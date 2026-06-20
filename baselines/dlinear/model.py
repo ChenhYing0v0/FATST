@@ -37,8 +37,11 @@ class DLinear(nn.Module):
         channels: int,
         moving_avg: int = 25,
         individual: bool = False,
+        init_mode: str = "average",
     ) -> None:
         super().__init__()
+        if init_mode not in {"average", "pytorch_default"}:
+            raise ValueError(f"Unknown init_mode: {init_mode}")
         self.seq_len = seq_len
         self.pred_len = pred_len
         self.channels = channels
@@ -52,16 +55,18 @@ class DLinear(nn.Module):
             self.linear_trend = nn.ModuleList(
                 [nn.Linear(seq_len, pred_len) for _ in range(channels)]
             )
-            for seasonal, trend in zip(self.linear_seasonal, self.linear_trend):
-                seasonal.weight = nn.Parameter((1 / seq_len) * torch.ones(pred_len, seq_len))
-                trend.weight = nn.Parameter((1 / seq_len) * torch.ones(pred_len, seq_len))
+            if init_mode == "average":
+                for seasonal, trend in zip(self.linear_seasonal, self.linear_trend):
+                    seasonal.weight = nn.Parameter((1 / seq_len) * torch.ones(pred_len, seq_len))
+                    trend.weight = nn.Parameter((1 / seq_len) * torch.ones(pred_len, seq_len))
         else:
             self.linear_seasonal = nn.Linear(seq_len, pred_len)
             self.linear_trend = nn.Linear(seq_len, pred_len)
-            self.linear_seasonal.weight = nn.Parameter(
-                (1 / seq_len) * torch.ones(pred_len, seq_len)
-            )
-            self.linear_trend.weight = nn.Parameter((1 / seq_len) * torch.ones(pred_len, seq_len))
+            if init_mode == "average":
+                self.linear_seasonal.weight = nn.Parameter(
+                    (1 / seq_len) * torch.ones(pred_len, seq_len)
+                )
+                self.linear_trend.weight = nn.Parameter((1 / seq_len) * torch.ones(pred_len, seq_len))
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         seasonal, trend = self.decomposition(x)

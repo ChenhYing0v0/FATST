@@ -82,11 +82,20 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--dataset", choices=sorted(DATASETS), default="ETTh2")
     parser.add_argument("--seq-len", type=int, default=336)
     parser.add_argument("--pred-len", type=int, choices=[96, 192, 336, 720], default=96)
+    parser.add_argument("--patch-len", type=int, default=16)
+    parser.add_argument("--stride", type=int, default=8)
+    parser.add_argument("--d-model", type=int, default=128)
+    parser.add_argument("--n-heads", type=int, default=16)
+    parser.add_argument("--encoder-layers", type=int, default=3)
+    parser.add_argument("--d-ff", type=int, default=256)
+    parser.add_argument("--dropout", type=float, default=0.2)
+    parser.add_argument("--head-dropout", type=float, default=0.0)
     parser.add_argument("--batch-size", type=int, default=128)
     parser.add_argument("--epochs", type=int, default=1)
     parser.add_argument("--learning-rate", type=float, default=1e-4)
     parser.add_argument("--patience", type=int, default=10)
     parser.add_argument("--seed", type=int, default=2021)
+    parser.add_argument("--run-name", default="PatchEncoderFixedHead")
     parser.add_argument("--output-root", default="artifacts/runs/phase0")
     parser.add_argument("--device", default="auto")
     return parser.parse_args()
@@ -110,11 +119,19 @@ def main() -> None:
         args.seq_len,
         args.pred_len,
         DATASETS[args.dataset].channels,
+        patch_len=args.patch_len,
+        stride=args.stride,
+        d_model=args.d_model,
+        n_heads=args.n_heads,
+        encoder_layers=args.encoder_layers,
+        d_ff=args.d_ff,
+        dropout=args.dropout,
+        head_dropout=args.head_dropout,
     ).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
     criterion = nn.MSELoss()
 
-    run_dir = Path(args.output_root) / "PatchEncoderFixedHead" / args.dataset / f"h{args.pred_len}" / f"seed{args.seed}"
+    run_dir = Path(args.output_root) / args.run_name / args.dataset / f"h{args.pred_len}" / f"seed{args.seed}"
     run_dir.mkdir(parents=True, exist_ok=True)
     best_val = float("inf")
     best_state = None

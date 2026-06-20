@@ -92,6 +92,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--learning-rate", type=float, default=1e-4)
     parser.add_argument("--patience", type=int, default=10)
     parser.add_argument("--seed", type=int, default=2021)
+    parser.add_argument("--init-mode", choices=["average", "pytorch_default"], default="average")
+    parser.add_argument("--run-name", default="DLinear")
     parser.add_argument("--output-root", default="artifacts/runs/phase0")
     parser.add_argument("--device", default="auto")
     return parser.parse_args()
@@ -111,11 +113,16 @@ def main() -> None:
     val_loader = DataLoader(val_set, batch_size=args.batch_size, shuffle=False)
     test_loader = DataLoader(test_set, batch_size=args.batch_size, shuffle=False)
 
-    model = DLinear(args.seq_len, args.pred_len, DATASETS[args.dataset].channels).to(device)
+    model = DLinear(
+        args.seq_len,
+        args.pred_len,
+        DATASETS[args.dataset].channels,
+        init_mode=args.init_mode,
+    ).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
     criterion = nn.MSELoss()
 
-    run_dir = Path(args.output_root) / "DLinear" / args.dataset / f"h{args.pred_len}" / f"seed{args.seed}"
+    run_dir = Path(args.output_root) / args.run_name / args.dataset / f"h{args.pred_len}" / f"seed{args.seed}"
     run_dir.mkdir(parents=True, exist_ok=True)
     best_val = float("inf")
     best_state = None
