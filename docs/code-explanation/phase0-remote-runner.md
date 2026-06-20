@@ -9,10 +9,12 @@ model、dataset 或 training 语义。它只负责把已经定义的三个 basel
 ## 数据流与执行流
 
 1. 读取环境变量或默认值：
-   - `DATASET_ROOT=/home/yingch/dataset`
+   - `DATASET_ROOT=${DATA_ROOT:-/home/yingch/dataset}`，兼容
+     `529lab-3090.env` 中的 `DATA_ROOT`
    - `OUTPUT_ROOT=artifacts/runs/phase0`
    - `LOG_ROOT=artifacts/logs/phase0_gate`
-   - `CONDA_ENV=moe`
+   - `CONDA_ENV=${CONDA_ENV_NAME:-moe}`，兼容 `529lab-3090.env` 中的
+     `CONDA_ENV_NAME`
    - `CONDA_BIN` 默认为自动定位：先查 `PATH`，再查
      `/home/anaconda3/bin/conda` 与 `/data/anaconda3/bin/conda`
    - `GPU_ID=1`

@@ -1,16 +1,23 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-DATASET_ROOT="${DATASET_ROOT:-/home/yingch/dataset}"
+DATASET_ROOT="${DATASET_ROOT:-${DATA_ROOT:-/home/yingch/dataset}}"
 OUTPUT_ROOT="${OUTPUT_ROOT:-artifacts/runs/phase0}"
 LOG_ROOT="${LOG_ROOT:-artifacts/logs/phase0_gate}"
-CONDA_ENV="${CONDA_ENV:-moe}"
+CONDA_ENV="${CONDA_ENV:-${CONDA_ENV_NAME:-moe}}"
 CONDA_BIN="${CONDA_BIN:-}"
 GPU_ID="${GPU_ID:-1}"
 SEED="${SEED:-2021}"
 EPOCHS="${EPOCHS:-100}"
 
 mkdir -p "${LOG_ROOT}"
+
+if [[ -f "/home/anaconda3/etc/profile.d/conda.sh" ]]; then
+  # Non-interactive SSH shells on 529_Lab-3090 do not load the zsh conda hook.
+  # Source the profile script when available, then still keep CONDA_BIN fallback.
+  # shellcheck source=/dev/null
+  . "/home/anaconda3/etc/profile.d/conda.sh"
+fi
 
 if [[ -z "${CONDA_BIN}" ]]; then
   if command -v conda >/dev/null 2>&1; then
