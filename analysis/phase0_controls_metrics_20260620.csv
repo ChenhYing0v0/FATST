@@ -1,0 +1,9 @@
+model,dataset,horizon,mse,mae,epochs,output_path
+DLinearOfficialInit,ETTh2,96,0.28650543093681335,0.35123008489608765,42,/home/yingch/exp_outputs/r-2026-fatst/phase0_controls/DLinearOfficialInit/ETTh2/h96/seed2021
+DLinearOfficialInit,ETTh2,192,0.3818703293800354,0.4168555438518524,40,/home/yingch/exp_outputs/r-2026-fatst/phase0_controls/DLinearOfficialInit/ETTh2/h192/seed2021
+DLinearOfficialInit,ETTh2,336,0.4577905237674713,0.4677444100379944,45,/home/yingch/exp_outputs/r-2026-fatst/phase0_controls/DLinearOfficialInit/ETTh2/h336/seed2021
+DLinearOfficialInit,ETTh2,720,0.7053214311599731,0.5973737835884094,42,/home/yingch/exp_outputs/r-2026-fatst/phase0_controls/DLinearOfficialInit/ETTh2/h720/seed2021
+PatchEncoderFixedHeadOfficialETT,ETTh2,96,0.3005911111831665,0.3554462492465973,26,/home/yingch/exp_outputs/r-2026-fatst/phase0_controls/PatchEncoderFixedHeadOfficialETT/ETTh2/h96/seed2021
+PatchEncoderFixedHeadOfficialETT,ETTh2,192,0.36339354515075684,0.3965317904949188,20,/home/yingch/exp_outputs/r-2026-fatst/phase0_controls/PatchEncoderFixedHeadOfficialETT/ETTh2/h192/seed2021
+PatchEncoderFixedHeadOfficialETT,ETTh2,336,0.38510605692863464,0.41551199555397034,16,/home/yingch/exp_outputs/r-2026-fatst/phase0_controls/PatchEncoderFixedHeadOfficialETT/ETTh2/h336/seed2021
+PatchEncoderFixedHeadOfficialETT,ETTh2,720,0.4054428040981293,0.4429866075515747,24,/home/yingch/exp_outputs/r-2026-fatst/phase0_controls/PatchEncoderFixedHeadOfficialETT/ETTh2/h720/seed2021
