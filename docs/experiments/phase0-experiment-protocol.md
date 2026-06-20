@@ -432,8 +432,11 @@ explicitly accepts the risk.
 paper reproduction. Paper-facing PatchTST and DLinear baselines should be reproduced from native
 upstream code before final comparison claims.
 
-[Fact] Remaining Phase0 validation before Phase1 is the selected-base seed-variance lite matrix:
+[Fact] The selected-base seed-variance lite matrix is complete:
 `PatchEncoderFixedHead × {ETTh2, ETTm1, Weather} × {96,720} × {2021,2022,2023}`.
+
+[Strong Evidence] The largest observed MSE CV is `2.47%` on `Weather / 720`, so Phase0 is finalized
+and Phase1 Variable-Horizon Decoder experiments can start from `PatchEncoderFixedHead`.
 
 ### Continue to Phase 1 if:
 
