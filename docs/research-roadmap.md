@@ -335,6 +335,10 @@ state 的粒度。
 - Experiment protocol 见 `docs/experiments/phase0-experiment-protocol.md`；当前 Phase 0
   gate 比较 `DLinear`、`PatchEncoderFixedHead`、`SegTSFTDenseFixedHead`，dataset matrix
   为 ETTh2、ETTm1、Weather，horizon matrix 为 `{96,192,336,720}`。
+- Phase 0 gate 与 targeted controls 完成后，`PatchEncoderFixedHead` 被选为 canonical
+  internal base。它是 clean PatchTST-style base，不作为 exact PatchTST reproduction。
+  进入 Phase 1 前补充 selected-base seed-variance lite：
+  `PatchEncoderFixedHead × {ETTh2, ETTm1, Weather} × {96,720} × {2021,2022,2023}`。
 
 通过条件：
 

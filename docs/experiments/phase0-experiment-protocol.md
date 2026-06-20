@@ -423,6 +423,18 @@ explicitly accepts the risk.
 
 ## Gate Criteria
 
+## Phase0 Decision Status
+
+[Fact] After the Phase0 gate, Weather-720 rerun, and targeted controls,
+`PatchEncoderFixedHead` is selected as the canonical internal base for Phase1.
+
+[Fact] `PatchEncoderFixedHead` is a clean PatchTST-style internal base, not an exact PatchTST
+paper reproduction. Paper-facing PatchTST and DLinear baselines should be reproduced from native
+upstream code before final comparison claims.
+
+[Fact] Remaining Phase0 validation before Phase1 is the selected-base seed-variance lite matrix:
+`PatchEncoderFixedHead × {ETTh2, ETTm1, Weather} × {96,720} × {2021,2022,2023}`.
+
 ### Continue to Phase 1 if:
 
 - `PatchEncoderFixedHead` is consistently stronger than or competitive with `DLinear`.

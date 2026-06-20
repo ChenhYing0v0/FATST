@@ -1,6 +1,18 @@
 {
   "phase": "phase0",
-  "objective": "Gate DLinear, PatchEncoderFixedHead, and SegTSFTDenseFixedHead before mechanism experiments.",
+  "objective": "Select and validate PatchEncoderFixedHead as the clean internal base before mechanism experiments.",
+  "decision": {
+    "selected_internal_base": "PatchEncoderFixedHead",
+    "status": "selected_after_gate_and_controls",
+    "decision_reports": [
+      "analysis/phase0_gate_results_20260620.md",
+      "analysis/phase0_followup_rerun_and_paper_gap_20260620.md",
+      "analysis/phase0_controls_results_20260620.md"
+    ],
+    "remaining_phase0_work": [
+      "patch_encoder_fixed_head_seed_variance_lite"
+    ]
+  },
   "paths": {
     "local_dataset_root": "/Users/river/PaperResearch/Project/datasets",
     "remote_dataset_root": "/home/yingch/dataset",
@@ -205,7 +217,7 @@
       "location": "remote_preferred"
     },
     "seed_variance_lite": {
-      "models": ["DLinear", "PatchEncoderFixedHead", "SegTSFTDenseFixedHead"],
+      "models": ["PatchEncoderFixedHead"],
       "datasets": ["ETTh2", "ETTm1", "Weather"],
       "horizons": [96, 720],
       "seeds": [2021, 2022, 2023],
