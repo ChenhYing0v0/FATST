@@ -1,0 +1,240 @@
+{
+  "phase": "phase0",
+  "objective": "Gate DLinear, PatchEncoderFixedHead, and SegTSFTDenseFixedHead before mechanism experiments.",
+  "paths": {
+    "local_dataset_root": "/Users/river/PaperResearch/Project/datasets",
+    "remote_dataset_root": "/home/yingch/dataset",
+    "artifact_root": "artifacts/runs/phase0",
+    "report_root": "artifacts/reports/phase0"
+  },
+  "horizons": [96, 192, 336, 720],
+  "seq_len": 336,
+  "datasets": [
+    {
+      "name": "ETTh1",
+      "group": "ETT",
+      "relative_path": "ETT-small/ETTh1.csv",
+      "format": "csv_with_date",
+      "features": "M",
+      "channels": 7,
+      "rows": 17420,
+      "split": "ett_standard",
+      "status": "inactive_phase0_gate"
+    },
+    {
+      "name": "ETTh2",
+      "group": "ETT",
+      "relative_path": "ETT-small/ETTh2.csv",
+      "format": "csv_with_date",
+      "features": "M",
+      "channels": 7,
+      "rows": 17420,
+      "split": "ett_standard",
+      "status": "active"
+    },
+    {
+      "name": "ETTm1",
+      "group": "ETT",
+      "relative_path": "ETT-small/ETTm1.csv",
+      "format": "csv_with_date",
+      "features": "M",
+      "channels": 7,
+      "rows": 69680,
+      "split": "ett_standard",
+      "status": "active"
+    },
+    {
+      "name": "ETTm2",
+      "group": "ETT",
+      "relative_path": "ETT-small/ETTm2.csv",
+      "format": "csv_with_date",
+      "features": "M",
+      "channels": 7,
+      "rows": 69680,
+      "split": "ett_standard",
+      "status": "inactive_phase0_gate"
+    },
+    {
+      "name": "Weather",
+      "group": "Weather",
+      "relative_path": "weather/weather.csv",
+      "format": "csv_with_date",
+      "features": "M",
+      "channels": 21,
+      "rows": 52696,
+      "split": "chronological_70_10_20",
+      "status": "active"
+    },
+    {
+      "name": "ECL",
+      "group": "ECL",
+      "relative_path": "electricity/electricity.csv",
+      "fallback_relative_path": "MoE_dataset/electricity.csv",
+      "format": "csv_with_date",
+      "features": "M",
+      "channels": 321,
+      "rows": 26304,
+      "split": "chronological_70_10_20",
+      "status": "inactive_phase0_gate"
+    },
+    {
+      "name": "Solar",
+      "group": "Solar",
+      "relative_path": "Solar/solar_AL.txt",
+      "format": "wide_txt_no_header",
+      "features": "M",
+      "channels": 137,
+      "rows": 52560,
+      "split": "chronological_70_10_20",
+      "status": "inactive_phase0_gate"
+    },
+    {
+      "name": "Traffic",
+      "group": "Traffic",
+      "relative_path": "traffic/traffic.csv",
+      "format": "csv_with_date",
+      "features": "M",
+      "channels": 862,
+      "rows": 17544,
+      "split": "chronological_70_10_20",
+      "status": "tentative"
+    }
+  ],
+  "models": {
+    "PatchEncoderFixedHead": {
+      "role": "main_internal_base",
+      "seq_len": 336,
+      "patch_len": 16,
+      "stride": 8,
+      "padding_patch": "end",
+      "revin": true,
+      "revin_affine": false,
+      "subtract_last": false,
+      "encoder_layers": 3,
+      "d_model": 128,
+      "n_heads": 16,
+      "d_ff": 256,
+      "dropout": 0.2,
+      "fc_dropout": 0.2,
+      "head_dropout": 0.0,
+      "activation": "gelu",
+      "head": "flatten_linear_fixed_horizon"
+    },
+    "DLinear": {
+      "role": "sanity_floor",
+      "seq_len": 336,
+      "moving_avg": 25,
+      "individual": false
+    },
+    "SegTSFTDenseFixedHead": {
+      "role": "modern_dense_candidate",
+      "seq_len": 336,
+      "patch_width": 8,
+      "width_factor": 4,
+      "encoder_layers": 4,
+      "d_model": 128,
+      "n_heads": 4,
+      "n_kv_heads": 2,
+      "d_ff": 256,
+      "dropout": 0.2,
+      "drop_path": 0.1,
+      "norm_type": "rms",
+      "rope_theta": 10000.0,
+      "use_input_norm": true,
+      "head": "flatten_linear_fixed_horizon",
+      "removed_from_segmoe": [
+        "segment_moe",
+        "token_moe",
+        "router_probs",
+        "imbalance_loss",
+        "autoregressive_forecast"
+      ]
+    }
+  },
+  "training": {
+    "optimizer": "Adam",
+    "learning_rate": 0.0001,
+    "loss": "mse",
+    "max_epochs": 100,
+    "early_stopping_patience": 10,
+    "amp": false,
+    "primary_seed": 2021,
+    "seed_variance": [2021, 2022, 2023],
+    "batch_size_by_dataset": {
+      "ETTh1": 128,
+      "ETTh2": 128,
+      "ETTm1": 128,
+      "ETTm2": 128,
+      "Weather": 128,
+      "ECL": 32,
+      "Solar": 64,
+      "Traffic": 24
+    }
+  },
+  "metrics": {
+    "primary": ["mse", "mae"],
+    "diagnostics": [
+      "metrics_by_horizon",
+      "metrics_by_segment",
+      "fixed_vs_max_prefix_mse",
+      "max_prefix_error",
+      "head_step_similarity"
+    ],
+    "segments": [
+      [1, 96],
+      [97, 192],
+      [193, 336],
+      [337, 720]
+    ]
+  },
+  "run_matrices": {
+    "smoke": {
+      "models": ["DLinear", "PatchEncoderFixedHead", "SegTSFTDenseFixedHead"],
+      "datasets": ["ETTh2"],
+      "horizons": [96],
+      "epochs": 1,
+      "location": "local"
+    },
+    "core_seed2021": {
+      "models": ["DLinear", "PatchEncoderFixedHead", "SegTSFTDenseFixedHead"],
+      "datasets": ["ETTh2", "ETTm1", "Weather"],
+      "horizons": [96, 192, 336, 720],
+      "seeds": [2021],
+      "location": "remote_preferred"
+    },
+    "seed_variance_lite": {
+      "models": ["DLinear", "PatchEncoderFixedHead", "SegTSFTDenseFixedHead"],
+      "datasets": ["ETTh2", "ETTm1", "Weather"],
+      "horizons": [96, 720],
+      "seeds": [2021, 2022, 2023],
+      "location": "remote_preferred"
+    }
+  },
+  "artifact_contract": {
+    "per_run_required": [
+      "effective_config.json",
+      "environment.json",
+      "metrics.json",
+      "metrics_by_horizon.csv",
+      "metrics_by_segment.csv",
+      "training_log.csv",
+      "checkpoint.pt",
+      "predictions_test.npz"
+    ],
+    "per_run_optional": [
+      "head_step_similarity.csv",
+      "prefix_consistency.json",
+      "memory_snapshot.txt"
+    ],
+    "global_reports": [
+      "summary_metrics.csv",
+      "summary_by_horizon.csv",
+      "summary_by_segment.csv"
+    ]
+  },
+  "remote": {
+    "host": "529_Lab-3090",
+    "conda_env": "moe",
+    "gpu_policy": "check nvidia-smi before every run; prefer GPU 1 or 2 when memory is safe; avoid GPU 0 unless explicitly approved"
+  }
+}
