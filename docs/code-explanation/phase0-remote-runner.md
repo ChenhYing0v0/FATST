@@ -13,6 +13,8 @@ model、dataset 或 training 语义。它只负责把已经定义的三个 basel
    - `OUTPUT_ROOT=artifacts/runs/phase0`
    - `LOG_ROOT=artifacts/logs/phase0_gate`
    - `CONDA_ENV=moe`
+   - `CONDA_BIN` 默认为自动定位：先查 `PATH`，再查
+     `/home/anaconda3/bin/conda` 与 `/data/anaconda3/bin/conda`
    - `GPU_ID=1`
    - `SEED=2021`
    - `EPOCHS=100`
@@ -34,7 +36,7 @@ model、dataset 或 training 语义。它只负责把已经定义的三个 basel
 [Fact] 该 runner 没有引入新的模型机制，也没有覆盖 baseline 内部默认训练逻辑。
 
 [Strong Evidence] 它只把原有 `train.py` 的命令行参数显式化，并记录 Git commit、
-GPU、dataset root、output root 与 conda env。
+GPU、dataset root、output root、conda env 与 conda executable。
 
 [Speculative] 当前使用单 GPU 顺序运行，牺牲吞吐换取可审计性与显存安全。若后续
 确认 GPU 1/2 长时间空闲，可以再增加并行调度，但那会改变资源冲突风险。

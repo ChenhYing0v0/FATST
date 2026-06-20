@@ -5,11 +5,25 @@ DATASET_ROOT="${DATASET_ROOT:-/home/yingch/dataset}"
 OUTPUT_ROOT="${OUTPUT_ROOT:-artifacts/runs/phase0}"
 LOG_ROOT="${LOG_ROOT:-artifacts/logs/phase0_gate}"
 CONDA_ENV="${CONDA_ENV:-moe}"
+CONDA_BIN="${CONDA_BIN:-}"
 GPU_ID="${GPU_ID:-1}"
 SEED="${SEED:-2021}"
 EPOCHS="${EPOCHS:-100}"
 
 mkdir -p "${LOG_ROOT}"
+
+if [[ -z "${CONDA_BIN}" ]]; then
+  if command -v conda >/dev/null 2>&1; then
+    CONDA_BIN="$(command -v conda)"
+  elif [[ -x "/home/anaconda3/bin/conda" ]]; then
+    CONDA_BIN="/home/anaconda3/bin/conda"
+  elif [[ -x "/data/anaconda3/bin/conda" ]]; then
+    CONDA_BIN="/data/anaconda3/bin/conda"
+  else
+    echo "Unable to locate conda. Set CONDA_BIN=/path/to/conda." >&2
+    exit 1
+  fi
+fi
 
 models=(
   "DLinear:baselines/dlinear/train.py"
@@ -25,6 +39,7 @@ echo "git_commit=$(git rev-parse HEAD)"
 echo "dataset_root=${DATASET_ROOT}"
 echo "output_root=${OUTPUT_ROOT}"
 echo "conda_env=${CONDA_ENV}"
+echo "conda_bin=${CONDA_BIN}"
 echo "gpu_id=${GPU_ID}"
 echo "seed=${SEED}"
 echo "epochs=${EPOCHS}"
@@ -45,7 +60,7 @@ for model_entry in "${models[@]}"; do
       nvidia-smi --query-gpu=index,name,memory.total,memory.used,memory.free,utilization.gpu \
         --format=csv,noheader,nounits
 
-      CUDA_VISIBLE_DEVICES="${GPU_ID}" PYTHONUNBUFFERED=1 conda run --no-capture-output -n "${CONDA_ENV}" \
+      CUDA_VISIBLE_DEVICES="${GPU_ID}" PYTHONUNBUFFERED=1 "${CONDA_BIN}" run --no-capture-output -n "${CONDA_ENV}" \
         python "${train_script}" \
         --dataset-root "${DATASET_ROOT}" \
         --dataset "${dataset}" \
