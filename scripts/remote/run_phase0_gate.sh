@@ -2,8 +2,8 @@
 set -euo pipefail
 
 DATASET_ROOT="${DATASET_ROOT:-${DATA_ROOT:-/home/yingch/dataset}}"
-OUTPUT_ROOT="${OUTPUT_ROOT:-artifacts/runs/phase0}"
-LOG_ROOT="${LOG_ROOT:-artifacts/logs/phase0_gate}"
+OUTPUT_ROOT="${OUTPUT_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/phase0}"
+LOG_ROOT="${LOG_ROOT:-${OUTPUT_ROOT}/_logs/phase0_gate}"
 CONDA_ENV="${CONDA_ENV:-${CONDA_ENV_NAME:-moe}}"
 CONDA_BIN="${CONDA_BIN:-}"
 GPU_ID="${GPU_ID:-1}"

@@ -47,3 +47,6 @@
 - 默认优先考虑 GPU 1 或 GPU 2；避免 GPU 0，除非用户明确接受风险。
 - 保留显存安全余量，不把 GPU 填满。
 - 记录实际使用 GPU、启动命令、conda 环境、代码版本和输出目录。
+- 后续正式 3090 实验默认写入 repo 外部输出目录，例如
+  `/home/yingch/exp_outputs/r-2026-fatst/phase0`；仓库内 `artifacts/runs/...`
+  只用于本地 smoke、小型临时验证或已经启动的历史 run。

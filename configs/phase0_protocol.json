@@ -5,6 +5,8 @@
     "local_dataset_root": "/Users/river/PaperResearch/Project/datasets",
     "remote_dataset_root": "/home/yingch/dataset",
     "artifact_root": "artifacts/runs/phase0",
+    "remote_artifact_root": "/home/yingch/exp_outputs/r-2026-fatst/phase0",
+    "remote_log_root": "/home/yingch/exp_outputs/r-2026-fatst/phase0/_logs",
     "report_root": "artifacts/reports/phase0"
   },
   "horizons": [96, 192, 336, 720],

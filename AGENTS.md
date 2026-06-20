@@ -43,6 +43,8 @@ Always use the global helper under `~/.codex/scripts/`.
 - Server aliases: when the user mentions `3090` or `529lab`, treat it as the
   `529_Lab-3090` server unless they explicitly say otherwise.
 - GitHub repository: `git@github.com:ChenhYing0v0/FATST.git`.
+- Default remote experiment output root:
+  `/home/yingch/exp_outputs/r-2026-fatst`.
 
 
 ## Communication And Decision Style
@@ -113,6 +115,10 @@ Always use the global helper under `~/.codex/scripts/`.
 - Keep a memory safety margin instead of filling the selected GPU.
 - Record the selected GPU, observed memory usage, command, environment, and
   output path for every meaningful experiment.
+- Default future 3090 experiment outputs to repo-external paths under
+  `/home/yingch/exp_outputs/r-2026-fatst`; use in-repo `artifacts/runs/...`
+  only for local smoke, small temporary checks, or historical runs that were
+  already launched there.
 
 
 
