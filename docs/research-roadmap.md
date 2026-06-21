@@ -428,6 +428,25 @@ Phase1-A.2 通过条件：
 - `adapter_delta_stats.csv` 显示 adapter 对 base prediction 有非零有效修正，避免把训练波动
   误判为机制收益。
 
+[Fact] Phase1-A.2 `PatchEncoderFixedHeadAdapter` 已完成：
+`analysis/phase1_fixed_adapter_gate_20260621/phase1_fixed_adapter_gate_report.md`。
+
+[Evidence] 结果为：
+
+- main MSE wins: `7/12`；
+- segment-level MSE wins: `15/30`；
+- mean relative MSE change: `+0.20%`；
+- relative MSE range: `-2.02%` 到 `+3.74%`；
+- mean adapter delta/base MAE ratio: `0.3200`。
+
+[Decision] `PatchEncoderFixedHeadAdapter` 是 `partial_pass`，但不足以成为论文核心创新。
+它支持一个更精确的判断：future-side interface 不是无效的，但仅靠 history-derived
+segment adapter 难以稳定提升性能。
+
+[Inference] Phase1 的下一步不应继续堆 adapter capacity，而应进入 Future-Aware Gate：
+用 training-only future signal 学习可推理的 future latent state，并检验这种 supervision
+是否能把 adapter/interface 从弱修正变成稳定机制收益。
+
 Phase1-B:
 
 - 仅在 Phase1-A 通过后执行；

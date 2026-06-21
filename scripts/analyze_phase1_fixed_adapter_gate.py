@@ -279,6 +279,23 @@ def format_pct(value: float) -> str:
     return f"{value * 100.0:+.2f}%"
 
 
+def decision_label(wins: int, total: int, mean_relative_mse: float) -> tuple[str, str]:
+    if wins >= 4 and mean_relative_mse <= 0.0:
+        return (
+            "pass",
+            "main wins 达到 Phase1-A.2 最低通过线，且平均 relative MSE 非退化。",
+        )
+    if wins >= 4:
+        return (
+            "partial_pass",
+            "main wins 达到最低通过线，但平均 relative MSE 仍为正退化，不足以作为论文核心 claim。",
+        )
+    return (
+        "fail",
+        "main wins 未达到最低通过线，history-only fixed-head adapter 不应继续作为主线。",
+    )
+
+
 def write_report(
     report_dir: Path,
     comparisons: list[dict[str, Any]],
@@ -295,6 +312,7 @@ def write_report(
     best_row = min(comparisons, key=lambda row: float(row["relative_mse_change"]))
     worst_row = max(comparisons, key=lambda row: float(row["relative_mse_change"]))
     mean_delta_ratio = float(np.mean([row["delta_to_base_mae_ratio"] for row in delta_rows]))
+    decision, decision_reason = decision_label(wins, len(comparisons), float(rel_changes.mean()))
 
     lines = [
         "# Phase1-A.2 Fixed-Head Adapter Gate 结果报告",
@@ -314,6 +332,13 @@ def write_report(
         f"segment relative MSE 平均为 `{format_pct(float(segment_rel.mean()))}`。",
         "",
         f"[Evidence] adapter 对 base prediction 的平均 MAE 修正比例为 `{mean_delta_ratio:.4f}`。",
+        "",
+        f"[Decision] `{decision}`: {decision_reason}",
+        "",
+        "[Decision] 该结果证明保留 fixed-head capacity 后，future-side adapter 不再系统性失败；",
+        "但当前收益幅度和稳定性不足，不能直接作为 decoder 论文主创新。下一步应回退到",
+        "training-only future-aware teacher/student alignment，而不是继续只增加 history-only",
+        "adapter capacity。",
         "",
         "## Main Metric Table",
         "",
@@ -444,6 +469,11 @@ def main() -> None:
         "mean_delta_to_base_mae_ratio": float(np.mean([row["delta_to_base_mae_ratio"] for row in delta_rows])),
         "report": str(report_path),
     }
+    summary["decision"], summary["decision_reason"] = decision_label(
+        int(summary["main_mse_wins"]),
+        int(summary["main_total"]),
+        float(summary["mean_relative_mse_change"]),
+    )
     (report_dir / "phase1_fixed_adapter_summary.json").write_text(json.dumps(summary, indent=2))
 
 

@@ -1,23 +1,25 @@
 {
   "phase": "phase1",
   "objective": "Evaluate whether future-side decoder interfaces can improve the Phase0 selected patch encoder before adding future-aware alignment or MoE.",
-  "status": "phase1a_second_candidate_ready",
+  "status": "phase1a_second_candidate_partial_pass",
   "decision_reports": [
-    "analysis/phase1_segment_decoder_gate_20260621/phase1_segment_decoder_gate_report.md"
+    "analysis/phase1_segment_decoder_gate_20260621/phase1_segment_decoder_gate_report.md",
+    "analysis/phase1_fixed_adapter_gate_20260621/phase1_fixed_adapter_gate_report.md"
   ],
   "latest_decision": {
-    "candidate": "PatchEncoderSegmentQueryHead",
-    "status": "failed",
-    "main_wins": "0/12",
-    "segment_wins": "0/30",
-    "relative_mse_change_range": ["+2.16%", "+15.17%"],
-    "mean_relative_mse_change": "+6.79%",
-    "rollback_step": "Step 5-6: theoretical feasibility and method design",
-    "next_direction": "Do not stack future-aware or MoE on this weak decoder; redesign with fixed-head capacity retained via FixedHeadAdapter or parameter-matched SegmentQueryDenseHead."
+    "candidate": "PatchEncoderFixedHeadAdapter",
+    "status": "partial_pass_not_paper_core",
+    "main_wins": "7/12",
+    "segment_wins": "15/30",
+    "relative_mse_change_range": ["-2.02%", "+3.74%"],
+    "mean_relative_mse_change": "+0.20%",
+    "mean_delta_to_base_mae_ratio": "0.3200",
+    "rollback_step": "Step 3-5: re-evaluate whether history-only future decoder is sufficient and move to future-aware alignment.",
+    "next_direction": "Use FixedHeadAdapter evidence as interface support, but do not treat it as the core decoder claim; next candidate should add training-only future-aware teacher/student alignment."
   },
   "active_candidate": {
     "candidate": "PatchEncoderFixedHeadAdapter",
-    "status": "ready_for_phase1a2_gate",
+    "status": "partial_pass_not_paper_core",
     "problem": "SegmentQueryHead removed too much fixed-head readout capacity; test whether future-segment conditioning helps when fixed flatten readout remains the main path.",
     "hypothesis": "A zero-initialized segment adapter can expose a future-side interface while preserving the strong fixed-head baseline path.",
     "pass_condition": "At least 4/12 main MSE wins or clear segment-level improvements without broad degradation; adapter delta must be non-zero enough to rule out pure noise."

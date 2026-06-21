@@ -1,0 +1,12 @@
+{
+  "main_mse_wins": 7,
+  "main_total": 12,
+  "segment_mse_wins": 15,
+  "segment_total": 30,
+  "mean_relative_mse_change": 0.00197872577116712,
+  "mean_segment_relative_mse_change": 0.004859542575449752,
+  "mean_delta_to_base_mae_ratio": 0.3200376604994138,
+  "report": "analysis/phase1_fixed_adapter_gate_20260621/phase1_fixed_adapter_gate_report.md",
+  "decision": "partial_pass",
+  "decision_reason": "main wins \u8fbe\u5230\u6700\u4f4e\u901a\u8fc7\u7ebf\uff0c\u4f46\u5e73\u5747 relative MSE \u4ecd\u4e3a\u6b63\u9000\u5316\uff0c\u4e0d\u8db3\u4ee5\u4f5c\u4e3a\u8bba\u6587\u6838\u5fc3 claim\u3002"
+}

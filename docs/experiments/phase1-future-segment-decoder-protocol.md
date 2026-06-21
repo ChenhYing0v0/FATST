@@ -276,3 +276,34 @@ Phase1-A.2 通过至少需要满足：
 - 回退到长研究模板第 3-5 步，重新评估 “history-only future decoder” 问题是否足够；
 - 下一候选应转向 `future-aware teacher/student alignment`，即用 training-only future
   signal 学习可推理的 future latent state，而不是继续只用 history-derived queries。
+
+## Phase1-A.2 结果
+
+[Fact] 远程 gate 已完成，结果报告见：
+`analysis/phase1_fixed_adapter_gate_20260621/phase1_fixed_adapter_gate_report.md`。
+
+[Evidence] `PatchEncoderFixedHeadAdapter` 相比 `PatchEncoderFixedHead` 的主指标结果为：
+
+- main MSE wins: `7/12`；
+- segment-level MSE wins: `15/30`；
+- relative MSE change range: `-2.02%` 到 `+3.74%`；
+- mean relative MSE change: `+0.20%`；
+- mean adapter delta/base MAE ratio: `0.3200`。
+
+[Decision] 该结果是 `partial_pass`，不是完整通过。它证明两件事：
+
+1. [Strong Evidence] 第一轮 `SegmentQueryHead` 失败主要来自 readout capacity 损失；
+   一旦保留 fixed head 主路径，future-side adapter 不再系统性失败。
+2. [Strong Evidence] 当前 history-only future-segment adapter 的收益不够稳定，平均 MSE
+   仍略退化，不能作为论文的核心 decoder 创新点。
+
+[Inference] 因此，Phase1 不应继续靠增加 adapter 容量来硬推 decoder 主线。更合理的回退点
+是长研究模板第 3-5 步：重新评估问题是否应从 “decoder readout form” 转为
+“训练时 future signal 如何塑造可推理 future latent state”。
+
+[Next] 下一候选应转向 `Future-Aware FixedHeadAdapter`：
+
+- 保留 fixed head 和 adapter interface；
+- 训练时加入 future teacher branch；
+- 用 teacher/student alignment 约束 adapter state 或 affine residual；
+- 推理时只保留 history-derived student path，严格做 leakage audit。
