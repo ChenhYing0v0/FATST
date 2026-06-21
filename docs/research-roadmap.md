@@ -6,134 +6,232 @@
 TimeAlign、ProtoTS、TIMEPERCEIVER、TFPS、ElasTST、QDF、AME-TS、TimeEmb、
 DTAF、SRP++、Seg-MoE、MoHETS。
 
-[Fact] 当前文档不是最终架构规划，也不是实验结论。它的作用是把可选路线收敛为
-一个可审计的 research program：哪些问题值得成为创新点，为什么它们在数学和
-数据流上相互约束，以及后续应如何用最小实验排除弱路线。
+[Fact] 当前文档不是最终架构规划，也不是 paper claim。它的作用是把当前研究方向
+收敛为一个可证伪的 research program：哪些机制值得继续，哪些机制只是诊断入口，
+以及每一阶段应该如何避免把多个变量混在一起解释。
 
-[Inference] 一篇完整 SCI 论文的合理体量可以围绕三个互相耦合的创新点展开：
-variable-horizon decoder、future-aware mechanism、MoE-style conditional
-architecture。三者不能被解释为简单模块堆叠；更合理的论文主张应是：
+[Strong Evidence] 经过 Phase0 baseline gate、targeted controls、seed variance、
+prefix consistency 和 segment-wise checkpoint oracle 后，`PatchEncoderFixedHead`
+被选为 Phase1 的 canonical internal base。固定 direct head 暴露了可量化问题，但
+问题幅度是中等的，而不是灾难性的。
 
-> long-term forecasting 的核心困难不是只缺少更强 backbone，而是
-> future positions、future states 与 heterogeneous temporal mechanisms
-> 在同一个模型内没有被一致建模。
+[Inference] 因此，本文路线不应继续把 “variable-horizon” 本身作为第一创新点的
+核心卖点。更合理的主线是：
+
+> long-term forecasting 的核心问题不是只缺少更强 encoder，也不是简单支持可变
+> 输出长度，而是 future positions / future segments / future states 没有被作为
+> 一个明确的预测过程来建模。
+
+据此，当前候选论文主张收敛为三个互相耦合的创新点：
+
+1. `Future-Segment Decoder`: 替代 static fixed head，显式构造 future-side states。
+2. `Future-Aware Mechanism`: 用 training-only future signal 约束可推理的 future latent state。
+3. `Future-Side MoE`: 在 future segment / future state 上做 conditional operators。
+
+`Variable-horizon` 和 `prefix consistency` 仍然保留，但它们的角色从主 claim 降级为：
+
+- 诊断 fixed head 是否存在输出策略问题；
+- 检查 future-side decoder 是否具备 one-model compatibility；
+- 作为附加能力，而不是第一轮机制成败标准。
+
+## Phase0 证据更新
+
+### Baseline 选择
+
+[Fact] Phase0 gate 比较了 `DLinear`、`PatchEncoderFixedHead`、
+`SegTSFTDenseFixedHead`。在 follow-up controls 和 seed variance 后，
+`PatchEncoderFixedHead` 被选为 canonical internal base。
+
+[Fact] `PatchEncoderFixedHead` 是 clean PatchTST-style base，不是 exact PatchTST
+paper reproduction。它的价值在于：encoder 简洁、性能合理、fixed head 缺陷清楚，
+便于后续只替换 output / decoder side。
+
+### Prefix consistency
+
+[Strong Evidence] Fixed direct head 暴露了可量化 prefix issue：
+
+- `Weather / H=96`: h720 prefix 比 h96 fixed head 劣化 `+4.79%` MSE。
+- `ETTm1 / H=96`: h720 prefix 比 h96 fixed head 劣化 `+4.70%` MSE。
+- 最大 fixed-head prediction mismatch 为 `ETTm1 / H=192` 的 `0.044742` MSE。
+- `truth_alignment_mse = 0.0`，说明该现象不是数据窗口错位造成的。
+
+[Inference] 这支持 fixed head 存在问题，但不足以单独支撑
+“variable-horizon decoder 一定显著提升性能”。
+
+### Segment-wise checkpoint oracle
+
+[Strong Evidence] 在统一 `0-720` 预测区间内，每 48 step 一个 segment，短 checkpoint
+用 rolling autoregression 扩展到 720 后，`pred_len=720` checkpoint 在三个数据集的
+全区间平均 MSE 都是最优：
+
+| Dataset | h96 avg MSE | h192 avg MSE | h336 avg MSE | h720 avg MSE | Best |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| ETTh2 | 0.461915 | 0.418412 | 0.413482 | 0.407403 | 720 |
+| ETTm1 | 0.463471 | 0.428760 | 0.416765 | 0.412788 | 720 |
+| Weather | 0.326617 | 0.331844 | 0.327533 | 0.323127 | 720 |
+
+[Strong Evidence] 但 h720 并不是所有 segment 的局部最优：
+
+| Dataset | h96 wins | h192 wins | h336 wins | h720 wins |
+| --- | ---: | ---: | ---: | ---: |
+| ETTh2 | 0 | 4 | 1 | 10 |
+| ETTm1 | 2 | 0 | 5 | 8 |
+| Weather | 3 | 2 | 0 | 10 |
+
+[Inference] 该结果否定了一个过强假设：短 horizon 模型并不天然统治短期预测。
+它同时说明另一个更有价值的问题：同一个 static fixed head 很难在所有 future segment
+上都达到局部最优。因此，Phase1 应验证 future-side decoder，而不是直接追求
+one-model for all horizons。
 
 ## 统一问题表述
 
-令历史窗口为 $X \in \mathbb{R}^{B \times L \times C}$，预测目标为
-$Y_{1:H} \in \mathbb{R}^{B \times H \times C}$。常规 direct forecasting
-通常学习
+令历史窗口为：
+
+$$
+X \in \mathbb{R}^{B \times L \times C},
+$$
+
+预测目标为：
+
+$$
+Y_{1:H} \in \mathbb{R}^{B \times H \times C}.
+$$
+
+常规 direct forecasting 可写为：
 
 $$
 \hat{Y}_{1:H} = D_\theta(E_\theta(X), H),
 $$
 
-其中 $E_\theta(X)$ 是 history representation，$D_\theta$ 是 decoder 或 output
-head。这个形式有三个隐含假设：
+其中 $E_\theta(X)$ 是 history representation，$D_\theta$ 通常是 fixed output head。
+这个形式隐含三个假设：
 
 1. [Inference] 同一个 history representation 足以支持所有 future steps。
-2. [Inference] future step 之间的依赖只需要通过 output dimension 或 loss 被动体现。
-3. [Inference] 不同样本、不同 horizon segment、不同 temporal regime 可以共享同一套
-   prediction operator。
+2. [Inference] future step 之间的结构只需要通过 output dimension 或 loss 被动体现。
+3. [Inference] 不同 future segments 与 temporal regimes 可以共享同一套 prediction operator。
 
-12 篇种子文献分别从不同侧面挑战这些假设：
-
-- SRP++ 指出 step-invariant representation 存在 expressiveness bottleneck。
-- ElasTST 指出 varied-horizon inference 需要 horizon-invariance，否则长 horizon
-  推理会改变短 horizon 已有位置的输出。
-- TIMEPERCEIVER 把 target query 作为显式 prediction interface，说明 horizon 不应只
-  是 output tensor 的 index。
-- TimeAlign 说明 prediction-side hidden state 与 ground-truth future-side hidden
-  state 存在 distribution mismatch。
-- QDF 说明 future steps 的 loss 不是独立同权任务。
-- Seg-MoE、AME-TS、MoHETS、TFPS、DTAF 说明 time series 的 expert specialization
-  需要有 temporal structure、pattern shift 或 operator bias，而不是任意 softmax
-  routing。
-
-因此，本项目候选主张应从如下统一映射出发：
+当前路线改写为：
 
 $$
-\hat{Y}_{1:H}
-= D_\theta\left(
-Z,\ Q_H,\ S_H,\ R_H
-\right),
+Z = E_\theta(X),
+$$
+
+$$
+U_H = A_\theta(Z, Q_H, G_H),
+$$
+
+$$
+S_H = P_\theta(U_H),
+$$
+
+$$
+\tilde{U}_H = C_\theta(U_H, S_H, Q_H),
+$$
+
+$$
+\hat{Y}_{1:H}=O_\theta(\tilde{U}_H).
 $$
 
 其中：
 
-- $Z = E_\theta(X)$：history-derived state，来自过去窗口。
-- $Q_H = \{q_1,\ldots,q_H\}$：future position queries，显式标识要预测的位置或
-  horizon segment。
-- $S_H$：future-aware latent state，训练时可被 future-side signal 约束，推理时只能
-  由 $X$ 与 $Q_H$ 生成。
-- $R_H$：routing / operator assignment，决定不同 future positions、segments 或
-  regimes 使用哪些 conditional operators。
+- $Z$: history-derived state。
+- $Q_H$: future position 或 future segment queries。
+- $G_H$: future segment grouping / dependency policy。
+- $U_H$: decoder 生成的 future-side hidden states。
+- $S_H$: future-aware latent state，可在训练时被 future signal 约束。
+- $C_\theta$: conditional operator，可由 dense adapter 或 MoE 实现。
+- $O_\theta$: final output projection。
 
-这不是架构定稿，而是后续所有候选模型都必须满足的数据流约束：
+该数据流的底层约束是：
 
 - 推理时不能访问 ground-truth future。
-- 同一模型必须能处理多个 horizon，并能解释不同 horizon 的输出是否稳定。
-- future-aware signal 必须进入 representation 或 decoder 的可验证位置，而不是只在
-  口头上声明。
-- MoE routing 必须服务于 future state 或 temporal operator difference，不能只是增加
-  参数量。
+- 第一阶段必须先证明 decoder-side 改动在 one-to-one horizon setting 下有效。
+- one-model for all horizons 是后续 compatibility gate，不是 Phase1-A 的成败标准。
+- MoE routing 必须服务于 future states 或 future segments，不能只是增加参数量。
 
-## 创新点一：Variable-Horizon Decoder
+## 创新点一：Future-Segment Decoder
 
-### 问题
+### 为什么不再以 variable-horizon 为主线
 
-[Hypothesis] 如果 decoder 只是把 $Z$ flatten 后映射到固定 $H \times C$，那么模型
-学习到的是 fixed-horizon projection。它可以在单个 benchmark horizon 上有效，但
-不天然满足 variable-horizon 或 one model for multi-horizon 的要求。
+[Fact] ElasTST 提出了 varied-horizon forecasting，通过 placeholder、structured mask、
+tunable RoPE、multi-scale patch 和 horizon reweighting 追求 horizon-invariant inference。
 
-更严格的要求是 horizon-invariance。对任意 $H_1 < H_2$，同一模型在预测 $H_1$ 和
-$H_2$ 时，前 $H_1$ 个位置应尽量一致：
+[Inference] 该问题形式优雅，但它不等价于更好的 forecasting performance。更长 horizon
+请求下保持 prefix 不变，是 consistency 约束；而 forecasting 的主要困难还包括
+future segment 的误差增长、远端 pattern 漂移、不同 temporal regime 的 operator 差异。
 
-$$
-\hat{Y}_{1:H_1}^{(H_1)}
-\approx
-\hat{Y}_{1:H_1}^{(H_2)}.
-$$
+[Strong Evidence] 本项目 Phase0 结果显示：
 
-ElasTST 的 placeholder + structured mask 给出一个重要原则：future positions 可以
-显式进入模型，但更长 future placeholder 不应泄漏信息并改变较短 horizon 的输出。
+- h720 checkpoint 并不在短 prefix 上普遍失败；
+- 短 horizon checkpoint 也不稳定统治短期 segment；
+- fixed head 的 prefix 问题存在，但幅度中等。
 
-### 候选数据流
+因此，Phase1 不应直接复刻 ElasTST 式 variable-horizon strategy，也不应把
+“one model for all horizon” 作为第一轮目标。
 
-候选 decoder 不应只接收一个全局 $Z$，而应接收 future queries：
+### 需要回答的新问题
+
+[Hypothesis] 关键问题是 fixed head 是否把未来预测过度压缩成一次静态投影：
 
 $$
-Q_H = g_\phi(1,2,\ldots,H),
-\quad
-U_H = A_\theta(Q_H, Z, M_H),
-\quad
-\hat{Y}_{1:H} = O_\theta(U_H).
+\hat{Y}_{1:H} = W \cdot \text{Flatten}(Z).
 $$
 
-其中 $M_H$ 是 horizon mask 或 dependency policy。它要回答两个问题：
+更合理的 decoder 应显式生成 future-side states：
 
-1. future queries 是否互相 attention？
-2. 如果互相 attention，是否会破坏 horizon-invariance？
+$$
+U_{1:J}=A_\theta(Z,Q_{1:J}),
+$$
 
-### 初步收敛
+其中 $J$ 可以是 future segment 数量。例如在 $H=720$、segment length 为 48 时，
+$J=15$。
 
-[Inference] 第一阶段不应直接追求复杂 decoder。更稳的路线是定义三类最小候选：
+每个 segment state 再生成对应区间：
 
-- `FixedHead`: 传统 fixed horizon head，作为下界。
-- `QueryDecoder`: future query cross-attends to history state，但 query 之间不互相泄漏。
-- `SegmentQueryDecoder`: 以 horizon segment 为 query/routing unit，兼容后续 MoE。
+$$
+\hat{Y}_{a_j:b_j}=O_\theta(U_j).
+$$
 
-[Strong Evidence] SRP++ 和 ElasTST 共同支持一个判断：multi-horizon 的关键不是
-“输出长度可变”这么简单，而是 future step-specific representation 与
-horizon-invariance 必须同时检查。
+这样 decoder 的研究问题从 “输出长度是否可变” 转为：
 
-### 必要诊断
+1. 不同 future segment 是否需要不同 readout state？
+2. segment state 是否能改善 error-by-segment profile？
+3. segment state 是否为后续 future-aware alignment 和 MoE routing 提供稳定载体？
 
-- Prefix consistency: 比较 $H_1$ 推理与 $H_2$ 推理的前缀输出差异。
-- Step-specificity: 检查不同 $q_h$ 诱导的 hidden states 是否可分，而不是全部退化为
-  shared representation。
-- Error-by-horizon: 不只报告平均 MSE/MAE，要报告 horizon position 或 segment 层面的
-  error profile。
+### Phase1-A 候选
+
+Phase1-A 使用 one-to-one horizon training。每个 horizon 单独训练，避免把 decoder
+有效性与 mixed-horizon optimization 混在一起。
+
+候选模型：
+
+| Model | 作用 |
+| --- | --- |
+| `PatchEncoderFixedHead` | Phase0 selected base |
+| `PatchEncoderSegmentQueryHead` | 用 future segment queries 替代 fixed flatten head |
+| `PatchEncoderHorizonConditionedHead` | 可选，对 fixed head 加 horizon/segment conditioning |
+
+第一轮不引入 MoE，不引入 teacher future branch。
+
+### Phase1-A 通过条件
+
+- 在 one-to-one setting 下，MSE/MAE 不低于 fixed head，最好在 ETTm1 或 Weather 上提升。
+- segment-wise MSE 更均衡，或在远端 horizon segment 上有明确改善。
+- 参数量提升需要受控；若参数增加明显，必须加入 dense parameter-control。
+- decoder-side states 不能完全退化为同质表示，需要通过 state similarity 或 segment
+  sensitivity 诊断。
+
+### Phase1-B: One-Model Compatibility Gate
+
+只有 Phase1-A 通过后，才进入 one-model compatibility：
+
+1. `train H=720, evaluate prefixes`;
+2. `mixed horizon training`，从 `{96,192,336,720}` 采样 horizon；
+3. 检查 prefix consistency、short-prefix MSE 和 full-horizon MSE。
+
+[Inference] 如果 Phase1-A 无法优于 fixed head，则 one-model for all horizons 没有继续
+投入的必要；如果 Phase1-A 有收益，Phase1-B 才能检验该 decoder 是否自然支持
+multi-horizon deployment。
 
 ## 创新点二：Future-Aware Mechanism
 
@@ -144,75 +242,71 @@ horizon-invariance 必须同时检查。
 history 和 future query 推断的 future latent space。
 
 TimeAlign 提供了关键启发：训练时可以用 future-side reconstruction branch 得到
-$H_y$，再约束 prediction branch 的 $H_x$ 靠近 future-side representation。ProtoTS
-和 TIMEPERCEIVER 则提示 future pattern / target query 可以成为 decoder 的显式接口。
+$S_H^{teacher}$，再约束 prediction branch 的 $S_H^{student}$ 靠近 future-side
+representation。ProtoTS 和 TIMEPERCEIVER 则提示 future pattern / target query 可以
+成为 decoder 的显式接口。
 
 ### 候选数学形式
 
-训练时可以定义 teacher future state：
+训练时定义 teacher future state：
 
 $$
-S_H^{teacher} = T_\psi(Y_{1:H}, Q_H),
+S_H^{teacher}=T_\psi(Y_{1:H},Q_H),
 $$
 
 推理可用的 student future state：
 
 $$
-S_H^{student} = P_\theta(Z, Q_H).
+S_H^{student}=P_\theta(U_H).
 $$
 
-future-aware loss 不是替代 forecasting loss，而是约束二者的 latent alignment：
+总 loss：
 
 $$
 \mathcal{L}
 =
-\mathcal{L}_{pred}(\hat{Y}, Y)
+\mathcal{L}_{pred}(\hat{Y},Y)
 +
-\lambda \mathcal{L}_{align}(S_H^{student}, \text{stopgrad}(S_H^{teacher})).
+\lambda \mathcal{L}_{align}(S_H^{student},\text{stopgrad}(S_H^{teacher})).
 $$
 
-这里的关键边界是：
+关键边界：
 
 - $S_H^{teacher}$ 只在训练时出现。
-- $S_H^{student}$ 必须只依赖 $X$、$Q_H$ 或允许的 covariates。
-- alignment 的目标应是 future distribution / pattern，而不是复制 $Y$ 的数值本身。
+- $S_H^{student}$ 必须只依赖 $X$、$Z$、$Q_H$ 或允许的 covariates。
+- alignment 应约束 future pattern / distribution，而不是直接复制 $Y$ 的数值。
 
-### 与 variable-horizon decoder 的对齐
+### 与 Future-Segment Decoder 的对齐
 
-[Hypothesis] future-aware 机制最适合约束 decoder 的 query-side hidden states，而不是
-只约束 encoder output $Z$。原因是 $Z$ 是 history-level state，而未来差异主要发生在
-$h=1,\ldots,H$ 的 target positions 或 horizon segments 上。
+[Hypothesis] future-aware signal 最适合落在 decoder-side future segment states 上，
+而不是只约束 encoder output $Z$。原因是 $Z$ 是 history-level state，而预测困难主要
+在 $h=1,\ldots,H$ 的 future positions 或 segments 上展开。
 
-因此更合理的数据流是：
+因此 Phase2 的默认接入点是：
 
 $$
-U_H = A_\theta(Q_H, Z),
+U_H = A_\theta(Z,Q_H),
 \quad
-S_H = P_\theta(U_H),
+S_H^{student}=P_\theta(U_H),
 \quad
-\hat{Y}_{1:H} = O_\theta(U_H, S_H).
+\hat{Y}_{1:H}=O_\theta(U_H,S_H^{student}).
 $$
 
-这使 future-aware signal 与 variable-horizon decoder 在同一张量层面对齐：
-它们都作用于 future query states，而不是分别附着在不相干模块上。
+### Phase2 通过条件
 
-### 必要诊断
+- alignment distance 下降，同时 forecast-relevant metrics 改善。
+- 改善可以定位到特定 horizon segment、turning point、high-frequency component 或
+  long-horizon error。
+- 推理路径通过 leakage audit：去掉 teacher branch 后完全不依赖 $Y$。
+- 如果 latent metric 改善但 forecast 不变，则 future-aware state 只能视为无效 proxy。
 
-- Alignment quality: $S_H^{student}$ 与 $S_H^{teacher}$ 的距离是否下降。
-- Forecast relevance: alignment 改善是否对应 high-frequency、turning point 或远端
-  horizon error 改善。
-- Leakage audit: 去掉 teacher branch 后推理路径是否完全不依赖 $Y$。
-- Proxy check: 如果 alignment 只改善 latent metric 但不改善 forecast，说明
-  future-aware state 可能只是无效 proxy。
-
-## 创新点三：MoE-Style Conditional Architecture
+## 创新点三：Future-Side MoE
 
 ### 问题
 
-[Inference] MoE 的必要性不能只由“不同样本需要不同专家”来支撑。对本项目更强的论证是：
-variable horizon 和 future-aware state 已经把预测过程分解为多个 future query /
-segment states；这些 states 可能对应不同 temporal mechanisms，因此需要 conditional
-operators。
+[Inference] MoE 的必要性不能只由“不同样本需要不同专家”支撑。对本项目更强的论证是：
+Future-Segment Decoder 已经把预测过程分解为多个 future segment states；这些 states
+可能对应不同 temporal mechanisms，因此 conditional operators 应该放在 future side。
 
 这与 Seg-MoE、AME-TS、MoHETS、TFPS、DTAF 的共同证据一致：
 
@@ -223,26 +317,22 @@ operators。
 
 ### 候选数据流
 
-把 routing 放在 future query / segment state 上，而不是随意放在 encoder token 上：
+把 routing 放在 future segment state 上：
 
 $$
-r_h = \text{Router}_\theta(U_h, S_h, q_h),
-\quad
-\tilde{U}_h = \sum_{k=1}^{K} r_{h,k} E_k(U_h),
-\quad
-\hat{Y}_h = O_\theta(\tilde{U}_h).
+r_j=\text{Router}_\theta(U_j,S_j,q_j),
 $$
 
-如果使用 segment routing，则：
+$$
+\tilde{U}_j=\sum_{k=1}^{K}r_{j,k}E_k(U_j),
+$$
 
 $$
-r_j = \text{Router}_\theta(U_{a_j:b_j}, S_{a_j:b_j}),
-\quad
-\tilde{U}_{a_j:b_j} = \sum_{k=1}^{K} r_{j,k} E_k(U_{a_j:b_j}).
+\hat{Y}_{a_j:b_j}=O_\theta(\tilde{U}_j).
 $$
 
 这个位置比 input-token MoE 更符合本项目主张：expert 选择直接对应未来预测机制，而不是
-只对过去 token 做条件变换。
+只对过去 tokens 做条件变换。
 
 ### Expert 的合理角色
 
@@ -251,160 +341,98 @@ $$
 - `TrendOperator`: 偏向低频趋势或 smooth projection。
 - `SeasonalOperator`: 偏向 periodic / frequency structure。
 - `LocalResidualOperator`: 偏向短期扰动和 residual correction。
-- `LinearStateOperator`: 作为低参数、可解释的 state transition baseline。
+- `LinearStateOperator`: 作为低参数 state transition baseline。
 
-[Inference] 这些 operator bias 不必一开始全部实现。第一阶段可以先用同构 lightweight
-experts 验证 routing 位置，再在有证据时引入 heterogeneous experts。
+[Inference] 这些 operator bias 不必一开始全部实现。Phase3 可以先用 lightweight
+homogeneous experts 验证 routing 位置，再在有证据时引入 heterogeneous experts。
 
-### 与前两个创新点的对齐
+### Phase3 通过条件
 
-MoE 不应作为第三个孤立模块。它必须回答：
-
-1. variable-horizon decoder 产生的 $U_H$ 是否存在 horizon/segment-specific
-   mechanism difference？
-2. future-aware state $S_H$ 是否能提供比 raw history state 更稳定的 routing signal？
-3. routing pattern 是否与 horizon error、future state cluster 或 temporal regime 有对应关系？
-
-如果这些问题没有证据支持，MoE 只能算参数扩张，不能算核心创新。
-
-### 必要诊断
-
-- Routing entropy: expert 使用是否塌缩或完全平均。
-- Horizon-routing relation: 不同 horizon segment 是否形成可解释 routing pattern。
-- State-routing relation: routing 是否与 future-aware state 的 cluster/trajectory 有一致性。
-- Expert ablation: 去掉某类 expert 或固定 routing 后，哪些 horizon 或 regime 受损。
-- Parameter-control: 与同参数 dense model 比较，排除“只是参数更多”的解释。
-
-## 三者的候选统一框架
-
-当前最稳的候选不是一次性定义最终模型，而是保留一个可逐级开启的框架：
-
-$$
-Z = E_\theta(X),
-$$
-
-$$
-U_H = A_\theta(Q_H, Z, M_H),
-$$
-
-$$
-S_H = P_\theta(U_H),
-$$
-
-$$
-\tilde{U}_H = \text{MoE}_\theta(U_H, S_H, Q_H),
-$$
-
-$$
-\hat{Y}_{1:H} = O_\theta(\tilde{U}_H).
-$$
-
-训练时可选 teacher branch：
-
-$$
-S_H^{teacher}=T_\psi(Y_{1:H}, Q_H),
-\quad
-\mathcal{L}_{align}(S_H, S_H^{teacher}).
-$$
-
-这个统一框架的逻辑是：
-
-1. $Q_H$ 解决 future position 被隐式处理的问题。
-2. $M_H$ 约束 variable-horizon inference 的前缀一致性。
-3. $S_H$ 让 future-aware signal 落在 future query state 上。
-4. MoE 以 $U_H$、$S_H$、$Q_H$ 为 routing evidence，服务于 future mechanism 分化。
-
-[Speculative] 如果后续实验显示 $S_H$ 对 routing 没有帮助，则 future-aware 与 MoE 应分离；
-如果 $Q_H$ 已经足够解释 horizon 差异，则 MoE 可能只需要作为 segment-level adapter；
-如果 horizon-invariance 与 future-aware alignment 冲突，则需要重新设计 mask 或 teacher
-state 的粒度。
+- MoE 改善不能只来自参数量，必须对比 same-parameter dense control。
+- routing entropy 不能塌缩，也不能完全平均。
+- routing pattern 应与 future segment、future-aware state cluster 或 error profile 有
+  对应关系。
+- fixed routing、random routing、no future-state routing 应作为 ablations。
 
 ## 分阶段收敛计划
 
 ### Phase 0：建立可证伪基线
 
-目标：不要先发明复杂模型，先证明当前问题确实存在。
+状态：已完成。
 
-- 实现或接入 `FixedHead` baseline。
-- 定义 multi-horizon protocol：同一模型覆盖多个 $H$，或最长 $H_{max}$ 下评估多个
-  prefix horizons。
-- 记录 error-by-horizon、prefix consistency、parameter count。
-- Baseline selection 见 `docs/experiments/phase0-baseline-selection.md`：当前推荐
-  `PatchTST-style channel-independent patch encoder + FixedHead` 作为 internal base，
-  `DLinear` 作为 sanity floor，`SRSNet` 作为重点 external comparison。
-- Experiment protocol 见 `docs/experiments/phase0-experiment-protocol.md`；当前 Phase 0
-  gate 比较 `DLinear`、`PatchEncoderFixedHead`、`SegTSFTDenseFixedHead`，dataset matrix
-  为 ETTh2、ETTm1、Weather，horizon matrix 为 `{96,192,336,720}`。
-- Phase 0 gate 与 targeted controls 完成后，`PatchEncoderFixedHead` 被选为 canonical
-  internal base。它是 clean PatchTST-style base，不作为 exact PatchTST reproduction。
- Selected-base seed-variance lite 已完成：
-  `PatchEncoderFixedHead × {ETTh2, ETTm1, Weather} × {96,720} × {2021,2022,2023}`，
-  最大 MSE CV 为 `2.47%`。Phase 1 可以从 `PatchEncoderFixedHead` 开始。
-  Prefix consistency diagnostic 已完成：`h720` prefix 在 `Weather / 96` 上相对
-  horizon-specific fixed head 劣化 `+4.79%` MSE，固定 head 之间的 prefix prediction mismatch
-  最高为 `0.044742` MSE。因此 fixed direct head 暴露了可量化 variable-horizon 问题。
+结论：
 
-通过条件：
+- canonical internal base: `PatchEncoderFixedHead`。
+- fixed head 有可量化 prefix issue，但不足以单独支撑 variable-horizon 主线。
+- segment oracle 显示 h720 全局平均最强，但局部 segment 存在不同 checkpoint 最优。
+- Phase1 应从 future-side decoder 的 one-to-one gate 开始。
 
-- 固定 head 在 variable-horizon 或 prefix consistency 上暴露可量化问题。
-- 如果问题不存在，后续 decoder 创新需要重新论证。
+关键文档：
 
-### Phase 1：Variable-Horizon Decoder Gate
+- `docs/experiments/phase0-baseline-selection.md`
+- `docs/experiments/phase0-experiment-protocol.md`
+- `analysis/phase0_prefix_consistency_report_20260621.md`
+- `analysis/phase0_segment_oracle_20260621/phase0_segment_oracle_summary_zh.md`
 
-目标：验证 future query / structured mask 是否是必要改动。
+### Phase 1：Future-Segment Decoder Gate
 
-- 对比 `FixedHead`、`QueryDecoder`、`SegmentQueryDecoder`。
-- 不引入 MoE，不引入 teacher future branch。
-- 重点看 prefix consistency、远端 horizon error、短端 horizon 是否被牺牲。
+目标：验证 future segment states 是否比 fixed flatten head 更合理。
 
-通过条件：
+Phase1-A:
 
-- query/segment decoder 在至少一个核心 dataset 上改善 horizon stability，且不靠明显增加参数。
+- one-to-one horizon training；
+- datasets: 先用 ETTh2、ETTm1、Weather；
+- horizons: `{96,192,336,720}`；
+- 对比 `PatchEncoderFixedHead`、`PatchEncoderSegmentQueryHead`，可选
+  `PatchEncoderHorizonConditionedHead`；
+- 不引入 MoE，不引入 future teacher branch。
+
+Phase1-B:
+
+- 仅在 Phase1-A 通过后执行；
+- 检查 `train H=720, evaluate prefixes` 和 mixed-horizon training；
+- 目标是 one-model compatibility，不是主效果 claim。
 
 ### Phase 2：Future-Aware Gate
 
 目标：验证 training-only future state 是否提供有效监督。
 
-- 在最稳 decoder 上加入 teacher future branch。
-- 对比 no-alignment、latent alignment、可能的 frequency/segment alignment。
+- 在 Phase1-A 最稳 decoder 上加入 teacher future branch。
+- 对比 no-alignment、latent alignment、segment-level alignment。
 - 严格检查推理路径无 future leakage。
 
-通过条件：
-
-- alignment 改善 forecast-relevant metrics，而不只是 latent distance。
-- 改善应能定位到特定 horizon 或 pattern，而不是平均指标微弱波动。
-
-### Phase 3：MoE Gate
+### Phase 3：Future-Side MoE Gate
 
 目标：验证 conditional operators 是否必要，以及 routing 是否与 future state 对齐。
 
-- 首先在 future query / segment state 上放轻量 MoE。
+- 首先在 future segment states 上放轻量 MoE。
 - 对比 dense parameter-control、fixed routing、random routing、no future-state routing。
 - 若 routing 有证据，再探索 heterogeneous operators。
 
-通过条件：
-
-- MoE 改善不能只来自参数量。
-- routing diagnostics 与 horizon segment、future-aware state 或 error profile 有对应关系。
-
 ### Phase 4：统一模型与论文主张
 
-目标：只把通过 gate 的机制合并成最终模型。
+目标：只合并通过 gate 的机制。
 
-- 若三者均有效：形成 unified variable-horizon future-aware MoE framework。
-- 若 future-aware 有效但 MoE 无效：论文主张应收敛到 decoder + future-state learning。
-- 若 MoE 有效但 alignment 无效：论文主张应收敛到 horizon-conditioned conditional operator。
-- 若 decoder gate 不通过：整个项目不应继续围绕 variable-horizon 讲故事。
+- 若 decoder、future-aware、MoE 都有效：形成 unified future-segment forecasting framework。
+- 若 decoder + future-aware 有效但 MoE 无效：论文主张收敛为 future-side decoder with
+  future-state alignment。
+- 若 decoder + MoE 有效但 alignment 无效：论文主张收敛为 future-side conditional
+  operators。
+- 若 decoder gate 不通过：项目不应继续围绕 decoder 讲故事，应回到 future-aware 或
+  external baseline reproduction。
 
 ## 当前不应冒进的点
 
 - 不应直接把 12 篇文献的模块全部堆进一个模型。
+- 不应把 ElasTST 式 variable-horizon 作为默认主线。
+- 不应一开始做 one-model for all horizons，并把结果作为 decoder 成败判断。
+- 不应把 rolling autoregression 作为主创新；它只能是 baseline 或 diagnostic。
 - 不应把 handcrafted descriptors 放入主路径，除非后续有明确证据和用户批准。
 - 不应默认 future covariates 可用，因为 benchmark protocol 未必支持。
 - 不应直接迁移旧仓库结果作为当前证据。
 - 不应在没有 parameter-control 和 routing diagnostics 时宣称 MoE 是机制贡献。
-- 不应只报告平均 MSE/MAE；本路线的核心证据必须包含 horizon-level 和 routing-level
-  diagnostics。
+- 不应只报告平均 MSE/MAE；本路线的核心证据必须包含 segment-level、horizon-level
+  和 routing-level diagnostics。
 
 ## Baseline 边界
 
