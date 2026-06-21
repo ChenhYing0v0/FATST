@@ -1,0 +1,2 @@
+scope,delta_mse_to_base,delta_mae_to_base,mean_abs_gamma,mean_abs_beta,delta_to_base_mae_ratio
+all,0.47519785165786743,0.43216559290885925,0.5294046401977539,0.01799919269979,0.42043671011924744

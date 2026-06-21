@@ -244,6 +244,10 @@ def write_report(
     fixed_wins = sum(1 for row in vs_fixed if row["future_passes_mse"])
     adapter_wins = sum(1 for row in vs_adapter if row["future_passes_mse"])
     leakage = max(row["prediction_leakage_max_abs"] for row in alignment_rows)
+    recon_by_dataset = {
+        dataset: float(np.mean([row["reconstruction_loss"] for row in alignment_rows if row["dataset"] == dataset]))
+        for dataset in DATASETS
+    }
     decision, reason = decision_label(vs_fixed, alignment_rows)
 
     lines = [
@@ -265,7 +269,16 @@ def write_report(
         "",
         f"[Evidence] leakage audit max abs prediction difference: `{leakage:.8f}`。",
         "",
+        "[Evidence] mean reconstruction loss by dataset: "
+        + ", ".join(f"`{dataset}={value:.4f}`" for dataset, value in recon_by_dataset.items())
+        + ".",
+        "",
         f"[Decision] `{decision}`: {reason}",
+        "",
+        "[Decision] 当前结果不应直接作为论文核心 claim。它说明 teacher/student alignment",
+        "在无 leakage 条件下可运行，但 first candidate 没有稳定提升 fixed head；同时 Weather",
+        "的 reconstruction loss 明显失衡，下一步若修补，应优先做 scale-normalized reconstruction",
+        "或降低/移除 reconstruction weight，而不是扩大 teacher branch。",
         "",
         "## 图像",
         "",

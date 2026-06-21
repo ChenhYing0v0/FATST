@@ -1,25 +1,28 @@
 {
   "phase": "phase1",
   "objective": "Evaluate whether future-side decoder interfaces can improve the Phase0 selected patch encoder before adding future-aware alignment or MoE.",
-  "status": "phase1a_third_candidate_ready",
+  "status": "phase1a_third_candidate_partial_pass",
   "decision_reports": [
     "analysis/phase1_segment_decoder_gate_20260621/phase1_segment_decoder_gate_report.md",
-    "analysis/phase1_fixed_adapter_gate_20260621/phase1_fixed_adapter_gate_report.md"
+    "analysis/phase1_fixed_adapter_gate_20260621/phase1_fixed_adapter_gate_report.md",
+    "analysis/phase1_future_aware_adapter_gate_20260621/phase1_future_aware_adapter_gate_report.md"
   ],
   "latest_decision": {
-    "candidate": "PatchEncoderFixedHeadAdapter",
+    "candidate": "PatchEncoderFutureAwareAdapter",
     "status": "partial_pass_not_paper_core",
-    "main_wins": "7/12",
-    "segment_wins": "15/30",
-    "relative_mse_change_range": ["-2.02%", "+3.74%"],
-    "mean_relative_mse_change": "+0.20%",
-    "mean_delta_to_base_mae_ratio": "0.3200",
-    "rollback_step": "Step 3-5: re-evaluate whether history-only future decoder is sufficient and move to future-aware alignment.",
-    "next_direction": "Use FixedHeadAdapter evidence as interface support, but do not treat it as the core decoder claim; next candidate should add training-only future-aware teacher/student alignment."
+    "vs_fixed_main_wins": "4/12",
+    "vs_adapter_main_wins": "5/12",
+    "mean_relative_mse_vs_fixed": "+0.16%",
+    "mean_relative_mse_vs_adapter": "-0.01%",
+    "max_prediction_leakage_abs": "0.0",
+    "mean_teacher_student_cosine": "0.4287",
+    "issue": "Weather reconstruction loss is scale-imbalanced and reaches hundreds to >1000, likely over-weighting the teacher reconstruction objective.",
+    "rollback_step": "Step 5-6: repair theoretical feasibility and method design for normalized future-aware supervision.",
+    "next_direction": "Try scale-normalized reconstruction or smaller/zero reconstruction weight before abandoning future-aware alignment."
   },
   "active_candidate": {
     "candidate": "PatchEncoderFutureAwareAdapter",
-    "status": "ready_for_phase1a3_gate",
+    "status": "partial_pass_needs_repair",
     "problem": "History-only future segment adapter is active but not stable enough; test whether training-only future teacher supervision stabilizes the future-side interface.",
     "hypothesis": "A teacher branch that encodes ground-truth future only during training can align student adapter states to future distribution without inference leakage.",
     "pass_condition": "Leakage max abs <= 1e-7; at least 6/12 main MSE wins versus PatchEncoderFixedHead with negative mean relative MSE; alignment diagnostics must show active teacher/student coupling."

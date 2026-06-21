@@ -403,3 +403,44 @@ Phase1-A.3 通过需要同时满足：
 
 如果只超过 `PatchEncoderFixedHeadAdapter` 但不能超过 fixed head，只能说明 alignment
 修补了 adapter，不足以成为论文核心。
+
+## Phase1-A.3 结果
+
+[Fact] 远程 gate 已完成，结果报告见：
+`analysis/phase1_future_aware_adapter_gate_20260621/phase1_future_aware_adapter_gate_report.md`。
+
+[Evidence] `PatchEncoderFutureAwareAdapter` 相比 `PatchEncoderFixedHead`：
+
+- main MSE wins: `4/12`；
+- mean relative MSE: `+0.16%`；
+- relative MSE range: `-2.32%` 到 `+2.41%`。
+
+[Evidence] 相比 `PatchEncoderFixedHeadAdapter`：
+
+- main MSE wins: `5/12`；
+- mean relative MSE: `-0.01%`。
+
+[Strong Evidence] leakage audit 通过：
+
+- `max_prediction_leakage_abs = 0.0`。
+
+[Evidence] teacher/student state 发生了有效耦合：
+
+- mean teacher/student cosine: `0.4287`。
+
+[Decision] 该结果为 `partial_pass`，不是完整通过。它说明：
+
+1. training-only future branch 在工程和 leakage 边界上成立；
+2. teacher/student alignment 有实际作用；
+3. 但当前设置没有稳定超过 fixed head，因此还不能作为论文核心机制。
+
+[Diagnosis] 当前最明确的修补点是 reconstruction loss 的尺度失衡。Weather 的 mean
+reconstruction loss 约为 `645.08`，而 ETTh2 约为 `1.05`、ETTm1 约为 `0.40`。
+这说明 $\mathcal{L}_{recon}$ 在不同 dataset 上不可比，`recon_weight=0.05` 可能在
+Weather 上显著压过 prediction objective。
+
+[Next] 下一步不应扩大 teacher branch。应回到长研究模板第 5-6 步，修补理论可行性和方案：
+
+- `ScaleNormalizedRecon`: 用 target energy 或 segment energy 归一化 reconstruction loss；
+- 或 `AlignOnly`: 暂时设置 `recon_weight=0`，只保留 teacher state alignment；
+- 对二者做小矩阵 gate，先验证 Weather 退化是否来自 reconstruction scale。

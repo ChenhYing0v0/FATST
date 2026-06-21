@@ -10,6 +10,35 @@ DTAF、SRP++、Seg-MoE、MoHETS。
 收敛为一个可证伪的 research program：哪些机制值得继续，哪些机制只是诊断入口，
 以及每一阶段应该如何避免把多个变量混在一起解释。
 
+## 长研究执行模板
+
+[Decision] 本项目后续所有长研究阶段固定使用以下闭环，而不是按“先实现、再解释”的
+方式推进：
+
+1. 调研分析。
+2. 提出待解决问题。
+3. 评估问题是否值得研究，以及问题是否真实存在。
+4. 提出 idea。
+5. 评估 idea 的理论可行性。
+6. 设计具体方案与实验协议。
+7. 实现方案。
+8. 远程训练。
+9. 评估结果。
+10. 判断是否通过：同时看 performance evidence 和 paper narrative 是否成立。
+11. 若不通过，评估应回退至哪一步，然后继续循环。
+
+该模板是本路线图的执行边界：
+
+- step 1-3 决定一个问题是否进入实现，而不是默认所有直觉都值得做实验；
+- step 4-6 必须先形成可证伪假设、数学数据流和实验协议，再进入 coding；
+- step 7-9 只负责产生可审计 evidence，不自动构成通过；
+- step 10 必须同时判断指标收益、机制解释和论文故事；
+- step 11 必须给出明确 rollback point，例如回到问题定义、理论可行性、方案设计或实现细节。
+
+[Inference] 对当前 roadmap 而言，这意味着 `Future-Segment Decoder`、
+`Future-Aware Mechanism` 和 `Future-Side MoE` 不是三段顺序堆叠的模块，而是三个候选
+research loops。一个 loop 未通过时，应先判断回退点，而不是继续把下一个机制叠上去。
+
 [Strong Evidence] 经过 Phase0 baseline gate、targeted controls、seed variance、
 prefix consistency 和 segment-wise checkpoint oracle 后，`PatchEncoderFixedHead`
 被选为 Phase1 的 canonical internal base。固定 direct head 暴露了可量化问题，但
@@ -468,6 +497,30 @@ Phase1-A.3 通过条件：
 - 相比 `PatchEncoderFixedHead` 至少 `6/12` main MSE wins；
 - mean relative MSE < 0；
 - alignment diagnostics 显示 teacher/student state 发生有效耦合。
+
+[Fact] Phase1-A.3 `PatchEncoderFutureAwareAdapter` 已完成：
+`analysis/phase1_future_aware_adapter_gate_20260621/phase1_future_aware_adapter_gate_report.md`。
+
+[Evidence] 结果为：
+
+- vs `PatchEncoderFixedHead`: main MSE wins `4/12`，mean relative MSE `+0.16%`；
+- vs `PatchEncoderFixedHeadAdapter`: main MSE wins `5/12`，mean relative MSE `-0.01%`；
+- leakage audit: `max_prediction_leakage_abs = 0.0`；
+- mean teacher/student cosine: `0.4287`。
+
+[Decision] Phase1-A.3 是 `partial_pass`，不是 paper-core pass。它证明 future-aware
+teacher/student alignment 可以在无泄漏条件下运行并实际耦合 student state，但当前性能
+证据不足。
+
+[Diagnosis] 第一轮 future-aware 方案暴露了 reconstruction loss scale imbalance：
+Weather 的 reconstruction loss 约 `645.08`，显著高于 ETTh2 的 `1.05` 和 ETTm1 的
+`0.40`。这会让同一个 `recon_weight=0.05` 在不同 dataset 上产生完全不同的优化压力。
+
+[Next] 不应直接扩大模型。下一步应做最小修补 gate：
+
+- `ScaleNormalizedRecon`: 将 $\mathcal{L}_{recon}$ 按 target/segment energy 归一化；
+- `AlignOnly`: 设置 `recon_weight=0`，检验是否 alignment 本身足够；
+- 如果两者仍不能稳定超过 fixed head，再考虑转向新架构或重新定义 future-aware claim。
 
 Phase1-B:
 
