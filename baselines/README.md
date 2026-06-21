@@ -20,6 +20,16 @@ Phase 0 当前包含三个独立候选：
 每个候选目录都有自己的 `dataset.py`、`model.py`、`train.py`，避免后续复刻时由共享
 训练代码引入隐性差异。
 
+## Phase 1 Candidates
+
+Phase 1 当前新增一个 decoder-side candidate：
+
+- `patch_encoder_segment_query_head/`
+  - 保留 Phase0 patch encoder
+  - 用 future segment queries + cross-attention 替换 fixed flatten head
+  - one-to-one horizon training，用于 `Future-Segment Decoder Gate`
+  - 不包含 future teacher branch 或 MoE
+
 当前重点 comparison baseline：
 
 - SRSNet

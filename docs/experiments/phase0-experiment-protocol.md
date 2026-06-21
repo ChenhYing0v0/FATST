@@ -436,7 +436,7 @@ upstream code before final comparison claims.
 `PatchEncoderFixedHead × {ETTh2, ETTm1, Weather} × {96,720} × {2021,2022,2023}`.
 
 [Strong Evidence] The largest observed MSE CV is `2.47%` on `Weather / 720`, so Phase0 is finalized
-and Phase1 Variable-Horizon Decoder experiments can start from `PatchEncoderFixedHead`.
+and Phase1 Future-Segment Decoder experiments can start from `PatchEncoderFixedHead`.
 
 [Strong Evidence] Prefix consistency diagnostic is complete. The h720 prefix is up to `+4.79%` MSE
 worse than the horizon-specific fixed head on `Weather / 96`, and direct fixed-head prediction
@@ -448,7 +448,7 @@ forecast interval split into 48-step segments, the `pred_len=720` checkpoint has
 MSE on ETTh2, ETTm1, and Weather, but it is not segment-wise dominant. Winner counts are:
 ETTh2 `h192=4, h336=1, h720=10`; ETTm1 `h96=2, h336=5, h720=8`; Weather
 `h96=3, h192=2, h720=10`. This supports a Phase1 decoder that can adapt readout behavior by
-requested horizon or forecast segment, instead of relying on a single fixed direct head.
+forecast segment, while one-model for all horizons remains a later compatibility gate.
 
 ### Continue to Phase 1 if:
 

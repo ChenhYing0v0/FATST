@@ -3,3 +3,13 @@
 保存项目工具脚本。
 
 脚本应尽量可重复运行，并在 destructive 或 expensive 操作前显式提示或要求确认。
+
+## Remote Runners
+
+- `remote/run_phase0_gate.sh`: Phase0 baseline gate。
+- `remote/run_phase0_controls.sh`: Phase0 targeted controls。
+- `remote/run_phase0_patch_seed_variance.sh`: selected-base seed variance。
+- `remote/run_phase1_segment_decoder_gate.sh`: Phase1-A `Future-Segment Decoder Gate`。
+
+远程实验前仍必须先检查 `529_Lab-3090` 的 GPU 占用；runner 中的 `nvidia-smi`
+输出只作为启动时记录，不替代人工选择 GPU。

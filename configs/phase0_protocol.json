@@ -12,7 +12,7 @@
       "analysis/phase0_prefix_consistency_report_20260621.md",
       "analysis/phase0_segment_oracle_20260621/phase0_segment_oracle_summary_zh.md"
     ],
-    "phase0_conclusion": "PatchEncoderFixedHead is the canonical internal base. Fixed direct heads expose moderate but measurable prefix inconsistency and segment-wise checkpoint oracle variation, supporting Phase1 Variable-Horizon Decoder experiments."
+    "phase0_conclusion": "PatchEncoderFixedHead is the canonical internal base. Fixed direct heads expose moderate but measurable prefix inconsistency and segment-wise checkpoint oracle variation. Phase1 should start from one-to-one Future-Segment Decoder experiments, while one-model compatibility remains a later gate."
   },
   "paths": {
     "local_dataset_root": "/Users/river/PaperResearch/Project/datasets",

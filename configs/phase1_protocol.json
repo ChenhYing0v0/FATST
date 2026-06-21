@@ -1,0 +1,49 @@
+{
+  "phase": "phase1",
+  "objective": "Evaluate whether future segment query states improve the Phase0 selected patch encoder before adding future-aware alignment or MoE.",
+  "status": "ready_for_gate",
+  "decision_boundary": {
+    "phase1a": "one-to-one horizon training; validates decoder-side mechanism only",
+    "phase1b": "one-model compatibility; run only if Phase1-A passes"
+  },
+  "paths": {
+    "local_dataset_root": "/Users/river/PaperResearch/Project/datasets",
+    "remote_dataset_root": "/home/yingch/dataset",
+    "local_smoke_root": "artifacts/runs/smoke_phase1",
+    "remote_artifact_root": "/home/yingch/exp_outputs/r-2026-fatst/phase1_future_segment",
+    "remote_log_root": "/home/yingch/exp_outputs/r-2026-fatst/phase1_future_segment/_logs/phase1_segment_decoder_gate"
+  },
+  "datasets": ["ETTh2", "ETTm1", "Weather"],
+  "horizons": [96, 192, 336, 720],
+  "seq_len": 336,
+  "primary_seed": 2021,
+  "models": {
+    "PatchEncoderFixedHead": {
+      "role": "phase0_selected_base",
+      "train_script": "baselines/patch_encoder_fixed_head/train.py"
+    },
+    "PatchEncoderSegmentQueryHead": {
+      "role": "phase1a_candidate",
+      "train_script": "baselines/patch_encoder_segment_query_head/train.py",
+      "segment_len": 48,
+      "decoder_layers": 1,
+      "decoder_heads": 8,
+      "decoder_d_ff": 256
+    }
+  },
+  "metrics": {
+    "primary": ["mse", "mae"],
+    "diagnostics": [
+      "metrics_by_horizon",
+      "metrics_by_segment",
+      "segment_query_similarity",
+      "parameter_count"
+    ]
+  },
+  "remote": {
+    "host": "529_Lab-3090",
+    "conda_env": "moe",
+    "runner": "scripts/remote/run_phase1_segment_decoder_gate.sh",
+    "gpu_policy": "check nvidia-smi before every run; prefer GPU 1 or 2 when memory is safe; GPU_IDS may contain one or two selected GPUs"
+  }
+}
