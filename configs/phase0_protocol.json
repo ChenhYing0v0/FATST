@@ -3,13 +3,15 @@
   "objective": "Select and validate PatchEncoderFixedHead as the clean internal base before mechanism experiments.",
   "decision": {
     "selected_internal_base": "PatchEncoderFixedHead",
-    "status": "finalized_after_seed_variance_lite",
+    "status": "complete",
     "decision_reports": [
       "analysis/phase0_gate_results_20260620.md",
       "analysis/phase0_followup_rerun_and_paper_gap_20260620.md",
       "analysis/phase0_controls_results_20260620.md",
-      "analysis/phase0_patch_seed_variance_report_20260621.md"
-    ]
+      "analysis/phase0_patch_seed_variance_report_20260621.md",
+      "analysis/phase0_prefix_consistency_report_20260621.md"
+    ],
+    "phase0_conclusion": "PatchEncoderFixedHead is the canonical internal base. Fixed direct heads expose moderate but measurable prefix inconsistency, supporting Phase1 Variable-Horizon Decoder experiments."
   },
   "paths": {
     "local_dataset_root": "/Users/river/PaperResearch/Project/datasets",

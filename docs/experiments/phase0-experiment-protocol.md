@@ -438,6 +438,11 @@ upstream code before final comparison claims.
 [Strong Evidence] The largest observed MSE CV is `2.47%` on `Weather / 720`, so Phase0 is finalized
 and Phase1 Variable-Horizon Decoder experiments can start from `PatchEncoderFixedHead`.
 
+[Strong Evidence] Prefix consistency diagnostic is complete. The h720 prefix is up to `+4.79%` MSE
+worse than the horizon-specific fixed head on `Weather / 96`, and direct fixed-head prediction
+mismatch reaches `0.044742` MSE on `ETTm1 / 192`. This is a measurable fixed-head
+variable-horizon problem, not a data alignment issue (`truth_alignment_mse = 0.0`).
+
 ### Continue to Phase 1 if:
 
 - `PatchEncoderFixedHead` is consistently stronger than or competitive with `DLinear`.
