@@ -522,6 +522,48 @@ Weather 的 reconstruction loss 约 `645.08`，显著高于 ETTh2 的 `1.05` 和
 - `AlignOnly`: 设置 `recon_weight=0`，检验是否 alignment 本身足够；
 - 如果两者仍不能稳定超过 fixed head，再考虑转向新架构或重新定义 future-aware claim。
 
+Phase1-A.4 当前执行候选：
+
+- `PatchEncoderFutureAwareAlignOnly`。
+- `PatchEncoderFutureAwareScaleNorm`。
+
+[Decision] Phase1-A.4 是对 Phase1-A.3 的 step 5-6 rollback，而不是新一轮模型扩容。
+它只回答一个具体问题：future-aware alignment 的失败是否主要来自
+$\mathcal{L}_{recon}$ 的尺度不可比。
+
+`AlignOnly` 的训练目标为：
+
+$$
+\mathcal{L}
+=
+\mathcal{L}_{pred}
++\lambda_{align}\mathcal{L}_{align}.
+$$
+
+`ScaleNorm` 的 reconstruction objective 为：
+
+$$
+\mathcal{L}_{recon}^{norm}
+=
+\frac{
+\operatorname{MSE}(\hat{Y}^{teacher,norm},Y^{norm})
+}{
+\operatorname{mean}((Y^{norm})^2)+\epsilon
+}.
+$$
+
+Phase1-A.4 通过条件：
+
+- 所有 repair candidates 的 `prediction_leakage_max_abs <= 1e-7`；
+- 最优 repair candidate 相比 `PatchEncoderFixedHead` 至少 `6/12` main MSE wins；
+- mean relative MSE < 0；
+- teacher/student coupling 仍存在，且 normalized reconstruction loss 不再被 Weather
+  的 raw scale 主导。
+
+[Inference] 若 Phase1-A.4 仍不能达到通过条件，则 future-aware adapter 方向应降级：
+它可作为 diagnostic evidence，但不应作为论文核心。下一步应回到 step 3-5 重新判断
+“future latent state alignment” 是否是正确问题，或转向更基础的 decoder/state architecture。
+
 Phase1-B:
 
 - 仅在 Phase1-A 通过后执行；

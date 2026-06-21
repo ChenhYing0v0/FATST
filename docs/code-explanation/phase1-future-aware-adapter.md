@@ -126,6 +126,22 @@ $$
 =\operatorname{MSE}(\hat{Y}^{teacher,norm},Y^{norm}).
 $$
 
+Phase1-A.4 repair 额外支持 scale-normalized reconstruction：
+
+$$
+\mathcal{L}_{recon}^{norm}
+=
+\frac{
+\operatorname{MSE}(\hat{Y}^{teacher,norm},Y^{norm})
+}{
+\operatorname{mean}((Y^{norm})^2)+\epsilon
+}.
+$$
+
+该项通过 `--recon-normalization target_energy` 启用。默认仍为 `none`，以保持
+Phase1-A.3 artifact 可解释。`--recon-weight 0` 对应 `AlignOnly` control：teacher
+branch 仍构造 future state 和 diagnostics，但 reconstruction loss 不进入训练目标。
+
 训练总 loss：
 
 $$
@@ -146,7 +162,9 @@ branch 只增加 diagnostic tensors 和 auxiliary losses，不参与 prediction 
 训练脚本写入 `future_alignment_stats.csv`：
 
 - `alignment_loss`: teacher/student state alignment loss。
-- `reconstruction_loss`: teacher branch reconstruction MSE。
+- `reconstruction_loss`: 实际进入 training objective 的 teacher reconstruction loss；
+  在 `target_energy` 下是归一化后的值。
+- `raw_reconstruction_loss`: 未归一化 teacher reconstruction MSE。
 - `teacher_student_cosine`: normalized teacher/student state cosine。
 - `prediction_leakage_max_abs`: `forward(x)` 与 `forward(x,y)` prediction 最大绝对差。
 
@@ -166,6 +184,7 @@ Code realization:
 - `_teacher_state` 只在 `y is not None` 时执行；
 - `teacher_state.detach()` 用于 alignment，避免 teacher 被 alignment loss 拉向 student；
 - `teacher_reconstruction_head` 通过 reconstruction loss 保持 teacher state 的 future meaning；
+- `recon_normalization` 只影响 auxiliary loss 尺度，不改变 inference prediction path；
 - `future_alignment_stats.csv` 显式审计 leakage。
 
 Still proxy:

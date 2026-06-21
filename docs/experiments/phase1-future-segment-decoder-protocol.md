@@ -444,3 +444,89 @@ Weather 上显著压过 prediction objective。
 - `ScaleNormalizedRecon`: 用 target energy 或 segment energy 归一化 reconstruction loss；
 - 或 `AlignOnly`: 暂时设置 `recon_weight=0`，只保留 teacher state alignment；
 - 对二者做小矩阵 gate，先验证 Weather 退化是否来自 reconstruction scale。
+
+## Phase1-A.4 Repair Gate 设计
+
+### 待解决问题
+
+[Fact] Phase1-A.3 的 teacher/student coupling 与 leakage boundary 成立，但
+`reconstruction_loss` 在不同 dataset 上不可比。Weather 的 reconstruction loss 约为
+ETTh2 的数百倍，这会让同一个 `recon_weight=0.05` 在不同数据集上代表完全不同的
+optimization pressure。
+
+[Hypothesis] 如果 future-aware supervision 本身有价值，那么修正 auxiliary loss 尺度后，
+forecasting performance 应至少不再被 Weather 系统性拖累；如果修正后仍不稳定，则问题
+可能不在 loss scale，而在 teacher state 与 prediction objective 的对齐方式。
+
+### 候选 idea
+
+`AlignOnly`：
+
+$$
+\mathcal{L}
+=
+\mathcal{L}_{pred}
++\lambda_{align}\mathcal{L}_{align}.
+$$
+
+该候选保留 teacher state 和 alignment，但不让 reconstruction loss 进入训练目标。
+它回答：teacher reconstruction 是否反而干扰了 forecasting。
+
+`ScaleNorm`：
+
+$$
+\mathcal{L}_{recon}^{norm}
+=
+\frac{
+\operatorname{MSE}(\hat{Y}^{teacher,norm},Y^{norm})
+}{
+\operatorname{mean}((Y^{norm})^2)+\epsilon
+},
+$$
+
+$$
+\mathcal{L}
+=
+\mathcal{L}_{pred}
++\lambda_{align}\mathcal{L}_{align}
++\lambda_{recon}\mathcal{L}_{recon}^{norm}.
+$$
+
+该候选回答：reconstruction branch 是否仍需要保留，只是要按 target energy 校准尺度。
+
+### 实验设计
+
+对比模型：
+
+- `PatchEncoderFixedHead`
+- `PatchEncoderFixedHeadAdapter`
+- `PatchEncoderFutureAwareAlignOnly`
+- `PatchEncoderFutureAwareScaleNorm`
+
+实验矩阵：
+
+- datasets: `ETTh2`, `ETTm1`, `Weather`
+- horizons: `96`, `192`, `336`, `720`
+- seed: `2021`
+- epochs: `100`
+
+远程 runner：
+
+- `scripts/remote/run_phase1_future_aware_repair_gate.sh`
+
+分析脚本：
+
+- `scripts/analyze_phase1_future_aware_repair_gate.py`
+
+### 通过条件
+
+Phase1-A.4 通过需要：
+
+1. [Leakage] 所有 future-aware repair candidates 的 `prediction_leakage_max_abs <= 1e-7`。
+2. [Performance] 最优 repair candidate 相比 `PatchEncoderFixedHead` 至少 `6/12`
+   main MSE wins，且 mean relative MSE < 0。
+3. [Mechanism] teacher/student cosine 显示 alignment 仍有效；`ScaleNorm` 的
+   `raw_reconstruction_loss` 可以大，但 `reconstruction_loss` 应变成可比尺度。
+
+如果只达到 `repair_partial`，则说明 future-aware 方向仍有机制信号，但不足以作为论文核心；
+下一步应回到长研究模板第 3-5 步，重新评估 future-aware claim 的问题定义或转向新架构。

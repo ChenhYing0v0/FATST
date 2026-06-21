@@ -12,6 +12,13 @@
 - `remote/run_phase1_segment_decoder_gate.sh`: Phase1-A `Future-Segment Decoder Gate`。
 - `remote/run_phase1_fixed_adapter_gate.sh`: Phase1-A.2 `Fixed-Head Adapter Gate`。
 - `remote/run_phase1_future_aware_adapter_gate.sh`: Phase1-A.3 `Future-Aware Adapter Gate`。
+- `remote/run_phase1_future_aware_repair_gate.sh`: Phase1-A.4 `Future-Aware Repair Gate`，
+  对比 `AlignOnly` 与 `ScaleNorm`。
+
+## Analysis
+
+- `analyze_phase1_future_aware_repair_gate.py`: 汇总 Phase1-A.4 repair gate 的
+  metrics、alignment diagnostics、delta stats、heatmap 和中文报告。
 
 远程实验前仍必须先检查 `529_Lab-3090` 的 GPU 占用；runner 中的 `nvidia-smi`
 输出只作为启动时记录，不替代人工选择 GPU。

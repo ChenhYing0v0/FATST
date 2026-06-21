@@ -87,12 +87,16 @@ class PatchEncoderFutureAwareAdapter(nn.Module):
         teacher_layers: int = 1,
         teacher_heads: int = 8,
         teacher_d_ff: int = 256,
+        recon_normalization: str = "none",
+        recon_eps: float = 1e-6,
     ) -> None:
         super().__init__()
         if segment_len <= 0:
             raise ValueError("segment_len must be positive.")
         if pred_len <= 0:
             raise ValueError("pred_len must be positive.")
+        if recon_normalization not in {"none", "target_energy"}:
+            raise ValueError("recon_normalization must be one of: none, target_energy.")
 
         self.seq_len = seq_len
         self.pred_len = pred_len
@@ -102,6 +106,8 @@ class PatchEncoderFutureAwareAdapter(nn.Module):
         self.segment_len = segment_len
         self.num_segments = math.ceil(pred_len / segment_len)
         self.revin = RevIN(channels, affine=False) if revin else None
+        self.recon_normalization = recon_normalization
+        self.recon_eps = recon_eps
 
         self.padding_patch = nn.ReplicationPad1d((0, stride))
         self.patch_embedding = nn.Linear(patch_len, d_model)
@@ -242,7 +248,12 @@ class PatchEncoderFutureAwareAdapter(nn.Module):
                 dim=-1,
             ).mean()
             target_flat = y_target_norm.permute(0, 2, 1).reshape(batch * channels, self.pred_len)
-            recon_loss = F.mse_loss(recon_norm, target_flat)
+            raw_recon_loss = F.mse_loss(recon_norm, target_flat)
+            if self.recon_normalization == "target_energy":
+                target_energy = target_flat.detach().pow(2).mean().clamp_min(self.recon_eps)
+                recon_loss = raw_recon_loss / target_energy
+            else:
+                recon_loss = raw_recon_loss
             output.update(
                 {
                     "teacher_state": teacher_state,
@@ -250,6 +261,7 @@ class PatchEncoderFutureAwareAdapter(nn.Module):
                     "teacher_reconstruction_norm": recon_norm.reshape(batch, channels, self.pred_len).permute(0, 2, 1),
                     "alignment_loss": align_loss,
                     "reconstruction_loss": recon_loss,
+                    "raw_reconstruction_loss": raw_recon_loss,
                 }
             )
 

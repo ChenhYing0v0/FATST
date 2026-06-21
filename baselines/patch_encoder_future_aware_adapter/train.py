@@ -107,6 +107,7 @@ def future_alignment_stats(
     model.eval()
     align_losses = []
     recon_losses = []
+    raw_recon_losses = []
     leakage_values = []
     cosines = []
     with torch.no_grad():
@@ -122,6 +123,7 @@ def future_alignment_stats(
             )
             align_losses.append(float(with_future["alignment_loss"].detach().cpu()))
             recon_losses.append(float(with_future["reconstruction_loss"].detach().cpu()))
+            raw_recon_losses.append(float(with_future["raw_reconstruction_loss"].detach().cpu()))
             student = torch.nn.functional.normalize(with_future["student_aligned_state"], dim=-1)
             teacher = torch.nn.functional.normalize(with_future["teacher_state"], dim=-1)
             cosines.append(float((student * teacher).sum(dim=-1).mean().detach().cpu()))
@@ -132,6 +134,7 @@ def future_alignment_stats(
             "scope": "test",
             "alignment_loss": float(np.mean(align_losses)),
             "reconstruction_loss": float(np.mean(recon_losses)),
+            "raw_reconstruction_loss": float(np.mean(raw_recon_losses)),
             "teacher_student_cosine": float(np.mean(cosines)),
             "prediction_leakage_max_abs": float(np.max(leakage_values)),
         }
@@ -188,6 +191,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--teacher-d-ff", type=int, default=256)
     parser.add_argument("--align-weight", type=float, default=0.05)
     parser.add_argument("--recon-weight", type=float, default=0.05)
+    parser.add_argument("--recon-normalization", choices=["none", "target_energy"], default="none")
     parser.add_argument("--batch-size", type=int, default=128)
     parser.add_argument("--epochs", type=int, default=1)
     parser.add_argument("--learning-rate", type=float, default=1e-4)
@@ -234,6 +238,7 @@ def main() -> None:
         teacher_layers=args.teacher_layers,
         teacher_heads=args.teacher_heads,
         teacher_d_ff=args.teacher_d_ff,
+        recon_normalization=args.recon_normalization,
     ).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
     criterion = nn.MSELoss()
@@ -251,6 +256,7 @@ def main() -> None:
         pred_losses = []
         align_losses = []
         recon_losses = []
+        raw_recon_losses = []
         for batch_index, (x, y) in enumerate(train_loader, start=1):
             x = x.float().to(device)
             y = y.float().to(device)
@@ -262,6 +268,7 @@ def main() -> None:
             pred_loss = criterion(pred, y)
             align_loss = output["alignment_loss"]
             recon_loss = output["reconstruction_loss"]
+            raw_recon_loss = output["raw_reconstruction_loss"]
             loss = pred_loss + args.align_weight * align_loss + args.recon_weight * recon_loss
             loss.backward()
             optimizer.step()
@@ -269,6 +276,7 @@ def main() -> None:
             pred_losses.append(float(pred_loss.detach().cpu()))
             align_losses.append(float(align_loss.detach().cpu()))
             recon_losses.append(float(recon_loss.detach().cpu()))
+            raw_recon_losses.append(float(raw_recon_loss.detach().cpu()))
             if args.max_train_batches is not None and batch_index >= args.max_train_batches:
                 break
 
@@ -279,6 +287,7 @@ def main() -> None:
             "train_pred_loss": float(np.mean(pred_losses)),
             "train_alignment_loss": float(np.mean(align_losses)),
             "train_reconstruction_loss": float(np.mean(recon_losses)),
+            "train_raw_reconstruction_loss": float(np.mean(raw_recon_losses)),
             **val_metrics,
         }
         log_rows.append(row)
