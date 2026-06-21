@@ -307,3 +307,99 @@ Phase1-A.2 通过至少需要满足：
 - 训练时加入 future teacher branch；
 - 用 teacher/student alignment 约束 adapter state 或 affine residual；
 - 推理时只保留 history-derived student path，严格做 leakage audit。
+
+## Phase1-A.3: Future-Aware Adapter Gate
+
+### 问题定义
+
+[Fact] Phase1-A.2 说明 history-only future segment adapter 已经会实际修正 base prediction，
+但它的收益不稳定，平均 MSE 仍为正退化。
+
+[Hypothesis] 问题可能不在 future-side interface 本身，而在该 interface 只由历史窗口
+和 learnable queries 学习，缺少关于 future distribution 的训练信号。TimeAlign 的证据
+提示：训练阶段可以用 ground-truth future 构造 teacher representation，再约束预测分支的
+student representation 向 future distribution 靠近。
+
+### 候选模型
+
+`PatchEncoderFutureAwareAdapter` 保留 Phase1-A.2 的推理路径：
+
+$$
+X \rightarrow Z \rightarrow \hat{Y}^{base}, U^{student}, \gamma,\beta
+\rightarrow \hat{Y}.
+$$
+
+训练时额外构造 teacher：
+
+$$
+S^{teacher}=T_\psi(Y_{1:H},Q_H),
+$$
+
+并把 student adapter state 投影后对齐到 stop-gradient teacher：
+
+$$
+S^{student}=P_\theta(U^{student}),
+$$
+
+$$
+\mathcal{L}_{align}
+=1-\cos(S^{student},\operatorname{sg}(S^{teacher})).
+$$
+
+teacher branch 还需要重构 normalized future：
+
+$$
+\hat{Y}^{teacher}=R_\psi(S^{teacher}),
+\quad
+\mathcal{L}_{recon}=\operatorname{MSE}(\hat{Y}^{teacher},Y^{norm}).
+$$
+
+总 loss：
+
+$$
+\mathcal{L}
+=
+\mathcal{L}_{pred}
++\lambda_{align}\mathcal{L}_{align}
++\lambda_{recon}\mathcal{L}_{recon}.
+$$
+
+默认第一轮：
+
+- `align_weight = 0.05`
+- `recon_weight = 0.05`
+- `segment_len = 48`
+- teacher branch 只在 training / diagnostic 中执行
+
+### Leakage Audit
+
+必须验证：
+
+$$
+f_\theta(X) = f_\theta(X,Y)
+$$
+
+其中右侧的 $Y$ 只能用于诊断输出 teacher loss，不允许改变 `prediction`。
+
+训练脚本写入：
+
+- `future_alignment_stats.csv`
+  - `alignment_loss`
+  - `reconstruction_loss`
+  - `teacher_student_cosine`
+  - `prediction_leakage_max_abs`
+
+`prediction_leakage_max_abs > 1e-7` 直接判定失败。
+
+### 通过条件
+
+Phase1-A.3 通过需要同时满足：
+
+1. [Leakage] `prediction_leakage_max_abs <= 1e-7`。
+2. [Performance] 相比 `PatchEncoderFixedHead` 至少 `6/12` main MSE wins 且 mean relative
+   MSE < 0。
+3. [Mechanism] teacher/student cosine 或 alignment loss 证明 student state 确实受到
+   future teacher 约束；若 forecast 改善但 alignment 不工作，论文故事不成立。
+
+如果只超过 `PatchEncoderFixedHeadAdapter` 但不能超过 fixed head，只能说明 alignment
+修补了 adapter，不足以成为论文核心。

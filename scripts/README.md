@@ -11,6 +11,7 @@
 - `remote/run_phase0_patch_seed_variance.sh`: selected-base seed variance。
 - `remote/run_phase1_segment_decoder_gate.sh`: Phase1-A `Future-Segment Decoder Gate`。
 - `remote/run_phase1_fixed_adapter_gate.sh`: Phase1-A.2 `Fixed-Head Adapter Gate`。
+- `remote/run_phase1_future_aware_adapter_gate.sh`: Phase1-A.3 `Future-Aware Adapter Gate`。
 
 远程实验前仍必须先检查 `529_Lab-3090` 的 GPU 占用；runner 中的 `nvidia-smi`
 输出只作为启动时记录，不替代人工选择 GPU。

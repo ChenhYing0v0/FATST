@@ -447,6 +447,28 @@ segment adapter 难以稳定提升性能。
 用 training-only future signal 学习可推理的 future latent state，并检验这种 supervision
 是否能把 adapter/interface 从弱修正变成稳定机制收益。
 
+Phase1-A.3 当前执行候选：
+
+- `PatchEncoderFutureAwareAdapter`。
+- 推理路径与 `PatchEncoderFixedHeadAdapter` 一致，不接收 future target。
+- 训练时额外编码 ground-truth future segment 得到 $S^{teacher}$。
+- history-derived adapter state 经过 projection 得到 $S^{student}$。
+- 使用 $\mathcal{L}_{align}$ 约束 $S^{student}$ 靠近 stop-gradient teacher。
+- 使用 $\mathcal{L}_{recon}$ 防止 teacher branch 变成无意义 anchor。
+
+第一轮默认：
+
+- `align_weight = 0.05`
+- `recon_weight = 0.05`
+- `segment_len = 48`
+
+Phase1-A.3 通过条件：
+
+- `prediction_leakage_max_abs <= 1e-7`；
+- 相比 `PatchEncoderFixedHead` 至少 `6/12` main MSE wins；
+- mean relative MSE < 0；
+- alignment diagnostics 显示 teacher/student state 发生有效耦合。
+
 Phase1-B:
 
 - 仅在 Phase1-A 通过后执行；

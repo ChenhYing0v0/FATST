@@ -34,6 +34,11 @@ Phase 1 当前新增一个 decoder-side candidate：
   - 用 future segment queries 生成 zero-initialized affine adapter
   - 用于 Phase1-A.2，检验 future-side interface 是否能在不删除 fixed readout
     capacity 的前提下提供收益
+- `patch_encoder_future_aware_adapter/`
+  - 保留 `patch_encoder_fixed_head_adapter` 的推理路径
+  - 训练时加入 future teacher branch 和 teacher/student alignment
+  - 用于 Phase1-A.3，检验 training-only future signal 是否能把 weak adapter
+    interface 转化为稳定收益
 
 当前重点 comparison baseline：
 
