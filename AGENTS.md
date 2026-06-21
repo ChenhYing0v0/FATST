@@ -104,6 +104,28 @@ Always use the global helper under `~/.codex/scripts/`.
   used for paper claims should still be reproduced in their native upstream
   repositories before any local comparison or adaptation.
 
+## Long Research Execution Loop
+
+For this project, long research stages should follow this loop and record the
+current step in protocol documents, experiment reports, or decision summaries:
+
+1. Research and analyze existing work.
+2. Propose the specific problem to solve.
+3. Evaluate whether the problem is real and worth studying.
+4. Propose the core idea.
+5. Evaluate the idea's theoretical feasibility.
+6. Design the concrete method and experiment plan.
+7. Implement the method.
+8. Run remote training when needed.
+9. Evaluate results from artifacts.
+10. Decide whether the idea passes as a performance and paper-story candidate.
+11. If it fails, decide which earlier step to return to, then continue the loop.
+
+The loop is not a formality. A mechanism should not advance merely because code
+exists; it advances only when the evidence supports both model performance and
+a credible paper narrative. If the evidence is weak, choose an explicit rollback
+point instead of continuing to stack mechanisms.
+
 
 ## Remote Experiment Policy
 
