@@ -568,3 +568,85 @@ Phase1-A.4 通过需要：
 [Rollback] 按长研究模板，应回到 step 3-5：重新评估当前问题定义是否值得研究，以及
 future-aware signal 是否应通过更基础的 decoder/state architecture 承载，而不是继续修补
 当前 affine adapter。
+
+## Phase1-A.5: Step-Specific State Decoder Reset
+
+[Fact] 详细 reset 文档见：
+`docs/experiments/phase1-step-specific-state-decoder-reset.md`。
+
+[Decision] Phase1-A.5 不再继续修补 post-head affine adapter，也不直接叠加 MoE。
+它回到长研究模板 step 1-6，重新定义一个更具体的问题：
+
+> fixed head 是否把所有 future steps 绑定到同一个 history representation，使不同 future
+> segments 只能通过 output rows 区分，而不能在进入 readout 前形成 step/segment-specific
+> representations？
+
+### 理论动机
+
+[Strong Evidence] SRP++ 指出 multi-step forecasting 中 step-invariant representation 可能
+构成 expressiveness bottleneck。TIMEPERCEIVER 则说明 target positions 应进入 decoder
+computation，而不是只作为 output dimension。
+
+[Inference] 本项目 Phase1-A 的负结果与该判断一致：
+
+- `PatchEncoderSegmentQueryHead` 失败，说明不能删除 fixed head 的 dense readout capacity；
+- `PatchEncoderFixedHeadAdapter` 和 future-aware repair 只得到 partial result，说明 post-head
+  correction 太靠后；
+- 因此下一步应保留 fixed head rows，但在 readout 前构造 segment-specific representation。
+
+### 候选模型
+
+下一候选暂命名为 `PatchEncoderStepSpecificStateAdapter`：
+
+$$
+Z=E_\theta(X),
+$$
+
+$$
+U_j=A_\theta(q_j,Z),
+$$
+
+$$
+\tilde{Z}_j=Z\odot(1+\gamma_j)+\beta_j,
+$$
+
+$$
+\hat{Y}_{a_j:b_j}=W_{a_j:b_j}\operatorname{Flatten}(\tilde{Z}_j).
+$$
+
+其中：
+
+- $q_j$ 是 future segment query；
+- $U_j$ 是 future segment state；
+- $\gamma_j,\beta_j \in \mathbb{R}^{d}$，由 $U_j$ 生成；
+- $W_{a_j:b_j}$ 复用 fixed head 对应 segment 的 readout rows；
+- $\gamma_j,\beta_j$ zero initialization，使初始 forward 等价于 fixed head。
+
+### 第一版 gate
+
+对比模型：
+
+- `PatchEncoderFixedHead`
+- `PatchEncoderFixedHeadAdapter`
+- `PatchEncoderStepSpecificStateAdapter`
+
+实验矩阵保持不变：
+
+- datasets: `ETTh2`, `ETTm1`, `Weather`
+- horizons: `96`, `192`, `336`, `720`
+- seed: `2021`
+- segment length: `48`
+
+通过条件：
+
+1. [Performance] 相比 `PatchEncoderFixedHead` 至少 `6/12` main MSE wins，且 mean relative
+   MSE < 0。
+2. [Stability] 不出现任一 dataset 全 horizon 系统性退化。
+3. [Mechanism] segment-conditioned $\gamma,\beta$ 或 $\tilde{Z}_j-Z$ 的统计不能完全退化；
+   segment state similarity 需要显示可分性。
+4. [Capacity control] 参数量应与 `PatchEncoderFixedHeadAdapter` 可比；否则必须加入
+   parameter-control。
+
+[Boundary] 只有 Phase1-A.5 通过后，future-aware alignment 才应该重新进入；届时应对齐
+$U_j$ 或 $\tilde{Z}_j$，而不是继续对齐 post-head adapter。MoE 也只能作为
+$T_\theta(Z,U_j)$ 的 conditional operator 进入，而不是作为失败 decoder 的参数补偿。
