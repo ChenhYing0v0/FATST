@@ -564,6 +564,35 @@ Phase1-A.4 通过条件：
 它可作为 diagnostic evidence，但不应作为论文核心。下一步应回到 step 3-5 重新判断
 “future latent state alignment” 是否是正确问题，或转向更基础的 decoder/state architecture。
 
+[Fact] Phase1-A.4 已完成：
+`analysis/phase1_future_aware_repair_gate_20260622/phase1_future_aware_repair_gate_report.md`。
+
+[Evidence] 结果为：
+
+- `PatchEncoderFutureAwareAlignOnly` vs `PatchEncoderFixedHead`: wins `4/12`，
+  mean relative MSE `+0.04%`；
+- `PatchEncoderFutureAwareScaleNorm` vs `PatchEncoderFixedHead`: wins `4/12`，
+  mean relative MSE `+0.12%`；
+- `AlignOnly` vs `PatchEncoderFixedHeadAdapter`: wins `5/12`，mean relative MSE `-0.13%`；
+- `ScaleNorm` vs `PatchEncoderFixedHeadAdapter`: wins `5/12`，mean relative MSE `-0.05%`；
+- leakage audit 全部为 `0.0`；
+- mean teacher/student cosine 为 `0.3313`。
+
+[Strong Evidence] `ScaleNorm` 确实修正了 reconstruction loss 尺度：Weather raw
+reconstruction loss 仍为数百到上千，但 normalized reconstruction loss 约为 `0.33-0.57`。
+因此，Phase1-A.4 不是因为修补无效而失败，而是因为修补后 forecasting performance 仍不稳定。
+
+[Decision] Phase1-A.4 是 `repair_partial`，不是 pass。当前 future-aware adapter 可作为
+机制诊断，但不能作为论文核心创新。特别是 Weather 四个 horizon 均未超过 fixed head，
+说明该机制没有解决跨数据集稳定性问题。
+
+[Rollback] 不应在该 adapter 上继续叠加 MoE。下一步回到长研究模板 step 3-5：
+
+1. 重新判断 “teacher/student future latent alignment” 是否是真正值得研究的问题；
+2. 若保留 future-aware 主张，应重新设计承载它的 future-side state architecture；
+3. 若转向 decoder 主线，应从 prediction process / state transition 的底层形式重新设计，
+   而不是继续在 fixed-head output 后做 affine correction。
+
 Phase1-B:
 
 - 仅在 Phase1-A 通过后执行；

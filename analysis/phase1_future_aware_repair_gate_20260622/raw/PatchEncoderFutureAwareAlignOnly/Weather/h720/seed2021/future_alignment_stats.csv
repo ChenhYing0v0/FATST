@@ -1,0 +1,2 @@
+scope,alignment_loss,reconstruction_loss,raw_reconstruction_loss,teacher_student_cosine,prediction_leakage_max_abs
+test,0.6976488580951443,1135.6356871406754,1135.6356871406754,0.3023511225526983,0.0

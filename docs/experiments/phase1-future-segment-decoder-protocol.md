@@ -530,3 +530,41 @@ Phase1-A.4 通过需要：
 
 如果只达到 `repair_partial`，则说明 future-aware 方向仍有机制信号，但不足以作为论文核心；
 下一步应回到长研究模板第 3-5 步，重新评估 future-aware claim 的问题定义或转向新架构。
+
+## Phase1-A.4 结果
+
+[Fact] 远程 repair gate 已完成，结果报告见：
+`analysis/phase1_future_aware_repair_gate_20260622/phase1_future_aware_repair_gate_report.md`。
+
+[Evidence] `PatchEncoderFutureAwareAlignOnly` 是较好 repair candidate：
+
+- vs `PatchEncoderFixedHead`: main MSE wins `4/12`，mean relative MSE `+0.04%`；
+- vs `PatchEncoderFixedHeadAdapter`: main MSE wins `5/12`，mean relative MSE `-0.13%`；
+- leakage audit: `max_prediction_leakage_abs = 0.0`。
+
+[Evidence] `PatchEncoderFutureAwareScaleNorm` 修正了 reconstruction loss 尺度，但没有带来
+稳定性能收益：
+
+- vs `PatchEncoderFixedHead`: main MSE wins `4/12`，mean relative MSE `+0.12%`；
+- vs `PatchEncoderFixedHeadAdapter`: main MSE wins `5/12`，mean relative MSE `-0.05%`；
+- Weather raw reconstruction loss 仍可达数百到上千，但 normalized `reconstruction_loss`
+  已压到约 `0.33-0.57`，说明 scale normalization 生效。
+
+[Evidence] 聚合结构显示收益不稳定：
+
+- `AlignOnly` vs fixed by dataset: ETTh2 `-0.43%`，ETTm1 `+0.13%`，Weather `+0.44%`；
+- `ScaleNorm` vs fixed by dataset: ETTh2 `-0.38%`，ETTm1 `+0.39%`，Weather `+0.35%`；
+- 两个 repair 在 horizon `192` 和 `720` 平均改善，但在 `96` 和 `336` 平均退化；
+- Weather 的 4 个 horizon 对 fixed head 均未获胜。
+
+[Decision] Phase1-A.4 为 `repair_partial`，不是 pass。该结果说明：
+
+1. Phase1-A.3 的 scale imbalance 诊断是真问题；
+2. `ScaleNorm` 可以修正 auxiliary loss 的数值尺度；
+3. 但修正后仍不能稳定超过 fixed head，说明当前 future-aware adapter 的问题不只是
+   reconstruction scale；
+4. 该方向不应继续直接叠加 MoE 或增加 teacher capacity。
+
+[Rollback] 按长研究模板，应回到 step 3-5：重新评估当前问题定义是否值得研究，以及
+future-aware signal 是否应通过更基础的 decoder/state architecture 承载，而不是继续修补
+当前 affine adapter。

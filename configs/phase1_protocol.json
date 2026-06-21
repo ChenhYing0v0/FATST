@@ -1,31 +1,32 @@
 {
   "phase": "phase1",
   "objective": "Evaluate whether future-side decoder interfaces can improve the Phase0 selected patch encoder before adding future-aware alignment or MoE.",
-  "status": "phase1a4_repair_gate_ready",
+  "status": "phase1a4_repair_partial",
   "decision_reports": [
     "analysis/phase1_segment_decoder_gate_20260621/phase1_segment_decoder_gate_report.md",
     "analysis/phase1_fixed_adapter_gate_20260621/phase1_fixed_adapter_gate_report.md",
-    "analysis/phase1_future_aware_adapter_gate_20260621/phase1_future_aware_adapter_gate_report.md"
+    "analysis/phase1_future_aware_adapter_gate_20260621/phase1_future_aware_adapter_gate_report.md",
+    "analysis/phase1_future_aware_repair_gate_20260622/phase1_future_aware_repair_gate_report.md"
   ],
   "latest_decision": {
-    "candidate": "PatchEncoderFutureAwareAdapter",
-    "status": "partial_pass_not_paper_core",
+    "candidate": "PatchEncoderFutureAwareAlignOnly",
+    "status": "repair_partial_not_paper_core",
     "vs_fixed_main_wins": "4/12",
     "vs_adapter_main_wins": "5/12",
-    "mean_relative_mse_vs_fixed": "+0.16%",
-    "mean_relative_mse_vs_adapter": "-0.01%",
+    "mean_relative_mse_vs_fixed": "+0.04%",
+    "mean_relative_mse_vs_adapter": "-0.13%",
     "max_prediction_leakage_abs": "0.0",
-    "mean_teacher_student_cosine": "0.4287",
-    "issue": "Weather reconstruction loss is scale-imbalanced and reaches hundreds to >1000, likely over-weighting the teacher reconstruction objective.",
-    "rollback_step": "Step 5-6: repair theoretical feasibility and method design for normalized future-aware supervision.",
-    "next_direction": "Try scale-normalized reconstruction or smaller/zero reconstruction weight before abandoning future-aware alignment."
+    "mean_teacher_student_cosine": "0.3313",
+    "issue": "Scale-normalized reconstruction fixes auxiliary loss scale but does not produce stable gains over PatchEncoderFixedHead; Weather remains negative for both repair candidates.",
+    "rollback_step": "Step 3-5: re-evaluate whether this future-aware adapter problem formulation is worth keeping as a paper-core direction.",
+    "next_direction": "Do not stack MoE on this adapter. Pivot toward a more fundamental decoder/state architecture or redefine future-aware supervision beyond simple teacher/student alignment."
   },
   "active_candidate": {
-    "candidate": "Phase1-A.4 FutureAwareRepairGate",
-    "status": "ready_for_remote_gate",
-    "problem": "Phase1-A.3 proved leakage-safe teacher/student coupling but exposed reconstruction loss scale imbalance, especially on Weather.",
-    "hypothesis": "If future-aware supervision is valid, either target-energy normalized reconstruction or align-only supervision should remove the scale imbalance and improve fixed-head performance without changing inference inputs.",
-    "pass_condition": "Leakage max abs <= 1e-7; best repair candidate reaches at least 6/12 main MSE wins versus PatchEncoderFixedHead with negative mean relative MSE; diagnostics must show active teacher/student coupling and controlled raw/normalized reconstruction scale."
+    "candidate": "NextDecoderStateArchitecture",
+    "status": "needs_step_1_to_5_research",
+    "problem": "Fixed-head adapter and teacher/student future alignment are active but insufficiently stable. The next candidate should revisit the decoder/state architecture rather than add mechanisms on top of the current adapter.",
+    "hypothesis": "A stronger paper-core direction likely needs a future-side state transition or structured decoder that changes the prediction process itself, not only an affine adapter supervised by a future teacher.",
+    "pass_condition": "A new candidate must first define a specific measurable problem and theoretical data flow before implementation."
   },
   "decision_boundary": {
     "phase1a": "one-to-one horizon training; validates decoder-side mechanism only",

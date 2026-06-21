@@ -1,0 +1,44 @@
+{
+  "decision": "repair_partial",
+  "best_candidate": "PatchEncoderFutureAwareAlignOnly",
+  "decision_reason": "repair improves some settings but still lacks stable fixed-head gains.",
+  "max_prediction_leakage_abs": 0.0,
+  "vs_fixed": [
+    {
+      "candidate": "PatchEncoderFutureAwareAlignOnly",
+      "baseline": "PatchEncoderFixedHead",
+      "wins": 4,
+      "mean_relative_mse": 0.00044525802386355417,
+      "min_relative_mse": -0.021389920302057483,
+      "max_relative_mse": 0.014685738352381593
+    },
+    {
+      "candidate": "PatchEncoderFutureAwareScaleNorm",
+      "baseline": "PatchEncoderFixedHead",
+      "wins": 4,
+      "mean_relative_mse": 0.0012135785111428172,
+      "min_relative_mse": -0.022846153803626146,
+      "max_relative_mse": 0.024090939170912106
+    }
+  ],
+  "vs_adapter": [
+    {
+      "candidate": "PatchEncoderFutureAwareAlignOnly",
+      "baseline": "PatchEncoderFixedHeadAdapter",
+      "wins": 5,
+      "mean_relative_mse": -0.001280091461221665,
+      "min_relative_mse": -0.05667127015039231,
+      "max_relative_mse": 0.025394907622637464
+    },
+    {
+      "candidate": "PatchEncoderFutureAwareScaleNorm",
+      "baseline": "PatchEncoderFixedHeadAdapter",
+      "wins": 5,
+      "mean_relative_mse": -0.0005002514433241001,
+      "min_relative_mse": -0.0580750027788394,
+      "max_relative_mse": 0.02815460854917633
+    }
+  ],
+  "mean_teacher_student_cosine": 0.331322119552309,
+  "report": "analysis/phase1_future_aware_repair_gate_20260622/phase1_future_aware_repair_gate_report.md"
+}
