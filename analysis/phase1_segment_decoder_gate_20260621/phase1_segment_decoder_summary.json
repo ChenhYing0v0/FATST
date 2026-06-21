@@ -1,0 +1,16 @@
+{
+  "status": "failed",
+  "decision": "PatchEncoderSegmentQueryHead does not pass Phase1-A.",
+  "n_main_comparisons": 12,
+  "n_main_wins": 0,
+  "relative_mse_change_min": 0.021564442585332636,
+  "relative_mse_change_max": 0.15171587912166204,
+  "relative_mse_change_mean": 0.06794394982865923,
+  "n_segment_comparisons": 30,
+  "n_segment_wins": 0,
+  "segment_relative_mse_change_min": 0.006250296691298638,
+  "segment_relative_mse_change_max": 0.24008889021656446,
+  "segment_relative_mse_change_mean": 0.08087150406985397,
+  "rollback_step": "Step 5-6: theoretical feasibility and method design.",
+  "report": "analysis/phase1_segment_decoder_gate_20260621/phase1_segment_decoder_gate_report.md"
+}

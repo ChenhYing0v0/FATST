@@ -1,7 +1,20 @@
 {
   "phase": "phase1",
   "objective": "Evaluate whether future segment query states improve the Phase0 selected patch encoder before adding future-aware alignment or MoE.",
-  "status": "ready_for_gate",
+  "status": "phase1a_first_candidate_failed",
+  "decision_reports": [
+    "analysis/phase1_segment_decoder_gate_20260621/phase1_segment_decoder_gate_report.md"
+  ],
+  "latest_decision": {
+    "candidate": "PatchEncoderSegmentQueryHead",
+    "status": "failed",
+    "main_wins": "0/12",
+    "segment_wins": "0/30",
+    "relative_mse_change_range": ["+2.16%", "+15.17%"],
+    "mean_relative_mse_change": "+6.79%",
+    "rollback_step": "Step 5-6: theoretical feasibility and method design",
+    "next_direction": "Do not stack future-aware or MoE on this weak decoder; redesign with fixed-head capacity retained via FixedHeadAdapter or parameter-matched SegmentQueryDenseHead."
+  },
   "decision_boundary": {
     "phase1a": "one-to-one horizon training; validates decoder-side mechanism only",
     "phase1b": "one-model compatibility; run only if Phase1-A passes"

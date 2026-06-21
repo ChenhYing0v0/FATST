@@ -387,6 +387,23 @@ Phase1-A:
   `PatchEncoderHorizonConditionedHead`；
 - 不引入 MoE，不引入 future teacher branch。
 
+[Fact] 第一轮 `PatchEncoderSegmentQueryHead` 已完成并未通过：
+`analysis/phase1_segment_decoder_gate_20260621/phase1_segment_decoder_gate_report.md`。
+
+[Strong Evidence] 它在 12/12 个主指标设置和 30/30 个 segment-level 设置上均弱于
+`PatchEncoderFixedHead`，平均 MSE 退化 `+6.79%`。这说明简单地用 segment query
+cross-attention 替换 fixed flatten head 会损失 readout capacity。
+
+[Decision] Phase1 不进入 one-model compatibility，也不在当前 SegmentQueryHead 上叠加
+future-aware 或 MoE。当前应回退到第 5-6 步，重新设计保留 fixed-head capacity 的
+future-side interface。
+
+下一轮优先候选：
+
+- `FixedHeadAdapter`: 保留 fixed flatten head，只在 readout 前后加入 future-segment adapter。
+- `SegmentQueryDenseHead`: segment query 提供 conditioning，但每个 segment 保留更强 dense readout。
+- `StepQueryHead`: 更细粒度 step-level query，作为高成本备选。
+
 Phase1-B:
 
 - 仅在 Phase1-A 通过后执行；

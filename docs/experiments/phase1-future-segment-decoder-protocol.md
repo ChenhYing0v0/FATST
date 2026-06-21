@@ -155,3 +155,28 @@ Phase1-A 通过需要满足至少一类强证据：
 - prefix consistency and short-prefix MSE
 
 Phase1-B 的目标是检验 one-model compatibility，不是替代 Phase1-A 的机制验证。
+
+## Phase1-A 第一轮结果
+
+[Fact] 远程 gate 已完成，结果报告见：
+`analysis/phase1_segment_decoder_gate_20260621/phase1_segment_decoder_gate_report.md`。
+
+[Strong Evidence] `PatchEncoderSegmentQueryHead` 未通过：
+
+- main MSE comparison: `0/12` wins；
+- segment-level MSE comparison: `0/30` wins；
+- relative MSE degradation: `+2.16%` 到 `+15.17%`，平均 `+6.79%`。
+
+[Decision] 当前 `PatchEncoderSegmentQueryHead` 不能作为论文核心 decoder 创新点，也不能进入
+Phase1-B one-model compatibility。更不能在它上面直接叠加 future-aware 或 MoE，否则后续机制
+会变成补偿一个弱 decoder。
+
+[Rollback] 回退到长研究执行模板第 5-6 步：重新评估理论可行性并重新设计方案。
+
+下一轮候选应保留 fixed head 的强 readout capacity，只把 future-side interface 作为 adapter
+或 conditioning 加进去。优先考虑：
+
+1. `FixedHeadAdapter`: 保留 fixed flatten head，在 readout 前后加入轻量 future-segment adapter。
+2. `SegmentQueryDenseHead`: segment state 只负责 conditioning，每个 segment 仍保留
+   parameter-controlled dense readout。
+3. `StepQueryHead`: step-level query 作为更细粒度方案，但需要控制参数和计算量。
