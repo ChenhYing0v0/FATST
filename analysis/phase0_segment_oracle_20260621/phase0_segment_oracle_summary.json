@@ -1,0 +1,32 @@
+{
+  "metric_csv": "/home/yingch/exp_outputs/r-2026-fatst/phase0_segment_oracle/phase0_segment_oracle_metrics.csv",
+  "winner_csv": "/home/yingch/exp_outputs/r-2026-fatst/phase0_segment_oracle/phase0_segment_oracle_winners.csv",
+  "report_md": "/home/yingch/exp_outputs/r-2026-fatst/phase0_segment_oracle/phase0_segment_oracle_report.md",
+  "winner_counts": {
+    "ETTh2": {
+      "192": 4,
+      "720": 10,
+      "336": 1
+    },
+    "ETTm1": {
+      "96": 2,
+      "336": 5,
+      "720": 8
+    },
+    "Weather": {
+      "96": 3,
+      "192": 2,
+      "720": 10
+    }
+  },
+  "heatmaps": {
+    "ETTh2": "/home/yingch/exp_outputs/r-2026-fatst/phase0_segment_oracle/phase0_segment_oracle_ETTh2_mse_heatmap.png",
+    "ETTm1": "/home/yingch/exp_outputs/r-2026-fatst/phase0_segment_oracle/phase0_segment_oracle_ETTm1_mse_heatmap.png",
+    "Weather": "/home/yingch/exp_outputs/r-2026-fatst/phase0_segment_oracle/phase0_segment_oracle_Weather_mse_heatmap.png"
+  },
+  "gap_plots": {
+    "ETTh2": "/home/yingch/exp_outputs/r-2026-fatst/phase0_segment_oracle/phase0_segment_oracle_ETTh2_winner_margin.png",
+    "ETTm1": "/home/yingch/exp_outputs/r-2026-fatst/phase0_segment_oracle/phase0_segment_oracle_ETTm1_winner_margin.png",
+    "Weather": "/home/yingch/exp_outputs/r-2026-fatst/phase0_segment_oracle/phase0_segment_oracle_Weather_winner_margin.png"
+  }
+}

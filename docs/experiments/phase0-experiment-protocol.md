@@ -443,6 +443,13 @@ worse than the horizon-specific fixed head on `Weather / 96`, and direct fixed-h
 mismatch reaches `0.044742` MSE on `ETTm1 / 192`. This is a measurable fixed-head
 variable-horizon problem, not a data alignment issue (`truth_alignment_mse = 0.0`).
 
+[Strong Evidence] Segment-wise checkpoint oracle diagnostic is complete. Over the shared `0-720`
+forecast interval split into 48-step segments, the `pred_len=720` checkpoint has the best average
+MSE on ETTh2, ETTm1, and Weather, but it is not segment-wise dominant. Winner counts are:
+ETTh2 `h192=4, h336=1, h720=10`; ETTm1 `h96=2, h336=5, h720=8`; Weather
+`h96=3, h192=2, h720=10`. This supports a Phase1 decoder that can adapt readout behavior by
+requested horizon or forecast segment, instead of relying on a single fixed direct head.
+
 ### Continue to Phase 1 if:
 
 - `PatchEncoderFixedHead` is consistently stronger than or competitive with `DLinear`.
