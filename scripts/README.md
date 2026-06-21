@@ -13,7 +13,9 @@
 - `remote/run_phase1_fixed_adapter_gate.sh`: Phase1-A.2 `Fixed-Head Adapter Gate`。
 - `remote/run_phase1_future_aware_adapter_gate.sh`: Phase1-A.3 `Future-Aware Adapter Gate`。
 - `remote/run_phase1_future_aware_repair_gate.sh`: Phase1-A.4 `Future-Aware Repair Gate`，
-  对比 `AlignOnly` 与 `ScaleNorm`。
+  对比 `AlignOnly` 与 `ScaleNorm`。该 runner 默认用 `metrics.json` 判断已完成 run，
+  并删除 `checkpoint.pt` / `predictions_test.npz` 以避免 3090 quota 压力；如需保留，
+  显式设置 `KEEP_HEAVY_ARTIFACTS=1`。
 
 ## Analysis
 

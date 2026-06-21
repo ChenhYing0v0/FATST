@@ -11,6 +11,7 @@ SEED="${SEED:-2021}"
 EPOCHS="${EPOCHS:-100}"
 ALIGN_WEIGHT="${ALIGN_WEIGHT:-0.05}"
 RECON_WEIGHT="${RECON_WEIGHT:-0.05}"
+KEEP_HEAVY_ARTIFACTS="${KEEP_HEAVY_ARTIFACTS:-0}"
 
 mkdir -p "${LOG_ROOT}"
 
@@ -55,6 +56,7 @@ echo "seed=${SEED}"
 echo "epochs=${EPOCHS}"
 echo "align_weight=${ALIGN_WEIGHT}"
 echo "recon_weight=${RECON_WEIGHT}"
+echo "keep_heavy_artifacts=${KEEP_HEAVY_ARTIFACTS}"
 
 nvidia-smi --query-gpu=index,name,memory.total,memory.used,memory.free,utilization.gpu \
   --format=csv,noheader,nounits
@@ -69,7 +71,7 @@ run_one() {
   local run_dir="${OUTPUT_ROOT}/${model_name}/${dataset}/h${horizon}/seed${SEED}"
   local run_log="${LOG_ROOT}/${model_name}_${dataset}_h${horizon}_seed${SEED}.log"
 
-  if [[ -s "${run_dir}/metrics.json" && -s "${run_dir}/checkpoint.pt" ]]; then
+  if [[ -s "${run_dir}/metrics.json" ]]; then
     echo "skip_existing model=${model_name} dataset=${dataset} horizon=${horizon}"
     return 0
   fi
@@ -85,6 +87,9 @@ run_one() {
     --output-root "${OUTPUT_ROOT}" \
     --device cuda \
     ${extra_args} 2>&1 | tee "${run_log}"
+  if [[ "${KEEP_HEAVY_ARTIFACTS}" != "1" ]]; then
+    find "${run_dir}" -maxdepth 1 -type f \( -name "checkpoint.pt" -o -name "predictions_test.npz" \) -delete
+  fi
   echo "run_done=$(date -Is) model=${model_name} dataset=${dataset} horizon=${horizon} gpu=${gpu_id}"
 }
 
