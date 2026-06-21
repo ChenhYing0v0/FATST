@@ -1,7 +1,7 @@
 {
   "phase": "phase1",
-  "objective": "Evaluate whether future segment query states improve the Phase0 selected patch encoder before adding future-aware alignment or MoE.",
-  "status": "phase1a_first_candidate_failed",
+  "objective": "Evaluate whether future-side decoder interfaces can improve the Phase0 selected patch encoder before adding future-aware alignment or MoE.",
+  "status": "phase1a_second_candidate_ready",
   "decision_reports": [
     "analysis/phase1_segment_decoder_gate_20260621/phase1_segment_decoder_gate_report.md"
   ],
@@ -15,6 +15,13 @@
     "rollback_step": "Step 5-6: theoretical feasibility and method design",
     "next_direction": "Do not stack future-aware or MoE on this weak decoder; redesign with fixed-head capacity retained via FixedHeadAdapter or parameter-matched SegmentQueryDenseHead."
   },
+  "active_candidate": {
+    "candidate": "PatchEncoderFixedHeadAdapter",
+    "status": "ready_for_phase1a2_gate",
+    "problem": "SegmentQueryHead removed too much fixed-head readout capacity; test whether future-segment conditioning helps when fixed flatten readout remains the main path.",
+    "hypothesis": "A zero-initialized segment adapter can expose a future-side interface while preserving the strong fixed-head baseline path.",
+    "pass_condition": "At least 4/12 main MSE wins or clear segment-level improvements without broad degradation; adapter delta must be non-zero enough to rule out pure noise."
+  },
   "decision_boundary": {
     "phase1a": "one-to-one horizon training; validates decoder-side mechanism only",
     "phase1b": "one-model compatibility; run only if Phase1-A passes"
@@ -23,8 +30,8 @@
     "local_dataset_root": "/Users/river/PaperResearch/Project/datasets",
     "remote_dataset_root": "/home/yingch/dataset",
     "local_smoke_root": "artifacts/runs/smoke_phase1",
-    "remote_artifact_root": "/home/yingch/exp_outputs/r-2026-fatst/phase1_future_segment",
-    "remote_log_root": "/home/yingch/exp_outputs/r-2026-fatst/phase1_future_segment/_logs/phase1_segment_decoder_gate"
+    "remote_artifact_root": "/home/yingch/exp_outputs/r-2026-fatst/phase1_fixed_adapter",
+    "remote_log_root": "/home/yingch/exp_outputs/r-2026-fatst/phase1_fixed_adapter/_logs/phase1_fixed_adapter_gate"
   },
   "datasets": ["ETTh2", "ETTm1", "Weather"],
   "horizons": [96, 192, 336, 720],
@@ -42,6 +49,15 @@
       "decoder_layers": 1,
       "decoder_heads": 8,
       "decoder_d_ff": 256
+    },
+    "PatchEncoderFixedHeadAdapter": {
+      "role": "phase1a2_candidate",
+      "train_script": "baselines/patch_encoder_fixed_head_adapter/train.py",
+      "segment_len": 48,
+      "adapter_layers": 1,
+      "adapter_heads": 8,
+      "adapter_d_ff": 256,
+      "identity_initialization": true
     }
   },
   "metrics": {
@@ -50,13 +66,15 @@
       "metrics_by_horizon",
       "metrics_by_segment",
       "segment_query_similarity",
+      "adapter_delta_stats",
+      "adapter_query_similarity",
       "parameter_count"
     ]
   },
   "remote": {
     "host": "529_Lab-3090",
     "conda_env": "moe",
-    "runner": "scripts/remote/run_phase1_segment_decoder_gate.sh",
+    "runner": "scripts/remote/run_phase1_fixed_adapter_gate.sh",
     "gpu_policy": "check nvidia-smi before every run; prefer GPU 1 or 2 when memory is safe; GPU_IDS may contain one or two selected GPUs"
   }
 }

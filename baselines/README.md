@@ -29,6 +29,11 @@ Phase 1 当前新增一个 decoder-side candidate：
   - 用 future segment queries + cross-attention 替换 fixed flatten head
   - one-to-one horizon training，用于 `Future-Segment Decoder Gate`
   - 不包含 future teacher branch 或 MoE
+- `patch_encoder_fixed_head_adapter/`
+  - 保留 Phase0 fixed flatten head 主路径
+  - 用 future segment queries 生成 zero-initialized affine adapter
+  - 用于 Phase1-A.2，检验 future-side interface 是否能在不删除 fixed readout
+    capacity 的前提下提供收益
 
 当前重点 comparison baseline：
 

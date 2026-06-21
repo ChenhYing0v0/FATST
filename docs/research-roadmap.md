@@ -400,9 +400,33 @@ future-side interface。
 
 下一轮优先候选：
 
-- `FixedHeadAdapter`: 保留 fixed flatten head，只在 readout 前后加入 future-segment adapter。
+- `FixedHeadAdapter`: 保留 fixed flatten head，只在 readout 后加入 future-segment affine adapter。
 - `SegmentQueryDenseHead`: segment query 提供 conditioning，但每个 segment 保留更强 dense readout。
 - `StepQueryHead`: 更细粒度 step-level query，作为高成本备选。
+
+Phase1-A.2 当前执行候选：
+
+- `PatchEncoderFixedHeadAdapter`。
+- 主路径仍是 `Flatten(Z) -> Linear(..., H)`，即不删除 Phase0 selected base 的 readout。
+- future segment queries 通过 cross-attention 生成 adapter state。
+- adapter 输出 $\gamma,\beta$，对 fixed-head normalized forecast 做：
+
+$$
+\hat{Y}=\hat{Y}^{base}\odot(1+\gamma)+\beta.
+$$
+
+- adapter final projection 采用 zero initialization，使初始 forward 等价于 fixed head。
+
+[Hypothesis] 如果该候选通过，说明 future-side interface 的问题仍成立，只是第一轮替换
+readout 的设计过激；如果它也失败，则 history-only future decoder 主线需要降级，
+下一步应优先转向 future-aware teacher/student alignment，而不是继续堆叠 decoder。
+
+Phase1-A.2 通过条件：
+
+- main MSE 至少 `4/12` wins，且平均 relative MSE 不出现明显退化；
+- 或 segment-level wins 集中改善远端/high-error segment；
+- `adapter_delta_stats.csv` 显示 adapter 对 base prediction 有非零有效修正，避免把训练波动
+  误判为机制收益。
 
 Phase1-B:
 

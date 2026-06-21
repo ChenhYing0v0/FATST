@@ -180,3 +180,99 @@ Phase1-B one-model compatibility。更不能在它上面直接叠加 future-awar
 2. `SegmentQueryDenseHead`: segment state 只负责 conditioning，每个 segment 仍保留
    parameter-controlled dense readout。
 3. `StepQueryHead`: step-level query 作为更细粒度方案，但需要控制参数和计算量。
+
+## Phase1-A.2: Fixed-Head Adapter Gate
+
+### 回退后的问题定义
+
+[Strong Evidence] `PatchEncoderSegmentQueryHead` 的失败并不是因为 segment queries 完全同质化；
+它的 query cosine 分布并未退化为全相同。更直接的问题是 readout capacity：
+
+$$
+\text{SegmentQueryHead}: U_j \rightarrow \mathbb{R}^{48}
+$$
+
+使用 shared segment output head，而 `PatchEncoderFixedHead` 使用：
+
+$$
+\text{Flatten}(Z) \rightarrow \mathbb{R}^{H}
+$$
+
+为每个 output step 保留独立 linear row。Phase1-A 第一轮的参数比例在 h720 只有 fixed
+head 的 `0.128`，因此它很可能是在删除强 readout 后再尝试用 segment state 补偿。
+
+[Decision] Phase1-A.2 不再直接替换 fixed head，而是检验一个更窄的问题：
+
+> future-segment interface 是否能在保留 fixed flatten head 主路径的前提下，提供有效
+> conditioning 或 residual correction？
+
+### 候选模型
+
+`PatchEncoderFixedHeadAdapter` 的 forward path 为：
+
+$$
+Z=E_\theta(X),
+$$
+
+$$
+\hat{Y}^{base}=\text{FixedHead}(Z),
+$$
+
+$$
+U_J=A_\theta(Q_J,Z),
+$$
+
+$$
+(\gamma,\beta)=R_\theta(U_J),
+$$
+
+$$
+\hat{Y}=\hat{Y}^{base}\odot(1+\gamma)+\beta.
+$$
+
+其中：
+
+- $Q_J$ 是 future segment queries；
+- $A_\theta$ 是 one-layer cross-attention adapter；
+- $R_\theta$ 是 segment-wise affine head；
+- $R_\theta$ 的最后一层 zero initialization，使初始 forward 等价于 fixed head。
+
+[Inference] 这个设计把机制风险拆开：如果该模型退化，说明仅靠 history-derived
+future-segment adapter 不足；如果它提升，则证明 future-side interface 可以在不破坏
+fixed readout capacity 的情况下发挥作用。
+
+### 诊断指标
+
+除 Phase1-A 的 MSE/MAE 和 segment metrics 外，Phase1-A.2 额外记录：
+
+| Artifact | 含义 |
+| --- | --- |
+| `adapter_delta_stats.csv` | adapter prediction 与 base prediction 的差异幅度 |
+| `adapter_query_similarity.csv` | segment query 是否保持非退化差异 |
+
+`adapter_delta_stats.csv` 中的核心列：
+
+- `delta_mse_to_base`: $\hat{Y}$ 与 $\hat{Y}^{base}$ 的 MSE。
+- `delta_mae_to_base`: $\hat{Y}$ 与 $\hat{Y}^{base}$ 的 MAE。
+- `mean_abs_gamma`: affine multiplicative term 的平均绝对值。
+- `mean_abs_beta`: additive residual term 的平均绝对值。
+- `delta_to_base_mae_ratio`: adapter 修正幅度相对 base prediction 幅度的比例。
+
+### 通过条件
+
+Phase1-A.2 通过至少需要满足：
+
+1. [Performance] main MSE 至少 `4/12` wins，且平均 relative MSE 不为明显正退化；
+2. [Segment profile] 或者 segment-level wins 明显集中在远端/high-error segments；
+3. [Mechanism] `delta_to_base_mae_ratio` 非零，排除 adapter 没有实际参与的假阳性。
+
+若仅有微小 MSE 提升但 adapter delta 接近零，则视为训练波动，不作为 decoder 创新点。
+
+### 失败后的回退
+
+如果 `PatchEncoderFixedHeadAdapter` 仍不通过：
+
+- 不再优先扩大 decoder capacity；
+- 回退到长研究模板第 3-5 步，重新评估 “history-only future decoder” 问题是否足够；
+- 下一候选应转向 `future-aware teacher/student alignment`，即用 training-only future
+  signal 学习可推理的 future latent state，而不是继续只用 history-derived queries。
