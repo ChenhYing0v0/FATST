@@ -675,6 +675,44 @@ compatibility 的基础。
 差异，但不支持仅靠 lightweight segment-conditioned modulation 就能稳定改善预测。
 下一轮不应继续叠 future-aware 或 MoE；应先重新定义 decoder 输出策略的核心问题。
 
+#### Phase1-A.6: Output-Process Residual Reset
+
+[Decision] Phase1-A.6 的研究入口记录在：
+`docs/experiments/phase1-output-process-rollback.md`。
+
+[Inference] A.5 之后，问题定义从 “是否需要 step-specific latent state” 收窄为：
+
+> fixed direct head 是否缺少对 future output trajectory 的结构化残差建模，使每个 output row
+> 独立学习，难以利用 future steps 之间的相关性、局部平滑性和 horizon-dependent error mode？
+
+下一候选暂命名为 `PatchEncoderTrajectoryBasisResidual`。它保留 fixed head 作为 base
+trajectory：
+
+$$
+\hat{Y}^{base}_{1:H}=W_H\operatorname{Flatten}(Z),
+$$
+
+再用 future position-aware basis 学习 low-rank residual：
+
+$$
+\Delta Y_{t,c}=\sum_{k=1}^{K} B_{t,k}A_{c,k},
+$$
+
+$$
+\hat{Y}_{1:H}=\hat{Y}^{base}_{1:H}+g_H\odot\Delta Y_{1:H}.
+$$
+
+[Hypothesis] 该设计比 A.5 更保守：它不扰动 encoder state 和 fixed head rows，只在输出轨迹
+上建模 correlated residual modes。因此它更可能保护 h96/h192 的稳定 readout，同时修正
+中长 horizon 的 segment-level error mode。
+
+Phase1-A.6 pass 条件：
+
+- 相比 `PatchEncoderFixedHead` mean relative MSE < 0，且至少 `7/12` main MSE wins；
+- 相比 `PatchEncoderFixedHeadAdapter` mean relative MSE < 0，且至少 `6/12` wins；
+- h96/h192 平均不能显著退化；
+- residual energy 非零但受控，并且 segment-level 改善不能只来自单个 dataset。
+
 Phase1-B:
 
 - 仅在 Phase1-A 通过后执行；

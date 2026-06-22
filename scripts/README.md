@@ -20,6 +20,11 @@
   `Step-Specific State Decoder Gate`，对比 `PatchEncoderFixedHead`、
   `PatchEncoderFixedHeadAdapter` 与 `PatchEncoderStepSpecificStateAdapter`。该 runner
   同样默认删除 `checkpoint.pt` / `predictions_test.npz`。
+- `remote/run_phase1_trajectory_basis_residual_gate.sh`: Phase1-A.6
+  `Output-Process Residual Gate`，对比 `PatchEncoderFixedHead`、
+  `PatchEncoderFixedHeadAdapter`、`PatchEncoderStepSpecificStateAdapter` 与
+  `PatchEncoderTrajectoryBasisResidual`。该 runner 默认删除 `checkpoint.pt` /
+  `predictions_test.npz`。
 
 ## Analysis
 

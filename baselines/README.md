@@ -44,6 +44,11 @@ Phase 1 当前新增一个 decoder-side candidate：
   - 在 readout 前用 future segment states 生成 latent-space `gamma/beta`
   - 用于 Phase1-A.5，检验 step/segment-specific representation 是否比
     post-head affine correction 更接近 decoder bottleneck
+- `patch_encoder_trajectory_basis_residual/`
+  - 保留 Phase0 fixed head 作为 base trajectory readout
+  - 在 output trajectory 上加入 zero-initialized future-position basis residual
+  - 用于 Phase1-A.6，检验 fixed head 是否缺少 correlated output-process residual
+    structure，而不是继续扰动 encoder state
 
 当前重点 comparison baseline：
 

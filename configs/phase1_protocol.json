@@ -1,14 +1,15 @@
 {
   "phase": "phase1",
   "objective": "Evaluate whether future-side decoder interfaces can improve the Phase0 selected patch encoder before adding future-aware alignment or MoE.",
-  "status": "phase1a5_partial_rollback_to_problem_definition",
+  "status": "phase1a6_output_process_residual_defined",
   "decision_reports": [
     "analysis/phase1_segment_decoder_gate_20260621/phase1_segment_decoder_gate_report.md",
     "analysis/phase1_fixed_adapter_gate_20260621/phase1_fixed_adapter_gate_report.md",
     "analysis/phase1_future_aware_adapter_gate_20260621/phase1_future_aware_adapter_gate_report.md",
     "analysis/phase1_future_aware_repair_gate_20260622/phase1_future_aware_repair_gate_report.md",
     "docs/experiments/phase1-step-specific-state-decoder-reset.md",
-    "analysis/phase1_step_specific_state_gate_20260622/phase1_step_specific_state_gate_report.md"
+    "analysis/phase1_step_specific_state_gate_20260622/phase1_step_specific_state_gate_report.md",
+    "docs/experiments/phase1-output-process-rollback.md"
   ],
   "latest_decision": {
     "candidate": "PatchEncoderStepSpecificStateAdapter",
@@ -25,12 +26,12 @@
     "next_direction": "Do not enter Phase1-B, future-aware alignment, or MoE on this candidate. Redefine the decoder/output strategy problem first."
   },
   "active_candidate": {
-    "candidate": "PatchEncoderStepSpecificStateAdapter",
-    "status": "phase1a5_partial_not_active_paper_core",
-    "problem": "Fixed head uses different output rows but a shared history representation for all future steps; prior attempts either removed readout capacity or corrected outputs too late.",
-    "hypothesis": "Segment-conditioned pre-head state adaptation can preserve fixed-head readout capacity while creating step/segment-specific representations before prediction.",
-    "design_doc": "docs/experiments/phase1-step-specific-state-decoder-reset.md",
-    "pass_condition": "At least 6/12 MSE wins versus PatchEncoderFixedHead, mean relative MSE < 0, no dataset-wide degradation, non-degenerate segment-conditioned state diagnostics, and parameter count comparable to PatchEncoderFixedHeadAdapter."
+    "candidate": "PatchEncoderTrajectoryBasisResidual",
+    "status": "step_1_to_6_defined_needs_implementation",
+    "problem": "Fixed direct head keeps strong dense readout but treats future output rows as largely independent; prior latent modulation disrupts short-horizon readout, while middle and long segments still show correctable residual modes.",
+    "hypothesis": "A low-rank future-position basis residual can model correlated trajectory errors after the fixed base readout without perturbing encoder states or fixed-head rows.",
+    "design_doc": "docs/experiments/phase1-output-process-rollback.md",
+    "pass_condition": "Mean relative MSE < 0 and at least 7/12 MSE wins versus PatchEncoderFixedHead; mean relative MSE < 0 and at least 6/12 wins versus PatchEncoderFixedHeadAdapter; no significant h96/h192 degradation; nonzero but controlled residual energy."
   },
   "decision_boundary": {
     "phase1a": "one-to-one horizon training; validates decoder-side mechanism only",
@@ -109,6 +110,15 @@
       "adapter_d_ff": 256,
       "state_modulation": "zero_initialized_token_channel_film_before_fixed_head_rows",
       "identity_initialization": true
+    },
+    "PatchEncoderTrajectoryBasisResidual": {
+      "role": "phase1a6_candidate",
+      "train_script": "baselines/patch_encoder_trajectory_basis_residual/train.py",
+      "basis_count": 8,
+      "residual_gate_init": "near_zero",
+      "residual_penalty": 0.0001,
+      "smoothness_penalty": 0.0001,
+      "residual_form": "future_position_basis_times_history_coefficients_added_after_fixed_head"
     }
   },
   "metrics": {
@@ -120,6 +130,9 @@
       "adapter_delta_stats",
       "adapter_query_similarity",
       "future_alignment_stats",
+      "trajectory_residual_energy",
+      "trajectory_residual_smoothness",
+      "trajectory_basis_coefficients",
       "parameter_count"
     ]
   },
