@@ -944,6 +944,23 @@ decoder 问题是：one-model decoder 如何建模 forecast output 的非均匀 
 step-region covariance 和 residual process。候选机制应把 prediction trajectory / residual
 trajectory 作为被解码对象，而不是只独立输出每个 segment 的 point values。
 
+[Design] Phase2-B fallback design 已定义：
+
+- doc: `docs/experiments/phase2-output-error-process-decoder-design.md`
+- candidate family: `Target-Conditioned Error-Process Decoder`
+- tentative implementation name: `PatchEncoderErrorProcessDecoder`
+
+核心区别：
+
+- 不重复 Phase1-A.6 的 static low-rank position basis；
+- residual process 由 target-set state $U_j$、target segment feature $q_j$ 和 compact
+  error-process state $c_{j-1}$ 共同生成；
+- 目标是建模 forecast output/error process，而不是继续对齐 latent future teacher。
+
+[Decision] 在 Phase2-R.1 结果回来前不实现 Phase2-B。若 R.1 通过，Phase2-B 只作为
+diagnostic appendix candidate；若 R.1 fail 或 partial pass，则 Phase2-B 成为下一轮 step 6-8
+实现候选。
+
 Phase2 pass 条件：
 
 - prediction path leakage audit 通过；

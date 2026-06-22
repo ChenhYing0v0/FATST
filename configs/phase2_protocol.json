@@ -251,6 +251,23 @@
           }
         }
       },
+      "phase2b_fallback_design": {
+        "status": "defined_not_active_until_phase2r1_result",
+        "design_doc": "docs/experiments/phase2-output-error-process-decoder-design.md",
+        "candidate_family": "Target-Conditioned Error-Process Decoder",
+        "tentative_candidate": "PatchEncoderErrorProcessDecoder",
+        "activation_condition": "Activate only if Phase2-R.1 fails or reaches partial pass.",
+        "core_difference_from_phase1a6": "Do not use static low-rank position-only residual basis; generate the residual process from target-set state U_j, target segment feature q_j, and compact error-process state c_{j-1}.",
+        "core_difference_from_phase2a": "Model the output residual/error trajectory directly instead of aligning target states to a latent future teacher.",
+        "minimum_gate": [
+          "mean relative MSE vs R.3 < 0",
+          "MSE wins vs R.3 >= 7/12",
+          "no dataset mean degradation > +0.3% vs R.3",
+          "H720 step-region diagnostics improve at least two weak regions",
+          "residual/base ratio nonzero but controlled",
+          "prefix mismatch remains numerical zero"
+        ]
+      },
       "rollback": "If confidence-weighted alignment still fails, return to loop step 2-3 and reconsider whether future-aware decoder supervision is the right problem definition."
     }
   },
