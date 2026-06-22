@@ -1,0 +1,36 @@
+{
+  "main_rows": 12,
+  "segment_rows": 30,
+  "mse_wins": 1,
+  "mae_wins": 2,
+  "mean_relative_mse_pct": 2.027434696467556,
+  "min_relative_mse_pct": -0.7416285577460879,
+  "max_relative_mse_pct": 5.228067815127302,
+  "dataset_mean_relative_mse_pct": {
+    "ETTh2": 2.207985022635095,
+    "ETTm1": 1.2439416577896711,
+    "Weather": 2.630377408977902
+  },
+  "horizon_mean_relative_mse_pct": {
+    "96": 4.520020274737997,
+    "192": 1.8696556539926634,
+    "336": 0.81726903105838,
+    "720": 0.902793826081183
+  },
+  "segment_mse_wins": 7,
+  "segment_mean_relative_mse_pct": 1.6778955705143799,
+  "h720_prefix_mse_wins": 4,
+  "h720_prefix_h96_h192_mean_relative_mse_pct": 1.2006203041341035,
+  "max_prefix_mismatch_mse": 1.5494680530498718e-14,
+  "mean_target_state_cosine": 0.8362498657022592,
+  "mean_abs_gamma": 0.5688672910133997,
+  "mean_abs_beta": 0.41478996723890305,
+  "compatibility": {
+    "mean_relative_mse_le_1pct": false,
+    "no_dataset_degrades_over_3pct": true,
+    "h96_h192_not_worse_than_fixed_h720_prefix": false,
+    "prefix_mismatch_near_zero": true,
+    "target_states_non_identical": true,
+    "pass": false
+  }
+}

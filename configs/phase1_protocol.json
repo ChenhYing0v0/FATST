@@ -1,7 +1,7 @@
 {
   "phase": "phase1",
   "objective": "Evaluate whether a target-set indexed forecasting decoder can expose future targets as model inputs, control the single-model amortization gap, improve prefix consistency, and provide a stable carrier for later future-aware or MoE mechanisms.",
-  "status": "phase1r_target_set_decoder_near_miss_needs_repair",
+  "status": "phase1r_target_set_decoder_near_miss_prefix_residual_failed_needs_rethink",
   "decision_reports": [
     "analysis/phase1_segment_decoder_gate_20260621/phase1_segment_decoder_gate_report.md",
     "analysis/phase1_fixed_adapter_gate_20260621/phase1_fixed_adapter_gate_report.md",
@@ -12,7 +12,8 @@
     "docs/experiments/phase1-output-process-rollback.md",
     "analysis/phase1_trajectory_basis_residual_gate_20260622/phase1_trajectory_basis_residual_gate_report.md",
     "docs/experiments/phase1-target-set-decoder-redefinition.md",
-    "analysis/phase1_target_set_decoder_gate_20260622/phase1_target_set_decoder_gate_report.md"
+    "analysis/phase1_target_set_decoder_gate_20260622/phase1_target_set_decoder_gate_report.md",
+    "analysis/phase1_target_set_prefix_residual_gate_20260622/phase1_target_set_prefix_residual_gate_report.md"
   ],
   "latest_decision": {
     "candidate": "PatchEncoderTargetSetDecoder",
@@ -37,14 +38,24 @@
   },
   "active_repair": {
     "candidate": "PatchEncoderTargetSetPrefixResidual",
-    "status": "local_smoke_passed_needs_remote_gate",
+    "status": "failed_remote_gate",
     "base_candidate": "PatchEncoderTargetSetDecoder",
     "problem": "The first target-set decoder mechanically solves prefix consistency but misses strict compatibility because short-prefix capacity is slightly weaker than fixed H720-prefix on ETTh2 h96 and ETTm1 h96, and h96 remains weak versus horizon-specific specialists.",
     "hypothesis": "A zero-initialized dense residual readout shared by the first target segments can repair h96/h192 capacity without reintroducing horizon-specific heads or breaking prefix stability.",
     "train_script": "baselines/patch_encoder_target_set_decoder/train.py",
     "run_name": "PatchEncoderTargetSetPrefixResidual",
     "prefix_residual_segments": 4,
-    "pass_condition": "H720-aligned h96/h192 strict no-degradation passes, h96 mean relative MSE improves over +2.74%, overall mean relative MSE stays <= +0.62%, and prefix mismatch remains near zero."
+    "pass_condition": "H720-aligned h96/h192 strict no-degradation passes, h96 mean relative MSE improves over +2.74%, overall mean relative MSE stays <= +0.62%, and prefix mismatch remains near zero.",
+    "result": {
+      "mse_wins_vs_fixed": "1/12",
+      "mean_relative_mse_vs_fixed": "+2.03%",
+      "h96_mean_relative_mse": "+4.52%",
+      "h720_prefix_h96_h192_mean_relative_mse": "+1.20%",
+      "max_prefix_mismatch_mse": "1.54947e-14",
+      "mean_target_state_cosine": "0.836250",
+      "mean_prefix_residual_mae_norm": "0.289765",
+      "decision": "failed; the dense prefix residual became an uncontrolled correction and worsened short-prefix capacity instead of repairing it"
+    }
   },
   "active_candidate": {
     "candidate": "PatchEncoderTargetSetDecoder",

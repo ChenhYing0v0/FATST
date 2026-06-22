@@ -4,7 +4,7 @@
 
 [Decision] `PatchEncoderTargetSetDecoder` does not reach compatibility pass.
 
-It should not be treated as paper-core unless follow-up mechanisms convert its target-side state into stable forecast gains.
+It should not be treated as paper-core or as a passed carrier for future-aware / MoE mechanisms without a rollback assessment.
 
 ## Main Metrics
 
@@ -43,7 +43,7 @@ It should not be treated as paper-core unless follow-up mechanisms convert its t
 
 [Inference] The first target-set implementation proves the prefix-stable interface works mechanically, because short-horizon predictions match the corresponding H=720 prefixes up to numerical noise.
 
-[Inference] On the same H=720-aligned windows used by the Phase0 prefix diagnostic, the target-set decoder improves h96/h192 prefixes over the fixed H720-prefix reference on average, but it does not satisfy the strict no-degradation condition in every setting. ETTh2 h96 and ETTm1 h96 are slightly worse than the fixed H720-prefix reference.
+[Inference] On the same H=720-aligned windows used by the Phase0 prefix diagnostic, the model improves h96/h192 prefixes over the fixed H720-prefix reference on average, but strict no-degradation still depends on the per-setting rows below.
 
 [Inference] The accuracy side is the decisive issue. If the mean relative MSE is positive, the current dense target-conditioned readout is not yet a paper-core decoder; it can only remain as a carrier if the amortization gap is within the compatibility threshold.
 

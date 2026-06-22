@@ -49,6 +49,11 @@
 可证伪 hypothesis、数学数据流、实验协议和通过/回退条件。一个机制只有在性能证据和
 paper narrative 都站得住时才继续叠加；若证据不足，应明确回退点，而不是继续堆模块。
 
+每一轮长研究都必须记录 `current_step`、`problem`、`existence_evidence`、`idea`、
+`theory_check`、`design`、`gate`、`artifacts` 和 `decision`。其中 `decision` 必须说明
+是否通过；若不通过，必须说明回退到 11-step loop 的哪一步。后续不能在一个机制未通过时
+直接叠加 future-aware、MoE 或其他复杂模块。
+
 ## Git 与远程同步原则
 
 - 每次完成阶段性的代码更新后，先完成最小必要验证，再进行一次 focused

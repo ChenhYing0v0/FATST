@@ -1,0 +1,4 @@
+short_horizon,long_horizon,prefix_mismatch_mse,prefix_mismatch_mae,truth_alignment_mse
+96,720,4.218906362365429e-15,3.3597547854924414e-08,0.0
+192,720,0.0,0.0,0.0
+336,720,0.0,0.0,0.0

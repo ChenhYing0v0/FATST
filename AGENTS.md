@@ -126,6 +126,13 @@ exists; it advances only when the evidence supports both model performance and
 a credible paper narrative. If the evidence is weak, choose an explicit rollback
 point instead of continuing to stack mechanisms.
 
+Each long-stage record must include `current_step`, `problem`,
+`existence_evidence`, `idea`, `theory_check`, `design`, `gate`, `artifacts`,
+and `decision`. The `decision` must say whether the mechanism passes; if it
+does not pass, it must name the rollback step in the 11-step loop. Do not add
+future-aware, MoE, or another complex mechanism on top of a failed mechanism
+without first completing that rollback assessment.
+
 
 ## Remote Experiment Policy
 

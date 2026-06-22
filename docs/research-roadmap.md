@@ -43,6 +43,26 @@
 [Decision] 后续任何 decoder、future-aware、MoE 或新 architecture 候选，都必须显式标注
 当前处于上述哪一步。一个机制未通过时，不继续叠加下一个机制；先判断应回退到哪一步。
 
+### 阶段记录格式
+
+[Decision] 每一轮长研究都必须在 protocol、experiment report 或 roadmap 中留下同构记录：
+
+| Field | Required Content |
+| --- | --- |
+| `current_step` | 当前处于 11-step loop 的哪一步 |
+| `problem` | 待解决问题，以及它为什么不是已有实验已经否定的问题 |
+| `existence_evidence` | 问题真实存在的 artifact、公式推导或可复查现象 |
+| `idea` | 核心 idea，不超过一个主机制 |
+| `theory_check` | 数据流、数学约束、可能成立的原因和反例 |
+| `design` | model/training/evaluation 的最小方案 |
+| `gate` | pass/fail/rollback 条件 |
+| `artifacts` | 代码版本、输出路径、报告和表格 |
+| `decision` | 是否通过；若不通过，回退到哪一步 |
+
+[Decision] 该记录格式用于防止两类错误：一是问题尚未证明真实就进入实现；二是某个
+partial signal 失败后继续叠加 future-aware 或 MoE。后续每个候选必须先明确自己在这个
+loop 中的角色，再进入远程训练。
+
 ## 当前总判断
 
 [Strong Evidence] Phase0 与 Phase1-A.1 到 A.6 已经给出一个关键结论：
@@ -61,6 +81,15 @@ A.5/A.6 上叠加 future-aware 或 MoE。更合理的收敛方向是：
 interface 是否能以可控 amortization gap 接近 horizon-specific specialists，并改善
 prefix consistency。只有该 interface 至少达到 compatibility pass，后续 future-aware 和 MoE
 才有稳定 carrier。
+
+[Decision] 在 `PatchEncoderTargetSetPrefixResidual` remote gate 失败后，当前不处于
+step 7-8 的继续实现阶段，而是回到 step 3-5：重新评估 target-set decoder 的问题定义、
+瓶颈归因和 theoretical feasibility。下一轮不能从“加一个模块”开始，必须先回答：
+
+1. one-model target-set interface 的性能差距主要来自 optimization、capacity allocation，
+   还是 target-query interaction；
+2. 这个差距是否足够真实且可放大为论文问题；
+3. 新 idea 是否能在不破坏 fixed-head 强 readout 的条件下改变 forecasting process。
 
 ## Phase0: Canonical Base
 
@@ -326,6 +355,33 @@ amortization gap，同时保持同一 prefix segment 在不同 requested horizon
 - 若 repair 只靠大 residual 破坏 target-set state 解释，则不能进入 future-aware/MoE。
 
 [Fact] Local smoke 已通过，`prefix_residual_stats.csv` 正常写出，prefix mismatch 仍为数值零级别。
+
+[Fact] Remote gate 已完成：
+
+- report: `analysis/phase1_target_set_prefix_residual_gate_20260622/phase1_target_set_prefix_residual_gate_report.md`
+- code commit: `bb164ff`
+- selected GPUs: `1`, `2`
+
+[Evidence] 结果：
+
+| Metric | Value |
+| --- | ---: |
+| MSE wins vs `PatchEncoderFixedHead` | `1/12` |
+| mean relative MSE | `+2.03%` |
+| h96 mean relative MSE | `+4.52%` |
+| H720-prefix h96/h192 mean relative MSE | `+1.20%` |
+| max prefix mismatch MSE | `1.54947e-14` |
+| mean target state cosine | `0.836250` |
+| mean prefix residual MAE norm | `0.289765` |
+
+[Decision] `PatchEncoderTargetSetPrefixResidual` 未通过。它保持了 prefix consistency，但
+short-prefix MSE 进一步恶化，target states 更同质，prefix residual 幅度不小，说明该 path
+更像 uncontrolled correction，而不是 capacity-preserving repair。
+
+[Rollback] 不应继续调大 prefix residual，也不应在该 repair 上叠加 MoE。当前应回到 step 3-5：
+重新判断 target-set decoder 的主要瓶颈是 architecture capacity、mixed-horizon optimization，
+还是 target-query interaction policy。下一轮若继续 decoder 主线，应优先考虑 objective-level
+或 interaction-level 设计，而不是 output residual patch。
 
 ## Phase2: Future-Aware Mechanism
 

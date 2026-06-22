@@ -253,11 +253,20 @@ def write_report(
     ]
     if compatibility["pass"]:
         lines.append(f"[Decision] `{model_name}` reaches compatibility pass.")
+        decision_note = (
+            "It is not paper-core by itself unless follow-up mechanisms convert "
+            "its target-side state into stable forecast gains, but it can remain "
+            "a candidate carrier."
+        )
     else:
         lines.append(f"[Decision] `{model_name}` does not reach compatibility pass.")
+        decision_note = (
+            "It should not be treated as paper-core or as a passed carrier for "
+            "future-aware / MoE mechanisms without a rollback assessment."
+        )
     lines += [
         "",
-        "It should not be treated as paper-core unless follow-up mechanisms convert its target-side state into stable forecast gains.",
+        decision_note,
         "",
         "## Main Metrics",
         "",
@@ -278,6 +287,19 @@ def write_report(
     ]
     for horizon in HORIZONS:
         lines.append(f"| {horizon} | {format_pct(float(horizon_mean[str(horizon)]))} |")
+    h720_prefix_mean = float(summary["h720_prefix_h96_h192_mean_relative_mse_pct"])
+    if h720_prefix_mean <= 0.0:
+        h720_prefix_interpretation = (
+            "[Inference] On the same H=720-aligned windows used by the Phase0 prefix diagnostic, "
+            "the model improves h96/h192 prefixes over the fixed H720-prefix reference on average, "
+            "but strict no-degradation still depends on the per-setting rows below."
+        )
+    else:
+        h720_prefix_interpretation = (
+            "[Inference] On the same H=720-aligned windows used by the Phase0 prefix diagnostic, "
+            "the model is worse than the fixed H720-prefix reference on h96/h192 on average. "
+            "This fails the prefix-reuse part of the compatibility gate."
+        )
     lines += [
         "",
         "## Compatibility Gate",
@@ -297,7 +319,7 @@ def write_report(
         "",
         "[Inference] The first target-set implementation proves the prefix-stable interface works mechanically, because short-horizon predictions match the corresponding H=720 prefixes up to numerical noise.",
         "",
-        "[Inference] On the same H=720-aligned windows used by the Phase0 prefix diagnostic, the target-set decoder improves h96/h192 prefixes over the fixed H720-prefix reference on average, but it does not satisfy the strict no-degradation condition in every setting. ETTh2 h96 and ETTm1 h96 are slightly worse than the fixed H720-prefix reference.",
+        h720_prefix_interpretation,
         "",
         "[Inference] The accuracy side is the decisive issue. If the mean relative MSE is positive, the current dense target-conditioned readout is not yet a paper-core decoder; it can only remain as a carrier if the amortization gap is within the compatibility threshold.",
         "",
