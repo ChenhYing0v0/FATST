@@ -628,8 +628,11 @@ gain，再回退到 problem definition 或重新选择 base architecture。
 
 ## Phase2: Future-Aware Mechanism
 
-状态：可进入 step 1-6。R.3 已提供 compatibility carrier，但 Phase2 仍需重新论证问题、
-theory 和 gate，不能直接把旧 future-aware adapter 迁过来。
+状态：step 1-6 已收敛到第一版候选 `PatchEncoderFutureStateAlignment`，等待实现。
+
+核心文档：
+
+- `docs/experiments/phase2-future-state-alignment-design.md`
 
 [Inference] future-aware 的合理形式不是泄漏 future，而是用 training-only future signal
 约束一个推理时可由 history 和 target set 推断的 future latent state。
@@ -657,6 +660,89 @@ $$
 而不是 A.5/A.6 的 fixed-head patch，也不是旧的 output adapter。future-aware 的目标不是
 再修一次 prefix consistency，而是证明 training-only future signal 能产生一个推理时可由
 history 与 target set 估计的 future latent state，并且这个 state 对 forecast error 有可定位贡献。
+
+### Phase2-A: Future-State Alignment
+
+[Problem] `PatchEncoderPrefixRiskWeighted` 的 target state $U_T$ 是由 history state $Z$ 与
+target query $Q_T$ 推断得到：
+
+$$
+U_j=D_\theta(Q_j,Z).
+$$
+
+它已经能作为 one-model carrier，但并没有显式校准到真实 future segment 的 latent
+distribution。旧 Phase1 future-aware adapter 失败的原因不是 future-aware signal 完全无效，
+而是它作用在没有 target-set carrier 的 fixed-head patch 上，无法进入真正的 target-side
+forecasting process。
+
+[Evidence] R.3 的剩余误差主要集中在 `ETTm1/h96` `+2.83%`、`ETTm1/h720` `+1.09%`、
+`ETTh2/h720` `+0.75%` 和 `Weather/h96` `+0.64%`。同时 target-state geometry 没有 collapse：
+`ETTh2/h720` mean target-state cosine 为 `+0.918`，而 `ETTm1/h96` 为 `-0.559`，
+`Weather/h96` 为 `-0.108`。这说明 $U_T$ 有数据集/segment 信号，但还缺少 future-side
+distribution anchor。
+
+[Idea] 第一版候选 `PatchEncoderFutureStateAlignment` 使用 training-only future teacher
+编码 ground-truth future segment：
+
+$$
+S_j^Y=T_\psi(Y_{a_j:b_j},q_j),
+$$
+
+并从 inference-time target state 得到 student state：
+
+$$
+S_j^X=P_\theta(U_j).
+$$
+
+训练时加入 local alignment 与 relation alignment：
+
+$$
+\mathcal{L}
+=
+\mathcal{L}_{prefix\_risk}
++
+\lambda_{local}
+\sum_j
+(1-\cos(S_j^X,\operatorname{sg}(S_j^Y)))
++
+\lambda_{rel}
+\left\|
+\operatorname{sim}(S^X)-
+\operatorname{sg}(\operatorname{sim}(S^Y))
+\right\|_F^2.
+$$
+
+推理时仍只使用：
+
+$$
+\hat{Y}_{a_j:b_j}
+=
+O_\theta(r\odot(1+\gamma(U_j))+\beta(U_j)).
+$$
+
+[Theory Check] 该设计与 `TimeAlign` 的 future-side teacher 一致，但 alignment 目标从全局
+history representation 改成 target-set decoder state $U_T$；与 `TimePerceiver` 的 target query
+接口一致；与 `SRP++` 的 step/segment-specific representation claim 一致；并延续 R.3/QDF
+暴露出的 future-step risk/objective 问题。
+
+[Gate] `PatchEncoderFutureStateAlignment` 必须先保持 R.3 carrier 不被破坏：
+
+- mean relative MSE vs `PatchEncoderFixedHead` 仍不差于 R.3 的 `-0.43%`；
+- 任一 dataset 平均不比 R.3 差超过 `+0.3%`；
+- prefix mismatch 保持数值零级别；
+- prediction leakage max abs <= `1e-7`；
+- teacher/student alignment 统计必须写出并随训练改善。
+
+Paper-core candidate pass 需要进一步满足：
+
+- vs R.3 至少 `7/12` dataset-horizon settings 获胜，或 mean relative MSE vs R.3 改善
+  至少 `0.5%`；
+- R.3 的弱项中至少两个改善：`ETTm1/h96`, `ETTm1/h720`, `ETTh2/h720`, `Weather/h96`；
+- 改善能定位到 horizon、segment、frequency 或 target-state alignment diagnostics。
+
+[Rollback] 若 alignment metric 改善但 MSE/MAE 不改善，说明 future teacher 只是 auxiliary
+proxy，不是有效 paper-core mechanism；应回到 step 2-5，考虑 covariance-aware objective 或
+更换 base architecture。若 Weather 系统性退化，先诊断 alignment conflict，不直接进入 MoE。
 
 Phase2 pass 条件：
 

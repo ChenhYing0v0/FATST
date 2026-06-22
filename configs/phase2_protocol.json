@@ -1,0 +1,114 @@
+{
+  "phase": "phase2",
+  "objective": "Evaluate whether a training-only future-state teacher can calibrate the target-side states of the compatible target-set decoder and turn future-aware supervision into forecast-relevant gains.",
+  "status": "phase2a_future_state_alignment_step_1_to_6_defined_needs_implementation",
+  "research_loop_step": "1-6",
+  "base_carrier": {
+    "candidate": "PatchEncoderPrefixRiskWeighted",
+    "source_report": "analysis/phase1_prefix_risk_weighted_gate_20260622/phase1_prefix_risk_weighted_gate_report.md",
+    "status": "compatibility_pass_not_paper_core",
+    "mean_relative_mse_vs_fixed": "-0.43%",
+    "h720_prefix_h96_h192_mean_relative_mse": "-2.46%",
+    "max_prefix_mismatch_mse": "5.3671e-14"
+  },
+  "active_candidate": {
+    "candidate": "PatchEncoderFutureStateAlignment",
+    "status": "design_defined_needs_implementation",
+    "design_doc": "docs/experiments/phase2-future-state-alignment-design.md",
+    "base_candidate": "PatchEncoderPrefixRiskWeighted",
+    "problem": "The R.3 target-set decoder has target-aware states U_T, but these states are inferred only from history and target queries. They are not explicitly calibrated to the distributional state of the realized future segment during training.",
+    "existence_evidence": {
+      "remaining_weak_settings": {
+        "ETTm1_h96": "+2.83%",
+        "ETTm1_h720": "+1.09%",
+        "ETTh2_h720": "+0.75%",
+        "Weather_h96": "+0.64%"
+      },
+      "target_state_geometry": {
+        "ETTh2_h720_mean_target_state_cosine": "+0.918",
+        "ETTm1_h96_mean_target_state_cosine": "-0.559",
+        "Weather_h96_mean_target_state_cosine": "-0.108"
+      },
+      "prior_future_aware_result": "Old fixed-head future-aware adapter had no prediction leakage and nonzero teacher/student alignment, but failed to produce stable gains because it did not act on a target-set decoder carrier."
+    },
+    "hypothesis": "A training-only future teacher that encodes each ground-truth future segment can calibrate the student target state U_j through local and relation alignment, improving weak horizon/segment errors without breaking prefix consistency or inference safety.",
+    "method": {
+      "future_teacher": "S_y_j = T_psi(Y_segment_j, q_j), training-only",
+      "student_state": "S_x_j = P_theta(U_j)",
+      "prediction_path": "unchanged R.3 target-set FiLM readout; future_y is not used for inference",
+      "loss": "prefix_risk_prediction_loss + local_cosine_alignment + target_relation_alignment",
+      "initial_weights": {
+        "future_align_weight": 0.02,
+        "future_relation_weight": 0.01,
+        "future_recon_weight": 0.0
+      }
+    },
+    "gate": {
+      "local_smoke": {
+        "dataset": "ETTh2",
+        "target_horizons": [
+          96,
+          192,
+          336,
+          720
+        ],
+        "epochs": 1,
+        "required_artifacts": [
+          "metrics_by_target_horizon.csv",
+          "prefix_consistency.csv",
+          "target_state_similarity.csv",
+          "future_alignment_stats.csv",
+          "future_leakage_audit.json",
+          "effective_config.json"
+        ]
+      },
+      "remote_gate": {
+        "datasets": [
+          "ETTh2",
+          "ETTm1",
+          "Weather"
+        ],
+        "horizons": [
+          96,
+          192,
+          336,
+          720
+        ],
+        "seed": 2021,
+        "primary_baselines": [
+          "PatchEncoderFixedHead",
+          "PatchEncoderPrefixRiskWeighted"
+        ]
+      },
+      "compatibility_preserving_pass": [
+        "mean_relative_mse_vs_fixed <= -0.43%",
+        "no_dataset_average_worse_than_R3_by_more_than_0.3pct",
+        "prefix_mismatch_numerical_zero",
+        "prediction_leakage_max_abs <= 1e-7",
+        "teacher_student_alignment_stats_written_and_improve_during_training"
+      ],
+      "paper_core_candidate_pass": [
+        "wins_vs_R3 >= 7/12 or mean_relative_mse_vs_R3 <= -0.5%",
+        "at_least_two_R3_weak_settings_improve",
+        "improvement_localized_to_horizon_segment_frequency_or_target_state_alignment_diagnostics"
+      ]
+    },
+    "rollback": {
+      "alignment_without_forecast_gain": "Return to step 2-5 and treat future teacher as an auxiliary proxy, not a paper-core mechanism.",
+      "weather_degradation": "Diagnose alignment conflict before adding routing or MoE.",
+      "leakage_failure": "Discard the implementation until the train/eval future boundary is repaired."
+    }
+  },
+  "paths": {
+    "local_dataset_root": "/Users/river/PaperResearch/Project/datasets",
+    "remote_dataset_root": "/home/yingch/dataset",
+    "local_smoke_root": "artifacts/runs/smoke_phase2_future_state_alignment",
+    "remote_artifact_root": "/home/yingch/exp_outputs/r-2026-fatst/phase2_future_state_alignment",
+    "analysis_root": "analysis/phase2_future_state_alignment_gate_20260622"
+  },
+  "remote": {
+    "host": "529_Lab-3090",
+    "conda_env": "moe",
+    "gpu_policy": "check nvidia-smi before every run; prefer GPU 1 or 2 when memory is safe; use two GPUs if both are idle"
+  }
+}
