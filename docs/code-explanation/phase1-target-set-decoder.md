@@ -91,6 +91,41 @@ $$
 
 若启用 RevIN，最终 prediction denorm 回原始尺度。
 
+## Prefix Residual Repair
+
+`--prefix-residual-segments K` 启用 short-prefix targeted repair。默认 `K=0`，即完全复现
+第一版 `PatchEncoderTargetSetDecoder`。
+
+启用后，模型从同一个 history patch state 生成前 $K$ 个 target segments 的 residual：
+
+$$
+\Delta^{prefix}
+=
+R^{prefix}_\theta(\operatorname{Flatten}(Z))
+\in \mathbb{R}^{(B C) \times (K \cdot S)}.
+$$
+
+其中 $S$ 是 `segment_len`。该 residual 只加到前 $K$ 个 segments：
+
+$$
+\hat{y}_{a_j:b_j}
+=
+O_\theta(r\odot(1+\gamma_j)+\beta_j)
++
+\Delta^{prefix}_{a_j:b_j},
+\quad j<K.
+$$
+
+`prefix_residual_head` 采用 zero initialization，因此训练起点仍等价于未修补版本。
+这个 repair 的约束是：
+
+- residual 只依赖 $Z$ 和 segment index，不依赖 requested horizon scalar；
+- 同一个 prefix segment 在 `H=96` 与 `H=720` 请求下 residual 完全相同；
+- 它只补 short-prefix dense readout capacity，不改变 target-set interface 的核心故事。
+
+该机制直接针对 Phase1-R 的 near-miss 失败点：h96/h192 strict H720-prefix gate 未完全通过，
+且 h96 相对 specialist 的 amortization gap 明显偏大。
+
 ## Mixed-Horizon Training
 
 `train.py` 为每个 target horizon `{96,192,336,720}` 建立独立 `ForecastDataset` 和
@@ -121,6 +156,8 @@ PatchEncoderTargetSetDecoder/{dataset}/mixed_h96_h192_h336_h720/seed{seed}
 - `h{H}/metrics_by_segment.csv`: segment-level MSE/MAE。
 - `h{H}/target_state_similarity.csv`: target segment states 的 pairwise cosine。
 - `h{H}/target_conditioning_stats.csv`: $\gamma,\beta$ 与 target state norm 统计。
+- `h{H}/prefix_residual_stats.csv`: 仅在启用 `--prefix-residual-segments` 时写出，记录
+  normalized prefix residual 幅度。
 - `h{H}/predictions_test.npz`: 仅在显式传入 `--save-predictions` 时写出，避免 Weather
   等大数据集在 remote gate 中把时间浪费在压缩后又删除的 heavy artifact 上。
 - `training_log.csv`: 每个 epoch 的 train loss、各 horizon validation metrics 和 horizon sampling counts。
@@ -137,6 +174,10 @@ PatchEncoderTargetSetDecoder/{dataset}/mixed_h96_h192_h336_h720/seed{seed}
 
 [Proxy] target set 目前是 segment-level，而不是 every-step token；target-query interaction
 第一版采用 independent policy，而不是完整 structured target self-attention。
+
+[Repair boundary] prefix residual 是 short-prefix capacity repair，不是新的 paper-core claim。
+若它只修复 h96/h192 strict gate 但无法降低整体 mean relative MSE，则它最多说明 target-set
+interface 需要 capacity-preserving prefix path，不能单独作为最终创新点。
 
 [Falsification] 如果 mixed target-set model 相比 horizon-specific `PatchEncoderFixedHead`
 mean relative MSE 超过 `+1.0%`，或 target states 高度同质，或 prefix consistency 没有改善，

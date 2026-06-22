@@ -84,6 +84,8 @@ class PatchEncoderTargetSetDecoder(nn.Module):
         target_heads: int = 8,
         target_d_ff: int = 256,
         readout_dim: int = 256,
+        prefix_residual_segments: int = 0,
+        prefix_residual_dropout: float = 0.0,
     ) -> None:
         super().__init__()
         if segment_len <= 0:
@@ -99,6 +101,9 @@ class PatchEncoderTargetSetDecoder(nn.Module):
         self.max_pred_len = max_pred_len
         self.max_segments = math.ceil(max_pred_len / segment_len)
         self.readout_dim = readout_dim
+        if prefix_residual_segments < 0:
+            raise ValueError("prefix_residual_segments must be non-negative.")
+        self.prefix_residual_segments = min(prefix_residual_segments, self.max_segments)
         self.revin = RevIN(channels, affine=False) if revin else None
 
         self.padding_patch = nn.ReplicationPad1d((0, stride))
@@ -147,9 +152,21 @@ class PatchEncoderTargetSetDecoder(nn.Module):
             nn.Linear(d_model, 2 * readout_dim),
         )
         self.segment_output = nn.Linear(readout_dim, segment_len)
+        self.prefix_residual_head: nn.Sequential | None = None
+        if self.prefix_residual_segments > 0:
+            self.prefix_residual_head = nn.Sequential(
+                nn.Dropout(prefix_residual_dropout),
+                nn.Flatten(start_dim=1),
+                nn.Linear(n_patches * d_model, self.prefix_residual_segments * segment_len),
+            )
 
         nn.init.trunc_normal_(self.pos_embedding, std=0.02)
         nn.init.trunc_normal_(self.target_pos_embedding, std=0.02)
+        if self.prefix_residual_head is not None:
+            final = self.prefix_residual_head[-1]
+            if isinstance(final, nn.Linear):
+                nn.init.zeros_(final.weight)
+                nn.init.zeros_(final.bias)
 
     def _validate_pred_len(self, pred_len: int) -> int:
         if pred_len <= 0:
@@ -219,8 +236,16 @@ class PatchEncoderTargetSetDecoder(nn.Module):
 
         conditioned = history_readout[:, None, :] * (1.0 + gamma) + beta
         segment_values = self.segment_output(conditioned).reshape(z.shape[0], segment_count * self.segment_len)
+        prefix_residual = segment_values.new_zeros(z.shape[0], segment_count * self.segment_len)
+        if self.prefix_residual_head is not None:
+            active_prefix_segments = min(segment_count, self.prefix_residual_segments)
+            active_width = active_prefix_segments * self.segment_len
+            residual_values = self.prefix_residual_head(z)[:, :active_width]
+            prefix_residual[:, :active_width] = residual_values
+            segment_values = segment_values + prefix_residual
         y_norm = segment_values[:, :pred_len]
         y = y_norm.reshape(batch, channels, pred_len).permute(0, 2, 1)
+        prefix_residual_y = prefix_residual[:, :pred_len].reshape(batch, channels, pred_len).permute(0, 2, 1)
 
         target_states_view = target_states.reshape(batch, channels, segment_count, -1)
         gamma_view = gamma.reshape(batch, channels, segment_count, -1)
@@ -237,5 +262,6 @@ class PatchEncoderTargetSetDecoder(nn.Module):
                 "gamma": gamma_view,
                 "beta": beta_view,
                 "history_readout": history_readout_view,
+                "prefix_residual_norm": prefix_residual_y,
             }
         return y

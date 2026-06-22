@@ -1,4 +1,4 @@
-# Phase1-R Target-Set Decoder Gate Report
+# Phase1-R PatchEncoderTargetSetDecoder Gate Report
 
 ## Decision
 

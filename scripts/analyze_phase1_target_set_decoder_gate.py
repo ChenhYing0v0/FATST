@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import json
+import argparse
 from pathlib import Path
 from statistics import mean
 
@@ -30,18 +31,18 @@ def write_csv(path: Path, rows: list[dict[str, object]]) -> None:
         writer.writerows(rows)
 
 
-def target_run_dir(raw_root: Path, dataset: str) -> Path:
-    return raw_root / "PatchEncoderTargetSetDecoder" / dataset / TARGET_RUN / f"seed{SEED}"
+def target_run_dir(raw_root: Path, model_name: str, target_run: str, dataset: str) -> Path:
+    return raw_root / model_name / dataset / target_run / f"seed{SEED}"
 
 
 def fixed_run_dir(fixed_raw_root: Path, dataset: str, horizon: int) -> Path:
     return fixed_raw_root / "PatchEncoderFixedHead" / dataset / f"h{horizon}" / f"seed{SEED}"
 
 
-def collect_main_metrics(raw_root: Path, fixed_raw_root: Path) -> list[dict[str, object]]:
+def collect_main_metrics(raw_root: Path, fixed_raw_root: Path, model_name: str, target_run: str) -> list[dict[str, object]]:
     rows: list[dict[str, object]] = []
     for dataset in DATASETS:
-        target_metrics = read_csv(target_run_dir(raw_root, dataset) / "metrics_by_target_horizon.csv")
+        target_metrics = read_csv(target_run_dir(raw_root, model_name, target_run, dataset) / "metrics_by_target_horizon.csv")
         target_by_horizon = {int(row["target_horizon"]): row for row in target_metrics}
         for horizon in HORIZONS:
             target = target_by_horizon[horizon]
@@ -67,11 +68,11 @@ def collect_main_metrics(raw_root: Path, fixed_raw_root: Path) -> list[dict[str,
     return rows
 
 
-def collect_segment_metrics(raw_root: Path, fixed_raw_root: Path) -> list[dict[str, object]]:
+def collect_segment_metrics(raw_root: Path, fixed_raw_root: Path, model_name: str, target_run: str) -> list[dict[str, object]]:
     rows: list[dict[str, object]] = []
     for dataset in DATASETS:
         for horizon in HORIZONS:
-            target_rows = read_csv(target_run_dir(raw_root, dataset) / f"h{horizon}" / "metrics_by_segment.csv")
+            target_rows = read_csv(target_run_dir(raw_root, model_name, target_run, dataset) / f"h{horizon}" / "metrics_by_segment.csv")
             fixed_rows = read_csv(fixed_run_dir(fixed_raw_root, dataset, horizon) / "metrics_by_segment.csv")
             fixed_by_segment = {row["segment"]: row for row in fixed_rows}
             for target in target_rows:
@@ -99,10 +100,10 @@ def collect_segment_metrics(raw_root: Path, fixed_raw_root: Path) -> list[dict[s
     return rows
 
 
-def collect_prefix_metrics(raw_root: Path) -> list[dict[str, object]]:
+def collect_prefix_metrics(raw_root: Path, model_name: str, target_run: str) -> list[dict[str, object]]:
     rows: list[dict[str, object]] = []
     for dataset in DATASETS:
-        for row in read_csv(target_run_dir(raw_root, dataset) / "prefix_consistency.csv"):
+        for row in read_csv(target_run_dir(raw_root, model_name, target_run, dataset) / "prefix_consistency.csv"):
             rows.append(
                 {
                     "dataset": dataset,
@@ -116,11 +117,11 @@ def collect_prefix_metrics(raw_root: Path) -> list[dict[str, object]]:
     return rows
 
 
-def collect_state_metrics(raw_root: Path) -> list[dict[str, object]]:
+def collect_state_metrics(raw_root: Path, model_name: str, target_run: str) -> list[dict[str, object]]:
     rows: list[dict[str, object]] = []
     for dataset in DATASETS:
         for horizon in HORIZONS:
-            run_dir = target_run_dir(raw_root, dataset) / f"h{horizon}"
+            run_dir = target_run_dir(raw_root, model_name, target_run, dataset) / f"h{horizon}"
             similarity = read_csv(run_dir / "target_state_similarity.csv")
             conditioning = read_csv(run_dir / "target_conditioning_stats.csv")
             all_conditioning = next(row for row in conditioning if row["scope"] == "all")
@@ -140,7 +141,7 @@ def collect_state_metrics(raw_root: Path) -> list[dict[str, object]]:
     return rows
 
 
-def collect_h720_prefix_reference(raw_root: Path) -> list[dict[str, object]]:
+def collect_h720_prefix_reference(raw_root: Path, model_name: str, target_run: str) -> list[dict[str, object]]:
     phase0_rows = read_csv(Path("analysis/phase0_prefix_consistency_raw_20260621.csv"))
     fixed_prefix = {
         (row["dataset"], int(row["prefix_horizon"])): row
@@ -149,7 +150,7 @@ def collect_h720_prefix_reference(raw_root: Path) -> list[dict[str, object]]:
     }
     rows: list[dict[str, object]] = []
     for dataset in DATASETS:
-        h720_steps = read_csv(target_run_dir(raw_root, dataset) / "h720" / "metrics_by_horizon.csv")
+        h720_steps = read_csv(target_run_dir(raw_root, model_name, target_run, dataset) / "h720" / "metrics_by_horizon.csv")
         step_mse = [float(row["mse"]) for row in h720_steps]
         step_mae = [float(row["mae"]) for row in h720_steps]
         for horizon in HORIZONS:
@@ -239,20 +240,21 @@ def write_report(
     summary: dict[str, object],
     main_rows: list[dict[str, object]],
     h720_prefix_rows: list[dict[str, object]],
+    model_name: str,
 ) -> None:
     dataset_mean = summary["dataset_mean_relative_mse_pct"]
     horizon_mean = summary["horizon_mean_relative_mse_pct"]
     compatibility = summary["compatibility"]
     lines = [
-        "# Phase1-R Target-Set Decoder Gate Report",
+        f"# Phase1-R {model_name} Gate Report",
         "",
         "## Decision",
         "",
     ]
     if compatibility["pass"]:
-        lines.append("[Decision] `PatchEncoderTargetSetDecoder` reaches compatibility pass.")
+        lines.append(f"[Decision] `{model_name}` reaches compatibility pass.")
     else:
-        lines.append("[Decision] `PatchEncoderTargetSetDecoder` does not reach compatibility pass.")
+        lines.append(f"[Decision] `{model_name}` does not reach compatibility pass.")
     lines += [
         "",
         "It should not be treated as paper-core unless follow-up mechanisms convert its target-side state into stable forecast gains.",
@@ -334,24 +336,40 @@ def write_report(
     path.write_text("\n".join(lines) + "\n")
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Analyze Phase1-R target-set decoder gate.")
+    parser.add_argument("--analysis-root", default="analysis/phase1_target_set_decoder_gate_20260622")
+    parser.add_argument("--model-name", default="PatchEncoderTargetSetDecoder")
+    parser.add_argument("--target-run", default=TARGET_RUN)
+    parser.add_argument("--output-prefix", default="phase1_target_set_decoder")
+    return parser.parse_args()
+
+
 def main() -> None:
-    analysis_root = Path("analysis/phase1_target_set_decoder_gate_20260622")
+    args = parse_args()
+    analysis_root = Path(args.analysis_root)
     raw_root = analysis_root / "raw"
     fixed_raw_root = Path("analysis/phase1_trajectory_basis_residual_gate_20260622/raw")
-    main_rows = collect_main_metrics(raw_root, fixed_raw_root)
-    segment_rows = collect_segment_metrics(raw_root, fixed_raw_root)
-    prefix_rows = collect_prefix_metrics(raw_root)
-    h720_prefix_rows = collect_h720_prefix_reference(raw_root)
-    state_rows = collect_state_metrics(raw_root)
+    main_rows = collect_main_metrics(raw_root, fixed_raw_root, args.model_name, args.target_run)
+    segment_rows = collect_segment_metrics(raw_root, fixed_raw_root, args.model_name, args.target_run)
+    prefix_rows = collect_prefix_metrics(raw_root, args.model_name, args.target_run)
+    h720_prefix_rows = collect_h720_prefix_reference(raw_root, args.model_name, args.target_run)
+    state_rows = collect_state_metrics(raw_root, args.model_name, args.target_run)
     summary = summarize(main_rows, segment_rows, prefix_rows, h720_prefix_rows, state_rows)
 
-    write_csv(analysis_root / "phase1_target_set_decoder_vs_fixed.csv", main_rows)
-    write_csv(analysis_root / "phase1_target_set_decoder_vs_fixed_segments.csv", segment_rows)
-    write_csv(analysis_root / "phase1_target_set_decoder_prefix_consistency.csv", prefix_rows)
-    write_csv(analysis_root / "phase1_target_set_decoder_h720_prefix_reference.csv", h720_prefix_rows)
-    write_csv(analysis_root / "phase1_target_set_decoder_state_stats.csv", state_rows)
-    (analysis_root / "phase1_target_set_decoder_summary.json").write_text(json.dumps(summary, indent=2))
-    write_report(analysis_root / "phase1_target_set_decoder_gate_report.md", summary, main_rows, h720_prefix_rows)
+    write_csv(analysis_root / f"{args.output_prefix}_vs_fixed.csv", main_rows)
+    write_csv(analysis_root / f"{args.output_prefix}_vs_fixed_segments.csv", segment_rows)
+    write_csv(analysis_root / f"{args.output_prefix}_prefix_consistency.csv", prefix_rows)
+    write_csv(analysis_root / f"{args.output_prefix}_h720_prefix_reference.csv", h720_prefix_rows)
+    write_csv(analysis_root / f"{args.output_prefix}_state_stats.csv", state_rows)
+    (analysis_root / f"{args.output_prefix}_summary.json").write_text(json.dumps(summary, indent=2))
+    write_report(
+        analysis_root / f"{args.output_prefix}_gate_report.md",
+        summary,
+        main_rows,
+        h720_prefix_rows,
+        args.model_name,
+    )
 
 
 if __name__ == "__main__":

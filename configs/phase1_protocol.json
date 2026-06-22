@@ -35,6 +35,17 @@
     "rollback_step": "Return to Step 5-6 for a targeted repair of short-horizon capacity and H720-prefix reuse, not to MoE. The target-side state is promising but not yet a passed carrier.",
     "next_direction": "Repair the target-set decoder with a short-prefix specialist residual, horizon-balanced objective, or capacity-preserving local prefix path; then rerun a targeted h96/h192 compatibility gate before future-aware or MoE."
   },
+  "active_repair": {
+    "candidate": "PatchEncoderTargetSetPrefixResidual",
+    "status": "local_smoke_passed_needs_remote_gate",
+    "base_candidate": "PatchEncoderTargetSetDecoder",
+    "problem": "The first target-set decoder mechanically solves prefix consistency but misses strict compatibility because short-prefix capacity is slightly weaker than fixed H720-prefix on ETTh2 h96 and ETTm1 h96, and h96 remains weak versus horizon-specific specialists.",
+    "hypothesis": "A zero-initialized dense residual readout shared by the first target segments can repair h96/h192 capacity without reintroducing horizon-specific heads or breaking prefix stability.",
+    "train_script": "baselines/patch_encoder_target_set_decoder/train.py",
+    "run_name": "PatchEncoderTargetSetPrefixResidual",
+    "prefix_residual_segments": 4,
+    "pass_condition": "H720-aligned h96/h192 strict no-degradation passes, h96 mean relative MSE improves over +2.74%, overall mean relative MSE stays <= +0.62%, and prefix mismatch remains near zero."
+  },
   "active_candidate": {
     "candidate": "PatchEncoderTargetSetDecoder",
     "status": "step_1_to_6_defined_needs_implementation",
@@ -153,6 +164,15 @@
       "target_interface": "future segment queries are model inputs and condition a dense history readout",
       "readout_policy": "preserve dense access to flattened history states to avoid the SegmentQueryHead capacity collapse",
       "mask_policy": "independent_target_queries_for_first_gate"
+    },
+    "PatchEncoderTargetSetPrefixResidual": {
+      "role": "phase1r1_repair_candidate",
+      "train_script": "baselines/patch_encoder_target_set_decoder/train.py",
+      "run_name": "PatchEncoderTargetSetPrefixResidual",
+      "target_sets": [96, 192, 336, 720],
+      "prefix_residual_segments": 4,
+      "prefix_residual_init": "zero",
+      "repair_scope": "shared dense residual readout for early target segments only"
     }
   },
   "metrics": {

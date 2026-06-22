@@ -110,6 +110,31 @@ def target_conditioning_stats(components: dict[str, np.ndarray]) -> list[dict[st
     return rows
 
 
+def prefix_residual_stats(components: dict[str, np.ndarray]) -> list[dict[str, float]]:
+    residual = components["prefix_residual_norm"]
+    rows = [
+        {
+            "scope": "all",
+            "residual_mse_norm": float(np.mean(residual * residual)),
+            "residual_mae_norm": float(np.mean(np.abs(residual))),
+            "max_abs_residual_norm": float(np.max(np.abs(residual))),
+        }
+    ]
+    for start, end in [(1, 96), (97, 192), (193, 336), (337, 720)]:
+        if residual.shape[1] < start:
+            continue
+        segment = residual[:, start - 1 : min(end, residual.shape[1]), :]
+        rows.append(
+            {
+                "scope": f"{start}-{min(end, residual.shape[1])}",
+                "residual_mse_norm": float(np.mean(segment * segment)),
+                "residual_mae_norm": float(np.mean(np.abs(segment))),
+                "max_abs_residual_norm": float(np.max(np.abs(segment))),
+            }
+        )
+    return rows
+
+
 def evaluate(
     model: PatchEncoderTargetSetDecoder,
     loader: DataLoader,
@@ -125,6 +150,7 @@ def evaluate(
         "gamma": [],
         "beta": [],
         "history_readout": [],
+        "prefix_residual_norm": [],
     }
     with torch.no_grad():
         for batch_index, (x, y) in enumerate(loader, start=1):
@@ -247,6 +273,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--target-heads", type=int, default=8)
     parser.add_argument("--target-d-ff", type=int, default=256)
     parser.add_argument("--readout-dim", type=int, default=256)
+    parser.add_argument("--prefix-residual-segments", type=int, default=0)
+    parser.add_argument("--prefix-residual-dropout", type=float, default=0.0)
     parser.add_argument("--batch-size", type=int, default=128)
     parser.add_argument("--epochs", type=int, default=1)
     parser.add_argument("--learning-rate", type=float, default=1e-4)
@@ -315,6 +343,8 @@ def main() -> None:
         target_heads=args.target_heads,
         target_d_ff=args.target_d_ff,
         readout_dim=args.readout_dim,
+        prefix_residual_segments=args.prefix_residual_segments,
+        prefix_residual_dropout=args.prefix_residual_dropout,
     ).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
     criterion = nn.MSELoss()
@@ -400,6 +430,8 @@ def main() -> None:
         write_csv(eval_dir / "metrics_by_segment.csv", metrics_by_segment(pred_np, true_np))
         write_csv(eval_dir / "target_state_similarity.csv", target_state_similarity(components))
         write_csv(eval_dir / "target_conditioning_stats.csv", target_conditioning_stats(components))
+        if args.prefix_residual_segments > 0:
+            write_csv(eval_dir / "prefix_residual_stats.csv", prefix_residual_stats(components))
 
     long_horizon = max(target_horizons)
     short_horizons = [horizon for horizon in target_horizons if horizon < long_horizon]

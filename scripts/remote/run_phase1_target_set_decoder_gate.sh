@@ -10,6 +10,9 @@ GPU_IDS="${GPU_IDS:-1}"
 SEED="${SEED:-2021}"
 EPOCHS="${EPOCHS:-100}"
 TARGET_HORIZONS="${TARGET_HORIZONS:-96,192,336,720}"
+RUN_NAME="${RUN_NAME:-PatchEncoderTargetSetDecoder}"
+PREFIX_RESIDUAL_SEGMENTS="${PREFIX_RESIDUAL_SEGMENTS:-0}"
+PREFIX_RESIDUAL_DROPOUT="${PREFIX_RESIDUAL_DROPOUT:-0.0}"
 STEPS_PER_EPOCH="${STEPS_PER_EPOCH:-}"
 MAX_EVAL_BATCHES="${MAX_EVAL_BATCHES:-}"
 KEEP_HEAVY_ARTIFACTS="${KEEP_HEAVY_ARTIFACTS:-0}"
@@ -54,6 +57,9 @@ echo "gpu_ids=${GPU_IDS}"
 echo "seed=${SEED}"
 echo "epochs=${EPOCHS}"
 echo "target_horizons=${TARGET_HORIZONS}"
+echo "run_name=${RUN_NAME}"
+echo "prefix_residual_segments=${PREFIX_RESIDUAL_SEGMENTS}"
+echo "prefix_residual_dropout=${PREFIX_RESIDUAL_DROPOUT}"
 echo "steps_per_epoch=${STEPS_PER_EPOCH:-auto}"
 echo "max_eval_batches=${MAX_EVAL_BATCHES:-all}"
 echo "keep_heavy_artifacts=${KEEP_HEAVY_ARTIFACTS}"
@@ -64,8 +70,8 @@ nvidia-smi --query-gpu=index,name,memory.total,memory.used,memory.free,utilizati
 run_one() {
   local dataset="$1"
   local gpu_id="$2"
-  local run_dir="${OUTPUT_ROOT}/PatchEncoderTargetSetDecoder/${dataset}/${horizon_label}/seed${SEED}"
-  local run_log="${LOG_ROOT}/PatchEncoderTargetSetDecoder_${dataset}_mixed_seed${SEED}.log"
+  local run_dir="${OUTPUT_ROOT}/${RUN_NAME}/${dataset}/${horizon_label}/seed${SEED}"
+  local run_log="${LOG_ROOT}/${RUN_NAME}_${dataset}_mixed_seed${SEED}.log"
   local extra_args=()
 
   if [[ -n "${STEPS_PER_EPOCH}" ]]; then
@@ -76,11 +82,11 @@ run_one() {
   fi
 
   if [[ -s "${run_dir}/metrics_by_target_horizon.csv" ]]; then
-    echo "skip_existing model=PatchEncoderTargetSetDecoder dataset=${dataset}"
+    echo "skip_existing model=${RUN_NAME} dataset=${dataset}"
     return 0
   fi
 
-  echo "run_start=$(date -Is) model=PatchEncoderTargetSetDecoder dataset=${dataset} gpu=${gpu_id}"
+  echo "run_start=$(date -Is) model=${RUN_NAME} dataset=${dataset} gpu=${gpu_id}"
   CUDA_VISIBLE_DEVICES="${gpu_id}" PYTHONUNBUFFERED=1 "${CONDA_BIN}" run --no-capture-output -n "${CONDA_ENV}" \
     python baselines/patch_encoder_target_set_decoder/train.py \
     --dataset-root "${DATASET_ROOT}" \
@@ -88,13 +94,16 @@ run_one() {
     --target-horizons "${TARGET_HORIZONS}" \
     --epochs "${EPOCHS}" \
     --seed "${SEED}" \
+    --run-name "${RUN_NAME}" \
+    --prefix-residual-segments "${PREFIX_RESIDUAL_SEGMENTS}" \
+    --prefix-residual-dropout "${PREFIX_RESIDUAL_DROPOUT}" \
     --output-root "${OUTPUT_ROOT}" \
     --device cuda \
     "${extra_args[@]}" 2>&1 | tee "${run_log}"
   if [[ "${KEEP_HEAVY_ARTIFACTS}" != "1" ]]; then
     find "${run_dir}" -type f \( -name "checkpoint.pt" -o -name "predictions_test.npz" \) -delete
   fi
-  echo "run_done=$(date -Is) model=PatchEncoderTargetSetDecoder dataset=${dataset} gpu=${gpu_id}"
+  echo "run_done=$(date -Is) model=${RUN_NAME} dataset=${dataset} gpu=${gpu_id}"
 }
 
 job_index=0
