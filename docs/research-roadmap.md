@@ -628,7 +628,8 @@ gain，再回退到 problem definition 或重新选择 base architecture。
 
 ## Phase2: Future-Aware Mechanism
 
-状态：`PatchEncoderFutureStateAlignment` 已实现并通过 local smoke，等待 remote gate。
+状态：`PatchEncoderFutureStateAlignment` remote gate 已完成，未通过；回退到 step 3-5
+诊断 future-state alignment conflict。
 
 核心文档：
 
@@ -772,6 +773,54 @@ proxy，不是有效 paper-core mechanism；应回到 step 2-5，考虑 covarian
 | `192` | `0.0` |
 | `336` | `0.0` |
 | `720` | `0.0` |
+
+[Fact] Remote gate 已完成：
+
+- report: `analysis/phase2_future_state_alignment_gate_20260622/phase2_future_state_alignment_decision_report.md`
+- code commit: `2f3dc42`
+- selected GPUs: `1`, `2`
+- remote output: `/home/yingch/exp_outputs/r-2026-fatst/phase2_future_state_alignment/PatchEncoderFutureStateAlignment`
+
+[Evidence] vs horizon-specific `PatchEncoderFixedHead`:
+
+| Metric | Value |
+| --- | ---: |
+| MSE wins | `6/12` |
+| MAE wins | `6/12` |
+| mean relative MSE | `+0.84%` |
+| ETTh2 mean relative MSE | `+4.54%` |
+| ETTm1 mean relative MSE | `-0.96%` |
+| Weather mean relative MSE | `-1.04%` |
+
+[Evidence] vs R.3 carrier `PatchEncoderPrefixRiskWeighted`:
+
+| Metric | Value |
+| --- | ---: |
+| MSE wins | `7/12` |
+| MAE wins | `7/12` |
+| mean relative MSE | `+1.29%` |
+| ETTh2 mean relative MSE | `+5.25%` |
+| ETTm1 mean relative MSE | `-1.29%` |
+| Weather mean relative MSE | `-0.07%` |
+
+[Evidence] Mechanism diagnostics:
+
+| Diagnostic | Value |
+| --- | ---: |
+| max prefix mismatch MSE | `4.72701e-14` |
+| max prediction leakage abs | `0.0` |
+| mean teacher/student cosine | `0.762778` |
+| mean local alignment loss | `0.237222` |
+| mean relation alignment loss | `0.074249` |
+
+[Decision] `PatchEncoderFutureStateAlignment` 未通过 Phase2 gate。它不是 leakage failure，也
+不是 prefix consistency failure；它对 `ETTm1` 全 horizon 有稳定改善，对 `Weather` 三个长
+horizon 有轻微改善，但 `ETTh2` 全 horizon 明显退化，导致 R.3 carrier 被破坏。
+
+[Rollback] 当前不应在该 state 上继续叠加 MoE，也不应简单增大 teacher capacity。回退点是
+step 3-5：诊断 alignment conflict。下一轮候选应先回答 uniform future alignment 为什么与
+`ETTh2` dynamics 冲突，可能方向包括 scale-normalized teacher reconstruction、scheduled/gated
+alignment、uncertainty-weighted alignment，或 horizon/dataset conflict diagnostics。
 
 Phase2 pass 条件：
 

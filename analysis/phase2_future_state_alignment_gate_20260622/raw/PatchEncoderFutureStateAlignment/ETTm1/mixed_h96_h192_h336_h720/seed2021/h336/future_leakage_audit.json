@@ -1,0 +1,6 @@
+{
+  "true_future_prediction_max_abs": 0.0,
+  "shuffled_future_prediction_max_abs": 0.0,
+  "zero_future_prediction_max_abs": 0.0,
+  "prediction_leakage_max_abs": 0.0
+}

@@ -1,0 +1,2 @@
+scope,future_local_alignment_loss,future_relation_alignment_loss,future_reconstruction_loss,teacher_student_cosine,prediction_leakage_max_abs
+all,0.16803528865178427,0.043695848107475926,478.321543181568,0.8319646804421036,0.0

@@ -1,8 +1,8 @@
 {
   "phase": "phase2",
   "objective": "Evaluate whether a training-only future-state teacher can calibrate the target-side states of the compatible target-set decoder and turn future-aware supervision into forecast-relevant gains.",
-  "status": "phase2a_future_state_alignment_local_smoke_passed_needs_remote_gate",
-  "research_loop_step": "8",
+  "status": "phase2a_future_state_alignment_failed_remote_gate_needs_alignment_conflict_diagnosis",
+  "research_loop_step": "11",
   "base_carrier": {
     "candidate": "PatchEncoderPrefixRiskWeighted",
     "source_report": "analysis/phase1_prefix_risk_weighted_gate_20260622/phase1_prefix_risk_weighted_gate_report.md",
@@ -13,7 +13,7 @@
   },
   "active_candidate": {
     "candidate": "PatchEncoderFutureStateAlignment",
-    "status": "local_smoke_passed_needs_remote_gate",
+    "status": "failed_remote_gate",
     "design_doc": "docs/experiments/phase2-future-state-alignment-design.md",
     "base_candidate": "PatchEncoderPrefixRiskWeighted",
     "problem": "The R.3 target-set decoder has target-aware states U_T, but these states are inferred only from history and target queries. They are not explicitly calibrated to the distributional state of the realized future segment during training.",
@@ -122,6 +122,42 @@
       "prediction_leakage_max_abs": "0.0",
       "required_artifacts_written": true,
       "decision": "passed; future-state alignment path writes required artifacts, preserves prefix consistency, passes leakage audit, and keeps reconstruction auxiliary rather than dominant"
+    },
+    "remote_gate_result": {
+      "analysis_root": "analysis/phase2_future_state_alignment_gate_20260622",
+      "decision_report": "analysis/phase2_future_state_alignment_gate_20260622/phase2_future_state_alignment_decision_report.md",
+      "mse_wins_vs_fixed": "6/12",
+      "mae_wins_vs_fixed": "6/12",
+      "mean_relative_mse_vs_fixed": "+0.84%",
+      "dataset_mean_relative_mse_vs_fixed": {
+        "ETTh2": "+4.54%",
+        "ETTm1": "-0.96%",
+        "Weather": "-1.04%"
+      },
+      "mse_wins_vs_r3": "7/12",
+      "mae_wins_vs_r3": "7/12",
+      "mean_relative_mse_vs_r3": "+1.29%",
+      "dataset_mean_relative_mse_vs_r3": {
+        "ETTh2": "+5.25%",
+        "ETTm1": "-1.29%",
+        "Weather": "-0.07%"
+      },
+      "max_prefix_mismatch_mse": "4.72701e-14",
+      "max_prediction_leakage_abs": "0.0",
+      "mean_teacher_student_cosine": "0.762778",
+      "decision": "failed; leakage-safe and useful on ETTm1, but breaks the R.3 carrier on ETTh2 and is not a paper-core candidate",
+      "rollback_step": "Return to step 3-5 to diagnose dataset-specific alignment conflict. Do not stack MoE on this state."
+    },
+    "next_candidate_direction": {
+      "status": "needs_problem_definition_before_implementation",
+      "candidate_family": "conflict-aware or scale-normalized future-state alignment",
+      "motivation": "Phase2-A proves future-state alignment can help some datasets, but uniform alignment/reconstruction conflicts with ETTh2. Next work must diagnose whether the conflict comes from reconstruction scale, teacher quality, alignment strength, or dataset-specific future dynamics.",
+      "possible_repairs": [
+        "scale-normalized teacher reconstruction loss",
+        "scheduled or gated alignment weight",
+        "uncertainty-weighted alignment based on teacher reconstruction error",
+        "horizon/dataset conflict diagnostics before MoE"
+      ]
     }
   },
   "paths": {

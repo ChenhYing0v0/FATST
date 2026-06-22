@@ -1,0 +1,64 @@
+{
+  "main_rows": 12,
+  "segment_rows": 30,
+  "mse_wins": 6,
+  "mae_wins": 6,
+  "mean_relative_mse_pct": 0.8435777075161216,
+  "min_relative_mse_pct": -3.4575427810103476,
+  "max_relative_mse_pct": 6.708256686509451,
+  "dataset_mean_relative_mse_pct": {
+    "ETTh2": 4.539730155894317,
+    "ETTm1": -0.9648360562718783,
+    "Weather": -1.0441609770740738
+  },
+  "horizon_mean_relative_mse_pct": {
+    "96": 3.1144936793605194,
+    "192": -0.1507006172087618,
+    "336": -0.6019805283541549,
+    "720": 1.0124982962668838
+  },
+  "segment_mse_wins": 17,
+  "segment_mean_relative_mse_pct": 0.31376951061262,
+  "h720_prefix_mse_wins": 8,
+  "h720_prefix_h96_h192_mean_relative_mse_pct": -0.6111837662772716,
+  "max_prefix_mismatch_mse": 4.727005597929615e-14,
+  "mean_target_state_cosine": 0.3635327272108014,
+  "mean_abs_gamma": 0.687713826696078,
+  "mean_abs_beta": 0.41591665397087735,
+  "compatibility": {
+    "mean_relative_mse_le_1pct": true,
+    "no_dataset_degrades_over_3pct": false,
+    "h96_h192_not_worse_than_fixed_h720_prefix": false,
+    "prefix_mismatch_near_zero": true,
+    "target_states_non_identical": true,
+    "pass": false
+  },
+  "vs_r3": {
+    "mse_wins": 7,
+    "mae_wins": 7,
+    "mean_relative_mse_vs_r3_pct": 1.294243031763306,
+    "dataset_mean_relative_mse_vs_r3_pct": {
+      "ETTh2": 5.245200887069575,
+      "ETTm1": -1.287779015258572,
+      "Weather": -0.07469277652108461
+    },
+    "weak_settings_improved": {
+      "ETTh2_h720": false,
+      "ETTm1_h96": true,
+      "ETTm1_h720": true,
+      "Weather_h96": false
+    }
+  },
+  "future_alignment": {
+    "mean_teacher_student_cosine": 0.7627780432437913,
+    "mean_future_local_alignment_loss": 0.23722192057116687,
+    "mean_future_relation_alignment_loss": 0.0742486728314883,
+    "max_prediction_leakage_abs": 0.0
+  },
+  "phase2_decision": {
+    "compatibility_preserving_pass": false,
+    "paper_core_candidate_pass": false,
+    "decision": "failed; future-state alignment is leakage-safe and improves ETTm1/Weather average, but breaks the R.3 carrier on ETTh2 and worsens mean MSE vs R.3",
+    "rollback_step": "return to step 3-5 to diagnose dataset-specific alignment conflict before adding MoE or stronger future teacher capacity"
+  }
+}
