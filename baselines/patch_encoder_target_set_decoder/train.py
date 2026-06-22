@@ -11,7 +11,6 @@ from pathlib import Path
 
 import numpy as np
 import torch
-from torch import nn
 from torch.utils.data import DataLoader
 
 from dataset import DATASETS, ForecastDataset
@@ -133,6 +132,29 @@ def prefix_residual_stats(components: dict[str, np.ndarray]) -> list[dict[str, f
             }
         )
     return rows
+
+
+def weighted_mse_loss(
+    pred: torch.Tensor,
+    true: torch.Tensor,
+    max_pred_len: int,
+    mode: str,
+    alpha: float,
+) -> torch.Tensor:
+    if mode == "uniform":
+        return torch.mean((pred - true) ** 2)
+    if mode != "prefix_risk":
+        raise ValueError(f"Unknown step loss weighting mode: {mode}")
+    if alpha < 0:
+        raise ValueError("step_loss_alpha must be non-negative.")
+
+    horizon = pred.shape[1]
+    step = torch.arange(1, horizon + 1, device=pred.device, dtype=pred.dtype)
+    full_step = torch.arange(1, max_pred_len + 1, device=pred.device, dtype=pred.dtype)
+    weights = torch.pow(step / float(max_pred_len), -alpha)
+    full_weights = torch.pow(full_step / float(max_pred_len), -alpha)
+    weights = weights / torch.mean(full_weights)
+    return torch.mean((pred - true) ** 2 * weights.view(1, horizon, 1))
 
 
 def evaluate(
@@ -281,6 +303,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--batch-size", type=int, default=128)
     parser.add_argument("--epochs", type=int, default=1)
     parser.add_argument("--learning-rate", type=float, default=1e-4)
+    parser.add_argument("--step-loss-weighting", choices=["uniform", "prefix_risk"], default="uniform")
+    parser.add_argument("--step-loss-alpha", type=float, default=0.5)
     parser.add_argument("--patience", type=int, default=10)
     parser.add_argument("--seed", type=int, default=2021)
     parser.add_argument("--run-name", default="PatchEncoderTargetSetDecoder")
@@ -353,8 +377,6 @@ def main() -> None:
         prefix_residual_dropout=args.prefix_residual_dropout,
     ).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
-    criterion = nn.MSELoss()
-
     horizon_label = "mixed_" + "_".join(f"h{horizon}" for horizon in target_horizons)
     run_dir = Path(args.output_root) / args.run_name / args.dataset / horizon_label / f"seed{args.seed}"
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -385,7 +407,13 @@ def main() -> None:
             pred = model(x, pred_len=horizon)
             if isinstance(pred, dict):
                 raise TypeError("Expected tensor prediction.")
-            loss = criterion(pred, y)
+            loss = weighted_mse_loss(
+                pred,
+                y,
+                args.max_pred_len,
+                args.step_loss_weighting,
+                args.step_loss_alpha,
+            )
             loss.backward()
             optimizer.step()
             losses.append(float(loss.detach().cpu()))

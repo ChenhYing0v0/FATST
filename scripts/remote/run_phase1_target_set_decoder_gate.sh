@@ -16,6 +16,8 @@ PREFIX_RESIDUAL_DROPOUT="${PREFIX_RESIDUAL_DROPOUT:-0.0}"
 TARGET_INTERACTION_LAYERS="${TARGET_INTERACTION_LAYERS:-0}"
 TARGET_INTERACTION_HEADS="${TARGET_INTERACTION_HEADS:-0}"
 TARGET_INTERACTION_D_FF="${TARGET_INTERACTION_D_FF:-0}"
+STEP_LOSS_WEIGHTING="${STEP_LOSS_WEIGHTING:-uniform}"
+STEP_LOSS_ALPHA="${STEP_LOSS_ALPHA:-0.5}"
 STEPS_PER_EPOCH="${STEPS_PER_EPOCH:-}"
 MAX_EVAL_BATCHES="${MAX_EVAL_BATCHES:-}"
 KEEP_HEAVY_ARTIFACTS="${KEEP_HEAVY_ARTIFACTS:-0}"
@@ -66,6 +68,8 @@ echo "prefix_residual_dropout=${PREFIX_RESIDUAL_DROPOUT}"
 echo "target_interaction_layers=${TARGET_INTERACTION_LAYERS}"
 echo "target_interaction_heads=${TARGET_INTERACTION_HEADS}"
 echo "target_interaction_d_ff=${TARGET_INTERACTION_D_FF}"
+echo "step_loss_weighting=${STEP_LOSS_WEIGHTING}"
+echo "step_loss_alpha=${STEP_LOSS_ALPHA}"
 echo "steps_per_epoch=${STEPS_PER_EPOCH:-auto}"
 echo "max_eval_batches=${MAX_EVAL_BATCHES:-all}"
 echo "keep_heavy_artifacts=${KEEP_HEAVY_ARTIFACTS}"
@@ -106,6 +110,8 @@ run_one() {
     --target-interaction-layers "${TARGET_INTERACTION_LAYERS}" \
     --target-interaction-heads "${TARGET_INTERACTION_HEADS}" \
     --target-interaction-d-ff "${TARGET_INTERACTION_D_FF}" \
+    --step-loss-weighting "${STEP_LOSS_WEIGHTING}" \
+    --step-loss-alpha "${STEP_LOSS_ALPHA}" \
     --output-root "${OUTPUT_ROOT}" \
     --device cuda \
     "${extra_args[@]}" 2>&1 | tee "${run_log}"

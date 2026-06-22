@@ -1,7 +1,7 @@
 {
   "phase": "phase1",
   "objective": "Evaluate whether a target-set indexed forecasting decoder can expose future targets as model inputs, control the single-model amortization gap, improve prefix consistency, and provide a stable carrier for later future-aware or MoE mechanisms.",
-  "status": "phase1r2_causal_target_interaction_failed_needs_objective_rollback",
+  "status": "phase1r3_prefix_risk_weighted_objective_local_smoke_passed_needs_remote_gate",
   "decision_reports": [
     "analysis/phase1_segment_decoder_gate_20260621/phase1_segment_decoder_gate_report.md",
     "analysis/phase1_fixed_adapter_gate_20260621/phase1_fixed_adapter_gate_report.md",
@@ -15,7 +15,8 @@
     "analysis/phase1_target_set_decoder_gate_20260622/phase1_target_set_decoder_gate_report.md",
     "analysis/phase1_target_set_prefix_residual_gate_20260622/phase1_target_set_prefix_residual_gate_report.md",
     "docs/experiments/phase1-causal-target-interaction-design.md",
-    "analysis/phase1_causal_target_interaction_gate_20260622/phase1_causal_target_interaction_gate_report.md"
+    "analysis/phase1_causal_target_interaction_gate_20260622/phase1_causal_target_interaction_gate_report.md",
+    "docs/experiments/phase1-prefix-risk-weighted-objective-design.md"
   ],
   "latest_decision": {
     "candidate": "PatchEncoderTargetSetDecoder",
@@ -94,6 +95,29 @@
       "mean_target_state_cosine": "0.424291",
       "decision": "failed; causal target interaction preserves prefix stability and helps ETTm1, but Weather degrades systematically and the overall amortization gap is worse than the first target-set decoder",
       "rollback_step": "Return to step 3-5 and test mixed-horizon objective or task-weighting bottlenecks before adding future-aware or MoE mechanisms."
+    }
+  },
+  "active_objective_candidate": {
+    "candidate": "PatchEncoderPrefixRiskWeighted",
+    "status": "local_smoke_passed_needs_remote_gate",
+    "base_candidate": "PatchEncoderTargetSetDecoder",
+    "problem": "The first target-set decoder solves prefix consistency but remains weak on h96 and strict H720-prefix reuse; architecture-level repairs did not stabilize gains, so the mixed-horizon objective may be the active bottleneck.",
+    "existence_evidence": "PatchEncoderTargetSetDecoder has +0.62% mean relative MSE and +2.74% h96 relative MSE; PrefixResidual worsens to +2.03%; CausalTargetInteraction worsens to +1.40% and Weather +4.68%.",
+    "hypothesis": "A prefix-risk weighted MSE can prioritize future steps shared by all requested horizons and improve h96/prefix reuse without changing architecture.",
+    "design_doc": "docs/experiments/phase1-prefix-risk-weighted-objective-design.md",
+    "train_script": "baselines/patch_encoder_target_set_decoder/train.py",
+    "run_name": "PatchEncoderPrefixRiskWeighted",
+    "step_loss_weighting": "prefix_risk",
+    "step_loss_alpha": 0.5,
+    "target_interaction_layers": 0,
+    "prefix_residual_segments": 0,
+    "pass_condition": "Mean relative MSE <= +0.62%, h96 mean relative MSE < +2.74%, Weather does not degrade more than +1.0% beyond the first target-set decoder, H720-prefix h96/h192 does not regress from -0.85%, and prefix mismatch remains near zero.",
+    "local_smoke": {
+      "output_root": "artifacts/runs/smoke_phase1_prefix_risk_weighted",
+      "dataset": "ETTh2",
+      "target_horizons": [96, 192, 336, 720],
+      "max_prefix_mismatch_mse": "4.45529e-16",
+      "decision": "passed; prefix-risk weighted loss writes required artifacts and preserves prefix consistency at numerical zero level"
     }
   },
   "active_candidate": {
@@ -232,6 +256,17 @@
       "target_interaction_layers": 1,
       "target_interaction_policy": "causal_self_attention_over_target_states_after_target_history_cross_attention",
       "repair_scope": "model target-segment dependency without allowing later target queries to alter earlier prefixes"
+    },
+    "PatchEncoderPrefixRiskWeighted": {
+      "role": "phase1r3_objective_candidate",
+      "train_script": "baselines/patch_encoder_target_set_decoder/train.py",
+      "run_name": "PatchEncoderPrefixRiskWeighted",
+      "target_sets": [96, 192, 336, 720],
+      "step_loss_weighting": "prefix_risk",
+      "step_loss_alpha": 0.5,
+      "target_interaction_layers": 0,
+      "prefix_residual_segments": 0,
+      "repair_scope": "test whether mixed-horizon objective underweights shared early-prefix risk"
     }
   },
   "metrics": {

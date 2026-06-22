@@ -496,6 +496,76 @@ mixed-horizon objective / task weighting，而不是 architecture interaction；
 下一轮候选应优先测试 objective-level / task-weighting path，例如 horizon-balanced 或
 covariance-aware weighting，而不是继续改 architecture。
 
+### Phase1-R.3: Prefix-Risk Weighted Objective
+
+状态：local smoke 已通过，等待 remote gate。
+
+核心文档：
+
+- `docs/experiments/phase1-prefix-risk-weighted-objective-design.md`
+
+[Problem] 第一版 target-set decoder 已经做到 prefix consistency，但 h96 与部分 H720-prefix
+strict no-degradation 仍失败。R.1 output residual 和 R.2 causal target interaction 都没有稳定
+改善，说明继续加 readout capacity 或 target interaction 不是当前最合理路径。
+
+[Hypothesis] 当前瓶颈可能来自 mixed-horizon objective。普通 MSE 没有显式表达早期 future
+prefix 是所有 requested horizons 共享、也是 consistency-sensitive 的风险区域。给 early
+future steps 更高优化权重，可能修复 h96 和 prefix reuse，而不改模型结构。
+
+[Idea] 使用 prefix-risk weighted MSE：
+
+$$
+w_t =
+\frac{(t / H_{max})^{-\alpha}}
+{
+\frac{1}{H_{max}}\sum_{s=1}^{H_{max}}(s / H_{max})^{-\alpha}
+},
+$$
+
+$$
+\mathcal{L}_{prefix}
+=
+\frac{1}{BHC}
+\sum_{b,t,c}w_t(\hat{y}_{b,t,c}-y_{b,t,c})^2.
+$$
+
+[Design] 第一轮候选 `PatchEncoderPrefixRiskWeighted` 保持第一版
+`PatchEncoderTargetSetDecoder` architecture：
+
+- `target_interaction_layers=0`
+- `prefix_residual_segments=0`
+- `step_loss_weighting=prefix_risk`
+- `step_loss_alpha=0.5`
+
+[Gate] 第一轮 pass 条件：
+
+- mean relative MSE 不差于第一版 target-set 的 `+0.62%`；
+- h96 mean relative MSE 低于 `+2.74%`；
+- Weather mean relative MSE 不比第一版 target-set 的 `+0.13%` 多退化超过 `+1.0%`；
+- H720-prefix h96/h192 不差于 `-0.85%`；
+- prefix mismatch 仍为数值零级别。
+
+[Rollback] 若只改善 h96 但牺牲 Weather 或 long horizons，则它只能说明存在 risk tradeoff，
+不能作为 paper-core。下一步应转向更原则化的 covariance-aware objective，或重新考虑 base
+architecture，而不是继续手工调权重。
+
+[Fact] Local smoke 已通过：
+
+- output root: `artifacts/runs/smoke_phase1_prefix_risk_weighted`
+- dataset: `ETTh2`
+- target horizons: `{96,192,336,720}`
+- command uses `step_loss_weighting=prefix_risk`, `step_loss_alpha=0.5`
+- artifact check: `metrics_by_target_horizon.csv`, `prefix_consistency.csv`,
+  `target_state_similarity.csv`, and `effective_config.json` written
+
+[Evidence] smoke prefix mismatch remains numerical zero-level:
+
+| Prefix | Mismatch MSE |
+| --- | ---: |
+| `96/720` | `0.0` |
+| `192/720` | `0.0` |
+| `336/720` | `4.45529e-16` |
+
 ## Phase2: Future-Aware Mechanism
 
 状态：暂停，等待 Phase1-R 至少达到 compatibility pass。
