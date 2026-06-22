@@ -3,6 +3,7 @@ from __future__ import annotations
 import math
 
 import torch
+import torch.nn.functional as F
 from torch import nn
 
 
@@ -128,6 +129,10 @@ class PatchEncoderTargetSetDecoder(nn.Module):
         readout_dim: int = 256,
         prefix_residual_segments: int = 0,
         prefix_residual_dropout: float = 0.0,
+        future_teacher_layers: int = 0,
+        future_teacher_heads: int | None = None,
+        future_teacher_d_ff: int | None = None,
+        future_state_dim: int | None = None,
     ) -> None:
         super().__init__()
         if segment_len <= 0:
@@ -152,6 +157,14 @@ class PatchEncoderTargetSetDecoder(nn.Module):
             target_interaction_heads = target_heads
         if target_interaction_d_ff is None:
             target_interaction_d_ff = target_d_ff
+        if future_teacher_layers < 0:
+            raise ValueError("future_teacher_layers must be non-negative.")
+        if future_teacher_heads is None:
+            future_teacher_heads = target_heads
+        if future_teacher_d_ff is None:
+            future_teacher_d_ff = target_d_ff
+        if future_state_dim is None:
+            future_state_dim = d_model
         self.revin = RevIN(channels, affine=False) if revin else None
 
         self.padding_patch = nn.ReplicationPad1d((0, stride))
@@ -211,6 +224,47 @@ class PatchEncoderTargetSetDecoder(nn.Module):
             nn.Linear(d_model, 2 * readout_dim),
         )
         self.segment_output = nn.Linear(readout_dim, segment_len)
+        self.future_teacher_layers = future_teacher_layers
+        self.future_segment_embedding: nn.Linear | None = None
+        self.future_feature_embedding: nn.Sequential | None = None
+        self.future_pos_embedding: nn.Parameter | None = None
+        self.future_teacher_encoder: nn.TransformerEncoder | None = None
+        self.future_student_projection: nn.Sequential | None = None
+        self.future_teacher_projection: nn.Sequential | None = None
+        self.future_reconstruction_head: nn.Sequential | None = None
+        if future_teacher_layers > 0:
+            self.future_segment_embedding = nn.Linear(segment_len, d_model)
+            self.future_feature_embedding = nn.Sequential(
+                nn.Linear(8, d_model),
+                nn.GELU(),
+                nn.Linear(d_model, d_model),
+            )
+            self.future_pos_embedding = nn.Parameter(torch.zeros(1, self.max_segments, d_model))
+            future_teacher_layer = nn.TransformerEncoderLayer(
+                d_model=d_model,
+                nhead=future_teacher_heads,
+                dim_feedforward=future_teacher_d_ff,
+                dropout=dropout,
+                activation="gelu",
+                batch_first=True,
+                norm_first=True,
+            )
+            self.future_teacher_encoder = nn.TransformerEncoder(
+                future_teacher_layer,
+                num_layers=future_teacher_layers,
+            )
+            self.future_student_projection = nn.Sequential(
+                nn.LayerNorm(d_model),
+                nn.Linear(d_model, future_state_dim),
+            )
+            self.future_teacher_projection = nn.Sequential(
+                nn.LayerNorm(d_model),
+                nn.Linear(d_model, future_state_dim),
+            )
+            self.future_reconstruction_head = nn.Sequential(
+                nn.LayerNorm(d_model),
+                nn.Linear(d_model, segment_len),
+            )
         self.prefix_residual_head: nn.Sequential | None = None
         if self.prefix_residual_segments > 0:
             self.prefix_residual_head = nn.Sequential(
@@ -221,6 +275,8 @@ class PatchEncoderTargetSetDecoder(nn.Module):
 
         nn.init.trunc_normal_(self.pos_embedding, std=0.02)
         nn.init.trunc_normal_(self.target_pos_embedding, std=0.02)
+        if self.future_pos_embedding is not None:
+            nn.init.trunc_normal_(self.future_pos_embedding, std=0.02)
         if self.prefix_residual_head is not None:
             final = self.prefix_residual_head[-1]
             if isinstance(final, nn.Linear):
@@ -278,10 +334,80 @@ class PatchEncoderTargetSetDecoder(nn.Module):
             query = block(query)
         return query
 
+    def _normalize_future(self, y: torch.Tensor) -> torch.Tensor:
+        if self.revin is None:
+            return y
+        return (y - self.revin.mean) / (self.revin.std + self.revin.eps)
+
+    def _future_teacher_state(
+        self,
+        y_norm: torch.Tensor,
+        pred_len: int,
+        segment_count: int,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        if (
+            self.future_segment_embedding is None
+            or self.future_feature_embedding is None
+            or self.future_pos_embedding is None
+            or self.future_teacher_encoder is None
+            or self.future_teacher_projection is None
+            or self.future_reconstruction_head is None
+        ):
+            raise RuntimeError("future teacher branch is disabled.")
+
+        batch, horizon, channels = y_norm.shape
+        y_flat = y_norm.permute(0, 2, 1).reshape(batch * channels, horizon)
+        pad_len = segment_count * self.segment_len - horizon
+        if pad_len > 0:
+            y_flat = F.pad(y_flat, (0, pad_len))
+        segments = y_flat.reshape(batch * channels, segment_count, self.segment_len)
+        features = self._target_features(pred_len, segment_count, y_norm.device, y_norm.dtype)
+        teacher_state = self.future_segment_embedding(segments)
+        teacher_state = teacher_state + self.future_feature_embedding(features).unsqueeze(0)
+        teacher_state = teacher_state + self.future_pos_embedding[:, :segment_count, :]
+        teacher_state = self.future_teacher_encoder(teacher_state)
+        teacher_projected = self.future_teacher_projection(teacher_state)
+        reconstruction = self.future_reconstruction_head(teacher_state).reshape(
+            batch * channels,
+            segment_count * self.segment_len,
+        )
+        return teacher_projected, reconstruction[:, :pred_len]
+
+    def _future_alignment_components(
+        self,
+        target_states: torch.Tensor,
+        y_norm: torch.Tensor,
+        pred_len: int,
+        segment_count: int,
+    ) -> dict[str, torch.Tensor]:
+        if self.future_student_projection is None:
+            raise RuntimeError("future teacher branch is disabled.")
+
+        student_state = self.future_student_projection(target_states)
+        teacher_state, reconstruction = self._future_teacher_state(y_norm, pred_len, segment_count)
+        student_norm = F.normalize(student_state, dim=-1)
+        teacher_norm = F.normalize(teacher_state.detach(), dim=-1)
+        local_alignment_loss = 1.0 - F.cosine_similarity(student_norm, teacher_norm, dim=-1).mean()
+        student_relation = torch.bmm(student_norm, student_norm.transpose(1, 2))
+        teacher_relation = torch.bmm(teacher_norm, teacher_norm.transpose(1, 2))
+        relation_alignment_loss = F.mse_loss(student_relation, teacher_relation)
+        batch, horizon, channels = y_norm.shape
+        target_flat = y_norm.permute(0, 2, 1).reshape(batch * channels, horizon)
+        reconstruction_loss = F.mse_loss(reconstruction, target_flat)
+        return {
+            "future_student_state": student_state,
+            "future_teacher_state": teacher_state,
+            "future_reconstruction_norm": reconstruction,
+            "future_local_alignment_loss": local_alignment_loss,
+            "future_relation_alignment_loss": relation_alignment_loss,
+            "future_reconstruction_loss": reconstruction_loss,
+        }
+
     def forward(
         self,
         x: torch.Tensor,
         pred_len: int,
+        future_y: torch.Tensor | None = None,
         return_components: bool = False,
     ) -> torch.Tensor | dict[str, torch.Tensor]:
         segment_count = self._validate_pred_len(pred_len)
@@ -290,6 +416,15 @@ class PatchEncoderTargetSetDecoder(nn.Module):
 
         z, batch, channels = self._encode(x)
         target_states = self._target_states(z, pred_len, segment_count)
+        future_components = None
+        if future_y is not None:
+            y_norm_target = self._normalize_future(future_y)
+            future_components = self._future_alignment_components(
+                target_states,
+                y_norm_target,
+                pred_len,
+                segment_count,
+            )
         history_readout = self.history_projector(z)
         affine = self.condition_head(target_states).reshape(z.shape[0], segment_count, 2, self.readout_dim)
         gamma = affine[:, :, 0, :]
@@ -317,7 +452,7 @@ class PatchEncoderTargetSetDecoder(nn.Module):
             y = self.revin(y, "denorm")
 
         if return_components:
-            return {
+            output = {
                 "prediction": y,
                 "target_states": target_states_view,
                 "gamma": gamma_view,
@@ -325,4 +460,28 @@ class PatchEncoderTargetSetDecoder(nn.Module):
                 "history_readout": history_readout_view,
                 "prefix_residual_norm": prefix_residual_y,
             }
+            if future_components is not None:
+                output.update(
+                    {
+                        "future_student_state": future_components["future_student_state"].reshape(
+                            batch,
+                            channels,
+                            segment_count,
+                            -1,
+                        ),
+                        "future_teacher_state": future_components["future_teacher_state"].reshape(
+                            batch,
+                            channels,
+                            segment_count,
+                            -1,
+                        ),
+                        "future_reconstruction_norm": future_components["future_reconstruction_norm"]
+                        .reshape(batch, channels, pred_len)
+                        .permute(0, 2, 1),
+                        "future_local_alignment_loss": future_components["future_local_alignment_loss"],
+                        "future_relation_alignment_loss": future_components["future_relation_alignment_loss"],
+                        "future_reconstruction_loss": future_components["future_reconstruction_loss"],
+                    }
+                )
+            return output
         return y

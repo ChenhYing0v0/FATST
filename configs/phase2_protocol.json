@@ -1,8 +1,8 @@
 {
   "phase": "phase2",
   "objective": "Evaluate whether a training-only future-state teacher can calibrate the target-side states of the compatible target-set decoder and turn future-aware supervision into forecast-relevant gains.",
-  "status": "phase2a_future_state_alignment_step_1_to_6_defined_needs_implementation",
-  "research_loop_step": "1-6",
+  "status": "phase2a_future_state_alignment_local_smoke_passed_needs_remote_gate",
+  "research_loop_step": "8",
   "base_carrier": {
     "candidate": "PatchEncoderPrefixRiskWeighted",
     "source_report": "analysis/phase1_prefix_risk_weighted_gate_20260622/phase1_prefix_risk_weighted_gate_report.md",
@@ -13,7 +13,7 @@
   },
   "active_candidate": {
     "candidate": "PatchEncoderFutureStateAlignment",
-    "status": "design_defined_needs_implementation",
+    "status": "local_smoke_passed_needs_remote_gate",
     "design_doc": "docs/experiments/phase2-future-state-alignment-design.md",
     "base_candidate": "PatchEncoderPrefixRiskWeighted",
     "problem": "The R.3 target-set decoder has target-aware states U_T, but these states are inferred only from history and target queries. They are not explicitly calibrated to the distributional state of the realized future segment during training.",
@@ -40,7 +40,7 @@
       "initial_weights": {
         "future_align_weight": 0.02,
         "future_relation_weight": 0.01,
-        "future_recon_weight": 0.0
+        "future_recon_weight": 0.001
       }
     },
     "gate": {
@@ -97,6 +97,31 @@
       "alignment_without_forecast_gain": "Return to step 2-5 and treat future teacher as an auxiliary proxy, not a paper-core mechanism.",
       "weather_degradation": "Diagnose alignment conflict before adding routing or MoE.",
       "leakage_failure": "Discard the implementation until the train/eval future boundary is repaired."
+    },
+    "code_explanation": "docs/code-explanation/phase2-future-state-alignment.md",
+    "train_script": "baselines/patch_encoder_target_set_decoder/train.py",
+    "remote_runner": "scripts/remote/run_phase2_future_state_alignment_gate.sh",
+    "local_smoke": {
+      "output_root": "artifacts/runs/smoke_phase2_future_state_alignment",
+      "dataset": "ETTh2",
+      "target_horizons": [
+        96,
+        192,
+        336,
+        720
+      ],
+      "epochs": 1,
+      "steps_per_epoch": 2,
+      "max_eval_batches": 1,
+      "future_align_weight": 0.02,
+      "future_relation_weight": 0.01,
+      "future_recon_weight": 0.001,
+      "train_loss": "0.628322",
+      "train_prediction_loss": "0.538840",
+      "max_prefix_mismatch_mse": "4.74343e-16",
+      "prediction_leakage_max_abs": "0.0",
+      "required_artifacts_written": true,
+      "decision": "passed; future-state alignment path writes required artifacts, preserves prefix consistency, passes leakage audit, and keeps reconstruction auxiliary rather than dominant"
     }
   },
   "paths": {

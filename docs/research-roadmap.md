@@ -628,7 +628,7 @@ gain，再回退到 problem definition 或重新选择 base architecture。
 
 ## Phase2: Future-Aware Mechanism
 
-状态：step 1-6 已收敛到第一版候选 `PatchEncoderFutureStateAlignment`，等待实现。
+状态：`PatchEncoderFutureStateAlignment` 已实现并通过 local smoke，等待 remote gate。
 
 核心文档：
 
@@ -743,6 +743,35 @@ Paper-core candidate pass 需要进一步满足：
 [Rollback] 若 alignment metric 改善但 MSE/MAE 不改善，说明 future teacher 只是 auxiliary
 proxy，不是有效 paper-core mechanism；应回到 step 2-5，考虑 covariance-aware objective 或
 更换 base architecture。若 Weather 系统性退化，先诊断 alignment conflict，不直接进入 MoE。
+
+[Fact] Local smoke 已通过：
+
+- output root: `artifacts/runs/smoke_phase2_future_state_alignment`
+- dataset: `ETTh2`
+- target horizons: `{96,192,336,720}`
+- command uses `step_loss_weighting=prefix_risk`, `future_teacher_layers=1`,
+  `future_align_weight=0.02`, `future_relation_weight=0.01`,
+  `future_recon_weight=0.001`
+- artifact check: `metrics_by_target_horizon.csv`, `prefix_consistency.csv`,
+  `target_state_similarity.csv`, `future_alignment_stats.csv`,
+  `future_leakage_audit.json`, and `effective_config.json` written
+
+[Evidence] smoke prefix mismatch remains numerical zero-level:
+
+| Prefix | Mismatch MSE |
+| --- | ---: |
+| `96/720` | `0.0` |
+| `192/720` | `0.0` |
+| `336/720` | `4.74343e-16` |
+
+[Evidence] smoke leakage audit passes for all evaluated horizons:
+
+| Horizon | prediction leakage max abs |
+| --- | ---: |
+| `96` | `0.0` |
+| `192` | `0.0` |
+| `336` | `0.0` |
+| `720` | `0.0` |
 
 Phase2 pass 条件：
 

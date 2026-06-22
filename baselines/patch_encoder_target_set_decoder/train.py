@@ -11,6 +11,7 @@ from pathlib import Path
 
 import numpy as np
 import torch
+import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
 from dataset import DATASETS, ForecastDataset
@@ -132,6 +133,86 @@ def prefix_residual_stats(components: dict[str, np.ndarray]) -> list[dict[str, f
             }
         )
     return rows
+
+
+def future_alignment_stats(
+    model: PatchEncoderTargetSetDecoder,
+    loader: DataLoader,
+    device: torch.device,
+    pred_len: int,
+    max_batches: int | None = None,
+) -> tuple[list[dict[str, float]], dict[str, float]]:
+    model.eval()
+    local_losses = []
+    relation_losses = []
+    reconstruction_losses = []
+    teacher_student_cosines = []
+    true_leakage = []
+    shuffled_leakage = []
+    zero_leakage = []
+    with torch.no_grad():
+        for batch_index, (x, y) in enumerate(loader, start=1):
+            x = x.float().to(device)
+            y = y.float().to(device)
+            no_future = model(x, pred_len=pred_len, return_components=True)
+            true_future = model(x, pred_len=pred_len, future_y=y, return_components=True)
+            shuffled_future = model(
+                x,
+                pred_len=pred_len,
+                future_y=y.flip(0),
+                return_components=True,
+            )
+            zero_future = model(
+                x,
+                pred_len=pred_len,
+                future_y=torch.zeros_like(y),
+                return_components=True,
+            )
+            if not isinstance(no_future, dict) or not isinstance(true_future, dict):
+                raise TypeError("Expected component dict from model.")
+            if not isinstance(shuffled_future, dict) or not isinstance(zero_future, dict):
+                raise TypeError("Expected component dict from model.")
+            true_leakage.append(
+                float(torch.max(torch.abs(no_future["prediction"] - true_future["prediction"])).cpu())
+            )
+            shuffled_leakage.append(
+                float(torch.max(torch.abs(no_future["prediction"] - shuffled_future["prediction"])).cpu())
+            )
+            zero_leakage.append(
+                float(torch.max(torch.abs(no_future["prediction"] - zero_future["prediction"])).cpu())
+            )
+            student = F.normalize(true_future["future_student_state"], dim=-1)
+            teacher = F.normalize(true_future["future_teacher_state"], dim=-1)
+            teacher_student_cosines.append(float((student * teacher).sum(dim=-1).mean().cpu()))
+            local_losses.append(float(true_future["future_local_alignment_loss"].cpu()))
+            relation_losses.append(float(true_future["future_relation_alignment_loss"].cpu()))
+            reconstruction_losses.append(float(true_future["future_reconstruction_loss"].cpu()))
+            if max_batches is not None and batch_index >= max_batches:
+                break
+
+    rows = [
+        {
+            "scope": "all",
+            "future_local_alignment_loss": float(np.mean(local_losses)),
+            "future_relation_alignment_loss": float(np.mean(relation_losses)),
+            "future_reconstruction_loss": float(np.mean(reconstruction_losses)),
+            "teacher_student_cosine": float(np.mean(teacher_student_cosines)),
+            "prediction_leakage_max_abs": float(
+                max(
+                    max(true_leakage, default=0.0),
+                    max(shuffled_leakage, default=0.0),
+                    max(zero_leakage, default=0.0),
+                )
+            ),
+        }
+    ]
+    audit = {
+        "true_future_prediction_max_abs": float(max(true_leakage, default=0.0)),
+        "shuffled_future_prediction_max_abs": float(max(shuffled_leakage, default=0.0)),
+        "zero_future_prediction_max_abs": float(max(zero_leakage, default=0.0)),
+        "prediction_leakage_max_abs": rows[0]["prediction_leakage_max_abs"],
+    }
+    return rows, audit
 
 
 def weighted_mse_loss(
@@ -300,6 +381,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--readout-dim", type=int, default=256)
     parser.add_argument("--prefix-residual-segments", type=int, default=0)
     parser.add_argument("--prefix-residual-dropout", type=float, default=0.0)
+    parser.add_argument("--future-teacher-layers", type=int, default=0)
+    parser.add_argument("--future-teacher-heads", type=int, default=0)
+    parser.add_argument("--future-teacher-d-ff", type=int, default=0)
+    parser.add_argument("--future-state-dim", type=int, default=0)
+    parser.add_argument("--future-align-weight", type=float, default=0.0)
+    parser.add_argument("--future-relation-weight", type=float, default=0.0)
+    parser.add_argument("--future-recon-weight", type=float, default=0.0)
     parser.add_argument("--batch-size", type=int, default=128)
     parser.add_argument("--epochs", type=int, default=1)
     parser.add_argument("--learning-rate", type=float, default=1e-4)
@@ -320,6 +408,13 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     target_horizons = parse_horizons(args.target_horizons)
+    future_loss_enabled = (
+        args.future_align_weight > 0
+        or args.future_relation_weight > 0
+        or args.future_recon_weight > 0
+    )
+    if future_loss_enabled and args.future_teacher_layers <= 0:
+        raise ValueError("future teacher layers must be positive when future loss weights are enabled.")
     set_seed(args.seed)
     device = torch.device("cuda" if args.device == "auto" and torch.cuda.is_available() else "cpu")
     if args.device != "auto":
@@ -375,6 +470,10 @@ def main() -> None:
         readout_dim=args.readout_dim,
         prefix_residual_segments=args.prefix_residual_segments,
         prefix_residual_dropout=args.prefix_residual_dropout,
+        future_teacher_layers=args.future_teacher_layers,
+        future_teacher_heads=args.future_teacher_heads or None,
+        future_teacher_d_ff=args.future_teacher_d_ff or None,
+        future_state_dim=args.future_state_dim or None,
     ).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
     horizon_label = "mixed_" + "_".join(f"h{horizon}" for horizon in target_horizons)
@@ -397,6 +496,10 @@ def main() -> None:
         model.train()
         iterators = {horizon: iter(loader) for horizon, loader in train_loaders.items()}
         losses = []
+        pred_losses = []
+        future_local_losses = []
+        future_relation_losses = []
+        future_reconstruction_losses = []
         horizon_counts = {horizon: 0 for horizon in target_horizons}
         for _ in range(steps_per_epoch):
             horizon = rng.choice(target_horizons)
@@ -404,19 +507,39 @@ def main() -> None:
             x = x.float().to(device)
             y = y.float().to(device)
             optimizer.zero_grad(set_to_none=True)
-            pred = model(x, pred_len=horizon)
-            if isinstance(pred, dict):
-                raise TypeError("Expected tensor prediction.")
-            loss = weighted_mse_loss(
+            output = model(
+                x,
+                pred_len=horizon,
+                future_y=y if future_loss_enabled else None,
+                return_components=future_loss_enabled,
+            )
+            if future_loss_enabled:
+                if not isinstance(output, dict):
+                    raise TypeError("Expected component dict from model.")
+                pred = output["prediction"]
+            else:
+                if isinstance(output, dict):
+                    raise TypeError("Expected tensor prediction.")
+                pred = output
+            pred_loss = weighted_mse_loss(
                 pred,
                 y,
                 args.max_pred_len,
                 args.step_loss_weighting,
                 args.step_loss_alpha,
             )
+            loss = pred_loss
+            if future_loss_enabled:
+                loss = loss + args.future_align_weight * output["future_local_alignment_loss"]
+                loss = loss + args.future_relation_weight * output["future_relation_alignment_loss"]
+                loss = loss + args.future_recon_weight * output["future_reconstruction_loss"]
+                future_local_losses.append(float(output["future_local_alignment_loss"].detach().cpu()))
+                future_relation_losses.append(float(output["future_relation_alignment_loss"].detach().cpu()))
+                future_reconstruction_losses.append(float(output["future_reconstruction_loss"].detach().cpu()))
             loss.backward()
             optimizer.step()
             losses.append(float(loss.detach().cpu()))
+            pred_losses.append(float(pred_loss.detach().cpu()))
             horizon_counts[horizon] += 1
 
         val_rows = []
@@ -424,7 +547,21 @@ def main() -> None:
             metrics, _, _, _ = evaluate(model, val_loaders[horizon], device, horizon, args.max_eval_batches)
             val_rows.append({"target_horizon": horizon, **metrics})
         mean_val_mse = float(np.mean([row["mse"] for row in val_rows]))
-        row = {"epoch": epoch, "train_loss": float(np.mean(losses)), "val_mean_mse": mean_val_mse}
+        row = {
+            "epoch": epoch,
+            "train_loss": float(np.mean(losses)),
+            "train_prediction_loss": float(np.mean(pred_losses)),
+            "train_future_local_alignment_loss": float(np.mean(future_local_losses))
+            if future_local_losses
+            else 0.0,
+            "train_future_relation_alignment_loss": float(np.mean(future_relation_losses))
+            if future_relation_losses
+            else 0.0,
+            "train_future_reconstruction_loss": float(np.mean(future_reconstruction_losses))
+            if future_reconstruction_losses
+            else 0.0,
+            "val_mean_mse": mean_val_mse,
+        }
         for horizon in target_horizons:
             row[f"train_steps_h{horizon}"] = horizon_counts[horizon]
         for val_row in val_rows:
@@ -466,6 +603,16 @@ def main() -> None:
         write_csv(eval_dir / "target_conditioning_stats.csv", target_conditioning_stats(components))
         if args.prefix_residual_segments > 0:
             write_csv(eval_dir / "prefix_residual_stats.csv", prefix_residual_stats(components))
+        if args.future_teacher_layers > 0:
+            alignment_rows, leakage_audit = future_alignment_stats(
+                model,
+                test_loaders[horizon],
+                device,
+                horizon,
+                args.max_eval_batches,
+            )
+            write_csv(eval_dir / "future_alignment_stats.csv", alignment_rows)
+            (eval_dir / "future_leakage_audit.json").write_text(json.dumps(leakage_audit, indent=2))
 
     long_horizon = max(target_horizons)
     short_horizons = [horizon for horizon in target_horizons if horizon < long_horizon]

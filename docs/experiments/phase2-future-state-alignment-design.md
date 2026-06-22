@@ -217,8 +217,8 @@ Loss:
 - add relation alignment among target segments;
 - start with small weights, e.g. `future_align_weight=0.02` and
   `future_relation_weight=0.01`;
-- reconstruction loss is optional and should be low weight if used, because the
-  paper claim is alignment, not future autoencoding.
+- use a low reconstruction weight, e.g. `future_recon_weight=0.001`, to train
+  the teacher state without making future autoencoding the paper claim.
 
 Leakage boundary:
 
