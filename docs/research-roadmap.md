@@ -136,11 +136,12 @@ PatchTST-style base，而不是 exact PatchTST paper reproduction。选择它的
 
 ### Phase1-R: Target-Set Forecasting Decoder
 
-状态：step 1-6 已定义，等待实现。
+状态：step 7 已实现第一版，local smoke 已通过，等待 remote gate。
 
 核心文档：
 
 - `docs/experiments/phase1-target-set-decoder-redefinition.md`
+- `docs/code-explanation/phase1-target-set-decoder.md`
 
 [Decision] 新的问题定义是：
 

@@ -1,7 +1,7 @@
 {
   "phase": "phase1",
   "objective": "Evaluate whether a target-set indexed forecasting decoder can expose future targets as model inputs, control the single-model amortization gap, improve prefix consistency, and provide a stable carrier for later future-aware or MoE mechanisms.",
-  "status": "phase1r_target_set_decoder_step6_ready_for_implementation",
+  "status": "phase1r_target_set_decoder_local_smoke_passed_needs_remote_gate",
   "decision_reports": [
     "analysis/phase1_segment_decoder_gate_20260621/phase1_segment_decoder_gate_report.md",
     "analysis/phase1_fixed_adapter_gate_20260621/phase1_fixed_adapter_gate_report.md",
@@ -35,6 +35,7 @@
     "problem": "Horizon-specific direct forecasting treats the target horizon as an external training-script setting rather than a model input, creating separate specialist heads that do not unify target positions, prefix consistency, or future-step dependency.",
     "hypothesis": "A target-set indexed decoder can expose requested future positions as model inputs, reduce prefix inconsistency, and provide a stable target-side state carrier for later future-aware or MoE mechanisms while keeping the single-model amortization gap controlled.",
     "design_doc": "docs/experiments/phase1-target-set-decoder-redefinition.md",
+    "code_explanation": "docs/code-explanation/phase1-target-set-decoder.md",
     "pass_condition": "Compatibility pass: one mixed target-set model has mean relative MSE <= +1.0% versus horizon-specific PatchEncoderFixedHead, no dataset average degradation worse than +3.0%, improves h96/h192 versus H720-prefix reuse, reduces prefix mismatch, and produces non-degenerate target states. Paper-core pass requires mean relative MSE < 0 versus specialists or follow-up mechanisms converting the target-side state into stable forecast gains."
   },
   "decision_boundary": {
@@ -145,7 +146,7 @@
       "training_protocol": "mixed_target_set_sampling",
       "target_interface": "future segment queries are model inputs and condition a dense history readout",
       "readout_policy": "preserve dense access to flattened history states to avoid the SegmentQueryHead capacity collapse",
-      "mask_policy": "independent_or_prefix_stable_target_queries_for_first_gate"
+      "mask_policy": "independent_target_queries_for_first_gate"
     }
   },
   "metrics": {
@@ -169,7 +170,7 @@
   "remote": {
     "host": "529_Lab-3090",
     "conda_env": "moe",
-    "runner": "to_be_created_for_phase1_target_set_decoder",
+    "runner": "scripts/remote/run_phase1_target_set_decoder_gate.sh",
     "gpu_policy": "check nvidia-smi before every run; prefer GPU 1 or 2 when memory is safe; GPU_IDS may contain one or two selected GPUs"
   }
 }
