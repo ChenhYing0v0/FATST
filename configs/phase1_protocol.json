@@ -1,7 +1,7 @@
 {
   "phase": "phase1",
   "objective": "Evaluate whether a target-set indexed forecasting decoder can expose future targets as model inputs, control the single-model amortization gap, improve prefix consistency, and provide a stable carrier for later future-aware or MoE mechanisms.",
-  "status": "phase1r2_causal_target_interaction_local_smoke_passed_needs_remote_gate",
+  "status": "phase1r2_causal_target_interaction_failed_needs_objective_rollback",
   "decision_reports": [
     "analysis/phase1_segment_decoder_gate_20260621/phase1_segment_decoder_gate_report.md",
     "analysis/phase1_fixed_adapter_gate_20260621/phase1_fixed_adapter_gate_report.md",
@@ -14,7 +14,8 @@
     "docs/experiments/phase1-target-set-decoder-redefinition.md",
     "analysis/phase1_target_set_decoder_gate_20260622/phase1_target_set_decoder_gate_report.md",
     "analysis/phase1_target_set_prefix_residual_gate_20260622/phase1_target_set_prefix_residual_gate_report.md",
-    "docs/experiments/phase1-causal-target-interaction-design.md"
+    "docs/experiments/phase1-causal-target-interaction-design.md",
+    "analysis/phase1_causal_target_interaction_gate_20260622/phase1_causal_target_interaction_gate_report.md"
   ],
   "latest_decision": {
     "candidate": "PatchEncoderTargetSetDecoder",
@@ -60,7 +61,7 @@
   },
   "active_next_candidate": {
     "candidate": "PatchEncoderCausalTargetInteraction",
-    "status": "local_smoke_passed_needs_remote_gate",
+    "status": "failed_remote_gate",
     "base_candidate": "PatchEncoderTargetSetDecoder",
     "problem": "The first target-set decoder preserves prefix consistency by using independent target queries, but this likely under-models future segment dependency that horizon-specific fixed heads can encode implicitly.",
     "existence_evidence": "PatchEncoderTargetSetDecoder reaches numerical prefix consistency but remains +0.62% mean relative MSE vs specialists; PatchEncoderTargetSetPrefixResidual worsens to +2.03% and raises target-state cosine to 0.836250, so uncontrolled output residual capacity is not the right repair.",
@@ -77,6 +78,22 @@
       "target_horizons": [96, 192, 336, 720],
       "max_prefix_mismatch_mse": "1.44997e-15",
       "decision": "passed; causal target interaction path writes required artifacts and preserves prefix consistency at numerical zero level"
+    },
+    "result": {
+      "mse_wins_vs_fixed": "4/12",
+      "mae_wins_vs_fixed": "5/12",
+      "mean_relative_mse_vs_fixed": "+1.40%",
+      "dataset_mean_relative_mse": {
+        "ETTh2": "-0.03%",
+        "ETTm1": "-0.45%",
+        "Weather": "+4.68%"
+      },
+      "h96_mean_relative_mse": "+3.62%",
+      "h720_prefix_h96_h192_mean_relative_mse": "-0.14%",
+      "max_prefix_mismatch_mse": "4.52311e-14",
+      "mean_target_state_cosine": "0.424291",
+      "decision": "failed; causal target interaction preserves prefix stability and helps ETTm1, but Weather degrades systematically and the overall amortization gap is worse than the first target-set decoder",
+      "rollback_step": "Return to step 3-5 and test mixed-horizon objective or task-weighting bottlenecks before adding future-aware or MoE mechanisms."
     }
   },
   "active_candidate": {

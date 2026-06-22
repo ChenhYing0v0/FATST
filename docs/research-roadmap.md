@@ -385,7 +385,7 @@ short-prefix MSE 进一步恶化，target states 更同质，prefix residual 幅
 
 ### Phase1-R.2: Causal Target Interaction
 
-状态：local smoke 已通过，等待 remote gate。
+状态：remote gate 已完成，未通过。
 
 核心文档：
 
@@ -458,6 +458,43 @@ mixed-horizon objective / task weighting，而不是 architecture interaction；
 | `96/720` | `4.62182e-16` |
 | `192/720` | `7.53289e-16` |
 | `336/720` | `1.44997e-15` |
+
+[Fact] Remote gate 已完成：
+
+- report: `analysis/phase1_causal_target_interaction_gate_20260622/phase1_causal_target_interaction_gate_report.md`
+- code commit: `830ffc6`
+- selected GPU: `2`
+- note: GPU1 在 Weather 阶段已空闲，但当前顺序 runner 已启动 Weather，未中途拆分以避免同一路径重复写入。
+
+[Evidence] 结果：
+
+| Metric | Value |
+| --- | ---: |
+| MSE wins vs `PatchEncoderFixedHead` | `4/12` |
+| MAE wins vs `PatchEncoderFixedHead` | `5/12` |
+| mean relative MSE | `+1.40%` |
+| h96 mean relative MSE | `+3.62%` |
+| H720-prefix h96/h192 mean relative MSE | `-0.14%` |
+| max prefix mismatch MSE | `4.52311e-14` |
+| mean target state cosine | `0.424291` |
+
+[Evidence] Dataset-level split shows why it fails:
+
+| Dataset | Mean relative MSE |
+| --- | ---: |
+| `ETTh2` | `-0.03%` |
+| `ETTm1` | `-0.45%` |
+| `Weather` | `+4.68%` |
+
+[Decision] `PatchEncoderCausalTargetInteraction` 未通过。它保留了 prefix consistency，也让
+`ETTm1` 从第一版 target-set 的 `+1.99%` 变为 `-0.45%`，说明 target interaction 不是完全
+无效；但 Weather 全 horizon 系统性退化，整体 mean relative MSE 高于第一版 target-set 的
+`+0.62%`，h96 也从 `+2.74%` 恶化到 `+3.62%`。
+
+[Rollback] 当前不应继续加深 target interaction，也不应在该 state 上启动 future-aware 或 MoE。
+更合理的回退点是 step 3-5：重新判断 mixed-horizon training objective 是否才是主要瓶颈。
+下一轮候选应优先测试 objective-level / task-weighting path，例如 horizon-balanced 或
+covariance-aware weighting，而不是继续改 architecture。
 
 ## Phase2: Future-Aware Mechanism
 
