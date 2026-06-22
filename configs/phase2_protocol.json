@@ -228,6 +228,29 @@
           "pivot_candidate": "Move from future latent alignment to output-process or error-process decoder design, such as horizon-wise error growth, covariance, or residual process modeling."
         }
       },
+      "pivot_candidate_evidence": {
+        "analysis_root": "analysis/output_error_process_diagnosis_20260623",
+        "report": "analysis/output_error_process_diagnosis_20260623/output_error_process_diagnosis_report.md",
+        "script": "scripts/analyze_output_error_process_problem.py",
+        "main_finding": "H720 step-wise artifacts show a step-region error-process problem: R.3 often improves early steps but can degrade middle or late H720 regions, and Phase2-A changes the curve in a dataset-dependent way.",
+        "examples": {
+          "ETTh2_1_96": {
+            "r3_vs_fixed": "-1.80%",
+            "phase2_vs_r3": "+6.42%",
+            "interpretation": "R.3 early gain is erased by Phase2-A"
+          },
+          "ETTh2_193_336": {
+            "r3_vs_fixed": "+4.07%",
+            "phase2_vs_r3": "+2.54%",
+            "interpretation": "both stages worsen this middle region"
+          },
+          "ETTm1_337_720": {
+            "r3_vs_fixed": "+3.03%",
+            "phase2_vs_r3": "-1.73%",
+            "interpretation": "R.3 late weak region is repaired by Phase2-A"
+          }
+        }
+      },
       "rollback": "If confidence-weighted alignment still fails, return to loop step 2-3 and reconsider whether future-aware decoder supervision is the right problem definition."
     }
   },

@@ -43,6 +43,9 @@
 - `analyze_phase2_alignment_conflict.py`: 使用已完成的 Phase2-A artifacts 诊断
   future-state alignment conflict，输出 MSE delta 与 teacher/student geometry、
   alignment loss、reconstruction loss 的关系。
+- `analyze_output_error_process_problem.py`: 使用 H720 step-wise artifacts 诊断
+  output/error-process decoder 问题，输出 segment-level relative MSE、step-wise 曲线
+  和下一步 decoder pivot 依据。
 
 远程实验前仍必须先检查 `529_Lab-3090` 的 GPU 占用；runner 中的 `nvidia-smi`
 输出只作为启动时记录，不替代人工选择 GPU。

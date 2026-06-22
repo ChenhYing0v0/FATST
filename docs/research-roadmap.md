@@ -922,6 +922,28 @@ Phase2-R.1 结果决策树：
      latent future state。更具体地，研究问题应从“预测 future latent state”改为
      “decoder 如何建模 horizon-wise error growth / covariance / residual process”。
 
+[Fact] Output/error-process decoder problem diagnosis 已完成：
+
+- report:
+  `analysis/output_error_process_diagnosis_20260623/output_error_process_diagnosis_report.md`
+- figures:
+  `analysis/output_error_process_diagnosis_20260623/*_h720_step_relative_mse.png`
+- script: `scripts/analyze_output_error_process_problem.py`
+
+[Evidence] H720 step-wise 误差曲线显示，当前问题不是单个平均 MSE 可以解释的：
+
+| Dataset | Segment | R.3 vs FixedHead | Phase2-A vs R.3 | Interpretation |
+| --- | --- | ---: | ---: | --- |
+| ETTh2 | `1-96` | `-1.80%` | `+6.42%` | R.3 early gain 被 Phase2-A 抹掉 |
+| ETTh2 | `193-336` | `+4.07%` | `+2.54%` | 两阶段都恶化中段 |
+| ETTm1 | `337-720` | `+3.03%` | `-1.73%` | R.3 late weak region 被 Phase2-A 修复 |
+| Weather | `1-96` | `-4.04%` | `+0.52%` | R.3 early gain 被 Phase2-A 轻微抹掉 |
+
+[Inference] 若 Phase2-R.1 失败，下一步不应继续增强 future teacher 或引入 MoE。更合理的
+decoder 问题是：one-model decoder 如何建模 forecast output 的非均匀 error growth、
+step-region covariance 和 residual process。候选机制应把 prediction trajectory / residual
+trajectory 作为被解码对象，而不是只独立输出每个 segment 的 point values。
+
 Phase2 pass 条件：
 
 - prediction path leakage audit 通过；
