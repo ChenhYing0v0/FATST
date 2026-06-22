@@ -259,6 +259,43 @@
         "activation_condition": "Activate only if Phase2-R.1 fails or reaches partial pass.",
         "core_difference_from_phase1a6": "Do not use static low-rank position-only residual basis; generate the residual process from target-set state U_j, target segment feature q_j, and compact error-process state c_{j-1}.",
         "core_difference_from_phase2a": "Model the output residual/error trajectory directly instead of aligning target states to a latent future teacher.",
+        "implementation_contract": {
+          "base_train_script": "baselines/patch_encoder_target_set_decoder/train.py",
+          "run_name": "PatchEncoderErrorProcessDecoder",
+          "local_smoke_root": "artifacts/runs/smoke_phase2_error_process_decoder",
+          "remote_output_root": "/home/yingch/exp_outputs/r-2026-fatst/phase2_error_process_decoder",
+          "forward_components": [
+            "prediction",
+            "base_prediction",
+            "error_residual",
+            "error_residual_norm",
+            "error_process_states",
+            "target_states",
+            "prefix_residual_norm"
+          ],
+          "shape_invariants": {
+            "prediction": "B,H,C",
+            "base_prediction": "B,H,C",
+            "error_residual": "B,H,C",
+            "error_process_states": "B,C,J,d_e or B,J,d_e"
+          },
+          "revin_boundary": "Produce and add error_residual_norm in normalized model space before RevIN denormalization; report denormalized error_residual for diagnostics.",
+          "initialization": "Zero-initialize the residual final projection or initialize an explicit residual gate close to zero so the first epoch behaves close to R.3.",
+          "required_artifacts": [
+            "metrics_by_target_horizon.csv",
+            "metrics_by_horizon.csv",
+            "metrics_by_segment.csv",
+            "prefix_consistency.csv",
+            "error_process_stats.csv",
+            "effective_config.json",
+            "training_log.csv"
+          ],
+          "smoke_invariants": [
+            "base_prediction + error_residual equals prediction up to numerical tolerance after denormalization",
+            "prefix mismatch remains numerical-zero level",
+            "error_process_stats.csv reports non-NaN residual energy and smoothness"
+          ]
+        },
         "minimum_gate": [
           "mean relative MSE vs R.3 < 0",
           "MSE wins vs R.3 >= 7/12",
