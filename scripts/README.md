@@ -16,11 +16,17 @@
   对比 `AlignOnly` 与 `ScaleNorm`。该 runner 默认用 `metrics.json` 判断已完成 run，
   并删除 `checkpoint.pt` / `predictions_test.npz` 以避免 3090 quota 压力；如需保留，
   显式设置 `KEEP_HEAVY_ARTIFACTS=1`。
+- `remote/run_phase1_step_specific_state_gate.sh`: Phase1-A.5
+  `Step-Specific State Decoder Gate`，对比 `PatchEncoderFixedHead`、
+  `PatchEncoderFixedHeadAdapter` 与 `PatchEncoderStepSpecificStateAdapter`。该 runner
+  同样默认删除 `checkpoint.pt` / `predictions_test.npz`。
 
 ## Analysis
 
 - `analyze_phase1_future_aware_repair_gate.py`: 汇总 Phase1-A.4 repair gate 的
   metrics、alignment diagnostics、delta stats、heatmap 和中文报告。
+- `analyze_phase1_step_specific_state_gate.py`: 汇总 Phase1-A.5 gate 的 metrics、
+  segment comparison、state modulation diagnostics、activation similarity、heatmap 和中文报告。
 
 远程实验前仍必须先检查 `529_Lab-3090` 的 GPU 占用；runner 中的 `nvidia-smi`
 输出只作为启动时记录，不替代人工选择 GPU。

@@ -38,8 +38,8 @@
     "local_dataset_root": "/Users/river/PaperResearch/Project/datasets",
     "remote_dataset_root": "/home/yingch/dataset",
     "local_smoke_root": "artifacts/runs/smoke_phase1",
-    "remote_artifact_root": "/home/yingch/exp_outputs/r-2026-fatst/phase1_future_aware_repair",
-    "remote_log_root": "/home/yingch/exp_outputs/r-2026-fatst/phase1_future_aware_repair/_logs/phase1_future_aware_repair_gate"
+    "remote_artifact_root": "/home/yingch/exp_outputs/r-2026-fatst/phase1_step_specific_state",
+    "remote_log_root": "/home/yingch/exp_outputs/r-2026-fatst/phase1_step_specific_state/_logs/phase1_step_specific_state_gate"
   },
   "datasets": ["ETTh2", "ETTm1", "Weather"],
   "horizons": [96, 192, 336, 720],
@@ -124,7 +124,7 @@
   "remote": {
     "host": "529_Lab-3090",
     "conda_env": "moe",
-    "runner": "scripts/remote/run_phase1_future_aware_repair_gate.sh",
+    "runner": "scripts/remote/run_phase1_step_specific_state_gate.sh",
     "gpu_policy": "check nvidia-smi before every run; prefer GPU 1 or 2 when memory is safe; GPU_IDS may contain one or two selected GPUs"
   }
 }

@@ -39,6 +39,11 @@ Phase 1 当前新增一个 decoder-side candidate：
   - 训练时加入 future teacher branch 和 teacher/student alignment
   - 用于 Phase1-A.3，检验 training-only future signal 是否能把 weak adapter
     interface 转化为稳定收益
+- `patch_encoder_step_specific_state_adapter/`
+  - 保留 Phase0 fixed head 的 readout rows
+  - 在 readout 前用 future segment states 生成 latent-space `gamma/beta`
+  - 用于 Phase1-A.5，检验 step/segment-specific representation 是否比
+    post-head affine correction 更接近 decoder bottleneck
 
 当前重点 comparison baseline：
 
