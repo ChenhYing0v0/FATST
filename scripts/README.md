@@ -25,6 +25,9 @@
   `PatchEncoderFixedHeadAdapter`、`PatchEncoderStepSpecificStateAdapter` 与
   `PatchEncoderTrajectoryBasisResidual`。该 runner 默认删除 `checkpoint.pt` /
   `predictions_test.npz`。
+- `remote/check_phase2_future_state_alignment_repair_progress.sh`: 在 3090 项目目录中
+  检查 Phase2-R.1 repair gate 进度，输出 dataset 矩阵位置、epoch/total、ETA 和
+  outer log tail。
 
 ## Analysis
 

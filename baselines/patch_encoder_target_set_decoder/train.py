@@ -6,6 +6,7 @@ import json
 import os
 import random
 import sys
+import time
 from collections.abc import Iterator
 from pathlib import Path
 
@@ -528,8 +529,10 @@ def main() -> None:
     stale_epochs = 0
     log_rows: list[dict[str, float]] = []
     rng = random.Random(args.seed)
+    training_start = time.perf_counter()
 
     for epoch in range(1, args.epochs + 1):
+        epoch_start = time.perf_counter()
         model.train()
         iterators = {horizon: iter(loader) for horizon, loader in train_loaders.items()}
         losses = []
@@ -619,6 +622,8 @@ def main() -> None:
             if future_confidence_means
             else 0.0,
             "val_mean_mse": mean_val_mse,
+            "epoch_elapsed_sec": time.perf_counter() - epoch_start,
+            "elapsed_sec": time.perf_counter() - training_start,
         }
         for horizon in target_horizons:
             row[f"train_steps_h{horizon}"] = horizon_counts[horizon]
@@ -627,6 +632,16 @@ def main() -> None:
             row[f"val_mse_h{horizon}"] = float(val_row["mse"])
             row[f"val_mae_h{horizon}"] = float(val_row["mae"])
         log_rows.append(row)
+        write_csv(run_dir / "training_log.csv", log_rows)
+        mean_epoch_sec = float(row["elapsed_sec"]) / epoch
+        eta_sec = max(args.epochs - epoch, 0) * mean_epoch_sec
+        print(
+            "epoch_progress "
+            f"run_name={args.run_name} dataset={args.dataset} "
+            f"epoch={epoch}/{args.epochs} val_mean_mse={mean_val_mse:.6f} "
+            f"elapsed_sec={float(row['elapsed_sec']):.1f} eta_sec={eta_sec:.1f}",
+            flush=True,
+        )
 
         if mean_val_mse < best_val:
             best_val = mean_val_mse
