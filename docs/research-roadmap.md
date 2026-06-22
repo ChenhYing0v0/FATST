@@ -822,6 +822,29 @@ step 3-5：诊断 alignment conflict。下一轮候选应先回答 uniform futur
 `ETTh2` dynamics 冲突，可能方向包括 scale-normalized teacher reconstruction、scheduled/gated
 alignment、uncertainty-weighted alignment，或 horizon/dataset conflict diagnostics。
 
+[Fact] Phase2-A conflict diagnosis 已完成：
+
+- report:
+  `analysis/phase2_alignment_conflict_diagnosis_20260623/phase2_alignment_conflict_diagnosis_report.md`
+- script: `scripts/analyze_phase2_alignment_conflict.py`
+
+[Evidence] failure pattern 更符合 target-state geometry conflict，而不是单纯 reconstruction
+scale imbalance：
+
+| Diagnostic | Value |
+| --- | ---: |
+| ETTh2 mean teacher/student cosine | `0.6363` |
+| ETTm1 mean teacher/student cosine | `0.8300` |
+| Weather mean teacher/student cosine | `0.8220` |
+| MSE delta vs teacher/student cosine Pearson r | `-0.8866` |
+| MSE delta vs local alignment loss Pearson r | `+0.8866` |
+| MSE delta vs reconstruction loss Pearson r | `-0.2911` |
+
+[Inference] `Weather` 的 reconstruction loss 极大，但只在 h96 轻微退化，其他 horizon
+改善；因此 raw reconstruction scale 不是 Phase2-A 失败的充分解释。`ETTh2` 的主要问题是
+teacher state 与 student target state 的 geometry 本来就不兼容，uniform alignment 把
+$U_T$ 强行拉向一个对 forecasting 不利的 anchor。
+
 ### Phase2-R.1: Confidence-Weighted Future Alignment
 
 状态：实现中。该候选不是扩大 teacher capacity，而是修补 Phase2-A 暴露的 alignment

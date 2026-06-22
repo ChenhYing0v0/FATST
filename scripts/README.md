@@ -40,6 +40,9 @@
 - `analyze_phase2_future_state_alignment_repair_gate.py`: 汇总 Phase2-R.1
   confidence-weighted future alignment repair gate，对比 FixedHead 与 R.3，并输出
   leakage、prefix consistency、reconstruction confidence 诊断和 decision report。
+- `analyze_phase2_alignment_conflict.py`: 使用已完成的 Phase2-A artifacts 诊断
+  future-state alignment conflict，输出 MSE delta 与 teacher/student geometry、
+  alignment loss、reconstruction loss 的关系。
 
 远程实验前仍必须先检查 `529_Lab-3090` 的 GPU 占用；runner 中的 `nvidia-smi`
 输出只作为启动时记录，不替代人工选择 GPU。

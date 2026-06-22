@@ -123,9 +123,9 @@
       "required_artifacts_written": true,
       "decision": "passed; future-state alignment path writes required artifacts, preserves prefix consistency, passes leakage audit, and keeps reconstruction auxiliary rather than dominant"
     },
-    "remote_gate_result": {
-      "analysis_root": "analysis/phase2_future_state_alignment_gate_20260622",
-      "decision_report": "analysis/phase2_future_state_alignment_gate_20260622/phase2_future_state_alignment_decision_report.md",
+      "remote_gate_result": {
+        "analysis_root": "analysis/phase2_future_state_alignment_gate_20260622",
+        "decision_report": "analysis/phase2_future_state_alignment_gate_20260622/phase2_future_state_alignment_decision_report.md",
       "mse_wins_vs_fixed": "6/12",
       "mae_wins_vs_fixed": "6/12",
       "mean_relative_mse_vs_fixed": "+0.84%",
@@ -145,11 +145,28 @@
       "max_prefix_mismatch_mse": "4.72701e-14",
       "max_prediction_leakage_abs": "0.0",
       "mean_teacher_student_cosine": "0.762778",
-      "decision": "failed; leakage-safe and useful on ETTm1, but breaks the R.3 carrier on ETTh2 and is not a paper-core candidate",
-      "rollback_step": "Return to step 3-5 to diagnose dataset-specific alignment conflict. Do not stack MoE on this state."
-    },
-    "next_candidate_direction": {
-      "status": "phase2r1_implemented_needs_smoke_and_remote_gate",
+        "decision": "failed; leakage-safe and useful on ETTm1, but breaks the R.3 carrier on ETTh2 and is not a paper-core candidate",
+        "rollback_step": "Return to step 3-5 to diagnose dataset-specific alignment conflict. Do not stack MoE on this state."
+      },
+      "conflict_diagnosis": {
+        "analysis_root": "analysis/phase2_alignment_conflict_diagnosis_20260623",
+        "report": "analysis/phase2_alignment_conflict_diagnosis_20260623/phase2_alignment_conflict_diagnosis_report.md",
+        "script": "scripts/analyze_phase2_alignment_conflict.py",
+        "main_finding": "Phase2-A failure is more consistent with target-state geometry conflict than pure reconstruction-scale imbalance.",
+        "dataset_mean_teacher_student_cosine": {
+          "ETTh2": 0.6363,
+          "ETTm1": 0.8300,
+          "Weather": 0.8220
+        },
+        "correlations": {
+          "relative_mse_vs_teacher_student_cosine": -0.8866,
+          "relative_mse_vs_local_alignment_loss": 0.8866,
+          "relative_mse_vs_reconstruction_loss": -0.2911
+        },
+        "implication": "R.1 should be judged by whether reliability-aware alignment repairs low-geometry-compatibility settings. If it fails, do not enlarge the teacher or add MoE; pivot to decoder output/error-process modeling."
+      },
+      "next_candidate_direction": {
+        "status": "phase2r1_implemented_needs_smoke_and_remote_gate",
       "candidate": "PatchEncoderFutureStateAlignmentConfWeighted",
       "candidate_family": "confidence-weighted and scale-normalized future-state alignment",
       "motivation": "Phase2-A proves future-state alignment can help some datasets, but uniform alignment/reconstruction conflicts with ETTh2. Phase2-R.1 tests whether segment-level teacher reliability should gate the auxiliary alignment gradient.",

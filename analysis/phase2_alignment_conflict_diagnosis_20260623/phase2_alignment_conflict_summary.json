@@ -1,0 +1,42 @@
+{
+  "settings": 12,
+  "dataset_summary": [
+    {
+      "dataset": "ETTh2",
+      "mean_relative_mse_vs_r3_pct": 5.245200887069575,
+      "mse_wins_vs_r3": 0,
+      "mean_teacher_student_cosine": 0.6362718082446466,
+      "mean_future_local_alignment_loss": 0.3637281666504827,
+      "mean_future_relation_alignment_loss": 0.09526164631631953,
+      "mean_future_reconstruction_loss": 0.6275185844606974
+    },
+    {
+      "dataset": "ETTm1",
+      "mean_relative_mse_vs_r3_pct": -1.287779015258572,
+      "mse_wins_vs_r3": 4,
+      "mean_teacher_student_cosine": 0.8300418628679157,
+      "mean_future_local_alignment_loss": 0.16995809626265507,
+      "mean_future_relation_alignment_loss": 0.07116104614041961,
+      "mean_future_reconstruction_loss": 0.18430886767999713
+    },
+    {
+      "dataset": "Weather",
+      "mean_relative_mse_vs_r3_pct": -0.07469277652108461,
+      "mse_wins_vs_r3": 3,
+      "mean_teacher_student_cosine": 0.8220204586188118,
+      "mean_future_local_alignment_loss": 0.17797949880036268,
+      "mean_future_relation_alignment_loss": 0.056323326037725725,
+      "mean_future_reconstruction_loss": 637.1229823119984
+    }
+  ],
+  "correlations": {
+    "relative_mse_vs_teacher_student_cosine": -0.8865815005707178,
+    "relative_mse_vs_local_alignment_loss": 0.8865814972192384,
+    "relative_mse_vs_relation_alignment_loss": 0.1235469498261671,
+    "relative_mse_vs_reconstruction_loss": -0.2911315709897818
+  },
+  "low_cosine_degradation_count": 4,
+  "low_cosine_count": 4,
+  "high_cosine_improvement_count": 7,
+  "high_cosine_count": 8
+}
