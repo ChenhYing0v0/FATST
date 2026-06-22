@@ -121,6 +121,8 @@ PatchEncoderTargetSetDecoder/{dataset}/mixed_h96_h192_h336_h720/seed{seed}
 - `h{H}/metrics_by_segment.csv`: segment-level MSE/MAE。
 - `h{H}/target_state_similarity.csv`: target segment states 的 pairwise cosine。
 - `h{H}/target_conditioning_stats.csv`: $\gamma,\beta$ 与 target state norm 统计。
+- `h{H}/predictions_test.npz`: 仅在显式传入 `--save-predictions` 时写出，避免 Weather
+  等大数据集在 remote gate 中把时间浪费在压缩后又删除的 heavy artifact 上。
 - `training_log.csv`: 每个 epoch 的 train loss、各 horizon validation metrics 和 horizon sampling counts。
 - `environment.json`: Python、torch、CUDA、device 和 parameter count。
 

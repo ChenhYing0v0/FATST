@@ -258,6 +258,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--steps-per-epoch", type=int, default=None)
     parser.add_argument("--max-train-batches", type=int, default=None)
     parser.add_argument("--max-eval-batches", type=int, default=None)
+    parser.add_argument("--save-predictions", action="store_true")
     return parser.parse_args()
 
 
@@ -392,7 +393,8 @@ def main() -> None:
         target_metric_rows.append({"target_horizon": horizon, **metrics})
         eval_dir = run_dir / f"h{horizon}"
         eval_dir.mkdir(parents=True, exist_ok=True)
-        np.savez_compressed(eval_dir / "predictions_test.npz", pred=pred_np, true=true_np)
+        if args.save_predictions:
+            np.savez_compressed(eval_dir / "predictions_test.npz", pred=pred_np, true=true_np)
         (eval_dir / "metrics.json").write_text(json.dumps(metrics, indent=2))
         write_csv(eval_dir / "metrics_by_horizon.csv", metrics_by_horizon(pred_np, true_np))
         write_csv(eval_dir / "metrics_by_segment.csv", metrics_by_segment(pred_np, true_np))

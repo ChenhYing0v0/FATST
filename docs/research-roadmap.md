@@ -136,7 +136,7 @@ PatchTST-style base，而不是 exact PatchTST paper reproduction。选择它的
 
 ### Phase1-R: Target-Set Forecasting Decoder
 
-状态：step 7 已实现第一版，local smoke 已通过，等待 remote gate。
+状态：第一版 remote gate 已完成，接近 compatibility pass，但严格条件未通过。
 
 核心文档：
 
@@ -264,6 +264,39 @@ Paper-core pass:
 [Decision] 若第一版只达到 compatibility pass，它可以作为后续 future-aware/MoE carrier，
 但不能立即作为论文核心。若连 compatibility pass 都达不到，应暂停 decoder 主线，回到
 step 2-5 重新评估问题定义或理论可行性。
+
+### Phase1-R Gate Result
+
+[Fact] 第一版 `PatchEncoderTargetSetDecoder` remote gate 已完成：
+
+- report: `analysis/phase1_target_set_decoder_gate_20260622/phase1_target_set_decoder_gate_report.md`
+- remote output: `/home/yingch/exp_outputs/r-2026-fatst/phase1_target_set_decoder`
+- code commit: `3f7ead2`
+- selected GPUs: `1`, `2`
+
+[Evidence] 结果：
+
+| Metric | Value |
+| --- | ---: |
+| MSE wins vs `PatchEncoderFixedHead` | `5/12` |
+| MAE wins vs `PatchEncoderFixedHead` | `5/12` |
+| mean relative MSE | `+0.62%` |
+| ETTh2 mean relative MSE | `-0.27%` |
+| ETTm1 mean relative MSE | `+1.99%` |
+| Weather mean relative MSE | `+0.13%` |
+| max prefix mismatch MSE | `5.112619e-14` |
+| mean target state cosine | `0.359800` |
+
+[Evidence] H720-aligned prefix reference 的平均 h96/h192 relative MSE 为 `-0.85%`，但严格
+逐项看 ETTh2 h96 为 `+0.19%`、ETTm1 h96 为 `+0.17%`，未满足“不退化”的 strict gate。
+
+[Decision] 该候选是 `near_miss_not_compatibility_pass`：单模型 amortization gap 控制在
+`+1.0%` 内，没有 dataset 平均退化超过 `+3.0%`，prefix consistency 在数值上接近精确成立，
+target states 也没有同质化；但 H720-prefix strict no-degradation 条件未完全满足。
+
+[Decision] 它不是 paper-core pass。mean relative MSE 仍为正，`ETTm1 / h96` 退化 `+5.63%`，
+短 horizon 平均退化 `+2.74%`。下一步不能把 one-model flexibility 当作主贡献，也不能直接
+进入 MoE；应回到 step 5-6 做 short-horizon / prefix reuse 的 targeted repair。
 
 ## Phase2: Future-Aware Mechanism
 

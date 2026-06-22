@@ -1,7 +1,7 @@
 {
   "phase": "phase1",
   "objective": "Evaluate whether a target-set indexed forecasting decoder can expose future targets as model inputs, control the single-model amortization gap, improve prefix consistency, and provide a stable carrier for later future-aware or MoE mechanisms.",
-  "status": "phase1r_target_set_decoder_local_smoke_passed_needs_remote_gate",
+  "status": "phase1r_target_set_decoder_near_miss_needs_repair",
   "decision_reports": [
     "analysis/phase1_segment_decoder_gate_20260621/phase1_segment_decoder_gate_report.md",
     "analysis/phase1_fixed_adapter_gate_20260621/phase1_fixed_adapter_gate_report.md",
@@ -11,23 +11,29 @@
     "analysis/phase1_step_specific_state_gate_20260622/phase1_step_specific_state_gate_report.md",
     "docs/experiments/phase1-output-process-rollback.md",
     "analysis/phase1_trajectory_basis_residual_gate_20260622/phase1_trajectory_basis_residual_gate_report.md",
-    "docs/experiments/phase1-target-set-decoder-redefinition.md"
+    "docs/experiments/phase1-target-set-decoder-redefinition.md",
+    "analysis/phase1_target_set_decoder_gate_20260622/phase1_target_set_decoder_gate_report.md"
   ],
   "latest_decision": {
-    "candidate": "PatchEncoderTrajectoryBasisResidual",
-    "status": "partial_not_phase1_pass",
+    "candidate": "PatchEncoderTargetSetDecoder",
+    "status": "near_miss_not_compatibility_pass",
     "vs_fixed_main_wins": "5/12",
-    "vs_adapter_main_wins": "6/12",
-    "vs_step_specific_main_wins": "4/12",
-    "mean_relative_mse_vs_fixed": "+0.67%",
-    "mean_relative_mse_vs_adapter": "+0.49%",
-    "mean_relative_mse_vs_step_specific": "+0.33%",
-    "mean_residual_to_base_mae_ratio": "0.002637",
-    "mean_gate": "0.018039",
-    "mean_coefficient_l2": "0.292015",
-    "issue": "Output-space low-rank trajectory residual is active but too weak and unstable; mean relative MSE remains worse than all controls, with h96 and h720 still degrading.",
-    "rollback_step": "Step 2-3: redefine the decoder innovation problem before proposing another architecture. A.1-A.6 do not support continuing lightweight fixed-head patches.",
-    "next_direction": "Do not enter Phase1-B, future-aware alignment, or MoE on A.5/A.6. Re-open problem definition and theoretical feasibility for the decoder strategy."
+    "vs_fixed_mae_wins": "5/12",
+    "mean_relative_mse_vs_fixed": "+0.62%",
+    "dataset_mean_relative_mse": {
+      "ETTh2": "-0.27%",
+      "ETTm1": "+1.99%",
+      "Weather": "+0.13%"
+    },
+    "max_prefix_mismatch_mse": "5.112619e-14",
+    "mean_target_state_cosine": "0.359800",
+    "mean_abs_gamma": "0.653291",
+    "mean_abs_beta": "0.407875",
+    "h720_prefix_h96_h192_mean_relative_mse": "-0.85%",
+    "h720_prefix_strict_no_degradation": false,
+    "issue": "The target-set interface mechanically solves prefix consistency and keeps the single-model amortization gap within +1.0%, but it fails strict compatibility because ETTh2 h96 and ETTm1 h96 are slightly worse than the fixed H720-prefix reference; h96/ETTm1 remains the main accuracy weakness.",
+    "rollback_step": "Return to Step 5-6 for a targeted repair of short-horizon capacity and H720-prefix reuse, not to MoE. The target-side state is promising but not yet a passed carrier.",
+    "next_direction": "Repair the target-set decoder with a short-prefix specialist residual, horizon-balanced objective, or capacity-preserving local prefix path; then rerun a targeted h96/h192 compatibility gate before future-aware or MoE."
   },
   "active_candidate": {
     "candidate": "PatchEncoderTargetSetDecoder",

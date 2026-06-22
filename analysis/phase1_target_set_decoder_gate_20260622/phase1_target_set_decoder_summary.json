@@ -1,0 +1,36 @@
+{
+  "main_rows": 12,
+  "segment_rows": 30,
+  "mse_wins": 5,
+  "mae_wins": 5,
+  "mean_relative_mse_pct": 0.6161776305228702,
+  "min_relative_mse_pct": -2.166161155085866,
+  "max_relative_mse_pct": 5.626848375379034,
+  "dataset_mean_relative_mse_pct": {
+    "ETTh2": -0.2699757119819124,
+    "ETTm1": 1.988187660524876,
+    "Weather": 0.1303209430256469
+  },
+  "horizon_mean_relative_mse_pct": {
+    "96": 2.7400069149119113,
+    "192": -0.9481170243543557,
+    "336": -0.4130005960582365,
+    "720": 1.0858212275921615
+  },
+  "segment_mse_wins": 15,
+  "segment_mean_relative_mse_pct": 0.09189469062274432,
+  "h720_prefix_mse_wins": 6,
+  "h720_prefix_h96_h192_mean_relative_mse_pct": -0.8521135322742809,
+  "max_prefix_mismatch_mse": 5.1126193800462086e-14,
+  "mean_target_state_cosine": 0.3597999724280459,
+  "mean_abs_gamma": 0.6532914116978645,
+  "mean_abs_beta": 0.4078746090332667,
+  "compatibility": {
+    "mean_relative_mse_le_1pct": true,
+    "no_dataset_degrades_over_3pct": true,
+    "h96_h192_not_worse_than_fixed_h720_prefix": false,
+    "prefix_mismatch_near_zero": true,
+    "target_states_non_identical": true,
+    "pass": false
+  }
+}
