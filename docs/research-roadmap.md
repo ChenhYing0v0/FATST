@@ -822,6 +822,63 @@ step 3-5：诊断 alignment conflict。下一轮候选应先回答 uniform futur
 `ETTh2` dynamics 冲突，可能方向包括 scale-normalized teacher reconstruction、scheduled/gated
 alignment、uncertainty-weighted alignment，或 horizon/dataset conflict diagnostics。
 
+### Phase2-R.1: Confidence-Weighted Future Alignment
+
+状态：实现中。该候选不是扩大 teacher capacity，而是修补 Phase2-A 暴露的 alignment
+conflict。
+
+[Problem] Phase2-A 证明 training-only future teacher 可以安全接入 decoder state，但
+uniform alignment 把所有 future segment 都当作同等可靠的 teacher anchor。若某个 segment
+的 future reconstruction error 高，说明 teacher state 对该 segment 的 future semantics
+解释能力弱；继续强制 student target state 对齐这个 anchor，可能把 $U_T$ 拉离对 forecasting
+有用的方向。
+
+[Idea] 用 teacher reconstruction error 估计 segment-level confidence：
+
+$$
+e_j=
+\frac{
+\operatorname{MSE}(\tilde{Y}^{norm}_j,Y^{norm}_j)
+}{
+\operatorname{mean}((Y^{norm}_j)^2)+\epsilon
+},
+\qquad
+c_j=\max(c_{min},\exp(-e_j/\tau)).
+$$
+
+local alignment 和 relation alignment 只在 teacher 可置信时施加强约束：
+
+$$
+\mathcal{L}_{local}^{conf}
+=
+\frac{\sum_j c_j(1-\cos(S^X_j,\operatorname{sg}(S^Y_j)))}
+{\sum_j c_j+\epsilon}.
+$$
+
+relation alignment 使用 pair weight $\sqrt{c_i c_j}$。teacher reconstruction loss 可通过
+`target_energy` 归一化，避免 auxiliary loss 在不同 dataset 上不可比。
+
+[Theory Check] 该设计与 Phase2-A 的核心边界一致：`future_y` 仍然不进入 prediction path；
+confidence 只改变 training-time auxiliary gradient。若它能修复 `ETTh2` 退化并保留
+`ETTm1/Weather` 收益，则说明 future-aware supervision 的关键不是“更多 future task”，而是
+“只对可靠 future state 做 decoder-state calibration”。若仍失败，则 future teacher 方向很可能
+只是 auxiliary proxy，不适合作为论文主机制。
+
+[Gate] 使用 `PatchEncoderFutureStateAlignmentConfWeighted`：
+
+- `future_recon_normalization=target_energy`;
+- `future_align_weighting=reconstruction_confidence`;
+- `future_confidence_floor=0.05`;
+- 其他结构保持 Phase2-A 不变。
+
+通过条件：
+
+- prediction leakage audit 仍为 `<= 1e-7`；
+- prefix mismatch 仍为数值零级别；
+- vs R.3 的 `ETTh2` 平均退化收敛到 `<= +0.3%`；
+- 同时不能牺牲 `ETTm1/Weather` 的已有正信号；
+- 若只改善 latent metric 而不改善 MSE/MAE，则回退到 step 2-3，重新定义 decoder 问题。
+
 Phase2 pass 条件：
 
 - prediction path leakage audit 通过；

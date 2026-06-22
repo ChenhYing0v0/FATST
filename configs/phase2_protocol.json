@@ -149,15 +149,52 @@
       "rollback_step": "Return to step 3-5 to diagnose dataset-specific alignment conflict. Do not stack MoE on this state."
     },
     "next_candidate_direction": {
-      "status": "needs_problem_definition_before_implementation",
-      "candidate_family": "conflict-aware or scale-normalized future-state alignment",
-      "motivation": "Phase2-A proves future-state alignment can help some datasets, but uniform alignment/reconstruction conflicts with ETTh2. Next work must diagnose whether the conflict comes from reconstruction scale, teacher quality, alignment strength, or dataset-specific future dynamics.",
-      "possible_repairs": [
-        "scale-normalized teacher reconstruction loss",
-        "scheduled or gated alignment weight",
-        "uncertainty-weighted alignment based on teacher reconstruction error",
-        "horizon/dataset conflict diagnostics before MoE"
-      ]
+      "status": "phase2r1_implemented_needs_smoke_and_remote_gate",
+      "candidate": "PatchEncoderFutureStateAlignmentConfWeighted",
+      "candidate_family": "confidence-weighted and scale-normalized future-state alignment",
+      "motivation": "Phase2-A proves future-state alignment can help some datasets, but uniform alignment/reconstruction conflicts with ETTh2. Phase2-R.1 tests whether segment-level teacher reliability should gate the auxiliary alignment gradient.",
+      "problem": "Uniform future alignment treats every future teacher segment as equally reliable. If a teacher segment has high normalized reconstruction error, forcing the student target state to align with it can move decoder state away from the forecasting objective.",
+      "idea": {
+        "future_recon_normalization": "target_energy",
+        "future_align_weighting": "reconstruction_confidence",
+        "confidence": "c_j = max(c_min, exp(-normalized_segment_reconstruction_error_j / tau))",
+        "local_alignment": "weighted by c_j",
+        "relation_alignment": "weighted by sqrt(c_i c_j)",
+        "prediction_path": "unchanged; future_y remains training-only"
+      },
+      "default_hyperparameters": {
+        "future_align_weight": 0.02,
+        "future_relation_weight": 0.01,
+        "future_recon_weight": 0.001,
+        "future_recon_normalization": "target_energy",
+        "future_align_weighting": "reconstruction_confidence",
+        "future_confidence_temperature": 1.0,
+        "future_confidence_floor": 0.05
+      },
+      "remote_runner": "scripts/remote/run_phase2_future_state_alignment_repair_gate.sh",
+      "gate": {
+        "datasets": [
+          "ETTh2",
+          "ETTm1",
+          "Weather"
+        ],
+        "target_horizons": [
+          96,
+          192,
+          336,
+          720
+        ],
+        "seed": 2021,
+        "primary_comparison": "PatchEncoderPrefixRiskWeighted",
+        "pass_conditions": [
+          "prediction_leakage_max_abs <= 1e-7",
+          "prefix_mismatch remains numerical zero",
+          "ETTh2 mean relative MSE vs R.3 <= +0.3%",
+          "ETTm1 and Weather positive signals from Phase2-A are not sacrificed",
+          "improvement is visible in forecast metrics, not only latent alignment metrics"
+        ]
+      },
+      "rollback": "If confidence-weighted alignment still fails, return to loop step 2-3 and reconsider whether future-aware decoder supervision is the right problem definition."
     }
   },
   "paths": {
@@ -165,6 +202,7 @@
     "remote_dataset_root": "/home/yingch/dataset",
     "local_smoke_root": "artifacts/runs/smoke_phase2_future_state_alignment",
     "remote_artifact_root": "/home/yingch/exp_outputs/r-2026-fatst/phase2_future_state_alignment",
+    "remote_repair_artifact_root": "/home/yingch/exp_outputs/r-2026-fatst/phase2_future_state_alignment_repair",
     "analysis_root": "analysis/phase2_future_state_alignment_gate_20260622"
   },
   "remote": {

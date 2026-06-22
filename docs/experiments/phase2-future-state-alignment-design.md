@@ -298,3 +298,30 @@ router would only route noisy decoder features.
 compatibility-preserving. If it cannot beat R.3, it still gives useful evidence:
 the paper direction should then move from future-aware architecture to either a
 principled covariance-aware objective or a stronger base architecture.
+
+## Phase2-R.1 Repair Candidate
+
+[Fact] Phase2-A remote gate failed because `ETTh2` degraded across all horizons,
+while `ETTm1` improved across all horizons and `Weather` mostly improved. The
+failure is therefore alignment conflict, not leakage or prefix inconsistency.
+
+[Problem] Uniform future-state alignment assumes every teacher segment is a
+reliable target for the student decoder state. This assumption is too strong:
+when the teacher cannot reconstruct a future segment after normalization, its
+state should be treated as a weak anchor rather than an equally weighted
+semantic target.
+
+[Idea] `PatchEncoderFutureStateAlignmentConfWeighted` keeps the Phase2-A
+prediction path unchanged, but adds:
+
+- `future_recon_normalization=target_energy`, so reconstruction loss is
+  comparable across datasets;
+- `future_align_weighting=reconstruction_confidence`, where segment confidence
+  is computed from normalized teacher reconstruction error;
+- pairwise relation weights $\sqrt{c_i c_j}$, so low-confidence segments do not
+  dominate relation alignment.
+
+[Gate] The repair candidate must first prove it can remove the `ETTh2`
+regression without losing the useful `ETTm1/Weather` signal. If it only improves
+alignment metrics but not MSE/MAE, the correct rollback is step 2-3: redefine the
+decoder problem instead of stacking MoE on the same future teacher state.

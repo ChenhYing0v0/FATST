@@ -144,6 +144,15 @@ without first completing that rollback assessment.
 - Keep a memory safety margin instead of filling the selected GPU.
 - Record the selected GPU, observed memory usage, command, environment, and
   output path for every meaningful experiment.
+- For long remote runs, prefer a long `sleep` interval between progress checks
+  instead of frequent polling. Do not spend attention or terminal cycles on
+  repeated short checks when the experiment clearly needs time.
+- Every remote progress update should report the current dataset/run position
+  within the full matrix, the current epoch progress for active jobs, and a
+  reasonable estimated finish time when the logs make that estimate possible.
+- When two safe GPUs are available, prefer launching the slower datasets first:
+  run `ETTm1` and `Weather` in parallel before shorter jobs, because `Weather`
+  is usually the slowest and `ETTm1` is also relatively costly.
 - Default future 3090 experiment outputs to repo-external paths under
   `/home/yingch/exp_outputs/r-2026-fatst`; use in-repo `artifacts/runs/...`
   only for local smoke, small temporary checks, or historical runs that were

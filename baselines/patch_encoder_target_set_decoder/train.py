@@ -146,6 +146,11 @@ def future_alignment_stats(
     local_losses = []
     relation_losses = []
     reconstruction_losses = []
+    raw_reconstruction_losses = []
+    normalized_reconstruction_losses = []
+    confidence_means = []
+    confidence_mins = []
+    confidence_maxes = []
     teacher_student_cosines = []
     true_leakage = []
     shuffled_leakage = []
@@ -187,6 +192,13 @@ def future_alignment_stats(
             local_losses.append(float(true_future["future_local_alignment_loss"].cpu()))
             relation_losses.append(float(true_future["future_relation_alignment_loss"].cpu()))
             reconstruction_losses.append(float(true_future["future_reconstruction_loss"].cpu()))
+            raw_reconstruction_losses.append(float(true_future["future_raw_reconstruction_loss"].cpu()))
+            normalized_reconstruction_losses.append(
+                float(true_future["future_normalized_reconstruction_loss"].cpu())
+            )
+            confidence_means.append(float(true_future["future_alignment_confidence_mean"].cpu()))
+            confidence_mins.append(float(true_future["future_alignment_confidence_min"].cpu()))
+            confidence_maxes.append(float(true_future["future_alignment_confidence_max"].cpu()))
             if max_batches is not None and batch_index >= max_batches:
                 break
 
@@ -196,6 +208,11 @@ def future_alignment_stats(
             "future_local_alignment_loss": float(np.mean(local_losses)),
             "future_relation_alignment_loss": float(np.mean(relation_losses)),
             "future_reconstruction_loss": float(np.mean(reconstruction_losses)),
+            "future_raw_reconstruction_loss": float(np.mean(raw_reconstruction_losses)),
+            "future_normalized_reconstruction_loss": float(np.mean(normalized_reconstruction_losses)),
+            "future_alignment_confidence_mean": float(np.mean(confidence_means)),
+            "future_alignment_confidence_min": float(np.min(confidence_mins)),
+            "future_alignment_confidence_max": float(np.max(confidence_maxes)),
             "teacher_student_cosine": float(np.mean(teacher_student_cosines)),
             "prediction_leakage_max_abs": float(
                 max(
@@ -388,6 +405,15 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--future-align-weight", type=float, default=0.0)
     parser.add_argument("--future-relation-weight", type=float, default=0.0)
     parser.add_argument("--future-recon-weight", type=float, default=0.0)
+    parser.add_argument("--future-recon-normalization", choices=["none", "target_energy"], default="none")
+    parser.add_argument(
+        "--future-align-weighting",
+        choices=["uniform", "reconstruction_confidence"],
+        default="uniform",
+    )
+    parser.add_argument("--future-confidence-temperature", type=float, default=1.0)
+    parser.add_argument("--future-confidence-floor", type=float, default=0.0)
+    parser.add_argument("--future-recon-eps", type=float, default=1e-6)
     parser.add_argument("--batch-size", type=int, default=128)
     parser.add_argument("--epochs", type=int, default=1)
     parser.add_argument("--learning-rate", type=float, default=1e-4)
@@ -415,6 +441,12 @@ def main() -> None:
     )
     if future_loss_enabled and args.future_teacher_layers <= 0:
         raise ValueError("future teacher layers must be positive when future loss weights are enabled.")
+    if args.future_confidence_temperature <= 0:
+        raise ValueError("future confidence temperature must be positive.")
+    if not 0 <= args.future_confidence_floor < 1:
+        raise ValueError("future confidence floor must be in [0, 1).")
+    if args.future_recon_eps <= 0:
+        raise ValueError("future reconstruction eps must be positive.")
     set_seed(args.seed)
     device = torch.device("cuda" if args.device == "auto" and torch.cuda.is_available() else "cpu")
     if args.device != "auto":
@@ -474,6 +506,11 @@ def main() -> None:
         future_teacher_heads=args.future_teacher_heads or None,
         future_teacher_d_ff=args.future_teacher_d_ff or None,
         future_state_dim=args.future_state_dim or None,
+        future_recon_normalization=args.future_recon_normalization,
+        future_align_weighting=args.future_align_weighting,
+        future_confidence_temperature=args.future_confidence_temperature,
+        future_confidence_floor=args.future_confidence_floor,
+        future_recon_eps=args.future_recon_eps,
     ).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
     horizon_label = "mixed_" + "_".join(f"h{horizon}" for horizon in target_horizons)
@@ -500,6 +537,9 @@ def main() -> None:
         future_local_losses = []
         future_relation_losses = []
         future_reconstruction_losses = []
+        future_raw_reconstruction_losses = []
+        future_normalized_reconstruction_losses = []
+        future_confidence_means = []
         horizon_counts = {horizon: 0 for horizon in target_horizons}
         for _ in range(steps_per_epoch):
             horizon = rng.choice(target_horizons)
@@ -536,6 +576,13 @@ def main() -> None:
                 future_local_losses.append(float(output["future_local_alignment_loss"].detach().cpu()))
                 future_relation_losses.append(float(output["future_relation_alignment_loss"].detach().cpu()))
                 future_reconstruction_losses.append(float(output["future_reconstruction_loss"].detach().cpu()))
+                future_raw_reconstruction_losses.append(
+                    float(output["future_raw_reconstruction_loss"].detach().cpu())
+                )
+                future_normalized_reconstruction_losses.append(
+                    float(output["future_normalized_reconstruction_loss"].detach().cpu())
+                )
+                future_confidence_means.append(float(output["future_alignment_confidence_mean"].detach().cpu()))
             loss.backward()
             optimizer.step()
             losses.append(float(loss.detach().cpu()))
@@ -559,6 +606,17 @@ def main() -> None:
             else 0.0,
             "train_future_reconstruction_loss": float(np.mean(future_reconstruction_losses))
             if future_reconstruction_losses
+            else 0.0,
+            "train_future_raw_reconstruction_loss": float(np.mean(future_raw_reconstruction_losses))
+            if future_raw_reconstruction_losses
+            else 0.0,
+            "train_future_normalized_reconstruction_loss": float(
+                np.mean(future_normalized_reconstruction_losses)
+            )
+            if future_normalized_reconstruction_losses
+            else 0.0,
+            "train_future_alignment_confidence_mean": float(np.mean(future_confidence_means))
+            if future_confidence_means
             else 0.0,
             "val_mean_mse": mean_val_mse,
         }

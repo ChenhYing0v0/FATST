@@ -133,12 +133,27 @@ class PatchEncoderTargetSetDecoder(nn.Module):
         future_teacher_heads: int | None = None,
         future_teacher_d_ff: int | None = None,
         future_state_dim: int | None = None,
+        future_recon_normalization: str = "none",
+        future_align_weighting: str = "uniform",
+        future_confidence_temperature: float = 1.0,
+        future_confidence_floor: float = 0.0,
+        future_recon_eps: float = 1e-6,
     ) -> None:
         super().__init__()
         if segment_len <= 0:
             raise ValueError("segment_len must be positive.")
         if max_pred_len <= 0:
             raise ValueError("max_pred_len must be positive.")
+        if future_recon_normalization not in {"none", "target_energy"}:
+            raise ValueError("future_recon_normalization must be one of: none, target_energy.")
+        if future_align_weighting not in {"uniform", "reconstruction_confidence"}:
+            raise ValueError("future_align_weighting must be one of: uniform, reconstruction_confidence.")
+        if future_confidence_temperature <= 0:
+            raise ValueError("future_confidence_temperature must be positive.")
+        if not 0 <= future_confidence_floor < 1:
+            raise ValueError("future_confidence_floor must be in [0, 1).")
+        if future_recon_eps <= 0:
+            raise ValueError("future_recon_eps must be positive.")
 
         self.seq_len = seq_len
         self.channels = channels
@@ -165,6 +180,11 @@ class PatchEncoderTargetSetDecoder(nn.Module):
             future_teacher_d_ff = target_d_ff
         if future_state_dim is None:
             future_state_dim = d_model
+        self.future_recon_normalization = future_recon_normalization
+        self.future_align_weighting = future_align_weighting
+        self.future_confidence_temperature = future_confidence_temperature
+        self.future_confidence_floor = future_confidence_floor
+        self.future_recon_eps = future_recon_eps
         self.revin = RevIN(channels, affine=False) if revin else None
 
         self.padding_patch = nn.ReplicationPad1d((0, stride))
@@ -387,13 +407,52 @@ class PatchEncoderTargetSetDecoder(nn.Module):
         teacher_state, reconstruction = self._future_teacher_state(y_norm, pred_len, segment_count)
         student_norm = F.normalize(student_state, dim=-1)
         teacher_norm = F.normalize(teacher_state.detach(), dim=-1)
-        local_alignment_loss = 1.0 - F.cosine_similarity(student_norm, teacher_norm, dim=-1).mean()
-        student_relation = torch.bmm(student_norm, student_norm.transpose(1, 2))
-        teacher_relation = torch.bmm(teacher_norm, teacher_norm.transpose(1, 2))
-        relation_alignment_loss = F.mse_loss(student_relation, teacher_relation)
         batch, horizon, channels = y_norm.shape
         target_flat = y_norm.permute(0, 2, 1).reshape(batch * channels, horizon)
-        reconstruction_loss = F.mse_loss(reconstruction, target_flat)
+        pad_len = segment_count * self.segment_len - horizon
+        reconstruction_padded = F.pad(reconstruction, (0, pad_len)) if pad_len > 0 else reconstruction
+        target_padded = F.pad(target_flat, (0, pad_len)) if pad_len > 0 else target_flat
+        valid_mask = target_padded.new_zeros(1, segment_count * self.segment_len)
+        valid_mask[:, :horizon] = 1.0
+        valid_mask = valid_mask.reshape(1, segment_count, self.segment_len)
+        reconstruction_segments = reconstruction_padded.reshape(-1, segment_count, self.segment_len)
+        target_segments = target_padded.reshape(-1, segment_count, self.segment_len)
+        squared_error = (reconstruction_segments - target_segments).pow(2) * valid_mask
+        valid_counts = valid_mask.sum(dim=-1).clamp_min(1.0)
+        segment_mse = squared_error.sum(dim=-1) / valid_counts
+        segment_energy = (target_segments.detach().pow(2) * valid_mask).sum(dim=-1) / valid_counts
+        normalized_segment_mse = segment_mse / segment_energy.clamp_min(self.future_recon_eps)
+        raw_reconstruction_loss = F.mse_loss(reconstruction, target_flat)
+        target_energy = target_flat.detach().pow(2).mean().clamp_min(self.future_recon_eps)
+        if self.future_recon_normalization == "target_energy":
+            reconstruction_loss = raw_reconstruction_loss / target_energy
+        else:
+            reconstruction_loss = raw_reconstruction_loss
+
+        alignment_confidence = torch.ones_like(segment_mse)
+        if self.future_align_weighting == "reconstruction_confidence":
+            alignment_confidence = torch.exp(
+                -normalized_segment_mse.detach() / self.future_confidence_temperature
+            )
+            if self.future_confidence_floor > 0:
+                alignment_confidence = alignment_confidence.clamp_min(self.future_confidence_floor)
+
+        local_alignment = 1.0 - F.cosine_similarity(student_norm, teacher_norm, dim=-1)
+        local_alignment_loss = (
+            local_alignment * alignment_confidence
+        ).sum() / alignment_confidence.sum().clamp_min(self.future_recon_eps)
+        student_relation = torch.bmm(student_norm, student_norm.transpose(1, 2))
+        teacher_relation = torch.bmm(teacher_norm, teacher_norm.transpose(1, 2))
+        relation_error = (student_relation - teacher_relation).pow(2)
+        if self.future_align_weighting == "reconstruction_confidence":
+            relation_weight = torch.sqrt(
+                alignment_confidence[:, :, None] * alignment_confidence[:, None, :]
+            )
+            relation_alignment_loss = (
+                relation_error * relation_weight
+            ).sum() / relation_weight.sum().clamp_min(self.future_recon_eps)
+        else:
+            relation_alignment_loss = relation_error.mean()
         return {
             "future_student_state": student_state,
             "future_teacher_state": teacher_state,
@@ -401,6 +460,11 @@ class PatchEncoderTargetSetDecoder(nn.Module):
             "future_local_alignment_loss": local_alignment_loss,
             "future_relation_alignment_loss": relation_alignment_loss,
             "future_reconstruction_loss": reconstruction_loss,
+            "future_raw_reconstruction_loss": raw_reconstruction_loss,
+            "future_normalized_reconstruction_loss": raw_reconstruction_loss / target_energy,
+            "future_alignment_confidence_mean": alignment_confidence.mean(),
+            "future_alignment_confidence_min": alignment_confidence.min(),
+            "future_alignment_confidence_max": alignment_confidence.max(),
         }
 
     def forward(
@@ -481,6 +545,19 @@ class PatchEncoderTargetSetDecoder(nn.Module):
                         "future_local_alignment_loss": future_components["future_local_alignment_loss"],
                         "future_relation_alignment_loss": future_components["future_relation_alignment_loss"],
                         "future_reconstruction_loss": future_components["future_reconstruction_loss"],
+                        "future_raw_reconstruction_loss": future_components["future_raw_reconstruction_loss"],
+                        "future_normalized_reconstruction_loss": future_components[
+                            "future_normalized_reconstruction_loss"
+                        ],
+                        "future_alignment_confidence_mean": future_components[
+                            "future_alignment_confidence_mean"
+                        ],
+                        "future_alignment_confidence_min": future_components[
+                            "future_alignment_confidence_min"
+                        ],
+                        "future_alignment_confidence_max": future_components[
+                            "future_alignment_confidence_max"
+                        ],
                     }
                 )
             return output

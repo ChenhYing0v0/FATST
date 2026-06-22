@@ -20,6 +20,12 @@ FUTURE_STATE_DIM="${FUTURE_STATE_DIM:-0}"
 FUTURE_ALIGN_WEIGHT="${FUTURE_ALIGN_WEIGHT:-0.02}"
 FUTURE_RELATION_WEIGHT="${FUTURE_RELATION_WEIGHT:-0.01}"
 FUTURE_RECON_WEIGHT="${FUTURE_RECON_WEIGHT:-0.001}"
+FUTURE_RECON_NORMALIZATION="${FUTURE_RECON_NORMALIZATION:-none}"
+FUTURE_ALIGN_WEIGHTING="${FUTURE_ALIGN_WEIGHTING:-uniform}"
+FUTURE_CONFIDENCE_TEMPERATURE="${FUTURE_CONFIDENCE_TEMPERATURE:-1.0}"
+FUTURE_CONFIDENCE_FLOOR="${FUTURE_CONFIDENCE_FLOOR:-0.0}"
+FUTURE_RECON_EPS="${FUTURE_RECON_EPS:-1e-6}"
+DATASETS="${DATASETS:-ETTm1 Weather ETTh2}"
 STEPS_PER_EPOCH="${STEPS_PER_EPOCH:-}"
 MAX_EVAL_BATCHES="${MAX_EVAL_BATCHES:-}"
 KEEP_HEAVY_ARTIFACTS="${KEEP_HEAVY_ARTIFACTS:-0}"
@@ -45,7 +51,7 @@ if [[ -z "${CONDA_BIN}" ]]; then
   fi
 fi
 
-datasets=("ETTh2" "ETTm1" "Weather")
+read -r -a datasets <<< "${DATASETS}"
 read -r -a gpu_ids <<< "${GPU_IDS}"
 IFS="," read -r -a target_horizon_array <<< "${TARGET_HORIZONS}"
 horizon_label="mixed"
@@ -74,6 +80,12 @@ echo "future_state_dim=${FUTURE_STATE_DIM}"
 echo "future_align_weight=${FUTURE_ALIGN_WEIGHT}"
 echo "future_relation_weight=${FUTURE_RELATION_WEIGHT}"
 echo "future_recon_weight=${FUTURE_RECON_WEIGHT}"
+echo "future_recon_normalization=${FUTURE_RECON_NORMALIZATION}"
+echo "future_align_weighting=${FUTURE_ALIGN_WEIGHTING}"
+echo "future_confidence_temperature=${FUTURE_CONFIDENCE_TEMPERATURE}"
+echo "future_confidence_floor=${FUTURE_CONFIDENCE_FLOOR}"
+echo "future_recon_eps=${FUTURE_RECON_EPS}"
+echo "datasets=${DATASETS}"
 echo "steps_per_epoch=${STEPS_PER_EPOCH:-auto}"
 echo "max_eval_batches=${MAX_EVAL_BATCHES:-all}"
 echo "keep_heavy_artifacts=${KEEP_HEAVY_ARTIFACTS}"
@@ -120,6 +132,11 @@ run_one() {
     --future-align-weight "${FUTURE_ALIGN_WEIGHT}" \
     --future-relation-weight "${FUTURE_RELATION_WEIGHT}" \
     --future-recon-weight "${FUTURE_RECON_WEIGHT}" \
+    --future-recon-normalization "${FUTURE_RECON_NORMALIZATION}" \
+    --future-align-weighting "${FUTURE_ALIGN_WEIGHTING}" \
+    --future-confidence-temperature "${FUTURE_CONFIDENCE_TEMPERATURE}" \
+    --future-confidence-floor "${FUTURE_CONFIDENCE_FLOOR}" \
+    --future-recon-eps "${FUTURE_RECON_EPS}" \
     --output-root "${OUTPUT_ROOT}" \
     --device cuda \
     "${extra_args[@]}" 2>&1 | tee "${run_log}"
