@@ -1,768 +1,168 @@
-# 候选研究路线图
+# FATST Research Roadmap
 
 ## 定位
 
-[Fact] 本路线图基于 Zotero `FSA` 子集 12 篇 notes 的第一版机制整理：
-TimeAlign、ProtoTS、TIMEPERCEIVER、TFPS、ElasTST、QDF、AME-TS、TimeEmb、
-DTAF、SRP++、Seg-MoE、MoHETS。
+[Fact] 本仓库是 `R_2026_FSA` 的 clean successor，但不默认继承旧仓库代码、
+配置、实验输出或未审计记忆。
 
-[Fact] 当前文档不是最终架构规划，也不是 paper claim。它的作用是把当前研究方向
-收敛为一个可证伪的 research program：哪些机制值得继续，哪些机制只是诊断入口，
-以及每一阶段应该如何避免把多个变量混在一起解释。
+[Fact] 当前目标是围绕 time series forecasting 形成一篇高水平 SCI 期刊论文。候选
+方向包括：
+
+1. `one model for multi-horizon forecasting`
+2. `future-aware architecture`
+3. `MoE-style conditional computation`
+
+[Decision] 这三个方向不是三个可以直接堆叠的模块，而是一个统一模型框架的候选构件。
+每个构件必须先通过独立 research loop，证明它解决的问题真实、理论上合理、工程上可实现，
+并且能带来 performance evidence 或 paper narrative evidence。
 
 ## 长研究执行模板
 
-[Decision] 本项目后续所有长研究阶段固定使用以下闭环，而不是按“先实现、再解释”的
-方式推进：
+[Decision] 本项目后续所有长研究阶段固定使用以下 11-step loop：
 
 1. 调研分析。
 2. 提出待解决问题。
 3. 评估问题是否值得研究，以及问题是否真实存在。
 4. 提出 idea。
 5. 评估 idea 的理论可行性。
-6. 设计具体方案与实验协议。
+6. 设计方案。
 7. 实现方案。
 8. 远程训练。
 9. 评估结果。
-10. 判断是否通过：同时看 performance evidence 和 paper narrative 是否成立。
+10. 判断是否通过：同时看性能收益与论文故事是否成立。
 11. 若不通过，评估应回退至哪一步，然后继续循环。
 
-该模板是本路线图的执行边界：
+该模板是推进边界，而不是文档装饰：
 
-- step 1-3 决定一个问题是否进入实现，而不是默认所有直觉都值得做实验；
-- step 4-6 必须先形成可证伪假设、数学数据流和实验协议，再进入 coding；
+- step 1-3 决定问题是否值得进入实现；
+- step 4-6 必须形成可证伪 hypothesis、数学数据流、实验协议和通过/回退条件；
 - step 7-9 只负责产生可审计 evidence，不自动构成通过；
-- step 10 必须同时判断指标收益、机制解释和论文故事；
+- step 10 必须同时判断 `performance evidence` 和 `paper narrative`；
 - step 11 必须给出明确 rollback point，例如回到问题定义、理论可行性、方案设计或实现细节。
 
-[Inference] 对当前 roadmap 而言，这意味着 `Future-Segment Decoder`、
-`Future-Aware Mechanism` 和 `Future-Side MoE` 不是三段顺序堆叠的模块，而是三个候选
-research loops。一个 loop 未通过时，应先判断回退点，而不是继续把下一个机制叠上去。
+[Decision] 后续任何 decoder、future-aware、MoE 或新 architecture 候选，都必须显式标注
+当前处于上述哪一步。一个机制未通过时，不继续叠加下一个机制；先判断应回退到哪一步。
 
-[Strong Evidence] 经过 Phase0 baseline gate、targeted controls、seed variance、
-prefix consistency 和 segment-wise checkpoint oracle 后，`PatchEncoderFixedHead`
-被选为 Phase1 的 canonical internal base。固定 direct head 暴露了可量化问题，但
-问题幅度是中等的，而不是灾难性的。
+## 当前总判断
 
-[Inference] 因此，本文路线不应继续把 “variable-horizon” 本身作为第一创新点的
-核心卖点。更合理的主线是：
+[Strong Evidence] Phase0 与 Phase1-A.1 到 A.6 已经给出一个关键结论：
+`PatchEncoderFixedHead` 是当前 canonical internal base，且 horizon-specific fixed head
+非常强。围绕它追加轻量 decoder patch、adapter、future-aware alignment 或 output residual，
+都没有稳定形成 paper-core 级别收益。
 
-> long-term forecasting 的核心问题不是只缺少更强 encoder，也不是简单支持可变
-> 输出长度，而是 future positions / future segments / future states 没有被作为
-> 一个明确的预测过程来建模。
+[Inference] 因此，当前不应继续把 “variable-horizon 本身” 作为第一创新点，也不应直接在
+A.5/A.6 上叠加 future-aware 或 MoE。更合理的收敛方向是：
 
-据此，当前候选论文主张收敛为三个互相耦合的创新点：
+> time series forecasting 的缺口不只是 encoder 不够强，也不只是输出长度不灵活；
+> 更底层的问题是 target future positions / segments 没有作为预测过程的显式输入来建模。
 
-1. `Future-Segment Decoder`: 替代 static fixed head，显式构造 future-side states。
-2. `Future-Aware Mechanism`: 用 training-only future signal 约束可推理的 future latent state。
-3. `Future-Side MoE`: 在 future segment / future state 上做 conditional operators。
+[Decision] 当前 Phase1 已从 `Future-Segment Decoder patching` 回退到
+`Target-Set Forecasting Decoder` 的问题重定义。该方向先验证 one-model / target-set
+interface 是否能以可控 amortization gap 接近 horizon-specific specialists，并改善
+prefix consistency。只有该 interface 至少达到 compatibility pass，后续 future-aware 和 MoE
+才有稳定 carrier。
 
-`Variable-horizon` 和 `prefix consistency` 仍然保留，但它们的角色从主 claim 降级为：
-
-- 诊断 fixed head 是否存在输出策略问题；
-- 检查 future-side decoder 是否具备 one-model compatibility；
-- 作为附加能力，而不是第一轮机制成败标准。
-
-## Phase0 证据更新
-
-### Baseline 选择
-
-[Fact] Phase0 gate 比较了 `DLinear`、`PatchEncoderFixedHead`、
-`SegTSFTDenseFixedHead`。在 follow-up controls 和 seed variance 后，
-`PatchEncoderFixedHead` 被选为 canonical internal base。
-
-[Fact] `PatchEncoderFixedHead` 是 clean PatchTST-style base，不是 exact PatchTST
-paper reproduction。它的价值在于：encoder 简洁、性能合理、fixed head 缺陷清楚，
-便于后续只替换 output / decoder side。
-
-### Prefix consistency
-
-[Strong Evidence] Fixed direct head 暴露了可量化 prefix issue：
-
-- `Weather / H=96`: h720 prefix 比 h96 fixed head 劣化 `+4.79%` MSE。
-- `ETTm1 / H=96`: h720 prefix 比 h96 fixed head 劣化 `+4.70%` MSE。
-- 最大 fixed-head prediction mismatch 为 `ETTm1 / H=192` 的 `0.044742` MSE。
-- `truth_alignment_mse = 0.0`，说明该现象不是数据窗口错位造成的。
-
-[Inference] 这支持 fixed head 存在问题，但不足以单独支撑
-“variable-horizon decoder 一定显著提升性能”。
-
-### Segment-wise checkpoint oracle
-
-[Strong Evidence] 在统一 `0-720` 预测区间内，每 48 step 一个 segment，短 checkpoint
-用 rolling autoregression 扩展到 720 后，`pred_len=720` checkpoint 在三个数据集的
-全区间平均 MSE 都是最优：
-
-| Dataset | h96 avg MSE | h192 avg MSE | h336 avg MSE | h720 avg MSE | Best |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| ETTh2 | 0.461915 | 0.418412 | 0.413482 | 0.407403 | 720 |
-| ETTm1 | 0.463471 | 0.428760 | 0.416765 | 0.412788 | 720 |
-| Weather | 0.326617 | 0.331844 | 0.327533 | 0.323127 | 720 |
-
-[Strong Evidence] 但 h720 并不是所有 segment 的局部最优：
-
-| Dataset | h96 wins | h192 wins | h336 wins | h720 wins |
-| --- | ---: | ---: | ---: | ---: |
-| ETTh2 | 0 | 4 | 1 | 10 |
-| ETTm1 | 2 | 0 | 5 | 8 |
-| Weather | 3 | 2 | 0 | 10 |
-
-[Inference] 该结果否定了一个过强假设：短 horizon 模型并不天然统治短期预测。
-它同时说明另一个更有价值的问题：同一个 static fixed head 很难在所有 future segment
-上都达到局部最优。因此，Phase1 应验证 future-side decoder，而不是直接追求
-one-model for all horizons。
-
-## 统一问题表述
-
-令历史窗口为：
-
-$$
-X \in \mathbb{R}^{B \times L \times C},
-$$
-
-预测目标为：
-
-$$
-Y_{1:H} \in \mathbb{R}^{B \times H \times C}.
-$$
-
-常规 direct forecasting 可写为：
-
-$$
-\hat{Y}_{1:H} = D_\theta(E_\theta(X), H),
-$$
-
-其中 $E_\theta(X)$ 是 history representation，$D_\theta$ 通常是 fixed output head。
-这个形式隐含三个假设：
-
-1. [Inference] 同一个 history representation 足以支持所有 future steps。
-2. [Inference] future step 之间的结构只需要通过 output dimension 或 loss 被动体现。
-3. [Inference] 不同 future segments 与 temporal regimes 可以共享同一套 prediction operator。
-
-当前路线改写为：
-
-$$
-Z = E_\theta(X),
-$$
-
-$$
-U_H = A_\theta(Z, Q_H, G_H),
-$$
-
-$$
-S_H = P_\theta(U_H),
-$$
-
-$$
-\tilde{U}_H = C_\theta(U_H, S_H, Q_H),
-$$
-
-$$
-\hat{Y}_{1:H}=O_\theta(\tilde{U}_H).
-$$
-
-其中：
-
-- $Z$: history-derived state。
-- $Q_H$: future position 或 future segment queries。
-- $G_H$: future segment grouping / dependency policy。
-- $U_H$: decoder 生成的 future-side hidden states。
-- $S_H$: future-aware latent state，可在训练时被 future signal 约束。
-- $C_\theta$: conditional operator，可由 dense adapter 或 MoE 实现。
-- $O_\theta$: final output projection。
-
-该数据流的底层约束是：
-
-- 推理时不能访问 ground-truth future。
-- 第一阶段必须先证明 decoder-side 改动在 one-to-one horizon setting 下有效。
-- one-model for all horizons 是后续 compatibility gate，不是 Phase1-A 的成败标准。
-- MoE routing 必须服务于 future states 或 future segments，不能只是增加参数量。
-
-## 创新点一：Future-Segment Decoder
-
-### 为什么不再以 variable-horizon 为主线
-
-[Fact] ElasTST 提出了 varied-horizon forecasting，通过 placeholder、structured mask、
-tunable RoPE、multi-scale patch 和 horizon reweighting 追求 horizon-invariant inference。
-
-[Inference] 该问题形式优雅，但它不等价于更好的 forecasting performance。更长 horizon
-请求下保持 prefix 不变，是 consistency 约束；而 forecasting 的主要困难还包括
-future segment 的误差增长、远端 pattern 漂移、不同 temporal regime 的 operator 差异。
-
-[Strong Evidence] 本项目 Phase0 结果显示：
-
-- h720 checkpoint 并不在短 prefix 上普遍失败；
-- 短 horizon checkpoint 也不稳定统治短期 segment；
-- fixed head 的 prefix 问题存在，但幅度中等。
-
-因此，Phase1 不应直接复刻 ElasTST 式 variable-horizon strategy，也不应把
-“one model for all horizon” 作为第一轮目标。
-
-### 需要回答的新问题
-
-[Hypothesis] 关键问题是 fixed head 是否把未来预测过度压缩成一次静态投影：
-
-$$
-\hat{Y}_{1:H} = W \cdot \text{Flatten}(Z).
-$$
-
-更合理的 decoder 应显式生成 future-side states：
-
-$$
-U_{1:J}=A_\theta(Z,Q_{1:J}),
-$$
-
-其中 $J$ 可以是 future segment 数量。例如在 $H=720$、segment length 为 48 时，
-$J=15$。
-
-每个 segment state 再生成对应区间：
-
-$$
-\hat{Y}_{a_j:b_j}=O_\theta(U_j).
-$$
-
-这样 decoder 的研究问题从 “输出长度是否可变” 转为：
-
-1. 不同 future segment 是否需要不同 readout state？
-2. segment state 是否能改善 error-by-segment profile？
-3. segment state 是否为后续 future-aware alignment 和 MoE routing 提供稳定载体？
-
-### Phase1-A 候选
-
-Phase1-A 使用 one-to-one horizon training。每个 horizon 单独训练，避免把 decoder
-有效性与 mixed-horizon optimization 混在一起。
-
-候选模型：
-
-| Model | 作用 |
-| --- | --- |
-| `PatchEncoderFixedHead` | Phase0 selected base |
-| `PatchEncoderSegmentQueryHead` | 用 future segment queries 替代 fixed flatten head |
-| `PatchEncoderHorizonConditionedHead` | 可选，对 fixed head 加 horizon/segment conditioning |
-
-第一轮不引入 MoE，不引入 teacher future branch。
-
-### Phase1-A 通过条件
-
-- 在 one-to-one setting 下，MSE/MAE 不低于 fixed head，最好在 ETTm1 或 Weather 上提升。
-- segment-wise MSE 更均衡，或在远端 horizon segment 上有明确改善。
-- 参数量提升需要受控；若参数增加明显，必须加入 dense parameter-control。
-- decoder-side states 不能完全退化为同质表示，需要通过 state similarity 或 segment
-  sensitivity 诊断。
-
-### Phase1-B: One-Model Compatibility Gate
-
-[Update] A.1-A.6 后，原先 “Phase1-A 通过后再进入 Phase1-B” 的顺序已经被 Phase1-R
-取代。现在 one-model compatibility 不再作为 fixed-head patch 的后续步骤，而是由
-`Target-Set Forecasting Decoder` 直接承担第一版 mixed target-set gate。
-
-历史上 Phase1-B 计划检查：
-
-1. `train H=720, evaluate prefixes`;
-2. `mixed horizon training`，从 `{96,192,336,720}` 采样 horizon；
-3. 检查 prefix consistency、short-prefix MSE 和 full-horizon MSE。
-
-[Decision] 当前以 Phase1-R 的 compatibility pass 作为是否继续 one-model / future-aware /
-MoE 后续机制的前置条件。
-
-## 创新点二：Future-Aware Mechanism
-
-### 问题
-
-[Inference] forecasting 的训练数据包含 ground-truth future $Y$，但推理时不可见。
-合理的 future-aware 机制不是泄漏未来，而是用 training-only signal 学习一个可由
-history 和 future query 推断的 future latent space。
-
-TimeAlign 提供了关键启发：训练时可以用 future-side reconstruction branch 得到
-$S_H^{teacher}$，再约束 prediction branch 的 $S_H^{student}$ 靠近 future-side
-representation。ProtoTS 和 TIMEPERCEIVER 则提示 future pattern / target query 可以
-成为 decoder 的显式接口。
-
-### 候选数学形式
-
-训练时定义 teacher future state：
-
-$$
-S_H^{teacher}=T_\psi(Y_{1:H},Q_H),
-$$
-
-推理可用的 student future state：
-
-$$
-S_H^{student}=P_\theta(U_H).
-$$
-
-总 loss：
-
-$$
-\mathcal{L}
-=
-\mathcal{L}_{pred}(\hat{Y},Y)
-+
-\lambda \mathcal{L}_{align}(S_H^{student},\text{stopgrad}(S_H^{teacher})).
-$$
-
-关键边界：
-
-- $S_H^{teacher}$ 只在训练时出现。
-- $S_H^{student}$ 必须只依赖 $X$、$Z$、$Q_H$ 或允许的 covariates。
-- alignment 应约束 future pattern / distribution，而不是直接复制 $Y$ 的数值。
-
-### 与 Future-Segment Decoder 的对齐
-
-[Hypothesis] future-aware signal 最适合落在 decoder-side future segment states 上，
-而不是只约束 encoder output $Z$。原因是 $Z$ 是 history-level state，而预测困难主要
-在 $h=1,\ldots,H$ 的 future positions 或 segments 上展开。
-
-因此 Phase2 的默认接入点是：
-
-$$
-U_H = A_\theta(Z,Q_H),
-\quad
-S_H^{student}=P_\theta(U_H),
-\quad
-\hat{Y}_{1:H}=O_\theta(U_H,S_H^{student}).
-$$
-
-### Phase2 通过条件
-
-- alignment distance 下降，同时 forecast-relevant metrics 改善。
-- 改善可以定位到特定 horizon segment、turning point、high-frequency component 或
-  long-horizon error。
-- 推理路径通过 leakage audit：去掉 teacher branch 后完全不依赖 $Y$。
-- 如果 latent metric 改善但 forecast 不变，则 future-aware state 只能视为无效 proxy。
-
-## 创新点三：Future-Side MoE
-
-### 问题
-
-[Inference] MoE 的必要性不能只由“不同样本需要不同专家”支撑。对本项目更强的论证是：
-Future-Segment Decoder 已经把预测过程分解为多个 future segment states；这些 states
-可能对应不同 temporal mechanisms，因此 conditional operators 应该放在 future side。
-
-这与 Seg-MoE、AME-TS、MoHETS、TFPS、DTAF 的共同证据一致：
-
-- routing granularity 应尊重 time series continuity，不能默认 token-wise。
-- expert identity 应有结构含义，否则 specialization 难解释。
-- expert 可以是不同 operator bias，而不一定都是同构 MLP。
-- MoE 可以处理 pattern shift、non-stationarity 或 residual stabilization。
-
-### 候选数据流
-
-把 routing 放在 future segment state 上：
-
-$$
-r_j=\text{Router}_\theta(U_j,S_j,q_j),
-$$
-
-$$
-\tilde{U}_j=\sum_{k=1}^{K}r_{j,k}E_k(U_j),
-$$
-
-$$
-\hat{Y}_{a_j:b_j}=O_\theta(\tilde{U}_j).
-$$
-
-这个位置比 input-token MoE 更符合本项目主张：expert 选择直接对应未来预测机制，而不是
-只对过去 tokens 做条件变换。
-
-### Expert 的合理角色
-
-[Hypothesis] 首轮不应直接堆叠大规模 experts。更可审计的候选包括：
-
-- `TrendOperator`: 偏向低频趋势或 smooth projection。
-- `SeasonalOperator`: 偏向 periodic / frequency structure。
-- `LocalResidualOperator`: 偏向短期扰动和 residual correction。
-- `LinearStateOperator`: 作为低参数 state transition baseline。
-
-[Inference] 这些 operator bias 不必一开始全部实现。Phase3 可以先用 lightweight
-homogeneous experts 验证 routing 位置，再在有证据时引入 heterogeneous experts。
-
-### Phase3 通过条件
-
-- MoE 改善不能只来自参数量，必须对比 same-parameter dense control。
-- routing entropy 不能塌缩，也不能完全平均。
-- routing pattern 应与 future segment、future-aware state cluster 或 error profile 有
-  对应关系。
-- fixed routing、random routing、no future-state routing 应作为 ablations。
-
-## 分阶段收敛计划
-
-### Phase 0：建立可证伪基线
+## Phase0: Canonical Base
 
 状态：已完成。
 
-结论：
+### 结论
 
-- canonical internal base: `PatchEncoderFixedHead`。
-- fixed head 有可量化 prefix issue，但不足以单独支撑 variable-horizon 主线。
-- segment oracle 显示 h720 全局平均最强，但局部 segment 存在不同 checkpoint 最优。
-- Phase1 应从 future-side decoder 的 one-to-one gate 开始。
+[Fact] Phase0 gate 比较了：
 
-关键文档：
+- `DLinear`
+- `PatchEncoderFixedHead`
+- `SegTSFTDenseFixedHead`
+
+[Decision] `PatchEncoderFixedHead` 被选为 canonical internal base。它是 clean
+PatchTST-style base，而不是 exact PatchTST paper reproduction。选择它的原因是：
+
+- encoder 简洁；
+- baseline performance 合理；
+- fixed direct head 的问题可诊断；
+- 后续可以只替换或研究 output / decoder side。
+
+### 关键证据
+
+[Strong Evidence] Fixed direct head 存在可量化 prefix issue：
+
+| Diagnostic | Evidence |
+| --- | --- |
+| `Weather / H=96` | h720 prefix 比 h96 fixed head 劣化 `+4.79%` MSE |
+| `ETTm1 / H=96` | h720 prefix 比 h96 fixed head 劣化 `+4.70%` MSE |
+| max fixed-head prediction mismatch | `ETTm1 / H=192`, `0.044742` MSE |
+| truth alignment audit | `truth_alignment_mse = 0.0` |
+
+[Strong Evidence] Segment-wise checkpoint oracle 显示，短 horizon checkpoint 并不天然统治
+短期预测；`pred_len=720` checkpoint 在三个数据集的 `0-720` 全区间平均 MSE 均为最优。
+但 h720 也不是所有 segment 的局部最优。
+
+[Inference] 这说明 fixed head 的问题真实存在，但幅度是中等的。它不足以单独支撑
+“variable-horizon decoder 一定能显著提升性能”的强 claim。
+
+### 证据入口
 
 - `docs/experiments/phase0-baseline-selection.md`
 - `docs/experiments/phase0-experiment-protocol.md`
 - `analysis/phase0_prefix_consistency_report_20260621.md`
 - `analysis/phase0_segment_oracle_20260621/phase0_segment_oracle_summary_zh.md`
 
-### Phase 1：Future-Segment Decoder Gate
+## Phase1: Decoder / Target Interface
 
-目标：验证 future segment states 是否比 fixed flatten head 更合理。
+### 历史路线结论
 
-Phase1-A:
+[Fact] Phase1-A.1 到 A.6 已完成多轮候选 gate：
 
-- one-to-one horizon training；
-- datasets: 先用 ETTh2、ETTm1、Weather；
-- horizons: `{96,192,336,720}`；
-- 对比 `PatchEncoderFixedHead`、`PatchEncoderSegmentQueryHead`，可选
-  `PatchEncoderHorizonConditionedHead`；
-- 不引入 MoE，不引入 future teacher branch。
+| Candidate | Main Outcome | Decision |
+| --- | --- | --- |
+| `PatchEncoderSegmentQueryHead` | `0/12` wins, mean MSE `+6.79%` | fail |
+| `PatchEncoderFixedHeadAdapter` | `7/12` wins, mean MSE `+0.20%` | partial |
+| `PatchEncoderFutureAwareAdapter` | `4/12` wins, mean MSE `+0.16%` | partial |
+| `PatchEncoderFutureAwareAlignOnly` | `4/12` wins, mean MSE `+0.04%` | repair partial |
+| `PatchEncoderStepSpecificStateAdapter` | `7/12` wins, mean MSE `+0.39%` | partial |
+| `PatchEncoderTrajectoryBasisResidual` | `5/12` wins, mean MSE `+0.67%` | partial |
 
-[Fact] 第一轮 `PatchEncoderSegmentQueryHead` 已完成并未通过：
-`analysis/phase1_segment_decoder_gate_20260621/phase1_segment_decoder_gate_report.md`。
+[Strong Evidence] 这些结果共同说明：
 
-[Strong Evidence] 它在 12/12 个主指标设置和 30/30 个 segment-level 设置上均弱于
-`PatchEncoderFixedHead`，平均 MSE 退化 `+6.79%`。这说明简单地用 segment query
-cross-attention 替换 fixed flatten head 会损失 readout capacity。
+1. 直接替换 fixed flatten head 容易造成 readout capacity collapse。
+2. 保留 fixed head 后做 output-space 或 pre-head lightweight modulation 可以产生局部信号，
+   但不能稳定超过 specialist fixed head。
+3. future-aware alignment 可以无泄漏运行并形成 teacher/student coupling，但当前承载结构
+   太弱，无法转化为稳定 forecast gain。
+4. output-space low-rank trajectory residual 非零，但幅度过小，不足以构成 paper-core。
 
-[Decision] Phase1 不进入 one-model compatibility，也不在当前 SegmentQueryHead 上叠加
-future-aware 或 MoE。当前应回退到第 5-6 步，重新设计保留 fixed-head capacity 的
-future-side interface。
+[Decision] A.1-A.6 后不进入旧 Phase1-B，不在 A.5/A.6 上继续叠加 future-aware 或 MoE。
+当前回退到 11-step loop 的 step 2-3：重新定义 decoder 创新点要解决的真实问题。
 
-下一轮优先候选：
+### Phase1-R: Target-Set Forecasting Decoder
 
-- `FixedHeadAdapter`: 保留 fixed flatten head，只在 readout 后加入 future-segment affine adapter。
-- `SegmentQueryDenseHead`: segment query 提供 conditioning，但每个 segment 保留更强 dense readout。
-- `StepQueryHead`: 更细粒度 step-level query，作为高成本备选。
+状态：step 1-6 已定义，等待实现。
 
-Phase1-A.2 当前执行候选：
+核心文档：
 
-- `PatchEncoderFixedHeadAdapter`。
-- 主路径仍是 `Flatten(Z) -> Linear(..., H)`，即不删除 Phase0 selected base 的 readout。
-- future segment queries 通过 cross-attention 生成 adapter state。
-- adapter 输出 $\gamma,\beta$，对 fixed-head normalized forecast 做：
+- `docs/experiments/phase1-target-set-decoder-redefinition.md`
 
-$$
-\hat{Y}=\hat{Y}^{base}\odot(1+\gamma)+\beta.
-$$
+[Decision] 新的问题定义是：
 
-- adapter final projection 采用 zero initialization，使初始 forward 等价于 fixed head。
+> horizon-specific direct forecasting 把 target horizon 当作训练脚本级别的外部设置，
+> 而不是模型输入的一部分；这导致每个 horizon 训练一套 specialist head，无法统一
+> target positions、prefix consistency 和 future-step dependency。
 
-[Hypothesis] 如果该候选通过，说明 future-side interface 的问题仍成立，只是第一轮替换
-readout 的设计过激；如果它也失败，则 history-only future decoder 主线需要降级，
-下一步应优先转向 future-aware teacher/student alignment，而不是继续堆叠 decoder。
-
-Phase1-A.2 通过条件：
-
-- main MSE 至少 `4/12` wins，且平均 relative MSE 不出现明显退化；
-- 或 segment-level wins 集中改善远端/high-error segment；
-- `adapter_delta_stats.csv` 显示 adapter 对 base prediction 有非零有效修正，避免把训练波动
-  误判为机制收益。
-
-[Fact] Phase1-A.2 `PatchEncoderFixedHeadAdapter` 已完成：
-`analysis/phase1_fixed_adapter_gate_20260621/phase1_fixed_adapter_gate_report.md`。
-
-[Evidence] 结果为：
-
-- main MSE wins: `7/12`；
-- segment-level MSE wins: `15/30`；
-- mean relative MSE change: `+0.20%`；
-- relative MSE range: `-2.02%` 到 `+3.74%`；
-- mean adapter delta/base MAE ratio: `0.3200`。
-
-[Decision] `PatchEncoderFixedHeadAdapter` 是 `partial_pass`，但不足以成为论文核心创新。
-它支持一个更精确的判断：future-side interface 不是无效的，但仅靠 history-derived
-segment adapter 难以稳定提升性能。
-
-[Inference] Phase1 的下一步不应继续堆 adapter capacity，而应进入 Future-Aware Gate：
-用 training-only future signal 学习可推理的 future latent state，并检验这种 supervision
-是否能把 adapter/interface 从弱修正变成稳定机制收益。
-
-Phase1-A.3 当前执行候选：
-
-- `PatchEncoderFutureAwareAdapter`。
-- 推理路径与 `PatchEncoderFixedHeadAdapter` 一致，不接收 future target。
-- 训练时额外编码 ground-truth future segment 得到 $S^{teacher}$。
-- history-derived adapter state 经过 projection 得到 $S^{student}$。
-- 使用 $\mathcal{L}_{align}$ 约束 $S^{student}$ 靠近 stop-gradient teacher。
-- 使用 $\mathcal{L}_{recon}$ 防止 teacher branch 变成无意义 anchor。
-
-第一轮默认：
-
-- `align_weight = 0.05`
-- `recon_weight = 0.05`
-- `segment_len = 48`
-
-Phase1-A.3 通过条件：
-
-- `prediction_leakage_max_abs <= 1e-7`；
-- 相比 `PatchEncoderFixedHead` 至少 `6/12` main MSE wins；
-- mean relative MSE < 0；
-- alignment diagnostics 显示 teacher/student state 发生有效耦合。
-
-[Fact] Phase1-A.3 `PatchEncoderFutureAwareAdapter` 已完成：
-`analysis/phase1_future_aware_adapter_gate_20260621/phase1_future_aware_adapter_gate_report.md`。
-
-[Evidence] 结果为：
-
-- vs `PatchEncoderFixedHead`: main MSE wins `4/12`，mean relative MSE `+0.16%`；
-- vs `PatchEncoderFixedHeadAdapter`: main MSE wins `5/12`，mean relative MSE `-0.01%`；
-- leakage audit: `max_prediction_leakage_abs = 0.0`；
-- mean teacher/student cosine: `0.4287`。
-
-[Decision] Phase1-A.3 是 `partial_pass`，不是 paper-core pass。它证明 future-aware
-teacher/student alignment 可以在无泄漏条件下运行并实际耦合 student state，但当前性能
-证据不足。
-
-[Diagnosis] 第一轮 future-aware 方案暴露了 reconstruction loss scale imbalance：
-Weather 的 reconstruction loss 约 `645.08`，显著高于 ETTh2 的 `1.05` 和 ETTm1 的
-`0.40`。这会让同一个 `recon_weight=0.05` 在不同 dataset 上产生完全不同的优化压力。
-
-[Next] 不应直接扩大模型。下一步应做最小修补 gate：
-
-- `ScaleNormalizedRecon`: 将 $\mathcal{L}_{recon}$ 按 target/segment energy 归一化；
-- `AlignOnly`: 设置 `recon_weight=0`，检验是否 alignment 本身足够；
-- 如果两者仍不能稳定超过 fixed head，再考虑转向新架构或重新定义 future-aware claim。
-
-Phase1-A.4 当前执行候选：
-
-- `PatchEncoderFutureAwareAlignOnly`。
-- `PatchEncoderFutureAwareScaleNorm`。
-
-[Decision] Phase1-A.4 是对 Phase1-A.3 的 step 5-6 rollback，而不是新一轮模型扩容。
-它只回答一个具体问题：future-aware alignment 的失败是否主要来自
-$\mathcal{L}_{recon}$ 的尺度不可比。
-
-`AlignOnly` 的训练目标为：
-
-$$
-\mathcal{L}
-=
-\mathcal{L}_{pred}
-+\lambda_{align}\mathcal{L}_{align}.
-$$
-
-`ScaleNorm` 的 reconstruction objective 为：
-
-$$
-\mathcal{L}_{recon}^{norm}
-=
-\frac{
-\operatorname{MSE}(\hat{Y}^{teacher,norm},Y^{norm})
-}{
-\operatorname{mean}((Y^{norm})^2)+\epsilon
-}.
-$$
-
-Phase1-A.4 通过条件：
-
-- 所有 repair candidates 的 `prediction_leakage_max_abs <= 1e-7`；
-- 最优 repair candidate 相比 `PatchEncoderFixedHead` 至少 `6/12` main MSE wins；
-- mean relative MSE < 0；
-- teacher/student coupling 仍存在，且 normalized reconstruction loss 不再被 Weather
-  的 raw scale 主导。
-
-[Inference] 若 Phase1-A.4 仍不能达到通过条件，则 future-aware adapter 方向应降级：
-它可作为 diagnostic evidence，但不应作为论文核心。下一步应回到 step 3-5 重新判断
-“future latent state alignment” 是否是正确问题，或转向更基础的 decoder/state architecture。
-
-[Fact] Phase1-A.4 已完成：
-`analysis/phase1_future_aware_repair_gate_20260622/phase1_future_aware_repair_gate_report.md`。
-
-[Evidence] 结果为：
-
-- `PatchEncoderFutureAwareAlignOnly` vs `PatchEncoderFixedHead`: wins `4/12`，
-  mean relative MSE `+0.04%`；
-- `PatchEncoderFutureAwareScaleNorm` vs `PatchEncoderFixedHead`: wins `4/12`，
-  mean relative MSE `+0.12%`；
-- `AlignOnly` vs `PatchEncoderFixedHeadAdapter`: wins `5/12`，mean relative MSE `-0.13%`；
-- `ScaleNorm` vs `PatchEncoderFixedHeadAdapter`: wins `5/12`，mean relative MSE `-0.05%`；
-- leakage audit 全部为 `0.0`；
-- mean teacher/student cosine 为 `0.3313`。
-
-[Strong Evidence] `ScaleNorm` 确实修正了 reconstruction loss 尺度：Weather raw
-reconstruction loss 仍为数百到上千，但 normalized reconstruction loss 约为 `0.33-0.57`。
-因此，Phase1-A.4 不是因为修补无效而失败，而是因为修补后 forecasting performance 仍不稳定。
-
-[Decision] Phase1-A.4 是 `repair_partial`，不是 pass。当前 future-aware adapter 可作为
-机制诊断，但不能作为论文核心创新。特别是 Weather 四个 horizon 均未超过 fixed head，
-说明该机制没有解决跨数据集稳定性问题。
-
-[Rollback] 不应在该 adapter 上继续叠加 MoE。下一步回到长研究模板 step 3-5：
-
-1. 重新判断 “teacher/student future latent alignment” 是否是真正值得研究的问题；
-2. 若保留 future-aware 主张，应重新设计承载它的 future-side state architecture；
-3. 若转向 decoder 主线，应从 prediction process / state transition 的底层形式重新设计，
-   而不是继续在 fixed-head output 后做 affine correction。
-
-#### Phase1-A.5: Step-Specific State Decoder Reset
-
-[Decision] Phase1-A.5 的研究入口记录在：
-`docs/experiments/phase1-step-specific-state-decoder-reset.md`。
-
-[Inference] 当前更值得研究的问题不是 fixed head 是否缺少一个 post-hoc correction，而是：
-
-> fixed head 是否把所有 future steps 绑定到同一个 history representation，使不同 future
-> segments 只能通过 output rows 区分，而不能在进入 readout 前形成 step/segment-specific
-> representations？
-
-该问题同时对齐三类证据：
-
-- SRP++ 的 step-specific representation bottleneck；
-- TIMEPERCEIVER 的 target/future query decoder 思想；
-- 本项目 Phase1-A.1 到 A.4 的负结果：直接替换 head 会丢失 readout capacity，post-head
-  adapter 又只能得到不稳定 partial repair。
-
-下一候选暂命名为 `PatchEncoderStepSpecificStateAdapter`。其核心形式是：
+当前 fixed-head specialist 可写为：
 
 $$
 Z=E_\theta(X),
+\qquad
+\hat{Y}_{1:H}^{(H)}=W_H\operatorname{Flatten}(Z).
 $$
 
-$$
-U_j=A_\theta(q_j,Z),
-$$
+不同 $H$ 下，同一个 future step $\tau$ 可能由不同参数和不同训练轨迹产生：
 
 $$
-\tilde{Z}_j=Z\odot(1+\gamma_j)+\beta_j,
+\hat{Y}_{\tau}^{(96)} \neq \hat{Y}_{\tau}^{(720)}.
 $$
 
-$$
-\hat{Y}_{a_j:b_j}=W_{a_j:b_j}\operatorname{Flatten}(\tilde{Z}_j).
-$$
-
-其中 $W_{a_j:b_j}$ 复用 fixed head 对应 segment 的 readout rows，避免
-`PatchEncoderSegmentQueryHead` 的 capacity collapse；$\tilde{Z}_j$ 是 segment-specific
-representation，区别于 Phase1-A.2/A.3 的 output-space affine correction。
-
-[Hypothesis] 如果 fixed head 的主要优势来自 dense readout rows，则复用 readout rows 可以
-保留性能下界；如果主要瓶颈来自 step-invariant $Z$，则 pre-head state adaptation 应比
-post-head output correction 更有机会产生稳定提升。
-
-Phase1-A.5 pass 条件：
-
-- 相比 `PatchEncoderFixedHead` 至少 `6/12` main MSE wins，且 mean relative MSE < 0；
-- 不允许 Weather 或任一 dataset 全 horizon 系统性退化；
-- segment-conditioned $\gamma,\beta$ 或 $\tilde{Z}_j-Z$ 不能完全退化为同质小扰动；
-- 参数量必须接近 `PatchEncoderFixedHeadAdapter`，否则需要 parameter-control。
-
-[Fact] Phase1-A.5 已完成完整远程 gate：
-
-- remote output: `/home/yingch/exp_outputs/r-2026-fatst/phase1_step_specific_state`
-- local report: `analysis/phase1_step_specific_state_gate_20260622/phase1_step_specific_state_gate_report.md`
-- matrix: 3 models x 3 datasets x 4 horizons, seed `2021`
-- selected GPUs: `1`, `2`
-
-结果：
-
-| Comparison | MSE wins | Mean relative MSE | Range | Zero-win datasets |
-| --- | ---: | ---: | --- | --- |
-| vs `PatchEncoderFixedHead` | 7/12 | +0.39% | -3.15% to +8.22% | none |
-| vs `PatchEncoderFixedHeadAdapter` | 8/12 | +0.19% | -2.31% to +6.77% | none |
-
-诊断：
-
-- mean_abs_gamma: `0.604776`
-- mean_abs_beta: `0.078682`
-- mean segment activation cosine: `0.964393`
-
-[Decision] Phase1-A.5 是 `partial`，不是 pass。它说明 pre-head step-specific state
-并非退化为空操作，且在多个 setting 上能击败 fixed head / fixed-head adapter；但两个关键
-performance 条件未满足：mean relative MSE 仍为正，且 ETTh2 short horizons 出现明显退化。
-因此，该候选不能作为 Phase1 paper-core decoder，也不能作为 Phase1-B one-model
-compatibility 的基础。
-
-[Rollback] 当前应回退到长研究模板 step 2-3：重新判断 “decoder-side state adaptation”
-是否是值得保留的问题定义。更窄地说，已有证据支持 fixed direct head 存在 horizon/segment
-差异，但不支持仅靠 lightweight segment-conditioned modulation 就能稳定改善预测。
-下一轮不应继续叠 future-aware 或 MoE；应先重新定义 decoder 输出策略的核心问题。
-
-#### Phase1-A.6: Output-Process Residual Reset
-
-[Decision] Phase1-A.6 的研究入口记录在：
-`docs/experiments/phase1-output-process-rollback.md`。
-
-[Inference] A.5 之后，问题定义从 “是否需要 step-specific latent state” 收窄为：
-
-> fixed direct head 是否缺少对 future output trajectory 的结构化残差建模，使每个 output row
-> 独立学习，难以利用 future steps 之间的相关性、局部平滑性和 horizon-dependent error mode？
-
-下一候选暂命名为 `PatchEncoderTrajectoryBasisResidual`。它保留 fixed head 作为 base
-trajectory：
-
-$$
-\hat{Y}^{base}_{1:H}=W_H\operatorname{Flatten}(Z),
-$$
-
-再用 future position-aware basis 学习 low-rank residual：
-
-$$
-\Delta Y_{t,c}=\sum_{k=1}^{K} B_{t,k}A_{c,k},
-$$
-
-$$
-\hat{Y}_{1:H}=\hat{Y}^{base}_{1:H}+g_H\odot\Delta Y_{1:H}.
-$$
-
-[Hypothesis] 该设计比 A.5 更保守：它不扰动 encoder state 和 fixed head rows，只在输出轨迹
-上建模 correlated residual modes。因此它更可能保护 h96/h192 的稳定 readout，同时修正
-中长 horizon 的 segment-level error mode。
-
-Phase1-A.6 pass 条件：
-
-- 相比 `PatchEncoderFixedHead` mean relative MSE < 0，且至少 `7/12` main MSE wins；
-- 相比 `PatchEncoderFixedHeadAdapter` mean relative MSE < 0，且至少 `6/12` wins；
-- h96/h192 平均不能显著退化；
-- residual energy 非零但受控，并且 segment-level 改善不能只来自单个 dataset。
-
-[Fact] Phase1-A.6 已完成完整远程 gate：
-
-- remote output: `/home/yingch/exp_outputs/r-2026-fatst/phase1_trajectory_basis_residual`
-- local report:
-  `analysis/phase1_trajectory_basis_residual_gate_20260622/phase1_trajectory_basis_residual_gate_report.md`
-- matrix: 4 models x 3 datasets x 4 horizons, seed `2021`
-- selected GPUs: `1`, `2`
-
-结果：
-
-| Comparison | MSE wins | Mean relative MSE | Range | Zero-win datasets |
-| --- | ---: | ---: | --- | --- |
-| vs `PatchEncoderFixedHead` | 5/12 | +0.67% | -3.85% to +6.43% | none |
-| vs `PatchEncoderFixedHeadAdapter` | 6/12 | +0.49% | -3.08% to +8.63% | none |
-| vs `PatchEncoderStepSpecificStateAdapter` | 4/12 | +0.33% | -7.09% to +3.17% | none |
-
-诊断：
-
-- mean residual/base MAE ratio: `0.002637`
-- mean gate: `0.018039`
-- mean coefficient L2: `0.292015`
-
-[Decision] Phase1-A.6 是 `partial`，不是 pass。该候选有局部信号，但相对三个 control 的
-mean relative MSE 均为正，且 h96/h720 仍不稳定。residual branch 非零但幅度很小，说明它
-更多是在 fixed head 之上学习弱扰动，而不是形成足以支撑 paper-core 的 structured output
-process。
-
-[Rollback] A.6 后不进入 Phase1-B、future-aware alignment 或 MoE。当前回退到长研究模板
-step 2-3：重新定义 decoder 创新点要解决的真实问题。A.1-A.6 的连续证据已经说明，围绕
-fixed head 追加轻量 future-side patch 很难形成稳定性能收益；下一轮若继续 decoder 主线，
-必须先提出更基础的 prediction process 问题，而不是继续调参扩容。
-
-#### Phase1-R: Target-Set Decoder Redefinition
-
-[Decision] Phase1-R 的研究入口记录在：
-`docs/experiments/phase1-target-set-decoder-redefinition.md`。
-
-[Inference] A.1-A.6 的共同问题是：它们都在 one-to-one horizon setting 中试图击败
-已经为每个 horizon 单独优化的 specialist fixed head。新的问题定义不再是
-“fixed head 缺少一个轻量补丁”，而是：
-
-> horizon-specific direct forecasting 把 target horizon 当作训练脚本级别的外部设置，而不是
-> 模型输入的一部分；这导致每个 horizon 训练一套 specialist head，无法统一 target positions、
-> prefix consistency 和 future-step dependency。
-
-候选方向暂命名为 `Target-Set Forecasting Decoder`，本地候选实现名暂定为
-`PatchEncoderTargetSetDecoder`。它把预测目标写成 target set：
+Phase1-R 将 horizon 外部设置改写为 target set 输入：
 
 $$
 T=\{\tau_1,\dots,\tau_m\},
@@ -776,79 +176,185 @@ $$
 \hat{Y}_T=D_\theta(E_\theta(X),Q_T,M_T).
 $$
 
-其中 $M_T$ 是 target-query interaction policy。第一版不引入 MoE 或 future teacher branch，
-而是做 mixed target-set gate，评估：
+其中 $M_T$ 是 target-query interaction policy。
 
-- single-model amortization gap vs horizon-specific `PatchEncoderFixedHead`；
-- prefix consistency 是否比 fixed-head specialist 更稳定；
-- target-query states 是否能成为后续 future-aware / MoE 的 carrier。
+### 第一版设计边界
 
-[Decision] Phase1-R 的第一版通过条件分为两层：
+[Decision] 第一版 `PatchEncoderTargetSetDecoder` 不复刻完整 ElasTST，不引入 future
+covariates，不引入 MoE，不引入 future teacher branch。
 
-- compatibility pass: 单模型接近 specialist，mean relative MSE vs specialist 不超过
-  `+1.0%`，并显著改善 prefix consistency；
-- paper-core pass: mean relative MSE vs specialist < 0，或后续 future-aware/MoE 能把
-  target-side state 转化为稳定 forecast gain。
+[Decision] 第一版应优先验证 target-set interface，而不是追求一次性统一所有机制：
 
-[Boundary] 如果 Phase1-R 连 compatibility pass 都达不到，则 decoder 主线应暂停，转向重新
-评估 future-aware objective 或 external baseline reproduction。
+- datasets: `ETTh2`, `ETTm1`, `Weather`
+- target horizons: `{96,192,336,720}`
+- seq_len: `336`
+- primary seed: `2021`
+- base encoder: 与 `PatchEncoderFixedHead` 保持一致
+- training: mixed target-set sampling
+- evaluation: 分别报告 `{96,192,336,720}` 的 MSE/MAE、segment metrics、prefix consistency
 
-Phase1-B:
+[Inference] 第一版实现需要避免 A.1 的 capacity collapse。Target query 不能只经过一个
+过窄 shared patch MLP。更合理的最小结构是保留 dense history readout capacity，同时让
+target segment state 对 readout 进行 conditioning。
 
-- 仅在 Phase1-R 至少达到 compatibility pass 后执行；
-- 检查 `train H=720, evaluate prefixes` 和 mixed-horizon training；
-- 目标是验证 target-set interface 能否支撑后续机制，不是把 flexibility 本身当作主效果 claim。
+候选张量流：
 
-### Phase 2：Future-Aware Gate
+$$
+X \in \mathbb{R}^{B \times L \times C},
+$$
 
-目标：验证 training-only future state 是否提供有效监督。
+$$
+Z = E_\theta(X) \in \mathbb{R}^{BC \times N \times d},
+$$
 
-- 在 Phase1-A 最稳 decoder 上加入 teacher future branch。
-- 对比 no-alignment、latent alignment、segment-level alignment。
-- 严格检查推理路径无 future leakage。
+$$
+Q_T = \operatorname{TargetEmbed}(T) \in \mathbb{R}^{BC \times J \times d},
+$$
 
-[Decision] 当前 Phase1-A 尚无通过候选，Phase1-R 仍未实现和验证，因此 Phase2 暂停。
-Future-aware 机制不能继续接到 A.5 或 A.6 上作为修补项；若重新启动，需要先有通过
-compatibility gate 的 target-side state carrier。
+$$
+U_T = \operatorname{TargetDecoder}(Q_T,Z),
+$$
 
-### Phase 3：Future-Side MoE Gate
+$$
+r = R_\theta(\operatorname{Flatten}(Z)) \in \mathbb{R}^{BC \times d_r},
+$$
 
-目标：验证 conditional operators 是否必要，以及 routing 是否与 future state 对齐。
+$$
+(\gamma_j,\beta_j)=F_\theta(U_j),
+$$
 
-- 首先在 future segment states 上放轻量 MoE。
-- 对比 dense parameter-control、fixed routing、random routing、no future-state routing。
-- 若 routing 有证据，再探索 heterogeneous operators。
+$$
+\hat{Y}_{a_j:b_j}
+=
+O_\theta(r\odot(1+\gamma_j)+\beta_j).
+$$
 
-[Decision] 当前不启动 MoE。A.1-A.6 没有产生可作为 routing unit 的稳定 future-side
-state；在此基础上引入 MoE 只会把负结果复杂化，无法形成清晰 paper story。
+[Hypothesis] 该结构比 A.1 更合理，因为每个 target segment 仍能访问 flattened history
+readout，而不是只依赖一个低容量 segment token；同时它又不同于 horizon-specific fixed head，
+因为 target segment 通过 $Q_T$ 和 $U_T$ 显式进入预测过程。
 
-### Phase 4：统一模型与论文主张
+### Mask 与 consistency policy
 
-目标：只合并通过 gate 的机制。
+[Decision] 第一版默认使用 `independent target queries` 或等价的 prefix-stable policy。
+这样当 $T_s \subset T_l$ 时，同一个 target segment 的计算不会因为额外 future queries
+加入而改变。
 
-- 若 decoder、future-aware、MoE 都有效：形成 unified future-segment forecasting framework。
-- 若 decoder + future-aware 有效但 MoE 无效：论文主张收敛为 future-side decoder with
-  future-state alignment。
-- 若 decoder + MoE 有效但 alignment 无效：论文主张收敛为 future-side conditional
-  operators。
-- 若 decoder gate 不通过：项目不应继续围绕 decoder 讲故事，应回到 future-aware 或
-  external baseline reproduction。
+[Inference] 这比一开始使用复杂 target self-attention 更保守，但更符合当前目标：先验证
+target-set interface 是否能降低 prefix mismatch，再考虑 target-query interaction 是否能带来
+额外收益。
 
-## 当前不应冒进的点
+### Phase1-R Gate
 
-- 不应直接把 12 篇文献的模块全部堆进一个模型。
-- 不应把 ElasTST 式 variable-horizon 作为默认主线。
-- 不应一开始做 one-model for all horizons，并把结果作为 decoder 成败判断。
-- 不应把 rolling autoregression 作为主创新；它只能是 baseline 或 diagnostic。
-- 不应把 handcrafted descriptors 放入主路径，除非后续有明确证据和用户批准。
-- 不应默认 future covariates 可用，因为 benchmark protocol 未必支持。
-- 不应直接迁移旧仓库结果作为当前证据。
-- 不应在没有 parameter-control 和 routing diagnostics 时宣称 MoE 是机制贡献。
-- 不应只报告平均 MSE/MAE；本路线的核心证据必须包含 segment-level、horizon-level
-  和 routing-level diagnostics。
+Compatibility pass:
+
+1. single mixed target-set model vs horizon-specific `PatchEncoderFixedHead` 的 mean relative
+   MSE 不超过 `+1.0%`。
+2. 任一 dataset 平均退化不超过 `+3.0%`。
+3. 相比 `H=720 fixed head prefix`，h96/h192 prefix MSE 不退化，最好改善。
+4. prefix consistency mismatch 相比 Phase0 fixed-head mismatch 明显下降。
+5. target states 不完全同质，且参数量低于四个 specialist heads 总和。
+
+Paper-core pass:
+
+1. mean relative MSE vs horizon-specific `PatchEncoderFixedHead` < 0；或
+2. consistency 明显改善，并且后续 future-aware / MoE 能把 target-side state 转化为稳定
+   forecast gain。
+
+[Decision] 若第一版只达到 compatibility pass，它可以作为后续 future-aware/MoE carrier，
+但不能立即作为论文核心。若连 compatibility pass 都达不到，应暂停 decoder 主线，回到
+step 2-5 重新评估问题定义或理论可行性。
+
+## Phase2: Future-Aware Mechanism
+
+状态：暂停，等待 Phase1-R 至少达到 compatibility pass。
+
+[Inference] future-aware 的合理形式不是泄漏 future，而是用 training-only future signal
+约束一个推理时可由 history 和 target set 推断的 future latent state。
+
+候选形式：
+
+$$
+S_T^{teacher}=T_\psi(Y_T,Q_T),
+$$
+
+$$
+S_T^{student}=P_\theta(U_T),
+$$
+
+$$
+\mathcal{L}
+=
+\mathcal{L}_{pred}
++
+\lambda\mathcal{L}_{align}
+(S_T^{student},\operatorname{stopgrad}(S_T^{teacher})).
+$$
+
+[Decision] Phase2 的默认接入点必须是 Phase1-R 产生的 target-side state $U_T$，而不是
+A.5/A.6 的 fixed-head patch。若 Phase1-R 不通过，future-aware 应重新定义 objective 或
+carrier，而不是继续作为 adapter 修补项。
+
+Phase2 pass 条件：
+
+- prediction path leakage audit 通过；
+- alignment distance 下降并转化为 forecast-relevant improvement；
+- 改善能定位到 horizon、segment、turning point、high-frequency component 或 long-horizon error；
+- 若 latent metric 改善但 MSE/MAE 不变，则该 future-aware state 只能视为无效 proxy。
+
+## Phase3: Future-Side MoE
+
+状态：暂停，等待 Phase1-R/Phase2 产生稳定 target-side state。
+
+[Inference] MoE 的必要性不能只由“不同样本需要不同专家”支撑。本项目更强的论证应是：
+target-set decoder 已经把预测过程分解为 future target/segment states，这些 states 可能对应
+不同 future mechanisms，因此 conditional operators 应放在 future side。
+
+候选数据流：
+
+$$
+r_j=\operatorname{Router}_\theta(U_j,S_j,q_j),
+$$
+
+$$
+\tilde{U}_j=\sum_{k=1}^{K}r_{j,k}E_k(U_j),
+$$
+
+$$
+\hat{Y}_{a_j:b_j}=O_\theta(\tilde{U}_j).
+$$
+
+Phase3 pass 条件：
+
+- 改善不能只来自参数量，必须对比 same-parameter dense control；
+- routing entropy 不能塌缩，也不能完全平均；
+- routing pattern 应与 future segment、future-aware state cluster 或 error profile 对齐；
+- fixed routing、random routing、no future-state routing 必须作为 ablations。
+
+## Phase4: Unified Model And Paper Claim
+
+[Decision] 最终模型只合并通过 gate 的机制：
+
+- 若 Phase1-R + Phase2 + Phase3 都通过：形成 unified target-set future-aware MoE forecasting framework。
+- 若 Phase1-R + Phase2 通过但 MoE 不通过：论文主张收敛为 target-set decoder with future-state alignment。
+- 若 Phase1-R + Phase3 通过但 Phase2 不通过：论文主张收敛为 future-side conditional operators。
+- 若 Phase1-R 不通过：项目不应继续围绕 decoder 讲故事，应回到 problem definition 或 external
+  baseline reproduction。
+
+## 当前禁止冒进项
+
+- 不把 12 篇文献的模块直接堆进一个模型。
+- 不把 ElasTST 式 variable-horizon 当作默认主线。
+- 不把 one-model flexibility 本身包装成性能贡献。
+- 不把 rolling autoregression 作为主创新；它只能是 baseline 或 diagnostic。
+- 不在没有 stable target-side state 的情况下启动 MoE。
+- 不默认 future covariates 可用。
+- 不直接迁移旧仓库结果作为当前证据。
+- 不只报告平均 MSE/MAE；本路线必须包含 horizon-level、segment-level、consistency 和
+  state/routing diagnostics。
 
 ## Baseline 边界
 
 - SRSNet 是重点 comparison baseline。
 - 旧 `R_2026_FSA` 中的 SRSNet 性能数据只能在用户批准后作为证据迁入或引用。
-- 新仓库内的 baseline 复现应保留 native upstream evidence，再决定是否写本地 wrapper。
+- 新仓库内的 external baseline 复现应优先保留 native upstream evidence，再决定是否写
+  local wrapper。

@@ -1,7 +1,7 @@
 {
   "phase": "phase1",
-  "objective": "Evaluate whether future-side decoder interfaces can improve the Phase0 selected patch encoder before adding future-aware alignment or MoE.",
-  "status": "phase1r_target_set_decoder_defined",
+  "objective": "Evaluate whether a target-set indexed forecasting decoder can expose future targets as model inputs, control the single-model amortization gap, improve prefix consistency, and provide a stable carrier for later future-aware or MoE mechanisms.",
+  "status": "phase1r_target_set_decoder_step6_ready_for_implementation",
   "decision_reports": [
     "analysis/phase1_segment_decoder_gate_20260621/phase1_segment_decoder_gate_report.md",
     "analysis/phase1_fixed_adapter_gate_20260621/phase1_fixed_adapter_gate_report.md",
@@ -39,15 +39,28 @@
   },
   "decision_boundary": {
     "phase1a": "one-to-one horizon training; completed with no passing fixed-head patch candidate",
-    "phase1r": "mixed target-set training; tests single-model target-position interface and amortization gap",
+    "phase1r": "mixed target-set training; tests single-model target-position interface, amortization gap, prefix consistency, and target-state carrier quality",
     "phase1b": "one-model compatibility and follow-up mechanisms; run only if Phase1-R reaches at least compatibility pass"
   },
+  "research_loop_template": [
+    "1. research_and_analysis",
+    "2. define_problem",
+    "3. evaluate_problem_reality_and_worth",
+    "4. propose_idea",
+    "5. evaluate_theoretical_feasibility",
+    "6. design_method",
+    "7. implement_method",
+    "8. remote_training",
+    "9. evaluate_results",
+    "10. pass_or_fail_decision",
+    "11. rollback_point_and_continue_loop_if_failed"
+  ],
   "paths": {
     "local_dataset_root": "/Users/river/PaperResearch/Project/datasets",
     "remote_dataset_root": "/home/yingch/dataset",
     "local_smoke_root": "artifacts/runs/smoke_phase1",
-    "remote_artifact_root": "/home/yingch/exp_outputs/r-2026-fatst/phase1_trajectory_basis_residual",
-    "remote_log_root": "/home/yingch/exp_outputs/r-2026-fatst/phase1_trajectory_basis_residual/_logs/phase1_trajectory_basis_residual_gate"
+    "remote_artifact_root": "/home/yingch/exp_outputs/r-2026-fatst/phase1_target_set_decoder",
+    "remote_log_root": "/home/yingch/exp_outputs/r-2026-fatst/phase1_target_set_decoder/_logs"
   },
   "datasets": ["ETTh2", "ETTm1", "Weather"],
   "horizons": [96, 192, 336, 720],
@@ -130,8 +143,9 @@
       "train_script": "baselines/patch_encoder_target_set_decoder/train.py",
       "target_sets": [96, 192, 336, 720],
       "training_protocol": "mixed_target_set_sampling",
-      "target_interface": "future_position_or_segment_queries_cross_attend_to_history_patch_states",
-      "mask_policy": "structured_target_query_interaction_policy_to_be_defined_before_implementation"
+      "target_interface": "future segment queries are model inputs and condition a dense history readout",
+      "readout_policy": "preserve dense access to flattened history states to avoid the SegmentQueryHead capacity collapse",
+      "mask_policy": "independent_or_prefix_stable_target_queries_for_first_gate"
     }
   },
   "metrics": {
@@ -155,7 +169,7 @@
   "remote": {
     "host": "529_Lab-3090",
     "conda_env": "moe",
-    "runner": "scripts/remote/run_phase1_trajectory_basis_residual_gate.sh",
+    "runner": "to_be_created_for_phase1_target_set_decoder",
     "gpu_policy": "check nvidia-smi before every run; prefer GPU 1 or 2 when memory is safe; GPU_IDS may contain one or two selected GPUs"
   }
 }
