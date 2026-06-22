@@ -53,3 +53,19 @@ ssh: connect to host 10.15.90.61 port 3022: Operation not permitted
 This was a local SSH connectivity failure, not evidence of remote training
 failure. The launched process had already detached with `PPID=1`, so result
 collection should resume once SSH connectivity is available again.
+
+## Follow-Up Monitoring Update
+
+Later local checks still failed at the SSH connection layer with the same
+message:
+
+```text
+ssh: connect to host 10.15.90.61 port 3022: Operation not permitted
+```
+
+Commit `da7a959` adds per-epoch `epoch_progress` logging and
+`scripts/remote/check_phase2_future_state_alignment_repair_progress.sh` for
+future remote runs. The already-launched process was started from commit
+`2868fbf`, so it will not automatically emit the new per-epoch progress lines.
+After SSH recovers, use the outer log, dataset-level logs, and artifact
+existence to determine whether PID `2518493` completed.

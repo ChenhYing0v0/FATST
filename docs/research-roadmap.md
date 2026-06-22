@@ -879,6 +879,26 @@ confidence 只改变 training-time auxiliary gradient。若它能修复 `ETTh2` 
 - 同时不能牺牲 `ETTm1/Weather` 的已有正信号；
 - 若只改善 latent metric 而不改善 MSE/MAE，则回退到 step 2-3，重新定义 decoder 问题。
 
+Phase2-R.1 结果决策树：
+
+1. **通过**：`ETTh2` 冲突被修复，且 `ETTm1/Weather` 正信号保留。
+   - [Continue] 保留 future-aware 主线，但论文叙事必须收敛为
+     “reliability-aware future-state calibration”，而不是泛泛的 future teacher。
+   - [Next] 先做 ablation：`uniform` vs `confidence`、`none` vs `target_energy`、
+     `confidence_floor` sensitivity，再决定是否进入 Phase3 MoE。
+2. **部分通过**：只修复 `ETTh2`，但牺牲 `ETTm1/Weather`；或只保留
+   `ETTm1/Weather`，但 `ETTh2` 仍明显退化。
+   - [Rollback] 回到 step 3-5。该结果说明 future signal 存在 dataset-dependent
+     conflict，不能作为 universal decoder state calibration。
+   - [Next] 只允许做一个诊断实验：按 dataset/horizon 的 confidence、teacher recon
+     error、target-state cosine 和 MSE delta 建立 conflict map；不得直接加 MoE。
+3. **失败**：leakage/prefix 通过，但 MSE/MAE 没有稳定收益，或只改善 latent diagnostics。
+   - [Rollback] 回到 step 2-3：重新定义 decoder 策略问题。当前 future teacher
+     只能作为 auxiliary proxy，不是 paper-core。
+   - [Pivot Candidate] 转向 output-process / error-process decoder，而不是继续对齐
+     latent future state。更具体地，研究问题应从“预测 future latent state”改为
+     “decoder 如何建模 horizon-wise error growth / covariance / residual process”。
+
 Phase2 pass 条件：
 
 - prediction path leakage audit 通过；

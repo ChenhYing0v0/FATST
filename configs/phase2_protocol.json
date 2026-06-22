@@ -194,6 +194,23 @@
           "improvement is visible in forecast metrics, not only latent alignment metrics"
         ]
       },
+      "outcome_decision_tree": {
+        "pass": {
+          "condition": "ETTh2 conflict is repaired and ETTm1/Weather positive signals are preserved.",
+          "continue_step": "Run ablations before Phase3: uniform vs confidence, none vs target_energy, confidence_floor sensitivity.",
+          "paper_story": "Reliability-aware future-state calibration, not generic future teacher supervision."
+        },
+        "partial_pass": {
+          "condition": "Only one side is repaired: ETTh2 improves but ETTm1/Weather is sacrificed, or ETTm1/Weather remains positive while ETTh2 still degrades.",
+          "rollback_step": "Return to loop step 3-5.",
+          "next_diagnostic": "Build a conflict map across dataset/horizon using confidence, teacher reconstruction error, target-state cosine, and MSE delta. Do not add MoE before this diagnosis."
+        },
+        "fail": {
+          "condition": "Leakage and prefix checks pass, but forecast MSE/MAE do not improve stably or only latent diagnostics improve.",
+          "rollback_step": "Return to loop step 2-3.",
+          "pivot_candidate": "Move from future latent alignment to output-process or error-process decoder design, such as horizon-wise error growth, covariance, or residual process modeling."
+        }
+      },
       "rollback": "If confidence-weighted alignment still fails, return to loop step 2-3 and reconsider whether future-aware decoder supervision is the right problem definition."
     }
   },
