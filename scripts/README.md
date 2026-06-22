@@ -34,6 +34,9 @@
   segment comparison、state modulation diagnostics、activation similarity、heatmap 和中文报告。
 - `analyze_phase1_trajectory_basis_residual_gate.py`: 汇总 Phase1-A.6 gate 的 metrics、
   segment comparison、trajectory residual diagnostics、heatmap 和中文报告。
+- `analyze_phase2_future_state_alignment_repair_gate.py`: 汇总 Phase2-R.1
+  confidence-weighted future alignment repair gate，对比 FixedHead 与 R.3，并输出
+  leakage、prefix consistency、reconstruction confidence 诊断和 decision report。
 
 远程实验前仍必须先检查 `529_Lab-3090` 的 GPU 占用；runner 中的 `nvidia-smi`
 输出只作为启动时记录，不替代人工选择 GPU。
