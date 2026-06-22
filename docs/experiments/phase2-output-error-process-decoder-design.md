@@ -259,14 +259,20 @@ The gate must write:
 - `effective_config.json`;
 - `training_log.csv`.
 
-`error_process_stats.csv` should define:
+`error_process_stats.csv` should be written inside each `h{H}/` evaluation
+directory and use fixed column names:
 
-- residual/base MAE ratio;
-- residual energy by segment;
-- residual second-difference smoothness;
-- error-process state norm by segment;
-- segment-to-segment state cosine;
-- H720 early/middle/late relative MSE summary.
+| Column | Meaning |
+| --- | --- |
+| `scope` | `all`, `1-96`, `97-192`, `193-336`, `337-720`, or segment subset available under shorter horizons |
+| `residual_base_mae_ratio` | $\operatorname{MAE}(\Delta Y) / (\operatorname{MAE}(\hat{Y}^{base})+\epsilon)$ |
+| `residual_energy` | mean squared residual in normalized model space |
+| `residual_second_diff_smoothness` | mean squared second difference of `error_residual_norm` over future steps |
+| `error_process_state_norm` | mean L2 norm of compact error-process states for this scope |
+| `segment_state_cosine` | adjacent segment state cosine; `1.0` for single-segment scopes |
+| `base_prediction_mse` | MSE of `base_prediction` against target |
+| `final_prediction_mse` | MSE of final `prediction` against target |
+| `residual_gain_mse_pct` | `(final_prediction_mse / base_prediction_mse - 1) * 100` |
 
 ### Implementation Interface Contract
 
@@ -369,6 +375,17 @@ the smoke must prove:
    tolerance after denormalization;
 3. prefix mismatch remains numerical-zero level;
 4. `error_process_stats.csv` reports non-NaN residual energy and smoothness.
+
+After the smoke finishes, run:
+
+```bash
+python scripts/validate_phase2_error_process_artifacts.py \
+  --run-dir artifacts/runs/smoke_phase2_error_process_decoder/PatchEncoderErrorProcessDecoder/ETTh2/mixed_h96_h192_h336_h720/seed2021
+```
+
+This validator is intentionally artifact-level. It does not prove performance;
+it only proves that the implementation obeys the Phase2-B contract before any
+remote gate is launched.
 
 ### Pass Conditions
 

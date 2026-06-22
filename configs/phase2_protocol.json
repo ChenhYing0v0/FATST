@@ -286,9 +286,20 @@
             "metrics_by_horizon.csv",
             "metrics_by_segment.csv",
             "prefix_consistency.csv",
-            "error_process_stats.csv",
+            "h{H}/error_process_stats.csv",
             "effective_config.json",
             "training_log.csv"
+          ],
+          "error_process_stats_columns": [
+            "scope",
+            "residual_base_mae_ratio",
+            "residual_energy",
+            "residual_second_diff_smoothness",
+            "error_process_state_norm",
+            "segment_state_cosine",
+            "base_prediction_mse",
+            "final_prediction_mse",
+            "residual_gain_mse_pct"
           ],
           "smoke_invariants": [
             "base_prediction + error_residual equals prediction up to numerical tolerance after denormalization",

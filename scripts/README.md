@@ -46,6 +46,9 @@
 - `analyze_output_error_process_problem.py`: 使用 H720 step-wise artifacts 诊断
   output/error-process decoder 问题，输出 segment-level relative MSE、step-wise 曲线
   和下一步 decoder pivot 依据。
+- `validate_phase2_error_process_artifacts.py`: 在 Phase2-B smoke 或 remote gate 完成后
+  检查 `PatchEncoderErrorProcessDecoder` 的 required artifacts、`error_process_stats.csv`
+  固定列、prefix mismatch 和非 NaN 诊断值。
 
 远程实验前仍必须先检查 `529_Lab-3090` 的 GPU 占用；runner 中的 `nvidia-smi`
 输出只作为启动时记录，不替代人工选择 GPU。
