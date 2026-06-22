@@ -82,14 +82,23 @@ interface 是否能以可控 amortization gap 接近 horizon-specific specialist
 prefix consistency。只有该 interface 至少达到 compatibility pass，后续 future-aware 和 MoE
 才有稳定 carrier。
 
-[Decision] 在 `PatchEncoderTargetSetPrefixResidual` remote gate 失败后，当前不处于
-step 7-8 的继续实现阶段，而是回到 step 3-5：重新评估 target-set decoder 的问题定义、
-瓶颈归因和 theoretical feasibility。下一轮不能从“加一个模块”开始，必须先回答：
+[Decision] `PatchEncoderPrefixRiskWeighted` remote gate 已达到 compatibility pass：
+one-model target-set interface 在不改变 architecture 的情况下，将 mean relative MSE 从第一版
+`+0.62%` 推到 `-0.43%`，且 H720-prefix h96/h192 相比 fixed H720-prefix 改善 `-2.46%`。
+这说明 target-set carrier 是可用的，mixed-horizon objective 确实是一个 active bottleneck。
 
-1. one-model target-set interface 的性能差距主要来自 optimization、capacity allocation，
-   还是 target-query interaction；
-2. 这个差距是否足够真实且可放大为论文问题；
-3. 新 idea 是否能在不破坏 fixed-head 强 readout 的条件下改变 forecasting process。
+[Decision] 但 R.3 仍不是 paper-core pass。它本质是 objective weighting，不是足够完整的
+decoder/process mechanism；并且 `ETTm1 / h96` 仍退化 `+2.83%`，long horizon 也没有全面领先。
+因此当前阶段不能停在“调 loss 通过 compatibility”上，而应进入下一轮 step 1-6：
+围绕 target-side state 与 future-aware mechanism，提出一个更强的、可解释的 forecasting
+process innovation。
+
+下一轮必须先回答：
+
+1. prefix-risk weighting 暴露出的早期 future risk 是否对应可建模的 future-state uncertainty；
+2. target-side state $U_T$ 是否能承载 training-only future signal，而不是只作为 readout FiLM；
+3. 新 idea 是否能在不破坏 R.3 compatibility carrier 的条件下，把 future-aware signal 转化为
+   horizon/segment 可定位的 forecast gain。
 
 ## Phase0: Canonical Base
 
@@ -498,7 +507,7 @@ covariance-aware weighting，而不是继续改 architecture。
 
 ### Phase1-R.3: Prefix-Risk Weighted Objective
 
-状态：local smoke 已通过，等待 remote gate。
+状态：remote gate 已完成，达到 compatibility pass，但不是 paper-core pass。
 
 核心文档：
 
@@ -566,9 +575,61 @@ architecture，而不是继续手工调权重。
 | `192/720` | `0.0` |
 | `336/720` | `4.45529e-16` |
 
+[Fact] Remote gate 已完成：
+
+- report: `analysis/phase1_prefix_risk_weighted_gate_20260622/phase1_prefix_risk_weighted_gate_report.md`
+- code commit: `e5f6b9e`
+- selected GPUs: `1`, `2`
+- remote output: `/home/yingch/exp_outputs/r-2026-fatst/phase1_target_set_decoder/PatchEncoderPrefixRiskWeighted`
+
+[Evidence] 结果：
+
+| Metric | Value |
+| --- | ---: |
+| MSE wins vs `PatchEncoderFixedHead` | `8/12` |
+| MAE wins vs `PatchEncoderFixedHead` | `8/12` |
+| mean relative MSE | `-0.43%` |
+| h96 mean relative MSE | `+0.87%` |
+| H720-prefix h96/h192 mean relative MSE | `-2.46%` |
+| max prefix mismatch MSE | `5.3671e-14` |
+| mean target state cosine | `0.313276` |
+
+[Evidence] Dataset-level split:
+
+| Dataset | Mean relative MSE |
+| --- | ---: |
+| `ETTh2` | `-0.66%` |
+| `ETTm1` | `+0.33%` |
+| `Weather` | `-0.97%` |
+
+[Evidence] Horizon-level split:
+
+| Horizon | Mean relative MSE |
+| --- | ---: |
+| `96` | `+0.87%` |
+| `192` | `-2.00%` |
+| `336` | `-0.98%` |
+| `720` | `+0.38%` |
+
+[Decision] `PatchEncoderPrefixRiskWeighted` 达到 compatibility pass。它满足 R.3 预设 gate：
+overall mean relative MSE 优于第一版 target-set 的 `+0.62%`，h96 mean relative MSE 从
+`+2.74%` 降到 `+0.87%`，Weather 不再退化，H720-prefix h96/h192 从 `-0.85%` 改善到
+`-2.46%`，prefix mismatch 保持数值零级别。
+
+[Decision] 该结果说明 one-model target-set decoder 路线可以保留为后续 mechanism carrier。
+但它不能单独作为论文核心创新，因为主要改动是 loss weighting，尚未给出充分的
+forecasting-process architecture 贡献；同时 `ETTm1 / h96` 仍比 specialist fixed head 差
+`+2.83%`，h720 在 `ETTh2` 和 `ETTm1` 仍略退化。
+
+[Rollback / Continue] 当前不回退到 base architecture，也不继续手工调 `alpha`。下一轮进入
+Phase2 的 step 1-6：研究 future-aware state 是否能解释并修复 remaining horizon/segment
+error，使用 R.3 作为 compatibility carrier；若 Phase2 无法把 latent alignment 转成 forecast
+gain，再回退到 problem definition 或重新选择 base architecture。
+
 ## Phase2: Future-Aware Mechanism
 
-状态：暂停，等待 Phase1-R 至少达到 compatibility pass。
+状态：可进入 step 1-6。R.3 已提供 compatibility carrier，但 Phase2 仍需重新论证问题、
+theory 和 gate，不能直接把旧 future-aware adapter 迁过来。
 
 [Inference] future-aware 的合理形式不是泄漏 future，而是用 training-only future signal
 约束一个推理时可由 history 和 target set 推断的 future latent state。
@@ -592,9 +653,10 @@ $$
 (S_T^{student},\operatorname{stopgrad}(S_T^{teacher})).
 $$
 
-[Decision] Phase2 的默认接入点必须是 Phase1-R 产生的 target-side state $U_T$，而不是
-A.5/A.6 的 fixed-head patch。若 Phase1-R 不通过，future-aware 应重新定义 objective 或
-carrier，而不是继续作为 adapter 修补项。
+[Decision] Phase2 的默认接入点必须是 R.3 兼容 carrier 产生的 target-side state $U_T$，
+而不是 A.5/A.6 的 fixed-head patch，也不是旧的 output adapter。future-aware 的目标不是
+再修一次 prefix consistency，而是证明 training-only future signal 能产生一个推理时可由
+history 与 target set 估计的 future latent state，并且这个 state 对 forecast error 有可定位贡献。
 
 Phase2 pass 条件：
 

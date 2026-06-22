@@ -1,7 +1,7 @@
 {
   "phase": "phase1",
   "objective": "Evaluate whether a target-set indexed forecasting decoder can expose future targets as model inputs, control the single-model amortization gap, improve prefix consistency, and provide a stable carrier for later future-aware or MoE mechanisms.",
-  "status": "phase1r3_prefix_risk_weighted_objective_local_smoke_passed_needs_remote_gate",
+  "status": "phase1r3_prefix_risk_weighted_objective_remote_gate_compatibility_pass_needs_phase2_problem_definition",
   "decision_reports": [
     "analysis/phase1_segment_decoder_gate_20260621/phase1_segment_decoder_gate_report.md",
     "analysis/phase1_fixed_adapter_gate_20260621/phase1_fixed_adapter_gate_report.md",
@@ -16,28 +16,36 @@
     "analysis/phase1_target_set_prefix_residual_gate_20260622/phase1_target_set_prefix_residual_gate_report.md",
     "docs/experiments/phase1-causal-target-interaction-design.md",
     "analysis/phase1_causal_target_interaction_gate_20260622/phase1_causal_target_interaction_gate_report.md",
-    "docs/experiments/phase1-prefix-risk-weighted-objective-design.md"
+    "docs/experiments/phase1-prefix-risk-weighted-objective-design.md",
+    "analysis/phase1_prefix_risk_weighted_gate_20260622/phase1_prefix_risk_weighted_gate_report.md"
   ],
   "latest_decision": {
-    "candidate": "PatchEncoderTargetSetDecoder",
-    "status": "near_miss_not_compatibility_pass",
-    "vs_fixed_main_wins": "5/12",
-    "vs_fixed_mae_wins": "5/12",
-    "mean_relative_mse_vs_fixed": "+0.62%",
+    "candidate": "PatchEncoderPrefixRiskWeighted",
+    "status": "compatibility_pass_not_paper_core",
+    "vs_fixed_main_wins": "8/12",
+    "vs_fixed_mae_wins": "8/12",
+    "mean_relative_mse_vs_fixed": "-0.43%",
     "dataset_mean_relative_mse": {
-      "ETTh2": "-0.27%",
-      "ETTm1": "+1.99%",
-      "Weather": "+0.13%"
+      "ETTh2": "-0.66%",
+      "ETTm1": "+0.33%",
+      "Weather": "-0.97%"
     },
-    "max_prefix_mismatch_mse": "5.112619e-14",
-    "mean_target_state_cosine": "0.359800",
-    "mean_abs_gamma": "0.653291",
-    "mean_abs_beta": "0.407875",
-    "h720_prefix_h96_h192_mean_relative_mse": "-0.85%",
-    "h720_prefix_strict_no_degradation": false,
-    "issue": "The target-set interface mechanically solves prefix consistency and keeps the single-model amortization gap within +1.0%, but it fails strict compatibility because ETTh2 h96 and ETTm1 h96 are slightly worse than the fixed H720-prefix reference; h96/ETTm1 remains the main accuracy weakness.",
-    "rollback_step": "Return to Step 5-6 for a targeted repair of short-horizon capacity and H720-prefix reuse, not to MoE. The target-side state is promising but not yet a passed carrier.",
-    "next_direction": "Repair the target-set decoder with a short-prefix specialist residual, horizon-balanced objective, or capacity-preserving local prefix path; then rerun a targeted h96/h192 compatibility gate before future-aware or MoE."
+    "horizon_mean_relative_mse": {
+      "96": "+0.87%",
+      "192": "-2.00%",
+      "336": "-0.98%",
+      "720": "+0.38%"
+    },
+    "max_prefix_mismatch_mse": "5.3671e-14",
+    "mean_target_state_cosine": "0.313276",
+    "mean_abs_gamma": "0.672743",
+    "mean_abs_beta": "0.407658",
+    "h720_prefix_h96_h192_mean_relative_mse": "-2.46%",
+    "compatibility_pass": true,
+    "paper_core_pass": false,
+    "issue": "The prefix-risk weighted objective converts the target-set decoder into a compatible one-model carrier, but the main change is objective weighting rather than a complete forecasting-process architecture; ETTm1 h96 still degrades by +2.83% and h720 is not uniformly better.",
+    "rollback_step": "Do not continue hand-tuning prefix-risk weights. Move to Step 1-6 of Phase2 and define a future-aware state mechanism that uses the compatible R.3 carrier and must translate latent alignment into horizon/segment forecast gains.",
+    "next_direction": "Use PatchEncoderPrefixRiskWeighted as the compatibility carrier for a future-aware target-state mechanism; keep R.3 as a carrier/control, not the paper-core innovation."
   },
   "active_repair": {
     "candidate": "PatchEncoderTargetSetPrefixResidual",
@@ -76,7 +84,12 @@
     "local_smoke": {
       "output_root": "artifacts/runs/smoke_phase1_causal_target_interaction",
       "dataset": "ETTh2",
-      "target_horizons": [96, 192, 336, 720],
+      "target_horizons": [
+        96,
+        192,
+        336,
+        720
+      ],
       "max_prefix_mismatch_mse": "1.44997e-15",
       "decision": "passed; causal target interaction path writes required artifacts and preserves prefix consistency at numerical zero level"
     },
@@ -99,7 +112,7 @@
   },
   "active_objective_candidate": {
     "candidate": "PatchEncoderPrefixRiskWeighted",
-    "status": "local_smoke_passed_needs_remote_gate",
+    "status": "remote_gate_compatibility_pass_not_paper_core",
     "base_candidate": "PatchEncoderTargetSetDecoder",
     "problem": "The first target-set decoder solves prefix consistency but remains weak on h96 and strict H720-prefix reuse; architecture-level repairs did not stabilize gains, so the mixed-horizon objective may be the active bottleneck.",
     "existence_evidence": "PatchEncoderTargetSetDecoder has +0.62% mean relative MSE and +2.74% h96 relative MSE; PrefixResidual worsens to +2.03%; CausalTargetInteraction worsens to +1.40% and Weather +4.68%.",
@@ -115,9 +128,29 @@
     "local_smoke": {
       "output_root": "artifacts/runs/smoke_phase1_prefix_risk_weighted",
       "dataset": "ETTh2",
-      "target_horizons": [96, 192, 336, 720],
+      "target_horizons": [
+        96,
+        192,
+        336,
+        720
+      ],
       "max_prefix_mismatch_mse": "4.45529e-16",
       "decision": "passed; prefix-risk weighted loss writes required artifacts and preserves prefix consistency at numerical zero level"
+    },
+    "result": {
+      "mse_wins_vs_fixed": "8/12",
+      "mae_wins_vs_fixed": "8/12",
+      "mean_relative_mse_vs_fixed": "-0.43%",
+      "dataset_mean_relative_mse": {
+        "ETTh2": "-0.66%",
+        "ETTm1": "+0.33%",
+        "Weather": "-0.97%"
+      },
+      "h96_mean_relative_mse": "+0.87%",
+      "h720_prefix_h96_h192_mean_relative_mse": "-2.46%",
+      "max_prefix_mismatch_mse": "5.3671e-14",
+      "mean_target_state_cosine": "0.313276",
+      "decision": "compatibility pass; keep as target-set carrier/control, but not a paper-core architecture contribution by itself"
     }
   },
   "active_candidate": {
@@ -131,8 +164,8 @@
   },
   "decision_boundary": {
     "phase1a": "one-to-one horizon training; completed with no passing fixed-head patch candidate",
-    "phase1r": "mixed target-set training; tests single-model target-position interface, amortization gap, prefix consistency, and target-state carrier quality",
-    "phase1b": "one-model compatibility and follow-up mechanisms; run only if Phase1-R reaches at least compatibility pass"
+    "phase1r": "mixed target-set training; R.3 reaches compatibility pass and can serve as carrier/control, but not paper-core by itself",
+    "phase1b": "follow-up mechanisms must use the compatible R.3 carrier and prove forecast-relevant gains beyond objective weighting"
   },
   "research_loop_template": [
     "1. research_and_analysis",
@@ -154,8 +187,17 @@
     "remote_artifact_root": "/home/yingch/exp_outputs/r-2026-fatst/phase1_target_set_decoder",
     "remote_log_root": "/home/yingch/exp_outputs/r-2026-fatst/phase1_target_set_decoder/_logs"
   },
-  "datasets": ["ETTh2", "ETTm1", "Weather"],
-  "horizons": [96, 192, 336, 720],
+  "datasets": [
+    "ETTh2",
+    "ETTm1",
+    "Weather"
+  ],
+  "horizons": [
+    96,
+    192,
+    336,
+    720
+  ],
   "seq_len": 336,
   "primary_seed": 2021,
   "models": {
@@ -233,7 +275,12 @@
     "PatchEncoderTargetSetDecoder": {
       "role": "phase1r_candidate",
       "train_script": "baselines/patch_encoder_target_set_decoder/train.py",
-      "target_sets": [96, 192, 336, 720],
+      "target_sets": [
+        96,
+        192,
+        336,
+        720
+      ],
       "training_protocol": "mixed_target_set_sampling",
       "target_interface": "future segment queries are model inputs and condition a dense history readout",
       "readout_policy": "preserve dense access to flattened history states to avoid the SegmentQueryHead capacity collapse",
@@ -243,7 +290,12 @@
       "role": "phase1r1_repair_candidate",
       "train_script": "baselines/patch_encoder_target_set_decoder/train.py",
       "run_name": "PatchEncoderTargetSetPrefixResidual",
-      "target_sets": [96, 192, 336, 720],
+      "target_sets": [
+        96,
+        192,
+        336,
+        720
+      ],
       "prefix_residual_segments": 4,
       "prefix_residual_init": "zero",
       "repair_scope": "shared dense residual readout for early target segments only"
@@ -252,7 +304,12 @@
       "role": "phase1r2_candidate",
       "train_script": "baselines/patch_encoder_target_set_decoder/train.py",
       "run_name": "PatchEncoderCausalTargetInteraction",
-      "target_sets": [96, 192, 336, 720],
+      "target_sets": [
+        96,
+        192,
+        336,
+        720
+      ],
       "target_interaction_layers": 1,
       "target_interaction_policy": "causal_self_attention_over_target_states_after_target_history_cross_attention",
       "repair_scope": "model target-segment dependency without allowing later target queries to alter earlier prefixes"
@@ -261,7 +318,12 @@
       "role": "phase1r3_objective_candidate",
       "train_script": "baselines/patch_encoder_target_set_decoder/train.py",
       "run_name": "PatchEncoderPrefixRiskWeighted",
-      "target_sets": [96, 192, 336, 720],
+      "target_sets": [
+        96,
+        192,
+        336,
+        720
+      ],
       "step_loss_weighting": "prefix_risk",
       "step_loss_alpha": 0.5,
       "target_interaction_layers": 0,
@@ -270,7 +332,10 @@
     }
   },
   "metrics": {
-    "primary": ["mse", "mae"],
+    "primary": [
+      "mse",
+      "mae"
+    ],
     "diagnostics": [
       "metrics_by_horizon",
       "metrics_by_segment",
