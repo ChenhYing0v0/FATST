@@ -1,7 +1,7 @@
 {
   "phase": "phase1",
   "objective": "Evaluate whether future-side decoder interfaces can improve the Phase0 selected patch encoder before adding future-aware alignment or MoE.",
-  "status": "phase1a6_output_process_residual_partial_not_passed",
+  "status": "phase1r_target_set_decoder_defined",
   "decision_reports": [
     "analysis/phase1_segment_decoder_gate_20260621/phase1_segment_decoder_gate_report.md",
     "analysis/phase1_fixed_adapter_gate_20260621/phase1_fixed_adapter_gate_report.md",
@@ -10,7 +10,8 @@
     "docs/experiments/phase1-step-specific-state-decoder-reset.md",
     "analysis/phase1_step_specific_state_gate_20260622/phase1_step_specific_state_gate_report.md",
     "docs/experiments/phase1-output-process-rollback.md",
-    "analysis/phase1_trajectory_basis_residual_gate_20260622/phase1_trajectory_basis_residual_gate_report.md"
+    "analysis/phase1_trajectory_basis_residual_gate_20260622/phase1_trajectory_basis_residual_gate_report.md",
+    "docs/experiments/phase1-target-set-decoder-redefinition.md"
   ],
   "latest_decision": {
     "candidate": "PatchEncoderTrajectoryBasisResidual",
@@ -29,16 +30,17 @@
     "next_direction": "Do not enter Phase1-B, future-aware alignment, or MoE on A.5/A.6. Re-open problem definition and theoretical feasibility for the decoder strategy."
   },
   "active_candidate": {
-    "candidate": null,
-    "status": "needs_problem_redefinition",
-    "problem": "No current Phase1-A decoder candidate has passed the one-to-one horizon gate. Fixed-head replacement, post-head affine correction, pre-head state modulation, future-aware adapter repair, and output-space low-rank residual all show partial or negative evidence.",
-    "hypothesis": "The next decoder strategy must start from a newly defined prediction-process problem rather than continuing lightweight patches around the fixed head.",
-    "design_doc": null,
-    "pass_condition": "Before implementation, return to research loop steps 1-5: investigate, define a specific problem, verify that it exists and is worth studying, propose an idea, and evaluate theoretical feasibility."
+    "candidate": "PatchEncoderTargetSetDecoder",
+    "status": "step_1_to_6_defined_needs_implementation",
+    "problem": "Horizon-specific direct forecasting treats the target horizon as an external training-script setting rather than a model input, creating separate specialist heads that do not unify target positions, prefix consistency, or future-step dependency.",
+    "hypothesis": "A target-set indexed decoder can expose requested future positions as model inputs, reduce prefix inconsistency, and provide a stable target-side state carrier for later future-aware or MoE mechanisms while keeping the single-model amortization gap controlled.",
+    "design_doc": "docs/experiments/phase1-target-set-decoder-redefinition.md",
+    "pass_condition": "Compatibility pass: one mixed target-set model has mean relative MSE <= +1.0% versus horizon-specific PatchEncoderFixedHead, no dataset average degradation worse than +3.0%, improves h96/h192 versus H720-prefix reuse, reduces prefix mismatch, and produces non-degenerate target states. Paper-core pass requires mean relative MSE < 0 versus specialists or follow-up mechanisms converting the target-side state into stable forecast gains."
   },
   "decision_boundary": {
-    "phase1a": "one-to-one horizon training; validates decoder-side mechanism only",
-    "phase1b": "one-model compatibility; run only if Phase1-A passes"
+    "phase1a": "one-to-one horizon training; completed with no passing fixed-head patch candidate",
+    "phase1r": "mixed target-set training; tests single-model target-position interface and amortization gap",
+    "phase1b": "one-model compatibility and follow-up mechanisms; run only if Phase1-R reaches at least compatibility pass"
   },
   "paths": {
     "local_dataset_root": "/Users/river/PaperResearch/Project/datasets",
@@ -122,6 +124,14 @@
       "residual_penalty": 0.0001,
       "smoothness_penalty": 0.0001,
       "residual_form": "future_position_basis_times_history_coefficients_added_after_fixed_head"
+    },
+    "PatchEncoderTargetSetDecoder": {
+      "role": "phase1r_candidate",
+      "train_script": "baselines/patch_encoder_target_set_decoder/train.py",
+      "target_sets": [96, 192, 336, 720],
+      "training_protocol": "mixed_target_set_sampling",
+      "target_interface": "future_position_or_segment_queries_cross_attend_to_history_patch_states",
+      "mask_policy": "structured_target_query_interaction_policy_to_be_defined_before_implementation"
     }
   },
   "metrics": {
@@ -136,6 +146,9 @@
       "trajectory_residual_energy",
       "trajectory_residual_smoothness",
       "trajectory_basis_coefficients",
+      "target_query_state_similarity",
+      "prefix_consistency_mismatch",
+      "amortization_gap_vs_specialists",
       "parameter_count"
     ]
   },
