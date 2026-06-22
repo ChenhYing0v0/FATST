@@ -1,0 +1,116 @@
+{
+  "decision": "partial",
+  "reason": "candidate has some signal but does not meet the full A.6 pass criteria.",
+  "summaries": {
+    "PatchEncoderFixedHead": {
+      "wins": 5,
+      "total": 12,
+      "mean_relative_mse": 0.006660418759910754,
+      "min_relative_mse": -0.03853143631075181,
+      "max_relative_mse": 0.0642892087701964,
+      "dataset_wins": {
+        "ETTh2": 2,
+        "ETTm1": 2,
+        "Weather": 1
+      },
+      "dataset_with_zero_wins": []
+    },
+    "PatchEncoderFixedHeadAdapter": {
+      "wins": 6,
+      "total": 12,
+      "mean_relative_mse": 0.004935625688893617,
+      "min_relative_mse": -0.03077187784069713,
+      "max_relative_mse": 0.08625811603269098,
+      "dataset_wins": {
+        "ETTh2": 2,
+        "ETTm1": 3,
+        "Weather": 1
+      },
+      "dataset_with_zero_wins": []
+    },
+    "PatchEncoderStepSpecificStateAdapter": {
+      "wins": 4,
+      "total": 12,
+      "mean_relative_mse": 0.0033070373198750068,
+      "min_relative_mse": -0.07087179645870184,
+      "max_relative_mse": 0.03169810607459298,
+      "dataset_wins": {
+        "ETTh2": 1,
+        "ETTm1": 2,
+        "Weather": 1
+      },
+      "dataset_with_zero_wins": []
+    }
+  },
+  "horizon_summaries": {
+    "PatchEncoderFixedHead": {
+      "96": {
+        "mean_relative_mse": 0.018560006818865025,
+        "wins": 1,
+        "total": 3
+      },
+      "192": {
+        "mean_relative_mse": -0.006811247840873463,
+        "wins": 1,
+        "total": 3
+      },
+      "336": {
+        "mean_relative_mse": 0.001628471622045104,
+        "wins": 2,
+        "total": 3
+      },
+      "720": {
+        "mean_relative_mse": 0.013264444439606352,
+        "wins": 1,
+        "total": 3
+      }
+    },
+    "PatchEncoderFixedHeadAdapter": {
+      "96": {
+        "mean_relative_mse": 0.021239872517913917,
+        "wins": 2,
+        "total": 3
+      },
+      "192": {
+        "mean_relative_mse": -0.014654570774982187,
+        "wins": 2,
+        "total": 3
+      },
+      "336": {
+        "mean_relative_mse": -0.0024797486300239236,
+        "wins": 2,
+        "total": 3
+      },
+      "720": {
+        "mean_relative_mse": 0.015636949642666657,
+        "wins": 0,
+        "total": 3
+      }
+    },
+    "PatchEncoderStepSpecificStateAdapter": {
+      "96": {
+        "mean_relative_mse": 0.0016042384704587425,
+        "wins": 2,
+        "total": 3
+      },
+      "192": {
+        "mean_relative_mse": -0.0194773502052717,
+        "wins": 2,
+        "total": 3
+      },
+      "336": {
+        "mean_relative_mse": 0.014219276698775698,
+        "wins": 0,
+        "total": 3
+      },
+      "720": {
+        "mean_relative_mse": 0.01688198431553729,
+        "wins": 0,
+        "total": 3
+      }
+    }
+  },
+  "mean_residual_to_base_mae_ratio": 0.0026374842855148017,
+  "mean_gate": 0.01803918012107412,
+  "mean_coefficient_l2": 0.2920147565503915
+}

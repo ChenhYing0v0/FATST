@@ -713,6 +713,38 @@ Phase1-A.6 pass 条件：
 - h96/h192 平均不能显著退化；
 - residual energy 非零但受控，并且 segment-level 改善不能只来自单个 dataset。
 
+[Fact] Phase1-A.6 已完成完整远程 gate：
+
+- remote output: `/home/yingch/exp_outputs/r-2026-fatst/phase1_trajectory_basis_residual`
+- local report:
+  `analysis/phase1_trajectory_basis_residual_gate_20260622/phase1_trajectory_basis_residual_gate_report.md`
+- matrix: 4 models x 3 datasets x 4 horizons, seed `2021`
+- selected GPUs: `1`, `2`
+
+结果：
+
+| Comparison | MSE wins | Mean relative MSE | Range | Zero-win datasets |
+| --- | ---: | ---: | --- | --- |
+| vs `PatchEncoderFixedHead` | 5/12 | +0.67% | -3.85% to +6.43% | none |
+| vs `PatchEncoderFixedHeadAdapter` | 6/12 | +0.49% | -3.08% to +8.63% | none |
+| vs `PatchEncoderStepSpecificStateAdapter` | 4/12 | +0.33% | -7.09% to +3.17% | none |
+
+诊断：
+
+- mean residual/base MAE ratio: `0.002637`
+- mean gate: `0.018039`
+- mean coefficient L2: `0.292015`
+
+[Decision] Phase1-A.6 是 `partial`，不是 pass。该候选有局部信号，但相对三个 control 的
+mean relative MSE 均为正，且 h96/h720 仍不稳定。residual branch 非零但幅度很小，说明它
+更多是在 fixed head 之上学习弱扰动，而不是形成足以支撑 paper-core 的 structured output
+process。
+
+[Rollback] A.6 后不进入 Phase1-B、future-aware alignment 或 MoE。当前回退到长研究模板
+step 2-3：重新定义 decoder 创新点要解决的真实问题。A.1-A.6 的连续证据已经说明，围绕
+fixed head 追加轻量 future-side patch 很难形成稳定性能收益；下一轮若继续 decoder 主线，
+必须先提出更基础的 prediction process 问题，而不是继续调参扩容。
+
 Phase1-B:
 
 - 仅在 Phase1-A 通过后执行；
@@ -727,6 +759,10 @@ Phase1-B:
 - 对比 no-alignment、latent alignment、segment-level alignment。
 - 严格检查推理路径无 future leakage。
 
+[Decision] 当前 Phase1-A 尚无通过候选，因此 Phase2 暂停。Future-aware 机制不能继续
+接到 A.5 或 A.6 上作为修补项；若重新启动，需要先有新的 future-side state carrier 或新的
+问题定义。
+
 ### Phase 3：Future-Side MoE Gate
 
 目标：验证 conditional operators 是否必要，以及 routing 是否与 future state 对齐。
@@ -734,6 +770,9 @@ Phase1-B:
 - 首先在 future segment states 上放轻量 MoE。
 - 对比 dense parameter-control、fixed routing、random routing、no future-state routing。
 - 若 routing 有证据，再探索 heterogeneous operators。
+
+[Decision] 当前不启动 MoE。A.1-A.6 没有产生可作为 routing unit 的稳定 future-side
+state；在此基础上引入 MoE 只会把负结果复杂化，无法形成清晰 paper story。
 
 ### Phase 4：统一模型与论文主张
 

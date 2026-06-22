@@ -204,3 +204,65 @@ A.6 若通过，才重新讨论：
 - 是否把 basis/residual 变成 one-model multi-horizon interface；
 - 是否用 future-aware teacher 监督 residual basis；
 - 是否在 residual modes 上做 MoE-style conditional operators。
+
+## Step 8-10: 远程训练、结果评估与决策
+
+[Fact] Phase1-A.6 完整 gate 已完成：
+
+- remote host: `529_Lab-3090`
+- remote output: `/home/yingch/exp_outputs/r-2026-fatst/phase1_trajectory_basis_residual`
+- local report: `analysis/phase1_trajectory_basis_residual_gate_20260622/phase1_trajectory_basis_residual_gate_report.md`
+- models: `PatchEncoderFixedHead`, `PatchEncoderFixedHeadAdapter`,
+  `PatchEncoderStepSpecificStateAdapter`, `PatchEncoderTrajectoryBasisResidual`
+- datasets: `ETTh2`, `ETTm1`, `Weather`
+- horizons: `96`, `192`, `336`, `720`
+- seed: `2021`
+- selected GPUs: `1`, `2`
+
+主结果：
+
+| Comparison | MSE wins | Mean relative MSE | Range | Zero-win datasets |
+| --- | ---: | ---: | --- | --- |
+| vs `PatchEncoderFixedHead` | 5/12 | +0.67% | -3.85% to +6.43% | none |
+| vs `PatchEncoderFixedHeadAdapter` | 6/12 | +0.49% | -3.08% to +8.63% | none |
+| vs `PatchEncoderStepSpecificStateAdapter` | 4/12 | +0.33% | -7.09% to +3.17% | none |
+
+Horizon-level 结果显示该候选没有保护住关键稳定性条件：
+
+- vs `PatchEncoderFixedHead`，h96 平均退化 `+1.86%`，h720 平均退化 `+1.33%`；
+- vs `PatchEncoderFixedHeadAdapter`，h96 平均退化 `+2.12%`，h720 平均退化 `+1.56%`；
+- vs `PatchEncoderStepSpecificStateAdapter`，h336/h720 均为 `0/3` wins。
+
+机制诊断：
+
+- mean residual/base MAE ratio: `0.002637`
+- mean gate: `0.018039`
+- mean coefficient L2: `0.292015`
+
+[Decision] Phase1-A.6 判定为 `partial`，但不通过。它不是空实现：residual branch
+确实被训练为非零，且在 ETTh2 h336/h720、ETTm1 h96/h192、Weather h336 等局部设置上
+有收益。然而整体 mean relative MSE 相对三个 control 均为正，MSE wins 也不足以通过
+预设 gate；同时 residual/base MAE ratio 仅约 `0.26%`，说明该 low-rank output residual
+主要以弱扰动方式工作，未形成足以支撑 paper-core 的结构化 output-process 改善。
+
+[Inference] 该结果反驳了 A.6 的强假设：当前 fixed head 的主要误差不只是缺少低秩、
+平滑、future-position residual basis。若仅调大 residual gate 或减小 penalty，可能增加
+残差幅度，但已有 h96/h720 退化表明这很可能放大不稳定性，而不是解决底层问题。
+
+## Step 11: 回退点
+
+[Rollback] A.6 不应进入 Phase1-B，也不应作为 future-aware 或 MoE 的承载结构。当前应回退到
+长研究模板 step 2-3，重新评估 decoder 创新点的问题定义。
+
+具体地说，A.1-A.6 的连续证据支持以下收敛判断：
+
+1. fixed head 的 output strategy 有问题，但问题幅度中等；
+2. 直接替换 dense head 会造成 readout capacity collapse；
+3. post-head affine、pre-head state modulation、output-space low-rank residual 都只有
+   partial signal，无法稳定超过 strong fixed-head base；
+4. 因此，下一轮不应继续围绕 fixed head 做轻量补丁，而应重新提出更基础的 prediction
+   process 问题，或者暂时把 decoder 方向降级，转向更有证据的新问题。
+
+[Decision] 在没有新的问题定义前，暂停 one-model compatibility、future-aware alignment
+和 Future-Side MoE 的继续实现。若后续仍保留 decoder 主线，需要回到 step 1-5，重新调研并
+论证一个不依赖 weak residual patch 的结构性问题。
