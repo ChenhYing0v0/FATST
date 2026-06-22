@@ -383,6 +383,82 @@ short-prefix MSE 进一步恶化，target states 更同质，prefix residual 幅
 还是 target-query interaction policy。下一轮若继续 decoder 主线，应优先考虑 objective-level
 或 interaction-level 设计，而不是 output residual patch。
 
+### Phase1-R.2: Causal Target Interaction
+
+状态：local smoke 已通过，等待 remote gate。
+
+核心文档：
+
+- `docs/experiments/phase1-causal-target-interaction-design.md`
+
+[Problem] 第一版 target-set decoder 为了 prefix stability 采用 independent target queries。
+这保证了 `H=96` 与 `H=720` prefix 在数值上相同，但也把 future target segments 当成
+conditioned-on-history 后的独立输出，无法显式建模 future-step / segment dependency。
+
+[Evidence] 该问题值得测试的原因是：
+
+- `PatchEncoderTargetSetDecoder` 已经解决 prefix mismatch，但仍有 `+0.62%` mean relative MSE；
+- `PatchEncoderTargetSetPrefixResidual` 增加 dense residual 后恶化到 `+2.03%`，说明简单补
+  output capacity 不是正确方向；
+- `QDF` 与 `SRP++` 的 notes 都支持 future steps 不是独立同质任务；
+- `ElasTST` 的结构化 mask 与 `TimePerceiver` 的 target query 共同支持 target-side
+  decoder interface。
+
+[Idea] 在 target-to-history cross-attention 后加入 causal target self-attention：
+
+$$
+U_T=\operatorname{CrossAttn}(Q_T,Z,Z),
+$$
+
+$$
+V_j=\operatorname{CausalTargetAttn}(U_j,U_{\le j}),
+$$
+
+$$
+\hat{Y}_{a_j:b_j}
+=
+O_\theta(r\odot(1+\gamma(V_j))+\beta(V_j)).
+$$
+
+[Theory Check] 因为第 $j$ 个 target segment 只读取 $U_{\le j}$，所以 extended horizon 中的
+later target queries 不会改写 earlier prefix：
+
+$$
+V_j(T_{1:J})=V_j(T_{1:K}),\quad j\le K\le J.
+$$
+
+这给出了比 independent queries 更强的 future process modeling，同时保留 prefix consistency。
+它不是 rolling autoregression，也不依赖 future ground truth。
+
+[Gate] `PatchEncoderCausalTargetInteraction` 的第一轮 gate：
+
+- mean relative MSE 不差于第一版 target-set decoder 的 `+0.62%`；
+- h96 mean relative MSE 低于 `+2.74%`；
+- H720-prefix h96/h192 relative MSE 不差于 `-0.85%`，或 strict no-degradation count 改善；
+- prefix mismatch 仍为数值零级别；
+- mean target-state cosine 不向 prefix residual 的 `0.836250` collapse。
+
+[Rollback] 若 causal target interaction 只保持 consistency 但不提升 MSE，则瓶颈更可能是
+mixed-horizon objective / task weighting，而不是 architecture interaction；应回到 step 3-5
+设计 objective-level candidate，不继续加深 target interaction 或启动 MoE。
+
+[Fact] Local smoke 已通过：
+
+- output root: `artifacts/runs/smoke_phase1_causal_target_interaction`
+- dataset: `ETTh2`
+- target horizons: `{96,192,336,720}`
+- command uses `target_interaction_layers=1`
+- artifact check: `metrics_by_target_horizon.csv`, `prefix_consistency.csv`,
+  `target_state_similarity.csv`, and `effective_config.json` written
+
+[Evidence] smoke prefix mismatch remains numerical zero-level:
+
+| Prefix | Mismatch MSE |
+| --- | ---: |
+| `96/720` | `4.62182e-16` |
+| `192/720` | `7.53289e-16` |
+| `336/720` | `1.44997e-15` |
+
 ## Phase2: Future-Aware Mechanism
 
 状态：暂停，等待 Phase1-R 至少达到 compatibility pass。

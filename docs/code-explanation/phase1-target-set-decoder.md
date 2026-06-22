@@ -59,6 +59,36 @@ $$
 第一版不做 target self-attention，因此同一个 prefix segment 的计算不会因为请求更长
 horizon 而被后续 target query 改写。这是当前 prefix-stable policy 的工程实现。
 
+## Causal Target Interaction
+
+`--target-interaction-layers K` 启用 Phase1-R.2 的 causal target interaction。默认
+`K=0`，即保持第一版 `PatchEncoderTargetSetDecoder` 的 independent target-query policy。
+
+启用后，target-to-history cross-attention 先得到：
+
+$$
+U_T=\operatorname{CrossAttn}(Q_T,Z,Z)
+\in\mathbb{R}^{(BC)\times J\times d}.
+$$
+
+随后 `CausalTargetInteractionBlock` 在 target segments 维度上做 masked self-attention：
+
+$$
+V_j = \operatorname{SelfAttn}(U_j, U_{\le j}, U_{\le j}).
+$$
+
+代码中的 causal mask 是上三角 mask，禁止 segment $j$ 读取任意 later target segment
+$k>j$。因此当 requested horizon 从 `H=96` 扩展到 `H=720` 时，前缀内第 $j$ 个 target
+state 的可见集合不变：
+
+$$
+V_j(T_{1:J}) = V_j(T_{1:K}),\quad j \le K \le J.
+$$
+
+这保持了 prefix stability，同时允许模型在 latent target-state 空间建模 future segment
+dependency。它不是 autoregression：模型没有把已预测的 future values 回灌到下一段，
+也没有读取 ground-truth future；interaction 只发生在 target queries / target states 之间。
+
 为了避免 A.1 `SegmentQueryHead` 的 readout capacity collapse，模型保留 dense history
 readout：
 
@@ -173,11 +203,17 @@ PatchEncoderTargetSetDecoder/{dataset}/mixed_h96_h192_h336_h720/seed{seed}
 通过 cross-attention 生成 target states，再让 target states condition dense history readout。
 
 [Proxy] target set 目前是 segment-level，而不是 every-step token；target-query interaction
-第一版采用 independent policy，而不是完整 structured target self-attention。
+第一版采用 independent policy。Phase1-R.2 的 causal target interaction 只放开
+past-to-current target-state dependency，仍禁止 later target segment 改写 earlier prefix。
 
 [Repair boundary] prefix residual 是 short-prefix capacity repair，不是新的 paper-core claim。
 若它只修复 h96/h192 strict gate 但无法降低整体 mean relative MSE，则它最多说明 target-set
 interface 需要 capacity-preserving prefix path，不能单独作为最终创新点。
+
+[Interaction boundary] causal target interaction 是 architecture-level hypothesis，用于检验
+first target-set decoder 是否因 independent target queries 而丢失 future-step dependency。
+若它只保持 prefix consistency 但 MSE 不改善，下一步应回到 objective-level 或 problem-level
+诊断，而不是继续加更深 target interaction 或 MoE。
 
 [Falsification] 如果 mixed target-set model 相比 horizon-specific `PatchEncoderFixedHead`
 mean relative MSE 超过 `+1.0%`，或 target states 高度同质，或 prefix consistency 没有改善，

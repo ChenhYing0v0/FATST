@@ -272,6 +272,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--target-layers", type=int, default=1)
     parser.add_argument("--target-heads", type=int, default=8)
     parser.add_argument("--target-d-ff", type=int, default=256)
+    parser.add_argument("--target-interaction-layers", type=int, default=0)
+    parser.add_argument("--target-interaction-heads", type=int, default=0)
+    parser.add_argument("--target-interaction-d-ff", type=int, default=0)
     parser.add_argument("--readout-dim", type=int, default=256)
     parser.add_argument("--prefix-residual-segments", type=int, default=0)
     parser.add_argument("--prefix-residual-dropout", type=float, default=0.0)
@@ -342,6 +345,9 @@ def main() -> None:
         target_layers=args.target_layers,
         target_heads=args.target_heads,
         target_d_ff=args.target_d_ff,
+        target_interaction_layers=args.target_interaction_layers,
+        target_interaction_heads=args.target_interaction_heads or None,
+        target_interaction_d_ff=args.target_interaction_d_ff or None,
         readout_dim=args.readout_dim,
         prefix_residual_segments=args.prefix_residual_segments,
         prefix_residual_dropout=args.prefix_residual_dropout,

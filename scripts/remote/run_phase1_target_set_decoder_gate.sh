@@ -13,6 +13,9 @@ TARGET_HORIZONS="${TARGET_HORIZONS:-96,192,336,720}"
 RUN_NAME="${RUN_NAME:-PatchEncoderTargetSetDecoder}"
 PREFIX_RESIDUAL_SEGMENTS="${PREFIX_RESIDUAL_SEGMENTS:-0}"
 PREFIX_RESIDUAL_DROPOUT="${PREFIX_RESIDUAL_DROPOUT:-0.0}"
+TARGET_INTERACTION_LAYERS="${TARGET_INTERACTION_LAYERS:-0}"
+TARGET_INTERACTION_HEADS="${TARGET_INTERACTION_HEADS:-0}"
+TARGET_INTERACTION_D_FF="${TARGET_INTERACTION_D_FF:-0}"
 STEPS_PER_EPOCH="${STEPS_PER_EPOCH:-}"
 MAX_EVAL_BATCHES="${MAX_EVAL_BATCHES:-}"
 KEEP_HEAVY_ARTIFACTS="${KEEP_HEAVY_ARTIFACTS:-0}"
@@ -60,6 +63,9 @@ echo "target_horizons=${TARGET_HORIZONS}"
 echo "run_name=${RUN_NAME}"
 echo "prefix_residual_segments=${PREFIX_RESIDUAL_SEGMENTS}"
 echo "prefix_residual_dropout=${PREFIX_RESIDUAL_DROPOUT}"
+echo "target_interaction_layers=${TARGET_INTERACTION_LAYERS}"
+echo "target_interaction_heads=${TARGET_INTERACTION_HEADS}"
+echo "target_interaction_d_ff=${TARGET_INTERACTION_D_FF}"
 echo "steps_per_epoch=${STEPS_PER_EPOCH:-auto}"
 echo "max_eval_batches=${MAX_EVAL_BATCHES:-all}"
 echo "keep_heavy_artifacts=${KEEP_HEAVY_ARTIFACTS}"
@@ -97,6 +103,9 @@ run_one() {
     --run-name "${RUN_NAME}" \
     --prefix-residual-segments "${PREFIX_RESIDUAL_SEGMENTS}" \
     --prefix-residual-dropout "${PREFIX_RESIDUAL_DROPOUT}" \
+    --target-interaction-layers "${TARGET_INTERACTION_LAYERS}" \
+    --target-interaction-heads "${TARGET_INTERACTION_HEADS}" \
+    --target-interaction-d-ff "${TARGET_INTERACTION_D_FF}" \
     --output-root "${OUTPUT_ROOT}" \
     --device cuda \
     "${extra_args[@]}" 2>&1 | tee "${run_log}"

@@ -1,7 +1,7 @@
 {
   "phase": "phase1",
   "objective": "Evaluate whether a target-set indexed forecasting decoder can expose future targets as model inputs, control the single-model amortization gap, improve prefix consistency, and provide a stable carrier for later future-aware or MoE mechanisms.",
-  "status": "phase1r_target_set_decoder_near_miss_prefix_residual_failed_needs_rethink",
+  "status": "phase1r2_causal_target_interaction_local_smoke_passed_needs_remote_gate",
   "decision_reports": [
     "analysis/phase1_segment_decoder_gate_20260621/phase1_segment_decoder_gate_report.md",
     "analysis/phase1_fixed_adapter_gate_20260621/phase1_fixed_adapter_gate_report.md",
@@ -13,7 +13,8 @@
     "analysis/phase1_trajectory_basis_residual_gate_20260622/phase1_trajectory_basis_residual_gate_report.md",
     "docs/experiments/phase1-target-set-decoder-redefinition.md",
     "analysis/phase1_target_set_decoder_gate_20260622/phase1_target_set_decoder_gate_report.md",
-    "analysis/phase1_target_set_prefix_residual_gate_20260622/phase1_target_set_prefix_residual_gate_report.md"
+    "analysis/phase1_target_set_prefix_residual_gate_20260622/phase1_target_set_prefix_residual_gate_report.md",
+    "docs/experiments/phase1-causal-target-interaction-design.md"
   ],
   "latest_decision": {
     "candidate": "PatchEncoderTargetSetDecoder",
@@ -55,6 +56,27 @@
       "mean_target_state_cosine": "0.836250",
       "mean_prefix_residual_mae_norm": "0.289765",
       "decision": "failed; the dense prefix residual became an uncontrolled correction and worsened short-prefix capacity instead of repairing it"
+    }
+  },
+  "active_next_candidate": {
+    "candidate": "PatchEncoderCausalTargetInteraction",
+    "status": "local_smoke_passed_needs_remote_gate",
+    "base_candidate": "PatchEncoderTargetSetDecoder",
+    "problem": "The first target-set decoder preserves prefix consistency by using independent target queries, but this likely under-models future segment dependency that horizon-specific fixed heads can encode implicitly.",
+    "existence_evidence": "PatchEncoderTargetSetDecoder reaches numerical prefix consistency but remains +0.62% mean relative MSE vs specialists; PatchEncoderTargetSetPrefixResidual worsens to +2.03% and raises target-state cosine to 0.836250, so uncontrolled output residual capacity is not the right repair.",
+    "hypothesis": "Causal target self-attention over target states can model future segment dependency while preserving prefix stability, because segment j only attends to target states <= j.",
+    "design_doc": "docs/experiments/phase1-causal-target-interaction-design.md",
+    "train_script": "baselines/patch_encoder_target_set_decoder/train.py",
+    "run_name": "PatchEncoderCausalTargetInteraction",
+    "target_interaction_layers": 1,
+    "target_interaction_policy": "causal_self_attention_over_target_states",
+    "pass_condition": "Mean relative MSE is no worse than +0.62%, h96 mean relative MSE improves below +2.74%, H720-prefix h96/h192 comparison does not regress, prefix mismatch remains near zero, and target states do not collapse toward the prefix residual cosine of 0.836250.",
+    "local_smoke": {
+      "output_root": "artifacts/runs/smoke_phase1_causal_target_interaction",
+      "dataset": "ETTh2",
+      "target_horizons": [96, 192, 336, 720],
+      "max_prefix_mismatch_mse": "1.44997e-15",
+      "decision": "passed; causal target interaction path writes required artifacts and preserves prefix consistency at numerical zero level"
     }
   },
   "active_candidate": {
@@ -184,6 +206,15 @@
       "prefix_residual_segments": 4,
       "prefix_residual_init": "zero",
       "repair_scope": "shared dense residual readout for early target segments only"
+    },
+    "PatchEncoderCausalTargetInteraction": {
+      "role": "phase1r2_candidate",
+      "train_script": "baselines/patch_encoder_target_set_decoder/train.py",
+      "run_name": "PatchEncoderCausalTargetInteraction",
+      "target_sets": [96, 192, 336, 720],
+      "target_interaction_layers": 1,
+      "target_interaction_policy": "causal_self_attention_over_target_states_after_target_history_cross_attention",
+      "repair_scope": "model target-segment dependency without allowing later target queries to alter earlier prefixes"
     }
   },
   "metrics": {

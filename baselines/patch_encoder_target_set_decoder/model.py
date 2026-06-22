@@ -64,6 +64,45 @@ class TargetDecoderBlock(nn.Module):
         return query + self.ffn(self.ffn_norm(query))
 
 
+class CausalTargetInteractionBlock(nn.Module):
+    def __init__(
+        self,
+        d_model: int,
+        n_heads: int,
+        d_ff: int,
+        dropout: float,
+    ) -> None:
+        super().__init__()
+        self.attn_norm = nn.LayerNorm(d_model)
+        self.self_attn = nn.MultiheadAttention(d_model, n_heads, dropout=dropout, batch_first=True)
+        self.attn_dropout = nn.Dropout(dropout)
+        self.ffn_norm = nn.LayerNorm(d_model)
+        self.ffn = nn.Sequential(
+            nn.Linear(d_model, d_ff),
+            nn.GELU(),
+            nn.Dropout(dropout),
+            nn.Linear(d_ff, d_model),
+            nn.Dropout(dropout),
+        )
+
+    def forward(self, target_states: torch.Tensor) -> torch.Tensor:
+        segment_count = target_states.shape[1]
+        causal_mask = torch.triu(
+            torch.ones(segment_count, segment_count, device=target_states.device, dtype=torch.bool),
+            diagonal=1,
+        )
+        target_norm = self.attn_norm(target_states)
+        attn_out, _ = self.self_attn(
+            target_norm,
+            target_norm,
+            target_norm,
+            attn_mask=causal_mask,
+            need_weights=False,
+        )
+        target_states = target_states + self.attn_dropout(attn_out)
+        return target_states + self.ffn(self.ffn_norm(target_states))
+
+
 class PatchEncoderTargetSetDecoder(nn.Module):
     def __init__(
         self,
@@ -83,6 +122,9 @@ class PatchEncoderTargetSetDecoder(nn.Module):
         target_layers: int = 1,
         target_heads: int = 8,
         target_d_ff: int = 256,
+        target_interaction_layers: int = 0,
+        target_interaction_heads: int | None = None,
+        target_interaction_d_ff: int | None = None,
         readout_dim: int = 256,
         prefix_residual_segments: int = 0,
         prefix_residual_dropout: float = 0.0,
@@ -104,6 +146,12 @@ class PatchEncoderTargetSetDecoder(nn.Module):
         if prefix_residual_segments < 0:
             raise ValueError("prefix_residual_segments must be non-negative.")
         self.prefix_residual_segments = min(prefix_residual_segments, self.max_segments)
+        if target_interaction_layers < 0:
+            raise ValueError("target_interaction_layers must be non-negative.")
+        if target_interaction_heads is None:
+            target_interaction_heads = target_heads
+        if target_interaction_d_ff is None:
+            target_interaction_d_ff = target_d_ff
         self.revin = RevIN(channels, affine=False) if revin else None
 
         self.padding_patch = nn.ReplicationPad1d((0, stride))
@@ -137,6 +185,17 @@ class PatchEncoderTargetSetDecoder(nn.Module):
                     dropout=dropout,
                 )
                 for _ in range(target_layers)
+            ]
+        )
+        self.target_interaction = nn.ModuleList(
+            [
+                CausalTargetInteractionBlock(
+                    d_model=d_model,
+                    n_heads=target_interaction_heads,
+                    d_ff=target_interaction_d_ff,
+                    dropout=dropout,
+                )
+                for _ in range(target_interaction_layers)
             ]
         )
 
@@ -215,6 +274,8 @@ class PatchEncoderTargetSetDecoder(nn.Module):
         query = query.expand(z.shape[0], -1, -1)
         for block in self.target_decoder:
             query = block(query, z)
+        for block in self.target_interaction:
+            query = block(query)
         return query
 
     def forward(
