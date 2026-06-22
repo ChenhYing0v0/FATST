@@ -644,6 +644,37 @@ Phase1-A.5 pass 条件：
 - segment-conditioned $\gamma,\beta$ 或 $\tilde{Z}_j-Z$ 不能完全退化为同质小扰动；
 - 参数量必须接近 `PatchEncoderFixedHeadAdapter`，否则需要 parameter-control。
 
+[Fact] Phase1-A.5 已完成完整远程 gate：
+
+- remote output: `/home/yingch/exp_outputs/r-2026-fatst/phase1_step_specific_state`
+- local report: `analysis/phase1_step_specific_state_gate_20260622/phase1_step_specific_state_gate_report.md`
+- matrix: 3 models x 3 datasets x 4 horizons, seed `2021`
+- selected GPUs: `1`, `2`
+
+结果：
+
+| Comparison | MSE wins | Mean relative MSE | Range | Zero-win datasets |
+| --- | ---: | ---: | --- | --- |
+| vs `PatchEncoderFixedHead` | 7/12 | +0.39% | -3.15% to +8.22% | none |
+| vs `PatchEncoderFixedHeadAdapter` | 8/12 | +0.19% | -2.31% to +6.77% | none |
+
+诊断：
+
+- mean_abs_gamma: `0.604776`
+- mean_abs_beta: `0.078682`
+- mean segment activation cosine: `0.964393`
+
+[Decision] Phase1-A.5 是 `partial`，不是 pass。它说明 pre-head step-specific state
+并非退化为空操作，且在多个 setting 上能击败 fixed head / fixed-head adapter；但两个关键
+performance 条件未满足：mean relative MSE 仍为正，且 ETTh2 short horizons 出现明显退化。
+因此，该候选不能作为 Phase1 paper-core decoder，也不能作为 Phase1-B one-model
+compatibility 的基础。
+
+[Rollback] 当前应回退到长研究模板 step 2-3：重新判断 “decoder-side state adaptation”
+是否是值得保留的问题定义。更窄地说，已有证据支持 fixed direct head 存在 horizon/segment
+差异，但不支持仅靠 lightweight segment-conditioned modulation 就能稳定改善预测。
+下一轮不应继续叠 future-aware 或 MoE；应先重新定义 decoder 输出策略的核心问题。
+
 Phase1-B:
 
 - 仅在 Phase1-A 通过后执行；

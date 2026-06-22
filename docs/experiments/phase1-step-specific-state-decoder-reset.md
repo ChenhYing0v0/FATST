@@ -177,3 +177,44 @@ $$
 
 如果该候选不通过，应回退到 step 2-3，重新判断 decoder-side state 是否是当前项目的主线；
 不应继续把 MoE 叠到失败的 state adapter 上。
+
+## Step 8-10: 远程训练、结果评估与决策
+
+[Fact] Phase1-A.5 完整 gate 已完成：
+
+- remote host: `529_Lab-3090`
+- remote output: `/home/yingch/exp_outputs/r-2026-fatst/phase1_step_specific_state`
+- local report: `analysis/phase1_step_specific_state_gate_20260622/phase1_step_specific_state_gate_report.md`
+- models: `PatchEncoderFixedHead`, `PatchEncoderFixedHeadAdapter`,
+  `PatchEncoderStepSpecificStateAdapter`
+- datasets: `ETTh2`, `ETTm1`, `Weather`
+- horizons: `96`, `192`, `336`, `720`
+- seed: `2021`
+
+主结果：
+
+| Comparison | MSE wins | Mean relative MSE | Range | Zero-win datasets |
+| --- | ---: | ---: | --- | --- |
+| vs `PatchEncoderFixedHead` | 7/12 | +0.39% | -3.15% to +8.22% | none |
+| vs `PatchEncoderFixedHeadAdapter` | 8/12 | +0.19% | -2.31% to +6.77% | none |
+
+机制诊断：
+
+- mean_abs_gamma: `0.604776`
+- mean_abs_beta: `0.078682`
+- mean segment activation cosine: `0.964393`
+
+[Decision] Phase1-A.5 判定为 `partial`。该候选不是无效实现：$\gamma,\beta$ 明显非零，
+segment state 也不是完全同质；但它未通过 performance gate，因为相对两个 control 的
+mean relative MSE 均为正。它只能作为 “pre-head state modulation 有活动但不稳定”
+的负/部分证据，不能作为 paper-core decoder。
+
+## Step 11: 回退点
+
+[Rollback] 回退到 step 2-3，重新评估 decoder-side state adaptation 这个问题本身是否足够
+值得研究。当前证据不支持继续在 A.5 上叠 future-aware 或 MoE。
+
+[Inference] 更合理的下一轮问题定义应从 output strategy 本身出发，而不是继续把 fixed head
+视为只缺少一个 segment-conditioned latent correction。已有结果提示 fixed head rows 可能
+已经承担了强 step-specific readout；直接调制 shared latent state 会在部分短 horizon 上破坏
+这一 readout。

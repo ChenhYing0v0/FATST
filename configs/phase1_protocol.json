@@ -1,30 +1,32 @@
 {
   "phase": "phase1",
   "objective": "Evaluate whether future-side decoder interfaces can improve the Phase0 selected patch encoder before adding future-aware alignment or MoE.",
-  "status": "phase1a5_step_specific_state_reset",
+  "status": "phase1a5_partial_rollback_to_problem_definition",
   "decision_reports": [
     "analysis/phase1_segment_decoder_gate_20260621/phase1_segment_decoder_gate_report.md",
     "analysis/phase1_fixed_adapter_gate_20260621/phase1_fixed_adapter_gate_report.md",
     "analysis/phase1_future_aware_adapter_gate_20260621/phase1_future_aware_adapter_gate_report.md",
     "analysis/phase1_future_aware_repair_gate_20260622/phase1_future_aware_repair_gate_report.md",
-    "docs/experiments/phase1-step-specific-state-decoder-reset.md"
+    "docs/experiments/phase1-step-specific-state-decoder-reset.md",
+    "analysis/phase1_step_specific_state_gate_20260622/phase1_step_specific_state_gate_report.md"
   ],
   "latest_decision": {
-    "candidate": "PatchEncoderFutureAwareAlignOnly",
-    "status": "repair_partial_not_paper_core",
-    "vs_fixed_main_wins": "4/12",
-    "vs_adapter_main_wins": "5/12",
-    "mean_relative_mse_vs_fixed": "+0.04%",
-    "mean_relative_mse_vs_adapter": "-0.13%",
-    "max_prediction_leakage_abs": "0.0",
-    "mean_teacher_student_cosine": "0.3313",
-    "issue": "Scale-normalized reconstruction fixes auxiliary loss scale but does not produce stable gains over PatchEncoderFixedHead; Weather remains negative for both repair candidates.",
-    "rollback_step": "Step 3-5: re-evaluate whether this future-aware adapter problem formulation is worth keeping as a paper-core direction.",
-    "next_direction": "Do not stack MoE on this adapter. Pivot toward a more fundamental decoder/state architecture or redefine future-aware supervision beyond simple teacher/student alignment."
+    "candidate": "PatchEncoderStepSpecificStateAdapter",
+    "status": "partial_not_phase1_pass",
+    "vs_fixed_main_wins": "7/12",
+    "vs_adapter_main_wins": "8/12",
+    "mean_relative_mse_vs_fixed": "+0.39%",
+    "mean_relative_mse_vs_adapter": "+0.19%",
+    "mean_abs_gamma": "0.604776",
+    "mean_abs_beta": "0.078682",
+    "mean_segment_activation_cosine": "0.964393",
+    "issue": "Pre-head segment-conditioned state modulation is active and has local wins, but mean relative MSE remains worse than both controls and ETTh2 short horizons degrade strongly.",
+    "rollback_step": "Step 2-3: re-evaluate whether decoder-side state adaptation is the right problem definition before proposing another decoder idea.",
+    "next_direction": "Do not enter Phase1-B, future-aware alignment, or MoE on this candidate. Redefine the decoder/output strategy problem first."
   },
   "active_candidate": {
     "candidate": "PatchEncoderStepSpecificStateAdapter",
-    "status": "step_1_to_6_defined_needs_implementation",
+    "status": "phase1a5_partial_not_active_paper_core",
     "problem": "Fixed head uses different output rows but a shared history representation for all future steps; prior attempts either removed readout capacity or corrected outputs too late.",
     "hypothesis": "Segment-conditioned pre-head state adaptation can preserve fixed-head readout capacity while creating step/segment-specific representations before prediction.",
     "design_doc": "docs/experiments/phase1-step-specific-state-decoder-reset.md",

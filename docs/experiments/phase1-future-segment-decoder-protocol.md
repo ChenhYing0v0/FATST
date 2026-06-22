@@ -650,3 +650,43 @@ $$
 [Boundary] 只有 Phase1-A.5 通过后，future-aware alignment 才应该重新进入；届时应对齐
 $U_j$ 或 $\tilde{Z}_j$，而不是继续对齐 post-head adapter。MoE 也只能作为
 $T_\theta(Z,U_j)$ 的 conditional operator 进入，而不是作为失败 decoder 的参数补偿。
+
+## Phase1-A.5 结果
+
+[Fact] Phase1-A.5 完整 gate 已在 `529_Lab-3090` 完成：
+
+- remote output: `/home/yingch/exp_outputs/r-2026-fatst/phase1_step_specific_state`
+- local raw artifacts: `analysis/phase1_step_specific_state_gate_20260622/raw/`
+- local report: `analysis/phase1_step_specific_state_gate_20260622/phase1_step_specific_state_gate_report.md`
+- matrix: `PatchEncoderFixedHead`, `PatchEncoderFixedHeadAdapter`,
+  `PatchEncoderStepSpecificStateAdapter` x `ETTh2`, `ETTm1`, `Weather` x
+  `96`, `192`, `336`, `720`
+- seed: `2021`
+- selected GPUs: `1`, `2`
+
+主结果：
+
+| Comparison | MSE wins | Mean relative MSE | Range | Zero-win datasets |
+| --- | ---: | ---: | --- | --- |
+| vs `PatchEncoderFixedHead` | 7/12 | +0.39% | -3.15% to +8.22% | none |
+| vs `PatchEncoderFixedHeadAdapter` | 8/12 | +0.19% | -2.31% to +6.77% | none |
+
+诊断结果：
+
+- mean_abs_gamma: `0.604776`
+- mean_abs_beta: `0.078682`
+- mean segment activation cosine: `0.964393`
+
+[Decision] Phase1-A.5 是 `partial`，不是 pass。它满足 “存在机制活动” 和
+“没有 dataset 全面失效” 两类弱证据，但没有满足 main pass 条件：相对两个 control 的 mean
+relative MSE 均为正。尤其 ETTh2 h96/h192 的退化说明 pre-head state modulation
+会破坏 fixed head 在短 horizon 上已经学到的稳定 readout。
+
+[Inference] 这说明当前问题定义仍不够准确。fixed head 的缺陷不是简单的
+“所有 future steps 共享一个 representation”，否则 A.5 应该在保留 readout rows 后稳定
+改进。更可能的情况是：dense fixed head 已经通过 output rows 隐式编码了相当强的
+step-specific readout，轻量 latent FiLM 容易干扰这种 readout，而不是补足它。
+
+[Rollback] 回退到长研究模板 step 2-3。下一步应重新定义 decoder/output strategy 的
+核心问题，再决定是否进入新的 step 4 idea。当前不进入 Phase1-B one-model compatibility，
+不在 A.5 上继续叠 future-aware alignment，也不引入 MoE 作为补偿。

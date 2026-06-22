@@ -1,0 +1,35 @@
+{
+  "decision": "partial",
+  "reason": "candidate has some signal but does not meet the full A.5 pass criteria.",
+  "summaries": {
+    "PatchEncoderFixedHead": {
+      "wins": 7,
+      "total": 12,
+      "mean_relative_mse": 0.003855751245633902,
+      "min_relative_mse": -0.03151657464926354,
+      "max_relative_mse": 0.0821737290200452,
+      "dataset_wins": {
+        "ETTh2": 2,
+        "ETTm1": 3,
+        "Weather": 2
+      },
+      "dataset_with_zero_wins": []
+    },
+    "PatchEncoderFixedHeadAdapter": {
+      "wins": 8,
+      "total": 12,
+      "mean_relative_mse": 0.00185721063593924,
+      "min_relative_mse": -0.023073862965141464,
+      "max_relative_mse": 0.06771249840590517,
+      "dataset_wins": {
+        "ETTh2": 1,
+        "ETTm1": 4,
+        "Weather": 3
+      },
+      "dataset_with_zero_wins": []
+    }
+  },
+  "mean_abs_gamma": 0.6047758460044861,
+  "mean_abs_beta": 0.07868179523696502,
+  "mean_activation_cosine": 0.9643928476032756
+}
