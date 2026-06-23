@@ -33,7 +33,10 @@ for index in "${!datasets[@]}"; do
   run_dir="${OUTPUT_ROOT}/${RUN_NAME}/${dataset}/${horizon_label}/seed${SEED}"
   dataset_log="${LOG_ROOT}/${RUN_NAME}_${dataset}_mixed_seed${SEED}.log"
   metrics_file="${run_dir}/metrics_by_target_horizon.csv"
-  prediction_count="$(find "${run_dir}" -path "*/h*/predictions_test.npz" -type f 2>/dev/null | wc -l | tr -d ' ')"
+  prediction_count=0
+  if [[ -d "${run_dir}" ]]; then
+    prediction_count="$(find "${run_dir}" -path "*/h*/predictions_test.npz" -type f | wc -l | tr -d ' ')"
+  fi
   if [[ -s "${metrics_file}" && "${prediction_count}" == "${#horizon_array[@]}" ]]; then
     completed=$((completed + 1))
     echo "dataset_progress position=${position}/${total} dataset=${dataset} status=completed epoch=${EPOCHS}/${EPOCHS} predictions=${prediction_count}/${#horizon_array[@]}"
