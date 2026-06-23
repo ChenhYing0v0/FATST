@@ -10,6 +10,7 @@ GPU_IDS="${GPU_IDS:-1}"
 SEED="${SEED:-2021}"
 EPOCHS="${EPOCHS:-100}"
 TARGET_HORIZONS="${TARGET_HORIZONS:-96,192,336,720}"
+DATASETS="${DATASETS:-ETTh2 ETTm1 Weather}"
 RUN_NAME="${RUN_NAME:-PatchEncoderTargetSetDecoder}"
 PREFIX_RESIDUAL_SEGMENTS="${PREFIX_RESIDUAL_SEGMENTS:-0}"
 PREFIX_RESIDUAL_DROPOUT="${PREFIX_RESIDUAL_DROPOUT:-0.0}"
@@ -44,7 +45,7 @@ if [[ -z "${CONDA_BIN}" ]]; then
   fi
 fi
 
-datasets=("ETTh2" "ETTm1" "Weather")
+read -r -a datasets <<< "${DATASETS}"
 read -r -a gpu_ids <<< "${GPU_IDS}"
 IFS="," read -r -a target_horizon_array <<< "${TARGET_HORIZONS}"
 horizon_label="mixed"
@@ -62,6 +63,7 @@ echo "conda_bin=${CONDA_BIN}"
 echo "gpu_ids=${GPU_IDS}"
 echo "seed=${SEED}"
 echo "epochs=${EPOCHS}"
+echo "datasets=${DATASETS}"
 echo "target_horizons=${TARGET_HORIZONS}"
 echo "run_name=${RUN_NAME}"
 echo "prefix_residual_segments=${PREFIX_RESIDUAL_SEGMENTS}"
