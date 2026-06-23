@@ -228,3 +228,16 @@ Implementation artifacts:
 [Decision] 下一步是按远程实验策略在 `529_Lab-3090` 跑完整
 `ETTh2/ETTm1/Weather x {96,192,336,720}` gate。Primary comparison 仍是 R.3；若
 `step_covariance_balanced` 不能超过 R.3，objective-only 主线停止。
+
+[Fact] Remote gate 已启动：
+
+- launch note:
+  `analysis/phase2_step_covariance_balanced_gate_20260623/remote_launch_note.md`
+- remote output:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase2_step_covariance_balanced_objective`
+- commit:
+  `f0f5d41`
+- selected GPUs:
+  `1`, `2`
+- first launched datasets:
+  `ETTm1` on GPU `1`, `Weather` on GPU `2`
