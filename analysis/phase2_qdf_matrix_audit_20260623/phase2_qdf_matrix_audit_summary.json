@@ -1,0 +1,41 @@
+{
+  "by_meta_type": {
+    "all": {
+      "count": 12,
+      "mean_covariance_condition_number": 6.280085851748784,
+      "mean_covariance_offdiag_fro_share": 0.12606821594142897,
+      "mean_precision_offdiag_fro_share": 0.01160201462188303,
+      "mean_precision_weighted_bandwidth": 68.35049516695528,
+      "mean_precision_weighted_bandwidth_ratio": 0.20104071960998154
+    },
+    "diag": {
+      "count": 12,
+      "mean_covariance_condition_number": 1.0553407470385234,
+      "mean_covariance_offdiag_fro_share": 0.0,
+      "mean_precision_offdiag_fro_share": 0.0,
+      "mean_precision_weighted_bandwidth": 0.0,
+      "mean_precision_weighted_bandwidth_ratio": 0.0
+    },
+    "off_diag": {
+      "count": 12,
+      "mean_covariance_condition_number": 7.085516631603241,
+      "mean_covariance_offdiag_fro_share": 0.1495036029467271,
+      "mean_precision_offdiag_fro_share": 0.013699907647954009,
+      "mean_precision_weighted_bandwidth": 68.55619090549013,
+      "mean_precision_weighted_bandwidth_ratio": 0.20252638620665764
+    }
+  },
+  "gate": {
+    "all_36_matrices_available": true,
+    "all_precision_has_interaction": true,
+    "diag_precision_offdiag_near_zero": true,
+    "off_diag_precision_has_interaction": true,
+    "supports_local_offdiag_audit": true
+  },
+  "matrix_rows": 36,
+  "meta_types_present": [
+    "all",
+    "diag",
+    "off_diag"
+  ]
+}

@@ -206,3 +206,42 @@ Gate:
 3. specialist gap wins `>=2/4`;
 4. prefix consistency 维持数值零级别；
 5. 若只赢 uniform 或只复现 QDF upstream，但输 R.3，则回滚到 Step 2。
+
+## Phase2-E0/E1 Progress
+
+更新时间：2026-06-23 21:20 +08:00
+
+[Fact] Phase2-E0 learned matrix audit 已完成：
+
+- report:
+  `analysis/phase2_qdf_matrix_audit_20260623/phase2_qdf_matrix_audit_report.md`;
+- metrics:
+  `analysis/phase2_qdf_matrix_audit_20260623/phase2_qdf_matrix_audit_metrics.csv`;
+- region blocks:
+  `analysis/phase2_qdf_matrix_audit_20260623/phase2_qdf_matrix_audit_region_blocks.csv`。
+
+Result:
+
+- `diag` precision off-diagonal Fro share: `0.000000`;
+- `all` precision off-diagonal Fro share: `0.011602`;
+- `off_diag` precision off-diagonal Fro share: `0.013700`;
+- `off_diag` normalized precision bandwidth: `0.202526`。
+
+[Decision] Matrix audit supports a local off-diagonal objective probe.
+
+[Implementation] Phase2-E1 implements `offdiag_block_quadratic`:
+
+- preserves R.3 `prefix_risk` base loss;
+- estimates a train-split block precision matrix;
+- removes diagonal and normalizes by spectral norm;
+- penalizes squared projected block residuals;
+- default block size is `48`, giving H720 `15` blocks and H96 `2` blocks.
+
+[Smoke] ETTh2 CPU smoke passed:
+
+- command mode: `--step-loss-weighting offdiag_block_quadratic`;
+- output:
+  `artifacts/runs/smoke_phase2_offdiag_block_quadratic/SmokeOffdiagBlockQuadratic/ETTh2/mixed_h96_h192_h336_h720/seed2021`;
+- max prefix mismatch MSE: `8.394639455409306e-15`.
+
+[Next] Run the Phase2-E1 remote gate before making any paper-story claim.

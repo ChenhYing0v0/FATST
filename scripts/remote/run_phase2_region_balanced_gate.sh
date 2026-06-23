@@ -19,6 +19,7 @@ STEP_COVARIANCE_EPS="${STEP_COVARIANCE_EPS:-1e-6}"
 STEPS_PER_EPOCH="${STEPS_PER_EPOCH:-}"
 MAX_EVAL_BATCHES="${MAX_EVAL_BATCHES:-}"
 KEEP_HEAVY_ARTIFACTS="${KEEP_HEAVY_ARTIFACTS:-0}"
+EXTRA_TRAIN_ARGS="${EXTRA_TRAIN_ARGS:-}"
 
 mkdir -p "${LOG_ROOT}"
 
@@ -69,6 +70,7 @@ echo "step_covariance_eps=${STEP_COVARIANCE_EPS}"
 echo "steps_per_epoch=${STEPS_PER_EPOCH:-auto}"
 echo "max_eval_batches=${MAX_EVAL_BATCHES:-all}"
 echo "keep_heavy_artifacts=${KEEP_HEAVY_ARTIFACTS}"
+echo "extra_train_args=${EXTRA_TRAIN_ARGS:-none}"
 
 nvidia-smi --query-gpu=index,name,memory.total,memory.used,memory.free,utilization.gpu \
   --format=csv,noheader,nounits
@@ -85,6 +87,10 @@ run_one() {
   fi
   if [[ -n "${MAX_EVAL_BATCHES}" ]]; then
     extra_args+=(--max-eval-batches "${MAX_EVAL_BATCHES}")
+  fi
+  if [[ -n "${EXTRA_TRAIN_ARGS}" ]]; then
+    # shellcheck disable=SC2206
+    extra_args+=(${EXTRA_TRAIN_ARGS})
   fi
 
   if [[ -s "${run_dir}/metrics_by_target_horizon.csv" ]]; then

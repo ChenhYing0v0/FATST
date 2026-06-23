@@ -324,9 +324,30 @@ def weighted_mse_loss(
     mode: str,
     alpha: float,
     precomputed_weights: torch.Tensor | None = None,
+    offdiag_block_matrix: torch.Tensor | None = None,
+    offdiag_block_size: int = 48,
+    offdiag_quadratic_weight: float = 0.0,
 ) -> torch.Tensor:
     if mode == "uniform":
         return torch.mean((pred - true) ** 2)
+    if mode == "offdiag_block_quadratic":
+        base_loss = weighted_mse_loss(
+            pred,
+            true,
+            max_pred_len,
+            target_horizons,
+            "prefix_risk",
+            alpha,
+        )
+        if offdiag_block_matrix is None:
+            raise ValueError("offdiag_block_quadratic requires a precomputed block matrix.")
+        penalty = offdiag_block_quadratic_loss(
+            pred,
+            true,
+            offdiag_block_matrix,
+            offdiag_block_size,
+        )
+        return base_loss + offdiag_quadratic_weight * penalty
     if mode not in {"prefix_risk", "region_balanced", "step_covariance_balanced"}:
         raise ValueError(f"Unknown step loss weighting mode: {mode}")
     if alpha < 0:
@@ -345,6 +366,31 @@ def weighted_mse_loss(
     else:
         weights = precomputed_weights.to(device=pred.device, dtype=pred.dtype)[:horizon]
     return torch.mean((pred - true) ** 2 * weights.view(1, horizon, 1))
+
+
+def offdiag_block_quadratic_loss(
+    pred: torch.Tensor,
+    true: torch.Tensor,
+    block_matrix: torch.Tensor,
+    block_size: int,
+) -> torch.Tensor:
+    if block_size <= 0:
+        raise ValueError("offdiag_block_size must be positive.")
+    residual = pred - true
+    horizon = residual.shape[1]
+    block_means = []
+    for start in range(0, horizon, block_size):
+        end = min(start + block_size, horizon)
+        block_means.append(torch.mean(residual[:, start:end, :], dim=1))
+    if len(block_means) < 2:
+        return residual.new_tensor(0.0)
+    error_blocks = torch.stack(block_means, dim=-1).reshape(-1, len(block_means))
+    active_matrix = block_matrix[: len(block_means), : len(block_means)].to(
+        device=residual.device,
+        dtype=residual.dtype,
+    )
+    coupled_error = error_blocks @ active_matrix.T
+    return torch.mean(coupled_error * coupled_error)
 
 
 def step_loss_weights(
@@ -450,6 +496,62 @@ def train_split_region_novelty(
     return {label: value / max(total, eps) for label, value in novelty.items()}
 
 
+def block_mean_series(data: np.ndarray, seq_len: int, pred_len: int, block_size: int) -> np.ndarray:
+    if block_size <= 0:
+        raise ValueError("block_size must be positive.")
+    n_windows = len(data) - seq_len - pred_len + 1
+    if n_windows <= 0:
+        raise ValueError("Dataset split is shorter than seq_len + pred_len.")
+    cumsum = np.vstack([np.zeros((1, data.shape[1]), dtype=np.float64), data.cumsum(axis=0, dtype=np.float64)])
+    window_index = np.arange(n_windows)
+    target_start = window_index + seq_len
+    blocks = []
+    for start in range(0, pred_len, block_size):
+        end = min(start + block_size, pred_len)
+        block_start = target_start + start
+        block_end = target_start + end
+        block_sum = cumsum[block_end] - cumsum[block_start]
+        blocks.append(block_sum / float(end - start))
+    return np.stack(blocks, axis=-1).reshape(-1, len(blocks))
+
+
+def train_split_offdiag_block_matrix(
+    dataset_root: str | Path,
+    dataset: str,
+    seq_len: int,
+    max_pred_len: int,
+    block_size: int,
+    eps: float,
+) -> tuple[torch.Tensor, dict[str, float]]:
+    train_set = ForecastDataset(dataset_root, dataset, "train", seq_len, max_pred_len)
+    block_values = block_mean_series(train_set.data.astype(np.float64), seq_len, max_pred_len, block_size)
+    centered = block_values - block_values.mean(axis=0, keepdims=True)
+    scale = block_values.std(axis=0, keepdims=True)
+    normalized = centered / np.maximum(scale, eps)
+    denom = max(normalized.shape[0] - 1, 1)
+    corr = (normalized.T @ normalized) / float(denom)
+    corr = np.nan_to_num(corr, nan=0.0, posinf=0.0, neginf=0.0)
+    corr = 0.5 * (corr + corr.T)
+    precision = np.linalg.inv(corr + eps * np.eye(corr.shape[0], dtype=np.float64))
+    offdiag = precision - np.diag(np.diag(precision))
+    spectral_norm = float(np.linalg.norm(offdiag, ord=2))
+    if spectral_norm > eps:
+        offdiag = offdiag / spectral_norm
+    matrix = torch.tensor(offdiag, dtype=torch.float32)
+    fro_sq = float(np.sum(offdiag * offdiag))
+    diag_fro_sq = float(np.sum(np.diag(precision) ** 2))
+    stats = {
+        "offdiag_block_count": float(offdiag.shape[0]),
+        "offdiag_block_size": float(block_size),
+        "offdiag_precision_spectral_norm": spectral_norm,
+        "offdiag_precision_fro": float(np.sqrt(fro_sq)),
+        "offdiag_precision_fro_share_before_norm": float(
+            fro_sq / max(fro_sq + diag_fro_sq, eps)
+        ),
+    }
+    return matrix, stats
+
+
 def step_covariance_balanced_step_weights(
     max_pred_len: int,
     target_horizons: list[int],
@@ -489,6 +591,8 @@ def objective_weight_stats(
         weights = torch.ones(max_pred_len, dtype=torch.float64)
     elif precomputed_weights is not None:
         weights = precomputed_weights.detach().to(device=device, dtype=torch.float64)
+    elif mode == "offdiag_block_quadratic":
+        weights = step_loss_weights(max_pred_len, target_horizons, "prefix_risk", alpha, device, torch.float64)
     else:
         weights = step_loss_weights(max_pred_len, target_horizons, mode, alpha, device, torch.float64)
     uniform_pressure = expected_uniform_step_pressure(max_pred_len, target_horizons)
@@ -713,13 +817,22 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--learning-rate", type=float, default=1e-4)
     parser.add_argument(
         "--step-loss-weighting",
-        choices=["uniform", "prefix_risk", "region_balanced", "step_covariance_balanced"],
+        choices=[
+            "uniform",
+            "prefix_risk",
+            "region_balanced",
+            "step_covariance_balanced",
+            "offdiag_block_quadratic",
+        ],
         default="uniform",
     )
     parser.add_argument("--step-loss-alpha", type=float, default=0.5)
     parser.add_argument("--step-covariance-beta", type=float, default=0.5)
     parser.add_argument("--step-covariance-eta", type=float, default=0.5)
     parser.add_argument("--step-covariance-eps", type=float, default=1e-6)
+    parser.add_argument("--offdiag-block-size", type=int, default=48)
+    parser.add_argument("--offdiag-quadratic-weight", type=float, default=0.05)
+    parser.add_argument("--offdiag-ridge-eps", type=float, default=1e-3)
     parser.add_argument("--patience", type=int, default=10)
     parser.add_argument("--seed", type=int, default=2021)
     parser.add_argument("--run-name", default="PatchEncoderTargetSetDecoder")
@@ -758,6 +871,12 @@ def main() -> None:
         raise ValueError("step covariance eta must be non-negative.")
     if args.step_covariance_eps <= 0:
         raise ValueError("step covariance eps must be positive.")
+    if args.offdiag_block_size <= 0:
+        raise ValueError("offdiag block size must be positive.")
+    if args.offdiag_quadratic_weight < 0:
+        raise ValueError("offdiag quadratic weight must be non-negative.")
+    if args.offdiag_ridge_eps <= 0:
+        raise ValueError("offdiag ridge eps must be positive.")
     set_seed(args.seed)
     device = torch.device("cuda" if args.device == "auto" and torch.cuda.is_available() else "cpu")
     if args.device != "auto":
@@ -845,6 +964,8 @@ def main() -> None:
 
     covariance_novelty_share: dict[str, float] | None = None
     covariance_step_weights: torch.Tensor | None = None
+    offdiag_block_matrix: torch.Tensor | None = None
+    offdiag_block_stats: dict[str, float] = {}
     if args.step_loss_weighting == "step_covariance_balanced":
         covariance_novelty_share = train_split_region_novelty(
             args.dataset_root,
@@ -863,6 +984,16 @@ def main() -> None:
             device,
             torch.float32,
         )
+    if args.step_loss_weighting == "offdiag_block_quadratic":
+        offdiag_block_matrix, offdiag_block_stats = train_split_offdiag_block_matrix(
+            args.dataset_root,
+            args.dataset,
+            args.seq_len,
+            args.max_pred_len,
+            args.offdiag_block_size,
+            args.offdiag_ridge_eps,
+        )
+        offdiag_block_matrix = offdiag_block_matrix.to(device=device)
 
     best_val = float("inf")
     best_state = None
@@ -914,6 +1045,9 @@ def main() -> None:
                 args.step_loss_weighting,
                 args.step_loss_alpha,
                 covariance_step_weights,
+                offdiag_block_matrix,
+                args.offdiag_block_size,
+                args.offdiag_quadratic_weight,
             )
             loss = pred_loss
             if future_loss_enabled:
@@ -1074,10 +1208,25 @@ def main() -> None:
             covariance_novelty_share,
         ),
     )
+    if offdiag_block_matrix is not None:
+        matrix_np = offdiag_block_matrix.detach().cpu().numpy()
+        matrix_rows = []
+        for row_index in range(matrix_np.shape[0]):
+            for col_index in range(matrix_np.shape[1]):
+                matrix_rows.append(
+                    {
+                        "row_block": row_index,
+                        "col_block": col_index,
+                        "value": float(matrix_np[row_index, col_index]),
+                        "is_diagonal": row_index == col_index,
+                    }
+                )
+        write_csv(run_dir / "offdiag_block_matrix.csv", matrix_rows)
     effective_config = vars(args)
     effective_config["target_horizons"] = target_horizons
     effective_config["steps_per_epoch_effective"] = steps_per_epoch
     effective_config["step_covariance_novelty_share"] = covariance_novelty_share or {}
+    effective_config["offdiag_block_stats"] = offdiag_block_stats
     (run_dir / "effective_config.json").write_text(json.dumps(effective_config, indent=2))
     env = {
         "python": sys.version,

@@ -468,3 +468,65 @@ future-step interaction；而 `off_diag` 在固定 diagonal 后学习 residual c
 - `artifacts`: 当前已有 Phase2-D upstream artifacts；Phase2-E0 应新增 matrix audit report。
 - `decision`: 不进入 MoE，不复制 QDF full meta-learning；下一步先做 learned matrix audit，
   再决定是否实现本地 off-diagonal objective。
+
+## 16. Phase2-E0/E1: Matrix Audit and Local Off-Diagonal Probe
+
+[Fact] Phase2-E0 learned matrix audit 已完成：
+
+- script:
+  `scripts/analyze_phase2_qdf_matrix_audit.py`;
+- report:
+  `analysis/phase2_qdf_matrix_audit_20260623/phase2_qdf_matrix_audit_report.md`;
+- code explanation:
+  `docs/code-explanation/phase2-qdf-matrix-audit.md`。
+
+[Strong Evidence] 审计支持继续本地 off-diagonal objective probe：
+
+| Meta type | Precision offdiag fro share | Covariance offdiag fro share | Normalized precision bandwidth |
+| --- | ---: | ---: | ---: |
+| `all` | `0.011602` | `0.126068` | `0.201041` |
+| `diag` | `0.000000` | `0.000000` | `0.000000` |
+| `off_diag` | `0.013700` | `0.149504` | `0.202526` |
+
+[Inference] QDF 的有效信号不是纯 diagonal，也不是只在局部相邻 step 上传播。`off_diag`
+precision interaction 比 `all` 更强，且 normalized bandwidth 约 `0.20`，支持做
+block-level future residual interaction，而不是 4-region-only 或 full 720x720 local matrix。
+
+[Implementation Update] Phase2-E1 最小本地候选已实现并通过本地 smoke：
+
+- train switch:
+  `--step-loss-weighting offdiag_block_quadratic`;
+- run name:
+  `PatchEncoderOffdiagBlockQuadratic`;
+- code:
+  `baselines/patch_encoder_target_set_decoder/train.py`;
+- remote runner:
+  `scripts/remote/run_phase2_offdiag_block_quadratic_gate.sh`;
+- sync wrapper:
+  `scripts/sync_phase2_offdiag_block_quadratic_results.sh`;
+- code explanation:
+  `docs/code-explanation/phase2-offdiag-block-quadratic-objective.md`。
+
+[Design] 该候选保留 R.3 的 `prefix_risk` base loss，并额外加入 train-split 估计的
+off-diagonal block residual penalty：
+
+- `offdiag_block_size=48`;
+- H720 有 `15` 个 blocks；
+- H96 有 `2` 个 blocks，因此 short-horizon specialist gap 也会接收到 off-diagonal signal；
+- `offdiag_quadratic_weight=0.05`;
+- `offdiag_ridge_eps=1e-3`。
+
+[Fact] ETTh2 CPU smoke 通过：
+
+- output:
+  `artifacts/runs/smoke_phase2_offdiag_block_quadratic/SmokeOffdiagBlockQuadratic/ETTh2/mixed_h96_h192_h336_h720/seed2021`;
+- scope: `ETTh2`, `{96,192,336,720}`, `epochs=1`, `steps_per_epoch=2`,
+  `max_eval_batches=1`, CPU;
+- `offdiag_block_count=15`;
+- `offdiag_precision_fro_share_before_norm=0.0093818328`;
+- max prefix mismatch MSE:
+  `8.394639455409306e-15`。
+
+[Next] commit/push 后，在 `529_Lab-3090` `git pull`，检查 GPU，启动
+Phase2-E1 remote gate。Gate 仍以 R.3 为主比较对象：mean MSE `< -0.3%`、MSE wins
+`>=7/12`、specialist gap wins `>=2/4`、prefix consistency 不破坏。
