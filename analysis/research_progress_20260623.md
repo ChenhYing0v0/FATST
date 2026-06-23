@@ -357,3 +357,9 @@ matrix，三个数据集均有强 off-diagonal signal：
 
 [Caveat] 该轮只跑 `meta_type=all`。最终是否进入 source-informed localization，需要后续补
 `diag` control 并由 `scripts/analyze_phase2_qdf_upstream_gate.py` 判定。
+
+[Remote Repair Update] 首次 `META_TYPES=all` 启动在 `ETTm1/h96,h192` 训练到 meta-test
+结束后失败，原因是 PyTorch 2.6+ 默认 `torch.load(weights_only=True)` 拒绝加载 QDF 保存的
+完整 `CovarianceMatrix` 对象 `A.pth`。这不是模型机制失败，也没有产生 metrics。已将
+`scripts/remote/run_phase2_qdf_upstream_gate.sh` 更新为启动前自动 patch QDF upstream 的
+两个 `A.pth` load 点为 `weights_only=False`，随后需要用 `RERUN=1` 重跑 `META_TYPES=all`。

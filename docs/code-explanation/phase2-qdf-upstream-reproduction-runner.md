@@ -30,6 +30,12 @@ QDF `run.py` 顶层 import `cupy` 并只在当前路径中调用 `cp.random.seed
 的轻量 shim，并把它 prepend 到 `PYTHONPATH`。该 shim 不改变 TQNet forward、QDF loss
 或 optimizer，只解除 optional seed dependency 对 reproduction gate 的阻塞。
 
+QDF upstream 在 `exp_long_term_forecasting_meta_ml3.py` 中用 `torch.save(self.A, ...)`
+保存完整 `CovarianceMatrix` 对象。PyTorch 2.6+ 将 `torch.load` 的默认值改为
+`weights_only=True`，会拒绝加载该对象。runner 会在启动前把两个 `A.pth` load 点 patch 为
+`weights_only=False`。这是 trusted local upstream source 的版本兼容修复，不改变训练目标、
+matrix 参数化或 forecast path。
+
 每个 run 的输出结构：
 
 ```text
