@@ -426,26 +426,46 @@ If Phase2-B fails:
 
 ## Current Decision
 
-[Decision Update: 2026-06-23] Phase2-R.1 remote results are now synced and the
-repair gate failed. The failure is performance-side, not safety-side:
+[Decision Update: 2026-06-23] The full `ETTh2/ETTm1/Weather` remote gate for
+`PatchEncoderErrorProcessDecoder` is complete. Phase2-B fails the error-process
+gate.
 
-- leakage is `0`;
-- max prefix mismatch MSE is `4.7318994e-14`;
-- mean relative MSE vs R.3 is `+1.28%`;
-- `ETTh2` remains strongly degraded at `+5.08%`.
+Main evidence vs R.3 `PatchEncoderPrefixRiskWeighted`:
 
-Therefore Phase2-B is no longer only a fallback design. It is the active step 8
-remote-gate candidate after rolling back the problem definition from latent
-future-state alignment to output/error-process modeling.
+- MSE wins: `4/12`;
+- MAE wins: `4/12`;
+- mean relative MSE: `+1.12%`;
+- dataset mean relative MSE:
+  `ETTh2 +4.15%`, `ETTm1 -1.24%`, `Weather +0.44%`;
+- H720 focus region wins: `1/4`.
 
-Implementation artifacts:
+Safety and contract checks passed:
 
-- model class: `PatchEncoderErrorProcessDecoder`;
-- trainer switch: `--model-variant error_process`;
-- code explanation:
-  `docs/code-explanation/phase2-error-process-decoder.md`;
-- remote wrapper:
-  `scripts/remote/run_phase2_error_process_decoder_gate.sh`.
+- prefix mismatch remains numerical-zero level;
+- base + residual decomposition passed with max absolute error
+  `9.53674e-07`;
+- mean residual/base MAE ratio is `0.00305975`, so the residual path is
+  controlled rather than an uncontrolled correction.
 
-The next evidence needed is the full `ETTh2/ETTm1/Weather` remote gate for
-`PatchEncoderErrorProcessDecoder`.
+[Inference] The failure is not an implementation-contract failure. It is a
+forecast-relevance failure: a small recurrent residual state can be inserted
+safely, but this residual does not consistently correct the regions where R.3
+is weak, and it hurts `ETTh2` and `Weather`.
+
+[Decision] `PatchEncoderErrorProcessDecoder` should not be treated as a
+paper-core mechanism, and MoE should not be added on top of its residual state.
+The rollback point is loop step 2-3: re-evaluate whether the decoder problem is
+really residual-process modeling, or whether the stronger problem is the
+mixed-horizon objective / step-region covariance induced by training one model
+across all target lengths.
+
+Recorded artifacts:
+
+- report:
+  `analysis/phase2_error_process_decoder_gate_20260623/phase2_error_process_decoder_decision_report.md`;
+- metrics:
+  `analysis/phase2_error_process_decoder_gate_20260623/phase2_error_process_decoder_vs_r3.csv`;
+- diagnostics:
+  `analysis/phase2_error_process_decoder_gate_20260623/phase2_error_process_decoder_error_process_stats.csv`;
+- H720 regions:
+  `analysis/phase2_error_process_decoder_gate_20260623/phase2_error_process_decoder_h720_regions_vs_r3.csv`.

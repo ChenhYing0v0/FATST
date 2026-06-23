@@ -1,0 +1,4 @@
+dataset,model_variant,error_process_dim,error_process_layers,error_residual_gate_init,error_energy_weight,error_smoothness_weight,step_loss_weighting,step_loss_alpha,epochs,steps_per_epoch_effective
+ETTh2,error_process,64,1,-4.0,0.0001,0.0001,prefix_risk,0.5,100,248
+ETTm1,error_process,64,1,-4.0,0.0001,0.0001,prefix_risk,0.5,100,1056
+Weather,error_process,64,1,-4.0,0.0001,0.0001,prefix_risk,0.5,100,1129

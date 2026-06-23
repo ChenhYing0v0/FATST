@@ -967,8 +967,8 @@ trajectory 作为被解码对象，而不是只独立输出每个 segment 的 po
 [Decision] future-state alignment 当前只能作为 auxiliary proxy 证据，不能作为 paper-core
 decoder 创新，也不能在其上继续叠 MoE。按照 step 11 rollback rule，当前回退到 step 2-3：
 将 decoder 问题从“对齐 latent future state”改为“建模 forecast output/error process”。
-Phase2-B `PatchEncoderErrorProcessDecoder` 已完成本地 smoke 和 artifact validator，进入
-下一轮 step 8 remote gate。
+Phase2-B `PatchEncoderErrorProcessDecoder` 已完成本地 smoke、artifact validator 和
+`ETTh2/ETTm1/Weather` remote gate。
 
 当前 Phase2-B artifacts：
 
@@ -977,12 +977,25 @@ Phase2-B `PatchEncoderErrorProcessDecoder` 已完成本地 smoke 和 artifact va
 - code explanation: `docs/code-explanation/phase2-error-process-decoder.md`
 - remote wrapper: `scripts/remote/run_phase2_error_process_decoder_gate.sh`
 
-Phase2 pass 条件：
+Phase2-B remote gate 结果：
 
-- prediction path leakage audit 通过；
-- alignment distance 下降并转化为 forecast-relevant improvement；
-- 改善能定位到 horizon、segment、turning point、high-frequency component 或 long-horizon error；
-- 若 latent metric 改善但 MSE/MAE 不变，则该 future-aware state 只能视为无效 proxy。
+- vs R.3 MSE wins: `4/12`，MAE wins: `4/12`；
+- mean relative MSE vs R.3: `+1.12%`；
+- `ETTh2`: `+4.15%`，`ETTm1`: `-1.24%`，`Weather`: `+0.44%`；
+- focus H720 regions wins: `1/4`；
+- prefix mismatch 通过，base + residual decomposition 通过；
+- mean residual/base MAE ratio 为 `0.00305975`，说明 residual 受控但贡献很弱。
+
+[Decision Update: 2026-06-23] `PatchEncoderErrorProcessDecoder` 未通过 Phase2-B gate。
+该失败不是实现安全性问题：prefix consistency、decomposition 和 residual magnitude 均受控；
+失败来自 forecast improvement 没有转化，且 ETTh2/Weather 仍退化。当前不能把
+error-process state 作为 paper-core，也不能在该 residual state 上叠加 MoE。
+
+[Rollback] 当前回到 11-step loop 的 step 2-3：重新评估 decoder 问题是否主要来自
+mixed-horizon objective / step-region covariance，而不是继续强化 target interaction、
+future-state alignment 或 residual capacity。下一步候选应优先验证 objective-level 机制
+是否真实存在，例如 step covariance weighting 或 horizon-region loss shaping；若该问题也
+不存在，应停止 decoder 主线并回到 base architecture / paper contribution 重新选择。
 
 ## Phase3: Future-Side MoE
 
