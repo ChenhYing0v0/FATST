@@ -109,13 +109,16 @@ run_one() {
 
 job_index=0
 max_jobs="${#gpu_ids[@]}"
+active_jobs=0
 
 for dataset in "${datasets[@]}"; do
   gpu_id="${gpu_ids[$((job_index % max_jobs))]}"
   run_one "${dataset}" "${gpu_id}" &
   job_index=$((job_index + 1))
-  if (( job_index % max_jobs == 0 )); then
-    wait
+  active_jobs=$((active_jobs + 1))
+  if (( active_jobs >= max_jobs )); then
+    wait -n
+    active_jobs=$((active_jobs - 1))
   fi
 done
 
