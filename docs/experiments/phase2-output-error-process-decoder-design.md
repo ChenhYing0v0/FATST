@@ -426,10 +426,17 @@ If Phase2-B fails:
 
 ## Current Decision
 
-[Decision Update: 2026-06-23] Phase2-B is implemented as a runnable fallback
-candidate while Phase2-R.1 remote results are not yet synced locally. This does
-not mean R.1 is judged failed. It means the next rollback path has been made
-auditable and ready for smoke / remote gate once the R.1 decision is available.
+[Decision Update: 2026-06-23] Phase2-R.1 remote results are now synced and the
+repair gate failed. The failure is performance-side, not safety-side:
+
+- leakage is `0`;
+- max prefix mismatch MSE is `4.7318994e-14`;
+- mean relative MSE vs R.3 is `+1.28%`;
+- `ETTh2` remains strongly degraded at `+5.08%`.
+
+Therefore Phase2-B is no longer only a fallback design. It is the active step 8
+remote-gate candidate after rolling back the problem definition from latent
+future-state alignment to output/error-process modeling.
 
 Implementation artifacts:
 
@@ -440,5 +447,5 @@ Implementation artifacts:
 - remote wrapper:
   `scripts/remote/run_phase2_error_process_decoder_gate.sh`.
 
-If R.1 passes, Phase2-B remains a diagnostic appendix candidate. If R.1 fails
-or only partially passes, Phase2-B becomes the next step 8 remote gate.
+The next evidence needed is the full `ETTh2/ETTm1/Weather` remote gate for
+`PatchEncoderErrorProcessDecoder`.

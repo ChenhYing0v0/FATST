@@ -957,11 +957,18 @@ trajectory 作为被解码对象，而不是只独立输出每个 segment 的 po
   error-process state $c_{j-1}$ 共同生成；
 - 目标是建模 forecast output/error process，而不是继续对齐 latent future teacher。
 
-[Decision Update: 2026-06-23] Phase2-B 已作为 runnable fallback 实现，但这不是对
-Phase2-R.1 的失败判定。原因是 R.1 远程结果尚未同步到本地，而 output/error-process 诊断已经
-给出独立问题证据；因此先完成 step 7 的可运行实现，避免在 SSH 不稳定期间停滞。若 R.1 通过，
-Phase2-B 只作为 diagnostic appendix candidate；若 R.1 fail 或 partial pass，则 Phase2-B
-进入下一轮 step 8 remote gate。
+[Decision Update: 2026-06-23] Phase2-R.1 remote gate 已同步并分析，结论为 fail：
+
+- vs R.3 MSE wins: `7/12`，但 mean relative MSE 为 `+1.28%`；
+- `ETTh2` mean relative MSE 为 `+5.08%`，未修复核心冲突；
+- `ETTm1` 保持正信号 `-1.28%`，但 `Weather` 变为 `+0.04%`；
+- leakage 为 `0`，prefix mismatch 为 `4.7318994e-14`。
+
+[Decision] future-state alignment 当前只能作为 auxiliary proxy 证据，不能作为 paper-core
+decoder 创新，也不能在其上继续叠 MoE。按照 step 11 rollback rule，当前回退到 step 2-3：
+将 decoder 问题从“对齐 latent future state”改为“建模 forecast output/error process”。
+Phase2-B `PatchEncoderErrorProcessDecoder` 已完成本地 smoke 和 artifact validator，进入
+下一轮 step 8 remote gate。
 
 当前 Phase2-B artifacts：
 

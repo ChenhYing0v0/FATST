@@ -325,3 +325,17 @@ prediction path unchanged, but adds:
 regression without losing the useful `ETTm1/Weather` signal. If it only improves
 alignment metrics but not MSE/MAE, the correct rollback is step 2-3: redefine the
 decoder problem instead of stacking MoE on the same future teacher state.
+
+[Decision Update: 2026-06-23] The Phase2-R.1 remote gate failed:
+
+- mean relative MSE vs R.3: `+1.28%`;
+- `ETTh2` mean relative MSE vs R.3: `+5.08%`;
+- `ETTm1` mean relative MSE vs R.3: `-1.28%`;
+- `Weather` mean relative MSE vs R.3: `+0.04%`;
+- leakage: `0`;
+- max prefix mismatch MSE: `4.7318994e-14`.
+
+This confirms that the issue is not prediction leakage or prefix inconsistency.
+The current future-teacher alignment is a dataset-dependent auxiliary proxy and
+should not be used as the carrier for MoE. The rollback point is step 2-3:
+redefine the decoder problem around output/error-process modeling.

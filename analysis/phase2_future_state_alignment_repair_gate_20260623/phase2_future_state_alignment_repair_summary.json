@@ -1,0 +1,38 @@
+{
+  "mse_wins_vs_fixed": 6,
+  "mae_wins_vs_fixed": 6,
+  "mean_relative_mse_vs_fixed_pct": 0.8310817350110503,
+  "dataset_mean_relative_mse_vs_fixed_pct": {
+    "ETTh2": 4.381338665736223,
+    "ETTm1": -0.9574125766575792,
+    "Weather": -0.9306808840454928
+  },
+  "mse_wins_vs_r3": 7,
+  "mae_wins_vs_r3": 7,
+  "mean_relative_mse_vs_r3_pct": 1.2812330090573365,
+  "dataset_mean_relative_mse_vs_r3_pct": {
+    "ETTh2": 5.084345988308526,
+    "ETTm1": -1.2803839488492008,
+    "Weather": 0.03973698771268519
+  },
+  "horizon_mean_relative_mse_vs_r3_pct": {
+    "96": 2.1959879838743444,
+    "192": 1.853481105783339,
+    "336": 0.3831092063816525,
+    "720": 0.6923537401900104
+  },
+  "max_prefix_mismatch_mse": 4.7318994154856714e-14,
+  "max_prediction_leakage_abs": 0.0,
+  "mean_teacher_student_cosine": 0.47106744915951493,
+  "mean_future_alignment_confidence": 0.7100823782633892,
+  "mean_future_normalized_reconstruction_loss": 0.3967360396005842,
+  "mean_future_raw_reconstruction_loss": 215.80166295602848,
+  "gate": {
+    "prediction_leakage_pass": true,
+    "prefix_consistency_pass": true,
+    "etth2_conflict_repaired": false,
+    "ettm1_signal_preserved": true,
+    "weather_signal_preserved": false,
+    "pass": false
+  }
+}

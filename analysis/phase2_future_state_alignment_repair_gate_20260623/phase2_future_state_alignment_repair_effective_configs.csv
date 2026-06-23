@@ -1,0 +1,4 @@
+dataset,future_recon_normalization,future_align_weighting,future_confidence_temperature,future_confidence_floor,future_align_weight,future_relation_weight,future_recon_weight,epochs,steps_per_epoch_effective
+ETTh2,target_energy,reconstruction_confidence,1.0,0.05,0.02,0.01,0.001,100,248
+ETTm1,target_energy,reconstruction_confidence,1.0,0.05,0.02,0.01,0.001,100,1056
+Weather,target_energy,reconstruction_confidence,1.0,0.05,0.02,0.01,0.001,100,1129
