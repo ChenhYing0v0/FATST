@@ -957,9 +957,18 @@ trajectory 作为被解码对象，而不是只独立输出每个 segment 的 po
   error-process state $c_{j-1}$ 共同生成；
 - 目标是建模 forecast output/error process，而不是继续对齐 latent future teacher。
 
-[Decision] 在 Phase2-R.1 结果回来前不实现 Phase2-B。若 R.1 通过，Phase2-B 只作为
-diagnostic appendix candidate；若 R.1 fail 或 partial pass，则 Phase2-B 成为下一轮 step 6-8
-实现候选。
+[Decision Update: 2026-06-23] Phase2-B 已作为 runnable fallback 实现，但这不是对
+Phase2-R.1 的失败判定。原因是 R.1 远程结果尚未同步到本地，而 output/error-process 诊断已经
+给出独立问题证据；因此先完成 step 7 的可运行实现，避免在 SSH 不稳定期间停滞。若 R.1 通过，
+Phase2-B 只作为 diagnostic appendix candidate；若 R.1 fail 或 partial pass，则 Phase2-B
+进入下一轮 step 8 remote gate。
+
+当前 Phase2-B artifacts：
+
+- model class: `PatchEncoderErrorProcessDecoder`
+- trainer switch: `--model-variant error_process`
+- code explanation: `docs/code-explanation/phase2-error-process-decoder.md`
+- remote wrapper: `scripts/remote/run_phase2_error_process_decoder_gate.sh`
 
 Phase2 pass 条件：
 

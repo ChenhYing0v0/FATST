@@ -562,3 +562,181 @@ class PatchEncoderTargetSetDecoder(nn.Module):
                 )
             return output
         return y
+
+
+class PatchEncoderErrorProcessDecoder(PatchEncoderTargetSetDecoder):
+    def __init__(
+        self,
+        *args,
+        error_process_dim: int = 64,
+        error_process_layers: int = 1,
+        error_residual_gate_init: float = -4.0,
+        **kwargs,
+    ) -> None:
+        super().__init__(*args, **kwargs)
+        if error_process_dim <= 0:
+            raise ValueError("error_process_dim must be positive.")
+        if error_process_layers != 1:
+            raise ValueError("Only error_process_layers=1 is currently supported.")
+        self.error_process_dim = error_process_dim
+        self.error_process_layers = error_process_layers
+        self.error_state_cell = nn.GRUCell(2 * self.patch_embedding.out_features, error_process_dim)
+        self.error_residual_head = nn.Sequential(
+            nn.LayerNorm(2 * self.patch_embedding.out_features + error_process_dim),
+            nn.Linear(2 * self.patch_embedding.out_features + error_process_dim, self.patch_embedding.out_features),
+            nn.GELU(),
+            nn.Linear(self.patch_embedding.out_features, self.segment_len),
+        )
+        self.error_residual_gate_logit = nn.Parameter(torch.tensor(float(error_residual_gate_init)))
+        final = self.error_residual_head[-1]
+        if isinstance(final, nn.Linear):
+            nn.init.zeros_(final.weight)
+            nn.init.zeros_(final.bias)
+
+    def _error_process_residual(
+        self,
+        target_states: torch.Tensor,
+        pred_len: int,
+        segment_count: int,
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        features = self._target_features(pred_len, segment_count, target_states.device, target_states.dtype)
+        target_query = self.target_feature_embedding(features).unsqueeze(0)
+        target_query = target_query + self.target_pos_embedding[:, :segment_count, :]
+        target_query = target_query.expand(target_states.shape[0], -1, -1)
+        state = target_states.new_zeros(target_states.shape[0], self.error_process_dim)
+        residual_segments = []
+        process_states = []
+        gate = torch.sigmoid(self.error_residual_gate_logit).to(
+            device=target_states.device,
+            dtype=target_states.dtype,
+        )
+        for segment_index in range(segment_count):
+            cell_input = torch.cat(
+                [target_states[:, segment_index, :], target_query[:, segment_index, :]],
+                dim=-1,
+            )
+            state = self.error_state_cell(cell_input, state)
+            head_input = torch.cat([cell_input, state], dim=-1)
+            residual_segments.append(self.error_residual_head(head_input) * gate)
+            process_states.append(state)
+        residual = torch.stack(residual_segments, dim=1).reshape(
+            target_states.shape[0],
+            segment_count * self.segment_len,
+        )
+        states = torch.stack(process_states, dim=1)
+        return residual[:, :pred_len], states, gate
+
+    def forward(
+        self,
+        x: torch.Tensor,
+        pred_len: int,
+        future_y: torch.Tensor | None = None,
+        return_components: bool = False,
+    ) -> torch.Tensor | dict[str, torch.Tensor]:
+        segment_count = self._validate_pred_len(pred_len)
+        if self.revin is not None:
+            x = self.revin(x, "norm")
+
+        z, batch, channels = self._encode(x)
+        target_states = self._target_states(z, pred_len, segment_count)
+        future_components = None
+        if future_y is not None:
+            y_norm_target = self._normalize_future(future_y)
+            future_components = self._future_alignment_components(
+                target_states,
+                y_norm_target,
+                pred_len,
+                segment_count,
+            )
+        history_readout = self.history_projector(z)
+        affine = self.condition_head(target_states).reshape(z.shape[0], segment_count, 2, self.readout_dim)
+        gamma = affine[:, :, 0, :]
+        beta = affine[:, :, 1, :]
+
+        conditioned = history_readout[:, None, :] * (1.0 + gamma) + beta
+        segment_values = self.segment_output(conditioned).reshape(z.shape[0], segment_count * self.segment_len)
+        prefix_residual = segment_values.new_zeros(z.shape[0], segment_count * self.segment_len)
+        if self.prefix_residual_head is not None:
+            active_prefix_segments = min(segment_count, self.prefix_residual_segments)
+            active_width = active_prefix_segments * self.segment_len
+            residual_values = self.prefix_residual_head(z)[:, :active_width]
+            prefix_residual[:, :active_width] = residual_values
+            segment_values = segment_values + prefix_residual
+
+        base_norm_flat = segment_values[:, :pred_len]
+        error_residual_norm_flat, error_process_states, error_gate = self._error_process_residual(
+            target_states,
+            pred_len,
+            segment_count,
+        )
+        y_norm_flat = base_norm_flat + error_residual_norm_flat
+
+        base_y = base_norm_flat.reshape(batch, channels, pred_len).permute(0, 2, 1)
+        error_residual_norm = error_residual_norm_flat.reshape(batch, channels, pred_len).permute(0, 2, 1)
+        y = y_norm_flat.reshape(batch, channels, pred_len).permute(0, 2, 1)
+        prefix_residual_y = prefix_residual[:, :pred_len].reshape(batch, channels, pred_len).permute(0, 2, 1)
+
+        target_states_view = target_states.reshape(batch, channels, segment_count, -1)
+        gamma_view = gamma.reshape(batch, channels, segment_count, -1)
+        beta_view = beta.reshape(batch, channels, segment_count, -1)
+        history_readout_view = history_readout.reshape(batch, channels, -1)
+        error_process_states_view = error_process_states.reshape(batch, channels, segment_count, -1)
+
+        error_residual = error_residual_norm
+        if self.revin is not None:
+            y = self.revin(y, "denorm")
+            base_y = self.revin(base_y, "denorm")
+            error_residual = error_residual_norm * self.revin.std
+
+        if return_components:
+            output = {
+                "prediction": y,
+                "base_prediction": base_y,
+                "error_residual": error_residual,
+                "error_residual_norm": error_residual_norm,
+                "error_process_states": error_process_states_view,
+                "error_residual_gate": error_gate.reshape(1),
+                "target_states": target_states_view,
+                "gamma": gamma_view,
+                "beta": beta_view,
+                "history_readout": history_readout_view,
+                "prefix_residual_norm": prefix_residual_y,
+            }
+            if future_components is not None:
+                output.update(
+                    {
+                        "future_student_state": future_components["future_student_state"].reshape(
+                            batch,
+                            channels,
+                            segment_count,
+                            -1,
+                        ),
+                        "future_teacher_state": future_components["future_teacher_state"].reshape(
+                            batch,
+                            channels,
+                            segment_count,
+                            -1,
+                        ),
+                        "future_reconstruction_norm": future_components["future_reconstruction_norm"]
+                        .reshape(batch, channels, pred_len)
+                        .permute(0, 2, 1),
+                        "future_local_alignment_loss": future_components["future_local_alignment_loss"],
+                        "future_relation_alignment_loss": future_components["future_relation_alignment_loss"],
+                        "future_reconstruction_loss": future_components["future_reconstruction_loss"],
+                        "future_raw_reconstruction_loss": future_components["future_raw_reconstruction_loss"],
+                        "future_normalized_reconstruction_loss": future_components[
+                            "future_normalized_reconstruction_loss"
+                        ],
+                        "future_alignment_confidence_mean": future_components[
+                            "future_alignment_confidence_mean"
+                        ],
+                        "future_alignment_confidence_min": future_components[
+                            "future_alignment_confidence_min"
+                        ],
+                        "future_alignment_confidence_max": future_components[
+                            "future_alignment_confidence_max"
+                        ],
+                    }
+                )
+            return output
+        return y

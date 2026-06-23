@@ -16,7 +16,7 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
 from dataset import DATASETS, ForecastDataset
-from model import PatchEncoderTargetSetDecoder
+from model import PatchEncoderErrorProcessDecoder, PatchEncoderTargetSetDecoder
 
 
 def set_seed(seed: int) -> None:
@@ -131,6 +131,87 @@ def prefix_residual_stats(components: dict[str, np.ndarray]) -> list[dict[str, f
                 "residual_mse_norm": float(np.mean(segment * segment)),
                 "residual_mae_norm": float(np.mean(np.abs(segment))),
                 "max_abs_residual_norm": float(np.max(np.abs(segment))),
+            }
+        )
+    return rows
+
+
+def residual_smoothness_torch(residual: torch.Tensor) -> torch.Tensor:
+    if residual.shape[1] < 3:
+        return residual.new_tensor(0.0)
+    second_diff = residual[:, 2:, :] - 2.0 * residual[:, 1:-1, :] + residual[:, :-2, :]
+    return torch.mean(second_diff * second_diff)
+
+
+def residual_smoothness_np(residual: np.ndarray) -> float:
+    if residual.shape[1] < 3:
+        return 0.0
+    second_diff = residual[:, 2:, :] - 2.0 * residual[:, 1:-1, :] + residual[:, :-2, :]
+    return float(np.mean(second_diff * second_diff))
+
+
+def mean_adjacent_state_cosine(states: np.ndarray, start_segment: int, end_segment: int) -> float:
+    selected = states[:, :, start_segment:end_segment, :]
+    if selected.shape[2] < 2:
+        return 1.0
+    left = selected[:, :, :-1, :].reshape(-1, selected.shape[-1])
+    right = selected[:, :, 1:, :].reshape(-1, selected.shape[-1])
+    left = left / (np.linalg.norm(left, axis=-1, keepdims=True) + 1e-12)
+    right = right / (np.linalg.norm(right, axis=-1, keepdims=True) + 1e-12)
+    return float(np.mean(np.sum(left * right, axis=-1)))
+
+
+def error_process_stats(
+    pred: np.ndarray,
+    true: np.ndarray,
+    components: dict[str, np.ndarray],
+    segment_len: int,
+) -> list[dict[str, float]]:
+    base = components["base_prediction"]
+    residual = components["error_residual"]
+    residual_norm = components["error_residual_norm"]
+    states = components["error_process_states"]
+    scopes = [
+        ("all", 1, pred.shape[1]),
+        ("1-96", 1, 96),
+        ("97-192", 97, 192),
+        ("193-336", 193, 336),
+        ("337-720", 337, 720),
+    ]
+    rows = []
+    for scope, start, end in scopes:
+        if pred.shape[1] < start:
+            continue
+        active_end = min(end, pred.shape[1])
+        slc = slice(start - 1, active_end)
+        base_scope = base[:, slc, :]
+        pred_scope = pred[:, slc, :]
+        true_scope = true[:, slc, :]
+        residual_scope = residual[:, slc, :]
+        residual_norm_scope = residual_norm[:, slc, :]
+        base_diff = base_scope - true_scope
+        final_diff = pred_scope - true_scope
+        base_mse = float(np.mean(base_diff * base_diff))
+        final_mse = float(np.mean(final_diff * final_diff))
+        start_segment = (start - 1) // segment_len
+        end_segment = (active_end + segment_len - 1) // segment_len
+        state_scope = states[:, :, start_segment:end_segment, :]
+        rows.append(
+            {
+                "scope": scope,
+                "residual_base_mae_ratio": float(
+                    np.mean(np.abs(residual_scope)) / (np.mean(np.abs(base_scope)) + 1e-12)
+                ),
+                "residual_energy": float(np.mean(residual_norm_scope * residual_norm_scope)),
+                "residual_second_diff_smoothness": residual_smoothness_np(residual_norm_scope),
+                "error_process_state_norm": float(np.mean(np.linalg.norm(state_scope, axis=-1))),
+                "segment_state_cosine": mean_adjacent_state_cosine(states, start_segment, end_segment),
+                "base_prediction_mse": base_mse,
+                "final_prediction_mse": final_mse,
+                "residual_gain_mse_pct": float((final_mse / (base_mse + 1e-12) - 1.0) * 100.0),
+                "prediction_decomposition_max_abs": float(
+                    np.max(np.abs(base_scope + residual_scope - pred_scope))
+                ),
             }
         )
     return rows
@@ -283,13 +364,15 @@ def evaluate(
             pred = output["prediction"]
             preds.append(pred.cpu().numpy())
             trues.append(y.cpu().numpy())
-            for name in component_rows:
-                component_rows[name].append(output[name].cpu().numpy())
+            for name, value in output.items():
+                if not isinstance(value, torch.Tensor) or value.ndim == 0:
+                    continue
+                component_rows.setdefault(name, []).append(value.cpu().numpy())
             if max_batches is not None and batch_index >= max_batches:
                 break
     pred_np = np.concatenate(preds, axis=0)
     true_np = np.concatenate(trues, axis=0)
-    components = {name: np.concatenate(values, axis=0) for name, values in component_rows.items()}
+    components = {name: np.concatenate(values, axis=0) for name, values in component_rows.items() if values}
     diff = pred_np - true_np
     return {"mse": float(np.mean(diff * diff)), "mae": float(np.mean(np.abs(diff)))}, pred_np, true_np, components
 
@@ -415,6 +498,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--future-confidence-temperature", type=float, default=1.0)
     parser.add_argument("--future-confidence-floor", type=float, default=0.0)
     parser.add_argument("--future-recon-eps", type=float, default=1e-6)
+    parser.add_argument(
+        "--model-variant",
+        choices=["target_set", "error_process"],
+        default="target_set",
+    )
+    parser.add_argument("--error-process-dim", type=int, default=64)
+    parser.add_argument("--error-process-layers", type=int, default=1)
+    parser.add_argument("--error-residual-gate-init", type=float, default=-4.0)
+    parser.add_argument("--error-energy-weight", type=float, default=0.0)
+    parser.add_argument("--error-smoothness-weight", type=float, default=0.0)
     parser.add_argument("--batch-size", type=int, default=128)
     parser.add_argument("--epochs", type=int, default=1)
     parser.add_argument("--learning-rate", type=float, default=1e-4)
@@ -448,6 +541,10 @@ def main() -> None:
         raise ValueError("future confidence floor must be in [0, 1).")
     if args.future_recon_eps <= 0:
         raise ValueError("future reconstruction eps must be positive.")
+    if args.error_energy_weight < 0:
+        raise ValueError("error energy weight must be non-negative.")
+    if args.error_smoothness_weight < 0:
+        raise ValueError("error smoothness weight must be non-negative.")
     set_seed(args.seed)
     device = torch.device("cuda" if args.device == "auto" and torch.cuda.is_available() else "cpu")
     if args.device != "auto":
@@ -481,7 +578,15 @@ def main() -> None:
         drop_last=False,
     )
 
-    model = PatchEncoderTargetSetDecoder(
+    model_cls = PatchEncoderErrorProcessDecoder if args.model_variant == "error_process" else PatchEncoderTargetSetDecoder
+    model_kwargs = {}
+    if args.model_variant == "error_process":
+        model_kwargs = {
+            "error_process_dim": args.error_process_dim,
+            "error_process_layers": args.error_process_layers,
+            "error_residual_gate_init": args.error_residual_gate_init,
+        }
+    model = model_cls(
         args.seq_len,
         DATASETS[args.dataset].channels,
         patch_len=args.patch_len,
@@ -512,6 +617,7 @@ def main() -> None:
         future_confidence_temperature=args.future_confidence_temperature,
         future_confidence_floor=args.future_confidence_floor,
         future_recon_eps=args.future_recon_eps,
+        **model_kwargs,
     ).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
     horizon_label = "mixed_" + "_".join(f"h{horizon}" for horizon in target_horizons)
@@ -543,6 +649,8 @@ def main() -> None:
         future_raw_reconstruction_losses = []
         future_normalized_reconstruction_losses = []
         future_confidence_means = []
+        error_energy_losses = []
+        error_smoothness_losses = []
         horizon_counts = {horizon: 0 for horizon in target_horizons}
         for _ in range(steps_per_epoch):
             horizon = rng.choice(target_horizons)
@@ -554,9 +662,9 @@ def main() -> None:
                 x,
                 pred_len=horizon,
                 future_y=y if future_loss_enabled else None,
-                return_components=future_loss_enabled,
+                return_components=future_loss_enabled or args.model_variant == "error_process",
             )
-            if future_loss_enabled:
+            if future_loss_enabled or args.model_variant == "error_process":
                 if not isinstance(output, dict):
                     raise TypeError("Expected component dict from model.")
                 pred = output["prediction"]
@@ -586,6 +694,13 @@ def main() -> None:
                     float(output["future_normalized_reconstruction_loss"].detach().cpu())
                 )
                 future_confidence_means.append(float(output["future_alignment_confidence_mean"].detach().cpu()))
+            if args.model_variant == "error_process":
+                error_energy_loss = torch.mean(output["error_residual_norm"] * output["error_residual_norm"])
+                error_smoothness_loss = residual_smoothness_torch(output["error_residual_norm"])
+                loss = loss + args.error_energy_weight * error_energy_loss
+                loss = loss + args.error_smoothness_weight * error_smoothness_loss
+                error_energy_losses.append(float(error_energy_loss.detach().cpu()))
+                error_smoothness_losses.append(float(error_smoothness_loss.detach().cpu()))
             loss.backward()
             optimizer.step()
             losses.append(float(loss.detach().cpu()))
@@ -620,6 +735,10 @@ def main() -> None:
             else 0.0,
             "train_future_alignment_confidence_mean": float(np.mean(future_confidence_means))
             if future_confidence_means
+            else 0.0,
+            "train_error_energy_loss": float(np.mean(error_energy_losses)) if error_energy_losses else 0.0,
+            "train_error_smoothness_loss": float(np.mean(error_smoothness_losses))
+            if error_smoothness_losses
             else 0.0,
             "val_mean_mse": mean_val_mse,
             "epoch_elapsed_sec": time.perf_counter() - epoch_start,
@@ -676,6 +795,11 @@ def main() -> None:
         write_csv(eval_dir / "target_conditioning_stats.csv", target_conditioning_stats(components))
         if args.prefix_residual_segments > 0:
             write_csv(eval_dir / "prefix_residual_stats.csv", prefix_residual_stats(components))
+        if args.model_variant == "error_process":
+            write_csv(
+                eval_dir / "error_process_stats.csv",
+                error_process_stats(pred_np, true_np, components, args.segment_len),
+            )
         if args.future_teacher_layers > 0:
             alignment_rows, leakage_audit = future_alignment_stats(
                 model,

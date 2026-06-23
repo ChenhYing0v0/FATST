@@ -32,6 +32,9 @@
   Phase2-R.1 repair gate artifacts 到
   `analysis/phase2_future_state_alignment_repair_gate_20260623/raw/`，排除
   `checkpoint.pt` / `predictions_test.npz`，随后运行 repair gate analyzer。
+- `remote/run_phase2_error_process_decoder_gate.sh`: Phase2-B
+  `PatchEncoderErrorProcessDecoder` gate。默认数据集顺序为 `ETTm1 Weather ETTh2`，
+  以便两卡可用时优先并行较慢数据集。
 
 ## Analysis
 

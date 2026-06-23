@@ -69,6 +69,7 @@ def validate_error_process_stats(path: Path, errors: list[str]) -> dict[str, flo
     energies = []
     smoothness = []
     gains = []
+    decompositions = []
     for row in rows:
         ratios.append(numeric(row["residual_base_mae_ratio"], path, "residual_base_mae_ratio"))
         energies.append(numeric(row["residual_energy"], path, "residual_energy"))
@@ -80,12 +81,26 @@ def validate_error_process_stats(path: Path, errors: list[str]) -> dict[str, flo
         numeric(row["base_prediction_mse"], path, "base_prediction_mse")
         numeric(row["final_prediction_mse"], path, "final_prediction_mse")
         gains.append(numeric(row["residual_gain_mse_pct"], path, "residual_gain_mse_pct"))
-    return {
+        if "prediction_decomposition_max_abs" in row:
+            decomposition = numeric(
+                row["prediction_decomposition_max_abs"],
+                path,
+                "prediction_decomposition_max_abs",
+            )
+            decompositions.append(decomposition)
+            if decomposition > 1e-5:
+                errors.append(
+                    f"{path}: prediction decomposition max abs {decomposition:.6g} > 1e-5"
+                )
+    stats = {
         "mean_residual_base_mae_ratio": sum(ratios) / len(ratios),
         "mean_residual_energy": sum(energies) / len(energies),
         "mean_residual_second_diff_smoothness": sum(smoothness) / len(smoothness),
         "mean_residual_gain_mse_pct": sum(gains) / len(gains),
     }
+    if decompositions:
+        stats["max_prediction_decomposition_abs"] = max(decompositions)
+    return stats
 
 
 def validate_prefix(path: Path, threshold: float, errors: list[str]) -> float:
@@ -161,7 +176,9 @@ def main() -> None:
     )
     text = json.dumps(summary, indent=2)
     if args.summary_json:
-        Path(args.summary_json).write_text(text + "\n")
+        summary_path = Path(args.summary_json)
+        summary_path.parent.mkdir(parents=True, exist_ok=True)
+        summary_path.write_text(text + "\n")
     print(text)
     if not summary["pass"]:
         raise SystemExit(1)

@@ -1,0 +1,38 @@
+{
+  "run_dir": "artifacts/runs/smoke_phase2_error_process_decoder/PatchEncoderErrorProcessDecoder/ETTh2/mixed_h96_h192_h336_h720/seed2021",
+  "pass": true,
+  "errors": [],
+  "stats": {
+    "max_prefix_mismatch_mse": 8.427580566728026e-15,
+    "horizon_error_process_stats": {
+      "96": {
+        "mean_residual_base_mae_ratio": 1.5602628991473466e-05,
+        "mean_residual_energy": 3.9892502634586435e-09,
+        "mean_residual_second_diff_smoothness": 2.2852830738884222e-08,
+        "mean_residual_gain_mse_pct": 0.0003080226757212756,
+        "max_prediction_decomposition_abs": 2.384185791015625e-07
+      },
+      "192": {
+        "mean_residual_base_mae_ratio": 1.5682249795645475e-05,
+        "mean_residual_energy": 4.034977389248222e-09,
+        "mean_residual_second_diff_smoothness": 2.29998065037762e-08,
+        "mean_residual_gain_mse_pct": -0.0007415330327849764,
+        "max_prediction_decomposition_abs": 2.384185791015625e-07
+      },
+      "336": {
+        "mean_residual_base_mae_ratio": 1.5520478882535826e-05,
+        "mean_residual_energy": 3.942046689076051e-09,
+        "mean_residual_second_diff_smoothness": 2.233914075944199e-08,
+        "mean_residual_gain_mse_pct": -0.0007169743872353918,
+        "max_prediction_decomposition_abs": 2.384185791015625e-07
+      },
+      "720": {
+        "mean_residual_base_mae_ratio": 1.5358250129793306e-05,
+        "mean_residual_energy": 3.8246990907708774e-09,
+        "mean_residual_second_diff_smoothness": 2.1432922991948544e-08,
+        "mean_residual_gain_mse_pct": -0.0005025344155651368,
+        "max_prediction_decomposition_abs": 2.384185791015625e-07
+      }
+    }
+  }
+}

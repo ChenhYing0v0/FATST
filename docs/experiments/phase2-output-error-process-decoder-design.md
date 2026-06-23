@@ -426,7 +426,19 @@ If Phase2-B fails:
 
 ## Current Decision
 
-[Decision] Do not implement Phase2-B before Phase2-R.1 results are available.
-This design exists to make the fallback precise and auditable. If R.1 passes,
-Phase2-B remains a diagnostic appendix candidate. If R.1 fails or only partially
-passes, Phase2-B becomes the next design to implement.
+[Decision Update: 2026-06-23] Phase2-B is implemented as a runnable fallback
+candidate while Phase2-R.1 remote results are not yet synced locally. This does
+not mean R.1 is judged failed. It means the next rollback path has been made
+auditable and ready for smoke / remote gate once the R.1 decision is available.
+
+Implementation artifacts:
+
+- model class: `PatchEncoderErrorProcessDecoder`;
+- trainer switch: `--model-variant error_process`;
+- code explanation:
+  `docs/code-explanation/phase2-error-process-decoder.md`;
+- remote wrapper:
+  `scripts/remote/run_phase2_error_process_decoder_gate.sh`.
+
+If R.1 passes, Phase2-B remains a diagnostic appendix candidate. If R.1 fails
+or only partially passes, Phase2-B becomes the next step 8 remote gate.
