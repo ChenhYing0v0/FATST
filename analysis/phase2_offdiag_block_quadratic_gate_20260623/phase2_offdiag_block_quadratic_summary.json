@@ -1,0 +1,32 @@
+{
+  "mse_wins_vs_r3": 1,
+  "mae_wins_vs_r3": 0,
+  "mean_relative_mse_vs_r3_pct": 0.046351477374048655,
+  "dataset_mean_relative_mse_vs_r3_pct": {
+    "ETTh2": 0.05666163495394727,
+    "ETTm1": 0.07456131997526927,
+    "Weather": 0.007831477192929426
+  },
+  "horizon_mean_relative_mse_vs_r3_pct": {
+    "96": 0.05051006301070027,
+    "192": 0.04217469921643513,
+    "336": 0.03931610060536143,
+    "720": 0.053405046663697796
+  },
+  "mse_wins_vs_uniform": 10,
+  "mean_relative_mse_vs_uniform_pct": -0.9871218765368441,
+  "mse_wins_vs_fixed": 8,
+  "mean_relative_mse_vs_fixed_pct": -0.3869573300193015,
+  "specialist_gap_wins_vs_r3": 1,
+  "h720_stability_region_wins_vs_r3": 0,
+  "max_prefix_mismatch_mse": 5.4052272504883855e-14,
+  "gate": {
+    "mean_mse_vs_r3_improves": false,
+    "mse_wins_vs_r3_at_least_7": false,
+    "no_dataset_degrades_over_0_3pct": true,
+    "specialist_gap_wins_at_least_2": false,
+    "h720_stability_regions_not_worse": true,
+    "prefix_consistency_pass": true,
+    "pass": false
+  }
+}

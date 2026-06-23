@@ -245,3 +245,74 @@ Result:
 - max prefix mismatch MSE: `8.394639455409306e-15`.
 
 [Next] Run the Phase2-E1 remote gate before making any paper-story claim.
+
+## Phase2-E1 Returned Result
+
+更新时间：2026-06-23
+
+[Fact] Phase2-E1 `PatchEncoderOffdiagBlockQuadratic` remote gate 已完成并同步：
+
+- remote output:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase2_offdiag_block_quadratic_objective`;
+- local artifacts:
+  `analysis/phase2_offdiag_block_quadratic_gate_20260623/`;
+- interpretation:
+  `analysis/phase2_offdiag_block_quadratic_gate_20260623/phase2_offdiag_block_quadratic_interpretation.md`。
+
+[Decision] 本地 static off-diagonal block quadratic objective 不通过 gate：
+
+- MSE wins vs R.3: `1/12`;
+- MAE wins vs R.3: `0/12`;
+- mean relative MSE vs R.3: `+0.0464%`;
+- specialist gap wins vs R.3: `1`;
+- H720 stability region wins vs R.3: `0`;
+- prefix consistency pass:
+  max mismatch MSE `5.4052272504883855e-14`。
+
+[Counter-Evidence] 该结果不等于 QDF 机制无效：
+
+- vs uniform target-set:
+  `10/12` MSE wins，mean relative MSE `-0.9871%`;
+- vs FixedHead:
+  `8/12` MSE wins，mean relative MSE `-0.3870%`;
+- QDF upstream controls 仍显示 `all` vs `diag` 为 `11/12` MSE wins，
+  `off_diag` 是 `10/12` 个 setting 的 best meta type。
+
+[Interpretation] 失败点在 local proxy，而不是问题本身。Phase2-E1 使用 train-split target
+covariance 构造 frozen block precision，并把它作为附加 penalty；QDF 更可能依赖 learned、
+error-aware、随训练动态形成的 objective matrix。因此，下一步不应做 weight/block-size/ridge 的
+宽 sweep。
+
+## Phase2-E2 Direction: Residual/Loss Alignment Diagnostic
+
+[11-Step Loop] 当前回滚到 Step 5-6：重新检查理论可行性与实验设计。
+
+目的：回答 QDF learned matrix 是否真的能解释 FATST R.3 的 residual/error direction。
+
+### Diagnostic Design
+
+比较三类 objective matrix 在同一批 FATST R.3 residual 上的行为：
+
+1. `identity/prefix-risk`: 当前 R.3 的 diagonal objective pressure；
+2. `static train-target offdiag`: Phase2-E1 使用的 target covariance proxy；
+3. `QDF learned off_diag/all`: native QDF 保存的 learned matrix。
+
+观察量：
+
+- per-horizon residual quadratic loss；
+- matrix 对 hard horizons / specialist gaps 的 loss ranking；
+- objective gradient direction 与 actual residual energy 的相关性；
+- learned matrix 是否能区分 R.3 已经失败的 settings。
+
+### Decision Rule
+
+- 若 QDF learned matrix 在 R.3 residual 上显示稳定 alignment，则进入 learnable 或
+  validation-informed local objective，不再使用 frozen target-only proxy。
+- 若 alignment weak，则停止 objective route，回到 base architecture / baseline story；不进入
+  MoE 或更复杂机制堆叠。
+
+### Artifact Gap
+
+[Fact] 当前本地 R.3 gate artifact 只确认存在 `metrics_by_target_horizon.csv`，未发现
+`predictions_test.npz`。Phase2-E2 若要做 residual-level offline diagnostic，需要先补充
+prediction/true artifacts，或补跑只保存预测的 R.3 diagnostic run。

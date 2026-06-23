@@ -1,0 +1,4 @@
+dataset,model_variant,step_loss_weighting,step_loss_alpha,target_horizons,epochs,steps_per_epoch_effective
+ETTh2,target_set,offdiag_block_quadratic,0.5,"96,192,336,720",100,248
+ETTm1,target_set,offdiag_block_quadratic,0.5,"96,192,336,720",100,1056
+Weather,target_set,offdiag_block_quadratic,0.5,"96,192,336,720",100,1129
