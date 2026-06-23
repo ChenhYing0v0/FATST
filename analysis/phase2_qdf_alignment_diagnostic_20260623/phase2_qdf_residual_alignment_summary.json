@@ -1,0 +1,26 @@
+{
+  "by_matrix_family": {},
+  "gate": {
+    "prediction_artifacts_complete": false,
+    "qdf_matrices_complete": true,
+    "ready_for_alignment_decision": false
+  },
+  "matrix_families": [],
+  "matrix_row_count": 0,
+  "missing": [
+    "r3_prediction:ETTh2:h96",
+    "r3_prediction:ETTh2:h192",
+    "r3_prediction:ETTh2:h336",
+    "r3_prediction:ETTh2:h720",
+    "r3_prediction:ETTm1:h96",
+    "r3_prediction:ETTm1:h192",
+    "r3_prediction:ETTm1:h336",
+    "r3_prediction:ETTm1:h720",
+    "r3_prediction:Weather:h96",
+    "r3_prediction:Weather:h192",
+    "r3_prediction:Weather:h336",
+    "r3_prediction:Weather:h720"
+  ],
+  "missing_count": 12,
+  "row_count": 0
+}

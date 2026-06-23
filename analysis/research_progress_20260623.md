@@ -613,3 +613,50 @@ learned/error-aware future-step residual interaction，而不是 frozen target c
 [Blocker] 当前本地 R.3 artifact 只确认存在 `metrics_by_target_horizon.csv`，未发现
 `predictions_test.npz`。因此 Phase2-E2 的 residual-level diagnostic 需要先补充保存
 prediction/true artifacts，或补跑只保存预测的 R.3 diagnostic run。
+
+## 18. Phase2-E2: QDF-to-FATST Residual Alignment Diagnostic Implementation
+
+[Fact] Phase2-E2 diagnostic tooling 已完成：
+
+- analyzer:
+  `scripts/analyze_phase2_qdf_residual_alignment.py`;
+- remote prediction runner:
+  `scripts/remote/run_phase2_qdf_alignment_r3_predictions.sh`;
+- remote progress checker:
+  `scripts/remote/check_phase2_qdf_alignment_r3_predictions_progress.sh`;
+- sync wrapper:
+  `scripts/sync_phase2_qdf_alignment_r3_predictions.sh`;
+- code explanation:
+  `docs/code-explanation/phase2-qdf-residual-alignment-diagnostic.md`;
+- dry report:
+  `analysis/phase2_qdf_alignment_diagnostic_20260623/phase2_qdf_residual_alignment_report.md`。
+
+[Implementation] `scripts/remote/run_phase1_target_set_decoder_gate.sh` 新增 opt-in
+`SAVE_PREDICTIONS` 开关，默认 `0`，不影响既有 gate。Phase2-E2 wrapper 显式设置：
+
+- `RUN_NAME=PatchEncoderPrefixRiskWeighted`;
+- `STEP_LOSS_WEIGHTING=prefix_risk`;
+- `SAVE_PREDICTIONS=1`;
+- `KEEP_HEAVY_ARTIFACTS=1`;
+- output root:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase2_qdf_alignment_r3_predictions`。
+
+[Verification] 本地验证已完成：
+
+- `python -m py_compile scripts/analyze_phase2_qdf_residual_alignment.py`;
+- `bash -n` for all new shell wrappers;
+- dry analysis 生成 missing-artifact report；
+- QDF `A.pth` load check 通过：
+  `off_diag`, `L_param`, precision shape `(96, 96)`。
+
+[Current Diagnostic Status] dry analysis 的 gate 为：
+
+- `prediction_artifacts_complete=False`;
+- `qdf_matrices_complete=True`;
+- `ready_for_alignment_decision=False`;
+- missing R.3 prediction artifacts: `12/12`。
+
+[Decision] 现在还不能做 alignment conclusion。下一步是 commit/push 后在 `529_Lab-3090`
+拉取代码、检查 GPU，并启动 Phase2-E2 R.3 prediction artifact run。该 run 是 artifact collection，
+不是新机制训练；返回后再运行 sync/analyzer，判断 QDF learned matrices 是否比 static proxy 更能解释
+FATST R.3 residual。
