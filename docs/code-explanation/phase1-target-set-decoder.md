@@ -199,6 +199,40 @@ $$
 mixed-horizon target-set 的瓶颈是否来自 objective/task weighting，而不是 readout capacity 或
 target interaction。它不是完整 QDF；若有效，才值得继续设计 covariance-aware objective。
 
+## Region-Balanced Objective
+
+`--step-loss-weighting region_balanced` 启用 Phase2-C 的最小 coverage-balanced objective。
+它仍然不改变模型结构或 inference path，只改变不同 forecast regions 的 training loss
+pressure。
+
+该模式先按当前 mixed-horizon sampler 计算 uniform MSE 下每个 future step 的 expected
+pressure：
+
+$$
+p_t
+=
+\frac{1}{|\mathcal{H}|}
+\sum_{H\in\mathcal{H},t\le H}
+\frac{1}{H}.
+$$
+
+然后在四个固定 region 上计算 uniform pressure share：
+
+$$
+\mathcal{R}=\{[1,96],[97,192],[193,336],[337,720]\}.
+$$
+
+每个 region 获得一个常数 multiplier，使 weighted pressure share 更接近 equal-region
+coverage：
+
+$$
+m_r \propto \frac{1/|\mathcal{R}|}{\sum_{t\in r}p_t}.
+$$
+
+最终 multiplier 会按 full horizon mean 归一化，避免 loss scale 大幅漂移。该候选只验证
+coverage balance 是否比 R.3 的单调 prefix-risk 更合理；它还不是完整 covariance-aware
+objective。
+
 ## Artifact 语义
 
 主 run 目录为：
@@ -218,6 +252,9 @@ PatchEncoderTargetSetDecoder/{dataset}/mixed_h96_h192_h336_h720/seed{seed}
 - `h{H}/target_conditioning_stats.csv`: $\gamma,\beta$ 与 target state norm 统计。
 - `h{H}/prefix_residual_stats.csv`: 仅在启用 `--prefix-residual-segments` 时写出，记录
   normalized prefix residual 幅度。
+- `objective_weight_stats.csv`: 记录当前 `step_loss_weighting` 在四个 region 与各 horizon
+  上的 mean/min/max step weights、uniform pressure share、weighted pressure share 和
+  pressure shift。用于审计 `prefix_risk` 或 `region_balanced` 是否真的改变了目标压力。
 - `h{H}/predictions_test.npz`: 仅在显式传入 `--save-predictions` 时写出，避免 Weather
   等大数据集在 remote gate 中把时间浪费在压缩后又删除的 heavy artifact 上。
 - `training_log.csv`: 每个 epoch 的 train loss、各 horizon validation metrics 和 horizon sampling counts。
@@ -251,6 +288,11 @@ first target-set decoder 是否因 independent target queries 而丢失 future-s
 如果它只把误差从 h96 转移到 Weather 或 long horizons，则说明 uniform target-set objective
 存在 risk tradeoff，但还不足以支撑最终方法。若它稳定提升 h96、prefix reuse 和 overall MSE，
 才进入 covariance-aware objective 或 future-aware/MoE carrier 的下一轮设计。
+
+[Region-balance boundary] `region_balanced` 只测试 coverage pressure 是否是问题，不使用
+target covariance 或 residual statistics。若它不能超过 R.3，则说明单纯 equal-region
+pressure 还不足以构成 Phase2-C；后续必须 either 引入可解释的 covariance/novelty prior，
+or 停止 objective-only 主线。
 
 [Falsification] 如果 mixed target-set model 相比 horizon-specific `PatchEncoderFixedHead`
 mean relative MSE 超过 `+1.0%`，或 target states 高度同质，或 prefix consistency 没有改善，

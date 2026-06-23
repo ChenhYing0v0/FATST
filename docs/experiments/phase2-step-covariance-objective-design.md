@@ -133,12 +133,24 @@ Implementation candidate:
 - compare against both:
   `PatchEncoderTargetSetDecoder` and `PatchEncoderPrefixRiskWeighted`.
 
-First implementation should prefer a conservative two-stage design:
+First implementation uses a conservative two-stage design:
 
-1. `region_balanced`: use only coverage balance, to test whether pressure
-   equalization alone helps.
-2. `step_covariance_balanced`: add target covariance/novelty once the region
+1. `region_balanced`: implemented as a new `step_loss_weighting` mode; use only
+   coverage balance, to test whether pressure equalization alone helps.
+2. `step_covariance_balanced`: future candidate; add target covariance/novelty once the region
    path is verified.
+
+`region_balanced` computes the uniform expected pressure induced by the current
+mixed-horizon sampler and assigns region multipliers:
+
+$$
+m_r
+\propto
+\frac{1/|\mathcal{R}|}{\sum_{t\in r}p_t}.
+$$
+
+The multiplier vector is normalized by its full-horizon mean, so the objective
+changes pressure allocation rather than merely scaling the loss.
 
 ## Gate
 
@@ -148,7 +160,7 @@ Local smoke:
 - target horizons: `{96,192,336,720}`;
 - epoch: `1`;
 - verify `metrics_by_target_horizon.csv`, `metrics_by_segment.csv`,
-  `prefix_consistency.csv`, and saved objective-weight diagnostics.
+  `prefix_consistency.csv`, `objective_weight_stats.csv`, and saved config.
 
 Remote gate:
 
@@ -190,9 +202,54 @@ Current diagnostic artifacts:
   `analysis/phase2_objective_pressure_diagnostic_20260623/objective_pressure_curve.png`,
   `analysis/phase2_objective_pressure_diagnostic_20260623/segment_effect_vs_pressure.png`.
 
+Implementation artifacts:
+
+- train switch:
+  `--step-loss-weighting region_balanced`;
+- code:
+  `baselines/patch_encoder_target_set_decoder/train.py`;
+- analyzer:
+  `scripts/analyze_phase2_region_balanced_gate.py`;
+- remote runner:
+  `scripts/remote/run_phase2_region_balanced_gate.sh`;
+- progress checker:
+  `scripts/remote/check_phase2_region_balanced_progress.sh`;
+- sync wrapper:
+  `scripts/sync_phase2_region_balanced_results.sh`;
+- code explanation:
+  `docs/code-explanation/phase1-target-set-decoder.md`.
+
+Local smoke artifacts:
+
+- output:
+  `artifacts/runs/smoke_phase2_region_balanced/PatchEncoderRegionBalanced/ETTh2/mixed_h96_h192_h336_h720/seed2021`;
+- command mode:
+  `--step-loss-weighting region_balanced`;
+- smoke scope:
+  `ETTh2`, `{96,192,336,720}`, `epoch=1`, `steps_per_epoch=2`,
+  `max_eval_batches=1`;
+- required artifacts written:
+  `metrics_by_target_horizon.csv`, `prefix_consistency.csv`,
+  `objective_weight_stats.csv`, `effective_config.json`;
+- prefix mismatch MSE:
+  `96/720 = 8.284057610079363e-15`,
+  `192/720 = 8.386538432301766e-15`,
+  `336/720 = 3.621962433886803e-15`;
+- objective-weight audit:
+  weighted pressure share is `0.25` for each of
+  `1-96`, `97-192`, `193-336`, and `337-720`.
+
 ## Decision
 
 [Decision] Proceed to implementation only after preserving this diagnostic
 boundary: Phase2-C is not another residual/future-state mechanism. It tests
 whether the training objective should model target-step covariance and
 region-specific pressure for one-model multi-horizon forecasting.
+
+[Decision Update: 2026-06-23] The first implementation is limited to
+`region_balanced`. It is an objective-only coverage-balance test; it should be
+judged against R.3 before adding covariance/novelty priors.
+
+[Decision Update: 2026-06-23] Local smoke passed. The next evidence must be the
+full remote gate against R.3; smoke metrics are not interpreted as performance
+evidence because only two training steps and one eval batch were used.

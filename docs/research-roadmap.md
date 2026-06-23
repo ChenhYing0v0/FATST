@@ -1083,6 +1083,22 @@ reproduction。
 [Decision] 当前不进入 Phase3 MoE。下一步允许实现 Phase2-C 的 objective-level candidate，
 并先做 `region_balanced` smoke，再决定是否加入 target covariance / novelty prior。
 
+[Decision Update: 2026-06-23] `region_balanced` objective 已实现并通过本地 smoke：
+
+- code: `baselines/patch_encoder_target_set_decoder/train.py`
+- mode: `--step-loss-weighting region_balanced`
+- smoke output:
+  `artifacts/runs/smoke_phase2_region_balanced/PatchEncoderRegionBalanced/ETTh2/mixed_h96_h192_h336_h720/seed2021`
+- artifact check: `metrics_by_target_horizon.csv`, `prefix_consistency.csv`,
+  `objective_weight_stats.csv`, `effective_config.json`
+- prefix mismatch MSE: `8.284057610079363e-15`, `8.386538432301766e-15`,
+  `3.621962433886803e-15`
+- objective-weight audit: four regions are rebalanced to weighted pressure share `0.25`
+
+[Next] 按项目规则，远程 gate 前必须先 commit/push，然后在 `529_Lab-3090` 上 `git pull`，
+检查 GPU 显存，再用 `scripts/remote/run_phase2_region_balanced_gate.sh` 跑完整
+`ETTh2/ETTm1/Weather` matrix。gate 主要比较对象是 R.3，而不是只比较 FixedHead。
+
 ## Phase3: Future-Side MoE
 
 状态：暂停，等待 Phase1-R/Phase2 产生稳定 target-side state。

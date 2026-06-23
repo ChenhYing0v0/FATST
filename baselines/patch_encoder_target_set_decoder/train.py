@@ -18,6 +18,8 @@ from torch.utils.data import DataLoader
 from dataset import DATASETS, ForecastDataset
 from model import PatchEncoderErrorProcessDecoder, PatchEncoderTargetSetDecoder
 
+STEP_REGIONS = [(1, 96), (97, 192), (193, 336), (337, 720)]
+
 
 def set_seed(seed: int) -> None:
     os.environ["PYTHONHASHSEED"] = str(seed)
@@ -47,7 +49,7 @@ def metrics_by_horizon(pred: np.ndarray, true: np.ndarray) -> list[dict[str, flo
 
 def metrics_by_segment(pred: np.ndarray, true: np.ndarray) -> list[dict[str, float]]:
     rows = []
-    for start, end in [(1, 96), (97, 192), (193, 336), (337, 720)]:
+    for start, end in STEP_REGIONS:
         if pred.shape[1] < start:
             continue
         segment_pred = pred[:, start - 1 : min(end, pred.shape[1]), :]
@@ -121,7 +123,7 @@ def prefix_residual_stats(components: dict[str, np.ndarray]) -> list[dict[str, f
             "max_abs_residual_norm": float(np.max(np.abs(residual))),
         }
     ]
-    for start, end in [(1, 96), (97, 192), (193, 336), (337, 720)]:
+    for start, end in STEP_REGIONS:
         if residual.shape[1] < start:
             continue
         segment = residual[:, start - 1 : min(end, residual.shape[1]), :]
@@ -318,23 +320,126 @@ def weighted_mse_loss(
     pred: torch.Tensor,
     true: torch.Tensor,
     max_pred_len: int,
+    target_horizons: list[int],
     mode: str,
     alpha: float,
 ) -> torch.Tensor:
     if mode == "uniform":
         return torch.mean((pred - true) ** 2)
-    if mode != "prefix_risk":
+    if mode not in {"prefix_risk", "region_balanced"}:
         raise ValueError(f"Unknown step loss weighting mode: {mode}")
     if alpha < 0:
         raise ValueError("step_loss_alpha must be non-negative.")
 
     horizon = pred.shape[1]
-    step = torch.arange(1, horizon + 1, device=pred.device, dtype=pred.dtype)
-    full_step = torch.arange(1, max_pred_len + 1, device=pred.device, dtype=pred.dtype)
-    weights = torch.pow(step / float(max_pred_len), -alpha)
-    full_weights = torch.pow(full_step / float(max_pred_len), -alpha)
-    weights = weights / torch.mean(full_weights)
+    weights = step_loss_weights(
+        max_pred_len,
+        target_horizons,
+        mode,
+        alpha,
+        pred.device,
+        pred.dtype,
+    )[:horizon]
     return torch.mean((pred - true) ** 2 * weights.view(1, horizon, 1))
+
+
+def step_loss_weights(
+    max_pred_len: int,
+    target_horizons: list[int],
+    mode: str,
+    alpha: float,
+    device: torch.device,
+    dtype: torch.dtype,
+) -> torch.Tensor:
+    step = torch.arange(1, max_pred_len + 1, device=device, dtype=dtype)
+    if mode == "prefix_risk":
+        weights = torch.pow(step / float(max_pred_len), -alpha)
+        return weights / torch.mean(weights)
+    if mode == "region_balanced":
+        return region_balanced_step_weights(max_pred_len, target_horizons, device, dtype)
+    raise ValueError(f"Unknown step loss weighting mode: {mode}")
+
+
+def region_balanced_step_weights(
+    max_pred_len: int,
+    target_horizons: list[int],
+    device: torch.device,
+    dtype: torch.dtype,
+) -> torch.Tensor:
+    pressure = expected_uniform_step_pressure(max_pred_len, target_horizons)
+    total_pressure = sum(pressure)
+    active_regions = [(start, min(end, max_pred_len)) for start, end in STEP_REGIONS if start <= max_pred_len]
+    desired_share = 1.0 / float(len(active_regions))
+    multipliers: list[float] = []
+    for start, end in active_regions:
+        share = sum(pressure[start - 1 : end]) / total_pressure
+        multipliers.append(desired_share / max(share, 1e-12))
+    full_weights = torch.ones(max_pred_len, device=device, dtype=dtype)
+    for (start, end), multiplier in zip(active_regions, multipliers, strict=True):
+        full_weights[start - 1 : end] = float(multiplier)
+    return full_weights / torch.mean(full_weights)
+
+
+def expected_uniform_step_pressure(max_pred_len: int, target_horizons: list[int]) -> list[float]:
+    pressure = []
+    for step in range(1, max_pred_len + 1):
+        coeff = 0.0
+        for horizon in target_horizons:
+            if step <= horizon:
+                coeff += 1.0 / float(horizon)
+        pressure.append(coeff / float(len(target_horizons)))
+    return pressure
+
+
+def objective_weight_stats(max_pred_len: int, target_horizons: list[int], mode: str, alpha: float) -> list[dict[str, float | str]]:
+    device = torch.device("cpu")
+    weights = (
+        torch.ones(max_pred_len, dtype=torch.float64)
+        if mode == "uniform"
+        else step_loss_weights(max_pred_len, target_horizons, mode, alpha, device, torch.float64)
+    )
+    uniform_pressure = expected_uniform_step_pressure(max_pred_len, target_horizons)
+    weighted_pressure = [
+        uniform_pressure[index] * float(weights[index].item())
+        for index in range(max_pred_len)
+    ]
+    uniform_total = sum(uniform_pressure)
+    weighted_total = sum(weighted_pressure)
+    rows: list[dict[str, float | str]] = []
+    for start, end in STEP_REGIONS:
+        if start > max_pred_len:
+            continue
+        active_end = min(end, max_pred_len)
+        uniform_share = sum(uniform_pressure[start - 1 : active_end]) / uniform_total
+        weighted_share = sum(weighted_pressure[start - 1 : active_end]) / weighted_total
+        region_weights = weights[start - 1 : active_end]
+        rows.append(
+            {
+                "scope": f"{start}-{active_end}",
+                "mode": mode,
+                "mean_step_weight": float(torch.mean(region_weights).item()),
+                "min_step_weight": float(torch.min(region_weights).item()),
+                "max_step_weight": float(torch.max(region_weights).item()),
+                "uniform_pressure_share": uniform_share,
+                "weighted_pressure_share": weighted_share,
+                "pressure_share_delta_pct": (weighted_share / uniform_share - 1.0) * 100.0,
+            }
+        )
+    for horizon in target_horizons:
+        horizon_weights = weights[:horizon]
+        rows.append(
+            {
+                "scope": f"horizon_{horizon}",
+                "mode": mode,
+                "mean_step_weight": float(torch.mean(horizon_weights).item()),
+                "min_step_weight": float(torch.min(horizon_weights).item()),
+                "max_step_weight": float(torch.max(horizon_weights).item()),
+                "uniform_pressure_share": 1.0,
+                "weighted_pressure_share": float(torch.mean(horizon_weights).item()),
+                "pressure_share_delta_pct": (float(torch.mean(horizon_weights).item()) - 1.0) * 100.0,
+            }
+        )
+    return rows
 
 
 def evaluate(
@@ -416,7 +521,7 @@ def prefix_consistency(
     return rows
 
 
-def write_csv(path: Path, rows: list[dict[str, float]]) -> None:
+def write_csv(path: Path, rows: list[dict[str, object]]) -> None:
     if not rows:
         return
     with path.open("w", newline="") as f:
@@ -511,7 +616,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--batch-size", type=int, default=128)
     parser.add_argument("--epochs", type=int, default=1)
     parser.add_argument("--learning-rate", type=float, default=1e-4)
-    parser.add_argument("--step-loss-weighting", choices=["uniform", "prefix_risk"], default="uniform")
+    parser.add_argument(
+        "--step-loss-weighting",
+        choices=["uniform", "prefix_risk", "region_balanced"],
+        default="uniform",
+    )
     parser.add_argument("--step-loss-alpha", type=float, default=0.5)
     parser.add_argument("--patience", type=int, default=10)
     parser.add_argument("--seed", type=int, default=2021)
@@ -676,6 +785,7 @@ def main() -> None:
                 pred,
                 y,
                 args.max_pred_len,
+                target_horizons,
                 args.step_loss_weighting,
                 args.step_loss_alpha,
             )
@@ -827,6 +937,15 @@ def main() -> None:
     torch.save(model.state_dict(), run_dir / "checkpoint.pt")
     write_csv(run_dir / "metrics_by_target_horizon.csv", target_metric_rows)
     write_csv(run_dir / "training_log.csv", log_rows)
+    write_csv(
+        run_dir / "objective_weight_stats.csv",
+        objective_weight_stats(
+            args.max_pred_len,
+            target_horizons,
+            args.step_loss_weighting,
+            args.step_loss_alpha,
+        ),
+    )
     effective_config = vars(args)
     effective_config["target_horizons"] = target_horizons
     effective_config["steps_per_epoch_effective"] = steps_per_epoch

@@ -41,6 +41,14 @@
 - `sync_phase2_error_process_decoder_results.sh`: 本地运行；从 3090 同步 Phase2-B
   artifacts 到 `analysis/phase2_error_process_decoder_gate_20260623/raw/`，排除
   `checkpoint.pt` / `predictions_test.npz`，随后运行 error-process gate analyzer。
+- `remote/run_phase2_region_balanced_gate.sh`: Phase2-C
+  `PatchEncoderRegionBalanced` objective gate。默认数据集顺序为 `ETTm1 Weather ETTh2`，
+  默认 `--step-loss-weighting region_balanced`，用于测试 coverage-balanced objective。
+- `remote/check_phase2_region_balanced_progress.sh`: 在 3090 项目目录中检查 Phase2-C
+  region-balanced gate 进度，输出 dataset 矩阵位置、epoch/total、ETA 和 outer log tail。
+- `sync_phase2_region_balanced_results.sh`: 本地运行；从 3090 同步 Phase2-C artifacts 到
+  `analysis/phase2_region_balanced_gate_20260623/raw/`，排除 `checkpoint.pt` /
+  `predictions_test.npz`，随后运行 region-balanced gate analyzer。
 
 ## Analysis
 
@@ -69,6 +77,10 @@
   复现 mixed-horizon sampler 下的 expected step pressure，比较 R.3
   `PatchEncoderPrefixRiskWeighted` 与 uniform `PatchEncoderTargetSetDecoder`，
   输出 objective pressure 分布、R.3 vs uniform 表格、相关性诊断、图片和 decision report。
+- `analyze_phase2_region_balanced_gate.py`: 汇总 Phase2-C
+  `PatchEncoderRegionBalanced` remote gate，对比 R.3、uniform target-set 与 FixedHead，
+  输出 objective-weight stats、specialist-gap 修复情况、H720 middle/late stability、
+  prefix consistency 和 decision report。
 
 远程实验前仍必须先检查 `529_Lab-3090` 的 GPU 占用；runner 中的 `nvidia-smi`
 输出只作为启动时记录，不替代人工选择 GPU。
