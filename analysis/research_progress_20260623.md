@@ -338,3 +338,22 @@ matrix，三个数据集均有强 off-diagonal signal：
 [Next] commit/push 后，在 `529_Lab-3090` `git pull`，检查 GPU 与 QDF upstream 环境。
 若环境满足，先启动 `META_TYPES=all` 的最小 QDF upstream gate；controls 后续用
 `META_TYPES="diag off_diag"` 补齐。
+
+[Remote Launch Update] Phase2-D QDF upstream `META_TYPES=all` gate 已在 `529_Lab-3090`
+启动：
+
+- launch note:
+  `analysis/phase2_qdf_upstream_gate_20260623/remote_launch_note.md`
+- remote output:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase2_qdf_upstream_gate`
+- FATST commit:
+  `9217cb8`
+- QDF upstream commit:
+  `eb0693a`
+- selected GPUs:
+  `1`, `2`
+- first active jobs:
+  `ETTm1/h96`, `ETTm1/h192`
+
+[Caveat] 该轮只跑 `meta_type=all`。最终是否进入 source-informed localization，需要后续补
+`diag` control 并由 `scripts/analyze_phase2_qdf_upstream_gate.py` 判定。
