@@ -28,6 +28,10 @@
 - `remote/check_phase2_future_state_alignment_repair_progress.sh`: 在 3090 项目目录中
   检查 Phase2-R.1 repair gate 进度，输出 dataset 矩阵位置、epoch/total、ETA 和
   outer log tail。
+- `sync_phase2_future_state_alignment_repair_results.sh`: 本地运行；从 3090 同步
+  Phase2-R.1 repair gate artifacts 到
+  `analysis/phase2_future_state_alignment_repair_gate_20260623/raw/`，排除
+  `checkpoint.pt` / `predictions_test.npz`，随后运行 repair gate analyzer。
 
 ## Analysis
 

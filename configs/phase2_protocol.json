@@ -189,6 +189,7 @@
         "future_confidence_floor": 0.05
       },
       "remote_runner": "scripts/remote/run_phase2_future_state_alignment_repair_gate.sh",
+      "sync_and_analyze": "scripts/sync_phase2_future_state_alignment_repair_results.sh",
       "gate": {
         "datasets": [
           "ETTh2",
