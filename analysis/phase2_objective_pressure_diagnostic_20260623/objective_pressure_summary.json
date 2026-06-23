@@ -1,0 +1,21 @@
+{
+  "gate": {
+    "naive_prefix_risk_is_insufficient": true,
+    "objective_problem_exists": true,
+    "r3_improves_all_h96_vs_uniform": true,
+    "r3_improves_h720_prefix_short_vs_uniform": true,
+    "r3_improves_uniform_mean_mse": true,
+    "r3_still_has_fixed_specialist_gap": true,
+    "segment_effect_varies_by_pressure": true
+  },
+  "main_delta_vs_horizon_loss_multiplier_pearson": -0.552957777364198,
+  "mean_h720_prefix_all_r3_vs_uniform_mse_pct": -1.1502739407020661,
+  "mean_h720_prefix_short_r3_vs_uniform_mse_pct": -1.6194577019810936,
+  "mean_h720_r3_vs_uniform_mse_pct": -0.6993009859854701,
+  "mean_h96_r3_vs_uniform_mse_pct": -1.8105334996484517,
+  "mean_r3_vs_uniform_mse_pct": -1.0329178474800471,
+  "mean_segment_r3_vs_uniform_mse_pct": -1.004098525204522,
+  "segment_delta_vs_pressure_share_delta_pearson": -0.6804434867319068,
+  "segment_wins_r3_vs_uniform": 24,
+  "wins_r3_vs_uniform": 11
+}

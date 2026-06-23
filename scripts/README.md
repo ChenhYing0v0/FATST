@@ -65,6 +65,10 @@
 - `analyze_phase2_error_process_decoder_gate.py`: 汇总 Phase2-B
   `PatchEncoderErrorProcessDecoder` gate，对比 R.3 与 FixedHead，并输出
   error-process residual、H720 focus regions、prefix consistency 和 decision report。
+- `analyze_phase2_objective_pressure.py`: Phase2-C objective-level diagnostic。
+  复现 mixed-horizon sampler 下的 expected step pressure，比较 R.3
+  `PatchEncoderPrefixRiskWeighted` 与 uniform `PatchEncoderTargetSetDecoder`，
+  输出 objective pressure 分布、R.3 vs uniform 表格、相关性诊断、图片和 decision report。
 
 远程实验前仍必须先检查 `529_Lab-3090` 的 GPU 占用；runner 中的 `nvidia-smi`
 输出只作为启动时记录，不替代人工选择 GPU。

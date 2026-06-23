@@ -997,6 +997,92 @@ future-state alignment 或 residual capacity。下一步候选应优先验证 ob
 是否真实存在，例如 step covariance weighting 或 horizon-region loss shaping；若该问题也
 不存在，应停止 decoder 主线并回到 base architecture / paper contribution 重新选择。
 
+### Phase2-C: Objective Pressure / Step-Covariance
+
+状态：objective-level diagnostic 已完成；进入 step 4-6 设计阶段。
+
+核心文档：
+
+- diagnostic report:
+  `analysis/phase2_objective_pressure_diagnostic_20260623/phase2_objective_pressure_diagnostic_report.md`
+- design:
+  `docs/experiments/phase2-step-covariance-objective-design.md`
+- script:
+  `scripts/analyze_phase2_objective_pressure.py`
+
+[Problem] Phase2-A/R/B 连续证明，继续强化 latent future-state alignment 或 residual state
+不能稳定转化为 forecast gain。更底层的问题可能是 mixed-horizon one-model training
+本身的 objective pressure：不同 horizon 共享 early prefix，但 middle/late regions 仍有
+独立 dynamics；普通 uniform MSE 与单调 prefix-risk 都没有显式建模 step-region covariance。
+
+[Existence Evidence] Phase2-C diagnostic 对比了 R.3 `PatchEncoderPrefixRiskWeighted`
+和 uniform `PatchEncoderTargetSetDecoder`：
+
+- R.3 vs uniform MSE wins: `11/12`；
+- mean relative MSE vs uniform: `-1.03%`；
+- mean h96 relative MSE vs uniform: `-1.81%`；
+- H720-prefix h96/h192 mean relative MSE vs uniform: `-1.62%`；
+- segment-level wins vs uniform: `24/30`；
+- horizon loss multiplier 与 R.3 main-horizon delta 的 Pearson r 为 `-0.5530`；
+- segment pressure-share delta 与 R.3 segment delta 的 Pearson r 为 `-0.6804`。
+
+[Strong Evidence] objective problem 真实存在：R.3 在不改 architecture 的情况下明显优于
+uniform target-set。但 naive prefix-risk 不是 paper-core，因为它把 normalized pressure share
+过度集中到 `1-96`：
+
+| Region | Uniform Share | Prefix-Risk Share | Share Delta |
+| --- | ---: | ---: | ---: |
+| `1-96` | `0.4798` | `0.7217` | `+50.43%` |
+| `97-192` | `0.2298` | `0.1540` | `-32.98%` |
+| `193-336` | `0.1571` | `0.0775` | `-50.71%` |
+| `337-720` | `0.1333` | `0.0469` | `-64.85%` |
+
+[Idea] 下一候选是 `Step-Covariance Balanced Objective`。它不改变 inference path，而是把
+forecast target 视为 region-structured trajectory，对 early prefix、middle transition 和
+long-tail regions 施加 region-normalized loss，并用 coverage balance 与 target-derived
+covariance/novelty prior 决定 region weights。
+
+候选目标形式：
+
+$$
+\mathcal{L}_{scb}
+=
+\sum_{r\in\mathcal{R}_H}
+\lambda_r
+\frac{1}{|r\cap[1,H]|C}
+\sum_{t\in r\cap[1,H]}\sum_{c=1}^{C}
+(\hat{y}_{t,c}-y_{t,c})^2.
+$$
+
+其中：
+
+$$
+\lambda_r
+\propto
+\left(p_r^{uniform}\right)^{-\beta}
+\left(u_r+\epsilon\right)^{\eta}.
+$$
+
+[Theory Check] 该方向与 QDF-style future-step dependency 的观点一致，但当前实现目标更窄：
+不是直接做完整未来协方差建模，而是先验证 one-model target-set decoder 是否需要
+region/covariance-aware objective。若它能超过 R.3，论文叙事可以从“调 loss”上升到
+“forecasting process has step-region covariance and needs objective-side calibration”。
+若它不能超过 R.3，则 objective 主线也应停止，转向 base architecture 或外部 baseline
+reproduction。
+
+[Gate] Phase2-C candidate 必须以 R.3 为主要比较对象：
+
+- mean relative MSE vs R.3 < `0`；
+- vs R.3 wins 至少 `7/12`；
+- 任一 dataset mean 不比 R.3 退化超过 `+0.3%`；
+- 至少两个 fixed-specialist gap 改善：
+  `ETTm1/h96`, `ETTm1/h720`, `ETTh2/h720`, `Weather/h96`；
+- H720 middle/late regions 不退化，同时 h96 保持 competitive；
+- prefix mismatch 保持数值零级别。
+
+[Decision] 当前不进入 Phase3 MoE。下一步允许实现 Phase2-C 的 objective-level candidate，
+并先做 `region_balanced` smoke，再决定是否加入 target covariance / novelty prior。
+
 ## Phase3: Future-Side MoE
 
 状态：暂停，等待 Phase1-R/Phase2 产生稳定 target-side state。
