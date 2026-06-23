@@ -35,6 +35,12 @@
 - `remote/run_phase2_error_process_decoder_gate.sh`: Phase2-B
   `PatchEncoderErrorProcessDecoder` gate。默认数据集顺序为 `ETTm1 Weather ETTh2`，
   以便两卡可用时优先并行较慢数据集。
+- `remote/check_phase2_error_process_decoder_progress.sh`: 在 3090 项目目录中检查
+  Phase2-B error-process gate 进度，输出 dataset 矩阵位置、epoch/total、ETA 和
+  outer log tail。
+- `sync_phase2_error_process_decoder_results.sh`: 本地运行；从 3090 同步 Phase2-B
+  artifacts 到 `analysis/phase2_error_process_decoder_gate_20260623/raw/`，排除
+  `checkpoint.pt` / `predictions_test.npz`，随后运行 error-process gate analyzer。
 
 ## Analysis
 
@@ -56,6 +62,9 @@
 - `validate_phase2_error_process_artifacts.py`: 在 Phase2-B smoke 或 remote gate 完成后
   检查 `PatchEncoderErrorProcessDecoder` 的 required artifacts、`error_process_stats.csv`
   固定列、prefix mismatch 和非 NaN 诊断值。
+- `analyze_phase2_error_process_decoder_gate.py`: 汇总 Phase2-B
+  `PatchEncoderErrorProcessDecoder` gate，对比 R.3 与 FixedHead，并输出
+  error-process residual、H720 focus regions、prefix consistency 和 decision report。
 
 远程实验前仍必须先检查 `529_Lab-3090` 的 GPU 占用；runner 中的 `nvidia-smi`
 输出只作为启动时记录，不替代人工选择 GPU。
