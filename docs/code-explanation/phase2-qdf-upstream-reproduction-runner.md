@@ -50,6 +50,10 @@ ${OUTPUT_ROOT}/${meta_type}/${dataset}/h${horizon}/seed${SEED}/
 默认删除 `checkpoint.pth`，保留 `A.pth` 与 `cov_matrix.pdf`，因为后者是 learned covariance
 诊断证据。
 
+QDF upstream 默认 `--num_workers=10`。在 3090 的当前环境中，test 阶段会触发
+`Too many open files`，因此 runner 默认传入 `NUM_WORKERS=0`，并在启动时尝试设置
+`ulimit -n 65535`。这只改变 DataLoader worker 策略，不改变数据切分、模型、loss 或 optimizer。
+
 ## Hyperparameter Mapping
 
 runner 没有调用 QDF upstream 的 dataset shell scripts，而是把其中的 dataset/horizon

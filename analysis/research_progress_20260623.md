@@ -363,3 +363,7 @@ matrix，三个数据集均有强 off-diagonal signal：
 完整 `CovarianceMatrix` 对象 `A.pth`。这不是模型机制失败，也没有产生 metrics。已将
 `scripts/remote/run_phase2_qdf_upstream_gate.sh` 更新为启动前自动 patch QDF upstream 的
 两个 `A.pth` load 点为 `weights_only=False`，随后需要用 `RERUN=1` 重跑 `META_TYPES=all`。
+
+[Remote Repair Update] 后续 `ETTm1/h96` 越过 `A.pth` load 后，在 test DataLoader 报
+`Too many open files`。已将 QDF runner 默认 `NUM_WORKERS=0` 并设置 `ulimit -n`，下一步先
+单独重跑 `ETTm1/h96` 监控到 metrics 生成，再恢复 full matrix。

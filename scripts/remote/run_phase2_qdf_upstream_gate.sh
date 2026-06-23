@@ -16,8 +16,11 @@ HORIZONS="${HORIZONS:-96 192 336 720}"
 META_TYPES="${META_TYPES:-all}"
 RERUN="${RERUN:-0}"
 KEEP_HEAVY_ARTIFACTS="${KEEP_HEAVY_ARTIFACTS:-0}"
+NUM_WORKERS="${NUM_WORKERS:-0}"
+ULIMIT_NOFILE="${ULIMIT_NOFILE:-65535}"
 
 mkdir -p "${LOG_ROOT}"
+ulimit -n "${ULIMIT_NOFILE}" 2>/dev/null || true
 
 if [[ -f "/home/anaconda3/etc/profile.d/conda.sh" ]]; then
   # Non-interactive SSH shells on 529_Lab-3090 do not load the zsh conda hook.
@@ -87,6 +90,8 @@ echo "horizons=${HORIZONS}"
 echo "meta_types=${META_TYPES}"
 echo "rerun=${RERUN}"
 echo "keep_heavy_artifacts=${KEEP_HEAVY_ARTIFACTS}"
+echo "num_workers=${NUM_WORKERS}"
+echo "ulimit_nofile=$(ulimit -n)"
 
 nvidia-smi --query-gpu=index,name,memory.total,memory.used,memory.free,utilization.gpu \
   --format=csv,noheader,nounits
@@ -213,6 +218,7 @@ run_one() {
       --learning_rate "${lr}" \
       --lradj "${lradj}" \
       --train_epochs "${train_epochs}" \
+      --num_workers "${NUM_WORKERS}" \
       --patience "${patience}" \
       --batch_size "${batch_size}" \
       --test_batch_size "${test_batch_size}" \
