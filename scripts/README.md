@@ -55,6 +55,14 @@
 - `sync_phase2_step_covariance_balanced_results.sh`: 本地运行；从 3090 同步
   Phase2-C.2 artifacts 到 `analysis/phase2_step_covariance_balanced_gate_20260623/raw/`，
   随后复用 region-balanced analyzer 输出 R.3 / uniform / FixedHead 对比报告。
+- `remote/run_phase2_qdf_upstream_gate.sh`: Phase2-D QDF upstream native
+  reproduction gate。默认在 3090 的 `/home/yingch/projects/QDF` 中运行 QDF 官方实现，
+  输出到 `/home/yingch/exp_outputs/r-2026-fatst/phase2_qdf_upstream_gate`。默认
+  `META_TYPES=all`；后续可用 `META_TYPES="diag off_diag"` 补 controls。
+- `remote/check_phase2_qdf_upstream_progress.sh`: 在 3090 上检查 Phase2-D QDF upstream
+  gate 的 GPU、完成 run 数、metrics 数和最新 log tail。
+- `sync_phase2_qdf_upstream_results.sh`: 本地运行；从 3090 同步 QDF upstream artifacts 到
+  `analysis/phase2_qdf_upstream_gate_20260623/raw/`，随后运行 QDF upstream analyzer。
 
 ## Analysis
 
@@ -95,6 +103,10 @@
   diagnostic。按 QDF loss 的 `[B*D, P]` 轴语义，把 H720 target regions 构成
   `[B*D, 4]` label matrix，输出 region correlation/covariance、heatmap 和
   reproduction gate report，用于判断是否值得进入 QDF upstream native reproduction。
+- `analyze_phase2_qdf_upstream_gate.py`: Phase2-D QDF upstream reproduction analyzer。
+  解析 QDF native outputs 中的 `metrics.npy`、`cov_matrix.pdf`、`A.pth` 与 logs，
+  输出 `all` vs `diag/off_diag` controls 的 gate report。只有 `all` 而没有 controls
+  时，gate 会保持 incomplete。
 
 远程实验前仍必须先检查 `529_Lab-3090` 的 GPU 占用；runner 中的 `nvidia-smi`
 输出只作为启动时记录，不替代人工选择 GPU。

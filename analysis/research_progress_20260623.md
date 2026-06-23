@@ -321,3 +321,20 @@ matrix，三个数据集均有强 off-diagonal signal：
 [Inference] 当前结论不是“QDF 一定有效”，而是“完整 QDF/off-diagonal 机制值得被原生复现”。
 下一步应进入 QDF upstream reproduction gate；不要继续调 `step_covariance_balanced` 的
 `beta/eta`，也不要直接把 QDF module 移植进 FATST。
+
+[Implementation Update] Phase2-D upstream reproduction tooling 已就绪：
+
+- remote runner:
+  `scripts/remote/run_phase2_qdf_upstream_gate.sh`
+- progress checker:
+  `scripts/remote/check_phase2_qdf_upstream_progress.sh`
+- sync wrapper:
+  `scripts/sync_phase2_qdf_upstream_results.sh`
+- analyzer:
+  `scripts/analyze_phase2_qdf_upstream_gate.py`
+- code explanation:
+  `docs/code-explanation/phase2-qdf-upstream-reproduction-runner.md`
+
+[Next] commit/push 后，在 `529_Lab-3090` `git pull`，检查 GPU 与 QDF upstream 环境。
+若环境满足，先启动 `META_TYPES=all` 的最小 QDF upstream gate；controls 后续用
+`META_TYPES="diag off_diag"` 补齐。

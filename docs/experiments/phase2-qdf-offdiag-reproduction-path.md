@@ -79,3 +79,7 @@ QDF upstream gate 通过需要同时满足：
 - diagnostic report: `analysis/phase2_qdf_offdiag_diagnostic_20260623/phase2_qdf_offdiag_diagnostic_report.md`
 - summary JSON: `analysis/phase2_qdf_offdiag_diagnostic_20260623/qdf_offdiag_summary.json`
 - heatmap: `analysis/phase2_qdf_offdiag_diagnostic_20260623/qdf_region_correlation_heatmap.png`
+- upstream runner: `scripts/remote/run_phase2_qdf_upstream_gate.sh`
+- progress checker: `scripts/remote/check_phase2_qdf_upstream_progress.sh`
+- sync wrapper: `scripts/sync_phase2_qdf_upstream_results.sh`
+- upstream analyzer: `scripts/analyze_phase2_qdf_upstream_gate.py`

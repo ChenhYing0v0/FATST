@@ -1254,6 +1254,17 @@ Artifacts:
 4. 若 QDF upstream gate 失败，objective route 回滚到 Step 2，转向 base architecture 或
    external baseline selection。
 
+[Implementation Update] QDF upstream reproduction tooling 已实现：
+
+- `scripts/remote/run_phase2_qdf_upstream_gate.sh`
+- `scripts/remote/check_phase2_qdf_upstream_progress.sh`
+- `scripts/sync_phase2_qdf_upstream_results.sh`
+- `scripts/analyze_phase2_qdf_upstream_gate.py`
+
+默认远程输出为 `/home/yingch/exp_outputs/r-2026-fatst/phase2_qdf_upstream_gate`。第一轮
+`META_TYPES=all` 只能完成 full-QDF metric collection；最终 gate 需要 `diag` control 才能
+判断是否 pass。
+
 ## Phase3: Future-Side MoE
 
 状态：暂停，等待 Phase1-R/Phase2 产生稳定 target-side state。
