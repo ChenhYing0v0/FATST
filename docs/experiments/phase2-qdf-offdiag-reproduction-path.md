@@ -83,3 +83,56 @@ QDF upstream gate 通过需要同时满足：
 - progress checker: `scripts/remote/check_phase2_qdf_upstream_progress.sh`
 - sync wrapper: `scripts/sync_phase2_qdf_upstream_results.sh`
 - upstream analyzer: `scripts/analyze_phase2_qdf_upstream_gate.py`
+
+## Returned `meta_type=all` Result
+
+更新时间：2026-06-23 19:40 +08:00
+
+[Fact] QDF upstream `META_TYPES=all` gate 已完成：
+
+- completed runs: `12/12`;
+- metric files: `12/12`;
+- covariance matrix PDFs: `12/12`;
+- local report:
+  `analysis/phase2_qdf_upstream_gate_20260623/phase2_qdf_upstream_decision_report.md`。
+
+| Dataset | Horizon | MSE | MAE | Cov loss |
+| --- | ---: | ---: | ---: | ---: |
+| `ETTh2` | `96` | `0.285880` | `0.337921` | `0.077645` |
+| `ETTh2` | `192` | `0.361037` | `0.388220` | `0.296859` |
+| `ETTh2` | `336` | `0.407588` | `0.422399` | `0.122215` |
+| `ETTh2` | `720` | `0.419218` | `0.438822` | `0.173580` |
+| `ETTm1` | `96` | `0.306606` | `0.348975` | `0.121592` |
+| `ETTm1` | `192` | `0.352415` | `0.376267` | `0.287310` |
+| `ETTm1` | `336` | `0.382601` | `0.397518` | `0.169737` |
+| `ETTm1` | `720` | `0.441164` | `0.434478` | `0.222438` |
+| `Weather` | `96` | `0.159555` | `0.202416` | `0.055837` |
+| `Weather` | `192` | `0.209021` | `0.246954` | `0.131674` |
+| `Weather` | `336` | `0.264798` | `0.288555` | `0.127803` |
+| `Weather` | `720` | `0.342472` | `0.339333` | `0.118382` |
+
+[Decision] 该轮不判 pass。它只证明 `meta_type=all` native QDF 能完整训练、测试并产生
+learned covariance artifacts；不能证明 full covariance 比 diagonal 或 off-diagonal-only
+机制更有效。
+
+## Next Control Gate
+
+[11-Step Loop] 当前处于 Step 9-10 的 incomplete decision。下一步回到 Step 6-8，补齐
+native QDF controls：
+
+- `META_TYPES="diag off_diag"`;
+- datasets: `ETTm1 Weather ETTh2`;
+- horizons: `96 192 336 720`;
+- output root 继续使用：
+  `/home/yingch/exp_outputs/r-2026-fatst/phase2_qdf_upstream_gate`。
+
+[Gate] 完整判定需要 `meta_type=all` 相对 `diag` 满足：
+
+1. mean MSE 改善；
+2. 12 个 setting 至少赢 7 个；
+3. FATST specialist gaps 至少赢 2 个；
+4. covariance artifacts 存在且非数值异常。
+
+[Decision Rule] 如果 controls 返回后 `all` 不优于 `diag`，则 QDF objective route 回滚到
+Step 2，不进入 FATST 本地实现；如果 `off_diag` 解释主要收益来源，再设计更小的
+source-informed off-diagonal component。

@@ -367,3 +367,32 @@ matrix，三个数据集均有强 off-diagonal signal：
 [Remote Repair Update] 后续 `ETTm1/h96` 越过 `A.pth` load 后，在 test DataLoader 报
 `Too many open files`。已将 QDF runner 默认 `NUM_WORKERS=0` 并设置 `ulimit -n`，下一步先
 单独重跑 `ETTm1/h96` 监控到 metrics 生成，再恢复 full matrix。
+
+## 12. Phase2-D: QDF Upstream `meta_type=all` Gate Result
+
+[Fact] Phase2-D QDF upstream `META_TYPES=all` gate 已完整返回：
+
+- completed runs: `12/12`;
+- metric files: `12/12`;
+- covariance artifacts: `12/12`;
+- remote output:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase2_qdf_upstream_gate`;
+- local report:
+  `analysis/phase2_qdf_upstream_gate_20260623/phase2_qdf_upstream_decision_report.md`。
+
+`meta_type=all` 的 MSE 如下：
+
+| Dataset | h96 | h192 | h336 | h720 | Mean |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `ETTh2` | `0.285880` | `0.361037` | `0.407588` | `0.419218` | `0.368431` |
+| `ETTm1` | `0.306606` | `0.352415` | `0.382601` | `0.441164` | `0.370696` |
+| `Weather` | `0.159555` | `0.209021` | `0.264798` | `0.342472` | `0.243961` |
+
+[Decision] 该结果证明 upstream QDF full covariance 路径可以稳定训练和产出完整 artifact，
+但尚不能证明 QDF mechanism pass。原因是当前只有 `meta_type=all`，缺少同一 upstream
+protocol 下的 `diag` 和 `off_diag` controls。
+
+[11-Step Loop] 当前处于 Step 9-10 的未闭合状态：实验产物已返回，但 performance/story
+candidate 不能判定通过。下一步回到 Step 6-8，补 `META_TYPES="diag off_diag"` control
+matrix。只有当 `all` 相对 `diag` 在 mean MSE、win count 和 specialist gaps 上成立时，
+才允许进入本地 source-informed localization；否则 objective route 回滚到 Step 2。
