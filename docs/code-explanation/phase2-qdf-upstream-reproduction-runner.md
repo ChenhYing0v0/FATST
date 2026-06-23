@@ -25,6 +25,11 @@
 5. 默认只跑 `META_TYPES=all`，用于最小 full-QDF gate；
 6. 支持后续通过 `META_TYPES="diag off_diag"` 补 controls。
 
+QDF `run.py` 顶层 import `cupy` 并只在当前路径中调用 `cp.random.seed`。如果远程环境缺少
+`cupy`，runner 会在 `${OUTPUT_ROOT}/_shims/cupy.py` 创建一个只实现 `random.seed`
+的轻量 shim，并把它 prepend 到 `PYTHONPATH`。该 shim 不改变 TQNet forward、QDF loss
+或 optimizer，只解除 optional seed dependency 对 reproduction gate 的阻塞。
+
 每个 run 的输出结构：
 
 ```text

@@ -68,6 +68,21 @@ echo "keep_heavy_artifacts=${KEEP_HEAVY_ARTIFACTS}"
 nvidia-smi --query-gpu=index,name,memory.total,memory.used,memory.free,utilization.gpu \
   --format=csv,noheader,nounits
 
+if ! "${CONDA_BIN}" run -n "${CONDA_ENV}" python -c "import cupy" >/dev/null 2>&1; then
+  SHIM_ROOT="${OUTPUT_ROOT}/_shims"
+  mkdir -p "${SHIM_ROOT}"
+  cat > "${SHIM_ROOT}/cupy.py" <<'PY'
+class _Random:
+    def seed(self, seed=None):
+        return None
+
+
+random = _Random()
+PY
+  export PYTHONPATH="${SHIM_ROOT}:${PYTHONPATH:-}"
+  echo "cupy_shim=${SHIM_ROOT}/cupy.py"
+fi
+
 read -r -a gpu_ids <<< "${GPU_IDS}"
 read -r -a datasets <<< "${DATASETS}"
 read -r -a horizons <<< "${HORIZONS}"
