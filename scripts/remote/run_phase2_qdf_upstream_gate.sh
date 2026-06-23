@@ -49,7 +49,7 @@ fi
 
 cd "${QDF_REPO_DIR}"
 
-python - <<'PY'
+"${CONDA_BIN}" run -n "${CONDA_ENV}" python - <<'PY'
 from pathlib import Path
 
 path = Path("exp/exp_long_term_forecasting_meta_ml3.py")
