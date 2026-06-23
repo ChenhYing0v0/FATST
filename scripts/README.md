@@ -81,6 +81,10 @@
   `PatchEncoderRegionBalanced` remote gate，对比 R.3、uniform target-set 与 FixedHead，
   输出 objective-weight stats、specialist-gap 修复情况、H720 middle/late stability、
   prefix consistency 和 decision report。
+- `analyze_phase2_covariance_novelty.py`: Phase2-C.1 离线 covariance/novelty
+  diagnostic。按 `ForecastDataset` 的 train split 与 scaling 计算 H720 target region
+  novelty，并与 R.3、`region_balanced` 的 segment-level gain/loss 对齐，判断是否值得进入
+  `step_covariance_balanced` 的 step 4-6。
 
 远程实验前仍必须先检查 `529_Lab-3090` 的 GPU 占用；runner 中的 `nvidia-smi`
 输出只作为启动时记录，不替代人工选择 GPU。

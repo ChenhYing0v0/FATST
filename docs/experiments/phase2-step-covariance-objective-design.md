@@ -278,3 +278,34 @@ defensible is a separate offline covariance/novelty diagnostic. If that
 diagnostic cannot explain why R.3 helps while equal-region coverage hurts, stop
 the objective-only path and reconsider base architecture or external baseline
 selection.
+
+[Decision Update: 2026-06-23] The offline covariance/novelty diagnostic passed
+the continuation gate. The synchronized artifacts are:
+
+- report:
+  `analysis/phase2_covariance_novelty_diagnostic_20260623/phase2_covariance_novelty_diagnostic_report.md`;
+- script:
+  `scripts/analyze_phase2_covariance_novelty.py`;
+- code explanation:
+  `docs/code-explanation/phase2-covariance-novelty-diagnostic.md`.
+
+Key evidence:
+
+- R.3 segment delta vs novelty share Pearson: `-0.7219`;
+- R.3 segment delta vs prefix pressure share Pearson: `-0.6909`;
+- `region_balanced` delta vs novelty deficit Pearson: `+0.6253`;
+- aggregate R.3 delta vs novelty share Pearson: `-0.6714`;
+- aggregate `region_balanced` delta vs novelty deficit Pearson: `+0.6253`.
+
+[Decision] Proceed to step 4-6 for `step_covariance_balanced`, but keep the
+scope narrow:
+
+1. do not change the model architecture or inference path;
+2. compute static novelty from the train split only;
+3. use one fixed hyperparameter setting first, not a sweep;
+4. compare primarily against R.3;
+5. stop the objective-only path if the candidate cannot beat R.3.
+
+[Caveat] This is not yet a paper-core pass. The `region_balanced` failure has a
+positive Pearson relationship with novelty deficit, but its Spearman correlation
+is only `0.1538`; the next training gate must prove forecast gains directly.

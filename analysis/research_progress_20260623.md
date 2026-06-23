@@ -139,3 +139,45 @@ prefix pressure 降得过多，导致 `ETTm1/h96`、`Weather/h96` 和多数 hori
 [Practical Next] 当前建议新建一个 Phase2-C.1 offline diagnostic，不训练模型，只读取
 dataset train split 与现有 Phase2-C artifacts。这样成本低，且能避免继续在失败 objective
 上盲目训练。
+
+## 10. Phase2-C.1: Covariance / Novelty Offline Diagnostic
+
+[Fact] Phase2-C.1 已完成，不训练模型，只读取 `ForecastDataset` train split 与现有
+Phase2-C artifacts。
+
+Artifacts:
+
+- report:
+  `analysis/phase2_covariance_novelty_diagnostic_20260623/phase2_covariance_novelty_diagnostic_report.md`
+- script:
+  `scripts/analyze_phase2_covariance_novelty.py`
+- code explanation:
+  `docs/code-explanation/phase2-covariance-novelty-diagnostic.md`
+
+[Strong Evidence] train-target novelty 与已有 gain/loss pattern 有一致关系：
+
+- R.3 segment delta vs novelty share Pearson: `-0.7219`;
+- R.3 segment delta vs prefix pressure share Pearson: `-0.6909`;
+- `region_balanced` delta vs novelty deficit Pearson: `+0.6253`;
+- aggregate R.3 delta vs novelty share Pearson: `-0.6714`;
+- aggregate `region_balanced` delta vs novelty deficit Pearson: `+0.6253`。
+
+[Fact] 三个数据集的最大 novelty region 都是 `1-96`：
+
+| Dataset | Max novelty region | Early novelty share | Late novelty share |
+| --- | --- | ---: | ---: |
+| `ETTh2` | `1-96` | `0.4763` | `0.1906` |
+| `ETTm1` | `1-96` | `0.6152` | `0.1299` |
+| `Weather` | `1-96` | `0.4815` | `0.1623` |
+
+[Inference] 这解释了为什么 R.3 的 early prefix pressure 提升有效，也解释了为什么
+`region_balanced` 把 `1-96` share 降到 `0.25` 后会明显伤害 `ETTm1` 与 `Weather`。
+因此失败的不是 objective route 本身，而是 coverage-only equal-region 假设。
+
+[Counterargument] 该证据仍不是最终机制证明：`region_balanced` delta vs novelty deficit 的
+Spearman 只有 `0.1538`，说明排序层面的单调性较弱；novelty 目前也是 dataset-level static
+proxy，不是 sample-adaptive mechanism。
+
+[Decision] 当前进入 11-step loop 的 step 4-6：允许设计 `step_covariance_balanced`，但第一版
+必须保持 objective-only、固定超参、小范围 gate，并且主要比较对象仍是 R.3。若该训练候选不能
+超过 R.3，应停止 objective-only 主线，转向 base architecture 或 external baseline selection。

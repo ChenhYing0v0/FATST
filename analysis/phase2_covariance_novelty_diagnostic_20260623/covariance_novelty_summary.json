@@ -1,0 +1,44 @@
+{
+  "correlations": {
+    "aggregate_r3_delta_vs_novelty_share_pearson": -0.6714262143234744,
+    "aggregate_region_balanced_delta_vs_novelty_deficit_pearson": 0.6253074631676886,
+    "r3_segment_delta_vs_novelty_share_pearson": -0.721886847245513,
+    "r3_segment_delta_vs_novelty_share_spearman": -0.5647919430050358,
+    "r3_segment_delta_vs_prefix_pressure_share_pearson": -0.6908978633255897,
+    "region_balanced_delta_vs_novelty_deficit_pearson": 0.6253074631676886,
+    "region_balanced_delta_vs_novelty_deficit_spearman": 0.15384615384615385,
+    "region_balanced_delta_vs_prefix_minus_novelty_pearson": 0.34951695438055874
+  },
+  "datasets": {
+    "ETTh2": {
+      "early_novelty_share": 0.4763297151843164,
+      "early_prefix_minus_novelty_share": 0.24537359208630455,
+      "late_novelty_share": 0.19059053928512645,
+      "late_prefix_minus_novelty_share": -0.14372884664033214,
+      "max_novelty_segment": "1-96",
+      "max_novelty_share": 0.4763297151843164
+    },
+    "ETTm1": {
+      "early_novelty_share": 0.6152471820939163,
+      "early_prefix_minus_novelty_share": 0.10645612517670466,
+      "late_novelty_share": 0.12988586024130958,
+      "late_prefix_minus_novelty_share": -0.08302416759651526,
+      "max_novelty_segment": "1-96",
+      "max_novelty_share": 0.6152471820939163
+    },
+    "Weather": {
+      "early_novelty_share": 0.48150456734464026,
+      "early_prefix_minus_novelty_share": 0.24019873992598068,
+      "late_novelty_share": 0.1623238909744518,
+      "late_prefix_minus_novelty_share": -0.11546219832965748,
+      "max_novelty_segment": "1-96",
+      "max_novelty_share": 0.48150456734464026
+    }
+  },
+  "gate": {
+    "aggregate_patterns_align": true,
+    "r3_gain_aligns_with_novelty": true,
+    "region_balanced_loss_aligns_with_novelty_deficit": true,
+    "supports_step_covariance_balanced": true
+  }
+}
