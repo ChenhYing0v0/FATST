@@ -1,0 +1,141 @@
+# FATST Current Research Progress
+
+更新时间：2026-06-23 14:11 +08:00
+
+## 1. 总体目标
+
+[Fact] 当前项目目标是围绕 time series forecasting 形成可投稿 SCI 期刊的模型创新。
+候选方向包括 one-model multi-horizon forecasting、future-aware architecture 和
+MoE-style conditional computation。
+
+[Decision] 当前阶段仍处于 decoder/output strategy 的 research loop，不应进入 MoE。
+原因是：尚未找到一个同时具备稳定性能收益和清晰 paper story 的 target-side state 或
+decoder mechanism。MoE 需要依附于已经通过 gate 的 state/operator carrier，否则会变成
+对失败机制的复杂化。
+
+## 2. Phase0: Canonical Base
+
+[Decision] `PatchEncoderFixedHead` 是当前 canonical internal base。
+
+[Evidence] 它在 Phase0 中比 `DLinear` 和 `SegTSFTDenseFixedHead` 更适合作为后续机制
+carrier：结构简洁、性能合理、输出端问题可诊断。
+
+[Fact] Phase0 也证明 fixed direct head 存在可量化 prefix inconsistency 和 horizon-specific
+specialist gap，但这些问题幅度中等，不足以单独支撑“variable-horizon decoder 必然显著提升”
+的强 claim。
+
+## 3. Phase1: Decoder / Target Interface
+
+[Fact] 多个直接 decoder-side 候选未形成 paper-core：
+
+| Candidate | Outcome |
+| --- | --- |
+| `PatchEncoderSegmentQueryHead` | capacity collapse, fail |
+| `PatchEncoderFixedHeadAdapter` | partial signal, not paper-core |
+| `PatchEncoderFutureAwareAdapter` | partial signal, unstable |
+| `PatchEncoderStepSpecificStateAdapter` | partial signal, not stable |
+| `PatchEncoderTrajectoryBasisResidual` | residual active but too weak |
+
+[Inference] 这些结果说明，简单替换 fixed head 或在 output space 上加轻量 patch，不能稳定
+超过 horizon-specific fixed-head specialists。
+
+[Decision] Phase1 的有效收敛点是 `Target-Set Forecasting Decoder`：把 target horizon /
+future positions 显式作为模型输入，而不是训练脚本外部参数。
+
+## 4. Phase1-R: Target-Set Carrier
+
+[Fact] 第一版 uniform target-set model 接近但没有通过 paper-core。
+
+[Strong Evidence] `PatchEncoderPrefixRiskWeighted` 是目前最强的 one-model target-set carrier：
+
+- mean relative MSE 从 uniform target-set 的 `+0.62%` 推到 `-0.43%`；
+- H720-prefix h96/h192 相比 fixed H720-prefix 改善 `-2.46%`；
+- prefix consistency 保持数值零级别。
+
+[Decision] R.3 通过 compatibility carrier 判断，但不是 paper-core。它主要是 objective
+weighting，不是完整 decoder/process mechanism；并且仍留下 `ETTm1/h96`、`ETTm1/h720`
+和 `ETTh2/h720` 等 specialist gaps。
+
+## 5. Phase2-A/R/B: Future-State 和 Error-Process 失败链
+
+[Fact] `PatchEncoderFutureStateAlignment` 安全性通过，但性能 gate 失败：它在部分数据集
+有正信号，却破坏 R.3 在 `ETTh2` 上的 compatibility。
+
+[Fact] `PatchEncoderFutureStateAlignmentConfWeighted` 修复尝试仍失败，说明问题不是简单
+teacher confidence 或 leakage。
+
+[Fact] `PatchEncoderErrorProcessDecoder` 也失败：residual decomposition 安全、残差非零，
+但 forecast MSE 没有稳定收益。
+
+[Decision] 不应在这些失败 state/residual 上继续叠 MoE。当前问题更可能在 mixed-horizon
+objective pressure 或更基础的 architecture choice。
+
+## 6. Phase2-C: Objective Pressure
+
+[Strong Evidence] objective bottleneck 真实存在。R.3 不改 architecture，却相对 uniform
+target-set 获得：
+
+- `11/12` MSE wins；
+- mean relative MSE `-1.03%`；
+- h96 mean relative MSE `-1.81%`；
+- segment-level wins `24/30`。
+
+[Fact] 但 R.3 的 prefix-risk weighting 将 pressure 过度集中到 early prefix：
+
+| Region | Uniform share | Prefix-risk share |
+| --- | ---: | ---: |
+| `1-96` | `0.4798` | `0.7217` |
+| `97-192` | `0.2298` | `0.1540` |
+| `193-336` | `0.1571` | `0.0775` |
+| `337-720` | `0.1333` | `0.0469` |
+
+因此 Phase2-C 测试了 coverage-only `region_balanced`：把四个 region 的 weighted pressure
+share 变为 `0.25`。
+
+## 7. 本次返回实验结论
+
+[Decision] `PatchEncoderRegionBalanced` 失败。
+
+核心结果：
+
+- MSE wins vs R.3: `2/12`;
+- MAE wins vs R.3: `0/12`;
+- mean relative MSE vs R.3: `+1.53%`;
+- dataset mean relative MSE vs R.3:
+  `ETTh2 -0.29%`, `ETTm1 +3.19%`, `Weather +1.70%`;
+- mean relative MSE vs uniform target-set: `+0.47%`;
+- mean relative MSE vs fixed head: `+1.10%`;
+- max prefix mismatch MSE: `5.2042527595328944e-14`.
+
+[Inference] 这不是实现安全问题。Prefix consistency 仍然成立，说明 target-set interface
+没有坏；失败来自 objective pressure allocation 本身。Equal-region coverage 把 early
+prefix pressure 降得过多，导致 `ETTm1/h96`、`Weather/h96` 和多数 horizon 退化。
+
+[Decision] 单纯 coverage balance 被证伪。不要手调 region multipliers，也不要在
+`region_balanced` 上叠 MoE。
+
+## 8. 当前可讲故事程度
+
+[Strong Evidence] 目前可以讲的故事是 diagnostic story，而不是 final method story：
+
+> one-model multi-horizon forecasting 的瓶颈不只是 decoder capacity；objective pressure
+> 会显著改变 target-set decoder 的行为，但 naive pressure allocation 会产生新的 tradeoff。
+
+[Inference] 这个故事有研究价值，但还不够成为论文主方法。论文主方法仍缺少一个通过 gate 的
+机制，能够同时解释并改善 R.3 留下的 specialist gaps。
+
+## 9. 下一步收敛路线
+
+[Decision] 当前回到 11-step loop 的 step 2-3。
+
+优先下一步不是直接实现 `step_covariance_balanced`，而是先做离线 diagnostic：
+
+1. 用 training targets 计算四个 region 的 normalized covariance / novelty；
+2. 检验 novelty 是否能解释 R.3 与 `region_balanced` 在 segment-level 的 gain/loss；
+3. 若 novelty 与改善方向一致，再进入 `step_covariance_balanced` 的 step 4-6；
+4. 若 novelty 解释力弱，停止 objective-only 主线，转向 base architecture 或 external
+   baseline reproduction / selection。
+
+[Practical Next] 当前建议新建一个 Phase2-C.1 offline diagnostic，不训练模型，只读取
+dataset train split 与现有 Phase2-C artifacts。这样成本低，且能避免继续在失败 objective
+上盲目训练。

@@ -1106,6 +1106,32 @@ objective route。预案文档：
 明确破坏 compatibility，则 objective route 应停止，回到 step 2-3 重新选择 base
 architecture 或 external baseline problem。
 
+[Decision Update: 2026-06-23] `PatchEncoderRegionBalanced` remote gate 已同步并分析，
+结论为 fail：
+
+- report:
+  `analysis/phase2_region_balanced_gate_20260623/phase2_region_balanced_decision_report.md`
+- MSE wins vs R.3: `2/12`；
+- mean relative MSE vs R.3: `+1.53%`；
+- dataset mean relative MSE vs R.3:
+  `ETTh2 -0.29%`, `ETTm1 +3.19%`, `Weather +1.70%`；
+- MSE wins vs uniform target-set: `4/12`；
+- mean relative MSE vs uniform target-set: `+0.47%`；
+- prefix mismatch max MSE: `5.2042527595328944e-14`。
+
+[Inference] 单纯 equal-region coverage balance 不是有效 paper-core，也不是 R.3 的可靠修补。
+它把 early prefix pressure 从 uniform 的 `0.4798` 降到 `0.25`，保留了 prefix consistency，
+但明显损害 `ETTm1/h96`, `Weather/h96` 和多数 horizon。这说明 R.3 的收益不能被简化为
+“让四个 regions 等权”。更可能的结论是：early prefix 确实需要更高 pressure，但 middle/late
+regions 的补偿必须由 source-grounded dependency/novelty evidence 决定，而不是手工等权。
+
+[Rollback] 当前回到 11-step loop 的 step 2-3。不要继续手调 region multipliers，也不要直接
+在失败的 `region_balanced` 上叠 MoE。若保留 objective 主线，下一步必须先做离线
+covariance/novelty diagnostic：用 training targets 估计 region novelty，并检验它是否能解释
+R.3 与 `region_balanced` 的 segment-level gain/loss pattern。只有该诊断成立，才允许进入
+`step_covariance_balanced` 的 step 4-6；若诊断不成立，应停止 objective-only 主线，转向
+base architecture 或 external baseline problem。
+
 ## Phase3: Future-Side MoE
 
 状态：暂停，等待 Phase1-R/Phase2 产生稳定 target-side state。

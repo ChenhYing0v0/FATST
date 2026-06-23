@@ -253,3 +253,28 @@ judged against R.3 before adding covariance/novelty priors.
 [Decision Update: 2026-06-23] Local smoke passed. The next evidence must be the
 full remote gate against R.3; smoke metrics are not interpreted as performance
 evidence because only two training steps and one eval batch were used.
+
+[Decision Update: 2026-06-23] The full remote `region_balanced` gate failed.
+The synchronized report is:
+
+- `analysis/phase2_region_balanced_gate_20260623/phase2_region_balanced_decision_report.md`.
+
+Key metrics:
+
+- MSE wins vs R.3: `2/12`;
+- MAE wins vs R.3: `0/12`;
+- mean relative MSE vs R.3: `+1.53%`;
+- dataset mean relative MSE vs R.3:
+  `ETTh2 -0.29%`, `ETTm1 +3.19%`, `Weather +1.70%`;
+- mean relative MSE vs uniform target-set: `+0.47%`;
+- prefix consistency remains numerical-zero level.
+
+[Decision] Coverage balance alone is falsified. It should not be tuned by
+hand, and it should not be used as the carrier for future-aware or MoE
+mechanisms.
+
+[Rollback] Return to step 2-3. The only objective-side continuation that remains
+defensible is a separate offline covariance/novelty diagnostic. If that
+diagnostic cannot explain why R.3 helps while equal-region coverage hurts, stop
+the objective-only path and reconsider base architecture or external baseline
+selection.
