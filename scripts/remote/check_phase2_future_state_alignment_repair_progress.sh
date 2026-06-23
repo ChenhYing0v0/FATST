@@ -21,7 +21,20 @@ read -r -a datasets <<< "${DATASETS}"
 
 finish_time() {
   local eta_sec="$1"
-  python - "$eta_sec" <<'PY'
+  local python_bin="${PYTHON_BIN:-}"
+  if [[ -z "${python_bin}" ]]; then
+    if command -v python3 >/dev/null 2>&1; then
+      python_bin="$(command -v python3)"
+    elif command -v python >/dev/null 2>&1; then
+      python_bin="$(command -v python)"
+    elif [[ -x "/home/anaconda3/bin/python" ]]; then
+      python_bin="/home/anaconda3/bin/python"
+    else
+      echo "unknown"
+      return 0
+    fi
+  fi
+  "${python_bin}" - "$eta_sec" <<'PY'
 from __future__ import annotations
 
 from datetime import datetime, timedelta
