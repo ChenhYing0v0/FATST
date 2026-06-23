@@ -1099,6 +1099,13 @@ reproduction。
 检查 GPU 显存，再用 `scripts/remote/run_phase2_region_balanced_gate.sh` 跑完整
 `ETTh2/ETTm1/Weather` matrix。gate 主要比较对象是 R.3，而不是只比较 FixedHead。
 
+[Contingency] 若 `region_balanced` 不是 clear pass，但仍保留 R.3 compatibility carrier，
+下一步允许回到 step 4-6 细化 `step_covariance_balanced` objective，而不是立即放弃
+objective route。预案文档：
+`docs/experiments/phase2-covariance-objective-contingency.md`。若 `region_balanced`
+明确破坏 compatibility，则 objective route 应停止，回到 step 2-3 重新选择 base
+architecture 或 external baseline problem。
+
 ## Phase3: Future-Side MoE
 
 状态：暂停，等待 Phase1-R/Phase2 产生稳定 target-side state。
