@@ -49,14 +49,14 @@ fi
 
 cd "${QDF_REPO_DIR}"
 
-"${CONDA_BIN}" run -n "${CONDA_ENV}" python - <<'PY'
+"${CONDA_BIN}" run -n "${CONDA_ENV}" python -c '
 from pathlib import Path
 
 path = Path("exp/exp_long_term_forecasting_meta_ml3.py")
 text = path.read_text()
 replacements = {
     "self.A = torch.load(best_A_path)": "self.A = torch.load(best_A_path, weights_only=False)",
-    "self.A = torch.load(os.path.join(ckpt_dir, 'A.pth'))": "self.A = torch.load(os.path.join(ckpt_dir, 'A.pth'), weights_only=False)",
+    "self.A = torch.load(os.path.join(ckpt_dir, '\''A.pth'\''))": "self.A = torch.load(os.path.join(ckpt_dir, '\''A.pth'\''), weights_only=False)",
 }
 updated = text
 for old, new in replacements.items():
@@ -66,7 +66,7 @@ if updated != text:
     print("patched_qdf_torch_load_weights_only=1")
 else:
     print("patched_qdf_torch_load_weights_only=already")
-PY
+'
 
 echo "phase2_qdf_upstream_gate_start=$(date -Is)"
 echo "cwd=$(pwd)"
