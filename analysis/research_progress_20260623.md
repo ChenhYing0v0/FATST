@@ -411,3 +411,60 @@ matrix。只有当 `all` 相对 `diag` 在 mean MSE、win count 和 specialist g
   `diag/ETTm1/h96`, `diag/ETTm1/h192`。
 
 [Decision] 在 control gate 完成前，不进入 FATST 本地 QDF component 实现。
+
+## 14. Phase2-D: QDF Upstream Control Gate Final Result
+
+[Fact] Phase2-D QDF upstream controls 已完整返回：
+
+- completed metric rows: `36`;
+- meta types: `all`, `diag`, `off_diag`;
+- all runs completed: `12/12`;
+- comparison report:
+  `analysis/phase2_qdf_upstream_gate_20260623/phase2_qdf_upstream_decision_report.md`;
+- comparison table:
+  `analysis/phase2_qdf_upstream_gate_20260623/phase2_qdf_upstream_meta_type_comparison.csv`。
+
+[Strong Evidence] `all` 相对 `diag` 通过 gate：
+
+- mean relative MSE: `-1.08%`;
+- MSE wins: `11/12`;
+- specialist gap wins: `4/4`;
+- mean relative MAE: `-0.67%`;
+- dataset mean relative MSE:
+  `ETTh2 -1.89%`, `ETTm1 -1.12%`, `Weather -0.23%`。
+
+[Counter-Evidence] `all` 并不是最优形态。相对 `off_diag`：
+
+- mean relative MSE: `+0.06%`;
+- MSE wins: `2/12`;
+- specialist gap wins: `1/4`;
+- `off_diag` 是 `10/12` 个 setting 的最优 meta type。
+
+[Inference] QDF 论文关于 future steps 不应等权、且 residual interactions 重要的判断得到支持；
+但本地化时不应直接追求 full learned matrix。更稳妥的解释是：diagonal-only objective 缺少
+future-step interaction；而 `off_diag` 在固定 diagonal 后学习 residual coupling，反而比
+`all` 更稳定。
+
+[Decision] Phase2-D external reproduction gate passes，但通过的是 “off-diagonal interaction
+值得本地化验证”，不是 “完整 QDF full matrix 可以直接成为 FATST 主方法”。
+
+## 15. Phase2-E: Local Off-Diagonal Objective Direction
+
+- `current_step`: Step 4-6，基于 Phase2-D pass 设计本地 source-informed candidate。
+- `problem`: R.3 的 prefix-risk diagonal weighting 能改善 objective pressure，但无法表达
+  future-step residual interaction；`step_covariance_balanced` 的 static diagonal proxy 已失败。
+- `existence_evidence`: QDF upstream `all` vs `diag` 为 `11/12` MSE wins，specialist gaps
+  `4/4` wins；本地 target-region off-diagonal correlation mean abs 为 `0.7677`。
+- `idea`: 先做 local off-diagonal objective probe：保留 R.3 carrier 和 prefix-risk diagonal
+  pressure，只增加低维 future-region residual interaction term。
+- `theory_check`: 若收益主要来自 off-diagonal coupling，则一个 4-region 或 banded low-rank
+  quadratic residual penalty 应能捕捉部分收益；若只有 QDF 的 bilevel/meta loop 有效，则该
+  本地静态/轻量版本会失败。
+- `design`: Phase2-E0 先审计 QDF learned `A.pth` matrix，统计 diagonal/off-diagonal energy、
+  bandwidth、region aggregation、condition/PSD proxy；Phase2-E1 再实现 FATST 本地
+  `offdiag_region_quadratic` objective。
+- `gate`: 本地训练候选必须相对 R.3 达到 mean MSE `< -0.3%`、MSE wins `>=7/12`、
+  specialist gap wins `>=2/4`，且 prefix consistency 仍为数值零级别。
+- `artifacts`: 当前已有 Phase2-D upstream artifacts；Phase2-E0 应新增 matrix audit report。
+- `decision`: 不进入 MoE，不复制 QDF full meta-learning；下一步先做 learned matrix audit，
+  再决定是否实现本地 off-diagonal objective。

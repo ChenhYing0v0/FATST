@@ -2,22 +2,22 @@
 
 ## Decision
 
-[Decision] QDF upstream reproduction gate is incomplete or fails.
+[Decision] QDF upstream reproduction gate passes.
 
-- meta_types_present: `all`
-- completed_metric_rows: `12`
+- meta_types_present: `all, diag, off_diag`
+- completed_metric_rows: `36`
 - all_runs_completed: `12/12`
 
 ## Gate
 
 - all_12_runs_complete: `True`
-- diag_control_available: `False`
-- off_diag_control_available: `False`
-- all_vs_diag_mean_mse_improves: `False`
-- all_vs_diag_wins_at_least_7: `False`
-- specialist_gap_wins_at_least_2: `False`
+- diag_control_available: `True`
+- off_diag_control_available: `True`
+- all_vs_diag_mean_mse_improves: `True`
+- all_vs_diag_wins_at_least_7: `True`
+- specialist_gap_wins_at_least_2: `True`
 - covariance_artifacts_present: `True`
-- pass: `False`
+- pass: `True`
 
 ## All Meta-Type Metrics
 
@@ -38,7 +38,32 @@
 
 ## Meta-Type Comparisons
 
-[Fact] No meta-type control comparison is available yet. Run `META_TYPES="diag off_diag"` to complete controls.
+| Candidate | Baseline | Dataset | Horizon | Specialist gap | Relative MSE | Candidate MSE | Baseline MSE |
+| --- | --- | --- | ---: | --- | ---: | ---: | ---: |
+| all | diag | ETTh2 | 96 | False | -2.39% | 0.285880 | 0.292882 |
+| all | diag | ETTh2 | 192 | False | -0.07% | 0.361037 | 0.361283 |
+| all | diag | ETTh2 | 336 | False | -1.89% | 0.407588 | 0.415434 |
+| all | diag | ETTh2 | 720 | True | -3.22% | 0.419218 | 0.433160 |
+| all | diag | ETTm1 | 96 | True | -0.97% | 0.306606 | 0.309600 |
+| all | diag | ETTm1 | 192 | False | -0.43% | 0.352415 | 0.353926 |
+| all | diag | ETTm1 | 336 | False | -1.37% | 0.382601 | 0.387927 |
+| all | diag | ETTm1 | 720 | True | -1.71% | 0.441164 | 0.448851 |
+| all | diag | Weather | 96 | True | -0.42% | 0.159555 | 0.160221 |
+| all | diag | Weather | 192 | False | +0.09% | 0.209021 | 0.208827 |
+| all | diag | Weather | 336 | False | -0.14% | 0.264798 | 0.265168 |
+| all | diag | Weather | 720 | False | -0.45% | 0.342472 | 0.344013 |
+| all | off_diag | ETTh2 | 96 | False | +0.42% | 0.285880 | 0.284695 |
+| all | off_diag | ETTh2 | 192 | False | +0.00% | 0.361037 | 0.361033 |
+| all | off_diag | ETTh2 | 336 | False | +0.12% | 0.407588 | 0.407107 |
+| all | off_diag | ETTh2 | 720 | True | +0.47% | 0.419218 | 0.417271 |
+| all | off_diag | ETTm1 | 96 | True | -1.49% | 0.306606 | 0.311258 |
+| all | off_diag | ETTm1 | 192 | False | +0.00% | 0.352415 | 0.352410 |
+| all | off_diag | ETTm1 | 336 | False | +0.07% | 0.382601 | 0.382341 |
+| all | off_diag | ETTm1 | 720 | True | +0.01% | 0.441164 | 0.441138 |
+| all | off_diag | Weather | 96 | True | +0.48% | 0.159555 | 0.158786 |
+| all | off_diag | Weather | 192 | False | +0.47% | 0.209021 | 0.208048 |
+| all | off_diag | Weather | 336 | False | +0.55% | 0.264798 | 0.263345 |
+| all | off_diag | Weather | 720 | False | -0.35% | 0.342472 | 0.343690 |
 
 ## Interpretation
 

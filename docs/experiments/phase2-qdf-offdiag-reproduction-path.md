@@ -136,3 +136,73 @@ native QDF controls：
 [Decision Rule] 如果 controls 返回后 `all` 不优于 `diag`，则 QDF objective route 回滚到
 Step 2，不进入 FATST 本地实现；如果 `off_diag` 解释主要收益来源，再设计更小的
 source-informed off-diagonal component。
+
+## Returned Control Gate Result
+
+更新时间：2026-06-23 20:55 +08:00
+
+[Fact] QDF upstream controls 已完成并同步：
+
+- completed metric rows: `36`;
+- meta types: `all`, `diag`, `off_diag`;
+- decision report:
+  `analysis/phase2_qdf_upstream_gate_20260623/phase2_qdf_upstream_decision_report.md`;
+- comparison table:
+  `analysis/phase2_qdf_upstream_gate_20260623/phase2_qdf_upstream_meta_type_comparison.csv`。
+
+[Decision] QDF upstream reproduction gate passes:
+
+- `all` vs `diag` mean relative MSE: `-1.08%`;
+- `all` vs `diag` MSE wins: `11/12`;
+- `all` vs `diag` specialist gap wins: `4/4`;
+- covariance artifacts present: `True`。
+
+[Counter-Evidence] 通过 gate 不等于 full matrix 是最佳本地形态：
+
+- `all` vs `off_diag` mean relative MSE: `+0.06%`;
+- `all` vs `off_diag` MSE wins: `2/12`;
+- `off_diag` 是 `10/12` 个 setting 的 best meta type。
+
+[Interpretation] QDF 的关键借鉴点应收窄为 future-step residual interaction，而不是完整
+full learned covariance。`diag` control 被稳定击败，说明 diagonal-only objective 不够；
+但 `off_diag` 强于 `all`，说明固定 diagonal、只学习 off-diagonal coupling 可能更稳定。
+
+## Next Local Experiment Direction
+
+[11-Step Loop] Phase2-D 在 Step 10 通过 external evidence gate。下一轮 Phase2-E 进入
+Step 4-6，设计本地 source-informed objective。
+
+### Phase2-E0: Learned Matrix Audit
+
+先不训练，审计 QDF 保存的 `A.pth`：
+
+1. 对 `all/diag/off_diag` 提取 learned matrix 或 diagonal vector；
+2. 统计 diagonal energy、off-diagonal energy、bandwidth、condition/PSD proxy；
+3. 聚合到 `1-96`, `97-192`, `193-336`, `337-720` 四个 region；
+4. 检查 matrix pattern 是否与 `all vs diag` 和 `off_diag vs all` 的收益一致。
+
+该步骤的目的不是复述 QDF，而是决定本地 objective 应该是：
+
+- 4-region off-diagonal quadratic；
+- banded future-step coupling；
+- low-rank residual coupling；
+- 或者停止 objective route。
+
+### Phase2-E1: Local Off-Diagonal Objective Probe
+
+若 Phase2-E0 显示 learned matrices 有稳定 off-diagonal structure，再实现本地最小候选：
+
+- carrier: `PatchEncoderPrefixRiskWeighted` / R.3；
+- base loss: 保留 prefix-risk diagonal pressure；
+- added term: 低维 future-region residual interaction；
+- no full QDF bilevel loop；
+- no MoE；
+- no copied upstream module。
+
+Gate:
+
+1. mean MSE vs R.3 `< -0.3%`;
+2. MSE wins vs R.3 `>=7/12`;
+3. specialist gap wins `>=2/4`;
+4. prefix consistency 维持数值零级别；
+5. 若只赢 uniform 或只复现 QDF upstream，但输 R.3，则回滚到 Step 2。
