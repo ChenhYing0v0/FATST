@@ -241,3 +241,42 @@ Implementation artifacts:
   `1`, `2`
 - first launched datasets:
   `ETTm1` on GPU `1`, `Weather` on GPU `2`
+
+## 12. Phase2-C.2 Remote Gate Result
+
+[Decision] `PatchEncoderStepCovarianceBalanced` 未通过 Phase2-C.2 gate。
+
+Artifacts:
+
+- decision report:
+  `analysis/phase2_step_covariance_balanced_gate_20260623/phase2_step_covariance_balanced_decision_report.md`
+- interpretation:
+  `analysis/phase2_step_covariance_balanced_gate_20260623/phase2_step_covariance_balanced_interpretation.md`
+- remote output:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase2_step_covariance_balanced_objective`
+
+核心结果：
+
+- MSE wins vs R.3: `2/12`;
+- MAE wins vs R.3: `0/12`;
+- mean relative MSE vs R.3: `+0.76%`;
+- dataset mean relative MSE vs R.3:
+  `ETTh2 -0.09%`, `ETTm1 +1.35%`, `Weather +1.03%`;
+- MSE wins vs uniform target-set: `12/12`;
+- mean relative MSE vs uniform target-set: `-0.28%`;
+- MSE wins vs FixedHead: `6/12`;
+- mean relative MSE vs FixedHead: `+0.33%`;
+- max prefix mismatch MSE: `5.182444710459706e-14`。
+
+[Inference] QDF-style premise仍成立：future-step objective weights 确实重要；
+static novelty-aware diagonal weighting 能稳定超过 uniform target-set。但它没有超过 R.3，
+说明当前简化版 objective 不能作为 paper-core。
+
+[Failure Pattern] 该候选没有保住 R.3 的 early-prefix 优势。`1-96` weighted pressure share 为
+`ETTh2 0.4807`, `ETTm1 0.5501`, `Weather 0.4813`，明显低于 R.3 的 `0.7217`。
+因此 `ETTm1/h96` 和 `Weather/h96` 仍分别比 R.3 退化 `+2.38%`、`+1.34%`。
+
+[Decision] 不继续手调 `beta/eta`，不在该 objective carrier 上进入 MoE。当前回到 11-step
+loop 的 step 2-3：要么把完整 QDF-style off-diagonal / learned quadratic objective 作为
+external baseline 或 diagnostic 复现，要么停止 objective-only 主线并回到 base architecture /
+external baseline selection。

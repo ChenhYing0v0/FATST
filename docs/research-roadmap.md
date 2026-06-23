@@ -1195,6 +1195,28 @@ Implementation:
 [Next] 按远程实验策略，commit/push 后在 `529_Lab-3090` `git pull`，检查 GPU 显存，
 再运行完整 Phase2-C.2 gate。Primary baseline 仍是 R.3。
 
+[Decision Update: 2026-06-23] Phase2-C.2 remote gate 已完成，结论为 fail：
+
+- report:
+  `analysis/phase2_step_covariance_balanced_gate_20260623/phase2_step_covariance_balanced_decision_report.md`
+- interpretation:
+  `analysis/phase2_step_covariance_balanced_gate_20260623/phase2_step_covariance_balanced_interpretation.md`
+- MSE wins vs R.3: `2/12`;
+- mean relative MSE vs R.3: `+0.76%`;
+- dataset mean relative MSE vs R.3:
+  `ETTh2 -0.09%`, `ETTm1 +1.35%`, `Weather +1.03%`;
+- MSE wins vs uniform target-set: `12/12`;
+- mean relative MSE vs uniform target-set: `-0.28%`;
+- max prefix mismatch MSE: `5.182444710459706e-14`。
+
+[Inference] 该结果保留了 QDF 相关性的弱证据：非等权 objective 比 uniform MSE 好。但
+static novelty-aware diagonal weighting 不足以超过 R.3，尤其没有保住 early-prefix gain。
+
+[Rollback] 当前停止 objective-only simplification path。不要继续对 `beta/eta` 做宽 sweep，
+也不要在该 objective carrier 上叠 MoE。若继续 QDF 方向，应先把完整 QDF-style
+off-diagonal / learned quadratic objective 作为 external baseline 或 diagnostic 复现；否则回到
+base architecture / external baseline selection。
+
 ## Phase3: Future-Side MoE
 
 状态：暂停，等待 Phase1-R/Phase2 产生稳定 target-side state。
