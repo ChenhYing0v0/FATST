@@ -396,3 +396,18 @@ protocol 下的 `diag` 和 `off_diag` controls。
 candidate 不能判定通过。下一步回到 Step 6-8，补 `META_TYPES="diag off_diag"` control
 matrix。只有当 `all` 相对 `diag` 在 mean MSE、win count 和 specialist gaps 上成立时，
 才允许进入本地 source-informed localization；否则 objective route 回滚到 Step 2。
+
+[Remote Launch Update] Phase2-D QDF upstream controls 已在 `529_Lab-3090` 启动：
+
+- launch note:
+  `analysis/phase2_qdf_upstream_gate_20260623/remote_controls_launch_note.md`;
+- remote output:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase2_qdf_upstream_gate`;
+- FATST commit:
+  `4f5f372`;
+- selected GPUs:
+  `1`, `2`;
+- first active jobs:
+  `diag/ETTm1/h96`, `diag/ETTm1/h192`。
+
+[Decision] 在 control gate 完成前，不进入 FATST 本地 QDF component 实现。
