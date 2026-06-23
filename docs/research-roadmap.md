@@ -1217,6 +1217,43 @@ static novelty-aware diagonal weighting 不足以超过 R.3，尤其没有保住
 off-diagonal / learned quadratic objective 作为 external baseline 或 diagnostic 复现；否则回到
 base architecture / external baseline selection。
 
+[Decision Update: 2026-06-23] Phase2-D QDF off-diagonal diagnostic 已完成，结论为 pass。
+
+Artifacts:
+
+- report:
+  `analysis/phase2_qdf_offdiag_diagnostic_20260623/phase2_qdf_offdiag_diagnostic_report.md`
+- script:
+  `scripts/analyze_phase2_qdf_offdiag_diagnostic.py`
+- experiment plan:
+  `docs/experiments/phase2-qdf-offdiag-reproduction-path.md`
+
+11-step loop 判断：
+
+- `current_step`: Step 2-3 rollback check；
+- `problem`: diagonal / static objective proxy 已失败，但 QDF 的完整 learned quadratic
+  objective 尚未被等价测试；
+- `existence_evidence`: QDF loss 的轴语义是 `[B*D, P]`，本地 `[B*D, 4]` future-region
+  diagnostic 显示 strong off-diagonal dependence；
+- `decision`: 进入 QDF upstream reproduction gate，不继续 diagonal objective sweep。
+
+核心统计：
+
+| Dataset | Mean abs offdiag corr | Max abs offdiag corr | Offdiag corr Fro share |
+| --- | ---: | ---: | ---: |
+| `ETTh2` | `0.7103` | `0.8127` | `0.6057` |
+| `ETTm1` | `0.8585` | `0.8897` | `0.6888` |
+| `Weather` | `0.7342` | `0.8066` | `0.6193` |
+
+[Decision] 下一步实验路径是 native QDF upstream reproduction：
+
+1. 先在 QDF 官方仓库原生流程中跑 `meta_type=all`；
+2. 若成本允许，再补 `diag` 和 `off_diag` controls；
+3. 只在 full/off-diagonal 明确优于 own MSE/diag control 后，才考虑 source-informed
+   local component；
+4. 若 QDF upstream gate 失败，objective route 回滚到 Step 2，转向 base architecture 或
+   external baseline selection。
+
 ## Phase3: Future-Side MoE
 
 状态：暂停，等待 Phase1-R/Phase2 产生稳定 target-side state。

@@ -1,6 +1,6 @@
 # FATST Current Research Progress
 
-更新时间：2026-06-23 14:11 +08:00
+更新时间：2026-06-23 18:02 +08:00
 
 ## 1. 总体目标
 
@@ -280,3 +280,44 @@ static novelty-aware diagonal weighting 能稳定超过 uniform target-set。但
 loop 的 step 2-3：要么把完整 QDF-style off-diagonal / learned quadratic objective 作为
 external baseline 或 diagnostic 复现，要么停止 objective-only 主线并回到 base architecture /
 external baseline selection。
+
+## 13. Phase2-D: QDF Off-Diagonal Diagnostic
+
+[Fact] 已完成 QDF off-diagonal diagnostic，不训练模型，只读取 `ForecastDataset` train split
+与 Phase2-C.1/C.2 summary。
+
+Artifacts:
+
+- report:
+  `analysis/phase2_qdf_offdiag_diagnostic_20260623/phase2_qdf_offdiag_diagnostic_report.md`
+- script:
+  `scripts/analyze_phase2_qdf_offdiag_diagnostic.py`
+- experiment plan:
+  `docs/experiments/phase2-qdf-offdiag-reproduction-path.md`
+- code explanation:
+  `docs/code-explanation/phase2-qdf-offdiag-diagnostic.md`
+
+[Fact] QDF 官方实现的核心 loss 不是 static diagonal weights。其 `CovarianceMatrix`
+将误差从 `[B, P, D]` 展平成 `[B*D, P]` 后，用 learned matrix 计算 quadratic loss，
+并支持 `meta_type=all/diag/off_diag`。
+
+[Strong Evidence] 本地诊断按相同轴语义，把 H720 future target regions 构成 `[B*D, 4]`
+matrix，三个数据集均有强 off-diagonal signal：
+
+| Dataset | Mean abs offdiag corr | Max abs offdiag corr | Offdiag corr Fro share |
+| --- | ---: | ---: | ---: |
+| `ETTh2` | `0.7103` | `0.8127` | `0.6057` |
+| `ETTm1` | `0.8585` | `0.8897` | `0.6888` |
+| `Weather` | `0.7342` | `0.8066` | `0.6193` |
+
+[Decision] Phase2-D diagnostic pass：
+
+- mean_abs_offdiag_corr: `0.7677`;
+- min_dataset_mean_abs_offdiag_corr: `0.7103`;
+- diagonal_proxy_failed: `True`;
+- novelty_supported_diagonal_before_training: `True`;
+- supports_qdf_upstream_reproduction: `True`。
+
+[Inference] 当前结论不是“QDF 一定有效”，而是“完整 QDF/off-diagonal 机制值得被原生复现”。
+下一步应进入 QDF upstream reproduction gate；不要继续调 `step_covariance_balanced` 的
+`beta/eta`，也不要直接把 QDF module 移植进 FATST。

@@ -1,0 +1,56 @@
+{
+  "datasets": [
+    {
+      "cov_condition_number": 20.523607743754326,
+      "dataset": "ETTh2",
+      "max_abs_offdiag_corr": 0.8126696906345469,
+      "max_cov_eig": 2.2843801097398497,
+      "mean_abs_offdiag_corr": 0.7103427110979569,
+      "min_cov_eig": 0.11130499755507287,
+      "offdiag_corr_fro_share": 0.6056888301057411,
+      "offdiag_cov_fro_share": 0.6072815344537987,
+      "regions": 4,
+      "samples": 53095
+    },
+    {
+      "cov_condition_number": 39.737461907478725,
+      "dataset": "ETTm1",
+      "max_abs_offdiag_corr": 0.8896814721665911,
+      "max_cov_eig": 2.258176956677006,
+      "mean_abs_offdiag_corr": 0.8585242761055357,
+      "min_cov_eig": 0.05682740789874175,
+      "offdiag_corr_fro_share": 0.6888479189046046,
+      "offdiag_cov_fro_share": 0.6885977612409303,
+      "regions": 4,
+      "samples": 234535
+    },
+    {
+      "cov_condition_number": 20.930100860556816,
+      "dataset": "Weather",
+      "max_abs_offdiag_corr": 0.806631224077591,
+      "max_cov_eig": 1.733248938566361,
+      "mean_abs_offdiag_corr": 0.7341643416197697,
+      "min_cov_eig": 0.0828113036871553,
+      "offdiag_corr_fro_share": 0.619334800321833,
+      "offdiag_cov_fro_share": 0.617631741713537,
+      "regions": 4,
+      "samples": 752472
+    }
+  ],
+  "gate": {
+    "diagonal_proxy_failed": true,
+    "mean_abs_offdiag_corr": 0.767677109607754,
+    "min_dataset_mean_abs_offdiag_corr": 0.7103427110979569,
+    "novelty_supported_diagonal_before_training": true,
+    "offdiag_signal_strong": true,
+    "offdiag_threshold": 0.35,
+    "supports_qdf_upstream_reproduction": true
+  },
+  "inputs": {
+    "dataset_root": "/Users/river/PaperResearch/Project/datasets",
+    "novelty_summary": "analysis/phase2_covariance_novelty_diagnostic_20260623/covariance_novelty_summary.json",
+    "pred_len": 720,
+    "seq_len": 336,
+    "step_covariance_summary": "analysis/phase2_step_covariance_balanced_gate_20260623/phase2_step_covariance_balanced_summary.json"
+  }
+}

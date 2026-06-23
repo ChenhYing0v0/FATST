@@ -91,6 +91,10 @@
   diagnostic。按 `ForecastDataset` 的 train split 与 scaling 计算 H720 target region
   novelty，并与 R.3、`region_balanced` 的 segment-level gain/loss 对齐，判断是否值得进入
   `step_covariance_balanced` 的 step 4-6。
+- `analyze_phase2_qdf_offdiag_diagnostic.py`: Phase2-D QDF off-diagonal
+  diagnostic。按 QDF loss 的 `[B*D, P]` 轴语义，把 H720 target regions 构成
+  `[B*D, 4]` label matrix，输出 region correlation/covariance、heatmap 和
+  reproduction gate report，用于判断是否值得进入 QDF upstream native reproduction。
 
 远程实验前仍必须先检查 `529_Lab-3090` 的 GPU 占用；runner 中的 `nvidia-smi`
 输出只作为启动时记录，不替代人工选择 GPU。
