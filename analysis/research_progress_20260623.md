@@ -530,3 +530,19 @@ off-diagonal block residual penalty：
 [Next] commit/push 后，在 `529_Lab-3090` `git pull`，检查 GPU，启动
 Phase2-E1 remote gate。Gate 仍以 R.3 为主比较对象：mean MSE `< -0.3%`、MSE wins
 `>=7/12`、specialist gap wins `>=2/4`、prefix consistency 不破坏。
+
+[Remote Launch Update] Phase2-E1 `PatchEncoderOffdiagBlockQuadratic` gate 已在
+`529_Lab-3090` 启动：
+
+- launch note:
+  `analysis/phase2_offdiag_block_quadratic_gate_20260623/remote_launch_note.md`;
+- remote output:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase2_offdiag_block_quadratic_objective`;
+- FATST commit:
+  `b3ba31d`;
+- selected GPUs:
+  `1`, `2`;
+- initial active jobs:
+  `ETTm1`, `Weather`;
+- initial progress:
+  `ETTm1 epoch=3/100`, `Weather epoch=1/100`。
