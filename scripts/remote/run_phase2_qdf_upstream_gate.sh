@@ -53,14 +53,18 @@ cd "${QDF_REPO_DIR}"
 from pathlib import Path
 
 path = Path("exp/exp_long_term_forecasting_meta_ml3.py")
-text = path.read_text()
-replacements = {
-    "self.A = torch.load(best_A_path)": "self.A = torch.load(best_A_path, weights_only=False)",
-    "self.A = torch.load(os.path.join(ckpt_dir, '\''A.pth'\''))": "self.A = torch.load(os.path.join(ckpt_dir, '\''A.pth'\''), weights_only=False)",
-}
-updated = text
-for old, new in replacements.items():
-    updated = updated.replace(old, new)
+lines = path.read_text().splitlines()
+updated_lines = []
+for line in lines:
+    if "self.A = torch.load(best_A_path)" in line and "weights_only" not in line:
+        indent = line[: len(line) - len(line.lstrip())]
+        line = f"{indent}self.A = torch.load(best_A_path, weights_only=False)"
+    elif "self.A = torch.load(os.path.join(ckpt_dir," in line and "A.pth" in line and "weights_only" not in line:
+        indent = line[: len(line) - len(line.lstrip())]
+        line = f"{indent}self.A = torch.load(os.path.join(ckpt_dir, \"A.pth\"), weights_only=False)"
+    updated_lines.append(line)
+updated = "\n".join(updated_lines) + "\n"
+text = "\n".join(lines) + "\n"
 if updated != text:
     path.write_text(updated)
     print("patched_qdf_torch_load_weights_only=1")
