@@ -309,3 +309,57 @@ scope narrow:
 [Caveat] This is not yet a paper-core pass. The `region_balanced` failure has a
 positive Pearson relationship with novelty deficit, but its Spearman correlation
 is only `0.1538`; the next training gate must prove forecast gains directly.
+
+## Phase2-C.2 Implementation: Step-Covariance Balanced
+
+[Source Link] This candidate is related to QDF / MetaDF:
+
+- QDF argues that standard MSE treats future steps as independent equal-weight
+  tasks, ignoring label autocorrelation and heterogeneous task weights.
+- QDF's quadratic objective uses off-diagonal weights for label autocorrelation
+  and non-uniform diagonal weights for future-step task weights.
+- The current FATST candidate adopts only a conservative diagonal/static part:
+  region-level heterogeneous weights from train-split novelty. It does not
+  implement QDF's full learned quadratic matrix or bilevel/meta update.
+
+[Design] Implemented candidate:
+
+- train switch: `--step-loss-weighting step_covariance_balanced`;
+- model/run name: `PatchEncoderStepCovarianceBalanced`;
+- static novelty source: train split only, through `ForecastDataset`;
+- default objective hyperparameters:
+  `step_covariance_beta=0.5`, `step_covariance_eta=0.5`,
+  `step_covariance_eps=1e-6`;
+- remote output root:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase2_step_covariance_balanced_objective`;
+- remote runner:
+  `scripts/remote/run_phase2_step_covariance_balanced_gate.sh`;
+- sync wrapper:
+  `scripts/sync_phase2_step_covariance_balanced_results.sh`;
+- code explanation:
+  `docs/code-explanation/phase2-step-covariance-balanced-objective.md`.
+
+[Rationale] The default `beta=0.5`, `eta=0.5` intentionally avoids the
+coverage-only failure mode. For the ETTh2 smoke run, weighted pressure share is
+`1-96 = 0.4807`, `97-192 = 0.1951`, `193-336 = 0.1640`, `337-720 = 0.1603`.
+This keeps early pressure near uniform instead of forcing it down to `0.25`, and
+only gives a moderate novelty-based increase to middle / late regions.
+
+[Fact] Local smoke passed:
+
+- output:
+  `artifacts/runs/smoke_phase2_step_covariance_balanced/PatchEncoderStepCovarianceBalanced/ETTh2/mixed_h96_h192_h336_h720/seed2021`;
+- scope: `ETTh2`, `{96,192,336,720}`, `epochs=1`, `steps_per_epoch=2`,
+  `max_eval_batches=1`, CPU;
+- required artifacts:
+  `metrics_by_target_horizon.csv`, `prefix_consistency.csv`,
+  `objective_weight_stats.csv`, `effective_config.json`;
+- prefix mismatch MSE:
+  `96/720 = 8.455293790696292e-15`,
+  `192/720 = 8.434740536231167e-15`,
+  `336/720 = 3.5504944524786947e-15`.
+
+[Next] Before remote training, commit and push this code state, then on
+`529_Lab-3090` run `git pull`, inspect `nvidia-smi`, prefer GPUs `1`/`2`, and
+launch the Phase2-C.2 gate. The primary baseline remains R.3, not uniform
+target-set.

@@ -1163,6 +1163,38 @@ objective-only 主线应停止。
 Spearman 只有 `0.1538`，说明 novelty proxy 的排序解释力有限；下一轮训练必须验证
 forecast gain，而不能只报告更好的 novelty alignment。
 
+[Decision Update: 2026-06-23] Phase2-C.2 `step_covariance_balanced` 已实现并通过
+本地 smoke。该候选与 QDF / MetaDF 相关，但只采用 diagonal heterogeneous task
+weighting 的保守部分，不实现完整 off-diagonal quadratic objective 或 bilevel/meta
+weight learning。
+
+Implementation:
+
+- train switch:
+  `--step-loss-weighting step_covariance_balanced`
+- run name:
+  `PatchEncoderStepCovarianceBalanced`
+- remote runner:
+  `scripts/remote/run_phase2_step_covariance_balanced_gate.sh`
+- sync wrapper:
+  `scripts/sync_phase2_step_covariance_balanced_results.sh`
+- code explanation:
+  `docs/code-explanation/phase2-step-covariance-balanced-objective.md`
+
+本地 smoke：
+
+- output:
+  `artifacts/runs/smoke_phase2_step_covariance_balanced/PatchEncoderStepCovarianceBalanced/ETTh2/mixed_h96_h192_h336_h720/seed2021`
+- weighted pressure share:
+  `1-96 = 0.4807`, `97-192 = 0.1951`, `193-336 = 0.1640`, `337-720 = 0.1603`
+- prefix mismatch MSE:
+  `96/720 = 8.455293790696292e-15`,
+  `192/720 = 8.434740536231167e-15`,
+  `336/720 = 3.5504944524786947e-15`
+
+[Next] 按远程实验策略，commit/push 后在 `529_Lab-3090` `git pull`，检查 GPU 显存，
+再运行完整 Phase2-C.2 gate。Primary baseline 仍是 R.3。
+
 ## Phase3: Future-Side MoE
 
 状态：暂停，等待 Phase1-R/Phase2 产生稳定 target-side state。

@@ -49,6 +49,12 @@
 - `sync_phase2_region_balanced_results.sh`: 本地运行；从 3090 同步 Phase2-C artifacts 到
   `analysis/phase2_region_balanced_gate_20260623/raw/`，排除 `checkpoint.pt` /
   `predictions_test.npz`，随后运行 region-balanced gate analyzer。
+- `remote/run_phase2_step_covariance_balanced_gate.sh`: Phase2-C.2
+  `PatchEncoderStepCovarianceBalanced` objective gate。复用 Phase2-C runner，但默认
+  `--step-loss-weighting step_covariance_balanced`，并使用 train-split static novelty prior。
+- `sync_phase2_step_covariance_balanced_results.sh`: 本地运行；从 3090 同步
+  Phase2-C.2 artifacts 到 `analysis/phase2_step_covariance_balanced_gate_20260623/raw/`，
+  随后复用 region-balanced analyzer 输出 R.3 / uniform / FixedHead 对比报告。
 
 ## Analysis
 

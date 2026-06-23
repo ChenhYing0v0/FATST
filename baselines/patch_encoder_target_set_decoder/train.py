@@ -323,23 +323,27 @@ def weighted_mse_loss(
     target_horizons: list[int],
     mode: str,
     alpha: float,
+    precomputed_weights: torch.Tensor | None = None,
 ) -> torch.Tensor:
     if mode == "uniform":
         return torch.mean((pred - true) ** 2)
-    if mode not in {"prefix_risk", "region_balanced"}:
+    if mode not in {"prefix_risk", "region_balanced", "step_covariance_balanced"}:
         raise ValueError(f"Unknown step loss weighting mode: {mode}")
     if alpha < 0:
         raise ValueError("step_loss_alpha must be non-negative.")
 
     horizon = pred.shape[1]
-    weights = step_loss_weights(
-        max_pred_len,
-        target_horizons,
-        mode,
-        alpha,
-        pred.device,
-        pred.dtype,
-    )[:horizon]
+    if precomputed_weights is None:
+        weights = step_loss_weights(
+            max_pred_len,
+            target_horizons,
+            mode,
+            alpha,
+            pred.device,
+            pred.dtype,
+        )[:horizon]
+    else:
+        weights = precomputed_weights.to(device=pred.device, dtype=pred.dtype)[:horizon]
     return torch.mean((pred - true) ** 2 * weights.view(1, horizon, 1))
 
 
@@ -357,6 +361,8 @@ def step_loss_weights(
         return weights / torch.mean(weights)
     if mode == "region_balanced":
         return region_balanced_step_weights(max_pred_len, target_horizons, device, dtype)
+    if mode == "step_covariance_balanced":
+        raise ValueError("step_covariance_balanced requires precomputed dataset-specific weights.")
     raise ValueError(f"Unknown step loss weighting mode: {mode}")
 
 
@@ -391,13 +397,100 @@ def expected_uniform_step_pressure(max_pred_len: int, target_horizons: list[int]
     return pressure
 
 
-def objective_weight_stats(max_pred_len: int, target_horizons: list[int], mode: str, alpha: float) -> list[dict[str, float | str]]:
+def region_mean_series(data: np.ndarray, seq_len: int, pred_len: int) -> dict[str, np.ndarray]:
+    n_windows = len(data) - seq_len - pred_len + 1
+    if n_windows <= 0:
+        raise ValueError("Dataset split is shorter than seq_len + pred_len.")
+    cumsum = np.vstack([np.zeros((1, data.shape[1]), dtype=np.float64), data.cumsum(axis=0, dtype=np.float64)])
+    means: dict[str, np.ndarray] = {}
+    window_index = np.arange(n_windows)
+    target_start = window_index + seq_len
+    for start, end in STEP_REGIONS:
+        if start > pred_len:
+            continue
+        active_end = min(end, pred_len)
+        start_index = target_start + start - 1
+        end_index = target_start + active_end
+        region_sum = cumsum[end_index] - cumsum[start_index]
+        means[f"{start}-{active_end}"] = region_sum / float(active_end - start + 1)
+    return means
+
+
+def correlation_squared(left: np.ndarray, right: np.ndarray) -> float:
+    left_flat = left.reshape(-1)
+    right_flat = right.reshape(-1)
+    left_centered = left_flat - left_flat.mean()
+    right_centered = right_flat - right_flat.mean()
+    denominator = float(np.linalg.norm(left_centered) * np.linalg.norm(right_centered))
+    if denominator == 0.0:
+        return 0.0
+    corr = float(np.dot(left_centered, right_centered) / denominator)
+    return corr * corr
+
+
+def train_split_region_novelty(
+    dataset_root: str | Path,
+    dataset: str,
+    seq_len: int,
+    max_pred_len: int,
+    eps: float,
+) -> dict[str, float]:
+    train_set = ForecastDataset(dataset_root, dataset, "train", seq_len, max_pred_len)
+    means = region_mean_series(train_set.data.astype(np.float64), seq_len, max_pred_len)
+    labels = list(means.keys())
+    novelty: dict[str, float] = {}
+    for index, label in enumerate(labels):
+        current = means[label]
+        current_centered = current - current.mean(axis=0, keepdims=True)
+        region_std = float(np.sqrt(np.mean(current_centered * current_centered)))
+        prev_r2 = [correlation_squared(current, means[prev_label]) for prev_label in labels[:index]]
+        max_prev_r2 = max(prev_r2) if prev_r2 else 0.0
+        novelty[label] = max(region_std * (1.0 - max_prev_r2), eps)
+    total = sum(novelty.values())
+    return {label: value / max(total, eps) for label, value in novelty.items()}
+
+
+def step_covariance_balanced_step_weights(
+    max_pred_len: int,
+    target_horizons: list[int],
+    novelty_share: dict[str, float],
+    beta: float,
+    eta: float,
+    eps: float,
+    device: torch.device,
+    dtype: torch.dtype,
+) -> torch.Tensor:
+    pressure = expected_uniform_step_pressure(max_pred_len, target_horizons)
+    total_pressure = sum(pressure)
+    active_regions = [(start, min(end, max_pred_len)) for start, end in STEP_REGIONS if start <= max_pred_len]
+    multipliers: list[float] = []
+    for start, end in active_regions:
+        label = f"{start}-{end}"
+        pressure_share = sum(pressure[start - 1 : end]) / total_pressure
+        novelty = novelty_share.get(label, eps)
+        multiplier = (max(pressure_share, eps) ** (-beta)) * (max(novelty, eps) ** eta)
+        multipliers.append(multiplier)
+    full_weights = torch.ones(max_pred_len, device=device, dtype=dtype)
+    for (start, end), multiplier in zip(active_regions, multipliers, strict=True):
+        full_weights[start - 1 : end] = float(multiplier)
+    return full_weights / torch.mean(full_weights)
+
+
+def objective_weight_stats(
+    max_pred_len: int,
+    target_horizons: list[int],
+    mode: str,
+    alpha: float,
+    precomputed_weights: torch.Tensor | None = None,
+    novelty_share: dict[str, float] | None = None,
+) -> list[dict[str, float | str]]:
     device = torch.device("cpu")
-    weights = (
-        torch.ones(max_pred_len, dtype=torch.float64)
-        if mode == "uniform"
-        else step_loss_weights(max_pred_len, target_horizons, mode, alpha, device, torch.float64)
-    )
+    if mode == "uniform":
+        weights = torch.ones(max_pred_len, dtype=torch.float64)
+    elif precomputed_weights is not None:
+        weights = precomputed_weights.detach().to(device=device, dtype=torch.float64)
+    else:
+        weights = step_loss_weights(max_pred_len, target_horizons, mode, alpha, device, torch.float64)
     uniform_pressure = expected_uniform_step_pressure(max_pred_len, target_horizons)
     weighted_pressure = [
         uniform_pressure[index] * float(weights[index].item())
@@ -423,6 +516,7 @@ def objective_weight_stats(max_pred_len: int, target_horizons: list[int], mode: 
                 "uniform_pressure_share": uniform_share,
                 "weighted_pressure_share": weighted_share,
                 "pressure_share_delta_pct": (weighted_share / uniform_share - 1.0) * 100.0,
+                "novelty_share": float((novelty_share or {}).get(f"{start}-{active_end}", 0.0)),
             }
         )
     for horizon in target_horizons:
@@ -437,6 +531,7 @@ def objective_weight_stats(max_pred_len: int, target_horizons: list[int], mode: 
                 "uniform_pressure_share": 1.0,
                 "weighted_pressure_share": float(torch.mean(horizon_weights).item()),
                 "pressure_share_delta_pct": (float(torch.mean(horizon_weights).item()) - 1.0) * 100.0,
+                "novelty_share": 0.0,
             }
         )
     return rows
@@ -618,10 +713,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--learning-rate", type=float, default=1e-4)
     parser.add_argument(
         "--step-loss-weighting",
-        choices=["uniform", "prefix_risk", "region_balanced"],
+        choices=["uniform", "prefix_risk", "region_balanced", "step_covariance_balanced"],
         default="uniform",
     )
     parser.add_argument("--step-loss-alpha", type=float, default=0.5)
+    parser.add_argument("--step-covariance-beta", type=float, default=0.5)
+    parser.add_argument("--step-covariance-eta", type=float, default=0.5)
+    parser.add_argument("--step-covariance-eps", type=float, default=1e-6)
     parser.add_argument("--patience", type=int, default=10)
     parser.add_argument("--seed", type=int, default=2021)
     parser.add_argument("--run-name", default="PatchEncoderTargetSetDecoder")
@@ -654,6 +752,12 @@ def main() -> None:
         raise ValueError("error energy weight must be non-negative.")
     if args.error_smoothness_weight < 0:
         raise ValueError("error smoothness weight must be non-negative.")
+    if args.step_covariance_beta < 0:
+        raise ValueError("step covariance beta must be non-negative.")
+    if args.step_covariance_eta < 0:
+        raise ValueError("step covariance eta must be non-negative.")
+    if args.step_covariance_eps <= 0:
+        raise ValueError("step covariance eps must be positive.")
     set_seed(args.seed)
     device = torch.device("cuda" if args.device == "auto" and torch.cuda.is_available() else "cpu")
     if args.device != "auto":
@@ -739,6 +843,27 @@ def main() -> None:
     if args.max_train_batches is not None:
         steps_per_epoch = min(steps_per_epoch, args.max_train_batches)
 
+    covariance_novelty_share: dict[str, float] | None = None
+    covariance_step_weights: torch.Tensor | None = None
+    if args.step_loss_weighting == "step_covariance_balanced":
+        covariance_novelty_share = train_split_region_novelty(
+            args.dataset_root,
+            args.dataset,
+            args.seq_len,
+            args.max_pred_len,
+            args.step_covariance_eps,
+        )
+        covariance_step_weights = step_covariance_balanced_step_weights(
+            args.max_pred_len,
+            target_horizons,
+            covariance_novelty_share,
+            args.step_covariance_beta,
+            args.step_covariance_eta,
+            args.step_covariance_eps,
+            device,
+            torch.float32,
+        )
+
     best_val = float("inf")
     best_state = None
     stale_epochs = 0
@@ -788,6 +913,7 @@ def main() -> None:
                 target_horizons,
                 args.step_loss_weighting,
                 args.step_loss_alpha,
+                covariance_step_weights,
             )
             loss = pred_loss
             if future_loss_enabled:
@@ -944,11 +1070,14 @@ def main() -> None:
             target_horizons,
             args.step_loss_weighting,
             args.step_loss_alpha,
+            covariance_step_weights,
+            covariance_novelty_share,
         ),
     )
     effective_config = vars(args)
     effective_config["target_horizons"] = target_horizons
     effective_config["steps_per_epoch_effective"] = steps_per_epoch
+    effective_config["step_covariance_novelty_share"] = covariance_novelty_share or {}
     (run_dir / "effective_config.json").write_text(json.dumps(effective_config, indent=2))
     env = {
         "python": sys.version,

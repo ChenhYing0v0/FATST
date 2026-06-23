@@ -13,6 +13,9 @@ TARGET_HORIZONS="${TARGET_HORIZONS:-96,192,336,720}"
 RUN_NAME="${RUN_NAME:-PatchEncoderRegionBalanced}"
 STEP_LOSS_WEIGHTING="${STEP_LOSS_WEIGHTING:-region_balanced}"
 STEP_LOSS_ALPHA="${STEP_LOSS_ALPHA:-0.5}"
+STEP_COVARIANCE_BETA="${STEP_COVARIANCE_BETA:-0.5}"
+STEP_COVARIANCE_ETA="${STEP_COVARIANCE_ETA:-0.5}"
+STEP_COVARIANCE_EPS="${STEP_COVARIANCE_EPS:-1e-6}"
 STEPS_PER_EPOCH="${STEPS_PER_EPOCH:-}"
 MAX_EVAL_BATCHES="${MAX_EVAL_BATCHES:-}"
 KEEP_HEAVY_ARTIFACTS="${KEEP_HEAVY_ARTIFACTS:-0}"
@@ -60,6 +63,9 @@ echo "target_horizons=${TARGET_HORIZONS}"
 echo "run_name=${RUN_NAME}"
 echo "step_loss_weighting=${STEP_LOSS_WEIGHTING}"
 echo "step_loss_alpha=${STEP_LOSS_ALPHA}"
+echo "step_covariance_beta=${STEP_COVARIANCE_BETA}"
+echo "step_covariance_eta=${STEP_COVARIANCE_ETA}"
+echo "step_covariance_eps=${STEP_COVARIANCE_EPS}"
 echo "steps_per_epoch=${STEPS_PER_EPOCH:-auto}"
 echo "max_eval_batches=${MAX_EVAL_BATCHES:-all}"
 echo "keep_heavy_artifacts=${KEEP_HEAVY_ARTIFACTS}"
@@ -98,6 +104,9 @@ run_one() {
     --model-variant target_set \
     --step-loss-weighting "${STEP_LOSS_WEIGHTING}" \
     --step-loss-alpha "${STEP_LOSS_ALPHA}" \
+    --step-covariance-beta "${STEP_COVARIANCE_BETA}" \
+    --step-covariance-eta "${STEP_COVARIANCE_ETA}" \
+    --step-covariance-eps "${STEP_COVARIANCE_EPS}" \
     --output-root "${OUTPUT_ROOT}" \
     --device cuda \
     "${extra_args[@]}" 2>&1 | tee "${run_log}"

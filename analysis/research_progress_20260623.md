@@ -181,3 +181,50 @@ proxy，不是 sample-adaptive mechanism。
 [Decision] 当前进入 11-step loop 的 step 4-6：允许设计 `step_covariance_balanced`，但第一版
 必须保持 objective-only、固定超参、小范围 gate，并且主要比较对象仍是 R.3。若该训练候选不能
 超过 R.3，应停止 objective-only 主线，转向 base architecture 或 external baseline selection。
+
+## 11. Phase2-C.2: Step-Covariance Balanced Objective
+
+[Fact] `step_covariance_balanced` 已实现并通过本地 smoke。
+
+QDF 相关性：
+
+- [Fact] QDF 指出 standard MSE 等价于 identity weighting，忽略 label autocorrelation 与
+  heterogeneous task weights。
+- [Inference] 当前候选只采用 QDF 的 diagonal / heterogeneous weighting 思路，不采用完整
+  off-diagonal quadratic matrix，也不引入 bilevel/meta-learning。
+
+Implementation artifacts:
+
+- train switch:
+  `--step-loss-weighting step_covariance_balanced`
+- run name:
+  `PatchEncoderStepCovarianceBalanced`
+- code:
+  `baselines/patch_encoder_target_set_decoder/train.py`
+- remote runner:
+  `scripts/remote/run_phase2_step_covariance_balanced_gate.sh`
+- sync wrapper:
+  `scripts/sync_phase2_step_covariance_balanced_results.sh`
+- code explanation:
+  `docs/code-explanation/phase2-step-covariance-balanced-objective.md`
+
+[Design] 默认使用 `step_covariance_beta=0.5`, `step_covariance_eta=0.5`,
+`step_covariance_eps=1e-6`。该设置不是调参 sweep，而是为了避免 `region_balanced`
+把 early pressure 直接压到 `0.25` 的失败模式。
+
+[Fact] ETTh2 local smoke 通过：
+
+- output:
+  `artifacts/runs/smoke_phase2_step_covariance_balanced/PatchEncoderStepCovarianceBalanced/ETTh2/mixed_h96_h192_h336_h720/seed2021`
+- scope: `ETTh2`, `{96,192,336,720}`, `epochs=1`, `steps_per_epoch=2`,
+  `max_eval_batches=1`, CPU
+- weighted pressure share:
+  `1-96 = 0.4807`, `97-192 = 0.1951`, `193-336 = 0.1640`, `337-720 = 0.1603`
+- prefix mismatch MSE:
+  `96/720 = 8.455293790696292e-15`,
+  `192/720 = 8.434740536231167e-15`,
+  `336/720 = 3.5504944524786947e-15`
+
+[Decision] 下一步是按远程实验策略在 `529_Lab-3090` 跑完整
+`ETTh2/ETTm1/Weather x {96,192,336,720}` gate。Primary comparison 仍是 R.3；若
+`step_covariance_balanced` 不能超过 R.3，objective-only 主线停止。
