@@ -40,6 +40,10 @@ class SupervisionUnit:
     condition_top_blocks: int = 0
     condition_mean_score: float = 0.0
     auxiliary_weight: float = 0.0
+    predictability_learnable_blocks: int = 0
+    predictability_noisy_blocks: int = 0
+    predictability_mean_weight: float = 1.0
+    predictability_floor_weight: float = 0.0
 
 
 def set_seed(seed: int) -> None:
@@ -675,6 +679,87 @@ def conditioned_future_unit_loss(
     return total_loss, time_loss, unit_loss, unit
 
 
+def predictability_downweight_loss(
+    pred: torch.Tensor,
+    true: torch.Tensor,
+    history: torch.Tensor,
+    block_size: int,
+    top_ratio: float,
+    aux_weight: float,
+    floor_weight: float,
+) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, SupervisionUnit]:
+    if block_size <= 0:
+        raise ValueError("supervision block size must be positive.")
+    if not 0 < top_ratio <= 1:
+        raise ValueError("supervision condition top ratio must be in (0, 1].")
+    if aux_weight < 0:
+        raise ValueError("supervision auxiliary weight must be non-negative.")
+    if not 0 <= floor_weight <= 1:
+        raise ValueError("supervision predictability floor weight must be in [0, 1].")
+
+    horizon = pred.shape[1]
+    blocks: list[tuple[int, int]] = []
+    novelty_scores = []
+    variation_scores = []
+    with torch.no_grad():
+        last_history = history[:, -1:, :]
+        for start in range(0, horizon, block_size):
+            end = min(start + block_size, horizon)
+            block = true[:, start:end, :]
+            reference = last_history.expand(-1, end - start, -1)
+            novelty = torch.mean((block - reference) ** 2)
+            if end - start <= 1:
+                variation = torch.zeros((), device=true.device, dtype=true.dtype)
+            else:
+                diff = block[:, 1:, :] - block[:, :-1, :]
+                variation = torch.mean(diff * diff)
+            blocks.append((start, end))
+            novelty_scores.append(novelty)
+            variation_scores.append(variation)
+
+        novelty_tensor = torch.stack(novelty_scores)
+        variation_tensor = torch.stack(variation_scores)
+        top_blocks = max(1, min(len(blocks), int(round(len(blocks) * top_ratio))))
+        novelty_top = set(torch.topk(novelty_tensor, k=top_blocks, largest=True).indices.tolist())
+        variation_top = set(torch.topk(variation_tensor, k=top_blocks, largest=True).indices.tolist())
+        noisy_blocks = sorted(novelty_top & variation_top)
+        learnable_blocks = sorted(novelty_top - variation_top)
+        if not learnable_blocks:
+            learnable_blocks = sorted(novelty_top)
+
+        step_weights = torch.ones(horizon, device=pred.device, dtype=pred.dtype)
+        learnable_mask = torch.zeros(horizon, device=pred.device, dtype=pred.dtype)
+        for block_index in noisy_blocks:
+            start, end = blocks[int(block_index)]
+            step_weights[start:end] = floor_weight
+        for block_index in learnable_blocks:
+            start, end = blocks[int(block_index)]
+            learnable_mask[start:end] = 1.0
+        step_weights = step_weights / torch.clamp(torch.mean(step_weights), min=1e-6)
+        mean_score = float(torch.mean(novelty_tensor[list(novelty_top)]).detach().cpu())
+
+    squared_error = (pred - true) ** 2
+    time_loss = torch.mean(squared_error * step_weights.view(1, horizon, 1))
+    unit_loss = masked_mse_loss(pred, true, learnable_mask)
+    total_loss = time_loss + aux_weight * unit_loss
+    active_steps = int(torch.sum(learnable_mask).detach().cpu().item())
+    mean_weight = float(torch.mean(step_weights).detach().cpu())
+    unit = SupervisionUnit(
+        unit_type="predictability_downweight",
+        active_steps=active_steps,
+        mask_ratio=active_steps / float(horizon),
+        condition_type="novelty_x_variation",
+        condition_top_blocks=top_blocks,
+        condition_mean_score=mean_score,
+        auxiliary_weight=aux_weight,
+        predictability_learnable_blocks=len(learnable_blocks),
+        predictability_noisy_blocks=len(noisy_blocks),
+        predictability_mean_weight=mean_weight,
+        predictability_floor_weight=floor_weight,
+    )
+    return total_loss, time_loss, unit_loss, unit
+
+
 def curriculum_phase(epoch: int, epochs: int) -> str:
     progress = epoch / float(max(epochs, 1))
     if progress <= 0.3:
@@ -732,6 +817,16 @@ def horizon_decoupled_supervision_loss(
             args.supervision_condition_top_ratio,
             args.supervision_aux_weight,
             args.supervision_condition,
+        )
+    if strategy == "predictability_downweight":
+        return predictability_downweight_loss(
+            pred,
+            true,
+            history,
+            args.supervision_block_size,
+            args.supervision_condition_top_ratio,
+            args.supervision_aux_weight,
+            args.supervision_predictability_floor_weight,
         )
     if strategy in {"component_basis_top", "component_basis_balanced"}:
         if component_basis is None or component_eigenvalues is None:
@@ -1293,6 +1388,7 @@ def parse_args() -> argparse.Namespace:
             "random_future_mask",
             "interval_supervision",
             "conditioned_future_unit_scheduling",
+            "predictability_downweight",
             "component_basis_top",
             "component_basis_balanced",
             "curriculum_units",
@@ -1311,6 +1407,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--supervision-condition-top-ratio", type=float, default=0.25)
     parser.add_argument("--supervision-aux-weight", type=float, default=0.1)
+    parser.add_argument("--supervision-predictability-floor-weight", type=float, default=0.5)
     parser.add_argument("--supervision-component-rank", type=int, default=16)
     parser.add_argument("--supervision-component-beta", type=float, default=0.25)
     parser.add_argument("--supervision-component-alpha", type=float, default=0.5)
@@ -1377,6 +1474,8 @@ def main() -> None:
         raise ValueError("supervision condition top ratio must be in (0, 1].")
     if args.supervision_aux_weight < 0:
         raise ValueError("supervision aux weight must be non-negative.")
+    if not 0 <= args.supervision_predictability_floor_weight <= 1:
+        raise ValueError("supervision predictability floor weight must be in [0, 1].")
     if args.supervision_component_rank <= 0:
         raise ValueError("supervision component rank must be positive.")
     if args.supervision_component_beta < 0:
@@ -1672,6 +1771,10 @@ def main() -> None:
                         "condition_top_blocks": unit.condition_top_blocks,
                         "condition_mean_score": unit.condition_mean_score,
                         "auxiliary_weight": unit.auxiliary_weight,
+                        "predictability_learnable_blocks": unit.predictability_learnable_blocks,
+                        "predictability_noisy_blocks": unit.predictability_noisy_blocks,
+                        "predictability_mean_weight": unit.predictability_mean_weight,
+                        "predictability_floor_weight": unit.predictability_floor_weight,
                         "loss_time": float(time_loss.detach().cpu()),
                         "loss_unit": float(unit_loss.detach().cpu()),
                         "loss_total": float(loss.detach().cpu()),
@@ -1853,6 +1956,7 @@ def main() -> None:
         "condition": args.supervision_condition,
         "condition_top_ratio": args.supervision_condition_top_ratio,
         "aux_weight": args.supervision_aux_weight,
+        "predictability_floor_weight": args.supervision_predictability_floor_weight,
         "component_rank": args.supervision_component_rank,
         "component_beta": args.supervision_component_beta,
         "component_alpha": args.supervision_component_alpha,

@@ -406,6 +406,175 @@ Step 6：重做 condition 可观测性与 CFUS-v2 schedule。
    `balanced condition buckets`，让 condition 同时保护 early/easy regions。
 4. 只有 CFUS-v2 的 local trace 证明不是固定 late weighting 后，再启动新的 small gate。
 
+## Step 4-6 回退：Predictability-Conditioned Scheduling
+
+[Question] 当前 S1 的隐含假设是 high-novelty / hard blocks 应该被加压。但 hard block
+至少有两类：
+
+| Type | 含义 | 合理 training action |
+| --- | --- | --- |
+| `learnable-hard` | 难，但包含可学习结构，例如 smooth shift、趋势变化或周期错位 | 加压或重点学习 |
+| `noisy-hard` / `low-predictability` | 难，因为局部扰动强、简单 predictor 也无法解释 | 降权、隔离或只让 auxiliary path 学习 |
+
+[Fact] SRP++ 不直接提出“avoid hard steps”，但它支持一个关键前提：不同 future
+steps/segments 的学习压力会互相干扰，step-specific adaptation 通过局部 adapter 和 frozen
+foundation 避免 long-range adaptation 破坏 short-term prediction。对本项目的启发是：
+HSS 不一定只做 hard-block emphasis，也可以做 hard-block shielding。
+
+[Decision] 新方向命名为：
+
+> Predictability-Conditioned Supervision Scheduling
+
+核心问题：
+
+> train-side condition 应该区分 learnable-hard 与 noisy-hard。前者可以加压，后者应避免污染
+> shared representation。
+
+### Offline Diagnostic
+
+[Fact] 已新增 train-only diagnostic：
+
+- script: `scripts/analyze_phase4_predictability_diagnostic.py`;
+- analysis root: `analysis/phase4_predictability_diagnostic_20260624`;
+- report:
+  `analysis/phase4_predictability_diagnostic_20260624/phase4_predictability_diagnostic_report.md`;
+- datasets: `ETTh2`, `Weather`;
+- split: train only;
+- pred_len: `720`;
+- block_size: `48`;
+- selected blocks: 按当前 S1 `label_novelty` top ratio `0.25` 复现。
+
+诊断指标：
+
+| Metric | Meaning |
+| --- | --- |
+| `novelty_mse` | 当前 CFUS 的 label novelty，即 future block 相对最后一个 history step 的 MSE |
+| `seasonal24_mse` | 24-step seasonal naive reference 的 MSE |
+| `best_naive_mse` | `min(novelty_mse, seasonal24_mse)`，越高表示简单可预测性越弱 |
+| `local_variation` | future block 内部一阶差分能量 |
+| `smoothness_ratio` | `local_variation / novelty_mse` |
+
+[Fact] 诊断结果：
+
+| Dataset | Selected best-naive ratio | Selected local-variation ratio | Late-block selected share | Interpretation |
+| --- | ---: | ---: | ---: | --- |
+| `ETTh2` | `2.51x` | `1.20x` | `0.485` | selected blocks 更像 smooth shift / learnable-hard |
+| `Weather` | `2.83x` | `8.45x` | `0.436` | selected blocks 明显是 high-variation / noisy-hard |
+
+[Strong Evidence] 这解释了 S1 small gate 的 dataset split：ETTh2 上 hard-block emphasis
+可以接近或超过 R.3；Weather 上同样的 label-novelty emphasis 会把大量 high-variation
+low-predictability blocks 加权，污染 shared 720-step dense learning。
+
+[Decision] 当前 `label_novelty` 不是稳定的 difficulty proxy。下一版不应继续简单给
+high-novelty blocks 加压，也不应仅做 balanced top-k。真正的 CFUS-v2 应转向：
+
+> learnable-hard emphasis + noisy-hard downweight/isolation。
+
+### CFUS-v2 候选
+
+最小设计：
+
+$$
+\mathcal{L}
+=
+\sum_{u\in\mathcal{U}} w_{\text{pred}}(u)\mathcal{L}_u
++
+\lambda
+\sum_{u\in\mathcal{U}_{learnable-hard}} a(u)\mathcal{L}_u.
+$$
+
+其中：
+
+- $w_{\text{pred}}(u)$ 是 predictability-aware dense weight，低可预测 block 不再主导梯度；
+- $\mathcal{U}_{learnable-hard}$ 是 high novelty 但低 local variation / smooth shift 的 blocks；
+- noisy-hard blocks 保留 floor weight，避免完全丢弃，但不再获得额外 auxiliary pressure。
+
+更激进但暂缓的 SRP-inspired 版本：
+
+$$
+\mathcal{L}
+=
+\mathcal{L}_{shared,predictable}
++
+\lambda\mathcal{L}_{isolated,low\text{-}predictability}.
+$$
+
+该版本需要 lightweight adapter 或 detached auxiliary path，当前只作为 Step 6 后续候选，不直接实现。
+
+### 下一步 Gate
+
+1. 先实现 `predictability_downweight`，不改 architecture；
+2. trace 必须记录 per-block predictability score、learnable-hard/noisy-hard bucket、实际 loss weight；
+3. local smoke 必须证明 train/eval 仍解耦，evaluation horizons 仍只用于测试；
+4. small gate 仍只跑 `ETTh2 + Weather`；
+5. pass 条件：保留 CFUS 相对 `full_time_mse` 的收益，同时消除 Weather vs R.3 的全面退化。
+
+### S2 本地实现与 Smoke
+
+`current_step`: Step 7 local implementation complete。
+
+[Decision] 已实现最小 `predictability_downweight`，不改 architecture，只改 training loss：
+
+- branch: `--supervision-strategy predictability_downweight`;
+- code explanation:
+  `docs/code-explanation/phase4-s-predictability-scheduling.md`;
+- remote runner:
+  `scripts/remote/run_phase4_s_predictability_gate.sh`。
+
+训练 loss：
+
+$$
+\mathcal{L}
+=
+\mathcal{L}_{time,predictability-weighted}
++
+\lambda\mathcal{L}_{learnable-hard}.
+$$
+
+其中：
+
+- high novelty blocks 是 hard candidates；
+- high variation blocks 是 noisy-hard proxy；
+- `noisy_blocks = top_novelty \cap top_variation`，在 dense loss 中使用 floor weight；
+- `learnable_blocks = top_novelty - top_variation`，获得 auxiliary emphasis；
+- step weights 均值归一化，避免整体 loss scale 改变过大。
+
+[Verification] local CPU smoke 已通过：
+
+```bash
+conda run -n r2026-fsa python baselines/patch_encoder_target_set_decoder/train.py \
+  --dataset ETTh2 \
+  --target-horizons 96,192,336,720 \
+  --supervision-strategy predictability_downweight \
+  --supervision-pred-len 720 \
+  --supervision-condition-top-ratio 0.25 \
+  --supervision-aux-weight 0.1 \
+  --supervision-predictability-floor-weight 0.5 \
+  --epochs 1 \
+  --steps-per-epoch 2 \
+  --max-eval-batches 1 \
+  --batch-size 16 \
+  --run-name SmokePhase4SPredictabilityDownweight \
+  --output-root artifacts/runs/smoke_phase4_s_predictability \
+  --device cpu
+```
+
+smoke artifact：
+
+- `artifacts/runs/smoke_phase4_s_predictability/SmokePhase4SPredictabilityDownweight/ETTh2/mixed_h96_h192_h336_h720/seed2021`
+
+[Fact] smoke trace 显示：
+
+- `training_evaluation_decoupled=true`;
+- `train_horizons_effective=[720]`;
+- `unit_type=predictability_downweight`;
+- `condition_type=novelty_x_variation`;
+- trace 记录 `predictability_learnable_blocks`、`predictability_noisy_blocks`、
+  `predictability_mean_weight`、`predictability_floor_weight`;
+- prefix mismatch 保持 numerical-zero 量级。
+
+[Decision] 允许进入 Step 8 small remote gate，但必须先 commit/push。
+
 ## 回退规则
 
 - 若 train-side proxy 无法定义，回退到 Step 1：补 literature 和 data diagnostic。

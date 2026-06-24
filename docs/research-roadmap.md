@@ -407,6 +407,102 @@ condition scores，因此不能排除 `label_novelty` 退化为固定 late weigh
    `balanced condition buckets`；
 4. CFUS-v2 local trace 证明不是固定 late weighting 后，再启动新的 small gate。
 
+### Phase4-S2：Predictability-Conditioned Scheduling
+
+`current_step`: Step 7 local implementation complete；下一步是 commit/push 后进入 Step 8
+small remote gate。
+
+[Question] S1 把 high-novelty / hard blocks 统一视为需要加压的对象。但当前实验提出了
+更强的反问题：
+
+> 难预测 block 是否应该被加压，还是应该被降权/隔离，避免污染模型对可预测部分的学习？
+
+[Fact] SRP++ 不直接讨论 hard-block avoidance，但它支持 future-step/segment interference
+这一前提：不同 forecast steps 需要 step-specific representations；冻结 foundation model 和
+segment-specific adapters 可以避免 long-range adaptation 破坏 short-term prediction。对当前
+HSS 主线的启发是：schedule 不一定只强调 hard units，也可以隔离 low-predictability units。
+
+[Decision] 新的核心 idea 是：
+
+> Predictability-Conditioned Supervision Scheduling
+
+即 train-side condition 不只判断 hard/easy，而要判断 hard block 是否可预测：
+
+| Block type | Interpretation | Training action |
+| --- | --- | --- |
+| `learnable-hard` | high novelty but smooth / structured | auxiliary emphasis |
+| `noisy-hard` / `low-predictability` | high novelty and high local variation / weak naive predictability | downweight or isolate |
+| `predictable-easy` | low novelty / stable | dense anchor / prefix protection |
+
+[Fact] 已完成 train-only offline diagnostic：
+
+- script: `scripts/analyze_phase4_predictability_diagnostic.py`;
+- analysis root: `analysis/phase4_predictability_diagnostic_20260624`;
+- report:
+  `analysis/phase4_predictability_diagnostic_20260624/phase4_predictability_diagnostic_report.md`;
+- datasets: `ETTh2`, `Weather`;
+- split: train only；
+- selected blocks: 复现当前 S1 的 `label_novelty` top-4 blocks。
+
+[Fact] 诊断结果：
+
+| Dataset | Selected best-naive ratio | Selected local-variation ratio | Late-block selected share | Interpretation |
+| --- | ---: | ---: | ---: | --- |
+| `ETTh2` | `2.51x` | `1.20x` | `0.485` | high novelty 更像 learnable smooth shift |
+| `Weather` | `2.83x` | `8.45x` | `0.436` | high novelty 明显混入 high-variation / noisy-hard |
+
+[Strong Evidence] 这解释了 S1 small gate：ETTh2 上 selected blocks 更像 learnable-hard，因此
+CFUS 能接近 R.3；Weather 上 selected blocks 更像 noisy-hard，因此 hard-block emphasis
+污染 shared dense learning，导致相对 R.3 全面退化。
+
+[Decision] 不做 `label_novelty` 参数 sweep，也不只做 region-balanced top-k。Phase4-S2
+已实现最小 `predictability_downweight`：
+
+$$
+\mathcal{L}
+=
+\sum_{u\in\mathcal{U}} w_{\text{pred}}(u)\mathcal{L}_u
++
+\lambda
+\sum_{u\in\mathcal{U}_{learnable-hard}} a(u)\mathcal{L}_u.
+$$
+
+其中 low-predictability blocks 保留 floor weight，避免完全丢弃；但它们不再获得额外
+auxiliary pressure，也不应主导 shared representation 的梯度。
+
+[Gate] 下一轮 small gate 必须同时满足：
+
+1. vs `full_time_mse` 保留收益；
+2. Weather vs R.3 不再 `0/4` collapse；
+3. early/predictable blocks 不被牺牲；
+4. trace 记录 per-block predictability score、bucket 和实际 loss weight；
+5. evaluation horizons 仍只用于测试，不进入 training schedule。
+
+[Verification] 本地实现与 smoke 已通过：
+
+- training strategy: `predictability_downweight`;
+- code explanation:
+  `docs/code-explanation/phase4-s-predictability-scheduling.md`;
+- remote runner:
+  `scripts/remote/run_phase4_s_predictability_gate.sh`;
+- smoke artifact:
+  `artifacts/runs/smoke_phase4_s_predictability/SmokePhase4SPredictabilityDownweight/ETTh2/mixed_h96_h192_h336_h720/seed2021`;
+- `training_evaluation_decoupled=true`;
+- `train_horizons_effective=[720]`;
+- `unit_type=predictability_downweight`;
+- trace 记录 `predictability_learnable_blocks`、`predictability_noisy_blocks`、
+  `predictability_mean_weight` 和 `predictability_floor_weight`;
+- prefix mismatch 为 numerical-zero 量级。
+
+[Decision] 下一步允许 Step 8 small remote gate：
+
+- runner: `scripts/remote/run_phase4_s_predictability_gate.sh`;
+- output root:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase4_s_predictability_gate`;
+- datasets: `ETTh2`, `Weather`;
+- strategies: `predictability_downweight`, `full_time_mse`, `r3_prefix_risk`;
+- 不进入 full matrix。
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：

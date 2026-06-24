@@ -45,6 +45,7 @@ run_name_for_strategy() {
     random_future_mask) echo "PatchEncoderRandomFutureMask" ;;
     interval_supervision) echo "PatchEncoderIntervalSupervision" ;;
     conditioned_future_unit_scheduling) echo "PatchEncoderConditionedFutureUnitScheduling" ;;
+    predictability_downweight) echo "PatchEncoderPredictabilityDownweight" ;;
     component_basis_top) echo "PatchEncoderComponentTop" ;;
     component_basis_balanced) echo "PatchEncoderComponentBalanced" ;;
     curriculum_units) echo "PatchEncoderCurriculumUnits" ;;
