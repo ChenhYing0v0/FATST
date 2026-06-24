@@ -416,9 +416,10 @@ HSS 研究问题保留，但回退到 Step 4/6：重新设计 conditioned schedu
 
 | ID | Candidate | 目标 |
 | --- | --- | --- |
-| `S2_r3_plus_sparse_unit_aux` | R.3 base loss + 小权重 sparse horizon-free auxiliary unit | 第一优先级；测试 HSS 作为辅助 schedule，而非替换 objective |
-| `S1_difficulty_conditioned_interval` | interval sampling probability 由 label novelty / running loss bucket 决定 | 第二优先级；让 interval unit pressure 对难例自适应 |
-| `S3_error_process_reweighting` | 用 residual/error-process proxy 调整 future unit pressure | 把 supervision pressure 连接到 error process |
+| `S1_conditioned_future_unit_scheduling` | `pred_len=720` full future dense anchor + train-side conditioned sparse unit pressure | 第一优先级；独立 HSS training strategy，不 repair R.3 |
+| `S2_difficulty_conditioned_interval` | interval sampling probability 由 label novelty / running loss bucket 决定 | 第二优先级；让 interval unit pressure 对难例自适应 |
+| `S3_r3_plus_aux_control` | R.3 base loss + 小权重 sparse horizon-free auxiliary unit | control only；检验 auxiliary 与 R.3 是否冲突，不作为 paper-core |
+| `S4_error_process_reweighting` | 用 residual/error-process proxy 调整 future unit pressure | 把 supervision pressure 连接到 error process |
 
 [Strong Evidence] post-hoc diagnostic 已完成：
 
@@ -430,9 +431,10 @@ HSS 研究问题保留，但回退到 Step 4/6：重新设计 conditioned schedu
 [Gate] Phase4-S 进入实现前仍必须完成：
 
 1. 定义不依赖 evaluation horizon identity 的 train-side condition；
-2. 先做 `S2_r3_plus_sparse_unit_aux`，不直接替换 R.3 objective；
-3. 写出 local smoke protocol；
-4. 若 condition 退化成固定 late weighting，回退 Step 4。
+2. 第一主线必须是独立 HSS training strategy，不以 R.3 loss 为 base；
+3. `S3_r3_plus_aux_control` 只能作为 conflict/control，不作为主线；
+4. 写出 local smoke protocol；
+5. 若 condition 退化成固定 late weighting，回退 Step 4。
 
 ## 当前结论
 

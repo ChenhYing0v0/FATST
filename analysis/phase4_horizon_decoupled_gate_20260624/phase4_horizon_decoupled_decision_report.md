@@ -181,8 +181,8 @@
 最小下一步：
 
 1. 用本轮 artifacts 做 post-hoc diagnostic：哪些 samples/segments 在 R.3 下高 residual，mask/interval 是否覆盖这些 regions。
-2. 设计 `difficulty_conditioned_interval`：仍训练 720 future sequence，但 interval sampling probability 由 train-label novelty 或 running loss bucket 决定。
-3. 设计 `r3_plus_sparse_unit_aux`：保留 R.3 base loss，只加小权重 horizon-free auxiliary unit，而不是替换 R.3 objective。
+2. 设计 `conditioned_future_unit_scheduling`：仍训练 720 future sequence，用 dense anchor + train-side conditioned sparse unit pressure，形成独立 HSS strategy。
+3. 将 `R.3 + auxiliary` 降级为 conflict/control，只回答 auxiliary 是否与 prefix-risk 冲突，不作为 paper-core。
 4. 先做 local diagnostic / small remote gate，再决定是否进入 full matrix。
 
-Rollback point: Step 4/6。当前 HSS 问题保留，具体 idea 从 static horizon-decoupled replacement 改为 conditioned auxiliary scheduling。
+Rollback point: Step 4/6。当前 HSS 问题保留，具体 idea 从 static horizon-decoupled replacement 改为 conditioned future-unit scheduling。

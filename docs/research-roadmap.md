@@ -326,9 +326,10 @@ future-aware 或 MoE 叠在失败策略上。
 
 | ID | Candidate | Role |
 | --- | --- | --- |
-| `S2_r3_plus_sparse_unit_aux` | 保留 R.3 base loss，加小权重 horizon-free sparse auxiliary unit | 第一优先级；测试 HSS 作为辅助 schedule，而非替换 objective |
-| `S1_difficulty_conditioned_interval` | 训练 `720` future sequence，但 interval sampling probability 由 label novelty / running loss bucket 决定 | 第二优先级；测试 conditioned unit pressure |
-| `S3_error_process_reweighting` | 用 validation residual 或 train-side proxy 调整 future unit pressure | 测试 error-process-aware supervision |
+| `S1_conditioned_future_unit_scheduling` | `pred_len=720` full future dense anchor + train-side conditioned sparse unit pressure | 第一优先级；独立 HSS training strategy，不 repair R.3 |
+| `S2_difficulty_conditioned_interval` | 训练 `720` future sequence，但 interval sampling probability 由 label novelty / running loss bucket 决定 | 第二优先级；测试 conditioned unit pressure |
+| `S3_r3_plus_aux_control` | R.3 base loss + 小权重 sparse auxiliary unit | control only；检验 auxiliary 与 R.3 是否冲突，不作为 paper-core |
+| `S4_error_process_reweighting` | 用 train-side residual proxy 调整 future unit pressure | 扩展候选；测试 error-process-aware supervision |
 
 [Strong Evidence] post-hoc diagnostic 已完成，支持 Phase4-S 作为 hypothesis 继续推进：
 
@@ -338,14 +339,17 @@ future-aware 或 MoE 叠在失败策略上。
 - early region 上所有候选均为 `0/12` wins，说明全局静态 pressure 会损伤 easy/early regions。
 
 [Decision] 这支持 conditioned schedule 的问题定义，但不等于 implementation gate 已通过。
-下一步必须先定义不依赖 evaluation horizon identity 的 train-side condition。
+同时，不能把下一步降级为 repair R.3。R.3 只作为 primary baseline、carrier sanity check 和
+control 参照；修好 R.3 不是本文 core narrative。
 
 实现前必须完成：
 
-1. 为 `S2_r3_plus_sparse_unit_aux` 定义 auxiliary unit 和 $\lambda$ gate；
-2. 为 `S1_difficulty_conditioned_interval` 定义 train-side difficulty proxy；
+1. 为 `S1_conditioned_future_unit_scheduling` 定义 dense anchor、conditioned sparse unit 和
+   $\lambda$ gate；
+2. 为 `S2_difficulty_conditioned_interval` 定义 train-side difficulty proxy；
 3. 确认 proxy 不直接使用 `96,192,336,720` 作为 training schedule；
-4. 写出 local smoke protocol，再允许代码实现。
+4. 明确 `S3_r3_plus_aux_control` 只是 ablation/control，不进入主线；
+5. 写出 local smoke protocol，再允许代码实现。
 
 ## 历史证据索引
 

@@ -112,6 +112,6 @@
 
 推荐优先级：
 
-1. `S2_r3_plus_sparse_unit_aux`：保留 R.3 base loss，把 static replacement 改成 low-weight auxiliary，风险最低。
-2. `S1_difficulty_conditioned_interval`：用 train-label novelty 或 running loss bucket 条件化 interval sampling。
-3. `S3_error_process_reweighting`：只有在 residual proxy 可由 train split 稳定估计时再做。
+1. `S1_conditioned_future_unit_scheduling`：使用 full future dense anchor + train-side conditioned sparse unit pressure，作为独立 HSS training strategy。
+2. `S2_difficulty_conditioned_interval`：用 train-label novelty 或 running loss bucket 条件化 interval sampling。
+3. `S3_r3_plus_aux_control`：只作为 conflict/control，不作为 paper-core。
