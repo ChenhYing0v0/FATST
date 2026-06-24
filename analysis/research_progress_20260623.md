@@ -1216,3 +1216,55 @@ objective-pressure 改动，而不是 operator 结构本身。
   bash scripts/remote/run_phase1_target_set_decoder_gate.sh`;
 - progress at 2026-06-24 12:50 CST:
   `ETTm1 6/100`, `Weather 2/100`, `ETTh2 queued`。
+
+## 26. Research Narrative Update: Horizon Supervision Scheduling as Core
+
+[Decision] 当前论文 core innovation 升级为 `Horizon Supervision Scheduling for Unified
+Multi-Horizon Forecasting`。研究主线不再是直接堆叠 future-aware operator、regime operator
+或 MoE，而是研究 multi-horizon unified forecasting 的训练监督过程是否存在结构性冲突，
+以及如何调度 supervision signal。
+
+[Core Claim] Evaluation horizons 是模型最终需要覆盖的预测能力集合；training horizons
+是训练过程中施加监督的 sampling、combination、curriculum 和 weighting 策略。两者不应
+默认严格等价。即使最终评估目标仍是 `96,192,336,720`，训练过程也不必在每个 step 中
+同时、等频、等权地优化四个 horizons。
+
+[Motivation] 现有 horizon-specific forecasting 通常是“评估哪个 horizon 就训练哪个
+horizon”；许多 unified 或 foundation-style forecaster 即使支持多 horizon，也倾向于在训练中
+同时优化多个 horizon objective。两者都默认 training supervision process 与 evaluation
+horizon set 高度一致。当前 Phase3-C full horizon-set control 失败，而 `h96,h720` reduced
+horizon set 出现 positive signal，提示更底层的问题可能是 `horizon-set interference`。
+
+[Hypothesis] `192/336` intermediate horizons 可能在 mixed-horizon training 中引入折中型
+objective pressure，削弱 `96` short-regime 与 `720` long-regime 的表示专门化。若 R.3
+carrier 的 `h96,h720` control 也能复现 positive signal，则说明收益主要来自 supervision
+schedule，而不是 Phase3-C operator。
+
+[Research Hierarchy]
+
+1. 一级核心创新：`horizon supervision scheduling`，包括 horizon subset sampling、
+   curriculum horizon expansion、non-uniform horizon weighting，以及 training/evaluation
+   horizon decoupling。
+2. 二级机制创新：`future-aware architecture`，用于解释或增强不同 horizon supervision
+   下的 future-state / error-growth 表征。
+3. 二级机制创新：`MoE-style conditional computation`，仅在一级主线证明存在稳定
+   horizon/regime heterogeneity 后，用作 conditional specialization。
+
+[11-Step Loop]
+
+- `current_step`: 回到 Step 2-3/6。
+- `problem`: unified multi-horizon forecasting 中，training supervision schedule 是否存在
+  可测量的 horizon interference。
+- `existence_evidence`: Phase3-C full horizon-set control fails；reduced `h96,h720` setting
+  positive；当前已启动 R.3 carrier `h96,h720` control。
+- `idea`: 将 horizon supervision schedule 作为 paper-core design variable，而非把训练目标
+  固定为 evaluation horizon set 的镜像。
+- `theory_check`: 不同 horizons 对局部状态、趋势、周期和 error-growth 的依赖不同，同步
+  等权优化可能产生 gradient/objective conflict。
+- `design`: 先用 `PatchEncoderPrefixRiskWeightedH96H720` 判断 reduced horizon set 是否足以
+  解释 positive signal；之后扩展到 subset sampling、curriculum 和 non-uniform weighting。
+- `gate`: 在 full evaluation horizons 上保持或超过 R.3，并用 horizon/segment/gradient 或
+  representation diagnostics 支持 reduced interference 解释。
+- `artifacts`: `analysis/phase3_horizon_set_interference_20260624/`。
+- `decision`: future-aware 与 MoE 降为二级机制；在 horizon supervision scheduling 主线通过
+  初步 gate 前，不作为独立主线推进。

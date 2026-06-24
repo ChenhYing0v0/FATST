@@ -5,16 +5,33 @@
 [Fact] 本仓库是 `R_2026_FSA` 的 clean successor，但不默认继承旧仓库代码、
 配置、实验输出或未审计记忆。
 
-[Fact] 当前目标是围绕 time series forecasting 形成一篇高水平 SCI 期刊论文。候选
-方向包括：
+[Fact] 当前目标是围绕 time series forecasting 形成一篇高水平 SCI 期刊论文。
 
-1. `one model for multi-horizon forecasting`
-2. `future-aware architecture`
-3. `MoE-style conditional computation`
+[Decision] 当前论文 core innovation 升级为：
 
-[Decision] 这三个方向不是三个可以直接堆叠的模块，而是一个统一模型框架的候选构件。
-每个构件必须先通过独立 research loop，证明它解决的问题真实、理论上合理、工程上可实现，
-并且能带来 performance evidence 或 paper narrative evidence。
+> `Horizon Supervision Scheduling for Unified Multi-Horizon Forecasting`
+
+核心问题不再是单纯“一个模型能否输出多个 horizon”，也不再是先堆叠
+future-aware 或 MoE 模块；而是研究 unified multi-horizon forecasting 中，
+training supervision process 是否必须与 evaluation horizon set 严格等价。
+本项目的主线假设是：模型最终需要覆盖 `96,192,336,720`，但训练过程不必在每个
+optimization step 中同时、等频、等权地优化这些 horizons。合理调度 horizon
+supervision 的出现时机、组合方式和权重，可能减少 horizon interference，并提升
+variable-horizon forecasting。
+
+[Decision] 后续研究方向按层级组织：
+
+1. 一级核心创新：`horizon supervision scheduling`，包括 horizon subset sampling、
+   curriculum horizon expansion、non-uniform horizon weighting，以及 training horizons
+   与 evaluation horizons 的可证伪解耦。
+2. 二级机制创新：`future-aware architecture`，用于解释或增强不同 horizon supervision
+   下的 future-state / error-growth 表征。
+3. 二级机制创新：`MoE-style conditional computation`，仅在一级主线证明存在可稳定利用的
+   horizon/regime heterogeneity 后，作为 conditional specialization 机制进入。
+
+[Decision] 这些方向不是可以直接堆叠的模块。一级主线先回答“监督训练过程如何组织”
+这个 paper-core 问题；future-aware 与 MoE 必须服务于该主线，不能在 horizon supervision
+conflict 尚未证明和建模前独立推进。
 
 ## 长研究执行模板
 
@@ -65,40 +82,70 @@ loop 中的角色，再进入远程训练。
 
 ## 当前总判断
 
+[Decision] 当前研究共识更新为：论文主线从“设计一个更复杂的 decoder/operator”转向
+“研究 multi-horizon unified forecasting 的训练监督过程是否存在结构性冲突，以及如何调度
+supervision signal”。Evaluation horizons 是模型最终需要覆盖的能力集合；training horizons
+是训练过程中施加监督的采样、组合和权重策略。两者不应默认画等号。
+
+[Hypothesis] `96,192,336,720` 同时训练可能把模型推向折中表示：short horizon 更依赖
+近邻局部状态，long horizon 更依赖趋势/周期/低频结构，而 intermediate horizons
+`192/336` 可能引入 objective pressure，削弱 short/long regimes 的专门化能力。
+因此，`h96,h720` reduced horizon set 的 positive signal 应首先被解释为
+`horizon-set interference` 证据，而不是某个 operator 的结构收益。
+
+[Decision] 当前 paper-core 候选问题定义为：
+
+> In unified multi-horizon forecasting, evaluation horizons define the required
+> forecast capability, but the training supervision schedule should be treated
+> as an independent design variable rather than a fixed mirror of the evaluation
+> horizon set.
+
+[Decision] 后续实验优先级：
+
+1. 验证 full horizon joint training 是否不是最优监督过程。
+2. 验证 horizon subset / curriculum / non-uniform scheduling 能否在 full evaluation
+   horizons 上保持或提升表现。
+3. 用 gradient conflict、per-horizon loss trajectory、segment-level error、
+   representation similarity 或 horizon-wise covariance diagnostics 解释收益是否来自
+   reduced interference，而不是偶然 regularization。
+4. 只有当以上证据成立时，才把 future-aware 或 MoE 作为第二级机制，用于建模或利用
+   horizon supervision 诱导出的 state/regime heterogeneity。
+
 [Strong Evidence] Phase0 与 Phase1-A.1 到 A.6 已经给出一个关键结论：
 `PatchEncoderFixedHead` 是当前 canonical internal base，且 horizon-specific fixed head
 非常强。围绕它追加轻量 decoder patch、adapter、future-aware alignment 或 output residual，
 都没有稳定形成 paper-core 级别收益。
 
-[Inference] 因此，当前不应继续把 “variable-horizon 本身” 作为第一创新点，也不应直接在
-A.5/A.6 上叠加 future-aware 或 MoE。更合理的收敛方向是：
+[Inference] 因此，当前不应继续把“输出长度灵活”或“单纯一个模型覆盖多 horizon”作为第一
+创新点，也不应直接在 A.5/A.6 上叠加 future-aware 或 MoE。更合理的收敛方向是：
 
 > time series forecasting 的缺口不只是 encoder 不够强，也不只是输出长度不灵活；
-> 更底层的问题是 target future positions / segments 没有作为预测过程的显式输入来建模。
+> 更底层的问题是 training supervision 如何组织 horizon / future positions / segments。
 
-[Decision] 当前 Phase1 已从 `Future-Segment Decoder patching` 回退到
+[Decision] 历史上 Phase1 曾从 `Future-Segment Decoder patching` 回退到
 `Target-Set Forecasting Decoder` 的问题重定义。该方向先验证 one-model / target-set
 interface 是否能以可控 amortization gap 接近 horizon-specific specialists，并改善
-prefix consistency。只有该 interface 至少达到 compatibility pass，后续 future-aware 和 MoE
-才有稳定 carrier。
+prefix consistency。该阶段证明 target-set carrier 可用，但后续 Phase2/Phase3 也显示：
+继续追加 future-aware、error-process 或 regime operator 并不能稳定形成 paper-core。
 
 [Decision] `PatchEncoderPrefixRiskWeighted` remote gate 已达到 compatibility pass：
 one-model target-set interface 在不改变 architecture 的情况下，将 mean relative MSE 从第一版
 `+0.62%` 推到 `-0.43%`，且 H720-prefix h96/h192 相比 fixed H720-prefix 改善 `-2.46%`。
 这说明 target-set carrier 是可用的，mixed-horizon objective 确实是一个 active bottleneck。
 
-[Decision] 但 R.3 仍不是 paper-core pass。它本质是 objective weighting，不是足够完整的
-decoder/process mechanism；并且 `ETTm1 / h96` 仍退化 `+2.83%`，long horizon 也没有全面领先。
-因此当前阶段不能停在“调 loss 通过 compatibility”上，而应进入下一轮 step 1-6：
-围绕 target-side state 与 future-aware mechanism，提出一个更强的、可解释的 forecasting
-process innovation。
+[Decision] R.3 过去被判断为不是 paper-core pass，因为它看起来只是 objective weighting。
+但结合 Phase3-C full horizon-set control，当前解释需要升级：R.3 的价值不在于一个手工
+loss trick，而在于它暴露了 `mixed-horizon objective / horizon-set interference` 这个
+paper-core 问题。后续不再把它作为终点，也不把它作为 future-aware/MoE 的简单 carrier；
+而是以它为最小实验基座，系统研究 horizon supervision scheduling。
 
 下一轮必须先回答：
 
-1. prefix-risk weighting 暴露出的早期 future risk 是否对应可建模的 future-state uncertainty；
-2. target-side state $U_T$ 是否能承载 training-only future signal，而不是只作为 readout FiLM；
-3. 新 idea 是否能在不破坏 R.3 compatibility carrier 的条件下，把 future-aware signal 转化为
-   horizon/segment 可定位的 forecast gain。
+1. full horizon joint supervision 是否确实会压制 short/long horizon regimes；
+2. reduced horizon subset、horizon sampling、curriculum 或 non-uniform weighting 是否能在
+   full evaluation horizons 上稳定优于 R.3/full-joint training；
+3. 这种收益是否可由 gradient conflict、horizon-wise loss trajectory、segment error 或
+   representation diagnostics 解释，而不是偶然 regularization。
 
 ## Phase0: Canonical Base
 

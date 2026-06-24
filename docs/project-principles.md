@@ -4,8 +4,12 @@
 
 - [Fact] 本仓库是 `R_2026_FSA` 的后续研究仓库，但以干净起点推进。
 - [Fact] 目标是围绕 time series forecasting 产出高水平 SCI 期刊论文。
-- [Fact] 准备推进的方向包括 one model for multi-horizon、future-aware
-  architecture、MoE。
+- [Decision] 当前论文 core innovation 是 `Horizon Supervision Scheduling for
+  Unified Multi-Horizon Forecasting`：研究 evaluation horizons 与 training
+  supervision horizons 是否必须等价，以及如何通过 sampling、curriculum 和 weighting
+  调度监督信号来降低 horizon interference。
+- [Decision] `future-aware architecture` 与 `MoE` 是二级机制创新，只能服务于上述主线；
+  不在 horizon supervision conflict 尚未证明和建模前独立推进。
 - [Fact] Zotero 的 `FSA` 子集是当前文献种子集合。
 - [Fact] 重点对比 baseline 是 SRSNet。
 - [Fact] 本地可用 conda 环境是 `r2026-fsa`。
@@ -25,6 +29,9 @@
 ## 研究推进原则
 
 - 先建立可审计的最小实验链路，再扩展模型复杂度。
+- 当前主线优先研究 supervision process，而不是直接堆叠 decoder/operator 模块。
+- 模型最终评估需要覆盖 `96,192,336,720`，但训练过程可以把 horizon sampling、
+  horizon subset、curriculum 和 loss weighting 作为独立设计变量。
 - 每个新 model component 都需要说明它服务的 mechanism claim。
 - 每个实验结论都需要记录数据集、horizon、baseline、seed、环境和输出路径。
 - 强结论必须来自可复查 artifact，而不是聊天上下文。
