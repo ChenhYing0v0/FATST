@@ -12,11 +12,15 @@ EPOCHS="${EPOCHS:-100}"
 TARGET_HORIZONS="${TARGET_HORIZONS:-96,192,336,720}"
 DATASETS="${DATASETS:-ETTh2 ETTm1 Weather}"
 RUN_NAME="${RUN_NAME:-PatchEncoderTargetSetDecoder}"
+MODEL_VARIANT="${MODEL_VARIANT:-target_set}"
+USE_WINDOW_POSITION="${USE_WINDOW_POSITION:-0}"
 PREFIX_RESIDUAL_SEGMENTS="${PREFIX_RESIDUAL_SEGMENTS:-0}"
 PREFIX_RESIDUAL_DROPOUT="${PREFIX_RESIDUAL_DROPOUT:-0.0}"
 TARGET_INTERACTION_LAYERS="${TARGET_INTERACTION_LAYERS:-0}"
 TARGET_INTERACTION_HEADS="${TARGET_INTERACTION_HEADS:-0}"
 TARGET_INTERACTION_D_FF="${TARGET_INTERACTION_D_FF:-0}"
+REGIME_HIDDEN_DIM="${REGIME_HIDDEN_DIM:-64}"
+REGIME_DROPOUT="${REGIME_DROPOUT:-0.0}"
 STEP_LOSS_WEIGHTING="${STEP_LOSS_WEIGHTING:-uniform}"
 STEP_LOSS_ALPHA="${STEP_LOSS_ALPHA:-0.5}"
 STEPS_PER_EPOCH="${STEPS_PER_EPOCH:-}"
@@ -66,11 +70,15 @@ echo "epochs=${EPOCHS}"
 echo "datasets=${DATASETS}"
 echo "target_horizons=${TARGET_HORIZONS}"
 echo "run_name=${RUN_NAME}"
+echo "model_variant=${MODEL_VARIANT}"
+echo "use_window_position=${USE_WINDOW_POSITION}"
 echo "prefix_residual_segments=${PREFIX_RESIDUAL_SEGMENTS}"
 echo "prefix_residual_dropout=${PREFIX_RESIDUAL_DROPOUT}"
 echo "target_interaction_layers=${TARGET_INTERACTION_LAYERS}"
 echo "target_interaction_heads=${TARGET_INTERACTION_HEADS}"
 echo "target_interaction_d_ff=${TARGET_INTERACTION_D_FF}"
+echo "regime_hidden_dim=${REGIME_HIDDEN_DIM}"
+echo "regime_dropout=${REGIME_DROPOUT}"
 echo "step_loss_weighting=${STEP_LOSS_WEIGHTING}"
 echo "step_loss_alpha=${STEP_LOSS_ALPHA}"
 echo "steps_per_epoch=${STEPS_PER_EPOCH:-auto}"
@@ -97,6 +105,9 @@ run_one() {
   if [[ "${SAVE_PREDICTIONS}" == "1" ]]; then
     extra_args+=(--save-predictions)
   fi
+  if [[ "${USE_WINDOW_POSITION}" == "1" ]]; then
+    extra_args+=(--use-window-position)
+  fi
 
   if [[ -s "${run_dir}/metrics_by_target_horizon.csv" ]]; then
     echo "skip_existing model=${RUN_NAME} dataset=${dataset}"
@@ -112,11 +123,14 @@ run_one() {
     --epochs "${EPOCHS}" \
     --seed "${SEED}" \
     --run-name "${RUN_NAME}" \
+    --model-variant "${MODEL_VARIANT}" \
     --prefix-residual-segments "${PREFIX_RESIDUAL_SEGMENTS}" \
     --prefix-residual-dropout "${PREFIX_RESIDUAL_DROPOUT}" \
     --target-interaction-layers "${TARGET_INTERACTION_LAYERS}" \
     --target-interaction-heads "${TARGET_INTERACTION_HEADS}" \
     --target-interaction-d-ff "${TARGET_INTERACTION_D_FF}" \
+    --regime-hidden-dim "${REGIME_HIDDEN_DIM}" \
+    --regime-dropout "${REGIME_DROPOUT}" \
     --step-loss-weighting "${STEP_LOSS_WEIGHTING}" \
     --step-loss-alpha "${STEP_LOSS_ALPHA}" \
     --output-root "${OUTPUT_ROOT}" \

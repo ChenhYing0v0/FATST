@@ -63,6 +63,12 @@
   gate 的 GPU、完成 run 数、metrics 数和最新 log tail。
 - `sync_phase2_qdf_upstream_results.sh`: 本地运行；从 3090 同步 QDF upstream artifacts 到
   `analysis/phase2_qdf_upstream_gate_20260623/raw/`，随后运行 QDF upstream analyzer。
+- `remote/run_phase3_regime_segment_operator_gate.sh`: Phase3-C
+  `PatchEncoderRegimeSegmentTargetOperator` 最小 gate。默认 `DATASETS="ETTm1 Weather ETTh2"`、
+  `TARGET_HORIZONS=96,720`、`MODEL_VARIANT=regime_segment_operator`、
+  `USE_WINDOW_POSITION=1`，用于先验证 short-extra-window 与 H720 late-segment gaps。
+- `remote/check_phase3_regime_segment_operator_progress.sh`: 在 3090 项目目录中检查
+  Phase3-C 最小 gate 进度，输出 dataset 矩阵位置、epoch/total、ETA 和 outer log tail。
 
 ## Analysis
 
@@ -107,6 +113,9 @@
   解析 QDF native outputs 中的 `metrics.npy`、`cov_matrix.pdf`、`A.pth` 与 logs，
   输出 `all` vs `diag/off_diag` controls 的 gate report。只有 `all` 而没有 controls
   时，gate 会保持 incomplete。
+- `analyze_phase3_regime_segment_mechanism.py`: Phase3-B diagnostic。使用 R.3
+  prediction artifacts 与 test split history/window-position features，检查 short-only extra
+  windows 与 H720 late high-error segments 是否能被 prediction-before signal 分离。
 
 远程实验前仍必须先检查 `529_Lab-3090` 的 GPU 占用；runner 中的 `nvidia-smi`
 输出只作为启动时记录，不替代人工选择 GPU。

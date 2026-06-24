@@ -40,7 +40,10 @@ class StandardScaler:
         return (values - self.mean) / self.std
 
 
-class ForecastDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
+ForecastItem = tuple[torch.Tensor, torch.Tensor] | tuple[torch.Tensor, torch.Tensor, torch.Tensor]
+
+
+class ForecastDataset(Dataset[ForecastItem]):
     def __init__(
         self,
         dataset_root: str | Path,
@@ -49,6 +52,7 @@ class ForecastDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
         seq_len: int,
         pred_len: int,
         scale: bool = True,
+        return_index: bool = False,
     ) -> None:
         if dataset not in DATASETS:
             raise ValueError(f"Unknown dataset: {dataset}")
@@ -58,6 +62,7 @@ class ForecastDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
         self.spec = DATASETS[dataset]
         self.seq_len = seq_len
         self.pred_len = pred_len
+        self.return_index = return_index
         path = Path(dataset_root) / self.spec.relative_path
         if not path.exists():
             raise FileNotFoundError(path)
@@ -101,7 +106,12 @@ class ForecastDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
     def __len__(self) -> int:
         return len(self.data) - self.seq_len - self.pred_len + 1
 
-    def __getitem__(self, index: int) -> tuple[torch.Tensor, torch.Tensor]:
+    def __getitem__(self, index: int) -> ForecastItem:
         x_end = index + self.seq_len
         y_end = x_end + self.pred_len
-        return torch.from_numpy(self.data[index:x_end]), torch.from_numpy(self.data[x_end:y_end])
+        x = torch.from_numpy(self.data[index:x_end])
+        y = torch.from_numpy(self.data[x_end:y_end])
+        if not self.return_index:
+            return x, y
+        denom = max(len(self) - 1, 1)
+        return x, y, torch.tensor(float(index) / float(denom), dtype=torch.float32)

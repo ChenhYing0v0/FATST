@@ -16,7 +16,11 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
 from dataset import DATASETS, ForecastDataset
-from model import PatchEncoderErrorProcessDecoder, PatchEncoderTargetSetDecoder
+from model import (
+    PatchEncoderErrorProcessDecoder,
+    PatchEncoderRegimeSegmentTargetOperator,
+    PatchEncoderTargetSetDecoder,
+)
 
 STEP_REGIONS = [(1, 96), (97, 192), (193, 336), (337, 720)]
 
@@ -152,6 +156,60 @@ def residual_smoothness_np(residual: np.ndarray) -> float:
     return float(np.mean(second_diff * second_diff))
 
 
+def regime_segment_operator_stats(components: dict[str, np.ndarray]) -> list[dict[str, float | str]]:
+    scale = components["regime_operator_scale"]
+    shift = components["regime_operator_shift"]
+    rows: list[dict[str, float | str]] = [
+        {
+            "scope": "all",
+            "mean_abs_scale": float(np.mean(np.abs(scale))),
+            "mean_abs_shift": float(np.mean(np.abs(shift))),
+            "max_abs_scale": float(np.max(np.abs(scale))),
+            "max_abs_shift": float(np.max(np.abs(shift))),
+        }
+    ]
+    for segment_index in range(scale.shape[2]):
+        rows.append(
+            {
+                "scope": f"segment_{segment_index}",
+                "mean_abs_scale": float(np.mean(np.abs(scale[:, :, segment_index, :]))),
+                "mean_abs_shift": float(np.mean(np.abs(shift[:, :, segment_index, :]))),
+                "max_abs_scale": float(np.max(np.abs(scale[:, :, segment_index, :]))),
+                "max_abs_shift": float(np.max(np.abs(shift[:, :, segment_index, :]))),
+            }
+        )
+    return rows
+
+
+def regime_feature_stats(components: dict[str, np.ndarray]) -> list[dict[str, float | str]]:
+    features = components["regime_features"]
+    feature_names = [
+        "history_mean",
+        "history_std",
+        "history_abs_mean",
+        "history_last_abs",
+        "history_recent_mean",
+        "history_recent_std",
+        "history_recent_minus_previous",
+        "history_second_minus_first",
+        "history_slope_abs",
+        "window_index_norm",
+    ]
+    rows: list[dict[str, float | str]] = []
+    for feature_index, feature_name in enumerate(feature_names):
+        values = features[:, :, feature_index]
+        rows.append(
+            {
+                "feature": feature_name,
+                "mean": float(np.mean(values)),
+                "std": float(np.std(values)),
+                "mean_abs": float(np.mean(np.abs(values))),
+                "max_abs": float(np.max(np.abs(values))),
+            }
+        )
+    return rows
+
+
 def mean_adjacent_state_cosine(states: np.ndarray, start_segment: int, end_segment: int) -> float:
     selected = states[:, :, start_segment:end_segment, :]
     if selected.shape[2] < 2:
@@ -240,22 +298,37 @@ def future_alignment_stats(
     shuffled_leakage = []
     zero_leakage = []
     with torch.no_grad():
-        for batch_index, (x, y) in enumerate(loader, start=1):
+        for batch_index, batch in enumerate(loader, start=1):
+            x, y, window_index_norm = unpack_batch(batch)
             x = x.float().to(device)
             y = y.float().to(device)
-            no_future = model(x, pred_len=pred_len, return_components=True)
-            true_future = model(x, pred_len=pred_len, future_y=y, return_components=True)
+            window_index_norm = tensor_to_device(window_index_norm, device)
+            no_future = model(
+                x,
+                pred_len=pred_len,
+                return_components=True,
+                window_index_norm=window_index_norm,
+            )
+            true_future = model(
+                x,
+                pred_len=pred_len,
+                future_y=y,
+                return_components=True,
+                window_index_norm=window_index_norm,
+            )
             shuffled_future = model(
                 x,
                 pred_len=pred_len,
                 future_y=y.flip(0),
                 return_components=True,
+                window_index_norm=window_index_norm,
             )
             zero_future = model(
                 x,
                 pred_len=pred_len,
                 future_y=torch.zeros_like(y),
                 return_components=True,
+                window_index_norm=window_index_norm,
             )
             if not isinstance(no_future, dict) or not isinstance(true_future, dict):
                 raise TypeError("Expected component dict from model.")
@@ -659,10 +732,17 @@ def evaluate(
         "prefix_residual_norm": [],
     }
     with torch.no_grad():
-        for batch_index, (x, y) in enumerate(loader, start=1):
+        for batch_index, batch in enumerate(loader, start=1):
+            x, y, window_index_norm = unpack_batch(batch)
             x = x.float().to(device)
             y = y.float().to(device)
-            output = model(x, pred_len=pred_len, return_components=True)
+            window_index_norm = tensor_to_device(window_index_norm, device)
+            output = model(
+                x,
+                pred_len=pred_len,
+                return_components=True,
+                window_index_norm=window_index_norm,
+            )
             if not isinstance(output, dict):
                 raise TypeError("PatchEncoderTargetSetDecoder must return component dict.")
             pred = output["prediction"]
@@ -692,13 +772,15 @@ def prefix_consistency(
     model.eval()
     mismatch: dict[int, list[np.ndarray]] = {horizon: [] for horizon in short_horizons}
     with torch.no_grad():
-        for batch_index, (x, _) in enumerate(loader, start=1):
+        for batch_index, batch in enumerate(loader, start=1):
+            x, _, window_index_norm = unpack_batch(batch)
             x = x.float().to(device)
-            long_pred = model(x, pred_len=long_horizon)
+            window_index_norm = tensor_to_device(window_index_norm, device)
+            long_pred = model(x, pred_len=long_horizon, window_index_norm=window_index_norm)
             if isinstance(long_pred, dict):
                 raise TypeError("Expected tensor prediction.")
             for horizon in short_horizons:
-                short_pred = model(x, pred_len=horizon)
+                short_pred = model(x, pred_len=horizon, window_index_norm=window_index_norm)
                 if isinstance(short_pred, dict):
                     raise TypeError("Expected tensor prediction.")
                 diff = short_pred - long_pred[:, :horizon, :]
@@ -737,10 +819,11 @@ def build_loaders(
     horizons: list[int],
     batch_size: int,
     drop_last: bool,
+    return_index: bool = False,
 ) -> dict[int, DataLoader]:
     return {
         horizon: DataLoader(
-            ForecastDataset(dataset_root, dataset, split, seq_len, horizon),
+            ForecastDataset(dataset_root, dataset, split, seq_len, horizon, return_index=return_index),
             batch_size=batch_size,
             shuffle=(split == "train"),
             drop_last=drop_last,
@@ -749,16 +832,35 @@ def build_loaders(
     }
 
 
+def unpack_batch(
+    batch: tuple[torch.Tensor, torch.Tensor] | tuple[torch.Tensor, torch.Tensor, torch.Tensor],
+) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor | None]:
+    if len(batch) == 2:
+        x, y = batch
+        return x, y, None
+    x, y, window_index_norm = batch
+    return x, y, window_index_norm
+
+
+def tensor_to_device(value: torch.Tensor | None, device: torch.device) -> torch.Tensor | None:
+    if value is None:
+        return None
+    return value.float().to(device)
+
+
 def next_batch(
     loaders: dict[int, DataLoader],
-    iterators: dict[int, Iterator[tuple[torch.Tensor, torch.Tensor]]],
+    iterators: dict[
+        int,
+        Iterator[tuple[torch.Tensor, torch.Tensor] | tuple[torch.Tensor, torch.Tensor, torch.Tensor]],
+    ],
     horizon: int,
-) -> tuple[torch.Tensor, torch.Tensor]:
+) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor | None]:
     try:
-        return next(iterators[horizon])
+        return unpack_batch(next(iterators[horizon]))
     except StopIteration:
         iterators[horizon] = iter(loaders[horizon])
-        return next(iterators[horizon])
+        return unpack_batch(next(iterators[horizon]))
 
 
 def parse_args() -> argparse.Namespace:
@@ -804,9 +906,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--future-recon-eps", type=float, default=1e-6)
     parser.add_argument(
         "--model-variant",
-        choices=["target_set", "error_process"],
+        choices=["target_set", "error_process", "regime_segment_operator"],
         default="target_set",
     )
+    parser.add_argument("--use-window-position", action="store_true")
+    parser.add_argument("--regime-hidden-dim", type=int, default=64)
+    parser.add_argument("--regime-dropout", type=float, default=0.0)
     parser.add_argument("--error-process-dim", type=int, default=64)
     parser.add_argument("--error-process-layers", type=int, default=1)
     parser.add_argument("--error-residual-gate-init", type=float, default=-4.0)
@@ -865,6 +970,10 @@ def main() -> None:
         raise ValueError("error energy weight must be non-negative.")
     if args.error_smoothness_weight < 0:
         raise ValueError("error smoothness weight must be non-negative.")
+    if args.regime_hidden_dim <= 0:
+        raise ValueError("regime hidden dim must be positive.")
+    if args.regime_dropout < 0:
+        raise ValueError("regime dropout must be non-negative.")
     if args.step_covariance_beta < 0:
         raise ValueError("step covariance beta must be non-negative.")
     if args.step_covariance_eta < 0:
@@ -882,6 +991,7 @@ def main() -> None:
     if args.device != "auto":
         device = torch.device(args.device)
 
+    return_index = args.use_window_position or args.model_variant == "regime_segment_operator"
     train_loaders = build_loaders(
         args.dataset_root,
         args.dataset,
@@ -890,6 +1000,7 @@ def main() -> None:
         target_horizons,
         args.batch_size,
         drop_last=True,
+        return_index=return_index,
     )
     val_loaders = build_loaders(
         args.dataset_root,
@@ -899,6 +1010,7 @@ def main() -> None:
         target_horizons,
         args.batch_size,
         drop_last=False,
+        return_index=return_index,
     )
     test_loaders = build_loaders(
         args.dataset_root,
@@ -908,15 +1020,26 @@ def main() -> None:
         target_horizons,
         args.batch_size,
         drop_last=False,
+        return_index=return_index,
     )
 
-    model_cls = PatchEncoderErrorProcessDecoder if args.model_variant == "error_process" else PatchEncoderTargetSetDecoder
+    model_registry = {
+        "target_set": PatchEncoderTargetSetDecoder,
+        "error_process": PatchEncoderErrorProcessDecoder,
+        "regime_segment_operator": PatchEncoderRegimeSegmentTargetOperator,
+    }
+    model_cls = model_registry[args.model_variant]
     model_kwargs = {}
     if args.model_variant == "error_process":
         model_kwargs = {
             "error_process_dim": args.error_process_dim,
             "error_process_layers": args.error_process_layers,
             "error_residual_gate_init": args.error_residual_gate_init,
+        }
+    if args.model_variant == "regime_segment_operator":
+        model_kwargs = {
+            "regime_hidden_dim": args.regime_hidden_dim,
+            "regime_dropout": args.regime_dropout,
         }
     model = model_cls(
         args.seq_len,
@@ -1019,15 +1142,17 @@ def main() -> None:
         horizon_counts = {horizon: 0 for horizon in target_horizons}
         for _ in range(steps_per_epoch):
             horizon = rng.choice(target_horizons)
-            x, y = next_batch(train_loaders, iterators, horizon)
+            x, y, window_index_norm = next_batch(train_loaders, iterators, horizon)
             x = x.float().to(device)
             y = y.float().to(device)
+            window_index_norm = tensor_to_device(window_index_norm, device)
             optimizer.zero_grad(set_to_none=True)
             output = model(
                 x,
                 pred_len=horizon,
                 future_y=y if future_loss_enabled else None,
                 return_components=future_loss_enabled or args.model_variant == "error_process",
+                window_index_norm=window_index_norm,
             )
             if future_loss_enabled or args.model_variant == "error_process":
                 if not isinstance(output, dict):
@@ -1180,6 +1305,9 @@ def main() -> None:
             )
             write_csv(eval_dir / "future_alignment_stats.csv", alignment_rows)
             (eval_dir / "future_leakage_audit.json").write_text(json.dumps(leakage_audit, indent=2))
+        if args.model_variant == "regime_segment_operator":
+            write_csv(eval_dir / "regime_segment_operator_stats.csv", regime_segment_operator_stats(components))
+            write_csv(eval_dir / "regime_feature_stats.csv", regime_feature_stats(components))
 
     long_horizon = max(target_horizons)
     short_horizons = [horizon for horizon in target_horizons if horizon < long_horizon]

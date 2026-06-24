@@ -1368,6 +1368,44 @@ Artifacts:
 regime/segment signal。下一步可以做 conditioned target operator，但 residual/error 只能作为
 diagnostic label，不应成为模型输出后的自由修正项。
 
+## Phase3-C: Regime/Segment-Conditioned Target Operator
+
+[Implementation Update: 2026-06-24] Phase3-C 最小候选已实现，本地 smoke 通过。
+
+Artifacts:
+
+- model:
+  `baselines/patch_encoder_target_set_decoder/model.py::PatchEncoderRegimeSegmentTargetOperator`;
+- train registration:
+  `--model-variant regime_segment_operator`;
+- code explanation:
+  `docs/code-explanation/phase3-regime-segment-target-operator.md`;
+- remote runner:
+  `scripts/remote/run_phase3_regime_segment_operator_gate.sh`;
+- progress checker:
+  `scripts/remote/check_phase3_regime_segment_operator_progress.sh`。
+
+11-step loop 判断：
+
+- `current_step`: Step 7 complete locally，准备 Step 8；
+- `problem`: R.3 target-set carrier 对 short extra windows 与 H720 late segments 的 operator
+  可能过于同质；
+- `existence_evidence`: Phase3-A/B 给出 gap localization 与 prediction-before separation；
+- `idea`: 用 history/window-position regime token + target segment token 条件化 readout 前 hidden state；
+- `theory_check`: 该机制不做 output residual correction，改变的是 prediction 生成前的 target-side
+  operator；
+- `design`: near-identity bounded FiLM-style operator，zero-init 最后一层；
+- `gate`: 先跑 `ETTm1`, `Weather`, `ETTh2` 的 H96/H720 minimal remote gate；
+- `decision`: 可以 commit/push 后进入 remote training。
+
+本地 smoke:
+
+- command: `conda run -n r2026-fsa python baselines/patch_encoder_target_set_decoder/train.py ...`;
+- dataset/horizons: `ETTh2`, `96,720`;
+- train/eval: one train step, one eval batch per horizon；
+- prefix mismatch MSE: `1.015119944076633e-14`;
+- extra artifacts: `regime_segment_operator_stats.csv`, `regime_feature_stats.csv`。
+
 ## Phase3: Future-Side MoE
 
 状态：继续暂停。Phase3-A 支持的是 regime/segment calibration 分支，不支持直接启动 MoE。

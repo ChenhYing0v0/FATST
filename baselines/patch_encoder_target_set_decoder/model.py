@@ -473,7 +473,9 @@ class PatchEncoderTargetSetDecoder(nn.Module):
         pred_len: int,
         future_y: torch.Tensor | None = None,
         return_components: bool = False,
+        window_index_norm: torch.Tensor | None = None,
     ) -> torch.Tensor | dict[str, torch.Tensor]:
+        del window_index_norm
         segment_count = self._validate_pred_len(pred_len)
         if self.revin is not None:
             x = self.revin(x, "norm")
@@ -523,6 +525,220 @@ class PatchEncoderTargetSetDecoder(nn.Module):
                 "beta": beta_view,
                 "history_readout": history_readout_view,
                 "prefix_residual_norm": prefix_residual_y,
+            }
+            if future_components is not None:
+                output.update(
+                    {
+                        "future_student_state": future_components["future_student_state"].reshape(
+                            batch,
+                            channels,
+                            segment_count,
+                            -1,
+                        ),
+                        "future_teacher_state": future_components["future_teacher_state"].reshape(
+                            batch,
+                            channels,
+                            segment_count,
+                            -1,
+                        ),
+                        "future_reconstruction_norm": future_components["future_reconstruction_norm"]
+                        .reshape(batch, channels, pred_len)
+                        .permute(0, 2, 1),
+                        "future_local_alignment_loss": future_components["future_local_alignment_loss"],
+                        "future_relation_alignment_loss": future_components["future_relation_alignment_loss"],
+                        "future_reconstruction_loss": future_components["future_reconstruction_loss"],
+                        "future_raw_reconstruction_loss": future_components["future_raw_reconstruction_loss"],
+                        "future_normalized_reconstruction_loss": future_components[
+                            "future_normalized_reconstruction_loss"
+                        ],
+                        "future_alignment_confidence_mean": future_components[
+                            "future_alignment_confidence_mean"
+                        ],
+                        "future_alignment_confidence_min": future_components[
+                            "future_alignment_confidence_min"
+                        ],
+                        "future_alignment_confidence_max": future_components[
+                            "future_alignment_confidence_max"
+                        ],
+                    }
+                )
+            return output
+        return y
+
+
+class PatchEncoderRegimeSegmentTargetOperator(PatchEncoderTargetSetDecoder):
+    def __init__(
+        self,
+        *args,
+        regime_hidden_dim: int = 64,
+        regime_dropout: float = 0.0,
+        **kwargs,
+    ) -> None:
+        super().__init__(*args, **kwargs)
+        if regime_hidden_dim <= 0:
+            raise ValueError("regime_hidden_dim must be positive.")
+        if regime_dropout < 0:
+            raise ValueError("regime_dropout must be non-negative.")
+        self.regime_feature_dim = 10
+        self.regime_encoder = nn.Sequential(
+            nn.LayerNorm(self.regime_feature_dim),
+            nn.Linear(self.regime_feature_dim, regime_hidden_dim),
+            nn.GELU(),
+            nn.Dropout(regime_dropout),
+            nn.Linear(regime_hidden_dim, self.patch_embedding.out_features),
+            nn.GELU(),
+        )
+        self.regime_segment_operator = nn.Sequential(
+            nn.LayerNorm(2 * self.patch_embedding.out_features),
+            nn.Linear(2 * self.patch_embedding.out_features, regime_hidden_dim),
+            nn.GELU(),
+            nn.Dropout(regime_dropout),
+            nn.Linear(regime_hidden_dim, 2 * self.readout_dim),
+        )
+        final = self.regime_segment_operator[-1]
+        if isinstance(final, nn.Linear):
+            nn.init.zeros_(final.weight)
+            nn.init.zeros_(final.bias)
+
+    def _history_regime_features(
+        self,
+        x_norm: torch.Tensor,
+        batch: int,
+        channels: int,
+        window_index_norm: torch.Tensor | None,
+    ) -> torch.Tensor:
+        x_channel = x_norm.permute(0, 2, 1).reshape(batch * channels, x_norm.shape[1])
+        first_half = x_channel[:, : x_channel.shape[1] // 2]
+        second_half = x_channel[:, x_channel.shape[1] // 2 :]
+        recent = x_channel[:, -48:]
+        previous = x_channel[:, -96:-48]
+        time = torch.linspace(-1.0, 1.0, x_channel.shape[1], device=x_norm.device, dtype=x_norm.dtype)
+        centered_time = time - time.mean()
+        denom = torch.sum(centered_time * centered_time).clamp_min(1e-12)
+        centered_x = x_channel - x_channel.mean(dim=1, keepdim=True)
+        slope = torch.sum(centered_x * centered_time.unsqueeze(0), dim=1) / denom
+        if window_index_norm is None:
+            position = torch.zeros(batch, device=x_norm.device, dtype=x_norm.dtype)
+        else:
+            position = window_index_norm.to(device=x_norm.device, dtype=x_norm.dtype).reshape(batch)
+        position = position[:, None].expand(batch, channels).reshape(batch * channels)
+        return torch.stack(
+            [
+                torch.mean(x_channel, dim=1),
+                torch.std(x_channel, dim=1, unbiased=False),
+                torch.mean(torch.abs(x_channel), dim=1),
+                torch.abs(x_channel[:, -1]),
+                torch.mean(recent, dim=1),
+                torch.std(recent, dim=1, unbiased=False),
+                torch.mean(recent, dim=1) - torch.mean(previous, dim=1),
+                torch.mean(second_half, dim=1) - torch.mean(first_half, dim=1),
+                torch.abs(slope),
+                position,
+            ],
+            dim=-1,
+        )
+
+    def _apply_regime_segment_operator(
+        self,
+        conditioned: torch.Tensor,
+        target_states: torch.Tensor,
+        pred_len: int,
+        segment_count: int,
+        regime_features: torch.Tensor,
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+        regime_token = self.regime_encoder(regime_features)
+        target_features = self._target_features(
+            pred_len,
+            segment_count,
+            target_states.device,
+            target_states.dtype,
+        )
+        target_token = self.target_feature_embedding(target_features).unsqueeze(0)
+        target_token = target_token + self.target_pos_embedding[:, :segment_count, :]
+        target_token = target_token.expand(target_states.shape[0], -1, -1)
+        regime_token = regime_token[:, None, :].expand(-1, segment_count, -1)
+        operator_input = torch.cat([regime_token, target_token], dim=-1)
+        affine = self.regime_segment_operator(operator_input).reshape(
+            target_states.shape[0],
+            segment_count,
+            2,
+            self.readout_dim,
+        )
+        scale = 0.1 * torch.tanh(affine[:, :, 0, :])
+        shift = 0.1 * torch.tanh(affine[:, :, 1, :])
+        return conditioned * (1.0 + scale) + shift, scale, shift, regime_features
+
+    def forward(
+        self,
+        x: torch.Tensor,
+        pred_len: int,
+        future_y: torch.Tensor | None = None,
+        return_components: bool = False,
+        window_index_norm: torch.Tensor | None = None,
+    ) -> torch.Tensor | dict[str, torch.Tensor]:
+        segment_count = self._validate_pred_len(pred_len)
+        if self.revin is not None:
+            x = self.revin(x, "norm")
+
+        z, batch, channels = self._encode(x)
+        target_states = self._target_states(z, pred_len, segment_count)
+        future_components = None
+        if future_y is not None:
+            y_norm_target = self._normalize_future(future_y)
+            future_components = self._future_alignment_components(
+                target_states,
+                y_norm_target,
+                pred_len,
+                segment_count,
+            )
+        history_readout = self.history_projector(z)
+        affine = self.condition_head(target_states).reshape(z.shape[0], segment_count, 2, self.readout_dim)
+        gamma = affine[:, :, 0, :]
+        beta = affine[:, :, 1, :]
+
+        conditioned = history_readout[:, None, :] * (1.0 + gamma) + beta
+        regime_features = self._history_regime_features(x, batch, channels, window_index_norm)
+        conditioned, regime_scale, regime_shift, regime_features = self._apply_regime_segment_operator(
+            conditioned,
+            target_states,
+            pred_len,
+            segment_count,
+            regime_features,
+        )
+        segment_values = self.segment_output(conditioned).reshape(z.shape[0], segment_count * self.segment_len)
+        prefix_residual = segment_values.new_zeros(z.shape[0], segment_count * self.segment_len)
+        if self.prefix_residual_head is not None:
+            active_prefix_segments = min(segment_count, self.prefix_residual_segments)
+            active_width = active_prefix_segments * self.segment_len
+            residual_values = self.prefix_residual_head(z)[:, :active_width]
+            prefix_residual[:, :active_width] = residual_values
+            segment_values = segment_values + prefix_residual
+        y_norm = segment_values[:, :pred_len]
+        y = y_norm.reshape(batch, channels, pred_len).permute(0, 2, 1)
+        prefix_residual_y = prefix_residual[:, :pred_len].reshape(batch, channels, pred_len).permute(0, 2, 1)
+
+        target_states_view = target_states.reshape(batch, channels, segment_count, -1)
+        gamma_view = gamma.reshape(batch, channels, segment_count, -1)
+        beta_view = beta.reshape(batch, channels, segment_count, -1)
+        history_readout_view = history_readout.reshape(batch, channels, -1)
+        regime_scale_view = regime_scale.reshape(batch, channels, segment_count, -1)
+        regime_shift_view = regime_shift.reshape(batch, channels, segment_count, -1)
+        regime_features_view = regime_features.reshape(batch, channels, -1)
+
+        if self.revin is not None:
+            y = self.revin(y, "denorm")
+
+        if return_components:
+            output = {
+                "prediction": y,
+                "target_states": target_states_view,
+                "gamma": gamma_view,
+                "beta": beta_view,
+                "history_readout": history_readout_view,
+                "prefix_residual_norm": prefix_residual_y,
+                "regime_operator_scale": regime_scale_view,
+                "regime_operator_shift": regime_shift_view,
+                "regime_features": regime_features_view,
             }
             if future_components is not None:
                 output.update(
@@ -632,7 +848,9 @@ class PatchEncoderErrorProcessDecoder(PatchEncoderTargetSetDecoder):
         pred_len: int,
         future_y: torch.Tensor | None = None,
         return_components: bool = False,
+        window_index_norm: torch.Tensor | None = None,
     ) -> torch.Tensor | dict[str, torch.Tensor]:
+        del window_index_norm
         segment_count = self._validate_pred_len(pred_len)
         if self.revin is not None:
             x = self.revin(x, "norm")

@@ -886,3 +886,52 @@ Phase3-C 需要把 window position 与 history statistics 合成 regime token，
    `q_j`，避免 future target leakage。
 3. 先本地 smoke + prefix consistency 检查，再远程跑最小 gate；若 observed gaps 不改善或 non-gap
    退化明显，回滚到 Step 2-3，转向 base architecture / external baseline comparison。
+
+## 22. Phase3-C Implementation: Regime/Segment-Conditioned Target Operator
+
+[Fact] Phase3-C 最小候选已实现并通过本地 smoke：
+
+- model:
+  `baselines/patch_encoder_target_set_decoder/model.py::PatchEncoderRegimeSegmentTargetOperator`;
+- dataset support:
+  `ForecastDataset(..., return_index=True)` 可选返回 `window_index_norm`;
+- training registration:
+  `--model-variant regime_segment_operator`;
+- remote runner:
+  `scripts/remote/run_phase3_regime_segment_operator_gate.sh`;
+- progress checker:
+  `scripts/remote/check_phase3_regime_segment_operator_progress.sh`;
+- code explanation:
+  `docs/code-explanation/phase3-regime-segment-target-operator.md`。
+
+[Mechanism Boundary]
+
+- [Fact] 新候选不在 prediction 后加 residual；
+- [Fact] conditioning 发生在 `segment_output` 之前；
+- [Fact] future target 不进入 prediction path；
+- [Fact] `regime_segment_operator` 最后一层 zero-initialized，初始行为接近 R.3；
+- [Fact] scale/shift 使用 `0.1 * tanh(...)` bounded transform，避免早期大幅破坏 readout。
+
+[Verification]
+
+- `python -m py_compile baselines/patch_encoder_target_set_decoder/dataset.py
+  baselines/patch_encoder_target_set_decoder/model.py
+  baselines/patch_encoder_target_set_decoder/train.py` passed；
+- local smoke:
+  `conda run -n r2026-fsa python baselines/patch_encoder_target_set_decoder/train.py ...`;
+- smoke completed one train step and 1-batch eval for `ETTh2` H96/H720；
+- smoke `prefix_mismatch_mse = 1.015119944076633e-14`；
+- smoke wrote `regime_segment_operator_stats.csv` and `regime_feature_stats.csv`。
+
+[11-Step Loop]
+
+- `current_step`: Step 7 complete locally，准备 Step 8 remote training。
+- `problem`: R.3 对 short extra windows 与 H720 late segments 的 operator 过于同质。
+- `existence_evidence`: Phase3-A/B 定位并验证 prediction-before signals。
+- `idea`: history/window-position regime token + target segment token 条件化 readout 前 hidden state。
+- `theory_check`: 机制发生在 output 前，能回应 residual correction 可解释性不足的问题。
+- `design`: near-identity bounded FiLM-style operator，保留 R.3 target-set carrier 和 prefix consistency。
+- `gate`: remote minimal gate 先跑 `ETTm1`, `Weather`, `ETTh2` 的 H96/H720。
+- `artifacts`: local smoke artifacts ignored in git；remote artifacts 将落在
+  `/home/yingch/exp_outputs/r-2026-fatst/phase3_regime_segment_operator`。
+- `decision`: 进入 Step 8；远程前需 commit/push，并在 `529_Lab-3090` 检查 GPU。
