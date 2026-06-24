@@ -1,4 +1,8 @@
 {
+  "candidate_horizons": [
+    96,
+    720
+  ],
   "gate": {
     "needs_no_window_position_ablation": true,
     "needs_same_horizon_set_control": true,

@@ -9,11 +9,9 @@ from typing import Any
 
 
 DATASETS = ["ETTh2", "ETTm1", "Weather"]
-HORIZONS = [96, 720]
 SEED = 2021
 CANDIDATE_RUN = "mixed_h96_h720"
 R3_RUN = "mixed_h96_h192_h336_h720"
-MODEL_NAME = "PatchEncoderRegimeSegmentTargetOperator"
 R3_NAME = "PatchEncoderPrefixRiskWeighted"
 OBSERVED_GAPS = {
     ("ETTm1", 96, "aggregate"),
@@ -43,30 +41,46 @@ def read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text())
 
 
-def candidate_dir(raw_root: Path, dataset: str) -> Path:
-    return raw_root / MODEL_NAME / dataset / CANDIDATE_RUN / f"seed{SEED}"
+def candidate_dir(raw_root: Path, model_name: str, candidate_run: str, dataset: str) -> Path:
+    return raw_root / model_name / dataset / candidate_run / f"seed{SEED}"
 
 
 def r3_dir(r3_raw_root: Path, dataset: str) -> Path:
     return r3_raw_root / R3_NAME / dataset / R3_RUN / f"seed{SEED}"
 
 
+def collect_horizons(raw_root: Path, model_name: str, candidate_run: str) -> list[int]:
+    metrics = read_csv(
+        candidate_dir(raw_root, model_name, candidate_run, DATASETS[0])
+        / "metrics_by_target_horizon.csv"
+    )
+    return [int(row["target_horizon"]) for row in metrics]
+
+
 def pct(candidate: float, baseline: float) -> float:
     return (candidate / baseline - 1.0) * 100.0
 
 
-def collect_main_rows(raw_root: Path, r3_raw_root: Path) -> list[dict[str, Any]]:
+def collect_main_rows(
+    raw_root: Path,
+    r3_raw_root: Path,
+    model_name: str,
+    candidate_run: str,
+    horizons: list[int],
+) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for dataset in DATASETS:
         candidate_metrics = {
             int(row["target_horizon"]): row
-            for row in read_csv(candidate_dir(raw_root, dataset) / "metrics_by_target_horizon.csv")
+            for row in read_csv(
+                candidate_dir(raw_root, model_name, candidate_run, dataset) / "metrics_by_target_horizon.csv"
+            )
         }
         r3_metrics = {
             int(row["target_horizon"]): row
             for row in read_csv(r3_dir(r3_raw_root, dataset) / "metrics_by_target_horizon.csv")
         }
-        for horizon in HORIZONS:
+        for horizon in horizons:
             candidate = candidate_metrics[horizon]
             r3 = r3_metrics[horizon]
             candidate_mse = float(candidate["mse"])
@@ -91,12 +105,21 @@ def collect_main_rows(raw_root: Path, r3_raw_root: Path) -> list[dict[str, Any]]
     return rows
 
 
-def collect_segment_rows(raw_root: Path, r3_raw_root: Path) -> list[dict[str, Any]]:
+def collect_segment_rows(
+    raw_root: Path,
+    r3_raw_root: Path,
+    model_name: str,
+    candidate_run: str,
+) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for dataset in DATASETS:
         candidate_rows = {
             row["segment"]: row
-            for row in read_csv(candidate_dir(raw_root, dataset) / "h720" / "metrics_by_segment.csv")
+            for row in read_csv(
+                candidate_dir(raw_root, model_name, candidate_run, dataset)
+                / "h720"
+                / "metrics_by_segment.csv"
+            )
         }
         r3_rows = {
             row["segment"]: row
@@ -120,10 +143,10 @@ def collect_segment_rows(raw_root: Path, r3_raw_root: Path) -> list[dict[str, An
     return rows
 
 
-def collect_prefix_rows(raw_root: Path) -> list[dict[str, Any]]:
+def collect_prefix_rows(raw_root: Path, model_name: str, candidate_run: str) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for dataset in DATASETS:
-        for row in read_csv(candidate_dir(raw_root, dataset) / "prefix_consistency.csv"):
+        for row in read_csv(candidate_dir(raw_root, model_name, candidate_run, dataset) / "prefix_consistency.csv"):
             rows.append(
                 {
                     "dataset": dataset,
@@ -136,12 +159,17 @@ def collect_prefix_rows(raw_root: Path) -> list[dict[str, Any]]:
     return rows
 
 
-def collect_operator_rows(raw_root: Path) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+def collect_operator_rows(
+    raw_root: Path,
+    model_name: str,
+    candidate_run: str,
+    horizons: list[int],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     operator_rows: list[dict[str, Any]] = []
     feature_rows: list[dict[str, Any]] = []
     for dataset in DATASETS:
-        for horizon in HORIZONS:
-            horizon_dir = candidate_dir(raw_root, dataset) / f"h{horizon}"
+        for horizon in horizons:
+            horizon_dir = candidate_dir(raw_root, model_name, candidate_run, dataset) / f"h{horizon}"
             for row in read_csv(horizon_dir / "regime_segment_operator_stats.csv"):
                 operator_rows.append(
                     {
@@ -169,11 +197,11 @@ def collect_operator_rows(raw_root: Path) -> tuple[list[dict[str, Any]], list[di
     return operator_rows, feature_rows
 
 
-def collect_training_rows(raw_root: Path) -> list[dict[str, Any]]:
+def collect_training_rows(raw_root: Path, model_name: str, candidate_run: str) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for dataset in DATASETS:
-        log_rows = read_csv(candidate_dir(raw_root, dataset) / "training_log.csv")
-        config = read_json(candidate_dir(raw_root, dataset) / "effective_config.json")
+        log_rows = read_csv(candidate_dir(raw_root, model_name, candidate_run, dataset) / "training_log.csv")
+        config = read_json(candidate_dir(raw_root, model_name, candidate_run, dataset) / "effective_config.json")
         best = min(float(row["val_mean_mse"]) for row in log_rows)
         last = float(log_rows[-1]["val_mean_mse"])
         rows.append(
@@ -198,6 +226,7 @@ def summarize(
     operator_rows: list[dict[str, Any]],
     feature_rows: list[dict[str, Any]],
     training_rows: list[dict[str, Any]],
+    horizons: list[int],
 ) -> dict[str, Any]:
     gap_main = [row for row in main_rows if row["is_observed_gap"]]
     non_gap_main = [row for row in main_rows if not row["is_observed_gap"]]
@@ -205,6 +234,7 @@ def summarize(
     non_gap_segments = [row for row in segment_rows if not row["is_observed_gap"]]
     operator_all = [row for row in operator_rows if row["scope"] == "all"]
     window_features = [row for row in feature_rows if row["feature"] == "window_index_norm"]
+    target_horizon_confounded = horizons != [96, 192, 336, 720]
     summary = {
         "mse_wins_vs_r3": sum(row["candidate_wins_mse_vs_r3"] for row in main_rows),
         "mse_total_vs_r3": len(main_rows),
@@ -224,7 +254,8 @@ def summarize(
         "mean_operator_abs_scale": mean(row["mean_abs_scale"] for row in operator_all),
         "mean_operator_abs_shift": mean(row["mean_abs_shift"] for row in operator_all),
         "window_index_feature_mean_std": mean(row["std"] for row in window_features),
-        "target_horizon_confounded": True,
+        "candidate_horizons": horizons,
+        "target_horizon_confounded": target_horizon_confounded,
         "uses_window_position": all(row["use_window_position"] for row in training_rows),
     }
     summary["gate"] = {
@@ -236,9 +267,9 @@ def summarize(
             and summary["max_prefix_mismatch_mse"] <= 1e-10
         ),
         "prefix_consistency_pass": summary["max_prefix_mismatch_mse"] <= 1e-10,
-        "window_index_concern_blocks_claim": True,
-        "needs_no_window_position_ablation": True,
-        "needs_same_horizon_set_control": True,
+        "window_index_concern_blocks_claim": summary["uses_window_position"],
+        "needs_no_window_position_ablation": summary["uses_window_position"],
+        "needs_same_horizon_set_control": target_horizon_confounded,
     }
     return summary
 
@@ -255,6 +286,7 @@ def write_report(
     prefix_rows: list[dict[str, Any]],
     operator_rows: list[dict[str, Any]],
     training_rows: list[dict[str, Any]],
+    horizons: list[int],
 ) -> None:
     lines = [
         "# Phase3-C Regime/Segment Operator Gate Report",
@@ -263,15 +295,19 @@ def write_report(
         "",
     ]
     if summary["gate"]["performance_gate_pass"]:
-        lines.append("[Decision] performance gate passes numerically, but the mechanism claim is blocked by controls.")
+        if summary["uses_window_position"]:
+            lines.append("[Decision] performance gate passes numerically, but the mechanism claim is blocked by controls.")
+        else:
+            lines.append("[Decision] history-only performance gate passes numerically; next control must align horizon set.")
     else:
         lines.append("[Decision] performance gate does not pass as a paper-story candidate.")
     lines.extend(
         [
             "",
-            "[Fact] This run used `TARGET_HORIZONS=96,720`, while R.3 uses `96,192,336,720`.",
-            "[Fact] This run used `window_index_norm` in the prediction path.",
-            "[Decision] Therefore the result cannot be claimed as clean evidence for regime/segment conditioning.",
+            f"[Fact] This run used `TARGET_HORIZONS={','.join(str(item) for item in horizons)}`.",
+            f"[Fact] Horizon-set confound vs R.3: `{summary['target_horizon_confounded']}`.",
+            f"[Fact] This run used `window_index_norm`: `{summary['uses_window_position']}`.",
+            "[Decision] The result can be considered clean only when window-position and horizon-set controls pass.",
             "",
             "## Summary",
             "",
@@ -384,7 +420,7 @@ def write_report(
             "[Concern] `window_index_norm` is prediction-before, but it is not a robust causal or calendar variable.",
             "It is normalized inside each split, so it can encode train/val/test split position rather than a deployable regime.",
             "",
-            "[Decision] Before claiming a mechanism, Phase3-C needs two controls:",
+            "[Decision] Before claiming a mechanism, Phase3-C needs controls:",
             "",
             "1. same architecture without `window_index_norm`, using history-only regime features;",
             "2. same target horizon set as R.3, using `96,192,336,720`.",
@@ -407,6 +443,9 @@ def parse_args() -> argparse.Namespace:
         "--r3-raw-root",
         default="analysis/phase2_qdf_alignment_diagnostic_20260623/raw",
     )
+    parser.add_argument("--model-name", default="PatchEncoderRegimeSegmentTargetOperator")
+    parser.add_argument("--candidate-run", default=CANDIDATE_RUN)
+    parser.add_argument("--output-prefix", default="phase3_regime_segment_operator")
     return parser.parse_args()
 
 
@@ -416,33 +455,36 @@ def main() -> None:
     analysis_root.mkdir(parents=True, exist_ok=True)
     raw_root = Path(args.raw_root)
     r3_raw_root = Path(args.r3_raw_root)
-    main_rows = collect_main_rows(raw_root, r3_raw_root)
-    segment_rows = collect_segment_rows(raw_root, r3_raw_root)
-    prefix_rows = collect_prefix_rows(raw_root)
-    operator_rows, feature_rows = collect_operator_rows(raw_root)
-    training_rows = collect_training_rows(raw_root)
-    summary = summarize(main_rows, segment_rows, prefix_rows, operator_rows, feature_rows, training_rows)
+    horizons = collect_horizons(raw_root, args.model_name, args.candidate_run)
+    main_rows = collect_main_rows(raw_root, r3_raw_root, args.model_name, args.candidate_run, horizons)
+    segment_rows = collect_segment_rows(raw_root, r3_raw_root, args.model_name, args.candidate_run)
+    prefix_rows = collect_prefix_rows(raw_root, args.model_name, args.candidate_run)
+    operator_rows, feature_rows = collect_operator_rows(raw_root, args.model_name, args.candidate_run, horizons)
+    training_rows = collect_training_rows(raw_root, args.model_name, args.candidate_run)
+    summary = summarize(main_rows, segment_rows, prefix_rows, operator_rows, feature_rows, training_rows, horizons)
 
-    write_csv(analysis_root / "phase3_regime_segment_operator_vs_r3.csv", main_rows)
-    write_csv(analysis_root / "phase3_regime_segment_operator_h720_segments_vs_r3.csv", segment_rows)
-    write_csv(analysis_root / "phase3_regime_segment_operator_prefix_consistency.csv", prefix_rows)
-    write_csv(analysis_root / "phase3_regime_segment_operator_stats.csv", operator_rows)
-    write_csv(analysis_root / "phase3_regime_segment_operator_feature_stats.csv", feature_rows)
-    write_csv(analysis_root / "phase3_regime_segment_operator_training_summary.csv", training_rows)
-    (analysis_root / "phase3_regime_segment_operator_summary.json").write_text(
+    prefix = args.output_prefix
+    write_csv(analysis_root / f"{prefix}_vs_r3.csv", main_rows)
+    write_csv(analysis_root / f"{prefix}_h720_segments_vs_r3.csv", segment_rows)
+    write_csv(analysis_root / f"{prefix}_prefix_consistency.csv", prefix_rows)
+    write_csv(analysis_root / f"{prefix}_stats.csv", operator_rows)
+    write_csv(analysis_root / f"{prefix}_feature_stats.csv", feature_rows)
+    write_csv(analysis_root / f"{prefix}_training_summary.csv", training_rows)
+    (analysis_root / f"{prefix}_summary.json").write_text(
         json.dumps(summary, indent=2, sort_keys=True),
         encoding="utf-8",
     )
     write_report(
-        analysis_root / "phase3_regime_segment_operator_report.md",
+        analysis_root / f"{prefix}_report.md",
         summary,
         main_rows,
         segment_rows,
         prefix_rows,
         operator_rows,
         training_rows,
+        horizons,
     )
-    print(f"phase3_regime_segment_operator_report={analysis_root / 'phase3_regime_segment_operator_report.md'}")
+    print(f"{prefix}_report={analysis_root / f'{prefix}_report.md'}")
 
 
 if __name__ == "__main__":

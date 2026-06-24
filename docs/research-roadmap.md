@@ -1435,6 +1435,24 @@ confounded。
 `window_index_norm` feature 为 0。History-only local smoke 已通过，prefix mismatch MSE
 `9.868e-15`。
 
+[Result Update: 2026-06-24] `history_only_h96_h720` control 已返回：
+
+- MSE wins vs R.3: `5/6`;
+- mean relative MSE vs R.3: `-0.51%`;
+- observed aggregate-gap wins: `1/2`;
+- observed H720 segment-gap wins: `2/3`;
+- max prefix mismatch MSE: `4.861e-14`;
+- `window_index_norm` feature std: `0.0`;
+- report:
+  `analysis/phase3_regime_segment_operator_history_only_20260624/phase3_regime_segment_operator_history_only_report.md`。
+
+[Decision] `window_index_norm` 不是当前收益的主要来源。去掉它之后收益保留，且略强于 window-index run。
+但机制仍未 pass，因为 horizon set 仍是 `96,720`，没有与 R.3 的 `96,192,336,720` 对齐。
+
+[Next] 启动 `history_only_h96_h192_h336_h720` control。若该 control 仍有稳定收益且 prefix consistency
+不破坏，Phase3-C 才能进入 mechanism-pass 判断；若失败，则收益更可能来自 horizon-set/objective-pressure
+变化，而不是 operator 结构。
+
 ## Phase3: Future-Side MoE
 
 状态：继续暂停。Phase3-A 支持的是 regime/segment calibration 分支，不支持直接启动 MoE。

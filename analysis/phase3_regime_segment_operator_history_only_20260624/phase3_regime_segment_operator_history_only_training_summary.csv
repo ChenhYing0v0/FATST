@@ -1,0 +1,4 @@
+dataset,epochs_recorded,best_val_mean_mse,last_val_mean_mse,steps_per_epoch_effective,target_horizons,use_window_position,model_variant
+ETTh2,13,0.4063265323638916,0.48688651621341705,123,"96,720",False,regime_segment_operator
+ETTm1,12,0.6539900749921799,0.8436908721923828,527,"96,720",False,regime_segment_operator
+Weather,12,0.5357106924057007,0.587024912238121,563,"96,720",False,regime_segment_operator

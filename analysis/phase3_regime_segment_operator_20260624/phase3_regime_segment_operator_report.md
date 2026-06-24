@@ -4,9 +4,10 @@
 
 [Decision] performance gate passes numerically, but the mechanism claim is blocked by controls.
 
-[Fact] This run used `TARGET_HORIZONS=96,720`, while R.3 uses `96,192,336,720`.
-[Fact] This run used `window_index_norm` in the prediction path.
-[Decision] Therefore the result cannot be claimed as clean evidence for regime/segment conditioning.
+[Fact] This run used `TARGET_HORIZONS=96,720`.
+[Fact] Horizon-set confound vs R.3: `True`.
+[Fact] This run used `window_index_norm`: `True`.
+[Decision] The result can be considered clean only when window-position and horizon-set controls pass.
 
 ## Summary
 
@@ -79,7 +80,7 @@
 [Concern] `window_index_norm` is prediction-before, but it is not a robust causal or calendar variable.
 It is normalized inside each split, so it can encode train/val/test split position rather than a deployable regime.
 
-[Decision] Before claiming a mechanism, Phase3-C needs two controls:
+[Decision] Before claiming a mechanism, Phase3-C needs controls:
 
 1. same architecture without `window_index_norm`, using history-only regime features;
 2. same target horizon set as R.3, using `96,192,336,720`.
