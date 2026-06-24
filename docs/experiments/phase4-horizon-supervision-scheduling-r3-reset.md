@@ -395,7 +395,7 @@ HSS 研究问题保留，但回退到 Step 4/6：重新设计 conditioned schedu
 
 ## Phase4-S 入口
 
-`current_step`: Step 4-6 draft。
+`current_step`: Step 7 local implementation complete；下一步是 commit/push 后执行 Step 8 small remote gate。
 
 [Decision] 下一阶段命名：
 
@@ -435,6 +435,23 @@ HSS 研究问题保留，但回退到 Step 4/6：重新设计 conditioned schedu
 3. `S3_r3_plus_aux_control` 只能作为 conflict/control，不作为主线；
 4. 写出 local smoke protocol；
 5. 若 condition 退化成固定 late weighting，回退 Step 4。
+
+[Verification] `S1_conditioned_future_unit_scheduling` local smoke 已通过：
+
+- artifact:
+  `artifacts/runs/smoke_phase4_s_conditioned/SmokePhase4SCFUS/ETTh2/mixed_h96_h192_h336_h720/seed2021`;
+- `training_evaluation_decoupled=true`;
+- `train_horizons_effective=[720]`;
+- `step_loss_weighting=uniform`;
+- trace 记录 `unit_type=conditioned_sparse` 和 `condition_type=label_novelty`;
+- prefix mismatch 为 numerical-zero 量级。
+
+[Decision] 下一步只允许 small remote gate：
+
+- runner: `scripts/remote/run_phase4_s_cfus_gate.sh`;
+- datasets: `ETTh2`, `Weather`;
+- strategies: `conditioned_future_unit_scheduling`, `full_time_mse`, `r3_prefix_risk`;
+- 不直接进入 full matrix。
 
 ## 当前结论
 

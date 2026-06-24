@@ -296,7 +296,7 @@ training/evaluation 解耦问题，重做核心 idea 和最小设计。
 
 ## 下一阶段：Phase4-S
 
-`current_step`: Step 4-6 draft。
+`current_step`: Step 7 local implementation complete；下一步是 commit/push 后执行 Step 8 small remote gate。
 
 [Decision] 下一步主线命名为：
 
@@ -338,18 +338,34 @@ future-aware 或 MoE 叠在失败策略上。
 - `D3_interval_supervision` 在 late region 有 `2/3` wins，mean relative MSE 为 `-0.46%`；
 - early region 上所有候选均为 `0/12` wins，说明全局静态 pressure 会损伤 easy/early regions。
 
-[Decision] 这支持 conditioned schedule 的问题定义，但不等于 implementation gate 已通过。
-同时，不能把下一步降级为 repair R.3。R.3 只作为 primary baseline、carrier sanity check 和
-control 参照；修好 R.3 不是本文 core narrative。
+[Decision] 这支持 conditioned schedule 的问题定义。`S1_conditioned_future_unit_scheduling`
+本地实现与 smoke 已通过，但仍不能把方向降级为 repair R.3。R.3 只作为 primary baseline、
+carrier sanity check 和 control 参照；修好 R.3 不是本文 core narrative。
 
-实现前必须完成：
+当前 S1 实现边界：
 
-1. 为 `S1_conditioned_future_unit_scheduling` 定义 dense anchor、conditioned sparse unit 和
-   $\lambda$ gate；
-2. 为 `S2_difficulty_conditioned_interval` 定义 train-side difficulty proxy；
-3. 确认 proxy 不直接使用 `96,192,336,720` 作为 training schedule；
-4. 明确 `S3_r3_plus_aux_control` 只是 ablation/control，不进入主线；
-5. 写出 local smoke protocol，再允许代码实现。
+1. `pred_len=720` full future dense anchor；
+2. train-side `label_novelty` condition 选择 sparse blocks；
+3. auxiliary weight 默认 `0.1`；
+4. 不使用 R.3 `prefix_risk`，不采样 `96,192,336,720` 作为 training schedule；
+5. local smoke 必须检查 `supervision_trace.csv` 和 prefix consistency。
+
+[Verification] 本地 smoke 已通过：
+
+- artifact:
+  `artifacts/runs/smoke_phase4_s_conditioned/SmokePhase4SCFUS/ETTh2/mixed_h96_h192_h336_h720/seed2021`;
+- `training_evaluation_decoupled=true`;
+- `train_horizons_effective=[720]`;
+- `step_loss_weighting=uniform`;
+- `unit_type=conditioned_sparse`;
+- prefix mismatch 为 numerical-zero 量级。
+
+[Decision] 下一步只允许 small remote gate：
+
+- runner: `scripts/remote/run_phase4_s_cfus_gate.sh`;
+- datasets: `ETTh2`, `Weather`;
+- strategies: `conditioned_future_unit_scheduling`, `full_time_mse`, `r3_prefix_risk`;
+- 不直接进入 full matrix。
 
 ## 历史证据索引
 

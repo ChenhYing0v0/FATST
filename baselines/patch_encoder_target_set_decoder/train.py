@@ -36,6 +36,10 @@ class SupervisionUnit:
     interval_end: int = 0
     component_rank: int = 0
     curriculum_phase: str = "none"
+    condition_type: str = "none"
+    condition_top_blocks: int = 0
+    condition_mean_score: float = 0.0
+    auxiliary_weight: float = 0.0
 
 
 def set_seed(seed: int) -> None:
@@ -599,6 +603,78 @@ def component_supervision_loss(
     return total_loss, time_loss, unit_loss, unit
 
 
+def conditioned_future_unit_loss(
+    pred: torch.Tensor,
+    true: torch.Tensor,
+    history: torch.Tensor,
+    block_size: int,
+    top_ratio: float,
+    aux_weight: float,
+    condition: str,
+) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, SupervisionUnit]:
+    if block_size <= 0:
+        raise ValueError("supervision block size must be positive.")
+    if not 0 < top_ratio <= 1:
+        raise ValueError("supervision condition top ratio must be in (0, 1].")
+    if aux_weight < 0:
+        raise ValueError("supervision auxiliary weight must be non-negative.")
+
+    horizon = pred.shape[1]
+    blocks: list[tuple[int, int]] = []
+    scores = []
+    with torch.no_grad():
+        last_history = history[:, -1:, :]
+        for start in range(0, horizon, block_size):
+            end = min(start + block_size, horizon)
+            block = true[:, start:end, :]
+            if condition == "label_novelty":
+                reference = last_history.expand(-1, end - start, -1)
+                score = torch.mean((block - reference) ** 2)
+            elif condition == "local_variation":
+                if end - start <= 1:
+                    score = torch.zeros((), device=true.device, dtype=true.dtype)
+                else:
+                    diff = block[:, 1:, :] - block[:, :-1, :]
+                    score = torch.mean(diff * diff)
+            elif condition == "hybrid":
+                reference = last_history.expand(-1, end - start, -1)
+                novelty = torch.mean((block - reference) ** 2)
+                if end - start <= 1:
+                    variation = torch.zeros((), device=true.device, dtype=true.dtype)
+                else:
+                    diff = block[:, 1:, :] - block[:, :-1, :]
+                    variation = torch.mean(diff * diff)
+                score = novelty + variation
+            else:
+                raise ValueError(f"Unknown supervision condition: {condition}")
+            blocks.append((start, end))
+            scores.append(score)
+
+        score_tensor = torch.stack(scores)
+        top_blocks = max(1, min(len(blocks), int(round(len(blocks) * top_ratio))))
+        selected = torch.topk(score_tensor, k=top_blocks, largest=True).indices.tolist()
+        mask = torch.zeros(horizon, device=pred.device, dtype=pred.dtype)
+        for block_index in selected:
+            start, end = blocks[int(block_index)]
+            mask[start:end] = 1.0
+        mean_score = float(torch.mean(score_tensor[selected]).detach().cpu())
+
+    time_loss = torch.mean((pred - true) ** 2)
+    unit_loss = masked_mse_loss(pred, true, mask)
+    total_loss = time_loss + aux_weight * unit_loss
+    active_steps = int(torch.sum(mask).detach().cpu().item())
+    unit = SupervisionUnit(
+        unit_type="conditioned_sparse",
+        active_steps=active_steps,
+        mask_ratio=active_steps / float(horizon),
+        condition_type=condition,
+        condition_top_blocks=top_blocks,
+        condition_mean_score=mean_score,
+        auxiliary_weight=aux_weight,
+    )
+    return total_loss, time_loss, unit_loss, unit
+
+
 def curriculum_phase(epoch: int, epochs: int) -> str:
     progress = epoch / float(max(epochs, 1))
     if progress <= 0.3:
@@ -611,6 +687,7 @@ def curriculum_phase(epoch: int, epochs: int) -> str:
 def horizon_decoupled_supervision_loss(
     pred: torch.Tensor,
     true: torch.Tensor,
+    history: torch.Tensor,
     args: argparse.Namespace,
     rng: random.Random,
     epoch: int,
@@ -646,6 +723,16 @@ def horizon_decoupled_supervision_loss(
         )
         unit_loss = masked_mse_loss(pred, true, mask)
         return unit_loss, time_loss, unit_loss, unit
+    if strategy == "conditioned_future_unit_scheduling":
+        return conditioned_future_unit_loss(
+            pred,
+            true,
+            history,
+            args.supervision_block_size,
+            args.supervision_condition_top_ratio,
+            args.supervision_aux_weight,
+            args.supervision_condition,
+        )
     if strategy in {"component_basis_top", "component_basis_balanced"}:
         if component_basis is None or component_eigenvalues is None:
             raise ValueError(f"{strategy} requires a train-label component basis.")
@@ -1205,6 +1292,7 @@ def parse_args() -> argparse.Namespace:
             "r3_prefix_risk",
             "random_future_mask",
             "interval_supervision",
+            "conditioned_future_unit_scheduling",
             "component_basis_top",
             "component_basis_balanced",
             "curriculum_units",
@@ -1216,6 +1304,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--supervision-block-size", type=int, default=48)
     parser.add_argument("--supervision-interval-min-blocks", type=int, default=1)
     parser.add_argument("--supervision-interval-max-blocks", type=int, default=4)
+    parser.add_argument(
+        "--supervision-condition",
+        choices=["label_novelty", "local_variation", "hybrid"],
+        default="label_novelty",
+    )
+    parser.add_argument("--supervision-condition-top-ratio", type=float, default=0.25)
+    parser.add_argument("--supervision-aux-weight", type=float, default=0.1)
     parser.add_argument("--supervision-component-rank", type=int, default=16)
     parser.add_argument("--supervision-component-beta", type=float, default=0.25)
     parser.add_argument("--supervision-component-alpha", type=float, default=0.5)
@@ -1278,6 +1373,10 @@ def main() -> None:
         raise ValueError("supervision interval min blocks must be positive.")
     if args.supervision_interval_max_blocks < args.supervision_interval_min_blocks:
         raise ValueError("supervision interval max blocks must be >= min blocks.")
+    if not 0 < args.supervision_condition_top_ratio <= 1:
+        raise ValueError("supervision condition top ratio must be in (0, 1].")
+    if args.supervision_aux_weight < 0:
+        raise ValueError("supervision aux weight must be non-negative.")
     if args.supervision_component_rank <= 0:
         raise ValueError("supervision component rank must be positive.")
     if args.supervision_component_beta < 0:
@@ -1515,6 +1614,7 @@ def main() -> None:
                 pred_loss, time_loss, unit_loss, unit = horizon_decoupled_supervision_loss(
                     pred,
                     y,
+                    x,
                     args,
                     rng,
                     epoch,
@@ -1568,6 +1668,10 @@ def main() -> None:
                         "interval_end": unit.interval_end,
                         "component_rank": unit.component_rank,
                         "curriculum_phase": unit.curriculum_phase,
+                        "condition_type": unit.condition_type,
+                        "condition_top_blocks": unit.condition_top_blocks,
+                        "condition_mean_score": unit.condition_mean_score,
+                        "auxiliary_weight": unit.auxiliary_weight,
                         "loss_time": float(time_loss.detach().cpu()),
                         "loss_unit": float(unit_loss.detach().cpu()),
                         "loss_total": float(loss.detach().cpu()),
@@ -1746,6 +1850,9 @@ def main() -> None:
         "block_size": args.supervision_block_size,
         "interval_min_blocks": args.supervision_interval_min_blocks,
         "interval_max_blocks": args.supervision_interval_max_blocks,
+        "condition": args.supervision_condition,
+        "condition_top_ratio": args.supervision_condition_top_ratio,
+        "aux_weight": args.supervision_aux_weight,
         "component_rank": args.supervision_component_rank,
         "component_beta": args.supervision_component_beta,
         "component_alpha": args.supervision_component_alpha,

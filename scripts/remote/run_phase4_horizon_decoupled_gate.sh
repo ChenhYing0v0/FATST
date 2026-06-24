@@ -44,6 +44,7 @@ run_name_for_strategy() {
     r3_prefix_risk) echo "PatchEncoderR3PrefixRisk" ;;
     random_future_mask) echo "PatchEncoderRandomFutureMask" ;;
     interval_supervision) echo "PatchEncoderIntervalSupervision" ;;
+    conditioned_future_unit_scheduling) echo "PatchEncoderConditionedFutureUnitScheduling" ;;
     component_basis_top) echo "PatchEncoderComponentTop" ;;
     component_basis_balanced) echo "PatchEncoderComponentBalanced" ;;
     curriculum_units) echo "PatchEncoderCurriculumUnits" ;;
@@ -61,6 +62,7 @@ step_loss_for_strategy() {
 read -r -a datasets <<< "${DATASETS}"
 read -r -a strategies <<< "${SUPERVISION_STRATEGIES}"
 read -r -a gpu_ids <<< "${GPU_IDS}"
+read -r -a phase4_extra_args <<< "${PHASE4_EXTRA_ARGS:-}"
 IFS="," read -r -a target_horizon_array <<< "${TARGET_HORIZONS}"
 horizon_label="mixed"
 for horizon in "${target_horizon_array[@]}"; do
@@ -124,6 +126,7 @@ run_one() {
     --model-variant target_set \
     --output-root "${OUTPUT_ROOT}" \
     --device cuda \
+    "${phase4_extra_args[@]}" \
     "${extra_args[@]}" 2>&1 | tee "${run_log}"
   if [[ "${KEEP_HEAVY_ARTIFACTS}" != "1" ]]; then
     find "${run_dir}" -type f \( -name "checkpoint.pt" -o -name "predictions_test.npz" \) -delete

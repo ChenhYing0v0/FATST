@@ -25,7 +25,8 @@ Training is split into two paths:
 
 2. horizon-decoupled path:
    - `supervision_strategy` is one of `full_time_mse`, `random_future_mask`,
-     `interval_supervision`, `component_basis_top`,
+     `interval_supervision`, `conditioned_future_unit_scheduling`,
+     `component_basis_top`,
      `component_basis_balanced`, `curriculum_units`;
    - train loader uses only `supervision_pred_len`, default `720`;
    - model training forward uses `pred_len=supervision_pred_len`;
@@ -76,6 +77,19 @@ This keeps the train-side tensor contract independent of
 - computes MSE only inside the sampled interval;
 - records 1-based interval start/end.
 
+`conditioned_future_unit_scheduling`:
+
+- keeps full future dense MSE as the anchor loss;
+- computes train-side condition scores from the current training batch only;
+- default condition is `label_novelty`: each future block is scored by its
+  squared deviation from the last observed history value;
+- alternative conditions are `local_variation` and `hybrid`;
+- selects the top-scored future blocks according to
+  `supervision_condition_top_ratio`;
+- adds `supervision_aux_weight * sparse_unit_loss` to the dense anchor;
+- does not use `target_horizons` or R.3 `prefix_risk` weights in the training
+  schedule.
+
 `component_basis_top`:
 
 - computes a train-split future-label covariance basis;
@@ -110,6 +124,7 @@ metadata:
 - interval range;
 - component rank;
 - curriculum phase;
+- condition type, selected condition blocks, condition score, auxiliary weight;
 - time loss, unit loss, and final loss.
 
 `training_log.csv` adds epoch-level summaries:
@@ -131,10 +146,44 @@ metadata:
 - `supervision_unit_config`;
 - `component_basis_stats`.
 
+## Conditioned Future-Unit Flow
+
+For `conditioned_future_unit_scheduling`, one training batch has:
+
+```text
+x:    [B, seq_len, C]
+y:    [B, 720, C]
+pred: [B, 720, C]
+```
+
+The condition path uses only `x` and `y` from the train batch:
+
+```text
+last_history = x[:, -1:, :]
+block_score_k = mean((y[:, block_k, :] - last_history) ** 2)
+selected_blocks = top_k(block_score)
+unit_loss = mse(pred, y, selected_blocks)
+loss = full_time_mse(pred, y) + lambda * unit_loss
+```
+
+This is intentionally not R.3 repair:
+
+- no sampled requested horizon;
+- no `prefix_risk` step weighting;
+- no validation/test residual in the condition;
+- no direct use of `96,192,336,720` inside the training schedule.
+
 ## Remote Scripts
 
 `scripts/remote/run_phase4_horizon_decoupled_gate.sh` runs the Phase4 candidate
-matrix on `529_Lab-3090`.
+matrix on `529_Lab-3090`. It accepts `PHASE4_EXTRA_ARGS`, which Phase4-S uses
+to pass conditioned scheduling parameters without changing the base matrix
+logic.
+
+`scripts/remote/run_phase4_s_cfus_gate.sh` is the Phase4-S small-gate wrapper.
+It defaults to `ETTh2` and `Weather`, and compares
+`conditioned_future_unit_scheduling` against `full_time_mse` and
+`r3_prefix_risk`. This wrapper is intentionally not a full matrix runner.
 
 `scripts/remote/check_phase4_horizon_decoupled_progress.sh` reports recent logs
 and completed `metrics_by_target_horizon.csv` files.
@@ -165,6 +214,8 @@ Remaining proxy:
 - component basis is dataset-specific and computed from train labels only;
 - random masks and intervals are simple first-pass supervision units;
 - curriculum is fixed by epoch ratio rather than learned.
+- conditioned future-unit scheduling currently uses batch-label novelty or
+  variation as a train-side proxy, not a learned difficulty estimator.
 
 Falsification evidence:
 

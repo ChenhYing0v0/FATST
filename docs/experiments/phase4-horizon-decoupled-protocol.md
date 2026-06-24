@@ -63,6 +63,7 @@ supervision selection 和 loss construction。
 | `r3_prefix_risk` | `D1_r3_prefix_risk` | `horizon_mixed + prefix_risk` 的显式别名 |
 | `random_future_mask` | `D2_random_future_mask` | `pred_len=720`，随机 future position/block mask |
 | `interval_supervision` | `D3_interval_supervision` | `pred_len=720`，随机 contiguous future interval |
+| `conditioned_future_unit_scheduling` | Phase4-S `S1_conditioned_future_unit_scheduling` | `pred_len=720`，full future dense anchor + train-side conditioned sparse unit pressure |
 | `component_basis_top` | `D4_component_basis_top` | `pred_len=720`，监督 train-label top components |
 | `component_basis_balanced` | `D5_component_basis_balanced` | `pred_len=720`，component groups balanced pressure |
 | `curriculum_units` | `D6_curriculum_units` | `pred_len=720`，从 coarse unit 过渡到 dense time-domain |
@@ -72,8 +73,8 @@ supervision selection 和 loss construction。
 [Decision] `horizon_mixed` 和 `r3_prefix_risk` 是仅有允许 training loader 使用
 `target_horizons` 的策略。它们存在的目的只是复现旧 baseline。
 
-[Decision] `random_future_mask`、`interval_supervision`、`component_basis_top`、
-`component_basis_balanced`、`curriculum_units` 必须满足：
+[Decision] `random_future_mask`、`interval_supervision`、`conditioned_future_unit_scheduling`、
+`component_basis_top`、`component_basis_balanced`、`curriculum_units` 必须满足：
 
 - train loader 只使用 `supervision_pred_len`；
 - model training forward 只使用 `pred_len=supervision_pred_len`；
