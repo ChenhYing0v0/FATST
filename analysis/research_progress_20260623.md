@@ -935,3 +935,26 @@ Phase3-C 需要把 window position 与 history statistics 合成 regime token，
 - `artifacts`: local smoke artifacts ignored in git；remote artifacts 将落在
   `/home/yingch/exp_outputs/r-2026-fatst/phase3_regime_segment_operator`。
 - `decision`: 进入 Step 8；远程前需 commit/push，并在 `529_Lab-3090` 检查 GPU。
+
+[Remote Launch Update]
+
+- launch note:
+  `analysis/phase3_regime_segment_operator_20260624/remote_launch_note.md`;
+- remote commit:
+  `bf9af01e31eb3b9ceaaa623448ee2ca5e45ae296`;
+- remote output:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase3_regime_segment_operator`;
+- PID:
+  `3736385`;
+- selected GPUs:
+  GPU1 and GPU2，launch 前均为 `18 MiB` used；
+- avoided GPU:
+  GPU0，launch 前为 `3964 MiB` used；
+- command:
+  `GPU_IDS="1 2" DATASETS="ETTm1 Weather ETTh2" TARGET_HORIZONS="96,720" EPOCHS=100
+  bash scripts/remote/run_phase3_regime_segment_operator_gate.sh`;
+- progress at 2026-06-24 10:48 CST:
+  `ETTm1 3/100`, `Weather 1/100`, `ETTh2 queued`。
+
+[Decision] Phase3-C 已进入 Step 8 remote training，且至少两个数据集正常运行。下一步等远程完成后同步
+metrics、segment metrics、prefix consistency 与 regime operator diagnostics，判断是否进入 Step 9-10。
