@@ -1,0 +1,28 @@
+{
+  "main_rows": 12,
+  "specialist_gap_rows": 4,
+  "non_gap_rows": 8,
+  "gap_mean_residual_top16_energy_share": 0.7890822779955358,
+  "non_gap_mean_residual_top16_energy_share": 0.827972773590728,
+  "gap_mean_residual_top32_energy_share": 0.8642073441239271,
+  "non_gap_mean_residual_top32_energy_share": 0.8823966017836616,
+  "gap_mean_residual_top64_energy_share": 0.922059356186409,
+  "non_gap_mean_residual_top64_energy_share": 0.9239723514629429,
+  "gap_mean_top16_over_label_ratio": 0.8695783972560391,
+  "non_gap_mean_top16_over_label_ratio": 0.9231023582112546,
+  "segment_gap_rows": 3,
+  "segment_non_gap_rows": 9,
+  "segment_gap_mean_top16_reconstruction_share": 0.7164986156237637,
+  "segment_non_gap_mean_top16_reconstruction_share": 0.7141374943094558,
+  "segment_gap_mean_top64_reconstruction_share": 0.8727030215488636,
+  "segment_non_gap_mean_top64_reconstruction_share": 0.8598763231294597,
+  "gap_minus_non_gap_top16_over_label_ratio": -0.0535239609552155,
+  "segment_gap_minus_non_gap_top16_reconstruction_share": 0.002361121314307879,
+  "decision": {
+    "component_residual_structure_exists": true,
+    "top_component_energy_separates_gaps": true,
+    "segment_reconstruction_separates_gaps": false,
+    "top_only_component_loss_supported": false,
+    "proceed_to_component_objective_design": true
+  }
+}

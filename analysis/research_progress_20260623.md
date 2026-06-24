@@ -1403,3 +1403,58 @@ correlation 和低 effective-rank structure，因此 `Component-Space Supervisio
   component-supervised training loss 设计；否则回退到 random interval supervision。
 - `artifacts`: `analysis/phase4_label_basis_audit_20260624/`。
 - `decision`: 继续 diagnostics，暂不进入远程训练。
+
+## 28. Phase4 Existing-Residual Projection Audit
+
+[Fact] 已实现并运行 existing-residual projection audit：
+
+- script:
+  `scripts/analyze_phase4_residual_projection_audit.py`;
+- report:
+  `analysis/phase4_residual_projection_audit_20260624/phase4_residual_projection_report.md`;
+- input predictions:
+  `analysis/phase2_qdf_alignment_diagnostic_20260623/raw/PatchEncoderPrefixRiskWeighted/.../predictions_test.npz`;
+- no new training:
+  `True`。
+
+[Result]
+
+| Metric | Value |
+| --- | ---: |
+| specialist gap rows | `4/12` |
+| gap mean residual top16 energy share | `0.789` |
+| non-gap mean residual top16 energy share | `0.828` |
+| gap mean top16-over-label ratio | `0.870` |
+| non-gap mean top16-over-label ratio | `0.923` |
+| gap minus non-gap top16-over-label ratio | `-0.054` |
+| H720 segment gap top16 reconstruction share | `0.716` |
+| H720 segment non-gap top16 reconstruction share | `0.714` |
+
+[Interpretation]
+
+1. R.3 residual 确实存在 component-space structure；component supervision 比任意 pairwise
+   horizon sweep 更有理论依据。
+2. Known gaps 没有更集中在 dominant top components；gap rows 的 top16-over-label ratio
+   反而略低。
+3. 因此不能直接照搬 top-only TransDF-style loss。下一步应设计 hybrid / variance-balanced
+   component objective，保留 time-domain MSE，同时避免忽略 lower-variance detail components。
+
+[Design Update]
+
+- new design doc:
+  `docs/experiments/phase4-component-balanced-objective-design.md`;
+- code explanation:
+  `docs/code-explanation/phase4-residual-projection-audit.md`。
+
+[11-Step Record]
+
+- `current_step`: Step 4-6。
+- `problem`: evaluation horizons are not necessarily the right training supervision units。
+- `existence_evidence`: Label Basis Audit + Existing-Residual Projection Audit。
+- `idea`: `Component-Balanced Objective`。
+- `theory_check`: component basis 有低秩相关结构，但 top-only 会忽略 gap 相关 detail residual。
+- `design`: time-domain MSE + variance-balanced component loss；先设计
+  `component_top16_l1`, `component_balanced_beta025`, `component_balanced_beta050`。
+- `gate`: 不劣化 R.3，并改善或不恶化 H96/H720 known gaps。
+- `artifacts`: `analysis/phase4_residual_projection_audit_20260624/`。
+- `decision`: 下一步实现最小 component objective variants；暂不启动远程训练。

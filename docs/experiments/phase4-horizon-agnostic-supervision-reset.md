@@ -270,3 +270,31 @@ component basis 定义。
 2. 将 residual 投影到 label-basis components；
 3. 判断已知 horizon/segment gaps 是否集中在少数 components 或特定 component groups；
 4. 若能解释 known gaps，再进入 component-supervised training loss 设计。
+
+## Diagnostic Result: Existing-Residual Projection Audit
+
+[Fact] 已实现并运行 `scripts/analyze_phase4_residual_projection_audit.py`。该脚本读取已有
+R.3 `predictions_test.npz`，不训练模型，不补跑远程实验。
+
+主要结果：
+
+| Metric | Value |
+| --- | ---: |
+| specialist gap rows | `4/12` |
+| gap mean residual top16 energy share | `0.789` |
+| non-gap mean residual top16 energy share | `0.828` |
+| gap minus non-gap top16-over-label ratio | `-0.054` |
+| H720 segment gap top16 reconstruction share | `0.716` |
+| H720 segment non-gap top16 reconstruction share | `0.714` |
+
+[Decision] Component-space residual structure 真实存在，但 known gaps 并没有更集中在 dominant
+top components。Top-only TransDF-style loss 不应作为第一候选。
+
+[Decision] 下一步进入 `Component-Balanced Objective` 设计：
+
+- design document:
+  `docs/experiments/phase4-component-balanced-objective-design.md`;
+- code explanation:
+  `docs/code-explanation/phase4-residual-projection-audit.md`;
+- report:
+  `analysis/phase4_residual_projection_audit_20260624/phase4_residual_projection_report.md`。
