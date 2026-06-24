@@ -128,6 +128,44 @@ interface 是否能以可控 amortization gap 接近 horizon-specific specialist
 prefix consistency。该阶段证明 target-set carrier 可用，但后续 Phase2/Phase3 也显示：
 继续追加 future-aware、error-process 或 regime operator 并不能稳定形成 paper-core。
 
+[Reset Update: 2026-06-24]
+
+[Decision] 当前再次从 Step 1 开始。此前 `h96,h720`、full horizon-set、QDF transfer、
+regime operator 等结果统一降级为 diagnostic evidence；它们不再直接约束新方法设计。
+
+[Decision] 新问题从 `pairwise horizon interference map` 扩展为
+`horizon-agnostic supervision`。Pairwise map 可以作为低成本 diagnostic，但不作为主线。
+原因是它仍然按 evaluation horizons 划分 training units，容易把研究变成
+`96/192/336/720` 的组合搜索。
+
+[Decision] 新 Step 1-6 reset 文档：
+
+- `docs/experiments/phase4-horizon-agnostic-supervision-reset.md`。
+
+[Decision] 当前优先候选是 `Component-Space Supervision`：
+
+- training supervision units 来自 train-label projection / decorrelated future components；
+- evaluation 仍保留 `96,192,336,720`；
+- 下一步先做 label-side basis audit 和 existing-residual projection audit；
+- 只有 diagnostics 通过后，才进入 component-supervised training。
+
+[Diagnostic Update] Label-side basis audit 已完成：
+
+- script:
+  `scripts/analyze_phase4_label_basis_audit.py`;
+- report:
+  `analysis/phase4_label_basis_audit_20260624/phase4_label_basis_report.md`;
+- effective rank:
+  `ETTh2=11.47`, `ETTm1=9.74`, `Weather=24.18` for `pred_len=720`;
+- Top16 variance:
+  `ETTh2=87.3%`, `ETTm1=88.1%`, `Weather=79.0%`;
+- mean abs off-diagonal step correlation:
+  `ETTh2=0.532`, `ETTm1=0.554`, `Weather=0.411`。
+
+[Decision] 该结果支持 `Component-Space Supervision` 继续进入 residual projection diagnostic。
+它也进一步削弱了 pairwise horizon map 作为主线的必要性：future-label structure 明显不是由
+`96/192/336/720` 这几个离散 horizon 单独定义的。
+
 [Decision] `PatchEncoderPrefixRiskWeighted` remote gate 已达到 compatibility pass：
 one-model target-set interface 在不改变 architecture 的情况下，将 mean relative MSE 从第一版
 `+0.62%` 推到 `-0.43%`，且 H720-prefix h96/h192 相比 fixed H720-prefix 改善 `-2.46%`。

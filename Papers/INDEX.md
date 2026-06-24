@@ -12,6 +12,7 @@
 | MoE / distribution shift | [TFPS](tfps-pattern-specific-experts.md) | `PXCHMY4H` |
 | varied horizon | [ElasTST](elastst-varied-horizon.md) | `MXLVX75Z` |
 | objective / multi-step loss | [QDF / MetaDF](qdf-quadratic-direct-forecast.md) | `R8YQ4UWY` |
+| objective / transformed label alignment | [TransDF](transdf-transformed-label-alignment.md) | `BK8HKCXT` |
 | structure-aware MoE | [AME-TS](ame-ts-anchored-moe.md) | `IZMRGTIG` |
 | static-dynamic decomposition | [TimeEmb](timeemb-static-dynamic-disentanglement.md) | `VFRBDA4N` |
 | non-stationarity / dual-domain | [DTAF](dtaf-temporal-stabilization-frequency-differencing.md) | `LAKF59WZ` |
@@ -21,7 +22,7 @@
 
 ## 初步聚类
 
-- one model for multi-horizon: ElasTST, TIMEPERCEIVER, SRP++, QDF.
+- one model for multi-horizon: ElasTST, TIMEPERCEIVER, SRP++, QDF, TransDF.
 - future-aware architecture: TimeAlign, TIMEPERCEIVER, ElasTST, SRP++, TimeEmb.
 - MoE and conditional computation: AME-TS, Seg-MoE, MoHETS, TFPS, DTAF.
 - non-stationarity and representation correction: TimeAlign, TimeEmb, DTAF, TFPS.

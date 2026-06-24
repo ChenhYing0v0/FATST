@@ -1334,3 +1334,72 @@ schedule，而不是 Phase3-C operator。
   conflict-aware objective/sampler/curriculum。
 - `artifacts`: `analysis/phase3_horizon_set_interference_20260624/`。
 - `decision`: horizon supervision scheduling 主线继续；MoE/future-side operator 暂不推进。
+
+## 27. Step-1 Reset: Horizon-Agnostic Supervision
+
+[Decision] 当前从 11-step loop 的 Step 1 重新开始。此前 Phase1-Phase3 的结果全部降级为
+diagnostic evidence，不作为新方法设计的硬约束。
+
+[Research Goal]
+
+新的研究问题不是“哪个 evaluation horizon pair 会互相干扰”，而是：
+
+> In unified multi-horizon forecasting, evaluation horizons define where we
+> measure forecasting ability, but they are not necessarily the right units for
+> training supervision. What horizon-agnostic supervision basis can reduce
+> redundant or conflicting future-step tasks while preserving full-horizon
+> evaluation accuracy?
+
+[Literature Update]
+
+- 新增 paper note:
+  `Papers/transdf-transformed-label-alignment.md`。
+- [Strong Evidence] QDF/TransDF 都指出 standard temporal MSE 忽略 future-step dependency；
+  TransDF 进一步指出 forecast horizon 变长会造成 excessive tasks 和 optimization difficulty。
+- [Inference] 这支持用户提出的方向：训练策略不必按目标 horizon 组合划分，可以按 future
+  components、intervals 或 curriculum 组织。
+
+[Design Update]
+
+- 新 reset 文档:
+  `docs/experiments/phase4-horizon-agnostic-supervision-reset.md`。
+- pairwise horizon interference map 降级为 diagnostic。
+- 当前优先候选:
+  `Component-Space Supervision`。
+- 下一步不直接训练；先做 label-side basis audit 与 existing-residual projection audit。
+
+[Label Basis Audit Result]
+
+- script:
+  `scripts/analyze_phase4_label_basis_audit.py`;
+- code explanation:
+  `docs/code-explanation/phase4-label-basis-audit.md`;
+- report:
+  `analysis/phase4_label_basis_audit_20260624/phase4_label_basis_report.md`;
+- effective rank for `pred_len=720`:
+  `ETTh2=11.47`, `ETTm1=9.74`, `Weather=24.18`;
+- Top16 explained variance:
+  `ETTh2=87.3%`, `ETTm1=88.1%`, `Weather=79.0%`;
+- mean abs off-diagonal step correlation:
+  `ETTh2=0.532`, `ETTm1=0.554`, `Weather=0.411`。
+
+[Decision] Label Basis Audit 通过。Train-label future sequences 具有强 off-diagonal
+correlation 和低 effective-rank structure，因此 `Component-Space Supervision` 值得进入
+下一步 existing-residual projection diagnostic。当前不启动 pairwise horizon remote training，也不
+启动 MoE/router。
+
+[11-Step Record]
+
+- `current_step`: Step 1-3 complete；进入 Step 4-6 的 diagnostic design。
+- `problem`: evaluation horizons are not necessarily the right training supervision units。
+- `existence_evidence`: QDF/TransDF 外部证据；Phase3 controls 内部 diagnostic；label-basis
+  audit 显示 low-rank/correlated future-label structure。
+- `idea`: horizon-agnostic component-space supervision。
+- `theory_check`: future labels 的低秩相关结构说明 training units 可以是 decorrelated components，
+  而不是 benchmark horizons。
+- `design`: 下一步做 existing-residual projection audit，检查 known gaps 是否可由 component
+  residual energy 解释。
+- `gate`: 若 component-domain residual 可以区分 R.3/fixed 的 known gaps，再进入
+  component-supervised training loss 设计；否则回退到 random interval supervision。
+- `artifacts`: `analysis/phase4_label_basis_audit_20260624/`。
+- `decision`: 继续 diagnostics，暂不进入远程训练。
