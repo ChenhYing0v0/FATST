@@ -1039,3 +1039,26 @@ metrics、segment metrics、prefix consistency 与 regime operator diagnostics�
 
 - `window_index_norm` feature stats: mean/std/mean_abs/max_abs all `0.0`;
 - prefix mismatch MSE: `9.868e-15`。
+
+[Remote Control Launch]
+
+- control:
+  `history_only_h96_h720`;
+- launch note:
+  `analysis/phase3_regime_segment_operator_20260624/history_only_control_launch_note.md`;
+- remote commit:
+  `1dcce5ce985647d49628e10317035b80307020a1`;
+- remote output:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase3_regime_segment_operator_history_only`;
+- PID:
+  `139925`;
+- selected GPU:
+  GPU1，launch 前为 `18 MiB` used；
+- avoided GPUs:
+  GPU0 `2649 MiB` used；GPU2 `10810 MiB` used；
+- command:
+  `GPU_IDS="1" RUN_NAME="PatchEncoderRegimeSegmentTargetOperatorHistoryOnly"
+  USE_WINDOW_POSITION=0 TARGET_HORIZONS="96,720"
+  bash scripts/remote/run_phase3_regime_segment_operator_gate.sh`;
+- progress at 2026-06-24 11:15 CST:
+  `ETTm1 1/100`, `Weather queued`, `ETTh2 queued`。
