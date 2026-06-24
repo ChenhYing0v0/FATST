@@ -1104,3 +1104,26 @@ split-position shortcut。
 - `gate`: 与 R.3 同 horizon set；mean MSE 不退化，observed gaps 至少不比 history-only H96/H720 更差，
   prefix consistency 保持数值零级别。
 - `decision`: 进入完整 horizon-set remote control。
+
+[Remote Control Launch]
+
+- control:
+  `history_only_h96_h192_h336_h720`;
+- launch note:
+  `analysis/phase3_regime_segment_operator_history_only_20260624/full_horizon_control_launch_note.md`;
+- remote commit:
+  `e1d5f93d4c0a5970a4c2dbcd9833c388a956399f`;
+- remote output:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase3_regime_segment_operator_history_only_full`;
+- PID:
+  `240983`;
+- selected GPUs:
+  GPU1 and GPU2；
+- avoided GPU:
+  GPU0；
+- command:
+  `GPU_IDS="1 2" RUN_NAME="PatchEncoderRegimeSegmentTargetOperatorHistoryOnlyFull"
+  USE_WINDOW_POSITION=0 TARGET_HORIZONS="96,192,336,720"
+  bash scripts/remote/run_phase3_regime_segment_operator_gate.sh`;
+- progress at 2026-06-24 12:04 CST:
+  `ETTm1 2/100`, `Weather running`, `ETTh2 queued`。
