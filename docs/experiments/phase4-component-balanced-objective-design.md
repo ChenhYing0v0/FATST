@@ -1,5 +1,9 @@
 # Phase4: Component-Balanced Objective Design
 
+[Status] 已暂停。本文仅保留为 `Horizon Supervision Scheduling` 路线下的历史候选设计。
+除非后续 HSS decision report 重新激活 component-basis supervision，否则它不是当前
+Phase4 implementation target。
+
 `current_step`: 11-step loop 的 Step 4-6。
 
 ## Context

@@ -1,5 +1,10 @@
 # Phase4: Horizon-Agnostic Supervision Reset
 
+[Status] 已被
+`docs/experiments/phase4-horizon-supervision-scheduling-r3-reset.md`
+取代。本文仅保留为历史 diagnostic evidence；其中 `Component-Space Supervision`
+结论不再是当前 active Phase4 route。
+
 `current_step`: 11-step loop 的 Step 1-3，暂不进入实现。
 
 ## Reset Decision

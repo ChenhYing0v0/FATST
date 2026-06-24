@@ -8,6 +8,7 @@ import random
 import sys
 import time
 from collections.abc import Iterator
+from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
@@ -23,6 +24,18 @@ from model import (
 )
 
 STEP_REGIONS = [(1, 96), (97, 192), (193, 336), (337, 720)]
+HORIZON_MIXED_STRATEGIES = {"horizon_mixed", "r3_prefix_risk"}
+
+
+@dataclass(frozen=True)
+class SupervisionUnit:
+    unit_type: str
+    active_steps: int
+    mask_ratio: float
+    interval_start: int = 0
+    interval_end: int = 0
+    component_rank: int = 0
+    curriculum_phase: str = "none"
 
 
 def set_seed(seed: int) -> None:
@@ -439,6 +452,252 @@ def weighted_mse_loss(
     else:
         weights = precomputed_weights.to(device=pred.device, dtype=pred.dtype)[:horizon]
     return torch.mean((pred - true) ** 2 * weights.view(1, horizon, 1))
+
+
+def masked_mse_loss(pred: torch.Tensor, true: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
+    horizon = pred.shape[1]
+    active_mask = mask.to(device=pred.device, dtype=pred.dtype)[:horizon].view(1, horizon, 1)
+    denominator = torch.sum(active_mask) * pred.shape[0] * pred.shape[2]
+    return torch.sum((pred - true) ** 2 * active_mask) / torch.clamp(denominator, min=1.0)
+
+
+def sample_block_mask(
+    horizon: int,
+    block_size: int,
+    mask_ratio: float,
+    rng: random.Random,
+    device: torch.device,
+    dtype: torch.dtype,
+) -> tuple[torch.Tensor, SupervisionUnit]:
+    if block_size <= 0:
+        raise ValueError("supervision block size must be positive.")
+    if not 0 < mask_ratio <= 1:
+        raise ValueError("supervision mask ratio must be in (0, 1].")
+    block_count = int(np.ceil(horizon / float(block_size)))
+    active_blocks = max(1, min(block_count, int(round(block_count * mask_ratio))))
+    selected = set(rng.sample(range(block_count), active_blocks))
+    mask = torch.zeros(horizon, device=device, dtype=dtype)
+    for block_index in selected:
+        start = block_index * block_size
+        end = min(start + block_size, horizon)
+        mask[start:end] = 1.0
+    active_steps = int(torch.sum(mask).item())
+    return mask, SupervisionUnit(
+        unit_type="mask",
+        active_steps=active_steps,
+        mask_ratio=float(active_steps / float(horizon)),
+    )
+
+
+def sample_interval_mask(
+    horizon: int,
+    block_size: int,
+    min_blocks: int,
+    max_blocks: int,
+    rng: random.Random,
+    device: torch.device,
+    dtype: torch.dtype,
+    curriculum_phase: str = "none",
+) -> tuple[torch.Tensor, SupervisionUnit]:
+    if block_size <= 0:
+        raise ValueError("supervision block size must be positive.")
+    if min_blocks <= 0 or max_blocks < min_blocks:
+        raise ValueError("invalid supervision interval block range.")
+    block_count = int(np.ceil(horizon / float(block_size)))
+    length_blocks = rng.randint(min_blocks, min(max_blocks, block_count))
+    start_block = rng.randint(0, block_count - length_blocks)
+    start = start_block * block_size
+    end = min(start + length_blocks * block_size, horizon)
+    mask = torch.zeros(horizon, device=device, dtype=dtype)
+    mask[start:end] = 1.0
+    active_steps = int(end - start)
+    return mask, SupervisionUnit(
+        unit_type="interval",
+        active_steps=active_steps,
+        mask_ratio=float(active_steps / float(horizon)),
+        interval_start=start + 1,
+        interval_end=end,
+        curriculum_phase=curriculum_phase,
+    )
+
+
+def target_rows_chunk(data: np.ndarray, indices: np.ndarray, seq_len: int, pred_len: int) -> np.ndarray:
+    targets = np.stack([data[index + seq_len : index + seq_len + pred_len] for index in indices], axis=0)
+    return targets.transpose(0, 2, 1).reshape(-1, pred_len).astype(np.float64, copy=False)
+
+
+def train_split_label_basis(
+    dataset_root: str | Path,
+    dataset: str,
+    seq_len: int,
+    pred_len: int,
+    chunk_windows: int = 256,
+) -> tuple[np.ndarray, np.ndarray]:
+    train_set = ForecastDataset(dataset_root, dataset, "train", seq_len, pred_len)
+    data = train_set.data.astype(np.float64, copy=False)
+    n_windows = len(data) - seq_len - pred_len + 1
+    if n_windows <= 0:
+        raise ValueError("Dataset split is shorter than seq_len + pred_len.")
+    step_sum = np.zeros(pred_len, dtype=np.float64)
+    step_cross = np.zeros((pred_len, pred_len), dtype=np.float64)
+    count = 0
+    for start in range(0, n_windows, chunk_windows):
+        stop = min(start + chunk_windows, n_windows)
+        rows = target_rows_chunk(data, np.arange(start, stop), seq_len, pred_len)
+        step_sum += rows.sum(axis=0)
+        step_cross += rows.T @ rows
+        count += rows.shape[0]
+    mean = step_sum / float(count)
+    covariance = (step_cross - float(count) * np.outer(mean, mean)) / float(max(count - 1, 1))
+    covariance = 0.5 * (covariance + covariance.T)
+    eigenvalues, eigenvectors = np.linalg.eigh(covariance)
+    order = np.argsort(eigenvalues)[::-1]
+    eigenvalues = np.maximum(eigenvalues[order], 0.0)
+    eigenvectors = eigenvectors[:, order]
+    return eigenvectors.astype(np.float32), eigenvalues.astype(np.float32)
+
+
+def component_supervision_loss(
+    pred: torch.Tensor,
+    true: torch.Tensor,
+    basis: torch.Tensor,
+    eigenvalues: torch.Tensor,
+    rank: int,
+    alpha: float,
+    beta: float,
+    balanced: bool,
+) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, SupervisionUnit]:
+    if not 0 <= alpha <= 1:
+        raise ValueError("supervision component alpha must be in [0, 1].")
+    horizon = pred.shape[1]
+    active_rank = max(1, min(rank, horizon, basis.shape[1]))
+    active_basis = basis[:horizon, :active_rank].to(device=pred.device, dtype=pred.dtype)
+    pred_rows = pred.permute(0, 2, 1).reshape(-1, horizon)
+    true_rows = true.permute(0, 2, 1).reshape(-1, horizon)
+    pred_components = pred_rows @ active_basis
+    true_components = true_rows @ active_basis
+    component_scale = torch.mean(true_components * true_components, dim=0).clamp_min(1e-6)
+    component_error = (pred_components - true_components) ** 2 / component_scale.view(1, active_rank)
+    if balanced:
+        active_eigenvalues = eigenvalues[:active_rank].to(device=pred.device, dtype=pred.dtype)
+        weights = torch.pow(torch.clamp(active_eigenvalues, min=1e-8), -beta)
+        weights = torch.clamp(weights, min=0.1, max=10.0)
+        weights = weights / torch.mean(weights)
+        unit_loss = torch.mean(component_error * weights.view(1, active_rank))
+        unit_type = "component_balanced"
+    else:
+        unit_loss = torch.mean(component_error)
+        unit_type = "component_top"
+    time_loss = torch.mean((pred - true) ** 2)
+    total_loss = (1.0 - alpha) * time_loss + alpha * unit_loss
+    unit = SupervisionUnit(
+        unit_type=unit_type,
+        active_steps=horizon,
+        mask_ratio=1.0,
+        component_rank=active_rank,
+    )
+    return total_loss, time_loss, unit_loss, unit
+
+
+def curriculum_phase(epoch: int, epochs: int) -> str:
+    progress = epoch / float(max(epochs, 1))
+    if progress <= 0.3:
+        return "coarse"
+    if progress <= 0.7:
+        return "mixed"
+    return "dense"
+
+
+def horizon_decoupled_supervision_loss(
+    pred: torch.Tensor,
+    true: torch.Tensor,
+    args: argparse.Namespace,
+    rng: random.Random,
+    epoch: int,
+    component_basis: torch.Tensor | None,
+    component_eigenvalues: torch.Tensor | None,
+) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, SupervisionUnit]:
+    strategy = args.supervision_strategy
+    horizon = pred.shape[1]
+    time_loss = torch.mean((pred - true) ** 2)
+    if strategy == "full_time_mse":
+        unit = SupervisionUnit("full_time", horizon, 1.0)
+        return time_loss, time_loss, time_loss, unit
+    if strategy == "random_future_mask":
+        mask, unit = sample_block_mask(
+            horizon,
+            args.supervision_block_size,
+            args.supervision_mask_ratio,
+            rng,
+            pred.device,
+            pred.dtype,
+        )
+        unit_loss = masked_mse_loss(pred, true, mask)
+        return unit_loss, time_loss, unit_loss, unit
+    if strategy == "interval_supervision":
+        mask, unit = sample_interval_mask(
+            horizon,
+            args.supervision_block_size,
+            args.supervision_interval_min_blocks,
+            args.supervision_interval_max_blocks,
+            rng,
+            pred.device,
+            pred.dtype,
+        )
+        unit_loss = masked_mse_loss(pred, true, mask)
+        return unit_loss, time_loss, unit_loss, unit
+    if strategy in {"component_basis_top", "component_basis_balanced"}:
+        if component_basis is None or component_eigenvalues is None:
+            raise ValueError(f"{strategy} requires a train-label component basis.")
+        return component_supervision_loss(
+            pred,
+            true,
+            component_basis,
+            component_eigenvalues,
+            args.supervision_component_rank,
+            args.supervision_component_alpha,
+            args.supervision_component_beta,
+            balanced=strategy == "component_basis_balanced",
+        )
+    if strategy == "curriculum_units":
+        phase = curriculum_phase(epoch, args.epochs)
+        if phase == "coarse":
+            if component_basis is None or component_eigenvalues is None:
+                raise ValueError("curriculum_units requires a train-label component basis.")
+            total_loss, time_loss, unit_loss, unit = component_supervision_loss(
+                pred,
+                true,
+                component_basis,
+                component_eigenvalues,
+                args.supervision_component_rank,
+                args.supervision_component_alpha,
+                args.supervision_component_beta,
+                balanced=False,
+            )
+            unit = SupervisionUnit(
+                unit.unit_type,
+                unit.active_steps,
+                unit.mask_ratio,
+                component_rank=unit.component_rank,
+                curriculum_phase=phase,
+            )
+            return total_loss, time_loss, unit_loss, unit
+        if phase == "mixed":
+            mask, unit = sample_interval_mask(
+                horizon,
+                args.supervision_block_size,
+                args.supervision_interval_min_blocks,
+                args.supervision_interval_max_blocks,
+                rng,
+                pred.device,
+                pred.dtype,
+                curriculum_phase=phase,
+            )
+            unit_loss = masked_mse_loss(pred, true, mask)
+            return unit_loss, time_loss, unit_loss, unit
+        unit = SupervisionUnit("full_time", horizon, 1.0, curriculum_phase=phase)
+        return time_loss, time_loss, time_loss, unit
+    raise ValueError(f"Unknown supervision strategy: {strategy}")
 
 
 def offdiag_block_quadratic_loss(
@@ -938,6 +1197,29 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--offdiag-block-size", type=int, default=48)
     parser.add_argument("--offdiag-quadratic-weight", type=float, default=0.05)
     parser.add_argument("--offdiag-ridge-eps", type=float, default=1e-3)
+    parser.add_argument(
+        "--supervision-strategy",
+        choices=[
+            "horizon_mixed",
+            "full_time_mse",
+            "r3_prefix_risk",
+            "random_future_mask",
+            "interval_supervision",
+            "component_basis_top",
+            "component_basis_balanced",
+            "curriculum_units",
+        ],
+        default="horizon_mixed",
+    )
+    parser.add_argument("--supervision-pred-len", type=int, default=720)
+    parser.add_argument("--supervision-mask-ratio", type=float, default=0.5)
+    parser.add_argument("--supervision-block-size", type=int, default=48)
+    parser.add_argument("--supervision-interval-min-blocks", type=int, default=1)
+    parser.add_argument("--supervision-interval-max-blocks", type=int, default=4)
+    parser.add_argument("--supervision-component-rank", type=int, default=16)
+    parser.add_argument("--supervision-component-beta", type=float, default=0.25)
+    parser.add_argument("--supervision-component-alpha", type=float, default=0.5)
+    parser.add_argument("--supervision-trace-limit", type=int, default=2000)
     parser.add_argument("--patience", type=int, default=10)
     parser.add_argument("--seed", type=int, default=2021)
     parser.add_argument("--run-name", default="PatchEncoderTargetSetDecoder")
@@ -986,18 +1268,40 @@ def main() -> None:
         raise ValueError("offdiag quadratic weight must be non-negative.")
     if args.offdiag_ridge_eps <= 0:
         raise ValueError("offdiag ridge eps must be positive.")
+    if args.supervision_pred_len <= 0 or args.supervision_pred_len > args.max_pred_len:
+        raise ValueError("supervision pred len must be in (0, max_pred_len].")
+    if not 0 < args.supervision_mask_ratio <= 1:
+        raise ValueError("supervision mask ratio must be in (0, 1].")
+    if args.supervision_block_size <= 0:
+        raise ValueError("supervision block size must be positive.")
+    if args.supervision_interval_min_blocks <= 0:
+        raise ValueError("supervision interval min blocks must be positive.")
+    if args.supervision_interval_max_blocks < args.supervision_interval_min_blocks:
+        raise ValueError("supervision interval max blocks must be >= min blocks.")
+    if args.supervision_component_rank <= 0:
+        raise ValueError("supervision component rank must be positive.")
+    if args.supervision_component_beta < 0:
+        raise ValueError("supervision component beta must be non-negative.")
+    if not 0 <= args.supervision_component_alpha <= 1:
+        raise ValueError("supervision component alpha must be in [0, 1].")
+    if args.supervision_trace_limit < 0:
+        raise ValueError("supervision trace limit must be non-negative.")
+    if args.supervision_strategy == "r3_prefix_risk" and args.step_loss_weighting != "prefix_risk":
+        raise ValueError("r3_prefix_risk supervision requires --step-loss-weighting prefix_risk.")
     set_seed(args.seed)
     device = torch.device("cuda" if args.device == "auto" and torch.cuda.is_available() else "cpu")
     if args.device != "auto":
         device = torch.device(args.device)
 
+    horizon_mixed_training = args.supervision_strategy in HORIZON_MIXED_STRATEGIES
+    train_horizons = target_horizons if horizon_mixed_training else [args.supervision_pred_len]
     return_index = args.use_window_position
     train_loaders = build_loaders(
         args.dataset_root,
         args.dataset,
         "train",
         args.seq_len,
-        target_horizons,
+        train_horizons,
         args.batch_size,
         drop_last=True,
         return_index=return_index,
@@ -1117,11 +1421,32 @@ def main() -> None:
             args.offdiag_ridge_eps,
         )
         offdiag_block_matrix = offdiag_block_matrix.to(device=device)
+    component_basis: torch.Tensor | None = None
+    component_eigenvalues: torch.Tensor | None = None
+    component_basis_stats: dict[str, float] = {}
+    if args.supervision_strategy in {"component_basis_top", "component_basis_balanced", "curriculum_units"}:
+        basis_np, eigenvalues_np = train_split_label_basis(
+            args.dataset_root,
+            args.dataset,
+            args.seq_len,
+            args.supervision_pred_len,
+        )
+        component_basis = torch.tensor(basis_np, device=device, dtype=torch.float32)
+        component_eigenvalues = torch.tensor(eigenvalues_np, device=device, dtype=torch.float32)
+        total_variance = float(np.sum(eigenvalues_np))
+        rank = min(args.supervision_component_rank, len(eigenvalues_np))
+        component_basis_stats = {
+            "component_rank": float(rank),
+            "component_top_rank_variance": float(np.sum(eigenvalues_np[:rank]) / max(total_variance, 1e-12)),
+            "component_total_variance": total_variance,
+        }
 
     best_val = float("inf")
     best_state = None
     stale_epochs = 0
-    log_rows: list[dict[str, float]] = []
+    log_rows: list[dict[str, object]] = []
+    supervision_trace_rows: list[dict[str, float | int | str]] = []
+    global_step = 0
     rng = random.Random(args.seed)
     training_start = time.perf_counter()
 
@@ -1139,9 +1464,16 @@ def main() -> None:
         future_confidence_means = []
         error_energy_losses = []
         error_smoothness_losses = []
+        unit_losses = []
+        time_losses = []
+        active_step_ratios = []
+        component_ranks = []
+        curriculum_phases = []
+        supervision_steps = 0
         horizon_counts = {horizon: 0 for horizon in target_horizons}
-        for _ in range(steps_per_epoch):
-            horizon = rng.choice(target_horizons)
+        for step_in_epoch in range(1, steps_per_epoch + 1):
+            global_step += 1
+            horizon = rng.choice(target_horizons) if horizon_mixed_training else args.supervision_pred_len
             x, y, window_index_norm = next_batch(train_loaders, iterators, horizon)
             x = x.float().to(device)
             y = y.float().to(device)
@@ -1162,18 +1494,34 @@ def main() -> None:
                 if isinstance(output, dict):
                     raise TypeError("Expected tensor prediction.")
                 pred = output
-            pred_loss = weighted_mse_loss(
-                pred,
-                y,
-                args.max_pred_len,
-                target_horizons,
-                args.step_loss_weighting,
-                args.step_loss_alpha,
-                covariance_step_weights,
-                offdiag_block_matrix,
-                args.offdiag_block_size,
-                args.offdiag_quadratic_weight,
-            )
+            if horizon_mixed_training:
+                pred_loss = weighted_mse_loss(
+                    pred,
+                    y,
+                    args.max_pred_len,
+                    target_horizons,
+                    args.step_loss_weighting,
+                    args.step_loss_alpha,
+                    covariance_step_weights,
+                    offdiag_block_matrix,
+                    args.offdiag_block_size,
+                    args.offdiag_quadratic_weight,
+                )
+                time_loss = pred_loss
+                unit_loss = pred_loss
+                unit = SupervisionUnit("horizon_mixed", horizon, 1.0)
+                horizon_counts[horizon] += 1
+            else:
+                pred_loss, time_loss, unit_loss, unit = horizon_decoupled_supervision_loss(
+                    pred,
+                    y,
+                    args,
+                    rng,
+                    epoch,
+                    component_basis,
+                    component_eigenvalues,
+                )
+                supervision_steps += 1
             loss = pred_loss
             if future_loss_enabled:
                 loss = loss + args.future_align_weight * output["future_local_alignment_loss"]
@@ -1200,7 +1548,31 @@ def main() -> None:
             optimizer.step()
             losses.append(float(loss.detach().cpu()))
             pred_losses.append(float(pred_loss.detach().cpu()))
-            horizon_counts[horizon] += 1
+            unit_losses.append(float(unit_loss.detach().cpu()))
+            time_losses.append(float(time_loss.detach().cpu()))
+            active_step_ratios.append(unit.mask_ratio)
+            component_ranks.append(float(unit.component_rank))
+            curriculum_phases.append(unit.curriculum_phase)
+            if len(supervision_trace_rows) < args.supervision_trace_limit:
+                supervision_trace_rows.append(
+                    {
+                        "epoch": epoch,
+                        "step_in_epoch": step_in_epoch,
+                        "global_step": global_step,
+                        "strategy": args.supervision_strategy,
+                        "supervision_pred_len": horizon,
+                        "unit_type": unit.unit_type,
+                        "active_steps": unit.active_steps,
+                        "mask_ratio": unit.mask_ratio,
+                        "interval_start": unit.interval_start,
+                        "interval_end": unit.interval_end,
+                        "component_rank": unit.component_rank,
+                        "curriculum_phase": unit.curriculum_phase,
+                        "loss_time": float(time_loss.detach().cpu()),
+                        "loss_unit": float(unit_loss.detach().cpu()),
+                        "loss_total": float(loss.detach().cpu()),
+                    }
+                )
 
         val_rows = []
         for horizon in target_horizons:
@@ -1235,6 +1607,16 @@ def main() -> None:
             "train_error_smoothness_loss": float(np.mean(error_smoothness_losses))
             if error_smoothness_losses
             else 0.0,
+            "train_supervision_strategy": args.supervision_strategy,
+            "train_supervision_pred_len": args.supervision_pred_len,
+            "train_unit_loss": float(np.mean(unit_losses)) if unit_losses else 0.0,
+            "train_time_loss": float(np.mean(time_losses)) if time_losses else 0.0,
+            "train_active_step_ratio": float(np.mean(active_step_ratios)) if active_step_ratios else 0.0,
+            "train_component_rank": float(np.mean(component_ranks)) if component_ranks else 0.0,
+            "train_supervision_steps": supervision_steps,
+            "train_curriculum_phase": max(set(curriculum_phases), key=curriculum_phases.count)
+            if curriculum_phases
+            else "none",
             "val_mean_mse": mean_val_mse,
             "epoch_elapsed_sec": time.perf_counter() - epoch_start,
             "elapsed_sec": time.perf_counter() - training_start,
@@ -1247,6 +1629,7 @@ def main() -> None:
             row[f"val_mae_h{horizon}"] = float(val_row["mae"])
         log_rows.append(row)
         write_csv(run_dir / "training_log.csv", log_rows)
+        write_csv(run_dir / "supervision_trace.csv", supervision_trace_rows)
         mean_epoch_sec = float(row["elapsed_sec"]) / epoch
         eta_sec = max(args.epochs - epoch, 0) * mean_epoch_sec
         print(
@@ -1325,6 +1708,7 @@ def main() -> None:
     torch.save(model.state_dict(), run_dir / "checkpoint.pt")
     write_csv(run_dir / "metrics_by_target_horizon.csv", target_metric_rows)
     write_csv(run_dir / "training_log.csv", log_rows)
+    write_csv(run_dir / "supervision_trace.csv", supervision_trace_rows)
     write_csv(
         run_dir / "objective_weight_stats.csv",
         objective_weight_stats(
@@ -1352,9 +1736,25 @@ def main() -> None:
         write_csv(run_dir / "offdiag_block_matrix.csv", matrix_rows)
     effective_config = vars(args)
     effective_config["target_horizons"] = target_horizons
+    effective_config["evaluation_target_horizons"] = target_horizons
+    effective_config["train_horizons_effective"] = train_horizons
+    effective_config["training_evaluation_decoupled"] = not horizon_mixed_training
+    effective_config["supervision_unit_config"] = {
+        "strategy": args.supervision_strategy,
+        "supervision_pred_len": args.supervision_pred_len,
+        "mask_ratio": args.supervision_mask_ratio,
+        "block_size": args.supervision_block_size,
+        "interval_min_blocks": args.supervision_interval_min_blocks,
+        "interval_max_blocks": args.supervision_interval_max_blocks,
+        "component_rank": args.supervision_component_rank,
+        "component_beta": args.supervision_component_beta,
+        "component_alpha": args.supervision_component_alpha,
+        "trace_limit": args.supervision_trace_limit,
+    }
     effective_config["steps_per_epoch_effective"] = steps_per_epoch
     effective_config["step_covariance_novelty_share"] = covariance_novelty_share or {}
     effective_config["offdiag_block_stats"] = offdiag_block_stats
+    effective_config["component_basis_stats"] = component_basis_stats
     (run_dir / "effective_config.json").write_text(json.dumps(effective_config, indent=2))
     env = {
         "python": sys.version,
