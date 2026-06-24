@@ -1,0 +1,8 @@
+model,strategy,rows,max_prefix_mismatch_mse,mean_prefix_mismatch_mse
+PatchEncoderR3PrefixRisk,D1_r3_prefix_risk,9,5.367102975158827e-14,2.0540560358804185e-14
+PatchEncoderFullTimeMSE720,D0_full_time_mse,9,5.118439851646561e-14,1.9895839442820907e-14
+PatchEncoderRandomFutureMask,D2_random_future_mask,9,4.6993137191916196e-14,1.867516285129993e-14
+PatchEncoderIntervalSupervision,D3_interval_supervision,9,5.037271733629792e-14,1.8317020380541867e-14
+PatchEncoderComponentTop,D4_component_basis_top,9,5.2823546182806033e-14,2.0673312444495562e-14
+PatchEncoderComponentBalanced,D5_component_basis_balanced,9,5.277412011626785e-14,2.06054191774118e-14
+PatchEncoderCurriculumUnits,D6_curriculum_units,9,5.2823546182806033e-14,2.0673312444495562e-14

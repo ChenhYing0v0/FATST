@@ -1,0 +1,8 @@
+model,strategy,baseline_model,settings,mse_wins,mae_wins,mean_relative_mse_pct,mean_relative_mae_pct,max_dataset_mean_degradation_pct
+PatchEncoderR3PrefixRisk,D1_r3_prefix_risk,PatchEncoderR3PrefixRisk,12,0,0,0.0,0.0,0.0
+PatchEncoderFullTimeMSE720,D0_full_time_mse,PatchEncoderR3PrefixRisk,12,0,0,5.12101451673464,3.17291320478027,5.46058675998779
+PatchEncoderRandomFutureMask,D2_random_future_mask,PatchEncoderR3PrefixRisk,12,1,0,3.508942988668344,2.891426288291258,3.5856946254980597
+PatchEncoderIntervalSupervision,D3_interval_supervision,PatchEncoderR3PrefixRisk,12,2,2,4.121115901888197,3.0937326627336947,7.123308644255544
+PatchEncoderComponentTop,D4_component_basis_top,PatchEncoderR3PrefixRisk,12,0,0,4.373156583367342,2.7138580263232774,5.497839572749369
+PatchEncoderComponentBalanced,D5_component_basis_balanced,PatchEncoderR3PrefixRisk,12,0,0,3.9094217454273994,2.646848263516305,5.324855159360209
+PatchEncoderCurriculumUnits,D6_curriculum_units,PatchEncoderR3PrefixRisk,12,0,0,4.373156583367342,2.7138580263232774,5.497839572749369

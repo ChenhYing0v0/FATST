@@ -245,41 +245,87 @@ paper-core。
 random mask smoke、component top smoke、component balanced smoke、interval smoke、
 curriculum smoke 均已通过。
 
-下一步进入 R4.3 remote gate。
-
 ### R4.3：529_Lab-3090 远程 gate
 
-`current_step`: Step 8，下一步进入。
+`current_step`: Step 8 complete。
 
-任务：
+[Fact] 已完成 7 strategies x 3 datasets x 4 evaluation horizons 的 remote gate：
 
-- commit + push 后在 `529_Lab-3090` 执行；
-- evaluation 覆盖 `ETTh2`, `ETTm1`, `Weather` x `96,192,336,720`；
-- 默认 output root:
+- remote output root:
   `/home/yingch/exp_outputs/r-2026-fatst`。
+- local synced analysis root:
+  `analysis/phase4_horizon_decoupled_gate_20260624`。
+- raw sync artifacts 位于 `analysis/phase4_horizon_decoupled_gate_20260624/raw`；
+  该目录按 `.gitignore` 保持不跟踪。
+- 汇总表和决策报告由
+  `scripts/analyze_phase4_horizon_decoupled_gate.py` 生成。
 
-验收：
+### R4.4：决策报告
 
-- 记录 GPU、命令、conda env、commit hash、输出路径；
-- 产出 metrics by dataset/horizon；
-- 产出 supervision trace / loss trajectory。
+`current_step`: Step 9-11 complete。
 
-### R4.4：证据分析与决策报告
+[Fact] 决策报告：
 
-`current_step`: Step 9-10，等待远程结果后进入。
+- `analysis/phase4_horizon_decoupled_gate_20260624/phase4_horizon_decoupled_decision_report.md`
 
-任务：
+[Fact] 相对 primary baseline `D1_r3_prefix_risk`：
 
-- 与 R.3 和 full_time_mse control 比较；
-- 拆解 horizon-level、segment-level、dataset-level 结果；
-- 判断 horizon-decoupled supervision 是否同时具备性能收益和 paper narrative；
-- 明确 pass/fail/rollback。
+| Strategy | MSE wins | Mean relative MSE | Worst dataset mean degradation |
+| --- | ---: | ---: | ---: |
+| `D0_full_time_mse` | 0/12 | +5.12% | +5.46% |
+| `D2_random_future_mask` | 1/12 | +3.51% | +3.59% |
+| `D3_interval_supervision` | 2/12 | +4.12% | +7.12% |
+| `D4_component_basis_top` | 0/12 | +4.37% | +5.50% |
+| `D5_component_basis_balanced` | 0/12 | +3.91% | +5.32% |
+| `D6_curriculum_units` | 0/12 | +4.37% | +5.50% |
 
-验收：
+[Strong Evidence] 当前 `D2-D6` 静态 horizon-decoupled replacement 全部不通过
+paper-core gate。最好的非 R.3 candidate 是 `D2_random_future_mask`，但仍然是
+`+3.51%` mean relative MSE，只有 `1/12` MSE wins。
 
-- analysis report 使用同构 11-step record；
-- 不只报告 aggregate MSE/MAE；
-- 若失败，明确回退到 Step 2、4、6 或 7。
+[Strong Evidence] `D3_interval_supervision` 在 `ETTh2` 有局部改进（dataset mean
+relative MSE `-0.36%`，2/4 wins），但在 `ETTm1` 和 `Weather` 明显退化。因此它不是
+可泛化 paper-core，而是提示 interval unit 可能需要 condition。
+
+[Fact] prefix mismatch 保持在 numerical-zero 量级，说明失败不是 unified inference 或
+evaluation interface 被破坏导致。
+
+[Decision] Phase4-R 当前版本失败的是“静态、全局、替换式的 horizon-decoupled
+supervision strategy”，不是 HSS 研究问题本身。回退点是 Step 4/6：保留
+training/evaluation 解耦问题，重做核心 idea 和最小设计。
+
+## 下一阶段：Phase4-S
+
+`current_step`: Step 4-6，下一步进入。
+
+[Decision] 下一步主线命名为：
+
+> Phase4-S: State/Difficulty-Conditioned Supervision Scheduling
+
+[Decision] 不继续做 mask ratio、interval length、component rank 的宽 sweep；也不把
+future-aware 或 MoE 叠在失败策略上。
+
+新 hypothesis：
+
+> Horizon-free supervision units 可以成立，但 unit pressure 不能是全局静态或随机。
+> 它应由 train-side difficulty、future-label novelty、residual/error process proxy 或
+> running-loss state 条件化。
+
+最小候选：
+
+| ID | Candidate | Role |
+| --- | --- | --- |
+| `S1_difficulty_conditioned_interval` | 训练 `720` future sequence，但 interval sampling probability 由 label novelty / running loss bucket 决定 | 测试 conditioned unit pressure |
+| `S2_r3_plus_sparse_unit_aux` | 保留 R.3 base loss，加小权重 horizon-free sparse auxiliary unit | 测试 HSS 作为辅助 schedule，而非替换 objective |
+| `S3_error_process_reweighting` | 用 validation residual 或 train-side proxy 调整 future unit pressure | 测试 error-process-aware supervision |
+
+进入 Phase4-S 前必须先做 post-hoc diagnostic：
+
+1. 从本轮 artifacts 定位 R.3 下的 high-residual dataset/horizon/segment；
+2. 检查 `D2_random_future_mask` 和 `D3_interval_supervision` 的改善是否集中在 long-horizon
+   或局部 segments；
+3. 判断可以不用 evaluation horizon 信息构造的 train-side difficulty proxy；
+4. 写出新的 Step 4-6 记录和 gate，再允许实现。
 
 ## 历史证据索引
 
