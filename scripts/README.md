@@ -67,6 +67,8 @@
   `PatchEncoderRegimeSegmentTargetOperator` 最小 gate。默认 `DATASETS="ETTm1 Weather ETTh2"`、
   `TARGET_HORIZONS=96,720`、`MODEL_VARIANT=regime_segment_operator`、
   `USE_WINDOW_POSITION=1`，用于先验证 short-extra-window 与 H720 late-segment gaps。
+  若要运行 history-only control，设置 `RUN_NAME=PatchEncoderRegimeSegmentTargetOperatorHistoryOnly`
+  且 `USE_WINDOW_POSITION=0`。
 - `remote/check_phase3_regime_segment_operator_progress.sh`: 在 3090 项目目录中检查
   Phase3-C 最小 gate 进度，输出 dataset 矩阵位置、epoch/total、ETA 和 outer log tail。
 

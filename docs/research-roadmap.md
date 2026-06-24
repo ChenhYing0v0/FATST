@@ -1406,6 +1406,35 @@ Artifacts:
 - prefix mismatch MSE: `1.015119944076633e-14`;
 - extra artifacts: `regime_segment_operator_stats.csv`, `regime_feature_stats.csv`。
 
+[Result Update: 2026-06-24] Phase3-C minimal remote gate 已返回，结论为 positive but
+confounded。
+
+核心结果：
+
+- MSE wins vs R.3: `5/6`;
+- mean relative MSE vs R.3: `-0.39%`;
+- observed aggregate-gap wins: `1/2`;
+- observed H720 segment-gap wins: `2/3`;
+- max prefix mismatch MSE: `4.925e-14`;
+- report:
+  `analysis/phase3_regime_segment_operator_20260624/phase3_regime_segment_operator_report.md`。
+
+[Decision] 暂不把该结果写成 mechanism pass。原因有两个：
+
+1. `TARGET_HORIZONS=96,720`，而 R.3 是 `96,192,336,720`，存在 horizon-set confound；
+2. prediction path 使用 `window_index_norm`，它是 split-normalized position signal，可能成为
+   split-position shortcut。
+
+[Next] 回到 Step 6-8 做 controls：
+
+1. `history_only_h96_h720`: `USE_WINDOW_POSITION=0`，先判断收益是否依赖 window index；
+2. `history_only_h96_h192_h336_h720`: 若第一个 control 通过，再用完整 horizon set 对齐 R.3；
+3. optional `window_h96_h192_h336_h720`: 隔离 horizon-set confound。
+
+[Implementation Update] `--use-window-position` 已变为真正的显式开关；不传时
+`window_index_norm` feature 为 0。History-only local smoke 已通过，prefix mismatch MSE
+`9.868e-15`。
+
 ## Phase3: Future-Side MoE
 
 状态：继续暂停。Phase3-A 支持的是 regime/segment calibration 分支，不支持直接启动 MoE。

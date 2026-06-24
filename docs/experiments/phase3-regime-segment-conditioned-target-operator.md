@@ -116,3 +116,19 @@ Fail 条件：
 3. 远程最小 gate：优先 `ETTm1`, `ETTh2`, `Weather`，覆盖 `96/720`。
 4. 若最小 gate 通过，再扩展到完整 4 horizons。
 5. 若失败，回滚到 Step 2-3：重新判断问题是否应转向 base architecture 或 external baseline selection。
+
+## 8. Control Plan After Window-Index Concern
+
+当前 `window_index_norm` run 只能作为 positive but confounded evidence。下一步必须拆分两个因素：
+
+1. `history_only_h96_h720`: `USE_WINDOW_POSITION=0`, `TARGET_HORIZONS=96,720`。
+   目的：判断收益是否依赖 split-position shortcut。
+2. `history_only_h96_h192_h336_h720`: `USE_WINDOW_POSITION=0`,
+   `TARGET_HORIZONS=96,192,336,720`。
+   目的：在与 R.3 相同 horizon set 下判断结构收益。
+3. 可选 `window_h96_h192_h336_h720`: `USE_WINDOW_POSITION=1`,
+   `TARGET_HORIZONS=96,192,336,720`。
+   目的：只隔离 horizon-set confound。
+
+若 `history_only_h96_h720` 后收益大幅消失，则当前 positive result 应视为 split-position shortcut
+证据，不应继续该机制。若 history-only 仍保留大部分收益，再进入完整 horizon-set control。

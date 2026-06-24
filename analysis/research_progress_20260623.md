@@ -958,3 +958,84 @@ Phase3-C 需要把 window position 与 history statistics 合成 regime token，
 
 [Decision] Phase3-C 已进入 Step 8 remote training，且至少两个数据集正常运行。下一步等远程完成后同步
 metrics、segment metrics、prefix consistency 与 regime operator diagnostics，判断是否进入 Step 9-10。
+
+## 23. Phase3-C Returned Result: Positive but Confounded
+
+[Fact] Phase3-C `PatchEncoderRegimeSegmentTargetOperator` minimal remote gate 已完成并同步：
+
+- raw artifacts:
+  `analysis/phase3_regime_segment_operator_20260624/raw/`;
+- analyzer:
+  `scripts/analyze_phase3_regime_segment_operator_gate.py`;
+- report:
+  `analysis/phase3_regime_segment_operator_20260624/phase3_regime_segment_operator_report.md`;
+- summary:
+  `analysis/phase3_regime_segment_operator_20260624/phase3_regime_segment_operator_summary.json`。
+
+[Evidence] Numerical gate vs R.3:
+
+| Quantity | Result |
+| --- | ---: |
+| MSE wins vs R.3 | `5/6` |
+| mean relative MSE vs R.3 | `-0.39%` |
+| observed aggregate-gap wins | `1/2` |
+| observed H720 segment-gap wins | `2/3` |
+| non-gap mean relative MSE vs R.3 | `-0.66%` |
+| max prefix mismatch MSE | `4.925e-14` |
+| mean operator abs scale | `0.079033` |
+| mean operator abs shift | `0.019258` |
+
+[Evidence] Main metrics:
+
+| Dataset | Horizon | Candidate MSE | R.3 MSE | Rel MSE | Win |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `ETTh2` | `96` | `0.301044` | `0.304796` | `-1.23%` | True |
+| `ETTh2` | `720` | `0.410215` | `0.410473` | `-0.06%` | True |
+| `ETTm1` | `96` | `0.298320` | `0.298685` | `-0.12%` | True |
+| `ETTm1` | `720` | `0.414320` | `0.417293` | `-0.71%` | True |
+| `Weather` | `96` | `0.148630` | `0.148026` | `+0.41%` | False |
+| `Weather` | `720` | `0.318859` | `0.320847` | `-0.62%` | True |
+
+[Evidence] Observed H720 segment gaps:
+
+| Dataset | Segment | Candidate MSE | R.3 MSE | Rel MSE | Win |
+| --- | --- | ---: | ---: | ---: | --- |
+| `ETTh2` | `193-336` | `0.373090` | `0.369671` | `+0.92%` | False |
+| `ETTh2` | `337-720` | `0.482149` | `0.484043` | `-0.39%` | True |
+| `ETTm1` | `337-720` | `0.467490` | `0.471249` | `-0.80%` | True |
+
+[Decision] 该结果是 positive but confounded：
+
+1. [Strong Evidence] 数值上有收益，且 prefix consistency 仍保持数值零级别。
+2. [Fact] 该 run 使用 `TARGET_HORIZONS=96,720`，而 R.3 baseline 使用
+   `96,192,336,720`，因此混入了 horizon-set/objective-pressure confound。
+3. [Fact] 该 run 在 prediction path 中使用 `window_index_norm`。
+4. [Decision] `window_index_norm` 是 prediction-before signal，但不是稳健 causal/calendar
+   variable；它按 split 内 index 归一化，可能学习 train/val/test split-position shortcut。
+
+[11-Step Loop]
+
+- `current_step`: Step 9-10。
+- `problem`: Regime/segment-conditioned target operator 是否真实改善 R.3 hard windows/segments。
+- `existence_evidence`: minimal gate 数值 positive，但存在 `window_index_norm` 与 horizon-set confounds。
+- `idea`: history/window-position regime token 条件化 target-side operator。
+- `theory_check`: 若收益依赖 split-position，则机制不可作为 paper-core；若 history-only 保留收益，
+  机制才有可解释性。
+- `design`: 当前 run 为 `window_index_norm + h96,h720`。
+- `gate`: numerical pass，但 mechanism claim blocked。
+- `artifacts`: `phase3_regime_segment_operator_*`。
+- `decision`: 不进入 full horizon expansion claim；先做 controls，回到 Step 6-8。
+
+[Next Controls]
+
+1. `history_only_h96_h720`: `USE_WINDOW_POSITION=0`, `TARGET_HORIZONS=96,720`。
+   目的：判断收益是否依赖 split-position shortcut。
+2. 若 control 仍保留主要收益，再跑 `history_only_h96_h192_h336_h720`。
+   目的：在与 R.3 相同 horizon set 下判断结构收益。
+3. 可选 `window_h96_h192_h336_h720` 用于隔离 horizon-set confound。
+
+[Implementation Update] 已修正 ablation support：`regime_segment_operator` 不再强制返回
+`window_index_norm`，只有显式 `--use-window-position` 时才启用。History-only local smoke 已通过：
+
+- `window_index_norm` feature stats: mean/std/mean_abs/max_abs all `0.0`;
+- prefix mismatch MSE: `9.868e-15`。

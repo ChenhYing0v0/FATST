@@ -991,7 +991,7 @@ def main() -> None:
     if args.device != "auto":
         device = torch.device(args.device)
 
-    return_index = args.use_window_position or args.model_variant == "regime_segment_operator"
+    return_index = args.use_window_position
     train_loaders = build_loaders(
         args.dataset_root,
         args.dataset,
