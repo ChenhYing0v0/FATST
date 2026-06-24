@@ -1195,3 +1195,24 @@ objective-pressure 改动，而不是 operator 结构本身。
    operator 仅在 reduced horizon set 下有局部价值，但不能作为统一 multi-horizon 主机制。
 4. 后续研究应回到 objective/sampler/curriculum 层，研究如何在保留 `96,192,336,720` 的同时降低
    intermediate horizons 对 short/long regimes 的 interference。
+
+[Remote Control Launch]
+
+- control:
+  `PatchEncoderPrefixRiskWeightedH96H720`;
+- launch note:
+  `analysis/phase3_horizon_set_interference_20260624/prefix_risk_h96_h720_launch_note.md`;
+- remote commit:
+  `77d2a78987fecd69d8f28a40aa052ccca68650cd`;
+- remote output:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase3_horizon_set_interference`;
+- PID:
+  `1056199`;
+- selected GPUs:
+  GPU1 and GPU2；
+- command:
+  `GPU_IDS="1 2" RUN_NAME="PatchEncoderPrefixRiskWeightedH96H720"
+  MODEL_VARIANT=target_set STEP_LOSS_WEIGHTING=prefix_risk TARGET_HORIZONS="96,720"
+  bash scripts/remote/run_phase1_target_set_decoder_gate.sh`;
+- progress at 2026-06-24 12:50 CST:
+  `ETTm1 6/100`, `Weather 2/100`, `ETTh2 queued`。
