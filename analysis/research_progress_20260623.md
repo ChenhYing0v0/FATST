@@ -1127,3 +1127,71 @@ split-position shortcut。
   bash scripts/remote/run_phase3_regime_segment_operator_gate.sh`;
 - progress at 2026-06-24 12:04 CST:
   `ETTm1 2/100`, `Weather running`, `ETTh2 queued`。
+
+## 25. Phase3-C Full Horizon-Set Control Result: Operator Fails
+
+[Fact] `history_only_h96_h192_h336_h720` control 已完成并同步：
+
+- raw artifacts:
+  `analysis/phase3_regime_segment_operator_history_only_full_20260624/raw/`;
+- report:
+  `analysis/phase3_regime_segment_operator_history_only_full_20260624/phase3_regime_segment_operator_history_only_full_report.md`;
+- summary:
+  `analysis/phase3_regime_segment_operator_history_only_full_20260624/phase3_regime_segment_operator_history_only_full_summary.json`。
+
+[Evidence] Full horizon-set control vs R.3:
+
+| Quantity | Result |
+| --- | ---: |
+| MSE wins vs R.3 | `1/12` |
+| mean relative MSE vs R.3 | `+2.00%` |
+| observed aggregate-gap wins | `0/2` |
+| observed H720 segment-gap wins | `1/3` |
+| non-gap mean relative MSE vs R.3 | `+1.95%` |
+| max prefix mismatch MSE | `5.319e-14` |
+| window-index used | `False` |
+| horizon-set confound | `False` |
+
+[Evidence] Main failures:
+
+| Dataset | Horizon | Relative MSE vs R.3 |
+| --- | ---: | ---: |
+| `ETTh2` | `96` | `+1.70%` |
+| `ETTh2` | `192` | `+3.38%` |
+| `ETTh2` | `336` | `+2.32%` |
+| `ETTh2` | `720` | `+3.19%` |
+| `Weather` | `96` | `+3.78%` |
+| `Weather` | `192` | `+3.22%` |
+| `Weather` | `336` | `+2.96%` |
+| `Weather` | `720` | `+2.98%` |
+
+[Decision] Phase3-C 当前 `Regime/Segment-Conditioned Target Operator` fails as paper-core candidate。
+原因不是 prefix consistency，也不是 `window_index_norm` shortcut；在无 window index 且 horizon set 与 R.3
+对齐后，operator 仍系统性退化。前面 `h96,h720` 的 positive result 更可能来自 horizon-set /
+objective-pressure 改动，而不是 operator 结构本身。
+
+[11-Step Loop]
+
+- `current_step`: Step 9-10。
+- `problem`: R.3 的 remaining gaps 是否能由 history-regime-conditioned target operator 修复。
+- `existence_evidence`: h96/h720 positive；history-only positive；但 full horizon-set aligned control fails。
+- `idea`: history-only regime token 条件化 target-side hidden state。
+- `theory_check`: 如果 operator 是真实机制，在相同 mixed-horizon pressure 下不应系统性退化。
+- `design`: bounded FiLM-style pre-output operator。
+- `gate`: full horizon-set vs R.3。
+- `artifacts`: `phase3_regime_segment_operator_history_only_full_*`。
+- `decision`: fail；回滚到 Step 2-3/6，重新定义问题为 horizon-set interference，而不是继续调
+  regime operator 或进入 MoE。
+
+[Next Research Direction]
+
+下一步不要继续调 `regime_segment_operator`。更合理的方向是验证 horizon-set interference：
+
+1. 运行 R.3 carrier 的 `h96,h720` control：
+   `PatchEncoderPrefixRiskWeightedH96H720`，`TARGET_HORIZONS=96,720`。
+2. 若 R.3 carrier 在 `h96,h720` 下也接近 Phase3-C positive result，则说明收益主要来自移除
+   `h192/h336` mixed-horizon pressure，operator 不是必要机制。
+3. 若 R.3 carrier 的 `h96,h720` 不改善，而 Phase3-C history-only `h96,h720` 改善，则说明
+   operator 仅在 reduced horizon set 下有局部价值，但不能作为统一 multi-horizon 主机制。
+4. 后续研究应回到 objective/sampler/curriculum 层，研究如何在保留 `96,192,336,720` 的同时降低
+   intermediate horizons 对 short/long regimes 的 interference。

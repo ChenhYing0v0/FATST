@@ -1453,6 +1453,32 @@ confounded。
 不破坏，Phase3-C 才能进入 mechanism-pass 判断；若失败，则收益更可能来自 horizon-set/objective-pressure
 变化，而不是 operator 结构。
 
+[Result Update: 2026-06-24] `history_only_h96_h192_h336_h720` control 已返回，结论为 fail：
+
+- MSE wins vs R.3: `1/12`;
+- mean relative MSE vs R.3: `+2.00%`;
+- observed aggregate-gap wins: `0/2`;
+- observed H720 segment-gap wins: `1/3`;
+- max prefix mismatch MSE: `5.319e-14`;
+- report:
+  `analysis/phase3_regime_segment_operator_history_only_full_20260624/phase3_regime_segment_operator_history_only_full_report.md`。
+
+[Decision] Phase3-C 当前 operator 不通过。它在 reduced horizon set (`96,720`) 中 positive，但在与 R.3
+完全相同的 `96,192,336,720` pressure 下系统性退化。因此当前收益更可能来自 horizon-set /
+objective-pressure 改动，而不是 regime/segment operator 结构。
+
+[Rollback] 回到 11-step loop 的 Step 2-3/6。下一步问题应改写为
+`horizon-set interference`：为什么加入 `192/336` 后，short/long regimes 的优势被压掉。
+
+[Next] 运行 R.3 carrier 的 `h96,h720` control：
+
+- `RUN_NAME=PatchEncoderPrefixRiskWeightedH96H720`;
+- `MODEL_VARIANT=target_set`;
+- `STEP_LOSS_WEIGHTING=prefix_risk`;
+- `TARGET_HORIZONS=96,720`。
+
+该 control 用于判断前面 `h96,h720` positive result 是否只来自移除 intermediate horizons。
+
 ## Phase3: Future-Side MoE
 
 状态：继续暂停。Phase3-A 支持的是 regime/segment calibration 分支，不支持直接启动 MoE。
