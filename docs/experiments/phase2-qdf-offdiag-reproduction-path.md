@@ -438,3 +438,44 @@ Gate:
 
 - diagnostic 必须证明 specialist gaps 与 prefix/shared-trajectory conflict 有稳定关系；
 - 若不能证明，则不进入 horizon-regime calibration，停止 R.3 repair route。
+
+## Phase3-A Returned Result
+
+更新时间：2026-06-24
+
+[Fact] Phase3-A prefix-specialist diagnostic 已完成：
+
+- analyzer:
+  `scripts/analyze_phase3_prefix_specialist_tradeoff.py`;
+- report:
+  `analysis/phase3_prefix_specialist_tradeoff_20260624/phase3_prefix_specialist_report.md`;
+- short alignment:
+  `analysis/phase3_prefix_specialist_tradeoff_20260624/phase3_prefix_specialist_short_alignment.csv`;
+- H720 segments:
+  `analysis/phase3_prefix_specialist_tradeoff_20260624/phase3_prefix_specialist_h720_segments.csv`。
+
+[Decision] diagnostic passes, but it does not support immediate MoE. It redirects the next work to
+regime/segment residual calibration.
+
+Core evidence:
+
+- max prediction prefix mismatch MSE:
+  `5.382513303646484e-14`;
+- max truth prefix alignment MSE:
+  `0.0`;
+- short aggregate gaps:
+  `ETTm1/96`, `Weather/96`;
+- both short gaps are `short_extra_window_gap`;
+- H720 segment gaps:
+  `ETTh2 193-336`, `ETTh2 337-720`, `ETTm1 337-720`。
+
+Interpretation:
+
+1. 同一输入下 short prediction 与 H720 prefix prediction 一致，所以 short gaps 不是 prefix
+   inconsistency。
+2. `ETTm1/96` 和 `Weather/96` 的 aggregate gaps 来自 short-only extra windows。
+3. Long-horizon gap 是 segment-localized late calibration issue。
+
+[Next] Phase3-B should test the smallest possible Regime/Segment Residual Calibration. The first
+candidate should preserve R.3 base prediction and only add low-rank or segment-gated residual
+calibration for the observed regimes/segments. A full MoE remains paused.

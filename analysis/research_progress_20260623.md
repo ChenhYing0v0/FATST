@@ -727,3 +727,76 @@ future-step interaction 的背景证据，但不应继续作为 FATST 本地 obj
 3. 检查四个 specialist gaps 是否体现 short-prefix 或 long-tail calibration conflict。
 4. 若 tradeoff 成立，再设计最小 horizon-regime residual calibration；若不成立，停止 R.3
    repair route，回到 base architecture / external baseline selection。
+
+## 20. Phase3-A Returned Result: Prefix Identity, Regime/Segment Gaps
+
+[Fact] Phase3-A prefix-specialist tradeoff diagnostic 已完成：
+
+- analyzer:
+  `scripts/analyze_phase3_prefix_specialist_tradeoff.py`;
+- report:
+  `analysis/phase3_prefix_specialist_tradeoff_20260624/phase3_prefix_specialist_report.md`;
+- short-horizon table:
+  `analysis/phase3_prefix_specialist_tradeoff_20260624/phase3_prefix_specialist_short_alignment.csv`;
+- H720 segment table:
+  `analysis/phase3_prefix_specialist_tradeoff_20260624/phase3_prefix_specialist_h720_segments.csv`;
+- code explanation:
+  `docs/code-explanation/phase3-prefix-specialist-tradeoff-diagnostic.md`。
+
+[Verification]
+
+- `python -m py_compile scripts/analyze_phase3_prefix_specialist_tradeoff.py` passed；
+- input prediction artifacts: Phase2-E2 R.3 `predictions_test.npz`；
+- max prediction prefix mismatch MSE:
+  `5.382513303646484e-14`;
+- max truth prefix alignment MSE:
+  `0.0`;
+- max residual prefix mismatch MSE:
+  `5.382513303646484e-14`。
+
+[Decision] 同一输入下不存在 meaningful prefix prediction/residual conflict。R.3 的剩余 gaps
+不是因为 `h96/h192/h336` 与 `h720` prefix 对同一窗口输出了不同预测；它们分成两类：
+
+1. short-horizon gap 来自 short-only extra windows；
+2. long-horizon gap 来自 H720 late segment。
+
+[Evidence] Short horizon 分解：
+
+| Dataset | Horizon | Gap type | Full gap | H720-prefix gap | Aligned MSE | Extra MSE | Extra vs aligned |
+| --- | ---: | --- | --- | --- | ---: | ---: | ---: |
+| `ETTm1` | `96` | `short_extra_window_gap` | `True` | `False` | `0.284174` | `0.549860` | `+93.49%` |
+| `Weather` | `96` | `short_extra_window_gap` | `True` | `False` | `0.147463` | `0.156898` | `+6.40%` |
+
+[Evidence] H720 segment gaps:
+
+| Dataset | Segment | Relative MSE vs fixed |
+| --- | --- | ---: |
+| `ETTh2` | `193-336` | `+4.07%` |
+| `ETTh2` | `337-720` | `+0.47%` |
+| `ETTm1` | `337-720` | `+3.03%` |
+
+[11-Step Loop]
+
+- `current_step`: Step 9-10。
+- `problem`: R.3 剩余 specialist gaps 的来源不清。
+- `existence_evidence`: R.3 vs fixed 有 `4/12` aggregate gaps；Phase3-A 进一步定位到
+  short-only extra windows 与 H720 late segments。
+- `idea`: prefix-consistency vs horizon-specialist tradeoff diagnostic。
+- `theory_check`: 若同输入 prefix conflict 存在，则 prefix mismatch/residual mismatch 应非零。
+- `design`: 对齐 `h96/h192/h336` 与 `h720` prefix 的前 `N_720` windows，并拆出 short-only
+  extra windows；H720 用 segment table 定位 late gaps。
+- `gate`: prefix identity pass，short gaps 可由 extra-window regime 解释，long gaps 可由 late
+  segment localization 解释。
+- `artifacts`: `phase3_prefix_specialist_*`。
+- `decision`: pass as diagnostic；进入 Step 4-6，设计 Phase3-B 的 regime/segment calibration
+  candidate。
+
+[Next] Phase3-B 不应回到 QDF/objective matrix，也不应直接做 full MoE。建议设计最小
+Regime/Segment Residual Calibration：
+
+1. 对 short-only extra-window issue：先做 time-position/regime diagnostic，确认 extra windows 是否
+   位于 test split 末端并有更高 residual energy。
+2. 对 H720 late-segment issue：优先做 H720 late residual calibration，目标 segment 为
+   `ETTh2 193-336/337-720` 和 `ETTm1 337-720`。
+3. 候选应保留 R.3 base prediction，只加 low-rank 或 segment-gated residual calibration；
+   gate 以修复上述 gaps 为主，同时 non-gap mean MSE 不得明显退化。

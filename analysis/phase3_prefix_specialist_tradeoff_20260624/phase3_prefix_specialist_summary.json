@@ -1,0 +1,46 @@
+{
+  "gate": {
+    "long_gaps_are_segment_localized": true,
+    "prefix_identity_pass": true,
+    "short_gaps_are_extra_window_effects": true,
+    "supports_tradeoff_diagnostic": true
+  },
+  "h720_segment_gap_count": 3,
+  "h720_segment_gaps": [
+    {
+      "dataset": "ETTh2",
+      "relative_mse_pct": 4.070552006204586,
+      "segment": "193-336"
+    },
+    {
+      "dataset": "ETTh2",
+      "relative_mse_pct": 0.46572828219921814,
+      "segment": "337-720"
+    },
+    {
+      "dataset": "ETTm1",
+      "relative_mse_pct": 3.0300441779770093,
+      "segment": "337-720"
+    }
+  ],
+  "max_pred_prefix_mismatch_mse": 5.382513303646484e-14,
+  "max_residual_prefix_mismatch_mse": 5.382513303646484e-14,
+  "max_true_prefix_alignment_mse": 0.0,
+  "mean_extra_vs_aligned_mse_pct_for_short_gaps": 49.94656533484264,
+  "short_extra_window_gap_count": 2,
+  "short_full_specialist_gap_count": 2,
+  "short_full_specialist_gaps": [
+    {
+      "dataset": "ETTm1",
+      "gap_type": "short_extra_window_gap",
+      "horizon": 96
+    },
+    {
+      "dataset": "Weather",
+      "gap_type": "short_extra_window_gap",
+      "horizon": 96
+    }
+  ],
+  "short_rows": 9,
+  "short_shared_prefix_gap_count": 0
+}

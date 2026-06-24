@@ -1265,9 +1265,67 @@ Artifacts:
 `META_TYPES=all` 只能完成 full-QDF metric collection；最终 gate 需要 `diag` control 才能
 判断是否 pass。
 
+[Decision Update: 2026-06-24] Phase2-E1/E2 已完成，objective-matrix route 暂停。
+
+Key returned evidence:
+
+- `PatchEncoderOffdiagBlockQuadratic` vs R.3:
+  `1/12` MSE wins, mean relative MSE `+0.0464%`;
+- QDF learned precision residual alignment:
+  `qdf_off_diag_precision` gap/non-gap ratio `0.8662`,
+  `qdf_all_precision` gap/non-gap ratio `0.8853`;
+- conclusion: QDF 可作为 future-step interaction 背景证据，但不再作为 local objective 的直接
+  设计来源。
+
+## Phase3-A: Prefix Specialist Tradeoff Diagnostic
+
+[Decision Update: 2026-06-24] Phase3-A diagnostic 已完成，结论为 pass-as-diagnostic，不是
+MoE pass。
+
+Artifacts:
+
+- analyzer:
+  `scripts/analyze_phase3_prefix_specialist_tradeoff.py`;
+- report:
+  `analysis/phase3_prefix_specialist_tradeoff_20260624/phase3_prefix_specialist_report.md`;
+- code explanation:
+  `docs/code-explanation/phase3-prefix-specialist-tradeoff-diagnostic.md`。
+
+11-step loop 判断：
+
+- `current_step`: Step 9-10；
+- `problem`: R.3 剩余 specialist gaps 来源不清；
+- `existence_evidence`: R.3 aggregate gaps 分解为 short-only extra-window gaps 与 H720
+  late-segment gaps；
+- `idea`: 检查 prefix-consistent carrier 是否在同输入下牺牲 horizon-specialist prediction；
+- `theory_check`: 若同输入 prefix conflict 存在，prediction/residual prefix mismatch 应非零；
+- `design`: 对齐 `h96/h192/h336` 与 `h720` prefix 的前 `N_720` windows，并拆出
+  short-only extra windows；
+- `gate`: prefix identity pass，short gaps 可由 extra-window regime 解释，long gaps 可由
+  late segment localization 解释；
+- `decision`: diagnostic pass；下一步进入 Phase3-B regime/segment calibration design。
+
+核心结果：
+
+- max prediction prefix mismatch MSE:
+  `5.382513303646484e-14`;
+- short aggregate gaps:
+  `ETTm1/96`, `Weather/96`；
+- both short gaps are `short_extra_window_gap` rather than same-input prefix conflict；
+- H720 segment gaps:
+  `ETTh2 193-336`, `ETTh2 337-720`, `ETTm1 337-720`。
+
+[Next] Phase3-B 不进入 full MoE。下一步只允许设计最小 Regime/Segment Residual Calibration：
+
+1. short-only extra-window issue: 先确认 test split 末端/局部 regime 是否导致 higher residual
+   energy；
+2. H720 late-segment issue: 优先针对 late segments 做 low-rank 或 segment-gated residual
+   calibration；
+3. gate 必须优先修复上述 gaps，且 non-gap mean MSE 不得明显退化。
+
 ## Phase3: Future-Side MoE
 
-状态：暂停，等待 Phase1-R/Phase2 产生稳定 target-side state。
+状态：继续暂停。Phase3-A 支持的是 regime/segment calibration 分支，不支持直接启动 MoE。
 
 [Inference] MoE 的必要性不能只由“不同样本需要不同专家”支撑。本项目更强的论证应是：
 target-set decoder 已经把预测过程分解为 future target/segment states，这些 states 可能对应
