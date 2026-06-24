@@ -84,7 +84,8 @@ analyzer 写出：
 
 - `phase2_qdf_residual_alignment_losses.csv`
   - 每个 `(dataset, horizon, matrix_family)` 的 normalized loss；
-  - `ratio_to_residual_mse` 表示相对 plain R.3 residual MSE 的 pressure ratio。
+  - `ratio_to_residual_mse` 表示相对同一 setting 的 plain R.3 residual MSE 的 pressure ratio；
+    `static_train_target_offdiag` 也使用同一分母，而不是 block-level residual MSE。
 - `phase2_qdf_residual_alignment_matrix_sources.csv`
   - QDF matrix source path、dimension、trace。
 - `phase2_qdf_residual_alignment_summary.json`

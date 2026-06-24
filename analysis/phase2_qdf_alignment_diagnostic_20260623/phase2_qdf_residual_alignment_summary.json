@@ -1,26 +1,75 @@
 {
-  "by_matrix_family": {},
-  "gate": {
-    "prediction_artifacts_complete": false,
-    "qdf_matrices_complete": true,
-    "ready_for_alignment_decision": false
+  "by_matrix_family": {
+    "identity": {
+      "count": 12,
+      "mean_ratio_to_residual_mse": 1.0,
+      "non_specialist_mean_ratio": 1.0,
+      "pearson_loss_vs_residual_mse": 1.0,
+      "spearman_loss_vs_residual_mse": 1.0,
+      "specialist_gap_mean_ratio": 1.0,
+      "std_ratio_to_residual_mse": 0.0
+    },
+    "prefix_risk": {
+      "count": 12,
+      "mean_ratio_to_residual_mse": 1.4605181745131919,
+      "non_specialist_mean_ratio": 1.4266382049822903,
+      "pearson_loss_vs_residual_mse": 0.25423080790122604,
+      "spearman_loss_vs_residual_mse": 0.24475524475524477,
+      "specialist_gap_mean_ratio": 1.528278113574995,
+      "std_ratio_to_residual_mse": 0.5041411173169464
+    },
+    "qdf_all_precision": {
+      "count": 12,
+      "mean_ratio_to_residual_mse": 0.5457575603213713,
+      "non_specialist_mean_ratio": 0.5674456190819948,
+      "pearson_loss_vs_residual_mse": 0.6295079735432452,
+      "spearman_loss_vs_residual_mse": 0.7062937062937062,
+      "specialist_gap_mean_ratio": 0.5023814428001246,
+      "std_ratio_to_residual_mse": 0.15336006909838718
+    },
+    "qdf_diag_precision": {
+      "count": 12,
+      "mean_ratio_to_residual_mse": 0.9984414192195992,
+      "non_specialist_mean_ratio": 0.9979017771741993,
+      "pearson_loss_vs_residual_mse": 0.999951598814839,
+      "spearman_loss_vs_residual_mse": 1.0,
+      "specialist_gap_mean_ratio": 0.9995207033103989,
+      "std_ratio_to_residual_mse": 0.002542890912448489
+    },
+    "qdf_off_diag_precision": {
+      "count": 12,
+      "mean_ratio_to_residual_mse": 0.5311738716298395,
+      "non_specialist_mean_ratio": 0.5559782129918927,
+      "pearson_loss_vs_residual_mse": 0.6145310783558529,
+      "spearman_loss_vs_residual_mse": 0.7482517482517482,
+      "specialist_gap_mean_ratio": 0.4815651889057333,
+      "std_ratio_to_residual_mse": 0.1598558100301058
+    },
+    "static_train_target_offdiag": {
+      "count": 12,
+      "mean_ratio_to_residual_mse": 0.15660702649012734,
+      "non_specialist_mean_ratio": 0.1506500183462568,
+      "pearson_loss_vs_residual_mse": 0.8730142479859226,
+      "spearman_loss_vs_residual_mse": 0.958041958041958,
+      "specialist_gap_mean_ratio": 0.16852104277786842,
+      "std_ratio_to_residual_mse": 0.07993208064666796
+    }
   },
-  "matrix_families": [],
-  "matrix_row_count": 0,
-  "missing": [
-    "r3_prediction:ETTh2:h96",
-    "r3_prediction:ETTh2:h192",
-    "r3_prediction:ETTh2:h336",
-    "r3_prediction:ETTh2:h720",
-    "r3_prediction:ETTm1:h96",
-    "r3_prediction:ETTm1:h192",
-    "r3_prediction:ETTm1:h336",
-    "r3_prediction:ETTm1:h720",
-    "r3_prediction:Weather:h96",
-    "r3_prediction:Weather:h192",
-    "r3_prediction:Weather:h336",
-    "r3_prediction:Weather:h720"
+  "gate": {
+    "prediction_artifacts_complete": true,
+    "qdf_matrices_complete": true,
+    "ready_for_alignment_decision": true
+  },
+  "matrix_families": [
+    "identity",
+    "prefix_risk",
+    "qdf_all_precision",
+    "qdf_diag_precision",
+    "qdf_off_diag_precision",
+    "static_train_target_offdiag"
   ],
-  "missing_count": 12,
-  "row_count": 0
+  "matrix_row_count": 36,
+  "missing": [],
+  "missing_count": 0,
+  "row_count": 72
 }

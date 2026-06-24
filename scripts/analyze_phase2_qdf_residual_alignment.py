@@ -77,7 +77,7 @@ def static_block_penalty(
     matrix: np.ndarray,
     horizon: int,
     block_size: int = 48,
-) -> tuple[float, float]:
+) -> float:
     blocks = []
     for start in range(0, horizon, block_size):
         end = min(start + block_size, horizon)
@@ -86,8 +86,7 @@ def static_block_penalty(
     active = matrix[: block_values.shape[1], : block_values.shape[1]]
     projected = block_values @ active.T
     penalty = float(np.mean(projected * projected))
-    block_mse = float(np.mean(block_values * block_values))
-    return penalty, penalty / max(block_mse, 1e-12)
+    return penalty
 
 
 def load_static_matrix(static_root: Path, dataset: str) -> np.ndarray | None:
@@ -115,7 +114,15 @@ def load_specialist_flags(path: Path) -> dict[tuple[str, int], bool]:
         return {}
     flags: dict[tuple[str, int], bool] = {}
     for row in read_csv(path):
-        flags[(row["dataset"], int(row["horizon"]))] = str(row.get("is_specialist_gap", "")).lower() == "true"
+        if "is_specialist_gap" in row:
+            is_gap = str(row["is_specialist_gap"]).lower() == "true"
+        elif "relative_mse_pct" in row:
+            is_gap = float(row["relative_mse_pct"]) > 0.0
+        elif "target_wins_mse" in row:
+            is_gap = str(row["target_wins_mse"]).lower() != "true"
+        else:
+            is_gap = False
+        flags[(row["dataset"], int(row["horizon"]))] = is_gap
     return flags
 
 
@@ -188,7 +195,7 @@ def collect(args: argparse.Namespace) -> tuple[list[dict[str, Any]], list[dict[s
                 }
             )
             if static_matrix is not None:
-                penalty, ratio = static_block_penalty(vectors, static_matrix, horizon)
+                penalty = static_block_penalty(vectors, static_matrix, horizon)
                 rows.append(
                     {
                         **base,
@@ -203,7 +210,7 @@ def collect(args: argparse.Namespace) -> tuple[list[dict[str, Any]], list[dict[s
                             / "offdiag_block_matrix.csv"
                         ),
                         "normalized_quadratic_loss": penalty,
-                        "ratio_to_residual_mse": ratio,
+                        "ratio_to_residual_mse": penalty / max(residual_mse, 1e-12),
                     }
                 )
 

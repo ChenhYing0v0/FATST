@@ -660,3 +660,70 @@ prediction/true artifacts，或补跑只保存预测的 R.3 diagnostic run。
 拉取代码、检查 GPU，并启动 Phase2-E2 R.3 prediction artifact run。该 run 是 artifact collection，
 不是新机制训练；返回后再运行 sync/analyzer，判断 QDF learned matrices 是否比 static proxy 更能解释
 FATST R.3 residual。
+
+## 19. Phase2-E2 Returned Result: QDF Precision Transfer Fails as R.3 Repair Evidence
+
+[Fact] Phase2-E2 R.3 prediction artifact collection 已完成并同步：
+
+- remote output:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase2_qdf_alignment_r3_predictions`;
+- local analysis root:
+  `analysis/phase2_qdf_alignment_diagnostic_20260623/`;
+- prediction artifacts:
+  `12/12`;
+- QDF matrix artifacts:
+  `36/36`;
+- report:
+  `analysis/phase2_qdf_alignment_diagnostic_20260623/phase2_qdf_residual_alignment_report.md`;
+- interpretation:
+  `analysis/phase2_qdf_alignment_diagnostic_20260623/phase2_qdf_residual_alignment_interpretation.md`。
+
+[Verification] analyzer 修正并重跑：
+
+- `relative_mse_pct > 0` 用于识别 R.3 vs fixed specialist gaps；
+- `static_train_target_offdiag` 的 `ratio_to_residual_mse` 已统一改为除以 plain residual MSE；
+- `python -m py_compile scripts/analyze_phase2_qdf_residual_alignment.py` 通过。
+
+[Result] Specialist gap settings 为：
+
+- `ETTh2 / 720`;
+- `ETTm1 / 96`;
+- `ETTm1 / 720`;
+- `Weather / 96`。
+
+[Evidence] QDF learned matrices 没有对 specialist gaps 给出更高 pressure：
+
+| Matrix family | Mean ratio | Specialist ratio | Non-specialist ratio | Gap / non-gap |
+| --- | ---: | ---: | ---: | ---: |
+| `prefix_risk` | `1.460518` | `1.528278` | `1.426638` | `1.071244` |
+| `static_train_target_offdiag` | `0.156607` | `0.168521` | `0.150650` | `1.118626` |
+| `qdf_off_diag_precision` | `0.531174` | `0.481565` | `0.555978` | `0.866158` |
+| `qdf_all_precision` | `0.545758` | `0.502381` | `0.567446` | `0.885338` |
+| `qdf_diag_precision` | `0.998441` | `0.999521` | `0.997902` | `1.001622` |
+
+[Decision] Phase2-E2 fails as evidence for QDF precision direct transfer. QDF upstream 仍可作为
+future-step interaction 的背景证据，但不应继续作为 FATST 本地 objective 的直接设计来源。
+
+[11-Step Loop]
+
+- `current_step`: Step 9-10。
+- `problem`: R.3 仍有 short/long 两端 specialist gaps。
+- `existence_evidence`: R.3 vs fixed head 有 `4/12` MSE gaps；Phase2-E2 residual artifacts
+  完整确认这些 settings。
+- `idea`: QDF learned `off_diag/all` precision transfer。
+- `theory_check`: 若 learned precision 能解释 R.3 residual，应对 specialist gaps 有更强 pressure。
+- `design`: 同一批 R.3 residual 上比较 `identity/prefix_risk/static/QDF` matrix losses。
+- `gate`: QDF learned matrices 对 specialist gaps 有正向区分。
+- `artifacts`: `phase2_qdf_residual_alignment_losses.csv`,
+  `phase2_qdf_residual_alignment_summary.json`。
+- `decision`: fail；回滚到 Step 2-3，重新定义问题为 prefix-consistency 与 specialist-performance
+  tradeoff。
+
+[Next] Phase3-A 应做 Prefix-Consistent Carrier vs Horizon Specialist Tradeoff Diagnostic：
+
+1. 使用已回传的 R.3 `predictions_test.npz`，不先训练新模型。
+2. 比较 `h96/h192/h336` 与 `h720` prefix 的 residual direction、error covariance、
+   step-region energy shift。
+3. 检查四个 specialist gaps 是否体现 short-prefix 或 long-tail calibration conflict。
+4. 若 tradeoff 成立，再设计最小 horizon-regime residual calibration；若不成立，停止 R.3
+   repair route，回到 base architecture / external baseline selection。

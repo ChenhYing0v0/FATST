@@ -380,3 +380,61 @@ bash scripts/sync_phase2_qdf_alignment_r3_predictions.sh
 [Decision Rule] 若 QDF `off_diag/all` 在 R.3 residual 上比 `static_train_target_offdiag` 更能区分
 specialist gaps 或 hard horizons，则下一步实现 learned / validation-informed local objective；
 否则停止 objective route。
+
+## Phase2-E2 Returned Result
+
+更新时间：2026-06-24
+
+[Fact] R.3 prediction artifact collection 已完成：
+
+- prediction artifacts:
+  `12/12`;
+- QDF matrices:
+  `36/36`;
+- analysis root:
+  `analysis/phase2_qdf_alignment_diagnostic_20260623`;
+- result table:
+  `phase2_qdf_residual_alignment_losses.csv`;
+- interpretation:
+  `phase2_qdf_residual_alignment_interpretation.md`。
+
+[Verification] analyzer 修正了两点：
+
+1. R.3 specialist gap 由 `relative_mse_pct > 0` 识别；
+2. `static_train_target_offdiag` 的 `ratio_to_residual_mse` 与其他 matrix family 一样统一除以
+   plain residual MSE。
+
+[Decision] QDF precision transfer 不通过 Phase2-E2 alignment gate。
+
+| Matrix family | Specialist ratio | Non-specialist ratio | Gap / non-gap |
+| --- | ---: | ---: | ---: |
+| `prefix_risk` | `1.528278` | `1.426638` | `1.071244` |
+| `static_train_target_offdiag` | `0.168521` | `0.150650` | `1.118626` |
+| `qdf_off_diag_precision` | `0.481565` | `0.555978` | `0.866158` |
+| `qdf_all_precision` | `0.502381` | `0.567446` | `0.885338` |
+
+[Interpretation] `qdf_off_diag_precision` 和 `qdf_all_precision` 在 R.3 specialist gaps 上不是更强，
+而是更弱。这说明 QDF learned precision 不适合作为当前 FATST R.3 specialist-gap repair 的直接
+objective source。
+
+[Decision] Phase2 objective-matrix route 暂停。QDF 仍作为背景证据，但不继续转化为 local loss。
+
+## Phase3-A Planned Direction
+
+[11-Step Loop] 回滚到 Step 2-3，重新定义问题：
+
+> R.3 的 prefix-consistent shared trajectory 是否与 horizon-specialist performance 存在结构性
+> tradeoff？
+
+下一步优先做 diagnostic，而不是直接上 MoE 或新 loss：
+
+1. 使用 Phase2-E2 已回传的 R.3 `predictions_test.npz`。
+2. 比较 `h96/h192/h336` 与 `h720` prefix residual 的方向、能量和 covariance。
+3. 单独分析四个 R.3 specialist gaps：
+   `ETTh2/720`, `ETTm1/96`, `ETTm1/720`, `Weather/96`。
+4. 若 tradeoff 成立，再设计最小 horizon-regime residual calibration。
+
+Gate:
+
+- diagnostic 必须证明 specialist gaps 与 prefix/shared-trajectory conflict 有稳定关系；
+- 若不能证明，则不进入 horizon-regime calibration，停止 R.3 repair route。
