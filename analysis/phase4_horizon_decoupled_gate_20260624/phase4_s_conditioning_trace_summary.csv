@@ -1,0 +1,8 @@
+model,strategy,unit_type,trace_rows,mean_active_steps,mean_mask_ratio,mean_loss_unit
+PatchEncoderR3PrefixRisk,D1_r3_prefix_risk,horizon_mixed,6000,342.288,1.0,0.5596916822095712
+PatchEncoderFullTimeMSE720,D0_full_time_mse,full_time,4767,720,1.0,0.5041659191478992
+PatchEncoderRandomFutureMask,D2_random_future_mask,mask,4826,384,0.5333333333333333,0.5158113302393568
+PatchEncoderIntervalSupervision,D3_interval_supervision,interval,4649,120.78984727898472,0.16776367677636767,0.5520925443706832
+PatchEncoderComponentTop,D4_component_basis_top,component_top,4826,720,1.0,0.7443157100993669
+PatchEncoderComponentBalanced,D5_component_basis_balanced,component_balanced,4826,720,1.0,0.788066160602289
+PatchEncoderCurriculumUnits,D6_curriculum_units,component_top,4826,720,1.0,0.7443157100993669

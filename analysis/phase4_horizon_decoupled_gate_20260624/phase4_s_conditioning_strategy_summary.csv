@@ -1,0 +1,7 @@
+model,strategy,segments,mse_wins,mean_relative_mse_pct,high_residual_segments,high_residual_wins,high_residual_mean_relative_mse_pct,late_segments,late_wins,late_mean_relative_mse_pct
+PatchEncoderFullTimeMSE720,D0_full_time_mse,30,1,4.870943598462819,10,1,2.278966897836132,3,1,2.625715450441657
+PatchEncoderRandomFutureMask,D2_random_future_mask,30,4,3.3909462656521914,10,4,0.45458696129288323,3,1,0.5339039917311365
+PatchEncoderIntervalSupervision,D3_interval_supervision,30,5,4.392252122363641,10,5,0.04834384696497329,3,2,-0.464617225192739
+PatchEncoderComponentTop,D4_component_basis_top,30,2,4.217449217809847,10,2,2.1274714866790365,3,1,2.48210092752017
+PatchEncoderComponentBalanced,D5_component_basis_balanced,30,3,3.7674216785302357,10,3,1.6078715061299065,3,1,2.1052417823085903
+PatchEncoderCurriculumUnits,D6_curriculum_units,30,2,4.217449217809847,10,2,2.1274714866790365,3,1,2.48210092752017

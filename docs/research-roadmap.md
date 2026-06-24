@@ -296,11 +296,22 @@ training/evaluation 解耦问题，重做核心 idea 和最小设计。
 
 ## 下一阶段：Phase4-S
 
-`current_step`: Step 4-6，下一步进入。
+`current_step`: Step 4-6 draft。
 
 [Decision] 下一步主线命名为：
 
 > Phase4-S: State/Difficulty-Conditioned Supervision Scheduling
+
+主记录文件：
+
+- `docs/experiments/phase4-s-conditioned-supervision-scheduling.md`
+
+诊断产物：
+
+- `analysis/phase4_horizon_decoupled_gate_20260624/phase4_s_conditioning_diagnostic_report.md`
+- `analysis/phase4_horizon_decoupled_gate_20260624/phase4_s_conditioning_strategy_summary.csv`
+- `analysis/phase4_horizon_decoupled_gate_20260624/phase4_s_conditioning_residual_bucket_summary.csv`
+- `analysis/phase4_horizon_decoupled_gate_20260624/phase4_s_conditioning_future_region_summary.csv`
 
 [Decision] 不继续做 mask ratio、interval length、component rank 的宽 sweep；也不把
 future-aware 或 MoE 叠在失败策略上。
@@ -315,17 +326,26 @@ future-aware 或 MoE 叠在失败策略上。
 
 | ID | Candidate | Role |
 | --- | --- | --- |
-| `S1_difficulty_conditioned_interval` | 训练 `720` future sequence，但 interval sampling probability 由 label novelty / running loss bucket 决定 | 测试 conditioned unit pressure |
-| `S2_r3_plus_sparse_unit_aux` | 保留 R.3 base loss，加小权重 horizon-free sparse auxiliary unit | 测试 HSS 作为辅助 schedule，而非替换 objective |
+| `S2_r3_plus_sparse_unit_aux` | 保留 R.3 base loss，加小权重 horizon-free sparse auxiliary unit | 第一优先级；测试 HSS 作为辅助 schedule，而非替换 objective |
+| `S1_difficulty_conditioned_interval` | 训练 `720` future sequence，但 interval sampling probability 由 label novelty / running loss bucket 决定 | 第二优先级；测试 conditioned unit pressure |
 | `S3_error_process_reweighting` | 用 validation residual 或 train-side proxy 调整 future unit pressure | 测试 error-process-aware supervision |
 
-进入 Phase4-S 前必须先做 post-hoc diagnostic：
+[Strong Evidence] post-hoc diagnostic 已完成，支持 Phase4-S 作为 hypothesis 继续推进：
 
-1. 从本轮 artifacts 定位 R.3 下的 high-residual dataset/horizon/segment；
-2. 检查 `D2_random_future_mask` 和 `D3_interval_supervision` 的改善是否集中在 long-horizon
-   或局部 segments；
-3. 判断可以不用 evaluation horizon 信息构造的 train-side difficulty proxy；
-4. 写出新的 Step 4-6 记录和 gate，再允许实现。
+- `D2_random_future_mask` 的 `4/30` segment wins 全部集中在 R.3 high-residual bucket；
+- `D3_interval_supervision` 的 `5/30` segment wins 全部集中在 R.3 high-residual bucket；
+- `D3_interval_supervision` 在 late region 有 `2/3` wins，mean relative MSE 为 `-0.46%`；
+- early region 上所有候选均为 `0/12` wins，说明全局静态 pressure 会损伤 easy/early regions。
+
+[Decision] 这支持 conditioned schedule 的问题定义，但不等于 implementation gate 已通过。
+下一步必须先定义不依赖 evaluation horizon identity 的 train-side condition。
+
+实现前必须完成：
+
+1. 为 `S2_r3_plus_sparse_unit_aux` 定义 auxiliary unit 和 $\lambda$ gate；
+2. 为 `S1_difficulty_conditioned_interval` 定义 train-side difficulty proxy；
+3. 确认 proxy 不直接使用 `96,192,336,720` 作为 training schedule；
+4. 写出 local smoke protocol，再允许代码实现。
 
 ## 历史证据索引
 

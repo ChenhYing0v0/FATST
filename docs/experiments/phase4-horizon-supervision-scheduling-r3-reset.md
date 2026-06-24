@@ -395,11 +395,19 @@ HSS 研究问题保留，但回退到 Step 4/6：重新设计 conditioned schedu
 
 ## Phase4-S 入口
 
-`current_step`: Step 4-6 pending。
+`current_step`: Step 4-6 draft。
 
 [Decision] 下一阶段命名：
 
 > Phase4-S: State/Difficulty-Conditioned Supervision Scheduling
+
+主记录文件：
+
+- `docs/experiments/phase4-s-conditioned-supervision-scheduling.md`
+
+诊断产物：
+
+- `analysis/phase4_horizon_decoupled_gate_20260624/phase4_s_conditioning_diagnostic_report.md`
 
 [Decision] Phase4-S 的核心不再是静态替换 R.3 objective，而是让 horizon-free unit pressure
 由 train-side condition 决定。
@@ -408,16 +416,23 @@ HSS 研究问题保留，但回退到 Step 4/6：重新设计 conditioned schedu
 
 | ID | Candidate | 目标 |
 | --- | --- | --- |
-| `S1_difficulty_conditioned_interval` | interval sampling probability 由 label novelty / running loss bucket 决定 | 让 interval unit pressure 对难例自适应 |
-| `S2_r3_plus_sparse_unit_aux` | R.3 base loss + 小权重 sparse horizon-free auxiliary unit | 测试 HSS 作为辅助 schedule，而非替换 objective |
+| `S2_r3_plus_sparse_unit_aux` | R.3 base loss + 小权重 sparse horizon-free auxiliary unit | 第一优先级；测试 HSS 作为辅助 schedule，而非替换 objective |
+| `S1_difficulty_conditioned_interval` | interval sampling probability 由 label novelty / running loss bucket 决定 | 第二优先级；让 interval unit pressure 对难例自适应 |
 | `S3_error_process_reweighting` | 用 residual/error-process proxy 调整 future unit pressure | 把 supervision pressure 连接到 error process |
 
-[Gate] Phase4-S 进入实现前必须补 post-hoc diagnostic：
+[Strong Evidence] post-hoc diagnostic 已完成：
 
-1. 定位 R.3 high-residual dataset/horizon/segment；
-2. 判断 `D2/D3` 的少数 wins 是否集中在 long-horizon 或特定 segment；
-3. 选择不依赖 evaluation horizon 的 train-side difficulty proxy；
-4. 写出新的 Step 4-6 记录、gate 和 rollback。
+- `D2_random_future_mask` 的 `4/30` segment wins 全部集中在 R.3 high-residual bucket；
+- `D3_interval_supervision` 的 `5/30` segment wins 全部集中在 R.3 high-residual bucket；
+- `D3_interval_supervision` 在 late region 有 `2/3` wins，mean relative MSE 为 `-0.46%`；
+- early region 上所有候选均为 `0/12` wins，说明全局静态 pressure 会损伤 easy/early regions。
+
+[Gate] Phase4-S 进入实现前仍必须完成：
+
+1. 定义不依赖 evaluation horizon identity 的 train-side condition；
+2. 先做 `S2_r3_plus_sparse_unit_aux`，不直接替换 R.3 objective；
+3. 写出 local smoke protocol；
+4. 若 condition 退化成固定 late weighting，回退 Step 4。
 
 ## 当前结论
 
