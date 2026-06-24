@@ -1,0 +1,9 @@
+strategy,baseline_strategy,settings,mse_wins,mae_wins,mean_relative_mse_pct,mean_relative_mae_pct,horizon
+S1_conditioned_future_unit_scheduling,D0_full_time_mse,2,1,2,-3.9021082335938484,-2.1298398390374897,96
+S1_conditioned_future_unit_scheduling,D0_full_time_mse,2,1,2,-3.3011383757161283,-1.9555839182568924,192
+S1_conditioned_future_unit_scheduling,D0_full_time_mse,2,2,2,-1.6532465492289983,-1.3969024590020973,336
+S1_conditioned_future_unit_scheduling,D0_full_time_mse,2,2,2,-2.108489703964689,-1.4934567382915376,720
+S1_conditioned_future_unit_scheduling,D1_r3_prefix_risk,2,0,0,3.576200628163484,3.0040210017306945,96
+S1_conditioned_future_unit_scheduling,D1_r3_prefix_risk,2,1,1,1.3473643413122072,0.9288314941364617,192
+S1_conditioned_future_unit_scheduling,D1_r3_prefix_risk,2,1,1,2.284074712520784,0.8403560314130254,336
+S1_conditioned_future_unit_scheduling,D1_r3_prefix_risk,2,1,1,1.654864132286571,0.7409877058953129,720

@@ -1,20 +1,22 @@
 # Phase4-S：State/Difficulty-Conditioned Supervision Scheduling
 
-`current_step`: Step 7 local implementation complete；下一步是 commit/push 后执行 Step 8 small remote gate。
+`current_step`: Step 9-11 complete；S1 small remote gate 已完成。当前结论是
+`conditioned_future_unit_scheduling` 不通过 paper-core gate，回退到 Step 6 重做
+condition 可观测性与 schedule 设计。
 
 ## 11-step 记录
 
 | Field | Content |
 | --- | --- |
-| `current_step` | Step 7 complete |
+| `current_step` | Step 9-11 complete |
 | `problem` | 静态 horizon-free supervision units 有局部收益但整体输 R.3，是否需要 train-side condition 来分配 unit pressure |
 | `existence_evidence` | Phase4-R remote gate；Phase4-S post-hoc segment diagnostic；QDF/TransDF/ElasTST/SRP++ seed evidence |
 | `idea` | 训练时仍使用 horizon-free units，但 unit sampling / auxiliary pressure 由 train-side difficulty 或 state proxy 条件化 |
 | `theory_check` | future-step dependency、task conflict、step heterogeneity 和 curriculum/dynamic weighting 共同支持“pressure 不应全局静态” |
 | `design` | 实现 `conditioned_future_unit_scheduling`：full future dense anchor + train-side conditioned sparse unit auxiliary |
 | `gate` | proxy 必须不泄漏 evaluation horizon；local smoke 后再做 small remote gate；若 trace 退化为固定 late weighting，回退 Step 4 |
-| `artifacts` | `analysis/phase4_horizon_decoupled_gate_20260624/phase4_s_conditioning_diagnostic_report.md`; `artifacts/runs/smoke_phase4_s_conditioned/SmokePhase4SCFUS` |
-| `decision` | S1 local smoke pass；允许进入 small remote gate，不允许直接 full matrix |
+| `artifacts` | `analysis/phase4_s_cfus_gate_20260624`; `analysis/phase4_horizon_decoupled_gate_20260624/phase4_s_conditioning_diagnostic_report.md`; `artifacts/runs/smoke_phase4_s_conditioned/SmokePhase4SCFUS` |
+| `decision` | S1 small gate fail as paper-core；不进入 full matrix；回退 Step 6，先补 condition trace 与 CFUS-v2 design |
 
 ## 为什么提出 Phase4-S
 
@@ -312,11 +314,27 @@ smoke artifact：
 
 ## Step 8 small remote gate
 
-[Decision] 允许进入 small remote gate，但不允许直接 full matrix。
+[Fact] small remote gate 已完成。
 
 入口脚本：
 
 - `scripts/remote/run_phase4_s_cfus_gate.sh`
+
+remote output root：
+
+- `/home/yingch/exp_outputs/r-2026-fatst/phase4_s_cfus_gate`
+
+local analysis root：
+
+- `analysis/phase4_s_cfus_gate_20260624`
+
+分析脚本：
+
+- `scripts/analyze_phase4_s_cfus_gate.py`
+
+决策报告：
+
+- `analysis/phase4_s_cfus_gate_20260624/phase4_s_cfus_gate_decision_report.md`
 
 默认矩阵：
 
@@ -336,6 +354,57 @@ small gate 判定：
 3. `h96` / early-region 不得系统性 collapse；
 4. `Weather` 不得出现类似 `D3_interval_supervision` 的明显退化；
 5. trace 必须证明 selected units 由 condition 驱动，而不是固定 late weighting。
+
+## Step 9-11：结果分析与决策
+
+[Fact] `conditioned_future_unit_scheduling` 相比 `full_time_mse` 有清楚收益：
+
+| Baseline | Settings | MSE wins | MAE wins | Mean relative MSE |
+| --- | ---: | ---: | ---: | ---: |
+| `D0_full_time_mse` | 8 | 6 | 8 | `-2.74%` |
+
+[Fact] 相比 primary baseline `R.3_prefix_risk`，S1 没有通过：
+
+| Baseline | Settings | MSE wins | MAE wins | Mean relative MSE |
+| --- | ---: | ---: | ---: | ---: |
+| `D1_r3_prefix_risk` | 8 | 3 | 3 | `+2.22%` |
+
+[Fact] dataset split 暴露了机制不稳定：
+
+| Dataset | Baseline | Settings | MSE wins | Mean relative MSE |
+| --- | --- | ---: | ---: | ---: |
+| `ETTh2` | `D1_r3_prefix_risk` | 4 | 3 | `-0.35%` |
+| `Weather` | `D1_r3_prefix_risk` | 4 | 0 | `+4.78%` |
+
+[Strong Evidence] S1 的 train/eval 解耦实现是干净的：
+
+- `train_horizons_effective=720`;
+- `step_loss_weighting=uniform`;
+- `unit_type=conditioned_sparse`;
+- `condition_type=label_novelty`;
+- prefix mismatch 仍是 numerical-zero 量级。
+
+[Strong Evidence] S1 不是无效机制。它在 ETTh2 上相对 full-time 和 R.3 都有接近或收益，
+说明 train-side conditioned sparse pressure 可以改变优化结果。
+
+[Counter-Evidence] S1 不能作为 paper-core。Weather 相比 R.3 四个 horizons 全输，
+且 h96/early-region 没有证明被保护。当前策略更像对 full-time dense anchor 的局部补强，
+不是稳定的 `Horizon Supervision Scheduling`。
+
+[Diagnostic Gap] 当前 `supervision_trace.csv` 只记录 `condition_top_blocks=4` 和
+`condition_mean_score`，没有记录 selected block indices / block ranges / per-block scores。
+因此不能排除 `label_novelty` 实际退化为固定 late weighting proxy。
+
+[Decision] S1 不进入 full matrix；不继续 sweep `top_ratio` 或 `aux_weight`。当前回退到
+Step 6：重做 condition 可观测性与 CFUS-v2 schedule。
+
+下一步最小任务：
+
+1. 在 trace 中记录 selected block indices、block ranges 和 per-block condition scores。
+2. 做 offline train-label condition diagnostic，确认 `label_novelty` 是否长期偏向 late blocks。
+3. 如果偏向 late blocks，改用 `novelty within future-region groups` 或
+   `balanced condition buckets`，让 condition 同时保护 early/easy regions。
+4. 只有 CFUS-v2 的 local trace 证明不是固定 late weighting 后，再启动新的 small gate。
 
 ## 回退规则
 

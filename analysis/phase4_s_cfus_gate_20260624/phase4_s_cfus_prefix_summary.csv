@@ -1,0 +1,7 @@
+model,strategy,dataset,rows,max_prefix_mismatch_mse,mean_prefix_mismatch_mse
+PatchEncoderConditionedFutureUnitScheduling,S1_conditioned_future_unit_scheduling,ETTh2,3,9.816058149690957e-15,8.654523422014872e-15
+PatchEncoderConditionedFutureUnitScheduling,S1_conditioned_future_unit_scheduling,Weather,3,9.462000071804554e-15,3.154000023934851e-15
+PatchEncoderFullTimeMSE720,D0_full_time_mse,ETTh2,3,1.3651581730019565e-14,1.197587273354386e-14
+PatchEncoderFullTimeMSE720,D0_full_time_mse,Weather,3,9.662900193267276e-15,3.220966731089092e-15
+PatchEncoderR3PrefixRisk,D1_r3_prefix_risk,ETTh2,3,1.4735178273947783e-14,1.2110637934206544e-14
+PatchEncoderR3PrefixRisk,D1_r3_prefix_risk,Weather,3,9.959660727436662e-15,3.3198869091455537e-15

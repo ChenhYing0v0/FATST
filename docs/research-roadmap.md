@@ -296,7 +296,9 @@ training/evaluation 解耦问题，重做核心 idea 和最小设计。
 
 ## 下一阶段：Phase4-S
 
-`current_step`: Step 7 local implementation complete；下一步是 commit/push 后执行 Step 8 small remote gate。
+`current_step`: Step 9-11 complete；S1 small remote gate 已完成。当前结论是
+`conditioned_future_unit_scheduling` 不通过 paper-core gate，回退到 Step 6 重做
+condition 可观测性与 schedule 设计。
 
 [Decision] 下一步主线命名为：
 
@@ -339,8 +341,8 @@ future-aware 或 MoE 叠在失败策略上。
 - early region 上所有候选均为 `0/12` wins，说明全局静态 pressure 会损伤 easy/early regions。
 
 [Decision] 这支持 conditioned schedule 的问题定义。`S1_conditioned_future_unit_scheduling`
-本地实现与 smoke 已通过，但仍不能把方向降级为 repair R.3。R.3 只作为 primary baseline、
-carrier sanity check 和 control 参照；修好 R.3 不是本文 core narrative。
+本地实现、remote small gate 与结果分析已完成，但它仍不能作为 paper-core。R.3 只作为
+primary baseline、carrier sanity check 和 control 参照；修好 R.3 不是本文 core narrative。
 
 当前 S1 实现边界：
 
@@ -360,12 +362,50 @@ carrier sanity check 和 control 参照；修好 R.3 不是本文 core narrative
 - `unit_type=conditioned_sparse`;
 - prefix mismatch 为 numerical-zero 量级。
 
-[Decision] 下一步只允许 small remote gate：
+[Fact] S1 small remote gate 已完成：
 
 - runner: `scripts/remote/run_phase4_s_cfus_gate.sh`;
+- remote output root:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase4_s_cfus_gate`;
+- local analysis root:
+  `analysis/phase4_s_cfus_gate_20260624`;
+- analysis script:
+  `scripts/analyze_phase4_s_cfus_gate.py`;
+- decision report:
+  `analysis/phase4_s_cfus_gate_20260624/phase4_s_cfus_gate_decision_report.md`;
 - datasets: `ETTh2`, `Weather`;
 - strategies: `conditioned_future_unit_scheduling`, `full_time_mse`, `r3_prefix_risk`;
-- 不直接进入 full matrix。
+- 不进入 full matrix。
+
+[Fact] 主要结果：
+
+| Comparison | Settings | MSE wins | MAE wins | Mean relative MSE |
+| --- | ---: | ---: | ---: | ---: |
+| CFUS vs `D0_full_time_mse` | 8 | 6 | 8 | `-2.74%` |
+| CFUS vs `D1_r3_prefix_risk` | 8 | 3 | 3 | `+2.22%` |
+
+[Fact] dataset split：
+
+| Dataset | Baseline | Settings | MSE wins | Mean relative MSE |
+| --- | --- | ---: | ---: | ---: |
+| `ETTh2` | `D1_r3_prefix_risk` | 4 | 3 | `-0.35%` |
+| `Weather` | `D1_r3_prefix_risk` | 4 | 0 | `+4.78%` |
+
+[Decision] S1 的有效证据只到“conditioned sparse auxiliary 能改善 plain full-time dense
+anchor”，不足以证明它是稳定的 HSS training strategy。它在 Weather 上相对 R.3 全面退化，
+触发 no Weather collapse / close R.3 gap gate 失败。
+
+[Diagnostic Gap] 当前 trace 没有记录 selected block indices / block ranges / per-block
+condition scores，因此不能排除 `label_novelty` 退化为固定 late weighting proxy。
+
+[Decision] 回退到 Step 6，不继续 sweep 当前 `label_novelty + top_ratio=0.25 + aux=0.1`。
+下一步只做 trace-first diagnosis 和 CFUS-v2 最小重设计：
+
+1. trace 记录 selected block indices、block ranges 和 per-block condition scores；
+2. offline diagnostic 判断 `label_novelty` 是否长期偏向 late blocks；
+3. 若偏向 late blocks，改为 `novelty within future-region groups` 或
+   `balanced condition buckets`；
+4. CFUS-v2 local trace 证明不是固定 late weighting 后，再启动新的 small gate。
 
 ## 历史证据索引
 

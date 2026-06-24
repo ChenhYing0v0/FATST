@@ -1,0 +1,7 @@
+model,strategy,dataset,training_evaluation_decoupled,train_horizons_effective,step_loss_weighting,unit_type,epochs_ran,trace_rows,mean_active_steps,mean_mask_ratio,condition_types,mean_condition_top_blocks,mean_condition_score,mean_auxiliary_weight,mean_time_loss,mean_unit_loss,mean_total_loss
+PatchEncoderConditionedFutureUnitScheduling,S1_conditioned_future_unit_scheduling,ETTh2,True,720,uniform,conditioned_sparse,11,649,192.0,0.26666666666666666,label_novelty,4.0,1.3814259660078674,0.1,0.6771668808302269,0.9164892557222046,0.768815806356527
+PatchEncoderConditionedFutureUnitScheduling,S1_conditioned_future_unit_scheduling,Weather,True,720,uniform,conditioned_sparse,14,2000,192.0,0.26666666666666666,label_novelty,4.0,1.6173347032666205,0.1,0.5774878083616495,0.7548895216286182,0.6529767603427171
+PatchEncoderFullTimeMSE720,D0_full_time_mse,ETTh2,True,720,uniform,full_time,13,767,720.0,1.0,none,0.0,0.0,0.0,0.6612716996374466,0.6612716996374466,0.6612716996374466
+PatchEncoderFullTimeMSE720,D0_full_time_mse,Weather,True,720,uniform,full_time,14,2000,720.0,1.0,none,0.0,0.0,0.0,0.5773162700533867,0.5773162700533867,0.5773162700533867
+PatchEncoderR3PrefixRisk,D1_r3_prefix_risk,ETTh2,False,"96,192,336,720",prefix_risk,horizon_mixed,11,2000,342.288,1.0,none,0.0,0.0,0.0,0.5114542225748301,0.5114542225748301,0.5114542225748301
+PatchEncoderR3PrefixRisk,D1_r3_prefix_risk,Weather,False,"96,192,336,720",prefix_risk,horizon_mixed,11,2000,342.288,1.0,none,0.0,0.0,0.0,0.7398512164652348,0.7398512164652348,0.7398512164652348

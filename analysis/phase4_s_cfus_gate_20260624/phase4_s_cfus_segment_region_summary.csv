@@ -1,0 +1,7 @@
+strategy,baseline_strategy,future_region,segments,mse_wins,mean_relative_mse_pct,mean_relative_mae_pct
+S1_conditioned_future_unit_scheduling,D0_full_time_mse,early_1_96,8,4,-2.932934449374637,-1.5708363432493795
+S1_conditioned_future_unit_scheduling,D0_full_time_mse,late_337_720,2,2,-2.68068121081611,-1.8775569500828815
+S1_conditioned_future_unit_scheduling,D0_full_time_mse,middle_97_336,10,10,-1.5234714942979743,-1.3036931762018156
+S1_conditioned_future_unit_scheduling,D1_r3_prefix_risk,early_1_96,8,0,3.6682382752906753,3.0423992768946
+S1_conditioned_future_unit_scheduling,D1_r3_prefix_risk,late_337_720,2,1,1.2643031851164,0.4812464654273263
+S1_conditioned_future_unit_scheduling,D1_r3_prefix_risk,middle_97_336,10,3,1.517937348279389,0.2163085299691092

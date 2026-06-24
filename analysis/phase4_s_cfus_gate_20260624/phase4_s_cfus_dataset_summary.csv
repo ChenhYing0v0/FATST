@@ -1,0 +1,5 @@
+strategy,baseline_strategy,settings,mse_wins,mae_wins,mean_relative_mse_pct,mean_relative_mae_pct,dataset
+S1_conditioned_future_unit_scheduling,D0_full_time_mse,4,4,4,-5.4488375881500435,-3.0445801766246228,ETTh2
+S1_conditioned_future_unit_scheduling,D0_full_time_mse,4,2,4,-0.03365384310178854,-0.4433113006693856,Weather
+S1_conditioned_future_unit_scheduling,D1_r3_prefix_risk,4,3,3,-0.3467160886109849,0.3783613224077276,ETTh2
+S1_conditioned_future_unit_scheduling,D1_r3_prefix_risk,4,0,0,4.777967995752508,2.3787367941800195,Weather

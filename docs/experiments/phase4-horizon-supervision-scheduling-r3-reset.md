@@ -395,7 +395,9 @@ HSS 研究问题保留，但回退到 Step 4/6：重新设计 conditioned schedu
 
 ## Phase4-S 入口
 
-`current_step`: Step 7 local implementation complete；下一步是 commit/push 后执行 Step 8 small remote gate。
+`current_step`: Step 9-11 complete；S1 small remote gate 已完成。当前结论是
+`conditioned_future_unit_scheduling` 不通过 paper-core gate，回退到 Step 6 重做
+condition 可观测性与 schedule 设计。
 
 [Decision] 下一阶段命名：
 
@@ -446,14 +448,31 @@ HSS 研究问题保留，但回退到 Step 4/6：重新设计 conditioned schedu
 - trace 记录 `unit_type=conditioned_sparse` 和 `condition_type=label_novelty`;
 - prefix mismatch 为 numerical-zero 量级。
 
-[Decision] 下一步只允许 small remote gate：
+[Fact] S1 small remote gate 已完成：
 
 - runner: `scripts/remote/run_phase4_s_cfus_gate.sh`;
+- remote output root:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase4_s_cfus_gate`;
+- local analysis root:
+  `analysis/phase4_s_cfus_gate_20260624`;
+- decision report:
+  `analysis/phase4_s_cfus_gate_20260624/phase4_s_cfus_gate_decision_report.md`;
 - datasets: `ETTh2`, `Weather`;
 - strategies: `conditioned_future_unit_scheduling`, `full_time_mse`, `r3_prefix_risk`;
-- 不直接进入 full matrix。
+- 不进入 full matrix。
+
+[Fact] CFUS vs `full_time_mse`: `6/8` MSE wins，mean relative MSE `-2.74%`。
+
+[Fact] CFUS vs `R.3_prefix_risk`: `3/8` MSE wins，mean relative MSE `+2.22%`。
+
+[Fact] dataset split 显示机制不稳定：ETTh2 vs R.3 为 `3/4` wins、`-0.35%`
+mean relative MSE；Weather vs R.3 为 `0/4` wins、`+4.78%` mean relative MSE。
+
+[Decision] S1 证明 conditioned auxiliary 能改善 plain full-time anchor，但没有证明能成为
+独立 paper-core HSS strategy。当前回退 Step 6：补 selected-block trace 与 offline
+condition diagnostic，再设计 CFUS-v2；不继续 sweep 当前参数。
 
 ## 当前结论
 
-[Decision] Phase4-R 不进入扩展实验，不叠加 future-aware 或 MoE。下一步进入 Phase4-S
-的 diagnostic 和 Step 4-6 重设计。
+[Decision] Phase4-R 不进入扩展实验，不叠加 future-aware 或 MoE。Phase4-S 的 S1 small
+gate 已失败；下一步进入 trace-first diagnostic 和 Step 6 CFUS-v2 重设计。
