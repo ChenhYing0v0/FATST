@@ -1526,6 +1526,49 @@ objective-pressure 改动，而不是 regime/segment operator 结构。
 
 该 control 用于判断前面 `h96,h720` positive result 是否只来自移除 intermediate horizons。
 
+[Result Update: 2026-06-24] `PatchEncoderPrefixRiskWeightedH96H720` 已返回：
+
+- report:
+  `analysis/phase3_horizon_set_interference_20260624/phase3_horizon_set_interference_report.md`;
+- wins vs full-horizon R.3:
+  `3/6`;
+- mean relative MSE vs full-horizon R.3:
+  `+0.49%`;
+- H96 mean:
+  `+1.39%`;
+- H720 mean:
+  `-0.41%`;
+- observed aggregate-gap wins:
+  `1/2`;
+- observed H720 segment-gap wins:
+  `3/3`;
+- operator reduced-set wins over carrier:
+  `3/6`;
+- full-set operator degradation vs reduced-set operator:
+  `+2.49%`;
+- `337-720` effective-pressure delta after removing `192/336`:
+  `+92.28%`;
+- prefix mismatch:
+  `4.823e-14`;
+- `window_index_norm`:
+  not used。
+
+[Decision] reduced horizon set 是 material factor，但不是充分解释。它解释了 H720 segment
+gap 的释放，却不能恢复 H96；Phase3-C operator 在 reduced set 下有条件性收益，但 full set
+下失败。因此 paper story 不应写成 pure operator story，而应切换为
+`horizon-set interference / horizon supervision scheduling`。
+
+[Next] 回到 11-step loop 的 Step 2-3/6，先构造 pairwise horizon interference map：
+
+- `96,192`;
+- `96,336`;
+- `96,720`（已完成，可作为 anchor）;
+- `192,720`;
+- `336,720`。
+
+只有当 interference map 明确之后，才进入 Step 6 设计 conflict-aware objective、sampler 或
+curriculum；此时不启动新的 MoE/router 主线。
+
 ## Phase3: Future-Side MoE
 
 状态：继续暂停。Phase3-A 支持的是 regime/segment calibration 分支，不支持直接启动 MoE。

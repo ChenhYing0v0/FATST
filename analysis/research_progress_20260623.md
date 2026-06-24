@@ -1268,3 +1268,69 @@ schedule，而不是 Phase3-C operator。
 - `artifacts`: `analysis/phase3_horizon_set_interference_20260624/`。
 - `decision`: future-aware 与 MoE 降为二级机制；在 horizon supervision scheduling 主线通过
   初步 gate 前，不作为独立主线推进。
+
+[Result Update: 2026-06-24] R.3 carrier `h96,h720` control 已返回：
+
+- report:
+  `analysis/phase3_horizon_set_interference_20260624/phase3_horizon_set_interference_report.md`;
+- control:
+  `PatchEncoderPrefixRiskWeightedH96H720`;
+- target horizons:
+  `96,720`;
+- compared baseline:
+  full-horizon R.3 `PatchEncoderPrefixRiskWeighted`, `96,192,336,720`;
+- control wins vs full-horizon R.3:
+  `3/6`;
+- mean relative MSE vs full-horizon R.3:
+  `+0.49%`;
+- H96 mean relative MSE:
+  `+1.39%`;
+- H720 mean relative MSE:
+  `-0.41%`;
+- observed aggregate-gap wins:
+  `1/2`;
+- observed H720 segment-gap wins:
+  `3/3`;
+- operator reduced-set wins over this control:
+  `3/6`;
+- operator reduced-set mean increment vs control:
+  `-0.97%`;
+- full-set operator degradation vs reduced-set operator:
+  `+2.49%`;
+- mean `337-720` effective-pressure delta after removing `192/336`:
+  `+92.28%`;
+- max prefix mismatch MSE:
+  `4.823e-14`;
+- epochs recorded:
+  `ETTh2=12`, `ETTm1=13`, `Weather=13`;
+- uses `window_index_norm`:
+  `False`。
+
+[Interpretation]
+
+1. reduced horizon set 本身是 material factor：它让 H720 平均改善，并且覆盖了所有已标记的
+   H720 segment gaps (`3/3`)。
+2. reduced horizon set alone 不是充分解释：H96 平均退化 `+1.39%`，aggregate gaps 只赢
+   `1/2`。
+3. Phase3-C history-only operator 在 reduced set 下仍有条件性价值：相对该 carrier 平均
+   `-0.97%`，但它在 full horizon-set 下平均退化 `+2.49%`。
+4. 因此应拒绝“operator-only”故事；更稳的主线是 horizon-set / objective-pressure interference。
+
+[11-Step Decision]
+
+- `current_step`: Step 2-3/6。
+- `problem`: mixed-horizon supervision 中，哪些 horizon 组合会对 short/long regimes 形成
+  destructive pressure。
+- `existence_evidence`: `h96,h720` carrier 的 H720 受益；full-horizon operator 失败；
+  removing `192/336` 使 `337-720` effective pressure 增加 `+92.28%`。
+- `idea`: 将 training horizon set 与 evaluation horizon set 解耦，先测量 interference map，再设计
+  supervision schedule。
+- `theory_check`: intermediate horizons 占据大量 objective pressure，并可能把模型推向
+  short/long 之间的折中解；这与 QDF 对 future-step 非等权的动机一致，但当前证据更具体地指向
+  horizon subset/schedule，而不仅是 static step weights。
+- `design`: 下一步运行 pairwise horizon controls：
+  `96,192`, `96,336`, `96,720`, `192,720`, `336,720`，全部使用 R.3 carrier。
+- `gate`: 找出导致 H96 或 H720 退化的 horizon pair；如果 interference map 稳定，再设计
+  conflict-aware objective/sampler/curriculum。
+- `artifacts`: `analysis/phase3_horizon_set_interference_20260624/`。
+- `decision`: horizon supervision scheduling 主线继续；MoE/future-side operator 暂不推进。

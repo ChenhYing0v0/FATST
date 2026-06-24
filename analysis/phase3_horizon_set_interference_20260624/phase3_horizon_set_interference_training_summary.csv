@@ -1,0 +1,4 @@
+dataset,epochs_recorded,best_val_mean_mse,last_val_mean_mse,steps_per_epoch_effective,target_horizons,use_window_position,model_variant,step_loss_weighting
+ETTh2,12,0.4072795435786247,0.4784473776817322,123,"96,720",False,target_set,prefix_risk
+ETTm1,13,0.6550919562578201,0.8420280814170837,527,"96,720",False,target_set,prefix_risk
+Weather,13,0.5350321978330612,0.5961358547210693,563,"96,720",False,target_set,prefix_risk

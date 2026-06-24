@@ -1,0 +1,32 @@
+{
+  "control_wins_vs_r3_full": 3,
+  "control_total_vs_r3_full": 6,
+  "control_mean_relative_mse_vs_r3_full_pct": 0.4896135082515722,
+  "control_h96_mean_relative_mse_vs_r3_full_pct": 1.3909849688394371,
+  "control_h720_mean_relative_mse_vs_r3_full_pct": -0.4117579523362928,
+  "control_observed_aggregate_gap_wins": 1,
+  "control_observed_aggregate_gap_total": 2,
+  "control_h720_segment_wins_vs_r3_full": 6,
+  "control_h720_segment_total_vs_r3_full": 12,
+  "control_observed_h720_segment_gap_wins": 3,
+  "control_observed_h720_segment_gap_total": 3,
+  "operator_reduced_beats_control": 3,
+  "operator_reduced_total": 6,
+  "operator_increment_mean_pct": -0.9737684252222711,
+  "operator_gap_increment_mean_pct": -1.4058050414680334,
+  "full_operator_degradation_vs_reduced_operator_mean_pct": 2.487086733617757,
+  "long_segment_pressure_delta_pct_mean": 92.28433998813846,
+  "max_prefix_mismatch_mse": 4.822898536701453e-14,
+  "epochs_recorded": {
+    "ETTh2": 12,
+    "ETTm1": 13,
+    "Weather": 13
+  },
+  "uses_window_position": false,
+  "decision": {
+    "reduced_horizon_set_alone_is_sufficient": false,
+    "reduced_horizon_set_is_material_factor": true,
+    "operator_only_claim_is_rejected": true,
+    "horizon_set_interference_mainline_supported": true
+  }
+}
