@@ -1315,13 +1315,58 @@ Artifacts:
 - H720 segment gaps:
   `ETTh2 193-336`, `ETTh2 337-720`, `ETTm1 337-720`。
 
-[Next] Phase3-B 不进入 full MoE。下一步只允许设计最小 Regime/Segment Residual Calibration：
+[Next] Phase3-B 不进入 full MoE，也不直接实现 output residual correction。下一步先做
+Regime/Segment Mechanism Diagnostic：只检查困难 windows/segments 是否能被 prediction-before
+features 识别。
 
 1. short-only extra-window issue: 先确认 test split 末端/局部 regime 是否导致 higher residual
-   energy；
-2. H720 late-segment issue: 优先针对 late segments 做 low-rank 或 segment-gated residual
-   calibration；
-3. gate 必须优先修复上述 gaps，且 non-gap mean MSE 不得明显退化。
+   energy 与可识别 input-regime signal；
+2. H720 late-segment issue: 先判断 high-error late windows 是否能由 history/window-position
+   signal 识别；
+3. 若 diagnostic pass，Phase3-C 才允许设计 target-state / segment-operator conditioning；
+   不采用 prediction 后的 arbitrary residual correction。
+
+## Phase3-B: Regime/Segment Mechanism Diagnostic
+
+[Decision Update: 2026-06-24] Phase3-B diagnostic 已完成，结论为 pass-as-diagnostic。
+
+Artifacts:
+
+- analyzer:
+  `scripts/analyze_phase3_regime_segment_mechanism.py`;
+- report:
+  `analysis/phase3_regime_segment_mechanism_20260624/phase3_regime_segment_mechanism_report.md`;
+- code explanation:
+  `docs/code-explanation/phase3-regime-segment-mechanism-diagnostic.md`;
+- next design doc:
+  `docs/experiments/phase3-regime-segment-conditioned-target-operator.md`。
+
+11-step loop 判断：
+
+- `current_step`: Step 9-10 完成，进入 Step 4-6；
+- `problem`: short-only extra windows 与 H720 late segments 有可定位 gaps；
+- `existence_evidence`: Phase3-A 定位 gaps；Phase3-B 证明这些 failure groups 有
+  prediction-before feature separation；
+- `idea`: 用 history/window-position regime token 条件化 target-side segment operator；
+- `theory_check`: 如果困难区域在 prediction 前可识别，就不需要 output residual correction；
+- `design`: Phase3-C `Regime/Segment-Conditioned Target Operator`，作用在 output readout 前；
+- `gate`: 修复 observed gaps，控制 non-gap degradation，保持 prefix consistency；
+- `decision`: diagnostic pass；下一步实现 Phase3-C 最小候选。
+
+核心结果：
+
+| Setting | Feature | AUC | SMD |
+| --- | --- | ---: | ---: |
+| `ETTm1/96` short extra windows | `history_mean` | `0.997619` | `-3.221514` |
+| `Weather/96` short extra windows | `window_index_norm` | `1.000000` | `2.599896` |
+| `Weather/96` short extra windows | `history_std` | `0.979425` | `2.494574` |
+| `ETTh2 337-720` high-error segment | `window_index_norm` | `0.845886` | `1.543815` |
+| `ETTh2 337-720` high-error segment | `history_slope_abs_mean` | `0.828835` | `1.262857` |
+| `ETTm1 337-720` high-error segment | `window_index_norm` | `0.786843` | `1.219849` |
+
+[Decision] 这些结果打消了“只能靠 residual 输出修补”的核心顾虑：hard groups 在预测前已有可用
+regime/segment signal。下一步可以做 conditioned target operator，但 residual/error 只能作为
+diagnostic label，不应成为模型输出后的自由修正项。
 
 ## Phase3: Future-Side MoE
 

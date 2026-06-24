@@ -791,12 +791,98 @@ future-step interaction 的背景证据，但不应继续作为 FATST 本地 obj
 - `decision`: pass as diagnostic；进入 Step 4-6，设计 Phase3-B 的 regime/segment calibration
   candidate。
 
-[Next] Phase3-B 不应回到 QDF/objective matrix，也不应直接做 full MoE。建议设计最小
-Regime/Segment Residual Calibration：
+[Next] Phase3-B 不应回到 QDF/objective matrix，也不应直接做 full MoE。基于用户对
+output residual correction 可解释性的顾虑，Phase3-B 先做 Regime/Segment Mechanism
+Diagnostic：只验证困难 regime/segment 是否能被 prediction-before features 识别，不实现
+output residual repair。
 
 1. 对 short-only extra-window issue：先做 time-position/regime diagnostic，确认 extra windows 是否
-   位于 test split 末端并有更高 residual energy。
-2. 对 H720 late-segment issue：优先做 H720 late residual calibration，目标 segment 为
+   位于 test split 末端并有可识别 input-regime signal。
+2. 对 H720 late-segment issue：先判断 high-error late windows 是否能由 history/window-position
+   signal 识别，目标 segment 为
    `ETTh2 193-336/337-720` 和 `ETTm1 337-720`。
-3. 候选应保留 R.3 base prediction，只加 low-rank 或 segment-gated residual calibration；
-   gate 以修复上述 gaps 为主，同时 non-gap mean MSE 不得明显退化。
+3. 若 diagnostic pass，下一步只允许进入 target-state / segment-operator conditioned design；
+   不采用 prediction 后的 arbitrary residual correction。
+
+## 21. Phase3-B Returned Result: Pre-Input Regime/Segment Signals Exist
+
+[Fact] Phase3-B regime/segment mechanism diagnostic 已完成：
+
+- analyzer:
+  `scripts/analyze_phase3_regime_segment_mechanism.py`;
+- report:
+  `analysis/phase3_regime_segment_mechanism_20260624/phase3_regime_segment_mechanism_report.md`;
+- short-regime table:
+  `analysis/phase3_regime_segment_mechanism_20260624/phase3_short_regime_preinput_features.csv`;
+- H720 late-segment table:
+  `analysis/phase3_regime_segment_mechanism_20260624/phase3_h720_late_segment_preinput_features.csv`;
+- summary:
+  `analysis/phase3_regime_segment_mechanism_20260624/phase3_regime_segment_mechanism_summary.json`;
+- code explanation:
+  `docs/code-explanation/phase3-regime-segment-mechanism-diagnostic.md`。
+
+[Verification]
+
+- `python -m py_compile scripts/analyze_phase3_regime_segment_mechanism.py` passed；
+- `conda run -n r2026-fsa python scripts/analyze_phase3_regime_segment_mechanism.py` completed；
+- diagnostic features 只来自 history input windows 与 split 内 window position；
+- R.3 predictions / truths 只用于构造 analysis labels，不作为候选模型输入。
+
+[Gate]
+
+- `short_regime_pre_input_signal`: `True`;
+- `late_segment_pre_input_signal`: `True`;
+- `no_output_residual_mechanism_used`: `True`;
+- `supports_conditioned_target_operator_design`: `True`。
+
+[Evidence] Short-regime pre-input signals:
+
+| Dataset | Horizon | Feature | AUC | SMD | Extra MSE | Aligned MSE |
+| --- | ---: | --- | ---: | ---: | ---: | ---: |
+| `ETTm1` | `96` | `history_mean` | `0.997619` | `-3.221514` | `0.549860` | `0.284174` |
+| `Weather` | `96` | `window_index_norm` | `1.000000` | `2.599896` | `0.156898` | `0.147463` |
+| `ETTm1` | `96` | `window_index_norm` | `1.000000` | `2.586690` | `0.549860` | `0.284174` |
+| `Weather` | `96` | `history_std` | `0.979425` | `2.494574` | `0.156898` | `0.147463` |
+
+[Evidence] H720 late-segment pre-input signals:
+
+| Dataset | Segment | Feature | AUC | SMD | High-error MSE | Other MSE |
+| --- | --- | --- | ---: | ---: | ---: | ---: |
+| `ETTh2` | `337-720` | `window_index_norm` | `0.845886` | `1.543815` | `0.826450` | `0.369696` |
+| `ETTh2` | `337-720` | `history_slope_abs_mean` | `0.828835` | `1.262857` | `0.826450` | `0.369696` |
+| `ETTm1` | `337-720` | `window_index_norm` | `0.786843` | `1.219849` | `0.814483` | `0.356796` |
+| `ETTh2` | `193-336` | `window_index_norm` | `0.777454` | `1.165940` | `0.753092` | `0.241627` |
+
+[Decision] Phase3-B pass as mechanism diagnostic. 结果说明：R.3 的剩余 gaps 并不是只能在输出后
+通过 residual patch 才能观察到；这些 hard windows/segments 在 prediction 之前已经有可用信号。
+因此下一步可设计 conditioned target operator，但机制应作用于 `target state`、`target segment
+feature` 或 readout 前的 segment operator，而不是对最终预测做自由 residual correction。
+
+[Caveat] `window_index_norm` 是 prediction-before time-position signal，但单独依赖它会让论文机制偏弱。
+Phase3-C 需要把 window position 与 history statistics 合成 regime token，并检查 learned gates
+是否真的与 history distribution shift / late-segment difficulty 对齐。
+
+[11-Step Loop]
+
+- `current_step`: Step 9-10 完成，进入 Step 4-6。
+- `problem`: short-only extra windows 与 H720 late segments 存在可定位 performance gaps。
+- `existence_evidence`: Phase3-A 定位 gaps；Phase3-B 证明这些 failure groups 有 prediction-before
+  separability。
+- `idea`: 用 history/window-position regime token 条件化 target-side segment operator。
+- `theory_check`: 若 failure groups 在预测前可识别，则不必使用 output residual correction；可在
+  latent/readout 前改变 target-state transformation。
+- `design`: Phase3-C `Regime/Segment-Conditioned Target Operator`，保持 R.3 target-set carrier，
+  在 output head 前引入轻量 segment-conditioned operator。
+- `gate`: 修复 observed gaps，同时 non-gap degradation 受控；保留 prefix consistency；不引入自由
+  output residual head。
+- `artifacts`: `phase3_regime_segment_mechanism_*`。
+- `decision`: pass as diagnostic；下一步实现 Phase3-C 的最小 model candidate 与 remote gate。
+
+[Next] Phase3-C 建议：
+
+1. 新建 `PatchEncoderRegimeSegmentTargetOperator`，只在 R.3 target state 到 output readout 之前
+   做 conditioning。
+2. Regime token 输入使用 history summary + `window_index_norm`，target branch 使用 segment feature
+   `q_j`，避免 future target leakage。
+3. 先本地 smoke + prefix consistency 检查，再远程跑最小 gate；若 observed gaps 不改善或 non-gap
+   退化明显，回滚到 Step 2-3，转向 base architecture / external baseline comparison。

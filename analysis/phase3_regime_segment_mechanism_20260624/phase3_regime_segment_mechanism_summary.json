@@ -1,0 +1,49 @@
+{
+  "best_late_gap_feature": {
+    "aligned_mse": 0.36969631383075374,
+    "comparison": "h720_337-720_top_quartile_error",
+    "dataset": "ETTh2",
+    "feature": "window_index_norm",
+    "horizon": 720,
+    "is_known_h720_segment_gap": true,
+    "negative_count": 1620,
+    "negative_group": "lower_three_quartiles_segment_error",
+    "negative_mean": 0.4133684842249657,
+    "positive_count": 541,
+    "positive_group": "top_quartile_segment_error",
+    "positive_group_mse": 0.8264503497939872,
+    "positive_mean": 0.7594141507496406,
+    "rank_auc_abs": 0.8458855343328541,
+    "segment": "337-720",
+    "standardized_mean_diff": 1.5438151961810493
+  },
+  "best_short_gap_feature": {
+    "aligned_mse": 0.28417394492911296,
+    "comparison": "h96_short_extra_vs_h720_aligned",
+    "dataset": "ETTm1",
+    "feature": "history_mean",
+    "horizon": 96,
+    "is_known_short_gap": true,
+    "negative_count": 10801,
+    "negative_group": "h720_aligned_windows",
+    "negative_mean": 0.05038737289036813,
+    "positive_count": 624,
+    "positive_group": "short_only_extra_windows",
+    "positive_group_mse": 0.549860348651057,
+    "positive_mean": -0.30971284178910935,
+    "rank_auc_abs": 0.9976193740370668,
+    "standardized_mean_diff": -3.2215144483524534
+  },
+  "gate": {
+    "late_segment_pre_input_signal": true,
+    "no_output_residual_mechanism_used": true,
+    "short_regime_pre_input_signal": true,
+    "supports_conditioned_target_operator_design": true
+  },
+  "late_known_gap_feature_max_abs_smd": 1.5438151961810493,
+  "late_known_gap_feature_max_auc": 0.8458855343328541,
+  "late_segment_rows": 120,
+  "short_known_gap_feature_max_abs_smd": 3.2215144483524534,
+  "short_known_gap_feature_max_auc": 1.0,
+  "short_regime_rows": 90
+}
