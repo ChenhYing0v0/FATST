@@ -85,6 +85,26 @@ def parse_positive_ints(value: str) -> list[int]:
     return sorted(set(integers))
 
 
+def freeze_non_adapter_parameters(model: torch.nn.Module) -> None:
+    has_adapter = False
+    for name, parameter in model.named_parameters():
+        is_adapter = name.startswith("supervision_adapter_head.")
+        parameter.requires_grad = is_adapter
+        has_adapter = has_adapter or is_adapter
+    if not has_adapter:
+        raise ValueError("freeze-non-adapter requires supervision_adapter_head parameters.")
+
+
+def load_state_dict_from_checkpoint(path: Path, device: torch.device) -> dict[str, torch.Tensor]:
+    try:
+        state_dict = torch.load(path, map_location=device, weights_only=True)
+    except TypeError:
+        state_dict = torch.load(path, map_location=device)
+    if not isinstance(state_dict, dict):
+        raise TypeError(f"Expected checkpoint state dict, got {type(state_dict)!r}.")
+    return state_dict
+
+
 def metrics_by_horizon(pred: np.ndarray, true: np.ndarray) -> list[dict[str, float]]:
     diff = pred - true
     mse = np.mean(diff * diff, axis=(0, 2))
@@ -1613,6 +1633,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--seed", type=int, default=2021)
     parser.add_argument("--run-name", default="PatchEncoderTargetSetDecoder")
     parser.add_argument("--output-root", default="artifacts/runs/phase1")
+    parser.add_argument("--init-checkpoint", default="")
+    parser.add_argument("--freeze-non-adapter", action="store_true")
     parser.add_argument("--device", default="auto")
     parser.add_argument("--steps-per-epoch", type=int, default=None)
     parser.add_argument("--max-train-batches", type=int, default=None)
@@ -1686,6 +1708,11 @@ def main() -> None:
         raise ValueError("supervision trace limit must be non-negative.")
     if args.supervision_strategy == "r3_prefix_risk" and args.step_loss_weighting != "prefix_risk":
         raise ValueError("r3_prefix_risk supervision requires --step-loss-weighting prefix_risk.")
+    if args.freeze_non_adapter and args.supervision_strategy not in {
+        "late_conflict_adapter_routing",
+        "dynamic_residual_stability_routing",
+    }:
+        raise ValueError("freeze-non-adapter requires an adapter-based supervision strategy.")
     set_seed(args.seed)
     device = torch.device("cuda" if args.device == "auto" and torch.cuda.is_available() else "cpu")
     if args.device != "auto":
@@ -1785,7 +1812,24 @@ def main() -> None:
         supervision_adapter_start_step=supervision_adapter_start_step,
         **model_kwargs,
     ).to(device)
-    optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
+    init_checkpoint_info: dict[str, object] = {}
+    if args.init_checkpoint:
+        checkpoint_path = Path(args.init_checkpoint)
+        if not checkpoint_path.exists():
+            raise FileNotFoundError(f"init checkpoint does not exist: {checkpoint_path}")
+        state_dict = load_state_dict_from_checkpoint(checkpoint_path, device)
+        load_result = model.load_state_dict(state_dict, strict=False)
+        init_checkpoint_info = {
+            "path": str(checkpoint_path),
+            "missing_keys": list(load_result.missing_keys),
+            "unexpected_keys": list(load_result.unexpected_keys),
+        }
+    if args.freeze_non_adapter:
+        freeze_non_adapter_parameters(model)
+    trainable_parameters = [parameter for parameter in model.parameters() if parameter.requires_grad]
+    if not trainable_parameters:
+        raise ValueError("No trainable parameters remain after applying freeze configuration.")
+    optimizer = torch.optim.Adam(trainable_parameters, lr=args.learning_rate)
     horizon_label = "mixed_" + "_".join(f"h{horizon}" for horizon in target_horizons)
     run_dir = Path(args.output_root) / args.run_name / args.dataset / horizon_label / f"seed{args.seed}"
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -2194,6 +2238,8 @@ def main() -> None:
     effective_config["evaluation_target_horizons"] = target_horizons
     effective_config["train_horizons_effective"] = train_horizons
     effective_config["training_evaluation_decoupled"] = not horizon_mixed_training
+    effective_config["init_checkpoint_info"] = init_checkpoint_info
+    effective_config["freeze_non_adapter_effective"] = bool(args.freeze_non_adapter)
     effective_config["supervision_unit_config"] = {
         "strategy": args.supervision_strategy,
         "supervision_pred_len": args.supervision_pred_len,
@@ -2224,6 +2270,7 @@ def main() -> None:
         "cuda": torch.version.cuda,
         "device": str(device),
         "parameter_count": sum(p.numel() for p in model.parameters()),
+        "trainable_parameter_count": sum(p.numel() for p in model.parameters() if p.requires_grad),
     }
     (run_dir / "environment.json").write_text(json.dumps(env, indent=2))
 

@@ -1005,6 +1005,88 @@ seasonal periods。当前应回退 Step 5/6，优先研究 training protocol / c
 重新检验 residual-stability proxy 是否在线不稳定；必要时改成 offline-calibrated threshold
 或完全转向 state-conditioned gradient blocking，而不是继续堆 adapter。
 
+### Phase4-OP-A：Stabilized Routing Protocol
+
+`current_step`: Step 5/6 -> Step 7。RG-B 失败后不继续调 routing threshold，而是先验证当前
+training protocol 是否是瓶颈。
+
+[Problem]
+
+[Fact] 当前和相邻 Phase4 gates 中，ETTh2/Weather 共 `26/26` 条训练日志都在 epoch `<=5`
+达到 best validation MSE；之后 train loss 继续下降而 validation 变差。
+
+[Fact] RG-B trace 中 router 没有塌缩，Weather 的 noisy suppression ratio 高于 ETTh2，
+adapter residual 非零，但 Weather vs R.3 仍 `0/4`。
+
+[Inference] 这说明失败可能不是“routing 完全没工作”，而是 current carrier 从零训练过快进入
+validation 退化区；routing adapter 在 base 尚未稳定时与 base learning 竞争，无法形成可泛化
+贡献。
+
+[Existence Evidence]
+
+- SRP code 的 finetune path 先加载 pretrain checkpoint；
+- SRP finetune 冻结 base parameters，只训练当前 tuner/group 或 MoLora shared tuner；
+- 当前 Phase4 logs 系统性 early-best，说明 training protocol 本身需要被研究；
+- RG-B 相对 full-time 仍有 `-2.73%` mean MSE，说明机制轴值得保留，但 carrier/protocol 不够。
+
+[Idea]
+
+吸收 SRP 的 protocol claim，而不是复制 SRP 架构：
+
+> route-specific parameters should be trained on top of a stabilized base instead of competing with
+> base learning from step zero.
+
+本阶段测试 `full_time_mse pretrain -> adapter-only dynamic routing finetune`。
+
+[Theory Check]
+
+[Strong Evidence] 如果 adapter/routing path 只负责 residual correction，而 shared base 已被
+validation-selected checkpoint 固定，那么 noisy/learnable routing 的梯度不会再干扰 base learning。
+
+[Speculative] full-time base 可能仍弱于 R.3；因此该实验若失败，不等价于否定 pretraining，
+只否定 “full-time stabilized base + current RG-B adapter” 这个组合。
+
+[Design]
+
+- training update:
+  `baselines/patch_encoder_target_set_decoder/train.py` 增加 `--init-checkpoint` 与
+  `--freeze-non-adapter`;
+- code explanation:
+  `docs/code-explanation/phase4-stabilized-routing-protocol.md`;
+- remote runner:
+  `scripts/remote/run_phase4_stabilized_routing_gate.sh`;
+- datasets:
+  `ETTh2`, `Weather`;
+- stage 1:
+  `PatchEncoderFullTimeMSE720Pretrain`，`full_time_mse`，lr `1e-4`，保留 best checkpoint；
+- stage 2:
+  `PatchEncoderStabilizedDynamicResidualRouting`，加载 stage-1 checkpoint，只训练
+  `supervision_adapter_head`，lr `1e-3`，epochs `30`，patience `5`。
+
+[Fact] 本地 smoke 已通过：
+
+- dataset: `ETTh2`;
+- pretrain: `full_time_mse`，`epochs=1`，`steps_per_epoch=1`；
+- finetune: `dynamic_residual_stability_routing`，加载 pretrain checkpoint，
+  `--freeze-non-adapter`，`epochs=1`，`steps_per_epoch=1`；
+- config audit: `freeze_non_adapter_effective=true`；
+- parameter audit: trainable params `12,848 / 2,025,312`；
+- checkpoint audit: missing keys 仅为 `supervision_adapter_head.*`，符合 adapter 新增预期。
+
+[Gate]
+
+1. `effective_config.json` 必须显示 `freeze_non_adapter_effective=true`；
+2. `environment.json` 的 `trainable_parameter_count` 必须远小于 `parameter_count`；
+3. finetune validation best epoch 不应仍系统性卡在 epoch `1`；
+4. Weather vs R.3 至少不能继续 `0/4`；
+5. Weather h720 `337-720` segment 必须优于 RG-B；
+6. ETTh2 late segment 正信号不能消失。
+
+[Rollback]
+
+如果 OP-A 失败，不继续调 finetune lr。回退 Step 5/6，判断当前 adapter/routing capacity 是否过弱；
+下一步应考虑 stronger base objective、R.3-style base stabilization，或更深的 carrier redesign。
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：
