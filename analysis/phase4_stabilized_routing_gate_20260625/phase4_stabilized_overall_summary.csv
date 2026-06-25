@@ -1,0 +1,4 @@
+baseline_strategy,settings,mse_wins,mae_wins,mean_relative_mse_pct,mean_relative_mae_pct
+D1_r3_prefix_risk,8,0,0,8.915598956938886,5.175541282156848
+OP-A_pretrain,8,0,0,3.574970670885136,1.9262520863965822
+RG-B_from_scratch,8,1,1,6.636712637663511,3.4252457993922847

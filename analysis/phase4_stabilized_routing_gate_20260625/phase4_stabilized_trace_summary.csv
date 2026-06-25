@@ -1,0 +1,3 @@
+dataset,trace_rows,mean_learnable_blocks,mean_noisy_blocks,mean_ambiguous_blocks,mean_noisy_suppression_ratio,mean_adapter_active_steps,mean_adapter_abs_residual,last_adapter_abs_residual
+ETTh2,708,1.1610169491525424,1.4491525423728813,1.3898305084745763,0.3622881355932203,55.728813559322035,0.0914090135960845,0.10381245613098145
+Weather,2000,1.4405,1.866,0.6935,0.4665,69.144,0.06575242914259434,0.07378175109624863

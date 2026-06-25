@@ -1082,6 +1082,86 @@ validation-selected checkpoint 固定，那么 noisy/learnable routing 的梯度
 5. Weather h720 `337-720` segment 必须优于 RG-B；
 6. ETTh2 late segment 正信号不能消失。
 
+[Returned Result]
+
+[Fact] OP-A small gate 已完成：
+
+- remote output:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase4_stabilized_routing_gate`;
+- local raw artifacts:
+  `analysis/phase4_stabilized_routing_gate_20260625/raw`;
+- analysis script:
+  `scripts/analyze_phase4_stabilized_routing_gate.py`;
+- decision report:
+  `analysis/phase4_stabilized_routing_gate_20260625/phase4_stabilized_routing_gate_report.md`。
+
+[Fact] Freeze / checkpoint audit 通过：
+
+| Dataset | Freeze | Trainable params | Missing keys | Unexpected keys |
+| --- | --- | ---: | ---: | ---: |
+| `ETTh2` | `True` | `12,848 / 2,025,312` (`0.63%`) | 4 | 0 |
+| `Weather` | `True` | `12,848 / 2,025,312` (`0.63%`) | 4 | 0 |
+
+missing keys 均为 `supervision_adapter_head.*`，符合 adapter 新增预期。
+
+[Fact] Overall result：
+
+| Baseline | Settings | MSE wins | MAE wins | Mean relative MSE |
+| --- | ---: | ---: | ---: | ---: |
+| OP-A vs R.3 | 8 | 0 | 0 | `+8.92%` |
+| OP-A vs pretrain | 8 | 0 | 0 | `+3.57%` |
+| OP-A vs RG-B from scratch | 8 | 1 | 1 | `+6.64%` |
+
+[Fact] Per-horizon MSE delta：
+
+| Dataset | Horizon | vs pretrain | vs R.3 | vs RG-B |
+| --- | ---: | ---: | ---: | ---: |
+| `ETTh2` | 96 | `+5.60%` | `+17.57%` | `+15.22%` |
+| `ETTh2` | 192 | `+6.39%` | `+12.06%` | `+13.61%` |
+| `ETTh2` | 336 | `+3.37%` | `+6.51%` | `+5.69%` |
+| `ETTh2` | 720 | `+3.79%` | `+5.99%` | `+7.31%` |
+| `Weather` | 96 | `+1.08%` | `+5.64%` | `-0.03%` |
+| `Weather` | 192 | `+2.01%` | `+6.41%` | `+2.39%` |
+| `Weather` | 336 | `+2.86%` | `+7.94%` | `+3.76%` |
+| `Weather` | 720 | `+3.51%` | `+9.20%` | `+5.14%` |
+
+[Fact] Segment gate：
+
+- Weather h720 `337-720` vs R.3: `+10.24%`;
+- Weather h720 `337-720` vs RG-B: `+5.94%`。
+
+[Fact] Training dynamics：
+
+| Dataset | Stage | Epochs | Best epoch | Best val MSE | Last val drift | Train loss change |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| `ETTh2` | pretrain | 13 | 3 | `0.380270` | `+14.45%` | `-30.94%` |
+| `ETTh2` | adapter-only | 12 | 7 | `0.402832` | `+2.47%` | `-0.05%` |
+| `Weather` | pretrain | 14 | 4 | `0.534117` | `+10.41%` | `-38.40%` |
+| `Weather` | adapter-only | 11 | 6 | `0.542288` | `+0.40%` | `-0.07%` |
+
+[Analysis]
+
+[Strong Evidence] OP-A 成功改变了 training dynamics：adapter-only finetune 的 best epoch
+从 pretrain 的 `3/4` 推迟到 `7/6`，且 train loss 几乎不再下降。这说明 base freezing 和
+adapter-only optimization 确实改变了训练过程。
+
+[Counter-Evidence] 但 OP-A 性能全面失败。它在所有 horizon 上都差于 pretrain 和 R.3；
+除 Weather h96 外也差于 from-scratch RG-B。Weather late segment 也比 RG-B 更差。
+
+[Inference] 这说明“从零训练时 base/routing 竞争”不是唯一瓶颈。当前小 adapter residual path
+在 frozen full-time base 上没有足够 capacity 或合适 objective 去修正预测；full-time base
+本身也不足以作为 paper-core pretrain base。
+
+[Decision]
+
+OP-A 不通过，不继续调 finetune lr 或 patience。回退 Step 5/6：
+
+1. 不再推进 `full_time_mse pretrain + adapter-only RG-B`；
+2. 若继续 pretraining，应测试 R.3/prefix-risk stabilized base，而不是 full-time base；
+3. 若继续 gradient routing，应允许 richer target/readout subset 更新，而不只是 tiny adapter；
+4. 下一步需要先诊断“R.3 为什么强”：prefix-risk 是优化 schedule、implicit regularization，
+   还是更适合 current carrier 的 base objective。
+
 [Rollback]
 
 如果 OP-A 失败，不继续调 finetune lr。回退 Step 5/6，判断当前 adapter/routing capacity 是否过弱；
