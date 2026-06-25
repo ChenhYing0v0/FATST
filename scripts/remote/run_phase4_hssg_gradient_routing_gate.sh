@@ -17,6 +17,9 @@ LEARNING_RATE="${LEARNING_RATE:-0.0001}"
 REGION_ROUTED_READOUT_RANK="${REGION_ROUTED_READOUT_RANK:-32}"
 REGION_ROUTED_READOUT_DROPOUT="${REGION_ROUTED_READOUT_DROPOUT:-0.0}"
 REGION_ROUTED_READOUT_SCALE="${REGION_ROUTED_READOUT_SCALE:-1.0}"
+SUPERVISION_AUX_WEIGHT="${SUPERVISION_AUX_WEIGHT:-0.1}"
+SUPERVISION_CONDITION_TOP_RATIO="${SUPERVISION_CONDITION_TOP_RATIO:-0.25}"
+SUPERVISION_RESIDUAL_PERIODS="${SUPERVISION_RESIDUAL_PERIODS:-24,48,96,168}"
 SUPERVISION_STRATEGIES="${SUPERVISION_STRATEGIES:-full_time_mse single_720_prefix_risk r3_prefix_risk hssg_region_routed_readout}"
 
 mkdir -p "${LOG_ROOT}"
@@ -54,6 +57,7 @@ run_name_for_strategy() {
     single_720_prefix_risk) echo "PatchEncoderSingle720PrefixRisk" ;;
     r3_prefix_risk) echo "PatchEncoderR3PrefixRisk" ;;
     hssg_region_routed_readout) echo "PatchEncoderHSSGRegionRoutedReadout" ;;
+    hssg_learnability_region_routing) echo "PatchEncoderHSSGLearnabilityRegionRouting" ;;
     *) echo "Unknown strategy: $1" >&2; exit 1 ;;
   esac
 }
@@ -61,7 +65,7 @@ run_name_for_strategy() {
 step_weighting_for_strategy() {
   case "$1" in
     full_time_mse) echo "uniform" ;;
-    single_720_prefix_risk|r3_prefix_risk|hssg_region_routed_readout) echo "prefix_risk" ;;
+    single_720_prefix_risk|r3_prefix_risk|hssg_region_routed_readout|hssg_learnability_region_routing) echo "prefix_risk" ;;
     *) echo "Unknown strategy: $1" >&2; exit 1 ;;
   esac
 }
@@ -82,6 +86,9 @@ echo "learning_rate=${LEARNING_RATE}"
 echo "region_routed_readout_rank=${REGION_ROUTED_READOUT_RANK}"
 echo "region_routed_readout_dropout=${REGION_ROUTED_READOUT_DROPOUT}"
 echo "region_routed_readout_scale=${REGION_ROUTED_READOUT_SCALE}"
+echo "supervision_aux_weight=${SUPERVISION_AUX_WEIGHT}"
+echo "supervision_condition_top_ratio=${SUPERVISION_CONDITION_TOP_RATIO}"
+echo "supervision_residual_periods=${SUPERVISION_RESIDUAL_PERIODS}"
 
 nvidia-smi --query-gpu=index,name,memory.total,memory.used,memory.free,utilization.gpu \
   --format=csv,noheader,nounits
@@ -115,6 +122,9 @@ run_train() {
     --region-routed-readout-rank "${REGION_ROUTED_READOUT_RANK}" \
     --region-routed-readout-dropout "${REGION_ROUTED_READOUT_DROPOUT}" \
     --region-routed-readout-scale "${REGION_ROUTED_READOUT_SCALE}" \
+    --supervision-aux-weight "${SUPERVISION_AUX_WEIGHT}" \
+    --supervision-condition-top-ratio "${SUPERVISION_CONDITION_TOP_RATIO}" \
+    --supervision-residual-periods "${SUPERVISION_RESIDUAL_PERIODS}" \
     --epochs "${EPOCHS}" \
     --patience "${PATIENCE}" \
     --learning-rate "${LEARNING_RATE}" \

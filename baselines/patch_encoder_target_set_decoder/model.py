@@ -165,6 +165,7 @@ class PatchEncoderTargetSetDecoder(nn.Module):
         region_routed_readout_rank: int = 32,
         region_routed_readout_dropout: float = 0.0,
         region_routed_readout_scale: float = 1.0,
+        region_routed_readout_detach_input: bool = False,
     ) -> None:
         super().__init__()
         if segment_len <= 0:
@@ -222,6 +223,7 @@ class PatchEncoderTargetSetDecoder(nn.Module):
         self.future_recon_eps = future_recon_eps
         self.supervision_adapter_start_step = supervision_adapter_start_step
         self.region_routed_readout_scale = region_routed_readout_scale
+        self.region_routed_readout_detach_input = region_routed_readout_detach_input
         self.revin = RevIN(channels, affine=False) if revin else None
 
         self.padding_patch = nn.ReplicationPad1d((0, stride))
@@ -599,7 +601,8 @@ class PatchEncoderTargetSetDecoder(nn.Module):
         conditioned = history_readout[:, None, :] * (1.0 + gamma) + beta
         base_segment_values = self.segment_output(conditioned).reshape(z.shape[0], segment_count * self.segment_len)
         segment_values = base_segment_values
-        region_readout_residual = self._region_routed_readout_residual(conditioned, pred_len, segment_count)
+        region_readout_input = conditioned.detach() if self.region_routed_readout_detach_input else conditioned
+        region_readout_residual = self._region_routed_readout_residual(region_readout_input, pred_len, segment_count)
         if self.region_readout_heads is not None:
             segment_values = segment_values + region_readout_residual
         prefix_residual = segment_values.new_zeros(z.shape[0], segment_count * self.segment_len)

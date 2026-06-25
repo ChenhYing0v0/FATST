@@ -873,22 +873,17 @@ def late_conflict_adapter_routing_loss(
     return total_loss, time_loss, unit_loss, unit
 
 
-def dynamic_residual_stability_routing_loss(
-    base_pred: torch.Tensor,
-    adapter_residual: torch.Tensor,
+def residual_stability_mask_and_stats(
     true: torch.Tensor,
     history: torch.Tensor,
     block_size: int,
     top_ratio: float,
-    aux_weight: float,
     periods: list[int],
-) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, SupervisionUnit]:
+) -> tuple[torch.Tensor, dict[str, float | int]]:
     if block_size <= 0:
         raise ValueError("supervision block size must be positive.")
     if not 0 < top_ratio <= 1:
         raise ValueError("supervision condition top ratio must be in (0, 1].")
-    if aux_weight < 0:
-        raise ValueError("supervision auxiliary weight must be non-negative.")
 
     horizon = true.shape[1]
     seq_len = history.shape[1]
@@ -981,30 +976,59 @@ def dynamic_residual_stability_routing_loss(
         mean_gain = float(torch.mean(selected_gain).detach().cpu())
         mean_smoothness = float(torch.mean(selected_smoothness).detach().cpu())
         mean_variation = float(torch.mean(selected_variation).detach().cpu())
+        noisy_suppression_ratio = len(noisy_blocks) / float(max(len(selected), 1))
 
+    stats: dict[str, float | int] = {
+        "top_blocks": top_blocks,
+        "mean_novelty": mean_novelty,
+        "mean_gain": mean_gain,
+        "mean_smoothness": mean_smoothness,
+        "mean_variation": mean_variation,
+        "learnable_blocks": len(learnable_blocks),
+        "noisy_blocks": len(noisy_blocks),
+        "ambiguous_blocks": len(ambiguous_blocks),
+        "noisy_suppression_ratio": noisy_suppression_ratio,
+    }
+    return learnable_mask, stats
+
+
+def dynamic_residual_stability_routing_loss(
+    base_pred: torch.Tensor,
+    adapter_residual: torch.Tensor,
+    true: torch.Tensor,
+    history: torch.Tensor,
+    block_size: int,
+    top_ratio: float,
+    aux_weight: float,
+    periods: list[int],
+) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, SupervisionUnit]:
+    if aux_weight < 0:
+        raise ValueError("supervision auxiliary weight must be non-negative.")
+
+    horizon = true.shape[1]
+    learnable_mask, stats = residual_stability_mask_and_stats(true, history, block_size, top_ratio, periods)
     adapter_pred = base_pred.detach() + adapter_residual
     time_loss = torch.mean((base_pred - true) ** 2)
     unit_loss = masked_mse_loss(adapter_pred, true, learnable_mask)
     total_loss = time_loss + aux_weight * unit_loss
     active_steps = int(torch.sum(learnable_mask).detach().cpu().item())
-    noisy_suppression_ratio = len(noisy_blocks) / float(max(len(selected), 1))
     unit = SupervisionUnit(
         unit_type="dynamic_residual_stability",
         active_steps=active_steps,
         mask_ratio=active_steps / float(horizon),
         condition_type="residual_stability",
-        condition_top_blocks=top_blocks,
-        condition_mean_score=mean_novelty,
+        condition_top_blocks=int(stats["top_blocks"]),
+        condition_mean_score=float(stats["mean_novelty"]),
         auxiliary_weight=aux_weight,
-        predictability_learnable_blocks=len(learnable_blocks),
-        predictability_noisy_blocks=len(noisy_blocks),
-        residual_stability_learnable_blocks=len(learnable_blocks),
-        residual_stability_noisy_blocks=len(noisy_blocks),
-        residual_stability_ambiguous_blocks=len(ambiguous_blocks),
-        residual_stability_mean_gain=mean_gain,
-        residual_stability_mean_smoothness=mean_smoothness,
-        residual_stability_mean_variation=mean_variation,
-        residual_stability_noisy_suppression_ratio=noisy_suppression_ratio,
+        predictability_learnable_blocks=int(stats["learnable_blocks"]),
+        predictability_noisy_blocks=int(stats["noisy_blocks"]),
+        residual_stability_learnable_blocks=int(stats["learnable_blocks"]),
+        residual_stability_noisy_blocks=int(stats["noisy_blocks"]),
+        residual_stability_ambiguous_blocks=int(stats["ambiguous_blocks"]),
+        residual_stability_mean_gain=float(stats["mean_gain"]),
+        residual_stability_mean_smoothness=float(stats["mean_smoothness"]),
+        residual_stability_mean_variation=float(stats["mean_variation"]),
+        residual_stability_noisy_suppression_ratio=float(stats["noisy_suppression_ratio"]),
         adapter_start_step=1,
         adapter_active_steps=active_steps,
         adapter_mean_abs_residual=float(torch.mean(torch.abs(adapter_residual)).detach().cpu()),
@@ -1043,6 +1067,63 @@ def region_routed_readout_loss(
         region_routed_mean_abs_residual=float(torch.mean(torch.abs(region_residual)).detach().cpu()),
     )
     return unit_loss, time_loss, unit_loss, unit
+
+
+def learnability_region_routed_readout_loss(
+    base_pred: torch.Tensor,
+    region_residual: torch.Tensor,
+    true: torch.Tensor,
+    history: torch.Tensor,
+    block_size: int,
+    top_ratio: float,
+    aux_weight: float,
+    periods: list[int],
+    max_pred_len: int,
+    alpha: float,
+) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, SupervisionUnit]:
+    if aux_weight < 0:
+        raise ValueError("supervision auxiliary weight must be non-negative.")
+
+    horizon = base_pred.shape[1]
+    learnable_mask, stats = residual_stability_mask_and_stats(true, history, block_size, top_ratio, periods)
+    time_loss = weighted_mse_loss(
+        base_pred,
+        true,
+        max_pred_len,
+        [horizon],
+        "prefix_risk",
+        alpha,
+    )
+    routed_pred = base_pred.detach() + region_residual
+    unit_loss = masked_mse_loss(routed_pred, true, learnable_mask)
+    total_loss = time_loss + aux_weight * unit_loss
+    active_steps = int(torch.sum(learnable_mask).detach().cpu().item())
+    early_steps = int(torch.sum(learnable_mask[: min(horizon, 96)]).detach().cpu().item())
+    middle_steps = int(torch.sum(learnable_mask[96 : min(horizon, 336)]).detach().cpu().item())
+    late_steps = int(torch.sum(learnable_mask[336:horizon]).detach().cpu().item())
+    unit = SupervisionUnit(
+        unit_type="learnability_region_routed_readout",
+        active_steps=active_steps,
+        mask_ratio=active_steps / float(horizon),
+        condition_type="residual_stability_region",
+        condition_top_blocks=int(stats["top_blocks"]),
+        condition_mean_score=float(stats["mean_novelty"]),
+        auxiliary_weight=aux_weight,
+        predictability_learnable_blocks=int(stats["learnable_blocks"]),
+        predictability_noisy_blocks=int(stats["noisy_blocks"]),
+        residual_stability_learnable_blocks=int(stats["learnable_blocks"]),
+        residual_stability_noisy_blocks=int(stats["noisy_blocks"]),
+        residual_stability_ambiguous_blocks=int(stats["ambiguous_blocks"]),
+        residual_stability_mean_gain=float(stats["mean_gain"]),
+        residual_stability_mean_smoothness=float(stats["mean_smoothness"]),
+        residual_stability_mean_variation=float(stats["mean_variation"]),
+        residual_stability_noisy_suppression_ratio=float(stats["noisy_suppression_ratio"]),
+        region_routed_early_steps=early_steps,
+        region_routed_middle_steps=middle_steps,
+        region_routed_late_steps=late_steps,
+        region_routed_mean_abs_residual=float(torch.mean(torch.abs(region_residual)).detach().cpu()),
+    )
+    return total_loss, time_loss, unit_loss, unit
 
 
 def curriculum_phase(epoch: int, epochs: int) -> str:
@@ -1689,6 +1770,7 @@ def parse_args() -> argparse.Namespace:
             "late_conflict_adapter_routing",
             "dynamic_residual_stability_routing",
             "hssg_region_routed_readout",
+            "hssg_learnability_region_routing",
             "component_basis_top",
             "component_basis_balanced",
             "curriculum_units",
@@ -1804,8 +1886,11 @@ def main() -> None:
         raise ValueError("r3_prefix_risk supervision requires --step-loss-weighting prefix_risk.")
     if args.supervision_strategy == "single_720_prefix_risk" and args.step_loss_weighting != "prefix_risk":
         raise ValueError("single_720_prefix_risk supervision requires --step-loss-weighting prefix_risk.")
-    if args.supervision_strategy == "hssg_region_routed_readout" and args.step_loss_weighting != "prefix_risk":
-        raise ValueError("hssg_region_routed_readout supervision requires --step-loss-weighting prefix_risk.")
+    if (
+        args.supervision_strategy in {"hssg_region_routed_readout", "hssg_learnability_region_routing"}
+        and args.step_loss_weighting != "prefix_risk"
+    ):
+        raise ValueError("HSSG region-routed supervision requires --step-loss-weighting prefix_risk.")
     if args.freeze_non_adapter and args.supervision_strategy not in {
         "late_conflict_adapter_routing",
         "dynamic_residual_stability_routing",
@@ -1908,10 +1993,12 @@ def main() -> None:
             in {"late_conflict_adapter_routing", "dynamic_residual_stability_routing"}
         ),
         supervision_adapter_start_step=supervision_adapter_start_step,
-        region_routed_readout=args.supervision_strategy == "hssg_region_routed_readout",
+        region_routed_readout=args.supervision_strategy
+        in {"hssg_region_routed_readout", "hssg_learnability_region_routing"},
         region_routed_readout_rank=args.region_routed_readout_rank,
         region_routed_readout_dropout=args.region_routed_readout_dropout,
         region_routed_readout_scale=args.region_routed_readout_scale,
+        region_routed_readout_detach_input=args.supervision_strategy == "hssg_learnability_region_routing",
         **model_kwargs,
     ).to(device)
     init_checkpoint_info: dict[str, object] = {}
@@ -2039,6 +2126,7 @@ def main() -> None:
                 or args.supervision_strategy == "late_conflict_adapter_routing"
                 or args.supervision_strategy == "dynamic_residual_stability_routing"
                 or args.supervision_strategy == "hssg_region_routed_readout"
+                or args.supervision_strategy == "hssg_learnability_region_routing"
             )
             output = model(
                 x,
@@ -2102,6 +2190,20 @@ def main() -> None:
                     args.step_loss_alpha,
                 )
                 supervision_steps += 1
+            elif args.supervision_strategy == "hssg_learnability_region_routing":
+                pred_loss, time_loss, unit_loss, unit = learnability_region_routed_readout_loss(
+                    output["base_prediction"],
+                    output["region_readout_residual"],
+                    y,
+                    x,
+                    args.supervision_block_size,
+                    args.supervision_condition_top_ratio,
+                    args.supervision_aux_weight,
+                    supervision_residual_periods,
+                    args.max_pred_len,
+                    args.step_loss_alpha,
+                )
+                supervision_steps += 1
             else:
                 pred_loss, time_loss, unit_loss, unit = horizon_decoupled_supervision_loss(
                     pred,
@@ -2137,7 +2239,7 @@ def main() -> None:
                 error_energy_losses.append(float(error_energy_loss.detach().cpu()))
                 error_smoothness_losses.append(float(error_smoothness_loss.detach().cpu()))
             loss.backward()
-            if args.supervision_strategy == "hssg_region_routed_readout":
+            if args.supervision_strategy in {"hssg_region_routed_readout", "hssg_learnability_region_routing"}:
                 region_grad_norms["early"].append(parameter_grad_norm(model, "region_readout_heads.0."))
                 region_grad_norms["middle"].append(parameter_grad_norm(model, "region_readout_heads.1."))
                 region_grad_norms["late"].append(parameter_grad_norm(model, "region_readout_heads.2."))
@@ -2389,6 +2491,7 @@ def main() -> None:
         "region_routed_readout_rank": args.region_routed_readout_rank,
         "region_routed_readout_dropout": args.region_routed_readout_dropout,
         "region_routed_readout_scale": args.region_routed_readout_scale,
+        "region_routed_readout_detach_input": args.supervision_strategy == "hssg_learnability_region_routing",
         "component_rank": args.supervision_component_rank,
         "component_beta": args.supervision_component_beta,
         "component_alpha": args.supervision_component_alpha,

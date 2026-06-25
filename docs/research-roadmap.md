@@ -1366,6 +1366,29 @@ prefix-stable shared representation。
 gradient routing：让 late/noisy units 根据 residual stability / predictability 决定更新
 shared path、region path，或 no-update path，同时保护 single-prefix 的 short-horizon gain。
 
+#### HSSG-B/C Plan：Learnability-Conditioned Region Routing
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 6/7：重设计并实现 HSSG-A 失败后的最小候选 |
+| `problem` | HSSG-A 的 fixed region path 改善 late/long，但牺牲 ETTh2 h96 和 Weather early/middle；adapter-only dynamic routing 又太弱 |
+| `existence_evidence` | HSSG-A late gate partial pass；RG-B residual-stability router 非 collapse；OP-A 证明 adapter-only carrier 不足 |
+| `idea` | 保留 region-routed readout 作为 richer carrier，但只让 residual-stability learnable blocks 更新 detached region path；noisy/ambiguous blocks 不给 auxiliary pressure |
+| `theory_check` | 如果 early/prefix gain 来自 shared base，而 late/structured residual 需要独立 path，则 base prefix-risk + learnable-region auxiliary 应同时保住 h96/h192 并修复 h720 late |
+| `design` | 新策略 `hssg_learnability_region_routing`：`base_pred` 用 h720-only `prefix_risk` 更新 shared path；`base_pred.detach() + region_residual` 只在 learnable blocks 上更新 detached-input region heads |
+| `gate` | vs `single_720_prefix_risk` 至少 `5/8` main wins；ETTh2 h96/h192 不超过 `+1%`；Weather h720 late vs R.3 gap `<= +1%`；trace 中 learnable/noisy buckets 与 region grad norm 非 collapse |
+| `artifacts` | `docs/code-explanation/phase4-hssg-learnability-region-routing.md`；`scripts/remote/run_phase4_hssg_learnability_routing_gate.sh` |
+| `decision` | 已进入实现与 remote gate 准备；若失败，不 sweep aux/rank，先判断 failure 是 carrier interference 还是 learnability proxy 错误 |
+
+[Implementation Note] `hssg_learnability_region_routing` 与 HSSG-A 的关键差异是
+`region_routed_readout_detach_input=True` 和 masked auxiliary。shared base 不通过 region
+auxiliary 更新；region path 只看 residual-stability learnable blocks。
+
+[Rollback] 若该 gate 仍牺牲 short/early，回 Step 4/6 重新设计 carrier，不能继续在
+target-set readout 旁堆 residual path；若 only Weather 失败且 trace 显示 learnability bucket
+有意义，回 Step 5 改进 predictability/residual-stability proxy；若 region grad/residual 接近零，
+回 Step 7 修初始化或 loss scale。
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：
