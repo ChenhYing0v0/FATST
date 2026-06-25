@@ -1,0 +1,9 @@
+strategy,baseline_strategy,settings,mse_wins,mae_wins,mean_relative_mse_pct,mean_relative_mae_pct,horizon
+RG-B_dynamic_residual_stability,D0_full_time_mse,2,1,1,-3.6226362593303696,-1.3388367292233583,96
+RG-B_dynamic_residual_stability,D0_full_time_mse,2,2,1,-3.3649465324455123,-1.6864077191638238,192
+RG-B_dynamic_residual_stability,D0_full_time_mse,2,2,2,-1.5316541990314236,-1.1227119361383708,336
+RG-B_dynamic_residual_stability,D0_full_time_mse,2,2,2,-2.4154800496516526,-1.5208548899477536,720
+RG-B_dynamic_residual_stability,D1_r3_prefix_risk,2,0,0,3.8528469569914847,3.8226749349085654,96
+RG-B_dynamic_residual_stability,D1_r3_prefix_risk,2,1,1,1.2821537879116884,1.2052729855968003,192
+RG-B_dynamic_residual_stability,D1_r3_prefix_risk,2,0,0,2.401851906430219,1.120633133497806,336
+RG-B_dynamic_residual_stability,D1_r3_prefix_risk,2,1,1,1.3183341425971051,0.7123893194737552,720

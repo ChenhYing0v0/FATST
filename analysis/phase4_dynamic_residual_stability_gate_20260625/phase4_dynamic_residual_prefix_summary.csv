@@ -1,0 +1,7 @@
+model,strategy,dataset,max_prefix_mismatch_mse,max_prefix_mismatch_mae
+PatchEncoderDynamicResidualStabilityRouting,RG-B_dynamic_residual_stability,ETTh2,1.064323833872751e-14,5.572809058662642e-08
+PatchEncoderDynamicResidualStabilityRouting,RG-B_dynamic_residual_stability,Weather,1.1430635931330372e-14,5.995215701659617e-08
+PatchEncoderFullTimeMSE720,D0_full_time_mse,ETTh2,1.3651581730019565e-14,6.475393377058936e-08
+PatchEncoderFullTimeMSE720,D0_full_time_mse,Weather,9.662900193267276e-15,5.523130397477871e-08
+PatchEncoderR3PrefixRisk,D1_r3_prefix_risk,ETTh2,1.4735178273947783e-14,6.577780453653759e-08
+PatchEncoderR3PrefixRisk,D1_r3_prefix_risk,Weather,9.959660727436662e-15,5.550196036097077e-08

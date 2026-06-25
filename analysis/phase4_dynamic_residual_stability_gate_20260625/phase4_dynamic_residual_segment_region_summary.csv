@@ -1,0 +1,7 @@
+strategy,baseline_strategy,future_region,segments,mse_wins,mean_relative_mse_pct,mean_relative_mae_pct
+RG-B_dynamic_residual_stability,D0_full_time_mse,early_1_96,8,4,-2.6270990493465125,-0.7809180598363261
+RG-B_dynamic_residual_stability,D0_full_time_mse,late_337_720,2,2,-3.282990062221841,-2.1273738952402366
+RG-B_dynamic_residual_stability,D0_full_time_mse,middle_97_336,10,10,-1.4554741459758869,-1.1979518310941395
+RG-B_dynamic_residual_stability,D1_r3_prefix_risk,early_1_96,8,0,3.975560625311647,3.8605729654292458
+RG-B_dynamic_residual_stability,D1_r3_prefix_risk,late_337_720,2,1,0.6143952302677447,0.22454416623695073
+RG-B_dynamic_residual_stability,D1_r3_prefix_risk,middle_97_336,10,2,1.5685209882015205,0.32206877777090637

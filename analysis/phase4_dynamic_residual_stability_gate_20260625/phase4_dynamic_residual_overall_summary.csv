@@ -1,0 +1,3 @@
+strategy,baseline_strategy,settings,mse_wins,mae_wins,mean_relative_mse_pct,mean_relative_mae_pct
+RG-B_dynamic_residual_stability,D0_full_time_mse,8,7,6,-2.7336792601147395,-1.4172028186183265
+RG-B_dynamic_residual_stability,D1_r3_prefix_risk,8,2,2,2.2137966984826245,1.7152425933692317

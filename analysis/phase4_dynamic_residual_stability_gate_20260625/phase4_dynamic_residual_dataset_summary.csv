@@ -1,0 +1,5 @@
+strategy,baseline_strategy,settings,mse_wins,mae_wins,mean_relative_mse_pct,mean_relative_mae_pct,dataset
+RG-B_dynamic_residual_stability,D0_full_time_mse,4,4,4,-5.049265375234599,-2.882981451879485,ETTh2
+RG-B_dynamic_residual_stability,D0_full_time_mse,4,3,2,-0.41809314499487993,0.04857581464283167,Weather
+RG-B_dynamic_residual_stability,D1_r3_prefix_risk,4,2,2,0.055425083641105766,0.5406245313439695,ETTh2
+RG-B_dynamic_residual_stability,D1_r3_prefix_risk,4,0,0,4.372168313324143,2.889860655394494,Weather
