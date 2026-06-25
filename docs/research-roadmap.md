@@ -1438,12 +1438,47 @@ learning-rate/early-best calibration，或让 routing 更新 `condition_head/tar
 | `theory_check` | 如果 shared representation 被过快 optimization 破坏，较低 LR 应延后 best epoch、降低 drift，并给 HSSG-A region path 更稳定训练空间 |
 | `design` | `single_720_prefix_risk`、`r3_prefix_risk`、`hssg_region_routed_readout`；LR `1e-4/5e-5/3e-5`；ETTh2 + Weather；seed `2021` |
 | `gate` | best epoch 后移且 validation drift 下降；HSSG-A 相对 single-prefix 至少 `5/8` main wins；ETTh2 h96/h192 不超过 `+1%`；Weather h720 late 仍接近 R.3 |
-| `artifacts` | `docs/code-explanation/phase4-protocol-calibration-gate.md`；`scripts/remote/run_phase4_protocol_calibration_gate.sh` |
-| `decision` | 已进入 remote gate 准备；若 lower LR 不能修复 HSSG-A，则回 Step 6 设计 richer carrier，而不是继续 protocol tuning |
+| `artifacts` | `docs/code-explanation/phase4-protocol-calibration-gate.md`；`scripts/remote/run_phase4_protocol_calibration_gate.sh`；`analysis/phase4_protocol_calibration_gate_20260625/phase4_protocol_calibration_gate_report.md` |
+| `decision` | Gate 已完成；lower LR 部分改善 trajectory，但不能修复 HSSG-A 对 R.3 的 Weather gap，回 Step 6 设计 richer carrier |
 
 [Implementation Note] 该 gate 是 protocol diagnostic，不是新方法。它复用现有 HSSG runner，
 只改变 `LEARNING_RATE` 和 output root；每个 LR 独立写入
 `/home/yingch/exp_outputs/r-2026-fatst/phase4_protocol_calibration_gate/lr_*`。
+
+#### Phase4-PTC Result：Protocol Helps, Carrier Still Fails
+
+[Fact] 18 个 run 全部完成：`3 LR × 3 strategies × 2 datasets`。结果归档在
+`artifacts/runs/phase4_protocol_calibration_gate`，分析报告在
+`analysis/phase4_protocol_calibration_gate_20260625/phase4_protocol_calibration_gate_report.md`。
+
+[Strong Evidence] 降低 LR 确实缓解了 early-best / drift：HSSG-A 的 mean best epoch 从
+`1.5` 后移到 `6.5`，mean post-best validation drift 从 `14.86%` 降到 `6.56%`。
+这说明 protocol bottleneck 是真实存在的，不能忽略。
+
+[Strong Evidence] 但 protocol calibration 没有把 HSSG-A 修成主线候选。`3e-5` 下
+HSSG-A 相对 single-prefix 达到 `6/8` MSE wins，但相对 R.3 只有 `4/8` wins；
+Weather 上相对 R.3 是 `0/4` wins，Weather h720 比 R.3 差 `+3.37%`。`5e-5`
+虽然是 HSSG-A 的最佳 mean MSE setting，但相对 R.3 只有 `2/8` wins。
+
+[Decision] Phase4-PTC gate 不通过。不能继续把失败解释为“learning rate 没调好”，也不应
+继续在 `hssg_region_routed_readout` 上 sweep `rank/dropout/aux/top_ratio`。下一步回
+Step 6：设计能更新 `condition_head/target_states` 或 adapter 子空间的 carrier，让
+supervision scheduling 决定 gradient 进入哪里，而不是只在 detached low-rank readout path
+上承接难预测区域。
+
+#### Phase4-SCC Plan：State/Condition Carrier Scheduling
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 6：重新设计 carrier，而不是继续修补 HSSG readout |
+| `problem` | 当前 scheduling signal 有效但 carrier 太弱：loss / readout reweight 可以改变 exposure，却不能稳定改善 Weather/R.3 |
+| `existence_evidence` | PTC 表明 lower LR 改善 drift；HSSG-A 在 ETTh2 可赢，但 Weather 相对 R.3 全输，说明瓶颈不是有没有 signal，而是 signal 更新的位置 |
+| `idea` | Horizon-agnostic supervision scheduling should decide where gradient updates: shared state, condition head, or lightweight adapter, not only how much loss a future unit receives |
+| `theory_check` | 若难预测 future unit 的梯度直接压 shared backbone 会损害可预测结构，则应把该梯度约束到可控 state/condition 子空间；这比纯 loss downweight 更接近 SRP-style “selective update / protect useful representation” 思路 |
+| `design` | 先做最小 carrier gate：冻结 backbone 主干，只开放 `condition_head/target_states` 或小 adapter；对 high-risk future units 执行 gated gradient routing；保留 R.3/single 作为 controls |
+| `gate` | Weather 相对 R.3 至少不劣于 `+0.5%` mean MSE；ETTh2 不牺牲 h96/h192；training drift 不高于 PTC `3e-5` HSSG-A；必须给出 gradient/update-path 诊断 |
+| `artifacts` | 待实现：code explanation、runner、analysis script |
+| `decision` | 若 SCC gate 仍不能接近 R.3，则回 Step 2/3 重估 Phase4 主问题是否应从 scheduling 转向 architecture/pretraining |
 
 ## 历史证据索引
 
