@@ -1480,6 +1480,85 @@ supervision scheduling 决定 gradient 进入哪里，而不是只在 detached l
 | `artifacts` | 待实现：code explanation、runner、analysis script |
 | `decision` | 若 SCC gate 仍不能接近 R.3，则回 Step 2/3 重估 Phase4 主问题是否应从 scheduling 转向 architecture/pretraining |
 
+#### Phase4-SCC-E1 Experiment Plan：Condition Carrier Gate
+
+[Purpose] 下一步实验不再问 “哪个 horizon / region 应该加权更多”，而是问：
+**同一个 horizon-agnostic scheduling signal，如果允许它更新更靠近主预测路径的
+`condition_head / target_states` carrier，是否能在 official validation selection 下超过或接近 R.3？**
+
+[Rationale] 现有证据链支持该实验，但也要求它保持克制：
+
+1. [Strong Evidence] PTC 表明 lower LR 可以改善 trajectory，因此后续 gate 采用更稳的
+   `5e-5` 为主 LR，并保留 `3e-5` 作为 sensitivity check；
+2. [Strong Evidence] RG-A/RG-B/OP-A 证明 output-side tiny adapter 或 adapter-only finetune
+   不是足够 carrier；
+3. [Strong Evidence] HSSG-A 证明 region/readout routing 在 ETTh2 有信号，但 Weather 对 R.3
+   仍失败，说明更新位置太晚或 capacity 太弱；
+4. [Hypothesis] 若 Weather 的 long/late structure 需要改变 `gamma/beta` 或 target-state
+   semantics，而不是只叠 residual，那么 condition/state carrier 应比 detached readout/adapter
+   更有效。
+
+**Minimal Gate Matrix**
+
+| Group | Strategy | Purpose | LR | Dataset | Seed |
+| --- | --- | --- | --- | --- | --- |
+| Control | `single_720_prefix_risk` | 当前 horizon-agnostic single-prefix control | `5e-5` | ETTh2, Weather | 2021 |
+| Control | `r3_prefix_risk` | 当前 strongest internal baseline | `5e-5` | ETTh2, Weather | 2021 |
+| Negative carrier control | `dynamic_residual_stability_routing` | 复核同一 routing signal 在 adapter carrier 上的上限 | `5e-5` | ETTh2, Weather | 2021 |
+| Candidate A | `scc_condition_delta_detached` | routing signal 只更新 zero-init condition-delta head，不更新 shared backbone | `5e-5` | ETTh2, Weather | 2021 |
+| Candidate B | `scc_condition_delta_state_open` | routing signal 更新 condition-delta head + target-state path 的受控子空间 | `5e-5` | ETTh2, Weather | 2021 |
+
+[Design Details]
+
+- `condition_delta` 作用位置：`target_states -> condition_head -> gamma/beta -> conditioned`
+  之间，优先做 zero-init low-rank 或 small MLP delta，避免初始破坏 base prediction；
+- `scc_condition_delta_detached`：`target_states.detach()` 进入 condition delta，只测试 carrier
+  capacity，不让 auxiliary gradient 污染 state generator；
+- `scc_condition_delta_state_open`：允许 auxiliary gradient 进入 target-state / condition path，
+  但冻结或弱化 encoder/history path，避免 noisy future unit 直接改 shared history representation；
+- routing signal 复用 residual-stability / predictability 逻辑：`learnable_conflict` route 到
+  condition carrier，`noisy_conflict` 不提供额外 positive pressure；
+- main loss 仍保留 official prediction loss，condition carrier 只承担 gated auxiliary pressure；
+- 初始化必须保证 `condition_delta=0` 时等价于 base，避免把收益写成参数量增加。
+
+[Validation / Checkpoint Diagnostics]
+
+Official model selection 继续使用当前 `val_mean_mse = mean(h96,h192,h336,h720)`，这是主结果。
+但 E1 必须额外记录以下 diagnostic views：
+
+- `best_epoch_val_mean`：官方 checkpoint；
+- `best_epoch_short_mean = mean(h96,h192)`；
+- `best_epoch_long_mean = mean(h336,h720)`；
+- `best_epoch_h720`；
+- official checkpoint 与 long/h720 oracle epoch 的 validation gap。
+
+[Gate]
+
+E1 只在以下条件同时满足时进入扩展实验：
+
+1. official checkpoint 下，Candidate A 或 B 相对 R.3 的 mean MSE 不劣于 `+0.5%`；
+2. Weather 相对 R.3 至少 `2/4` horizon wins，且 h720 不劣于 `+0.5%`；
+3. ETTh2 h96/h192 不劣于 R.3 超过 `+1.0%`；
+4. post-best validation drift 不高于 PTC `3e-5` HSSG-A 的 `6.56%` 太多，目标 `<8%`；
+5. trace 必须证明 carrier 被实际使用：condition delta norm 非零但不过度主导，learnable/noisy
+   route 分布非 collapse。
+
+[Expansion If Pass]
+
+- 加 `3e-5` LR sensitivity；
+- 加 `ETTm1` 或 `ETTm2`，优先选择 Weather-like failure 是否复现；
+- 加 seed `2022`；
+- 若 Candidate B 赢 Candidate A，进一步做 update-path ablation：open target-state only /
+  open condition-head only / open both。
+
+[Rollback If Fail]
+
+若 Candidate A/B 在 official checkpoint 下都不能接近 R.3，但 `best_epoch_h720` 有明显收益，
+说明机制信号存在但 checkpoint selection 与主目标冲突；回 Step 5 研究 selection-sensitive
+training / regularization。若 official 与 oracle views 都无收益，则回 Step 2/3，重新判断 Phase4
+是否应从 supervision scheduling 转向 future-aware architecture 或 pretraining，而不是继续 carrier
+局部修补。
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：
