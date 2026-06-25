@@ -1,0 +1,5 @@
+model,strategy,settings,mean_mse,mean_mae
+PatchEncoderFullTimeMSE720,D0_full_time_mse,8,0.31157695688307285,0.3436331022530794
+PatchEncoderSingle720PrefixRisk,D1_single_720_prefix_risk,8,0.29777757078409195,0.3345339819788933
+PatchEncoderR3PrefixRisk,D2_r3_prefix_risk,8,0.29666234366595745,0.333154721185565
+PatchEncoderHSSGRegionRoutedReadout,HSSG-A_region_routed_readout,8,0.29719136841595173,0.33647884614765644

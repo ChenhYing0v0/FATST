@@ -1329,6 +1329,43 @@ HSSG-A 通过需要同时满足：
 - 如果只有 Weather 失败，回 Step 5 分析 Weather 的 late/noisy region 是否需要 explicit stability score；
 - 如果 audit 显示 routed paths collapse，回 Step 7 修实现或初始化，不做理论否定。
 
+#### HSSG-A Gate Result：Region-Routed Readout
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 9/10：远程结果评估与 gate decision |
+| `problem` | HSSG-A 要验证 fixed early/middle/late low-rank readout path 是否足以把 prefix-risk supervision 转化为有效 gradient routing |
+| `existence_evidence` | remote artifacts 位于 `/home/yingch/exp_outputs/r-2026-fatst/phase4_hssg_gradient_routing_gate`；本地分析位于 `analysis/phase4_hssg_gradient_routing_gate_20260625` |
+| `idea` | 在 h720-only `prefix_risk` objective 下，用 region-routed readout residual path 分担 shared readout 的 future-region gradient pressure |
+| `theory_check` | 若该机制成立，应保留 single-prefix 的 short/prefix gain，同时缩小 Weather h720 late 相对 R.3 的缺口 |
+| `design` | ETTh2 + Weather；`full_time_mse`、`single_720_prefix_risk`、`r3_prefix_risk`、`hssg_region_routed_readout`；seed `2021` |
+| `gate` | vs single overall 改善且 `>=5/8` main wins；Weather h720 late vs R.3 gap `<= +1%`；ETTh2 h96/h192 vs single 不超过 `+1%`；routed path 非 collapse |
+| `artifacts` | `scripts/analyze_phase4_hssg_gradient_routing_gate.py`；`analysis/phase4_hssg_gradient_routing_gate_20260625/phase4_hssg_gradient_routing_gate_report.md` |
+| `decision` | `fail_as_core_candidate`；HSSG-A 是 partial evidence，不作为 core method 继续扩展 |
+
+[Fact] HSSG-A absolute mean MSE 相对 `single_720_prefix_risk` 为 `-0.20%`，但
+per-setting relative MSE 为 `+0.23%`，且只赢 `4/8` main settings，未达到 `5/8`
+gate。相对 R.3，absolute mean MSE 为 `+0.18%`，per-setting relative MSE 为
+`+0.67%`，只赢 `3/8`。
+
+[Fact] HSSG-A 的 late/long 信号不是无效：Weather h720 相对 single-prefix 为
+`-1.14%`，Weather h720 late segment `337-720` 相对 single-prefix 为 `-1.74%`，
+相对 R.3 仅 `+0.16%`，满足“接近 R.3”的 late gate。
+
+[Counter-Evidence] HSSG-A 牺牲了 short/early 优势：ETTh2 h96 相对 single-prefix
+为 `+1.61%`，超过 `+1%` gate；Weather early region 相对 single-prefix 和 R.3 都
+不稳。这说明 fixed region-routed residual path 把一部分 late/long 修好了，但没有保住
+prefix-stable shared representation。
+
+[Audit] routed path 非 collapse，但幅度偏小。HSSG Weather h720 的
+`region_readout_residual` all MAE 为 `0.036413`，late MAE 为 `0.038856`；best epoch
+仍非常早，ETTh2 为 `2/12`，Weather 为 `1/11`。
+
+[Decision] 保留 HSSG 主线，但回到 Step 6 重设计方法。下一步不是 sweep
+`rank/dropout/scale`，也不是继续堆 loss weight；应进入 learnability-conditioned
+gradient routing：让 late/noisy units 根据 residual stability / predictability 决定更新
+shared path、region path，或 no-update path，同时保护 single-prefix 的 short-horizon gain。
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：

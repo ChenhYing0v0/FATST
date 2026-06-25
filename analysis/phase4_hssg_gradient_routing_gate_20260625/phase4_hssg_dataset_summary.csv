@@ -1,0 +1,7 @@
+strategy,baseline_strategy,settings,mse_wins,mae_wins,mean_relative_mse_pct,mean_relative_mae_pct,dataset
+HSSG-A_region_routed_readout,D0_full_time_mse,4,4,4,-5.74967137919902,-3.1893128996201447,ETTh2
+HSSG-A_region_routed_readout,D0_full_time_mse,4,4,2,-2.634092783646469,-0.3087520485122147,Weather
+HSSG-A_region_routed_readout,D1_single_720_prefix_risk,4,3,1,-0.4515502010065897,0.09842732910037844,ETTh2
+HSSG-A_region_routed_readout,D1_single_720_prefix_risk,4,1,1,0.9130087828657985,1.7130732202839645,Weather
+HSSG-A_region_routed_readout,D2_r3_prefix_risk,4,3,2,-0.6991663666526399,0.2103589979667586,ETTh2
+HSSG-A_region_routed_readout,D2_r3_prefix_risk,4,0,0,2.046235249906819,2.5233643711101204,Weather
