@@ -761,6 +761,157 @@ dynamic conflict/predictability router：
 3. noisy-conflict units 应降低或阻断 shared gradient，而不是固定 late adapter 学习；
 4. gate 继续要求 Weather vs R.3 不再 `0/4` collapse，且 ETTh2 late gain 不丢失。
 
+### Phase4-RG-B：Residual-Stability Dynamic Routing 诊断
+
+`current_step`: Step 5/6 complete；RG-A 失败后重新定义 dynamic conflict proxy，并验证它是否能解释
+fixed late route 的失败。
+
+[Problem]
+
+RG-A 相对 `full_time_mse` 有稳定收益，但相对 R.3 失败，尤其 Weather `late_337_720`
+segment 没被修复。因此问题不是“late supervision 有没有冲突”，而是 fixed late route
+把 learnable conflict 和 noisy conflict 混在一起，导致 adapter 也在学习不该承载的 noisy units。
+
+[Existence Evidence]
+
+- S1/S2 说明 high-novelty / predictability scheduling 相对 `full_time_mse` 有机制信号；
+- gradient conflict diagnostic 说明 late/noisy supervision 会与 shared representation 发生冲突；
+- RG-A 说明 gradient destination 是有效轴，但 fixed late destination 不够；
+- residual-stability diagnostic 用 train labels 进一步验证：selected high-novelty units 内部确实存在
+  learnable/noisy 分化。
+
+[Idea]
+
+将 HSS 主线升级为：
+
+> Horizon-agnostic supervision scheduling decides not only how much a future unit supervises,
+> but also where its gradient is allowed to update.
+
+这里的关键不是“按 horizon 选 loss”，而是对 training 中的 future units 做
+state/difficulty/residual-stability conditioned routing。evaluation 仍保持 benchmark horizons；
+training strategy 可以完全 horizon-agnostic。
+
+[Theory Check]
+
+[Strong Evidence] 如果一个 high-novelty block 相对 seasonal/persistence baseline 有高 gain，
+且 best residual 平滑，那么它更像 structured residual，适合交给 adapter 或 auxiliary branch 学习。
+
+[Strong Evidence] 如果一个 high-novelty block 在扣除 best baseline 后 residual 仍高频震荡，
+且 local variation 高，那么它更可能是 noisy conflict；继续让它更新 shared path 或 adapter
+可能伤害可预测部分。
+
+[Speculative] 这个 proxy 还没有证明能在线稳定工作。当前诊断使用 dataset-relative quantiles；
+训练中需要设计 batch-level 或 warmup-calibrated threshold，并记录 trace。
+
+[Design]
+
+- diagnostic script:
+  `scripts/analyze_phase4_residual_stability_diagnostic.py`;
+- code explanation:
+  `docs/code-explanation/phase4-residual-stability-diagnostic.md`;
+- analysis artifacts:
+  `analysis/phase4_residual_stability_diagnostic_20260625`;
+- train split only，`seq_len=336`，`pred_len=720`，`block_size=48`;
+- selected units: 每个 window 内 top `25%` `novelty_mse` blocks；
+- baseline candidates: persistence, seasonal `24/48/96/168`;
+- bucket:
+  `learnable_conflict`, `noisy_conflict`, `ambiguous_conflict`。
+
+[Fact] Selection summary：
+
+| Dataset | Region | Selected share | Gain over persistence | Residual smoothness | Local variation |
+| --- | --- | ---: | ---: | ---: | ---: |
+| `ETTh2` | `early_1_96` | `6.0%` | `2.346` | `0.453` | `0.103` |
+| `ETTh2` | `middle_97_336` | `26.7%` | `2.306` | `0.349` | `0.103` |
+| `ETTh2` | `late_337_720` | `67.3%` | `1.827` | `0.238` | `0.095` |
+| `Weather` | `early_1_96` | `8.1%` | `2.271` | `0.294` | `0.964` |
+| `Weather` | `middle_97_336` | `26.1%` | `2.411` | `0.274` | `0.783` |
+| `Weather` | `late_337_720` | `65.8%` | `1.957` | `0.199` | `0.526` |
+
+[Fact] Late bucket split：
+
+| Dataset | Bucket | Share in late selected units | Gain | Smoothness | Variation | Baseline mode |
+| --- | --- | ---: | ---: | ---: | ---: | --- |
+| `ETTh2` | `ambiguous_conflict` | `68.8%` | `1.527` | `0.180` | `0.094` | `persistence` |
+| `ETTh2` | `learnable_conflict` | `9.5%` | `2.316` | `0.107` | `0.068` | `seasonal_168` |
+| `ETTh2` | `noisy_conflict` | `21.7%` | `2.562` | `0.479` | `0.112` | `seasonal_168` |
+| `Weather` | `ambiguous_conflict` | `51.0%` | `1.817` | `0.110` | `0.068` | `persistence` |
+| `Weather` | `learnable_conflict` | `16.2%` | `2.839` | `0.078` | `0.040` | `seasonal_48` |
+| `Weather` | `noisy_conflict` | `32.8%` | `1.738` | `0.396` | `1.478` | `seasonal_48` |
+
+[Analysis]
+
+[Strong Evidence] Weather 的问题不是 late units 全部不可学。Weather late 中仍有
+`16.2%` learnable-conflict，且 gain `2.839`；这说明完全避开 hard units 会丢掉可学习信号。
+
+[Strong Evidence] Weather late 同时有 `32.8%` noisy-conflict，且 local variation `1.478`，
+远高于 ETTh2 late noisy 的 `0.112`。这解释了 fixed late adapter 为什么没有修复 Weather：
+它把可学习 residual 与高频 noisy residual 放进同一个 adapter route。
+
+[Strong Evidence] Weather noisy-conflict 不只出现在 late：early noisy share `48.1%`，
+middle noisy share `45.3%`。因此下一步不应继续固定 late start，而应使用 bucket-conditioned
+route。
+
+[Decision]
+
+RG-B 作为 Step 5/6 通过：它不是最终方法结果，但足以支持下一个最小方法候选
+`dynamic_residual_stability_routing`。
+
+下一步进入 Step 6/7：
+
+1. dense base 仍使用 full 720 supervision，保留统一多 horizon carrier；
+2. selected high-novelty units 内部按 residual stability 分桶；
+3. `learnable_conflict` route 到 adapter auxiliary；
+4. `noisy_conflict` 不进入 adapter auxiliary，并降低或阻断其对 shared path 的额外压力；
+5. `ambiguous_conflict` 默认只保留 dense base 或极弱 auxiliary；
+6. trace 必须记录 bucket share、routed loss、adapter residual magnitude、noisy suppression ratio。
+
+[Implementation]
+
+[Fact] Step 7 最小实现已完成：
+
+- training strategy:
+  `dynamic_residual_stability_routing`;
+- modified training entry:
+  `baselines/patch_encoder_target_set_decoder/train.py`;
+- remote runner:
+  `scripts/remote/run_phase4_dynamic_residual_stability_gate.sh`;
+- shared runner run name:
+  `PatchEncoderDynamicResidualStabilityRouting`;
+- code explanation:
+  `docs/code-explanation/phase4-dynamic-residual-stability-routing.md`。
+
+[Fact] Dynamic strategy 的 adapter effective start step 被强制为 `1`，避免继承 RG-A 的
+fixed late mask。否则 early/middle learnable blocks 会被 router 选中，但 adapter residual
+在模型层面被置零。
+
+[Fact] 本地 smoke 仅验证代码路径，不作为实验结果：
+
+- dataset: `Weather`;
+- strategy: `dynamic_residual_stability_routing`;
+- `epochs=1`, `steps_per_epoch=1`, `max_eval_batches=1`, `batch_size=8`, `device=cpu`;
+- trace example:
+  `learnable_blocks=1`, `noisy_blocks=2`, `ambiguous_blocks=1`,
+  `noisy_suppression_ratio=0.5`；
+- 该 smoke 证明 forward/loss/trace 能运行，但不能证明性能。
+
+[Gate]
+
+`dynamic_residual_stability_routing` small gate 仍只跑 `ETTh2` 与 `Weather`：
+
+1. vs `full_time_mse` 必须保留 S1/S2/RG-A 已经证明的收益；
+2. Weather vs R.3 不能继续 `0/4` collapse；
+3. Weather `late_337_720` segment 必须优于 RG-A；
+4. ETTh2 late segment 的正信号不能消失；
+5. trace 中 learnable/noisy bucket 不能塌缩为单一 bucket；
+6. prefix consistency 仍必须 numerical-zero。
+
+[Rollback]
+
+如果 RG-B 方法 gate 失败，不继续加 MoE 或 future-aware module。回到 Step 5：
+重新检验 residual-stability proxy 是否在线不稳定；必要时改成 offline-calibrated threshold
+或完全转向 state-conditioned gradient blocking，而不是继续堆 adapter。
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：

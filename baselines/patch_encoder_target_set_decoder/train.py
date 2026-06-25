@@ -44,6 +44,13 @@ class SupervisionUnit:
     predictability_noisy_blocks: int = 0
     predictability_mean_weight: float = 1.0
     predictability_floor_weight: float = 0.0
+    residual_stability_learnable_blocks: int = 0
+    residual_stability_noisy_blocks: int = 0
+    residual_stability_ambiguous_blocks: int = 0
+    residual_stability_mean_gain: float = 0.0
+    residual_stability_mean_smoothness: float = 0.0
+    residual_stability_mean_variation: float = 0.0
+    residual_stability_noisy_suppression_ratio: float = 0.0
     adapter_start_step: int = 0
     adapter_active_steps: int = 0
     adapter_mean_abs_residual: float = 0.0
@@ -66,6 +73,16 @@ def parse_horizons(value: str) -> list[int]:
     if unknown:
         raise ValueError(f"Unsupported target horizons: {unknown}")
     return sorted(set(horizons))
+
+
+def parse_positive_ints(value: str) -> list[int]:
+    integers = [int(item.strip()) for item in value.split(",") if item.strip()]
+    if not integers:
+        raise ValueError("At least one integer value is required.")
+    invalid = [item for item in integers if item <= 0]
+    if invalid:
+        raise ValueError(f"Expected positive integers, got: {invalid}")
+    return sorted(set(integers))
 
 
 def metrics_by_horizon(pred: np.ndarray, true: np.ndarray) -> list[dict[str, float]]:
@@ -797,6 +814,145 @@ def late_conflict_adapter_routing_loss(
     return total_loss, time_loss, unit_loss, unit
 
 
+def dynamic_residual_stability_routing_loss(
+    base_pred: torch.Tensor,
+    adapter_residual: torch.Tensor,
+    true: torch.Tensor,
+    history: torch.Tensor,
+    block_size: int,
+    top_ratio: float,
+    aux_weight: float,
+    periods: list[int],
+) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, SupervisionUnit]:
+    if block_size <= 0:
+        raise ValueError("supervision block size must be positive.")
+    if not 0 < top_ratio <= 1:
+        raise ValueError("supervision condition top ratio must be in (0, 1].")
+    if aux_weight < 0:
+        raise ValueError("supervision auxiliary weight must be non-negative.")
+
+    horizon = true.shape[1]
+    seq_len = history.shape[1]
+    valid_periods = [period for period in periods if period <= seq_len]
+    if not valid_periods:
+        raise ValueError("At least one residual-stability period must be <= seq_len.")
+
+    blocks: list[tuple[int, int]] = []
+    novelty_scores = []
+    gain_scores = []
+    smoothness_scores = []
+    variation_scores = []
+    with torch.no_grad():
+        last_history = history[:, -1:, :]
+        for start in range(0, horizon, block_size):
+            end = min(start + block_size, horizon)
+            width = end - start
+            block = true[:, start:end, :]
+            persistence_ref = last_history.expand(-1, width, -1)
+            residual_candidates = [block - persistence_ref]
+            mse_candidates = [torch.mean(residual_candidates[0] * residual_candidates[0])]
+            for period in valid_periods:
+                offsets = seq_len - period + (torch.arange(width, device=true.device) % period)
+                seasonal_ref = history[:, offsets, :]
+                residual = block - seasonal_ref
+                residual_candidates.append(residual)
+                mse_candidates.append(torch.mean(residual * residual))
+
+            mse_tensor = torch.stack(mse_candidates)
+            residual_tensor = torch.stack(residual_candidates)
+            best_index = int(torch.argmin(mse_tensor).detach().cpu().item())
+            best_mse = mse_tensor[best_index]
+            best_residual = residual_tensor[best_index]
+            novelty = mse_tensor[0]
+            if width <= 1:
+                local_variation = torch.zeros((), device=true.device, dtype=true.dtype)
+                residual_first_diff = torch.zeros((), device=true.device, dtype=true.dtype)
+            else:
+                target_diff = block[:, 1:, :] - block[:, :-1, :]
+                residual_diff = best_residual[:, 1:, :] - best_residual[:, :-1, :]
+                local_variation = torch.mean(target_diff * target_diff)
+                residual_first_diff = torch.mean(residual_diff * residual_diff)
+
+            blocks.append((start, end))
+            novelty_scores.append(novelty)
+            gain_scores.append(novelty / torch.clamp(best_mse, min=1e-8))
+            smoothness_scores.append(residual_first_diff / torch.clamp(best_mse, min=1e-8))
+            variation_scores.append(local_variation)
+
+        novelty_tensor = torch.stack(novelty_scores)
+        top_blocks = max(1, min(len(blocks), int(round(len(blocks) * top_ratio))))
+        selected = torch.topk(novelty_tensor, k=top_blocks, largest=True).indices.tolist()
+        selected_gain = torch.stack([gain_scores[int(index)] for index in selected])
+        selected_smoothness = torch.stack([smoothness_scores[int(index)] for index in selected])
+        selected_variation = torch.stack([variation_scores[int(index)] for index in selected])
+
+        smooth_threshold = torch.median(selected_smoothness)
+        variation_threshold = torch.median(selected_variation)
+        sorted_gain = torch.sort(selected_gain).values
+        gain_index = min(len(selected) - 1, max(0, int(np.ceil(0.60 * len(selected))) - 1))
+        gain_threshold = sorted_gain[gain_index]
+
+        learnable_blocks = []
+        noisy_blocks = []
+        ambiguous_blocks = []
+        for offset, block_index in enumerate(selected):
+            gain = selected_gain[offset]
+            smoothness = selected_smoothness[offset]
+            variation = selected_variation[offset]
+            if gain >= gain_threshold and smoothness <= smooth_threshold:
+                learnable_blocks.append(int(block_index))
+            elif smoothness > smooth_threshold and variation >= variation_threshold:
+                noisy_blocks.append(int(block_index))
+            else:
+                ambiguous_blocks.append(int(block_index))
+
+        if not learnable_blocks:
+            learnability_score = selected_gain / (1.0 + selected_smoothness)
+            fallback = int(selected[int(torch.argmax(learnability_score).detach().cpu().item())])
+            learnable_blocks.append(fallback)
+            noisy_blocks = [block for block in noisy_blocks if block != fallback]
+            ambiguous_blocks = [block for block in ambiguous_blocks if block != fallback]
+
+        learnable_mask = torch.zeros(horizon, device=true.device, dtype=true.dtype)
+        for block_index in learnable_blocks:
+            start, end = blocks[block_index]
+            learnable_mask[start:end] = 1.0
+
+        mean_novelty = float(torch.mean(novelty_tensor[selected]).detach().cpu())
+        mean_gain = float(torch.mean(selected_gain).detach().cpu())
+        mean_smoothness = float(torch.mean(selected_smoothness).detach().cpu())
+        mean_variation = float(torch.mean(selected_variation).detach().cpu())
+
+    adapter_pred = base_pred.detach() + adapter_residual
+    time_loss = torch.mean((base_pred - true) ** 2)
+    unit_loss = masked_mse_loss(adapter_pred, true, learnable_mask)
+    total_loss = time_loss + aux_weight * unit_loss
+    active_steps = int(torch.sum(learnable_mask).detach().cpu().item())
+    noisy_suppression_ratio = len(noisy_blocks) / float(max(len(selected), 1))
+    unit = SupervisionUnit(
+        unit_type="dynamic_residual_stability",
+        active_steps=active_steps,
+        mask_ratio=active_steps / float(horizon),
+        condition_type="residual_stability",
+        condition_top_blocks=top_blocks,
+        condition_mean_score=mean_novelty,
+        auxiliary_weight=aux_weight,
+        predictability_learnable_blocks=len(learnable_blocks),
+        predictability_noisy_blocks=len(noisy_blocks),
+        residual_stability_learnable_blocks=len(learnable_blocks),
+        residual_stability_noisy_blocks=len(noisy_blocks),
+        residual_stability_ambiguous_blocks=len(ambiguous_blocks),
+        residual_stability_mean_gain=mean_gain,
+        residual_stability_mean_smoothness=mean_smoothness,
+        residual_stability_mean_variation=mean_variation,
+        residual_stability_noisy_suppression_ratio=noisy_suppression_ratio,
+        adapter_start_step=1,
+        adapter_active_steps=active_steps,
+        adapter_mean_abs_residual=float(torch.mean(torch.abs(adapter_residual)).detach().cpu()),
+    )
+    return total_loss, time_loss, unit_loss, unit
+
+
 def curriculum_phase(epoch: int, epochs: int) -> str:
     progress = epoch / float(max(epochs, 1))
     if progress <= 0.3:
@@ -1427,6 +1583,7 @@ def parse_args() -> argparse.Namespace:
             "conditioned_future_unit_scheduling",
             "predictability_downweight",
             "late_conflict_adapter_routing",
+            "dynamic_residual_stability_routing",
             "component_basis_top",
             "component_basis_balanced",
             "curriculum_units",
@@ -1446,6 +1603,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--supervision-condition-top-ratio", type=float, default=0.25)
     parser.add_argument("--supervision-aux-weight", type=float, default=0.1)
     parser.add_argument("--supervision-predictability-floor-weight", type=float, default=0.5)
+    parser.add_argument("--supervision-residual-periods", default="24,48,96,168")
     parser.add_argument("--supervision-adapter-start-step", type=int, default=337)
     parser.add_argument("--supervision-component-rank", type=int, default=16)
     parser.add_argument("--supervision-component-beta", type=float, default=0.25)
@@ -1515,6 +1673,7 @@ def main() -> None:
         raise ValueError("supervision aux weight must be non-negative.")
     if not 0 <= args.supervision_predictability_floor_weight <= 1:
         raise ValueError("supervision predictability floor weight must be in [0, 1].")
+    supervision_residual_periods = parse_positive_ints(args.supervision_residual_periods)
     if args.supervision_adapter_start_step <= 0:
         raise ValueError("supervision adapter start step must be positive.")
     if args.supervision_component_rank <= 0:
@@ -1584,6 +1743,10 @@ def main() -> None:
             "regime_hidden_dim": args.regime_hidden_dim,
             "regime_dropout": args.regime_dropout,
         }
+    supervision_adapter_start_step = (
+        1 if args.supervision_strategy == "dynamic_residual_stability_routing"
+        else args.supervision_adapter_start_step
+    )
     model = model_cls(
         args.seq_len,
         DATASETS[args.dataset].channels,
@@ -1615,8 +1778,11 @@ def main() -> None:
         future_confidence_temperature=args.future_confidence_temperature,
         future_confidence_floor=args.future_confidence_floor,
         future_recon_eps=args.future_recon_eps,
-        supervision_adapter=args.supervision_strategy == "late_conflict_adapter_routing",
-        supervision_adapter_start_step=args.supervision_adapter_start_step,
+        supervision_adapter=(
+            args.supervision_strategy
+            in {"late_conflict_adapter_routing", "dynamic_residual_stability_routing"}
+        ),
+        supervision_adapter_start_step=supervision_adapter_start_step,
         **model_kwargs,
     ).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
@@ -1724,6 +1890,7 @@ def main() -> None:
                 future_loss_enabled
                 or args.model_variant == "error_process"
                 or args.supervision_strategy == "late_conflict_adapter_routing"
+                or args.supervision_strategy == "dynamic_residual_stability_routing"
             )
             output = model(
                 x,
@@ -1764,6 +1931,18 @@ def main() -> None:
                     y,
                     args.supervision_adapter_start_step,
                     args.supervision_aux_weight,
+                )
+                supervision_steps += 1
+            elif args.supervision_strategy == "dynamic_residual_stability_routing":
+                pred_loss, time_loss, unit_loss, unit = dynamic_residual_stability_routing_loss(
+                    output["base_prediction"],
+                    output["adapter_residual"],
+                    y,
+                    x,
+                    args.supervision_block_size,
+                    args.supervision_condition_top_ratio,
+                    args.supervision_aux_weight,
+                    supervision_residual_periods,
                 )
                 supervision_steps += 1
             else:
@@ -1832,6 +2011,15 @@ def main() -> None:
                         "predictability_noisy_blocks": unit.predictability_noisy_blocks,
                         "predictability_mean_weight": unit.predictability_mean_weight,
                         "predictability_floor_weight": unit.predictability_floor_weight,
+                        "residual_stability_learnable_blocks": unit.residual_stability_learnable_blocks,
+                        "residual_stability_noisy_blocks": unit.residual_stability_noisy_blocks,
+                        "residual_stability_ambiguous_blocks": unit.residual_stability_ambiguous_blocks,
+                        "residual_stability_mean_gain": unit.residual_stability_mean_gain,
+                        "residual_stability_mean_smoothness": unit.residual_stability_mean_smoothness,
+                        "residual_stability_mean_variation": unit.residual_stability_mean_variation,
+                        "residual_stability_noisy_suppression_ratio": (
+                            unit.residual_stability_noisy_suppression_ratio
+                        ),
                         "adapter_start_step": unit.adapter_start_step,
                         "adapter_active_steps": unit.adapter_active_steps,
                         "adapter_mean_abs_residual": unit.adapter_mean_abs_residual,
@@ -2017,7 +2205,9 @@ def main() -> None:
         "condition_top_ratio": args.supervision_condition_top_ratio,
         "aux_weight": args.supervision_aux_weight,
         "predictability_floor_weight": args.supervision_predictability_floor_weight,
+        "residual_periods": supervision_residual_periods,
         "adapter_start_step": args.supervision_adapter_start_step,
+        "adapter_effective_start_step": supervision_adapter_start_step,
         "component_rank": args.supervision_component_rank,
         "component_beta": args.supervision_component_beta,
         "component_alpha": args.supervision_component_alpha,

@@ -47,6 +47,7 @@ run_name_for_strategy() {
     conditioned_future_unit_scheduling) echo "PatchEncoderConditionedFutureUnitScheduling" ;;
     predictability_downweight) echo "PatchEncoderPredictabilityDownweight" ;;
     late_conflict_adapter_routing) echo "PatchEncoderLateConflictAdapterRouting" ;;
+    dynamic_residual_stability_routing) echo "PatchEncoderDynamicResidualStabilityRouting" ;;
     component_basis_top) echo "PatchEncoderComponentTop" ;;
     component_basis_balanced) echo "PatchEncoderComponentBalanced" ;;
     curriculum_units) echo "PatchEncoderCurriculumUnits" ;;
