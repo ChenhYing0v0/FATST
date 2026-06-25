@@ -1,0 +1,2 @@
+group,settings,mixed_wins,single_wins,r3_wins,mixed_beats_full,single_beats_full,r3_beats_full,mean_mixed_vs_full_mse_pct,mean_single_vs_full_mse_pct,mean_r3_vs_full_mse_pct,mean_r3_vs_mixed_mse_pct,mean_r3_vs_single_mse_pct,mean_interaction_residual_abs
+all,8,1,2,5,8,8,8,-4.123790557369753,-4.3931733377438995,-4.830798280556629,-0.7398283389172742,-0.4329058443935385,-0.011971963569521904

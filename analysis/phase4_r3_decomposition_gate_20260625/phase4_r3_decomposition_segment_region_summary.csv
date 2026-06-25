@@ -1,0 +1,4 @@
+future_region,settings,mixed_wins,single_wins,r3_wins,mixed_beats_full,single_beats_full,r3_beats_full,mean_mixed_vs_full_mse_pct,mean_single_vs_full_mse_pct,mean_r3_vs_full_mse_pct
+early_1_96,8,0,2,6,8,8,8,-4.9045027546177495,-6.057191842991619,-6.391558816451908
+late_337_720,2,0,0,2,2,1,2,-2.7844003183879913,-1.6881162172872777,-3.8071524863038717
+middle_97_336,10,4,1,5,10,10,10,-3.022310153152011,-2.694018570726604,-2.9525941352945972

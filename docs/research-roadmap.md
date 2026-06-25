@@ -1171,15 +1171,15 @@ OP-A 不通过，不继续调 finetune lr 或 patience。回退 Step 5/6：
 
 | Field | Content |
 | --- | --- |
-| `current_step` | Step 5/6：先解释 R.3 的优势来源，再设计下一轮方法实验 |
+| `current_step` | Step 9/10：评估 decomposition artifacts，并决定 rollback/next direction |
 | `problem` | R.3 在 Phase4 中持续压过 `full_time_mse`、RG-B 和 OP-A，但它不是单一 step-weight baseline |
 | `existence_evidence` | `phase4_dynamic_residual_stability_gate`、`phase4_stabilized_routing_gate`、Phase2 objective-pressure diagnostic |
 | `idea` | 把 R.3 视作 compound protocol：mixed-horizon exposure + prefix-risk pressure，而不是“简单预测段权重” |
 | `theory_check` | 若不拆开 R.3，HSS 失败无法判断是输给 horizon exposure、loss weighting，还是二者交互 |
 | `design` | 先生成 R.3 diagnostic；随后运行 `full_time_mse`、`horizon_mixed`、`single_720_prefix_risk`、`r3_prefix_risk` 四个 controls |
 | `gate` | 若 `horizon_mixed` 接近 R.3，说明 exposure 是主因；若 `single_720_prefix_risk` 接近 R.3，说明 weighting 是主因；若两者都弱而 R.3 强，说明 interaction 是主因 |
-| `artifacts` | `analysis/phase4_r3_mechanism_diagnostic_20260625/`；`scripts/remote/run_phase4_r3_decomposition_gate.sh` |
-| `decision` | R.3 不作为 core story；下一步必须做 decomposition controls，再决定是否继续 HSS 的 architecture/gradient-routing 升级 |
+| `artifacts` | `analysis/phase4_r3_mechanism_diagnostic_20260625/`；`analysis/phase4_r3_decomposition_gate_20260625/`；`scripts/remote/run_phase4_r3_decomposition_gate.sh` |
+| `decision` | R.3 不作为 core story；prefix-risk pressure 是更干净的 HSS 起点，mixed-horizon exposure 保留为强对照而非主线 |
 
 [Fact] 当前 R.3 vs h720-only `full_time_mse720`：`8/8` MSE wins，mean relative MSE
 `-4.83%`。其中 ETTh2 为 `-5.07%`，Weather 为 `-4.59%`。
@@ -1196,17 +1196,39 @@ training exposure share 约为 `0.25/0.23/0.25/0.27`；Weather 约为
 当前 R.3 vs h720-only full-time 的 `-4.83%`。这支持“R.3 当前优势来自 compound protocol”
 而不是“prefix-risk 单独强大”的判断。
 
-[Decision] 不继续 repair R.3，也不把 R.3 包装成主贡献。下一轮实验只回答一个问题：
-R.3 优势到底来自 exposure、weighting，还是 interaction。只有这个问题回答清楚后，才继续
-设计 HSS 的 architecture-level gradient routing。
+[Returned Result]
+
+[Fact] Decomposition gate 已完成。四个 controls 都相对 h720-only `full_time_mse720`
+取得收益：
+
+| Strategy | vs full-time mean MSE | Beats full-time | Best among candidates |
+| --- | ---: | ---: | ---: |
+| `mixed_horizon_uniform` | `-4.12%` | `8/8` | `1/8` |
+| `single_720_prefix_risk` | `-4.39%` | `8/8` | `2/8` |
+| `r3_prefix_risk` | `-4.83%` | `8/8` | `5/8` |
+
+[Fact] `single_720_prefix_risk` 在 ETTh2 h96/h192 最优，说明 prefix-risk pressure
+不依赖 training/evaluation horizon coupling 也能给出强收益。`r3_prefix_risk` 在 Weather
+四个 horizons 全部最优，并在 h720 late segment 更强，说明 mixed exposure 与 prefix-risk
+的 compound protocol 仍是强对照。
+
+[Strong Evidence] `mixed_horizon_uniform` 有收益，但不是主导解释：它相对 full-time
+`8/8` 改善，却只在 `1/8` setting 中最优，并且 Weather 上稳定弱于 R.3。
+
+[Decision] 不继续 repair R.3，也不把 R.3 包装成主贡献。下一步将 HSS 重新锚定为：
+在 h720-only prefix/stability pressure 下，控制 gradient 更新到哪些 future-state/readout
+subspace，而不是训练时采样哪些 horizons。
+
+[Next Direction] 进入 Phase4-HSSG：architecture-level gradient routing under
+`single_720_prefix_risk` base。核心问题是：prefix-weighted supervision 可以提高前缀和
+短 horizon，但 late/noisy regions 容易被牺牲；下一步应让不同 future regions 的梯度进入
+不同可控参数子空间，而不是继续叠加 scalar loss reweighting。
 
 [Rollback]
 
-若 decomposition 证明 mixed-horizon exposure 是主因，则回到 Step 2/4，重新定义
-Horizon-agnostic supervision scheduling 的训练分布问题；若 prefix-risk 是主因，则回到
-Step 4/5，寻找比 monotone prefix-risk 更有叙事潜力的 supervision pressure；若 interaction
-是主因，则在同等 compound protocol 下重新评估 HSS/gradient-routing，而不是继续和
-h720-only control 直接比较。
+回到 Step 4/6：HSS 不再被定义为 mixed-horizon training schedule，也不继续作为 R.3 repair。
+新的主线定义是 horizon-agnostic supervision pressure + gradient routing。R.3 compound
+保留为 strong reference，尤其用于 Weather 与 long-horizon/late-segment gate。
 
 ## 历史证据索引
 
