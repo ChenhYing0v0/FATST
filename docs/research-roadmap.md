@@ -1230,6 +1230,100 @@ subspace，而不是训练时采样哪些 horizons。
 新的主线定义是 horizon-agnostic supervision pressure + gradient routing。R.3 compound
 保留为 strong reference，尤其用于 Weather 与 long-horizon/late-segment gate。
 
+### Phase4-HSSG：Horizon-Agnostic Supervision Scheduling via Gradient Routing
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 4/6：提出核心想法并设计可证伪实验 |
+| `problem` | `single_720_prefix_risk` 证明 h720-only prefix pressure 有效，但 scalar loss reweighting 无法说明“梯度应该更新哪里”；R.3 compound 在 Weather/late segment 仍强，说明单纯 h720 prefix pressure 还缺少 region-aware capacity 分配 |
+| `existence_evidence` | Phase4-R3D decomposition；OP-A adapter-only failure；SRP 中按 tuner/group 冻结与激活参数的训练思想 |
+| `idea` | HSS 不只决定 future unit 的 loss weight，而是决定该 unit 的 gradient 被允许更新哪些 future-state/readout 参数子空间 |
+| `theory_check` | 若不同 future regions 的可预测性和噪声结构不同，则将所有 region 的误差压到同一组 shared parameters 会产生 gradient conflict；restricted subspace update 可以把 prefix/stability pressure 转化为结构性学习，而非全局 loss bias |
+| `design` | 在 h720-only `single_720_prefix_risk` base 下，比较 unrestricted prefix-risk、region-routed readout/update、compound R.3 strong reference |
+| `gate` | 必须优于 `single_720_prefix_risk`，并至少在 Weather h720 late segment 接近或超过 R.3；若只提升 early prefix 而牺牲 late，不通过 |
+| `artifacts` | 待实现：`phase4_hssg_gradient_routing_gate` |
+| `decision` | 进入规划阶段，不立即堆 MoE/future-aware；先用最小 architecture-level routing 验证“where gradients update”是否成立 |
+
+#### 为什么提出 HSSG
+
+[Fact] `single_720_prefix_risk` 在不使用 mixed-horizon training 的情况下取得 `-4.39%`
+mean MSE，并在 ETTh2 h96/h192 最优。这说明训练和 evaluation 解耦是可行的：
+training 不必显式采样 benchmark horizons。
+
+[Fact] R.3 compound 仍在 Weather 四个 horizons 和 h720 late segment 上最强。这说明
+prefix pressure 虽然是干净起点，但单一 scalar weighting 不能充分处理 Weather/long-horizon
+late region。
+
+[Fact] OP-A 的 frozen base + tiny adapter-only 失败，说明把 gradient routing 放在
+输出 residual adapter 上太晚、capacity 太弱。需要把可更新位置上移到
+`target_states -> condition_head -> history_readout -> segment_output` 预测主路径附近。
+
+[Source-Informed Evidence] SRP 的 finetune group 代码提供了一个可借鉴原则：
+冻结主体参数，只激活特定 tuner/group，并对不同 tuner 单独 early stopping。我们不直接复制
+SRP 的代码或训练流程，但吸收它的机制启发：supervision 可以被分配到特定参数组，而不是
+全模型无差别反传。
+
+#### 核心研究假设
+
+[Hypothesis H1] Prefix-weighted supervision 的主要价值不是“更看重短 horizon”，而是让
+可预测的 early/prefix structure 先稳定地塑造 shared representation。
+
+[Hypothesis H2] Late/noisy regions 不应简单被忽略，也不应和 early/prefix regions 竞争同一组
+readout parameters；它们需要 either protected base path or region-specific update path。
+
+[Hypothesis H3] 如果 HSSG 成立，最小模型应在不采样 mixed horizons 的情况下达到或超过
+R.3 的平均性能，并在 Weather h720 late segment 缩小当前 `single_720_prefix_risk`
+相对 R.3 的缺口。
+
+#### 方法候选
+
+| Candidate | 机制 | 为什么先/后做 | 通过条件 |
+| --- | --- | --- | --- |
+| HSSG-A：Region-Routed Readout LoRA | 在 `condition_head` 或 `segment_output` 上增加 region-specific low-rank/update path；early/middle/late losses 只更新对应 path，shared base 仍由主 loss 更新 | 最小 architecture-level routing；比 tiny adapter 更靠近主预测路径 | mean MSE 优于 `single_720_prefix_risk`；Weather h720 late 不劣于 single-prefix |
+| HSSG-B：Prefix-Stable Shared + Late-Protected Readout | Prefix-risk loss 更新 shared target/readout；late loss 只更新 late-specific path 或被 gradient-detach 保护 | 用来验证“保护 late/noisy regions”是否必要 | early gain 不消失，同时 late segment 接近 R.3 |
+| HSSG-C：Learnability-Conditioned Gradient Mask | 用 residual stability/predictability score 决定 unit 更新 shared、region-specific、或 no-update path | 风险更高，应在 A/B 有信号后再做 | 比 A/B 更稳定，且跨 ETTh2/Weather 不发生 dataset-specific collapse |
+
+#### 最小实验计划
+
+第一轮只做 HSSG-A，不做 HSSG-B/C：
+
+1. `D0_full_time_mse720`：h720-only uniform baseline。
+2. `D1_single_720_prefix_risk`：当前干净起点。
+3. `D2_r3_prefix_risk`：compound strong reference，不作为主线机制。
+4. `HSSG-A_region_routed_readout`：h720-only prefix-risk + region-routed readout/update。
+
+数据集先用 `ETTh2` 与 `Weather`，seed `2021`。原因是 ETTh2 能检验 short/prefix gain，
+Weather 能检验 long/late robustness。若最小 gate 不通过，不扩展到 ETTm1/ETTm2。
+
+#### 分析指标
+
+- Main horizon MSE/MAE：h96/h192/h336/h720。
+- Segment MSE/MAE：尤其 h720 的 `1-96`、`97-192`、`193-336`、`337-720`。
+- Region win profile：early/middle/late 哪些 region 受益。
+- Gradient/update audit：每个 region-specific path 的 trainable params、mean grad norm、
+  update norm、是否 collapsed。
+- Prefix consistency：必须保持 numerical-zero 或接近当前 target-set decoder 水平。
+- Training dynamics：best epoch、post-best drift、train loss drop；若 best epoch 仍在
+  1-3 且 drift 更大，需要回到 optimization schedule，而不是继续加结构。
+
+#### Gate
+
+HSSG-A 通过需要同时满足：
+
+1. vs `single_720_prefix_risk`：overall mean MSE 改善，且至少 `5/8` main settings 不劣。
+2. vs R.3：Weather h720 late segment 缺口缩小到 `<= +1.0%`，或直接优于 R.3。
+3. 不牺牲 ETTh2 h96/h192：相对 `single_720_prefix_risk` 不超过 `+1.0%`。
+4. Audit 显示 region-routed path 非 collapse：不同 region 的 update/grad norm 有可解释差异。
+
+#### Rollback
+
+若 HSSG-A 失败：
+
+- 如果 main MSE 下降但 late 改善，回 Step 6 调整 routing capacity，而不是否定 HSSG；
+- 如果 early 与 late 都差，回 Step 4，说明 current target-set carrier 不适合 gradient routing；
+- 如果只有 Weather 失败，回 Step 5 分析 Weather 的 late/noisy region 是否需要 explicit stability score；
+- 如果 audit 显示 routed paths collapse，回 Step 7 修实现或初始化，不做理论否定。
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：
