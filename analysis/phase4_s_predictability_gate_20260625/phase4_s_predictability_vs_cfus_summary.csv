@@ -1,0 +1,2 @@
+strategy,baseline_strategy,settings,mse_wins,mae_wins,mean_relative_mse_pct,mean_relative_mae_pct
+S2_predictability_downweight,S1_conditioned_future_unit_scheduling,8,2,3,0.1330572354981449,0.21223853503033463

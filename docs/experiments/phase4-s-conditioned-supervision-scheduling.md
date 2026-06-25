@@ -1,22 +1,22 @@
 # Phase4-S：State/Difficulty-Conditioned Supervision Scheduling
 
-`current_step`: Step 9-11 complete；S1 small remote gate 已完成。当前结论是
-`conditioned_future_unit_scheduling` 不通过 paper-core gate，回退到 Step 6 重做
-condition 可观测性与 schedule 设计。
+`current_step`: Step 9-11 complete；S1 和 S2 small remote gate 均已完成。当前结论是
+S1 `conditioned_future_unit_scheduling` 与 S2 `predictability_downweight` 都不通过
+paper-core gate；下一步回退到 Step 5/6，重做 predictability proxy 与 shielding 机制。
 
 ## 11-step 记录
 
 | Field | Content |
 | --- | --- |
 | `current_step` | Step 9-11 complete |
-| `problem` | 静态 horizon-free supervision units 有局部收益但整体输 R.3，是否需要 train-side condition 来分配 unit pressure |
-| `existence_evidence` | Phase4-R remote gate；Phase4-S post-hoc segment diagnostic；QDF/TransDF/ElasTST/SRP++ seed evidence |
-| `idea` | 训练时仍使用 horizon-free units，但 unit sampling / auxiliary pressure 由 train-side difficulty 或 state proxy 条件化 |
-| `theory_check` | future-step dependency、task conflict、step heterogeneity 和 curriculum/dynamic weighting 共同支持“pressure 不应全局静态” |
-| `design` | 实现 `conditioned_future_unit_scheduling`：full future dense anchor + train-side conditioned sparse unit auxiliary |
-| `gate` | proxy 必须不泄漏 evaluation horizon；local smoke 后再做 small remote gate；若 trace 退化为固定 late weighting，回退 Step 4 |
-| `artifacts` | `analysis/phase4_s_cfus_gate_20260624`; `analysis/phase4_horizon_decoupled_gate_20260624/phase4_s_conditioning_diagnostic_report.md`; `artifacts/runs/smoke_phase4_s_conditioned/SmokePhase4SCFUS` |
-| `decision` | S1 small gate fail as paper-core；不进入 full matrix；回退 Step 6，先补 condition trace 与 CFUS-v2 design |
+| `problem` | 静态 horizon-free supervision units 有局部收益但整体输 R.3；train-side condition 能否区分 learnable-hard 与 noisy-hard，并调度 supervision pressure |
+| `existence_evidence` | Phase4-R remote gate；Phase4-S post-hoc segment diagnostic；S1 CFUS gate；S2 predictability gate；QDF/TransDF/ElasTST/SRP++ seed evidence |
+| `idea` | 训练时仍使用 horizon-free units，但 unit pressure 由 train-side difficulty / predictability / state proxy 条件化 |
+| `theory_check` | future-step dependency、task conflict、step heterogeneity 和 SRP++ interference 共同支持“pressure 不应全局静态”，但 noisy-hard 不能简单加压 |
+| `design` | S1 `conditioned_future_unit_scheduling`; S2 `predictability_downweight` |
+| `gate` | 保留 full-time gain；缩小 R.3 gap；Weather 不 collapse；trace 证明 condition/split 生效；diagnostic 能解释收益来源 |
+| `artifacts` | `analysis/phase4_s_cfus_gate_20260624`; `analysis/phase4_predictability_diagnostic_20260624`; `analysis/phase4_s_predictability_gate_20260625` |
+| `decision` | S1 与 S2 均 fail as paper-core；不进入 full matrix；回退 Step 5/6，重新设计 stronger predictability proxy 或 isolated shielding path |
 
 ## 为什么提出 Phase4-S
 
@@ -511,7 +511,7 @@ $$
 
 ### S2 本地实现与 Smoke
 
-`current_step`: Step 7 local implementation complete。
+`current_step`: Step 9-11 complete。
 
 [Decision] 已实现最小 `predictability_downweight`，不改 architecture，只改 training loss：
 
@@ -573,7 +573,54 @@ smoke artifact：
   `predictability_mean_weight`、`predictability_floor_weight`;
 - prefix mismatch 保持 numerical-zero 量级。
 
-[Decision] 允许进入 Step 8 small remote gate，但必须先 commit/push。
+[Fact] S2 small remote gate 已完成：
+
+- remote output root:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase4_s_predictability_gate`;
+- local analysis root:
+  `analysis/phase4_s_predictability_gate_20260625`;
+- analysis script:
+  `scripts/analyze_phase4_s_predictability_gate.py`;
+- decision report:
+  `analysis/phase4_s_predictability_gate_20260625/phase4_s_predictability_gate_decision_report.md`。
+
+主要结果：
+
+| Comparison | Settings | MSE wins | MAE wins | Mean relative MSE |
+| --- | ---: | ---: | ---: | ---: |
+| S2 vs `D0_full_time_mse` | 8 | 4 | 5 | `-2.61%` |
+| S2 vs `D1_r3_prefix_risk` | 8 | 3 | 3 | `+2.35%` |
+| S2 vs S1-CFUS | 8 | 2 | 3 | `+0.13%` |
+
+dataset split：
+
+| Dataset | Baseline | Settings | MSE wins | Mean relative MSE |
+| --- | --- | ---: | ---: | ---: |
+| `ETTh2` | `D1_r3_prefix_risk` | 4 | 3 | `-0.34%` |
+| `Weather` | `D1_r3_prefix_risk` | 4 | 0 | `+5.05%` |
+
+[Strong Evidence] trace 证明 S2 的 noisy/learnable split 生效：
+
+- ETTh2: mean learnable blocks `3.10`，mean noisy blocks `0.91`;
+- Weather: mean learnable blocks `2.08`，mean noisy blocks `2.11`。
+
+[Counter-Evidence] 指标没有支持 S2：Weather 相对 R.3 仍然 `0/4` wins；相对
+`full_time_mse` 也退化 `+0.23%` mean relative MSE；相对 S1-CFUS 整体 `+0.13%`
+mean relative MSE。
+
+[Decision] S2 不通过 paper-core gate，不进入 full matrix，不继续 sweep 当前
+`floor_weight=0.5`。当前失败的是简单 `top_novelty ∩ top_variation` proxy 和 shared dense
+downweight formulation，不是 predictability-conditioned scheduling 问题本身。
+
+[Decision] 回退到 Step 5/6：
+
+1. 重新评估 predictability proxy：仅用 local variation 过粗；
+2. 下一步应做 train-only baseline residual / seasonal residual stability / running residual
+   stability diagnostic；
+3. 若继续 noisy-hard shielding，应考虑 detached 或 isolated auxiliary path，而不是只在
+   shared dense loss 中降权；
+4. S1-CFUS 保留为 evidence：hard-block emphasis 对 ETTh2 有效，但需要 dataset/state-aware
+   gate 判断何时启用。
 
 ## 回退规则
 

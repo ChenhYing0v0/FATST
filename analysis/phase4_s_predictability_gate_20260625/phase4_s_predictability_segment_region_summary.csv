@@ -1,0 +1,7 @@
+strategy,baseline_strategy,future_region,segments,mse_wins,mean_relative_mse_pct,mean_relative_mae_pct
+S2_predictability_downweight,D0_full_time_mse,early_1_96,8,4,-2.856923110780306,-1.361005788701787
+S2_predictability_downweight,D0_full_time_mse,late_337_720,2,1,-2.455310149312356,-1.6949175356634816
+S2_predictability_downweight,D0_full_time_mse,middle_97_336,10,5,-1.3122420808375346,-1.049817452144397
+S2_predictability_downweight,D1_r3_prefix_risk,early_1_96,8,0,3.7454953779438056,3.2594727116105697
+S2_predictability_downweight,D1_r3_prefix_risk,late_337_720,2,1,1.5047298709744361,0.6686613273724162
+S2_predictability_downweight,D1_r3_prefix_risk,middle_97_336,10,3,1.7366839575477844,0.4746136209457563

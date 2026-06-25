@@ -1,0 +1,9 @@
+strategy,baseline_strategy,settings,mse_wins,mae_wins,mean_relative_mse_pct,mean_relative_mae_pct,horizon
+S2_predictability_downweight,D0_full_time_mse,2,1,2,-3.8717199687660737,-1.9469023635358629,96
+S2_predictability_downweight,D0_full_time_mse,2,1,1,-3.213955696447146,-1.7441443542484614,192
+S2_predictability_downweight,D0_full_time_mse,2,1,1,-1.4751977836479913,-1.1595982008309969,336
+S2_predictability_downweight,D0_full_time_mse,2,1,1,-1.8691940422897404,-1.277477016627232,720
+S2_predictability_downweight,D1_r3_prefix_risk,2,0,0,3.6026563411595713,3.1922437984456487,96
+S2_predictability_downweight,D1_r3_prefix_risk,2,1,1,1.4384918416664005,1.1458355644529017,192
+S2_predictability_downweight,D1_r3_prefix_risk,2,1,1,2.4695625490615605,1.0831576996656767,336
+S2_predictability_downweight,D1_r3_prefix_risk,2,1,1,1.9073719694910063,0.9621884223237287,720

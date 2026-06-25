@@ -409,8 +409,9 @@ condition scores，因此不能排除 `label_novelty` 退化为固定 late weigh
 
 ### Phase4-S2：Predictability-Conditioned Scheduling
 
-`current_step`: Step 7 local implementation complete；下一步是 commit/push 后进入 Step 8
-small remote gate。
+`current_step`: Step 9-11 complete；S2 small remote gate 已完成。当前结论是
+`predictability_downweight` 不通过 paper-core gate，回退到 Step 5/6 重新设计
+predictability proxy 和 shielding 机制。
 
 [Question] S1 把 high-novelty / hard blocks 统一视为需要加压的对象。但当前实验提出了
 更强的反问题：
@@ -456,7 +457,7 @@ CFUS 能接近 R.3；Weather 上 selected blocks 更像 noisy-hard，因此 hard
 污染 shared dense learning，导致相对 R.3 全面退化。
 
 [Decision] 不做 `label_novelty` 参数 sweep，也不只做 region-balanced top-k。Phase4-S2
-已实现最小 `predictability_downweight`：
+已实现并完成 small remote gate 的最小 `predictability_downweight`：
 
 $$
 \mathcal{L}
@@ -470,7 +471,7 @@ $$
 其中 low-predictability blocks 保留 floor weight，避免完全丢弃；但它们不再获得额外
 auxiliary pressure，也不应主导 shared representation 的梯度。
 
-[Gate] 下一轮 small gate 必须同时满足：
+[Gate] S2 small gate 必须同时满足：
 
 1. vs `full_time_mse` 保留收益；
 2. Weather vs R.3 不再 `0/4` collapse；
@@ -494,14 +495,58 @@ auxiliary pressure，也不应主导 shared representation 的梯度。
   `predictability_mean_weight` 和 `predictability_floor_weight`;
 - prefix mismatch 为 numerical-zero 量级。
 
-[Decision] 下一步允许 Step 8 small remote gate：
+[Fact] S2 small remote gate 已完成：
 
 - runner: `scripts/remote/run_phase4_s_predictability_gate.sh`;
 - output root:
   `/home/yingch/exp_outputs/r-2026-fatst/phase4_s_predictability_gate`;
+- local analysis root:
+  `analysis/phase4_s_predictability_gate_20260625`;
+- analysis script:
+  `scripts/analyze_phase4_s_predictability_gate.py`;
+- decision report:
+  `analysis/phase4_s_predictability_gate_20260625/phase4_s_predictability_gate_decision_report.md`;
 - datasets: `ETTh2`, `Weather`;
 - strategies: `predictability_downweight`, `full_time_mse`, `r3_prefix_risk`;
 - 不进入 full matrix。
+
+[Fact] 主要结果：
+
+| Comparison | Settings | MSE wins | MAE wins | Mean relative MSE |
+| --- | ---: | ---: | ---: | ---: |
+| S2 vs `D0_full_time_mse` | 8 | 4 | 5 | `-2.61%` |
+| S2 vs `D1_r3_prefix_risk` | 8 | 3 | 3 | `+2.35%` |
+| S2 vs S1-CFUS | 8 | 2 | 3 | `+0.13%` |
+
+[Fact] dataset split：
+
+| Dataset | Baseline | Settings | MSE wins | Mean relative MSE |
+| --- | --- | ---: | ---: | ---: |
+| `ETTh2` | `D1_r3_prefix_risk` | 4 | 3 | `-0.34%` |
+| `Weather` | `D1_r3_prefix_risk` | 4 | 0 | `+5.05%` |
+
+[Strong Evidence] trace 证明 S2 的 noisy/learnable split 确实发生：
+
+- ETTh2: mean learnable blocks `3.10`，mean noisy blocks `0.91`;
+- Weather: mean learnable blocks `2.08`，mean noisy blocks `2.11`。
+
+[Counter-Evidence] 尽管 split 发生，Weather 没有被修复。S2 相对 R.3 在 Weather 仍为
+`0/4` wins，且相对 `full_time_mse` 为 `+0.23%` mean relative MSE、相对 S1-CFUS 为
+全 horizon 退化。
+
+[Decision] 当前 `predictability_downweight` 不通过 paper-core gate。不继续 sweep
+`floor_weight=0.5`。失败点不是 train/eval 解耦，也不是 trace 未生效，而是简单 proxy 与
+shared dense downweight formulation 不足以形成有效 shielding。
+
+[Decision] 回退到 Step 5/6：
+
+1. 重新评估 predictability proxy：仅用 local variation 过粗，需引入 train-only baseline
+   residual、seasonal residual stability 或 running residual stability；
+2. 若继续 noisy-hard shielding，优先考虑 detached/isolated auxiliary path，而不是在 shared
+   dense loss 中简单降权；
+3. S1-CFUS 保留为正证据：hard-block emphasis 对 ETTh2 有效，但需要 dataset/state-aware
+   gate 决定何时启用；
+4. 下一轮必须先做 train-side residual predictability diagnostic，再决定是否实现新 loss。
 
 ## 历史证据索引
 

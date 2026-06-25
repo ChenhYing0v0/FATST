@@ -1,0 +1,5 @@
+strategy,baseline_strategy,settings,mse_wins,mae_wins,mean_relative_mse_pct,mean_relative_mae_pct,dataset
+S2_predictability_downweight,D0_full_time_mse,4,4,4,-5.443904257394655,-3.077630977874751,ETTh2
+S2_predictability_downweight,D0_full_time_mse,4,0,1,0.22887051181917917,0.013570010253474707,Weather
+S2_predictability_downweight,D1_r3_prefix_risk,4,3,3,-0.34463890833396627,0.34293469239604357,ETTh2
+S2_predictability_downweight,D1_r3_prefix_risk,4,0,0,5.053680259023236,2.848778050047934,Weather
