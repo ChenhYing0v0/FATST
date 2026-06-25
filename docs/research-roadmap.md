@@ -1427,6 +1427,24 @@ training protocol / representation carrier：优先研究 prefix-risk stabilized
 learning-rate/early-best calibration，或让 routing 更新 `condition_head/target_states` 的受控
 子空间，而不是继续只更新小 residual head。
 
+#### Phase4-PTC Plan：Protocol Calibration Gate
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 6/8：设计并运行 training protocol diagnostic |
+| `problem` | Phase4 多个策略在 epoch `1-5` 达到 best validation，之后 train loss 下降但 validation drift；这会混淆 HSSG carrier 是否真的失败 |
+| `existence_evidence` | HSSG-A/HSSG-B/C、RG-B、OP-A training logs 均显示 early-best pattern |
+| `idea` | 不加新结构，只降低 learning rate，判断 early-best collapse 是否是 HSSG-A 牺牲 short/early 与 Weather instability 的主要原因 |
+| `theory_check` | 如果 shared representation 被过快 optimization 破坏，较低 LR 应延后 best epoch、降低 drift，并给 HSSG-A region path 更稳定训练空间 |
+| `design` | `single_720_prefix_risk`、`r3_prefix_risk`、`hssg_region_routed_readout`；LR `1e-4/5e-5/3e-5`；ETTh2 + Weather；seed `2021` |
+| `gate` | best epoch 后移且 validation drift 下降；HSSG-A 相对 single-prefix 至少 `5/8` main wins；ETTh2 h96/h192 不超过 `+1%`；Weather h720 late 仍接近 R.3 |
+| `artifacts` | `docs/code-explanation/phase4-protocol-calibration-gate.md`；`scripts/remote/run_phase4_protocol_calibration_gate.sh` |
+| `decision` | 已进入 remote gate 准备；若 lower LR 不能修复 HSSG-A，则回 Step 6 设计 richer carrier，而不是继续 protocol tuning |
+
+[Implementation Note] 该 gate 是 protocol diagnostic，不是新方法。它复用现有 HSSG runner，
+只改变 `LEARNING_RATE` 和 output root；每个 LR 独立写入
+`/home/yingch/exp_outputs/r-2026-fatst/phase4_protocol_calibration_gate/lr_*`。
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：
