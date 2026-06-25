@@ -548,6 +548,69 @@ shared dense downweight formulation 不足以形成有效 shielding。
    gate 决定何时启用；
 4. 下一轮必须先做 train-side residual predictability diagnostic，再决定是否实现新 loss。
 
+## Phase4-RG：Gradient-Routing HSS 主线升级
+
+[Decision] Phase4 主线从 loss-only HSS 升级为 representation-aware / gradient-routing HSS：
+
+> Horizon-agnostic supervision scheduling decides not only how much a future unit supervises,
+> but also where its gradient is allowed to update.
+
+[Current Step] 当前回到 11-step 的 Step 5/6：先验证理论可行性与诊断证据，再决定是否实现
+adapter-isolated training strategy。
+
+[Problem] S1/S2 已证明 train-side future-unit supervision 相比 `full_time_mse` 有收益，但
+Weather 相对 R.3 全面失败。关键疑问不是继续调 `aux_weight` 或 `floor_weight`，而是 difficult
+future units 是否污染 shared representation。
+
+[Existence Evidence]
+
+- [Fact] S1/S2 在 ETTh2 上能接近或超过 R.3，但 Weather 仍 `0/4` vs R.3；
+- [Fact] Weather selected blocks 的 local-variation ratio 明显高于 ETTh2；
+- [Fact] SRP/SRP++ 论文与本地代码 `SRP-7C55` 均支持 step/segment-specific representation
+  或 tuner path 的必要性；
+- [Fact] SRP finetune code 冻结 base parameters，只训练当前 tuner/group 或 MoLora shared
+  tuner parameters，说明 gradient destination 是可被显式调度的设计变量。
+
+[Idea] 把 HSS 从 “future unit loss reweighting” 扩展为：
+
+1. `predictable/easy` 与 dense anchor 更新 shared path；
+2. `learnable-hard` 可以增强 shared path 或 adapter path；
+3. `noisy-hard` / conflict units 不直接污染 shared representation，而是进入 isolated adapter、
+   detached auxiliary branch 或只更新 small residual path。
+
+[Theory Check] SRP 对我们的支撑是机制级而非实现级：
+
+- 可吸收：step/segment-specific path、base freezing、zero-init adapter、group-level metric；
+- 不直接采用：two-stage SRP pretrain+finetune、按 benchmark `pred_len` 分组、直接复制 LoRA modules。
+
+[Design] 当前先实现并运行 gradient conflict diagnostic：
+
+- script: `scripts/analyze_phase4_gradient_conflict_diagnostic.py`;
+- code explanation:
+  `docs/code-explanation/phase4-gradient-conflict-diagnostic.md`;
+- SRP code audit:
+  `docs/experiments/phase4-srp-code-audit-for-gradient-routing-hss.md`;
+- remote runner:
+  `scripts/remote/run_phase4_gradient_conflict_diagnostic.sh`;
+- supervision groups:
+  `early_1_96`, `middle_97_192`, `middle_193_336`, `late_337_720`,
+  `learnable_hard`, `noisy_hard`, `predictable_easy`, `full_1_720`;
+- parameter groups:
+  `encoder`, `target_path`, `readout_head`, `all_shared`;
+- metric:
+  pairwise gradient cosine、negative share、low-cosine share。
+
+[Gate] 只有满足以下条件，才实现 `adapter_isolated_supervision`：
+
+1. Weather `noisy_hard` vs `early_1_96` 或 `predictable_easy` 的 cosine 明显低于 ETTh2；
+2. 冲突主要出现在 shared path，包括 `encoder`、`target_path` 或 `readout_head`；
+3. block trace 中 Weather 确实存在稳定 noisy-hard bucket；
+4. 诊断结论能解释 S2 scalar downweight 为什么不足。
+
+[Rollback] 如果 gradient conflict 证据不成立，不进入 architecture-level HSS。回退到 Step 5：
+重做 predictability proxy，优先 residual stability / seasonal residual stability / train-only baseline
+residual，而不是继续堆 adapter 或 MoE。
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：
