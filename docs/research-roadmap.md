@@ -611,6 +611,100 @@ future units 是否污染 shared representation。
 重做 predictability proxy，优先 residual stability / seasonal residual stability / train-only baseline
 residual，而不是继续堆 adapter 或 MoE。
 
+[Fact] Gradient conflict diagnostic 已完成：
+
+- remote output:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase4_gradient_conflict_diagnostic_20260625`;
+- local analysis:
+  `analysis/phase4_gradient_conflict_diagnostic_20260625`;
+- decision report:
+  `analysis/phase4_gradient_conflict_diagnostic_20260625/phase4_gradient_conflict_decision.md`;
+- GPU: `1`;
+- warmup steps: `40`;
+- diagnostic batches: `16`;
+- datasets: `ETTh2`, `Weather`。
+
+[Fact] 关键结果：
+
+| Pair | Parameter group | ETTh2 mean cosine | Weather mean cosine | Weather negative share |
+| --- | --- | ---: | ---: | ---: |
+| `noisy_hard` vs `predictable_easy` | `readout_head` | `0.6455` | `0.1190` | `0.3333` |
+| `noisy_hard` vs `predictable_easy` | `all_shared` | `0.6482` | `0.1403` | `0.2667` |
+| `late_337_720` vs `early_1_96` | `readout_head` | `0.2379` | `-0.0219` | `0.5625` |
+| `late_337_720` vs `early_1_96` | `all_shared` | `0.1912` | `-0.0149` | `0.5625` |
+
+[Decision] 诊断为 partial pass：支持 gradient-routing HSS 主线升级，但不支持只做
+`noisy-hard isolation`。最强冲突来自 Weather 的 late vs early shared/readout path；因此下一步
+method design 应调整为 `late/conflict-aware adapter routing`：
+
+1. dense anchor 继续训练 shared base；
+2. early/predictable units 保持 shared path；
+3. late/conflict auxiliary pressure 不直接更新 shared readout/head；
+4. adapter path zero-init，初始预测等价于 base；
+5. adapter 更新范围优先限制在 readout/head 或 small residual branch，而不是全 encoder。
+
+[Gate] 下一轮最小方法必须证明：
+
+1. Weather vs R.3 不再 `0/4` collapse；
+2. Weather `late_337_720` segment relative MSE 改善；
+3. ETTh2 相对 R.3 的 `3/4` 正信号不能丢失；
+4. trace 记录 routed units、adapter contribution、shared/adapter loss；
+5. prefix consistency 保持 numerical-zero。
+
+## Phase4-RG-A：Late-Conflict Adapter Routing
+
+[Current Step] Step 6/7：基于 gradient conflict diagnostic 设计并实现最小方法。
+
+[Idea] 不把所有 hard/noisy blocks 一刀切隔离，而是先处理诊断中最明确的冲突：
+Weather `late_337_720` vs `early_1_96` 在 `readout_head/all_shared` 上 mean cosine 接近或低于
+0。因此新增 zero-init late adapter residual：
+
+$$
+\hat{y}_{final}
+=
+\hat{y}_{base}
++
+r_{\phi}(h) \cdot \mathbb{1}[t \ge 337].
+$$
+
+训练 loss：
+
+$$
+\mathcal{L}
+=
+\mathcal{L}_{base}(1{:}720)
++
+\lambda
+\mathcal{L}_{adapter}(337{:}720),
+$$
+
+其中 adapter loss 使用 `base_pred.detach() + adapter_residual`，因此 late auxiliary pressure
+不通过 adapter path 更新 shared encoder/target/readout。
+
+[Design]
+
+- model update: `PatchEncoderTargetSetDecoder` 增加 optional `supervision_adapter_head`;
+- training strategy: `late_conflict_adapter_routing`;
+- code explanation:
+  `docs/code-explanation/phase4-late-conflict-adapter-routing.md`;
+- remote runner:
+  `scripts/remote/run_phase4_late_conflict_adapter_gate.sh`;
+- default adapter start: step `337`;
+- default aux weight: `0.1`;
+- controls: `full_time_mse`, `r3_prefix_risk`。
+
+[Gate] Small gate 仍只跑 `ETTh2` 与 `Weather`：
+
+1. vs `full_time_mse` 必须保留收益；
+2. Weather vs R.3 不能再 `0/4` collapse；
+3. Weather `late_337_720` segment 必须改善；
+4. ETTh2 vs R.3 不低于 S1/S2 的正信号；
+5. `adapter_mean_abs_residual` 非零但不能主导 base prediction；
+6. prefix consistency numerical-zero。
+
+[Rollback] 如果失败，不继续扩大 adapter 或上 MoE。回退 Step 5，重新定义 dynamic
+conflict/predictability router。
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：

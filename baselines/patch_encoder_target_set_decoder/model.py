@@ -138,6 +138,8 @@ class PatchEncoderTargetSetDecoder(nn.Module):
         future_confidence_temperature: float = 1.0,
         future_confidence_floor: float = 0.0,
         future_recon_eps: float = 1e-6,
+        supervision_adapter: bool = False,
+        supervision_adapter_start_step: int = 337,
     ) -> None:
         super().__init__()
         if segment_len <= 0:
@@ -154,6 +156,8 @@ class PatchEncoderTargetSetDecoder(nn.Module):
             raise ValueError("future_confidence_floor must be in [0, 1).")
         if future_recon_eps <= 0:
             raise ValueError("future_recon_eps must be positive.")
+        if supervision_adapter_start_step <= 0:
+            raise ValueError("supervision_adapter_start_step must be positive.")
 
         self.seq_len = seq_len
         self.channels = channels
@@ -185,6 +189,7 @@ class PatchEncoderTargetSetDecoder(nn.Module):
         self.future_confidence_temperature = future_confidence_temperature
         self.future_confidence_floor = future_confidence_floor
         self.future_recon_eps = future_recon_eps
+        self.supervision_adapter_start_step = supervision_adapter_start_step
         self.revin = RevIN(channels, affine=False) if revin else None
 
         self.padding_patch = nn.ReplicationPad1d((0, stride))
@@ -244,6 +249,12 @@ class PatchEncoderTargetSetDecoder(nn.Module):
             nn.Linear(d_model, 2 * readout_dim),
         )
         self.segment_output = nn.Linear(readout_dim, segment_len)
+        self.supervision_adapter_head: nn.Sequential | None = None
+        if supervision_adapter:
+            self.supervision_adapter_head = nn.Sequential(
+                nn.LayerNorm(readout_dim),
+                nn.Linear(readout_dim, segment_len),
+            )
         self.future_teacher_layers = future_teacher_layers
         self.future_segment_embedding: nn.Linear | None = None
         self.future_feature_embedding: nn.Sequential | None = None
@@ -302,6 +313,18 @@ class PatchEncoderTargetSetDecoder(nn.Module):
             if isinstance(final, nn.Linear):
                 nn.init.zeros_(final.weight)
                 nn.init.zeros_(final.bias)
+        if self.supervision_adapter_head is not None:
+            final = self.supervision_adapter_head[-1]
+            if isinstance(final, nn.Linear):
+                nn.init.zeros_(final.weight)
+                nn.init.zeros_(final.bias)
+
+    def _adapter_step_mask(self, pred_len: int, segment_count: int, device: torch.device, dtype: torch.dtype) -> torch.Tensor:
+        steps = torch.arange(1, segment_count * self.segment_len + 1, device=device, dtype=dtype)
+        mask = (steps >= float(self.supervision_adapter_start_step)).to(dtype)
+        if pred_len < mask.shape[0]:
+            mask[pred_len:] = 0.0
+        return mask.view(1, -1)
 
     def _validate_pred_len(self, pred_len: int) -> int:
         if pred_len <= 0:
@@ -497,7 +520,8 @@ class PatchEncoderTargetSetDecoder(nn.Module):
         beta = affine[:, :, 1, :]
 
         conditioned = history_readout[:, None, :] * (1.0 + gamma) + beta
-        segment_values = self.segment_output(conditioned).reshape(z.shape[0], segment_count * self.segment_len)
+        base_segment_values = self.segment_output(conditioned).reshape(z.shape[0], segment_count * self.segment_len)
+        segment_values = base_segment_values
         prefix_residual = segment_values.new_zeros(z.shape[0], segment_count * self.segment_len)
         if self.prefix_residual_head is not None:
             active_prefix_segments = min(segment_count, self.prefix_residual_segments)
@@ -505,9 +529,23 @@ class PatchEncoderTargetSetDecoder(nn.Module):
             residual_values = self.prefix_residual_head(z)[:, :active_width]
             prefix_residual[:, :active_width] = residual_values
             segment_values = segment_values + prefix_residual
+            base_segment_values = segment_values
+
+        adapter_residual = segment_values.new_zeros(z.shape[0], segment_count * self.segment_len)
+        if self.supervision_adapter_head is not None:
+            adapter_values = self.supervision_adapter_head(conditioned.detach()).reshape(
+                z.shape[0],
+                segment_count * self.segment_len,
+            )
+            adapter_mask = self._adapter_step_mask(pred_len, segment_count, z.device, z.dtype)
+            adapter_residual = adapter_values * adapter_mask
+            segment_values = segment_values + adapter_residual
         y_norm = segment_values[:, :pred_len]
+        base_y_norm = base_segment_values[:, :pred_len]
         y = y_norm.reshape(batch, channels, pred_len).permute(0, 2, 1)
+        base_y = base_y_norm.reshape(batch, channels, pred_len).permute(0, 2, 1)
         prefix_residual_y = prefix_residual[:, :pred_len].reshape(batch, channels, pred_len).permute(0, 2, 1)
+        adapter_residual_y = adapter_residual[:, :pred_len].reshape(batch, channels, pred_len).permute(0, 2, 1)
 
         target_states_view = target_states.reshape(batch, channels, segment_count, -1)
         gamma_view = gamma.reshape(batch, channels, segment_count, -1)
@@ -516,10 +554,14 @@ class PatchEncoderTargetSetDecoder(nn.Module):
 
         if self.revin is not None:
             y = self.revin(y, "denorm")
+            base_y = self.revin(base_y, "denorm")
+            adapter_residual_y = adapter_residual_y * self.revin.std
 
         if return_components:
             output = {
                 "prediction": y,
+                "base_prediction": base_y,
+                "adapter_residual": adapter_residual_y,
                 "target_states": target_states_view,
                 "gamma": gamma_view,
                 "beta": beta_view,

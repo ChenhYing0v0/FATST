@@ -44,6 +44,9 @@ class SupervisionUnit:
     predictability_noisy_blocks: int = 0
     predictability_mean_weight: float = 1.0
     predictability_floor_weight: float = 0.0
+    adapter_start_step: int = 0
+    adapter_active_steps: int = 0
+    adapter_mean_abs_residual: float = 0.0
 
 
 def set_seed(seed: int) -> None:
@@ -760,6 +763,40 @@ def predictability_downweight_loss(
     return total_loss, time_loss, unit_loss, unit
 
 
+def late_conflict_adapter_routing_loss(
+    base_pred: torch.Tensor,
+    adapter_residual: torch.Tensor,
+    true: torch.Tensor,
+    adapter_start_step: int,
+    aux_weight: float,
+) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, SupervisionUnit]:
+    if adapter_start_step <= 0:
+        raise ValueError("adapter start step must be positive.")
+    if aux_weight < 0:
+        raise ValueError("supervision auxiliary weight must be non-negative.")
+
+    horizon = true.shape[1]
+    mask = torch.zeros(horizon, device=true.device, dtype=true.dtype)
+    if adapter_start_step <= horizon:
+        mask[adapter_start_step - 1 :] = 1.0
+    adapter_pred = base_pred.detach() + adapter_residual
+    time_loss = torch.mean((base_pred - true) ** 2)
+    unit_loss = masked_mse_loss(adapter_pred, true, mask)
+    total_loss = time_loss + aux_weight * unit_loss
+    active_steps = int(torch.sum(mask).detach().cpu().item())
+    unit = SupervisionUnit(
+        unit_type="late_conflict_adapter",
+        active_steps=horizon,
+        mask_ratio=1.0,
+        condition_type="late_conflict_region",
+        auxiliary_weight=aux_weight,
+        adapter_start_step=adapter_start_step,
+        adapter_active_steps=active_steps,
+        adapter_mean_abs_residual=float(torch.mean(torch.abs(adapter_residual)).detach().cpu()),
+    )
+    return total_loss, time_loss, unit_loss, unit
+
+
 def curriculum_phase(epoch: int, epochs: int) -> str:
     progress = epoch / float(max(epochs, 1))
     if progress <= 0.3:
@@ -1389,6 +1426,7 @@ def parse_args() -> argparse.Namespace:
             "interval_supervision",
             "conditioned_future_unit_scheduling",
             "predictability_downweight",
+            "late_conflict_adapter_routing",
             "component_basis_top",
             "component_basis_balanced",
             "curriculum_units",
@@ -1408,6 +1446,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--supervision-condition-top-ratio", type=float, default=0.25)
     parser.add_argument("--supervision-aux-weight", type=float, default=0.1)
     parser.add_argument("--supervision-predictability-floor-weight", type=float, default=0.5)
+    parser.add_argument("--supervision-adapter-start-step", type=int, default=337)
     parser.add_argument("--supervision-component-rank", type=int, default=16)
     parser.add_argument("--supervision-component-beta", type=float, default=0.25)
     parser.add_argument("--supervision-component-alpha", type=float, default=0.5)
@@ -1476,6 +1515,8 @@ def main() -> None:
         raise ValueError("supervision aux weight must be non-negative.")
     if not 0 <= args.supervision_predictability_floor_weight <= 1:
         raise ValueError("supervision predictability floor weight must be in [0, 1].")
+    if args.supervision_adapter_start_step <= 0:
+        raise ValueError("supervision adapter start step must be positive.")
     if args.supervision_component_rank <= 0:
         raise ValueError("supervision component rank must be positive.")
     if args.supervision_component_beta < 0:
@@ -1574,6 +1615,8 @@ def main() -> None:
         future_confidence_temperature=args.future_confidence_temperature,
         future_confidence_floor=args.future_confidence_floor,
         future_recon_eps=args.future_recon_eps,
+        supervision_adapter=args.supervision_strategy == "late_conflict_adapter_routing",
+        supervision_adapter_start_step=args.supervision_adapter_start_step,
         **model_kwargs,
     ).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
@@ -1677,14 +1720,19 @@ def main() -> None:
             y = y.float().to(device)
             window_index_norm = tensor_to_device(window_index_norm, device)
             optimizer.zero_grad(set_to_none=True)
+            needs_components = (
+                future_loss_enabled
+                or args.model_variant == "error_process"
+                or args.supervision_strategy == "late_conflict_adapter_routing"
+            )
             output = model(
                 x,
                 pred_len=horizon,
                 future_y=y if future_loss_enabled else None,
-                return_components=future_loss_enabled or args.model_variant == "error_process",
+                return_components=needs_components,
                 window_index_norm=window_index_norm,
             )
-            if future_loss_enabled or args.model_variant == "error_process":
+            if needs_components:
                 if not isinstance(output, dict):
                     raise TypeError("Expected component dict from model.")
                 pred = output["prediction"]
@@ -1709,6 +1757,15 @@ def main() -> None:
                 unit_loss = pred_loss
                 unit = SupervisionUnit("horizon_mixed", horizon, 1.0)
                 horizon_counts[horizon] += 1
+            elif args.supervision_strategy == "late_conflict_adapter_routing":
+                pred_loss, time_loss, unit_loss, unit = late_conflict_adapter_routing_loss(
+                    output["base_prediction"],
+                    output["adapter_residual"],
+                    y,
+                    args.supervision_adapter_start_step,
+                    args.supervision_aux_weight,
+                )
+                supervision_steps += 1
             else:
                 pred_loss, time_loss, unit_loss, unit = horizon_decoupled_supervision_loss(
                     pred,
@@ -1775,6 +1832,9 @@ def main() -> None:
                         "predictability_noisy_blocks": unit.predictability_noisy_blocks,
                         "predictability_mean_weight": unit.predictability_mean_weight,
                         "predictability_floor_weight": unit.predictability_floor_weight,
+                        "adapter_start_step": unit.adapter_start_step,
+                        "adapter_active_steps": unit.adapter_active_steps,
+                        "adapter_mean_abs_residual": unit.adapter_mean_abs_residual,
                         "loss_time": float(time_loss.detach().cpu()),
                         "loss_unit": float(unit_loss.detach().cpu()),
                         "loss_total": float(loss.detach().cpu()),
@@ -1957,6 +2017,7 @@ def main() -> None:
         "condition_top_ratio": args.supervision_condition_top_ratio,
         "aux_weight": args.supervision_aux_weight,
         "predictability_floor_weight": args.supervision_predictability_floor_weight,
+        "adapter_start_step": args.supervision_adapter_start_step,
         "component_rank": args.supervision_component_rank,
         "component_beta": args.supervision_component_beta,
         "component_alpha": args.supervision_component_alpha,
