@@ -1,0 +1,9 @@
+strategy,baseline_strategy,settings,mse_wins,mae_wins,mean_relative_mse_pct,mean_relative_mae_pct,horizon
+RG-A_late_conflict_adapter,D0_full_time_mse,2,1,1,-0.27650630557581324,0.7467744753817562,96
+RG-A_late_conflict_adapter,D0_full_time_mse,2,2,1,-1.6305010853913282,-0.23151321712629458,192
+RG-A_late_conflict_adapter,D0_full_time_mse,2,2,2,-1.452136685651706,-0.5711755527221696,336
+RG-A_late_conflict_adapter,D0_full_time_mse,2,2,2,-1.8815753854450556,-0.8463637753867437,720
+RG-A_late_conflict_adapter,D1_r3_prefix_risk,2,0,0,7.580314247030362,6.0419367468831915,96
+RG-A_late_conflict_adapter,D1_r3_prefix_risk,2,0,0,3.1089550622592,2.7061888643033827,192
+RG-A_late_conflict_adapter,D1_r3_prefix_risk,2,0,0,2.4825717087174404,1.6844796627756842,336
+RG-A_late_conflict_adapter,D1_r3_prefix_risk,2,1,0,1.870151901653,1.4017890914817865,720

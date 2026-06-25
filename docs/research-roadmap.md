@@ -705,6 +705,62 @@ $$
 [Rollback] 如果失败，不继续扩大 adapter 或上 MoE。回退 Step 5，重新定义 dynamic
 conflict/predictability router。
 
+[Fact] RG-A small remote gate 已完成：
+
+- runner: `scripts/remote/run_phase4_late_conflict_adapter_gate.sh`;
+- remote output:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase4_late_conflict_adapter_gate_20260625`;
+- local analysis:
+  `analysis/phase4_late_conflict_adapter_gate_20260625`;
+- analysis script:
+  `scripts/analyze_phase4_late_conflict_adapter_gate.py`;
+- decision report:
+  `analysis/phase4_late_conflict_adapter_gate_20260625/phase4_late_conflict_adapter_gate_report.md`;
+- strategies:
+  `late_conflict_adapter_routing`, `full_time_mse`, `r3_prefix_risk`;
+- datasets: `ETTh2`, `Weather`。
+
+[Fact] 主要结果：
+
+| Comparison | Settings | MSE wins | MAE wins | Mean relative MSE |
+| --- | ---: | ---: | ---: | ---: |
+| RG-A vs `D0_full_time_mse` | 8 | 7 | 6 | `-1.31%` |
+| RG-A vs `D1_r3_prefix_risk` | 8 | 1 | 0 | `+3.76%` |
+
+[Fact] dataset split：
+
+| Dataset | Baseline | Settings | MSE wins | Mean relative MSE |
+| --- | --- | ---: | ---: | ---: |
+| `ETTh2` | `D0_full_time_mse` | 4 | 4 | `-2.26%` |
+| `Weather` | `D0_full_time_mse` | 4 | 3 | `-0.36%` |
+| `ETTh2` | `D1_r3_prefix_risk` | 4 | 1 | `+3.08%` |
+| `Weather` | `D1_r3_prefix_risk` | 4 | 0 | `+4.44%` |
+
+[Fact] segment gate：
+
+- Weather h720 `337-720` vs R.3: `+4.74%`，late segment 没被修复；
+- ETTh2 h720 `337-720` vs R.3: `-1.53%`，adapter 只在 ETTh2 的 late segment 起效；
+- prefix consistency 仍为 numerical-zero，max prefix mismatch MSE `1.474e-14`；
+- adapter trace 生效：`adapter_active_steps=384`，ETTh2 mean abs residual `0.0136`，
+  Weather mean abs residual `0.0145`。
+
+[Decision] RG-A 不通过 paper-core gate，不进入 full matrix。它保留为 partial evidence：
+gradient routing 是有价值的研究轴，因为它相对 `full_time_mse` 有稳定收益；但 fixed late
+adapter route 不能解释或修复 Weather 相对 R.3 的失败。
+
+[Counter-Evidence] 当前失败直接推翻“只要把 late conflict auxiliary 隔离到 adapter 就能解决
+Weather”的假设。Weather 的问题不是单纯 gradient destination，而是需要判断 late signal 何时
+learnable、何时 noisy。固定 late route 缺少 state/difficulty condition。
+
+[Rollback] 回到 Step 5/6。下一步不 sweep `aux_weight` 或 `adapter_start_step`，而是设计
+dynamic conflict/predictability router：
+
+1. 用 train-side residual stability / seasonal residual stability 区分 learnable-conflict 与
+   noisy-conflict；
+2. 只将被判定为 learnable-conflict 的 units route 到 adapter 或 auxiliary branch；
+3. noisy-conflict units 应降低或阻断 shared gradient，而不是固定 late adapter 学习；
+4. gate 继续要求 Weather vs R.3 不再 `0/4` collapse，且 ETTh2 late gain 不丢失。
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：

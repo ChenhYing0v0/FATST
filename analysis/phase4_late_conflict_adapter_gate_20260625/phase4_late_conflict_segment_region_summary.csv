@@ -1,0 +1,7 @@
+strategy,baseline_strategy,future_region,segments,mse_wins,mean_relative_mse_pct,mean_relative_mae_pct
+RG-A_late_conflict_adapter,D0_full_time_mse,early_1_96,8,3,0.1243685789911117,0.8975891912465741
+RG-A_late_conflict_adapter,D0_full_time_mse,late_337_720,2,2,-2.3253313870953916,-1.212376299484863
+RG-A_late_conflict_adapter,D0_full_time_mse,middle_97_336,10,10,-1.865461440238192,-0.8370149880619393
+RG-A_late_conflict_adapter,D1_r3_prefix_risk,early_1_96,8,0,6.9999940736563016,5.633735795581584
+RG-A_late_conflict_adapter,D1_r3_prefix_risk,late_337_720,2,1,1.6037309668441857,1.1608232943582375
+RG-A_late_conflict_adapter,D1_r3_prefix_risk,middle_97_336,10,3,1.1520685807975373,0.6882890819266685

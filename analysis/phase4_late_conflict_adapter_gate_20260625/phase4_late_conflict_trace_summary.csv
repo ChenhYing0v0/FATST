@@ -1,0 +1,7 @@
+model,strategy,dataset,training_evaluation_decoupled,train_horizons_effective,step_loss_weighting,unit_type,epochs_ran,trace_rows,mean_active_steps,mean_auxiliary_weight,mean_adapter_start_step,mean_adapter_active_steps,mean_adapter_abs_residual,last_adapter_abs_residual,mean_time_loss,mean_unit_loss,mean_total_loss
+PatchEncoderLateConflictAdapterRouting,RG-A_late_conflict_adapter,ETTh2,True,720,uniform,late_conflict_adapter,12,708,720.0,0.1,337.0,384.0,0.013636928826825703,0.016239220276474953,0.6717726857648731,0.8243402711584069,0.7542067120893526
+PatchEncoderLateConflictAdapterRouting,RG-A_late_conflict_adapter,Weather,True,720,uniform,late_conflict_adapter,13,2000,720.0,0.1,337.0,384.0,0.014466517272288912,0.01566259004175663,0.5793095106780529,0.6263287881463766,0.6419423893839121
+PatchEncoderFullTimeMSE720,D0_full_time_mse,ETTh2,True,720,uniform,full_time,13,767,720.0,0.0,0.0,0.0,0.0,0.0,0.6612716996374466,0.6612716996374466,0.6612716996374466
+PatchEncoderFullTimeMSE720,D0_full_time_mse,Weather,True,720,uniform,full_time,14,2000,720.0,0.0,0.0,0.0,0.0,0.0,0.5773162700533867,0.5773162700533867,0.5773162700533867
+PatchEncoderR3PrefixRisk,D1_r3_prefix_risk,ETTh2,False,"96,192,336,720",prefix_risk,horizon_mixed,11,2000,342.288,0.0,0.0,0.0,0.0,0.0,0.5114542225748301,0.5114542225748301,0.5114542225748301
+PatchEncoderR3PrefixRisk,D1_r3_prefix_risk,Weather,False,"96,192,336,720",prefix_risk,horizon_mixed,11,2000,342.288,0.0,0.0,0.0,0.0,0.0,0.7398512164652348,0.7398512164652348,0.7398512164652348

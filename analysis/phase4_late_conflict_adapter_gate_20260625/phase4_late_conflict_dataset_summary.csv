@@ -1,0 +1,5 @@
+strategy,baseline_strategy,settings,mse_wins,mae_wins,mean_relative_mse_pct,mean_relative_mae_pct,dataset
+RG-A_late_conflict_adapter,D0_full_time_mse,4,4,4,-2.2640817802258404,-0.8163149638884953,ETTh2
+RG-A_late_conflict_adapter,D0_full_time_mse,4,3,2,-0.3562779508061109,0.36517592896176954,Weather
+RG-A_late_conflict_adapter,D1_r3_prefix_risk,4,1,0,3.083422110002523,2.701825459122947,ETTh2
+RG-A_late_conflict_adapter,D1_r3_prefix_risk,4,0,0,4.437574349827478,3.215371723599075,Weather
