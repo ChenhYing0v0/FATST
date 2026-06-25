@@ -166,6 +166,8 @@ class PatchEncoderTargetSetDecoder(nn.Module):
         region_routed_readout_dropout: float = 0.0,
         region_routed_readout_scale: float = 1.0,
         region_routed_readout_detach_input: bool = False,
+        condition_delta: bool = False,
+        condition_delta_detach_target: bool = True,
     ) -> None:
         super().__init__()
         if segment_len <= 0:
@@ -224,6 +226,7 @@ class PatchEncoderTargetSetDecoder(nn.Module):
         self.supervision_adapter_start_step = supervision_adapter_start_step
         self.region_routed_readout_scale = region_routed_readout_scale
         self.region_routed_readout_detach_input = region_routed_readout_detach_input
+        self.condition_delta_detach_target = condition_delta_detach_target
         self.revin = RevIN(channels, affine=False) if revin else None
 
         self.padding_patch = nn.ReplicationPad1d((0, stride))
@@ -282,6 +285,12 @@ class PatchEncoderTargetSetDecoder(nn.Module):
             nn.LayerNorm(d_model),
             nn.Linear(d_model, 2 * readout_dim),
         )
+        self.condition_delta_head: nn.Sequential | None = None
+        if condition_delta:
+            self.condition_delta_head = nn.Sequential(
+                nn.LayerNorm(d_model),
+                nn.Linear(d_model, 2 * readout_dim),
+            )
         self.segment_output = nn.Linear(readout_dim, segment_len)
         self.supervision_adapter_head: nn.Sequential | None = None
         if supervision_adapter:
@@ -362,6 +371,11 @@ class PatchEncoderTargetSetDecoder(nn.Module):
                 nn.init.zeros_(final.bias)
         if self.supervision_adapter_head is not None:
             final = self.supervision_adapter_head[-1]
+            if isinstance(final, nn.Linear):
+                nn.init.zeros_(final.weight)
+                nn.init.zeros_(final.bias)
+        if self.condition_delta_head is not None:
+            final = self.condition_delta_head[-1]
             if isinstance(final, nn.Linear):
                 nn.init.zeros_(final.weight)
                 nn.init.zeros_(final.bias)
@@ -594,13 +608,37 @@ class PatchEncoderTargetSetDecoder(nn.Module):
                 segment_count,
             )
         history_readout = self.history_projector(z)
-        affine = self.condition_head(target_states).reshape(z.shape[0], segment_count, 2, self.readout_dim)
+        base_affine = self.condition_head(target_states).reshape(z.shape[0], segment_count, 2, self.readout_dim)
+        condition_delta_affine = torch.zeros_like(base_affine)
+        if self.condition_delta_head is not None:
+            delta_source = target_states.detach() if self.condition_delta_detach_target else target_states
+            condition_delta_affine = self.condition_delta_head(delta_source).reshape(
+                z.shape[0],
+                segment_count,
+                2,
+                self.readout_dim,
+            )
+        affine = base_affine + condition_delta_affine
         gamma = affine[:, :, 0, :]
         beta = affine[:, :, 1, :]
+        base_gamma = base_affine[:, :, 0, :]
+        base_beta = base_affine[:, :, 1, :]
+        delta_gamma = condition_delta_affine[:, :, 0, :]
+        delta_beta = condition_delta_affine[:, :, 1, :]
 
-        conditioned = history_readout[:, None, :] * (1.0 + gamma) + beta
-        base_segment_values = self.segment_output(conditioned).reshape(z.shape[0], segment_count * self.segment_len)
-        segment_values = base_segment_values
+        base_conditioned = history_readout[:, None, :] * (1.0 + base_gamma) + base_beta
+        delta_conditioned = history_readout[:, None, :] * delta_gamma + delta_beta
+        conditioned = base_conditioned + delta_conditioned
+        base_segment_values = self.segment_output(base_conditioned).reshape(
+            z.shape[0],
+            segment_count * self.segment_len,
+        )
+        condition_delta_values = F.linear(
+            delta_conditioned,
+            self.segment_output.weight.detach(),
+            None,
+        ).reshape(z.shape[0], segment_count * self.segment_len)
+        segment_values = base_segment_values + condition_delta_values
         region_readout_input = conditioned.detach() if self.region_routed_readout_detach_input else conditioned
         region_readout_residual = self._region_routed_readout_residual(region_readout_input, pred_len, segment_count)
         if self.region_readout_heads is not None:
@@ -625,8 +663,10 @@ class PatchEncoderTargetSetDecoder(nn.Module):
             segment_values = segment_values + adapter_residual
         y_norm = segment_values[:, :pred_len]
         base_y_norm = base_segment_values[:, :pred_len]
+        condition_delta_y_norm = condition_delta_values[:, :pred_len]
         y = y_norm.reshape(batch, channels, pred_len).permute(0, 2, 1)
         base_y = base_y_norm.reshape(batch, channels, pred_len).permute(0, 2, 1)
+        condition_delta_y = condition_delta_y_norm.reshape(batch, channels, pred_len).permute(0, 2, 1)
         prefix_residual_y = prefix_residual[:, :pred_len].reshape(batch, channels, pred_len).permute(0, 2, 1)
         adapter_residual_y = adapter_residual[:, :pred_len].reshape(batch, channels, pred_len).permute(0, 2, 1)
         region_readout_residual_y = (
@@ -641,6 +681,7 @@ class PatchEncoderTargetSetDecoder(nn.Module):
         if self.revin is not None:
             y = self.revin(y, "denorm")
             base_y = self.revin(base_y, "denorm")
+            condition_delta_y = condition_delta_y * self.revin.std
             adapter_residual_y = adapter_residual_y * self.revin.std
             region_readout_residual_y = region_readout_residual_y * self.revin.std
 
@@ -648,6 +689,7 @@ class PatchEncoderTargetSetDecoder(nn.Module):
             output = {
                 "prediction": y,
                 "base_prediction": base_y,
+                "condition_delta_residual": condition_delta_y,
                 "adapter_residual": adapter_residual_y,
                 "target_states": target_states_view,
                 "gamma": gamma_view,

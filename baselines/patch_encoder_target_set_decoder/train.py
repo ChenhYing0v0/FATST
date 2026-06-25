@@ -54,6 +54,8 @@ class SupervisionUnit:
     adapter_start_step: int = 0
     adapter_active_steps: int = 0
     adapter_mean_abs_residual: float = 0.0
+    condition_delta_active_steps: int = 0
+    condition_delta_mean_abs_residual: float = 0.0
     region_routed_early_steps: int = 0
     region_routed_middle_steps: int = 0
     region_routed_late_steps: int = 0
@@ -1036,6 +1038,61 @@ def dynamic_residual_stability_routing_loss(
     return total_loss, time_loss, unit_loss, unit
 
 
+def condition_delta_carrier_routing_loss(
+    pred: torch.Tensor,
+    base_pred: torch.Tensor,
+    condition_delta_residual: torch.Tensor,
+    true: torch.Tensor,
+    history: torch.Tensor,
+    block_size: int,
+    top_ratio: float,
+    aux_weight: float,
+    periods: list[int],
+    max_pred_len: int,
+    alpha: float,
+) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, SupervisionUnit]:
+    if aux_weight < 0:
+        raise ValueError("supervision auxiliary weight must be non-negative.")
+
+    horizon = true.shape[1]
+    learnable_mask, stats = residual_stability_mask_and_stats(true, history, block_size, top_ratio, periods)
+    time_loss = weighted_mse_loss(
+        pred,
+        true,
+        max_pred_len,
+        [horizon],
+        "prefix_risk",
+        alpha,
+    )
+    carrier_pred = base_pred.detach() + condition_delta_residual
+    unit_loss = masked_mse_loss(carrier_pred, true, learnable_mask)
+    total_loss = time_loss + aux_weight * unit_loss
+    active_steps = int(torch.sum(learnable_mask).detach().cpu().item())
+    unit = SupervisionUnit(
+        unit_type="condition_delta_carrier",
+        active_steps=active_steps,
+        mask_ratio=active_steps / float(horizon),
+        condition_type="residual_stability_condition_delta",
+        condition_top_blocks=int(stats["top_blocks"]),
+        condition_mean_score=float(stats["mean_novelty"]),
+        auxiliary_weight=aux_weight,
+        predictability_learnable_blocks=int(stats["learnable_blocks"]),
+        predictability_noisy_blocks=int(stats["noisy_blocks"]),
+        residual_stability_learnable_blocks=int(stats["learnable_blocks"]),
+        residual_stability_noisy_blocks=int(stats["noisy_blocks"]),
+        residual_stability_ambiguous_blocks=int(stats["ambiguous_blocks"]),
+        residual_stability_mean_gain=float(stats["mean_gain"]),
+        residual_stability_mean_smoothness=float(stats["mean_smoothness"]),
+        residual_stability_mean_variation=float(stats["mean_variation"]),
+        residual_stability_noisy_suppression_ratio=float(stats["noisy_suppression_ratio"]),
+        condition_delta_active_steps=active_steps,
+        condition_delta_mean_abs_residual=float(
+            torch.mean(torch.abs(condition_delta_residual)).detach().cpu()
+        ),
+    )
+    return total_loss, time_loss, unit_loss, unit
+
+
 def region_routed_readout_loss(
     pred: torch.Tensor,
     true: torch.Tensor,
@@ -1579,6 +1636,49 @@ def evaluate(
     return {"mse": float(np.mean(diff * diff)), "mae": float(np.mean(np.abs(diff)))}, pred_np, true_np, components
 
 
+def checkpoint_selection_diagnostics(
+    log_rows: list[dict[str, object]],
+    target_horizons: list[int],
+) -> list[dict[str, object]]:
+    if not log_rows:
+        return []
+    short_horizons = [horizon for horizon in target_horizons if horizon <= 192]
+    long_horizons = [horizon for horizon in target_horizons if horizon >= 336]
+    selectors: list[tuple[str, list[int] | None]] = [("val_mean", None)]
+    if short_horizons:
+        selectors.append(("short_mean", short_horizons))
+    if long_horizons:
+        selectors.append(("long_mean", long_horizons))
+    if 720 in target_horizons:
+        selectors.append(("h720", [720]))
+
+    def score(row: dict[str, object], horizons: list[int] | None) -> float:
+        if horizons is None:
+            return float(row["val_mean_mse"])
+        return float(np.mean([float(row[f"val_mse_h{horizon}"]) for horizon in horizons]))
+
+    official_best = min(log_rows, key=lambda item: score(item, None))
+    official_best_score = score(official_best, None)
+    rows = []
+    for selector_name, horizons in selectors:
+        best_row = min(log_rows, key=lambda item: score(item, horizons))
+        selector_score = score(best_row, horizons)
+        official_score_for_selector = score(official_best, horizons)
+        rows.append(
+            {
+                "selector": selector_name,
+                "horizons": "all" if horizons is None else ",".join(str(horizon) for horizon in horizons),
+                "best_epoch": int(best_row["epoch"]),
+                "best_selector_mse": selector_score,
+                "official_best_epoch": int(official_best["epoch"]),
+                "official_val_mean_mse": official_best_score,
+                "official_selector_mse": official_score_for_selector,
+                "official_gap_to_selector_best_pct": relative_pct(official_score_for_selector, selector_score),
+            }
+        )
+    return rows
+
+
 def prefix_consistency(
     model: PatchEncoderTargetSetDecoder,
     loader: DataLoader,
@@ -1664,6 +1764,10 @@ def tensor_to_device(value: torch.Tensor | None, device: torch.device) -> torch.
     if value is None:
         return None
     return value.float().to(device)
+
+
+def relative_pct(candidate: float, baseline: float) -> float:
+    return (candidate / baseline - 1.0) * 100.0
 
 
 def next_batch(
@@ -1771,6 +1875,8 @@ def parse_args() -> argparse.Namespace:
             "dynamic_residual_stability_routing",
             "hssg_region_routed_readout",
             "hssg_learnability_region_routing",
+            "scc_condition_delta_detached",
+            "scc_condition_delta_state_open",
             "component_basis_top",
             "component_basis_balanced",
             "curriculum_units",
@@ -1891,6 +1997,11 @@ def main() -> None:
         and args.step_loss_weighting != "prefix_risk"
     ):
         raise ValueError("HSSG region-routed supervision requires --step-loss-weighting prefix_risk.")
+    if (
+        args.supervision_strategy in {"scc_condition_delta_detached", "scc_condition_delta_state_open"}
+        and args.step_loss_weighting != "prefix_risk"
+    ):
+        raise ValueError("SCC condition-delta supervision requires --step-loss-weighting prefix_risk.")
     if args.freeze_non_adapter and args.supervision_strategy not in {
         "late_conflict_adapter_routing",
         "dynamic_residual_stability_routing",
@@ -1999,6 +2110,9 @@ def main() -> None:
         region_routed_readout_dropout=args.region_routed_readout_dropout,
         region_routed_readout_scale=args.region_routed_readout_scale,
         region_routed_readout_detach_input=args.supervision_strategy == "hssg_learnability_region_routing",
+        condition_delta=args.supervision_strategy
+        in {"scc_condition_delta_detached", "scc_condition_delta_state_open"},
+        condition_delta_detach_target=args.supervision_strategy == "scc_condition_delta_detached",
         **model_kwargs,
     ).to(device)
     init_checkpoint_info: dict[str, object] = {}
@@ -2110,6 +2224,7 @@ def main() -> None:
         component_ranks = []
         curriculum_phases = []
         region_grad_norms = {"early": [], "middle": [], "late": []}
+        condition_delta_grad_norms = []
         supervision_steps = 0
         horizon_counts = {horizon: 0 for horizon in target_horizons}
         for step_in_epoch in range(1, steps_per_epoch + 1):
@@ -2127,6 +2242,8 @@ def main() -> None:
                 or args.supervision_strategy == "dynamic_residual_stability_routing"
                 or args.supervision_strategy == "hssg_region_routed_readout"
                 or args.supervision_strategy == "hssg_learnability_region_routing"
+                or args.supervision_strategy == "scc_condition_delta_detached"
+                or args.supervision_strategy == "scc_condition_delta_state_open"
             )
             output = model(
                 x,
@@ -2204,6 +2321,21 @@ def main() -> None:
                     args.step_loss_alpha,
                 )
                 supervision_steps += 1
+            elif args.supervision_strategy in {"scc_condition_delta_detached", "scc_condition_delta_state_open"}:
+                pred_loss, time_loss, unit_loss, unit = condition_delta_carrier_routing_loss(
+                    pred,
+                    output["base_prediction"],
+                    output["condition_delta_residual"],
+                    y,
+                    x,
+                    args.supervision_block_size,
+                    args.supervision_condition_top_ratio,
+                    args.supervision_aux_weight,
+                    supervision_residual_periods,
+                    args.max_pred_len,
+                    args.step_loss_alpha,
+                )
+                supervision_steps += 1
             else:
                 pred_loss, time_loss, unit_loss, unit = horizon_decoupled_supervision_loss(
                     pred,
@@ -2243,6 +2375,8 @@ def main() -> None:
                 region_grad_norms["early"].append(parameter_grad_norm(model, "region_readout_heads.0."))
                 region_grad_norms["middle"].append(parameter_grad_norm(model, "region_readout_heads.1."))
                 region_grad_norms["late"].append(parameter_grad_norm(model, "region_readout_heads.2."))
+            if args.supervision_strategy in {"scc_condition_delta_detached", "scc_condition_delta_state_open"}:
+                condition_delta_grad_norms.append(parameter_grad_norm(model, "condition_delta_head."))
             optimizer.step()
             losses.append(float(loss.detach().cpu()))
             pred_losses.append(float(pred_loss.detach().cpu()))
@@ -2286,6 +2420,8 @@ def main() -> None:
                         "adapter_start_step": unit.adapter_start_step,
                         "adapter_active_steps": unit.adapter_active_steps,
                         "adapter_mean_abs_residual": unit.adapter_mean_abs_residual,
+                        "condition_delta_active_steps": unit.condition_delta_active_steps,
+                        "condition_delta_mean_abs_residual": unit.condition_delta_mean_abs_residual,
                         "region_routed_early_steps": unit.region_routed_early_steps,
                         "region_routed_middle_steps": unit.region_routed_middle_steps,
                         "region_routed_late_steps": unit.region_routed_late_steps,
@@ -2347,6 +2483,9 @@ def main() -> None:
             else 0.0,
             "train_region_grad_norm_late": float(np.mean(region_grad_norms["late"]))
             if region_grad_norms["late"]
+            else 0.0,
+            "train_condition_delta_grad_norm": float(np.mean(condition_delta_grad_norms))
+            if condition_delta_grad_norms
             else 0.0,
             "val_mean_mse": mean_val_mse,
             "epoch_elapsed_sec": time.perf_counter() - epoch_start,
@@ -2443,6 +2582,10 @@ def main() -> None:
     write_csv(run_dir / "training_log.csv", log_rows)
     write_csv(run_dir / "supervision_trace.csv", supervision_trace_rows)
     write_csv(
+        run_dir / "checkpoint_selection_diagnostics.csv",
+        checkpoint_selection_diagnostics(log_rows, target_horizons),
+    )
+    write_csv(
         run_dir / "objective_weight_stats.csv",
         objective_weight_stats(
             args.max_pred_len,
@@ -2492,6 +2635,9 @@ def main() -> None:
         "region_routed_readout_dropout": args.region_routed_readout_dropout,
         "region_routed_readout_scale": args.region_routed_readout_scale,
         "region_routed_readout_detach_input": args.supervision_strategy == "hssg_learnability_region_routing",
+        "condition_delta_enabled": args.supervision_strategy
+        in {"scc_condition_delta_detached", "scc_condition_delta_state_open"},
+        "condition_delta_detach_target": args.supervision_strategy == "scc_condition_delta_detached",
         "component_rank": args.supervision_component_rank,
         "component_beta": args.supervision_component_beta,
         "component_alpha": args.supervision_component_alpha,

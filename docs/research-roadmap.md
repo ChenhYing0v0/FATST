@@ -1477,7 +1477,7 @@ supervision scheduling 决定 gradient 进入哪里，而不是只在 detached l
 | `theory_check` | 若难预测 future unit 的梯度直接压 shared backbone 会损害可预测结构，则应把该梯度约束到可控 state/condition 子空间；这比纯 loss downweight 更接近 SRP-style “selective update / protect useful representation” 思路 |
 | `design` | 先做最小 carrier gate：冻结 backbone 主干，只开放 `condition_head/target_states` 或小 adapter；对 high-risk future units 执行 gated gradient routing；保留 R.3/single 作为 controls |
 | `gate` | Weather 相对 R.3 至少不劣于 `+0.5%` mean MSE；ETTh2 不牺牲 h96/h192；training drift 不高于 PTC `3e-5` HSSG-A；必须给出 gradient/update-path 诊断 |
-| `artifacts` | 待实现：code explanation、runner、analysis script |
+| `artifacts` | `docs/code-explanation/phase4-scc-condition-carrier.md`；`scripts/remote/run_phase4_scc_condition_carrier_gate.sh`；`scripts/analyze_phase4_scc_condition_carrier_gate.py` |
 | `decision` | 若 SCC gate 仍不能接近 R.3，则回 Step 2/3 重估 Phase4 主问题是否应从 scheduling 转向 architecture/pretraining |
 
 #### Phase4-SCC-E1 Experiment Plan：Condition Carrier Gate

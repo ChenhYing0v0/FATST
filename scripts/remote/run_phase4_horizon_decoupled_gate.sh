@@ -41,6 +41,7 @@ fi
 run_name_for_strategy() {
   case "$1" in
     full_time_mse) echo "PatchEncoderFullTimeMSE720" ;;
+    single_720_prefix_risk) echo "PatchEncoderSingle720PrefixRisk" ;;
     r3_prefix_risk) echo "PatchEncoderR3PrefixRisk" ;;
     random_future_mask) echo "PatchEncoderRandomFutureMask" ;;
     interval_supervision) echo "PatchEncoderIntervalSupervision" ;;
@@ -48,6 +49,8 @@ run_name_for_strategy() {
     predictability_downweight) echo "PatchEncoderPredictabilityDownweight" ;;
     late_conflict_adapter_routing) echo "PatchEncoderLateConflictAdapterRouting" ;;
     dynamic_residual_stability_routing) echo "PatchEncoderDynamicResidualStabilityRouting" ;;
+    scc_condition_delta_detached) echo "PatchEncoderSCCConditionDeltaDetached" ;;
+    scc_condition_delta_state_open) echo "PatchEncoderSCCConditionDeltaStateOpen" ;;
     component_basis_top) echo "PatchEncoderComponentTop" ;;
     component_basis_balanced) echo "PatchEncoderComponentBalanced" ;;
     curriculum_units) echo "PatchEncoderCurriculumUnits" ;;
@@ -57,7 +60,7 @@ run_name_for_strategy() {
 
 step_loss_for_strategy() {
   case "$1" in
-    r3_prefix_risk) echo "prefix_risk" ;;
+    single_720_prefix_risk|r3_prefix_risk|scc_condition_delta_detached|scc_condition_delta_state_open) echo "prefix_risk" ;;
     *) echo "uniform" ;;
   esac
 }
