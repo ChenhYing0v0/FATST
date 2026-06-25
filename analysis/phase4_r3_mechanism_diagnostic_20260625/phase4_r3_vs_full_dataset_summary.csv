@@ -1,0 +1,3 @@
+dataset,settings,r3_mse_wins,r3_mae_wins,mean_r3_vs_full_mse_pct,mean_r3_vs_full_mae_pct
+ETTh2,4,4,4,-5.070780481124556,-3.3892005517893566
+Weather,4,4,4,-4.590816079988702,-2.7529314020825564

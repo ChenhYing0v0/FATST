@@ -998,6 +998,17 @@ def horizon_decoupled_supervision_loss(
     if strategy == "full_time_mse":
         unit = SupervisionUnit("full_time", horizon, 1.0)
         return time_loss, time_loss, time_loss, unit
+    if strategy == "single_720_prefix_risk":
+        unit_loss = weighted_mse_loss(
+            pred,
+            true,
+            args.max_pred_len,
+            [args.supervision_pred_len],
+            args.step_loss_weighting,
+            args.step_loss_alpha,
+        )
+        unit = SupervisionUnit("single_720_prefix_risk", horizon, 1.0)
+        return unit_loss, time_loss, unit_loss, unit
     if strategy == "random_future_mask":
         mask, unit = sample_block_mask(
             horizon,
@@ -1597,6 +1608,7 @@ def parse_args() -> argparse.Namespace:
         choices=[
             "horizon_mixed",
             "full_time_mse",
+            "single_720_prefix_risk",
             "r3_prefix_risk",
             "random_future_mask",
             "interval_supervision",
@@ -1708,6 +1720,8 @@ def main() -> None:
         raise ValueError("supervision trace limit must be non-negative.")
     if args.supervision_strategy == "r3_prefix_risk" and args.step_loss_weighting != "prefix_risk":
         raise ValueError("r3_prefix_risk supervision requires --step-loss-weighting prefix_risk.")
+    if args.supervision_strategy == "single_720_prefix_risk" and args.step_loss_weighting != "prefix_risk":
+        raise ValueError("single_720_prefix_risk supervision requires --step-loss-weighting prefix_risk.")
     if args.freeze_non_adapter and args.supervision_strategy not in {
         "late_conflict_adapter_routing",
         "dynamic_residual_stability_routing",

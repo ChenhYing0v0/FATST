@@ -1167,6 +1167,47 @@ OP-A 不通过，不继续调 finetune lr 或 patience。回退 Step 5/6：
 如果 OP-A 失败，不继续调 finetune lr。回退 Step 5/6，判断当前 adapter/routing capacity 是否过弱；
 下一步应考虑 stronger base objective、R.3-style base stabilization，或更深的 carrier redesign。
 
+### Phase4-R3D：R.3 Mechanism Diagnostic And Decomposition
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 5/6：先解释 R.3 的优势来源，再设计下一轮方法实验 |
+| `problem` | R.3 在 Phase4 中持续压过 `full_time_mse`、RG-B 和 OP-A，但它不是单一 step-weight baseline |
+| `existence_evidence` | `phase4_dynamic_residual_stability_gate`、`phase4_stabilized_routing_gate`、Phase2 objective-pressure diagnostic |
+| `idea` | 把 R.3 视作 compound protocol：mixed-horizon exposure + prefix-risk pressure，而不是“简单预测段权重” |
+| `theory_check` | 若不拆开 R.3，HSS 失败无法判断是输给 horizon exposure、loss weighting，还是二者交互 |
+| `design` | 先生成 R.3 diagnostic；随后运行 `full_time_mse`、`horizon_mixed`、`single_720_prefix_risk`、`r3_prefix_risk` 四个 controls |
+| `gate` | 若 `horizon_mixed` 接近 R.3，说明 exposure 是主因；若 `single_720_prefix_risk` 接近 R.3，说明 weighting 是主因；若两者都弱而 R.3 强，说明 interaction 是主因 |
+| `artifacts` | `analysis/phase4_r3_mechanism_diagnostic_20260625/`；`scripts/remote/run_phase4_r3_decomposition_gate.sh` |
+| `decision` | R.3 不作为 core story；下一步必须做 decomposition controls，再决定是否继续 HSS 的 architecture/gradient-routing 升级 |
+
+[Fact] 当前 R.3 vs h720-only `full_time_mse720`：`8/8` MSE wins，mean relative MSE
+`-4.83%`。其中 ETTh2 为 `-5.07%`，Weather 为 `-4.59%`。
+
+[Fact] 训练日志显示 R.3 实际使用 mixed-horizon training：ETTh2 的 h96/h192/h336/h720
+training exposure share 约为 `0.25/0.23/0.25/0.27`；Weather 约为
+`0.25/0.26/0.25/0.25`。`full_time_mse` 则是 h720-only supervision。
+
+[Fact] `prefix_risk` objective pressure 把 `1-96` region 的 expected pressure share
+从 `0.4798` 提高到 `0.7217`，并把 `337-720` 从 `0.1333` 降到 `0.0469`。
+因此 R.3 同时改变了训练暴露分布和 future-region loss pressure。
+
+[Counter-Evidence] Phase2 中 R.3 vs uniform target-set 的平均收益约 `-1.03%`，明显小于
+当前 R.3 vs h720-only full-time 的 `-4.83%`。这支持“R.3 当前优势来自 compound protocol”
+而不是“prefix-risk 单独强大”的判断。
+
+[Decision] 不继续 repair R.3，也不把 R.3 包装成主贡献。下一轮实验只回答一个问题：
+R.3 优势到底来自 exposure、weighting，还是 interaction。只有这个问题回答清楚后，才继续
+设计 HSS 的 architecture-level gradient routing。
+
+[Rollback]
+
+若 decomposition 证明 mixed-horizon exposure 是主因，则回到 Step 2/4，重新定义
+Horizon-agnostic supervision scheduling 的训练分布问题；若 prefix-risk 是主因，则回到
+Step 4/5，寻找比 monotone prefix-risk 更有叙事潜力的 supervision pressure；若 interaction
+是主因，则在同等 compound protocol 下重新评估 HSS/gradient-routing，而不是继续和
+h720-only control 直接比较。
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：
