@@ -54,6 +54,10 @@ class SupervisionUnit:
     adapter_start_step: int = 0
     adapter_active_steps: int = 0
     adapter_mean_abs_residual: float = 0.0
+    region_routed_early_steps: int = 0
+    region_routed_middle_steps: int = 0
+    region_routed_late_steps: int = 0
+    region_routed_mean_abs_residual: float = 0.0
 
 
 def set_seed(seed: int) -> None:
@@ -93,6 +97,15 @@ def freeze_non_adapter_parameters(model: torch.nn.Module) -> None:
         has_adapter = has_adapter or is_adapter
     if not has_adapter:
         raise ValueError("freeze-non-adapter requires supervision_adapter_head parameters.")
+
+
+def parameter_grad_norm(model: torch.nn.Module, prefix: str) -> float:
+    total = 0.0
+    for name, parameter in model.named_parameters():
+        if name.startswith(prefix) and parameter.grad is not None:
+            grad = parameter.grad.detach()
+            total += float(torch.sum(grad * grad).cpu())
+    return float(np.sqrt(total))
 
 
 def load_state_dict_from_checkpoint(path: Path, device: torch.device) -> dict[str, torch.Tensor]:
@@ -198,6 +211,32 @@ def prefix_residual_stats(components: dict[str, np.ndarray]) -> list[dict[str, f
                 "residual_mse_norm": float(np.mean(segment * segment)),
                 "residual_mae_norm": float(np.mean(np.abs(segment))),
                 "max_abs_residual_norm": float(np.max(np.abs(segment))),
+            }
+        )
+    return rows
+
+
+def region_readout_stats(components: dict[str, np.ndarray]) -> list[dict[str, float]]:
+    residual = components["region_readout_residual"]
+    rows = [
+        {
+            "scope": "all",
+            "residual_mse": float(np.mean(residual * residual)),
+            "residual_mae": float(np.mean(np.abs(residual))),
+            "max_abs_residual": float(np.max(np.abs(residual))),
+        }
+    ]
+    region_bounds = [(1, 96), (97, 336), (337, 720)]
+    for start, end in region_bounds:
+        if residual.shape[1] < start:
+            continue
+        segment = residual[:, start - 1 : min(end, residual.shape[1]), :]
+        rows.append(
+            {
+                "scope": f"{start}-{min(end, residual.shape[1])}",
+                "residual_mse": float(np.mean(segment * segment)),
+                "residual_mae": float(np.mean(np.abs(segment))),
+                "max_abs_residual": float(np.max(np.abs(segment))),
             }
         )
     return rows
@@ -973,6 +1012,39 @@ def dynamic_residual_stability_routing_loss(
     return total_loss, time_loss, unit_loss, unit
 
 
+def region_routed_readout_loss(
+    pred: torch.Tensor,
+    true: torch.Tensor,
+    region_residual: torch.Tensor,
+    max_pred_len: int,
+    alpha: float,
+) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, SupervisionUnit]:
+    horizon = pred.shape[1]
+    unit_loss = weighted_mse_loss(
+        pred,
+        true,
+        max_pred_len,
+        [horizon],
+        "prefix_risk",
+        alpha,
+    )
+    time_loss = torch.mean((pred - true) ** 2)
+    early_steps = min(horizon, 96)
+    middle_steps = max(0, min(horizon, 336) - 96)
+    late_steps = max(0, horizon - 336)
+    unit = SupervisionUnit(
+        unit_type="region_routed_readout",
+        active_steps=horizon,
+        mask_ratio=1.0,
+        condition_type="fixed_future_region",
+        region_routed_early_steps=early_steps,
+        region_routed_middle_steps=middle_steps,
+        region_routed_late_steps=late_steps,
+        region_routed_mean_abs_residual=float(torch.mean(torch.abs(region_residual)).detach().cpu()),
+    )
+    return unit_loss, time_loss, unit_loss, unit
+
+
 def curriculum_phase(epoch: int, epochs: int) -> str:
     progress = epoch / float(max(epochs, 1))
     if progress <= 0.3:
@@ -1616,6 +1688,7 @@ def parse_args() -> argparse.Namespace:
             "predictability_downweight",
             "late_conflict_adapter_routing",
             "dynamic_residual_stability_routing",
+            "hssg_region_routed_readout",
             "component_basis_top",
             "component_basis_balanced",
             "curriculum_units",
@@ -1637,6 +1710,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--supervision-predictability-floor-weight", type=float, default=0.5)
     parser.add_argument("--supervision-residual-periods", default="24,48,96,168")
     parser.add_argument("--supervision-adapter-start-step", type=int, default=337)
+    parser.add_argument("--region-routed-readout-rank", type=int, default=32)
+    parser.add_argument("--region-routed-readout-dropout", type=float, default=0.0)
+    parser.add_argument("--region-routed-readout-scale", type=float, default=1.0)
     parser.add_argument("--supervision-component-rank", type=int, default=16)
     parser.add_argument("--supervision-component-beta", type=float, default=0.25)
     parser.add_argument("--supervision-component-alpha", type=float, default=0.5)
@@ -1710,6 +1786,12 @@ def main() -> None:
     supervision_residual_periods = parse_positive_ints(args.supervision_residual_periods)
     if args.supervision_adapter_start_step <= 0:
         raise ValueError("supervision adapter start step must be positive.")
+    if args.region_routed_readout_rank <= 0:
+        raise ValueError("region routed readout rank must be positive.")
+    if args.region_routed_readout_dropout < 0:
+        raise ValueError("region routed readout dropout must be non-negative.")
+    if args.region_routed_readout_scale < 0:
+        raise ValueError("region routed readout scale must be non-negative.")
     if args.supervision_component_rank <= 0:
         raise ValueError("supervision component rank must be positive.")
     if args.supervision_component_beta < 0:
@@ -1722,6 +1804,8 @@ def main() -> None:
         raise ValueError("r3_prefix_risk supervision requires --step-loss-weighting prefix_risk.")
     if args.supervision_strategy == "single_720_prefix_risk" and args.step_loss_weighting != "prefix_risk":
         raise ValueError("single_720_prefix_risk supervision requires --step-loss-weighting prefix_risk.")
+    if args.supervision_strategy == "hssg_region_routed_readout" and args.step_loss_weighting != "prefix_risk":
+        raise ValueError("hssg_region_routed_readout supervision requires --step-loss-weighting prefix_risk.")
     if args.freeze_non_adapter and args.supervision_strategy not in {
         "late_conflict_adapter_routing",
         "dynamic_residual_stability_routing",
@@ -1824,6 +1908,10 @@ def main() -> None:
             in {"late_conflict_adapter_routing", "dynamic_residual_stability_routing"}
         ),
         supervision_adapter_start_step=supervision_adapter_start_step,
+        region_routed_readout=args.supervision_strategy == "hssg_region_routed_readout",
+        region_routed_readout_rank=args.region_routed_readout_rank,
+        region_routed_readout_dropout=args.region_routed_readout_dropout,
+        region_routed_readout_scale=args.region_routed_readout_scale,
         **model_kwargs,
     ).to(device)
     init_checkpoint_info: dict[str, object] = {}
@@ -1934,6 +2022,7 @@ def main() -> None:
         active_step_ratios = []
         component_ranks = []
         curriculum_phases = []
+        region_grad_norms = {"early": [], "middle": [], "late": []}
         supervision_steps = 0
         horizon_counts = {horizon: 0 for horizon in target_horizons}
         for step_in_epoch in range(1, steps_per_epoch + 1):
@@ -1949,6 +2038,7 @@ def main() -> None:
                 or args.model_variant == "error_process"
                 or args.supervision_strategy == "late_conflict_adapter_routing"
                 or args.supervision_strategy == "dynamic_residual_stability_routing"
+                or args.supervision_strategy == "hssg_region_routed_readout"
             )
             output = model(
                 x,
@@ -2003,6 +2093,15 @@ def main() -> None:
                     supervision_residual_periods,
                 )
                 supervision_steps += 1
+            elif args.supervision_strategy == "hssg_region_routed_readout":
+                pred_loss, time_loss, unit_loss, unit = region_routed_readout_loss(
+                    pred,
+                    y,
+                    output["region_readout_residual"],
+                    args.max_pred_len,
+                    args.step_loss_alpha,
+                )
+                supervision_steps += 1
             else:
                 pred_loss, time_loss, unit_loss, unit = horizon_decoupled_supervision_loss(
                     pred,
@@ -2038,6 +2137,10 @@ def main() -> None:
                 error_energy_losses.append(float(error_energy_loss.detach().cpu()))
                 error_smoothness_losses.append(float(error_smoothness_loss.detach().cpu()))
             loss.backward()
+            if args.supervision_strategy == "hssg_region_routed_readout":
+                region_grad_norms["early"].append(parameter_grad_norm(model, "region_readout_heads.0."))
+                region_grad_norms["middle"].append(parameter_grad_norm(model, "region_readout_heads.1."))
+                region_grad_norms["late"].append(parameter_grad_norm(model, "region_readout_heads.2."))
             optimizer.step()
             losses.append(float(loss.detach().cpu()))
             pred_losses.append(float(pred_loss.detach().cpu()))
@@ -2081,6 +2184,10 @@ def main() -> None:
                         "adapter_start_step": unit.adapter_start_step,
                         "adapter_active_steps": unit.adapter_active_steps,
                         "adapter_mean_abs_residual": unit.adapter_mean_abs_residual,
+                        "region_routed_early_steps": unit.region_routed_early_steps,
+                        "region_routed_middle_steps": unit.region_routed_middle_steps,
+                        "region_routed_late_steps": unit.region_routed_late_steps,
+                        "region_routed_mean_abs_residual": unit.region_routed_mean_abs_residual,
                         "loss_time": float(time_loss.detach().cpu()),
                         "loss_unit": float(unit_loss.detach().cpu()),
                         "loss_total": float(loss.detach().cpu()),
@@ -2130,6 +2237,15 @@ def main() -> None:
             "train_curriculum_phase": max(set(curriculum_phases), key=curriculum_phases.count)
             if curriculum_phases
             else "none",
+            "train_region_grad_norm_early": float(np.mean(region_grad_norms["early"]))
+            if region_grad_norms["early"]
+            else 0.0,
+            "train_region_grad_norm_middle": float(np.mean(region_grad_norms["middle"]))
+            if region_grad_norms["middle"]
+            else 0.0,
+            "train_region_grad_norm_late": float(np.mean(region_grad_norms["late"]))
+            if region_grad_norms["late"]
+            else 0.0,
             "val_mean_mse": mean_val_mse,
             "epoch_elapsed_sec": time.perf_counter() - epoch_start,
             "elapsed_sec": time.perf_counter() - training_start,
@@ -2186,6 +2302,8 @@ def main() -> None:
         write_csv(eval_dir / "target_conditioning_stats.csv", target_conditioning_stats(components))
         if args.prefix_residual_segments > 0:
             write_csv(eval_dir / "prefix_residual_stats.csv", prefix_residual_stats(components))
+        if "region_readout_residual" in components:
+            write_csv(eval_dir / "region_readout_stats.csv", region_readout_stats(components))
         if args.model_variant == "error_process":
             write_csv(
                 eval_dir / "error_process_stats.csv",
@@ -2268,6 +2386,9 @@ def main() -> None:
         "residual_periods": supervision_residual_periods,
         "adapter_start_step": args.supervision_adapter_start_step,
         "adapter_effective_start_step": supervision_adapter_start_step,
+        "region_routed_readout_rank": args.region_routed_readout_rank,
+        "region_routed_readout_dropout": args.region_routed_readout_dropout,
+        "region_routed_readout_scale": args.region_routed_readout_scale,
         "component_rank": args.supervision_component_rank,
         "component_beta": args.supervision_component_beta,
         "component_alpha": args.supervision_component_alpha,

@@ -1241,8 +1241,8 @@ subspace，而不是训练时采样哪些 horizons。
 | `theory_check` | 若不同 future regions 的可预测性和噪声结构不同，则将所有 region 的误差压到同一组 shared parameters 会产生 gradient conflict；restricted subspace update 可以把 prefix/stability pressure 转化为结构性学习，而非全局 loss bias |
 | `design` | 在 h720-only `single_720_prefix_risk` base 下，比较 unrestricted prefix-risk、region-routed readout/update、compound R.3 strong reference |
 | `gate` | 必须优于 `single_720_prefix_risk`，并至少在 Weather h720 late segment 接近或超过 R.3；若只提升 early prefix 而牺牲 late，不通过 |
-| `artifacts` | 待实现：`phase4_hssg_gradient_routing_gate` |
-| `decision` | 进入规划阶段，不立即堆 MoE/future-aware；先用最小 architecture-level routing 验证“where gradients update”是否成立 |
+| `artifacts` | `docs/code-explanation/phase4-hssg-region-routed-readout.md`；`scripts/remote/run_phase4_hssg_gradient_routing_gate.sh` |
+| `decision` | HSSG-A 已进入实现与远程 gate 阶段；不立即堆 MoE/future-aware，先验证最小 architecture-level routing 是否成立 |
 
 #### 为什么提出 HSSG
 
@@ -1294,6 +1294,11 @@ R.3 的平均性能，并在 Weather h720 late segment 缩小当前 `single_720_
 
 数据集先用 `ETTh2` 与 `Weather`，seed `2021`。原因是 ETTh2 能检验 short/prefix gain，
 Weather 能检验 long/late robustness。若最小 gate 不通过，不扩展到 ETTm1/ETTm2。
+
+[Implementation Note] HSSG-A 当前实现为 `hssg_region_routed_readout`：
+在 `conditioned -> segment_output` 主预测路径旁增加 early/middle/late 三个 low-rank
+readout residual path；训练仍为 h720-only `prefix_risk`，因此与 `single_720_prefix_risk`
+的 objective 对齐，差异只来自 gradient/update subspace。
 
 #### 分析指标
 

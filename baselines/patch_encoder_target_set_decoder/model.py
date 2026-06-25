@@ -104,6 +104,27 @@ class CausalTargetInteractionBlock(nn.Module):
         return target_states + self.ffn(self.ffn_norm(target_states))
 
 
+class LowRankSegmentReadout(nn.Module):
+    def __init__(self, readout_dim: int, segment_len: int, rank: int, dropout: float) -> None:
+        super().__init__()
+        if rank <= 0:
+            raise ValueError("region_routed_readout_rank must be positive.")
+        self.net = nn.Sequential(
+            nn.LayerNorm(readout_dim),
+            nn.Linear(readout_dim, rank),
+            nn.GELU(),
+            nn.Dropout(dropout),
+            nn.Linear(rank, segment_len),
+        )
+        final = self.net[-1]
+        if isinstance(final, nn.Linear):
+            nn.init.zeros_(final.weight)
+            nn.init.zeros_(final.bias)
+
+    def forward(self, conditioned: torch.Tensor) -> torch.Tensor:
+        return self.net(conditioned)
+
+
 class PatchEncoderTargetSetDecoder(nn.Module):
     def __init__(
         self,
@@ -140,6 +161,10 @@ class PatchEncoderTargetSetDecoder(nn.Module):
         future_recon_eps: float = 1e-6,
         supervision_adapter: bool = False,
         supervision_adapter_start_step: int = 337,
+        region_routed_readout: bool = False,
+        region_routed_readout_rank: int = 32,
+        region_routed_readout_dropout: float = 0.0,
+        region_routed_readout_scale: float = 1.0,
     ) -> None:
         super().__init__()
         if segment_len <= 0:
@@ -158,6 +183,12 @@ class PatchEncoderTargetSetDecoder(nn.Module):
             raise ValueError("future_recon_eps must be positive.")
         if supervision_adapter_start_step <= 0:
             raise ValueError("supervision_adapter_start_step must be positive.")
+        if region_routed_readout_rank <= 0:
+            raise ValueError("region_routed_readout_rank must be positive.")
+        if region_routed_readout_dropout < 0:
+            raise ValueError("region_routed_readout_dropout must be non-negative.")
+        if region_routed_readout_scale < 0:
+            raise ValueError("region_routed_readout_scale must be non-negative.")
 
         self.seq_len = seq_len
         self.channels = channels
@@ -190,6 +221,7 @@ class PatchEncoderTargetSetDecoder(nn.Module):
         self.future_confidence_floor = future_confidence_floor
         self.future_recon_eps = future_recon_eps
         self.supervision_adapter_start_step = supervision_adapter_start_step
+        self.region_routed_readout_scale = region_routed_readout_scale
         self.revin = RevIN(channels, affine=False) if revin else None
 
         self.padding_patch = nn.ReplicationPad1d((0, stride))
@@ -255,6 +287,19 @@ class PatchEncoderTargetSetDecoder(nn.Module):
                 nn.LayerNorm(readout_dim),
                 nn.Linear(readout_dim, segment_len),
             )
+        self.region_readout_heads: nn.ModuleList | None = None
+        if region_routed_readout:
+            self.region_readout_heads = nn.ModuleList(
+                [
+                    LowRankSegmentReadout(
+                        readout_dim,
+                        segment_len,
+                        region_routed_readout_rank,
+                        region_routed_readout_dropout,
+                    )
+                    for _ in range(3)
+                ]
+            )
         self.future_teacher_layers = future_teacher_layers
         self.future_segment_embedding: nn.Linear | None = None
         self.future_feature_embedding: nn.Sequential | None = None
@@ -318,6 +363,38 @@ class PatchEncoderTargetSetDecoder(nn.Module):
             if isinstance(final, nn.Linear):
                 nn.init.zeros_(final.weight)
                 nn.init.zeros_(final.bias)
+
+    def _region_step_masks(
+        self,
+        pred_len: int,
+        segment_count: int,
+        device: torch.device,
+        dtype: torch.dtype,
+    ) -> torch.Tensor:
+        steps = torch.arange(1, segment_count * self.segment_len + 1, device=device, dtype=dtype)
+        region_bounds = [(1, 96), (97, 336), (337, self.max_pred_len)]
+        masks = []
+        for start, end in region_bounds:
+            mask = ((steps >= float(start)) & (steps <= float(end))).to(dtype)
+            if pred_len < mask.shape[0]:
+                mask[pred_len:] = 0.0
+            masks.append(mask)
+        return torch.stack(masks, dim=0)
+
+    def _region_routed_readout_residual(
+        self,
+        conditioned: torch.Tensor,
+        pred_len: int,
+        segment_count: int,
+    ) -> torch.Tensor:
+        if self.region_readout_heads is None:
+            return conditioned.new_zeros(conditioned.shape[0], segment_count * self.segment_len)
+        masks = self._region_step_masks(pred_len, segment_count, conditioned.device, conditioned.dtype)
+        residual = conditioned.new_zeros(conditioned.shape[0], segment_count * self.segment_len)
+        for index, head in enumerate(self.region_readout_heads):
+            values = head(conditioned).reshape(conditioned.shape[0], segment_count * self.segment_len)
+            residual = residual + values * masks[index].view(1, -1)
+        return residual * self.region_routed_readout_scale
 
     def _adapter_step_mask(self, pred_len: int, segment_count: int, device: torch.device, dtype: torch.dtype) -> torch.Tensor:
         steps = torch.arange(1, segment_count * self.segment_len + 1, device=device, dtype=dtype)
@@ -522,6 +599,9 @@ class PatchEncoderTargetSetDecoder(nn.Module):
         conditioned = history_readout[:, None, :] * (1.0 + gamma) + beta
         base_segment_values = self.segment_output(conditioned).reshape(z.shape[0], segment_count * self.segment_len)
         segment_values = base_segment_values
+        region_readout_residual = self._region_routed_readout_residual(conditioned, pred_len, segment_count)
+        if self.region_readout_heads is not None:
+            segment_values = segment_values + region_readout_residual
         prefix_residual = segment_values.new_zeros(z.shape[0], segment_count * self.segment_len)
         if self.prefix_residual_head is not None:
             active_prefix_segments = min(segment_count, self.prefix_residual_segments)
@@ -546,6 +626,9 @@ class PatchEncoderTargetSetDecoder(nn.Module):
         base_y = base_y_norm.reshape(batch, channels, pred_len).permute(0, 2, 1)
         prefix_residual_y = prefix_residual[:, :pred_len].reshape(batch, channels, pred_len).permute(0, 2, 1)
         adapter_residual_y = adapter_residual[:, :pred_len].reshape(batch, channels, pred_len).permute(0, 2, 1)
+        region_readout_residual_y = (
+            region_readout_residual[:, :pred_len].reshape(batch, channels, pred_len).permute(0, 2, 1)
+        )
 
         target_states_view = target_states.reshape(batch, channels, segment_count, -1)
         gamma_view = gamma.reshape(batch, channels, segment_count, -1)
@@ -556,6 +639,7 @@ class PatchEncoderTargetSetDecoder(nn.Module):
             y = self.revin(y, "denorm")
             base_y = self.revin(base_y, "denorm")
             adapter_residual_y = adapter_residual_y * self.revin.std
+            region_readout_residual_y = region_readout_residual_y * self.revin.std
 
         if return_components:
             output = {
@@ -567,6 +651,7 @@ class PatchEncoderTargetSetDecoder(nn.Module):
                 "beta": beta_view,
                 "history_readout": history_readout_view,
                 "prefix_residual_norm": prefix_residual_y,
+                "region_readout_residual": region_readout_residual_y,
             }
             if future_components is not None:
                 output.update(
