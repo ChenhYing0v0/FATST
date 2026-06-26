@@ -1587,6 +1587,93 @@ Weather mean learnable/noisy blocks 约 `1.41/1.86`，与 dynamic residual-stabi
 回 Step 2/3 重估 Phase4：如果仍坚持 HSS 叙事，需要转向更强的 future-aware representation /
 pretraining；否则应考虑把 R.3/prefix-risk 作为强 baseline 机制分析，而不是继续局部 stacking。
 
+### Phase4-FSA：Future-State Anchored HSS 方向重设
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 2/3 -> Step 4/6：重新判断 Phase4 的真实问题，并设计可证伪的下一轮实验 |
+| `problem` | Phase4 已证明 supervision signal 会改变训练结果，但 loss-only、readout routing、adapter routing、condition/state carrier 都没有稳定超过 R.3；核心瓶颈可能不是“如何给 future unit 加权”，而是当前 `target_states` 缺少可承接 scheduling pressure 的 future-structured representation |
+| `existence_evidence` | S1/S2 相对 `full_time_mse` 有收益但 Weather vs R.3 collapse；HSSG-A 有 late/long partial gain 但牺牲 early；HSSG-B/C 与 SCC-E1 routing/carrier 非 collapse 却仍输 R.3；OP-A 改变 training dynamics 但 full-time stabilized base 全面失败；R3D 证明 `single_720_prefix_risk` 是比 `full_time_mse` 更强的 h720-only base |
+| `idea` | 将 HSS 从“直接调度 raw future-unit loss / gradient”升级为 **Future-State Anchored HSS**：先用 training-only future teacher 把 `target_states` 锚定到可解释的 future latent manifold，再让 supervision scheduling 决定哪些 future units 如何塑造这个 manifold |
+| `theory_check` | 若 future regions 的可预测性、噪声和长期依赖结构不同，raw loss pressure 直接压 shared state 会产生 conflict；但如果 state space 先具有 future-aware geometry，HSS 的 gradient/schedule 才有稳定落点。SRP-style pretrain 的可吸收点不是复制架构，而是“selective update 需要 stabilized representation”这一 protocol claim |
+| `design` | 第一轮只做 substrate diagnostic，不叠加新的 MoE/scheduler：在 `single_720_prefix_risk` 和 `r3_prefix_risk` 上加入轻量 future-state alignment，并与各自 base 比较；`full_time_mse + future alignment` 只作为 weak control，不作为主线 |
+| `gate` | `r3_prefix_risk + future alignment` 相对 R.3 mean MSE 不劣于 `+0.3%`，并在 Weather h720 或 long mean 有改善；`single_720_prefix_risk + future alignment` 相对 single-prefix 至少 `5/8` main wins；future alignment stats 不能 collapse，且 checkpoint oracle gap 不能成为唯一收益来源 |
+| `artifacts` | 待新增 `scripts/remote/run_phase4_future_state_anchor_gate.sh`、`scripts/analyze_phase4_future_state_anchor_gate.py`、`docs/code-explanation/phase4-future-state-anchored-hss.md` |
+| `decision` | 当前决策是进入 Phase4-FSA-F1 substrate diagnostic；在 F1 通过前，不继续做 SCC/HSSG 参数 sweep，也不把 R.3 包装成最终贡献 |
+
+#### 为什么转向 Future-State Anchored HSS
+
+[Fact] Phase4 已经排除了几个局部解释：
+
+- 不是简单的 `full_time_mse` 弱 baseline 问题：S1/S2/RG-B 能相对 full-time 改善，但无法跨过 R.3；
+- 不是 routing 没有发生：RG-B、HSSG、SCC trace 都显示 adapter/readout/condition carrier 被使用；
+- 不是只由 validation checkpoint 选择造成：SCC-E1 official vs long/h720 oracle gap 很小；
+- 不是只要 pretraining 就能解决：OP-A 的 full-time pretrain + adapter-only finetune 改善了 drift，却全面输给 pretrain 与 R.3；
+- 不是 R.3 只有简单 step 权重：R3D 证明它是 mixed-horizon exposure + prefix-risk pressure 的 compound protocol。
+
+[Inference] 因此下一步不应继续问“哪个 future block 应该加更大/更小 loss”，而应问：
+
+> 当前 model state 是否有足够的 future structure，让不同 future-unit supervision 能以可泛化方式更新它？
+
+[Hypothesis] 如果 `target_states` 本身只是 current-history representation 的弱读出，那么 HSS 的
+loss/routing signal 会变成不稳定的局部 bias：ETTh2 late 可能受益，Weather early/late 可能被破坏。
+如果先用 future teacher 建立 future-state geometry，再施加 prefix-risk 或 HSS pressure，
+模型可能更容易把 supervision signal 转化为统一多 horizon 的有效表示。
+
+#### Phase4-FSA-F1 最小实验设计
+
+[Design Principle] F1 只验证 representation substrate，不同时引入新的 scheduler、MoE 或复杂
+gradient mask。它回答“future-state anchor 是否让现有强 base 更强或至少不坏”。
+
+实验矩阵：
+
+| Arm | Strategy | Future alignment | 角色 |
+| --- | --- | --- | --- |
+| `F1-C0` | `single_720_prefix_risk` | off | h720-only clean HSS base |
+| `F1-C1` | `r3_prefix_risk` | off | compound strong reference |
+| `F1-A0` | `single_720_prefix_risk` | on | 测试 h720-only prefix pressure 是否受益于 future-state anchor |
+| `F1-A1` | `r3_prefix_risk` | on | 测试最强 reference 是否仍能被 future-state anchor 改善 |
+| `F1-W0` | `full_time_mse` | on | weak control；只判断 full-time base 是否仍不适合作为 anchor |
+
+建议默认配置：
+
+- datasets: `ETTh2`, `Weather`;
+- seed: `2021`;
+- LR: 先沿用 PTC/SCC 稳定设置 `5e-5`，不做 LR sweep；
+- `future_teacher_layers=1`;
+- `future_align_weight` 使用小权重起步；
+- `future_relation_weight=0` 作为第一轮，避免 relation loss 与 prefix-risk 同时引入过强约束；
+- `future_recon_weight` 使用小权重，只保证 teacher 不退化成任意 latent；
+- `future_recon_normalization=target_energy`;
+- `future_align_weighting=reconstruction_confidence`;
+- validation checkpoint 仍使用 official `val_mean_mse`，同时保留 h720/long oracle diagnostics。
+
+必须记录的诊断：
+
+- main MSE/MAE vs own base、vs R.3；
+- h720 segment MSE，尤其 Weather `337-720`；
+- `future_alignment_stats.csv` 中的 local alignment、reconstruction loss、confidence mean/min/max；
+- `checkpoint_selection_diagnostics.csv`，判断收益是否只是 checkpoint selection artifact；
+- training drift 与 best epoch，判断 future anchor 是否缓解或加剧 early-best pattern。
+
+通过门槛：
+
+1. `F1-A1` 相对 R.3 mean MSE 不劣于 `+0.3%`，且 Weather h720 或 Weather long mean 至少一项改善；
+2. `F1-A0` 相对 `single_720_prefix_risk` 至少 `5/8` main MSE wins，或 mean MSE 改善且不牺牲 ETTh2 h96/h192 超过 `+1%`；
+3. future teacher diagnostics 非 collapse：confidence 不应接近全 floor，reconstruction loss 有限，alignment loss 下降不能与 MSE 明显反向；
+4. 若 official checkpoint 无收益但 h720/long oracle 有一致收益，下一步先研究 validation selection，而不是继续加结构；
+5. 若 `F1-W0` 仍弱于 prefix/R.3 bases，则继续否定 full-time pretrain 作为主 base。
+
+回滚规则：
+
+- 若 `F1-A0/A1` 均输给各自 base，且 future diagnostics 无有效 alignment，回 Step 2/3：当前 Phase4
+  不应继续以 HSS 为主线，应转向 R.3 compound protocol 的机制分析或更大 architecture redesign；
+- 若 `F1-A1` 接近或超过 R.3，但 `F1-A0` 不行，说明 future-state anchor 需要 mixed exposure
+  作为 training support，HSS 叙事必须诚实地包含 compound exposure control；
+- 若 `F1-A0` 有收益而 `F1-A1` 无收益，说明 clean h720-only HSS substrate 成立，下一步进入
+  Phase4-FSA-F2：在 anchored state 上重新测试 gradient routing/scheduling；
+- 若只有 oracle checkpoint 有收益，则先回 Step 6 修 validation metric，而不是修改 model。
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：
@@ -1604,7 +1691,8 @@ pretraining；否则应考虑把 R.3/prefix-risk 作为强 baseline 机制分析
 - 不把 Phase4 写成“训练时挑哪些 horizon”。
 - 不把 Phase4 写成 component objective 或 residual repair。
 - 不把 R.3 包装成最终贡献。
-- 不在 horizon-decoupled supervision evidence 成立前启动 future-aware 或 MoE。
+- 不把 future-aware 当作绕过 HSS 失败的装饰性模块；只能作为 Phase4-FSA 的 representation
+  substrate diagnostic，并且必须保留 R.3/single-prefix controls。
 - 不把 reduced horizon set 的 positive signal 写成 operator success。
 - 不只用 aggregate MSE/MAE 判定通过。
 - 不默认使用旧 `R_2026_FSA` 证据，除非用户批准具体来源和用途。
