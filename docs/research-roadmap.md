@@ -1836,6 +1836,40 @@ Horizon-agnostic supervision scheduling。
 应回到 Step 2/3：重新定义真正的 HSS 主线 carrier。优先考虑从 supervision/gradient allocation
 本身出发，而不是把 future-state auxiliary branch 作为核心 substrate。
 
+### Phase5：TimeAlign Carrier Gate for HSS
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 2/3/6/7/8：重新定义 HSS carrier，并先做最小 carrier gate |
+| `problem` | Phase4 future-anchor 在当前 target-set decoder 上不稳定；但 TimeAlign 原论文证明 future reconstruction alignment 在 fixed-horizon forecasting 中有效。因此需要判断失败来自 TimeAlign 机制本身，还是来自我们把机制弱接到错误 carrier 上 |
+| `existence_evidence` | TimeAlign 原文和官方代码支持 training-only future reconstruction branch、local/global alignment、stop-gradient teacher；Phase4-F1/F2 证明弱 auxiliary future anchor 不能作为 HSS substrate |
+| `idea` | 不继续修补 Phase4 anchor，而是建立 TimeAlign-style carrier gate：先验证 fixed-horizon TimeAlign carrier 是否可用，再验证 unified-720 是否相对 fixed-horizon 出现 multi-horizon gap |
+| `theory_check` | 若 fixed TimeAlign 强而 unified-720 退化，则 HSS 的问题支点是多个 future distributions 在共享模型中的 supervision conflict；若 fixed TimeAlign 弱，carrier 不成立；若 unified 不退化，则 HSS 缺少必要性 |
+| `design` | `2 datasets × (4 fixed horizons + 1 unified-720)`；fixed runs 分别训练 `h96/h192/h336/h720`；unified run 训练 `pred_len=720` 并评估 `96/192/336/720` prefix |
+| `gate` | 先看 fixed-horizon carrier 是否合理；再看 unified-vs-fixed mean relative MSE gap 是否明显为正。只有二者同时成立，才进入 TimeAlign-based HSS schedule/gradient allocation 设计 |
+| `artifacts` | `baselines/timealign_carrier/`、`scripts/remote/run_phase5_timealign_carrier_gate.sh`、`scripts/remote/check_phase5_timealign_carrier_progress.sh`、`scripts/sync_phase5_timealign_carrier_results.sh`、`scripts/analyze_phase5_timealign_carrier_gate.py`、`docs/code-explanation/phase5-timealign-carrier-gate.md` |
+| `decision` | Phase5 carrier gate 已实现；下一步进入 remote training。通过后进入 Step 4/5 设计 TimeAlign-HSS；失败则回 Step 2/3 继续寻找非 TimeAlign carrier |
+
+[Design Boundary] Phase5 不把 TimeAlign 直接包装成我们的贡献，也不声称 HSS 已经成立。它只回答：
+TimeAlign 是否能提供一个比 Phase4 target-set future anchor 更合适的 HSS carrier。
+
+最小实验矩阵：
+
+| Run type | Run name | Training target | Evaluation target |
+| --- | --- | --- | --- |
+| fixed | `TimeAlignCarrierFixedH96` | `pred_len=96` | `h96` |
+| fixed | `TimeAlignCarrierFixedH192` | `pred_len=192` | `h192` |
+| fixed | `TimeAlignCarrierFixedH336` | `pred_len=336` | `h336` |
+| fixed | `TimeAlignCarrierFixedH720` | `pred_len=720` | `h720` |
+| unified | `TimeAlignCarrierUnified720` | `pred_len=720` | `h96/h192/h336/h720` |
+
+Phase5 的下一步判断：
+
+- 若 fixed carrier 自身性能弱：停止 TimeAlign-HSS，先审计 source-faithfulness 或放弃该 carrier；
+- 若 fixed carrier 可用且 unified gap 明显：进入 TimeAlign-HSS，研究 horizon-agnostic
+  supervision scheduling 如何调度 future-distribution alignment pressure；
+- 若 unified gap 不明显：TimeAlign 已天然适配 unified prefix evaluation，不强行做 HSS。
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：
