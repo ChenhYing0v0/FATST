@@ -1790,6 +1790,52 @@ F2B 仅在 F2A 给出接近通过但仍有轻微副作用时启动：
 - 不同时改 `future_recon_weight`、`future_relation_weight` 或 architecture；
 - 如果 F2B 仍不能同时满足 Weather late 与 ETTh2 no-harm，则停止 future-anchor calibration。
 
+#### Phase4-FSA-F2 Result：Confidence Floor Is Not The Failure Source
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 9/10/11：评估 F2A remote artifacts，并决定是否继续 future-anchor calibration |
+| `problem` | F2A 要判断 F1 的副作用是否来自 low-confidence future units 被 `future_confidence_floor=0.05` 强制保留 alignment pressure |
+| `existence_evidence` | F2A 四个 run 完成：`2 arms × 2 datasets`；remote root `/home/yingch/exp_outputs/r-2026-fatst/phase4_fsa_f2_anchor_pressure_gate`；local analysis `analysis/phase4_fsa_f2_anchor_pressure_gate_20260626/` |
+| `idea` | 若 low-confidence forced alignment 是主因，取消 floor 后应明显缓解 A0 的 Weather late damage，或缓解 A1 的 ETTh2 damage |
+| `theory_check` | 代码中 `alignment_confidence` 进入 `local_alignment_loss = sum(local_alignment * confidence) / sum(confidence)`；floor 只改变相对权重，且 `future_align_weight=0.01` 较小。因此如果 floor 改动后指标几乎不变，说明主矛盾不在 floor，而在 future-anchor carrier/pressure 的整体梯度方向 |
+| `design` | 只改 `future_confidence_floor=0.0`，其余 future anchor 设置保持 F1：`future_align_weight=0.01`、`future_recon_weight=0.001`、`future_relation_weight=0` |
+| `gate` | A0 需相对 F1-C0 mean MSE `<0` 且 Weather h720 late `<=+0.5%`；或 A1 需相对 F1-C1 ETTh2 damage `<=+1.0%` 且保留 Weather h720 late gain |
+| `artifacts` | `analysis/phase4_fsa_f2_anchor_pressure_gate_20260626/phase4_fsa_f2_anchor_pressure_gate_report.md` |
+| `decision` | `fail_stop_future_anchor_stacking`；F2A 没有接近通过，不启动 F2B weight sweep；回 Step 2/3，重新设计 Phase4 主线 carrier，而不是继续在 future anchor 上叠 HSSG/SCC |
+
+[Fact] `F2-A0 = single_720_prefix_risk + floor0 anchor` 相对 `F1-C0`：
+
+- overall: `4/8` MSE wins，mean relative MSE `-0.34%`；
+- ETTh2: `3/4` wins，mean relative MSE `-1.45%`；
+- Weather: `1/4` wins，mean relative MSE `+0.77%`；
+- Weather h720 late `337-720`: `+2.90%`，未解决 F1-A0 的核心副作用。
+
+[Fact] `F2-A1 = r3_prefix_risk + floor0 anchor` 相对 `F1-C1/R.3`：
+
+- overall: `2/8` MSE wins，mean relative MSE `+1.62%`；
+- ETTh2: `0/4` wins，mean relative MSE `+3.31%`；
+- Weather: `2/4` wins，mean relative MSE `-0.06%`；
+- Weather h720 late `337-720`: `-1.24%`，保留了 Weather late 局部收益，但 ETTh2 damage 完全没有缓解。
+
+[Strong Evidence] F2A 与 F1-A direct comparison 几乎完全重合：
+
+- `F2-A0` vs `F1-A0`: mean relative MSE 约 `-0.00%`；
+- `F2-A1` vs `F1-A1`: mean relative MSE 约 `+0.00%`；
+- F2A config 确认 `future_confidence_floor=0.0`，不是实验配置错误；
+- mean alignment confidence 只从 F1 的约 `0.391/0.623/0.465/0.704`
+  变为 F2 的约 `0.389/0.620/0.463/0.701`。
+
+[Inference] F1 的失败不主要来自 low-confidence forced alignment。更合理的解释是：当前 future
+teacher anchor 作为 auxiliary representation pressure，无法稳定地产生与 main forecasting
+objective 一致的梯度方向；它对 Weather late 有局部帮助，但对 ETTh2 和部分 Weather horizon
+产生 conflict。继续调小 `future_align_weight` 更可能只是把机制淡化，而不是形成有叙事潜力的
+Horizon-agnostic supervision scheduling。
+
+[Decision] 停止 future-anchor stacking。下一步不做 F2B，不进入 anchored-state HSSG/SCC。Phase4
+应回到 Step 2/3：重新定义真正的 HSS 主线 carrier。优先考虑从 supervision/gradient allocation
+本身出发，而不是把 future-state auxiliary branch 作为核心 substrate。
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：

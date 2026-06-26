@@ -1,0 +1,5 @@
+arm,label,dataset,horizons,mean_teacher_student_cosine,mean_future_reconstruction_loss,mean_future_alignment_confidence,min_future_alignment_confidence,max_prediction_leakage_abs
+F2-A0,F2-A0_single_prefix_floor000,ETTh2,4,0.12296216027564644,0.8392125690525228,0.3890828378598161,0.0,0.0
+F2-A0,F2-A0_single_prefix_floor000,Weather,4,0.3236688199182022,0.5370310713232251,0.6196210341528579,0.0,0.0
+F2-A1,F2-A1_r3_floor000,ETTh2,4,0.26484293699075273,0.6148977630298564,0.46313747024751284,0.0,0.0
+F2-A1,F2-A1_r3_floor000,Weather,4,0.3708361330290563,0.4923980148467552,0.7010149396666311,0.0,0.0

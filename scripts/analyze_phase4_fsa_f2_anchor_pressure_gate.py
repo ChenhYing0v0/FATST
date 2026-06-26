@@ -68,7 +68,9 @@ def fmt_pct(value: float) -> str:
 
 
 def model_for_arm(arm: str) -> str:
-    return F2_MODELS.get(arm, F1_MODELS[arm])
+    if arm in F2_MODELS:
+        return F2_MODELS[arm]
+    return F1_MODELS[arm]
 
 
 def root_for_arm(f2_root: Path, f1_root: Path, arm: str) -> Path:
