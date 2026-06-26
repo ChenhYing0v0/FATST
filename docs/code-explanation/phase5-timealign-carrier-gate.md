@@ -93,7 +93,7 @@ carrier。
 
 `scripts/remote/run_phase5_timealign_carrier_gate.sh` 默认运行：
 
-- datasets: `Weather ETTh2`;
+- datasets: `Weather ETTm2 ETTh2`;
 - fixed-horizon runs: `h96/h192/h336/h720`;
 - unified run: `pred_len=720`，`target_horizons=96,192,336,720`;
 - output root:
@@ -117,6 +117,10 @@ ETTh2 使用轻量 setting：
 - `w_align=0.1`;
 - `local_margin=0.0`;
 - `layer_norm=on`.
+
+`ETTm2` 与可选的 `ETTm1` 使用同一 ETT-family 轻量 setting。第一轮默认加入
+`ETTm2` 是为了避免 `Weather + ETTh2` 对 TimeAlign carrier 过于悲观；`ETTm1`
+保留为后续扩展数据集，不默认增加首轮矩阵规模。
 
 ## Analysis
 

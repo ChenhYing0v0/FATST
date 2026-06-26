@@ -10,7 +10,7 @@ GPU_IDS="${GPU_IDS:-1 2}"
 SEED="${SEED:-2021}"
 EPOCHS="${EPOCHS:-10}"
 PATIENCE="${PATIENCE:-3}"
-DATASETS="${DATASETS:-Weather ETTh2}"
+DATASETS="${DATASETS:-Weather ETTm2 ETTh2}"
 HORIZONS="${HORIZONS:-96 192 336 720}"
 SEQ_LEN="${SEQ_LEN:-720}"
 BATCH_SIZE="${BATCH_SIZE:-32}"
@@ -61,7 +61,7 @@ dataset_args() {
   local dataset="$1"
   if [[ "${dataset}" == "Weather" ]]; then
     echo "--d-model 128 --d-ff 256 --learning-rate 0.0001 --no-layer-norm --local-margin 0.5 --global-margin 0.0 --w-align 0.1"
-  elif [[ "${dataset}" == "ETTh2" ]]; then
+  elif [[ "${dataset}" == "ETTh2" || "${dataset}" == "ETTm1" || "${dataset}" == "ETTm2" ]]; then
     echo "--d-model 32 --d-ff 32 --learning-rate 0.0005 --local-margin 0.0 --global-margin 0.0 --w-align 0.1"
   else
     echo "--d-model 32 --d-ff 32 --learning-rate 0.0005 --local-margin 0.0 --global-margin 0.0 --w-align 0.1"

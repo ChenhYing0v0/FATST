@@ -1845,7 +1845,7 @@ Horizon-agnostic supervision scheduling。
 | `existence_evidence` | TimeAlign 原文和官方代码支持 training-only future reconstruction branch、local/global alignment、stop-gradient teacher；Phase4-F1/F2 证明弱 auxiliary future anchor 不能作为 HSS substrate |
 | `idea` | 不继续修补 Phase4 anchor，而是建立 TimeAlign-style carrier gate：先验证 fixed-horizon TimeAlign carrier 是否可用，再验证 unified-720 是否相对 fixed-horizon 出现 multi-horizon gap |
 | `theory_check` | 若 fixed TimeAlign 强而 unified-720 退化，则 HSS 的问题支点是多个 future distributions 在共享模型中的 supervision conflict；若 fixed TimeAlign 弱，carrier 不成立；若 unified 不退化，则 HSS 缺少必要性 |
-| `design` | `2 datasets × (4 fixed horizons + 1 unified-720)`；fixed runs 分别训练 `h96/h192/h336/h720`；unified run 训练 `pred_len=720` 并评估 `96/192/336/720` prefix |
+| `design` | `3 datasets × (4 fixed horizons + 1 unified-720)`；默认数据集为 `Weather/ETTm2/ETTh2`；fixed runs 分别训练 `h96/h192/h336/h720`；unified run 训练 `pred_len=720` 并评估 `96/192/336/720` prefix |
 | `gate` | 先看 fixed-horizon carrier 是否合理；再看 unified-vs-fixed mean relative MSE gap 是否明显为正。只有二者同时成立，才进入 TimeAlign-based HSS schedule/gradient allocation 设计 |
 | `artifacts` | `baselines/timealign_carrier/`、`scripts/remote/run_phase5_timealign_carrier_gate.sh`、`scripts/remote/check_phase5_timealign_carrier_progress.sh`、`scripts/sync_phase5_timealign_carrier_results.sh`、`scripts/analyze_phase5_timealign_carrier_gate.py`、`docs/code-explanation/phase5-timealign-carrier-gate.md` |
 | `decision` | Phase5 carrier gate 已实现；下一步进入 remote training。通过后进入 Step 4/5 设计 TimeAlign-HSS；失败则回 Step 2/3 继续寻找非 TimeAlign carrier |
@@ -1862,6 +1862,13 @@ TimeAlign 是否能提供一个比 Phase4 target-set future anchor 更合适的 
 | fixed | `TimeAlignCarrierFixedH336` | `pred_len=336` | `h336` |
 | fixed | `TimeAlignCarrierFixedH720` | `pred_len=720` | `h720` |
 | unified | `TimeAlignCarrierUnified720` | `pred_len=720` | `h96/h192/h336/h720` |
+
+[Dataset Choice] 第一轮默认加入 `ETTm2`，而不是同时扩到 `ETTm1+ETTm2`：
+
+- `ETTh2` 在 TimeAlign 原论文中不一定是最强证据数据集，保留它作为 difficult counterexample；
+- `Weather` 是 Phase4 中最关键的 long/late conflict 数据集，必须保留；
+- `ETTm2` 提供 ETT minute-level 数据，能降低只看 `Weather+ETTh2` 导致 carrier gate 过早悲观的风险；
+- `ETTm1` 暂作为可选扩展，若 `ETTm2` 与 `ETTh2` 结论冲突，再补跑 `DATASETS="ETTm1"`。
 
 Phase5 的下一步判断：
 

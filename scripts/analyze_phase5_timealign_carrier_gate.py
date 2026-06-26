@@ -7,7 +7,7 @@ from statistics import mean
 from typing import Any
 
 
-DATASETS = ["ETTh2", "Weather"]
+DATASETS = ["ETTh2", "ETTm2", "Weather"]
 HORIZONS = [96, 192, 336, 720]
 SEED = 2021
 FIXED_LABEL = {
