@@ -102,6 +102,9 @@ carrier。
 - epochs: `10`;
 - patience: `3`.
 
+Runner 在 dataset 边界设置 barrier：同一 dataset 的 fixed/unified jobs 完成后才进入下一个
+dataset，避免 slow `Weather` job 与较快 ETT job 配对导致 GPU 长时间空等。
+
 Weather 使用更大的 model setting：
 
 - `d_model=128`;

@@ -148,6 +148,10 @@ for dataset in "${datasets[@]}"; do
   if [[ "${#pids[@]}" -ge "${#gpu_ids[@]}" ]]; then
     wait_for_wave
   fi
+  if [[ "${#pids[@]}" -gt 0 ]]; then
+    wait_for_wave
+  fi
+  echo "dataset_done=$(date -Is) dataset=${dataset}"
 done
 
 wait_for_wave
