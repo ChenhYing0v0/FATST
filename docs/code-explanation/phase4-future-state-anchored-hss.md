@@ -112,8 +112,14 @@ loss 覆盖 forecasting objective。
 - datasets: `Weather ETTh2`;
 - arms: `F1-C0 F1-C1 F1-A0 F1-A1 F1-W0`;
 - GPUs: `1 2`;
+- job order: `dataset_major`;
 - seed: `2021`;
 - epochs: `100`。
+
+`dataset_major` 是 workload-aware 默认值。它按 dataset 外层、arm 内层排队，因此会先把
+`Weather` 的多个 arms 分散到 GPU 1/2 上，再进入更快的 `ETTh2` jobs。这样避免
+`Weather + ETTh2` 成对运行时 ETTh2 很快结束、对应 GPU 长时间空等。若需要复现旧的
+逐 arm 配对顺序，可显式设置 `JOB_ORDER=arm_major`。
 
 每个 arm 使用唯一 `run_name`，避免相同 strategy 的 on/off 配置覆盖：
 

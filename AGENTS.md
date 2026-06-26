@@ -153,6 +153,11 @@ without first completing that rollback assessment.
 - When two safe GPUs are available, prefer launching the slower datasets first:
   run `ETTm1` and `Weather` in parallel before shorter jobs, because `Weather`
   is usually the slowest and `ETTm1` is also relatively costly.
+- Avoid per-arm paired scheduling that waits on one slow dataset and one fast
+  dataset together, because this leaves the fast GPU idle. For multi-arm
+  matrices, use workload-aware or dataset-major ordering so slow datasets such
+  as `Weather` are spread across the available GPUs first, then fill remaining
+  slots with faster datasets such as `ETTh2`.
 - Default future 3090 experiment outputs to repo-external paths under
   `/home/yingch/exp_outputs/r-2026-fatst`; use in-repo `artifacts/runs/...`
   only for local smoke, small temporary checks, or historical runs that were

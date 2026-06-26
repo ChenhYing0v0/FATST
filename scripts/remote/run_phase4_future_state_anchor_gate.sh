@@ -14,6 +14,7 @@ TARGET_HORIZONS="${TARGET_HORIZONS:-96,192,336,720}"
 SUPERVISION_PRED_LEN="${SUPERVISION_PRED_LEN:-720}"
 DATASETS="${DATASETS:-Weather ETTh2}"
 ARMS="${ARMS:-F1-C0 F1-C1 F1-A0 F1-A1 F1-W0}"
+JOB_ORDER="${JOB_ORDER:-dataset_major}"
 FUTURE_TEACHER_LAYERS="${FUTURE_TEACHER_LAYERS:-1}"
 FUTURE_TEACHER_HEADS="${FUTURE_TEACHER_HEADS:-8}"
 FUTURE_TEACHER_D_FF="${FUTURE_TEACHER_D_FF:-256}"
@@ -106,6 +107,7 @@ echo "epochs=${EPOCHS}"
 echo "learning_rate=${LEARNING_RATE}"
 echo "datasets=${DATASETS}"
 echo "arms=${ARMS}"
+echo "job_order=${JOB_ORDER}"
 echo "target_horizons=${TARGET_HORIZONS}"
 echo "supervision_pred_len=${SUPERVISION_PRED_LEN}"
 echo "future_teacher_layers=${FUTURE_TEACHER_LAYERS}"
@@ -201,16 +203,38 @@ run_one() {
 job_index=0
 max_jobs="${#gpu_ids[@]}"
 
-for arm in "${arms[@]}"; do
-  for dataset in "${datasets[@]}"; do
-    gpu_id="${gpu_ids[$((job_index % max_jobs))]}"
-    run_one "${arm}" "${dataset}" "${gpu_id}" &
-    job_index=$((job_index + 1))
-    if (( job_index % max_jobs == 0 )); then
-      wait
-    fi
-  done
-done
+launch_job() {
+  local arm="$1"
+  local dataset="$2"
+  local gpu_id
+  gpu_id="${gpu_ids[$((job_index % max_jobs))]}"
+  run_one "${arm}" "${dataset}" "${gpu_id}" &
+  job_index=$((job_index + 1))
+  if (( job_index % max_jobs == 0 )); then
+    wait
+  fi
+}
+
+case "${JOB_ORDER}" in
+  dataset_major)
+    for dataset in "${datasets[@]}"; do
+      for arm in "${arms[@]}"; do
+        launch_job "${arm}" "${dataset}"
+      done
+    done
+    ;;
+  arm_major)
+    for arm in "${arms[@]}"; do
+      for dataset in "${datasets[@]}"; do
+        launch_job "${arm}" "${dataset}"
+      done
+    done
+    ;;
+  *)
+    echo "unknown_job_order=${JOB_ORDER}" >&2
+    exit 1
+    ;;
+esac
 
 wait
 echo "phase4_future_state_anchor_gate_done=$(date -Is)"
