@@ -1989,10 +1989,30 @@ diagnostic 验证是否只是 checkpoint artifact。
 [Strong Evidence] Winner pattern 与 `official-last` 完全一致；checkpoint selector 不是造成
 ETTh2 positive、ETTm2/Weather negative 分裂的主因。
 
-[Decision] 当前 TimeAlign-HSS 不能写成“unified multi-horizon 普遍退化，需要 HSS 修复”。可行的下一步有两个：
+[Decision] 当前 TimeAlign-HSS 不能写成“unified multi-horizon 普遍退化，需要 HSS 修复”。当前 active route 不再做论文级 look-back reproduction，而是将 TimeAlign 作为 strong carrier，回 Step 2/3 重新定义 HSS 如何进入该 carrier。
 
-1. 回 Step 2/3：把研究问题改成 dataset/state-dependent future alignment scheduling，解释为什么某些数据集 unified 受益、某些数据集 unified 受损；
-2. 先做 look-back horizon sweep：作者说明主表使用 `{96,192,336,720}` look-back search，若目标是论文级复现对齐，应先完成 fixed-horizon look-back sweep，再判断 carrier 是否足够强。
+1. Active：回 Step 2/3，把研究问题改成 dataset/state-dependent future alignment scheduling，解释为什么某些数据集 unified 受益、某些数据集 unified 受损；
+2. Backlog：look-back horizon sweep 只在需要论文表格级复现对齐时再做，不作为当前 HSS 主线前置条件。
+
+#### Phase5-HSS：Integrating TimeAlign into Horizon Supervision Scheduling
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 2/3/4/5/6：重新定义 TimeAlign-HSS 的研究问题与第一轮方法 |
+| `problem` | TimeAlign 已证明是 strong carrier；`official-last` 与 `best-val` 都显示 unified behavior 是 dataset-dependent：ETTh2 unified 受益，ETTm2/Weather unified 受损。因此 HSS 不应叙述为修复“全局 unified degradation”，而应叙述为调度 future supervision 在不同 future states/units 上的作用强度与梯度路径 |
+| `existence_evidence` | `official-last` 与 `best-val` winner pattern 完全一致：ETTh2 `3/4` unified wins，ETTm2/Weather `0/4` unified wins；checkpoint selector 不是主因；official-source fixed 相对 repo-local fixed 在 11/12 个 setting 改善 |
+| `idea` | 把 TimeAlign 从 baseline 升级为 HSS carrier：HSS 不重新定义预测架构，而是在 TimeAlign 的 future reconstruction/alignment supervision 上做 horizon-agnostic scheduling，决定哪些 future units 提供监督、监督进入哪个 branch、何时削弱或释放 alignment gradient |
+| `theory_check` | TimeAlign 的 future branch 在 training-only 读取 ground-truth future，alignment loss 将 future distribution pressure 传回 history branch；当 future units 可对齐且可预测时，这种 pressure 可提升 unified 表示；当 future units 噪声大、状态不稳定或与当前 history 表示冲突时，static full-future alignment 会产生 harmful supervision。HSS 的理论支点是 supervision reliability，而不是 benchmark horizon label |
+| `design` | 第一轮不直接堆复杂结构，先做 lean diagnostic + minimal scheduling：D1 诊断 future unit 的 alignability/reconstruction difficulty/residual volatility 与 unified degradation 的关系；M1 在 TimeAlign alignment/reconstruction loss 上加入 unit-level reliability schedule；M2 只改变 alignment gradient path，验证“where gradient is allowed to update”是否比 loss reweight 更有叙事与性能潜力 |
+| `gate` | 必须同时满足：ETTm2/Weather unified gap 明显缩小；ETTh2 不丢失 unified benefit；机制证据显示 schedule 不是简单降低 loss，而是区分 useful vs harmful future supervision；若只改善一个 dataset 或只靠淡化 TimeAlign loss，回 Step 4/5 重设 idea |
+| `artifacts` | 新建 `docs/experiments/phase5-timealign-hss-integration.md`；后续代码应在 `baselines/timealign_official/` 的 adapter 层增加最小 diagnostic/scheduling，不改官方 vendored forward 作为对照 |
+| `decision` | `active_timealign_hss_integration`；下一步先设计 lean diagnostic 与 M1/M2 最小实验，不做 look-back sweep |
+
+[Narrative Anchor] 论文主线应从 “TimeAlign 很强，所以直接改它” 变为：
+
+> Unified multi-horizon forecasting is not only a prediction-head problem; it is also a supervision-allocation problem. A future-aware carrier such as TimeAlign exposes this issue because the same future alignment objective can be beneficial on alignable future states but harmful on unstable or noisy future units. Horizon Supervision Scheduling studies how future supervision should be scheduled, masked, or routed during training while evaluation remains multi-horizon.
+
+[Design Constraint] HSS 仍必须 horizon-agnostic：schedule 的输入不能是 benchmark horizon id，而应来自 future unit/state 的 reliability proxy，例如 reconstruction difficulty、alignment consistency、local volatility、prediction residual structure 或 training dynamics。
 
 ## 历史证据索引
 
