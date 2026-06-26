@@ -1731,21 +1731,64 @@ base/exposure：
 - 同一个全局 anchor pressure 无法同时满足 ETTh2 short/prefix 与 Weather long/late。
 
 [Decision] 不进入 “anchored state + HSSG/SCC” stacking。下一步回 Step 5/6：
-先验证负作用是否来自 low-confidence future segments 被 `confidence_floor` 强制对齐。
+先做 anchor pressure calibration。这里的目标不是增加 diagnostic 工作量，而是用最少实验判断
+F1 的副作用来自 low-confidence forced alignment、anchor pressure 过强，还是 future anchor
+本身不适合当前 carrier。
 
-#### Phase4-FSA-F2A Plan：Confidence-Selective Future Anchor
+#### Phase4-FSA Diagnostic 使用原则
+
+[Decision] diagnostic artifacts 只服务于机制失效定位，不作为研究主线本身。后续实验前必须先问：
+**这个中间数据是否会改变 pass/fail 判断或 rollback 点？** 如果不会，不新增保存项。
+
+默认保留的轻量诊断：
+
+- `metrics_by_target_horizon.csv` 与 h720 `metrics_by_segment.csv`：主判断与 Weather late gate；
+- `training_log.csv`：best epoch、drift、auxiliary loss 是否异常；
+- `checkpoint_selection_diagnostics.csv`：排除 validation metric artifact；
+- `future_alignment_stats.csv`：仅在 future-anchor 实验中检查 leakage、confidence、teacher/student
+  是否 collapse；
+- `effective_config.json`：确认实验变量确实只改了预期项。
+
+默认不扩大保存的诊断：
+
+- 不保存 checkpoint 或 `predictions_test.npz`，除非后续需要做 residual/projection audit；
+- 不把 `target_state_similarity`、`target_conditioning_stats`、`objective_weight_stats` 作为每次主报告
+  的必选项。只有当 main metrics 的失败原因不清楚时才补充读取；
+- 不因为 diagnostic 有可解释差异就推进方法。method gate 仍由 main/segment performance 和
+  paper-story 共同决定。
+
+#### Phase4-FSA-F2 Plan：Anchor Pressure Calibration Gate
 
 | Field | Content |
 | --- | --- |
-| `current_step` | Step 5/6：基于 F1 结果重新检查 future anchor 理论可行性，并设计最小诊断 |
-| `problem` | F1 的 anchor 有局部正信号，但 Weather h720-only long/late 受损，R.3 anchor 又伤 ETTh2；需要判断是不是 low-confidence future units 的强制 alignment pressure 造成 conflict |
-| `existence_evidence` | F1 future alignment diagnostics 非 collapse；min raw confidence 触达 `0.05` floor；A0/A1 的收益集中在不同 dataset/regions |
-| `idea` | 把 future anchor 从 dense floor-forced alignment 改为 confidence-selective alignment：不再强制低置信 future segments 提供最小梯度 |
-| `theory_check` | 如果低置信或 reconstruction-hard segments 主要带来噪声/冲突，那么取消 floor 应减少 Weather late 与 ETTh2 的副作用，同时保留高置信 teacher 对 state geometry 的约束 |
-| `design` | 只改一个因素：`future_confidence_floor=0.0`；保留 `future_align_weight=0.01`、`future_recon_weight=0.001`、`future_relation_weight=0`；只跑 `F2-A0 single_prefix + selective anchor` 与 `F2-A1 R3 + selective anchor`，复用 F1 controls |
-| `gate` | `F2-A0` 相对 `F1-C0` mean MSE `<0` 且 Weather h720 late 不超过 `+0.5%`；`F2-A1` 相对 `F1-C1` ETTh2 mean damage 降到 `<=+1.0%` 且保留 Weather h720 late improvement；否则停止 future-anchor stacking |
-| `artifacts` | 待新增 F2A runner/analyzer 或复用 F1 runner with `ARMS=... FUTURE_CONFIDENCE_FLOOR=0.0` |
-| `decision` | 若 F2A 通过，才进入 anchored-state HSS；若 F2A 失败，回 Step 2/3，考虑 R.3 compound protocol 机制分析或更大 representation redesign |
+| `current_step` | Step 5/6：基于 F1 结果重新检查 future anchor 理论可行性，并设计最小可证伪实验 |
+| `problem` | F1 的 future anchor 有局部正信号，但不是稳定 substrate：A0 改善 ETTh2 却伤 Weather late；A1 改善 Weather late 却伤 ETTh2 |
+| `existence_evidence` | F1 中 future alignment 非 collapse 且无 leakage；min raw confidence 触达 `0.05` floor；A0/A1 的收益随 base/exposure 改变 |
+| `idea` | 不直接叠加 HSSG/SCC，而先校准 anchor pressure：判断 conflict 是来自 low-confidence units 被强制对齐，还是来自 dense/global anchor pressure 过强 |
+| `theory_check` | 如果低置信 future units 主要贡献噪声，取消 confidence floor 应减少 Weather late 与 ETTh2 damage；如果全局 pressure 过强，降低 `future_align_weight` 才会缓解；若二者都无效，future anchor 不是当前 HSS substrate |
+| `design` | Stage F2A 只跑 `future_confidence_floor=0.0`，复用 F1 controls；若 F2A 只部分改善，再进入 F2B 降低 `future_align_weight`，否则不 sweep |
+| `gate` | F2A 需要 `single_prefix + selective anchor` 相对 F1-C0 mean MSE `<0` 且 Weather h720 late `<=+0.5%`；或 `R3 + selective anchor` 相对 F1-C1 ETTh2 damage `<=+1.0%` 且保留 Weather h720 late gain |
+| `artifacts` | 待新增 thin F2A wrapper/analyzer；复用现有 train code，不改 model；新增 run names 或独立 output root 避免覆盖 F1；diagnostics 只保留主指标、h720 segment、training/checkpoint/future_alignment/config |
+| `decision` | F2A 通过才进入 anchored-state HSS；F2A 失败则不做 HSSG-on-anchor，回 Step 2/3 重新考虑 R.3 compound protocol 或更大 representation redesign |
+
+F2A 最小矩阵：
+
+| Arm | Base | Changed factor | Purpose |
+| --- | --- | --- | --- |
+| `F2-A0` | `single_720_prefix_risk` | `future_confidence_floor=0.0` | 检查 A0 的 Weather late damage 是否来自 low-confidence forced alignment |
+| `F2-A1` | `r3_prefix_risk` | `future_confidence_floor=0.0` | 检查 A1 的 ETTh2 damage 是否来自 low-confidence forced alignment |
+
+复用 F1 controls：
+
+- `F1-C0` 作为 `single_720_prefix_risk` baseline；
+- `F1-C1` 作为 R.3 baseline；
+- `F1-A0/F1-A1` 作为 floor `0.05` 的 direct comparison。
+
+F2B 仅在 F2A 给出接近通过但仍有轻微副作用时启动：
+
+- candidate factor: `future_align_weight=0.003` 或 `0.005`；
+- 不同时改 `future_recon_weight`、`future_relation_weight` 或 architecture；
+- 如果 F2B 仍不能同时满足 Weather late 与 ETTh2 no-harm，则停止 future-anchor calibration。
 
 ## 历史证据索引
 
