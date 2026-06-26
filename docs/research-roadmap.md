@@ -1926,33 +1926,33 @@ Phase5 的下一步判断：
 | `current_step` | Step 11 -> Step 1/6/7/8：从 local source-informed implementation 回滚到 official-source reproduction |
 | `problem` | 前一版 `baselines/timealign_carrier` 的 fixed-horizon 结果与 TimeAlign 论文表现存在较大差距；如果差距来自 repo 实现、dataloader、官方 hyperparameter preset 或 checkpoint policy 错位，则后续 unified/fixed 和 HSS 判断都不可靠 |
 | `existence_evidence` | 官方代码包含自己的 `data_provider`、dataset split、official scripts；并且官方 `EarlyStopping` 实际未执行 best-checkpoint 选择，`test()` 也不 reload checkpoint。这些实现细节足以改变 fixed-horizon 结果 |
-| `idea` | 新建 `baselines/timealign_official/`，vendored 官方 TimeAlign 源码；只添加薄 repo adapter，不再复用本 repo 的 dataloader/model；先跑 source-faithful `official-last`，再把 corrected `best-val` 作为独立 diagnostic |
+| `idea` | 新建 `baselines/timealign_official/`，vendored 官方 TimeAlign 源码；只添加薄 repo adapter，不再复用本 repo 的 dataloader/model；先跑 source-faithful `official-last`，再把 `best-val` 作为 validation-selector diagnostic |
 | `theory_check` | 若 official-source fixed-horizon 仍不能接近论文，问题优先是 reproduction/data/code-version audit，而不是 HSS 方法设计；若 official-source fixed-horizon 成立，再判断 unified-720 是否存在可叙事的 supervision conflict |
 | `design` | `3 datasets × (4 fixed horizons + 1 unified-720)`；datasets 为 `Weather/ETTm2/ETTh2`；fixed runs 使用 dataset+horizon official preset；unified-720 使用 h720 official preset 并评估 `h96/h192/h336/h720` prefix；primary checkpoint policy 为 `official-last` |
 | `gate` | Gate-1：fixed-horizon official reproduction 是否可信；Gate-2：unified-720 相对 fixed 是否存在稳定 gap；Gate-3：若 `official-last` 与 `best-val` 结论冲突，必须先解决 checkpoint protocol 再进入 HSS |
 | `artifacts` | `baselines/timealign_official/`、`scripts/remote/run_phase5_timealign_official_gate.sh`、`scripts/remote/check_phase5_timealign_official_progress.sh`、`scripts/sync_phase5_timealign_official_results.sh`、`scripts/analyze_phase5_timealign_official_gate.py`、`docs/code-explanation/phase5-timealign-official-reproduction.md` |
 | `decision` | Active route 切换为 official-source reproduction。暂不继续 Phase5-R1 ablation，直到 source-faithful fixed/unified 对比返回并完成分析 |
 
-[Fact] 官方 `EarlyStopping` 的有效行为是 last-epoch checkpoint，而非 best validation checkpoint。该行为看起来像实现问题，但不能在 paper-faithful reproduction 中静默修正。
+[Fact] 官方 `EarlyStopping` 的有效行为是 last-epoch checkpoint，而非 best validation checkpoint。作者在 GitHub issue #2 中确认，论文使用固定训练轮数后的 final model，理由是长时序预测中 validation/test 可能存在 distribution shift，validation-best 可能训练不足。因此该行为应视为 author-intended paper protocol，而不是 bug。
 
 [Decision] 后续实验分成两个 protocol：
 
 - `official-last`：primary，用于回答“当前 fixed-horizon 与论文差距是否来自我们的 repo implementation”；
-- `best-val`：secondary，用于 corrected research control，只在 `official-last` 返回后按需运行。
+- `best-val`：secondary，用于 validation-selector diagnostic，只检验 unified/fixed 结论是否依赖 checkpoint selector。
 
 #### Phase5-R0 Result：Official Source Valid, Checkpoint Policy Blocks HSS Claim
 
 | Field | Content |
 | --- | --- |
 | `current_step` | Step 9/10/11：评估 official-source reproduction，并决定是否进入 HSS |
-| `problem` | `official-last` 是 source-faithful protocol，但官方 `EarlyStopping` 不执行 best checkpoint；若 checkpoint artifact 很大，unified/fixed gap 不能直接作为 HSS 证据 |
+| `problem` | `official-last` 是作者确认的 paper protocol；但 unified/fixed 研究仍需检查结论是否依赖 checkpoint selector |
 | `existence_evidence` | 完整矩阵 `3 datasets × (4 fixed + 1 unified)` 已完成；artifacts 在 `analysis/phase5_timealign_official_gate_20260626/` |
 | `idea` | 先判定 official-source fixed carrier 是否可信，再把 checkpoint protocol 作为独立变量处理 |
 | `theory_check` | official-source fixed 相对 repo-local fixed 在 11/12 个 setting 改善，说明 source/preset mismatch 确实存在；但 ETTh2 official-last 的 last-vs-best validation gap 高达 `+6.29%/+15.73%/+27.84%/+20.76%`，足以污染结论 |
 | `design` | `official-last` fixed/unified 对比；同步读取 training summary 作为 checkpoint diagnostic |
-| `gate` | Carrier source-faithfulness gate 通过；HSS necessity gate 暂停，必须先过 `best-val` corrected control |
+| `gate` | Carrier source-faithfulness gate 通过；HSS necessity gate 暂停，必须先过 `best-val` validation-selector diagnostic |
 | `artifacts` | `analysis/phase5_timealign_official_gate_20260626/phase5_timealign_official_gate_report.md`、`analysis/phase5_timealign_official_gate_20260626/phase5_timealign_official_interpretation.md` |
-| `decision` | `official_source_carrier_valid_but_checkpoint_policy_blocks_hss_claim`；下一步运行 `CHECKPOINT_POLICY=best-val` 的同矩阵 corrected control |
+| `decision` | `official_source_carrier_valid_need_selector_sensitivity_check`；下一步运行 `CHECKPOINT_POLICY=best-val` 的同矩阵 validation-selector diagnostic |
 
 [Fact] `official-last` unified-vs-fixed：
 
@@ -1962,8 +1962,37 @@ Phase5 的下一步判断：
 - ALL: `3/12` wins，mean relative MSE `-1.08%`。
 
 [Inference] 当前不能写成“unified 一定退化”，也不能写成“unified 没有问题”。更准确的判断是：
-TimeAlign unified degradation 在 ETTm2/Weather 上存在，但 ETTh2 的反向结果被 checkpoint policy
-强烈污染。进入 HSS 前必须用 corrected checkpoint protocol 验证。
+TimeAlign unified degradation 在 ETTm2/Weather 上存在，但 ETTh2 的反向结果需要用 validation-selector
+diagnostic 验证是否只是 checkpoint artifact。
+
+#### Phase5-R0B Result：Unified Behavior Is Dataset-Dependent, Not Selector-Driven
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 9/10/11：评估 `best-val` validation-selector diagnostic |
+| `problem` | `official-last` 是 paper-faithful protocol；需要判断 unified/fixed gap 是否依赖 last-epoch selector |
+| `existence_evidence` | `best-val` 同矩阵 `3 datasets × (4 fixed + 1 unified)` 完成；artifacts 在 `analysis/phase5_timealign_official_bestval_20260626/` |
+| `idea` | 若 `best-val` 改变 winner pattern，则 unified/fixed 结论是 selector-sensitive；若不改变，则 checkpoint policy 不是主因 |
+| `theory_check` | `best-val` 与 `official-last` 的 dataset-level pattern 完全一致：ETTh2 `3/4` unified wins，ETTm2/Weather `0/4` unified wins |
+| `design` | 比较 `official-last` 与 `best-val` 的 relative MSE gap、wins、dataset mean |
+| `gate` | 若 ETTm2/Weather 在两种 selector 下仍稳定退化，则存在 TimeAlign unified pressure 的数据集依赖性；若 ETTh2 在两种 selector 下仍稳定受益，则不能建立“统一退化”的 HSS 叙事 |
+| `artifacts` | `analysis/phase5_timealign_official_bestval_20260626/phase5_timealign_official_gate_report.md`、`analysis/phase5_timealign_official_bestval_20260626/phase5_timealign_selector_comparison.md` |
+| `decision` | `dataset_dependent_unified_behavior_not_global_hss_gap`；不直接进入通用 HSS 方法设计，下一步应回 Step 2/3 重新定义 TimeAlign-HSS 的问题支点，或做 look-back horizon sweep 先对齐论文复现口径 |
+
+[Fact] `best-val` unified-vs-fixed：
+
+- ETTh2: `3/4` wins，mean relative MSE `-8.38%`；
+- ETTm2: `0/4` wins，mean relative MSE `+3.68%`；
+- Weather: `0/4` wins，mean relative MSE `+1.15%`；
+- ALL: `3/12` wins，mean relative MSE `-1.18%`。
+
+[Strong Evidence] Winner pattern 与 `official-last` 完全一致；checkpoint selector 不是造成
+ETTh2 positive、ETTm2/Weather negative 分裂的主因。
+
+[Decision] 当前 TimeAlign-HSS 不能写成“unified multi-horizon 普遍退化，需要 HSS 修复”。可行的下一步有两个：
+
+1. 回 Step 2/3：把研究问题改成 dataset/state-dependent future alignment scheduling，解释为什么某些数据集 unified 受益、某些数据集 unified 受损；
+2. 先做 look-back horizon sweep：作者说明主表使用 `{96,192,336,720}` look-back search，若目标是论文级复现对齐，应先完成 fixed-horizon look-back sweep，再判断 carrier 是否足够强。
 
 ## 历史证据索引
 

@@ -18,10 +18,15 @@ FATST adapter in `train_repo.py`.
 
 The official `EarlyStopping` implementation saves every epoch and has the
 actual early-stop comparison logic commented out. The official `test()` path
-also does not reload the saved checkpoint. To avoid mixing reproduction and
-repair, the adapter exposes two explicit policies:
+also does not reload the saved checkpoint. The author clarified in GitHub issue
+#2 that the paper uses the last-epoch checkpoint because validation/test
+distribution shift can make validation-best selection undertrain the model.
+Therefore this is treated as an author-intended training/checkpoint policy, not
+as a source bug. To keep sensitivity analysis explicit, the adapter exposes two
+policies:
 
 - `official-last`: keep the effective official behavior and evaluate the last
   epoch model. This is the primary paper-faithful reproduction protocol.
 - `best-val`: evaluate the model state with the best validation MSE. This is a
-  corrected research-control protocol, not the source-faithful reproduction.
+  validation-selector diagnostic, not a correction of the source-faithful
+  reproduction.

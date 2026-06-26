@@ -71,5 +71,5 @@
 ## Gate Reading
 
 - [Fact] This baseline vendors official TimeAlign model and dataloader code.
-- [Fact] The `official-last` policy is for source-faithful reproduction, not for corrected research selection.
-- [Decision] If fixed-horizon `official-last` still diverges from the paper, audit data version, official commit/version, and script-level hyperparameters before designing HSS on top.
+- [Fact] `official-last` is the author-confirmed paper protocol; `best-val` is a validation-selector diagnostic, not a correction of the paper protocol.
+- [Decision] If the unified-vs-fixed pattern is stable across both selectors, treat checkpoint policy as a sensitivity factor rather than the main mechanism.

@@ -2,11 +2,12 @@
 
 ## 结论摘要
 
-[Decision] `official_source_carrier_valid_but_checkpoint_policy_blocks_hss_claim`.
+[Decision] `official_source_carrier_valid_need_selector_sensitivity_check`.
 
 `official-last` 矩阵已经完成，说明 official-source TimeAlign carrier 的 fixed-horizon
-表现明显强于上一版 repo-local implementation。但该结果还不能直接进入 HSS 设计，因为
-ETTh2 的 last-epoch checkpoint policy 对 validation 产生了严重污染。
+表现明显强于上一版 repo-local implementation。作者在 GitHub issue #2 中确认论文使用
+fixed training epochs 后的 final model，而不是 validation-best checkpoint。因此
+`official-last` 应视为 author-intended paper protocol，不应被称为源码错误。
 
 ## Fixed-Horizon 复现质量
 
@@ -43,14 +44,15 @@ dataloader 或 official preset mismatch，而不是 TimeAlign 机制本身失败
 在 h96/h192/h336 显著优于 fixed。
 
 [Inference] 不能把问题简单写成 “unified multi-horizon 一定退化”。更准确的研究问题是：
-TimeAlign-style future alignment 在 unified setting 下存在 dataset-dependent
-checkpoint/protocol interaction；ETTm2/Weather 显示 multi-horizon pressure 伤害短中期，
-但 ETTh2 的 official-last 结果可能被 checkpoint policy 放大或扭曲。
+TimeAlign-style future alignment 在 unified setting 下存在 dataset-dependent behavior；
+ETTm2/Weather 显示 multi-horizon pressure 伤害短中期，而 ETTh2 显示 unified-720 对短中期
+反而有益。该分裂需要通过 `best-val` diagnostic 检查是否由 selector 造成。
 
-## Checkpoint Policy Risk
+## Checkpoint Selector Diagnostic Need
 
-`official-last` 是 source-faithful reproduction，但不是可靠研究 protocol。ETTh2 的
-last-vs-best validation gap 很大：
+`official-last` 是 source-faithful reproduction，也是作者确认的 paper protocol。尽管如此，
+ETTh2 的 last-vs-best validation gap 很大，因此需要 `best-val` 作为 validation-selector
+diagnostic，而不是作为对 TimeAlign 官方策略的 correction：
 
 | Run | Best epoch | Last-vs-best val MSE |
 | --- | ---: | ---: |
@@ -62,8 +64,7 @@ last-vs-best validation gap 很大：
 
 相比之下，ETTm2 和 Weather 的 last-vs-best validation gap 大多小于 `2%`。
 
-[Strong Evidence] ETTh2 的 unified advantage 不能直接作为 HSS 反证，因为 fixed 和 unified
-都在 official-last 下严重偏离最佳 validation epoch，而且偏离幅度不一致。
+[Fact] 该 diagnostic 的目的不是替代论文 protocol，而是判断 unified/fixed 结论是否依赖 selector。
 
 ## Decision
 
@@ -71,12 +72,11 @@ last-vs-best validation gap 很大：
 
 1. [Pass] official-source TimeAlign carrier 比 repo-local carrier 更可信；
 2. [Pass] ETTm2/Weather 存在 unified degradation signal；
-3. [Fail] 不能在 `official-last` 上做最终 HSS necessity claim；
-4. [Next] 必须运行 `best-val` corrected control。
+3. [Hold] ETTh2 与 ETTm2/Weather 的结论方向相反，不能建立 global unified-degradation 叙事；
+4. [Next] 必须运行 `best-val` validation-selector diagnostic。
 
-如果 `best-val` 后 ETTm2/Weather 仍退化，且 ETTh2 不再呈现由 checkpoint artifact 导致的反向结论，
-则可以进入 TimeAlign-HSS：研究 horizon-agnostic supervision scheduling 如何调度
-future reconstruction/alignment 的梯度压力。
+如果 `best-val` 后 winner pattern 仍一致，则 checkpoint selector 不是主因，下一步应把研究问题
+改成 dataset/state-dependent future alignment scheduling，或先做 look-back horizon sweep 对齐论文复现口径。
 
 如果 `best-val` 消除 unified degradation，则 TimeAlign 本身可能已经能处理 unified prefix
 evaluation，HSS 必要性不足，应回 Step 2/3 寻找新的 carrier 或研究问题。

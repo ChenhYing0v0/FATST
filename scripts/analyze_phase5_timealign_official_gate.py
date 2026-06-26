@@ -230,9 +230,9 @@ def write_report(
     elif checkpoint_policy == "official-last":
         decision = "source_faithful_reproduction_ready_for_paper_gap_audit"
     elif all_summary["mean_relative_mse_pct"] > 0.5:
-        decision = "corrected_protocol_unified_gap_candidate"
+        decision = "validation_selector_unified_gap_candidate"
     else:
-        decision = "corrected_protocol_no_clear_unified_gap"
+        decision = "validation_selector_no_clear_unified_gap"
     lines = [
         "# Phase5 TimeAlign Official Gate Report",
         "",
@@ -285,8 +285,8 @@ def write_report(
         "## Gate Reading",
         "",
         "- [Fact] This baseline vendors official TimeAlign model and dataloader code.",
-        "- [Fact] The `official-last` policy is for source-faithful reproduction, not for corrected research selection.",
-        "- [Decision] If fixed-horizon `official-last` still diverges from the paper, audit data version, official commit/version, and script-level hyperparameters before designing HSS on top.",
+        "- [Fact] `official-last` is the author-confirmed paper protocol; `best-val` is a validation-selector diagnostic, not a correction of the paper protocol.",
+        "- [Decision] If the unified-vs-fixed pattern is stable across both selectors, treat checkpoint policy as a sensitivity factor rather than the main mechanism.",
     ]
     (output_dir / "phase5_timealign_official_gate_report.md").write_text("\n".join(lines) + "\n")
 

@@ -40,13 +40,18 @@
 官方 `train()` 末尾没有 reload best checkpoint，`test()` 的 checkpoint load 也被注释。因此官方默认
 路径实际是 last-epoch evaluation。
 
+[Fact] 作者在 GitHub issue #2 中说明，论文结果使用固定训练轮数后的最终模型，而不是
+validation-best checkpoint；理由是长时序预测中 validation/test 可能存在 distribution shift，
+validation-best 有时会导致训练不足。因此这里把 `official-last` 视为 author-intended
+paper protocol，而不是源码 bug。
+
 `train_repo.py` 不直接修补官方源码，而是暴露两个显式 protocol：
 
 - `official-last`：复现官方有效行为，用于 paper-faithful gap audit；
-- `best-val`：使用 validation MSE 最优模型，用于 corrected research control。
+- `best-val`：使用 validation MSE 最优模型，用于 validation-selector diagnostic。
 
 这两个 protocol 必须分开分析。`official-last` 回答“为什么和论文/官方结果不一致”，
-`best-val` 才回答“作为我们的 HSS carrier 是否合理”。
+`best-val` 回答 unified/fixed 结论是否依赖 validation selector。
 
 ## Forward 与 Loss
 
@@ -120,8 +125,9 @@ unified-720 使用 h720 official preset，并在 test 时评估 `h96/h192/h336/h
 [Code realization] 当前代码以官方 dataloader/model/loss/preset 为主体，只加入 repo artifact
 导出和 unified/fixed 对比入口。
 
-[Proxy] `official-last` 是 source-faithful proxy；它不代表最合理训练 protocol。
-`best-val` 是 corrected protocol；它不代表论文代码默认行为。
+[Proxy] `official-last` 是 source-faithful proxy，也是作者确认的 paper protocol。
+`best-val` 是 validation-selector diagnostic；它不代表论文代码默认行为，也不被视为对
+TimeAlign 官方训练策略的修正。
 
 [Falsification] 若 `official-last` fixed-horizon 仍明显偏离论文，下一步应继续审计数据版本、
 官方 commit、test path 与 script setting，而不是直接进入 HSS 设计。
