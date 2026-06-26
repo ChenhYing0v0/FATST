@@ -1559,6 +1559,34 @@ training / regularization。若 official 与 oracle views 都无收益，则回 
 是否应从 supervision scheduling 转向 future-aware architecture 或 pretraining，而不是继续 carrier
 局部修补。
 
+#### Phase4-SCC-E1 Result：Carrier Signal Exists, R.3 Gate Fails
+
+[Fact] 10 个 run 全部完成：`5 strategies × 2 datasets`，LR `5e-5`，seed `2021`。
+结果归档在 `artifacts/runs/phase4_scc_condition_carrier_gate`，分析报告在
+`analysis/phase4_scc_condition_carrier_gate_20260626/phase4_scc_condition_carrier_gate_report.md`。
+
+[Strong Evidence] SCC carrier 确实被使用：`condition_delta_mean_abs_residual` 非零，
+Weather 上 detached/state-open 分别达到 `0.1128/0.1202`，且
+`train_condition_delta_grad_norm` 约 `0.05-0.06`。routing 也没有 collapse：
+Weather mean learnable/noisy blocks 约 `1.41/1.86`，与 dynamic residual-stability control
+接近。
+
+[Strong Evidence] 但 SCC-E1 未通过 R.3 gate。相对 R.3：
+
+- `scc_condition_delta_detached`：ETTh2 `+2.65%`，Weather `+1.96%`，均为 `0/4` wins；
+- `scc_condition_delta_state_open`：ETTh2 `+2.83%`，Weather `+0.68%`，Weather 仅 h720
+  `1/4` win；
+- checkpoint diagnostics 显示 official vs long/h720 oracle gap 很小，Weather state-open
+  h720 oracle gap 约 `+0.59%`，不足以解释整体失败。
+
+[Inference] 更新位置上移到 condition/state carrier 比 adapter carrier 更强：state-open 在 Weather
+相对 dynamic residual-stability control 是 `4/4` wins、mean MSE `-3.28%`。但它仍没有超过 R.3，
+说明当前 bottleneck 不是简单的 “carrier 太晚/太弱” 可以单独解决。
+
+[Decision] SCC-E1 fail as core route。停止继续 sweep `aux_weight/top_ratio/condition_delta_size`。
+回 Step 2/3 重估 Phase4：如果仍坚持 HSS 叙事，需要转向更强的 future-aware representation /
+pretraining；否则应考虑把 R.3/prefix-risk 作为强 baseline 机制分析，而不是继续局部 stacking。
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：

@@ -1,0 +1,13 @@
+candidate_strategy,baseline_strategy,dataset,settings,mse_wins,mae_wins,mean_relative_mse_pct,mean_relative_mae_pct
+scc_condition_delta_detached,dynamic_residual_stability_routing,ETTh2,4,1,1,-0.2880478962156069,0.22633612362983335
+scc_condition_delta_detached,dynamic_residual_stability_routing,Weather,4,3,4,-2.025357229012445,-2.8537697969344715
+scc_condition_delta_detached,r3_prefix_risk,ETTh2,4,0,0,2.646364886190028,2.0000048044840013
+scc_condition_delta_detached,r3_prefix_risk,Weather,4,0,0,1.9639811363383108,2.0142206323780663
+scc_condition_delta_detached,single_720_prefix_risk,ETTh2,4,0,0,0.5775043203233354,0.7052856915615413
+scc_condition_delta_detached,single_720_prefix_risk,Weather,4,0,0,1.1444589272548766,1.1515555554826862
+scc_condition_delta_state_open,dynamic_residual_stability_routing,ETTh2,4,1,1,-0.10286315011815983,0.3069791284740775
+scc_condition_delta_state_open,dynamic_residual_stability_routing,Weather,4,4,4,-3.284448338998147,-2.8868636993313492
+scc_condition_delta_state_open,r3_prefix_risk,ETTh2,4,0,0,2.830070338783741,2.0794672821361604
+scc_condition_delta_state_open,r3_prefix_risk,Weather,4,1,0,0.6817611072273688,2.0053907995113143
+scc_condition_delta_state_open,single_720_prefix_risk,ETTh2,4,0,0,0.7589594678935274,0.7839883459792529
+scc_condition_delta_state_open,single_720_prefix_risk,Weather,4,2,0,-0.13172515495603332,1.1368728668799177

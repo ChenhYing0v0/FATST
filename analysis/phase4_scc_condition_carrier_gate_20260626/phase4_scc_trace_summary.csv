@@ -1,0 +1,11 @@
+strategy,dataset,trace_rows,mean_learnable_blocks,mean_noisy_blocks,mean_noisy_suppression_ratio,mean_condition_delta_abs_residual,last_condition_delta_abs_residual
+single_720_prefix_risk,ETTh2,826,0.0,0.0,0.0,0.0,0.0
+single_720_prefix_risk,Weather,2000,0.0,0.0,0.0,0.0,0.0
+r3_prefix_risk,ETTh2,2000,0.0,0.0,0.0,0.0,0.0
+r3_prefix_risk,Weather,2000,0.0,0.0,0.0,0.0,0.0
+dynamic_residual_stability_routing,ETTh2,767,1.1603650586701435,1.4432855280312908,0.3608213820078227,0.0,0.0
+dynamic_residual_stability_routing,Weather,2000,1.4405,1.866,0.4665,0.0,0.0
+scc_condition_delta_detached,ETTh2,826,1.1573849878934626,1.4430992736077481,0.36077481840193704,0.05052942779088803,0.06928538531064987
+scc_condition_delta_detached,Weather,2000,1.4125,1.861,0.46525,0.11276074175909162,0.1346203088760376
+scc_condition_delta_state_open,ETTh2,826,1.1573849878934626,1.4430992736077481,0.36077481840193704,0.054470326501727284,0.07435671985149384
+scc_condition_delta_state_open,Weather,2000,1.4125,1.861,0.46525,0.12020744382520206,0.1555701047182083

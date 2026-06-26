@@ -246,6 +246,16 @@ def write_report(
     lines = [
         "# Phase4 SCC Condition Carrier Gate Report",
         "",
+        "## Decision",
+        "",
+        "[Strong Evidence] SCC condition carrier is active and improves over the adapter carrier on Weather,",
+        "but it does not pass the core gate against R.3. The state-open variant gets one Weather h720 win,",
+        "yet remains worse than R.3 on mean MSE and most horizons.",
+        "",
+        "[Decision] SCC-E1 fails as a core-route candidate. Do not continue local sweeps over aux weight,",
+        "top ratio, or condition-delta size. The next step should roll back to Step 2/3 and reassess whether",
+        "Phase4 should pivot from local supervision scheduling to future-aware representation or pretraining.",
+        "",
         "## Candidate vs R.3",
         "",
         rows_for_table(
