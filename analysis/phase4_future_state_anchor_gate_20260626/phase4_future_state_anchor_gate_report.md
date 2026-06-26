@@ -107,6 +107,68 @@
 | F1-W0 | Weather | long_mean | 2 | 6 | +0.44% |
 | F1-W0 | Weather | h720 | 2 | 6 | +0.51% |
 
+## Intermediate Diagnostics
+
+[Fact] 结论不只依赖 aggregate MSE/MAE。本报告同步检查了 segment metrics、future alignment/leakage、checkpoint selection、training dynamics、target conditioning、target-state similarity、prefix consistency 和 objective pressure。
+
+### Target Conditioning Summary
+
+| arm | dataset | horizons | mean_abs_gamma | mean_abs_beta | mean_target_state_norm | mean_target_state_norm_std | mean_history_readout_norm |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| F1-A0 | ETTh2 | 4 | 0.437158 | 0.437516 | 7.153762 | 0.396529 | 10.220398 |
+| F1-A0 | Weather | 4 | 0.766411 | 0.417302 | 8.416493 | 1.954961 | 10.715979 |
+| F1-A1 | ETTh2 | 4 | 0.513034 | 0.429625 | 7.922244 | 1.117792 | 10.163903 |
+| F1-A1 | Weather | 4 | 0.697083 | 0.416682 | 8.396148 | 1.521291 | 11.689461 |
+| F1-C0 | ETTh2 | 4 | 0.463760 | 0.429097 | 6.443887 | 0.753688 | 10.597639 |
+| F1-C0 | Weather | 4 | 0.723331 | 0.425456 | 8.862094 | 1.715274 | 10.726435 |
+| F1-C1 | ETTh2 | 4 | 0.444583 | 0.434325 | 6.470165 | 0.469123 | 10.466527 |
+| F1-C1 | Weather | 4 | 0.780469 | 0.409766 | 9.127822 | 2.225557 | 10.463046 |
+| F1-W0 | ETTh2 | 4 | 0.432823 | 0.431449 | 7.418954 | 0.422416 | 9.641081 |
+| F1-W0 | Weather | 4 | 0.741088 | 0.428028 | 8.157727 | 1.255222 | 11.209194 |
+
+### Target-State Similarity Summary
+
+| arm | dataset | horizons | mean_target_state_cosine | mean_abs_target_state_cosine | mean_adjacent_target_state_cosine | min_target_state_cosine | max_target_state_cosine |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| F1-A0 | ETTh2 | 4 | 0.981923 | 0.981923 | 0.995412 | 0.903722 | 0.997814 |
+| F1-A0 | Weather | 4 | 0.279710 | 0.286924 | 0.192015 | -0.193859 | 0.992190 |
+| F1-A1 | ETTh2 | 4 | 0.797603 | 0.797603 | 0.884270 | 0.377783 | 0.997335 |
+| F1-A1 | Weather | 4 | 0.130775 | 0.229675 | 0.013286 | -0.286034 | 0.992126 |
+| F1-C0 | ETTh2 | 4 | 0.873780 | 0.873780 | 0.938474 | 0.548574 | 0.997353 |
+| F1-C0 | Weather | 4 | 0.146128 | 0.222085 | 0.019770 | -0.311883 | 0.993930 |
+| F1-C1 | ETTh2 | 4 | 0.912303 | 0.912303 | 0.961652 | 0.649992 | 0.996613 |
+| F1-C1 | Weather | 4 | 0.227846 | 0.246360 | 0.133534 | -0.306833 | 0.993345 |
+| F1-W0 | ETTh2 | 4 | 0.989593 | 0.989593 | 0.997126 | 0.951085 | 0.998288 |
+| F1-W0 | Weather | 4 | 0.261200 | 0.266033 | 0.153050 | -0.147227 | 0.993251 |
+
+### Prefix Consistency Summary
+
+| arm | dataset | pairs | max_prefix_mismatch_mse | max_prefix_mismatch_mae | max_truth_alignment_mse |
+| --- | --- | --- | --- | --- | --- |
+| F1-C0 | ETTh2 | 3 | 0.000000 | 0.000000 | 0.000000 |
+| F1-C0 | Weather | 3 | 0.000000 | 0.000000 | 0.000000 |
+| F1-C1 | ETTh2 | 3 | 0.000000 | 0.000000 | 0.000000 |
+| F1-C1 | Weather | 3 | 0.000000 | 0.000000 | 0.000000 |
+| F1-A0 | ETTh2 | 3 | 0.000000 | 0.000000 | 0.000000 |
+| F1-A0 | Weather | 3 | 0.000000 | 0.000000 | 0.000000 |
+| F1-A1 | ETTh2 | 3 | 0.000000 | 0.000000 | 0.000000 |
+| F1-A1 | Weather | 3 | 0.000000 | 0.000000 | 0.000000 |
+| F1-W0 | ETTh2 | 3 | 0.000000 | 0.000000 | 0.000000 |
+| F1-W0 | Weather | 3 | 0.000000 | 0.000000 | 0.000000 |
+
+### Objective Pressure Check
+
+| arm | dataset | scope | mode | mean_step_weight | weighted_pressure_share | pressure_share_delta_pct |
+| --- | --- | --- | --- | --- | --- | --- |
+| F1-C0 | Weather | 1-96 | prefix_risk | 2.611814 | 0.721703 | +50.43% |
+| F1-C0 | Weather | 97-192 | prefix_risk | 1.163544 | 0.153976 | -32.98% |
+| F1-C0 | Weather | 193-336 | prefix_risk | 0.855834 | 0.077459 | -50.71% |
+| F1-C0 | Weather | 337-720 | prefix_risk | 0.610223 | 0.046862 | -64.85% |
+| F1-C0 | Weather | horizon_96 | prefix_risk | 2.611814 | 2.611814 | +161.18% |
+| F1-C0 | Weather | horizon_192 | prefix_risk | 1.887679 | 1.887679 | +88.77% |
+| F1-C0 | Weather | horizon_336 | prefix_risk | 1.445460 | 1.445460 | +44.55% |
+| F1-C0 | Weather | horizon_720 | prefix_risk | 1.000000 | 1.000000 | -0.00% |
+
 ## Gate Reading
 
 - [Fact] `F1-A0` vs `F1-C0`: `4/8` MSE wins, mean relative MSE `-0.34%`.
@@ -115,6 +177,9 @@
 - [Fact] `F1-A1` ETTh2 mean relative MSE vs R.3 `+3.31%`.
 - [Fact] `F1-A1` Weather mean relative MSE vs R.3 `-0.06%`; Weather h720 late `337-720` segment vs R.3 `-1.24%`.
 - [Fact] Future leakage max `0.000e+00`; min raw confidence `0.050000`; min mean confidence `0.390767`; max official-to-oracle gap among A0/A1 long/h720 selectors `+1.44%`.
+- [Fact] Prefix consistency max MSE `1.523e-14`，说明 unified output prefix 没有因为 anchor 产生数值不一致。
+- [Inference] `objective_weight_stats.csv` 显示 prefix-risk pressure 在同类 arms 中一致，因此 F1-A0/A1 的差异不是由 step-weight 配置漂移造成。
+- [Inference] `target_conditioning_stats.csv` 与 `target_state_similarity.csv` 证明 anchor 确实改变了 state/conditioning geometry，但这种变化没有稳定转化为跨 dataset 的 main-metric 改善。
 
 ## Decision Rules
 

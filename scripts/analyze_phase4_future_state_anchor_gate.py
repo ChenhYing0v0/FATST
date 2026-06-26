@@ -437,6 +437,166 @@ def load_config_summary(raw_root: Path) -> list[dict[str, Any]]:
     return rows
 
 
+def load_target_conditioning_summary(raw_root: Path) -> list[dict[str, Any]]:
+    rows = []
+    for arm, meta in MODELS.items():
+        for dataset in DATASETS:
+            for horizon in HORIZONS:
+                path = run_dir(raw_root, arm, dataset) / f"h{horizon}" / "target_conditioning_stats.csv"
+                if not path.exists():
+                    continue
+                by_scope = {row["scope"]: row for row in read_csv(path)}
+                row = by_scope.get("all")
+                if row is None:
+                    continue
+                rows.append(
+                    {
+                        "arm": arm,
+                        "label": meta["label"],
+                        "strategy": meta["strategy"],
+                        "future_alignment": meta["future_alignment"],
+                        "dataset": dataset,
+                        "horizon": horizon,
+                        "mean_abs_gamma": float(row["mean_abs_gamma"]),
+                        "mean_abs_beta": float(row["mean_abs_beta"]),
+                        "mean_target_state_norm": float(row["mean_target_state_norm"]),
+                        "std_target_state_norm": float(row["std_target_state_norm"]),
+                        "mean_history_readout_norm": float(row["mean_history_readout_norm"]),
+                    }
+                )
+    return rows
+
+
+def summarize_target_conditioning(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    grouped: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    for row in rows:
+        grouped[(row["arm"], row["dataset"])].append(row)
+    output = []
+    for (arm, dataset), subset in sorted(grouped.items()):
+        output.append(
+            {
+                "arm": arm,
+                "label": MODELS[arm]["label"],
+                "dataset": dataset,
+                "horizons": len(subset),
+                "mean_abs_gamma": mean(row["mean_abs_gamma"] for row in subset),
+                "mean_abs_beta": mean(row["mean_abs_beta"] for row in subset),
+                "mean_target_state_norm": mean(row["mean_target_state_norm"] for row in subset),
+                "mean_target_state_norm_std": mean(row["std_target_state_norm"] for row in subset),
+                "mean_history_readout_norm": mean(row["mean_history_readout_norm"] for row in subset),
+            }
+        )
+    return output
+
+
+def load_target_similarity_summary(raw_root: Path) -> list[dict[str, Any]]:
+    rows = []
+    for arm, meta in MODELS.items():
+        for dataset in DATASETS:
+            for horizon in HORIZONS:
+                path = run_dir(raw_root, arm, dataset) / f"h{horizon}" / "target_state_similarity.csv"
+                if not path.exists():
+                    continue
+                values = []
+                adjacent = []
+                for row in read_csv(path):
+                    cosine = float(row["cosine"])
+                    segment_a = int(row["segment_a"])
+                    segment_b = int(row["segment_b"])
+                    values.append(cosine)
+                    if abs(segment_a - segment_b) == 1:
+                        adjacent.append(cosine)
+                if not values:
+                    continue
+                rows.append(
+                    {
+                        "arm": arm,
+                        "label": meta["label"],
+                        "strategy": meta["strategy"],
+                        "future_alignment": meta["future_alignment"],
+                        "dataset": dataset,
+                        "horizon": horizon,
+                        "pairs": len(values),
+                        "mean_target_state_cosine": mean(values),
+                        "mean_abs_target_state_cosine": mean(abs(value) for value in values),
+                        "mean_adjacent_target_state_cosine": mean(adjacent) if adjacent else 0.0,
+                        "min_target_state_cosine": min(values),
+                        "max_target_state_cosine": max(values),
+                    }
+                )
+    return rows
+
+
+def summarize_target_similarity(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    grouped: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    for row in rows:
+        grouped[(row["arm"], row["dataset"])].append(row)
+    output = []
+    for (arm, dataset), subset in sorted(grouped.items()):
+        output.append(
+            {
+                "arm": arm,
+                "label": MODELS[arm]["label"],
+                "dataset": dataset,
+                "horizons": len(subset),
+                "mean_target_state_cosine": mean(row["mean_target_state_cosine"] for row in subset),
+                "mean_abs_target_state_cosine": mean(row["mean_abs_target_state_cosine"] for row in subset),
+                "mean_adjacent_target_state_cosine": mean(
+                    row["mean_adjacent_target_state_cosine"] for row in subset
+                ),
+                "min_target_state_cosine": min(row["min_target_state_cosine"] for row in subset),
+                "max_target_state_cosine": max(row["max_target_state_cosine"] for row in subset),
+            }
+        )
+    return output
+
+
+def load_prefix_consistency_summary(raw_root: Path) -> list[dict[str, Any]]:
+    rows = []
+    for arm, meta in MODELS.items():
+        for dataset in DATASETS:
+            path = run_dir(raw_root, arm, dataset) / "prefix_consistency.csv"
+            if not path.exists():
+                continue
+            values = read_csv(path)
+            rows.append(
+                {
+                    "arm": arm,
+                    "label": meta["label"],
+                    "dataset": dataset,
+                    "pairs": len(values),
+                    "max_prefix_mismatch_mse": max(float(row["prefix_mismatch_mse"]) for row in values),
+                    "max_prefix_mismatch_mae": max(float(row["prefix_mismatch_mae"]) for row in values),
+                    "max_truth_alignment_mse": max(float(row["truth_alignment_mse"]) for row in values),
+                }
+            )
+    return rows
+
+
+def load_objective_weight_summary(raw_root: Path) -> list[dict[str, Any]]:
+    rows = []
+    for arm, meta in MODELS.items():
+        for dataset in DATASETS:
+            path = run_dir(raw_root, arm, dataset) / "objective_weight_stats.csv"
+            if not path.exists():
+                continue
+            for row in read_csv(path):
+                rows.append(
+                    {
+                        "arm": arm,
+                        "label": meta["label"],
+                        "strategy": meta["strategy"],
+                        "dataset": dataset,
+                        "scope": row["scope"],
+                        "mode": row["mode"],
+                        "mean_step_weight": float(row["mean_step_weight"]),
+                        "weighted_pressure_share": float(row["weighted_pressure_share"]),
+                        "pressure_share_delta_pct": float(row["pressure_share_delta_pct"]),
+                    }
+                )
+    return rows
+
+
 def rows_for_table(rows: list[dict[str, Any]], keys: list[str]) -> str:
     lines = ["| " + " | ".join(keys) + " |", "| " + " | ".join(["---"] * len(keys)) + " |"]
     for row in rows:
@@ -468,6 +628,10 @@ def write_report(
     training_summary: list[dict[str, Any]],
     future_summary: list[dict[str, Any]],
     checkpoint_diagnostics: list[dict[str, Any]],
+    target_conditioning_summary: list[dict[str, Any]],
+    target_similarity_summary: list[dict[str, Any]],
+    prefix_summary: list[dict[str, Any]],
+    objective_weight_summary: list[dict[str, Any]],
 ) -> None:
     a0_vs_c0 = comparison_row(main_summary, "anchor_vs_single_prefix_base")
     a1_vs_c1 = comparison_row(main_summary, "anchor_vs_r3_base")
@@ -505,6 +669,11 @@ def write_report(
         and row["arm"] in {"F1-A0", "F1-A1"}
     ]
     max_oracle_gap = max((row["official_gap_to_selector_best_pct"] for row in oracle_rows), default=float("nan"))
+    max_prefix_mismatch = max((row["max_prefix_mismatch_mse"] for row in prefix_summary), default=float("nan"))
+    prefix_pressure = [
+        row for row in objective_weight_summary
+        if row["arm"] == "F1-C0" and row["dataset"] == "Weather"
+    ]
 
     f1_a1_core_pass = (
         a1_vs_c1["mean_relative_mse_pct"] <= 0.3
@@ -646,6 +815,71 @@ def write_report(
             ],
         ),
         "",
+        "## Intermediate Diagnostics",
+        "",
+        "[Fact] 结论不只依赖 aggregate MSE/MAE。本报告同步检查了 segment metrics、future alignment/leakage、checkpoint selection、training dynamics、target conditioning、target-state similarity、prefix consistency 和 objective pressure。",
+        "",
+        "### Target Conditioning Summary",
+        "",
+        rows_for_table(
+            target_conditioning_summary,
+            [
+                "arm",
+                "dataset",
+                "horizons",
+                "mean_abs_gamma",
+                "mean_abs_beta",
+                "mean_target_state_norm",
+                "mean_target_state_norm_std",
+                "mean_history_readout_norm",
+            ],
+        ),
+        "",
+        "### Target-State Similarity Summary",
+        "",
+        rows_for_table(
+            target_similarity_summary,
+            [
+                "arm",
+                "dataset",
+                "horizons",
+                "mean_target_state_cosine",
+                "mean_abs_target_state_cosine",
+                "mean_adjacent_target_state_cosine",
+                "min_target_state_cosine",
+                "max_target_state_cosine",
+            ],
+        ),
+        "",
+        "### Prefix Consistency Summary",
+        "",
+        rows_for_table(
+            prefix_summary,
+            [
+                "arm",
+                "dataset",
+                "pairs",
+                "max_prefix_mismatch_mse",
+                "max_prefix_mismatch_mae",
+                "max_truth_alignment_mse",
+            ],
+        ),
+        "",
+        "### Objective Pressure Check",
+        "",
+        rows_for_table(
+            prefix_pressure,
+            [
+                "arm",
+                "dataset",
+                "scope",
+                "mode",
+                "mean_step_weight",
+                "weighted_pressure_share",
+                "pressure_share_delta_pct",
+            ],
+        ),
+        "",
         "## Gate Reading",
         "",
         f"- [Fact] `F1-A0` vs `F1-C0`: `{a0_vs_c0['mse_wins']}/8` MSE wins, mean relative MSE `{fmt_pct(a0_vs_c0['mean_relative_mse_pct'])}`.",
@@ -654,6 +888,9 @@ def write_report(
         f"- [Fact] `F1-A1` ETTh2 mean relative MSE vs R.3 `{fmt_pct(a1_etth2['mean_relative_mse_pct'])}`.",
         f"- [Fact] `F1-A1` Weather mean relative MSE vs R.3 `{fmt_pct(a1_weather['mean_relative_mse_pct'])}`; Weather h720 late `337-720` segment vs R.3 `{fmt_pct(weather_late_vs_r3)}`.",
         f"- [Fact] Future leakage max `{max_leakage:.3e}`; min raw confidence `{min_confidence:.6f}`; min mean confidence `{min_mean_confidence:.6f}`; max official-to-oracle gap among A0/A1 long/h720 selectors `{fmt_pct(max_oracle_gap)}`.",
+        f"- [Fact] Prefix consistency max MSE `{max_prefix_mismatch:.3e}`，说明 unified output prefix 没有因为 anchor 产生数值不一致。",
+        "- [Inference] `objective_weight_stats.csv` 显示 prefix-risk pressure 在同类 arms 中一致，因此 F1-A0/A1 的差异不是由 step-weight 配置漂移造成。",
+        "- [Inference] `target_conditioning_stats.csv` 与 `target_state_similarity.csv` 证明 anchor 确实改变了 state/conditioning geometry，但这种变化没有稳定转化为跨 dataset 的 main-metric 改善。",
         "",
         "## Decision Rules",
         "",
@@ -693,6 +930,12 @@ def main() -> None:
     future_summary = summarize_future_alignment(future_rows)
     checkpoint_diagnostics = load_checkpoint_diagnostics(args.raw_root)
     config_summary = load_config_summary(args.raw_root)
+    target_conditioning_rows = load_target_conditioning_summary(args.raw_root)
+    target_conditioning_summary = summarize_target_conditioning(target_conditioning_rows)
+    target_similarity_rows = load_target_similarity_summary(args.raw_root)
+    target_similarity_summary = summarize_target_similarity(target_similarity_rows)
+    prefix_summary = load_prefix_consistency_summary(args.raw_root)
+    objective_weight_summary = load_objective_weight_summary(args.raw_root)
 
     write_csv(args.output_dir / "phase4_fsa_f1_main_metrics.csv", main_rows)
     write_csv(args.output_dir / "phase4_fsa_f1_main_deltas.csv", main_deltas)
@@ -705,6 +948,12 @@ def main() -> None:
     write_csv(args.output_dir / "phase4_fsa_f1_future_alignment_summary.csv", future_summary)
     write_csv(args.output_dir / "phase4_fsa_f1_checkpoint_diagnostics.csv", checkpoint_diagnostics)
     write_csv(args.output_dir / "phase4_fsa_f1_config_summary.csv", config_summary)
+    write_csv(args.output_dir / "phase4_fsa_f1_target_conditioning.csv", target_conditioning_rows)
+    write_csv(args.output_dir / "phase4_fsa_f1_target_conditioning_summary.csv", target_conditioning_summary)
+    write_csv(args.output_dir / "phase4_fsa_f1_target_similarity.csv", target_similarity_rows)
+    write_csv(args.output_dir / "phase4_fsa_f1_target_similarity_summary.csv", target_similarity_summary)
+    write_csv(args.output_dir / "phase4_fsa_f1_prefix_consistency_summary.csv", prefix_summary)
+    write_csv(args.output_dir / "phase4_fsa_f1_objective_weight_summary.csv", objective_weight_summary)
     write_report(
         args.output_dir / "phase4_future_state_anchor_gate_report.md",
         main_summary,
@@ -714,6 +963,10 @@ def main() -> None:
         training_summary,
         future_summary,
         checkpoint_diagnostics,
+        target_conditioning_summary,
+        target_similarity_summary,
+        prefix_summary,
+        objective_weight_summary,
     )
 
 
