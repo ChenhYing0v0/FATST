@@ -474,6 +474,7 @@ def write_report(
     a1_weather = comparison_row(main_dataset_summary, "anchor_vs_r3_base", "Weather")
     a0_etth2 = comparison_row(main_dataset_summary, "anchor_vs_single_prefix_base", "ETTh2")
     a0_weather = comparison_row(main_dataset_summary, "anchor_vs_single_prefix_base", "Weather")
+    a1_etth2 = comparison_row(main_dataset_summary, "anchor_vs_r3_base", "ETTh2")
     weather_h720 = [
         row for row in segment_deltas
         if row["comparison"] == "anchor_vs_r3_base"
@@ -482,8 +483,22 @@ def write_report(
         and row["segment"] == "337-720"
     ]
     weather_late_vs_r3 = weather_h720[0]["relative_mse_pct"] if weather_h720 else float("nan")
+    a0_weather_h720 = [
+        row for row in segment_deltas
+        if row["comparison"] == "anchor_vs_single_prefix_base"
+        and row["dataset"] == "Weather"
+        and row["horizon"] == 720
+        and row["segment"] == "337-720"
+    ]
+    weather_late_vs_single = (
+        a0_weather_h720[0]["relative_mse_pct"] if a0_weather_h720 else float("nan")
+    )
     max_leakage = max((row["max_prediction_leakage_abs"] for row in future_summary), default=float("nan"))
     min_confidence = min((row["min_future_alignment_confidence"] for row in future_summary), default=float("nan"))
+    min_mean_confidence = min(
+        (row["mean_future_alignment_confidence"] for row in future_summary),
+        default=float("nan"),
+    )
     oracle_rows = [
         row for row in checkpoint_diagnostics
         if row["selector"] in {"long_mean", "h720"}
@@ -491,19 +506,29 @@ def write_report(
     ]
     max_oracle_gap = max((row["official_gap_to_selector_best_pct"] for row in oracle_rows), default=float("nan"))
 
-    f1_a1_pass = a1_vs_c1["mean_relative_mse_pct"] <= 0.3 and (
-        a1_weather["mean_relative_mse_pct"] < 0 or weather_late_vs_r3 < 0
+    f1_a1_core_pass = (
+        a1_vs_c1["mean_relative_mse_pct"] <= 0.3
+        and a1_etth2["mean_relative_mse_pct"] <= 1.0
+        and (a1_weather["mean_relative_mse_pct"] < 0 or weather_late_vs_r3 < 0)
     )
-    f1_a0_pass = (
+    f1_a0_core_pass = (
         a0_vs_c0["mse_wins"] >= 5
-        or (
-            a0_vs_c0["mean_relative_mse_pct"] < 0
-            and a0_etth2["mean_relative_mse_pct"] <= 1.0
-            and a0_weather["mean_relative_mse_pct"] <= 1.0
-        )
+        and a0_vs_c0["mean_relative_mse_pct"] < 0
+        and a0_weather["mean_relative_mse_pct"] <= 0.5
+        and weather_late_vs_single <= 0.5
     )
-    diagnostics_pass = max_leakage <= 1e-7 and min_confidence > 0.05
-    verdict = "pass_to_fsa_f2" if (f1_a0_pass or f1_a1_pass) and diagnostics_pass else "fail_or_partial"
+    diagnostics_pass = max_leakage <= 1e-7 and min_mean_confidence > 0.1
+    anchor_signal = (
+        a0_vs_c0["mean_relative_mse_pct"] < 0
+        or a1_weather["mean_relative_mse_pct"] < 0
+        or weather_late_vs_r3 < 0
+    )
+    if (f1_a0_core_pass or f1_a1_core_pass) and diagnostics_pass:
+        verdict = "pass_to_fsa_f2"
+    elif anchor_signal and diagnostics_pass:
+        verdict = "partial_pass_anchor_signal_but_not_core_substrate"
+    else:
+        verdict = "fail_return_to_step_2_3"
 
     lines = [
         "# Phase4-FSA-F1 Future-State Anchor Gate Report",
@@ -624,14 +649,16 @@ def write_report(
         "## Gate Reading",
         "",
         f"- [Fact] `F1-A0` vs `F1-C0`: `{a0_vs_c0['mse_wins']}/8` MSE wins, mean relative MSE `{fmt_pct(a0_vs_c0['mean_relative_mse_pct'])}`.",
+        f"- [Fact] `F1-A0` Weather mean relative MSE vs single-prefix `{fmt_pct(a0_weather['mean_relative_mse_pct'])}`; Weather h720 late `337-720` segment vs single-prefix `{fmt_pct(weather_late_vs_single)}`.",
         f"- [Fact] `F1-A1` vs `F1-C1/R.3`: `{a1_vs_c1['mse_wins']}/8` MSE wins, mean relative MSE `{fmt_pct(a1_vs_c1['mean_relative_mse_pct'])}`.",
+        f"- [Fact] `F1-A1` ETTh2 mean relative MSE vs R.3 `{fmt_pct(a1_etth2['mean_relative_mse_pct'])}`.",
         f"- [Fact] `F1-A1` Weather mean relative MSE vs R.3 `{fmt_pct(a1_weather['mean_relative_mse_pct'])}`; Weather h720 late `337-720` segment vs R.3 `{fmt_pct(weather_late_vs_r3)}`.",
-        f"- [Fact] Future leakage max `{max_leakage:.3e}`; min confidence `{min_confidence:.6f}`; max official-to-oracle gap among A0/A1 long/h720 selectors `{fmt_pct(max_oracle_gap)}`.",
+        f"- [Fact] Future leakage max `{max_leakage:.3e}`; min raw confidence `{min_confidence:.6f}`; min mean confidence `{min_mean_confidence:.6f}`; max official-to-oracle gap among A0/A1 long/h720 selectors `{fmt_pct(max_oracle_gap)}`.",
         "",
         "## Decision Rules",
         "",
-        "- 若 `F1-A0` 通过而 `F1-A1` 不通过：进入 FSA-F2，在 anchored h720-only state 上重新测试 HSS/gradient routing。",
-        "- 若 `F1-A1` 通过而 `F1-A0` 不通过：future-state anchor 可能需要 mixed exposure support，后续叙事必须保留 compound exposure control。",
+        "- `pass_to_fsa_f2` 需要 A0 或 A1 同时满足 mean/win、dataset split 和 Weather late no-harm gate。",
+        "- `partial_pass_anchor_signal_but_not_core_substrate` 表示 future anchor 有局部正信号，但不能直接叠加 HSS/gradient routing。",
         "- 若二者均失败且 diagnostics 非 collapse：future teacher 与 forecasting objective 语义不一致，回 Step 2/3 重新定义 representation 问题。",
         "- 若只有 oracle checkpoint 有收益：先修 validation metric，不继续改 model。",
         "",
