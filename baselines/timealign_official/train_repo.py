@@ -1,0 +1,655 @@
+from __future__ import annotations
+
+import argparse
+import csv
+import json
+import os
+import random
+import sys
+import time
+from dataclasses import asdict, dataclass
+from pathlib import Path
+from typing import Any
+
+import numpy as np
+import torch
+import torch.nn as nn
+from torch import optim
+
+BASE_DIR = Path(__file__).resolve().parent
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
+
+from data_provider.data_factory import data_provider  # noqa: E402
+from models import TimeAlign  # noqa: E402
+from utils.metrics import MAE, MSE  # noqa: E402
+from utils.tools import adjust_learning_rate  # noqa: E402
+
+
+HORIZONS = [96, 192, 336, 720]
+
+
+@dataclass(frozen=True)
+class OfficialPreset:
+    data: str
+    data_path: str
+    relative_root: str
+    freq: str
+    enc_in: int
+    dec_in: int
+    c_out: int
+    d_model: int
+    d_ff: int
+    learning_rate: float
+    dropout: float
+    w_align: float
+    patch_num: int
+    local_margin: float
+    global_margin: float
+    layer_norm: int
+
+
+OFFICIAL_PRESETS: dict[str, dict[int, OfficialPreset]] = {
+    "ETTh2": {
+        horizon: OfficialPreset(
+            data="ETTh2",
+            data_path="ETTh2.csv",
+            relative_root="ETT-small",
+            freq="h",
+            enc_in=7,
+            dec_in=7,
+            c_out=7,
+            d_model=32,
+            d_ff=32,
+            learning_rate=0.0005,
+            dropout=0.1,
+            w_align=0.1,
+            patch_num=48,
+            local_margin=0.0,
+            global_margin=0.0,
+            layer_norm=1,
+        )
+        for horizon in HORIZONS
+    },
+    "ETTm2": {
+        96: OfficialPreset(
+            data="ETTm2",
+            data_path="ETTm2.csv",
+            relative_root="ETT-small",
+            freq="t",
+            enc_in=7,
+            dec_in=7,
+            c_out=7,
+            d_model=128,
+            d_ff=128,
+            learning_rate=0.0001,
+            dropout=0.3,
+            w_align=1.0,
+            patch_num=12,
+            local_margin=0.0,
+            global_margin=0.0,
+            layer_norm=1,
+        ),
+        192: OfficialPreset(
+            data="ETTm2",
+            data_path="ETTm2.csv",
+            relative_root="ETT-small",
+            freq="t",
+            enc_in=7,
+            dec_in=7,
+            c_out=7,
+            d_model=128,
+            d_ff=128,
+            learning_rate=0.0001,
+            dropout=0.3,
+            w_align=1.0,
+            patch_num=12,
+            local_margin=0.0,
+            global_margin=0.0,
+            layer_norm=1,
+        ),
+        336: OfficialPreset(
+            data="ETTm2",
+            data_path="ETTm2.csv",
+            relative_root="ETT-small",
+            freq="t",
+            enc_in=7,
+            dec_in=7,
+            c_out=7,
+            d_model=128,
+            d_ff=128,
+            learning_rate=0.0001,
+            dropout=0.9,
+            w_align=1.0,
+            patch_num=12,
+            local_margin=0.0,
+            global_margin=0.0,
+            layer_norm=1,
+        ),
+        720: OfficialPreset(
+            data="ETTm2",
+            data_path="ETTm2.csv",
+            relative_root="ETT-small",
+            freq="t",
+            enc_in=7,
+            dec_in=7,
+            c_out=7,
+            d_model=128,
+            d_ff=128,
+            learning_rate=0.0001,
+            dropout=0.9,
+            w_align=1.0,
+            patch_num=12,
+            local_margin=0.0,
+            global_margin=0.0,
+            layer_norm=1,
+        ),
+    },
+    "Weather": {
+        96: OfficialPreset(
+            data="custom",
+            data_path="weather.csv",
+            relative_root="weather",
+            freq="h",
+            enc_in=21,
+            dec_in=21,
+            c_out=21,
+            d_model=128,
+            d_ff=256,
+            learning_rate=0.0001,
+            dropout=0.1,
+            w_align=0.1,
+            patch_num=48,
+            local_margin=0.5,
+            global_margin=0.0,
+            layer_norm=0,
+        ),
+        192: OfficialPreset(
+            data="custom",
+            data_path="weather.csv",
+            relative_root="weather",
+            freq="h",
+            enc_in=21,
+            dec_in=21,
+            c_out=21,
+            d_model=128,
+            d_ff=256,
+            learning_rate=0.0001,
+            dropout=0.1,
+            w_align=0.1,
+            patch_num=48,
+            local_margin=0.5,
+            global_margin=0.0,
+            layer_norm=0,
+        ),
+        336: OfficialPreset(
+            data="custom",
+            data_path="weather.csv",
+            relative_root="weather",
+            freq="h",
+            enc_in=21,
+            dec_in=21,
+            c_out=21,
+            d_model=128,
+            d_ff=256,
+            learning_rate=0.0001,
+            dropout=0.1,
+            w_align=0.1,
+            patch_num=48,
+            local_margin=0.5,
+            global_margin=0.0,
+            layer_norm=0,
+        ),
+        720: OfficialPreset(
+            data="custom",
+            data_path="weather.csv",
+            relative_root="weather",
+            freq="h",
+            enc_in=21,
+            dec_in=21,
+            c_out=21,
+            d_model=128,
+            d_ff=128,
+            learning_rate=0.0001,
+            dropout=0.5,
+            w_align=0.1,
+            patch_num=48,
+            local_margin=0.5,
+            global_margin=0.0,
+            layer_norm=0,
+        ),
+    },
+}
+
+
+def parse_horizons(value: str) -> list[int]:
+    horizons = [int(item) for item in value.replace(" ", "").split(",") if item]
+    if not horizons:
+        raise argparse.ArgumentTypeError("at least one horizon is required")
+    return horizons
+
+
+def set_seed(seed: int) -> None:
+    os.environ["PYTHONHASHSEED"] = str(seed)
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)
+        torch.cuda.manual_seed_all(seed)
+
+
+def resolve_dataset_root(dataset_root: Path, preset: OfficialPreset) -> Path:
+    direct = dataset_root / preset.data_path
+    nested = dataset_root / preset.relative_root / preset.data_path
+    if direct.exists():
+        return dataset_root
+    if nested.exists():
+        return dataset_root / preset.relative_root
+    raise FileNotFoundError(
+        f"Cannot find {preset.data_path} under {dataset_root} or {dataset_root / preset.relative_root}"
+    )
+
+
+def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> argparse.Namespace:
+    root_path = resolve_dataset_root(args.dataset_root, preset)
+    device = torch.device(args.device if args.device != "auto" else ("cuda" if torch.cuda.is_available() else "cpu"))
+    official = argparse.Namespace(
+        task_name="long_term_forecast",
+        is_training=1,
+        model_id=f"{args.dataset}_{args.seq_len}_{args.pred_len}",
+        model="TimeAlign",
+        data=preset.data,
+        root_path=str(root_path),
+        data_path=preset.data_path,
+        features="M",
+        target="OT",
+        freq=preset.freq,
+        checkpoints=str(args.output_dir / "_official_checkpoints"),
+        seq_len=args.seq_len,
+        label_len=args.label_len,
+        pred_len=args.pred_len,
+        seasonal_patterns="Monthly",
+        inverse=False,
+        enc_in=preset.enc_in,
+        dec_in=preset.dec_in,
+        c_out=preset.c_out,
+        d_model=preset.d_model,
+        n_heads=8,
+        e_layers=args.e_layers,
+        d_layers=1,
+        d_ff=preset.d_ff,
+        factor=3,
+        dropout=preset.dropout,
+        embed="timeF",
+        distil=True,
+        expand=2,
+        d_conv=4,
+        num_workers=args.num_workers,
+        itr=1,
+        train_epochs=args.epochs,
+        batch_size=args.batch_size,
+        patience=args.patience,
+        learning_rate=preset.learning_rate,
+        des="Exp",
+        loss="MSE",
+        lradj="cosine",
+        use_amp=args.use_amp,
+        use_gpu=device.type == "cuda",
+        gpu=0,
+        gpu_type=device.type,
+        use_multi_gpu=False,
+        device_ids=[],
+        p_hidden_dims=[128, 128],
+        p_hidden_layers=2,
+        use_dtw=False,
+        augmentation_ratio=0,
+        seed=args.seed,
+        jitter=False,
+        scaling=False,
+        permutation=False,
+        randompermutation=False,
+        magwarp=False,
+        timewarp=False,
+        windowslice=False,
+        windowwarp=False,
+        rotation=False,
+        spawner=False,
+        dtwwarp=False,
+        shapedtwwarp=False,
+        wdba=False,
+        discdtw=False,
+        discsdtw=False,
+        extra_tag="",
+        w_align=preset.w_align,
+        w_recon=args.w_recon,
+        local_margin=preset.local_margin,
+        global_margin=preset.global_margin,
+        patch_num=preset.patch_num,
+        layer_norm=preset.layer_norm,
+        pos=1,
+        loc=1,
+        glo=1,
+        device=device,
+    )
+    return official
+
+
+def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
+    if not rows:
+        return
+    fields: list[str] = []
+    for row in rows:
+        for key in row:
+            if key not in fields:
+                fields.append(key)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def dump_json(path: Path, payload: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+
+
+def metric_rows(preds: np.ndarray, trues: np.ndarray, horizons: list[int]) -> list[dict[str, Any]]:
+    rows = []
+    for horizon in horizons:
+        pred_h = preds[:, :horizon, :]
+        true_h = trues[:, :horizon, :]
+        rows.append(
+            {
+                "target_horizon": horizon,
+                "mse": float(MSE(pred_h, true_h)),
+                "mae": float(MAE(pred_h, true_h)),
+                "num_samples": int(preds.shape[0]),
+                "num_channels": int(preds.shape[-1]),
+                "eval_prefix_steps": horizon,
+            }
+        )
+    return rows
+
+
+def segment_rows(preds: np.ndarray, trues: np.ndarray, target_horizon: int, segment_len: int = 96) -> list[dict[str, Any]]:
+    rows = []
+    for start in range(0, target_horizon, segment_len):
+        end = min(start + segment_len, target_horizon)
+        pred_s = preds[:, start:end, :]
+        true_s = trues[:, start:end, :]
+        rows.append(
+            {
+                "target_horizon": target_horizon,
+                "segment_start": start,
+                "segment_end": end,
+                "mse": float(MSE(pred_s, true_s)),
+                "mae": float(MAE(pred_s, true_s)),
+            }
+        )
+    return rows
+
+
+def evaluate(
+    model: nn.Module,
+    loader: torch.utils.data.DataLoader,
+    official_args: argparse.Namespace,
+    horizons: list[int],
+    max_batches: int,
+    is_training_flag: bool,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], np.ndarray, np.ndarray]:
+    preds = []
+    trues = []
+    model.eval()
+    with torch.no_grad():
+        for batch_idx, (batch_x, batch_y, _batch_x_mark, _batch_y_mark) in enumerate(loader):
+            if max_batches and batch_idx >= max_batches:
+                break
+            batch_x = batch_x.float().to(official_args.device)
+            batch_y = batch_y.float().to(official_args.device)
+            outputs, _recon, _alignment = model(
+                batch_x,
+                batch_y[:, -official_args.pred_len :, :],
+                is_training=is_training_flag,
+            )
+            f_dim = -1 if official_args.features == "MS" else 0
+            outputs = outputs[:, -official_args.pred_len :, f_dim:]
+            batch_y = batch_y[:, -official_args.pred_len :, f_dim:]
+            preds.append(outputs.detach().cpu().numpy())
+            trues.append(batch_y.detach().cpu().numpy())
+    if not preds:
+        raise RuntimeError("evaluation produced no batches")
+    pred_np = np.concatenate(preds, axis=0)
+    true_np = np.concatenate(trues, axis=0)
+    main_rows = metric_rows(pred_np, true_np, horizons)
+    all_segments: list[dict[str, Any]] = []
+    for horizon in horizons:
+        all_segments.extend(segment_rows(pred_np, true_np, horizon))
+    return main_rows, all_segments, pred_np, true_np
+
+
+def validation_mean_mse(
+    model: nn.Module,
+    loader: torch.utils.data.DataLoader,
+    official_args: argparse.Namespace,
+    horizons: list[int],
+    max_batches: int,
+) -> float:
+    rows, _segments, _preds, _trues = evaluate(
+        model,
+        loader,
+        official_args,
+        horizons,
+        max_batches=max_batches,
+        is_training_flag=False,
+    )
+    return float(np.mean([row["mse"] for row in rows]))
+
+
+def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[nn.Module, list[dict[str, Any]]]:
+    train_data, train_loader = data_provider(official_args, "train")
+    vali_data, vali_loader = data_provider(official_args, "val")
+    test_data, test_loader = data_provider(official_args, "test")
+    del train_data, vali_data, test_data, test_loader
+
+    model = TimeAlign.Model(official_args).float().to(official_args.device)
+    optimizer = optim.AdamW(model.parameters(), lr=official_args.learning_rate)
+    criterion = nn.L1Loss()
+    training_rows: list[dict[str, Any]] = []
+    best_val = float("inf")
+    best_state: dict[str, torch.Tensor] | None = None
+
+    for epoch in range(args.epochs):
+        model.train()
+        epoch_start = time.time()
+        total_loss = []
+        pred_loss_values = []
+        recon_loss_values = []
+        alignment_values = []
+        train_steps = len(train_loader)
+        for batch_idx, (batch_x, batch_y, _batch_x_mark, _batch_y_mark) in enumerate(train_loader):
+            if args.max_train_batches and batch_idx >= args.max_train_batches:
+                break
+            optimizer.zero_grad()
+            batch_x = batch_x.float().to(official_args.device)
+            batch_y = batch_y.float().to(official_args.device)
+
+            outputs, recon, alignment_loss = model(
+                batch_x,
+                batch_y[:, -official_args.pred_len :, :],
+                is_training=True,
+            )
+
+            f_dim = -1 if official_args.features == "MS" else 0
+            outputs = outputs[:, -official_args.pred_len :, f_dim:]
+            batch_y = batch_y[:, -official_args.pred_len :, f_dim:]
+
+            pred_loss = criterion(outputs, batch_y)
+            recon_loss = criterion(recon, batch_y)
+            loss = pred_loss + official_args.w_recon * recon_loss + official_args.w_align * alignment_loss
+            loss.backward()
+            optimizer.step()
+
+            total_loss.append(float(loss.detach().cpu()))
+            pred_loss_values.append(float(pred_loss.detach().cpu()))
+            recon_loss_values.append(float(recon_loss.detach().cpu()))
+            alignment_values.append(float(alignment_loss.detach().cpu()))
+
+            if (batch_idx + 1) % 100 == 0:
+                print(
+                    f"\titers: {batch_idx + 1}, epoch: {epoch + 1} | loss: {float(loss.detach().cpu()):.7f}",
+                    flush=True,
+                )
+
+        val_mean_mse = validation_mean_mse(
+            model,
+            vali_loader,
+            official_args,
+            args.target_horizons,
+            max_batches=args.max_eval_batches,
+        )
+        if val_mean_mse < best_val:
+            best_val = val_mean_mse
+            best_state = {name: tensor.detach().cpu().clone() for name, tensor in model.state_dict().items()}
+
+        row = {
+            "epoch": epoch + 1,
+            "train_steps": train_steps if not args.max_train_batches else min(train_steps, args.max_train_batches),
+            "train_loss": float(np.mean(total_loss)),
+            "train_prediction_l1": float(np.mean(pred_loss_values)),
+            "train_reconstruction_l1": float(np.mean(recon_loss_values)),
+            "train_alignment_loss": float(np.mean(alignment_values)),
+            "val_mean_mse": val_mean_mse,
+            "lr": float(optimizer.param_groups[0]["lr"]),
+            "epoch_seconds": time.time() - epoch_start,
+        }
+        training_rows.append(row)
+        print(
+            "Epoch: {epoch}, Steps: {steps} | Train Loss: {train_loss:.7f} Vali Loss: {val:.7f}".format(
+                epoch=epoch + 1,
+                steps=row["train_steps"],
+                train_loss=row["train_loss"],
+                val=val_mean_mse,
+            ),
+            flush=True,
+        )
+        adjust_learning_rate(optimizer, epoch + 1, official_args)
+
+    if args.checkpoint_policy == "best-val":
+        if best_state is None:
+            raise RuntimeError("best-val policy requested but no checkpoint was captured")
+        model.load_state_dict(best_state)
+    return model, training_rows
+
+
+def run(args: argparse.Namespace) -> None:
+    if args.dataset not in OFFICIAL_PRESETS:
+        raise ValueError(f"Unsupported dataset {args.dataset}. Choose from {sorted(OFFICIAL_PRESETS)}")
+    preset_key = args.pred_len if args.mode == "fixed" else 720
+    preset = OFFICIAL_PRESETS[args.dataset][preset_key]
+    official_args = build_official_args(args, preset)
+    args.output_dir.mkdir(parents=True, exist_ok=True)
+
+    set_seed(args.seed)
+    dump_json(
+        args.output_dir / "effective_config.json",
+        {
+            "adapter": vars(args) | {"dataset_root": str(args.dataset_root), "output_dir": str(args.output_dir)},
+            "official_args": {
+                key: (str(value) if isinstance(value, torch.device) else value)
+                for key, value in vars(official_args).items()
+                if key != "device_ids"
+            },
+            "official_preset": asdict(preset),
+            "source_note": "Official TimeAlign source vendored under baselines/timealign_official; train_repo.py is a thin repo adapter.",
+        },
+    )
+    dump_json(
+        args.output_dir / "environment.json",
+        {
+            "python": sys.version,
+            "torch": torch.__version__,
+            "cuda_available": torch.cuda.is_available(),
+            "cuda_version": torch.version.cuda,
+            "device": str(official_args.device),
+            "gpu_name": torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
+        },
+    )
+
+    print(
+        f"run_start dataset={args.dataset} mode={args.mode} pred_len={args.pred_len} "
+        f"target_horizons={args.target_horizons} output_dir={args.output_dir}",
+        flush=True,
+    )
+    model, training_rows = train(args, official_args)
+    write_csv(args.output_dir / "training_log.csv", training_rows)
+    torch.save(model.state_dict(), args.output_dir / "checkpoint.pt")
+
+    _test_data, test_loader = data_provider(official_args, "test")
+    main_rows, segment_metric_rows, preds, trues = evaluate(
+        model,
+        test_loader,
+        official_args,
+        args.target_horizons,
+        max_batches=args.max_eval_batches,
+        is_training_flag=args.official_test_mode,
+    )
+    for row in main_rows:
+        row["mode"] = args.mode
+        row["run_name"] = args.run_name
+        row["dataset"] = args.dataset
+        row["pred_len"] = args.pred_len
+        row["checkpoint_policy"] = args.checkpoint_policy
+        row["official_test_mode"] = int(args.official_test_mode)
+    for row in segment_metric_rows:
+        row["mode"] = args.mode
+        row["run_name"] = args.run_name
+        row["dataset"] = args.dataset
+        row["pred_len"] = args.pred_len
+    write_csv(args.output_dir / "metrics_by_target_horizon.csv", main_rows)
+    write_csv(args.output_dir / "metrics_by_segment.csv", segment_metric_rows)
+    np.savez_compressed(args.output_dir / "predictions_test.npz", pred=preds, true=trues)
+    print(f"run_done output_dir={args.output_dir}", flush=True)
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Thin FATST adapter for official TimeAlign.")
+    parser.add_argument("--dataset-root", type=Path, required=True)
+    parser.add_argument("--dataset", choices=sorted(OFFICIAL_PRESETS), required=True)
+    parser.add_argument("--mode", choices=["fixed", "unified"], required=True)
+    parser.add_argument("--seq-len", type=int, default=720)
+    parser.add_argument("--label-len", type=int, default=48)
+    parser.add_argument("--pred-len", type=int, required=True)
+    parser.add_argument("--target-horizons", type=parse_horizons, required=True)
+    parser.add_argument("--e-layers", type=int, default=2)
+    parser.add_argument("--w-recon", type=float, default=1.0)
+    parser.add_argument("--batch-size", type=int, default=32)
+    parser.add_argument("--epochs", type=int, default=10)
+    parser.add_argument("--patience", type=int, default=3)
+    parser.add_argument("--seed", type=int, default=2021)
+    parser.add_argument("--num-workers", type=int, default=0)
+    parser.add_argument("--max-train-batches", type=int, default=0)
+    parser.add_argument("--max-eval-batches", type=int, default=0)
+    parser.add_argument("--run-name", type=str, required=True)
+    parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--device", default="auto")
+    parser.add_argument("--use-amp", action="store_true")
+    parser.add_argument("--official-test-mode", action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument("--checkpoint-policy", choices=["official-last", "best-val"], default="official-last")
+    args = parser.parse_args()
+    if max(args.target_horizons) > args.pred_len:
+        raise ValueError("target horizons cannot exceed pred_len")
+    if args.mode == "fixed" and args.target_horizons != [args.pred_len]:
+        raise ValueError("fixed mode expects target_horizons == [pred_len]")
+    if args.mode == "unified" and args.pred_len != 720:
+        raise ValueError("unified mode currently expects pred_len=720")
+    return args
+
+
+def main() -> None:
+    run(parse_args())
+
+
+if __name__ == "__main__":
+    main()

@@ -1919,6 +1919,27 @@ Phase5 的下一步判断：
 2. mechanism ablation：`w_align=0,w_recon=1`、`w_align=0.1,w_recon=0`、full TimeAlign；
 3. 若 R1 证明 full TimeAlign alignment 是必要贡献，再进入 TimeAlign-HSS；否则先修 carrier 或放弃该路线。
 
+#### Phase5-R0：Official TimeAlign Reproduction Reset
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 11 -> Step 1/6/7/8：从 local source-informed implementation 回滚到 official-source reproduction |
+| `problem` | 前一版 `baselines/timealign_carrier` 的 fixed-horizon 结果与 TimeAlign 论文表现存在较大差距；如果差距来自 repo 实现、dataloader、官方 hyperparameter preset 或 checkpoint policy 错位，则后续 unified/fixed 和 HSS 判断都不可靠 |
+| `existence_evidence` | 官方代码包含自己的 `data_provider`、dataset split、official scripts；并且官方 `EarlyStopping` 实际未执行 best-checkpoint 选择，`test()` 也不 reload checkpoint。这些实现细节足以改变 fixed-horizon 结果 |
+| `idea` | 新建 `baselines/timealign_official/`，vendored 官方 TimeAlign 源码；只添加薄 repo adapter，不再复用本 repo 的 dataloader/model；先跑 source-faithful `official-last`，再把 corrected `best-val` 作为独立 diagnostic |
+| `theory_check` | 若 official-source fixed-horizon 仍不能接近论文，问题优先是 reproduction/data/code-version audit，而不是 HSS 方法设计；若 official-source fixed-horizon 成立，再判断 unified-720 是否存在可叙事的 supervision conflict |
+| `design` | `3 datasets × (4 fixed horizons + 1 unified-720)`；datasets 为 `Weather/ETTm2/ETTh2`；fixed runs 使用 dataset+horizon official preset；unified-720 使用 h720 official preset 并评估 `h96/h192/h336/h720` prefix；primary checkpoint policy 为 `official-last` |
+| `gate` | Gate-1：fixed-horizon official reproduction 是否可信；Gate-2：unified-720 相对 fixed 是否存在稳定 gap；Gate-3：若 `official-last` 与 `best-val` 结论冲突，必须先解决 checkpoint protocol 再进入 HSS |
+| `artifacts` | `baselines/timealign_official/`、`scripts/remote/run_phase5_timealign_official_gate.sh`、`scripts/remote/check_phase5_timealign_official_progress.sh`、`scripts/sync_phase5_timealign_official_results.sh`、`scripts/analyze_phase5_timealign_official_gate.py`、`docs/code-explanation/phase5-timealign-official-reproduction.md` |
+| `decision` | Active route 切换为 official-source reproduction。暂不继续 Phase5-R1 ablation，直到 source-faithful fixed/unified 对比返回并完成分析 |
+
+[Fact] 官方 `EarlyStopping` 的有效行为是 last-epoch checkpoint，而非 best validation checkpoint。该行为看起来像实现问题，但不能在 paper-faithful reproduction 中静默修正。
+
+[Decision] 后续实验分成两个 protocol：
+
+- `official-last`：primary，用于回答“当前 fixed-horizon 与论文差距是否来自我们的 repo implementation”；
+- `best-val`：secondary，用于 corrected research control，只在 `official-last` 返回后按需运行。
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：
