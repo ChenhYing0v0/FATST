@@ -186,3 +186,37 @@ F1 通过不要求所有 arm 同时赢。它判断 substrate 是否值得进入 
 [Falsification] 若 `F1-A0/A1` 均输给各自 base，且 leakage/confidence diagnostics 正常，
 则当前 future-state anchor 不能作为 HSS substrate；下一步应回 Step 2/3，重新定义
 representation problem 或停止 Phase4 local HSS stacking。
+
+## F2 Anchor Pressure Calibration
+
+F2 不改 model，不新增 prediction path。它只复用 F1 runner 的 future-anchor branch，新增两个
+arm：
+
+| Arm | `run_name` | Base | Changed factor |
+| --- | --- | --- | --- |
+| `F2-A0` | `PatchEncoderFSAF2SinglePrefixSelectiveAnchor` | `single_720_prefix_risk` | `future_confidence_floor=0.0` |
+| `F2-A1` | `PatchEncoderFSAF2R3SelectiveAnchor` | `r3_prefix_risk` | `future_confidence_floor=0.0` |
+
+`scripts/remote/run_phase4_fsa_f2_anchor_pressure_gate.sh` 是 thin wrapper，默认设置：
+
+- output root:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase4_fsa_f2_anchor_pressure_gate`;
+- `ARMS="F2-A0 F2-A1"`;
+- `FUTURE_CONFIDENCE_FLOOR=0.0`;
+- `FUTURE_ALIGN_WEIGHT=0.01`;
+- `FUTURE_RECON_WEIGHT=0.001`;
+- `FUTURE_RELATION_WEIGHT=0.0`;
+- `JOB_ORDER=dataset_major`。
+
+`scripts/analyze_phase4_fsa_f2_anchor_pressure_gate.py` 只生成 focused outputs：
+
+- main horizon deltas；
+- dataset-level deltas；
+- h720 segment deltas；
+- future alignment summary；
+- training summary；
+- checkpoint selection diagnostics；
+- effective config summary。
+
+它刻意不默认分析 `target_state_similarity`、`target_conditioning_stats` 或 residual-level artifacts。
+这些 diagnostic 只在 F2A pass/fail 原因仍不清楚时再补充读取。

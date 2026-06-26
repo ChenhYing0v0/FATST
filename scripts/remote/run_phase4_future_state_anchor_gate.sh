@@ -58,14 +58,16 @@ run_name_for_arm() {
     F1-A0) echo "PatchEncoderFSAF1SinglePrefixFutureAnchor" ;;
     F1-A1) echo "PatchEncoderFSAF1R3FutureAnchor" ;;
     F1-W0) echo "PatchEncoderFSAF1FullTimeFutureAnchor" ;;
+    F2-A0) echo "PatchEncoderFSAF2SinglePrefixSelectiveAnchor" ;;
+    F2-A1) echo "PatchEncoderFSAF2R3SelectiveAnchor" ;;
     *) echo "PatchEncoderFSAF1_${1}" ;;
   esac
 }
 
 strategy_for_arm() {
   case "$1" in
-    F1-C0|F1-A0) echo "single_720_prefix_risk" ;;
-    F1-C1|F1-A1) echo "r3_prefix_risk" ;;
+    F1-C0|F1-A0|F2-A0) echo "single_720_prefix_risk" ;;
+    F1-C1|F1-A1|F2-A1) echo "r3_prefix_risk" ;;
     F1-W0) echo "full_time_mse" ;;
     *) echo "unknown" ;;
   esac
@@ -73,7 +75,7 @@ strategy_for_arm() {
 
 future_enabled_for_arm() {
   case "$1" in
-    F1-A0|F1-A1|F1-W0) echo "1" ;;
+    F1-A0|F1-A1|F1-W0|F2-A0|F2-A1) echo "1" ;;
     *) echo "0" ;;
   esac
 }
