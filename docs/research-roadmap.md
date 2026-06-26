@@ -1877,6 +1877,48 @@ Phase5 的下一步判断：
   supervision scheduling 如何调度 future-distribution alignment pressure；
 - 若 unified gap 不明显：TimeAlign 已天然适配 unified prefix evaluation，不强行做 HSS。
 
+#### Phase5 Result：Carrier Viable, HSS Necessity Not Yet Proven
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 9/10/11：评估 Phase5 carrier gate，并决定是否直接进入 TimeAlign-HSS |
+| `problem` | 判断 TimeAlign 是否能作为 HSS carrier，以及 unified-720 是否相对 fixed-horizon 产生需要 HSS 修复的 gap |
+| `existence_evidence` | 15 个 run 完成：`3 datasets × (4 fixed horizons + 1 unified-720)`；remote root `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_carrier_gate`；local analysis `analysis/phase5_timealign_carrier_gate_20260626/` |
+| `idea` | 若 fixed TimeAlign strong 且 unified 明显退化，则进入 TimeAlign-HSS；否则先做 carrier/validation 诊断 |
+| `theory_check` | 结果显示 TimeAlign unified-720 并未整体退化；ETTh2/Weather 上 unified 反而多处优于 fixed。h720 上 fixed/unified 训练目标相同，因此差异主要来自 validation/checkpoint selector |
+| `design` | 比较 fixed vs unified，同时横向比较 ETTh2/Weather 上的 R.3 reference；检查 h720 segment 与 training/best epoch |
+| `gate` | TimeAlign carrier 通过“可继续研究”的最低门槛；但 HSS necessity gate 未通过，因为没有稳定 unified degradation |
+| `artifacts` | `analysis/phase5_timealign_carrier_gate_20260626/phase5_timealign_carrier_gate_report.md`、`analysis/phase5_timealign_carrier_gate_20260626/phase5_timealign_interpretation.md` |
+| `decision` | `carrier_viable_but_hss_necessity_not_yet_proven`；不直接进入 TimeAlign-HSS，回 Step 5/6 做 Phase5-R1 validation selector 与 mechanism control |
+
+[Fact] Unified-720 相对 fixed-horizon：
+
+- ETTh2: `3/4` wins，mean relative MSE `-7.88%`；
+- ETTm2: `0/4` wins，mean relative MSE `+1.47%`；
+- Weather: `3/4` wins，mean relative MSE `-1.07%`；
+- overall: `6/12` wins，mean relative MSE `-2.49%`。
+
+[Fact] TimeAlign unified-720 相对 R.3 reference：
+
+- ETTh2 h96/h192/h336 分别为 `-16.17%/-16.21%/-10.62%`，但 h720 为 `+5.86%`；
+- Weather h96 为 `+1.60%`，h192/h336/h720 分别为 `-0.02%/-1.50%/-3.70%`。
+
+[Inference] TimeAlign unified-720 是一个真实 carrier candidate，但它的 failure 不是
+“unified 全局退化”，而是 selective failure：ETTh2 h720 与 Weather h96。HSS 若成立，
+也应围绕 selective future-distribution conflict，而不是泛化地声称修复 unified multi-horizon。
+
+[Strong Evidence] Weather h720 的 unified 优势主要是 validation/checkpoint selector：
+
+- `TimeAlignCarrierFixedH720` 与 `TimeAlignCarrierUnified720` 在同一 dataset 上训练轨迹相同；
+- Weather fixed h720 best epoch 是 `1`，unified-720 best epoch 是 `7`；
+- unified h720 test MSE 相对 fixed h720 为 `-1.67%`。
+
+[Decision] 下一步 Phase5-R1：
+
+1. validation selector audit：分离 `val_h720`、`val_long_mean`、`val_all_mean` 对 test h720/all-horizon 的影响；
+2. mechanism ablation：`w_align=0,w_recon=1`、`w_align=0.1,w_recon=0`、full TimeAlign；
+3. 若 R1 证明 full TimeAlign alignment 是必要贡献，再进入 TimeAlign-HSS；否则先修 carrier 或放弃该路线。
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：
