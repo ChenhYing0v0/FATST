@@ -1,0 +1,13 @@
+model,dataset,target_horizon,mse,mae
+TimeAlignOfficialUnified720_official-last,ETTh2,96,0.24910904467105865,0.31970900297164917
+TimeAlignOfficialUnified720_official-last,ETTh2,192,0.2959613502025604,0.35337868332862854
+TimeAlignOfficialUnified720_official-last,ETTh2,336,0.3267449736595154,0.3787094056606293
+TimeAlignOfficialUnified720_official-last,ETTh2,720,0.40325209498405457,0.43513625860214233
+TimeAlignOfficialUnified720_official-last,ETTm2,96,0.16761432588100433,0.2530774176120758
+TimeAlignOfficialUnified720_official-last,ETTm2,192,0.2195192277431488,0.2874913811683655
+TimeAlignOfficialUnified720_official-last,ETTm2,336,0.26930680871009827,0.32044097781181335
+TimeAlignOfficialUnified720_official-last,ETTm2,720,0.343566358089447,0.3716011643409729
+TimeAlignOfficialUnified720_official-last,Weather,96,0.14317019283771515,0.18443308770656586
+TimeAlignOfficialUnified720_official-last,Weather,192,0.18486426770687103,0.22576011717319489
+TimeAlignOfficialUnified720_official-last,Weather,336,0.23452013731002808,0.266031950712204
+TimeAlignOfficialUnified720_official-last,Weather,720,0.3067764937877655,0.31663402915000916

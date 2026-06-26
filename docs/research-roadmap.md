@@ -1940,6 +1940,31 @@ Phase5 的下一步判断：
 - `official-last`：primary，用于回答“当前 fixed-horizon 与论文差距是否来自我们的 repo implementation”；
 - `best-val`：secondary，用于 corrected research control，只在 `official-last` 返回后按需运行。
 
+#### Phase5-R0 Result：Official Source Valid, Checkpoint Policy Blocks HSS Claim
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 9/10/11：评估 official-source reproduction，并决定是否进入 HSS |
+| `problem` | `official-last` 是 source-faithful protocol，但官方 `EarlyStopping` 不执行 best checkpoint；若 checkpoint artifact 很大，unified/fixed gap 不能直接作为 HSS 证据 |
+| `existence_evidence` | 完整矩阵 `3 datasets × (4 fixed + 1 unified)` 已完成；artifacts 在 `analysis/phase5_timealign_official_gate_20260626/` |
+| `idea` | 先判定 official-source fixed carrier 是否可信，再把 checkpoint protocol 作为独立变量处理 |
+| `theory_check` | official-source fixed 相对 repo-local fixed 在 11/12 个 setting 改善，说明 source/preset mismatch 确实存在；但 ETTh2 official-last 的 last-vs-best validation gap 高达 `+6.29%/+15.73%/+27.84%/+20.76%`，足以污染结论 |
+| `design` | `official-last` fixed/unified 对比；同步读取 training summary 作为 checkpoint diagnostic |
+| `gate` | Carrier source-faithfulness gate 通过；HSS necessity gate 暂停，必须先过 `best-val` corrected control |
+| `artifacts` | `analysis/phase5_timealign_official_gate_20260626/phase5_timealign_official_gate_report.md`、`analysis/phase5_timealign_official_gate_20260626/phase5_timealign_official_interpretation.md` |
+| `decision` | `official_source_carrier_valid_but_checkpoint_policy_blocks_hss_claim`；下一步运行 `CHECKPOINT_POLICY=best-val` 的同矩阵 corrected control |
+
+[Fact] `official-last` unified-vs-fixed：
+
+- ETTh2: `3/4` wins，mean relative MSE `-8.01%`；
+- ETTm2: `0/4` wins，mean relative MSE `+3.72%`；
+- Weather: `0/4` wins，mean relative MSE `+1.05%`；
+- ALL: `3/12` wins，mean relative MSE `-1.08%`。
+
+[Inference] 当前不能写成“unified 一定退化”，也不能写成“unified 没有问题”。更准确的判断是：
+TimeAlign unified degradation 在 ETTm2/Weather 上存在，但 ETTh2 的反向结果被 checkpoint policy
+强烈污染。进入 HSS 前必须用 corrected checkpoint protocol 验证。
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：
