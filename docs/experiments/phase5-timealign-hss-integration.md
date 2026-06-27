@@ -21,7 +21,7 @@
 | `existence_evidence` | `official-last` 与 `best-val` 的 winner pattern 一致：ETTh2 `3/4` unified wins，ETTm2/Weather `0/4` unified wins；selector 不是主因。官方源码版本相对 repo-local 实现显著更可信，说明 carrier 本身成立 |
 | `idea` | 将 TimeAlign 作为 HSS carrier：HSS 不再只调整预测 loss，而是调度 TimeAlign future reconstruction/alignment supervision 的强度、位置和 gradient path |
 | `theory_check` | TimeAlign 的 training-only future branch 会把 ground-truth future distribution pressure 传回 history branch。若 future units 可预测且可对齐，这种 pressure 有益；若 future units 噪声大、状态漂移强或与 history representation 冲突，static full-future alignment 会成为 harmful supervision |
-| `design` | 先做 lean diagnostic，再做 minimal scheduling。D1 诊断 supervision reliability；M1 做 unit-level reliability weighting；M2 做 alignment gradient-path routing |
+| `design` | 先做 head/interface confounder diagnostic，再做 supervision diagnostic 与 minimal scheduling。D0 诊断 fixed `pred_len=720` head 是否导致短 prefix 监督不足；D1 诊断 supervision reliability；M1 做 unit-level reliability weighting；M2 做 alignment gradient-path routing |
 | `gate` | ETTm2/Weather unified gap 缩小；ETTh2 unified benefit 不丢失；机制诊断能说明 schedule 区分了 useful/harmful future supervision，而不是简单淡化 TimeAlign loss |
 | `artifacts` | 本文档；后续分析输出放入 `analysis/phase5_timealign_hss_*`；代码优先加在 `baselines/timealign_official/` adapter / train wrapper 层，保留官方 forward 作为对照 |
 | `decision` | `active_timealign_hss_integration`。若 D1 不能证明 reliability 与 unified decrease 有关，回 Step 2/3；若 M1/M2 只靠 loss weakening 取胜，回 Step 4/5 |
@@ -46,13 +46,58 @@ evaluation 仍然保持 `{96,192,336,720}` multi-horizon。
 
 不应直接把 `h96/h192/h336/h720` 作为 schedule 的输入。
 
+## D0：Unified Head / Interface Diagnostic
+
+### 目的
+
+[Question] TimeAlign 的 unified decrease 是否主要来自 fixed `pred_len=720` output head 没有
+统一 multi-horizon interface 设计？
+
+[Fact] 官方 TimeAlign 使用固定长度 projection head：
+`Linear(d_model * patch_num, pred_len)`。当前 unified 设置是训练 `pred_len=720`，然后在评估时
+裁剪 `96/192/336/720` prefix。它具备 tensor-level prefix consistency，但没有像 R.3 /
+target-set decoder 那样显式设计 requested-horizon interface。
+
+如果 D0 通过，后续 HSS 不能直接从 supervision reliability 开始；必须先承认 unified head /
+interface 是一个 co-factor。
+
+### 最小实验
+
+| Arm | Change | Purpose |
+| --- | --- | --- |
+| `full` | 官方 full-horizon prediction loss | official unified-720 baseline |
+| `multi-prefix` | prediction loss 改为 `mean(L_96,L_192,L_336,L_720)` | 判断短 prefix 是否只是缺少直接 prediction supervision |
+
+两臂都不改 official TimeAlign forward，不改 reconstruction / alignment loss，也不引入 horizon id
+作为模型输入。`multi-prefix` 只改变 prediction loss 的计算方式，因此是 head/interface confounder
+control，不是最终 HSS 方法。
+
+### 判定
+
+[Pass] `multi-prefix` 明显缩小 ETTm2/Weather 的 unified decrease，同时不破坏 ETTh2 的 unified
+benefit。此时先进入 unified head/interface 设计，而不是直接做 D1/M1。
+
+[Partial] 只改善一个 degraded dataset，或只改善短 horizon。继续 D1，但在叙事中把 head/interface
+作为 co-factor。
+
+[Fail] `multi-prefix` 不改善 ETTm2/Weather 或明显伤害 ETTh2。此时 head/interface confounder
+不是主因，进入 D1。
+
+### Artifacts
+
+- runner: `scripts/remote/run_phase5_timealign_hss_d0_head_gate.sh`
+- analyzer: `scripts/analyze_phase5_timealign_hss_d0_head_gate.py`
+- sync: `scripts/sync_phase5_timealign_hss_d0_results.sh`
+- output root: `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_d0_head_gate`
+
 ## D1：Supervision Reliability Diagnostic
 
 ### 目的
 
 [Question] ETTm2/Weather 的 unified decrease 是否与 future supervision reliability 有关？
 
-如果答案是否定的，TimeAlign-HSS 缺少必要机制支点；后续不应直接实现 scheduling。
+如果答案是否定的，TimeAlign-HSS 缺少必要机制支点；后续不应直接实现 scheduling。D1 只在
+D0 未完全解释 unified decrease 后进入。
 
 ### 最小诊断量
 
@@ -143,7 +188,8 @@ representation capacity 或 dataset-specific hyperparameter。
 
 ## 当前下一步
 
-1. 完成 D1 诊断脚本设计，优先复用 existing predictions/logs；
-2. 如果 D1 通过，进入 M1 最小实验；
-3. 只有当 M1 显示 scalar scheduling 不足但机制方向成立时，才进入 M2；
-4. 不做 look-back horizon sweep，除非后续需要论文表格级 TimeAlign reproduction 作为附录或审稿防线。
+1. 先运行 D0 head/interface diagnostic；
+2. 若 D0 不能解释 unified decrease，再完成 D1 诊断脚本设计，优先复用 existing predictions/logs；
+3. 如果 D1 通过，进入 M1 最小实验；
+4. 只有当 M1 显示 scalar scheduling 不足但机制方向成立时，才进入 M2；
+5. 不做 look-back horizon sweep，除非后续需要论文表格级 TimeAlign reproduction 作为附录或审稿防线。

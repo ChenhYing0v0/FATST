@@ -391,6 +391,27 @@ def segment_rows(preds: np.ndarray, trues: np.ndarray, target_horizon: int, segm
     return rows
 
 
+def prediction_loss(
+    outputs: torch.Tensor,
+    targets: torch.Tensor,
+    criterion: nn.Module,
+    horizons: list[int],
+    mode: str,
+) -> tuple[torch.Tensor, dict[str, torch.Tensor]]:
+    full_loss = criterion(outputs, targets)
+    losses: dict[str, torch.Tensor] = {"full": full_loss}
+    if mode == "full":
+        return full_loss, losses
+    if mode != "multi-prefix":
+        raise ValueError(f"Unsupported prediction loss mode: {mode}")
+    prefix_losses = []
+    for horizon in sorted(set(horizons)):
+        horizon_loss = criterion(outputs[:, :horizon, :], targets[:, :horizon, :])
+        losses[f"h{horizon}"] = horizon_loss
+        prefix_losses.append(horizon_loss)
+    return torch.stack(prefix_losses).mean(), losses
+
+
 def evaluate(
     model: nn.Module,
     loader: torch.utils.data.DataLoader,
@@ -465,6 +486,8 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
         epoch_start = time.time()
         total_loss = []
         pred_loss_values = []
+        pred_full_loss_values = []
+        pred_prefix_loss_values: dict[int, list[float]] = {horizon: [] for horizon in args.target_horizons}
         recon_loss_values = []
         alignment_values = []
         train_steps = len(train_loader)
@@ -485,7 +508,13 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
             outputs = outputs[:, -official_args.pred_len :, f_dim:]
             batch_y = batch_y[:, -official_args.pred_len :, f_dim:]
 
-            pred_loss = criterion(outputs, batch_y)
+            pred_loss, pred_components = prediction_loss(
+                outputs,
+                batch_y,
+                criterion,
+                args.target_horizons,
+                args.pred_loss_mode,
+            )
             recon_loss = criterion(recon, batch_y)
             loss = pred_loss + official_args.w_recon * recon_loss + official_args.w_align * alignment_loss
             loss.backward()
@@ -493,6 +522,11 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
 
             total_loss.append(float(loss.detach().cpu()))
             pred_loss_values.append(float(pred_loss.detach().cpu()))
+            pred_full_loss_values.append(float(pred_components["full"].detach().cpu()))
+            for horizon in args.target_horizons:
+                component = pred_components.get(f"h{horizon}")
+                if component is not None:
+                    pred_prefix_loss_values[horizon].append(float(component.detach().cpu()))
             recon_loss_values.append(float(recon_loss.detach().cpu()))
             alignment_values.append(float(alignment_loss.detach().cpu()))
 
@@ -518,12 +552,17 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
             "train_steps": train_steps if not args.max_train_batches else min(train_steps, args.max_train_batches),
             "train_loss": float(np.mean(total_loss)),
             "train_prediction_l1": float(np.mean(pred_loss_values)),
+            "train_prediction_full_l1": float(np.mean(pred_full_loss_values)),
             "train_reconstruction_l1": float(np.mean(recon_loss_values)),
             "train_alignment_loss": float(np.mean(alignment_values)),
+            "pred_loss_mode": args.pred_loss_mode,
             "val_mean_mse": val_mean_mse,
             "lr": float(optimizer.param_groups[0]["lr"]),
             "epoch_seconds": time.time() - epoch_start,
         }
+        for horizon, values in pred_prefix_loss_values.items():
+            if values:
+                row[f"train_prediction_h{horizon}_l1"] = float(np.mean(values))
         training_rows.append(row)
         print(
             "Epoch: {epoch}, Steps: {steps} | Train Loss: {train_loss:.7f} Vali Loss: {val:.7f}".format(
@@ -637,6 +676,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--use-amp", action="store_true")
     parser.add_argument("--official-test-mode", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--checkpoint-policy", choices=["official-last", "best-val"], default="official-last")
+    parser.add_argument("--pred-loss-mode", choices=["full", "multi-prefix"], default="full")
     args = parser.parse_args()
     if max(args.target_horizons) > args.pred_len:
         raise ValueError("target horizons cannot exceed pred_len")

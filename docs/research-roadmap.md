@@ -2003,16 +2003,22 @@ ETTh2 positive、ETTm2/Weather negative 分裂的主因。
 | `existence_evidence` | `official-last` 与 `best-val` winner pattern 完全一致：ETTh2 `3/4` unified wins，ETTm2/Weather `0/4` unified wins；checkpoint selector 不是主因；official-source fixed 相对 repo-local fixed 在 11/12 个 setting 改善 |
 | `idea` | 把 TimeAlign 从 baseline 升级为 HSS carrier：HSS 不重新定义预测架构，而是在 TimeAlign 的 future reconstruction/alignment supervision 上做 horizon-agnostic scheduling，决定哪些 future units 提供监督、监督进入哪个 branch、何时削弱或释放 alignment gradient |
 | `theory_check` | TimeAlign 的 future branch 在 training-only 读取 ground-truth future，alignment loss 将 future distribution pressure 传回 history branch；当 future units 可对齐且可预测时，这种 pressure 可提升 unified 表示；当 future units 噪声大、状态不稳定或与当前 history 表示冲突时，static full-future alignment 会产生 harmful supervision。HSS 的理论支点是 supervision reliability，而不是 benchmark horizon label |
-| `design` | 第一轮不直接堆复杂结构，先做 lean diagnostic + minimal scheduling：D1 诊断 future unit 的 alignability/reconstruction difficulty/residual volatility 与 unified degradation 的关系；M1 在 TimeAlign alignment/reconstruction loss 上加入 unit-level reliability schedule；M2 只改变 alignment gradient path，验证“where gradient is allowed to update”是否比 loss reweight 更有叙事与性能潜力 |
+| `design` | 第一轮不直接堆复杂结构，先做 head/interface confounder diagnostic，再做 supervision diagnostic + minimal scheduling：D0 检查 fixed `pred_len=720` head 是否造成短 prefix 监督不足；D1 诊断 future unit 的 alignability/reconstruction difficulty/residual volatility 与 unified degradation 的关系；M1 在 TimeAlign alignment/reconstruction loss 上加入 unit-level reliability schedule；M2 只改变 alignment gradient path，验证“where gradient is allowed to update”是否比 loss reweight 更有叙事与性能潜力 |
 | `gate` | 必须同时满足：ETTm2/Weather unified gap 明显缩小；ETTh2 不丢失 unified benefit；机制证据显示 schedule 不是简单降低 loss，而是区分 useful vs harmful future supervision；若只改善一个 dataset 或只靠淡化 TimeAlign loss，回 Step 4/5 重设 idea |
 | `artifacts` | 新建 `docs/experiments/phase5-timealign-hss-integration.md`；后续代码应在 `baselines/timealign_official/` 的 adapter 层增加最小 diagnostic/scheduling，不改官方 vendored forward 作为对照 |
-| `decision` | `active_timealign_hss_integration`；下一步先设计 lean diagnostic 与 M1/M2 最小实验，不做 look-back sweep |
+| `decision` | `active_timealign_hss_integration`；下一步先运行 D0 head/interface diagnostic，再视结果进入 D1/M1/M2，不做 look-back sweep |
 
 [Narrative Anchor] 论文主线应从 “TimeAlign 很强，所以直接改它” 变为：
 
 > Unified multi-horizon forecasting is not only a prediction-head problem; it is also a supervision-allocation problem. A future-aware carrier such as TimeAlign exposes this issue because the same future alignment objective can be beneficial on alignable future states but harmful on unstable or noisy future units. Horizon Supervision Scheduling studies how future supervision should be scheduled, masked, or routed during training while evaluation remains multi-horizon.
 
 [Design Constraint] HSS 仍必须 horizon-agnostic：schedule 的输入不能是 benchmark horizon id，而应来自 future unit/state 的 reliability proxy，例如 reconstruction difficulty、alignment consistency、local volatility、prediction residual structure 或 training dynamics。
+
+[D0 Update] TimeAlign 当前没有显式 unified head 设计：official model 使用 fixed
+`Linear(d_model * patch_num, pred_len)` projection；unified-720 只是训练 720 并裁剪 prefix。
+因此 D1 之前必须先排除 head/interface confounder。D0 将比较 official full-horizon prediction
+loss 与 `multi-prefix` prediction loss，判断 ETTm2/Weather 的 unified decrease 是否主要来自短
+prefix 监督不足。
 
 ## 历史证据索引
 

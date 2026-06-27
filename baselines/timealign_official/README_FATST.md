@@ -30,3 +30,20 @@ policies:
 - `best-val`: evaluate the model state with the best validation MSE. This is a
   validation-selector diagnostic, not a correction of the source-faithful
   reproduction.
+
+## D0 Head / Interface Diagnostic
+
+The adapter exposes `--pred-loss-mode` for Phase5 TimeAlign-HSS D0:
+
+- `full`: official prediction loss on the full `pred_len` output. This is the
+  default and preserves previous official-source runs.
+- `multi-prefix`: average prediction loss over the requested target prefixes
+  such as `96,192,336,720`, while keeping the official TimeAlign forward,
+  reconstruction loss, and alignment loss unchanged.
+
+This is a diagnostic for the unified-head/interface confounder. Official
+TimeAlign uses a fixed `Linear(d_model * patch_num, pred_len)` output projection;
+the unified-720 setting evaluates shorter horizons by cropping prefixes. The
+diagnostic tests whether the observed unified decrease is mainly caused by short
+prefixes receiving insufficient direct prediction supervision before introducing
+HSS reliability scheduling.

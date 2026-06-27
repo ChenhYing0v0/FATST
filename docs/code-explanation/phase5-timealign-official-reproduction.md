@@ -63,7 +63,7 @@ batch_y_future: [B, pred_len, C]
 outputs, recon, alignment_loss = model(batch_x, batch_y_future, is_training=True)
 ```
 
-训练 loss 与官方一致：
+默认训练 loss 与官方一致：
 
 $$
 \mathcal{L}
@@ -75,6 +75,33 @@ $$
 
 validation 使用 MSE prefix mean；test 默认使用官方 `is_training=True` 路径。该路径会构建
 future reconstruction branch，但 prediction branch 的 `outputs` 只由 history branch 产生。
+
+## D0 Head / Interface Diagnostic
+
+[Fact] 官方 TimeAlign 的 prediction head 是 fixed-length projection：
+
+```text
+proj_x: Linear(d_model * patch_num, pred_len)
+outputs: [B, pred_len, C]
+```
+
+unified-720 评估 `h96/h192/h336/h720` 时，只是对 `[B,720,C]` 的输出做 prefix crop。
+这保证 tensor-level prefix consistency，但没有显式 requested-horizon interface。
+
+为排除这个 confounder，`train_repo.py` 新增 `--pred-loss-mode`：
+
+- `full`：默认值，保持官方 full-horizon prediction L1；
+- `multi-prefix`：只把 prediction loss 改为 `mean(L_96,L_192,L_336,L_720)`。
+
+`multi-prefix` 不修改 official TimeAlign forward，不修改 `recon_loss` 或 `alignment_loss`。
+它只检查 unified decrease 是否来自短 prefix 缺少直接 prediction supervision，因此属于 D0
+diagnostic，不是最终 HSS 方法。
+
+训练日志同步导出：
+
+- `train_prediction_l1`：实际用于反传的 prediction loss；
+- `train_prediction_full_l1`：full 720 prediction L1；
+- `train_prediction_h{horizon}_l1`：`multi-prefix` 模式下各 prefix 的 L1。
 
 ## Official Preset
 
@@ -102,6 +129,14 @@ unified-720 使用 h720 official preset，并在 test 时评估 `h96/h192/h336/h
 - GPUs: `1 2`;
 - workload-aware queue：优先排 Weather/ETTm2，GPU 空出即补下一个 job。
 
+`scripts/remote/run_phase5_timealign_hss_d0_head_gate.sh` 运行 D0 head/interface gate：
+
+- mode: unified only；
+- loss modes: `full` 与 `multi-prefix`；
+- datasets: `Weather ETTm2 ETTh2`；
+- output root:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_d0_head_gate`。
+
 ## Analysis
 
 `scripts/analyze_phase5_timealign_official_gate.py` 输出：
@@ -117,17 +152,33 @@ unified-720 使用 h720 official preset，并在 test 时评估 `h96/h192/h336/h
 `last_val_mean_mse`、`last_minus_best_val_mse_pct`，用于量化 official-last
 相对 best-val 的影响。
 
+`scripts/analyze_phase5_timealign_hss_d0_head_gate.py` 输出：
+
+- `phase5_timealign_hss_d0_metrics.csv`;
+- `phase5_timealign_hss_d0_multi_prefix_gap.csv`;
+- `phase5_timealign_hss_d0_summary.csv`;
+- `phase5_timealign_hss_d0_training.csv`;
+- `phase5_timealign_hss_d0_best_epoch.csv`;
+- `phase5_timealign_hss_d0_head_gate_report.md`。
+
+该分析只比较 `multi-prefix` 相对 `full` 的变化。若它显著缩小 ETTm2/Weather 的 unified
+decrease，说明 head/interface confounder 必须先处理；若无效，再进入 D1 supervision
+reliability diagnostic。
+
 ## Code-Theory Consistency
 
-[Intended theory] 在设计 HSS 前，必须先确认 TimeAlign fixed-horizon carrier 的官方复现是否可信。
-如果 fixed-horizon 自身不能接近官方/论文表现，HSS 的失败或成功都无法归因。
+[Intended theory] 在设计 HSS 前，必须先确认 TimeAlign fixed-horizon carrier 的官方复现是否可信，
+并排除 unified head/interface confounder。如果 unified decrease 只是因为 fixed 720 head
+没有直接优化短 prefix，HSS 不能直接写成 future supervision reliability 问题。
 
-[Code realization] 当前代码以官方 dataloader/model/loss/preset 为主体，只加入 repo artifact
-导出和 unified/fixed 对比入口。
+[Code realization] 当前代码以官方 dataloader/model/preset 为主体，只加入 repo artifact
+导出、unified/fixed 对比入口，以及 adapter-level `pred-loss-mode` diagnostic。默认 `full`
+保持官方训练语义；`multi-prefix` 只改变 prediction loss 的 aggregation。
 
 [Proxy] `official-last` 是 source-faithful proxy，也是作者确认的 paper protocol。
 `best-val` 是 validation-selector diagnostic；它不代表论文代码默认行为，也不被视为对
 TimeAlign 官方训练策略的修正。
 
 [Falsification] 若 `official-last` fixed-horizon 仍明显偏离论文，下一步应继续审计数据版本、
-官方 commit、test path 与 script setting，而不是直接进入 HSS 设计。
+官方 commit、test path 与 script setting，而不是直接进入 HSS 设计。若 D0 `multi-prefix`
+已经解释 unified decrease，则下一步应先研究 unified head/interface，而不是进入 D1/M1。
