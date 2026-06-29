@@ -40,10 +40,17 @@ The adapter exposes `--pred-loss-mode` for Phase5 TimeAlign-HSS D0:
 - `multi-prefix`: average prediction loss over the requested target prefixes
   such as `96,192,336,720`, while keeping the official TimeAlign forward,
   reconstruction loss, and alignment loss unchanged.
+- `balanced-step`: average prediction loss over non-overlapping regions split
+  by the requested prefixes, such as `1:96`, `97:192`, `193:336`, `337:720`.
+- `stochastic-prefix`: sample prefix lengths from the requested target prefixes
+  during training.
+- `continuous-prefix`: sample prefix lengths from a denser prefix pool such as
+  `32,64,...,720` during training.
 
 This is a diagnostic for the unified-head/interface confounder. Official
 TimeAlign uses a fixed `Linear(d_model * patch_num, pred_len)` output projection;
 the unified-720 setting evaluates shorter horizons by cropping prefixes. The
 diagnostic tests whether the observed unified decrease is mainly caused by short
 prefixes receiving insufficient direct prediction supervision before introducing
-HSS reliability scheduling.
+HSS reliability scheduling. `balanced-step` is a mechanism control, while
+`stochastic-prefix` and `continuous-prefix` are candidate scheduling protocols.

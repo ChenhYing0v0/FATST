@@ -138,9 +138,8 @@ without first completing that rollback assessment.
 
 - Before launching any remote experiment on `529_Lab-3090`, inspect GPU memory and
   active processes with `nvidia-smi`.
-- Prefer GPUs with lower memory occupancy. GPUs 1 and 2 are usually more
-  stable; GPU 0 has a known process-kill risk and should be avoided unless the
-  user explicitly accepts that risk for the run.
+- Prefer GPUs with lower memory occupancy. GPU 0's previous process-kill risk
+  has been fixed, so GPUs 0, 1, and 2 can all be used when available.
 - Keep a memory safety margin instead of filling the selected GPU.
 - Record the selected GPU, observed memory usage, command, environment, and
   output path for every meaningful experiment.

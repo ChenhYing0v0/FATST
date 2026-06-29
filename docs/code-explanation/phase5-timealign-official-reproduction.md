@@ -92,16 +92,22 @@ unified-720 评估 `h96/h192/h336/h720` 时，只是对 `[B,720,C]` 的输出做
 
 - `full`：默认值，保持官方 full-horizon prediction L1；
 - `multi-prefix`：只把 prediction loss 改为 `mean(L_96,L_192,L_336,L_720)`。
+- `balanced-step`：把 future axis 切成不重叠区间
+  `1:96,97:192,193:336,337:720`，分别计算 loss 后平均；
+- `stochastic-prefix`：每个 batch 从 `{96,192,336,720}` 中采样 prefix；
+- `continuous-prefix`：每个 batch 从 `32,64,...,720` 这类连续 prefix pool 中采样 prefix。
 
-`multi-prefix` 不修改 official TimeAlign forward，不修改 `recon_loss` 或 `alignment_loss`。
-它只检查 unified decrease 是否来自短 prefix 缺少直接 prediction supervision，因此属于 D0
-diagnostic，不是最终 HSS 方法。
+这些模式都不修改 official TimeAlign forward，不修改 `recon_loss` 或 `alignment_loss`。
+`multi-prefix` 检查 unified decrease 是否来自短 prefix 缺少直接 prediction supervision；
+`balanced-step` 检查收益是否只是 region reweight；`stochastic-prefix` 和 `continuous-prefix`
+检查 prefix supervision 是否能形成 train-time schedule。
 
 训练日志同步导出：
 
 - `train_prediction_l1`：实际用于反传的 prediction loss；
 - `train_prediction_full_l1`：full 720 prediction L1；
 - `train_prediction_h{horizon}_l1`：`multi-prefix` 模式下各 prefix 的 L1。
+- `train_prediction_seg{start}_{end}_l1`：`balanced-step` 模式下各不重叠区间的 L1。
 
 ## Official Preset
 
@@ -137,6 +143,16 @@ unified-720 使用 h720 official preset，并在 test 时评估 `h96/h192/h336/h
 - output root:
   `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_d0_head_gate`。
 
+`scripts/remote/run_phase5_timealign_hss_h0_prefix_gate.sh` 运行 H0 prefix-supervision gate：
+
+- mode: unified only；
+- loss modes: `full`, `multi-prefix`, `balanced-step`, `stochastic-prefix`,
+  `continuous-prefix`；
+- datasets: `Weather ETTm2 ETTh2`；
+- default GPUs: `0 1 2`；
+- output root:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_h0_prefix_gate`。
+
 ## Analysis
 
 `scripts/analyze_phase5_timealign_official_gate.py` 输出：
@@ -165,6 +181,19 @@ unified-720 使用 h720 official preset，并在 test 时评估 `h96/h192/h336/h
 decrease，说明 head/interface confounder 必须先处理；若无效，再进入 D1 supervision
 reliability diagnostic。
 
+`scripts/analyze_phase5_timealign_hss_h0_prefix_gate.py` 输出：
+
+- `phase5_timealign_hss_h0_metrics.csv`;
+- `phase5_timealign_hss_h0_comparison.csv`;
+- `phase5_timealign_hss_h0_summary.csv`;
+- `phase5_timealign_hss_h0_training.csv`;
+- `phase5_timealign_hss_h0_best_epoch.csv`;
+- `phase5_timealign_hss_h0_prefix_gate_report.md`。
+
+该分析同时比较每个 loss mode 相对 `full`、相对 `multi-prefix`、相对 fixed-horizon reference
+的变化。H0 的关键不是只看是否超过 full，而是判断 schedule-like modes 是否能接近或超过
+`multi-prefix`，从而支撑 horizon-agnostic supervision scheduling 叙事。
+
 ## Code-Theory Consistency
 
 [Intended theory] 在设计 HSS 前，必须先确认 TimeAlign fixed-horizon carrier 的官方复现是否可信，
@@ -173,7 +202,8 @@ reliability diagnostic。
 
 [Code realization] 当前代码以官方 dataloader/model/preset 为主体，只加入 repo artifact
 导出、unified/fixed 对比入口，以及 adapter-level `pred-loss-mode` diagnostic。默认 `full`
-保持官方训练语义；`multi-prefix` 只改变 prediction loss 的 aggregation。
+保持官方训练语义；其他 prefix modes 只改变 prediction loss 的 aggregation 或 train-time
+prefix sampling。
 
 [Proxy] `official-last` 是 source-faithful proxy，也是作者确认的 paper protocol。
 `best-val` 是 validation-selector diagnostic；它不代表论文代码默认行为，也不被视为对

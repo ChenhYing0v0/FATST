@@ -2050,8 +2050,12 @@ HSS 的叙事应升级为两层：
    与 gradient path。
 
 [Next] 进入 Phase5-H0：`Prefix-Supervised TimeAlign`。第一轮先 formalize `multi-prefix`
-prediction loss 并做最小 robustness check；第二轮再考虑轻量 prefix-aware / target-set readout。
-D1 supervision reliability diagnostic 后移，只有 H0 后仍存在 residual gap 时才进入。
+prediction loss，并加入 `balanced-step`、`stochastic-prefix`、`continuous-prefix` 三个机制对照。
+其中 `balanced-step` 判断收益是否只是 non-overlap region reweight；`stochastic-prefix` 判断
+prefix supervision 能否作为 schedule；`continuous-prefix` 判断能否脱离 benchmark horizon id。
+若 schedule-like variants 接近或超过 `multi-prefix`，HSS 叙事可升级为 horizon-agnostic
+prediction-prefix supervision scheduling。D1 supervision reliability diagnostic 后移，只有 H0
+后仍存在 residual gap 时才进入。
 
 ## 历史证据索引
 

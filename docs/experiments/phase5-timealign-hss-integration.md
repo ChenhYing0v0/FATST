@@ -129,16 +129,41 @@ evaluation-consistent prefix supervision？
 | --- | --- | --- |
 | `full` | official full-horizon prediction loss | strong baseline |
 | `multi-prefix` | `mean(L_96,L_192,L_336,L_720)` | prefix-supervised interface |
-| `short-heavy` | 给短 prefix 更高权重 | 判断收益是否来自短 horizon under-supervision |
-| `long-heavy` | 给长 prefix 更高权重 | 反证：若 long-heavy 更好，D0 解释需要修正 |
+| `balanced-step` | `mean(L_1:96,L_97:192,L_193:336,L_337:720)` | 判断收益是否只是非重叠 region reweight |
+| `stochastic-prefix` | 每 batch 从 `{96,192,336,720}` 采样 prefix | 判断 prefix supervision 能否作为 schedule |
+| `continuous-prefix` | 每 batch 从连续 prefix pool 采样 | 判断能否脱离 benchmark horizon id |
 
 第一轮仍不改 official TimeAlign forward。若 robustness 成立，再进入轻量 prefix-aware /
 target-set readout。
+
+### 实现语义
+
+所有 H0 arms 都保持：
+
+```text
+pred: [B, 720, C]
+true: [B, 720, C]
+```
+
+只改变 `L_pred`：
+
+- `full`: `L1(pred[:, :720], true[:, :720])`；
+- `multi-prefix`: `mean(L1(:96), L1(:192), L1(:336), L1(:720))`；
+- `balanced-step`: 对不重叠区间分别算 loss 后平均；
+- `stochastic-prefix`: 每个 batch 从 fixed prefix set 随机采样一个 prefix；
+- `continuous-prefix`: 每个 batch 从 `32,64,...,720` prefix pool 随机采样一个 prefix。
+
+`balanced-step` 是 mechanism control，不是最终 HSS 候选；`stochastic-prefix` 与
+`continuous-prefix` 才是 scheduling 候选。
 
 ### Gate
 
 [Pass] `multi-prefix` 或其稳健变体在 ETTm2/Weather 继续缩小 fixed gap，且 ETTh2 不退化；
 至少一次 seed/checkpoint sensitivity 不改变方向。
+
+[Paper-story Pass] `stochastic-prefix` 或 `continuous-prefix` 接近或超过 `multi-prefix`。这说明
+D0 的收益可以从 benchmark-specific multi-prefix loss 升级为 horizon-agnostic supervision
+scheduling。
 
 [Fail] prefix weighting 的收益不稳定或只来自单次随机性，则回到 D1 reliability diagnostic，
 但保留 head/interface 作为 confounder。

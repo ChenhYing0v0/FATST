@@ -397,17 +397,47 @@ def prediction_loss(
     criterion: nn.Module,
     horizons: list[int],
     mode: str,
+    prefix_samples: int,
+    continuous_min_prefix: int,
+    continuous_prefix_step: int,
 ) -> tuple[torch.Tensor, dict[str, torch.Tensor]]:
     full_loss = criterion(outputs, targets)
     losses: dict[str, torch.Tensor] = {"full": full_loss}
     if mode == "full":
         return full_loss, losses
-    if mode != "multi-prefix":
+    sorted_horizons = sorted(set(horizons))
+    if mode == "multi-prefix":
+        selected_horizons = sorted_horizons
+    elif mode == "stochastic-prefix":
+        selected_horizons = random.choices(sorted_horizons, k=max(prefix_samples, 1))
+    elif mode == "continuous-prefix":
+        pred_len = outputs.shape[1]
+        pool = list(range(max(1, continuous_min_prefix), pred_len + 1, max(continuous_prefix_step, 1)))
+        if pred_len not in pool:
+            pool.append(pred_len)
+        selected_horizons = random.choices(pool, k=max(prefix_samples, 1))
+    elif mode == "balanced-step":
+        segment_losses = []
+        start = 0
+        for horizon in sorted_horizons:
+            if horizon <= start:
+                continue
+            segment_loss = criterion(outputs[:, start:horizon, :], targets[:, start:horizon, :])
+            losses[f"seg{start + 1}_{horizon}"] = segment_loss
+            segment_losses.append(segment_loss)
+            start = horizon
+        if not segment_losses:
+            raise ValueError("balanced-step produced no supervision segments")
+        return torch.stack(segment_losses).mean(), losses
+    else:
         raise ValueError(f"Unsupported prediction loss mode: {mode}")
     prefix_losses = []
-    for horizon in sorted(set(horizons)):
+    for horizon in selected_horizons:
         horizon_loss = criterion(outputs[:, :horizon, :], targets[:, :horizon, :])
-        losses[f"h{horizon}"] = horizon_loss
+        key = f"h{horizon}"
+        if key in losses:
+            key = f"{key}_repeat{len([name for name in losses if name.startswith(key)])}"
+        losses[key] = horizon_loss
         prefix_losses.append(horizon_loss)
     return torch.stack(prefix_losses).mean(), losses
 
@@ -487,7 +517,7 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
         total_loss = []
         pred_loss_values = []
         pred_full_loss_values = []
-        pred_prefix_loss_values: dict[int, list[float]] = {horizon: [] for horizon in args.target_horizons}
+        pred_component_values: dict[str, list[float]] = {}
         recon_loss_values = []
         alignment_values = []
         train_steps = len(train_loader)
@@ -514,6 +544,9 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
                 criterion,
                 args.target_horizons,
                 args.pred_loss_mode,
+                args.prefix_samples,
+                args.continuous_min_prefix,
+                args.continuous_prefix_step,
             )
             recon_loss = criterion(recon, batch_y)
             loss = pred_loss + official_args.w_recon * recon_loss + official_args.w_align * alignment_loss
@@ -523,10 +556,10 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
             total_loss.append(float(loss.detach().cpu()))
             pred_loss_values.append(float(pred_loss.detach().cpu()))
             pred_full_loss_values.append(float(pred_components["full"].detach().cpu()))
-            for horizon in args.target_horizons:
-                component = pred_components.get(f"h{horizon}")
-                if component is not None:
-                    pred_prefix_loss_values[horizon].append(float(component.detach().cpu()))
+            for name, component in pred_components.items():
+                if name == "full":
+                    continue
+                pred_component_values.setdefault(name, []).append(float(component.detach().cpu()))
             recon_loss_values.append(float(recon_loss.detach().cpu()))
             alignment_values.append(float(alignment_loss.detach().cpu()))
 
@@ -556,13 +589,16 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
             "train_reconstruction_l1": float(np.mean(recon_loss_values)),
             "train_alignment_loss": float(np.mean(alignment_values)),
             "pred_loss_mode": args.pred_loss_mode,
+            "prefix_samples": args.prefix_samples,
+            "continuous_min_prefix": args.continuous_min_prefix,
+            "continuous_prefix_step": args.continuous_prefix_step,
             "val_mean_mse": val_mean_mse,
             "lr": float(optimizer.param_groups[0]["lr"]),
             "epoch_seconds": time.time() - epoch_start,
         }
-        for horizon, values in pred_prefix_loss_values.items():
+        for name, values in sorted(pred_component_values.items()):
             if values:
-                row[f"train_prediction_h{horizon}_l1"] = float(np.mean(values))
+                row[f"train_prediction_{name}_l1"] = float(np.mean(values))
         training_rows.append(row)
         print(
             "Epoch: {epoch}, Steps: {steps} | Train Loss: {train_loss:.7f} Vali Loss: {val:.7f}".format(
@@ -676,7 +712,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--use-amp", action="store_true")
     parser.add_argument("--official-test-mode", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--checkpoint-policy", choices=["official-last", "best-val"], default="official-last")
-    parser.add_argument("--pred-loss-mode", choices=["full", "multi-prefix"], default="full")
+    parser.add_argument(
+        "--pred-loss-mode",
+        choices=["full", "multi-prefix", "balanced-step", "stochastic-prefix", "continuous-prefix"],
+        default="full",
+    )
+    parser.add_argument("--prefix-samples", type=int, default=1)
+    parser.add_argument("--continuous-min-prefix", type=int, default=32)
+    parser.add_argument("--continuous-prefix-step", type=int, default=32)
     args = parser.parse_args()
     if max(args.target_horizons) > args.pred_len:
         raise ValueError("target horizons cannot exceed pred_len")
