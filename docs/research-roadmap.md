@@ -2020,6 +2020,39 @@ ETTh2 positive、ETTm2/Weather negative 分裂的主因。
 loss 与 `multi-prefix` prediction loss，判断 ETTm2/Weather 的 unified decrease 是否主要来自短
 prefix 监督不足。
 
+#### Phase5-HSS-D0 Result：Head / Interface Confounder Strong
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 9/10/11：评估 D0 remote artifacts，并决定是否进入 D1/M1 |
+| `problem` | 判断 TimeAlign unified decrease 是否主要来自 fixed `pred_len=720` head 缺少 evaluation-consistent prefix supervision |
+| `existence_evidence` | D0 完成 `3 datasets x 2 prediction-loss modes` unified-only matrix；artifacts 在 `analysis/phase5_timealign_hss_d0_head_gate_20260629/` |
+| `idea` | 若 `multi-prefix` prediction loss 显著优于 full-horizon loss，说明 unified head/interface 是强 confounder；HSS 不应直接从 future supervision reliability 开始 |
+| `theory_check` | `multi-prefix` 不改 official TimeAlign forward、reconstruction loss 或 alignment loss，只改变 prediction loss 的 prefix aggregation；因此它隔离测试 output interface / prefix supervision 是否是主要因素 |
+| `design` | 比较 `full` vs `multi-prefix`；再把两者放回 fixed-horizon reference，计算 unified gap 是否缩小 |
+| `gate` | `multi-prefix` 应缩小 ETTm2/Weather unified gap，且不损伤 ETTh2 unified benefit |
+| `artifacts` | `phase5_timealign_hss_d0_head_gate_report.md`、`phase5_timealign_hss_d0_interpretation.md`、`phase5_timealign_hss_d0_fixed_reference_comparison.csv` |
+| `decision` | `head_interface_confounder_strong`；暂不进入 D1/M1，回 Step 4/6 先设计 TimeAlign-compatible unified head/interface carrier |
+
+[Fact] `multi-prefix` 相对 full unified 在全部 `12/12` 个 setting 上降低 MSE；平均 MSE 相对变化：
+ETTh2 `-3.36%`、ETTm2 `-1.57%`、Weather `-1.17%`、ALL `-2.03%`。
+
+[Fact] 放回 fixed reference 后，Weather 的 unified gap 从 `+1.05%` 变成 `-0.13%`；
+ETTm2 从 `+3.72%` 缩小到 `+2.06%`；ETTh2 unified benefit 从 `-8.01%` 扩大到
+`-11.05%`。
+
+[Decision] 这说明 TimeAlign-HSS 的第一层问题不是直接调度 future reconstruction/alignment
+supervision，而是先让 TimeAlign 具备 evaluation-consistent unified prediction interface。
+HSS 的叙事应升级为两层：
+
+1. prefix-supervised unified prediction interface；
+2. 在该 interface 稳定后，再调度 future alignment/reconstruction supervision 的 reliability
+   与 gradient path。
+
+[Next] 进入 Phase5-H0：`Prefix-Supervised TimeAlign`。第一轮先 formalize `multi-prefix`
+prediction loss 并做最小 robustness check；第二轮再考虑轻量 prefix-aware / target-set readout。
+D1 supervision reliability diagnostic 后移，只有 H0 后仍存在 residual gap 时才进入。
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：

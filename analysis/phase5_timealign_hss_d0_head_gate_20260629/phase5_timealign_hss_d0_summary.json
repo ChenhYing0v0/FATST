@@ -1,0 +1,35 @@
+{
+  "gap_rows": 12,
+  "metric_rows": 24,
+  "summary_rows": [
+    {
+      "dataset": "ETTh2",
+      "mean_relative_mae_pct": -1.706634992718831,
+      "mean_relative_mse_pct": -3.3580385531728654,
+      "multi_prefix_wins": 4,
+      "settings": 4
+    },
+    {
+      "dataset": "ETTm2",
+      "mean_relative_mae_pct": -0.9762193962229271,
+      "mean_relative_mse_pct": -1.5741672353550369,
+      "multi_prefix_wins": 4,
+      "settings": 4
+    },
+    {
+      "dataset": "Weather",
+      "mean_relative_mae_pct": -1.0600205582471571,
+      "mean_relative_mse_pct": -1.1713955601474701,
+      "multi_prefix_wins": 4,
+      "settings": 4
+    },
+    {
+      "dataset": "ALL",
+      "mean_relative_mae_pct": -1.247624982396305,
+      "mean_relative_mse_pct": -2.0345337828917907,
+      "multi_prefix_wins": 12,
+      "settings": 12
+    }
+  ],
+  "training_rows": 60
+}

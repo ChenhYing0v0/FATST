@@ -90,6 +90,59 @@ benefit。此时先进入 unified head/interface 设计，而不是直接做 D1/
 - sync: `scripts/sync_phase5_timealign_hss_d0_results.sh`
 - output root: `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_d0_head_gate`
 
+### D0 结果
+
+[Decision] `head_interface_confounder_strong`.
+
+`multi-prefix` 在全部 `12/12` 个 dataset-horizon setting 上优于 full unified loss，平均
+MSE 相对 full 下降：
+
+| dataset | wins | mean relative MSE vs full |
+| --- | --- | --- |
+| ETTh2 | 4/4 | -3.36% |
+| ETTm2 | 4/4 | -1.57% |
+| Weather | 4/4 | -1.17% |
+| ALL | 12/12 | -2.03% |
+
+相对 fixed-horizon reference：
+
+| dataset | full unified gap | multi-prefix gap | gap improvement |
+| --- | --- | --- | --- |
+| ETTh2 | -8.01% | -11.05% | +3.05 pct-pt |
+| ETTm2 | +3.72% | +2.06% | +1.66 pct-pt |
+| Weather | +1.05% | -0.13% | +1.18 pct-pt |
+
+[Decision] D0 通过，且强度足以改变研究顺序。D1 supervision reliability diagnostic 后移；
+下一步应先研究 TimeAlign-compatible unified prediction interface。
+
+## H0：Prefix-Supervised TimeAlign Carrier
+
+### 目的
+
+[Question] 是否可以把 D0 的 `multi-prefix` control 从 diagnostic formalize 成 TimeAlign-HSS 的
+第一层 carrier，即让 TimeAlign 在 unified multi-horizon setting 中先获得
+evaluation-consistent prefix supervision？
+
+### 第一轮计划
+
+| Arm | Change | Purpose |
+| --- | --- | --- |
+| `full` | official full-horizon prediction loss | strong baseline |
+| `multi-prefix` | `mean(L_96,L_192,L_336,L_720)` | prefix-supervised interface |
+| `short-heavy` | 给短 prefix 更高权重 | 判断收益是否来自短 horizon under-supervision |
+| `long-heavy` | 给长 prefix 更高权重 | 反证：若 long-heavy 更好，D0 解释需要修正 |
+
+第一轮仍不改 official TimeAlign forward。若 robustness 成立，再进入轻量 prefix-aware /
+target-set readout。
+
+### Gate
+
+[Pass] `multi-prefix` 或其稳健变体在 ETTm2/Weather 继续缩小 fixed gap，且 ETTh2 不退化；
+至少一次 seed/checkpoint sensitivity 不改变方向。
+
+[Fail] prefix weighting 的收益不稳定或只来自单次随机性，则回到 D1 reliability diagnostic，
+但保留 head/interface 作为 confounder。
+
 ## D1：Supervision Reliability Diagnostic
 
 ### 目的
@@ -97,7 +150,7 @@ benefit。此时先进入 unified head/interface 设计，而不是直接做 D1/
 [Question] ETTm2/Weather 的 unified decrease 是否与 future supervision reliability 有关？
 
 如果答案是否定的，TimeAlign-HSS 缺少必要机制支点；后续不应直接实现 scheduling。D1 只在
-D0 未完全解释 unified decrease 后进入。
+H0 后仍存在 residual unified decrease 时进入。
 
 ### 最小诊断量
 
@@ -188,8 +241,8 @@ representation capacity 或 dataset-specific hyperparameter。
 
 ## 当前下一步
 
-1. 先运行 D0 head/interface diagnostic；
-2. 若 D0 不能解释 unified decrease，再完成 D1 诊断脚本设计，优先复用 existing predictions/logs；
+1. D0 已通过，先进入 H0：Prefix-Supervised TimeAlign Carrier；
+2. 若 H0 后仍存在 ETTm2/Weather residual gap，再完成 D1 诊断脚本设计，优先复用 existing predictions/logs；
 3. 如果 D1 通过，进入 M1 最小实验；
 4. 只有当 M1 显示 scalar scheduling 不足但机制方向成立时，才进入 M2；
 5. 不做 look-back horizon sweep，除非后续需要论文表格级 TimeAlign reproduction 作为附录或审稿防线。
