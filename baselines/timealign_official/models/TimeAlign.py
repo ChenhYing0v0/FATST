@@ -77,7 +77,9 @@ class Model(nn.Module):
         self.readout_mode = getattr(configs, "readout_mode", "official")
         self.proj_x = nn.Linear(configs.d_model * self.patch_num, configs.pred_len)
         self.proj_y = nn.Linear(configs.d_model * self.patch_num, configs.pred_len)
-        if self.readout_mode in {"prefix-conditioned-head", "target-set-decoder"}:
+        self.conditioned_projection_modes = {"prefix-conditioned-head", "target-set-decoder"}
+        self.variable_prefix_modes = {"target-set-prefix-head", "prefix-token-decoder"}
+        if self.readout_mode in self.conditioned_projection_modes:
             readout_dim = configs.d_model * self.patch_num
             self.prefix_condition = nn.Sequential(
                 nn.Linear(1, readout_dim),
@@ -86,18 +88,66 @@ class Model(nn.Module):
             )
             nn.init.zeros_(self.prefix_condition[-1].weight)
             nn.init.zeros_(self.prefix_condition[-1].bias)
+        if self.readout_mode == "target-set-prefix-head":
+            readout_dim = configs.d_model * self.patch_num
+            self.prefix_step_weight = nn.Sequential(
+                nn.Linear(2, configs.d_model),
+                nn.GELU(),
+                nn.Linear(configs.d_model, readout_dim),
+            )
+            self.prefix_step_bias = nn.Linear(2, 1)
+            self.readout_scale = readout_dim ** -0.5
+        if self.readout_mode == "prefix-token-decoder":
+            self.step_query = nn.Sequential(
+                nn.Linear(2, configs.d_model),
+                nn.GELU(),
+                nn.Linear(configs.d_model, configs.d_model),
+            )
+            self.token_key = nn.Linear(configs.d_model, configs.d_model)
+            self.token_value = nn.Linear(configs.d_model, configs.d_model)
+            self.token_out = nn.Linear(configs.d_model, 1)
+            self.readout_scale = configs.d_model ** -0.5
 
         self.normalization_x = Normalize(configs.enc_in, affine=False)
         self.normalization_y = Normalize(configs.enc_in, affine=False)
 
     def _condition_readout(self, hidden, target_prefix):
-        if self.readout_mode not in {"prefix-conditioned-head", "target-set-decoder"}:
+        if self.readout_mode not in self.conditioned_projection_modes:
             return hidden
         if target_prefix is None:
             target_prefix = self.pred_len
         prefix_value = hidden.new_tensor([[float(target_prefix) / float(self.pred_len)]])
         condition = torch.tanh(self.prefix_condition(prefix_value)).view(1, 1, -1)
         return hidden + hidden * condition
+
+    def _prefix_features(self, target_prefix, device, dtype):
+        if target_prefix is None:
+            target_prefix = self.pred_len
+        horizon = int(target_prefix)
+        steps = torch.arange(1, horizon + 1, device=device, dtype=dtype) / float(self.pred_len)
+        prefix = torch.full_like(steps, float(horizon) / float(self.pred_len))
+        return torch.stack([steps, prefix], dim=-1)
+
+    def _target_set_prefix_head(self, hidden, target_prefix):
+        # hidden: [B, C, R], output: [B, H, C]
+        features = self._prefix_features(target_prefix, hidden.device, hidden.dtype)
+        weights = self.prefix_step_weight(features)
+        bias = self.prefix_step_bias(features).squeeze(-1)
+        output = torch.einsum("bcr,hr->bch", hidden, weights) * self.readout_scale
+        output = output + bias.view(1, 1, -1)
+        return output.permute(0, 2, 1)
+
+    def _prefix_token_decoder(self, hidden, target_prefix):
+        # hidden: [B, C, N, D], output: [B, H, C]
+        features = self._prefix_features(target_prefix, hidden.device, hidden.dtype)
+        query = self.step_query(features)
+        key = self.token_key(hidden)
+        value = self.token_value(hidden)
+        scores = torch.einsum("bcnd,hd->bchn", key, query) * self.readout_scale
+        weights = torch.softmax(scores, dim=-1)
+        context = torch.einsum("bchn,bcnd->bchd", weights, value)
+        output = self.token_out(context).squeeze(-1)
+        return output.permute(0, 2, 1)
 
     def forward(self, x, y, is_training=True, target_prefix=None):
         # [B, L, C]   [B, T, C]
@@ -129,10 +179,16 @@ class Model(nn.Module):
         # [B, C, N, D]
         # print(x.reshape(-1, C, self.patch_num, self.d_model).shape)
 
-        x = x.reshape(-1, C, self.patch_num, self.d_model).flatten(start_dim=-2)
-        x = self._condition_readout(x, target_prefix)
-        x = self.proj_x(x) # [B, C, T]
-        x = x.permute(0, 2, 1)
+        x = x.reshape(-1, C, self.patch_num, self.d_model)
+        if self.readout_mode == "target-set-prefix-head":
+            x = self._target_set_prefix_head(x.flatten(start_dim=-2), target_prefix)
+        elif self.readout_mode == "prefix-token-decoder":
+            x = self._prefix_token_decoder(x, target_prefix)
+        else:
+            x = x.flatten(start_dim=-2)
+            x = self._condition_readout(x, target_prefix)
+            x = self.proj_x(x) # [B, C, T]
+            x = x.permute(0, 2, 1)
         x = self.normalization_x(x, 'denorm')
 
         if is_training:

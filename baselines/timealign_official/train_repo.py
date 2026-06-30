@@ -835,7 +835,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--checkpoint-policy", choices=["official-last", "best-val"], default="official-last")
     parser.add_argument(
         "--readout-mode",
-        choices=["official", "prefix-conditioned-head", "target-set-decoder"],
+        choices=[
+            "official",
+            "prefix-conditioned-head",
+            "target-set-decoder",
+            "target-set-prefix-head",
+            "prefix-token-decoder",
+        ],
         default="official",
     )
     parser.add_argument(

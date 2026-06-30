@@ -132,6 +132,43 @@ official head；如果 H1 有收益，收益应来自模型学会按 requested p
 `target_prefix=96/192/336/720` forward 后计算对应 prefix metric。这样 H1 的指标真正测试
 “模型是否知道当前请求的 horizon”，而不是继续测试 h720 crop。
 
+[Boundary] H1 的 `target-set-decoder` 名称只表示 target-set-conditioned training protocol，
+并不是真正的 decoder head。它仍然使用 `proj_x: Linear(...,720)`，只是 projection 前的
+hidden 被 requested prefix 调制。
+
+## H1B Variable-Prefix Readout
+
+H1B 新增两个真正改变 prediction head 结构的 `--readout-mode`：
+
+- `target-set-prefix-head`：对 requested prefix 中的每个 future step 生成动态 linear weight，
+  直接输出 `[B,H,C]`；
+- `prefix-token-decoder`：把 requested future step token 作为 query，对 history patch tokens
+  做 attention readout，直接输出 `[B,H,C]`。
+
+`target-set-prefix-head` 的 tensor flow：
+
+```text
+x_hidden:  [B, C, patch_num, d_model]
+x_flat:    [B, C, d_model * patch_num]
+features:  [H, 2] = [step / 720, H / 720]
+weights:   MLP(features) -> [H, d_model * patch_num]
+output:    einsum(x_flat, weights) -> [B, H, C]
+```
+
+`prefix-token-decoder` 的 tensor flow：
+
+```text
+x_tokens:  [B, C, patch_num, d_model]
+features:  [H, 2] = [step / 720, H / 720]
+query:     MLP(features) -> [H, d_model]
+key/value: Linear(x_tokens) -> [B, C, patch_num, d_model]
+attention: softmax(query @ key) over patch_num
+output:    Linear(attended context) -> [B, H, C]
+```
+
+这两个模式都不再先生成 `[B,720,C]` 再 crop。训练和评估仍按 requested prefix 循环调用
+`model(..., target_prefix=H)`，但模型返回的 prediction length 就是 `H`。
+
 训练日志同步导出：
 
 - `train_prediction_l1`：实际用于反传的 prediction loss；
@@ -210,6 +247,19 @@ unified-720 使用 h720 official preset，并在 test 时评估 `h96/h192/h336/h
 - output root:
   `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_h1_readout_gate`。
 
+`scripts/remote/run_phase5_timealign_hss_h1b_variable_readout_gate.sh` 运行 H1B variable-readout gate：
+
+- mode: unified only；
+- arms:
+  - `target_set_prefix_head_multiprefix`: `readout-mode=target-set-prefix-head`,
+    `pred-loss-mode=multi-prefix`;
+  - `prefix_token_decoder_multiprefix`: `readout-mode=prefix-token-decoder`,
+    `pred-loss-mode=multi-prefix`;
+- datasets: `Weather ETTm2 ETTh2`；
+- default GPUs: `0 1 2`；
+- output root:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_h1b_variable_readout_gate`。
+
 ## Analysis
 
 `scripts/analyze_phase5_timealign_official_gate.py` 输出：
@@ -276,6 +326,19 @@ reliability diagnostic。
 `stochastic_prefix_k2` 与 fixed specialist 的差异。H1 的 primary gate 是 ETTm2 fixed gap
 是否缩小，同时不能牺牲 ETTh2 unified benefit 或 Weather no-harm。
 
+`scripts/analyze_phase5_timealign_hss_h1b_variable_readout_gate.py` 输出：
+
+- `phase5_timealign_hss_h1b_metrics.csv`;
+- `phase5_timealign_hss_h1b_comparison.csv`;
+- `phase5_timealign_hss_h1b_summary.csv`;
+- `phase5_timealign_hss_h1b_training.csv`;
+- `phase5_timealign_hss_h1b_best_epoch.csv`;
+- `phase5_timealign_hss_h1b_variable_readout_gate_report.md`。
+
+该分析比较 H1B arms 相对 H0 `full`、H0B `stochastic_prefix_k2`、H1
+`target_set_decoder_multiprefix` 与 fixed specialist 的差异。H1B 的关键不是只超过 H0B，
+而是必须超过 H1 target-set conditioned 720 projection，证明真正 decoder/head 改造有额外价值。
+
 ## Code-Theory Consistency
 
 [Intended theory] 在设计 HSS 前，必须先确认 TimeAlign fixed-horizon carrier 的官方复现是否可信，
@@ -286,7 +349,9 @@ reliability diagnostic。
 导出、unified/fixed 对比入口，以及 adapter-level `pred-loss-mode` diagnostic。默认 `full`
 保持官方训练语义；其他 prefix modes 只改变 prediction loss 的 aggregation 或 train-time
 prefix sampling。H1 的 `readout-mode` 只在 prediction head 前加入 requested-prefix condition，
-不改 encoder、future autoencoder、alignment loss 或 official dataloader。
+不改 encoder、future autoencoder、alignment loss 或 official dataloader。H1B 进一步替换
+prediction head，使 selected prefix 直接输出 `[B,H,C]`，但仍保留 TimeAlign backbone、
+future autoencoder、alignment loss 与 official dataloader。
 
 [Proxy] `official-last` 是 source-faithful proxy，也是作者确认的 paper protocol。
 `best-val` 是 validation-selector diagnostic；它不代表论文代码默认行为，也不被视为对

@@ -2147,10 +2147,14 @@ prediction-prefix supervision scheduling。D1 supervision reliability diagnostic
 | `existence_evidence` | H1 `target_set_decoder_multiprefix` 相对 H0B 改善 `-0.69%`，但 ETTm2 vs fixed 仍为 `+1.81%` |
 | `idea` | 从 condition-before-720-projection 升级为真正的 variable-prefix 或 prefix-token decoder |
 | `theory_check` | 如果 unified multi-horizon 的瓶颈在 readout shape，模型应按 requested target set 直接生成对应 prefix，而不是所有 request 都先生成 720 |
-| `design` | 候选 arms：`target_set_prefix_head` 与 `prefix_token_decoder`；保留 TimeAlign backbone/future alignment |
+| `design` | 候选 arms：`target_set_prefix_head_multiprefix` 与 `prefix_token_decoder_multiprefix`；二者都使用 `multi-prefix` supervision，差别只在 head |
 | `gate` | ETTm2 fixed gap 明显低于 H1 的 `+1.81%`，ETTh2 保持强收益，Weather no-harm |
-| `artifacts` | 待实现 |
-| `decision` | H1B 尚未实现；若仍不能缩小 ETTm2 gap，再回 Step 2/3 判断 TimeAlign carrier 是否适合作为 HSS 主线 |
+| `artifacts` | `scripts/remote/run_phase5_timealign_hss_h1b_variable_readout_gate.sh`、`scripts/analyze_phase5_timealign_hss_h1b_variable_readout_gate.py`、`scripts/sync_phase5_timealign_hss_h1b_results.sh` |
+| `decision` | H1B 已进入 Step 7/8；若仍不能缩小 ETTm2 gap，再回 Step 2/3 判断 TimeAlign carrier 是否适合作为 HSS 主线 |
+
+[Correction] H1 的 `target_set_decoder_multiprefix` 并不是真正 decoder head，它仍然是
+condition-before-720-projection。H1B 才开始测试真正的 variable-prefix / prefix-token prediction
+head。
 
 ## 历史证据索引
 
