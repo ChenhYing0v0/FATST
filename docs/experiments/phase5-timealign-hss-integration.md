@@ -165,6 +165,37 @@ true: [B, 720, C]
 D0 的收益可以从 benchmark-specific multi-prefix loss 升级为 horizon-agnostic supervision
 scheduling。
 
+### H0 结果
+
+[Decision] `prefix_scheduling_pass_with_stochastic_candidate`.
+
+| loss_mode | mean MSE vs full | mean MSE vs multi-prefix | wins vs fixed | mean MSE vs fixed |
+| --- | ---: | ---: | ---: | ---: |
+| `multi-prefix` | -2.03% | 0.00% | 7/12 | -3.04% |
+| `balanced-step` | -1.22% | +0.83% | 6/12 | -2.26% |
+| `stochastic-prefix` | -1.90% | +0.13% | 7/12 | -2.90% |
+| `continuous-prefix` | -1.67% | +0.37% | 7/12 | -2.69% |
+
+[Strong Evidence] `balanced-step` 明显弱于 prefix modes，说明 D0/H0 的收益不是简单 region
+reweight。
+
+[Strong Evidence] `stochastic-prefix` 接近 `multi-prefix`，说明 prefix supervision 可以
+schedule 化；它是当前最有 paper-story potential 的 H0 候选。
+
+[Evidence] `continuous-prefix` 有效但略弱，说明脱离 benchmark horizon id 有潜力，但当前
+single-prefix sample 与 `32` step pool 需要继续校准。
+
+### H0B 计划
+
+| Arm | Change | Purpose |
+| --- | --- | --- |
+| `stochastic-prefix_k2` | 每 batch 从 `{96,192,336,720}` 采样 2 个 prefix | 检查 schedule strength 是否能超过 `multi-prefix` 或稳定提升 ETTm2 |
+| `continuous-prefix_k2` | 每 batch 从 continuous pool 采样 2 个 prefix | 检查 horizon-agnostic schedule 是否能追上 benchmark-specific schedule |
+| `continuous-prefix_pool96` | 从较粗 prefix pool 采样，例如 `96,192,...,720` | 判断 continuous 弱势是否来自过短 prefix 噪声 |
+
+H0B 通过后再做 seed/checkpoint sensitivity；H0B 失败则保留 `multi-prefix` 作为 strong interface
+control，但主线应转向 prefix-aware / target-set readout，而不是继续调 random schedule。
+
 [Fail] prefix weighting 的收益不稳定或只来自单次随机性，则回到 D1 reliability diagnostic，
 但保留 head/interface 作为 confounder。
 
