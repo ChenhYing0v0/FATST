@@ -1,0 +1,10 @@
+dataset,arm,pred_loss_mode,prefix_samples,continuous_min_prefix,continuous_prefix_step,best_epoch,best_val_mean_mse,last_epoch,last_val_mean_mse,last_gap_to_best_pct
+ETTh2,continuous_prefix_k2,continuous-prefix,2,32,32,1,0.4117847606539726,10,0.45467402040958405,10.41545580450749
+ETTh2,continuous_prefix_pool96,continuous-prefix,1,96,96,1,0.41759471595287323,10,0.4575161933898926,9.559861730033138
+ETTh2,stochastic_prefix_k2,stochastic-prefix,2,32,32,1,0.40846946090459824,10,0.44691114127635956,9.411151640719527
+ETTm2,continuous_prefix_k2,continuous-prefix,2,32,32,3,0.18187963962554932,10,0.18327252380549908,0.765827435559796
+ETTm2,continuous_prefix_pool96,continuous-prefix,1,96,96,3,0.18209898099303246,10,0.18399228155612946,1.039709586935822
+ETTm2,stochastic_prefix_k2,stochastic-prefix,2,32,32,3,0.18092982284724712,10,0.18293115869164467,1.1061392825699068
+Weather,continuous_prefix_k2,continuous-prefix,2,32,32,5,0.489287868142128,10,0.4899999797344208,0.14554041468404222
+Weather,continuous_prefix_pool96,continuous-prefix,1,96,96,5,0.4900142252445221,10,0.4906364157795906,0.126973974022504
+Weather,stochastic_prefix_k2,stochastic-prefix,2,32,32,10,0.4899890720844269,10,0.4899890720844269,0.0

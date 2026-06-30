@@ -200,14 +200,33 @@ control，但主线应转向 prefix-aware / target-set readout，而不是继续
 
 | Field | Content |
 | --- | --- |
-| `current_step` | Step 6/7/8：设计并运行 schedule robustness gate |
+| `current_step` | Step 9/10/11：评估 schedule robustness gate，并决定是否继续 schedule sweep |
 | `problem` | H0 证明 `stochastic-prefix` 接近 `multi-prefix`，但还不知道 sample count 与 continuous pool 是否能进一步提升或 horizon-agnostic 化 |
 | `idea` | 调整 prefix sample count 和 continuous pool granularity，不改 TimeAlign forward |
 | `theory_check` | 若 `k=2` 改善 ETTm2 或整体 mean，说明单 prefix sample 的 supervision signal 不足；若 `pool96` 改善 continuous-prefix，说明过短 prefix 采样引入噪声 |
 | `design` | `3 datasets x 3 arms`：`stochastic_prefix_k2`、`continuous_prefix_k2`、`continuous_prefix_pool96` |
 | `gate` | 至少一个 schedule arm 接近或超过 `multi-prefix`；优先看 ETTm2 residual gap、Weather no-harm、ETTh2 gain preservation |
-| `artifacts` | `scripts/remote/run_phase5_timealign_hss_h0b_schedule_gate.sh`、`scripts/analyze_phase5_timealign_hss_h0b_schedule_gate.py`、`scripts/sync_phase5_timealign_hss_h0b_results.sh` |
-| `decision` | H0B 已进入远程实验；返回后再决定 seed/checkpoint sensitivity 或 prefix-aware readout |
+| `artifacts` | `analysis/phase5_timealign_hss_h0b_schedule_gate_20260630/`、`scripts/remote/run_phase5_timealign_hss_h0b_schedule_gate.sh`、`scripts/analyze_phase5_timealign_hss_h0b_schedule_gate.py` |
+| `decision` | `prefix_scheduling_robust_but_saturated`；不继续扩大 schedule sweep，回 Step 6 设计 prefix-aware / target-set-aware readout |
+
+### H0B 结果
+
+| Arm | Mean MSE vs full | Mean MSE vs multi-prefix | Wins vs fixed | Mean MSE vs fixed |
+| --- | ---: | ---: | ---: | ---: |
+| `stochastic_prefix_k2` | -2.03% | +0.00% | 7/12 | -3.04% |
+| `continuous_prefix_k2` | -1.78% | +0.26% | 7/12 | -2.79% |
+| `continuous_prefix_pool96` | -1.48% | +0.57% | 6/12 | -2.49% |
+
+[Strong Evidence] `stochastic_prefix_k2` 是 H0B 内部最稳健 arm：在 `12` 个
+dataset-horizon setting 中拿到 `11` 个 best。它基本追平 `multi-prefix`，说明 prefix
+schedule 不是一次偶然结果。
+
+[Limit] H0B 没有缩小 ETTm2 residual fixed gap。`stochastic_prefix_k2` 在 ETTm2 上相对
+fixed 为 `+2.08%`，与 H0 `multi-prefix` 的 `+2.06%` 基本相同。
+
+[Decision] 继续调 `prefix_samples` 或 continuous pool granularity 的边际价值较低。当前问题
+已经从 loss schedule 转移到 unified readout/interface：official TimeAlign 仍是固定
+`Linear(..., 720)` head 后裁剪 prefix，缺少 explicit prefix-conditioned prediction path。
 
 [Fail] prefix weighting 的收益不稳定或只来自单次随机性，则回到 D1 reliability diagnostic，
 但保留 head/interface 作为 confounder。
@@ -310,8 +329,8 @@ representation capacity 或 dataset-specific hyperparameter。
 
 ## 当前下一步
 
-1. D0 已通过，先进入 H0：Prefix-Supervised TimeAlign Carrier；
-2. 若 H0 后仍存在 ETTm2/Weather residual gap，再完成 D1 诊断脚本设计，优先复用 existing predictions/logs；
-3. 如果 D1 通过，进入 M1 最小实验；
-4. 只有当 M1 显示 scalar scheduling 不足但机制方向成立时，才进入 M2；
-5. 不做 look-back horizon sweep，除非后续需要论文表格级 TimeAlign reproduction 作为附录或审稿防线。
+1. H0/H0B 已证明 prefix supervision 是有效 carrier，但 schedule 参数已接近饱和；
+2. 下一步回到 Step 6，设计 `H1 Prefix-Aware / Target-Set-Aware Readout`；
+3. H1 最小实验保留 TimeAlign backbone/future alignment，只替换或扩展 prediction head；
+4. Gate 优先看 ETTm2 residual fixed gap 是否缩小，同时要求 ETTh2/Weather 不明显退化；
+5. D1/M1 future reliability scheduling 暂时后移，除非 H1 证明 readout/interface 不是主瓶颈。

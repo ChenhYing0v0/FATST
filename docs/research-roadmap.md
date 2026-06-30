@@ -2090,15 +2090,42 @@ prediction-prefix supervision scheduling。D1 supervision reliability diagnostic
 
 | Field | Content |
 | --- | --- |
-| `current_step` | Step 6/7/8：设计、实现并运行 H0B schedule robustness gate |
+| `current_step` | Step 9/10/11：评估 H0B schedule robustness gate，并决定 rollback/advance point |
 | `problem` | H0 的 `stochastic-prefix` 接近 `multi-prefix`，但仍需判断 sample count 与 continuous pool granularity 是否能进一步提升 ETTm2 或让 schedule 更 horizon-agnostic |
 | `existence_evidence` | H0 中 `stochastic-prefix` ALL mean MSE 只比 `multi-prefix` 高 `+0.13%`，但 ETTm2 仍弱于 fixed specialist |
 | `idea` | 在不改 TimeAlign forward 的情况下，调整 train-time prefix schedule：增加 sampled prefixes 数量，或移除过短 continuous prefixes |
 | `theory_check` | 若 `stochastic-prefix_k2` 提升，说明单 prefix sample signal 不足；若 `continuous-prefix_pool96` 提升，说明 `32-step` continuous pool 的短 prefix 噪声是主要限制；若都失败，HSS 应转向 prefix-aware / target-set readout |
 | `design` | `3 datasets x 3 arms`：`stochastic_prefix_k2`、`continuous_prefix_k2`、`continuous_prefix_pool96` |
 | `gate` | 至少一个 schedule arm 接近或超过 `multi-prefix`；ETTm2 residual gap 缩小；Weather 不退化；ETTh2 unified benefit 保留 |
-| `artifacts` | H0B runner/analyzer/sync scripts and remote root `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_h0b_schedule_gate` |
-| `decision` | H0B 已进入远程实验；结果返回后决定是否做 seed/checkpoint sensitivity |
+| `artifacts` | `analysis/phase5_timealign_hss_h0b_schedule_gate_20260630/` and remote root `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_h0b_schedule_gate` |
+| `decision` | `prefix_scheduling_robust_but_saturated`；不继续扩大 random schedule sweep，rollback 到 Step 6 设计 prefix-aware / target-set-aware readout |
+
+[Fact] H0B 的 `stochastic_prefix_k2` 基本追平 H0 `multi-prefix`：ALL mean MSE 相对
+`full` 为 `-2.03%`，相对 `multi-prefix` 为 `+0.00%`，相对 fixed 为 `-3.04%`。
+
+[Strong Evidence] `stochastic_prefix_k2` 是 H0B 内部最稳健 arm：`12` 个 setting 中拿到
+`11` 个 best；`continuous_prefix_k2` 与 `continuous_prefix_pool96` 均弱于它。
+
+[Limit] ETTm2 residual fixed gap 没有缩小：`stochastic_prefix_k2` 相对 fixed 为 `+2.08%`，
+与 H0 `multi-prefix` 的 `+2.06%` 基本相同。
+
+[Decision] H0B 支持 prefix supervision / stochastic schedule 作为稳健 carrier，但不支持继续
+调 `prefix_samples` 或 continuous pool 作为主线。下一步进入 `Phase5-H1`：在 TimeAlign carrier
+上设计 unified head / readout，而不是继续只改 loss。
+
+#### Phase5-H1：Prefix-Aware / Target-Set-Aware TimeAlign Readout
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 6：设计 concrete method and experiment plan |
+| `problem` | official TimeAlign unified 仍使用固定 `Linear(d_model * patch_num, 720)` head，再裁剪 prefix；H0/H0B 证明 loss schedule 有效但已饱和 |
+| `existence_evidence` | H0B `stochastic_prefix_k2` 追平 `multi-prefix` 却没有缩小 ETTm2 residual fixed gap，说明瓶颈可能在 unified readout/interface |
+| `idea` | 保留 TimeAlign backbone 与 future alignment，显式加入 prefix-conditioned 或 target-set-aware prediction path |
+| `theory_check` | 如果 unified model 能知道当前请求的 target length / target set，就不必只依赖 720-head crop 来兼容多 horizon；这比继续调 loss schedule 更直接对应 unified multi-horizon forecasting |
+| `design` | 最小 arms：`prefix_conditioned_head` 与 `target_set_decoder`，训练监督沿用 H0B 最稳健的 `stochastic_prefix_k2` |
+| `gate` | ETTm2 相对 fixed 的 residual gap 明显缩小；ETTh2 unified benefit 与 Weather no-harm 不丢失；参数量和训练成本保持可解释 |
+| `artifacts` | 待实现；先写 method design 和 code-facing tensor contract，再进入 Step 7 |
+| `decision` | H1 尚未实现；若 H1 失败，再回 Step 2/3 判断 TimeAlign 是否适合作为 HSS carrier |
 
 ## 历史证据索引
 
