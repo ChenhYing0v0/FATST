@@ -1,0 +1,111 @@
+{
+  "compare_rows": 24,
+  "metric_rows": 24,
+  "summary_rows": [
+    {
+      "arm": "prefix_conditioned_stochastic_k2",
+      "dataset": "ETTh2",
+      "mean_relative_mse_vs_fixed_pct": -12.249674120024359,
+      "mean_relative_mse_vs_full_pct": -4.673149847449734,
+      "mean_relative_mse_vs_h0b_stochastic_k2_pct": -1.3428024475261564,
+      "mean_relative_mse_vs_multi_prefix_pct": -1.3642301415952045,
+      "settings": 4,
+      "wins_vs_fixed": 4,
+      "wins_vs_full": 4,
+      "wins_vs_h0b_stochastic_k2": 4,
+      "wins_vs_multi_prefix": 4
+    },
+    {
+      "arm": "target_set_decoder_multiprefix",
+      "dataset": "ETTh2",
+      "mean_relative_mse_vs_fixed_pct": -12.650195093360013,
+      "mean_relative_mse_vs_full_pct": -5.115957090990397,
+      "mean_relative_mse_vs_h0b_stochastic_k2_pct": -1.8048775161220303,
+      "mean_relative_mse_vs_multi_prefix_pct": -1.8254036904221949,
+      "settings": 4,
+      "wins_vs_fixed": 4,
+      "wins_vs_full": 4,
+      "wins_vs_h0b_stochastic_k2": 4,
+      "wins_vs_multi_prefix": 4
+    },
+    {
+      "arm": "prefix_conditioned_stochastic_k2",
+      "dataset": "ETTm2",
+      "mean_relative_mse_vs_fixed_pct": 2.0001234448581124,
+      "mean_relative_mse_vs_full_pct": -1.6279545391322037,
+      "mean_relative_mse_vs_h0b_stochastic_k2_pct": -0.073613209732723,
+      "mean_relative_mse_vs_multi_prefix_pct": -0.05710440565677988,
+      "settings": 4,
+      "wins_vs_fixed": 1,
+      "wins_vs_full": 4,
+      "wins_vs_h0b_stochastic_k2": 1,
+      "wins_vs_multi_prefix": 1
+    },
+    {
+      "arm": "target_set_decoder_multiprefix",
+      "dataset": "ETTm2",
+      "mean_relative_mse_vs_fixed_pct": 1.813624578695383,
+      "mean_relative_mse_vs_full_pct": -1.8027849600267487,
+      "mean_relative_mse_vs_h0b_stochastic_k2_pct": -0.25264212186821566,
+      "mean_relative_mse_vs_multi_prefix_pct": -0.23608431092085602,
+      "settings": 4,
+      "wins_vs_fixed": 1,
+      "wins_vs_full": 4,
+      "wins_vs_h0b_stochastic_k2": 3,
+      "wins_vs_multi_prefix": 3
+    },
+    {
+      "arm": "prefix_conditioned_stochastic_k2",
+      "dataset": "Weather",
+      "mean_relative_mse_vs_fixed_pct": -0.0038456423765570458,
+      "mean_relative_mse_vs_full_pct": -1.0418618700809845,
+      "mean_relative_mse_vs_h0b_stochastic_k2_pct": 0.11343391309392437,
+      "mean_relative_mse_vs_multi_prefix_pct": 0.13104190337013266,
+      "settings": 4,
+      "wins_vs_fixed": 2,
+      "wins_vs_full": 4,
+      "wins_vs_h0b_stochastic_k2": 0,
+      "wins_vs_multi_prefix": 0
+    },
+    {
+      "arm": "target_set_decoder_multiprefix",
+      "dataset": "Weather",
+      "mean_relative_mse_vs_fixed_pct": -0.11521730764020577,
+      "mean_relative_mse_vs_full_pct": -1.1523911964103046,
+      "mean_relative_mse_vs_h0b_stochastic_k2_pct": 0.0016475703850965528,
+      "mean_relative_mse_vs_multi_prefix_pct": 0.01923586369659558,
+      "settings": 4,
+      "wins_vs_fixed": 2,
+      "wins_vs_full": 4,
+      "wins_vs_h0b_stochastic_k2": 2,
+      "wins_vs_multi_prefix": 2
+    },
+    {
+      "arm": "prefix_conditioned_stochastic_k2",
+      "dataset": "ALL",
+      "mean_relative_mse_vs_fixed_pct": -3.4177987725142684,
+      "mean_relative_mse_vs_full_pct": -2.4476554188876407,
+      "mean_relative_mse_vs_h0b_stochastic_k2_pct": -0.43432724805498496,
+      "mean_relative_mse_vs_multi_prefix_pct": -0.4300975479606173,
+      "settings": 12,
+      "wins_vs_fixed": 7,
+      "wins_vs_full": 12,
+      "wins_vs_h0b_stochastic_k2": 5,
+      "wins_vs_multi_prefix": 5
+    },
+    {
+      "arm": "target_set_decoder_multiprefix",
+      "dataset": "ALL",
+      "mean_relative_mse_vs_fixed_pct": -3.650595940768279,
+      "mean_relative_mse_vs_full_pct": -2.6903777491424834,
+      "mean_relative_mse_vs_h0b_stochastic_k2_pct": -0.6852906892017167,
+      "mean_relative_mse_vs_multi_prefix_pct": -0.6807507125488187,
+      "settings": 12,
+      "wins_vs_fixed": 7,
+      "wins_vs_full": 12,
+      "wins_vs_h0b_stochastic_k2": 9,
+      "wins_vs_multi_prefix": 9
+    }
+  ],
+  "training_rows": 60
+}

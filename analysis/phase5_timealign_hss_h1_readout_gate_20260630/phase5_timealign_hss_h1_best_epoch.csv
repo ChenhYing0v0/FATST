@@ -1,0 +1,7 @@
+dataset,arm,pred_loss_mode,prefix_samples,best_epoch,best_val_mean_mse,last_epoch,last_val_mean_mse,last_gap_to_best_pct
+ETTh2,prefix_conditioned_stochastic_k2,stochastic-prefix,2,2,0.40147826448082924,10,0.4333885982632637,7.948209555926833
+ETTh2,target_set_decoder_multiprefix,multi-prefix,1,2,0.4031967483460903,10,0.44248610734939575,9.744463258810999
+ETTm2,prefix_conditioned_stochastic_k2,stochastic-prefix,2,4,0.17971711233258247,10,0.18182425759732723,1.1724789239019762
+ETTm2,target_set_decoder_multiprefix,multi-prefix,1,2,0.17929004691541195,10,0.18242669105529785,1.749480349774113
+Weather,prefix_conditioned_stochastic_k2,stochastic-prefix,2,4,0.4903995245695114,10,0.49128979444503784,0.18153971015937298
+Weather,target_set_decoder_multiprefix,multi-prefix,1,9,0.4902684688568115,10,0.49096983671188354,0.14305791614692698

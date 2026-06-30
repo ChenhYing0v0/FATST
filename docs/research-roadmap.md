@@ -2117,19 +2117,40 @@ prediction-prefix supervision scheduling。D1 supervision reliability diagnostic
 
 | Field | Content |
 | --- | --- |
-| `current_step` | Step 6：设计 concrete method and experiment plan |
+| `current_step` | Step 9/10/11：评估 H1 readout gate，并决定是否继续 readout route |
 | `problem` | official TimeAlign unified 仍使用固定 `Linear(d_model * patch_num, 720)` head，再裁剪 prefix；H0/H0B 证明 loss schedule 有效但已饱和 |
 | `existence_evidence` | H0B `stochastic_prefix_k2` 追平 `multi-prefix` 却没有缩小 ETTm2 residual fixed gap，说明瓶颈可能在 unified readout/interface |
 | `idea` | 保留 TimeAlign backbone 与 future alignment，显式加入 prefix-conditioned 或 target-set-aware prediction path |
 | `theory_check` | 如果 unified model 能知道当前请求的 target length / target set，就不必只依赖 720-head crop 来兼容多 horizon；这比继续调 loss schedule 更直接对应 unified multi-horizon forecasting |
 | `design` | 最小 arms：`prefix_conditioned_stochastic_k2` 与 `target_set_decoder_multiprefix` |
 | `gate` | ETTm2 相对 fixed 的 residual gap 明显缩小；ETTh2 unified benefit 与 Weather no-harm 不丢失；参数量和训练成本保持可解释 |
-| `artifacts` | `scripts/remote/run_phase5_timealign_hss_h1_readout_gate.sh`、`scripts/analyze_phase5_timealign_hss_h1_readout_gate.py`、`scripts/sync_phase5_timealign_hss_h1_results.sh` |
-| `decision` | H1 已进入 Step 7/8；远程结果返回后决定是否保留 TimeAlign readout route |
+| `artifacts` | `analysis/phase5_timealign_hss_h1_readout_gate_20260630/` and remote root `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_h1_readout_gate` |
+| `decision` | `readout_route_weak_pass_with_target_set_candidate`；继续 readout route，但 rollback 到 Step 6 设计 H1B variable-prefix / prefix-token readout |
 
 [Implementation] `prefix_conditioned_stochastic_k2` 在 `proj_x` 前加入 requested-prefix condition，
 并沿用 H0B 最稳健的 `stochastic-prefix, prefix_samples=2`；`target_set_decoder_multiprefix`
 使用同一 readout condition，但训练时按 target set 的 `96/192/336/720` 多 prefix supervision。
+
+[Fact] `target_set_decoder_multiprefix` 是 H1 更强 arm：ALL mean MSE 相对 H0 `full` 为
+`-2.69%`，相对 H0 `multi-prefix` 为 `-0.68%`，相对 H0B `stochastic_prefix_k2` 为
+`-0.69%`，并在 `12` 个 setting 中拿到 `10` 个 H1 内部 best。
+
+[Limit] H1 没有达到 ETTm2 full pass：ETTm2 相对 fixed 仍为 `+1.81%`，相比 H0B 的
+`+2.08%` 只是小幅缩小。
+
+#### Phase5-H1B：Variable-Prefix / Prefix-Token Readout
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 6：设计 concrete method and experiment plan |
+| `problem` | H1 虽然证明 requested-prefix readout 有价值，但仍保留 720-step projection 后 crop，ETTm2 residual gap 未明显解决 |
+| `existence_evidence` | H1 `target_set_decoder_multiprefix` 相对 H0B 改善 `-0.69%`，但 ETTm2 vs fixed 仍为 `+1.81%` |
+| `idea` | 从 condition-before-720-projection 升级为真正的 variable-prefix 或 prefix-token decoder |
+| `theory_check` | 如果 unified multi-horizon 的瓶颈在 readout shape，模型应按 requested target set 直接生成对应 prefix，而不是所有 request 都先生成 720 |
+| `design` | 候选 arms：`target_set_prefix_head` 与 `prefix_token_decoder`；保留 TimeAlign backbone/future alignment |
+| `gate` | ETTm2 fixed gap 明显低于 H1 的 `+1.81%`，ETTh2 保持强收益，Weather no-harm |
+| `artifacts` | 待实现 |
+| `decision` | H1B 尚未实现；若仍不能缩小 ETTm2 gap，再回 Step 2/3 判断 TimeAlign carrier 是否适合作为 HSS 主线 |
 
 ## 历史证据索引
 

@@ -330,8 +330,9 @@ representation capacity 或 dataset-specific hyperparameter。
 ## 当前下一步
 
 1. H0/H0B 已证明 prefix supervision 是有效 carrier，但 schedule 参数已接近饱和；
-2. 当前进入 H1：`Prefix-Aware / Target-Set-Aware Readout`；
-3. H1 最小实验保留 TimeAlign backbone/future alignment，只在 prediction readout 前加入 requested-prefix condition；
-4. 第一轮 arms 为 `prefix_conditioned_stochastic_k2` 与 `target_set_decoder_multiprefix`；
-5. Gate 优先看 ETTm2 residual fixed gap 是否缩小，同时要求 ETTh2/Weather 不明显退化；
-6. D1/M1 future reliability scheduling 暂时后移，除非 H1 证明 readout/interface 不是主瓶颈。
+2. H1 结果为 `readout_route_weak_pass_with_target_set_candidate`；
+3. `target_set_decoder_multiprefix` 相对 H0B `stochastic_prefix_k2` 的 ALL mean MSE 为
+   `-0.69%`，说明 readout/interface 路线有效；
+4. ETTm2 fixed gap 只从 `+2.08%` 缩到 `+1.81%`，不构成 full pass；
+5. 下一步进入 H1B：`Variable-Prefix / Prefix-Token Readout`，不再继续扩大 loss schedule；
+6. D1/M1 future reliability scheduling 暂时后移，除非 H1B 证明 readout/interface 不是主瓶颈。
