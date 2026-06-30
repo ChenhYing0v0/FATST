@@ -409,13 +409,21 @@ def prediction_loss(
     if mode == "multi-prefix":
         selected_horizons = sorted_horizons
     elif mode == "stochastic-prefix":
-        selected_horizons = random.choices(sorted_horizons, k=max(prefix_samples, 1))
+        sample_count = max(prefix_samples, 1)
+        if sample_count <= len(sorted_horizons):
+            selected_horizons = random.sample(sorted_horizons, k=sample_count)
+        else:
+            selected_horizons = random.choices(sorted_horizons, k=sample_count)
     elif mode == "continuous-prefix":
         pred_len = outputs.shape[1]
         pool = list(range(max(1, continuous_min_prefix), pred_len + 1, max(continuous_prefix_step, 1)))
         if pred_len not in pool:
             pool.append(pred_len)
-        selected_horizons = random.choices(pool, k=max(prefix_samples, 1))
+        sample_count = max(prefix_samples, 1)
+        if sample_count <= len(pool):
+            selected_horizons = random.sample(pool, k=sample_count)
+        else:
+            selected_horizons = random.choices(pool, k=sample_count)
     elif mode == "balanced-step":
         segment_losses = []
         start = 0

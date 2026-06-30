@@ -196,6 +196,19 @@ single-prefix sample 与 `32` step pool 需要继续校准。
 H0B 通过后再做 seed/checkpoint sensitivity；H0B 失败则保留 `multi-prefix` 作为 strong interface
 control，但主线应转向 prefix-aware / target-set readout，而不是继续调 random schedule。
 
+### H0B 实验落地
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 6/7/8：设计并运行 schedule robustness gate |
+| `problem` | H0 证明 `stochastic-prefix` 接近 `multi-prefix`，但还不知道 sample count 与 continuous pool 是否能进一步提升或 horizon-agnostic 化 |
+| `idea` | 调整 prefix sample count 和 continuous pool granularity，不改 TimeAlign forward |
+| `theory_check` | 若 `k=2` 改善 ETTm2 或整体 mean，说明单 prefix sample 的 supervision signal 不足；若 `pool96` 改善 continuous-prefix，说明过短 prefix 采样引入噪声 |
+| `design` | `3 datasets x 3 arms`：`stochastic_prefix_k2`、`continuous_prefix_k2`、`continuous_prefix_pool96` |
+| `gate` | 至少一个 schedule arm 接近或超过 `multi-prefix`；优先看 ETTm2 residual gap、Weather no-harm、ETTh2 gain preservation |
+| `artifacts` | `scripts/remote/run_phase5_timealign_hss_h0b_schedule_gate.sh`、`scripts/analyze_phase5_timealign_hss_h0b_schedule_gate.py`、`scripts/sync_phase5_timealign_hss_h0b_results.sh` |
+| `decision` | H0B 已进入远程实验；返回后再决定 seed/checkpoint sensitivity 或 prefix-aware readout |
+
 [Fail] prefix weighting 的收益不稳定或只来自单次随机性，则回到 D1 reliability diagnostic，
 但保留 head/interface 作为 confounder。
 

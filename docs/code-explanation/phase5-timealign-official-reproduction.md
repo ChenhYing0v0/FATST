@@ -96,6 +96,8 @@ unified-720 评估 `h96/h192/h336/h720` 时，只是对 `[B,720,C]` 的输出做
   `1:96,97:192,193:336,337:720`，分别计算 loss 后平均；
 - `stochastic-prefix`：每个 batch 从 `{96,192,336,720}` 中采样 prefix；
 - `continuous-prefix`：每个 batch 从 `32,64,...,720` 这类连续 prefix pool 中采样 prefix。
+  当 `prefix_samples` 不超过 pool 大小时，采样为 no-replacement，避免 H0B `k=2`
+  退化成同一个 prefix 被重复监督。
 
 这些模式都不修改 official TimeAlign forward，不修改 `recon_loss` 或 `alignment_loss`。
 `multi-prefix` 检查 unified decrease 是否来自短 prefix 缺少直接 prediction supervision；
@@ -153,6 +155,20 @@ unified-720 使用 h720 official preset，并在 test 时评估 `h96/h192/h336/h
 - output root:
   `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_h0_prefix_gate`。
 
+`scripts/remote/run_phase5_timealign_hss_h0b_schedule_gate.sh` 运行 H0B schedule robustness gate：
+
+- mode: unified only；
+- arms:
+  - `stochastic_prefix_k2`: `stochastic-prefix` with `prefix_samples=2`;
+  - `continuous_prefix_k2`: `continuous-prefix` with `prefix_samples=2`,
+    `continuous_min_prefix=32`, `continuous_prefix_step=32`;
+  - `continuous_prefix_pool96`: `continuous-prefix` with `prefix_samples=1`,
+    `continuous_min_prefix=96`, `continuous_prefix_step=96`;
+- datasets: `Weather ETTm2 ETTh2`；
+- default GPUs: `0 1 2`；
+- output root:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_h0b_schedule_gate`。
+
 ## Analysis
 
 `scripts/analyze_phase5_timealign_official_gate.py` 输出：
@@ -193,6 +209,18 @@ reliability diagnostic。
 该分析同时比较每个 loss mode 相对 `full`、相对 `multi-prefix`、相对 fixed-horizon reference
 的变化。H0 的关键不是只看是否超过 full，而是判断 schedule-like modes 是否能接近或超过
 `multi-prefix`，从而支撑 horizon-agnostic supervision scheduling 叙事。
+
+`scripts/analyze_phase5_timealign_hss_h0b_schedule_gate.py` 输出：
+
+- `phase5_timealign_hss_h0b_metrics.csv`;
+- `phase5_timealign_hss_h0b_comparison.csv`;
+- `phase5_timealign_hss_h0b_summary.csv`;
+- `phase5_timealign_hss_h0b_training.csv`;
+- `phase5_timealign_hss_h0b_best_epoch.csv`;
+- `phase5_timealign_hss_h0b_schedule_gate_report.md`。
+
+该分析读取 H0 的 `phase5_timealign_hss_h0_metrics.csv` 作为 reference，并比较 H0B arms
+相对 `full`、`multi-prefix`、`stochastic-prefix`、`continuous-prefix` 与 fixed specialist 的差异。
 
 ## Code-Theory Consistency
 

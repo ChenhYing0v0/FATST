@@ -2086,6 +2086,20 @@ prediction-prefix supervision scheduling。D1 supervision reliability diagnostic
 而不是直接把 benchmark-specific `multi-prefix` 写成方法。下一步进入 H0B：
 `stochastic-prefix_k2`、`continuous-prefix_k2`、`continuous-prefix_pool96`。
 
+#### Phase5-H0B：Schedule Robustness / Horizon-Agnostic Refinement
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 6/7/8：设计、实现并运行 H0B schedule robustness gate |
+| `problem` | H0 的 `stochastic-prefix` 接近 `multi-prefix`，但仍需判断 sample count 与 continuous pool granularity 是否能进一步提升 ETTm2 或让 schedule 更 horizon-agnostic |
+| `existence_evidence` | H0 中 `stochastic-prefix` ALL mean MSE 只比 `multi-prefix` 高 `+0.13%`，但 ETTm2 仍弱于 fixed specialist |
+| `idea` | 在不改 TimeAlign forward 的情况下，调整 train-time prefix schedule：增加 sampled prefixes 数量，或移除过短 continuous prefixes |
+| `theory_check` | 若 `stochastic-prefix_k2` 提升，说明单 prefix sample signal 不足；若 `continuous-prefix_pool96` 提升，说明 `32-step` continuous pool 的短 prefix 噪声是主要限制；若都失败，HSS 应转向 prefix-aware / target-set readout |
+| `design` | `3 datasets x 3 arms`：`stochastic_prefix_k2`、`continuous_prefix_k2`、`continuous_prefix_pool96` |
+| `gate` | 至少一个 schedule arm 接近或超过 `multi-prefix`；ETTm2 residual gap 缩小；Weather 不退化；ETTh2 unified benefit 保留 |
+| `artifacts` | H0B runner/analyzer/sync scripts and remote root `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_h0b_schedule_gate` |
+| `decision` | H0B 已进入远程实验；结果返回后决定是否做 seed/checkpoint sensitivity |
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：
