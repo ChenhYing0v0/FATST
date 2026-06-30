@@ -74,13 +74,32 @@ class Model(nn.Module):
             self.norm_y = nn.ModuleList([nn.LayerNorm(configs.d_model) for _ in range(configs.e_layers)])
 
         # Decoder
+        self.readout_mode = getattr(configs, "readout_mode", "official")
         self.proj_x = nn.Linear(configs.d_model * self.patch_num, configs.pred_len)
         self.proj_y = nn.Linear(configs.d_model * self.patch_num, configs.pred_len)
+        if self.readout_mode in {"prefix-conditioned-head", "target-set-decoder"}:
+            readout_dim = configs.d_model * self.patch_num
+            self.prefix_condition = nn.Sequential(
+                nn.Linear(1, readout_dim),
+                nn.GELU(),
+                nn.Linear(readout_dim, readout_dim),
+            )
+            nn.init.zeros_(self.prefix_condition[-1].weight)
+            nn.init.zeros_(self.prefix_condition[-1].bias)
 
         self.normalization_x = Normalize(configs.enc_in, affine=False)
         self.normalization_y = Normalize(configs.enc_in, affine=False)
 
-    def forward(self, x, y, is_training=True):
+    def _condition_readout(self, hidden, target_prefix):
+        if self.readout_mode not in {"prefix-conditioned-head", "target-set-decoder"}:
+            return hidden
+        if target_prefix is None:
+            target_prefix = self.pred_len
+        prefix_value = hidden.new_tensor([[float(target_prefix) / float(self.pred_len)]])
+        condition = torch.tanh(self.prefix_condition(prefix_value)).view(1, 1, -1)
+        return hidden + hidden * condition
+
+    def forward(self, x, y, is_training=True, target_prefix=None):
         # [B, L, C]   [B, T, C]
         B, T, C = x.shape
         _, L, C = y.shape
@@ -110,7 +129,9 @@ class Model(nn.Module):
         # [B, C, N, D]
         # print(x.reshape(-1, C, self.patch_num, self.d_model).shape)
 
-        x = self.proj_x(x.reshape(-1, C, self.patch_num, self.d_model).flatten(start_dim=-2)) # [B, C, T]
+        x = x.reshape(-1, C, self.patch_num, self.d_model).flatten(start_dim=-2)
+        x = self._condition_readout(x, target_prefix)
+        x = self.proj_x(x) # [B, C, T]
         x = x.permute(0, 2, 1)
         x = self.normalization_x(x, 'denorm')
 

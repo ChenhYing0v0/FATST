@@ -2122,10 +2122,14 @@ prediction-prefix supervision scheduling。D1 supervision reliability diagnostic
 | `existence_evidence` | H0B `stochastic_prefix_k2` 追平 `multi-prefix` 却没有缩小 ETTm2 residual fixed gap，说明瓶颈可能在 unified readout/interface |
 | `idea` | 保留 TimeAlign backbone 与 future alignment，显式加入 prefix-conditioned 或 target-set-aware prediction path |
 | `theory_check` | 如果 unified model 能知道当前请求的 target length / target set，就不必只依赖 720-head crop 来兼容多 horizon；这比继续调 loss schedule 更直接对应 unified multi-horizon forecasting |
-| `design` | 最小 arms：`prefix_conditioned_head` 与 `target_set_decoder`，训练监督沿用 H0B 最稳健的 `stochastic_prefix_k2` |
+| `design` | 最小 arms：`prefix_conditioned_stochastic_k2` 与 `target_set_decoder_multiprefix` |
 | `gate` | ETTm2 相对 fixed 的 residual gap 明显缩小；ETTh2 unified benefit 与 Weather no-harm 不丢失；参数量和训练成本保持可解释 |
-| `artifacts` | 待实现；先写 method design 和 code-facing tensor contract，再进入 Step 7 |
-| `decision` | H1 尚未实现；若 H1 失败，再回 Step 2/3 判断 TimeAlign 是否适合作为 HSS carrier |
+| `artifacts` | `scripts/remote/run_phase5_timealign_hss_h1_readout_gate.sh`、`scripts/analyze_phase5_timealign_hss_h1_readout_gate.py`、`scripts/sync_phase5_timealign_hss_h1_results.sh` |
+| `decision` | H1 已进入 Step 7/8；远程结果返回后决定是否保留 TimeAlign readout route |
+
+[Implementation] `prefix_conditioned_stochastic_k2` 在 `proj_x` 前加入 requested-prefix condition，
+并沿用 H0B 最稳健的 `stochastic-prefix, prefix_samples=2`；`target_set_decoder_multiprefix`
+使用同一 readout condition，但训练时按 target set 的 `96/192/336/720` 多 prefix supervision。
 
 ## 历史证据索引
 

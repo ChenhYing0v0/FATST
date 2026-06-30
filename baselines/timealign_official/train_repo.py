@@ -331,6 +331,7 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         loc=1,
         glo=1,
         device=device,
+        readout_mode=args.readout_mode,
     )
     return official
 
@@ -405,29 +406,10 @@ def prediction_loss(
     losses: dict[str, torch.Tensor] = {"full": full_loss}
     if mode == "full":
         return full_loss, losses
-    sorted_horizons = sorted(set(horizons))
-    if mode == "multi-prefix":
-        selected_horizons = sorted_horizons
-    elif mode == "stochastic-prefix":
-        sample_count = max(prefix_samples, 1)
-        if sample_count <= len(sorted_horizons):
-            selected_horizons = random.sample(sorted_horizons, k=sample_count)
-        else:
-            selected_horizons = random.choices(sorted_horizons, k=sample_count)
-    elif mode == "continuous-prefix":
-        pred_len = outputs.shape[1]
-        pool = list(range(max(1, continuous_min_prefix), pred_len + 1, max(continuous_prefix_step, 1)))
-        if pred_len not in pool:
-            pool.append(pred_len)
-        sample_count = max(prefix_samples, 1)
-        if sample_count <= len(pool):
-            selected_horizons = random.sample(pool, k=sample_count)
-        else:
-            selected_horizons = random.choices(pool, k=sample_count)
-    elif mode == "balanced-step":
+    if mode == "balanced-step":
         segment_losses = []
         start = 0
-        for horizon in sorted_horizons:
+        for horizon in sorted(set(horizons)):
             if horizon <= start:
                 continue
             segment_loss = criterion(outputs[:, start:horizon, :], targets[:, start:horizon, :])
@@ -438,7 +420,14 @@ def prediction_loss(
             raise ValueError("balanced-step produced no supervision segments")
         return torch.stack(segment_losses).mean(), losses
     else:
-        raise ValueError(f"Unsupported prediction loss mode: {mode}")
+        selected_horizons = select_prediction_horizons(
+            horizons,
+            mode,
+            prefix_samples,
+            continuous_min_prefix,
+            continuous_prefix_step,
+            pred_len=outputs.shape[1],
+        )
     prefix_losses = []
     for horizon in selected_horizons:
         horizon_loss = criterion(outputs[:, :horizon, :], targets[:, :horizon, :])
@@ -450,6 +439,35 @@ def prediction_loss(
     return torch.stack(prefix_losses).mean(), losses
 
 
+def select_prediction_horizons(
+    horizons: list[int],
+    mode: str,
+    prefix_samples: int,
+    continuous_min_prefix: int,
+    continuous_prefix_step: int,
+    pred_len: int,
+) -> list[int]:
+    sorted_horizons = sorted(set(horizons))
+    if mode == "full":
+        return [pred_len]
+    if mode == "multi-prefix":
+        return sorted_horizons
+    if mode == "stochastic-prefix":
+        sample_count = max(prefix_samples, 1)
+        if sample_count <= len(sorted_horizons):
+            return random.sample(sorted_horizons, k=sample_count)
+        return random.choices(sorted_horizons, k=sample_count)
+    if mode == "continuous-prefix":
+        pool = list(range(max(1, continuous_min_prefix), pred_len + 1, max(continuous_prefix_step, 1)))
+        if pred_len not in pool:
+            pool.append(pred_len)
+        sample_count = max(prefix_samples, 1)
+        if sample_count <= len(pool):
+            return random.sample(pool, k=sample_count)
+        return random.choices(pool, k=sample_count)
+    raise ValueError(f"Unsupported prediction loss mode for prefix-conditioned readout: {mode}")
+
+
 def evaluate(
     model: nn.Module,
     loader: torch.utils.data.DataLoader,
@@ -458,6 +476,8 @@ def evaluate(
     max_batches: int,
     is_training_flag: bool,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], np.ndarray, np.ndarray]:
+    if getattr(official_args, "readout_mode", "official") != "official":
+        return evaluate_prefix_conditioned(model, loader, official_args, horizons, max_batches, is_training_flag)
     preds = []
     trues = []
     model.eval()
@@ -486,6 +506,53 @@ def evaluate(
     for horizon in horizons:
         all_segments.extend(segment_rows(pred_np, true_np, horizon))
     return main_rows, all_segments, pred_np, true_np
+
+
+def evaluate_prefix_conditioned(
+    model: nn.Module,
+    loader: torch.utils.data.DataLoader,
+    official_args: argparse.Namespace,
+    horizons: list[int],
+    max_batches: int,
+    is_training_flag: bool,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], np.ndarray, np.ndarray]:
+    main_rows: list[dict[str, Any]] = []
+    all_segments: list[dict[str, Any]] = []
+    pred_for_npz: np.ndarray | None = None
+    true_for_npz: np.ndarray | None = None
+    f_dim = -1 if official_args.features == "MS" else 0
+    model.eval()
+    with torch.no_grad():
+        for horizon in horizons:
+            preds = []
+            trues = []
+            for batch_idx, (batch_x, batch_y, _batch_x_mark, _batch_y_mark) in enumerate(loader):
+                if max_batches and batch_idx >= max_batches:
+                    break
+                batch_x = batch_x.float().to(official_args.device)
+                batch_y = batch_y.float().to(official_args.device)
+                outputs, _recon, _alignment = model(
+                    batch_x,
+                    batch_y[:, -official_args.pred_len :, :],
+                    is_training=is_training_flag,
+                    target_prefix=horizon,
+                )
+                outputs = outputs[:, -official_args.pred_len :, f_dim:]
+                target = batch_y[:, -official_args.pred_len :, f_dim:]
+                preds.append(outputs.detach().cpu().numpy())
+                trues.append(target.detach().cpu().numpy())
+            if not preds:
+                raise RuntimeError("evaluation produced no batches")
+            pred_np = np.concatenate(preds, axis=0)
+            true_np = np.concatenate(trues, axis=0)
+            main_rows.extend(metric_rows(pred_np, true_np, [horizon]))
+            all_segments.extend(segment_rows(pred_np, true_np, horizon))
+            if horizon == max(horizons):
+                pred_for_npz = pred_np
+                true_for_npz = true_np
+    if pred_for_npz is None or true_for_npz is None:
+        raise RuntimeError("prefix-conditioned evaluation did not produce final-horizon predictions")
+    return main_rows, all_segments, pred_for_npz, true_for_npz
 
 
 def validation_mean_mse(
@@ -536,27 +603,73 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
             batch_x = batch_x.float().to(official_args.device)
             batch_y = batch_y.float().to(official_args.device)
 
-            outputs, recon, alignment_loss = model(
-                batch_x,
-                batch_y[:, -official_args.pred_len :, :],
-                is_training=True,
-            )
-
             f_dim = -1 if official_args.features == "MS" else 0
-            outputs = outputs[:, -official_args.pred_len :, f_dim:]
-            batch_y = batch_y[:, -official_args.pred_len :, f_dim:]
+            target_y = batch_y[:, -official_args.pred_len :, f_dim:]
 
-            pred_loss, pred_components = prediction_loss(
-                outputs,
-                batch_y,
-                criterion,
-                args.target_horizons,
-                args.pred_loss_mode,
-                args.prefix_samples,
-                args.continuous_min_prefix,
-                args.continuous_prefix_step,
-            )
-            recon_loss = criterion(recon, batch_y)
+            if args.readout_mode == "official":
+                outputs, recon, alignment_loss = model(
+                    batch_x,
+                    batch_y[:, -official_args.pred_len :, :],
+                    is_training=True,
+                )
+                outputs = outputs[:, -official_args.pred_len :, f_dim:]
+                pred_loss, pred_components = prediction_loss(
+                    outputs,
+                    target_y,
+                    criterion,
+                    args.target_horizons,
+                    args.pred_loss_mode,
+                    args.prefix_samples,
+                    args.continuous_min_prefix,
+                    args.continuous_prefix_step,
+                )
+                recon_loss = criterion(recon, target_y)
+            else:
+                if args.pred_loss_mode == "balanced-step":
+                    raise ValueError("balanced-step is not supported for prefix-conditioned readout modes")
+                selected_horizons = select_prediction_horizons(
+                    args.target_horizons,
+                    args.pred_loss_mode,
+                    args.prefix_samples,
+                    args.continuous_min_prefix,
+                    args.continuous_prefix_step,
+                    pred_len=official_args.pred_len,
+                )
+                prefix_losses = []
+                recon_losses = []
+                alignment_losses = []
+                pred_components = {}
+                for horizon in selected_horizons:
+                    outputs, recon, alignment_loss = model(
+                        batch_x,
+                        batch_y[:, -official_args.pred_len :, :],
+                        is_training=True,
+                        target_prefix=horizon,
+                    )
+                    outputs = outputs[:, -official_args.pred_len :, f_dim:]
+                    horizon_loss = criterion(outputs[:, :horizon, :], target_y[:, :horizon, :])
+                    key = f"h{horizon}"
+                    if key in pred_components:
+                        key = f"{key}_repeat{len([name for name in pred_components if name.startswith(key)])}"
+                    pred_components[key] = horizon_loss
+                    prefix_losses.append(horizon_loss)
+                    recon_losses.append(criterion(recon, target_y))
+                    alignment_losses.append(alignment_loss)
+                    if horizon == official_args.pred_len:
+                        pred_components["full"] = criterion(outputs, target_y)
+                if "full" not in pred_components:
+                    with torch.no_grad():
+                        outputs_full, _recon_full, _alignment_full = model(
+                            batch_x,
+                            batch_y[:, -official_args.pred_len :, :],
+                            is_training=True,
+                            target_prefix=official_args.pred_len,
+                        )
+                        outputs_full = outputs_full[:, -official_args.pred_len :, f_dim:]
+                        pred_components["full"] = criterion(outputs_full, target_y)
+                pred_loss = torch.stack(prefix_losses).mean()
+                recon_loss = torch.stack(recon_losses).mean()
+                alignment_loss = torch.stack(alignment_losses).mean()
             loss = pred_loss + official_args.w_recon * recon_loss + official_args.w_align * alignment_loss
             loss.backward()
             optimizer.step()
@@ -720,6 +833,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--use-amp", action="store_true")
     parser.add_argument("--official-test-mode", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--checkpoint-policy", choices=["official-last", "best-val"], default="official-last")
+    parser.add_argument(
+        "--readout-mode",
+        choices=["official", "prefix-conditioned-head", "target-set-decoder"],
+        default="official",
+    )
     parser.add_argument(
         "--pred-loss-mode",
         choices=["full", "multi-prefix", "balanced-step", "stochastic-prefix", "continuous-prefix"],

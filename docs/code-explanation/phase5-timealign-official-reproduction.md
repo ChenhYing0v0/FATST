@@ -104,6 +104,34 @@ unified-720 评估 `h96/h192/h336/h720` 时，只是对 `[B,720,C]` 的输出做
 `balanced-step` 检查收益是否只是 region reweight；`stochastic-prefix` 和 `continuous-prefix`
 检查 prefix supervision 是否能形成 train-time schedule。
 
+## H1 Prefix-Aware Readout
+
+H0/H0B 后，`train_repo.py` 新增 `--readout-mode`：
+
+- `official`：默认值，保持官方 `proj_x: Linear(d_model * patch_num, pred_len)`；
+- `prefix-conditioned-head`：在 `proj_x` 前加入 requested-prefix condition；
+- `target-set-decoder`：使用同一 prefix-conditioned readout，但训练时按 target set 中的
+  多个 requested prefixes 逐个生成 prediction。
+
+对应的 tensor flow 在 `models/TimeAlign.py` 中保持 backbone 不变：
+
+```text
+x_hidden: [B, C, patch_num, d_model]
+x_flat:   [B, C, d_model * patch_num]
+prefix:   scalar target_prefix / pred_len
+cond:     [1, 1, d_model * patch_num]
+x_cond:   x_flat + x_flat * tanh(cond)
+proj_x:   Linear(d_model * patch_num, pred_len)
+output:   [B, pred_len, C]
+```
+
+`prefix_condition` 的最后一层 zero-init，因此训练开始时 `x_cond == x_flat`，不会立刻破坏
+official head；如果 H1 有收益，收益应来自模型学会按 requested prefix 调整 readout。
+
+对于非 `official` readout，evaluation 不再只用 h720 输出裁剪所有 horizon，而是分别用
+`target_prefix=96/192/336/720` forward 后计算对应 prefix metric。这样 H1 的指标真正测试
+“模型是否知道当前请求的 horizon”，而不是继续测试 h720 crop。
+
 训练日志同步导出：
 
 - `train_prediction_l1`：实际用于反传的 prediction loss；
@@ -169,6 +197,19 @@ unified-720 使用 h720 official preset，并在 test 时评估 `h96/h192/h336/h
 - output root:
   `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_h0b_schedule_gate`。
 
+`scripts/remote/run_phase5_timealign_hss_h1_readout_gate.sh` 运行 H1 readout gate：
+
+- mode: unified only；
+- arms:
+  - `prefix_conditioned_stochastic_k2`: `readout-mode=prefix-conditioned-head`,
+    `pred-loss-mode=stochastic-prefix`, `prefix_samples=2`;
+  - `target_set_decoder_multiprefix`: `readout-mode=target-set-decoder`,
+    `pred-loss-mode=multi-prefix`;
+- datasets: `Weather ETTm2 ETTh2`；
+- default GPUs: `0 1 2`；
+- output root:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_h1_readout_gate`。
+
 ## Analysis
 
 `scripts/analyze_phase5_timealign_official_gate.py` 输出：
@@ -222,6 +263,19 @@ reliability diagnostic。
 该分析读取 H0 的 `phase5_timealign_hss_h0_metrics.csv` 作为 reference，并比较 H0B arms
 相对 `full`、`multi-prefix`、`stochastic-prefix`、`continuous-prefix` 与 fixed specialist 的差异。
 
+`scripts/analyze_phase5_timealign_hss_h1_readout_gate.py` 输出：
+
+- `phase5_timealign_hss_h1_metrics.csv`;
+- `phase5_timealign_hss_h1_comparison.csv`;
+- `phase5_timealign_hss_h1_summary.csv`;
+- `phase5_timealign_hss_h1_training.csv`;
+- `phase5_timealign_hss_h1_best_epoch.csv`;
+- `phase5_timealign_hss_h1_readout_gate_report.md`。
+
+该分析同时比较 H1 arms 相对 H0 `full`、H0 `multi-prefix`、H0B
+`stochastic_prefix_k2` 与 fixed specialist 的差异。H1 的 primary gate 是 ETTm2 fixed gap
+是否缩小，同时不能牺牲 ETTh2 unified benefit 或 Weather no-harm。
+
 ## Code-Theory Consistency
 
 [Intended theory] 在设计 HSS 前，必须先确认 TimeAlign fixed-horizon carrier 的官方复现是否可信，
@@ -231,7 +285,8 @@ reliability diagnostic。
 [Code realization] 当前代码以官方 dataloader/model/preset 为主体，只加入 repo artifact
 导出、unified/fixed 对比入口，以及 adapter-level `pred-loss-mode` diagnostic。默认 `full`
 保持官方训练语义；其他 prefix modes 只改变 prediction loss 的 aggregation 或 train-time
-prefix sampling。
+prefix sampling。H1 的 `readout-mode` 只在 prediction head 前加入 requested-prefix condition，
+不改 encoder、future autoencoder、alignment loss 或 official dataloader。
 
 [Proxy] `official-last` 是 source-faithful proxy，也是作者确认的 paper protocol。
 `best-val` 是 validation-selector diagnostic；它不代表论文代码默认行为，也不被视为对
