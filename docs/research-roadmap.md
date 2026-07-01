@@ -78,10 +78,10 @@ Phase4-R 的 11-step 判断允许时才重新激活。
 7. 实现方案。
 8. 远程训练。
 9. 评估结果。
-10. 判断是否通过：同时看性能收益与论文故事是否成立。
+10. 判断是否通过：基于实验 artifact 评估 effectiveness；不能在此时才补做方法叙事。
 11. 若不通过，评估应回退至哪一步，然后继续循环。
 
-[Decision] 每个阶段记录必须包含：
+[Decision] 每个新方法候选的阶段记录必须包含：
 
 | Field | Required Content |
 | --- | --- |
@@ -91,9 +91,14 @@ Phase4-R 的 11-step 判断允许时才重新激活。
 | `idea` | 核心 idea，不超过一个主机制 |
 | `theory_check` | 数据流、数学约束、可能成立的原因和反例 |
 | `design` | model/training/evaluation 的最小方案 |
-| `gate` | pass/fail/rollback 条件 |
+| `narrative_gate` | Step 4-6 完成；判断该方案是否具备 paper-core 叙事资格 |
+| `effectiveness_gate` | Step 9-10 完成；判断实验 artifact 是否支持性能与机制有效性 |
 | `artifacts` | 代码版本、输出路径、报告和表格 |
 | `decision` | 是否通过；若不通过，回退到哪一步 |
+
+[Rule] 旧记录中的单一 `gate` 保留作为历史记录，不强制回填；新的 method-candidate 记录必须拆成
+`narrative_gate` 与 `effectiveness_gate`。若实验是 `diagnostic_only` 或 `control_only`，可以不写
+`narrative_gate`，但必须在 `design` 或 `decision` 中明确标注其不能直接升级为 paper-core。
 
 ## Phase4-R 当前 11-Step 状态
 

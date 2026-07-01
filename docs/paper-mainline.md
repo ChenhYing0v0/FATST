@@ -12,12 +12,18 @@
 
 主线选择原则：
 
-- 新架构、新方法、新 training strategy 不只按 MSE/MAE 是否更低来决定是否采用；
-- 每个候选必须同时评估 `effectiveness` 与 `SCI narrative fitness`：问题动机是否清楚、机制是否有新意、
-  tensor/gradient path 是否可解释、贡献边界是否能被审稿人接受；
-- 若两个方案性能差距不大，优先选择叙事性更强、贡献边界更清晰、能支撑高水平 SCI 主线的方案；
-- 若一个方案只是小幅修补 metric，但无法形成论文级机制叙事，不能作为 paper-core，只能作为 control
-  或 diagnostic evidence。
+- `narrative_gate` 属于 Step 4-6：在提出 core idea、theory check 和 method design 时完成，
+  远程实验前必须判断该方案是否具备高水平 SCI 叙事资格；
+- `effectiveness_gate` 属于 Step 9-10：实验结果返回后，再判断 MSE/MAE、segment behavior、
+  stability 和 diagnostics 是否支持该方案；
+- 新架构、新方法、新 training strategy 若希望成为 `paper-core`，必须先通过 `narrative_gate`，
+  不能等实验结果出来后再补叙事；
+- diagnostic/control 实验可以不通过 `narrative_gate`，但必须在 launch 前标注
+  `diagnostic_only` 或 `control_only`，且不能因为 metric 突然变好就直接升级为 paper-core；
+- 若两个 paper-core 候选性能差距不大，优先选择叙事性更强、贡献边界更清晰、能支撑高水平
+  SCI 主线的方案；
+- 若一个方案只是小幅修补 metric，但无法形成论文级机制叙事，不能作为 paper-core，只能作为
+  control 或 diagnostic evidence。
 
 ## 当前状态
 

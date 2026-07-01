@@ -126,14 +126,22 @@ exists; it advances only when the evidence supports both model performance and
 a credible paper narrative. If the evidence is weak, choose an explicit rollback
 point instead of continuing to stack mechanisms.
 
-When proposing or selecting a new architecture, method, carrier, objective, or
-training strategy, judge both empirical effectiveness and paper narrative
-fitness. A design is preferable only if it can support a high-level SCI story:
-clear problem motivation, mechanism novelty, explainable tensor/gradient path,
-and defensible contribution boundary. When two options have similar performance
-or neither has decisive metric superiority, prefer the option with stronger
-narrative potential and clearer SCI-level contribution, instead of the option
-that is merely a small engineering patch.
+Narrative and effectiveness gates belong to different steps. For any proposed
+architecture, method, carrier, objective, or training strategy that may become a
+paper-core method, the SCI narrative gate must be evaluated during Step 4-6,
+before implementation or remote launch. The narrative gate asks whether the
+design has clear problem motivation, mechanism novelty, explainable tensor or
+gradient path, and a defensible contribution boundary. If it fails this gate,
+do not launch it as a method candidate; either redesign it or explicitly label
+it as `diagnostic_only` / `control_only`. The effectiveness gate belongs to
+Step 9-10 after artifacts return, and should judge MSE/MAE, segment behavior,
+stability, and mechanism diagnostics. Diagnostic experiments may bypass the
+narrative gate only if they are declared diagnostic before launch and are not
+later promoted to paper-core solely because metrics look good.
+
+When two paper-core candidates have similar expected or observed performance,
+prefer the option with stronger narrative potential and clearer SCI-level
+contribution over a small engineering patch.
 
 Claims about capacity preservation, warm-starting, initialization transfer, or
 teacher preservation must be code-theory checked before launch. In particular,
@@ -143,9 +151,11 @@ function-preserving path. Random-initialized weight copying should be treated as
 a shallow initialization variant, not as a capacity-preserving mechanism.
 
 Each long-stage record must include `current_step`, `problem`,
-`existence_evidence`, `idea`, `theory_check`, `design`, `gate`, `artifacts`,
-and `decision`. The `decision` must say whether the mechanism passes; if it
-does not pass, it must name the rollback step in the 11-step loop. Do not add
+`existence_evidence`, `idea`, `theory_check`, `design`, `narrative_gate`,
+`effectiveness_gate`, `artifacts`, and `decision`. For backward compatibility,
+older entries may keep a single `gate`, but new method-candidate entries must
+split the two gates. The `decision` must say whether the mechanism passes; if
+it does not pass, it must name the rollback step in the 11-step loop. Do not add
 future-aware, MoE, or another complex mechanism on top of a failed mechanism
 without first completing that rollback assessment.
 
