@@ -84,6 +84,7 @@ class Model(nn.Module):
             "prefix-token-decoder",
             "dense-row-initialized-prefix-decoder",
             "nested-segment-decoder",
+            "dense-initialized-nested-segment-decoder",
         }
         self.capacity_preserving_modes = {
             "dense-prefix-residual-adapter",
@@ -144,7 +145,7 @@ class Model(nn.Module):
             self.prefix_row_delta_up = nn.Linear(adapter_dim, configs.pred_len)
             nn.init.zeros_(self.prefix_row_delta_up.weight)
             nn.init.zeros_(self.prefix_row_delta_up.bias)
-        if self.readout_mode == "nested-segment-decoder":
+        if self.readout_mode in {"nested-segment-decoder", "dense-initialized-nested-segment-decoder"}:
             boundaries = sorted(set(getattr(configs, "target_horizons", [configs.pred_len])))
             boundaries = [value for value in boundaries if 0 < value <= configs.pred_len]
             if configs.pred_len not in boundaries:
@@ -153,7 +154,12 @@ class Model(nn.Module):
             previous = 0
             self.nested_segment_heads = nn.ModuleList()
             for boundary in self.nested_boundaries:
-                self.nested_segment_heads.append(nn.Linear(readout_dim, boundary - previous))
+                head = nn.Linear(readout_dim, boundary - previous)
+                if self.readout_mode == "dense-initialized-nested-segment-decoder":
+                    with torch.no_grad():
+                        head.weight.copy_(self.proj_x.weight[previous:boundary])
+                        head.bias.copy_(self.proj_x.bias[previous:boundary])
+                self.nested_segment_heads.append(head)
                 previous = boundary
 
         self.normalization_x = Normalize(configs.enc_in, affine=False)
@@ -292,7 +298,7 @@ class Model(nn.Module):
             x = self._prefix_token_decoder(x, target_prefix)
         elif self.readout_mode == "dense-row-initialized-prefix-decoder":
             x = self._dense_row_initialized_prefix_decoder(x.flatten(start_dim=-2), target_prefix)
-        elif self.readout_mode == "nested-segment-decoder":
+        elif self.readout_mode in {"nested-segment-decoder", "dense-initialized-nested-segment-decoder"}:
             x = self._nested_segment_decoder(x.flatten(start_dim=-2), target_prefix)
         else:
             x = x.flatten(start_dim=-2)

@@ -2265,6 +2265,20 @@ segment head 作为最终贡献。下一步回 Step 5/6 设计 A3：把 nested c
 capacity preservation 或 teacher preservation 结合。Stage B/D1 reliability diagnostic 可以并行
 准备，但不能替代 A3 interface gate。
 
+### Phase5-A3：Nested Interface Capacity Repair
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 6/7/8：设计并启动 A3-1 dense-initialized nested interface gate |
+| `problem` | A2 nested segment 有 prefix-composition 正向信号，但未超过 H1/H1C；可能原因是 random segment heads 牺牲了 official dense head 的 row-level readout capacity |
+| `existence_evidence` | A2 nested 相对 fixed 为 `-3.13%`，Weather 相对 H1C 为 `-0.09%` 且 `4/4` horizons 赢 H1C；但 ALL 相对 H1 为 `+0.61%`、相对 H1C 为 `+0.18%` |
+| `idea` | 保留 nested composition，不改训练 objective，只把 segment heads 初始化为 `proj_x` 对应 row slices |
+| `theory_check` | 若 A2 的主要漏洞是 capacity collapse，则 dense-initialized nested 应优于 A2 nested，并降低 H1/H1C gap；若仍失败，则问题不只是 initialization，而是 nested interface 或 condition signal 不足 |
+| `design` | 新增 `dense-initialized-nested-segment-decoder`：`[0:96]`、`[96:192]`、`[192:336]`、`[336:720]` segment heads 分别复制 `proj_x.weight/bias` 对应 rows；forward 与 A2 nested 相同 |
+| `gate` | A3-1 至少要优于 A2 nested；paper-core gate 仍要求超过 H1 target-set 和 H1C row-gated，并降低 ETTm2 fixed gap；若只优于 A2 nested，则进入 A3-2 teacher/target-conditioned repair |
+| `artifacts` | `baselines/timealign_official/models/TimeAlign.py`、`scripts/remote/run_phase5_timealign_hss_a3_interface_repair.sh`、`scripts/sync_phase5_timealign_hss_a3_results.sh`、`scripts/analyze_phase5_timealign_hss_a3_interface_repair.py` |
+| `decision` | 待 remote gate；这是对 A2 nested 的最小机制修复，不是新 head sweep |
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：

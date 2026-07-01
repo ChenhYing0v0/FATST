@@ -255,6 +255,26 @@ output(H):    concat needed segments and crop to H -> [B, H, C]
 这个 head 直接测试 prefix-consistent / nested output contract：短 horizon 是长 horizon 的
 前缀组成部分，而不是从 full 720 output 中被动裁剪。
 
+## A3 Dense-Initialized Nested Interface Repair
+
+A3 保留 A2 `nested-segment-decoder` 的 output contract，只修复一个机制漏洞：A2 的 segment
+heads 是随机初始化，可能丢掉 official dense head 已经具备的 row-level readout capacity。
+
+`dense-initialized-nested-segment-decoder` 的 tensor flow：
+
+```text
+hidden:       [B, C, d_model * patch_num]
+segment_1:    Linear(hidden), initialized from proj_x.weight[0:96]     -> [B, C, 96]
+segment_2:    Linear(hidden), initialized from proj_x.weight[96:192]   -> [B, C, 96]
+segment_3:    Linear(hidden), initialized from proj_x.weight[192:336]  -> [B, C, 144]
+segment_4:    Linear(hidden), initialized from proj_x.weight[336:720]  -> [B, C, 384]
+output(H):    concat needed segments and crop to H -> [B, H, C]
+```
+
+它和 A2 nested 的 forward 完全一致，区别只在 initialization：每个 segment head 的
+`weight` 与 `bias` 从 `proj_x` 对应 row slice 复制。这个实验测试 nested composition 的
+收益是否被 A2 的 random segment initialization 掩盖。
+
 训练日志同步导出：
 
 - `train_prediction_l1`：实际用于反传的 prediction loss；
@@ -376,6 +396,18 @@ capacity-preserving decoder/head gate：
 - output root:
   `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a2_interface_gate`。
 
+`scripts/remote/run_phase5_timealign_hss_a3_interface_repair.sh` 运行 A3 interface repair gate：
+
+- mode: unified only；
+- arm:
+  - `dense_initialized_nested_segment_decoder_multiprefix`:
+    `readout-mode=dense-initialized-nested-segment-decoder`,
+    `pred-loss-mode=multi-prefix`;
+- datasets: `Weather ETTm2 ETTh2`；
+- default GPUs: `0 1 2`；
+- output root:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a3_interface_repair`。
+
 
 ## Analysis
 
@@ -478,9 +510,21 @@ H1 target-set conditioned 720 projection；仅比 H1B 好不能构成 pass。
 - `phase5_timealign_hss_a2_best_epoch.csv`;
 - `phase5_timealign_hss_a2_interface_gate_report.md`。
 
-该分析比较 A2 arms 相对 H0 `full`、H0B `stochastic_prefix_k2`、H1
+`scripts/analyze_phase5_timealign_hss_a3_interface_repair.py` 输出：
+
+- `phase5_timealign_hss_a3_metrics.csv`;
+- `phase5_timealign_hss_a3_comparison.csv`;
+- `phase5_timealign_hss_a3_summary.csv`;
+- `phase5_timealign_hss_a3_decision.csv`;
+- `phase5_timealign_hss_a3_training.csv`;
+- `phase5_timealign_hss_a3_best_epoch.csv`;
+- `phase5_timealign_hss_a3_interface_repair_report.md`。
+
+A2 分析比较 A2 arms 相对 H0 `full`、H0B `stochastic_prefix_k2`、H1
 `target_set_decoder_multiprefix`、H1C `row_gated_dense_head_multiprefix` 与 fixed specialist
-的差异。A2 的 primary gate 是超过 H1/H1C controls，并明显缩小 ETTm2 fixed gap。
+的差异。A3 分析重点比较 dense-initialized nested 相对 A2 nested、H1、H1C 与 fixed
+specialist 的差异。A3-1 的 primary gate 是先优于 A2 nested，再判断是否达到 H1/H1C
+controls。
 
 ## Code-Theory Consistency
 

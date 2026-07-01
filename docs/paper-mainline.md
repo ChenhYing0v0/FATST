@@ -16,10 +16,10 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_11_step` | Phase5-A2：Step 9/10/11 已完成；下一步回 Step 5/6 设计 A3 nested + capacity/teacher preservation |
+| `current_11_step` | Phase5-A3：Step 6/7/8，先验证 dense-initialized nested interface 是否修复 A2 capacity gap |
 | `active_carrier` | official-source TimeAlign |
 | `active_question` | 如何设计 SCI 级 unified prediction interface，使其不是简单 prefix loss 或 post-hoc gate；以及 future supervision reliability 是否能在该 interface 上进一步带来贡献 |
-| `current_gate` | Stage A3 必须让 nested-composition interface 超过 H1 target-set / H1C row-gated controls，并降低 ETTm2 fixed gap |
+| `current_gate` | Stage A3-1 必须优于 A2 nested，并尽量超过 H1 target-set / H1C row-gated controls；若只优于 A2 但仍弱于 H1/H1C，则进入 teacher/target-conditioned A3-2 |
 | `paper_core_status` | A2 nested 是 partial pass；interface 主轴继续，但需要 capacity/teacher preservation 才有 paper-core 资格 |
 
 ## 顶级 SCI 审稿视角评判
@@ -297,6 +297,14 @@ A3 gate：
 - ETTm2 fixed gap 必须明显低于 H1/A2 的约 `+1.81%`；
 - ETTh2 strong unified benefit 不能明显下降；
 - Weather 的 A2 nested gain 不能消失。
+
+A3-1 implementation：
+
+- `readout-mode=dense-initialized-nested-segment-decoder`；
+- forward 与 A2 `nested-segment-decoder` 一致；
+- 每个 segment head 从 `proj_x` 对应 row slice 初始化；
+- 只跑一个 arm：`dense_initialized_nested_segment_decoder_multiprefix`；
+- comparison 同时包含 A2 nested、H1 target-set、H1C row-gated 和 fixed。
 
 ### Stage B：Future Supervision Reliability Diagnostic
 
