@@ -1,0 +1,5 @@
+dataset,arm,settings,wins_vs_a2_nested,mean_relative_mse_vs_a2_nested_pct,wins_vs_h1_target_set,mean_relative_mse_vs_h1_target_set_pct,wins_vs_h1c_row_gated,mean_relative_mse_vs_h1c_row_gated_pct,wins_vs_fixed,mean_relative_mse_vs_fixed_pct
+ETTh2,dense_initialized_nested_segment_decoder_multiprefix,4,3,-0.056220042173674156,0,1.878754618824302,0,0.42748874942858395,4,-11.048795221892426
+ETTm2,dense_initialized_nested_segment_decoder_multiprefix,4,4,-0.14779188259577136,3,-0.1614147553937184,1,0.003846271744215035,1,1.6526676787294385
+Weather,dense_initialized_nested_segment_decoder_multiprefix,4,0,0.027824219275152107,2,-0.05505717567182988,4,-0.06260097558776212,2,-0.17068068161417982
+ALL,dense_initialized_nested_segment_decoder_multiprefix,12,7,-0.05872923516476447,5,0.554094229252918,5,0.12291134852834562,7,-3.1889360749257225

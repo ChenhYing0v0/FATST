@@ -1,0 +1,4 @@
+dataset,arm,pred_loss_mode,prefix_samples,best_epoch,best_val_mean_mse,last_epoch,last_val_mean_mse,last_gap_to_best_pct
+ETTh2,dense_initialized_nested_segment_decoder_multiprefix,multi-prefix,1,1,0.4184652268886566,10,0.45605070888996124,8.981745575554179
+ETTm2,dense_initialized_nested_segment_decoder_multiprefix,multi-prefix,1,6,0.18215739354491234,10,0.1834763940423727,0.7240993471588908
+Weather,dense_initialized_nested_segment_decoder_multiprefix,multi-prefix,1,6,0.4882912114262581,10,0.4900713115930557,0.3645570768308737

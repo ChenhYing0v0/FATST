@@ -10,17 +10,26 @@
 - 研究方向从 head/interface 转向 future supervision routing，或从 TimeAlign carrier 转向其他 carrier；
 - 新增实验族会改变论文 claim、方法命名、主 baseline 或核心贡献边界。
 
+主线选择原则：
+
+- 新架构、新方法、新 training strategy 不只按 MSE/MAE 是否更低来决定是否采用；
+- 每个候选必须同时评估 `effectiveness` 与 `SCI narrative fitness`：问题动机是否清楚、机制是否有新意、
+  tensor/gradient path 是否可解释、贡献边界是否能被审稿人接受；
+- 若两个方案性能差距不大，优先选择叙事性更强、贡献边界更清晰、能支撑高水平 SCI 主线的方案；
+- 若一个方案只是小幅修补 metric，但无法形成论文级机制叙事，不能作为 paper-core，只能作为 control
+  或 diagnostic evidence。
+
 ## 当前状态
 
 | Field | Content |
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_11_step` | Phase5-A3：Step 6/7/8，先验证 dense-initialized nested interface 是否修复 A2 capacity gap |
+| `current_11_step` | Phase5-A3：A3-1 Step 9/10/11 已完成；下一步回 Step 5/6 设计 teacher/target-conditioned nested preservation |
 | `active_carrier` | official-source TimeAlign |
 | `active_question` | 如何设计 SCI 级 unified prediction interface，使其不是简单 prefix loss 或 post-hoc gate；以及 future supervision reliability 是否能在该 interface 上进一步带来贡献 |
-| `current_gate` | Stage A3-1 必须优于 A2 nested，并尽量超过 H1 target-set / H1C row-gated controls；若只优于 A2 但仍弱于 H1/H1C，则进入 teacher/target-conditioned A3-2 |
-| `paper_core_status` | A2 nested 是 partial pass；interface 主轴继续，但需要 capacity/teacher preservation 才有 paper-core 资格 |
+| `current_gate` | Stage A3-2 必须证明 nested interface 的收益来自 learned capacity / target condition preservation，而不是 shallow initialization |
+| `paper_core_status` | A3-1 不通过；nested interface 主轴仍保留，但 paper-core 必须转向 teacher-preserved 或 target-conditioned nested route |
 
 ## 顶级 SCI 审稿视角评判
 
@@ -306,6 +315,22 @@ A3-1 implementation：
 - 只跑一个 arm：`dense_initialized_nested_segment_decoder_multiprefix`；
 - comparison 同时包含 A2 nested、H1 target-set、H1C row-gated 和 fixed。
 
+A3-1 result：
+
+- ALL 相对 A2 nested 为 `-0.06%`，说明 shallow dense initialization 只有极弱修复；
+- ALL 相对 H1 target-set 为 `+0.55%`，相对 H1C row-gated 为 `+0.12%`，未过 paper-core gate；
+- ETTh2 相对 fixed 仍强 `-11.05%`，Weather 相对 H1C 为 `-0.06%`，说明 nested route 仍有
+  partial evidence；
+- 但当前 A3-1 复制的是同一模型中未训练的 `proj_x` rows，不是 learned full-head capacity。
+
+A3-1 decision：
+
+- 不能写成 capacity-preserving contribution；
+- 不能继续调 initialization 或扩展 shallow head sweep；
+- 下一步如果保留 Stage A，必须进入真正的 `teacher_preserved_nested_segment_decoder`、
+  `target_conditioned_nested_segment_decoder` 或从已训练 checkpoint 初始化的
+  `warm_started_nested_segment_decoder`。
+
 ### Stage B：Future Supervision Reliability Diagnostic
 
 目标：证明 future supervision 的 useful/harmful 差异真实存在。该阶段可以和 Stage A2 并行
@@ -433,8 +458,8 @@ Mechanism figures：
 
 ### 进入下一部分工作的条件
 
-- H1C 已不通过 paper-core gate；A2 nested partial pass；当前回 Step 5/6 设计 Stage A3；
-- Stage A3 产生超过 H1/H1C controls 的 interface 后，进入 Stage B/D1 和 Stage C/M1/M2；
+- H1C 已不通过 paper-core gate；A2 nested partial pass；A3-1 shallow initialization repair 不通过；
+- Stage A3-2 产生超过 H1/H1C controls 的 teacher/target-conditioned nested interface 后，进入 Stage B/D1 和 Stage C/M1/M2；
 - D1 可以并行准备诊断，但只有在 A3 或当前最强 interface carrier 上验证后，才能支撑方法主线；
 - M2 超过 loss-only control 后，进入 Stage D 主实验；
 - Stage D 稳定后，开始 paper writing 与 figure/table freeze。
@@ -442,7 +467,7 @@ Mechanism figures：
 ### 暂停或转向条件
 
 - H1C 失败：停止当前 post-hoc readout sweep，但不停止 interface 主轴；回 Step 2/3/6 设计 A2；
-- A3 失败：必须重新进行顶级 SCI 审稿评估，再决定是放弃 interface、换 carrier，还是重构论文主线；
+- A3-2 失败：必须重新进行顶级 SCI 审稿评估，再决定是放弃 interface、换 carrier，还是重构论文主线；
 - D1 失败：不做 routing 方法，回 Step 2/3 重定义 supervision reliability；
 - M1/M2 只弱于 Stage A2/H1/H1C controls：不作为 paper-core，保留为 negative evidence；
 - 方法只在一个 dataset 上有效：不扩主表，先做 failure analysis；

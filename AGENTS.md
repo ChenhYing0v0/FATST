@@ -126,6 +126,15 @@ exists; it advances only when the evidence supports both model performance and
 a credible paper narrative. If the evidence is weak, choose an explicit rollback
 point instead of continuing to stack mechanisms.
 
+When proposing or selecting a new architecture, method, carrier, objective, or
+training strategy, judge both empirical effectiveness and paper narrative
+fitness. A design is preferable only if it can support a high-level SCI story:
+clear problem motivation, mechanism novelty, explainable tensor/gradient path,
+and defensible contribution boundary. When two options have similar performance
+or neither has decisive metric superiority, prefer the option with stronger
+narrative potential and clearer SCI-level contribution, instead of the option
+that is merely a small engineering patch.
+
 Each long-stage record must include `current_step`, `problem`,
 `existence_evidence`, `idea`, `theory_check`, `design`, `gate`, `artifacts`,
 and `decision`. The `decision` must say whether the mechanism passes; if it

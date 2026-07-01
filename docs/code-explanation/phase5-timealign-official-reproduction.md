@@ -275,6 +275,11 @@ output(H):    concat needed segments and crop to H -> [B, H, C]
 `weight` 与 `bias` 从 `proj_x` 对应 row slice 复制。这个实验测试 nested composition 的
 收益是否被 A2 的 random segment initialization 掩盖。
 
+注意：当前 A3-1 复制的是模型初始化时的 `proj_x` rows，而不是已训练 full head 或 H1/H1C
+checkpoint 的 learned rows。因此它是 shallow initialization repair，不是严格意义上的
+learned capacity preservation。若论文主线需要声明 capacity preservation，后续必须使用
+teacher consistency、target-conditioned nested readout，或从已训练 checkpoint warm-start。
+
 训练日志同步导出：
 
 - `train_prediction_l1`：实际用于反传的 prediction loss；

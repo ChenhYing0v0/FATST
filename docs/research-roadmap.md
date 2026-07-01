@@ -2276,8 +2276,21 @@ capacity preservation 或 teacher preservation 结合。Stage B/D1 reliability d
 | `theory_check` | 若 A2 的主要漏洞是 capacity collapse，则 dense-initialized nested 应优于 A2 nested，并降低 H1/H1C gap；若仍失败，则问题不只是 initialization，而是 nested interface 或 condition signal 不足 |
 | `design` | 新增 `dense-initialized-nested-segment-decoder`：`[0:96]`、`[96:192]`、`[192:336]`、`[336:720]` segment heads 分别复制 `proj_x.weight/bias` 对应 rows；forward 与 A2 nested 相同 |
 | `gate` | A3-1 至少要优于 A2 nested；paper-core gate 仍要求超过 H1 target-set 和 H1C row-gated，并降低 ETTm2 fixed gap；若只优于 A2 nested，则进入 A3-2 teacher/target-conditioned repair |
-| `artifacts` | `baselines/timealign_official/models/TimeAlign.py`、`scripts/remote/run_phase5_timealign_hss_a3_interface_repair.sh`、`scripts/sync_phase5_timealign_hss_a3_results.sh`、`scripts/analyze_phase5_timealign_hss_a3_interface_repair.py` |
-| `decision` | 待 remote gate；这是对 A2 nested 的最小机制修复，不是新 head sweep |
+| `artifacts` | `analysis/phase5_timealign_hss_a3_interface_repair_20260701/`、`baselines/timealign_official/models/TimeAlign.py`、`scripts/remote/run_phase5_timealign_hss_a3_interface_repair.sh`、`scripts/sync_phase5_timealign_hss_a3_results.sh`、`scripts/analyze_phase5_timealign_hss_a3_interface_repair.py` |
+| `decision` | `shallow_dense_initialization_no_capacity_repair`；A3-1 不通过 paper-core gate，rollback 到 Step 5/6 设计真正的 teacher/target-conditioned nested preservation |
+
+[Fact] A3-1 remote gate 已完成，`3 datasets × 1 arm × 4 horizons`。ALL mean MSE 相对
+A2 nested 为 `-0.06%`，相对 fixed 为 `-3.19%`，但相对 H1 target-set 为 `+0.55%`、
+相对 H1C row-gated 为 `+0.12%`。
+
+[Critical Limit] A3-1 复制的是同一模型初始化时的 `proj_x.weight/bias` rows；`proj_x` 不是
+已训练 full head。因此 A3-1 不是严格的 learned capacity preservation，只是 dense-like
+initialization repair。
+
+[Decision] A3-1 否定 shallow initialization repair，不否定 nested / prefix-composition
+interface。下一步若继续 Stage A，必须做真正的 `teacher_preserved_nested_segment_decoder`、
+`target_conditioned_nested_segment_decoder` 或从已训练 checkpoint 出发的
+`warm_started_nested_segment_decoder`。不继续调初始化或泛化 head sweep。
 
 ## 历史证据索引
 
