@@ -143,6 +143,32 @@ When two paper-core candidates have similar expected or observed performance,
 prefer the option with stronger narrative potential and clearer SCI-level
 contribution over a small engineering patch.
 
+## Research Path Traceability
+
+The project uses a layered research record system:
+
+- `docs/paper-mainline.md` is the paper-level mainline.
+- `docs/stage-ledgers/` stores the active stage candidate queue, pending tasks,
+  and decision cursor.
+- `docs/research-roadmap.md` stores cross-stage 11-step decisions and rollback
+  points.
+- `analysis/` stores detailed experiment reports.
+- `docs/research-governance.md` defines the update and synchronization rules.
+
+Before continuing research, designing the next experiment, or analyzing a
+returned remote run, read the active stage ledger first. Check whether any
+candidate is still `proposed`, `narrative_ready`, `analysis_pending`, or
+`partial_pass`. A single candidate failure may only update that candidate; it
+must not be treated as a stage-mainline failure while other viable candidates
+remain in the queue.
+
+Detailed experiment metrics and long diagnostics should be written to
+`analysis/`, not into the stage ledger or paper mainline. The stage ledger
+should only keep the decision summary, candidate status, next action, and
+artifact links. Update `docs/paper-mainline.md` only when a stage result changes
+paper claims, contribution boundaries, main baselines, method naming, main
+experiment arrangement, or triggers a rollback to Step 2/3.
+
 Claims about capacity preservation, warm-starting, initialization transfer, or
 teacher preservation must be code-theory checked before launch. In particular,
 copying weights from another module is not evidence of preserved learned

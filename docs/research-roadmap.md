@@ -6,6 +6,11 @@
 研究过程、实验证据和阶段性 rollback；`docs/paper-mainline.md` 负责维护能进入论文的
 核心 claim、创新点、实验总安排和转向规则。
 
+[Decision] 阶段内部候选队列、未完成任务和“已提出但尚未执行”的 idea 由
+`docs/stage-ledgers/` 维护。当前 active ledger 是
+`docs/stage-ledgers/phase5-timealign-interface.md`。完整研究路径保存体系见
+`docs/research-governance.md`。
+
 [Rule] 每次重要实验节点或研究转向后，必须先在本文档完成 11-step decision，再检查
 `docs/paper-mainline.md` 是否需要同步更新：
 
@@ -13,6 +18,11 @@
 - 如果结果只是局部 negative evidence 或 diagnostic 细节，保留在本文档和 `docs/experiments/`，
   不写入论文总纲；
 - 若 11-step rollback 到 Step 2/3，论文总纲也必须重新审视 `核心问题` 和 `目标 claim`。
+
+[Rule] 每次用户要求“继续推进研究”“按计划继续”“设计下一步实验”或“远程实验完成请分析”
+时，必须先读取 active Stage Ledger，检查 `candidate_queue` 与 `pending_tasks`。若仍存在
+`proposed`、`narrative_ready`、`analysis_pending` 或 `partial_pass` 候选，不能因为当前实验失败
+直接改写主线或跳到全新方向。
 
 ## 当前锚点
 

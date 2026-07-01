@@ -2,6 +2,9 @@
 
 本文档是当前项目的论文级总纲，优先级高于单个 phase 的局部实验计划。`docs/research-roadmap.md`
 负责记录完整 11-step 研究过程；本文档只维护能进入论文叙事的主线、创新点、实验安排和转向规则。
+阶段内部的候选队列、未完成任务和局部 decision cursor 由 `docs/stage-ledgers/` 维护；当前 active
+ledger 是 `docs/stage-ledgers/phase5-timealign-interface.md`。研究路径保存体系见
+`docs/research-governance.md`。
 
 每次发生以下事件时必须回到本文档复核：
 
@@ -9,6 +12,13 @@
 - 一个机制被判定为 `pass`、`partial pass` 或 `fail_as_core_candidate`；
 - 研究方向从 head/interface 转向 future supervision routing，或从 TimeAlign carrier 转向其他 carrier；
 - 新增实验族会改变论文 claim、方法命名、主 baseline 或核心贡献边界。
+
+不属于本文档职责的内容：
+
+- 阶段内已提出但尚未执行的并行候选；这些必须登记在 active Stage Ledger 的
+  `candidate_queue`；
+- 单次实验的详细 metric、CSV 解读、训练日志和 diagnostic 表；这些必须保存在 `analysis/`；
+- 只影响阶段内部执行顺序、但不改变论文 claim 或贡献边界的局部判断。
 
 主线选择原则：
 
@@ -33,6 +43,7 @@
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
 | `current_11_step` | Phase5-A3C：Step 6/7/8，验证 warm-started primary nested interface |
 | `active_carrier` | official-source TimeAlign |
+| `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 | `active_question` | 如何设计 SCI 级 unified prediction interface，使其不是简单 prefix loss 或 post-hoc gate；以及 future supervision reliability 是否能在该 interface 上进一步带来贡献 |
 | `current_gate` | Stage A3C narrative_gate 已通过；effectiveness_gate 要求优于 A2 nested/H1/H1C 或证明 learned capacity 不是 nested primary 的主要瓶颈 |
 | `paper_core_status` | A3B 不通过且降级为 diagnostic/control；A3C 是当前 primary nested interface 主线 |
