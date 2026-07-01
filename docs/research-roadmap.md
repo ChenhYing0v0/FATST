@@ -2375,16 +2375,16 @@ multi-horizon interface。当前保留的 paper-core candidates 是：
 
 | Field | Content |
 | --- | --- |
-| `current_step` | Step 6/7/8：设计、实现并启动 A3E target-conditioned nested gate |
+| `current_step` | Step 9/10/11：评估 A3E target-conditioned nested gate 并决定 rollback |
 | `problem` | A3D 保留 H1 function 但不能解决 minute-level failure；当前缺口更像 requested target set 没有进入 primary nested head，导致 nested decomposition 缺少 target-prefix specialization |
 | `existence_evidence` | A3D teacher loss 下降且 overall 接近 H1/H1C，说明 capacity/function preservation 有效；但 ETTm2 仍弱。为避免只围绕 ETTm2 单一数据集决策，本轮用 ETTm1 替换 ETTm2 并重建 reference |
 | `idea` | 将 target-prefix condition 直接注入 primary nested head 的 hidden representation，而不是在 dense residual 或 teacher loss 中间接作用 |
 | `theory_check` | A3C 已证明 warm-start alone 无效；因此 A3E warm arm 只作为和 A3C 对齐的 initialization control。若 warm arm 优于 A3C/A3D，增量来自 target conditioning；scratch arm 只判断该结构是否独立于 H1 initialization |
 | `design` | 数据集改为 `ETTh2 + ETTm1 + Weather`。先补跑 ETTm1 fixed、H1 target-set、H1C row-gated、A2 nested、A3C warm、A3D w03 references，再跑 A3E 双臂：`target_conditioned_nested_warm` 与 `target_conditioned_nested_scratch` |
 | `narrative_gate` | 通过：它直接回答 multi-prefix evaluation 与 prediction head 不一致的问题；warm-start 不作为机制贡献 |
-| `effectiveness_gate` | warm arm 必须优于 A3C，并接近或超过 A3D/H1/H1C；特别要在 ETTm1 上验证 minute-level interface gap 是否可被 target conditioning 修复。scratch arm 若失败，不直接否定 warm arm，但说明 capacity initialization 仍是必要条件 |
+| `effectiveness_gate` | 未通过：warm/scratch ALL 相对 A3C 仅 `-0.25/-0.26%`，相对 A3D/H1 仍为正 gap；ETTm1 上 A3C 仍是最强候选 |
 | `artifacts` | `baselines/timealign_official/models/TimeAlign.py`、`baselines/timealign_official/train_repo.py`、`scripts/remote/run_phase5_timealign_hss_a3e_ettm1_replacement_gate.sh`、`scripts/remote/run_phase5_timealign_hss_a3e_target_conditioned_nested_gate.sh`、`scripts/sync_phase5_timealign_hss_a3e_ettm1_results.sh`、`scripts/analyze_phase5_timealign_hss_a3e_ettm1_replacement_gate.py` |
-| `decision` | 待 remote gate |
+| `decision` | A3E 标记为 `failed_as_core_candidate`。target conditioning 直接进入 primary nested head 的增量不足，且没有解决 ETTm1；暂不进入 A3F，rollback 到 Step 2/3/4 做 `interface reliability diagnostic`，重新判断 Stage A 是否应从 universal prefix-aware head 转向 capacity-preserving path reliability |
 
 ## 历史证据索引
 

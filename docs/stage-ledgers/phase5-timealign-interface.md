@@ -19,11 +19,11 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | A3E 处于 Step 8：ETTm1 replacement remote gate 已启动 |
+| `current_11_step` | A3E 处于 Step 9/10/11：ETTm1 replacement gate 已分析，决定 rollback |
 | `current_candidate` | `A3E_target_conditioned_nested_primary` |
-| `latest_decision` | A3D 为 `partial_pass`：`w03` 相对 A3C `-0.73%`、相对 H1 `-0.06%`、相对 H1C `-0.48%`，但 ETTm2 仍负，不能作为 paper-core |
-| `next_required_action` | 等待 A3E ETTm1 replacement gate 完成；完成后同步 artifacts 并分析 `target_conditioned_nested_warm/scratch` |
-| `rollback_point` | A3E 失败时才评估 A3F 最小组合或重审 Stage A interface family |
+| `latest_decision` | A3E 不通过 paper-core gate：ALL 相对 A3C 仅 `-0.25/-0.26%`，相对 A3D/H1 仍为正 gap；ETTm1 上 A3C 仍最强 |
+| `next_required_action` | 回 Step 2/3/4 设计 `interface reliability diagnostic`，不要直接叠加 A3F |
+| `rollback_point` | 回 Step 2/3/4：重定义 Stage A 问题，从 universal prefix-aware head 转向 capacity-preserving path 的 reliability 分析 |
 
 ## Candidate Queue
 
@@ -31,7 +31,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | --- | --- | --- | --- | --- | --- | --- |
 | `A3C_warm_started_nested_primary` | `failed_as_core_candidate` | A2 nested 的主要瓶颈是缺少 learned capacity；从 H1 learned full head warm-start 后，primary nested interface 应显著优于 A2/A3B | passed：保留 primary nested interface，且 learned capacity 来自 trained checkpoint | 未通过：相对 A2 基本持平，未超过 H1/H1C | 保留为 negative evidence：row-slice warm-start 不足以 preserve learned function | `analysis/phase5_timealign_hss_a3c_warm_started_nested_gate_20260701/` |
 | `A3D_teacher_preserved_nested_primary` | `partial_pass` | full head/teacher 保留 dense prediction capacity，nested primary head 学习 prefix-consistent decomposition，可避免直接替换 head 带来的 capacity loss | passed：它直接修复 A3C 暴露的 function-preservation gap，且 nested 仍是 primary interface | 部分通过：`w03` overall 接近/略超 H1/H1C，但 ETTm2 仍失败 | 保留为 partial evidence，不直接作为 paper-core | `analysis/phase5_timealign_hss_a3d_teacher_preserved_nested_gate_20260701/` |
-| `A3E_target_conditioned_nested_primary` | `narrative_ready` | requested target set/prefix condition 应进入 decoder/head 本身，而不是 condition before 720-step projection 后再 crop | passed：它直接解决 multi-prefix evaluation 与 unified head 不一致；warm-start 只作为与 A3C 对齐的 initialization control，不作为机制贡献 | warm arm 应优于 A3C/A3D，scratch arm 用于判断结构是否完全依赖 H1 initialization；本轮用 ETTm1 替换 ETTm2 验证 minute-level gap | 已实现，下一步启动 remote gate | `scripts/remote/run_phase5_timealign_hss_a3e_ettm1_replacement_gate.sh` |
+| `A3E_target_conditioned_nested_primary` | `failed_as_core_candidate` | requested target set/prefix condition 应进入 decoder/head 本身，而不是 condition before 720-step projection 后再 crop | passed：它直接解决 multi-prefix evaluation 与 unified head 不一致；warm-start 只作为与 A3C 对齐的 initialization control，不作为机制贡献 | 未通过：ALL 相对 A3C 只有约 `-0.25%`，相对 A3D/H1 仍弱；ETTm1 上不如 A3C | 保留为 negative evidence；下一步做 reliability diagnostic，不直接进入 A3F | `analysis/phase5_timealign_hss_a3e_ettm1_replacement_gate_20260701/phase5_timealign_hss_a3e_ettm1_deep_dive.md` |
 | `A3F_teacher_preserved_target_conditioned_nested` | `deferred` | teacher preservation 解决 capacity，target conditioning 解决 requested-prefix specialization，二者组合可能形成最终 paper-core interface | 仅在 A3D/A3E 各自通过 narrative gate 后评估，避免未证实机制堆叠 | 必须超过单机制候选，且不能只靠参数量提升 | 等 A3D/A3E 至少一个 partial/pass 后再考虑 | pending |
 | `A3B_nested_residual_gate` | `failed_as_core_candidate` | nested structure 作为 residual path 可修复 dense head 的 prefix behavior | failed：nested 变成 dense head 附属补丁，削弱 primary interface 叙事 | 0/12 win，不能作为 paper-core | 仅保留为 negative evidence/control | `analysis/phase5_timealign_hss_a3b_nested_residual_gate_20260701/` |
 | `A3A_dense_initialized_nested_segment` | `failed_as_core_candidate` | 随机 dense row-copy 可作为 capacity-preserving repair | failed：随机初始化复制不等于 learned capacity preservation | 不通过 | 标记为设计错误，不再沿用 | `analysis/phase5_timealign_hss_a3_interface_repair_20260701/` |
@@ -47,7 +47,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | A3B nested residual | `A3B_nested_residual_gate` | diagnostic/control | residual path 破坏 primary nested 叙事且效果差 | `failed_as_core_candidate` | `analysis/phase5_timealign_hss_a3b_nested_residual_gate_20260701/` |
 | A3C warm-started nested | `A3C_warm_started_nested_primary` | method candidate | 相对 A2 `+0.07%`，相对 A3B `-4.06%`，相对 H1 `+0.68%`，相对 H1C `+0.25%` | `failed_as_core_candidate` | `analysis/phase5_timealign_hss_a3c_warm_started_nested_gate_20260701/phase5_timealign_hss_a3c_interpretation.md` |
 | A3D teacher-preserved nested | `A3D_teacher_preserved_nested_primary` | method candidate | `w03` 相对 A3C `-0.73%`，相对 H1 `-0.06%`，相对 H1C `-0.48%`，但 ETTm2 仍负；deep dive 判断 teacher preservation 有效但缺 target-prefix specialization | `partial_pass` | `analysis/phase5_timealign_hss_a3d_teacher_preserved_nested_gate_20260701/phase5_timealign_hss_a3d_deep_dive.md` |
-| A3E target-conditioned nested | `A3E_target_conditioned_nested_primary` | method candidate | 待 remote gate；ETTm1 替换 ETTm2，并补齐 ETTm1 references；双臂：`target_conditioned_nested_warm`、`target_conditioned_nested_scratch` | `narrative_ready` | pending |
+| A3E target-conditioned nested | `A3E_target_conditioned_nested_primary` | method candidate | warm/scratch ALL 相对 A3C `-0.25/-0.26%`，但相对 A3D/H1 仍弱；ETTm1 上 A3C 仍最强 | `failed_as_core_candidate` | `analysis/phase5_timealign_hss_a3e_ettm1_replacement_gate_20260701/phase5_timealign_hss_a3e_ettm1_deep_dive.md` |
 
 ## Pending Tasks
 
@@ -58,6 +58,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | 启动 A3D remote gate | Codex | A3D implementation verification 通过 | `completed` | 已在 3090 启动，等待用户通知完成后同步分析 |
 | 分析 A3D 结果 | Codex | 用户通知远程完成 | `completed` | A3D 标为 partial_pass；下一步进入 A3E |
 | 启动 A3E ETTm1 replacement remote gate | Codex | A3E implementation verification 通过且 ETTm1 presets/sync 已补齐 | `completed` | 已在 3090 启动，等待用户通知完成后同步分析 |
+| 分析 A3E ETTm1 replacement gate | Codex | 用户通知远程完成 | `completed` | A3E 标为 failed_as_core_candidate；下一步回 Step 2/3/4 做 reliability diagnostic |
 | paper-mainline 同步检查 | Codex | A3C 或 A3D/A3E 产生 pass/fail_as_family 结论 | `pending` | 只有影响贡献边界或主实验安排时修改 `docs/paper-mainline.md` |
 
 ## Paper Mainline Sync Log
@@ -68,6 +69,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | 2026-07-01 | 建立研究路径保存体系 | `当前状态` / 文档入口 | 管理机制修正 | paper-mainline 继续管论文总纲，阶段内候选由本 ledger 管理 |
 | 2026-07-01 | A3C 不通过 paper-core gate | `当前状态` | 当前阶段状态更新 | active candidate 从 A3C 切换为 A3D，不改变论文贡献边界 |
 | 2026-07-01 | A3D partial pass | `当前状态` | 当前阶段状态更新 | active candidate 从 A3D 切换为 A3E，不改变论文贡献边界 |
+| 2026-07-01 | A3E ETTm1 replacement gate 失败 | `当前状态` | 当前阶段状态更新 | 不直接进入 A3F；先回 Step 2/3/4 做 interface reliability diagnostic |
 
 ## Remote Launch Log
 
@@ -83,6 +85,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 - 当前优先 A3E；A3E 的 warm arm 只能解释为对齐 A3C 的 initialization control，不能把 warm-start 当作机制贡献。
 - 2026-07-01 artifact audit 未发现远端 A3E 结果目录或 launcher log；A3E 仍是 pending remote gate，不应被当作已完成实验分析。
 - 用户要求加入 ETTm1 替换 ETTm2；A3E analysis universe 改为 `ETTh2 + ETTm1 + Weather`。ETTm1 过去没有 references，必须先补跑 fixed/H1/H1C/A2/A3C/A3D。
-- A3E ETTm1 replacement gate 已启动；当前 first step 是 ETTm1 official fixed reference，三张 GPU 同时运行。
+- A3E 已失败为 paper-core：target conditioning 进入 primary nested head 的增量太小，且 ETTm1 上 A3C 仍是最强候选。
+- 不要直接进入 A3F `teacher_preserved + target_conditioned`；两个组成机制在 ETTm1 上没有同时正向，叠加会违反 narrative gate。
 - 不允许再把 residual patch 或 shallow initialization 当作 paper-core interface 候选。
 - 详细 metric 和诊断报告不要写入本文件，只写 conclusion summary 和 artifact path。
