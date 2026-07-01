@@ -332,6 +332,7 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         glo=1,
         device=device,
         readout_mode=args.readout_mode,
+        target_horizons=args.target_horizons,
     )
     return official
 
@@ -844,6 +845,8 @@ def parse_args() -> argparse.Namespace:
             "dense-prefix-residual-adapter",
             "row-gated-dense-head",
             "prefix-adapter-shared-dense",
+            "dense-row-initialized-prefix-decoder",
+            "nested-segment-decoder",
         ],
         default="official",
     )

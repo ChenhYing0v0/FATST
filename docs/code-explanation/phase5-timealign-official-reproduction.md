@@ -216,6 +216,45 @@ output:     proj_x(hidden') -> [B, 720, C]
 三个 H1C arms 的 last projection 或 residual-up 分支均为 zero-init / identity-preserving
 设计：训练开始时尽量等价于 official dense head，之后才学习 prefix-aware delta。
 
+## A2 SCI-Level Unified Interface
+
+A2 不再继续 H1C 的 post-hoc residual/gate/adapter sweep，而是测试两个更明确的 unified
+prediction interface contract：
+
+- `dense-row-initialized-prefix-decoder`：直接输出 requested prefix `[B,H,C]`，但 base
+  weight 使用 `proj_x.weight[:H]` 和 `proj_x.bias[:H]`，避免 H1B random variable head 的
+  capacity collapse；
+- `nested-segment-decoder`：按 target horizons 构造 nested segments，例如
+  `[1:96]`、`[97:192]`、`[193:336]`、`[337:720]`，requested prefix 由共享 segment heads
+  拼接得到，而不是完整生成 720 后裁剪。
+
+`dense-row-initialized-prefix-decoder` 的 tensor flow：
+
+```text
+hidden:     [B, C, d_model * patch_num]
+base rows:  Linear(hidden, proj_x.weight[:H], proj_x.bias[:H]) -> [B, C, H]
+condition:  Linear(target_prefix / 720) -> [1, 1, adapter_dim]
+delta:      zero-init low-rank delta(hidden, condition)[:, :, :H]
+output:     base + delta -> [B, H, C]
+```
+
+这个 head 与 H1C 的区别是：H1C 仍完整生成 `[B,720,C]` 再参与 prefix loss，而 A2 直接按
+requested prefix 读取 dense rows。它保留 dense-row initialization，但改变 output contract。
+
+`nested-segment-decoder` 的 tensor flow：
+
+```text
+hidden:       [B, C, d_model * patch_num]
+segment_1:    Linear(hidden) -> [B, C, 96]
+segment_2:    Linear(hidden) -> [B, C, 96]
+segment_3:    Linear(hidden) -> [B, C, 144]
+segment_4:    Linear(hidden) -> [B, C, 384]
+output(H):    concat needed segments and crop to H -> [B, H, C]
+```
+
+这个 head 直接测试 prefix-consistent / nested output contract：短 horizon 是长 horizon 的
+前缀组成部分，而不是从 full 720 output 中被动裁剪。
+
 训练日志同步导出：
 
 - `train_prediction_l1`：实际用于反传的 prediction loss；
@@ -323,6 +362,21 @@ capacity-preserving decoder/head gate：
 - output root:
   `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_h1c_capacity_preserving_gate`。
 
+`scripts/remote/run_phase5_timealign_hss_a2_interface_gate.sh` 运行 A2 unified-interface gate：
+
+- mode: unified only；
+- arms:
+  - `dense_row_initialized_prefix_decoder_multiprefix`:
+    `readout-mode=dense-row-initialized-prefix-decoder`,
+    `pred-loss-mode=multi-prefix`;
+  - `nested_segment_decoder_multiprefix`: `readout-mode=nested-segment-decoder`,
+    `pred-loss-mode=multi-prefix`;
+- datasets: `Weather ETTm2 ETTh2`；
+- default GPUs: `0 1 2`；
+- output root:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a2_interface_gate`。
+
+
 ## Analysis
 
 `scripts/analyze_phase5_timealign_official_gate.py` 输出：
@@ -415,6 +469,19 @@ reliability diagnostic。
 `target_set_decoder_multiprefix` 与 fixed specialist 的差异。H1C 的 primary gate 是能否超过
 H1 target-set conditioned 720 projection；仅比 H1B 好不能构成 pass。
 
+`scripts/analyze_phase5_timealign_hss_a2_interface_gate.py` 输出：
+
+- `phase5_timealign_hss_a2_metrics.csv`;
+- `phase5_timealign_hss_a2_comparison.csv`;
+- `phase5_timealign_hss_a2_summary.csv`;
+- `phase5_timealign_hss_a2_training.csv`;
+- `phase5_timealign_hss_a2_best_epoch.csv`;
+- `phase5_timealign_hss_a2_interface_gate_report.md`。
+
+该分析比较 A2 arms 相对 H0 `full`、H0B `stochastic_prefix_k2`、H1
+`target_set_decoder_multiprefix`、H1C `row_gated_dense_head_multiprefix` 与 fixed specialist
+的差异。A2 的 primary gate 是超过 H1/H1C controls，并明显缩小 ETTm2 fixed gap。
+
 ## Code-Theory Consistency
 
 [Intended theory] 在设计 HSS 前，必须先确认 TimeAlign fixed-horizon carrier 的官方复现是否可信，
@@ -429,7 +496,8 @@ prefix sampling。H1 的 `readout-mode` 只在 prediction head 前加入 request
 prediction head，使 selected prefix 直接输出 `[B,H,C]`，但仍保留 TimeAlign backbone、
 future autoencoder、alignment loss 与 official dataloader。H1C 回到 capacity-preserving
 decoder/head：保留或复用 `proj_x: Linear(...,720)`，只让 prefix condition 控制 residual、gate
-或 hidden adapter 这类增量路径。
+或 hidden adapter 这类增量路径。A2 进一步把问题从 post-hoc modulation 改成 output contract：
+直接按 requested prefix 读取 dense rows，或用 nested segments 组成 prefix-consistent output。
 
 [Proxy] `official-last` 是 source-faithful proxy，也是作者确认的 paper protocol。
 `best-val` 是 validation-selector diagnostic；它不代表论文代码默认行为，也不被视为对
@@ -439,4 +507,4 @@ TimeAlign 官方训练策略的修正。
 官方 commit、test path 与 script setting，而不是直接进入 HSS 设计。若 D0 `multi-prefix`
 已经解释 unified decrease，则下一步应先研究 unified head/interface，而不是进入 D1/M1。
 若 H1C 仍不能超过 H1 target-set conditioned 720 projection，则应回到 Step 2/3，重新判断
-TimeAlign 是否适合作为 HSS 主 carrier，而不是继续堆叠 future reliability schedule。
+当前 post-hoc interface 族，而不是直接否定 interface 主轴或继续堆叠 future reliability schedule。

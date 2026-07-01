@@ -1,0 +1,10 @@
+dataset,arm,pred_loss_mode,prefix_samples,best_epoch,best_val_mean_mse,last_epoch,last_val_mean_mse,last_gap_to_best_pct
+ETTh2,dense_prefix_residual_adapter_multiprefix,multi-prefix,1,1,0.448940634727478,10,0.5461565554141998,21.654515801568095
+ETTh2,prefix_adapter_shared_dense_multiprefix,multi-prefix,1,1,0.4557696580886841,10,0.6234920844435692,36.79982275657532
+ETTh2,row_gated_dense_head_multiprefix,multi-prefix,1,1,0.40810171514749527,10,0.45352083072066307,11.129361599657205
+ETTm2,dense_prefix_residual_adapter_multiprefix,multi-prefix,1,1,0.18324132822453976,10,0.1882654596120119,2.741811269407357
+ETTm2,prefix_adapter_shared_dense_multiprefix,multi-prefix,1,1,0.1841320712119341,10,0.19393249787390232,5.322498463990044
+ETTm2,row_gated_dense_head_multiprefix,multi-prefix,1,2,0.18104685842990875,10,0.18318446911871433,1.1806947148067515
+Weather,dense_prefix_residual_adapter_multiprefix,multi-prefix,1,5,0.4893752932548523,10,0.48939479887485504,0.003985820345153712
+Weather,prefix_adapter_shared_dense_multiprefix,multi-prefix,1,1,0.49090372025966644,10,0.4929281696677208,0.4123923540411356
+Weather,row_gated_dense_head_multiprefix,multi-prefix,1,5,0.48906654864549637,10,0.4900711253285408,0.20540695040924817

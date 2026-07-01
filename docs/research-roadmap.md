@@ -1,5 +1,19 @@
 # FATST Research Roadmap
 
+## 论文主线总纲
+
+[Decision] 论文级主线由 `docs/paper-mainline.md` 维护。本文档负责完整记录 11-step
+研究过程、实验证据和阶段性 rollback；`docs/paper-mainline.md` 负责维护能进入论文的
+核心 claim、创新点、实验总安排和转向规则。
+
+[Rule] 每次重要实验节点或研究转向后，必须先在本文档完成 11-step decision，再检查
+`docs/paper-mainline.md` 是否需要同步更新：
+
+- 如果结果改变 paper claim、方法命名、核心贡献、主 baseline 或实验总安排，必须同步更新；
+- 如果结果只是局部 negative evidence 或 diagnostic 细节，保留在本文档和 `docs/experiments/`，
+  不写入论文总纲；
+- 若 11-step rollback 到 Step 2/3，论文总纲也必须重新审视 `核心问题` 和 `目标 claim`。
+
 ## 当前锚点
 
 [Fact] 本仓库是 `R_2026_FSA` 的 clean successor，但当前路线只使用本仓库内已经记录、
@@ -2168,15 +2182,15 @@ conditioned residual、low-rank adapter 或 row-wise gate。
 
 | Field | Content |
 | --- | --- |
-| `current_step` | Step 7/8：已实现 capacity-preserving decoder/head gate，准备远程实验 |
+| `current_step` | Step 9/10/11：评估 H1C capacity-preserving decoder/head gate，并决定 rollback point |
 | `problem` | H1B 证明简单 variable-prefix head 破坏 TimeAlign dense readout capacity；但 H1 证明 prefix/target-set condition 在 dense projection 上有正向信号 |
 | `existence_evidence` | H1 target-set conditioned 720 projection 相对 H0B 改善 `-0.69%`；H1B variable heads 相对 H1 退化 `+14.41%` 到 `+25.52%` |
 | `idea` | 保留 dense 720 projection，prefix/target-set information 只控制 residual adapter、low-rank delta 或 row-wise gate |
 | `theory_check` | 如果 TimeAlign 的性能来自 dense row capacity，则 decoder 改造必须 preserve base readout，并让 HSS 只调度/调制增量路径 |
 | `design` | 候选 arms：`dense_prefix_residual_adapter_multiprefix`、`row_gated_dense_head_multiprefix`、`prefix_adapter_shared_dense_multiprefix`；三者都保留 `proj_x: Linear(...,720)`，区别只在 prefix condition 进入 output residual、row-wise gate 或 hidden adapter |
 | `gate` | 必须超过 H1 `target_set_decoder_multiprefix`，并让 ETTm2 fixed gap 明显低于 `+1.81%` |
-| `artifacts` | `baselines/timealign_official/models/TimeAlign.py`、`scripts/remote/run_phase5_timealign_hss_h1c_capacity_preserving_gate.sh`、`scripts/sync_phase5_timealign_hss_h1c_results.sh`、`scripts/analyze_phase5_timealign_hss_h1c_capacity_preserving_gate.py` |
-| `decision` | 待远程结果；若 H1C 仍低于 H1 target-set conditioned 720 projection，回 Step 2/3 重新判断 TimeAlign 是否适合作为 HSS 主 carrier |
+| `artifacts` | `analysis/phase5_timealign_hss_h1c_capacity_preserving_gate_20260701/`、`baselines/timealign_official/models/TimeAlign.py`、`scripts/remote/run_phase5_timealign_hss_h1c_capacity_preserving_gate.sh`、`scripts/sync_phase5_timealign_hss_h1c_results.sh`、`scripts/analyze_phase5_timealign_hss_h1c_capacity_preserving_gate.py` |
+| `decision` | `capacity_preserving_readout_partial_fail_row_gate_control`；不继续扩大当前 post-hoc residual/gate/adapter sweep，rollback 到 Step 2/3/6，重设计 SCI-level unified interface；future supervision reliability diagnostic 只作为并行准备 |
 
 [Implementation] H1C 不再尝试让 decoder 直接输出 variable prefix。它把 TimeAlign 原始 dense
 720 projection 视为 base path，并测试 prefix/target-set information 应该控制哪个增量位置：
@@ -2192,6 +2206,48 @@ conditioned residual、low-rank adapter 或 row-wise gate。
 真正被比较的是 prefix condition 在 prediction head 内部的落点：output residual、row gate、
 hidden adapter。若三者均失败，说明当前 TimeAlign carrier 中“保留 dense capacity + prefix
 condition”的 decoder route 也不足以支撑 HSS 主线。
+
+[Fact] H1C 最佳 arm 是 `row_gated_dense_head_multiprefix`：ALL mean MSE 相对 H0 `full`
+为 `-2.29%`，相对 H0B `stochastic_prefix_k2` 为 `-0.27%`，相对 fixed 为 `-3.29%`，
+但相对 H1 `target_set_decoder_multiprefix` 仍为 `+0.43%`。它在 `12` 个 setting 中
+只赢 H1 `5/12`。
+
+[Counter-Evidence] `dense_prefix_residual_adapter_multiprefix` 相对 H1 为 `+5.04%`，
+`prefix_adapter_shared_dense_multiprefix` 相对 H1 为 `+10.89%`。这说明 output residual
+和 hidden low-rank adapter 都会破坏当前 TimeAlign readout balance。
+
+[Decision] H1C 不通过 paper-core gate。`row_gated_dense_head_multiprefix` 可作为
+capacity-preserving control 保留，但不能成为主线 decoder。这个失败只否定当前
+post-hoc residual/gate/adapter interface 族，不能否定 unified interface 作为论文主轴。
+下一步回 Step 2/3/6 设计 Stage A2：SCI-level unified interface redesign；future unit 的
+reconstruction difficulty、alignment consistency、residual volatility 与 segment-level unified
+gap 诊断可以并行准备，但不能替代 interface 主轴。只有 A2 再次失败后，才允许重新审稿评估
+是否放弃 interface、换 carrier 或重构论文路线。
+
+#### Phase5-A2：SCI-Level Unified Interface Redesign
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 6/7/8：完成 A2 最小 interface 设计与实现，准备 remote gate |
+| `problem` | H1 证明 prefix-aware interface 有价值；H1B 证明 random variable-prefix head 发生 capacity collapse；H1C 证明 post-hoc residual/gate/adapter 不能超过 H1 target-set。因此 A2 需要重新设计更有结构约束的 unified prediction interface |
+| `existence_evidence` | D0/H0/H1 均说明 interface/prefix supervision 是 material factor；H1C row-gated 相对 fixed 为 `-3.29%` 但相对 H1 为 `+0.43%`，说明保守 calibration 稳定但创新不足 |
+| `idea` | 不再做 full-720 crop 后的小修补，而是测试直接服务 requested prefix 的 output contract：dense-row initialized prefix decoder 与 nested segment decoder |
+| `theory_check` | 如果 H1B 失败主要来自随机 variable head 丢失 dense row capacity，则 dense-row initialized prefix decoder 应避免 collapse；如果 unified interface 需要 prefix-consistent composition，则 nested segment decoder 应优于单纯 720 crop/gate |
+| `design` | `dense_row_initialized_prefix_decoder_multiprefix` 直接用 `proj_x.weight[:H]` 读出 prefix，并加 zero-init low-rank delta；`nested_segment_decoder_multiprefix` 以 `[96,192,336,720]` boundaries 构造 nested segment heads |
+| `gate` | 必须超过 H1 `target_set_decoder_multiprefix` 和 H1C `row_gated_dense_head_multiprefix`；ETTm2 fixed gap 明显低于 H1 的 `+1.81%`；ETTh2 benefit 与 Weather no-harm 不丢失 |
+| `artifacts` | `baselines/timealign_official/models/TimeAlign.py`、`scripts/remote/run_phase5_timealign_hss_a2_interface_gate.sh`、`scripts/sync_phase5_timealign_hss_a2_results.sh`、`scripts/analyze_phase5_timealign_hss_a2_interface_gate.py` |
+| `decision` | 待 remote gate；若 A2 失败，不能直接转向 reliability routing，必须重新进行 SCI 级主线评估 |
+
+[Implementation] A2 当前只做两个最小 arms：
+
+- `dense_row_initialized_prefix_decoder_multiprefix`：区别于 H1B random dynamic head，它直接复用
+  dense head 的前 `H` 行作为 base，因此初始 output contract 等价于 dense-row prefix readout；
+- `nested_segment_decoder_multiprefix`：区别于 H1/H1C 的 720 output crop，它按 nested segments
+  组合 requested prefix，显式测试 prefix-consistent composition。
+
+[Gate Clarification] A2 不是增加更多 head sweep，而是测试 H1C 没有覆盖的两个结构假设：
+capacity preservation by dense-row initialization，以及 prefix consistency by nested composition。
+若二者都失败，才说明当前 TimeAlign carrier 上的 unified interface 主轴需要重新审稿评估。
 
 ## 历史证据索引
 
