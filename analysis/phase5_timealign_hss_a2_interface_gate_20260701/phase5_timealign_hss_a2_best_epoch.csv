@@ -1,0 +1,7 @@
+dataset,arm,pred_loss_mode,prefix_samples,best_epoch,best_val_mean_mse,last_epoch,last_val_mean_mse,last_gap_to_best_pct
+ETTh2,dense_row_initialized_prefix_decoder_multiprefix,multi-prefix,1,1,0.4492911472916603,10,0.5386448577046394,19.887707770697418
+ETTh2,nested_segment_decoder_multiprefix,multi-prefix,1,1,0.419258002191782,10,0.4563702791929245,8.851894730005938
+ETTm2,dense_row_initialized_prefix_decoder_multiprefix,multi-prefix,1,1,0.18324442766606808,10,0.188277967274189,2.7468991402530785
+ETTm2,nested_segment_decoder_multiprefix,multi-prefix,1,6,0.1820028517395258,10,0.18336629308760166,0.7491318597728114
+Weather,dense_row_initialized_prefix_decoder_multiprefix,multi-prefix,1,10,0.48941770195961,10,0.48941770195961,0.0
+Weather,nested_segment_decoder_multiprefix,multi-prefix,1,6,0.48841939121484756,10,0.4902370795607567,0.37215728503079415

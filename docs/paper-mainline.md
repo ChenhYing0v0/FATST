@@ -16,11 +16,11 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_11_step` | Phase5-A2：Step 7/8 已实现 SCI-level unified interface 最小 gate，准备 remote training |
+| `current_11_step` | Phase5-A2：Step 9/10/11 已完成；下一步回 Step 5/6 设计 A3 nested + capacity/teacher preservation |
 | `active_carrier` | official-source TimeAlign |
 | `active_question` | 如何设计 SCI 级 unified prediction interface，使其不是简单 prefix loss 或 post-hoc gate；以及 future supervision reliability 是否能在该 interface 上进一步带来贡献 |
-| `current_gate` | Stage A2 必须验证 `dense-row-initialized-prefix-decoder` 或 `nested-segment-decoder` 是否超过 H1 target-set / H1C row-gated controls；Stage B/D1 作为并行诊断准备 |
-| `paper_core_status` | H1C 不通过，但只否定当前 residual/gate/adapter 实现族；interface 主轴不能被降级为纯诊断 |
+| `current_gate` | Stage A3 必须让 nested-composition interface 超过 H1 target-set / H1C row-gated controls，并降低 ETTm2 fixed gap |
+| `paper_core_status` | A2 nested 是 partial pass；interface 主轴继续，但需要 capacity/teacher preservation 才有 paper-core 资格 |
 
 ## 顶级 SCI 审稿视角评判
 
@@ -262,10 +262,46 @@ Stage A2 gate：
 - 必须有结构解释：prefix consistency、capacity preservation 或 teacher preservation 至少成立一个；
 - 若 A2 仍失败，才允许从论文逻辑上放弃 interface 贡献，并必须重新构造 SCI 级新路线。
 
+A2 result：
+
+- `dense_row_initialized_prefix_decoder_multiprefix` 失败，ALL 相对 H1 `+5.39%`，相对 H1C
+  row-gated `+4.92%`，wins 均为 `0/12`；
+- `nested_segment_decoder_multiprefix` 是 partial pass，ALL 相对 H0 `full` 为 `-2.12%`，
+  相对 fixed 为 `-3.13%`，Weather 上 `4/4` horizon 赢 H1C；
+- 但 nested segment 仍未过 gate：ALL 相对 H1 `+0.61%`，相对 H1C `+0.18%`，ETTm2
+  fixed gap 仍约 `+1.81%`；
+- 因此 A2 不进入 final method，但保留 nested composition 作为 A3 substrate。
+
+### Stage A3：Nested Interface With Capacity / Teacher Preservation
+
+目标：保留 A2 nested composition 的正向信号，同时修复它相对 H1/H1C 仍不足的问题。A3 不是
+继续扩大 head sweep，而是围绕一个 substrate 做机制增强。
+
+优先候选：
+
+1. **Dense-Initialized Nested Segment Decoder**
+   用 `proj_x.weight` 与 `proj_x.bias` 的对应 row slices 初始化 nested segment heads，测试
+   nested composition + dense capacity preservation 是否能超过 H1/H1C。
+
+2. **Teacher-Preserved Nested Segment Decoder**
+   用 H1 target-set 或 H1C row-gated 作为 teacher，增加 prediction consistency /
+   distillation loss，防止 nested interface 丢失当前 best carrier 的输出能力。
+
+3. **Target-Conditioned Nested Segment Decoder**
+   在 nested segment heads 中加入 target-set condition，测试 H1 的 requested-prefix signal
+   能否与 nested composition 结合。
+
+A3 gate：
+
+- 必须超过 H1 `target_set_decoder_multiprefix` 和 H1C `row_gated_dense_head_multiprefix`；
+- ETTm2 fixed gap 必须明显低于 H1/A2 的约 `+1.81%`；
+- ETTh2 strong unified benefit 不能明显下降；
+- Weather 的 A2 nested gain 不能消失。
+
 ### Stage B：Future Supervision Reliability Diagnostic
 
 目标：证明 future supervision 的 useful/harmful 差异真实存在。该阶段可以和 Stage A2 并行
-准备 diagnostic，但不应替代 Stage A2 成为当前唯一主线，除非 interface 方向经过 A2 再次失败。
+准备 diagnostic，但不应替代 Stage A2/A3 成为当前唯一主线，除非 interface 方向经过 A3 再次失败。
 
 建议诊断：
 
@@ -389,16 +425,16 @@ Mechanism figures：
 
 ### 进入下一部分工作的条件
 
-- H1C 已不通过 paper-core gate；当前回 Step 2/3/6 设计 Stage A2 interface，而不是直接放弃 interface；
-- Stage A2 产生超过 H1/H1C controls 的 interface 后，进入 Stage B/D1 和 Stage C/M1/M2；
-- D1 可以并行准备诊断，但只有在 A2 或当前最强 interface carrier 上验证后，才能支撑方法主线；
+- H1C 已不通过 paper-core gate；A2 nested partial pass；当前回 Step 5/6 设计 Stage A3；
+- Stage A3 产生超过 H1/H1C controls 的 interface 后，进入 Stage B/D1 和 Stage C/M1/M2；
+- D1 可以并行准备诊断，但只有在 A3 或当前最强 interface carrier 上验证后，才能支撑方法主线；
 - M2 超过 loss-only control 后，进入 Stage D 主实验；
 - Stage D 稳定后，开始 paper writing 与 figure/table freeze。
 
 ### 暂停或转向条件
 
 - H1C 失败：停止当前 post-hoc readout sweep，但不停止 interface 主轴；回 Step 2/3/6 设计 A2；
-- A2 失败：必须重新进行顶级 SCI 审稿评估，再决定是放弃 interface、换 carrier，还是重构论文主线；
+- A3 失败：必须重新进行顶级 SCI 审稿评估，再决定是放弃 interface、换 carrier，还是重构论文主线；
 - D1 失败：不做 routing 方法，回 Step 2/3 重定义 supervision reliability；
 - M1/M2 只弱于 Stage A2/H1/H1C controls：不作为 paper-core，保留为 negative evidence；
 - 方法只在一个 dataset 上有效：不扩主表，先做 failure analysis；
