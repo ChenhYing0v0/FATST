@@ -382,8 +382,13 @@ Effectiveness gate：
 
 - 必须优于 A2 nested 与 A3B residual；
 - paper-core gate 要求接近或超过 H1 target-set / H1C row-gated；
-- 若 warm-start 后仍不能超过 H1/H1C，说明 primary nested interface 的瓶颈不只是 learned
-  capacity，Stage A 需要重新评估或转向 teacher consistency / supervision routing。
+- 若 warm-start 后仍不能超过 H1/H1C，只能说明 `learned capacity preservation` 这一分支不足以
+  修复 primary nested interface，不能直接判定 Stage A interface 主线失败；
+- A3C 失败后的 rollback point 是 Step 4/5/6：对 remaining primary-interface candidates
+  做 narrative-gate triage，优先评估 `teacher_preserved_nested_primary_decoder`、
+  `target_conditioned_nested_primary_decoder`，以及二者的最小组合；
+- 只有这些候选在 narrative gate 或 effectiveness gate 上连续失败，才进入 Stage A interface
+  主线的顶级 SCI 审稿式重评估。
 
 ### Stage B：Future Supervision Reliability Diagnostic
 
@@ -513,7 +518,8 @@ Mechanism figures：
 ### 进入下一部分工作的条件
 
 - H1C 已不通过 paper-core gate；A2 nested partial pass；A3-1 shallow initialization repair 不通过；
-- Stage A3-2 产生超过 H1/H1C controls 的 teacher/target-conditioned nested interface 后，进入 Stage B/D1 和 Stage C/M1/M2；
+- Stage A3 candidate triage 产生超过 H1/H1C controls 的 teacher-preserved 或
+  target-conditioned nested interface 后，进入 Stage B/D1 和 Stage C/M1/M2；
 - D1 可以并行准备诊断，但只有在 A3 或当前最强 interface carrier 上验证后，才能支撑方法主线；
 - M2 超过 loss-only control 后，进入 Stage D 主实验；
 - Stage D 稳定后，开始 paper writing 与 figure/table freeze。
@@ -521,7 +527,10 @@ Mechanism figures：
 ### 暂停或转向条件
 
 - H1C 失败：停止当前 post-hoc readout sweep，但不停止 interface 主轴；回 Step 2/3/6 设计 A2；
-- A3-2 失败：必须重新进行顶级 SCI 审稿评估，再决定是放弃 interface、换 carrier，还是重构论文主线；
+- A3C 失败：只否定 warm-started nested primary 这一候选；回 Step 4/5/6 对
+  teacher-preserved、target-conditioned 等 remaining primary-interface candidates 做 triage；
+- A3 candidate triage 失败：必须重新进行顶级 SCI 审稿评估，再决定是放弃 interface、换
+  carrier，还是重构论文主线；
 - D1 失败：不做 routing 方法，回 Step 2/3 重定义 supervision reliability；
 - M1/M2 只弱于 Stage A2/H1/H1C controls：不作为 paper-core，保留为 negative evidence；
 - 方法只在一个 dataset 上有效：不扩主表，先做 failure analysis；

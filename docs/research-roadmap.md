@@ -2332,7 +2332,19 @@ Step 4/5/6 设计 warm-started primary nested interface。
 | `narrative_gate` | 通过：保留 primary nested interface，且 learned capacity 来自已训练 checkpoint，不再是 shallow initialization 或 residual patch |
 | `effectiveness_gate` | 必须优于 A2 nested 与 A3B residual；paper-core gate 要求接近或超过 H1/H1C，并降低 ETTm2 fixed gap |
 | `artifacts` | `baselines/timealign_official/models/TimeAlign.py`、`baselines/timealign_official/train_repo.py`、`scripts/remote/run_phase5_timealign_hss_a3c_warm_started_nested_gate.sh`、`scripts/sync_phase5_timealign_hss_a3c_results.sh`、`scripts/analyze_phase5_timealign_hss_a3c_warm_started_nested_gate.py` |
-| `decision` | 待 remote gate；若 A3C 失败，Stage A 需要重新审稿评估，而不是继续 head initialization/residual sweep |
+| `decision` | 待 remote gate；若 A3C 失败，只否定 warm-started primary nested 分支，不直接否定 Stage A interface 主线；rollback 到 Step 4/5/6 进行 remaining-candidate triage，优先评估 `teacher_preserved_nested_primary_decoder`、`target_conditioned_nested_primary_decoder` 及其最小组合；只有这些候选也失败，才重新审稿评估 Stage A interface 主线 |
+
+[A3 Candidate Triage Rule] A3C 之后的候选选择不能退回到 shallow initialization 或 residual patch。
+候选必须同时满足两点：第一，nested/prefix-aware structure 是 primary prediction interface 的一部分；
+第二，在 Step 4-6 通过 narrative gate，能清楚解释为什么它比 dense full head 更适合作为 unified
+multi-horizon interface。当前保留的 paper-core candidates 是：
+
+- `teacher_preserved_nested_primary_decoder`：用 teacher full head 或 fixed-horizon teacher 保留原有
+  dense prediction capacity，同时让 nested interface 学习 prefix-consistent decomposition；
+- `target_conditioned_nested_primary_decoder`：把 target/prefix condition 显式注入 nested primary
+  head，让 decoder 不再先生成 720 再 crop，而是让 requested target set 进入预测头结构；
+- `teacher_preserved + target_conditioned` 最小组合：只在前两者分别具备 narrative gate 合理性后考虑，
+  避免把两个未证实机制直接叠加。
 
 ## 历史证据索引
 
