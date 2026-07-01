@@ -2360,7 +2360,7 @@ multi-horizon interface。当前保留的 paper-core candidates 是：
 
 | Field | Content |
 | --- | --- |
-| `current_step` | Step 8：A3D teacher-preserved nested remote gate 已启动 |
+| `current_step` | Step 9/10/11：评估 A3D teacher-preserved nested gate 并决定下一步 |
 | `problem` | A3C 证明 row-slice warm-start 不能让 nested primary 超过 H1/H1C；问题不是参数初值，而是 learned function 在切换到 nested interface 时缺少训练期 preservation constraint |
 | `existence_evidence` | A3C 相对 A2 仅 `+0.07%`，相对 H1/H1C 仍为 `+0.68%` / `+0.25%`，说明 warm-start 后仍未保留 H1 target-set function |
 | `idea` | 使用 H1 `target_set_decoder_multiprefix` 作为 frozen teacher；student 仍是 warm-started nested primary head；训练时同时优化 label loss 与 teacher consistency loss |
@@ -2368,8 +2368,23 @@ multi-horizon interface。当前保留的 paper-core candidates 是：
 | `design` | 两个 teacher strength arms：`teacher_preserved_nested_w03` 与 `teacher_preserved_nested_w10`；二者均从 H1 checkpoint warm-start，并用同一 H1 checkpoint 作为 target-set teacher |
 | `narrative_gate` | 通过：它直接服务 `Capacity-Preserving Prefix-Aware Interface`，且是 A3C 失败后的最小机制修复，不是 residual patch 或 shallow initialization |
 | `effectiveness_gate` | 必须优于 A3C/A2；paper-core gate 要求接近或超过 H1/H1C；若只接近 H1 但无 prefix/nested 行为收益，则降级为 teacher-preservation diagnostic |
-| `artifacts` | `baselines/timealign_official/train_repo.py`、`scripts/remote/run_phase5_timealign_hss_a3d_teacher_preserved_nested_gate.sh`、`scripts/sync_phase5_timealign_hss_a3d_results.sh`、`scripts/analyze_phase5_timealign_hss_a3d_teacher_preserved_nested_gate.py` |
-| `decision` | remote gate 已启动；commit `354e895`；GPU 0/1/2 预检均为空闲；remote PID `3848377`；输出路径 `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a3d_teacher_preserved_nested_gate` |
+| `artifacts` | `analysis/phase5_timealign_hss_a3d_teacher_preserved_nested_gate_20260701/`、`baselines/timealign_official/train_repo.py`、`scripts/remote/run_phase5_timealign_hss_a3d_teacher_preserved_nested_gate.sh`、`scripts/sync_phase5_timealign_hss_a3d_results.sh`、`scripts/analyze_phase5_timealign_hss_a3d_teacher_preserved_nested_gate.py` |
+| `decision` | A3D 为 `partial_pass`；`w03` 相对 A3C `-0.73%`、相对 H1 `-0.06%`、相对 H1C `-0.48%`，说明 teacher preservation 有效；但 ETTm2 仍负，不能作为 paper-core。下一步进入 A3E target-conditioned nested primary |
+
+### Phase5-A3E：Target-Conditioned Nested Primary Interface
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 6/7/8：设计、实现并启动 A3E target-conditioned nested gate |
+| `problem` | A3D 保留 H1 function 但不能解决 minute-level failure；当前缺口更像 requested target set 没有进入 primary nested head，导致 nested decomposition 缺少 target-prefix specialization |
+| `existence_evidence` | A3D teacher loss 下降且 overall 接近 H1/H1C，说明 capacity/function preservation 有效；但 ETTm2 仍弱。为避免只围绕 ETTm2 单一数据集决策，本轮用 ETTm1 替换 ETTm2 并重建 reference |
+| `idea` | 将 target-prefix condition 直接注入 primary nested head 的 hidden representation，而不是在 dense residual 或 teacher loss 中间接作用 |
+| `theory_check` | A3C 已证明 warm-start alone 无效；因此 A3E warm arm 只作为和 A3C 对齐的 initialization control。若 warm arm 优于 A3C/A3D，增量来自 target conditioning；scratch arm 只判断该结构是否独立于 H1 initialization |
+| `design` | 数据集改为 `ETTh2 + ETTm1 + Weather`。先补跑 ETTm1 fixed、H1 target-set、H1C row-gated、A2 nested、A3C warm、A3D w03 references，再跑 A3E 双臂：`target_conditioned_nested_warm` 与 `target_conditioned_nested_scratch` |
+| `narrative_gate` | 通过：它直接回答 multi-prefix evaluation 与 prediction head 不一致的问题；warm-start 不作为机制贡献 |
+| `effectiveness_gate` | warm arm 必须优于 A3C，并接近或超过 A3D/H1/H1C；特别要在 ETTm1 上验证 minute-level interface gap 是否可被 target conditioning 修复。scratch arm 若失败，不直接否定 warm arm，但说明 capacity initialization 仍是必要条件 |
+| `artifacts` | `baselines/timealign_official/models/TimeAlign.py`、`baselines/timealign_official/train_repo.py`、`scripts/remote/run_phase5_timealign_hss_a3e_ettm1_replacement_gate.sh`、`scripts/remote/run_phase5_timealign_hss_a3e_target_conditioned_nested_gate.sh`、`scripts/sync_phase5_timealign_hss_a3e_ettm1_results.sh`、`scripts/analyze_phase5_timealign_hss_a3e_ettm1_replacement_gate.py` |
+| `decision` | 待 remote gate |
 
 ## 历史证据索引
 

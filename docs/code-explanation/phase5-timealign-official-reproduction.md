@@ -136,6 +136,20 @@ official head；如果 H1 有收益，收益应来自模型学会按 requested p
 并不是真正的 decoder head。它仍然使用 `proj_x: Linear(...,720)`，只是 projection 前的
 hidden 被 requested prefix 调制。
 
+## ETTm1 Official Preset
+
+`train_repo.py` 新增 `ETTm1` preset，来源是 vendored official TimeAlign
+`scripts/ETTm1.sh`，不是从 ETTm2 机械复制：
+
+- `h96/h192`: `d_model=128`, `d_ff=256`, `dropout=0.2`, `w_align=0.1`,
+  `patch_num=1`, `local_margin=0.5`;
+- `h336`: 同上但 `dropout=0.8`;
+- `h720`: `d_model=256`, `d_ff=256`, `dropout=0.9`, `w_align=0.1`,
+  `patch_num=1`, `local_margin=0.5`;
+- `freq=t`, `enc_in=dec_in=c_out=7`, `relative_root=ETT-small`。
+
+unified-720 / HSS runs 使用 h720 preset；fixed references 按各自 horizon 使用对应 preset。
+
 ## H1B Variable-Prefix Readout
 
 H1B 新增两个真正改变 prediction head 结构的 `--readout-mode`：
@@ -687,6 +701,68 @@ Code-theory consistency：
 - falsification: if A3D does not beat A3C/A2, then teacher consistency is insufficient to turn nested primary
   into a paper-core interface; if it only imitates H1 without reducing any prefix/interface gap, it should be
   treated as teacher-preservation diagnostic rather than a final method.
+
+## A3E Target-Conditioned Nested Primary Interface
+
+A3E 的核心不是 warm-start。A3C 已经证明 row-slice warm-start alone 不是有效机制。A3E 使用两个
+arms 来隔离机制：
+
+```text
+target_conditioned_nested_warm:
+  same H1 warm-start as A3C
+  + target-conditioned nested modulation
+  => tests target-conditioning delta over A3C
+
+target_conditioned_nested_scratch:
+  no H1 warm-start
+  + same target-conditioned nested modulation
+  => diagnostic/control for initialization dependency
+```
+
+Model path：
+
+```text
+hidden [B, C, R]
+target_prefix -> scalar [prefix / pred_len]
+condition = zero-init MLP(scalar) -> [R]
+conditioned_hidden = hidden + hidden * tanh(condition)
+conditioned_hidden -> nested segment heads -> concat needed segments -> [B, H, C]
+```
+
+The final projection remains a primary nested head. It is not `proj_x + residual`, and it does not generate
+720 steps and then use target condition only as a post-hoc gate.
+
+Code-theory consistency：
+
+- target-prefix enters the primary nested head before segment prediction, so A3E directly tests whether
+  requested target set should be a decoder/head variable;
+- zero-init modulation makes the warm arm initially equivalent to A3C, so any difference after training is
+  attributable to learned target conditioning under the same initialization;
+- scratch arm is diagnostic only. If it fails while warm succeeds, the conclusion is not that warm-start is
+  the mechanism, but that target-conditioned nested still needs capacity initialization.
+
+### A3E ETTm1 Replacement Gate
+
+本轮 A3E 按用户要求用 `ETTm1` 替换 `ETTm2`，dataset universe 改为：
+
+```text
+ETTh2 + ETTm1 + Weather
+```
+
+因为 ETTm1 过去没有跑过 references，`run_phase5_timealign_hss_a3e_ettm1_replacement_gate.sh`
+按依赖顺序补齐：
+
+1. ETTm1 official fixed references；
+2. ETTm1 H1 `target_set_decoder_multiprefix` checkpoint；
+3. ETTm1 H1C `row_gated_dense_head_multiprefix`；
+4. ETTm1 A2 `nested_segment_decoder_multiprefix`；
+5. ETTm1 A3C warm-started nested；
+6. ETTm1 A3D `teacher_preserved_nested_w03`；
+7. A3E warm/scratch on `Weather ETTm1 ETTh2`。
+
+`analyze_phase5_timealign_hss_a3e_ettm1_replacement_gate.py` 不读取旧的 ETTm2 summary CSV。
+它从同步后的 remote raw metrics 重新构造 fixed/H1/H1C/A2/A3C/A3D references，并只在
+`ETTh2 + ETTm1 + Weather` 上计算 A3E comparison。
 
 ## Code-Theory Consistency
 

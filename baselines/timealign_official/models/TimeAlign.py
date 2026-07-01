@@ -87,6 +87,7 @@ class Model(nn.Module):
             "dense-initialized-nested-segment-decoder",
             "target-conditioned-nested-residual-decoder",
             "checkpoint-initialized-nested-segment-decoder",
+            "target-conditioned-nested-segment-decoder",
         }
         self.capacity_preserving_modes = {
             "dense-prefix-residual-adapter",
@@ -153,6 +154,7 @@ class Model(nn.Module):
             "dense-initialized-nested-segment-decoder",
             "target-conditioned-nested-residual-decoder",
             "checkpoint-initialized-nested-segment-decoder",
+            "target-conditioned-nested-segment-decoder",
         }
         if self.readout_mode in self.nested_readout_modes:
             boundaries = sorted(set(getattr(configs, "target_horizons", [configs.pred_len])))
@@ -172,6 +174,14 @@ class Model(nn.Module):
                     self.nested_segment_heads.append(head)
                     previous = boundary
             else:
+                if self.readout_mode == "target-conditioned-nested-segment-decoder":
+                    self.nested_primary_condition = nn.Sequential(
+                        nn.Linear(1, adapter_dim),
+                        nn.GELU(),
+                        nn.Linear(adapter_dim, readout_dim),
+                    )
+                    nn.init.zeros_(self.nested_primary_condition[-1].weight)
+                    nn.init.zeros_(self.nested_primary_condition[-1].bias)
                 self.nested_segment_heads = nn.ModuleList()
                 for boundary in self.nested_boundaries:
                     head = nn.Linear(readout_dim, boundary - previous)
@@ -302,6 +312,12 @@ class Model(nn.Module):
         residual = torch.cat(segments, dim=-1)
         return (base + residual).permute(0, 2, 1)
 
+    def _target_conditioned_nested_segment_decoder(self, hidden, target_prefix):
+        # hidden: [B, C, R], output: [B, H, C]
+        condition = torch.tanh(self.nested_primary_condition(self._prefix_scalar_feature(target_prefix, hidden))).view(1, 1, -1)
+        conditioned_hidden = hidden + hidden * condition
+        return self._nested_segment_decoder(conditioned_hidden, target_prefix)
+
     def forward(self, x, y, is_training=True, target_prefix=None):
         # [B, L, C]   [B, T, C]
         B, T, C = x.shape
@@ -345,6 +361,8 @@ class Model(nn.Module):
             "checkpoint-initialized-nested-segment-decoder",
         }:
             x = self._nested_segment_decoder(x.flatten(start_dim=-2), target_prefix)
+        elif self.readout_mode == "target-conditioned-nested-segment-decoder":
+            x = self._target_conditioned_nested_segment_decoder(x.flatten(start_dim=-2), target_prefix)
         elif self.readout_mode == "target-conditioned-nested-residual-decoder":
             x = self._target_conditioned_nested_residual_decoder(x.flatten(start_dim=-2), target_prefix)
         else:

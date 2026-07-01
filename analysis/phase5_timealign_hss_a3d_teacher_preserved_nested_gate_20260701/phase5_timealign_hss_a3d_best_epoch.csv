@@ -1,0 +1,7 @@
+dataset,arm,pred_loss_mode,prefix_samples,best_epoch,best_val_mean_mse,last_epoch,last_val_mean_mse,last_gap_to_best_pct
+ETTh2,teacher_preserved_nested_w03,multi-prefix,1,4,0.4472283273935318,10,0.45383748412132263,1.4778036906359038
+ETTh2,teacher_preserved_nested_w10,multi-prefix,1,3,0.4361432231962681,10,0.4429843910038471,1.568559923376478
+ETTm2,teacher_preserved_nested_w03,multi-prefix,1,5,0.18175404705107212,10,0.1822157222777605,0.2540109748195407
+ETTm2,teacher_preserved_nested_w10,multi-prefix,1,5,0.18159853480756283,10,0.18219269067049026,0.32718097839117277
+Weather,teacher_preserved_nested_w03,multi-prefix,1,9,0.48963163793087006,10,0.49047140032052994,0.17150901302225297
+Weather,teacher_preserved_nested_w10,multi-prefix,1,1,0.49055036902427673,10,0.4909132868051529,0.0739817567761758
