@@ -19,11 +19,11 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | A3E 处于 Step 9/10/11：ETTm1 replacement gate 已分析，决定 rollback |
-| `current_candidate` | `A3E_target_conditioned_nested_primary` |
-| `latest_decision` | A3E 不通过 paper-core gate：ALL 相对 A3C 仅 `-0.25/-0.26%`，相对 A3D/H1 仍为正 gap；ETTm1 上 A3C 仍最强 |
-| `next_required_action` | 回 Step 2/3/4 设计 `interface reliability diagnostic`，不要直接叠加 A3F |
-| `rollback_point` | 回 Step 2/3/4：重定义 Stage A 问题，从 universal prefix-aware head 转向 capacity-preserving path 的 reliability 分析 |
+| `current_11_step` | A4R 处于 Step 3/4/11：现有 training-log signals 已诊断，决定不进入 learned routing |
+| `current_candidate` | `A4R_reliability_signal_diagnostic` |
+| `latest_decision` | 现有日志信号不足：ALL-level 最强 `last_train_alignment_loss` 的 Spearman 仅 `0.321`，不能解释 per-horizon best-path map |
+| `next_required_action` | 设计 A4S validation-prefix signal export：导出 prefix-wise validation MSE、teacher-student disagreement、prefix residual，再判断是否存在可部署 routing signal |
+| `rollback_point` | 若 A4S 仍找不到可观测 reliability signal，则回 Step 2/3 重审 Stage A contribution，不能直接实现 routing |
 
 ## Candidate Queue
 
@@ -33,6 +33,9 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | `A3D_teacher_preserved_nested_primary` | `partial_pass` | full head/teacher 保留 dense prediction capacity，nested primary head 学习 prefix-consistent decomposition，可避免直接替换 head 带来的 capacity loss | passed：它直接修复 A3C 暴露的 function-preservation gap，且 nested 仍是 primary interface | 部分通过：`w03` overall 接近/略超 H1/H1C，但 ETTm2 仍失败 | 保留为 partial evidence，不直接作为 paper-core | `analysis/phase5_timealign_hss_a3d_teacher_preserved_nested_gate_20260701/` |
 | `A3E_target_conditioned_nested_primary` | `failed_as_core_candidate` | requested target set/prefix condition 应进入 decoder/head 本身，而不是 condition before 720-step projection 后再 crop | passed：它直接解决 multi-prefix evaluation 与 unified head 不一致；warm-start 只作为与 A3C 对齐的 initialization control，不作为机制贡献 | 未通过：ALL 相对 A3C 只有约 `-0.25%`，相对 A3D/H1 仍弱；ETTm1 上不如 A3C | 保留为 negative evidence；下一步做 reliability diagnostic，不直接进入 A3F | `analysis/phase5_timealign_hss_a3e_ettm1_replacement_gate_20260701/phase5_timealign_hss_a3e_ettm1_deep_dive.md` |
 | `A3F_teacher_preserved_target_conditioned_nested` | `deferred` | teacher preservation 解决 capacity，target conditioning 解决 requested-prefix specialization，二者组合可能形成最终 paper-core interface | 仅在 A3D/A3E 各自通过 narrative gate 后评估，避免未证实机制堆叠 | 必须超过单机制候选，且不能只靠参数量提升 | 等 A3D/A3E 至少一个 partial/pass 后再考虑 | pending |
+| `A4_interface_reliability_diagnostic` | `diagnostic_only` | A3D/A3E/A3C/A2/H1/H1C 的相对表现可能说明 capacity-preserving path 的可靠性随 future context 变化，而不是存在一个 universal head | not_required：launch 前定义为 diagnostic，不可直接升级为 paper-core | 已完成：best path 分散，oracle 上限存在但较小；只证明 reliability 差异存在，不证明可部署 routing | 进入 A4R signal diagnostic；禁止把 dataset/horizon 手工选择当作方法 | `analysis/phase5_timealign_hss_a4_interface_reliability_diagnostic_20260701/phase5_timealign_hss_a4_interface_reliability_diagnostic.md` |
+| `A4R_reliability_signal_diagnostic` | `diagnostic_only` | 若可观测 signals 能预测 path reliability 或 gap-to-best，则 Stage A 可重构为 `Reliability-Aware Capacity-Preserving Interface`，避免弱化为 manual routing | not_required：使用现有日志的 diagnostic-only | 未通过：ALL-level 最强 signal Spearman `0.321`，且 dataset 内方向不稳定 | 不进入 routing；下一步 A4S 设计更明确的 validation-prefix signal export | `analysis/phase5_timealign_hss_a4r_reliability_signal_diagnostic_20260701/phase5_timealign_hss_a4r_reliability_signal_diagnostic.md` |
+| `A4S_validation_prefix_signal_export` | `proposed` | 当前日志过粗，缺少 prefix-wise validation behavior；若 prefix validation residual / teacher-student disagreement 能解释 path reliability，才有资格进入 routing method | diagnostic 阶段 not_required；若后续作为 paper-core signal，必须重新过 narrative gate | 待设计：只导出精简 validation diagnostics，避免大规模保存 predictions | 下一步实现轻量 diagnostic export 或先做最小远程 gate 设计 | pending |
 | `A3B_nested_residual_gate` | `failed_as_core_candidate` | nested structure 作为 residual path 可修复 dense head 的 prefix behavior | failed：nested 变成 dense head 附属补丁，削弱 primary interface 叙事 | 0/12 win，不能作为 paper-core | 仅保留为 negative evidence/control | `analysis/phase5_timealign_hss_a3b_nested_residual_gate_20260701/` |
 | `A3A_dense_initialized_nested_segment` | `failed_as_core_candidate` | 随机 dense row-copy 可作为 capacity-preserving repair | failed：随机初始化复制不等于 learned capacity preservation | 不通过 | 标记为设计错误，不再沿用 | `analysis/phase5_timealign_hss_a3_interface_repair_20260701/` |
 | `A2_nested_segment_primary` | `partial_pass` | nested segment primary interface 可能比 full dense head 更适配 multi-prefix evaluation | partial：有结构叙事，但 capacity 不足 | 有正向信号但不足以 paper-core | 作为 A3D/A3E 的机制来源 | `analysis/phase5_timealign_hss_a2_interface_gate_20260630/` |
@@ -48,6 +51,8 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | A3C warm-started nested | `A3C_warm_started_nested_primary` | method candidate | 相对 A2 `+0.07%`，相对 A3B `-4.06%`，相对 H1 `+0.68%`，相对 H1C `+0.25%` | `failed_as_core_candidate` | `analysis/phase5_timealign_hss_a3c_warm_started_nested_gate_20260701/phase5_timealign_hss_a3c_interpretation.md` |
 | A3D teacher-preserved nested | `A3D_teacher_preserved_nested_primary` | method candidate | `w03` 相对 A3C `-0.73%`，相对 H1 `-0.06%`，相对 H1C `-0.48%`，但 ETTm2 仍负；deep dive 判断 teacher preservation 有效但缺 target-prefix specialization | `partial_pass` | `analysis/phase5_timealign_hss_a3d_teacher_preserved_nested_gate_20260701/phase5_timealign_hss_a3d_deep_dive.md` |
 | A3E target-conditioned nested | `A3E_target_conditioned_nested_primary` | method candidate | warm/scratch ALL 相对 A3C `-0.25/-0.26%`，但相对 A3D/H1 仍弱；ETTm1 上 A3C 仍最强 | `failed_as_core_candidate` | `analysis/phase5_timealign_hss_a3e_ettm1_replacement_gate_20260701/phase5_timealign_hss_a3e_ettm1_deep_dive.md` |
+| A4 interface reliability diagnostic | `A4_interface_reliability_diagnostic` | diagnostic | best path map 分散；ALL best static 为 A3D，oracle 相对 best static `-0.431%`，说明 reliability 差异真实但手工 routing 叙事弱 | `diagnostic_only_completed` | `analysis/phase5_timealign_hss_a4_interface_reliability_diagnostic_20260701/phase5_timealign_hss_a4_interface_reliability_diagnostic.md` |
+| A4R existing-log signal diagnostic | `A4R_reliability_signal_diagnostic` | diagnostic | 现有 training-log signals 解释力不足：ALL 最强 Spearman `0.321`，dataset 内方向不稳定 | `diagnostic_only_failed` | `analysis/phase5_timealign_hss_a4r_reliability_signal_diagnostic_20260701/phase5_timealign_hss_a4r_reliability_signal_diagnostic.md` |
 
 ## Pending Tasks
 
@@ -59,7 +64,10 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | 分析 A3D 结果 | Codex | 用户通知远程完成 | `completed` | A3D 标为 partial_pass；下一步进入 A3E |
 | 启动 A3E ETTm1 replacement remote gate | Codex | A3E implementation verification 通过且 ETTm1 presets/sync 已补齐 | `completed` | 已在 3090 启动，等待用户通知完成后同步分析 |
 | 分析 A3E ETTm1 replacement gate | Codex | 用户通知远程完成 | `completed` | A3E 标为 failed_as_core_candidate；下一步回 Step 2/3/4 做 reliability diagnostic |
-| paper-mainline 同步检查 | Codex | A3C 或 A3D/A3E 产生 pass/fail_as_family 结论 | `pending` | 只有影响贡献边界或主实验安排时修改 `docs/paper-mainline.md` |
+| A4 interface reliability diagnostic | Codex | A3E 失败后 rollback 到 Step 2/3/4 | `completed` | 已生成 A4 diagnostic；下一步 A4R signal diagnostic |
+| A4R reliability signal diagnostic 设计 | Codex | A4 证明 best-path reliability 差异存在但不能直接手工 routing | `completed` | 现有日志信号不足，不启动 routing |
+| A4S validation-prefix signal export 设计 | Codex | A4R 证明现有 logs 太粗 | `pending` | 设计 prefix-wise validation MSE / teacher-student disagreement / prefix residual 导出 |
+| paper-mainline 同步检查 | Codex | A4 将 Stage A 从 universal head 改为 reliability-aware interface 诊断 | `completed` | 已同步当前状态与贡献边界，不改变 working title |
 
 ## Paper Mainline Sync Log
 
@@ -70,6 +78,8 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | 2026-07-01 | A3C 不通过 paper-core gate | `当前状态` | 当前阶段状态更新 | active candidate 从 A3C 切换为 A3D，不改变论文贡献边界 |
 | 2026-07-01 | A3D partial pass | `当前状态` | 当前阶段状态更新 | active candidate 从 A3D 切换为 A3E，不改变论文贡献边界 |
 | 2026-07-01 | A3E ETTm1 replacement gate 失败 | `当前状态` | 当前阶段状态更新 | 不直接进入 A3F；先回 Step 2/3/4 做 interface reliability diagnostic |
+| 2026-07-01 | A4 reliability diagnostic 完成 | `当前状态` / `修订后的论文主线` | 贡献边界微调 | Stage A 不写成 universal head，也不写成手工 routing；下一步先验证可观测 reliability signals |
+| 2026-07-01 | A4R existing-log signal diagnostic 完成 | `当前状态` | 转向规则细化 | 现有 logs 不足以解释 path reliability；下一步只做 validation-prefix signal export，不进入 routing |
 
 ## Remote Launch Log
 
@@ -87,5 +97,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 - 用户要求加入 ETTm1 替换 ETTm2；A3E analysis universe 改为 `ETTh2 + ETTm1 + Weather`。ETTm1 过去没有 references，必须先补跑 fixed/H1/H1C/A2/A3C/A3D。
 - A3E 已失败为 paper-core：target conditioning 进入 primary nested head 的增量太小，且 ETTm1 上 A3C 仍是最强候选。
 - 不要直接进入 A3F `teacher_preserved + target_conditioned`；两个组成机制在 ETTm1 上没有同时正向，叠加会违反 narrative gate。
+- A4 诊断显示 best path 分散，但 oracle routing 上限较小：ALL 相对 best static A3D 只有 `-0.431%`。这支持 reliability 问题真实存在，但不支持把 dataset/horizon 手工选择路径写成最终方法。
+- A4R 使用现有 training logs 后发现 signals 太粗：ALL 最强 Spearman 只有 `0.321`。下一步必须新增 prefix-wise validation diagnostic export，而不是直接实现 routing。
 - 不允许再把 residual patch 或 shallow initialization 当作 paper-core interface 候选。
 - 详细 metric 和诊断报告不要写入本文件，只写 conclusion summary 和 artifact path。

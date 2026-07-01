@@ -2386,6 +2386,36 @@ multi-horizon interface。当前保留的 paper-core candidates 是：
 | `artifacts` | `baselines/timealign_official/models/TimeAlign.py`、`baselines/timealign_official/train_repo.py`、`scripts/remote/run_phase5_timealign_hss_a3e_ettm1_replacement_gate.sh`、`scripts/remote/run_phase5_timealign_hss_a3e_target_conditioned_nested_gate.sh`、`scripts/sync_phase5_timealign_hss_a3e_ettm1_results.sh`、`scripts/analyze_phase5_timealign_hss_a3e_ettm1_replacement_gate.py` |
 | `decision` | A3E 标记为 `failed_as_core_candidate`。target conditioning 直接进入 primary nested head 的增量不足，且没有解决 ETTm1；暂不进入 A3F，rollback 到 Step 2/3/4 做 `interface reliability diagnostic`，重新判断 Stage A 是否应从 universal prefix-aware head 转向 capacity-preserving path reliability |
 
+### Phase5-A4：Interface Reliability Diagnostic
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 3/4：A3E 失败后，先诊断问题存在性与下一步 idea，而不是直接实现新 head |
+| `problem` | 若不同 dataset/horizon 下手工选择不同 capacity-preserving path，论文叙事会变弱；需要判断这到底是 ad hoc tuning，还是存在可进一步建模的 path reliability 问题 |
+| `existence_evidence` | A3D 在 ETTh2 较强，A3C 在 ETTm1 较强，A2/fixed 在 Weather 部分 horizon 较强；A3E 没能统一这些差异 |
+| `idea` | 将已有 paths 视作 offline probes，构建 best-path map、path reliability summary 和 oracle routing upper bound；只判断 reliability 差异是否真实存在，不提出最终方法 |
+| `theory_check` | 如果 best path 分散且 oracle 相对 best static 有非零上限，说明 universal head 假设不足；但若 oracle 上限很小或只能用 dataset/horizon oracle 解释，则不能直接做 routing 方法 |
+| `design` | 使用 `ETTh2 + ETTm1 + Weather` 上 fixed、H1、H1C、A2、A3C、A3D、A3E warm/scratch 的 per-horizon MSE，输出 path-level、family-level、best-path map 和 oracle routing summaries |
+| `narrative_gate` | not_required：本实验 launch 前定义为 diagnostic-only，不可直接升级为 paper-core |
+| `effectiveness_gate` | 已完成：ALL best static 为 `a3d_teacher_preserved`，per-setting oracle 相对 best static 只有 `-0.431%`；best path 分散但 oracle 上限较小 |
+| `artifacts` | `analysis/phase5_timealign_hss_a4_interface_reliability_diagnostic_20260701/`、`scripts/analyze_phase5_timealign_hss_a4_interface_reliability.py` |
+| `decision` | reliability 差异真实存在，但不能写成手工 dataset/horizon routing。下一步进入 A4R signal diagnostic：只验证可观测 reliability signals 是否能解释 path reliability；若不能，Stage A 回 Step 2/3 重审贡献 |
+
+### Phase5-A4R：Existing-Log Reliability Signal Diagnostic
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 3/4/11：评估现有 training logs 是否已经包含足够 reliability signal，并决定是否进入 routing |
+| `problem` | A4 只证明 offline best-path 分散；若没有可观测 signal，routing 会退化成 test-oracle 或手工 dataset/horizon 规则 |
+| `existence_evidence` | A4 ALL oracle 相对 best static 有 `-0.431%` 上限，但该上限较小，必须先找 signal 而不是直接实现 method |
+| `idea` | 使用已有 training logs 中的 validation/training quantities 作为 proxy signals，检查它们与 `gap_to_best` 的相关性 |
+| `theory_check` | 如果 best/last validation MSE、prediction L1、alignment loss 或 teacher L1 能稳定解释 gap-to-best，则可继续设计 reliability-aware interface routing；若相关性弱或方向不稳，说明现有 logs 太粗 |
+| `design` | 将 A4 `all_paths` 中每个 path/horizon row 与其 `training_log.csv` 对齐，提取 best/last validation MSE、last gap to best-val、train prediction L1、horizon prediction L1、reconstruction L1、alignment loss、teacher L1，并计算 Pearson/Spearman 相关 |
+| `narrative_gate` | not_required：diagnostic-only，不作为 paper-core |
+| `effectiveness_gate` | 未通过：ALL 最强 signal `last_train_alignment_loss` Spearman 仅 `0.321`；dataset 内有局部相关但方向不稳，且多数 signals 不是 horizon-specific |
+| `artifacts` | `analysis/phase5_timealign_hss_a4r_reliability_signal_diagnostic_20260701/`、`scripts/analyze_phase5_timealign_hss_a4r_reliability_signals.py` |
+| `decision` | 不进入 learned routing；下一步 A4S 只能做轻量 prefix-wise validation signal export，例如 prefix validation MSE、teacher-student disagreement by prefix、prefix residual。若 A4S 仍失败，则回 Step 2/3 重审 Stage A contribution |
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：
