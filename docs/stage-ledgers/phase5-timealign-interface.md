@@ -19,10 +19,10 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | A3E 处于 Step 7/8：target-conditioned nested primary 已实现；本轮加入 ETTm1 替换 ETTm2，并补跑 ETTm1 references 后进入 remote gate |
+| `current_11_step` | A3E 处于 Step 8：ETTm1 replacement remote gate 已启动 |
 | `current_candidate` | `A3E_target_conditioned_nested_primary` |
 | `latest_decision` | A3D 为 `partial_pass`：`w03` 相对 A3C `-0.73%`、相对 H1 `-0.06%`、相对 H1C `-0.48%`，但 ETTm2 仍负，不能作为 paper-core |
-| `next_required_action` | 启动 A3E ETTm1 replacement gate：先补 ETTm1 fixed/H1/H1C/A2/A3C/A3D references，再跑 A3E warm/scratch on `Weather ETTm1 ETTh2` |
+| `next_required_action` | 等待 A3E ETTm1 replacement gate 完成；完成后同步 artifacts 并分析 `target_conditioned_nested_warm/scratch` |
 | `rollback_point` | A3E 失败时才评估 A3F 最小组合或重审 Stage A interface family |
 
 ## Candidate Queue
@@ -57,7 +57,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | A3C 失败后的 candidate triage | Codex | A3C effectiveness gate 不通过 | `completed` | A3D 通过 narrative gate，优先启动；A3E 保留 proposed |
 | 启动 A3D remote gate | Codex | A3D implementation verification 通过 | `completed` | 已在 3090 启动，等待用户通知完成后同步分析 |
 | 分析 A3D 结果 | Codex | 用户通知远程完成 | `completed` | A3D 标为 partial_pass；下一步进入 A3E |
-| 启动 A3E ETTm1 replacement remote gate | Codex | A3E implementation verification 通过且 ETTm1 presets/sync 已补齐 | `pending` | commit/push 后远程 git pull，预检 GPU 并启动 |
+| 启动 A3E ETTm1 replacement remote gate | Codex | A3E implementation verification 通过且 ETTm1 presets/sync 已补齐 | `completed` | 已在 3090 启动，等待用户通知完成后同步分析 |
 | paper-mainline 同步检查 | Codex | A3C 或 A3D/A3E 产生 pass/fail_as_family 结论 | `pending` | 只有影响贡献边界或主实验安排时修改 `docs/paper-mainline.md` |
 
 ## Paper Mainline Sync Log
@@ -74,6 +74,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | Date | Candidate | Commit | GPU Preflight | Remote PID | Output Path | Launcher Log |
 | --- | --- | --- | --- | --- | --- | --- |
 | 2026-07-01 | `A3D_teacher_preserved_nested_primary` | `354e895` | GPU 0/1/2 all free: `18 MiB used`, `24107 MiB free` each | `3848377` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a3d_teacher_preserved_nested_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a3d_teacher_preserved_nested_gate/_launcher/a3d_launcher.log` |
+| 2026-07-01 | `A3E_target_conditioned_nested_primary_ettm1_replacement` | `0a59296` | GPU 0/1/2 all free: `18 MiB used`, `24107 MiB free` each | `3942988` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a3e_target_conditioned_nested_gate` plus ETTm1 reference roots | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a3e_ettm1_replacement_gate/_launcher/a3e_ettm1_launcher.log` |
 
 ## Notes For Next Continuation
 
@@ -82,5 +83,6 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 - 当前优先 A3E；A3E 的 warm arm 只能解释为对齐 A3C 的 initialization control，不能把 warm-start 当作机制贡献。
 - 2026-07-01 artifact audit 未发现远端 A3E 结果目录或 launcher log；A3E 仍是 pending remote gate，不应被当作已完成实验分析。
 - 用户要求加入 ETTm1 替换 ETTm2；A3E analysis universe 改为 `ETTh2 + ETTm1 + Weather`。ETTm1 过去没有 references，必须先补跑 fixed/H1/H1C/A2/A3C/A3D。
+- A3E ETTm1 replacement gate 已启动；当前 first step 是 ETTm1 official fixed reference，三张 GPU 同时运行。
 - 不允许再把 residual patch 或 shallow initialization 当作 paper-core interface 候选。
 - 详细 metric 和诊断报告不要写入本文件，只写 conclusion summary 和 artifact path。
