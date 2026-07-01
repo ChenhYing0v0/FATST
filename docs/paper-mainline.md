@@ -25,11 +25,11 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_11_step` | Phase5-A3：A3-1 Step 9/10/11 已完成；下一步回 Step 5/6 设计 teacher/target-conditioned nested preservation |
+| `current_11_step` | Phase5-A3B：Step 6/7/8，验证 target-conditioned nested residual 是否修复 A3-1 的 shallow initialization 错误 |
 | `active_carrier` | official-source TimeAlign |
 | `active_question` | 如何设计 SCI 级 unified prediction interface，使其不是简单 prefix loss 或 post-hoc gate；以及 future supervision reliability 是否能在该 interface 上进一步带来贡献 |
-| `current_gate` | Stage A3-2 必须证明 nested interface 的收益来自 learned capacity / target condition preservation，而不是 shallow initialization |
-| `paper_core_status` | A3-1 不通过；nested interface 主轴仍保留，但 paper-core 必须转向 teacher-preserved 或 target-conditioned nested route |
+| `current_gate` | Stage A3B 必须优于 A2 nested / A3-1 shallow，并超过 H1 target-set 或 H1C row-gated controls |
+| `paper_core_status` | A3-1 不通过；A3B 是当前最小可信 capacity-preserving nested interface gate |
 
 ## 顶级 SCI 审稿视角评判
 
@@ -330,6 +330,21 @@ A3-1 decision：
 - 下一步如果保留 Stage A，必须进入真正的 `teacher_preserved_nested_segment_decoder`、
   `target_conditioned_nested_segment_decoder` 或从已训练 checkpoint 初始化的
   `warm_started_nested_segment_decoder`。
+
+A3B implementation：
+
+- `readout-mode=target-conditioned-nested-residual-decoder`；
+- base path：`proj_x(hidden)[:, :, :H]`，保留 dense full-head prefix 能力；
+- residual path：`target_prefix` condition 后进入 zero-init nested segment residual heads；
+- 初始函数严格等价于 dense full-head prefix，不再把随机 row-copy 误写成 learned capacity；
+- comparison 同时包含 A2 nested、A3-1 shallow、H1 target-set、H1C row-gated 和 fixed。
+
+A3B gate：
+
+- primary：ALL 必须优于 A2 nested 与 A3-1 shallow；
+- paper-core：ALL 或至少多数 dataset/horizon 必须超过 H1 target-set 或 H1C row-gated；
+- ETTm2 fixed gap 必须低于 A2/A3-1；
+- Weather 的 nested partial gain 不能消失。
 
 ### Stage B：Future Supervision Reliability Diagnostic
 

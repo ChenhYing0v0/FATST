@@ -135,6 +135,13 @@ or neither has decisive metric superiority, prefer the option with stronger
 narrative potential and clearer SCI-level contribution, instead of the option
 that is merely a small engineering patch.
 
+Claims about capacity preservation, warm-starting, initialization transfer, or
+teacher preservation must be code-theory checked before launch. In particular,
+copying weights from another module is not evidence of preserved learned
+capacity unless those weights come from a trained checkpoint or an active
+function-preserving path. Random-initialized weight copying should be treated as
+a shallow initialization variant, not as a capacity-preserving mechanism.
+
 Each long-stage record must include `current_step`, `problem`,
 `existence_evidence`, `idea`, `theory_check`, `design`, `gate`, `artifacts`,
 and `decision`. The `decision` must say whether the mechanism passes; if it

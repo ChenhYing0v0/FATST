@@ -2292,6 +2292,20 @@ interface。下一步若继续 Stage A，必须做真正的 `teacher_preserved_n
 `target_conditioned_nested_segment_decoder` 或从已训练 checkpoint 出发的
 `warm_started_nested_segment_decoder`。不继续调初始化或泛化 head sweep。
 
+### Phase5-A3B：Target-Conditioned Nested Residual Interface
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 6/7/8：从 A3-1 design error 回滚后，设计并启动 A3B nested residual gate |
+| `problem` | A3-1 误把随机 `proj_x` row-copy 当作 capacity preservation；真正的问题是如何同时保留 dense readout path、target condition 和 nested prefix composition |
+| `existence_evidence` | A2/A3-1 nested route 相对 fixed 仍有 `-3%` 左右收益，Weather 上接近或优于 H1C；但 A3-1 相对 H1/H1C 仍为正 gap，说明 shallow initialization 不够 |
+| `idea` | 用 dense `proj_x` 作为 function-preserving base path，再叠加 zero-init、target-conditioned nested residual path |
+| `theory_check` | zero-init residual 保证训练开始时等价于 dense full-head prefix；target condition 提供 H1 的 requested-prefix signal；nested residual 提供 A2 的 prefix-composition structure |
+| `design` | `target-conditioned-nested-residual-decoder`：`base=proj_x(hidden)[:H]`；`residual=f(target_prefix, hidden)` 经 `[0:96]`、`[96:192]`、`[192:336]`、`[336:720]` zero-init segment heads 拼接；输出 `base + residual` |
+| `gate` | 必须优于 A2 nested 与 A3-1 shallow；paper-core gate 要求超过 H1 target-set 或 H1C row-gated，并降低 ETTm2 fixed gap；Weather nested gain 不能消失 |
+| `artifacts` | `baselines/timealign_official/models/TimeAlign.py`、`scripts/remote/run_phase5_timealign_hss_a3b_nested_residual_gate.sh`、`scripts/sync_phase5_timealign_hss_a3b_results.sh`、`scripts/analyze_phase5_timealign_hss_a3b_nested_residual_gate.py` |
+| `decision` | 待 remote gate；若 A3B 失败，不再继续 head initialization repair，转向 teacher checkpoint 或重新评估 interface 主轴 |
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：

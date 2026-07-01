@@ -85,11 +85,13 @@ class Model(nn.Module):
             "dense-row-initialized-prefix-decoder",
             "nested-segment-decoder",
             "dense-initialized-nested-segment-decoder",
+            "target-conditioned-nested-residual-decoder",
         }
         self.capacity_preserving_modes = {
             "dense-prefix-residual-adapter",
             "row-gated-dense-head",
             "prefix-adapter-shared-dense",
+            "target-conditioned-nested-residual-decoder",
         }
         readout_dim = configs.d_model * self.patch_num
         adapter_dim = min(64, readout_dim)
@@ -145,22 +147,38 @@ class Model(nn.Module):
             self.prefix_row_delta_up = nn.Linear(adapter_dim, configs.pred_len)
             nn.init.zeros_(self.prefix_row_delta_up.weight)
             nn.init.zeros_(self.prefix_row_delta_up.bias)
-        if self.readout_mode in {"nested-segment-decoder", "dense-initialized-nested-segment-decoder"}:
+        self.nested_readout_modes = {
+            "nested-segment-decoder",
+            "dense-initialized-nested-segment-decoder",
+            "target-conditioned-nested-residual-decoder",
+        }
+        if self.readout_mode in self.nested_readout_modes:
             boundaries = sorted(set(getattr(configs, "target_horizons", [configs.pred_len])))
             boundaries = [value for value in boundaries if 0 < value <= configs.pred_len]
             if configs.pred_len not in boundaries:
                 boundaries.append(configs.pred_len)
             self.nested_boundaries = boundaries
             previous = 0
-            self.nested_segment_heads = nn.ModuleList()
-            for boundary in self.nested_boundaries:
-                head = nn.Linear(readout_dim, boundary - previous)
-                if self.readout_mode == "dense-initialized-nested-segment-decoder":
-                    with torch.no_grad():
-                        head.weight.copy_(self.proj_x.weight[previous:boundary])
-                        head.bias.copy_(self.proj_x.bias[previous:boundary])
-                self.nested_segment_heads.append(head)
-                previous = boundary
+            if self.readout_mode == "target-conditioned-nested-residual-decoder":
+                self.nested_residual_down = nn.Linear(readout_dim, adapter_dim)
+                self.nested_residual_condition = nn.Linear(1, adapter_dim)
+                self.nested_segment_heads = nn.ModuleList()
+                for boundary in self.nested_boundaries:
+                    head = nn.Linear(adapter_dim, boundary - previous)
+                    nn.init.zeros_(head.weight)
+                    nn.init.zeros_(head.bias)
+                    self.nested_segment_heads.append(head)
+                    previous = boundary
+            else:
+                self.nested_segment_heads = nn.ModuleList()
+                for boundary in self.nested_boundaries:
+                    head = nn.Linear(readout_dim, boundary - previous)
+                    if self.readout_mode == "dense-initialized-nested-segment-decoder":
+                        with torch.no_grad():
+                            head.weight.copy_(self.proj_x.weight[previous:boundary])
+                            head.bias.copy_(self.proj_x.bias[previous:boundary])
+                    self.nested_segment_heads.append(head)
+                    previous = boundary
 
         self.normalization_x = Normalize(configs.enc_in, affine=False)
         self.normalization_y = Normalize(configs.enc_in, affine=False)
@@ -261,6 +279,27 @@ class Model(nn.Module):
             previous = boundary
         return torch.cat(segments, dim=-1).permute(0, 2, 1)
 
+    def _target_conditioned_nested_residual_decoder(self, hidden, target_prefix):
+        # hidden: [B, C, R], output: [B, H, C]
+        if target_prefix is None:
+            target_prefix = self.pred_len
+        horizon = int(target_prefix)
+        base = self.proj_x(hidden)[:, :, :horizon]
+        condition = torch.tanh(self.nested_residual_condition(self._prefix_scalar_feature(target_prefix, hidden))).view(1, 1, -1)
+        adapted = F.gelu(self.nested_residual_down(hidden)) * (1.0 + condition)
+        segments = []
+        previous = 0
+        for boundary, head in zip(self.nested_boundaries, self.nested_segment_heads):
+            if previous >= horizon:
+                break
+            segment = head(adapted)
+            take = min(boundary, horizon) - previous
+            if take > 0:
+                segments.append(segment[:, :, :take])
+            previous = boundary
+        residual = torch.cat(segments, dim=-1)
+        return (base + residual).permute(0, 2, 1)
+
     def forward(self, x, y, is_training=True, target_prefix=None):
         # [B, L, C]   [B, T, C]
         B, T, C = x.shape
@@ -300,6 +339,8 @@ class Model(nn.Module):
             x = self._dense_row_initialized_prefix_decoder(x.flatten(start_dim=-2), target_prefix)
         elif self.readout_mode in {"nested-segment-decoder", "dense-initialized-nested-segment-decoder"}:
             x = self._nested_segment_decoder(x.flatten(start_dim=-2), target_prefix)
+        elif self.readout_mode == "target-conditioned-nested-residual-decoder":
+            x = self._target_conditioned_nested_residual_decoder(x.flatten(start_dim=-2), target_prefix)
         else:
             x = x.flatten(start_dim=-2)
             if self.readout_mode == "dense-prefix-residual-adapter":

@@ -848,6 +848,7 @@ def parse_args() -> argparse.Namespace:
             "dense-row-initialized-prefix-decoder",
             "nested-segment-decoder",
             "dense-initialized-nested-segment-decoder",
+            "target-conditioned-nested-residual-decoder",
         ],
         default="official",
     )
