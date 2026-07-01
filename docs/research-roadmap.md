@@ -2142,19 +2142,41 @@ prediction-prefix supervision scheduling。D1 supervision reliability diagnostic
 
 | Field | Content |
 | --- | --- |
-| `current_step` | Step 6：设计 concrete method and experiment plan |
+| `current_step` | Step 9/10/11：评估 H1B variable readout gate，并决定 rollback point |
 | `problem` | H1 虽然证明 requested-prefix readout 有价值，但仍保留 720-step projection 后 crop，ETTm2 residual gap 未明显解决 |
 | `existence_evidence` | H1 `target_set_decoder_multiprefix` 相对 H0B 改善 `-0.69%`，但 ETTm2 vs fixed 仍为 `+1.81%` |
 | `idea` | 从 condition-before-720-projection 升级为真正的 variable-prefix 或 prefix-token decoder |
 | `theory_check` | 如果 unified multi-horizon 的瓶颈在 readout shape，模型应按 requested target set 直接生成对应 prefix，而不是所有 request 都先生成 720 |
 | `design` | 候选 arms：`target_set_prefix_head_multiprefix` 与 `prefix_token_decoder_multiprefix`；二者都使用 `multi-prefix` supervision，差别只在 head |
 | `gate` | ETTm2 fixed gap 明显低于 H1 的 `+1.81%`，ETTh2 保持强收益，Weather no-harm |
-| `artifacts` | `scripts/remote/run_phase5_timealign_hss_h1b_variable_readout_gate.sh`、`scripts/analyze_phase5_timealign_hss_h1b_variable_readout_gate.py`、`scripts/sync_phase5_timealign_hss_h1b_results.sh` |
-| `decision` | H1B 已进入 Step 7/8；若仍不能缩小 ETTm2 gap，再回 Step 2/3 判断 TimeAlign carrier 是否适合作为 HSS 主线 |
+| `artifacts` | `analysis/phase5_timealign_hss_h1b_variable_readout_gate_20260701/` and remote root `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_h1b_variable_readout_gate` |
+| `decision` | `variable_readout_fail_capacity_collapse`；不继续扩展当前 variable heads，rollback 到 Step 5/6 设计 capacity-preserving prefix decoder |
 
 [Correction] H1 的 `target_set_decoder_multiprefix` 并不是真正 decoder head，它仍然是
 condition-before-720-projection。H1B 才开始测试真正的 variable-prefix / prefix-token prediction
 head。
+
+[Fact] H1B 两个真正 variable-prefix heads 均失败。`target_set_prefix_head_multiprefix` 的
+ALL mean MSE 相对 H1 `target_set_decoder_multiprefix` 为 `+14.41%`，相对 fixed 为
+`+10.26%`；`prefix_token_decoder_multiprefix` 更差，相对 H1 为 `+25.52%`。
+
+[Decision] H1B 说明直接替换 dense 720 projection 会导致 readout capacity collapse。下一步若继续
+decoder/head route，必须保留 TimeAlign dense projection 作为 base path，并只加入 prefix/target-set
+conditioned residual、low-rank adapter 或 row-wise gate。
+
+#### Phase5-H1C：Capacity-Preserving Prefix Decoder
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 5/6：重新评估理论可行性并设计 capacity-preserving decoder |
+| `problem` | H1B 证明简单 variable-prefix head 破坏 TimeAlign dense readout capacity；但 H1 证明 prefix/target-set condition 在 dense projection 上有正向信号 |
+| `existence_evidence` | H1 target-set conditioned 720 projection 相对 H0B 改善 `-0.69%`；H1B variable heads 相对 H1 退化 `+14.41%` 到 `+25.52%` |
+| `idea` | 保留 dense 720 projection，prefix/target-set information 只控制 residual adapter、low-rank delta 或 row-wise gate |
+| `theory_check` | 如果 TimeAlign 的性能来自 dense row capacity，则 decoder 改造必须 preserve base readout，并让 HSS 只调度/调制增量路径 |
+| `design` | 候选 arms：`dense_prefix_residual_adapter`、`row_gated_dense_head`、`prefix_adapter_shared_dense` |
+| `gate` | 必须超过 H1 `target_set_decoder_multiprefix`，并让 ETTm2 fixed gap 明显低于 `+1.81%` |
+| `artifacts` | 待实现 |
+| `decision` | H1C 尚未实现；若失败，回 Step 2/3 重新判断 TimeAlign 是否适合作为 HSS 主 carrier |
 
 ## 历史证据索引
 

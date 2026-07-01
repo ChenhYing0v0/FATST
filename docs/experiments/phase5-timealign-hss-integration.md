@@ -334,7 +334,8 @@ representation capacity 或 dataset-specific hyperparameter。
 3. `target_set_decoder_multiprefix` 相对 H0B `stochastic_prefix_k2` 的 ALL mean MSE 为
    `-0.69%`，说明 readout/interface 路线有效；
 4. ETTm2 fixed gap 只从 `+2.08%` 缩到 `+1.81%`，不构成 full pass；
-5. 当前进入 H1B：`Variable-Prefix / Prefix-Token Readout`，不再继续扩大 loss schedule；
-6. H1B 第一轮 arms 为 `target_set_prefix_head_multiprefix` 与
-   `prefix_token_decoder_multiprefix`，二者都直接输出 requested prefix；
-7. D1/M1 future reliability scheduling 暂时后移，除非 H1B 证明 readout/interface 不是主瓶颈。
+5. H1B 结果为 `variable_readout_fail_capacity_collapse`；
+6. `target_set_prefix_head_multiprefix` 相对 H1 target-set conditioned 720 projection 的 ALL mean
+   MSE 为 `+14.41%`，`prefix_token_decoder_multiprefix` 为 `+25.52%`；
+7. 直接替换 dense 720 projection 失败，下一步进入 H1C：`Capacity-Preserving Prefix Decoder`；
+8. D1/M1 future reliability scheduling 暂时后移，除非 H1C 证明 readout/interface 不是主瓶颈。

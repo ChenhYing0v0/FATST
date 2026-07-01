@@ -1,0 +1,111 @@
+{
+  "compare_rows": 24,
+  "metric_rows": 24,
+  "summary_rows": [
+    {
+      "arm": "target_set_prefix_head_multiprefix",
+      "dataset": "ETTh2",
+      "mean_relative_mse_vs_fixed_pct": -0.24020413880148905,
+      "mean_relative_mse_vs_h0_full_pct": 8.42921186135344,
+      "mean_relative_mse_vs_h0b_stochastic_k2_pct": 12.21872287054958,
+      "mean_relative_mse_vs_h1_target_set_pct": 14.27981699044339,
+      "settings": 4,
+      "wins_vs_fixed": 2,
+      "wins_vs_h0_full": 0,
+      "wins_vs_h0b_stochastic_k2": 0,
+      "wins_vs_h1_target_set": 0
+    },
+    {
+      "arm": "prefix_token_decoder_multiprefix",
+      "dataset": "ETTh2",
+      "mean_relative_mse_vs_fixed_pct": 13.667301906745934,
+      "mean_relative_mse_vs_h0_full_pct": 23.776688450892703,
+      "mean_relative_mse_vs_h0b_stochastic_k2_pct": 28.092623103918395,
+      "mean_relative_mse_vs_h1_target_set_pct": 30.40809582011343,
+      "settings": 4,
+      "wins_vs_fixed": 0,
+      "wins_vs_h0_full": 0,
+      "wins_vs_h0b_stochastic_k2": 0,
+      "wins_vs_h1_target_set": 0
+    },
+    {
+      "arm": "target_set_prefix_head_multiprefix",
+      "dataset": "ETTm2",
+      "mean_relative_mse_vs_fixed_pct": 17.910434930363365,
+      "mean_relative_mse_vs_h0_full_pct": 13.582792864021886,
+      "mean_relative_mse_vs_h0b_stochastic_k2_pct": 15.41614880035328,
+      "mean_relative_mse_vs_h1_target_set_pct": 15.72903034823528,
+      "settings": 4,
+      "wins_vs_fixed": 0,
+      "wins_vs_h0_full": 0,
+      "wins_vs_h0b_stochastic_k2": 0,
+      "wins_vs_h1_target_set": 0
+    },
+    {
+      "arm": "prefix_token_decoder_multiprefix",
+      "dataset": "ETTm2",
+      "mean_relative_mse_vs_fixed_pct": 22.9497925202723,
+      "mean_relative_mse_vs_h0_full_pct": 18.40805599284306,
+      "mean_relative_mse_vs_h0b_stochastic_k2_pct": 20.328952018598486,
+      "mean_relative_mse_vs_h1_target_set_pct": 20.659576270045903,
+      "settings": 4,
+      "wins_vs_fixed": 0,
+      "wins_vs_h0_full": 0,
+      "wins_vs_h0b_stochastic_k2": 0,
+      "wins_vs_h1_target_set": 0
+    },
+    {
+      "arm": "target_set_prefix_head_multiprefix",
+      "dataset": "Weather",
+      "mean_relative_mse_vs_fixed_pct": 13.12186849480392,
+      "mean_relative_mse_vs_h0_full_pct": 11.92023659023559,
+      "mean_relative_mse_vs_h0b_stochastic_k2_pct": 13.229936278882203,
+      "mean_relative_mse_vs_h1_target_set_pct": 13.22723177164758,
+      "settings": 4,
+      "wins_vs_fixed": 0,
+      "wins_vs_h0_full": 0,
+      "wins_vs_h0b_stochastic_k2": 0,
+      "wins_vs_h1_target_set": 0
+    },
+    {
+      "arm": "prefix_token_decoder_multiprefix",
+      "dataset": "Weather",
+      "mean_relative_mse_vs_fixed_pct": 25.435788522057365,
+      "mean_relative_mse_vs_h0_full_pct": 24.0533683131209,
+      "mean_relative_mse_vs_h0b_stochastic_k2_pct": 25.509931441601456,
+      "mean_relative_mse_vs_h1_target_set_pct": 25.503706547773884,
+      "settings": 4,
+      "wins_vs_fixed": 0,
+      "wins_vs_h0_full": 0,
+      "wins_vs_h0b_stochastic_k2": 0,
+      "wins_vs_h1_target_set": 0
+    },
+    {
+      "arm": "target_set_prefix_head_multiprefix",
+      "dataset": "ALL",
+      "mean_relative_mse_vs_fixed_pct": 10.264033095455266,
+      "mean_relative_mse_vs_h0_full_pct": 11.310747105203639,
+      "mean_relative_mse_vs_h0b_stochastic_k2_pct": 13.621602649928354,
+      "mean_relative_mse_vs_h1_target_set_pct": 14.41202637010875,
+      "settings": 12,
+      "wins_vs_fixed": 2,
+      "wins_vs_h0_full": 0,
+      "wins_vs_h0b_stochastic_k2": 0,
+      "wins_vs_h1_target_set": 0
+    },
+    {
+      "arm": "prefix_token_decoder_multiprefix",
+      "dataset": "ALL",
+      "mean_relative_mse_vs_fixed_pct": 20.684294316358535,
+      "mean_relative_mse_vs_h0_full_pct": 22.079370918952222,
+      "mean_relative_mse_vs_h0b_stochastic_k2_pct": 24.643835521372782,
+      "mean_relative_mse_vs_h1_target_set_pct": 25.523792879311078,
+      "settings": 12,
+      "wins_vs_fixed": 0,
+      "wins_vs_h0_full": 0,
+      "wins_vs_h0b_stochastic_k2": 0,
+      "wins_vs_h1_target_set": 0
+    }
+  ],
+  "training_rows": 60
+}
