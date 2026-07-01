@@ -337,5 +337,22 @@ representation capacity 或 dataset-specific hyperparameter。
 5. H1B 结果为 `variable_readout_fail_capacity_collapse`；
 6. `target_set_prefix_head_multiprefix` 相对 H1 target-set conditioned 720 projection 的 ALL mean
    MSE 为 `+14.41%`，`prefix_token_decoder_multiprefix` 为 `+25.52%`；
-7. 直接替换 dense 720 projection 失败，下一步进入 H1C：`Capacity-Preserving Prefix Decoder`；
-8. D1/M1 future reliability scheduling 暂时后移，除非 H1C 证明 readout/interface 不是主瓶颈。
+7. 直接替换 dense 720 projection 失败，当前进入 H1C：`Capacity-Preserving Prefix Decoder`；
+8. H1C arms 固定使用 `multi-prefix` supervision，只比较 decoder/head 内部 prefix condition 的落点；
+9. D1/M1 future reliability scheduling 暂时后移，除非 H1C 证明 readout/interface 不是主瓶颈。
+
+## H1C Capacity-Preserving Prefix Decoder
+
+H1C 的核心不是继续调 loss schedule，而是在保留 TimeAlign 原始 dense 720 projection 的基础上，
+重新设计 prefix-aware prediction head。三个 arms 都先保留或复用 `proj_x: Linear(...,720)`，
+避免 H1B 中直接替换 readout 后发生的 capacity collapse：
+
+- `dense_prefix_residual_adapter_multiprefix`：base path 为 `proj_x(hidden)`，prefix condition
+  只控制一个 zero-init low-rank output residual；
+- `row_gated_dense_head_multiprefix`：base path 为 `proj_x(hidden)`，prefix condition 和 row
+  index 共同生成 720 个 row-wise gate；
+- `prefix_adapter_shared_dense_multiprefix`：prefix condition 先调制 hidden low-rank adapter，
+  然后仍由共享 `proj_x` 输出 720 steps。
+
+Gate：H1C 必须超过 H1 `target_set_decoder_multiprefix`，并进一步缩小 ETTm2 unified-vs-fixed
+gap；如果只超过 H1B 但仍低于 H1，说明修复 capacity collapse 不足以产生新的 HSS 叙事价值。

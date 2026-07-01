@@ -841,6 +841,9 @@ def parse_args() -> argparse.Namespace:
             "target-set-decoder",
             "target-set-prefix-head",
             "prefix-token-decoder",
+            "dense-prefix-residual-adapter",
+            "row-gated-dense-head",
+            "prefix-adapter-shared-dense",
         ],
         default="official",
     )

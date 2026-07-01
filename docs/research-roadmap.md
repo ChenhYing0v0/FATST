@@ -2168,15 +2168,30 @@ conditioned residual、low-rank adapter 或 row-wise gate。
 
 | Field | Content |
 | --- | --- |
-| `current_step` | Step 5/6：重新评估理论可行性并设计 capacity-preserving decoder |
+| `current_step` | Step 7/8：已实现 capacity-preserving decoder/head gate，准备远程实验 |
 | `problem` | H1B 证明简单 variable-prefix head 破坏 TimeAlign dense readout capacity；但 H1 证明 prefix/target-set condition 在 dense projection 上有正向信号 |
 | `existence_evidence` | H1 target-set conditioned 720 projection 相对 H0B 改善 `-0.69%`；H1B variable heads 相对 H1 退化 `+14.41%` 到 `+25.52%` |
 | `idea` | 保留 dense 720 projection，prefix/target-set information 只控制 residual adapter、low-rank delta 或 row-wise gate |
 | `theory_check` | 如果 TimeAlign 的性能来自 dense row capacity，则 decoder 改造必须 preserve base readout，并让 HSS 只调度/调制增量路径 |
-| `design` | 候选 arms：`dense_prefix_residual_adapter`、`row_gated_dense_head`、`prefix_adapter_shared_dense` |
+| `design` | 候选 arms：`dense_prefix_residual_adapter_multiprefix`、`row_gated_dense_head_multiprefix`、`prefix_adapter_shared_dense_multiprefix`；三者都保留 `proj_x: Linear(...,720)`，区别只在 prefix condition 进入 output residual、row-wise gate 或 hidden adapter |
 | `gate` | 必须超过 H1 `target_set_decoder_multiprefix`，并让 ETTm2 fixed gap 明显低于 `+1.81%` |
-| `artifacts` | 待实现 |
-| `decision` | H1C 尚未实现；若失败，回 Step 2/3 重新判断 TimeAlign 是否适合作为 HSS 主 carrier |
+| `artifacts` | `baselines/timealign_official/models/TimeAlign.py`、`scripts/remote/run_phase5_timealign_hss_h1c_capacity_preserving_gate.sh`、`scripts/sync_phase5_timealign_hss_h1c_results.sh`、`scripts/analyze_phase5_timealign_hss_h1c_capacity_preserving_gate.py` |
+| `decision` | 待远程结果；若 H1C 仍低于 H1 target-set conditioned 720 projection，回 Step 2/3 重新判断 TimeAlign 是否适合作为 HSS 主 carrier |
+
+[Implementation] H1C 不再尝试让 decoder 直接输出 variable prefix。它把 TimeAlign 原始 dense
+720 projection 视为 base path，并测试 prefix/target-set information 应该控制哪个增量位置：
+
+- `dense_prefix_residual_adapter_multiprefix`：`proj_x(hidden)` 先产生 `[B,C,720]`，再加一个
+  zero-init、prefix-conditioned low-rank residual；
+- `row_gated_dense_head_multiprefix`：`proj_x(hidden)` 先产生 `[B,C,720]`，再用
+  `[step/720, target_prefix/720]` 生成 row-wise multiplicative gate；
+- `prefix_adapter_shared_dense_multiprefix`：先在 `hidden` 上加入 zero-init low-rank adapter，
+  再复用同一个 `proj_x` 输出 720 steps。
+
+[Gate Clarification] 这不是回到纯 training schedule。`multi-prefix` 只作为统一控制变量，
+真正被比较的是 prefix condition 在 prediction head 内部的落点：output residual、row gate、
+hidden adapter。若三者均失败，说明当前 TimeAlign carrier 中“保留 dense capacity + prefix
+condition”的 decoder route 也不足以支撑 HSS 主线。
 
 ## 历史证据索引
 

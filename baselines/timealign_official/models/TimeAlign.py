@@ -79,8 +79,14 @@ class Model(nn.Module):
         self.proj_y = nn.Linear(configs.d_model * self.patch_num, configs.pred_len)
         self.conditioned_projection_modes = {"prefix-conditioned-head", "target-set-decoder"}
         self.variable_prefix_modes = {"target-set-prefix-head", "prefix-token-decoder"}
+        self.capacity_preserving_modes = {
+            "dense-prefix-residual-adapter",
+            "row-gated-dense-head",
+            "prefix-adapter-shared-dense",
+        }
+        readout_dim = configs.d_model * self.patch_num
+        adapter_dim = min(64, readout_dim)
         if self.readout_mode in self.conditioned_projection_modes:
-            readout_dim = configs.d_model * self.patch_num
             self.prefix_condition = nn.Sequential(
                 nn.Linear(1, readout_dim),
                 nn.GELU(),
@@ -89,7 +95,6 @@ class Model(nn.Module):
             nn.init.zeros_(self.prefix_condition[-1].weight)
             nn.init.zeros_(self.prefix_condition[-1].bias)
         if self.readout_mode == "target-set-prefix-head":
-            readout_dim = configs.d_model * self.patch_num
             self.prefix_step_weight = nn.Sequential(
                 nn.Linear(2, configs.d_model),
                 nn.GELU(),
@@ -107,6 +112,26 @@ class Model(nn.Module):
             self.token_value = nn.Linear(configs.d_model, configs.d_model)
             self.token_out = nn.Linear(configs.d_model, 1)
             self.readout_scale = configs.d_model ** -0.5
+        if self.readout_mode == "dense-prefix-residual-adapter":
+            self.residual_down = nn.Linear(readout_dim, adapter_dim)
+            self.residual_condition = nn.Linear(1, adapter_dim)
+            self.residual_up = nn.Linear(adapter_dim, configs.pred_len)
+            nn.init.zeros_(self.residual_up.weight)
+            nn.init.zeros_(self.residual_up.bias)
+        if self.readout_mode == "row-gated-dense-head":
+            self.row_gate = nn.Sequential(
+                nn.Linear(2, configs.d_model),
+                nn.GELU(),
+                nn.Linear(configs.d_model, 1),
+            )
+            nn.init.zeros_(self.row_gate[-1].weight)
+            nn.init.zeros_(self.row_gate[-1].bias)
+        if self.readout_mode == "prefix-adapter-shared-dense":
+            self.hidden_adapter_down = nn.Linear(readout_dim, adapter_dim)
+            self.hidden_adapter_condition = nn.Linear(1, adapter_dim)
+            self.hidden_adapter_up = nn.Linear(adapter_dim, readout_dim)
+            nn.init.zeros_(self.hidden_adapter_up.weight)
+            nn.init.zeros_(self.hidden_adapter_up.bias)
 
         self.normalization_x = Normalize(configs.enc_in, affine=False)
         self.normalization_y = Normalize(configs.enc_in, affine=False)
@@ -128,6 +153,11 @@ class Model(nn.Module):
         prefix = torch.full_like(steps, float(horizon) / float(self.pred_len))
         return torch.stack([steps, prefix], dim=-1)
 
+    def _prefix_scalar_feature(self, target_prefix, hidden):
+        if target_prefix is None:
+            target_prefix = self.pred_len
+        return hidden.new_tensor([[float(target_prefix) / float(self.pred_len)]])
+
     def _target_set_prefix_head(self, hidden, target_prefix):
         # hidden: [B, C, R], output: [B, H, C]
         features = self._prefix_features(target_prefix, hidden.device, hidden.dtype)
@@ -148,6 +178,31 @@ class Model(nn.Module):
         context = torch.einsum("bchn,bcnd->bchd", weights, value)
         output = self.token_out(context).squeeze(-1)
         return output.permute(0, 2, 1)
+
+    def _dense_prefix_residual_adapter(self, hidden, target_prefix):
+        # hidden: [B, C, R], output: [B, C, pred_len]
+        base = self.proj_x(hidden)
+        condition = torch.tanh(self.residual_condition(self._prefix_scalar_feature(target_prefix, hidden))).view(1, 1, -1)
+        adapted = torch.nn.functional.gelu(self.residual_down(hidden)) * (1.0 + condition)
+        residual = self.residual_up(adapted)
+        return base + residual
+
+    def _row_gated_dense_head(self, hidden, target_prefix):
+        # hidden: [B, C, R], output: [B, C, pred_len]
+        base = self.proj_x(hidden)
+        features = self._prefix_features(self.pred_len, hidden.device, hidden.dtype)
+        if target_prefix is None:
+            target_prefix = self.pred_len
+        features[:, 1] = float(target_prefix) / float(self.pred_len)
+        gate = 1.0 + 0.1 * torch.tanh(self.row_gate(features).squeeze(-1))
+        return base * gate.view(1, 1, -1)
+
+    def _prefix_adapter_shared_dense(self, hidden, target_prefix):
+        # hidden: [B, C, R], output: [B, C, pred_len]
+        condition = torch.tanh(self.hidden_adapter_condition(self._prefix_scalar_feature(target_prefix, hidden))).view(1, 1, -1)
+        adapted = torch.nn.functional.gelu(self.hidden_adapter_down(hidden)) * (1.0 + condition)
+        hidden = hidden + self.hidden_adapter_up(adapted)
+        return self.proj_x(hidden)
 
     def forward(self, x, y, is_training=True, target_prefix=None):
         # [B, L, C]   [B, T, C]
@@ -186,8 +241,15 @@ class Model(nn.Module):
             x = self._prefix_token_decoder(x, target_prefix)
         else:
             x = x.flatten(start_dim=-2)
-            x = self._condition_readout(x, target_prefix)
-            x = self.proj_x(x) # [B, C, T]
+            if self.readout_mode == "dense-prefix-residual-adapter":
+                x = self._dense_prefix_residual_adapter(x, target_prefix)
+            elif self.readout_mode == "row-gated-dense-head":
+                x = self._row_gated_dense_head(x, target_prefix)
+            elif self.readout_mode == "prefix-adapter-shared-dense":
+                x = self._prefix_adapter_shared_dense(x, target_prefix)
+            else:
+                x = self._condition_readout(x, target_prefix)
+                x = self.proj_x(x) # [B, C, T]
             x = x.permute(0, 2, 1)
         x = self.normalization_x(x, 'denorm')
 

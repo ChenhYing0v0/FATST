@@ -169,6 +169,53 @@ output:    Linear(attended context) -> [B, H, C]
 这两个模式都不再先生成 `[B,720,C]` 再 crop。训练和评估仍按 requested prefix 循环调用
 `model(..., target_prefix=H)`，但模型返回的 prediction length 就是 `H`。
 
+## H1C Capacity-Preserving Prefix Decoder
+
+H1C 保留 TimeAlign 原始 dense 720 projection，把 H1B 的问题从“是否直接生成 variable
+prefix”改成“prefix condition 应该调制 dense readout 的哪个增量路径”。新增三个
+`--readout-mode`：
+
+- `dense-prefix-residual-adapter`：`proj_x(hidden)` 是 base path，prefix-conditioned low-rank
+  residual 只作为 additive delta；
+- `row-gated-dense-head`：`proj_x(hidden)` 是 base path，`[step/720, target_prefix/720]`
+  生成 720 个 row-wise gate；
+- `prefix-adapter-shared-dense`：在 `hidden` 上加入 prefix-conditioned low-rank adapter，
+  再复用同一个 `proj_x` 输出 720 steps。
+
+`dense-prefix-residual-adapter` 的 tensor flow：
+
+```text
+hidden:     [B, C, d_model * patch_num]
+base:       proj_x(hidden) -> [B, C, 720]
+condition:  Linear(target_prefix / 720) -> [1, 1, adapter_dim]
+adapted:    GELU(residual_down(hidden)) * (1 + condition)
+residual:   residual_up(adapted) -> [B, C, 720]
+output:     base + residual -> [B, 720, C]
+```
+
+`row-gated-dense-head` 的 tensor flow：
+
+```text
+hidden:    [B, C, d_model * patch_num]
+base:      proj_x(hidden) -> [B, C, 720]
+features:  [720, 2] = [step / 720, target_prefix / 720]
+gate:      1 + 0.1 * tanh(MLP(features)) -> [720]
+output:    base * gate -> [B, 720, C]
+```
+
+`prefix-adapter-shared-dense` 的 tensor flow：
+
+```text
+hidden:     [B, C, d_model * patch_num]
+condition:  Linear(target_prefix / 720) -> [1, 1, adapter_dim]
+adapted:    GELU(hidden_adapter_down(hidden)) * (1 + condition)
+hidden':    hidden + hidden_adapter_up(adapted)
+output:     proj_x(hidden') -> [B, 720, C]
+```
+
+三个 H1C arms 的 last projection 或 residual-up 分支均为 zero-init / identity-preserving
+设计：训练开始时尽量等价于 official dense head，之后才学习 prefix-aware delta。
+
 训练日志同步导出：
 
 - `train_prediction_l1`：实际用于反传的 prediction loss；
@@ -260,6 +307,22 @@ unified-720 使用 h720 official preset，并在 test 时评估 `h96/h192/h336/h
 - output root:
   `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_h1b_variable_readout_gate`。
 
+`scripts/remote/run_phase5_timealign_hss_h1c_capacity_preserving_gate.sh` 运行 H1C
+capacity-preserving decoder/head gate：
+
+- mode: unified only；
+- arms:
+  - `dense_prefix_residual_adapter_multiprefix`: `readout-mode=dense-prefix-residual-adapter`,
+    `pred-loss-mode=multi-prefix`;
+  - `row_gated_dense_head_multiprefix`: `readout-mode=row-gated-dense-head`,
+    `pred-loss-mode=multi-prefix`;
+  - `prefix_adapter_shared_dense_multiprefix`: `readout-mode=prefix-adapter-shared-dense`,
+    `pred-loss-mode=multi-prefix`;
+- datasets: `Weather ETTm2 ETTh2`；
+- default GPUs: `0 1 2`；
+- output root:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_h1c_capacity_preserving_gate`。
+
 ## Analysis
 
 `scripts/analyze_phase5_timealign_official_gate.py` 输出：
@@ -339,6 +402,19 @@ reliability diagnostic。
 `target_set_decoder_multiprefix` 与 fixed specialist 的差异。H1B 的关键不是只超过 H0B，
 而是必须超过 H1 target-set conditioned 720 projection，证明真正 decoder/head 改造有额外价值。
 
+`scripts/analyze_phase5_timealign_hss_h1c_capacity_preserving_gate.py` 输出：
+
+- `phase5_timealign_hss_h1c_metrics.csv`;
+- `phase5_timealign_hss_h1c_comparison.csv`;
+- `phase5_timealign_hss_h1c_summary.csv`;
+- `phase5_timealign_hss_h1c_training.csv`;
+- `phase5_timealign_hss_h1c_best_epoch.csv`;
+- `phase5_timealign_hss_h1c_capacity_preserving_gate_report.md`。
+
+该分析比较 H1C arms 相对 H0 `full`、H0B `stochastic_prefix_k2`、H1
+`target_set_decoder_multiprefix` 与 fixed specialist 的差异。H1C 的 primary gate 是能否超过
+H1 target-set conditioned 720 projection；仅比 H1B 好不能构成 pass。
+
 ## Code-Theory Consistency
 
 [Intended theory] 在设计 HSS 前，必须先确认 TimeAlign fixed-horizon carrier 的官方复现是否可信，
@@ -351,7 +427,9 @@ reliability diagnostic。
 prefix sampling。H1 的 `readout-mode` 只在 prediction head 前加入 requested-prefix condition，
 不改 encoder、future autoencoder、alignment loss 或 official dataloader。H1B 进一步替换
 prediction head，使 selected prefix 直接输出 `[B,H,C]`，但仍保留 TimeAlign backbone、
-future autoencoder、alignment loss 与 official dataloader。
+future autoencoder、alignment loss 与 official dataloader。H1C 回到 capacity-preserving
+decoder/head：保留或复用 `proj_x: Linear(...,720)`，只让 prefix condition 控制 residual、gate
+或 hidden adapter 这类增量路径。
 
 [Proxy] `official-last` 是 source-faithful proxy，也是作者确认的 paper protocol。
 `best-val` 是 validation-selector diagnostic；它不代表论文代码默认行为，也不被视为对
@@ -360,3 +438,5 @@ TimeAlign 官方训练策略的修正。
 [Falsification] 若 `official-last` fixed-horizon 仍明显偏离论文，下一步应继续审计数据版本、
 官方 commit、test path 与 script setting，而不是直接进入 HSS 设计。若 D0 `multi-prefix`
 已经解释 unified decrease，则下一步应先研究 unified head/interface，而不是进入 D1/M1。
+若 H1C 仍不能超过 H1 target-set conditioned 720 projection，则应回到 Step 2/3，重新判断
+TimeAlign 是否适合作为 HSS 主 carrier，而不是继续堆叠 future reliability schedule。
