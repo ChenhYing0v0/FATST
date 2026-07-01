@@ -1,0 +1,65 @@
+{
+  "metric_rows": 12,
+  "summary_rows": [
+    {
+      "arm": "checkpoint_initialized_nested_segment_decoder_multiprefix",
+      "dataset": "ETTh2",
+      "mean_relative_mse_vs_a2_nested_pct": 0.030177667517350404,
+      "mean_relative_mse_vs_a3b_residual_pct": -8.2253849302787,
+      "mean_relative_mse_vs_fixed_pct": -10.981974745846182,
+      "mean_relative_mse_vs_h1_target_set_pct": 1.964231674645539,
+      "mean_relative_mse_vs_h1c_row_gated_pct": 0.517493098227273,
+      "settings": 4,
+      "wins_vs_a2_nested": 2,
+      "wins_vs_a3b_residual": 4,
+      "wins_vs_fixed": 4,
+      "wins_vs_h1_target_set": 0,
+      "wins_vs_h1c_row_gated": 2
+    },
+    {
+      "arm": "checkpoint_initialized_nested_segment_decoder_multiprefix",
+      "dataset": "ETTm2",
+      "mean_relative_mse_vs_a2_nested_pct": -0.10675044823581226,
+      "mean_relative_mse_vs_a3b_residual_pct": -2.731082172546215,
+      "mean_relative_mse_vs_fixed_pct": 1.684078487590865,
+      "mean_relative_mse_vs_h1_target_set_pct": -0.12204249867139305,
+      "mean_relative_mse_vs_h1c_row_gated_pct": 0.0442292884930362,
+      "settings": 4,
+      "wins_vs_a2_nested": 2,
+      "wins_vs_a3b_residual": 4,
+      "wins_vs_fixed": 1,
+      "wins_vs_h1_target_set": 2,
+      "wins_vs_h1c_row_gated": 2
+    },
+    {
+      "arm": "checkpoint_initialized_nested_segment_decoder_multiprefix",
+      "dataset": "Weather",
+      "mean_relative_mse_vs_a2_nested_pct": 0.28699669961769203,
+      "mean_relative_mse_vs_a3b_residual_pct": -1.2264509815189144,
+      "mean_relative_mse_vs_fixed_pct": 0.08690104899247708,
+      "mean_relative_mse_vs_h1_target_set_pct": 0.20395055384675176,
+      "mean_relative_mse_vs_h1c_row_gated_pct": 0.1963058601547829,
+      "settings": 4,
+      "wins_vs_a2_nested": 0,
+      "wins_vs_a3b_residual": 4,
+      "wins_vs_fixed": 2,
+      "wins_vs_h1_target_set": 1,
+      "wins_vs_h1c_row_gated": 1
+    },
+    {
+      "arm": "checkpoint_initialized_nested_segment_decoder_multiprefix",
+      "dataset": "ALL",
+      "mean_relative_mse_vs_a2_nested_pct": 0.0701413062997434,
+      "mean_relative_mse_vs_a3b_residual_pct": -4.060972694781276,
+      "mean_relative_mse_vs_fixed_pct": -3.070331736420947,
+      "mean_relative_mse_vs_h1_target_set_pct": 0.682046576606966,
+      "mean_relative_mse_vs_h1c_row_gated_pct": 0.25267608229169736,
+      "settings": 12,
+      "wins_vs_a2_nested": 4,
+      "wins_vs_a3b_residual": 12,
+      "wins_vs_fixed": 7,
+      "wins_vs_h1_target_set": 3,
+      "wins_vs_h1c_row_gated": 5
+    }
+  ]
+}

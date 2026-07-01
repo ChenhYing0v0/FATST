@@ -1,0 +1,5 @@
+dataset,arm,settings,wins_vs_a2_nested,mean_relative_mse_vs_a2_nested_pct,wins_vs_a3b_residual,mean_relative_mse_vs_a3b_residual_pct,wins_vs_h1_target_set,mean_relative_mse_vs_h1_target_set_pct,wins_vs_h1c_row_gated,mean_relative_mse_vs_h1c_row_gated_pct,wins_vs_fixed,mean_relative_mse_vs_fixed_pct
+ETTh2,checkpoint_initialized_nested_segment_decoder_multiprefix,4,2,0.030177667517350404,4,-8.2253849302787,0,1.964231674645539,2,0.517493098227273,4,-10.981974745846182
+ETTm2,checkpoint_initialized_nested_segment_decoder_multiprefix,4,2,-0.10675044823581226,4,-2.731082172546215,2,-0.12204249867139305,2,0.0442292884930362,1,1.684078487590865
+Weather,checkpoint_initialized_nested_segment_decoder_multiprefix,4,0,0.28699669961769203,4,-1.2264509815189144,1,0.20395055384675176,1,0.1963058601547829,2,0.08690104899247708
+ALL,checkpoint_initialized_nested_segment_decoder_multiprefix,12,4,0.0701413062997434,12,-4.060972694781276,3,0.682046576606966,5,0.25267608229169736,7,-3.070331736420947

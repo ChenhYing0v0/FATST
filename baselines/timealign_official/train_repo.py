@@ -399,6 +399,27 @@ def warm_start_nested_from_checkpoint(model: nn.Module, checkpoint_path: Path, d
     }
 
 
+def load_teacher_model(
+    official_args: argparse.Namespace,
+    checkpoint_path: Path,
+    readout_mode: str,
+) -> nn.Module:
+    teacher_args = argparse.Namespace(**vars(official_args))
+    teacher_args.readout_mode = readout_mode
+    teacher = TimeAlign.Model(teacher_args).float().to(official_args.device)
+    checkpoint = torch.load(checkpoint_path, map_location="cpu")
+    if not isinstance(checkpoint, dict):
+        raise TypeError(f"Unsupported checkpoint type: {type(checkpoint)!r}")
+    state = checkpoint.get("state_dict", checkpoint)
+    if not isinstance(state, dict):
+        raise TypeError("Teacher checkpoint does not contain a state_dict-like mapping")
+    teacher.load_state_dict(state, strict=True)
+    teacher.eval()
+    for parameter in teacher.parameters():
+        parameter.requires_grad_(False)
+    return teacher
+
+
 def metric_rows(preds: np.ndarray, trues: np.ndarray, horizons: list[int]) -> list[dict[str, Any]]:
     rows = []
     for horizon in horizons:
@@ -627,6 +648,13 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
     if args.warm_start_checkpoint is not None:
         warm_start_info = warm_start_nested_from_checkpoint(model, args.warm_start_checkpoint, official_args.device)
         print(f"warm_start_info={json.dumps(warm_start_info, sort_keys=True)}", flush=True)
+    teacher_model = None
+    if args.teacher_checkpoint is not None:
+        teacher_model = load_teacher_model(official_args, args.teacher_checkpoint, args.teacher_readout_mode)
+        print(
+            f"teacher_info={json.dumps({'checkpoint_path': str(args.teacher_checkpoint), 'readout_mode': args.teacher_readout_mode, 'loss_weight': args.teacher_loss_weight}, sort_keys=True)}",
+            flush=True,
+        )
     optimizer = optim.AdamW(model.parameters(), lr=official_args.learning_rate)
     criterion = nn.L1Loss()
     training_rows: list[dict[str, Any]] = []
@@ -640,6 +668,7 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
         pred_loss_values = []
         pred_full_loss_values = []
         pred_component_values: dict[str, list[float]] = {}
+        teacher_loss_values = []
         recon_loss_values = []
         alignment_values = []
         train_steps = len(train_loader)
@@ -683,6 +712,7 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
                     pred_len=official_args.pred_len,
                 )
                 prefix_losses = []
+                teacher_losses = []
                 recon_losses = []
                 alignment_losses = []
                 pred_components = {}
@@ -700,6 +730,16 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
                         key = f"{key}_repeat{len([name for name in pred_components if name.startswith(key)])}"
                     pred_components[key] = horizon_loss
                     prefix_losses.append(horizon_loss)
+                    if teacher_model is not None:
+                        with torch.no_grad():
+                            teacher_outputs, _teacher_recon, _teacher_alignment = teacher_model(
+                                batch_x,
+                                batch_y[:, -official_args.pred_len :, :],
+                                is_training=True,
+                                target_prefix=horizon,
+                            )
+                            teacher_outputs = teacher_outputs[:, -official_args.pred_len :, f_dim:]
+                        teacher_losses.append(criterion(outputs[:, :horizon, :], teacher_outputs[:, :horizon, :]))
                     recon_losses.append(criterion(recon, target_y))
                     alignment_losses.append(alignment_loss)
                     if horizon == official_args.pred_len:
@@ -715,15 +755,28 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
                         outputs_full = outputs_full[:, -official_args.pred_len :, f_dim:]
                         pred_components["full"] = criterion(outputs_full, target_y)
                 pred_loss = torch.stack(prefix_losses).mean()
+                teacher_loss = (
+                    torch.stack(teacher_losses).mean()
+                    if teacher_losses
+                    else torch.zeros((), device=official_args.device)
+                )
                 recon_loss = torch.stack(recon_losses).mean()
                 alignment_loss = torch.stack(alignment_losses).mean()
-            loss = pred_loss + official_args.w_recon * recon_loss + official_args.w_align * alignment_loss
+            if args.readout_mode == "official":
+                teacher_loss = torch.zeros((), device=official_args.device)
+            loss = (
+                pred_loss
+                + args.teacher_loss_weight * teacher_loss
+                + official_args.w_recon * recon_loss
+                + official_args.w_align * alignment_loss
+            )
             loss.backward()
             optimizer.step()
 
             total_loss.append(float(loss.detach().cpu()))
             pred_loss_values.append(float(pred_loss.detach().cpu()))
             pred_full_loss_values.append(float(pred_components["full"].detach().cpu()))
+            teacher_loss_values.append(float(teacher_loss.detach().cpu()))
             for name, component in pred_components.items():
                 if name == "full":
                     continue
@@ -754,6 +807,8 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
             "train_loss": float(np.mean(total_loss)),
             "train_prediction_l1": float(np.mean(pred_loss_values)),
             "train_prediction_full_l1": float(np.mean(pred_full_loss_values)),
+            "train_teacher_l1": float(np.mean(teacher_loss_values)),
+            "teacher_loss_weight": args.teacher_loss_weight,
             "train_reconstruction_l1": float(np.mean(recon_loss_values)),
             "train_alignment_loss": float(np.mean(alignment_values)),
             "pred_loss_mode": args.pred_loss_mode,
@@ -768,6 +823,9 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
             row["warm_start_checkpoint"] = warm_start_info["checkpoint_path"]
             row["warm_start_compatible_keys"] = warm_start_info["compatible_keys"]
             row["warm_start_incompatible_keys"] = warm_start_info["incompatible_keys"]
+        if args.teacher_checkpoint is not None:
+            row["teacher_checkpoint"] = str(args.teacher_checkpoint)
+            row["teacher_readout_mode"] = args.teacher_readout_mode
         for name, values in sorted(pred_component_values.items()):
             if values:
                 row[f"train_prediction_{name}_l1"] = float(np.mean(values))
@@ -802,6 +860,8 @@ def run(args: argparse.Namespace) -> None:
     adapter_config = vars(args) | {"dataset_root": str(args.dataset_root), "output_dir": str(args.output_dir)}
     if args.warm_start_checkpoint is not None:
         adapter_config["warm_start_checkpoint"] = str(args.warm_start_checkpoint)
+    if args.teacher_checkpoint is not None:
+        adapter_config["teacher_checkpoint"] = str(args.teacher_checkpoint)
     dump_json(
         args.output_dir / "effective_config.json",
         {
@@ -907,6 +967,9 @@ def parse_args() -> argparse.Namespace:
         default="official",
     )
     parser.add_argument("--warm-start-checkpoint", type=Path, default=None)
+    parser.add_argument("--teacher-checkpoint", type=Path, default=None)
+    parser.add_argument("--teacher-readout-mode", choices=["target-set-decoder"], default="target-set-decoder")
+    parser.add_argument("--teacher-loss-weight", type=float, default=0.0)
     parser.add_argument(
         "--pred-loss-mode",
         choices=["full", "multi-prefix", "balanced-step", "stochastic-prefix", "continuous-prefix"],

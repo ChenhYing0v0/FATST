@@ -2333,7 +2333,7 @@ Step 4/5/6 设计 warm-started primary nested interface。
 
 | Field | Content |
 | --- | --- |
-| `current_step` | Step 6/7/8：设计并启动 A3C warm-started primary nested gate |
+| `current_step` | Step 9/10/11：评估 A3C warm-started primary nested gate 并决定 rollback point |
 | `problem` | A2 nested 有正向信号但缺 learned capacity；A3-1 的随机 row-copy 是设计错误；A3B residual route 破坏 primary nested 叙事 |
 | `existence_evidence` | A2 nested 相对 fixed 为 `-3.13%`，Weather 上赢 H1C；A3B `0/12` 赢 A2/H1/H1C，说明 nested 必须回到 primary head |
 | `idea` | 从已训练 H1 target-set checkpoint warm-start shared TimeAlign carrier，并把 H1 learned `proj_x` rows 转换为 nested segment heads |
@@ -2341,8 +2341,8 @@ Step 4/5/6 设计 warm-started primary nested interface。
 | `design` | `checkpoint-initialized-nested-segment-decoder`：加载 H1 checkpoint 的兼容 shared weights；将 checkpoint `proj_x.weight/bias` 按 `[0:96]`、`[96:192]`、`[192:336]`、`[336:720]` 写入 nested heads；输出仍由 nested heads 直接生成 |
 | `narrative_gate` | 通过：保留 primary nested interface，且 learned capacity 来自已训练 checkpoint，不再是 shallow initialization 或 residual patch |
 | `effectiveness_gate` | 必须优于 A2 nested 与 A3B residual；paper-core gate 要求接近或超过 H1/H1C，并降低 ETTm2 fixed gap |
-| `artifacts` | `baselines/timealign_official/models/TimeAlign.py`、`baselines/timealign_official/train_repo.py`、`scripts/remote/run_phase5_timealign_hss_a3c_warm_started_nested_gate.sh`、`scripts/sync_phase5_timealign_hss_a3c_results.sh`、`scripts/analyze_phase5_timealign_hss_a3c_warm_started_nested_gate.py` |
-| `decision` | 待 remote gate；若 A3C 失败，只否定 warm-started primary nested 分支，不直接否定 Stage A interface 主线；rollback 到 Step 4/5/6 进行 remaining-candidate triage，优先评估 `teacher_preserved_nested_primary_decoder`、`target_conditioned_nested_primary_decoder` 及其最小组合；只有这些候选也失败，才重新审稿评估 Stage A interface 主线 |
+| `artifacts` | `analysis/phase5_timealign_hss_a3c_warm_started_nested_gate_20260701/`、`baselines/timealign_official/models/TimeAlign.py`、`baselines/timealign_official/train_repo.py`、`scripts/remote/run_phase5_timealign_hss_a3c_warm_started_nested_gate.sh`、`scripts/sync_phase5_timealign_hss_a3c_results.sh`、`scripts/analyze_phase5_timealign_hss_a3c_warm_started_nested_gate.py` |
+| `decision` | A3C 不通过 paper-core gate；相对 A2 `+0.07%`，相对 H1 `+0.68%`，相对 H1C `+0.25%`，只相对 A3B residual 明显改善 `-4.06%`。结论是 row-slice warm-start 不足以 preserve H1 learned function；rollback 到 Step 4/5/6 后，A3D teacher-preserved nested primary 通过 narrative gate，进入实现和 remote gate |
 
 [A3 Candidate Triage Rule] A3C 之后的候选选择不能退回到 shallow initialization 或 residual patch。
 候选必须同时满足两点：第一，nested/prefix-aware structure 是 primary prediction interface 的一部分；
@@ -2355,6 +2355,21 @@ multi-horizon interface。当前保留的 paper-core candidates 是：
   head，让 decoder 不再先生成 720 再 crop，而是让 requested target set 进入预测头结构；
 - `teacher_preserved + target_conditioned` 最小组合：只在前两者分别具备 narrative gate 合理性后考虑，
   避免把两个未证实机制直接叠加。
+
+### Phase5-A3D：Teacher-Preserved Nested Primary Interface
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 6/7/8：设计、实现并启动 A3D teacher-preserved nested gate |
+| `problem` | A3C 证明 row-slice warm-start 不能让 nested primary 超过 H1/H1C；问题不是参数初值，而是 learned function 在切换到 nested interface 时缺少训练期 preservation constraint |
+| `existence_evidence` | A3C 相对 A2 仅 `+0.07%`，相对 H1/H1C 仍为 `+0.68%` / `+0.25%`，说明 warm-start 后仍未保留 H1 target-set function |
+| `idea` | 使用 H1 `target_set_decoder_multiprefix` 作为 frozen teacher；student 仍是 warm-started nested primary head；训练时同时优化 label loss 与 teacher consistency loss |
+| `theory_check` | 若 A3C 的主要问题是 function preservation 而不是 nested structure 本身，则 teacher consistency 应让 nested primary 接近 H1/H1C，同时保留 prefix-consistent decomposition；若结果只复制 H1 或仍弱于 A3C，则该 preservation route 不成立 |
+| `design` | 两个 teacher strength arms：`teacher_preserved_nested_w03` 与 `teacher_preserved_nested_w10`；二者均从 H1 checkpoint warm-start，并用同一 H1 checkpoint 作为 target-set teacher |
+| `narrative_gate` | 通过：它直接服务 `Capacity-Preserving Prefix-Aware Interface`，且是 A3C 失败后的最小机制修复，不是 residual patch 或 shallow initialization |
+| `effectiveness_gate` | 必须优于 A3C/A2；paper-core gate 要求接近或超过 H1/H1C；若只接近 H1 但无 prefix/nested 行为收益，则降级为 teacher-preservation diagnostic |
+| `artifacts` | `baselines/timealign_official/train_repo.py`、`scripts/remote/run_phase5_timealign_hss_a3d_teacher_preserved_nested_gate.sh`、`scripts/sync_phase5_timealign_hss_a3d_results.sh`、`scripts/analyze_phase5_timealign_hss_a3d_teacher_preserved_nested_gate.py` |
+| `decision` | 待 remote gate |
 
 ## 历史证据索引
 

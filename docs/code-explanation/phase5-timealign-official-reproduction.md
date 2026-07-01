@@ -644,6 +644,50 @@ Code-theory consistency：
 - limitation: this introduces a two-stage dependency on H1. If it passes, the next question is whether the
   warm-started transfer can be simplified or justified as part of the final training protocol.
 
+## A3D Teacher-Preserved Nested Primary Interface
+
+A3D 不新增新的 prediction head 结构，仍使用 A3C 的 primary nested student：
+
+```text
+student:
+  readout_mode = checkpoint-initialized-nested-segment-decoder
+  warm_start_checkpoint = H1 target_set_decoder_multiprefix checkpoint
+
+teacher:
+  readout_mode = target-set-decoder
+  checkpoint = same H1 target_set_decoder_multiprefix checkpoint
+  frozen parameters
+
+training loss:
+  label prefix L1
+  + teacher_loss_weight * L1(student_prefix, teacher_prefix)
+  + reconstruction/alignment losses
+```
+
+Forward and loss flow：
+
+1. 对每个 selected `target_prefix`，student 输出 `[B, H, C]`。
+2. frozen teacher 用相同 `batch_x`、`batch_y` 和相同 `target_prefix` 输出 teacher prefix。
+3. `teacher_l1 = L1(student[:, :H, :], teacher[:, :H, :])`。
+4. 最终 loss 写作：
+
+```text
+loss = label_prefix_l1
+     + teacher_loss_weight * teacher_l1
+     + w_recon * recon_l1
+     + w_align * alignment_loss
+```
+
+Code-theory consistency：
+
+- function preservation: stronger than A3C, because A3D does not only copy trained rows at initialization;
+  it constrains training updates to stay close to the H1 target-set function;
+- primary nested interface: true, because final prediction is still produced by nested segment heads rather
+  than by dense `proj_x` plus a residual patch;
+- falsification: if A3D does not beat A3C/A2, then teacher consistency is insufficient to turn nested primary
+  into a paper-core interface; if it only imitates H1 without reducing any prefix/interface gap, it should be
+  treated as teacher-preservation diagnostic rather than a final method.
+
 ## Code-Theory Consistency
 
 [Intended theory] 在设计 HSS 前，必须先确认 TimeAlign fixed-horizon carrier 的官方复现是否可信，

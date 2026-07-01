@@ -19,18 +19,18 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | A3C 处于 Step 8/9：远程已启动，等待 artifact 后进入 effectiveness gate |
-| `current_candidate` | `A3C_warm_started_nested_primary` |
-| `latest_decision` | A3B 失败只否定 nested residual path；不能否定 primary nested interface 主线 |
-| `next_required_action` | 等 A3C 结果；若 A3C 失败，先执行 candidate triage，不直接重审 Stage A |
-| `rollback_point` | A3C 失败时 rollback 到 Step 4/5/6，对 remaining primary-interface candidates 做 narrative-gate triage |
+| `current_11_step` | A3D 处于 Step 6/7/8：已完成 narrative triage，进入 teacher-preserved nested implementation / remote gate |
+| `current_candidate` | `A3D_teacher_preserved_nested_primary` |
+| `latest_decision` | A3C 不通过 paper-core gate：相对 A2 `+0.07%`，相对 H1 `+0.68%`，相对 H1C `+0.25%`；只否定 warm-start row-slice 分支 |
+| `next_required_action` | 启动 A3D teacher-preserved nested gate，检验 teacher consistency 是否能保留 H1 learned function |
+| `rollback_point` | A3D 失败时仍不重审 Stage A；先评估 A3E target-conditioned nested primary 的 narrative gate |
 
 ## Candidate Queue
 
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Blocking Or Next Action | Artifacts |
 | --- | --- | --- | --- | --- | --- | --- |
-| `A3C_warm_started_nested_primary` | `running` | A2 nested 的主要瓶颈是缺少 learned capacity；从 H1 learned full head warm-start 后，primary nested interface 应显著优于 A2/A3B | passed：保留 primary nested interface，且 learned capacity 来自 trained checkpoint | 必须优于 A2 nested 与 A3B；paper-core gate 要求接近或超过 H1/H1C | 等远程结果并分析 | `scripts/remote/run_phase5_timealign_hss_a3c_warm_started_nested_gate.sh` |
-| `A3D_teacher_preserved_nested_primary` | `proposed` | full head/teacher 保留 dense prediction capacity，nested primary head 学习 prefix-consistent decomposition，可避免直接替换 head 带来的 capacity loss | 待评估；叙事潜力强，因为它把 capacity preservation 和 prefix-aware interface 绑定 | 至少不弱于 H1/H1C，且在 segment/prefix gap 上优于 dense full 或 A3C | 若 A3C 失败，优先进入 Step 4/5/6 设计 | pending |
+| `A3C_warm_started_nested_primary` | `failed_as_core_candidate` | A2 nested 的主要瓶颈是缺少 learned capacity；从 H1 learned full head warm-start 后，primary nested interface 应显著优于 A2/A3B | passed：保留 primary nested interface，且 learned capacity 来自 trained checkpoint | 未通过：相对 A2 基本持平，未超过 H1/H1C | 保留为 negative evidence：row-slice warm-start 不足以 preserve learned function | `analysis/phase5_timealign_hss_a3c_warm_started_nested_gate_20260701/` |
+| `A3D_teacher_preserved_nested_primary` | `narrative_ready` | full head/teacher 保留 dense prediction capacity，nested primary head 学习 prefix-consistent decomposition，可避免直接替换 head 带来的 capacity loss | passed：它直接修复 A3C 暴露的 function-preservation gap，且 nested 仍是 primary interface | 至少优于 A3C/A2；paper-core gate 要求接近或超过 H1/H1C，并证明不是单纯 teacher imitation | 已实现，下一步启动 remote gate | `scripts/remote/run_phase5_timealign_hss_a3d_teacher_preserved_nested_gate.sh` |
 | `A3E_target_conditioned_nested_primary` | `proposed` | requested target set/prefix condition 应进入 decoder/head 本身，而不是 condition before 720-step projection 后再 crop | 待评估；叙事潜力强，因为它直接解决 multi-prefix evaluation 与 unified head 不一致 | 应优于 H1 target-set 和 A2 nested，或至少显著降低 unified/fixed gap | 若 A3C 失败，与 A3D 并列做 narrative-gate triage | pending |
 | `A3F_teacher_preserved_target_conditioned_nested` | `deferred` | teacher preservation 解决 capacity，target conditioning 解决 requested-prefix specialization，二者组合可能形成最终 paper-core interface | 仅在 A3D/A3E 各自通过 narrative gate 后评估，避免未证实机制堆叠 | 必须超过单机制候选，且不能只靠参数量提升 | 等 A3D/A3E 至少一个 partial/pass 后再考虑 | pending |
 | `A3B_nested_residual_gate` | `failed_as_core_candidate` | nested structure 作为 residual path 可修复 dense head 的 prefix behavior | failed：nested 变成 dense head 附属补丁，削弱 primary interface 叙事 | 0/12 win，不能作为 paper-core | 仅保留为 negative evidence/control | `analysis/phase5_timealign_hss_a3b_nested_residual_gate_20260701/` |
@@ -45,14 +45,16 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | A2 interface gate | `A2_nested_segment_primary` | method candidate | nested primary 有局部正向信号，但 capacity/稳定性不足 | `partial_pass` | `analysis/phase5_timealign_hss_a2_interface_gate_20260630/` |
 | A3A interface repair | `A3A_dense_initialized_nested_segment` | method candidate | 随机初始化 row-copy 不能证明 capacity preservation | `failed_as_core_candidate` | `analysis/phase5_timealign_hss_a3_interface_repair_20260701/` |
 | A3B nested residual | `A3B_nested_residual_gate` | diagnostic/control | residual path 破坏 primary nested 叙事且效果差 | `failed_as_core_candidate` | `analysis/phase5_timealign_hss_a3b_nested_residual_gate_20260701/` |
-| A3C warm-started nested | `A3C_warm_started_nested_primary` | method candidate | 远程运行中，待 artifact | `analysis_pending` | pending |
+| A3C warm-started nested | `A3C_warm_started_nested_primary` | method candidate | 相对 A2 `+0.07%`，相对 A3B `-4.06%`，相对 H1 `+0.68%`，相对 H1C `+0.25%` | `failed_as_core_candidate` | `analysis/phase5_timealign_hss_a3c_warm_started_nested_gate_20260701/phase5_timealign_hss_a3c_interpretation.md` |
+| A3D teacher-preserved nested | `A3D_teacher_preserved_nested_primary` | method candidate | 待 remote gate | `narrative_ready` | pending |
 
 ## Pending Tasks
 
 | Task | Owner | Trigger | Status | Next Action |
 | --- | --- | --- | --- | --- |
-| 分析 A3C 结果 | Codex | 用户通知远程完成 | `pending` | sync artifacts，生成 `analysis/phase5_timealign_hss_a3c_warm_started_nested_gate_*/` 报告 |
-| A3C 失败后的 candidate triage | Codex | A3C effectiveness gate 不通过 | `pending` | 先评估 A3D/A3E narrative gate，再决定实现顺序 |
+| 分析 A3C 结果 | Codex | 用户通知远程完成 | `completed` | 已生成 A3C interpretation，并将 A3C 降级为 failed core candidate |
+| A3C 失败后的 candidate triage | Codex | A3C effectiveness gate 不通过 | `completed` | A3D 通过 narrative gate，优先启动；A3E 保留 proposed |
+| 启动 A3D remote gate | Codex | A3D implementation verification 通过 | `pending` | commit/push 后远程 git pull，预检 GPU 并启动 |
 | paper-mainline 同步检查 | Codex | A3C 或 A3D/A3E 产生 pass/fail_as_family 结论 | `pending` | 只有影响贡献边界或主实验安排时修改 `docs/paper-mainline.md` |
 
 ## Paper Mainline Sync Log
@@ -61,10 +63,11 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | --- | --- | --- | --- | --- |
 | 2026-07-01 | A3B 失败后纠正 A3C rollback 表述 | `转向规则` | 转向规则修正 | A3C 失败不等于 Stage A 失败；必须先 triage A3D/A3E |
 | 2026-07-01 | 建立研究路径保存体系 | `当前状态` / 文档入口 | 管理机制修正 | paper-mainline 继续管论文总纲，阶段内候选由本 ledger 管理 |
+| 2026-07-01 | A3C 不通过 paper-core gate | `当前状态` | 当前阶段状态更新 | active candidate 从 A3C 切换为 A3D，不改变论文贡献边界 |
 
 ## Notes For Next Continuation
 
-- A3C 只能检验 `warm-started primary nested`，不能代表 teacher-preserved 或 target-conditioned 候选。
-- 若 A3C 失败，下一步不是“重新审稿 Stage A”，而是先做 A3D/A3E 的 Step 4-6 narrative-gate triage。
+- A3C 已失败为 paper-core，但只否定 `warm-started primary nested`，不能代表 teacher-preserved 或 target-conditioned 候选。
+- 当前优先 A3D；若 A3D 失败，下一步不是“重新审稿 Stage A”，而是评估 A3E target-conditioned nested primary。
 - 不允许再把 residual patch 或 shallow initialization 当作 paper-core interface 候选。
 - 详细 metric 和诊断报告不要写入本文件，只写 conclusion summary 和 artifact path。

@@ -1,0 +1,4 @@
+dataset,arm,pred_loss_mode,prefix_samples,best_epoch,best_val_mean_mse,last_epoch,last_val_mean_mse,last_gap_to_best_pct
+ETTh2,checkpoint_initialized_nested_segment_decoder_multiprefix,multi-prefix,1,1,0.46189986914396286,10,0.49318596720695496,6.773350709315951
+ETTm2,checkpoint_initialized_nested_segment_decoder_multiprefix,multi-prefix,1,6,0.18225994892418385,10,0.18323737755417824,0.5362827301136797
+Weather,checkpoint_initialized_nested_segment_decoder_multiprefix,multi-prefix,1,6,0.4866398870944977,10,0.4888554513454437,0.45527798063864644
