@@ -1,0 +1,5 @@
+dataset,arm,settings,wins_vs_a2_nested,mean_relative_mse_vs_a2_nested_pct,wins_vs_a3_shallow,mean_relative_mse_vs_a3_shallow_pct,wins_vs_h1_target_set,mean_relative_mse_vs_h1_target_set_pct,wins_vs_h1c_row_gated,mean_relative_mse_vs_h1c_row_gated_pct,wins_vs_fixed,mean_relative_mse_vs_fixed_pct,improves_a2_nested,improves_a3_shallow,passes_h1_gate,passes_h1c_gate,beats_fixed
+ETTh2,target_conditioned_nested_residual_decoder_multiprefix,4,0,9.014691802923625,0,9.074726776453762,0,11.115861252486468,0,9.539082483337186,3,-2.9065609897055005,False,False,False,False,True
+ETTm2,target_conditioned_nested_residual_decoder_multiprefix,4,0,2.7108514147428595,0,2.8613814541709304,0,2.692553222129729,0,2.8650224047897357,0,4.537408544239196,False,False,False,False,False
+Weather,target_conditioned_nested_residual_decoder_multiprefix,4,0,1.5324518760984396,0,1.5042477357283146,0,1.4483884502663635,0,1.4407141106676624,0,1.3314266237673678,False,False,False,False,False
+ALL,target_conditioned_nested_residual_decoder_multiprefix,12,0,4.419331697921641,0,4.480118655451003,0,5.085600974960854,0,4.614939666264862,3,0.9874247261003547,False,False,False,False,False

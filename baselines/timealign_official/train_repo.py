@@ -357,6 +357,48 @@ def dump_json(path: Path, payload: dict[str, Any]) -> None:
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
 
 
+def warm_start_nested_from_checkpoint(model: nn.Module, checkpoint_path: Path, device: torch.device) -> dict[str, Any]:
+    checkpoint = torch.load(checkpoint_path, map_location="cpu")
+    if not isinstance(checkpoint, dict):
+        raise TypeError(f"Unsupported checkpoint type: {type(checkpoint)!r}")
+    state = checkpoint.get("state_dict", checkpoint)
+    if not isinstance(state, dict):
+        raise TypeError("Checkpoint does not contain a state_dict-like mapping")
+
+    model_state = model.state_dict()
+    compatible = {
+        key: value
+        for key, value in state.items()
+        if key in model_state and tuple(model_state[key].shape) == tuple(value.shape)
+    }
+    incompatible_keys = sorted(key for key in state if key not in compatible)
+    load_result = model.load_state_dict(compatible, strict=False)
+
+    if not hasattr(model, "nested_segment_heads") or not hasattr(model, "nested_boundaries"):
+        raise ValueError("Warm-started nested checkpoint requires nested_segment_heads")
+    if "proj_x.weight" not in state or "proj_x.bias" not in state:
+        raise KeyError("Checkpoint must contain proj_x.weight and proj_x.bias")
+
+    previous = 0
+    copied_segments = []
+    with torch.no_grad():
+        for boundary, head in zip(model.nested_boundaries, model.nested_segment_heads):
+            head.weight.copy_(state["proj_x.weight"][previous:boundary].to(device=head.weight.device, dtype=head.weight.dtype))
+            head.bias.copy_(state["proj_x.bias"][previous:boundary].to(device=head.bias.device, dtype=head.bias.dtype))
+            copied_segments.append({"start": previous, "end": boundary, "width": boundary - previous})
+            previous = boundary
+
+    model.to(device)
+    return {
+        "checkpoint_path": str(checkpoint_path),
+        "compatible_keys": len(compatible),
+        "incompatible_keys": len(incompatible_keys),
+        "missing_keys": sorted(load_result.missing_keys),
+        "unexpected_keys": sorted(load_result.unexpected_keys),
+        "copied_segments": copied_segments,
+    }
+
+
 def metric_rows(preds: np.ndarray, trues: np.ndarray, horizons: list[int]) -> list[dict[str, Any]]:
     rows = []
     for horizon in horizons:
@@ -581,6 +623,10 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
     del train_data, vali_data, test_data, test_loader
 
     model = TimeAlign.Model(official_args).float().to(official_args.device)
+    warm_start_info = None
+    if args.warm_start_checkpoint is not None:
+        warm_start_info = warm_start_nested_from_checkpoint(model, args.warm_start_checkpoint, official_args.device)
+        print(f"warm_start_info={json.dumps(warm_start_info, sort_keys=True)}", flush=True)
     optimizer = optim.AdamW(model.parameters(), lr=official_args.learning_rate)
     criterion = nn.L1Loss()
     training_rows: list[dict[str, Any]] = []
@@ -718,6 +764,10 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
             "lr": float(optimizer.param_groups[0]["lr"]),
             "epoch_seconds": time.time() - epoch_start,
         }
+        if warm_start_info is not None:
+            row["warm_start_checkpoint"] = warm_start_info["checkpoint_path"]
+            row["warm_start_compatible_keys"] = warm_start_info["compatible_keys"]
+            row["warm_start_incompatible_keys"] = warm_start_info["incompatible_keys"]
         for name, values in sorted(pred_component_values.items()):
             if values:
                 row[f"train_prediction_{name}_l1"] = float(np.mean(values))
@@ -749,10 +799,13 @@ def run(args: argparse.Namespace) -> None:
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
     set_seed(args.seed)
+    adapter_config = vars(args) | {"dataset_root": str(args.dataset_root), "output_dir": str(args.output_dir)}
+    if args.warm_start_checkpoint is not None:
+        adapter_config["warm_start_checkpoint"] = str(args.warm_start_checkpoint)
     dump_json(
         args.output_dir / "effective_config.json",
         {
-            "adapter": vars(args) | {"dataset_root": str(args.dataset_root), "output_dir": str(args.output_dir)},
+            "adapter": adapter_config,
             "official_args": {
                 key: (str(value) if isinstance(value, torch.device) else value)
                 for key, value in vars(official_args).items()
@@ -849,9 +902,11 @@ def parse_args() -> argparse.Namespace:
             "nested-segment-decoder",
             "dense-initialized-nested-segment-decoder",
             "target-conditioned-nested-residual-decoder",
+            "checkpoint-initialized-nested-segment-decoder",
         ],
         default="official",
     )
+    parser.add_argument("--warm-start-checkpoint", type=Path, default=None)
     parser.add_argument(
         "--pred-loss-mode",
         choices=["full", "multi-prefix", "balanced-step", "stochastic-prefix", "continuous-prefix"],

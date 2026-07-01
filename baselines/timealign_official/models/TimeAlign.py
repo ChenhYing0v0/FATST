@@ -86,6 +86,7 @@ class Model(nn.Module):
             "nested-segment-decoder",
             "dense-initialized-nested-segment-decoder",
             "target-conditioned-nested-residual-decoder",
+            "checkpoint-initialized-nested-segment-decoder",
         }
         self.capacity_preserving_modes = {
             "dense-prefix-residual-adapter",
@@ -151,6 +152,7 @@ class Model(nn.Module):
             "nested-segment-decoder",
             "dense-initialized-nested-segment-decoder",
             "target-conditioned-nested-residual-decoder",
+            "checkpoint-initialized-nested-segment-decoder",
         }
         if self.readout_mode in self.nested_readout_modes:
             boundaries = sorted(set(getattr(configs, "target_horizons", [configs.pred_len])))
@@ -337,7 +339,11 @@ class Model(nn.Module):
             x = self._prefix_token_decoder(x, target_prefix)
         elif self.readout_mode == "dense-row-initialized-prefix-decoder":
             x = self._dense_row_initialized_prefix_decoder(x.flatten(start_dim=-2), target_prefix)
-        elif self.readout_mode in {"nested-segment-decoder", "dense-initialized-nested-segment-decoder"}:
+        elif self.readout_mode in {
+            "nested-segment-decoder",
+            "dense-initialized-nested-segment-decoder",
+            "checkpoint-initialized-nested-segment-decoder",
+        }:
             x = self._nested_segment_decoder(x.flatten(start_dim=-2), target_prefix)
         elif self.readout_mode == "target-conditioned-nested-residual-decoder":
             x = self._target_conditioned_nested_residual_decoder(x.flatten(start_dim=-2), target_prefix)

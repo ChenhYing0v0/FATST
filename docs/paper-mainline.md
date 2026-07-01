@@ -31,11 +31,11 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_11_step` | Phase5-A3B：Step 6/7/8，验证 target-conditioned nested residual 是否修复 A3-1 的 shallow initialization 错误 |
+| `current_11_step` | Phase5-A3C：Step 6/7/8，验证 warm-started primary nested interface |
 | `active_carrier` | official-source TimeAlign |
 | `active_question` | 如何设计 SCI 级 unified prediction interface，使其不是简单 prefix loss 或 post-hoc gate；以及 future supervision reliability 是否能在该 interface 上进一步带来贡献 |
-| `current_gate` | Stage A3B 必须优于 A2 nested / A3-1 shallow，并超过 H1 target-set 或 H1C row-gated controls |
-| `paper_core_status` | A3-1 不通过；A3B 是当前最小可信 capacity-preserving nested interface gate |
+| `current_gate` | Stage A3C narrative_gate 已通过；effectiveness_gate 要求优于 A2 nested/H1/H1C 或证明 learned capacity 不是 nested primary 的主要瓶颈 |
+| `paper_core_status` | A3B 不通过且降级为 diagnostic/control；A3C 是当前 primary nested interface 主线 |
 
 ## 顶级 SCI 审稿视角评判
 
@@ -351,6 +351,39 @@ A3B gate：
 - paper-core：ALL 或至少多数 dataset/horizon 必须超过 H1 target-set 或 H1C row-gated；
 - ETTm2 fixed gap 必须低于 A2/A3-1；
 - Weather 的 nested partial gain 不能消失。
+
+A3B result：
+
+- ALL 相对 A2 nested 为 `+4.42%`，相对 A3-1 shallow 为 `+4.48%`；
+- ALL 相对 H1 target-set 为 `+5.09%`，相对 H1C row-gated 为 `+4.61%`；
+- `0/12` horizon 赢 A2 nested、H1 或 H1C；
+- 因此 A3B 不通过 effectiveness gate，并且只作为 diagnostic/control：nested 放在 residual
+  path 上会削弱 primary nested 的正向信号。
+
+### Stage A3C：Warm-Started Primary Nested Interface
+
+目标：回到 A2 中有正向信号的 primary nested output contract，但用真正的 learned capacity
+preservation 修复 A2/A3-1 的 capacity 问题。
+
+Design：
+
+- `readout-mode=checkpoint-initialized-nested-segment-decoder`；
+- 从 H1 `target_set_decoder_multiprefix` checkpoint warm-start shared TimeAlign carrier；
+- 将 checkpoint 中已训练的 `proj_x.weight/bias` row slices 复制到 nested segment heads；
+- output 仍由 nested segment heads 直接生成，是 primary prediction interface，不是 residual correction。
+
+Narrative gate：
+
+- 通过。它直接服务于论文第一贡献 `Capacity-Preserving Prefix-Aware Interface`；
+- 它保留 A2 的 primary nested interface 叙事，同时修复 A3-1 的 shallow initialization 错误；
+- 它比 A3B 更符合 SCI 主线，因为 nested 仍是 prediction head 的主体，而不是 dense head 的附属补丁。
+
+Effectiveness gate：
+
+- 必须优于 A2 nested 与 A3B residual；
+- paper-core gate 要求接近或超过 H1 target-set / H1C row-gated；
+- 若 warm-start 后仍不能超过 H1/H1C，说明 primary nested interface 的瓶颈不只是 learned
+  capacity，Stage A 需要重新评估或转向 teacher consistency / supervision routing。
 
 ### Stage B：Future Supervision Reliability Diagnostic
 

@@ -455,6 +455,21 @@ capacity-preserving decoder/head gate：
 - output root:
   `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a3b_nested_residual_gate`。
 
+`scripts/remote/run_phase5_timealign_hss_a3c_warm_started_nested_gate.sh` 运行 A3C warm-started
+primary nested gate：
+
+- mode: unified only；
+- arm:
+  - `checkpoint_initialized_nested_segment_decoder_multiprefix`:
+    `readout-mode=checkpoint-initialized-nested-segment-decoder`,
+    `pred-loss-mode=multi-prefix`;
+- warm-start source:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_h1_readout_gate/official-last/TimeAlignOfficialUnified720_H1_target_set_decoder_multiprefix_official-last/{dataset}/mixed_h96_h192_h336_h720/seed2021/checkpoint.pt`；
+- datasets: `Weather ETTm2 ETTh2`；
+- default GPUs: `0 1 2`；
+- output root:
+  `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a3c_warm_started_nested_gate`。
+
 
 ## Analysis
 
@@ -585,6 +600,49 @@ controls。
 
 A3B 分析重点比较 target-conditioned nested residual 相对 A2 nested、A3-1 shallow、H1、H1C
 与 fixed specialist 的差异。
+
+`scripts/analyze_phase5_timealign_hss_a3c_warm_started_nested_gate.py` 输出：
+
+- `phase5_timealign_hss_a3c_metrics.csv`;
+- `phase5_timealign_hss_a3c_comparison.csv`;
+- `phase5_timealign_hss_a3c_summary.csv`;
+- `phase5_timealign_hss_a3c_training.csv`;
+- `phase5_timealign_hss_a3c_best_epoch.csv`;
+- `phase5_timealign_hss_a3c_warm_started_nested_gate_report.md`。
+
+A3C 分析重点比较 warm-started primary nested 相对 A2 nested、A3B residual、H1、H1C 与
+fixed specialist 的差异。
+
+## A3C Warm-Started Primary Nested Interface
+
+A3C 回到 primary nested prediction interface，不再把 nested 放在 residual path。它从已训练的
+H1 `target_set_decoder_multiprefix` checkpoint warm-start：
+
+```text
+source checkpoint:
+  shared TimeAlign carrier weights
+  trained proj_x.weight / proj_x.bias
+
+target model:
+  readout_mode = checkpoint-initialized-nested-segment-decoder
+  nested heads:
+    head_1 <- source proj_x rows [0:96]
+    head_2 <- source proj_x rows [96:192]
+    head_3 <- source proj_x rows [192:336]
+    head_4 <- source proj_x rows [336:720]
+
+forward:
+  hidden -> nested segment heads -> concat needed segments -> [B, H, C]
+```
+
+Code-theory consistency：
+
+- learned capacity preservation: true as a warm-start diagnostic, because compatible shared weights and
+  trained `proj_x` rows come from a completed H1 checkpoint;
+- primary nested interface: true, because output is produced directly by nested heads rather than
+  `proj_x + residual`;
+- limitation: this introduces a two-stage dependency on H1. If it passes, the next question is whether the
+  warm-started transfer can be simplified or justified as part of the final training protocol.
 
 ## Code-Theory Consistency
 

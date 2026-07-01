@@ -1,0 +1,4 @@
+dataset,arm,pred_loss_mode,prefix_samples,best_epoch,best_val_mean_mse,last_epoch,last_val_mean_mse,last_gap_to_best_pct
+ETTh2,target_conditioned_nested_residual_decoder_multiprefix,multi-prefix,1,1,0.44891157746315,10,0.5474191382527351,21.94364452488895
+ETTm2,target_conditioned_nested_residual_decoder_multiprefix,multi-prefix,1,1,0.18323996104300022,10,0.18824386969208717,2.7307955211323787
+Weather,target_conditioned_nested_residual_decoder_multiprefix,multi-prefix,1,10,0.4894239231944084,10,0.4894239231944084,0.0
