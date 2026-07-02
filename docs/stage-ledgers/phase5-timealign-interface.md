@@ -85,7 +85,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | A5 first-principles candidate proposal | Codex | PCF narrative gate 未通过 | `completed` | 已提出 A5-Q/A5-B/A5-S/A5-I/A5-M；优先评估 A5-Q 与 A5-B |
 | A5-Q/A5-B narrative gate mini-notes | Codex | 候选已提出但尚未通过 narrative gate | `completed` | A5-Q/A5-B 均通过 narrative gate；进入实现与本地 smoke |
 | A5-Q/A5-B 最小实现与 smoke | Codex | A5-Q/A5-B narrative gate 通过 | `pending` | 实现 A5-B rank arms 与 A5-Q query arms；验证 shape 与 prefix-invariance |
-| A5-Q/A5-B remote synchronous gate | Codex | 本地 smoke 通过且 commit/push 完成 | `pending` | preflight 3090 GPU 后同步启动 4-arm gate |
+| A5-Q/A5-B remote synchronous gate | Codex | 本地 smoke 通过且 commit/push 完成 | `running` | 远程 4-arm gate 已启动，等待完成后同步并进入 Step 9/10 分析 |
 | Stage B diagnostic plan | Codex | A5 architecture 通过后再推进 | `deferred` | 暂缓；不能替代 Stage A architecture |
 | paper-mainline 同步检查 | Codex | A4 将 Stage A 从 universal head 改为 reliability-aware interface 诊断 | `completed` | 已同步当前状态与贡献边界，不改变 working title |
 
@@ -115,6 +115,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | 2026-07-01 | `A3D_teacher_preserved_nested_primary` | `354e895` | GPU 0/1/2 all free: `18 MiB used`, `24107 MiB free` each | `3848377` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a3d_teacher_preserved_nested_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a3d_teacher_preserved_nested_gate/_launcher/a3d_launcher.log` |
 | 2026-07-01 | `A3E_target_conditioned_nested_primary_ettm1_replacement` | `0a59296` | GPU 0/1/2 all free: `18 MiB used`, `24107 MiB free` each | `3942988` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a3e_target_conditioned_nested_gate` plus ETTm1 reference roots | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a3e_ettm1_replacement_gate/_launcher/a3e_ettm1_launcher.log` |
 | 2026-07-02 | `A4S_validation_prefix_signal_export` | `9c86588` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each | `1255624` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a4s_validation_prefix_signal_export` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a4s_validation_prefix_signal_export/_launcher/a4s_launcher.log` |
+| 2026-07-02 | `A5-Q/A5-B_unified_head_sync_gate` | `5b9637b` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch Weather arms occupied GPU 0/1/2 with about `5439/5444/4748 MiB used` | `1441800` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a5_unified_head_sync_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a5_unified_head_sync_gate/_launcher/a5_launcher.log` |
 
 ## Notes For Next Continuation
 
@@ -134,6 +135,8 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 - A5 first-principles 候选已提出：A5-Q target-query decoder、A5-B continuous basis operator、A5-S hypernetwork、A5-I innovation process、A5-M placeholder head。
 - A5-Q/A5-B narrative gate 已完成：二者可进入 Step 6/7，实现前必须做 shape 与 prefix-invariance smoke。
 - A5-S/A5-I/A5-M 暂缓；本轮不扩展成无边界 sweep。
+- A5-Q/A5-B remote synchronous gate 已在 commit `5b9637b` 启动：默认矩阵为 `Weather ETTm1 ETTh2`
+  × `a5b_r64/a5b_r128/a5q_seg48_small/a5q_seg24_wide`。
 - Stage B `Reliability-Aware Future Supervision Routing` 仅作为 A5 成立后的第二贡献暂缓。
 - 不允许再把 residual patch 或 shallow initialization 当作 paper-core interface 候选。
 - 不允许把 `interface-controlled evaluation protocol` 当作解决 interface mismatch 的方法贡献。
