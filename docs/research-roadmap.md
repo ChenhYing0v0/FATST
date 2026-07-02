@@ -2450,16 +2450,35 @@ multi-horizon interface。当前保留的 paper-core candidates 是：
 
 | Field | Content |
 | --- | --- |
-| `current_step` | Step 2/3/4：重新定义 Stage A 的核心问题，并提出 first-principles unified prediction architecture |
+| `current_step` | Step 6/7：A5-Q 与 A5-B 已通过 narrative gate，进入最小实现与远程同步 gate |
 | `problem` | 如果我们声称 naive full-720 crop 存在 interface mismatch，就必须在 head/decoder 层面提出 fair enough unified architecture；否则 Stage B 的收益归因不干净 |
 | `existence_evidence` | A2 nested 有局部正向信号；A3D teacher-preserved 说明 function preservation 有效；A3E/A4S 否定的是 target-conditioned nested 和 existing-path selector，不是否定 first-principles interface |
-| `idea` | 设计 `Capacity-Preserving Prefix-Consistent Decoder`：direct multi-prefix generation + prefix consistency + capacity preservation + target-prefix awareness |
-| `theory_check` | A5 必须避免旧错误：不能是 shallow row-copy、residual patch、teacher-weight sweep 或 existing-path mixture；必须有清楚 decoder contract 和 function/capacity preservation mechanism |
-| `design` | 下一步先写 A5 design/narrative gate，明确 tensor path、prefix request 如何进入 decoder、capacity 如何保留、prefix consistency 如何实现；通过后再实现和远程 gate |
-| `narrative_gate` | pending：必须证明它比 A2/A3D/A3E 更根本，而不是机械叠加 |
-| `effectiveness_gate` | pending：至少超过 H1 target-set 与 A3D teacher-preserved controls；不能只靠单 dataset/horizon；当前 gate universe 为 `ETTh2 + ETTm1 + Weather` |
-| `artifacts` | `docs/paper-mainline.md`、`docs/stage-ledgers/phase5-timealign-interface.md` |
-| `decision` | active next action：进入 A5 Step 2/3/4；Stage B reliability-aware future supervision routing 暂缓为 A5 成立后的第二贡献 |
+| `idea` | 提出 5 个候选：A5-Q elastic causal target-query decoder、A5-B continuous forecast-basis operator、A5-S step-specific hypernetwork head、A5-I cumulative innovation process decoder、A5-M masked future placeholder head |
+| `theory_check` | A5-Q/A5-B 最符合 first-principles unified head：它们都不依赖 pretrained full-head anchor，也不是 residual/correction 主体；A5-S/A5-I/A5-M 暂作为 control/backlog |
+| `design` | 本轮实现 A5-B rank 64/128 与 A5-Q seg48-small/seg24-wide 四个 gate arms；本地 shape 与 prefix-invariance smoke 通过后提交推送，再远程同步启动 |
+| `narrative_gate` | passed：A5-Q 与 A5-B 均满足 first-principles unified head 叙事；A5-S/A5-I/A5-M 暂缓为 control/backlog；PCF 保持 `narrative_rejected_after_review` |
+| `effectiveness_gate` | pending：远程返回后判断 ALL mean MSE、12-prefix wins、h96/h720 segment behavior、prefix mismatch 与 capacity-control 对照 |
+| `artifacts` | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md`、`docs/experiments/phase5-a5-qb-narrative-gate-and-sync-experiment.md`、`docs/experiments/phase5-a5-capacity-preserving-prefix-consistent-decoder.md`、`docs/paper-mainline.md`、`docs/stage-ledgers/phase5-timealign-interface.md` |
+| `decision` | A5 进入 Step 6/7；A5-Q/A5-B 可实现并同步远程 gate。Stage B reliability-aware future supervision routing 仍暂缓，不能替代 A5 |
+
+[A5 PCF Re-evaluation] 用户指出 PCF 不像重新设计的 unified head，而像旧阶段机制混合。复评后该质疑成立：
+active dense anchor 的原意是避免 capacity collapse，但它会让方法依赖 pretrained full-head rows；
+`anchor + correction` 也容易被审稿人理解为 residual repair。该路线不能作为 paper-core。
+
+[A5 Candidate Proposal] 已提出 5 个新候选。优先级如下：
+
+1. `A5-Q_elastic_causal_target_query_decoder`：future position queries + prefix-causal / structured mask；
+2. `A5-B_continuous_forecast_basis_operator`：continuous forecast function/operator；
+3. `A5-S_step_specific_hypernetwork_head`：coordinate-conditioned generated readout weights；
+4. `A5-I_cumulative_innovation_process_decoder`：trajectory innovation process；
+5. `A5-M_masked_future_placeholder_head`：future placeholders + structured mask。
+
+[A5-Q/A5-B Narrative Gate] A5-Q 与 A5-B 均通过 narrative gate。A5-Q 的贡献边界是
+prefix-elastic target-query decoder；A5-B 的贡献边界是 continuous prefix-consistent forecast
+operator。二者都不依赖 pretrained dense rows、teacher anchor 或 residual correction。
+
+[Next] 实现 A5-B 与 A5-Q 的最小 head modes，完成 shape/prefix-invariance smoke 后，提交推送并
+启动 3090 远程同步 gate。
 
 ## 历史证据索引
 

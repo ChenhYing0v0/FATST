@@ -88,6 +88,8 @@ class Model(nn.Module):
             "target-conditioned-nested-residual-decoder",
             "checkpoint-initialized-nested-segment-decoder",
             "target-conditioned-nested-segment-decoder",
+            "continuous-forecast-basis-operator",
+            "elastic-causal-target-query-decoder",
         }
         self.capacity_preserving_modes = {
             "dense-prefix-residual-adapter",
@@ -149,6 +151,46 @@ class Model(nn.Module):
             self.prefix_row_delta_up = nn.Linear(adapter_dim, configs.pred_len)
             nn.init.zeros_(self.prefix_row_delta_up.weight)
             nn.init.zeros_(self.prefix_row_delta_up.bias)
+        if self.readout_mode == "continuous-forecast-basis-operator":
+            self.basis_rank = int(getattr(configs, "basis_rank", 64))
+            self.basis_coeff = nn.Sequential(
+                nn.LayerNorm(readout_dim),
+                nn.Linear(readout_dim, readout_dim),
+                nn.GELU(),
+                nn.Dropout(configs.dropout),
+                nn.Linear(readout_dim, self.basis_rank),
+            )
+        if self.readout_mode == "elastic-causal-target-query-decoder":
+            self.target_query_segment_len = int(getattr(configs, "target_query_segment_len", 48))
+            target_query_heads = int(getattr(configs, "target_query_heads", 4))
+            target_query_ff = int(getattr(configs, "target_query_ff", configs.d_ff))
+            self.target_query_embed = nn.Sequential(
+                nn.Linear(2, configs.d_model),
+                nn.GELU(),
+                nn.Linear(configs.d_model, configs.d_model),
+            )
+            self.target_cross_attn = nn.MultiheadAttention(
+                configs.d_model,
+                num_heads=target_query_heads,
+                dropout=configs.dropout,
+                batch_first=True,
+            )
+            self.target_self_attn = nn.MultiheadAttention(
+                configs.d_model,
+                num_heads=target_query_heads,
+                dropout=configs.dropout,
+                batch_first=True,
+            )
+            self.target_query_norm1 = nn.LayerNorm(configs.d_model)
+            self.target_query_norm2 = nn.LayerNorm(configs.d_model)
+            self.target_query_norm3 = nn.LayerNorm(configs.d_model)
+            self.target_query_ffn = nn.Sequential(
+                nn.Linear(configs.d_model, target_query_ff),
+                nn.GELU(),
+                nn.Dropout(configs.dropout),
+                nn.Linear(target_query_ff, configs.d_model),
+            )
+            self.target_segment_out = nn.Linear(configs.d_model, self.target_query_segment_len)
         self.nested_readout_modes = {
             "nested-segment-decoder",
             "dense-initialized-nested-segment-decoder",
@@ -217,6 +259,26 @@ class Model(nn.Module):
             target_prefix = self.pred_len
         return hidden.new_tensor([[float(target_prefix) / float(self.pred_len)]])
 
+    def _forecast_basis_features(self, horizon, hidden):
+        rank = self.basis_rank
+        steps = torch.arange(1, horizon + 1, device=hidden.device, dtype=hidden.dtype)
+        tau = steps / float(self.pred_len)
+        features = [
+            torch.ones_like(tau),
+            tau,
+            tau * tau,
+            tau * tau * tau,
+        ]
+        frequency = 1.0
+        while len(features) < rank:
+            angle = np.pi * frequency * tau
+            features.append(torch.sin(angle))
+            if len(features) < rank:
+                features.append(torch.cos(angle))
+            frequency += 1.0
+        basis = torch.stack(features[:rank], dim=-1)
+        return basis / float(rank) ** 0.5
+
     def _target_set_prefix_head(self, hidden, target_prefix):
         # hidden: [B, C, R], output: [B, H, C]
         features = self._prefix_features(target_prefix, hidden.device, hidden.dtype)
@@ -236,6 +298,49 @@ class Model(nn.Module):
         weights = torch.softmax(scores, dim=-1)
         context = torch.einsum("bchn,bcnd->bchd", weights, value)
         output = self.token_out(context).squeeze(-1)
+        return output.permute(0, 2, 1)
+
+    def _continuous_forecast_basis_operator(self, hidden, target_prefix):
+        # hidden: [B, C, R], output: [B, H, C]
+        if target_prefix is None:
+            target_prefix = self.pred_len
+        horizon = int(target_prefix)
+        coeff = self.basis_coeff(hidden)
+        basis = self._forecast_basis_features(horizon, hidden)
+        output = torch.einsum("hk,bck->bch", basis, coeff)
+        return output.permute(0, 2, 1)
+
+    def _target_segment_features(self, horizon, hidden):
+        segment_len = self.target_query_segment_len
+        segment_count = (int(horizon) + segment_len - 1) // segment_len
+        start = torch.arange(segment_count, device=hidden.device, dtype=hidden.dtype) * segment_len
+        center = (start + 0.5 * segment_len) / float(self.pred_len)
+        width = torch.full_like(center, float(segment_len) / float(self.pred_len))
+        return torch.stack([center, width], dim=-1)
+
+    def _elastic_causal_target_query_decoder(self, hidden, target_prefix):
+        # hidden: [B, C, N, D], output: [B, H, C]
+        if target_prefix is None:
+            target_prefix = self.pred_len
+        horizon = int(target_prefix)
+        batch, channels, patch_num, dim = hidden.shape
+        memory = hidden.reshape(batch * channels, patch_num, dim)
+        features = self._target_segment_features(horizon, hidden)
+        query = self.target_query_embed(features)
+        query = query.unsqueeze(0).expand(batch * channels, -1, -1)
+        cross, _ = self.target_cross_attn(query, memory, memory, need_weights=False)
+        query = self.target_query_norm1(query + cross)
+
+        segment_count = query.shape[1]
+        causal_mask = torch.triu(
+            torch.ones(segment_count, segment_count, device=hidden.device, dtype=torch.bool),
+            diagonal=1,
+        )
+        target, _ = self.target_self_attn(query, query, query, attn_mask=causal_mask, need_weights=False)
+        target = self.target_query_norm2(query + target)
+        target = self.target_query_norm3(target + self.target_query_ffn(target))
+        output = self.target_segment_out(target).reshape(batch, channels, -1)
+        output = output[:, :, :horizon]
         return output.permute(0, 2, 1)
 
     def _dense_prefix_residual_adapter(self, hidden, target_prefix):
@@ -365,6 +470,10 @@ class Model(nn.Module):
             x = self._target_conditioned_nested_segment_decoder(x.flatten(start_dim=-2), target_prefix)
         elif self.readout_mode == "target-conditioned-nested-residual-decoder":
             x = self._target_conditioned_nested_residual_decoder(x.flatten(start_dim=-2), target_prefix)
+        elif self.readout_mode == "continuous-forecast-basis-operator":
+            x = self._continuous_forecast_basis_operator(x.flatten(start_dim=-2), target_prefix)
+        elif self.readout_mode == "elastic-causal-target-query-decoder":
+            x = self._elastic_causal_target_query_decoder(x, target_prefix)
         else:
             x = x.flatten(start_dim=-2)
             if self.readout_mode == "dense-prefix-residual-adapter":

@@ -407,6 +407,10 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         device=device,
         readout_mode=args.readout_mode,
         target_horizons=args.target_horizons,
+        basis_rank=args.basis_rank,
+        target_query_segment_len=args.target_query_segment_len,
+        target_query_heads=args.target_query_heads,
+        target_query_ff=args.target_query_ff,
     )
     return official
 
@@ -1038,9 +1042,15 @@ def parse_args() -> argparse.Namespace:
             "target-conditioned-nested-residual-decoder",
             "checkpoint-initialized-nested-segment-decoder",
             "target-conditioned-nested-segment-decoder",
+            "continuous-forecast-basis-operator",
+            "elastic-causal-target-query-decoder",
         ],
         default="official",
     )
+    parser.add_argument("--basis-rank", type=int, default=64)
+    parser.add_argument("--target-query-segment-len", type=int, default=48)
+    parser.add_argument("--target-query-heads", type=int, default=4)
+    parser.add_argument("--target-query-ff", type=int, default=256)
     parser.add_argument("--warm-start-checkpoint", type=Path, default=None)
     parser.add_argument("--teacher-checkpoint", type=Path, default=None)
     parser.add_argument("--teacher-readout-mode", choices=["target-set-decoder"], default="target-set-decoder")
