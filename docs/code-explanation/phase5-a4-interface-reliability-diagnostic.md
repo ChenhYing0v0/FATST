@@ -155,3 +155,63 @@ Code-theory boundary：
 A4R 使用现有 logs，因此它只能判断“当前已保存的信号是否足够解释 path reliability”。它不能否定
 prefix-wise validation residual、teacher-student disagreement by prefix 等尚未导出的更强 signals。
 若 A4R signal 较弱，合理下一步是设计轻量 diagnostic export，而不是直接做 routing。
+
+## A4S Validation-Prefix Signal Export
+
+`scripts/export_timealign_validation_prefix_diagnostics.py` 是 A4S 的 checkpoint-level exporter。它不训练模型，
+只加载已有远端 checkpoint，在 validation split 上导出 prefix-wise diagnostics。
+
+默认由远程 wrapper 调用：
+
+`scripts/remote/run_phase5_timealign_hss_a4s_validation_prefix_signal_export.sh`
+
+同步和分析入口：
+
+`scripts/sync_phase5_timealign_hss_a4s_results.sh`
+
+本地分析脚本：
+
+`scripts/analyze_phase5_timealign_hss_a4s_validation_prefix_signals.py`
+
+A4S 覆盖的 unified path：
+
+- `h1_target_set`
+- `h1c_row_gated`
+- `a2_nested`
+- `a3c_warm_nested`
+- `a3d_teacher_preserved`
+- `a3e_target_conditioned_warm`
+- `a3e_target_conditioned_scratch`
+
+固定 horizon specialist 不进入 A4S routing candidate。它仍是 problem evidence 和 performance reference，
+但不是 unified interface path routing 的候选路径。
+
+A4S exporter 输出：
+
+`validation_prefix_diagnostics.csv`
+
+| column | 来源 | 含义 |
+| --- | --- | --- |
+| `validation_prefix_mse` | validation split, requested target_prefix | 当前 path 在 prefix horizon 上的 validation MSE |
+| `validation_prefix_mae` | validation split, requested target_prefix | 当前 path 在 prefix horizon 上的 validation MAE |
+| `full_context_prefix_mse` | validation split, target_prefix=720 后取前 H | 同一模型在 full-context request 下的 prefix validation MSE |
+| `prefix_vs_full_mse` | requested prefix output vs full-context prefix output | 该 path 对 target_prefix 是否敏感，越大表示 prefix-conditioned behavior 越强 |
+| `teacher_student_mse` | current path output vs H1 teacher output | 当前 path 相对 H1 target-set teacher 的 prefix disagreement |
+| `teacher_student_mae` | current path output vs H1 teacher output | teacher-student MAE disagreement |
+| `residual_abs_mean` | current prediction - validation target | validation residual 平均绝对值 |
+| `residual_std` | current prediction - validation target | validation residual dispersion |
+
+A4S analyzer 的 correlation target 仍是 A4 的 `relative_vs_setting_best_pct`。如果 prefix-wise validation
+signals 能稳定解释该 target，才允许进入 `Reliability-Aware Capacity-Preserving Interface` 的 method
+narrative gate。
+
+Code-theory boundary：
+
+A4S 只导出聚合后的 validation diagnostics，不保存 batch-level predictions，因此不会显著增加存储压力。
+它也不使用 test target 作为 method input；test MSE 只在离线分析中作为被解释对象。
+
+Gate：
+
+- 若 ALL-level 或跨 dataset 稳定 signal 的 Spearman 绝对值达到约 `0.55`，说明 signal-existence gate
+  初步通过，可进入 routing method 的 Step 4-6 narrative gate；
+- 若相关性弱或方向不稳定，则 Stage A 不能继续做 routing，应回 Step 2/3 重审 interface contribution。

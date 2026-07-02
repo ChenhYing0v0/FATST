@@ -2416,6 +2416,21 @@ multi-horizon interface。当前保留的 paper-core candidates 是：
 | `artifacts` | `analysis/phase5_timealign_hss_a4r_reliability_signal_diagnostic_20260701/`、`scripts/analyze_phase5_timealign_hss_a4r_reliability_signals.py` |
 | `decision` | 不进入 learned routing；下一步 A4S 只能做轻量 prefix-wise validation signal export，例如 prefix validation MSE、teacher-student disagreement by prefix、prefix residual。若 A4S 仍失败，则回 Step 2/3 重审 Stage A contribution |
 
+### Phase5-A4S：Validation-Prefix Signal Export
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 6/7/8：设计并实现 validation-prefix signal export，准备远程 diagnostic-only run |
+| `problem` | A4R 证明现有 run-level logs 太粗，无法解释 per-horizon best-path map；需要 prefix-wise validation behavior 才能判断是否存在可部署 routing signal |
+| `existence_evidence` | A4R ALL 最强 signal Spearman 仅 `0.321`；多数现有 signals 不是 horizon-specific |
+| `idea` | 不训练新模型，直接加载已有 checkpoint，在 validation split 上导出 prefix-wise MSE、prefix-vs-full disagreement、teacher-student disagreement 和 residual statistics |
+| `theory_check` | 若 validation prefix residual 或 teacher-student disagreement 能稳定预测 A4 `gap_to_best`，说明 reliability-aware interface routing 有可观测依据；若仍弱，则 path reliability 主要是 test-oracle 现象或 signal 不可得 |
+| `design` | 新增 checkpoint-level exporter、远程 wrapper、sync 脚本和 analyzer。覆盖 H1/H1C/A2/A3C/A3D/A3E warm/scratch unified paths，不覆盖 fixed specialist routing |
+| `narrative_gate` | not_required：diagnostic-only，不作为 paper-core |
+| `effectiveness_gate` | 待远程结果；signal-existence gate 要求 ALL-level 或跨 dataset 稳定 signal 的 Spearman 绝对值约 `>=0.55`，且方向可解释 |
+| `artifacts` | `scripts/export_timealign_validation_prefix_diagnostics.py`、`scripts/remote/run_phase5_timealign_hss_a4s_validation_prefix_signal_export.sh`、`scripts/sync_phase5_timealign_hss_a4s_results.sh`、`scripts/analyze_phase5_timealign_hss_a4s_validation_prefix_signals.py` |
+| `decision` | 本轮完成实现与本地验证；下一步 commit/push 后在 3090 启动 diagnostic-only run |
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：

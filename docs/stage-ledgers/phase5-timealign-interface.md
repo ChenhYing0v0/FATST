@@ -19,10 +19,10 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | A4R 处于 Step 3/4/11：现有 training-log signals 已诊断，决定不进入 learned routing |
-| `current_candidate` | `A4R_reliability_signal_diagnostic` |
-| `latest_decision` | 现有日志信号不足：ALL-level 最强 `last_train_alignment_loss` 的 Spearman 仅 `0.321`，不能解释 per-horizon best-path map |
-| `next_required_action` | 设计 A4S validation-prefix signal export：导出 prefix-wise validation MSE、teacher-student disagreement、prefix residual，再判断是否存在可部署 routing signal |
+| `current_11_step` | A4S 处于 Step 6/7/8：validation-prefix signal export 已实现，准备远程 diagnostic-only run |
+| `current_candidate` | `A4S_validation_prefix_signal_export` |
+| `latest_decision` | A4S 只导出 prefix-wise validation diagnostics，不训练新模型、不进入 routing method；用于判断 signal-existence gate |
+| `next_required_action` | commit/push 后在 3090 启动 A4S diagnostic-only run，等待完成后同步并分析 signal correlations |
 | `rollback_point` | 若 A4S 仍找不到可观测 reliability signal，则回 Step 2/3 重审 Stage A contribution，不能直接实现 routing |
 
 ## Candidate Queue
@@ -35,7 +35,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | `A3F_teacher_preserved_target_conditioned_nested` | `deferred` | teacher preservation 解决 capacity，target conditioning 解决 requested-prefix specialization，二者组合可能形成最终 paper-core interface | 仅在 A3D/A3E 各自通过 narrative gate 后评估，避免未证实机制堆叠 | 必须超过单机制候选，且不能只靠参数量提升 | 等 A3D/A3E 至少一个 partial/pass 后再考虑 | pending |
 | `A4_interface_reliability_diagnostic` | `diagnostic_only` | A3D/A3E/A3C/A2/H1/H1C 的相对表现可能说明 capacity-preserving path 的可靠性随 future context 变化，而不是存在一个 universal head | not_required：launch 前定义为 diagnostic，不可直接升级为 paper-core | 已完成：best path 分散，oracle 上限存在但较小；只证明 reliability 差异存在，不证明可部署 routing | 进入 A4R signal diagnostic；禁止把 dataset/horizon 手工选择当作方法 | `analysis/phase5_timealign_hss_a4_interface_reliability_diagnostic_20260701/phase5_timealign_hss_a4_interface_reliability_diagnostic.md` |
 | `A4R_reliability_signal_diagnostic` | `diagnostic_only` | 若可观测 signals 能预测 path reliability 或 gap-to-best，则 Stage A 可重构为 `Reliability-Aware Capacity-Preserving Interface`，避免弱化为 manual routing | not_required：使用现有日志的 diagnostic-only | 未通过：ALL-level 最强 signal Spearman `0.321`，且 dataset 内方向不稳定 | 不进入 routing；下一步 A4S 设计更明确的 validation-prefix signal export | `analysis/phase5_timealign_hss_a4r_reliability_signal_diagnostic_20260701/phase5_timealign_hss_a4r_reliability_signal_diagnostic.md` |
-| `A4S_validation_prefix_signal_export` | `proposed` | 当前日志过粗，缺少 prefix-wise validation behavior；若 prefix validation residual / teacher-student disagreement 能解释 path reliability，才有资格进入 routing method | diagnostic 阶段 not_required；若后续作为 paper-core signal，必须重新过 narrative gate | 待设计：只导出精简 validation diagnostics，避免大规模保存 predictions | 下一步实现轻量 diagnostic export 或先做最小远程 gate 设计 | pending |
+| `A4S_validation_prefix_signal_export` | `running` | 当前日志过粗，缺少 prefix-wise validation behavior；若 prefix validation residual / teacher-student disagreement 能解释 path reliability，才有资格进入 routing method | not_required：diagnostic-only；若后续作为 paper-core signal，必须重新过 narrative gate | 待远程结果：signal gate 要求 prefix-wise validation signals 能稳定解释 A4 gap-to-best；否则回 Step 2/3 | 已实现 exporter/wrapper/sync/analyzer，准备远程运行 | `scripts/export_timealign_validation_prefix_diagnostics.py` |
 | `A3B_nested_residual_gate` | `failed_as_core_candidate` | nested structure 作为 residual path 可修复 dense head 的 prefix behavior | failed：nested 变成 dense head 附属补丁，削弱 primary interface 叙事 | 0/12 win，不能作为 paper-core | 仅保留为 negative evidence/control | `analysis/phase5_timealign_hss_a3b_nested_residual_gate_20260701/` |
 | `A3A_dense_initialized_nested_segment` | `failed_as_core_candidate` | 随机 dense row-copy 可作为 capacity-preserving repair | failed：随机初始化复制不等于 learned capacity preservation | 不通过 | 标记为设计错误，不再沿用 | `analysis/phase5_timealign_hss_a3_interface_repair_20260701/` |
 | `A2_nested_segment_primary` | `partial_pass` | nested segment primary interface 可能比 full dense head 更适配 multi-prefix evaluation | partial：有结构叙事，但 capacity 不足 | 有正向信号但不足以 paper-core | 作为 A3D/A3E 的机制来源 | `analysis/phase5_timealign_hss_a2_interface_gate_20260630/` |
@@ -66,7 +66,8 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | 分析 A3E ETTm1 replacement gate | Codex | 用户通知远程完成 | `completed` | A3E 标为 failed_as_core_candidate；下一步回 Step 2/3/4 做 reliability diagnostic |
 | A4 interface reliability diagnostic | Codex | A3E 失败后 rollback 到 Step 2/3/4 | `completed` | 已生成 A4 diagnostic；下一步 A4R signal diagnostic |
 | A4R reliability signal diagnostic 设计 | Codex | A4 证明 best-path reliability 差异存在但不能直接手工 routing | `completed` | 现有日志信号不足，不启动 routing |
-| A4S validation-prefix signal export 设计 | Codex | A4R 证明现有 logs 太粗 | `pending` | 设计 prefix-wise validation MSE / teacher-student disagreement / prefix residual 导出 |
+| A4S validation-prefix signal export 设计 | Codex | A4R 证明现有 logs 太粗 | `completed` | 已实现 exporter/wrapper/sync/analyzer |
+| 启动 A4S remote diagnostic-only run | Codex | A4S 本地验证通过 | `pending` | commit/push 后在 3090 启动，使用已有 checkpoints，不重训 |
 | paper-mainline 同步检查 | Codex | A4 将 Stage A 从 universal head 改为 reliability-aware interface 诊断 | `completed` | 已同步当前状态与贡献边界，不改变 working title |
 
 ## Paper Mainline Sync Log
