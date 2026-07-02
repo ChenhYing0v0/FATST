@@ -2431,6 +2431,21 @@ multi-horizon interface。当前保留的 paper-core candidates 是：
 | `artifacts` | `analysis/phase5_timealign_hss_a4s_validation_prefix_signal_export_20260702/`、`scripts/export_timealign_validation_prefix_diagnostics.py`、`scripts/remote/run_phase5_timealign_hss_a4s_validation_prefix_signal_export.sh`、`scripts/sync_phase5_timealign_hss_a4s_results.sh`、`scripts/analyze_phase5_timealign_hss_a4s_validation_prefix_signals.py` |
 | `decision` | A4S 标记为 `diagnostic_only_failed`。不进入 learned routing，不继续 existing-path selector。Stage A 回 Step 2/3 重审 contribution 1：若保留 interface 贡献，必须重新定义问题和机制；若放弃，必须重构 paper-mainline |
 
+### Phase5-StageA-Reeval：Interface Contribution Re-evaluation
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 2/3：A4S 失败后，审稿式重评估 Stage A contribution 是否仍能作为论文主贡献 |
+| `problem` | Stage A 已证明 interface 是 material confounder，但 A2/A3D/A3E 没有形成稳定 standalone interface method；A4R/A4S 又否定了 existing-path selector |
+| `existence_evidence` | A3D `w03` 相对 H1/H1C 接近或略优，说明 function preservation 有效；A4 best path 分散但 oracle 上限仅 `-0.431%`；A4S ALL 最强 Spearman 仅 `0.388` 且 dataset-level 方向不一致 |
+| `idea` | 不继续 head/path sweep；把 interface 从 standalone method contribution 重构为 `Problem Formulation and Interface-Controlled Evaluation`，主方法转入 future-supervision gradient routing |
+| `theory_check` | 论文题目是 HSS，不是 head architecture。若 interface 已被证明是 confounder 但未形成强 method，最合理位置是 carrier/control constraint；真正方法应回答 future supervision 的 gradient path 如何调度 |
+| `design` | 新增 Stage A re-evaluation report；同步 stage ledger 与 paper-mainline；下一步建立 Stage B `Reliability-Aware Future Supervision Routing` ledger 和 diagnostic plan |
+| `narrative_gate` | 通过：它保留 interface 问题的论文价值，同时避免把未通过 effectiveness gate 的 head 方案写成主贡献 |
+| `effectiveness_gate` | not_applicable：本轮是 Step 2/3 研究决策，不是训练实验 |
+| `artifacts` | `analysis/phase5_stage_a_contribution_reevaluation_20260702/stage_a_contribution_reevaluation.md`、`docs/stage-ledgers/phase5-timealign-interface.md`、`docs/paper-mainline.md` |
+| `decision` | Stage A standalone interface method route 暂停；interface 保留为 problem evidence 与 carrier/control constraint；下一步进入 Stage B Step 2/3/4 |
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：

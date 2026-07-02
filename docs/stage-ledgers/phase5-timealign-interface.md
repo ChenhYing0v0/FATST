@@ -19,11 +19,11 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | A4S 处于 Step 9/10/11：validation-prefix signal diagnostic 已完成，Stage A 触发 Step 2/3 rollback |
-| `current_candidate` | `A4S_validation_prefix_signal_export` |
-| `latest_decision` | A4S 未通过 signal-existence gate：ALL-level 最强 `teacher_student_mae` Spearman 仅 `0.388`，dataset-level signals 方向不一致 |
-| `next_required_action` | 回 Step 2/3 做 Stage A contribution reviewer-style re-evaluation；不能继续 existing-path routing，也不能把 validation signal 包装成 method |
-| `rollback_point` | 回 Step 2/3：重审 `Reliability-Aware Capacity-Preserving Interface` 是否还能作为贡献 1；若保留，必须重新定义问题与机制，不再沿用 existing path routing |
+| `current_11_step` | Stage A contribution re-evaluation 已完成 Step 2/3；Stage A standalone method route 暂停 |
+| `current_candidate` | `Stage_A_contribution_reevaluation` |
+| `latest_decision` | 当前证据不足以支撑 standalone interface method；interface 保留为 paper-level problem evidence 和 carrier/control constraint；主方法转入 Stage B future-supervision gradient routing |
+| `next_required_action` | 新建/切换 Stage B ledger，先做 `Reliability-Aware Future Supervision Routing` 的 Step 2/3/4 diagnostic plan，再决定是否实现 |
+| `rollback_point` | 回 Step 2/3：论文贡献边界重构为 `Problem Formulation and Interface-Controlled Evaluation` + `Reliability-Aware Future Supervision Routing`；若 Stage B 发现收益依赖 head choice，再回 Stage A 重新设计 first-principles interface |
 
 ## Candidate Queue
 
@@ -54,6 +54,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | A4 interface reliability diagnostic | `A4_interface_reliability_diagnostic` | diagnostic | best path map 分散；ALL best static 为 A3D，oracle 相对 best static `-0.431%`，说明 reliability 差异真实但手工 routing 叙事弱 | `diagnostic_only_completed` | `analysis/phase5_timealign_hss_a4_interface_reliability_diagnostic_20260701/phase5_timealign_hss_a4_interface_reliability_diagnostic.md` |
 | A4R existing-log signal diagnostic | `A4R_reliability_signal_diagnostic` | diagnostic | 现有 training-log signals 解释力不足：ALL 最强 Spearman `0.321`，dataset 内方向不稳定 | `diagnostic_only_failed` | `analysis/phase5_timealign_hss_a4r_reliability_signal_diagnostic_20260701/phase5_timealign_hss_a4r_reliability_signal_diagnostic.md` |
 | A4S validation-prefix signal export | `A4S_validation_prefix_signal_export` | diagnostic | prefix-wise validation signals 仍不足：ALL 最强 teacher-student MAE Spearman `0.388`，dataset-level 方向不一致 | `diagnostic_only_failed` | `analysis/phase5_timealign_hss_a4s_validation_prefix_signal_export_20260702/phase5_timealign_hss_a4s_deep_dive.md` |
+| Stage A contribution re-evaluation | `Stage_A_contribution_reevaluation` | reviewer-style decision | Stage A 不能作为 standalone interface method contribution；interface 问题必须保留为 problem evidence 与 carrier/control constraint；主方法转入 Stage B future-supervision gradient routing | `stage_a_method_route_paused` | `analysis/phase5_stage_a_contribution_reevaluation_20260702/stage_a_contribution_reevaluation.md` |
 
 ## Pending Tasks
 
@@ -69,7 +70,8 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | A4R reliability signal diagnostic 设计 | Codex | A4 证明 best-path reliability 差异存在但不能直接手工 routing | `completed` | 现有日志信号不足，不启动 routing |
 | A4S validation-prefix signal export 设计 | Codex | A4R 证明现有 logs 太粗 | `completed` | 已实现 exporter/wrapper/sync/analyzer |
 | 启动 A4S remote diagnostic-only run | Codex | A4S 本地验证通过 | `completed` | 21/21 diagnostics 已完成并同步 |
-| Stage A contribution 重评估 | Codex | A4S signal-existence gate 未通过 | `pending` | 回 Step 2/3，评估贡献 1 是否重构、替换或与 Stage B 合并 |
+| Stage A contribution 重评估 | Codex | A4S signal-existence gate 未通过 | `completed` | 已完成 reviewer-style re-evaluation；下一步建立 Stage B diagnostic plan |
+| Stage B diagnostic plan | Codex | Stage A standalone method route 暂停，论文主方法转入 future-supervision gradient routing | `pending` | 新建或切换 Stage B ledger，定义 problem/evidence/idea/theory check/narrative gate |
 | paper-mainline 同步检查 | Codex | A4 将 Stage A 从 universal head 改为 reliability-aware interface 诊断 | `completed` | 已同步当前状态与贡献边界，不改变 working title |
 
 ## Paper Mainline Sync Log
@@ -84,6 +86,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | 2026-07-01 | A4 reliability diagnostic 完成 | `当前状态` / `修订后的论文主线` | 贡献边界微调 | Stage A 不写成 universal head，也不写成手工 routing；下一步先验证可观测 reliability signals |
 | 2026-07-01 | A4R existing-log signal diagnostic 完成 | `当前状态` | 转向规则细化 | 现有 logs 不足以解释 path reliability；下一步只做 validation-prefix signal export，不进入 routing |
 | 2026-07-02 | A4S validation-prefix signal diagnostic 完成 | `当前状态` / `贡献边界` | rollback 触发 | prefix-wise validation signals 未通过；Stage A 回 Step 2/3 重审贡献 1 |
+| 2026-07-02 | Stage A contribution re-evaluation 完成 | `当前状态` / `预期贡献` / `方法边界` | 贡献边界重构 | Stage A standalone interface method route 暂停；interface 保留为 problem evidence 和 carrier/control constraint；主方法转入 Stage B |
 
 ## Remote Launch Log
 
@@ -105,6 +108,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 - A4 诊断显示 best path 分散，但 oracle routing 上限较小：ALL 相对 best static A3D 只有 `-0.431%`。这支持 reliability 问题真实存在，但不支持把 dataset/horizon 手工选择路径写成最终方法。
 - A4R 使用现有 training logs 后发现 signals 太粗：ALL 最强 Spearman 只有 `0.321`。下一步必须新增 prefix-wise validation diagnostic export，而不是直接实现 routing。
 - A4S 使用 prefix-wise validation signals 后仍失败：ALL 最强 Spearman 只有 `0.388`，且 dataset-level top signals 方向不一致。不能继续 existing-path routing。
-- 下一步必须做 Stage A Step 2/3 重评估：若继续保留 interface 贡献，必须重新定义问题和机制；若放弃，需要重构 paper-mainline，不得简单降级成 diagnostic。
+- Stage A Step 2/3 重评估已完成：standalone interface method route 暂停；interface 不删除，而是保留为 problem evidence 与 HSS carrier/control constraint。
+- 下一步必须建立 Stage B `Reliability-Aware Future Supervision Routing` ledger 和 diagnostic plan；先验证 future supervision 的 gradient-path conflict/reliability 问题是否真实存在，再实现方法。
 - 不允许再把 residual patch 或 shallow initialization 当作 paper-core interface 候选。
 - 详细 metric 和诊断报告不要写入本文件，只写 conclusion summary 和 artifact path。
