@@ -19,11 +19,11 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Stage A contribution re-evaluation 已完成 Step 2/3；Stage A standalone method route 暂停 |
-| `current_candidate` | `Stage_A_contribution_reevaluation` |
-| `latest_decision` | 当前证据不足以支撑 standalone interface method；interface 保留为 paper-level problem evidence 和 carrier/control constraint；主方法转入 Stage B future-supervision gradient routing |
-| `next_required_action` | 新建/切换 Stage B ledger，先做 `Reliability-Aware Future Supervision Routing` 的 Step 2/3/4 diagnostic plan，再决定是否实现 |
-| `rollback_point` | 回 Step 2/3：论文贡献边界重构为 `Problem Formulation and Interface-Controlled Evaluation` + `Reliability-Aware Future Supervision Routing`；若 Stage B 发现收益依赖 head choice，再回 Stage A 重新设计 first-principles interface |
+| `current_11_step` | Phase5-A5：Step 2/3/4，重新设计 first-principles unified prediction architecture |
+| `current_candidate` | `A5_capacity_preserving_prefix_consistent_decoder` |
+| `latest_decision` | A4S 只否定 existing-path selector；不能把 interface mismatch 降级为 protocol/control。Stage A 仍是 blocking core，必须先提出 fair enough unified prediction architecture |
+| `next_required_action` | 设计 A5 `Capacity-Preserving Prefix-Consistent Decoder`：先完成 problem/evidence/idea/theory check/narrative gate，再决定是否实现 |
+| `rollback_point` | 若 A5 narrative gate 失败，回 Step 2/3 重审论文是否仍能以 HSS 为主线；若 A5 effectiveness 失败，再判断继续 first-principles interface 还是重构论文方向。Stage B 暂缓，不能替代 A5 |
 
 ## Candidate Queue
 
@@ -39,6 +39,8 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | `A3B_nested_residual_gate` | `failed_as_core_candidate` | nested structure 作为 residual path 可修复 dense head 的 prefix behavior | failed：nested 变成 dense head 附属补丁，削弱 primary interface 叙事 | 0/12 win，不能作为 paper-core | 仅保留为 negative evidence/control | `analysis/phase5_timealign_hss_a3b_nested_residual_gate_20260701/` |
 | `A3A_dense_initialized_nested_segment` | `failed_as_core_candidate` | 随机 dense row-copy 可作为 capacity-preserving repair | failed：随机初始化复制不等于 learned capacity preservation | 不通过 | 标记为设计错误，不再沿用 | `analysis/phase5_timealign_hss_a3_interface_repair_20260701/` |
 | `A2_nested_segment_primary` | `partial_pass` | nested segment primary interface 可能比 full dense head 更适配 multi-prefix evaluation | partial：有结构叙事，但 capacity 不足 | 有正向信号但不足以 paper-core | 作为 A3D/A3E 的机制来源 | `analysis/phase5_timealign_hss_a2_interface_gate_20260630/` |
+| `Stage_A_contribution_reevaluation` | `superseded` | A4S 后曾考虑把 Stage A 降级为 protocol/control 并转入 Stage B | superseded：后续审稿讨论认为该路线存在逻辑漏洞 | not_applicable | 被 A5 共识替代：Stage A 必须先解决 architecture | `analysis/phase5_stage_a_contribution_reevaluation_20260702/stage_a_contribution_reevaluation.md` |
+| `A5_capacity_preserving_prefix_consistent_decoder` | `proposed` | 若论文提出 interface mismatch，就必须设计 fair unified prediction architecture；A2 nested/A3D teacher-preserved 的正向信号说明 nested + preservation 值得 first-principles 重构 | pending：必须证明它不是 A2/A3D/A3E 的机械堆叠，而是有清楚 decoder contract 的 SCI 级 architecture | pending：实现前先定义 direct multi-prefix generation、prefix consistency、capacity preservation、target-prefix awareness 四个 gate | 下一步完成 A5 design note 与 narrative gate | pending |
 
 ## Experiment Ledger
 
@@ -54,7 +56,8 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | A4 interface reliability diagnostic | `A4_interface_reliability_diagnostic` | diagnostic | best path map 分散；ALL best static 为 A3D，oracle 相对 best static `-0.431%`，说明 reliability 差异真实但手工 routing 叙事弱 | `diagnostic_only_completed` | `analysis/phase5_timealign_hss_a4_interface_reliability_diagnostic_20260701/phase5_timealign_hss_a4_interface_reliability_diagnostic.md` |
 | A4R existing-log signal diagnostic | `A4R_reliability_signal_diagnostic` | diagnostic | 现有 training-log signals 解释力不足：ALL 最强 Spearman `0.321`，dataset 内方向不稳定 | `diagnostic_only_failed` | `analysis/phase5_timealign_hss_a4r_reliability_signal_diagnostic_20260701/phase5_timealign_hss_a4r_reliability_signal_diagnostic.md` |
 | A4S validation-prefix signal export | `A4S_validation_prefix_signal_export` | diagnostic | prefix-wise validation signals 仍不足：ALL 最强 teacher-student MAE Spearman `0.388`，dataset-level 方向不一致 | `diagnostic_only_failed` | `analysis/phase5_timealign_hss_a4s_validation_prefix_signal_export_20260702/phase5_timealign_hss_a4s_deep_dive.md` |
-| Stage A contribution re-evaluation | `Stage_A_contribution_reevaluation` | reviewer-style decision | Stage A 不能作为 standalone interface method contribution；interface 问题必须保留为 problem evidence 与 carrier/control constraint；主方法转入 Stage B future-supervision gradient routing | `stage_a_method_route_paused` | `analysis/phase5_stage_a_contribution_reevaluation_20260702/stage_a_contribution_reevaluation.md` |
+| Stage A contribution re-evaluation | `Stage_A_contribution_reevaluation` | reviewer-style decision | 初版判断为转入 Stage B；后续审稿讨论发现该路线无法解决 interface mismatch 逻辑漏洞 | `superseded_by_a5` | `analysis/phase5_stage_a_contribution_reevaluation_20260702/stage_a_contribution_reevaluation.md` |
+| A5 consensus correction | `A5_capacity_preserving_prefix_consistent_decoder` | research direction | Stage A 必须继续：先设计 fair unified prediction architecture，再谈 Stage B routing | `proposed` | pending |
 
 ## Pending Tasks
 
@@ -70,8 +73,9 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | A4R reliability signal diagnostic 设计 | Codex | A4 证明 best-path reliability 差异存在但不能直接手工 routing | `completed` | 现有日志信号不足，不启动 routing |
 | A4S validation-prefix signal export 设计 | Codex | A4R 证明现有 logs 太粗 | `completed` | 已实现 exporter/wrapper/sync/analyzer |
 | 启动 A4S remote diagnostic-only run | Codex | A4S 本地验证通过 | `completed` | 21/21 diagnostics 已完成并同步 |
-| Stage A contribution 重评估 | Codex | A4S signal-existence gate 未通过 | `completed` | 已完成 reviewer-style re-evaluation；下一步建立 Stage B diagnostic plan |
-| Stage B diagnostic plan | Codex | Stage A standalone method route 暂停，论文主方法转入 future-supervision gradient routing | `pending` | 新建或切换 Stage B ledger，定义 problem/evidence/idea/theory check/narrative gate |
+| Stage A contribution 重评估 | Codex | A4S signal-existence gate 未通过 | `completed` | 初版转 Stage B 的判断已被修正；Stage A 继续进入 A5 |
+| A5 design and narrative gate | Codex | 新共识：必须先解决 unified prediction architecture | `pending` | 设计 `Capacity-Preserving Prefix-Consistent Decoder`，明确 direct prefix generation / consistency / capacity / target awareness |
+| Stage B diagnostic plan | Codex | A5 architecture 通过后再推进 | `deferred` | 暂缓；不能替代 Stage A architecture |
 | paper-mainline 同步检查 | Codex | A4 将 Stage A 从 universal head 改为 reliability-aware interface 诊断 | `completed` | 已同步当前状态与贡献边界，不改变 working title |
 
 ## Paper Mainline Sync Log
@@ -87,6 +91,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | 2026-07-01 | A4R existing-log signal diagnostic 完成 | `当前状态` | 转向规则细化 | 现有 logs 不足以解释 path reliability；下一步只做 validation-prefix signal export，不进入 routing |
 | 2026-07-02 | A4S validation-prefix signal diagnostic 完成 | `当前状态` / `贡献边界` | rollback 触发 | prefix-wise validation signals 未通过；Stage A 回 Step 2/3 重审贡献 1 |
 | 2026-07-02 | Stage A contribution re-evaluation 完成 | `当前状态` / `预期贡献` / `方法边界` | 贡献边界重构 | Stage A standalone interface method route 暂停；interface 保留为 problem evidence 和 carrier/control constraint；主方法转入 Stage B |
+| 2026-07-02 | Stage A re-evaluation consensus correction | `当前状态` / `预期贡献` / `方法边界` | 贡献边界修正 | 初版转 Stage B 存在逻辑漏洞；Stage A 必须先解决 unified prediction architecture，进入 A5 |
 
 ## Remote Launch Log
 
@@ -108,7 +113,9 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 - A4 诊断显示 best path 分散，但 oracle routing 上限较小：ALL 相对 best static A3D 只有 `-0.431%`。这支持 reliability 问题真实存在，但不支持把 dataset/horizon 手工选择路径写成最终方法。
 - A4R 使用现有 training logs 后发现 signals 太粗：ALL 最强 Spearman 只有 `0.321`。下一步必须新增 prefix-wise validation diagnostic export，而不是直接实现 routing。
 - A4S 使用 prefix-wise validation signals 后仍失败：ALL 最强 Spearman 只有 `0.388`，且 dataset-level top signals 方向不一致。不能继续 existing-path routing。
-- Stage A Step 2/3 重评估已完成：standalone interface method route 暂停；interface 不删除，而是保留为 problem evidence 与 HSS carrier/control constraint。
-- 下一步必须建立 Stage B `Reliability-Aware Future Supervision Routing` ledger 和 diagnostic plan；先验证 future supervision 的 gradient-path conflict/reliability 问题是否真实存在，再实现方法。
+- Stage A Step 2/3 重评估的初版“转入 Stage B”判断已被修正：如果提出 interface mismatch，就必须先在 head/decoder 层面解决它。
+- 下一步必须做 A5 `Capacity-Preserving Prefix-Consistent Decoder` 的 Step 2/3/4 design，不要新建 Stage B ledger。
+- Stage B `Reliability-Aware Future Supervision Routing` 仅作为 A5 成立后的第二贡献暂缓。
 - 不允许再把 residual patch 或 shallow initialization 当作 paper-core interface 候选。
+- 不允许把 `interface-controlled evaluation protocol` 当作解决 interface mismatch 的方法贡献。
 - 详细 metric 和诊断报告不要写入本文件，只写 conclusion summary 和 artifact path。

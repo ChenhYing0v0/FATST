@@ -1,5 +1,23 @@
 # Phase5 Stage A Contribution Re-evaluation
 
+## 2026-07-02 共识修正
+
+[Decision Update] 本报告最初倾向于把 Stage A 从 standalone method route 降级为
+`interface-controlled evaluation`，并让主方法转入 Stage B。经过进一步审稿式讨论后，该判断被修正。
+
+最新共识是：
+
+1. 如果论文明确提出 `interface mismatch`，就必须给出一个能实质解决或缓解 mismatch 的
+   unified prediction architecture；
+2. `interface-controlled evaluation protocol` 只能作为实验规范，不能替代方法贡献；
+3. Stage B `Reliability-Aware Future Supervision Routing` 是建立在 unified prediction architecture
+   之后的增益性工作，不能用来补 Stage A 的逻辑缺口；
+4. 当前应回到 Stage A，启动 A5 `Capacity-Preserving Prefix-Consistent Decoder` 的 Step 2/3/4
+   设计，而不是新建 Stage B method ledger。
+
+因此，本报告中“直接转入 Stage B”的内容仅作为被否定的中间判断保留。后续研究以
+`docs/paper-mainline.md` 和 `docs/stage-ledgers/phase5-timealign-interface.md` 中的 A5 路线为准。
+
 ## 评估目标
 
 本次重评估对应 11-step 的 Step 2/3：在 A4S 未通过 signal-existence gate 后，重新判断
@@ -44,9 +62,10 @@
 - A2 nested 和 A3D teacher-preserved nested 都有正向信号，说明 prefix-aware / capacity-preserving 不是伪问题；
 - 如果后续直接转向 future supervision routing，而不控制 interface，审稿人会质疑收益来自 head capacity 或 crop protocol。
 
-因此，正确处理不是把 interface 降级为无关诊断，而是把它从“已验证 method contribution”重构为：
+因此，正确处理不是把 interface 降级为无关诊断。更严格地说，Stage A 必须继续承担论文核心结构问题：
 
-> a required capacity-preserving prefix-aware carrier constraint and confounder-control protocol for HSS.
+> 在 prediction head / decoder 层面提出一个 fair enough 的 unified prediction architecture，
+> 否则后续 HSS routing 的收益归因不成立。
 
 ## 贡献边界重构
 
@@ -68,69 +87,76 @@ A4S 已经否定了跨 dataset 稳定的可观测 signal。
 
 更稳健的贡献边界应改为：
 
-1. **Problem Formulation and Interface-Controlled Evaluation**
+1. **Problem Formulation**
    形式化 unified multi-horizon 中的 `supervision-interface mismatch`：benchmark horizons 是
    evaluation probes，不应直接等同于 training units；同时证明 naive full-720 crop 会引入
-   interface confounder。因此后续 HSS 必须在 capacity-preserving prefix-aware carrier 上评估。
+   interface confounder。
 
-2. **Reliability-Aware Future Supervision Routing**
-   论文主方法不再是在 existing prediction heads 之间选择，而是控制 future supervision 的
-   gradient path：哪些 future units 监督模型、监督强度多大、梯度允许进入哪些模块。
+2. **Capacity-Preserving Prefix-Consistent Unified Prediction Architecture**
+   在 head/decoder 层面解决 mismatch：短 horizon 不是从 720 被动 crop，而是由同一套
+   prefix-consistent decoder contract 原生生成；同时必须保留 TimeAlign dense/full-head 的有效 capacity。
 
-3. **Mechanism-Level Evidence Under Interface Control**
-   用 H1/A3D 等 interface controls 证明方法收益不是 head choice、validation artifact 或简单
-   loss weakening。
+3. **Reliability-Aware Future Supervision Routing**
+   在上述 architecture 成立后，进一步控制 future supervision 的 gradient path：哪些 future
+   units 监督模型、监督强度多大、梯度允许进入哪些模块。
 
-这个重构不会取消 interface 的价值，但会避免把一个尚未通过 effectiveness gate 的 head 方案强行写成主贡献。
+这个重构不会把未通过 gate 的旧 head 强行写成贡献，但也不会跳过 prediction architecture 这个核心问题。
 
-## 为什么不继续做新 interface head
+## 为什么必须继续做新 interface head
 
 [Hypothesis] 仍可能存在更强的 first-principles prefix interface，例如 shared cumulative basis、
-monotonic nested operator 或 function-preserving conditional decoder。但当前阶段不建议立即继续 A5 head sweep。
+monotonic nested operator 或 function-preserving conditional decoder。最新共识认为当前阶段必须继续 A5，
+但不能做零散 head sweep。
 
 原因如下：
 
-1. 已执行的 A2/A3C/A3D/A3E 覆盖了 primary nested、warm-start、teacher preservation、target conditioning 四类主要修复；
-2. A4S 说明 existing path 的 validation reliability 不足，继续增加 path 很可能只扩大 search space；
-3. 论文核心题目是 `Horizon-Agnostic Supervision Scheduling`，不是 prediction head architecture；
-4. 高水平 SCI 的主线应把 interface 作为 HSS 的必要控制条件，而不是把研究资源继续耗在 head 微结构上。
+1. 若论文声称 naive full-720 crop 有 mismatch，就必须提出 fair unified head；
+2. Stage B 是增益性 supervision routing，不能替代 architecture；
+3. A2 nested 与 A3D teacher-preserved 已经给出正向信号，说明 prefix-consistent / capacity-preserving
+   不是伪方向；
+4. 失败的是 shallow initialization、residual patch、existing-path selector，而不是 first-principles
+   unified prediction architecture。
 
-[Self-Critique] 这个判断不等于“interface 方向失败”。它只是说：在当前证据下，继续设计 head 的边际论文价值低于进入 future-supervision gradient routing。若 Stage B 后续发现方法收益高度依赖某个 head，必须回到 interface mechanism 重新设计。
+[Self-Critique] A5 的风险是继续陷入 head variant search。因此 A5 必须先过 narrative gate：
+它要有清楚的 decoder contract、capacity-preservation path 和 prefix-consistency mechanism，不能只是
+把 A2/A3D 组件机械叠加。
 
 ## 下一步研究计划
 
 ### Step 2/3：新问题定义
 
-从现在开始，Stage B 的问题应定义为：
+从现在开始，A5 的问题应定义为：
 
-> 在 capacity-preserving prefix-aware carrier 已被控制的前提下，future-aware branch 的监督是否应该按 future-unit reliability 决定梯度路径？
+> 如何设计一个 fair enough 的 unified prediction architecture，使 h96/h192/h336/h720
+> 不是 naive 720 crop，而是由同一套 prefix-consistent、capacity-preserving decoder contract 生成？
 
-这里的 reliability 不再是“哪个 existing head 最好”，而是“某个 future unit 的监督信号是否值得更新 shared encoder、future branch、alignment module 或 prediction head”。
+这里的核心不是哪个 existing head 最好，而是 prediction architecture 本身是否能同时满足
+direct multi-prefix generation、prefix consistency、capacity preservation 和 target-prefix awareness。
 
 ### Step 4/5：候选核心 idea
 
-下一步优先设计 `Reliability-Aware Future Supervision Routing`：
+下一步优先设计 `Capacity-Preserving Prefix-Consistent Decoder`：
 
-- reliable future units 可以更新 shared representation 和 prediction path；
-- unreliable future units 只更新 future-specific / alignment auxiliary path，或降低进入 shared path 的梯度；
-- routing signal 应来自训练期可观测的 future-unit behavior，例如 residual volatility、alignment consistency、reconstruction predictability 或 gradient conflict，而不是 test horizon id。
+- nested / cumulative decoder 提供 prefix-consistent structure；
+- teacher/full-head preservation 提供 function/capacity preservation；
+- target prefix 直接进入 decoder，而不是先生成完整 720 再裁剪；
+- 训练和评估围绕 direct prefix output，而不是 post-hoc crop。
 
 ### Step 6：实验前 gate
 
-进入实现前必须先完成一个 Stage B diagnostic plan：
+进入实现前必须先完成一个 A5 design plan：
 
-- 选择固定 carrier：至少包含 H1 target-set 和 A3D teacher-preserved nested 作为 interface controls；
-- 设计最小诊断：检查 future branch supervision 是否与 prediction loss 存在梯度冲突或 state-dependent harm；
-- 明确 narrative gate：方法必须回答 gradient path scheduling，而不是简单 loss reweighting；
-- 明确 effectiveness gate：必须在 `ETTh2 + ETTm1 + Weather` 上超过 H1/A3D controls，且不能只靠一个 dataset。
+- 明确 decoder forward contract：输入、输出、prefix request 如何进入 head；
+- 明确 capacity preservation 来自 trained teacher、active function-preserving path 或 explicit consistency loss；
+- 明确为什么它比 A2/A3D/A3E 更根本，而不是旧组件堆叠；
+- 明确 effectiveness gate：必须至少超过 H1 和 A3D controls，且不能只靠一个 dataset。
 
 ## 决策
 
-[Decision] Stage A 作为 standalone `Capacity-Preserving Prefix-Aware Interface` method contribution 暂停，不再继续
-existing-head sweep 或 existing-path selector。
+[Decision] existing-head sweep 与 existing-path selector 暂停，但 Stage A 不能暂停。
 
-[Decision] interface 问题保留为 paper-level `Problem Formulation and Interface-Controlled Evaluation`，并作为
-Stage B 的必要 carrier constraint。
+[Decision] Stage A 必须回到 Step 2/3/4，设计 first-principles `Capacity-Preserving Prefix-Consistent
+Unified Prediction Architecture`。
 
-[Decision] 论文主方法进入 Stage B：`Reliability-Aware Future Supervision Routing`。下一次研究推进应先建立
-Stage B ledger 和 diagnostic plan，再实现远程实验。
+[Decision] Stage B `Reliability-Aware Future Supervision Routing` 暂缓，只有在 A5 architecture
+通过 narrative gate 并形成可运行 candidate 后，才作为第二贡献继续推进。

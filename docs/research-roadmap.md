@@ -2438,13 +2438,28 @@ multi-horizon interface。当前保留的 paper-core candidates 是：
 | `current_step` | Step 2/3：A4S 失败后，审稿式重评估 Stage A contribution 是否仍能作为论文主贡献 |
 | `problem` | Stage A 已证明 interface 是 material confounder，但 A2/A3D/A3E 没有形成稳定 standalone interface method；A4R/A4S 又否定了 existing-path selector |
 | `existence_evidence` | A3D `w03` 相对 H1/H1C 接近或略优，说明 function preservation 有效；A4 best path 分散但 oracle 上限仅 `-0.431%`；A4S ALL 最强 Spearman 仅 `0.388` 且 dataset-level 方向不一致 |
-| `idea` | 不继续 head/path sweep；把 interface 从 standalone method contribution 重构为 `Problem Formulation and Interface-Controlled Evaluation`，主方法转入 future-supervision gradient routing |
-| `theory_check` | 论文题目是 HSS，不是 head architecture。若 interface 已被证明是 confounder 但未形成强 method，最合理位置是 carrier/control constraint；真正方法应回答 future supervision 的 gradient path 如何调度 |
-| `design` | 新增 Stage A re-evaluation report；同步 stage ledger 与 paper-mainline；下一步建立 Stage B `Reliability-Aware Future Supervision Routing` ledger 和 diagnostic plan |
-| `narrative_gate` | 通过：它保留 interface 问题的论文价值，同时避免把未通过 effectiveness gate 的 head 方案写成主贡献 |
+| `idea` | 初版判断曾尝试把 interface 降级为 protocol/control 并转入 future-supervision gradient routing；该判断已被后续审稿讨论修正 |
+| `theory_check` | 若论文提出 interface mismatch，就必须先提出 fair unified prediction architecture。Stage B routing 是增益性工作，不能替代 architecture |
+| `design` | 新增 Stage A re-evaluation report；随后同步修正 paper-mainline 与 stage ledger，把 next action 改为 A5 first-principles unified prediction architecture |
+| `narrative_gate` | 初版转 Stage B 未通过后续 narrative audit：它无法回答“既然 full-720 crop 不公平，fair enough head 是什么” |
 | `effectiveness_gate` | not_applicable：本轮是 Step 2/3 研究决策，不是训练实验 |
 | `artifacts` | `analysis/phase5_stage_a_contribution_reevaluation_20260702/stage_a_contribution_reevaluation.md`、`docs/stage-ledgers/phase5-timealign-interface.md`、`docs/paper-mainline.md` |
-| `decision` | Stage A standalone interface method route 暂停；interface 保留为 problem evidence 与 carrier/control constraint；下一步进入 Stage B Step 2/3/4 |
+| `decision` | `superseded_by_a5`：不进入 Stage B；Stage A 必须先解决 unified prediction architecture |
+
+### Phase5-A5：Capacity-Preserving Prefix-Consistent Decoder
+
+| Field | Content |
+| --- | --- |
+| `current_step` | Step 2/3/4：重新定义 Stage A 的核心问题，并提出 first-principles unified prediction architecture |
+| `problem` | 如果我们声称 naive full-720 crop 存在 interface mismatch，就必须在 head/decoder 层面提出 fair enough unified architecture；否则 Stage B 的收益归因不干净 |
+| `existence_evidence` | A2 nested 有局部正向信号；A3D teacher-preserved 说明 function preservation 有效；A3E/A4S 否定的是 target-conditioned nested 和 existing-path selector，不是否定 first-principles interface |
+| `idea` | 设计 `Capacity-Preserving Prefix-Consistent Decoder`：direct multi-prefix generation + prefix consistency + capacity preservation + target-prefix awareness |
+| `theory_check` | A5 必须避免旧错误：不能是 shallow row-copy、residual patch、teacher-weight sweep 或 existing-path mixture；必须有清楚 decoder contract 和 function/capacity preservation mechanism |
+| `design` | 下一步先写 A5 design/narrative gate，明确 tensor path、prefix request 如何进入 decoder、capacity 如何保留、prefix consistency 如何实现；通过后再实现和远程 gate |
+| `narrative_gate` | pending：必须证明它比 A2/A3D/A3E 更根本，而不是机械叠加 |
+| `effectiveness_gate` | pending：至少超过 H1 target-set 与 A3D teacher-preserved controls；不能只靠单 dataset/horizon；当前 gate universe 为 `ETTh2 + ETTm1 + Weather` |
+| `artifacts` | `docs/paper-mainline.md`、`docs/stage-ledgers/phase5-timealign-interface.md` |
+| `decision` | active next action：进入 A5 Step 2/3/4；Stage B reliability-aware future supervision routing 暂缓为 A5 成立后的第二贡献 |
 
 ## 历史证据索引
 
