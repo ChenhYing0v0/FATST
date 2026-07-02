@@ -2420,16 +2420,16 @@ multi-horizon interface。当前保留的 paper-core candidates 是：
 
 | Field | Content |
 | --- | --- |
-| `current_step` | Step 6/7/8：设计并实现 validation-prefix signal export，准备远程 diagnostic-only run |
+| `current_step` | Step 9/10/11：A4S validation-prefix signal diagnostic 已完成，决定 rollback |
 | `problem` | A4R 证明现有 run-level logs 太粗，无法解释 per-horizon best-path map；需要 prefix-wise validation behavior 才能判断是否存在可部署 routing signal |
 | `existence_evidence` | A4R ALL 最强 signal Spearman 仅 `0.321`；多数现有 signals 不是 horizon-specific |
 | `idea` | 不训练新模型，直接加载已有 checkpoint，在 validation split 上导出 prefix-wise MSE、prefix-vs-full disagreement、teacher-student disagreement 和 residual statistics |
 | `theory_check` | 若 validation prefix residual 或 teacher-student disagreement 能稳定预测 A4 `gap_to_best`，说明 reliability-aware interface routing 有可观测依据；若仍弱，则 path reliability 主要是 test-oracle 现象或 signal 不可得 |
 | `design` | 新增 checkpoint-level exporter、远程 wrapper、sync 脚本和 analyzer。覆盖 H1/H1C/A2/A3C/A3D/A3E warm/scratch unified paths，不覆盖 fixed specialist routing |
 | `narrative_gate` | not_required：diagnostic-only，不作为 paper-core |
-| `effectiveness_gate` | 待远程结果；signal-existence gate 要求 ALL-level 或跨 dataset 稳定 signal 的 Spearman 绝对值约 `>=0.55`，且方向可解释 |
-| `artifacts` | `scripts/export_timealign_validation_prefix_diagnostics.py`、`scripts/remote/run_phase5_timealign_hss_a4s_validation_prefix_signal_export.sh`、`scripts/sync_phase5_timealign_hss_a4s_results.sh`、`scripts/analyze_phase5_timealign_hss_a4s_validation_prefix_signals.py` |
-| `decision` | 本轮完成实现与本地验证；下一步 commit/push 后在 3090 启动 diagnostic-only run |
+| `effectiveness_gate` | 未通过：ALL-level 最强 `teacher_student_mae` Spearman 仅 `0.388`；dataset-level signals 虽局部强，但方向不一致 |
+| `artifacts` | `analysis/phase5_timealign_hss_a4s_validation_prefix_signal_export_20260702/`、`scripts/export_timealign_validation_prefix_diagnostics.py`、`scripts/remote/run_phase5_timealign_hss_a4s_validation_prefix_signal_export.sh`、`scripts/sync_phase5_timealign_hss_a4s_results.sh`、`scripts/analyze_phase5_timealign_hss_a4s_validation_prefix_signals.py` |
+| `decision` | A4S 标记为 `diagnostic_only_failed`。不进入 learned routing，不继续 existing-path selector。Stage A 回 Step 2/3 重审 contribution 1：若保留 interface 贡献，必须重新定义问题和机制；若放弃，必须重构 paper-mainline |
 
 ## 历史证据索引
 
