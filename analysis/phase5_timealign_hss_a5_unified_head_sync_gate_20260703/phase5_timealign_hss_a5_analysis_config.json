@@ -1,0 +1,56 @@
+{
+  "a5_arms": [
+    "a5b_r64",
+    "a5b_r128",
+    "a5q_seg48_small",
+    "a5q_seg24_wide"
+  ],
+  "datasets": [
+    "ETTh2",
+    "ETTm1",
+    "Weather"
+  ],
+  "horizons": [
+    96,
+    192,
+    336,
+    720
+  ],
+  "raw_root": "analysis/phase5_timealign_hss_a5_unified_head_sync_gate_20260703/raw",
+  "reference_root": "analysis/phase5_timealign_hss_a3e_ettm1_replacement_gate_20260701/raw",
+  "reference_runs": {
+    "a2_nested": [
+      "a2/official-last",
+      "TimeAlignOfficialUnified720_A2_nested_segment_decoder_multiprefix_official-last"
+    ],
+    "a3c_warm": [
+      "a3c/official-last",
+      "TimeAlignOfficialUnified720_A3C_checkpoint_initialized_nested_segment_decoder_multiprefix_official-last"
+    ],
+    "a3d_w03": [
+      "a3d/official-last",
+      "TimeAlignOfficialUnified720_A3D_teacher_preserved_nested_w03_official-last"
+    ],
+    "a3e_scratch": [
+      "a3e/official-last",
+      "TimeAlignOfficialUnified720_A3E_target_conditioned_nested_scratch_official-last"
+    ],
+    "a3e_warm": [
+      "a3e/official-last",
+      "TimeAlignOfficialUnified720_A3E_target_conditioned_nested_warm_official-last"
+    ],
+    "h1_target_set": [
+      "h1/official-last",
+      "TimeAlignOfficialUnified720_H1_target_set_decoder_multiprefix_official-last"
+    ],
+    "h1c_row_gated": [
+      "h1c/official-last",
+      "TimeAlignOfficialUnified720_H1C_row_gated_dense_head_multiprefix_official-last"
+    ],
+    "official_unified": [
+      "official/official-last",
+      "TimeAlignOfficialUnified720_official-last"
+    ]
+  },
+  "seed": 2021
+}

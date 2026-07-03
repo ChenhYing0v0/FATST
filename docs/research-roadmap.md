@@ -2450,16 +2450,16 @@ multi-horizon interface。当前保留的 paper-core candidates 是：
 
 | Field | Content |
 | --- | --- |
-| `current_step` | Step 6/7：A5-Q 与 A5-B 已通过 narrative gate，进入最小实现与远程同步 gate |
+| `current_step` | Step 10/11：A5-Q/A5-B effectiveness gate 已完成且未通过，回退到 Step 4/5 |
 | `problem` | 如果我们声称 naive full-720 crop 存在 interface mismatch，就必须在 head/decoder 层面提出 fair enough unified architecture；否则 Stage B 的收益归因不干净 |
 | `existence_evidence` | A2 nested 有局部正向信号；A3D teacher-preserved 说明 function preservation 有效；A3E/A4S 否定的是 target-conditioned nested 和 existing-path selector，不是否定 first-principles interface |
 | `idea` | 提出 5 个候选：A5-Q elastic causal target-query decoder、A5-B continuous forecast-basis operator、A5-S step-specific hypernetwork head、A5-I cumulative innovation process decoder、A5-M masked future placeholder head |
-| `theory_check` | A5-Q/A5-B 最符合 first-principles unified head：它们都不依赖 pretrained full-head anchor，也不是 residual/correction 主体；A5-S/A5-I/A5-M 暂作为 control/backlog |
-| `design` | 本轮实现 A5-B rank 64/128 与 A5-Q seg48-small/seg24-wide 四个 gate arms；本地 shape 与 prefix-invariance smoke 通过后提交推送，再远程同步启动 |
+| `theory_check` | A5-Q/A5-B 的 prefix-consistency theory 成立，但远程结果显示 direct first-principles head 的 forecasting capacity 明显不足；A5-S/A5-I/A5-M 暂不能自动进入 sweep |
+| `design` | 已完成 A5-B rank 64/128 与 A5-Q seg48-small/seg24-wide 四个 gate arms；本地/远程 smoke 验证 direct `[B,H,C]` shape 与 prefix-invariance |
 | `narrative_gate` | passed：A5-Q 与 A5-B 均满足 first-principles unified head 叙事；A5-S/A5-I/A5-M 暂缓为 control/backlog；PCF 保持 `narrative_rejected_after_review` |
-| `effectiveness_gate` | pending：远程返回后判断 ALL mean MSE、12-prefix wins、h96/h720 segment behavior、prefix mismatch 与 capacity-control 对照 |
-| `artifacts` | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md`、`docs/experiments/phase5-a5-qb-narrative-gate-and-sync-experiment.md`、`docs/experiments/phase5-a5-capacity-preserving-prefix-consistent-decoder.md`、`docs/paper-mainline.md`、`docs/stage-ledgers/phase5-timealign-interface.md` |
-| `decision` | A5 进入 Step 6/7；A5-Q/A5-B 可实现并同步远程 gate。Stage B reliability-aware future supervision routing 仍暂缓，不能替代 A5 |
+| `effectiveness_gate` | failed：最佳 A5 arm `a5b_r128` 相对 `best_stage_control` 平均 MSE `+14.19%`，wins `0/12`；A5-Q/A5-B 均不能作为 paper-core |
+| `artifacts` | `analysis/phase5_timealign_hss_a5_unified_head_sync_gate_20260703/phase5_timealign_hss_a5_unified_head_sync_gate_report.md`、`docs/experiments/phase5-a5-first-principles-unified-head-candidates.md`、`docs/experiments/phase5-a5-qb-narrative-gate-and-sync-experiment.md`、`docs/experiments/phase5-a5-capacity-preserving-prefix-consistent-decoder.md`、`docs/paper-mainline.md`、`docs/stage-ledgers/phase5-timealign-interface.md` |
+| `decision` | A5-Q/A5-B 降级为 `failed_as_core_candidate`；A5 回退到 Step 4/5，先诊断 direct head capacity 失败原因。Stage B reliability-aware future supervision routing 仍暂缓，不能替代 A5 |
 
 [A5 PCF Re-evaluation] 用户指出 PCF 不像重新设计的 unified head，而像旧阶段机制混合。复评后该质疑成立：
 active dense anchor 的原意是避免 capacity collapse，但它会让方法依赖 pretrained full-head rows；
@@ -2477,8 +2477,13 @@ active dense anchor 的原意是避免 capacity collapse，但它会让方法依
 prefix-elastic target-query decoder；A5-B 的贡献边界是 continuous prefix-consistent forecast
 operator。二者都不依赖 pretrained dense rows、teacher anchor 或 residual correction。
 
-[Next] 实现 A5-B 与 A5-Q 的最小 head modes，完成 shape/prefix-invariance smoke 后，提交推送并
-启动 3090 远程同步 gate。
+[A5-Q/A5-B Effectiveness Gate] 远程 12-run gate 已完成。A5-B/A5-Q 的 architecture-level
+prefix consistency 成立，但 forecasting effectiveness 明显不足：最佳 `a5b_r128` 相对
+`best_stage_control` 平均 MSE `+14.19%`，wins `0/12`；A5-Q 两个 arms 分别为 `+42.41%` 与
+`+55.62%`。
+
+[Next] 回 Step 4/5：重新诊断 first-principles direct head 为什么丢失 TimeAlign dense/full-head
+forecasting capacity。不得直接把 A5-S/A5-I/A5-M 扩展为下一轮远程 sweep。
 
 ## 历史证据索引
 

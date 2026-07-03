@@ -19,11 +19,11 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Phase5-A5：Step 6/7，A5-Q 与 A5-B 已通过 narrative gate，进入最小实现与同步 gate |
-| `current_candidate` | `A5-Q_elastic_causal_target_query_decoder` / `A5-B_continuous_forecast_basis_operator` |
-| `latest_decision` | A5-Q 与 A5-B 均通过 narrative gate；A5-S/A5-I/A5-M 暂不进入本轮远程同步实验。PCF 仍为 rejected design，不得实现 |
-| `next_required_action` | 实现 A5-B 与 A5-Q 的最小 head modes，完成 shape/prefix-invariance smoke 后提交推送，并启动远程同步 gate |
-| `rollback_point` | 若新的 A5 idea 仍无法通过 narrative gate，回 Step 2/3 重审 interface problem 是否能作为论文贡献。Stage B 暂缓，不能替代 A5 |
+| `current_11_step` | Phase5-A5：Step 10/11，A5-Q/A5-B effectiveness gate 未通过，回退到 Step 4/5 做 capacity-mechanism 重审 |
+| `current_candidate` | none active；A5-Q/A5-B 均降级为 failed core candidates |
+| `latest_decision` | A5-Q/A5-B 具备 architecture-level prefix consistency，但 forecasting effectiveness 明显弱于 best existing unified controls：最佳 A5 arm `a5b_r128` 相对 `best_stage_control` 平均 MSE `+14.19%`，wins `0/12` |
+| `next_required_action` | 回 Step 4/5：诊断为什么 first-principles direct head 的 capacity 不足；不得直接把 A5-S/A5-I/A5-M 扩成远程 sweep |
+| `rollback_point` | 若 Step 4/5 无法提出新的 capacity mechanism，回 Step 2/3 重审 Stage A interface problem 是否应作为 paper-core 贡献。Stage B 暂缓，不能替代 A5 |
 
 ## Candidate Queue
 
@@ -41,8 +41,8 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | `A2_nested_segment_primary` | `partial_pass` | nested segment primary interface 可能比 full dense head 更适配 multi-prefix evaluation | partial：有结构叙事，但 capacity 不足 | 有正向信号但不足以 paper-core | 作为 A3D/A3E 的机制来源 | `analysis/phase5_timealign_hss_a2_interface_gate_20260630/` |
 | `Stage_A_contribution_reevaluation` | `superseded` | A4S 后曾考虑把 Stage A 降级为 protocol/control 并转入 Stage B | superseded：后续审稿讨论认为该路线存在逻辑漏洞 | not_applicable | 被 A5 共识替代：Stage A 必须先解决 architecture | `analysis/phase5_stage_a_contribution_reevaluation_20260702/stage_a_contribution_reevaluation.md` |
 | `A5_pcf_prefix_consistent_function_preserving_decoder` | `narrative_rejected_after_review` | 原假设是用 active trained dense anchor + cumulative correction 兼顾 capacity 与 prefix consistency | 未通过：它过度依赖 pretrained dense rows，结构上接近 residual/correction，并混合 A2/A3D/H1C 思路；不能作为重新设计的 unified head | not_applicable | 保留为 rejected design/control idea；不得进入实现或 remote gate | `docs/experiments/phase5-a5-capacity-preserving-prefix-consistent-decoder.md` |
-| `A5-Q_elastic_causal_target_query_decoder` | `narrative_ready` | 用 future position queries + prefix-causal / structured mask 作为主生成 graph，requested prefix 通过 query set 和 mask 进入 decoder | passed：target-query graph、causal mask 与 absolute future coordinates 形成 prefix-elastic decoder；capacity 需用 small/wide 对照验证 | pending | 实现 `seg48-small` 与 `seg24-wide` gate arms，并做 prefix-invariance smoke | `docs/experiments/phase5-a5-qb-narrative-gate-and-sync-experiment.md` |
-| `A5-B_continuous_forecast_basis_operator` | `narrative_ready` | 将 unified head 写成 continuous forecast function/operator：TimeAlign hidden 生成 coefficients，requested prefix 只决定 future coordinate grid | passed：forecast function/operator 避免 dense rows、anchor 与 residual；capacity 需用 rank 对照验证 | pending | 实现 `r64` 与 `r128` gate arms，并做 prefix-invariance smoke | `docs/experiments/phase5-a5-qb-narrative-gate-and-sync-experiment.md` |
+| `A5-Q_elastic_causal_target_query_decoder` | `failed_as_core_candidate` | 用 future position queries + prefix-causal / structured mask 作为主生成 graph，requested prefix 通过 query set 和 mask 进入 decoder | passed：target-query graph、causal mask 与 absolute future coordinates 形成 prefix-elastic decoder | 未通过：`a5q_seg48_small` 相对 `best_stage_control` 平均 MSE `+42.41%`，`a5q_seg24_wide` 为 `+55.62%`，wins `0/12` | 保留为 negative evidence：prefix-query contract 成立但容量/训练路径不足；不得继续简单加宽 | `analysis/phase5_timealign_hss_a5_unified_head_sync_gate_20260703/phase5_timealign_hss_a5_unified_head_sync_gate_report.md` |
+| `A5-B_continuous_forecast_basis_operator` | `failed_as_core_candidate` | 将 unified head 写成 continuous forecast function/operator：TimeAlign hidden 生成 coefficients，requested prefix 只决定 future coordinate grid | passed：forecast function/operator 避免 dense rows、anchor 与 residual | 未通过：最佳 `a5b_r128` 相对 `best_stage_control` 平均 MSE `+14.19%`，wins `0/12`；rank 128 比 rank 64 好但仍明显不足 | 保留为 negative evidence：basis rank 提升有效但 operator class 上限不足 | `analysis/phase5_timealign_hss_a5_unified_head_sync_gate_20260703/phase5_timealign_hss_a5_unified_head_sync_gate_report.md` |
 | `A5-S_step_specific_hypernetwork_head` | `control_deferred` | 用 coordinate-conditioned hypernetwork 生成 step readout weights，避免 pretrained dense rows 但保留 step-specific capacity | deferred：容易被视作 generated dense rows，贡献边界弱于 A5-B | pending | 等 A5-B 结果后再决定是否作为 capacity control | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
 | `A5-I_cumulative_innovation_process_decoder` | `control_deferred` | 生成 future innovation process 再 cumulative 得到 trajectory，与 output/error-process 诊断对齐 | deferred：trajectory-process 叙事有价值，但 cumulative drift 风险较高 | pending | 等 A5-Q/A5-B gate 后再决定是否作为 trajectory-process control | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
 | `A5-M_masked_future_placeholder_head` | `backlog_diagnostic` | 使用 future placeholders + structured mask 形成 prefix-native decoder | pending：与 ElasTST 过近且实现重 | pending | 暂作 diagnostic/backlog | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
@@ -65,6 +65,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | A5 PCF narrative re-evaluation | `A5_pcf_prefix_consistent_function_preserving_decoder` | reviewer-style decision | 用户指出 PCF 更像旧机制混合；复评确认 active dense anchor + correction 不满足 first-principles unified head narrative | `narrative_rejected_after_review` | `docs/experiments/phase5-a5-capacity-preserving-prefix-consistent-decoder.md` |
 | A5 first-principles candidate proposal | `A5-Q/A5-B/A5-S/A5-I/A5-M` | idea proposal | 基于 ElasTST、TIMEPERCEIVER、SRP++、TransDF 和 output-process diagnostics 提出 5 个候选；A5-Q/A5-B 优先进入 narrative gate mini-note | `candidate_proposal_completed` | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
 | A5-Q/A5-B narrative gate | `A5-Q/A5-B` | reviewer-style decision / experiment plan | A5-Q 与 A5-B 均满足 first-principles unified head 的 narrative gate；本轮只同步启动二者的最小容量对照 | `narrative_gate_passed` | `docs/experiments/phase5-a5-qb-narrative-gate-and-sync-experiment.md` |
+| A5-Q/A5-B synchronous effectiveness gate | `A5-Q/A5-B` | method candidate gate | 12/12 artifacts 完成；prefix smoke 成立，但全部 A5 arms 在 12 个 dataset-horizon settings 上均未超过 `best_stage_control`；最佳 `a5b_r128` 仍为 `+14.19%` | `failed_as_core_candidate` | `analysis/phase5_timealign_hss_a5_unified_head_sync_gate_20260703/phase5_timealign_hss_a5_unified_head_sync_gate_report.md` |
 
 ## Pending Tasks
 
@@ -84,8 +85,9 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | A5 PCF narrative gate 复评 | Codex | 用户质疑 PCF 不是重新设计的 unified head | `completed` | PCF 撤回 `narrative_ready`，标记为 `narrative_rejected_after_review` |
 | A5 first-principles candidate proposal | Codex | PCF narrative gate 未通过 | `completed` | 已提出 A5-Q/A5-B/A5-S/A5-I/A5-M；优先评估 A5-Q 与 A5-B |
 | A5-Q/A5-B narrative gate mini-notes | Codex | 候选已提出但尚未通过 narrative gate | `completed` | A5-Q/A5-B 均通过 narrative gate；进入实现与本地 smoke |
-| A5-Q/A5-B 最小实现与 smoke | Codex | A5-Q/A5-B narrative gate 通过 | `pending` | 实现 A5-B rank arms 与 A5-Q query arms；验证 shape 与 prefix-invariance |
-| A5-Q/A5-B remote synchronous gate | Codex | 本地 smoke 通过且 commit/push 完成 | `running` | 远程 4-arm gate 已启动，等待完成后同步并进入 Step 9/10 分析 |
+| A5-Q/A5-B 最小实现与 smoke | Codex | A5-Q/A5-B narrative gate 通过 | `completed` | 本地 smoke 显示 A5-B mismatch `0.0`、A5-Q mismatch 约 `4.77e-07` |
+| A5-Q/A5-B remote synchronous gate | Codex | 本地 smoke 通过且 commit/push 完成 | `completed_failed` | Step 9/10 已完成：A5-Q/A5-B 均未通过 effectiveness gate，回 Step 4/5 |
+| A5 capacity-mechanism rollback diagnostic | Codex | A5-Q/A5-B failed_as_core_candidate | `pending` | 分析 direct first-principles head 为什么丢失 forecasting capacity；不得直接扩 A5-S/A5-I/A5-M sweep |
 | Stage B diagnostic plan | Codex | A5 architecture 通过后再推进 | `deferred` | 暂缓；不能替代 Stage A architecture |
 | paper-mainline 同步检查 | Codex | A4 将 Stage A 从 universal head 改为 reliability-aware interface 诊断 | `completed` | 已同步当前状态与贡献边界，不改变 working title |
 
@@ -107,6 +109,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | 2026-07-02 | A5 PCF narrative gate 复评 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | 纠错 / rollback | 撤回 `narrative_ready`：PCF 更像旧机制混合与 residual/correction，回 Step 4/5 重设 first-principles unified head |
 | 2026-07-02 | A5 first-principles 候选提出 | `Candidate Queue` / `Pending Tasks` | 候选队列扩展 | 提出 A5-Q/A5-B/A5-S/A5-I/A5-M；优先 A5-Q 与 A5-B narrative gate，不实现 |
 | 2026-07-02 | A5-Q/A5-B narrative gate 完成 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | 进入实现 | A5-Q 与 A5-B 通过 narrative gate；A5-S/A5-I/A5-M 暂缓，本轮只做 4-arm synchronous gate |
+| 2026-07-03 | A5-Q/A5-B effectiveness gate 失败 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | rollback | A5-B/A5-Q prefix consistency 成立但 forecasting capacity 不足；二者降级为 failed core candidates，回 Step 4/5 |
 
 ## Remote Launch Log
 
@@ -133,10 +136,12 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 - 下一步必须做 A5 `Capacity-Preserving Prefix-Consistent Decoder` 的 Step 2/3/4 design，不要新建 Stage B ledger。
 - A5 PCF narrative gate 复评已完成：`A5_pcf_prefix_consistent_function_preserving_decoder` 被撤回为 `narrative_rejected_after_review`，不得进入实现或 remote gate。
 - A5 first-principles 候选已提出：A5-Q target-query decoder、A5-B continuous basis operator、A5-S hypernetwork、A5-I innovation process、A5-M placeholder head。
-- A5-Q/A5-B narrative gate 已完成：二者可进入 Step 6/7，实现前必须做 shape 与 prefix-invariance smoke。
-- A5-S/A5-I/A5-M 暂缓；本轮不扩展成无边界 sweep。
-- A5-Q/A5-B remote synchronous gate 已在 commit `5b9637b` 启动：默认矩阵为 `Weather ETTm1 ETTh2`
-  × `a5b_r64/a5b_r128/a5q_seg48_small/a5q_seg24_wide`。
+- A5-Q/A5-B narrative gate 曾通过，但 remote synchronous effectiveness gate 已完成并失败：
+  最佳 `a5b_r128` 相对 `best_stage_control` 平均 MSE `+14.19%`，wins `0/12`。
+- A5-Q/A5-B 的 prefix-invariance smoke 成立；失败点不是 output shape 或 prefix contract，而是
+  forecasting capacity / training path。
+- A5-S/A5-I/A5-M 仍暂缓；不得因为 A5-Q/A5-B 失败就直接扩成无边界 sweep。下一步回 Step 4/5
+  做 capacity-mechanism rollback diagnostic。
 - Stage B `Reliability-Aware Future Supervision Routing` 仅作为 A5 成立后的第二贡献暂缓。
 - 不允许再把 residual patch 或 shallow initialization 当作 paper-core interface 候选。
 - 不允许把 `interface-controlled evaluation protocol` 当作解决 interface mismatch 的方法贡献。

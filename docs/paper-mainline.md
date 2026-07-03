@@ -41,12 +41,12 @@ ledger 是 `docs/stage-ledgers/phase5-timealign-interface.md`。研究路径保�
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_11_step` | Phase5-A5：Step 6/7，A5-Q 与 A5-B 已通过 narrative gate，进入最小实现与同步 gate |
+| `current_11_step` | Phase5-A5：Step 10/11，A5-Q/A5-B effectiveness gate 未通过，回 Step 4/5 重审 capacity mechanism |
 | `active_carrier` | official-source TimeAlign |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 | `active_question` | 如何在 prediction head / decoder 层面解决 unified multi-horizon 的 interface mismatch，使短 horizon 不是 naive full-720 crop |
-| `current_gate` | A5-Q/A5-B 已通过 narrative gate；PCF 保持 `narrative_rejected_after_review`；下一门槛是本地 prefix-invariance smoke 与远程 effectiveness gate |
-| `paper_core_status` | Stage A 仍是当前 blocking core；A5-Q target-query decoder 与 A5-B continuous basis operator 进入同步 gate。Stage B routing 暂缓为 A5 成立后的第二贡献 |
+| `current_gate` | A5-Q/A5-B narrative gate 曾通过，但 effectiveness gate 已失败；最佳 `a5b_r128` 相对 `best_stage_control` 平均 MSE `+14.19%`，wins `0/12` |
+| `paper_core_status` | Stage A 仍是当前 blocking core；A5-Q/A5-B 不能作为 paper-core unified head。Stage B routing 暂缓为 A5 成立后的第二贡献 |
 
 ## 顶级 SCI 审稿视角评判
 
@@ -329,12 +329,22 @@ A5-Q/A5-B narrative gate result：
   prefix-elastic target-query decoder；
 - `A5-B_continuous_forecast_basis_operator` 通过 narrative gate：贡献边界是 continuous
   prefix-consistent forecast operator；
-- `A5-S/A5-I/A5-M` 暂缓为 control/backlog，不进入本轮同步实验；
-- 下一步允许实现 A5-B rank 64/128 与 A5-Q seg48-small/seg24-wide，并在本地 shape /
-  prefix-invariance smoke 后远程同步 gate。
+- `A5-S/A5-I/A5-M` 暂缓为 control/backlog，不进入本轮同步实验。
+
+A5-Q/A5-B effectiveness gate result：
+
+- `A5-B` 与 `A5-Q` 的本地 smoke 证明 direct `[B,H,C]` shape 与 prefix-invariance contract 成立；
+- 远程 12-run gate 未通过：最佳 A5 arm `a5b_r128` 相对 `best_stage_control` 平均 MSE `+14.19%`，
+  wins `0/12`；
+- A5-B rank 128 相比 rank 64 有稳定容量收益，但仍明显弱于现有 unified controls，说明当前
+  continuous basis/operator class 表达上限不足；
+- A5-Q `seg24-wide` 比 `seg48-small` 更差，说明简单加密 target queries 或加宽 FFN 不能修复
+  query decoder 的 capacity / training path 问题；
+- A5-Q/A5-B 均降级为 `failed_as_core_candidate`，A5 回 Step 4/5 重审 capacity mechanism。
 
 候选说明见 `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md`；gate 计划见
-`docs/experiments/phase5-a5-qb-narrative-gate-and-sync-experiment.md`。
+`docs/experiments/phase5-a5-qb-narrative-gate-and-sync-experiment.md`；结果报告见
+`analysis/phase5_timealign_hss_a5_unified_head_sync_gate_20260703/phase5_timealign_hss_a5_unified_head_sync_gate_report.md`。
 
 A5 effectiveness gate：
 
