@@ -2487,8 +2487,22 @@ prefix consistency 成立，但 forecasting effectiveness 明显不足：最佳 
 改善 `-34.09%/-36.81%`。但所有 diagnostic arms 对 `best_stage_control` 仍为 `0` win，最佳单点
 仍比 best control 差 `+2.16%`；`patch_num_override=48` 反而弱于保留 `patch_num=1` 的 dropout 修复。
 
-[Next] 回 Step 4/5：重新设计能保留 forecasting capacity 的 target-query/function path。不得直接把
-A5-S/A5-I/A5-M 扩展为下一轮远程 sweep，也不得继续做简单 dropout/patch/width sweep。
+[A6 Capacity-Native Proposal] A5-Q 不再作为 standalone 主线后，Phase5-A6 将问题重构为：
+prefix-native head 如何保留 dense-equivalent capacity。新的优先候选为：
+
+1. `A6-DER_prefix_native_dense_equivalent_row_bank`：capacity ceiling/control，直接请求 `W[:H]` rows，
+   不先生成 720；
+2. `A6-LBF_learned_basis_forecast_operator`：primary method candidate，用 learned temporal basis +
+   hidden coefficients 构造 prefix-consistent forecast operator，`K=720` 可 dense-equivalent；
+3. `A6-QBR_query_bilinear_readout`：deferred，仅在 A6-LBF 证明 learned-basis capacity path 有效后再考虑。
+
+[A6 Local Implementation] A6-DER 与 A6-LBF 已完成本地实现；code explanation 已记录在
+`docs/code-explanation/phase5-a6-capacity-native-heads.md`。本地 smoke 显示 A6-DER 与 A6-LBF
+均直接输出 `[B,H,C]`，且 h96 prefix mismatch 为 `0.0`。
+
+[Next] Step 8：提交推送后在 3090 启动 A6 capacity-native remote gate：`A6-DER`、`A6-LBF-r256`、
+`A6-LBF-r512` × `Weather/ETTm1/ETTh2`。不得直接把 A5-S/A5-I/A5-M 扩展为下一轮远程 sweep，
+也不得继续做简单 dropout/patch/width sweep。
 
 ## 历史证据索引
 

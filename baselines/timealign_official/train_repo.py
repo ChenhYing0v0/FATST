@@ -1046,6 +1046,8 @@ def parse_args() -> argparse.Namespace:
             "target-conditioned-nested-segment-decoder",
             "continuous-forecast-basis-operator",
             "elastic-causal-target-query-decoder",
+            "prefix-native-dense-equivalent-row-bank",
+            "learned-basis-forecast-operator",
         ],
         default="official",
     )

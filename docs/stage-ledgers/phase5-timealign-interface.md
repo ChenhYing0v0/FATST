@@ -19,10 +19,10 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Phase5-A5：Step 4/5，A5-Q collapse diagnostic 已完成，重新设计 capacity mechanism |
-| `current_candidate` | none active；`A5-Q_collapse_diagnostic_repair` 已完成为 `diagnostic_only_completed_failed_as_repair` |
-| `latest_decision` | A5-Q diagnostic 证明 ETTm1 collapse 混入 decoder dropout 错位：`target_query_dropout=0.1/0.0` 后 ETTm1 mean MSE 相对旧 A5-Q 改善 `-34.09%/-36.81%`；但所有 diagnostic arms 对 `best_stage_control` wins 仍为 `0` |
-| `next_required_action` | 回 Step 4/5：若继续 target-query 路线，必须重写 capacity mechanism；不得继续简单 dropout/patch/width sweep，也不得把本轮 repair 升级为 paper-core |
+| `current_11_step` | Phase5-A6：Step 4/5，capacity-native unified head mechanism 已提出 |
+| `current_candidate` | `A6-LBF_learned_basis_forecast_operator` as primary method candidate；`A6-DER_prefix_native_dense_equivalent_row_bank` as required control |
+| `latest_decision` | A5-Q 不再作为 standalone 主线；A6 将问题重构为 prefix-native head 如何保留 dense-equivalent capacity。A6-DER 用作 capacity ceiling，A6-LBF 用 learned temporal basis 修复 A5-B fixed-basis under-capacity |
+| `next_required_action` | Step 8：A6-DER/A6-LBF local smoke 已通过；提交推送后按 GPU policy 启动 A6 capacity-native remote gate |
 | `rollback_point` | 若 Step 4/5 无法提出新的 capacity mechanism，回 Step 2/3 重审 Stage A interface problem 是否应作为 paper-core 贡献。Stage B 暂缓，不能替代 A5 |
 
 ## Candidate Queue
@@ -44,6 +44,9 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | `A5-Q_elastic_causal_target_query_decoder` | `failed_as_core_candidate` | 用 future position queries + prefix-causal / structured mask 作为主生成 graph，requested prefix 通过 query set 和 mask 进入 decoder | passed：target-query graph、causal mask 与 absolute future coordinates 形成 prefix-elastic decoder | 未通过：`a5q_seg48_small` 相对 `best_stage_control` 平均 MSE `+42.41%`，`a5q_seg24_wide` 为 `+55.62%`，wins `0/12` | 保留为 negative evidence：prefix-query contract 成立但容量/训练路径不足；不得继续简单加宽 | `analysis/phase5_timealign_hss_a5_unified_head_sync_gate_20260703/phase5_timealign_hss_a5_unified_head_sync_gate_report.md` |
 | `A5-Q_collapse_diagnostic_repair` | `diagnostic_only_completed_failed_as_repair` | A5-Q collapse 可能混入 decoder dropout 继承 preset 与 ETTm1 `patch_num=1` cross-attention 退化，需要先拆开验证 | not_required：launch 前定义为 diagnostic-only，不可直接升级为 paper-core | completed：ETTm1 dropout 修复显著改善旧 A5-Q，但最佳 setting 仍相对 best stage control `+2.16%`，所有 arms wins `0`；`patch_num_override=48` 反而更差 | 只保留为 failure diagnosis；若保留 target-query 叙事，需回 Step 4/5 重新设计 function/capacity-preserving path | `analysis/phase5_timealign_hss_a5q_diagnostic_gate_20260703/phase5_timealign_hss_a5q_diagnostic_gate_report.md` |
 | `A5-B_continuous_forecast_basis_operator` | `failed_as_core_candidate` | 将 unified head 写成 continuous forecast function/operator：TimeAlign hidden 生成 coefficients，requested prefix 只决定 future coordinate grid | passed：forecast function/operator 避免 dense rows、anchor 与 residual | 未通过：最佳 `a5b_r128` 相对 `best_stage_control` 平均 MSE `+14.19%`，wins `0/12`；rank 128 比 rank 64 好但仍明显不足 | 保留为 negative evidence：basis rank 提升有效但 operator class 上限不足 | `analysis/phase5_timealign_hss_a5_unified_head_sync_gate_20260703/phase5_timealign_hss_a5_unified_head_sync_gate_report.md` |
+| `A6-DER_prefix_native_dense_equivalent_row_bank` | `control_implemented_smoke_passed` | 若完全保留 dense row capacity 且只改成 prefix-native invocation，应该能判断 Stage A bottleneck 是否真在 head capacity | not_required：作为 capacity ceiling/control，不单独宣称 paper-core | local smoke passed：direct `[B,H,C]` shape 正确，h96 prefix mismatch `0.0` | 与 A6-LBF 同步启动 remote gate；若 DER 仍失败，回 Step 2/3 重审 multi-prefix objective / representation conflict | `docs/experiments/phase5-a6-capacity-native-unified-head-mechanisms.md`; `docs/code-explanation/phase5-a6-capacity-native-heads.md` |
+| `A6-LBF_learned_basis_forecast_operator` | `implemented_smoke_passed` | 用 learned temporal basis + hidden coefficients 构造 prefix-consistent forecast operator；`K=720` 可 dense-equivalent，较小 rank 测试 intrinsic rank | conditional_pass：anchor-free、非 residual、prefix-native，且直接修复 A5-B fixed-basis under-capacity；必须和 A6-DER ceiling 一起解释 | local smoke passed：`r64/r128` direct `[B,H,C]` shape 正确，h96 prefix mismatch `0.0` | 第一轮 remote gate 使用 `r256/r512` 与 A6-DER ceiling 对照 | `docs/experiments/phase5-a6-capacity-native-unified-head-mechanisms.md`; `docs/code-explanation/phase5-a6-capacity-native-heads.md` |
+| `A6-QBR_query_bilinear_readout` | `deferred` | 保留 target-query semantics，但把 final readout 改成 dense-equivalent bilinear operator | deferred：需等 A6-LBF 证明 learned-basis capacity path 有效 | pending | 暂不实现，避免再次陷入 query mechanism sweep | `docs/experiments/phase5-a6-capacity-native-unified-head-mechanisms.md` |
 | `A5-S_step_specific_hypernetwork_head` | `control_deferred` | 用 coordinate-conditioned hypernetwork 生成 step readout weights，避免 pretrained dense rows 但保留 step-specific capacity | deferred：容易被视作 generated dense rows，贡献边界弱于 A5-B | pending | 等 A5-B 结果后再决定是否作为 capacity control | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
 | `A5-I_cumulative_innovation_process_decoder` | `control_deferred` | 生成 future innovation process 再 cumulative 得到 trajectory，与 output/error-process 诊断对齐 | deferred：trajectory-process 叙事有价值，但 cumulative drift 风险较高 | pending | 等 A5-Q/A5-B gate 后再决定是否作为 trajectory-process control | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
 | `A5-M_masked_future_placeholder_head` | `backlog_diagnostic` | 使用 future placeholders + structured mask 形成 prefix-native decoder | pending：与 ElasTST 过近且实现重 | pending | 暂作 diagnostic/backlog | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
@@ -68,6 +71,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | A5-Q/A5-B narrative gate | `A5-Q/A5-B` | reviewer-style decision / experiment plan | A5-Q 与 A5-B 均满足 first-principles unified head 的 narrative gate；本轮只同步启动二者的最小容量对照 | `narrative_gate_passed` | `docs/experiments/phase5-a5-qb-narrative-gate-and-sync-experiment.md` |
 | A5-Q/A5-B synchronous effectiveness gate | `A5-Q/A5-B` | method candidate gate | 12/12 artifacts 完成；prefix smoke 成立，但全部 A5 arms 在 12 个 dataset-horizon settings 上均未超过 `best_stage_control`；最佳 `a5b_r128` 仍为 `+14.19%` | `failed_as_core_candidate` | `analysis/phase5_timealign_hss_a5_unified_head_sync_gate_20260703/phase5_timealign_hss_a5_unified_head_sync_gate_report.md` |
 | A5-Q collapse diagnostic repair | `A5-Q_collapse_diagnostic_repair` | diagnostic | dropout 错位解释 ETTm1 collapse 的重要部分：`a5q_seg48_dropout01/00` 在 ETTm1 相对旧 A5-Q 平均 `-34.09%/-36.81%`；但所有 arms 对 best stage control 仍 `0` win，`patch_num=48` 不成立 | `diagnostic_only_completed_failed_as_repair` | `analysis/phase5_timealign_hss_a5q_diagnostic_gate_20260703/phase5_timealign_hss_a5q_diagnostic_gate_report.md` |
+| A6 capacity-native mechanism proposal | `A6-DER/A6-LBF/A6-QBR` | idea proposal / narrative gate | A6-DER 作为 dense-equivalent prefix-native ceiling；A6-LBF 作为 learned-basis primary candidate；A6-QBR 暂缓 | `narrative_ready_for_A6_LBF` | `docs/experiments/phase5-a6-capacity-native-unified-head-mechanisms.md` |
 
 ## Pending Tasks
 
@@ -90,6 +94,8 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | A5-Q/A5-B 最小实现与 smoke | Codex | A5-Q/A5-B narrative gate 通过 | `completed` | 本地 smoke 显示 A5-B mismatch `0.0`、A5-Q mismatch 约 `4.77e-07` |
 | A5-Q/A5-B remote synchronous gate | Codex | 本地 smoke 通过且 commit/push 完成 | `completed_failed` | Step 9/10 已完成：A5-Q/A5-B 均未通过 effectiveness gate，回 Step 4/5 |
 | A5 capacity-mechanism rollback diagnostic | Codex | A5-Q/A5-B failed_as_core_candidate | `completed` | A5-Q diagnostic 已完成：dropout 错位是 collapse amplifier，但不是 paper-core repair；下一步回 Step 4/5 重新设计 capacity mechanism |
+| A6-DER/A6-LBF local implementation | Codex | A6 capacity-native proposal | `completed` | 已实现两个 readout modes，`py_compile` 与 local smoke 通过 |
+| A6 capacity-native remote gate | Codex | A6 local smoke passed | `ready_to_launch` | commit/push 后在 3090 启动 9-run gate：A6-DER、A6-LBF-r256、A6-LBF-r512 × Weather/ETTm1/ETTh2 |
 | Stage B diagnostic plan | Codex | A5 architecture 通过后再推进 | `deferred` | 暂缓；不能替代 Stage A architecture |
 | paper-mainline 同步检查 | Codex | A4 将 Stage A 从 universal head 改为 reliability-aware interface 诊断 | `completed` | 已同步当前状态与贡献边界，不改变 working title |
 
@@ -149,6 +155,8 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
   对 best stage control 仍为 0 win；`patch_num=48` 不应作为下一步修复方向。
 - 若继续 target-query 路线，下一轮必须先在 Step 4/5 提出真正的 capacity/function-preserving mechanism，
   而不是继续调 `target_query_dropout`、`patch_num` 或 decoder width。
+- A6 已将下一步重构为 capacity-native unified head：先实现 A6-DER capacity ceiling 与 A6-LBF learned-basis
+  operator；A6-QBR target-query variant 暂缓。
 - Stage B `Reliability-Aware Future Supervision Routing` 仅作为 A5 成立后的第二贡献暂缓。
 - 不允许再把 residual patch 或 shallow initialization 当作 paper-core interface 候选。
 - 不允许把 `interface-controlled evaluation protocol` 当作解决 interface mismatch 的方法贡献。

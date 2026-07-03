@@ -86,6 +86,18 @@ def main() -> None:
             "A5-Q-seg24-wide",
             build_config("elastic-causal-target-query-decoder", target_query_segment_len=24, target_query_ff=128),
         ),
+        (
+            "A6-DER",
+            build_config("prefix-native-dense-equivalent-row-bank"),
+        ),
+        (
+            "A6-LBF-r64",
+            build_config("learned-basis-forecast-operator", basis_rank=64),
+        ),
+        (
+            "A6-LBF-r128",
+            build_config("learned-basis-forecast-operator", basis_rank=128),
+        ),
     ]
     results = [check_arm(name, config) for name, config in arms]
     print(json.dumps({"status": "ok", "results": results}, indent=2, sort_keys=True))

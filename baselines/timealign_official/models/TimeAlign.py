@@ -90,6 +90,8 @@ class Model(nn.Module):
             "target-conditioned-nested-segment-decoder",
             "continuous-forecast-basis-operator",
             "elastic-causal-target-query-decoder",
+            "prefix-native-dense-equivalent-row-bank",
+            "learned-basis-forecast-operator",
         }
         self.capacity_preserving_modes = {
             "dense-prefix-residual-adapter",
@@ -160,6 +162,12 @@ class Model(nn.Module):
                 nn.Dropout(configs.dropout),
                 nn.Linear(readout_dim, self.basis_rank),
             )
+        if self.readout_mode == "learned-basis-forecast-operator":
+            self.basis_rank = int(getattr(configs, "basis_rank", 256))
+            self.learned_basis_coeff = nn.Linear(readout_dim, self.basis_rank)
+            self.learned_temporal_basis = nn.Parameter(torch.empty(configs.pred_len, self.basis_rank))
+            self.learned_temporal_bias = nn.Parameter(torch.zeros(configs.pred_len))
+            nn.init.normal_(self.learned_temporal_basis, mean=0.0, std=self.basis_rank ** -0.5)
         if self.readout_mode == "elastic-causal-target-query-decoder":
             self.target_query_segment_len = int(getattr(configs, "target_query_segment_len", 48))
             target_query_heads = int(getattr(configs, "target_query_heads", 4))
@@ -311,6 +319,29 @@ class Model(nn.Module):
         coeff = self.basis_coeff(hidden)
         basis = self._forecast_basis_features(horizon, hidden)
         output = torch.einsum("hk,bck->bch", basis, coeff)
+        return output.permute(0, 2, 1)
+
+    def _prefix_native_dense_equivalent_row_bank(self, hidden, target_prefix):
+        # hidden: [B, C, R], output: [B, H, C]
+        if target_prefix is None:
+            target_prefix = self.pred_len
+        horizon = int(target_prefix)
+        output = torch.nn.functional.linear(
+            hidden,
+            self.proj_x.weight[:horizon],
+            self.proj_x.bias[:horizon],
+        )
+        return output.permute(0, 2, 1)
+
+    def _learned_basis_forecast_operator(self, hidden, target_prefix):
+        # hidden: [B, C, R], output: [B, H, C]
+        if target_prefix is None:
+            target_prefix = self.pred_len
+        horizon = int(target_prefix)
+        coeff = self.learned_basis_coeff(hidden)
+        basis = self.learned_temporal_basis[:horizon].to(dtype=hidden.dtype)
+        bias = self.learned_temporal_bias[:horizon].to(dtype=hidden.dtype)
+        output = torch.einsum("hk,bck->bch", basis, coeff) + bias.view(1, 1, -1)
         return output.permute(0, 2, 1)
 
     def _target_segment_features(self, horizon, hidden):
@@ -477,6 +508,10 @@ class Model(nn.Module):
             x = self._continuous_forecast_basis_operator(x.flatten(start_dim=-2), target_prefix)
         elif self.readout_mode == "elastic-causal-target-query-decoder":
             x = self._elastic_causal_target_query_decoder(x, target_prefix)
+        elif self.readout_mode == "prefix-native-dense-equivalent-row-bank":
+            x = self._prefix_native_dense_equivalent_row_bank(x.flatten(start_dim=-2), target_prefix)
+        elif self.readout_mode == "learned-basis-forecast-operator":
+            x = self._learned_basis_forecast_operator(x.flatten(start_dim=-2), target_prefix)
         else:
             x = x.flatten(start_dim=-2)
             if self.readout_mode == "dense-prefix-residual-adapter":
