@@ -358,6 +358,20 @@ A5-Q collapse diagnostic result：
 诊断报告见
 `analysis/phase5_timealign_hss_a5q_diagnostic_gate_20260703/phase5_timealign_hss_a5q_diagnostic_gate_report.md`。
 
+A6 capacity-native gate result：
+
+- `A6-DER_prefix_native_dense_equivalent_row_bank` 作为 capacity ceiling/control 通过：相对
+  `best_stage_control` 平均仅差 `+0.91%`，相对 A5-B-r128 平均改善 `-11.27%`；
+- `A6-LBF_learned_basis_forecast_operator` 恢复了 learned-basis dense-capacity path：`r256` 相对
+  A6-DER 平均 `-0.03%`，相对 A5-B-r128 `-11.30%`；
+- 但 A6-LBF-r256/r512 对 `best_stage_control` 仍为 `0/12` win，因此当前是
+  `partial_pass_capacity_recovered_not_yet_core`，不能直接作为 paper-core pass；
+- 下一步不做 rank-only sweep，而是检查 best-val/early-stopping 与 learned-basis structure，判断
+  ETTh2 与 long horizon 的剩余差距是否来自 checkpoint policy 或 objective conflict。
+
+结果报告见
+`analysis/phase5_timealign_hss_a6_capacity_native_gate_20260703/phase5_timealign_hss_a6_capacity_native_gate_report.md`。
+
 A5 effectiveness gate：
 
 - 至少要超过 H1 `target_set_decoder_multiprefix` 与 A3D `teacher_preserved_nested` controls；

@@ -2500,13 +2500,18 @@ prefix-native head 如何保留 dense-equivalent capacity。新的优先候选�
 `docs/code-explanation/phase5-a6-capacity-native-heads.md`。本地 smoke 显示 A6-DER 与 A6-LBF
 均直接输出 `[B,H,C]`，且 h96 prefix mismatch 为 `0.0`。
 
-[A6 Remote Gate] A6 capacity-native remote gate 已在 3090 启动：`A6-DER`、`A6-LBF-r256`、
-`A6-LBF-r512` × `Weather/ETTm1/ETTh2`。输出路径为
-`/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6_capacity_native_gate`。
+[A6 Remote Gate] A6 capacity-native remote gate 已完成。`A6-DER` 相对 `best_stage_control` 平均
+仅差 `+0.91%`，相对 A5-B-r128 平均改善 `-11.27%`；`A6-LBF-r256` 相对 A6-DER 平均 `-0.03%`，
+相对 A5-B-r128 `-11.30%`。这证明 learned-basis dense-capacity path 基本修复 A5-B fixed-basis
+under-capacity。
 
-[Next] Step 9：等待 artifacts 返回后分析 A6-DER ceiling 是否恢复 dense capacity，以及 A6-LBF-r256/r512
-是否接近 A6-DER 并超过 A5-B/best stage controls。不得直接把 A5-S/A5-I/A5-M 扩展为下一轮远程 sweep，
-也不得继续做简单 dropout/patch/width sweep。
+[Decision] A6-DER 标记为 `control_passed_as_capacity_ceiling`；A6-LBF 标记为
+`partial_pass_capacity_recovered_not_yet_core`。它恢复了 capacity，但还没有超过 best stage controls：
+`A6-LBF-r256/r512` 对 best control 均为 `0/12` win。
+
+[Next] Step 9/10 diagnostic：不做 rank-only sweep；优先设计 best-val/early-stopping diagnostic 与
+learned-basis structure diagnostic，判断 ETTh2 与 long horizon 的剩余差距是否来自 checkpoint policy
+或 objective conflict。
 
 ## 历史证据索引
 
