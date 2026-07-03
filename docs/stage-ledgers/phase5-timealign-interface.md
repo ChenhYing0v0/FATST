@@ -19,10 +19,10 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Phase5-A6：Step 10/11，partial-pass 诊断已完成，准备回 Step 4/5 设计 official-last-compatible anti-drift / objective repair |
+| `current_11_step` | Phase5-A6OD：Step 8，official-last objective drift diagnostic 正在远端运行 |
 | `current_candidate` | `A6-LBF_learned_basis_forecast_operator` 为 `partial_pass_capacity_recovered_not_yet_core`；`A6-DER` 为 passed capacity ceiling/control |
 | `latest_decision` | A6 partial-pass 诊断显示 ETTh2 是主要 official-last trajectory drift 来源：三 arm last-vs-best validation MSE 平均漂移 `+11.81%`，ETTm1/Weather 平均仅 `+0.12%`；`r512` 的 operator rank99 扩张没有转化为 metric gain |
-| `next_required_action` | 回 Step 4/5 设计 official-last-compatible anti-drift / objective repair；不做 rank-only sweep，不启动 best-val/early-stopping 主实验，`best-val` 仅可作为 diagnostic-only upper-bound audit |
+| `next_required_action` | 等待 A6OD objective drift diagnostic 完成后进入 Step 9/10 分析；不做 rank-only sweep，不启动 best-val/early-stopping 主实验，`best-val` 仅可作为 diagnostic-only upper-bound audit |
 | `rollback_point` | 若 Step 4/5 无法提出新的 capacity mechanism，回 Step 2/3 重审 Stage A interface problem 是否应作为 paper-core 贡献。Stage B 暂缓，不能替代 A5 |
 
 ## Candidate Queue
@@ -74,6 +74,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | A6 capacity-native mechanism proposal | `A6-DER/A6-LBF/A6-QBR` | idea proposal / narrative gate | A6-DER 作为 dense-equivalent prefix-native ceiling；A6-LBF 作为 learned-basis primary candidate；A6-QBR 暂缓 | `narrative_ready_for_A6_LBF` | `docs/experiments/phase5-a6-capacity-native-unified-head-mechanisms.md` |
 | A6 capacity-native remote gate | `A6-DER/A6-LBF` | method/control gate | A6-DER 恢复 dense-equivalent capacity，A6-LBF-r256 基本贴住 ceiling；但 A6-LBF 对 best stage control 仍 `0/12` win | `partial_pass_capacity_recovered_not_yet_core` | `analysis/phase5_timealign_hss_a6_capacity_native_gate_20260703/phase5_timealign_hss_a6_capacity_native_gate_report.md` |
 | A6 partial-pass official-last diagnostic | `A6-LBF` | diagnostic-only | ETTh2 三 arm last-vs-best validation MSE 平均漂移 `+11.81%`，ETTm1/Weather 平均仅 `+0.12%`；`r512` rank 扩张未带来 metric gain | `diagnostic_only_completed` | `analysis/phase5_timealign_hss_a6_partial_pass_diagnostic_20260703/phase5_timealign_hss_a6_partial_pass_diagnostic_report.md` |
+| A6OD objective drift diagnostic | `A6-LBF/A6-DER` | diagnostic-only | ETTh2 only；比较 `full`、`stochastic-prefix`、`continuous-prefix` official-last objectives 是否降低 trajectory drift | `remote_running` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6_objective_drift_diagnostic` |
 
 ## Pending Tasks
 
@@ -99,6 +100,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | A6-DER/A6-LBF local implementation | Codex | A6 capacity-native proposal | `completed` | 已实现两个 readout modes，`py_compile` 与 local smoke 通过 |
 | A6 capacity-native remote gate | Codex | A6 local smoke passed | `completed_partial_pass` | A6-LBF-r256 已恢复 capacity 但未超过 best controls；下一步做 official-last trajectory 与 basis diagnostics |
 | A6 partial-pass diagnostic design | Codex | A6 capacity-native gate partial pass | `completed` | 已完成 official-last trajectory 与 learned-basis structure diagnostic；下一步回 Step 4/5 设计 official-last-compatible anti-drift / objective repair |
+| A6OD objective drift diagnostic remote run | Codex | A6 partial-pass diagnostic completed | `running` | 已启动 ETTh2-only `full/stochastic-prefix/continuous-prefix` diagnostic；等待 artifacts 返回 |
 | Stage B diagnostic plan | Codex | A5 architecture 通过后再推进 | `deferred` | 暂缓；不能替代 Stage A architecture |
 | paper-mainline 同步检查 | Codex | A4 将 Stage A 从 universal head 改为 reliability-aware interface 诊断 | `completed` | 已同步当前状态与贡献边界，不改变 working title |
 
@@ -133,6 +135,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | 2026-07-02 | `A5-Q/A5-B_unified_head_sync_gate` | `5b9637b` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch Weather arms occupied GPU 0/1/2 with about `5439/5444/4748 MiB used` | `1441800` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a5_unified_head_sync_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a5_unified_head_sync_gate/_launcher/a5_launcher.log` |
 | 2026-07-03 | `A5-Q_collapse_diagnostic_repair` | `46f60c6` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1/2 used about `4747/4748/584 MiB` | `3107046` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a5q_diagnostic_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a5q_diagnostic_gate/_launcher/a5q_diagnostic_launcher.log` |
 | 2026-07-03 | `A6-DER/A6-LBF_capacity_native_gate` | `1a5a235` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch Weather arms used about `4547/4432/4434 MiB` | `3494284` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6_capacity_native_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6_capacity_native_gate/_launcher/a6_launcher.log` |
+| 2026-07-03 | `A6OD_objective_drift_diagnostic` | `1cd5259` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1/2 used about `533/562/864 MiB` | `3642564` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6_objective_drift_diagnostic` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6_objective_drift_diagnostic/_launcher/a6_objective_drift_launcher.log` |
 
 ## Notes For Next Continuation
 
