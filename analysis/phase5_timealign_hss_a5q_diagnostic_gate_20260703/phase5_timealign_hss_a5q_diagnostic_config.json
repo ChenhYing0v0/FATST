@@ -1,0 +1,5 @@
+{
+  "output_dir": "analysis/phase5_timealign_hss_a5q_diagnostic_gate_20260703",
+  "prior_comparison": "analysis/phase5_timealign_hss_a5_unified_head_sync_gate_20260703/phase5_timealign_hss_a5_comparison.csv",
+  "raw_root": "analysis/phase5_timealign_hss_a5q_diagnostic_gate_20260703/raw"
+}

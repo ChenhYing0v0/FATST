@@ -346,6 +346,18 @@ A5-Q/A5-B effectiveness gate result：
 `docs/experiments/phase5-a5-qb-narrative-gate-and-sync-experiment.md`；结果报告见
 `analysis/phase5_timealign_hss_a5_unified_head_sync_gate_20260703/phase5_timealign_hss_a5_unified_head_sync_gate_report.md`。
 
+A5-Q collapse diagnostic result：
+
+- `target_query_dropout=0.1/0.0` 证明 ETTm1 high-dropout 错位是 collapse amplifier：ETTm1 mean
+  MSE 相对旧 A5-Q 改善 `-34.09%/-36.81%`；
+- 但所有 diagnostic arms 对 `best_stage_control` 仍为 `0` win，最佳单点仍差 `+2.16%`；
+- ETTm1 `patch_num_override=48` 没有修复问题，反而弱于保留 `patch_num=1` 的 dropout 修复；
+- 因此 A5-Q diagnostic 只解释 failure，不恢复 paper-core 身份。下一步仍是 Step 4/5 重写
+  capacity/function-preserving mechanism，而不是继续调 dropout、patch_num 或 width。
+
+诊断报告见
+`analysis/phase5_timealign_hss_a5q_diagnostic_gate_20260703/phase5_timealign_hss_a5q_diagnostic_gate_report.md`。
+
 A5 effectiveness gate：
 
 - 至少要超过 H1 `target_set_decoder_multiprefix` 与 A3D `teacher_preserved_nested` controls；
