@@ -2500,8 +2500,12 @@ prefix-native head 如何保留 dense-equivalent capacity。新的优先候选�
 `docs/code-explanation/phase5-a6-capacity-native-heads.md`。本地 smoke 显示 A6-DER 与 A6-LBF
 均直接输出 `[B,H,C]`，且 h96 prefix mismatch 为 `0.0`。
 
-[Next] Step 8：提交推送后在 3090 启动 A6 capacity-native remote gate：`A6-DER`、`A6-LBF-r256`、
-`A6-LBF-r512` × `Weather/ETTm1/ETTh2`。不得直接把 A5-S/A5-I/A5-M 扩展为下一轮远程 sweep，
+[A6 Remote Gate] A6 capacity-native remote gate 已在 3090 启动：`A6-DER`、`A6-LBF-r256`、
+`A6-LBF-r512` × `Weather/ETTm1/ETTh2`。输出路径为
+`/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6_capacity_native_gate`。
+
+[Next] Step 9：等待 artifacts 返回后分析 A6-DER ceiling 是否恢复 dense capacity，以及 A6-LBF-r256/r512
+是否接近 A6-DER 并超过 A5-B/best stage controls。不得直接把 A5-S/A5-I/A5-M 扩展为下一轮远程 sweep，
 也不得继续做简单 dropout/patch/width sweep。
 
 ## 历史证据索引
