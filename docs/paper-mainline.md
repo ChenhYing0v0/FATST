@@ -366,11 +366,23 @@ A6 capacity-native gate result：
   A6-DER 平均 `-0.03%`，相对 A5-B-r128 `-11.30%`；
 - 但 A6-LBF-r256/r512 对 `best_stage_control` 仍为 `0/12` win，因此当前是
   `partial_pass_capacity_recovered_not_yet_core`，不能直接作为 paper-core pass；
-- 下一步不做 rank-only sweep，而是检查 best-val/early-stopping 与 learned-basis structure，判断
-  ETTh2 与 long horizon 的剩余差距是否来自 checkpoint policy 或 objective conflict。
+- 下一步不做 rank-only sweep，而是检查 official-last trajectory 与 learned-basis structure，判断
+  ETTh2 与 long horizon 的剩余差距是否来自 official-last training drift、operator structure 或
+  objective conflict；`best-val` 仅可作为 diagnostic-only upper-bound audit。
+
+A6 partial-pass diagnostic result：
+
+- ETTh2 是 A6 剩余差距的主要 official-last trajectory drift 来源：三 arm last-vs-best validation
+  MSE 平均漂移 `+11.81%`，而 ETTm1/Weather 平均仅 `+0.12%`；
+- `r512` 的 induced operator rank99 高于 `r256`，但 mean effective rank 只从 `82.91` 到
+  `92.80`，且 A6 gate 中没有稳定优于 `r256`；
+- 因此下一步不启动 `best-val/early-stopping` 主实验，也不继续 rank-only sweep；应回 Step 4/5
+  设计 official-last-compatible anti-drift / objective repair。
 
 结果报告见
 `analysis/phase5_timealign_hss_a6_capacity_native_gate_20260703/phase5_timealign_hss_a6_capacity_native_gate_report.md`。
+诊断报告见
+`analysis/phase5_timealign_hss_a6_partial_pass_diagnostic_20260703/phase5_timealign_hss_a6_partial_pass_diagnostic_report.md`。
 
 A5 effectiveness gate：
 

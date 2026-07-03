@@ -2509,9 +2509,21 @@ under-capacity。
 `partial_pass_capacity_recovered_not_yet_core`。它恢复了 capacity，但还没有超过 best stage controls：
 `A6-LBF-r256/r512` 对 best control 均为 `0/12` win。
 
-[Next] Step 9/10 diagnostic：不做 rank-only sweep；优先设计 best-val/early-stopping diagnostic 与
-learned-basis structure diagnostic，判断 ETTh2 与 long horizon 的剩余差距是否来自 checkpoint policy
-或 objective conflict。
+[Next] Step 9/10 diagnostic：不做 rank-only sweep；优先设计 official-last trajectory diagnostic 与
+learned-basis structure diagnostic，判断 ETTh2 与 long horizon 的剩余差距是否来自 official-last
+training drift、operator structure 或 objective conflict；`best-val` 仅可作为 diagnostic-only
+upper-bound audit，不能替代 main protocol。
+
+[A6 Partial-Pass Diagnostic] official-last trajectory 与 learned-basis structure diagnostic 已完成。
+ETTh2 是主要 training drift 来源：三 arm last-vs-best validation MSE 平均漂移 `+11.81%`，
+ETTm1/Weather 平均仅 `+0.12%`。learned-basis structure 显示 `r512` 虽扩大 induced operator
+rank99，但 mean effective rank 只从 `82.91` 到 `92.80`，且未带来 metric gain。
+
+[Decision] A6-LBF 维持 `partial_pass_capacity_recovered_not_yet_core`，不升级为 paper-core pass。
+下一步回 Step 4/5 设计 official-last-compatible anti-drift / objective repair；不做 rank-only sweep，
+不启动 `best-val/early-stopping` 主实验。`best-val` 只允许作为 diagnostic-only upper-bound audit。
+
+[Artifacts] `analysis/phase5_timealign_hss_a6_partial_pass_diagnostic_20260703/phase5_timealign_hss_a6_partial_pass_diagnostic_report.md`
 
 ## 历史证据索引
 

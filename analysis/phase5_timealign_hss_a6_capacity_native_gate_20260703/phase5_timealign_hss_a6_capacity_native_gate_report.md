@@ -10,7 +10,7 @@
 
 [Fact] A6 仍未形成明确 paper-core pass：按单 arm 统计，`A6-LBF-r256/r512` 对 `best_stage_control` 的 wins 均为 `0/12`，`A6-DER` 仅在 Weather 两个 setting 上略胜。
 
-[Decision] A6-LBF 应标记为 `partial_pass_capacity_recovered_not_yet_core`。它证明 learned-basis dense-capacity path 有效，但还需要 best-val/early-stopping 或 objective-level 诊断来判断 ETTh2 与 long horizon 的剩余差距。
+[Decision] A6-LBF 应标记为 `partial_pass_capacity_recovered_not_yet_core`。它证明 learned-basis dense-capacity path 有效，但还需要 official-last training-trajectory 与 learned-basis structure 诊断来判断 ETTh2 与 long horizon 的剩余差距；`best-val` 只能作为 diagnostic-only upper-bound audit，不能作为主协议。
 
 ## Arm Summary
 
@@ -51,13 +51,13 @@ A6-LBF-r256 与 A6-DER 的平均差距接近 0，说明 fixed Fourier/polynomial
 
 ### Remaining gap
 
-A6 尚未超过 best stage controls。ETTh2 的 training summary 显示 A6-DER 在 epoch 1 已达到 best val，随后 last-val 变差；这提示 official-last checkpoint policy 可能低估 A6 on ETTh2。但在未跑 best-val 对照前，不能把 A6-LBF 升级为 paper-core pass。
+A6 尚未超过 best stage controls。ETTh2 的 training summary 显示 A6-DER 在 epoch 1 已达到 best val，随后 last-val 变差；这应被记录为 official-last trajectory drift，而不是改变 main protocol 的理由。在未完成 trajectory/objective 诊断前，不能把 A6-LBF 升级为 paper-core pass。
 
 ## Decision
 
 - `A6-DER_prefix_native_dense_equivalent_row_bank`: `control_passed_as_capacity_ceiling`。
 - `A6-LBF_learned_basis_forecast_operator`: `partial_pass_capacity_recovered_not_yet_core`。
-- 不建议继续 rank-only sweep；下一步优先做 best-val / early-stopping diagnostic，并同步检查 whether A6-LBF 的 learned basis 具备可解释 low-rank structure。
+- 不建议继续 rank-only sweep；下一步优先做 official-last trajectory diagnostic，并同步检查 whether A6-LBF 的 learned basis 具备可解释 low-rank structure。`best-val` 仅可作为 diagnostic-only upper-bound audit。
 
 ## Artifacts
 

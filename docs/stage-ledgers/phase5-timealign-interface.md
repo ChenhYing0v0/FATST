@@ -19,10 +19,10 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Phase5-A6：Step 9/10，capacity-native gate 已完成，进入 partial-pass 诊断 |
+| `current_11_step` | Phase5-A6：Step 10/11，partial-pass 诊断已完成，准备回 Step 4/5 设计 official-last-compatible anti-drift / objective repair |
 | `current_candidate` | `A6-LBF_learned_basis_forecast_operator` 为 `partial_pass_capacity_recovered_not_yet_core`；`A6-DER` 为 passed capacity ceiling/control |
-| `latest_decision` | A6 成功修复 A5-Q/A5-B 的主要 capacity collapse：`A6-DER` 相对 `best_stage_control` 平均仅 `+0.91%`，相对 A5-B-r128 `-11.27%`；`A6-LBF-r256` 相对 A6-DER 平均 `-0.03%`，但对 best control 仍 `0/12` wins |
-| `next_required_action` | 不做 rank-only sweep；先做 best-val/early-stopping diagnostic 与 learned-basis structure diagnostic，判断 ETTh2/long-horizon 剩余差距是否来自 checkpoint policy 或 objective conflict |
+| `latest_decision` | A6 partial-pass 诊断显示 ETTh2 是主要 official-last trajectory drift 来源：三 arm last-vs-best validation MSE 平均漂移 `+11.81%`，ETTm1/Weather 平均仅 `+0.12%`；`r512` 的 operator rank99 扩张没有转化为 metric gain |
+| `next_required_action` | 回 Step 4/5 设计 official-last-compatible anti-drift / objective repair；不做 rank-only sweep，不启动 best-val/early-stopping 主实验，`best-val` 仅可作为 diagnostic-only upper-bound audit |
 | `rollback_point` | 若 Step 4/5 无法提出新的 capacity mechanism，回 Step 2/3 重审 Stage A interface problem 是否应作为 paper-core 贡献。Stage B 暂缓，不能替代 A5 |
 
 ## Candidate Queue
@@ -45,7 +45,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | `A5-Q_collapse_diagnostic_repair` | `diagnostic_only_completed_failed_as_repair` | A5-Q collapse 可能混入 decoder dropout 继承 preset 与 ETTm1 `patch_num=1` cross-attention 退化，需要先拆开验证 | not_required：launch 前定义为 diagnostic-only，不可直接升级为 paper-core | completed：ETTm1 dropout 修复显著改善旧 A5-Q，但最佳 setting 仍相对 best stage control `+2.16%`，所有 arms wins `0`；`patch_num_override=48` 反而更差 | 只保留为 failure diagnosis；若保留 target-query 叙事，需回 Step 4/5 重新设计 function/capacity-preserving path | `analysis/phase5_timealign_hss_a5q_diagnostic_gate_20260703/phase5_timealign_hss_a5q_diagnostic_gate_report.md` |
 | `A5-B_continuous_forecast_basis_operator` | `failed_as_core_candidate` | 将 unified head 写成 continuous forecast function/operator：TimeAlign hidden 生成 coefficients，requested prefix 只决定 future coordinate grid | passed：forecast function/operator 避免 dense rows、anchor 与 residual | 未通过：最佳 `a5b_r128` 相对 `best_stage_control` 平均 MSE `+14.19%`，wins `0/12`；rank 128 比 rank 64 好但仍明显不足 | 保留为 negative evidence：basis rank 提升有效但 operator class 上限不足 | `analysis/phase5_timealign_hss_a5_unified_head_sync_gate_20260703/phase5_timealign_hss_a5_unified_head_sync_gate_report.md` |
 | `A6-DER_prefix_native_dense_equivalent_row_bank` | `control_passed_as_capacity_ceiling` | 若完全保留 dense row capacity 且只改成 prefix-native invocation，应该能判断 Stage A bottleneck 是否真在 head capacity | not_required：作为 capacity ceiling/control，不单独宣称 paper-core | passed_as_control：相对 best stage control 平均 `+0.91%`、wins `2/12`，相对 A5-B-r128 `-11.27%` | 证明 A5 失败主要包含 operator capacity 问题；作为 A6-LBF ceiling 保留 | `analysis/phase5_timealign_hss_a6_capacity_native_gate_20260703/phase5_timealign_hss_a6_capacity_native_gate_report.md` |
-| `A6-LBF_learned_basis_forecast_operator` | `partial_pass_capacity_recovered_not_yet_core` | 用 learned temporal basis + hidden coefficients 构造 prefix-consistent forecast operator；`K=720` 可 dense-equivalent，较小 rank 测试 intrinsic rank | conditional_pass：anchor-free、非 residual、prefix-native，且直接修复 A5-B fixed-basis under-capacity；必须和 A6-DER ceiling 一起解释 | partial_pass：`r256` 相对 A6-DER 平均 `-0.03%`，相对 A5-B-r128 `-11.30%`，但对 best stage control `0/12` win | 下一步做 best-val/early-stopping diagnostic 与 learned-basis structure diagnostic；不做 rank-only sweep | `analysis/phase5_timealign_hss_a6_capacity_native_gate_20260703/phase5_timealign_hss_a6_capacity_native_gate_report.md` |
+| `A6-LBF_learned_basis_forecast_operator` | `partial_pass_capacity_recovered_not_yet_core` | 用 learned temporal basis + hidden coefficients 构造 prefix-consistent forecast operator；`K=720` 可 dense-equivalent，较小 rank 测试 intrinsic rank | conditional_pass：anchor-free、非 residual、prefix-native，且直接修复 A5-B fixed-basis under-capacity；必须和 A6-DER ceiling 一起解释 | partial_pass：`r256` 相对 A6-DER 平均 `-0.03%`，相对 A5-B-r128 `-11.30%`，但对 best stage control `0/12` win；partial-pass diagnostic 显示主要剩余问题是 ETTh2 official-last drift 与 objective/regularization mismatch | 回 Step 4/5 设计 official-last-compatible anti-drift / objective repair；不做 rank-only sweep；`best-val` 仅可作为 diagnostic-only upper-bound audit | `analysis/phase5_timealign_hss_a6_partial_pass_diagnostic_20260703/phase5_timealign_hss_a6_partial_pass_diagnostic_report.md` |
 | `A6-QBR_query_bilinear_readout` | `deferred` | 保留 target-query semantics，但把 final readout 改成 dense-equivalent bilinear operator | deferred：需等 A6-LBF 证明 learned-basis capacity path 有效 | pending | 暂不实现，避免再次陷入 query mechanism sweep | `docs/experiments/phase5-a6-capacity-native-unified-head-mechanisms.md` |
 | `A5-S_step_specific_hypernetwork_head` | `control_deferred` | 用 coordinate-conditioned hypernetwork 生成 step readout weights，避免 pretrained dense rows 但保留 step-specific capacity | deferred：容易被视作 generated dense rows，贡献边界弱于 A5-B | pending | 等 A5-B 结果后再决定是否作为 capacity control | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
 | `A5-I_cumulative_innovation_process_decoder` | `control_deferred` | 生成 future innovation process 再 cumulative 得到 trajectory，与 output/error-process 诊断对齐 | deferred：trajectory-process 叙事有价值，但 cumulative drift 风险较高 | pending | 等 A5-Q/A5-B gate 后再决定是否作为 trajectory-process control | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
@@ -73,6 +73,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | A5-Q collapse diagnostic repair | `A5-Q_collapse_diagnostic_repair` | diagnostic | dropout 错位解释 ETTm1 collapse 的重要部分：`a5q_seg48_dropout01/00` 在 ETTm1 相对旧 A5-Q 平均 `-34.09%/-36.81%`；但所有 arms 对 best stage control 仍 `0` win，`patch_num=48` 不成立 | `diagnostic_only_completed_failed_as_repair` | `analysis/phase5_timealign_hss_a5q_diagnostic_gate_20260703/phase5_timealign_hss_a5q_diagnostic_gate_report.md` |
 | A6 capacity-native mechanism proposal | `A6-DER/A6-LBF/A6-QBR` | idea proposal / narrative gate | A6-DER 作为 dense-equivalent prefix-native ceiling；A6-LBF 作为 learned-basis primary candidate；A6-QBR 暂缓 | `narrative_ready_for_A6_LBF` | `docs/experiments/phase5-a6-capacity-native-unified-head-mechanisms.md` |
 | A6 capacity-native remote gate | `A6-DER/A6-LBF` | method/control gate | A6-DER 恢复 dense-equivalent capacity，A6-LBF-r256 基本贴住 ceiling；但 A6-LBF 对 best stage control 仍 `0/12` win | `partial_pass_capacity_recovered_not_yet_core` | `analysis/phase5_timealign_hss_a6_capacity_native_gate_20260703/phase5_timealign_hss_a6_capacity_native_gate_report.md` |
+| A6 partial-pass official-last diagnostic | `A6-LBF` | diagnostic-only | ETTh2 三 arm last-vs-best validation MSE 平均漂移 `+11.81%`，ETTm1/Weather 平均仅 `+0.12%`；`r512` rank 扩张未带来 metric gain | `diagnostic_only_completed` | `analysis/phase5_timealign_hss_a6_partial_pass_diagnostic_20260703/phase5_timealign_hss_a6_partial_pass_diagnostic_report.md` |
 
 ## Pending Tasks
 
@@ -96,8 +97,8 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | A5-Q/A5-B remote synchronous gate | Codex | 本地 smoke 通过且 commit/push 完成 | `completed_failed` | Step 9/10 已完成：A5-Q/A5-B 均未通过 effectiveness gate，回 Step 4/5 |
 | A5 capacity-mechanism rollback diagnostic | Codex | A5-Q/A5-B failed_as_core_candidate | `completed` | A5-Q diagnostic 已完成：dropout 错位是 collapse amplifier，但不是 paper-core repair；下一步回 Step 4/5 重新设计 capacity mechanism |
 | A6-DER/A6-LBF local implementation | Codex | A6 capacity-native proposal | `completed` | 已实现两个 readout modes，`py_compile` 与 local smoke 通过 |
-| A6 capacity-native remote gate | Codex | A6 local smoke passed | `completed_partial_pass` | A6-LBF-r256 已恢复 capacity 但未超过 best controls；下一步做 best-val/early-stopping 与 basis diagnostics |
-| A6 partial-pass diagnostic design | Codex | A6 capacity-native gate partial pass | `pending` | 设计最小 best-val/early-stopping diagnostic，并检查 learned temporal basis rank/energy/row similarity |
+| A6 capacity-native remote gate | Codex | A6 local smoke passed | `completed_partial_pass` | A6-LBF-r256 已恢复 capacity 但未超过 best controls；下一步做 official-last trajectory 与 basis diagnostics |
+| A6 partial-pass diagnostic design | Codex | A6 capacity-native gate partial pass | `completed` | 已完成 official-last trajectory 与 learned-basis structure diagnostic；下一步回 Step 4/5 设计 official-last-compatible anti-drift / objective repair |
 | Stage B diagnostic plan | Codex | A5 architecture 通过后再推进 | `deferred` | 暂缓；不能替代 Stage A architecture |
 | paper-mainline 同步检查 | Codex | A4 将 Stage A 从 universal head 改为 reliability-aware interface 诊断 | `completed` | 已同步当前状态与贡献边界，不改变 working title |
 
@@ -120,6 +121,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | 2026-07-02 | A5 first-principles 候选提出 | `Candidate Queue` / `Pending Tasks` | 候选队列扩展 | 提出 A5-Q/A5-B/A5-S/A5-I/A5-M；优先 A5-Q 与 A5-B narrative gate，不实现 |
 | 2026-07-02 | A5-Q/A5-B narrative gate 完成 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | 进入实现 | A5-Q 与 A5-B 通过 narrative gate；A5-S/A5-I/A5-M 暂缓，本轮只做 4-arm synchronous gate |
 | 2026-07-03 | A5-Q/A5-B effectiveness gate 失败 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | rollback | A5-B/A5-Q prefix consistency 成立但 forecasting capacity 不足；二者降级为 failed core candidates，回 Step 4/5 |
+| 2026-07-03 | A6 partial-pass diagnostic 完成 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | protocol correction / rollback | 主协议保持 official-last；A6-LBF 维持 partial pass，下一步回 Step 4/5 设计 anti-drift/objective repair |
 
 ## Remote Launch Log
 

@@ -1,0 +1,180 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DATASET_ROOT="${DATASET_ROOT:-${DATA_ROOT:-/home/yingch/dataset}}"
+OUTPUT_ROOT="${OUTPUT_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6_objective_drift_diagnostic}"
+CHECKPOINT_POLICY="${CHECKPOINT_POLICY:-official-last}"
+LOG_ROOT="${LOG_ROOT:-${OUTPUT_ROOT}/_logs/${CHECKPOINT_POLICY}}"
+CONDA_ENV="${CONDA_ENV:-${CONDA_ENV_NAME:-moe}}"
+CONDA_BIN="${CONDA_BIN:-}"
+GPU_IDS="${GPU_IDS:-0 1 2}"
+SEED="${SEED:-2021}"
+EPOCHS="${EPOCHS:-10}"
+PATIENCE="${PATIENCE:-3}"
+DATASETS="${DATASETS:-ETTh2}"
+VARIANTS="${VARIANTS:-lbf_r256_full lbf_r256_stochastic_p1 lbf_r256_continuous_p4 der_full der_stochastic_p1 der_continuous_p4}"
+SEQ_LEN="${SEQ_LEN:-720}"
+BATCH_SIZE="${BATCH_SIZE:-32}"
+MAX_TRAIN_BATCHES="${MAX_TRAIN_BATCHES:-0}"
+MAX_EVAL_BATCHES="${MAX_EVAL_BATCHES:-0}"
+NUM_WORKERS="${NUM_WORKERS:-0}"
+
+mkdir -p "${LOG_ROOT}"
+
+if [[ -z "${CONDA_BIN}" ]]; then
+  if command -v conda >/dev/null 2>&1; then
+    CONDA_BIN="$(command -v conda)"
+  elif [[ -x "/home/anaconda3/bin/conda" ]]; then
+    CONDA_BIN="/home/anaconda3/bin/conda"
+  elif [[ -x "/data/anaconda3/bin/conda" ]]; then
+    CONDA_BIN="/data/anaconda3/bin/conda"
+  else
+    echo "Unable to locate conda. Set CONDA_BIN=/path/to/conda." >&2
+    exit 1
+  fi
+fi
+
+read -r -a gpu_ids <<< "${GPU_IDS}"
+read -r -a datasets <<< "${DATASETS}"
+read -r -a variants <<< "${VARIANTS}"
+
+if [[ "${CHECKPOINT_POLICY}" != "official-last" ]]; then
+  echo "This diagnostic must use CHECKPOINT_POLICY=official-last." >&2
+  exit 1
+fi
+
+variant_config() {
+  local variant="$1"
+  case "${variant}" in
+    lbf_r256_full)
+      echo "learned-basis-forecast-operator full 1 32 32 256"
+      ;;
+    lbf_r256_stochastic_p1)
+      echo "learned-basis-forecast-operator stochastic-prefix 1 32 32 256"
+      ;;
+    lbf_r256_continuous_p4)
+      echo "learned-basis-forecast-operator continuous-prefix 4 32 32 256"
+      ;;
+    der_full)
+      echo "prefix-native-dense-equivalent-row-bank full 1 32 32 64"
+      ;;
+    der_stochastic_p1)
+      echo "prefix-native-dense-equivalent-row-bank stochastic-prefix 1 32 32 64"
+      ;;
+    der_continuous_p4)
+      echo "prefix-native-dense-equivalent-row-bank continuous-prefix 4 32 32 64"
+      ;;
+    *)
+      echo "Unknown A6 objective drift diagnostic variant: ${variant}" >&2
+      exit 1
+      ;;
+  esac
+}
+
+echo "phase5_timealign_hss_a6_objective_drift_diagnostic_start=$(date -Is)"
+echo "cwd=$(pwd)"
+echo "git_commit=$(git rev-parse HEAD)"
+echo "dataset_root=${DATASET_ROOT}"
+echo "output_root=${OUTPUT_ROOT}"
+echo "checkpoint_policy=${CHECKPOINT_POLICY}"
+echo "conda_env=${CONDA_ENV}"
+echo "conda_bin=${CONDA_BIN}"
+echo "gpu_ids=${GPU_IDS}"
+echo "seed=${SEED}"
+echo "epochs=${EPOCHS}"
+echo "patience=${PATIENCE}"
+echo "datasets=${DATASETS}"
+echo "variants=${VARIANTS}"
+echo "seq_len=${SEQ_LEN}"
+echo "batch_size=${BATCH_SIZE}"
+echo "max_train_batches=${MAX_TRAIN_BATCHES}"
+echo "max_eval_batches=${MAX_EVAL_BATCHES}"
+nvidia-smi --query-gpu=index,name,memory.total,memory.used,memory.free,utilization.gpu \
+  --format=csv,noheader,nounits
+
+run_job() {
+  local dataset="$1"
+  local variant="$2"
+  local gpu="$3"
+  local readout_mode loss_mode prefix_samples continuous_min_prefix continuous_prefix_step basis_rank
+  read -r readout_mode loss_mode prefix_samples continuous_min_prefix continuous_prefix_step basis_rank <<< "$(variant_config "${variant}")"
+  local run_name run_dir run_log
+  run_name="TimeAlignOfficialUnified720_A6OD_${variant}_${CHECKPOINT_POLICY}"
+  run_dir="${OUTPUT_ROOT}/${CHECKPOINT_POLICY}/${run_name}/${dataset}/mixed_h96_h192_h336_h720/seed${SEED}"
+  run_log="${LOG_ROOT}/${run_name}_${dataset}_seed${SEED}.log"
+  if [[ -s "${run_dir}/metrics_by_target_horizon.csv" && -s "${run_dir}/training_log.csv" ]]; then
+    echo "skip_existing run_name=${run_name} dataset=${dataset} variant=${variant}"
+    return 0
+  fi
+  echo "run_start=$(date -Is) run_name=${run_name} dataset=${dataset} variant=${variant} readout_mode=${readout_mode} loss_mode=${loss_mode} basis_rank=${basis_rank} gpu=${gpu}"
+  CUDA_VISIBLE_DEVICES="${gpu}" PYTHONUNBUFFERED=1 "${CONDA_BIN}" run --no-capture-output -n "${CONDA_ENV}" \
+    python baselines/timealign_official/train_repo.py \
+      --dataset-root "${DATASET_ROOT}" \
+      --dataset "${dataset}" \
+      --mode unified \
+      --seq-len "${SEQ_LEN}" \
+      --pred-len 720 \
+      --target-horizons 96,192,336,720 \
+      --batch-size "${BATCH_SIZE}" \
+      --epochs "${EPOCHS}" \
+      --patience "${PATIENCE}" \
+      --seed "${SEED}" \
+      --max-train-batches "${MAX_TRAIN_BATCHES}" \
+      --max-eval-batches "${MAX_EVAL_BATCHES}" \
+      --num-workers "${NUM_WORKERS}" \
+      --run-name "${run_name}" \
+      --output-dir "${run_dir}" \
+      --device cuda \
+      --checkpoint-policy "${CHECKPOINT_POLICY}" \
+      --readout-mode "${readout_mode}" \
+      --pred-loss-mode "${loss_mode}" \
+      --prefix-samples "${prefix_samples}" \
+      --continuous-min-prefix "${continuous_min_prefix}" \
+      --continuous-prefix-step "${continuous_prefix_step}" \
+      --basis-rank "${basis_rank}" 2>&1 | tee "${run_log}"
+  echo "run_done=$(date -Is) run_name=${run_name} dataset=${dataset} variant=${variant} gpu=${gpu}"
+}
+
+pids=()
+next_gpu=0
+
+launch_job() {
+  local dataset="$1"
+  local variant="$2"
+  local gpu="${gpu_ids[${next_gpu}]}"
+  next_gpu=$(((next_gpu + 1) % ${#gpu_ids[@]}))
+  run_job "${dataset}" "${variant}" "${gpu}" &
+  pids+=("$!")
+}
+
+compact_pids() {
+  local alive=()
+  local pid
+  for pid in "${pids[@]}"; do
+    if kill -0 "${pid}" >/dev/null 2>&1; then
+      alive+=("${pid}")
+    fi
+  done
+  pids=("${alive[@]}")
+}
+
+wait_for_slot() {
+  while [[ "${#pids[@]}" -ge "${#gpu_ids[@]}" ]]; do
+    wait -n
+    compact_pids
+  done
+}
+
+for dataset in "${datasets[@]}"; do
+  for variant in "${variants[@]}"; do
+    wait_for_slot
+    launch_job "${dataset}" "${variant}"
+  done
+done
+
+for pid in "${pids[@]}"; do
+  wait "${pid}"
+done
+
+echo "phase5_timealign_hss_a6_objective_drift_diagnostic_done=$(date -Is)"
+find "${OUTPUT_ROOT}/${CHECKPOINT_POLICY}" -path "*/metrics_by_target_horizon.csv" -type f | sort
