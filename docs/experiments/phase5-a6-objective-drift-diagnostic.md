@@ -15,8 +15,8 @@
 | `design` | ETTh2 only；`A6-LBF-r256` 与 `A6-DER` 各跑 `full`、`stochastic-prefix`、`continuous-prefix` 三个 objective variants；所有 run 使用 `official-last` |
 | `narrative_gate` | not_required：本轮是 diagnostic-only，不能直接升级为 paper-core method |
 | `effectiveness_gate` | 比较 final test MSE、last-vs-best validation drift、是否缩小 ETTh2 gap；若只改变 selector 不改变 official-last final，则不算修复 |
-| `artifacts` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6_objective_drift_diagnostic` |
-| `decision` | pending remote artifacts |
+| `artifacts` | `analysis/phase5_timealign_hss_a6_objective_drift_diagnostic_20260703/phase5_timealign_hss_a6_objective_drift_diagnostic_report.md` |
+| `decision` | completed_failed_as_repair：objective switch 没有修复 A6 的 ETTh2 gap |
 
 ## Variants
 
@@ -34,3 +34,16 @@
 [Decision] 本轮不测试 `r512`，因为 A6 partial-pass diagnostic 已显示 `r512` 的 rank 扩张没有转化为
 metric gain。若本轮 objective variants 均不能缩小 ETTh2 official-last gap，则应回 Step 4/5
 重新设计 explicit anti-drift regularization 或 teacher/nested-style stability path，而不是继续调 rank。
+
+## Result
+
+[Strong Evidence] A6OD 不通过 repair gate。最佳 variant 是 `lbf_r256_stochastic_p1`，相对
+ETTh2 best stage control 平均仍差 `+1.79%`，wins `0/4`，last-vs-best validation drift 仍为
+`+6.25%`。
+
+[Fact] `full` objective 明显更差：`lbf_r256_full` 相对 best control `+5.61%`，`der_full`
+为 `+5.81%`。`continuous-prefix` 也未修复 gap。
+
+[Decision] 下一步不继续 objective-sampling sweep；应回 Step 4/5 设计 explicit stability path，
+例如 official-last-compatible regularization、teacher/nested stability control，或重新评估 best controls
+的 regularization advantage。

@@ -384,6 +384,17 @@ A6 partial-pass diagnostic result：
 诊断报告见
 `analysis/phase5_timealign_hss_a6_partial_pass_diagnostic_20260703/phase5_timealign_hss_a6_partial_pass_diagnostic_report.md`。
 
+A6OD objective drift diagnostic result：
+
+- ETTh2-only objective sampling diagnostic 已完成；所有 run 仍使用 `official-last` / without early stop；
+- 最佳 variant 为 `lbf_r256_stochastic_p1`，相对 ETTh2 best stage control 平均仍差 `+1.79%`，
+  wins `0/4`，last-vs-best validation drift 仍为 `+6.25%`；
+- `full` objective 明显更差：`lbf_r256_full` 为 `+5.61%`，`der_full` 为 `+5.81%`；
+- 因此下一步不继续 objective-sampling sweep；需要回 Step 4/5 设计 explicit stability path。
+
+结果报告见
+`analysis/phase5_timealign_hss_a6_objective_drift_diagnostic_20260703/phase5_timealign_hss_a6_objective_drift_diagnostic_report.md`。
+
 A5 effectiveness gate：
 
 - 至少要超过 H1 `target_set_decoder_multiprefix` 与 A3D `teacher_preserved_nested` controls；

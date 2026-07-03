@@ -1,0 +1,7 @@
+{
+  "a6_comparison": "analysis/phase5_timealign_hss_a6_capacity_native_gate_20260703/phase5_timealign_hss_a6_comparison.csv",
+  "output_dir": "analysis/phase5_timealign_hss_a6_objective_drift_diagnostic_20260703",
+  "protocol": "official-last / without early stop",
+  "raw_root": "analysis/phase5_timealign_hss_a6_objective_drift_diagnostic_20260703/raw",
+  "role": "diagnostic_only"
+}

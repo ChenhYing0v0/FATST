@@ -2525,6 +2525,18 @@ rank99，但 mean effective rank 只从 `82.91` 到 `92.80`，且未带来 metri
 
 [Artifacts] `analysis/phase5_timealign_hss_a6_partial_pass_diagnostic_20260703/phase5_timealign_hss_a6_partial_pass_diagnostic_report.md`
 
+[A6OD Objective Drift Diagnostic] ETTh2-only objective sampling diagnostic 已完成，所有 run 仍使用
+`official-last` / without early stop。最佳 variant 为 `lbf_r256_stochastic_p1`，相对 ETTh2 best
+stage control 平均仍差 `+1.79%`，wins `0/4`，last-vs-best validation drift `+6.25%`。
+`full` objective 明显更差：`lbf_r256_full` 为 `+5.61%`，`der_full` 为 `+5.81%`。
+
+[Decision] A6OD 标记为 `diagnostic_only_completed_failed_as_repair`。仅调整 prefix supervision
+sampling 不足以修复 A6-LBF 的 ETTh2 partial-pass；下一步不继续 objective-sampling sweep，应回
+Step 4/5 设计 explicit stability path，例如 official-last-compatible regularization、teacher/nested
+stability control，或重新评估 best controls 的 regularization advantage。
+
+[Artifacts] `analysis/phase5_timealign_hss_a6_objective_drift_diagnostic_20260703/phase5_timealign_hss_a6_objective_drift_diagnostic_report.md`
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：
