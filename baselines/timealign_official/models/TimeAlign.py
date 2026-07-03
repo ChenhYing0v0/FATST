@@ -164,6 +164,9 @@ class Model(nn.Module):
             self.target_query_segment_len = int(getattr(configs, "target_query_segment_len", 48))
             target_query_heads = int(getattr(configs, "target_query_heads", 4))
             target_query_ff = int(getattr(configs, "target_query_ff", configs.d_ff))
+            target_query_dropout = getattr(configs, "target_query_dropout", None)
+            if target_query_dropout is None:
+                target_query_dropout = configs.dropout
             self.target_query_embed = nn.Sequential(
                 nn.Linear(2, configs.d_model),
                 nn.GELU(),
@@ -172,13 +175,13 @@ class Model(nn.Module):
             self.target_cross_attn = nn.MultiheadAttention(
                 configs.d_model,
                 num_heads=target_query_heads,
-                dropout=configs.dropout,
+                dropout=target_query_dropout,
                 batch_first=True,
             )
             self.target_self_attn = nn.MultiheadAttention(
                 configs.d_model,
                 num_heads=target_query_heads,
-                dropout=configs.dropout,
+                dropout=target_query_dropout,
                 batch_first=True,
             )
             self.target_query_norm1 = nn.LayerNorm(configs.d_model)
@@ -187,7 +190,7 @@ class Model(nn.Module):
             self.target_query_ffn = nn.Sequential(
                 nn.Linear(configs.d_model, target_query_ff),
                 nn.GELU(),
-                nn.Dropout(configs.dropout),
+                nn.Dropout(target_query_dropout),
                 nn.Linear(target_query_ff, configs.d_model),
             )
             self.target_segment_out = nn.Linear(configs.d_model, self.target_query_segment_len)

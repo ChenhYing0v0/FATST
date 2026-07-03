@@ -39,6 +39,7 @@ def build_config(readout_mode: str, **overrides: int | float | str) -> Namespace
         target_query_segment_len=48,
         target_query_heads=4,
         target_query_ff=64,
+        target_query_dropout=None,
     )
     for key, value in overrides.items():
         setattr(config, key, value)

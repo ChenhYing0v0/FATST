@@ -328,6 +328,7 @@ def resolve_dataset_root(dataset_root: Path, preset: OfficialPreset) -> Path:
 def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> argparse.Namespace:
     root_path = resolve_dataset_root(args.dataset_root, preset)
     device = torch.device(args.device if args.device != "auto" else ("cuda" if torch.cuda.is_available() else "cpu"))
+    patch_num = args.patch_num_override if args.patch_num_override > 0 else preset.patch_num
     official = argparse.Namespace(
         task_name="long_term_forecast",
         is_training=1,
@@ -399,7 +400,7 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         w_recon=args.w_recon,
         local_margin=preset.local_margin,
         global_margin=preset.global_margin,
-        patch_num=preset.patch_num,
+        patch_num=patch_num,
         layer_norm=preset.layer_norm,
         pos=1,
         loc=1,
@@ -411,6 +412,7 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         target_query_segment_len=args.target_query_segment_len,
         target_query_heads=args.target_query_heads,
         target_query_ff=args.target_query_ff,
+        target_query_dropout=args.target_query_dropout,
     )
     return official
 
@@ -1051,6 +1053,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--target-query-segment-len", type=int, default=48)
     parser.add_argument("--target-query-heads", type=int, default=4)
     parser.add_argument("--target-query-ff", type=int, default=256)
+    parser.add_argument("--target-query-dropout", type=float, default=None)
+    parser.add_argument("--patch-num-override", type=int, default=0)
     parser.add_argument("--warm-start-checkpoint", type=Path, default=None)
     parser.add_argument("--teacher-checkpoint", type=Path, default=None)
     parser.add_argument("--teacher-readout-mode", choices=["target-set-decoder"], default="target-set-decoder")
@@ -1070,6 +1074,10 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("fixed mode expects target_horizons == [pred_len]")
     if args.mode == "unified" and args.pred_len != 720:
         raise ValueError("unified mode currently expects pred_len=720")
+    if args.target_query_dropout is not None and not 0.0 <= args.target_query_dropout <= 1.0:
+        raise ValueError("target_query_dropout must be between 0.0 and 1.0")
+    if args.patch_num_override < 0:
+        raise ValueError("patch_num_override must be non-negative")
     return args
 
 

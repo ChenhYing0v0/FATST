@@ -59,6 +59,7 @@ target_query_embed: [segment_center, segment_width] -> [d_model]
 target_cross_attn: query attends to TimeAlign history tokens
 target_self_attn: causal target-target attention
 target_segment_out: [d_model] -> [S]
+target_query_dropout: optional decoder-only dropout override
 ```
 
 ### Forward flow
@@ -82,6 +83,16 @@ permute -> [B, H, C]
 
 这里的 target query 使用 absolute segment coordinate，不使用 global horizon id。causal mask 保证
 较短 prefix 中的 target segments 不会受到较长 horizon 的 future segments 影响。
+
+### Diagnostic knobs
+
+`target_query_dropout` 是 A5-Q decoder-only override。若未设置，它保持旧行为并继承
+`configs.dropout`；若设置，则只影响 `target_cross_attn`、`target_self_attn` 与
+`target_query_ffn`，不改变 TimeAlign backbone encoder/autoencoder dropout。
+
+`train_repo.py` 还提供 `patch_num_override`，用于诊断 ETTm1 preset 中 `patch_num=1` 是否让
+`memory=[B*C, 1, d_model]` 退化为单 token cross-attention。该 override 是 diagnostic-only 入口，
+不改变 dataset preset 的默认配置。
 
 ### Prefix consistency
 
@@ -107,6 +118,7 @@ A5 的目标是提供 first-principles unified prediction architecture：request
 - A5-B 的 capacity preservation 目前由 `basis_rank` 控制，是否足够替代 dense head 需要远程结果验证；
 - A5-Q 的 capacity preservation 由 query segment length、decoder width 和 attention layers 近似控制，
   不是数学意义的 full-head function preservation；
+- `target_query_dropout` 与 `patch_num_override` 只用于 collapse 诊断；它们本身不构成新的论文机制；
 - 当前 smoke 只能证明 shape 与 prefix-invariance，不证明 forecasting performance。
 
 ### 可证伪证据

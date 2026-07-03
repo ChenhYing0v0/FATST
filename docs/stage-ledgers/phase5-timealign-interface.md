@@ -19,10 +19,10 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Phase5-A5：Step 10/11，A5-Q/A5-B effectiveness gate 未通过，回退到 Step 4/5 做 capacity-mechanism 重审 |
-| `current_candidate` | none active；A5-Q/A5-B 均降级为 failed core candidates |
+| `current_11_step` | Phase5-A5：Step 4/5/6，A5-Q collapse diagnostic repair 设计与验证 |
+| `current_candidate` | `A5-Q_collapse_diagnostic_repair`，仅为 `diagnostic_only`；A5-Q/A5-B core-candidate 结论不恢复 |
 | `latest_decision` | A5-Q/A5-B 具备 architecture-level prefix consistency，但 forecasting effectiveness 明显弱于 best existing unified controls：最佳 A5 arm `a5b_r128` 相对 `best_stage_control` 平均 MSE `+14.19%`，wins `0/12` |
-| `next_required_action` | 回 Step 4/5：诊断为什么 first-principles direct head 的 capacity 不足；不得直接把 A5-S/A5-I/A5-M 扩成远程 sweep |
+| `next_required_action` | 启动 A5-Q diagnostic-only gate，隔离 `target_query_dropout` 与 ETTm1 `patch_num=1` memory-token 退化；不得直接把结果升级为 paper-core |
 | `rollback_point` | 若 Step 4/5 无法提出新的 capacity mechanism，回 Step 2/3 重审 Stage A interface problem 是否应作为 paper-core 贡献。Stage B 暂缓，不能替代 A5 |
 
 ## Candidate Queue
@@ -42,6 +42,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | `Stage_A_contribution_reevaluation` | `superseded` | A4S 后曾考虑把 Stage A 降级为 protocol/control 并转入 Stage B | superseded：后续审稿讨论认为该路线存在逻辑漏洞 | not_applicable | 被 A5 共识替代：Stage A 必须先解决 architecture | `analysis/phase5_stage_a_contribution_reevaluation_20260702/stage_a_contribution_reevaluation.md` |
 | `A5_pcf_prefix_consistent_function_preserving_decoder` | `narrative_rejected_after_review` | 原假设是用 active trained dense anchor + cumulative correction 兼顾 capacity 与 prefix consistency | 未通过：它过度依赖 pretrained dense rows，结构上接近 residual/correction，并混合 A2/A3D/H1C 思路；不能作为重新设计的 unified head | not_applicable | 保留为 rejected design/control idea；不得进入实现或 remote gate | `docs/experiments/phase5-a5-capacity-preserving-prefix-consistent-decoder.md` |
 | `A5-Q_elastic_causal_target_query_decoder` | `failed_as_core_candidate` | 用 future position queries + prefix-causal / structured mask 作为主生成 graph，requested prefix 通过 query set 和 mask 进入 decoder | passed：target-query graph、causal mask 与 absolute future coordinates 形成 prefix-elastic decoder | 未通过：`a5q_seg48_small` 相对 `best_stage_control` 平均 MSE `+42.41%`，`a5q_seg24_wide` 为 `+55.62%`，wins `0/12` | 保留为 negative evidence：prefix-query contract 成立但容量/训练路径不足；不得继续简单加宽 | `analysis/phase5_timealign_hss_a5_unified_head_sync_gate_20260703/phase5_timealign_hss_a5_unified_head_sync_gate_report.md` |
+| `A5-Q_collapse_diagnostic_repair` | `diagnostic_ready` | A5-Q collapse 可能混入 decoder dropout 继承 preset 与 ETTm1 `patch_num=1` cross-attention 退化，需要先拆开验证 | not_required：launch 前定义为 diagnostic-only，不可直接升级为 paper-core | pending：计划验证 `target_query_dropout=0.1/0.0` 与 ETTm1 `patch_num_override=48` | 启动 remote diagnostic gate；返回后写 analysis report 并决定是否回 Step 4/5 重写 A5-Q capacity mechanism | `docs/experiments/phase5-a5q-collapse-diagnostic-repair-plan.md` |
 | `A5-B_continuous_forecast_basis_operator` | `failed_as_core_candidate` | 将 unified head 写成 continuous forecast function/operator：TimeAlign hidden 生成 coefficients，requested prefix 只决定 future coordinate grid | passed：forecast function/operator 避免 dense rows、anchor 与 residual | 未通过：最佳 `a5b_r128` 相对 `best_stage_control` 平均 MSE `+14.19%`，wins `0/12`；rank 128 比 rank 64 好但仍明显不足 | 保留为 negative evidence：basis rank 提升有效但 operator class 上限不足 | `analysis/phase5_timealign_hss_a5_unified_head_sync_gate_20260703/phase5_timealign_hss_a5_unified_head_sync_gate_report.md` |
 | `A5-S_step_specific_hypernetwork_head` | `control_deferred` | 用 coordinate-conditioned hypernetwork 生成 step readout weights，避免 pretrained dense rows 但保留 step-specific capacity | deferred：容易被视作 generated dense rows，贡献边界弱于 A5-B | pending | 等 A5-B 结果后再决定是否作为 capacity control | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
 | `A5-I_cumulative_innovation_process_decoder` | `control_deferred` | 生成 future innovation process 再 cumulative 得到 trajectory，与 output/error-process 诊断对齐 | deferred：trajectory-process 叙事有价值，但 cumulative drift 风险较高 | pending | 等 A5-Q/A5-B gate 后再决定是否作为 trajectory-process control | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
@@ -87,7 +88,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | A5-Q/A5-B narrative gate mini-notes | Codex | 候选已提出但尚未通过 narrative gate | `completed` | A5-Q/A5-B 均通过 narrative gate；进入实现与本地 smoke |
 | A5-Q/A5-B 最小实现与 smoke | Codex | A5-Q/A5-B narrative gate 通过 | `completed` | 本地 smoke 显示 A5-B mismatch `0.0`、A5-Q mismatch 约 `4.77e-07` |
 | A5-Q/A5-B remote synchronous gate | Codex | 本地 smoke 通过且 commit/push 完成 | `completed_failed` | Step 9/10 已完成：A5-Q/A5-B 均未通过 effectiveness gate，回 Step 4/5 |
-| A5 capacity-mechanism rollback diagnostic | Codex | A5-Q/A5-B failed_as_core_candidate | `pending` | 分析 direct first-principles head 为什么丢失 forecasting capacity；不得直接扩 A5-S/A5-I/A5-M sweep |
+| A5 capacity-mechanism rollback diagnostic | Codex | A5-Q/A5-B failed_as_core_candidate | `in_progress` | 已设计 A5-Q diagnostic repair gate：先验证 `target_query_dropout` 与 ETTm1 `patch_num=1`，不得直接扩 A5-S/A5-I/A5-M sweep |
 | Stage B diagnostic plan | Codex | A5 architecture 通过后再推进 | `deferred` | 暂缓；不能替代 Stage A architecture |
 | paper-mainline 同步检查 | Codex | A4 将 Stage A 从 universal head 改为 reliability-aware interface 诊断 | `completed` | 已同步当前状态与贡献边界，不改变 working title |
 
