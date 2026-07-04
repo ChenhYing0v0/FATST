@@ -485,6 +485,21 @@ A7DG selective stability route：
 设计文档见
 `docs/experiments/phase5-a7dg-disagreement-gated-self-teacher.md`。
 
+A7DG selective gate result：
+
+- 最佳 `a7dg_abs004_t001_w02_d0999_wu1` 相对 uniform A6ST 平均 MSE `-0.40%`，
+  `11/12` horizons 更好；
+- gate 行为符合预期：`train_self_teacher_gate` 在 ETTh2/ETTm1/Weather 为
+  `0.88/0.31/0.22`，说明低 drift 数据集确实被降权；
+- 但相对 best controls 仍为 `+0.46%`、wins `2/12`；ETTm1/Weather 仍弱于
+  A6-LBF-r256；
+- 因此 A7DG 只保留为 selective stability evidence，不能作为 paper-core method；
+- 当前回 Step 4/5：下一步必须提出更有理论边界的 adaptive/selective objective 或新的
+  capacity-preserving unified head，不能继续做 threshold sweep。
+
+结果报告见
+`analysis/phase5_timealign_hss_a7dg_selective_self_teacher_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`。
+
 A5 effectiveness gate：
 
 - 至少要超过 H1 `target_set_decoder_multiprefix` 与 A3D `teacher_preserved_nested` controls；

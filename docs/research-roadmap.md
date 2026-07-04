@@ -2673,6 +2673,27 @@ launch 前 GPU 0/1/2 均空闲（`18 MiB used`, `24107 MiB free`），启动后 
 [Next] 等待 artifacts；返回后先检查 `train_self_teacher_gate` 是否在 ETTm1/Weather 上显著低于
 ETTh2，再判断 metrics 是否满足 selective safety gate。
 
+[A7DG Remote Gate Result] A7DG ETTh2/ETTm1/Weather selective gate 已完成。最佳 variant 为
+`a7dg_abs004_t001_w02_d0999_wu1`。
+
+[Strong Evidence] A7DG best 相对 uniform A6ST 有稳定改善：三数据集 12 个 horizon 平均 MSE
+`-0.40%`，`11/12` horizons 更好；分数据集为 ETTh2 `-0.05%`、ETTm1 `-0.53%`、
+Weather `-0.62%`。
+
+[Strong Evidence] Gate 行为符合 selective stability 假设：best variant 的
+`train_self_teacher_gate` 在 ETTh2/ETTm1/Weather 分别为 `0.88/0.31/0.22`，说明高 drift
+数据集获得更强 consistency，低 drift 数据集被降权。
+
+[Fact] 但 A7DG 仍未通过 paper-core effectiveness gate：best variant 相对 best controls 仍
+`+0.46%`、wins `2/12`；ETTm1 相对 A6-LBF-r256 `+0.51%`，Weather `+0.23%`。
+
+[Decision] A7DG 标记为 `partial_positive_not_paper_core`。它证明 selective stability objective
+比 uniform self-teacher 更合理，但当前 threshold-gated implementation 不足以成为主方法。
+下一步回 Step 4/5，不能继续做简单 threshold sweep；必须提出更有理论边界的 adaptive/selective
+objective 或新的 capacity-preserving unified head。
+
+[Artifacts] `analysis/phase5_timealign_hss_a7dg_selective_self_teacher_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：

@@ -139,6 +139,7 @@ def summarize(comparison: pd.DataFrame, trajectory: pd.DataFrame) -> pd.DataFram
             mean_relative_mse_vs_a6_der_pct=("relative_mse_vs_a6_der_pct", "mean"),
             mean_relative_mse_vs_best_stage_control_pct=("relative_mse_vs_best_stage_control_pct", "mean"),
             wins_vs_best_stage_control=("beats_best_stage_control", "sum"),
+            horizon_count=("beats_best_stage_control", "count"),
         )
     )
     trajectory_summary = (
@@ -232,20 +233,24 @@ def fmt(value: float) -> str:
 
 def write_report(output_dir: Path, summary: pd.DataFrame, dataset_summary: pd.DataFrame) -> None:
     best = summary.iloc[0]
-    horizon_count = int(dataset_summary["horizon_count"].sum())
     datasets = ", ".join(sorted(dataset_summary["dataset"].unique()))
     smooth = summary[summary["basis_operator_smoothness_weight"].gt(0.0)]
     max_smooth_ratio = (
         float(smooth["last_weighted_smoothness_to_train_loss"].max()) if not smooth.empty else 0.0
     )
     output_name = output_dir.name.lower()
-    if "a6st" in output_name:
+    if "a7dg" in output_name:
+        gate_label = "A7DG"
+    elif "a6st" in output_name:
         gate_label = "A6ST"
     elif "a6s2" in output_name:
         gate_label = "A6S2"
     else:
         gate_label = "A6S"
     title = (
+        "# Phase5-A7DG Official-Last Selective Self-Teacher Gate Report"
+        if gate_label == "A7DG"
+        else
         "# Phase5-A6ST Official-Last Self-Teacher Gate Report"
         if gate_label == "A6ST"
         else
@@ -263,7 +268,7 @@ def write_report(output_dir: Path, summary: pd.DataFrame, dataset_summary: pd.Da
         (
             "[Fact] 最佳 variant 为 "
             f"`{best['variant']}`：相对 best stage control 平均 `{best['mean_relative_mse_vs_best_stage_control_pct']:+.2f}%`，"
-            f"wins `{int(best['wins_vs_best_stage_control'])}/{horizon_count}`，last-vs-best validation drift "
+            f"wins `{int(best['wins_vs_best_stage_control'])}/{int(best['horizon_count'])}`，last-vs-best validation drift "
             f"`{best['last_vs_best_val_mse_pct']:+.2f}%`。"
         ),
         "",
@@ -273,7 +278,7 @@ def write_report(output_dir: Path, summary: pd.DataFrame, dataset_summary: pd.Da
         ),
         "",
     ]
-    if gate_label == "A6ST":
+    if gate_label in {"A6ST", "A7DG"}:
         lines.extend(
             [
                 (
@@ -309,7 +314,7 @@ def write_report(output_dir: Path, summary: pd.DataFrame, dataset_summary: pd.Da
                 mse=row["mean_mse"],
                 gap=row["mean_relative_mse_vs_best_stage_control_pct"],
                 wins=int(row["wins_vs_best_stage_control"]),
-                count=horizon_count,
+                count=int(row["horizon_count"]),
                 lbf=row["mean_relative_mse_vs_a6_lbf_r256_pct"],
                 drift=row["last_vs_best_val_mse_pct"],
                 ema=row["ema_decay"],
@@ -345,7 +350,18 @@ def write_report(output_dir: Path, summary: pd.DataFrame, dataset_summary: pd.Da
             )
         )
     lines.extend(["", "## Gate Decision", ""])
-    if gate_label == "A6ST":
+    if gate_label == "A7DG":
+        lines.extend(
+            [
+                "[Decision] A7DG effectiveness 必须同时看三点：是否保留 ETTh2 positive signal，是否降低 ETTm1/Weather 的 uniform A6ST 负向，以及 `train_self_teacher_gate` 是否按 dataset 产生选择性降权。",
+                "",
+                "[Decision] 若 A7DG 只优于 uniform A6ST 但仍系统性弱于 A6-LBF 或 best controls，则它只能作为 selective-stability partial evidence，不能直接升级为 paper-core。",
+                "",
+                "[Decision] 若 gate 强度在 ETTh2 显著高于 ETTm1/Weather，且 metrics 接近 A6-LBF，则下一步应围绕 adaptive/selective stability objective 做更严格 narrative gate，而不是继续人工调 threshold。",
+                "",
+            ]
+        )
+    elif gate_label == "A6ST":
         lines.extend(
             [
                 "[Decision] 该 gate 的 effectiveness 必须同时检查 raw final checkpoint 是否改善、是否跨 dataset 安全、以及是否只是 ETTh2-specific repair。",

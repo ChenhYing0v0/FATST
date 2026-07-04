@@ -8,7 +8,7 @@ stabilization，同时避免伤害 ETTm1/Weather。
 
 | Field | Content |
 | --- | --- |
-| `current_step` | Step 4/5 -> Step 6/7/8：新机制 narrative/code-theory gate 后进入最小 selective gate |
+| `current_step` | Step 9/10 completed：remote gate partial positive，但未通过 paper-core effectiveness gate |
 | `problem` | Uniform self-teacher consistency 修复 ETTh2 raw-final drift，但在 ETTm1/Weather 系统性负向 |
 | `existence_evidence` | A6ST ETTh2：`-1.91%` vs A6-LBF-r256、`+0.21%` vs best controls、wins `2/4`；ETTm1/Weather：`+0.95%` vs A6-LBF-r256、`+1.20%` vs best controls、wins `0/8` |
 | `idea` | 只在 student 与 EMA teacher 的 disagreement 足够高时施加 consistency；低 disagreement 时退化接近 A6-LBF |
@@ -17,7 +17,7 @@ stabilization，同时避免伤害 ETTm1/Weather。
 | `narrative_gate` | conditional pass：若写成 dataset hand-tuned threshold 则失败；若写成 disagreement-triggered final-checkpoint stabilization，并要求 gate 在低 drift 数据集自动降权，则可进入 diagnostic method gate |
 | `effectiveness_gate` | ETTh2 不应丢失 A6ST 的主要 gain；ETTm1/Weather 相对 A6-LBF-r256 不应系统性变差；三数据集 combined 应优于 A6ST uniform setting |
 | `artifacts` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a7dg_selective_self_teacher_gate` |
-| `decision` | ready_for_remote_gate |
+| `decision` | partial_positive_not_paper_core |
 
 ## Mechanism
 
@@ -93,3 +93,29 @@ New training-log columns:
 
 [Decision] A7DG 已进入 `ready_for_remote_gate`。下一步按 remote policy commit/push 后启动
 ETTh2/ETTm1/Weather selective gate。
+
+## Remote Gate Result
+
+[Fact] A7DG remote gate 已完成，覆盖 ETTh2/ETTm1/Weather × 3 variants。最佳 variant 为
+`a7dg_abs004_t001_w02_d0999_wu1`。
+
+[Strong Evidence] 相对 uniform A6ST，A7DG best 平均 MSE `-0.40%`，`11/12` horizons 更好。
+分数据集看，ETTh2 `-0.05%`、ETTm1 `-0.53%`、Weather `-0.62%`。
+
+[Strong Evidence] Gate 的 dataset separation 成立：best variant 的 `train_self_teacher_gate`
+在 ETTh2 为 `0.88`，ETTm1 为 `0.31`，Weather 为 `0.22`。这支持 selective stability
+objective 的方向，而不是 uniform consistency。
+
+[Fact] 但 A7DG best 相对 best controls 仍 `+0.46%`、wins `2/12`；ETTm1 相对 A6-LBF-r256
+仍 `+0.51%`，Weather 仍 `+0.23%`。
+
+[Decision] A7DG 标记为 `partial_positive_not_paper_core`。它保留为 selective stability evidence，
+但当前 threshold-gated implementation 不足以成为 paper-core method。
+
+[Rollback] 回 Step 4/5。下一步不能继续做简单 threshold sweep；需要提出理论边界更强的
+adaptive/selective objective，或转向新的 capacity-preserving unified head。
+
+Result artifacts:
+
+- `analysis/phase5_timealign_hss_a7dg_selective_self_teacher_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`
+- `analysis/phase5_timealign_hss_a7dg_selective_self_teacher_gate_20260704/phase5_timealign_hss_a7dg_vs_uniform_a6st.csv`
