@@ -395,6 +395,18 @@ A6OD objective drift diagnostic result：
 结果报告见
 `analysis/phase5_timealign_hss_a6_objective_drift_diagnostic_20260703/phase5_timealign_hss_a6_objective_drift_diagnostic_report.md`。
 
+A6S official-last stability path：
+
+- TimeAlign issue #1 提供外部 protocol evidence：作者说明固定训练轮数最终权重是有意设置，
+  因为 validation/test shift 下 early stopping 可能训练不充分；
+- 因此 A6 的 trajectory drift 不能被写成“改用 early-stop 即可解决”，而应写成
+  official-last final-checkpoint robustness / stability 问题；
+- 下一步进入 `A6S-EMA` 与 `A6S-HeadStability` 的 narrative + code-theory check，`best-val`
+  仍只作为 diagnostic-only upper-bound audit。
+
+设计文档见
+`docs/experiments/phase5-a6s-official-last-stability-path.md`。
+
 A5 effectiveness gate：
 
 - 至少要超过 H1 `target_set_decoder_multiprefix` 与 A3D `teacher_preserved_nested` controls；

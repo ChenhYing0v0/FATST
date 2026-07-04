@@ -2537,6 +2537,17 @@ stability control，或重新评估 best controls 的 regularization advantage�
 
 [Artifacts] `analysis/phase5_timealign_hss_a6_objective_drift_diagnostic_20260703/phase5_timealign_hss_a6_objective_drift_diagnostic_report.md`
 
+[External Protocol Evidence] TimeAlign GitHub issue #1 中，作者解释了为什么测试使用固定训练轮数后的最终权重：
+长时序预测中 validation 与 test 可能存在分布偏移，基于 validation 的早停可能训练不充分。因此，
+本项目不能把 A6 的 `official-last trajectory drift` 直接解释为“应该改用 early stopping”。
+
+[Decision] A6 下一步进入 `A6S_official_last_stability_path`，回 Step 4/5 设计 final-checkpoint
+robustness 机制。优先评估 `A6S-EMA` control 与 `A6S-HeadStability` method candidate；
+`A6S-SelfTeacher` 暂缓，`A6S-ExternalTeacher` 只能 diagnostic-only。`best-val` 仍只允许作为
+diagnostic-only upper-bound audit。
+
+[Artifacts] `docs/experiments/phase5-a6s-official-last-stability-path.md`
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：
