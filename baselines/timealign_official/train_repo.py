@@ -671,6 +671,23 @@ def learned_basis_coeff_l2_loss(model: nn.Module) -> torch.Tensor:
     return loss
 
 
+def self_teacher_gate(
+    self_teacher_loss: torch.Tensor,
+    pred_loss: torch.Tensor,
+    mode: str,
+    threshold: float,
+    temperature: float,
+) -> torch.Tensor:
+    if mode == "none":
+        return torch.ones((), device=self_teacher_loss.device)
+    signal = self_teacher_loss.detach()
+    if mode == "ratio":
+        signal = signal / pred_loss.detach().clamp_min(1e-8)
+    elif mode != "absolute":
+        raise ValueError(f"Unknown self_teacher_gate_mode: {mode}")
+    return torch.sigmoid((signal - threshold) / temperature)
+
+
 def evaluate(
     model: nn.Module,
     loader: torch.utils.data.DataLoader,
@@ -802,6 +819,9 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
             + json.dumps(
                 {
                     "decay": args.self_teacher_decay,
+                    "gate_mode": args.self_teacher_gate_mode,
+                    "gate_temperature": args.self_teacher_gate_temperature,
+                    "gate_threshold": args.self_teacher_gate_threshold,
                     "loss_weight": args.self_teacher_loss_weight,
                     "warmup_epochs": args.self_teacher_warmup_epochs,
                 },
@@ -825,6 +845,8 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
         pred_component_values: dict[str, list[float]] = {}
         teacher_loss_values = []
         self_teacher_loss_values = []
+        self_teacher_gate_values = []
+        weighted_self_teacher_loss_values = []
         basis_operator_smoothness_values = []
         basis_coeff_l2_values = []
         recon_loss_values = []
@@ -962,6 +984,14 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
                 teacher_loss = torch.zeros((), device=official_args.device)
             if self_teacher_model is None:
                 self_teacher_loss = torch.zeros((), device=official_args.device)
+            self_teacher_gate_value = self_teacher_gate(
+                self_teacher_loss,
+                pred_loss,
+                args.self_teacher_gate_mode,
+                args.self_teacher_gate_threshold,
+                args.self_teacher_gate_temperature,
+            )
+            weighted_self_teacher_loss = self_teacher_gate_value * self_teacher_loss
             if args.basis_operator_smoothness_weight > 0.0:
                 basis_operator_smoothness = learned_basis_operator_smoothness_loss(model)
             else:
@@ -973,7 +1003,7 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
             loss = (
                 pred_loss
                 + args.teacher_loss_weight * teacher_loss
-                + args.self_teacher_loss_weight * self_teacher_loss
+                + args.self_teacher_loss_weight * weighted_self_teacher_loss
                 + official_args.w_recon * recon_loss
                 + official_args.w_align * alignment_loss
                 + args.basis_operator_smoothness_weight * basis_operator_smoothness
@@ -991,6 +1021,8 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
             pred_full_loss_values.append(float(pred_components["full"].detach().cpu()))
             teacher_loss_values.append(float(teacher_loss.detach().cpu()))
             self_teacher_loss_values.append(float(self_teacher_loss.detach().cpu()))
+            self_teacher_gate_values.append(float(self_teacher_gate_value.detach().cpu()))
+            weighted_self_teacher_loss_values.append(float(weighted_self_teacher_loss.detach().cpu()))
             basis_operator_smoothness_values.append(float(basis_operator_smoothness.detach().cpu()))
             basis_coeff_l2_values.append(float(basis_coeff_l2.detach().cpu()))
             for name, component in pred_components.items():
@@ -1028,7 +1060,12 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
             "self_teacher_loss_weight": args.self_teacher_loss_weight,
             "self_teacher_decay": args.self_teacher_decay,
             "self_teacher_warmup_epochs": args.self_teacher_warmup_epochs,
+            "self_teacher_gate_mode": args.self_teacher_gate_mode,
+            "self_teacher_gate_threshold": args.self_teacher_gate_threshold,
+            "self_teacher_gate_temperature": args.self_teacher_gate_temperature,
             "train_self_teacher_l1": float(np.mean(self_teacher_loss_values)),
+            "train_self_teacher_gate": float(np.mean(self_teacher_gate_values)),
+            "train_weighted_self_teacher_l1": float(np.mean(weighted_self_teacher_loss_values)),
             "basis_operator_smoothness_weight": args.basis_operator_smoothness_weight,
             "train_basis_operator_smoothness_loss": float(np.mean(basis_operator_smoothness_values)),
             "basis_coeff_l2_weight": args.basis_coeff_l2_weight,
@@ -1224,6 +1261,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--self-teacher-decay", type=float, default=0.0)
     parser.add_argument("--self-teacher-loss-weight", type=float, default=0.0)
     parser.add_argument("--self-teacher-warmup-epochs", type=int, default=1)
+    parser.add_argument("--self-teacher-gate-mode", choices=["none", "absolute", "ratio"], default="none")
+    parser.add_argument("--self-teacher-gate-threshold", type=float, default=0.0)
+    parser.add_argument("--self-teacher-gate-temperature", type=float, default=1.0)
     parser.add_argument("--basis-operator-smoothness-weight", type=float, default=0.0)
     parser.add_argument("--basis-coeff-l2-weight", type=float, default=0.0)
     args = parser.parse_args()
@@ -1253,6 +1293,12 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("self-teacher method gate must evaluate raw official-last weights, not ema-eval")
     if args.self_teacher_warmup_epochs < 0:
         raise ValueError("self_teacher_warmup_epochs must be non-negative")
+    if args.self_teacher_gate_mode != "none" and args.self_teacher_loss_weight <= 0.0:
+        raise ValueError("self-teacher gate requires self-teacher-loss-weight > 0")
+    if args.self_teacher_gate_threshold < 0.0:
+        raise ValueError("self_teacher_gate_threshold must be non-negative")
+    if args.self_teacher_gate_temperature <= 0.0:
+        raise ValueError("self_teacher_gate_temperature must be positive")
     if args.basis_operator_smoothness_weight < 0.0:
         raise ValueError("basis_operator_smoothness_weight must be non-negative")
     if args.basis_coeff_l2_weight < 0.0:

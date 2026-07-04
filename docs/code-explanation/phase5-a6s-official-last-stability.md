@@ -144,3 +144,41 @@ checkpoint 用作 test-time model。
 
 [Proxy] 该机制仍有 generic mean-teacher/KD 风险。它只有在 raw official-last checkpoint 接近
 A6S2 `ema0999` control，且保持 A6-LBF prefix-native operator 贡献边界时，才有继续设计价值。
+
+## A7DG Disagreement-Gated Self-Teacher
+
+A6ST cross-dataset sanity 显示 uniform self-teacher consistency 对 ETTh2 有益，但会伤害
+ETTm1/Weather。A7DG 在同一 self-teacher path 上新增一个默认关闭的 detached gate：
+
+```text
+self_teacher_loss: scalar
+pred_loss: scalar
+signal = self_teacher_loss                  # absolute mode
+signal = self_teacher_loss / pred_loss      # ratio mode
+gate = sigmoid((signal - threshold) / temperature)
+weighted_self_teacher_loss = gate * self_teacher_loss
+loss += self_teacher_loss_weight * weighted_self_teacher_loss
+```
+
+[Fact] `gate` 来自 detached scalar signal，不把梯度传回 threshold path。它只调节 self-teacher
+loss 的有效强度，不改变 A6-LBF 的 forward output graph。
+
+[Fact] `self_teacher_gate_mode=none` 时 `gate=1`，因此旧 A6ST 行为保持不变。
+
+新增训练日志字段：
+
+- `self_teacher_gate_mode`
+- `self_teacher_gate_threshold`
+- `self_teacher_gate_temperature`
+- `train_self_teacher_gate`
+- `train_weighted_self_teacher_l1`
+
+[Theory] 如果 ETTh2 的主要问题是 raw student 与 slow EMA trajectory 分离，而 ETTm1/Weather
+已经处于低 drift 区间，则 disagreement gate 应在 ETTh2 上保持较高 self-teacher force，在
+ETTm1/Weather 上自动降权。
+
+[Proxy] 该 gate 仍可能变成 threshold tuning。只有当 `train_self_teacher_gate` 与跨数据集 metric
+同时证明“高 drift 激活、低 drift 退火”时，它才有继续作为 method candidate 的价值。
+
+[Falsification] 若 A7DG 保不住 ETTh2 gain，或 ETTm1/Weather 仍系统性负向，则 self-teacher
+stability route 应停止，不能继续堆 threshold/schedule。

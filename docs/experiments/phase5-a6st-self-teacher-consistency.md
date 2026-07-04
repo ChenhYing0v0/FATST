@@ -8,7 +8,7 @@ signal 转化为 training-time raw-final stability mechanism，而不是把 gene
 
 | Field | Content |
 | --- | --- |
-| `current_step` | Step 4/5 -> Step 6/7/8：narrative/code-theory gate 通过后进入最小实现与 ETTh2 gate |
+| `current_step` | Step 9/10 completed：ETTh2 positive，但 cross-dataset safety gate 未通过；回 Step 4/5 |
 | `problem` | A6-LBF 已恢复 dense-capacity path，但 raw final checkpoint 仍弱；A6S2 显示 EMA-0.999 final weights 有明显 control gain |
 | `existence_evidence` | A6S2 `lbf_r256_ema0999` 相对 A6-LBF-r256 平均 MSE `-1.46%`，相对 ETTh2 best control `+0.67%`，wins `1/4` |
 | `idea` | 使用 EMA teacher 的 prefix predictions 作为 online consistency target，训练 raw model 学到 trajectory-averaged behavior |
@@ -16,8 +16,8 @@ signal 转化为 training-time raw-final stability mechanism，而不是把 gene
 | `design` | ETTh2-only minimal gate：固定 A6-LBF-r256，测试 self-teacher decay/weight/warmup |
 | `narrative_gate` | conditional pass：若表述为 generic EMA/KD 则失败；若表述为 official-last-compatible raw-checkpoint stabilization for prefix-native operator，则可作为 diagnostic method candidate |
 | `effectiveness_gate` | raw official-last MSE 是否接近 A6S2 EMA-0.999 control；是否改善 A6-LBF-r256 与 ETTh2 best controls gap；是否不增大 validation drift |
-| `artifacts` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6st_self_teacher_gate` |
-| `decision` | ready_for_minimal_remote_gate |
+| `artifacts` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6st_self_teacher_gate`; `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6st_cross_dataset_sanity` |
+| `decision` | failed_as_universal_method_etth2_specific_positive |
 
 ## Mechanism
 
@@ -72,3 +72,30 @@ Result artifacts:
 
 - `analysis/phase5_timealign_hss_a6st_self_teacher_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`
 - `analysis/phase5_timealign_hss_a6st_self_teacher_gate_20260704/phase5_timealign_hss_a6s_summary.csv`
+
+## Cross-Dataset Sanity Result
+
+[Fact] 使用 ETTh2 最佳 setting `a6st_w02_d0999_wu1` 在 ETTm1/Weather 完成 safety gate。
+所有 run 仍为 `official-last` / without early stop，且最终评估 raw student weights。
+
+[Fact] ETTm1/Weather 合并后相对 best stage controls 平均 MSE `+1.20%`，wins `0/8`；
+相对 A6-LBF-r256 为 `+0.95%`。
+
+[Fact] 分数据集看，ETTm1 为 `+1.49%` vs best controls、wins `0/4`；Weather 为 `+0.91%`
+vs best controls、wins `0/4`。这说明负向不是单一 horizon 造成。
+
+[Strong Evidence] 将 ETTh2 正向与 ETTm1/Weather safety result 合并后，A6ST best 在三数据集
+12 个 horizon 上为 `+0.87%` vs best controls、wins `2/12`，相对 A6-LBF-r256 约持平。
+
+[Decision] 当前 A6ST 不能作为 universal method candidate。它保留的价值是：train-time
+self-teacher consistency 确实可以修复 ETTh2 raw-final drift，但 uniform consistency objective
+对 ETTm1/Weather 造成系统性小幅负向。
+
+[Rollback] 回 Step 4/5。下一步必须先解释 dataset-conditioned stability 需求，并提出
+selective/adaptive stability objective 或新的 capacity-preserving unified head；不得直接把
+`a6st_w02_d0999_wu1` 扩展为 full matrix。
+
+Result artifacts:
+
+- `analysis/phase5_timealign_hss_a6st_cross_dataset_sanity_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`
+- `analysis/phase5_timealign_hss_a6st_cross_dataset_sanity_20260704/phase5_timealign_hss_a6s_dataset_summary.csv`

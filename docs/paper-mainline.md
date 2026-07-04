@@ -457,6 +457,34 @@ A6ST ETTh2 gate result：
 结果报告见
 `analysis/phase5_timealign_hss_a6st_self_teacher_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`。
 
+A6ST cross-dataset sanity result：
+
+- `a6st_w02_d0999_wu1` 在 ETTm1/Weather safety gate 中相对 best controls 平均 `+1.20%`，
+  wins `0/8`，相对 A6-LBF-r256 `+0.95%`；
+- ETTm1 为 `+1.49%` vs best controls、Weather 为 `+0.91%`，两者均 `0/4` wins；
+- 将 ETTh2 正向与 ETTm1/Weather 负向合并后，三数据集 12 个 horizon 为 `+0.87%`
+  vs best controls、wins `2/12`，相对 A6-LBF-r256 约持平；
+- 因此 A6ST 不能作为 universal paper-core method，只能保留为 ETTh2 raw-final drift repair
+  evidence；
+- 当前回到 Phase5 Step 4/5：不做 A6ST full matrix，下一步需要设计 selective/adaptive
+  stability objective 或新的 capacity-preserving unified head。
+
+结果报告见
+`analysis/phase5_timealign_hss_a6st_cross_dataset_sanity_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`。
+
+A7DG selective stability route：
+
+- A7DG 不延续 A6ST full matrix，而是回 Step 4/5 后提出 disagreement-gated self-teacher；
+- 机制是在 train-time EMA teacher consistency 上加入 detached absolute/ratio gate，只在
+  teacher-student disagreement 足够高时施加 consistency；
+- narrative gate 为 conditional pass：必须证明它是 selective raw-final stabilization，而不是
+  dataset hand-tuned threshold；
+- 本地 `py_compile`、wrapper `bash -n` 和 CPU smoke 已通过，下一步启动 ETTh2/ETTm1/Weather
+  selective remote gate。
+
+设计文档见
+`docs/experiments/phase5-a7dg-disagreement-gated-self-teacher.md`。
+
 A5 effectiveness gate：
 
 - 至少要超过 H1 `target_set_decoder_multiprefix` 与 A3D `teacher_preserved_nested` controls；

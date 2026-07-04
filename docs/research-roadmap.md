@@ -2616,6 +2616,55 @@ checkpoint 更稳定，而不是只依赖 test-time EMA weights。
 
 [Artifacts] `analysis/phase5_timealign_hss_a6st_self_teacher_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`
 
+[A6ST Cross-Dataset Sanity Result] A6ST best ETTh2 setting `a6st_w02_d0999_wu1` 已在
+ETTm1/Weather 完成 safety gate，仍使用 `official-last` / without early stop。
+
+[Fact] 在 ETTm1/Weather 上，该 setting 相对 best stage controls 平均 MSE 为 `+1.20%`，
+wins `0/8`；相对 A6-LBF-r256 为 `+0.95%`。
+
+[Fact] 分数据集看：ETTm1 相对 best controls `+1.49%`、wins `0/4`；Weather 相对 best
+controls `+0.91%`、wins `0/4`。两者都不是单个 horizon 的噪声，而是系统性小幅负向。
+
+[Strong Evidence] 把 ETTh2 positive result 与 ETTm1/Weather safety result 合并后，A6ST best
+在三数据集 12 个 horizon 上为 `+0.87%` vs best controls、wins `2/12`，相对 A6-LBF-r256
+约 `-0.00%`。因此它没有形成跨数据集的 method-level improvement。
+
+[Decision] A6ST 降级为 `failed_as_universal_method_etth2_specific_positive`：它证明
+train-time self-teacher consistency 可以修复 ETTh2 的 raw final drift，但当前 uniform consistency
+objective 会伤害 ETTm1/Weather，不能直接进入 full matrix，也不能作为 paper-core universal method。
+
+[Next] 回 Step 4/5：解释为什么 stability target 只对 ETTh2 有益，并设计 selective / adaptive
+stability objective 或新的 capacity-preserving unified head。下一步实验必须先通过 narrative gate，
+且不能只把 A6ST 当前 setting 做大规模扩展。
+
+[Artifacts] `analysis/phase5_timealign_hss_a6st_cross_dataset_sanity_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`
+
+[A7DG Selective Stability Design] 已完成 A6ST rollback 后的 Step 4/5 设计，并进入 Step 6/7
+本地实现验证。机制为 disagreement-gated self-teacher：在 A6ST 的 detached EMA teacher
+prediction consistency 外加一个 detached gate，只在 teacher-student disagreement 或
+`self_teacher_loss / pred_loss` 足够高时施加 consistency。
+
+[Theory Check] 该设计试图解释 A6ST 的 split result：ETTh2 的 self-teacher L1 约 `0.060`，
+ETTm1/Weather 仅约 `0.017/0.022`。若 high disagreement 对应 raw-final drift，则 gate 应保留
+ETTh2 gain，同时让低 drift 数据集接近 A6-LBF。
+
+[Narrative Gate] conditional pass：A7DG 可叙述为 official-last-compatible selective
+raw-final stabilization；但如果远程结果显示只是 threshold tuning，或 ETTm1/Weather 仍负向，
+则停止 self-teacher route。
+
+[Design] 最小 gate 使用 ETTh2/ETTm1/Weather 与三种 variants：
+`a7dg_abs004_t001_w02_d0999_wu1`、`a7dg_ratio008_t002_w02_d0999_wu1`、
+`a7dg_ratio010_t002_w02_d0999_wu1`。
+
+[Verification] `python -m py_compile baselines/timealign_official/train_repo.py
+scripts/analyze_phase5_timealign_hss_a6s_stability_gate.py`、A7DG wrapper `bash -n`、以及本地
+CPU smoke 均通过。Smoke 中 `ratio` gate 写出 `train_self_teacher_gate=0.081953` 与
+`train_weighted_self_teacher_l1=0.001288`，确认 gate 进入 loss/log path。
+
+[Next] commit/push 后按 remote policy 启动 A7DG selective gate。
+
+[Artifacts] `docs/experiments/phase5-a7dg-disagreement-gated-self-teacher.md`
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：
