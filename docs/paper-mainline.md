@@ -407,6 +407,20 @@ A6S official-last stability path：
 设计文档见
 `docs/experiments/phase5-a6s-official-last-stability-path.md`。
 
+A6S minimal gate result：
+
+- ETTh2-only stability gate 已完成，仍使用 `official-last` / without early stop；
+- 最佳 `lbf_r256_ema099_smooth1e3` 相对 ETTh2 best stage control 平均仍差 `+2.00%`，
+  wins `0/4`，last-vs-best validation drift 为 `+9.86%`；
+- `EMA-0.99` 只带来弱改善，不能作为 paper-core；
+- `smooth1e-3` 的实际 `weighted_smoothness / train_loss` 仅 `4.86e-07`，因此当前只否定
+  未校准的 smoothness setting，不能把 operator-level stability 方向直接判死；
+- 下一步进入 `A6S2_stability_calibration_gate`：diagnostic-only 测试 `ema_decay=0.995/0.999`
+  与更强 `smoothness=10/100`，仍不使用 `best-val/early-stopping` 主协议。
+
+结果报告见
+`analysis/phase5_timealign_hss_a6s_stability_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`。
+
 A5 effectiveness gate：
 
 - 至少要超过 H1 `target_set_decoder_multiprefix` 与 A3D `teacher_preserved_nested` controls；

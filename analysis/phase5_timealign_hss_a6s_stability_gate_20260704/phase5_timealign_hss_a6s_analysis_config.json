@@ -1,0 +1,7 @@
+{
+  "a6_comparison": "analysis/phase5_timealign_hss_a6_capacity_native_gate_20260703/phase5_timealign_hss_a6_comparison.csv",
+  "output_dir": "analysis/phase5_timealign_hss_a6s_stability_gate_20260704",
+  "protocol": "official-last / without early stop",
+  "raw_root": "analysis/phase5_timealign_hss_a6s_stability_gate_20260704/raw",
+  "role": "diagnostic_control_first"
+}

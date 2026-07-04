@@ -2557,6 +2557,20 @@ EMA/smoothness helper check 均通过。
 `lbf_r256_ema099_smooth1e3`、`der_ema099`。该 gate 仍为 diagnostic/control-first，不直接升级为
 paper-core。
 
+[A6S Minimal Gate Result] A6S ETTh2-only stability gate 已完成，所有 run 仍使用 `official-last` /
+without early stop。最佳 variant 为 `lbf_r256_ema099_smooth1e3`，相对 ETTh2 best stage control
+平均仍差 `+2.00%`，wins `0/4`，last-vs-best validation drift 为 `+9.86%`。
+
+[Decision] A6S minimal gate 记为 `diagnostic_control_completed_failed_as_repair`。`EMA-0.99`
+只提供弱正向 control evidence，不能作为 paper-core；`smooth1e-3` 的实际
+`weighted_smoothness / train_loss` 只有 `4.86e-07`，不能充分否定 operator-level stability。
+
+[Next] 回 Step 4/5 设计并启动 `A6S2_stability_calibration_gate`。该 gate 是 diagnostic-only，
+用于测试 `ema_decay=0.995/0.999` 与更强 `basis_operator_smoothness_weight=10/100`；仍不启动
+`best-val/early-stopping` 主实验。
+
+[Artifacts] `analysis/phase5_timealign_hss_a6s_stability_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：

@@ -55,6 +55,7 @@ def read_trajectory(raw_root: Path) -> pd.DataFrame:
             "variant": variant,
             "best_epoch": int(frame.iloc[best_idx]["epoch"]),
             "last_epoch": int(frame.iloc[-1]["epoch"]),
+            "last_train_loss": float(frame.iloc[-1]["train_loss"]),
             "first_val_mean_mse": float(frame.iloc[0]["val_mean_mse"]),
             "best_val_mean_mse": best,
             "last_val_mean_mse": last,
@@ -69,6 +70,15 @@ def read_trajectory(raw_root: Path) -> pd.DataFrame:
             ),
             "source_path": str(path),
         }
+        row["last_weighted_basis_operator_smoothness_loss"] = (
+            row["basis_operator_smoothness_weight"]
+            * row["last_train_basis_operator_smoothness_loss"]
+        )
+        row["last_weighted_smoothness_to_train_loss"] = (
+            row["last_weighted_basis_operator_smoothness_loss"] / row["last_train_loss"]
+            if row["last_train_loss"] > 0.0
+            else 0.0
+        )
         rows.append(row)
     if not rows:
         raise FileNotFoundError(f"No A6S training logs found under {raw_root}")
@@ -134,6 +144,10 @@ def fmt(value: float) -> str:
 
 def write_report(output_dir: Path, summary: pd.DataFrame) -> None:
     best = summary.iloc[0]
+    smooth = summary[summary["basis_operator_smoothness_weight"].gt(0.0)]
+    max_smooth_ratio = (
+        float(smooth["last_weighted_smoothness_to_train_loss"].max()) if not smooth.empty else 0.0
+    )
     lines = [
         "# Phase5-A6S Official-Last Stability Gate Report",
         "",
@@ -143,19 +157,31 @@ def write_report(output_dir: Path, summary: pd.DataFrame) -> None:
         "",
         (
             "[Fact] 最佳 variant 为 "
-            f"`{best['variant']}`：相对 ETTh2 best stage control 平均 `{fmt(best['mean_relative_mse_vs_best_stage_control_pct'])}%`，"
+            f"`{best['variant']}`：相对 ETTh2 best stage control 平均 `{best['mean_relative_mse_vs_best_stage_control_pct']:+.2f}%`，"
             f"wins `{int(best['wins_vs_best_stage_control'])}/4`，last-vs-best validation drift "
-            f"`{fmt(best['last_vs_best_val_mse_pct'])}%`。"
+            f"`{best['last_vs_best_val_mse_pct']:+.2f}%`。"
+        ),
+        "",
+        (
+            "[Strong Evidence] `ema_decay=0.99` 只带来约 "
+            f"`{best['mean_relative_mse_vs_a6_lbf_r256_pct']:+.2f}%` 的 A6-LBF 相对改善，"
+            "不足以修复 best-control gap。"
+        ),
+        "",
+        (
+            "[Fact] 本轮 smoothness regularizer 实际强度很弱：最大 "
+            f"`weighted_smoothness / train_loss = {max_smooth_ratio:.2e}`。"
+            "因此该结果只能否定未校准的 `smooth1e-3`，不能严格否定 operator-level stability 方向。"
         ),
         "",
         "## Variant Summary",
         "",
-        "| Variant | mean MSE | vs best control | wins | vs A6-LBF-r256 | last-vs-best val | EMA | smooth weight |",
-        "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+        "| Variant | mean MSE | vs best control | wins | vs A6-LBF-r256 | last-vs-best val | EMA | smooth weight | smooth/train |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
     for _, row in summary.iterrows():
         lines.append(
-            "| `{variant}` | {mse:.4f} | {gap:+.2f}% | {wins}/4 | {lbf:+.2f}% | {drift:+.2f}% | {ema:.2f} | {smooth:g} |".format(
+            "| `{variant}` | {mse:.4f} | {gap:+.2f}% | {wins}/4 | {lbf:+.2f}% | {drift:+.2f}% | {ema:.3g} | {smooth:g} | {ratio:.2e} |".format(
                 variant=row["variant"],
                 mse=row["mean_mse"],
                 gap=row["mean_relative_mse_vs_best_stage_control_pct"],
@@ -164,16 +190,23 @@ def write_report(output_dir: Path, summary: pd.DataFrame) -> None:
                 drift=row["last_vs_best_val_mse_pct"],
                 ema=row["ema_decay"],
                 smooth=row["basis_operator_smoothness_weight"],
+                ratio=row["last_weighted_smoothness_to_train_loss"],
             )
         )
     lines.extend(
         [
             "",
-            "## Decision Rule",
+            "## Gate Decision",
             "",
-            "- 若 EMA 明显改善但 HeadStability 无效，则 A6 drift 更像 generic weight trajectory variance。",
-            "- 若 HeadStability 改善且不依赖 EMA，则 A6-LBF 需要 operator-level stability mechanism。",
-            "- 若二者均无效，回 Step 4/5 设计更强 stability path，不继续 rank/objective sweep。",
+            "[Decision] A6S minimal gate 未通过 effectiveness gate：最佳 variant 仍对 ETTh2 best stage control `0/4` win，平均 MSE 仍差约 `+2.00%`。",
+            "",
+            "[Decision] 不把 `A6S-EMA` 推为 paper-core；`EMA-0.99` 只作为弱正向 control evidence。",
+            "",
+            "[Decision] `A6S-HeadStability` 需要先做 diagnostic-only strength calibration。当前 `smooth1e-3` 的优化权重过低，不能作为机制失败的充分证据。",
+            "",
+            "## Next Step",
+            "",
+            "回 Step 4/5 设计 `A6S2_stability_calibration_gate`：仍保持 `official-last` / without early stop，使用 ETTh2-only diagnostic 检查 `ema_decay=0.995/0.999` 与更强 operator smoothness weight。该 gate 不宣称 paper-core，只判断 stability route 是否还有继续设计价值。",
             "",
             "## Artifacts",
             "",

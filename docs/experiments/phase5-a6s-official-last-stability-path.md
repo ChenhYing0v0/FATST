@@ -24,11 +24,11 @@ Source: https://github.com/TROUBADOUR000/TimeAlign/issues/1#issuecomment-4780784
 | `existence_evidence` | A6 partial-pass diagnostic：ETTh2 三个 A6 arms 的 last-vs-best validation MSE 平均漂移 `+11.81%`；A6OD 最佳 `lbf_r256_stochastic_p1` 仍相对 best control `+1.79%`、wins `0/4` |
 | `idea` | 不追逐 validation-best checkpoint，而是设计 official-last-compatible stability mechanism |
 | `theory_check` | 若机制只依赖 validation selection，则违反 TimeAlign protocol；若机制在训练中改变 optimization geometry 或 final-weight stability，则可作为 diagnostic/control 或 method candidate |
-| `design` | 先做 ETTh2-only 最小 gate：`A6S-EMA` control、`A6S-HeadStability` candidate、二者组合、`DER-EMA` control |
+| `design` | 已完成 ETTh2-only 最小 gate；下一步做 `A6S2` diagnostic-only stability-strength calibration |
 | `narrative_gate` | conditional：`A6S-EMA` 只能 control；`A6S-HeadStability` 可作为 A6-LBF 内生稳定化候选；`A6S-SelfTeacher` 暂缓 |
-| `effectiveness_gate` | pending remote：以 official-last final test MSE、last-vs-best drift、best-control gap、prefix-wise behavior 为主 |
-| `artifacts` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6s_stability_gate` |
-| `decision` | ready_for_minimal_remote_gate |
+| `effectiveness_gate` | A6S minimal gate 未通过：best variant 仍为 `+2.00%` vs ETTh2 best stage control，wins `0/4` |
+| `artifacts` | `analysis/phase5_timealign_hss_a6s_stability_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md` |
+| `decision` | `minimal_gate_failed_but_headstability_underpowered`；回 Step 4/5 做 `A6S2_stability_calibration_gate` |
 
 ## Candidate Stability Paths
 
@@ -79,3 +79,36 @@ minimal remote gate：
 2. `A6S-HeadStability` 作为更接近 A6-LBF 机制的候选，回答 learned-basis operator 是否需要显式几何稳定化；
 3. `A6S-SelfTeacher` 保留为若前两者不足时的 method-candidate；
 4. `A6S-ExternalTeacher` 只做 diagnostic，不升级为 paper-core。
+
+## Minimal Gate Result
+
+[Fact] A6S minimal gate 已完成，所有 run 使用 `official-last` / without early stop。最佳 variant 为
+`lbf_r256_ema099_smooth1e3`，相对 ETTh2 best stage control 平均仍差 `+2.00%`，wins `0/4`，
+last-vs-best validation drift 为 `+9.86%`。
+
+[Strong Evidence] `ema_decay=0.99` 只带来约 `-0.15%` 的 A6-LBF 相对改善，不能修复 best-control
+gap。`der_ema099` 也没有形成稳定优势，说明简单 final EMA 不是当前 paper-core mechanism。
+
+[Fact] `smooth1e-3` 的实际优化强度过低：最后 epoch 的
+`weighted_smoothness / train_loss = 4.86e-07`。因此本轮只能否定未校准的 smoothness setting，
+不能充分否定 operator-level stability 方向。
+
+[Decision] A6S minimal gate 记为 `diagnostic_control_completed_failed_as_repair`。`A6S-EMA` 不升级为
+paper-core；`A6S-HeadStability` 先进入 diagnostic-only calibration。
+
+## A6S2 Stability Calibration Gate
+
+`A6S2` 不是新 paper-core 候选，而是为了修正 A6S minimal gate 的强度不足问题。它仍保持
+`official-last` / without early stop，不使用 validation-best selection。
+
+| Variant | Role | Readout | Extra mechanism |
+| --- | --- | --- | --- |
+| `lbf_r256_ema0995` | EMA strength control | `learned-basis-forecast-operator` | final EMA weights, decay `0.995` |
+| `lbf_r256_ema0999` | EMA strength control | `learned-basis-forecast-operator` | final EMA weights, decay `0.999` |
+| `lbf_r256_smooth10` | HeadStability calibration | `learned-basis-forecast-operator` | operator smoothness weight `10.0` |
+| `lbf_r256_smooth100` | HeadStability stress test | `learned-basis-forecast-operator` | operator smoothness weight `100.0` |
+| `lbf_r256_ema0995_smooth10` | interaction diagnostic | `learned-basis-forecast-operator` | EMA `0.995` + smoothness `10.0` |
+
+[Effectiveness Gate] 若 A6S2 仍不能把 ETTh2 gap 拉到接近 best control，或者改善只来自 generic EMA，
+则 stability route 不能作为 Stage A paper-core。若强 smoothness 独立改善且不破坏 prefix behavior，
+再回 Step 4/6 设计机制化、可解释的 operator-stability method。

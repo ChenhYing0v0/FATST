@@ -72,3 +72,33 @@ prediction path 或 pretrained anchor。因此它仍保持 prefix-native learned
 [Falsification] 若 `A6S-EMA` 改善明显而 `A6S-HeadStability` 无效，则问题更像 generic optimization
 variance；若二者均无效，则 A6-LBF 的剩余 gap 不是简单 final-weight stability 或 operator smoothness
 可修复，需要回 Step 4/5 设计更强 stability mechanism。
+
+## Analyzer And Remote Wrappers
+
+`scripts/analyze_phase5_timealign_hss_a6s_stability_gate.py` 读取每个 run 的
+`metrics_by_target_horizon.csv` 与 `training_log.csv`，并和 A6 ETTh2 reference/control 对齐。新增的
+diagnostic columns 包括：
+
+- `last_train_loss`
+- `last_weighted_basis_operator_smoothness_loss`
+- `last_weighted_smoothness_to_train_loss`
+
+这些列用于判断 smoothness regularizer 是否真的进入优化，而不是只看 flag 是否开启。
+
+`scripts/remote/run_phase5_timealign_hss_a6s2_stability_calibration_gate.sh` 复用 A6S 的模型实现，只改变
+diagnostic strength：
+
+- `ema_decay=0.995/0.999`
+- `basis_operator_smoothness_weight=10.0/100.0`
+
+该 wrapper 仍强制 `CHECKPOINT_POLICY=official-last`，默认只跑 ETTh2，输出到
+`/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6s2_stability_calibration_gate`。
+
+## A6S Minimal Gate Interpretation
+
+[Fact] A6S minimal gate 的最佳 variant 仍相对 ETTh2 best stage control 差 `+2.00%`，wins `0/4`。
+
+[Fact] `smooth1e-3` 的 `weighted_smoothness / train_loss` 最大只有 `4.86e-07`，几乎不改变优化。
+
+[Decision] 该结果不支持把 EMA 或当前 smoothness setting 作为 paper-core，但也不能把
+operator-level stability 机制完全判死。下一步 A6S2 只做 strength calibration diagnostic。

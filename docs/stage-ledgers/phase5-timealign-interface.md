@@ -19,10 +19,10 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Phase5-A6S：Step 4/5，基于 TimeAlign issue #1 进入 official-last-compatible stability path 设计 |
+| `current_11_step` | Phase5-A6S2：Step 4/5 -> Step 8，A6S minimal gate 未通过后进入 diagnostic-only stability-strength calibration |
 | `current_candidate` | `A6-LBF_learned_basis_forecast_operator` 为 `partial_pass_capacity_recovered_not_yet_core`；`A6-DER` 为 passed capacity ceiling/control |
-| `latest_decision` | TimeAlign issue #1 支持 fixed-final protocol 的外部证据：validation/test shift 下 early stopping 可能训练不充分；因此 A6 drift 不能被解释为改用 early-stop，而应转向 official-last-compatible stability path |
-| `next_required_action` | 启动 A6S ETTh2-only stability remote gate；不继续 objective-sampling sweep，不做 rank-only sweep，不启动 best-val/early-stopping 主实验 |
+| `latest_decision` | A6S minimal gate 未通过：最佳 variant 仍为 `+2.00%` vs ETTh2 best stage control、wins `0/4`；但 `smooth1e-3` 的实际 regularizer 强度只有 `4.86e-07` train-loss ratio，不能充分否定 operator-level stability |
+| `next_required_action` | 启动 A6S2 ETTh2-only calibration gate：测试 `ema_decay=0.995/0.999` 与 `smoothness=10/100`；仍不启动 best-val/early-stopping 主实验 |
 | `rollback_point` | 若 Step 4/5 无法提出新的 capacity mechanism，回 Step 2/3 重审 Stage A interface problem 是否应作为 paper-core 贡献。Stage B 暂缓，不能替代 A5 |
 
 ## Candidate Queue
@@ -47,7 +47,8 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | `A6-DER_prefix_native_dense_equivalent_row_bank` | `control_passed_as_capacity_ceiling` | 若完全保留 dense row capacity 且只改成 prefix-native invocation，应该能判断 Stage A bottleneck 是否真在 head capacity | not_required：作为 capacity ceiling/control，不单独宣称 paper-core | passed_as_control：相对 best stage control 平均 `+0.91%`、wins `2/12`，相对 A5-B-r128 `-11.27%` | 证明 A5 失败主要包含 operator capacity 问题；作为 A6-LBF ceiling 保留 | `analysis/phase5_timealign_hss_a6_capacity_native_gate_20260703/phase5_timealign_hss_a6_capacity_native_gate_report.md` |
 | `A6-LBF_learned_basis_forecast_operator` | `partial_pass_capacity_recovered_not_yet_core` | 用 learned temporal basis + hidden coefficients 构造 prefix-consistent forecast operator；`K=720` 可 dense-equivalent，较小 rank 测试 intrinsic rank | conditional_pass：anchor-free、非 residual、prefix-native，且直接修复 A5-B fixed-basis under-capacity；必须和 A6-DER ceiling 一起解释 | partial_pass：`r256` 相对 A6-DER 平均 `-0.03%`，相对 A5-B-r128 `-11.30%`，但对 best stage control `0/12` win；partial-pass diagnostic 显示主要剩余问题是 ETTh2 official-last drift 与 objective/regularization mismatch | 回 Step 4/5 设计 official-last-compatible anti-drift / objective repair；不做 rank-only sweep；`best-val` 仅可作为 diagnostic-only upper-bound audit | `analysis/phase5_timealign_hss_a6_partial_pass_diagnostic_20260703/phase5_timealign_hss_a6_partial_pass_diagnostic_report.md` |
 | `A6-QBR_query_bilinear_readout` | `deferred` | 保留 target-query semantics，但把 final readout 改成 dense-equivalent bilinear operator | deferred：需等 A6-LBF 证明 learned-basis capacity path 有效 | pending | 暂不实现，避免再次陷入 query mechanism sweep | `docs/experiments/phase5-a6-capacity-native-unified-head-mechanisms.md` |
-| `A6S_official_last_stability_path` | `ready_for_minimal_remote_gate` | A6-LBF 已恢复 capacity 但 final checkpoint 仍弱；需要在 official-last 协议下增强 final-weight / operator stability | conditional：`A6S-EMA` 只作为 control，`A6S-HeadStability` 可作为机制候选，`A6S-SelfTeacher` 暂缓 | pending remote | 启动 ETTh2-only minimal gate；不得把 validation-best selector 当作方法 | `docs/experiments/phase5-a6s-official-last-stability-path.md` |
+| `A6S_official_last_stability_path` | `diagnostic_control_completed_failed_as_repair` | A6-LBF 已恢复 capacity 但 final checkpoint 仍弱；需要在 official-last 协议下增强 final-weight / operator stability | conditional：`A6S-EMA` 只作为 control，`A6S-HeadStability` 可作为机制候选，`A6S-SelfTeacher` 暂缓 | minimal gate 未通过：最佳 `lbf_r256_ema099_smooth1e3` 相对 ETTh2 best control `+2.00%`，wins `0/4`；EMA-0.99 只有弱改善，smooth1e-3 过弱 | 不升级为 paper-core；进入 A6S2 calibration diagnostic | `analysis/phase5_timealign_hss_a6s_stability_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md` |
+| `A6S2_stability_calibration_gate` | `ready_for_remote_gate` | A6S 的 smoothness penalty 实际强度过低，需要先校准 stability strength 再判断 route 是否值得继续 | diagnostic-only：不作为 paper-core；若强 smoothness 独立改善，再回 Step 4/6 设计机制化 operator-stability method | pending remote | 启动 ETTh2-only calibration：`lbf_r256_ema0995/ema0999/smooth10/smooth100/ema0995_smooth10` | `docs/experiments/phase5-a6s-official-last-stability-path.md` |
 | `A5-S_step_specific_hypernetwork_head` | `control_deferred` | 用 coordinate-conditioned hypernetwork 生成 step readout weights，避免 pretrained dense rows 但保留 step-specific capacity | deferred：容易被视作 generated dense rows，贡献边界弱于 A5-B | pending | 等 A5-B 结果后再决定是否作为 capacity control | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
 | `A5-I_cumulative_innovation_process_decoder` | `control_deferred` | 生成 future innovation process 再 cumulative 得到 trajectory，与 output/error-process 诊断对齐 | deferred：trajectory-process 叙事有价值，但 cumulative drift 风险较高 | pending | 等 A5-Q/A5-B gate 后再决定是否作为 trajectory-process control | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
 | `A5-M_masked_future_placeholder_head` | `backlog_diagnostic` | 使用 future placeholders + structured mask 形成 prefix-native decoder | pending：与 ElasTST 过近且实现重 | pending | 暂作 diagnostic/backlog | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
@@ -77,6 +78,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | A6 partial-pass official-last diagnostic | `A6-LBF` | diagnostic-only | ETTh2 三 arm last-vs-best validation MSE 平均漂移 `+11.81%`，ETTm1/Weather 平均仅 `+0.12%`；`r512` rank 扩张未带来 metric gain | `diagnostic_only_completed` | `analysis/phase5_timealign_hss_a6_partial_pass_diagnostic_20260703/phase5_timealign_hss_a6_partial_pass_diagnostic_report.md` |
 | A6OD objective drift diagnostic | `A6-LBF/A6-DER` | diagnostic-only | ETTh2 only；`stochastic-prefix` 略优但仍未修复：最佳 `lbf_r256_stochastic_p1` 相对 best control `+1.79%`、wins `0/4`；`full` 明显更差 | `diagnostic_only_completed_failed_as_repair` | `analysis/phase5_timealign_hss_a6_objective_drift_diagnostic_20260703/phase5_timealign_hss_a6_objective_drift_diagnostic_report.md` |
 | A6S official-last stability path design | `A6S-EMA/A6S-HeadStability/A6S-SelfTeacher` | idea proposal / narrative triage | TimeAlign issue #1 确认 fixed-final protocol 的外部动机；已完成 narrative/code-theory check 与本地 smoke | `ready_for_minimal_remote_gate` | `docs/experiments/phase5-a6s-official-last-stability-path.md` |
+| A6S official-last stability minimal gate | `A6S-EMA/A6S-HeadStability` | diagnostic/control gate | 最佳 `lbf_r256_ema099_smooth1e3` 相对 ETTh2 best control 仍差 `+2.00%`、wins `0/4`；EMA-0.99 改善很弱，`smooth1e-3` 的实际 loss ratio 仅 `4.86e-07` | `diagnostic_control_completed_failed_as_repair` | `analysis/phase5_timealign_hss_a6s_stability_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md` |
 
 ## Pending Tasks
 
@@ -104,7 +106,8 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | A6 partial-pass diagnostic design | Codex | A6 capacity-native gate partial pass | `completed` | 已完成 official-last trajectory 与 learned-basis structure diagnostic；下一步回 Step 4/5 设计 official-last-compatible anti-drift / objective repair |
 | A6OD objective drift diagnostic remote run | Codex | A6 partial-pass diagnostic completed | `completed_failed_as_repair` | 最佳 `lbf_r256_stochastic_p1` 仍为 `+1.79%` vs best control、0/4 wins；下一步回 Step 4/5 设计 explicit stability path |
 | A6S stability path narrative + code-theory check | Codex | A6OD failed as repair + TimeAlign issue #1 protocol evidence | `completed` | 已实现 EMA final weights 与 learned-basis operator smoothness；下一步启动 ETTh2-only stability gate |
-| A6S ETTh2-only stability remote gate | Codex | A6S local verification passed | `pending_launch` | 运行 `lbf_r256_base/lbf_r256_ema099/lbf_r256_smooth1e3/lbf_r256_ema099_smooth1e3/der_ema099` |
+| A6S ETTh2-only stability remote gate | Codex | A6S local verification passed | `completed_failed_as_repair` | 最佳 variant 仍 `+2.00%` vs ETTh2 best control、0/4 wins；下一步 A6S2 calibration |
+| A6S2 stability calibration remote gate | Codex | A6S minimal gate underpowered | `pending_launch` | 运行 `lbf_r256_ema0995/lbf_r256_ema0999/lbf_r256_smooth10/lbf_r256_smooth100/lbf_r256_ema0995_smooth10` |
 | Stage B diagnostic plan | Codex | A5 architecture 通过后再推进 | `deferred` | 暂缓；不能替代 Stage A architecture |
 | paper-mainline 同步检查 | Codex | A4 将 Stage A 从 universal head 改为 reliability-aware interface 诊断 | `completed` | 已同步当前状态与贡献边界，不改变 working title |
 
@@ -130,6 +133,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | 2026-07-03 | A6 partial-pass diagnostic 完成 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | protocol correction / rollback | 主协议保持 official-last；A6-LBF 维持 partial pass，下一步回 Step 4/5 设计 anti-drift/objective repair |
 | 2026-07-03 | A6OD objective drift diagnostic 完成 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | diagnostic result / rollback | objective sampling switch 未修复 ETTh2 gap；下一步回 Step 4/5 设计 explicit stability path |
 | 2026-07-04 | TimeAlign issue #1 protocol evidence | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | external evidence / protocol correction | 不能把 A6 drift 写成 early-stop 需求；转向 official-last-compatible stability path |
+| 2026-07-04 | A6S minimal gate 完成 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | diagnostic result / calibration rollback | EMA-0.99 与 smooth1e-3 未修复 ETTh2 gap；但 smoothness penalty 过弱，先进入 A6S2 calibration diagnostic |
 
 ## Remote Launch Log
 
@@ -142,6 +146,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | 2026-07-03 | `A5-Q_collapse_diagnostic_repair` | `46f60c6` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1/2 used about `4747/4748/584 MiB` | `3107046` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a5q_diagnostic_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a5q_diagnostic_gate/_launcher/a5q_diagnostic_launcher.log` |
 | 2026-07-03 | `A6-DER/A6-LBF_capacity_native_gate` | `1a5a235` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch Weather arms used about `4547/4432/4434 MiB` | `3494284` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6_capacity_native_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6_capacity_native_gate/_launcher/a6_launcher.log` |
 | 2026-07-03 | `A6OD_objective_drift_diagnostic` | `1cd5259` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1/2 used about `533/562/864 MiB` | `3642564` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6_objective_drift_diagnostic` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6_objective_drift_diagnostic/_launcher/a6_objective_drift_launcher.log` |
+| 2026-07-04 | `A6S_official_last_stability_gate` | `3426827` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1/2 used about `847/856/840 MiB` | `624046` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6s_stability_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6s_stability_gate/_launcher/a6s_stability_launcher.log` |
 
 ## Notes For Next Continuation
 
