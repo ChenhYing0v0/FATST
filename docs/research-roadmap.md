@@ -2665,6 +2665,14 @@ CPU smoke 均通过。Smoke 中 `ratio` gate 写出 `train_self_teacher_gate=0.0
 
 [Artifacts] `docs/experiments/phase5-a7dg-disagreement-gated-self-teacher.md`
 
+[A7DG Remote Launch] 已在 529_Lab-3090 启动 Step 8 remote gate。远程 commit 为 `e4261b5`；
+launch 前 GPU 0/1/2 均空闲（`18 MiB used`, `24107 MiB free`），启动后 GPU 0/1/2 约
+`873/874/874 MiB`。PID `957726`，输出目录
+`/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a7dg_selective_self_teacher_gate`。
+
+[Next] 等待 artifacts；返回后先检查 `train_self_teacher_gate` 是否在 ETTm1/Weather 上显著低于
+ETTh2，再判断 metrics 是否满足 selective safety gate。
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：

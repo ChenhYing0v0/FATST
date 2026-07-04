@@ -19,10 +19,10 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Phase5-A7DG：Step 6/7 本地验证完成，进入 Step 8 remote gate |
+| `current_11_step` | Phase5-A7DG：Step 8 remote gate running |
 | `current_candidate` | `A7DG_disagreement_gated_self_teacher` 为 selective-stability diagnostic method candidate；`A6-LBF` 仍是 capacity-recovered carrier |
 | `latest_decision` | A6ST cross-dataset sanity failed：同一 best setting 在 ETTm1/Weather 相对 best controls 平均 `+1.20%`、wins `0/8`，相对 A6-LBF-r256 `+0.95%`；ETTh2 正向信号不能直接泛化为 universal method |
-| `next_required_action` | commit/push 当前实现后，启动 A7DG ETTh2/ETTm1/Weather selective gate |
+| `next_required_action` | 等待并同步 A7DG selective gate artifacts；优先检查 ETTh2 gain 是否保留、ETTm1/Weather 是否退化接近 A6-LBF |
 | `rollback_point` | 若 Step 4/5 不能给出跨数据集可辩护的 stability/capacity mechanism，则回 Step 2/3 重审 Stage A interface problem 是否应继续作为 paper-core 贡献。Stage B 暂缓，不能替代 Stage A architecture |
 
 ## Candidate Queue
@@ -51,7 +51,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | `A6S2_stability_calibration_gate` | `diagnostic_completed_partial_positive_ema_only` | A6S 的 smoothness penalty 实际强度过低，需要先校准 stability strength 再判断 route 是否值得继续 | diagnostic-only：不作为 paper-core；若强 smoothness 独立改善，再回 Step 4/6 设计机制化 operator-stability method | completed：`ema0999` 显著改善但仍未完全超过 best controls；`smooth10/100` 变差 | EMA 作为 control evidence；暂停简单 smoothness route，转入 A6S-SelfTeacher narrative gate | `analysis/phase5_timealign_hss_a6s2_stability_calibration_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md` |
 | `A6ST_self_teacher_consistency` | `failed_as_universal_method_etth2_specific_positive` | 若 trajectory-averaged weights 有效，可用 EMA teacher/prefix prediction consistency 训练 raw final checkpoint，而不是 test-time 依赖 EMA | conditional_pass：作为 official-last-compatible raw-checkpoint stabilization；若表述成 generic EMA/KD 则不能作为 paper-core | ETTh2 partial pass，但 cross-dataset sanity 未通过：ETTm1/Weather 相对 best controls `+1.20%`、wins `0/8` | 保留为 ETTh2 drift repair evidence；不得直接 full matrix 或 paper-core 化；回 Step 4/5 设计 selective stability objective | `analysis/phase5_timealign_hss_a6st_self_teacher_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`; `analysis/phase5_timealign_hss_a6st_cross_dataset_sanity_20260704/phase5_timealign_hss_a6s_stability_gate_report.md` |
 | `A6ST_cross_dataset_sanity` | `completed_failed_safety_gate` | ETTh2 正向可能只是数据集特有；需要确认 self-teacher 不伤害 ETTm1/Weather | diagnostic-only：不是 full paper gate，只检查安全性 | failed：ETTm1 `+1.49%`、Weather `+0.91%` vs best controls，均 `0/4` wins | 不扩展为 full matrix；进入 Step 4/5 机制诊断与新设计 | `analysis/phase5_timealign_hss_a6st_cross_dataset_sanity_20260704/phase5_timealign_hss_a6s_stability_gate_report.md` |
-| `A7DG_disagreement_gated_self_teacher` | `ready_for_remote_gate` | uniform self-teacher 只在 high-disagreement/high-drift 情况下有益；用 detached teacher-student disagreement gate 控制 consistency 强度，使低 drift 数据集退化接近 A6-LBF | conditional_pass：必须写成 disagreement-triggered raw-final stabilization；若变成 dataset hand-tuned threshold 则失败 | local verification passed：`py_compile`、wrapper `bash -n`、CPU smoke 均通过，smoke 中 ratio gate 写出 `train_self_teacher_gate=0.081953` | commit/push 后启动 ETTh2+ETTm1+Weather 3-variant selective gate | `docs/experiments/phase5-a7dg-disagreement-gated-self-teacher.md` |
+| `A7DG_disagreement_gated_self_teacher` | `remote_running` | uniform self-teacher 只在 high-disagreement/high-drift 情况下有益；用 detached teacher-student disagreement gate 控制 consistency 强度，使低 drift 数据集退化接近 A6-LBF | conditional_pass：必须写成 disagreement-triggered raw-final stabilization；若变成 dataset hand-tuned threshold 则失败 | local verification passed and remote launched：ETTh2/ETTm1/Weather × 3 variants | 等待 artifacts；effectiveness gate 必须同时看 metrics 与 `train_self_teacher_gate` 是否按 dataset 降权 | `docs/experiments/phase5-a7dg-disagreement-gated-self-teacher.md` |
 | `A5-S_step_specific_hypernetwork_head` | `control_deferred` | 用 coordinate-conditioned hypernetwork 生成 step readout weights，避免 pretrained dense rows 但保留 step-specific capacity | deferred：容易被视作 generated dense rows，贡献边界弱于 A5-B | pending | 等 A5-B 结果后再决定是否作为 capacity control | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
 | `A5-I_cumulative_innovation_process_decoder` | `control_deferred` | 生成 future innovation process 再 cumulative 得到 trajectory，与 output/error-process 诊断对齐 | deferred：trajectory-process 叙事有价值，但 cumulative drift 风险较高 | pending | 等 A5-Q/A5-B gate 后再决定是否作为 trajectory-process control | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
 | `A5-M_masked_future_placeholder_head` | `backlog_diagnostic` | 使用 future placeholders + structured mask 形成 prefix-native decoder | pending：与 ElasTST 过近且实现重 | pending | 暂作 diagnostic/backlog | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
@@ -118,7 +118,8 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | A6S2 stability calibration remote gate | Codex | A6S minimal gate underpowered | `completed_partial_positive_ema_only` | `ema0999` 有明显 control gain；simple smoothness route 暂停；下一步 A6ST narrative gate |
 | A6ST self-teacher narrative gate | Codex | A6S2 EMA-0.999 positive control signal | `completed_partial_pass_etth2` | ETTh2 raw final checkpoint 已稳定；下一步 cross-dataset sanity |
 | A6ST cross-dataset sanity remote gate | Codex | A6ST ETTh2 partial pass | `completed_failed_safety_gate` | ETTm1/Weather `0/8` wins；当前 self-teacher setting 不能升级为 universal paper-core，回 Step 4/5 |
-| A7DG selective self-teacher local verification | Codex | A6ST cross-dataset safety failure | `completed` | 本地验证通过；下一步 commit/push 后启动 remote gate |
+| A7DG selective self-teacher local verification | Codex | A6ST cross-dataset safety failure | `completed` | 本地验证通过；已启动 remote gate |
+| A7DG selective self-teacher remote gate | Codex | A7DG local verification passed | `launched_running` | PID `957726`；跑 ETTh2/ETTm1/Weather × 3 variants |
 | Stage B diagnostic plan | Codex | A5 architecture 通过后再推进 | `deferred` | 暂缓；不能替代 Stage A architecture |
 | paper-mainline 同步检查 | Codex | A4 将 Stage A 从 universal head 改为 reliability-aware interface 诊断 | `completed` | 已同步当前状态与贡献边界，不改变 working title |
 
@@ -150,6 +151,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | 2026-07-04 | A6ST ETTh2 gate 完成 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | positive result / next safety gate | ETTh2 raw final checkpoint 接近 best controls并优于 EMA eval control；下一步做 ETTm1/Weather sanity |
 | 2026-07-04 | A6ST cross-dataset sanity 完成 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | safety gate failure / rollback | ETTm1/Weather 系统性负向；A6ST 降级为 ETTh2-specific positive evidence，不能直接 full matrix 或 paper-core 化 |
 | 2026-07-04 | A7DG selective stability design | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | rollback Step 4/5 new candidate | 基于 teacher-student disagreement 的 detached gate 已提出并实现；下一步本地验证后最小远程 gate |
+| 2026-07-04 | A7DG selective remote gate launch | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | remote launch | 3 GPUs 空闲后启动 ETTh2/ETTm1/Weather × 3 variants；等待 artifacts |
 
 ## Remote Launch Log
 
@@ -166,6 +168,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | 2026-07-04 | `A6S2_stability_calibration_gate` | `63c5e0c` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1/2 used about `855/856/840 MiB` | `639555` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6s2_stability_calibration_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6s2_stability_calibration_gate/_launcher/a6s2_stability_calibration_launcher.log` |
 | 2026-07-04 | `A6ST_self_teacher_gate` | `781c131` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1/2 used about `855/856/856 MiB` | `892096` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6st_self_teacher_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6st_self_teacher_gate/_launcher/a6st_self_teacher_launcher.log` |
 | 2026-07-04 | `A6ST_cross_dataset_sanity` | `689a5b6` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1 used about `469/4486 MiB`, GPU 2 free | `905758` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6st_cross_dataset_sanity` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6st_cross_dataset_sanity/_launcher/a6st_cross_dataset_launcher.log` |
+| 2026-07-04 | `A7DG_selective_self_teacher_gate` | `e4261b5` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1/2 used about `873/874/874 MiB` | `957726` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a7dg_selective_self_teacher_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a7dg_selective_self_teacher_gate/_launcher/a7dg_selective_self_teacher_launcher.log` |
 
 ## Notes For Next Continuation
 
