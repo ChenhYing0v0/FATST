@@ -2602,6 +2602,20 @@ control，则停止 stability route。
 
 [Artifacts] `docs/experiments/phase5-a6st-self-teacher-consistency.md`
 
+[A6ST ETTh2 Gate Result] A6ST ETTh2-only self-teacher gate 已完成。最佳 variant 为
+`a6st_w02_d0999_wu1`，相对 A6-LBF-r256 平均 MSE `-1.91%`，相对 ETTh2 best stage control
+仅差 `+0.21%`，wins `2/4`。
+
+[Strong Evidence] A6ST best 优于 A6S2 `lbf_r256_ema0999` control：A6S2 EMA-0.999 为
+`+0.67%` vs best control、`1/4` wins、raw validation drift `+9.85%`；A6ST best 为
+`+0.21%`、`2/4` wins、raw drift `+3.86%`。这说明 train-time consistency 让 raw official-last
+checkpoint 更稳定，而不是只依赖 test-time EMA weights。
+
+[Decision] A6ST 标记为 `partial_pass_etth2_raw_final_stabilized`。下一步不是直接 full matrix，
+而是先做 ETTm1/Weather cross-dataset sanity gate，确认该机制不会伤害 A6 原本 drift 不明显的数据集。
+
+[Artifacts] `analysis/phase5_timealign_hss_a6st_self_teacher_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：

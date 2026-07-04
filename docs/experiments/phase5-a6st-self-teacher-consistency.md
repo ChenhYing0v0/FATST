@@ -50,3 +50,25 @@ stabilization，而不是 checkpoint selector trick。
 
 [Fail Condition] 若所有 self-teacher variants 都没有接近 A6S2 EMA-0.999 control，或造成 validation
 drift 更大，则停止 stability route，回 Step 2/3 重审 Stage A 是否还能作为 paper-core。
+
+## ETTh2 Gate Result
+
+[Fact] A6ST ETTh2-only gate 已完成。最佳 variant 为 `a6st_w02_d0999_wu1`，即
+`self_teacher_loss_weight=0.20`、`self_teacher_decay=0.999`、`warmup=1`。
+
+[Strong Evidence] 该 variant 相对 A6-LBF-r256 平均 MSE `-1.91%`，相对 ETTh2 best stage control
+仅差 `+0.21%`，wins `2/4`。它也优于 A6S2 `lbf_r256_ema0999` control，后者为 `+0.67%`
+vs best control、wins `1/4`。
+
+[Strong Evidence] A6ST 同时降低 raw-model validation drift：best variant 的 last-vs-best validation
+drift 为 `+3.86%`，而 A6S2 EMA-0.999 control 的 raw validation drift 仍为 `+9.85%`。
+这支持“训练 raw final checkpoint”而不是“test-time EMA 替换”的机制解释。
+
+[Decision] A6ST 标记为 `partial_pass_etth2_raw_final_stabilized`。下一步必须做 cross-dataset
+sanity gate，检查该机制是否伤害 ETTm1/Weather。若 cross-dataset 不损害，再进入 full matrix 或
+method refinement。
+
+Result artifacts:
+
+- `analysis/phase5_timealign_hss_a6st_self_teacher_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`
+- `analysis/phase5_timealign_hss_a6st_self_teacher_gate_20260704/phase5_timealign_hss_a6s_summary.csv`

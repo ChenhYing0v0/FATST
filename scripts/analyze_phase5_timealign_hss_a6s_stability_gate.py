@@ -22,7 +22,7 @@ def variant_from_path(path: Path) -> str:
 
 def read_metrics(raw_root: Path) -> pd.DataFrame:
     rows: list[dict[str, Any]] = []
-    pattern = "official-last/*/ETTh2/mixed_h96_h192_h336_h720/seed2021/metrics_by_target_horizon.csv"
+    pattern = "official-last/*/*/mixed_h96_h192_h336_h720/seed2021/metrics_by_target_horizon.csv"
     for path in sorted(raw_root.glob(pattern)):
         variant = variant_from_path(path)
         frame = pd.read_csv(path)
@@ -44,7 +44,7 @@ def read_metrics(raw_root: Path) -> pd.DataFrame:
 
 def read_trajectory(raw_root: Path) -> pd.DataFrame:
     rows: list[dict[str, Any]] = []
-    pattern = "official-last/*/ETTh2/mixed_h96_h192_h336_h720/seed2021/training_log.csv"
+    pattern = "official-last/*/*/mixed_h96_h192_h336_h720/seed2021/training_log.csv"
     for path in sorted(raw_root.glob(pattern)):
         frame = pd.read_csv(path)
         variant = variant_from_path(path)
@@ -62,6 +62,10 @@ def read_trajectory(raw_root: Path) -> pd.DataFrame:
             "last_vs_best_val_mse_pct": (last / best - 1.0) * 100.0,
             "ema_decay": float(frame.iloc[-1].get("ema_decay", 0.0)),
             "ema_eval": int(frame.iloc[-1].get("ema_eval", 0)),
+            "self_teacher_decay": float(frame.iloc[-1].get("self_teacher_decay", 0.0)),
+            "self_teacher_loss_weight": float(frame.iloc[-1].get("self_teacher_loss_weight", 0.0)),
+            "self_teacher_warmup_epochs": int(frame.iloc[-1].get("self_teacher_warmup_epochs", 0)),
+            "last_train_self_teacher_l1": float(frame.iloc[-1].get("train_self_teacher_l1", 0.0)),
             "basis_operator_smoothness_weight": float(
                 frame.iloc[-1].get("basis_operator_smoothness_weight", 0.0)
             ),
@@ -87,18 +91,17 @@ def read_trajectory(raw_root: Path) -> pd.DataFrame:
 
 def add_references(metrics: pd.DataFrame, a6_comparison_path: Path) -> pd.DataFrame:
     a6 = pd.read_csv(a6_comparison_path)
-    etth2 = a6[a6["dataset"].eq("ETTh2")]
-    lbf = etth2[etth2["arm"].eq("a6_lbf_r256")][["target_horizon", "mse"]].rename(
+    lbf = a6[a6["arm"].eq("a6_lbf_r256")][["dataset", "target_horizon", "mse"]].rename(
         columns={"mse": "a6_lbf_r256_mse"}
     )
-    der = etth2[etth2["arm"].eq("a6_der")][
-        ["target_horizon", "mse", "best_stage_control_mse", "best_stage_control_name"]
+    der = a6[a6["arm"].eq("a6_der")][
+        ["dataset", "target_horizon", "mse", "best_stage_control_mse", "best_stage_control_name"]
     ].rename(columns={"mse": "a6_der_mse"})
-    merged = metrics.merge(lbf, on="target_horizon", how="left", validate="many_to_one")
-    merged = merged.merge(der, on="target_horizon", how="left", validate="many_to_one")
+    merged = metrics.merge(lbf, on=["dataset", "target_horizon"], how="left", validate="many_to_one")
+    merged = merged.merge(der, on=["dataset", "target_horizon"], how="left", validate="many_to_one")
     required = ["a6_lbf_r256_mse", "a6_der_mse", "best_stage_control_mse"]
     if merged[required].isna().any().any():
-        missing = merged[merged[required].isna().any(axis=1)][["variant", "target_horizon"]]
+        missing = merged[merged[required].isna().any(axis=1)][["dataset", "variant", "target_horizon"]]
         raise ValueError(f"Missing reference rows: {missing.to_dict('records')}")
     merged["relative_mse_vs_a6_lbf_r256_pct"] = (merged["mse"] / merged["a6_lbf_r256_mse"] - 1.0) * 100.0
     merged["relative_mse_vs_a6_der_pct"] = (merged["mse"] / merged["a6_der_mse"] - 1.0) * 100.0
@@ -120,7 +123,33 @@ def summarize(comparison: pd.DataFrame, trajectory: pd.DataFrame) -> pd.DataFram
             wins_vs_best_stage_control=("beats_best_stage_control", "sum"),
         )
     )
-    return summary.merge(trajectory, on="variant", how="left", validate="one_to_one").sort_values(
+    trajectory_summary = (
+        trajectory.groupby("variant", as_index=False)
+        .agg(
+            best_epoch=("best_epoch", "min"),
+            last_epoch=("last_epoch", "max"),
+            last_train_loss=("last_train_loss", "mean"),
+            first_val_mean_mse=("first_val_mean_mse", "mean"),
+            best_val_mean_mse=("best_val_mean_mse", "mean"),
+            last_val_mean_mse=("last_val_mean_mse", "mean"),
+            last_vs_best_val_mse_pct=("last_vs_best_val_mse_pct", "mean"),
+            ema_decay=("ema_decay", "first"),
+            ema_eval=("ema_eval", "first"),
+            self_teacher_decay=("self_teacher_decay", "first"),
+            self_teacher_loss_weight=("self_teacher_loss_weight", "first"),
+            self_teacher_warmup_epochs=("self_teacher_warmup_epochs", "first"),
+            last_train_self_teacher_l1=("last_train_self_teacher_l1", "mean"),
+            basis_operator_smoothness_weight=("basis_operator_smoothness_weight", "first"),
+            last_train_basis_operator_smoothness_loss=("last_train_basis_operator_smoothness_loss", "mean"),
+            last_weighted_basis_operator_smoothness_loss=(
+                "last_weighted_basis_operator_smoothness_loss",
+                "mean",
+            ),
+            last_weighted_smoothness_to_train_loss=("last_weighted_smoothness_to_train_loss", "mean"),
+            source_path=("source_path", "first"),
+        )
+    )
+    return summary.merge(trajectory_summary, on="variant", how="left", validate="one_to_one").sort_values(
         "mean_relative_mse_vs_best_stage_control_pct"
     )
 
@@ -148,8 +177,17 @@ def write_report(output_dir: Path, summary: pd.DataFrame) -> None:
     max_smooth_ratio = (
         float(smooth["last_weighted_smoothness_to_train_loss"].max()) if not smooth.empty else 0.0
     )
-    gate_label = "A6S2" if "a6s2" in output_dir.name.lower() else "A6S"
+    output_name = output_dir.name.lower()
+    if "a6st" in output_name:
+        gate_label = "A6ST"
+    elif "a6s2" in output_name:
+        gate_label = "A6S2"
+    else:
+        gate_label = "A6S"
     title = (
+        "# Phase5-A6ST Official-Last Self-Teacher Gate Report"
+        if gate_label == "A6ST"
+        else
         "# Phase5-A6S2 Official-Last Stability Calibration Gate Report"
         if gate_label == "A6S2"
         else "# Phase5-A6S Official-Last Stability Gate Report"
@@ -181,12 +219,12 @@ def write_report(output_dir: Path, summary: pd.DataFrame) -> None:
         "",
         "## Variant Summary",
         "",
-        "| Variant | mean MSE | vs best control | wins | vs A6-LBF-r256 | last-vs-best val | EMA | smooth weight | smooth/train |",
+        "| Variant | mean MSE | vs best control | wins | vs A6-LBF-r256 | last-vs-best val | EMA | self-teacher | smooth/train |",
         "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
     for _, row in summary.iterrows():
         lines.append(
-            "| `{variant}` | {mse:.4f} | {gap:+.2f}% | {wins}/4 | {lbf:+.2f}% | {drift:+.2f}% | {ema:.3g} | {smooth:g} | {ratio:.2e} |".format(
+            "| `{variant}` | {mse:.4f} | {gap:+.2f}% | {wins}/4 | {lbf:+.2f}% | {drift:+.2f}% | {ema:.3g} | w={stw:.3g}, d={std:.3g}, wu={warmup} | {ratio:.2e} |".format(
                 variant=row["variant"],
                 mse=row["mean_mse"],
                 gap=row["mean_relative_mse_vs_best_stage_control_pct"],
@@ -194,7 +232,9 @@ def write_report(output_dir: Path, summary: pd.DataFrame) -> None:
                 lbf=row["mean_relative_mse_vs_a6_lbf_r256_pct"],
                 drift=row["last_vs_best_val_mse_pct"],
                 ema=row["ema_decay"],
-                smooth=row["basis_operator_smoothness_weight"],
+                stw=row["self_teacher_loss_weight"],
+                std=row["self_teacher_decay"],
+                warmup=int(row["self_teacher_warmup_epochs"]),
                 ratio=row["last_weighted_smoothness_to_train_loss"],
             )
         )

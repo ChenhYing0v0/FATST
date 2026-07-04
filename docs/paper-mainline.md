@@ -446,6 +446,17 @@ A6ST self-teacher consistency path：
 设计文档见
 `docs/experiments/phase5-a6st-self-teacher-consistency.md`。
 
+A6ST ETTh2 gate result：
+
+- 最佳 `a6st_w02_d0999_wu1` 相对 A6-LBF-r256 平均 MSE `-1.91%`；
+- 相对 ETTh2 best stage control 仅差 `+0.21%`，wins `2/4`；
+- raw validation drift 降到 `+3.86%`，优于 A6S2 `ema0999` control 的 `+9.85%`；
+- 因此 A6ST 当前标记为 `partial_pass_etth2_raw_final_stabilized`；
+- 下一步先做 ETTm1/Weather cross-dataset sanity gate，确认不伤害非 ETTh2 数据集。
+
+结果报告见
+`analysis/phase5_timealign_hss_a6st_self_teacher_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`。
+
 A5 effectiveness gate：
 
 - 至少要超过 H1 `target_set_decoder_multiprefix` 与 A3D `teacher_preserved_nested` controls；
