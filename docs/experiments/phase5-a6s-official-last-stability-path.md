@@ -112,3 +112,28 @@ paper-core；`A6S-HeadStability` 先进入 diagnostic-only calibration。
 [Effectiveness Gate] 若 A6S2 仍不能把 ETTh2 gap 拉到接近 best control，或者改善只来自 generic EMA，
 则 stability route 不能作为 Stage A paper-core。若强 smoothness 独立改善且不破坏 prefix behavior，
 再回 Step 4/6 设计机制化、可解释的 operator-stability method。
+
+## A6S2 Calibration Result
+
+[Fact] A6S2 ETTh2-only calibration gate 已完成，仍使用 `official-last` / without early stop。最佳
+variant 为 `lbf_r256_ema0999`：相对 A6-LBF-r256 平均 MSE `-1.46%`，相对 ETTh2 best stage
+control 平均仍差 `+0.67%`，wins `1/4`。
+
+[Strong Evidence] 改善主要来自更长 EMA trajectory averaging，而不是 operator smoothness。
+`lbf_r256_ema0995` 仅为 `+1.98%` vs best control；`lbf_r256_ema0999` 才接近 best controls。
+由于 validation log 仍来自 raw model，`last-vs-best validation drift` 维持 `+9.85%`，说明
+EMA 改善的是 final evaluation weights 的 trajectory average，而不是让 raw final checkpoint 本身稳定。
+
+[Strong Evidence] operator smoothness calibration 给出负向信号：`smooth10` 为 `+2.28%` vs best
+control，`smooth100` 为 `+2.85%`，且 drift 上升到 `+10.17%/+10.81%`。本轮最大
+`weighted_smoothness / train_loss` 已达到 `2.99e-03`，不再是完全无效的 `smooth1e-3` 量级。
+
+[Decision] 暂停 `A6S-HeadStability` 的简单 temporal smoothness route。`EMA-0.999` 是有价值的
+control evidence，但 generic EMA 本身不满足 SCI paper-core narrative。下一步回 Step 4/5 评估
+`A6S-SelfTeacher`：用 EMA teacher/prediction consistency 训练 raw final model，而不是 test-time
+直接使用 EMA 作为方法贡献。
+
+Result artifacts:
+
+- `analysis/phase5_timealign_hss_a6s2_stability_calibration_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`
+- `analysis/phase5_timealign_hss_a6s2_stability_calibration_gate_20260704/phase5_timealign_hss_a6s_summary.csv`

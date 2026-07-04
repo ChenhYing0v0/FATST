@@ -148,10 +148,16 @@ def write_report(output_dir: Path, summary: pd.DataFrame) -> None:
     max_smooth_ratio = (
         float(smooth["last_weighted_smoothness_to_train_loss"].max()) if not smooth.empty else 0.0
     )
+    gate_label = "A6S2" if "a6s2" in output_dir.name.lower() else "A6S"
+    title = (
+        "# Phase5-A6S2 Official-Last Stability Calibration Gate Report"
+        if gate_label == "A6S2"
+        else "# Phase5-A6S Official-Last Stability Gate Report"
+    )
     lines = [
-        "# Phase5-A6S Official-Last Stability Gate Report",
+        title,
         "",
-        "本文档分析 A6S ETTh2-only stability gate。所有 run 使用 `official-last` / without early stop。",
+        f"本文档分析 {gate_label} ETTh2-only stability gate。所有 run 使用 `official-last` / without early stop。",
         "",
         "## Conclusion",
         "",
@@ -163,15 +169,14 @@ def write_report(output_dir: Path, summary: pd.DataFrame) -> None:
         ),
         "",
         (
-            "[Strong Evidence] `ema_decay=0.99` 只带来约 "
-            f"`{best['mean_relative_mse_vs_a6_lbf_r256_pct']:+.2f}%` 的 A6-LBF 相对改善，"
-            "不足以修复 best-control gap。"
+            "[Strong Evidence] 最佳 variant 相对 A6-LBF-r256 的平均 MSE 变化为 "
+            f"`{best['mean_relative_mse_vs_a6_lbf_r256_pct']:+.2f}%`。"
         ),
         "",
         (
-            "[Fact] 本轮 smoothness regularizer 实际强度很弱：最大 "
+            "[Fact] 本轮 smoothness regularizer 的最大实际强度为 "
             f"`weighted_smoothness / train_loss = {max_smooth_ratio:.2e}`。"
-            "因此该结果只能否定未校准的 `smooth1e-3`，不能严格否定 operator-level stability 方向。"
+            "该值用于判断 regularizer 是否真的进入优化，而不是只看 flag 是否开启。"
         ),
         "",
         "## Variant Summary",
@@ -198,15 +203,15 @@ def write_report(output_dir: Path, summary: pd.DataFrame) -> None:
             "",
             "## Gate Decision",
             "",
-            "[Decision] A6S minimal gate 未通过 effectiveness gate：最佳 variant 仍对 ETTh2 best stage control `0/4` win，平均 MSE 仍差约 `+2.00%`。",
+            "[Decision] 该 gate 的 effectiveness 必须结合 best-control gap、wins、A6-LBF 相对改善和 regularizer 实际强度判断；不能只看单个 variant 的平均 MSE。",
             "",
-            "[Decision] 不把 `A6S-EMA` 推为 paper-core；`EMA-0.99` 只作为弱正向 control evidence。",
+            "[Decision] 若改善主要来自 EMA，则它首先是 generic trajectory-averaging control evidence，不能直接升级为 paper-core。",
             "",
-            "[Decision] `A6S-HeadStability` 需要先做 diagnostic-only strength calibration。当前 `smooth1e-3` 的优化权重过低，不能作为机制失败的充分证据。",
+            "[Decision] 若 stronger smoothness 独立改善，才支持继续设计 operator-level stability mechanism；若 stronger smoothness 变差，则应暂停该 route。",
             "",
-            "## Next Step",
+            "## Reader Path",
             "",
-            "回 Step 4/5 设计 `A6S2_stability_calibration_gate`：仍保持 `official-last` / without early stop，使用 ETTh2-only diagnostic 检查 `ema_decay=0.995/0.999` 与更强 operator smoothness weight。该 gate 不宣称 paper-core，只判断 stability route 是否还有继续设计价值。",
+            "先读取 `phase5_timealign_hss_a6s_summary.csv` 判断 variant-level gate，再读取 `phase5_timealign_hss_a6s_comparison.csv` 判断 prefix-wise wins/gaps，最后回到 stage ledger 写入 11-step decision。",
             "",
             "## Artifacts",
             "",

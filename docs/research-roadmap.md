@@ -2571,6 +2571,20 @@ without early stop。最佳 variant 为 `lbf_r256_ema099_smooth1e3`，相对 ETT
 
 [Artifacts] `analysis/phase5_timealign_hss_a6s_stability_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`
 
+[A6S2 Stability Calibration Result] A6S2 ETTh2-only calibration gate 已完成。最佳 variant 为
+`lbf_r256_ema0999`，相对 A6-LBF-r256 平均 MSE `-1.46%`，相对 ETTh2 best stage control
+仍差 `+0.67%`，wins `1/4`。`lbf_r256_ema0995` 只有弱改善。
+
+[Decision] 改善主要来自 longer EMA trajectory averaging，说明 final-weight averaging 是真实
+positive control signal；但 generic EMA 不能直接作为 SCI paper-core。`smooth10/smooth100` 变差，
+因此暂停简单 operator temporal smoothness route。
+
+[Next] 回 Step 4/5 做 `A6S-SelfTeacher` narrative + code-theory gate：判断能否用 EMA teacher /
+prediction consistency 训练 raw final model，使 official-last checkpoint 本身获得 trajectory-averaged
+prediction behavior；若 narrative gate 不成立，则停止 stability route。
+
+[Artifacts] `analysis/phase5_timealign_hss_a6s2_stability_calibration_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：

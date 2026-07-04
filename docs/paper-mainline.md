@@ -421,6 +421,19 @@ A6S minimal gate result：
 结果报告见
 `analysis/phase5_timealign_hss_a6s_stability_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`。
 
+A6S2 stability calibration result：
+
+- `lbf_r256_ema0999` 给出强 control signal：相对 A6-LBF-r256 平均 MSE `-1.46%`，相对
+  ETTh2 best stage control 仍差 `+0.67%`，wins `1/4`；
+- `lbf_r256_ema0995` 只有弱改善，说明 EMA window 需要足够长；
+- `smooth10/smooth100` 均变差，simple operator temporal smoothness route 暂停；
+- 由于改善来自 generic EMA final weights，不能直接作为 paper-core；下一步只做
+  `A6S-SelfTeacher` narrative/code-theory gate，判断是否能把 trajectory averaging 转化为
+  training-time raw-final stability mechanism。
+
+结果报告见
+`analysis/phase5_timealign_hss_a6s2_stability_calibration_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`。
+
 A5 effectiveness gate：
 
 - 至少要超过 H1 `target_set_decoder_multiprefix` 与 A3D `teacher_preserved_nested` controls；

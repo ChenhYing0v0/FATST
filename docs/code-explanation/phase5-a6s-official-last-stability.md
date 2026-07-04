@@ -102,3 +102,15 @@ diagnostic strength：
 
 [Decision] 该结果不支持把 EMA 或当前 smoothness setting 作为 paper-core，但也不能把
 operator-level stability 机制完全判死。下一步 A6S2 只做 strength calibration diagnostic。
+
+## A6S2 Calibration Interpretation
+
+[Fact] A6S2 复用同一个 analyzer 与 remote wrapper family。`lbf_r256_ema0999` 相对 A6-LBF-r256
+平均 MSE 改善 `-1.46%`，相对 ETTh2 best stage control 仍差 `+0.67%`，wins `1/4`。
+
+[Fact] `smooth10/smooth100` 没有改善，且 stronger smoothness 使 validation drift 变大。该结果支持
+暂停简单 temporal smoothness regularization route。
+
+[Decision] `EMA-0.999` 是 control signal，不是 model contribution。若继续，应把它转化为
+training-time self-teacher / consistency mechanism，让 raw final checkpoint 学到 trajectory-averaged
+prediction behavior。
