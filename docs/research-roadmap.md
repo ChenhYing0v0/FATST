@@ -2548,6 +2548,15 @@ diagnostic-only upper-bound audit。
 
 [Artifacts] `docs/experiments/phase5-a6s-official-last-stability-path.md`
 
+[A6S Implementation Check] 已实现两个默认关闭的 official-last-compatible stability options：
+`--ema-decay/--ema-eval` 用于 final EMA weights control，`--basis-operator-smoothness-weight` 用于
+A6-LBF induced operator smoothness。`py_compile`、remote wrapper `bash -n`、A6 prefix smoke 与合成
+EMA/smoothness helper check 均通过。
+
+[Next] 启动 ETTh2-only minimal gate：`lbf_r256_base`、`lbf_r256_ema099`、`lbf_r256_smooth1e3`、
+`lbf_r256_ema099_smooth1e3`、`der_ema099`。该 gate 仍为 diagnostic/control-first，不直接升级为
+paper-core。
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：

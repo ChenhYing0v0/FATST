@@ -24,11 +24,11 @@ Source: https://github.com/TROUBADOUR000/TimeAlign/issues/1#issuecomment-4780784
 | `existence_evidence` | A6 partial-pass diagnostic：ETTh2 三个 A6 arms 的 last-vs-best validation MSE 平均漂移 `+11.81%`；A6OD 最佳 `lbf_r256_stochastic_p1` 仍相对 best control `+1.79%`、wins `0/4` |
 | `idea` | 不追逐 validation-best checkpoint，而是设计 official-last-compatible stability mechanism |
 | `theory_check` | 若机制只依赖 validation selection，则违反 TimeAlign protocol；若机制在训练中改变 optimization geometry 或 final-weight stability，则可作为 diagnostic/control 或 method candidate |
-| `design` | 先做 narrative gate triage，再选择最小 remote gate |
-| `narrative_gate` | pending：必须区分 paper-core method、diagnostic-only、control-only |
-| `effectiveness_gate` | pending：以 official-last final test MSE、last-vs-best drift、best-control gap、prefix-wise behavior 为主 |
-| `artifacts` | pending |
-| `decision` | pending |
+| `design` | 先做 ETTh2-only 最小 gate：`A6S-EMA` control、`A6S-HeadStability` candidate、二者组合、`DER-EMA` control |
+| `narrative_gate` | conditional：`A6S-EMA` 只能 control；`A6S-HeadStability` 可作为 A6-LBF 内生稳定化候选；`A6S-SelfTeacher` 暂缓 |
+| `effectiveness_gate` | pending remote：以 official-last final test MSE、last-vs-best drift、best-control gap、prefix-wise behavior 为主 |
+| `artifacts` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6s_stability_gate` |
+| `decision` | ready_for_minimal_remote_gate |
 
 ## Candidate Stability Paths
 
@@ -39,10 +39,41 @@ Source: https://github.com/TROUBADOUR000/TimeAlign/issues/1#issuecomment-4780784
 | `A6S-HeadStability` | Learned-basis operator temporal smoothness / coefficient norm regularization | diagnostic/method candidate | 直接约束 `learned_temporal_basis @ learned_basis_coeff.weight` 的 operator geometry，降低 dense-row-dictionary 式 late drift | conditional：若 regularizer 与 prefix-native operator 绑定清楚，可进入 method gate |
 | `A6S-ExternalTeacher` | Distill from H1/A3D-style stable controls | diagnostic-only | 检查 best controls 是否主要来自 teacher/nested stability advantage | failed_for_core_by_default：依赖外部 trained controls，贡献边界弱，不能直接作为 paper-core |
 
+## Code-Theory Check
+
+### A6S-EMA
+
+[Fact] `A6S-EMA` 不使用 validation selection。训练过程中维护参数 EMA shadow，最后使用 final EMA
+weights 进行 `official-last` evaluation。它回答的问题是：A6 drift 是否来自最后若干 optimization steps
+的 weight variance。
+
+[Decision] `A6S-EMA` 只能作为 control-first，因为 EMA 是通用训练稳定化技巧，SCI contribution 边界弱。
+若它显著改善 A6-LBF，则说明下一步应设计更机制化的 stability path，而不是把 EMA 本身作为主方法。
+
+### A6S-HeadStability
+
+[Fact] `A6S-HeadStability` 只作用于 `learned-basis-forecast-operator`。其正则项约束 induced operator
+`learned_temporal_basis @ learned_basis_coeff.weight` 的相邻 future rows 差分，目标是降低 dense-row
+dictionary 式 late-epoch operator drift。
+
+[Decision] 该候选与 A6-LBF 的 prefix-native learned operator 绑定更紧，具备 method-candidate 潜力；
+但第一轮只能作为 ETTh2 diagnostic gate。若它改善 ETTh2 但损害 ETTm1/Weather 或 prefix behavior，
+不能升级为 paper-core。
+
+## Minimal Remote Gate
+
+| Variant | Role | Readout | Extra mechanism |
+| --- | --- | --- | --- |
+| `lbf_r256_base` | same-root baseline | `learned-basis-forecast-operator` | none |
+| `lbf_r256_ema099` | EMA control | `learned-basis-forecast-operator` | final EMA weights, decay `0.99` |
+| `lbf_r256_smooth1e3` | HeadStability candidate | `learned-basis-forecast-operator` | operator smoothness weight `0.001` |
+| `lbf_r256_ema099_smooth1e3` | interaction diagnostic | `learned-basis-forecast-operator` | EMA + operator smoothness |
+| `der_ema099` | dense-equivalent EMA control | `prefix-native-dense-equivalent-row-bank` | final EMA weights, decay `0.99` |
+
 ## Immediate Decision
 
-[Decision] 下一步不再做 objective-sampling sweep，也不做 rank-only sweep。优先做 `A6S-EMA` 和
-`A6S-HeadStability` 的 narrative + code-theory check：
+[Decision] 下一步不再做 objective-sampling sweep，也不做 rank-only sweep。优先启动上述 ETTh2-only
+minimal remote gate：
 
 1. `A6S-EMA` 作为最小 control，回答 final checkpoint 是否主要是 trajectory variance 问题；
 2. `A6S-HeadStability` 作为更接近 A6-LBF 机制的候选，回答 learned-basis operator 是否需要显式几何稳定化；

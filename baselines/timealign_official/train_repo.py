@@ -612,6 +612,40 @@ def select_prediction_horizons(
     raise ValueError(f"Unsupported prediction loss mode for prefix-conditioned readout: {mode}")
 
 
+def init_ema_state(model: nn.Module) -> dict[str, torch.Tensor]:
+    return {name: tensor.detach().clone() for name, tensor in model.state_dict().items()}
+
+
+def update_ema_state(model: nn.Module, ema_state: dict[str, torch.Tensor], decay: float) -> None:
+    with torch.no_grad():
+        for name, tensor in model.state_dict().items():
+            if tensor.is_floating_point():
+                ema_state[name].mul_(decay).add_(tensor.detach(), alpha=1.0 - decay)
+            else:
+                ema_state[name].copy_(tensor.detach())
+
+
+def learned_basis_operator_smoothness_loss(model: nn.Module) -> torch.Tensor:
+    if not hasattr(model, "learned_temporal_basis") or not hasattr(model, "learned_basis_coeff"):
+        raise ValueError("learned-basis operator smoothness requires learned-basis-forecast-operator")
+    operator = model.learned_temporal_basis @ model.learned_basis_coeff.weight
+    operator_diff = operator[1:] - operator[:-1]
+    loss = operator_diff.pow(2).mean()
+    if hasattr(model, "learned_temporal_bias"):
+        bias_diff = model.learned_temporal_bias[1:] - model.learned_temporal_bias[:-1]
+        loss = loss + bias_diff.pow(2).mean()
+    return loss
+
+
+def learned_basis_coeff_l2_loss(model: nn.Module) -> torch.Tensor:
+    if not hasattr(model, "learned_basis_coeff"):
+        raise ValueError("learned-basis coefficient L2 requires learned-basis-forecast-operator")
+    loss = model.learned_basis_coeff.weight.pow(2).mean()
+    if model.learned_basis_coeff.bias is not None:
+        loss = loss + model.learned_basis_coeff.bias.pow(2).mean()
+    return loss
+
+
 def evaluate(
     model: nn.Module,
     loader: torch.utils.data.DataLoader,
@@ -740,6 +774,7 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
     training_rows: list[dict[str, Any]] = []
     best_val = float("inf")
     best_state: dict[str, torch.Tensor] | None = None
+    ema_state = init_ema_state(model) if args.ema_decay > 0.0 else None
 
     for epoch in range(args.epochs):
         model.train()
@@ -749,6 +784,8 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
         pred_full_loss_values = []
         pred_component_values: dict[str, list[float]] = {}
         teacher_loss_values = []
+        basis_operator_smoothness_values = []
+        basis_coeff_l2_values = []
         recon_loss_values = []
         alignment_values = []
         train_steps = len(train_loader)
@@ -844,19 +881,33 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
                 alignment_loss = torch.stack(alignment_losses).mean()
             if args.readout_mode == "official":
                 teacher_loss = torch.zeros((), device=official_args.device)
+            if args.basis_operator_smoothness_weight > 0.0:
+                basis_operator_smoothness = learned_basis_operator_smoothness_loss(model)
+            else:
+                basis_operator_smoothness = torch.zeros((), device=official_args.device)
+            if args.basis_coeff_l2_weight > 0.0:
+                basis_coeff_l2 = learned_basis_coeff_l2_loss(model)
+            else:
+                basis_coeff_l2 = torch.zeros((), device=official_args.device)
             loss = (
                 pred_loss
                 + args.teacher_loss_weight * teacher_loss
                 + official_args.w_recon * recon_loss
                 + official_args.w_align * alignment_loss
+                + args.basis_operator_smoothness_weight * basis_operator_smoothness
+                + args.basis_coeff_l2_weight * basis_coeff_l2
             )
             loss.backward()
             optimizer.step()
+            if ema_state is not None:
+                update_ema_state(model, ema_state, args.ema_decay)
 
             total_loss.append(float(loss.detach().cpu()))
             pred_loss_values.append(float(pred_loss.detach().cpu()))
             pred_full_loss_values.append(float(pred_components["full"].detach().cpu()))
             teacher_loss_values.append(float(teacher_loss.detach().cpu()))
+            basis_operator_smoothness_values.append(float(basis_operator_smoothness.detach().cpu()))
+            basis_coeff_l2_values.append(float(basis_coeff_l2.detach().cpu()))
             for name, component in pred_components.items():
                 if name == "full":
                     continue
@@ -889,6 +940,12 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
             "train_prediction_full_l1": float(np.mean(pred_full_loss_values)),
             "train_teacher_l1": float(np.mean(teacher_loss_values)),
             "teacher_loss_weight": args.teacher_loss_weight,
+            "basis_operator_smoothness_weight": args.basis_operator_smoothness_weight,
+            "train_basis_operator_smoothness_loss": float(np.mean(basis_operator_smoothness_values)),
+            "basis_coeff_l2_weight": args.basis_coeff_l2_weight,
+            "train_basis_coeff_l2_loss": float(np.mean(basis_coeff_l2_values)),
+            "ema_decay": args.ema_decay,
+            "ema_eval": int(args.ema_eval),
             "train_reconstruction_l1": float(np.mean(recon_loss_values)),
             "train_alignment_loss": float(np.mean(alignment_values)),
             "pred_loss_mode": args.pred_loss_mode,
@@ -925,6 +982,10 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
         if best_state is None:
             raise RuntimeError("best-val policy requested but no checkpoint was captured")
         model.load_state_dict(best_state)
+    elif args.ema_eval:
+        if ema_state is None:
+            raise RuntimeError("ema-eval requested but EMA state was not initialized")
+        model.load_state_dict(ema_state)
     return model, training_rows
 
 
@@ -1069,6 +1130,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--prefix-samples", type=int, default=1)
     parser.add_argument("--continuous-min-prefix", type=int, default=32)
     parser.add_argument("--continuous-prefix-step", type=int, default=32)
+    parser.add_argument("--ema-decay", type=float, default=0.0)
+    parser.add_argument("--ema-eval", action="store_true")
+    parser.add_argument("--basis-operator-smoothness-weight", type=float, default=0.0)
+    parser.add_argument("--basis-coeff-l2-weight", type=float, default=0.0)
     args = parser.parse_args()
     if max(args.target_horizons) > args.pred_len:
         raise ValueError("target horizons cannot exceed pred_len")
@@ -1080,6 +1145,20 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("target_query_dropout must be between 0.0 and 1.0")
     if args.patch_num_override < 0:
         raise ValueError("patch_num_override must be non-negative")
+    if not 0.0 <= args.ema_decay < 1.0:
+        raise ValueError("ema_decay must be in [0.0, 1.0)")
+    if args.ema_eval and args.ema_decay <= 0.0:
+        raise ValueError("ema-eval requires ema-decay > 0")
+    if args.ema_eval and args.checkpoint_policy != "official-last":
+        raise ValueError("ema-eval is only allowed with official-last checkpoint policy")
+    if args.basis_operator_smoothness_weight < 0.0:
+        raise ValueError("basis_operator_smoothness_weight must be non-negative")
+    if args.basis_coeff_l2_weight < 0.0:
+        raise ValueError("basis_coeff_l2_weight must be non-negative")
+    if (
+        args.basis_operator_smoothness_weight > 0.0 or args.basis_coeff_l2_weight > 0.0
+    ) and args.readout_mode != "learned-basis-forecast-operator":
+        raise ValueError("learned-basis stability regularizers require learned-basis-forecast-operator")
     return args
 
 
