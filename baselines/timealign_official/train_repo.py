@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import csv
 import json
 import os
@@ -625,6 +626,30 @@ def update_ema_state(model: nn.Module, ema_state: dict[str, torch.Tensor], decay
                 ema_state[name].copy_(tensor.detach())
 
 
+def init_ema_teacher_model(model: nn.Module) -> nn.Module:
+    teacher = copy.deepcopy(model)
+    teacher.eval()
+    for parameter in teacher.parameters():
+        parameter.requires_grad_(False)
+    return teacher
+
+
+def update_ema_teacher_model(model: nn.Module, teacher: nn.Module, decay: float) -> None:
+    student_state = model.state_dict()
+    teacher_state = teacher.state_dict()
+    with torch.no_grad():
+        for name, teacher_tensor in teacher_state.items():
+            student_tensor = student_state[name].detach()
+            if teacher_tensor.is_floating_point():
+                teacher_tensor.mul_(decay).add_(
+                    student_tensor.to(device=teacher_tensor.device, dtype=teacher_tensor.dtype),
+                    alpha=1.0 - decay,
+                )
+            else:
+                teacher_tensor.copy_(student_tensor.to(device=teacher_tensor.device))
+    teacher.eval()
+
+
 def learned_basis_operator_smoothness_loss(model: nn.Module) -> torch.Tensor:
     if not hasattr(model, "learned_temporal_basis") or not hasattr(model, "learned_basis_coeff"):
         raise ValueError("learned-basis operator smoothness requires learned-basis-forecast-operator")
@@ -769,6 +794,21 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
             f"teacher_info={json.dumps({'checkpoint_path': str(args.teacher_checkpoint), 'readout_mode': args.teacher_readout_mode, 'loss_weight': args.teacher_loss_weight}, sort_keys=True)}",
             flush=True,
         )
+    self_teacher_model = None
+    if args.self_teacher_loss_weight > 0.0:
+        self_teacher_model = init_ema_teacher_model(model)
+        print(
+            "self_teacher_info="
+            + json.dumps(
+                {
+                    "decay": args.self_teacher_decay,
+                    "loss_weight": args.self_teacher_loss_weight,
+                    "warmup_epochs": args.self_teacher_warmup_epochs,
+                },
+                sort_keys=True,
+            ),
+            flush=True,
+        )
     optimizer = optim.AdamW(model.parameters(), lr=official_args.learning_rate)
     criterion = nn.L1Loss()
     training_rows: list[dict[str, Any]] = []
@@ -784,6 +824,7 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
         pred_full_loss_values = []
         pred_component_values: dict[str, list[float]] = {}
         teacher_loss_values = []
+        self_teacher_loss_values = []
         basis_operator_smoothness_values = []
         basis_coeff_l2_values = []
         recon_loss_values = []
@@ -817,6 +858,26 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
                     args.continuous_prefix_step,
                 )
                 recon_loss = criterion(recon, target_y)
+                if self_teacher_model is not None and epoch >= args.self_teacher_warmup_epochs:
+                    with torch.no_grad():
+                        self_teacher_outputs, _self_teacher_recon, _self_teacher_alignment = self_teacher_model(
+                            batch_x,
+                            batch_y[:, -official_args.pred_len :, :],
+                            is_training=True,
+                        )
+                        self_teacher_outputs = self_teacher_outputs[:, -official_args.pred_len :, f_dim:]
+                    self_teacher_loss, _self_teacher_components = prediction_loss(
+                        outputs,
+                        self_teacher_outputs,
+                        criterion,
+                        args.target_horizons,
+                        args.pred_loss_mode,
+                        args.prefix_samples,
+                        args.continuous_min_prefix,
+                        args.continuous_prefix_step,
+                    )
+                else:
+                    self_teacher_loss = torch.zeros((), device=official_args.device)
             else:
                 if args.pred_loss_mode == "balanced-step":
                     raise ValueError("balanced-step is not supported for prefix-conditioned readout modes")
@@ -830,6 +891,7 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
                 )
                 prefix_losses = []
                 teacher_losses = []
+                self_teacher_losses = []
                 recon_losses = []
                 alignment_losses = []
                 pred_components = {}
@@ -857,6 +919,18 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
                             )
                             teacher_outputs = teacher_outputs[:, -official_args.pred_len :, f_dim:]
                         teacher_losses.append(criterion(outputs[:, :horizon, :], teacher_outputs[:, :horizon, :]))
+                    if self_teacher_model is not None and epoch >= args.self_teacher_warmup_epochs:
+                        with torch.no_grad():
+                            self_teacher_outputs, _self_teacher_recon, _self_teacher_alignment = self_teacher_model(
+                                batch_x,
+                                batch_y[:, -official_args.pred_len :, :],
+                                is_training=True,
+                                target_prefix=horizon,
+                            )
+                            self_teacher_outputs = self_teacher_outputs[:, -official_args.pred_len :, f_dim:]
+                        self_teacher_losses.append(
+                            criterion(outputs[:, :horizon, :], self_teacher_outputs[:, :horizon, :])
+                        )
                     recon_losses.append(criterion(recon, target_y))
                     alignment_losses.append(alignment_loss)
                     if horizon == official_args.pred_len:
@@ -877,10 +951,17 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
                     if teacher_losses
                     else torch.zeros((), device=official_args.device)
                 )
+                self_teacher_loss = (
+                    torch.stack(self_teacher_losses).mean()
+                    if self_teacher_losses
+                    else torch.zeros((), device=official_args.device)
+                )
                 recon_loss = torch.stack(recon_losses).mean()
                 alignment_loss = torch.stack(alignment_losses).mean()
             if args.readout_mode == "official":
                 teacher_loss = torch.zeros((), device=official_args.device)
+            if self_teacher_model is None:
+                self_teacher_loss = torch.zeros((), device=official_args.device)
             if args.basis_operator_smoothness_weight > 0.0:
                 basis_operator_smoothness = learned_basis_operator_smoothness_loss(model)
             else:
@@ -892,6 +973,7 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
             loss = (
                 pred_loss
                 + args.teacher_loss_weight * teacher_loss
+                + args.self_teacher_loss_weight * self_teacher_loss
                 + official_args.w_recon * recon_loss
                 + official_args.w_align * alignment_loss
                 + args.basis_operator_smoothness_weight * basis_operator_smoothness
@@ -901,11 +983,14 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
             optimizer.step()
             if ema_state is not None:
                 update_ema_state(model, ema_state, args.ema_decay)
+            if self_teacher_model is not None:
+                update_ema_teacher_model(model, self_teacher_model, args.self_teacher_decay)
 
             total_loss.append(float(loss.detach().cpu()))
             pred_loss_values.append(float(pred_loss.detach().cpu()))
             pred_full_loss_values.append(float(pred_components["full"].detach().cpu()))
             teacher_loss_values.append(float(teacher_loss.detach().cpu()))
+            self_teacher_loss_values.append(float(self_teacher_loss.detach().cpu()))
             basis_operator_smoothness_values.append(float(basis_operator_smoothness.detach().cpu()))
             basis_coeff_l2_values.append(float(basis_coeff_l2.detach().cpu()))
             for name, component in pred_components.items():
@@ -940,6 +1025,10 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
             "train_prediction_full_l1": float(np.mean(pred_full_loss_values)),
             "train_teacher_l1": float(np.mean(teacher_loss_values)),
             "teacher_loss_weight": args.teacher_loss_weight,
+            "self_teacher_loss_weight": args.self_teacher_loss_weight,
+            "self_teacher_decay": args.self_teacher_decay,
+            "self_teacher_warmup_epochs": args.self_teacher_warmup_epochs,
+            "train_self_teacher_l1": float(np.mean(self_teacher_loss_values)),
             "basis_operator_smoothness_weight": args.basis_operator_smoothness_weight,
             "train_basis_operator_smoothness_loss": float(np.mean(basis_operator_smoothness_values)),
             "basis_coeff_l2_weight": args.basis_coeff_l2_weight,
@@ -1132,6 +1221,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--continuous-prefix-step", type=int, default=32)
     parser.add_argument("--ema-decay", type=float, default=0.0)
     parser.add_argument("--ema-eval", action="store_true")
+    parser.add_argument("--self-teacher-decay", type=float, default=0.0)
+    parser.add_argument("--self-teacher-loss-weight", type=float, default=0.0)
+    parser.add_argument("--self-teacher-warmup-epochs", type=int, default=1)
     parser.add_argument("--basis-operator-smoothness-weight", type=float, default=0.0)
     parser.add_argument("--basis-coeff-l2-weight", type=float, default=0.0)
     args = parser.parse_args()
@@ -1151,6 +1243,16 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("ema-eval requires ema-decay > 0")
     if args.ema_eval and args.checkpoint_policy != "official-last":
         raise ValueError("ema-eval is only allowed with official-last checkpoint policy")
+    if not 0.0 <= args.self_teacher_decay < 1.0:
+        raise ValueError("self_teacher_decay must be in [0.0, 1.0)")
+    if args.self_teacher_loss_weight < 0.0:
+        raise ValueError("self_teacher_loss_weight must be non-negative")
+    if args.self_teacher_loss_weight > 0.0 and args.self_teacher_decay <= 0.0:
+        raise ValueError("self-teacher requires self-teacher-decay > 0")
+    if args.self_teacher_loss_weight > 0.0 and args.ema_eval:
+        raise ValueError("self-teacher method gate must evaluate raw official-last weights, not ema-eval")
+    if args.self_teacher_warmup_epochs < 0:
+        raise ValueError("self_teacher_warmup_epochs must be non-negative")
     if args.basis_operator_smoothness_weight < 0.0:
         raise ValueError("basis_operator_smoothness_weight must be non-negative")
     if args.basis_coeff_l2_weight < 0.0:

@@ -2585,6 +2585,23 @@ prediction behavior；若 narrative gate 不成立，则停止 stability route�
 
 [Artifacts] `analysis/phase5_timealign_hss_a6s2_stability_calibration_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`
 
+[A6ST Self-Teacher Gate Design] 已完成 Step 4/5 narrative + code-theory gate，并进入 Step 6/7/8。
+机制是 train-time EMA teacher prefix consistency：teacher 只提供 detached prefix prediction target，
+`optimizer.step()` 后由 raw student 更新；最终 checkpoint 与 test evaluation 均使用 raw student
+official-last weights，不使用 `--ema-eval`。
+
+[Decision] A6ST 只作为 conditional method candidate：若 remote gate 显示 raw official-last model 接近
+A6S2 `ema0999` control，才继续将其发展为 paper-core；若只是 weak regularizer 或仍明显弱于 EMA
+control，则停止 stability route。
+
+[Verification] `python -m py_compile baselines/timealign_official/train_repo.py`、A6ST wrapper
+`bash -n`、合成 EMA teacher helper check 均通过。
+
+[Next] 启动 ETTh2-only A6ST remote gate：`a6st_w005_d0999_wu1`、`a6st_w01_d0999_wu1`、
+`a6st_w02_d0999_wu1`、`a6st_w01_d0999_wu3`、`a6st_w01_d0995_wu1`。
+
+[Artifacts] `docs/experiments/phase5-a6st-self-teacher-consistency.md`
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：

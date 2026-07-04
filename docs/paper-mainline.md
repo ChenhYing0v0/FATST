@@ -434,6 +434,18 @@ A6S2 stability calibration result：
 结果报告见
 `analysis/phase5_timealign_hss_a6s2_stability_calibration_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`。
 
+A6ST self-teacher consistency path：
+
+- A6S2 的 `EMA-0.999` 不能直接作为 paper-core，因为它是 test-time final weights averaging；
+- A6ST 将该 signal 转化为 training-time prefix consistency：EMA teacher 只提供 detached
+  prefix prediction target，最终仍评估 raw official-last student weights；
+- narrative gate 为 conditional pass：若远程 gate 能让 raw final checkpoint 接近 A6S2
+  `ema0999` control，才继续作为 official-last-compatible raw-checkpoint stabilization method；
+- 已完成最小实现和本地验证，下一步启动 ETTh2-only remote gate。
+
+设计文档见
+`docs/experiments/phase5-a6st-self-teacher-consistency.md`。
+
 A5 effectiveness gate：
 
 - 至少要超过 H1 `target_set_decoder_multiprefix` 与 A3D `teacher_preserved_nested` controls；

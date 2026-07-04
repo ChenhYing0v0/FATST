@@ -114,3 +114,33 @@ operator-level stability 机制完全判死。下一步 A6S2 只做 strength cal
 [Decision] `EMA-0.999` 是 control signal，不是 model contribution。若继续，应把它转化为
 training-time self-teacher / consistency mechanism，让 raw final checkpoint 学到 trajectory-averaged
 prediction behavior。
+
+## A6ST Self-Teacher Training Flow
+
+`--self-teacher-loss-weight > 0` 时，训练开始后复制当前 `model` 得到 `self_teacher_model`：
+
+```text
+self_teacher_model = deepcopy(model)
+self_teacher_model.eval()
+```
+
+每个 training batch 内：
+
+```text
+student_output = model(..., target_prefix=H)
+teacher_output = self_teacher_model(..., target_prefix=H).detach()
+self_teacher_loss = L1(student_output[:, :H], teacher_output[:, :H])
+loss += self_teacher_loss_weight * self_teacher_loss
+```
+
+`optimizer.step()` 后更新 teacher：
+
+```text
+teacher = decay * teacher + (1 - decay) * student
+```
+
+[Fact] A6ST 最终保存和评估的是 raw student weights；它不设置 `--ema-eval`，也不把 EMA teacher
+checkpoint 用作 test-time model。
+
+[Proxy] 该机制仍有 generic mean-teacher/KD 风险。它只有在 raw official-last checkpoint 接近
+A6S2 `ema0999` control，且保持 A6-LBF prefix-native operator 贡献边界时，才有继续设计价值。
