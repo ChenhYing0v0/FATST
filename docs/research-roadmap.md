@@ -2715,6 +2715,14 @@ CPU smoke 均通过。Smoke 中 `train_self_teacher_advantage_l1=-0.00044`，因
 
 [Artifacts] `docs/experiments/phase5-a8tag-teacher-advantage-gated-self-teacher.md`
 
+[A8TAG Remote Launch] 已在 529_Lab-3090 启动 Step 8 remote gate。远程 commit 为 `dec4911`；
+launch 前 GPU 0/1/2 均空闲（`18 MiB used`, `24107 MiB free`），启动后 GPU 0/1/2 约
+`855/856/856 MiB`。PID `2336496`，输出目录
+`/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a8tag_teacher_advantage_gate`。
+
+[Next] 等待 artifacts；返回后优先检查 `train_self_teacher_advantage_l1` 是否为正，以及
+teacher-advantage gate 是否优于 A7DG 的 threshold-gated selective objective。
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：
