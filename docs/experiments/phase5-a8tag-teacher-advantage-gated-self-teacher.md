@@ -96,3 +96,19 @@ New / reused training-log columns:
 
 [Decision] Smoke 表明当 teacher 不优于 student 时，A8TAG 确实关闭 self-teacher loss。该候选进入
 `ready_for_remote_gate`。
+
+## Remote Gate Result
+
+[Fact] Remote gate 已完成，覆盖 ETTh2/ETTm1/Weather × 3 variants。最佳 variant 是
+`a8tag_advratio_w10_d0999_wu1`，12 个 dataset-horizon setting 的 mean MSE 为
+`0.285779`，相对 best stage control `+0.91%`，wins `0/12`。
+
+[Fact] A8TAG 最佳 variant 相对 A6-LBF-r256 为 `+0.03%`，相对 A7DG best 变差约
+`+0.47%`。Binary gate 在 ETTm1/Weather 高激活但效果更差，ratio gate 接近关闭并基本退化
+到 A6-LBF。
+
+[Decision] A8TAG 标记为 `failed_as_core_candidate`。teacher-advantage 是一个清晰但被证伪的
+gate：它不能解释 ETTh2 上 useful self-teacher 的来源，也不能提供跨数据集收益。下一步回
+Step 4/5 回溯未执行候选，不继续做 teacher-advantage threshold 或 weight sweep。
+
+[Artifacts] `analysis/phase5_timealign_hss_a8tag_teacher_advantage_gate_20260705/phase5_timealign_hss_a8tag_interpretation.md`

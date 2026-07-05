@@ -505,13 +505,16 @@ A8TAG teacher-advantage route：
 - A8TAG 是 A7DG partial-positive 后的 Step 4/5 新候选；
 - 它不继续调 disagreement threshold，而是用 supervised teacher advantage 决定是否蒸馏：
   只有 EMA teacher 在当前 prefix 上比 raw student 更接近 label 时，才施加 consistency；
-- narrative gate 为 conditional pass：若 teacher advantage 能解释何时该蒸馏，则比 A7DG
-  有更强机制边界；若 teacher 多数无 advantage，则 self-teacher route 应停止；
-- 本地 `py_compile`、wrapper `bash -n` 和 CPU smoke 已通过，下一步启动 ETTh2/ETTm1/Weather
-  teacher-advantage remote gate。
+- remote gate 已完成：最佳 `a8tag_advratio_w10_d0999_wu1` 相对 best controls `+0.91%`、
+  wins `0/12`，相对 A6-LBF-r256 `+0.03%`，弱于 A7DG best；
+- 机制诊断显示 teacher-advantage gate 在 ETTh2 关闭了 A7DG 的主要正向 self-teacher
+  signal，而 binary gate 在 ETTm1/Weather 高激活反而更差；
+- 因此 A8TAG 降级为 `failed_as_core_candidate`，self-teacher route 暂停，不继续做
+  teacher-advantage threshold/weight sweep。
 
-设计文档见
-`docs/experiments/phase5-a8tag-teacher-advantage-gated-self-teacher.md`。
+设计与解释文档见
+`docs/experiments/phase5-a8tag-teacher-advantage-gated-self-teacher.md`、
+`analysis/phase5_timealign_hss_a8tag_teacher_advantage_gate_20260705/phase5_timealign_hss_a8tag_interpretation.md`。
 
 A5 effectiveness gate：
 

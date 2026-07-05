@@ -2720,8 +2720,26 @@ launch 前 GPU 0/1/2 均空闲（`18 MiB used`, `24107 MiB free`），启动后 
 `855/856/856 MiB`。PID `2336496`，输出目录
 `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a8tag_teacher_advantage_gate`。
 
-[Next] 等待 artifacts；返回后优先检查 `train_self_teacher_advantage_l1` 是否为正，以及
-teacher-advantage gate 是否优于 A7DG 的 threshold-gated selective objective。
+[A8TAG Remote Gate Result] A8TAG ETTh2/ETTm1/Weather teacher-advantage gate 已完成。最佳 variant
+为 `a8tag_advratio_w10_d0999_wu1`，12 个 dataset-horizon setting 的 mean MSE 为
+`0.285779`，相对 best stage control `+0.91%`，wins `0/12`。
+
+[Fact] A8TAG 最佳 variant 相对 A6-LBF-r256 为 `+0.03%`，基本退化到 A6-LBF；相对
+A7DG best `0.284431` 变差约 `+0.47%`。Cross-family 排序为 A7DG best `0.284431`、
+uniform A6ST `0.285442`、A6-LBF `0.285698`、A8TAG best `0.285779`。
+
+[Strong Evidence] A8TAG 没有保住 A7DG 的 ETTh2 正向信号：A7DG 在 ETTh2 相对 A6-LBF
+为 `-1.95%`，A8TAG-ratio 为 `-0.00%`。Binary teacher-advantage gate 在 ETTm1/Weather
+高激活，但指标更差，说明 supervised prefix 上的小幅 teacher advantage 不能证明 teacher
+trajectory 是好的 consistency target。
+
+[Decision] A8TAG 标记为 `failed_as_core_candidate`。其 narrative gate 从 conditional pass
+降为 failed：mechanism boundary 清楚，但 empirical evidence 说明它不能解释 useful
+self-teacher。Effectiveness gate 失败：`0/12` wins vs best stage control，整体弱于 A7DG。
+
+[Rollback] 当前回 Step 4/5。下一步必须先回溯未执行候选 `A5-S/A5-I/A5-M/A6-QBR` 与
+A6 stability/capacity conflict evidence；不能继续做 teacher-advantage threshold/weight sweep，
+也不能把 A7DG/A8TAG 简单混合成新 gate。
 
 ## 历史证据索引
 
