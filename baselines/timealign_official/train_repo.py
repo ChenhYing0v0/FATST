@@ -1270,6 +1270,7 @@ def parse_args() -> argparse.Namespace:
             "elastic-causal-target-query-decoder",
             "prefix-native-dense-equivalent-row-bank",
             "learned-basis-forecast-operator",
+            "query-bilinear-readout",
         ],
         default="official",
     )

@@ -92,6 +92,7 @@ class Model(nn.Module):
             "elastic-causal-target-query-decoder",
             "prefix-native-dense-equivalent-row-bank",
             "learned-basis-forecast-operator",
+            "query-bilinear-readout",
         }
         self.capacity_preserving_modes = {
             "dense-prefix-residual-adapter",
@@ -168,6 +169,18 @@ class Model(nn.Module):
             self.learned_temporal_basis = nn.Parameter(torch.empty(configs.pred_len, self.basis_rank))
             self.learned_temporal_bias = nn.Parameter(torch.zeros(configs.pred_len))
             nn.init.normal_(self.learned_temporal_basis, mean=0.0, std=self.basis_rank ** -0.5)
+        if self.readout_mode == "query-bilinear-readout":
+            self.basis_rank = int(getattr(configs, "basis_rank", 256))
+            qbr_feature_dim = 9
+            self.qbr_feature_proj = nn.Linear(readout_dim, self.basis_rank)
+            self.qbr_row_key = nn.Sequential(
+                nn.Linear(qbr_feature_dim, configs.d_model),
+                nn.GELU(),
+                nn.Linear(configs.d_model, self.basis_rank),
+            )
+            self.qbr_row_bias = nn.Parameter(torch.zeros(configs.pred_len))
+            nn.init.normal_(self.qbr_row_key[-1].weight, mean=0.0, std=self.basis_rank ** -0.5)
+            nn.init.zeros_(self.qbr_row_key[-1].bias)
         if self.readout_mode == "elastic-causal-target-query-decoder":
             self.target_query_segment_len = int(getattr(configs, "target_query_segment_len", 48))
             target_query_heads = int(getattr(configs, "target_query_heads", 4))
@@ -344,6 +357,36 @@ class Model(nn.Module):
         output = torch.einsum("hk,bck->bch", basis, coeff) + bias.view(1, 1, -1)
         return output.permute(0, 2, 1)
 
+    def _query_bilinear_features(self, horizon, hidden):
+        steps = torch.arange(1, horizon + 1, device=hidden.device, dtype=hidden.dtype)
+        tau = steps / float(self.pred_len)
+        return torch.stack(
+            [
+                torch.ones_like(tau),
+                tau,
+                tau * tau,
+                tau * tau * tau,
+                torch.sin(np.pi * tau),
+                torch.cos(np.pi * tau),
+                torch.sin(2.0 * np.pi * tau),
+                torch.cos(2.0 * np.pi * tau),
+                torch.sin(4.0 * np.pi * tau),
+            ],
+            dim=-1,
+        )
+
+    def _query_bilinear_readout(self, hidden, target_prefix):
+        # hidden: [B, C, R], output: [B, H, C]
+        if target_prefix is None:
+            target_prefix = self.pred_len
+        horizon = int(target_prefix)
+        feature = self.qbr_feature_proj(hidden)
+        query_features = self._query_bilinear_features(horizon, hidden)
+        row_key = self.qbr_row_key(query_features) / float(self.basis_rank) ** 0.5
+        bias = self.qbr_row_bias[:horizon].to(dtype=hidden.dtype)
+        output = torch.einsum("bck,hk->bch", feature, row_key) + bias.view(1, 1, -1)
+        return output.permute(0, 2, 1)
+
     def _target_segment_features(self, horizon, hidden):
         segment_len = self.target_query_segment_len
         segment_count = (int(horizon) + segment_len - 1) // segment_len
@@ -512,6 +555,8 @@ class Model(nn.Module):
             x = self._prefix_native_dense_equivalent_row_bank(x.flatten(start_dim=-2), target_prefix)
         elif self.readout_mode == "learned-basis-forecast-operator":
             x = self._learned_basis_forecast_operator(x.flatten(start_dim=-2), target_prefix)
+        elif self.readout_mode == "query-bilinear-readout":
+            x = self._query_bilinear_readout(x.flatten(start_dim=-2), target_prefix)
         else:
             x = x.flatten(start_dim=-2)
             if self.readout_mode == "dense-prefix-residual-adapter":

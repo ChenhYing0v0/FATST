@@ -2758,6 +2758,21 @@ budget，以及 A6-LBF/A6-DER/A7DG controls。
 
 [Artifacts] `docs/experiments/phase5-post-a8tag-candidate-backtracking.md`
 
+[A6-QBR Design And Local Verification] A6-QBR Step 6/7 已完成。新增 `query-bilinear-readout`
+readout mode：`hidden [B,C,R] -> qbr_feature_proj -> [B,C,K]`，absolute future coordinate
+features 经 `qbr_row_key` 生成 `[H,K]` row keys，并通过 bilinear product 直接输出 `[B,H,C]`。
+
+[Verification] `py_compile`、remote wrapper `bash -n`、model-level shape smoke、prefix-invariance smoke
+和 CPU data-loader smoke 均通过。Prefix-invariance check 中 `decode(96)` 与 `decode(720)[:, :96]`
+的 `prefix_overlap_max_diff=0`。
+
+[Decision] A6-QBR 进入 `ready_for_remote_gate`。下一步按 remote policy 在 529_Lab-3090 启动
+ETTh2/ETTm1/Weather × `a6qbr_r256/a6qbr_r512` official-last gate；不加入 teacher 或 self-teacher。
+
+[Artifacts] `docs/experiments/phase5-a6-qbr-query-bilinear-readout.md`、
+`docs/code-explanation/phase5-a6-capacity-native-heads.md`、
+`scripts/remote/run_phase5_timealign_hss_a6qbr_query_bilinear_gate.sh`
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：

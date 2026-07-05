@@ -41,11 +41,11 @@ ledger 是 `docs/stage-ledgers/phase5-timealign-interface.md`。研究路径保�
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_11_step` | Phase5-A6-QBR：A8TAG Step 9/10/11 已失败，post-A8TAG 回溯完成；下一步 Step 6 design/code-theory gate |
+| `current_11_step` | Phase5-A6-QBR：Step 6/7 design and local verification complete；下一步 Step 8 remote gate |
 | `active_carrier` | official-source TimeAlign |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 | `active_question` | 如何在 prediction head / decoder 层面解决 unified multi-horizon 的 interface mismatch，使短 horizon 不是 naive full-720 crop |
-| `current_gate` | A8TAG teacher-advantage gate 已失败：最佳 ratio variant 相对 best controls `+0.91%`、wins `0/12`，弱于 A7DG；A6-QBR 进入 design gate 但未实现 |
+| `current_gate` | A6-QBR `query-bilinear-readout` 已实现并通过本地 verification；准备 ETTh2/ETTm1/Weather × r256/r512 official-last remote gate |
 | `paper_core_status` | Stage A 仍是当前 blocking core；self-teacher route 暂停。Stage B routing 暂缓，不能替代 A6-QBR architecture gate |
 
 ## 顶级 SCI 审稿视角评判
@@ -524,10 +524,14 @@ Post-A8TAG candidate backtracking：
 - `A5-M` 保持 backlog diagnostic，因为与 ElasTST 接近且实现成本高；
 - `A6-QBR_query_bilinear_readout` 被选为下一步 design/code-theory gate：它将 A5-Q 的 target-query
   semantics 与 A6-LBF/A6-DER 的 dense-equivalent bilinear capacity path 结合；
-- 未通过 A6-QBR design gate 前，不实现、不启动 remote。
+- A6-QBR design/code-theory gate 已通过，`query-bilinear-readout` 已实现；
+- 本地 shape smoke、prefix-invariance smoke（`prefix_overlap_max_diff=0`）与 CPU data-loader smoke
+  均通过，下一步启动 remote gate；
+- remote gate 只包含 `a6qbr_r256/a6qbr_r512`，不加入 teacher/self-teacher。
 
 回溯文档见
-`docs/experiments/phase5-post-a8tag-candidate-backtracking.md`。
+`docs/experiments/phase5-post-a8tag-candidate-backtracking.md`；A6-QBR 设计文档见
+`docs/experiments/phase5-a6-qbr-query-bilinear-readout.md`。
 
 A5 effectiveness gate：
 
