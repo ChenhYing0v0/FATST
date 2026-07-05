@@ -153,3 +153,22 @@ dense-equivalent bilinear readout 的 row-key generation。
 
 [Decision] 本地验证通过，A6-QBR 可进入 remote gate。remote gate 仍保持 ETTh2/ETTm1/Weather ×
 `a6qbr_r256/a6qbr_r512`，不加入 teacher/self-teacher。
+
+## Remote Gate Result
+
+[Fact] Remote gate 已完成。A6-QBR 两个 rank 均失败：
+
+| Arm | mean MSE | vs A6-LBF-r256 | vs best control | wins |
+| --- | ---: | ---: | ---: | ---: |
+| `a6qbr_r256` | 0.401095 | +35.69% | +36.78% | 0/12 |
+| `a6qbr_r512` | 0.401957 | +35.97% | +37.06% | 0/12 |
+
+[Strong Evidence] 失败不是 ETTh2 official-last drift 单点问题。ETTm1 相对 A6-LBF-r256 为
+`+92.60%`，且 best epoch 在最后；Weather 也稳定为 `+3.12%`。`r512` 没有改善，说明瓶颈不在
+rank，而在 coordinate-generated row-key function 的表达/优化能力。
+
+[Decision] A6-QBR 标记为 `failed_as_core_candidate`。不继续做 rank/scale/teacher sweep，也不把
+A5-S/A5-I/A5-M 直接升级为下一轮 primary head。下一步回 Step 2/3 做
+`Stage_A_architecture_exhaustion_audit`。
+
+[Artifacts] `analysis/phase5_timealign_hss_a6qbr_query_bilinear_gate_20260705/phase5_timealign_hss_a6qbr_interpretation.md`

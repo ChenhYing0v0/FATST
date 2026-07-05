@@ -1,0 +1,3 @@
+arm,mean_mse,mean_relative_mse_vs_a6_lbf_r256_pct,mean_relative_mse_vs_a6_der_pct,mean_relative_mse_vs_best_stage_control_pct,wins_vs_best_stage_control,horizon_count,mean_best_epoch,mean_last_vs_best_val_mse_pct
+a6qbr_r256,0.4010954176386197,35.69392186774079,35.61475615801022,36.78281772291284,0,12,7.0,5.070826918585469
+a6qbr_r512,0.4019565259416898,35.97295284919506,35.89337514748117,37.064376117508026,0,12,6.666666666666667,4.347117383162365

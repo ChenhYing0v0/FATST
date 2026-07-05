@@ -2778,8 +2778,51 @@ launch 前 GPU 0/1/2 均空闲（`18 MiB used`, `24107 MiB free`），启动后 
 `4431/4438/448 MiB`。PID `2423595`，输出目录
 `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6qbr_query_bilinear_gate`。
 
-[Next] 等待 artifacts；返回后优先比较 A6-QBR-r256/r512 与 A6-LBF-r256、A6-DER、A7DG best
-以及 A8TAG negative evidence。
+[A6-QBR Remote Gate Result] A6-QBR remote gate 已完成。最佳 `a6qbr_r256` 12 个
+dataset-horizon setting 的 mean MSE 为 `0.401095`，相对 A6-LBF-r256 `+35.69%`，相对 best
+stage control `+36.78%`，wins `0/12`。`a6qbr_r512` 为 `+35.97%` vs A6-LBF-r256，未改善。
+
+[Strong Evidence] QBR 失败不是单一 ETTh2 official-last drift。ETTm1 相对 A6-LBF-r256 为
+`+92.60%`，且 best epoch 在最后；Weather 也稳定为 `+3.12%`。这说明 coordinate-generated
+row-key function 无法承接 A6-LBF 的 learned row dictionary。
+
+[Decision] A6-QBR 标记为 `failed_as_core_candidate`。不继续 rank/scale/teacher sweep。
+
+[Stage A Architecture Exhaustion Audit] 已完成 Step 2/3 route-level audit。Stage A standalone
+architecture/head route 暂停：A5-Q/A5-B/A6-LBF/A7DG/A8TAG/A6-QBR 均未同时满足跨数据集性能与
+SCI narrative boundary。Stage A 保留为 problem evidence、design constraint 和 ablation/control
+scaffold。
+
+[Next] 启动 `Stage_B_problem_redefinition_and_narrative_gate`：先回溯 Stage B backlog/ledger，再重新定义
+paper-core problem。未通过新的 Step 2/3 problem definition 与 Step 4/5 narrative gate 前，不启动 remote。
+
+[Artifacts] `analysis/phase5_timealign_hss_a6qbr_query_bilinear_gate_20260705/phase5_timealign_hss_a6qbr_interpretation.md`、
+`analysis/phase5_stage_a_architecture_exhaustion_audit_20260705/stage_a_architecture_exhaustion_audit.md`
+
+[Stage B Problem Redefinition] 已完成 Step 2/3/4/5 narrative gate。旧 Stage B 不能按“在已解决的 unified
+head 上加 routing”恢复，因为 Stage A 没有给出 final architecture。新的 Stage B 问题定义为：
+future-aware carrier 中 future supervision pressure 的 reliability / allocation problem。
+
+[Decision] Stage B 进入 `B0_future_supervision_pressure_audit`，但 B0 是 diagnostic-only。下一步先做
+source/code audit，明确 TimeAlign `recon_loss`、`align_loss` 的 tensor/gradient path，以及当前
+`train_repo.py` 能否分别控制和记录这些 pressure。未完成 B0 audit 前不启动 remote。
+
+[Artifacts] `docs/experiments/phase5-stage-b-problem-redefinition-and-narrative-gate.md`
+
+[B0 Source/Code Audit And Local Verification] B0 已完成 Step 6/7。source audit 确认 TimeAlign
+future branch 中 `recon_loss` 主要约束 future-side autoencoder/reconstruction path；`align_loss`
+因 `y.detach()` 主要把 future representation 作为 target 来约束 history-side path。已新增
+`--w-align-override` 与 weighted pressure logging，remote wrapper 覆盖 ETTh2/ETTm1/Weather ×
+`b0_no_recon/b0_no_align/b0_no_future_pressure`。
+
+[Verification] `py_compile`、remote wrapper `bash -n` 与 ETTh2 CPU smoke 均通过；smoke 的
+`effective_config.json` 显示 `official_args.w_align=0.0`，`training_log.csv` 显示
+`train_weighted_alignment_loss=0.0`。
+
+[Decision] B0 进入 `ready_for_remote_gate`。它仍是 diagnostic-only：若某个 pressure ablation
+优于 base，也只能证明 Stage B problem-existence，不能直接作为 paper-core method。
+
+[Artifacts] `docs/experiments/phase5-stage-b0-future-supervision-pressure-audit.md`
 
 ## 历史证据索引
 

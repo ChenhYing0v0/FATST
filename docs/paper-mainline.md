@@ -41,12 +41,12 @@ ledger 是 `docs/stage-ledgers/phase5-timealign-interface.md`。研究路径保�
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_11_step` | Phase5-A6-QBR：Step 8 remote gate running |
+| `current_11_step` | Phase5-StageB：Step 7 B0 diagnostic implementation / local verification completed |
 | `active_carrier` | official-source TimeAlign |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 | `active_question` | 如何在 prediction head / decoder 层面解决 unified multi-horizon 的 interface mismatch，使短 horizon 不是 naive full-720 crop |
-| `current_gate` | A6-QBR `query-bilinear-readout` remote gate 已启动：ETTh2/ETTm1/Weather × r256/r512，commit `406406b`，PID `2423595` |
-| `paper_core_status` | Stage A 仍是当前 blocking core；self-teacher route 暂停。Stage B routing 暂缓，不能替代 A6-QBR architecture gate |
+| `current_gate` | A6-QBR 已失败：best `r256` vs A6-LBF-r256 `+35.69%`、vs best controls `+36.78%`、wins `0/12` |
+| `paper_core_status` | Stage A standalone architecture/head route 暂停；Stage B 已重定义为 future supervision pressure reliability/allocation problem。B0 diagnostic 已通过 source/code audit 与 local verification，下一步 remote gate |
 
 ## 顶级 SCI 审稿视角评判
 
@@ -527,11 +527,25 @@ Post-A8TAG candidate backtracking：
 - A6-QBR design/code-theory gate 已通过，`query-bilinear-readout` 已实现；
 - 本地 shape smoke、prefix-invariance smoke（`prefix_overlap_max_diff=0`）与 CPU data-loader smoke
   均通过，下一步启动 remote gate；
-- remote gate 只包含 `a6qbr_r256/a6qbr_r512`，不加入 teacher/self-teacher。
+- remote gate 已完成：best `a6qbr_r256` 相对 A6-LBF-r256 `+35.69%`、相对 best controls
+  `+36.78%`、wins `0/12`；`r512` 不改善；
+- 因此 A6-QBR 降级为 `failed_as_core_candidate`，不继续 rank/scale/teacher sweep。
 
 回溯文档见
 `docs/experiments/phase5-post-a8tag-candidate-backtracking.md`；A6-QBR 设计文档见
 `docs/experiments/phase5-a6-qbr-query-bilinear-readout.md`。
+
+Stage A architecture exhaustion audit：
+
+- A5-Q/A5-B 证明 prefix-native contract without dense capacity 会 collapse；
+- A6-DER/A6-LBF 证明恢复 dense-equivalent capacity 仍不足以超过 best controls；
+- A6ST/A7DG 证明 official-last stability 有条件性信号，但不足以成为 universal method；
+- A8TAG/QBR 证明 teacher advantage 与 target-query row-key generation 都不能解释或修复剩余 gap；
+- 因此 Stage A standalone architecture route 暂停，只保留为 paper motivation、constraints 与 ablation/control；
+- 下一步必须先重新定义 paper-core problem，优先进入 Stage B problem redefinition / narrative gate。
+
+审计报告见
+`analysis/phase5_stage_a_architecture_exhaustion_audit_20260705/stage_a_architecture_exhaustion_audit.md`。
 
 A5 effectiveness gate：
 
@@ -832,6 +846,16 @@ A4S decision：
 目标：在 A5 unified prediction architecture 成立后，证明 future supervision 的 useful/harmful
 差异真实存在，并判断这种差异是否应通过 gradient-path routing 处理。Stage B 当前暂缓，不是 active
 next route。
+
+2026-07-05 update：
+
+- Stage A standalone architecture/head route 已暂停；A5/A6/A7/A8TAG/QBR 没有形成 paper-core head；
+- 因此 Stage B 不能再按旧假设写成“在已解决的 unified head 上加 routing”；
+- Stage B 已重定义为 future-aware carrier 中 future supervision pressure 的 reliability/allocation
+  problem；
+- 当前 next action 是 `B0_future_supervision_pressure_audit` 的 diagnostic remote gate；其
+  source/code audit 与 local verification 已通过，`w_align` override 和 weighted pressure logging 已补齐；
+- B0 是 diagnostic-only，未过新的 problem-existence gate 前不进入 method gate。
 
 建议诊断：
 

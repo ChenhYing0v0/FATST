@@ -397,7 +397,7 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         discdtw=False,
         discsdtw=False,
         extra_tag="",
-        w_align=preset.w_align,
+        w_align=preset.w_align if args.w_align_override is None else args.w_align_override,
         w_recon=args.w_recon,
         local_margin=preset.local_margin,
         global_margin=preset.global_margin,
@@ -1109,6 +1109,8 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
             "ema_eval": int(args.ema_eval),
             "train_reconstruction_l1": float(np.mean(recon_loss_values)),
             "train_alignment_loss": float(np.mean(alignment_values)),
+            "train_weighted_reconstruction_l1": official_args.w_recon * float(np.mean(recon_loss_values)),
+            "train_weighted_alignment_loss": official_args.w_align * float(np.mean(alignment_values)),
             "pred_loss_mode": args.pred_loss_mode,
             "prefix_samples": args.prefix_samples,
             "continuous_min_prefix": args.continuous_min_prefix,
@@ -1236,6 +1238,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--target-horizons", type=parse_horizons, required=True)
     parser.add_argument("--e-layers", type=int, default=2)
     parser.add_argument("--w-recon", type=float, default=1.0)
+    parser.add_argument("--w-align-override", type=float, default=None)
     parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--epochs", type=int, default=10)
     parser.add_argument("--patience", type=int, default=3)
@@ -1315,6 +1318,10 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("unified mode currently expects pred_len=720")
     if args.target_query_dropout is not None and not 0.0 <= args.target_query_dropout <= 1.0:
         raise ValueError("target_query_dropout must be between 0.0 and 1.0")
+    if args.w_recon < 0.0:
+        raise ValueError("w_recon must be non-negative")
+    if args.w_align_override is not None and args.w_align_override < 0.0:
+        raise ValueError("w_align_override must be non-negative")
     if args.patch_num_override < 0:
         raise ValueError("patch_num_override must be non-negative")
     if not 0.0 <= args.ema_decay < 1.0:
