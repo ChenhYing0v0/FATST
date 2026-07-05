@@ -41,12 +41,12 @@ ledger 是 `docs/stage-ledgers/phase5-timealign-interface.md`。研究路径保�
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_11_step` | Phase5-A5：Step 10/11，A5-Q/A5-B effectiveness gate 未通过，回 Step 4/5 重审 capacity mechanism |
+| `current_11_step` | Phase5-A6-QBR：A8TAG Step 9/10/11 已失败，post-A8TAG 回溯完成；下一步 Step 6 design/code-theory gate |
 | `active_carrier` | official-source TimeAlign |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 | `active_question` | 如何在 prediction head / decoder 层面解决 unified multi-horizon 的 interface mismatch，使短 horizon 不是 naive full-720 crop |
-| `current_gate` | A5-Q/A5-B narrative gate 曾通过，但 effectiveness gate 已失败；最佳 `a5b_r128` 相对 `best_stage_control` 平均 MSE `+14.19%`，wins `0/12` |
-| `paper_core_status` | Stage A 仍是当前 blocking core；A5-Q/A5-B 不能作为 paper-core unified head。Stage B routing 暂缓为 A5 成立后的第二贡献 |
+| `current_gate` | A8TAG teacher-advantage gate 已失败：最佳 ratio variant 相对 best controls `+0.91%`、wins `0/12`，弱于 A7DG；A6-QBR 进入 design gate 但未实现 |
+| `paper_core_status` | Stage A 仍是当前 blocking core；self-teacher route 暂停。Stage B routing 暂缓，不能替代 A6-QBR architecture gate |
 
 ## 顶级 SCI 审稿视角评判
 
@@ -515,6 +515,19 @@ A8TAG teacher-advantage route：
 设计与解释文档见
 `docs/experiments/phase5-a8tag-teacher-advantage-gated-self-teacher.md`、
 `analysis/phase5_timealign_hss_a8tag_teacher_advantage_gate_20260705/phase5_timealign_hss_a8tag_interpretation.md`。
+
+Post-A8TAG candidate backtracking：
+
+- 已按 stage-ledger 规则回溯未执行候选；
+- `A5-S` 继续 deferred，因为它容易被审稿人理解为 generated dense rows；
+- `A5-I` 继续 diagnostic-deferred，因为 cumulative process 与当前 ETTh2 late-drift 风险冲突；
+- `A5-M` 保持 backlog diagnostic，因为与 ElasTST 接近且实现成本高；
+- `A6-QBR_query_bilinear_readout` 被选为下一步 design/code-theory gate：它将 A5-Q 的 target-query
+  semantics 与 A6-LBF/A6-DER 的 dense-equivalent bilinear capacity path 结合；
+- 未通过 A6-QBR design gate 前，不实现、不启动 remote。
+
+回溯文档见
+`docs/experiments/phase5-post-a8tag-candidate-backtracking.md`。
 
 A5 effectiveness gate：
 

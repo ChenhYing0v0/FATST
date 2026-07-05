@@ -2741,6 +2741,23 @@ self-teacher。Effectiveness gate 失败：`0/12` wins vs best stage control，�
 A6 stability/capacity conflict evidence；不能继续做 teacher-advantage threshold/weight sweep，
 也不能把 A7DG/A8TAG 简单混合成新 gate。
 
+[Post-A8TAG Candidate Backtracking] 已完成 Step 4/5 回溯。结论如下：
+
+- `A5-S_step_specific_hypernetwork_head` 继续 deferred：它容易被视作 generated dense rows，
+  在 A6-LBF 已接近 dense row dictionary 后贡献边界更弱；
+- `A5-I_cumulative_innovation_process_decoder` 继续 diagnostic-deferred：trajectory-process 叙事
+  仍有价值，但当前 ETTh2 的主要风险就是 late drift，cumulative operator 不适合作为下一轮 primary；
+- `A5-M_masked_future_placeholder_head` 保持 backlog diagnostic：prefix-native 叙事强，但与 ElasTST
+  相似且实现成本高；
+- `A6-QBR_query_bilinear_readout` 被选为下一步候选：它继承 A5-Q 的 target-query semantics，
+  同时用 A6-LBF/A6-DER 已验证的 dense-equivalent bilinear capacity path 避免 query decoder collapse。
+
+[Decision] 当前进入 `A6-QBR_query_bilinear_readout` 的 Step 6 design/code-theory gate。未通过 design
+gate 前不实现、不启动 remote。设计文档必须明确 tensor contract、prefix-invariance smoke、rank/parameter
+budget，以及 A6-LBF/A6-DER/A7DG controls。
+
+[Artifacts] `docs/experiments/phase5-post-a8tag-candidate-backtracking.md`
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：
