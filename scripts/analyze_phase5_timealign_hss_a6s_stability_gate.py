@@ -80,6 +80,12 @@ def read_trajectory(raw_root: Path) -> pd.DataFrame:
             "self_teacher_gate_threshold": float(frame.iloc[-1].get("self_teacher_gate_threshold", 0.0)),
             "self_teacher_gate_temperature": float(frame.iloc[-1].get("self_teacher_gate_temperature", 1.0)),
             "last_train_self_teacher_l1": float(frame.iloc[-1].get("train_self_teacher_l1", 0.0)),
+            "last_train_self_teacher_target_l1": float(
+                frame.iloc[-1].get("train_self_teacher_target_l1", 0.0)
+            ),
+            "last_train_self_teacher_advantage_l1": float(
+                frame.iloc[-1].get("train_self_teacher_advantage_l1", 0.0)
+            ),
             "last_train_self_teacher_gate": float(frame.iloc[-1].get("train_self_teacher_gate", 1.0)),
             "last_train_weighted_self_teacher_l1": float(
                 frame.iloc[-1].get("train_weighted_self_teacher_l1", frame.iloc[-1].get("train_self_teacher_l1", 0.0))
@@ -161,6 +167,8 @@ def summarize(comparison: pd.DataFrame, trajectory: pd.DataFrame) -> pd.DataFram
             self_teacher_gate_threshold=("self_teacher_gate_threshold", "first"),
             self_teacher_gate_temperature=("self_teacher_gate_temperature", "first"),
             last_train_self_teacher_l1=("last_train_self_teacher_l1", "mean"),
+            last_train_self_teacher_target_l1=("last_train_self_teacher_target_l1", "mean"),
+            last_train_self_teacher_advantage_l1=("last_train_self_teacher_advantage_l1", "mean"),
             last_train_self_teacher_gate=("last_train_self_teacher_gate", "mean"),
             last_train_weighted_self_teacher_l1=("last_train_weighted_self_teacher_l1", "mean"),
             basis_operator_smoothness_weight=("basis_operator_smoothness_weight", "first"),
@@ -201,6 +209,8 @@ def summarize_by_dataset(comparison: pd.DataFrame, trajectory: pd.DataFrame) -> 
             last_val_mean_mse=("last_val_mean_mse", "mean"),
             last_vs_best_val_mse_pct=("last_vs_best_val_mse_pct", "mean"),
             last_train_self_teacher_l1=("last_train_self_teacher_l1", "mean"),
+            last_train_self_teacher_target_l1=("last_train_self_teacher_target_l1", "mean"),
+            last_train_self_teacher_advantage_l1=("last_train_self_teacher_advantage_l1", "mean"),
             last_train_self_teacher_gate=("last_train_self_teacher_gate", "mean"),
             last_train_weighted_self_teacher_l1=("last_train_weighted_self_teacher_l1", "mean"),
             source_path=("source_path", "first"),
@@ -239,7 +249,9 @@ def write_report(output_dir: Path, summary: pd.DataFrame, dataset_summary: pd.Da
         float(smooth["last_weighted_smoothness_to_train_loss"].max()) if not smooth.empty else 0.0
     )
     output_name = output_dir.name.lower()
-    if "a7dg" in output_name:
+    if "a8tag" in output_name:
+        gate_label = "A8TAG"
+    elif "a7dg" in output_name:
         gate_label = "A7DG"
     elif "a6st" in output_name:
         gate_label = "A6ST"
@@ -248,6 +260,9 @@ def write_report(output_dir: Path, summary: pd.DataFrame, dataset_summary: pd.Da
     else:
         gate_label = "A6S"
     title = (
+        "# Phase5-A8TAG Official-Last Teacher-Advantage Gate Report"
+        if gate_label == "A8TAG"
+        else
         "# Phase5-A7DG Official-Last Selective Self-Teacher Gate Report"
         if gate_label == "A7DG"
         else
@@ -331,13 +346,13 @@ def write_report(output_dir: Path, summary: pd.DataFrame, dataset_summary: pd.Da
             "",
             "## Dataset Summary",
             "",
-            "| Dataset | Variant | mean MSE | vs best control | wins | vs A6-LBF-r256 | last-vs-best val | gate |",
-            "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |",
+            "| Dataset | Variant | mean MSE | vs best control | wins | vs A6-LBF-r256 | last-vs-best val | gate | teacher advantage |",
+            "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
         ]
     )
     for _, row in dataset_summary.iterrows():
         lines.append(
-            "| `{dataset}` | `{variant}` | {mse:.4f} | {gap:+.2f}% | {wins}/{count} | {lbf:+.2f}% | {drift:+.2f}% | {gate:.2f} |".format(
+            "| `{dataset}` | `{variant}` | {mse:.4f} | {gap:+.2f}% | {wins}/{count} | {lbf:+.2f}% | {drift:+.2f}% | {gate:.2f} | {adv:+.4f} |".format(
                 dataset=row["dataset"],
                 variant=row["variant"],
                 mse=row["mean_mse"],
@@ -347,10 +362,22 @@ def write_report(output_dir: Path, summary: pd.DataFrame, dataset_summary: pd.Da
                 lbf=row["mean_relative_mse_vs_a6_lbf_r256_pct"],
                 drift=row["last_vs_best_val_mse_pct"],
                 gate=row["last_train_self_teacher_gate"],
+                adv=row["last_train_self_teacher_advantage_l1"],
             )
         )
     lines.extend(["", "## Gate Decision", ""])
-    if gate_label == "A7DG":
+    if gate_label == "A8TAG":
+        lines.extend(
+            [
+                "[Decision] A8TAG effectiveness 必须同时看三点：teacher 是否在 supervised prefix 上确实有正 advantage，teacher-advantage gate 是否避免低质量 teacher imitation，以及 metrics 是否超过 A7DG/A6-LBF。",
+                "",
+                "[Decision] 若 teacher advantage 多数为负或接近零，说明 EMA teacher 不是可靠 target，应停止 self-teacher route。",
+                "",
+                "[Decision] 若 teacher advantage gate 改善 ETTm1/Weather 但损失 ETTh2 gain，则需要回 Step 4/5 重新建模 stability 与 capacity 的冲突，而不是加回 threshold。",
+                "",
+            ]
+        )
+    elif gate_label == "A7DG":
         lines.extend(
             [
                 "[Decision] A7DG effectiveness 必须同时看三点：是否保留 ETTh2 positive signal，是否降低 ETTm1/Weather 的 uniform A6ST 负向，以及 `train_self_teacher_gate` 是否按 dataset 产生选择性降权。",

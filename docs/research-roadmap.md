@@ -2694,6 +2694,27 @@ objective 或新的 capacity-preserving unified head。
 
 [Artifacts] `analysis/phase5_timealign_hss_a7dg_selective_self_teacher_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`
 
+[A8TAG Teacher-Advantage Gate Design] A7DG partial positive 后已回 Step 4/5 设计 A8TAG。核心变化是：
+不再用 disagreement threshold 决定是否蒸馏，而是比较 raw student 与 EMA teacher 在当前
+supervised prefix 上的 empirical risk。只有当 teacher 更接近 label 时，才施加 consistency。
+
+[Theory Check] A8TAG 的 gate 边界为 `student_pred_loss - teacher_pred_loss`。这直接回答 A7DG 的
+主要弱点：disagreement 高不代表 teacher 值得 imitation；teacher 必须先证明自身在当前 prefix 上
+更优。
+
+[Design] 最小 gate 使用 ETTh2/ETTm1/Weather 与三种 variants：
+`a8tag_advbin_w02_d0999_wu1`、`a8tag_advbin_w05_d0999_wu1`、
+`a8tag_advratio_w10_d0999_wu1`。
+
+[Verification] `python -m py_compile baselines/timealign_official/train_repo.py
+scripts/analyze_phase5_timealign_hss_a6s_stability_gate.py`、A8TAG wrapper `bash -n`、以及本地
+CPU smoke 均通过。Smoke 中 `train_self_teacher_advantage_l1=-0.00044`，因此
+`teacher-advantage-binary` gate 为 `0.0`，`train_weighted_self_teacher_l1=0.0`，符合设计。
+
+[Next] commit/push 后按 remote policy 启动 A8TAG teacher-advantage gate。
+
+[Artifacts] `docs/experiments/phase5-a8tag-teacher-advantage-gated-self-teacher.md`
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：

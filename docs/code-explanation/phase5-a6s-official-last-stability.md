@@ -182,3 +182,49 @@ ETTm1/Weather 上自动降权。
 
 [Falsification] 若 A7DG 保不住 ETTh2 gain，或 ETTm1/Weather 仍系统性负向，则 self-teacher
 stability route 应停止，不能继续堆 threshold/schedule。
+
+## A8TAG Teacher-Advantage Gate
+
+A8TAG 进一步把 A7DG 的 disagreement threshold 改成 supervised teacher advantage。训练时同时计算：
+
+```text
+pred_loss = L1(student_output, target_y)
+self_teacher_target_loss = L1(teacher_output, target_y)
+self_teacher_loss = L1(student_output, teacher_output)
+```
+
+Binary gate：
+
+```text
+gate = 1 if self_teacher_target_loss < pred_loss else 0
+```
+
+Relative advantage gate：
+
+```text
+gate = clamp((pred_loss - self_teacher_target_loss) / pred_loss, 0, 1)
+```
+
+最终仍然只改变 self-teacher consistency 的有效强度：
+
+```text
+weighted_self_teacher_loss = gate * self_teacher_loss
+loss += self_teacher_loss_weight * weighted_self_teacher_loss
+```
+
+[Fact] Gate 使用 detached `pred_loss` 与 `self_teacher_target_loss`，因此它是 supervised risk
+comparison，而不是一个可被主模型直接优化的可微捷径。
+
+[Fact] A8TAG 不使用 `ema_eval`，最终评估仍是 raw `official-last` student weights。
+
+新增训练日志字段：
+
+- `train_self_teacher_target_l1`
+- `train_self_teacher_advantage_l1`
+
+[Theory] 如果 EMA teacher 只是 trajectory-smoother，它只有在当前 prefix 上更接近 label 时才值得
+被 student imitation。该 gate 比 A7DG 的 absolute/ratio threshold 更有机制边界。
+
+[Falsification] 若 `train_self_teacher_advantage_l1` 多数为负或接近零，说明 EMA teacher 并不是
+可靠 target；若 teacher advantage 存在但 metrics 仍不改善，则 self-teacher route 需要停止，
+回到新的 capacity-preserving unified head 设计。

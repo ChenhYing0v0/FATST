@@ -19,10 +19,10 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Phase5-A7DG：Step 9/10 完成；partial positive，但未通过 paper-core effectiveness gate |
-| `current_candidate` | `A7DG_disagreement_gated_self_teacher` 为 selective-stability partial evidence；`A6-LBF` 仍是 capacity-recovered carrier |
+| `current_11_step` | Phase5-A8TAG：Step 6/7 本地验证完成，进入 Step 8 remote gate |
+| `current_candidate` | `A8TAG_teacher_advantage_gated_self_teacher` 为 label-grounded selective-stability candidate；`A7DG` 保留为 partial evidence |
 | `latest_decision` | A7DG 最佳 `abs004` 相对 uniform A6ST `-0.40%` 且 `11/12` horizons 更好，gate 在 ETTh2/ETTm1/Weather 为 `0.88/0.31/0.22`；但相对 best controls 仍 `+0.46%`、wins `2/12`，不能升为 paper-core |
-| `next_required_action` | 回 Step 4/5：围绕 adaptive/selective stability objective 做更严格 narrative gate，或转向新的 capacity-preserving unified head；不得继续简单 threshold sweep |
+| `next_required_action` | commit/push 当前实现后，启动 A8TAG ETTh2/ETTm1/Weather teacher-advantage gate |
 | `rollback_point` | 若下一步不能给出跨数据集可辩护且非 threshold-tuning 的 stability/capacity mechanism，则回 Step 2/3 重审 Stage A interface problem 是否应继续作为 paper-core 贡献。Stage B 暂缓，不能替代 Stage A architecture |
 
 ## Candidate Queue
@@ -52,6 +52,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | `A6ST_self_teacher_consistency` | `failed_as_universal_method_etth2_specific_positive` | 若 trajectory-averaged weights 有效，可用 EMA teacher/prefix prediction consistency 训练 raw final checkpoint，而不是 test-time 依赖 EMA | conditional_pass：作为 official-last-compatible raw-checkpoint stabilization；若表述成 generic EMA/KD 则不能作为 paper-core | ETTh2 partial pass，但 cross-dataset sanity 未通过：ETTm1/Weather 相对 best controls `+1.20%`、wins `0/8` | 保留为 ETTh2 drift repair evidence；不得直接 full matrix 或 paper-core 化；回 Step 4/5 设计 selective stability objective | `analysis/phase5_timealign_hss_a6st_self_teacher_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`; `analysis/phase5_timealign_hss_a6st_cross_dataset_sanity_20260704/phase5_timealign_hss_a6s_stability_gate_report.md` |
 | `A6ST_cross_dataset_sanity` | `completed_failed_safety_gate` | ETTh2 正向可能只是数据集特有；需要确认 self-teacher 不伤害 ETTm1/Weather | diagnostic-only：不是 full paper gate，只检查安全性 | failed：ETTm1 `+1.49%`、Weather `+0.91%` vs best controls，均 `0/4` wins | 不扩展为 full matrix；进入 Step 4/5 机制诊断与新设计 | `analysis/phase5_timealign_hss_a6st_cross_dataset_sanity_20260704/phase5_timealign_hss_a6s_stability_gate_report.md` |
 | `A7DG_disagreement_gated_self_teacher` | `partial_positive_not_paper_core` | uniform self-teacher 只在 high-disagreement/high-drift 情况下有益；用 detached teacher-student disagreement gate 控制 consistency 强度，使低 drift 数据集退化接近 A6-LBF | conditional_pass：必须写成 disagreement-triggered raw-final stabilization；若变成 dataset hand-tuned threshold 则失败 | partial positive：best `abs004` vs uniform A6ST `-0.40%`、`11/12` wins，gate 按 dataset 降权；但 vs best controls `+0.46%`、wins `2/12` | 保留 selective stability evidence；下一步不能 threshold sweep，需重新过 Step 4/5 | `analysis/phase5_timealign_hss_a7dg_selective_self_teacher_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md` |
+| `A8TAG_teacher_advantage_gated_self_teacher` | `ready_for_remote_gate` | EMA teacher 只有在当前 supervised prefix 上比 raw student 更接近 label 时才应作为 consistency target | conditional_pass：gate 来自 empirical risk comparison，不是 dataset threshold；若 teacher advantage 多数不存在则停止 self-teacher route | local verification passed：`py_compile`、wrapper `bash -n`、CPU smoke 均通过；smoke 中 teacher advantage 为负时 gate=0 | commit/push 后启动 ETTh2/ETTm1/Weather × 3 variants | `docs/experiments/phase5-a8tag-teacher-advantage-gated-self-teacher.md` |
 | `A5-S_step_specific_hypernetwork_head` | `control_deferred` | 用 coordinate-conditioned hypernetwork 生成 step readout weights，避免 pretrained dense rows 但保留 step-specific capacity | deferred：容易被视作 generated dense rows，贡献边界弱于 A5-B | pending | 等 A5-B 结果后再决定是否作为 capacity control | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
 | `A5-I_cumulative_innovation_process_decoder` | `control_deferred` | 生成 future innovation process 再 cumulative 得到 trajectory，与 output/error-process 诊断对齐 | deferred：trajectory-process 叙事有价值，但 cumulative drift 风险较高 | pending | 等 A5-Q/A5-B gate 后再决定是否作为 trajectory-process control | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
 | `A5-M_masked_future_placeholder_head` | `backlog_diagnostic` | 使用 future placeholders + structured mask 形成 prefix-native decoder | pending：与 ElasTST 过近且实现重 | pending | 暂作 diagnostic/backlog | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
@@ -88,6 +89,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | A6ST cross-dataset sanity gate | `A6ST_self_teacher_consistency` | safety diagnostic gate | best ETTh2 setting 在 ETTm1/Weather 相对 best controls 平均 `+1.20%`、wins `0/8`，相对 A6-LBF-r256 `+0.95%` | `completed_failed_safety_gate` | `analysis/phase5_timealign_hss_a6st_cross_dataset_sanity_20260704/phase5_timealign_hss_a6s_stability_gate_report.md` |
 | A7DG selective self-teacher design | `A7DG_disagreement_gated_self_teacher` | method-candidate design / local implementation | 已添加 detached absolute/ratio gate；默认 `none` 保持 A6ST 行为；`py_compile`、wrapper `bash -n`、CPU smoke 通过 | `ready_for_remote_gate` | `docs/experiments/phase5-a7dg-disagreement-gated-self-teacher.md` |
 | A7DG selective self-teacher gate | `A7DG_disagreement_gated_self_teacher` | method-candidate gate | best `abs004` 相对 uniform A6ST `-0.40%`、`11/12` wins；相对 A6-LBF-r256 `-0.40%` overall，但 ETTm1/Weather 仍弱于 A6-LBF | `partial_positive_not_paper_core` | `analysis/phase5_timealign_hss_a7dg_selective_self_teacher_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md` |
+| A8TAG teacher-advantage gate design | `A8TAG_teacher_advantage_gated_self_teacher` | method-candidate design / local implementation | 已添加 `teacher-advantage-binary` 与 `teacher-advantage-ratio` gate；本地 smoke 验证 teacher 不优时 gate=0 | `ready_for_remote_gate` | `docs/experiments/phase5-a8tag-teacher-advantage-gated-self-teacher.md` |
 
 ## Pending Tasks
 
@@ -121,6 +123,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | A6ST cross-dataset sanity remote gate | Codex | A6ST ETTh2 partial pass | `completed_failed_safety_gate` | ETTm1/Weather `0/8` wins；当前 self-teacher setting 不能升级为 universal paper-core，回 Step 4/5 |
 | A7DG selective self-teacher local verification | Codex | A6ST cross-dataset safety failure | `completed` | 本地验证通过；已启动 remote gate |
 | A7DG selective self-teacher remote gate | Codex | A7DG local verification passed | `completed_partial_positive` | 结果支持 selective gate，但未过 paper-core effectiveness；下一步回 Step 4/5 |
+| A8TAG teacher-advantage local verification | Codex | A7DG partial positive but threshold-gated | `completed` | 本地验证通过；下一步 commit/push 后启动 remote gate |
 | Stage B diagnostic plan | Codex | A5 architecture 通过后再推进 | `deferred` | 暂缓；不能替代 Stage A architecture |
 | paper-mainline 同步检查 | Codex | A4 将 Stage A 从 universal head 改为 reliability-aware interface 诊断 | `completed` | 已同步当前状态与贡献边界，不改变 working title |
 
@@ -154,6 +157,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | 2026-07-04 | A7DG selective stability design | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | rollback Step 4/5 new candidate | 基于 teacher-student disagreement 的 detached gate 已提出并实现；下一步本地验证后最小远程 gate |
 | 2026-07-04 | A7DG selective remote gate launch | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | remote launch | 3 GPUs 空闲后启动 ETTh2/ETTm1/Weather × 3 variants；等待 artifacts |
 | 2026-07-04 | A7DG selective gate 完成 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | partial positive / no paper-core pass | Selective gate 改善 uniform A6ST 并产生 dataset gate separation，但仍弱于 best controls；禁止 threshold sweep，回 Step 4/5 |
+| 2026-07-05 | A8TAG teacher-advantage design | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | rollback Step 4/5 new candidate | 用 supervised teacher advantage 替代 disagreement threshold；本地验证通过，准备 remote gate |
 
 ## Remote Launch Log
 

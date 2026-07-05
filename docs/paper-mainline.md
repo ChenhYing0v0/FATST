@@ -500,6 +500,19 @@ A7DG selective gate result：
 结果报告见
 `analysis/phase5_timealign_hss_a7dg_selective_self_teacher_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`。
 
+A8TAG teacher-advantage route：
+
+- A8TAG 是 A7DG partial-positive 后的 Step 4/5 新候选；
+- 它不继续调 disagreement threshold，而是用 supervised teacher advantage 决定是否蒸馏：
+  只有 EMA teacher 在当前 prefix 上比 raw student 更接近 label 时，才施加 consistency；
+- narrative gate 为 conditional pass：若 teacher advantage 能解释何时该蒸馏，则比 A7DG
+  有更强机制边界；若 teacher 多数无 advantage，则 self-teacher route 应停止；
+- 本地 `py_compile`、wrapper `bash -n` 和 CPU smoke 已通过，下一步启动 ETTh2/ETTm1/Weather
+  teacher-advantage remote gate。
+
+设计文档见
+`docs/experiments/phase5-a8tag-teacher-advantage-gated-self-teacher.md`。
+
 A5 effectiveness gate：
 
 - 至少要超过 H1 `target_set_decoder_multiprefix` 与 A3D `teacher_preserved_nested` controls；
