@@ -2824,6 +2824,17 @@ future branch 中 `recon_loss` 主要约束 future-side autoencoder/reconstructi
 
 [Artifacts] `docs/experiments/phase5-stage-b0-future-supervision-pressure-audit.md`
 
+[B0 Remote Launch] 已在 529_Lab-3090 启动 Step 8 diagnostic remote gate。远程 commit 为
+`8d802f5`；GPU preflight 显示 GPU 0/1/2 均为 `18 MiB used`、`24107 MiB free`、`0% util`。
+launcher PID 为 `2561335`。启动后 Weather 三个 arms 占用 GPU 0/1/2，显存约
+`4431/4432/4432 MiB`，GPU util 约 `87/87/96%`。
+
+[Decision] 当前等待 artifacts。完成后应先判断 `b0_no_recon`、`b0_no_align`、
+`b0_no_future_pressure` 是否改变 prediction/drift pattern，再决定 Stage B 是否进入 Step 4-6
+method narrative gate。
+
+[Artifacts] `/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b0_future_supervision_pressure_audit`
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：

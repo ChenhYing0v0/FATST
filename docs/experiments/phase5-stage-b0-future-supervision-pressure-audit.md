@@ -7,7 +7,7 @@ remote，也不提出 method。
 
 | Field | Content |
 | --- | --- |
-| `current_step` | Step 7：B0 diagnostic implementation / local verification completed |
+| `current_step` | Step 8：B0 diagnostic remote gate running |
 | `problem` | 需要判断 TimeAlign future branch 的 reconstruction/alignment pressure 是否存在 useful/harmful structure |
 | `existence_evidence` | Stage A head route 已暂停；A7DG 显示 official-last stability 有条件性；A4/A4R/A4S 显示 existing-path reliability signal 不足 |
 | `idea` | 先审计 `recon_loss` 与 `align_loss` 的 tensor/gradient path，再决定是否做 pressure ablation diagnostic |
@@ -15,8 +15,8 @@ remote，也不提出 method。
 | `design` | B0 分两步：source/code audit -> diagnostic-only local/remote design；当前已完成最小实现与 CPU smoke |
 | `narrative_gate` | diagnostic-only pass：问题值得审计，但还不能作为 method candidate |
 | `effectiveness_gate` | pending；需要后续 diagnostic artifacts |
-| `artifacts` | `TimeAlign.py`、`train_repo.py` code path audit；`train_repo.py` B0 controls；remote wrapper；CPU smoke `/tmp/fatst-b0-smoke` |
-| `decision` | B0 本地验证通过；commit/push 后可启动 diagnostic remote gate |
+| `artifacts` | `TimeAlign.py`、`train_repo.py` code path audit；`train_repo.py` B0 controls；remote wrapper；CPU smoke `/tmp/fatst-b0-smoke`；remote root `/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b0_future_supervision_pressure_audit` |
+| `decision` | B0 remote gate 已启动；等待 artifacts 后做 problem-existence analysis |
 
 ## Source Path
 
@@ -127,6 +127,22 @@ exists，不能直接写成 paper method。
 显示 `train_weighted_alignment_loss = 0.0`。这证明 B0 可以在不改默认 TimeAlign preset 的前提下隔离
 alignment pressure。
 
+## Remote Launch
+
+[Fact] B0 diagnostic remote gate 已在 529_Lab-3090 启动：
+
+| Item | Value |
+| --- | --- |
+| commit | `8d802f5` |
+| remote PID | launcher shell `2561335`; wrapper `2561337` |
+| output root | `/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b0_future_supervision_pressure_audit` |
+| launcher log | `/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b0_future_supervision_pressure_audit/_launcher/b0_future_supervision_pressure_launcher.log` |
+| GPU preflight | GPU 0/1/2 all free：`18 MiB used`、`24107 MiB free`、`0% util` |
+| after launch | Weather three arms running on GPU 0/1/2；about `4431/4432/4432 MiB` used |
+
+[Run Matrix] ETTh2/ETTm1/Weather × `b0_no_recon/b0_no_align/b0_no_future_pressure`，carrier 为
+A6-LBF-r256，checkpoint policy 为 `official-last`。
+
 ## Narrative Gate
 
 | Gate Item | Assessment |
@@ -138,6 +154,6 @@ alignment pressure。
 
 ## Decision
 
-[Decision] B0 source/code audit 与 local verification 通过。下一步在 commit/push 后启动 diagnostic
-remote gate。远程结果只用于判断 future supervision pressure problem 是否真实存在；任何正向 arm 都不能直接
-升级为 paper-core method，必须重新进入 Step 4-6 narrative gate。
+[Decision] B0 source/code audit 与 local verification 通过，remote gate 已启动。远程结果只用于判断
+future supervision pressure problem 是否真实存在；任何正向 arm 都不能直接升级为 paper-core method，必须重新进入
+Step 4-6 narrative gate。

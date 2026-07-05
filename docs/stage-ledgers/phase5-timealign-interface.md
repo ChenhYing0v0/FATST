@@ -19,10 +19,10 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Phase5-StageB：Step 7 B0 diagnostic implementation / local verification completed |
+| `current_11_step` | Phase5-StageB：Step 8 B0 diagnostic remote gate running |
 | `current_candidate` | `B0_future_supervision_pressure_audit` 为 diagnostic-only next action；无 active Stage A head candidate |
-| `latest_decision` | Stage B 不能按旧假设直接恢复；已重定义为 future-aware carrier 中 future supervision pressure 的 reliability/allocation problem |
-| `next_required_action` | B0 已完成 source/code audit、`w_align` override、weighted pressure logging、remote wrapper 与 CPU smoke；下一步 commit/push 后启动 diagnostic remote gate |
+| `latest_decision` | B0 source/code audit 与 local verification 通过；已在 529_Lab-3090 启动 diagnostic remote gate |
+| `next_required_action` | 等待 B0 remote artifacts 完成后同步并分析 ETTh2/ETTm1/Weather × `b0_no_recon/b0_no_align/b0_no_future_pressure` |
 | `rollback_point` | 回 Step 2/3：重审 paper-core 是否应从 unified head 转向 reliability-aware future supervision / official-last stability-capacity conflict |
 
 ## Candidate Queue
@@ -53,7 +53,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | `A6ST_cross_dataset_sanity` | `completed_failed_safety_gate` | ETTh2 正向可能只是数据集特有；需要确认 self-teacher 不伤害 ETTm1/Weather | diagnostic-only：不是 full paper gate，只检查安全性 | failed：ETTm1 `+1.49%`、Weather `+0.91%` vs best controls，均 `0/4` wins | 不扩展为 full matrix；进入 Step 4/5 机制诊断与新设计 | `analysis/phase5_timealign_hss_a6st_cross_dataset_sanity_20260704/phase5_timealign_hss_a6s_stability_gate_report.md` |
 | `A7DG_disagreement_gated_self_teacher` | `partial_positive_not_paper_core` | uniform self-teacher 只在 high-disagreement/high-drift 情况下有益；用 detached teacher-student disagreement gate 控制 consistency 强度，使低 drift 数据集退化接近 A6-LBF | conditional_pass：必须写成 disagreement-triggered raw-final stabilization；若变成 dataset hand-tuned threshold 则失败 | partial positive：best `abs004` vs uniform A6ST `-0.40%`、`11/12` wins，gate 按 dataset 降权；但 vs best controls `+0.46%`、wins `2/12` | 保留 selective stability evidence；下一步不能 threshold sweep，需重新过 Step 4/5 | `analysis/phase5_timealign_hss_a7dg_selective_self_teacher_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md` |
 | `A8TAG_teacher_advantage_gated_self_teacher` | `failed_as_core_candidate` | EMA teacher 只有在当前 supervised prefix 上比 raw student 更接近 label 时才应作为 consistency target | conditional pass failed：机制边界清楚，但 evidence 显示当前 supervised advantage 不能解释 useful self-teacher | failed：最佳 ratio variant 相对 best controls `+0.91%`、wins `0/12`，相对 A6-LBF `+0.03%`；binary gate 高激活反而更差 | 保留为 negative evidence；不做 teacher-advantage threshold/weight sweep，回 Step 4/5 | `analysis/phase5_timealign_hss_a8tag_teacher_advantage_gate_20260705/phase5_timealign_hss_a8tag_interpretation.md` |
-| `B0_future_supervision_pressure_audit` | `ready_for_remote_gate` | TimeAlign future branch 的 reconstruction/alignment pressure 可能存在 useful/harmful structure，需要先作为 problem-existence diagnostic 验证 | diagnostic-only pass：tensor/gradient path 明确，`recon_loss` 约束 future branch，`align_loss` 通过 `y.detach()` 主要约束 history path | pending：等待 ETTh2/ETTm1/Weather × `b0_no_recon/b0_no_align/b0_no_future_pressure` artifacts | commit/push 后启动 remote；若某 ablation 变好，也只能证明 pressure problem，不能直接升级为 method | `docs/experiments/phase5-stage-b0-future-supervision-pressure-audit.md` |
+| `B0_future_supervision_pressure_audit` | `remote_gate_running` | TimeAlign future branch 的 reconstruction/alignment pressure 可能存在 useful/harmful structure，需要先作为 problem-existence diagnostic 验证 | diagnostic-only pass：tensor/gradient path 明确，`recon_loss` 约束 future branch，`align_loss` 通过 `y.detach()` 主要约束 history path | pending：等待 ETTh2/ETTm1/Weather × `b0_no_recon/b0_no_align/b0_no_future_pressure` artifacts | 远程已启动；若某 ablation 变好，也只能证明 pressure problem，不能直接升级为 method | `docs/experiments/phase5-stage-b0-future-supervision-pressure-audit.md` |
 | `A5-S_step_specific_hypernetwork_head` | `control_deferred` | 用 coordinate-conditioned hypernetwork 生成 step readout weights，避免 pretrained dense rows 但保留 step-specific capacity | deferred：容易被视作 generated dense rows，贡献边界弱于 A5-B | pending | 等 A5-B 结果后再决定是否作为 capacity control | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
 | `A5-I_cumulative_innovation_process_decoder` | `control_deferred` | 生成 future innovation process 再 cumulative 得到 trajectory，与 output/error-process 诊断对齐 | deferred：trajectory-process 叙事有价值，但 cumulative drift 风险较高 | pending | 等 A5-Q/A5-B gate 后再决定是否作为 trajectory-process control | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
 | `A5-M_masked_future_placeholder_head` | `backlog_diagnostic` | 使用 future placeholders + structured mask 形成 prefix-native decoder | pending：与 ElasTST 过近且实现重 | pending | 暂作 diagnostic/backlog | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
@@ -131,7 +131,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | A6-QBR remote gate | Codex | A6-QBR local verification passed | `completed_failed_as_core_candidate` | best `r256` 相对 A6-LBF `+35.69%`、0/12 wins；触发 Stage A exhaustion audit |
 | Stage A architecture exhaustion audit | Codex | A6-QBR failed_as_core_candidate | `completed_stage_a_architecture_route_paused` | Stage A standalone head route 暂停；下一步 Stage B problem redefinition / narrative gate |
 | Stage B problem redefinition | Codex | Stage A architecture exhaustion audit completed | `completed_b0_diagnostic_selected` | Stage B 改写为 future supervision pressure reliability/allocation；下一步 B0 source/code audit |
-| Stage B diagnostic plan | Codex | B0 problem redefinition completed | `ready_for_remote_gate` | B0 source/code audit、implementation、CPU smoke 已完成；commit/push 后启动 diagnostic remote gate |
+| Stage B diagnostic plan | Codex | B0 problem redefinition completed | `remote_gate_running` | B0 已在 529_Lab-3090 启动；等待 artifacts 后分析 pressure problem-existence |
 | paper-mainline 同步检查 | Codex | A4 将 Stage A 从 universal head 改为 reliability-aware interface 诊断 | `completed` | 已同步当前状态与贡献边界，不改变 working title |
 
 ## Paper Mainline Sync Log
@@ -174,6 +174,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | 2026-07-05 | Stage A architecture exhaustion audit | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | route-level rollback | Stage A standalone head route 暂停；下一步 Stage B problem redefinition / narrative gate |
 | 2026-07-05 | Stage B problem redefinition | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | narrative gate / diagnostic selection | Stage B 改写为 future supervision pressure reliability/allocation；下一步 B0 source/code audit |
 | 2026-07-05 | B0 source/code audit and local verification | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | diagnostic implementation | 新增 `w_align` override 与 weighted pressure logging；CPU smoke 证明 effective `w_align=0` 且 weighted alignment loss 为 0；下一步 remote gate |
+| 2026-07-05 | B0 future supervision pressure remote launch | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | remote launch | 3 GPUs 空闲后启动 ETTh2/ETTm1/Weather × `b0_no_recon/b0_no_align/b0_no_future_pressure`；当前 Weather 三 arm 正在运行 |
 
 ## Remote Launch Log
 
@@ -193,6 +194,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | 2026-07-04 | `A7DG_selective_self_teacher_gate` | `e4261b5` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1/2 used about `873/874/874 MiB` | `957726` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a7dg_selective_self_teacher_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a7dg_selective_self_teacher_gate/_launcher/a7dg_selective_self_teacher_launcher.log` |
 | 2026-07-05 | `A8TAG_teacher_advantage_gate` | `dec4911` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1/2 used about `855/856/856 MiB` | `2336496` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a8tag_teacher_advantage_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a8tag_teacher_advantage_gate/_launcher/a8tag_teacher_advantage_launcher.log` |
 | 2026-07-05 | `A6QBR_query_bilinear_gate` | `406406b` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1/2 used about `4431/4438/448 MiB` | `2423595` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6qbr_query_bilinear_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6qbr_query_bilinear_gate/_launcher/a6qbr_query_bilinear_launcher.log` |
+| 2026-07-05 | `B0_future_supervision_pressure_audit` | `8d802f5` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch Weather arms used about `4431/4432/4432 MiB`, GPU util about `87/87/96%` | launcher shell `2561335`; wrapper `2561337` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b0_future_supervision_pressure_audit` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b0_future_supervision_pressure_audit/_launcher/b0_future_supervision_pressure_launcher.log` |
 
 ## Notes For Next Continuation
 

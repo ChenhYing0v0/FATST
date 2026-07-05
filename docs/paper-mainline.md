@@ -41,12 +41,12 @@ ledger 是 `docs/stage-ledgers/phase5-timealign-interface.md`。研究路径保�
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_11_step` | Phase5-StageB：Step 7 B0 diagnostic implementation / local verification completed |
+| `current_11_step` | Phase5-StageB：Step 8 B0 diagnostic remote gate running |
 | `active_carrier` | official-source TimeAlign |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 | `active_question` | 如何在 prediction head / decoder 层面解决 unified multi-horizon 的 interface mismatch，使短 horizon 不是 naive full-720 crop |
 | `current_gate` | A6-QBR 已失败：best `r256` vs A6-LBF-r256 `+35.69%`、vs best controls `+36.78%`、wins `0/12` |
-| `paper_core_status` | Stage A standalone architecture/head route 暂停；Stage B 已重定义为 future supervision pressure reliability/allocation problem。B0 diagnostic 已通过 source/code audit 与 local verification，下一步 remote gate |
+| `paper_core_status` | Stage A standalone architecture/head route 暂停；Stage B 已重定义为 future supervision pressure reliability/allocation problem。B0 diagnostic remote gate 已启动，等待 artifacts |
 
 ## 顶级 SCI 审稿视角评判
 
@@ -853,8 +853,8 @@ next route。
 - 因此 Stage B 不能再按旧假设写成“在已解决的 unified head 上加 routing”；
 - Stage B 已重定义为 future-aware carrier 中 future supervision pressure 的 reliability/allocation
   problem；
-- 当前 next action 是 `B0_future_supervision_pressure_audit` 的 diagnostic remote gate；其
-  source/code audit 与 local verification 已通过，`w_align` override 和 weighted pressure logging 已补齐；
+- 当前 next action 是等待 `B0_future_supervision_pressure_audit` 的 diagnostic remote artifacts；其
+  source/code audit、local verification、remote launch 已完成；
 - B0 是 diagnostic-only，未过新的 problem-existence gate 前不进入 method gate。
 
 建议诊断：
