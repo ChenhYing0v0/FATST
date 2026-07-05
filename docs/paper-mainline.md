@@ -41,11 +41,11 @@ ledger 是 `docs/stage-ledgers/phase5-timealign-interface.md`。研究路径保�
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_11_step` | Phase5-A6-QBR：Step 6/7 design and local verification complete；下一步 Step 8 remote gate |
+| `current_11_step` | Phase5-A6-QBR：Step 8 remote gate running |
 | `active_carrier` | official-source TimeAlign |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 | `active_question` | 如何在 prediction head / decoder 层面解决 unified multi-horizon 的 interface mismatch，使短 horizon 不是 naive full-720 crop |
-| `current_gate` | A6-QBR `query-bilinear-readout` 已实现并通过本地 verification；准备 ETTh2/ETTm1/Weather × r256/r512 official-last remote gate |
+| `current_gate` | A6-QBR `query-bilinear-readout` remote gate 已启动：ETTh2/ETTm1/Weather × r256/r512，commit `406406b`，PID `2423595` |
 | `paper_core_status` | Stage A 仍是当前 blocking core；self-teacher route 暂停。Stage B routing 暂缓，不能替代 A6-QBR architecture gate |
 
 ## 顶级 SCI 审稿视角评判

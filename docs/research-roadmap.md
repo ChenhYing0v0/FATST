@@ -2773,6 +2773,14 @@ ETTh2/ETTm1/Weather × `a6qbr_r256/a6qbr_r512` official-last gate；不加入 te
 `docs/code-explanation/phase5-a6-capacity-native-heads.md`、
 `scripts/remote/run_phase5_timealign_hss_a6qbr_query_bilinear_gate.sh`
 
+[A6-QBR Remote Launch] 已在 529_Lab-3090 启动 Step 8 remote gate。远程 commit 为 `406406b`；
+launch 前 GPU 0/1/2 均空闲（`18 MiB used`, `24107 MiB free`），启动后 GPU 0/1/2 约
+`4431/4438/448 MiB`。PID `2423595`，输出目录
+`/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6qbr_query_bilinear_gate`。
+
+[Next] 等待 artifacts；返回后优先比较 A6-QBR-r256/r512 与 A6-LBF-r256、A6-DER、A7DG best
+以及 A8TAG negative evidence。
+
 ## 历史证据索引
 
 [Decision] 以下历史记录保留为 evidence index，不再作为当前 active route：

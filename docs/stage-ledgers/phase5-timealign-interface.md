@@ -19,10 +19,10 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Phase5-A6-QBR：Step 6/7 completed；下一步 Step 8 remote gate |
+| `current_11_step` | Phase5-A6-QBR：Step 8 remote gate running |
 | `current_candidate` | `A6-QBR_query_bilinear_readout` 被 post-A8TAG backtracking 选为下一候选；`A7DG` 仅保留 selective stability evidence |
-| `latest_decision` | A6-QBR 通过 Step 6 design/code-theory gate 与本地验证：shape smoke、prefix-invariance `diff=0`、CPU data-loader smoke 均通过 |
-| `next_required_action` | commit/push 后按 remote policy 启动 A6-QBR ETTh2/ETTm1/Weather × r256/r512 official-last gate；返回后与 A6-LBF/A6-DER/A7DG/A8TAG 同口径分析 |
+| `latest_decision` | A6-QBR 通过 Step 6 design/code-theory gate 与本地验证；remote gate 已在 commit `406406b` 上启动 |
+| `next_required_action` | 等待并同步 A6-QBR ETTh2/ETTm1/Weather × r256/r512 official-last artifacts；返回后与 A6-LBF/A6-DER/A7DG/A8TAG 同口径分析 |
 | `rollback_point` | 若下一步不能给出跨数据集可辩护且非 threshold-tuning 的 stability/capacity mechanism，则回 Step 2/3 重审 Stage A interface problem 是否应继续作为 paper-core 贡献。Stage B 暂缓，不能替代 Stage A architecture |
 
 ## Candidate Queue
@@ -165,6 +165,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | 2026-07-05 | A8TAG teacher-advantage gate 完成 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | failure / rollback | A8TAG 最佳仅与 A6-LBF 持平且弱于 A7DG；self-teacher route 不继续 sweep，下一步回溯未执行候选并重做 Step 4/5 narrative gate |
 | 2026-07-05 | Post-A8TAG candidate backtracking | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | candidate selection | A5-S/A5-I/A5-M 继续 deferred/backlog；A6-QBR 被选为下一步 design/code-theory gate |
 | 2026-07-05 | A6-QBR design/local verification | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | design/code-theory pass | `query-bilinear-readout` 已实现；local verification 通过，下一步 commit/push 后 remote gate |
+| 2026-07-05 | A6-QBR remote gate launch | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | remote launch | 3 GPUs 空闲后启动 ETTh2/ETTm1/Weather × r256/r512；等待 artifacts |
 
 ## Remote Launch Log
 
@@ -183,6 +184,7 @@ candidate queue、实验决策和未完成任务；完整分析报告保存在 `
 | 2026-07-04 | `A6ST_cross_dataset_sanity` | `689a5b6` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1 used about `469/4486 MiB`, GPU 2 free | `905758` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6st_cross_dataset_sanity` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6st_cross_dataset_sanity/_launcher/a6st_cross_dataset_launcher.log` |
 | 2026-07-04 | `A7DG_selective_self_teacher_gate` | `e4261b5` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1/2 used about `873/874/874 MiB` | `957726` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a7dg_selective_self_teacher_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a7dg_selective_self_teacher_gate/_launcher/a7dg_selective_self_teacher_launcher.log` |
 | 2026-07-05 | `A8TAG_teacher_advantage_gate` | `dec4911` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1/2 used about `855/856/856 MiB` | `2336496` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a8tag_teacher_advantage_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a8tag_teacher_advantage_gate/_launcher/a8tag_teacher_advantage_launcher.log` |
+| 2026-07-05 | `A6QBR_query_bilinear_gate` | `406406b` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1/2 used about `4431/4438/448 MiB` | `2423595` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6qbr_query_bilinear_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6qbr_query_bilinear_gate/_launcher/a6qbr_query_bilinear_launcher.log` |
 
 ## Notes For Next Continuation
 
