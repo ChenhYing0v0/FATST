@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import copy
 import csv
 import json
 import os
@@ -73,226 +72,22 @@ OFFICIAL_PRESETS: dict[str, dict[int, OfficialPreset]] = {
         for horizon in HORIZONS
     },
     "ETTm2": {
-        96: OfficialPreset(
-            data="ETTm2",
-            data_path="ETTm2.csv",
-            relative_root="ETT-small",
-            freq="t",
-            enc_in=7,
-            dec_in=7,
-            c_out=7,
-            d_model=128,
-            d_ff=128,
-            learning_rate=0.0001,
-            dropout=0.3,
-            w_align=1.0,
-            patch_num=12,
-            local_margin=0.0,
-            global_margin=0.0,
-            layer_norm=1,
-        ),
-        192: OfficialPreset(
-            data="ETTm2",
-            data_path="ETTm2.csv",
-            relative_root="ETT-small",
-            freq="t",
-            enc_in=7,
-            dec_in=7,
-            c_out=7,
-            d_model=128,
-            d_ff=128,
-            learning_rate=0.0001,
-            dropout=0.3,
-            w_align=1.0,
-            patch_num=12,
-            local_margin=0.0,
-            global_margin=0.0,
-            layer_norm=1,
-        ),
-        336: OfficialPreset(
-            data="ETTm2",
-            data_path="ETTm2.csv",
-            relative_root="ETT-small",
-            freq="t",
-            enc_in=7,
-            dec_in=7,
-            c_out=7,
-            d_model=128,
-            d_ff=128,
-            learning_rate=0.0001,
-            dropout=0.9,
-            w_align=1.0,
-            patch_num=12,
-            local_margin=0.0,
-            global_margin=0.0,
-            layer_norm=1,
-        ),
-        720: OfficialPreset(
-            data="ETTm2",
-            data_path="ETTm2.csv",
-            relative_root="ETT-small",
-            freq="t",
-            enc_in=7,
-            dec_in=7,
-            c_out=7,
-            d_model=128,
-            d_ff=128,
-            learning_rate=0.0001,
-            dropout=0.9,
-            w_align=1.0,
-            patch_num=12,
-            local_margin=0.0,
-            global_margin=0.0,
-            layer_norm=1,
-        ),
+        96: OfficialPreset("ETTm2", "ETTm2.csv", "ETT-small", "t", 7, 7, 7, 128, 128, 0.0001, 0.3, 1.0, 12, 0.0, 0.0, 1),
+        192: OfficialPreset("ETTm2", "ETTm2.csv", "ETT-small", "t", 7, 7, 7, 128, 128, 0.0001, 0.3, 1.0, 12, 0.0, 0.0, 1),
+        336: OfficialPreset("ETTm2", "ETTm2.csv", "ETT-small", "t", 7, 7, 7, 128, 128, 0.0001, 0.9, 1.0, 12, 0.0, 0.0, 1),
+        720: OfficialPreset("ETTm2", "ETTm2.csv", "ETT-small", "t", 7, 7, 7, 128, 128, 0.0001, 0.9, 1.0, 12, 0.0, 0.0, 1),
     },
     "ETTm1": {
-        96: OfficialPreset(
-            data="ETTm1",
-            data_path="ETTm1.csv",
-            relative_root="ETT-small",
-            freq="t",
-            enc_in=7,
-            dec_in=7,
-            c_out=7,
-            d_model=128,
-            d_ff=256,
-            learning_rate=0.0001,
-            dropout=0.2,
-            w_align=0.1,
-            patch_num=1,
-            local_margin=0.5,
-            global_margin=0.0,
-            layer_norm=1,
-        ),
-        192: OfficialPreset(
-            data="ETTm1",
-            data_path="ETTm1.csv",
-            relative_root="ETT-small",
-            freq="t",
-            enc_in=7,
-            dec_in=7,
-            c_out=7,
-            d_model=128,
-            d_ff=256,
-            learning_rate=0.0001,
-            dropout=0.2,
-            w_align=0.1,
-            patch_num=1,
-            local_margin=0.5,
-            global_margin=0.0,
-            layer_norm=1,
-        ),
-        336: OfficialPreset(
-            data="ETTm1",
-            data_path="ETTm1.csv",
-            relative_root="ETT-small",
-            freq="t",
-            enc_in=7,
-            dec_in=7,
-            c_out=7,
-            d_model=128,
-            d_ff=256,
-            learning_rate=0.0001,
-            dropout=0.8,
-            w_align=0.1,
-            patch_num=1,
-            local_margin=0.5,
-            global_margin=0.0,
-            layer_norm=1,
-        ),
-        720: OfficialPreset(
-            data="ETTm1",
-            data_path="ETTm1.csv",
-            relative_root="ETT-small",
-            freq="t",
-            enc_in=7,
-            dec_in=7,
-            c_out=7,
-            d_model=256,
-            d_ff=256,
-            learning_rate=0.0001,
-            dropout=0.9,
-            w_align=0.1,
-            patch_num=1,
-            local_margin=0.5,
-            global_margin=0.0,
-            layer_norm=1,
-        ),
+        96: OfficialPreset("ETTm1", "ETTm1.csv", "ETT-small", "t", 7, 7, 7, 128, 256, 0.0001, 0.2, 0.1, 1, 0.5, 0.0, 1),
+        192: OfficialPreset("ETTm1", "ETTm1.csv", "ETT-small", "t", 7, 7, 7, 128, 256, 0.0001, 0.2, 0.1, 1, 0.5, 0.0, 1),
+        336: OfficialPreset("ETTm1", "ETTm1.csv", "ETT-small", "t", 7, 7, 7, 128, 256, 0.0001, 0.8, 0.1, 1, 0.5, 0.0, 1),
+        720: OfficialPreset("ETTm1", "ETTm1.csv", "ETT-small", "t", 7, 7, 7, 256, 256, 0.0001, 0.9, 0.1, 1, 0.5, 0.0, 1),
     },
     "Weather": {
-        96: OfficialPreset(
-            data="custom",
-            data_path="weather.csv",
-            relative_root="weather",
-            freq="h",
-            enc_in=21,
-            dec_in=21,
-            c_out=21,
-            d_model=128,
-            d_ff=256,
-            learning_rate=0.0001,
-            dropout=0.1,
-            w_align=0.1,
-            patch_num=48,
-            local_margin=0.5,
-            global_margin=0.0,
-            layer_norm=0,
-        ),
-        192: OfficialPreset(
-            data="custom",
-            data_path="weather.csv",
-            relative_root="weather",
-            freq="h",
-            enc_in=21,
-            dec_in=21,
-            c_out=21,
-            d_model=128,
-            d_ff=256,
-            learning_rate=0.0001,
-            dropout=0.1,
-            w_align=0.1,
-            patch_num=48,
-            local_margin=0.5,
-            global_margin=0.0,
-            layer_norm=0,
-        ),
-        336: OfficialPreset(
-            data="custom",
-            data_path="weather.csv",
-            relative_root="weather",
-            freq="h",
-            enc_in=21,
-            dec_in=21,
-            c_out=21,
-            d_model=128,
-            d_ff=256,
-            learning_rate=0.0001,
-            dropout=0.1,
-            w_align=0.1,
-            patch_num=48,
-            local_margin=0.5,
-            global_margin=0.0,
-            layer_norm=0,
-        ),
-        720: OfficialPreset(
-            data="custom",
-            data_path="weather.csv",
-            relative_root="weather",
-            freq="h",
-            enc_in=21,
-            dec_in=21,
-            c_out=21,
-            d_model=128,
-            d_ff=128,
-            learning_rate=0.0001,
-            dropout=0.5,
-            w_align=0.1,
-            patch_num=48,
-            local_margin=0.5,
-            global_margin=0.0,
-            layer_norm=0,
-        ),
+        96: OfficialPreset("custom", "weather.csv", "weather", "h", 21, 21, 21, 128, 256, 0.0001, 0.1, 0.1, 48, 0.5, 0.0, 0),
+        192: OfficialPreset("custom", "weather.csv", "weather", "h", 21, 21, 21, 128, 256, 0.0001, 0.1, 0.1, 48, 0.5, 0.0, 0),
+        336: OfficialPreset("custom", "weather.csv", "weather", "h", 21, 21, 21, 128, 256, 0.0001, 0.1, 0.1, 48, 0.5, 0.0, 0),
+        720: OfficialPreset("custom", "weather.csv", "weather", "h", 21, 21, 21, 128, 128, 0.0001, 0.5, 0.1, 48, 0.5, 0.0, 0),
     },
 }
 
@@ -329,8 +124,7 @@ def resolve_dataset_root(dataset_root: Path, preset: OfficialPreset) -> Path:
 def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> argparse.Namespace:
     root_path = resolve_dataset_root(args.dataset_root, preset)
     device = torch.device(args.device if args.device != "auto" else ("cuda" if torch.cuda.is_available() else "cpu"))
-    patch_num = args.patch_num_override if args.patch_num_override > 0 else preset.patch_num
-    official = argparse.Namespace(
+    return argparse.Namespace(
         task_name="long_term_forecast",
         is_training=1,
         model_id=f"{args.dataset}_{args.seq_len}_{args.pred_len}",
@@ -397,11 +191,11 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         discdtw=False,
         discsdtw=False,
         extra_tag="",
-        w_align=preset.w_align if args.w_align_override is None else args.w_align_override,
+        w_align=preset.w_align,
         w_recon=args.w_recon,
         local_margin=preset.local_margin,
         global_margin=preset.global_margin,
-        patch_num=patch_num,
+        patch_num=preset.patch_num,
         layer_norm=preset.layer_norm,
         pos=1,
         loc=1,
@@ -410,12 +204,7 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         readout_mode=args.readout_mode,
         target_horizons=args.target_horizons,
         basis_rank=args.basis_rank,
-        target_query_segment_len=args.target_query_segment_len,
-        target_query_heads=args.target_query_heads,
-        target_query_ff=args.target_query_ff,
-        target_query_dropout=args.target_query_dropout,
     )
-    return official
 
 
 def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
@@ -438,79 +227,14 @@ def dump_json(path: Path, payload: dict[str, Any]) -> None:
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
 
 
-def warm_start_nested_from_checkpoint(model: nn.Module, checkpoint_path: Path, device: torch.device) -> dict[str, Any]:
-    checkpoint = torch.load(checkpoint_path, map_location="cpu")
-    if not isinstance(checkpoint, dict):
-        raise TypeError(f"Unsupported checkpoint type: {type(checkpoint)!r}")
-    state = checkpoint.get("state_dict", checkpoint)
-    if not isinstance(state, dict):
-        raise TypeError("Checkpoint does not contain a state_dict-like mapping")
-
-    model_state = model.state_dict()
-    compatible = {
-        key: value
-        for key, value in state.items()
-        if key in model_state and tuple(model_state[key].shape) == tuple(value.shape)
-    }
-    incompatible_keys = sorted(key for key in state if key not in compatible)
-    load_result = model.load_state_dict(compatible, strict=False)
-
-    if not hasattr(model, "nested_segment_heads") or not hasattr(model, "nested_boundaries"):
-        raise ValueError("Warm-started nested checkpoint requires nested_segment_heads")
-    if "proj_x.weight" not in state or "proj_x.bias" not in state:
-        raise KeyError("Checkpoint must contain proj_x.weight and proj_x.bias")
-
-    previous = 0
-    copied_segments = []
-    with torch.no_grad():
-        for boundary, head in zip(model.nested_boundaries, model.nested_segment_heads):
-            head.weight.copy_(state["proj_x.weight"][previous:boundary].to(device=head.weight.device, dtype=head.weight.dtype))
-            head.bias.copy_(state["proj_x.bias"][previous:boundary].to(device=head.bias.device, dtype=head.bias.dtype))
-            copied_segments.append({"start": previous, "end": boundary, "width": boundary - previous})
-            previous = boundary
-
-    model.to(device)
-    return {
-        "checkpoint_path": str(checkpoint_path),
-        "compatible_keys": len(compatible),
-        "incompatible_keys": len(incompatible_keys),
-        "missing_keys": sorted(load_result.missing_keys),
-        "unexpected_keys": sorted(load_result.unexpected_keys),
-        "copied_segments": copied_segments,
-    }
-
-
-def load_teacher_model(
-    official_args: argparse.Namespace,
-    checkpoint_path: Path,
-    readout_mode: str,
-) -> nn.Module:
-    teacher_args = argparse.Namespace(**vars(official_args))
-    teacher_args.readout_mode = readout_mode
-    teacher = TimeAlign.Model(teacher_args).float().to(official_args.device)
-    checkpoint = torch.load(checkpoint_path, map_location="cpu")
-    if not isinstance(checkpoint, dict):
-        raise TypeError(f"Unsupported checkpoint type: {type(checkpoint)!r}")
-    state = checkpoint.get("state_dict", checkpoint)
-    if not isinstance(state, dict):
-        raise TypeError("Teacher checkpoint does not contain a state_dict-like mapping")
-    teacher.load_state_dict(state, strict=True)
-    teacher.eval()
-    for parameter in teacher.parameters():
-        parameter.requires_grad_(False)
-    return teacher
-
-
 def metric_rows(preds: np.ndarray, trues: np.ndarray, horizons: list[int]) -> list[dict[str, Any]]:
     rows = []
     for horizon in horizons:
-        pred_h = preds[:, :horizon, :]
-        true_h = trues[:, :horizon, :]
         rows.append(
             {
                 "target_horizon": horizon,
-                "mse": float(MSE(pred_h, true_h)),
-                "mae": float(MAE(pred_h, true_h)),
+                "mse": float(MSE(preds[:, :horizon, :], trues[:, :horizon, :])),
+                "mae": float(MAE(preds[:, :horizon, :], trues[:, :horizon, :])),
                 "num_samples": int(preds.shape[0]),
                 "num_channels": int(preds.shape[-1]),
                 "eval_prefix_steps": horizon,
@@ -523,18 +247,24 @@ def segment_rows(preds: np.ndarray, trues: np.ndarray, target_horizon: int, segm
     rows = []
     for start in range(0, target_horizon, segment_len):
         end = min(start + segment_len, target_horizon)
-        pred_s = preds[:, start:end, :]
-        true_s = trues[:, start:end, :]
         rows.append(
             {
                 "target_horizon": target_horizon,
                 "segment_start": start,
                 "segment_end": end,
-                "mse": float(MSE(pred_s, true_s)),
-                "mae": float(MAE(pred_s, true_s)),
+                "mse": float(MSE(preds[:, start:end, :], trues[:, start:end, :])),
+                "mae": float(MAE(preds[:, start:end, :], trues[:, start:end, :])),
             }
         )
     return rows
+
+
+def select_prediction_horizons(mode: str, horizons: list[int], pred_len: int) -> list[int]:
+    if mode == "full":
+        return [pred_len]
+    if mode == "multi-prefix":
+        return sorted(set(horizons))
+    raise ValueError(f"Unsupported prediction loss mode: {mode}")
 
 
 def prediction_loss(
@@ -543,155 +273,15 @@ def prediction_loss(
     criterion: nn.Module,
     horizons: list[int],
     mode: str,
-    prefix_samples: int,
-    continuous_min_prefix: int,
-    continuous_prefix_step: int,
 ) -> tuple[torch.Tensor, dict[str, torch.Tensor]]:
-    full_loss = criterion(outputs, targets)
-    losses: dict[str, torch.Tensor] = {"full": full_loss}
-    if mode == "full":
-        return full_loss, losses
-    if mode == "balanced-step":
-        segment_losses = []
-        start = 0
-        for horizon in sorted(set(horizons)):
-            if horizon <= start:
-                continue
-            segment_loss = criterion(outputs[:, start:horizon, :], targets[:, start:horizon, :])
-            losses[f"seg{start + 1}_{horizon}"] = segment_loss
-            segment_losses.append(segment_loss)
-            start = horizon
-        if not segment_losses:
-            raise ValueError("balanced-step produced no supervision segments")
-        return torch.stack(segment_losses).mean(), losses
-    else:
-        selected_horizons = select_prediction_horizons(
-            horizons,
-            mode,
-            prefix_samples,
-            continuous_min_prefix,
-            continuous_prefix_step,
-            pred_len=outputs.shape[1],
-        )
+    selected_horizons = select_prediction_horizons(mode, horizons, outputs.shape[1])
+    losses: dict[str, torch.Tensor] = {"full": criterion(outputs, targets)}
     prefix_losses = []
     for horizon in selected_horizons:
-        horizon_loss = criterion(outputs[:, :horizon, :], targets[:, :horizon, :])
-        key = f"h{horizon}"
-        if key in losses:
-            key = f"{key}_repeat{len([name for name in losses if name.startswith(key)])}"
-        losses[key] = horizon_loss
-        prefix_losses.append(horizon_loss)
+        loss = criterion(outputs[:, :horizon, :], targets[:, :horizon, :])
+        losses[f"h{horizon}"] = loss
+        prefix_losses.append(loss)
     return torch.stack(prefix_losses).mean(), losses
-
-
-def select_prediction_horizons(
-    horizons: list[int],
-    mode: str,
-    prefix_samples: int,
-    continuous_min_prefix: int,
-    continuous_prefix_step: int,
-    pred_len: int,
-) -> list[int]:
-    sorted_horizons = sorted(set(horizons))
-    if mode == "full":
-        return [pred_len]
-    if mode == "multi-prefix":
-        return sorted_horizons
-    if mode == "stochastic-prefix":
-        sample_count = max(prefix_samples, 1)
-        if sample_count <= len(sorted_horizons):
-            return random.sample(sorted_horizons, k=sample_count)
-        return random.choices(sorted_horizons, k=sample_count)
-    if mode == "continuous-prefix":
-        pool = list(range(max(1, continuous_min_prefix), pred_len + 1, max(continuous_prefix_step, 1)))
-        if pred_len not in pool:
-            pool.append(pred_len)
-        sample_count = max(prefix_samples, 1)
-        if sample_count <= len(pool):
-            return random.sample(pool, k=sample_count)
-        return random.choices(pool, k=sample_count)
-    raise ValueError(f"Unsupported prediction loss mode for prefix-conditioned readout: {mode}")
-
-
-def init_ema_state(model: nn.Module) -> dict[str, torch.Tensor]:
-    return {name: tensor.detach().clone() for name, tensor in model.state_dict().items()}
-
-
-def update_ema_state(model: nn.Module, ema_state: dict[str, torch.Tensor], decay: float) -> None:
-    with torch.no_grad():
-        for name, tensor in model.state_dict().items():
-            if tensor.is_floating_point():
-                ema_state[name].mul_(decay).add_(tensor.detach(), alpha=1.0 - decay)
-            else:
-                ema_state[name].copy_(tensor.detach())
-
-
-def init_ema_teacher_model(model: nn.Module) -> nn.Module:
-    teacher = copy.deepcopy(model)
-    teacher.eval()
-    for parameter in teacher.parameters():
-        parameter.requires_grad_(False)
-    return teacher
-
-
-def update_ema_teacher_model(model: nn.Module, teacher: nn.Module, decay: float) -> None:
-    student_state = model.state_dict()
-    teacher_state = teacher.state_dict()
-    with torch.no_grad():
-        for name, teacher_tensor in teacher_state.items():
-            student_tensor = student_state[name].detach()
-            if teacher_tensor.is_floating_point():
-                teacher_tensor.mul_(decay).add_(
-                    student_tensor.to(device=teacher_tensor.device, dtype=teacher_tensor.dtype),
-                    alpha=1.0 - decay,
-                )
-            else:
-                teacher_tensor.copy_(student_tensor.to(device=teacher_tensor.device))
-    teacher.eval()
-
-
-def learned_basis_operator_smoothness_loss(model: nn.Module) -> torch.Tensor:
-    if not hasattr(model, "learned_temporal_basis") or not hasattr(model, "learned_basis_coeff"):
-        raise ValueError("learned-basis operator smoothness requires learned-basis-forecast-operator")
-    operator = model.learned_temporal_basis @ model.learned_basis_coeff.weight
-    operator_diff = operator[1:] - operator[:-1]
-    loss = operator_diff.pow(2).mean()
-    if hasattr(model, "learned_temporal_bias"):
-        bias_diff = model.learned_temporal_bias[1:] - model.learned_temporal_bias[:-1]
-        loss = loss + bias_diff.pow(2).mean()
-    return loss
-
-
-def learned_basis_coeff_l2_loss(model: nn.Module) -> torch.Tensor:
-    if not hasattr(model, "learned_basis_coeff"):
-        raise ValueError("learned-basis coefficient L2 requires learned-basis-forecast-operator")
-    loss = model.learned_basis_coeff.weight.pow(2).mean()
-    if model.learned_basis_coeff.bias is not None:
-        loss = loss + model.learned_basis_coeff.bias.pow(2).mean()
-    return loss
-
-
-def self_teacher_gate(
-    self_teacher_loss: torch.Tensor,
-    pred_loss: torch.Tensor,
-    self_teacher_target_loss: torch.Tensor,
-    mode: str,
-    threshold: float,
-    temperature: float,
-) -> torch.Tensor:
-    if mode == "none":
-        return torch.ones((), device=self_teacher_loss.device)
-    if mode == "teacher-advantage-binary":
-        return (self_teacher_target_loss.detach() < pred_loss.detach()).to(dtype=self_teacher_loss.dtype)
-    if mode == "teacher-advantage-ratio":
-        advantage = (pred_loss.detach() - self_teacher_target_loss.detach()) / pred_loss.detach().clamp_min(1e-8)
-        return advantage.clamp(min=0.0, max=1.0)
-    signal = self_teacher_loss.detach()
-    if mode == "ratio":
-        signal = signal / pred_loss.detach().clamp_min(1e-8)
-    elif mode != "absolute":
-        raise ValueError(f"Unknown self_teacher_gate_mode: {mode}")
-    return torch.sigmoid((signal - threshold) / temperature)
 
 
 def evaluate(
@@ -702,10 +292,12 @@ def evaluate(
     max_batches: int,
     is_training_flag: bool,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], np.ndarray, np.ndarray]:
-    if getattr(official_args, "readout_mode", "official") != "official":
-        return evaluate_prefix_conditioned(model, loader, official_args, horizons, max_batches, is_training_flag)
+    if official_args.readout_mode == "learned-basis-forecast-operator":
+        return evaluate_a6_lbf(model, loader, official_args, horizons, max_batches, is_training_flag)
+
     preds = []
     trues = []
+    f_dim = -1 if official_args.features == "MS" else 0
     model.eval()
     with torch.no_grad():
         for batch_idx, (batch_x, batch_y, _batch_x_mark, _batch_y_mark) in enumerate(loader):
@@ -718,11 +310,9 @@ def evaluate(
                 batch_y[:, -official_args.pred_len :, :],
                 is_training=is_training_flag,
             )
-            f_dim = -1 if official_args.features == "MS" else 0
-            outputs = outputs[:, -official_args.pred_len :, f_dim:]
-            batch_y = batch_y[:, -official_args.pred_len :, f_dim:]
-            preds.append(outputs.detach().cpu().numpy())
-            trues.append(batch_y.detach().cpu().numpy())
+            preds.append(outputs[:, -official_args.pred_len :, f_dim:].detach().cpu().numpy())
+            trues.append(batch_y[:, -official_args.pred_len :, f_dim:].detach().cpu().numpy())
+
     if not preds:
         raise RuntimeError("evaluation produced no batches")
     pred_np = np.concatenate(preds, axis=0)
@@ -734,7 +324,7 @@ def evaluate(
     return main_rows, all_segments, pred_np, true_np
 
 
-def evaluate_prefix_conditioned(
+def evaluate_a6_lbf(
     model: nn.Module,
     loader: torch.utils.data.DataLoader,
     official_args: argparse.Namespace,
@@ -763,10 +353,8 @@ def evaluate_prefix_conditioned(
                     is_training=is_training_flag,
                     target_prefix=horizon,
                 )
-                outputs = outputs[:, -official_args.pred_len :, f_dim:]
-                target = batch_y[:, -official_args.pred_len :, f_dim:]
-                preds.append(outputs.detach().cpu().numpy())
-                trues.append(target.detach().cpu().numpy())
+                preds.append(outputs[:, -official_args.pred_len :, f_dim:].detach().cpu().numpy())
+                trues.append(batch_y[:, -official_args.pred_len :, f_dim:].detach().cpu().numpy())
             if not preds:
                 raise RuntimeError("evaluation produced no batches")
             pred_np = np.concatenate(preds, axis=0)
@@ -776,8 +364,9 @@ def evaluate_prefix_conditioned(
             if horizon == max(horizons):
                 pred_for_npz = pred_np
                 true_for_npz = true_np
+
     if pred_for_npz is None or true_for_npz is None:
-        raise RuntimeError("prefix-conditioned evaluation did not produce final-horizon predictions")
+        raise RuntimeError("A6-LBF evaluation did not produce final-horizon predictions")
     return main_rows, all_segments, pred_for_npz, true_for_npz
 
 
@@ -806,41 +395,11 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
     del train_data, vali_data, test_data, test_loader
 
     model = TimeAlign.Model(official_args).float().to(official_args.device)
-    warm_start_info = None
-    if args.warm_start_checkpoint is not None:
-        warm_start_info = warm_start_nested_from_checkpoint(model, args.warm_start_checkpoint, official_args.device)
-        print(f"warm_start_info={json.dumps(warm_start_info, sort_keys=True)}", flush=True)
-    teacher_model = None
-    if args.teacher_checkpoint is not None:
-        teacher_model = load_teacher_model(official_args, args.teacher_checkpoint, args.teacher_readout_mode)
-        print(
-            f"teacher_info={json.dumps({'checkpoint_path': str(args.teacher_checkpoint), 'readout_mode': args.teacher_readout_mode, 'loss_weight': args.teacher_loss_weight}, sort_keys=True)}",
-            flush=True,
-        )
-    self_teacher_model = None
-    if args.self_teacher_loss_weight > 0.0:
-        self_teacher_model = init_ema_teacher_model(model)
-        print(
-            "self_teacher_info="
-            + json.dumps(
-                {
-                    "decay": args.self_teacher_decay,
-                    "gate_mode": args.self_teacher_gate_mode,
-                    "gate_temperature": args.self_teacher_gate_temperature,
-                    "gate_threshold": args.self_teacher_gate_threshold,
-                    "loss_weight": args.self_teacher_loss_weight,
-                    "warmup_epochs": args.self_teacher_warmup_epochs,
-                },
-                sort_keys=True,
-            ),
-            flush=True,
-        )
     optimizer = optim.AdamW(model.parameters(), lr=official_args.learning_rate)
     criterion = nn.L1Loss()
     training_rows: list[dict[str, Any]] = []
     best_val = float("inf")
     best_state: dict[str, torch.Tensor] | None = None
-    ema_state = init_ema_state(model) if args.ema_decay > 0.0 else None
 
     for epoch in range(args.epochs):
         model.train()
@@ -849,24 +408,16 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
         pred_loss_values = []
         pred_full_loss_values = []
         pred_component_values: dict[str, list[float]] = {}
-        teacher_loss_values = []
-        self_teacher_loss_values = []
-        self_teacher_target_loss_values = []
-        self_teacher_advantage_values = []
-        self_teacher_gate_values = []
-        weighted_self_teacher_loss_values = []
-        basis_operator_smoothness_values = []
-        basis_coeff_l2_values = []
         recon_loss_values = []
         alignment_values = []
         train_steps = len(train_loader)
+
         for batch_idx, (batch_x, batch_y, _batch_x_mark, _batch_y_mark) in enumerate(train_loader):
             if args.max_train_batches and batch_idx >= args.max_train_batches:
                 break
             optimizer.zero_grad()
             batch_x = batch_x.float().to(official_args.device)
             batch_y = batch_y.float().to(official_args.device)
-
             f_dim = -1 if official_args.features == "MS" else 0
             target_y = batch_y[:, -official_args.pred_len :, f_dim:]
 
@@ -883,57 +434,15 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
                     criterion,
                     args.target_horizons,
                     args.pred_loss_mode,
-                    args.prefix_samples,
-                    args.continuous_min_prefix,
-                    args.continuous_prefix_step,
                 )
                 recon_loss = criterion(recon, target_y)
-                if self_teacher_model is not None and epoch >= args.self_teacher_warmup_epochs:
-                    with torch.no_grad():
-                        self_teacher_outputs, _self_teacher_recon, _self_teacher_alignment = self_teacher_model(
-                            batch_x,
-                            batch_y[:, -official_args.pred_len :, :],
-                            is_training=True,
-                        )
-                        self_teacher_outputs = self_teacher_outputs[:, -official_args.pred_len :, f_dim:]
-                    self_teacher_loss, _self_teacher_components = prediction_loss(
-                        outputs,
-                        self_teacher_outputs,
-                        criterion,
-                        args.target_horizons,
-                        args.pred_loss_mode,
-                        args.prefix_samples,
-                        args.continuous_min_prefix,
-                        args.continuous_prefix_step,
-                    )
-                    self_teacher_target_loss, _self_teacher_target_components = prediction_loss(
-                        self_teacher_outputs,
-                        target_y,
-                        criterion,
-                        args.target_horizons,
-                        args.pred_loss_mode,
-                        args.prefix_samples,
-                        args.continuous_min_prefix,
-                        args.continuous_prefix_step,
-                    )
-                else:
-                    self_teacher_loss = torch.zeros((), device=official_args.device)
-                    self_teacher_target_loss = pred_loss.detach()
             else:
-                if args.pred_loss_mode == "balanced-step":
-                    raise ValueError("balanced-step is not supported for prefix-conditioned readout modes")
                 selected_horizons = select_prediction_horizons(
-                    args.target_horizons,
                     args.pred_loss_mode,
-                    args.prefix_samples,
-                    args.continuous_min_prefix,
-                    args.continuous_prefix_step,
-                    pred_len=official_args.pred_len,
+                    args.target_horizons,
+                    official_args.pred_len,
                 )
                 prefix_losses = []
-                teacher_losses = []
-                self_teacher_losses = []
-                self_teacher_target_losses = []
                 recon_losses = []
                 alignment_losses = []
                 pred_components = {}
@@ -946,36 +455,8 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
                     )
                     outputs = outputs[:, -official_args.pred_len :, f_dim:]
                     horizon_loss = criterion(outputs[:, :horizon, :], target_y[:, :horizon, :])
-                    key = f"h{horizon}"
-                    if key in pred_components:
-                        key = f"{key}_repeat{len([name for name in pred_components if name.startswith(key)])}"
-                    pred_components[key] = horizon_loss
+                    pred_components[f"h{horizon}"] = horizon_loss
                     prefix_losses.append(horizon_loss)
-                    if teacher_model is not None:
-                        with torch.no_grad():
-                            teacher_outputs, _teacher_recon, _teacher_alignment = teacher_model(
-                                batch_x,
-                                batch_y[:, -official_args.pred_len :, :],
-                                is_training=True,
-                                target_prefix=horizon,
-                            )
-                            teacher_outputs = teacher_outputs[:, -official_args.pred_len :, f_dim:]
-                        teacher_losses.append(criterion(outputs[:, :horizon, :], teacher_outputs[:, :horizon, :]))
-                    if self_teacher_model is not None and epoch >= args.self_teacher_warmup_epochs:
-                        with torch.no_grad():
-                            self_teacher_outputs, _self_teacher_recon, _self_teacher_alignment = self_teacher_model(
-                                batch_x,
-                                batch_y[:, -official_args.pred_len :, :],
-                                is_training=True,
-                                target_prefix=horizon,
-                            )
-                            self_teacher_outputs = self_teacher_outputs[:, -official_args.pred_len :, f_dim:]
-                        self_teacher_losses.append(
-                            criterion(outputs[:, :horizon, :], self_teacher_outputs[:, :horizon, :])
-                        )
-                        self_teacher_target_losses.append(
-                            criterion(self_teacher_outputs[:, :horizon, :], target_y[:, :horizon, :])
-                        )
                     recon_losses.append(criterion(recon, target_y))
                     alignment_losses.append(alignment_loss)
                     if horizon == official_args.pred_len:
@@ -991,79 +472,21 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
                         outputs_full = outputs_full[:, -official_args.pred_len :, f_dim:]
                         pred_components["full"] = criterion(outputs_full, target_y)
                 pred_loss = torch.stack(prefix_losses).mean()
-                teacher_loss = (
-                    torch.stack(teacher_losses).mean()
-                    if teacher_losses
-                    else torch.zeros((), device=official_args.device)
-                )
-                self_teacher_loss = (
-                    torch.stack(self_teacher_losses).mean()
-                    if self_teacher_losses
-                    else torch.zeros((), device=official_args.device)
-                )
-                self_teacher_target_loss = (
-                    torch.stack(self_teacher_target_losses).mean()
-                    if self_teacher_target_losses
-                    else pred_loss.detach()
-                )
                 recon_loss = torch.stack(recon_losses).mean()
                 alignment_loss = torch.stack(alignment_losses).mean()
-            if args.readout_mode == "official":
-                teacher_loss = torch.zeros((), device=official_args.device)
-            if self_teacher_model is None:
-                self_teacher_loss = torch.zeros((), device=official_args.device)
-                self_teacher_target_loss = pred_loss.detach()
-            self_teacher_gate_value = self_teacher_gate(
-                self_teacher_loss,
-                pred_loss,
-                self_teacher_target_loss,
-                args.self_teacher_gate_mode,
-                args.self_teacher_gate_threshold,
-                args.self_teacher_gate_temperature,
-            )
-            weighted_self_teacher_loss = self_teacher_gate_value * self_teacher_loss
-            self_teacher_advantage = pred_loss.detach() - self_teacher_target_loss.detach()
-            if args.basis_operator_smoothness_weight > 0.0:
-                basis_operator_smoothness = learned_basis_operator_smoothness_loss(model)
-            else:
-                basis_operator_smoothness = torch.zeros((), device=official_args.device)
-            if args.basis_coeff_l2_weight > 0.0:
-                basis_coeff_l2 = learned_basis_coeff_l2_loss(model)
-            else:
-                basis_coeff_l2 = torch.zeros((), device=official_args.device)
-            loss = (
-                pred_loss
-                + args.teacher_loss_weight * teacher_loss
-                + args.self_teacher_loss_weight * weighted_self_teacher_loss
-                + official_args.w_recon * recon_loss
-                + official_args.w_align * alignment_loss
-                + args.basis_operator_smoothness_weight * basis_operator_smoothness
-                + args.basis_coeff_l2_weight * basis_coeff_l2
-            )
+
+            loss = pred_loss + official_args.w_recon * recon_loss + official_args.w_align * alignment_loss
             loss.backward()
             optimizer.step()
-            if ema_state is not None:
-                update_ema_state(model, ema_state, args.ema_decay)
-            if self_teacher_model is not None:
-                update_ema_teacher_model(model, self_teacher_model, args.self_teacher_decay)
 
             total_loss.append(float(loss.detach().cpu()))
             pred_loss_values.append(float(pred_loss.detach().cpu()))
             pred_full_loss_values.append(float(pred_components["full"].detach().cpu()))
-            teacher_loss_values.append(float(teacher_loss.detach().cpu()))
-            self_teacher_loss_values.append(float(self_teacher_loss.detach().cpu()))
-            self_teacher_target_loss_values.append(float(self_teacher_target_loss.detach().cpu()))
-            self_teacher_advantage_values.append(float(self_teacher_advantage.detach().cpu()))
-            self_teacher_gate_values.append(float(self_teacher_gate_value.detach().cpu()))
-            weighted_self_teacher_loss_values.append(float(weighted_self_teacher_loss.detach().cpu()))
-            basis_operator_smoothness_values.append(float(basis_operator_smoothness.detach().cpu()))
-            basis_coeff_l2_values.append(float(basis_coeff_l2.detach().cpu()))
-            for name, component in pred_components.items():
-                if name == "full":
-                    continue
-                pred_component_values.setdefault(name, []).append(float(component.detach().cpu()))
             recon_loss_values.append(float(recon_loss.detach().cpu()))
             alignment_values.append(float(alignment_loss.detach().cpu()))
+            for name, component in pred_components.items():
+                if name != "full":
+                    pred_component_values.setdefault(name, []).append(float(component.detach().cpu()))
 
             if (batch_idx + 1) % 100 == 0:
                 print(
@@ -1088,44 +511,15 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
             "train_loss": float(np.mean(total_loss)),
             "train_prediction_l1": float(np.mean(pred_loss_values)),
             "train_prediction_full_l1": float(np.mean(pred_full_loss_values)),
-            "train_teacher_l1": float(np.mean(teacher_loss_values)),
-            "teacher_loss_weight": args.teacher_loss_weight,
-            "self_teacher_loss_weight": args.self_teacher_loss_weight,
-            "self_teacher_decay": args.self_teacher_decay,
-            "self_teacher_warmup_epochs": args.self_teacher_warmup_epochs,
-            "self_teacher_gate_mode": args.self_teacher_gate_mode,
-            "self_teacher_gate_threshold": args.self_teacher_gate_threshold,
-            "self_teacher_gate_temperature": args.self_teacher_gate_temperature,
-            "train_self_teacher_l1": float(np.mean(self_teacher_loss_values)),
-            "train_self_teacher_target_l1": float(np.mean(self_teacher_target_loss_values)),
-            "train_self_teacher_advantage_l1": float(np.mean(self_teacher_advantage_values)),
-            "train_self_teacher_gate": float(np.mean(self_teacher_gate_values)),
-            "train_weighted_self_teacher_l1": float(np.mean(weighted_self_teacher_loss_values)),
-            "basis_operator_smoothness_weight": args.basis_operator_smoothness_weight,
-            "train_basis_operator_smoothness_loss": float(np.mean(basis_operator_smoothness_values)),
-            "basis_coeff_l2_weight": args.basis_coeff_l2_weight,
-            "train_basis_coeff_l2_loss": float(np.mean(basis_coeff_l2_values)),
-            "ema_decay": args.ema_decay,
-            "ema_eval": int(args.ema_eval),
             "train_reconstruction_l1": float(np.mean(recon_loss_values)),
             "train_alignment_loss": float(np.mean(alignment_values)),
             "train_weighted_reconstruction_l1": official_args.w_recon * float(np.mean(recon_loss_values)),
             "train_weighted_alignment_loss": official_args.w_align * float(np.mean(alignment_values)),
             "pred_loss_mode": args.pred_loss_mode,
-            "prefix_samples": args.prefix_samples,
-            "continuous_min_prefix": args.continuous_min_prefix,
-            "continuous_prefix_step": args.continuous_prefix_step,
             "val_mean_mse": val_mean_mse,
             "lr": float(optimizer.param_groups[0]["lr"]),
             "epoch_seconds": time.time() - epoch_start,
         }
-        if warm_start_info is not None:
-            row["warm_start_checkpoint"] = warm_start_info["checkpoint_path"]
-            row["warm_start_compatible_keys"] = warm_start_info["compatible_keys"]
-            row["warm_start_incompatible_keys"] = warm_start_info["incompatible_keys"]
-        if args.teacher_checkpoint is not None:
-            row["teacher_checkpoint"] = str(args.teacher_checkpoint)
-            row["teacher_readout_mode"] = args.teacher_readout_mode
         for name, values in sorted(pred_component_values.items()):
             if values:
                 row[f"train_prediction_{name}_l1"] = float(np.mean(values))
@@ -1145,10 +539,6 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
         if best_state is None:
             raise RuntimeError("best-val policy requested but no checkpoint was captured")
         model.load_state_dict(best_state)
-    elif args.ema_eval:
-        if ema_state is None:
-            raise RuntimeError("ema-eval requested but EMA state was not initialized")
-        model.load_state_dict(ema_state)
     return model, training_rows
 
 
@@ -1161,22 +551,17 @@ def run(args: argparse.Namespace) -> None:
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
     set_seed(args.seed)
-    adapter_config = vars(args) | {"dataset_root": str(args.dataset_root), "output_dir": str(args.output_dir)}
-    if args.warm_start_checkpoint is not None:
-        adapter_config["warm_start_checkpoint"] = str(args.warm_start_checkpoint)
-    if args.teacher_checkpoint is not None:
-        adapter_config["teacher_checkpoint"] = str(args.teacher_checkpoint)
     dump_json(
         args.output_dir / "effective_config.json",
         {
-            "adapter": adapter_config,
+            "adapter": vars(args) | {"dataset_root": str(args.dataset_root), "output_dir": str(args.output_dir)},
             "official_args": {
                 key: (str(value) if isinstance(value, torch.device) else value)
                 for key, value in vars(official_args).items()
                 if key != "device_ids"
             },
             "official_preset": asdict(preset),
-            "source_note": "Official TimeAlign source vendored under baselines/timealign_official; train_repo.py is a thin repo adapter.",
+            "source_note": "Clean TimeAlign adapter: official baseline plus A6-LBF-r256 unified carrier.",
         },
     )
     dump_json(
@@ -1193,7 +578,7 @@ def run(args: argparse.Namespace) -> None:
 
     print(
         f"run_start dataset={args.dataset} mode={args.mode} pred_len={args.pred_len} "
-        f"target_horizons={args.target_horizons} output_dir={args.output_dir}",
+        f"target_horizons={args.target_horizons} readout_mode={args.readout_mode} output_dir={args.output_dir}",
         flush=True,
     )
     model, training_rows = train(args, official_args)
@@ -1228,7 +613,7 @@ def run(args: argparse.Namespace) -> None:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Thin FATST adapter for official TimeAlign.")
+    parser = argparse.ArgumentParser(description="Clean FATST adapter for official TimeAlign and A6-LBF.")
     parser.add_argument("--dataset-root", type=Path, required=True)
     parser.add_argument("--dataset", choices=sorted(OFFICIAL_PRESETS), required=True)
     parser.add_argument("--mode", choices=["fixed", "unified"], required=True)
@@ -1238,7 +623,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--target-horizons", type=parse_horizons, required=True)
     parser.add_argument("--e-layers", type=int, default=2)
     parser.add_argument("--w-recon", type=float, default=1.0)
-    parser.add_argument("--w-align-override", type=float, default=None)
     parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--epochs", type=int, default=10)
     parser.add_argument("--patience", type=int, default=3)
@@ -1254,61 +638,15 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--checkpoint-policy", choices=["official-last", "best-val"], default="official-last")
     parser.add_argument(
         "--readout-mode",
-        choices=[
-            "official",
-            "prefix-conditioned-head",
-            "target-set-decoder",
-            "target-set-prefix-head",
-            "prefix-token-decoder",
-            "dense-prefix-residual-adapter",
-            "row-gated-dense-head",
-            "prefix-adapter-shared-dense",
-            "dense-row-initialized-prefix-decoder",
-            "nested-segment-decoder",
-            "dense-initialized-nested-segment-decoder",
-            "target-conditioned-nested-residual-decoder",
-            "checkpoint-initialized-nested-segment-decoder",
-            "target-conditioned-nested-segment-decoder",
-            "continuous-forecast-basis-operator",
-            "elastic-causal-target-query-decoder",
-            "prefix-native-dense-equivalent-row-bank",
-            "learned-basis-forecast-operator",
-            "query-bilinear-readout",
-        ],
+        choices=["official", "learned-basis-forecast-operator"],
         default="official",
     )
-    parser.add_argument("--basis-rank", type=int, default=64)
-    parser.add_argument("--target-query-segment-len", type=int, default=48)
-    parser.add_argument("--target-query-heads", type=int, default=4)
-    parser.add_argument("--target-query-ff", type=int, default=256)
-    parser.add_argument("--target-query-dropout", type=float, default=None)
-    parser.add_argument("--patch-num-override", type=int, default=0)
-    parser.add_argument("--warm-start-checkpoint", type=Path, default=None)
-    parser.add_argument("--teacher-checkpoint", type=Path, default=None)
-    parser.add_argument("--teacher-readout-mode", choices=["target-set-decoder"], default="target-set-decoder")
-    parser.add_argument("--teacher-loss-weight", type=float, default=0.0)
+    parser.add_argument("--basis-rank", type=int, default=256)
     parser.add_argument(
         "--pred-loss-mode",
-        choices=["full", "multi-prefix", "balanced-step", "stochastic-prefix", "continuous-prefix"],
+        choices=["full", "multi-prefix"],
         default="full",
     )
-    parser.add_argument("--prefix-samples", type=int, default=1)
-    parser.add_argument("--continuous-min-prefix", type=int, default=32)
-    parser.add_argument("--continuous-prefix-step", type=int, default=32)
-    parser.add_argument("--ema-decay", type=float, default=0.0)
-    parser.add_argument("--ema-eval", action="store_true")
-    parser.add_argument("--self-teacher-decay", type=float, default=0.0)
-    parser.add_argument("--self-teacher-loss-weight", type=float, default=0.0)
-    parser.add_argument("--self-teacher-warmup-epochs", type=int, default=1)
-    parser.add_argument(
-        "--self-teacher-gate-mode",
-        choices=["none", "absolute", "ratio", "teacher-advantage-binary", "teacher-advantage-ratio"],
-        default="none",
-    )
-    parser.add_argument("--self-teacher-gate-threshold", type=float, default=0.0)
-    parser.add_argument("--self-teacher-gate-temperature", type=float, default=1.0)
-    parser.add_argument("--basis-operator-smoothness-weight", type=float, default=0.0)
-    parser.add_argument("--basis-coeff-l2-weight", type=float, default=0.0)
     args = parser.parse_args()
     if max(args.target_horizons) > args.pred_len:
         raise ValueError("target horizons cannot exceed pred_len")
@@ -1316,44 +654,12 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("fixed mode expects target_horizons == [pred_len]")
     if args.mode == "unified" and args.pred_len != 720:
         raise ValueError("unified mode currently expects pred_len=720")
-    if args.target_query_dropout is not None and not 0.0 <= args.target_query_dropout <= 1.0:
-        raise ValueError("target_query_dropout must be between 0.0 and 1.0")
     if args.w_recon < 0.0:
         raise ValueError("w_recon must be non-negative")
-    if args.w_align_override is not None and args.w_align_override < 0.0:
-        raise ValueError("w_align_override must be non-negative")
-    if args.patch_num_override < 0:
-        raise ValueError("patch_num_override must be non-negative")
-    if not 0.0 <= args.ema_decay < 1.0:
-        raise ValueError("ema_decay must be in [0.0, 1.0)")
-    if args.ema_eval and args.ema_decay <= 0.0:
-        raise ValueError("ema-eval requires ema-decay > 0")
-    if args.ema_eval and args.checkpoint_policy != "official-last":
-        raise ValueError("ema-eval is only allowed with official-last checkpoint policy")
-    if not 0.0 <= args.self_teacher_decay < 1.0:
-        raise ValueError("self_teacher_decay must be in [0.0, 1.0)")
-    if args.self_teacher_loss_weight < 0.0:
-        raise ValueError("self_teacher_loss_weight must be non-negative")
-    if args.self_teacher_loss_weight > 0.0 and args.self_teacher_decay <= 0.0:
-        raise ValueError("self-teacher requires self-teacher-decay > 0")
-    if args.self_teacher_loss_weight > 0.0 and args.ema_eval:
-        raise ValueError("self-teacher method gate must evaluate raw official-last weights, not ema-eval")
-    if args.self_teacher_warmup_epochs < 0:
-        raise ValueError("self_teacher_warmup_epochs must be non-negative")
-    if args.self_teacher_gate_mode != "none" and args.self_teacher_loss_weight <= 0.0:
-        raise ValueError("self-teacher gate requires self-teacher-loss-weight > 0")
-    if args.self_teacher_gate_threshold < 0.0:
-        raise ValueError("self_teacher_gate_threshold must be non-negative")
-    if args.self_teacher_gate_temperature <= 0.0:
-        raise ValueError("self_teacher_gate_temperature must be positive")
-    if args.basis_operator_smoothness_weight < 0.0:
-        raise ValueError("basis_operator_smoothness_weight must be non-negative")
-    if args.basis_coeff_l2_weight < 0.0:
-        raise ValueError("basis_coeff_l2_weight must be non-negative")
-    if (
-        args.basis_operator_smoothness_weight > 0.0 or args.basis_coeff_l2_weight > 0.0
-    ) and args.readout_mode != "learned-basis-forecast-operator":
-        raise ValueError("learned-basis stability regularizers require learned-basis-forecast-operator")
+    if args.basis_rank <= 0:
+        raise ValueError("basis_rank must be positive")
+    if args.readout_mode == "learned-basis-forecast-operator" and args.mode != "unified":
+        raise ValueError("A6-LBF is defined as a unified carrier; use --mode unified --pred-len 720")
     return args
 
 

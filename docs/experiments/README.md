@@ -24,16 +24,16 @@ what decision follows
 
 ## 当前路线
 
-- `phase4-horizon-supervision-scheduling-r3-reset.md`: 当前 active research
-  route，锚定 `Horizon Supervision Scheduling for Unified Multi-Horizon
-  Forecasting`，以 R.3 作为干净起点，强调 training/evaluation 解耦，training unit
-  不按 evaluation horizons 定义。
-- `phase4-horizon-decoupled-protocol.md`: R4.1 protocol，定义 supervision unit API、
-  trace、最小触达文件、本地 smoke 和远程 gate。
+- Phase5 StageA 已固定为 `A6-LBF-r256`。当前 active route 由
+  `docs/stage-ledgers/phase5-timealign-interface.md` 和 `docs/research-roadmap.md`
+  记录。
+- 下一份新增实验文档应是 StageB 重新设计文档，命名为
+  `phase5-stage-b-*.md`，并先完成 problem definition 与 narrative gate。
 
-## 历史 Phase4 记录
+## 历史记录
 
 - `phase4-horizon-agnostic-supervision-reset.md`: 历史 diagnostic route；已被
   Phase4-R horizon-decoupled reset 取代。
 - `phase4-component-balanced-objective-design.md`: 暂停的候选；只作为 HSS 的潜在扩展，
   不是当前第一实现。
+- `docs/archive/phase5-stage-a/experiments/`: Phase5 StageA 旧候选和 B0 预清理诊断文档。

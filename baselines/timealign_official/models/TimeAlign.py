@@ -1,10 +1,9 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-from layers.Alignment import orth_align, glocal_align, glocal_align_ablation
+
+from layers.Alignment import glocal_align_ablation
 from layers.Embed import PositionalEmbedding
 from layers.StandardNorm import Normalize
-import numpy as np
 
 
 class PatchEmbed(nn.Module):
@@ -13,567 +12,131 @@ class PatchEmbed(nn.Module):
         self.patch_len = patch_len
         self.stride = patch_len if stride is None else stride
         self.patch_proj = nn.Linear(self.patch_len, dim)
-
         self.pos = pos
         if self.pos:
-            pos_emb_theta = 10000
-            self.pe = PositionalEmbedding(dim, pos_emb_theta)
-    def forward(self, x):
-        # x: [B, C, L]
-        x = x.unfold(dimension=-1, size=self.patch_len, step=self.stride)
-        # x: [B, C*N, P]
-        x = self.patch_proj(x) # [B, C*N, D]
+            self.pe = PositionalEmbedding(dim, 10000)
 
+    def forward(self, x):
+        # x: [B, C, L] -> [B, C * N, D]
+        x = x.unfold(dimension=-1, size=self.patch_len, step=self.stride)
+        x = self.patch_proj(x)
         if self.pos:
             x += self.pe(x)
         return x
 
 
 class Model(nn.Module):
+    """Official TimeAlign carrier with only the accepted A6-LBF unified head."""
+
     def __init__(self, configs):
-        super(Model, self).__init__()
+        super().__init__()
         self.task_name = configs.task_name
         self.seq_len = configs.seq_len
         self.pred_len = configs.pred_len
         self.patch_num = configs.patch_num
         self.d_model = configs.d_model
-        # embedding
+        self.readout_mode = getattr(configs, "readout_mode", "official")
+        if self.readout_mode not in {"official", "learned-basis-forecast-operator"}:
+            raise ValueError(
+                "Clean TimeAlign supports only 'official' and "
+                "'learned-basis-forecast-operator' readout modes"
+            )
+
         self.patch_emb_x = PatchEmbed(configs.d_model, self.seq_len // self.patch_num, pos=configs.pos)
         self.patch_emb_y = PatchEmbed(configs.d_model, self.pred_len // self.patch_num, pos=configs.pos)
 
-        # Encoder
         self.e_layers = configs.e_layers
-        self.encoder = nn.ModuleList([
-            nn.Sequential(
-                nn.Linear(configs.d_model, configs.d_ff),
-                nn.GELU(),
-                nn.Dropout(configs.dropout),
-                nn.Linear(configs.d_ff, configs.d_model),
-            )
-            for _ in range(configs.e_layers)
-        ])
-
-        # self.align = glocal_align(configs.local_margin, configs.global_margin)
-        self.align = glocal_align_ablation(configs.local_margin, configs.global_margin, configs.loc, configs.glo)
-
+        self.encoder = nn.ModuleList(
+            [
+                nn.Sequential(
+                    nn.Linear(configs.d_model, configs.d_ff),
+                    nn.GELU(),
+                    nn.Dropout(configs.dropout),
+                    nn.Linear(configs.d_ff, configs.d_model),
+                )
+                for _ in range(configs.e_layers)
+            ]
+        )
         self.ffn = nn.ModuleList([nn.Linear(configs.d_model, configs.d_model) for _ in range(configs.e_layers)])
-
-        self.autoencoder = nn.ModuleList([
-            nn.Sequential(
-                nn.Linear(configs.d_model, configs.d_ff),
-                nn.GELU(),
-                nn.Dropout(configs.dropout),
-                nn.Linear(configs.d_ff, configs.d_model),
-            )
-            for _ in range(configs.e_layers)
-        ])
+        self.autoencoder = nn.ModuleList(
+            [
+                nn.Sequential(
+                    nn.Linear(configs.d_model, configs.d_ff),
+                    nn.GELU(),
+                    nn.Dropout(configs.dropout),
+                    nn.Linear(configs.d_ff, configs.d_model),
+                )
+                for _ in range(configs.e_layers)
+            ]
+        )
+        self.align = glocal_align_ablation(configs.local_margin, configs.global_margin, configs.loc, configs.glo)
 
         self.layer_norm = configs.layer_norm
         if self.layer_norm:
             self.norm_x = nn.ModuleList([nn.LayerNorm(configs.d_model) for _ in range(configs.e_layers)])
             self.norm_y = nn.ModuleList([nn.LayerNorm(configs.d_model) for _ in range(configs.e_layers)])
 
-        # Decoder
-        self.readout_mode = getattr(configs, "readout_mode", "official")
-        self.proj_x = nn.Linear(configs.d_model * self.patch_num, configs.pred_len)
-        self.proj_y = nn.Linear(configs.d_model * self.patch_num, configs.pred_len)
-        self.conditioned_projection_modes = {"prefix-conditioned-head", "target-set-decoder"}
-        self.variable_prefix_modes = {"target-set-prefix-head", "prefix-token-decoder"}
-        self.direct_prefix_modes = {
-            "target-set-prefix-head",
-            "prefix-token-decoder",
-            "dense-row-initialized-prefix-decoder",
-            "nested-segment-decoder",
-            "dense-initialized-nested-segment-decoder",
-            "target-conditioned-nested-residual-decoder",
-            "checkpoint-initialized-nested-segment-decoder",
-            "target-conditioned-nested-segment-decoder",
-            "continuous-forecast-basis-operator",
-            "elastic-causal-target-query-decoder",
-            "prefix-native-dense-equivalent-row-bank",
-            "learned-basis-forecast-operator",
-            "query-bilinear-readout",
-        }
-        self.capacity_preserving_modes = {
-            "dense-prefix-residual-adapter",
-            "row-gated-dense-head",
-            "prefix-adapter-shared-dense",
-            "target-conditioned-nested-residual-decoder",
-        }
         readout_dim = configs.d_model * self.patch_num
-        adapter_dim = min(64, readout_dim)
-        if self.readout_mode in self.conditioned_projection_modes:
-            self.prefix_condition = nn.Sequential(
-                nn.Linear(1, readout_dim),
-                nn.GELU(),
-                nn.Linear(readout_dim, readout_dim),
-            )
-            nn.init.zeros_(self.prefix_condition[-1].weight)
-            nn.init.zeros_(self.prefix_condition[-1].bias)
-        if self.readout_mode == "target-set-prefix-head":
-            self.prefix_step_weight = nn.Sequential(
-                nn.Linear(2, configs.d_model),
-                nn.GELU(),
-                nn.Linear(configs.d_model, readout_dim),
-            )
-            self.prefix_step_bias = nn.Linear(2, 1)
-            self.readout_scale = readout_dim ** -0.5
-        if self.readout_mode == "prefix-token-decoder":
-            self.step_query = nn.Sequential(
-                nn.Linear(2, configs.d_model),
-                nn.GELU(),
-                nn.Linear(configs.d_model, configs.d_model),
-            )
-            self.token_key = nn.Linear(configs.d_model, configs.d_model)
-            self.token_value = nn.Linear(configs.d_model, configs.d_model)
-            self.token_out = nn.Linear(configs.d_model, 1)
-            self.readout_scale = configs.d_model ** -0.5
-        if self.readout_mode == "dense-prefix-residual-adapter":
-            self.residual_down = nn.Linear(readout_dim, adapter_dim)
-            self.residual_condition = nn.Linear(1, adapter_dim)
-            self.residual_up = nn.Linear(adapter_dim, configs.pred_len)
-            nn.init.zeros_(self.residual_up.weight)
-            nn.init.zeros_(self.residual_up.bias)
-        if self.readout_mode == "row-gated-dense-head":
-            self.row_gate = nn.Sequential(
-                nn.Linear(2, configs.d_model),
-                nn.GELU(),
-                nn.Linear(configs.d_model, 1),
-            )
-            nn.init.zeros_(self.row_gate[-1].weight)
-            nn.init.zeros_(self.row_gate[-1].bias)
-        if self.readout_mode == "prefix-adapter-shared-dense":
-            self.hidden_adapter_down = nn.Linear(readout_dim, adapter_dim)
-            self.hidden_adapter_condition = nn.Linear(1, adapter_dim)
-            self.hidden_adapter_up = nn.Linear(adapter_dim, readout_dim)
-            nn.init.zeros_(self.hidden_adapter_up.weight)
-            nn.init.zeros_(self.hidden_adapter_up.bias)
-        if self.readout_mode == "dense-row-initialized-prefix-decoder":
-            self.prefix_row_delta_down = nn.Linear(readout_dim, adapter_dim)
-            self.prefix_row_delta_condition = nn.Linear(1, adapter_dim)
-            self.prefix_row_delta_up = nn.Linear(adapter_dim, configs.pred_len)
-            nn.init.zeros_(self.prefix_row_delta_up.weight)
-            nn.init.zeros_(self.prefix_row_delta_up.bias)
-        if self.readout_mode == "continuous-forecast-basis-operator":
-            self.basis_rank = int(getattr(configs, "basis_rank", 64))
-            self.basis_coeff = nn.Sequential(
-                nn.LayerNorm(readout_dim),
-                nn.Linear(readout_dim, readout_dim),
-                nn.GELU(),
-                nn.Dropout(configs.dropout),
-                nn.Linear(readout_dim, self.basis_rank),
-            )
+        self.proj_x = nn.Linear(readout_dim, configs.pred_len)
+        self.proj_y = nn.Linear(readout_dim, configs.pred_len)
+
         if self.readout_mode == "learned-basis-forecast-operator":
             self.basis_rank = int(getattr(configs, "basis_rank", 256))
             self.learned_basis_coeff = nn.Linear(readout_dim, self.basis_rank)
             self.learned_temporal_basis = nn.Parameter(torch.empty(configs.pred_len, self.basis_rank))
             self.learned_temporal_bias = nn.Parameter(torch.zeros(configs.pred_len))
             nn.init.normal_(self.learned_temporal_basis, mean=0.0, std=self.basis_rank ** -0.5)
-        if self.readout_mode == "query-bilinear-readout":
-            self.basis_rank = int(getattr(configs, "basis_rank", 256))
-            qbr_feature_dim = 9
-            self.qbr_feature_proj = nn.Linear(readout_dim, self.basis_rank)
-            self.qbr_row_key = nn.Sequential(
-                nn.Linear(qbr_feature_dim, configs.d_model),
-                nn.GELU(),
-                nn.Linear(configs.d_model, self.basis_rank),
-            )
-            self.qbr_row_bias = nn.Parameter(torch.zeros(configs.pred_len))
-            nn.init.normal_(self.qbr_row_key[-1].weight, mean=0.0, std=self.basis_rank ** -0.5)
-            nn.init.zeros_(self.qbr_row_key[-1].bias)
-        if self.readout_mode == "elastic-causal-target-query-decoder":
-            self.target_query_segment_len = int(getattr(configs, "target_query_segment_len", 48))
-            target_query_heads = int(getattr(configs, "target_query_heads", 4))
-            target_query_ff = int(getattr(configs, "target_query_ff", configs.d_ff))
-            target_query_dropout = getattr(configs, "target_query_dropout", None)
-            if target_query_dropout is None:
-                target_query_dropout = configs.dropout
-            self.target_query_embed = nn.Sequential(
-                nn.Linear(2, configs.d_model),
-                nn.GELU(),
-                nn.Linear(configs.d_model, configs.d_model),
-            )
-            self.target_cross_attn = nn.MultiheadAttention(
-                configs.d_model,
-                num_heads=target_query_heads,
-                dropout=target_query_dropout,
-                batch_first=True,
-            )
-            self.target_self_attn = nn.MultiheadAttention(
-                configs.d_model,
-                num_heads=target_query_heads,
-                dropout=target_query_dropout,
-                batch_first=True,
-            )
-            self.target_query_norm1 = nn.LayerNorm(configs.d_model)
-            self.target_query_norm2 = nn.LayerNorm(configs.d_model)
-            self.target_query_norm3 = nn.LayerNorm(configs.d_model)
-            self.target_query_ffn = nn.Sequential(
-                nn.Linear(configs.d_model, target_query_ff),
-                nn.GELU(),
-                nn.Dropout(target_query_dropout),
-                nn.Linear(target_query_ff, configs.d_model),
-            )
-            self.target_segment_out = nn.Linear(configs.d_model, self.target_query_segment_len)
-        self.nested_readout_modes = {
-            "nested-segment-decoder",
-            "dense-initialized-nested-segment-decoder",
-            "target-conditioned-nested-residual-decoder",
-            "checkpoint-initialized-nested-segment-decoder",
-            "target-conditioned-nested-segment-decoder",
-        }
-        if self.readout_mode in self.nested_readout_modes:
-            boundaries = sorted(set(getattr(configs, "target_horizons", [configs.pred_len])))
-            boundaries = [value for value in boundaries if 0 < value <= configs.pred_len]
-            if configs.pred_len not in boundaries:
-                boundaries.append(configs.pred_len)
-            self.nested_boundaries = boundaries
-            previous = 0
-            if self.readout_mode == "target-conditioned-nested-residual-decoder":
-                self.nested_residual_down = nn.Linear(readout_dim, adapter_dim)
-                self.nested_residual_condition = nn.Linear(1, adapter_dim)
-                self.nested_segment_heads = nn.ModuleList()
-                for boundary in self.nested_boundaries:
-                    head = nn.Linear(adapter_dim, boundary - previous)
-                    nn.init.zeros_(head.weight)
-                    nn.init.zeros_(head.bias)
-                    self.nested_segment_heads.append(head)
-                    previous = boundary
-            else:
-                if self.readout_mode == "target-conditioned-nested-segment-decoder":
-                    self.nested_primary_condition = nn.Sequential(
-                        nn.Linear(1, adapter_dim),
-                        nn.GELU(),
-                        nn.Linear(adapter_dim, readout_dim),
-                    )
-                    nn.init.zeros_(self.nested_primary_condition[-1].weight)
-                    nn.init.zeros_(self.nested_primary_condition[-1].bias)
-                self.nested_segment_heads = nn.ModuleList()
-                for boundary in self.nested_boundaries:
-                    head = nn.Linear(readout_dim, boundary - previous)
-                    if self.readout_mode == "dense-initialized-nested-segment-decoder":
-                        with torch.no_grad():
-                            head.weight.copy_(self.proj_x.weight[previous:boundary])
-                            head.bias.copy_(self.proj_x.bias[previous:boundary])
-                    self.nested_segment_heads.append(head)
-                    previous = boundary
 
         self.normalization_x = Normalize(configs.enc_in, affine=False)
         self.normalization_y = Normalize(configs.enc_in, affine=False)
 
-    def _condition_readout(self, hidden, target_prefix):
-        if self.readout_mode not in self.conditioned_projection_modes:
-            return hidden
-        if target_prefix is None:
-            target_prefix = self.pred_len
-        prefix_value = hidden.new_tensor([[float(target_prefix) / float(self.pred_len)]])
-        condition = torch.tanh(self.prefix_condition(prefix_value)).view(1, 1, -1)
-        return hidden + hidden * condition
-
-    def _prefix_features(self, target_prefix, device, dtype):
-        if target_prefix is None:
-            target_prefix = self.pred_len
-        horizon = int(target_prefix)
-        steps = torch.arange(1, horizon + 1, device=device, dtype=dtype) / float(self.pred_len)
-        prefix = torch.full_like(steps, float(horizon) / float(self.pred_len))
-        return torch.stack([steps, prefix], dim=-1)
-
-    def _prefix_scalar_feature(self, target_prefix, hidden):
-        if target_prefix is None:
-            target_prefix = self.pred_len
-        return hidden.new_tensor([[float(target_prefix) / float(self.pred_len)]])
-
-    def _forecast_basis_features(self, horizon, hidden):
-        rank = self.basis_rank
-        steps = torch.arange(1, horizon + 1, device=hidden.device, dtype=hidden.dtype)
-        tau = steps / float(self.pred_len)
-        features = [
-            torch.ones_like(tau),
-            tau,
-            tau * tau,
-            tau * tau * tau,
-        ]
-        frequency = 1.0
-        while len(features) < rank:
-            angle = np.pi * frequency * tau
-            features.append(torch.sin(angle))
-            if len(features) < rank:
-                features.append(torch.cos(angle))
-            frequency += 1.0
-        basis = torch.stack(features[:rank], dim=-1)
-        return basis / float(rank) ** 0.5
-
-    def _target_set_prefix_head(self, hidden, target_prefix):
-        # hidden: [B, C, R], output: [B, H, C]
-        features = self._prefix_features(target_prefix, hidden.device, hidden.dtype)
-        weights = self.prefix_step_weight(features)
-        bias = self.prefix_step_bias(features).squeeze(-1)
-        output = torch.einsum("bcr,hr->bch", hidden, weights) * self.readout_scale
-        output = output + bias.view(1, 1, -1)
-        return output.permute(0, 2, 1)
-
-    def _prefix_token_decoder(self, hidden, target_prefix):
-        # hidden: [B, C, N, D], output: [B, H, C]
-        features = self._prefix_features(target_prefix, hidden.device, hidden.dtype)
-        query = self.step_query(features)
-        key = self.token_key(hidden)
-        value = self.token_value(hidden)
-        scores = torch.einsum("bcnd,hd->bchn", key, query) * self.readout_scale
-        weights = torch.softmax(scores, dim=-1)
-        context = torch.einsum("bchn,bcnd->bchd", weights, value)
-        output = self.token_out(context).squeeze(-1)
-        return output.permute(0, 2, 1)
-
-    def _continuous_forecast_basis_operator(self, hidden, target_prefix):
-        # hidden: [B, C, R], output: [B, H, C]
-        if target_prefix is None:
-            target_prefix = self.pred_len
-        horizon = int(target_prefix)
-        coeff = self.basis_coeff(hidden)
-        basis = self._forecast_basis_features(horizon, hidden)
-        output = torch.einsum("hk,bck->bch", basis, coeff)
-        return output.permute(0, 2, 1)
-
-    def _prefix_native_dense_equivalent_row_bank(self, hidden, target_prefix):
-        # hidden: [B, C, R], output: [B, H, C]
-        if target_prefix is None:
-            target_prefix = self.pred_len
-        horizon = int(target_prefix)
-        output = torch.nn.functional.linear(
-            hidden,
-            self.proj_x.weight[:horizon],
-            self.proj_x.bias[:horizon],
-        )
-        return output.permute(0, 2, 1)
-
     def _learned_basis_forecast_operator(self, hidden, target_prefix):
-        # hidden: [B, C, R], output: [B, H, C]
-        if target_prefix is None:
-            target_prefix = self.pred_len
-        horizon = int(target_prefix)
+        # hidden: [B, C, R] -> output: [B, H, C]
+        horizon = self.pred_len if target_prefix is None else int(target_prefix)
         coeff = self.learned_basis_coeff(hidden)
         basis = self.learned_temporal_basis[:horizon].to(dtype=hidden.dtype)
         bias = self.learned_temporal_bias[:horizon].to(dtype=hidden.dtype)
         output = torch.einsum("hk,bck->bch", basis, coeff) + bias.view(1, 1, -1)
         return output.permute(0, 2, 1)
 
-    def _query_bilinear_features(self, horizon, hidden):
-        steps = torch.arange(1, horizon + 1, device=hidden.device, dtype=hidden.dtype)
-        tau = steps / float(self.pred_len)
-        return torch.stack(
-            [
-                torch.ones_like(tau),
-                tau,
-                tau * tau,
-                tau * tau * tau,
-                torch.sin(np.pi * tau),
-                torch.cos(np.pi * tau),
-                torch.sin(2.0 * np.pi * tau),
-                torch.cos(2.0 * np.pi * tau),
-                torch.sin(4.0 * np.pi * tau),
-            ],
-            dim=-1,
-        )
-
-    def _query_bilinear_readout(self, hidden, target_prefix):
-        # hidden: [B, C, R], output: [B, H, C]
-        if target_prefix is None:
-            target_prefix = self.pred_len
-        horizon = int(target_prefix)
-        feature = self.qbr_feature_proj(hidden)
-        query_features = self._query_bilinear_features(horizon, hidden)
-        row_key = self.qbr_row_key(query_features) / float(self.basis_rank) ** 0.5
-        bias = self.qbr_row_bias[:horizon].to(dtype=hidden.dtype)
-        output = torch.einsum("bck,hk->bch", feature, row_key) + bias.view(1, 1, -1)
-        return output.permute(0, 2, 1)
-
-    def _target_segment_features(self, horizon, hidden):
-        segment_len = self.target_query_segment_len
-        segment_count = (int(horizon) + segment_len - 1) // segment_len
-        start = torch.arange(segment_count, device=hidden.device, dtype=hidden.dtype) * segment_len
-        center = (start + 0.5 * segment_len) / float(self.pred_len)
-        width = torch.full_like(center, float(segment_len) / float(self.pred_len))
-        return torch.stack([center, width], dim=-1)
-
-    def _elastic_causal_target_query_decoder(self, hidden, target_prefix):
-        # hidden: [B, C, N, D], output: [B, H, C]
-        if target_prefix is None:
-            target_prefix = self.pred_len
-        horizon = int(target_prefix)
-        batch, channels, patch_num, dim = hidden.shape
-        memory = hidden.reshape(batch * channels, patch_num, dim)
-        features = self._target_segment_features(horizon, hidden)
-        query = self.target_query_embed(features)
-        query = query.unsqueeze(0).expand(batch * channels, -1, -1)
-        cross, _ = self.target_cross_attn(query, memory, memory, need_weights=False)
-        query = self.target_query_norm1(query + cross)
-
-        segment_count = query.shape[1]
-        causal_mask = torch.triu(
-            torch.ones(segment_count, segment_count, device=hidden.device, dtype=torch.bool),
-            diagonal=1,
-        )
-        target, _ = self.target_self_attn(query, query, query, attn_mask=causal_mask, need_weights=False)
-        target = self.target_query_norm2(query + target)
-        target = self.target_query_norm3(target + self.target_query_ffn(target))
-        output = self.target_segment_out(target).reshape(batch, channels, -1)
-        output = output[:, :, :horizon]
-        return output.permute(0, 2, 1)
-
-    def _dense_prefix_residual_adapter(self, hidden, target_prefix):
-        # hidden: [B, C, R], output: [B, C, pred_len]
-        base = self.proj_x(hidden)
-        condition = torch.tanh(self.residual_condition(self._prefix_scalar_feature(target_prefix, hidden))).view(1, 1, -1)
-        adapted = torch.nn.functional.gelu(self.residual_down(hidden)) * (1.0 + condition)
-        residual = self.residual_up(adapted)
-        return base + residual
-
-    def _row_gated_dense_head(self, hidden, target_prefix):
-        # hidden: [B, C, R], output: [B, C, pred_len]
-        base = self.proj_x(hidden)
-        features = self._prefix_features(self.pred_len, hidden.device, hidden.dtype)
-        if target_prefix is None:
-            target_prefix = self.pred_len
-        features[:, 1] = float(target_prefix) / float(self.pred_len)
-        gate = 1.0 + 0.1 * torch.tanh(self.row_gate(features).squeeze(-1))
-        return base * gate.view(1, 1, -1)
-
-    def _prefix_adapter_shared_dense(self, hidden, target_prefix):
-        # hidden: [B, C, R], output: [B, C, pred_len]
-        condition = torch.tanh(self.hidden_adapter_condition(self._prefix_scalar_feature(target_prefix, hidden))).view(1, 1, -1)
-        adapted = torch.nn.functional.gelu(self.hidden_adapter_down(hidden)) * (1.0 + condition)
-        hidden = hidden + self.hidden_adapter_up(adapted)
-        return self.proj_x(hidden)
-
-    def _dense_row_initialized_prefix_decoder(self, hidden, target_prefix):
-        # hidden: [B, C, R], output: [B, H, C]
-        if target_prefix is None:
-            target_prefix = self.pred_len
-        horizon = int(target_prefix)
-        base = torch.nn.functional.linear(hidden, self.proj_x.weight[:horizon], self.proj_x.bias[:horizon])
-        condition = torch.tanh(self.prefix_row_delta_condition(self._prefix_scalar_feature(target_prefix, hidden))).view(1, 1, -1)
-        adapted = torch.nn.functional.gelu(self.prefix_row_delta_down(hidden)) * (1.0 + condition)
-        delta = self.prefix_row_delta_up(adapted)[:, :, :horizon]
-        return (base + delta).permute(0, 2, 1)
-
-    def _nested_segment_decoder(self, hidden, target_prefix):
-        # hidden: [B, C, R], output: [B, H, C]
-        if target_prefix is None:
-            target_prefix = self.pred_len
-        horizon = int(target_prefix)
-        segments = []
-        previous = 0
-        for boundary, head in zip(self.nested_boundaries, self.nested_segment_heads):
-            if previous >= horizon:
-                break
-            segment = head(hidden)
-            take = min(boundary, horizon) - previous
-            if take > 0:
-                segments.append(segment[:, :, :take])
-            previous = boundary
-        return torch.cat(segments, dim=-1).permute(0, 2, 1)
-
-    def _target_conditioned_nested_residual_decoder(self, hidden, target_prefix):
-        # hidden: [B, C, R], output: [B, H, C]
-        if target_prefix is None:
-            target_prefix = self.pred_len
-        horizon = int(target_prefix)
-        base = self.proj_x(hidden)[:, :, :horizon]
-        condition = torch.tanh(self.nested_residual_condition(self._prefix_scalar_feature(target_prefix, hidden))).view(1, 1, -1)
-        adapted = F.gelu(self.nested_residual_down(hidden)) * (1.0 + condition)
-        segments = []
-        previous = 0
-        for boundary, head in zip(self.nested_boundaries, self.nested_segment_heads):
-            if previous >= horizon:
-                break
-            segment = head(adapted)
-            take = min(boundary, horizon) - previous
-            if take > 0:
-                segments.append(segment[:, :, :take])
-            previous = boundary
-        residual = torch.cat(segments, dim=-1)
-        return (base + residual).permute(0, 2, 1)
-
-    def _target_conditioned_nested_segment_decoder(self, hidden, target_prefix):
-        # hidden: [B, C, R], output: [B, H, C]
-        condition = torch.tanh(self.nested_primary_condition(self._prefix_scalar_feature(target_prefix, hidden))).view(1, 1, -1)
-        conditioned_hidden = hidden + hidden * condition
-        return self._nested_segment_decoder(conditioned_hidden, target_prefix)
-
     def forward(self, x, y, is_training=True, target_prefix=None):
-        # [B, L, C]   [B, T, C]
-        B, T, C = x.shape
-        _, L, C = y.shape
+        # x: [B, seq_len, C], y: [B, pred_len, C]
+        batch, seq_len, channels = x.shape
+        _batch_y, pred_len, _channels_y = y.shape
 
-        x = self.normalization_x(x, 'norm')
-        x = self.patch_emb_x(x.permute(0, 2, 1).reshape(-1, C*T))
+        x = self.normalization_x(x, "norm")
+        x = self.patch_emb_x(x.permute(0, 2, 1).reshape(-1, channels * seq_len))
 
+        recon = y
         if is_training:
-            y = self.normalization_y(y, 'norm')
-            y = self.patch_emb_y(y.permute(0, 2, 1).reshape(-1, C*L))
+            y = self.normalization_y(y, "norm")
+            y = self.patch_emb_y(y.permute(0, 2, 1).reshape(-1, channels * pred_len))
 
-        # [B, C, D]
-        align_loss = 0.0
-        for i in range(self.e_layers):
-            x = x + self.encoder[i](x)
+        align_loss = x.new_zeros(())
+        for layer_idx in range(self.e_layers):
+            x = x + self.encoder[layer_idx](x)
             if self.layer_norm:
-                x = self.norm_x[i](x)
+                x = self.norm_x[layer_idx](x)
             if is_training:
-                x_ = self.ffn[i](x)
-                y = y + self.autoencoder[i](y)
+                x_aligned = self.ffn[layer_idx](x)
+                y = y + self.autoencoder[layer_idx](y)
                 if self.layer_norm:
-                    y = self.norm_y[i](y)
-                # align_loss += self.align(x_, y)
-                align_loss += self.align(x_, y.detach())
-        align_loss /= self.e_layers
+                    y = self.norm_y[layer_idx](y)
+                align_loss = align_loss + self.align(x_aligned, y.detach())
+        align_loss = align_loss / self.e_layers
 
-        # [B, C, N, D]
-        # print(x.reshape(-1, C, self.patch_num, self.d_model).shape)
-
-        x = x.reshape(-1, C, self.patch_num, self.d_model)
-        if self.readout_mode == "target-set-prefix-head":
-            x = self._target_set_prefix_head(x.flatten(start_dim=-2), target_prefix)
-        elif self.readout_mode == "prefix-token-decoder":
-            x = self._prefix_token_decoder(x, target_prefix)
-        elif self.readout_mode == "dense-row-initialized-prefix-decoder":
-            x = self._dense_row_initialized_prefix_decoder(x.flatten(start_dim=-2), target_prefix)
-        elif self.readout_mode in {
-            "nested-segment-decoder",
-            "dense-initialized-nested-segment-decoder",
-            "checkpoint-initialized-nested-segment-decoder",
-        }:
-            x = self._nested_segment_decoder(x.flatten(start_dim=-2), target_prefix)
-        elif self.readout_mode == "target-conditioned-nested-segment-decoder":
-            x = self._target_conditioned_nested_segment_decoder(x.flatten(start_dim=-2), target_prefix)
-        elif self.readout_mode == "target-conditioned-nested-residual-decoder":
-            x = self._target_conditioned_nested_residual_decoder(x.flatten(start_dim=-2), target_prefix)
-        elif self.readout_mode == "continuous-forecast-basis-operator":
-            x = self._continuous_forecast_basis_operator(x.flatten(start_dim=-2), target_prefix)
-        elif self.readout_mode == "elastic-causal-target-query-decoder":
-            x = self._elastic_causal_target_query_decoder(x, target_prefix)
-        elif self.readout_mode == "prefix-native-dense-equivalent-row-bank":
-            x = self._prefix_native_dense_equivalent_row_bank(x.flatten(start_dim=-2), target_prefix)
+        hidden = x.reshape(batch, channels, self.patch_num, self.d_model).flatten(start_dim=-2)
+        if self.readout_mode == "official":
+            output = self.proj_x(hidden).permute(0, 2, 1)
         elif self.readout_mode == "learned-basis-forecast-operator":
-            x = self._learned_basis_forecast_operator(x.flatten(start_dim=-2), target_prefix)
-        elif self.readout_mode == "query-bilinear-readout":
-            x = self._query_bilinear_readout(x.flatten(start_dim=-2), target_prefix)
+            output = self._learned_basis_forecast_operator(hidden, target_prefix)
         else:
-            x = x.flatten(start_dim=-2)
-            if self.readout_mode == "dense-prefix-residual-adapter":
-                x = self._dense_prefix_residual_adapter(x, target_prefix)
-            elif self.readout_mode == "row-gated-dense-head":
-                x = self._row_gated_dense_head(x, target_prefix)
-            elif self.readout_mode == "prefix-adapter-shared-dense":
-                x = self._prefix_adapter_shared_dense(x, target_prefix)
-            else:
-                x = self._condition_readout(x, target_prefix)
-                x = self.proj_x(x) # [B, C, T]
-            x = x.permute(0, 2, 1)
-        x = self.normalization_x(x, 'denorm')
+            raise ValueError(f"Unsupported readout mode: {self.readout_mode}")
+        output = self.normalization_x(output, "denorm")
 
         if is_training:
-            y = self.proj_y(y.reshape(-1, C, self.patch_num, self.d_model).flatten(start_dim=-2)) # [B, C, T]
-            y = y.permute(0, 2, 1)
-            y = self.normalization_y(y, 'denorm')
+            recon = self.proj_y(y.reshape(batch, channels, self.patch_num, self.d_model).flatten(start_dim=-2))
+            recon = recon.permute(0, 2, 1)
+            recon = self.normalization_y(recon, "denorm")
 
-        return x[:, -self.pred_len :, :], y, align_loss
+        return output[:, -self.pred_len :, :], recon, align_loss

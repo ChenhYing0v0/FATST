@@ -7,3 +7,9 @@ operations，以及 changed tensor 进入下游模块的位置。
 
 非模型代码按 functional module 组织，例如 training、data loading、metrics、
 runner、diagnostics、remote scripts 或 analysis。
+
+## 当前 Phase5 入口
+
+- `phase5-clean-timealign-a6-lbf.md`: StageA 固化后的 clean official TimeAlign +
+  A6-LBF-r256 实现说明。
+- `docs/archive/phase5-stage-a/code-explanation/`: 旧 StageA 变体和诊断代码说明归档。

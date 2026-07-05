@@ -1,230 +1,74 @@
 # Phase5 TimeAlign Interface Stage Ledger
 
-本文档是 Phase5 中 `TimeAlign + unified multi-horizon interface` 的阶段执行账本。它只记录阶段内
-candidate queue、实验决策和未完成任务；完整分析报告保存在 `analysis/`。
-
-## Stage Scope
-
-| Field | Content |
-| --- | --- |
-| `stage_id` | `phase5-timealign-interface` |
-| `paper_mainline_role` | 支撑论文贡献 1：`Capacity-Preserving Prefix-Aware Interface`，并为后续 reliability-aware future supervision routing 提供 carrier |
-| `active_question` | 如何设计 SCI 级 unified prediction interface，使 unified multi-horizon 不只是训练 720 再 crop，而是在 head/interface 层面对 multi-prefix evaluation 有结构一致性 |
-| `active_carrier` | official-source TimeAlign |
-| `entry_evidence` | TimeAlign 是强 baseline；fixed/unified 对比存在 unified decrease；H1/H1C/A2/A3B 表明 head/interface 是当前主要 confounder |
-| `stage_exit_condition` | 找到一个通过 narrative gate 且 effectiveness 接近或超过 H1/H1C controls 的 prefix-aware primary interface；或证明该 interface family 不成立并重构论文贡献 |
-| `stage_rollback_condition` | candidate queue 中 primary-interface 候选均失败或被 narrative gate 拒绝后，回 Step 2/3 重审 interface problem 是否应作为论文贡献 |
+本文档是 Phase5 当前主线账本。旧 StageA 候选细节已归档到
+`docs/archive/phase5-stage-a/`；详细实验结果仍保存在 `analysis/`。
 
 ## Decision Cursor
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Phase5-StageB：Step 8 B0 diagnostic remote gate running |
-| `current_candidate` | `B0_future_supervision_pressure_audit` 为 diagnostic-only next action；无 active Stage A head candidate |
-| `latest_decision` | B0 source/code audit 与 local verification 通过；已在 529_Lab-3090 启动 diagnostic remote gate |
-| `next_required_action` | 等待 B0 remote artifacts 完成后同步并分析 ETTh2/ETTm1/Weather × `b0_no_recon/b0_no_align/b0_no_future_pressure` |
-| `rollback_point` | 回 Step 2/3：重审 paper-core 是否应从 unified head 转向 reliability-aware future supervision / official-last stability-capacity conflict |
+| `stage_id` | `phase5-timealign-interface` |
+| `current_11_step` | StageA fixed；StageB 回到 Step 2/3 problem redefinition |
+| `active_carrier` | `A6-LBF-r256` on official-source TimeAlign |
+| `active_question` | 如何基于 A6-LBF-r256 这个 unified carrier 继续研究 future-aware / reliability-aware StageB mechanism |
+| `latest_decision` | A6-LBF-r256 已从 StageA partial evidence 上调为论文重要创新点与 StageB 起点 |
+| `next_required_action` | StageB 重新设计；不得沿用 pre-cleanup B0 diagnostic 作为正式 method |
+| `rollback_point` | 若 StageB 新问题无法形成 narrative gate，则回到 A6-LBF-r256 作为独立 unified forecasting contribution |
 
-## Candidate Queue
+## StageA Fixed Result
 
-| ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Blocking Or Next Action | Artifacts |
-| --- | --- | --- | --- | --- | --- | --- |
-| `A3C_warm_started_nested_primary` | `failed_as_core_candidate` | A2 nested 的主要瓶颈是缺少 learned capacity；从 H1 learned full head warm-start 后，primary nested interface 应显著优于 A2/A3B | passed：保留 primary nested interface，且 learned capacity 来自 trained checkpoint | 未通过：相对 A2 基本持平，未超过 H1/H1C | 保留为 negative evidence：row-slice warm-start 不足以 preserve learned function | `analysis/phase5_timealign_hss_a3c_warm_started_nested_gate_20260701/` |
-| `A3D_teacher_preserved_nested_primary` | `partial_pass` | full head/teacher 保留 dense prediction capacity，nested primary head 学习 prefix-consistent decomposition，可避免直接替换 head 带来的 capacity loss | passed：它直接修复 A3C 暴露的 function-preservation gap，且 nested 仍是 primary interface | 部分通过：`w03` overall 接近/略超 H1/H1C，但 ETTm2 仍失败 | 保留为 partial evidence，不直接作为 paper-core | `analysis/phase5_timealign_hss_a3d_teacher_preserved_nested_gate_20260701/` |
-| `A3E_target_conditioned_nested_primary` | `failed_as_core_candidate` | requested target set/prefix condition 应进入 decoder/head 本身，而不是 condition before 720-step projection 后再 crop | passed：它直接解决 multi-prefix evaluation 与 unified head 不一致；warm-start 只作为与 A3C 对齐的 initialization control，不作为机制贡献 | 未通过：ALL 相对 A3C 只有约 `-0.25%`，相对 A3D/H1 仍弱；ETTm1 上不如 A3C | 保留为 negative evidence；下一步做 reliability diagnostic，不直接进入 A3F | `analysis/phase5_timealign_hss_a3e_ettm1_replacement_gate_20260701/phase5_timealign_hss_a3e_ettm1_deep_dive.md` |
-| `A3F_teacher_preserved_target_conditioned_nested` | `deferred` | teacher preservation 解决 capacity，target conditioning 解决 requested-prefix specialization，二者组合可能形成最终 paper-core interface | 仅在 A3D/A3E 各自通过 narrative gate 后评估，避免未证实机制堆叠 | 必须超过单机制候选，且不能只靠参数量提升 | 等 A3D/A3E 至少一个 partial/pass 后再考虑 | pending |
-| `A4_interface_reliability_diagnostic` | `diagnostic_only` | A3D/A3E/A3C/A2/H1/H1C 的相对表现可能说明 capacity-preserving path 的可靠性随 future context 变化，而不是存在一个 universal head | not_required：launch 前定义为 diagnostic，不可直接升级为 paper-core | 已完成：best path 分散，oracle 上限存在但较小；只证明 reliability 差异存在，不证明可部署 routing | 进入 A4R signal diagnostic；禁止把 dataset/horizon 手工选择当作方法 | `analysis/phase5_timealign_hss_a4_interface_reliability_diagnostic_20260701/phase5_timealign_hss_a4_interface_reliability_diagnostic.md` |
-| `A4R_reliability_signal_diagnostic` | `diagnostic_only` | 若可观测 signals 能预测 path reliability 或 gap-to-best，则 Stage A 可重构为 `Reliability-Aware Capacity-Preserving Interface`，避免弱化为 manual routing | not_required：使用现有日志的 diagnostic-only | 未通过：ALL-level 最强 signal Spearman `0.321`，且 dataset 内方向不稳定 | 不进入 routing；下一步 A4S 设计更明确的 validation-prefix signal export | `analysis/phase5_timealign_hss_a4r_reliability_signal_diagnostic_20260701/phase5_timealign_hss_a4r_reliability_signal_diagnostic.md` |
-| `A4S_validation_prefix_signal_export` | `diagnostic_only` | 当前日志过粗，缺少 prefix-wise validation behavior；若 prefix validation residual / teacher-student disagreement 能解释 path reliability，才有资格进入 routing method | not_required：diagnostic-only；若后续作为 paper-core signal，必须重新过 narrative gate | 未通过：ALL strongest Spearman `0.388`；ETTh2/ETTm1/Weather 的 top signals 方向不一致 | 触发 Step 2/3 rollback；不进入 learned routing | `analysis/phase5_timealign_hss_a4s_validation_prefix_signal_export_20260702/phase5_timealign_hss_a4s_validation_prefix_signal_export.md` |
-| `A3B_nested_residual_gate` | `failed_as_core_candidate` | nested structure 作为 residual path 可修复 dense head 的 prefix behavior | failed：nested 变成 dense head 附属补丁，削弱 primary interface 叙事 | 0/12 win，不能作为 paper-core | 仅保留为 negative evidence/control | `analysis/phase5_timealign_hss_a3b_nested_residual_gate_20260701/` |
-| `A3A_dense_initialized_nested_segment` | `failed_as_core_candidate` | 随机 dense row-copy 可作为 capacity-preserving repair | failed：随机初始化复制不等于 learned capacity preservation | 不通过 | 标记为设计错误，不再沿用 | `analysis/phase5_timealign_hss_a3_interface_repair_20260701/` |
-| `A2_nested_segment_primary` | `partial_pass` | nested segment primary interface 可能比 full dense head 更适配 multi-prefix evaluation | partial：有结构叙事，但 capacity 不足 | 有正向信号但不足以 paper-core | 作为 A3D/A3E 的机制来源 | `analysis/phase5_timealign_hss_a2_interface_gate_20260630/` |
-| `Stage_A_contribution_reevaluation` | `superseded` | A4S 后曾考虑把 Stage A 降级为 protocol/control 并转入 Stage B | superseded：后续审稿讨论认为该路线存在逻辑漏洞 | not_applicable | 被 A5 共识替代：Stage A 必须先解决 architecture | `analysis/phase5_stage_a_contribution_reevaluation_20260702/stage_a_contribution_reevaluation.md` |
-| `A5_pcf_prefix_consistent_function_preserving_decoder` | `narrative_rejected_after_review` | 原假设是用 active trained dense anchor + cumulative correction 兼顾 capacity 与 prefix consistency | 未通过：它过度依赖 pretrained dense rows，结构上接近 residual/correction，并混合 A2/A3D/H1C 思路；不能作为重新设计的 unified head | not_applicable | 保留为 rejected design/control idea；不得进入实现或 remote gate | `docs/experiments/phase5-a5-capacity-preserving-prefix-consistent-decoder.md` |
-| `A5-Q_elastic_causal_target_query_decoder` | `failed_as_core_candidate` | 用 future position queries + prefix-causal / structured mask 作为主生成 graph，requested prefix 通过 query set 和 mask 进入 decoder | passed：target-query graph、causal mask 与 absolute future coordinates 形成 prefix-elastic decoder | 未通过：`a5q_seg48_small` 相对 `best_stage_control` 平均 MSE `+42.41%`，`a5q_seg24_wide` 为 `+55.62%`，wins `0/12` | 保留为 negative evidence：prefix-query contract 成立但容量/训练路径不足；不得继续简单加宽 | `analysis/phase5_timealign_hss_a5_unified_head_sync_gate_20260703/phase5_timealign_hss_a5_unified_head_sync_gate_report.md` |
-| `A5-Q_collapse_diagnostic_repair` | `diagnostic_only_completed_failed_as_repair` | A5-Q collapse 可能混入 decoder dropout 继承 preset 与 ETTm1 `patch_num=1` cross-attention 退化，需要先拆开验证 | not_required：launch 前定义为 diagnostic-only，不可直接升级为 paper-core | completed：ETTm1 dropout 修复显著改善旧 A5-Q，但最佳 setting 仍相对 best stage control `+2.16%`，所有 arms wins `0`；`patch_num_override=48` 反而更差 | 只保留为 failure diagnosis；若保留 target-query 叙事，需回 Step 4/5 重新设计 function/capacity-preserving path | `analysis/phase5_timealign_hss_a5q_diagnostic_gate_20260703/phase5_timealign_hss_a5q_diagnostic_gate_report.md` |
-| `A5-B_continuous_forecast_basis_operator` | `failed_as_core_candidate` | 将 unified head 写成 continuous forecast function/operator：TimeAlign hidden 生成 coefficients，requested prefix 只决定 future coordinate grid | passed：forecast function/operator 避免 dense rows、anchor 与 residual | 未通过：最佳 `a5b_r128` 相对 `best_stage_control` 平均 MSE `+14.19%`，wins `0/12`；rank 128 比 rank 64 好但仍明显不足 | 保留为 negative evidence：basis rank 提升有效但 operator class 上限不足 | `analysis/phase5_timealign_hss_a5_unified_head_sync_gate_20260703/phase5_timealign_hss_a5_unified_head_sync_gate_report.md` |
-| `A6-DER_prefix_native_dense_equivalent_row_bank` | `control_passed_as_capacity_ceiling` | 若完全保留 dense row capacity 且只改成 prefix-native invocation，应该能判断 Stage A bottleneck 是否真在 head capacity | not_required：作为 capacity ceiling/control，不单独宣称 paper-core | passed_as_control：相对 best stage control 平均 `+0.91%`、wins `2/12`，相对 A5-B-r128 `-11.27%` | 证明 A5 失败主要包含 operator capacity 问题；作为 A6-LBF ceiling 保留 | `analysis/phase5_timealign_hss_a6_capacity_native_gate_20260703/phase5_timealign_hss_a6_capacity_native_gate_report.md` |
-| `A6-LBF_learned_basis_forecast_operator` | `partial_pass_capacity_recovered_not_yet_core` | 用 learned temporal basis + hidden coefficients 构造 prefix-consistent forecast operator；`K=720` 可 dense-equivalent，较小 rank 测试 intrinsic rank | conditional_pass：anchor-free、非 residual、prefix-native，且直接修复 A5-B fixed-basis under-capacity；必须和 A6-DER ceiling 一起解释 | partial_pass：`r256` 相对 A6-DER 平均 `-0.03%`，相对 A5-B-r128 `-11.30%`，但对 best stage control `0/12` win；partial-pass diagnostic 显示主要剩余问题是 ETTh2 official-last drift 与 objective/regularization mismatch | 回 Step 4/5 设计 official-last-compatible anti-drift / objective repair；不做 rank-only sweep；`best-val` 仅可作为 diagnostic-only upper-bound audit | `analysis/phase5_timealign_hss_a6_partial_pass_diagnostic_20260703/phase5_timealign_hss_a6_partial_pass_diagnostic_report.md` |
-| `A6-QBR_query_bilinear_readout` | `failed_as_core_candidate` | 保留 target-query semantics，但把 final readout 改成 dense-equivalent bilinear operator | failed after evidence：target-query semantics 未能转化为 forecasting capacity，coordinate row-key generator 成为瓶颈 | failed：best `r256` vs A6-LBF-r256 `+35.69%`，vs best controls `+36.78%`，wins `0/12`；`r512` 不改善 | 不继续 rank/scale/teacher sweep；触发 Stage A architecture exhaustion audit | `analysis/phase5_timealign_hss_a6qbr_query_bilinear_gate_20260705/phase5_timealign_hss_a6qbr_interpretation.md` |
-| `A6S_official_last_stability_path` | `diagnostic_control_completed_failed_as_repair` | A6-LBF 已恢复 capacity 但 final checkpoint 仍弱；需要在 official-last 协议下增强 final-weight / operator stability | conditional：`A6S-EMA` 只作为 control，`A6S-HeadStability` 可作为机制候选，`A6S-SelfTeacher` 暂缓 | minimal gate 未通过：最佳 `lbf_r256_ema099_smooth1e3` 相对 ETTh2 best control `+2.00%`，wins `0/4`；EMA-0.99 只有弱改善，smooth1e-3 过弱 | 不升级为 paper-core；进入 A6S2 calibration diagnostic | `analysis/phase5_timealign_hss_a6s_stability_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md` |
-| `A6S2_stability_calibration_gate` | `diagnostic_completed_partial_positive_ema_only` | A6S 的 smoothness penalty 实际强度过低，需要先校准 stability strength 再判断 route 是否值得继续 | diagnostic-only：不作为 paper-core；若强 smoothness 独立改善，再回 Step 4/6 设计机制化 operator-stability method | completed：`ema0999` 显著改善但仍未完全超过 best controls；`smooth10/100` 变差 | EMA 作为 control evidence；暂停简单 smoothness route，转入 A6S-SelfTeacher narrative gate | `analysis/phase5_timealign_hss_a6s2_stability_calibration_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md` |
-| `A6ST_self_teacher_consistency` | `failed_as_universal_method_etth2_specific_positive` | 若 trajectory-averaged weights 有效，可用 EMA teacher/prefix prediction consistency 训练 raw final checkpoint，而不是 test-time 依赖 EMA | conditional_pass：作为 official-last-compatible raw-checkpoint stabilization；若表述成 generic EMA/KD 则不能作为 paper-core | ETTh2 partial pass，但 cross-dataset sanity 未通过：ETTm1/Weather 相对 best controls `+1.20%`、wins `0/8` | 保留为 ETTh2 drift repair evidence；不得直接 full matrix 或 paper-core 化；回 Step 4/5 设计 selective stability objective | `analysis/phase5_timealign_hss_a6st_self_teacher_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md`; `analysis/phase5_timealign_hss_a6st_cross_dataset_sanity_20260704/phase5_timealign_hss_a6s_stability_gate_report.md` |
-| `A6ST_cross_dataset_sanity` | `completed_failed_safety_gate` | ETTh2 正向可能只是数据集特有；需要确认 self-teacher 不伤害 ETTm1/Weather | diagnostic-only：不是 full paper gate，只检查安全性 | failed：ETTm1 `+1.49%`、Weather `+0.91%` vs best controls，均 `0/4` wins | 不扩展为 full matrix；进入 Step 4/5 机制诊断与新设计 | `analysis/phase5_timealign_hss_a6st_cross_dataset_sanity_20260704/phase5_timealign_hss_a6s_stability_gate_report.md` |
-| `A7DG_disagreement_gated_self_teacher` | `partial_positive_not_paper_core` | uniform self-teacher 只在 high-disagreement/high-drift 情况下有益；用 detached teacher-student disagreement gate 控制 consistency 强度，使低 drift 数据集退化接近 A6-LBF | conditional_pass：必须写成 disagreement-triggered raw-final stabilization；若变成 dataset hand-tuned threshold 则失败 | partial positive：best `abs004` vs uniform A6ST `-0.40%`、`11/12` wins，gate 按 dataset 降权；但 vs best controls `+0.46%`、wins `2/12` | 保留 selective stability evidence；下一步不能 threshold sweep，需重新过 Step 4/5 | `analysis/phase5_timealign_hss_a7dg_selective_self_teacher_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md` |
-| `A8TAG_teacher_advantage_gated_self_teacher` | `failed_as_core_candidate` | EMA teacher 只有在当前 supervised prefix 上比 raw student 更接近 label 时才应作为 consistency target | conditional pass failed：机制边界清楚，但 evidence 显示当前 supervised advantage 不能解释 useful self-teacher | failed：最佳 ratio variant 相对 best controls `+0.91%`、wins `0/12`，相对 A6-LBF `+0.03%`；binary gate 高激活反而更差 | 保留为 negative evidence；不做 teacher-advantage threshold/weight sweep，回 Step 4/5 | `analysis/phase5_timealign_hss_a8tag_teacher_advantage_gate_20260705/phase5_timealign_hss_a8tag_interpretation.md` |
-| `B0_future_supervision_pressure_audit` | `remote_gate_running` | TimeAlign future branch 的 reconstruction/alignment pressure 可能存在 useful/harmful structure，需要先作为 problem-existence diagnostic 验证 | diagnostic-only pass：tensor/gradient path 明确，`recon_loss` 约束 future branch，`align_loss` 通过 `y.detach()` 主要约束 history path | pending：等待 ETTh2/ETTm1/Weather × `b0_no_recon/b0_no_align/b0_no_future_pressure` artifacts | 远程已启动；若某 ablation 变好，也只能证明 pressure problem，不能直接升级为 method | `docs/experiments/phase5-stage-b0-future-supervision-pressure-audit.md` |
-| `A5-S_step_specific_hypernetwork_head` | `control_deferred` | 用 coordinate-conditioned hypernetwork 生成 step readout weights，避免 pretrained dense rows 但保留 step-specific capacity | deferred：容易被视作 generated dense rows，贡献边界弱于 A5-B | pending | 等 A5-B 结果后再决定是否作为 capacity control | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
-| `A5-I_cumulative_innovation_process_decoder` | `control_deferred` | 生成 future innovation process 再 cumulative 得到 trajectory，与 output/error-process 诊断对齐 | deferred：trajectory-process 叙事有价值，但 cumulative drift 风险较高 | pending | 等 A5-Q/A5-B gate 后再决定是否作为 trajectory-process control | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
-| `A5-M_masked_future_placeholder_head` | `backlog_diagnostic` | 使用 future placeholders + structured mask 形成 prefix-native decoder | pending：与 ElasTST 过近且实现重 | pending | 暂作 diagnostic/backlog | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
+| Item | Decision |
+| --- | --- |
+| Accepted variant | `A6-LBF-r256` / `learned-basis-forecast-operator` |
+| Role | 论文重要组成部分；StageB carrier |
+| Main claim | 一个 unified model 在当前三数据集上整体优于 fixed-horizon per-horizon TimeAlign baseline |
+| Code status | 主代码仅保留 `official` 与 `learned-basis-forecast-operator` |
+| Archived variants | A2/A3/A4/A5/A6-DER/A6-QBR/A6S/A6ST/A7DG/A8TAG/B0 旧文档与脚本均不再作为 active route |
 
-## Experiment Ledger
+### Key Evidence
 
-| Experiment | Candidate | Role | Result Summary | Decision | Full Report |
-| --- | --- | --- | --- | --- | --- |
-| H1/H1C interface controls | H1/H1C | control | target-set / row-gated 思路未形成稳定 paper-core interface，但保留强 control | control baseline | `analysis/phase5_timealign_hss_h1c_capacity_preserving_gate_20260701_partial/` |
-| A2 interface gate | `A2_nested_segment_primary` | method candidate | nested primary 有局部正向信号，但 capacity/稳定性不足 | `partial_pass` | `analysis/phase5_timealign_hss_a2_interface_gate_20260630/` |
-| A3A interface repair | `A3A_dense_initialized_nested_segment` | method candidate | 随机初始化 row-copy 不能证明 capacity preservation | `failed_as_core_candidate` | `analysis/phase5_timealign_hss_a3_interface_repair_20260701/` |
-| A3B nested residual | `A3B_nested_residual_gate` | diagnostic/control | residual path 破坏 primary nested 叙事且效果差 | `failed_as_core_candidate` | `analysis/phase5_timealign_hss_a3b_nested_residual_gate_20260701/` |
-| A3C warm-started nested | `A3C_warm_started_nested_primary` | method candidate | 相对 A2 `+0.07%`，相对 A3B `-4.06%`，相对 H1 `+0.68%`，相对 H1C `+0.25%` | `failed_as_core_candidate` | `analysis/phase5_timealign_hss_a3c_warm_started_nested_gate_20260701/phase5_timealign_hss_a3c_interpretation.md` |
-| A3D teacher-preserved nested | `A3D_teacher_preserved_nested_primary` | method candidate | `w03` 相对 A3C `-0.73%`，相对 H1 `-0.06%`，相对 H1C `-0.48%`，但 ETTm2 仍负；deep dive 判断 teacher preservation 有效但缺 target-prefix specialization | `partial_pass` | `analysis/phase5_timealign_hss_a3d_teacher_preserved_nested_gate_20260701/phase5_timealign_hss_a3d_deep_dive.md` |
-| A3E target-conditioned nested | `A3E_target_conditioned_nested_primary` | method candidate | warm/scratch ALL 相对 A3C `-0.25/-0.26%`，但相对 A3D/H1 仍弱；ETTm1 上 A3C 仍最强 | `failed_as_core_candidate` | `analysis/phase5_timealign_hss_a3e_ettm1_replacement_gate_20260701/phase5_timealign_hss_a3e_ettm1_deep_dive.md` |
-| A4 interface reliability diagnostic | `A4_interface_reliability_diagnostic` | diagnostic | best path map 分散；ALL best static 为 A3D，oracle 相对 best static `-0.431%`，说明 reliability 差异真实但手工 routing 叙事弱 | `diagnostic_only_completed` | `analysis/phase5_timealign_hss_a4_interface_reliability_diagnostic_20260701/phase5_timealign_hss_a4_interface_reliability_diagnostic.md` |
-| A4R existing-log signal diagnostic | `A4R_reliability_signal_diagnostic` | diagnostic | 现有 training-log signals 解释力不足：ALL 最强 Spearman `0.321`，dataset 内方向不稳定 | `diagnostic_only_failed` | `analysis/phase5_timealign_hss_a4r_reliability_signal_diagnostic_20260701/phase5_timealign_hss_a4r_reliability_signal_diagnostic.md` |
-| A4S validation-prefix signal export | `A4S_validation_prefix_signal_export` | diagnostic | prefix-wise validation signals 仍不足：ALL 最强 teacher-student MAE Spearman `0.388`，dataset-level 方向不一致 | `diagnostic_only_failed` | `analysis/phase5_timealign_hss_a4s_validation_prefix_signal_export_20260702/phase5_timealign_hss_a4s_deep_dive.md` |
-| Stage A contribution re-evaluation | `Stage_A_contribution_reevaluation` | reviewer-style decision | 初版判断为转入 Stage B；后续审稿讨论发现该路线无法解决 interface mismatch 逻辑漏洞 | `superseded_by_a5` | `analysis/phase5_stage_a_contribution_reevaluation_20260702/stage_a_contribution_reevaluation.md` |
-| A5 PCF narrative re-evaluation | `A5_pcf_prefix_consistent_function_preserving_decoder` | reviewer-style decision | 用户指出 PCF 更像旧机制混合；复评确认 active dense anchor + correction 不满足 first-principles unified head narrative | `narrative_rejected_after_review` | `docs/experiments/phase5-a5-capacity-preserving-prefix-consistent-decoder.md` |
-| A5 first-principles candidate proposal | `A5-Q/A5-B/A5-S/A5-I/A5-M` | idea proposal | 基于 ElasTST、TIMEPERCEIVER、SRP++、TransDF 和 output-process diagnostics 提出 5 个候选；A5-Q/A5-B 优先进入 narrative gate mini-note | `candidate_proposal_completed` | `docs/experiments/phase5-a5-first-principles-unified-head-candidates.md` |
-| A5-Q/A5-B narrative gate | `A5-Q/A5-B` | reviewer-style decision / experiment plan | A5-Q 与 A5-B 均满足 first-principles unified head 的 narrative gate；本轮只同步启动二者的最小容量对照 | `narrative_gate_passed` | `docs/experiments/phase5-a5-qb-narrative-gate-and-sync-experiment.md` |
-| A5-Q/A5-B synchronous effectiveness gate | `A5-Q/A5-B` | method candidate gate | 12/12 artifacts 完成；prefix smoke 成立，但全部 A5 arms 在 12 个 dataset-horizon settings 上均未超过 `best_stage_control`；最佳 `a5b_r128` 仍为 `+14.19%` | `failed_as_core_candidate` | `analysis/phase5_timealign_hss_a5_unified_head_sync_gate_20260703/phase5_timealign_hss_a5_unified_head_sync_gate_report.md` |
-| A5-Q collapse diagnostic repair | `A5-Q_collapse_diagnostic_repair` | diagnostic | dropout 错位解释 ETTm1 collapse 的重要部分：`a5q_seg48_dropout01/00` 在 ETTm1 相对旧 A5-Q 平均 `-34.09%/-36.81%`；但所有 arms 对 best stage control 仍 `0` win，`patch_num=48` 不成立 | `diagnostic_only_completed_failed_as_repair` | `analysis/phase5_timealign_hss_a5q_diagnostic_gate_20260703/phase5_timealign_hss_a5q_diagnostic_gate_report.md` |
-| A6 capacity-native mechanism proposal | `A6-DER/A6-LBF/A6-QBR` | idea proposal / narrative gate | A6-DER 作为 dense-equivalent prefix-native ceiling；A6-LBF 作为 learned-basis primary candidate；A6-QBR 暂缓 | `narrative_ready_for_A6_LBF` | `docs/experiments/phase5-a6-capacity-native-unified-head-mechanisms.md` |
-| A6 capacity-native remote gate | `A6-DER/A6-LBF` | method/control gate | A6-DER 恢复 dense-equivalent capacity，A6-LBF-r256 基本贴住 ceiling；但 A6-LBF 对 best stage control 仍 `0/12` win | `partial_pass_capacity_recovered_not_yet_core` | `analysis/phase5_timealign_hss_a6_capacity_native_gate_20260703/phase5_timealign_hss_a6_capacity_native_gate_report.md` |
-| A6 partial-pass official-last diagnostic | `A6-LBF` | diagnostic-only | ETTh2 三 arm last-vs-best validation MSE 平均漂移 `+11.81%`，ETTm1/Weather 平均仅 `+0.12%`；`r512` rank 扩张未带来 metric gain | `diagnostic_only_completed` | `analysis/phase5_timealign_hss_a6_partial_pass_diagnostic_20260703/phase5_timealign_hss_a6_partial_pass_diagnostic_report.md` |
-| A6OD objective drift diagnostic | `A6-LBF/A6-DER` | diagnostic-only | ETTh2 only；`stochastic-prefix` 略优但仍未修复：最佳 `lbf_r256_stochastic_p1` 相对 best control `+1.79%`、wins `0/4`；`full` 明显更差 | `diagnostic_only_completed_failed_as_repair` | `analysis/phase5_timealign_hss_a6_objective_drift_diagnostic_20260703/phase5_timealign_hss_a6_objective_drift_diagnostic_report.md` |
-| A6S official-last stability path design | `A6S-EMA/A6S-HeadStability/A6S-SelfTeacher` | idea proposal / narrative triage | TimeAlign issue #1 确认 fixed-final protocol 的外部动机；已完成 narrative/code-theory check 与本地 smoke | `ready_for_minimal_remote_gate` | `docs/experiments/phase5-a6s-official-last-stability-path.md` |
-| A6S official-last stability minimal gate | `A6S-EMA/A6S-HeadStability` | diagnostic/control gate | 最佳 `lbf_r256_ema099_smooth1e3` 相对 ETTh2 best control 仍差 `+2.00%`、wins `0/4`；EMA-0.99 改善很弱，`smooth1e-3` 的实际 loss ratio 仅 `4.86e-07` | `diagnostic_control_completed_failed_as_repair` | `analysis/phase5_timealign_hss_a6s_stability_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md` |
-| A6S2 stability calibration gate | `A6S2-EMA/A6S2-HeadStability` | diagnostic/control gate | `ema0999` 相对 A6-LBF-r256 `-1.46%`，相对 ETTh2 best control `+0.67%`，wins `1/4`；`smooth10/100` 变差 | `diagnostic_completed_partial_positive_ema_only` | `analysis/phase5_timealign_hss_a6s2_stability_calibration_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md` |
-| A6ST self-teacher consistency design | `A6ST_self_teacher_consistency` | method-candidate design / local implementation | 已实现 train-time EMA teacher prefix consistency；`py_compile`、wrapper `bash -n` 与合成 EMA teacher helper check 通过 | `ready_for_remote_gate` | `docs/experiments/phase5-a6st-self-teacher-consistency.md` |
-| A6ST ETTh2 self-teacher gate | `A6ST_self_teacher_consistency` | method-candidate gate | best `a6st_w02_d0999_wu1` 相对 A6-LBF-r256 `-1.91%`，相对 ETTh2 best control `+0.21%`，wins `2/4`，raw drift `+3.86%` | `partial_pass_etth2_raw_final_stabilized` | `analysis/phase5_timealign_hss_a6st_self_teacher_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md` |
-| A6ST cross-dataset sanity gate | `A6ST_self_teacher_consistency` | safety diagnostic gate | best ETTh2 setting 在 ETTm1/Weather 相对 best controls 平均 `+1.20%`、wins `0/8`，相对 A6-LBF-r256 `+0.95%` | `completed_failed_safety_gate` | `analysis/phase5_timealign_hss_a6st_cross_dataset_sanity_20260704/phase5_timealign_hss_a6s_stability_gate_report.md` |
-| A7DG selective self-teacher design | `A7DG_disagreement_gated_self_teacher` | method-candidate design / local implementation | 已添加 detached absolute/ratio gate；默认 `none` 保持 A6ST 行为；`py_compile`、wrapper `bash -n`、CPU smoke 通过 | `ready_for_remote_gate` | `docs/experiments/phase5-a7dg-disagreement-gated-self-teacher.md` |
-| A7DG selective self-teacher gate | `A7DG_disagreement_gated_self_teacher` | method-candidate gate | best `abs004` 相对 uniform A6ST `-0.40%`、`11/12` wins；相对 A6-LBF-r256 `-0.40%` overall，但 ETTm1/Weather 仍弱于 A6-LBF | `partial_positive_not_paper_core` | `analysis/phase5_timealign_hss_a7dg_selective_self_teacher_gate_20260704/phase5_timealign_hss_a6s_stability_gate_report.md` |
-| A8TAG teacher-advantage gate design | `A8TAG_teacher_advantage_gated_self_teacher` | method-candidate design / local implementation | 已添加 `teacher-advantage-binary` 与 `teacher-advantage-ratio` gate；本地 smoke 验证 teacher 不优时 gate=0 | `ready_for_remote_gate` | `docs/experiments/phase5-a8tag-teacher-advantage-gated-self-teacher.md` |
+相对 `TimeAlignOfficialFixedH{96,192,336,720}_official-last`：
 
-## Pending Tasks
+| Dataset | A6-LBF MSE wins | Mean MSE vs fixed |
+| --- | ---: | ---: |
+| ETTh2 | 4/4 | `-10.89%` |
+| ETTm1 | 3/4 | `-1.46%` |
+| Weather | 2/4 | `-0.36%` |
+| Overall | 9/12 | `-4.82%` |
 
-| Task | Owner | Trigger | Status | Next Action |
-| --- | --- | --- | --- | --- |
-| 分析 A3C 结果 | Codex | 用户通知远程完成 | `completed` | 已生成 A3C interpretation，并将 A3C 降级为 failed core candidate |
-| A3C 失败后的 candidate triage | Codex | A3C effectiveness gate 不通过 | `completed` | A3D 通过 narrative gate，优先启动；A3E 保留 proposed |
-| 启动 A3D remote gate | Codex | A3D implementation verification 通过 | `completed` | 已在 3090 启动，等待用户通知完成后同步分析 |
-| 分析 A3D 结果 | Codex | 用户通知远程完成 | `completed` | A3D 标为 partial_pass；下一步进入 A3E |
-| 启动 A3E ETTm1 replacement remote gate | Codex | A3E implementation verification 通过且 ETTm1 presets/sync 已补齐 | `completed` | 已在 3090 启动，等待用户通知完成后同步分析 |
-| 分析 A3E ETTm1 replacement gate | Codex | 用户通知远程完成 | `completed` | A3E 标为 failed_as_core_candidate；下一步回 Step 2/3/4 做 reliability diagnostic |
-| A4 interface reliability diagnostic | Codex | A3E 失败后 rollback 到 Step 2/3/4 | `completed` | 已生成 A4 diagnostic；下一步 A4R signal diagnostic |
-| A4R reliability signal diagnostic 设计 | Codex | A4 证明 best-path reliability 差异存在但不能直接手工 routing | `completed` | 现有日志信号不足，不启动 routing |
-| A4S validation-prefix signal export 设计 | Codex | A4R 证明现有 logs 太粗 | `completed` | 已实现 exporter/wrapper/sync/analyzer |
-| 启动 A4S remote diagnostic-only run | Codex | A4S 本地验证通过 | `completed` | 21/21 diagnostics 已完成并同步 |
-| Stage A contribution 重评估 | Codex | A4S signal-existence gate 未通过 | `completed` | 初版转 Stage B 的判断已被修正；Stage A 继续进入 A5 |
-| A5 PCF narrative gate 复评 | Codex | 用户质疑 PCF 不是重新设计的 unified head | `completed` | PCF 撤回 `narrative_ready`，标记为 `narrative_rejected_after_review` |
-| A5 first-principles candidate proposal | Codex | PCF narrative gate 未通过 | `completed` | 已提出 A5-Q/A5-B/A5-S/A5-I/A5-M；优先评估 A5-Q 与 A5-B |
-| A5-Q/A5-B narrative gate mini-notes | Codex | 候选已提出但尚未通过 narrative gate | `completed` | A5-Q/A5-B 均通过 narrative gate；进入实现与本地 smoke |
-| A5-Q/A5-B 最小实现与 smoke | Codex | A5-Q/A5-B narrative gate 通过 | `completed` | 本地 smoke 显示 A5-B mismatch `0.0`、A5-Q mismatch 约 `4.77e-07` |
-| A5-Q/A5-B remote synchronous gate | Codex | 本地 smoke 通过且 commit/push 完成 | `completed_failed` | Step 9/10 已完成：A5-Q/A5-B 均未通过 effectiveness gate，回 Step 4/5 |
-| A5 capacity-mechanism rollback diagnostic | Codex | A5-Q/A5-B failed_as_core_candidate | `completed` | A5-Q diagnostic 已完成：dropout 错位是 collapse amplifier，但不是 paper-core repair；下一步回 Step 4/5 重新设计 capacity mechanism |
-| A6-DER/A6-LBF local implementation | Codex | A6 capacity-native proposal | `completed` | 已实现两个 readout modes，`py_compile` 与 local smoke 通过 |
-| A6 capacity-native remote gate | Codex | A6 local smoke passed | `completed_partial_pass` | A6-LBF-r256 已恢复 capacity 但未超过 best controls；下一步做 official-last trajectory 与 basis diagnostics |
-| A6 partial-pass diagnostic design | Codex | A6 capacity-native gate partial pass | `completed` | 已完成 official-last trajectory 与 learned-basis structure diagnostic；下一步回 Step 4/5 设计 official-last-compatible anti-drift / objective repair |
-| A6OD objective drift diagnostic remote run | Codex | A6 partial-pass diagnostic completed | `completed_failed_as_repair` | 最佳 `lbf_r256_stochastic_p1` 仍为 `+1.79%` vs best control、0/4 wins；下一步回 Step 4/5 设计 explicit stability path |
-| A6S stability path narrative + code-theory check | Codex | A6OD failed as repair + TimeAlign issue #1 protocol evidence | `completed` | 已实现 EMA final weights 与 learned-basis operator smoothness；下一步启动 ETTh2-only stability gate |
-| A6S ETTh2-only stability remote gate | Codex | A6S local verification passed | `completed_failed_as_repair` | 最佳 variant 仍 `+2.00%` vs ETTh2 best control、0/4 wins；下一步 A6S2 calibration |
-| A6S2 stability calibration remote gate | Codex | A6S minimal gate underpowered | `completed_partial_positive_ema_only` | `ema0999` 有明显 control gain；simple smoothness route 暂停；下一步 A6ST narrative gate |
-| A6ST self-teacher narrative gate | Codex | A6S2 EMA-0.999 positive control signal | `completed_partial_pass_etth2` | ETTh2 raw final checkpoint 已稳定；下一步 cross-dataset sanity |
-| A6ST cross-dataset sanity remote gate | Codex | A6ST ETTh2 partial pass | `completed_failed_safety_gate` | ETTm1/Weather `0/8` wins；当前 self-teacher setting 不能升级为 universal paper-core，回 Step 4/5 |
-| A7DG selective self-teacher local verification | Codex | A6ST cross-dataset safety failure | `completed` | 本地验证通过；已启动 remote gate |
-| A7DG selective self-teacher remote gate | Codex | A7DG local verification passed | `completed_partial_positive` | 结果支持 selective gate，但未过 paper-core effectiveness；下一步回 Step 4/5 |
-| A8TAG teacher-advantage local verification | Codex | A7DG partial positive but threshold-gated | `completed` | 本地验证通过；已启动 remote gate |
-| A8TAG teacher-advantage remote gate | Codex | A8TAG local verification passed | `completed_failed_as_core_candidate` | 最佳 ratio variant 只接近 A6-LBF 且弱于 A7DG；teacher-advantage 不解释 useful self-teacher，回 Step 4/5 |
-| Post-A8TAG candidate backtracking | Codex | A8TAG failed_as_core_candidate | `completed_selected_a6_qbr` | 回溯 A5-S/A5-I/A5-M/A6-QBR；选 A6-QBR 进入 Step 6 design/code-theory gate |
-| A6-QBR design/code-theory gate | Codex | Post-A8TAG backtracking selected A6-QBR | `ready_for_remote_gate` | 已实现 `query-bilinear-readout`；本地 shape/prefix/data-loader smoke 通过 |
-| A6-QBR remote gate | Codex | A6-QBR local verification passed | `completed_failed_as_core_candidate` | best `r256` 相对 A6-LBF `+35.69%`、0/12 wins；触发 Stage A exhaustion audit |
-| Stage A architecture exhaustion audit | Codex | A6-QBR failed_as_core_candidate | `completed_stage_a_architecture_route_paused` | Stage A standalone head route 暂停；下一步 Stage B problem redefinition / narrative gate |
-| Stage B problem redefinition | Codex | Stage A architecture exhaustion audit completed | `completed_b0_diagnostic_selected` | Stage B 改写为 future supervision pressure reliability/allocation；下一步 B0 source/code audit |
-| Stage B diagnostic plan | Codex | B0 problem redefinition completed | `remote_gate_running` | B0 已在 529_Lab-3090 启动；等待 artifacts 后分析 pressure problem-existence |
-| paper-mainline 同步检查 | Codex | A4 将 Stage A 从 universal head 改为 reliability-aware interface 诊断 | `completed` | 已同步当前状态与贡献边界，不改变 working title |
+相对 `TimeAlignOfficialUnified720_official-last`：
 
-## Paper Mainline Sync Log
+| Dataset | A6-LBF MSE wins | Mean MSE vs official unified |
+| --- | ---: | ---: |
+| ETTh2 | 4/4 | `-3.39%` |
+| ETTm1 | 3/4 | `-1.01%` |
+| Weather | 4/4 | `-1.19%` |
+| Overall | 11/12 | `-1.92%` |
 
-| Date | Trigger | Paper Section | Change Type | Decision |
-| --- | --- | --- | --- | --- |
-| 2026-07-01 | A3B 失败后纠正 A3C rollback 表述 | `转向规则` | 转向规则修正 | A3C 失败不等于 Stage A 失败；必须先 triage A3D/A3E |
-| 2026-07-01 | 建立研究路径保存体系 | `当前状态` / 文档入口 | 管理机制修正 | paper-mainline 继续管论文总纲，阶段内候选由本 ledger 管理 |
-| 2026-07-01 | A3C 不通过 paper-core gate | `当前状态` | 当前阶段状态更新 | active candidate 从 A3C 切换为 A3D，不改变论文贡献边界 |
-| 2026-07-01 | A3D partial pass | `当前状态` | 当前阶段状态更新 | active candidate 从 A3D 切换为 A3E，不改变论文贡献边界 |
-| 2026-07-01 | A3E ETTm1 replacement gate 失败 | `当前状态` | 当前阶段状态更新 | 不直接进入 A3F；先回 Step 2/3/4 做 interface reliability diagnostic |
-| 2026-07-01 | A4 reliability diagnostic 完成 | `当前状态` / `修订后的论文主线` | 贡献边界微调 | Stage A 不写成 universal head，也不写成手工 routing；下一步先验证可观测 reliability signals |
-| 2026-07-01 | A4R existing-log signal diagnostic 完成 | `当前状态` | 转向规则细化 | 现有 logs 不足以解释 path reliability；下一步只做 validation-prefix signal export，不进入 routing |
-| 2026-07-02 | A4S validation-prefix signal diagnostic 完成 | `当前状态` / `贡献边界` | rollback 触发 | prefix-wise validation signals 未通过；Stage A 回 Step 2/3 重审贡献 1 |
-| 2026-07-02 | Stage A contribution re-evaluation 完成 | `当前状态` / `预期贡献` / `方法边界` | 贡献边界重构 | Stage A standalone interface method route 暂停；interface 保留为 problem evidence 和 carrier/control constraint；主方法转入 Stage B |
-| 2026-07-02 | Stage A re-evaluation consensus correction | `当前状态` / `预期贡献` / `方法边界` | 贡献边界修正 | 初版转 Stage B 存在逻辑漏洞；Stage A 必须先解决 unified prediction architecture，进入 A5 |
-| 2026-07-02 | A5 PCF 初版 narrative gate 误判 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | 历史中间判断 | 曾将 PCF 标为 `narrative_ready`；该判断已由下一条复评记录撤回，不再作为执行依据 |
-| 2026-07-02 | A5 PCF narrative gate 复评 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | 纠错 / rollback | 撤回 `narrative_ready`：PCF 更像旧机制混合与 residual/correction，回 Step 4/5 重设 first-principles unified head |
-| 2026-07-02 | A5 first-principles 候选提出 | `Candidate Queue` / `Pending Tasks` | 候选队列扩展 | 提出 A5-Q/A5-B/A5-S/A5-I/A5-M；优先 A5-Q 与 A5-B narrative gate，不实现 |
-| 2026-07-02 | A5-Q/A5-B narrative gate 完成 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | 进入实现 | A5-Q 与 A5-B 通过 narrative gate；A5-S/A5-I/A5-M 暂缓，本轮只做 4-arm synchronous gate |
-| 2026-07-03 | A5-Q/A5-B effectiveness gate 失败 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | rollback | A5-B/A5-Q prefix consistency 成立但 forecasting capacity 不足；二者降级为 failed core candidates，回 Step 4/5 |
-| 2026-07-03 | A6 partial-pass diagnostic 完成 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | protocol correction / rollback | 主协议保持 official-last；A6-LBF 维持 partial pass，下一步回 Step 4/5 设计 anti-drift/objective repair |
-| 2026-07-03 | A6OD objective drift diagnostic 完成 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | diagnostic result / rollback | objective sampling switch 未修复 ETTh2 gap；下一步回 Step 4/5 设计 explicit stability path |
-| 2026-07-04 | TimeAlign issue #1 protocol evidence | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | external evidence / protocol correction | 不能把 A6 drift 写成 early-stop 需求；转向 official-last-compatible stability path |
-| 2026-07-04 | A6S minimal gate 完成 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | diagnostic result / calibration rollback | EMA-0.99 与 smooth1e-3 未修复 ETTh2 gap；但 smoothness penalty 过弱，先进入 A6S2 calibration diagnostic |
-| 2026-07-04 | A6S2 calibration gate 完成 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | diagnostic result / next narrative gate | EMA-0.999 明显改善但仍是 generic control；smooth10/100 负向，下一步只做 A6ST narrative/code-theory gate |
-| 2026-07-04 | A6ST self-teacher gate 设计与实现 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | narrative/code-theory gate | 通过 conditional narrative gate：训练期 EMA teacher consistency 可测试 raw final checkpoint stabilization；准备远程 gate |
-| 2026-07-04 | A6ST ETTh2 gate 完成 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | positive result / next safety gate | ETTh2 raw final checkpoint 接近 best controls并优于 EMA eval control；下一步做 ETTm1/Weather sanity |
-| 2026-07-04 | A6ST cross-dataset sanity 完成 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | safety gate failure / rollback | ETTm1/Weather 系统性负向；A6ST 降级为 ETTh2-specific positive evidence，不能直接 full matrix 或 paper-core 化 |
-| 2026-07-04 | A7DG selective stability design | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | rollback Step 4/5 new candidate | 基于 teacher-student disagreement 的 detached gate 已提出并实现；下一步本地验证后最小远程 gate |
-| 2026-07-04 | A7DG selective remote gate launch | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | remote launch | 3 GPUs 空闲后启动 ETTh2/ETTm1/Weather × 3 variants；等待 artifacts |
-| 2026-07-04 | A7DG selective gate 完成 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | partial positive / no paper-core pass | Selective gate 改善 uniform A6ST 并产生 dataset gate separation，但仍弱于 best controls；禁止 threshold sweep，回 Step 4/5 |
-| 2026-07-05 | A8TAG teacher-advantage design | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | rollback Step 4/5 new candidate | 用 supervised teacher advantage 替代 disagreement threshold；本地验证通过，准备 remote gate |
-| 2026-07-05 | A8TAG teacher-advantage remote launch | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | remote launch | 3 GPUs 空闲后启动 ETTh2/ETTm1/Weather × 3 variants；后续已完成并进入下一条 failure decision |
-| 2026-07-05 | A8TAG teacher-advantage gate 完成 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | failure / rollback | A8TAG 最佳仅与 A6-LBF 持平且弱于 A7DG；self-teacher route 不继续 sweep，下一步回溯未执行候选并重做 Step 4/5 narrative gate |
-| 2026-07-05 | Post-A8TAG candidate backtracking | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | candidate selection | A5-S/A5-I/A5-M 继续 deferred/backlog；A6-QBR 被选为下一步 design/code-theory gate |
-| 2026-07-05 | A6-QBR design/local verification | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | design/code-theory pass | `query-bilinear-readout` 已实现；local verification 通过，下一步 commit/push 后 remote gate |
-| 2026-07-05 | A6-QBR remote gate launch | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | remote launch | 3 GPUs 空闲后启动 ETTh2/ETTm1/Weather × r256/r512；后续已完成并进入 failure decision |
-| 2026-07-05 | A6-QBR gate 完成 | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | failure / rollback | QBR 相对 A6-LBF 大幅退化且 r512 不改善；Stage A architecture route 进入 exhaustion audit |
-| 2026-07-05 | Stage A architecture exhaustion audit | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | route-level rollback | Stage A standalone head route 暂停；下一步 Stage B problem redefinition / narrative gate |
-| 2026-07-05 | Stage B problem redefinition | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | narrative gate / diagnostic selection | Stage B 改写为 future supervision pressure reliability/allocation；下一步 B0 source/code audit |
-| 2026-07-05 | B0 source/code audit and local verification | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | diagnostic implementation | 新增 `w_align` override 与 weighted pressure logging；CPU smoke 证明 effective `w_align=0` 且 weighted alignment loss 为 0；下一步 remote gate |
-| 2026-07-05 | B0 future supervision pressure remote launch | `Decision Cursor` / `Candidate Queue` / `Pending Tasks` | remote launch | 3 GPUs 空闲后启动 ETTh2/ETTm1/Weather × `b0_no_recon/b0_no_align/b0_no_future_pressure`；当前 Weather 三 arm 正在运行 |
+## StageB Entry Rules
 
-## Remote Launch Log
+- StageB 必须以 A6-LBF-r256 为 carrier；
+- StageB 需要重新写 Step 2/3 problem definition 与 Step 4-6 narrative gate；
+- 不再复用旧 StageA 变体作为 active candidate；
+- 不把 old B0 `w_recon/w_align` ablation 直接升级为 StageB method；
+- 后续新增 StageB 代码前，必须先写 `docs/experiments/phase5-stage-b-*.md` 的 design/narrative gate；
+- 远程实验前必须 commit/push，并按 `AGENTS.md` 做 GPU preflight。
 
-| Date | Candidate | Commit | GPU Preflight | Remote PID | Output Path | Launcher Log |
-| --- | --- | --- | --- | --- | --- | --- |
-| 2026-07-01 | `A3D_teacher_preserved_nested_primary` | `354e895` | GPU 0/1/2 all free: `18 MiB used`, `24107 MiB free` each | `3848377` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a3d_teacher_preserved_nested_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a3d_teacher_preserved_nested_gate/_launcher/a3d_launcher.log` |
-| 2026-07-01 | `A3E_target_conditioned_nested_primary_ettm1_replacement` | `0a59296` | GPU 0/1/2 all free: `18 MiB used`, `24107 MiB free` each | `3942988` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a3e_target_conditioned_nested_gate` plus ETTm1 reference roots | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a3e_ettm1_replacement_gate/_launcher/a3e_ettm1_launcher.log` |
-| 2026-07-02 | `A4S_validation_prefix_signal_export` | `9c86588` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each | `1255624` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a4s_validation_prefix_signal_export` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a4s_validation_prefix_signal_export/_launcher/a4s_launcher.log` |
-| 2026-07-02 | `A5-Q/A5-B_unified_head_sync_gate` | `5b9637b` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch Weather arms occupied GPU 0/1/2 with about `5439/5444/4748 MiB used` | `1441800` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a5_unified_head_sync_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a5_unified_head_sync_gate/_launcher/a5_launcher.log` |
-| 2026-07-03 | `A5-Q_collapse_diagnostic_repair` | `46f60c6` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1/2 used about `4747/4748/584 MiB` | `3107046` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a5q_diagnostic_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a5q_diagnostic_gate/_launcher/a5q_diagnostic_launcher.log` |
-| 2026-07-03 | `A6-DER/A6-LBF_capacity_native_gate` | `1a5a235` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch Weather arms used about `4547/4432/4434 MiB` | `3494284` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6_capacity_native_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6_capacity_native_gate/_launcher/a6_launcher.log` |
-| 2026-07-03 | `A6OD_objective_drift_diagnostic` | `1cd5259` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1/2 used about `533/562/864 MiB` | `3642564` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6_objective_drift_diagnostic` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6_objective_drift_diagnostic/_launcher/a6_objective_drift_launcher.log` |
-| 2026-07-04 | `A6S_official_last_stability_gate` | `3426827` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1/2 used about `847/856/840 MiB` | `624046` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6s_stability_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6s_stability_gate/_launcher/a6s_stability_launcher.log` |
-| 2026-07-04 | `A6S2_stability_calibration_gate` | `63c5e0c` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1/2 used about `855/856/840 MiB` | `639555` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6s2_stability_calibration_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6s2_stability_calibration_gate/_launcher/a6s2_stability_calibration_launcher.log` |
-| 2026-07-04 | `A6ST_self_teacher_gate` | `781c131` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1/2 used about `855/856/856 MiB` | `892096` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6st_self_teacher_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6st_self_teacher_gate/_launcher/a6st_self_teacher_launcher.log` |
-| 2026-07-04 | `A6ST_cross_dataset_sanity` | `689a5b6` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1 used about `469/4486 MiB`, GPU 2 free | `905758` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6st_cross_dataset_sanity` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6st_cross_dataset_sanity/_launcher/a6st_cross_dataset_launcher.log` |
-| 2026-07-04 | `A7DG_selective_self_teacher_gate` | `e4261b5` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1/2 used about `873/874/874 MiB` | `957726` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a7dg_selective_self_teacher_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a7dg_selective_self_teacher_gate/_launcher/a7dg_selective_self_teacher_launcher.log` |
-| 2026-07-05 | `A8TAG_teacher_advantage_gate` | `dec4911` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1/2 used about `855/856/856 MiB` | `2336496` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a8tag_teacher_advantage_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a8tag_teacher_advantage_gate/_launcher/a8tag_teacher_advantage_launcher.log` |
-| 2026-07-05 | `A6QBR_query_bilinear_gate` | `406406b` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch GPU 0/1/2 used about `4431/4438/448 MiB` | `2423595` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6qbr_query_bilinear_gate` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_timealign_hss_a6qbr_query_bilinear_gate/_launcher/a6qbr_query_bilinear_launcher.log` |
-| 2026-07-05 | `B0_future_supervision_pressure_audit` | `8d802f5` | GPU 0/1/2 all free before launch: `18 MiB used`, `24107 MiB free` each; after launch Weather arms used about `4431/4432/4432 MiB`, GPU util about `87/87/96%` | launcher shell `2561335`; wrapper `2561337` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b0_future_supervision_pressure_audit` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b0_future_supervision_pressure_audit/_launcher/b0_future_supervision_pressure_launcher.log` |
+## Active Artifacts
 
-## Notes For Next Continuation
+| Artifact | Purpose |
+| --- | --- |
+| `baselines/timealign_official/models/TimeAlign.py` | clean official + A6-LBF model |
+| `baselines/timealign_official/train_repo.py` | clean official/A6-LBF training adapter |
+| `docs/code-explanation/phase5-clean-timealign-a6-lbf.md` | code-facing explanation |
+| `scripts/remote/run_phase5_a6_lbf_r256_main.sh` | clean A6-LBF-r256 remote runner |
+| `analysis/phase5_timealign_hss_a6_capacity_native_gate_20260703/` | StageA accepted evidence |
 
-- A3C 已失败为 paper-core，但只否定 `warm-started primary nested`，不能代表 teacher-preserved 或 target-conditioned 候选。
-- A3D 是 partial pass，说明 function preservation 有效但不足以解决 ETTm2 和 target-prefix specialization。
-- 当前优先 A3E；A3E 的 warm arm 只能解释为对齐 A3C 的 initialization control，不能把 warm-start 当作机制贡献。
-- 2026-07-01 artifact audit 未发现远端 A3E 结果目录或 launcher log；A3E 仍是 pending remote gate，不应被当作已完成实验分析。
-- 用户要求加入 ETTm1 替换 ETTm2；A3E analysis universe 改为 `ETTh2 + ETTm1 + Weather`。ETTm1 过去没有 references，必须先补跑 fixed/H1/H1C/A2/A3C/A3D。
-- A3E 已失败为 paper-core：target conditioning 进入 primary nested head 的增量太小，且 ETTm1 上 A3C 仍是最强候选。
-- 不要直接进入 A3F `teacher_preserved + target_conditioned`；两个组成机制在 ETTm1 上没有同时正向，叠加会违反 narrative gate。
-- A4 诊断显示 best path 分散，但 oracle routing 上限较小：ALL 相对 best static A3D 只有 `-0.431%`。这支持 reliability 问题真实存在，但不支持把 dataset/horizon 手工选择路径写成最终方法。
-- A4R 使用现有 training logs 后发现 signals 太粗：ALL 最强 Spearman 只有 `0.321`。下一步必须新增 prefix-wise validation diagnostic export，而不是直接实现 routing。
-- A4S 使用 prefix-wise validation signals 后仍失败：ALL 最强 Spearman 只有 `0.388`，且 dataset-level top signals 方向不一致。不能继续 existing-path routing。
-- Stage A Step 2/3 重评估的初版“转入 Stage B”判断已被修正：如果提出 interface mismatch，就必须先在 head/decoder 层面解决它。
-- 下一步必须做 A5 `Capacity-Preserving Prefix-Consistent Decoder` 的 Step 2/3/4 design，不要新建 Stage B ledger。
-- A5 PCF narrative gate 复评已完成：`A5_pcf_prefix_consistent_function_preserving_decoder` 被撤回为 `narrative_rejected_after_review`，不得进入实现或 remote gate。
-- A5 first-principles 候选已提出：A5-Q target-query decoder、A5-B continuous basis operator、A5-S hypernetwork、A5-I innovation process、A5-M placeholder head。
-- A5-Q/A5-B narrative gate 曾通过，但 remote synchronous effectiveness gate 已完成并失败：
-  最佳 `a5b_r128` 相对 `best_stage_control` 平均 MSE `+14.19%`，wins `0/12`。
-- A5-Q/A5-B 的 prefix-invariance smoke 成立；失败点不是 output shape 或 prefix contract，而是
-  forecasting capacity / training path。
-- A5-S/A5-I/A5-M 仍暂缓；不得因为 A5-Q/A5-B 失败就直接扩成无边界 sweep。下一步回 Step 4/5
-  做 capacity-mechanism rollback diagnostic。
-- A5-Q diagnostic repair 已完成：ETTm1 high-dropout 错位解释了最严重 collapse 的一部分，但所有 repair arms
-  对 best stage control 仍为 0 win；`patch_num=48` 不应作为下一步修复方向。
-- 若继续 target-query 路线，下一轮必须先在 Step 4/5 提出真正的 capacity/function-preserving mechanism，
-  而不是继续调 `target_query_dropout`、`patch_num` 或 decoder width。
-- A6 已将下一步重构为 capacity-native unified head：先实现 A6-DER capacity ceiling 与 A6-LBF learned-basis
-  operator；A6-QBR target-query variant 暂缓。
-- Stage B `Reliability-Aware Future Supervision Routing` 仅作为 A5 成立后的第二贡献暂缓。
-- 不允许再把 residual patch 或 shallow initialization 当作 paper-core interface 候选。
-- 不允许把 `interface-controlled evaluation protocol` 当作解决 interface mismatch 的方法贡献。
-- 详细 metric 和诊断报告不要写入本文件，只写 conclusion summary 和 artifact path。
+## Archived Evidence
+
+旧 StageA route 的详细候选记录不再放在 active ledger 中。若需要审计历史，可读：
+
+- `docs/archive/phase5-stage-a/experiments/`
+- `docs/archive/phase5-stage-a/code-explanation/`
+- `analysis/phase5_stage_a_architecture_exhaustion_audit_20260705/`
+- `analysis/phase5_timealign_hss_a6_capacity_native_gate_20260703/`
