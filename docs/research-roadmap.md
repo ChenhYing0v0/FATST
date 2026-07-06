@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 fixed as StageA result；StageB TimeAlign dependency diagnostic |
-| `current_11_step` | StageB Step 2/3：TimeAlign dependency ablation and basis-align precondition |
+| `current_stage` | Phase5：A6-LBF-r256 fixed as StageA result；StageB prefix-native objective diagnostic |
+| `current_11_step` | StageB Step 2/3：rollback from TimeAlign dependency route to prefix-native label/basis objective problem |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -163,13 +163,46 @@ on `11/12` settings with mean MSE change `-1.94%`. This supports an A6-LBF head/
 alignment share is ETTh2 `0.19`, ETTm1 `0.08`, Weather `0.12`; therefore full architecture independence is not
 established.
 
-[Decision] Status is `partial_dependency_risk_confirmed`. Reliability-aware B2/B3 should not continue to method
-implementation. The next valid StageB route is TimeAlign dependency ablation followed by basis-aware future alignment
-only if the diagnostics pass.
+[Decision] This audit produced `partial_dependency_risk_confirmed` and required a causal no-align/no-recon ablation
+before any B5 basis-aware alignment design. That ablation has now returned and supersedes the audit-level decision
+below.
 
-[Next Required Action] Remote ablation matrix has been launched after commit/push and GPU preflight. Wait for the
-12-run matrix to return, then analyze before any B5 basis-aware alignment design:
-`/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_timealign_dependency_ablation`.
+### TimeAlign Dependency Ablation Decision
+
+[Decision] B4 no-align/no-recon dependency ablation completed at
+`analysis/phase5_stage_b_timealign_dependency_ablation_20260706/`.
+
+[Fact] The returned 12-run matrix compares four A6-LBF-r256 arms:
+`current_align_recon`, `no_align_recon`, `align_no_recon`, and `no_align_no_recon` on ETTh2/ETTm1/Weather with
+horizons 96/192/336/720.
+
+[Strong Evidence] Removing both inherited auxiliary losses does not collapse A6-LBF-r256. `no_align_no_recon`
+changes mean MSE by only `+0.07%` versus current and wins `7/12` horizon settings. `align_no_recon` is slightly
+better on mean MSE (`-0.04%`) and wins `8/12`, but the effect size is too small to justify a new align method by
+itself.
+
+[Mechanism Note] `no_align_recon` and `no_align_no_recon` are metric-identical in the returned artifacts. This is
+consistent with the current code path: when `w_align=0`, reconstruction alone mostly trains the future branch rather
+than the history-derived forecast operator.
+
+[Decision] B4 status is `dependency_ablation_pass_for_head_contribution_but_not_for_b5`. The result strengthens the
+paper boundary for Contribution 1: A6-LBF is not merely an inherited TimeAlign alignment artifact. It simultaneously
+weakens B5 basis-aware future alignment as the next paper-core method, because the diagnostic did not show a material
+dependence on inherited alignment.
+
+### B6 Prefix-Native Objective Entry
+
+[Decision] StageB rolls back to Step 2/3 and opens `B6-PLO`: prefix-native label/basis objective diagnostic.
+
+[Problem] A6-LBF-r256 already changes the forecast operator into learned-basis coefficient space, but training is
+still dominated by time-domain point loss plus inherited generic TimeAlign auxiliary terms. The next credible StageB
+question is whether the supervision objective should explicitly match the prefix-native label autocorrelation /
+learned-basis structure, rather than adding another generic auxiliary loss.
+
+[Required Diagnostic Before Implementation] B6 must first test train-only label autocorrelation, learned-basis
+projection coverage, and coefficient-space residual structure. It may use `current_align_recon` and
+`no_align_no_recon` as controls, but no new objective or alignment method should be implemented until Step 4-6
+narrative gate is written and passed.
 
 ## Active Implementation
 
@@ -182,9 +215,11 @@ only if the diagnostics pass.
 | `scripts/analyze_phase5_stage_b_reliability_diagnostic.py` | StageB B1 diagnostic analyzer |
 | `scripts/analyze_phase5_stage_b_b3_dsr_diagnostic.py` | StageB B3 diagnostic analyzer |
 | `scripts/analyze_phase5_stage_b_timealign_dependency_audit.py` | StageB TimeAlign dependency audit analyzer |
-| `scripts/remote/run_phase5_stage_b_timealign_dependency_ablation.sh` | pending remote no-align/no-recon ablation runner |
+| `scripts/analyze_phase5_stage_b_timealign_dependency_ablation.py` | returned no-align/no-recon dependency ablation analyzer |
+| `scripts/remote/run_phase5_stage_b_timealign_dependency_ablation.sh` | completed no-align/no-recon ablation runner |
 | `docs/experiments/phase5-stage-b-distance-normalized-seasonal-residual-diagnostic.md` | StageB B3 diagnostic protocol |
 | `docs/experiments/phase5-stage-b-timealign-dependency-and-basis-align-diagnostic.md` | StageB dependency/basis-align protocol |
+| `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | StageB B6 prefix-native objective diagnostic protocol |
 
 ## Archive Map
 
@@ -196,7 +231,7 @@ only if the diagnostics pass.
 | `analysis/phase5_stage_b_step23_redefinition_20260706/` | B3 problem redefinition audit |
 | `analysis/phase5_stage_b_distance_normalized_seasonal_residual_20260706/` | B3 partial/not method-ready diagnostic |
 | `analysis/phase5_stage_b_timealign_dependency_audit_20260706/` | TimeAlign dependency risk audit |
-| `analysis/phase5_stage_b_timealign_dependency_ablation_20260706/` | running remote ablation launch record |
+| `analysis/phase5_stage_b_timealign_dependency_ablation_20260706/` | B4 dependency ablation result |
 | `analysis/phase5_stage_a_architecture_exhaustion_audit_20260705/` | old route-level audit before A6-LBF was promoted |
 
 ## Current Prohibitions

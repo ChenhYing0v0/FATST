@@ -1,0 +1,13 @@
+arm,dataset,mean_mse,mean_mae,mean_mse_vs_current_pct,wins_vs_current,num_horizons
+current_align_recon,ETTh2,0.3079730421,0.3653878346,0.000000,0,4
+current_align_recon,ETTm1,0.3343806788,0.3653246015,0.000000,0,4
+current_align_recon,Weather,0.2147395983,0.2454751991,0.000000,0,4
+no_align_recon,ETTh2,0.3091790788,0.3662320971,0.391605,0,4
+no_align_recon,ETTm1,0.3339063525,0.3654129431,-0.141852,3,4
+no_align_recon,Weather,0.2146373019,0.2454305962,-0.047637,4,4
+align_no_recon,ETTh2,0.3079753891,0.3653479144,0.000762,1,4
+align_no_recon,ETTm1,0.3340099752,0.3653772771,-0.110863,3,4
+align_no_recon,Weather,0.2147319391,0.2454713807,-0.003567,4,4
+no_align_no_recon,ETTh2,0.3091790788,0.3662320971,0.391605,0,4
+no_align_no_recon,ETTm1,0.3339063525,0.3654129431,-0.141852,3,4
+no_align_no_recon,Weather,0.2146373019,0.2454305962,-0.047637,4,4

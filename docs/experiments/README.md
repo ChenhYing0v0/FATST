@@ -36,9 +36,13 @@ what decision follows
 - B3 已判定为 `partial_pass_needs_stronger_proxy_or_method_boundary`。当前不得实现
   reliability-aware loss weighting；下一步必须先决定是否继续找更强 train-only structural proxy，
   或关闭 StageB 并转向 label-autocorrelation objective route。
-- 当前 StageB 已转向 TimeAlign dependency / basis-aware alignment 诊断：
-  `phase5-stage-b-timealign-dependency-and-basis-align-diagnostic.md`。现有 artifact audit 只能得到
-  `partial_dependency_risk_confirmed`；下一步是远程 no-align/no-recon ablation，不是 method implementation。
+- TimeAlign dependency / basis-aware alignment 诊断已完成：
+  `phase5-stage-b-timealign-dependency-and-basis-align-diagnostic.md`。B4 no-align/no-recon ablation 判定为
+  `dependency_ablation_pass_for_head_contribution_but_not_for_b5`：A6-LBF 的 head/operator 贡献更可辩护，
+  但 B5 basis-aware alignment 不再是当前优先 method route。
+- 当前 StageB 回到 Step 2/3，新增
+  `phase5-stage-b-prefix-native-label-objective-diagnostic.md`。下一步是诊断 prefix-native
+  label/basis objective problem，仍不得直接实现新 loss。
 
 ## 历史记录
 

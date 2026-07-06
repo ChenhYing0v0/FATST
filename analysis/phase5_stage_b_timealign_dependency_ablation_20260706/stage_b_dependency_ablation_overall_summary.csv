@@ -1,0 +1,5 @@
+arm,mean_mse,mean_mae,mean_mse_vs_current_pct,wins_vs_current,num_settings,max_regression_pct,max_gain_pct
+current_align_recon,0.2856977731,0.3253958784,0.000000,0,12,0.000000,0.000000
+no_align_recon,0.2859075777,0.3256918788,0.065342,7,12,0.673690,-0.337232
+align_no_recon,0.2855724345,0.3253988574,-0.041915,8,12,0.038284,-0.323089
+no_align_no_recon,0.2859075777,0.3256918788,0.065342,7,12,0.673690,-0.337232

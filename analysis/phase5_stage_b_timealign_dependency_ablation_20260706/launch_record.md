@@ -72,12 +72,27 @@ nohup bash scripts/remote/run_phase5_stage_b_timealign_dependency_ablation.sh > 
 
 [Fact] Launcher log showed ETTh2 reaching epoch 5 during the first health check, with no early crash.
 
-## Next Check
+## Completion Status
 
-Poll with:
+| Field | Content |
+| --- | --- |
+| `completed_at` | `2026-07-06` |
+| `completed_runs` | `12/12` |
+| `local_synced_artifacts` | `analysis/phase5_stage_b_timealign_dependency_ablation_20260706/raw/` |
+| `analysis_report` | `analysis/phase5_stage_b_timealign_dependency_ablation_20260706/stage_b_dependency_ablation_report.md` |
+| `decision` | `dependency_ablation_pass_for_head_contribution_but_not_for_b5` |
 
-```bash
-ssh 529_Lab-3090 'tail -n 120 /home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_timealign_dependency_ablation/launcher.log'
-```
+[Fact] All 12 runs finished. Local sync excludes large `checkpoint.pt` and `predictions_test.npz` files; the remote
+output root remains the source for full raw artifacts.
 
-When all runs finish, sync output artifacts and run a result analyzer before making any B5 basis-aware alignment decision.
+[Result] `no_align_no_recon` changed mean MSE by only `+0.07%` vs `current_align_recon` and won `7/12` horizon
+settings. `align_no_recon` was slightly better on mean MSE (`-0.04%`) but the effect is too small to support B5 as a
+paper-core method.
+
+## Scheduling Note
+
+[Fact] The current runner assigned jobs by simple arm/dataset order and modulo GPU id. This allowed several long
+Weather jobs to accumulate on GPU 0 during the matrix.
+
+[Decision] Do not retroactively change this completed experiment. For future remote matrices, use workload-aware or
+dataset-major scheduling so Weather/ETTm1 are distributed across available GPUs before filling shorter jobs.

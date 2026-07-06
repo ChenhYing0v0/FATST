@@ -9,10 +9,10 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA fixed；StageB dependency/basis-align diagnostic |
+| `current_stage` | Phase5 StageA fixed；StageB prefix-native objective diagnostic |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 2/3 TimeAlign dependency and basis-align precondition diagnostic |
+| `current_11_step` | StageB Step 2/3 rollback to prefix-native label/basis objective diagnostic |
 | `paper_core_status` | A6-LBF-r256 已成为论文重要创新点；StageB 尚未成为 paper-core method |
 
 ## Core Claim
@@ -39,25 +39,29 @@ A6-LBF-r256 的机制：
 - 它直接挑战 fixed-horizon per-horizon 训练的必要性；
 - 它不是 early-stop、best-val、teacher distillation 或手工 horizon routing。
 
-### Contribution 2 Candidate: Basis-Aware Future Alignment
+### Contribution 2 Candidate: Prefix-Native Objective
 
 StageB 尚未成为正式贡献。B1/B3 reliability route 已证明 raw future-unit weighting 会被
 forecast-distance confounder 污染，不能作为 method implementation。
 
-当前更合理的候选问题是：
-
-> A6-LBF-r256 是否仍过度依赖 inherited TimeAlign encoder/alignment；若是，能否把 generic
-> past/future representation alignment 改成 A6-LBF-specific basis-aware future alignment？
-
-当前诊断状态：
+TimeAlign dependency route 的最新结论是：
 
 - artifact-only dependency audit 显示 A6-LBF 在 same TimeAlign align/recon setting 下相对 official
   unified TimeAlign 有 `11/12` MSE wins，mean MSE `-1.94%`；
-- 但训练 objective 仍包含 inherited `w_recon * recon_loss + w_align * align_loss`，A6 last-epoch
-  weighted alignment share 约为 ETTh2 `0.19`、ETTm1 `0.08`、Weather `0.12`；
-- 因此 Contribution 1 的 head/operator 证据成立，但 full architecture 独立性尚未成立。
+- no-align/no-recon dependency ablation 显示纯 head/operator arm `no_align_no_recon` 相对 current
+  A6-LBF mean MSE 仅 `+0.07%`，且有 `7/12` MSE wins；
+- `align_no_recon` 的 mean MSE 略好 `-0.04%`，但 effect size 太小，不能单独支撑一个新的
+  basis-aware alignment 方法。
 
-StageB 进入实现前必须先完成 TimeAlign dependency ablation 和 basis-space alignability diagnostic。
+因此 Contribution 1 的 head/operator 证据已经更强：A6-LBF-r256 不只是 inherited TimeAlign
+alignment/reconstruction 的 artifact。当前更合理的 Contribution 2 候选问题转为：
+
+> A6-LBF-r256 已经把 prediction head 改成 learned-basis coefficient space；训练目标是否也应该从
+> generic time-domain point loss / generic auxiliary loss，转成与 prefix-native label autocorrelation
+> 和 learned-basis residual 结构一致的 objective？
+
+StageB 进入实现前必须先完成 `B6-PLO` Step 2/3 diagnostic；basis-aware future alignment 只作为
+deferred route 保留，除非后续诊断发现明确的 alignment-specific failure mode。
 
 ## Evidence Snapshot
 
@@ -80,6 +84,16 @@ Protocol: official-last；datasets: ETTh2 / ETTm1 / Weather；horizons: 96/192/3
 | ETTm1 | 3/4 | `-1.01%` |
 | Weather | 4/4 | `-1.19%` |
 | Overall | 11/12 | `-1.92%` |
+
+### A6-LBF-r256 no-align/no-recon dependency ablation
+
+Protocol: official-last；datasets: ETTh2 / ETTm1 / Weather；horizons: 96/192/336/720。
+
+| Arm | Mean MSE vs current | MSE wins vs current | Decision |
+| --- | ---: | ---: | --- |
+| `no_align_recon` | `+0.07%` | 7/12 | inherited align not required |
+| `align_no_recon` | `-0.04%` | 8/12 | recon not required; tiny align benefit only |
+| `no_align_no_recon` | `+0.07%` | 7/12 | pure A6-LBF operator remains competitive |
 
 ## Method Boundary
 
@@ -110,11 +124,14 @@ Archived or inactive:
 | `docs/code-explanation/phase5-clean-timealign-a6-lbf.md` | code explanation |
 | `docs/stage-ledgers/phase5-timealign-interface.md` | active StageA/StageB ledger |
 | `docs/research-roadmap.md` | active roadmap |
+| `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | next StageB diagnostic protocol |
 | `analysis/phase5_stage_b_timealign_dependency_audit_20260706/` | TimeAlign dependency audit |
+| `analysis/phase5_stage_b_timealign_dependency_ablation_20260706/` | no-align/no-recon dependency ablation |
 
 ## Next Step
 
 1. Treat StageA as fixed.
 2. Do not revive archived StageA code paths.
-3. Run TimeAlign dependency ablation before claiming architecture independence.
-4. Only if dependency and basis-space diagnostics pass, design basis-aware future alignment as StageB method.
+3. Treat B5 basis-aware alignment as deferred, not the next implementation target.
+4. Start B6 Step 2/3 diagnostic for prefix-native label/basis objective; do not implement a new loss before the
+   diagnostic and narrative gate pass.
