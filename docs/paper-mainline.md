@@ -9,11 +9,11 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA fixed；StageB prefix-native objective diagnostic |
+| `current_stage` | Phase5 StageA clean A6 validation；StageB paused after negative diagnostics |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 2/3 rollback to prefix-native label/basis objective diagnostic |
-| `paper_core_status` | A6-LBF-r256 pure operator 已成为论文重要创新点；StageB 尚未成为 paper-core method |
+| `current_11_step` | StageB Step 10/11 negative diagnostic decision; clean A6 rerun required |
+| `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 paper-core method；StageB 暂无可实现贡献 |
 
 ## Core Claim
 
@@ -58,14 +58,22 @@ alignment/reconstruction 的 artifact。当前代码也已将 A6-LBF 收束为 p
 operator：official TimeAlign baseline 保留 future reconstruction/alignment，A6-LBF 不再包含该 branch
 或对应 auxiliary losses。
 
-当前更合理的 Contribution 2 候选问题转为：
+因此曾经提出的 Contribution 2 候选问题是：
 
 > A6-LBF-r256 已经把 prediction head 改成 learned-basis coefficient space；训练目标是否也应该从
 > generic time-domain point loss / generic auxiliary loss，转成与 prefix-native label autocorrelation
 > 和 learned-basis residual 结构一致的 objective？
 
-StageB 进入实现前必须先完成 `B6-PLO` Step 2/3 diagnostic；basis-aware future alignment 只作为
-deferred route 保留，除非后续诊断发现明确的 alignment-specific failure mode。
+但 B6-PLO Step 2/3 diagnostic 已返回负证据：
+
+- train-label PCA top32 与 DCT top32 几乎相同：ETTh2 `0.917/0.889`，ETTm1 `0.939/0.930`，
+  Weather `0.832/0.831`；
+- A6 learned basis top32 弱于 DCT：label coverage 为 ETTh2 `0.675`、ETTm1 `0.690`、Weather
+  `0.251`，residual coverage 为 ETTh2 `0.287`、ETTm1 `0.110`、Weather `0.081`。
+
+StageB 当前不得实现 prefix-native objective。该方向容易退化为 generic low-frequency/frequency auxiliary
+loss，难以区别 FreDF/TransDF。论文主线应暂时以 Contribution 1 为唯一核心方法，并用 B1/B3/B4/B6
+作为严谨的负诊断边界。
 
 ## Evidence Snapshot
 
@@ -131,11 +139,13 @@ Archived or inactive:
 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | next StageB diagnostic protocol |
 | `analysis/phase5_stage_b_timealign_dependency_audit_20260706/` | TimeAlign dependency audit |
 | `analysis/phase5_stage_b_timealign_dependency_ablation_20260706/` | no-align/no-recon dependency ablation |
+| `analysis/phase5_stage_b_prefix_native_objective_diagnostic_20260706/` | B6 negative diagnostic |
 
 ## Next Step
 
 1. Treat StageA as fixed.
 2. Do not revive archived StageA code paths.
 3. Treat B5 basis-aware alignment as deferred, not the next implementation target.
-4. Start B6 Step 2/3 diagnostic for prefix-native label/basis objective; do not implement a new loss before the
-   diagnostic and narrative gate pass.
+4. Do not implement B6 objective under current evidence.
+5. Rerun clean A6-LBF-r256 main matrix under active code, then consolidate the paper around Contribution 1 unless a
+   new StageB Step 2/3 problem is found.

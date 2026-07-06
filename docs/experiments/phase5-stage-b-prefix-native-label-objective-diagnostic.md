@@ -16,10 +16,10 @@ rollback 入口：先验证 A6-LBF-r256 是否真的存在 architecture-specific
 | `idea` | 诊断 train-label autocorrelation、learned-basis projection coverage、coefficient-space residual 是否形成稳定 objective problem |
 | `theory_check` | 若 label residual 在 A6 learned basis / train-only label basis 中有稳定结构，则 objective 可以与 forecast operator 对齐；若没有，则继续堆 loss 只是 auxiliary engineering |
 | `design` | offline diagnostic only；使用已有 A6 artifacts 和 train split labels，不训练新模型 |
-| `narrative_gate` | pending |
+| `narrative_gate` | `diagnostic_not_enough_pause_b6` |
 | `effectiveness_gate` | not applicable before method implementation |
-| `artifacts` | pending |
-| `decision` | pending；通过前不得实现新 objective |
+| `artifacts` | `analysis/phase5_stage_b_prefix_native_objective_diagnostic_20260706/` |
+| `decision` | 不实现 B6 objective；PCA/label-basis 信号主要被 DCT low-frequency control 解释，A6 learned basis 没有形成额外优势 |
 
 ## Why This Replaces B5 As Next Step
 
@@ -97,3 +97,18 @@ All metrics must define tensor source, shape, normalization, and aggregation in 
 
 If B6 fails the Step 2/3 diagnostic, StageB should pause. The paper should proceed with A6-LBF-r256 as the main
 architecture contribution and use B1/B3/B4 as negative diagnostic evidence rather than stacking another weak mechanism.
+
+## Returned Diagnostic
+
+[Decision] B6 Step 2/3 diagnostic completed at
+`analysis/phase5_stage_b_prefix_native_objective_diagnostic_20260706/`.
+
+[Fact] Train labels are highly compressible, but the compression is almost entirely generic low-frequency structure:
+PCA top32 vs DCT top32 is ETTh2 `0.917/0.889`, ETTm1 `0.939/0.930`, Weather `0.832/0.831`.
+
+[Fact] The A6 learned temporal basis from pure `no_align_no_recon` checkpoints is weaker than DCT at top32:
+label coverage is ETTh2 `0.675`, ETTm1 `0.690`, Weather `0.251`; residual coverage is ETTh2 `0.287`,
+ETTm1 `0.110`, Weather `0.081`.
+
+[Decision] `diagnostic_not_enough_pause_b6`. Do not implement a B6 objective now. The evidence would make the method
+look like a generic low-frequency/frequency auxiliary loss, which weakens distinction from FreDF/TransDF-style work.

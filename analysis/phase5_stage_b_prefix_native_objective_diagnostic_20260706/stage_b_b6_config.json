@@ -1,0 +1,9 @@
+{
+  "a6_root": "analysis/phase5_timealign_hss_a6_capacity_native_gate_20260703/raw/official-last/TimeAlignOfficialUnified720_A6_a6_lbf_r256_official-last",
+  "checkpoint_root": "/tmp/fatst_b6_checkpoints",
+  "checkpoint_source": "529_Lab-3090:/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_timealign_dependency_ablation/official-last/TimeAlignOfficialUnified720_A6LBF_r256_no_align_no_recon_official-last/{dataset}/mixed_h96_h192_h336_h720/seed2021/checkpoint.pt",
+  "dataset_root": "/Users/river/PaperResearch/Project/datasets",
+  "max_residual_rows": 30000,
+  "max_train_windows": 4096,
+  "seed": 2021
+}

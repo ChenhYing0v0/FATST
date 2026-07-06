@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 fixed as StageA result；StageB prefix-native objective diagnostic |
-| `current_11_step` | StageB Step 2/3：rollback from TimeAlign dependency route to prefix-native label/basis objective problem |
+| `current_stage` | Phase5：A6-LBF-r256 clean operator validation；StageB paused after B6 negative diagnostic |
+| `current_11_step` | StageB Step 10/11：B6 failed diagnostic gate; rollback to clean A6 validation and paper consolidation |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -213,6 +213,25 @@ projection coverage, and coefficient-space residual structure. It may use `curre
 `no_align_no_recon` as controls, but no new objective or alignment method should be implemented until Step 4-6
 narrative gate is written and passed.
 
+### B6 Prefix-Native Objective Diagnostic Decision
+
+[Decision] B6 offline diagnostic completed at
+`analysis/phase5_stage_b_prefix_native_objective_diagnostic_20260706/`.
+
+[Fact] Train labels are compressible, but mostly by generic low-frequency structure. PCA top32 versus DCT top32 is:
+ETTh2 `0.917/0.889`, ETTm1 `0.939/0.930`, Weather `0.832/0.831`.
+
+[Counter-Evidence] A6 learned temporal basis does not provide top32 advantage over DCT. Label coverage is ETTh2
+`0.675`, ETTm1 `0.690`, Weather `0.251`; residual coverage is ETTh2 `0.287`, ETTm1 `0.110`, Weather `0.081`.
+All are weaker than or close to DCT at top32.
+
+[Decision] Status is `diagnostic_not_enough_pause_b6`. Do not implement a prefix-native label/basis objective now.
+The result would not provide a clean distinction from generic frequency-domain auxiliary losses such as FreDF/TransDF.
+
+[Next Required Action] Because the active A6 code now removes unused future branch modules, rerun the clean
+A6-LBF-r256 main matrix under the current code to refresh the paper's main evidence. If that rerun preserves the A6
+result, StageB should remain paused until a new non-generic, non-distance-confounded Step 2/3 problem is found.
+
 ## Active Implementation
 
 | File | Role |
@@ -225,10 +244,12 @@ narrative gate is written and passed.
 | `scripts/analyze_phase5_stage_b_b3_dsr_diagnostic.py` | StageB B3 diagnostic analyzer |
 | `scripts/analyze_phase5_stage_b_timealign_dependency_audit.py` | StageB TimeAlign dependency audit analyzer |
 | `scripts/analyze_phase5_stage_b_timealign_dependency_ablation.py` | returned no-align/no-recon dependency ablation analyzer |
+| `scripts/analyze_phase5_stage_b_b6_prefix_objective_diagnostic.py` | StageB B6 prefix-native objective diagnostic analyzer |
 | `scripts/remote/run_phase5_stage_b_timealign_dependency_ablation.sh` | completed no-align/no-recon ablation runner |
 | `docs/experiments/phase5-stage-b-distance-normalized-seasonal-residual-diagnostic.md` | StageB B3 diagnostic protocol |
 | `docs/experiments/phase5-stage-b-timealign-dependency-and-basis-align-diagnostic.md` | StageB dependency/basis-align protocol |
 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | StageB B6 prefix-native objective diagnostic protocol |
+| `docs/code-explanation/phase5-stage-b-b6-prefix-objective-diagnostic.md` | B6 diagnostic analyzer explanation |
 
 ## Archive Map
 
@@ -241,6 +262,7 @@ narrative gate is written and passed.
 | `analysis/phase5_stage_b_distance_normalized_seasonal_residual_20260706/` | B3 partial/not method-ready diagnostic |
 | `analysis/phase5_stage_b_timealign_dependency_audit_20260706/` | TimeAlign dependency risk audit |
 | `analysis/phase5_stage_b_timealign_dependency_ablation_20260706/` | B4 dependency ablation result |
+| `analysis/phase5_stage_b_prefix_native_objective_diagnostic_20260706/` | B6 negative diagnostic |
 | `analysis/phase5_stage_a_architecture_exhaustion_audit_20260705/` | old route-level audit before A6-LBF was promoted |
 
 ## Current Prohibitions

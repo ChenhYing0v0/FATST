@@ -44,6 +44,9 @@ what decision follows
 - 当前 StageB 回到 Step 2/3，新增
   `phase5-stage-b-prefix-native-label-objective-diagnostic.md`。下一步是诊断 prefix-native
   label/basis objective problem，仍不得直接实现新 loss。
+- B6-PLO 诊断已返回 `diagnostic_not_enough_pause_b6`：train-label/residual structure 主要由 DCT
+  low-frequency control 解释，A6 learned basis 没有形成 top32 advantage。当前不得实现 B6 objective；
+  下一步先重跑 active clean A6 main matrix。
 
 ## 历史记录
 
