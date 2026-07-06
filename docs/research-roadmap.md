@@ -228,9 +228,11 @@ All are weaker than or close to DCT at top32.
 [Decision] Status is `diagnostic_not_enough_pause_b6`. Do not implement a prefix-native label/basis objective now.
 The result would not provide a clean distinction from generic frequency-domain auxiliary losses such as FreDF/TransDF.
 
-[Next Required Action] Because the active A6 code now removes unused future branch modules, rerun the clean
-A6-LBF-r256 main matrix under the current code to refresh the paper's main evidence. If that rerun preserves the A6
-result, StageB should remain paused until a new non-generic, non-distance-confounded Step 2/3 problem is found.
+[Next Required Action] Because the active A6 code now removes unused future branch modules, the clean A6-LBF-r256
+main matrix has been launched under the current code at
+`/home/yingch/exp_outputs/r-2026-fatst/phase5_a6_lbf_r256_clean_operator_rerun_20260706`. When it returns, analyze
+the metrics before updating the paper's main evidence. If that rerun preserves the A6 result, StageB should remain
+paused until a new non-generic, non-distance-confounded Step 2/3 problem is found.
 
 ## Active Implementation
 
@@ -263,6 +265,7 @@ result, StageB should remain paused until a new non-generic, non-distance-confou
 | `analysis/phase5_stage_b_timealign_dependency_audit_20260706/` | TimeAlign dependency risk audit |
 | `analysis/phase5_stage_b_timealign_dependency_ablation_20260706/` | B4 dependency ablation result |
 | `analysis/phase5_stage_b_prefix_native_objective_diagnostic_20260706/` | B6 negative diagnostic |
+| `analysis/phase5_a6_lbf_r256_clean_operator_rerun_20260706/` | launched clean A6 rerun |
 | `analysis/phase5_stage_a_architecture_exhaustion_audit_20260705/` | old route-level audit before A6-LBF was promoted |
 
 ## Current Prohibitions

@@ -12,7 +12,7 @@
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator on official-source TimeAlign encoder |
 | `active_question` | A6-LBF-r256 是否需要一个与 learned-basis forecast operator 匹配的 prefix-native label/basis objective |
 | `latest_decision` | B6-PLO diagnostic completed：label/residual 结构主要由 DCT low-frequency control 解释，A6 learned basis top32 弱于 DCT；status `diagnostic_not_enough_pause_b6` |
-| `next_required_action` | 先重跑 active clean A6-LBF-r256 main matrix，确认移除 future branch 后主结果；不实现 B6 objective |
+| `next_required_action` | 等待 active clean A6-LBF-r256 main matrix 返回并分析；不实现 B6 objective |
 | `rollback_point` | StageB 暂停；若继续找 Contribution 2，必须重新回到 Step 2/3 定义一个非 generic-frequency、非 distance-confounded 的问题 |
 
 ## StageA Fixed Result
@@ -91,7 +91,7 @@
 | Define B6 prefix-native objective diagnostic | Codex | B4 made align innovation low-priority, while B1/B3 blocked reliability weighting | `completed` | Protocol written in `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` |
 | Run B6 offline diagnostic | Codex | B6 protocol ready | `completed` | Done; decision is `diagnostic_not_enough_pause_b6` |
 | Revalidate clean A6 smoke/main run | Codex | A6 future branch removed from code | `completed_local_smoke` | A6 smoke shows `w_recon=w_align=0.0` and zero recon/align logs; official smoke keeps inherited terms. Remote main matrix rerun is optional before B6 training. |
-| Rerun clean A6 main matrix | Codex | Active A6 code removed unused future branch and changed initialization order | `pending` | Commit/push B6 diagnostic, then launch clean A6 main runner on 529_Lab-3090 with workload-aware GPU assignment |
+| Rerun clean A6 main matrix | Codex | Active A6 code removed unused future branch and changed initialization order | `running` | Remote output root `/home/yingch/exp_outputs/r-2026-fatst/phase5_a6_lbf_r256_clean_operator_rerun_20260706`; analyze returned metrics before updating paper evidence |
 
 ## Paper Mainline Sync Log
 
@@ -134,6 +134,7 @@
 | `analysis/phase5_stage_b_timealign_dependency_audit_20260706/` | TimeAlign dependency audit; decision `partial_dependency_risk_confirmed` |
 | `analysis/phase5_stage_b_timealign_dependency_ablation_20260706/` | B4 no-align/no-recon ablation; decision `dependency_ablation_pass_for_head_contribution_but_not_for_b5` |
 | `analysis/phase5_stage_b_prefix_native_objective_diagnostic_20260706/` | B6 diagnostic; decision `diagnostic_not_enough_pause_b6` |
+| `analysis/phase5_a6_lbf_r256_clean_operator_rerun_20260706/` | Clean A6 rerun launch record |
 
 ## Archived Evidence
 
