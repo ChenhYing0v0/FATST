@@ -1,0 +1,13 @@
+dataset,target_horizon,a6_lbf_mse,official_unified_mse,a6_vs_official_mse_pct,same_timealign_alignment,causal_attribution
+ETTh2,96,0.2420645654,0.2491090447,-2.827870,1,readout_difference_under_same_align_recon
+ETTh2,192,0.2828057408,0.2959613502,-4.445043,1,readout_difference_under_same_align_recon
+ETTh2,336,0.3128487766,0.3267449737,-4.252918,1,readout_difference_under_same_align_recon
+ETTh2,720,0.3941730857,0.4032520950,-2.251448,1,readout_difference_under_same_align_recon
+ETTm1,96,0.2730823159,0.2811818421,-2.880530,1,readout_difference_under_same_align_recon
+ETTm1,192,0.3093577325,0.3133629560,-1.278142,1,readout_difference_under_same_align_recon
+ETTm1,336,0.3471782207,0.3499610722,-0.795189,1,readout_difference_under_same_align_recon
+ETTm1,720,0.4079044461,0.4067089558,0.293942,1,readout_difference_under_same_align_recon
+Weather,96,0.1413587779,0.1431701928,-1.265218,1,readout_difference_under_same_align_recon
+Weather,192,0.1824371964,0.1848642677,-1.312894,1,readout_difference_under_same_align_recon
+Weather,336,0.2317628264,0.2345201373,-1.175725,1,readout_difference_under_same_align_recon
+Weather,720,0.3033995926,0.3067764938,-1.100769,1,readout_difference_under_same_align_recon

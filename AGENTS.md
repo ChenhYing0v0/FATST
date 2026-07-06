@@ -76,6 +76,11 @@ Always use the global helper under `~/.codex/scripts/`.
 ## Literature And Note Workflow
 
 - Treat Zotero as the source of truth for paper discovery and metadata.
+- For deep research steps, do not rely only on Zotero. Also search external
+  web sources, prioritizing primary sources such as arXiv, OpenReview,
+  conference proceedings, official project pages, and official code
+  repositories; record whether external evidence changes or only supports the
+  Zotero-derived view.
 - Write or update canonical project paper notes under the project's
   `Papers/`.
 - Default note language is Chinese unless the user explicitly changes it.

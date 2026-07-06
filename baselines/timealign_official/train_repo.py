@@ -191,7 +191,7 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         discdtw=False,
         discsdtw=False,
         extra_tag="",
-        w_align=preset.w_align,
+        w_align=preset.w_align if args.w_align is None else args.w_align,
         w_recon=args.w_recon,
         local_margin=preset.local_margin,
         global_margin=preset.global_margin,
@@ -623,6 +623,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--target-horizons", type=parse_horizons, required=True)
     parser.add_argument("--e-layers", type=int, default=2)
     parser.add_argument("--w-recon", type=float, default=1.0)
+    parser.add_argument("--w-align", type=float, default=None)
     parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--epochs", type=int, default=10)
     parser.add_argument("--patience", type=int, default=3)
@@ -656,6 +657,8 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("unified mode currently expects pred_len=720")
     if args.w_recon < 0.0:
         raise ValueError("w_recon must be non-negative")
+    if args.w_align is not None and args.w_align < 0.0:
+        raise ValueError("w_align must be non-negative")
     if args.basis_rank <= 0:
         raise ValueError("basis_rank must be positive")
     if args.readout_mode == "learned-basis-forecast-operator" and args.mode != "unified":

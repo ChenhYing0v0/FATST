@@ -27,8 +27,18 @@ what decision follows
 - Phase5 StageA 已固定为 `A6-LBF-r256`。当前 active route 由
   `docs/stage-ledgers/phase5-timealign-interface.md` 和 `docs/research-roadmap.md`
   记录。
-- 下一份新增实验文档应是 StageB 重新设计文档，命名为
-  `phase5-stage-b-*.md`，并先完成 problem definition 与 narrative gate。
+- 当前 StageB 重新设计入口是
+  `phase5-stage-b-reliability-aware-supervision-redesign.md`，先执行 B1 diagnostic-only
+  problem-existence gate，再决定是否进入 method implementation。
+- B1 已判定为 `partial_pass_distance_confounded`，B2-RAS 不进入实现。当前下一步是
+  `phase5-stage-b-distance-normalized-seasonal-residual-diagnostic.md`，验证 `B3-DSR`
+  是否能作为 non-distance-confounded reliability problem。
+- B3 已判定为 `partial_pass_needs_stronger_proxy_or_method_boundary`。当前不得实现
+  reliability-aware loss weighting；下一步必须先决定是否继续找更强 train-only structural proxy，
+  或关闭 StageB 并转向 label-autocorrelation objective route。
+- 当前 StageB 已转向 TimeAlign dependency / basis-aware alignment 诊断：
+  `phase5-stage-b-timealign-dependency-and-basis-align-diagnostic.md`。现有 artifact audit 只能得到
+  `partial_dependency_risk_confirmed`；下一步是远程 no-align/no-recon ablation，不是 method implementation。
 
 ## 历史记录
 

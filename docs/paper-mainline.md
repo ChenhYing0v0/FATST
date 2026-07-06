@@ -9,11 +9,11 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA fixed；StageB pending redesign |
+| `current_stage` | Phase5 StageA fixed；StageB dependency/basis-align diagnostic |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 2/3 problem redefinition |
-| `paper_core_status` | A6-LBF-r256 已成为论文重要创新点；后续 StageB 以它为起点 |
+| `current_11_step` | StageB Step 2/3 TimeAlign dependency and basis-align precondition diagnostic |
+| `paper_core_status` | A6-LBF-r256 已成为论文重要创新点；StageB 尚未成为 paper-core method |
 
 ## Core Claim
 
@@ -39,15 +39,25 @@ A6-LBF-r256 的机制：
 - 它直接挑战 fixed-horizon per-horizon 训练的必要性；
 - 它不是 early-stop、best-val、teacher distillation 或手工 horizon routing。
 
-### Contribution 2: StageB Future-Aware Reliability Mechanism
+### Contribution 2 Candidate: Basis-Aware Future Alignment
 
-StageB 尚未设计完成。它必须基于 A6-LBF-r256，而不是旧 StageA 失败候选。预期问题是：
+StageB 尚未成为正式贡献。B1/B3 reliability route 已证明 raw future-unit weighting 会被
+forecast-distance confounder 污染，不能作为 method implementation。
 
-> 在已经成立的 unified forecast operator 上，future-aware supervision 或 reliability-aware allocation
-> 是否能进一步提升稳定性与机制解释力？
+当前更合理的候选问题是：
 
-StageB 进入实现前必须重新完成 Step 2-6，包括 problem definition、existence evidence、idea、
-theory check、design 和 narrative gate。
+> A6-LBF-r256 是否仍过度依赖 inherited TimeAlign encoder/alignment；若是，能否把 generic
+> past/future representation alignment 改成 A6-LBF-specific basis-aware future alignment？
+
+当前诊断状态：
+
+- artifact-only dependency audit 显示 A6-LBF 在 same TimeAlign align/recon setting 下相对 official
+  unified TimeAlign 有 `11/12` MSE wins，mean MSE `-1.94%`；
+- 但训练 objective 仍包含 inherited `w_recon * recon_loss + w_align * align_loss`，A6 last-epoch
+  weighted alignment share 约为 ETTh2 `0.19`、ETTm1 `0.08`、Weather `0.12`；
+- 因此 Contribution 1 的 head/operator 证据成立，但 full architecture 独立性尚未成立。
+
+StageB 进入实现前必须先完成 TimeAlign dependency ablation 和 basis-space alignability diagnostic。
 
 ## Evidence Snapshot
 
@@ -100,10 +110,11 @@ Archived or inactive:
 | `docs/code-explanation/phase5-clean-timealign-a6-lbf.md` | code explanation |
 | `docs/stage-ledgers/phase5-timealign-interface.md` | active StageA/StageB ledger |
 | `docs/research-roadmap.md` | active roadmap |
+| `analysis/phase5_stage_b_timealign_dependency_audit_20260706/` | TimeAlign dependency audit |
 
 ## Next Step
 
 1. Treat StageA as fixed.
 2. Do not revive archived StageA code paths.
-3. Design StageB from A6-LBF-r256 with a fresh narrative gate.
-4. Only after StageB design is written and approved, implement new StageB code and launch remote experiments.
+3. Run TimeAlign dependency ablation before claiming architecture independence.
+4. Only if dependency and basis-space diagnostics pass, design basis-aware future alignment as StageB method.
