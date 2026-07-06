@@ -13,7 +13,7 @@
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 | `current_11_step` | StageB Step 2/3 rollback to prefix-native label/basis objective diagnostic |
-| `paper_core_status` | A6-LBF-r256 已成为论文重要创新点；StageB 尚未成为 paper-core method |
+| `paper_core_status` | A6-LBF-r256 pure operator 已成为论文重要创新点；StageB 尚未成为 paper-core method |
 
 ## Core Claim
 
@@ -31,7 +31,7 @@ A6-LBF-r256 的机制：
 - `learned_basis_coeff(hidden)` 生成 per-channel forecast coefficients；
 - `learned_temporal_basis[:H]` 根据 requested horizon `H` 选择 prefix-native temporal basis；
 - 输出 `prediction: [B, H, C]`；
-- 不依赖 dense-row anchor、teacher、EMA、nested residual 或 target-query path。
+- 不依赖 dense-row anchor、teacher、EMA、nested residual、target-query path 或 future-recon-branch。
 
 论文叙事边界：
 
@@ -54,7 +54,11 @@ TimeAlign dependency route 的最新结论是：
   basis-aware alignment 方法。
 
 因此 Contribution 1 的 head/operator 证据已经更强：A6-LBF-r256 不只是 inherited TimeAlign
-alignment/reconstruction 的 artifact。当前更合理的 Contribution 2 候选问题转为：
+alignment/reconstruction 的 artifact。当前代码也已将 A6-LBF 收束为 pure learned-basis forecast
+operator：official TimeAlign baseline 保留 future reconstruction/alignment，A6-LBF 不再包含该 branch
+或对应 auxiliary losses。
+
+当前更合理的 Contribution 2 候选问题转为：
 
 > A6-LBF-r256 已经把 prediction head 改成 learned-basis coefficient space；训练目标是否也应该从
 > generic time-domain point loss / generic auxiliary loss，转成与 prefix-native label autocorrelation
@@ -100,7 +104,7 @@ Protocol: official-last；datasets: ETTh2 / ETTm1 / Weather；horizons: 96/192/3
 Accepted into current mainline:
 
 - `official` TimeAlign baseline；
-- `A6-LBF-r256` learned-basis forecast operator；
+- `A6-LBF-r256` pure learned-basis forecast operator；
 - official-last protocol；
 - multi-prefix evaluation on 96/192/336/720。
 

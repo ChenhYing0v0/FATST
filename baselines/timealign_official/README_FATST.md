@@ -54,3 +54,15 @@ diagnostic tests whether the observed unified decrease is mainly caused by short
 prefixes receiving insufficient direct prediction supervision before introducing
 HSS reliability scheduling. `balanced-step` is a mechanism control, while
 `stochastic-prefix` and `continuous-prefix` are candidate scheduling protocols.
+
+## A6-LBF Clean Carrier
+
+For `--readout-mode learned-basis-forecast-operator`, the active FATST carrier is no longer the inherited
+TimeAlign future-reconstruction architecture. The A6-LBF path:
+
+- keeps the official history patch encoder;
+- replaces the prediction head with learned basis coefficients and a prefix-native temporal basis;
+- removes the future reconstruction/alignment branch from the model instance;
+- forces `w_recon=0.0` and `w_align=0.0` in `train_repo.py`.
+
+The official `--readout-mode official` path still keeps reconstruction and alignment for baseline reproduction.

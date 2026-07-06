@@ -42,10 +42,13 @@ If omitted, it keeps the official dataset preset value. This preserves current b
 The effective argument is:
 
 ```text
-w_align = preset.w_align if args.w_align is None else args.w_align
+w_align = 0.0 if A6-LBF else (preset.w_align if args.w_align is None else args.w_align)
+w_recon = 0.0 if A6-LBF else args.w_recon
 ```
 
-This is required for no-align ablations because `w_align` was previously fixed inside `OFFICIAL_PRESETS`.
+This originally enabled no-align ablations because `w_align` was fixed inside `OFFICIAL_PRESETS`. After the B4
+decision, the A6-LBF path always disables these auxiliary weights; the official TimeAlign path still keeps them for
+baseline reproduction.
 
 ## Ablation Analyzer Flow
 
@@ -101,3 +104,7 @@ carried by inherited TimeAlign alignment/reconstruction.
 [Boundary] The analyzer does not prove that alignment is useless in all settings. It only shows that, in the current
 ETTh2/ETTm1/Weather official-last matrix, alignment dependence is too small to justify B5 as the immediate paper-core
 method.
+
+[Code Consequence] The active A6-LBF path now removes the future reconstruction/alignment branch and forces
+`w_recon=w_align=0.0`. The historical dependency ablation runner is therefore deprecated for new runs; its returned
+artifacts remain the evidence for this cleanup decision.

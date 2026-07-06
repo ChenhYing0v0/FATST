@@ -124,6 +124,7 @@ def resolve_dataset_root(dataset_root: Path, preset: OfficialPreset) -> Path:
 def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> argparse.Namespace:
     root_path = resolve_dataset_root(args.dataset_root, preset)
     device = torch.device(args.device if args.device != "auto" else ("cuda" if torch.cuda.is_available() else "cpu"))
+    is_a6_lbf = args.readout_mode == "learned-basis-forecast-operator"
     return argparse.Namespace(
         task_name="long_term_forecast",
         is_training=1,
@@ -191,8 +192,8 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         discdtw=False,
         discsdtw=False,
         extra_tag="",
-        w_align=preset.w_align if args.w_align is None else args.w_align,
-        w_recon=args.w_recon,
+        w_align=0.0 if is_a6_lbf else (preset.w_align if args.w_align is None else args.w_align),
+        w_recon=0.0 if is_a6_lbf else args.w_recon,
         local_margin=preset.local_margin,
         global_margin=preset.global_margin,
         patch_num=preset.patch_num,
@@ -435,6 +436,8 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
                     args.target_horizons,
                     args.pred_loss_mode,
                 )
+                if recon is None:
+                    raise RuntimeError("official TimeAlign training requires reconstruction output")
                 recon_loss = criterion(recon, target_y)
             else:
                 selected_horizons = select_prediction_horizons(
@@ -443,11 +446,9 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
                     official_args.pred_len,
                 )
                 prefix_losses = []
-                recon_losses = []
-                alignment_losses = []
                 pred_components = {}
                 for horizon in selected_horizons:
-                    outputs, recon, alignment_loss = model(
+                    outputs, _recon, _alignment_loss = model(
                         batch_x,
                         batch_y[:, -official_args.pred_len :, :],
                         is_training=True,
@@ -457,8 +458,6 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
                     horizon_loss = criterion(outputs[:, :horizon, :], target_y[:, :horizon, :])
                     pred_components[f"h{horizon}"] = horizon_loss
                     prefix_losses.append(horizon_loss)
-                    recon_losses.append(criterion(recon, target_y))
-                    alignment_losses.append(alignment_loss)
                     if horizon == official_args.pred_len:
                         pred_components["full"] = criterion(outputs, target_y)
                 if "full" not in pred_components:
@@ -472,8 +471,8 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
                         outputs_full = outputs_full[:, -official_args.pred_len :, f_dim:]
                         pred_components["full"] = criterion(outputs_full, target_y)
                 pred_loss = torch.stack(prefix_losses).mean()
-                recon_loss = torch.stack(recon_losses).mean()
-                alignment_loss = torch.stack(alignment_losses).mean()
+                recon_loss = pred_loss.new_zeros(())
+                alignment_loss = pred_loss.new_zeros(())
 
             loss = pred_loss + official_args.w_recon * recon_loss + official_args.w_align * alignment_loss
             loss.backward()
@@ -562,6 +561,11 @@ def run(args: argparse.Namespace) -> None:
             },
             "official_preset": asdict(preset),
             "source_note": "Clean TimeAlign adapter: official baseline plus A6-LBF-r256 unified carrier.",
+            "a6_lbf_auxiliary_policy": (
+                "A6-LBF disables TimeAlign future reconstruction/alignment branches and trains with prediction loss only."
+                if args.readout_mode == "learned-basis-forecast-operator"
+                else "Official TimeAlign keeps the inherited reconstruction/alignment objective."
+            ),
         },
     )
     dump_json(

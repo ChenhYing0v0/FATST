@@ -41,9 +41,11 @@ class Model(nn.Module):
                 "Clean TimeAlign supports only 'official' and "
                 "'learned-basis-forecast-operator' readout modes"
             )
+        self.has_future_recon_branch = self.readout_mode == "official"
 
         self.patch_emb_x = PatchEmbed(configs.d_model, self.seq_len // self.patch_num, pos=configs.pos)
-        self.patch_emb_y = PatchEmbed(configs.d_model, self.pred_len // self.patch_num, pos=configs.pos)
+        if self.has_future_recon_branch:
+            self.patch_emb_y = PatchEmbed(configs.d_model, self.pred_len // self.patch_num, pos=configs.pos)
 
         self.e_layers = configs.e_layers
         self.encoder = nn.ModuleList(
@@ -57,28 +59,31 @@ class Model(nn.Module):
                 for _ in range(configs.e_layers)
             ]
         )
-        self.ffn = nn.ModuleList([nn.Linear(configs.d_model, configs.d_model) for _ in range(configs.e_layers)])
-        self.autoencoder = nn.ModuleList(
-            [
-                nn.Sequential(
-                    nn.Linear(configs.d_model, configs.d_ff),
-                    nn.GELU(),
-                    nn.Dropout(configs.dropout),
-                    nn.Linear(configs.d_ff, configs.d_model),
-                )
-                for _ in range(configs.e_layers)
-            ]
-        )
-        self.align = glocal_align_ablation(configs.local_margin, configs.global_margin, configs.loc, configs.glo)
+        if self.has_future_recon_branch:
+            self.ffn = nn.ModuleList([nn.Linear(configs.d_model, configs.d_model) for _ in range(configs.e_layers)])
+            self.autoencoder = nn.ModuleList(
+                [
+                    nn.Sequential(
+                        nn.Linear(configs.d_model, configs.d_ff),
+                        nn.GELU(),
+                        nn.Dropout(configs.dropout),
+                        nn.Linear(configs.d_ff, configs.d_model),
+                    )
+                    for _ in range(configs.e_layers)
+                ]
+            )
+            self.align = glocal_align_ablation(configs.local_margin, configs.global_margin, configs.loc, configs.glo)
 
         self.layer_norm = configs.layer_norm
         if self.layer_norm:
             self.norm_x = nn.ModuleList([nn.LayerNorm(configs.d_model) for _ in range(configs.e_layers)])
-            self.norm_y = nn.ModuleList([nn.LayerNorm(configs.d_model) for _ in range(configs.e_layers)])
+            if self.has_future_recon_branch:
+                self.norm_y = nn.ModuleList([nn.LayerNorm(configs.d_model) for _ in range(configs.e_layers)])
 
         readout_dim = configs.d_model * self.patch_num
         self.proj_x = nn.Linear(readout_dim, configs.pred_len)
-        self.proj_y = nn.Linear(readout_dim, configs.pred_len)
+        if self.has_future_recon_branch:
+            self.proj_y = nn.Linear(readout_dim, configs.pred_len)
 
         if self.readout_mode == "learned-basis-forecast-operator":
             self.basis_rank = int(getattr(configs, "basis_rank", 256))
@@ -88,7 +93,8 @@ class Model(nn.Module):
             nn.init.normal_(self.learned_temporal_basis, mean=0.0, std=self.basis_rank ** -0.5)
 
         self.normalization_x = Normalize(configs.enc_in, affine=False)
-        self.normalization_y = Normalize(configs.enc_in, affine=False)
+        if self.has_future_recon_branch:
+            self.normalization_y = Normalize(configs.enc_in, affine=False)
 
     def _learned_basis_forecast_operator(self, hidden, target_prefix):
         # hidden: [B, C, R] -> output: [B, H, C]
@@ -107,8 +113,8 @@ class Model(nn.Module):
         x = self.normalization_x(x, "norm")
         x = self.patch_emb_x(x.permute(0, 2, 1).reshape(-1, channels * seq_len))
 
-        recon = y
-        if is_training:
+        recon = None
+        if self.has_future_recon_branch and is_training:
             y = self.normalization_y(y, "norm")
             y = self.patch_emb_y(y.permute(0, 2, 1).reshape(-1, channels * pred_len))
 
@@ -117,7 +123,7 @@ class Model(nn.Module):
             x = x + self.encoder[layer_idx](x)
             if self.layer_norm:
                 x = self.norm_x[layer_idx](x)
-            if is_training:
+            if self.has_future_recon_branch and is_training:
                 x_aligned = self.ffn[layer_idx](x)
                 y = y + self.autoencoder[layer_idx](y)
                 if self.layer_norm:
@@ -134,7 +140,7 @@ class Model(nn.Module):
             raise ValueError(f"Unsupported readout mode: {self.readout_mode}")
         output = self.normalization_x(output, "denorm")
 
-        if is_training:
+        if self.has_future_recon_branch and is_training:
             recon = self.proj_y(y.reshape(batch, channels, self.patch_num, self.d_model).flatten(start_dim=-2))
             recon = recon.permute(0, 2, 1)
             recon = self.normalization_y(recon, "denorm")

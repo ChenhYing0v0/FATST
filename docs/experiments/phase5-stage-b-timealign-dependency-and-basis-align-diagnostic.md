@@ -22,19 +22,20 @@ future alignment。若不证明 A6-LBF 的独立贡献边界，论文会被视�
 
 ## What We Tested
 
-[Fact] Existing artifact audit compares A6-LBF-r256 against official unified TimeAlign while keeping the inherited
+[Fact] The first artifact audit compared A6-LBF-r256 against official unified TimeAlign while keeping the inherited
 TimeAlign alignment/reconstruction setting.
 
-[Boundary] This is not a causal ablation. It cannot answer what happens when `w_align` or `w_recon` is removed.
+[Boundary] That first audit was not causal. The later returned B4 ablation answers what happens when `w_align` and
+`w_recon` are removed.
 
 ## Current Evidence
 
 [Strong Evidence] A6-LBF-r256 beats official unified TimeAlign under the same inherited align/recon mechanism:
 `11/12` MSE wins, mean MSE change `-1.94%`.
 
-[Risk Evidence] The training objective still includes inherited terms. At last epoch, A6-LBF weighted alignment
-share is about ETTh2 `0.19`, ETTm1 `0.08`, Weather `0.12`. Therefore the paper cannot claim the full model is
-independent from TimeAlign.
+[Historical Risk Evidence] Before B4, the training objective still included inherited terms. At last epoch, A6-LBF
+weighted alignment share was about ETTh2 `0.19`, ETTm1 `0.08`, Weather `0.12`. This is why the causal ablation was
+required before claiming independence from TimeAlign.
 
 [Returned Evidence] The causal ablation weakens that risk. Removing both inherited auxiliary losses
 (`no_align_no_recon`) changes mean MSE by only `+0.07%` and wins `7/12` horizon settings against current A6-LBF.
@@ -92,6 +93,9 @@ Basis-aware align can re-enter Step 4-6 only if:
 ## Decision
 
 [Decision] Current result is `dependency_ablation_pass_for_head_contribution_but_not_for_b5`.
+
+[Code Consequence] A6-LBF now removes the future reconstruction/alignment branch and auxiliary losses from the active
+`learned-basis-forecast-operator` path. Official TimeAlign keeps the branch for baseline reproduction.
 
 [Next] Do not implement basis-aware alignment now. Roll StageB to `B6-PLO`: prefix-native label/basis objective
 diagnostic.

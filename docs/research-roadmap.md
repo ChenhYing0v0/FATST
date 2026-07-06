@@ -11,7 +11,7 @@
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
 | `current_stage` | Phase5：A6-LBF-r256 fixed as StageA result；StageB prefix-native objective diagnostic |
 | `current_11_step` | StageB Step 2/3：rollback from TimeAlign dependency route to prefix-native label/basis objective problem |
-| `active_carrier` | `A6-LBF-r256` |
+| `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
 ## Long Research Loop Rule
@@ -190,14 +190,23 @@ paper boundary for Contribution 1: A6-LBF is not merely an inherited TimeAlign a
 weakens B5 basis-aware future alignment as the next paper-core method, because the diagnostic did not show a material
 dependence on inherited alignment.
 
+[Code Decision] The active A6-LBF implementation now removes the future reconstruction/alignment branch and sets
+`w_recon=w_align=0.0` for `readout_mode=learned-basis-forecast-operator`. Official TimeAlign keeps its inherited
+future branch for baseline reproduction. This makes A6-LBF a cleaner research carrier: the only active mechanism is
+history encoder -> learned coefficients -> prefix-native temporal basis.
+
 ### B6 Prefix-Native Objective Entry
 
 [Decision] StageB rolls back to Step 2/3 and opens `B6-PLO`: prefix-native label/basis objective diagnostic.
 
-[Problem] A6-LBF-r256 already changes the forecast operator into learned-basis coefficient space, but training is
-still dominated by time-domain point loss plus inherited generic TimeAlign auxiliary terms. The next credible StageB
-question is whether the supervision objective should explicitly match the prefix-native label autocorrelation /
-learned-basis structure, rather than adding another generic auxiliary loss.
+[Problem] A6-LBF-r256 already changes the forecast operator into learned-basis coefficient space, and its active code
+path now removes inherited generic TimeAlign auxiliary terms. The next credible StageB question is whether the
+remaining time-domain prefix point objective should explicitly match the prefix-native label autocorrelation /
+learned-basis structure.
+
+[Updated After Code Cleanup] After removing inherited auxiliary terms from A6-LBF, the B6 question becomes sharper:
+the architecture is now cleanly basis-native, while the objective is still time-domain prefix L1. B6 asks whether the
+target labels/residuals have a stable basis-space structure that should guide supervision.
 
 [Required Diagnostic Before Implementation] B6 must first test train-only label autocorrelation, learned-basis
 projection coverage, and coefficient-space residual structure. It may use `current_align_recon` and

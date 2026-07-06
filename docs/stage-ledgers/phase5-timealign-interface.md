@@ -9,9 +9,9 @@
 | --- | --- |
 | `stage_id` | `phase5-timealign-interface` |
 | `current_11_step` | StageA fixed；StageB Step 2/3 rollback to prefix-native objective diagnostic |
-| `active_carrier` | `A6-LBF-r256` on official-source TimeAlign |
+| `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator on official-source TimeAlign encoder |
 | `active_question` | A6-LBF-r256 是否需要一个与 learned-basis forecast operator 匹配的 prefix-native label/basis objective |
-| `latest_decision` | TimeAlign dependency ablation completed：移除 inherited `w_align/w_recon` 后 mean MSE 仅 `+0.07%`，且 pure head/operator arm 有 `7/12` wins；status `dependency_ablation_pass_for_head_contribution_but_not_for_b5` |
+| `latest_decision` | TimeAlign dependency ablation completed：移除 inherited `w_align/w_recon` 后 mean MSE 仅 `+0.07%`，且 pure head/operator arm 有 `7/12` wins；A6 code now removes future-recon-branch and auxiliary losses |
 | `next_required_action` | 新建并执行 `B6-PLO` Step 2/3 diagnostic：验证 train-label autocorrelation / learned-basis coefficient residual 是否构成真实 objective problem |
 | `rollback_point` | 若 B6 不能证明 architecture-specific objective problem，则 StageB 暂停，论文主线保留 A6-LBF-r256 为核心 contribution |
 
@@ -22,7 +22,7 @@
 | Accepted variant | `A6-LBF-r256` / `learned-basis-forecast-operator` |
 | Role | 论文重要组成部分；StageB carrier |
 | Main claim | 一个 unified model 在当前三数据集上整体优于 fixed-horizon per-horizon TimeAlign baseline |
-| Code status | 主代码仅保留 `official` 与 `learned-basis-forecast-operator` |
+| Code status | 主代码保留 `official` baseline；A6 `learned-basis-forecast-operator` 已移除 future reconstruction/alignment branch |
 | Archived variants | A2/A3/A4/A5/A6-DER/A6-QBR/A6S/A6ST/A7DG/A8TAG/B0 旧文档与脚本均不再作为 active route |
 
 ### Key Evidence
@@ -75,6 +75,7 @@
 | B3 distance-normalized seasonal residual diagnostic | `B3-DSR` | problem-existence diagnostic | Linear residual signal is positive on all datasets/block sizes, but stricter rank/prefix residual and bootstrap checks are unstable | `partial_pass_needs_stronger_proxy_or_method_boundary`; not method-ready | `analysis/phase5_stage_b_distance_normalized_seasonal_residual_20260706/stage_b_b3_report.md` |
 | TimeAlign dependency audit | `B4-TDA` | dependency diagnostic | Same-align A6-LBF beats official unified `11/12`, mean `-1.94%`; inherited alignment share remains non-trivial and causal ablations are missing | `partial_dependency_risk_confirmed` | `analysis/phase5_stage_b_timealign_dependency_audit_20260706/stage_b_timealign_dependency_report.md` |
 | TimeAlign dependency ablation | `B4-TDA` | causal dependency diagnostic | `no_align_no_recon` mean MSE only `+0.07%` vs current and wins `7/12`; `align_no_recon` is slightly better on mean MSE (`-0.04%`) but effect is tiny | `dependency_ablation_pass_for_head_contribution_but_not_for_b5`; B5 not prioritized | `analysis/phase5_stage_b_timealign_dependency_ablation_20260706/stage_b_dependency_ablation_report.md` |
+| A6 clean-operator code cut | `B4-TDA` | code cleanup from diagnostic evidence | A6-LBF no longer instantiates future reconstruction/alignment branch; official baseline remains unchanged | accepted as new clean research start; local smoke passed | `baselines/timealign_official/models/TimeAlign.py`; `baselines/timealign_official/train_repo.py`; `docs/code-explanation/phase5-clean-timealign-a6-lbf.md` |
 
 ## Pending Tasks
 
@@ -88,6 +89,7 @@
 | Run TimeAlign dependency ablation | Codex | Artifact audit confirmed unresolved dependency risk | `completed` | Done; B4 supports Contribution 1 attribution and blocks urgent B5 implementation |
 | Define B6 prefix-native objective diagnostic | Codex | B4 made align innovation low-priority, while B1/B3 blocked reliability weighting | `completed` | Protocol written in `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` |
 | Run B6 offline diagnostic | Codex | B6 protocol ready | `pending` | Implement/read-only analyzer for train-label autocorrelation, learned-basis coverage, and coefficient residual structure |
+| Revalidate clean A6 smoke/main run | Codex | A6 future branch removed from code | `completed_local_smoke` | A6 smoke shows `w_recon=w_align=0.0` and zero recon/align logs; official smoke keeps inherited terms. Remote main matrix rerun is optional before B6 training. |
 
 ## Paper Mainline Sync Log
 

@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+echo "This historical runner targeted the pre-clean A6-LBF code path with active future recon/alignment branches." >&2
+echo "Current A6-LBF disables those branches, so this ablation is no longer meaningful." >&2
+echo "Use committed analysis artifacts or the historical commit fc8edc4 to inspect the returned matrix." >&2
+exit 2
+
 OUTPUT_ROOT="${OUTPUT_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_timealign_dependency_ablation}"
 DATASET_ROOT="${DATASET_ROOT:-/home/yingch/dataset}"
 CONDA_ENV="${CONDA_ENV:-moe}"

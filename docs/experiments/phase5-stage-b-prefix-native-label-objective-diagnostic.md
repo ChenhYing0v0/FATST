@@ -11,8 +11,8 @@ rollback 入口：先验证 A6-LBF-r256 是否真的存在 architecture-specific
 | Field | Content |
 | --- | --- |
 | `current_step` | StageB Step 2/3：prefix-native label/basis objective diagnostic |
-| `problem` | A6-LBF 已在 learned-basis coefficient space 中预测，但 training objective 仍主要是 time-domain point loss 和 generic TimeAlign auxiliary terms |
-| `existence_evidence` | B1/B3 排除了 raw reliability weighting；B4 表明 inherited align/recon 不是必要性能来源 |
+| `problem` | A6-LBF 已在 learned-basis coefficient space 中预测，clean code 也已移除 future-recon-branch；剩余问题是 objective 仍为 time-domain prefix point loss |
+| `existence_evidence` | B1/B3 排除了 raw reliability weighting；B4 表明 inherited align/recon 不是必要性能来源，并触发 A6 clean code cut |
 | `idea` | 诊断 train-label autocorrelation、learned-basis projection coverage、coefficient-space residual 是否形成稳定 objective problem |
 | `theory_check` | 若 label residual 在 A6 learned basis / train-only label basis 中有稳定结构，则 objective 可以与 forecast operator 对齐；若没有，则继续堆 loss 只是 auxiliary engineering |
 | `design` | offline diagnostic only；使用已有 A6 artifacts 和 train split labels，不训练新模型 |
@@ -26,11 +26,14 @@ rollback 入口：先验证 A6-LBF-r256 是否真的存在 architecture-specific
 [Fact] B4 dependency ablation shows `no_align_no_recon` mean MSE only `+0.07%` vs current A6-LBF and wins `7/12`
 settings. This means the inherited TimeAlign alignment/reconstruction path is not a strong bottleneck.
 
+[Fact] The active A6-LBF code path now removes the future reconstruction/alignment branch and forces
+`w_recon=w_align=0.0`. Official TimeAlign keeps that branch only for baseline reproduction.
+
 [Inference] If we still implement basis-aware alignment now, the paper risk is high: it can look like another small
 auxiliary-loss variant rather than a necessary architecture change.
 
-[Hypothesis] The stronger next problem is objective mismatch: A6-LBF changes the prediction operator into prefix-native
-learned-basis space, but supervision still treats every time step through a generic point loss. A StageB contribution
+[Hypothesis] The stronger next problem is objective mismatch: A6-LBF is now a clean prefix-native learned-basis
+forecast operator, but supervision still treats every time step through a generic point loss. A StageB contribution
 should first prove that the label/residual structure has a stable basis-space signal that the current objective ignores.
 
 ## Diagnostic Questions
@@ -49,9 +52,10 @@ should first prove that the label/residual structure has a stable basis-space si
      distance.
 
 4. Control comparison:
-   - Compare `current_align_recon` and `no_align_no_recon`.
-   - If both arms show the same coefficient residual structure, the problem is head/objective related rather than
-     inherited-align related.
+   - Use B4 `current_align_recon` and `no_align_no_recon` as historical controls for inherited-align dependence.
+   - Use the active clean A6 code path as the current carrier for any new diagnostic summaries.
+   - If the same coefficient residual structure appears after the clean cut, the problem is head/objective related
+     rather than inherited-align related.
 
 ## Required Inputs
 
@@ -60,7 +64,8 @@ should first prove that the label/residual structure has a stable basis-space si
 | A6-LBF train/eval config | dataset identity, horizons, normalization protocol |
 | train split labels | train-only label autocorrelation and basis diagnostics |
 | returned A6 metrics/artifacts | residual and horizon-level comparison |
-| `current_align_recon` and `no_align_no_recon` controls | separate objective/head signal from inherited alignment |
+| historical `current_align_recon` and `no_align_no_recon` controls | separate objective/head signal from inherited alignment |
+| active clean A6 code path | current carrier after future branch removal |
 
 Large prediction arrays should remain outside git. If a diagnostic needs residual tensors, sync only the minimal
 needed summaries or regenerate small summaries on the remote side.
