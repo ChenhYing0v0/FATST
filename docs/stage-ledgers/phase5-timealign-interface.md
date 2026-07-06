@@ -12,7 +12,7 @@
 | `active_carrier` | `A6-LBF-r256` on official-source TimeAlign |
 | `active_question` | A6-LBF-r256 是否仍过度依赖 inherited TimeAlign align；PhaseB 是否能形成 basis-aware future alignment |
 | `latest_decision` | TimeAlign dependency audit completed：same-align A6-LBF 有 `11/12` wins、mean `-1.94%`，但 inherited alignment share 仍为 `0.08-0.19`；status `partial_dependency_risk_confirmed` |
-| `next_required_action` | 远程运行 no-align/no-recon dependency ablation；通过前不得实现 basis-aware alignment |
+| `next_required_action` | 等待 no-align/no-recon dependency ablation 返回并分析；通过前不得实现 basis-aware alignment |
 | `rollback_point` | 若 dependency ablation 不支持 align/encoder 创新必要性，则 StageB 关闭，A6-LBF-r256 保留为 head/operator contribution |
 
 ## StageA Fixed Result
@@ -83,7 +83,7 @@
 | Redefine StageB after distance-confounded B1 | Codex | B1 full diagnostic did not justify B2 | `completed` | B3-DSR proposed as stronger diagnostic-only problem candidate |
 | Run B3 distance-normalized seasonal residual diagnostic | Codex | Step 2/3 redefinition found a non-distance candidate | `completed` | B3 partial; no method implementation |
 | Decide StageB route after B3 partial | Codex | B3 is not method-ready | `completed` | Pivot to TimeAlign dependency / basis-aware align route |
-| Run TimeAlign dependency ablation | Codex | Artifact audit confirmed unresolved dependency risk | `pending` | Commit/push, GPU preflight, then run `scripts/remote/run_phase5_stage_b_timealign_dependency_ablation.sh` |
+| Run TimeAlign dependency ablation | Codex | Artifact audit confirmed unresolved dependency risk | `running` | Remote PID `99608`; wait for 12-run matrix under `/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_timealign_dependency_ablation` |
 
 ## Paper Mainline Sync Log
 
@@ -93,6 +93,7 @@
 | 2026-07-06 | StageB Step 2/3 redefinition found B3-DSR | none | no paper-mainline change | Not synced because B3 is diagnostic-only and has no accepted method or paper claim yet |
 | 2026-07-06 | B3 diagnostic returned partial/not method-ready | none | no paper-mainline change | Not synced because the result blocks method implementation and adds no accepted paper claim |
 | 2026-07-06 | TimeAlign dependency audit confirms attribution risk | Contribution 2 candidate | update needed | Paper mainline now treats basis-aware alignment as candidate, not accepted claim |
+| 2026-07-06 | Dependency ablation launched on 529_Lab-3090 | none | no paper-mainline change | Remote launch only; no returned effectiveness evidence yet |
 
 ## Active Artifacts
 
@@ -117,6 +118,7 @@
 | `analysis/phase5_stage_b_step23_redefinition_20260706/` | StageB problem redefinition audit; B3-DSR proposed |
 | `analysis/phase5_stage_b_distance_normalized_seasonal_residual_20260706/` | B3 diagnostic; decision `partial_pass_needs_stronger_proxy_or_method_boundary` |
 | `analysis/phase5_stage_b_timealign_dependency_audit_20260706/` | TimeAlign dependency audit; decision `partial_dependency_risk_confirmed` |
+| `analysis/phase5_stage_b_timealign_dependency_ablation_20260706/` | Launch record for running remote no-align/no-recon ablation |
 
 ## Archived Evidence
 

@@ -167,8 +167,9 @@ established.
 implementation. The next valid StageB route is TimeAlign dependency ablation followed by basis-aware future alignment
 only if the diagnostics pass.
 
-[Next Required Action] Run remote ablation matrix after commit/push and GPU preflight:
-`scripts/remote/run_phase5_stage_b_timealign_dependency_ablation.sh`.
+[Next Required Action] Remote ablation matrix has been launched after commit/push and GPU preflight. Wait for the
+12-run matrix to return, then analyze before any B5 basis-aware alignment design:
+`/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_timealign_dependency_ablation`.
 
 ## Active Implementation
 
@@ -195,6 +196,7 @@ only if the diagnostics pass.
 | `analysis/phase5_stage_b_step23_redefinition_20260706/` | B3 problem redefinition audit |
 | `analysis/phase5_stage_b_distance_normalized_seasonal_residual_20260706/` | B3 partial/not method-ready diagnostic |
 | `analysis/phase5_stage_b_timealign_dependency_audit_20260706/` | TimeAlign dependency risk audit |
+| `analysis/phase5_stage_b_timealign_dependency_ablation_20260706/` | running remote ablation launch record |
 | `analysis/phase5_stage_a_architecture_exhaustion_audit_20260705/` | old route-level audit before A6-LBF was promoted |
 
 ## Current Prohibitions
