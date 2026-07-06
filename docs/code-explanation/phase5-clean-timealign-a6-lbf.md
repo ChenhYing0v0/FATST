@@ -74,3 +74,12 @@ mechanism 保留。
 - ETTh2 CPU smoke：`readout_mode=official`，`pred_loss_mode=full`，仍保留 non-zero recon/align loss；
 - 结构检查：A6 模型实例不再含 `patch_emb_y/autoencoder/proj_y/ffn/align/normalization_y`，official
   模型实例仍包含这些属性。
+
+远程 clean rerun 也已通过：
+
+- artifact: `analysis/phase5_a6_lbf_r256_clean_operator_rerun_20260706/clean_a6_rerun_report.md`;
+- effective config: `w_recon=0.0`、`w_align=0.0`、`readout_mode=learned-basis-forecast-operator`、
+  `basis_rank=256`、`pred_loss_mode=multi-prefix`;
+- vs fixed-horizon TimeAlign: overall mean MSE `-4.13%`，`9/12` MSE wins;
+- vs official unified TimeAlign: overall mean MSE `-1.75%`，`11/12` MSE wins;
+- vs historical A6-LBF-r256: overall mean MSE `+0.20%`，说明去除 future-recon branch 后经验结论基本稳定。

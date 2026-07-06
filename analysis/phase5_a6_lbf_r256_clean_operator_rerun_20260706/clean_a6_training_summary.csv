@@ -1,0 +1,4 @@
+dataset,status,epochs_ran,best_epoch,best_val_mean_mse,last_val_mean_mse,effective_w_recon,effective_w_align,readout_mode,basis_rank,pred_loss_mode
+ETTh2,ok,10,1,0.41033047437667847,0.47512371093034744,0.0,0.0,learned-basis-forecast-operator,256,multi-prefix
+ETTm1,ok,10,9,0.5996279567480087,0.5999331399798393,0.0,0.0,learned-basis-forecast-operator,256,multi-prefix
+Weather,ok,10,8,0.4884675517678261,0.48948492109775543,0.0,0.0,learned-basis-forecast-operator,256,multi-prefix

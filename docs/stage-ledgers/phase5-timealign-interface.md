@@ -8,11 +8,11 @@
 | Field | Content |
 | --- | --- |
 | `stage_id` | `phase5-timealign-interface` |
-| `current_11_step` | StageA fixed；StageB B6 Step 2/3 diagnostic returned negative |
+| `current_11_step` | StageA clean validation passed；StageB paused after B6 negative diagnostic |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator on official-source TimeAlign encoder |
 | `active_question` | A6-LBF-r256 是否需要一个与 learned-basis forecast operator 匹配的 prefix-native label/basis objective |
-| `latest_decision` | B6-PLO diagnostic completed：label/residual 结构主要由 DCT low-frequency control 解释，A6 learned basis top32 弱于 DCT；status `diagnostic_not_enough_pause_b6` |
-| `next_required_action` | 等待 active clean A6-LBF-r256 main matrix 返回并分析；不实现 B6 objective |
+| `latest_decision` | Clean A6-LBF-r256 rerun completed：active pure operator keeps fixed/unified gains and is close to historical A6；status `clean_a6_validated` |
+| `next_required_action` | StageB 暂停；若继续 Contribution 2，必须先回到 Step 2/3 定义新问题，不实现 B5/B6 |
 | `rollback_point` | StageB 暂停；若继续找 Contribution 2，必须重新回到 Step 2/3 定义一个非 generic-frequency、非 distance-confounded 的问题 |
 
 ## StageA Fixed Result
@@ -31,19 +31,28 @@
 
 | Dataset | A6-LBF MSE wins | Mean MSE vs fixed |
 | --- | ---: | ---: |
-| ETTh2 | 4/4 | `-10.89%` |
-| ETTm1 | 3/4 | `-1.46%` |
-| Weather | 2/4 | `-0.36%` |
-| Overall | 9/12 | `-4.82%` |
+| ETTh2 | 4/4 | `-10.53%` |
+| ETTm1 | 3/4 | `-1.64%` |
+| Weather | 2/4 | `-0.22%` |
+| Overall | 9/12 | `-4.13%` |
 
 相对 `TimeAlignOfficialUnified720_official-last`：
 
 | Dataset | A6-LBF MSE wins | Mean MSE vs official unified |
 | --- | ---: | ---: |
-| ETTh2 | 4/4 | `-3.39%` |
-| ETTm1 | 3/4 | `-1.01%` |
-| Weather | 4/4 | `-1.19%` |
-| Overall | 11/12 | `-1.92%` |
+| ETTh2 | 4/4 | `-2.78%` |
+| ETTm1 | 3/4 | `-1.20%` |
+| Weather | 4/4 | `-1.26%` |
+| Overall | 11/12 | `-1.75%` |
+
+Clean rerun after code cleanup:
+
+| Check | Result |
+| --- | --- |
+| Effective losses | `w_recon=0.0`, `w_align=0.0` |
+| Readout | `learned-basis-forecast-operator`, `basis_rank=256`, `pred_loss_mode=multi-prefix` |
+| vs historical A6-LBF-r256 | overall mean MSE `+0.20%`, `6/12` MSE wins |
+| Decision | `clean_a6_validated` |
 
 ## StageB Entry Rules
 
@@ -77,6 +86,7 @@
 | TimeAlign dependency ablation | `B4-TDA` | causal dependency diagnostic | `no_align_no_recon` mean MSE only `+0.07%` vs current and wins `7/12`; `align_no_recon` is slightly better on mean MSE (`-0.04%`) but effect is tiny | `dependency_ablation_pass_for_head_contribution_but_not_for_b5`; B5 not prioritized | `analysis/phase5_stage_b_timealign_dependency_ablation_20260706/stage_b_dependency_ablation_report.md` |
 | A6 clean-operator code cut | `B4-TDA` | code cleanup from diagnostic evidence | A6-LBF no longer instantiates future reconstruction/alignment branch; official baseline remains unchanged | accepted as new clean research start; local smoke passed | `baselines/timealign_official/models/TimeAlign.py`; `baselines/timealign_official/train_repo.py`; `docs/code-explanation/phase5-clean-timealign-a6-lbf.md` |
 | B6 prefix-native objective diagnostic | `B6-PLO` | problem-existence diagnostic | PCA/DCT top32 nearly identical; A6 learned basis top32 is weaker than DCT on label and residual coverage | `diagnostic_not_enough_pause_b6`; not method-ready | `analysis/phase5_stage_b_prefix_native_objective_diagnostic_20260706/stage_b_b6_report.md` |
+| Clean A6-LBF-r256 main rerun | StageA validation | clean carrier validation | Active pure A6 operator beats fixed TimeAlign by `-4.13%` mean MSE with `9/12` wins and official unified by `-1.75%` with `11/12` wins; vs historical A6 mean MSE changes only `+0.20%` | `clean_a6_validated`; StageB remains paused | `analysis/phase5_a6_lbf_r256_clean_operator_rerun_20260706/clean_a6_rerun_report.md` |
 
 ## Pending Tasks
 
@@ -90,8 +100,8 @@
 | Run TimeAlign dependency ablation | Codex | Artifact audit confirmed unresolved dependency risk | `completed` | Done; B4 supports Contribution 1 attribution and blocks urgent B5 implementation |
 | Define B6 prefix-native objective diagnostic | Codex | B4 made align innovation low-priority, while B1/B3 blocked reliability weighting | `completed` | Protocol written in `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` |
 | Run B6 offline diagnostic | Codex | B6 protocol ready | `completed` | Done; decision is `diagnostic_not_enough_pause_b6` |
-| Revalidate clean A6 smoke/main run | Codex | A6 future branch removed from code | `completed_local_smoke` | A6 smoke shows `w_recon=w_align=0.0` and zero recon/align logs; official smoke keeps inherited terms. Remote main matrix rerun is optional before B6 training. |
-| Rerun clean A6 main matrix | Codex | Active A6 code removed unused future branch and changed initialization order | `running` | Remote output root `/home/yingch/exp_outputs/r-2026-fatst/phase5_a6_lbf_r256_clean_operator_rerun_20260706`; analyze returned metrics before updating paper evidence |
+| Revalidate clean A6 smoke/main run | Codex | A6 future branch removed from code | `completed` | Local smoke and remote main rerun both passed; active clean A6 is validated. |
+| Rerun clean A6 main matrix | Codex | Active A6 code removed unused future branch and changed initialization order | `completed` | Done; decision `clean_a6_validated`; paper evidence now uses clean rerun metrics |
 
 ## Paper Mainline Sync Log
 
@@ -103,7 +113,8 @@
 | 2026-07-06 | TimeAlign dependency audit confirms attribution risk | Contribution 2 candidate | update needed | Paper mainline now treats basis-aware alignment as candidate, not accepted claim |
 | 2026-07-06 | Dependency ablation launched on 529_Lab-3090 | none | no paper-mainline change | Remote launch only; no returned effectiveness evidence yet |
 | 2026-07-06 | Dependency ablation returned | Contribution boundary and StageB plan | updated | Contribution 1 independence strengthened; B5 basis-aware alignment deferred; StageB rolls to B6 prefix-native objective diagnostic |
-| 2026-07-06 | B6 diagnostic returned negative | Contribution 2 candidate | updated | Do not claim prefix-native objective as contribution; StageB pauses pending clean A6 rerun and possible new Step 2/3 |
+| 2026-07-06 | B6 diagnostic returned negative | Contribution 2 candidate | updated | Do not claim prefix-native objective as contribution; StageB pauses until a possible new Step 2/3 problem is found |
+| 2026-07-06 | Clean A6 rerun returned | StageA evidence and contribution boundary | updated | Active pure A6 operator validated; StageB remains paused |
 
 ## Active Artifacts
 
@@ -116,6 +127,7 @@
 | `docs/code-explanation/phase5-stage-b-b3-dsr-diagnostic.md` | B3 diagnostic script explanation |
 | `docs/code-explanation/phase5-stage-b-timealign-dependency-audit.md` | TimeAlign dependency audit and ablation code explanation |
 | `docs/code-explanation/phase5-stage-b-b6-prefix-objective-diagnostic.md` | B6 diagnostic analyzer explanation |
+| `docs/code-explanation/phase5-clean-a6-rerun-analysis.md` | clean A6 validation analyzer explanation |
 | `docs/experiments/phase5-stage-b-reliability-aware-supervision-redesign.md` | StageB problem definition and B1/B2 candidate boundary |
 | `docs/experiments/phase5-stage-b-distance-normalized-seasonal-residual-diagnostic.md` | B3 diagnostic protocol |
 | `docs/experiments/phase5-stage-b-timealign-dependency-and-basis-align-diagnostic.md` | B4 dependency and B5 basis-align protocol |
@@ -125,6 +137,7 @@
 | `scripts/analyze_phase5_stage_b_timealign_dependency_audit.py` | TimeAlign dependency artifact audit |
 | `scripts/analyze_phase5_stage_b_timealign_dependency_ablation.py` | returned no-align/no-recon ablation analyzer |
 | `scripts/analyze_phase5_stage_b_b6_prefix_objective_diagnostic.py` | B6 prefix-native objective offline diagnostic analyzer |
+| `scripts/analyze_phase5_a6_clean_operator_rerun.py` | clean A6 rerun validation analyzer |
 | `scripts/remote/run_phase5_stage_b_timealign_dependency_ablation.sh` | completed remote no-align/no-recon ablation runner |
 | `scripts/remote/run_phase5_a6_lbf_r256_main.sh` | clean A6-LBF-r256 remote runner |
 | `analysis/phase5_timealign_hss_a6_capacity_native_gate_20260703/` | StageA accepted evidence |
@@ -134,7 +147,7 @@
 | `analysis/phase5_stage_b_timealign_dependency_audit_20260706/` | TimeAlign dependency audit; decision `partial_dependency_risk_confirmed` |
 | `analysis/phase5_stage_b_timealign_dependency_ablation_20260706/` | B4 no-align/no-recon ablation; decision `dependency_ablation_pass_for_head_contribution_but_not_for_b5` |
 | `analysis/phase5_stage_b_prefix_native_objective_diagnostic_20260706/` | B6 diagnostic; decision `diagnostic_not_enough_pause_b6` |
-| `analysis/phase5_a6_lbf_r256_clean_operator_rerun_20260706/` | Clean A6 rerun launch record |
+| `analysis/phase5_a6_lbf_r256_clean_operator_rerun_20260706/` | Clean A6 rerun; decision `clean_a6_validated` |
 
 ## Archived Evidence
 

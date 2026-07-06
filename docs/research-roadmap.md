@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 clean operator validation；StageB paused after B6 negative diagnostic |
-| `current_11_step` | StageB Step 10/11：B6 failed diagnostic gate; rollback to clean A6 validation and paper consolidation |
+| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB paused after B6 negative diagnostic |
+| `current_11_step` | StageA clean validation passed; StageB may only reopen from Step 2/3 with a new non-generic problem |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -42,23 +42,29 @@ operator。在当前实验集合上，一个 unified model 整体优于 fixed-ho
 
 ### Evidence
 
-相对 fixed-horizon per-horizon TimeAlign official-last：
+相对 fixed-horizon per-horizon TimeAlign official-last（clean A6 rerun）：
 
 | Dataset | MSE wins | Mean MSE change |
 | --- | ---: | ---: |
-| ETTh2 | 4/4 | `-10.89%` |
-| ETTm1 | 3/4 | `-1.46%` |
-| Weather | 2/4 | `-0.36%` |
-| Overall | 9/12 | `-4.82%` |
+| ETTh2 | 4/4 | `-10.53%` |
+| ETTm1 | 3/4 | `-1.64%` |
+| Weather | 2/4 | `-0.22%` |
+| Overall | 9/12 | `-4.13%` |
 
-相对 official unified TimeAlign：
+相对 official unified TimeAlign（clean A6 rerun）：
 
 | Dataset | MSE wins | Mean MSE change |
 | --- | ---: | ---: |
-| ETTh2 | 4/4 | `-3.39%` |
-| ETTm1 | 3/4 | `-1.01%` |
-| Weather | 4/4 | `-1.19%` |
-| Overall | 11/12 | `-1.92%` |
+| ETTh2 | 4/4 | `-2.78%` |
+| ETTm1 | 3/4 | `-1.20%` |
+| Weather | 4/4 | `-1.26%` |
+| Overall | 11/12 | `-1.75%` |
+
+[Validation] Clean rerun after removing the A6 future reconstruction/alignment branch is at
+`analysis/phase5_a6_lbf_r256_clean_operator_rerun_20260706/`. It preserves the accepted result and is close to the
+historical A6 artifact: overall mean MSE change `+0.20%`, `6/12` MSE wins. Effective clean A6 training uses
+`w_recon=0.0`, `w_align=0.0`, `readout_mode=learned-basis-forecast-operator`, `basis_rank=256`, and
+`pred_loss_mode=multi-prefix`.
 
 ### Contribution Boundary
 
@@ -228,11 +234,21 @@ All are weaker than or close to DCT at top32.
 [Decision] Status is `diagnostic_not_enough_pause_b6`. Do not implement a prefix-native label/basis objective now.
 The result would not provide a clean distinction from generic frequency-domain auxiliary losses such as FreDF/TransDF.
 
-[Next Required Action] Because the active A6 code now removes unused future branch modules, the clean A6-LBF-r256
-main matrix has been launched under the current code at
-`/home/yingch/exp_outputs/r-2026-fatst/phase5_a6_lbf_r256_clean_operator_rerun_20260706`. When it returns, analyze
-the metrics before updating the paper's main evidence. If that rerun preserves the A6 result, StageB should remain
-paused until a new non-generic, non-distance-confounded Step 2/3 problem is found.
+### Clean A6 Rerun Decision
+
+[Decision] Clean A6-LBF-r256 rerun completed at
+`analysis/phase5_a6_lbf_r256_clean_operator_rerun_20260706/` with status `clean_a6_validated`.
+
+[Fact] The active implementation has no A6 future reconstruction/alignment branch and trains with
+`effective_w_recon=0.0`, `effective_w_align=0.0`.
+
+[Strong Evidence] The clean rerun still beats fixed-horizon TimeAlign by overall mean MSE `-4.13%` with `9/12`
+MSE wins, and official unified TimeAlign by `-1.75%` with `11/12` MSE wins. Relative to historical A6-LBF-r256 it
+changes mean MSE by only `+0.20%`.
+
+[Decision] StageA clean carrier is validated. StageB remains paused; do not implement B5 or B6. If research
+continues beyond Contribution 1, return to Step 2/3 and define a problem that is neither generic frequency
+supervision nor step-distance-confounded reliability weighting.
 
 ## Active Implementation
 
@@ -247,11 +263,13 @@ paused until a new non-generic, non-distance-confounded Step 2/3 problem is foun
 | `scripts/analyze_phase5_stage_b_timealign_dependency_audit.py` | StageB TimeAlign dependency audit analyzer |
 | `scripts/analyze_phase5_stage_b_timealign_dependency_ablation.py` | returned no-align/no-recon dependency ablation analyzer |
 | `scripts/analyze_phase5_stage_b_b6_prefix_objective_diagnostic.py` | StageB B6 prefix-native objective diagnostic analyzer |
+| `scripts/analyze_phase5_a6_clean_operator_rerun.py` | clean A6 validation analyzer |
 | `scripts/remote/run_phase5_stage_b_timealign_dependency_ablation.sh` | completed no-align/no-recon ablation runner |
 | `docs/experiments/phase5-stage-b-distance-normalized-seasonal-residual-diagnostic.md` | StageB B3 diagnostic protocol |
 | `docs/experiments/phase5-stage-b-timealign-dependency-and-basis-align-diagnostic.md` | StageB dependency/basis-align protocol |
 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | StageB B6 prefix-native objective diagnostic protocol |
 | `docs/code-explanation/phase5-stage-b-b6-prefix-objective-diagnostic.md` | B6 diagnostic analyzer explanation |
+| `docs/code-explanation/phase5-clean-a6-rerun-analysis.md` | clean A6 validation analyzer explanation |
 
 ## Archive Map
 
@@ -265,7 +283,7 @@ paused until a new non-generic, non-distance-confounded Step 2/3 problem is foun
 | `analysis/phase5_stage_b_timealign_dependency_audit_20260706/` | TimeAlign dependency risk audit |
 | `analysis/phase5_stage_b_timealign_dependency_ablation_20260706/` | B4 dependency ablation result |
 | `analysis/phase5_stage_b_prefix_native_objective_diagnostic_20260706/` | B6 negative diagnostic |
-| `analysis/phase5_a6_lbf_r256_clean_operator_rerun_20260706/` | launched clean A6 rerun |
+| `analysis/phase5_a6_lbf_r256_clean_operator_rerun_20260706/` | clean A6 validation result |
 | `analysis/phase5_stage_a_architecture_exhaustion_audit_20260705/` | old route-level audit before A6-LBF was promoted |
 
 ## Current Prohibitions

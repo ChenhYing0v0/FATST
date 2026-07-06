@@ -9,10 +9,10 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA clean A6 validation；StageB paused after negative diagnostics |
+| `current_stage` | Phase5 StageA clean A6 validated；StageB paused after negative diagnostics |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 10/11 negative diagnostic decision; clean A6 rerun required |
+| `current_11_step` | StageA clean validation passed; StageB rollback to Step 2/3 only if a new non-generic problem is found |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 paper-core method；StageB 暂无可实现贡献 |
 
 ## Core Claim
@@ -83,19 +83,29 @@ Protocol: official-last；datasets: ETTh2 / ETTm1 / Weather；horizons: 96/192/3
 
 | Dataset | A6-LBF MSE wins | Mean MSE change |
 | --- | ---: | ---: |
-| ETTh2 | 4/4 | `-10.89%` |
-| ETTm1 | 3/4 | `-1.46%` |
-| Weather | 2/4 | `-0.36%` |
-| Overall | 9/12 | `-4.82%` |
+| ETTh2 | 4/4 | `-10.53%` |
+| ETTm1 | 3/4 | `-1.64%` |
+| Weather | 2/4 | `-0.22%` |
+| Overall | 9/12 | `-4.13%` |
 
 ### A6-LBF-r256 vs official unified TimeAlign
 
 | Dataset | A6-LBF MSE wins | Mean MSE change |
 | --- | ---: | ---: |
-| ETTh2 | 4/4 | `-3.39%` |
-| ETTm1 | 3/4 | `-1.01%` |
-| Weather | 4/4 | `-1.19%` |
-| Overall | 11/12 | `-1.92%` |
+| ETTh2 | 4/4 | `-2.78%` |
+| ETTm1 | 3/4 | `-1.20%` |
+| Weather | 4/4 | `-1.26%` |
+| Overall | 11/12 | `-1.75%` |
+
+### Clean A6 validation after removing future-recon branch
+
+The clean rerun at `analysis/phase5_a6_lbf_r256_clean_operator_rerun_20260706/` validates the active
+implementation: `effective_w_recon=0.0`, `effective_w_align=0.0`, `readout_mode=learned-basis-forecast-operator`,
+`basis_rank=256`, and `pred_loss_mode=multi-prefix`.
+
+Relative to the historical A6-LBF-r256 artifact, the clean rerun changes mean MSE by only `+0.20%` overall
+(`6/12` MSE wins). Therefore the future reconstruction/alignment branch removal improves contribution boundary
+clarity without materially changing the accepted StageA evidence.
 
 ### A6-LBF-r256 no-align/no-recon dependency ablation
 
@@ -133,19 +143,21 @@ Archived or inactive:
 | `baselines/timealign_official/models/TimeAlign.py` | clean official + A6-LBF model |
 | `baselines/timealign_official/train_repo.py` | clean training and evaluation adapter |
 | `scripts/remote/run_phase5_a6_lbf_r256_main.sh` | clean A6-LBF-r256 remote runner |
+| `scripts/analyze_phase5_a6_clean_operator_rerun.py` | clean A6 validation analyzer |
 | `docs/code-explanation/phase5-clean-timealign-a6-lbf.md` | code explanation |
+| `docs/code-explanation/phase5-clean-a6-rerun-analysis.md` | clean A6 validation analyzer explanation |
 | `docs/stage-ledgers/phase5-timealign-interface.md` | active StageA/StageB ledger |
 | `docs/research-roadmap.md` | active roadmap |
 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | next StageB diagnostic protocol |
 | `analysis/phase5_stage_b_timealign_dependency_audit_20260706/` | TimeAlign dependency audit |
 | `analysis/phase5_stage_b_timealign_dependency_ablation_20260706/` | no-align/no-recon dependency ablation |
 | `analysis/phase5_stage_b_prefix_native_objective_diagnostic_20260706/` | B6 negative diagnostic |
+| `analysis/phase5_a6_lbf_r256_clean_operator_rerun_20260706/` | clean A6 validation report |
 
 ## Next Step
 
-1. Treat StageA as fixed.
+1. Treat StageA clean A6-LBF-r256 as fixed.
 2. Do not revive archived StageA code paths.
 3. Treat B5 basis-aware alignment as deferred, not the next implementation target.
 4. Do not implement B6 objective under current evidence.
-5. Rerun clean A6-LBF-r256 main matrix under active code, then consolidate the paper around Contribution 1 unless a
-   new StageB Step 2/3 problem is found.
+5. Consolidate the paper around Contribution 1 unless a new StageB Step 2/3 problem is found.

@@ -63,3 +63,21 @@ initialization order and should be validated as the paper's clean A6 evidence ra
 no-align/no-recon artifacts.
 
 [Decision] This run is validation of the clean A6 carrier, not a new StageB method experiment.
+
+## Completion Summary
+
+| Dataset | GPU | Done Time |
+| --- | ---: | --- |
+| ETTh2 | 2 | `2026-07-06T18:49:26+08:00` |
+| ETTm1 | 1 | `2026-07-06T18:53:08+08:00` |
+| Weather | 0 | `2026-07-06T18:53:55+08:00` |
+
+Final GPU check after completion showed GPUs 0/1/2 all idle with `18 MiB` used.
+
+Analysis report:
+
+- `analysis/phase5_a6_lbf_r256_clean_operator_rerun_20260706/clean_a6_rerun_report.md`
+
+[Decision] `clean_a6_validated`. The active pure A6 operator preserves the accepted StageA evidence:
+overall mean MSE `-4.13%` vs fixed TimeAlign with `9/12` MSE wins, `-1.75%` vs official unified TimeAlign with
+`11/12` wins, and only `+0.20%` mean MSE drift vs historical A6-LBF-r256.
