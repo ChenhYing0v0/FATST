@@ -9,10 +9,10 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA clean A6 validated；StageB B7-UPO Step 2/3 candidate |
+| `current_stage` | Phase5 StageA clean A6 validated；StageB B8-FQA architecture candidate |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 2/3 problem-existence diagnostic for unified prefix optimization |
+| `current_11_step` | StageB Step 1/2 architecture research for future-query aligned basis interface |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 paper-core method；StageB 暂无可实现贡献 |
 
 ## Core Claim
@@ -80,6 +80,13 @@ multi-prefix objective 公平、稳定地优化。初步 offline diagnostic 显�
 steps 获得 `336-720` tail steps 的 `14.39x` scalar supervision weight；segment-level A6 gains vs fixed
 TimeAlign 从 early `-3.57%` 收窄到 tail `-0.16%`。该方向与 StageA 的 unified prediction 叙事更连贯，
 但仍只是 `problem_candidate`：Weather 是反例，且还缺少 gradient/task-interference evidence。
+
+根据用户对 StageB 主贡献的约束，B7 当前降级为 small objective candidate。新的主线 architecture
+candidate 是 `B8-FQA`: Future-Query Aligned Basis Operator。它的核心问题是：A6-LBF 已有
+prefix-native learned-basis decoder，但 sample-specific coefficient vector 对 future positions 是不变的；
+StageB 可以引入 future-position query/placeholder tokens，在进入 basis operator 前生成
+target-position-aware coefficient modulation。该方向更适合作为第二个主创新点，因为它改变 representation
+interface，而不是只改 loss。
 
 ## Evidence Snapshot
 
@@ -156,11 +163,13 @@ Archived or inactive:
 | `docs/research-roadmap.md` | active roadmap |
 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | next StageB diagnostic protocol |
 | `docs/experiments/phase5-stage-b-unified-prefix-optimization-diagnostic.md` | active B7 unified prefix optimization diagnostic protocol |
+| `docs/experiments/phase5-stage-b-future-query-aligned-basis-architecture.md` | active B8 architecture candidate protocol |
 | `analysis/phase5_stage_b_timealign_dependency_audit_20260706/` | TimeAlign dependency audit |
 | `analysis/phase5_stage_b_timealign_dependency_ablation_20260706/` | no-align/no-recon dependency ablation |
 | `analysis/phase5_stage_b_prefix_native_objective_diagnostic_20260706/` | B6 negative diagnostic |
 | `analysis/phase5_a6_lbf_r256_clean_operator_rerun_20260706/` | clean A6 validation report |
 | `analysis/phase5_stage_b_unified_prefix_optimization_20260707/` | B7 problem-candidate diagnostic |
+| `analysis/phase5_stage_b_future_query_aligned_architecture_research_20260707/` | B8 architecture direction research |
 
 ## Next Step
 
@@ -168,4 +177,5 @@ Archived or inactive:
 2. Do not revive archived StageA code paths.
 3. Treat B5 basis-aware alignment as deferred, not the next implementation target.
 4. Do not implement B6 objective under current evidence.
-5. Continue B7 only through gradient/task diagnostics first; do not implement a new loss until Step 4-6 narrative gate passes.
+5. Defer B7 objective optimization as a small contribution candidate.
+6. Continue B8 only through coefficient-space oracle diagnostics first; do not implement architecture changes until Step 4-6 narrative gate passes.

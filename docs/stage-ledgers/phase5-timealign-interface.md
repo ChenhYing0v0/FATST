@@ -8,12 +8,12 @@
 | Field | Content |
 | --- | --- |
 | `stage_id` | `phase5-timealign-interface` |
-| `current_11_step` | StageB Step 2/3 reopened with B7-UPO problem candidate |
+| `current_11_step` | StageB Step 1/2 architecture research reopened with B8-FQA |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator on official-source TimeAlign encoder |
-| `active_question` | A6-LBF-r256 的 unified forecast operator 是否被当前 nested multi-prefix objective 公平、稳定地优化 |
-| `latest_decision` | B7-UPO offline diagnostic completed：multi-prefix loss has `14.39x` early-vs-tail weight imbalance and segment gains shrink in the tail；status `prefix_imbalance_problem_candidate` |
-| `next_required_action` | Run B7-GTD gradient/task decomposition diagnostic before any loss implementation |
-| `rollback_point` | If B7-GTD does not show stable horizon-task imbalance or gradient conflict, pause StageB again and consolidate Contribution 1 |
+| `active_question` | Can StageB add a future-position-aware architecture interface before A6's learned-basis forecast operator |
+| `latest_decision` | B8-FQA proposed：future-query aligned basis operator is the preferred architecture-level StageB candidate; status `proposed_architecture_candidate` |
+| `next_required_action` | Run B8-OCD coefficient-space oracle diagnostic before any implementation |
+| `rollback_point` | If B8-OCD does not show segment-specific coefficient headroom, do not implement B8; keep B7 as small objective candidate only |
 
 ## StageA Fixed Result
 
@@ -73,7 +73,8 @@ Clean rerun after code cleanup:
 | `B4-TDA` | `completed_diagnostic` | A6-LBF same-align gains support head/operator contribution, but inherited TimeAlign align may still explain part of full architecture advantage | passed for Contribution 1 attribution：pure no-align/no-recon arm remains competitive | not a new method；diagnostic only | Use as evidence against urgent B5 align innovation | `analysis/phase5_stage_b_timealign_dependency_audit_20260706/stage_b_timealign_dependency_report.md`; `analysis/phase5_stage_b_timealign_dependency_ablation_20260706/stage_b_dependency_ablation_report.md`; `docs/experiments/phase5-stage-b-timealign-dependency-and-basis-align-diagnostic.md` |
 | `B5-BAFA` | `deferred_by_diagnostic` | Replace generic TimeAlign alignment with A6-LBF basis-aware future alignment | failed current priority gate：removing inherited align/recon does not materially hurt A6-LBF | not evaluated | Do not implement unless later B6 or basis-space diagnostics show a stronger alignment-specific failure mode | none |
 | `B6-PLO` | `rejected_by_diagnostic` | A6-LBF 的 architecture 已在 learned-basis space 中建模，但当前 supervision 仍主要是 time-domain point loss；可能缺少 prefix-native label/basis objective | failed：train-label/residual structure is largely generic DCT low-frequency; A6 learned basis has no top32 advantage | not evaluated | Do not implement B6 objective; pause StageB or redefine Step 2/3 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md`; `analysis/phase5_stage_b_prefix_native_objective_diagnostic_20260706/stage_b_b6_report.md` |
-| `B7-UPO` | `problem_candidate` | A6-LBF has a unified operator, but nested multi-prefix training overweights short steps and may under-optimize long-tail forecast regions | partial：directly follows unified prediction narrative and avoids B6 frequency/basis objective; Weather counterexample and no gradient evidence yet | not evaluated | Run `B7-GTD` gradient/task diagnostic; do not implement loss yet | `docs/experiments/phase5-stage-b-unified-prefix-optimization-diagnostic.md`; `analysis/phase5_stage_b_unified_prefix_optimization_20260707/stage_b_b7_unified_prefix_optimization_report.md` |
+| `B7-UPO` | `deferred_small_contribution_candidate` | A6-LBF has a unified operator, but nested multi-prefix training overweights short steps and may under-optimize long-tail forecast regions | partial：useful as objective refinement, not preferred as second main innovation | not evaluated | Defer until architecture candidate is resolved | `docs/experiments/phase5-stage-b-unified-prefix-optimization-diagnostic.md`; `analysis/phase5_stage_b_unified_prefix_optimization_20260707/stage_b_b7_unified_prefix_optimization_report.md` |
+| `B8-FQA` | `proposed_architecture_candidate` | A6-LBF's coefficient is sample-specific but future-position-invariant; future queries can align history representations to target positions before basis prediction | promising：directly deepens StageA and replaces generic TimeAlign align with future-query coefficient modulation | not evaluated | Run B8-OCD coefficient-space oracle diagnostic | `docs/experiments/phase5-stage-b-future-query-aligned-basis-architecture.md`; `analysis/phase5_stage_b_future_query_aligned_architecture_research_20260707/stage_b_architecture_direction_report.md` |
 
 ## Experiment Ledger
 
@@ -89,6 +90,7 @@ Clean rerun after code cleanup:
 | B6 prefix-native objective diagnostic | `B6-PLO` | problem-existence diagnostic | PCA/DCT top32 nearly identical; A6 learned basis top32 is weaker than DCT on label and residual coverage | `diagnostic_not_enough_pause_b6`; not method-ready | `analysis/phase5_stage_b_prefix_native_objective_diagnostic_20260706/stage_b_b6_report.md` |
 | Clean A6-LBF-r256 main rerun | StageA validation | clean carrier validation | Active pure A6 operator beats fixed TimeAlign by `-4.13%` mean MSE with `9/12` wins and official unified by `-1.75%` with `11/12` wins; vs historical A6 mean MSE changes only `+0.20%` | `clean_a6_validated`; StageB remains paused | `analysis/phase5_a6_lbf_r256_clean_operator_rerun_20260706/clean_a6_rerun_report.md` |
 | B7 unified prefix optimization diagnostic | `B7-UPO` | problem-existence diagnostic | Current multi-prefix loss gives `0-96` steps `14.39x` tail supervision weight; segment-level A6 gains vs fixed shrink from early `-3.57%` to tail `-0.16%` overall, with ETTh2/ETTm1 supporting and Weather countering | `prefix_imbalance_problem_candidate`; not method-ready | `analysis/phase5_stage_b_unified_prefix_optimization_20260707/stage_b_b7_unified_prefix_optimization_report.md` |
+| B8 future-query aligned architecture research | `B8-FQA` | architecture direction research | Literature and code-theory review suggest A6 lacks target-position-aware sample-specific representation before basis prediction; future-query coefficient modulation is the preferred architecture-level route | `proposed_architecture_candidate`; requires B8-OCD before implementation | `analysis/phase5_stage_b_future_query_aligned_architecture_research_20260707/stage_b_architecture_direction_report.md` |
 
 ## Pending Tasks
 
@@ -105,7 +107,8 @@ Clean rerun after code cleanup:
 | Revalidate clean A6 smoke/main run | Codex | A6 future branch removed from code | `completed` | Local smoke and remote main rerun both passed; active clean A6 is validated. |
 | Rerun clean A6 main matrix | Codex | Active A6 code removed unused future branch and changed initialization order | `completed` | Done; decision `clean_a6_validated`; paper evidence now uses clean rerun metrics |
 | Run B7 unified prefix optimization diagnostic | Codex | User requested StageB direction within unified prediction, excluding channel modeling | `completed` | Done; B7 is a problem candidate only |
-| Run B7-GTD gradient/task diagnostic | Codex | B7-UPO segment evidence is partial and Weather is a counterexample | `pending` | Measure prefix-loss gradient cosine/norm conflict before any loss design |
+| Run B7-GTD gradient/task diagnostic | Codex | B7-UPO segment evidence is partial and Weather is a counterexample | `deferred` | Keep as objective small-contribution diagnostic after architecture path is resolved |
+| Run B8-OCD coefficient-space oracle diagnostic | Codex | B8-FQA is proposed but needs evidence that future-segment-specific coefficients can reduce A6 residuals | `pending` | Locate/sync clean A6 checkpoint and test oracle segment-specific coefficient headroom |
 
 ## Paper Mainline Sync Log
 
@@ -120,6 +123,7 @@ Clean rerun after code cleanup:
 | 2026-07-06 | B6 diagnostic returned negative | Contribution 2 candidate | updated | Do not claim prefix-native objective as contribution; StageB pauses until a possible new Step 2/3 problem is found |
 | 2026-07-06 | Clean A6 rerun returned | StageA evidence and contribution boundary | updated | Active pure A6 operator validated; StageB remains paused |
 | 2026-07-07 | B7-UPO diagnostic returned partial evidence | Contribution 2 candidate | no accepted paper claim | Reopen StageB Step 2/3 around unified prefix optimization; require gradient diagnostic before implementation |
+| 2026-07-07 | User requested architecture-level StageB main innovation | Contribution 2 candidate | no accepted paper claim | B7 deferred as small objective candidate; B8-FQA proposed as architecture candidate |
 
 ## Active Artifacts
 
@@ -139,6 +143,7 @@ Clean rerun after code cleanup:
 | `docs/experiments/phase5-stage-b-timealign-dependency-and-basis-align-diagnostic.md` | B4 dependency and B5 basis-align protocol |
 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | B6 prefix-native label/basis objective diagnostic protocol |
 | `docs/experiments/phase5-stage-b-unified-prefix-optimization-diagnostic.md` | B7 unified prefix optimization diagnostic protocol |
+| `docs/experiments/phase5-stage-b-future-query-aligned-basis-architecture.md` | B8 future-query aligned basis architecture protocol |
 | `scripts/analyze_phase5_stage_b_reliability_diagnostic.py` | B1 full reliability diagnostic generator |
 | `scripts/analyze_phase5_stage_b_b3_dsr_diagnostic.py` | B3 distance-normalized seasonal residual diagnostic generator |
 | `scripts/analyze_phase5_stage_b_timealign_dependency_audit.py` | TimeAlign dependency artifact audit |
@@ -157,6 +162,7 @@ Clean rerun after code cleanup:
 | `analysis/phase5_stage_b_prefix_native_objective_diagnostic_20260706/` | B6 diagnostic; decision `diagnostic_not_enough_pause_b6` |
 | `analysis/phase5_a6_lbf_r256_clean_operator_rerun_20260706/` | Clean A6 rerun; decision `clean_a6_validated` |
 | `analysis/phase5_stage_b_unified_prefix_optimization_20260707/` | B7 diagnostic; decision `prefix_imbalance_problem_candidate` |
+| `analysis/phase5_stage_b_future_query_aligned_architecture_research_20260707/` | B8 architecture direction research; decision `proposed_architecture_candidate` |
 
 ## Archived Evidence
 

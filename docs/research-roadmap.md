@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB reopened at B7-UPO Step 2/3 |
-| `current_11_step` | StageB Step 2/3: B7 unified prefix optimization problem candidate |
+| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB architecture search reopened at B8-FQA |
+| `current_11_step` | StageB Step 1/2: future-query aligned architecture candidate |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -274,6 +274,39 @@ loss. However, it must pass a stronger gradient/task diagnostic before any imple
 pairs on A6 shared parameters for small train batches. If conflict/imbalance is stable and aligns with segment-tail
 weakness, then enter Step 4-6 method design. If not, pause StageB again.
 
+### B8 Future-Query Aligned Architecture Direction
+
+[Decision] B7-UPO is useful but deferred as a small objective contribution candidate. The preferred StageB route is
+now `B8-FQA`, an architecture-level candidate.
+
+[Motivation] StageA only changes the decoder/head. A second main innovation should change the representation
+interface feeding A6's learned-basis forecast operator.
+
+[Problem] A6-LBF-r256 computes one sample-specific coefficient vector per channel:
+
+```text
+coeff = learned_basis_coeff(hidden)
+y[t, c] = learned_temporal_basis[t] @ coeff[c] + bias[t]
+```
+
+Thus `coeff[c]` is future-position-invariant. Future positions are distinguished by global basis rows, but there is
+no sample-specific target-position representation.
+
+[Idea] Introduce future-position query/placeholder tokens that attend to history tokens and generate
+future-segment-specific coefficient modulation before the learned-basis operator. Initialize the modulation gate to
+zero so the first forward pass is exactly clean A6-LBF-r256.
+
+[Literature] TimeAlign motivates future-aligned representations via prediction/reconstruction alignment; ElasTST
+shows future placeholders and structured masks for horizon-invariant varied-horizon forecasting; TimePerceiver uses
+target-position-aware decoder queries. B8 uses these ideas only as evidence and adapts them to A6's basis-coefficient
+interface.
+
+[Decision] B8-FQA status is `proposed_architecture_candidate`, not method-ready.
+
+[Next Required Action] Run `B8-OCD`: coefficient-space oracle capacity diagnostic. It should test whether
+future-segment-specific coefficients under the same learned temporal basis can reduce A6 residuals. If oracle gains
+are meaningful, proceed to Step 4-6 architecture design; otherwise do not implement B8.
+
 ## Active Implementation
 
 | File | Role |
@@ -294,6 +327,7 @@ weakness, then enter Step 4-6 method design. If not, pause StageB again.
 | `docs/experiments/phase5-stage-b-timealign-dependency-and-basis-align-diagnostic.md` | StageB dependency/basis-align protocol |
 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | StageB B6 prefix-native objective diagnostic protocol |
 | `docs/experiments/phase5-stage-b-unified-prefix-optimization-diagnostic.md` | StageB B7 unified prefix optimization diagnostic protocol |
+| `docs/experiments/phase5-stage-b-future-query-aligned-basis-architecture.md` | StageB B8 future-query aligned basis architecture protocol |
 | `docs/code-explanation/phase5-stage-b-b6-prefix-objective-diagnostic.md` | B6 diagnostic analyzer explanation |
 | `docs/code-explanation/phase5-clean-a6-rerun-analysis.md` | clean A6 validation analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b7-unified-prefix-optimization.md` | B7 diagnostic analyzer explanation |
@@ -312,6 +346,7 @@ weakness, then enter Step 4-6 method design. If not, pause StageB again.
 | `analysis/phase5_stage_b_prefix_native_objective_diagnostic_20260706/` | B6 negative diagnostic |
 | `analysis/phase5_a6_lbf_r256_clean_operator_rerun_20260706/` | clean A6 validation result |
 | `analysis/phase5_stage_b_unified_prefix_optimization_20260707/` | B7 unified prefix optimization diagnostic |
+| `analysis/phase5_stage_b_future_query_aligned_architecture_research_20260707/` | B8 future-query aligned architecture direction research |
 | `analysis/phase5_stage_a_architecture_exhaustion_audit_20260705/` | old route-level audit before A6-LBF was promoted |
 
 ## Current Prohibitions
