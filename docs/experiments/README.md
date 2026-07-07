@@ -51,6 +51,10 @@ what decision follows
   已降级为 small contribution candidate。StageB architecture-level candidate `B8-FQA` 已完成
   coefficient-space oracle diagnostic：learned basis 有 segment-specific headroom，但 DCT control 的绝对
   residual reduction 更强。当前不得实现 B8-FQA；StageB 回到 Step 2/3 重新寻找 architecture-level 第二贡献问题。
+- 用户明确排除 residual-style architecture 后，StageB 新增 native future-stage-aware route `B9-FSN`，
+  记录在 `phase5-stage-b-native-future-stage-operator.md`。`B9-SGC` stage-gradient diagnostic 已返回
+  `problem_candidate_passed`：不同 future stages 对同一个 A6 `coeff` 的梯度方向相似度很低。下一步必须写
+  Step 4-6 narrative/method gate，仍不得直接实现。
 
 ## 历史记录
 

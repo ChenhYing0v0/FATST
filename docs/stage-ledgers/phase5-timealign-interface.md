@@ -8,12 +8,12 @@
 | Field | Content |
 | --- | --- |
 | `stage_id` | `phase5-timealign-interface` |
-| `current_11_step` | StageB Step 2/3 architecture problem redefinition after B8-OCD |
+| `current_11_step` | StageB Step 2/3 B9 native future-stage problem candidate passed |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator on official-source TimeAlign encoder |
-| `active_question` | What architecture-level second contribution can deepen unified prediction after B8-FQA failed the DCT control gate |
-| `latest_decision` | B8-OCD completed：learned segment-specific coefficient headroom exists, but DCT control explains residual better；status `rejected_by_ocd_control` |
-| `next_required_action` | Return to StageB Step 2/3 and redefine a stronger architecture-level problem before implementation |
-| `rollback_point` | Do not implement B8-FQA; keep B7 as small objective candidate only |
+| `active_question` | Can native future-stage-aware representation/operator solve the stage-gradient conflict of A6's shared coefficient state |
+| `latest_decision` | B9-SGC completed：future-stage gradients on shared A6 coefficient have low cosine across all datasets；status `problem_candidate_passed` |
+| `next_required_action` | Enter Step 4-6 narrative/method design for B9-FSN before any implementation |
+| `rollback_point` | Do not implement residual correction; if B9 narrative gate fails, return to StageB Step 2/3 |
 
 ## StageA Fixed Result
 
@@ -75,6 +75,7 @@ Clean rerun after code cleanup:
 | `B6-PLO` | `rejected_by_diagnostic` | A6-LBF 的 architecture 已在 learned-basis space 中建模，但当前 supervision 仍主要是 time-domain point loss；可能缺少 prefix-native label/basis objective | failed：train-label/residual structure is largely generic DCT low-frequency; A6 learned basis has no top32 advantage | not evaluated | Do not implement B6 objective; pause StageB or redefine Step 2/3 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md`; `analysis/phase5_stage_b_prefix_native_objective_diagnostic_20260706/stage_b_b6_report.md` |
 | `B7-UPO` | `deferred_small_contribution_candidate` | A6-LBF 已有 unified operator，但 nested multi-prefix training 会过度加权短步，并可能弱化 long-tail forecast regions | partial：可作为 objective refinement，但不适合作为第二主创新点 | not evaluated | 暂缓，待 architecture candidate 判定后再作为小贡献候选处理 | `docs/experiments/phase5-stage-b-unified-prefix-optimization-diagnostic.md`; `analysis/phase5_stage_b_unified_prefix_optimization_20260707/stage_b_b7_unified_prefix_optimization_report.md` |
 | `B8-FQA` | `rejected_by_ocd_control` | A6-LBF 的 coefficient 是 sample-specific 但 future-position-invariant；future queries 可在 basis prediction 前将 history representation 对齐到 target positions | failed：learned segment-specific correction has headroom, but DCT control has stronger absolute residual reduction | not evaluated | Do not implement B8; return StageB to Step 2/3 | `docs/experiments/phase5-stage-b-future-query-aligned-basis-architecture.md`; `analysis/phase5_stage_b_future_query_aligned_architecture_research_20260707/stage_b_architecture_direction_report.md`; `analysis/phase5_stage_b_b8_ocd_coefficient_oracle_20260707/b8_ocd_report.md` |
+| `B9-FSN` | `problem_candidate_passed` | A6-LBF 的 single coefficient state 同时服务多个 future stages；若 stage losses 对该 coefficient 的梯度方向不一致，则需要 native future-stage-aware representation/operator | passed Step 2/3：B9-SGC shows very low stage-gradient cosine across ETTh2/ETTm1/Weather; not residual route | not evaluated | Write Step 4-6 narrative/method gate; do not implement yet | `docs/experiments/phase5-stage-b-native-future-stage-operator.md`; `analysis/phase5_stage_b_b9_stage_gradient_diagnostic_20260707/b9_stage_gradient_report.md` |
 
 ## Experiment Ledger
 
@@ -92,6 +93,7 @@ Clean rerun after code cleanup:
 | B7 unified prefix optimization diagnostic | `B7-UPO` | problem-existence diagnostic | Current multi-prefix loss gives `0-96` steps `14.39x` tail supervision weight; segment-level A6 gains vs fixed shrink from early `-3.57%` to tail `-0.16%` overall, with ETTh2/ETTm1 supporting and Weather countering | `prefix_imbalance_problem_candidate`; not method-ready | `analysis/phase5_stage_b_unified_prefix_optimization_20260707/stage_b_b7_unified_prefix_optimization_report.md` |
 | B8 future-query aligned architecture research | `B8-FQA` | architecture direction research | 外部网络调研与 code-theory review 表明，A6 在 basis prediction 前缺少 target-position-aware sample-specific representation；future-query coefficient modulation 曾是优先 architecture route | `superseded_by_b8_ocd`；后续诊断未通过 | `analysis/phase5_stage_b_future_query_aligned_architecture_research_20260707/stage_b_architecture_direction_report.md` |
 | B8 coefficient-space oracle diagnostic | `B8-FQA` | problem-existence diagnostic | Rank64 learned segment reduction is ETTh2 `79.05%`, ETTm1 `72.77%`, Weather `61.91%`, but DCT control is stronger at `87.61%/91.85%/91.18%`; residual headroom is generic low-frequency confounded | `rejected_by_ocd_control`; do not implement B8 | `analysis/phase5_stage_b_b8_ocd_coefficient_oracle_20260707/b8_ocd_report.md` |
+| B9 stage-gradient diagnostic | `B9-FSN` | native architecture problem diagnostic | Four future stage losses have low cosine gradients on the same A6 `coeff`: mean pairwise cosine ETTh2 `0.072`, ETTm1 `0.171`, Weather `0.048`; early-tail cosine `0.041/0.112/0.014` | `problem_candidate_passed`; Step 4-6 required before implementation | `analysis/phase5_stage_b_b9_stage_gradient_diagnostic_20260707/b9_stage_gradient_report.md` |
 
 ## Pending Tasks
 
@@ -110,7 +112,9 @@ Clean rerun after code cleanup:
 | Run B7 unified prefix optimization diagnostic | Codex | User requested StageB direction within unified prediction, excluding channel modeling | `completed` | Done; B7 is a problem candidate only |
 | Run B7-GTD gradient/task diagnostic | Codex | B7-UPO segment evidence is partial and Weather is a counterexample | `deferred` | Keep as objective small-contribution diagnostic after architecture path is resolved |
 | Run B8-OCD coefficient-space oracle diagnostic | Codex | B8-FQA is proposed but needs evidence that future-segment-specific coefficients can reduce A6 residuals | `completed` | Done; decision `rejected_by_ocd_control`, do not implement B8 |
-| Redefine StageB architecture-level problem after B8-OCD | Codex | B8 narrative was coherent but failed DCT control gate | `pending` | Return to Step 2/3; find a stronger architecture problem that is not generic low-frequency residual correction |
+| Redefine StageB architecture-level problem after B8-OCD | Codex | B8 narrative was coherent but failed DCT control gate | `completed` | B9-FSN defined as native future-stage-aware route, excluding residual correction |
+| Run B9-SGC native future-stage gradient diagnostic | Codex | User rejected residual architecture and requested native future-stage-aware route | `completed` | Done; decision `problem_candidate_passed` |
+| Design B9-FSN Step 4-6 narrative/method gate | Codex | B9-SGC supports problem existence | `pending` | Define primary-path tensor design, capacity-preserving initialization, and small gate |
 
 ## Paper Mainline Sync Log
 
@@ -127,6 +131,7 @@ Clean rerun after code cleanup:
 | 2026-07-07 | B7-UPO diagnostic returned partial evidence | Contribution 2 candidate | no accepted paper claim | Reopen StageB Step 2/3 around unified prefix optimization; require gradient diagnostic before implementation |
 | 2026-07-07 | User requested architecture-level StageB main innovation | Contribution 2 candidate | no accepted paper claim | B7 deferred as small objective candidate; B8-FQA proposed as architecture candidate |
 | 2026-07-07 | B8-OCD returned negative control | Contribution 2 candidate | no accepted paper claim | Do not implement B8-FQA; StageB returns to Step 2/3 architecture problem search |
+| 2026-07-07 | B9-SGC returned positive stage-gradient evidence | Contribution 2 candidate | no accepted paper claim | B9-FSN becomes active problem candidate; Step 4-6 design required before implementation |
 
 ## Active Artifacts
 
@@ -142,12 +147,14 @@ Clean rerun after code cleanup:
 | `docs/code-explanation/phase5-clean-a6-rerun-analysis.md` | clean A6 validation analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b7-unified-prefix-optimization.md` | B7 unified prefix optimization analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b8-ocd-coefficient-oracle.md` | B8-OCD coefficient oracle analyzer explanation |
+| `docs/code-explanation/phase5-stage-b-b9-stage-gradient-diagnostic.md` | B9-SGC stage gradient analyzer explanation |
 | `docs/experiments/phase5-stage-b-reliability-aware-supervision-redesign.md` | StageB problem definition and B1/B2 candidate boundary |
 | `docs/experiments/phase5-stage-b-distance-normalized-seasonal-residual-diagnostic.md` | B3 diagnostic protocol |
 | `docs/experiments/phase5-stage-b-timealign-dependency-and-basis-align-diagnostic.md` | B4 dependency and B5 basis-align protocol |
 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | B6 prefix-native label/basis objective diagnostic protocol |
 | `docs/experiments/phase5-stage-b-unified-prefix-optimization-diagnostic.md` | B7 unified prefix optimization diagnostic protocol |
 | `docs/experiments/phase5-stage-b-future-query-aligned-basis-architecture.md` | B8 future-query aligned basis architecture protocol |
+| `docs/experiments/phase5-stage-b-native-future-stage-operator.md` | B9 native future-stage operator protocol |
 | `scripts/analyze_phase5_stage_b_reliability_diagnostic.py` | B1 full reliability diagnostic generator |
 | `scripts/analyze_phase5_stage_b_b3_dsr_diagnostic.py` | B3 distance-normalized seasonal residual diagnostic generator |
 | `scripts/analyze_phase5_stage_b_timealign_dependency_audit.py` | TimeAlign dependency artifact audit |
@@ -156,6 +163,7 @@ Clean rerun after code cleanup:
 | `scripts/analyze_phase5_a6_clean_operator_rerun.py` | clean A6 rerun validation analyzer |
 | `scripts/analyze_phase5_stage_b_unified_prefix_optimization.py` | B7 unified prefix optimization diagnostic analyzer |
 | `scripts/analyze_phase5_stage_b_b8_ocd_coefficient_oracle.py` | B8-OCD coefficient oracle diagnostic analyzer |
+| `scripts/analyze_phase5_stage_b_b9_stage_gradient_diagnostic.py` | B9-SGC stage gradient diagnostic analyzer |
 | `scripts/remote/run_phase5_stage_b_timealign_dependency_ablation.sh` | completed remote no-align/no-recon ablation runner |
 | `scripts/remote/run_phase5_a6_lbf_r256_main.sh` | clean A6-LBF-r256 remote runner |
 | `analysis/phase5_timealign_hss_a6_capacity_native_gate_20260703/` | StageA accepted evidence |
@@ -169,6 +177,7 @@ Clean rerun after code cleanup:
 | `analysis/phase5_stage_b_unified_prefix_optimization_20260707/` | B7 diagnostic; decision `prefix_imbalance_problem_candidate` |
 | `analysis/phase5_stage_b_future_query_aligned_architecture_research_20260707/` | B8 architecture direction research; superseded by B8-OCD |
 | `analysis/phase5_stage_b_b8_ocd_coefficient_oracle_20260707/` | B8-OCD diagnostic; decision `rejected_by_ocd_control` |
+| `analysis/phase5_stage_b_b9_stage_gradient_diagnostic_20260707/` | B9-SGC diagnostic; decision `problem_candidate_passed` |
 
 ## Archived Evidence
 

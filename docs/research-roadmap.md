@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB architecture search returned to Step 2/3 after B8-OCD |
-| `current_11_step` | StageB Step 2/3: redefine architecture-level second contribution after B8 negative control |
+| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B9-FSN native future-stage problem candidate |
+| `current_11_step` | StageB Step 2/3: B9 native future-stage-aware problem candidate passed |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -320,6 +320,44 @@ A6 learned-basis coefficient interface 特有的强 architecture problem；不�
 [Rollback] StageB 回到 Step 2/3，继续寻找 architecture-level 第二主创新问题。B7-UPO 仍仅作为 small
 objective contribution candidate 保留。
 
+### B9 Native Future-Stage Operator Problem Candidate
+
+[Decision] 用户明确排除 residual-style architecture 作为 paper-core method。StageB 的新候选是
+`B9-FSN`: native future-stage-aware operator。
+
+[Problem] A6-LBF-r256 的 primary path 使用一个 `coeff[b,c]` 服务所有 future stages：
+
+```text
+coeff = learned_basis_coeff(hidden)
+y[t,c] = learned_temporal_basis[t] @ coeff[b,c] + bias[t]
+```
+
+这不是 residual correction 问题，而是 primary prediction path 问题：不同 future stages 是否对同一个
+coefficient 施加不一致的训练方向？
+
+[External Literature] 本轮不是只参考 Zotero/本地 notes；已外部核验 TimePerceiver、ElasTST、MQ-RNN 与
+Temporal Fusion Transformer。TimePerceiver 支持 target timestamp queries；ElasTST 支持 future
+placeholders/masks；MQ-RNN 明确使用 horizon-specific contexts；TFT 显式处理 known future inputs 和
+multi-horizon architecture。
+
+[Diagnostic] `B9-SGC` 已完成，见
+`analysis/phase5_stage_b_b9_stage_gradient_diagnostic_20260707/b9_stage_gradient_report.md`。诊断不拟合
+residual，不设计 correction module；它计算四个 future stage losses 对同一个 A6 `coeff` 的梯度方向。
+
+[Fact] 三个 dataset 的 stage-gradient cosine 都很低：
+
+| Dataset | Mean pairwise cosine | Early-tail cosine | Negative pair rate |
+| --- | ---: | ---: | ---: |
+| ETTh2 | `0.072` | `0.041` | `0.083` |
+| ETTm1 | `0.171` | `0.112` | `0.042` |
+| Weather | `0.048` | `0.014` | `0.083` |
+
+[Decision] `B9-SGC` 暂定通过 problem-candidate gate。它支持 native future-stage-aware representation /
+operator 的问题存在，但还不是 method-ready。
+
+[Next Required Action] 进入 Step 4-6 前，设计 `B9-FSN` concrete tensor path、narrative gate 和
+capacity-preserving initialization。不得直接实现，也不得写成 residual correction。
+
 ## Active Implementation
 
 | File | Role |
@@ -336,16 +374,19 @@ objective contribution candidate 保留。
 | `scripts/analyze_phase5_a6_clean_operator_rerun.py` | clean A6 validation analyzer |
 | `scripts/analyze_phase5_stage_b_unified_prefix_optimization.py` | B7 unified prefix optimization diagnostic analyzer |
 | `scripts/analyze_phase5_stage_b_b8_ocd_coefficient_oracle.py` | B8-OCD coefficient-space oracle diagnostic analyzer |
+| `scripts/analyze_phase5_stage_b_b9_stage_gradient_diagnostic.py` | B9-SGC native future-stage gradient diagnostic analyzer |
 | `scripts/remote/run_phase5_stage_b_timealign_dependency_ablation.sh` | completed no-align/no-recon ablation runner |
 | `docs/experiments/phase5-stage-b-distance-normalized-seasonal-residual-diagnostic.md` | StageB B3 diagnostic protocol |
 | `docs/experiments/phase5-stage-b-timealign-dependency-and-basis-align-diagnostic.md` | StageB dependency/basis-align protocol |
 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | StageB B6 prefix-native objective diagnostic protocol |
 | `docs/experiments/phase5-stage-b-unified-prefix-optimization-diagnostic.md` | StageB B7 unified prefix optimization diagnostic protocol |
 | `docs/experiments/phase5-stage-b-future-query-aligned-basis-architecture.md` | StageB B8 future-query aligned basis architecture protocol |
+| `docs/experiments/phase5-stage-b-native-future-stage-operator.md` | StageB B9 native future-stage operator protocol |
 | `docs/code-explanation/phase5-stage-b-b6-prefix-objective-diagnostic.md` | B6 diagnostic analyzer explanation |
 | `docs/code-explanation/phase5-clean-a6-rerun-analysis.md` | clean A6 validation analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b7-unified-prefix-optimization.md` | B7 diagnostic analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b8-ocd-coefficient-oracle.md` | B8-OCD analyzer explanation |
+| `docs/code-explanation/phase5-stage-b-b9-stage-gradient-diagnostic.md` | B9-SGC analyzer explanation |
 
 ## Archive Map
 
@@ -363,6 +404,7 @@ objective contribution candidate 保留。
 | `analysis/phase5_stage_b_unified_prefix_optimization_20260707/` | B7 unified prefix optimization diagnostic |
 | `analysis/phase5_stage_b_future_query_aligned_architecture_research_20260707/` | B8 future-query aligned architecture direction research |
 | `analysis/phase5_stage_b_b8_ocd_coefficient_oracle_20260707/` | B8-OCD negative coefficient oracle diagnostic |
+| `analysis/phase5_stage_b_b9_stage_gradient_diagnostic_20260707/` | B9-SGC positive problem-candidate diagnostic |
 | `analysis/phase5_stage_a_architecture_exhaustion_audit_20260705/` | old route-level audit before A6-LBF was promoted |
 
 ## Current Prohibitions
