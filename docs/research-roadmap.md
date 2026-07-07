@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B9-FSN-SCF local implementation smoke passed |
-| `current_11_step` | StageB Step 7: B9-FSN-SCF minimal implementation and local smoke passed |
+| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B9-FSN-SCF remote small gate running |
+| `current_11_step` | StageB Step 8: B9-FSN-SCF remote small gate launched |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -384,8 +384,12 @@ max_abs_no_stage_h96_vs_h720_prefix = 0.0
 
 ETTh2 CPU smoke 已通过 B9 与 no-stage 两个 paths，且 `model_diagnostics.json` 已导出 stage gate 与参数量诊断。
 
-[Next Required Action] 进入 Step 8 remote small gate：commit/push 后在 `529_Lab-3090` 做 GPU preflight，
-再启动 `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh`。不得直接启动 full main matrix。
+[Step 8 Launch] Remote small gate 已在 `529_Lab-3090` 启动，PID `1883897`，输出目录为
+`/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b9_fsn_scf_small_gate`。GPU preflight 显示
+GPU 0/1/2 均空闲，首批 Weather 三个 arms 已分散到三张 GPU。
+
+[Next Required Action] 等待 remote small gate 完成，然后运行
+`scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` 同步并分析。不得直接启动 full main matrix。
 
 ## Active Implementation
 
@@ -438,6 +442,7 @@ ETTh2 CPU smoke 已通过 B9 与 no-stage 两个 paths，且 `model_diagnostics.
 | `analysis/phase5_stage_b_future_query_aligned_architecture_research_20260707/` | B8 future-query aligned architecture direction research |
 | `analysis/phase5_stage_b_b8_ocd_coefficient_oracle_20260707/` | B8-OCD negative coefficient oracle diagnostic |
 | `analysis/phase5_stage_b_b9_stage_gradient_diagnostic_20260707/` | B9-SGC positive problem-candidate diagnostic |
+| `analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/` | B9-FSN-SCF remote launch record and future small-gate analysis |
 | `analysis/phase5_stage_a_architecture_exhaustion_audit_20260705/` | old route-level audit before A6-LBF was promoted |
 
 ## Current Prohibitions

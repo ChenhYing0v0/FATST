@@ -9,10 +9,10 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA clean A6 validated；StageB B9-FSN-SCF local implementation smoke passed |
+| `current_stage` | Phase5 StageA clean A6 validated；StageB B9-FSN-SCF remote small gate running |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 7 B9-FSN-SCF minimal implementation and local smoke passed |
+| `current_11_step` | StageB Step 8 B9-FSN-SCF remote small gate launched |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；B9-FSN-SCF 是可进入 small gate 的第二贡献候选 |
 
 ## Core Claim
@@ -115,6 +115,9 @@ Step 7 最小实现与本地 smoke 已通过：`stage-native-coefficient-field` 
 `0.0`，`H=96` 与 `H=720` prefix consistency max abs 也为 `0.0`。B9 仍未成为 accepted method；下一步
 只能做 remote small gate，比较 `a6_clean`、`b9_fsn_scf`、`b9_no_stage`。
 
+Remote small gate 已在 `529_Lab-3090` 启动，PID `1883897`。该实验仍只属于 effectiveness gate，不产生
+accepted paper claim，需等待 artifacts 返回后判断。
+
 ## Evidence Snapshot
 
 ### A6-LBF-r256 vs fixed-horizon per-horizon TimeAlign
@@ -204,6 +207,7 @@ Archived or inactive:
 | `analysis/phase5_stage_b_future_query_aligned_architecture_research_20260707/` | B8 architecture direction research |
 | `analysis/phase5_stage_b_b8_ocd_coefficient_oracle_20260707/` | B8-OCD negative oracle diagnostic |
 | `analysis/phase5_stage_b_b9_stage_gradient_diagnostic_20260707/` | B9-SGC positive problem-candidate diagnostic |
+| `analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/` | B9-FSN-SCF launch record and future small-gate analysis |
 
 ## Next Step
 
@@ -213,4 +217,4 @@ Archived or inactive:
 4. Do not implement B6 objective under current evidence.
 5. Defer B7 objective optimization as a small contribution candidate.
 6. Do not implement B8-FQA under current evidence.
-7. Launch B9-FSN-SCF remote small gate only after commit/push and GPU preflight; do not launch full matrix before the small gate returns.
+7. Wait for B9-FSN-SCF remote small gate artifacts; sync/analyze before any full matrix decision.

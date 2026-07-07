@@ -12,7 +12,7 @@
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator on official-source TimeAlign encoder |
 | `active_question` | Can B9-FSN-SCF route A6's shared-coefficient stage-gradient conflict through a native stage-indexed coefficient field |
 | `latest_decision` | Step 7 completed：minimal B9-FSN-SCF and no-stage control are implemented; fallback/prefix checks are exactly `0.0`; CPU smoke passed |
-| `next_required_action` | Commit/push code state, preflight 529_Lab-3090 GPUs, then launch B9 remote small gate only |
+| `next_required_action` | Wait for B9 remote small gate to finish, then sync and analyze artifacts |
 | `rollback_point` | If remote B9 small gate fails vs clean A6 or no-stage control, return to StageB Step 4 or Step 2/3; do not stack residual modules |
 
 ## StageA Fixed Result
@@ -118,7 +118,7 @@ Clean rerun after code cleanup:
 | Run B9-SGC native future-stage gradient diagnostic | Codex | User rejected residual architecture and requested native future-stage-aware route | `completed` | Done; decision `problem_candidate_passed` |
 | Design B9-FSN Step 4-6 narrative/method gate | Codex | B9-SGC supports problem existence | `completed` | Done; `B9-FSN-SCF` may enter minimal implementation and small gate |
 | Implement B9-FSN-SCF minimal gate | Codex | Step 4-6 narrative/method gate passed | `completed` | Done; local fallback/prefix checks and smoke passed |
-| Launch B9-FSN-SCF remote small gate | Codex | Local implementation smoke passed | `pending` | Commit/push, run GPU preflight, then launch `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` |
+| Launch B9-FSN-SCF remote small gate | Codex | Local implementation smoke passed | `running` | Launched on `529_Lab-3090` PID `1883897`; wait, sync, analyze |
 
 ## Paper Mainline Sync Log
 
@@ -138,6 +138,7 @@ Clean rerun after code cleanup:
 | 2026-07-07 | B9-SGC returned positive stage-gradient evidence | Contribution 2 candidate | no accepted paper claim | B9-FSN becomes active problem candidate; Step 4-6 design required before implementation |
 | 2026-07-07 | B9-FSN-SCF Step 4-6 design gate passed | Contribution 2 candidate | no accepted paper claim | B9-FSN-SCF may enter minimal implementation and small gate; no full matrix claim yet |
 | 2026-07-07 | B9-FSN-SCF local implementation smoke passed | Contribution 2 candidate | no accepted paper claim | Launch remote small gate after commit/push and GPU preflight |
+| 2026-07-07 | B9-FSN-SCF remote small gate launched | Contribution 2 candidate | no accepted paper claim | Wait for artifacts, then run sync/analyzer |
 
 ## Active Artifacts
 
@@ -188,6 +189,7 @@ Clean rerun after code cleanup:
 | `analysis/phase5_stage_b_future_query_aligned_architecture_research_20260707/` | B8 architecture direction research; superseded by B8-OCD |
 | `analysis/phase5_stage_b_b8_ocd_coefficient_oracle_20260707/` | B8-OCD diagnostic; decision `rejected_by_ocd_control` |
 | `analysis/phase5_stage_b_b9_stage_gradient_diagnostic_20260707/` | B9-SGC diagnostic; decision `problem_candidate_passed` |
+| `analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/launch_record.md` | B9-FSN-SCF remote launch record |
 
 ## Archived Evidence
 
