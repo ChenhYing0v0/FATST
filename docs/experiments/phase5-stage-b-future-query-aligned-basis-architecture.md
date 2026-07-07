@@ -5,16 +5,16 @@
 | 字段 | 内容 |
 | --- | --- |
 | `candidate_id` | `B8-FQA` |
-| `current_step` | Step 1-2：文献调研与 architecture problem proposal |
+| `current_step` | Step 3：`B8-OCD` problem-existence diagnostic completed |
 | `problem` | StageA A6-LBF-r256 已经统一 decoder/head，但 sample-specific coefficient 对 horizon/position 不变；future positions 只通过全局 learned basis 区分，缺少 target-position-aware representation |
-| `existence_evidence` | 目前只有 code-theory evidence 与文献动机，仍需 `B8-OCD` coefficient-space oracle diagnostic |
+| `existence_evidence` | `B8-OCD` 显示 learned basis segment-specific correction 有 headroom，但 DCT control 的绝对 residual reduction 更强 |
 | `idea` | 引入 future-position query/placeholder tokens，使其 attend 到 history tokens，并在 learned-basis operator 前生成 target-position-aware coefficient modulation |
 | `theory_check` | 这是 architecture-level 路线，直接深化 unified prediction；不恢复 generic TimeAlign auxiliary loss，也不转向 channel-correlation modeling |
 | `design` | 仅为候选设计，尚未实现 |
-| `narrative_gate` | `promising_not_passed`：有论文叙事潜力，但必须先通过 `B8-OCD` |
+| `narrative_gate` | `failed_by_ocd_generic_low_frequency_confounder`：叙事通顺，但当前 problem evidence 不足 |
 | `effectiveness_gate` | 未评估 |
-| `artifacts` | 本 protocol；`analysis/phase5_stage_b_future_query_aligned_architecture_research_20260707/` |
-| `decision` | `proposed_architecture_candidate`；`B7-UPO` 降级为 small objective contribution candidate |
+| `artifacts` | 本 protocol；`analysis/phase5_stage_b_future_query_aligned_architecture_research_20260707/`；`analysis/phase5_stage_b_b8_ocd_coefficient_oracle_20260707/` |
+| `decision` | `rejected_by_ocd_control`；当前不实现 B8-FQA，StageB 回到 Step 2/3 |
 
 ## 为什么 StageB 不应停在 B7
 
@@ -179,13 +179,53 @@ B8 的机制变化是：
 - 必须先证明 segment-specific coefficient modulation 有 residual headroom；
 - cross-attention 需要保持轻量，不能把收益变成单纯参数量收益。
 
-## 实现前必须完成的诊断
+## B8-OCD 诊断结果
+
+`B8-OCD` 已完成，完整报告见：
+
+- `analysis/phase5_stage_b_b8_ocd_coefficient_oracle_20260707/b8_ocd_report.md`
+- `docs/code-explanation/phase5-stage-b-b8-ocd-coefficient-oracle.md`
+
+诊断方法：
+
+```text
+residual[b,t,c] = true[b,t,c] - pred[b,t,c]
+```
+
+然后固定 clean A6 checkpoint 中的 `learned_temporal_basis`，比较：
+
+- `global_oracle`：整段 720 steps 共用一组 correction coefficients；
+- `segment_oracle`：四个 future segments 分别求 correction coefficients；
+- `dct` control：同 rank、同 oracle 流程，用于排除 generic low-frequency residual explanation。
+
+Rank 64 summary：
+
+| dataset | basis | global reduction | segment reduction | segment - global |
+| --- | --- | ---: | ---: | ---: |
+| ETTh2 | learned_a6 | 62.20% | 79.05% | 16.85% |
+| ETTh2 | dct | 86.24% | 87.61% | 1.37% |
+| ETTm1 | learned_a6 | 44.58% | 72.77% | 28.19% |
+| ETTm1 | dct | 90.98% | 91.85% | 0.87% |
+| Weather | learned_a6 | 39.89% | 61.91% | 22.01% |
+| Weather | dct | 90.08% | 91.18% | 1.10% |
+
+[Fact] learned basis 的 segment-specific correction 相比 global correction 确实有明显 headroom，说明“单一
+future-position-invariant coefficient”不是完全无问题。
+
+[Counter-Evidence] DCT control 在绝对 residual reduction 上显著强于 learned basis。也就是说，当前 residual
+主要仍可由 generic low-frequency structure 解释，而不是 A6 learned-basis coefficient interface 特有的
+future-query alignment problem。
+
+[Decision] `B8-OCD` 未通过 problem-existence gate。当前不实现 B8-FQA。
+
+## 实际执行的诊断定义
 
 `B8-OCD`：coefficient-space oracle capacity diagnostic。
 
 目标：
 
-> 检验在同一个 A6 learned temporal basis 下，允许 future-segment-specific coefficients 是否能降低 A6 errors。
+> 检验在同一个 A6 learned temporal basis span 下，允许 future-segment-specific coefficient correction
+> 是否能降低 clean A6 residual，并且该现象是否强于 DCT control。
 
 所需 artifacts：
 
@@ -195,12 +235,11 @@ B8 的机制变化是：
 诊断流程：
 
 1. 加载 A6 learned basis `B`。
-2. 对每个 sample/channel/未来 segment，用该 segment 的 true values 求解 ridge least-squares coefficient `c_s^*`。
+2. 计算 `residual = true - pred`，并 reshape 为 `[sample * channel, 720]`。
 3. 比较：
-   - global A6 prediction；
-   - 同一 basis 下的 oracle segment-specific coefficient reconstruction；
-   - 必要时加入 DCT/low-rank control。
-4. 如果 oracle segment-specific coefficients 显著降低 tail/segment residuals，B8 才有真实 architecture target。
-5. 如果 oracle gains 很小，或可由 generic DCT/frequency control 解释，则不实现 B8。
-
-只有 `B8-OCD` 通过后，才能进入 Step 4-6 method design 与 remote implementation。
+   - learned basis global residual correction；
+   - learned basis segment-specific residual correction；
+   - same-rank DCT global/segment correction control。
+4. 如果 learned basis 的 segment-specific correction 在多个 dataset 上显著超过 global correction，且绝对
+   residual reduction 强于 DCT control，B8 才有真实 architecture target。
+5. 本次结果没有满足第 4 点，因此不进入 Step 4-6，不实现 B8-FQA。

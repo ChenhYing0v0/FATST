@@ -48,9 +48,9 @@ what decision follows
   low-frequency control 解释，A6 learned basis 没有形成 top32 advantage。当前不得实现 B6 objective；
   clean A6 main matrix 已完成 rerun 并返回 `clean_a6_validated`。
 - 当前 StageA clean A6-LBF-r256 是唯一 accepted paper-core method。B7-UPO objective optimization
-  已降级为 small contribution candidate。StageB 主线改为 architecture-level `B8-FQA`，记录在
-  `phase5-stage-b-future-query-aligned-basis-architecture.md`；下一步必须做 coefficient-space oracle
-  diagnostic，仍不得直接实现 architecture changes。
+  已降级为 small contribution candidate。StageB architecture-level candidate `B8-FQA` 已完成
+  coefficient-space oracle diagnostic：learned basis 有 segment-specific headroom，但 DCT control 的绝对
+  residual reduction 更强。当前不得实现 B8-FQA；StageB 回到 Step 2/3 重新寻找 architecture-level 第二贡献问题。
 
 ## 历史记录
 

@@ -2,13 +2,31 @@
 
 ## 决策
 
-[Decision] `B8-FQA` 是当前优先推进的 StageB architecture candidate。
+[Decision] `B8-FQA` 曾是优先推进的 StageB architecture candidate，但已被后续 `B8-OCD` negative control
+否决。
 
 完整名称：`Future-Query Aligned Basis Operator`。
 
-当前状态：`proposed_architecture_candidate`，不是 method-ready。
+当前状态：`rejected_by_ocd_control`，不是 method-ready。
 
-下一步必须先运行 `B8-OCD`，即 coefficient-space oracle capacity diagnostic。未通过该诊断前，不应实现 B8。
+`B8-OCD` 已完成，结果不支持实现 B8-FQA。本文保留原 architecture research 的推理过程，但 post-diagnostic
+decision 已改为：StageB 回到 Step 2/3，重新寻找 architecture-level 第二贡献问题。
+
+## Post-Diagnostic Addendum
+
+[Fact] `B8-OCD` 使用 clean A6 checkpoint 与 predictions，固定 `learned_temporal_basis`，比较 learned basis
+和 DCT control 的 global/segment residual correction。完整报告见
+`analysis/phase5_stage_b_b8_ocd_coefficient_oracle_20260707/b8_ocd_report.md`。
+
+[Fact] learned basis 的 segment-specific correction 相比 global correction 有明显额外 headroom。Rank 64 的
+segment-minus-global reduction 为 ETTh2 `16.85%`、ETTm1 `28.19%`、Weather `22.01%`。
+
+[Counter-Evidence] DCT control 的绝对 residual reduction 更强。Rank 64 的 segment reduction 中，learned
+basis 为 ETTh2 `79.05%`、ETTm1 `72.77%`、Weather `61.91%`，DCT control 为 ETTh2 `87.61%`、ETTm1
+`91.85%`、Weather `91.18%`。
+
+[Decision] B8 的叙事逻辑仍然通顺，但当前问题证据被 generic low-frequency control 混淆。`B8-FQA` 不应进入
+Step 4-6 method design，也不应实现。
 
 ## 用户约束
 
@@ -99,7 +117,7 @@ y[t, c] = basis[t] @ coeff[c] + b[t]
 
 > unified multi-horizon model 不应只在 history-only encoder 后接 prefix-native basis decoder，还应在 basis prediction 前将 history representation 对齐到 future positions。
 
-## 推荐候选：B8-FQA
+## 原推荐候选：B8-FQA
 
 最小架构：
 
@@ -179,7 +197,7 @@ StageB B8 的贡献候选是：
 - B7 改 objective/training weighting；
 - B8 改 architecture。
 
-## 下一步必须做的诊断
+## 原计划必须做的诊断
 
 `B8-OCD`：coefficient-space oracle capacity diagnostic。
 
@@ -200,12 +218,12 @@ Gate：
 - 若 oracle segment-specific coefficients 在 ETTh2 和 ETTm1 至少稳定降低 tail/segment residuals，且不能被 generic DCT control 解释，则 B8 进入 Step 4-6 method design；
 - 若收益很小、只在 Weather 出现、或完全由 generic basis control 解释，则不实现 B8。
 
-## 下一步研究动作
+## 原下一步研究动作
 
-当前不要实现 B8。
+当前不要实现 B8。以下原计划已经由 `B8-OCD` 执行并返回负向控制结果，仅作为历史记录保留。
 
 下一步：
 
 1. 定位或同步 clean A6 checkpoint，确认包含 `learned_temporal_basis`；
 2. 编写 `B8-OCD` diagnostic protocol 与 analyzer；
-3. 只有 `B8-OCD` 通过，才进入 Step 4-6 method design。
+3. 只有 `B8-OCD` 通过，才进入 Step 4-6 method design；本次没有通过，因此不进入方法设计。

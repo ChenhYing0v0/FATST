@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB architecture search reopened at B8-FQA |
-| `current_11_step` | StageB Step 1/2: future-query aligned architecture candidate |
+| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB architecture search returned to Step 2/3 after B8-OCD |
+| `current_11_step` | StageB Step 2/3: redefine architecture-level second contribution after B8 negative control |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -276,8 +276,8 @@ weakness, then enter Step 4-6 method design. If not, pause StageB again.
 
 ### B8 Future-Query Aligned Architecture Direction
 
-[Decision] `B7-UPO` 有价值，但当前降级为 small objective contribution candidate。StageB 当前优先路线改为
-`B8-FQA`，即 architecture-level candidate。
+[Decision] `B7-UPO` 有价值，但当前降级为 small objective contribution candidate。随后 StageB 曾提出
+`B8-FQA` 作为 architecture-level candidate。
 
 [Motivation] StageA 主要改变 decoder/head。第二个主创新点应改变 feeding A6 learned-basis forecast operator
 的 representation interface。
@@ -302,11 +302,23 @@ placeholders 与 structured masks 可服务 horizon-invariant varied-horizon for
 target-position-aware decoder queries。B8 只把这些作为机制证据，并将其改写到 A6 的 basis-coefficient
 interface。
 
-[Decision] `B8-FQA` 状态为 `proposed_architecture_candidate`，尚未 method-ready。
+[Diagnostic] `B8-OCD` 已完成，见
+`analysis/phase5_stage_b_b8_ocd_coefficient_oracle_20260707/b8_ocd_report.md`。诊断固定 clean A6
+prediction 与 checkpoint 中的 `learned_temporal_basis`，比较 learned basis 与 DCT control 的 global/segment
+residual correction。
 
-[Next Required Action] 运行 `B8-OCD`: coefficient-space oracle capacity diagnostic。它应检验在同一个
-learned temporal basis 下，future-segment-specific coefficients 是否能降低 A6 residuals。若 oracle gains
-有意义，则进入 Step 4-6 architecture design；否则不实现 B8。
+[Fact] learned basis 的 segment-specific correction 确实相对 global correction 有明显 headroom。Rank 64 下
+segment-minus-global reduction 为 ETTh2 `16.85%`、ETTm1 `28.19%`、Weather `22.01%`。
+
+[Counter-Evidence] DCT control 的绝对 residual reduction 更强。Rank 64 segment reduction 中，learned basis
+为 ETTh2 `79.05%`、ETTm1 `72.77%`、Weather `61.91%`，DCT control 为 ETTh2 `87.61%`、ETTm1
+`91.85%`、Weather `91.18%`。
+
+[Decision] `B8-FQA` 状态改为 `rejected_by_ocd_control`。叙事逻辑仍然通顺，但当前 evidence 不能证明它是
+A6 learned-basis coefficient interface 特有的强 architecture problem；不要实现 B8。
+
+[Rollback] StageB 回到 Step 2/3，继续寻找 architecture-level 第二主创新问题。B7-UPO 仍仅作为 small
+objective contribution candidate 保留。
 
 ## Active Implementation
 
@@ -323,6 +335,7 @@ learned temporal basis 下，future-segment-specific coefficients 是否能降�
 | `scripts/analyze_phase5_stage_b_b6_prefix_objective_diagnostic.py` | StageB B6 prefix-native objective diagnostic analyzer |
 | `scripts/analyze_phase5_a6_clean_operator_rerun.py` | clean A6 validation analyzer |
 | `scripts/analyze_phase5_stage_b_unified_prefix_optimization.py` | B7 unified prefix optimization diagnostic analyzer |
+| `scripts/analyze_phase5_stage_b_b8_ocd_coefficient_oracle.py` | B8-OCD coefficient-space oracle diagnostic analyzer |
 | `scripts/remote/run_phase5_stage_b_timealign_dependency_ablation.sh` | completed no-align/no-recon ablation runner |
 | `docs/experiments/phase5-stage-b-distance-normalized-seasonal-residual-diagnostic.md` | StageB B3 diagnostic protocol |
 | `docs/experiments/phase5-stage-b-timealign-dependency-and-basis-align-diagnostic.md` | StageB dependency/basis-align protocol |
@@ -332,6 +345,7 @@ learned temporal basis 下，future-segment-specific coefficients 是否能降�
 | `docs/code-explanation/phase5-stage-b-b6-prefix-objective-diagnostic.md` | B6 diagnostic analyzer explanation |
 | `docs/code-explanation/phase5-clean-a6-rerun-analysis.md` | clean A6 validation analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b7-unified-prefix-optimization.md` | B7 diagnostic analyzer explanation |
+| `docs/code-explanation/phase5-stage-b-b8-ocd-coefficient-oracle.md` | B8-OCD analyzer explanation |
 
 ## Archive Map
 
@@ -348,6 +362,7 @@ learned temporal basis 下，future-segment-specific coefficients 是否能降�
 | `analysis/phase5_a6_lbf_r256_clean_operator_rerun_20260706/` | clean A6 validation result |
 | `analysis/phase5_stage_b_unified_prefix_optimization_20260707/` | B7 unified prefix optimization diagnostic |
 | `analysis/phase5_stage_b_future_query_aligned_architecture_research_20260707/` | B8 future-query aligned architecture direction research |
+| `analysis/phase5_stage_b_b8_ocd_coefficient_oracle_20260707/` | B8-OCD negative coefficient oracle diagnostic |
 | `analysis/phase5_stage_a_architecture_exhaustion_audit_20260705/` | old route-level audit before A6-LBF was promoted |
 
 ## Current Prohibitions

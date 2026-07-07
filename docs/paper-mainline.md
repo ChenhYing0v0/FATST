@@ -9,10 +9,10 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA clean A6 validated；StageB B8-FQA architecture candidate |
+| `current_stage` | Phase5 StageA clean A6 validated；StageB architecture search returned to Step 2/3 after B8-OCD |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 1/2 architecture research for future-query aligned basis interface |
+| `current_11_step` | StageB Step 2/3 architecture problem redefinition after B8-OCD negative control |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 paper-core method；StageB 暂无可实现贡献 |
 
 ## Core Claim
@@ -81,7 +81,7 @@ steps 获得 `336-720` tail steps 的 `14.39x` scalar supervision weight；segme
 TimeAlign 从 early `-3.57%` 收窄到 tail `-0.16%`。该方向与 StageA 的 unified prediction 叙事更连贯，
 但仍只是 `problem_candidate`：Weather 是反例，且还缺少 gradient/task-interference evidence。
 
-根据用户对 StageB 主贡献的约束，B7 当前降级为 small objective candidate。新的主线 architecture
+根据用户对 StageB 主贡献的约束，B7 当前降级为 small objective candidate。随后提出的 architecture
 candidate 是 `B8-FQA`: Future-Query Aligned Basis Operator。它的核心问题是：A6-LBF 已有
 prefix-native learned-basis decoder，但 sample-specific coefficient vector 对 future positions 是不变的；
 StageB 可以引入 future-position query/placeholder tokens，在进入 basis operator 前生成
@@ -89,6 +89,13 @@ target-position-aware coefficient modulation。该方向更适合作为第二个
 interface，而不是只改 loss。该判断已补充外部网络调研证据：TimeAlign、ElasTST、TimePerceiver 的 arXiv
 或 official repository 资料分别支撑 future alignment、future placeholders/masks 与 target-query
 decoder 的机制可行性；SRP++ 仅作为本地 note 辅助证据。
+
+`B8-OCD` coefficient-space oracle diagnostic 已返回负向控制结果：learned basis 的 segment-specific
+correction 相比 global correction 有明显 headroom，但 DCT control 的绝对 residual reduction 更强。Rank
+64 下 learned basis 的 segment reduction 为 ETTh2 `79.05%`、ETTm1 `72.77%`、Weather `61.91%`，而
+DCT control 为 ETTh2 `87.61%`、ETTm1 `91.85%`、Weather `91.18%`。因此当前证据不足以说明 B8
+对应的是 A6 learned-basis coefficient interface 特有的 architecture problem，StageB 不能实现 B8-FQA，
+应回到 Step 2/3 重新定义 architecture-level 第二贡献问题。
 
 ## Evidence Snapshot
 
@@ -172,6 +179,7 @@ Archived or inactive:
 | `analysis/phase5_a6_lbf_r256_clean_operator_rerun_20260706/` | clean A6 validation report |
 | `analysis/phase5_stage_b_unified_prefix_optimization_20260707/` | B7 problem-candidate diagnostic |
 | `analysis/phase5_stage_b_future_query_aligned_architecture_research_20260707/` | B8 architecture direction research |
+| `analysis/phase5_stage_b_b8_ocd_coefficient_oracle_20260707/` | B8-OCD negative oracle diagnostic |
 
 ## Next Step
 
@@ -180,4 +188,4 @@ Archived or inactive:
 3. Treat B5 basis-aware alignment as deferred, not the next implementation target.
 4. Do not implement B6 objective under current evidence.
 5. Defer B7 objective optimization as a small contribution candidate.
-6. Continue B8 only through coefficient-space oracle diagnostics first; do not implement architecture changes until Step 4-6 narrative gate passes.
+6. Do not implement B8-FQA under current evidence; StageB architecture search returns to Step 2/3.
