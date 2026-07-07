@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB paused after B6 negative diagnostic |
-| `current_11_step` | StageA clean validation passed; StageB may only reopen from Step 2/3 with a new non-generic problem |
+| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB reopened at B7-UPO Step 2/3 |
+| `current_11_step` | StageB Step 2/3: B7 unified prefix optimization problem candidate |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -250,6 +250,30 @@ changes mean MSE by only `+0.20%`.
 continues beyond Contribution 1, return to Step 2/3 and define a problem that is neither generic frequency
 supervision nor step-distance-confounded reliability weighting.
 
+### B7 Unified Prefix Optimization Diagnostic
+
+[Decision] B7-UPO diagnostic completed at
+`analysis/phase5_stage_b_unified_prefix_optimization_20260707/`.
+
+[Problem] A6-LBF-r256 已经提供 unified forecast operator，但当前 `multi-prefix` objective 把
+`h96/h192/h336/h720` prefix losses 简单平均。由于每个 prefix loss 又对 `1..H` 求均值，short future
+steps 被多个 prefix 重复覆盖，long-tail steps 只被 long horizon 覆盖。
+
+[Fact] 当前 horizons `[96,192,336,720]` 下，`0-96` segment 的平均 scalar supervision weight 是
+`336-720` tail segment 的 `14.39x`；`96-192` 是 `6.89x`；`192-336` 是 `3.14x`。
+
+[Moderate Evidence] Segment-level comparison shows A6 gains vs fixed TimeAlign shrink in the under-weighted tail:
+overall early `0-96` relative MSE is `-3.57%`, while tail `336-720` is only `-0.16%`. ETTh2 and ETTm1 support this
+reading; Weather is a counterexample.
+
+[Decision] B7-UPO status is `prefix_imbalance_problem_candidate`, not method-ready. It is stronger than reviving B6
+because it directly deepens unified prediction training mechanics and does not become a generic frequency auxiliary
+loss. However, it must pass a stronger gradient/task diagnostic before any implementation.
+
+[Next Required Action] Run `B7-GTD`: compute per-prefix gradient cosine similarities, gradient norms, and conflict
+pairs on A6 shared parameters for small train batches. If conflict/imbalance is stable and aligns with segment-tail
+weakness, then enter Step 4-6 method design. If not, pause StageB again.
+
 ## Active Implementation
 
 | File | Role |
@@ -264,12 +288,15 @@ supervision nor step-distance-confounded reliability weighting.
 | `scripts/analyze_phase5_stage_b_timealign_dependency_ablation.py` | returned no-align/no-recon dependency ablation analyzer |
 | `scripts/analyze_phase5_stage_b_b6_prefix_objective_diagnostic.py` | StageB B6 prefix-native objective diagnostic analyzer |
 | `scripts/analyze_phase5_a6_clean_operator_rerun.py` | clean A6 validation analyzer |
+| `scripts/analyze_phase5_stage_b_unified_prefix_optimization.py` | B7 unified prefix optimization diagnostic analyzer |
 | `scripts/remote/run_phase5_stage_b_timealign_dependency_ablation.sh` | completed no-align/no-recon ablation runner |
 | `docs/experiments/phase5-stage-b-distance-normalized-seasonal-residual-diagnostic.md` | StageB B3 diagnostic protocol |
 | `docs/experiments/phase5-stage-b-timealign-dependency-and-basis-align-diagnostic.md` | StageB dependency/basis-align protocol |
 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | StageB B6 prefix-native objective diagnostic protocol |
+| `docs/experiments/phase5-stage-b-unified-prefix-optimization-diagnostic.md` | StageB B7 unified prefix optimization diagnostic protocol |
 | `docs/code-explanation/phase5-stage-b-b6-prefix-objective-diagnostic.md` | B6 diagnostic analyzer explanation |
 | `docs/code-explanation/phase5-clean-a6-rerun-analysis.md` | clean A6 validation analyzer explanation |
+| `docs/code-explanation/phase5-stage-b-b7-unified-prefix-optimization.md` | B7 diagnostic analyzer explanation |
 
 ## Archive Map
 
@@ -284,6 +311,7 @@ supervision nor step-distance-confounded reliability weighting.
 | `analysis/phase5_stage_b_timealign_dependency_ablation_20260706/` | B4 dependency ablation result |
 | `analysis/phase5_stage_b_prefix_native_objective_diagnostic_20260706/` | B6 negative diagnostic |
 | `analysis/phase5_a6_lbf_r256_clean_operator_rerun_20260706/` | clean A6 validation result |
+| `analysis/phase5_stage_b_unified_prefix_optimization_20260707/` | B7 unified prefix optimization diagnostic |
 | `analysis/phase5_stage_a_architecture_exhaustion_audit_20260705/` | old route-level audit before A6-LBF was promoted |
 
 ## Current Prohibitions

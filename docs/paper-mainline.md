@@ -9,10 +9,10 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA clean A6 validated；StageB paused after negative diagnostics |
+| `current_stage` | Phase5 StageA clean A6 validated；StageB B7-UPO Step 2/3 candidate |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageA clean validation passed; StageB rollback to Step 2/3 only if a new non-generic problem is found |
+| `current_11_step` | StageB Step 2/3 problem-existence diagnostic for unified prefix optimization |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 paper-core method；StageB 暂无可实现贡献 |
 
 ## Core Claim
@@ -72,8 +72,14 @@ operator：official TimeAlign baseline 保留 future reconstruction/alignment，
   `0.251`，residual coverage 为 ETTh2 `0.287`、ETTm1 `0.110`、Weather `0.081`。
 
 StageB 当前不得实现 prefix-native objective。该方向容易退化为 generic low-frequency/frequency auxiliary
-loss，难以区别 FreDF/TransDF。论文主线应暂时以 Contribution 1 为唯一核心方法，并用 B1/B3/B4/B6
-作为严谨的负诊断边界。
+loss，难以区别 FreDF/TransDF。B6 因此作为严谨的负诊断边界保留。
+
+当前新的 StageB candidate 是 `B7-UPO`: unified prefix optimization。它不再问 label/basis 是否需要
+frequency-like auxiliary objective，而是问 A6-LBF 的 unified forecast operator 是否被 nested
+multi-prefix objective 公平、稳定地优化。初步 offline diagnostic 显示，当前 `multi-prefix` loss 使 `0-96`
+steps 获得 `336-720` tail steps 的 `14.39x` scalar supervision weight；segment-level A6 gains vs fixed
+TimeAlign 从 early `-3.57%` 收窄到 tail `-0.16%`。该方向与 StageA 的 unified prediction 叙事更连贯，
+但仍只是 `problem_candidate`：Weather 是反例，且还缺少 gradient/task-interference evidence。
 
 ## Evidence Snapshot
 
@@ -149,10 +155,12 @@ Archived or inactive:
 | `docs/stage-ledgers/phase5-timealign-interface.md` | active StageA/StageB ledger |
 | `docs/research-roadmap.md` | active roadmap |
 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | next StageB diagnostic protocol |
+| `docs/experiments/phase5-stage-b-unified-prefix-optimization-diagnostic.md` | active B7 unified prefix optimization diagnostic protocol |
 | `analysis/phase5_stage_b_timealign_dependency_audit_20260706/` | TimeAlign dependency audit |
 | `analysis/phase5_stage_b_timealign_dependency_ablation_20260706/` | no-align/no-recon dependency ablation |
 | `analysis/phase5_stage_b_prefix_native_objective_diagnostic_20260706/` | B6 negative diagnostic |
 | `analysis/phase5_a6_lbf_r256_clean_operator_rerun_20260706/` | clean A6 validation report |
+| `analysis/phase5_stage_b_unified_prefix_optimization_20260707/` | B7 problem-candidate diagnostic |
 
 ## Next Step
 
@@ -160,4 +168,4 @@ Archived or inactive:
 2. Do not revive archived StageA code paths.
 3. Treat B5 basis-aware alignment as deferred, not the next implementation target.
 4. Do not implement B6 objective under current evidence.
-5. Consolidate the paper around Contribution 1 unless a new StageB Step 2/3 problem is found.
+5. Continue B7 only through gradient/task diagnostics first; do not implement a new loss until Step 4-6 narrative gate passes.

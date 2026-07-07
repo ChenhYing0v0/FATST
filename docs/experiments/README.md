@@ -47,8 +47,9 @@ what decision follows
 - B6-PLO 诊断已返回 `diagnostic_not_enough_pause_b6`：train-label/residual structure 主要由 DCT
   low-frequency control 解释，A6 learned basis 没有形成 top32 advantage。当前不得实现 B6 objective；
   clean A6 main matrix 已完成 rerun 并返回 `clean_a6_validated`。
-- 当前 StageA clean A6-LBF-r256 是唯一 paper-core method。StageB 暂停；若继续 Contribution 2，必须先回到
-  Step 2/3 定义一个非 generic-frequency、非 step-distance-confounded 的新问题。
+- 当前 StageA clean A6-LBF-r256 是唯一 paper-core method。StageB 已按用户要求回到 unified prediction
+  主体方向，新增 `phase5-stage-b-unified-prefix-optimization-diagnostic.md`。B7-UPO 当前只是
+  `prefix_imbalance_problem_candidate`，下一步必须做 gradient/task diagnostic，仍不得直接实现新 loss。
 
 ## 历史记录
 
