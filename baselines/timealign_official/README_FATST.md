@@ -66,3 +66,19 @@ TimeAlign future-reconstruction architecture. The A6-LBF path:
 - forces `w_recon=0.0` and `w_align=0.0` in `train_repo.py`.
 
 The official `--readout-mode official` path still keeps reconstruction and alignment for baseline reproduction.
+
+## B9-FSN-SCF Stage-Native Coefficient Field
+
+StageB adds two prefix-native learned-basis readout modes:
+
+- `stage-native-coefficient-field`: B9-FSN-SCF candidate;
+- `stage-native-coefficient-field-no-stage`: no-stage capacity control.
+
+Both modes keep the A6 learned temporal basis, but replace the single coefficient vector
+`coeff: [B, C, K]` with a stage-indexed coefficient field `coeff_field: [B, C, S, K]`
+before basis projection. They do not restore the TimeAlign future reconstruction/alignment branch and still force
+`w_recon=0.0` and `w_align=0.0`.
+
+The final stage modulation layer is zero-initialized, so the initial forward path is function-preserving with respect
+to `learned-basis-forecast-operator`. The no-stage control keeps the same module shape but shares the averaged stage
+token/gate across all stages.

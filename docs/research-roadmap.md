@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B9-FSN-SCF method candidate ready for small gate |
-| `current_11_step` | StageB Step 4-6: B9-FSN-SCF narrative/method gate passed |
+| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B9-FSN-SCF local implementation smoke passed |
+| `current_11_step` | StageB Step 7: B9-FSN-SCF minimal implementation and local smoke passed |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -372,9 +372,20 @@ basis。这解决的是 primary-path stage pressure routing，不是 output resi
 [Narrative Gate] Step 4-6 已通过：问题清楚、机制在 tensor path 上可解释、与 StageA 的 learned-basis
 operator 连续、与 TimePerceiver/ElasTST/MQ-RNN/TFT/SRP++ 有明确边界，且可 function-preserving 初始化。
 
-[Next Required Action] 进入 Step 7 最小实现与 small gate：实现 `B9-FSN-SCF`、`B9-no-stage-control`
-和可选 `A6-rank-control`，先 local smoke，再做 ETTh2/ETTm1/Weather seed2021 small remote gate。不得直接
-启动 full main matrix。
+[Step 7 Implementation] 最小 `B9-FSN-SCF` 与 `B9-no-stage-control` 已实现。新增 readout modes：
+`stage-native-coefficient-field` 与 `stage-native-coefficient-field-no-stage`。本地 fallback/prefix 检查为：
+
+```text
+max_abs_b9_vs_a6_h720 = 0.0
+max_abs_no_stage_vs_a6_h720 = 0.0
+max_abs_b9_h96_vs_h720_prefix = 0.0
+max_abs_no_stage_h96_vs_h720_prefix = 0.0
+```
+
+ETTh2 CPU smoke 已通过 B9 与 no-stage 两个 paths，且 `model_diagnostics.json` 已导出 stage gate 与参数量诊断。
+
+[Next Required Action] 进入 Step 8 remote small gate：commit/push 后在 `529_Lab-3090` 做 GPU preflight，
+再启动 `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh`。不得直接启动 full main matrix。
 
 ## Active Implementation
 
@@ -393,6 +404,7 @@ operator 连续、与 TimePerceiver/ElasTST/MQ-RNN/TFT/SRP++ 有明确边界，�
 | `scripts/analyze_phase5_stage_b_unified_prefix_optimization.py` | B7 unified prefix optimization diagnostic analyzer |
 | `scripts/analyze_phase5_stage_b_b8_ocd_coefficient_oracle.py` | B8-OCD coefficient-space oracle diagnostic analyzer |
 | `scripts/analyze_phase5_stage_b_b9_stage_gradient_diagnostic.py` | B9-SGC native future-stage gradient diagnostic analyzer |
+| `scripts/analyze_phase5_stage_b_b9_fsn_scf_small_gate.py` | B9-FSN-SCF small gate analyzer |
 | `scripts/remote/run_phase5_stage_b_timealign_dependency_ablation.sh` | completed no-align/no-recon ablation runner |
 | `docs/experiments/phase5-stage-b-distance-normalized-seasonal-residual-diagnostic.md` | StageB B3 diagnostic protocol |
 | `docs/experiments/phase5-stage-b-timealign-dependency-and-basis-align-diagnostic.md` | StageB dependency/basis-align protocol |
@@ -405,6 +417,9 @@ operator 连续、与 TimePerceiver/ElasTST/MQ-RNN/TFT/SRP++ 有明确边界，�
 | `docs/code-explanation/phase5-stage-b-b7-unified-prefix-optimization.md` | B7 diagnostic analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b8-ocd-coefficient-oracle.md` | B8-OCD analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b9-stage-gradient-diagnostic.md` | B9-SGC analyzer explanation |
+| `docs/code-explanation/phase5-stage-b-b9-fsn-scf.md` | B9-FSN-SCF implementation explanation |
+| `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF remote small gate runner |
+| `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF result sync/analyze wrapper |
 
 ## Archive Map
 

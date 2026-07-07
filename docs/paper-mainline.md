@@ -9,10 +9,10 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA clean A6 validated；StageB B9-FSN-SCF method candidate ready for small gate |
+| `current_stage` | Phase5 StageA clean A6 validated；StageB B9-FSN-SCF local implementation smoke passed |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 4-6 B9-FSN-SCF narrative/method gate passed |
+| `current_11_step` | StageB Step 7 B9-FSN-SCF minimal implementation and local smoke passed |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；B9-FSN-SCF 是可进入 small gate 的第二贡献候选 |
 
 ## Core Claim
@@ -108,8 +108,12 @@ pressure。
 Step 4-6 设计门已通过：B9-FSN-SCF 将 A6 的 `coeff: [B,C,K]` 扩展为
 `coeff_field: [B,C,S,K]`，其中 `S=4` 对应当前 multi-prefix stages；每个 stage 在 prediction 前生成
 自己的 coefficient field，再与同一组 `learned_temporal_basis` 做 projection。该设计通过 zero-gated
-multiplicative coefficient modulation 保持 A6 function-preserving fallback。B9 仍未成为 accepted method；
-下一步只能做 minimal implementation + no-stage/capacity controls + small gate。
+multiplicative coefficient modulation 保持 A6 function-preserving fallback。
+
+Step 7 最小实现与本地 smoke 已通过：`stage-native-coefficient-field` 与
+`stage-native-coefficient-field-no-stage` 均可训练/评估；B9/no-stage 对 A6 的初始 fallback max abs 为
+`0.0`，`H=96` 与 `H=720` prefix consistency max abs 也为 `0.0`。B9 仍未成为 accepted method；下一步
+只能做 remote small gate，比较 `a6_clean`、`b9_fsn_scf`、`b9_no_stage`。
 
 ## Evidence Snapshot
 
@@ -182,12 +186,16 @@ Archived or inactive:
 | `scripts/analyze_phase5_a6_clean_operator_rerun.py` | clean A6 validation analyzer |
 | `docs/code-explanation/phase5-clean-timealign-a6-lbf.md` | code explanation |
 | `docs/code-explanation/phase5-clean-a6-rerun-analysis.md` | clean A6 validation analyzer explanation |
+| `docs/code-explanation/phase5-stage-b-b9-fsn-scf.md` | B9-FSN-SCF implementation explanation |
 | `docs/stage-ledgers/phase5-timealign-interface.md` | active StageA/StageB ledger |
 | `docs/research-roadmap.md` | active roadmap |
 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | next StageB diagnostic protocol |
 | `docs/experiments/phase5-stage-b-unified-prefix-optimization-diagnostic.md` | active B7 unified prefix optimization diagnostic protocol |
 | `docs/experiments/phase5-stage-b-future-query-aligned-basis-architecture.md` | B8 rejected architecture candidate protocol |
 | `docs/experiments/phase5-stage-b-native-future-stage-operator.md` | active B9-FSN-SCF Step 4-6 protocol |
+| `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF remote small gate runner |
+| `scripts/analyze_phase5_stage_b_b9_fsn_scf_small_gate.py` | B9-FSN-SCF small gate analyzer |
+| `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF result sync/analyze wrapper |
 | `analysis/phase5_stage_b_timealign_dependency_audit_20260706/` | TimeAlign dependency audit |
 | `analysis/phase5_stage_b_timealign_dependency_ablation_20260706/` | no-align/no-recon dependency ablation |
 | `analysis/phase5_stage_b_prefix_native_objective_diagnostic_20260706/` | B6 negative diagnostic |
@@ -205,4 +213,4 @@ Archived or inactive:
 4. Do not implement B6 objective under current evidence.
 5. Defer B7 objective optimization as a small contribution candidate.
 6. Do not implement B8-FQA under current evidence.
-7. Implement B9-FSN-SCF only as a minimal small-gate candidate with no-stage/capacity controls; do not launch full matrix before the small gate returns.
+7. Launch B9-FSN-SCF remote small gate only after commit/push and GPU preflight; do not launch full matrix before the small gate returns.

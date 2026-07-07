@@ -5,7 +5,7 @@
 | 字段 | 内容 |
 | --- | --- |
 | `candidate_id` | `B9-FSN` |
-| `current_step` | Step 4-6：native future-stage-aware method/narrative gate completed |
+| `current_step` | Step 7：minimal B9-FSN-SCF implementation and local smoke completed |
 | `problem` | A6-LBF 用一个 sample/channel-specific `coeff[b,c]` 服务所有 future stages；不同 stage 可能对该共享 coefficient 施加不同训练方向 |
 | `existence_evidence` | `B9-SGC` stage-gradient diagnostic 显示三数据集 stage gradients 对共享 coefficient 的 cosine 很低 |
 | `idea` | 将 future stage 作为 primary prediction path 的条件变量，生成 stage-native representation/operator，而不是在 A6 output 后做 residual correction |
@@ -14,7 +14,7 @@
 | `narrative_gate` | `passed_for_small_gate`; 可进入最小实现与 smoke/gate，不得直接启动 full main matrix |
 | `effectiveness_gate` | 未评估 |
 | `artifacts` | `analysis/phase5_stage_b_b9_stage_gradient_diagnostic_20260707/` |
-| `decision` | `method_candidate_ready_for_small_gate`; 下一步只实现最小 B9-FSN-SCF 与 capacity/no-stage controls |
+| `decision` | `local_implementation_smoke_passed`; 下一步启动 remote small gate |
 
 ## 用户约束
 
@@ -389,3 +389,40 @@ MSE(pred_H96, pred_H720[:, :96])
 - 若 B9 明显劣于 A6：回滚到 Step 2/3，不继续堆叠 stage modules；
 - 若收益只来自 additive coefficient bias：不得改写成 residual-style paper story，需重新设计 primary-path
   mechanism。
+
+## Step 7：Implementation Status
+
+[Decision] 最小 B9-FSN-SCF 已实现并通过本地 smoke。代码入口：
+
+- `baselines/timealign_official/models/TimeAlign.py`
+- `baselines/timealign_official/train_repo.py`
+- `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh`
+- `scripts/analyze_phase5_stage_b_b9_fsn_scf_small_gate.py`
+- `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh`
+- `docs/code-explanation/phase5-stage-b-b9-fsn-scf.md`
+
+新增 readout modes：
+
+| Mode | Role |
+| --- | --- |
+| `stage-native-coefficient-field` | B9-FSN-SCF candidate |
+| `stage-native-coefficient-field-no-stage` | no-stage capacity control |
+
+[Verification] 本地验证已完成：
+
+```text
+max_abs_b9_vs_a6_h720 = 0.0
+max_abs_no_stage_vs_a6_h720 = 0.0
+max_abs_b9_h96_vs_h720_prefix = 0.0
+max_abs_no_stage_h96_vs_h720_prefix = 0.0
+```
+
+CPU smoke：
+
+- `stage-native-coefficient-field` on ETTh2: 1 epoch / 1 train batch / 1 eval batch passed；
+- `stage-native-coefficient-field-no-stage` on ETTh2: 1 epoch / 1 train batch / 1 eval batch passed；
+- `model_diagnostics.json` exported with stage gate and parameter diagnostics。
+
+[Next] 进入 Step 8 remote small gate。Runner 默认按 dataset-major ordering 调度
+`Weather ETTm1 ETTh2`，并在 `a6_clean / b9_fsn_scf / b9_no_stage` arms 间分散 GPU，避免 slow dataset
+堆在同一张 GPU 上。

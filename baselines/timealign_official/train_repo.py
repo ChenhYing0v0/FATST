@@ -27,6 +27,11 @@ from utils.tools import adjust_learning_rate  # noqa: E402
 
 
 HORIZONS = [96, 192, 336, 720]
+PREFIX_READOUT_MODES = {
+    "learned-basis-forecast-operator",
+    "stage-native-coefficient-field",
+    "stage-native-coefficient-field-no-stage",
+}
 
 
 @dataclass(frozen=True)
@@ -124,7 +129,7 @@ def resolve_dataset_root(dataset_root: Path, preset: OfficialPreset) -> Path:
 def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> argparse.Namespace:
     root_path = resolve_dataset_root(args.dataset_root, preset)
     device = torch.device(args.device if args.device != "auto" else ("cuda" if torch.cuda.is_available() else "cpu"))
-    is_a6_lbf = args.readout_mode == "learned-basis-forecast-operator"
+    is_prefix_readout = args.readout_mode in PREFIX_READOUT_MODES
     return argparse.Namespace(
         task_name="long_term_forecast",
         is_training=1,
@@ -192,8 +197,8 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         discdtw=False,
         discsdtw=False,
         extra_tag="",
-        w_align=0.0 if is_a6_lbf else (preset.w_align if args.w_align is None else args.w_align),
-        w_recon=0.0 if is_a6_lbf else args.w_recon,
+        w_align=0.0 if is_prefix_readout else (preset.w_align if args.w_align is None else args.w_align),
+        w_recon=0.0 if is_prefix_readout else args.w_recon,
         local_margin=preset.local_margin,
         global_margin=preset.global_margin,
         patch_num=preset.patch_num,
@@ -205,6 +210,9 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         readout_mode=args.readout_mode,
         target_horizons=args.target_horizons,
         basis_rank=args.basis_rank,
+        stage_token_dim=args.stage_token_dim,
+        stage_field_rank=args.stage_field_rank,
+        stage_gate_init=args.stage_gate_init,
     )
 
 
@@ -226,6 +234,33 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
 def dump_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+
+
+def model_diagnostics(model: nn.Module) -> dict[str, Any]:
+    payload: dict[str, Any] = {
+        "total_parameters": sum(parameter.numel() for parameter in model.parameters()),
+        "trainable_parameters": sum(parameter.numel() for parameter in model.parameters() if parameter.requires_grad),
+        "readout_mode": getattr(model, "readout_mode", ""),
+    }
+    if hasattr(model, "stage_gate_logits"):
+        with torch.no_grad():
+            gate = torch.sigmoid(model.stage_gate_logits.detach().cpu()).view(-1).tolist()
+            payload.update(
+                {
+                    "stage_count": int(model.stage_count),
+                    "stage_boundaries": [int(value) for value in model.stage_boundaries],
+                    "stage_token_dim": int(model.stage_token_dim),
+                    "stage_field_rank": int(model.stage_field_rank),
+                    "stage_gate_sigmoid": gate,
+                    "stage_gate_mean": float(np.mean(gate)),
+                    "stage_gate_min": float(np.min(gate)),
+                    "stage_gate_max": float(np.max(gate)),
+                    "stage_token_l2": float(model.stage_tokens.detach().cpu().norm().item()),
+                    "stage_coeff_down_l2": float(model.stage_coeff_down.weight.detach().cpu().norm().item()),
+                    "stage_coeff_up_l2": float(model.stage_coeff_up.weight.detach().cpu().norm().item()),
+                }
+            )
+    return payload
 
 
 def metric_rows(preds: np.ndarray, trues: np.ndarray, horizons: list[int]) -> list[dict[str, Any]]:
@@ -293,7 +328,7 @@ def evaluate(
     max_batches: int,
     is_training_flag: bool,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], np.ndarray, np.ndarray]:
-    if official_args.readout_mode == "learned-basis-forecast-operator":
+    if official_args.readout_mode in PREFIX_READOUT_MODES:
         return evaluate_a6_lbf(model, loader, official_args, horizons, max_batches, is_training_flag)
 
     preds = []
@@ -562,8 +597,9 @@ def run(args: argparse.Namespace) -> None:
             "official_preset": asdict(preset),
             "source_note": "Clean TimeAlign adapter: official baseline plus A6-LBF-r256 unified carrier.",
             "a6_lbf_auxiliary_policy": (
-                "A6-LBF disables TimeAlign future reconstruction/alignment branches and trains with prediction loss only."
-                if args.readout_mode == "learned-basis-forecast-operator"
+                "Prefix-native learned-basis readouts disable TimeAlign future reconstruction/alignment branches "
+                "and train with prediction loss only."
+                if args.readout_mode in PREFIX_READOUT_MODES
                 else "Official TimeAlign keeps the inherited reconstruction/alignment objective."
             ),
         },
@@ -588,6 +624,7 @@ def run(args: argparse.Namespace) -> None:
     model, training_rows = train(args, official_args)
     write_csv(args.output_dir / "training_log.csv", training_rows)
     torch.save(model.state_dict(), args.output_dir / "checkpoint.pt")
+    dump_json(args.output_dir / "model_diagnostics.json", model_diagnostics(model))
 
     _test_data, test_loader = data_provider(official_args, "test")
     main_rows, segment_metric_rows, preds, trues = evaluate(
@@ -643,10 +680,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--checkpoint-policy", choices=["official-last", "best-val"], default="official-last")
     parser.add_argument(
         "--readout-mode",
-        choices=["official", "learned-basis-forecast-operator"],
+        choices=sorted({"official", *PREFIX_READOUT_MODES}),
         default="official",
     )
     parser.add_argument("--basis-rank", type=int, default=256)
+    parser.add_argument("--stage-token-dim", type=int, default=32)
+    parser.add_argument("--stage-field-rank", type=int, default=32)
+    parser.add_argument("--stage-gate-init", type=float, default=-5.0)
     parser.add_argument(
         "--pred-loss-mode",
         choices=["full", "multi-prefix"],
@@ -665,8 +705,12 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("w_align must be non-negative")
     if args.basis_rank <= 0:
         raise ValueError("basis_rank must be positive")
-    if args.readout_mode == "learned-basis-forecast-operator" and args.mode != "unified":
-        raise ValueError("A6-LBF is defined as a unified carrier; use --mode unified --pred-len 720")
+    if args.stage_token_dim <= 0:
+        raise ValueError("stage_token_dim must be positive")
+    if args.stage_field_rank <= 0:
+        raise ValueError("stage_field_rank must be positive")
+    if args.readout_mode in PREFIX_READOUT_MODES and args.mode != "unified":
+        raise ValueError("Prefix-native learned-basis readouts require --mode unified --pred-len 720")
     return args
 
 

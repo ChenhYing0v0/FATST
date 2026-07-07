@@ -54,8 +54,8 @@ what decision follows
 - 用户明确排除 residual-style architecture 后，StageB 新增 native future-stage-aware route
   `B9-FSN-SCF`，记录在 `phase5-stage-b-native-future-stage-operator.md`。`B9-SGC` stage-gradient
   diagnostic 已返回 `problem_candidate_passed`；Step 4-6 已将方法定义为 primary-path
-  stage-native coefficient field。下一步只能做 minimal implementation、no-stage/capacity controls 和
-  small gate，不得直接启动 full main matrix。
+  stage-native coefficient field。Step 7 最小实现和本地 smoke 已通过：B9/no-stage 初始 fallback 与
+  prefix consistency max abs 均为 `0.0`。下一步只能启动 remote small gate，不得直接启动 full main matrix。
 
 ## 历史记录
 
