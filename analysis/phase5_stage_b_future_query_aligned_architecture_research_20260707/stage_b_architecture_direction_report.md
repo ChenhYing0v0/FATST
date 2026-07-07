@@ -1,99 +1,87 @@
 # StageB Architecture Direction Research Report
 
-## Decision
+## 决策
 
-[Decision] `B8-FQA` is the preferred next StageB architecture candidate.
+[Decision] `B8-FQA` 是当前优先推进的 StageB architecture candidate。
 
-Full name: `Future-Query Aligned Basis Operator`.
+完整名称：`Future-Query Aligned Basis Operator`。
 
-Current status: `proposed_architecture_candidate`, not method-ready.
+当前状态：`proposed_architecture_candidate`，不是 method-ready。
 
-Next required action: run `B8-OCD`, a coefficient-space oracle capacity diagnostic, before implementation.
+下一步必须先运行 `B8-OCD`，即 coefficient-space oracle capacity diagnostic。未通过该诊断前，不应实现 B8。
 
-## User Constraint
+## 用户约束
 
-[Fact] The user prefers StageB to establish a second main innovation point, ideally architecture-level, because
-StageA mainly changed the decoder/head. Objective optimization, including B7-UPO, may remain a small contribution
-but should not be the main StageB route.
+[Fact] 用户明确指出：objective optimization 是后续想研究的问题，但更适合作为小贡献点；StageB 应优先建立第二个主创新点，最好是模型架构层面的研究，因为 StageA 主要创新在 decoder/head。
 
-[Decision] Channel-correlation modeling is excluded from this search.
+[Decision] 本轮 StageB architecture search 不考虑 channel-correlation modeling。
 
-## Why Not Simply Restore TimeAlign Future Align
+## 外部网络调研说明
 
-Original TimeAlign is relevant but not sufficient as StageB:
+[Fact] 本轮调研不是只参考 Zotero 或本地 paper notes。外部网络调研使用了以下来源：
 
-- TimeAlign's contribution is training-time future reconstruction plus representation alignment.
-- B4 dependency ablation already showed A6-LBF does not materially depend on inherited align/recon.
-- Restoring a generic `w_align * align_loss` would make the paper look like a TimeAlign variant again.
-- TimeAlign alignment is not designed around unified multi-horizon basis coefficients.
+| 来源 | 类型 | 本轮用途 |
+| --- | --- | --- |
+| <https://arxiv.org/html/2509.14181v3> | TimeAlign arXiv HTML | 核验 past/future distribution mismatch、reconstruction branch、local/global alignment、frequency mismatch 叙事 |
+| <https://arxiv.org/abs/2509.14181> | TimeAlign arXiv abstract | 核验论文摘要、code link、贡献边界 |
+| <https://github.com/TROUBADOUR000/TimeAlign> | TimeAlign official code repository | 核验其 plug-and-play reconstruction-based alignment 定位 |
+| <https://arxiv.org/abs/2411.01842> | ElasTST arXiv abstract | 核验 future placeholders、structured self-attention masks、horizon-invariant varied-horizon forecasting |
+| <https://arxiv.org/abs/2512.22550> | TimePerceiver arXiv abstract | 核验 generalized forecasting、target timestamps learnable queries |
+| <https://arxiv.org/html/2512.22550v1> | TimePerceiver arXiv HTML | 核验 encoder-decoder target-query architecture 叙事 |
+| <https://github.com/efficient-learning-lab/TimePerceiver> | TimePerceiver official code repository | 核验 official implementation 与 unified encoder-decoder framing |
 
-Therefore StageB should not be:
+[Fact] SRP++ 证据来自本地 `Papers/srp-step-specific-representation.md`。本轮 OpenReview 页面访问被浏览器验证阻挡，因此 SRP++ 不计入外部网络已核验证据，只作为本地 note evidence。
+
+## 为什么不能简单恢复 TimeAlign Future Align
+
+原始 TimeAlign 与 StageB 相关，但不能直接作为本项目 StageB 主线：
+
+- TimeAlign 的核心贡献是 training-time future reconstruction 与 representation alignment；
+- B4 dependency ablation 已经说明 A6-LBF 不实质依赖 inherited align/recon；
+- 恢复 generic `w_align * align_loss` 会使论文重新像 TimeAlign variant；
+- TimeAlign alignment 并不是围绕 unified multi-horizon basis coefficients 设计的。
+
+因此 StageB 不应变成：
 
 ```text
 A6-LBF + TimeAlign future branch + align loss
 ```
 
-The usable idea is more abstract:
+真正可继承的是更抽象的问题意识：
 
 > history-only representations may not be sufficiently aligned with future target positions.
 
-B8 turns this into an architecture problem rather than an auxiliary-loss problem.
+B8 将这个问题转化为 architecture problem，而不是 auxiliary-loss problem。
 
-## Literature Synthesis
+## 文献综合
 
 ### TimeAlign
 
-[Fact] TimeAlign diagnoses a structural limitation of history-only forecasting: historical representations are mapped
-directly to future targets, causing past/future distribution mismatch and low-frequency smoothing. It introduces a
-training-only future reconstruction branch and local/global representation alignment.
+[Fact] TimeAlign 诊断的是 history-only forecasting 的结构限制：历史表示直接映射到未来目标，容易产生 past/future distribution mismatch 和 low-frequency smoothing。其方法是引入 training-only future reconstruction branch，并进行 global/local representation alignment。
 
-Source: <https://arxiv.org/html/2509.14181v3>.
-
-Implication for us:
-
-- keep the problem framing: prediction representations need future alignment;
-- reject the exact mechanism as StageB main route, because it is not unified-horizon-specific and was not necessary
-  for A6-LBF.
+[Implication] 对本项目来说，应保留“prediction representation 需要 future alignment”的问题 framing，但拒绝原样继承机制。原因是它不针对 unified-horizon coefficient space，且 B4 已证明它不是 A6-LBF 的必要性能来源。
 
 ### ElasTST
 
-[Fact] ElasTST uses future placeholders and structured masks to make varied-horizon forecasts invariant to horizon
-extension.
+[Fact] ElasTST 使用 future placeholders 与 structured self-attention masks，使 varied-horizon inference 中扩展 horizon 不改变已有 future outputs。
 
-Source: <https://arxiv.org/html/2411.01842v1>.
-
-Implication for us:
-
-- future positions can be represented as tokens without future-value leakage;
-- structured masks or independent queries are important to keep prefix invariance.
+[Implication] future positions 可以作为 tokens/placeholders 进入 architecture，且不需要 future-value leakage。B8 若实现，应明确保证 prefix/horizon invariance。
 
 ### TimePerceiver
 
-[Fact] TimePerceiver uses target-position-aware decoder queries and shows that query-based decoding plus temporal
-positional alignment is important in generalized forecasting.
+[Fact] TimePerceiver 使用 target-position-aware decoder queries，并将 forecasting 泛化到任意 target segments 的 extrapolation、interpolation、imputation。
 
-Source: <https://arxiv.org/html/2512.22550v1>.
-
-Implication for us:
-
-- target queries are a credible architecture mechanism;
-- we should not copy a full generalized forecasting framework, but can adapt the future-query idea to A6's basis
-  coefficient interface.
+[Implication] target queries 是可信架构机制，但 B8 不应复制完整 generalized forecasting framework，而应把 query mechanism 约束在 A6 learned-basis coefficient interface 上。
 
 ### SRP++
 
-[Fact] The local paper note `Papers/srp-step-specific-representation.md` records SRP++'s claim that multi-step
-forecasting can need step/segment-specific representations rather than one shared representation for all future
-steps.
+[Fact] 本地 note 记录 SRP++ 认为 multi-step forecasting 可能需要 step/segment-specific representations，而不是所有 future steps 共用同一表示。
 
-Implication for us:
+[Implication] 这支持 A6-LBF 的一个潜在瓶颈：global coefficient vector 可能不足以同时服务不同 future regions。
 
-- A6-LBF's global coefficient vector may be a representation bottleneck;
-- StageB can introduce future-position-specific representation without abandoning one unified model.
+## A6 的核心 architecture problem
 
-## Core Problem In A6
-
-A6-LBF currently predicts:
+A6-LBF 当前预测路径为：
 
 ```text
 hidden = encoder(history)            # [B, C, R]
@@ -101,20 +89,19 @@ coeff = W(hidden)                    # [B, C, K]
 y[t, c] = basis[t] @ coeff[c] + b[t]
 ```
 
-This is clean and strong, but it has an architecture limitation:
+该设计干净且强，但存在一个明确的 architecture limitation：
 
-- `basis[t]` is future-position-specific but global;
-- `coeff[c]` is sample-specific but future-position-invariant;
-- there is no `coeff[t, c]` or target-position-aware representation.
+- `basis[t]` 是 future-position-specific，但对所有 samples 全局共享；
+- `coeff[c]` 是 sample-specific，但对所有 future positions 共享；
+- 进入 final basis dot product 前，没有 `coeff[t, c]` 或 target-position-aware representation。
 
-[Hypothesis] A second main innovation can target this exact missing interface:
+[Hypothesis] 第二个主创新可以瞄准这个缺口：
 
-> A unified multi-horizon model should align history representations to future positions before basis prediction,
-> not only attach a prefix-native basis decoder after a history-only encoder.
+> unified multi-horizon model 不应只在 history-only encoder 后接 prefix-native basis decoder，还应在 basis prediction 前将 history representation 对齐到 future positions。
 
-## Recommended Candidate: B8-FQA
+## 推荐候选：B8-FQA
 
-Minimal architecture:
+最小架构：
 
 ```text
 history tokens:
@@ -136,91 +123,89 @@ prediction:
   y_t = basis[t] @ c_s + bias[t], for t in segment s
 ```
 
-Preservation rule:
+capacity preservation 规则：
 
-- initialize `alpha_s = 0`;
-- first forward pass exactly equals clean A6-LBF-r256;
-- this satisfies the project rule that capacity-preservation claims must be code-theory checked.
+- `alpha_s` 零初始化；
+- 初始 forward 与 clean A6-LBF-r256 完全等价；
+- 这符合项目规则：capacity-preserving claim 必须有 code-theory check，不能把随机初始化权重复制误称为保留已学能力。
 
-## Candidate Comparison
+## 候选路线比较
 
-| Candidate | Main idea | Narrative strength | Feasibility | Risk |
+| 候选 | 核心想法 | 叙事强度 | 可行性 | 主要风险 |
 | --- | --- | --- | --- | --- |
-| Restore TimeAlign align | Re-add future reconstruction/align branch | weak after B4 | high | looks inherited; not A6-specific |
-| Basis-aware align | Align history/future coefficients | medium | medium | B6 showed learned basis not stronger than DCT; needs new evidence |
-| ElasTST-style placeholders | Add future placeholders into encoder | medium-high | medium | may look like full ElasTST adaptation |
-| TimePerceiver-style target queries | Query future positions from history | high | medium | can repeat old A5 target-query collapse if capacity not preserved |
-| `B8-FQA` | Future queries modulate A6 basis coefficients | highest | medium | needs oracle evidence; implementation must remain lightweight |
+| 恢复 TimeAlign align | 重新加入 future reconstruction/align branch | 弱 | 高 | 像 inherited TimeAlign variant，不够 A6-specific |
+| Basis-aware align | 对齐 history/future coefficients | 中 | 中 | B6 已显示 learned basis top32 不强于 DCT，需新证据 |
+| ElasTST-style placeholders | 在 encoder 中加入 future placeholders | 中高 | 中 | 容易变成完整 ElasTST adaptation |
+| TimePerceiver-style target queries | 用 target queries 从 history 中取信息 | 高 | 中 | 若不保留 A6 path，可能重演旧 A5 target-query collapse |
+| `B8-FQA` | 用 future queries 调制 A6 basis coefficients | 最高 | 中 | 需要 oracle evidence；实现必须轻量 |
 
-## Why B8 Connects To StageA
+## B8 如何衔接 StageA
 
-StageA:
+StageA 的贡献是：
 
-> Replace dense/fixed prediction head with a prefix-native learned-basis forecast operator.
+> 用 prefix-native learned-basis forecast operator 替换 dense/fixed prediction head。
 
-StageB B8:
+StageB B8 的贡献候选是：
 
-> Make the representation feeding that operator future-position-aware, so the unified operator receives different
-> sample-conditioned states for different future regions.
+> 使 feeding this operator 的 representation interface 具备 future-position awareness，让 unified operator 对不同 future regions 接收不同的 sample-conditioned states。
 
-This forms a coherent two-part architecture:
+因此论文可以形成两个连续的 architecture contribution：
 
-1. unified forecast operator;
-2. future-query aligned representation interface.
+1. unified forecast operator；
+2. future-query aligned representation interface。
 
-## Difference From Prior Work
+## 与已有工作的区别
 
-Different from TimeAlign:
+不同于 TimeAlign：
 
-- no future values at inference;
-- not a generic hidden alignment loss;
-- alignment target is future position/query state, not only reconstructed future value distribution.
+- 不把 future reconstruction/alignment loss 作为主机制；
+- 不做 generic hidden alignment；
+- alignment target 是 future position/query state 到 A6 coefficient space 的调制路径。
 
-Different from ElasTST:
+不同于 ElasTST：
 
-- not a full placeholder Transformer;
-- keeps A6 learned-basis operator;
-- uses future queries to modulate coefficient space.
+- 不构建完整 placeholder Transformer；
+- 保留 A6 learned-basis operator；
+- future queries 只服务 coefficient modulation。
 
-Different from TimePerceiver:
+不同于 TimePerceiver：
 
-- not generalized interpolation/imputation;
-- target queries are not the whole decoder;
-- queries serve the learned-basis coefficient interface.
+- 不转向 generalized interpolation/imputation framework；
+- target queries 不是完整 decoder；
+- queries 的作用被限制在 learned-basis coefficient interface。
 
-Different from B7:
+不同于 B7：
 
-- B7 optimizes loss weighting;
-- B8 changes architecture.
+- B7 改 objective/training weighting；
+- B8 改 architecture。
 
-## Required Next Diagnostic
+## 下一步必须做的诊断
 
-`B8-OCD`: coefficient-space oracle capacity diagnostic.
+`B8-OCD`：coefficient-space oracle capacity diagnostic。
 
-Purpose:
+目的：
 
-> Determine whether future-segment-specific coefficients under the same learned basis can reduce A6 residuals.
+> 判断在同一 learned basis 下，future-segment-specific coefficients 是否能显著降低 A6 residuals。
 
-Procedure:
+流程：
 
-1. Obtain clean A6 checkpoint or equivalent learned basis.
-2. Use predictions/targets for ETTh2, ETTm1, Weather.
-3. For each sample/channel/segment, solve ridge least-squares coefficients using the same learned basis rows.
-4. Compare A6 global coefficient prediction with oracle segment-specific coefficient reconstruction.
-5. If segment-specific oracle gains are meaningful, B8 has a real target.
+1. 获取 clean A6 checkpoint，或至少获取包含 `learned_temporal_basis` 的等价 state。
+2. 使用 ETTh2、ETTm1、Weather 的 predictions/targets。
+3. 对每个 sample/channel/segment，在相同 learned basis rows 上求 ridge least-squares coefficients。
+4. 比较 A6 global coefficient prediction 与 oracle segment-specific coefficient reconstruction。
+5. 必要时加入 DCT/low-rank control，排除 generic frequency/basis explanation。
 
-Gate:
+Gate：
 
-- Pass if oracle segment-specific coefficients reduce tail/segment residuals substantially on at least ETTh2 and
-  ETTm1, without reducing to a generic DCT/frequency explanation.
-- Fail if gains are tiny, only Weather-specific, or explained by a generic basis control.
+- 若 oracle segment-specific coefficients 在 ETTh2 和 ETTm1 至少稳定降低 tail/segment residuals，且不能被 generic DCT control 解释，则 B8 进入 Step 4-6 method design；
+- 若收益很小、只在 Weather 出现、或完全由 generic basis control 解释，则不实现 B8。
 
-## Next Research Step
+## 下一步研究动作
 
-Do not implement B8 yet.
+当前不要实现 B8。
 
-Next action:
+下一步：
 
-1. sync or locate clean A6 checkpoint containing `learned_temporal_basis`;
-2. write `B8-OCD` diagnostic protocol and analyzer;
-3. only after B8-OCD passes, enter Step 4-6 method design.
+1. 定位或同步 clean A6 checkpoint，确认包含 `learned_temporal_basis`；
+2. 编写 `B8-OCD` diagnostic protocol 与 analyzer；
+3. 只有 `B8-OCD` 通过，才进入 Step 4-6 method design。

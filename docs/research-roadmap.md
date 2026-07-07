@@ -276,36 +276,37 @@ weakness, then enter Step 4-6 method design. If not, pause StageB again.
 
 ### B8 Future-Query Aligned Architecture Direction
 
-[Decision] B7-UPO is useful but deferred as a small objective contribution candidate. The preferred StageB route is
-now `B8-FQA`, an architecture-level candidate.
+[Decision] `B7-UPO` 有价值，但当前降级为 small objective contribution candidate。StageB 当前优先路线改为
+`B8-FQA`，即 architecture-level candidate。
 
-[Motivation] StageA only changes the decoder/head. A second main innovation should change the representation
-interface feeding A6's learned-basis forecast operator.
+[Motivation] StageA 主要改变 decoder/head。第二个主创新点应改变 feeding A6 learned-basis forecast operator
+的 representation interface。
 
-[Problem] A6-LBF-r256 computes one sample-specific coefficient vector per channel:
+[Problem] A6-LBF-r256 为每个 channel 计算一个 sample-specific coefficient vector：
 
 ```text
 coeff = learned_basis_coeff(hidden)
 y[t, c] = learned_temporal_basis[t] @ coeff[c] + bias[t]
 ```
 
-Thus `coeff[c]` is future-position-invariant. Future positions are distinguished by global basis rows, but there is
-no sample-specific target-position representation.
+因此 `coeff[c]` 对 future position 不变。Future positions 由全局 basis rows 区分，但没有
+sample-specific target-position representation。
 
-[Idea] Introduce future-position query/placeholder tokens that attend to history tokens and generate
-future-segment-specific coefficient modulation before the learned-basis operator. Initialize the modulation gate to
-zero so the first forward pass is exactly clean A6-LBF-r256.
+[Idea] 引入 future-position query/placeholder tokens，使其 attend 到 history tokens，并在 learned-basis
+operator 前生成 future-segment-specific coefficient modulation。modulation gate 零初始化，使初始 forward
+与 clean A6-LBF-r256 完全等价。
 
-[Literature] TimeAlign motivates future-aligned representations via prediction/reconstruction alignment; ElasTST
-shows future placeholders and structured masks for horizon-invariant varied-horizon forecasting; TimePerceiver uses
-target-position-aware decoder queries. B8 uses these ideas only as evidence and adapts them to A6's basis-coefficient
-interface.
+[Literature] 本轮不是只参考 Zotero/本地 notes；已外部核验 TimeAlign、ElasTST、TimePerceiver 的 arXiv 或官方
+repository 资料。TimeAlign 提供 future-aligned representation 的问题动机；ElasTST 证明 future
+placeholders 与 structured masks 可服务 horizon-invariant varied-horizon forecasting；TimePerceiver 使用
+target-position-aware decoder queries。B8 只把这些作为机制证据，并将其改写到 A6 的 basis-coefficient
+interface。
 
-[Decision] B8-FQA status is `proposed_architecture_candidate`, not method-ready.
+[Decision] `B8-FQA` 状态为 `proposed_architecture_candidate`，尚未 method-ready。
 
-[Next Required Action] Run `B8-OCD`: coefficient-space oracle capacity diagnostic. It should test whether
-future-segment-specific coefficients under the same learned temporal basis can reduce A6 residuals. If oracle gains
-are meaningful, proceed to Step 4-6 architecture design; otherwise do not implement B8.
+[Next Required Action] 运行 `B8-OCD`: coefficient-space oracle capacity diagnostic。它应检验在同一个
+learned temporal basis 下，future-segment-specific coefficients 是否能降低 A6 residuals。若 oracle gains
+有意义，则进入 Step 4-6 architecture design；否则不实现 B8。
 
 ## Active Implementation
 

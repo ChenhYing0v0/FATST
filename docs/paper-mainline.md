@@ -86,7 +86,9 @@ candidate 是 `B8-FQA`: Future-Query Aligned Basis Operator。它的核心问题
 prefix-native learned-basis decoder，但 sample-specific coefficient vector 对 future positions 是不变的；
 StageB 可以引入 future-position query/placeholder tokens，在进入 basis operator 前生成
 target-position-aware coefficient modulation。该方向更适合作为第二个主创新点，因为它改变 representation
-interface，而不是只改 loss。
+interface，而不是只改 loss。该判断已补充外部网络调研证据：TimeAlign、ElasTST、TimePerceiver 的 arXiv
+或 official repository 资料分别支撑 future alignment、future placeholders/masks 与 target-query
+decoder 的机制可行性；SRP++ 仅作为本地 note 辅助证据。
 
 ## Evidence Snapshot
 
