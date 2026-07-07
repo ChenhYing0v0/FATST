@@ -9,11 +9,11 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA clean A6 validated；StageB B9-FSN native future-stage problem candidate |
+| `current_stage` | Phase5 StageA clean A6 validated；StageB B9-FSN-SCF method candidate ready for small gate |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 2/3 B9 native future-stage problem candidate passed |
-| `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 paper-core method；StageB 暂无可实现贡献 |
+| `current_11_step` | StageB Step 4-6 B9-FSN-SCF narrative/method gate passed |
+| `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；B9-FSN-SCF 是可进入 small gate 的第二贡献候选 |
 
 ## Core Claim
 
@@ -98,12 +98,18 @@ DCT control 为 ETTh2 `87.61%`、ETTm1 `91.85%`、Weather `91.18%`。因此当�
 应回到 Step 2/3 重新定义 architecture-level 第二贡献问题。
 
 用户明确排除 residual-style architecture 作为 paper-core route。因此新的 StageB candidate 是
-`B9-FSN`: native future-stage-aware operator。它不做 `y=A6(x)+correction`，而是研究 future stage
-信息是否应进入 primary prediction path。`B9-SGC` stage-gradient diagnostic 已给出正向问题证据：
-四个 future stage losses 对同一个 A6 `coeff[b,c]` 的梯度方向相似度很低，mean pairwise cosine 为
-ETTh2 `0.072`、ETTm1 `0.171`、Weather `0.048`，early-tail cosine 为 `0.041/0.112/0.014`。这说明
-single coefficient state 同时服务多个 future stages 时存在 native stage pressure。B9 当前只是
-`problem_candidate_passed`，尚未成为 accepted method；下一步必须写 Step 4-6 narrative/method gate。
+`B9-FSN-SCF`: Stage-Native Coefficient Field。它不做 `y=A6(x)+correction`，而是让 future stage
+信息在 basis projection 前进入 primary coefficient/operator path。`B9-SGC` stage-gradient diagnostic
+已给出正向问题证据：四个 future stage losses 对同一个 A6 `coeff[b,c]` 的梯度方向相似度很低，mean
+pairwise cosine 为 ETTh2 `0.072`、ETTm1 `0.171`、Weather `0.048`，early-tail cosine 为
+`0.041/0.112/0.014`。这说明 single coefficient state 同时服务多个 future stages 时存在 native stage
+pressure。
+
+Step 4-6 设计门已通过：B9-FSN-SCF 将 A6 的 `coeff: [B,C,K]` 扩展为
+`coeff_field: [B,C,S,K]`，其中 `S=4` 对应当前 multi-prefix stages；每个 stage 在 prediction 前生成
+自己的 coefficient field，再与同一组 `learned_temporal_basis` 做 projection。该设计通过 zero-gated
+multiplicative coefficient modulation 保持 A6 function-preserving fallback。B9 仍未成为 accepted method；
+下一步只能做 minimal implementation + no-stage/capacity controls + small gate。
 
 ## Evidence Snapshot
 
@@ -181,7 +187,7 @@ Archived or inactive:
 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | next StageB diagnostic protocol |
 | `docs/experiments/phase5-stage-b-unified-prefix-optimization-diagnostic.md` | active B7 unified prefix optimization diagnostic protocol |
 | `docs/experiments/phase5-stage-b-future-query-aligned-basis-architecture.md` | B8 rejected architecture candidate protocol |
-| `docs/experiments/phase5-stage-b-native-future-stage-operator.md` | active B9 native future-stage protocol |
+| `docs/experiments/phase5-stage-b-native-future-stage-operator.md` | active B9-FSN-SCF Step 4-6 protocol |
 | `analysis/phase5_stage_b_timealign_dependency_audit_20260706/` | TimeAlign dependency audit |
 | `analysis/phase5_stage_b_timealign_dependency_ablation_20260706/` | no-align/no-recon dependency ablation |
 | `analysis/phase5_stage_b_prefix_native_objective_diagnostic_20260706/` | B6 negative diagnostic |
@@ -199,4 +205,4 @@ Archived or inactive:
 4. Do not implement B6 objective under current evidence.
 5. Defer B7 objective optimization as a small contribution candidate.
 6. Do not implement B8-FQA under current evidence.
-7. Continue B9-FSN only through Step 4-6 narrative/method design first; do not implement until the narrative gate passes.
+7. Implement B9-FSN-SCF only as a minimal small-gate candidate with no-stage/capacity controls; do not launch full matrix before the small gate returns.

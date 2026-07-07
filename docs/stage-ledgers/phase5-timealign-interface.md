@@ -8,12 +8,12 @@
 | Field | Content |
 | --- | --- |
 | `stage_id` | `phase5-timealign-interface` |
-| `current_11_step` | StageB Step 2/3 B9 native future-stage problem candidate passed |
+| `current_11_step` | StageB Step 4-6 B9-FSN-SCF method/narrative gate passed |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator on official-source TimeAlign encoder |
-| `active_question` | Can native future-stage-aware representation/operator solve the stage-gradient conflict of A6's shared coefficient state |
-| `latest_decision` | B9-SGC completed：future-stage gradients on shared A6 coefficient have low cosine across all datasets；status `problem_candidate_passed` |
-| `next_required_action` | Enter Step 4-6 narrative/method design for B9-FSN before any implementation |
-| `rollback_point` | Do not implement residual correction; if B9 narrative gate fails, return to StageB Step 2/3 |
+| `active_question` | Can B9-FSN-SCF route A6's shared-coefficient stage-gradient conflict through a native stage-indexed coefficient field |
+| `latest_decision` | Step 4-6 completed：B9-FSN-SCF passes narrative/method gate as a primary-path stage-native coefficient field, not residual correction |
+| `next_required_action` | Implement minimal B9-FSN-SCF plus no-stage/capacity controls, run local smoke and then small remote gate only |
+| `rollback_point` | If B9 small gate fails vs clean A6 or no-stage control, return to StageB Step 4 or Step 2/3; do not stack residual modules |
 
 ## StageA Fixed Result
 
@@ -75,7 +75,7 @@ Clean rerun after code cleanup:
 | `B6-PLO` | `rejected_by_diagnostic` | A6-LBF 的 architecture 已在 learned-basis space 中建模，但当前 supervision 仍主要是 time-domain point loss；可能缺少 prefix-native label/basis objective | failed：train-label/residual structure is largely generic DCT low-frequency; A6 learned basis has no top32 advantage | not evaluated | Do not implement B6 objective; pause StageB or redefine Step 2/3 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md`; `analysis/phase5_stage_b_prefix_native_objective_diagnostic_20260706/stage_b_b6_report.md` |
 | `B7-UPO` | `deferred_small_contribution_candidate` | A6-LBF 已有 unified operator，但 nested multi-prefix training 会过度加权短步，并可能弱化 long-tail forecast regions | partial：可作为 objective refinement，但不适合作为第二主创新点 | not evaluated | 暂缓，待 architecture candidate 判定后再作为小贡献候选处理 | `docs/experiments/phase5-stage-b-unified-prefix-optimization-diagnostic.md`; `analysis/phase5_stage_b_unified_prefix_optimization_20260707/stage_b_b7_unified_prefix_optimization_report.md` |
 | `B8-FQA` | `rejected_by_ocd_control` | A6-LBF 的 coefficient 是 sample-specific 但 future-position-invariant；future queries 可在 basis prediction 前将 history representation 对齐到 target positions | failed：learned segment-specific correction has headroom, but DCT control has stronger absolute residual reduction | not evaluated | Do not implement B8; return StageB to Step 2/3 | `docs/experiments/phase5-stage-b-future-query-aligned-basis-architecture.md`; `analysis/phase5_stage_b_future_query_aligned_architecture_research_20260707/stage_b_architecture_direction_report.md`; `analysis/phase5_stage_b_b8_ocd_coefficient_oracle_20260707/b8_ocd_report.md` |
-| `B9-FSN` | `problem_candidate_passed` | A6-LBF 的 single coefficient state 同时服务多个 future stages；若 stage losses 对该 coefficient 的梯度方向不一致，则需要 native future-stage-aware representation/operator | passed Step 2/3：B9-SGC shows very low stage-gradient cosine across ETTh2/ETTm1/Weather; not residual route | not evaluated | Write Step 4-6 narrative/method gate; do not implement yet | `docs/experiments/phase5-stage-b-native-future-stage-operator.md`; `analysis/phase5_stage_b_b9_stage_gradient_diagnostic_20260707/b9_stage_gradient_report.md` |
+| `B9-FSN-SCF` | `method_candidate_ready_for_small_gate` | A6-LBF 的 single coefficient state 同时服务多个 future stages；若 stage losses 对该 coefficient 的梯度方向不一致，则需要 native future-stage-aware coefficient field | passed Step 4-6：B9-SGC shows low stage-gradient cosine; method uses `[B,C,S,K]` stage-native coefficient field before basis projection, with function-preserving A6 fallback | not evaluated | Implement minimal B9-FSN-SCF, no-stage control, local smoke, then small gate only | `docs/experiments/phase5-stage-b-native-future-stage-operator.md`; `analysis/phase5_stage_b_b9_stage_gradient_diagnostic_20260707/b9_stage_gradient_report.md` |
 
 ## Experiment Ledger
 
@@ -94,6 +94,7 @@ Clean rerun after code cleanup:
 | B8 future-query aligned architecture research | `B8-FQA` | architecture direction research | 外部网络调研与 code-theory review 表明，A6 在 basis prediction 前缺少 target-position-aware sample-specific representation；future-query coefficient modulation 曾是优先 architecture route | `superseded_by_b8_ocd`；后续诊断未通过 | `analysis/phase5_stage_b_future_query_aligned_architecture_research_20260707/stage_b_architecture_direction_report.md` |
 | B8 coefficient-space oracle diagnostic | `B8-FQA` | problem-existence diagnostic | Rank64 learned segment reduction is ETTh2 `79.05%`, ETTm1 `72.77%`, Weather `61.91%`, but DCT control is stronger at `87.61%/91.85%/91.18%`; residual headroom is generic low-frequency confounded | `rejected_by_ocd_control`; do not implement B8 | `analysis/phase5_stage_b_b8_ocd_coefficient_oracle_20260707/b8_ocd_report.md` |
 | B9 stage-gradient diagnostic | `B9-FSN` | native architecture problem diagnostic | Four future stage losses have low cosine gradients on the same A6 `coeff`: mean pairwise cosine ETTh2 `0.072`, ETTm1 `0.171`, Weather `0.048`; early-tail cosine `0.041/0.112/0.014` | `problem_candidate_passed`; Step 4-6 required before implementation | `analysis/phase5_stage_b_b9_stage_gradient_diagnostic_20260707/b9_stage_gradient_report.md` |
+| B9-FSN-SCF Step 4-6 design gate | `B9-FSN-SCF` | narrative/method gate | Concrete design extends A6 `coeff` from `[B,C,K]` to stage-indexed `[B,C,S,K]` before basis projection; zero-gated multiplicative coefficient modulation preserves A6 at initialization | `method_candidate_ready_for_small_gate`; no full matrix yet | `docs/experiments/phase5-stage-b-native-future-stage-operator.md` |
 
 ## Pending Tasks
 
@@ -114,7 +115,8 @@ Clean rerun after code cleanup:
 | Run B8-OCD coefficient-space oracle diagnostic | Codex | B8-FQA is proposed but needs evidence that future-segment-specific coefficients can reduce A6 residuals | `completed` | Done; decision `rejected_by_ocd_control`, do not implement B8 |
 | Redefine StageB architecture-level problem after B8-OCD | Codex | B8 narrative was coherent but failed DCT control gate | `completed` | B9-FSN defined as native future-stage-aware route, excluding residual correction |
 | Run B9-SGC native future-stage gradient diagnostic | Codex | User rejected residual architecture and requested native future-stage-aware route | `completed` | Done; decision `problem_candidate_passed` |
-| Design B9-FSN Step 4-6 narrative/method gate | Codex | B9-SGC supports problem existence | `pending` | Define primary-path tensor design, capacity-preserving initialization, and small gate |
+| Design B9-FSN Step 4-6 narrative/method gate | Codex | B9-SGC supports problem existence | `completed` | Done; `B9-FSN-SCF` may enter minimal implementation and small gate |
+| Implement B9-FSN-SCF minimal gate | Codex | Step 4-6 narrative/method gate passed | `pending` | Implement primary-path coefficient field, no-stage control, local smoke, then small remote gate |
 
 ## Paper Mainline Sync Log
 
@@ -132,6 +134,7 @@ Clean rerun after code cleanup:
 | 2026-07-07 | User requested architecture-level StageB main innovation | Contribution 2 candidate | no accepted paper claim | B7 deferred as small objective candidate; B8-FQA proposed as architecture candidate |
 | 2026-07-07 | B8-OCD returned negative control | Contribution 2 candidate | no accepted paper claim | Do not implement B8-FQA; StageB returns to Step 2/3 architecture problem search |
 | 2026-07-07 | B9-SGC returned positive stage-gradient evidence | Contribution 2 candidate | no accepted paper claim | B9-FSN becomes active problem candidate; Step 4-6 design required before implementation |
+| 2026-07-07 | B9-FSN-SCF Step 4-6 design gate passed | Contribution 2 candidate | no accepted paper claim | B9-FSN-SCF may enter minimal implementation and small gate; no full matrix claim yet |
 
 ## Active Artifacts
 

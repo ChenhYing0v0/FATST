@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B9-FSN native future-stage problem candidate |
-| `current_11_step` | StageB Step 2/3: B9 native future-stage-aware problem candidate passed |
+| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B9-FSN-SCF method candidate ready for small gate |
+| `current_11_step` | StageB Step 4-6: B9-FSN-SCF narrative/method gate passed |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -352,11 +352,29 @@ residual，不设计 correction module；它计算四个 future stage losses 对
 | ETTm1 | `0.171` | `0.112` | `0.042` |
 | Weather | `0.048` | `0.014` | `0.083` |
 
-[Decision] `B9-SGC` 暂定通过 problem-candidate gate。它支持 native future-stage-aware representation /
-operator 的问题存在，但还不是 method-ready。
+[Step 4-6 Design] `B9-FSN-SCF` 即 Stage-Native Coefficient Field。它保留 A6 的
+`learned_temporal_basis` 作为 unified operator 坐标系，但把 coefficient 从
+`coeff: [B,C,K]` 扩展为 `coeff_field: [B,C,S,K]`，其中 `S=4` 对应 `[0,96)`,
+`[96,192)`, `[192,336)`, `[336,720)`。
 
-[Next Required Action] 进入 Step 4-6 前，设计 `B9-FSN` concrete tensor path、narrative gate 和
-capacity-preserving initialization。不得直接实现，也不得写成 residual correction。
+核心路径是：
+
+```text
+coeff_base = learned_basis_coeff(hidden)
+coeff_s = StageCoefficientField(coeff_base, hidden, stage_token_s)
+y[t in stage_s,c] = learned_temporal_basis[t] @ coeff_s[b,c] + bias[t]
+```
+
+[Theory Check] 若 `stage_gate_s=0`，所有 `coeff_s=coeff_base`，prediction 退回 clean A6；训练后
+stage loss 的梯度主要作用于对应 stage coefficient field，同时仍共享 encoder、base coefficient 和 temporal
+basis。这解决的是 primary-path stage pressure routing，不是 output residual repair。
+
+[Narrative Gate] Step 4-6 已通过：问题清楚、机制在 tensor path 上可解释、与 StageA 的 learned-basis
+operator 连续、与 TimePerceiver/ElasTST/MQ-RNN/TFT/SRP++ 有明确边界，且可 function-preserving 初始化。
+
+[Next Required Action] 进入 Step 7 最小实现与 small gate：实现 `B9-FSN-SCF`、`B9-no-stage-control`
+和可选 `A6-rank-control`，先 local smoke，再做 ETTh2/ETTm1/Weather seed2021 small remote gate。不得直接
+启动 full main matrix。
 
 ## Active Implementation
 
