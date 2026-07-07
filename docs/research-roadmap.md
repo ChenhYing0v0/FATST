@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B9-FSN-SCF remote small gate running |
-| `current_11_step` | StageB Step 8: B9-FSN-SCF remote small gate launched |
+| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B9-FSN-SCF blocked by no-stage control |
+| `current_11_step` | StageB Step 10: B9-FSN-SCF failed mechanism effectiveness gate |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -384,12 +384,21 @@ max_abs_no_stage_h96_vs_h720_prefix = 0.0
 
 ETTh2 CPU smoke 已通过 B9 与 no-stage 两个 paths，且 `model_diagnostics.json` 已导出 stage gate 与参数量诊断。
 
-[Step 8 Launch] Remote small gate 已在 `529_Lab-3090` 启动，PID `1883897`，输出目录为
-`/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b9_fsn_scf_small_gate`。GPU preflight 显示
-GPU 0/1/2 均空闲，首批 Weather 三个 arms 已分散到三张 GPU。
+[Step 8-10 Result] Remote small gate 已完成并同步到
+`analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/`。
 
-[Next Required Action] 等待 remote small gate 完成，然后运行
-`scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` 同步并分析。不得直接启动 full main matrix。
+| Comparison | Overall MSE wins | Mean relative MSE |
+| --- | ---: | ---: |
+| `b9_fsn_scf` vs `a6_clean` | `12/12` | `-0.13%` |
+| `b9_no_stage` vs `a6_clean` | `12/12` | `-0.13%` |
+| `b9_fsn_scf` vs `b9_no_stage` | `2/12` | `+0.0036%` |
+
+[Decision] `B9-FSN-SCF` 状态为 `blocked_by_no_stage_control`。它不能作为 paper-core method 继续推进，
+因为相对 A6 的微弱收益被同参数 no-stage control 完全解释。不得启动 full matrix，也不得将结果解释为
+future-stage-aware routing 的正证据。
+
+[Rollback] 回到 Step 4 重新设计 native-stage mechanism；若找不到能压过 no-stage control 的机制约束，则回到
+StageB Step 2/3 重新寻找第二主创新点。
 
 ## Active Implementation
 

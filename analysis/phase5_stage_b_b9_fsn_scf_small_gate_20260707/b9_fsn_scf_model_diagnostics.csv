@@ -1,0 +1,10 @@
+arm,dataset,status,readout_mode,total_parameters,trainable_parameters,stage_count,stage_gate_mean,stage_gate_min,stage_gate_max,stage_coeff_up_l2
+a6_clean,ETTh2,ok,learned-basis-forecast-operator,1690016,1690016,,,,,
+a6_clean,ETTm1,ok,learned-basis-forecast-operator,884640,884640,,,,,
+a6_clean,Weather,ok,learned-basis-forecast-operator,6250656,6250656,,,,,
+b9_fsn_scf,ETTh2,ok,stage-native-coefficient-field,1708356,1708356,4,0.011574914213269949,0.010455012321472168,0.012249534018337727,7.651099681854248
+b9_fsn_scf,ETTm1,ok,stage-native-coefficient-field,902980,902980,4,0.011111830128356814,0.010394493117928505,0.012115220539271832,4.903892517089844
+b9_fsn_scf,Weather,ok,stage-native-coefficient-field,6268996,6268996,4,0.01133693940937519,0.010850638151168823,0.012142010033130646,7.203205108642578
+b9_no_stage,ETTh2,ok,stage-native-coefficient-field-no-stage,1708356,1708356,4,0.012576431035995483,0.012576431035995483,0.012576431035995483,7.719919681549072
+b9_no_stage,ETTm1,ok,stage-native-coefficient-field-no-stage,902980,902980,4,0.012255178764462471,0.012255178764462471,0.012255178764462471,4.89543342590332
+b9_no_stage,Weather,ok,stage-native-coefficient-field-no-stage,6268996,6268996,4,0.012220674194395542,0.012220674194395542,0.012220674194395542,7.184526443481445

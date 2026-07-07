@@ -8,12 +8,12 @@
 | Field | Content |
 | --- | --- |
 | `stage_id` | `phase5-timealign-interface` |
-| `current_11_step` | StageB Step 7 B9-FSN-SCF minimal implementation and local smoke passed |
+| `current_11_step` | StageB Step 10 B9-FSN-SCF small gate blocked by no-stage control |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator on official-source TimeAlign encoder |
 | `active_question` | Can B9-FSN-SCF route A6's shared-coefficient stage-gradient conflict through a native stage-indexed coefficient field |
-| `latest_decision` | Step 7 completed：minimal B9-FSN-SCF and no-stage control are implemented; fallback/prefix checks are exactly `0.0`; CPU smoke passed |
-| `next_required_action` | Wait for B9 remote small gate to finish, then sync and analyze artifacts |
-| `rollback_point` | If remote B9 small gate fails vs clean A6 or no-stage control, return to StageB Step 4 or Step 2/3; do not stack residual modules |
+| `latest_decision` | B9-FSN-SCF small gate completed：B9 beats clean A6 by `-0.13%` mean MSE, but no-stage control also beats A6 by `-0.13%` and slightly beats B9 |
+| `next_required_action` | Do not launch B9 full matrix; rollback to Step 4 redesign or Step 2/3 if no stronger native-stage mechanism is found |
+| `rollback_point` | Current B9-FSN-SCF is rejected as method; do not stack residual modules or claim stage-token mechanism |
 
 ## StageA Fixed Result
 
@@ -75,7 +75,7 @@ Clean rerun after code cleanup:
 | `B6-PLO` | `rejected_by_diagnostic` | A6-LBF 的 architecture 已在 learned-basis space 中建模，但当前 supervision 仍主要是 time-domain point loss；可能缺少 prefix-native label/basis objective | failed：train-label/residual structure is largely generic DCT low-frequency; A6 learned basis has no top32 advantage | not evaluated | Do not implement B6 objective; pause StageB or redefine Step 2/3 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md`; `analysis/phase5_stage_b_prefix_native_objective_diagnostic_20260706/stage_b_b6_report.md` |
 | `B7-UPO` | `deferred_small_contribution_candidate` | A6-LBF 已有 unified operator，但 nested multi-prefix training 会过度加权短步，并可能弱化 long-tail forecast regions | partial：可作为 objective refinement，但不适合作为第二主创新点 | not evaluated | 暂缓，待 architecture candidate 判定后再作为小贡献候选处理 | `docs/experiments/phase5-stage-b-unified-prefix-optimization-diagnostic.md`; `analysis/phase5_stage_b_unified_prefix_optimization_20260707/stage_b_b7_unified_prefix_optimization_report.md` |
 | `B8-FQA` | `rejected_by_ocd_control` | A6-LBF 的 coefficient 是 sample-specific 但 future-position-invariant；future queries 可在 basis prediction 前将 history representation 对齐到 target positions | failed：learned segment-specific correction has headroom, but DCT control has stronger absolute residual reduction | not evaluated | Do not implement B8; return StageB to Step 2/3 | `docs/experiments/phase5-stage-b-future-query-aligned-basis-architecture.md`; `analysis/phase5_stage_b_future_query_aligned_architecture_research_20260707/stage_b_architecture_direction_report.md`; `analysis/phase5_stage_b_b8_ocd_coefficient_oracle_20260707/b8_ocd_report.md` |
-| `B9-FSN-SCF` | `local_implementation_smoke_passed` | A6-LBF 的 single coefficient state 同时服务多个 future stages；若 stage losses 对该 coefficient 的梯度方向不一致，则需要 native future-stage-aware coefficient field | passed Step 4-7：B9-SGC shows low stage-gradient cosine; method uses `[B,C,S,K]` stage-native coefficient field before basis projection; fallback/prefix checks are `0.0` | not evaluated | Launch remote small gate with `a6_clean`, `b9_fsn_scf`, `b9_no_stage`; no full matrix yet | `docs/experiments/phase5-stage-b-native-future-stage-operator.md`; `docs/code-explanation/phase5-stage-b-b9-fsn-scf.md`; `analysis/phase5_stage_b_b9_stage_gradient_diagnostic_20260707/b9_stage_gradient_report.md` |
+| `B9-FSN-SCF` | `blocked_by_no_stage_control` | A6-LBF 的 single coefficient state 同时服务多个 future stages；若 stage losses 对该 coefficient 的梯度方向不一致，则需要 native future-stage-aware coefficient field | passed Step 4-7, but failed effectiveness mechanism gate：B9 cannot beat same-parameter no-stage control | failed：B9 vs A6 `-0.13%`, no-stage vs A6 `-0.13%`, B9 vs no-stage `+0.0036%` and `2/12` wins | Do not launch full matrix; rollback to Step 4 redesign or Step 2/3 | `docs/experiments/phase5-stage-b-native-future-stage-operator.md`; `docs/code-explanation/phase5-stage-b-b9-fsn-scf.md`; `analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/b9_fsn_scf_small_gate_report.md` |
 
 ## Experiment Ledger
 
@@ -96,6 +96,7 @@ Clean rerun after code cleanup:
 | B9 stage-gradient diagnostic | `B9-FSN` | native architecture problem diagnostic | Four future stage losses have low cosine gradients on the same A6 `coeff`: mean pairwise cosine ETTh2 `0.072`, ETTm1 `0.171`, Weather `0.048`; early-tail cosine `0.041/0.112/0.014` | `problem_candidate_passed`; Step 4-6 required before implementation | `analysis/phase5_stage_b_b9_stage_gradient_diagnostic_20260707/b9_stage_gradient_report.md` |
 | B9-FSN-SCF Step 4-6 design gate | `B9-FSN-SCF` | narrative/method gate | Concrete design extends A6 `coeff` from `[B,C,K]` to stage-indexed `[B,C,S,K]` before basis projection; zero-gated multiplicative coefficient modulation preserves A6 at initialization | `method_candidate_ready_for_small_gate`; no full matrix yet | `docs/experiments/phase5-stage-b-native-future-stage-operator.md` |
 | B9-FSN-SCF local implementation smoke | `B9-FSN-SCF` | implementation verification | Added `stage-native-coefficient-field` and `stage-native-coefficient-field-no-stage`; A6 fallback and prefix consistency max abs are all `0.0`; ETTh2 1-batch CPU smoke passed for B9 and no-stage | `local_implementation_smoke_passed`; launch remote small gate after commit/push | `baselines/timealign_official/models/TimeAlign.py`; `baselines/timealign_official/train_repo.py`; `docs/code-explanation/phase5-stage-b-b9-fsn-scf.md` |
+| B9-FSN-SCF remote small gate | `B9-FSN-SCF` | effectiveness and mechanism control | B9 beats A6 by `-0.13%` mean MSE with `12/12` wins, but no-stage also beats A6 by `-0.13%`; B9 vs no-stage is `+0.0036%` mean MSE with only `2/12` wins | `blocked_by_no_stage_control`; do not claim stage-token mechanism | `analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/b9_fsn_scf_small_gate_report.md` |
 
 ## Pending Tasks
 
@@ -118,7 +119,8 @@ Clean rerun after code cleanup:
 | Run B9-SGC native future-stage gradient diagnostic | Codex | User rejected residual architecture and requested native future-stage-aware route | `completed` | Done; decision `problem_candidate_passed` |
 | Design B9-FSN Step 4-6 narrative/method gate | Codex | B9-SGC supports problem existence | `completed` | Done; `B9-FSN-SCF` may enter minimal implementation and small gate |
 | Implement B9-FSN-SCF minimal gate | Codex | Step 4-6 narrative/method gate passed | `completed` | Done; local fallback/prefix checks and smoke passed |
-| Launch B9-FSN-SCF remote small gate | Codex | Local implementation smoke passed | `running` | Launched on `529_Lab-3090` PID `1883897`; wait, sync, analyze |
+| Launch B9-FSN-SCF remote small gate | Codex | Local implementation smoke passed | `completed` | Done; decision `blocked_by_no_stage_control` |
+| Redesign or rollback after B9-FSN-SCF no-stage block | Codex | B9-SCF cannot beat no-stage control | `pending` | Return to Step 4 if a stronger native-stage constraint is available; otherwise Step 2/3 |
 
 ## Paper Mainline Sync Log
 
@@ -139,6 +141,7 @@ Clean rerun after code cleanup:
 | 2026-07-07 | B9-FSN-SCF Step 4-6 design gate passed | Contribution 2 candidate | no accepted paper claim | B9-FSN-SCF may enter minimal implementation and small gate; no full matrix claim yet |
 | 2026-07-07 | B9-FSN-SCF local implementation smoke passed | Contribution 2 candidate | no accepted paper claim | Launch remote small gate after commit/push and GPU preflight |
 | 2026-07-07 | B9-FSN-SCF remote small gate launched | Contribution 2 candidate | no accepted paper claim | Wait for artifacts, then run sync/analyzer |
+| 2026-07-07 | B9-FSN-SCF small gate blocked by no-stage | Contribution 2 candidate | no accepted paper claim | Do not launch full matrix; rollback to Step 4/2 |
 
 ## Active Artifacts
 
@@ -190,6 +193,7 @@ Clean rerun after code cleanup:
 | `analysis/phase5_stage_b_b8_ocd_coefficient_oracle_20260707/` | B8-OCD diagnostic; decision `rejected_by_ocd_control` |
 | `analysis/phase5_stage_b_b9_stage_gradient_diagnostic_20260707/` | B9-SGC diagnostic; decision `problem_candidate_passed` |
 | `analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/launch_record.md` | B9-FSN-SCF remote launch record |
+| `analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/b9_fsn_scf_small_gate_report.md` | B9-FSN-SCF small gate decision |
 
 ## Archived Evidence
 

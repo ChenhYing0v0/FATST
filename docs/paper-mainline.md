@@ -9,11 +9,11 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA clean A6 validated；StageB B9-FSN-SCF remote small gate running |
+| `current_stage` | Phase5 StageA clean A6 validated；StageB B9-FSN-SCF blocked by no-stage control |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 8 B9-FSN-SCF remote small gate launched |
-| `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；B9-FSN-SCF 是可进入 small gate 的第二贡献候选 |
+| `current_11_step` | StageB Step 10 B9-FSN-SCF failed mechanism effectiveness gate |
+| `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
 
 ## Core Claim
 
@@ -115,8 +115,10 @@ Step 7 最小实现与本地 smoke 已通过：`stage-native-coefficient-field` 
 `0.0`，`H=96` 与 `H=720` prefix consistency max abs 也为 `0.0`。B9 仍未成为 accepted method；下一步
 只能做 remote small gate，比较 `a6_clean`、`b9_fsn_scf`、`b9_no_stage`。
 
-Remote small gate 已在 `529_Lab-3090` 启动，PID `1883897`。该实验仍只属于 effectiveness gate，不产生
-accepted paper claim，需等待 artifacts 返回后判断。
+Remote small gate 已返回负向机制结果：`b9_fsn_scf` 相对 `a6_clean` 有 `12/12` MSE wins、mean MSE
+`-0.13%`，但 `b9_no_stage` 相对 `a6_clean` 同样有 `12/12` wins、mean MSE `-0.13%`；`b9_fsn_scf`
+相对 `b9_no_stage` 只有 `2/12` wins，mean MSE `+0.0036%`。因此 B9-FSN-SCF 被 no-stage control
+阻断，不能作为 accepted method，也不能将相对 A6 的微弱收益解释为 future-stage-aware routing。
 
 ## Evidence Snapshot
 
@@ -217,4 +219,4 @@ Archived or inactive:
 4. Do not implement B6 objective under current evidence.
 5. Defer B7 objective optimization as a small contribution candidate.
 6. Do not implement B8-FQA under current evidence.
-7. Wait for B9-FSN-SCF remote small gate artifacts; sync/analyze before any full matrix decision.
+7. Do not launch B9-FSN-SCF full matrix; rollback StageB to Step 4 redesign or Step 2/3 if no stronger native-stage mechanism exists.

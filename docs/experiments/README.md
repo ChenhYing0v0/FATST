@@ -55,7 +55,8 @@ what decision follows
   `B9-FSN-SCF`，记录在 `phase5-stage-b-native-future-stage-operator.md`。`B9-SGC` stage-gradient
   diagnostic 已返回 `problem_candidate_passed`；Step 4-6 已将方法定义为 primary-path
   stage-native coefficient field。Step 7 最小实现和本地 smoke 已通过：B9/no-stage 初始 fallback 与
-  prefix consistency max abs 均为 `0.0`。下一步只能启动 remote small gate，不得直接启动 full main matrix。
+  prefix consistency max abs 均为 `0.0`。Remote small gate 已返回 `blocked_by_no_stage_control`：
+  B9 相对 A6 的微弱收益被 no-stage control 完全解释，当前不得启动 B9 full matrix。
 
 ## 历史记录
 

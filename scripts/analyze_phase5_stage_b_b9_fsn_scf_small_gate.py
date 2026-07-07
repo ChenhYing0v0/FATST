@@ -40,6 +40,8 @@ def pct(candidate: float, baseline: float) -> float:
 
 
 def fmt_pct(value: float) -> str:
+    if abs(value) < 0.01:
+        return f"{value:+.4f}%"
     return f"{value:+.2f}%"
 
 

@@ -5,16 +5,16 @@
 | 字段 | 内容 |
 | --- | --- |
 | `candidate_id` | `B9-FSN` |
-| `current_step` | Step 7：minimal B9-FSN-SCF implementation and local smoke completed |
+| `current_step` | Step 9/10：B9-FSN-SCF small gate completed |
 | `problem` | A6-LBF 用一个 sample/channel-specific `coeff[b,c]` 服务所有 future stages；不同 stage 可能对该共享 coefficient 施加不同训练方向 |
 | `existence_evidence` | `B9-SGC` stage-gradient diagnostic 显示三数据集 stage gradients 对共享 coefficient 的 cosine 很低 |
 | `idea` | 将 future stage 作为 primary prediction path 的条件变量，生成 stage-native representation/operator，而不是在 A6 output 后做 residual correction |
 | `theory_check` | stage-gradient conflict 下，共享 coefficient 接收多个近正交目标；stage-native coefficient field 可把冲突路由到不同 future-stage state，同时保留 A6 shared basis |
 | `design` | `B9-FSN-SCF`: Stage-Native Coefficient Field，在 basis projection 前生成 stage-specific coefficient field，并以 function-preserving gate 初始化为 clean A6 |
 | `narrative_gate` | `passed_for_small_gate`; 可进入最小实现与 smoke/gate，不得直接启动 full main matrix |
-| `effectiveness_gate` | 未评估 |
-| `artifacts` | `analysis/phase5_stage_b_b9_stage_gradient_diagnostic_20260707/` |
-| `decision` | `local_implementation_smoke_passed`; 下一步启动 remote small gate |
+| `effectiveness_gate` | `blocked_by_no_stage_control` |
+| `artifacts` | `analysis/phase5_stage_b_b9_stage_gradient_diagnostic_20260707/`; `analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/` |
+| `decision` | `B9-FSN-SCF rejected as current method`; rollback to Step 4 redesign or Step 2/3 if no stronger native-stage mechanism is found |
 
 ## 用户约束
 
@@ -426,3 +426,36 @@ CPU smoke：
 [Next] 进入 Step 8 remote small gate。Runner 默认按 dataset-major ordering 调度
 `Weather ETTm1 ETTh2`，并在 `a6_clean / b9_fsn_scf / b9_no_stage` arms 间分散 GPU，避免 slow dataset
 堆在同一张 GPU 上。
+
+## Step 9/10：Small Gate Result
+
+Remote small gate 已完成，完整分析见：
+
+- `analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/b9_fsn_scf_small_gate_report.md`
+- `analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/b9_fsn_scf_small_gate_summary.csv`
+- `analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/b9_fsn_scf_small_gate_comparison.csv`
+- `analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/b9_fsn_scf_model_diagnostics.csv`
+
+Summary:
+
+| Comparison | Overall MSE wins | Mean relative MSE |
+| --- | ---: | ---: |
+| `b9_fsn_scf` vs `a6_clean` | `12/12` | `-0.13%` |
+| `b9_no_stage` vs `a6_clean` | `12/12` | `-0.13%` |
+| `b9_fsn_scf` vs `b9_no_stage` | `2/12` | `+0.00%` |
+
+[Fact] B9-FSN-SCF 相比 clean A6 有很小正收益，但 no-stage control 也有同等甚至略强收益。
+
+[Fact] B9-FSN-SCF 相比 no-stage control 的 overall mean relative MSE 为 `+0.0036%`，MSE wins 为
+`2/12`。ETTm1 与 Weather 上 B9 对 no-stage 是 `0/4` wins；ETTh2 只有 `2/4` wins，且差异在
+`0.01%` 量级。
+
+[Decision] `B9-FSN-SCF` 被 `no-stage` control 阻断，不能作为 paper-core method 继续推进，也不能把
+相对 A6 的微弱收益解释成 native future-stage mechanism。
+
+[Interpretation] 当前结果说明，Step 2/3 的 stage-gradient conflict 仍可能是真问题，但首版
+Stage-Native Coefficient Field 没有让 stage token 产生可分辨收益。观察到的收益更可能来自额外 coefficient-space
+modulation capacity、训练扰动或 zero-gated shared modulation，而不是 future-stage-aware routing。
+
+[Rollback] 不启动 full matrix。回滚到 Step 4 重新设计 native-stage mechanism；若不能提出能击败 no-stage
+control 的机制约束，则回滚到 Step 2/3，重新寻找 StageB 第二主创新点。
