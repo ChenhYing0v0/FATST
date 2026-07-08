@@ -5,6 +5,7 @@ OUTPUT_ROOT="${OUTPUT_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b
 DATASET_ROOT="${DATASET_ROOT:-/home/yingch/dataset}"
 CONDA_ENV="${CONDA_ENV:-moe}"
 CONDA_BIN="${CONDA_BIN:-/home/anaconda3/bin/conda}"
+PYTHON_BIN="${PYTHON_BIN:-}"
 GPU_IDS_STR="${GPU_IDS:-0 1 2}"
 DATASETS_STR="${DATASETS:-Weather ETTm1 ETTh2}"
 ARMS_STR="${ARMS:-a6_clean b11_bcf b11_no_basis b11_constant_slot}"
@@ -39,6 +40,7 @@ echo "dataset_root=${DATASET_ROOT}"
 echo "output_root=${OUTPUT_ROOT}"
 echo "checkpoint_policy=${CHECKPOINT_POLICY}"
 echo "conda_env=${CONDA_ENV}"
+echo "python_bin=${PYTHON_BIN:-conda_run}"
 echo "gpu_ids=${GPU_IDS[*]}"
 echo "datasets=${DATASETS[*]}"
 echo "arms=${ARMS[*]}"
@@ -91,8 +93,8 @@ run_one() {
 
   mkdir -p "${output_dir}"
   echo "run_start=$(date -Is) arm=${arm} dataset=${dataset} gpu=${gpu} output_dir=${output_dir}"
-  CUDA_VISIBLE_DEVICES="${gpu}" "${CONDA_BIN}" run --no-capture-output -n "${CONDA_ENV}" \
-    python baselines/timealign_official/train_repo.py \
+  if [[ -n "${PYTHON_BIN}" ]]; then
+    CUDA_VISIBLE_DEVICES="${gpu}" "${PYTHON_BIN}" baselines/timealign_official/train_repo.py \
       --dataset-root "${DATASET_ROOT}" \
       --dataset "${dataset}" \
       --mode unified \
@@ -118,6 +120,35 @@ run_one() {
       --basis-field-tau "${BASIS_FIELD_TAU}" \
       --basis-field-gate-init "${BASIS_FIELD_GATE_INIT}" \
       --pred-loss-mode multi-prefix 2>&1 | tee "${run_log}"
+  else
+    CUDA_VISIBLE_DEVICES="${gpu}" "${CONDA_BIN}" run --no-capture-output -n "${CONDA_ENV}" \
+      python baselines/timealign_official/train_repo.py \
+        --dataset-root "${DATASET_ROOT}" \
+        --dataset "${dataset}" \
+        --mode unified \
+        --seq-len 720 \
+        --pred-len 720 \
+        --target-horizons 96,192,336,720 \
+        --batch-size "${BATCH_SIZE}" \
+        --epochs "${EPOCHS}" \
+        --patience "${PATIENCE}" \
+        --seed "${SEED}" \
+        --max-train-batches "${MAX_TRAIN_BATCHES}" \
+        --max-eval-batches "${MAX_EVAL_BATCHES}" \
+        --num-workers 0 \
+        --run-name "${run_name}" \
+        --output-dir "${output_dir}" \
+        --device cuda \
+        --checkpoint-policy "${CHECKPOINT_POLICY}" \
+        --readout-mode "${readout_mode}" \
+        --basis-rank 256 \
+        --basis-field-window-len "${BASIS_FIELD_WINDOW_LEN}" \
+        --basis-field-stride "${BASIS_FIELD_STRIDE}" \
+        --basis-field-rank "${BASIS_FIELD_RANK}" \
+        --basis-field-tau "${BASIS_FIELD_TAU}" \
+        --basis-field-gate-init "${BASIS_FIELD_GATE_INIT}" \
+        --pred-loss-mode multi-prefix 2>&1 | tee "${run_log}"
+  fi
   echo "run_done=$(date -Is) arm=${arm} dataset=${dataset} gpu=${gpu}"
 }
 

@@ -9,10 +9,12 @@
 | `local_commit` | `16367b2 feat: add b11 basis-conditioned coefficient field` |
 | `remote_host` | `529_Lab-3090` |
 | `remote_repo` | `/home/yingch/projects/FATST` |
-| `remote_output_root` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b11_bcf_small_gate` |
+| `remote_output_root_first_attempt` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b11_bcf_small_gate` |
+| `remote_output_root_retry` | `/tmp/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b11_bcf_small_gate` |
 | `checkpoint_policy` | `official-last` |
 | `seed` | `2021` |
-| `driver_pid` | `3599363` |
+| `driver_pid_first_attempt` | `3599363` |
+| `driver_pid_tmp_retry` | `3611775` |
 
 ## Matrix
 
@@ -82,11 +84,36 @@ The driver log showed the first three Weather jobs active:
 
 All three entered training and were printing epoch-1 iteration logs.
 
+## Launch Failure And Retry
+
+The first `/home` output-root launch failed with `OSError: [Errno 122] Disk quota exceeded`.
+
+Read-only quota check:
+
+```text
+Disk quotas for user yingch:
+/dev/sdb3 space 220G*, quota 200G, limit 220G
+```
+
+The failed B11 output itself was only about `294M`; the failure came from account-level `/home` quota saturation.
+`/tmp/yingch/exp_outputs/r-2026-fatst` was writable and had about `75G` available, so a retry was attempted there.
+
+The second retry still failed because `conda run` itself tried to create a temporary wrapper and hit the same quota
+path before training. The runner was updated to support direct Python execution with:
+
+```bash
+PYTHON_BIN=/home/yingch/.conda/envs/moe/bin/python
+OUTPUT_ROOT=/tmp/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b11_bcf_small_gate
+```
+
+The next valid launch should use both variables above.
+
 ## Next Action
 
 Use a long progress interval before checking again. When all artifacts return, run:
 
 ```bash
+REMOTE_OUTPUT_ROOT=/tmp/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b11_bcf_small_gate \
 bash scripts/sync_phase5_stage_b_b11_bcf_small_gate_results.sh
 ```
 

@@ -173,6 +173,15 @@ Smoke result:
 脚本沿用 dataset-major scheduling，让慢数据集优先铺到可用 GPU，避免所有 Weather 长任务堆在同一张卡。
 `b11_shuffled_basis` 是 optional arm，可通过 `ARMS` 环境变量追加。
 
+当远程 `/home` quota 紧张导致 `conda run` 无法创建临时 wrapper 时，可以设置：
+
+```bash
+PYTHON_BIN=/home/yingch/.conda/envs/moe/bin/python
+OUTPUT_ROOT=/tmp/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b11_bcf_small_gate
+```
+
+这样 runner 会直接调用 env Python，并把实验 artifacts 写到 `/tmp` 输出根。
+
 `scripts/sync_phase5_stage_b_b11_bcf_small_gate_results.sh` 会同步 remote metrics，并调用
 `scripts/analyze_phase5_stage_b_b11_bcf_small_gate.py` 生成：
 
