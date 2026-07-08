@@ -15,6 +15,7 @@
 | `seed` | `2021` |
 | `driver_pid_first_attempt` | `3599363` |
 | `driver_pid_tmp_retry` | `3611775` |
+| `driver_pid_tmp_direct_retry` | `3616625` |
 
 ## Matrix
 
@@ -108,12 +109,35 @@ OUTPUT_ROOT=/tmp/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b11_bcf_small_ga
 
 The next valid launch should use both variables above.
 
+Because `/home` quota also prevented `git pull` from writing the runner fix into the remote repo, a temporary direct
+runner was written under `/tmp/yingch/run_b11_bcf_direct.sh` and launched with:
+
+```text
+ROOT=/tmp/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b11_bcf_small_gate_direct
+PY=/home/yingch/.conda/envs/moe/bin/python
+PYTHONDONTWRITEBYTECODE=1
+```
+
+This launch entered training successfully. Initial active jobs:
+
+- `a6_clean` / Weather / GPU0;
+- `b11_bcf` / Weather / GPU1;
+- `b11_no_basis` / Weather / GPU2.
+
+Initial GPU state after valid direct launch:
+
+```text
+0, 3633 MiB used, 20493 MiB free, 70% util
+1, 1104 MiB used, 23021 MiB free, 39% util
+2, 1102 MiB used, 23023 MiB free, 56% util
+```
+
 ## Next Action
 
 Use a long progress interval before checking again. When all artifacts return, run:
 
 ```bash
-REMOTE_OUTPUT_ROOT=/tmp/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b11_bcf_small_gate \
+REMOTE_OUTPUT_ROOT=/tmp/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b11_bcf_small_gate_direct \
 bash scripts/sync_phase5_stage_b_b11_bcf_small_gate_results.sh
 ```
 

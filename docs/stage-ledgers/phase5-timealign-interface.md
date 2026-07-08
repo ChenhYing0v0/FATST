@@ -11,7 +11,7 @@
 | `current_11_step` | StageB Step 8 B11-BCF remote small gate running |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator on official-source TimeAlign encoder |
 | `active_question` | Can A6's learned basis geometry drive continuous history aggregation without explicit stage/horizon encoding |
-| `latest_decision` | B11-BCF remote required small gate launched on `529_Lab-3090` after commit/push and GPU preflight |
+| `latest_decision` | B11-BCF remote required small gate launched on `529_Lab-3090`; valid run uses direct Python and `/tmp` output root because `/home` quota blocked `conda run` and `git pull` |
 | `next_required_action` | Wait with long polling interval, then sync/analyze returned artifacts with `scripts/sync_phase5_stage_b_b11_bcf_small_gate_results.sh` |
 | `rollback_point` | Do not implement hard cluster/stage variants; if no-basis or constant-slot explains the gain, mark B11 as capacity/head effect and rollback StageB to Step 2/3 |
 
@@ -107,7 +107,7 @@ Clean rerun after code cleanup:
 | B11-ESA basis/coeff diagnostic | `B11-ESA` | emergent subspace problem diagnostic | KMeans clusters are only clear on ETTh2, but sliding-window basis subspaces are consistent: adjacent/far overlap `0.3900/0.0649`, `0.4021/0.0811`, `0.3810/0.0700`; coeff projection cosine also drops from adjacent to far windows | `problem_candidate_passed`; enter Step 4-6 design gate, not implementation | `analysis/phase5_stage_b_b11_esa_basis_coeff_diagnostic_20260708/b11_esa_basis_coeff_report.md`; `docs/code-explanation/phase5-stage-b-b11-esa-basis-coeff-diagnostic.md` |
 | B11-BCF Step 4-6 design gate | `B11-ESA/BCF` | narrative/method gate | Defines a continuous basis-conditioned coefficient field: overlapping basis-window descriptors drive soft coefficient states before basis projection, with no hard `stage_id`/`horizon_id` | `method_candidate_ready_for_local_implementation`; controls are mandatory before remote launch | `docs/experiments/phase5-stage-b-emergent-subspace-aggregation.md` |
 | B11-BCF local implementation smoke | `B11-ESA/BCF` | implementation verification | Added B11-BCF and three controls; A6 fallback H96 max abs `3.695488e-06`; B11 H96 vs H720 prefix max abs `0.0`; all B11 modes pass synthetic backward; ETTh2 one-batch CPU smoke passed; remote runner/sync/analyzer prepared | `local_implementation_smoke_passed`; next commit/push and remote small gate | `baselines/timealign_official/models/TimeAlign.py`; `baselines/timealign_official/train_repo.py`; `scripts/check_phase5_stage_b_b11_bcf_local.py`; `scripts/remote/run_phase5_stage_b_b11_bcf_small_gate.sh`; `scripts/sync_phase5_stage_b_b11_bcf_small_gate_results.sh`; `scripts/analyze_phase5_stage_b_b11_bcf_small_gate.py`; `docs/code-explanation/phase5-stage-b-b11-bcf.md` |
-| B11-BCF remote small gate launch | `B11-ESA/BCF` | remote launch | Required 12-run gate launched on GPUs `0 1 2`: datasets `Weather ETTm1 ETTh2`, arms `a6_clean b11_bcf b11_no_basis b11_constant_slot` | `remote_small_gate_running`; wait for artifacts | `analysis/phase5_stage_b_b11_bcf_small_gate_20260708/launch_record.md` |
+| B11-BCF remote small gate launch | `B11-ESA/BCF` | remote launch | Required 12-run gate launched on GPUs `0 1 2`: datasets `Weather ETTm1 ETTh2`, arms `a6_clean b11_bcf b11_no_basis b11_constant_slot`; valid output root is `/tmp/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b11_bcf_small_gate_direct` | `remote_small_gate_running`; wait for artifacts | `analysis/phase5_stage_b_b11_bcf_small_gate_20260708/launch_record.md` |
 
 ## Pending Tasks
 
