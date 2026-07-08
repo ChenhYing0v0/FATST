@@ -12,7 +12,7 @@
 | `current_stage` | Phase5 StageA clean A6 validated；StageB B11 emergent subspace aggregation |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 4-6: B11 continuous basis-conditioned aggregation design gate |
+| `current_11_step` | StageB Step 7: B11-BCF local implementation preparation |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
 
 ## Core Claim
@@ -23,7 +23,8 @@ operator。它用一个 unified 720-step model 覆盖 96/192/336/720 多个 pred
 
 [Boundary] A6-LBF-r256 不是强意义上的 target-set-native multi-horizon architecture。它更准确地说是
 prefix-compatible learned-basis trajectory operator：模型生成同一条 720-step future trajectory，再按
-requested horizon 返回 prefix。StageB 的新问题正是让 requested target set 原生进入 prediction operator。
+requested horizon 返回 prefix。StageB 当前已从显式 target-set conditioning 转向 B11：研究如何让
+learned basis 自发形成的 continuous future geometry 进入 primary coefficient field。
 
 ## Main Contribution Draft
 
@@ -167,9 +168,15 @@ subspace overlap 为 ETTh2 `0.3900/0.0649`、ETTm1 `0.4021/0.0811`、Weather `0.
 distance-overlap Spearman 为 `-0.7016/-0.5472/-0.2786`。真实 `coeff` 的 projection cosine 也随
 window distance 降低：adjacent/far 为 `0.5585/0.1504`、`0.5391/0.2379`、`0.4071/0.0484`。
 
-当前 B11 只能进入 Step 4-6 design gate，不能直接实现。若继续，设计必须是 continuous
-basis-conditioned aggregation，并设置 `no-basis`、`shuffled-basis`、`constant-slot` 和 `A6 fallback`
-controls。
+B11 的 Step 4-6 design gate 已通过，但只对 `B11-BCF` 成立。`B11-BCF` 是 continuous
+basis-conditioned coefficient field：用 overlapping basis-window descriptors 生成 soft coefficient states，
+再通过同一组 `learned_temporal_basis` 做 primary prediction。它不输入 hard `stage_id` 或
+`horizon_id`，也不写成 `A6 + residual repair`。
+
+当前 B11 仍不是 accepted contribution。下一步只能进入 local implementation：必须同时实现
+`no-basis`、`shuffled-basis`、`constant-slot` 和 `A6 fallback` controls，并先通过 fallback、prefix
+consistency 与 one-batch smoke。若 no-basis/constant-slot control 持平，论文只能把 B11 记为
+capacity/head effect，而不能 claim basis-conditioned architecture mechanism。
 
 ## Evidence Snapshot
 
@@ -290,4 +297,4 @@ Archived or inactive:
 6. Do not implement B8-FQA under current evidence.
 7. Do not launch B9-FSN-SCF full matrix.
 8. Do not continue explicit stage/horizon conditioning as the main StageB route.
-9. Next StageB action is B11 continuous basis-conditioned aggregation Step 4-6 gate; no implementation until controls and fallback are specified.
+9. Next StageB action is B11-BCF local implementation with mandatory controls; no remote experiment until fallback, prefix consistency, and smoke checks pass.

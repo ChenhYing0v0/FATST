@@ -10,7 +10,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
 | `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B11 emergent subspace aggregation |
-| `current_11_step` | StageB Step 4-6: B11 continuous basis-conditioned aggregation design gate |
+| `current_11_step` | StageB Step 7: B11-BCF local implementation preparation |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -502,9 +502,17 @@ Hard basis-row KMeans 只在 ETTh2 上有清晰 temporal structure，不能支�
 - distance-overlap Spearman: ETTh2 `-0.7016`, ETTm1 `-0.5472`, Weather `-0.2786`;
 - adjacent/far coeff projection cosine: ETTh2 `0.5585/0.1504`, ETTm1 `0.5391/0.2379`, Weather `0.4071/0.0484`。
 
-[Decision] `B11-ESA` 状态为 `problem_candidate_passed`。下一步进入 Step 4-6，不实现 hard cluster/stage
-method，而是设计 continuous basis-conditioned subspace aggregation。method gate 必须包含 `no-basis`,
-`shuffled-basis`, `constant-slot`, and `A6 fallback` controls。
+[Decision] `B11-ESA` 的 Step 4-6 设计门已通过，但只对 continuous `B11-BCF` 成立。`B11-BCF`
+不是 hard cluster/stage method，而是用 overlapping basis-window descriptors 生成 soft coefficient field，
+再进入 A6 的 basis projection primary path。它不得输入 hard `stage_id` 或 `horizon_id`。
+
+[Design Boundary] 本地实现必须同时包含 `no-basis`, `shuffled-basis`, `constant-slot`, and
+`A6 fallback` controls。若 `no-basis` 或 `constant-slot` 解释了收益，B11 只能记为 capacity/head effect，
+不能写成 basis-conditioned architecture contribution。
+
+[Next] 进入 Step 7 local implementation preparation：先实现最小 B11-BCF 与 controls，再做
+py_compile、A6 fallback、prefix consistency 和 ETTh2 one-batch smoke。远程实验仍需等本地验证和
+commit/push 之后再做 GPU preflight。
 
 ## Active Implementation
 
