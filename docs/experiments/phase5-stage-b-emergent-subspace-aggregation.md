@@ -5,16 +5,16 @@
 | 字段 | 内容 |
 | --- | --- |
 | `candidate_id` | `B11-ESA` |
-| `current_step` | Step 7：B11-BCF local implementation smoke passed |
+| `current_step` | Step 10/11：B11-BCF small gate decision and rollback |
 | `problem` | A6 不应依赖显式 stage / horizon encoding；需要利用 `learned_temporal_basis` 自发形成的 continuous future geometry，让架构更自然地聚合 history information |
 | `existence_evidence` | B10-TSI-A/B 显示 basis row spaces 已有分化、coeff 在不同 subspaces 上被差异化使用；B11 进一步证明 sliding-window basis subspaces 沿未来时间轴连续变化，coeff projection 也随窗口距离变化 |
 | `idea` | 用 basis-induced continuous subspace descriptors 驱动 coefficient field / history aggregation，而不是把人工 stage token 加到 coeff |
 | `theory_check` | `B11-BCF` 只在 A6 primary prediction path 内工作；目标是更有效利用 basis geometry，不改变 unified/prefix-consistent 立场 |
 | `design` | `B11-BCF`: Continuous Basis-conditioned Coefficient Field |
 | `narrative_gate` | `passed_for_minimal_local_implementation`; only for the continuous soft field with required controls |
-| `effectiveness_gate` | `local_smoke_passed`; remote small gate not evaluated |
-| `artifacts` | `analysis/phase5_stage_b_b11_esa_basis_coeff_diagnostic_20260708/b11_esa_basis_coeff_report.md`; `docs/code-explanation/phase5-stage-b-b11-esa-basis-coeff-diagnostic.md`; `docs/code-explanation/phase5-stage-b-b11-bcf.md`; `artifacts/smoke_phase5_stage_b_b11_bcf_local/b11_bcf_etth2/` |
-| `decision` | `local_implementation_smoke_passed`; remote small gate required before any paper-core claim |
+| `effectiveness_gate` | `failed_required_controls`; no-basis and constant-slot explain the observed gain |
+| `artifacts` | `analysis/phase5_stage_b_b11_esa_basis_coeff_diagnostic_20260708/b11_esa_basis_coeff_report.md`; `docs/code-explanation/phase5-stage-b-b11-esa-basis-coeff-diagnostic.md`; `docs/code-explanation/phase5-stage-b-b11-bcf.md`; `artifacts/smoke_phase5_stage_b_b11_bcf_local/b11_bcf_etth2/`; `analysis/phase5_stage_b_b11_bcf_small_gate_20260708/b11_bcf_small_gate_report.md` |
+| `decision` | `blocked_by_required_controls`; do not promote B11-BCF to paper-core |
 
 ## Motivation
 
@@ -262,5 +262,36 @@ Code explanation:
 
 - `docs/code-explanation/phase5-stage-b-b11-bcf.md`。
 
-下一步进入 remote small gate preparation。不得实现 hard cluster/stage variant；不得在 remote small gate
-缺少 `no_basis` / `constant_slot` controls 时做 paper-core claim。
+## Step 8-10 Remote Small Gate Result
+
+Required small gate returned:
+
+| Comparison | Overall Mean MSE | MSE Wins |
+| --- | ---: | ---: |
+| `b11_bcf` vs `a6_clean` | `-0.1019%` | `5/12` |
+| `b11_no_basis` vs `a6_clean` | `-0.1007%` | `5/12` |
+| `b11_constant_slot` vs `a6_clean` | `-0.1281%` | `5/12` |
+| `b11_bcf` vs `b11_no_basis` | `-0.0012%` | `2/12` |
+| `b11_bcf` vs `b11_constant_slot` | `+0.0263%` | `7/12` |
+
+Interpretation:
+
+- `b11_bcf` 相对 A6 有极小 mean gain，但 wins 不稳定；
+- `no_basis` 几乎完全复现该 gain；
+- `constant_slot` overall 更强，说明 row-wise continuous mixture 不是必要机制；
+- 因此 B11-BCF 的 observed gain 不能归因于 basis geometry。
+
+Failure attribution:
+
+- `hypothesis_false`: not proven；B11 Step 2/3 诊断仍说明 basis subspace geometry 存在；
+- `intervention_point_wrong`: possible；
+- `readout_or_head_design_wrong`: possible；
+- `optimization_or_numeric_pathology`: not observed；
+- `capacity_control_explains`: yes。
+
+Decision:
+
+`B11-BCF` is blocked by required controls. 下一步只能二选一：
+
+1. rollback to Step 4，重新设计更强的 basis-geometry intervention point；
+2. rollback StageB to Step 2/3，寻找新的 architecture-level second contribution。

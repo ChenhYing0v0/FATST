@@ -1,0 +1,16 @@
+arm,dataset,status,readout_mode,total_parameters,trainable_parameters,basis_field_window_count,basis_field_rank,basis_field_tau,basis_field_gate_sigmoid,basis_field_delta_l2
+a6_clean,ETTh2,ok,learned-basis-forecast-operator,1690016,1690016,,,,,
+a6_clean,ETTm1,ok,learned-basis-forecast-operator,884640,884640,,,,,
+a6_clean,Weather,ok,learned-basis-forecast-operator,6250656,6250656,,,,,
+b11_bcf,ETTh2,ok,basis-conditioned-coefficient-field,1779873,1779873,14,32,1.0,0.015719393268227577,11.113492012023926
+b11_bcf,ETTm1,ok,basis-conditioned-coefficient-field,933537,933537,14,32,1.0,0.011137174442410469,4.5837721824646
+b11_bcf,Weather,ok,basis-conditioned-coefficient-field,6487969,6487969,14,32,1.0,0.01206015795469284,5.635636806488037
+b11_no_basis,ETTh2,ok,basis-conditioned-coefficient-field-no-basis,1779873,1779873,14,32,1.0,0.015928082168102264,11.595098495483398
+b11_no_basis,ETTm1,ok,basis-conditioned-coefficient-field-no-basis,933537,933537,14,32,1.0,0.011313545517623425,4.785792350769043
+b11_no_basis,Weather,ok,basis-conditioned-coefficient-field-no-basis,6487969,6487969,14,32,1.0,0.01256945077329874,5.765350341796875
+b11_constant_slot,ETTh2,ok,basis-conditioned-coefficient-field-constant-slot,1779873,1779873,14,32,1.0,0.015695080161094666,11.099516868591309
+b11_constant_slot,ETTm1,ok,basis-conditioned-coefficient-field-constant-slot,933537,933537,14,32,1.0,0.011141381226480007,4.587192535400391
+b11_constant_slot,Weather,ok,basis-conditioned-coefficient-field-constant-slot,6487969,6487969,14,32,1.0,0.012052246369421482,5.622180938720703
+b11_shuffled_basis,ETTh2,missing,,,,,,,,
+b11_shuffled_basis,ETTm1,missing,,,,,,,,
+b11_shuffled_basis,Weather,missing,,,,,,,,

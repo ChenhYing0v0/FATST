@@ -10,7 +10,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
 | `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B11 emergent subspace aggregation |
-| `current_11_step` | StageB Step 8: B11-BCF remote small gate running |
+| `current_11_step` | StageB Step 10/11: B11-BCF small gate decision and rollback |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -522,8 +522,24 @@ preflight. The matrix contains `a6_clean`, `b11_bcf`, `b11_no_basis`, and `b11_c
 Weather/ETTm1/ETTh2 with horizons 96/192/336/720. GPUs `0 1 2` were selected, and dataset-major scheduling was
 used to avoid stacking slow Weather jobs on one GPU.
 
-[Next] Wait with a long polling interval. After completion, run
-`scripts/sync_phase5_stage_b_b11_bcf_small_gate_results.sh` and decide whether B11-BCF beats both required controls.
+[B11-BCF Result] Required small gate completed and was synced to
+`analysis/phase5_stage_b_b11_bcf_small_gate_20260708/`.
+
+Summary:
+
+- `b11_bcf` vs `a6_clean`: mean MSE `-0.1019%`, `5/12` wins;
+- `b11_no_basis` vs `a6_clean`: mean MSE `-0.1007%`, `5/12` wins;
+- `b11_constant_slot` vs `a6_clean`: mean MSE `-0.1281%`, `5/12` wins;
+- `b11_bcf` vs `b11_no_basis`: mean MSE `-0.0012%`, only `2/12` wins;
+- `b11_bcf` vs `b11_constant_slot`: mean MSE `+0.0263%`, `7/12` wins but worse overall.
+
+[Decision] `B11-BCF` is `blocked_by_required_controls`. The tested continuous basis-conditioned coefficient field
+cannot be promoted to paper-core because no-basis and constant-slot controls explain the observed A6 gain.
+
+[Failure Attribution] This is not a direction-level rejection of all emergent basis geometry. The earlier diagnostic
+still supports continuous basis subspace structure. The failure cause is `capacity_control_explains`, with possible
+`intervention_point_wrong` / `readout_or_head_design_wrong`. If StageB continues B11, it must roll back to Step 4
+and redesign the intervention point before any new remote launch; otherwise rollback StageB to Step 2/3.
 
 ## Active Implementation
 
@@ -581,6 +597,7 @@ used to avoid stacking slow Weather jobs on one GPU.
 | `analysis/phase5_stage_b_b11_esa_basis_coeff_diagnostic_20260708/b11_esa_basis_coeff_report.md` | B11-ESA basis/coeff diagnostic report |
 | `artifacts/smoke_phase5_stage_b_b11_bcf_local/b11_bcf_etth2/` | B11-BCF ETTh2 one-batch CPU smoke |
 | `analysis/phase5_stage_b_b11_bcf_small_gate_20260708/launch_record.md` | B11-BCF remote launch record |
+| `analysis/phase5_stage_b_b11_bcf_small_gate_20260708/b11_bcf_small_gate_report.md` | B11-BCF small gate decision report |
 | `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF remote small gate runner |
 | `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF result sync/analyze wrapper |
 
