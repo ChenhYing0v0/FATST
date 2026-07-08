@@ -57,6 +57,10 @@ what decision follows
   stage-native coefficient field。Step 7 最小实现和本地 smoke 已通过：B9/no-stage 初始 fallback 与
   prefix consistency max abs 均为 `0.0`。Remote small gate 已返回 `blocked_by_no_stage_control`：
   B9 相对 A6 的微弱收益被 no-stage control 完全解释，当前不得启动 B9 full matrix。
+- B9 之后，StageB 回滚到 target-set-native multi-horizon 问题。当前 active protocol 是
+  `phase5-stage-b-target-set-conditioned-operator.md`，候选 `B10-TCO`。它将 A6 重新界定为
+  prefix-compatible learned-basis trajectory operator，并要求先运行 `B10-TSI` diagnostic，验证 requested
+  target set 是否需要进入 basis-coeff computation graph。
 
 ## 历史记录
 

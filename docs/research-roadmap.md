@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B9-FSN-SCF blocked by no-stage control |
-| `current_11_step` | StageB Step 10: B9-FSN-SCF failed mechanism effectiveness gate |
+| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B10 target-set-native problem redefinition |
+| `current_11_step` | StageB Step 2/3: B10 target-set-conditioned operator problem redefinition |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -400,6 +400,57 @@ future-stage-aware routing 的正证据。
 [Rollback] 回到 Step 4 重新设计 native-stage mechanism；若找不到能压过 no-stage control 的机制约束，则回到
 StageB Step 2/3 重新寻找第二主创新点。
 
+### B10 Target-Set Conditioned Operator Redefinition
+
+[Decision] B9-FSN-SCF 被 no-stage control 阻断后，StageB 不再继续简单 stage-token coefficient modulation。
+新的问题候选是 `B10-TCO`: Target-Set Conditioned Operator。
+
+[Problem] A6-LBF-r256 更准确地说是 prefix-compatible learned-basis trajectory operator：
+
+```text
+f_A6(history) -> y_{1:720}
+return y_{1:H}
+```
+
+它支持多 horizon evaluation，但 requested horizon / target set $J$ 没有进入 computation graph。短 horizon
+预测仍是从同一条 720-step trajectory 上 prefix slicing。
+
+[Reframing] A6 的 learned-basis head 不是普通 dense Linear head，而是 factorized temporal-coordinate operator：
+
+```text
+coeff = learned_basis_coeff(hidden)
+y[t,c] = learned_temporal_basis[t] @ coeff[b,c] + bias[t]
+```
+
+其中 `learned_temporal_basis[:, k]` 可理解为 shared temporal atom，`coeff[b,c,k]` 是 sample/channel-wise
+coordinate。但这个结构仍没有表达“本次请求的 target set 是什么”。
+
+[External Evidence] 本轮方向落地不只参考本地 notes。外部网络重新核验了 TimePerceiver、ElasTST、
+MQ-RNN 与 Temporal Fusion Transformer：target timestamp queries、future placeholders/masks、
+horizon-specific contexts 与 known future inputs 都支持 target/future-side information 进入 prediction graph。
+B10 只吸收 target-set conditioning 的机制证据，不复制完整外部架构。
+
+[Idea] B10 应研究：
+
+```text
+f_B10(history, J) -> y_J
+```
+
+其中 $J$ 是 requested target set，例如 `{1..96}`, `{1..192}`, `{1..336}`, `{1..720}`。B10 默认采用
+`prefix-invariant target-set computation`：requested target set 进入 forward graph，但更长 target set
+中的后续 positions 不允许改写已有 prefix outputs。
+
+[Existing Evidence] 当前 artifacts 支持该问题值得诊断：
+
+- A6 vs fixed-horizon specialist 虽整体 `9/12` wins、mean MSE `-4.13%`，但 Weather 只有 `2/4` wins，
+  ETTm1-720 仍输给 fixed specialist；
+- B7-UPO 显示当前 multi-prefix slicing/objective 下 tail region gain 仅 `-0.16%`；
+- B9-SCF 显示把 stage token 塞进 coefficient 会被 no-stage capacity control 解释。
+
+[Next Required Action] 运行 `B10-TSI`: Target-Set Interface diagnostic。诊断必须先检查
+`basis_stage_subspace_audit`、`coeff_usage_by_stage`、`target_set_oracle_control` 和
+`prefix_consistency_contract`。若 no-target-set control 能解释结果，不得实现 B10 method。
+
 ## Active Implementation
 
 | File | Role |
@@ -425,6 +476,7 @@ StageB Step 2/3 重新寻找第二主创新点。
 | `docs/experiments/phase5-stage-b-unified-prefix-optimization-diagnostic.md` | StageB B7 unified prefix optimization diagnostic protocol |
 | `docs/experiments/phase5-stage-b-future-query-aligned-basis-architecture.md` | StageB B8 future-query aligned basis architecture protocol |
 | `docs/experiments/phase5-stage-b-native-future-stage-operator.md` | StageB B9 native future-stage operator protocol |
+| `docs/experiments/phase5-stage-b-target-set-conditioned-operator.md` | StageB B10 target-set-conditioned operator protocol |
 | `docs/code-explanation/phase5-stage-b-b6-prefix-objective-diagnostic.md` | B6 diagnostic analyzer explanation |
 | `docs/code-explanation/phase5-clean-a6-rerun-analysis.md` | clean A6 validation analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b7-unified-prefix-optimization.md` | B7 diagnostic analyzer explanation |

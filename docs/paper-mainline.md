@@ -9,10 +9,10 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA clean A6 validated；StageB B9-FSN-SCF blocked by no-stage control |
+| `current_stage` | Phase5 StageA clean A6 validated；StageB B10 target-set-native problem redefinition |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 10 B9-FSN-SCF failed mechanism effectiveness gate |
+| `current_11_step` | StageB Step 2/3 B10 target-set-conditioned operator problem redefinition |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
 
 ## Core Claim
@@ -20,6 +20,10 @@
 [Claim] A6-LBF-r256 将 TimeAlign 的 final prediction head 改写为 prefix-native learned-basis forecast
 operator。它用一个 unified 720-step model 覆盖 96/192/336/720 多个 prediction horizons，并在当前
 实验集合上整体优于 fixed-horizon per-horizon TimeAlign。
+
+[Boundary] A6-LBF-r256 不是强意义上的 target-set-native multi-horizon architecture。它更准确地说是
+prefix-compatible learned-basis trajectory operator：模型生成同一条 720-step future trajectory，再按
+requested horizon 返回 prefix。StageB 的新问题正是让 requested target set 原生进入 prediction operator。
 
 ## Main Contribution Draft
 
@@ -37,6 +41,8 @@ A6-LBF-r256 的机制：
 
 - 这是一个 unified multi-horizon architecture contribution；
 - 它直接挑战 fixed-horizon per-horizon 训练的必要性；
+- 更精确地说，它是 learned temporal-coordinate / low-rank trajectory operator，而不是
+  target-set-conditioned forecaster；
 - 它不是 early-stop、best-val、teacher distillation 或手工 horizon routing。
 
 ### Contribution 2 Candidate: Prefix-Native Objective
@@ -120,6 +126,12 @@ Remote small gate 已返回负向机制结果：`b9_fsn_scf` 相对 `a6_clean` �
 相对 `b9_no_stage` 只有 `2/12` wins，mean MSE `+0.0036%`。因此 B9-FSN-SCF 被 no-stage control
 阻断，不能作为 accepted method，也不能将相对 A6 的微弱收益解释为 future-stage-aware routing。
 
+B9 之后，StageB 回滚到更根本的问题：A6 当前仍是 `f(history) -> y_{1:720}` 后 prefix slicing，而不是
+`f(history, J) -> y_J`。新的候选是 `B10-TCO`: Target-Set Conditioned Operator。B10 不再把 stage token
+塞进已有 coefficient，而是研究 requested target set $J$ 是否应进入 basis-coeff prediction graph。默认立场是
+prefix-invariant target-set computation：`H=720` 的后续 target positions 不应改写 `H=96` 的 prefix outputs。
+当前 B10 只是 problem redefinition，下一步必须先做 `B10-TSI` diagnostic，不能直接实现。
+
 ## Evidence Snapshot
 
 ### A6-LBF-r256 vs fixed-horizon per-horizon TimeAlign
@@ -198,6 +210,7 @@ Archived or inactive:
 | `docs/experiments/phase5-stage-b-unified-prefix-optimization-diagnostic.md` | active B7 unified prefix optimization diagnostic protocol |
 | `docs/experiments/phase5-stage-b-future-query-aligned-basis-architecture.md` | B8 rejected architecture candidate protocol |
 | `docs/experiments/phase5-stage-b-native-future-stage-operator.md` | active B9-FSN-SCF Step 4-6 protocol |
+| `docs/experiments/phase5-stage-b-target-set-conditioned-operator.md` | active B10 target-set-conditioned operator protocol |
 | `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF remote small gate runner |
 | `scripts/analyze_phase5_stage_b_b9_fsn_scf_small_gate.py` | B9-FSN-SCF small gate analyzer |
 | `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF result sync/analyze wrapper |
@@ -219,4 +232,5 @@ Archived or inactive:
 4. Do not implement B6 objective under current evidence.
 5. Defer B7 objective optimization as a small contribution candidate.
 6. Do not implement B8-FQA under current evidence.
-7. Do not launch B9-FSN-SCF full matrix; rollback StageB to Step 4 redesign or Step 2/3 if no stronger native-stage mechanism exists.
+7. Do not launch B9-FSN-SCF full matrix.
+8. Run B10-TSI diagnostic before any target-set-conditioned implementation.
