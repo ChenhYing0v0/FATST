@@ -10,7 +10,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
 | `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B11 emergent subspace aggregation |
-| `current_11_step` | StageB Step 8: B11-BCF remote small gate preparation |
+| `current_11_step` | StageB Step 8: B11-BCF remote small gate running |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -517,9 +517,13 @@ Hard basis-row KMeans 只在 ETTh2 上有清晰 temporal structure，不能支�
 max abs `3.695488e-06`, B11 H96 vs H720 prefix max abs `0.0`, all B11 modes passed synthetic backward, and
 ETTh2 one-batch CPU smoke completed.
 
-[Next] 进入 Step 8 remote small gate preparation。远程 runner/sync/analyzer 已准备。远程前必须
-commit/push，并做 GPU preflight。Small gate 必须至少包含 `a6_clean`, `b11_bcf`, `b11_no_basis`,
-and `b11_constant_slot`；`b11_shuffled_basis` 可作为扩展 control。
+[Remote Launch] B11-BCF required small gate has been launched on `529_Lab-3090` after commit/push and GPU
+preflight. The matrix contains `a6_clean`, `b11_bcf`, `b11_no_basis`, and `b11_constant_slot` on
+Weather/ETTm1/ETTh2 with horizons 96/192/336/720. GPUs `0 1 2` were selected, and dataset-major scheduling was
+used to avoid stacking slow Weather jobs on one GPU.
+
+[Next] Wait with a long polling interval. After completion, run
+`scripts/sync_phase5_stage_b_b11_bcf_small_gate_results.sh` and decide whether B11-BCF beats both required controls.
 
 ## Active Implementation
 
@@ -576,6 +580,7 @@ and `b11_constant_slot`；`b11_shuffled_basis` 可作为扩展 control。
 | `analysis/phase5_stage_b_b10_tsi_failure_attribution_rank16_20260708/b10_tsi_failure_attribution_report.md` | B10-TSI-D rank16 stability control |
 | `analysis/phase5_stage_b_b11_esa_basis_coeff_diagnostic_20260708/b11_esa_basis_coeff_report.md` | B11-ESA basis/coeff diagnostic report |
 | `artifacts/smoke_phase5_stage_b_b11_bcf_local/b11_bcf_etth2/` | B11-BCF ETTh2 one-batch CPU smoke |
+| `analysis/phase5_stage_b_b11_bcf_small_gate_20260708/launch_record.md` | B11-BCF remote launch record |
 | `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF remote small gate runner |
 | `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF result sync/analyze wrapper |
 
