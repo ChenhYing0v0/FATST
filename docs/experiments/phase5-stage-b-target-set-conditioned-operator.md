@@ -7,14 +7,14 @@
 | `candidate_id` | `B10-TCO` |
 | `current_step` | Step 2/3：target-set-native multi-horizon problem redefinition |
 | `problem` | A6-LBF-r256 是 prefix-compatible 720-step trajectory operator，但 requested horizon / target set 没有进入 computation graph；短 horizon 只是从同一条 720 trajectory 上 prefix slicing |
-| `existence_evidence` | A6 统一模型成立但 multi-horizon 原生性不足；B7 显示 multi-prefix supervision 的 tail weakness；B9-SCF 显示单纯 stage-token coefficient modulation 被 no-stage control 解释 |
+| `existence_evidence` | A6 统一模型成立但 multi-horizon 原生性不足；B7 显示 multi-prefix supervision 的 tail weakness；B9-SCF 显示单纯 stage-token coefficient modulation 被 no-stage control 解释；B10-TSI-A 显示 basis 已有 stage geometry，但 target set 仍缺席于 history-to-coeff/state path |
 | `idea` | 将 requested target set $J$ 原生输入 basis-coeff operator，使模型按 $J$ 生成预测，同时保持 prefix consistency |
 | `theory_check` | 尚未完成；当前只建立问题边界与诊断计划 |
 | `design` | 候选方向是 target-set conditioned basis-coeff interface，不是 full-720 prediction 后 slicing，也不是 residual correction |
 | `narrative_gate` | `not_evaluated` |
 | `effectiveness_gate` | `not_evaluated` |
-| `artifacts` | 本文档；后续需要 B10-TSI diagnostic |
-| `decision` | `problem_redefinition_ready`; 下一步做 B10-TSI problem diagnostic |
+| `artifacts` | 本文档；`analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/b10_tsi_basis_geometry_report.md` |
+| `decision` | `partial_support_continue_tsi`; 下一步做 B10-TSI-B coefficient usage / target-set interface diagnostic |
 
 ## Motivation
 
@@ -194,6 +194,29 @@ target set J -> target query/state -> read history -> basis-coeff coupling -> y_
 也就是说，future stage 不只是调制已有 coefficient，而是决定“请求的 target set 如何从 history 中形成预测
 state”。这是更原生的 multi-horizon architecture 问题。
 
+## B10-TSI-A Basis Geometry Result
+
+[Fact] `B10-TSI-A` 已读取三个 clean A6 checkpoint 的 `learned_temporal_basis: [720, 256]`，检查
+segment rank、atom stage share 和 stage row-space overlap。
+
+| Dataset | top64 atom entropy | stage-specialized rate | rank32 row-space overlap |
+| --- | ---: | ---: | ---: |
+| ETTh2 | `0.8108` | `0.0156` | `0.1324` |
+| ETTm1 | `0.8764` | `0.0000` | `0.1510` |
+| Weather | `0.8658` | `0.0000` | `0.1368` |
+
+[Interpretation] 这个结果不支持“basis 没有 future-stage 信息”的简单叙事。高能 atoms 并不强烈局部化到
+单一 stage，但不同 stage 在 coefficient 维度上的 row subspace overlap 很低，说明 A6 basis 已经形成
+stage-differentiated coefficient geometry。
+
+[Decision] B10 的问题因此必须收窄为：
+
+> requested target set 没有进入 `history -> coeff/state` 生成路径；单一 target-set-blind coefficient
+> vector 必须同时服务多个 stage row subspaces。
+
+后续不得退回 B9 式 “在既有 `coeff_base` 后加 stage modulation”。下一步是 B10-TSI-B：在真实 forward batch
+中检查 `coeff` 如何被不同 stage row subspaces 使用，并加入 no-target-set capacity control。
+
 ## Problem Evidence From Existing Artifacts
 
 ### A6 Is Strong But Still Prefix-Slicing
@@ -251,7 +274,9 @@ basis-coeff coupling，而不是只提供 coefficient-space extra capacity。
 
 1. `basis_stage_subspace_audit`
    - 对 `learned_temporal_basis` 做 stage-wise Gram/cosine/subspace overlap；
-   - 判断不同 future regions 是否已有自然 subspace separation。
+   - 判断不同 future regions 是否已有自然 subspace separation；
+   - `B10-TSI-A` 已完成：basis 不是 stage-blind，但 stage 信息主要在 basis row-space geometry 中，未进入
+     target-set-conditioned history readout。
 
 2. `coeff_usage_by_stage`
    - 对 A6 checkpoint 的 prediction contribution `basis[t,k] * coeff[b,c,k]` 做 stage-wise energy 分解；

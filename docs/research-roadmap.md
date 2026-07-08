@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B10 target-set-native problem redefinition |
-| `current_11_step` | StageB Step 2/3: B10 target-set-conditioned operator problem redefinition |
+| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B10 target-set interface diagnostic |
+| `current_11_step` | StageB Step 3: B10-TSI coefficient usage / target-set interface diagnostic |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -446,10 +446,19 @@ f_B10(history, J) -> y_J
   ETTm1-720 仍输给 fixed specialist；
 - B7-UPO 显示当前 multi-prefix slicing/objective 下 tail region gain 仅 `-0.16%`；
 - B9-SCF 显示把 stage token 塞进 coefficient 会被 no-stage capacity control 解释。
+- B10-TSI-A 显示 A6 basis 不是 stage-blind：top64 atoms 的 entropy 为
+  `0.8108/0.8764/0.8658`，但 rank32 stage row-space overlap 只有
+  `0.1324/0.1510/0.1368`。
 
-[Next Required Action] 运行 `B10-TSI`: Target-Set Interface diagnostic。诊断必须先检查
-`basis_stage_subspace_audit`、`coeff_usage_by_stage`、`target_set_oracle_control` 和
-`prefix_consistency_contract`。若 no-target-set control 能解释结果，不得实现 B10 method。
+[Updated Boundary] B10 不能叙事为“给 basis 补 stage 信息”。更准确的问题是：
+
+> `learned_temporal_basis` 已经形成 stage-differentiated coefficient geometry，但
+> `learned_basis_coeff(hidden)` 仍只生成一个 target-set-blind coefficient/state；requested target set
+> 没有进入 `history -> coeff/state` 生成路径。
+
+[Next Required Action] 继续 `B10-TSI-B`: coefficient usage / target-set interface diagnostic。诊断必须检查
+真实 forward batch 中 `coeff` 如何被 stage row subspaces 使用，并加入 `target_set_oracle_control` 与
+no-target-set capacity control。若 no-target-set control 能解释结果，不得实现 B10 method。
 
 ## Active Implementation
 
@@ -483,6 +492,9 @@ f_B10(history, J) -> y_J
 | `docs/code-explanation/phase5-stage-b-b8-ocd-coefficient-oracle.md` | B8-OCD analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b9-stage-gradient-diagnostic.md` | B9-SGC analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b9-fsn-scf.md` | B9-FSN-SCF implementation explanation |
+| `docs/code-explanation/phase5-stage-b-b10-tsi-basis-geometry.md` | B10-TSI-A basis geometry analyzer explanation |
+| `scripts/analyze_phase5_stage_b_b10_tsi_basis_geometry.py` | B10-TSI-A basis geometry analyzer |
+| `analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/b10_tsi_basis_geometry_report.md` | B10-TSI-A basis geometry report |
 | `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF remote small gate runner |
 | `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF result sync/analyze wrapper |
 

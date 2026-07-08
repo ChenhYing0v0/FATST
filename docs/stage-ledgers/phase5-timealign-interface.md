@@ -8,11 +8,11 @@
 | Field | Content |
 | --- | --- |
 | `stage_id` | `phase5-timealign-interface` |
-| `current_11_step` | StageB Step 2/3 B10 target-set-native multi-horizon problem redefinition |
+| `current_11_step` | StageB Step 3 B10-TSI target-set interface diagnostic |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator on official-source TimeAlign encoder |
 | `active_question` | Can requested target set enter the A6 basis-coeff operator natively, instead of generating a 720-step trajectory and slicing prefixes |
-| `latest_decision` | B9-FSN-SCF is blocked by no-stage control; StageB rolls back to B10 target-set-conditioned operator problem definition |
-| `next_required_action` | Run B10-TSI diagnostic before any implementation; test basis-stage subspaces, coeff usage, target-set oracle/control, and prefix consistency |
+| `latest_decision` | B10-TSI-A shows A6 basis is not stage-blind: top atoms are cross-stage, but stage row spaces are separated; B10 must focus on target-set-blind history-to-coeff/state path |
+| `next_required_action` | Run B10-TSI-B coefficient usage / target-set interface diagnostic with no-target-set capacity control before any implementation |
 | `rollback_point` | If B10-TSI is explained by no-target-set capacity control, return to StageB Step 2/3 or keep B7 only as small objective contribution |
 
 ## StageA Fixed Result
@@ -76,7 +76,7 @@ Clean rerun after code cleanup:
 | `B7-UPO` | `deferred_small_contribution_candidate` | A6-LBF 已有 unified operator，但 nested multi-prefix training 会过度加权短步，并可能弱化 long-tail forecast regions | partial：可作为 objective refinement，但不适合作为第二主创新点 | not evaluated | 暂缓，待 architecture candidate 判定后再作为小贡献候选处理 | `docs/experiments/phase5-stage-b-unified-prefix-optimization-diagnostic.md`; `analysis/phase5_stage_b_unified_prefix_optimization_20260707/stage_b_b7_unified_prefix_optimization_report.md` |
 | `B8-FQA` | `rejected_by_ocd_control` | A6-LBF 的 coefficient 是 sample-specific 但 future-position-invariant；future queries 可在 basis prediction 前将 history representation 对齐到 target positions | failed：learned segment-specific correction has headroom, but DCT control has stronger absolute residual reduction | not evaluated | Do not implement B8; return StageB to Step 2/3 | `docs/experiments/phase5-stage-b-future-query-aligned-basis-architecture.md`; `analysis/phase5_stage_b_future_query_aligned_architecture_research_20260707/stage_b_architecture_direction_report.md`; `analysis/phase5_stage_b_b8_ocd_coefficient_oracle_20260707/b8_ocd_report.md` |
 | `B9-FSN-SCF` | `blocked_by_no_stage_control` | A6-LBF 的 single coefficient state 同时服务多个 future stages；若 stage losses 对该 coefficient 的梯度方向不一致，则需要 native future-stage-aware coefficient field | passed Step 4-7, but failed effectiveness mechanism gate：B9 cannot beat same-parameter no-stage control | failed：B9 vs A6 `-0.13%`, no-stage vs A6 `-0.13%`, B9 vs no-stage `+0.0036%` and `2/12` wins | Do not launch full matrix; rollback to Step 4 redesign or Step 2/3 | `docs/experiments/phase5-stage-b-native-future-stage-operator.md`; `docs/code-explanation/phase5-stage-b-b9-fsn-scf.md`; `analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/b9_fsn_scf_small_gate_report.md` |
-| `B10-TCO` | `problem_redefinition_ready` | A6-LBF 是 prefix-compatible 720-step trajectory operator；requested target set 没有进入 computation graph，短 horizon 是 prefix slicing | pending：external evidence supports target queries/placeholders/horizon-specific contexts, but local B10-TSI diagnostic is required | not evaluated | Run B10-TSI diagnostic before implementation | `docs/experiments/phase5-stage-b-target-set-conditioned-operator.md` |
+| `B10-TCO` | `partial_support_continue_tsi` | A6-LBF 是 prefix-compatible 720-step trajectory operator；requested target set 没有进入 computation graph，短 horizon 是 prefix slicing | B10-TSI-A partial：basis 已有 stage-differentiated row-space geometry，但 `learned_basis_coeff(hidden)` 仍是 target-set-blind | not evaluated | Run B10-TSI-B coefficient usage / target-set interface diagnostic with no-target-set control | `docs/experiments/phase5-stage-b-target-set-conditioned-operator.md`; `analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/b10_tsi_basis_geometry_report.md` |
 
 ## Experiment Ledger
 
@@ -99,6 +99,7 @@ Clean rerun after code cleanup:
 | B9-FSN-SCF local implementation smoke | `B9-FSN-SCF` | implementation verification | Added `stage-native-coefficient-field` and `stage-native-coefficient-field-no-stage`; A6 fallback and prefix consistency max abs are all `0.0`; ETTh2 1-batch CPU smoke passed for B9 and no-stage | `local_implementation_smoke_passed`; launch remote small gate after commit/push | `baselines/timealign_official/models/TimeAlign.py`; `baselines/timealign_official/train_repo.py`; `docs/code-explanation/phase5-stage-b-b9-fsn-scf.md` |
 | B9-FSN-SCF remote small gate | `B9-FSN-SCF` | effectiveness and mechanism control | B9 beats A6 by `-0.13%` mean MSE with `12/12` wins, but no-stage also beats A6 by `-0.13%`; B9 vs no-stage is `+0.0036%` mean MSE with only `2/12` wins | `blocked_by_no_stage_control`; do not claim stage-token mechanism | `analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/b9_fsn_scf_small_gate_report.md` |
 | B10 target-set-conditioned operator redefinition | `B10-TCO` | problem redefinition | A6 is better framed as a prefix-compatible learned-basis trajectory operator, not a target-set-native multi-horizon architecture; B10 asks whether requested target set $J$ should enter basis-coeff operator | `problem_redefinition_ready`; run B10-TSI diagnostic | `docs/experiments/phase5-stage-b-target-set-conditioned-operator.md` |
+| B10-TSI-A basis geometry diagnostic | `B10-TCO` | checkpoint-only problem diagnostic | Top64 atoms are cross-stage (`entropy=0.8108/0.8764/0.8658`, stage-specialized rate `0.0156/0/0`), but rank32 stage row-space overlap is low (`0.1324/0.1510/0.1368`) | `partial_support_continue_tsi`; B10 problem narrows to target-set-blind history-to-coeff/state path | `analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/b10_tsi_basis_geometry_report.md`; `docs/code-explanation/phase5-stage-b-b10-tsi-basis-geometry.md` |
 
 ## Pending Tasks
 
@@ -123,7 +124,7 @@ Clean rerun after code cleanup:
 | Implement B9-FSN-SCF minimal gate | Codex | Step 4-6 narrative/method gate passed | `completed` | Done; local fallback/prefix checks and smoke passed |
 | Launch B9-FSN-SCF remote small gate | Codex | Local implementation smoke passed | `completed` | Done; decision `blocked_by_no_stage_control` |
 | Redesign or rollback after B9-FSN-SCF no-stage block | Codex | B9-SCF cannot beat no-stage control | `completed` | Rolled back to B10 target-set-native multi-horizon problem |
-| Run B10-TSI target-set interface diagnostic | Codex | B10-TCO problem redefinition is ready | `pending` | Diagnose basis-stage subspaces, coeff stage usage, target-set oracle/control, and prefix consistency |
+| Run B10-TSI target-set interface diagnostic | Codex | B10-TCO problem redefinition is ready | `in_progress` | B10-TSI-A basis geometry done; next B10-TSI-B diagnoses coeff stage usage and target-set/no-target-set controls |
 
 ## Paper Mainline Sync Log
 
@@ -146,6 +147,7 @@ Clean rerun after code cleanup:
 | 2026-07-07 | B9-FSN-SCF remote small gate launched | Contribution 2 candidate | no accepted paper claim | Wait for artifacts, then run sync/analyzer |
 | 2026-07-07 | B9-FSN-SCF small gate blocked by no-stage | Contribution 2 candidate | no accepted paper claim | Do not launch full matrix; rollback to Step 4/2 |
 | 2026-07-08 | B10 target-set-native problem redefinition | Contribution 2 candidate | no accepted paper claim | Run B10-TSI diagnostic before implementation |
+| 2026-07-08 | B10-TSI-A basis geometry returned | Contribution 2 candidate | no accepted paper claim | Continue B10-TSI-B; problem is target-set-blind history-to-coeff/state path, not basis stage-blindness |
 
 ## Active Artifacts
 
@@ -163,6 +165,7 @@ Clean rerun after code cleanup:
 | `docs/code-explanation/phase5-stage-b-b8-ocd-coefficient-oracle.md` | B8-OCD coefficient oracle analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b9-stage-gradient-diagnostic.md` | B9-SGC stage gradient analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b9-fsn-scf.md` | B9-FSN-SCF model implementation explanation |
+| `docs/code-explanation/phase5-stage-b-b10-tsi-basis-geometry.md` | B10-TSI-A basis geometry analyzer explanation |
 | `docs/experiments/phase5-stage-b-reliability-aware-supervision-redesign.md` | StageB problem definition and B1/B2 candidate boundary |
 | `docs/experiments/phase5-stage-b-distance-normalized-seasonal-residual-diagnostic.md` | B3 diagnostic protocol |
 | `docs/experiments/phase5-stage-b-timealign-dependency-and-basis-align-diagnostic.md` | B4 dependency and B5 basis-align protocol |
@@ -183,6 +186,7 @@ Clean rerun after code cleanup:
 | `scripts/analyze_phase5_stage_b_unified_prefix_optimization.py` | B7 unified prefix optimization diagnostic analyzer |
 | `scripts/analyze_phase5_stage_b_b8_ocd_coefficient_oracle.py` | B8-OCD coefficient oracle diagnostic analyzer |
 | `scripts/analyze_phase5_stage_b_b9_stage_gradient_diagnostic.py` | B9-SGC stage gradient diagnostic analyzer |
+| `scripts/analyze_phase5_stage_b_b10_tsi_basis_geometry.py` | B10-TSI-A basis geometry diagnostic analyzer |
 | `scripts/remote/run_phase5_stage_b_timealign_dependency_ablation.sh` | completed remote no-align/no-recon ablation runner |
 | `scripts/remote/run_phase5_a6_lbf_r256_main.sh` | clean A6-LBF-r256 remote runner |
 | `analysis/phase5_timealign_hss_a6_capacity_native_gate_20260703/` | StageA accepted evidence |
@@ -199,6 +203,7 @@ Clean rerun after code cleanup:
 | `analysis/phase5_stage_b_b9_stage_gradient_diagnostic_20260707/` | B9-SGC diagnostic; decision `problem_candidate_passed` |
 | `analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/launch_record.md` | B9-FSN-SCF remote launch record |
 | `analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/b9_fsn_scf_small_gate_report.md` | B9-FSN-SCF small gate decision |
+| `analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/b10_tsi_basis_geometry_report.md` | B10-TSI-A basis geometry decision |
 
 ## Archived Evidence
 

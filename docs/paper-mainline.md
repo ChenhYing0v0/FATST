@@ -9,10 +9,10 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA clean A6 validated；StageB B10 target-set-native problem redefinition |
+| `current_stage` | Phase5 StageA clean A6 validated；StageB B10 target-set interface diagnostic |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 2/3 B10 target-set-conditioned operator problem redefinition |
+| `current_11_step` | StageB Step 3 B10-TSI coefficient usage / target-set interface diagnostic |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
 
 ## Core Claim
@@ -130,7 +130,13 @@ B9 之后，StageB 回滚到更根本的问题：A6 当前仍是 `f(history) -> 
 `f(history, J) -> y_J`。新的候选是 `B10-TCO`: Target-Set Conditioned Operator。B10 不再把 stage token
 塞进已有 coefficient，而是研究 requested target set $J$ 是否应进入 basis-coeff prediction graph。默认立场是
 prefix-invariant target-set computation：`H=720` 的后续 target positions 不应改写 `H=96` 的 prefix outputs。
-当前 B10 只是 problem redefinition，下一步必须先做 `B10-TSI` diagnostic，不能直接实现。
+
+B10-TSI-A 已完成 checkpoint-only basis geometry audit。结果显示 A6 的 basis 不是 stage-blind：top64 atoms
+主要跨 stage，但不同 stage 的 coefficient row spaces overlap 很低。因此 StageB 不能叙事为“给 basis 补
+stage 信息”。更准确的论文问题是：`learned_temporal_basis` 已经形成 stage-differentiated coefficient
+geometry，但 `learned_basis_coeff(hidden)` 仍然只生成 target-set-blind coefficient/state；requested target set
+没有进入 `history -> coeff/state` 生成路径。下一步是 B10-TSI-B coefficient usage / target-set control
+diagnostic，仍不能直接实现方法。
 
 ## Evidence Snapshot
 
@@ -204,6 +210,7 @@ Archived or inactive:
 | `docs/code-explanation/phase5-clean-timealign-a6-lbf.md` | code explanation |
 | `docs/code-explanation/phase5-clean-a6-rerun-analysis.md` | clean A6 validation analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b9-fsn-scf.md` | B9-FSN-SCF implementation explanation |
+| `docs/code-explanation/phase5-stage-b-b10-tsi-basis-geometry.md` | B10-TSI-A basis geometry analyzer explanation |
 | `docs/stage-ledgers/phase5-timealign-interface.md` | active StageA/StageB ledger |
 | `docs/research-roadmap.md` | active roadmap |
 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | next StageB diagnostic protocol |
@@ -211,6 +218,7 @@ Archived or inactive:
 | `docs/experiments/phase5-stage-b-future-query-aligned-basis-architecture.md` | B8 rejected architecture candidate protocol |
 | `docs/experiments/phase5-stage-b-native-future-stage-operator.md` | active B9-FSN-SCF Step 4-6 protocol |
 | `docs/experiments/phase5-stage-b-target-set-conditioned-operator.md` | active B10 target-set-conditioned operator protocol |
+| `scripts/analyze_phase5_stage_b_b10_tsi_basis_geometry.py` | B10-TSI-A basis geometry analyzer |
 | `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF remote small gate runner |
 | `scripts/analyze_phase5_stage_b_b9_fsn_scf_small_gate.py` | B9-FSN-SCF small gate analyzer |
 | `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF result sync/analyze wrapper |
@@ -223,6 +231,7 @@ Archived or inactive:
 | `analysis/phase5_stage_b_b8_ocd_coefficient_oracle_20260707/` | B8-OCD negative oracle diagnostic |
 | `analysis/phase5_stage_b_b9_stage_gradient_diagnostic_20260707/` | B9-SGC positive problem-candidate diagnostic |
 | `analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/` | B9-FSN-SCF launch record and future small-gate analysis |
+| `analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/` | B10-TSI-A basis geometry diagnostic |
 
 ## Next Step
 
@@ -233,4 +242,4 @@ Archived or inactive:
 5. Defer B7 objective optimization as a small contribution candidate.
 6. Do not implement B8-FQA under current evidence.
 7. Do not launch B9-FSN-SCF full matrix.
-8. Run B10-TSI diagnostic before any target-set-conditioned implementation.
+8. Run B10-TSI-B coefficient usage / target-set interface diagnostic before any target-set-conditioned implementation.
