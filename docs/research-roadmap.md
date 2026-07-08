@@ -10,7 +10,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
 | `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B12 subspace-tiled basis operator |
-| `current_11_step` | StageB Step 7: B12-STBO local implementation smoke passed |
+| `current_11_step` | StageB Step 8: B12-STBO remote small gate running |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -582,9 +582,14 @@ only with DCT and independent-tile controls.
 `py_compile` passed; synthetic H96 vs H720 prefix max abs is `0.0` for all four modes; all modes passed synthetic
 backward; ETTh2 one-batch CPU smoke passed.
 
-[Next] Remote small gate is allowed only after commit/push and GPU preflight. Required arms are `a6_clean`,
-`stbo_shared`, `stbo_bank4`, `stbo_dct`, and `stbo_independent`. Learned STBO must beat the DCT control and avoid
-being explained only by independent-tile capacity before any paper-core claim.
+[Remote Launch] B12-STBO small gate launched on `529_Lab-3090` at `2026-07-08T18:13:42+08:00` from commit
+`ae86f24`. Required arms are `a6_clean`, `stbo_shared`, `stbo_bank4`, `stbo_dct`, and `stbo_independent` over
+Weather/ETTm1/ETTh2. Because `/home` quota blocked writes in the persistent repo, the launch uses
+`/tmp/yingch/projects/FATST_b12_stbo_ae86f24` and output root
+`/tmp/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b12_stbo_small_gate`.
+
+[Next] Wait for artifacts, sync with the B12 wrapper, and analyze whether learned STBO beats DCT while avoiding
+independent-tile capacity explanation. No paper-core claim exists before that result.
 
 ## Active Implementation
 

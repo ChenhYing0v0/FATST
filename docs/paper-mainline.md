@@ -12,7 +12,7 @@
 | `current_stage` | Phase5 StageA clean A6 validated；StageB B12 subspace-tiled basis operator |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 7: B12-STBO local implementation smoke passed |
+| `current_11_step` | StageB Step 8: B12-STBO remote small gate running |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
 
 ## Core Claim
@@ -207,6 +207,10 @@ H96 与 H720 prefix consistency max abs 为 `0.0`，synthetic backward 和 ETTh2
 B12 仍不是 accepted paper-core method。只有当 learned `stbo_shared` / `stbo_bank4` 在 remote small gate
 中超过 `stbo_dct`，且收益不能仅由 `stbo_independent` capacity 解释时，才可能进入 StageB Contribution 2
 评估。
+
+截至 2026-07-08，B12 remote small gate 已启动，但没有 returned effectiveness evidence。由于远程 `/home`
+quota 阻塞持久 repo 写入，本次使用 `/tmp` clone 和 `/tmp` output root；这只影响执行位置，不改变实验矩阵或
+paper claim boundary。
 
 ## Evidence Snapshot
 
