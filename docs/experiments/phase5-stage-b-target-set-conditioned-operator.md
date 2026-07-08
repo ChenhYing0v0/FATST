@@ -5,7 +5,7 @@
 | 字段 | 内容 |
 | --- | --- |
 | `candidate_id` | `B10-TCO` |
-| `current_step` | Step 3：B10-TSI-D failure attribution completed; Step 4-6 native target-query design gate pending |
+| `current_step` | Superseded by B11-ESA after user reframed StageB away from explicit stage/target conditioning |
 | `problem` | A6-LBF-r256 是 prefix-compatible 720-step trajectory operator，但 requested horizon / target set 没有进入 computation graph；短 horizon 只是从同一条 720 trajectory 上 prefix slicing |
 | `existence_evidence` | A6 统一模型成立但 multi-horizon 原生性不足；B7 显示 multi-prefix supervision 的 tail weakness；B9-SCF 显示单纯 stage-token coefficient modulation 被 no-stage control 解释；B10-TSI-A/B 支持问题收窄；B10-TSI-C/D 暴露 frozen/offline readout 病态，不能作为方向拒绝依据 |
 | `idea` | 将 requested target set $J$ 原生输入 basis-coeff operator，使模型按 $J$ 生成预测，同时保持 prefix consistency |
@@ -14,7 +14,7 @@
 | `narrative_gate` | `pending`; only a native target-query memory readout may enter Step 4-6, frozen/offline readout is blocked |
 | `effectiveness_gate` | `not_evaluated` |
 | `artifacts` | 本文档；`analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/b10_tsi_basis_geometry_report.md`; `analysis/phase5_stage_b_b10_tsi_coeff_usage_20260708/b10_tsi_coeff_usage_report.md`; `analysis/phase5_stage_b_b10_tsi_target_set_oracle_20260708/b10_tsi_target_set_oracle_report.md`; `analysis/phase5_stage_b_b10_tsi_failure_attribution_20260708/b10_tsi_failure_attribution_report.md`; `analysis/phase5_stage_b_b10_tsi_failure_attribution_rank16_20260708/b10_tsi_failure_attribution_report.md` |
-| `decision` | `offline_readout_route_blocked_but_direction_not_rejected`; next action is Step 4-6 native target-query design gate or rollback to StageB Step 2/3 |
+| `decision` | `offline_readout_route_blocked_but_direction_not_rejected`; no longer active as next route because StageB has moved to B11 emergent basis-subspace utilization |
 
 ## Motivation
 
@@ -362,8 +362,12 @@ B10 当前不进入 implementation，但不能从 B10-TSI-C 推出 direction rej
 2. full independent target head 与 shrinkage target head 都没有稳定超过 pooled no-target control；
 3. memory-level pooling 仍不是原生 target-query memory readout，只能说明该 diagnostic path 被阻断。
 
-下一步只能二选一：
+该文档原本的下一步是二选一：
 
 1. 写 Step 4-6 native trainable target-query memory readout 的 narrative/method gate，明确它如何不同于
    frozen ridge readout，并保留 no-target query implementation control；
 2. 若该 narrative gate 不成立，则 B10 回到 StageB Step 2/3，不再用 offline readout oracle 继续消耗。
+
+[Superseded] 用户随后明确不希望主路线依赖显式 stage/target-set encoding。StageB 当前 active route
+已转向 `B11-ESA`: 利用 A6 basis 自发形成的 continuous subspace geometry，而不是把 stage/target-set
+作为硬条件注入。

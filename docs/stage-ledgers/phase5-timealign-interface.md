@@ -8,12 +8,12 @@
 | Field | Content |
 | --- | --- |
 | `stage_id` | `phase5-timealign-interface` |
-| `current_11_step` | StageB Step 4-6 B10 native target-query design gate or rollback |
+| `current_11_step` | StageB Step 4-6 B11 continuous basis-conditioned aggregation design gate |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator on official-source TimeAlign encoder |
-| `active_question` | Can requested target set enter the A6 basis-coeff operator natively, instead of generating a 720-step trajectory and slicing prefixes |
-| `latest_decision` | B10-TSI-D showed that frozen/offline target-set readouts remain unstable or weaker than pooled no-target controls; this blocks the offline readout route, not the broader native target-query architecture direction |
-| `next_required_action` | Decide Step 4-6: either design a native trainable target-query memory readout with no-target query control, or rollback B10 to StageB Step 2/3 |
-| `rollback_point` | Frozen coefficient/readout and offline memory-pooling ridge diagnostics are blocked; do not reject target-set-aware architecture unless a native trainable target-query path also fails against controls |
+| `active_question` | Can A6's learned basis geometry drive continuous history aggregation without explicit stage/horizon encoding |
+| `latest_decision` | B11-ESA diagnostic found robust sliding-window basis subspace geometry and distance-dependent coeff projection directions; hard basis clustering is not robust enough, but continuous basis-conditioned aggregation is a valid Step 4-6 candidate |
+| `next_required_action` | Write B11 Step 4-6 method/narrative gate: continuous basis-conditioned subspace aggregation with no-basis, shuffled-basis, constant-slot, and A6 fallback controls |
+| `rollback_point` | Do not return to explicit stage token or frozen offline target readout; if B11 design gate fails, rollback StageB to Step 2/3 rather than implementing another hard conditioning patch |
 
 ## StageA Fixed Result
 
@@ -76,7 +76,8 @@ Clean rerun after code cleanup:
 | `B7-UPO` | `deferred_small_contribution_candidate` | A6-LBF 已有 unified operator，但 nested multi-prefix training 会过度加权短步，并可能弱化 long-tail forecast regions | partial：可作为 objective refinement，但不适合作为第二主创新点 | not evaluated | 暂缓，待 architecture candidate 判定后再作为小贡献候选处理 | `docs/experiments/phase5-stage-b-unified-prefix-optimization-diagnostic.md`; `analysis/phase5_stage_b_unified_prefix_optimization_20260707/stage_b_b7_unified_prefix_optimization_report.md` |
 | `B8-FQA` | `rejected_by_ocd_control` | A6-LBF 的 coefficient 是 sample-specific 但 future-position-invariant；future queries 可在 basis prediction 前将 history representation 对齐到 target positions | failed：learned segment-specific correction has headroom, but DCT control has stronger absolute residual reduction | not evaluated | Do not implement B8; return StageB to Step 2/3 | `docs/experiments/phase5-stage-b-future-query-aligned-basis-architecture.md`; `analysis/phase5_stage_b_future_query_aligned_architecture_research_20260707/stage_b_architecture_direction_report.md`; `analysis/phase5_stage_b_b8_ocd_coefficient_oracle_20260707/b8_ocd_report.md` |
 | `B9-FSN-SCF` | `blocked_by_no_stage_control` | A6-LBF 的 single coefficient state 同时服务多个 future stages；若 stage losses 对该 coefficient 的梯度方向不一致，则需要 native future-stage-aware coefficient field | passed Step 4-7, but failed effectiveness mechanism gate：B9 cannot beat same-parameter no-stage control | failed：B9 vs A6 `-0.13%`, no-stage vs A6 `-0.13%`, B9 vs no-stage `+0.0036%` and `2/12` wins | Do not launch full matrix; rollback to Step 4 redesign or Step 2/3 | `docs/experiments/phase5-stage-b-native-future-stage-operator.md`; `docs/code-explanation/phase5-stage-b-b9-fsn-scf.md`; `analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/b9_fsn_scf_small_gate_report.md` |
-| `B10-TCO` | `offline_readout_route_blocked_but_direction_not_rejected` | A6-LBF 是 prefix-compatible 720-step trajectory operator；requested target set 没有进入 computation graph，短 horizon 是 prefix slicing | B10-TSI-C/D block frozen/offline readout diagnostics: target-set readouts remain unstable or weaker than pooled controls, including rank16 stability control | pending Step 4-6 native design gate | Either design native trainable target-query memory readout with no-target query control, or rollback B10 to StageB Step 2/3 | `docs/experiments/phase5-stage-b-target-set-conditioned-operator.md`; `analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/b10_tsi_basis_geometry_report.md`; `analysis/phase5_stage_b_b10_tsi_coeff_usage_20260708/b10_tsi_coeff_usage_report.md`; `analysis/phase5_stage_b_b10_tsi_target_set_oracle_20260708/b10_tsi_target_set_oracle_report.md`; `analysis/phase5_stage_b_b10_tsi_failure_attribution_20260708/b10_tsi_failure_attribution_report.md`; `analysis/phase5_stage_b_b10_tsi_failure_attribution_rank16_20260708/b10_tsi_failure_attribution_report.md` |
+| `B10-TCO` | `superseded_by_B11` | A6-LBF 是 prefix-compatible 720-step trajectory operator；requested target set 没有进入 computation graph，短 horizon 是 prefix slicing | B10-TSI-C/D block frozen/offline readout diagnostics: target-set readouts remain unstable or weaker than pooled controls, including rank16 stability control | not active | User reframed StageB away from explicit stage/target conditioning; evidence retained as rollback context | `docs/experiments/phase5-stage-b-target-set-conditioned-operator.md`; `analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/b10_tsi_basis_geometry_report.md`; `analysis/phase5_stage_b_b10_tsi_coeff_usage_20260708/b10_tsi_coeff_usage_report.md`; `analysis/phase5_stage_b_b10_tsi_target_set_oracle_20260708/b10_tsi_target_set_oracle_report.md`; `analysis/phase5_stage_b_b10_tsi_failure_attribution_20260708/b10_tsi_failure_attribution_report.md`; `analysis/phase5_stage_b_b10_tsi_failure_attribution_rank16_20260708/b10_tsi_failure_attribution_report.md` |
+| `B11-ESA` | `problem_candidate_passed` | A6 不应依赖显式 stage/horizon encoding；应利用 learned basis 自发形成的 continuous future geometry 来驱动 history aggregation | passed Step 2/3：hard KMeans clusters are not robust, but sliding-window subspaces show adjacent/far overlap `0.3911/0.0720` and distance-overlap Spearman `-0.5091`; coeff projection cosine also decays with window distance | pending Step 4-6 design gate | Design continuous basis-conditioned subspace aggregation; controls must include no-basis, shuffled-basis, constant-slot, and A6 fallback | `docs/experiments/phase5-stage-b-emergent-subspace-aggregation.md`; `analysis/phase5_stage_b_b11_esa_basis_coeff_diagnostic_20260708/b11_esa_basis_coeff_report.md`; `docs/code-explanation/phase5-stage-b-b11-esa-basis-coeff-diagnostic.md` |
 
 ## Experiment Ledger
 
@@ -103,6 +104,7 @@ Clean rerun after code cleanup:
 | B10-TSI-B coefficient usage diagnostic | `B10-TCO` | forward-path problem diagnostic | Rank64 projection share `0.3882/0.4950/0.2764`, projection cosine `0.3759/0.4702/0.1639`, output entropy `0.7969/0.8958/0.9042`; real `coeff` activates multiple low-aligned stage subspaces | `supports_continue_to_oracle_control`; still not method-ready | `analysis/phase5_stage_b_b10_tsi_coeff_usage_20260708/b10_tsi_coeff_usage_report.md`; `docs/code-explanation/phase5-stage-b-b10-tsi-coeff-usage.md` |
 | B10-TSI-C target-set oracle/control | `B10-TCO` | frozen-coeff linear readout diagnostic | Target-set-aware readout vs pooled 4-head no-target control: ETTh2 `-185.5316%`, ETTm1 `+0.2812%`, Weather `-26.5683%`; ETTh2/Weather instability indicates readout/numeric pathology | `diagnostic_invalid_for_direction_rejection`; only this readout design is blocked | `analysis/phase5_stage_b_b10_tsi_target_set_oracle_20260708/b10_tsi_target_set_oracle_report.md`; `docs/code-explanation/phase5-stage-b-b10-tsi-target-set-oracle.md` |
 | B10-TSI-D failure attribution | `B10-TCO` | intervention/readout attribution diagnostic | Main rank64 stabilized target vs pooled: `coeff_late -12.37%`, `memory_pool -40.75%`, `memory_plus_coeff -44.47%`; rank16 control remains negative (`-5.15%/-32.03%/-36.37%`) and still shows ETTh2/Weather instability | `offline_readout_route_blocked_but_direction_not_rejected`; next is native trainable target-query design gate or rollback | `analysis/phase5_stage_b_b10_tsi_failure_attribution_20260708/b10_tsi_failure_attribution_report.md`; `analysis/phase5_stage_b_b10_tsi_failure_attribution_rank16_20260708/b10_tsi_failure_attribution_report.md`; `docs/code-explanation/phase5-stage-b-b10-tsi-failure-attribution.md` |
+| B11-ESA basis/coeff diagnostic | `B11-ESA` | emergent subspace problem diagnostic | KMeans clusters are only clear on ETTh2, but sliding-window basis subspaces are consistent: adjacent/far overlap `0.3900/0.0649`, `0.4021/0.0811`, `0.3810/0.0700`; coeff projection cosine also drops from adjacent to far windows | `problem_candidate_passed`; enter Step 4-6 design gate, not implementation | `analysis/phase5_stage_b_b11_esa_basis_coeff_diagnostic_20260708/b11_esa_basis_coeff_report.md`; `docs/code-explanation/phase5-stage-b-b11-esa-basis-coeff-diagnostic.md` |
 
 ## Pending Tasks
 
@@ -129,7 +131,9 @@ Clean rerun after code cleanup:
 | Redesign or rollback after B9-FSN-SCF no-stage block | Codex | B9-SCF cannot beat no-stage control | `completed` | Rolled back to B10 target-set-native multi-horizon problem |
 | Run B10-TSI target-set interface diagnostic | Codex | B10-TCO problem redefinition is ready | `completed` | B10-TSI-A/B supported narrowing; B10-TSI-C/D block frozen/offline readout route |
 | Run B10-TSI-D failure attribution | Codex | B10-TSI-C showed ETTh2/Weather pathology and conflated target-set information with readout/head design | `completed` | Offline ridge readout route blocked; next decide native trainable target-query design gate or rollback |
-| Decide B10 native target-query design gate | Codex | B10-TSI-D blocks offline readout but not broader direction | `pending` | Write Step 4-6 narrative/method gate only if native trainable target-query memory readout can address failure attribution and include no-target query control |
+| Decide B10 native target-query design gate | Codex | B10-TSI-D blocks offline readout but not broader direction | `superseded` | User reframed direction away from explicit stage/target conditioning toward emergent basis-subspace utilization |
+| Run B11-ESA basis/coeff diagnostic | Codex | User requested diagnosis of basis subspaces and coeff usage directions without hard stage encoding | `completed` | B11 problem candidate passed; proceed to Step 4-6 design gate |
+| Design B11 continuous basis-conditioned aggregation | Codex | B11 diagnostic supports continuous basis geometry and coeff direction decay | `pending` | Write method/narrative gate with tensor path and no-basis/shuffled-basis/constant-slot/A6 fallback controls |
 
 ## Paper Mainline Sync Log
 
@@ -156,6 +160,8 @@ Clean rerun after code cleanup:
 | 2026-07-08 | B10-TSI-B coefficient usage returned | Contribution 2 candidate | no accepted paper claim | Continue to B10-TSI-C oracle/control; do not implement method yet |
 | 2026-07-08 | B10-TSI-C oracle/control exposed readout pathology | Contribution 2 candidate | no accepted paper claim | Do not reject B10 direction; redesign diagnostic to test intervention point and readout/head separately |
 | 2026-07-08 | B10-TSI-D failure attribution returned | Contribution 2 candidate | no accepted paper claim | Frozen/offline readout route is blocked; next is native trainable target-query design gate or rollback, not more offline oracle patching |
+| 2026-07-08 | User reframed StageB away from explicit stage encoding | Contribution 2 candidate | no accepted paper claim | Open B11-ESA: use emergent basis subspace geometry rather than hard stage/target conditioning |
+| 2026-07-08 | B11-ESA basis/coeff diagnostic returned | Contribution 2 candidate | no accepted paper claim | B11 passes Step 2/3 and may enter Step 4-6 design gate; no implementation yet |
 
 ## Active Artifacts
 
@@ -177,6 +183,7 @@ Clean rerun after code cleanup:
 | `docs/code-explanation/phase5-stage-b-b10-tsi-coeff-usage.md` | B10-TSI-B coefficient usage analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b10-tsi-target-set-oracle.md` | B10-TSI-C target-set oracle/control analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b10-tsi-failure-attribution.md` | B10-TSI-D failure attribution analyzer explanation |
+| `docs/code-explanation/phase5-stage-b-b11-esa-basis-coeff-diagnostic.md` | B11-ESA basis/coeff diagnostic analyzer explanation |
 | `docs/experiments/phase5-stage-b-reliability-aware-supervision-redesign.md` | StageB problem definition and B1/B2 candidate boundary |
 | `docs/experiments/phase5-stage-b-distance-normalized-seasonal-residual-diagnostic.md` | B3 diagnostic protocol |
 | `docs/experiments/phase5-stage-b-timealign-dependency-and-basis-align-diagnostic.md` | B4 dependency and B5 basis-align protocol |
@@ -185,6 +192,7 @@ Clean rerun after code cleanup:
 | `docs/experiments/phase5-stage-b-future-query-aligned-basis-architecture.md` | B8 future-query aligned basis architecture protocol |
 | `docs/experiments/phase5-stage-b-native-future-stage-operator.md` | B9 native future-stage operator protocol |
 | `docs/experiments/phase5-stage-b-target-set-conditioned-operator.md` | B10 target-set-conditioned operator protocol |
+| `docs/experiments/phase5-stage-b-emergent-subspace-aggregation.md` | B11 emergent subspace aggregation protocol |
 | `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF small gate remote runner |
 | `scripts/analyze_phase5_stage_b_b9_fsn_scf_small_gate.py` | B9-FSN-SCF small gate analyzer |
 | `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF small gate sync/analyze wrapper |
@@ -201,6 +209,7 @@ Clean rerun after code cleanup:
 | `scripts/analyze_phase5_stage_b_b10_tsi_coeff_usage.py` | B10-TSI-B coefficient usage diagnostic analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_target_set_oracle.py` | B10-TSI-C target-set oracle/control analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_failure_attribution.py` | B10-TSI-D failure attribution analyzer |
+| `scripts/analyze_phase5_stage_b_b11_esa_basis_coeff_diagnostic.py` | B11-ESA basis/coeff diagnostic analyzer |
 | `scripts/remote/run_phase5_stage_b_timealign_dependency_ablation.sh` | completed remote no-align/no-recon ablation runner |
 | `scripts/remote/run_phase5_a6_lbf_r256_main.sh` | clean A6-LBF-r256 remote runner |
 | `analysis/phase5_timealign_hss_a6_capacity_native_gate_20260703/` | StageA accepted evidence |
@@ -222,6 +231,7 @@ Clean rerun after code cleanup:
 | `analysis/phase5_stage_b_b10_tsi_target_set_oracle_20260708/b10_tsi_target_set_oracle_report.md` | B10-TSI-C oracle/control decision |
 | `analysis/phase5_stage_b_b10_tsi_failure_attribution_20260708/b10_tsi_failure_attribution_report.md` | B10-TSI-D rank64 failure attribution decision |
 | `analysis/phase5_stage_b_b10_tsi_failure_attribution_rank16_20260708/b10_tsi_failure_attribution_report.md` | B10-TSI-D rank16 stability control |
+| `analysis/phase5_stage_b_b11_esa_basis_coeff_diagnostic_20260708/b11_esa_basis_coeff_report.md` | B11-ESA basis/coeff diagnostic decision |
 
 ## Archived Evidence
 

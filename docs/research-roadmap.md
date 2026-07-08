@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B10 native design gate or rollback |
-| `current_11_step` | StageB Step 4-6: decide native trainable target-query memory readout, or rollback B10 to Step 2/3 |
+| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B11 emergent subspace aggregation |
+| `current_11_step` | StageB Step 4-6: B11 continuous basis-conditioned aggregation design gate |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -488,11 +488,23 @@ rank16 稳定性对照仍为负：
 [Decision] `B10-TCO` 当前状态为 `offline_readout_route_blocked_but_direction_not_rejected`。
 这阻断 frozen/offline ridge readout route，不能阻断更大的 native target-query architecture 方向。
 
-[Next Required Action] 不再继续用 frozen offline oracle 消耗。下一步只能二选一：
+[B11-ESA Result] 用户将方向进一步收敛为：不要显式编码 stage/horizon，而是利用 A6 learned basis
+自发形成的 future geometry。`B11-ESA` basis/coeff diagnostic 已完成。
 
-1. 写 Step 4-6 native trainable target-query memory readout 的 narrative/method gate，并保留 no-target
-   query implementation control；
-2. 若该 narrative gate 不能解释 B10-TSI-C/D 的 readout pathology，则 B10 rollback 到 StageB Step 2/3。
+Hard basis-row KMeans 只在 ETTh2 上有清晰 temporal structure，不能支持 hard stage-like cluster method：
+
+- K=4 stage NMI: ETTh2 `0.5325`, ETTm1 `0.0057`, Weather `0.0068`;
+- K=4 coeff projection cosine: ETTh2 `0.2708`, ETTm1 `0.0483`, Weather `0.0146`。
+
+更强证据来自 sliding-window subspace geometry。用 window length `96`、stride `48`、rank `16`：
+
+- adjacent/far subspace overlap: ETTh2 `0.3900/0.0649`, ETTm1 `0.4021/0.0811`, Weather `0.3810/0.0700`;
+- distance-overlap Spearman: ETTh2 `-0.7016`, ETTm1 `-0.5472`, Weather `-0.2786`;
+- adjacent/far coeff projection cosine: ETTh2 `0.5585/0.1504`, ETTm1 `0.5391/0.2379`, Weather `0.4071/0.0484`。
+
+[Decision] `B11-ESA` 状态为 `problem_candidate_passed`。下一步进入 Step 4-6，不实现 hard cluster/stage
+method，而是设计 continuous basis-conditioned subspace aggregation。method gate 必须包含 `no-basis`,
+`shuffled-basis`, `constant-slot`, and `A6 fallback` controls。
 
 ## Active Implementation
 
@@ -520,6 +532,7 @@ rank16 稳定性对照仍为负：
 | `docs/experiments/phase5-stage-b-future-query-aligned-basis-architecture.md` | StageB B8 future-query aligned basis architecture protocol |
 | `docs/experiments/phase5-stage-b-native-future-stage-operator.md` | StageB B9 native future-stage operator protocol |
 | `docs/experiments/phase5-stage-b-target-set-conditioned-operator.md` | StageB B10 target-set-conditioned operator protocol |
+| `docs/experiments/phase5-stage-b-emergent-subspace-aggregation.md` | StageB B11 emergent subspace aggregation protocol |
 | `docs/code-explanation/phase5-stage-b-b6-prefix-objective-diagnostic.md` | B6 diagnostic analyzer explanation |
 | `docs/code-explanation/phase5-clean-a6-rerun-analysis.md` | clean A6 validation analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b7-unified-prefix-optimization.md` | B7 diagnostic analyzer explanation |
@@ -530,15 +543,18 @@ rank16 稳定性对照仍为负：
 | `docs/code-explanation/phase5-stage-b-b10-tsi-coeff-usage.md` | B10-TSI-B coefficient usage analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b10-tsi-target-set-oracle.md` | B10-TSI-C oracle/control analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b10-tsi-failure-attribution.md` | B10-TSI-D failure attribution analyzer explanation |
+| `docs/code-explanation/phase5-stage-b-b11-esa-basis-coeff-diagnostic.md` | B11-ESA basis/coeff diagnostic explanation |
 | `scripts/analyze_phase5_stage_b_b10_tsi_basis_geometry.py` | B10-TSI-A basis geometry analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_coeff_usage.py` | B10-TSI-B coefficient usage analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_target_set_oracle.py` | B10-TSI-C target-set oracle/control analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_failure_attribution.py` | B10-TSI-D failure attribution analyzer |
+| `scripts/analyze_phase5_stage_b_b11_esa_basis_coeff_diagnostic.py` | B11-ESA basis/coeff diagnostic analyzer |
 | `analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/b10_tsi_basis_geometry_report.md` | B10-TSI-A basis geometry report |
 | `analysis/phase5_stage_b_b10_tsi_coeff_usage_20260708/b10_tsi_coeff_usage_report.md` | B10-TSI-B coefficient usage report |
 | `analysis/phase5_stage_b_b10_tsi_target_set_oracle_20260708/b10_tsi_target_set_oracle_report.md` | B10-TSI-C oracle/control report |
 | `analysis/phase5_stage_b_b10_tsi_failure_attribution_20260708/b10_tsi_failure_attribution_report.md` | B10-TSI-D rank64 failure attribution report |
 | `analysis/phase5_stage_b_b10_tsi_failure_attribution_rank16_20260708/b10_tsi_failure_attribution_report.md` | B10-TSI-D rank16 stability control |
+| `analysis/phase5_stage_b_b11_esa_basis_coeff_diagnostic_20260708/b11_esa_basis_coeff_report.md` | B11-ESA basis/coeff diagnostic report |
 | `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF remote small gate runner |
 | `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF result sync/analyze wrapper |
 

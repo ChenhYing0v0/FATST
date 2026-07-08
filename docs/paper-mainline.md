@@ -9,10 +9,10 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA clean A6 validated；StageB B10 native design gate or rollback |
+| `current_stage` | Phase5 StageA clean A6 validated；StageB B11 emergent subspace aggregation |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 4-6: decide native trainable target-query memory readout, or rollback B10 to Step 2/3 |
+| `current_11_step` | StageB Step 4-6: B11 continuous basis-conditioned aggregation design gate |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
 
 ## Core Claim
@@ -152,9 +152,24 @@ readout。rank64 stabilized target vs pooled control 为 `-12.3695%/-40.7499%/-4
 稳定性对照仍为 `-5.1506%/-32.0345%/-36.3672%`。因此当前结论是：
 `offline_readout_route_blocked_but_direction_not_rejected`。
 
-StageB 不能继续用 frozen/offline oracle 反复否定 B10。下一步只能写 native trainable target-query memory
-readout 的 Step 4-6 narrative/method gate，并保留 no-target query implementation control；若该 gate
-不能解释 B10-TSI-C/D 的 pathology，则 B10 rollback 到 StageB Step 2/3。
+StageB 不能继续用 frozen/offline oracle 反复否定 B10。该节点原本只允许转入 native trainable
+target-query memory readout 的 Step 4-6 gate，或 rollback；但后续用户进一步排除了显式
+stage/target-set conditioning 作为主线。
+
+基于用户对 unified model 叙事的进一步约束，StageB 现在不继续显式 stage/target-set conditioning。
+新的候选是 `B11-ESA`: Emergent Subspace Aggregation。它的问题是：A6 的 `learned_temporal_basis`
+已经自发形成 future geometry，是否能让架构更自然地利用这种 geometry，而不是输入 hard `stage_id`
+或 `horizon_id`。
+
+B11 basis/coeff diagnostic 已返回正向 problem evidence。Hard KMeans basis-row clusters 只在 ETTh2
+上明显，不能支持 hard cluster/stage method；但 sliding-window subspace geometry 更稳定：adjacent/far
+subspace overlap 为 ETTh2 `0.3900/0.0649`、ETTm1 `0.4021/0.0811`、Weather `0.3810/0.0700`；
+distance-overlap Spearman 为 `-0.7016/-0.5472/-0.2786`。真实 `coeff` 的 projection cosine 也随
+window distance 降低：adjacent/far 为 `0.5585/0.1504`、`0.5391/0.2379`、`0.4071/0.0484`。
+
+当前 B11 只能进入 Step 4-6 design gate，不能直接实现。若继续，设计必须是 continuous
+basis-conditioned aggregation，并设置 `no-basis`、`shuffled-basis`、`constant-slot` 和 `A6 fallback`
+controls。
 
 ## Evidence Snapshot
 
@@ -232,6 +247,7 @@ Archived or inactive:
 | `docs/code-explanation/phase5-stage-b-b10-tsi-coeff-usage.md` | B10-TSI-B coefficient usage analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b10-tsi-target-set-oracle.md` | B10-TSI-C target-set oracle/control analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b10-tsi-failure-attribution.md` | B10-TSI-D failure attribution analyzer explanation |
+| `docs/code-explanation/phase5-stage-b-b11-esa-basis-coeff-diagnostic.md` | B11-ESA basis/coeff diagnostic analyzer explanation |
 | `docs/stage-ledgers/phase5-timealign-interface.md` | active StageA/StageB ledger |
 | `docs/research-roadmap.md` | active roadmap |
 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | next StageB diagnostic protocol |
@@ -239,10 +255,12 @@ Archived or inactive:
 | `docs/experiments/phase5-stage-b-future-query-aligned-basis-architecture.md` | B8 rejected architecture candidate protocol |
 | `docs/experiments/phase5-stage-b-native-future-stage-operator.md` | active B9-FSN-SCF Step 4-6 protocol |
 | `docs/experiments/phase5-stage-b-target-set-conditioned-operator.md` | active B10 target-set-conditioned operator protocol |
+| `docs/experiments/phase5-stage-b-emergent-subspace-aggregation.md` | active B11 emergent subspace aggregation protocol |
 | `scripts/analyze_phase5_stage_b_b10_tsi_basis_geometry.py` | B10-TSI-A basis geometry analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_coeff_usage.py` | B10-TSI-B coefficient usage analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_target_set_oracle.py` | B10-TSI-C target-set oracle/control analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_failure_attribution.py` | B10-TSI-D failure attribution analyzer |
+| `scripts/analyze_phase5_stage_b_b11_esa_basis_coeff_diagnostic.py` | B11-ESA basis/coeff diagnostic analyzer |
 | `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF remote small gate runner |
 | `scripts/analyze_phase5_stage_b_b9_fsn_scf_small_gate.py` | B9-FSN-SCF small gate analyzer |
 | `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF result sync/analyze wrapper |
@@ -260,6 +278,7 @@ Archived or inactive:
 | `analysis/phase5_stage_b_b10_tsi_target_set_oracle_20260708/` | B10-TSI-C target-set oracle/control diagnostic |
 | `analysis/phase5_stage_b_b10_tsi_failure_attribution_20260708/` | B10-TSI-D rank64 failure attribution diagnostic |
 | `analysis/phase5_stage_b_b10_tsi_failure_attribution_rank16_20260708/` | B10-TSI-D rank16 stability control |
+| `analysis/phase5_stage_b_b11_esa_basis_coeff_diagnostic_20260708/` | B11-ESA basis/coeff diagnostic |
 
 ## Next Step
 
@@ -270,5 +289,5 @@ Archived or inactive:
 5. Defer B7 objective optimization as a small contribution candidate.
 6. Do not implement B8-FQA under current evidence.
 7. Do not launch B9-FSN-SCF full matrix.
-8. Do not reject target-set-aware architecture from B10-TSI-C/D; frozen/offline readout route is blocked, not the broader native target-query direction.
-9. Next StageB action is native trainable target-query memory readout Step 4-6 gate or rollback B10 to Step 2/3.
+8. Do not continue explicit stage/horizon conditioning as the main StageB route.
+9. Next StageB action is B11 continuous basis-conditioned aggregation Step 4-6 gate; no implementation until controls and fallback are specified.
