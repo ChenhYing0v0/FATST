@@ -9,10 +9,10 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA clean A6 validated；StageB rollback after B10 rejection |
+| `current_stage` | Phase5 StageA clean A6 validated；StageB B10 failure attribution |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 2/3 search after B10 oracle-control failure |
+| `current_11_step` | StageB Step 3 B10 diagnostic redesign after frozen-coeff readout pathology |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
 
 ## Core Claim
@@ -141,10 +141,11 @@ B10-TSI-B 进一步显示，真实 A6 `coeff` 同时激活多个低同向性 sta
 projection share 为 `0.3882/0.4950/0.2764`，projection cosine 为 `0.3759/0.4702/0.1639`，output
 entropy 为 `0.7969/0.8958/0.9042`。这支持继续诊断 target-set interface，但仍不能直接实现方法。
 
-B10-TSI-C 已返回负向结论：target-set-aware coefficient readout 未能超过 no-target-set capacity controls。
-相对 pooled 4-head no-target control，ETTh2 为 `-185.5316%`，ETTm1 仅 `+0.2812%`，Weather 为
-`-26.5683%`。因此 `B10-TCO` 被 `rejected_by_oracle_control` 阻断，不进入 Step 4-6 method design。
-StageB 回到 Step 2/3；B7 仍只能作为小贡献候选，而不是第二主创新点。
+B10-TSI-C 返回了负向且病态的 frozen-coeff linear readout 结果：相对 pooled 4-head no-target control，
+ETTh2 为 `-185.5316%`，ETTm1 仅 `+0.2812%`，Weather 为 `-26.5683%`。该结果不能否定
+target-set-aware 方向；它只说明 `frozen coeff -> Linear_s(coeff)` 这个信息介入位置太晚、readout/head
+过线性且存在数值病态风险。当前 B10 状态应视为 `diagnostic_invalid_for_direction_rejection`，下一步必须
+做 failure attribution，将 target-set 信息价值与 readout/head/intervention-point 设计分开。
 
 ## Evidence Snapshot
 
@@ -256,5 +257,5 @@ Archived or inactive:
 5. Defer B7 objective optimization as a small contribution candidate.
 6. Do not implement B8-FQA under current evidence.
 7. Do not launch B9-FSN-SCF full matrix.
-8. Do not implement B10-TCO after oracle/control failure.
-9. Return StageB to Step 2/3 to search for a stronger second contribution, or keep B7 only as a small objective contribution candidate.
+8. Do not reject target-set-aware architecture from B10-TSI-C; only the frozen-coeff linear readout is blocked.
+9. Run B10-TSI-D failure attribution: separate target-set information value from readout/head and intervention-point stability.

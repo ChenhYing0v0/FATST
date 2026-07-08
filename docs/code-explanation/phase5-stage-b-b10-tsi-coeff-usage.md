@@ -117,5 +117,5 @@ target-set-blind。
 
 1. 比较了 target-set-aware coefficient readout 与 no-target-set capacity controls；
 2. 加入了参数量更接近的 `Pooled-4H` control；
-3. 结果显示 target-set-aware readout 未稳定超过 controls；
-4. 因此 B10-TCO 被 `rejected_by_oracle_control` 阻断，不进入 Step 4-6 method design。
+3. 结果显示 frozen-coeff linear readout 未稳定超过 controls，且出现 ETTh2/Weather 病态；
+4. 因此当前 readout/head 设计被阻断，但不能据此否定 target-set-aware architecture 方向。

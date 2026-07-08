@@ -127,3 +127,29 @@ Ledger；Roadmap 只在该切换改变 11-step rollback 或阶段状态时更新
 - 一个 candidate family 失败，才否定该机制族。
 - 只有多个机制族都失败，且 candidate queue 没有合理 remaining candidates，才重审 stage mainline。
 - 只有 stage mainline 被重审后仍不成立，才改写 paper-mainline 的核心贡献或论文路线。
+
+## Failure Attribution 规则
+
+任何可能阻断 paper-core 方向的 diagnostic，必须先做 failure attribution，不能把诊断设计缺陷归纳为方向失败。
+
+失败至少要拆成以下类别：
+
+| 类别 | 含义 | 可否否定方向 |
+| --- | --- | --- |
+| `hypothesis_false` | 核心问题本身未被支持 | 只有覆盖了正确 intervention point 和稳定 control 后才可以 |
+| `intervention_point_wrong` | 信息注入位置太晚、太早或不在真实机制路径上 | 不可以，只否定该设计 |
+| `readout_or_head_design_wrong` | readout/head 形式太弱、过线性、数值病态或与机制不一致 | 不可以，只否定该 head/readout |
+| `optimization_or_numeric_pathology` | 发散、ill-conditioned inversion、过拟合、val/test mismatch、超过 `100%` 的异常退化 | 不可以，必须先标记诊断不适合做方向结论 |
+| `capacity_control_explains` | no-mechanism/no-condition control 解释收益 | 可以阻断当前 method，但仍需说明是否只否定该 intervention/readout |
+
+若出现 `optimization_or_numeric_pathology`，报告中的 `decision` 必须使用
+`diagnostic_invalid_for_direction_rejection`、`design_fault_suspected` 或等价状态，而不是
+`rejected_direction`。只有在重新设计稳定诊断、覆盖正确 mechanism path，并再次输给 controls 后，才能否定更大方向。
+
+每份 blocking diagnostic report 必须回答：
+
+1. 哪个具体实现或诊断设计失败？
+2. 是否存在明显数值/优化/overfit 病态？
+3. 失败是否可能由 intervention point 或 readout/head 设计导致？
+4. 哪些方向级问题仍未被测试？
+5. 下一步是修正诊断、重设 intervention point，还是才允许 rollback？

@@ -57,10 +57,10 @@ what decision follows
   stage-native coefficient field。Step 7 最小实现和本地 smoke 已通过：B9/no-stage 初始 fallback 与
   prefix consistency max abs 均为 `0.0`。Remote small gate 已返回 `blocked_by_no_stage_control`：
   B9 相对 A6 的微弱收益被 no-stage control 完全解释，当前不得启动 B9 full matrix。
-- B9 之后，StageB 回滚到 target-set-native multi-horizon 问题，并完成 `B10-TCO` 诊断链：
-  `B10-TSI-A/B` 支持问题收窄，但 `B10-TSI-C` target-set oracle/control 未通过。当前不得实现
-  B10 target-set-conditioned method；StageB 回到 Step 2/3 继续寻找第二主创新点，或将 B7 objective
-  optimization 作为小贡献候选处理。
+- B9 之后，StageB 回滚到 target-set-native multi-horizon 问题，并完成 `B10-TCO` 当前诊断链：
+  `B10-TSI-A/B` 支持问题收窄，但 `B10-TSI-C` 暴露 frozen-coeff linear readout 的设计/数值病态。
+  当前不得实现该 late linear readout，也不得据此否定 target-set-aware 方向；下一步应做
+  `B10-TSI-D` failure attribution，分离 target-set 信息价值与 readout/head、intervention point 的影响。
 
 ## 历史记录
 

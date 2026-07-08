@@ -5,16 +5,16 @@
 | 字段 | 内容 |
 | --- | --- |
 | `candidate_id` | `B10-TCO` |
-| `current_step` | Step 2/3：target-set-native multi-horizon problem redefinition |
+| `current_step` | Step 3：failure attribution after B10-TSI-C diagnostic fault |
 | `problem` | A6-LBF-r256 是 prefix-compatible 720-step trajectory operator，但 requested horizon / target set 没有进入 computation graph；短 horizon 只是从同一条 720 trajectory 上 prefix slicing |
-| `existence_evidence` | A6 统一模型成立但 multi-horizon 原生性不足；B7 显示 multi-prefix supervision 的 tail weakness；B9-SCF 显示单纯 stage-token coefficient modulation 被 no-stage control 解释；B10-TSI-A/B 支持问题收窄，但 B10-TSI-C target-set oracle/control 未通过 |
+| `existence_evidence` | A6 统一模型成立但 multi-horizon 原生性不足；B7 显示 multi-prefix supervision 的 tail weakness；B9-SCF 显示单纯 stage-token coefficient modulation 被 no-stage control 解释；B10-TSI-A/B 支持问题收窄；B10-TSI-C 暴露 frozen-coeff linear readout 病态，不能作为方向拒绝依据 |
 | `idea` | 将 requested target set $J$ 原生输入 basis-coeff operator，使模型按 $J$ 生成预测，同时保持 prefix consistency |
-| `theory_check` | 尚未完成；当前只建立问题边界与诊断计划 |
+| `theory_check` | B10-TSI-C 说明 late coefficient correction 不是充分测试；需要 memory-level target query diagnostic |
 | `design` | 候选方向是 target-set conditioned basis-coeff interface，不是 full-720 prediction 后 slicing，也不是 residual correction |
-| `narrative_gate` | `blocked_before_step_4` |
+| `narrative_gate` | `not_evaluated`; B10-TSI-C invalid for direction rejection |
 | `effectiveness_gate` | `not_evaluated` |
 | `artifacts` | 本文档；`analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/b10_tsi_basis_geometry_report.md`; `analysis/phase5_stage_b_b10_tsi_coeff_usage_20260708/b10_tsi_coeff_usage_report.md`; `analysis/phase5_stage_b_b10_tsi_target_set_oracle_20260708/b10_tsi_target_set_oracle_report.md` |
-| `decision` | `rejected_by_oracle_control`; rollback to StageB Step 2/3 |
+| `decision` | `diagnostic_invalid_for_direction_rejection`; run B10-TSI-D failure attribution |
 
 ## Motivation
 
@@ -259,8 +259,10 @@ Pooled-4H: y_s = basis_s @ (coeff + mean_j Linear_pooled_j(coeff))
 | ETTm1 | `+0.2220%` | `+0.2812%` |
 | Weather | `-23.7469%` | `-26.5683%` |
 
-[Decision] B10-TSI-C 未通过。target-set-aware coefficient readout 没有稳定超过 no-target-set capacity
-control；只有 ETTm1 有极小正向，ETTh2 和 Weather 明显负向。因此 B10-TCO 不进入 Step 4-6 method design。
+[Failure Attribution] B10-TSI-C 不能否定 target-set-aware 方向。它只说明当前
+`frozen coeff -> Linear_s(coeff)` readout/head 设计存在明显缺陷：信息介入太晚、readout 过线性，且
+ETTh2/Weather 出现数值/泛化病态。该诊断只能阻断这个 readout 设计，不能阻断 `target query -> history
+memory -> coeff/state` 这类更原生的 target-set-aware architecture。
 
 ## Problem Evidence From Existing Artifacts
 
@@ -343,6 +345,11 @@ MSE(pred_H96, pred_H720[:, :96])
 
 ## Next Decision
 
-B10 当前不进入 implementation，且在 `B10-TSI-C` 后不再进入 method/narrative gate。
+B10 当前不进入 implementation，但不能从 B10-TSI-C 推出 direction rejection。
 
-StageB 应回到 Step 2/3 继续寻找第二主创新点，或将 B7 objective optimization 降级为小贡献继续处理。
+下一步是 `B10-TSI-D failure attribution`：把两个因素分开诊断：
+
+1. target-set 信息是否有用；
+2. readout/head 与 intervention point 是否导致不稳定性能。
+
+只有在稳定的 memory-level target-query diagnostic 仍输给 no-target controls 时，才允许讨论方向级 rollback。

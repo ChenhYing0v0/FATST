@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB rollback after B10 rejection |
-| `current_11_step` | StageB Step 2/3: search for second contribution after B10 oracle-control failure |
+| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B10 failure attribution |
+| `current_11_step` | StageB Step 3: B10 diagnostic redesign after frozen-coeff readout pathology |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -459,16 +459,26 @@ f_B10(history, J) -> y_J
 > `learned_basis_coeff(hidden)` 仍只生成一个 target-set-blind coefficient/state；requested target set
 > 没有进入 `history -> coeff/state` 生成路径。
 
-[B10-TSI-C Result] target-set-aware coefficient readout 未能超过 no-target-set capacity controls：
+[B10-TSI-C Result] frozen-coeff linear target-set readout 未能超过 no-target-set capacity controls：
 
 - ETTh2: target vs pooled-4H `-185.5316%`;
 - ETTm1: target vs pooled-4H `+0.2812%`;
 - Weather: target vs pooled-4H `-26.5683%`.
 
-[Decision] `B10-TCO` 被 `rejected_by_oracle_control` 阻断，不进入 Step 4-6 method design。
+[Failure Attribution] 该结果不能否定 target-set-aware 方向。ETTh2/Weather 的明显发散说明当前 diagnostic
+存在 `readout_or_head_design_wrong` 或 `optimization_or_numeric_pathology` 风险；它只否定
+`frozen coeff -> Linear_s(coeff) -> basis_s projection` 这个过晚、过线性的 readout 设计。
 
-[Next Required Action] StageB 回到 Step 2/3。下一步只能重新寻找第二个主创新点，或把 B7 objective
-optimization 作为小贡献候选继续处理；不得实现 B10 target-set-conditioned method。
+[Decision] `B10-TCO` 当前状态改为 `diagnostic_invalid_for_direction_rejection`。不得据此实现 B10 方法，
+也不得据此否定 target-set-aware architecture。
+
+[Next Required Action] 运行 `B10-TSI-D`: failure attribution / diagnostic redesign。必须分解两个因素：
+
+1. target-set 信息是否有用；
+2. readout/head 与 intervention point 是否导致不稳定性能。
+
+新的诊断应优先测试 `target query -> history patch memory -> coeff/state`，而不是继续在已经生成好的
+`coeff` 后面做 late linear correction。
 
 ## Active Implementation
 

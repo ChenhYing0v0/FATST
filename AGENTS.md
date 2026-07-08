@@ -148,6 +148,33 @@ When two paper-core candidates have similar expected or observed performance,
 prefer the option with stronger narrative potential and clearer SCI-level
 contribution over a small engineering patch.
 
+## Diagnostic Failure Attribution Rule
+
+Do not turn a failed diagnostic design into a rejected research direction.
+Before rejecting a direction, explicitly separate these failure causes:
+
+1. `hypothesis_false`: the core problem is not supported.
+2. `intervention_point_wrong`: the mechanism injected information at the wrong
+   point in the computation graph.
+3. `readout_or_head_design_wrong`: the prediction head/readout design is too
+   weak, too late, numerically unstable, or inconsistent with the claimed
+   mechanism.
+4. `optimization_or_numeric_pathology`: divergence, ill-conditioned inversion,
+   overfitting, validation/test mismatch, or >100% degradation appears.
+5. `capacity_control_explains`: a no-mechanism or no-condition control explains
+   the observed gain.
+
+If any pathology in item 4 appears, the diagnostic may reject only the exact
+tested implementation or diagnostic protocol. It must not reject the broader
+architecture direction unless a redesigned, stable diagnostic that tests the
+right intervention point also fails against controls.
+
+Every diagnostic report that can block a paper-core direction must include a
+failure-attribution paragraph: what failed, what remains untested, whether the
+failure is direction-level or design-level, and the next rollback step. When in
+doubt, mark the result as `diagnostic_invalid_for_direction_rejection` or
+`design_fault_suspected`, not as a rejected direction.
+
 ## Research Path Traceability
 
 The project uses a layered research record system:

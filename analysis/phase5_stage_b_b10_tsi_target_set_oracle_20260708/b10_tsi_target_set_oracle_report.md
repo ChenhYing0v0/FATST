@@ -9,7 +9,7 @@
 | `current_step` | Step 3：target-set oracle/control diagnostic |
 | `problem` | 检查 target-set-specific coefficient readout 的 headroom 是否超过 no-target-set capacity control |
 | `scope` | Frozen A6 encoder/basis；offline ridge oracle；不训练新 forecasting model |
-| `decision` | 见文末；本诊断只决定能否进入 Step 4-6 method design |
+| `decision` | 见文末；本诊断只能评价 frozen-coeff linear readout，不能做方向级拒绝 |
 
 ## Readout Definition
 
@@ -56,6 +56,10 @@ Pooled-4H: y_s = basis_s @ (coeff + mean_j Linear_pooled_j(coeff))
 [Fact] Target-set-aware readout vs shared control 的平均额外 reduction 为 `-74.6160%`。
 [Fact] Target-set-aware readout vs pooled 4-head no-target control 的平均额外 reduction 为 `-70.6062%`。
 
-[Decision] `B10-TSI-C` 未通过：target-set-aware readout 没有稳定超过 pooled 4-head no-target capacity control。
+[Failure Attribution] `B10-TSI-C` 暴露了 readout/head 设计和数值稳定性问题：target-set-aware readout
+没有稳定超过 pooled 4-head no-target capacity control，且 ETTh2/Weather 退化幅度异常。
 
-[Rollback] B10 不应进入 method design；StageB 返回 Step 2/3，或将 B7 objective optimization 保留为小贡献候选。
+[Decision] 该结果只能阻断 `frozen coeff -> Linear_s(coeff)` 这个 late linear readout。它不能否定
+target-set-aware architecture 方向，也不能阻断 `target query -> history memory -> coeff/state` 的更原生
+机制。下一步应做 B10-TSI-D failure attribution，分离 target-set 信息价值、intervention point 和
+readout/head 稳定性。

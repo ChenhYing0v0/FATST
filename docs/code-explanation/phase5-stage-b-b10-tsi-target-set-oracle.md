@@ -10,7 +10,7 @@
 | `current_step` | StageB Step 3：target-set oracle/control diagnostic |
 | `input` | clean A6 checkpoint、train/val/test split、frozen `coeff` 与 `learned_temporal_basis` |
 | `output` | `analysis/phase5_stage_b_b10_tsi_target_set_oracle_20260708/` |
-| `scope` | Frozen-A6 offline ridge oracle；不训练 forecasting model；只判断 B10 是否可进入 Step 4-6 |
+| `scope` | Frozen-A6 offline ridge oracle；不训练 forecasting model；只判断当前 late linear readout 是否稳定，不做方向级拒绝 |
 
 ## Reader Path
 
@@ -24,7 +24,8 @@ B10-TSI-C 问的是更严格的问题：
 
 > target-set-aware coefficient readout 的 headroom 是否超过 no-target-set capacity control？
 
-如果不能超过 control，B10 不能作为 architecture-level method 继续。
+如果不能超过 control，只能说明当前 readout/head 设计不足。若同时出现明显数值病态，不能据此否定
+target-set-aware architecture 方向。
 
 ## Readout Design
 
@@ -101,10 +102,14 @@ train fit -> val select alpha -> test report
 
 [Code realization] 脚本将 comparison 限制在 frozen A6 basis-coeff interface 内，并加入参数量更接近的 `Pooled-4H` control。
 
-[Observed boundary] 结果不支持 B10 进入 method design。ETTm1 有小正向，但 ETTh2 和 Weather 明显负向，且 pooled no-target control 更稳。
+[Observed boundary] 结果不支持当前 `frozen coeff -> Linear_s(coeff)` readout 进入 method design。
+ETTm1 有小正向，但 ETTh2 和 Weather 明显负向，且 pooled no-target control 更稳。该结果更像
+`readout_or_head_design_wrong` / `optimization_or_numeric_pathology`，不能作为方向拒绝依据。
 
 ## Decision
 
-`B10-TSI-C` 未通过。
+`B10-TSI-C` 对当前 late linear readout 未通过。
 
-后续不应实现 B10-TCO 方法。StageB 应回到 Step 2/3，重新寻找第二主创新点；或者将 B7 objective optimization 降级为小贡献候选继续处理。
+后续不应实现该 frozen-coeff linear readout。下一步应做 B10-TSI-D failure attribution：分离
+target-set 信息是否有用、信息介入预测的位置是否正确、readout/head 设计是否造成不稳定。更合理的诊断应
+把 target query 前移到 history patch memory readout，而不是修补已经生成好的 `coeff`。
