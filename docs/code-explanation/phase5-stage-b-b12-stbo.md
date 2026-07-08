@@ -5,6 +5,9 @@
 - `baselines/timealign_official/models/TimeAlign.py`
 - `baselines/timealign_official/train_repo.py`
 - `scripts/check_phase5_stage_b_b12_stbo_local.py`
+- `scripts/remote/run_phase5_stage_b_b12_stbo_small_gate.sh`
+- `scripts/sync_phase5_stage_b_b12_stbo_small_gate_results.sh`
+- `scripts/analyze_phase5_stage_b_b12_stbo_small_gate.py`
 
 ## Purpose
 
@@ -180,3 +183,81 @@ Falsification:
 - 若 independent tile 显著更好而 shared/bank 不行，则方法可能退化为 segmented Direct head；
 - 若 STBO 相对 A6 没有稳定收益，则不能作为 StageB paper-core method。
 
+## Remote Small Gate Scripts
+
+### Runner
+
+`scripts/remote/run_phase5_stage_b_b12_stbo_small_gate.sh` 固定 small gate 的 required arms：
+
+| Arm | `readout_mode` | Role |
+| --- | --- | --- |
+| `a6_clean` | `learned-basis-forecast-operator` | clean A6 anchor |
+| `stbo_shared` | `subspace-tiled-basis-operator-shared` | shared local-basis method candidate |
+| `stbo_bank4` | `subspace-tiled-basis-operator-bank` | learned basis-bank method candidate |
+| `stbo_dct` | `subspace-tiled-basis-operator-dct` | fixed local basis control |
+| `stbo_independent` | `subspace-tiled-basis-operator-independent` | independent-tile capacity control |
+
+默认远程矩阵：
+
+- datasets: `Weather ETTm1 ETTh2`;
+- horizons: `96,192,336,720`;
+- seed: `2021`;
+- epochs/patience: `10/3`;
+- checkpoint policy: `official-last`;
+- STBO config: `tile_len=48`, `rank=16`, `bank_count=4`;
+- loss: `multi-prefix`;
+- scheduling: dataset-major order on `GPU_IDS`, so slower datasets are launched first across available GPUs.
+
+Runner 的输出目录结构与已有 Phase5 gates 一致：
+
+```text
+${OUTPUT_ROOT}/official-last/
+  TimeAlignOfficialUnified720_${arm}_official-last/
+    ${dataset}/mixed_h96_h192_h336_h720/seed2021/
+```
+
+若目标 run 已存在 `metrics_by_target_horizon.csv` 和 `checkpoint.pt`，runner 会跳过该 run，便于 remote resume。
+
+### Sync Wrapper
+
+`scripts/sync_phase5_stage_b_b12_stbo_small_gate_results.sh` 从远程
+`${REMOTE_OUTPUT_ROOT}/official-last/` 同步 artifact 到：
+
+```text
+analysis/phase5_stage_b_b12_stbo_small_gate_${date}/raw/official-last/
+```
+
+默认排除：
+
+- `checkpoint.pt`;
+- `predictions_test.npz`。
+
+同步后自动调用 analyzer；如果只需拉取原始结果，可设置 `SKIP_ANALYSIS=1`。
+
+### Analyzer
+
+`scripts/analyze_phase5_stage_b_b12_stbo_small_gate.py` 输出：
+
+- `b12_stbo_small_gate_comparisons.csv`;
+- `b12_stbo_small_gate_summary.csv`;
+- `b12_stbo_small_gate_model_diagnostics.csv`;
+- `b12_stbo_small_gate_report.md`。
+
+核心 comparisons：
+
+- `stbo_shared` / `stbo_bank4` / `stbo_dct` / `stbo_independent` vs `a6_clean`;
+- learned STBO vs `stbo_dct`;
+- learned STBO vs `stbo_independent`;
+- `stbo_bank4` vs `stbo_shared`。
+
+Report gate 不允许只凭超过 A6 宣称方法成立。必须同时读：
+
+1. learned shared/bank 是否超过 fixed DCT；
+2. learned shared/bank 是否不是只被 independent-tile capacity 压倒；
+3. 相对 A6 是否没有系统性退化。
+
+Failure attribution 规则：
+
+- DCT 持平或更好：`generic_local_basis_control_explains`；
+- 只有 independent-tile 明显更好：`independent_tile_capacity_explains`；
+- learned STBO 不稳或退化：仅拒绝当前 tested implementation，不拒绝全部 native multi-horizon operator 方向。

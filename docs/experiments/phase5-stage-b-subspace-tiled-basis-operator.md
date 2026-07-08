@@ -339,3 +339,38 @@ Effectiveness and mechanism gate：
 3. 相对 `a6_clean` 至少不能出现系统性退化；
 4. 若只有 `stbo_independent` 正向，则 B12 不进入 paper-core；
 5. 若 learned STBO 正向但 DCT 持平，则只能记录为 local-basis capacity effect。
+
+### Remote Small Gate Implementation
+
+已落地三个脚本：
+
+- `scripts/remote/run_phase5_stage_b_b12_stbo_small_gate.sh`;
+- `scripts/sync_phase5_stage_b_b12_stbo_small_gate_results.sh`;
+- `scripts/analyze_phase5_stage_b_b12_stbo_small_gate.py`。
+
+默认 launch matrix：
+
+| Field | Value |
+| --- | --- |
+| datasets | `Weather ETTm1 ETTh2` |
+| arms | `a6_clean stbo_shared stbo_bank4 stbo_dct stbo_independent` |
+| seed | `2021` |
+| epochs / patience | `10 / 3` |
+| checkpoint policy | `official-last` |
+| `stbo_tile_len` | `48` |
+| `stbo_rank` | `16` |
+| `stbo_bank_count` | `4` |
+| loss | `multi-prefix` |
+
+Runner 使用 dataset-major scheduling：先把 `Weather` 的各 arms 分散到可用 GPUs，再进入 `ETTm1` 和 `ETTh2`。
+这符合当前 remote policy，避免把所有长耗时 Weather run 堆到同一张 GPU。
+
+Analyzer 的 decision labels：
+
+- `small_gate_pass_candidate`: learned shared/bank STBO 超过 DCT control，且不只是 independent-tile capacity；
+- `generic_local_basis_control_explains`: learned STBO 未超过 fixed local DCT；
+- `independent_tile_capacity_explains`: independent-tile control 更能解释收益；
+- `small_gate_failed`: learned STBO 相对 A6 anchor 没有足够稳定性。
+
+该 gate 仍不是 full matrix。通过后才允许进入 Step 9/10 扩展设计；失败时必须按 failure attribution 回滚，
+不能把设计缺陷直接写成方向失败。
