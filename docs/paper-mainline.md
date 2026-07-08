@@ -9,10 +9,10 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA clean A6 validated；StageB B10 failure attribution |
+| `current_stage` | Phase5 StageA clean A6 validated；StageB B10 native design gate or rollback |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 3 B10 diagnostic redesign after frozen-coeff readout pathology |
+| `current_11_step` | StageB Step 4-6: decide native trainable target-query memory readout, or rollback B10 to Step 2/3 |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
 
 ## Core Claim
@@ -144,8 +144,17 @@ entropy 为 `0.7969/0.8958/0.9042`。这支持继续诊断 target-set interface�
 B10-TSI-C 返回了负向且病态的 frozen-coeff linear readout 结果：相对 pooled 4-head no-target control，
 ETTh2 为 `-185.5316%`，ETTm1 仅 `+0.2812%`，Weather 为 `-26.5683%`。该结果不能否定
 target-set-aware 方向；它只说明 `frozen coeff -> Linear_s(coeff)` 这个信息介入位置太晚、readout/head
-过线性且存在数值病态风险。当前 B10 状态应视为 `diagnostic_invalid_for_direction_rejection`，下一步必须
-做 failure attribution，将 target-set 信息价值与 readout/head/intervention-point 设计分开。
+过线性且存在数值病态风险。
+
+B10-TSI-D 已进一步做 failure attribution：比较 `coeff_late`、`memory_pool`、`memory_plus_coeff`
+三种 feature sources，并加入 rank-truncated row-space target、wrong-target control 和 shrinkage target-set
+readout。rank64 stabilized target vs pooled control 为 `-12.3695%/-40.7499%/-44.4687%`；rank16
+稳定性对照仍为 `-5.1506%/-32.0345%/-36.3672%`。因此当前结论是：
+`offline_readout_route_blocked_but_direction_not_rejected`。
+
+StageB 不能继续用 frozen/offline oracle 反复否定 B10。下一步只能写 native trainable target-query memory
+readout 的 Step 4-6 narrative/method gate，并保留 no-target query implementation control；若该 gate
+不能解释 B10-TSI-C/D 的 pathology，则 B10 rollback 到 StageB Step 2/3。
 
 ## Evidence Snapshot
 
@@ -222,6 +231,7 @@ Archived or inactive:
 | `docs/code-explanation/phase5-stage-b-b10-tsi-basis-geometry.md` | B10-TSI-A basis geometry analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b10-tsi-coeff-usage.md` | B10-TSI-B coefficient usage analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b10-tsi-target-set-oracle.md` | B10-TSI-C target-set oracle/control analyzer explanation |
+| `docs/code-explanation/phase5-stage-b-b10-tsi-failure-attribution.md` | B10-TSI-D failure attribution analyzer explanation |
 | `docs/stage-ledgers/phase5-timealign-interface.md` | active StageA/StageB ledger |
 | `docs/research-roadmap.md` | active roadmap |
 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | next StageB diagnostic protocol |
@@ -232,6 +242,7 @@ Archived or inactive:
 | `scripts/analyze_phase5_stage_b_b10_tsi_basis_geometry.py` | B10-TSI-A basis geometry analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_coeff_usage.py` | B10-TSI-B coefficient usage analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_target_set_oracle.py` | B10-TSI-C target-set oracle/control analyzer |
+| `scripts/analyze_phase5_stage_b_b10_tsi_failure_attribution.py` | B10-TSI-D failure attribution analyzer |
 | `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF remote small gate runner |
 | `scripts/analyze_phase5_stage_b_b9_fsn_scf_small_gate.py` | B9-FSN-SCF small gate analyzer |
 | `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF result sync/analyze wrapper |
@@ -247,6 +258,8 @@ Archived or inactive:
 | `analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/` | B10-TSI-A basis geometry diagnostic |
 | `analysis/phase5_stage_b_b10_tsi_coeff_usage_20260708/` | B10-TSI-B coefficient usage diagnostic |
 | `analysis/phase5_stage_b_b10_tsi_target_set_oracle_20260708/` | B10-TSI-C target-set oracle/control diagnostic |
+| `analysis/phase5_stage_b_b10_tsi_failure_attribution_20260708/` | B10-TSI-D rank64 failure attribution diagnostic |
+| `analysis/phase5_stage_b_b10_tsi_failure_attribution_rank16_20260708/` | B10-TSI-D rank16 stability control |
 
 ## Next Step
 
@@ -257,5 +270,5 @@ Archived or inactive:
 5. Defer B7 objective optimization as a small contribution candidate.
 6. Do not implement B8-FQA under current evidence.
 7. Do not launch B9-FSN-SCF full matrix.
-8. Do not reject target-set-aware architecture from B10-TSI-C; only the frozen-coeff linear readout is blocked.
-9. Run B10-TSI-D failure attribution: separate target-set information value from readout/head and intervention-point stability.
+8. Do not reject target-set-aware architecture from B10-TSI-C/D; frozen/offline readout route is blocked, not the broader native target-query direction.
+9. Next StageB action is native trainable target-query memory readout Step 4-6 gate or rollback B10 to Step 2/3.

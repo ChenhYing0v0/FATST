@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B10 failure attribution |
-| `current_11_step` | StageB Step 3: B10 diagnostic redesign after frozen-coeff readout pathology |
+| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B10 native design gate or rollback |
+| `current_11_step` | StageB Step 4-6: decide native trainable target-query memory readout, or rollback B10 to Step 2/3 |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -469,16 +469,30 @@ f_B10(history, J) -> y_J
 存在 `readout_or_head_design_wrong` 或 `optimization_or_numeric_pathology` 风险；它只否定
 `frozen coeff -> Linear_s(coeff) -> basis_s projection` 这个过晚、过线性的 readout 设计。
 
-[Decision] `B10-TCO` 当前状态改为 `diagnostic_invalid_for_direction_rejection`。不得据此实现 B10 方法，
-也不得据此否定 target-set-aware architecture。
+[B10-TSI-D Result] failure-attribution diagnostic 已完成。它比较 `coeff_late`、`memory_pool`、
+`memory_plus_coeff` 三个 feature sources，并加入 rank-truncated row-space target、pooled control、
+wrong-target control 和 shrinkage target-set readout。
 
-[Next Required Action] 运行 `B10-TSI-D`: failure attribution / diagnostic redesign。必须分解两个因素：
+主 rank64 stabilized target vs pooled control：
 
-1. target-set 信息是否有用；
-2. readout/head 与 intervention point 是否导致不稳定性能。
+- `coeff_late`: `-12.3695%`;
+- `memory_pool`: `-40.7499%`;
+- `memory_plus_coeff`: `-44.4687%`。
 
-新的诊断应优先测试 `target query -> history patch memory -> coeff/state`，而不是继续在已经生成好的
-`coeff` 后面做 late linear correction。
+rank16 稳定性对照仍为负：
+
+- `coeff_late`: `-5.1506%`;
+- `memory_pool`: `-32.0345%`;
+- `memory_plus_coeff`: `-36.3672%`。
+
+[Decision] `B10-TCO` 当前状态为 `offline_readout_route_blocked_but_direction_not_rejected`。
+这阻断 frozen/offline ridge readout route，不能阻断更大的 native target-query architecture 方向。
+
+[Next Required Action] 不再继续用 frozen offline oracle 消耗。下一步只能二选一：
+
+1. 写 Step 4-6 native trainable target-query memory readout 的 narrative/method gate，并保留 no-target
+   query implementation control；
+2. 若该 narrative gate 不能解释 B10-TSI-C/D 的 readout pathology，则 B10 rollback 到 StageB Step 2/3。
 
 ## Active Implementation
 
@@ -515,12 +529,16 @@ f_B10(history, J) -> y_J
 | `docs/code-explanation/phase5-stage-b-b10-tsi-basis-geometry.md` | B10-TSI-A basis geometry analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b10-tsi-coeff-usage.md` | B10-TSI-B coefficient usage analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b10-tsi-target-set-oracle.md` | B10-TSI-C oracle/control analyzer explanation |
+| `docs/code-explanation/phase5-stage-b-b10-tsi-failure-attribution.md` | B10-TSI-D failure attribution analyzer explanation |
 | `scripts/analyze_phase5_stage_b_b10_tsi_basis_geometry.py` | B10-TSI-A basis geometry analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_coeff_usage.py` | B10-TSI-B coefficient usage analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_target_set_oracle.py` | B10-TSI-C target-set oracle/control analyzer |
+| `scripts/analyze_phase5_stage_b_b10_tsi_failure_attribution.py` | B10-TSI-D failure attribution analyzer |
 | `analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/b10_tsi_basis_geometry_report.md` | B10-TSI-A basis geometry report |
 | `analysis/phase5_stage_b_b10_tsi_coeff_usage_20260708/b10_tsi_coeff_usage_report.md` | B10-TSI-B coefficient usage report |
 | `analysis/phase5_stage_b_b10_tsi_target_set_oracle_20260708/b10_tsi_target_set_oracle_report.md` | B10-TSI-C oracle/control report |
+| `analysis/phase5_stage_b_b10_tsi_failure_attribution_20260708/b10_tsi_failure_attribution_report.md` | B10-TSI-D rank64 failure attribution report |
+| `analysis/phase5_stage_b_b10_tsi_failure_attribution_rank16_20260708/b10_tsi_failure_attribution_report.md` | B10-TSI-D rank16 stability control |
 | `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF remote small gate runner |
 | `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF result sync/analyze wrapper |
 

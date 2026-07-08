@@ -5,16 +5,16 @@
 | 字段 | 内容 |
 | --- | --- |
 | `candidate_id` | `B10-TCO` |
-| `current_step` | Step 3：failure attribution after B10-TSI-C diagnostic fault |
+| `current_step` | Step 3：B10-TSI-D failure attribution completed; Step 4-6 native target-query design gate pending |
 | `problem` | A6-LBF-r256 是 prefix-compatible 720-step trajectory operator，但 requested horizon / target set 没有进入 computation graph；短 horizon 只是从同一条 720 trajectory 上 prefix slicing |
-| `existence_evidence` | A6 统一模型成立但 multi-horizon 原生性不足；B7 显示 multi-prefix supervision 的 tail weakness；B9-SCF 显示单纯 stage-token coefficient modulation 被 no-stage control 解释；B10-TSI-A/B 支持问题收窄；B10-TSI-C 暴露 frozen-coeff linear readout 病态，不能作为方向拒绝依据 |
+| `existence_evidence` | A6 统一模型成立但 multi-horizon 原生性不足；B7 显示 multi-prefix supervision 的 tail weakness；B9-SCF 显示单纯 stage-token coefficient modulation 被 no-stage control 解释；B10-TSI-A/B 支持问题收窄；B10-TSI-C/D 暴露 frozen/offline readout 病态，不能作为方向拒绝依据 |
 | `idea` | 将 requested target set $J$ 原生输入 basis-coeff operator，使模型按 $J$ 生成预测，同时保持 prefix consistency |
-| `theory_check` | B10-TSI-C 说明 late coefficient correction 不是充分测试；需要 memory-level target query diagnostic |
+| `theory_check` | B10-TSI-D 说明 frozen ridge memory-level readout 仍不稳定；后续若继续，必须转向 native trainable target-query memory readout，而不是继续 offline oracle |
 | `design` | 候选方向是 target-set conditioned basis-coeff interface，不是 full-720 prediction 后 slicing，也不是 residual correction |
-| `narrative_gate` | `not_evaluated`; B10-TSI-C invalid for direction rejection |
+| `narrative_gate` | `pending`; only a native target-query memory readout may enter Step 4-6, frozen/offline readout is blocked |
 | `effectiveness_gate` | `not_evaluated` |
-| `artifacts` | 本文档；`analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/b10_tsi_basis_geometry_report.md`; `analysis/phase5_stage_b_b10_tsi_coeff_usage_20260708/b10_tsi_coeff_usage_report.md`; `analysis/phase5_stage_b_b10_tsi_target_set_oracle_20260708/b10_tsi_target_set_oracle_report.md` |
-| `decision` | `diagnostic_invalid_for_direction_rejection`; run B10-TSI-D failure attribution |
+| `artifacts` | 本文档；`analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/b10_tsi_basis_geometry_report.md`; `analysis/phase5_stage_b_b10_tsi_coeff_usage_20260708/b10_tsi_coeff_usage_report.md`; `analysis/phase5_stage_b_b10_tsi_target_set_oracle_20260708/b10_tsi_target_set_oracle_report.md`; `analysis/phase5_stage_b_b10_tsi_failure_attribution_20260708/b10_tsi_failure_attribution_report.md`; `analysis/phase5_stage_b_b10_tsi_failure_attribution_rank16_20260708/b10_tsi_failure_attribution_report.md` |
+| `decision` | `offline_readout_route_blocked_but_direction_not_rejected`; next action is Step 4-6 native target-query design gate or rollback to StageB Step 2/3 |
 
 ## Motivation
 
@@ -333,9 +333,18 @@ basis-coeff coupling，而不是只提供 coefficient-space extra capacity。
 3. `target_set_oracle_control`
    - 用 frozen A6 hidden 和 basis，比较 target-set-specific readout 的 oracle headroom 与 no-target-set capacity control；
    - 不能拟合 output residual correction；只能在 basis-coeff coupling 内做诊断。
-   - `B10-TSI-C` 已完成：target-set-aware readout 未能超过 no-target-set controls，B10 被阻断。
+   - `B10-TSI-C` 已完成：target-set-aware readout 未能超过 no-target-set controls，但 ETTh2/Weather
+     出现 pathology；只能阻断 frozen-coeff linear readout，不能阻断 B10 方向。
 
-4. `prefix_consistency_contract`
+4. `failure_attribution_memory_readout`
+   - 比较 `coeff_late`、`memory_pool`、`memory_plus_coeff` 三个 feature sources；
+   - 用 rank-truncated basis row-space target 避免 full coefficient inverse；
+   - 加入 `shared_control`、`pooled_multihead_control`、`wrong_target_control` 和 shrinkage target-set readout；
+   - `B10-TSI-D` 已完成：rank64 和 rank16 均显示 offline target-set readout 仍输给 pooled control，
+     且 memory-level route 仍有 pathology。结论是 frozen/offline readout route 被阻断，不能作为 method，
+     也不能方向级拒绝 native trainable target-query architecture。
+
+5. `prefix_consistency_contract`
    - 任何候选 forward graph 都必须报告：
 
 ```text
@@ -347,9 +356,14 @@ MSE(pred_H96, pred_H720[:, :96])
 
 B10 当前不进入 implementation，但不能从 B10-TSI-C 推出 direction rejection。
 
-下一步是 `B10-TSI-D failure attribution`：把两个因素分开诊断：
+`B10-TSI-D` 已完成。结论不是“target-set-aware 方向失败”，而是：
 
-1. target-set 信息是否有用；
-2. readout/head 与 intervention point 是否导致不稳定性能。
+1. frozen/offline ridge readout 不是可靠的 method path；
+2. full independent target head 与 shrinkage target head 都没有稳定超过 pooled no-target control；
+3. memory-level pooling 仍不是原生 target-query memory readout，只能说明该 diagnostic path 被阻断。
 
-只有在稳定的 memory-level target-query diagnostic 仍输给 no-target controls 时，才允许讨论方向级 rollback。
+下一步只能二选一：
+
+1. 写 Step 4-6 native trainable target-query memory readout 的 narrative/method gate，明确它如何不同于
+   frozen ridge readout，并保留 no-target query implementation control；
+2. 若该 narrative gate 不成立，则 B10 回到 StageB Step 2/3，不再用 offline readout oracle 继续消耗。
