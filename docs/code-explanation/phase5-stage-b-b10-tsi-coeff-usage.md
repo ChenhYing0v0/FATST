@@ -111,11 +111,11 @@ target-set-blind。
 [Boundary] 这不是 method evidence。它不能证明 target-set-conditioned architecture 会提升 MSE，也不能排除
 “只是增加 readout capacity 就能解释”的可能性。
 
-## Next Diagnostic Constraint
+## Follow-Up Result
 
-下一步必须做 `B10-TSI-C target_set_oracle_control`：
+后续 `B10-TSI-C target_set_oracle_control` 已完成：
 
-1. 比较 target-set-aware history readout 的 oracle headroom；
-2. 加入 no-target-set capacity control；
-3. 若 no-target-set control 解释收益，则 B10 不得进入 Step 4-6 method design；
-4. 若 target-set-aware readout 明确超过 control，才进入 B10 method/narrative gate。
+1. 比较了 target-set-aware coefficient readout 与 no-target-set capacity controls；
+2. 加入了参数量更接近的 `Pooled-4H` control；
+3. 结果显示 target-set-aware readout 未稳定超过 controls；
+4. 因此 B10-TCO 被 `rejected_by_oracle_control` 阻断，不进入 Step 4-6 method design。

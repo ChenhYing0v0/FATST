@@ -9,10 +9,10 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA clean A6 validated；StageB B10 target-set interface diagnostic |
+| `current_stage` | Phase5 StageA clean A6 validated；StageB rollback after B10 rejection |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 3 B10-TSI-C target-set oracle/control diagnostic |
+| `current_11_step` | StageB Step 2/3 search after B10 oracle-control failure |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
 
 ## Core Claim
@@ -139,8 +139,12 @@ geometry，但 `learned_basis_coeff(hidden)` 仍然只生成 target-set-blind co
 
 B10-TSI-B 进一步显示，真实 A6 `coeff` 同时激活多个低同向性 stage row subspaces；rank64 下三数据集
 projection share 为 `0.3882/0.4950/0.2764`，projection cosine 为 `0.3759/0.4702/0.1639`，output
-entropy 为 `0.7969/0.8958/0.9042`。这支持继续诊断 target-set interface，但仍不能直接实现方法。下一步是
-B10-TSI-C target-set oracle/control，必须排除 no-target-set capacity control。
+entropy 为 `0.7969/0.8958/0.9042`。这支持继续诊断 target-set interface，但仍不能直接实现方法。
+
+B10-TSI-C 已返回负向结论：target-set-aware coefficient readout 未能超过 no-target-set capacity controls。
+相对 pooled 4-head no-target control，ETTh2 为 `-185.5316%`，ETTm1 仅 `+0.2812%`，Weather 为
+`-26.5683%`。因此 `B10-TCO` 被 `rejected_by_oracle_control` 阻断，不进入 Step 4-6 method design。
+StageB 回到 Step 2/3；B7 仍只能作为小贡献候选，而不是第二主创新点。
 
 ## Evidence Snapshot
 
@@ -216,6 +220,7 @@ Archived or inactive:
 | `docs/code-explanation/phase5-stage-b-b9-fsn-scf.md` | B9-FSN-SCF implementation explanation |
 | `docs/code-explanation/phase5-stage-b-b10-tsi-basis-geometry.md` | B10-TSI-A basis geometry analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b10-tsi-coeff-usage.md` | B10-TSI-B coefficient usage analyzer explanation |
+| `docs/code-explanation/phase5-stage-b-b10-tsi-target-set-oracle.md` | B10-TSI-C target-set oracle/control analyzer explanation |
 | `docs/stage-ledgers/phase5-timealign-interface.md` | active StageA/StageB ledger |
 | `docs/research-roadmap.md` | active roadmap |
 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | next StageB diagnostic protocol |
@@ -225,6 +230,7 @@ Archived or inactive:
 | `docs/experiments/phase5-stage-b-target-set-conditioned-operator.md` | active B10 target-set-conditioned operator protocol |
 | `scripts/analyze_phase5_stage_b_b10_tsi_basis_geometry.py` | B10-TSI-A basis geometry analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_coeff_usage.py` | B10-TSI-B coefficient usage analyzer |
+| `scripts/analyze_phase5_stage_b_b10_tsi_target_set_oracle.py` | B10-TSI-C target-set oracle/control analyzer |
 | `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF remote small gate runner |
 | `scripts/analyze_phase5_stage_b_b9_fsn_scf_small_gate.py` | B9-FSN-SCF small gate analyzer |
 | `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF result sync/analyze wrapper |
@@ -239,6 +245,7 @@ Archived or inactive:
 | `analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/` | B9-FSN-SCF launch record and future small-gate analysis |
 | `analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/` | B10-TSI-A basis geometry diagnostic |
 | `analysis/phase5_stage_b_b10_tsi_coeff_usage_20260708/` | B10-TSI-B coefficient usage diagnostic |
+| `analysis/phase5_stage_b_b10_tsi_target_set_oracle_20260708/` | B10-TSI-C target-set oracle/control diagnostic |
 
 ## Next Step
 
@@ -249,4 +256,5 @@ Archived or inactive:
 5. Defer B7 objective optimization as a small contribution candidate.
 6. Do not implement B8-FQA under current evidence.
 7. Do not launch B9-FSN-SCF full matrix.
-8. Run B10-TSI-C target-set oracle/control before any target-set-conditioned implementation.
+8. Do not implement B10-TCO after oracle/control failure.
+9. Return StageB to Step 2/3 to search for a stronger second contribution, or keep B7 only as a small objective contribution candidate.

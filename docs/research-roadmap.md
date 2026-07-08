@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B10 target-set interface diagnostic |
-| `current_11_step` | StageB Step 3: B10-TSI-C target-set oracle/control diagnostic |
+| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB rollback after B10 rejection |
+| `current_11_step` | StageB Step 2/3: search for second contribution after B10 oracle-control failure |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -459,9 +459,16 @@ f_B10(history, J) -> y_J
 > `learned_basis_coeff(hidden)` 仍只生成一个 target-set-blind coefficient/state；requested target set
 > 没有进入 `history -> coeff/state` 生成路径。
 
-[Next Required Action] 继续 `B10-TSI-C`: target-set oracle/control。诊断必须比较 target-set-aware history
-readout 的 oracle headroom 与 no-target-set capacity control。若 no-target-set control 能解释结果，不得
-实现 B10 method。
+[B10-TSI-C Result] target-set-aware coefficient readout 未能超过 no-target-set capacity controls：
+
+- ETTh2: target vs pooled-4H `-185.5316%`;
+- ETTm1: target vs pooled-4H `+0.2812%`;
+- Weather: target vs pooled-4H `-26.5683%`.
+
+[Decision] `B10-TCO` 被 `rejected_by_oracle_control` 阻断，不进入 Step 4-6 method design。
+
+[Next Required Action] StageB 回到 Step 2/3。下一步只能重新寻找第二个主创新点，或把 B7 objective
+optimization 作为小贡献候选继续处理；不得实现 B10 target-set-conditioned method。
 
 ## Active Implementation
 
@@ -497,10 +504,13 @@ readout 的 oracle headroom 与 no-target-set capacity control。若 no-target-s
 | `docs/code-explanation/phase5-stage-b-b9-fsn-scf.md` | B9-FSN-SCF implementation explanation |
 | `docs/code-explanation/phase5-stage-b-b10-tsi-basis-geometry.md` | B10-TSI-A basis geometry analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b10-tsi-coeff-usage.md` | B10-TSI-B coefficient usage analyzer explanation |
+| `docs/code-explanation/phase5-stage-b-b10-tsi-target-set-oracle.md` | B10-TSI-C oracle/control analyzer explanation |
 | `scripts/analyze_phase5_stage_b_b10_tsi_basis_geometry.py` | B10-TSI-A basis geometry analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_coeff_usage.py` | B10-TSI-B coefficient usage analyzer |
+| `scripts/analyze_phase5_stage_b_b10_tsi_target_set_oracle.py` | B10-TSI-C target-set oracle/control analyzer |
 | `analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/b10_tsi_basis_geometry_report.md` | B10-TSI-A basis geometry report |
 | `analysis/phase5_stage_b_b10_tsi_coeff_usage_20260708/b10_tsi_coeff_usage_report.md` | B10-TSI-B coefficient usage report |
+| `analysis/phase5_stage_b_b10_tsi_target_set_oracle_20260708/b10_tsi_target_set_oracle_report.md` | B10-TSI-C oracle/control report |
 | `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF remote small gate runner |
 | `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF result sync/analyze wrapper |
 

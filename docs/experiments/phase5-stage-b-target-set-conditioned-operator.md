@@ -7,14 +7,14 @@
 | `candidate_id` | `B10-TCO` |
 | `current_step` | Step 2/3：target-set-native multi-horizon problem redefinition |
 | `problem` | A6-LBF-r256 是 prefix-compatible 720-step trajectory operator，但 requested horizon / target set 没有进入 computation graph；短 horizon 只是从同一条 720 trajectory 上 prefix slicing |
-| `existence_evidence` | A6 统一模型成立但 multi-horizon 原生性不足；B7 显示 multi-prefix supervision 的 tail weakness；B9-SCF 显示单纯 stage-token coefficient modulation 被 no-stage control 解释；B10-TSI-A 显示 basis 已有 stage geometry；B10-TSI-B 显示真实 `coeff` 同时激活多个 stage row subspaces |
+| `existence_evidence` | A6 统一模型成立但 multi-horizon 原生性不足；B7 显示 multi-prefix supervision 的 tail weakness；B9-SCF 显示单纯 stage-token coefficient modulation 被 no-stage control 解释；B10-TSI-A/B 支持问题收窄，但 B10-TSI-C target-set oracle/control 未通过 |
 | `idea` | 将 requested target set $J$ 原生输入 basis-coeff operator，使模型按 $J$ 生成预测，同时保持 prefix consistency |
 | `theory_check` | 尚未完成；当前只建立问题边界与诊断计划 |
 | `design` | 候选方向是 target-set conditioned basis-coeff interface，不是 full-720 prediction 后 slicing，也不是 residual correction |
-| `narrative_gate` | `not_evaluated` |
+| `narrative_gate` | `blocked_before_step_4` |
 | `effectiveness_gate` | `not_evaluated` |
-| `artifacts` | 本文档；`analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/b10_tsi_basis_geometry_report.md`; `analysis/phase5_stage_b_b10_tsi_coeff_usage_20260708/b10_tsi_coeff_usage_report.md` |
-| `decision` | `supports_continue_to_oracle_control`; 下一步做 B10-TSI-C target-set oracle/control |
+| `artifacts` | 本文档；`analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/b10_tsi_basis_geometry_report.md`; `analysis/phase5_stage_b_b10_tsi_coeff_usage_20260708/b10_tsi_coeff_usage_report.md`; `analysis/phase5_stage_b_b10_tsi_target_set_oracle_20260708/b10_tsi_target_set_oracle_report.md` |
+| `decision` | `rejected_by_oracle_control`; rollback to StageB Step 2/3 |
 
 ## Motivation
 
@@ -238,6 +238,30 @@ target set 应进入 `history -> coeff/state` 路径。
 [Boundary] B10-TSI-B 仍不是 method evidence。它只支持进入 `B10-TSI-C target_set_oracle_control`。
 若 no-target-set capacity control 能解释 target-set-aware readout 的 headroom，则 B10 不得进入 Step 4-6。
 
+## B10-TSI-C Target-Set Oracle/Control Result
+
+[Fact] `B10-TSI-C` 固定 A6 encoder、`coeff` 与 `learned_temporal_basis`，在 normalized basis-coeff
+interface 内拟合 coefficient delta oracle：
+
+```text
+A6:        y_s = basis_s @ coeff
+TS-aware:  y_s = basis_s @ (coeff + Linear_s(coeff))
+Control:   y_s = basis_s @ (coeff + Linear_shared(coeff))
+Pooled-4H: y_s = basis_s @ (coeff + mean_j Linear_pooled_j(coeff))
+```
+
+其中 `Pooled-4H` 有 4 个 pooled heads，但不按 target set 选择 head，是主要 no-target-set capacity control。
+脚本使用 `train fit -> val select alpha -> test report`。
+
+| Dataset | target vs shared | target vs pooled-4H |
+| --- | ---: | ---: |
+| ETTh2 | `-200.3230%` | `-185.5316%` |
+| ETTm1 | `+0.2220%` | `+0.2812%` |
+| Weather | `-23.7469%` | `-26.5683%` |
+
+[Decision] B10-TSI-C 未通过。target-set-aware coefficient readout 没有稳定超过 no-target-set capacity
+control；只有 ETTm1 有极小正向，ETTh2 和 Weather 明显负向。因此 B10-TCO 不进入 Step 4-6 method design。
+
 ## Problem Evidence From Existing Artifacts
 
 ### A6 Is Strong But Still Prefix-Slicing
@@ -307,6 +331,7 @@ basis-coeff coupling，而不是只提供 coefficient-space extra capacity。
 3. `target_set_oracle_control`
    - 用 frozen A6 hidden 和 basis，比较 target-set-specific readout 的 oracle headroom 与 no-target-set capacity control；
    - 不能拟合 output residual correction；只能在 basis-coeff coupling 内做诊断。
+   - `B10-TSI-C` 已完成：target-set-aware readout 未能超过 no-target-set controls，B10 被阻断。
 
 4. `prefix_consistency_contract`
    - 任何候选 forward graph 都必须报告：
@@ -318,9 +343,6 @@ MSE(pred_H96, pred_H720[:, :96])
 
 ## Next Decision
 
-B10 当前不进入 implementation。下一步必须先写并运行 `B10-TSI-C target_set_oracle_control`。若 diagnostic
-证明 target-set interface 的问题存在且不能被 no-target-set capacity control 解释，再进入 Step 4-6
-method/narrative gate。
+B10 当前不进入 implementation，且在 `B10-TSI-C` 后不再进入 method/narrative gate。
 
-若 `B10-TSI` 也被 no-target-set control 阻断，则 StageB 应回到 Step 2/3 继续寻找第二主创新点，或将
-B7 objective optimization 降级为小贡献继续处理。
+StageB 应回到 Step 2/3 继续寻找第二主创新点，或将 B7 objective optimization 降级为小贡献继续处理。
