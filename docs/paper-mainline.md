@@ -12,7 +12,7 @@
 | `current_stage` | Phase5 StageA clean A6 validated；StageB B10 target-set interface diagnostic |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 3 B10-TSI coefficient usage / target-set interface diagnostic |
+| `current_11_step` | StageB Step 3 B10-TSI-C target-set oracle/control diagnostic |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
 
 ## Core Claim
@@ -135,8 +135,12 @@ B10-TSI-A 已完成 checkpoint-only basis geometry audit。结果显示 A6 的 b
 主要跨 stage，但不同 stage 的 coefficient row spaces overlap 很低。因此 StageB 不能叙事为“给 basis 补
 stage 信息”。更准确的论文问题是：`learned_temporal_basis` 已经形成 stage-differentiated coefficient
 geometry，但 `learned_basis_coeff(hidden)` 仍然只生成 target-set-blind coefficient/state；requested target set
-没有进入 `history -> coeff/state` 生成路径。下一步是 B10-TSI-B coefficient usage / target-set control
-diagnostic，仍不能直接实现方法。
+没有进入 `history -> coeff/state` 生成路径。
+
+B10-TSI-B 进一步显示，真实 A6 `coeff` 同时激活多个低同向性 stage row subspaces；rank64 下三数据集
+projection share 为 `0.3882/0.4950/0.2764`，projection cosine 为 `0.3759/0.4702/0.1639`，output
+entropy 为 `0.7969/0.8958/0.9042`。这支持继续诊断 target-set interface，但仍不能直接实现方法。下一步是
+B10-TSI-C target-set oracle/control，必须排除 no-target-set capacity control。
 
 ## Evidence Snapshot
 
@@ -211,6 +215,7 @@ Archived or inactive:
 | `docs/code-explanation/phase5-clean-a6-rerun-analysis.md` | clean A6 validation analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b9-fsn-scf.md` | B9-FSN-SCF implementation explanation |
 | `docs/code-explanation/phase5-stage-b-b10-tsi-basis-geometry.md` | B10-TSI-A basis geometry analyzer explanation |
+| `docs/code-explanation/phase5-stage-b-b10-tsi-coeff-usage.md` | B10-TSI-B coefficient usage analyzer explanation |
 | `docs/stage-ledgers/phase5-timealign-interface.md` | active StageA/StageB ledger |
 | `docs/research-roadmap.md` | active roadmap |
 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | next StageB diagnostic protocol |
@@ -219,6 +224,7 @@ Archived or inactive:
 | `docs/experiments/phase5-stage-b-native-future-stage-operator.md` | active B9-FSN-SCF Step 4-6 protocol |
 | `docs/experiments/phase5-stage-b-target-set-conditioned-operator.md` | active B10 target-set-conditioned operator protocol |
 | `scripts/analyze_phase5_stage_b_b10_tsi_basis_geometry.py` | B10-TSI-A basis geometry analyzer |
+| `scripts/analyze_phase5_stage_b_b10_tsi_coeff_usage.py` | B10-TSI-B coefficient usage analyzer |
 | `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF remote small gate runner |
 | `scripts/analyze_phase5_stage_b_b9_fsn_scf_small_gate.py` | B9-FSN-SCF small gate analyzer |
 | `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF result sync/analyze wrapper |
@@ -232,6 +238,7 @@ Archived or inactive:
 | `analysis/phase5_stage_b_b9_stage_gradient_diagnostic_20260707/` | B9-SGC positive problem-candidate diagnostic |
 | `analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/` | B9-FSN-SCF launch record and future small-gate analysis |
 | `analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/` | B10-TSI-A basis geometry diagnostic |
+| `analysis/phase5_stage_b_b10_tsi_coeff_usage_20260708/` | B10-TSI-B coefficient usage diagnostic |
 
 ## Next Step
 
@@ -242,4 +249,4 @@ Archived or inactive:
 5. Defer B7 objective optimization as a small contribution candidate.
 6. Do not implement B8-FQA under current evidence.
 7. Do not launch B9-FSN-SCF full matrix.
-8. Run B10-TSI-B coefficient usage / target-set interface diagnostic before any target-set-conditioned implementation.
+8. Run B10-TSI-C target-set oracle/control before any target-set-conditioned implementation.

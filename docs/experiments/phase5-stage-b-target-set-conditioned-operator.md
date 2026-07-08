@@ -7,14 +7,14 @@
 | `candidate_id` | `B10-TCO` |
 | `current_step` | Step 2/3：target-set-native multi-horizon problem redefinition |
 | `problem` | A6-LBF-r256 是 prefix-compatible 720-step trajectory operator，但 requested horizon / target set 没有进入 computation graph；短 horizon 只是从同一条 720 trajectory 上 prefix slicing |
-| `existence_evidence` | A6 统一模型成立但 multi-horizon 原生性不足；B7 显示 multi-prefix supervision 的 tail weakness；B9-SCF 显示单纯 stage-token coefficient modulation 被 no-stage control 解释；B10-TSI-A 显示 basis 已有 stage geometry，但 target set 仍缺席于 history-to-coeff/state path |
+| `existence_evidence` | A6 统一模型成立但 multi-horizon 原生性不足；B7 显示 multi-prefix supervision 的 tail weakness；B9-SCF 显示单纯 stage-token coefficient modulation 被 no-stage control 解释；B10-TSI-A 显示 basis 已有 stage geometry；B10-TSI-B 显示真实 `coeff` 同时激活多个 stage row subspaces |
 | `idea` | 将 requested target set $J$ 原生输入 basis-coeff operator，使模型按 $J$ 生成预测，同时保持 prefix consistency |
 | `theory_check` | 尚未完成；当前只建立问题边界与诊断计划 |
 | `design` | 候选方向是 target-set conditioned basis-coeff interface，不是 full-720 prediction 后 slicing，也不是 residual correction |
 | `narrative_gate` | `not_evaluated` |
 | `effectiveness_gate` | `not_evaluated` |
-| `artifacts` | 本文档；`analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/b10_tsi_basis_geometry_report.md` |
-| `decision` | `partial_support_continue_tsi`; 下一步做 B10-TSI-B coefficient usage / target-set interface diagnostic |
+| `artifacts` | 本文档；`analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/b10_tsi_basis_geometry_report.md`; `analysis/phase5_stage_b_b10_tsi_coeff_usage_20260708/b10_tsi_coeff_usage_report.md` |
+| `decision` | `supports_continue_to_oracle_control`; 下一步做 B10-TSI-C target-set oracle/control |
 
 ## Motivation
 
@@ -217,6 +217,27 @@ stage-differentiated coefficient geometry。
 后续不得退回 B9 式 “在既有 `coeff_base` 后加 stage modulation”。下一步是 B10-TSI-B：在真实 forward batch
 中检查 `coeff` 如何被不同 stage row subspaces 使用，并加入 no-target-set capacity control。
 
+## B10-TSI-B Coefficient Usage Result
+
+[Fact] `B10-TSI-B` 在 clean A6 checkpoint 的 test split 上读取真实 forward 中的
+`coeff: [B, C, 256]`，计算其在四个 stage row subspaces 上的 projection share，并检查同一个 `coeff`
+生成的 segment output energy 分布。
+
+Rank64 summary：
+
+| Dataset | projection share | projection cosine | output entropy | max stage share |
+| --- | ---: | ---: | ---: | ---: |
+| ETTh2 | `0.3882` | `0.3759` | `0.7969` | `0.5564` |
+| ETTm1 | `0.4950` | `0.4702` | `0.8958` | `0.4895` |
+| Weather | `0.2764` | `0.1639` | `0.9042` | `0.4416` |
+
+[Interpretation] 同一个 target-set-blind `coeff` 同时在多个 stage row subspaces 上有可观投影，而且这些
+投影不是同一方向的简单重复；output energy 也不是单一 stage 主导。这支持 B10 的收窄问题：requested
+target set 应进入 `history -> coeff/state` 路径。
+
+[Boundary] B10-TSI-B 仍不是 method evidence。它只支持进入 `B10-TSI-C target_set_oracle_control`。
+若 no-target-set capacity control 能解释 target-set-aware readout 的 headroom，则 B10 不得进入 Step 4-6。
+
 ## Problem Evidence From Existing Artifacts
 
 ### A6 Is Strong But Still Prefix-Slicing
@@ -280,7 +301,8 @@ basis-coeff coupling，而不是只提供 coefficient-space extra capacity。
 
 2. `coeff_usage_by_stage`
    - 对 A6 checkpoint 的 prediction contribution `basis[t,k] * coeff[b,c,k]` 做 stage-wise energy 分解；
-   - 判断同一批 coefficient dimensions 是否被所有 stages 共同使用，还是已经存在 stage-specialized dimensions。
+   - 判断同一批 coefficient dimensions 是否被所有 stages 共同使用，还是已经存在 stage-specialized dimensions；
+   - `B10-TSI-B` 已完成：同一个 `coeff` 同时激活多个低同向性 stage subspaces，支持继续进入 oracle/control。
 
 3. `target_set_oracle_control`
    - 用 frozen A6 hidden 和 basis，比较 target-set-specific readout 的 oracle headroom 与 no-target-set capacity control；
@@ -296,8 +318,9 @@ MSE(pred_H96, pred_H720[:, :96])
 
 ## Next Decision
 
-B10 当前不进入 implementation。下一步必须先写并运行 `B10-TSI` diagnostic。若 diagnostic 证明 target-set
-interface 的问题存在且不能被 no-target-set capacity control 解释，再进入 Step 4-6 method/narrative gate。
+B10 当前不进入 implementation。下一步必须先写并运行 `B10-TSI-C target_set_oracle_control`。若 diagnostic
+证明 target-set interface 的问题存在且不能被 no-target-set capacity control 解释，再进入 Step 4-6
+method/narrative gate。
 
 若 `B10-TSI` 也被 no-target-set control 阻断，则 StageB 应回到 Step 2/3 继续寻找第二主创新点，或将
 B7 objective optimization 降级为小贡献继续处理。
