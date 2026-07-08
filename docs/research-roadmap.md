@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B11 emergent subspace aggregation |
-| `current_11_step` | StageB Step 10/11: B11-BCF small gate decision and rollback |
+| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B12 subspace-tiled basis operator diagnostic |
+| `current_11_step` | StageB Step 2/3: B12-STBO diagnostic decision |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -541,6 +541,36 @@ still supports continuous basis subspace structure. The failure cause is `capaci
 `intervention_point_wrong` / `readout_or_head_design_wrong`. If StageB continues B11, it must roll back to Step 4
 and redesign the intervention point before any new remote launch; otherwise rollback StageB to Step 2/3.
 
+### B12 Subspace-Tiled Basis Operator Diagnostic
+
+[Decision] StageB rolled back from B11-BCF to Step 2/3 and opened `B12-STBO`: Subspace-Tiled Basis Operator.
+
+[Problem] A6-LBF-r256 uses a full-720 `learned_temporal_basis[720,K]` and returns requested horizons by prefix
+slicing. B12 asks whether this can be replaced by a more native multi-horizon operator: split the future into local
+tiles, use shared or banked local basis `U[L,r]`, and activate only the needed tiles for short horizons.
+
+[Boundary] B12 is not a residual route and not `coeff + delta`. It would replace the primary basis-coeff operator:
+`full step basis projection -> subspace-tiled local basis projection`.
+
+[Diagnostic Result] B12 Step 2/3 diagnostic completed at
+`analysis/phase5_stage_b_b12_stbo_diagnostic_20260708/`.
+
+At `tile_len=48`, `gate_rank=16`:
+
+- A6 basis side has weak evidence: `bank4` beats local DCT by ETTh2 `0.061`, ETTm1 `0.054`, Weather `0.081`,
+  but remains below independent-tile upper bound by `0.067/0.068/0.083`;
+- train-label tile structure is strong but generic: shared/bank energy is ETTh2 `0.975`, ETTm1 `0.986`,
+  Weather `0.936`, while local DCT is `0.973/0.986/0.925`;
+- coeff tile-subspace structure is not cross-dataset: adjacent/far projection cosine is positive on ETTh2
+  `0.284/0.124`, but not on ETTm1 `0.030/0.164` or Weather `0.035/0.047`.
+
+[Decision] `B12-STBO` is `diagnostic_not_enough_for_method`. Do not implement current shared/bank local-basis
+operator.
+
+[Failure Attribution] `hypothesis_false` is not proven. The current block is `generic_basis_control_explains` on
+the label side and `coeff_path_not_supported` across datasets. This is not a direction-level rejection of all
+basis-operator redesigns, but B12 cannot enter Step 4-6 without stronger non-DCT and coeff-path evidence.
+
 ## Active Implementation
 
 | File | Role |
@@ -568,6 +598,7 @@ and redesign the intervention point before any new remote launch; otherwise roll
 | `docs/experiments/phase5-stage-b-native-future-stage-operator.md` | StageB B9 native future-stage operator protocol |
 | `docs/experiments/phase5-stage-b-target-set-conditioned-operator.md` | StageB B10 target-set-conditioned operator protocol |
 | `docs/experiments/phase5-stage-b-emergent-subspace-aggregation.md` | StageB B11 emergent subspace aggregation protocol |
+| `docs/experiments/phase5-stage-b-subspace-tiled-basis-operator.md` | StageB B12 subspace-tiled basis operator protocol |
 | `docs/code-explanation/phase5-stage-b-b6-prefix-objective-diagnostic.md` | B6 diagnostic analyzer explanation |
 | `docs/code-explanation/phase5-clean-a6-rerun-analysis.md` | clean A6 validation analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b7-unified-prefix-optimization.md` | B7 diagnostic analyzer explanation |
@@ -580,11 +611,13 @@ and redesign the intervention point before any new remote launch; otherwise roll
 | `docs/code-explanation/phase5-stage-b-b10-tsi-failure-attribution.md` | B10-TSI-D failure attribution analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b11-esa-basis-coeff-diagnostic.md` | B11-ESA basis/coeff diagnostic explanation |
 | `docs/code-explanation/phase5-stage-b-b11-bcf.md` | B11-BCF implementation explanation |
+| `docs/code-explanation/phase5-stage-b-b12-stbo-diagnostic.md` | B12-STBO diagnostic explanation |
 | `scripts/analyze_phase5_stage_b_b10_tsi_basis_geometry.py` | B10-TSI-A basis geometry analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_coeff_usage.py` | B10-TSI-B coefficient usage analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_target_set_oracle.py` | B10-TSI-C target-set oracle/control analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_failure_attribution.py` | B10-TSI-D failure attribution analyzer |
 | `scripts/analyze_phase5_stage_b_b11_esa_basis_coeff_diagnostic.py` | B11-ESA basis/coeff diagnostic analyzer |
+| `scripts/analyze_phase5_stage_b_b12_stbo_diagnostic.py` | B12-STBO diagnostic analyzer |
 | `scripts/check_phase5_stage_b_b11_bcf_local.py` | B11-BCF local fallback/prefix/backward checker |
 | `scripts/remote/run_phase5_stage_b_b11_bcf_small_gate.sh` | B11-BCF remote small gate runner |
 | `scripts/sync_phase5_stage_b_b11_bcf_small_gate_results.sh` | B11-BCF remote artifact sync/analyze wrapper |
@@ -598,6 +631,7 @@ and redesign the intervention point before any new remote launch; otherwise roll
 | `artifacts/smoke_phase5_stage_b_b11_bcf_local/b11_bcf_etth2/` | B11-BCF ETTh2 one-batch CPU smoke |
 | `analysis/phase5_stage_b_b11_bcf_small_gate_20260708/launch_record.md` | B11-BCF remote launch record |
 | `analysis/phase5_stage_b_b11_bcf_small_gate_20260708/b11_bcf_small_gate_report.md` | B11-BCF small gate decision report |
+| `analysis/phase5_stage_b_b12_stbo_diagnostic_20260708/b12_stbo_report.md` | B12-STBO Step 2/3 diagnostic report |
 | `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF remote small gate runner |
 | `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF result sync/analyze wrapper |
 

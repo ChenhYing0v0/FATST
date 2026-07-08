@@ -1,0 +1,34 @@
+{
+  "decision": "diagnostic_not_enough_for_b12",
+  "gate_rank": 16,
+  "tile_len": 48,
+  "gate": {
+    "basis_bank_ok": [],
+    "basis_shared_ok": [],
+    "label_bank_ok": [],
+    "label_shared_ok": [
+      "ETTh2",
+      "ETTm1",
+      "Weather"
+    ],
+    "independent_only": [],
+    "coeff_ok": [
+      "ETTh2"
+    ],
+    "dct_risk": [
+      "ETTh2",
+      "ETTm1",
+      "Weather"
+    ]
+  },
+  "config": {
+    "dataset_root": "/Users/river/PaperResearch/Project/datasets",
+    "checkpoint_root": "analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/raw/official-last/TimeAlignOfficialUnified720_a6_clean_official-last",
+    "max_train_windows": 4096,
+    "max_coeff_rows": 20000,
+    "batch_size": 32,
+    "split": "train",
+    "device": "cpu",
+    "seed": 2021
+  }
+}

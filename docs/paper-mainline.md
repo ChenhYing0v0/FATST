@@ -9,10 +9,10 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA clean A6 validated；StageB B11 emergent subspace aggregation |
+| `current_stage` | Phase5 StageA clean A6 validated；StageB B12 subspace-tiled basis operator diagnostic |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 10/11: B11-BCF small gate decision and rollback |
+| `current_11_step` | StageB Step 2/3: B12-STBO diagnostic decision |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
 
 ## Core Claim
@@ -23,8 +23,8 @@ operator。它用一个 unified 720-step model 覆盖 96/192/336/720 多个 pred
 
 [Boundary] A6-LBF-r256 不是强意义上的 target-set-native multi-horizon architecture。它更准确地说是
 prefix-compatible learned-basis trajectory operator：模型生成同一条 720-step future trajectory，再按
-requested horizon 返回 prefix。StageB 当前已从显式 target-set conditioning 转向 B11：研究如何让
-learned basis 自发形成的 continuous future geometry 进入 primary coefficient field。
+requested horizon 返回 prefix。StageB 已依次排查显式 target-set/stage conditioning、basis-conditioned
+coefficient field，以及 subspace-tiled basis operator；当前仍未形成第二个 accepted paper-core method。
 
 ## Main Contribution Draft
 
@@ -182,6 +182,21 @@ gate 返回后被 controls 阻断：`b11_bcf` 相对 A6 mean MSE `-0.1019%`、`5
 因此 B11-BCF 不能写成 basis-conditioned architecture contribution。论文主线当前只能保留 A6-LBF-r256
 作为 accepted paper-core method；StageB 必须回到 Step 4 redesign 或 Step 2/3。
 
+B11 之后，StageB 回到 Step 2/3 并打开 `B12-STBO`: Subspace-Tiled Basis Operator。该方向来自一个更
+native 的 multi-horizon 问题：A6 当前是 `learned_temporal_basis[720,K]` 的 full-trajectory operator，
+短 horizon 只是 prefix slicing；B12 询问是否能把它改成 stage/tile-local shared or banked basis
+operator，使短 horizon 只启动必要 tiles。
+
+B12 的叙事比 B11-BCF 更接近 primary operator redesign，因为它不是 residual，也不是
+`coeff + delta`。但 Step 2/3 diagnostic 未通过 method-entry gate：A6 basis 的 `bank4` local basis
+相对 local DCT 有弱优势，ETTh2/ETTm1/Weather 分别为 `+0.061/+0.054/+0.081`，但仍低于
+independent-tile upper bound `0.067/0.068/0.083`；train-label tile structure 虽然很强，却几乎被
+local DCT 解释；真实 A6 `coeff` 的 adjacent/far tile-subspace projection pattern 只在 ETTh2 明显。
+
+因此 `B12-STBO` 当前结论是 `diagnostic_not_enough_for_method`。不得实现当前 shared/bank local-basis
+operator，也不能把它写成 Contribution 2。该结果不是所有 basis-operator redesign 的方向级否定，但说明
+下一步必须重新定义能压过 generic DCT local basis 且能跨数据集支持 coeff-path 分化的问题。
+
 ## Evidence Snapshot
 
 ### A6-LBF-r256 vs fixed-horizon per-horizon TimeAlign
@@ -260,19 +275,22 @@ Archived or inactive:
 | `docs/code-explanation/phase5-stage-b-b10-tsi-failure-attribution.md` | B10-TSI-D failure attribution analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b11-esa-basis-coeff-diagnostic.md` | B11-ESA basis/coeff diagnostic analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b11-bcf.md` | B11-BCF implementation explanation |
+| `docs/code-explanation/phase5-stage-b-b12-stbo-diagnostic.md` | B12-STBO diagnostic analyzer explanation |
 | `docs/stage-ledgers/phase5-timealign-interface.md` | active StageA/StageB ledger |
 | `docs/research-roadmap.md` | active roadmap |
-| `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | next StageB diagnostic protocol |
+| `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | B6 rejected objective diagnostic protocol |
 | `docs/experiments/phase5-stage-b-unified-prefix-optimization-diagnostic.md` | active B7 unified prefix optimization diagnostic protocol |
 | `docs/experiments/phase5-stage-b-future-query-aligned-basis-architecture.md` | B8 rejected architecture candidate protocol |
-| `docs/experiments/phase5-stage-b-native-future-stage-operator.md` | active B9-FSN-SCF Step 4-6 protocol |
-| `docs/experiments/phase5-stage-b-target-set-conditioned-operator.md` | active B10 target-set-conditioned operator protocol |
-| `docs/experiments/phase5-stage-b-emergent-subspace-aggregation.md` | active B11 emergent subspace aggregation protocol |
+| `docs/experiments/phase5-stage-b-native-future-stage-operator.md` | B9-FSN-SCF blocked protocol |
+| `docs/experiments/phase5-stage-b-target-set-conditioned-operator.md` | B10 target-set-conditioned operator protocol |
+| `docs/experiments/phase5-stage-b-emergent-subspace-aggregation.md` | B11 emergent subspace aggregation protocol |
+| `docs/experiments/phase5-stage-b-subspace-tiled-basis-operator.md` | B12 subspace-tiled basis operator protocol |
 | `scripts/analyze_phase5_stage_b_b10_tsi_basis_geometry.py` | B10-TSI-A basis geometry analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_coeff_usage.py` | B10-TSI-B coefficient usage analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_target_set_oracle.py` | B10-TSI-C target-set oracle/control analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_failure_attribution.py` | B10-TSI-D failure attribution analyzer |
 | `scripts/analyze_phase5_stage_b_b11_esa_basis_coeff_diagnostic.py` | B11-ESA basis/coeff diagnostic analyzer |
+| `scripts/analyze_phase5_stage_b_b12_stbo_diagnostic.py` | B12-STBO diagnostic analyzer |
 | `scripts/check_phase5_stage_b_b11_bcf_local.py` | B11-BCF local fallback/prefix/backward checker |
 | `scripts/remote/run_phase5_stage_b_b11_bcf_small_gate.sh` | B11-BCF remote small gate runner |
 | `scripts/sync_phase5_stage_b_b11_bcf_small_gate_results.sh` | B11-BCF remote artifact sync/analyze wrapper |
@@ -298,6 +316,7 @@ Archived or inactive:
 | `artifacts/smoke_phase5_stage_b_b11_bcf_local/b11_bcf_etth2/` | B11-BCF local ETTh2 smoke |
 | `analysis/phase5_stage_b_b11_bcf_small_gate_20260708/launch_record.md` | B11-BCF remote launch record |
 | `analysis/phase5_stage_b_b11_bcf_small_gate_20260708/b11_bcf_small_gate_report.md` | B11-BCF small gate decision |
+| `analysis/phase5_stage_b_b12_stbo_diagnostic_20260708/b12_stbo_report.md` | B12-STBO Step 2/3 diagnostic decision |
 
 ## Next Step
 
@@ -310,3 +329,4 @@ Archived or inactive:
 7. Do not launch B9-FSN-SCF full matrix.
 8. Do not continue explicit stage/horizon conditioning as the main StageB route.
 9. B11-BCF is blocked by no-basis and constant-slot controls; do not claim it as paper-core.
+10. B12-STBO is not method-ready; local DCT explains label-side tile structure and coeff-path evidence is ETTh2-only.
