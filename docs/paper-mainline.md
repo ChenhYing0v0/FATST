@@ -12,7 +12,7 @@
 | `current_stage` | Phase5 StageA clean A6 validated；StageB B11 emergent subspace aggregation |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 7: B11-BCF local implementation preparation |
+| `current_11_step` | StageB Step 8: B11-BCF remote small gate preparation |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
 
 ## Core Claim
@@ -173,10 +173,11 @@ basis-conditioned coefficient field：用 overlapping basis-window descriptors �
 再通过同一组 `learned_temporal_basis` 做 primary prediction。它不输入 hard `stage_id` 或
 `horizon_id`，也不写成 `A6 + residual repair`。
 
-当前 B11 仍不是 accepted contribution。下一步只能进入 local implementation：必须同时实现
-`no-basis`、`shuffled-basis`、`constant-slot` 和 `A6 fallback` controls，并先通过 fallback、prefix
-consistency 与 one-batch smoke。若 no-basis/constant-slot control 持平，论文只能把 B11 记为
-capacity/head effect，而不能 claim basis-conditioned architecture mechanism。
+当前 B11 仍不是 accepted contribution。B11-BCF local implementation 已通过 smoke：A6 fallback H96
+max abs `3.695488e-06`，B11 H96 vs H720 prefix max abs `0.0`，四个 B11/control modes 均通过
+synthetic backward，ETTh2 one-batch CPU smoke 也完成；remote runner/sync/analyzer 已准备。下一步只能做 remote small gate。若
+no-basis/constant-slot control 持平，论文只能把 B11 记为 capacity/head effect，而不能 claim
+basis-conditioned architecture mechanism。
 
 ## Evidence Snapshot
 
@@ -255,6 +256,7 @@ Archived or inactive:
 | `docs/code-explanation/phase5-stage-b-b10-tsi-target-set-oracle.md` | B10-TSI-C target-set oracle/control analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b10-tsi-failure-attribution.md` | B10-TSI-D failure attribution analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b11-esa-basis-coeff-diagnostic.md` | B11-ESA basis/coeff diagnostic analyzer explanation |
+| `docs/code-explanation/phase5-stage-b-b11-bcf.md` | B11-BCF implementation explanation |
 | `docs/stage-ledgers/phase5-timealign-interface.md` | active StageA/StageB ledger |
 | `docs/research-roadmap.md` | active roadmap |
 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | next StageB diagnostic protocol |
@@ -268,6 +270,10 @@ Archived or inactive:
 | `scripts/analyze_phase5_stage_b_b10_tsi_target_set_oracle.py` | B10-TSI-C target-set oracle/control analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_failure_attribution.py` | B10-TSI-D failure attribution analyzer |
 | `scripts/analyze_phase5_stage_b_b11_esa_basis_coeff_diagnostic.py` | B11-ESA basis/coeff diagnostic analyzer |
+| `scripts/check_phase5_stage_b_b11_bcf_local.py` | B11-BCF local fallback/prefix/backward checker |
+| `scripts/remote/run_phase5_stage_b_b11_bcf_small_gate.sh` | B11-BCF remote small gate runner |
+| `scripts/sync_phase5_stage_b_b11_bcf_small_gate_results.sh` | B11-BCF remote artifact sync/analyze wrapper |
+| `scripts/analyze_phase5_stage_b_b11_bcf_small_gate.py` | B11-BCF small gate analyzer |
 | `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF remote small gate runner |
 | `scripts/analyze_phase5_stage_b_b9_fsn_scf_small_gate.py` | B9-FSN-SCF small gate analyzer |
 | `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF result sync/analyze wrapper |
@@ -286,6 +292,7 @@ Archived or inactive:
 | `analysis/phase5_stage_b_b10_tsi_failure_attribution_20260708/` | B10-TSI-D rank64 failure attribution diagnostic |
 | `analysis/phase5_stage_b_b10_tsi_failure_attribution_rank16_20260708/` | B10-TSI-D rank16 stability control |
 | `analysis/phase5_stage_b_b11_esa_basis_coeff_diagnostic_20260708/` | B11-ESA basis/coeff diagnostic |
+| `artifacts/smoke_phase5_stage_b_b11_bcf_local/b11_bcf_etth2/` | B11-BCF local ETTh2 smoke |
 
 ## Next Step
 
@@ -297,4 +304,4 @@ Archived or inactive:
 6. Do not implement B8-FQA under current evidence.
 7. Do not launch B9-FSN-SCF full matrix.
 8. Do not continue explicit stage/horizon conditioning as the main StageB route.
-9. Next StageB action is B11-BCF local implementation with mandatory controls; no remote experiment until fallback, prefix consistency, and smoke checks pass.
+9. Next StageB action is B11-BCF remote small gate with mandatory controls; no paper-core claim until B11 beats no-basis and constant-slot controls.

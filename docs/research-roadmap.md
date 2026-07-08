@@ -10,7 +10,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
 | `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B11 emergent subspace aggregation |
-| `current_11_step` | StageB Step 7: B11-BCF local implementation preparation |
+| `current_11_step` | StageB Step 8: B11-BCF remote small gate preparation |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -510,9 +510,16 @@ Hard basis-row KMeans 只在 ETTh2 上有清晰 temporal structure，不能支�
 `A6 fallback` controls。若 `no-basis` 或 `constant-slot` 解释了收益，B11 只能记为 capacity/head effect，
 不能写成 basis-conditioned architecture contribution。
 
-[Next] 进入 Step 7 local implementation preparation：先实现最小 B11-BCF 与 controls，再做
-py_compile、A6 fallback、prefix consistency 和 ETTh2 one-batch smoke。远程实验仍需等本地验证和
-commit/push 之后再做 GPU preflight。
+[Implementation Result] B11-BCF local implementation has passed smoke verification. Added readout modes:
+`basis-conditioned-coefficient-field`, `basis-conditioned-coefficient-field-no-basis`,
+`basis-conditioned-coefficient-field-shuffled-basis`, and
+`basis-conditioned-coefficient-field-constant-slot`. Verification results: `py_compile` passed, A6 fallback H96
+max abs `3.695488e-06`, B11 H96 vs H720 prefix max abs `0.0`, all B11 modes passed synthetic backward, and
+ETTh2 one-batch CPU smoke completed.
+
+[Next] 进入 Step 8 remote small gate preparation。远程 runner/sync/analyzer 已准备。远程前必须
+commit/push，并做 GPU preflight。Small gate 必须至少包含 `a6_clean`, `b11_bcf`, `b11_no_basis`,
+and `b11_constant_slot`；`b11_shuffled_basis` 可作为扩展 control。
 
 ## Active Implementation
 
@@ -552,17 +559,23 @@ commit/push 之后再做 GPU preflight。
 | `docs/code-explanation/phase5-stage-b-b10-tsi-target-set-oracle.md` | B10-TSI-C oracle/control analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b10-tsi-failure-attribution.md` | B10-TSI-D failure attribution analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b11-esa-basis-coeff-diagnostic.md` | B11-ESA basis/coeff diagnostic explanation |
+| `docs/code-explanation/phase5-stage-b-b11-bcf.md` | B11-BCF implementation explanation |
 | `scripts/analyze_phase5_stage_b_b10_tsi_basis_geometry.py` | B10-TSI-A basis geometry analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_coeff_usage.py` | B10-TSI-B coefficient usage analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_target_set_oracle.py` | B10-TSI-C target-set oracle/control analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_failure_attribution.py` | B10-TSI-D failure attribution analyzer |
 | `scripts/analyze_phase5_stage_b_b11_esa_basis_coeff_diagnostic.py` | B11-ESA basis/coeff diagnostic analyzer |
+| `scripts/check_phase5_stage_b_b11_bcf_local.py` | B11-BCF local fallback/prefix/backward checker |
+| `scripts/remote/run_phase5_stage_b_b11_bcf_small_gate.sh` | B11-BCF remote small gate runner |
+| `scripts/sync_phase5_stage_b_b11_bcf_small_gate_results.sh` | B11-BCF remote artifact sync/analyze wrapper |
+| `scripts/analyze_phase5_stage_b_b11_bcf_small_gate.py` | B11-BCF small gate analyzer |
 | `analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/b10_tsi_basis_geometry_report.md` | B10-TSI-A basis geometry report |
 | `analysis/phase5_stage_b_b10_tsi_coeff_usage_20260708/b10_tsi_coeff_usage_report.md` | B10-TSI-B coefficient usage report |
 | `analysis/phase5_stage_b_b10_tsi_target_set_oracle_20260708/b10_tsi_target_set_oracle_report.md` | B10-TSI-C oracle/control report |
 | `analysis/phase5_stage_b_b10_tsi_failure_attribution_20260708/b10_tsi_failure_attribution_report.md` | B10-TSI-D rank64 failure attribution report |
 | `analysis/phase5_stage_b_b10_tsi_failure_attribution_rank16_20260708/b10_tsi_failure_attribution_report.md` | B10-TSI-D rank16 stability control |
 | `analysis/phase5_stage_b_b11_esa_basis_coeff_diagnostic_20260708/b11_esa_basis_coeff_report.md` | B11-ESA basis/coeff diagnostic report |
+| `artifacts/smoke_phase5_stage_b_b11_bcf_local/b11_bcf_etth2/` | B11-BCF ETTh2 one-batch CPU smoke |
 | `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF remote small gate runner |
 | `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF result sync/analyze wrapper |
 

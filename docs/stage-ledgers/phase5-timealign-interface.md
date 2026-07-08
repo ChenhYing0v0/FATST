@@ -8,11 +8,11 @@
 | Field | Content |
 | --- | --- |
 | `stage_id` | `phase5-timealign-interface` |
-| `current_11_step` | StageB Step 7 B11-BCF local implementation preparation |
+| `current_11_step` | StageB Step 8 B11-BCF remote small gate preparation |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator on official-source TimeAlign encoder |
 | `active_question` | Can A6's learned basis geometry drive continuous history aggregation without explicit stage/horizon encoding |
-| `latest_decision` | B11 Step 4-6 design gate passed only for `B11-BCF`: a continuous basis-conditioned coefficient field with no-basis, shuffled-basis, constant-slot, and A6 fallback controls |
-| `next_required_action` | Implement minimal local `B11-BCF` and required controls; verify A6 fallback, prefix consistency, and one-batch smoke before any remote launch |
+| `latest_decision` | B11-BCF local implementation smoke passed: A6 fallback max abs `3.695488e-06`, prefix mismatch `0.0`, synthetic backward passed for all B11 controls, ETTh2 one-batch CPU smoke passed |
+| `next_required_action` | Commit/push implementation and remote scripts, then run GPU preflight and launch B11-BCF remote small gate |
 | `rollback_point` | Do not implement hard cluster/stage variants; if no-basis or constant-slot explains the gain, mark B11 as capacity/head effect and rollback StageB to Step 2/3 |
 
 ## StageA Fixed Result
@@ -77,7 +77,7 @@ Clean rerun after code cleanup:
 | `B8-FQA` | `rejected_by_ocd_control` | A6-LBF 的 coefficient 是 sample-specific 但 future-position-invariant；future queries 可在 basis prediction 前将 history representation 对齐到 target positions | failed：learned segment-specific correction has headroom, but DCT control has stronger absolute residual reduction | not evaluated | Do not implement B8; return StageB to Step 2/3 | `docs/experiments/phase5-stage-b-future-query-aligned-basis-architecture.md`; `analysis/phase5_stage_b_future_query_aligned_architecture_research_20260707/stage_b_architecture_direction_report.md`; `analysis/phase5_stage_b_b8_ocd_coefficient_oracle_20260707/b8_ocd_report.md` |
 | `B9-FSN-SCF` | `blocked_by_no_stage_control` | A6-LBF 的 single coefficient state 同时服务多个 future stages；若 stage losses 对该 coefficient 的梯度方向不一致，则需要 native future-stage-aware coefficient field | passed Step 4-7, but failed effectiveness mechanism gate：B9 cannot beat same-parameter no-stage control | failed：B9 vs A6 `-0.13%`, no-stage vs A6 `-0.13%`, B9 vs no-stage `+0.0036%` and `2/12` wins | Do not launch full matrix; rollback to Step 4 redesign or Step 2/3 | `docs/experiments/phase5-stage-b-native-future-stage-operator.md`; `docs/code-explanation/phase5-stage-b-b9-fsn-scf.md`; `analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/b9_fsn_scf_small_gate_report.md` |
 | `B10-TCO` | `superseded_by_B11` | A6-LBF 是 prefix-compatible 720-step trajectory operator；requested target set 没有进入 computation graph，短 horizon 是 prefix slicing | B10-TSI-C/D block frozen/offline readout diagnostics: target-set readouts remain unstable or weaker than pooled controls, including rank16 stability control | not active | User reframed StageB away from explicit stage/target conditioning; evidence retained as rollback context | `docs/experiments/phase5-stage-b-target-set-conditioned-operator.md`; `analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/b10_tsi_basis_geometry_report.md`; `analysis/phase5_stage_b_b10_tsi_coeff_usage_20260708/b10_tsi_coeff_usage_report.md`; `analysis/phase5_stage_b_b10_tsi_target_set_oracle_20260708/b10_tsi_target_set_oracle_report.md`; `analysis/phase5_stage_b_b10_tsi_failure_attribution_20260708/b10_tsi_failure_attribution_report.md`; `analysis/phase5_stage_b_b10_tsi_failure_attribution_rank16_20260708/b10_tsi_failure_attribution_report.md` |
-| `B11-ESA/BCF` | `method_candidate_ready_for_local_implementation` | A6 不应依赖显式 stage/horizon encoding；应利用 learned basis 自发形成的 continuous future geometry 来驱动 coefficient field / history aggregation | passed for continuous `B11-BCF` only：basis-window descriptors generate a soft coefficient field in the primary prediction path; hard cluster/stage variants remain blocked | not evaluated | Implement minimal local B11-BCF plus `no_basis`, `shuffled_basis`, `constant_slot`, and A6 fallback checks | `docs/experiments/phase5-stage-b-emergent-subspace-aggregation.md`; `analysis/phase5_stage_b_b11_esa_basis_coeff_diagnostic_20260708/b11_esa_basis_coeff_report.md`; `docs/code-explanation/phase5-stage-b-b11-esa-basis-coeff-diagnostic.md` |
+| `B11-ESA/BCF` | `local_implementation_smoke_passed` | A6 不应依赖显式 stage/horizon encoding；应利用 learned basis 自发形成的 continuous future geometry 来驱动 coefficient field / history aggregation | passed for continuous `B11-BCF` only：basis-window descriptors generate a soft coefficient field in the primary prediction path; hard cluster/stage variants remain blocked | local smoke passed; remote not evaluated | Prepare remote small gate with required controls; do not claim mechanism unless B11 beats no-basis/constant-slot controls | `docs/experiments/phase5-stage-b-emergent-subspace-aggregation.md`; `analysis/phase5_stage_b_b11_esa_basis_coeff_diagnostic_20260708/b11_esa_basis_coeff_report.md`; `docs/code-explanation/phase5-stage-b-b11-esa-basis-coeff-diagnostic.md`; `docs/code-explanation/phase5-stage-b-b11-bcf.md` |
 
 ## Experiment Ledger
 
@@ -106,6 +106,7 @@ Clean rerun after code cleanup:
 | B10-TSI-D failure attribution | `B10-TCO` | intervention/readout attribution diagnostic | Main rank64 stabilized target vs pooled: `coeff_late -12.37%`, `memory_pool -40.75%`, `memory_plus_coeff -44.47%`; rank16 control remains negative (`-5.15%/-32.03%/-36.37%`) and still shows ETTh2/Weather instability | `offline_readout_route_blocked_but_direction_not_rejected`; next is native trainable target-query design gate or rollback | `analysis/phase5_stage_b_b10_tsi_failure_attribution_20260708/b10_tsi_failure_attribution_report.md`; `analysis/phase5_stage_b_b10_tsi_failure_attribution_rank16_20260708/b10_tsi_failure_attribution_report.md`; `docs/code-explanation/phase5-stage-b-b10-tsi-failure-attribution.md` |
 | B11-ESA basis/coeff diagnostic | `B11-ESA` | emergent subspace problem diagnostic | KMeans clusters are only clear on ETTh2, but sliding-window basis subspaces are consistent: adjacent/far overlap `0.3900/0.0649`, `0.4021/0.0811`, `0.3810/0.0700`; coeff projection cosine also drops from adjacent to far windows | `problem_candidate_passed`; enter Step 4-6 design gate, not implementation | `analysis/phase5_stage_b_b11_esa_basis_coeff_diagnostic_20260708/b11_esa_basis_coeff_report.md`; `docs/code-explanation/phase5-stage-b-b11-esa-basis-coeff-diagnostic.md` |
 | B11-BCF Step 4-6 design gate | `B11-ESA/BCF` | narrative/method gate | Defines a continuous basis-conditioned coefficient field: overlapping basis-window descriptors drive soft coefficient states before basis projection, with no hard `stage_id`/`horizon_id` | `method_candidate_ready_for_local_implementation`; controls are mandatory before remote launch | `docs/experiments/phase5-stage-b-emergent-subspace-aggregation.md` |
+| B11-BCF local implementation smoke | `B11-ESA/BCF` | implementation verification | Added B11-BCF and three controls; A6 fallback H96 max abs `3.695488e-06`; B11 H96 vs H720 prefix max abs `0.0`; all B11 modes pass synthetic backward; ETTh2 one-batch CPU smoke passed; remote runner/sync/analyzer prepared | `local_implementation_smoke_passed`; next commit/push and remote small gate | `baselines/timealign_official/models/TimeAlign.py`; `baselines/timealign_official/train_repo.py`; `scripts/check_phase5_stage_b_b11_bcf_local.py`; `scripts/remote/run_phase5_stage_b_b11_bcf_small_gate.sh`; `scripts/sync_phase5_stage_b_b11_bcf_small_gate_results.sh`; `scripts/analyze_phase5_stage_b_b11_bcf_small_gate.py`; `docs/code-explanation/phase5-stage-b-b11-bcf.md` |
 
 ## Pending Tasks
 
@@ -135,7 +136,8 @@ Clean rerun after code cleanup:
 | Decide B10 native target-query design gate | Codex | B10-TSI-D blocks offline readout but not broader direction | `superseded` | User reframed direction away from explicit stage/target conditioning toward emergent basis-subspace utilization |
 | Run B11-ESA basis/coeff diagnostic | Codex | User requested diagnosis of basis subspaces and coeff usage directions without hard stage encoding | `completed` | B11 problem candidate passed; proceed to Step 4-6 design gate |
 | Design B11 continuous basis-conditioned aggregation | Codex | B11 diagnostic supports continuous basis geometry and coeff direction decay | `completed` | Done; `B11-BCF` may enter local implementation only with required controls |
-| Implement B11-BCF minimal local gate | Codex | B11 Step 4-6 design gate passed | `pending` | Add model/readout mode, controls, code explanation, py_compile, fallback check, prefix consistency check, and ETTh2 one-batch smoke |
+| Implement B11-BCF minimal local gate | Codex | B11 Step 4-6 design gate passed | `completed` | Done; local fallback/prefix/backward and ETTh2 one-batch CPU smoke passed |
+| Launch B11-BCF remote small gate | Codex | B11 local implementation smoke passed | `pending` | After commit/push, run GPU preflight and launch workload-aware remote small gate with required controls |
 
 ## Paper Mainline Sync Log
 
@@ -165,6 +167,7 @@ Clean rerun after code cleanup:
 | 2026-07-08 | User reframed StageB away from explicit stage encoding | Contribution 2 candidate | no accepted paper claim | Open B11-ESA: use emergent basis subspace geometry rather than hard stage/target conditioning |
 | 2026-07-08 | B11-ESA basis/coeff diagnostic returned | Contribution 2 candidate | no accepted paper claim | B11 passes Step 2/3 and may enter Step 4-6 design gate; no implementation yet |
 | 2026-07-08 | B11-BCF Step 4-6 design gate passed | Contribution 2 candidate | no accepted paper claim | May enter local implementation with mandatory controls; remote launch blocked until fallback/prefix/smoke verification passes |
+| 2026-07-08 | B11-BCF local implementation smoke passed | Contribution 2 candidate | no accepted paper claim | Remote small gate may launch after commit/push and GPU preflight; controls remain mandatory |
 
 ## Active Artifacts
 
@@ -187,6 +190,7 @@ Clean rerun after code cleanup:
 | `docs/code-explanation/phase5-stage-b-b10-tsi-target-set-oracle.md` | B10-TSI-C target-set oracle/control analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b10-tsi-failure-attribution.md` | B10-TSI-D failure attribution analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b11-esa-basis-coeff-diagnostic.md` | B11-ESA basis/coeff diagnostic analyzer explanation |
+| `docs/code-explanation/phase5-stage-b-b11-bcf.md` | B11-BCF model implementation explanation |
 | `docs/experiments/phase5-stage-b-reliability-aware-supervision-redesign.md` | StageB problem definition and B1/B2 candidate boundary |
 | `docs/experiments/phase5-stage-b-distance-normalized-seasonal-residual-diagnostic.md` | B3 diagnostic protocol |
 | `docs/experiments/phase5-stage-b-timealign-dependency-and-basis-align-diagnostic.md` | B4 dependency and B5 basis-align protocol |
@@ -213,6 +217,10 @@ Clean rerun after code cleanup:
 | `scripts/analyze_phase5_stage_b_b10_tsi_target_set_oracle.py` | B10-TSI-C target-set oracle/control analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_failure_attribution.py` | B10-TSI-D failure attribution analyzer |
 | `scripts/analyze_phase5_stage_b_b11_esa_basis_coeff_diagnostic.py` | B11-ESA basis/coeff diagnostic analyzer |
+| `scripts/check_phase5_stage_b_b11_bcf_local.py` | B11-BCF fallback/prefix/backward local checker |
+| `scripts/remote/run_phase5_stage_b_b11_bcf_small_gate.sh` | B11-BCF remote small gate runner |
+| `scripts/sync_phase5_stage_b_b11_bcf_small_gate_results.sh` | B11-BCF remote artifact sync/analyze wrapper |
+| `scripts/analyze_phase5_stage_b_b11_bcf_small_gate.py` | B11-BCF small gate analyzer |
 | `scripts/remote/run_phase5_stage_b_timealign_dependency_ablation.sh` | completed remote no-align/no-recon ablation runner |
 | `scripts/remote/run_phase5_a6_lbf_r256_main.sh` | clean A6-LBF-r256 remote runner |
 | `analysis/phase5_timealign_hss_a6_capacity_native_gate_20260703/` | StageA accepted evidence |
@@ -235,6 +243,7 @@ Clean rerun after code cleanup:
 | `analysis/phase5_stage_b_b10_tsi_failure_attribution_20260708/b10_tsi_failure_attribution_report.md` | B10-TSI-D rank64 failure attribution decision |
 | `analysis/phase5_stage_b_b10_tsi_failure_attribution_rank16_20260708/b10_tsi_failure_attribution_report.md` | B10-TSI-D rank16 stability control |
 | `analysis/phase5_stage_b_b11_esa_basis_coeff_diagnostic_20260708/b11_esa_basis_coeff_report.md` | B11-ESA basis/coeff diagnostic decision |
+| `artifacts/smoke_phase5_stage_b_b11_bcf_local/b11_bcf_etth2/` | B11-BCF ETTh2 one-batch CPU smoke |
 
 ## Archived Evidence
 

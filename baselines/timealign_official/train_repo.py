@@ -31,6 +31,10 @@ PREFIX_READOUT_MODES = {
     "learned-basis-forecast-operator",
     "stage-native-coefficient-field",
     "stage-native-coefficient-field-no-stage",
+    "basis-conditioned-coefficient-field",
+    "basis-conditioned-coefficient-field-no-basis",
+    "basis-conditioned-coefficient-field-shuffled-basis",
+    "basis-conditioned-coefficient-field-constant-slot",
 }
 
 
@@ -213,6 +217,11 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         stage_token_dim=args.stage_token_dim,
         stage_field_rank=args.stage_field_rank,
         stage_gate_init=args.stage_gate_init,
+        basis_field_window_len=args.basis_field_window_len,
+        basis_field_stride=args.basis_field_stride,
+        basis_field_rank=args.basis_field_rank,
+        basis_field_tau=args.basis_field_tau,
+        basis_field_gate_init=args.basis_field_gate_init,
     )
 
 
@@ -258,6 +267,22 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
                     "stage_token_l2": float(model.stage_tokens.detach().cpu().norm().item()),
                     "stage_coeff_down_l2": float(model.stage_coeff_down.weight.detach().cpu().norm().item()),
                     "stage_coeff_up_l2": float(model.stage_coeff_up.weight.detach().cpu().norm().item()),
+                }
+            )
+    if hasattr(model, "basis_field_gate_logit"):
+        with torch.no_grad():
+            gate = float(torch.sigmoid(model.basis_field_gate_logit.detach().cpu()).item())
+            payload.update(
+                {
+                    "basis_field_window_len": int(model.basis_field_window_len),
+                    "basis_field_stride": int(model.basis_field_stride),
+                    "basis_field_window_count": int(model.basis_field_window_count),
+                    "basis_field_rank": int(model.basis_field_rank),
+                    "basis_field_tau": float(model.basis_field_tau),
+                    "basis_field_gate_sigmoid": gate,
+                    "basis_field_desc_proj_l2": float(model.basis_field_desc_proj.weight.detach().cpu().norm().item()),
+                    "basis_field_state_proj_l2": float(model.basis_field_state_proj.weight.detach().cpu().norm().item()),
+                    "basis_field_delta_l2": float(model.basis_field_delta.weight.detach().cpu().norm().item()),
                 }
             )
     return payload
@@ -687,6 +712,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--stage-token-dim", type=int, default=32)
     parser.add_argument("--stage-field-rank", type=int, default=32)
     parser.add_argument("--stage-gate-init", type=float, default=-5.0)
+    parser.add_argument("--basis-field-window-len", type=int, default=96)
+    parser.add_argument("--basis-field-stride", type=int, default=48)
+    parser.add_argument("--basis-field-rank", type=int, default=32)
+    parser.add_argument("--basis-field-tau", type=float, default=1.0)
+    parser.add_argument("--basis-field-gate-init", type=float, default=-5.0)
     parser.add_argument(
         "--pred-loss-mode",
         choices=["full", "multi-prefix"],
@@ -709,6 +739,14 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("stage_token_dim must be positive")
     if args.stage_field_rank <= 0:
         raise ValueError("stage_field_rank must be positive")
+    if args.basis_field_window_len <= 0:
+        raise ValueError("basis_field_window_len must be positive")
+    if args.basis_field_stride <= 0:
+        raise ValueError("basis_field_stride must be positive")
+    if args.basis_field_rank <= 0:
+        raise ValueError("basis_field_rank must be positive")
+    if args.basis_field_tau <= 0.0:
+        raise ValueError("basis_field_tau must be positive")
     if args.readout_mode in PREFIX_READOUT_MODES and args.mode != "unified":
         raise ValueError("Prefix-native learned-basis readouts require --mode unified --pred-len 720")
     return args

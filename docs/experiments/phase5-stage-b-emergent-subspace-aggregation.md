@@ -5,16 +5,16 @@
 | 字段 | 内容 |
 | --- | --- |
 | `candidate_id` | `B11-ESA` |
-| `current_step` | Step 4-6：native basis-conditioned aggregation design gate |
+| `current_step` | Step 7：B11-BCF local implementation smoke passed |
 | `problem` | A6 不应依赖显式 stage / horizon encoding；需要利用 `learned_temporal_basis` 自发形成的 continuous future geometry，让架构更自然地聚合 history information |
 | `existence_evidence` | B10-TSI-A/B 显示 basis row spaces 已有分化、coeff 在不同 subspaces 上被差异化使用；B11 进一步证明 sliding-window basis subspaces 沿未来时间轴连续变化，coeff projection 也随窗口距离变化 |
 | `idea` | 用 basis-induced continuous subspace descriptors 驱动 coefficient field / history aggregation，而不是把人工 stage token 加到 coeff |
 | `theory_check` | `B11-BCF` 只在 A6 primary prediction path 内工作；目标是更有效利用 basis geometry，不改变 unified/prefix-consistent 立场 |
 | `design` | `B11-BCF`: Continuous Basis-conditioned Coefficient Field |
 | `narrative_gate` | `passed_for_minimal_local_implementation`; only for the continuous soft field with required controls |
-| `effectiveness_gate` | `not_evaluated` |
-| `artifacts` | `analysis/phase5_stage_b_b11_esa_basis_coeff_diagnostic_20260708/b11_esa_basis_coeff_report.md`; `docs/code-explanation/phase5-stage-b-b11-esa-basis-coeff-diagnostic.md` |
-| `decision` | `method_candidate_ready_for_local_implementation`; do not implement hard cluster/stage variants |
+| `effectiveness_gate` | `local_smoke_passed`; remote small gate not evaluated |
+| `artifacts` | `analysis/phase5_stage_b_b11_esa_basis_coeff_diagnostic_20260708/b11_esa_basis_coeff_report.md`; `docs/code-explanation/phase5-stage-b-b11-esa-basis-coeff-diagnostic.md`; `docs/code-explanation/phase5-stage-b-b11-bcf.md`; `artifacts/smoke_phase5_stage_b_b11_bcf_local/b11_bcf_etth2/` |
+| `decision` | `local_implementation_smoke_passed`; remote small gate required before any paper-core claim |
 
 ## Motivation
 
@@ -239,4 +239,28 @@ Effectiveness gate：
 - B11 研究如何让 learned basis 自身形成的 continuous future geometry 进入 primary coefficient field；
 - 这可以构成第二个架构贡献候选，但必须先通过 no-basis / constant-slot controls。
 
-下一步进入 Step 7 local implementation。不得实现 hard cluster/stage variant；不得在 controls 缺失时启动远程实验。
+## Step 7 Local Implementation Result
+
+已实现 readout modes：
+
+- `basis-conditioned-coefficient-field`;
+- `basis-conditioned-coefficient-field-no-basis`;
+- `basis-conditioned-coefficient-field-shuffled-basis`;
+- `basis-conditioned-coefficient-field-constant-slot`。
+
+本地验证结果：
+
+| Check | Result |
+| --- | ---: |
+| `py_compile` | passed |
+| A6 fallback H96 max abs | `3.695488e-06` |
+| B11 H96 vs H720 prefix max abs | `0.000000e+00` |
+| B11/control synthetic backward | passed |
+| ETTh2 one-batch CPU smoke | passed |
+
+Code explanation:
+
+- `docs/code-explanation/phase5-stage-b-b11-bcf.md`。
+
+下一步进入 remote small gate preparation。不得实现 hard cluster/stage variant；不得在 remote small gate
+缺少 `no_basis` / `constant_slot` controls 时做 paper-core claim。

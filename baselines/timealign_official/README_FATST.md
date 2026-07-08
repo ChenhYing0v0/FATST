@@ -82,3 +82,20 @@ before basis projection. They do not restore the TimeAlign future reconstruction
 The final stage modulation layer is zero-initialized, so the initial forward path is function-preserving with respect
 to `learned-basis-forecast-operator`. The no-stage control keeps the same module shape but shares the averaged stage
 token/gate across all stages.
+
+## B11-BCF Continuous Basis-Conditioned Field
+
+StageB B11 adds four prefix-native learned-basis readout modes:
+
+- `basis-conditioned-coefficient-field`: B11-BCF candidate;
+- `basis-conditioned-coefficient-field-no-basis`: learned slot control without basis descriptors;
+- `basis-conditioned-coefficient-field-shuffled-basis`: reversed basis-order control;
+- `basis-conditioned-coefficient-field-constant-slot`: constant row-mixture control.
+
+These modes keep the A6 temporal basis projection but replace the single coefficient vector with a soft coefficient
+field. The field is generated from overlapping basis-window descriptors, then mixed for each future row before the
+same `learned_temporal_basis` projection. They do not restore TimeAlign future reconstruction/alignment and still force
+`w_recon=0.0` and `w_align=0.0`.
+
+The field delta layer is zero-initialized. At initialization all slots equal the A6 `coeff_base`, so the output is
+function-preserving up to numerical tolerance.

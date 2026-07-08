@@ -10,6 +10,10 @@ LEARNED_BASIS_READOUTS = {
     "learned-basis-forecast-operator",
     "stage-native-coefficient-field",
     "stage-native-coefficient-field-no-stage",
+    "basis-conditioned-coefficient-field",
+    "basis-conditioned-coefficient-field-no-basis",
+    "basis-conditioned-coefficient-field-shuffled-basis",
+    "basis-conditioned-coefficient-field-constant-slot",
 }
 
 
@@ -46,7 +50,7 @@ class Model(nn.Module):
         if self.readout_mode not in {"official", *LEARNED_BASIS_READOUTS}:
             raise ValueError(
                 "Clean TimeAlign supports only 'official' and "
-                "learned-basis/stage-native readout modes"
+                "learned-basis/stage-native/basis-conditioned readout modes"
             )
         self.has_future_recon_branch = self.readout_mode == "official"
 
@@ -113,6 +117,41 @@ class Model(nn.Module):
                 nn.init.normal_(self.stage_tokens, mean=0.0, std=0.02)
                 nn.init.zeros_(self.stage_coeff_up.weight)
                 nn.init.zeros_(self.stage_coeff_up.bias)
+            if self.readout_mode.startswith("basis-conditioned-coefficient-field"):
+                self.basis_field_window_len = int(getattr(configs, "basis_field_window_len", 96))
+                self.basis_field_stride = int(getattr(configs, "basis_field_stride", 48))
+                self.basis_field_rank = int(getattr(configs, "basis_field_rank", 32))
+                self.basis_field_tau = float(getattr(configs, "basis_field_tau", 1.0))
+                if self.basis_field_window_len <= 0 or self.basis_field_stride <= 0:
+                    raise ValueError("basis field window length and stride must be positive")
+                if self.basis_field_rank <= 0:
+                    raise ValueError("basis field rank must be positive")
+                if self.basis_field_tau <= 0.0:
+                    raise ValueError("basis field tau must be positive")
+                starts = self._build_basis_field_window_starts(configs.pred_len)
+                self.register_buffer(
+                    "basis_field_window_starts",
+                    torch.tensor(starts, dtype=torch.long),
+                    persistent=False,
+                )
+                self.basis_field_window_count = len(starts)
+                self.basis_field_desc_norm = nn.LayerNorm(self.basis_rank)
+                self.basis_field_desc_proj = nn.Linear(self.basis_rank, self.basis_field_rank)
+                self.basis_field_state_proj = nn.Linear(readout_dim, self.basis_field_rank)
+                self.basis_field_delta = nn.Linear(self.basis_field_rank, self.basis_rank)
+                self.basis_field_gate_logit = nn.Parameter(
+                    torch.tensor(float(getattr(configs, "basis_field_gate_init", -5.0)))
+                )
+                self.basis_field_no_basis_rows = nn.Parameter(
+                    torch.empty(configs.pred_len, self.basis_field_rank)
+                )
+                self.basis_field_no_basis_slots = nn.Parameter(
+                    torch.empty(self.basis_field_window_count, self.basis_field_rank)
+                )
+                nn.init.normal_(self.basis_field_no_basis_rows, mean=0.0, std=0.02)
+                nn.init.normal_(self.basis_field_no_basis_slots, mean=0.0, std=0.02)
+                nn.init.zeros_(self.basis_field_delta.weight)
+                nn.init.zeros_(self.basis_field_delta.bias)
 
         self.normalization_x = Normalize(configs.enc_in, affine=False)
         if self.has_future_recon_branch:
@@ -127,6 +166,12 @@ class Model(nn.Module):
         if horizons[-1] > configs.pred_len:
             raise ValueError("stage boundaries cannot exceed pred_len")
         return horizons
+
+    def _build_basis_field_window_starts(self, pred_len):
+        starts = list(range(0, pred_len - self.basis_field_window_len + 1, self.basis_field_stride))
+        if not starts or starts[-1] + self.basis_field_window_len < pred_len:
+            starts.append(max(0, pred_len - self.basis_field_window_len))
+        return sorted(set(starts))
 
     def _learned_basis_forecast_operator(self, hidden, target_prefix):
         # hidden: [B, C, R] -> output: [B, H, C]
@@ -184,6 +229,52 @@ class Model(nn.Module):
         output = torch.cat(outputs, dim=-1)
         return output.permute(0, 2, 1)
 
+    def _basis_field_descriptors(self, horizon, dtype):
+        if self.readout_mode == "basis-conditioned-coefficient-field-no-basis":
+            row_desc = self.basis_field_no_basis_rows[:horizon].to(dtype=dtype)
+            window_desc = self.basis_field_no_basis_slots.to(dtype=dtype)
+            return row_desc, window_desc
+
+        descriptor_basis = self.learned_temporal_basis
+        if self.readout_mode == "basis-conditioned-coefficient-field-shuffled-basis":
+            descriptor_basis = descriptor_basis.flip(dims=[0])
+
+        descriptor_basis = descriptor_basis.to(dtype=dtype)
+        row_desc = self.basis_field_desc_proj(self.basis_field_desc_norm(descriptor_basis[:horizon]))
+        window_means = []
+        for start_tensor in self.basis_field_window_starts:
+            start = int(start_tensor.item())
+            end = min(start + self.basis_field_window_len, self.pred_len)
+            window_means.append(descriptor_basis[start:end].mean(dim=0))
+        window_mean = torch.stack(window_means, dim=0)
+        window_desc = self.basis_field_desc_proj(self.basis_field_desc_norm(window_mean))
+        return row_desc, window_desc
+
+    def _basis_field_alpha(self, horizon, dtype):
+        row_desc, window_desc = self._basis_field_descriptors(horizon, dtype)
+        row_desc = F.normalize(row_desc, dim=-1)
+        window_desc = F.normalize(window_desc, dim=-1)
+        scores = torch.matmul(row_desc, window_desc.transpose(0, 1)) / self.basis_field_tau
+        alpha = torch.softmax(scores, dim=-1)
+        if self.readout_mode == "basis-conditioned-coefficient-field-constant-slot":
+            alpha = alpha.mean(dim=0, keepdim=True).expand(horizon, -1)
+        return alpha, window_desc
+
+    def _basis_conditioned_coefficient_field_operator(self, hidden, target_prefix):
+        # hidden: [B, C, R] -> output: [B, H, C]
+        horizon = self.pred_len if target_prefix is None else int(target_prefix)
+        coeff = self.learned_basis_coeff(hidden)
+        alpha, window_desc = self._basis_field_alpha(horizon, hidden.dtype)
+        state = self.basis_field_state_proj(hidden)
+        field_state = state.unsqueeze(2) + window_desc.view(1, 1, self.basis_field_window_count, -1)
+        delta = torch.tanh(self.basis_field_delta(F.gelu(field_state)))
+        gate = torch.sigmoid(self.basis_field_gate_logit.to(dtype=hidden.dtype))
+        coeff_slots = coeff.unsqueeze(2) + gate * delta
+        basis = self.learned_temporal_basis[:horizon].to(dtype=hidden.dtype)
+        bias = self.learned_temporal_bias[:horizon].to(dtype=hidden.dtype)
+        output = torch.einsum("hm,hk,bcmk->bch", alpha, basis, coeff_slots) + bias.view(1, 1, -1)
+        return output.permute(0, 2, 1)
+
     def forward(self, x, y, is_training=True, target_prefix=None):
         # x: [B, seq_len, C], y: [B, pred_len, C]
         batch, seq_len, channels = x.shape
@@ -217,6 +308,8 @@ class Model(nn.Module):
             output = self._learned_basis_forecast_operator(hidden, target_prefix)
         elif self.readout_mode.startswith("stage-native-coefficient-field"):
             output = self._stage_native_coefficient_field_operator(hidden, target_prefix)
+        elif self.readout_mode.startswith("basis-conditioned-coefficient-field"):
+            output = self._basis_conditioned_coefficient_field_operator(hidden, target_prefix)
         else:
             raise ValueError(f"Unsupported readout mode: {self.readout_mode}")
         output = self.normalization_x(output, "denorm")
