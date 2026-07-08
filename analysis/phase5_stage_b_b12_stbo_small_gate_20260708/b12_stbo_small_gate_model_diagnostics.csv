@@ -1,0 +1,16 @@
+arm,dataset,status,readout_mode,total_parameters,trainable_parameters,basis_rank,learned_temporal_basis_l2,learned_basis_coeff_l2,stbo_tile_len,stbo_tile_count,stbo_rank,stbo_coeff_l2,stbo_shared_basis_l2,stbo_bank_count,stbo_basis_bank_l2,stbo_tile_bank_entropy_mean,stbo_tile_basis_l2,stbo_dct_basis_l2
+a6_clean,ETTh2,ok,learned-basis-forecast-operator,1690016,1690016,,,,,,,,,,,,,
+a6_clean,ETTm1,ok,learned-basis-forecast-operator,884640,884640,,,,,,,,,,,,,
+a6_clean,Weather,ok,learned-basis-forecast-operator,6250656,6250656,,,,,,,,,,,,,
+stbo_shared,ETTh2,ok,subspace-tiled-basis-operator-shared,1481872,1481872,,,,48,15,16,10.994122505187988,6.221934795379639,,,,,
+stbo_shared,ETTm1,ok,subspace-tiled-basis-operator-shared,696976,696976,,,,48,15,16,7.885730743408203,6.5636796951293945,,,,,
+stbo_shared,Weather,ok,subspace-tiled-basis-operator-shared,5968784,5968784,,,,48,15,16,7.729362487792969,6.294506072998047,,,,,
+stbo_bank4,ETTh2,ok,subspace-tiled-basis-operator-bank,1484236,1484236,,,,48,15,16,12.99710750579834,,4,13.499690055847168,0.9990069749217535,,
+stbo_bank4,ETTm1,ok,subspace-tiled-basis-operator-bank,699340,699340,,,,48,15,16,9.152091026306152,,4,14.135064125061035,0.9992485245548903,,
+stbo_bank4,Weather,ok,subspace-tiled-basis-operator-bank,5971148,5971148,,,,48,15,16,8.59860610961914,,4,13.313318252563477,0.999470124200527,,
+stbo_dct,ETTh2,ok,subspace-tiled-basis-operator-dct,1481104,1481104,,,,48,15,16,9.710862159729004,,,,,,4.000000476837158
+stbo_dct,ETTm1,ok,subspace-tiled-basis-operator-dct,696208,696208,,,,48,15,16,8.270604133605957,,,,,,4.000000476837158
+stbo_dct,Weather,ok,subspace-tiled-basis-operator-dct,5968016,5968016,,,,48,15,16,6.382012844085693,,,,,,4.000000476837158
+stbo_independent,ETTh2,ok,subspace-tiled-basis-operator-independent,1492624,1492624,,,,48,15,16,10.614904403686523,,,,,24.7426815032959,
+stbo_independent,ETTm1,ok,subspace-tiled-basis-operator-independent,707728,707728,,,,48,15,16,7.892406463623047,,,,,25.802410125732422,
+stbo_independent,Weather,ok,subspace-tiled-basis-operator-independent,5979536,5979536,,,,48,15,16,7.808459281921387,,,,,24.933908462524414,

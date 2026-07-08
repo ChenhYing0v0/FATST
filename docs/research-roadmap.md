@@ -10,7 +10,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
 | `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B12 subspace-tiled basis operator |
-| `current_11_step` | StageB Step 8: B12-STBO remote small gate running |
+| `current_11_step` | StageB Step 10: B12-STBO remote small gate evaluated |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -588,8 +588,18 @@ Weather/ETTm1/ETTh2. Because `/home` quota blocked writes in the persistent repo
 `/tmp/yingch/projects/FATST_b12_stbo_ae86f24` and output root
 `/tmp/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b12_stbo_small_gate`.
 
-[Next] Wait for artifacts, sync with the B12 wrapper, and analyze whether learned STBO beats DCT while avoiding
-independent-tile capacity explanation. No paper-core claim exists before that result.
+[Remote Sync] Artifacts were synced to `analysis/phase5_stage_b_b12_stbo_small_gate_20260708/` and analyzed with
+`scripts/analyze_phase5_stage_b_b12_stbo_small_gate.py`.
+
+[Result] B12-STBO remote small gate returned and is `blocked_by_required_controls`. A6 remains best on `9/12`.
+`stbo_shared` vs A6 is `+1.59%` mean MSE with `0/12` wins; `stbo_bank4` vs A6 is `+1.98%` with `3/12`
+Weather-only tiny wins; `stbo_dct` vs A6 is `+1.57%`. Learned STBO does not beat DCT (`shared` vs DCT
+`+0.03%`, `bank4` vs DCT `+0.40%`), and `stbo_bank4` tile-bank entropy remains near uniform
+(`0.9990/0.9992/0.9995`). Current B12 cannot become paper-core or full matrix.
+
+[Failure Attribution] Reject only the tested `tile_len=48`, `rank=16` STBO implementation. The result has a capacity
+confound because STBO has fewer parameters than A6, but a capacity-equalized rerun would still need to beat same-rank
+DCT and show non-uniform bank specialization before any method claim.
 
 ## Active Implementation
 

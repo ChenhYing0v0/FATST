@@ -12,7 +12,7 @@
 | `current_stage` | Phase5 StageA clean A6 validated；StageB B12 subspace-tiled basis operator |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 8: B12-STBO remote small gate running |
+| `current_11_step` | StageB Step 10: B12-STBO remote small gate evaluated |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
 
 ## Core Claim
@@ -208,9 +208,12 @@ B12 仍不是 accepted paper-core method。只有当 learned `stbo_shared` / `st
 中超过 `stbo_dct`，且收益不能仅由 `stbo_independent` capacity 解释时，才可能进入 StageB Contribution 2
 评估。
 
-截至 2026-07-08，B12 remote small gate 已启动，但没有 returned effectiveness evidence。由于远程 `/home`
-quota 阻塞持久 repo 写入，本次使用 `/tmp` clone 和 `/tmp` output root；这只影响执行位置，不改变实验矩阵或
-paper claim boundary。
+截至 2026-07-08，B12 remote small gate 已返回但未通过。由于远程 `/home` quota 阻塞持久 repo 写入，
+本次使用 `/tmp` clone 和 `/tmp` output root；这只影响执行位置，不改变实验矩阵或 paper claim boundary。
+A6 在 `9/12` settings 上仍是 best arm；`stbo_shared` vs A6
+为 `+1.59%` mean MSE 且 `0/12` wins，`stbo_bank4` vs A6 为 `+1.98%` 且只有 Weather 的三个短中 horizon
+极小正向；learned STBO 没有超过 fixed local DCT，`stbo_bank4` 的 tile-bank entropy 约 `0.999`，说明
+stage/tile bank specialization 未形成。因此 B12 当前实现不能进入 Contribution 2。
 
 ## Evidence Snapshot
 
