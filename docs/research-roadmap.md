@@ -10,7 +10,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
 | `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B12 subspace-tiled basis operator |
-| `current_11_step` | StageB Step 10: B12-STBO remote small gate evaluated |
+| `current_11_step` | StageB Step 8: B12-STBO rank/capacity diagnostic running |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -600,6 +600,12 @@ Weather-only tiny wins; `stbo_dct` vs A6 is `+1.57%`. Learned STBO does not beat
 [Failure Attribution] Reject only the tested `tile_len=48`, `rank=16` STBO implementation. The result has a capacity
 confound because STBO has fewer parameters than A6, but a capacity-equalized rerun would still need to beat same-rank
 DCT and show non-uniform bank specialization before any method claim.
+
+[Follow-up Diagnostic] User correctly pointed out that A6 uses `basis_rank=256`, while the first STBO gate used
+`stbo_rank=16`. A direct `tile_len=48, rank=256` setting is invalid because the local basis rank is bounded by
+`tile_len`. Therefore a rank/capacity diagnostic was launched with coupled tile/rank configs:
+`L48-R32`, `L96-R64`, `L144-R128`, and `L360-R256_capacity_probe`. The last config restores A6-like rank only as a
+capacity probe, because it leaves just two 360-step tiles and weakens the stage-local method story.
 
 ## Active Implementation
 

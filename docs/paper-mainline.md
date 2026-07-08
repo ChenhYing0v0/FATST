@@ -12,7 +12,7 @@
 | `current_stage` | Phase5 StageA clean A6 validated；StageB B12 subspace-tiled basis operator |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 10: B12-STBO remote small gate evaluated |
+| `current_11_step` | StageB Step 8: B12-STBO rank/capacity diagnostic running |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
 
 ## Core Claim
@@ -214,6 +214,11 @@ A6 在 `9/12` settings 上仍是 best arm；`stbo_shared` vs A6
 为 `+1.59%` mean MSE 且 `0/12` wins，`stbo_bank4` vs A6 为 `+1.98%` 且只有 Weather 的三个短中 horizon
 极小正向；learned STBO 没有超过 fixed local DCT，`stbo_bank4` 的 tile-bank entropy 约 `0.999`，说明
 stage/tile bank specialization 未形成。因此 B12 当前实现不能进入 Contribution 2。
+
+随后打开一个 diagnostic-only rank/capacity check：由于 A6 使用 `basis_rank=256`，而第一轮 STBO 只使用
+`stbo_rank=16`，需要判断失败是否主要来自 local rank bottleneck。该诊断不改变 B12 当前未通过的 paper
+claim 状态；只有当高 rank learned STBO 同时接近 A6、超过 same-rank DCT，并形成非均匀 bank specialization
+时，B12 才能重新进入方法候选讨论。
 
 ## Evidence Snapshot
 

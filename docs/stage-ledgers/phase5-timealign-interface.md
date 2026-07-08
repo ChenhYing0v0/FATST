@@ -8,11 +8,11 @@
 | Field | Content |
 | --- | --- |
 | `stage_id` | `phase5-timealign-interface` |
-| `current_11_step` | StageB Step 10 B12-STBO remote small gate evaluated |
+| `current_11_step` | StageB Step 8 B12-STBO rank/capacity diagnostic running |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator on official-source TimeAlign encoder |
 | `active_question` | Can A6's full-720 step basis be replaced by a subspace-tiled local basis operator that is native to multi-horizon forecasting |
-| `latest_decision` | B12-STBO remote small gate is `blocked_by_required_controls`: all STBO variants underperform A6 on mean MSE, learned shared/bank do not beat DCT, and bank4 tile-bank entropy remains near uniform |
-| `next_required_action` | Do not launch B12 full matrix; if revisiting B12, first run capacity/method-separation diagnostics, otherwise roll StageB back to Step 2/3 architecture search |
+| `latest_decision` | B12-STBO small gate was blocked, but a rank/capacity confound remains; launched diagnostic configs `L48-R32`, `L96-R64`, `L144-R128`, and `L360-R256` capacity probe |
+| `next_required_action` | Wait for rank diagnostic artifacts; evaluate against clean A6 and same-rank DCT before deciding whether B12 is design-blocked or capacity-blocked |
 | `rollback_point` | If learned STBO cannot beat DCT or only independent-tile wins, B12 must not enter paper-core and should roll back to Step 2/3 architecture search |
 
 ## StageA Fixed Result
@@ -114,6 +114,7 @@ Clean rerun after code cleanup:
 | B12-STBO local implementation smoke | `B12-STBO` | native trainable architecture local verification | Added shared/bank/DCT/independent STBO readout modes; H96 vs H720 prefix max abs is `0.0` for all modes; synthetic backward and ETTh2 one-batch CPU smoke passed | `local_implementation_smoke_passed`; remote small gate may be considered after commit/push and GPU preflight | `baselines/timealign_official/models/TimeAlign.py`; `baselines/timealign_official/train_repo.py`; `scripts/check_phase5_stage_b_b12_stbo_local.py`; `docs/code-explanation/phase5-stage-b-b12-stbo.md` |
 | B12-STBO remote small gate launch | `B12-STBO` | remote launch with required controls | 15-run small gate launched on GPUs `0 1 2`: datasets `Weather ETTm1 ETTh2`, arms `a6_clean stbo_shared stbo_bank4 stbo_dct stbo_independent`; `/home` quota blocked persistent repo writes, so code and output use `/tmp` paths | `remote_small_gate_running`; wait for artifacts | `analysis/phase5_stage_b_b12_stbo_small_gate_20260708/launch_record.md` |
 | B12-STBO remote small gate result | `B12-STBO` | effectiveness and mechanism control | A6 is best on `9/12`; shared vs A6 `+1.59%` and `0/12` wins; bank4 vs A6 `+1.98%` and `3/12` Weather-only tiny wins; DCT vs A6 `+1.57%`; shared vs DCT `+0.03%`, bank4 vs DCT `+0.40%`; bank4 entropy `0.9990/0.9992/0.9995` | `blocked_by_required_controls`; current STBO implementation is not paper-core; failure is design/capacity/control-level, not direction-level | `analysis/phase5_stage_b_b12_stbo_small_gate_20260708/b12_stbo_small_gate_report.md`; `analysis/phase5_stage_b_b12_stbo_small_gate_20260708/b12_stbo_deep_analysis.md` |
+| B12-STBO rank/capacity diagnostic launch | `B12-STBO` | capacity confound diagnostic | Launched four configs: `L48-R32`, `L96-R64`, `L144-R128`, `L360-R256_capacity_probe`; arms are `stbo_shared stbo_bank4 stbo_dct stbo_independent`; no repeated A6 run | `remote_rank_diagnostic_running`; wait for artifacts | `analysis/phase5_stage_b_b12_stbo_rank_diagnostic_20260708/launch_record.md` |
 
 ## Pending Tasks
 
@@ -150,7 +151,8 @@ Clean rerun after code cleanup:
 | Reassess B12 after offline diagnostic limitation | Codex | User noted A6-derived offline evidence cannot reject native trainable STBO | `completed` | Corrected boundary; implement native STBO with controls |
 | Implement B12-STBO local gate | Codex | Native STBO remains untested and may learn structures A6 cannot expose | `completed` | Done; local smoke passed |
 | Launch B12-STBO remote small gate | Codex | Local implementation smoke passed | `completed` | Done; result `blocked_by_required_controls` |
-| Decide StageB rollback after B12-STBO | Codex | Current B12 failed A6 and DCT/independent controls | `pending` | Either run a diagnostic-only capacity-equalized B12 check, or return to Step 2/3 architecture search |
+| Run B12-STBO rank/capacity diagnostic | Codex | User asked whether local rank bottleneck explains B12 failure | `running` | Wait for remote artifacts; compare learned STBO against clean A6 and same-rank DCT |
+| Decide StageB rollback after B12-STBO | Codex | Current B12 failed A6 and DCT/independent controls | `pending` | Defer until rank/capacity diagnostic returns |
 
 ## Paper Mainline Sync Log
 
