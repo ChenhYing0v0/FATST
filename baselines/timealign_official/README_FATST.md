@@ -99,3 +99,30 @@ same `learned_temporal_basis` projection. They do not restore TimeAlign future r
 
 The field delta layer is zero-initialized. At initialization all slots equal the A6 `coeff_base`, so the output is
 function-preserving up to numerical tolerance.
+
+## B12-STBO Subspace-Tiled Basis Operator
+
+StageB B12 adds four prefix-native STBO readout modes:
+
+- `subspace-tiled-basis-operator-shared`: shared learned local basis across future tiles;
+- `subspace-tiled-basis-operator-bank`: learned local basis bank with tile-wise soft mixture;
+- `subspace-tiled-basis-operator-dct`: fixed local DCT basis control;
+- `subspace-tiled-basis-operator-independent`: independent learned local basis per tile.
+
+These modes replace the A6 full-720 temporal basis projection with a tiled primary operator:
+
+```text
+hidden [B,C,R] -> tile_coeff [B,C,M,Rb]
+local_basis [M,L,Rb] -> prediction [B,H,C]
+```
+
+They do not instantiate the TimeAlign future reconstruction/alignment branch. They also do not use
+`learned_temporal_basis` or `learned_basis_coeff`; this is an operator replacement, not `A6 + residual` and not
+`coeff + delta`.
+
+STBO-specific arguments:
+
+- `--stbo-tile-len`, default `48`;
+- `--stbo-rank`, default `16`;
+- `--stbo-bank-count`, default `4`;
+- `--stbo-basis-init-std`, default `stbo_rank ** -0.5` when set to `0`.

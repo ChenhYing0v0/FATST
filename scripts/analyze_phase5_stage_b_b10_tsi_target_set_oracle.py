@@ -98,6 +98,15 @@ def build_args(args: argparse.Namespace, dataset: str) -> argparse.Namespace:
         stage_token_dim=32,
         stage_field_rank=32,
         stage_gate_init=-5.0,
+        basis_field_window_len=96,
+        basis_field_stride=48,
+        basis_field_rank=32,
+        basis_field_tau=1.0,
+        basis_field_gate_init=-5.0,
+        stbo_tile_len=48,
+        stbo_rank=16,
+        stbo_bank_count=4,
+        stbo_basis_init_std=16 ** -0.5,
     )
     official_args = build_official_args(adapter_args, preset)
     official_args.batch_size = args.batch_size

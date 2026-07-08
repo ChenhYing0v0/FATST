@@ -5,16 +5,16 @@
 | 字段 | 内容 |
 | --- | --- |
 | `candidate_id` | `B12-STBO` |
-| `current_step` | Step 2/3：problem-existence and feasibility diagnostic completed |
+| `current_step` | Step 7：native STBO local implementation smoke passed |
 | `problem` | A6-LBF-r256 当前使用 `basis[720,K]` 的 full-trajectory step basis，再按 horizon 做 prefix slicing；这可能不是 multi-horizon 原生的 basis-coeff operator |
 | `existence_evidence` | B10/B11 显示 A6 `learned_temporal_basis` 已形成 stage/subspace geometry，且真实 `coeff` 在不同 subspaces 上的投影方向不同；B11-BCF 失败说明 late coefficient perturbation 不足以利用该结构 |
 | `idea` | 将 full-720 step basis 重构为 non-overlapping future tiles 内的 shared/local subspace basis，使预测任务从单个 720-step basis projection 变为若干 tile-local basis projections |
 | `theory_check` | 若 A6 basis 和 train labels 都能被 shared/local tile basis 或少量 basis banks 高效近似，则 B12 有可能成为原生 multi-horizon operator；若只有 independent per-tile basis 有效，则该方向可能退化为分段 Direct head |
-| `design` | Offline diagnostic：basis factorization audit、train-label tile-basis audit、coeff projection audit；不训练新模型 |
-| `narrative_gate` | pending; 只有 Step 2/3 诊断支持 shared/bank tile basis 后，才能进入 Step 4-6 method design |
-| `effectiveness_gate` | not applicable before implementation |
-| `artifacts` | `analysis/phase5_stage_b_b12_stbo_diagnostic_20260708/b12_stbo_report.md`; `docs/code-explanation/phase5-stage-b-b12-stbo-diagnostic.md`; `scripts/analyze_phase5_stage_b_b12_stbo_diagnostic.py` |
-| `decision` | `diagnostic_not_enough_for_b12`; do not implement B12-STBO as currently defined |
+| `design` | Native trainable STBO gate with shared/bank/DCT/independent controls |
+| `narrative_gate` | `conditional_pass_for_trainable_gate`; offline A6-derived diagnostic cannot reject native STBO, but controls are mandatory |
+| `effectiveness_gate` | pending remote small gate; local smoke only verifies tensor/gradient path |
+| `artifacts` | `analysis/phase5_stage_b_b12_stbo_diagnostic_20260708/b12_stbo_report.md`; `docs/code-explanation/phase5-stage-b-b12-stbo-diagnostic.md`; `docs/code-explanation/phase5-stage-b-b12-stbo.md`; `scripts/analyze_phase5_stage_b_b12_stbo_diagnostic.py`; `scripts/check_phase5_stage_b_b12_stbo_local.py` |
+| `decision` | `local_implementation_smoke_passed`; next decision is whether to launch remote small gate |
 
 ## Motivation
 
@@ -236,6 +236,106 @@ B12 需要的跨数据集 tile-local coeff path 证据。
 
 ## Decision
 
-`B12-STBO` 当前结论为 `diagnostic_not_enough_for_b12`。不得实现当前 shared/bank local basis operator。
-若继续该方向，必须先重新定义能压过 local DCT control、且能在 ETTm1/Weather 上支持 coeff-path
-分化的更强 basis-operator problem；否则 StageB 应回到 Step 2/3 architecture search。
+Step 2/3 offline 诊断的初始结论为 `diagnostic_not_enough_for_b12`。该结论说明 A6-derived evidence
+不足以直接支持当前 shared/bank local basis operator；若只基于 offline A6 解，不应进入方法实现。
+后续用户指出该诊断不能否定 native trainable STBO，因此下文修正边界并进入严格控制的 trainable gate。
+
+## Reassessment After User Objection
+
+[Correction] 上述 offline 诊断不能直接否定 native STBO architecture。原因是：
+
+- 诊断对象来自已经训练好的 A6 `full-720 step basis + single coeff` 解；
+- A6 的参数化可能本身不鼓励 stage/tile-local basis 显式出现；
+- 当前 coeff 没有跨数据集形成 tile-local pattern，不代表新架构从头训练后不能学到该 pattern；
+- train-label tile structure 被 DCT 解释，只说明需要 DCT control，不说明 learned STBO 一定无效。
+
+因此 B12 的正确状态应修正为：
+
+```text
+A6-derived offline evidence is insufficient,
+but native trainable STBO remains untested.
+```
+
+## Step 4-6 Native Trainable Gate Design
+
+B12 进入一个严格的 trainable small gate，而不是直接 full matrix。
+
+### Method Arms
+
+| Arm | Readout Mode | Role |
+| --- | --- | --- |
+| `a6_clean` | `learned-basis-forecast-operator` | accepted carrier baseline |
+| `stbo_shared` | `subspace-tiled-basis-operator-shared` | main low-parameter shared local-basis candidate |
+| `stbo_bank4` | `subspace-tiled-basis-operator-bank` | main subspace-bank candidate |
+| `stbo_dct` | `subspace-tiled-basis-operator-dct` | fixed local DCT control |
+| `stbo_independent` | `subspace-tiled-basis-operator-independent` | independent tile upper-bound / capacity control |
+
+### Tensor Contract
+
+所有 STBO arms 直接替换 A6 readout：
+
+```text
+hidden [B,C,R]
+  -> tile_coeff [B,C,M,Rb]
+local_basis [M,L,Rb]
+  -> prediction [B,H,C]
+```
+
+默认：
+
+- `L=48`;
+- `M=15`;
+- `Rb=16`;
+- `Q=4` for bank mode。
+
+这不是 `A6 + residual`，也不是 `coeff_base + delta`。
+
+### Local Gate Before Remote
+
+本地 Step 7 必须通过：
+
+1. `py_compile`；
+2. four STBO modes synthetic prefix consistency；
+3. four STBO modes synthetic backward；
+4. ETTh2 one-batch CPU smoke。
+
+### Step 7 Local Implementation Result
+
+已实现 readout modes：
+
+- `subspace-tiled-basis-operator-shared`;
+- `subspace-tiled-basis-operator-bank`;
+- `subspace-tiled-basis-operator-dct`;
+- `subspace-tiled-basis-operator-independent`。
+
+本地验证结果：
+
+| Check | Result |
+| --- | ---: |
+| `py_compile` | passed |
+| STBO synthetic H96 vs H720 prefix max abs | `0.000000e+00` for all four modes |
+| STBO synthetic backward | passed for all four modes |
+| ETTh2 one-batch CPU smoke | passed for all four modes |
+
+Code explanation:
+
+- `docs/code-explanation/phase5-stage-b-b12-stbo.md`。
+
+该验证只证明 tensor path、prefix consistency 和 gradient path 成立，不证明性能。
+
+### Remote Small Gate Criteria
+
+若本地通过，远程 small gate 只允许使用：
+
+- datasets: ETTh2, ETTm1, Weather；
+- horizons: 96, 192, 336, 720；
+- arms: `a6_clean`, `stbo_shared`, `stbo_bank4`, `stbo_dct`, `stbo_independent`；
+- seed: `2021`。
+
+Effectiveness and mechanism gate：
+
+1. `stbo_bank4` 或 `stbo_shared` 必须优于 `stbo_dct`，否则 learned STBO 被 generic local DCT 解释；
+2. `stbo_bank4/shared` 不能只输给 `independent` 太多，否则可能说明只需要 segmented Direct capacity；
+3. 相对 `a6_clean` 至少不能出现系统性退化；
+4. 若只有 `stbo_independent` 正向，则 B12 不进入 paper-core；
+5. 若 learned STBO 正向但 DCT 持平，则只能记录为 local-basis capacity effect。

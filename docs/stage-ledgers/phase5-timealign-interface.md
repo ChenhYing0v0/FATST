@@ -8,12 +8,12 @@
 | Field | Content |
 | --- | --- |
 | `stage_id` | `phase5-timealign-interface` |
-| `current_11_step` | StageB Step 2/3 B12-STBO diagnostic decision |
+| `current_11_step` | StageB Step 7 B12-STBO local implementation smoke passed |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator on official-source TimeAlign encoder |
 | `active_question` | Can A6's full-720 step basis be replaced by a subspace-tiled local basis operator that is native to multi-horizon forecasting |
-| `latest_decision` | B12-STBO Step 2/3 diagnostic is not enough for method design: A6 basis bank4 beats local DCT but remains `0.067-0.083` below independent-tile upper bound; train-label tile structure is almost fully explained by local DCT; coeff tile projection structure is clear only on ETTh2 |
-| `next_required_action` | Do not implement current B12-STBO; either redesign the basis-operator problem with stronger non-DCT and coeff-path evidence, or roll back StageB to Step 2/3 architecture search |
-| `rollback_point` | B12 blocks the current shared/bank local-basis operator, but it is not a direction-level rejection of all future basis-operator redesigns |
+| `latest_decision` | B12-STBO native trainable implementation passed local smoke: four STBO modes have exact H96/H720 prefix consistency, synthetic backward, and ETTh2 one-batch CPU forward/backward |
+| `next_required_action` | Decide whether to launch B12 remote small gate with mandatory controls: A6, STBO-shared, STBO-bank4, STBO-DCT, STBO-independent |
+| `rollback_point` | If learned STBO cannot beat DCT or only independent-tile wins, B12 must not enter paper-core and should roll back to Step 2/3 architecture search |
 
 ## StageA Fixed Result
 
@@ -78,7 +78,7 @@ Clean rerun after code cleanup:
 | `B9-FSN-SCF` | `blocked_by_no_stage_control` | A6-LBF 的 single coefficient state 同时服务多个 future stages；若 stage losses 对该 coefficient 的梯度方向不一致，则需要 native future-stage-aware coefficient field | passed Step 4-7, but failed effectiveness mechanism gate：B9 cannot beat same-parameter no-stage control | failed：B9 vs A6 `-0.13%`, no-stage vs A6 `-0.13%`, B9 vs no-stage `+0.0036%` and `2/12` wins | Do not launch full matrix; rollback to Step 4 redesign or Step 2/3 | `docs/experiments/phase5-stage-b-native-future-stage-operator.md`; `docs/code-explanation/phase5-stage-b-b9-fsn-scf.md`; `analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/b9_fsn_scf_small_gate_report.md` |
 | `B10-TCO` | `superseded_by_B11` | A6-LBF 是 prefix-compatible 720-step trajectory operator；requested target set 没有进入 computation graph，短 horizon 是 prefix slicing | B10-TSI-C/D block frozen/offline readout diagnostics: target-set readouts remain unstable or weaker than pooled controls, including rank16 stability control | not active | User reframed StageB away from explicit stage/target conditioning; evidence retained as rollback context | `docs/experiments/phase5-stage-b-target-set-conditioned-operator.md`; `analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/b10_tsi_basis_geometry_report.md`; `analysis/phase5_stage_b_b10_tsi_coeff_usage_20260708/b10_tsi_coeff_usage_report.md`; `analysis/phase5_stage_b_b10_tsi_target_set_oracle_20260708/b10_tsi_target_set_oracle_report.md`; `analysis/phase5_stage_b_b10_tsi_failure_attribution_20260708/b10_tsi_failure_attribution_report.md`; `analysis/phase5_stage_b_b10_tsi_failure_attribution_rank16_20260708/b10_tsi_failure_attribution_report.md` |
 | `B11-ESA/BCF` | `blocked_by_required_controls` | A6 不应依赖显式 stage/horizon encoding；应利用 learned basis 自发形成的 continuous future geometry 来驱动 coefficient field / history aggregation | passed for continuous `B11-BCF` only, but small gate shows the tested intervention is explainable by no-basis/constant-slot controls | failed mechanism gate：not a paper-core method | Rollback to Step 4 redesign or Step 2/3; do not claim basis-conditioned architecture mechanism | `docs/experiments/phase5-stage-b-emergent-subspace-aggregation.md`; `analysis/phase5_stage_b_b11_esa_basis_coeff_diagnostic_20260708/b11_esa_basis_coeff_report.md`; `docs/code-explanation/phase5-stage-b-b11-esa-basis-coeff-diagnostic.md`; `docs/code-explanation/phase5-stage-b-b11-bcf.md`; `analysis/phase5_stage_b_b11_bcf_small_gate_20260708/b11_bcf_small_gate_report.md` |
-| `B12-STBO` | `diagnostic_not_enough_for_method` | A6 full-720 step basis may be replaceable by subspace-tiled local basis banks, so short horizons activate only required tiles instead of slicing a full trajectory operator | failed Step 2/3 method-entry gate：basis side has weak evidence, but label side is explained by local DCT and coeff-path evidence is ETTh2-only | not evaluated | Do not implement current B12-STBO; redesign non-DCT basis-operator problem or rollback StageB Step 2/3 | `docs/experiments/phase5-stage-b-subspace-tiled-basis-operator.md`; `docs/code-explanation/phase5-stage-b-b12-stbo-diagnostic.md`; `analysis/phase5_stage_b_b12_stbo_diagnostic_20260708/b12_stbo_report.md` |
+| `B12-STBO` | `local_implementation_smoke_passed` | A6 full-720 step basis may be replaceable by native subspace-tiled local basis operators, so short horizons activate only required tiles instead of slicing a full trajectory operator | conditional gate：offline A6-derived evidence was insufficient but cannot reject native trainable STBO; implementation includes DCT and independent controls | pending remote small gate | Launch only if accepting mandatory controls; do not claim until learned STBO beats DCT/capacity controls | `docs/experiments/phase5-stage-b-subspace-tiled-basis-operator.md`; `docs/code-explanation/phase5-stage-b-b12-stbo-diagnostic.md`; `docs/code-explanation/phase5-stage-b-b12-stbo.md`; `scripts/check_phase5_stage_b_b12_stbo_local.py`; `analysis/phase5_stage_b_b12_stbo_diagnostic_20260708/b12_stbo_report.md` |
 
 ## Experiment Ledger
 
@@ -111,6 +111,7 @@ Clean rerun after code cleanup:
 | B11-BCF remote small gate launch | `B11-ESA/BCF` | remote launch | Required 12-run gate launched on GPUs `0 1 2`: datasets `Weather ETTm1 ETTh2`, arms `a6_clean b11_bcf b11_no_basis b11_constant_slot`; valid output root is `/tmp/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b11_bcf_small_gate_direct` | `remote_small_gate_running`; wait for artifacts | `analysis/phase5_stage_b_b11_bcf_small_gate_20260708/launch_record.md` |
 | B11-BCF remote small gate result | `B11-ESA/BCF` | effectiveness and mechanism control | B11 vs A6 `-0.10%` mean MSE with `5/12` wins; no-basis vs A6 `-0.10%`; constant-slot vs A6 `-0.13%`; B11 vs no-basis `-0.0012%` with `2/12` wins; B11 vs constant-slot `+0.03%` | `blocked_by_required_controls`; tested B11-BCF is not paper-core | `analysis/phase5_stage_b_b11_bcf_small_gate_20260708/b11_bcf_small_gate_report.md` |
 | B12-STBO Step 2/3 diagnostic | `B12-STBO` | subspace-tiled basis operator feasibility diagnostic | Basis bank4 beats local DCT by `0.061/0.054/0.081` but remains `0.067/0.068/0.083` below independent-tile upper bound; label shared/bank energy is high but local DCT nearly matches it; coeff adjacent/far structure is clear only on ETTh2 | `diagnostic_not_enough_for_method`; current B12 must not enter Step 4-6 | `analysis/phase5_stage_b_b12_stbo_diagnostic_20260708/b12_stbo_report.md`; `docs/experiments/phase5-stage-b-subspace-tiled-basis-operator.md`; `docs/code-explanation/phase5-stage-b-b12-stbo-diagnostic.md` |
+| B12-STBO local implementation smoke | `B12-STBO` | native trainable architecture local verification | Added shared/bank/DCT/independent STBO readout modes; H96 vs H720 prefix max abs is `0.0` for all modes; synthetic backward and ETTh2 one-batch CPU smoke passed | `local_implementation_smoke_passed`; remote small gate may be considered after commit/push and GPU preflight | `baselines/timealign_official/models/TimeAlign.py`; `baselines/timealign_official/train_repo.py`; `scripts/check_phase5_stage_b_b12_stbo_local.py`; `docs/code-explanation/phase5-stage-b-b12-stbo.md` |
 
 ## Pending Tasks
 
@@ -144,7 +145,9 @@ Clean rerun after code cleanup:
 | Launch B11-BCF remote small gate | Codex | B11 local implementation smoke passed | `completed` | Done; result is `blocked_by_required_controls` |
 | Decide B11 redesign or rollback | Codex | B11-BCF small gate is explained by no-basis/constant-slot controls | `completed` | Rolled back to Step 2/3 and ran B12-STBO diagnostic |
 | Run B12-STBO tile-basis diagnostic | Codex | User proposed replacing full-720 step basis with stage/subspace local basis operator | `completed` | Done; decision `diagnostic_not_enough_for_method`; do not implement current B12 |
-| Decide post-B12 StageB route | Codex | B12 blocks current shared/bank local-basis operator | `pending` | Redesign basis-operator problem with stronger non-DCT/coeff evidence, or rollback StageB Step 2/3 architecture search |
+| Reassess B12 after offline diagnostic limitation | Codex | User noted A6-derived offline evidence cannot reject native trainable STBO | `completed` | Corrected boundary; implement native STBO with controls |
+| Implement B12-STBO local gate | Codex | Native STBO remains untested and may learn structures A6 cannot expose | `completed` | Done; local smoke passed |
+| Launch B12-STBO remote small gate | Codex | Local implementation smoke passed | `pending` | Commit/push first, then GPU preflight and mandatory control matrix if launched |
 
 ## Paper Mainline Sync Log
 
@@ -178,6 +181,7 @@ Clean rerun after code cleanup:
 | 2026-07-08 | B11-BCF remote small gate launched | Contribution 2 candidate | no accepted paper claim | Required control matrix is running on `529_Lab-3090`; await returned artifacts |
 | 2026-07-08 | B11-BCF remote small gate returned | Contribution 2 candidate | no accepted paper claim | B11-BCF blocked by no-basis/constant-slot controls; do not promote to paper-core |
 | 2026-07-08 | B12-STBO Step 2/3 diagnostic returned | Contribution 2 candidate | no accepted paper claim | Current subspace-tiled basis operator is not method-ready; local DCT explains label-side structure and coeff evidence is ETTh2-only |
+| 2026-07-08 | B12-STBO native implementation smoke passed | Contribution 2 candidate | no accepted paper claim | Offline diagnostic limitation corrected; remote small gate may test native trainable STBO against DCT/independent controls |
 
 ## Active Artifacts
 
@@ -202,6 +206,7 @@ Clean rerun after code cleanup:
 | `docs/code-explanation/phase5-stage-b-b11-esa-basis-coeff-diagnostic.md` | B11-ESA basis/coeff diagnostic analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b11-bcf.md` | B11-BCF model implementation explanation |
 | `docs/code-explanation/phase5-stage-b-b12-stbo-diagnostic.md` | B12-STBO diagnostic analyzer explanation |
+| `docs/code-explanation/phase5-stage-b-b12-stbo.md` | B12-STBO model implementation explanation |
 | `docs/experiments/phase5-stage-b-reliability-aware-supervision-redesign.md` | StageB problem definition and B1/B2 candidate boundary |
 | `docs/experiments/phase5-stage-b-distance-normalized-seasonal-residual-diagnostic.md` | B3 diagnostic protocol |
 | `docs/experiments/phase5-stage-b-timealign-dependency-and-basis-align-diagnostic.md` | B4 dependency and B5 basis-align protocol |
@@ -230,6 +235,7 @@ Clean rerun after code cleanup:
 | `scripts/analyze_phase5_stage_b_b10_tsi_failure_attribution.py` | B10-TSI-D failure attribution analyzer |
 | `scripts/analyze_phase5_stage_b_b11_esa_basis_coeff_diagnostic.py` | B11-ESA basis/coeff diagnostic analyzer |
 | `scripts/analyze_phase5_stage_b_b12_stbo_diagnostic.py` | B12-STBO tile-basis diagnostic analyzer |
+| `scripts/check_phase5_stage_b_b12_stbo_local.py` | B12-STBO local prefix/backward/smoke checker |
 | `scripts/check_phase5_stage_b_b11_bcf_local.py` | B11-BCF fallback/prefix/backward local checker |
 | `scripts/remote/run_phase5_stage_b_b11_bcf_small_gate.sh` | B11-BCF remote small gate runner |
 | `scripts/sync_phase5_stage_b_b11_bcf_small_gate_results.sh` | B11-BCF remote artifact sync/analyze wrapper |

@@ -35,6 +35,10 @@ PREFIX_READOUT_MODES = {
     "basis-conditioned-coefficient-field-no-basis",
     "basis-conditioned-coefficient-field-shuffled-basis",
     "basis-conditioned-coefficient-field-constant-slot",
+    "subspace-tiled-basis-operator-shared",
+    "subspace-tiled-basis-operator-bank",
+    "subspace-tiled-basis-operator-dct",
+    "subspace-tiled-basis-operator-independent",
 }
 
 
@@ -222,6 +226,10 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         basis_field_rank=args.basis_field_rank,
         basis_field_tau=args.basis_field_tau,
         basis_field_gate_init=args.basis_field_gate_init,
+        stbo_tile_len=args.stbo_tile_len,
+        stbo_rank=args.stbo_rank,
+        stbo_bank_count=args.stbo_bank_count,
+        stbo_basis_init_std=args.stbo_basis_init_std,
     )
 
 
@@ -285,6 +293,34 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
                     "basis_field_delta_l2": float(model.basis_field_delta.weight.detach().cpu().norm().item()),
                 }
             )
+    if hasattr(model, "stbo_coeff"):
+        payload.update(
+            {
+                "stbo_tile_len": int(model.stbo_tile_len),
+                "stbo_tile_count": int(model.stbo_tile_count),
+                "stbo_rank": int(model.stbo_rank),
+                "stbo_coeff_l2": float(model.stbo_coeff.weight.detach().cpu().norm().item()),
+            }
+        )
+        if hasattr(model, "stbo_shared_basis"):
+            payload["stbo_shared_basis_l2"] = float(model.stbo_shared_basis.detach().cpu().norm().item())
+        if hasattr(model, "stbo_basis_bank"):
+            with torch.no_grad():
+                weights = torch.softmax(model.stbo_tile_bank_logits.detach().cpu(), dim=-1)
+                payload.update(
+                    {
+                        "stbo_bank_count": int(model.stbo_bank_count),
+                        "stbo_basis_bank_l2": float(model.stbo_basis_bank.detach().cpu().norm().item()),
+                        "stbo_tile_bank_entropy_mean": float(
+                            (-weights * torch.log(torch.clamp(weights, min=1e-12))).sum(dim=-1).mean().item()
+                            / np.log(model.stbo_bank_count)
+                        ),
+                    }
+                )
+        if hasattr(model, "stbo_tile_basis"):
+            payload["stbo_tile_basis_l2"] = float(model.stbo_tile_basis.detach().cpu().norm().item())
+        if hasattr(model, "stbo_dct_basis"):
+            payload["stbo_dct_basis_l2"] = float(model.stbo_dct_basis.detach().cpu().norm().item())
     return payload
 
 
@@ -717,6 +753,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--basis-field-rank", type=int, default=32)
     parser.add_argument("--basis-field-tau", type=float, default=1.0)
     parser.add_argument("--basis-field-gate-init", type=float, default=-5.0)
+    parser.add_argument("--stbo-tile-len", type=int, default=48)
+    parser.add_argument("--stbo-rank", type=int, default=16)
+    parser.add_argument("--stbo-bank-count", type=int, default=4)
+    parser.add_argument("--stbo-basis-init-std", type=float, default=0.0)
     parser.add_argument(
         "--pred-loss-mode",
         choices=["full", "multi-prefix"],
@@ -747,6 +787,18 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("basis_field_rank must be positive")
     if args.basis_field_tau <= 0.0:
         raise ValueError("basis_field_tau must be positive")
+    if args.stbo_tile_len <= 0:
+        raise ValueError("stbo_tile_len must be positive")
+    if args.pred_len % args.stbo_tile_len != 0:
+        raise ValueError("stbo_tile_len must divide pred_len")
+    if args.stbo_rank <= 0 or args.stbo_rank > args.stbo_tile_len:
+        raise ValueError("stbo_rank must be in [1, stbo_tile_len]")
+    if args.stbo_bank_count < 2:
+        raise ValueError("stbo_bank_count must be at least 2")
+    if args.stbo_basis_init_std < 0.0:
+        raise ValueError("stbo_basis_init_std must be non-negative")
+    if args.stbo_basis_init_std == 0.0:
+        args.stbo_basis_init_std = args.stbo_rank ** -0.5
     if args.readout_mode in PREFIX_READOUT_MODES and args.mode != "unified":
         raise ValueError("Prefix-native learned-basis readouts require --mode unified --pred-len 720")
     return args

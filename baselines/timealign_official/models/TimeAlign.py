@@ -16,6 +16,13 @@ LEARNED_BASIS_READOUTS = {
     "basis-conditioned-coefficient-field-constant-slot",
 }
 
+STBO_READOUTS = {
+    "subspace-tiled-basis-operator-shared",
+    "subspace-tiled-basis-operator-bank",
+    "subspace-tiled-basis-operator-dct",
+    "subspace-tiled-basis-operator-independent",
+}
+
 
 class PatchEmbed(nn.Module):
     def __init__(self, dim, patch_len, stride=None, pos=True):
@@ -47,10 +54,10 @@ class Model(nn.Module):
         self.patch_num = configs.patch_num
         self.d_model = configs.d_model
         self.readout_mode = getattr(configs, "readout_mode", "official")
-        if self.readout_mode not in {"official", *LEARNED_BASIS_READOUTS}:
+        if self.readout_mode not in {"official", *LEARNED_BASIS_READOUTS, *STBO_READOUTS}:
             raise ValueError(
                 "Clean TimeAlign supports only 'official' and "
-                "learned-basis/stage-native/basis-conditioned readout modes"
+                "learned-basis/stage-native/basis-conditioned/STBO readout modes"
             )
         self.has_future_recon_branch = self.readout_mode == "official"
 
@@ -152,6 +159,42 @@ class Model(nn.Module):
                 nn.init.normal_(self.basis_field_no_basis_slots, mean=0.0, std=0.02)
                 nn.init.zeros_(self.basis_field_delta.weight)
                 nn.init.zeros_(self.basis_field_delta.bias)
+        if self.readout_mode in STBO_READOUTS:
+            self.stbo_tile_len = int(getattr(configs, "stbo_tile_len", 48))
+            self.stbo_rank = int(getattr(configs, "stbo_rank", 16))
+            self.stbo_bank_count = int(getattr(configs, "stbo_bank_count", 4))
+            if self.stbo_tile_len <= 0:
+                raise ValueError("stbo_tile_len must be positive")
+            if configs.pred_len % self.stbo_tile_len != 0:
+                raise ValueError("stbo_tile_len must divide pred_len")
+            if self.stbo_rank <= 0 or self.stbo_rank > self.stbo_tile_len:
+                raise ValueError("stbo_rank must be in [1, stbo_tile_len]")
+            if self.stbo_bank_count < 2:
+                raise ValueError("stbo_bank_count must be at least 2")
+            self.stbo_tile_count = configs.pred_len // self.stbo_tile_len
+            self.stbo_coeff = nn.Linear(readout_dim, self.stbo_tile_count * self.stbo_rank)
+            self.stbo_temporal_bias = nn.Parameter(torch.zeros(configs.pred_len))
+            init_std = float(getattr(configs, "stbo_basis_init_std", self.stbo_rank ** -0.5))
+            if self.readout_mode == "subspace-tiled-basis-operator-shared":
+                self.stbo_shared_basis = nn.Parameter(torch.empty(self.stbo_tile_len, self.stbo_rank))
+                nn.init.normal_(self.stbo_shared_basis, mean=0.0, std=init_std)
+            elif self.readout_mode == "subspace-tiled-basis-operator-bank":
+                self.stbo_basis_bank = nn.Parameter(
+                    torch.empty(self.stbo_bank_count, self.stbo_tile_len, self.stbo_rank)
+                )
+                self.stbo_tile_bank_logits = nn.Parameter(torch.zeros(self.stbo_tile_count, self.stbo_bank_count))
+                nn.init.normal_(self.stbo_basis_bank, mean=0.0, std=init_std)
+            elif self.readout_mode == "subspace-tiled-basis-operator-independent":
+                self.stbo_tile_basis = nn.Parameter(
+                    torch.empty(self.stbo_tile_count, self.stbo_tile_len, self.stbo_rank)
+                )
+                nn.init.normal_(self.stbo_tile_basis, mean=0.0, std=init_std)
+            elif self.readout_mode == "subspace-tiled-basis-operator-dct":
+                self.register_buffer(
+                    "stbo_dct_basis",
+                    self._build_dct_basis(self.stbo_tile_len, self.stbo_rank),
+                    persistent=False,
+                )
 
         self.normalization_x = Normalize(configs.enc_in, affine=False)
         if self.has_future_recon_branch:
@@ -172,6 +215,15 @@ class Model(nn.Module):
         if not starts or starts[-1] + self.basis_field_window_len < pred_len:
             starts.append(max(0, pred_len - self.basis_field_window_len))
         return sorted(set(starts))
+
+    def _build_dct_basis(self, length, rank):
+        steps = torch.arange(length, dtype=torch.float32) + 0.5
+        freqs = torch.arange(rank, dtype=torch.float32)
+        basis = torch.cos(torch.pi * torch.outer(steps, freqs) / float(length))
+        basis[:, 0] *= (1.0 / float(length)) ** 0.5
+        if rank > 1:
+            basis[:, 1:] *= (2.0 / float(length)) ** 0.5
+        return basis
 
     def _learned_basis_forecast_operator(self, hidden, target_prefix):
         # hidden: [B, C, R] -> output: [B, H, C]
@@ -275,6 +327,38 @@ class Model(nn.Module):
         output = torch.einsum("hm,hk,bcmk->bch", alpha, basis, coeff_slots) + bias.view(1, 1, -1)
         return output.permute(0, 2, 1)
 
+    def _stbo_basis_tiles(self, dtype):
+        if self.readout_mode == "subspace-tiled-basis-operator-shared":
+            basis = self.stbo_shared_basis.to(dtype=dtype)
+            return basis.unsqueeze(0).expand(self.stbo_tile_count, -1, -1)
+        if self.readout_mode == "subspace-tiled-basis-operator-bank":
+            weights = torch.softmax(self.stbo_tile_bank_logits.to(dtype=dtype), dim=-1)
+            bank = self.stbo_basis_bank.to(dtype=dtype)
+            return torch.einsum("mq,qlr->mlr", weights, bank)
+        if self.readout_mode == "subspace-tiled-basis-operator-dct":
+            basis = self.stbo_dct_basis.to(dtype=dtype)
+            return basis.unsqueeze(0).expand(self.stbo_tile_count, -1, -1)
+        if self.readout_mode == "subspace-tiled-basis-operator-independent":
+            return self.stbo_tile_basis.to(dtype=dtype)
+        raise ValueError(f"Unsupported STBO readout mode: {self.readout_mode}")
+
+    def _subspace_tiled_basis_operator(self, hidden, target_prefix):
+        # hidden: [B, C, R] -> output: [B, H, C]
+        horizon = self.pred_len if target_prefix is None else int(target_prefix)
+        if horizon <= 0 or horizon > self.pred_len:
+            raise ValueError("target_prefix must be in [1, pred_len]")
+        needed_tiles = (horizon + self.stbo_tile_len - 1) // self.stbo_tile_len
+        coeff = self.stbo_coeff(hidden)
+        coeff = coeff.view(hidden.shape[0], hidden.shape[1], self.stbo_tile_count, self.stbo_rank)
+        coeff = coeff[:, :, :needed_tiles, :]
+        basis = self._stbo_basis_tiles(hidden.dtype)[:needed_tiles]
+        output = torch.einsum("mlr,bcmr->bcml", basis, coeff)
+        output = output.reshape(hidden.shape[0], hidden.shape[1], needed_tiles * self.stbo_tile_len)
+        bias = self.stbo_temporal_bias[: needed_tiles * self.stbo_tile_len].to(dtype=hidden.dtype)
+        output = output + bias.view(1, 1, -1)
+        output = output[:, :, :horizon]
+        return output.permute(0, 2, 1)
+
     def forward(self, x, y, is_training=True, target_prefix=None):
         # x: [B, seq_len, C], y: [B, pred_len, C]
         batch, seq_len, channels = x.shape
@@ -310,6 +394,8 @@ class Model(nn.Module):
             output = self._stage_native_coefficient_field_operator(hidden, target_prefix)
         elif self.readout_mode.startswith("basis-conditioned-coefficient-field"):
             output = self._basis_conditioned_coefficient_field_operator(hidden, target_prefix)
+        elif self.readout_mode in STBO_READOUTS:
+            output = self._subspace_tiled_basis_operator(hidden, target_prefix)
         else:
             raise ValueError(f"Unsupported readout mode: {self.readout_mode}")
         output = self.normalization_x(output, "denorm")

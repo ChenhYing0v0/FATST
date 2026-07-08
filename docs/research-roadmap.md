@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B12 subspace-tiled basis operator diagnostic |
-| `current_11_step` | StageB Step 2/3: B12-STBO diagnostic decision |
+| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B12 subspace-tiled basis operator |
+| `current_11_step` | StageB Step 7: B12-STBO local implementation smoke passed |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -564,12 +564,27 @@ At `tile_len=48`, `gate_rank=16`:
 - coeff tile-subspace structure is not cross-dataset: adjacent/far projection cosine is positive on ETTh2
   `0.284/0.124`, but not on ETTm1 `0.030/0.164` or Weather `0.035/0.047`.
 
-[Decision] `B12-STBO` is `diagnostic_not_enough_for_method`. Do not implement current shared/bank local-basis
-operator.
+[Decision] The initial offline diagnostic decision was `diagnostic_not_enough_for_method`. It did not support a
+method claim from A6-derived basis/coeff evidence alone.
 
 [Failure Attribution] `hypothesis_false` is not proven. The current block is `generic_basis_control_explains` on
 the label side and `coeff_path_not_supported` across datasets. This is not a direction-level rejection of all
 basis-operator redesigns, but B12 cannot enter Step 4-6 without stronger non-DCT and coeff-path evidence.
+
+[Correction] The offline B12 diagnostic cannot directly reject native trainable STBO, because all evidence comes from
+the already-trained A6 full-basis solution. A6 may simply not expose stage-local basis/coeff patterns that a native
+tiled operator could learn from scratch. Therefore B12 may proceed to a strictly controlled trainable small gate, but
+only with DCT and independent-tile controls.
+
+[Implementation Result] B12-STBO local implementation has passed smoke verification. Added readout modes:
+`subspace-tiled-basis-operator-shared`, `subspace-tiled-basis-operator-bank`,
+`subspace-tiled-basis-operator-dct`, and `subspace-tiled-basis-operator-independent`. Verification results:
+`py_compile` passed; synthetic H96 vs H720 prefix max abs is `0.0` for all four modes; all modes passed synthetic
+backward; ETTh2 one-batch CPU smoke passed.
+
+[Next] Remote small gate is allowed only after commit/push and GPU preflight. Required arms are `a6_clean`,
+`stbo_shared`, `stbo_bank4`, `stbo_dct`, and `stbo_independent`. Learned STBO must beat the DCT control and avoid
+being explained only by independent-tile capacity before any paper-core claim.
 
 ## Active Implementation
 
@@ -612,12 +627,14 @@ basis-operator redesigns, but B12 cannot enter Step 4-6 without stronger non-DCT
 | `docs/code-explanation/phase5-stage-b-b11-esa-basis-coeff-diagnostic.md` | B11-ESA basis/coeff diagnostic explanation |
 | `docs/code-explanation/phase5-stage-b-b11-bcf.md` | B11-BCF implementation explanation |
 | `docs/code-explanation/phase5-stage-b-b12-stbo-diagnostic.md` | B12-STBO diagnostic explanation |
+| `docs/code-explanation/phase5-stage-b-b12-stbo.md` | B12-STBO model implementation explanation |
 | `scripts/analyze_phase5_stage_b_b10_tsi_basis_geometry.py` | B10-TSI-A basis geometry analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_coeff_usage.py` | B10-TSI-B coefficient usage analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_target_set_oracle.py` | B10-TSI-C target-set oracle/control analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_failure_attribution.py` | B10-TSI-D failure attribution analyzer |
 | `scripts/analyze_phase5_stage_b_b11_esa_basis_coeff_diagnostic.py` | B11-ESA basis/coeff diagnostic analyzer |
 | `scripts/analyze_phase5_stage_b_b12_stbo_diagnostic.py` | B12-STBO diagnostic analyzer |
+| `scripts/check_phase5_stage_b_b12_stbo_local.py` | B12-STBO local checker |
 | `scripts/check_phase5_stage_b_b11_bcf_local.py` | B11-BCF local fallback/prefix/backward checker |
 | `scripts/remote/run_phase5_stage_b_b11_bcf_small_gate.sh` | B11-BCF remote small gate runner |
 | `scripts/sync_phase5_stage_b_b11_bcf_small_gate_results.sh` | B11-BCF remote artifact sync/analyze wrapper |

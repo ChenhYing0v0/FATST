@@ -9,10 +9,10 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA clean A6 validated；StageB B12 subspace-tiled basis operator diagnostic |
+| `current_stage` | Phase5 StageA clean A6 validated；StageB B12 subspace-tiled basis operator |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 2/3: B12-STBO diagnostic decision |
+| `current_11_step` | StageB Step 7: B12-STBO local implementation smoke passed |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
 
 ## Core Claim
@@ -193,9 +193,20 @@ B12 的叙事比 B11-BCF 更接近 primary operator redesign，因为它不是 r
 independent-tile upper bound `0.067/0.068/0.083`；train-label tile structure 虽然很强，却几乎被
 local DCT 解释；真实 A6 `coeff` 的 adjacent/far tile-subspace projection pattern 只在 ETTh2 明显。
 
-因此 `B12-STBO` 当前结论是 `diagnostic_not_enough_for_method`。不得实现当前 shared/bank local-basis
-operator，也不能把它写成 Contribution 2。该结果不是所有 basis-operator redesign 的方向级否定，但说明
-下一步必须重新定义能压过 generic DCT local basis 且能跨数据集支持 coeff-path 分化的问题。
+因此 B12 的 Step 2/3 offline 初始结论是 `diagnostic_not_enough_for_method`：不能仅凭 A6-derived
+basis/coeff evidence 把 shared/bank local-basis operator 写成 Contribution 2。该结果不是所有
+basis-operator redesign 的方向级否定。
+
+该边界随后被修正：A6-derived offline diagnostic 不能直接否定 native trainable STBO，因为它只观察已经
+训练好的 A6 full-basis 解。StageB 因此允许一个严格控制的 trainable small gate，但必须包含 fixed local DCT
+和 independent-tile controls。B12-STBO local implementation 已通过 smoke：新增
+`subspace-tiled-basis-operator-shared`、`subspace-tiled-basis-operator-bank`、
+`subspace-tiled-basis-operator-dct`、`subspace-tiled-basis-operator-independent` 四个 readout modes；
+H96 与 H720 prefix consistency max abs 为 `0.0`，synthetic backward 和 ETTh2 one-batch CPU smoke 均通过。
+
+B12 仍不是 accepted paper-core method。只有当 learned `stbo_shared` / `stbo_bank4` 在 remote small gate
+中超过 `stbo_dct`，且收益不能仅由 `stbo_independent` capacity 解释时，才可能进入 StageB Contribution 2
+评估。
 
 ## Evidence Snapshot
 
@@ -276,6 +287,7 @@ Archived or inactive:
 | `docs/code-explanation/phase5-stage-b-b11-esa-basis-coeff-diagnostic.md` | B11-ESA basis/coeff diagnostic analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b11-bcf.md` | B11-BCF implementation explanation |
 | `docs/code-explanation/phase5-stage-b-b12-stbo-diagnostic.md` | B12-STBO diagnostic analyzer explanation |
+| `docs/code-explanation/phase5-stage-b-b12-stbo.md` | B12-STBO model implementation explanation |
 | `docs/stage-ledgers/phase5-timealign-interface.md` | active StageA/StageB ledger |
 | `docs/research-roadmap.md` | active roadmap |
 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | B6 rejected objective diagnostic protocol |
@@ -291,6 +303,7 @@ Archived or inactive:
 | `scripts/analyze_phase5_stage_b_b10_tsi_failure_attribution.py` | B10-TSI-D failure attribution analyzer |
 | `scripts/analyze_phase5_stage_b_b11_esa_basis_coeff_diagnostic.py` | B11-ESA basis/coeff diagnostic analyzer |
 | `scripts/analyze_phase5_stage_b_b12_stbo_diagnostic.py` | B12-STBO diagnostic analyzer |
+| `scripts/check_phase5_stage_b_b12_stbo_local.py` | B12-STBO local checker |
 | `scripts/check_phase5_stage_b_b11_bcf_local.py` | B11-BCF local fallback/prefix/backward checker |
 | `scripts/remote/run_phase5_stage_b_b11_bcf_small_gate.sh` | B11-BCF remote small gate runner |
 | `scripts/sync_phase5_stage_b_b11_bcf_small_gate_results.sh` | B11-BCF remote artifact sync/analyze wrapper |
@@ -329,4 +342,4 @@ Archived or inactive:
 7. Do not launch B9-FSN-SCF full matrix.
 8. Do not continue explicit stage/horizon conditioning as the main StageB route.
 9. B11-BCF is blocked by no-basis and constant-slot controls; do not claim it as paper-core.
-10. B12-STBO is not method-ready; local DCT explains label-side tile structure and coeff-path evidence is ETTh2-only.
+10. B12-STBO local implementation smoke passed, but no paper-core claim exists before remote DCT/independent controls.
