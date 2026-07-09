@@ -35,7 +35,7 @@ To test higher rank honestly, this diagnostic increases `tile_len` together with
 | Tag | `stbo_tile_len` | `stbo_rank` | Role |
 | --- | ---: | ---: | --- |
 | `l48_r32` | `48` | `32` | local-rank expansion while preserving the original 15-tile structure |
-| `l96_r64` | `96` | `64` | medium-rank tile operator |
+| `l120_r64` | `120` | `64` | medium-rank tile operator; repaired from invalid `L96-R64` |
 | `l144_r128` | `144` | `128` | high-rank tile operator; 5 future tiles |
 | `l360_r256_capacity_probe` | `360` | `256` | capacity probe close to A6 rank; only 2 tiles, so not a preferred stage-local method |
 
@@ -70,6 +70,23 @@ anchor in `analysis/phase5_stage_b_b12_stbo_small_gate_20260708/` and
 | `launch_log` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b12_stbo_rank_diagnostic/_launch_rank_diagnostic.log` |
 | `python` | `/home/yingch/.conda/envs/moe/bin/python` |
 
+## Repair Launch
+
+The first launch completed only `L48-R32`. The planned `L96-R64` config failed immediately because current STBO
+requires `stbo_tile_len` to divide `pred_len=720`, and `96` does not divide `720`.
+
+The repaired launch started at `2026-07-09T15:58:05+08:00`:
+
+| Field | Value |
+| --- | --- |
+| `repair_status` | `running` |
+| `repair_pid` | `1219133` |
+| `repair_log` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b12_stbo_rank_diagnostic/_launch_rank_diagnostic_repair.log` |
+| repaired configs | `L120-R64`, `L144-R128`, `L360-R256_capacity_probe` |
+
+Initial repair check confirmed `L120-R64` started on GPUs 0/1/2 with Weather `stbo_shared`, `stbo_bank4`, and
+`stbo_dct`.
+
 ## GPU Preflight
 
 At launch, GPUs 0/1/2 were idle:
@@ -90,7 +107,14 @@ Initial check confirmed `l48_r32` started on all three GPUs:
 
 ## Analysis Requirements
 
-This diagnostic can only answer whether increasing local rank repairs the tested STBO implementation. It must not
+This diagnostic can only answer whether increasing local rank repairs the tested STBO implementation. The complete
+expected artifact count after repair is:
+
+```text
+4 valid configs * 4 arms * 3 datasets = 48 metrics_by_target_horizon.csv files
+```
+
+It must not
 promote B12 to paper-core unless all of the following hold:
 
 1. learned STBO approaches or beats clean A6;

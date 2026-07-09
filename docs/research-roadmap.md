@@ -603,9 +603,10 @@ DCT and show non-uniform bank specialization before any method claim.
 
 [Follow-up Diagnostic] User correctly pointed out that A6 uses `basis_rank=256`, while the first STBO gate used
 `stbo_rank=16`. A direct `tile_len=48, rank=256` setting is invalid because the local basis rank is bounded by
-`tile_len`. Therefore a rank/capacity diagnostic was launched with coupled tile/rank configs:
-`L48-R32`, `L96-R64`, `L144-R128`, and `L360-R256_capacity_probe`. The last config restores A6-like rank only as a
-capacity probe, because it leaves just two 360-step tiles and weakens the stage-local method story.
+`tile_len`. Therefore a rank/capacity diagnostic was launched with coupled tile/rank configs. The initial `L96-R64`
+choice was invalid because `96` does not divide `720`; only `L48-R32` completed in the first launch. The repaired valid
+matrix is `L48-R32`, `L120-R64`, `L144-R128`, and `L360-R256_capacity_probe`. The last config restores A6-like rank
+only as a capacity probe, because it leaves just two 360-step tiles and weakens the stage-local method story.
 
 ## Active Implementation
 

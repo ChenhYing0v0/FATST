@@ -216,9 +216,10 @@ A6 在 `9/12` settings 上仍是 best arm；`stbo_shared` vs A6
 stage/tile bank specialization 未形成。因此 B12 当前实现不能进入 Contribution 2。
 
 随后打开一个 diagnostic-only rank/capacity check：由于 A6 使用 `basis_rank=256`，而第一轮 STBO 只使用
-`stbo_rank=16`，需要判断失败是否主要来自 local rank bottleneck。该诊断不改变 B12 当前未通过的 paper
-claim 状态；只有当高 rank learned STBO 同时接近 A6、超过 same-rank DCT，并形成非均匀 bank specialization
-时，B12 才能重新进入方法候选讨论。
+`stbo_rank=16`，需要判断失败是否主要来自 local rank bottleneck。初始 `L96-R64` 配置无效，因为 `96`
+不整除 `720`；修复后的有效矩阵为 `L48-R32`, `L120-R64`, `L144-R128`,
+`L360-R256_capacity_probe`。该诊断不改变 B12 当前未通过的 paper claim 状态；只有当高 rank learned STBO
+同时接近 A6、超过 same-rank DCT，并形成非均匀 bank specialization 时，B12 才能重新进入方法候选讨论。
 
 ## Evidence Snapshot
 
