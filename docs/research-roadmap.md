@@ -10,7 +10,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
 | `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B12 subspace-tiled basis operator |
-| `current_11_step` | StageB Step 8: B12-STBO rank/capacity diagnostic running |
+| `current_11_step` | StageB Step 10: B12-STBO rank/capacity diagnostic evaluated |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -607,6 +607,12 @@ DCT and show non-uniform bank specialization before any method claim.
 choice was invalid because `96` does not divide `720`; only `L48-R32` completed in the first launch. The repaired valid
 matrix is `L48-R32`, `L120-R64`, `L144-R128`, and `L360-R256_capacity_probe`. The last config restores A6-like rank
 only as a capacity probe, because it leaves just two 360-step tiles and weakens the stage-local method story.
+
+[Rank Diagnostic Result] Rank/capacity bottleneck is partially confirmed. `L360-R256:stbo_independent` nearly matches
+A6 with `+0.014%` mean MSE and `4/12` wins, showing the low-rank STBO failure was not purely directional. But current
+B12-STBO is still blocked: the best learned shared/bank arm is `L360-R256:stbo_shared` at `+0.33%` mean MSE vs A6
+with `4/12` wins, and `stbo_bank4` remains inactive with entropy near maximum (`0.9997-0.99999`). B12 should not enter
+full matrix or paper-core; rollback to Step 2/3 architecture search.
 
 ## Active Implementation
 
