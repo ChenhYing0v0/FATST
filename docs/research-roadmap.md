@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B12 subspace-tiled basis operator |
-| `current_11_step` | StageB Step 10: B12-STBO rank/capacity diagnostic evaluated |
+| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB post-B12 architecture search |
+| `current_11_step` | StageB Step 11 rollback; restart Step 2/3 architecture search after B12-STBO block |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -614,6 +614,11 @@ B12-STBO is still blocked: the best learned shared/bank arm is `L360-R256:stbo_s
 with `4/12` wins, and `stbo_bank4` remains inactive with entropy near maximum (`0.9997-0.99999`). B12 should not enter
 full matrix or paper-core; rollback to Step 2/3 architecture search.
 
+[Restart Handoff] The current restart point is documented at
+`docs/stage-ledgers/phase5-stageb-restart-handoff-20260709.md`. A new conversation should treat StageA A6-LBF-r256 as
+fixed and StageB as Step 2/3 architecture search. Do not continue B12-STBO by adding more rank sweeps or full-matrix
+runs unless a new non-STBO operator hypothesis is first written and passes the narrative gate.
+
 ## Active Implementation
 
 | File | Role |
@@ -642,6 +647,7 @@ full matrix or paper-core; rollback to Step 2/3 architecture search.
 | `docs/experiments/phase5-stage-b-target-set-conditioned-operator.md` | StageB B10 target-set-conditioned operator protocol |
 | `docs/experiments/phase5-stage-b-emergent-subspace-aggregation.md` | StageB B11 emergent subspace aggregation protocol |
 | `docs/experiments/phase5-stage-b-subspace-tiled-basis-operator.md` | StageB B12 subspace-tiled basis operator protocol |
+| `docs/stage-ledgers/phase5-stageb-restart-handoff-20260709.md` | post-B12 restart handoff and next-step guardrails |
 | `docs/code-explanation/phase5-stage-b-b6-prefix-objective-diagnostic.md` | B6 diagnostic analyzer explanation |
 | `docs/code-explanation/phase5-clean-a6-rerun-analysis.md` | clean A6 validation analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b7-unified-prefix-optimization.md` | B7 diagnostic analyzer explanation |
@@ -656,12 +662,14 @@ full matrix or paper-core; rollback to Step 2/3 architecture search.
 | `docs/code-explanation/phase5-stage-b-b11-bcf.md` | B11-BCF implementation explanation |
 | `docs/code-explanation/phase5-stage-b-b12-stbo-diagnostic.md` | B12-STBO diagnostic explanation |
 | `docs/code-explanation/phase5-stage-b-b12-stbo.md` | B12-STBO model implementation explanation |
+| `docs/code-explanation/phase5-stage-b-b12-stbo-rank-diagnostic.md` | B12-STBO rank/capacity diagnostic explanation |
 | `scripts/analyze_phase5_stage_b_b10_tsi_basis_geometry.py` | B10-TSI-A basis geometry analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_coeff_usage.py` | B10-TSI-B coefficient usage analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_target_set_oracle.py` | B10-TSI-C target-set oracle/control analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_failure_attribution.py` | B10-TSI-D failure attribution analyzer |
 | `scripts/analyze_phase5_stage_b_b11_esa_basis_coeff_diagnostic.py` | B11-ESA basis/coeff diagnostic analyzer |
 | `scripts/analyze_phase5_stage_b_b12_stbo_diagnostic.py` | B12-STBO diagnostic analyzer |
+| `scripts/analyze_phase5_stage_b_b12_stbo_rank_diagnostic.py` | B12-STBO rank/capacity diagnostic analyzer |
 | `scripts/check_phase5_stage_b_b12_stbo_local.py` | B12-STBO local checker |
 | `scripts/check_phase5_stage_b_b11_bcf_local.py` | B11-BCF local fallback/prefix/backward checker |
 | `scripts/remote/run_phase5_stage_b_b11_bcf_small_gate.sh` | B11-BCF remote small gate runner |
@@ -677,6 +685,8 @@ full matrix or paper-core; rollback to Step 2/3 architecture search.
 | `analysis/phase5_stage_b_b11_bcf_small_gate_20260708/launch_record.md` | B11-BCF remote launch record |
 | `analysis/phase5_stage_b_b11_bcf_small_gate_20260708/b11_bcf_small_gate_report.md` | B11-BCF small gate decision report |
 | `analysis/phase5_stage_b_b12_stbo_diagnostic_20260708/b12_stbo_report.md` | B12-STBO Step 2/3 diagnostic report |
+| `analysis/phase5_stage_b_b12_stbo_rank_diagnostic_20260708/b12_stbo_rank_diagnostic_report.md` | B12-STBO rank/capacity diagnostic report |
+| `analysis/phase5_stage_b_b12_stbo_rank_diagnostic_20260708/b12_stbo_rank_deep_analysis.md` | B12-STBO rank/capacity deep analysis |
 | `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF remote small gate runner |
 | `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF result sync/analyze wrapper |
 

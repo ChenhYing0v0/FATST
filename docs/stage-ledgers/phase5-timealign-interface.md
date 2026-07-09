@@ -8,12 +8,12 @@
 | Field | Content |
 | --- | --- |
 | `stage_id` | `phase5-timealign-interface` |
-| `current_11_step` | StageB Step 10 B12-STBO rank/capacity diagnostic evaluated |
+| `current_11_step` | StageB Step 11 rollback after B12-STBO; restart Step 2/3 architecture search |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator on official-source TimeAlign encoder |
-| `active_question` | Can A6's full-720 step basis be replaced by a subspace-tiled local basis operator that is native to multi-horizon forecasting |
+| `active_question` | What architecture-level unified multi-horizon problem can follow A6 without residual repair, hard stage coding, or unsupported STBO tiling |
 | `latest_decision` | B12-STBO rank diagnostic partially confirms rank bottleneck but blocks current method: `L360-R256:independent` nearly matches A6, while best learned shared/bank remains `+0.33%` vs A6 and bank entropy stays near uniform |
-| `next_required_action` | Do not launch B12 full matrix; roll StageB back to Step 2/3 architecture search unless proposing a non-STBO operator redesign |
-| `rollback_point` | If learned STBO cannot beat DCT or only independent-tile wins, B12 must not enter paper-core and should roll back to Step 2/3 architecture search |
+| `next_required_action` | Start StageB Step 2/3 architecture search from the restart handoff; do not launch more B12 rank/full-matrix experiments without a new operator hypothesis |
+| `rollback_point` | Current B12-STBO is closed as paper-core; any revival must be a non-STBO operator redesign with new problem evidence and controls |
 
 ## StageA Fixed Result
 
@@ -153,7 +153,8 @@ Clean rerun after code cleanup:
 | Implement B12-STBO local gate | Codex | Native STBO remains untested and may learn structures A6 cannot expose | `completed` | Done; local smoke passed |
 | Launch B12-STBO remote small gate | Codex | Local implementation smoke passed | `completed` | Done; result `blocked_by_required_controls` |
 | Run B12-STBO rank/capacity diagnostic | Codex | User asked whether local rank bottleneck explains B12 failure | `completed` | Done; rank bottleneck partially confirmed, but B12-STBO still blocked |
-| Decide StageB rollback after B12-STBO | Codex | Current B12 failed A6 and rank/capacity diagnostic did not rescue shared/bank mechanism | `pending` | Return StageB to Step 2/3 architecture search unless a non-STBO operator redesign is proposed |
+| Decide StageB rollback after B12-STBO | Codex | Current B12 failed A6 and rank/capacity diagnostic did not rescue shared/bank mechanism | `completed` | StageB rolled back to Step 2/3 architecture search; restart handoff written |
+| Start post-B12 StageB architecture search | Codex | B12-STBO is closed as paper-core and Contribution 2 remains open | `pending` | Read `docs/stage-ledgers/phase5-stageb-restart-handoff-20260709.md`, then define a new Step 2/3 problem before any implementation |
 
 ## Paper Mainline Sync Log
 
@@ -188,6 +189,7 @@ Clean rerun after code cleanup:
 | 2026-07-08 | B11-BCF remote small gate returned | Contribution 2 candidate | no accepted paper claim | B11-BCF blocked by no-basis/constant-slot controls; do not promote to paper-core |
 | 2026-07-08 | B12-STBO Step 2/3 diagnostic returned | Contribution 2 candidate | no accepted paper claim | Current subspace-tiled basis operator is not method-ready; local DCT explains label-side structure and coeff evidence is ETTh2-only |
 | 2026-07-08 | B12-STBO native implementation smoke passed | Contribution 2 candidate | no accepted paper claim | Offline diagnostic limitation corrected; remote small gate may test native trainable STBO against DCT/independent controls |
+| 2026-07-09 | B12-STBO rank diagnostic returned and handoff written | Contribution 2 candidate | no accepted paper claim | B12-STBO blocked by rank/capacity diagnostic; StageB rolls back to Step 2/3 architecture search |
 
 ## Active Artifacts
 
@@ -213,6 +215,8 @@ Clean rerun after code cleanup:
 | `docs/code-explanation/phase5-stage-b-b11-bcf.md` | B11-BCF model implementation explanation |
 | `docs/code-explanation/phase5-stage-b-b12-stbo-diagnostic.md` | B12-STBO diagnostic analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b12-stbo.md` | B12-STBO model implementation explanation |
+| `docs/code-explanation/phase5-stage-b-b12-stbo-rank-diagnostic.md` | B12-STBO rank/capacity diagnostic explanation |
+| `docs/stage-ledgers/phase5-stageb-restart-handoff-20260709.md` | restart handoff for new conversations after B12 rollback |
 | `docs/experiments/phase5-stage-b-reliability-aware-supervision-redesign.md` | StageB problem definition and B1/B2 candidate boundary |
 | `docs/experiments/phase5-stage-b-distance-normalized-seasonal-residual-diagnostic.md` | B3 diagnostic protocol |
 | `docs/experiments/phase5-stage-b-timealign-dependency-and-basis-align-diagnostic.md` | B4 dependency and B5 basis-align protocol |
@@ -241,6 +245,7 @@ Clean rerun after code cleanup:
 | `scripts/analyze_phase5_stage_b_b10_tsi_failure_attribution.py` | B10-TSI-D failure attribution analyzer |
 | `scripts/analyze_phase5_stage_b_b11_esa_basis_coeff_diagnostic.py` | B11-ESA basis/coeff diagnostic analyzer |
 | `scripts/analyze_phase5_stage_b_b12_stbo_diagnostic.py` | B12-STBO tile-basis diagnostic analyzer |
+| `scripts/analyze_phase5_stage_b_b12_stbo_rank_diagnostic.py` | B12-STBO rank/capacity diagnostic analyzer |
 | `scripts/check_phase5_stage_b_b12_stbo_local.py` | B12-STBO local prefix/backward/smoke checker |
 | `scripts/check_phase5_stage_b_b11_bcf_local.py` | B11-BCF fallback/prefix/backward local checker |
 | `scripts/remote/run_phase5_stage_b_b11_bcf_small_gate.sh` | B11-BCF remote small gate runner |
@@ -272,6 +277,8 @@ Clean rerun after code cleanup:
 | `analysis/phase5_stage_b_b11_bcf_small_gate_20260708/launch_record.md` | B11-BCF remote launch record |
 | `analysis/phase5_stage_b_b11_bcf_small_gate_20260708/b11_bcf_small_gate_report.md` | B11-BCF small gate decision |
 | `analysis/phase5_stage_b_b12_stbo_diagnostic_20260708/b12_stbo_report.md` | B12-STBO Step 2/3 diagnostic decision |
+| `analysis/phase5_stage_b_b12_stbo_rank_diagnostic_20260708/b12_stbo_rank_diagnostic_report.md` | B12-STBO rank/capacity diagnostic decision |
+| `analysis/phase5_stage_b_b12_stbo_rank_diagnostic_20260708/b12_stbo_rank_deep_analysis.md` | B12-STBO rank/capacity deep analysis |
 
 ## Archived Evidence
 
