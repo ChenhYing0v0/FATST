@@ -31,7 +31,7 @@ Step 2 的 future-region-specific generation problem 重新开始。
 | `closed_candidate` | current `GRU-based prefix-causal future-unit composition` |
 | `open_direction` | native large future-unit/stage generation without full-horizon clipping |
 | `next_problem` | determine whether ETTm1 inherited `patch_num=1` is a carrier defect after controlling global-state width, active capacity, dropout and checkpoint selector |
-| `do_not_implement_next` | no new StageB method and no mixer；six-arm C0 local gate has passed, so only remote launch and returned-artifact analysis are authorized |
+| `do_not_implement_next` | no new StageB method and no mixer；six-arm C0 is remotely running, so only returned-artifact sync and analysis are authorized |
 
 ## C0 Encoder And Protocol Audit Update
 
@@ -53,7 +53,7 @@ active forecast capacity.
 [Decision] C0 is a short Encoder/control blocker, not Contribution 2. The revised six-arm protocol preserves the same
 flattened `C*P` semantics and separates P1 global width, `P=1` vs near-state/parameter-matched `P=5`, dropout
 `0.9/0.2`, and last/best checkpoints from one training trajectory. Implementation, parameter/prefix/strict-reload checks
-and one-batch dual-artifact smoke have passed；remote launch is next.
+and one-batch dual-artifact smoke have passed。Remote six-arm gate is running on GPUs 0/1/2；按用户要求不长期值守。
 
 ## B14 Prerequisite Encoder Reconstruction
 

@@ -10,7 +10,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
 | `current_stage` | Phase5：A6-LBF-r256 validated；StageB post-B14 C0 carrier/protocol audit |
-| `current_11_step` | B14-FURD Step 3 failed；rollback Step 2/3；C0 local gate passed, remote launch pending |
+| `current_11_step` | B14-FURD Step 3 failed；rollback Step 2/3；C0 Encoder control remotely running |
 | `active_carrier` | `A6-LBF-r256`；patch side path remains diagnostic-only |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
