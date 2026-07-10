@@ -3,7 +3,7 @@
 ## Purpose And Boundary
 
 `scripts/analyze_phase5_stage_b_b14_future_unit_retrieval_demand.py`只读取 frozen A6 checkpoint，判断不同
-future units的 error-conditioned history demand是否比 A6 existing sensitivity更 unit-specific。它不训练模型、
+future units的 model-independent label-patch dependence是否比 A6 existing sensitivity更 unit-specific。它不训练模型、
 不让 patch side path进入 prediction，也不能单独验证 retrieval method。
 
 ## Forward And Gradient Flow
@@ -18,6 +18,11 @@ unit loss / Hutchinson scalar
   -> gradient w.r.t. the same x_norm [B,720,C]
   -> mean over B,C -> position profile [720]
   -> coverage-corrected aggregation -> patch profile [29]
+
+patch memory / future unit
+  -> fixed rank-8 DCT descriptors
+  -> centered linear CKA over batch*channels observations
+  -> label-patch dependence profile [29]
 ```
 
 模型 parameters全部 frozen；`x_norm`保留 autograd。prediction path与 clean A6一致，side path只定义相同的
@@ -49,6 +54,8 @@ right padding重复末端 value。
 
 - `error_conditioned_demand`：future-unit MSE对 `x_norm` 的 absolute gradient profile；
 - `target_independent_sensitivity`：4-draw Hutchinson output-Jacobian RMS profile；
+- `label_patch_dependence`：不经过 A6 Jacobian的 DCT-8 linear-CKA profile；
+- `mean_label_shuffle_gap`：true CKA减 4-draw shuffled-target CKA；
 - `delta_cosine`：mean sensitivity pair cosine减 mean demand pair cosine；
 - `delta_js`：mean demand pair JS减 mean sensitivity pair JS；
 - `coeff_gradient_cosine`：unit loss对 A6 coefficient的 signed-gradient control；
@@ -60,8 +67,10 @@ right padding重复末端 value。
 
 ## Gate And Falsification
 
-单 setting需要 bootstrap `p05(delta_cosine)>0.05`、`p05(delta_js)>0.01`、mean sensitivity cosine
-`>=0.80`。整体至少两个 datasets的 U180/U240同时支持，才进入 B14-B parameter-matched probe。
+单 setting需要 bootstrap `p05(delta_label_cosine)>0.05`、`p05(delta_label_js)>0.01`、
+`p05(mean_label_shuffle_gap)>0`、mean sensitivity cosine `>=0.80`。整体至少两个 datasets的 U180/U240
+同时支持，才进入 B14-B parameter-matched probe。原 error-conditioned demand保留为 A1 control，不再拥有
+方向否定权。
 
 以下情况不允许否定 broader direction：non-finite/zero profile、Hutchinson失败、evidence contract失败或 mass
 conservation error `>1e-6`。这些只说明 diagnostic无效。

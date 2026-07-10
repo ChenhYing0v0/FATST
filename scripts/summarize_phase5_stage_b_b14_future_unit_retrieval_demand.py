@@ -73,7 +73,7 @@ def decision(summary_rows: list[dict[str, str]]) -> tuple[str, dict[str, bool]]:
     )
     dataset_support = {
         dataset: all(
-            truth(row["retrieval_demand_mismatch_support"])
+            truth(row["label_patch_mismatch_support"])
             for row in summary_rows
             if row["dataset"] == dataset
         )
@@ -85,7 +85,7 @@ def decision(summary_rows: list[dict[str, str]]) -> tuple[str, dict[str, bool]]:
     if sum(dataset_support.values()) >= 2:
         return "partial_pass_retrieval_demand_mismatch", dataset_support
     setting_support = sum(
-        truth(row["retrieval_demand_mismatch_support"]) for row in summary_rows
+        truth(row["label_patch_mismatch_support"]) for row in summary_rows
     )
     sensitivity_specific = sum(
         float(row["mean_sensitivity_cosine"]) < 0.80 for row in summary_rows
@@ -94,7 +94,7 @@ def decision(summary_rows: list[dict[str, str]]) -> tuple[str, dict[str, bool]]:
         return "dataset_or_unit_size_specific_mismatch", dataset_support
     if sensitivity_specific >= 3:
         return "current_a6_sensitivity_already_unit_specific", dataset_support
-    return "retrieval_demand_problem_not_supported", dataset_support
+    return "label_patch_mismatch_not_supported", dataset_support
 
 
 def report(
@@ -110,18 +110,20 @@ def report(
         "",
         "## Gate Results",
         "",
-        "| Dataset | U | dCos mean | dCos p05 | dJS mean | dJS p05 | sensitivity cos | support |",
-        "| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |",
+        "| Dataset | U | label dCos mean | label dCos p05 | label dJS mean | "
+        "label dJS p05 | CKA-shuffle p05 | sensitivity cos | support |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |",
     ]
     for row in summary_rows:
         lines.append(
             f"| {row['dataset']} | {row['unit_size']} | "
-            f"{float(row['delta_cosine_mean']):.4f} | "
-            f"{float(row['delta_cosine_p05']):.4f} | "
-            f"{float(row['delta_js_mean']):.4f} | "
-            f"{float(row['delta_js_p05']):.4f} | "
+            f"{float(row['delta_label_cosine_mean']):.4f} | "
+            f"{float(row['delta_label_cosine_p05']):.4f} | "
+            f"{float(row['delta_label_js_mean']):.4f} | "
+            f"{float(row['delta_label_js_p05']):.4f} | "
+            f"{float(row['label_shuffle_gap_p05']):.4f} | "
             f"{float(row['mean_sensitivity_cosine']):.4f} | "
-            f"{'yes' if truth(row['retrieval_demand_mismatch_support']) else 'no'} |"
+            f"{'yes' if truth(row['label_patch_mismatch_support']) else 'no'} |"
         )
     lines.extend(
         [
@@ -138,9 +140,9 @@ def report(
             "",
             "## Failure Attribution Boundary",
             "",
-            "该诊断只判断 accepted A6 是否存在 error-conditioned demand 与 existing "
-            "sensitivity 的 patch-level",
-            "mismatch。正结果只允许进入 parameter-matched B14-B probe；负结果回滚 "
+            "该诊断只判断 model-independent label-patch dependence 是否比 accepted A6 "
+            "sensitivity更 unit-specific。",
+            "正结果只允许进入 parameter-matched B14-B probe；负结果回滚 "
             "Step 2，不允许通过实现",
             "cross-attention 来替代 problem evidence。任何 evidence-contract、non-finite "
             "或 mass-conservation",
@@ -183,7 +185,7 @@ def run(args: argparse.Namespace) -> None:
                 "per_dataset": per_dataset,
                 "setting_count": len(summary_rows),
                 "support_setting_count": sum(
-                    truth(row["retrieval_demand_mismatch_support"])
+                    truth(row["label_patch_mismatch_support"])
                     for row in summary_rows
                 ),
                 "max_mass_conservation_error": float(

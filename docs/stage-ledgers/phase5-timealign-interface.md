@@ -12,7 +12,7 @@
 | `active_carrier` | `A6-LBF-r256` plus exact hierarchical `P48-S24` local patch-memory interface |
 | `active_question` | Do benchmark-independent large future regions require region-specific history retrieval/state without recurrent unit-to-unit transition or full-horizon clipping? |
 | `latest_decision` | full contextual replacement failed；A6-preserving side path refined to 29 complete `K48-S24` patches with exact local evidence reconstruction |
-| `next_required_action` | Run B14-FURD Step 3 demand-vs-sensitivity diagnostic on U180/U240；no trainable retrieval before the gate |
+| `next_required_action` | Run B14-FURD A2 model-independent label-patch dependence gate on U180/U240；no trainable retrieval |
 | `rollback_point` | If B14 mismatch is unsupported, return Step 2；do not repair by reviving contextual replacement, GRU composition, or late residual heads |
 
 ## StageA Fixed Result
@@ -168,7 +168,8 @@ Clean rerun after code cleanup:
 | Run B13-FUCO-B2 hidden-memory intervention repair | Codex | B1 may intervene after an already full-trajectory coefficient bottleneck | `completed` | Gate fails on ETTh2 and per-unit mechanism pattern；close current GRU composition |
 | Redefine StageB after B13 GRU composition block | Codex | B13-A keeps large future-unit problem evidence, while B1/B2 reject recurrent transition | `completed` | B14-FURD problem and prior-art boundary written |
 | Build B14 common patch-memory prerequisite | Codex | ETTm1 legacy `P=1` invalidates cross-dataset patch retrieval | `completed` | Full CPE failed；HPM exact repair passed 3/3 datasets |
-| Run B14-FURD demand mismatch diagnostic | Codex | valid HPM evidence contract locally passes | `pending` | Run U180/U240 remote diagnostic on 29 coverage-corrected patch supports |
+| Run B14-FURD A1 current-gradient mismatch | Codex | valid HPM evidence contract | `completed` | 0/6 support；exact contradiction closed but shared-Jacobian design has no direction-rejection authority |
+| Run B14-FURD A2 label-patch dependence | Codex | A1 circularity requires one Step 3 repair | `pending` | Run DCT-8 linear CKA vs A6 sensitivity with shuffle control |
 
 ## Paper Mainline Sync Log
 

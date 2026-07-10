@@ -152,6 +152,87 @@ def reconstruct_history(memory: torch.Tensor) -> torch.Tensor:
     return reconstruction / coverage.view(1, 1, -1)
 
 
+def dct_basis(
+    length: int,
+    rank: int,
+    device: torch.device,
+    dtype: torch.dtype,
+) -> torch.Tensor:
+    if rank <= 0 or rank > length:
+        raise ValueError(f"DCT rank must be in [1, {length}]")
+    positions = torch.arange(length, device=device, dtype=dtype).unsqueeze(1)
+    frequencies = torch.arange(rank, device=device, dtype=dtype).unsqueeze(0)
+    basis = torch.cos(math.pi / length * (positions + 0.5) * frequencies)
+    basis[:, 0] *= math.sqrt(1.0 / length)
+    if rank > 1:
+        basis[:, 1:] *= math.sqrt(2.0 / length)
+    return basis
+
+
+def patch_descriptors(memory: torch.Tensor, rank: int) -> torch.Tensor:
+    basis = dct_basis(
+        PATCH_LEN,
+        rank,
+        memory.device,
+        memory.dtype,
+    )
+    descriptors = torch.einsum("bcpk,kq->bcpq", memory, basis)
+    return descriptors.reshape(-1, memory.shape[2], rank)
+
+
+def label_dependence_profile(
+    history_descriptors: torch.Tensor,
+    target_unit: torch.Tensor,
+    rank: int,
+    shuffle_draws: int,
+    generator: torch.Generator,
+) -> tuple[torch.Tensor, float]:
+    """Return a linear-CKA patch profile and its shuffle-control gap."""
+    target_basis = dct_basis(
+        target_unit.shape[1],
+        rank,
+        target_unit.device,
+        target_unit.dtype,
+    )
+    target_descriptors = torch.einsum(
+        "buc,uq->bcq",
+        target_unit,
+        target_basis,
+    ).reshape(-1, rank)
+    history = history_descriptors - history_descriptors.mean(dim=0, keepdim=True)
+    target = target_descriptors - target_descriptors.mean(dim=0, keepdim=True)
+    cross = torch.einsum("npq,nr->pqr", history, target)
+    history_gram = torch.einsum("npq,npr->pqr", history, history)
+    target_gram = target.T @ target
+    numerator = cross.square().sum(dim=(1, 2))
+    denominator = torch.sqrt(history_gram.square().sum(dim=(1, 2)))
+    denominator = denominator * torch.sqrt(target_gram.square().sum())
+    cka = numerator / denominator.clamp_min(torch.finfo(history.dtype).eps)
+
+    shuffled = torch.zeros_like(cka)
+    for _draw in range(shuffle_draws):
+        permutation = torch.randperm(
+            target.shape[0],
+            device=target.device,
+            generator=generator,
+        )
+        shuffled_cross = torch.einsum(
+            "npq,nr->pqr",
+            history,
+            target[permutation],
+        )
+        shuffled += (
+            shuffled_cross.square().sum(dim=(1, 2))
+            / denominator.clamp_min(torch.finfo(history.dtype).eps)
+        )
+    shuffled = shuffled / shuffle_draws
+    total = cka.sum()
+    if not torch.isfinite(total) or float(total.detach().cpu()) <= 1e-12:
+        raise RuntimeError("label-patch dependence profile is zero or non-finite")
+    shuffle_gap = float((cka.mean() - shuffled.mean()).detach().cpu())
+    return cka / total, shuffle_gap
+
+
 def normalized_forward(
     model: Model,
     batch_x: torch.Tensor,
@@ -329,12 +410,16 @@ def analyze_setting(
     unit_size: int,
     prediction: torch.Tensor,
     target: torch.Tensor,
+    target_normalized: torch.Tensor,
+    history_descriptors: torch.Tensor,
     coeff: torch.Tensor,
     normalized: torch.Tensor,
     generator: torch.Generator,
 ) -> tuple[dict[str, Any], list[dict[str, Any]], list[dict[str, Any]], float]:
     demands: list[torch.Tensor] = []
     sensitivities: list[torch.Tensor] = []
+    label_profiles: list[torch.Tensor] = []
+    label_shuffle_gaps: list[float] = []
     coeff_grads: list[torch.Tensor] = []
     losses: list[float] = []
     profiles: list[dict[str, Any]] = []
@@ -352,6 +437,15 @@ def analyze_setting(
     ]
 
     for unit_idx, start, end in ranges:
+        label_profile, label_shuffle_gap = label_dependence_profile(
+            history_descriptors,
+            target_normalized[:, start:end, :],
+            args.descriptor_rank,
+            args.cka_shuffle_draws,
+            generator,
+        )
+        label_profiles.append(label_profile.detach().cpu())
+        label_shuffle_gaps.append(label_shuffle_gap)
         loss = F.mse_loss(prediction[:, start:end, :], target[:, start:end, :])
         demand_grad, coeff_grad = torch.autograd.grad(
             loss,
@@ -403,6 +497,16 @@ def analyze_setting(
                 batch_idx,
                 unit_size,
                 unit_idx,
+                "label_patch_dependence",
+                label_profiles[-1],
+            )
+        )
+        profiles.extend(
+            profile_rows(
+                dataset,
+                batch_idx,
+                unit_size,
+                unit_idx,
                 "target_independent_sensitivity",
                 sensitivities[-1],
             )
@@ -413,6 +517,8 @@ def analyze_setting(
     sensitivity_cosines: list[float] = []
     demand_js_values: list[float] = []
     sensitivity_js_values: list[float] = []
+    label_cosines: list[float] = []
+    label_js_values: list[float] = []
     coeff_cosines: list[float] = []
     pair_distances: list[float] = []
     for left in range(len(ranges)):
@@ -422,6 +528,8 @@ def analyze_setting(
             sensitivity_cos = cosine(sensitivities[left], sensitivities[right])
             demand_js = jensen_shannon(demands[left], demands[right])
             sensitivity_js = jensen_shannon(sensitivities[left], sensitivities[right])
+            label_cos = cosine(label_profiles[left], label_profiles[right])
+            label_js = jensen_shannon(label_profiles[left], label_profiles[right])
             coeff_cos = cosine(coeff_grads[left], coeff_grads[right])
             pair_rows.append(
                 {
@@ -439,6 +547,10 @@ def analyze_setting(
                     "demand_js": demand_js,
                     "sensitivity_js": sensitivity_js,
                     "delta_js": demand_js - sensitivity_js,
+                    "label_dependence_cosine": label_cos,
+                    "label_dependence_js": label_js,
+                    "delta_label_cosine": sensitivity_cos - label_cos,
+                    "delta_label_js": label_js - sensitivity_js,
                     "coeff_gradient_cosine": coeff_cos,
                 }
             )
@@ -446,12 +558,18 @@ def analyze_setting(
             sensitivity_cosines.append(sensitivity_cos)
             demand_js_values.append(demand_js)
             sensitivity_js_values.append(sensitivity_js)
+            label_cosines.append(label_cos)
+            label_js_values.append(label_js)
             coeff_cosines.append(coeff_cos)
             pair_distances.append(float(distance))
 
     unit_alignment = [
         cosine(demand, sensitivity)
         for demand, sensitivity in zip(demands, sensitivities)
+    ]
+    label_sensitivity_alignment = [
+        cosine(label, sensitivity)
+        for label, sensitivity in zip(label_profiles, sensitivities)
     ]
     demand_entropies = [profile_entropy(profile) for profile in demands]
     sensitivity_entropies = [profile_entropy(profile) for profile in sensitivities]
@@ -469,10 +587,22 @@ def analyze_setting(
         "mean_demand_js": float(np.mean(demand_js_values)),
         "mean_sensitivity_js": float(np.mean(sensitivity_js_values)),
         "delta_js": float(np.mean(demand_js_values) - np.mean(sensitivity_js_values)),
+        "mean_label_dependence_cosine": float(np.mean(label_cosines)),
+        "mean_label_dependence_js": float(np.mean(label_js_values)),
+        "mean_label_shuffle_gap": float(np.mean(label_shuffle_gaps)),
+        "delta_label_cosine": float(
+            np.mean(sensitivity_cosines) - np.mean(label_cosines)
+        ),
+        "delta_label_js": float(
+            np.mean(label_js_values) - np.mean(sensitivity_js_values)
+        ),
         "pair_matrix_spearman": spearman(demand_cosines, sensitivity_cosines),
         "demand_distance_spearman": spearman(pair_distances, demand_cosines),
         "sensitivity_distance_spearman": spearman(pair_distances, sensitivity_cosines),
         "mean_unit_demand_sensitivity_cosine": float(np.mean(unit_alignment)),
+        "mean_unit_label_sensitivity_cosine": float(
+            np.mean(label_sensitivity_alignment)
+        ),
         "mean_coeff_gradient_cosine": float(np.mean(coeff_cosines)),
         "mean_demand_entropy": float(np.mean(demand_entropies)),
         "mean_sensitivity_entropy": float(np.mean(sensitivity_entropies)),
@@ -493,7 +623,14 @@ def bootstrap_setting(
     rng = np.random.default_rng(seed)
     output_rows: list[dict[str, Any]] = []
     by_metric: dict[str, dict[str, float]] = {}
-    for metric in ("delta_cosine", "delta_js", "mean_sensitivity_cosine"):
+    for metric in (
+        "delta_cosine",
+        "delta_js",
+        "delta_label_cosine",
+        "delta_label_js",
+        "mean_label_shuffle_gap",
+        "mean_sensitivity_cosine",
+    ):
         values = np.asarray([float(row[metric]) for row in rows], dtype=np.float64)
         if not np.all(np.isfinite(values)):
             stats = {key: float("nan") for key in ("mean", "p05", "p50", "p95")}
@@ -531,13 +668,21 @@ def summarize(
     finite = all(
         np.isfinite(float(row[field]))
         for row in rows
-        for field in ("delta_cosine", "delta_js", "mean_sensitivity_cosine")
+        for field in (
+            "delta_cosine",
+            "delta_js",
+            "delta_label_cosine",
+            "delta_label_js",
+            "mean_label_shuffle_gap",
+            "mean_sensitivity_cosine",
+        )
     )
     support = bool(
         audit_pass
         and finite
-        and bootstrap["delta_cosine"]["p05"] > 0.05
-        and bootstrap["delta_js"]["p05"] > 0.01
+        and bootstrap["delta_label_cosine"]["p05"] > 0.05
+        and bootstrap["delta_label_js"]["p05"] > 0.01
+        and bootstrap["mean_label_shuffle_gap"]["p05"] > 0.0
         and bootstrap["mean_sensitivity_cosine"]["mean"] >= 0.80
     )
     return {
@@ -551,9 +696,18 @@ def summarize(
         "delta_cosine_p05": bootstrap["delta_cosine"]["p05"],
         "delta_js_mean": bootstrap["delta_js"]["mean"],
         "delta_js_p05": bootstrap["delta_js"]["p05"],
+        "delta_label_cosine_mean": bootstrap["delta_label_cosine"]["mean"],
+        "delta_label_cosine_p05": bootstrap["delta_label_cosine"]["p05"],
+        "delta_label_js_mean": bootstrap["delta_label_js"]["mean"],
+        "delta_label_js_p05": bootstrap["delta_label_js"]["p05"],
+        "mean_label_shuffle_gap": bootstrap["mean_label_shuffle_gap"]["mean"],
+        "label_shuffle_gap_p05": bootstrap["mean_label_shuffle_gap"]["p05"],
         "mean_sensitivity_cosine": bootstrap["mean_sensitivity_cosine"]["mean"],
         "mean_unit_demand_sensitivity_cosine": float(
             np.mean([row["mean_unit_demand_sensitivity_cosine"] for row in rows])
+        ),
+        "mean_unit_label_sensitivity_cosine": float(
+            np.mean([row["mean_unit_label_sensitivity_cosine"] for row in rows])
         ),
         "mean_coeff_gradient_cosine": float(
             np.mean([row["mean_coeff_gradient_cosine"] for row in rows])
@@ -561,6 +715,7 @@ def summarize(
         "max_patch_mass_conservation_error": float(
             max(row["max_patch_mass_conservation_error"] for row in rows)
         ),
+        "label_patch_mismatch_support": support,
         "retrieval_demand_mismatch_support": support,
     }
 
@@ -595,21 +750,25 @@ def write_report(path: Path, summary: list[dict[str, Any]], decision: str) -> No
         "",
         "## Gate Results",
         "",
-        "| Dataset | U | batches | dCos p05 | dJS p05 | sensitivity cos | support |",
-        "| --- | ---: | ---: | ---: | ---: | ---: | --- |",
+        "| Dataset | U | batches | label dCos p05 | label dJS p05 | "
+        "CKA-shuffle p05 | sensitivity cos | support |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |",
     ]
     for row in summary:
         lines.append(
-            "| {dataset} | {unit_size} | {batches} | {delta_cosine_p05:.4f} | "
-            "{delta_js_p05:.4f} | {mean_sensitivity_cosine:.4f} | {support} |".format(
+            "| {dataset} | {unit_size} | {batches} | {delta_label_cosine_p05:.4f} | "
+            "{delta_label_js_p05:.4f} | {label_shuffle_gap_p05:.4f} | "
+            "{mean_sensitivity_cosine:.4f} | {support} |".format(
                 **row,
-                support=("yes" if row["retrieval_demand_mismatch_support"] else "no"),
+                support=("yes" if row["label_patch_mismatch_support"] else "no"),
             )
         )
     lines.extend(
         [
             "",
-            "单 setting gate要求 `p05(delta_cosine)>0.05`、`p05(delta_js)>0.01`、",
+            "单 setting gate要求 `p05(delta_label_cosine)>0.05`、"
+            "`p05(delta_label_js)>0.01`、",
+            "`p05(mean_label_shuffle_gap)>0`、",
             "`mean sensitivity cosine>=0.80`。本报告仅是 Step 3 problem evidence，"
             "不验证 trainable retrieval。",
             "",
@@ -619,8 +778,13 @@ def write_report(path: Path, summary: list[dict[str, Any]], decision: str) -> No
 
 
 def run(args: argparse.Namespace) -> None:
-    if args.hutchinson_draws <= 0 or args.max_batches <= 0:
-        raise ValueError("draws and max-batches must be positive")
+    if (
+        args.hutchinson_draws <= 0
+        or args.cka_shuffle_draws <= 0
+        or args.descriptor_rank <= 0
+        or args.max_batches <= 0
+    ):
+        raise ValueError("draws, descriptor rank, and max-batches must be positive")
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
     config = build_args(args)
@@ -651,6 +815,13 @@ def run(args: argparse.Namespace) -> None:
             )
         )
         prediction, coeff, normalized = normalized_forward(model, batch_x)
+        history_descriptors = patch_descriptors(
+            model.retrieval_memory(normalized.detach().permute(0, 2, 1)),
+            args.descriptor_rank,
+        )
+        target_normalized = (
+            target - model.normalization_x.mean
+        ) / model.normalization_x.stdev
         evidence_position = normalize_position_profile(
             normalized.detach().abs().mean(dim=(0, 2))
         )
@@ -673,6 +844,8 @@ def run(args: argparse.Namespace) -> None:
                 unit_size,
                 prediction,
                 target,
+                target_normalized,
+                history_descriptors,
                 coeff,
                 normalized,
                 generator,
@@ -704,14 +877,14 @@ def run(args: argparse.Namespace) -> None:
 
     if not evidence_ok:
         decision = "diagnostic_invalid_for_direction_rejection"
-    elif all(row["retrieval_demand_mismatch_support"] for row in summary_rows):
-        decision = "dataset_supports_retrieval_demand_mismatch"
-    elif any(row["retrieval_demand_mismatch_support"] for row in summary_rows):
-        decision = "unit_size_specific_retrieval_demand_mismatch"
+    elif all(row["label_patch_mismatch_support"] for row in summary_rows):
+        decision = "dataset_supports_label_patch_mismatch"
+    elif any(row["label_patch_mismatch_support"] for row in summary_rows):
+        decision = "unit_size_specific_label_patch_mismatch"
     elif sum(row["mean_sensitivity_cosine"] < 0.80 for row in summary_rows) >= 1:
         decision = "current_a6_sensitivity_already_unit_specific"
     else:
-        decision = "retrieval_demand_problem_not_supported"
+        decision = "label_patch_mismatch_not_supported"
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
     write_csv(args.output_dir / "b14_future_unit_retrieval_batches.csv", batch_rows)
@@ -730,6 +903,8 @@ def run(args: argparse.Namespace) -> None:
                 "patch_len": PATCH_LEN,
                 "patch_stride": PATCH_STRIDE,
                 "hutchinson_draws": args.hutchinson_draws,
+                "descriptor_rank": args.descriptor_rank,
+                "cka_shuffle_draws": args.cka_shuffle_draws,
                 "max_batches": args.max_batches,
                 "checkpoint": str(checkpoint),
             },
@@ -756,6 +931,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-batches", type=int, default=8)
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--hutchinson-draws", type=int, default=4)
+    parser.add_argument("--descriptor-rank", type=int, default=8)
+    parser.add_argument("--cka-shuffle-draws", type=int, default=4)
     parser.add_argument("--bootstrap-iterations", type=int, default=1000)
     parser.add_argument("--seed", type=int, default=2021)
     parser.add_argument("--device", default="cuda")

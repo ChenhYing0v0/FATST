@@ -5,15 +5,15 @@
 | 字段 | 内容 |
 | --- | --- |
 | `candidate_id` | `B14-FURD` |
-| `current_step` | Step 3 analyzer implemented；valid patch-evidence contract locally passed；remote gate pending |
+| `current_step` | A1 returned negative for current-gradient mismatch；A2 model-independent label-patch repair ready |
 | `problem` | A6 可能用高度共享的 input sensitivity 服务不同 large future units，而各 unit error gradients 实际要求不同 raw-history evidence |
 | `existence_evidence` | B13-A large-unit gradient pressure 在 `12/12` settings 稳定；B13-B1/B2 关闭 recurrent transition，但未否定 non-recurrent region-specific retrieval |
-| `idea` | 先比较 label-weighted retrieval demand 与 target-independent A6 input sensitivity；只有 mismatch 成立才设计 trainable retrieval mechanism |
-| `theory_check` | 如果 demand 比 existing sensitivity 显著更 unit-specific，则 unit-aware retrieval 有 carrier-specific problem basis；若 sensitivity 已同样分化，则新 retrieval 可能重复 A6 已有 path |
-| `design` | error-conditioned demand vs target-independent A6 sensitivity on 29 valid `K48-S24` supports；coverage-corrected aggregation |
+| `idea` | 比较 model-independent label-patch dependence 与 target-independent A6 sensitivity；只有 mismatch 成立才设计 trainable retrieval mechanism |
+| `theory_check` | label-history dependence必须绕开 A6 Jacobian；否则 error-gradient demand与 sensitivity共享同一 computation path，负结果没有方向否定权 |
+| `design` | DCT-8 linear CKA label dependence vs A6 sensitivity on 29 valid `K48-S24` supports；shuffle + coverage controls |
 | `narrative_gate` | pending；target-query/retrieval 本身是 prior art，A 只能提供 problem evidence |
 | `effectiveness_gate` | not applicable before Step 4-6 |
-| `artifacts` | literature audit、valid HPM checker、Step 3 analyzer与 remote runner ready |
+| `artifacts` | A1 3-dataset artifacts returned；A2 analyzer/runner locally passed，remote pending |
 | `decision` | authorize B14-FURD-A diagnostic only；no trainable retrieval model |
 
 ## Prerequisite Hold
@@ -29,6 +29,17 @@ parameter-free normalized local patches。初始 30-token interface含 right rep
 
 [Result] valid interface本地 checker已证明 manual slice与 overlap-add reconstruction exact，且 A6 output exact
 不变。Step 3 analyzer已实现；远程运行时每个 batch都重新验证该 contract，任何失败均使 diagnostic invalid。
+
+## Returned A1 And Failure Attribution
+
+A1在 ETTh2、ETTm1、Weather 的 U180/U240 `0/6` settings通过：`Delta_cos p05`为
+`-0.0315...0.0051`，`Delta_JS p05`为 `-0.00153...0.00153`，远低于预注册 gate。24/24 batch evidence
+contract exact，mass error最多 `1.19e-7`，因此不是 numeric或 side-path错误。
+
+但 A1只能关闭精确命题 `current A6 error gradient reveals unit-specific patches while A6 Jacobian remains shared`。
+error demand $J_{A6}^T r_m$ 与 sensitivity都受同一 $J_{A6}$ 约束，因此该负结果不能否定 A6尚未利用的
+label-history evidence。failure attribution为 `diagnostic_valid_for_exact_carrier_contradiction`，同时
+`diagnostic_invalid_for_direction_rejection`。不实现 retrieval；允许一次 A2 model-independent Step 3 repair。
 
 ## Why This Is Not A Retrieval Model Yet
 
@@ -80,7 +91,16 @@ x_raw [B,720,C]
 
 model 与 checkpoint frozen；只保留 autograd，不更新参数。
 
-## Metric 1：Label-Weighted Retrieval Demand
+## Metric 1：Model-Independent Label-Patch Dependence（A2 Main）
+
+history patches与 future unit都投影到固定 rank-8 orthonormal DCT descriptors。将 batch与 channels合并为
+observations，对每个 history patch和 future unit计算 centered linear CKA。CKA在 29 patches上 L1 normalize为
+label-dependence profile；同 batch使用 4 次 shuffled target CKA作为 finite-sample control。
+
+该 profile不经过 A6 encoder/readout，因此可以检验 current model尚未表达的 predictive dependence。A2 main
+mismatch用 `A6 sensitivity cosine - label CKA cosine` 与 `label CKA JS - sensitivity JS`。
+
+## Metric 2：Error-Conditioned Demand（A1 Control）
 
 对 future unit $m$：
 
@@ -100,7 +120,7 @@ $$
 $d_m$ 先形成 720-position non-negative distribution，再 coverage-corrected聚合成 29-patch distribution。它是
 model-conditioned error demand，不等同于 causal feature attribution或 label-only oracle。
 
-## Metric 2：Target-Independent Existing Sensitivity
+## Metric 3：Target-Independent Existing Sensitivity
 
 为了避免把 residual magnitude 直接当 retrieval，使用 Hutchinson estimator 估计每个 future unit output
 Jacobian 对 normalized history positions 的 squared sensitivity。
@@ -137,7 +157,7 @@ Carlo noise。默认 `4` draws。
 - per-unit demand-vs-sensitivity cosine；
 - profile entropy 与 temporal centroid。
 
-核心 mismatch：
+历史 A1 mismatch：
 
 $$
 \Delta_{cos}
@@ -157,6 +177,9 @@ $$
 
 正 gap 表示 task demand 比 current model sensitivity 更 unit-specific。
 
+A2把上述 $d$ 替换为 model-independent label-patch CKA profile，并额外要求 true CKA相对 shuffled CKA的
+batch-mean gap具有正 bootstrap lower bound。
+
 ## Controls And Attribution
 
 1. `target-independent sensitivity control`：排除所有差异都来自 A6 output Jacobian；
@@ -172,9 +195,10 @@ $$
 
 单个 dataset/unit-size setting 为 `retrieval_demand_mismatch_support`，当同时满足：
 
-1. bootstrap `p05(Delta_cos) > 0.05`；
-2. bootstrap `p05(Delta_JS) > 0.01`；
-3. mean sensitivity pairwise cosine `>= 0.80`。
+1. bootstrap `p05(Delta_label_cos) > 0.05`；
+2. bootstrap `p05(Delta_label_JS) > 0.01`；
+3. bootstrap `p05(mean_true_CKA - mean_shuffled_CKA) > 0`；
+4. mean sensitivity pairwise cosine `>= 0.80`。
 
 整体进入 B14-B 需要至少两个 datasets 的 U180 与 U240 均支持，即至少 `4/6` settings，并且每个支持
 dataset 两个 sizes 同向。
