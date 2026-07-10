@@ -8,11 +8,11 @@
 | Field | Content |
 | --- | --- |
 | `stage_id` | `phase5-timealign-interface` |
-| `current_11_step` | C0 Step 9/10 completed；patch-defect gate failed；rollback StageB Step 2/3 |
+| `current_11_step` | C1 carrier Step 4-7；design/local gate passed，remote small gate pending |
 | `active_carrier` | `A6-LBF-r256` plus exact hierarchical `P48-S24` local patch-memory interface |
-| `active_question` | C0 is closed；StageB needs a new Step 2/3 paper problem or should pause |
-| `latest_decision` | matched P5 loses `0/16` horizon-selector-dropout settings；wider P1 also loses `0/8`；retain ETTm1 P1-D256-drop0.9 and close patch-defect route |
-| `next_required_action` | Do not add seeds or mixer；return to StageB Step 2/3 problem selection, keeping Encoder cleanup separate from innovation |
+| `active_question` | Can a standard global-anchored multi-patch carrier unify all dataset interfaces within a pre-registered degradation budget? |
+| `latest_decision` | C1 separates five dropout sites and tests valid P16-S8/P48-S24 scales；global/local gradient, prefix, strict reload and dual-artifact smoke pass |
+| `next_required_action` | Commit/push and launch the 9-run C1 gate；do not add multi-scale bank, dropout sweep or StageB mechanism |
 | `rollback_point` | B14-FURD is closed as paper-core；do not implement retrieval or continue unit-size/CKA sweeps |
 
 ## StageA Fixed Result
@@ -83,6 +83,7 @@ Clean rerun after code cleanup:
 | `B14-PRE-HPM` | `hierarchical_patch_memory_ready` | B14 requires a common local patch axis without sacrificing accepted A6 performance | full CPE replacement failed；parameter-free valid memory has 29 complete patches, exact reconstruction and unchanged A6 path | prerequisite only；not a retrieval method | Release B14-FURD Step 3；keep contextual replacement closed | `docs/experiments/phase5-stage-b-b14-prerequisite-patchwise-encoder.md`; `analysis/phase5_stage_b_b14_prerequisite_patchwise_encoder_20260710/hierarchical_patch_memory_gate_report.md` |
 | `B14-FURD` | `blocked_by_nonrobust_label_patch_evidence` | different U180/U240 future regions may demand different local history evidence while current A6 sensitivity remains shared | A1 `0/6`; model-independent A2 `1/6`, Weather-U180 only；no dataset passes both sizes | not applicable before Step 4-6 | Close retrieval route；rollback Step 2/3 minimal patch tokenization question | `docs/experiments/phase5-stage-b-future-unit-retrieval-demand-diagnostic.md`; `analysis/phase5_stage_b_b14_future_unit_retrieval_demand_20260710/b14_future_unit_retrieval_deep_analysis.md` |
 | `C0-ETTm1-CPA` | `closed_patch_defect_not_supported` | ETTm1 unified A6 simultaneously inherits `P=1,D=256,dropout=0.9,official-last`; global width, patch granularity, regularization and selector effects were not identified | matched P5 is worse under both dropouts and selectors (`0/16` settings)；wider P1 is also worse (`0/8`)；dropout/selector do not reverse ranking | diagnostic-only completed；not a StageB method | Retain P1-D256-drop0.9；no extra seeds or mixer；rollback StageB Step 2/3 | `docs/experiments/phase5-stage-b-ettm1-carrier-protocol-audit.md`; `analysis/phase5_stage_b_c0_ettm1_carrier_protocol_gate_20260710/c0_ettm1_encoder_control_deep_analysis.md` |
+| `C1-GAMP` | `local_gate_passed_remote_pending` | accepted A6 performance is strong but ETTm1 P1 vs ETTh2/Weather P48 complicates a common local-token interface and paper story | full-window global anchor plus valid local tokens；P16-S8/P48-S24；five explicit dropout sites；~0.99M active params；local contract passed | control-only；not a StageB method | Run A6 dual reference plus two scales on all three datasets；accept only within degradation/fixed-baseline gates | `docs/experiments/phase5-c1-global-anchored-multipatch-carrier.md`; `docs/code-explanation/phase5-c1-global-anchored-multipatch-carrier.md` |
 
 ## Experiment Ledger
 
@@ -131,6 +132,7 @@ Clean rerun after code cleanup:
 | C0 frozen cross-patch interaction | `C0-ETTm1-CPA` | design-confound diagnostic | all 8 attenuation-horizon settings pass；pair-median mean is `0.0634-0.0646` at attenuation 0.25 and `0.1282-0.1294` at 0.50 | `material_interaction_detected`; P5 no-mix is not function-preserving, but mixer remains unauthorized before returned gate | `analysis/phase5_stage_b_c0_cross_patch_interaction_20260710/c0_cross_patch_interaction_report.md` |
 | C0 six-arm local gate | `C0-ETTm1-CPA` | implementation verification | six active parameter counts match preregistration；memory shapes, prefix consistency, strict reload and one-batch dual-checkpoint artifacts pass | `local_gate_passed_remote_launch_pending` | `scripts/check_phase5_stage_b_c0_ettm1_carrier_local.py`; `docs/code-explanation/phase5-stage-b-c0-ettm1-carrier-protocol-gate.md` |
 | C0 six-arm returned gate | `C0-ETTm1-CPA` | Encoder/protocol effectiveness and attribution | matched P5 vs P1: dropout0.9 `+4.22%/+4.17%`, dropout0.2 `+1.92%/+2.50%` for last/best；all four comparisons `0/4` wins；wider P1 `+1.34%/+1.44%` | `patch_num_performance_defect_not_supported`；retain accepted carrier；no seeds/mixer | `analysis/phase5_stage_b_c0_ettm1_carrier_protocol_gate_20260710/c0_ettm1_encoder_control_deep_analysis.md` |
+| C1 source/design/local gate | `C1-GAMP` | carrier normalization | global `[B,C,1,256]`；local fine/coarse `[B,C,89/29,256]`；five dropout sites `0/0/0.1/0.1/0.1`；all required gradients and one-batch dual smoke pass | `local_gate_passed_remote_pending` | `docs/experiments/phase5-c1-global-anchored-multipatch-carrier.md`; `scripts/check_phase5_c1_global_anchored_multipatch_local.py` |
 
 ## Pending Tasks
 
@@ -179,6 +181,7 @@ Clean rerun after code cleanup:
 | Run B14-FURD A2 label-patch dependence | Codex | A1 circularity requires one Step 3 repair | `completed` | `1/6`; close B14-FURD and rollback Step 2/3 |
 | Define minimal patch-only carrier audit | Codex | User requested StageB route, `patch_num`, Encoder, dropout and checkpoint audit | `completed` | Six-arm channel-semantic/state/parameter/dropout/dual-checkpoint protocol preregistered |
 | Implement C0 ETTm1 carrier/protocol small gate | Codex | C0 protocol is preregistered | `completed_closed` | Returned gate fails patch-defect hypothesis；retain P1-D256-drop0.9；no extra seeds/mixer |
+| Run C1 global-anchored multi-patch gate | Codex | User prioritizes common architecture/interface with bounded degradation | `local_pass_remote_pending` | Commit/push，GPU preflight，launch 9 runs；scale selected only by validation |
 
 ## Paper Mainline Sync Log
 
@@ -249,6 +252,8 @@ Clean rerun after code cleanup:
 | `docs/code-explanation/phase5-stage-b-b13-future-unit-composition-probe.md` | B13 parameter-matched composition probe explanation |
 | `docs/code-explanation/phase5-stage-b-encoder-protocol-audit.md` | C0 preset/checkpoint/frozen branch audit explanation |
 | `docs/code-explanation/phase5-stage-b-c0-ettm1-returned-analysis.md` | C0 returned gate and statistic definitions |
+| `docs/code-explanation/phase5-c1-global-anchored-multipatch-carrier.md` | C1 model/dropout/scale/analyzer contracts |
+| `docs/experiments/phase5-c1-global-anchored-multipatch-carrier.md` | C1 control-only design and pre-registered gates |
 | `docs/experiments/phase5-stage-b-ettm1-carrier-protocol-audit.md` | C0 six-arm causal carrier protocol |
 | `docs/stage-ledgers/phase5-stageb-restart-handoff-20260709.md` | restart handoff for new conversations after B12 rollback |
 | `docs/stage-ledgers/phase5-stageb-b13-restart-handoff-20260710.md` | current post-C0 Step 2/3 restart handoff |
@@ -286,6 +291,10 @@ Clean rerun after code cleanup:
 | `scripts/analyze_phase5_stage_b_b13_future_unit_composition_probe.py` | B13 exact parameter-matched composition analyzer |
 | `scripts/analyze_phase5_stage_b_encoder_protocol_audit.py` | C0 source/config/checkpoint/frozen branch analyzer |
 | `scripts/analyze_phase5_stage_b_c0_ettm1_carrier_deep.py` | C0 returned protocol/training/segment attribution analyzer |
+| `scripts/check_phase5_c1_global_anchored_multipatch_local.py` | C1 local shape/dropout/gradient/prefix/dual smoke |
+| `scripts/remote/run_phase5_c1_global_anchored_multipatch_gate.sh` | C1 9-run remote gate |
+| `scripts/sync_phase5_c1_global_anchored_multipatch_gate_results.sh` | C1 result sync/analyze wrapper |
+| `scripts/analyze_phase5_c1_global_anchored_multipatch_gate.py` | C1 shared/validation-selected scale analyzer |
 | `scripts/remote/run_phase5_stage_b_b13_hidden_memory_probe.sh` | B13 hidden-memory repair remote runner |
 | `scripts/sync_phase5_stage_b_b13_hidden_memory_probe_results.sh` | B13 hidden-memory repair artifact sync wrapper |
 | `scripts/check_phase5_stage_b_b12_stbo_local.py` | B12-STBO local prefix/backward/smoke checker |

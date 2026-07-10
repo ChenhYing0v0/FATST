@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 validated；StageB post-C0 rollback |
-| `current_11_step` | C0 Step 9/10 completed；patch-defect gate failed；rollback Step 2/3 |
+| `current_stage` | Phase5：A6-LBF-r256 validated；C1 carrier-normalization gate pending；StageB innovation paused |
+| `current_11_step` | C1 carrier Step 4-7 local pass；remote effectiveness gate pending |
 | `active_carrier` | `A6-LBF-r256`；patch side path remains diagnostic-only |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -106,6 +106,14 @@ wins，mean MSE 分别退化 `+4.22%/+4.17%/+1.92%/+2.50%`；wider P1 也退化 
 ETTm1 P1-D256-drop0.9 carrier，不追加 seeds/mixer，StageB 回滚 Step 2/3。详细归因见：
 
 - `analysis/phase5_stage_b_c0_ettm1_carrier_protocol_gate_20260710/c0_ettm1_encoder_control_deep_analysis.md`。
+
+[C1 Decision] 用户愿意在明确 budget内用少量性能换取统一 multipatch topology与后续 module interface。
+因此进入 control-only `C1-GAMP`：full-window global token + valid local tokens + one standard attention block，
+coefficient head只读取 updated global token。首轮运行 P16-S8/P48-S24 两 scales与 A6 dual reference，三数据集
+共9 runs；五个 dropout sites显式拆分为 `0/0/0.1/0.1/0.1`。不做 parameter matching、multi-scale bank或
+dropout sweep。协议见：
+
+- `docs/experiments/phase5-c1-global-anchored-multipatch-carrier.md`。
 
 ## StageB Redesign Entry
 
@@ -771,12 +779,18 @@ datasets pass both U180/U240). Decision：`blocked_by_nonrobust_label_patch_evid
 | `docs/code-explanation/phase5-stage-b-b13-future-unit-composition-probe.md` | B13 parameter-matched composition probe explanation |
 | `docs/code-explanation/phase5-stage-b-encoder-protocol-audit.md` | C0 preset/checkpoint/frozen branch audit explanation |
 | `docs/code-explanation/phase5-stage-b-c0-ettm1-returned-analysis.md` | C0 returned protocol/training/segment analysis explanation |
+| `docs/code-explanation/phase5-c1-global-anchored-multipatch-carrier.md` | C1 global/local token and dropout contract explanation |
+| `docs/experiments/phase5-c1-global-anchored-multipatch-carrier.md` | C1 carrier-normalization protocol |
 | `docs/experiments/phase5-stage-b-ettm1-carrier-protocol-audit.md` | C0 six-arm carrier/protocol diagnostic |
 | `docs/stage-ledgers/phase5-stageb-b13-restart-handoff-20260710.md` | current post-C0 Step 2/3 restart handoff |
 | `scripts/analyze_phase5_stage_b_b13_future_unit_granularity.py` | B13 large-unit granularity analyzer |
 | `scripts/analyze_phase5_stage_b_b13_future_unit_composition_probe.py` | B13 coefficient/hidden-memory composition analyzer |
 | `scripts/analyze_phase5_stage_b_encoder_protocol_audit.py` | C0 source/config/checkpoint/frozen branch analyzer |
 | `scripts/analyze_phase5_stage_b_c0_ettm1_carrier_deep.py` | C0 returned deep attribution analyzer |
+| `scripts/check_phase5_c1_global_anchored_multipatch_local.py` | C1 local checker |
+| `scripts/remote/run_phase5_c1_global_anchored_multipatch_gate.sh` | C1 remote runner |
+| `scripts/sync_phase5_c1_global_anchored_multipatch_gate_results.sh` | C1 sync wrapper |
+| `scripts/analyze_phase5_c1_global_anchored_multipatch_gate.py` | C1 returned gate analyzer |
 | `scripts/remote/run_phase5_stage_b_b13_hidden_memory_probe.sh` | B13 hidden-memory repair remote runner |
 | `scripts/sync_phase5_stage_b_b13_hidden_memory_probe_results.sh` | B13 hidden-memory repair artifact sync wrapper |
 | `scripts/check_phase5_stage_b_b11_bcf_local.py` | B11-BCF local fallback/prefix/backward checker |

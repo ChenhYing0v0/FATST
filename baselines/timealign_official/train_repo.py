@@ -139,11 +139,21 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
     device = torch.device(args.device if args.device != "auto" else ("cuda" if torch.cuda.is_available() else "cpu"))
     is_prefix_readout = args.readout_mode in PREFIX_READOUT_MODES
     encoder_mode = getattr(args, "encoder_mode", "timealign-token-mlp")
-    contextual_encoder = encoder_mode == "contextual-patch-transformer"
+    contextual_encoder = encoder_mode in {
+        "contextual-patch-transformer",
+        "global-anchored-patch-transformer",
+    }
+    global_anchored_encoder = encoder_mode == "global-anchored-patch-transformer"
     legacy_d_model = preset.d_model if args.legacy_d_model is None else args.legacy_d_model
     legacy_d_ff = preset.d_ff if args.legacy_d_ff is None else args.legacy_d_ff
     legacy_dropout = preset.dropout if args.legacy_dropout is None else args.legacy_dropout
     legacy_patch_num = preset.patch_num if args.legacy_patch_num is None else args.legacy_patch_num
+    if global_anchored_encoder:
+        effective_dropout = args.history_ffn_dropout
+    elif contextual_encoder:
+        effective_dropout = args.history_dropout
+    else:
+        effective_dropout = legacy_dropout
     return argparse.Namespace(
         task_name="long_term_forecast",
         is_training=1,
@@ -184,11 +194,7 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
             else legacy_d_ff
         ),
         factor=3,
-        dropout=(
-            getattr(args, "history_dropout", 0.2)
-            if contextual_encoder
-            else legacy_dropout
-        ),
+        dropout=effective_dropout,
         embed="timeF",
         distil=True,
         expand=2,
@@ -247,7 +253,19 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         encoder_mode=encoder_mode,
         history_patch_len=getattr(args, "history_patch_len", 48),
         history_patch_stride=getattr(args, "history_patch_stride", 24),
+        history_token_dropout=getattr(args, "history_token_dropout", 0.0),
         history_attn_dropout=getattr(args, "history_attn_dropout", 0.0),
+        history_attn_residual_dropout=getattr(
+            args,
+            "history_attn_residual_dropout",
+            0.1,
+        ),
+        history_ffn_dropout=getattr(args, "history_ffn_dropout", 0.1),
+        history_ffn_residual_dropout=getattr(
+            args,
+            "history_ffn_residual_dropout",
+            0.1,
+        ),
         history_res_attention=getattr(args, "history_res_attention", True),
         target_horizons=args.target_horizons,
         basis_rank=args.basis_rank,
@@ -324,13 +342,27 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
             }
         )
     if hasattr(model, "history_encoder"):
-        payload.update(
-            {
-                "history_patch_len": int(model.history_encoder.patch_len),
-                "history_patch_stride": int(model.history_encoder.stride),
-                "history_res_attention": bool(model.history_encoder.residual_attention),
-            }
-        )
+        history_payload = {
+            "history_patch_len": int(model.history_encoder.patch_len),
+            "history_patch_stride": int(model.history_encoder.stride),
+            "history_res_attention": bool(model.history_encoder.residual_attention),
+        }
+        if hasattr(model.history_encoder, "patch_num"):
+            history_payload["history_local_patch_num"] = int(
+                model.history_encoder.patch_num
+            )
+        for field in (
+            "token_dropout_p",
+            "attn_dropout_p",
+            "attn_residual_dropout_p",
+            "ffn_dropout_p",
+            "ffn_residual_dropout_p",
+        ):
+            if hasattr(model.history_encoder, field):
+                history_payload[f"history_{field}"] = float(
+                    getattr(model.history_encoder, field)
+                )
+        payload.update(history_payload)
     if hasattr(model, "retrieval_memory"):
         payload.update(
             {
@@ -767,9 +799,13 @@ def run(args: argparse.Namespace) -> None:
                 "B14 prerequisite: PatchTST-derived contextual history encoder plus A6-LBF-r256 operator."
                 if args.encoder_mode == "contextual-patch-transformer"
                 else (
-                    "B14 prerequisite: accepted A6 carrier plus parameter-free hierarchical patch memory."
-                    if args.encoder_mode == "hierarchical-patch-memory"
-                    else "Clean TimeAlign adapter: official baseline plus A6-LBF-r256 unified carrier."
+                    "C1 carrier normalization: full-window global anchor plus valid local patch tokens and explicit dropout sites."
+                    if args.encoder_mode == "global-anchored-patch-transformer"
+                    else (
+                        "B14 prerequisite: accepted A6 carrier plus parameter-free hierarchical patch memory."
+                        if args.encoder_mode == "hierarchical-patch-memory"
+                        else "Clean TimeAlign adapter: official baseline plus A6-LBF-r256 unified carrier."
+                    )
                 )
             ),
             "a6_lbf_auxiliary_policy": (
@@ -872,6 +908,7 @@ def parse_args() -> argparse.Namespace:
         choices=[
             "timealign-token-mlp",
             "contextual-patch-transformer",
+            "global-anchored-patch-transformer",
             "hierarchical-patch-memory",
         ],
         default="timealign-token-mlp",
@@ -883,7 +920,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--history-d-ff", type=int, default=256)
     parser.add_argument("--history-e-layers", type=int, default=3)
     parser.add_argument("--history-dropout", type=float, default=0.2)
+    parser.add_argument("--history-token-dropout", type=float, default=0.0)
     parser.add_argument("--history-attn-dropout", type=float, default=0.0)
+    parser.add_argument("--history-attn-residual-dropout", type=float, default=0.1)
+    parser.add_argument("--history-ffn-dropout", type=float, default=0.1)
+    parser.add_argument("--history-ffn-residual-dropout", type=float, default=0.1)
     parser.add_argument(
         "--history-res-attention",
         action=argparse.BooleanOptionalAction,
@@ -960,6 +1001,15 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("history dropout must be in [0, 1)")
     if not 0.0 <= args.history_attn_dropout < 1.0:
         raise ValueError("history attention dropout must be in [0, 1)")
+    named_history_dropouts = {
+        "history token dropout": args.history_token_dropout,
+        "history attention residual dropout": args.history_attn_residual_dropout,
+        "history FFN dropout": args.history_ffn_dropout,
+        "history FFN residual dropout": args.history_ffn_residual_dropout,
+    }
+    for name, value in named_history_dropouts.items():
+        if not 0.0 <= value < 1.0:
+            raise ValueError(f"{name} must be in [0, 1)")
     legacy_overrides = (
         args.legacy_patch_num,
         args.legacy_d_model,
@@ -1019,14 +1069,17 @@ def parse_args() -> argparse.Namespace:
         args.stbo_basis_init_std = args.stbo_rank ** -0.5
     if args.readout_mode in PREFIX_READOUT_MODES and args.mode != "unified":
         raise ValueError("Prefix-native learned-basis readouts require --mode unified --pred-len 720")
-    if args.encoder_mode == "contextual-patch-transformer":
+    if args.encoder_mode in {
+        "contextual-patch-transformer",
+        "global-anchored-patch-transformer",
+    }:
         if args.readout_mode != "learned-basis-forecast-operator":
             raise ValueError(
-                "contextual-patch-transformer currently requires "
+                "contextual patch encoders currently require "
                 "readout-mode=learned-basis-forecast-operator"
             )
         if args.mode != "unified" or args.pred_len != 720:
-            raise ValueError("contextual-patch-transformer is a unified A6 carrier prerequisite")
+            raise ValueError("contextual patch encoders require unified A6-LBF")
     if args.encoder_mode == "hierarchical-patch-memory":
         if args.readout_mode != "learned-basis-forecast-operator":
             raise ValueError(

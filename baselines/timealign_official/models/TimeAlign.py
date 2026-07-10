@@ -26,6 +26,7 @@ STBO_READOUTS = {
 ENCODER_MODES = {
     "timealign-token-mlp",
     "contextual-patch-transformer",
+    "global-anchored-patch-transformer",
     "hierarchical-patch-memory",
 }
 
@@ -171,6 +172,134 @@ class ContextualPatchEncoder(nn.Module):
         return tokens.reshape(batch, channels, self.patch_num, self.dim)
 
 
+class GlobalAnchoredPatchEncoderLayer(nn.Module):
+    """Pre-norm patch mixer with independently controlled dropout sites."""
+
+    def __init__(
+        self,
+        dim,
+        heads,
+        d_ff,
+        attn_dropout,
+        attn_residual_dropout,
+        ffn_dropout,
+        ffn_residual_dropout,
+    ):
+        super().__init__()
+        self.attention_norm = nn.LayerNorm(dim)
+        self.attention = ResidualPatchAttention(
+            dim,
+            heads,
+            attn_dropout,
+            proj_dropout=0.0,
+        )
+        self.attention_residual_dropout = nn.Dropout(attn_residual_dropout)
+        self.feed_forward_norm = nn.LayerNorm(dim)
+        self.feed_forward = nn.Sequential(
+            nn.Linear(dim, d_ff),
+            nn.GELU(),
+            nn.Dropout(ffn_dropout),
+            nn.Linear(d_ff, dim),
+        )
+        self.feed_forward_residual_dropout = nn.Dropout(ffn_residual_dropout)
+
+    def forward(self, x, previous_scores=None):
+        attended, scores = self.attention(
+            self.attention_norm(x),
+            previous_scores,
+        )
+        x = x + self.attention_residual_dropout(attended)
+        x = x + self.feed_forward_residual_dropout(
+            self.feed_forward(self.feed_forward_norm(x))
+        )
+        return x, scores
+
+
+class GlobalAnchoredPatchEncoder(nn.Module):
+    """Full-window anchor plus contextual valid local patches."""
+
+    def __init__(
+        self,
+        seq_len,
+        patch_len,
+        stride,
+        dim,
+        heads,
+        d_ff,
+        layers,
+        token_dropout,
+        attn_dropout,
+        attn_residual_dropout,
+        ffn_dropout,
+        ffn_residual_dropout,
+        residual_attention,
+    ):
+        super().__init__()
+        if patch_len <= 0 or stride <= 0:
+            raise ValueError("history patch length and stride must be positive")
+        if patch_len > seq_len:
+            raise ValueError("history patch length cannot exceed sequence length")
+        self.patch_len = patch_len
+        self.stride = stride
+        self.patch_num = (seq_len - patch_len) // stride + 1
+        self.dim = dim
+        self.residual_attention = residual_attention
+        self.token_dropout_p = float(token_dropout)
+        self.attn_dropout_p = float(attn_dropout)
+        self.attn_residual_dropout_p = float(attn_residual_dropout)
+        self.ffn_dropout_p = float(ffn_dropout)
+        self.ffn_residual_dropout_p = float(ffn_residual_dropout)
+        self.global_projection = nn.Linear(seq_len, dim)
+        self.local_projection = nn.Linear(patch_len, dim)
+        self.position_embedding = nn.Parameter(
+            torch.empty(1, self.patch_num + 1, dim)
+        )
+        self.token_dropout = nn.Dropout(token_dropout)
+        self.layers = nn.ModuleList(
+            [
+                GlobalAnchoredPatchEncoderLayer(
+                    dim=dim,
+                    heads=heads,
+                    d_ff=d_ff,
+                    attn_dropout=attn_dropout,
+                    attn_residual_dropout=attn_residual_dropout,
+                    ffn_dropout=ffn_dropout,
+                    ffn_residual_dropout=ffn_residual_dropout,
+                )
+                for _ in range(layers)
+            ]
+        )
+        self.output_norm = nn.LayerNorm(dim)
+        nn.init.uniform_(self.position_embedding, -0.02, 0.02)
+
+    def forward(self, x):
+        # x: [B, C, L] -> global: [B, C, D], local: [B, C, P, D]
+        batch, channels, _length = x.shape
+        global_token = self.global_projection(x).unsqueeze(2)
+        local_patches = x.unfold(-1, self.patch_len, self.stride)
+        local_tokens = self.local_projection(local_patches)
+        tokens = torch.cat([global_token, local_tokens], dim=2)
+        tokens = tokens.reshape(
+            batch * channels,
+            self.patch_num + 1,
+            self.dim,
+        )
+        tokens = self.token_dropout(tokens + self.position_embedding)
+        scores = None
+        for layer in self.layers:
+            tokens, scores = layer(
+                tokens,
+                scores if self.residual_attention else None,
+            )
+        tokens = self.output_norm(tokens).reshape(
+            batch,
+            channels,
+            self.patch_num + 1,
+            self.dim,
+        )
+        return tokens[:, :, 0, :], tokens[:, :, 1:, :]
+
+
 class CanonicalPatchMemory(nn.Module):
     """Parameter-free valid patches for a stable retrieval interface."""
 
@@ -208,7 +337,11 @@ class Model(nn.Module):
             )
         self.has_future_recon_branch = self.readout_mode == "official"
         if (
-            self.encoder_mode == "contextual-patch-transformer"
+            self.encoder_mode
+            in {
+                "contextual-patch-transformer",
+                "global-anchored-patch-transformer",
+            }
             and self.readout_mode != "learned-basis-forecast-operator"
         ):
             raise ValueError(
@@ -239,7 +372,7 @@ class Model(nn.Module):
                     for _ in range(configs.e_layers)
                 ]
             )
-        else:
+        elif self.encoder_mode == "contextual-patch-transformer":
             self.d_model = configs.d_model
             self.history_encoder = ContextualPatchEncoder(
                 seq_len=configs.seq_len,
@@ -254,6 +387,24 @@ class Model(nn.Module):
                 residual_attention=configs.history_res_attention,
             )
             self.patch_num = self.history_encoder.patch_num
+        else:
+            self.d_model = configs.d_model
+            self.history_encoder = GlobalAnchoredPatchEncoder(
+                seq_len=configs.seq_len,
+                patch_len=configs.history_patch_len,
+                stride=configs.history_patch_stride,
+                dim=configs.d_model,
+                heads=configs.n_heads,
+                d_ff=configs.d_ff,
+                layers=configs.e_layers,
+                token_dropout=configs.history_token_dropout,
+                attn_dropout=configs.history_attn_dropout,
+                attn_residual_dropout=configs.history_attn_residual_dropout,
+                ffn_dropout=configs.history_ffn_dropout,
+                ffn_residual_dropout=configs.history_ffn_residual_dropout,
+                residual_attention=configs.history_res_attention,
+            )
+            self.patch_num = 1
 
         if self.encoder_mode == "hierarchical-patch-memory":
             self.retrieval_memory = CanonicalPatchMemory(
@@ -402,6 +553,11 @@ class Model(nn.Module):
         batch, seq_len, channels = x.shape
         if self.encoder_mode == "contextual-patch-transformer":
             return self.history_encoder(x.permute(0, 2, 1))
+        if self.encoder_mode == "global-anchored-patch-transformer":
+            global_state, _local_memory = self.history_encoder(
+                x.permute(0, 2, 1)
+            )
+            return global_state.unsqueeze(2)
         tokens = self.patch_emb_x(x.permute(0, 2, 1).reshape(-1, channels * seq_len))
         for layer_idx in range(self.e_layers):
             tokens = tokens + self.encoder[layer_idx](tokens)
@@ -418,6 +574,11 @@ class Model(nn.Module):
         normalized = self.normalization_x(x, "norm")
         if self.encoder_mode == "hierarchical-patch-memory":
             return self.retrieval_memory(normalized.permute(0, 2, 1))
+        if self.encoder_mode == "global-anchored-patch-transformer":
+            _global_state, local_memory = self.history_encoder(
+                normalized.permute(0, 2, 1)
+            )
+            return local_memory
         return self._encode_normalized_history(normalized)
 
     def _build_stage_boundaries(self, configs):

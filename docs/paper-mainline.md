@@ -9,10 +9,10 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA clean A6 validated；StageB post-C0 Step 2/3 rollback |
+| `current_stage` | Phase5 StageA clean A6 validated；C1 carrier-normalization gate pending；StageB innovation paused |
 | `active_carrier` | `A6-LBF-r256`；hierarchical patch memory is diagnostic-only |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | C0 Step 9/10 completed；patch-defect gate failed；rollback Step 2/3 |
+| `current_11_step` | C1 carrier Step 4-7 local pass；remote effectiveness gate pending |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
 
 ## Core Claim
@@ -287,6 +287,12 @@ dropout0.2 下为 `+1.92%/+2.50%`，四组均 `0/4` horizon wins；wider P1-D384
 排序。因此保留 ETTm1 `P=1,D=256,d_ff=256,dropout=0.9,official-last`，关闭 patch-defect route，不追加
 seeds 或 mixer。该结果不支持“所有 patchwise encoders 失败”，只是不支持 inherited P1 是 performance
 defect；StageB 回到 Step 2/3。
+
+用户选择进一步执行 `C1-GAMP` carrier normalization：允许预注册范围内的小幅退化，换取所有数据集共有的
+global-anchor + multiple-local-patch topology和统一 downstream interface。C1 明确是 control-only，不增加
+StageB contribution。Legacy `dropout=0.9` 不复用于 attention；新 Encoder拆分五个 dropout sites为
+`0.0/0.0/0.1/0.1/0.1`。P16-S8与P48-S24两个 valid local scales在三数据集上完整运行，scale只能由
+shared gate或 validation选择。C1通过前，accepted paper carrier仍是 A6-LBF-r256。
 
 ## Evidence Snapshot
 

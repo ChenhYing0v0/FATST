@@ -25,14 +25,14 @@ route 继续调参，而应重新选择 StageB Step 2/3 problem，或明确暂�
 
 | Field | Content |
 | --- | --- |
-| `current_stage` | Phase5 StageA accepted；StageB post-C0 rollback |
-| `current_11_step` | C0 Step 9/10 completed；rollback StageB Step 2/3 |
+| `current_stage` | Phase5 StageA accepted；C1 carrier-normalization gate pending；StageB innovation paused |
+| `current_11_step` | C1 carrier Step 4-7 local pass；remote effectiveness gate pending |
 | `active_carrier` | `A6-LBF-r256`；patch-memory interface is diagnostic-only |
 | `accepted_paper_core` | `A6-LBF-r256` only |
 | `closed_candidate` | current `GRU-based prefix-causal future-unit composition` |
 | `open_direction` | native large future-unit/stage generation without full-horizon clipping |
-| `next_problem` | C0 has closed the ETTm1 patch-defect question；select a new StageB Step 2/3 problem or pause |
-| `do_not_implement_next` | no C0 extra seeds, P5 mixer, width/dropout sweep or Encoder mechanism stacking |
+| `next_problem` | determine whether one global-anchored multi-patch topology can unify dataset interfaces within a bounded performance cost |
+| `do_not_implement_next` | no multi-scale bank, dataset-specific test-selected scale, dropout sweep or StageB mechanism before C1 returns |
 
 ## C0 Encoder And Protocol Audit Update
 
@@ -65,6 +65,22 @@ mean MSE `+0.79%/+0.34%`, and best-val does not reverse any architecture ranking
 official-last as the source-faithful accepted carrier. Do not add seeds or a mixer. P5 no-mix may still be the wrong
 intervention because it removes frozen P1 interactions, but repairing P5 would answer a different question rather than
 show that inherited P1 was defective.
+
+## C1 Carrier Normalization Update
+
+用户进一步明确：可以用小幅 performance regression换取跨数据集 multipatch topology、downstream module
+interface与论文叙事一致，但不把 Encoder写成 StageB创新。
+
+[Decision] 不复活 C0 P5 no-mix，也不复活 B14 local-only contextual replacement。C1 使用所有数据集共有的
+full-window global token，加 valid local tokens，再用一个 standard pre-norm attention block更新 global token；
+coefficient head只读取 global token。Fine/coarse local scales分别为 P16-S8与 P48-S24。
+
+[Dropout Boundary] legacy ETTm1 `0.9` 不传入 attention。C1 独立设置 token/attention-weight/
+attention-residual/FFN-hidden/FFN-residual dropouts为 `0.0/0.0/0.1/0.1/0.1`。首轮不做 dropout sweep。
+
+[Local Gate] global/local memory shapes、89/29 valid patches、五个 dropout sites、global/local/attention/FFN
+gradients、prefix consistency、strict reload与 dual-checkpoint smoke均通过。Active carrier在 remote gate通过前
+仍是 A6-LBF-r256。
 
 ## B14 Prerequisite Encoder Reconstruction
 
