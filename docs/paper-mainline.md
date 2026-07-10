@@ -9,10 +9,10 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA clean A6 validated；StageB post-B13 future-region-specific generation search |
-| `active_carrier` | `A6-LBF-r256` |
+| `current_stage` | Phase5 StageA clean A6 validated；StageB B14 future-unit retrieval-demand diagnostic |
+| `active_carrier` | `A6-LBF-r256` with exact hierarchical patch-memory interface |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | B13 Step 3 diagnostic decision completed；restart StageB Step 2 after GRU composition block |
+| `current_11_step` | B14 prerequisite completed；B14-FURD Step 3 ready |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
 
 ## Core Claim
@@ -248,6 +248,15 @@ StageB 回到 Step 2，下一问题收束为：不同 large future regions 是�
 并能否在没有 recurrent transition 与 full-horizon clipping 的情况下形成 native generator。该问题尚未通过
 literature/problem existence gate，因此不得直接实现。
 
+B14 前置 encoder reconstruction 已完成。直接用 PatchTST-derived contextual encoder替换 A6 carrier的两个
+arms均失败：`P16-S8 +4.135% (1/12 wins)`，`P48-S24 +4.799% (0/12 wins)`。这关闭 full contextual
+replacement，不否定 local patch memory。Step 5/6 repair改为 hierarchical interface：accepted A6 forecast path
+保持，normalized history额外展开为 parameter-free `P48-S24` local memory `[B,C,30,48]`。
+
+该 repair在 ETTh2、ETTm1、Weather 全部通过 strict equivalence：state keys与 parameter count相同，
+multi-prefix outputs和 full-test MSE/MAE max diff均为 `0.0`。因此 A6性能结论无需修改，B14可以在统一 local
+patch supports上执行 Step 3 demand-vs-sensitivity diagnostic；trainable retrieval仍未获授权。
+
 ## Evidence Snapshot
 
 ### A6-LBF-r256 vs fixed-horizon per-horizon TimeAlign
@@ -398,5 +407,5 @@ Archived or inactive:
 9. B11-BCF is blocked by no-basis and constant-slot controls; do not claim it as paper-core.
 10. B12-STBO is blocked by rank/capacity diagnostic; do not continue it as paper-core or full matrix.
 11. B13 GRU-based prefix-causal composition is blocked by no-transition control; do not continue GRU/head tuning.
-12. Restart StageB from Step 2 around future-unit-specific history retrieval using
-    `docs/stage-ledgers/phase5-stageb-b13-restart-handoff-20260710.md`.
+12. Use the exact A6-preserving hierarchical `P48-S24` memory as B14's common history interface.
+13. Run B14-FURD Step 3 demand-vs-sensitivity diagnostic；do not implement trainable retrieval before it passes.

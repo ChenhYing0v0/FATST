@@ -9,9 +9,9 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB post-B13 future-region-specific generation search |
-| `current_11_step` | B13 Step 3 diagnostic decision completed；restart StageB Step 2 after GRU composition block |
-| `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
+| `current_stage` | Phase5：A6-LBF-r256 validated；StageB B14 future-unit retrieval-demand diagnostic |
+| `current_11_step` | B14 prerequisite completed；B14-FURD Step 3 ready |
+| `active_carrier` | `A6-LBF-r256` + exact hierarchical `P48-S24` patch-memory interface |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
 ## Long Research Loop Rule
@@ -657,11 +657,32 @@ large-unit pressure and B2 only tests recurrent transition. The next problem sho
 `future-unit-specific history retrieval/state without recurrent transition`; do not implement a model before new
 literature/problem evidence and parameter-matched constant/no-unit controls.
 
+### B14 Prerequisite Patch-Memory Reconstruction
+
+[Problem] inherited A6 presets expose `P=48/1/48` hidden tokens on ETTh2/ETTm1/Weather, so a patch-retrieval
+diagnostic is not comparable across datasets. Since A6 no longer uses TimeAlign future alignment, upstream
+dataset-specific tokenization is not an architectural constraint.
+
+[Failed Design] PatchTST-derived full contextual replacement was tested at `P16-S8` and `P48-S24`. Both failed the
+carrier gate：overall mean MSE `+4.135%/+4.799%` with `1/12` and `0/12` wins. Failure attribution is
+`readout_or_encoder_design_wrong`：standard patch backbone cannot replace the accepted A6 carrier computation through
+the same flatten coefficient head without losing performance.
+
+[Step 5/6 Repair] `hierarchical-patch-memory` preserves the accepted A6 forecast path and adds parameter-free
+normalized `P48-S24` patches `[B,C,30,48]` as a separate local evidence memory. This is not residual prediction and
+does not let unvalidated tokens enter the output.
+
+[Gate Result] ETTh2/ETTm1/Weather all pass strict checkpoint/state/parameter/output/full-metric equivalence；maximum
+output and MSE/MAE difference is `0.0`. Decision：`hierarchical_patch_memory_ready`。
+
+[Next] B14-FURD enters Step 3. Aggregate future-unit error demand and current A6 input sensitivity over the same 30
+overlapping patch supports for `U180/U240`. No trainable retrieval is allowed before the mismatch gate passes.
+
 ## Active Implementation
 
 | File | Role |
 | --- | --- |
-| `baselines/timealign_official/models/TimeAlign.py` | clean official + A6-LBF model |
+| `baselines/timealign_official/models/TimeAlign.py` | clean official + A6-LBF + hierarchical patch-memory interface |
 | `baselines/timealign_official/train_repo.py` | clean training/evaluation adapter |
 | `scripts/remote/run_phase5_a6_lbf_r256_main.sh` | clean A6-LBF-r256 remote runner |
 | `docs/code-explanation/phase5-clean-timealign-a6-lbf.md` | implementation explanation |

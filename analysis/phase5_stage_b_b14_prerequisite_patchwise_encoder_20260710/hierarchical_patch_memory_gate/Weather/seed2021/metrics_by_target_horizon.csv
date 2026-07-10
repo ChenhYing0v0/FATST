@@ -1,0 +1,5 @@
+target_horizon,mse,mae,num_samples,num_channels,eval_prefix_steps,dataset,encoder_mode,checkpoint
+96,0.14136819541454315,0.18159954249858856,9820,21,96,Weather,hierarchical-patch-memory,/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b13_probe_inputs/a6_clean/Weather/mixed_h96_h192_h336_h720/seed2021/checkpoint.pt
+192,0.18240033090114594,0.22314205765724182,9820,21,192,Weather,hierarchical-patch-memory,/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b13_probe_inputs/a6_clean/Weather/mixed_h96_h192_h336_h720/seed2021/checkpoint.pt
+336,0.2316502183675766,0.26356613636016846,9820,21,336,Weather,hierarchical-patch-memory,/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b13_probe_inputs/a6_clean/Weather/mixed_h96_h192_h336_h720/seed2021/checkpoint.pt
+720,0.3030458390712738,0.3143439292907715,9820,21,720,Weather,hierarchical-patch-memory,/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b13_probe_inputs/a6_clean/Weather/mixed_h96_h192_h336_h720/seed2021/checkpoint.pt

@@ -1,0 +1,5 @@
+target_horizon,mse,mae,num_samples,num_channels,eval_prefix_steps,dataset,encoder_mode,checkpoint
+96,0.24416223168373108,0.31473836302757263,2161,7,96,ETTh2,hierarchical-patch-memory,/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b13_probe_inputs/a6_clean/ETTh2/mixed_h96_h192_h336_h720/seed2021/checkpoint.pt
+192,0.2861934006214142,0.3473576307296753,2161,7,192,ETTh2,hierarchical-patch-memory,/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b13_probe_inputs/a6_clean/ETTh2/mixed_h96_h192_h336_h720/seed2021/checkpoint.pt
+336,0.31436556577682495,0.37210166454315186,2161,7,336,ETTh2,hierarchical-patch-memory,/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b13_probe_inputs/a6_clean/ETTh2/mixed_h96_h192_h336_h720/seed2021/checkpoint.pt
+720,0.3950280547142029,0.4309396743774414,2161,7,720,ETTh2,hierarchical-patch-memory,/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_b13_probe_inputs/a6_clean/ETTh2/mixed_h96_h192_h336_h720/seed2021/checkpoint.pt

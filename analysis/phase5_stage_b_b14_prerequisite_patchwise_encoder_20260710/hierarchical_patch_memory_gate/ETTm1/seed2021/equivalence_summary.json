@@ -1,0 +1,15 @@
+{
+  "dataset": "ETTm1",
+  "decision": "exact_equivalence_pass",
+  "first_batch_max_abs_output_diff": 0.0,
+  "hierarchical_parameters": 884640,
+  "legacy_parameters": 884640,
+  "max_abs_metric_diff": 0.0,
+  "retrieval_memory_shape": [
+    32,
+    7,
+    30,
+    48
+  ],
+  "state_keys_equal": true
+}

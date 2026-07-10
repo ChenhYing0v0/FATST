@@ -21,14 +21,14 @@ Step 2 的 future-region-specific generation problem 重新开始。
 
 | Field | Content |
 | --- | --- |
-| `current_stage` | Phase5 StageA accepted；StageB B14 prerequisite encoder reconstruction |
-| `current_11_step` | `B14-PRE-CPE` Step 9/10 failed；Step 5/6 hierarchical-memory repair gate |
-| `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
+| `current_stage` | Phase5 StageA accepted；StageB B14 retrieval-demand diagnostic |
+| `current_11_step` | B14 prerequisite complete；B14-FURD Step 3 ready |
+| `active_carrier` | `A6-LBF-r256` + exact hierarchical patch-memory interface |
 | `accepted_paper_core` | `A6-LBF-r256` only |
 | `closed_candidate` | current `GRU-based prefix-causal future-unit composition` |
 | `open_direction` | native large future-unit/stage generation without full-horizon clipping |
-| `next_problem` | verify exact A6-preserving hierarchical patch memory；then test future-region-specific retrieval/state |
-| `do_not_implement_next` | no B14 retrieval model before hierarchical memory passes strict 3-dataset equivalence |
+| `next_problem` | test whether U180/U240 regions demand different canonical local-patch evidence than current A6 sensitivity provides |
+| `do_not_implement_next` | no trainable B14 retrieval model before Step 3 demand-mismatch gate passes |
 
 ## B14 Prerequisite Encoder Reconstruction
 
@@ -54,6 +54,9 @@ full contextual replacement 已完成并失败：`P16-S8 +4.135% (1/12 wins)`，
 [Decision] Step 5/6 repair 改为 hierarchical encoder interface：accepted A6 carrier path严格保持，额外输出
 parameter-free normalized `P48-S24` local memory `[B,C,30,48]`。只有 strict state/parameter/output/metric
 equivalence 在三个 datasets 全部通过，才恢复 B14 diagnostic。
+
+[Result] repair gate已 `3/3` exact pass：state keys、parameters、first-batch outputs、full-test MSE/MAE全部
+max diff `0.0`。状态为 `hierarchical_patch_memory_ready`；B14 Step 3 diagnostic blocker已解除。
 
 ## Fixed StageA Boundary
 

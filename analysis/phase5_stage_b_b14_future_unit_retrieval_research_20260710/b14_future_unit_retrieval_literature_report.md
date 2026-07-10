@@ -1,8 +1,8 @@
 # Phase5 StageB B14 Future-Unit Retrieval Literature And Boundary Audit
 
-> Status update 2026-07-10：本报告的 retrieval novelty boundary仍有效，但原 raw-history diagnostic execution
-> 已暂停。项目先执行 `B14-PRE-CPE` contextual patch-wise encoder reconstruction；只有新 carrier 通过
-> effectiveness gate 后才重写并启动 B14 diagnostic。
+> Status update 2026-07-10：retrieval novelty boundary仍有效。full contextual replacement已失败；exact
+> A6-preserving hierarchical `P48-S24` memory已通过 3/3 equivalence gate。B14 Step 3现可基于 30 个 canonical
+> patch supports重写并启动，trainable retrieval仍未授权。
 
 ## 阶段记录
 
@@ -142,6 +142,6 @@ future-unit-specific history retrieval。若 A6 sensitivity 已经与 unit deman
    covariates 的 carrier-specific mechanism；
 4. method 必须由 retrieval-demand mismatch 推导，而不是先选 cross-attention 再补叙事。
 
-[Next] 先完成 `B14-PRE-CPE` 3-dataset effectiveness/confirmation gate。通过后基于统一 `[B,C,P,D]`
-contextual memory重写 `B14-FURD-A`；失败则先回滚 encoder Step 5/6，不用 legacy raw-history diagnostic
-替代 architecture repair。
+[Next] `B14-PRE-HPM` 已 exact pass。重写 `B14-FURD-A`，把 raw-position demand/sensitivity按统一
+`K48-S24` overlapping supports聚合到 30-token axis；通过后才可设计 exact parameter-matched
+retrieval-vs-no-retrieval probe。
