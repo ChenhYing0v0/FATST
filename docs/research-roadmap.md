@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB post-B12 architecture search |
-| `current_11_step` | StageB Step 11 rollback; restart Step 2/3 architecture search after B12-STBO block |
+| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B13-FUCO future-unit problem diagnostic |
+| `current_11_step` | StageB Step 2/3；B13 hidden-memory intervention-point repair before mechanism decision |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -619,6 +619,34 @@ full matrix or paper-core; rollback to Step 2/3 architecture search.
 fixed and StageB as Step 2/3 architecture search. Do not continue B12-STBO by adding more rank sweeps or full-matrix
 runs unless a new non-STBO operator hypothesis is first written and passes the narrative gate.
 
+### B13 Future-Unit Compositional Operator Diagnostic
+
+[Problem Redefinition] B13-FUCO replaces the B12 tile/clipping question with a future-generation question. A6 uses
+one full-trajectory `coeff [B,C,256]` and `basis[:H]`; B13 asks whether requested horizon should instead determine how
+many benchmark-independent latent future units are generated and composed. Main unit sizes are deliberately large
+(`120/144/180/240`) so the diagnostic does not repeat B12's small-unit capacity bottleneck.
+
+[Diagnostic A Result] Large-unit problem evidence passes strongly. ETTh2, ETTm1 and Weather each pass all `4/4`
+main sizes under the pre-registered gradient-pressure bootstrap gate (`12/12` total). Adjacent gradient cosine exceeds
+far cosine in every setting, while A6 basis overlap does not generally explain the pattern. Decision:
+`partial_pass_large_unit_granularity_robust`; this permits only a parameter-matched mechanism diagnostic.
+
+[Diagnostic B1 Result] Frozen coefficient-memory probes compare exact parameter-matched
+`prefix_causal_composed` and `parallel_no_transition` arms. Composition supports only `3/6` dataset/size settings;
+ETTh2 degrades at both sizes, whereas ETTm1-U240 and Weather-U180/U240 support. Prefix error is zero, parameter counts
+match, and no numeric pathology is present. Decision: `no_transition_control_explains` for the tested
+post-coefficient GRU transition.
+
+[Failure Attribution] B1 does not reject all future-unit generation. A6 coefficient is already a global
+full-trajectory bottleneck, so the intervention may be too late. One final pre-registered repair moves only the frozen
+memory source to pre-coefficient A6 encoder hidden while keeping arms, unit sizes `180/240`, seeds, state dimension,
+loss and gate fixed. This B2 probe runs remotely with bounded rows `4096/1024/1024`.
+
+[Rollback] If hidden-memory B2 passes, B13 may enter Step 4-6 literature/narrative design, not model implementation.
+If B2 is again explained by the no-transition control, close current GRU-based prefix-causal composition and return
+to Step 2. Do not continue GRU/head tuning; future work must distinguish region-specific states from a different
+non-recurrent future-stage generator.
+
 ## Active Implementation
 
 | File | Role |
@@ -671,6 +699,13 @@ runs unless a new non-STBO operator hypothesis is first written and passes the n
 | `scripts/analyze_phase5_stage_b_b12_stbo_diagnostic.py` | B12-STBO diagnostic analyzer |
 | `scripts/analyze_phase5_stage_b_b12_stbo_rank_diagnostic.py` | B12-STBO rank/capacity diagnostic analyzer |
 | `scripts/check_phase5_stage_b_b12_stbo_local.py` | B12-STBO local checker |
+| `docs/experiments/phase5-stage-b-future-unit-compositional-operator.md` | B13 Step 2/3 problem, diagnostic gates and rollback boundary |
+| `docs/code-explanation/phase5-stage-b-b13-future-unit-granularity.md` | B13 large-unit granularity analyzer explanation |
+| `docs/code-explanation/phase5-stage-b-b13-future-unit-composition-probe.md` | B13 parameter-matched composition probe explanation |
+| `scripts/analyze_phase5_stage_b_b13_future_unit_granularity.py` | B13 large-unit granularity analyzer |
+| `scripts/analyze_phase5_stage_b_b13_future_unit_composition_probe.py` | B13 coefficient/hidden-memory composition analyzer |
+| `scripts/remote/run_phase5_stage_b_b13_hidden_memory_probe.sh` | B13 hidden-memory repair remote runner |
+| `scripts/sync_phase5_stage_b_b13_hidden_memory_probe_results.sh` | B13 hidden-memory repair artifact sync wrapper |
 | `scripts/check_phase5_stage_b_b11_bcf_local.py` | B11-BCF local fallback/prefix/backward checker |
 | `scripts/remote/run_phase5_stage_b_b11_bcf_small_gate.sh` | B11-BCF remote small gate runner |
 | `scripts/sync_phase5_stage_b_b11_bcf_small_gate_results.sh` | B11-BCF remote artifact sync/analyze wrapper |
@@ -687,6 +722,8 @@ runs unless a new non-STBO operator hypothesis is first written and passes the n
 | `analysis/phase5_stage_b_b12_stbo_diagnostic_20260708/b12_stbo_report.md` | B12-STBO Step 2/3 diagnostic report |
 | `analysis/phase5_stage_b_b12_stbo_rank_diagnostic_20260708/b12_stbo_rank_diagnostic_report.md` | B12-STBO rank/capacity diagnostic report |
 | `analysis/phase5_stage_b_b12_stbo_rank_diagnostic_20260708/b12_stbo_rank_deep_analysis.md` | B12-STBO rank/capacity deep analysis |
+| `analysis/phase5_stage_b_b13_future_unit_granularity_20260710/` | B13-A large-unit granularity result |
+| `analysis/phase5_stage_b_b13_future_unit_composition_20260710/` | B13-B1 coefficient-memory control result |
 | `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF remote small gate runner |
 | `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF result sync/analyze wrapper |
 
