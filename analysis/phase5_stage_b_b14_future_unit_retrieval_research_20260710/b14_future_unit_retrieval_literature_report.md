@@ -1,8 +1,8 @@
 # Phase5 StageB B14 Future-Unit Retrieval Literature And Boundary Audit
 
 > Status update 2026-07-10：retrieval novelty boundary仍有效。full contextual replacement已失败；exact
-> A6-preserving hierarchical `P48-S24` memory已通过 3/3 equivalence gate。B14 Step 3现可基于 30 个 canonical
-> patch supports重写并启动，trainable retrieval仍未授权。
+> A6-preserving hierarchical `P48-S24` memory已通过 equivalence gate。为保证 evidence semantics，B14 Step 3
+> 基于 29 个无 padding 的 complete canonical patch supports启动，trainable retrieval仍未授权。
 
 ## 阶段记录
 
@@ -143,5 +143,5 @@ future-unit-specific history retrieval。若 A6 sensitivity 已经与 unit deman
 4. method 必须由 retrieval-demand mismatch 推导，而不是先选 cross-attention 再补叙事。
 
 [Next] `B14-PRE-HPM` 已 exact pass。重写 `B14-FURD-A`，把 raw-position demand/sensitivity按统一
-`K48-S24` overlapping supports聚合到 30-token axis；通过后才可设计 exact parameter-matched
+`K48-S24` valid overlapping supports聚合到 29-token axis；通过后才可设计 exact parameter-matched
 retrieval-vs-no-retrieval probe。

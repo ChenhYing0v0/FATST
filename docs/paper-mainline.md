@@ -251,11 +251,14 @@ literature/problem existence gate，因此不得直接实现。
 B14 前置 encoder reconstruction 已完成。直接用 PatchTST-derived contextual encoder替换 A6 carrier的两个
 arms均失败：`P16-S8 +4.135% (1/12 wins)`，`P48-S24 +4.799% (0/12 wins)`。这关闭 full contextual
 replacement，不否定 local patch memory。Step 5/6 repair改为 hierarchical interface：accepted A6 forecast path
-保持，normalized history额外展开为 parameter-free `P48-S24` local memory `[B,C,30,48]`。
+保持，normalized history额外展开为 parameter-free valid `P48-S24` local memory `[B,C,29,48]`。
 
 该 repair在 ETTh2、ETTm1、Weather 全部通过 strict equivalence：state keys与 parameter count相同，
 multi-prefix outputs和 full-test MSE/MAE max diff均为 `0.0`。因此 A6性能结论无需修改，B14可以在统一 local
 patch supports上执行 Step 3 demand-vs-sensitivity diagnostic；trainable retrieval仍未获授权。
+
+Step 3启动前进一步移除了 initial side path的 right replication padding：29 个 patches都对应完整 48-step
+history evidence；coverage-corrected aggregation保持 position attribution total mass。本修改不进入 forecast path。
 
 ## Evidence Snapshot
 

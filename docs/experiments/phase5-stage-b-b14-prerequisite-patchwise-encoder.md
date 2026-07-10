@@ -5,7 +5,7 @@
 | 字段 | 内容 |
 | --- | --- |
 | `candidate_id` | `B14-PRE-CPE` |
-| `current_step` | Step 9/10 prerequisite decision completed |
+| `current_step` | Step 9/10 carrier decision completed；valid evidence refinement locally verified |
 | `problem` | active A6 已移除 TimeAlign future alignment branch，但 history encoder 仍继承 dataset-specific `patch_num` 与 token-wise MLP；ETTm1 的 `P=1` 使 B14 不存在可检索的 patch memory，ETTh2/Weather 的 patch tokens 之间也没有 encoder-level mixing |
 | `existence_evidence` | code audit：ETTm1/ETTh2/Weather 的 `P=1/48/48`；encoder FFN 独立作用于每个 token；cross-patch interaction 只在 flatten 后的 coefficient head 发生 |
 | `idea` | 用 horizon-independent、channel-independent、overlapping contextual patches 统一 history representation；保留 A6 learned-basis operator 作为 downstream prediction operator |
@@ -53,14 +53,14 @@ broader_patch_memory_direction_not_rejected
 ```text
 normalized history
   ├─ accepted A6 carrier encoder -> carrier_state -> coeff -> basis[:H]
-  └─ parameter-free P48-S24 unfold -> local_memory [B,C,30,48]
+  └─ parameter-free valid P48-S24 unfold -> local_memory [B,C,29,48]
 ```
 
 关键性质：
 
 1. forecast path、state-dict keys 与 parameter count严格等于 clean A6；
 2. local memory来自同一 normalized history，没有随机 projection 或未训练 token；
-3. 48-step overlapping patches跨 datasets产生相同 `P=30/K=48` contract；
+3. 29 个完整 48-step overlapping patches跨 datasets产生相同 evidence contract；
 4. B14只在通过 problem gate 后学习 projection/retrieval，不提前污染 A6 prediction；
 5. 这是 hierarchical encoder interface，不是 `A6 + residual forecast`。
 
@@ -72,16 +72,17 @@ normalized history
 - parameter count完全相等；
 - first-batch `{96,192,336,720}` outputs max absolute diff `0`；
 - full-test MSE/MAE absolute diff `<=1e-8`；
-- retrieval memory shape `[B,C,30,48]`。
+- retrieval memory shape `[B,C,29,48]`；
+- memory等于手工 normalized-history切片，且 coverage-corrected overlap-add可 exact reconstruct history。
 
 全部通过后，carrier命名仍为 `A6-LBF-r256`，只把 encoder contract更新为
 `hierarchical_patch_memory_ready`；不需要 seeds 2022/2023，因为这是 exact functional-equivalence gate。
 
 ### Repair Gate Result
 
-[Decision] ETTh2、ETTm1、Weather `3/3` pass：state keys、parameter count、multi-prefix outputs与 full-test
-MSE/MAE均 exact equal（max diff `0.0`）；retrieval memory均为 `P=30,K=48`。prerequisite完成，B14 Step 3
-可以启动。
+[Historical Result] 初始 padded interface在 ETTh2、ETTm1、Weather `3/3` exact pass；但 padding会复制末端
+history evidence。当前 valid `P=29,K=48` refinement已通过 local state/output/manual-slice/reconstruction checker，
+并作为 B14 Step 3 analyzer的唯一 main interface；远程 diagnostic会再次执行 per-batch evidence audit。
 
 ## Closed Contextual Replacement Design（Historical）
 

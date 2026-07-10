@@ -172,22 +172,21 @@ class ContextualPatchEncoder(nn.Module):
 
 
 class CanonicalPatchMemory(nn.Module):
-    """Parameter-free overlapping patches for a stable retrieval interface."""
+    """Parameter-free valid patches for a stable retrieval interface."""
 
     def __init__(self, seq_len, patch_len, stride):
         super().__init__()
         if patch_len <= 0 or stride <= 0:
             raise ValueError("history patch length and stride must be positive")
-        if patch_len > seq_len + stride:
-            raise ValueError("history patch length cannot exceed padded sequence length")
+        if patch_len > seq_len:
+            raise ValueError("history patch length cannot exceed sequence length")
         self.patch_len = patch_len
         self.stride = stride
-        self.patch_num = (seq_len + stride - patch_len) // stride + 1
-        self.end_padding = nn.ReplicationPad1d((0, stride))
+        self.patch_num = (seq_len - patch_len) // stride + 1
 
     def forward(self, x):
         # x: [B, C, L] -> memory: [B, C, P, K]
-        return self.end_padding(x).unfold(-1, self.patch_len, self.stride)
+        return x.unfold(-1, self.patch_len, self.stride)
 
 
 class Model(nn.Module):

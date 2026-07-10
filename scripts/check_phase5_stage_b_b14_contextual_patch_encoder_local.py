@@ -124,13 +124,34 @@ def main() -> None:
             target_prefix=720,
         )[0]
         retrieval_memory = hierarchical.encode_retrieval_memory(x)
+        normalized = hierarchical.normalization_x(x, "norm")
+        manual_memory = torch.stack(
+            [
+                normalized[:, start : start + 48, :].permute(0, 2, 1)
+                for start in range(0, 720 - 48 + 1, 24)
+            ],
+            dim=2,
+        )
     torch.testing.assert_close(
         hierarchical_output,
         legacy_output,
         rtol=0.0,
         atol=0.0,
     )
-    assert retrieval_memory.shape == (2, 3, 30, 48)
+    assert retrieval_memory.shape == (2, 3, 29, 48)
+    torch.testing.assert_close(retrieval_memory, manual_memory, rtol=0.0, atol=0.0)
+    reconstruction = torch.zeros_like(normalized.permute(0, 2, 1))
+    coverage = torch.zeros(720, dtype=normalized.dtype)
+    for patch_idx, start in enumerate(range(0, 720 - 48 + 1, 24)):
+        reconstruction[..., start : start + 48] += retrieval_memory[..., patch_idx, :]
+        coverage[start : start + 48] += 1
+    reconstruction = reconstruction / coverage.view(1, 1, -1)
+    torch.testing.assert_close(
+        reconstruction,
+        normalized.permute(0, 2, 1),
+        rtol=0.0,
+        atol=0.0,
+    )
 
     official = Model(
         make_config(
@@ -206,7 +227,8 @@ def main() -> None:
     print("legacy_exact_equivalence=pass")
     print("official_alignment_path=pass")
     print("hierarchical_patch_memory_exact_equivalence=pass")
-    print("hierarchical_retrieval_shape=[2,3,30,48]")
+    print("hierarchical_retrieval_shape=[2,3,29,48]")
+    print("hierarchical_patch_evidence_exact_reconstruction=pass")
     print("contextual_p16_shape=[2,3,90,16]")
     print("contextual_p48_shape=[2,3,30,16]")
     print("gradient_and_reload=pass")

@@ -5,15 +5,15 @@
 | 字段 | 内容 |
 | --- | --- |
 | `candidate_id` | `B14-FURD` |
-| `current_step` | Step 3 diagnostic ready；hierarchical patch-memory prerequisite passed |
+| `current_step` | Step 3 analyzer implemented；valid patch-evidence contract locally passed；remote gate pending |
 | `problem` | A6 可能用高度共享的 input sensitivity 服务不同 large future units，而各 unit error gradients 实际要求不同 raw-history evidence |
 | `existence_evidence` | B13-A large-unit gradient pressure 在 `12/12` settings 稳定；B13-B1/B2 关闭 recurrent transition，但未否定 non-recurrent region-specific retrieval |
 | `idea` | 先比较 label-weighted retrieval demand 与 target-independent A6 input sensitivity；只有 mismatch 成立才设计 trainable retrieval mechanism |
 | `theory_check` | 如果 demand 比 existing sensitivity 显著更 unit-specific，则 unit-aware retrieval 有 carrier-specific problem basis；若 sensitivity 已同样分化，则新 retrieval 可能重复 A6 已有 path |
-| `design` | after prerequisite pass：contextual-token loss demand vs token-to-output sensitivity；raw-input statistics become robustness controls |
+| `design` | error-conditioned demand vs target-independent A6 sensitivity on 29 valid `K48-S24` supports；coverage-corrected aggregation |
 | `narrative_gate` | pending；target-query/retrieval 本身是 prior art，A 只能提供 problem evidence |
 | `effectiveness_gate` | not applicable before Step 4-6 |
-| `artifacts` | literature audit + exact HPM prerequisite ready；analyzer must be rewritten to patch-support aggregation |
+| `artifacts` | literature audit、valid HPM checker、Step 3 analyzer与 remote runner ready |
 | `decision` | authorize B14-FURD-A diagnostic only；no trainable retrieval model |
 
 ## Prerequisite Hold
@@ -24,12 +24,11 @@ contextual patch-wise history encoder，而不是继续用 raw-history interface
 前置协议：`docs/experiments/phase5-stage-b-b14-prerequisite-patchwise-encoder.md`。
 
 full contextual replacement已失败并关闭。repair前置 gate通过后，本 diagnostic 的 main interface改为
-parameter-free normalized local patches `[B,C,30,48]`；current A6 sensitivity仍从 forecast carrier path对 raw
-history求导，再按同一 overlapping patch support聚合。本文需在正式启动前重新同步 gate 与 analyzer。
+parameter-free normalized local patches。初始 30-token interface含 right replication padding；为避免末端 evidence
+重复，Step 3改用 29 个 valid `[B,C,29,48]` patches。
 
-[Result] hierarchical repair在三个 datasets均 strict exact pass，max output/metric diff `0.0`，因此该 blocker
-已解除。下一动作是重写 analyzer，将 720-position profiles按 `K=48,S=24` overlapping supports聚合为 30-token
-profiles，再执行本页 Step 3 gate。
+[Result] valid interface本地 checker已证明 manual slice与 overlap-add reconstruction exact，且 A6 output exact
+不变。Step 3 analyzer已实现；远程运行时每个 batch都重新验证该 contract，任何失败均使 diagnostic invalid。
 
 ## Why This Is Not A Retrieval Model Yet
 
@@ -47,17 +46,20 @@ current A6 input sensitivity remains shared across units
 
 不存在该 contradiction 时，不实现 future-unit retrieval。
 
-## Common Raw-History Interface
+## Common Patch-Evidence Interface
 
 active A6 presets 的 hidden patch count 为 ETTh2 `48`、ETTm1 `1`、Weather `48`。因此 hidden-patch
-attention 不能作为跨数据集 diagnostic。B14-A 对共同的 raw input 使用：
+attention 不能作为跨数据集 diagnostic。B14-A 从共同的 normalized history构造：
 
 ```text
-batch_x: [B,720,C]
+x_norm [B,720,C]
+  -> valid unfold(K=48,S=24)
+  -> local_memory [B,C,29,48]
 ```
 
-所有 main metrics 在 `720` history positions 上定义。ETTh2/Weather 的 hidden-patch analysis 可后续作为
-supplemental，但没有否定权限。
+attribution先在 720 positions上计算，再映射到 29 patches。对每个 position $t$，其 attribution除以覆盖该
+position的 patch数，再分配给相应 patches；因此 overlapping不会重复计数，patch mass之和严格等于 raw-position
+mass。ETTh2/Weather legacy hidden-patch analysis只可作为 supplemental control。
 
 ## Unit Sizes
 
@@ -92,23 +94,23 @@ $$
 d_m(t)
 \propto
 \operatorname{mean}_{b,c}
-\left|\frac{\partial \mathcal{L}_m}{\partial x_{b,t,c}}\right|.
+\left|\frac{\partial \mathcal{L}_m}{\partial x^{norm}_{b,t,c}}\right|.
 $$
 
-$d_m$ 在 history dimension 上做 L1 normalization，形成 `720` 维 non-negative distribution。它描述当前
-error signal 对不同 history positions 的需求，不等同于 causal feature attribution。
+$d_m$ 先形成 720-position non-negative distribution，再 coverage-corrected聚合成 29-patch distribution。它是
+model-conditioned error demand，不等同于 causal feature attribution或 label-only oracle。
 
 ## Metric 2：Target-Independent Existing Sensitivity
 
 为了避免把 residual magnitude 直接当 retrieval，使用 Hutchinson estimator 估计每个 future unit output
-Jacobian 对 raw history positions 的 squared sensitivity。
+Jacobian 对 normalized history positions 的 squared sensitivity。
 
 对 draw $r$ 的 Rademacher vector $v_{m,r}$：
 
 $$
 g_{m,r}
 =
-\frac{\partial \langle v_{m,r},\hat y_m\rangle}{\partial x},
+\frac{\partial \langle v_{m,r},\hat y_m\rangle}{\partial x^{norm}},
 $$
 
 $$
@@ -161,9 +163,10 @@ $$
 2. `same Rademacher draws`：减少 unit pairs 之间的 estimator noise；
 3. `coeff-gradient pair control`：记录 unit loss 对 A6 coeff 的 signed gradient cosine，判断 raw-history demand
    是否只是 B13 coefficient conflict 的机械重述；
-4. `raw-history common interface`：避免 ETTm1 single hidden patch 造成 false negative；
+4. `valid-patch evidence audit`：manual slice、overlap-add reconstruction、forecast equivalence逐 batch验证；
 5. `basis geometry cross-reference`：与 B13-A basis-pair artifacts 对照，不把 basis rows 的 geometry 当 retrieval；
-6. deterministic bootstrap：对 batch-level gaps 做 `1000` 次 bootstrap。
+6. deterministic bootstrap：对 batch-level gaps 做 `1000` 次 bootstrap；
+7. `mass-conservation control`：position-to-patch aggregation error必须 `<=1e-6`。
 
 ## Pre-Registered Gate
 
@@ -221,6 +224,7 @@ diagnostic_invalid_for_direction_rejection
 - `b14_future_unit_retrieval_profiles.csv`（batch-mean profiles）；
 - `b14_future_unit_retrieval_summary.csv`；
 - `b14_future_unit_retrieval_bootstrap.csv`；
+- `b14_history_patch_evidence_audit.csv`；
 - `b14_future_unit_retrieval_report.md`。
 
 ## Rollback Boundary

@@ -219,7 +219,7 @@ def run(args: argparse.Namespace) -> None:
         and legacy_parameters == hierarchical_parameters
         and output_diff == 0.0
         and metric_diff <= 1e-8
-        and memory_shape[2:] == [30, 48]
+        and memory_shape[2:] == [29, 48]
     )
     args.output_dir.mkdir(parents=True, exist_ok=True)
     write_csv(args.output_dir / "metrics_by_target_horizon.csv", main_rows)

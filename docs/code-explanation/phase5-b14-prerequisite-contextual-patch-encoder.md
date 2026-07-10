@@ -179,9 +179,8 @@ forecast computation与 `timealign-token-mlp` 完全相同；只新增无参数�
 ```text
 x_norm [B,720,C]
   -> permute [B,C,720]
-  -> ReplicationPad1d(0,24)
-  -> unfold(K=48,S=24)
-  -> local_memory [B,C,30,48]
+  -> valid unfold(K=48,S=24)
+  -> local_memory [B,C,29,48]
 ```
 
 `Model.encode_history(x)` 仍返回 carrier memory；新增 `Model.encode_retrieval_memory(x)` 返回 B14 canonical
@@ -194,3 +193,14 @@ local memory。`CanonicalPatchMemory` 没有 parameters/buffers，因此 hierarc
 
 这条 repair没有让 local memory进入预测，也没有加入 residual correction。B14通过 problem diagnostic 后，
 才允许设计可训练 projection/retrieval及其 exact no-retrieval controls。
+
+### Evidence-Semantics Refinement
+
+初始 exact-equivalence gate使用 PatchTST-style right replication padding，得到 30 patches。该 convention不影响
+A6 output，但最后一个 patch只有 24 个真实 history positions，剩余值重复末端 observation，因此不适合作为
+Step 3 evidence unit。当前 `CanonicalPatchMemory` 改为 valid unfold：starts为 `0,24,...,672`，共 29 个
+完整 `K=48` patches。checker额外验证：
+
+- memory与 normalized history手工切片逐元素相同；
+- overlap-add除以 position coverage后逐元素重构 normalized history；
+- state-dict、parameters及 A6 forecast path仍完全不变。

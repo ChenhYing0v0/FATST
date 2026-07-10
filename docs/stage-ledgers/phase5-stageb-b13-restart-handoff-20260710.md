@@ -52,11 +52,14 @@ full contextual replacement 已完成并失败：`P16-S8 +4.135% (1/12 wins)`，
 (0/12 wins)`。结果归因为 `readout_or_encoder_design_wrong`，不追加 seeds/width sweep。
 
 [Decision] Step 5/6 repair 改为 hierarchical encoder interface：accepted A6 carrier path严格保持，额外输出
-parameter-free normalized `P48-S24` local memory `[B,C,30,48]`。只有 strict state/parameter/output/metric
+parameter-free normalized valid `P48-S24` local memory `[B,C,29,48]`。只有 strict state/parameter/output/metric
 equivalence 在三个 datasets 全部通过，才恢复 B14 diagnostic。
 
 [Result] repair gate已 `3/3` exact pass：state keys、parameters、first-batch outputs、full-test MSE/MAE全部
 max diff `0.0`。状态为 `hierarchical_patch_memory_ready`；B14 Step 3 diagnostic blocker已解除。
+
+[Refinement] Step 3不使用 initial padded 30th patch；29 个 complete patches可 exact reconstruct normalized
+history，overlap attribution使用 coverage correction，避免末端复制和中心位置重复计数。
 
 ## Fixed StageA Boundary
 

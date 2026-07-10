@@ -1,5 +1,9 @@
 # B14 Prerequisite Hierarchical Patch Memory Gate Report
 
+> Superseded interface note 2026-07-10：本报告验证的是 initial right-padded 30-patch interface。A6 exact
+> preservation结论仍有效；B14 Step 3为避免复制末端 evidence，使用 later valid 29-patch interface，并逐 batch
+> 验证 manual slice、overlap-add reconstruction与 forecast equivalence。
+
 ## Conclusion
 
 [Decision] `hierarchical_patch_memory_ready`。full contextual encoder replacement失败后，Step 5/6 repair在

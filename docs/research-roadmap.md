@@ -669,7 +669,7 @@ carrier gate：overall mean MSE `+4.135%/+4.799%` with `1/12` and `0/12` wins. F
 the same flatten coefficient head without losing performance.
 
 [Step 5/6 Repair] `hierarchical-patch-memory` preserves the accepted A6 forecast path and adds parameter-free
-normalized `P48-S24` patches `[B,C,30,48]` as a separate local evidence memory. This is not residual prediction and
+normalized valid `P48-S24` patches `[B,C,29,48]` as a separate local evidence memory. This is not residual prediction and
 does not let unvalidated tokens enter the output.
 
 [Gate Result] ETTh2/ETTm1/Weather all pass strict checkpoint/state/parameter/output/full-metric equivalence；maximum
@@ -677,6 +677,9 @@ output and MSE/MAE difference is `0.0`. Decision：`hierarchical_patch_memory_re
 
 [Next] B14-FURD enters Step 3. Aggregate future-unit error demand and current A6 input sensitivity over the same 30
 overlapping patch supports for `U180/U240`. No trainable retrieval is allowed before the mismatch gate passes.
+
+[Evidence Refinement] The initial 30-patch interface used right replication padding. Step 3 removes padding and uses 29
+complete patches；coverage-corrected allocation preserves attribution mass and overlap-add reconstructs normalized history.
 
 ## Active Implementation
 
