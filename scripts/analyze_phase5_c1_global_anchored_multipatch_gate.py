@@ -261,6 +261,26 @@ def diagnostics_rows(root: Path, seed: int) -> list[dict[str, Any]]:
     return rows
 
 
+def protocol_audit_rows(root: Path, seed: int) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for arm in ("a6_clean", *SCALES):
+        for dataset in DATASETS:
+            path = run_dir(root, arm, dataset, seed) / "effective_config.json"
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            effective_lr = float(payload["official_args"]["learning_rate"])
+            source_lr = float(payload["official_preset"]["learning_rate"])
+            rows.append(
+                {
+                    "arm": arm,
+                    "dataset": dataset,
+                    "effective_learning_rate": effective_lr,
+                    "source_preset_learning_rate": source_lr,
+                    "source_learning_rate_match": int(effective_lr == source_lr),
+                }
+            )
+    return rows
+
+
 def markdown_table(rows: list[dict[str, Any]], fields: list[str]) -> list[str]:
     lines = [
         "| " + " | ".join(fields) + " |",
@@ -281,6 +301,7 @@ def write_report(
     output_dir: Path,
     summaries: list[dict[str, Any]],
     selection: list[dict[str, Any]],
+    protocol_audit: list[dict[str, Any]],
 ) -> None:
     shared_pass = any(
         all(
@@ -309,6 +330,23 @@ def write_report(
         f"`{decision}`",
         "",
         "C1 只评估统一 carrier/interface，不构成 StageB 创新点。",
+        "",
+        "## Protocol audit",
+        "",
+        *markdown_table(
+            protocol_audit,
+            [
+                "arm",
+                "dataset",
+                "effective_learning_rate",
+                "source_preset_learning_rate",
+                "source_learning_rate_match",
+            ],
+        ),
+        "",
+        "Runner 对全部 arms 显式使用 `learning_rate=1e-4`。ETTh2 source preset 为 "
+        "`5e-4`，所以 ETTh2 A6 不是 source-faithful reproduction；同一 dataset 内的 "
+        "C1/A6 controlled comparison仍使用相同 learning rate。ETTm1 与 Weather 无此偏差。",
         "",
         "## Gate summary",
         "",
@@ -370,11 +408,13 @@ def main() -> None:
         for selector in SELECTORS
     )
     diagnostics = diagnostics_rows(args.raw_root, args.seed)
+    protocol_audit = protocol_audit_rows(args.raw_root, args.seed)
     write_csv(args.output_dir / "c1_comparisons.csv", combined)
     write_csv(args.output_dir / "c1_gate_summary.csv", summaries)
     write_csv(args.output_dir / "c1_validation_scale_selection.csv", selection)
     write_csv(args.output_dir / "c1_model_diagnostics.csv", diagnostics)
-    write_report(args.output_dir, summaries, selection)
+    write_csv(args.output_dir / "c1_protocol_audit.csv", protocol_audit)
+    write_report(args.output_dir, summaries, selection, protocol_audit)
 
 
 if __name__ == "__main__":

@@ -25,6 +25,9 @@ if [[ "${SKIP_ANALYSIS}" != "1" ]]; then
   python scripts/analyze_phase5_c1_global_anchored_multipatch_gate.py \
     --raw-root "${ANALYSIS_ROOT}/raw" \
     --output-dir "${ANALYSIS_ROOT}"
+  python scripts/analyze_phase5_c1_global_anchored_multipatch_deep.py \
+    --raw-root "${ANALYSIS_ROOT}/raw" \
+    --output-dir "${ANALYSIS_ROOT}"
 fi
 
 echo "sync_phase5_c1_global_anchored_multipatch_gate_done=$(date '+%Y-%m-%dT%H:%M:%S%z')"

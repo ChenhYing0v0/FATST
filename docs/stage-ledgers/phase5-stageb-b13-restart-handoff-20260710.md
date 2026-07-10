@@ -1,7 +1,7 @@
 # Phase5 StageB B13 Restart Handoff 2026-07-10
 
-本文档已同步到 C0 Encoder control 完成后的当前重启状态。新对话不应从 B12、B13-GRU 或 C0 patch
-route 继续调参，而应重新选择 StageB Step 2/3 problem，或明确暂停第二贡献搜索。
+本文档已同步到 C1 carrier normalization完成后的当前重启状态。新对话不应从B12、B13-GRU、C0或C1
+patch route继续调参；应先完成Contribution 1 matched-supervision control，再回到StageB Step 2/3。
 
 ## Minimal Reading Order
 
@@ -10,12 +10,14 @@ route 继续调参，而应重新选择 StageB Step 2/3 problem，或明确暂�
 3. `docs/paper-mainline.md`
 4. `docs/research-roadmap.md`
 5. `docs/experiments/phase5-stage-b-ettm1-carrier-protocol-audit.md`
+6. `docs/experiments/phase5-post-c1-research-plan.md`
 
 关键 evidence：
 
 - `analysis/phase5_stage_b_encoder_protocol_audit_20260710/stageb_route_encoder_protocol_audit.md`；
 - `analysis/phase5_stage_b_c0_cross_patch_interaction_20260710/c0_cross_patch_interaction_report.md`；
 - `analysis/phase5_stage_b_c0_ettm1_carrier_protocol_gate_20260710/c0_ettm1_encoder_control_deep_analysis.md`；
+- `analysis/phase5_c1_global_anchored_multipatch_gate_20260710/c1_global_anchored_multipatch_deep_analysis.md`；
 - `docs/experiments/phase5-stage-b-ettm1-carrier-protocol-audit.md`；
 - `analysis/phase5_stage_b_b13_future_unit_granularity_20260710/b13_future_unit_granularity_report.md`；
 - `analysis/phase5_stage_b_b13_future_unit_composition_20260710/b13_future_unit_composition_report.md`；
@@ -25,14 +27,14 @@ route 继续调参，而应重新选择 StageB Step 2/3 problem，或明确暂�
 
 | Field | Content |
 | --- | --- |
-| `current_stage` | Phase5 StageA accepted；C1 carrier-normalization gate pending；StageB innovation paused |
-| `current_11_step` | C1 carrier Step 8；9-run remote effectiveness gate running |
+| `current_stage` | Phase5 StageA accepted；C1 closed；StageB innovation paused |
+| `current_11_step` | C1 Step 9-10 failed；next matched control then StageB Step 2/3 |
 | `active_carrier` | `A6-LBF-r256`；patch-memory interface is diagnostic-only |
 | `accepted_paper_core` | `A6-LBF-r256` only |
 | `closed_candidate` | current `GRU-based prefix-causal future-unit composition` |
 | `open_direction` | native large future-unit/stage generation without full-horizon clipping |
-| `next_problem` | determine whether one global-anchored multi-patch topology can unify dataset interfaces within a bounded performance cost |
-| `do_not_implement_next` | no multi-scale bank, dataset-specific test-selected scale, dropout sweep or StageB mechanism before C1 returns |
+| `next_problem` | isolate multi-prefix objective under the same A6 architecture, then test B7 exposure/conflict causality |
+| `do_not_implement_next` | no C1 readout/width/scale/mixer/dropout repair；no StageB method before B7 Step 3 passes |
 
 ## C0 Encoder And Protocol Audit Update
 
@@ -81,6 +83,21 @@ attention-residual/FFN-hidden/FFN-residual dropouts为 `0.0/0.0/0.1/0.1/0.1`。�
 [Local Gate] global/local memory shapes、89/29 valid patches、五个 dropout sites、global/local/attention/FFN
 gradients、prefix consistency、strict reload与 dual-checkpoint smoke均通过。Active carrier在 remote gate通过前
 仍是 A6-LBF-r256。
+
+[Returned Result] 9/9 runs完整且无numeric/runtime pathology。P16-S8 last/best-val相对same-run A6为
+`+5.37%/+3.75%`，P48-S24为`+5.87%/+4.73%`；validation三个datasets均选P48但仍失败。相对既有
+source-faithful A6，两个scales都是`0/12` wins。
+
+[Protocol Audit] ETTh2 effective LR为`1e-4`而source preset为`5e-4`；因此same-run A6不是exact source
+reproduction。该偏差不改变裁决：ETTh2内comparison仍matched，ETTm1/Weather无偏差，source-A6与fixed
+baseline comparisons也独立失败。
+
+[Failure Attribution] C1 global-only D256 readout造成ETTh2/Weather state bottleneck；ETTm1无width压缩仍
+退化。结论为exact design failure，不是broader multi-patch theory rejection。按预注册gate关闭C1，不做
+readout/width/scale/mixer/dropout sweep；active carrier恢复`A6-LBF-r256 + exact valid HPM`。
+
+[Next] 先按`docs/experiments/phase5-post-c1-research-plan.md`执行Contribution 1 matched-supervision control；
+然后只做B7 Step 2/3 gradient/exposure diagnostic。若证据不能跨dataset并解释Weather反例，暂停Contribution 2。
 
 ## B14 Prerequisite Encoder Reconstruction
 

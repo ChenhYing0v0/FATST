@@ -5,7 +5,7 @@
 | 字段 | 内容 |
 | --- | --- |
 | `candidate_id` | `C1-GAMP`，carrier normalization，不是 StageB method candidate |
-| `current_step` | C0 closed 后的 carrier Step 4-6 design gate |
+| `current_step` | carrier Step 9-10 completed；effectiveness gate failed |
 | `problem` | accepted A6 使用同一个 Encoder class，但 ETTm1 为 `P=1`，ETTh2/Weather 为 `P=48`；这不利于统一 local-token interface 与论文叙事 |
 | `existence_evidence` | C0 证明 P1 性能有效；B14 full local-only contextual replacement 退化；exact HPM 证明统一 local patch interface 可构造 |
 | `idea` | 所有数据集统一使用 full-window global anchor 与多个 valid local patch tokens；标准 attention 只负责让 global/local tokens 交互 |
@@ -14,6 +14,8 @@
 | `narrative_gate` | `control_only`；只允许统一 carrier/interface，不构成 StageB 创新点 |
 | `effectiveness_gate` | 允许小幅性能换取一致性，但不得抹掉 Contribution 1 的 cross-dataset evidence |
 | `rollback` | 若 shared scale 和 validation-selected scale 都越过 degradation budget，恢复 accepted A6 + exact HPM interface，停止 Encoder normalization |
+| `artifacts` | `analysis/phase5_c1_global_anchored_multipatch_gate_20260710/` |
+| `decision` | `c1_carrier_normalization_gate_failed`；关闭 exact C1 design，回滚 StageB Step 2/3 |
 
 ## Source-informed boundary
 
@@ -132,3 +134,37 @@ tokens被忽略，C1最多作为统一 API cleanup，不能声称 multi-patch re
 - 仅 Gate 2通过：允许 dataset-specific patch hyperparameter，但保持统一 topology；追加 seeds；
 - 性能接近但 validation gap显示明确 regularization问题：只追加一个 dropout sensitivity；
 - Gate 1/2失败：恢复 accepted A6 + exact HPM，关闭 C1，不继续 scale/mixer/width sweep。
+
+## Returned effectiveness result
+
+9/9 runs、last/best checkpoints、training logs、effective configs与model diagnostics均完整；无 OOM、NaN、
+traceback或runtime failure。预注册 gate结果如下：
+
+| Scale | Selector | Overall vs A6 | Max horizon | ETTh2 | ETTm1 | Weather | vs fixed | Fixed wins |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| P16-S8 | last | `+5.37%` | `+12.26%` | `+8.23%` | `+1.10%` | `+6.78%` | `+0.25%` | 5/12 |
+| P16-S8 | best-val | `+3.75%` | `+6.18%` | `+2.80%` | `+2.97%` | `+5.49%` | `+0.03%` | 4/12 |
+| P48-S24 | last | `+5.87%` | `+12.20%` | `+4.53%` | `+2.05%` | `+11.02%` | `+0.96%` | 4/12 |
+| P48-S24 | best-val | `+4.73%` | `+9.63%` | `+3.96%` | `+1.93%` | `+8.31%` | `+0.98%` | 4/12 |
+
+Validation在三个datasets都选择P48-S24，因此validation-selected组合与P48-S24相同并失败。Weather的
+validation差仅`-0.11%`，但test在last/best都偏向P16-S8，说明dataset-specific scale selection也不稳定。
+
+### Protocol audit
+
+Runner对全部arms使用`learning_rate=1e-4`。ETTh2 source preset实际为`5e-4`，所以本轮ETTh2 A6不是
+source-faithful exact reproduction；ETTm1/Weather无此偏差。该问题不改变C1裁决：同一ETTh2 comparison
+仍是matched-LR control，且相对既有source-faithful A6 official-last，P16-S8/P48-S24整体分别退化
+`+4.63%/+5.17%`、均为`0/12` wins。
+
+### Failure attribution
+
+- `hypothesis_false`：不能据此否定所有统一multi-patch carrier；
+- `intervention_point_wrong`：可能。random global token aggregation替换了已验证的dataset-specific A6 hidden contract；
+- `readout_or_head_design_wrong`：强支持。ETTh2/Weather readout state由`1536/6144`压至`256`；
+- `optimization_or_numeric_pathology`：无数值异常，但ETTh2/ETTm1出现早期validation overfit；
+- `capacity_control_explains`：只部分解释Weather；C1在ETTh2/ETTm1参数更多仍退化。
+
+[Decision] 失败是exact C1 design级别，不是broader multi-patch方向的理论否定。但按预注册rollback，继续做
+readout、width、scale、mixer或dropout search会把control-only cleanup扩张为architecture research，因此不再修补。
+恢复并冻结`A6-LBF-r256 + exact valid HPM [B,C,29,48]`。

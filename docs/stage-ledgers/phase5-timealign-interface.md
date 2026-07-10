@@ -8,12 +8,12 @@
 | Field | Content |
 | --- | --- |
 | `stage_id` | `phase5-timealign-interface` |
-| `current_11_step` | C1 carrier Step 8；9-run remote small gate running |
+| `current_11_step` | C1 Step 9-10 failed and closed；StageB rolled back to Step 2/3 |
 | `active_carrier` | `A6-LBF-r256` plus exact hierarchical `P48-S24` local patch-memory interface |
-| `active_question` | Can a standard global-anchored multi-patch carrier unify all dataset interfaces within a pre-registered degradation budget? |
-| `latest_decision` | C1 local gate passed；9 runs launched on GPUs 0/1/2 at commit `055044b` with explicit dropout and scale policies |
-| `next_required_action` | Wait for user completion notice，then sync and apply shared/validation-selected gates；no extra arms while running |
-| `rollback_point` | B14-FURD is closed as paper-core；do not implement retrieval or continue unit-size/CKA sweeps |
+| `active_question` | First close Contribution 1's matched-objective confound；then test whether B7 exposure imbalance has causal cross-dataset support |
+| `latest_decision` | C1 fails all shared/validation-selected gates；restore A6 + exact HPM and close Encoder normalization |
+| `next_required_action` | Implement the matched unified-vs-single-prefix supervision control；do not repair C1 |
+| `rollback_point` | If B7 Step 3 remains dataset-specific, pause Contribution 2 and consolidate Contribution 1 |
 
 ## StageA Fixed Result
 
@@ -73,7 +73,7 @@ Clean rerun after code cleanup:
 | `B4-TDA` | `completed_diagnostic` | A6-LBF same-align gains support head/operator contribution, but inherited TimeAlign align may still explain part of full architecture advantage | passed for Contribution 1 attribution：pure no-align/no-recon arm remains competitive | not a new method；diagnostic only | Use as evidence against urgent B5 align innovation | `analysis/phase5_stage_b_timealign_dependency_audit_20260706/stage_b_timealign_dependency_report.md`; `analysis/phase5_stage_b_timealign_dependency_ablation_20260706/stage_b_dependency_ablation_report.md`; `docs/experiments/phase5-stage-b-timealign-dependency-and-basis-align-diagnostic.md` |
 | `B5-BAFA` | `deferred_by_diagnostic` | Replace generic TimeAlign alignment with A6-LBF basis-aware future alignment | failed current priority gate：removing inherited align/recon does not materially hurt A6-LBF | not evaluated | Do not implement unless later B6 or basis-space diagnostics show a stronger alignment-specific failure mode | none |
 | `B6-PLO` | `rejected_by_diagnostic` | A6-LBF 的 architecture 已在 learned-basis space 中建模，但当前 supervision 仍主要是 time-domain point loss；可能缺少 prefix-native label/basis objective | failed：train-label/residual structure is largely generic DCT low-frequency; A6 learned basis has no top32 advantage | not evaluated | Do not implement B6 objective; pause StageB or redefine Step 2/3 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md`; `analysis/phase5_stage_b_prefix_native_objective_diagnostic_20260706/stage_b_b6_report.md` |
-| `B7-UPO` | `deferred_small_contribution_candidate` | A6-LBF 已有 unified operator，但 nested multi-prefix training 会过度加权短步，并可能弱化 long-tail forecast regions | partial：可作为 objective refinement，但不适合作为第二主创新点 | not evaluated | 暂缓，待 architecture candidate 判定后再作为小贡献候选处理 | `docs/experiments/phase5-stage-b-unified-prefix-optimization-diagnostic.md`; `analysis/phase5_stage_b_unified_prefix_optimization_20260707/stage_b_b7_unified_prefix_optimization_report.md` |
+| `B7-UPO` | `step23_reaudit_planned` | A6-LBF 已有 unified operator，但 nested multi-prefix training 会过度加权短步，并可能弱化 long-tail forecast regions | partial：14.39x exposure与ETTh2/ETTm1 tail weakness支持，Weather反例阻止方法设计 | not evaluated | After Contribution 1 matched control, run gradient/continuous-prefix exposure diagnostics only | `docs/experiments/phase5-stage-b-unified-prefix-optimization-diagnostic.md`; `docs/experiments/phase5-post-c1-research-plan.md`; `analysis/phase5_stage_b_unified_prefix_optimization_20260707/stage_b_b7_unified_prefix_optimization_report.md` |
 | `B8-FQA` | `rejected_by_ocd_control` | A6-LBF 的 coefficient 是 sample-specific 但 future-position-invariant；future queries 可在 basis prediction 前将 history representation 对齐到 target positions | failed：learned segment-specific correction has headroom, but DCT control has stronger absolute residual reduction | not evaluated | Do not implement B8; return StageB to Step 2/3 | `docs/experiments/phase5-stage-b-future-query-aligned-basis-architecture.md`; `analysis/phase5_stage_b_future_query_aligned_architecture_research_20260707/stage_b_architecture_direction_report.md`; `analysis/phase5_stage_b_b8_ocd_coefficient_oracle_20260707/b8_ocd_report.md` |
 | `B9-FSN-SCF` | `blocked_by_no_stage_control` | A6-LBF 的 single coefficient state 同时服务多个 future stages；若 stage losses 对该 coefficient 的梯度方向不一致，则需要 native future-stage-aware coefficient field | passed Step 4-7, but failed effectiveness mechanism gate：B9 cannot beat same-parameter no-stage control | failed：B9 vs A6 `-0.13%`, no-stage vs A6 `-0.13%`, B9 vs no-stage `+0.0036%` and `2/12` wins | Do not launch full matrix; rollback to Step 4 redesign or Step 2/3 | `docs/experiments/phase5-stage-b-native-future-stage-operator.md`; `docs/code-explanation/phase5-stage-b-b9-fsn-scf.md`; `analysis/phase5_stage_b_b9_fsn_scf_small_gate_20260707/b9_fsn_scf_small_gate_report.md` |
 | `B10-TCO` | `superseded_by_B11` | A6-LBF 是 prefix-compatible 720-step trajectory operator；requested target set 没有进入 computation graph，短 horizon 是 prefix slicing | B10-TSI-C/D block frozen/offline readout diagnostics: target-set readouts remain unstable or weaker than pooled controls, including rank16 stability control | not active | User reframed StageB away from explicit stage/target conditioning; evidence retained as rollback context | `docs/experiments/phase5-stage-b-target-set-conditioned-operator.md`; `analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/b10_tsi_basis_geometry_report.md`; `analysis/phase5_stage_b_b10_tsi_coeff_usage_20260708/b10_tsi_coeff_usage_report.md`; `analysis/phase5_stage_b_b10_tsi_target_set_oracle_20260708/b10_tsi_target_set_oracle_report.md`; `analysis/phase5_stage_b_b10_tsi_failure_attribution_20260708/b10_tsi_failure_attribution_report.md`; `analysis/phase5_stage_b_b10_tsi_failure_attribution_rank16_20260708/b10_tsi_failure_attribution_report.md` |
@@ -83,7 +83,7 @@ Clean rerun after code cleanup:
 | `B14-PRE-HPM` | `hierarchical_patch_memory_ready` | B14 requires a common local patch axis without sacrificing accepted A6 performance | full CPE replacement failed；parameter-free valid memory has 29 complete patches, exact reconstruction and unchanged A6 path | prerequisite only；not a retrieval method | Release B14-FURD Step 3；keep contextual replacement closed | `docs/experiments/phase5-stage-b-b14-prerequisite-patchwise-encoder.md`; `analysis/phase5_stage_b_b14_prerequisite_patchwise_encoder_20260710/hierarchical_patch_memory_gate_report.md` |
 | `B14-FURD` | `blocked_by_nonrobust_label_patch_evidence` | different U180/U240 future regions may demand different local history evidence while current A6 sensitivity remains shared | A1 `0/6`; model-independent A2 `1/6`, Weather-U180 only；no dataset passes both sizes | not applicable before Step 4-6 | Close retrieval route；rollback Step 2/3 minimal patch tokenization question | `docs/experiments/phase5-stage-b-future-unit-retrieval-demand-diagnostic.md`; `analysis/phase5_stage_b_b14_future_unit_retrieval_demand_20260710/b14_future_unit_retrieval_deep_analysis.md` |
 | `C0-ETTm1-CPA` | `closed_patch_defect_not_supported` | ETTm1 unified A6 simultaneously inherits `P=1,D=256,dropout=0.9,official-last`; global width, patch granularity, regularization and selector effects were not identified | matched P5 is worse under both dropouts and selectors (`0/16` settings)；wider P1 is also worse (`0/8`)；dropout/selector do not reverse ranking | diagnostic-only completed；not a StageB method | Retain P1-D256-drop0.9；no extra seeds or mixer；rollback StageB Step 2/3 | `docs/experiments/phase5-stage-b-ettm1-carrier-protocol-audit.md`; `analysis/phase5_stage_b_c0_ettm1_carrier_protocol_gate_20260710/c0_ettm1_encoder_control_deep_analysis.md` |
-| `C1-GAMP` | `remote_running` | accepted A6 performance is strong but ETTm1 P1 vs ETTh2/Weather P48 complicates a common local-token interface and paper story | full-window global anchor plus valid local tokens；P16-S8/P48-S24；five explicit dropout sites；~0.99M active params；local contract passed | control-only；not a StageB method | Wait for 9-run dual artifacts；accept only within degradation/fixed-baseline gates | `docs/experiments/phase5-c1-global-anchored-multipatch-carrier.md`; `analysis/phase5_c1_global_anchored_multipatch_gate_20260710/launch_record.md` |
+| `C1-GAMP` | `closed_exact_design_failed` | accepted A6 performance is strong but ETTm1 P1 vs ETTh2/Weather P48 complicates a common local-token interface and paper story | coherent control-only topology, but global-only D256 readout creates a state bottleneck on ETTh2/Weather | failed：best shared arm is still `+3.75%` best-val；fixed-baseline gate and scale stability fail | Restore A6 + exact HPM；no scale/mixer/width/dropout/readout repair | `docs/experiments/phase5-c1-global-anchored-multipatch-carrier.md`; `analysis/phase5_c1_global_anchored_multipatch_gate_20260710/c1_global_anchored_multipatch_deep_analysis.md` |
 
 ## Experiment Ledger
 
@@ -130,9 +130,10 @@ Clean rerun after code cleanup:
 | B14-FURD A2 label-patch dependence | `B14-FURD` | model-independent Step 3 repair | Weather-U180 only；`1/6` settings and `0/3` complete datasets pass | `blocked_by_nonrobust_label_patch_evidence` | `analysis/phase5_stage_b_b14_future_unit_retrieval_demand_20260710/b14_future_unit_retrieval_deep_analysis.md` |
 | C0 encoder/protocol source and frozen audit | `C0-ETTm1-CPA` | carrier/protocol attribution | ETTm1 active path is global `720->256` token plus material residual MLP；no-MLP frozen ablation is `+12.96/+9.32/+7.29/+5.58%` on H96/H192/H336/H720；ETTh2 last-vs-best validation drift is `+15.79%` | `source_audit_completed`; patch defect not yet established | `analysis/phase5_stage_b_encoder_protocol_audit_20260710/stageb_route_encoder_protocol_audit.md`; `docs/code-explanation/phase5-stage-b-encoder-protocol-audit.md` |
 | C0 frozen cross-patch interaction | `C0-ETTm1-CPA` | design-confound diagnostic | all 8 attenuation-horizon settings pass；pair-median mean is `0.0634-0.0646` at attenuation 0.25 and `0.1282-0.1294` at 0.50 | `material_interaction_detected`; P5 no-mix is not function-preserving, but mixer remains unauthorized before returned gate | `analysis/phase5_stage_b_c0_cross_patch_interaction_20260710/c0_cross_patch_interaction_report.md` |
-| C0 six-arm local gate | `C0-ETTm1-CPA` | implementation verification | six active parameter counts match preregistration；memory shapes, prefix consistency, strict reload and one-batch dual-checkpoint artifacts pass | `local_gate_passed_remote_launch_pending` | `scripts/check_phase5_stage_b_c0_ettm1_carrier_local.py`; `docs/code-explanation/phase5-stage-b-c0-ettm1-carrier-protocol-gate.md` |
+| C0 six-arm local gate | `C0-ETTm1-CPA` | implementation verification | six active parameter counts match preregistration；memory shapes, prefix consistency, strict reload and one-batch dual-checkpoint artifacts pass | `local_gate_passed` | `scripts/check_phase5_stage_b_c0_ettm1_carrier_local.py`; `docs/code-explanation/phase5-stage-b-c0-ettm1-carrier-protocol-gate.md` |
 | C0 six-arm returned gate | `C0-ETTm1-CPA` | Encoder/protocol effectiveness and attribution | matched P5 vs P1: dropout0.9 `+4.22%/+4.17%`, dropout0.2 `+1.92%/+2.50%` for last/best；all four comparisons `0/4` wins；wider P1 `+1.34%/+1.44%` | `patch_num_performance_defect_not_supported`；retain accepted carrier；no seeds/mixer | `analysis/phase5_stage_b_c0_ettm1_carrier_protocol_gate_20260710/c0_ettm1_encoder_control_deep_analysis.md` |
-| C1 source/design/local gate | `C1-GAMP` | carrier normalization | global `[B,C,1,256]`；local fine/coarse `[B,C,89/29,256]`；five dropout sites `0/0/0.1/0.1/0.1`；all required gradients and one-batch dual smoke pass | `local_gate_passed_remote_pending` | `docs/experiments/phase5-c1-global-anchored-multipatch-carrier.md`; `scripts/check_phase5_c1_global_anchored_multipatch_local.py` |
+| C1 source/design/local gate | `C1-GAMP` | carrier normalization | global `[B,C,1,256]`；local fine/coarse `[B,C,89/29,256]`；five dropout sites `0/0/0.1/0.1/0.1`；all required gradients and one-batch dual smoke pass | `local_gate_passed` | `docs/experiments/phase5-c1-global-anchored-multipatch-carrier.md`; `scripts/check_phase5_c1_global_anchored_multipatch_local.py` |
+| C1 returned effectiveness gate | `C1-GAMP` | carrier normalization control | P16-S8 last/best `+5.37%/+3.75%`；P48-S24 `+5.87%/+4.73%` vs same-run A6；validation-selected P48 also fails；vs source A6 both scales `0/12` wins | `c1_carrier_normalization_gate_failed`；exact design closed | `analysis/phase5_c1_global_anchored_multipatch_gate_20260710/c1_global_anchored_multipatch_deep_analysis.md` |
 
 ## Pending Tasks
 
@@ -149,7 +150,7 @@ Clean rerun after code cleanup:
 | Revalidate clean A6 smoke/main run | Codex | A6 future branch removed from code | `completed` | Local smoke and remote main rerun both passed; active clean A6 is validated. |
 | Rerun clean A6 main matrix | Codex | Active A6 code removed unused future branch and changed initialization order | `completed` | Done; decision `clean_a6_validated`; paper evidence now uses clean rerun metrics |
 | Run B7 unified prefix optimization diagnostic | Codex | User requested StageB direction within unified prediction, excluding channel modeling | `completed` | Done; B7 is a problem candidate only |
-| Run B7-GTD gradient/task diagnostic | Codex | B7-UPO segment evidence is partial and Weather is a counterexample | `deferred` | Keep as objective small-contribution diagnostic after architecture path is resolved |
+| Run B7-GTD gradient/task diagnostic | Codex | B7-UPO segment evidence is partial and Weather is a counterexample | `planned_after_matched_control` | Add continuous-prefix exposure control；no method design until Step 3 passes |
 | Run B8-OCD coefficient-space oracle diagnostic | Codex | B8-FQA is proposed but needs evidence that future-segment-specific coefficients can reduce A6 residuals | `completed` | Done; decision `rejected_by_ocd_control`, do not implement B8 |
 | Redefine StageB architecture-level problem after B8-OCD | Codex | B8 narrative was coherent but failed DCT control gate | `completed` | B9-FSN defined as native future-stage-aware route, excluding residual correction |
 | Run B9-SGC native future-stage gradient diagnostic | Codex | User rejected residual architecture and requested native future-stage-aware route | `completed` | Done; decision `problem_candidate_passed` |
@@ -181,7 +182,9 @@ Clean rerun after code cleanup:
 | Run B14-FURD A2 label-patch dependence | Codex | A1 circularity requires one Step 3 repair | `completed` | `1/6`; close B14-FURD and rollback Step 2/3 |
 | Define minimal patch-only carrier audit | Codex | User requested StageB route, `patch_num`, Encoder, dropout and checkpoint audit | `completed` | Six-arm channel-semantic/state/parameter/dropout/dual-checkpoint protocol preregistered |
 | Implement C0 ETTm1 carrier/protocol small gate | Codex | C0 protocol is preregistered | `completed_closed` | Returned gate fails patch-defect hypothesis；retain P1-D256-drop0.9；no extra seeds/mixer |
-| Run C1 global-anchored multi-patch gate | Codex | User prioritizes common architecture/interface with bounded degradation | `remote_running` | Launcher PID 3349678，GPUs 0/1/2；await user completion notice |
+| Run C1 global-anchored multi-patch gate | Codex | User prioritizes common architecture/interface with bounded degradation | `completed_closed` | Gate failed；restore A6 + exact HPM；no C1 repair sweep |
+| Run Contribution 1 matched-supervision control | Codex | C1 protocol audit exposed remaining architecture/objective attribution confound | `planned` | Implement same-architecture multi-prefix vs single-prefix seed-2021 gate |
+| Re-audit B7 horizon-agnostic supervision | Codex | Encoder/retrieval routes are blocked and B7 still has partial exposure evidence | `planned_after_matched_control` | Run gradient/exposure Step 2/3 diagnostic before any method design |
 
 ## Paper Mainline Sync Log
 
@@ -222,6 +225,7 @@ Clean rerun after code cleanup:
 | 2026-07-10 | B13-FUCO-B2 hidden-memory control returned | Contribution 2 candidate | paper-mainline rollback sync | Current GRU composition is blocked by ETTh2 and non-progressive per-unit gains；StageB returns Step 2 while broader future-unit generation remains open |
 | 2026-07-10 | C0 encoder/protocol audit and patch gate preregistered | Contribution 1 protocol boundary | updated | A6 remains accepted under source-faithful protocol；architecture-only superiority now explicitly requires config/dropout/checkpoint-controlled confirmation |
 | 2026-07-10 | C0 six-arm returned gate closed | Encoder/carrier control | closed | P5 loses across dropout/selector controls；retain P1-D256-drop0.9；no extra seeds/mixer；StageB rollback Step 2/3 |
+| 2026-07-11 | C1 9-run gate returned | Encoder/carrier control | closed | All scales/selectors fail；restore A6 + exact HPM；next close Contribution 1 matched-objective confound, then re-audit B7 at Step 2/3 |
 
 ## Active Artifacts
 
@@ -254,9 +258,10 @@ Clean rerun after code cleanup:
 | `docs/code-explanation/phase5-stage-b-c0-ettm1-returned-analysis.md` | C0 returned gate and statistic definitions |
 | `docs/code-explanation/phase5-c1-global-anchored-multipatch-carrier.md` | C1 model/dropout/scale/analyzer contracts |
 | `docs/experiments/phase5-c1-global-anchored-multipatch-carrier.md` | C1 control-only design and pre-registered gates |
+| `docs/experiments/phase5-post-c1-research-plan.md` | post-C1 matched-control and B7 Step 2/3 execution plan |
 | `docs/experiments/phase5-stage-b-ettm1-carrier-protocol-audit.md` | C0 six-arm causal carrier protocol |
 | `docs/stage-ledgers/phase5-stageb-restart-handoff-20260709.md` | restart handoff for new conversations after B12 rollback |
-| `docs/stage-ledgers/phase5-stageb-b13-restart-handoff-20260710.md` | current post-C0 Step 2/3 restart handoff |
+| `docs/stage-ledgers/phase5-stageb-b13-restart-handoff-20260710.md` | current post-C1 Step 2/3 restart handoff |
 | `docs/experiments/phase5-stage-b-reliability-aware-supervision-redesign.md` | StageB problem definition and B1/B2 candidate boundary |
 | `docs/experiments/phase5-stage-b-distance-normalized-seasonal-residual-diagnostic.md` | B3 diagnostic protocol |
 | `docs/experiments/phase5-stage-b-timealign-dependency-and-basis-align-diagnostic.md` | B4 dependency and B5 basis-align protocol |
@@ -295,6 +300,7 @@ Clean rerun after code cleanup:
 | `scripts/remote/run_phase5_c1_global_anchored_multipatch_gate.sh` | C1 9-run remote gate |
 | `scripts/sync_phase5_c1_global_anchored_multipatch_gate_results.sh` | C1 result sync/analyze wrapper |
 | `scripts/analyze_phase5_c1_global_anchored_multipatch_gate.py` | C1 shared/validation-selected scale analyzer |
+| `scripts/analyze_phase5_c1_global_anchored_multipatch_deep.py` | C1 protocol/training/scale/capacity failure attribution analyzer |
 | `scripts/remote/run_phase5_stage_b_b13_hidden_memory_probe.sh` | B13 hidden-memory repair remote runner |
 | `scripts/sync_phase5_stage_b_b13_hidden_memory_probe_results.sh` | B13 hidden-memory repair artifact sync wrapper |
 | `scripts/check_phase5_stage_b_b12_stbo_local.py` | B12-STBO local prefix/backward/smoke checker |
@@ -335,7 +341,7 @@ Clean rerun after code cleanup:
 | `analysis/phase5_stage_b_b13_future_unit_hidden_composition_20260710/` | B13-B2 hidden-memory final repair, launch record and deep analysis；current GRU composition closed |
 | `analysis/phase5_stage_b_encoder_protocol_audit_20260710/` | C0 StageB route, Encoder, dropout and checkpoint protocol audit |
 | `analysis/phase5_stage_b_c0_ettm1_carrier_protocol_gate_20260710/` | C0 six-arm returned artifacts and final negative decision |
-| `analysis/phase5_c1_global_anchored_multipatch_gate_20260710/launch_record.md` | C1 remote launch record |
+| `analysis/phase5_c1_global_anchored_multipatch_gate_20260710/` | C1 complete returned artifacts and failed gate analysis |
 
 ## Archived Evidence
 

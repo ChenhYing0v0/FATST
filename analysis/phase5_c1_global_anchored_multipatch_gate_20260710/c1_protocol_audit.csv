@@ -1,0 +1,10 @@
+arm,dataset,effective_learning_rate,source_preset_learning_rate,source_learning_rate_match
+a6_clean,ETTh2,0.0001,0.0005,0
+a6_clean,ETTm1,0.0001,0.0001,1
+a6_clean,Weather,0.0001,0.0001,1
+gamp_p16s8,ETTh2,0.0001,0.0005,0
+gamp_p16s8,ETTm1,0.0001,0.0001,1
+gamp_p16s8,Weather,0.0001,0.0001,1
+gamp_p48s24,ETTh2,0.0001,0.0005,0
+gamp_p48s24,ETTm1,0.0001,0.0001,1
+gamp_p48s24,Weather,0.0001,0.0001,1

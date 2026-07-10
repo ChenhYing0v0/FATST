@@ -58,6 +58,17 @@ Small gate使用 `0.0/0.0/0.1/0.1/0.1`。`ResidualPatchAttention.output` 的内�
 - `c1_gate_summary.csv`：shared scale与 validation-selected scale的预注册 gate；
 - `c1_validation_scale_selection.csv`：只由 training log minimum validation MSE决定的 scale；
 - `c1_model_diagnostics.csv`：active parameters、local patch count与实际 dropout概率。
+- `c1_protocol_audit.csv`：effective learning rate、source preset learning rate及是否一致；
+- `c1_global_anchored_multipatch_deep_analysis.md`：training dynamics、scale stability、source-A6 comparison、
+  parameter/state-width attribution与failure attribution；
+- `c1_training_dynamics.csv`：best epoch、last/best validation gap、last train loss与best-vs-last test差异；
+- `c1_capacity_state_width.csv`：active parameter变化与forecast-head实际读取的`patch_num*d_model` state width；
+- `c1_scale_stability.csv`：validation选择和last/best test偏好的scale是否一致；
+- `c1_vs_source_a6_summary.csv`：候选相对既有source-faithful A6 official-last的独立comparison。
+
+`c1_capacity_state_width.csv`中的state width来自`model_diagnostics.json`的实际`patch_num*d_model`，不读取
+`effective_config.official_args.patch_num`，因为legacy A6 model可能在初始化时把preset patch count改写为
+实际Encoder输出patch count。
 
 ## Code-theory consistency
 
@@ -68,3 +79,13 @@ global token。
 仍未证明的是 local tokens是否被训练后实际使用。只有 performance gate通过后，frozen local masking与
 global-only same-backbone control才可验证这一点。若 C1性能通过但 local branch可被无损屏蔽，它只能作为 API
 cleanup，不能支持 multi-patch representation claim。
+
+## Returned code-theory evaluation
+
+本轮performance gate失败。ETTh2/Weather的legacy A6 head分别读取`1536/6144`维flattened state，而C1只读取
+`256`维global state；因此“避免state随P变化”的设计同时形成了readout bottleneck。ETTm1两者state width都为
+`256`但C1仍退化，说明该bottleneck不是唯一原因。
+
+Deep analyzer还检测到runner把ETTh2 learning rate从source preset `5e-4`覆盖成`1e-4`。主gate中的
+same-run ETTh2 comparison仍是matched control，但不是source-faithful reproduction；所以最终裁决同时读取既有
+source-faithful A6 artifact。两个C1 scales相对该reference均为`0/12` wins，失败结论不依赖该protocol mismatch。

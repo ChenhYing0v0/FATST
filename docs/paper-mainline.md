@@ -9,10 +9,10 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA clean A6 validated；C1 carrier-normalization gate pending；StageB innovation paused |
+| `current_stage` | Phase5 StageA clean A6 validated；C1 closed；StageB rolled back Step 2/3 |
 | `active_carrier` | `A6-LBF-r256`；hierarchical patch memory is diagnostic-only |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | C1 carrier Step 8；9-run remote effectiveness gate running |
+| `current_11_step` | C1 Step 9-10 failed；next Contribution 1 matched control, then StageB Step 2/3 |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
 
 ## Core Claim
@@ -292,7 +292,18 @@ defect；StageB 回到 Step 2/3。
 global-anchor + multiple-local-patch topology和统一 downstream interface。C1 明确是 control-only，不增加
 StageB contribution。Legacy `dropout=0.9` 不复用于 attention；新 Encoder拆分五个 dropout sites为
 `0.0/0.0/0.1/0.1/0.1`。P16-S8与P48-S24两个 valid local scales在三数据集上完整运行，scale只能由
-shared gate或 validation选择。C1通过前，accepted paper carrier仍是 A6-LBF-r256。
+shared gate或 validation选择。
+
+C1返回后被关闭。P16-S8 last/best-val相对same-run A6整体退化`+5.37%/+3.75%`，P48-S24为
+`+5.87%/+4.73%`；validation在三个datasets都选P48-S24，因此selected gate同样失败。两个scales相对既有
+source-faithful A6 official-last均为`0/12` wins。ETTh2本轮runner把source preset learning rate `5e-4`
+覆盖为`1e-4`，所以same-run A6不是exact source reproduction；但同dataset comparison仍matched，且独立
+source-A6 comparison保持失败，因此不改变裁决。
+
+[Failure Attribution] C1的global-only readout把ETTh2/Weather forecast state width从`1536/6144`压到`256`，
+形成明显readout bottleneck；ETTm1 state width不变仍退化，说明问题不只在capacity。该结果只关闭exact C1
+design，不否定所有multi-patch carrier。但继续修补readout/width/dropout/mixer会把control cleanup扩张为新
+architecture search，故按预注册规则停止。论文carrier保持`A6-LBF-r256`，统一local interface保留exact HPM。
 
 ## Evidence Snapshot
 
@@ -446,4 +457,6 @@ Archived or inactive:
 11. B13 GRU-based prefix-causal composition is blocked by no-transition control; do not continue GRU/head tuning.
 12. Use the exact A6-preserving hierarchical `P48-S24` memory as B14's common history interface.
 13. B14-FURD failed its Step 3 gate (`A1 0/6`, `A2 1/6`)；do not implement trainable retrieval.
-14. Roll back Step 2/3 and test only the minimal ETTm1 `patch_num=1 -> >1` carrier question with capacity controls.
+14. C0/C1均已关闭；不再继续patch/mixer/dropout/readout normalization search。
+15. First run a same-architecture matched multi-prefix vs single-prefix supervision control for Contribution 1 attribution。
+16. Then return StageB to Step 2/3 and re-audit B7 gradient/exposure causality；if cross-dataset support fails, pause Contribution 2。

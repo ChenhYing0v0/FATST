@@ -9,9 +9,9 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 validated；C1 carrier-normalization gate pending；StageB innovation paused |
-| `current_11_step` | C1 carrier Step 8；9-run remote effectiveness gate running |
-| `active_carrier` | `A6-LBF-r256`；patch side path remains diagnostic-only |
+| `current_stage` | Phase5：A6-LBF-r256 validated；C1 closed；StageB rolled back Step 2/3 |
+| `current_11_step` | C1 Step 9-10 failed；Contribution 1 matched control planned；StageB Step 2/3 next |
+| `active_carrier` | `A6-LBF-r256 + exact valid HPM`；trainable patch carrier closed |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
 ## Long Research Loop Rule
@@ -114,6 +114,26 @@ coefficient head只读取 updated global token。首轮运行 P16-S8/P48-S24 两
 dropout sweep。协议见：
 
 - `docs/experiments/phase5-c1-global-anchored-multipatch-carrier.md`。
+
+[C1 Returned Decision] 9-run gate完成并为`c1_carrier_normalization_gate_failed`。P16-S8 last/best-val相对
+same-run A6为`+5.37%/+3.75%`，P48-S24为`+5.87%/+4.73%`；validation-selected P48同样失败。
+相对既有source-faithful A6 official-last，两个scales分别为`+4.63%/+5.17%`且均`0/12` wins。
+
+[Protocol Boundary] ETTh2 runner effective LR为`1e-4`，source preset为`5e-4`，所以same-run ETTh2 A6
+不是source-faithful exact reproduction；ETTm1/Weather一致。该mismatch不改变C1失败，因为ETTh2 arms
+仍为matched-LR comparison，fixed baseline与source-A6两条独立comparison也失败。
+
+[Failure Attribution] global-only D256 readout将ETTh2/Weather legacy state width压缩`83.33%/95.83%`，
+支持`readout_or_head_design_wrong`；ETTm1无state-width压缩仍退化，故不能只归因于capacity。无数值异常，
+但ETTh2/ETTm1存在早期validation overfit。关闭exact C1 design，不否定所有multi-patch carrier；按预注册
+rollback不追加readout/width/dropout/mixer/scale search，恢复A6 + exact HPM。
+
+[Next Plan] 先执行Contribution 1 same-architecture multi-prefix vs single-prefix supervision control，消除
+objective/preset confound；随后StageB回到Step 2/3，优先做B7 gradient/exposure causal re-audit。若B7证据
+仍为dataset-specific或由step difficulty解释，则暂停Contribution 2。协议见：
+
+- `docs/experiments/phase5-post-c1-research-plan.md`；
+- `analysis/phase5_c1_global_anchored_multipatch_gate_20260710/c1_global_anchored_multipatch_deep_analysis.md`。
 
 ## StageB Redesign Entry
 
@@ -781,8 +801,9 @@ datasets pass both U180/U240). Decision：`blocked_by_nonrobust_label_patch_evid
 | `docs/code-explanation/phase5-stage-b-c0-ettm1-returned-analysis.md` | C0 returned protocol/training/segment analysis explanation |
 | `docs/code-explanation/phase5-c1-global-anchored-multipatch-carrier.md` | C1 global/local token and dropout contract explanation |
 | `docs/experiments/phase5-c1-global-anchored-multipatch-carrier.md` | C1 carrier-normalization protocol |
+| `docs/experiments/phase5-post-c1-research-plan.md` | post-C1 matched-supervision and B7 re-audit plan |
 | `docs/experiments/phase5-stage-b-ettm1-carrier-protocol-audit.md` | C0 six-arm carrier/protocol diagnostic |
-| `docs/stage-ledgers/phase5-stageb-b13-restart-handoff-20260710.md` | current post-C0 Step 2/3 restart handoff |
+| `docs/stage-ledgers/phase5-stageb-b13-restart-handoff-20260710.md` | current post-C1 Step 2/3 restart handoff |
 | `scripts/analyze_phase5_stage_b_b13_future_unit_granularity.py` | B13 large-unit granularity analyzer |
 | `scripts/analyze_phase5_stage_b_b13_future_unit_composition_probe.py` | B13 coefficient/hidden-memory composition analyzer |
 | `scripts/analyze_phase5_stage_b_encoder_protocol_audit.py` | C0 source/config/checkpoint/frozen branch analyzer |
@@ -791,6 +812,7 @@ datasets pass both U180/U240). Decision：`blocked_by_nonrobust_label_patch_evid
 | `scripts/remote/run_phase5_c1_global_anchored_multipatch_gate.sh` | C1 remote runner |
 | `scripts/sync_phase5_c1_global_anchored_multipatch_gate_results.sh` | C1 sync wrapper |
 | `scripts/analyze_phase5_c1_global_anchored_multipatch_gate.py` | C1 returned gate analyzer |
+| `scripts/analyze_phase5_c1_global_anchored_multipatch_deep.py` | C1 returned protocol/training/capacity attribution analyzer |
 | `scripts/remote/run_phase5_stage_b_b13_hidden_memory_probe.sh` | B13 hidden-memory repair remote runner |
 | `scripts/sync_phase5_stage_b_b13_hidden_memory_probe_results.sh` | B13 hidden-memory repair artifact sync wrapper |
 | `scripts/check_phase5_stage_b_b11_bcf_local.py` | B11-BCF local fallback/prefix/backward checker |
@@ -814,7 +836,7 @@ datasets pass both U180/U240). Decision：`blocked_by_nonrobust_label_patch_evid
 | `analysis/phase5_stage_b_b13_future_unit_hidden_composition_20260710/` | B13-B2 hidden-memory final repair, launch record and deep analysis |
 | `analysis/phase5_stage_b_encoder_protocol_audit_20260710/` | C0 StageB route, Encoder, dropout and checkpoint audit |
 | `analysis/phase5_stage_b_c0_ettm1_carrier_protocol_gate_20260710/` | C0 six-arm results, protocol sensitivity and final decision |
-| `analysis/phase5_c1_global_anchored_multipatch_gate_20260710/launch_record.md` | C1 remote launch record |
+| `analysis/phase5_c1_global_anchored_multipatch_gate_20260710/` | C1 complete result, protocol audit and failed gate decision |
 | `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF remote small gate runner |
 | `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF result sync/analyze wrapper |
 

@@ -1,0 +1,10 @@
+arm,dataset,encoder_mode,active_forward_parameters,history_patch_len,history_patch_stride,history_local_patch_num,history_token_dropout_p,history_attn_dropout_p,history_attn_residual_dropout_p,history_ffn_dropout_p,history_ffn_residual_dropout_p
+a6_clean,ETTh2,timealign-token-mlp,583376,,,,,,,,
+a6_clean,ETTm1,timealign-token-mlp,699600,,,,,,,,
+a6_clean,Weather,timealign-token-mlp,1826256,,,,,,,,
+gamp_p16s8,ETTh2,global-anchored-patch-transformer,990416,16,8,89,0.0,0.0,0.1,0.1,0.1
+gamp_p16s8,ETTm1,global-anchored-patch-transformer,990416,16,8,89,0.0,0.0,0.1,0.1,0.1
+gamp_p16s8,Weather,global-anchored-patch-transformer,990416,16,8,89,0.0,0.0,0.1,0.1,0.1
+gamp_p48s24,ETTh2,global-anchored-patch-transformer,983248,48,24,29,0.0,0.0,0.1,0.1,0.1
+gamp_p48s24,ETTm1,global-anchored-patch-transformer,983248,48,24,29,0.0,0.0,0.1,0.1,0.1
+gamp_p48s24,Weather,global-anchored-patch-transformer,983248,48,24,29,0.0,0.0,0.1,0.1,0.1

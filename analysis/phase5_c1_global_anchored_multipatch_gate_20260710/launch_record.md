@@ -12,7 +12,8 @@
 | `output_root` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_c1_global_anchored_multipatch_gate` |
 | `launcher_log` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_c1_global_anchored_multipatch_gate/_logs/launcher.log` |
 | `matrix` | 3 datasets x A6 dual reference/P16-S8/P48-S24 x seed2021 = 9 runs |
-| `status` | `remote_running_initial_process_check_passed` |
+| `completion_time` | 2026-07-10 21:26:51 Asia/Shanghai |
+| `status` | `completed_9_of_9_analyzed_gate_failed` |
 
 ## GPU preflight
 
@@ -41,3 +42,12 @@ attention。
 
 Launcher与首批 Weather 三个 arms均存活，分别分配至 GPU 0/1/2；日志确认 commit、9-run matrix、dropout
 policy与三个 `run_start` 正确。按既有约定，初始确认后不长期值守；远程完成后由用户通知再同步分析。
+
+## Completion audit
+
+9/9 runs均包含effective config、model diagnostics、training log、last/best metrics与last/best checkpoints；
+launcher正常完成，无traceback、OOM或runtime error。分析结论为`c1_carrier_normalization_gate_failed`。
+
+[Protocol Mismatch] Runner统一传入`learning_rate=1e-4`，但ETTh2 source preset为`5e-4`。因此ETTh2 A6
+不是source-faithful exact reproduction；同一dataset内的controlled comparison仍matched，最终裁决另以既有
+source-faithful A6 artifact复核，两个C1 scales仍均为`0/12` wins。
