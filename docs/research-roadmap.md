@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 validated；StageB post-B14 minimal patch tokenization audit |
-| `current_11_step` | B14-FURD Step 3 failed；rollback Step 2/3 |
+| `current_stage` | Phase5：A6-LBF-r256 validated；StageB post-B14 C0 carrier/protocol audit |
+| `current_11_step` | B14-FURD Step 3 failed；rollback Step 2/3；C0 diagnostic preregistered |
 | `active_carrier` | `A6-LBF-r256`；patch side path remains diagnostic-only |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -79,6 +79,24 @@ A6-LBF-r256 可以作为：
 - teacher/self-teacher 或 EMA 稳定化方法；
 - target-query / QBR / nested / residual adapter 的混合路线；
 - 依赖 best-val/early-stop 的 protocol trick。
+
+### Carrier And Protocol Boundary
+
+[Fact] clean A6 的当前 evidence使用 TimeAlign source-faithful H720 preset与 `official-last`。ETTm1 unified
+arm为 `patch_num=1,d_model=256,dropout=0.9`，而 fixed H96/H192为
+`patch_num=1,d_model=128,dropout=0.2`。因此 `-4.13%, 9/12 wins` 是有效的 source-faithful practical
+comparison，但尚未单独识别 unified objective、Encoder tokenization、width、dropout与 checkpoint selector。
+
+[Strong Evidence] frozen clean A6 residual-branch audit显示，移除 ETTm1 MLP并保留 LayerNorm会使四个
+horizons MSE恶化 `5.58%-12.96%`；高 dropout没有使 Encoder branch失活。另一方面，ETTh2 clean A6
+last validation MSE相对 best epoch恶化 `+15.79%`，说明 dual-checkpoint sensitivity仍是必要 control。
+
+[Decision] StageA carrier继续 accepted，但强 architecture-only superiority claim保持
+`controlled_confirmation_pending`。当前只授权 `C0-ETTm1-CPA` 六臂 carrier/protocol diagnostic；它不是
+StageB Contribution 2 candidate。协议与证据见：
+
+- `analysis/phase5_stage_b_encoder_protocol_audit_20260710/stageb_route_encoder_protocol_audit.md`；
+- `docs/experiments/phase5-stage-b-ettm1-carrier-protocol-audit.md`。
 
 ## StageB Redesign Entry
 
@@ -742,9 +760,12 @@ datasets pass both U180/U240). Decision：`blocked_by_nonrobust_label_patch_evid
 | `docs/experiments/phase5-stage-b-future-unit-compositional-operator.md` | B13 Step 2/3 problem, diagnostic gates and rollback boundary |
 | `docs/code-explanation/phase5-stage-b-b13-future-unit-granularity.md` | B13 large-unit granularity analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b13-future-unit-composition-probe.md` | B13 parameter-matched composition probe explanation |
+| `docs/code-explanation/phase5-stage-b-encoder-protocol-audit.md` | C0 preset/checkpoint/frozen branch audit explanation |
+| `docs/experiments/phase5-stage-b-ettm1-carrier-protocol-audit.md` | C0 six-arm carrier/protocol diagnostic |
 | `docs/stage-ledgers/phase5-stageb-b13-restart-handoff-20260710.md` | current post-B13 Step 2 restart handoff |
 | `scripts/analyze_phase5_stage_b_b13_future_unit_granularity.py` | B13 large-unit granularity analyzer |
 | `scripts/analyze_phase5_stage_b_b13_future_unit_composition_probe.py` | B13 coefficient/hidden-memory composition analyzer |
+| `scripts/analyze_phase5_stage_b_encoder_protocol_audit.py` | C0 source/config/checkpoint/frozen branch analyzer |
 | `scripts/remote/run_phase5_stage_b_b13_hidden_memory_probe.sh` | B13 hidden-memory repair remote runner |
 | `scripts/sync_phase5_stage_b_b13_hidden_memory_probe_results.sh` | B13 hidden-memory repair artifact sync wrapper |
 | `scripts/check_phase5_stage_b_b11_bcf_local.py` | B11-BCF local fallback/prefix/backward checker |
@@ -766,6 +787,7 @@ datasets pass both U180/U240). Decision：`blocked_by_nonrobust_label_patch_evid
 | `analysis/phase5_stage_b_b13_future_unit_granularity_20260710/` | B13-A large-unit granularity result |
 | `analysis/phase5_stage_b_b13_future_unit_composition_20260710/` | B13-B1 coefficient-memory control result |
 | `analysis/phase5_stage_b_b13_future_unit_hidden_composition_20260710/` | B13-B2 hidden-memory final repair, launch record and deep analysis |
+| `analysis/phase5_stage_b_encoder_protocol_audit_20260710/` | C0 StageB route, Encoder, dropout and checkpoint audit |
 | `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF remote small gate runner |
 | `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF result sync/analyze wrapper |
 

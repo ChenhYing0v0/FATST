@@ -1,0 +1,4 @@
+dataset,seq_len,patch_num,patch_len,d_model,d_ff,readout_dim,dropout,dropout_variance_factor,expected_kept_d_ff_units,total_model_parameters,active_forward_parameters,unused_proj_x_parameters
+ETTh2,720,48,15,32,32,1536,0.1,0.11111111111111112,28.8,1690016,583376,1106640
+ETTm1,720,1,720,256,256,256,0.9,9.000000000000002,25.599999999999994,884640,699600,185040
+Weather,720,48,15,128,128,6144,0.5,1.0,64.0,6250656,1826256,4424400

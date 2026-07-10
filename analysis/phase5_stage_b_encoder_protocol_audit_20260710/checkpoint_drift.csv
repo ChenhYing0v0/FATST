@@ -1,0 +1,4 @@
+dataset,epochs_ran,best_epoch,best_val_mean_mse,last_val_mean_mse,last_minus_best_val_mse_pct,checkpoint_policy
+ETTh2,10,1,0.41033047437667847,0.47512371093034744,15.790500730440392,official-last
+ETTm1,10,9,0.5996279567480087,0.5999331399798393,0.05089543080774028,official-last
+Weather,10,8,0.4884675517678261,0.48948492109775543,0.20827777121477098,official-last

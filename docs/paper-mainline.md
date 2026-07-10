@@ -9,10 +9,10 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA clean A6 validated；StageB post-B14 Step 2/3 minimal patch tokenization audit |
+| `current_stage` | Phase5 StageA clean A6 validated；StageB post-B14 C0 carrier/protocol audit |
 | `active_carrier` | `A6-LBF-r256`；hierarchical patch memory is diagnostic-only |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | B14-FURD Step 3 blocked；rollback Step 2/3 |
+| `current_11_step` | B14-FURD Step 3 blocked；rollback Step 2/3；C0 diagnostic preregistered |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
 
 ## Core Claim
@@ -267,6 +267,17 @@ sensitivity共享 A6 Jacobian，追加一次 model-independent DCT-8 linear-CKA 
 
 下一问题回到最小 carrier 修改：ETTm1 inherited `patch_num=1` 是否应单独改为 `patch_num>1`。这必须作为
 patch-only/capacity-controlled audit，不复活 full contextual encoder，也不把 diagnostic side path写入论文方法。
+
+C0 carrier/protocol audit进一步收紧了该问题。ETTm1 unified A6同时继承 official H720 preset的
+`patch_num=1,d_model=256,dropout=0.9,official-last`，而 fixed H96/H192使用
+`d_model=128,dropout=0.2`。因此现有 A6 vs fixed结果是 source-faithful practical comparison，但不是完全
+configuration-controlled architecture comparison。该边界不撤销 A6 accepted carrier；正式论文的强
+architecture claim需要追加 matched configuration、dropout与 dual-checkpoint control。
+
+Frozen checkpoint evidence反对“高 dropout使 Encoder失效”的解释：移除 ETTm1 residual MLP并保留
+LayerNorm后，H96/H192/H336/H720 MSE分别恶化 `12.96%/9.32%/7.29%/5.58%`。当前只允许
+`C0-ETTm1-CPA` 六臂 diagnostic，分离 channel-position semantics、state/capacity、dropout和 last/best
+selector；任何正向结果最多修复 carrier/protocol，不能成为 Contribution 2。
 
 ## Evidence Snapshot
 

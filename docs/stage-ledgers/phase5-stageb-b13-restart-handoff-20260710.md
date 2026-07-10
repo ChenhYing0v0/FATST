@@ -13,6 +13,8 @@ Step 2 的 future-region-specific generation problem 重新开始。
 
 关键 evidence：
 
+- `analysis/phase5_stage_b_encoder_protocol_audit_20260710/stageb_route_encoder_protocol_audit.md`；
+- `docs/experiments/phase5-stage-b-ettm1-carrier-protocol-audit.md`；
 - `analysis/phase5_stage_b_b13_future_unit_granularity_20260710/b13_future_unit_granularity_report.md`；
 - `analysis/phase5_stage_b_b13_future_unit_composition_20260710/b13_future_unit_composition_report.md`；
 - `analysis/phase5_stage_b_b13_future_unit_hidden_composition_20260710/b13_future_unit_hidden_deep_analysis.md`。
@@ -21,14 +23,33 @@ Step 2 的 future-region-specific generation problem 重新开始。
 
 | Field | Content |
 | --- | --- |
-| `current_stage` | Phase5 StageA accepted；StageB post-B14 minimal patch tokenization audit |
-| `current_11_step` | B14-FURD Step 3 blocked；rollback Step 2/3 |
+| `current_stage` | Phase5 StageA accepted；StageB post-B14 C0 carrier/protocol audit |
+| `current_11_step` | B14-FURD Step 3 blocked；rollback Step 2/3 diagnostic-only carrier audit |
 | `active_carrier` | `A6-LBF-r256`；patch-memory interface is diagnostic-only |
 | `accepted_paper_core` | `A6-LBF-r256` only |
 | `closed_candidate` | current `GRU-based prefix-causal future-unit composition` |
 | `open_direction` | native large future-unit/stage generation without full-horizon clipping |
-| `next_problem` | determine whether ETTm1 inherited `patch_num=1` is a carrier defect fixable by patch-only tokenization |
-| `do_not_implement_next` | no retrieval/contextual replacement；pre-register minimal patch_num and capacity controls first |
+| `next_problem` | determine whether ETTm1 inherited `patch_num=1` is a carrier defect after controlling channel-position semantics, capacity, dropout and checkpoint selector |
+| `do_not_implement_next` | no new StageB method；only the preregistered six-arm C0 local implementation/checker may proceed before any remote launch |
+
+## C0 Encoder And Protocol Audit Update
+
+[Fact] ETTm1 unified A6 simultaneously inherits the official H720 preset:
+`patch_num=1,d_model=256,d_ff=256,dropout=0.9,official-last`. Fixed ETTm1 H96/H192 use
+`d_model=128,dropout=0.2`, so the existing unified-vs-fixed comparison is source-faithful but not fully
+configuration-controlled.
+
+[Strong Evidence] `P=1` is a full-window global token, not an inactive Encoder. A frozen seed-2021 clean A6 audit
+removed the residual MLP while preserving LayerNorm；ETTm1 H96/H192/H336/H720 MSE increased
+`12.96%/9.32%/7.29%/5.58%`.
+
+[Code-Theory Risk] legacy positional encoding is applied over the flattened `C*P` token axis, so it mixes channel
+offset with patch position；the Encoder has no cross-patch mixing before the dense coefficient readout；A6 also
+instantiates an unused official `proj_x`, which must not count as active forecast capacity.
+
+[Decision] C0 is a short carrier/protocol blocker, not Contribution 2. The six-arm protocol separates legacy vs
+channel-independent PE, `P=1` vs near-state/parameter-matched `P=5`, dropout `0.9/0.2`, and last/best checkpoints
+from one training trajectory. It is preregistered but not implemented or launched.
 
 ## B14 Prerequisite Encoder Reconstruction
 

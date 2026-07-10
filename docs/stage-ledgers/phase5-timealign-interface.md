@@ -8,11 +8,11 @@
 | Field | Content |
 | --- | --- |
 | `stage_id` | `phase5-timealign-interface` |
-| `current_11_step` | B14-FURD Step 3 failed；rollback Step 2/3 minimal patch tokenization question |
+| `current_11_step` | B14-FURD Step 3 failed；rollback Step 2/3 carrier/protocol audit |
 | `active_carrier` | `A6-LBF-r256` plus exact hierarchical `P48-S24` local patch-memory interface |
-| `active_question` | Is ETTm1 `patch_num=1` an inherited carrier defect that can be repaired by a minimal patch-only change without contextual/retrieval mechanisms? |
-| `latest_decision` | B14 A1 current-gradient mismatch `0/6`; A2 model-independent label-patch repair `1/6`; current retrieval problem is not cross-dataset robust |
-| `next_required_action` | Return Step 2/3 and pre-register minimal ETTm1 `patch_num>1` carrier audit with capacity controls |
+| `active_question` | Is ETTm1 `patch_num=1` a carrier defect after separating channel-position semantics, state/capacity, dropout and checkpoint selector? |
+| `latest_decision` | C0 audit preregistered；frozen no-MLP ablation degrades ETTm1 MSE by `5.58%-12.96%`, so high dropout does not make the Encoder branch inactive |
+| `next_required_action` | Implement only the six-arm ETTm1 dual-checkpoint carrier audit；do not launch before local semantic/parameter/prefix checks pass |
 | `rollback_point` | B14-FURD is closed as paper-core；do not implement retrieval or continue unit-size/CKA sweeps |
 
 ## StageA Fixed Result
@@ -82,6 +82,7 @@ Clean rerun after code cleanup:
 | `B13-FUCO` | `blocked_by_no_transition_control` | A6 global full-horizon coefficient/basis path may be replaced by benchmark-independent latent future units whose requested count defines horizon and whose states compose prefix-causally | failed for GRU composition：B2 passes `4/6` settings but fails ETTh2 and per-unit gains do not grow with composition depth | not applicable：diagnostic probe only | Close current GRU composition；return Step 2 to future-region-specific history retrieval without recurrent transition | `docs/experiments/phase5-stage-b-future-unit-compositional-operator.md`; `analysis/phase5_stage_b_b13_future_unit_granularity_20260710/`; `analysis/phase5_stage_b_b13_future_unit_composition_20260710/`; `analysis/phase5_stage_b_b13_future_unit_hidden_composition_20260710/` |
 | `B14-PRE-HPM` | `hierarchical_patch_memory_ready` | B14 requires a common local patch axis without sacrificing accepted A6 performance | full CPE replacement failed；parameter-free valid memory has 29 complete patches, exact reconstruction and unchanged A6 path | prerequisite only；not a retrieval method | Release B14-FURD Step 3；keep contextual replacement closed | `docs/experiments/phase5-stage-b-b14-prerequisite-patchwise-encoder.md`; `analysis/phase5_stage_b_b14_prerequisite_patchwise_encoder_20260710/hierarchical_patch_memory_gate_report.md` |
 | `B14-FURD` | `blocked_by_nonrobust_label_patch_evidence` | different U180/U240 future regions may demand different local history evidence while current A6 sensitivity remains shared | A1 `0/6`; model-independent A2 `1/6`, Weather-U180 only；no dataset passes both sizes | not applicable before Step 4-6 | Close retrieval route；rollback Step 2/3 minimal patch tokenization question | `docs/experiments/phase5-stage-b-future-unit-retrieval-demand-diagnostic.md`; `analysis/phase5_stage_b_b14_future_unit_retrieval_demand_20260710/b14_future_unit_retrieval_deep_analysis.md` |
+| `C0-ETTm1-CPA` | `diagnostic_preregistered_not_launched` | ETTm1 unified A6 simultaneously inherits `P=1,D=256,dropout=0.9,official-last`; patch, regularization and selector effects are not identified | source/config audit passes；frozen branch-use evidence rejects an inactive-Encoder explanation；causal patch effect remains untested | diagnostic-only；not a StageB method | Run only channel-semantic/state/parameter/dropout/dual-checkpoint controls；positive result may repair carrier but cannot become Contribution 2 | `docs/experiments/phase5-stage-b-ettm1-carrier-protocol-audit.md`; `analysis/phase5_stage_b_encoder_protocol_audit_20260710/stageb_route_encoder_protocol_audit.md` |
 
 ## Experiment Ledger
 
@@ -126,6 +127,7 @@ Clean rerun after code cleanup:
 | B14 hierarchical patch-memory gate | `B14-PRE-HPM` | initial padded carrier-preservation repair | 3/3 datasets have equal state keys/parameters, output and full metrics max diff `0.0`; historical padded memory was `[B,C,30,48]` | `hierarchical_patch_memory_ready`; Step 3 uses later valid 29-patch refinement | `analysis/phase5_stage_b_b14_prerequisite_patchwise_encoder_20260710/hierarchical_patch_memory_gate_report.md` |
 | B14-FURD A1 current-gradient mismatch | `B14-FURD` | shared-Jacobian carrier contradiction | 24/24 evidence audits exact；`0/6` settings pass | exact contradiction unsupported；no direction rejection authority | `analysis/phase5_stage_b_b14_future_unit_retrieval_demand_20260710/b14_future_unit_retrieval_summary.csv` |
 | B14-FURD A2 label-patch dependence | `B14-FURD` | model-independent Step 3 repair | Weather-U180 only；`1/6` settings and `0/3` complete datasets pass | `blocked_by_nonrobust_label_patch_evidence` | `analysis/phase5_stage_b_b14_future_unit_retrieval_demand_20260710/b14_future_unit_retrieval_deep_analysis.md` |
+| C0 encoder/protocol source and frozen audit | `C0-ETTm1-CPA` | carrier/protocol attribution | ETTm1 active path is global `720->256` token plus material residual MLP；no-MLP frozen ablation is `+12.96/+9.32/+7.29/+5.58%` on H96/H192/H336/H720；ETTh2 last-vs-best validation drift is `+15.79%` | `diagnostic_preregistered_not_launched`; patch defect not yet established | `analysis/phase5_stage_b_encoder_protocol_audit_20260710/stageb_route_encoder_protocol_audit.md`; `docs/code-explanation/phase5-stage-b-encoder-protocol-audit.md` |
 
 ## Pending Tasks
 
@@ -172,7 +174,8 @@ Clean rerun after code cleanup:
 | Build B14 common patch-memory prerequisite | Codex | ETTm1 legacy `P=1` invalidates cross-dataset patch retrieval | `completed` | Full CPE failed；HPM exact repair passed 3/3 datasets |
 | Run B14-FURD A1 current-gradient mismatch | Codex | valid HPM evidence contract | `completed` | 0/6 support；exact contradiction closed but shared-Jacobian design has no direction-rejection authority |
 | Run B14-FURD A2 label-patch dependence | Codex | A1 circularity requires one Step 3 repair | `completed` | `1/6`; close B14-FURD and rollback Step 2/3 |
-| Define minimal patch-only carrier audit | Codex | User intended patch-only change, not contextual replacement | `pending` | Pre-register ETTm1 `patch_num>1` and capacity controls before implementation |
+| Define minimal patch-only carrier audit | Codex | User requested StageB route, `patch_num`, Encoder, dropout and checkpoint audit | `completed` | Six-arm channel-semantic/state/parameter/dropout/dual-checkpoint protocol preregistered |
+| Implement C0 ETTm1 carrier/protocol small gate | Codex | C0 protocol is preregistered | `pending` | Add dual-checkpoint artifact path and local semantics/parameter/prefix checker before any remote launch |
 
 ## Paper Mainline Sync Log
 
@@ -211,6 +214,7 @@ Clean rerun after code cleanup:
 | 2026-07-10 | B13-FUCO-A large-unit diagnostic returned | Contribution 2 candidate | no accepted paper claim | Large-unit problem evidence passes, but only authorizes a parameter-matched mechanism diagnostic |
 | 2026-07-10 | B13-FUCO-B1 coefficient-memory control returned | Contribution 2 candidate | no accepted paper claim | No-transition control blocks the tested post-coefficient composition; one pre-coefficient repair is allowed before closing current GRU candidate |
 | 2026-07-10 | B13-FUCO-B2 hidden-memory control returned | Contribution 2 candidate | paper-mainline rollback sync | Current GRU composition is blocked by ETTh2 and non-progressive per-unit gains；StageB returns Step 2 while broader future-unit generation remains open |
+| 2026-07-10 | C0 encoder/protocol audit and patch gate preregistered | Contribution 1 protocol boundary | updated | A6 remains accepted under source-faithful protocol；architecture-only superiority now explicitly requires config/dropout/checkpoint-controlled confirmation |
 
 ## Active Artifacts
 
@@ -239,6 +243,8 @@ Clean rerun after code cleanup:
 | `docs/code-explanation/phase5-stage-b-b12-stbo-rank-diagnostic.md` | B12-STBO rank/capacity diagnostic explanation |
 | `docs/code-explanation/phase5-stage-b-b13-future-unit-granularity.md` | B13 large-unit granularity analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b13-future-unit-composition-probe.md` | B13 parameter-matched composition probe explanation |
+| `docs/code-explanation/phase5-stage-b-encoder-protocol-audit.md` | C0 preset/checkpoint/frozen branch audit explanation |
+| `docs/experiments/phase5-stage-b-ettm1-carrier-protocol-audit.md` | C0 six-arm causal carrier protocol |
 | `docs/stage-ledgers/phase5-stageb-restart-handoff-20260709.md` | restart handoff for new conversations after B12 rollback |
 | `docs/stage-ledgers/phase5-stageb-b13-restart-handoff-20260710.md` | current post-B13 Step 2 restart handoff |
 | `docs/experiments/phase5-stage-b-reliability-aware-supervision-redesign.md` | StageB problem definition and B1/B2 candidate boundary |
@@ -273,6 +279,7 @@ Clean rerun after code cleanup:
 | `scripts/analyze_phase5_stage_b_b12_stbo_rank_diagnostic.py` | B12-STBO rank/capacity diagnostic analyzer |
 | `scripts/analyze_phase5_stage_b_b13_future_unit_granularity.py` | B13 large-unit granularity diagnostic analyzer |
 | `scripts/analyze_phase5_stage_b_b13_future_unit_composition_probe.py` | B13 exact parameter-matched composition analyzer |
+| `scripts/analyze_phase5_stage_b_encoder_protocol_audit.py` | C0 source/config/checkpoint/frozen branch analyzer |
 | `scripts/remote/run_phase5_stage_b_b13_hidden_memory_probe.sh` | B13 hidden-memory repair remote runner |
 | `scripts/sync_phase5_stage_b_b13_hidden_memory_probe_results.sh` | B13 hidden-memory repair artifact sync wrapper |
 | `scripts/check_phase5_stage_b_b12_stbo_local.py` | B12-STBO local prefix/backward/smoke checker |
@@ -311,6 +318,7 @@ Clean rerun after code cleanup:
 | `analysis/phase5_stage_b_b13_future_unit_granularity_20260710/` | B13-A large-unit granularity evidence; decision `partial_pass_large_unit_granularity_robust` |
 | `analysis/phase5_stage_b_b13_future_unit_composition_20260710/` | B13-B1 coefficient-memory control; decision `no_transition_control_explains` |
 | `analysis/phase5_stage_b_b13_future_unit_hidden_composition_20260710/` | B13-B2 hidden-memory final repair, launch record and deep analysis；current GRU composition closed |
+| `analysis/phase5_stage_b_encoder_protocol_audit_20260710/` | C0 StageB route, Encoder, dropout and checkpoint protocol audit |
 
 ## Archived Evidence
 
