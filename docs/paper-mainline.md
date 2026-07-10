@@ -12,7 +12,7 @@
 | `current_stage` | Phase5 StageA clean A6 validated；C1 carrier-normalization gate pending；StageB innovation paused |
 | `active_carrier` | `A6-LBF-r256`；hierarchical patch memory is diagnostic-only |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | C1 carrier Step 4-7 local pass；remote effectiveness gate pending |
+| `current_11_step` | C1 carrier Step 8；9-run remote effectiveness gate running |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
 
 ## Core Claim

@@ -8,11 +8,11 @@
 | Field | Content |
 | --- | --- |
 | `stage_id` | `phase5-timealign-interface` |
-| `current_11_step` | C1 carrier Step 4-7；design/local gate passed，remote small gate pending |
+| `current_11_step` | C1 carrier Step 8；9-run remote small gate running |
 | `active_carrier` | `A6-LBF-r256` plus exact hierarchical `P48-S24` local patch-memory interface |
 | `active_question` | Can a standard global-anchored multi-patch carrier unify all dataset interfaces within a pre-registered degradation budget? |
-| `latest_decision` | C1 separates five dropout sites and tests valid P16-S8/P48-S24 scales；global/local gradient, prefix, strict reload and dual-artifact smoke pass |
-| `next_required_action` | Commit/push and launch the 9-run C1 gate；do not add multi-scale bank, dropout sweep or StageB mechanism |
+| `latest_decision` | C1 local gate passed；9 runs launched on GPUs 0/1/2 at commit `055044b` with explicit dropout and scale policies |
+| `next_required_action` | Wait for user completion notice，then sync and apply shared/validation-selected gates；no extra arms while running |
 | `rollback_point` | B14-FURD is closed as paper-core；do not implement retrieval or continue unit-size/CKA sweeps |
 
 ## StageA Fixed Result
@@ -83,7 +83,7 @@ Clean rerun after code cleanup:
 | `B14-PRE-HPM` | `hierarchical_patch_memory_ready` | B14 requires a common local patch axis without sacrificing accepted A6 performance | full CPE replacement failed；parameter-free valid memory has 29 complete patches, exact reconstruction and unchanged A6 path | prerequisite only；not a retrieval method | Release B14-FURD Step 3；keep contextual replacement closed | `docs/experiments/phase5-stage-b-b14-prerequisite-patchwise-encoder.md`; `analysis/phase5_stage_b_b14_prerequisite_patchwise_encoder_20260710/hierarchical_patch_memory_gate_report.md` |
 | `B14-FURD` | `blocked_by_nonrobust_label_patch_evidence` | different U180/U240 future regions may demand different local history evidence while current A6 sensitivity remains shared | A1 `0/6`; model-independent A2 `1/6`, Weather-U180 only；no dataset passes both sizes | not applicable before Step 4-6 | Close retrieval route；rollback Step 2/3 minimal patch tokenization question | `docs/experiments/phase5-stage-b-future-unit-retrieval-demand-diagnostic.md`; `analysis/phase5_stage_b_b14_future_unit_retrieval_demand_20260710/b14_future_unit_retrieval_deep_analysis.md` |
 | `C0-ETTm1-CPA` | `closed_patch_defect_not_supported` | ETTm1 unified A6 simultaneously inherits `P=1,D=256,dropout=0.9,official-last`; global width, patch granularity, regularization and selector effects were not identified | matched P5 is worse under both dropouts and selectors (`0/16` settings)；wider P1 is also worse (`0/8`)；dropout/selector do not reverse ranking | diagnostic-only completed；not a StageB method | Retain P1-D256-drop0.9；no extra seeds or mixer；rollback StageB Step 2/3 | `docs/experiments/phase5-stage-b-ettm1-carrier-protocol-audit.md`; `analysis/phase5_stage_b_c0_ettm1_carrier_protocol_gate_20260710/c0_ettm1_encoder_control_deep_analysis.md` |
-| `C1-GAMP` | `local_gate_passed_remote_pending` | accepted A6 performance is strong but ETTm1 P1 vs ETTh2/Weather P48 complicates a common local-token interface and paper story | full-window global anchor plus valid local tokens；P16-S8/P48-S24；five explicit dropout sites；~0.99M active params；local contract passed | control-only；not a StageB method | Run A6 dual reference plus two scales on all three datasets；accept only within degradation/fixed-baseline gates | `docs/experiments/phase5-c1-global-anchored-multipatch-carrier.md`; `docs/code-explanation/phase5-c1-global-anchored-multipatch-carrier.md` |
+| `C1-GAMP` | `remote_running` | accepted A6 performance is strong but ETTm1 P1 vs ETTh2/Weather P48 complicates a common local-token interface and paper story | full-window global anchor plus valid local tokens；P16-S8/P48-S24；five explicit dropout sites；~0.99M active params；local contract passed | control-only；not a StageB method | Wait for 9-run dual artifacts；accept only within degradation/fixed-baseline gates | `docs/experiments/phase5-c1-global-anchored-multipatch-carrier.md`; `analysis/phase5_c1_global_anchored_multipatch_gate_20260710/launch_record.md` |
 
 ## Experiment Ledger
 
@@ -181,7 +181,7 @@ Clean rerun after code cleanup:
 | Run B14-FURD A2 label-patch dependence | Codex | A1 circularity requires one Step 3 repair | `completed` | `1/6`; close B14-FURD and rollback Step 2/3 |
 | Define minimal patch-only carrier audit | Codex | User requested StageB route, `patch_num`, Encoder, dropout and checkpoint audit | `completed` | Six-arm channel-semantic/state/parameter/dropout/dual-checkpoint protocol preregistered |
 | Implement C0 ETTm1 carrier/protocol small gate | Codex | C0 protocol is preregistered | `completed_closed` | Returned gate fails patch-defect hypothesis；retain P1-D256-drop0.9；no extra seeds/mixer |
-| Run C1 global-anchored multi-patch gate | Codex | User prioritizes common architecture/interface with bounded degradation | `local_pass_remote_pending` | Commit/push，GPU preflight，launch 9 runs；scale selected only by validation |
+| Run C1 global-anchored multi-patch gate | Codex | User prioritizes common architecture/interface with bounded degradation | `remote_running` | Launcher PID 3349678，GPUs 0/1/2；await user completion notice |
 
 ## Paper Mainline Sync Log
 
@@ -335,6 +335,7 @@ Clean rerun after code cleanup:
 | `analysis/phase5_stage_b_b13_future_unit_hidden_composition_20260710/` | B13-B2 hidden-memory final repair, launch record and deep analysis；current GRU composition closed |
 | `analysis/phase5_stage_b_encoder_protocol_audit_20260710/` | C0 StageB route, Encoder, dropout and checkpoint protocol audit |
 | `analysis/phase5_stage_b_c0_ettm1_carrier_protocol_gate_20260710/` | C0 six-arm returned artifacts and final negative decision |
+| `analysis/phase5_c1_global_anchored_multipatch_gate_20260710/launch_record.md` | C1 remote launch record |
 
 ## Archived Evidence
 

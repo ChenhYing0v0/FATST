@@ -10,7 +10,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
 | `current_stage` | Phase5：A6-LBF-r256 validated；C1 carrier-normalization gate pending；StageB innovation paused |
-| `current_11_step` | C1 carrier Step 4-7 local pass；remote effectiveness gate pending |
+| `current_11_step` | C1 carrier Step 8；9-run remote effectiveness gate running |
 | `active_carrier` | `A6-LBF-r256`；patch side path remains diagnostic-only |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -814,6 +814,7 @@ datasets pass both U180/U240). Decision：`blocked_by_nonrobust_label_patch_evid
 | `analysis/phase5_stage_b_b13_future_unit_hidden_composition_20260710/` | B13-B2 hidden-memory final repair, launch record and deep analysis |
 | `analysis/phase5_stage_b_encoder_protocol_audit_20260710/` | C0 StageB route, Encoder, dropout and checkpoint audit |
 | `analysis/phase5_stage_b_c0_ettm1_carrier_protocol_gate_20260710/` | C0 six-arm results, protocol sensitivity and final decision |
+| `analysis/phase5_c1_global_anchored_multipatch_gate_20260710/launch_record.md` | C1 remote launch record |
 | `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF remote small gate runner |
 | `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF result sync/analyze wrapper |
 

@@ -26,7 +26,7 @@ route 继续调参，而应重新选择 StageB Step 2/3 problem，或明确暂�
 | Field | Content |
 | --- | --- |
 | `current_stage` | Phase5 StageA accepted；C1 carrier-normalization gate pending；StageB innovation paused |
-| `current_11_step` | C1 carrier Step 4-7 local pass；remote effectiveness gate pending |
+| `current_11_step` | C1 carrier Step 8；9-run remote effectiveness gate running |
 | `active_carrier` | `A6-LBF-r256`；patch-memory interface is diagnostic-only |
 | `accepted_paper_core` | `A6-LBF-r256` only |
 | `closed_candidate` | current `GRU-based prefix-causal future-unit composition` |
