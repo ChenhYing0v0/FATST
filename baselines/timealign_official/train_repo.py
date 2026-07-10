@@ -138,6 +138,7 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
     root_path = resolve_dataset_root(args.dataset_root, preset)
     device = torch.device(args.device if args.device != "auto" else ("cuda" if torch.cuda.is_available() else "cpu"))
     is_prefix_readout = args.readout_mode in PREFIX_READOUT_MODES
+    contextual_encoder = args.encoder_mode == "contextual-patch-transformer"
     return argparse.Namespace(
         task_name="long_term_forecast",
         is_training=1,
@@ -158,13 +159,13 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         enc_in=preset.enc_in,
         dec_in=preset.dec_in,
         c_out=preset.c_out,
-        d_model=preset.d_model,
-        n_heads=8,
-        e_layers=args.e_layers,
+        d_model=args.history_d_model if contextual_encoder else preset.d_model,
+        n_heads=args.history_n_heads if contextual_encoder else 8,
+        e_layers=args.history_e_layers if contextual_encoder else args.e_layers,
         d_layers=1,
-        d_ff=preset.d_ff,
+        d_ff=args.history_d_ff if contextual_encoder else preset.d_ff,
         factor=3,
-        dropout=preset.dropout,
+        dropout=args.history_dropout if contextual_encoder else preset.dropout,
         embed="timeF",
         distil=True,
         expand=2,
@@ -174,7 +175,7 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         train_epochs=args.epochs,
         batch_size=args.batch_size,
         patience=args.patience,
-        learning_rate=preset.learning_rate,
+        learning_rate=preset.learning_rate if args.learning_rate is None else args.learning_rate,
         des="Exp",
         loss="MSE",
         lradj="cosine",
@@ -216,6 +217,11 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         glo=1,
         device=device,
         readout_mode=args.readout_mode,
+        encoder_mode=args.encoder_mode,
+        history_patch_len=args.history_patch_len,
+        history_patch_stride=args.history_patch_stride,
+        history_attn_dropout=args.history_attn_dropout,
+        history_res_attention=args.history_res_attention,
         target_horizons=args.target_horizons,
         basis_rank=args.basis_rank,
         stage_token_dim=args.stage_token_dim,
@@ -258,7 +264,18 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
         "total_parameters": sum(parameter.numel() for parameter in model.parameters()),
         "trainable_parameters": sum(parameter.numel() for parameter in model.parameters() if parameter.requires_grad),
         "readout_mode": getattr(model, "readout_mode", ""),
+        "encoder_mode": getattr(model, "encoder_mode", ""),
+        "patch_num": int(getattr(model, "patch_num", 0)),
+        "d_model": int(getattr(model, "d_model", 0)),
     }
+    if hasattr(model, "history_encoder"):
+        payload.update(
+            {
+                "history_patch_len": int(model.history_encoder.patch_len),
+                "history_patch_stride": int(model.history_encoder.stride),
+                "history_res_attention": bool(model.history_encoder.residual_attention),
+            }
+        )
     if hasattr(model, "stage_gate_logits"):
         with torch.no_grad():
             gate = torch.sigmoid(model.stage_gate_logits.detach().cpu()).view(-1).tolist()
@@ -656,7 +673,11 @@ def run(args: argparse.Namespace) -> None:
                 if key != "device_ids"
             },
             "official_preset": asdict(preset),
-            "source_note": "Clean TimeAlign adapter: official baseline plus A6-LBF-r256 unified carrier.",
+            "source_note": (
+                "B14 prerequisite: PatchTST-derived contextual history encoder plus A6-LBF-r256 operator."
+                if args.encoder_mode == "contextual-patch-transformer"
+                else "Clean TimeAlign adapter: official baseline plus A6-LBF-r256 unified carrier."
+            ),
             "a6_lbf_auxiliary_policy": (
                 "Prefix-native learned-basis readouts disable TimeAlign future reconstruction/alignment branches "
                 "and train with prediction loss only."
@@ -679,7 +700,8 @@ def run(args: argparse.Namespace) -> None:
 
     print(
         f"run_start dataset={args.dataset} mode={args.mode} pred_len={args.pred_len} "
-        f"target_horizons={args.target_horizons} readout_mode={args.readout_mode} output_dir={args.output_dir}",
+        f"target_horizons={args.target_horizons} encoder_mode={args.encoder_mode} "
+        f"readout_mode={args.readout_mode} output_dir={args.output_dir}",
         flush=True,
     )
     model, training_rows = train(args, official_args)
@@ -724,6 +746,25 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--pred-len", type=int, required=True)
     parser.add_argument("--target-horizons", type=parse_horizons, required=True)
     parser.add_argument("--e-layers", type=int, default=2)
+    parser.add_argument(
+        "--encoder-mode",
+        choices=["timealign-token-mlp", "contextual-patch-transformer"],
+        default="timealign-token-mlp",
+    )
+    parser.add_argument("--history-patch-len", type=int, default=16)
+    parser.add_argument("--history-patch-stride", type=int, default=8)
+    parser.add_argument("--history-d-model", type=int, default=128)
+    parser.add_argument("--history-n-heads", type=int, default=16)
+    parser.add_argument("--history-d-ff", type=int, default=256)
+    parser.add_argument("--history-e-layers", type=int, default=3)
+    parser.add_argument("--history-dropout", type=float, default=0.2)
+    parser.add_argument("--history-attn-dropout", type=float, default=0.0)
+    parser.add_argument(
+        "--history-res-attention",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+    )
+    parser.add_argument("--learning-rate", type=float, default=None)
     parser.add_argument("--w-recon", type=float, default=1.0)
     parser.add_argument("--w-align", type=float, default=None)
     parser.add_argument("--batch-size", type=int, default=32)
@@ -771,6 +812,22 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("unified mode currently expects pred_len=720")
     if args.w_recon < 0.0:
         raise ValueError("w_recon must be non-negative")
+    if args.history_patch_len <= 0 or args.history_patch_stride <= 0:
+        raise ValueError("history patch length and stride must be positive")
+    if args.history_patch_len > args.seq_len + args.history_patch_stride:
+        raise ValueError("history patch length cannot exceed padded sequence length")
+    if args.history_d_model <= 0 or args.history_n_heads <= 0:
+        raise ValueError("history d_model and n_heads must be positive")
+    if args.history_d_model % args.history_n_heads != 0:
+        raise ValueError("history d_model must be divisible by history n_heads")
+    if args.history_d_ff <= 0 or args.history_e_layers <= 0:
+        raise ValueError("history d_ff and e_layers must be positive")
+    if not 0.0 <= args.history_dropout < 1.0:
+        raise ValueError("history dropout must be in [0, 1)")
+    if not 0.0 <= args.history_attn_dropout < 1.0:
+        raise ValueError("history attention dropout must be in [0, 1)")
+    if args.learning_rate is not None and args.learning_rate <= 0.0:
+        raise ValueError("learning rate must be positive")
     if args.w_align is not None and args.w_align < 0.0:
         raise ValueError("w_align must be non-negative")
     if args.basis_rank <= 0:
@@ -801,6 +858,14 @@ def parse_args() -> argparse.Namespace:
         args.stbo_basis_init_std = args.stbo_rank ** -0.5
     if args.readout_mode in PREFIX_READOUT_MODES and args.mode != "unified":
         raise ValueError("Prefix-native learned-basis readouts require --mode unified --pred-len 720")
+    if args.encoder_mode == "contextual-patch-transformer":
+        if args.readout_mode != "learned-basis-forecast-operator":
+            raise ValueError(
+                "contextual-patch-transformer currently requires "
+                "readout-mode=learned-basis-forecast-operator"
+            )
+        if args.mode != "unified" or args.pred_len != 720:
+            raise ValueError("contextual-patch-transformer is a unified A6 carrier prerequisite")
     return args
 
 

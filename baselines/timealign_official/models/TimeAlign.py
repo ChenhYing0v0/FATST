@@ -23,6 +23,11 @@ STBO_READOUTS = {
     "subspace-tiled-basis-operator-independent",
 }
 
+ENCODER_MODES = {
+    "timealign-token-mlp",
+    "contextual-patch-transformer",
+}
+
 
 class PatchEmbed(nn.Module):
     def __init__(self, dim, patch_len, stride=None, pos=True):
@@ -43,16 +48,139 @@ class PatchEmbed(nn.Module):
         return x
 
 
+class TokenBatchNorm(nn.Module):
+    """Batch-normalize the feature axis of [N, P, D] patch tokens."""
+
+    def __init__(self, dim):
+        super().__init__()
+        self.norm = nn.BatchNorm1d(dim)
+
+    def forward(self, x):
+        return self.norm(x.transpose(1, 2)).transpose(1, 2)
+
+
+class ResidualPatchAttention(nn.Module):
+    """Multi-head self-attention with optional pre-softmax residual scores."""
+
+    def __init__(self, dim, heads, attn_dropout, proj_dropout):
+        super().__init__()
+        if dim % heads != 0:
+            raise ValueError("history d_model must be divisible by history n_heads")
+        self.heads = heads
+        self.head_dim = dim // heads
+        self.scale = self.head_dim ** -0.5
+        self.query = nn.Linear(dim, dim)
+        self.key = nn.Linear(dim, dim)
+        self.value = nn.Linear(dim, dim)
+        self.attn_dropout = nn.Dropout(attn_dropout)
+        self.output = nn.Sequential(nn.Linear(dim, dim), nn.Dropout(proj_dropout))
+
+    def forward(self, x, previous_scores=None):
+        batch, patch_num, dim = x.shape
+        query = self.query(x).reshape(
+            batch, patch_num, self.heads, self.head_dim
+        ).transpose(1, 2)
+        key = self.key(x).reshape(
+            batch, patch_num, self.heads, self.head_dim
+        ).transpose(1, 2)
+        value = self.value(x).reshape(
+            batch, patch_num, self.heads, self.head_dim
+        ).transpose(1, 2)
+        scores = torch.matmul(query, key.transpose(-2, -1)) * self.scale
+        if previous_scores is not None:
+            scores = scores + previous_scores
+        weights = self.attn_dropout(torch.softmax(scores, dim=-1))
+        context = torch.matmul(weights, value)
+        context = context.transpose(1, 2).contiguous().reshape(batch, patch_num, dim)
+        return self.output(context), scores
+
+
+class ContextualPatchEncoderLayer(nn.Module):
+    """PatchTST-derived post-BatchNorm residual attention block."""
+
+    def __init__(self, dim, heads, d_ff, dropout, attn_dropout):
+        super().__init__()
+        self.attention = ResidualPatchAttention(dim, heads, attn_dropout, dropout)
+        self.attention_dropout = nn.Dropout(dropout)
+        self.attention_norm = TokenBatchNorm(dim)
+        self.feed_forward = nn.Sequential(
+            nn.Linear(dim, d_ff),
+            nn.GELU(),
+            nn.Dropout(dropout),
+            nn.Linear(d_ff, dim),
+        )
+        self.feed_forward_dropout = nn.Dropout(dropout)
+        self.feed_forward_norm = TokenBatchNorm(dim)
+
+    def forward(self, x, previous_scores=None):
+        attended, scores = self.attention(x, previous_scores)
+        x = self.attention_norm(x + self.attention_dropout(attended))
+        x = self.feed_forward_norm(x + self.feed_forward_dropout(self.feed_forward(x)))
+        return x, scores
+
+
+class ContextualPatchEncoder(nn.Module):
+    """Channel-independent overlapping patch encoder returning [B, C, P, D]."""
+
+    def __init__(
+        self,
+        seq_len,
+        patch_len,
+        stride,
+        dim,
+        heads,
+        d_ff,
+        layers,
+        dropout,
+        attn_dropout,
+        residual_attention,
+    ):
+        super().__init__()
+        if patch_len <= 0 or stride <= 0:
+            raise ValueError("history patch length and stride must be positive")
+        if patch_len > seq_len + stride:
+            raise ValueError("history patch length cannot exceed padded sequence length")
+        self.patch_len = patch_len
+        self.stride = stride
+        self.patch_num = (seq_len + stride - patch_len) // stride + 1
+        self.dim = dim
+        self.residual_attention = residual_attention
+        self.end_padding = nn.ReplicationPad1d((0, stride))
+        self.patch_projection = nn.Linear(patch_len, dim)
+        self.position_embedding = nn.Parameter(torch.empty(1, self.patch_num, dim))
+        self.input_dropout = nn.Dropout(dropout)
+        self.layers = nn.ModuleList(
+            [
+                ContextualPatchEncoderLayer(dim, heads, d_ff, dropout, attn_dropout)
+                for _ in range(layers)
+            ]
+        )
+        nn.init.uniform_(self.position_embedding, -0.02, 0.02)
+
+    def forward(self, x):
+        # x: [B, C, L] -> memory: [B, C, P, D]
+        batch, channels, _length = x.shape
+        patches = self.end_padding(x).unfold(-1, self.patch_len, self.stride)
+        tokens = self.patch_projection(patches)
+        tokens = tokens.reshape(batch * channels, self.patch_num, self.dim)
+        tokens = self.input_dropout(tokens + self.position_embedding)
+        scores = None
+        for layer in self.layers:
+            tokens, scores = layer(tokens, scores if self.residual_attention else None)
+        return tokens.reshape(batch, channels, self.patch_num, self.dim)
+
+
 class Model(nn.Module):
-    """Official TimeAlign carrier with only the accepted A6-LBF unified head."""
+    """Legacy TimeAlign baseline plus clean A6 history/readout candidates."""
 
     def __init__(self, configs):
         super().__init__()
         self.task_name = configs.task_name
         self.seq_len = configs.seq_len
         self.pred_len = configs.pred_len
-        self.patch_num = configs.patch_num
-        self.d_model = configs.d_model
+        self.encoder_mode = getattr(configs, "encoder_mode", "timealign-token-mlp")
+        if self.encoder_mode not in ENCODER_MODES:
+            raise ValueError(f"Unsupported encoder mode: {self.encoder_mode}")
         self.readout_mode = getattr(configs, "readout_mode", "official")
         if self.readout_mode not in {"official", *LEARNED_BASIS_READOUTS, *STBO_READOUTS}:
             raise ValueError(
@@ -60,23 +188,54 @@ class Model(nn.Module):
                 "learned-basis/stage-native/basis-conditioned/STBO readout modes"
             )
         self.has_future_recon_branch = self.readout_mode == "official"
+        if (
+            self.encoder_mode == "contextual-patch-transformer"
+            and self.readout_mode != "learned-basis-forecast-operator"
+        ):
+            raise ValueError(
+                "The contextual patch encoder is a clean A6 prerequisite and requires "
+                "readout_mode=learned-basis-forecast-operator"
+            )
 
-        self.patch_emb_x = PatchEmbed(configs.d_model, self.seq_len // self.patch_num, pos=configs.pos)
+        self.e_layers = configs.e_layers
+        if self.encoder_mode == "timealign-token-mlp":
+            self.patch_num = configs.patch_num
+            self.d_model = configs.d_model
+            self.patch_emb_x = PatchEmbed(
+                configs.d_model,
+                self.seq_len // self.patch_num,
+                pos=configs.pos,
+            )
+            self.encoder = nn.ModuleList(
+                [
+                    nn.Sequential(
+                        nn.Linear(configs.d_model, configs.d_ff),
+                        nn.GELU(),
+                        nn.Dropout(configs.dropout),
+                        nn.Linear(configs.d_ff, configs.d_model),
+                    )
+                    for _ in range(configs.e_layers)
+                ]
+            )
+        else:
+            self.d_model = configs.d_model
+            self.history_encoder = ContextualPatchEncoder(
+                seq_len=configs.seq_len,
+                patch_len=configs.history_patch_len,
+                stride=configs.history_patch_stride,
+                dim=configs.d_model,
+                heads=configs.n_heads,
+                d_ff=configs.d_ff,
+                layers=configs.e_layers,
+                dropout=configs.dropout,
+                attn_dropout=configs.history_attn_dropout,
+                residual_attention=configs.history_res_attention,
+            )
+            self.patch_num = self.history_encoder.patch_num
+
         if self.has_future_recon_branch:
             self.patch_emb_y = PatchEmbed(configs.d_model, self.pred_len // self.patch_num, pos=configs.pos)
 
-        self.e_layers = configs.e_layers
-        self.encoder = nn.ModuleList(
-            [
-                nn.Sequential(
-                    nn.Linear(configs.d_model, configs.d_ff),
-                    nn.GELU(),
-                    nn.Dropout(configs.dropout),
-                    nn.Linear(configs.d_ff, configs.d_model),
-                )
-                for _ in range(configs.e_layers)
-            ]
-        )
         if self.has_future_recon_branch:
             self.ffn = nn.ModuleList([nn.Linear(configs.d_model, configs.d_model) for _ in range(configs.e_layers)])
             self.autoencoder = nn.ModuleList(
@@ -92,14 +251,15 @@ class Model(nn.Module):
             )
             self.align = glocal_align_ablation(configs.local_margin, configs.global_margin, configs.loc, configs.glo)
 
-        self.layer_norm = configs.layer_norm
+        self.layer_norm = configs.layer_norm if self.encoder_mode == "timealign-token-mlp" else False
         if self.layer_norm:
             self.norm_x = nn.ModuleList([nn.LayerNorm(configs.d_model) for _ in range(configs.e_layers)])
             if self.has_future_recon_branch:
                 self.norm_y = nn.ModuleList([nn.LayerNorm(configs.d_model) for _ in range(configs.e_layers)])
 
         readout_dim = configs.d_model * self.patch_num
-        self.proj_x = nn.Linear(readout_dim, configs.pred_len)
+        if self.has_future_recon_branch or self.encoder_mode == "timealign-token-mlp":
+            self.proj_x = nn.Linear(readout_dim, configs.pred_len)
         if self.has_future_recon_branch:
             self.proj_y = nn.Linear(readout_dim, configs.pred_len)
 
@@ -199,6 +359,22 @@ class Model(nn.Module):
         self.normalization_x = Normalize(configs.enc_in, affine=False)
         if self.has_future_recon_branch:
             self.normalization_y = Normalize(configs.enc_in, affine=False)
+
+    def _encode_normalized_history(self, x):
+        # x: [B, L, C] -> memory: [B, C, P, D]
+        batch, seq_len, channels = x.shape
+        if self.encoder_mode == "contextual-patch-transformer":
+            return self.history_encoder(x.permute(0, 2, 1))
+        tokens = self.patch_emb_x(x.permute(0, 2, 1).reshape(-1, channels * seq_len))
+        for layer_idx in range(self.e_layers):
+            tokens = tokens + self.encoder[layer_idx](tokens)
+            if self.layer_norm:
+                tokens = self.norm_x[layer_idx](tokens)
+        return tokens.reshape(batch, channels, self.patch_num, self.d_model)
+
+    def encode_history(self, x):
+        """Return normalized history memory for diagnostics and retrieval."""
+        return self._encode_normalized_history(self.normalization_x(x, "norm"))
 
     def _build_stage_boundaries(self, configs):
         horizons = sorted({int(horizon) for horizon in getattr(configs, "target_horizons", [])})
@@ -365,27 +541,29 @@ class Model(nn.Module):
         _batch_y, pred_len, _channels_y = y.shape
 
         x = self.normalization_x(x, "norm")
-        x = self.patch_emb_x(x.permute(0, 2, 1).reshape(-1, channels * seq_len))
 
         recon = None
         if self.has_future_recon_branch and is_training:
+            x = self.patch_emb_x(x.permute(0, 2, 1).reshape(-1, channels * seq_len))
             y = self.normalization_y(y, "norm")
             y = self.patch_emb_y(y.permute(0, 2, 1).reshape(-1, channels * pred_len))
-
-        align_loss = x.new_zeros(())
-        for layer_idx in range(self.e_layers):
-            x = x + self.encoder[layer_idx](x)
-            if self.layer_norm:
-                x = self.norm_x[layer_idx](x)
-            if self.has_future_recon_branch and is_training:
+            align_loss = x.new_zeros(())
+            for layer_idx in range(self.e_layers):
+                x = x + self.encoder[layer_idx](x)
+                if self.layer_norm:
+                    x = self.norm_x[layer_idx](x)
                 x_aligned = self.ffn[layer_idx](x)
                 y = y + self.autoencoder[layer_idx](y)
                 if self.layer_norm:
                     y = self.norm_y[layer_idx](y)
                 align_loss = align_loss + self.align(x_aligned, y.detach())
-        align_loss = align_loss / self.e_layers
+            align_loss = align_loss / self.e_layers
+            memory = x.reshape(batch, channels, self.patch_num, self.d_model)
+        else:
+            memory = self._encode_normalized_history(x)
+            align_loss = memory.new_zeros(())
 
-        hidden = x.reshape(batch, channels, self.patch_num, self.d_model).flatten(start_dim=-2)
+        hidden = memory.flatten(start_dim=-2)
         if self.readout_mode == "official":
             output = self.proj_x(hidden).permute(0, 2, 1)
         elif self.readout_mode == "learned-basis-forecast-operator":

@@ -21,14 +21,30 @@ Step 2 的 future-region-specific generation problem 重新开始。
 
 | Field | Content |
 | --- | --- |
-| `current_stage` | Phase5 StageA accepted；StageB post-B13 Step 2 restart |
-| `current_11_step` | B13 Step 3 diagnostic decision completed；return to Step 2 |
+| `current_stage` | Phase5 StageA accepted；StageB B14 prerequisite encoder reconstruction |
+| `current_11_step` | `B14-PRE-CPE` Step 6 implementation/effectiveness gate |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `accepted_paper_core` | `A6-LBF-r256` only |
 | `closed_candidate` | current `GRU-based prefix-causal future-unit composition` |
 | `open_direction` | native large future-unit/stage generation without full-horizon clipping |
-| `next_problem` | whether large future regions need region-specific history retrieval/state without recurrent transition |
-| `do_not_implement_next` | no model until Step 1-3 literature/problem evidence and controls are written |
+| `next_problem` | first establish a consistent contextual patch memory；then test future-region-specific retrieval/state |
+| `do_not_implement_next` | no B14 retrieval model before the reconstructed encoder passes its 3-dataset effectiveness gate |
+
+## B14 Prerequisite Encoder Reconstruction
+
+ETTm1 `patch_num=1` 是 TimeAlign official hyperparameter，而不是用户配置错误。但 A6 已移除 future
+reconstruction/alignment branch，因此本项目不再把 upstream dataset-specific tokenization 当作 active
+architecture constraint。
+
+[Decision] 原 `carrier tokenization audit` 被 `B14-PRE-CPE` 取代：实现统一的 channel-independent、
+overlapping、cross-patch contextual history encoder，并显式输出 `[B,C,P,D]` memory。A6 learned-basis
+operator保持不变。
+
+当前只授权该 carrier prerequisite 的 Step 6 implementation/performance gate；legacy A6 在 remote gate 前
+仍是唯一 accepted carrier。详见：
+
+- `docs/experiments/phase5-stage-b-b14-prerequisite-patchwise-encoder.md`；
+- `analysis/phase5_stage_b_b14_prerequisite_patchwise_encoder_20260710/patchwise_encoder_source_and_design_report.md`。
 
 ## Fixed StageA Boundary
 

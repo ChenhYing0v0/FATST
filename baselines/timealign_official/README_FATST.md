@@ -1,12 +1,16 @@
 # TimeAlign Official Baseline Adapter
 
-This directory vendors the official TimeAlign source code and adds only a thin
-FATST adapter in `train_repo.py`.
+This directory vendors the official TimeAlign source and preserves its baseline
+path. FATST also maintains explicitly named local A6 encoder/readout paths in
+`models/TimeAlign.py` and the training adapter in `train_repo.py`.
 
 ## Source Boundary
 
-- `models/`, `layers/`, `data_provider/`, `exp/`, `utils/`, `run.py`, and
-  `scripts/` are copied from the official TimeAlign repository.
+- `layers/`, `data_provider/`, `exp/`, `utils/`, `run.py`, and `scripts/` are
+  copied from the official TimeAlign repository, apart from the compatibility
+  changes listed below.
+- `models/TimeAlign.py` preserves the official baseline path and contains the
+  explicitly named local A6 encoder/readout candidates.
 - `train_repo.py` is the repo adapter for dataset roots, unified/fixed batch
   execution, seed control, and CSV artifact export.
 - The only compatibility changes inside official files are:
@@ -66,6 +70,21 @@ TimeAlign future-reconstruction architecture. The A6-LBF path:
 - forces `w_recon=0.0` and `w_align=0.0` in `train_repo.py`.
 
 The official `--readout-mode official` path still keeps reconstruction and alignment for baseline reproduction.
+
+## B14 Prerequisite Contextual Patch Encoder
+
+`--encoder-mode contextual-patch-transformer` replaces the inherited dataset-specific patch/token MLP with a
+PatchTST-derived history encoder:
+
+- channel-independent overlapping patches with end replication padding;
+- learnable positional embeddings;
+- residual cross-patch self-attention;
+- post-BatchNorm residual blocks;
+- a public `[B,C,P,D]` history-memory interface through `Model.encode_history()`.
+
+This encoder is currently restricted to `--readout-mode learned-basis-forecast-operator`, unified `pred_len=720`.
+It does not instantiate or restore the TimeAlign future reconstruction/alignment branch. The legacy
+`timealign-token-mlp` remains the default until the 3-dataset effectiveness gate passes.
 
 ## B9-FSN-SCF Stage-Native Coefficient Field
 
