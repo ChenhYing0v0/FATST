@@ -5,7 +5,7 @@
 | 字段 | 内容 |
 | --- | --- |
 | `candidate_id` | `B14-FURD` |
-| `current_step` | A1 returned negative for current-gradient mismatch；A2 model-independent label-patch repair ready |
+| `current_step` | Step 3 decision completed；rollback Step 2/3 |
 | `problem` | A6 可能用高度共享的 input sensitivity 服务不同 large future units，而各 unit error gradients 实际要求不同 raw-history evidence |
 | `existence_evidence` | B13-A large-unit gradient pressure 在 `12/12` settings 稳定；B13-B1/B2 关闭 recurrent transition，但未否定 non-recurrent region-specific retrieval |
 | `idea` | 比较 model-independent label-patch dependence 与 target-independent A6 sensitivity；只有 mismatch 成立才设计 trainable retrieval mechanism |
@@ -13,8 +13,8 @@
 | `design` | DCT-8 linear CKA label dependence vs A6 sensitivity on 29 valid `K48-S24` supports；shuffle + coverage controls |
 | `narrative_gate` | pending；target-query/retrieval 本身是 prior art，A 只能提供 problem evidence |
 | `effectiveness_gate` | not applicable before Step 4-6 |
-| `artifacts` | A1 3-dataset artifacts returned；A2 analyzer/runner locally passed，remote pending |
-| `decision` | authorize B14-FURD-A diagnostic only；no trainable retrieval model |
+| `artifacts` | A1 + A2 3-dataset artifacts and cross-dataset report complete |
+| `decision` | `blocked_by_nonrobust_label_patch_evidence`；no trainable retrieval；rollback Step 2/3 |
 
 ## Prerequisite Hold
 
@@ -200,6 +200,9 @@ batch-mean gap具有正 bootstrap lower bound。
 3. bootstrap `p05(mean_true_CKA - mean_shuffled_CKA) > 0`；
 4. mean sensitivity pairwise cosine `>= 0.80`。
 
+[Returned] A2仅 Weather-U180通过，整体 `1/6`；没有任何 dataset的 U180/U240同时通过。ETTm1虽有
+positive CKA-shuffle gap，但 profile mismatch低于 gate；ETTh2 CKA未超过 shuffle。整体 gate失败。
+
 整体进入 B14-B 需要至少两个 datasets 的 U180 与 U240 均支持，即至少 `4/6` settings，并且每个支持
 dataset 两个 sizes 同向。
 
@@ -259,3 +262,7 @@ B14-A 只能决定 carrier-specific retrieval problem 是否成立：
 - A 通过：进入 B14-B probe design，仍不进入 Step 4-6；
 - B14-B 通过后，才允许重新做 fresh primary-source audit 与 narrative novelty gate；
 - 任一正结果都不能复活 B13 recurrence、B9 hard stage、B8 late coefficient correction 或 B11 basis field。
+
+[Final Rollback] A1 exact contradiction `0/6`、A2 independent repair `1/6`，且没有 numeric/evidence pathology。
+关闭当前 B14-FURD route，回 Step 2/3；下一问题只允许审计 minimal `patch_num=1 -> patch_num>1` carrier
+tokenization，不允许继续 retrieval/CKA/unit-size sweep。

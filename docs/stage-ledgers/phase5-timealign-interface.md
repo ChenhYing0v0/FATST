@@ -8,12 +8,12 @@
 | Field | Content |
 | --- | --- |
 | `stage_id` | `phase5-timealign-interface` |
-| `current_11_step` | B14 prerequisite completed；B14-FURD Step 3 diagnostic ready |
+| `current_11_step` | B14-FURD Step 3 failed；rollback Step 2/3 minimal patch tokenization question |
 | `active_carrier` | `A6-LBF-r256` plus exact hierarchical `P48-S24` local patch-memory interface |
-| `active_question` | Do benchmark-independent large future regions require region-specific history retrieval/state without recurrent unit-to-unit transition or full-horizon clipping? |
-| `latest_decision` | full contextual replacement failed；A6-preserving side path refined to 29 complete `K48-S24` patches with exact local evidence reconstruction |
-| `next_required_action` | Run B14-FURD A2 model-independent label-patch dependence gate on U180/U240；no trainable retrieval |
-| `rollback_point` | If B14 mismatch is unsupported, return Step 2；do not repair by reviving contextual replacement, GRU composition, or late residual heads |
+| `active_question` | Is ETTm1 `patch_num=1` an inherited carrier defect that can be repaired by a minimal patch-only change without contextual/retrieval mechanisms? |
+| `latest_decision` | B14 A1 current-gradient mismatch `0/6`; A2 model-independent label-patch repair `1/6`; current retrieval problem is not cross-dataset robust |
+| `next_required_action` | Return Step 2/3 and pre-register minimal ETTm1 `patch_num>1` carrier audit with capacity controls |
+| `rollback_point` | B14-FURD is closed as paper-core；do not implement retrieval or continue unit-size/CKA sweeps |
 
 ## StageA Fixed Result
 
@@ -81,7 +81,7 @@ Clean rerun after code cleanup:
 | `B12-STBO` | `blocked_by_rank_diagnostic` | A6 full-720 step basis may be replaceable by native subspace-tiled local basis operators, so short horizons activate only required tiles instead of slicing a full trajectory operator | conditional gate：offline A6-derived evidence was insufficient but cannot reject native trainable STBO; implementation includes DCT and independent controls | rank/capacity partially helps but method fails：best learned shared/bank is `L360-R256:shared` at `+0.33%` vs A6; `L360-R256:independent` nearly matches A6 at `+0.014%`; bank entropy remains `0.9997-0.99999` | Do not claim or full-matrix B12; rollback to Step 2/3 architecture search | `docs/experiments/phase5-stage-b-subspace-tiled-basis-operator.md`; `docs/code-explanation/phase5-stage-b-b12-stbo-diagnostic.md`; `docs/code-explanation/phase5-stage-b-b12-stbo.md`; `docs/code-explanation/phase5-stage-b-b12-stbo-rank-diagnostic.md`; `scripts/check_phase5_stage_b_b12_stbo_local.py`; `scripts/remote/run_phase5_stage_b_b12_stbo_small_gate.sh`; `scripts/sync_phase5_stage_b_b12_stbo_small_gate_results.sh`; `scripts/analyze_phase5_stage_b_b12_stbo_small_gate.py`; `scripts/analyze_phase5_stage_b_b12_stbo_rank_diagnostic.py`; `analysis/phase5_stage_b_b12_stbo_diagnostic_20260708/b12_stbo_report.md`; `analysis/phase5_stage_b_b12_stbo_small_gate_20260708/b12_stbo_deep_analysis.md`; `analysis/phase5_stage_b_b12_stbo_rank_diagnostic_20260708/b12_stbo_rank_deep_analysis.md` |
 | `B13-FUCO` | `blocked_by_no_transition_control` | A6 global full-horizon coefficient/basis path may be replaced by benchmark-independent latent future units whose requested count defines horizon and whose states compose prefix-causally | failed for GRU composition：B2 passes `4/6` settings but fails ETTh2 and per-unit gains do not grow with composition depth | not applicable：diagnostic probe only | Close current GRU composition；return Step 2 to future-region-specific history retrieval without recurrent transition | `docs/experiments/phase5-stage-b-future-unit-compositional-operator.md`; `analysis/phase5_stage_b_b13_future_unit_granularity_20260710/`; `analysis/phase5_stage_b_b13_future_unit_composition_20260710/`; `analysis/phase5_stage_b_b13_future_unit_hidden_composition_20260710/` |
 | `B14-PRE-HPM` | `hierarchical_patch_memory_ready` | B14 requires a common local patch axis without sacrificing accepted A6 performance | full CPE replacement failed；parameter-free valid memory has 29 complete patches, exact reconstruction and unchanged A6 path | prerequisite only；not a retrieval method | Release B14-FURD Step 3；keep contextual replacement closed | `docs/experiments/phase5-stage-b-b14-prerequisite-patchwise-encoder.md`; `analysis/phase5_stage_b_b14_prerequisite_patchwise_encoder_20260710/hierarchical_patch_memory_gate_report.md` |
-| `B14-FURD` | `diagnostic_ready` | different U180/U240 future regions may demand different local history evidence while current A6 sensitivity remains shared | literature boundary + canonical patch interface ready；problem diagnostic not yet run | not applicable before Step 4-6 | Run checkpoint-only demand-vs-sensitivity mismatch gate；no model implementation | `docs/experiments/phase5-stage-b-future-unit-retrieval-demand-diagnostic.md`; `analysis/phase5_stage_b_b14_future_unit_retrieval_research_20260710/b14_future_unit_retrieval_literature_report.md` |
+| `B14-FURD` | `blocked_by_nonrobust_label_patch_evidence` | different U180/U240 future regions may demand different local history evidence while current A6 sensitivity remains shared | A1 `0/6`; model-independent A2 `1/6`, Weather-U180 only；no dataset passes both sizes | not applicable before Step 4-6 | Close retrieval route；rollback Step 2/3 minimal patch tokenization question | `docs/experiments/phase5-stage-b-future-unit-retrieval-demand-diagnostic.md`; `analysis/phase5_stage_b_b14_future_unit_retrieval_demand_20260710/b14_future_unit_retrieval_deep_analysis.md` |
 
 ## Experiment Ledger
 
@@ -124,6 +124,8 @@ Clean rerun after code cleanup:
 | B13-FUCO-B2 hidden-memory composition control | `B13-FUCO` | final intervention-point repair | Composition supports `4/6`, but ETTh2-U180/U240 remain `+5.16%/+5.36%`; ETTm1-U240 last unit degrades despite aggregate gain and largest U240 gains occur at unit 0 | `no_transition_control_explains`; close current GRU composition and rollback Step 2 | `analysis/phase5_stage_b_b13_future_unit_hidden_composition_20260710/b13_future_unit_hidden_deep_analysis.md` |
 | B14 contextual patch encoder gate | `B14-PRE-CPE` | carrier prerequisite replacement | `P16-S8 +4.135% (1/12)`；`P48-S24 +4.799% (0/12)`；finite but weaker than A6 | `readout_or_encoder_design_wrong`; close full replacement | `analysis/phase5_stage_b_b14_prerequisite_patchwise_encoder_20260710/contextual_patch_encoder_gate_report.md` |
 | B14 hierarchical patch-memory gate | `B14-PRE-HPM` | initial padded carrier-preservation repair | 3/3 datasets have equal state keys/parameters, output and full metrics max diff `0.0`; historical padded memory was `[B,C,30,48]` | `hierarchical_patch_memory_ready`; Step 3 uses later valid 29-patch refinement | `analysis/phase5_stage_b_b14_prerequisite_patchwise_encoder_20260710/hierarchical_patch_memory_gate_report.md` |
+| B14-FURD A1 current-gradient mismatch | `B14-FURD` | shared-Jacobian carrier contradiction | 24/24 evidence audits exact；`0/6` settings pass | exact contradiction unsupported；no direction rejection authority | `analysis/phase5_stage_b_b14_future_unit_retrieval_demand_20260710/b14_future_unit_retrieval_summary.csv` |
+| B14-FURD A2 label-patch dependence | `B14-FURD` | model-independent Step 3 repair | Weather-U180 only；`1/6` settings and `0/3` complete datasets pass | `blocked_by_nonrobust_label_patch_evidence` | `analysis/phase5_stage_b_b14_future_unit_retrieval_demand_20260710/b14_future_unit_retrieval_deep_analysis.md` |
 
 ## Pending Tasks
 
@@ -169,7 +171,8 @@ Clean rerun after code cleanup:
 | Redefine StageB after B13 GRU composition block | Codex | B13-A keeps large future-unit problem evidence, while B1/B2 reject recurrent transition | `completed` | B14-FURD problem and prior-art boundary written |
 | Build B14 common patch-memory prerequisite | Codex | ETTm1 legacy `P=1` invalidates cross-dataset patch retrieval | `completed` | Full CPE failed；HPM exact repair passed 3/3 datasets |
 | Run B14-FURD A1 current-gradient mismatch | Codex | valid HPM evidence contract | `completed` | 0/6 support；exact contradiction closed but shared-Jacobian design has no direction-rejection authority |
-| Run B14-FURD A2 label-patch dependence | Codex | A1 circularity requires one Step 3 repair | `pending` | Run DCT-8 linear CKA vs A6 sensitivity with shuffle control |
+| Run B14-FURD A2 label-patch dependence | Codex | A1 circularity requires one Step 3 repair | `completed` | `1/6`; close B14-FURD and rollback Step 2/3 |
+| Define minimal patch-only carrier audit | Codex | User intended patch-only change, not contextual replacement | `pending` | Pre-register ETTm1 `patch_num>1` and capacity controls before implementation |
 
 ## Paper Mainline Sync Log
 

@@ -21,14 +21,14 @@ Step 2 的 future-region-specific generation problem 重新开始。
 
 | Field | Content |
 | --- | --- |
-| `current_stage` | Phase5 StageA accepted；StageB B14 retrieval-demand diagnostic |
-| `current_11_step` | B14 prerequisite complete；B14-FURD Step 3 ready |
-| `active_carrier` | `A6-LBF-r256` + exact hierarchical patch-memory interface |
+| `current_stage` | Phase5 StageA accepted；StageB post-B14 minimal patch tokenization audit |
+| `current_11_step` | B14-FURD Step 3 blocked；rollback Step 2/3 |
+| `active_carrier` | `A6-LBF-r256`；patch-memory interface is diagnostic-only |
 | `accepted_paper_core` | `A6-LBF-r256` only |
 | `closed_candidate` | current `GRU-based prefix-causal future-unit composition` |
 | `open_direction` | native large future-unit/stage generation without full-horizon clipping |
-| `next_problem` | test whether U180/U240 regions demand different canonical local-patch evidence than current A6 sensitivity provides |
-| `do_not_implement_next` | no trainable B14 retrieval model before Step 3 demand-mismatch gate passes |
+| `next_problem` | determine whether ETTm1 inherited `patch_num=1` is a carrier defect fixable by patch-only tokenization |
+| `do_not_implement_next` | no retrieval/contextual replacement；pre-register minimal patch_num and capacity controls first |
 
 ## B14 Prerequisite Encoder Reconstruction
 
@@ -60,6 +60,9 @@ max diff `0.0`。状态为 `hierarchical_patch_memory_ready`；B14 Step 3 diagno
 
 [Refinement] Step 3不使用 initial padded 30th patch；29 个 complete patches可 exact reconstruct normalized
 history，overlap attribution使用 coverage correction，避免末端复制和中心位置重复计数。
+
+[B14 Result] A1 current-gradient mismatch为 `0/6`；A2 model-independent label-patch repair仅 Weather-U180
+通过，整体 `1/6`。没有 cross-dataset problem evidence，当前 B14-FURD关闭并回滚 Step 2/3。
 
 ## Fixed StageA Boundary
 

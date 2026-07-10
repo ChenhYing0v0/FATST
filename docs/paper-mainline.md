@@ -9,10 +9,10 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA clean A6 validated；StageB B14 future-unit retrieval-demand diagnostic |
-| `active_carrier` | `A6-LBF-r256` with exact hierarchical patch-memory interface |
+| `current_stage` | Phase5 StageA clean A6 validated；StageB post-B14 Step 2/3 minimal patch tokenization audit |
+| `active_carrier` | `A6-LBF-r256`；hierarchical patch memory is diagnostic-only |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | B14 prerequisite completed；B14-FURD Step 3 ready |
+| `current_11_step` | B14-FURD Step 3 blocked；rollback Step 2/3 |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
 
 ## Core Claim
@@ -260,6 +260,14 @@ patch supports上执行 Step 3 demand-vs-sensitivity diagnostic；trainable retr
 Step 3启动前进一步移除了 initial side path的 right replication padding：29 个 patches都对应完整 48-step
 history evidence；coverage-corrected aggregation保持 position attribution total mass。本修改不进入 forecast path。
 
+B14 Step 3已完成并关闭当前 retrieval route。A1 current-gradient mismatch为 `0/6`；由于 A1 demand与
+sensitivity共享 A6 Jacobian，追加一次 model-independent DCT-8 linear-CKA repair。A2仅 Weather-U180通过，
+整体 `1/6`，没有 dataset的 U180/U240同时支持。结果为
+`blocked_by_nonrobust_label_patch_evidence`：不得实现 trainable retrieval，回 Step 2/3。
+
+下一问题回到最小 carrier 修改：ETTm1 inherited `patch_num=1` 是否应单独改为 `patch_num>1`。这必须作为
+patch-only/capacity-controlled audit，不复活 full contextual encoder，也不把 diagnostic side path写入论文方法。
+
 ## Evidence Snapshot
 
 ### A6-LBF-r256 vs fixed-horizon per-horizon TimeAlign
@@ -411,4 +419,5 @@ Archived or inactive:
 10. B12-STBO is blocked by rank/capacity diagnostic; do not continue it as paper-core or full matrix.
 11. B13 GRU-based prefix-causal composition is blocked by no-transition control; do not continue GRU/head tuning.
 12. Use the exact A6-preserving hierarchical `P48-S24` memory as B14's common history interface.
-13. Run B14-FURD Step 3 demand-vs-sensitivity diagnostic；do not implement trainable retrieval before it passes.
+13. B14-FURD failed its Step 3 gate (`A1 0/6`, `A2 1/6`)；do not implement trainable retrieval.
+14. Roll back Step 2/3 and test only the minimal ETTm1 `patch_num=1 -> >1` carrier question with capacity controls.

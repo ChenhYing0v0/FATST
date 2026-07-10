@@ -4,6 +4,9 @@
 > A6-preserving hierarchical `P48-S24` memory已通过 equivalence gate。为保证 evidence semantics，B14 Step 3
 > 基于 29 个无 padding 的 complete canonical patch supports启动，trainable retrieval仍未授权。
 
+> Result update：A1 `0/6`，model-independent A2 `1/6`（Weather-U180 only）。当前 retrieval problem不具备
+> cross-dataset robustness，route已关闭并回滚 Step 2/3；本文只保留 prior-art boundary。
+
 ## 阶段记录
 
 | 字段 | 内容 |

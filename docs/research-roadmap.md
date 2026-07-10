@@ -9,9 +9,9 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 validated；StageB B14 future-unit retrieval-demand diagnostic |
-| `current_11_step` | B14 prerequisite completed；B14-FURD Step 3 ready |
-| `active_carrier` | `A6-LBF-r256` + exact hierarchical `P48-S24` patch-memory interface |
+| `current_stage` | Phase5：A6-LBF-r256 validated；StageB post-B14 minimal patch tokenization audit |
+| `current_11_step` | B14-FURD Step 3 failed；rollback Step 2/3 |
+| `active_carrier` | `A6-LBF-r256`；patch side path remains diagnostic-only |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
 ## Long Research Loop Rule
@@ -672,14 +672,20 @@ the same flatten coefficient head without losing performance.
 normalized valid `P48-S24` patches `[B,C,29,48]` as a separate local evidence memory. This is not residual prediction and
 does not let unvalidated tokens enter the output.
 
-[Gate Result] ETTh2/ETTm1/Weather all pass strict checkpoint/state/parameter/output/full-metric equivalence；maximum
-output and MSE/MAE difference is `0.0`. Decision：`hierarchical_patch_memory_ready`。
+[Initial Gate Result] The padded interface passed strict checkpoint/state/parameter/output/full-metric equivalence on
+ETTh2/ETTm1/Weather；maximum output and MSE/MAE difference was `0.0`。
 
-[Next] B14-FURD enters Step 3. Aggregate future-unit error demand and current A6 input sensitivity over the same 30
-overlapping patch supports for `U180/U240`. No trainable retrieval is allowed before the mismatch gate passes.
+[Historical Next] B14-FURD was released to Step 3 after this prerequisite；the returned decision is recorded below.
 
 [Evidence Refinement] The initial 30-patch interface used right replication padding. Step 3 removes padding and uses 29
 complete patches；coverage-corrected allocation preserves attribution mass and overlap-add reconstructs normalized history.
+
+[B14 Step 3 Result] A1 current-gradient contradiction passes `0/6`. Because A1 shares the A6 Jacobian, A2 uses
+model-independent DCT-8 linear CKA with shuffled-label controls. A2 passes only Weather-U180 (`1/6` settings, `0/3`
+datasets pass both U180/U240). Decision：`blocked_by_nonrobust_label_patch_evidence`。
+
+[Rollback] Do not implement retrieval. Return Step 2/3 to the user's original minimal question：whether ETTm1
+`patch_num=1` should be changed without replacing the encoder. Required next gate must include parameter/capacity controls.
 
 ## Active Implementation
 
