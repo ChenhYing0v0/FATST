@@ -12,7 +12,8 @@
 | `output_root` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_c0_ettm1_carrier_protocol_gate` |
 | `launcher_log` | `/home/yingch/exp_outputs/r-2026-fatst/phase5_stage_b_c0_ettm1_carrier_protocol_gate/_logs/launcher.log` |
 | `matrix` | ETTm1, six arms, seed 2021, 10 epochs, dual last/best-val evaluation |
-| `status` | `remote_running_initial_process_check_passed` |
+| `completion_time` | 2026-07-10 18:05:49 Asia/Shanghai |
+| `status` | `remote_completed_6_of_6_artifacts_verified` |
 
 ## GPU preflight
 
@@ -42,4 +43,7 @@ nohup env GPU_IDS="0 1 2" \
 Launcher 与首批三个 arms 均存活；GPU 0/1/2 分别出现对应 Python compute process，初始显存约
 `280/278/278 MiB`。launcher log 已记录正确 commit、六臂矩阵和三个 `run_start`。
 
-按用户要求，启动确认后不做长期值守。远程完成后由用户通知，再执行 sync 与预注册 analyzer。
+按用户要求，启动确认后未做长期值守。用户通知完成后已核对 6/6 runs：每个 arm 均有
+`effective_config.json`、`model_diagnostics.json`、`training_log.csv`、last/best metrics 与 last/best
+checkpoints；launcher 正常打印 done，logs 未发现 traceback、runtime error 或 OOM。轻量 artifacts 已同步并
+完成预注册与深度分析。

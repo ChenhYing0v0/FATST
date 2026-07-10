@@ -9,10 +9,10 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA clean A6 validated；StageB post-B14 C0 carrier/protocol audit |
+| `current_stage` | Phase5 StageA clean A6 validated；StageB post-C0 Step 2/3 rollback |
 | `active_carrier` | `A6-LBF-r256`；hierarchical patch memory is diagnostic-only |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | B14-FURD Step 3 blocked；rollback Step 2/3；C0 Encoder control remotely running |
+| `current_11_step` | C0 Step 9/10 completed；patch-defect gate failed；rollback Step 2/3 |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
 
 ## Core Claim
@@ -278,8 +278,15 @@ Frozen checkpoint evidence反对“高 dropout使 Encoder失效”的解释：�
 LayerNorm后，H96/H192/H336/H720 MSE分别恶化 `12.96%/9.32%/7.29%/5.58%`。进一步的 frozen
 inclusion-exclusion diagnostic 在全部 8 个 attenuation-horizon settings 检测到 material cross-patch
 interaction。因此当前六臂 `C0-ETTm1-CPA` 保持相同 flattened `C*P` semantics，分离 global width、
-state/active capacity、dropout和 last/best selector；不在返回结果前增加 mixer。任何正向结果最多修复
+state/active capacity、dropout和 last/best selector；执行期间未提前增加 mixer。任何正向结果最多修复
 carrier/protocol，不能成为 Contribution 2。
+
+C0 返回结果关闭了该 blocker。Parameter-matched P5 在 dropout0.9 的 last/best 下为 `+4.22%/+4.17%`，
+dropout0.2 下为 `+1.92%/+2.50%`，四组均 `0/4` horizon wins；wider P1-D384 也为
+`+1.34%/+1.44%`、`0/4` wins。降低 accepted P1 dropout 到 0.2 没有改善整体 MSE，best-val 也不改变结构
+排序。因此保留 ETTm1 `P=1,D=256,d_ff=256,dropout=0.9,official-last`，关闭 patch-defect route，不追加
+seeds 或 mixer。该结果不支持“所有 patchwise encoders 失败”，只是不支持 inherited P1 是 performance
+defect；StageB 回到 Step 2/3。
 
 ## Evidence Snapshot
 

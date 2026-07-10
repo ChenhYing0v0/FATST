@@ -5,7 +5,7 @@
 | 字段 | 内容 |
 | --- | --- |
 | `candidate_id` | `C0-ETTm1-CPA`，Encoder/carrier control，不是 StageB method candidate |
-| `current_step` | B14-FURD Step 3 失败后回滚 Step 2/3；先排查 carrier 与 protocol confounder |
+| `current_step` | C0 Step 9/10 已完成；patch-defect gate failed，回滚 StageB Step 2/3 |
 | `problem` | ETTm1 unified A6 同时继承 `patch_num=1`、`d_model=256`、`dropout=0.9` 与 `official-last`，现有证据不能区分全局状态宽度、patch granularity、regularization 与 checkpoint selector |
 | `existence_evidence` | code/config audit；frozen residual-MLP ablation；last-vs-best drift；冻结 checkpoint 的跨 patch inclusion-exclusion diagnostic |
 | `idea` | 不提出新机制；保持相同的 flattened `C*P` token semantics，用 global-width control、state/capacity control、dropout control 和同轨迹 dual checkpoint evaluation 做最小因果分解 |
@@ -13,9 +13,9 @@
 | `design` | ETTm1 seed-2021 六臂 small gate；只有预注册 gate 通过后才追加 seeds 2022/2023 |
 | `narrative_gate` | `diagnostic_only`；任何结果只允许让 Encoder 更可控、合理，不能成为 StageB 创新点或 Contribution 2 |
 | `effectiveness_gate` | patch effect 必须跨 dropout、跨 last/best selector 同号，并排除 global-width 与 parameter-capacity 解释 |
-| `artifacts` | frozen interaction diagnostic 已完成；六臂训练矩阵待启动 |
-| `decision` | `interaction_detected_control_gate_authorized` |
-| `rollback` | 若 patch effect 不稳，关闭 ETTm1 `patch_num` performance defect 假设；StageB 仍回到 Step 2/3，不在 Encoder 上叠加机制 |
+| `artifacts` | frozen interaction diagnostic、六臂 dual-checkpoint metrics、training/segment attribution 均已完成 |
+| `decision` | `patch_num_performance_defect_not_supported`；保留 ETTm1 P1-D256-drop0.9 carrier |
+| `rollback` | 关闭 ETTm1 patch-defect route，不追加 seeds 或 mixer；StageB 回到 Step 2/3 或暂停 |
 
 ## Scope boundary
 
@@ -151,6 +151,33 @@ interval 不跨 0，且至少 `2/3` seeds 保持相同 dataset-level 方向。
 - 仅 Gate 1 通过：调整 global-state capacity control，关闭 patch-defect 强结论。
 - 仅 Gate 3 模式：保留 architecture，报告 selector/regularization sensitivity。
 - 全部 patch arms 失败：保留 `P=1`，定义为 global-token inductive bias；StageB 回 Step 2/3 或暂停。
+
+## Returned results and final decision
+
+[Fact] Gate 0 完整通过：6/6 arms 的 effective config、active parameter count 与 dual metrics 完整；accepted
+P1-D256-F256-drop0.9 official-last control 与先前 clean A6 ETTm1 metrics 逐值一致，MSE/MAE max abs diff
+为 `0.0`。
+
+[Strong Evidence] Gate 1 未通过。更宽的 P1-D384-F96 在四 horizons 为 `0/4` wins，mean MSE 相对 accepted
+P1 在 last/best-val 下分别为 `+1.34%/+1.44%`。因此没有 global-state-width bottleneck evidence。
+
+[Strong Evidence] Gate 2 反向失败。parameter-matched P5-D52-F2048 在 dropout 0.9 下为
+`+4.22%/+4.17%`，dropout 0.2 下为 `+1.92%/+2.50%`；四个 dropout-selector 组合全部 `0/4` wins。
+H720 的 8 个 disjoint segments 也全部 `0/8` wins。该结果不授权 seeds 2022/2023。
+
+[Strong Evidence] Gate 3 不是主解释：降低 P1 dropout 到 0.2 使 mean MSE 变化 `+0.79%/+0.34%`，没有
+改善 accepted P1；best-val 相对 last 在 accepted P1 上仅改善 mean test MSE `0.15%`，也不改变任何结构
+排序。高 dropout 和 official-last 在本 ETTm1 gate 中都不是 patch 结论的 confounder。
+
+[Failure Attribution] 当前结果不支持“ETTm1 `P=1` 是 performance defect”这一窄假设。P5 no-mix 仍可能
+属于 `intervention_point_wrong/readout_or_head_design_wrong`，因为 frozen P1 已证明存在跨时间区域 interaction；
+但这只说明不能用当前失败否定所有 patchwise encoders。所有 runs 稳定，无 numeric pathology；把 P5
+`d_ff` 从 256 提升到 2048 仅带来 mean `-0.30%/-0.38%` 且长 horizons 反向，capacity matching 不足以
+恢复 P1。
+
+[Decision] 保留 ETTm1 `P=1,D=256,d_ff=256,dropout=0.9,official-last` 作为 accepted A6 carrier。关闭
+patch-defect route，不追加 seeds，不启动 mixer control。后者即使成功，也只回答“P5 如何恢复 P1 interaction
+capacity”，已不再回答 inherited P1 是否有缺陷。
 
 ## Separate unified-vs-fixed control
 

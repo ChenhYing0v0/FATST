@@ -1,7 +1,7 @@
 # Phase5 StageB B13 Restart Handoff 2026-07-10
 
-本文档是 B13-FUCO diagnostics 完成后的当前重启入口。新对话不应从 B12 或 B13-GRU 继续调参，而应从
-Step 2 的 future-region-specific generation problem 重新开始。
+本文档已同步到 C0 Encoder control 完成后的当前重启状态。新对话不应从 B12、B13-GRU 或 C0 patch
+route 继续调参，而应重新选择 StageB Step 2/3 problem，或明确暂停第二贡献搜索。
 
 ## Minimal Reading Order
 
@@ -9,12 +9,13 @@ Step 2 的 future-region-specific generation problem 重新开始。
 2. `docs/stage-ledgers/phase5-timealign-interface.md`
 3. `docs/paper-mainline.md`
 4. `docs/research-roadmap.md`
-5. `docs/experiments/phase5-stage-b-future-unit-compositional-operator.md`
+5. `docs/experiments/phase5-stage-b-ettm1-carrier-protocol-audit.md`
 
 关键 evidence：
 
 - `analysis/phase5_stage_b_encoder_protocol_audit_20260710/stageb_route_encoder_protocol_audit.md`；
 - `analysis/phase5_stage_b_c0_cross_patch_interaction_20260710/c0_cross_patch_interaction_report.md`；
+- `analysis/phase5_stage_b_c0_ettm1_carrier_protocol_gate_20260710/c0_ettm1_encoder_control_deep_analysis.md`；
 - `docs/experiments/phase5-stage-b-ettm1-carrier-protocol-audit.md`；
 - `analysis/phase5_stage_b_b13_future_unit_granularity_20260710/b13_future_unit_granularity_report.md`；
 - `analysis/phase5_stage_b_b13_future_unit_composition_20260710/b13_future_unit_composition_report.md`；
@@ -24,14 +25,14 @@ Step 2 的 future-region-specific generation problem 重新开始。
 
 | Field | Content |
 | --- | --- |
-| `current_stage` | Phase5 StageA accepted；StageB post-B14 C0 carrier/protocol audit |
-| `current_11_step` | B14-FURD Step 3 blocked；rollback Step 2/3 diagnostic-only carrier audit |
+| `current_stage` | Phase5 StageA accepted；StageB post-C0 rollback |
+| `current_11_step` | C0 Step 9/10 completed；rollback StageB Step 2/3 |
 | `active_carrier` | `A6-LBF-r256`；patch-memory interface is diagnostic-only |
 | `accepted_paper_core` | `A6-LBF-r256` only |
 | `closed_candidate` | current `GRU-based prefix-causal future-unit composition` |
 | `open_direction` | native large future-unit/stage generation without full-horizon clipping |
-| `next_problem` | determine whether ETTm1 inherited `patch_num=1` is a carrier defect after controlling global-state width, active capacity, dropout and checkpoint selector |
-| `do_not_implement_next` | no new StageB method and no mixer；six-arm C0 is remotely running, so only returned-artifact sync and analysis are authorized |
+| `next_problem` | C0 has closed the ETTm1 patch-defect question；select a new StageB Step 2/3 problem or pause |
+| `do_not_implement_next` | no C0 extra seeds, P5 mixer, width/dropout sweep or Encoder mechanism stacking |
 
 ## C0 Encoder And Protocol Audit Update
 
@@ -53,7 +54,17 @@ active forecast capacity.
 [Decision] C0 is a short Encoder/control blocker, not Contribution 2. The revised six-arm protocol preserves the same
 flattened `C*P` semantics and separates P1 global width, `P=1` vs near-state/parameter-matched `P=5`, dropout
 `0.9/0.2`, and last/best checkpoints from one training trajectory. Implementation, parameter/prefix/strict-reload checks
-and one-batch dual-artifact smoke have passed。Remote six-arm gate is running on GPUs 0/1/2；按用户要求不长期值守。
+and one-batch dual-artifact smoke passed. The returned six-arm gate is now complete.
+
+[Returned Result] Parameter-matched P5 is worse than P1 for every horizon under both dropout values and both
+checkpoint selectors: dropout0.9 mean `+4.22%/+4.17%`, dropout0.2 `+1.92%/+2.50%`, all `0/4` wins.
+Wider P1-D384 also loses `0/4` with mean `+1.34%/+1.44%`. Lowering accepted P1 dropout from 0.9 to 0.2 changes
+mean MSE `+0.79%/+0.34%`, and best-val does not reverse any architecture ranking.
+
+[Decision] `patch_num_performance_defect_not_supported`. Keep ETTm1 `P=1,D=256,d_ff=256,dropout=0.9` and
+official-last as the source-faithful accepted carrier. Do not add seeds or a mixer. P5 no-mix may still be the wrong
+intervention because it removes frozen P1 interactions, but repairing P5 would answer a different question rather than
+show that inherited P1 was defective.
 
 ## B14 Prerequisite Encoder Reconstruction
 

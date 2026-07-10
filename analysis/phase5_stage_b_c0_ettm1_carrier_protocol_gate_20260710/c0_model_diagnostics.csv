@@ -1,0 +1,7 @@
+arm,status,patch_num,d_model,d_ff,dropout,active_forward_parameters,expected_active_forward_parameters,unused_proj_x_parameters,dual_metrics_present
+p1_d256_f256_d09,ok,1,256,256,0.9,699600,699600,185040,1
+p1_d384_f96_d09,ok,1,384,96,0.9,710416,710416,277200,1
+p5_d52_f256_d09,ok,5,52,256,0.9,313468,313468,187920,1
+p5_d52_f2048_d09,ok,5,52,2048,0.9,689788,689788,187920,1
+p1_d256_f256_d02,ok,1,256,256,0.2,699600,699600,185040,1
+p5_d52_f2048_d02,ok,5,52,2048,0.2,689788,689788,187920,1

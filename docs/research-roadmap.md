@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 validated；StageB post-B14 C0 carrier/protocol audit |
-| `current_11_step` | B14-FURD Step 3 failed；rollback Step 2/3；C0 Encoder control remotely running |
+| `current_stage` | Phase5：A6-LBF-r256 validated；StageB post-C0 rollback |
+| `current_11_step` | C0 Step 9/10 completed；patch-defect gate failed；rollback Step 2/3 |
 | `active_carrier` | `A6-LBF-r256`；patch side path remains diagnostic-only |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -99,6 +99,13 @@ flattened `C*P` semantics，检查 global width、patch granularity、active cap
 - `analysis/phase5_stage_b_encoder_protocol_audit_20260710/stageb_route_encoder_protocol_audit.md`；
 - `analysis/phase5_stage_b_c0_cross_patch_interaction_20260710/c0_cross_patch_interaction_report.md`；
 - `docs/experiments/phase5-stage-b-ettm1-carrier-protocol-audit.md`。
+
+[Returned Decision] C0 已完成并关闭。Matched P5 在 dropout0.9/0.2、last/best 的四个组合全部 `0/4`
+wins，mean MSE 分别退化 `+4.22%/+4.17%/+1.92%/+2.50%`；wider P1 也退化 `+1.34%/+1.44%`。
+降低 P1 dropout 或改用 best-val 都不反转排序。结论为 `patch_num_performance_defect_not_supported`：保留
+ETTm1 P1-D256-drop0.9 carrier，不追加 seeds/mixer，StageB 回滚 Step 2/3。详细归因见：
+
+- `analysis/phase5_stage_b_c0_ettm1_carrier_protocol_gate_20260710/c0_ettm1_encoder_control_deep_analysis.md`。
 
 ## StageB Redesign Entry
 
@@ -763,11 +770,13 @@ datasets pass both U180/U240). Decision：`blocked_by_nonrobust_label_patch_evid
 | `docs/code-explanation/phase5-stage-b-b13-future-unit-granularity.md` | B13 large-unit granularity analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b13-future-unit-composition-probe.md` | B13 parameter-matched composition probe explanation |
 | `docs/code-explanation/phase5-stage-b-encoder-protocol-audit.md` | C0 preset/checkpoint/frozen branch audit explanation |
+| `docs/code-explanation/phase5-stage-b-c0-ettm1-returned-analysis.md` | C0 returned protocol/training/segment analysis explanation |
 | `docs/experiments/phase5-stage-b-ettm1-carrier-protocol-audit.md` | C0 six-arm carrier/protocol diagnostic |
-| `docs/stage-ledgers/phase5-stageb-b13-restart-handoff-20260710.md` | current post-B13 Step 2 restart handoff |
+| `docs/stage-ledgers/phase5-stageb-b13-restart-handoff-20260710.md` | current post-C0 Step 2/3 restart handoff |
 | `scripts/analyze_phase5_stage_b_b13_future_unit_granularity.py` | B13 large-unit granularity analyzer |
 | `scripts/analyze_phase5_stage_b_b13_future_unit_composition_probe.py` | B13 coefficient/hidden-memory composition analyzer |
 | `scripts/analyze_phase5_stage_b_encoder_protocol_audit.py` | C0 source/config/checkpoint/frozen branch analyzer |
+| `scripts/analyze_phase5_stage_b_c0_ettm1_carrier_deep.py` | C0 returned deep attribution analyzer |
 | `scripts/remote/run_phase5_stage_b_b13_hidden_memory_probe.sh` | B13 hidden-memory repair remote runner |
 | `scripts/sync_phase5_stage_b_b13_hidden_memory_probe_results.sh` | B13 hidden-memory repair artifact sync wrapper |
 | `scripts/check_phase5_stage_b_b11_bcf_local.py` | B11-BCF local fallback/prefix/backward checker |
@@ -790,6 +799,7 @@ datasets pass both U180/U240). Decision：`blocked_by_nonrobust_label_patch_evid
 | `analysis/phase5_stage_b_b13_future_unit_composition_20260710/` | B13-B1 coefficient-memory control result |
 | `analysis/phase5_stage_b_b13_future_unit_hidden_composition_20260710/` | B13-B2 hidden-memory final repair, launch record and deep analysis |
 | `analysis/phase5_stage_b_encoder_protocol_audit_20260710/` | C0 StageB route, Encoder, dropout and checkpoint audit |
+| `analysis/phase5_stage_b_c0_ettm1_carrier_protocol_gate_20260710/` | C0 six-arm results, protocol sensitivity and final decision |
 | `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF remote small gate runner |
 | `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF result sync/analyze wrapper |
 
