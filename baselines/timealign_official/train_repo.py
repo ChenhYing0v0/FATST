@@ -140,6 +140,10 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
     is_prefix_readout = args.readout_mode in PREFIX_READOUT_MODES
     encoder_mode = getattr(args, "encoder_mode", "timealign-token-mlp")
     contextual_encoder = encoder_mode == "contextual-patch-transformer"
+    legacy_d_model = preset.d_model if args.legacy_d_model is None else args.legacy_d_model
+    legacy_d_ff = preset.d_ff if args.legacy_d_ff is None else args.legacy_d_ff
+    legacy_dropout = preset.dropout if args.legacy_dropout is None else args.legacy_dropout
+    legacy_patch_num = preset.patch_num if args.legacy_patch_num is None else args.legacy_patch_num
     return argparse.Namespace(
         task_name="long_term_forecast",
         is_training=1,
@@ -163,7 +167,7 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         d_model=(
             getattr(args, "history_d_model", 128)
             if contextual_encoder
-            else preset.d_model
+            else legacy_d_model
         ),
         n_heads=(
             getattr(args, "history_n_heads", 16) if contextual_encoder else 8
@@ -177,13 +181,13 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         d_ff=(
             getattr(args, "history_d_ff", 256)
             if contextual_encoder
-            else preset.d_ff
+            else legacy_d_ff
         ),
         factor=3,
         dropout=(
             getattr(args, "history_dropout", 0.2)
             if contextual_encoder
-            else preset.dropout
+            else legacy_dropout
         ),
         embed="timeF",
         distil=True,
@@ -233,7 +237,7 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         w_recon=0.0 if is_prefix_readout else args.w_recon,
         local_margin=preset.local_margin,
         global_margin=preset.global_margin,
-        patch_num=preset.patch_num,
+        patch_num=legacy_patch_num,
         layer_norm=preset.layer_norm,
         pos=1,
         loc=1,
@@ -283,14 +287,42 @@ def dump_json(path: Path, payload: dict[str, Any]) -> None:
 
 
 def model_diagnostics(model: nn.Module) -> dict[str, Any]:
+    total_parameters = sum(parameter.numel() for parameter in model.parameters())
     payload: dict[str, Any] = {
-        "total_parameters": sum(parameter.numel() for parameter in model.parameters()),
+        "total_parameters": total_parameters,
         "trainable_parameters": sum(parameter.numel() for parameter in model.parameters() if parameter.requires_grad),
         "readout_mode": getattr(model, "readout_mode", ""),
         "encoder_mode": getattr(model, "encoder_mode", ""),
         "patch_num": int(getattr(model, "patch_num", 0)),
         "d_model": int(getattr(model, "d_model", 0)),
     }
+    if getattr(model, "readout_mode", "") == "learned-basis-forecast-operator":
+        active_prefixes = (
+            "patch_emb_x.",
+            "encoder.",
+            "norm_x.",
+            "history_encoder.",
+            "learned_basis_coeff.",
+            "learned_temporal_basis",
+            "learned_temporal_bias",
+        )
+        active_parameters = sum(
+            parameter.numel()
+            for name, parameter in model.named_parameters()
+            if name.startswith(active_prefixes)
+        )
+        unused_proj_x_parameters = sum(
+            parameter.numel()
+            for name, parameter in model.named_parameters()
+            if name.startswith("proj_x.")
+        )
+        payload.update(
+            {
+                "active_forward_parameters": active_parameters,
+                "unused_proj_x_parameters": unused_proj_x_parameters,
+                "inactive_or_other_parameters": total_parameters - active_parameters,
+            }
+        )
     if hasattr(model, "history_encoder"):
         payload.update(
             {
@@ -534,7 +566,15 @@ def validation_mean_mse(
     return float(np.mean([row["mse"] for row in rows]))
 
 
-def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[nn.Module, list[dict[str, Any]]]:
+def train(
+    args: argparse.Namespace,
+    official_args: argparse.Namespace,
+) -> tuple[
+    nn.Module,
+    list[dict[str, Any]],
+    dict[str, torch.Tensor],
+    dict[str, torch.Tensor],
+]:
     train_data, train_loader = data_provider(official_args, "train")
     vali_data, vali_loader = data_provider(official_args, "val")
     test_data, test_loader = data_provider(official_args, "test")
@@ -679,11 +719,29 @@ def train(args: argparse.Namespace, official_args: argparse.Namespace) -> tuple[
         )
         adjust_learning_rate(optimizer, epoch + 1, official_args)
 
+    if best_state is None:
+        raise RuntimeError("training completed without capturing a validation checkpoint")
+    last_state = {
+        name: tensor.detach().cpu().clone()
+        for name, tensor in model.state_dict().items()
+    }
     if args.checkpoint_policy == "best-val":
-        if best_state is None:
-            raise RuntimeError("best-val policy requested but no checkpoint was captured")
         model.load_state_dict(best_state)
-    return model, training_rows
+    return model, training_rows, last_state, best_state
+
+
+def annotate_evaluation_rows(
+    rows: list[dict[str, Any]],
+    args: argparse.Namespace,
+    checkpoint_policy: str,
+) -> None:
+    for row in rows:
+        row["mode"] = args.mode
+        row["run_name"] = args.run_name
+        row["dataset"] = args.dataset
+        row["pred_len"] = args.pred_len
+        row["checkpoint_policy"] = checkpoint_policy
+        row["official_test_mode"] = int(args.official_test_mode)
 
 
 def run(args: argparse.Namespace) -> None:
@@ -740,32 +798,59 @@ def run(args: argparse.Namespace) -> None:
         f"readout_mode={args.readout_mode} output_dir={args.output_dir}",
         flush=True,
     )
-    model, training_rows = train(args, official_args)
+    model, training_rows, last_state, best_state = train(args, official_args)
     write_csv(args.output_dir / "training_log.csv", training_rows)
     torch.save(model.state_dict(), args.output_dir / "checkpoint.pt")
     dump_json(args.output_dir / "model_diagnostics.json", model_diagnostics(model))
 
     _test_data, test_loader = data_provider(official_args, "test")
-    main_rows, segment_metric_rows, preds, trues = evaluate(
-        model,
-        test_loader,
-        official_args,
-        args.target_horizons,
-        max_batches=args.max_eval_batches,
-        is_training_flag=args.official_test_mode,
-    )
-    for row in main_rows:
-        row["mode"] = args.mode
-        row["run_name"] = args.run_name
-        row["dataset"] = args.dataset
-        row["pred_len"] = args.pred_len
-        row["checkpoint_policy"] = args.checkpoint_policy
-        row["official_test_mode"] = int(args.official_test_mode)
-    for row in segment_metric_rows:
-        row["mode"] = args.mode
-        row["run_name"] = args.run_name
-        row["dataset"] = args.dataset
-        row["pred_len"] = args.pred_len
+    if args.evaluate_dual_checkpoints:
+        torch.save(last_state, args.output_dir / "checkpoint_last.pt")
+        torch.save(best_state, args.output_dir / "checkpoint_best_val.pt")
+        evaluations: dict[
+            str,
+            tuple[list[dict[str, Any]], list[dict[str, Any]], np.ndarray, np.ndarray],
+        ] = {}
+        for file_label, policy_label, state in (
+            ("last", "official-last", last_state),
+            ("best_val", "best-val", best_state),
+        ):
+            model.load_state_dict(state)
+            evaluation = evaluate(
+                model,
+                test_loader,
+                official_args,
+                args.target_horizons,
+                max_batches=args.max_eval_batches,
+                is_training_flag=args.official_test_mode,
+            )
+            checkpoint_rows, checkpoint_segments, _preds, _trues = evaluation
+            annotate_evaluation_rows(checkpoint_rows, args, policy_label)
+            annotate_evaluation_rows(checkpoint_segments, args, policy_label)
+            write_csv(
+                args.output_dir / f"metrics_{file_label}_by_target_horizon.csv",
+                checkpoint_rows,
+            )
+            write_csv(
+                args.output_dir / f"metrics_{file_label}_by_segment.csv",
+                checkpoint_segments,
+            )
+            evaluations[file_label] = evaluation
+        selected_label = "last" if args.checkpoint_policy == "official-last" else "best_val"
+        main_rows, segment_metric_rows, preds, trues = evaluations[selected_label]
+        selected_state = last_state if selected_label == "last" else best_state
+        model.load_state_dict(selected_state)
+    else:
+        main_rows, segment_metric_rows, preds, trues = evaluate(
+            model,
+            test_loader,
+            official_args,
+            args.target_horizons,
+            max_batches=args.max_eval_batches,
+            is_training_flag=args.official_test_mode,
+        )
+        annotate_evaluation_rows(main_rows, args, args.checkpoint_policy)
+        annotate_evaluation_rows(segment_metric_rows, args, args.checkpoint_policy)
     write_csv(args.output_dir / "metrics_by_target_horizon.csv", main_rows)
     write_csv(args.output_dir / "metrics_by_segment.csv", segment_metric_rows)
     np.savez_compressed(args.output_dir / "predictions_test.npz", pred=preds, true=trues)
@@ -804,6 +889,10 @@ def parse_args() -> argparse.Namespace:
         action=argparse.BooleanOptionalAction,
         default=True,
     )
+    parser.add_argument("--legacy-patch-num", type=int, default=None)
+    parser.add_argument("--legacy-d-model", type=int, default=None)
+    parser.add_argument("--legacy-d-ff", type=int, default=None)
+    parser.add_argument("--legacy-dropout", type=float, default=None)
     parser.add_argument("--learning-rate", type=float, default=None)
     parser.add_argument("--w-recon", type=float, default=1.0)
     parser.add_argument("--w-align", type=float, default=None)
@@ -820,6 +909,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--use-amp", action="store_true")
     parser.add_argument("--official-test-mode", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--checkpoint-policy", choices=["official-last", "best-val"], default="official-last")
+    parser.add_argument(
+        "--evaluate-dual-checkpoints",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+    )
     parser.add_argument(
         "--readout-mode",
         choices=sorted({"official", *PREFIX_READOUT_MODES}),
@@ -866,6 +960,33 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("history dropout must be in [0, 1)")
     if not 0.0 <= args.history_attn_dropout < 1.0:
         raise ValueError("history attention dropout must be in [0, 1)")
+    legacy_overrides = (
+        args.legacy_patch_num,
+        args.legacy_d_model,
+        args.legacy_d_ff,
+        args.legacy_dropout,
+    )
+    if any(value is not None for value in legacy_overrides):
+        if args.encoder_mode not in {
+            "timealign-token-mlp",
+            "hierarchical-patch-memory",
+        }:
+            raise ValueError("legacy encoder overrides require a token-MLP encoder mode")
+        if args.readout_mode != "learned-basis-forecast-operator":
+            raise ValueError("legacy encoder overrides are restricted to clean A6-LBF")
+    if args.legacy_patch_num is not None:
+        if args.legacy_patch_num <= 0:
+            raise ValueError("legacy patch_num must be positive")
+        if args.seq_len % args.legacy_patch_num != 0:
+            raise ValueError("legacy patch_num must divide seq_len")
+    if args.legacy_d_model is not None and args.legacy_d_model <= 0:
+        raise ValueError("legacy d_model must be positive")
+    if args.legacy_d_model is not None and args.legacy_d_model % 2 != 0:
+        raise ValueError("legacy d_model must be even for sinusoidal positional encoding")
+    if args.legacy_d_ff is not None and args.legacy_d_ff <= 0:
+        raise ValueError("legacy d_ff must be positive")
+    if args.legacy_dropout is not None and not 0.0 <= args.legacy_dropout < 1.0:
+        raise ValueError("legacy dropout must be in [0, 1)")
     if args.learning_rate is not None and args.learning_rate <= 0.0:
         raise ValueError("learning rate must be positive")
     if args.w_align is not None and args.w_align < 0.0:

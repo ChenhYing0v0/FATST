@@ -14,6 +14,7 @@ Step 2 的 future-region-specific generation problem 重新开始。
 关键 evidence：
 
 - `analysis/phase5_stage_b_encoder_protocol_audit_20260710/stageb_route_encoder_protocol_audit.md`；
+- `analysis/phase5_stage_b_c0_cross_patch_interaction_20260710/c0_cross_patch_interaction_report.md`；
 - `docs/experiments/phase5-stage-b-ettm1-carrier-protocol-audit.md`；
 - `analysis/phase5_stage_b_b13_future_unit_granularity_20260710/b13_future_unit_granularity_report.md`；
 - `analysis/phase5_stage_b_b13_future_unit_composition_20260710/b13_future_unit_composition_report.md`；
@@ -29,8 +30,8 @@ Step 2 的 future-region-specific generation problem 重新开始。
 | `accepted_paper_core` | `A6-LBF-r256` only |
 | `closed_candidate` | current `GRU-based prefix-causal future-unit composition` |
 | `open_direction` | native large future-unit/stage generation without full-horizon clipping |
-| `next_problem` | determine whether ETTm1 inherited `patch_num=1` is a carrier defect after controlling channel-position semantics, capacity, dropout and checkpoint selector |
-| `do_not_implement_next` | no new StageB method；only the preregistered six-arm C0 local implementation/checker may proceed before any remote launch |
+| `next_problem` | determine whether ETTm1 inherited `patch_num=1` is a carrier defect after controlling global-state width, active capacity, dropout and checkpoint selector |
+| `do_not_implement_next` | no new StageB method and no mixer；six-arm C0 local gate has passed, so only remote launch and returned-artifact analysis are authorized |
 
 ## C0 Encoder And Protocol Audit Update
 
@@ -43,13 +44,16 @@ configuration-controlled.
 removed the residual MLP while preserving LayerNorm；ETTm1 H96/H192/H336/H720 MSE increased
 `12.96%/9.32%/7.29%/5.58%`.
 
-[Code-Theory Risk] legacy positional encoding is applied over the flattened `C*P` token axis, so it mixes channel
-offset with patch position；the Encoder has no cross-patch mixing before the dense coefficient readout；A6 also
-instantiates an unused official `proj_x`, which must not count as active forecast capacity.
+[Fact] flattened `C*P` positional encoding is retained across all controls and is not treated as a major standalone
+risk. Frozen inclusion-exclusion evidence instead shows that the P1 global Encoder contains material cross-time-region
+non-additivity in all 8 attenuation-horizon settings. Therefore P5 no-mix is not function-preserving, and any returned
+degradation must be attributed cautiously. A6 also instantiates an unused official `proj_x`, which does not count as
+active forecast capacity.
 
-[Decision] C0 is a short carrier/protocol blocker, not Contribution 2. The six-arm protocol separates legacy vs
-channel-independent PE, `P=1` vs near-state/parameter-matched `P=5`, dropout `0.9/0.2`, and last/best checkpoints
-from one training trajectory. It is preregistered but not implemented or launched.
+[Decision] C0 is a short Encoder/control blocker, not Contribution 2. The revised six-arm protocol preserves the same
+flattened `C*P` semantics and separates P1 global width, `P=1` vs near-state/parameter-matched `P=5`, dropout
+`0.9/0.2`, and last/best checkpoints from one training trajectory. Implementation, parameter/prefix/strict-reload checks
+and one-batch dual-artifact smoke have passed；remote launch is next.
 
 ## B14 Prerequisite Encoder Reconstruction
 

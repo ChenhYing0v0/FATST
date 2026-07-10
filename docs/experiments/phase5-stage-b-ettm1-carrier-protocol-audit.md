@@ -1,34 +1,33 @@
-# Phase5 StageB ETTm1 Carrier Protocol Audit
+# Phase5 StageB ETTm1 Encoder Control Protocol
 
 ## 阶段记录
 
 | 字段 | 内容 |
 | --- | --- |
-| `candidate_id` | `C0-ETTm1-CPA`，carrier/control audit，不是 StageB method candidate |
-| `current_step` | B14-FURD Step 3 失败后回滚 Step 2/3；先审计 carrier 与 protocol confounder |
-| `problem` | ETTm1 unified A6 同时继承 `patch_num=1`、`d_model=256`、`dropout=0.9` 与 `official-last`；现有证据不能区分 single-token inductive bias、regularization、capacity 和 checkpoint selector |
-| `existence_evidence` | code/config audit；ETTm1 `P=1` 无 local patch axis；frozen branch ablation 证明 residual MLP 仍有效；A6 last-vs-best validation drift在 ETTm1 很小、ETTh2 很大 |
-| `idea` | 不提出新机制；用 channel-independent patch semantics、state/capacity controls、dropout control 和同一次训练的 dual checkpoint evaluation 做最小因果分解 |
-| `theory_check` | `P=1` 是 full-window global token，不是信息空洞；`P>1` 改变的是局部共享投影与 token aggregation，因此必须和参数/hidden state一起控制 |
-| `design` | ETTm1 seed-2021 六臂 small gate；只在预注册 gate 通过后追加 seeds 2022/2023 |
-| `narrative_gate` | `diagnostic_only`；任何正向结果只允许修复 carrier/protocol，不能成为 Contribution 2 |
-| `effectiveness_gate` | patch effect必须跨 dropout、跨 last/best selector同号，且不能由 channel-position语义或参数量解释 |
-| `artifacts` | 当前只有 source/config/frozen-checkpoint audit；尚未实现或启动训练矩阵 |
-| `decision` | `preregistered_not_launched` |
-| `rollback` | 若 patch effect不稳，关闭 ETTm1 `patch_num` performance defect假设；StageB回到 Step 2/3 或暂停第二贡献搜索 |
+| `candidate_id` | `C0-ETTm1-CPA`，Encoder/carrier control，不是 StageB method candidate |
+| `current_step` | B14-FURD Step 3 失败后回滚 Step 2/3；先排查 carrier 与 protocol confounder |
+| `problem` | ETTm1 unified A6 同时继承 `patch_num=1`、`d_model=256`、`dropout=0.9` 与 `official-last`，现有证据不能区分全局状态宽度、patch granularity、regularization 与 checkpoint selector |
+| `existence_evidence` | code/config audit；frozen residual-MLP ablation；last-vs-best drift；冻结 checkpoint 的跨 patch inclusion-exclusion diagnostic |
+| `idea` | 不提出新机制；保持相同的 flattened `C*P` token semantics，用 global-width control、state/capacity control、dropout control 和同轨迹 dual checkpoint evaluation 做最小因果分解 |
+| `theory_check` | `P=1` 是 full-window global token，不是信息空洞；`P>1` 同时改变局部投影、hidden state 与参数量，必须用宽度/参数控制拆解 |
+| `design` | ETTm1 seed-2021 六臂 small gate；只有预注册 gate 通过后才追加 seeds 2022/2023 |
+| `narrative_gate` | `diagnostic_only`；任何结果只允许让 Encoder 更可控、合理，不能成为 StageB 创新点或 Contribution 2 |
+| `effectiveness_gate` | patch effect 必须跨 dropout、跨 last/best selector 同号，并排除 global-width 与 parameter-capacity 解释 |
+| `artifacts` | frozen interaction diagnostic 已完成；六臂训练矩阵待启动 |
+| `decision` | `interaction_detected_control_gate_authorized` |
+| `rollback` | 若 patch effect 不稳，关闭 ETTm1 `patch_num` performance defect 假设；StageB 仍回到 Step 2/3，不在 Encoder 上叠加机制 |
 
-## 为什么这不是新的 StageB 方法
+## Scope boundary
 
-当前 paper-level StageB 问题仍是：A6 作为 full-trajectory prefix operator 后，是否存在稳定、跨数据集的
-future-aware architecture problem。B14-FURD 已在 Step 3 被 `A1 0/6`、`A2 1/6` 阻断。
+本实验不是新的 StageB 方法。ETTm1 `patch_num=1` 是 B14 过程中暴露出的 carrier/control 问题；即使
+`patch_num>1` 提升性能，也最多授权修复 inherited Encoder preset。它不能证明 future-unit retrieval、
+target-set conditioning、MoE routing 或新的 future-aware mechanism 成立。
 
-ETTm1 `patch_num=1` 是 B14 过程中暴露出的 carrier/protocol 问题，不是新的 future-aware mechanism。即使
-`patch_num>1` 提升 ETTm1，也最多说明 accepted carrier 的 inherited preset 需要修复；它不能证明
-future-unit retrieval、target-set conditioning 或 MoE routing 成立。
+用户指出 Unified FM 常把多变量 patches 展平到 `C*P` token axis。这一设计本身不是主要风险。因此本
+protocol 不再把 positional encoding 的 `C*P` 作用域列为独立实验因素；所有 arms 保留同一
+flattened-token semantics，只改变 `P/D/d_ff/dropout`。
 
-## 已确认的 Tensor 事实
-
-legacy A6 history path为：
+## Tensor path
 
 ```text
 x [B,720,C]
@@ -36,6 +35,7 @@ x [B,720,C]
   -> permute + flatten [B,C*720]
   -> non-overlap unfold, patch_len=720/P
   -> tokens [B,C*P,D]
+  -> positional encoding on C*P
   -> token-wise residual MLP x 2
   -> reshape memory [B,C,P,D]
   -> flatten hidden [B,C,P*D]
@@ -44,116 +44,116 @@ x [B,720,C]
   -> prediction [B,H,C]
 ```
 
-ETTm1 official-720 preset为 `P=1,D=256,d_ff=256,dropout=0.9`。因此每个 channel 的整个 720-step
-history先投影到一个 256-dimensional global token。该路径没有 local patch axis，但不是“没有使用 history”。
+只要 `P` 整除 720，non-overlap patches 会在每个 channel 内精确闭合，不跨 channel boundary。
+`P=1,D=256` 的 readout state width 是 256；`P=5,D=52` 的 width 是 260（`+1.56%`）。
 
-legacy `PositionalEmbedding` 在 `[B,C*P,D]` 上执行，position index同时包含 channel offset与 patch
-offset。干净的 channel-independent control必须先 reshape为 `[B*C,P,K]`，再对每个 channel 从 patch
-position 0 重新编码；否则 `P=1 -> P>1` 会同时改变 channel identity leakage。
+## Frozen cross-patch interaction diagnostic
 
-## Small Gate Arms
+在 clean A6 ETTm1 official-last checkpoint 上，将历史划为 5 个 144-step canonical patches。对 patch
+pair `(i,j)` 定义 coefficient-space inclusion-exclusion interaction：
 
-所有 arms固定：
+$$
+I_{ij}=c(x)-c(x^{(-i)})-c(x^{(-j)})+c(x^{(-i,-j)}).
+$$
 
-- dataset：ETTm1；
-- `seq_len=pred_len=720`；
-- target prefixes：`96/192/336/720`；
-- `basis_rank=256`；
-- `pred_loss_mode=multi-prefix`；
-- `w_recon=w_align=0`；
-- optimizer、learning rate、epochs、batch size与 clean A6一致；
-- seed-2021；同一次训练同时保存 last 与 best-validation states，并分别评估；
-- 不增加 attention、retrieval、future query、residual forecast 或 auxiliary loss。
+投影到每个 target prefix 后，用 interaction RMS 除以两个 single-patch main-effect RMS 的均值。结果：
 
-| Arm | Patch semantics | `P` | patch length | `D` | `d_ff` | dropout | Active-forward params（约） | 作用 |
-| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| `legacy_p1_d256_f256_d09` | legacy channel-offset PE | 1 | 720 | 256 | 256 | 0.9 | 699.6K | accepted A6 exact control |
-| `ci_p1_d256_f256_d09` | channel-independent PE | 1 | 720 | 256 | 256 | 0.9 | 699.6K | isolate channel-position semantics |
-| `ci_p5_d52_f256_d09` | channel-independent PE | 5 | 144 | 52 | 256 | 0.9 | 313.5K | near-state-matched lower-capacity patch control |
-| `ci_p5_d52_f2048_d09` | channel-independent PE | 5 | 144 | 52 | 2048 | 0.9 | 689.8K | near-state/parameter-matched patch arm |
-| `ci_p1_d256_f256_d02` | channel-independent PE | 1 | 720 | 256 | 256 | 0.2 | 699.6K | dropout control |
-| `ci_p5_d52_f2048_d02` | channel-independent PE | 5 | 144 | 52 | 2048 | 0.2 | 689.8K | patch-by-dropout interaction control |
+- attenuation `0.25`：四个 horizon 的 pair-median mean 为 `0.0634--0.0646`，每个 horizon 有
+  `9/10` 或 `10/10` pairs 达到 `0.05`；
+- attenuation `0.50`：四个 horizon 的 pair-median mean 为 `0.1282--0.1294`，全部 `10/10` pairs
+  达到 `0.05`。
 
-`P=5,D=52` 给出 `P*D=260`，与 legacy hidden width 256 相差 `+1.56%`；`d_ff=2048` 后 active
-forward parameter count与 legacy相差约 `-1.4%`。`d_ff=256` arm用于防止 parameter matching本身掩盖
-或制造 patch收益。
+[Strong Evidence] P1 global Encoder 存在稳定的跨时间区域非加性交互。[Boundary] 该诊断不证明显式
+token mixer 会提升性能；它只说明 P5 no-mix 不是对 P1 计算图的功能保持分解。因而 mixer 不进入当前
+六臂 gate，必须等返回结果后才可作为独立的、条件触发的 control。
 
-`unused proj_x` 不计入 active-forward parameters。当前 A6 实例仍构造但不调用 official dense
-`proj_x`；它在 ETTh2/ETTm1/Weather 分别约有 `1.107M/0.185M/4.424M` parameters，不能用于论证 A6
-实际 forecast capacity。
+## Six-arm small gate
 
-## Required Artifact Change
+所有 arms 固定：ETTm1；`seq_len=pred_len=720`；prefixes `96/192/336/720`；`basis_rank=256`；
+`multi-prefix` loss；`w_recon=w_align=0`；seed 2021；10 epochs；batch size 32；相同 optimizer 和
+learning rate；同一次训练同时评估 last 与 best-validation states。
 
-训练 adapter在本 diagnostic中必须同时保存并评估：
+| Arm | `P` | patch length | `D` | `d_ff` | dropout | Active-forward params | 作用 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| `p1_d256_f256_d09` | 1 | 720 | 256 | 256 | 0.9 | 699,600 | accepted A6 exact control |
+| `p1_d384_f96_d09` | 1 | 720 | 384 | 96 | 0.9 | 710,416 | near-parameter-matched wider global-state control |
+| `p5_d52_f256_d09` | 5 | 144 | 52 | 256 | 0.9 | 313,468 | near-state-matched lower-capacity patch control |
+| `p5_d52_f2048_d09` | 5 | 144 | 52 | 2048 | 0.9 | 689,788 | near-state/parameter-matched patch arm |
+| `p1_d256_f256_d02` | 1 | 720 | 256 | 256 | 0.2 | 699,600 | regularization control |
+| `p5_d52_f2048_d02` | 5 | 144 | 52 | 2048 | 0.2 | 689,788 | patch-by-dropout interaction control |
+
+`unused proj_x` 不计入 active-forward parameters。它由 legacy model 构造但不进入 clean A6 forward，
+因此只报告，不用于 capacity matching。
+
+## Required artifacts
+
+每个 arm 必须产出：
 
 ```text
+checkpoint.pt
 checkpoint_last.pt
 checkpoint_best_val.pt
+metrics_by_target_horizon.csv
 metrics_last_by_target_horizon.csv
 metrics_best_val_by_target_horizon.csv
+model_diagnostics.json
+effective_config.json
 ```
 
-这不是运行两次相同训练。两个 checkpoint必须来自同一 optimization trajectory，避免把 seed/CUDA
-nondeterminism误当作 selector effect。`patience` 只记录兼容字段，不得声称发生 early stopping。
+last 与 best-val 必须来自同一 optimization trajectory。主 `checkpoint.pt` 仍由 `checkpoint_policy`
+决定，以保持现有 runner compatibility；本 gate 的比较读取显式 dual artifacts。
 
-## Pre-Registered Gates
+## Pre-registered gates
 
-### Gate 0：实现语义
+### Gate 0: implementation semantics
 
-每个 arm必须通过：
+1. 所有 arms 保持相同 flattened `C*P` positional semantics；
+2. `P` 整除 720，patch 不跨 channel boundary；
+3. effective config 精确记录 `P/D/d_ff/dropout`；
+4. active/unused parameter count 与预注册值一致；
+5. 四个 requested prefixes 通过 deterministic prefix consistency；
+6. last/best checkpoints 均可 strict reload，并来自同一训练轨迹。
 
-1. patch不跨 channel boundary；
-2. channel-independent PE在每个 channel从 position 0重新开始；
-3. `P=1` 时 legacy与 CI arm的差异只能来自 channel-offset PE；
-4. 记录 active/unused parameter count、state keys和 tensor shapes；
-5. 四个 requested prefixes均通过 deterministic prefix consistency；
-6. last/best checkpoints均可 strict reload。
+### Gate 1: global-state bottleneck
 
-### Gate 1：`patch_num` performance defect
+比较 `p1_d384_f96_d09` 与 `p1_d256_f256_d09`。它只诊断 P1 global state width 是否限制性能；即使
+通过，也只授权合理调整 Encoder capacity，不支持 patch 或新机制结论。
 
-比较 `ci_p5_d52_f2048` 与同 dropout的 `ci_p1_d256_f256`。只有同时满足以下条件，才把 ETTm1
-`P=1` 标记为 carrier defect：
+### Gate 2: `patch_num` performance defect
 
-1. dropout `0.9` 与 `0.2` 下 mean MSE delta均 `<=-0.5%`；
-2. last 与 best-val selector下 effect方向一致；
-3. 每个 dropout-selector组合至少 `3/4` horizon MSE wins；
-4. 任一 horizon不出现 `>+1.0%` regression；
-5. `ci_p5_d52_f256_d09` 不发生 numeric/optimization collapse；
-6. `ci_p5` 的收益不能只来自 `ci_p1` 相对 legacy的 PE语义修复。
+比较 `p5_d52_f2048` 与同 dropout 的 `p1_d256_f256`。只有每个 dropout-selector 组合均满足，才标记
+ETTm1 `P=1` 为 carrier defect：
 
-small gate通过后，才给相关 arms追加 seeds 2022/2023。三 seed confirmation要求 mean effect的 95%
-bootstrap interval不跨 0，且至少 `2/3` seeds保持相同 dataset-level方向。
+1. 四 horizon mean MSE delta `<= -0.5%`；
+2. 至少 `3/4` horizon MSE wins；
+3. 任一 horizon regression 不超过 `+1.0%`；
+4. effect 在 dropout `0.9/0.2` 与 last/best-val 下同号；
+5. `p5_d52_f256_d09` 无 numeric/optimization collapse；
+6. 收益不能由 wider P1 control 或 active parameter 差异单独解释。
 
-### Gate 2：protocol-only confound
+small gate 通过后才追加 seeds 2022/2023。三 seed confirmation 要求 mean effect 的 95% bootstrap
+interval 不跨 0，且至少 `2/3` seeds 保持相同 dataset-level 方向。
 
-若 patch收益只存在于 `dropout=0.9` 或只存在于 `official-last`，decision必须是：
+### Gate 3: protocol confound
 
-```text
-patch_effect_confounded_by_regularization_or_selector
-```
+若 patch 收益只存在于 `dropout=0.9` 或只存在于某个 selector，decision 必须是
+`patch_effect_confounded_by_regularization_or_selector`，不得修改 active Encoder topology。
 
-此时不得修改 active Encoder；应优先修正实验报告边界与统一/固定对照协议。
+### Conditional mixer boundary
 
-### Gate 3：channel-position semantic defect
+只有 P5 no-mix 在 state/parameter controls 下出现退化，且退化与冻结 interaction 证据一致时，才允许
+设计独立 mixer control。该 control 的目的仍是恢复可控的 interaction capacity，不是 StageB innovation。
 
-若 `ci_p1` 已稳定优于 `legacy_p1`，但 `ci_p5` 不优于 `ci_p1`，则问题是 legacy positional/channel
-semantics，而不是 `patch_num=1`。该结果只授权 channel-independent implementation repair。
+## Decisions
 
-## Separate Unified-vs-Fixed Control
+- Gate 2 + multi-seed confirmation 通过：修复 ETTm1 carrier preset，重跑 A6 controlled evidence；不产生
+  StageB Contribution 2。
+- 仅 Gate 1 通过：调整 global-state capacity control，关闭 patch-defect 强结论。
+- 仅 Gate 3 模式：保留 architecture，报告 selector/regularization sensitivity。
+- 全部 patch arms 失败：保留 `P=1`，定义为 global-token inductive bias；StageB 回 Step 2/3 或暂停。
 
-carrier audit之后，Contribution 1 还需要一个独立的 fair-task control：固定同一个 720-step A6 architecture、
-同一 `P/D/d_ff/dropout` 与同一 checkpoint policy，分别训练四个 single-prefix loss arms，再与 multi-prefix
-unified arm比较。这样 fixed controls仍保留 720-step parameterization，只改变 supervision target，避免把
-official per-horizon preset的 width/dropout/patch差异误归因于 unified learning。
+## Separate unified-vs-fixed control
 
-该 control与本 patch audit分开报告；不能用一个实验同时回答 carrier tokenization与 unified training
-是否有效两个问题。
-
-## Decision Rules
-
-- Gate 1 + confirmation通过：修复 ETTm1 carrier preset，重跑 A6 controlled evidence；仍不产生 StageB
-  Contribution 2。
-- Gate 3通过：修复 channel-independent PE semantics，`patch_num` route关闭。
-- 仅 Gate 2模式：保留 architecture，新增 dual-selector/regularization sensitivity报告。
-- 所有 patch arms失败：保留 ETTm1 `P=1`；将其定义为 global-token inductive bias，而不是漏洞；StageB回
-  Step 2/3 或暂停。
+Contribution 1 的 fair-task control 与本实验分开：固定同一个 720-step A6 architecture、同一
+`P/D/d_ff/dropout/checkpoint policy`，分别训练 single-prefix loss arms，再与 multi-prefix unified arm
+比较。本 Encoder control 不回答 unified training 是否有效。

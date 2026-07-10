@@ -12,7 +12,7 @@
 | `current_stage` | Phase5 StageA clean A6 validated；StageB post-B14 C0 carrier/protocol audit |
 | `active_carrier` | `A6-LBF-r256`；hierarchical patch memory is diagnostic-only |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | B14-FURD Step 3 blocked；rollback Step 2/3；C0 diagnostic preregistered |
+| `current_11_step` | B14-FURD Step 3 blocked；rollback Step 2/3；C0 local gate passed, remote launch pending |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
 
 ## Core Claim
@@ -275,9 +275,11 @@ configuration-controlled architecture comparison。该边界不撤销 A6 accepte
 architecture claim需要追加 matched configuration、dropout与 dual-checkpoint control。
 
 Frozen checkpoint evidence反对“高 dropout使 Encoder失效”的解释：移除 ETTm1 residual MLP并保留
-LayerNorm后，H96/H192/H336/H720 MSE分别恶化 `12.96%/9.32%/7.29%/5.58%`。当前只允许
-`C0-ETTm1-CPA` 六臂 diagnostic，分离 channel-position semantics、state/capacity、dropout和 last/best
-selector；任何正向结果最多修复 carrier/protocol，不能成为 Contribution 2。
+LayerNorm后，H96/H192/H336/H720 MSE分别恶化 `12.96%/9.32%/7.29%/5.58%`。进一步的 frozen
+inclusion-exclusion diagnostic 在全部 8 个 attenuation-horizon settings 检测到 material cross-patch
+interaction。因此当前六臂 `C0-ETTm1-CPA` 保持相同 flattened `C*P` semantics，分离 global width、
+state/active capacity、dropout和 last/best selector；不在返回结果前增加 mixer。任何正向结果最多修复
+carrier/protocol，不能成为 Contribution 2。
 
 ## Evidence Snapshot
 

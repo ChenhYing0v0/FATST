@@ -10,7 +10,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
 | `current_stage` | Phase5：A6-LBF-r256 validated；StageB post-B14 C0 carrier/protocol audit |
-| `current_11_step` | B14-FURD Step 3 failed；rollback Step 2/3；C0 diagnostic preregistered |
+| `current_11_step` | B14-FURD Step 3 failed；rollback Step 2/3；C0 local gate passed, remote launch pending |
 | `active_carrier` | `A6-LBF-r256`；patch side path remains diagnostic-only |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -92,10 +92,12 @@ horizons MSE恶化 `5.58%-12.96%`；高 dropout没有使 Encoder branch失活。
 last validation MSE相对 best epoch恶化 `+15.79%`，说明 dual-checkpoint sensitivity仍是必要 control。
 
 [Decision] StageA carrier继续 accepted，但强 architecture-only superiority claim保持
-`controlled_confirmation_pending`。当前只授权 `C0-ETTm1-CPA` 六臂 carrier/protocol diagnostic；它不是
-StageB Contribution 2 candidate。协议与证据见：
+`controlled_confirmation_pending`。当前只授权 `C0-ETTm1-CPA` 六臂 Encoder control；它保持统一的
+flattened `C*P` semantics，检查 global width、patch granularity、active capacity、dropout与 dual selector，
+不是 StageB Contribution 2 candidate。冻结 interaction gate 已通过，但不授权提前增加 mixer。协议与证据见：
 
 - `analysis/phase5_stage_b_encoder_protocol_audit_20260710/stageb_route_encoder_protocol_audit.md`；
+- `analysis/phase5_stage_b_c0_cross_patch_interaction_20260710/c0_cross_patch_interaction_report.md`；
 - `docs/experiments/phase5-stage-b-ettm1-carrier-protocol-audit.md`。
 
 ## StageB Redesign Entry
