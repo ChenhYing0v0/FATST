@@ -83,8 +83,13 @@ PatchTST-derived history encoder:
 - a public `[B,C,P,D]` history-memory interface through `Model.encode_history()`.
 
 This encoder is currently restricted to `--readout-mode learned-basis-forecast-operator`, unified `pred_len=720`.
-It does not instantiate or restore the TimeAlign future reconstruction/alignment branch. The legacy
-`timealign-token-mlp` remains the default until the 3-dataset effectiveness gate passes.
+It does not instantiate or restore the TimeAlign future reconstruction/alignment branch. The full contextual
+replacement failed its 3-dataset effectiveness gate and is retained only for traceability.
+
+The Step 5/6 repair is `--encoder-mode hierarchical-patch-memory`: it preserves the accepted A6 forecast path
+exactly and exposes parameter-free normalized `P48-S24` local memory through
+`Model.encode_retrieval_memory()`. This mode has identical state-dict keys and parameter count to legacy A6 and is
+the intended B14 prerequisite interface.
 
 ## B9-FSN-SCF Stage-Native Coefficient Field
 

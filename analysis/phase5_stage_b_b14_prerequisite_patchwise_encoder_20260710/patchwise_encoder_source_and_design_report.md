@@ -1,5 +1,8 @@
 # B14 前置工作：Patch-Wise Encoder Source And Design Report
 
+> Status：原 contextual full replacement 已完成并失败；本文 source audit保留，当前执行路径见文末
+> `Returned Decision Update` 的 hierarchical patch-memory repair。
+
 ## 结论
 
 [Decision] 停止 `carrier tokenization audit`。active A6 已不包含 TimeAlign future align branch，history
@@ -97,7 +100,12 @@ causal raw-history selection。
 [Mitigation] B14 主统计定义为 contextual-token demand/sensitivity，raw-position gradient只作为 robustness
 cross-check，并明确不是 causal attribution。
 
-## Current Decision
+## Returned Decision Update
 
-进入 Step 6 implementation。legacy A6 在 remote effectiveness gate 前仍是唯一 accepted carrier；不得仅凭
-架构叙事直接替换。
+remote 6-run gate 返回：`P16-S8 +4.135%`、`P48-S24 +4.799%` overall mean MSE；两个 full
+replacement arms均失败。legacy A6保持 accepted。
+
+[Decision] 回 Step 5/6，而不是否定 patch memory。source-derived Transformer适合作为独立 forecasting
+backbone，但不能无代价替换 A6 已验证 computation。repair改为 hierarchical encoder contract：保留 global
+carrier state，额外暴露 parameter-free normalized local patches。这样 B14可以检验 local retrieval需求，
+而 performance在任何 trainable retrieval介入前由 exact equivalence保证。

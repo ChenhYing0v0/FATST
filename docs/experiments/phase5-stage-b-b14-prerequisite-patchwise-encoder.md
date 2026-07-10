@@ -5,16 +5,82 @@
 | 字段 | 内容 |
 | --- | --- |
 | `candidate_id` | `B14-PRE-CPE` |
-| `current_step` | Step 1-5 completed；Step 6 implementation/performance-gate design |
+| `current_step` | contextual replacement Step 9/10 failed；Step 5/6 hierarchical-memory repair |
 | `problem` | active A6 已移除 TimeAlign future alignment branch，但 history encoder 仍继承 dataset-specific `patch_num` 与 token-wise MLP；ETTm1 的 `P=1` 使 B14 不存在可检索的 patch memory，ETTh2/Weather 的 patch tokens 之间也没有 encoder-level mixing |
 | `existence_evidence` | code audit：ETTm1/ETTh2/Weather 的 `P=1/48/48`；encoder FFN 独立作用于每个 token；cross-patch interaction 只在 flatten 后的 coefficient head 发生 |
 | `idea` | 用 horizon-independent、channel-independent、overlapping contextual patches 统一 history representation；保留 A6 learned-basis operator 作为 downstream prediction operator |
 | `theory_check` | patch embedding 提供局部语义；cross-patch attention contextualizes each token；统一 `[B,C,P,D]` memory 允许 B14 比较 future-unit-specific retrieval；requested horizon 不进入 encoder |
 | `design` | PatchTST-derived post-BatchNorm residual-attention encoder；`P16-S8` source anchor 与 `P48-S24` rich-patch arm；A6-LBF-r256 head unchanged |
 | `narrative_gate` | `pass_as_carrier_prerequisite`：增强 Multi-Horizon Unified architecture 的 history/future interface，但不得声称 patch encoder 是论文 novelty |
-| `effectiveness_gate` | pending remote 3-dataset seed-2021 small gate；winner 追加 seeds 2022/2023 |
-| `artifacts` | implementation/report pending |
-| `decision` | legacy A6 remains accepted until effectiveness gate passes |
+| `effectiveness_gate` | contextual `P16-S8/P48-S24` both failed；hierarchical patch memory exact-equivalence gate pending |
+| `artifacts` | contextual 6-run gate complete；repair implementation ready |
+| `decision` | close full encoder replacement；retain accepted A6 forecast path and add canonical local patch-memory interface |
+
+## Returned Contextual-Encoder Gate
+
+| Arm | Overall mean MSE | Wins | ETTh2 | ETTm1 | Weather | Decision |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| `cpe_p16s8` | `+4.135%` | `1/12` | `+0.770%` | `+7.395%` | `+3.916%` | fail |
+| `cpe_p48s24` | `+4.799%` | `0/12` | `+3.344%` | `+4.066%` | `+8.040%` | fail |
+
+[Decision] 不追加 seeds，不通过 width/head/dropout sweep 复活 full contextual replacement。
+
+### Failure Attribution
+
+- `hypothesis_false`：未成立。返回性能接近项目早期 PatchTST-style backbone，说明 patch encoder 本身可正常
+  forecasting；失败不能否定统一 local patch memory 的必要性。
+- `intervention_point_wrong`：部分成立。把标准 contextual encoder直接放在 A6 coefficient readout 前，替换了
+  已验证的 carrier computation，而 B14真正需要的是额外的 local retrieval axis。
+- `readout_or_head_design_wrong`：主要归因。`P16` 产生 90 tokens，ETTm1/Weather 的 flatten-to-coeff head
+  达 `3.55M` parameters并明显过拟合；`P48` 降到 30 tokens/`1.58M` parameters，但 single-scale coarse
+  representation在 Weather/ETTh2 丢失细节。
+- `optimization_or_numeric_pathology`：否。所有 runs finite、checkpoint reload正常；best-val已隔离后期过拟合。
+- `capacity_control_explains`：否。更大/更小 parameter arms在不同 datasets互有优劣，不能用单一 capacity
+  解释；但新增 capacity没有恢复 A6 performance。
+
+结果标签：
+
+```text
+full_contextual_encoder_replacement_failed
+readout_or_encoder_design_wrong
+broader_patch_memory_direction_not_rejected
+```
+
+## Step 5/6 Repair：Hierarchical Patch Memory
+
+本 repair 不再让未验证 patch encoder替换 accepted forecast carrier，而是明确 history encoder 的两个输出：
+
+```text
+normalized history
+  ├─ accepted A6 carrier encoder -> carrier_state -> coeff -> basis[:H]
+  └─ parameter-free P48-S24 unfold -> local_memory [B,C,30,48]
+```
+
+关键性质：
+
+1. forecast path、state-dict keys 与 parameter count严格等于 clean A6；
+2. local memory来自同一 normalized history，没有随机 projection 或未训练 token；
+3. 48-step overlapping patches跨 datasets产生相同 `P=30/K=48` contract；
+4. B14只在通过 problem gate 后学习 projection/retrieval，不提前污染 A6 prediction；
+5. 这是 hierarchical encoder interface，不是 `A6 + residual forecast`。
+
+### Repair Gate
+
+使用 clean A6 seed-2021 checkpoints，在 ETTh2、ETTm1、Weather 上同时要求：
+
+- strict state-dict load；
+- parameter count完全相等；
+- first-batch `{96,192,336,720}` outputs max absolute diff `0`；
+- full-test MSE/MAE absolute diff `<=1e-8`；
+- retrieval memory shape `[B,C,30,48]`。
+
+全部通过后，carrier命名仍为 `A6-LBF-r256`，只把 encoder contract更新为
+`hierarchical_patch_memory_ready`；不需要 seeds 2022/2023，因为这是 exact functional-equivalence gate。
+
+## Closed Contextual Replacement Design（Historical）
+
+以下 sections记录已执行的 `P16-S8/P48-S24` full replacement预注册设计，用于审计，不再授权
+confirmation或追加 sweep。
 
 ## Why This Replaces The Carrier Tokenization Audit
 
@@ -156,12 +222,12 @@ retrieval attribution 更稳定、attention cost 更低。否则只按 effective
 
 ## B14 Boundary
 
-B14 只能在 confirmation gate 后启动。届时 main diagnostic 从 raw positions 调整为：
+原 contextual confirmation gate已关闭。B14只能在 hierarchical patch-memory exact-equivalence通过后启动：
 
 ```text
-future-unit error demand over contextual history tokens
+future-unit error demand aggregated over canonical local patches
 vs
-current A6 token-to-output sensitivity
+accepted A6 raw-input sensitivity aggregated over the same patch supports
 ```
 
-raw-position gradients保留为 robustness appendix，不再作为主接口。
+任何 trainable patch projection/retrieval都属于后续 B14-B probe，必须配 exact no-retrieval controls。

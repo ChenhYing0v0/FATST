@@ -1,0 +1,19 @@
+{
+  "small_gate": {
+    "cpe_p16s8": {
+      "complete": true,
+      "finite": true,
+      "overall_delta_pct": 4.134997579739652,
+      "passed": false,
+      "wins": 1
+    },
+    "cpe_p48s24": {
+      "complete": true,
+      "finite": true,
+      "overall_delta_pct": 4.798798717024533,
+      "passed": false,
+      "wins": 0
+    }
+  },
+  "winner": null
+}

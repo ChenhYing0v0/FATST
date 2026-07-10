@@ -138,7 +138,8 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
     root_path = resolve_dataset_root(args.dataset_root, preset)
     device = torch.device(args.device if args.device != "auto" else ("cuda" if torch.cuda.is_available() else "cpu"))
     is_prefix_readout = args.readout_mode in PREFIX_READOUT_MODES
-    contextual_encoder = args.encoder_mode == "contextual-patch-transformer"
+    encoder_mode = getattr(args, "encoder_mode", "timealign-token-mlp")
+    contextual_encoder = encoder_mode == "contextual-patch-transformer"
     return argparse.Namespace(
         task_name="long_term_forecast",
         is_training=1,
@@ -159,13 +160,31 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         enc_in=preset.enc_in,
         dec_in=preset.dec_in,
         c_out=preset.c_out,
-        d_model=args.history_d_model if contextual_encoder else preset.d_model,
-        n_heads=args.history_n_heads if contextual_encoder else 8,
-        e_layers=args.history_e_layers if contextual_encoder else args.e_layers,
+        d_model=(
+            getattr(args, "history_d_model", 128)
+            if contextual_encoder
+            else preset.d_model
+        ),
+        n_heads=(
+            getattr(args, "history_n_heads", 16) if contextual_encoder else 8
+        ),
+        e_layers=(
+            getattr(args, "history_e_layers", 3)
+            if contextual_encoder
+            else args.e_layers
+        ),
         d_layers=1,
-        d_ff=args.history_d_ff if contextual_encoder else preset.d_ff,
+        d_ff=(
+            getattr(args, "history_d_ff", 256)
+            if contextual_encoder
+            else preset.d_ff
+        ),
         factor=3,
-        dropout=args.history_dropout if contextual_encoder else preset.dropout,
+        dropout=(
+            getattr(args, "history_dropout", 0.2)
+            if contextual_encoder
+            else preset.dropout
+        ),
         embed="timeF",
         distil=True,
         expand=2,
@@ -175,7 +194,11 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         train_epochs=args.epochs,
         batch_size=args.batch_size,
         patience=args.patience,
-        learning_rate=preset.learning_rate if args.learning_rate is None else args.learning_rate,
+        learning_rate=(
+            preset.learning_rate
+            if getattr(args, "learning_rate", None) is None
+            else args.learning_rate
+        ),
         des="Exp",
         loss="MSE",
         lradj="cosine",
@@ -217,11 +240,11 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         glo=1,
         device=device,
         readout_mode=args.readout_mode,
-        encoder_mode=args.encoder_mode,
-        history_patch_len=args.history_patch_len,
-        history_patch_stride=args.history_patch_stride,
-        history_attn_dropout=args.history_attn_dropout,
-        history_res_attention=args.history_res_attention,
+        encoder_mode=encoder_mode,
+        history_patch_len=getattr(args, "history_patch_len", 48),
+        history_patch_stride=getattr(args, "history_patch_stride", 24),
+        history_attn_dropout=getattr(args, "history_attn_dropout", 0.0),
+        history_res_attention=getattr(args, "history_res_attention", True),
         target_horizons=args.target_horizons,
         basis_rank=args.basis_rank,
         stage_token_dim=args.stage_token_dim,
@@ -274,6 +297,15 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
                 "history_patch_len": int(model.history_encoder.patch_len),
                 "history_patch_stride": int(model.history_encoder.stride),
                 "history_res_attention": bool(model.history_encoder.residual_attention),
+            }
+        )
+    if hasattr(model, "retrieval_memory"):
+        payload.update(
+            {
+                "retrieval_patch_num": int(model.retrieval_memory.patch_num),
+                "retrieval_patch_len": int(model.retrieval_memory.patch_len),
+                "retrieval_patch_stride": int(model.retrieval_memory.stride),
+                "retrieval_token_dim": int(model.retrieval_memory.patch_len),
             }
         )
     if hasattr(model, "stage_gate_logits"):
@@ -676,7 +708,11 @@ def run(args: argparse.Namespace) -> None:
             "source_note": (
                 "B14 prerequisite: PatchTST-derived contextual history encoder plus A6-LBF-r256 operator."
                 if args.encoder_mode == "contextual-patch-transformer"
-                else "Clean TimeAlign adapter: official baseline plus A6-LBF-r256 unified carrier."
+                else (
+                    "B14 prerequisite: accepted A6 carrier plus parameter-free hierarchical patch memory."
+                    if args.encoder_mode == "hierarchical-patch-memory"
+                    else "Clean TimeAlign adapter: official baseline plus A6-LBF-r256 unified carrier."
+                )
             ),
             "a6_lbf_auxiliary_policy": (
                 "Prefix-native learned-basis readouts disable TimeAlign future reconstruction/alignment branches "
@@ -748,7 +784,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--e-layers", type=int, default=2)
     parser.add_argument(
         "--encoder-mode",
-        choices=["timealign-token-mlp", "contextual-patch-transformer"],
+        choices=[
+            "timealign-token-mlp",
+            "contextual-patch-transformer",
+            "hierarchical-patch-memory",
+        ],
         default="timealign-token-mlp",
     )
     parser.add_argument("--history-patch-len", type=int, default=16)
@@ -866,6 +906,14 @@ def parse_args() -> argparse.Namespace:
             )
         if args.mode != "unified" or args.pred_len != 720:
             raise ValueError("contextual-patch-transformer is a unified A6 carrier prerequisite")
+    if args.encoder_mode == "hierarchical-patch-memory":
+        if args.readout_mode != "learned-basis-forecast-operator":
+            raise ValueError(
+                "hierarchical-patch-memory currently requires "
+                "readout-mode=learned-basis-forecast-operator"
+            )
+        if args.mode != "unified" or args.pred_len != 720:
+            raise ValueError("hierarchical-patch-memory is a unified A6 carrier prerequisite")
     return args
 
 

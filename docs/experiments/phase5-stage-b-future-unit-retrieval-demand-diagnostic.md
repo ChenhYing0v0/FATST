@@ -5,7 +5,7 @@
 | 字段 | 内容 |
 | --- | --- |
 | `candidate_id` | `B14-FURD` |
-| `current_step` | paused before Step 3；blocked by `B14-PRE-CPE` carrier prerequisite |
+| `current_step` | paused before Step 3；blocked by hierarchical patch-memory equivalence gate |
 | `problem` | A6 可能用高度共享的 input sensitivity 服务不同 large future units，而各 unit error gradients 实际要求不同 raw-history evidence |
 | `existence_evidence` | B13-A large-unit gradient pressure 在 `12/12` settings 稳定；B13-B1/B2 关闭 recurrent transition，但未否定 non-recurrent region-specific retrieval |
 | `idea` | 先比较 label-weighted retrieval demand 与 target-independent A6 input sensitivity；只有 mismatch 成立才设计 trainable retrieval mechanism |
@@ -14,7 +14,7 @@
 | `narrative_gate` | pending；target-query/retrieval 本身是 prior art，A 只能提供 problem evidence |
 | `effectiveness_gate` | not applicable before Step 4-6 |
 | `artifacts` | literature audit ready；analyzer/report pending |
-| `decision` | do not run until `A6-CPE-LBF-r256` carrier gate passes |
+| `decision` | full CPE replacement failed；do not run until exact A6-preserving hierarchical memory passes |
 
 ## Prerequisite Hold
 
@@ -23,8 +23,9 @@ contextual patch-wise history encoder，而不是继续用 raw-history interface
 
 前置协议：`docs/experiments/phase5-stage-b-b14-prerequisite-patchwise-encoder.md`。
 
-前置 gate 通过后，本 diagnostic 的 main interface 改为 `[B,C,P,D]` contextual history tokens；本文后续
-raw-position metrics暂保留为 robustness design，需在启动前重新同步 gate 与 analyzer。
+full contextual replacement已失败并关闭。repair前置 gate通过后，本 diagnostic 的 main interface改为
+parameter-free normalized local patches `[B,C,30,48]`；current A6 sensitivity仍从 forecast carrier path对 raw
+history求导，再按同一 overlapping patch support聚合。本文需在正式启动前重新同步 gate 与 analyzer。
 
 ## Why This Is Not A Retrieval Model Yet
 

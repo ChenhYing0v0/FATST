@@ -22,13 +22,13 @@ Step 2 的 future-region-specific generation problem 重新开始。
 | Field | Content |
 | --- | --- |
 | `current_stage` | Phase5 StageA accepted；StageB B14 prerequisite encoder reconstruction |
-| `current_11_step` | `B14-PRE-CPE` Step 6 implementation/effectiveness gate |
+| `current_11_step` | `B14-PRE-CPE` Step 9/10 failed；Step 5/6 hierarchical-memory repair gate |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `accepted_paper_core` | `A6-LBF-r256` only |
 | `closed_candidate` | current `GRU-based prefix-causal future-unit composition` |
 | `open_direction` | native large future-unit/stage generation without full-horizon clipping |
-| `next_problem` | first establish a consistent contextual patch memory；then test future-region-specific retrieval/state |
-| `do_not_implement_next` | no B14 retrieval model before the reconstructed encoder passes its 3-dataset effectiveness gate |
+| `next_problem` | verify exact A6-preserving hierarchical patch memory；then test future-region-specific retrieval/state |
+| `do_not_implement_next` | no B14 retrieval model before hierarchical memory passes strict 3-dataset equivalence |
 
 ## B14 Prerequisite Encoder Reconstruction
 
@@ -40,11 +40,20 @@ architecture constraint。
 overlapping、cross-patch contextual history encoder，并显式输出 `[B,C,P,D]` memory。A6 learned-basis
 operator保持不变。
 
-当前只授权该 carrier prerequisite 的 Step 6 implementation/performance gate；legacy A6 在 remote gate 前
-仍是唯一 accepted carrier。详见：
+该 contextual carrier prerequisite 已执行并失败；legacy A6 始终保持唯一 accepted carrier。当前只授权
+hierarchical patch-memory exact-equivalence repair gate。详见：
 
 - `docs/experiments/phase5-stage-b-b14-prerequisite-patchwise-encoder.md`；
 - `analysis/phase5_stage_b_b14_prerequisite_patchwise_encoder_20260710/patchwise_encoder_source_and_design_report.md`。
+
+### Returned Gate And Repair
+
+full contextual replacement 已完成并失败：`P16-S8 +4.135% (1/12 wins)`，`P48-S24 +4.799%
+(0/12 wins)`。结果归因为 `readout_or_encoder_design_wrong`，不追加 seeds/width sweep。
+
+[Decision] Step 5/6 repair 改为 hierarchical encoder interface：accepted A6 carrier path严格保持，额外输出
+parameter-free normalized `P48-S24` local memory `[B,C,30,48]`。只有 strict state/parameter/output/metric
+equivalence 在三个 datasets 全部通过，才恢复 B14 diagnostic。
 
 ## Fixed StageA Boundary
 

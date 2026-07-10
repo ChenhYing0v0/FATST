@@ -98,6 +98,40 @@ def main() -> None:
     assert float(align) == 0.0
     assert legacy.encode_history(x).shape == (2, 3, 48, 32)
 
+    hierarchical = Model(
+        make_config(
+            "hierarchical-patch-memory",
+            patch_len=48,
+            stride=24,
+        )
+    ).eval()
+    hierarchical.load_state_dict(copy.deepcopy(legacy.state_dict()), strict=True)
+    assert hierarchical.state_dict().keys() == legacy.state_dict().keys()
+    assert sum(parameter.numel() for parameter in hierarchical.parameters()) == sum(
+        parameter.numel() for parameter in legacy.parameters()
+    )
+    with torch.no_grad():
+        hierarchical_output = hierarchical(
+            x,
+            y,
+            is_training=False,
+            target_prefix=720,
+        )[0]
+        legacy_output = legacy(
+            x,
+            y,
+            is_training=False,
+            target_prefix=720,
+        )[0]
+        retrieval_memory = hierarchical.encode_retrieval_memory(x)
+    torch.testing.assert_close(
+        hierarchical_output,
+        legacy_output,
+        rtol=0.0,
+        atol=0.0,
+    )
+    assert retrieval_memory.shape == (2, 3, 30, 48)
+
     official = Model(
         make_config(
             "timealign-token-mlp",
@@ -171,6 +205,8 @@ def main() -> None:
 
     print("legacy_exact_equivalence=pass")
     print("official_alignment_path=pass")
+    print("hierarchical_patch_memory_exact_equivalence=pass")
+    print("hierarchical_retrieval_shape=[2,3,30,48]")
     print("contextual_p16_shape=[2,3,90,16]")
     print("contextual_p48_shape=[2,3,30,16]")
     print("gradient_and_reload=pass")

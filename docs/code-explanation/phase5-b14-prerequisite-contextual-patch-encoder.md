@@ -170,3 +170,27 @@ history evidence，同时不把 benchmark horizons 写入 history representation
 - `P16-S8`/`P48-S24` memory shape 为 `90/30`；
 - prefix output shape、finite gradients、state-dict reload；
 - contextual encoder 拒绝 official readout。
+
+## Post-Gate Repair：Hierarchical Patch Memory
+
+full contextual replacement未通过 performance gate。新增 `encoder_mode=hierarchical-patch-memory`，其
+forecast computation与 `timealign-token-mlp` 完全相同；只新增无参数的 `CanonicalPatchMemory`：
+
+```text
+x_norm [B,720,C]
+  -> permute [B,C,720]
+  -> ReplicationPad1d(0,24)
+  -> unfold(K=48,S=24)
+  -> local_memory [B,C,30,48]
+```
+
+`Model.encode_history(x)` 仍返回 carrier memory；新增 `Model.encode_retrieval_memory(x)` 返回 B14 canonical
+local memory。`CanonicalPatchMemory` 没有 parameters/buffers，因此 hierarchical model与 legacy A6：
+
+- state-dict keys相同；
+- parameter count相同；
+- forecast forward逐元素相同；
+- clean A6 checkpoints可 `strict=True` 加载。
+
+这条 repair没有让 local memory进入预测，也没有加入 residual correction。B14通过 problem diagnostic 后，
+才允许设计可训练 projection/retrieval及其 exact no-retrieval controls。

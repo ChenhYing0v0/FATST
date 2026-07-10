@@ -26,6 +26,7 @@ STBO_READOUTS = {
 ENCODER_MODES = {
     "timealign-token-mlp",
     "contextual-patch-transformer",
+    "hierarchical-patch-memory",
 }
 
 
@@ -170,6 +171,25 @@ class ContextualPatchEncoder(nn.Module):
         return tokens.reshape(batch, channels, self.patch_num, self.dim)
 
 
+class CanonicalPatchMemory(nn.Module):
+    """Parameter-free overlapping patches for a stable retrieval interface."""
+
+    def __init__(self, seq_len, patch_len, stride):
+        super().__init__()
+        if patch_len <= 0 or stride <= 0:
+            raise ValueError("history patch length and stride must be positive")
+        if patch_len > seq_len + stride:
+            raise ValueError("history patch length cannot exceed padded sequence length")
+        self.patch_len = patch_len
+        self.stride = stride
+        self.patch_num = (seq_len + stride - patch_len) // stride + 1
+        self.end_padding = nn.ReplicationPad1d((0, stride))
+
+    def forward(self, x):
+        # x: [B, C, L] -> memory: [B, C, P, K]
+        return self.end_padding(x).unfold(-1, self.patch_len, self.stride)
+
+
 class Model(nn.Module):
     """Legacy TimeAlign baseline plus clean A6 history/readout candidates."""
 
@@ -198,7 +218,10 @@ class Model(nn.Module):
             )
 
         self.e_layers = configs.e_layers
-        if self.encoder_mode == "timealign-token-mlp":
+        if self.encoder_mode in {
+            "timealign-token-mlp",
+            "hierarchical-patch-memory",
+        }:
             self.patch_num = configs.patch_num
             self.d_model = configs.d_model
             self.patch_emb_x = PatchEmbed(
@@ -233,6 +256,13 @@ class Model(nn.Module):
             )
             self.patch_num = self.history_encoder.patch_num
 
+        if self.encoder_mode == "hierarchical-patch-memory":
+            self.retrieval_memory = CanonicalPatchMemory(
+                seq_len=configs.seq_len,
+                patch_len=configs.history_patch_len,
+                stride=configs.history_patch_stride,
+            )
+
         if self.has_future_recon_branch:
             self.patch_emb_y = PatchEmbed(configs.d_model, self.pred_len // self.patch_num, pos=configs.pos)
 
@@ -251,14 +281,22 @@ class Model(nn.Module):
             )
             self.align = glocal_align_ablation(configs.local_margin, configs.global_margin, configs.loc, configs.glo)
 
-        self.layer_norm = configs.layer_norm if self.encoder_mode == "timealign-token-mlp" else False
+        self.layer_norm = (
+            configs.layer_norm
+            if self.encoder_mode
+            in {"timealign-token-mlp", "hierarchical-patch-memory"}
+            else False
+        )
         if self.layer_norm:
             self.norm_x = nn.ModuleList([nn.LayerNorm(configs.d_model) for _ in range(configs.e_layers)])
             if self.has_future_recon_branch:
                 self.norm_y = nn.ModuleList([nn.LayerNorm(configs.d_model) for _ in range(configs.e_layers)])
 
         readout_dim = configs.d_model * self.patch_num
-        if self.has_future_recon_branch or self.encoder_mode == "timealign-token-mlp":
+        if self.has_future_recon_branch or self.encoder_mode in {
+            "timealign-token-mlp",
+            "hierarchical-patch-memory",
+        }:
             self.proj_x = nn.Linear(readout_dim, configs.pred_len)
         if self.has_future_recon_branch:
             self.proj_y = nn.Linear(readout_dim, configs.pred_len)
@@ -375,6 +413,13 @@ class Model(nn.Module):
     def encode_history(self, x):
         """Return normalized history memory for diagnostics and retrieval."""
         return self._encode_normalized_history(self.normalization_x(x, "norm"))
+
+    def encode_retrieval_memory(self, x):
+        """Return the canonical local memory without changing the forecast path."""
+        normalized = self.normalization_x(x, "norm")
+        if self.encoder_mode == "hierarchical-patch-memory":
+            return self.retrieval_memory(normalized.permute(0, 2, 1))
+        return self._encode_normalized_history(normalized)
 
     def _build_stage_boundaries(self, configs):
         horizons = sorted({int(horizon) for horizon in getattr(configs, "target_horizons", [])})
