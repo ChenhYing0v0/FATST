@@ -2,6 +2,9 @@
 
 本文档用于新对话重启研究。它不是完整实验报告，而是当前 StageA/StageB 的最小上下文、已裁决路线、禁止误读点和下一步研究入口。
 
+> [Superseded] 该 handoff 只记录 post-B12 状态。2026-07-10 已完成 B13-FUCO diagnostics；当前重启入口改为
+> `docs/stage-ledgers/phase5-stageb-b13-restart-handoff-20260710.md`。
+
 ## Minimal Reading Order
 
 新对话建议按以下顺序读取：
@@ -113,4 +116,3 @@
 新对话可从这个问题启动：
 
 > A6-LBF-r256 已证明 learned-basis unified forecast operator 有效，但它仍是 full-trajectory prefix slicing。StageB 的第二主创新点应如何在 primary architecture path 上更 native 地建模 requested horizon / future trajectory structure，同时保留 A6 的 full-basis expressiveness，并避免 residual、hard stage coding 和 auxiliary-loss 化？
-

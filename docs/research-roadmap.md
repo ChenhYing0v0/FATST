@@ -9,8 +9,8 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB B13-FUCO future-unit problem diagnostic |
-| `current_11_step` | StageB Step 2/3；B13 hidden-memory intervention-point repair before mechanism decision |
+| `current_stage` | Phase5：A6-LBF-r256 clean operator validated；StageB post-B13 future-region-specific generation search |
+| `current_11_step` | B13 Step 3 diagnostic decision completed；restart StageB Step 2 after GRU composition block |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator |
 | `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
 
@@ -637,15 +637,25 @@ ETTh2 degrades at both sizes, whereas ETTm1-U240 and Weather-U180/U240 support. 
 match, and no numeric pathology is present. Decision: `no_transition_control_explains` for the tested
 post-coefficient GRU transition.
 
-[Failure Attribution] B1 does not reject all future-unit generation. A6 coefficient is already a global
-full-trajectory bottleneck, so the intervention may be too late. One final pre-registered repair moves only the frozen
-memory source to pre-coefficient A6 encoder hidden while keeping arms, unit sizes `180/240`, seeds, state dimension,
-loss and gate fixed. This B2 probe runs remotely with bounded rows `4096/1024/1024`.
+[Diagnostic B2 Result] Pre-coefficient hidden-memory repair completed remotely with the fixed `180/240` unit sizes,
+three seeds and exact parameter-matched arms. Composition reaches `4/6` setting support, but ETTh2 fails both sizes at
+`+5.16%/+5.36%` mean MSE with only `1/3` wins and about `19-20%` seed std. The required per-dataset non-degradation
+gate therefore fails.
 
-[Rollback] If hidden-memory B2 passes, B13 may enter Step 4-6 literature/narrative design, not model implementation.
-If B2 is again explained by the no-transition control, close current GRU-based prefix-causal composition and return
-to Step 2. Do not continue GRU/head tuning; future work must distinguish region-specific states from a different
-non-recurrent future-stage generator.
+[Mechanism Check] Positive aggregate results do not follow progressive composition depth. ETTm1-U240 improves
+`-16.10%` overall but its last unit degrades `+7.50%`; Weather-U240's largest gain occurs at unit 0 (`-12.64%`),
+which has no previous-unit information. ETTh2 unit 0 improves while later units degrade about `+9.8%` on average.
+These patterns support shared-weight optimization/parameterization effects more than accumulated latent future
+context.
+
+[Failure Attribution] B2 removes the major post-coefficient intervention confound and passes numeric/prefix/parameter
+integrity checks. The no-transition control therefore closes current GRU-based prefix-causal composition. A different
+head might behave differently in principle, but the pre-registered repair boundary forbids a new GRU/head sweep.
+
+[Rollback] StageB returns to Step 2. Broader future-unit generation remains open because B13-A established robust
+large-unit pressure and B2 only tests recurrent transition. The next problem should be
+`future-unit-specific history retrieval/state without recurrent transition`; do not implement a model before new
+literature/problem evidence and parameter-matched constant/no-unit controls.
 
 ## Active Implementation
 
@@ -702,6 +712,7 @@ non-recurrent future-stage generator.
 | `docs/experiments/phase5-stage-b-future-unit-compositional-operator.md` | B13 Step 2/3 problem, diagnostic gates and rollback boundary |
 | `docs/code-explanation/phase5-stage-b-b13-future-unit-granularity.md` | B13 large-unit granularity analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b13-future-unit-composition-probe.md` | B13 parameter-matched composition probe explanation |
+| `docs/stage-ledgers/phase5-stageb-b13-restart-handoff-20260710.md` | current post-B13 Step 2 restart handoff |
 | `scripts/analyze_phase5_stage_b_b13_future_unit_granularity.py` | B13 large-unit granularity analyzer |
 | `scripts/analyze_phase5_stage_b_b13_future_unit_composition_probe.py` | B13 coefficient/hidden-memory composition analyzer |
 | `scripts/remote/run_phase5_stage_b_b13_hidden_memory_probe.sh` | B13 hidden-memory repair remote runner |
@@ -724,6 +735,7 @@ non-recurrent future-stage generator.
 | `analysis/phase5_stage_b_b12_stbo_rank_diagnostic_20260708/b12_stbo_rank_deep_analysis.md` | B12-STBO rank/capacity deep analysis |
 | `analysis/phase5_stage_b_b13_future_unit_granularity_20260710/` | B13-A large-unit granularity result |
 | `analysis/phase5_stage_b_b13_future_unit_composition_20260710/` | B13-B1 coefficient-memory control result |
+| `analysis/phase5_stage_b_b13_future_unit_hidden_composition_20260710/` | B13-B2 hidden-memory final repair, launch record and deep analysis |
 | `scripts/remote/run_phase5_stage_b_b9_fsn_scf_small_gate.sh` | B9-FSN-SCF remote small gate runner |
 | `scripts/sync_phase5_stage_b_b9_fsn_scf_small_gate_results.sh` | B9-FSN-SCF result sync/analyze wrapper |
 

@@ -561,14 +561,16 @@ def write_report(
     decision, reasons = gate_decision(run_rows, summary_rows)
     memory_sources = sorted({str(row.get("memory_source", "coeff")) for row in run_rows})
     hidden_only = memory_sources == ["hidden"]
+    diagnostic_id = "B13-FUCO-B2" if hidden_only else "B13-FUCO-B1"
     memory_label = "A6 encoder hidden memory" if hidden_only else "A6 coefficient memory"
     mismatches = [row for row in run_rows if float(row["test_val_ratio"]) > 2.0]
     max_prefix = max(float(row["prefix_max_abs"]) for row in run_rows)
-    parameter_deltas = {
-        int(row["unit_size"]): {
+    parameter_sets = {
+        (str(row["dataset"]), int(row["unit_size"])): {
             int(candidate["trainable_parameters"])
             for candidate in run_rows
-            if candidate["unit_size"] == row["unit_size"]
+            if candidate["dataset"] == row["dataset"]
+            and candidate["unit_size"] == row["unit_size"]
         }
         for row in run_rows
     }
@@ -580,7 +582,7 @@ def write_report(
         "| 字段 | 内容 |",
         "| --- | --- |",
         "| `candidate_id` | `B13-FUCO` |",
-        "| `diagnostic_id` | `B13-FUCO-B` |",
+        f"| `diagnostic_id` | `{diagnostic_id}` |",
         "| `current_step` | Step 2/3：parameter-matched composition control |",
         "| `scope` | frozen A6 memory；trainable diagnostic probes；not end-to-end model performance |",
         f"| `memory_source` | `{','.join(memory_sources)}` |",
@@ -621,10 +623,10 @@ def write_report(
             "",
             f"[Fact] Maximum prefix-consistency absolute error across runs is `{max_prefix:.6e}`.",
             f"[Fact] Runs with test/validation MSE ratio above `2.0`: `{len(mismatches)}/{len(run_rows)}`.",
-            "[Fact] Trainable parameter sets by unit size: "
+            "[Fact] Trainable parameter sets by dataset/unit size: "
             + "; ".join(
-                f"U{unit_size}={sorted(values)}"
-                for unit_size, values in sorted(parameter_deltas.items())
+                f"{dataset}-U{unit_size}={sorted(values)}"
+                for (dataset, unit_size), values in sorted(parameter_sets.items())
             )
             + ".",
             "",

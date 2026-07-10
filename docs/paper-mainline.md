@@ -9,10 +9,10 @@
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA clean A6 validated；StageB post-B12 architecture search |
+| `current_stage` | Phase5 StageA clean A6 validated；StageB post-B13 future-region-specific generation search |
 | `active_carrier` | `A6-LBF-r256` |
 | `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | StageB Step 11 rollback; restart Step 2/3 architecture search after B12-STBO block |
+| `current_11_step` | B13 Step 3 diagnostic decision completed；restart StageB Step 2 after GRU composition block |
 | `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
 
 ## Core Claim
@@ -24,7 +24,8 @@ operator。它用一个 unified 720-step model 覆盖 96/192/336/720 多个 pred
 [Boundary] A6-LBF-r256 不是强意义上的 target-set-native multi-horizon architecture。它更准确地说是
 prefix-compatible learned-basis trajectory operator：模型生成同一条 720-step future trajectory，再按
 requested horizon 返回 prefix。StageB 已依次排查显式 target-set/stage conditioning、basis-conditioned
-coefficient field，以及 subspace-tiled basis operator；当前仍未形成第二个 accepted paper-core method。
+coefficient field、subspace-tiled basis operator，以及 GRU-based future-unit composition；当前仍未形成第二个
+accepted paper-core method。
 
 ## Main Contribution Draft
 
@@ -231,6 +232,22 @@ StageB 第二贡献保持 open，回到 Step 2/3 architecture search。新候选
 并避免 residual repair、hard stage/horizon coding、以及容易退化为 auxiliary loss 的路线。重启入口文档为
 `docs/stage-ledgers/phase5-stageb-restart-handoff-20260709.md`。
 
+Post-B12 search 打开了 `B13-FUCO`，将用户提出的“future stage/segment generation 而不是 full-horizon
+clipping”具体化为 benchmark-independent large future units。Diagnostic A 在 ETTh2/ETTm1/Weather 的
+`120/144/180/240` unit sizes 上全部通过（`12/12`），证明 shared-state gradient pressure 不是 canonical
+horizon boundary 或 small-unit artifact。
+
+但 current GRU-based prefix-causal composition 没有通过 mechanism gate。Coefficient-memory B1 只支持
+`3/6` settings；pre-coefficient hidden-memory B2 支持 `4/6`，但 ETTh2-U180/U240 仍平均退化
+`+5.16%/+5.36%`。更关键的是正向 setting 没有 progressive-depth pattern：ETTm1-U240 最后一个 unit
+平均退化 `+7.50%`，Weather-U240 最大收益发生在没有 previous-unit information 的 unit 0。正向 aggregate
+gain 因而不能支撑 latent compositional context claim。
+
+论文主线当前只关闭 `GRU-based prefix-causal composition`，不关闭 broader future-unit generation。
+StageB 回到 Step 2，下一问题收束为：不同 large future regions 是否需要不同的 history retrieval/state，
+并能否在没有 recurrent transition 与 full-horizon clipping 的情况下形成 native generator。该问题尚未通过
+literature/problem existence gate，因此不得直接实现。
+
 ## Evidence Snapshot
 
 ### A6-LBF-r256 vs fixed-horizon per-horizon TimeAlign
@@ -312,7 +329,10 @@ Archived or inactive:
 | `docs/code-explanation/phase5-stage-b-b12-stbo-diagnostic.md` | B12-STBO diagnostic analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b12-stbo.md` | B12-STBO model implementation explanation |
 | `docs/code-explanation/phase5-stage-b-b12-stbo-rank-diagnostic.md` | B12-STBO rank/capacity diagnostic explanation |
+| `docs/code-explanation/phase5-stage-b-b13-future-unit-granularity.md` | B13 large-unit problem diagnostic explanation |
+| `docs/code-explanation/phase5-stage-b-b13-future-unit-composition-probe.md` | B13 parameter-matched composition probe explanation |
 | `docs/stage-ledgers/phase5-stageb-restart-handoff-20260709.md` | post-B12 restart handoff for new conversations |
+| `docs/stage-ledgers/phase5-stageb-b13-restart-handoff-20260710.md` | post-B13 Step 2 restart handoff |
 | `docs/stage-ledgers/phase5-timealign-interface.md` | active StageA/StageB ledger |
 | `docs/research-roadmap.md` | active roadmap |
 | `docs/experiments/phase5-stage-b-prefix-native-label-objective-diagnostic.md` | B6 rejected objective diagnostic protocol |
@@ -322,6 +342,7 @@ Archived or inactive:
 | `docs/experiments/phase5-stage-b-target-set-conditioned-operator.md` | B10 target-set-conditioned operator protocol |
 | `docs/experiments/phase5-stage-b-emergent-subspace-aggregation.md` | B11 emergent subspace aggregation protocol |
 | `docs/experiments/phase5-stage-b-subspace-tiled-basis-operator.md` | B12 subspace-tiled basis operator protocol |
+| `docs/experiments/phase5-stage-b-future-unit-compositional-operator.md` | B13 future-unit problem, controls and rollback protocol |
 | `scripts/analyze_phase5_stage_b_b10_tsi_basis_geometry.py` | B10-TSI-A basis geometry analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_coeff_usage.py` | B10-TSI-B coefficient usage analyzer |
 | `scripts/analyze_phase5_stage_b_b10_tsi_target_set_oracle.py` | B10-TSI-C target-set oracle/control analyzer |
@@ -330,6 +351,8 @@ Archived or inactive:
 | `scripts/analyze_phase5_stage_b_b12_stbo_diagnostic.py` | B12-STBO diagnostic analyzer |
 | `scripts/analyze_phase5_stage_b_b12_stbo_rank_diagnostic.py` | B12-STBO rank/capacity diagnostic analyzer |
 | `scripts/check_phase5_stage_b_b12_stbo_local.py` | B12-STBO local checker |
+| `scripts/analyze_phase5_stage_b_b13_future_unit_granularity.py` | B13 large-unit granularity analyzer |
+| `scripts/analyze_phase5_stage_b_b13_future_unit_composition_probe.py` | B13 coefficient/hidden-memory composition analyzer |
 | `scripts/check_phase5_stage_b_b11_bcf_local.py` | B11-BCF local fallback/prefix/backward checker |
 | `scripts/remote/run_phase5_stage_b_b11_bcf_small_gate.sh` | B11-BCF remote small gate runner |
 | `scripts/sync_phase5_stage_b_b11_bcf_small_gate_results.sh` | B11-BCF remote artifact sync/analyze wrapper |
@@ -358,6 +381,9 @@ Archived or inactive:
 | `analysis/phase5_stage_b_b12_stbo_diagnostic_20260708/b12_stbo_report.md` | B12-STBO Step 2/3 diagnostic decision |
 | `analysis/phase5_stage_b_b12_stbo_rank_diagnostic_20260708/b12_stbo_rank_diagnostic_report.md` | B12-STBO rank/capacity diagnostic decision |
 | `analysis/phase5_stage_b_b12_stbo_rank_diagnostic_20260708/b12_stbo_rank_deep_analysis.md` | B12-STBO rank/capacity deep analysis |
+| `analysis/phase5_stage_b_b13_future_unit_granularity_20260710/` | B13-A large-unit problem evidence |
+| `analysis/phase5_stage_b_b13_future_unit_composition_20260710/` | B13-B1 coefficient-memory no-transition control |
+| `analysis/phase5_stage_b_b13_future_unit_hidden_composition_20260710/` | B13-B2 hidden-memory final repair and rollback decision |
 
 ## Next Step
 
@@ -371,4 +397,6 @@ Archived or inactive:
 8. Do not continue explicit stage/horizon conditioning as the main StageB route.
 9. B11-BCF is blocked by no-basis and constant-slot controls; do not claim it as paper-core.
 10. B12-STBO is blocked by rank/capacity diagnostic; do not continue it as paper-core or full matrix.
-11. Restart StageB from Step 2/3 architecture search using `docs/stage-ledgers/phase5-stageb-restart-handoff-20260709.md`.
+11. B13 GRU-based prefix-causal composition is blocked by no-transition control; do not continue GRU/head tuning.
+12. Restart StageB from Step 2 around future-unit-specific history retrieval using
+    `docs/stage-ledgers/phase5-stageb-b13-restart-handoff-20260710.md`.

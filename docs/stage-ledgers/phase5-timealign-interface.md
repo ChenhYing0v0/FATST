@@ -8,12 +8,12 @@
 | Field | Content |
 | --- | --- |
 | `stage_id` | `phase5-timealign-interface` |
-| `current_11_step` | StageB Step 2/3；B13-FUCO hidden-memory intervention-point diagnostic |
+| `current_11_step` | StageB B13 Step 3 diagnostic decision completed；restart Step 2 future-region-specific generation search |
 | `active_carrier` | `A6-LBF-r256` pure learned-basis forecast operator on official-source TimeAlign encoder |
-| `active_question` | Can a benchmark-independent, large future-unit generator obtain predictive value from prefix-causal latent composition rather than full-horizon clipping or independent coordinate-conditioned units? |
-| `latest_decision` | B13-A passes on all `12/12` large-unit settings; B13-B1 coefficient-memory composition supports only `3/6` settings and fails ETTh2, so the no-transition control blocks the tested post-coefficient mechanism |
-| `next_required_action` | Run the single pre-registered B13-B2 repair with frozen pre-coefficient A6 hidden memory on `529_Lab-3090`; keep unit sizes, seeds, arms and gate fixed |
-| `rollback_point` | If B13-B2 still fails the exact no-transition control, close current GRU-based prefix-causal composition and return to Step 2; do not continue head/GRU tuning |
+| `active_question` | Do benchmark-independent large future regions require region-specific history retrieval/state without recurrent unit-to-unit transition or full-horizon clipping? |
+| `latest_decision` | B13-B2 hidden-memory composition supports `4/6` settings but fails both ETTh2 sizes (`+5.16%/+5.36%`); per-unit gains are not progressive with composition depth, so current GRU mechanism is closed |
+| `next_required_action` | Start Step 2 literature/problem audit for `future-unit-specific history retrieval`; do not implement a model before new existence evidence and controls |
+| `rollback_point` | Current GRU-based prefix-causal composition is closed; broader future-unit generation remains open only as a new Step 2 problem, not as a head/GRU repair |
 
 ## StageA Fixed Result
 
@@ -79,7 +79,7 @@ Clean rerun after code cleanup:
 | `B10-TCO` | `superseded_by_B11` | A6-LBF 是 prefix-compatible 720-step trajectory operator；requested target set 没有进入 computation graph，短 horizon 是 prefix slicing | B10-TSI-C/D block frozen/offline readout diagnostics: target-set readouts remain unstable or weaker than pooled controls, including rank16 stability control | not active | User reframed StageB away from explicit stage/target conditioning; evidence retained as rollback context | `docs/experiments/phase5-stage-b-target-set-conditioned-operator.md`; `analysis/phase5_stage_b_b10_tsi_basis_geometry_20260708/b10_tsi_basis_geometry_report.md`; `analysis/phase5_stage_b_b10_tsi_coeff_usage_20260708/b10_tsi_coeff_usage_report.md`; `analysis/phase5_stage_b_b10_tsi_target_set_oracle_20260708/b10_tsi_target_set_oracle_report.md`; `analysis/phase5_stage_b_b10_tsi_failure_attribution_20260708/b10_tsi_failure_attribution_report.md`; `analysis/phase5_stage_b_b10_tsi_failure_attribution_rank16_20260708/b10_tsi_failure_attribution_report.md` |
 | `B11-ESA/BCF` | `blocked_by_required_controls` | A6 不应依赖显式 stage/horizon encoding；应利用 learned basis 自发形成的 continuous future geometry 来驱动 coefficient field / history aggregation | passed for continuous `B11-BCF` only, but small gate shows the tested intervention is explainable by no-basis/constant-slot controls | failed mechanism gate：not a paper-core method | Rollback to Step 4 redesign or Step 2/3; do not claim basis-conditioned architecture mechanism | `docs/experiments/phase5-stage-b-emergent-subspace-aggregation.md`; `analysis/phase5_stage_b_b11_esa_basis_coeff_diagnostic_20260708/b11_esa_basis_coeff_report.md`; `docs/code-explanation/phase5-stage-b-b11-esa-basis-coeff-diagnostic.md`; `docs/code-explanation/phase5-stage-b-b11-bcf.md`; `analysis/phase5_stage_b_b11_bcf_small_gate_20260708/b11_bcf_small_gate_report.md` |
 | `B12-STBO` | `blocked_by_rank_diagnostic` | A6 full-720 step basis may be replaceable by native subspace-tiled local basis operators, so short horizons activate only required tiles instead of slicing a full trajectory operator | conditional gate：offline A6-derived evidence was insufficient but cannot reject native trainable STBO; implementation includes DCT and independent controls | rank/capacity partially helps but method fails：best learned shared/bank is `L360-R256:shared` at `+0.33%` vs A6; `L360-R256:independent` nearly matches A6 at `+0.014%`; bank entropy remains `0.9997-0.99999` | Do not claim or full-matrix B12; rollback to Step 2/3 architecture search | `docs/experiments/phase5-stage-b-subspace-tiled-basis-operator.md`; `docs/code-explanation/phase5-stage-b-b12-stbo-diagnostic.md`; `docs/code-explanation/phase5-stage-b-b12-stbo.md`; `docs/code-explanation/phase5-stage-b-b12-stbo-rank-diagnostic.md`; `scripts/check_phase5_stage_b_b12_stbo_local.py`; `scripts/remote/run_phase5_stage_b_b12_stbo_small_gate.sh`; `scripts/sync_phase5_stage_b_b12_stbo_small_gate_results.sh`; `scripts/analyze_phase5_stage_b_b12_stbo_small_gate.py`; `scripts/analyze_phase5_stage_b_b12_stbo_rank_diagnostic.py`; `analysis/phase5_stage_b_b12_stbo_diagnostic_20260708/b12_stbo_report.md`; `analysis/phase5_stage_b_b12_stbo_small_gate_20260708/b12_stbo_deep_analysis.md`; `analysis/phase5_stage_b_b12_stbo_rank_diagnostic_20260708/b12_stbo_rank_deep_analysis.md` |
-| `B13-FUCO` | `partial_pass_intervention_repair_pending` | A6 global full-horizon coefficient/basis path may be replaced by benchmark-independent latent future units whose requested count defines horizon and whose states compose prefix-causally | pending：large-unit problem evidence passed, but composition mechanism has not passed exact no-transition control | not applicable：diagnostic probe only | Run B2 once at pre-coefficient hidden memory; pass enters Step 4-6, failure closes current GRU composition and rolls back to Step 2 | `docs/experiments/phase5-stage-b-future-unit-compositional-operator.md`; `analysis/phase5_stage_b_b13_future_unit_granularity_20260710/`; `analysis/phase5_stage_b_b13_future_unit_composition_20260710/` |
+| `B13-FUCO` | `blocked_by_no_transition_control` | A6 global full-horizon coefficient/basis path may be replaced by benchmark-independent latent future units whose requested count defines horizon and whose states compose prefix-causally | failed for GRU composition：B2 passes `4/6` settings but fails ETTh2 and per-unit gains do not grow with composition depth | not applicable：diagnostic probe only | Close current GRU composition；return Step 2 to future-region-specific history retrieval without recurrent transition | `docs/experiments/phase5-stage-b-future-unit-compositional-operator.md`; `analysis/phase5_stage_b_b13_future_unit_granularity_20260710/`; `analysis/phase5_stage_b_b13_future_unit_composition_20260710/`; `analysis/phase5_stage_b_b13_future_unit_hidden_composition_20260710/` |
 
 ## Experiment Ledger
 
@@ -119,6 +119,7 @@ Clean rerun after code cleanup:
 | B12-STBO rank/capacity diagnostic result | `B12-STBO` | rank/capacity failure attribution | Increasing rank/tile length improves performance, proving rank bottleneck was real; however best learned shared/bank is `L360-R256:shared` at `+0.33%` vs A6 with `4/12` wins, while best capacity probe `L360-R256:independent` is near A6 at `+0.014%`; `stbo_bank4` entropy remains near max | `blocked_by_rank_diagnostic`; capacity can recover performance but shared/bank STBO mechanism remains unsupported | `analysis/phase5_stage_b_b12_stbo_rank_diagnostic_20260708/b12_stbo_rank_diagnostic_report.md`; `analysis/phase5_stage_b_b12_stbo_rank_diagnostic_20260708/b12_stbo_rank_deep_analysis.md` |
 | B13-FUCO-A large-unit granularity diagnostic | `B13-FUCO` | problem-existence diagnostic | Non-benchmark unit sizes `120/144/180/240` pass the pre-registered gradient-pressure gate on ETTh2/ETTm1/Weather (`12/12`); adjacent gradient cosine exceeds far cosine in all settings and is not generally explained by basis overlap | `partial_pass_large_unit_granularity_robust`; permits Diagnostic B only | `analysis/phase5_stage_b_b13_future_unit_granularity_20260710/b13_future_unit_granularity_report.md` |
 | B13-FUCO-B1 coefficient-memory composition control | `B13-FUCO` | parameter-matched mechanism diagnostic | Composition supports `3/6` settings; ETTh2 degrades at both sizes, while ETTm1-U240 and Weather-U180/U240 support; exact parameter counts and prefix consistency pass with no numeric pathology | `no_transition_control_explains`; repair intervention point once before candidate decision | `analysis/phase5_stage_b_b13_future_unit_composition_20260710/b13_future_unit_composition_report.md` |
+| B13-FUCO-B2 hidden-memory composition control | `B13-FUCO` | final intervention-point repair | Composition supports `4/6`, but ETTh2-U180/U240 remain `+5.16%/+5.36%`; ETTm1-U240 last unit degrades despite aggregate gain and largest U240 gains occur at unit 0 | `no_transition_control_explains`; close current GRU composition and rollback Step 2 | `analysis/phase5_stage_b_b13_future_unit_hidden_composition_20260710/b13_future_unit_hidden_deep_analysis.md` |
 
 ## Pending Tasks
 
@@ -160,7 +161,8 @@ Clean rerun after code cleanup:
 | Start post-B12 StageB architecture search | Codex | B12-STBO is closed as paper-core and Contribution 2 remains open | `completed` | B13-FUCO defines benchmark-independent large future-unit generation rather than clipped full-horizon basis output |
 | Run B13-FUCO-A large-unit granularity diagnostic | Codex | User identified small-unit capacity confound from B12 | `completed` | `12/12` main settings pass; proceed only to parameter-matched composition control |
 | Run B13-FUCO-B1 coefficient-memory composition control | Codex | Diagnostic A passed across datasets and large unit sizes | `completed` | Gate fails at `3/6`; post-coefficient GRU transition is blocked by no-transition control |
-| Run B13-FUCO-B2 hidden-memory intervention repair | Codex | B1 may intervene after an already full-trajectory coefficient bottleneck | `in_progress` | Commit/push verified diagnostic code, sync clean A6 checkpoints, GPU preflight, then run the fixed remote matrix |
+| Run B13-FUCO-B2 hidden-memory intervention repair | Codex | B1 may intervene after an already full-trajectory coefficient bottleneck | `completed` | Gate fails on ETTh2 and per-unit mechanism pattern；close current GRU composition |
+| Redefine StageB after B13 GRU composition block | Codex | B13-A keeps large future-unit problem evidence, while B1/B2 reject recurrent transition | `pending` | Step 2 literature/problem audit for future-unit-specific history retrieval；no model implementation yet |
 
 ## Paper Mainline Sync Log
 
@@ -198,6 +200,7 @@ Clean rerun after code cleanup:
 | 2026-07-09 | B12-STBO rank diagnostic returned and handoff written | Contribution 2 candidate | no accepted paper claim | B12-STBO blocked by rank/capacity diagnostic; StageB rolls back to Step 2/3 architecture search |
 | 2026-07-10 | B13-FUCO-A large-unit diagnostic returned | Contribution 2 candidate | no accepted paper claim | Large-unit problem evidence passes, but only authorizes a parameter-matched mechanism diagnostic |
 | 2026-07-10 | B13-FUCO-B1 coefficient-memory control returned | Contribution 2 candidate | no accepted paper claim | No-transition control blocks the tested post-coefficient composition; one pre-coefficient repair is allowed before closing current GRU candidate |
+| 2026-07-10 | B13-FUCO-B2 hidden-memory control returned | Contribution 2 candidate | paper-mainline rollback sync | Current GRU composition is blocked by ETTh2 and non-progressive per-unit gains；StageB returns Step 2 while broader future-unit generation remains open |
 
 ## Active Artifacts
 
@@ -227,6 +230,7 @@ Clean rerun after code cleanup:
 | `docs/code-explanation/phase5-stage-b-b13-future-unit-granularity.md` | B13 large-unit granularity analyzer explanation |
 | `docs/code-explanation/phase5-stage-b-b13-future-unit-composition-probe.md` | B13 parameter-matched composition probe explanation |
 | `docs/stage-ledgers/phase5-stageb-restart-handoff-20260709.md` | restart handoff for new conversations after B12 rollback |
+| `docs/stage-ledgers/phase5-stageb-b13-restart-handoff-20260710.md` | current post-B13 Step 2 restart handoff |
 | `docs/experiments/phase5-stage-b-reliability-aware-supervision-redesign.md` | StageB problem definition and B1/B2 candidate boundary |
 | `docs/experiments/phase5-stage-b-distance-normalized-seasonal-residual-diagnostic.md` | B3 diagnostic protocol |
 | `docs/experiments/phase5-stage-b-timealign-dependency-and-basis-align-diagnostic.md` | B4 dependency and B5 basis-align protocol |
@@ -296,6 +300,7 @@ Clean rerun after code cleanup:
 | `analysis/phase5_stage_b_b12_stbo_rank_diagnostic_20260708/b12_stbo_rank_deep_analysis.md` | B12-STBO rank/capacity deep analysis |
 | `analysis/phase5_stage_b_b13_future_unit_granularity_20260710/` | B13-A large-unit granularity evidence; decision `partial_pass_large_unit_granularity_robust` |
 | `analysis/phase5_stage_b_b13_future_unit_composition_20260710/` | B13-B1 coefficient-memory control; decision `no_transition_control_explains` |
+| `analysis/phase5_stage_b_b13_future_unit_hidden_composition_20260710/` | B13-B2 hidden-memory final repair, launch record and deep analysis；current GRU composition closed |
 
 ## Archived Evidence
 

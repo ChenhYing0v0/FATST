@@ -5,16 +5,16 @@
 | 字段 | 内容 |
 | --- | --- |
 | `candidate_id` | `B13-FUCO` |
-| `current_step` | Step 2/3：future-unit problem definition and intervention-point diagnostic |
+| `current_step` | Step 3 diagnostic decision completed；return to Step 2 future-region-specific generation search |
 | `problem` | A6-LBF-r256 用一个 global coefficient state 与 full-horizon temporal basis 表示同一条 future trajectory；multi-horizon 能力主要来自 prefix restriction，而不是可组合、可提前停止的 future generation |
 | `existence_evidence` | B9 显示 canonical stages 对共享 coefficient 的 gradients 低相似；B11 显示 future basis subspace geometry 连续变化；B12 显示过小 local unit/rank 会形成容量瓶颈，但高-rank local factorization 可接近 A6 |
 | `idea` | 将 future 表示为 benchmark-independent latent future units；requested horizon 决定生成多少 units，unit states 通过 prefix-causal composition 形成，而不是对 full-horizon representation 做 clipping |
 | `theory_check` | 若较大的非 benchmark unit sizes 上仍存在稳定的 shared-state gradient pressure 与 adjacent/far geometry，则 future-unit generation 有 Step 2/3 问题基础；若信号只在 canonical boundaries 或小 units 上成立，则该问题可能是 segmentation artifact |
-| `design` | `B13-FUCO-A` 已确认 large-unit granularity robustness；`B13-FUCO-B1` coefficient-memory control 未通过；当前执行一次 pre-coefficient hidden-memory repair probe，不实现 model |
-| `narrative_gate` | pending targeted literature audit and Diagnostic A/B evidence |
-| `effectiveness_gate` | not applicable before Step 4-6 |
-| `artifacts` | `analysis/phase5_stage_b_b13_future_unit_granularity_20260710/`; `analysis/phase5_stage_b_b13_future_unit_composition_20260710/`; `scripts/analyze_phase5_stage_b_b13_future_unit_granularity.py`; `scripts/analyze_phase5_stage_b_b13_future_unit_composition_probe.py` |
-| `decision` | `partial_pass`：problem evidence 通过，但 coefficient-memory transition 被 no-transition control 解释；等待 hidden-memory intervention repair |
+| `design` | `B13-FUCO-A` 已确认 large-unit granularity robustness；B1/B2 exact parameter-matched probes 均未证明 GRU composition mechanism，不实现 model |
+| `narrative_gate` | failed for current GRU-based prefix-causal composition；broader future-unit generation remains at Step 2 |
+| `effectiveness_gate` | not applicable；candidate never advanced beyond Step 3 diagnostic |
+| `artifacts` | `analysis/phase5_stage_b_b13_future_unit_granularity_20260710/`; `analysis/phase5_stage_b_b13_future_unit_composition_20260710/`; `analysis/phase5_stage_b_b13_future_unit_hidden_composition_20260710/` |
+| `decision` | `blocked_by_no_transition_control`：关闭 current GRU composition；回滚 Step 2，不否定 broader future-unit generation |
 
 ## Step 2：Problem Definition
 
@@ -405,3 +405,48 @@ Step 4-6 narrative/literature audit；若仍由 no-transition control 解释，�
 `GRU-based prefix-causal composition` candidate，并回到 Step 2 重新判断真正需要的是
 future-region-specific state 还是其它非 recurrent future-stage generator。B2 失败不能自动否定所有
 future-unit architecture，但不允许继续围绕 GRU/head 叠加调参。
+
+## Diagnostic B2 Result：Hidden-Memory Intervention
+
+Remote artifacts：
+
+- `analysis/phase5_stage_b_b13_future_unit_hidden_composition_20260710/launch_record.md`；
+- `analysis/phase5_stage_b_b13_future_unit_hidden_composition_20260710/b13_future_unit_composition_report.md`；
+- `analysis/phase5_stage_b_b13_future_unit_hidden_composition_20260710/b13_future_unit_hidden_deep_analysis.md`。
+
+| Dataset | Unit size | Composed wins | Mean composed vs parallel MSE | Support |
+| --- | ---: | ---: | ---: | --- |
+| ETTh2 | `180` | `1/3` | `+5.1639%` | no |
+| ETTh2 | `240` | `1/3` | `+5.3589%` | no |
+| ETTm1 | `180` | `3/3` | `-2.3454%` | yes |
+| ETTm1 | `240` | `3/3` | `-16.0953%` | yes |
+| Weather | `180` | `2/3` | `-1.8434%` | yes |
+| Weather | `240` | `3/3` | `-6.4462%` | yes |
+
+[Fact] B2 达到 `4/6` setting support，但 ETTh2 两个 sizes 都平均退化约 `+5%`，没有任何 size 通过
+dataset non-degradation boundary。所有 `18` pairs 的 parameter delta 为 `0`，最大 prefix error 为 `0`，
+且没有 numeric invalidity。
+
+[Strong Evidence] Per-unit pattern 不支持 progressive composition narrative：
+
+- ETTh2-U180/U240 的 unit 0 平均改善 `-11.66%/-5.43%`，但 later-unit mean 退化
+  `+9.78%/+9.90%`；
+- ETTm1-U240 aggregate 改善 `-16.10%`，但最后一个 unit 平均退化 `+7.50%`；
+- Weather-U240 所有 units 改善，但最大改善发生在没有 previous-unit input 的 unit 0（`-12.64%`），
+  后续收益随 depth 变小。
+
+unit 0 在两个 arms 中没有 previous-unit information，其差异只能来自 later-unit joint loss 对 shared
+weights 的优化影响。因此正向 aggregate result 更符合 optimization/parameterization effect，而不是
+previous latent unit 提供 compositional context。
+
+[Decision] `no_transition_control_explains`。B2 不是 marginal miss：ETTh2 只有 `1/3` wins，seed-level
+std 约 `19-20%`。关闭 current `GRU-based prefix-causal composition`，不进入 Step 4-6 或 end-to-end model。
+
+[Rollback] StageB 回到 Step 2。后续若继续用户提出的 future stage/unit generation 叙事，应改问：
+
+> 不同 large future regions 是否需要不同的 history retrieval/state，并且 region-specific generation
+> 是否可以在没有 recurrent transition 的条件下成立？
+
+该 broader direction 尚未被 B13 否定。下一步优先做 `future-unit-specific history retrieval` 的问题存在性
+与 literature audit；禁止继续 GRU/head tuning、late coefficient modulation、hard stage id、residual repair
+或 small-unit tiling。

@@ -5,7 +5,7 @@
 | 字段 | 内容 |
 | --- | --- |
 | `candidate_id` | `B13-FUCO` |
-| `diagnostic_id` | `B13-FUCO-B` |
+| `diagnostic_id` | `B13-FUCO-B1` |
 | `current_step` | Step 2/3：parameter-matched composition control |
 | `scope` | frozen A6 memory；trainable diagnostic probes；not end-to-end model performance |
 | `memory_source` | `coeff` |
@@ -37,7 +37,7 @@
 
 [Fact] Maximum prefix-consistency absolute error across runs is `0.000000e+00`.
 [Fact] Runs with test/validation MSE ratio above `2.0`: `0/36`.
-[Fact] Trainable parameter sets by unit size: U180=[57396]; U240=[61296].
+[Fact] Trainable parameter sets by dataset/unit size: ETTh2-U180=[57396]; ETTh2-U240=[61296]; ETTm1-U180=[57396]; ETTm1-U240=[61296]; Weather-U180=[57396]; Weather-U240=[61296].
 
 [Decision] Large-unit gradient pressure exists, but the parameter-matched no-transition probe explains the predictive value. Do not implement prefix-causal composition as a paper-core candidate.
 

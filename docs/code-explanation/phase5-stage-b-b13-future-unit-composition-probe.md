@@ -224,3 +224,21 @@ Failure attribution：
 - composed 输给 no-transition，可以阻断当前 latent-transition claim；
 - 但不能单独证明所有 future-unit generation 都无效，因为 intervention point 与 probe design 仍可能错误；
 - numeric/val-test pathology 出现时，只能修复 probe，不能做方向级拒绝。
+
+## Returned B2 Verification
+
+Hidden-memory B2 在 remote commit `013dd35` 上完成 `36` runs：
+
+- `18/18` paired parameter deltas 为 `0`；
+- max prefix error 为 `0`；
+- all reported losses finite；
+- `0/36` severe val-test mismatch；
+- setting support 为 `4/6`，但 ETTh2-U180/U240 均平均退化约 `+5%`。
+
+Analyzer 根据 `memory_source` 将 coefficient 与 hidden reports 分别标记为 `B13-FUCO-B1` 与
+`B13-FUCO-B2`。由于 hidden width 为 ETTh2 `1536`、ETTm1 `256`、Weather `6144`，report 按
+`dataset/unit_size` 显示 parameter set；只要求同一 paired comparison exact match，不要求跨 dataset 相等。
+
+Per-unit audit 进一步发现，多个正向 settings 的最大收益出现在 unit 0，而 unit 0 没有 previous-unit
+information；ETTm1-U240 最后一个 unit 还平均退化 `+7.50%`。因此当前 code 确实检验并否定了
+GRU-based progressive composition claim，而不是仅仅因为 aggregate gate 少一个 dataset 通过。
