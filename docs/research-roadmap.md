@@ -8,11 +8,12 @@
 | Field | Content |
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
-| `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5：A6-LBF-r256 validated；C1 closed；StageB rolled back Step 2/3 |
-| `current_11_step` | C1 Step 9-10 failed；Contribution 1 matched control planned；StageB Step 2/3 next |
-| `active_carrier` | `A6-LBF-r256 + exact valid HPM`；trainable patch carrier closed |
-| `active_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
+| `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Time Series Forecasting |
+| `current_stage` | StageC active；StageB paused/closed as active stage |
+| `current_11_step` | StageC Step 1-3：standardized carrier、prior-art boundary、problem existence |
+| `source_evidence_carrier` | `A6-LBF-r256` source-faithful results |
+| `mechanism_control_carrier` | pending `SC0-MCP` global profile freeze |
+| `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 
 ## Long Research Loop Rule
 
@@ -33,7 +34,52 @@
 Narrative gate 属于 Step 4-6；effectiveness gate 属于 Step 9-10。Diagnostic-only 实验不能因为
 metric 正向就直接升级为 method。
 
-## StageA Final Decision
+## StageC Transition And Research Plan
+
+### Stage transition
+
+[Decision] 2026-07-11 新开 `StageC-UVHF`。Phase5 StageB 的 candidate queue与负结果保留为历史
+evidence，但不再继续 B7/B8/B9/B10/B11/B12/B13/B14 或 C1 repair。StageC 回到 paper-level Step 1-3，
+目标是形成两项相互支撑且各自可证伪的创新：projective decoder/operator 与 horizon-measure training。
+
+### Why protocol calibration comes first
+
+[Fact] source-faithful A6 在 ETTh2/ETTm1/Weather 上继承不同 TimeAlign H720 presets，尤其包含
+`patch_num=48/1/48`、`d_model=32/256/128`、`dropout=0.1/0.9/0.5`。这适合复现 upstream，但不适合
+mechanism attribution：任何结构改动都可能因为离开 dataset-specific operating point而退化。
+
+[Decision] `SC0-MCP` 是 StageC blocker。它使用三组 `P*D=1536` 的 capacity-matched arms：
+
+| Arm | `P` | `D` | `d_ff` | Approx. active params |
+| --- | ---: | ---: | ---: | ---: |
+| `sc0_p12_d128` | 12 | 128 | 256 | 718,672 |
+| `sc0_p24_d64` | 24 | 64 | 536 | 719,168 |
+| `sc0_p48_d32` | 48 | 32 | 1072 | 718,576 |
+
+所有 arms固定 A6 readout、full-720 neutral objective、dropout `0.1`、LR `1e-4`、20 epochs、effective
+batch 32、best-full720 validation selector与last sensitivity。只用 validation macro regret选一个全局
+winner，不允许逐 dataset配置；selected profile经三 seed确认后冻结。完整 gate见：
+
+- `docs/experiments/stage-c-standardized-mechanism-control-protocol.md`；
+- `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`。
+
+[Rollback] 若没有单一 profile在所有 datasets满足 `<=3%` validation regret，则 decision 为
+`common_token_mlp_profile_not_supported`，回 StageC Step 2/3重审 carrier topology；不得恢复
+dataset-specific presets作为 mechanism control。
+
+### StageC execution order
+
+1. `SC0-MCP`：实现、local gate、validation-only calibration、multi-seed profile freeze；
+2. `SC1-PFO`/`SC2-HML`：分别完成 prior-art与 Step 2/3 problem diagnostic；
+3. 只有 individual narrative gates通过，才进入 method implementation；
+4. 用 `2x2` factorial验证 decoder与training strategy的独立主效应和joint interaction；
+5. 扩展 dense seen/unseen horizons、完整 datasets与第二 backbone；
+6. Step 9-10 同时判断 performance、mechanism和SCI narrative；失败明确回滚。
+
+以下内容保留 Phase5 StageA/StageB 的完整 evidence chain与rollback记录；其中的 next action 已被上述
+StageC transition supersede。
+
+## Historical StageA Final Decision
 
 [Decision] StageA 结果已固定：`A6-LBF-r256` 是当前论文的重要创新点与后续 StageB 起点。
 

@@ -8,14 +8,48 @@
 | Field | Content |
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
-| `working_title` | Horizon-Agnostic Supervision Scheduling for Unified Multi-Horizon Forecasting |
-| `current_stage` | Phase5 StageA clean A6 validated；C1 closed；StageB rolled back Step 2/3 |
-| `active_carrier` | `A6-LBF-r256`；hierarchical patch memory is diagnostic-only |
-| `active_stage_ledger` | `docs/stage-ledgers/phase5-timealign-interface.md` |
-| `current_11_step` | C1 Step 9-10 failed；next Contribution 1 matched control, then StageB Step 2/3 |
-| `paper_core_status` | A6-LBF-r256 pure operator 是当前唯一 accepted paper-core method；StageB 第二贡献仍未成立 |
+| `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Time Series Forecasting |
+| `current_stage` | StageC active；StageB paused and closed as active research stage |
+| `source_evidence_carrier` | `A6-LBF-r256` on TimeAlign source-faithful presets |
+| `mechanism_control_carrier` | pending `SC0-MCP` global standardized calibration；`patch_num=1` forbidden |
+| `active_stage_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
+| `current_11_step` | StageC Step 1-3：protocol calibration、prior-art boundary、problem existence |
+| `paper_core_status` | A6 performance evidence retained；final decoder/training contributions reopened under StageC gates |
 
-## Core Claim
+## StageC Research Reset
+
+[Decision] StageB 的局部 coefficient/stage/retrieval/future-unit 路线暂停，不再继续修补。StageC 从论文级
+问题重新开始：一个参数共享模型如何对任意 requested horizon 产生 projectively consistent、无需逐
+horizon tuning、且能与 specialists 竞争的预测。
+
+StageC 预留两个必须分别过 gate 的 innovation slots：
+
+1. `SC1-PFO`：projective forecast decoder/operator；
+2. `SC2-HML`：与声明的 horizon measure一致的 training principle。
+
+两者当前均为 `proposed`，不是 accepted contribution。A6 是 source-evidence anchor和可能的 discrete
+prototype，但 learned basis、future query、continuous basis、horizon reweighting等单点已有充分 prior art，
+因此必须重新做 novelty boundary，而不能沿用“换 head 即创新”的旧表述。
+
+### Standardized Mechanism-Control Boundary
+
+[Fact] 当前 source A6 unified scripts继承 TimeAlign H720 presets：ETTh2/ETTm1/Weather 的
+`patch_num` 为 `48/1/48`，并同时改变 width、dropout、LR与LayerNorm。这些结果继续作为
+source-faithful performance evidence，但不再作为 StageC mechanism attribution protocol。
+
+[Decision] StageC 先执行 `SC0-MCP`：在 `P*D=1536` 与近似相同 active parameter budget下，比较
+`P12-D128`、`P24-D64`、`P48-D32`，通过 validation-only macro rule选择一个跨 dataset的全局 profile。
+该 profile multi-seed确认后冻结；后续机制实验不得逐 dataset或逐 candidate重新调整
+`patch_num/d_model/d_ff/dropout/LR/epoch/selector`。完整协议见
+`docs/experiments/stage-c-standardized-mechanism-control-protocol.md`。
+
+[Rollback] 若没有统一 profile通过 per-dataset regret gate，不恢复 TimeAlign dataset-specific presets；回到
+StageC Step 2/3 重审 common carrier contract。
+
+以下 Phase5 sections保留历史 performance与failure evidence；其中出现的“当前 StageB candidate”不再表示
+active cursor。StageC 的 candidate status只以 active ledger为准。
+
+## Historical Phase5 Core Claim And Evidence
 
 [Claim] A6-LBF-r256 将 TimeAlign 的 final prediction head 改写为 prefix-native learned-basis forecast
 operator。它用一个 unified 720-step model 覆盖 96/192/336/720 多个 prediction horizons，并在当前

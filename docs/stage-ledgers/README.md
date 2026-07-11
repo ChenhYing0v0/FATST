@@ -5,7 +5,12 @@ pending tasks、decision cursor 和 paper-mainline sync 状态。
 
 ## Active Ledger
 
-- `phase5-timealign-interface.md`：当前 TimeAlign unified interface 阶段。
+- `stage-c-unified-forecasting-redesign.md`：当前 StageC unified forecasting decoder/training redesign。
+
+## Historical Ledgers
+
+- `phase5-timealign-interface.md`：Phase5 StageA/StageB 的完整候选与 rollback 记录；不再是 active cursor。
+- `phase5-stageb-b13-restart-handoff-20260710.md`：StageB/C1 关闭时的 restart snapshot。
 
 ## Usage
 
