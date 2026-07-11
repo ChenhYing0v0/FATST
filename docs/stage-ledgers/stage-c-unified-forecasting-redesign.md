@@ -24,8 +24,8 @@ mechanism-control protocol。StageB 的实验和负结果继续保存在 `phase5
 | --- | --- |
 | `current_11_step` | StageC Step 1-3：prior-art boundary、problem definition、standardized protocol calibration |
 | `current_candidate` | `SC0-MCP` |
-| `latest_decision` | StageB paused；source-faithful TimeAlign presets 不再作为 StageC mechanism controls |
-| `next_required_action` | SC0 local gate已通过；commit/push后做GPU preflight并启动validation-only remote calibration |
+| `latest_decision` | SC0 local gate通过；seed2021 validation-only 9-run calibration已在3090启动 |
+| `next_required_action` | 低频监控remote matrix；完成后sync validation artifacts并执行global selection analyzer |
 | `rollback_point` | SC0 失败回到 Step 2/3 carrier definition；禁止逐 dataset 恢复 TimeAlign finetuned presets |
 
 ## 11-Step Stage Record
@@ -59,7 +59,7 @@ TimeAlign official reproduction。
 
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Blocking Or Next Action | Artifacts |
 | --- | --- | --- | --- | --- | --- | --- |
-| `SC0-MCP` | `control_only` | 一个非 `patch_num=1`、capacity-matched、跨 dataset 共用的 TimeAlign-derived carrier profile 可以为后续 mechanism attribution 提供稳定基线 | `not_required`；protocol control | validation-only global selection；单一 winner；multi-seed confirmation；不得逐 dataset 调参 | local gate通过；下一步remote seed2021 calibration，通过后只确认selected arm | protocol、config、checker、runner、analyzer与code explanation |
+| `SC0-MCP` | `running` | 一个非 `patch_num=1`、capacity-matched、跨 dataset 共用的 TimeAlign-derived carrier profile 可以为后续 mechanism attribution 提供稳定基线 | `not_required`；protocol control | validation-only global selection；单一 winner；multi-seed confirmation；不得逐 dataset 调参 | seed2021 9-run matrix运行中；完成后sync/analyze，通过后只确认selected arm | protocol、config、checker、runner、analyzer、code explanation、launch record |
 | `SC1-PFO` | `proposed` | unified forecasting 应表示满足 projective consistency 的 forecast family，而不是 benchmark-horizon heads 或 full-trajectory clipping | 尚未通过；必须区别 DAM/FlowState/ElasTST/TimePerceiver，并明确 A6 special-case relation | dense seen/unseen horizons；exact consistency；matched A6/fixed-basis/query controls；跨 dataset 和 seed | 等待 SC0；完成 full paper/code prior-art matrix 与 problem diagnostic | none |
 | `SC2-HML` | `proposed` | training risk 应对应声明的 horizon measure，而不是由 `{96,192,336,720}` nested prefixes 隐式产生 early-step overweighting | 尚未通过；必须超越 ElasTST uniform-horizon harmonic reweighting与 generic task balancing | exposure/gradient mechanism 先过 Step 3；再验证 worst-horizon regret、AUC 与 unseen-H generalization | 等待 SC0；先做 gradient/exposure causal diagnostic | none |
 | `SC3-JCO` | `deferred` | projective decoder 与 horizon-measure learning 有可解释、非冗余的 interaction | 只有 SC1/SC2 分别通过后才评估 | `2x2` factorial 必须显示两项独立主效应，joint arm 不能只由单项解释 | 不得提前实现 | none |
@@ -88,6 +88,7 @@ two token-MLP layers 与 `P*D=1536`，比较：
 | C0 ETTm1 protocol gate | protocol evidence | diagnostic | P5 matched controls 全部输给 P1；不能证明 inherited `P=1` 是 performance defect | 不继续修 C0；但 StageC 不继承 dataset-specific P1 | `analysis/phase5_stage_b_c0_ettm1_carrier_protocol_gate_20260710/c0_ettm1_encoder_control_deep_analysis.md` |
 | C1 multipatch carrier | protocol evidence | control | 两个 scales 相对 same-run A6 均明显退化 | 只否定 exact C1 design；不否定 standardized token-MLP calibration | `analysis/phase5_c1_global_anchored_multipatch_gate_20260710/c1_global_anchored_multipatch_deep_analysis.md` |
 | SC0 local semantic gate | `SC0-MCP` | implementation verification | 3 arms structural gate与3 datasets × 3 arms one-batch CPU smoke通过；validation-only、dense horizons、dual reload、analyzer complete均通过 | `local_gate_passed`；允许commit/push后remote launch | `scripts/check_stage_c_sc0_carrier_local.py`; `docs/code-explanation/stage-c-sc0-mechanism-control.md` |
+| SC0 seed2021 launch | `SC0-MCP` | validation-only carrier calibration | commit `31730cd`；GPU 0/1/2 preflight均free；Weather three arms先行；9 runs | `running`；不得在completion前读取test或提前选profile | `analysis/stage_c_sc0_carrier_calibration_20260711/launch_record.md` |
 
 ## Pending Tasks
 
@@ -96,7 +97,7 @@ two token-MLP layers 与 `P*D=1536`，比较：
 | Freeze SC0 mathematical/config contract | Codex | StageC creation | `completed` | 以 protocol 文档为实现依据 |
 | Implement SC0 config profile and runner | Codex | user continues StageC execution | `completed` | config、profile overrides、runner、sync、analyzer已完成 |
 | Verify SC0 local semantics | Codex | implementation complete | `completed` | 9-run one-batch smoke与analyzer integration通过；profile hash `79a037f7...fd900` |
-| Run SC0 validation-only calibration | Codex | local gate + commit/push + GPU preflight | `pending` | 三 datasets × 三 arms × seed2021；不读取 test 选 config |
+| Run SC0 validation-only calibration | Codex | local gate + commit/push + GPU preflight | `running` | 3090 GPU 0/1/2；output `/home/yingch/exp_outputs/r-2026-fatst/stage_c_sc0_carrier_calibration` |
 | Confirm and freeze global profile | Codex | seed2021 gate passes | `pending` | selected arm seeds 2022/2023；写 frozen profile hash |
 | Build StageC prior-art matrix | Codex | SC0 可并行准备 | `pending` | 逐项记录 task definition、decoder contract、training distribution、official code defaults与 novelty boundary |
 | Run SC1/SC2 problem diagnostics | Codex | SC0 frozen | `pending` | 先 Step 2/3，后 Step 4-6 narrative gate |
