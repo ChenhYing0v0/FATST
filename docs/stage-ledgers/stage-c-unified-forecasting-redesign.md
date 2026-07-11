@@ -22,11 +22,11 @@ mechanism-control protocol。StageB 的实验和负结果继续保存在 `phase5
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | StageC Step 2/3：standardized optimization/checkpoint protocol rollback |
-| `current_candidate` | `SC0-R1`（control-only，尚未通过 protocol gate） |
-| `latest_decision` | SC0 seed2021 9/9完成；best winner `p24/d64`、last winner `p48/d32`，selector gate失败；未读test、未启动confirmation |
-| `next_required_action` | 预注册统一 validation-controlled stopping/checkpoint rule，并修复 multi-seed winner confirmation 的逻辑缺口 |
-| `rollback_point` | 当前已回到 Step 2/3；若修订后仍无稳定 common carrier，再重审 carrier topology，禁止逐 dataset 恢复特调 presets |
+| `current_11_step` | StageC Step 7/8：SC0-R1 control implementation complete，等待remote effectiveness gate |
+| `current_candidate` | `SC0-R1`（control-only，protocol/local gate passed） |
+| `latest_decision` | patience离线gate选择5并保留9/9旧best；opt-in stopping、27-run analyzer与ETTh2 semantic smoke通过 |
+| `next_required_action` | commit/push后执行3090 preflight，启动三臂×三dataset×三seed validation-only calibration |
+| `rollback_point` | SC0-R1 effectiveness gate失败则回Step 2/3重审carrier topology，禁止逐dataset恢复特调presets或再改stopping追结果 |
 
 ## 11-Step Stage Record
 
@@ -60,7 +60,7 @@ TimeAlign official reproduction。
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Blocking Or Next Action | Artifacts |
 | --- | --- | --- | --- | --- | --- | --- |
 | `SC0-MCP` | `failed_exact_protocol` | 一个非 `patch_num=1`、capacity-matched、跨 dataset 共用的 TimeAlign-derived carrier profile 可以为后续 mechanism attribution 提供稳定基线 | `not_required`；protocol control | best-val regret通过，但 last/best winner必须一致 | 9/9、0 errors、validation-only；best=`p24/d64`、last=`p48/d32`；固定20 epoch在ETTh2产生31.63%-44.95%退化，回滚Step 2/3 | protocol、config、runner、`analysis/stage_c_sc0_carrier_calibration_20260711/` |
-| `SC0-R1` | `proposed_control` | 统一 validation-controlled training/checkpoint policy可消除固定20 epoch过训练，使common carrier成为稳定研究工具 | `not_required`；必须先过 protocol audit | 不得 post-hoc 改写SC0；重跑前冻结 stopping、robustness selector和可计算的multi-seed claim | 先完成 protocol amendment；当前不授权remote launch | SC0 failure attribution report |
+| `SC0-R1` | `ready_to_launch` | 统一 validation-controlled training/checkpoint policy可消除固定20 epoch过训练，使common carrier成为稳定研究工具 | `not_required`；control-only；protocol audit通过：max20/patience5/restore-best，同一规则跨dataset | 27 runs；mean/median winner一致；至少2/3 seed wins；pooled regret<=3%；任一seed-dataset<=5% | local gate通过；允许commit/push与GPU preflight后launch | SC0 failure report；stopping audit；R1 config/runner/analyzer/code explanation |
 | `SC1-PFO` | `proposed` | unified forecasting 应表示满足 projective consistency 的 forecast family，而不是 benchmark-horizon heads 或 full-trajectory clipping | 尚未通过；必须区别 DAM/FlowState/ElasTST/TimePerceiver，并明确 A6 special-case relation | dense seen/unseen horizons；exact consistency；matched A6/fixed-basis/query controls；跨 dataset 和 seed | 等待 SC0；完成 full paper/code prior-art matrix 与 problem diagnostic | none |
 | `SC2-HML` | `proposed` | training risk 应对应声明的 horizon measure，而不是由 `{96,192,336,720}` nested prefixes 隐式产生 early-step overweighting | 尚未通过；必须超越 ElasTST uniform-horizon harmonic reweighting与 generic task balancing | exposure/gradient mechanism 先过 Step 3；再验证 worst-horizon regret、AUC 与 unseen-H generalization | 等待 SC0；先做 gradient/exposure causal diagnostic | none |
 | `SC3-JCO` | `deferred` | projective decoder 与 horizon-measure learning 有可解释、非冗余的 interaction | 只有 SC1/SC2 分别通过后才评估 | `2x2` factorial 必须显示两项独立主效应，joint arm 不能只由单项解释 | 不得提前实现 | none |
@@ -91,6 +91,8 @@ two token-MLP layers 与 `P*D=1536`，比较：
 | SC0 local semantic gate | `SC0-MCP` | implementation verification | 3 arms structural gate与3 datasets × 3 arms one-batch CPU smoke通过；validation-only、dense horizons、dual reload、analyzer complete均通过 | `local_gate_passed`；允许commit/push后remote launch | `scripts/check_stage_c_sc0_carrier_local.py`; `docs/code-explanation/stage-c-sc0-mechanism-control.md` |
 | SC0 seed2021 launch | `SC0-MCP` | validation-only carrier calibration | commit `31730cd`；GPU 0/1/2 preflight均free；Weather three arms先行；9 runs | `completed`；14:06-14:19，9/9、0 errors | `analysis/stage_c_sc0_carrier_calibration_20260711/launch_record.md` |
 | SC0 seed2021 result | `SC0-MCP` | validation-only carrier calibration | 9/9、0 errors；best winner `p24/d64`、macro regret 0.4051%、max regret 1.2153%；last winner `p48/d32`；ETTh2 last较best恶化31.63%-44.95% | `exact_sc0_fixed20_protocol_not_frozen`；归因optimization/checkpoint pathology，回滚Step 2/3；不启动seeds 2022/2023 | `analysis/stage_c_sc0_carrier_calibration_20260711/sc0_failure_attribution_and_rollback.md` |
+| SC0-R1 stopping policy gate | `SC0-R1` | offline protocol diagnostic | patience3保留7/9 best；patience5/7均9/9；选择最小满足者5，预计节省105 epochs | `protocol_gate_passed`；只授权预注册R1，不作为performance evidence | `analysis/stage_c_sc0_r1_protocol_gate_20260711/` |
+| SC0-R1 local semantic gate | `SC0-R1` | implementation verification | opt-in early stopping、restore-best、27-run analyzer integration、三臂structure与ETTh2 validation-only smoke通过 | `local_gate_passed`；允许remote launch | `scripts/check_stage_c_sc0_r1_local.py`; `docs/code-explanation/stage-c-sc0-r1-training-control.md` |
 
 ## Pending Tasks
 
@@ -101,7 +103,8 @@ two token-MLP layers 与 `P*D=1536`，比较：
 | Verify SC0 local semantics | Codex | implementation complete | `completed` | 9-run one-batch smoke与analyzer integration通过；profile hash `79a037f7...fd900` |
 | Run SC0 validation-only calibration | Codex | local gate + commit/push + GPU preflight | `completed_failed_gate` | 9/9已同步；exact fixed-20 protocol不冻结 |
 | Confirm and freeze global profile | Codex | seed2021 gate passes | `blocked_by_gate` | 禁止启动原confirmation；SC0-R1重新过protocol gate后再决定 |
-| Design SC0-R1 training control | Codex | SC0 selector instability + optimization pathology | `pending` | 预注册统一stopping/checkpoint robustness；修复selected-only无法验证global winner的逻辑缺口 |
+| Design SC0-R1 training control | Codex | SC0 selector instability + optimization pathology | `completed` | max20/patience5/restore-best；全臂三seed gate已冻结 |
+| Run SC0-R1 validation-only calibration | Codex | protocol/local gate + commit/push + GPU preflight | `pending` | 27 runs；output root使用repo-external StageC路径 |
 | Build StageC prior-art matrix | Codex | SC0 可并行准备 | `pending` | 逐项记录 task definition、decoder contract、training distribution、official code defaults与 novelty boundary |
 | Run SC1/SC2 problem diagnostics | Codex | SC0 frozen | `pending` | 先 Step 2/3，后 Step 4-6 narrative gate |
 

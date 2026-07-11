@@ -603,6 +603,18 @@ def validation_mean_mse(
     return float(np.mean([row["mse"] for row in rows]))
 
 
+def early_stopping_update(
+    value: float,
+    best_value: float,
+    epochs_without_improvement: int,
+    min_delta: float,
+) -> tuple[bool, int]:
+    """Return whether validation improved and the updated patience counter."""
+    if value < best_value - min_delta:
+        return True, 0
+    return False, epochs_without_improvement + 1
+
+
 def train(
     args: argparse.Namespace,
     official_args: argparse.Namespace,
@@ -622,6 +634,8 @@ def train(
     training_rows: list[dict[str, Any]] = []
     best_val = float("inf")
     best_state: dict[str, torch.Tensor] | None = None
+    best_epoch = 0
+    epochs_without_improvement = 0
 
     for epoch in range(args.epochs):
         model.train()
@@ -732,9 +746,21 @@ def train(
             args.validation_horizons,
             max_batches=args.max_eval_batches,
         )
-        if val_mean_mse < best_val:
+        improved, epochs_without_improvement = early_stopping_update(
+            val_mean_mse,
+            best_val,
+            epochs_without_improvement,
+            args.early_stopping_min_delta,
+        )
+        if improved:
             best_val = val_mean_mse
+            best_epoch = epoch + 1
             best_state = {name: tensor.detach().cpu().clone() for name, tensor in model.state_dict().items()}
+
+        stop_triggered = (
+            args.enable_early_stopping
+            and epochs_without_improvement >= args.patience
+        )
 
         row = {
             "epoch": epoch + 1,
@@ -757,6 +783,12 @@ def train(
             "val_mean_mse": val_mean_mse,
             "lr": float(optimizer.param_groups[0]["lr"]),
             "epoch_seconds": time.time() - epoch_start,
+            "early_stopping_enabled": int(args.enable_early_stopping),
+            "early_stopping_patience": args.patience,
+            "early_stopping_min_delta": args.early_stopping_min_delta,
+            "best_epoch_so_far": best_epoch,
+            "epochs_without_improvement": epochs_without_improvement,
+            "stop_triggered": int(stop_triggered),
         }
         for name, values in sorted(pred_component_values.items()):
             if values:
@@ -771,6 +803,12 @@ def train(
             ),
             flush=True,
         )
+        if stop_triggered:
+            print(
+                f"Early stopping at epoch {epoch + 1}; restoring best epoch {best_epoch}",
+                flush=True,
+            )
+            break
         adjust_learning_rate(optimizer, epoch + 1, official_args)
 
     if best_state is None:
@@ -990,6 +1028,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--gradient-accumulation-steps", type=int, default=1)
     parser.add_argument("--epochs", type=int, default=10)
     parser.add_argument("--patience", type=int, default=3)
+    parser.add_argument(
+        "--enable-early-stopping",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+    )
+    parser.add_argument("--early-stopping-min-delta", type=float, default=0.0)
     parser.add_argument("--seed", type=int, default=2021)
     parser.add_argument("--num-workers", type=int, default=0)
     parser.add_argument("--max-train-batches", type=int, default=0)
@@ -1057,6 +1101,12 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("w_recon must be non-negative")
     if args.gradient_accumulation_steps <= 0:
         raise ValueError("gradient accumulation steps must be positive")
+    if args.patience <= 0:
+        raise ValueError("patience must be positive")
+    if args.early_stopping_min_delta < 0.0:
+        raise ValueError("early stopping min delta must be non-negative")
+    if args.enable_early_stopping and args.checkpoint_policy != "best-val":
+        raise ValueError("early stopping requires checkpoint_policy=best-val")
     if args.protocol_class == "mechanism_control":
         if not args.protocol_profile or not args.profile_hash:
             raise ValueError(

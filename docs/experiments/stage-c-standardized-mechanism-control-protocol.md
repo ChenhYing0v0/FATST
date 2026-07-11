@@ -228,3 +228,46 @@ confirmation 与 selected-arm absolute stability confirmation。
 [Decision] 原 profile不冻结，不启动原定 seeds 2022/2023；回到StageC Step 2/3设计统一的
 validation-controlled stopping/checkpoint policy。完整归因见
 `analysis/stage_c_sc0_carrier_calibration_20260711/sc0_failure_attribution_and_rollback.md`。
+
+## 12. SC0-R1 Preregistered Repair
+
+### 12.1 Offline stopping-policy gate
+
+在SC0九条完整validation trajectory上模拟统一patience候选：
+
+| Patience | Retains full-trajectory best | Early-stopped runs | Total epochs saved |
+| ---: | ---: | ---: | ---: |
+| 3 | 7/9 | 9/9 | 136 |
+| 5 | 9/9 | 9/9 | 105 |
+| 7 | 9/9 | 9/9 | 87 |
+
+[Decision] 选择最小且保留9/9已知best的`patience=5`。该结果只证明不会在已有trajectory上过早截断；
+不证明新seed稳定。完整定义和逐run结果见
+`analysis/stage_c_sc0_r1_protocol_gate_20260711/`。
+
+### 12.2 Frozen training rule
+
+- `max_epochs=20`；
+- `enable_early_stopping=true`；
+- `patience=5`、`min_delta=0`；
+- `checkpoint_policy=best-val`、`restore_best=true`；
+- optimizer、cosine schedule、LR、effective batch、loss与SC0一致；
+- 所有dataset、arms和seeds使用同一规则；realized stop epoch可以由validation trajectory决定。
+
+这意味着“统一超参数”要求相同decision rule，而不是要求不同dataset无视validation状态、机械训练同样多的
+epochs。禁止根据dataset修改patience、max epochs或selector。
+
+### 12.3 Full-arm multi-seed gate
+
+SC0-R1一次运行全部`3 datasets × 3 arms × seeds {2021,2022,2023}=27 runs`。不再使用
+selected-arm-only confirmation。只读取full-720 validation MSE：
+
+1. pooled-mean与median-seed selector必须选择同一arm；
+2. selected arm必须在至少2/3 seeds中成为global winner；
+3. pooled-mean下每dataset regret不超过3%；
+4. selected arm任一seed-dataset regret不超过5%；
+5. 27 runs配置、参数、数值与dense validation artifacts完整；
+6. profile freeze前禁止读取test。
+
+若通过，直接冻结`configs/stage_c_mechanism_control_r1.json`的profile hash；若失败，回Step 2/3重审
+carrier topology，不再修改stopping rule追逐本次结果。

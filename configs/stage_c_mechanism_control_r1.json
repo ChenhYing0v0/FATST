@@ -1,0 +1,77 @@
+{
+  "stage": "StageC-UVHF",
+  "candidate": "SC0-R1",
+  "protocol_class": "mechanism_control",
+  "protocol_profile": "stage_c_sc0_r1_calibration_v2",
+  "selection_split": "val",
+  "selection_metric": "full_720_mse",
+  "datasets": [
+    "Weather",
+    "ETTm1",
+    "ETTh2"
+  ],
+  "common": {
+    "seq_len": 720,
+    "pred_len": 720,
+    "target_horizons": [720],
+    "validation_horizons": [720],
+    "evaluation_horizons": [48, 96, 144, 192, 288, 336, 512, 720],
+    "encoder_mode": "timealign-token-mlp",
+    "readout_mode": "learned-basis-forecast-operator",
+    "basis_rank": 256,
+    "e_layers": 2,
+    "dropout": 0.1,
+    "layer_norm": 1,
+    "learning_rate": 0.0001,
+    "batch_size": 32,
+    "gradient_accumulation_steps": 1,
+    "effective_batch_size": 32,
+    "max_epochs": 20,
+    "enable_early_stopping": true,
+    "early_stopping_patience": 5,
+    "early_stopping_min_delta": 0.0,
+    "restore_best": true,
+    "pred_loss_mode": "full",
+    "checkpoint_policy": "best-val",
+    "final_evaluation_split": "val",
+    "initial_seed": 2021,
+    "seeds": [2021, 2022, 2023]
+  },
+  "arms": {
+    "sc0_p12_d128": {
+      "patch_num": 12,
+      "patch_len": 60,
+      "d_model": 128,
+      "d_ff": 256,
+      "state_width": 1536,
+      "active_forward_parameters": 718672,
+      "unused_proj_x_parameters": 1106640
+    },
+    "sc0_p24_d64": {
+      "patch_num": 24,
+      "patch_len": 30,
+      "d_model": 64,
+      "d_ff": 536,
+      "state_width": 1536,
+      "active_forward_parameters": 719168,
+      "unused_proj_x_parameters": 1106640
+    },
+    "sc0_p48_d32": {
+      "patch_num": 48,
+      "patch_len": 15,
+      "d_model": 32,
+      "d_ff": 1072,
+      "state_width": 1536,
+      "active_forward_parameters": 718576,
+      "unused_proj_x_parameters": 1106640
+    }
+  },
+  "gates": {
+    "max_pooled_per_dataset_regret": 0.03,
+    "max_seed_per_dataset_regret": 0.05,
+    "required_seed_winner_count": 2,
+    "tie_macro_score_delta": 0.005,
+    "active_parameter_relative_spread_max": 0.001
+  },
+  "selection_policy": "Run every arm on seeds 2021, 2022, and 2023. Select one global arm using validation full-720 MSE only. The pooled-mean and median-seed selectors must agree, the arm must win at least two seeds, pooled per-dataset regret must be at most 3%, and every seed-dataset regret must be at most 5%. Never inspect test metrics before profile freeze."
+}

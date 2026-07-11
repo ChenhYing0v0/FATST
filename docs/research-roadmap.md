@@ -10,9 +10,9 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Time Series Forecasting |
 | `current_stage` | StageC active；StageB paused/closed as active stage |
-| `current_11_step` | StageC Step 2/3：standardized optimization/checkpoint protocol rollback |
+| `current_11_step` | StageC Step 7/8：SC0-R1 implementation complete，等待remote effectiveness gate |
 | `source_evidence_carrier` | `A6-LBF-r256` source-faithful results |
-| `mechanism_control_carrier` | pending；SC0 fixed-20 selector gate失败，`SC0-R1`待预注册 |
+| `mechanism_control_carrier` | pending；SC0-R1 max20/patience5/full-arm三seedprotocol已冻结并通过local gate |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 
 ## Long Research Loop Rule
@@ -78,6 +78,12 @@ optimization/checkpoint pathology。
 `SC0-R1`：先预注册统一validation-controlled stopping/checkpoint rule，并修复“只跑selected arm却要求
 确认global winner”的逻辑缺口。该失败不否定common carrier topology、projective decoder或
 horizon-measure learning。
+
+[SC0-R1 Protocol Gate] patience候选离线审计显示3只保留7/9旧best，5和7均保留9/9；因此冻结最小满足者
+`max_epochs=20, patience=5, min_delta=0, restore-best`。SC0-R1将完整运行三臂、三dataset和三个seeds，
+以pooled-mean/median一致性、至少2/3 seed wins、pooled每dataset regret<=3%及任一seed-dataset
+regret<=5%作为effectiveness gate。实现与local semantic gate已通过；下一步只允许commit/push、GPU
+preflight和remote validation-only launch。
 
 ### StageC execution order
 

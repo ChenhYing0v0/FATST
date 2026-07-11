@@ -1,0 +1,4 @@
+patience,retained_runs,total_runs,stopped_early_runs,total_epochs_saved,mean_epochs_saved
+3,7,9,9,136,15.11111111111111
+5,9,9,9,105,11.666666666666666
+7,9,9,9,87,9.666666666666666
