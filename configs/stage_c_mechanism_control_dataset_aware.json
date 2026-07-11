@@ -1,0 +1,83 @@
+{
+  "stage": "StageC-UVHF",
+  "role": "dataset_aware_mechanism_control",
+  "status": "active",
+  "protocol_profile": "stage_c_dataset_aware_mechanism_control_v1",
+  "supersedes": "configs/stage_c_mechanism_control_frozen.json",
+  "selection_evidence": "analysis/stage_c_sc0_r1_carrier_calibration_20260711/sc0_r1_validation_horizon_metrics.csv",
+  "checkpoint_evidence": "analysis/stage_c_sc0_checkpoint_test_gap_20260712/sc0_checkpoint_test_report.md",
+  "selection_split": "validation_only",
+  "selection_rule": "For each dataset, select one profile from the same preregistered three-arm capacity-matched grid using three-seed pooled full-720 validation MSE. Test metrics are diagnostic only and cannot change the mapping.",
+  "global_fields": {
+    "seq_len": 720,
+    "pred_len": 720,
+    "encoder_mode": "timealign-token-mlp",
+    "readout_mode": "learned-basis-forecast-operator",
+    "basis_rank": 256,
+    "e_layers": 2,
+    "dropout": 0.1,
+    "layer_norm": 1,
+    "objective": "full_720_pointwise_l1",
+    "optimizer": "AdamW",
+    "learning_rate": 0.0001,
+    "lr_schedule": "cosine",
+    "effective_batch_size": 32,
+    "max_epochs": 20,
+    "early_stopping_patience": 5,
+    "early_stopping_min_delta": 0.0,
+    "checkpoint_policy": "best-val",
+    "restore_best": true,
+    "default_seeds": [2021, 2022, 2023],
+    "dense_validation_horizons": [48, 96, 144, 192, 288, 336, 512, 720]
+  },
+  "dataset_profiles": {
+    "Weather": {
+      "profile": "sc0_p12_d128",
+      "patch_num": 12,
+      "patch_len": 60,
+      "d_model": 128,
+      "d_ff": 256,
+      "state_width": 1536,
+      "active_forward_parameters": 718672,
+      "pooled_validation_mse_h720": 0.5872341394424438,
+      "seed_winner_count": 3
+    },
+    "ETTm1": {
+      "profile": "sc0_p48_d32",
+      "patch_num": 48,
+      "patch_len": 15,
+      "d_model": 32,
+      "d_ff": 1072,
+      "state_width": 1536,
+      "active_forward_parameters": 718576,
+      "pooled_validation_mse_h720": 0.9559173782666525,
+      "seed_winner_count": 2
+    },
+    "ETTh2": {
+      "profile": "sc0_p24_d64",
+      "patch_num": 24,
+      "patch_len": 30,
+      "d_model": 64,
+      "d_ff": 536,
+      "state_width": 1536,
+      "active_forward_parameters": 719168,
+      "pooled_validation_mse_h720": 0.6544919808705648,
+      "seed_winner_count": 2
+    }
+  },
+  "governance": {
+    "allowed_dataset_specific_fields": ["patch_num", "patch_len", "d_model", "d_ff"],
+    "grid_size": 3,
+    "capacity_matched": true,
+    "active_parameter_relative_spread": 0.000824445,
+    "selection_frequency": "once_before_mechanism_experiments",
+    "forbidden": [
+      "test-driven profile changes",
+      "per-mechanism carrier reselection",
+      "continuous or large hyperparameter sweeps",
+      "different dataset profile for method and matched control",
+      "patch_num=1 in mechanism-control experiments"
+    ],
+    "new_dataset_rule": "Evaluate only the same three registered profiles on validation with the standard seeds, freeze one mapping, then reuse it for every mechanism and control."
+  }
+}

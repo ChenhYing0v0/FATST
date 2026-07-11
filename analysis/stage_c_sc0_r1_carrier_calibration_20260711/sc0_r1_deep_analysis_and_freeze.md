@@ -1,5 +1,10 @@
 # StageC SC0-R1：Multi-Seed Carrier Gate与冻结决策
 
+> 2026-07-12 governance update：本文冻结的global P24 profile保留为更严格的历史control，但不再是active
+> StageC要求。用户允许dataset有有限结构偏好；active mapping改为Weather=P12、ETTm1=P48、ETTh2=P24，
+> 仍只使用本文三seedvalidation evidence选择。见
+> `configs/stage_c_mechanism_control_dataset_aware.json`。
+
 ## 1. Decision
 
 - `current_step`: SC0-R1 Step 9-10完成；StageC随后回到SC1/SC2 Step 1-3

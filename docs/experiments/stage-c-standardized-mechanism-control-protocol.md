@@ -25,7 +25,7 @@ source baseline，不再决定 StageC mechanism runner。
 | Protocol | Purpose | Hyperparameter Rule | Allowed Claim |
 | --- | --- | --- | --- |
 | `source` | 复现 TimeAlign 与历史 A6 | 完整保留 upstream per-dataset/per-horizon presets | source-faithful performance only |
-| `mechanism_control` | 因果归因、消融、候选 small gate | 一个跨 dataset frozen profile；禁止 `patch_num=1` | mechanism evidence under controlled carrier |
+| `mechanism_control` | 因果归因、消融、候选 small gate | dataset-aware frozen mapping；同dataset的method/control共用profile；禁止 `patch_num=1` | mechanism evidence under controlled carrier |
 | `native_external` | 复现外部 baseline | 在其官方 repository 使用原生 protocol | external baseline reproduction only |
 
 不同 protocol 的结果必须分表报告，不能混成同一 matched comparison。
@@ -34,9 +34,8 @@ source baseline，不再决定 StageC mechanism runner。
 
 “统一”定义为：
 
-- 同一 computation topology；
-- 同一 patch policy；
-- 同一 active state width 与近似 active parameter budget；
+- 同一dataset内保持相同computation topology与patch policy；
+- dataset可从预注册小grid选择结构profile，但所有profiles保持相同state width与近似active parameter budget；
 - 同一 optimizer、LR schedule、effective batch、epoch budget、loss 与 checkpoint selector；
 - 同一 global selection rule；
 - dataset 只改变无法避免的数据 schema。
@@ -46,18 +45,19 @@ dataset 的最佳配置。
 
 ## 4. Allowed Dataset-Specific Fields
 
-StageC mechanism-control runner只允许下列 dataset-specific fields：
+StageC mechanism-control runner允许下列dataset-specific fields：
 
 - file path、dataset loader、sampling frequency；
 - `enc_in/dec_in/c_out` 与 channel identity；
 - normalization statistics；
 - physical micro-batch size，但必须用 gradient accumulation保持相同 effective batch；
 - worker/GPU 等不改变 optimization semantics 的 runtime setting。
+- 从预注册三臂grid一次性选择的`patch_num/patch_len/d_model/d_ff`。
 
 禁止 dataset-specific 修改：
 
-- `patch_num`、patch topology；
-- `d_model`、`d_ff`、layers、basis rank；
+- grid之外的`patch_num/d_model/d_ff`，或为不同mechanism重新选择这些字段；
+- layers、basis rank；
 - dropout；
 - learning rate、optimizer、schedule、epoch count；
 - prediction loss 与 horizon distribution；
@@ -291,3 +291,29 @@ provenance。完整结果与dense-horizon claim boundary见
 [Boundary] `p24/d64`按full-720 validation选择，并非逐horizon最优。ETTm1 H48相对三臂oracle仍有
 11.23% diagnostic regret；因此该profile用于因果归因而非all-horizon tuning claim，dense horizons仍必须
 完整报告。
+
+## 14. Active Dataset-Aware Governance Revision
+
+[Correction] SC0中31.63%-44.95%是ETTh2 validation trajectory degradation，不是test degradation。
+冻结后用原fixed20 checkpoints做test诊断，H720 last在9/9均差于best，mean test MSE为+6.11%；但dense
+horizons中last有29/72个MSE wins。StageC A6 mechanism-control据此保留best-val；official TimeAlign
+source reproduction仍遵循作者说明的native last protocol。证据见
+`analysis/stage_c_sc0_checkpoint_test_gap_20260712/`与
+[TimeAlign issue #2](https://github.com/TROUBADOUR000/TimeAlign/issues/2)。
+
+[Governance Revision] 用户目标是避免精细特调，而非禁止dataset偏好。Section 13的uniform P24 contract
+保留为历史更严格control，但active profile改为：
+
+| Dataset | Active profile | P/D/d_ff | Three-seed dataset winner count |
+| --- | --- | --- | ---: |
+| Weather | `p12/d128` | 12/128/256 | 3/3 |
+| ETTm1 | `p48/d32` | 48/32/1072 | 2/3 |
+| ETTh2 | `p24/d64` | 24/64/536 | 2/3 |
+
+选择只使用SC0-R1三seed pooled full-720 validation MSE；test没有改变mapping。active contract为
+`configs/stage_c_mechanism_control_dataset_aware.json`，SHA256
+`a10414acb23961225bb944e5939bac96fbecc3d332ff9dab3af71938f972fd88`。
+
+同dataset内baseline、method、ablation和capacity/no-mechanism control必须使用同一profile。禁止test-driven
+切换、per-mechanism重选和扩大continuous grid。新dataset只允许同样三组registered profiles的一次性
+validation calibration。

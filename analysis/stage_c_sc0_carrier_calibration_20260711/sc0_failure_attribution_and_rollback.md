@@ -1,5 +1,10 @@
 # StageC SC0 Standardized Carrier Calibration：失败归因与回滚
 
+> 2026-07-12 correction：本文中的31.63%-44.95%是full-720 **validation** degradation，不是test
+> degradation。后续用同一fixed20 checkpoints评估test，ETTh2三臂last相对best的H720 test MSE分别
+> 恶化13.70%/4.69%/9.68%，均值9.35%。因此validation恶化在test上收缩但没有消失。完整修订见
+> `analysis/stage_c_sc0_checkpoint_test_gap_20260712/`。
+
 ## 1. Decision Summary
 
 - `candidate`: `SC0-MCP`

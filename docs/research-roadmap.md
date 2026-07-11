@@ -12,7 +12,7 @@
 | `current_stage` | StageC active；StageB paused/closed as active stage |
 | `current_11_step` | StageC Step 1-3：SC1/SC2 prior-art boundary与problem existence |
 | `source_evidence_carrier` | `A6-LBF-r256` source-faithful results |
-| `mechanism_control_carrier` | frozen `sc0_p24_d64`；resolved contract SHA256 `86a30f99...2b6f` |
+| `mechanism_control_carrier` | active dataset-aware mapping：Weather=P12、ETTm1=P48、ETTh2=P24；SHA256 `a10414ac...fd88` |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 
 ## Long Research Loop Rule
@@ -92,6 +92,17 @@ mechanism-control profile，而不是all-horizon tuned baseline。
 
 [Next Cursor] SC0 blocker关闭。StageC回到SC1-PFO/SC2-HML Step 1-3，先建立统一prior-art/problem
 matrix，再分别判断novelty与problem existence；当前不自动授权method implementation。
+
+### Checkpoint and dataset-profile correction
+
+[Correction] 先前31.63%-44.95%只表示ETTh2 validation从best到epoch20的恶化。冻结后test诊断显示，
+H720 last在9/9均差于best，mean test MSE +6.11%；因此当前A6 mechanism-control使用best-val有依据，
+但不能把validation数字当成test。TimeAlign source reproduction仍按作者issue说明使用native last。
+
+[User Boundary] 防止精调不等于所有dataset完全共用结构超参数。active protocol改为低自由度dataset-aware
+mapping：Weather=P12/D128，ETTm1=P48/D32，ETTh2=P24/D64。mapping来自同一三臂capacity-matched
+grid、三seed pooled validation，并在所有后续mechanism/control间冻结；test与per-mechanism reselection禁止。
+完整治理见`analysis/stage_c_sc0_checkpoint_test_gap_20260712/checkpoint_and_dataset_profile_governance_revision.md`。
 
 ### StageC execution order
 

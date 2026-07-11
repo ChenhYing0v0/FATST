@@ -11,7 +11,7 @@
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Time Series Forecasting |
 | `current_stage` | StageC active；StageB paused and closed as active research stage |
 | `source_evidence_carrier` | `A6-LBF-r256` on TimeAlign source-faithful presets |
-| `mechanism_control_carrier` | frozen `sc0_p24_d64`；P24/D64/d_ff536，max20/patience5/best-val；`patch_num=1` forbidden |
+| `mechanism_control_carrier` | dataset-aware frozen mapping：Weather=P12/D128，ETTm1=P48/D32，ETTh2=P24/D64；best-val；`patch_num=1` forbidden |
 | `active_stage_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `current_11_step` | StageC Step 1-3：SC1/SC2 prior-art boundary与problem existence |
 | `paper_core_status` | A6 performance evidence retained；final decoder/training contributions reopened under StageC gates |
@@ -53,10 +53,20 @@ fixed-20 optimization/checkpoint protocol不稳定。StageC未冻结carrier、�
 horizon-measure training方向的否定。
 
 [SC0-R1 Result] 修订后的统一max20/patience5/restore-best protocol完成27/27 runs。pooled-mean与
-median-seed都选择`p24/d64`，且在2/3 seeds保持global winner；所有regret gates通过。该profile现已冻结为
-StageC mechanism-control carrier。其作用是提供统一因果对照，不替代source-faithful或native external
+median-seed都选择`p24/d64`，且在2/3 seeds保持global winner；所有regret gates通过。该profile当时冻结为
+更严格的global mechanism-control。其作用是提供统一因果对照，不替代source-faithful或native external
 baseline；dense diagnostic显示ETTm1 H48仍有11.23% patch-profile regret，论文不得将其表述为
 all-horizon tuned configuration。
+
+[Protocol Correction] 上述uniform P24保留为历史更严格control，不再是active requirement。用户允许dataset
+具有有限结构偏好，只反对精细特调。基于相同三臂capacity-matched grid和三seed validation，active mapping
+冻结为Weather=P12、ETTm1=P48、ETTh2=P24；同dataset的所有method/control必须共享profile，test不能
+触发切换。
+
+[Checkpoint Evidence] SC0的31.63%-44.95%是validation degradation。冻结后test诊断显示H720 last在9/9
+均差于best，mean test MSE +6.11%，因此StageC A6 mechanism-control继续用best-val；但dense horizons中
+last有29/72个MSE wins，说明validation/test shift确实存在。TimeAlign source baseline仍遵循作者native
+last protocol，两种checkpoint口径必须分表报告。
 
 以下 Phase5 sections保留历史 performance与failure evidence；其中出现的“当前 StageB candidate”不再表示
 active cursor。StageC 的 candidate status只以 active ledger为准。

@@ -13,7 +13,7 @@ mechanism-control protocol。StageB 的实验和负结果继续保存在 `phase5
 | `paper_mainline_role` | 重建两项相互支撑的 paper-core innovation：decoder/operator 与 training principle |
 | `active_question` | 一个参数共享模型如何对任意 requested horizon 产生 projectively consistent、无需逐 horizon 特调且可与 specialists 竞争的预测？ |
 | `source_evidence_carrier` | `A6-LBF-r256` on source-faithful TimeAlign presets；仅保留历史 performance evidence |
-| `mechanism_control_carrier` | frozen `sc0_p24_d64`；resolved contract SHA256 `86a30f99...2b6f` |
+| `mechanism_control_carrier` | active dataset-aware mapping：Weather=P12/D128，ETTm1=P48/D32，ETTh2=P24/D64；SHA256 `a10414ac...fd88` |
 | `entry_evidence` | A6 clean rerun；StageB mechanism failures；C0/C1 carrier controls；2024-2026 decoder/training prior-art audit |
 | `stage_exit_condition` | decoder 与 training strategy 分别通过 narrative/effectiveness gate，并在 frozen protocol 下显示独立主效应和 joint gain |
 | `stage_rollback_condition` | 若 standardized carrier 不成立、问题存在性不跨 dataset，或 prior art 无法形成清晰 novelty boundary，则回到 Step 2/3，不实现 paper-core method |
@@ -24,8 +24,8 @@ mechanism-control protocol。StageB 的实验和负结果继续保存在 `phase5
 | --- | --- |
 | `current_11_step` | StageC Step 1-3：SC1/SC2 prior-art boundary与problem existence |
 | `current_candidate` | `SC1-PFO` / `SC2-HML`（均为proposed，尚未过narrative gate） |
-| `latest_decision` | SC0-R1 27/27通过；pooled/median均选`p24/d64`，2/3 seed wins，carrier已冻结 |
-| `next_required_action` | 建立SC1/SC2统一prior-art/problem matrix；先诊断再决定Step 4-6 method gate |
+| `latest_decision` | 用户纠正global-profile约束；checkpoint test显示H720 last 0/9 wins、mean +6.11%；active carrier改为低自由度dataset-aware mapping |
+| `next_required_action` | SC1/SC2 prior-art/problem matrix读取dataset-aware profile；同dataset内method/control必须共享profile |
 | `rollback_point` | 若SC1/SC2问题存在性或novelty不足，分别回Step 2/3；不得因carrier已冻结而强行实现method |
 
 ## 11-Step Stage Record
@@ -48,7 +48,7 @@ mechanism-control protocol。StageB 的实验和负结果继续保存在 `phase5
 StageC 强制区分三类 protocol：
 
 1. `source-faithful reproduction`：复现 TimeAlign/A6 历史结果，保留 upstream dataset-specific presets；
-2. `standardized mechanism control`：所有 StageC mechanism diagnostics/ablations 使用同一个冻结 profile；
+2. `standardized mechanism control`：每个dataset使用一次性validation冻结的profile；同dataset的所有mechanism/control共用该profile；
 3. `native external baseline`：ElasTST、TimePerceiver、DAM、FlowState、Implicit Forecaster 等先在其官方
    repository/native protocol 中复现，再讨论适配或横向比较。
 
@@ -60,7 +60,9 @@ TimeAlign official reproduction。
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Blocking Or Next Action | Artifacts |
 | --- | --- | --- | --- | --- | --- | --- |
 | `SC0-MCP` | `failed_exact_protocol` | 一个非 `patch_num=1`、capacity-matched、跨 dataset 共用的 TimeAlign-derived carrier profile 可以为后续 mechanism attribution 提供稳定基线 | `not_required`；protocol control | best-val regret通过，但 last/best winner必须一致 | 9/9、0 errors、validation-only；best=`p24/d64`、last=`p48/d32`；固定20 epoch在ETTh2产生31.63%-44.95%退化，回滚Step 2/3 | protocol、config、runner、`analysis/stage_c_sc0_carrier_calibration_20260711/` |
-| `SC0-R1` | `passed_frozen` | 统一 validation-controlled training/checkpoint policy可消除固定20 epoch过训练，使common carrier成为稳定研究工具 | `not_required`；control-only | 27/27；mean/median=`p24/d64`；2/3 seed wins；pooled max regret1.277%；seed-dataset max1.440% | blocker关闭；后续不得逐dataset/candidate改carrier | stopping audit；R1 result；frozen config |
+| `SC0-R1` | `passed_global_control_superseded` | 一个全局profile能否作为更严格control | `not_required`；control-only | 27/27下global winner=`p24/d64` | 保留历史证据；用户并不要求跨dataset同profile，不再作为active约束 | R1 result；uniform frozen config |
+| `SC0-CPA` | `passed_diagnostic` | SC0 validation degradation是否对应test degradation | `not_required`；post-freeze test diagnostic | 同一fixed20 best/last checkpoints；test不得反向选profile | H720 last 0/9 wins，mean test MSE +6.11%；dense last 29/72 wins | checkpoint test report |
+| `SC0-DAP` | `active_frozen_control` | dataset可从低自由度capacity-matched grid获得稳定偏好，而无需精细特调 | `not_required`；protocol control | pooled/median validation、3 seeds；同dataset mechanism/control固定 | Weather=P12，ETTm1=P48，ETTh2=P24；test未参与mapping | dataset-aware config；governance revision |
 | `SC1-PFO` | `analysis_pending` | unified forecasting 应表示满足 projective consistency 的 forecast family，而不是 benchmark-horizon heads 或 full-trajectory clipping | 尚未通过；必须区别 DAM/FlowState/ElasTST/TimePerceiver，并明确 A6 special-case relation | dense seen/unseen horizons；exact consistency；matched A6/fixed-basis/query controls；跨 dataset 和 seed | SC0已关闭；完成full paper/code prior-art matrix与problem diagnostic | frozen carrier；待新增analysis |
 | `SC2-HML` | `analysis_pending` | training risk 应对应声明的 horizon measure，而不是由 `{96,192,336,720}` nested prefixes 隐式产生 early-step overweighting | 尚未通过；必须超越 ElasTST uniform-horizon harmonic reweighting与 generic task balancing | exposure/gradient mechanism 先过 Step 3；再验证 worst-horizon regret、AUC 与 unseen-H generalization | SC0已关闭；先做exposure/gradient causal diagnostic | frozen carrier；待新增analysis |
 | `SC3-JCO` | `deferred` | projective decoder 与 horizon-measure learning 有可解释、非冗余的 interaction | 只有 SC1/SC2 分别通过后才评估 | `2x2` factorial 必须显示两项独立主效应，joint arm 不能只由单项解释 | 不得提前实现 | none |
@@ -95,6 +97,8 @@ two token-MLP layers 与 `P*D=1536`，比较：
 | SC0-R1 local semantic gate | `SC0-R1` | implementation verification | opt-in early stopping、restore-best、27-run analyzer integration、三臂structure与ETTh2 validation-only smoke通过 | `local_gate_passed`；允许remote launch | `scripts/check_stage_c_sc0_r1_local.py`; `docs/code-explanation/stage-c-sc0-r1-training-control.md` |
 | SC0-R1 launch | `SC0-R1` | validation-only multi-seed carrier calibration | commit`15b391b`；profile`3ebd07d6...f31a`；GPU 0/1/2 free；27 runs | `completed`；16:22-16:42，27/27、0 errors | `analysis/stage_c_sc0_r1_carrier_calibration_20260711/launch_record.md` |
 | SC0-R1 result/freeze | `SC0-R1` | multi-seed standardized carrier gate | 27/27、0 errors；pooled/median均`p24/d64`；seed winners`p24/p12/p24`；regret gates全通过；test=false | `global_profile_selected_and_frozen`；SC0 blocker关闭 | `analysis/stage_c_sc0_r1_carrier_calibration_20260711/sc0_r1_deep_analysis_and_freeze.md` |
+| SC0 checkpoint test gap | `SC0-CPA` | post-freeze diagnostic | H720 last在9/9均差于best；mean test MSE +6.11%，远小于validation +14.72%；dense last有29/72 wins | A6 mechanism-control用best-val有证据；不能把validation 32%-45%写成test值；official TimeAlign仍遵循native last | `analysis/stage_c_sc0_checkpoint_test_gap_20260712/` |
+| Dataset-aware carrier revision | `SC0-DAP` | protocol governance | 用户允许dataset结构偏好；从同一三臂capacity-matched grid用三seed validation一次性冻结 | active mapping=`Weather:P12, ETTm1:P48, ETTh2:P24`；禁止test/per-mechanism重选 | `configs/stage_c_mechanism_control_dataset_aware.json` |
 
 ## Pending Tasks
 
@@ -107,7 +111,7 @@ two token-MLP layers 与 `P*D=1536`，比较：
 | Confirm and freeze global profile | Codex | seed2021 gate passes | `blocked_by_gate` | 禁止启动原confirmation；SC0-R1重新过protocol gate后再决定 |
 | Design SC0-R1 training control | Codex | SC0 selector instability + optimization pathology | `completed` | max20/patience5/restore-best；全臂三seed gate已冻结 |
 | Run SC0-R1 validation-only calibration | Codex | protocol/local gate + commit/push + GPU preflight | `completed_pass` | `p24/d64`与frozen contract已落地 |
-| Freeze mechanism-control profile | Codex | SC0-R1 pass | `completed` | calibration hash`3ebd07d6...f31a`；resolved hash`86a30f99...2b6f` |
+| Freeze mechanism-control profile | Codex | user governance correction | `completed_revised` | active dataset-aware hash`a10414ac...fd88`；uniform P24保留为historical stricter control |
 | Build StageC prior-art matrix | Codex | SC0 frozen | `next` | 逐项记录 task definition、decoder contract、training distribution、official code defaults与 novelty boundary |
 | Run SC1/SC2 problem diagnostics | Codex | prior-art matrix complete | `pending` | 先Step 2/3，后Step 4-6 narrative gate |
 
@@ -123,6 +127,6 @@ two token-MLP layers 与 `P*D=1536`，比较：
 - `patch_num=1` 可存在于 TimeAlign source reproduction，不得进入 StageC mechanism-control profile。
 - SC0 winner 一经 multi-seed freeze，后续 mechanism experiments 不得逐 dataset、逐 candidate 或根据 test
   result 修改 `patch_num/d_model/d_ff/dropout/LR/epoch/selector`。
-- 如果统一 profile 在任一 dataset 上超过预注册 regret gate，不得退回 dataset-specific presets；应回到
-  StageC Step 2/3 重审 common carrier contract。
+- dataset profile只能从预注册capacity-matched grid用validation一次性选择；允许dataset之间不同，但禁止
+  根据test或每个新mechanism重新选择。
 - SC1/SC2 是两个 paper innovation slots，不是预先接受的方法名称。任何 candidate 都必须先过 narrative gate。
