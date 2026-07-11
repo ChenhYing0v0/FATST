@@ -271,3 +271,23 @@ selected-arm-only confirmation。只读取full-720 validation MSE：
 
 若通过，直接冻结`configs/stage_c_mechanism_control_r1.json`的profile hash；若失败，回Step 2/3重审
 carrier topology，不再修改stopping rule追逐本次结果。
+
+## 13. SC0-R1 Result And Frozen Profile
+
+[Result] 27/27 validation-only runs完成，0 errors。pooled-mean与median-seed均选择`sc0_p24_d64`；seed
+winners为`p24/p12/p24`，达到2/3。selected arm pooled max dataset regret为1.277%，max
+seed-dataset regret为1.440%，全部通过预注册阈值；test metrics未参与selection。
+
+[Decision] StageC mechanism-control carrier冻结为`P=24, D=64, d_ff=536`。两层hash分工如下：
+
+- calibration evidence hash：`3ebd07d647cdd4b0e8ea36a53eea9451d21f438a79164f74b8f4e8095426f31a`；
+- resolved frozen contract：`configs/stage_c_mechanism_control_frozen.json`，SHA256
+  `86a30f990370eb760feb27fad96fdc972893f196f7cfad4831e6264d2e582b6f`。
+
+后续mechanism runner必须记录resolved contract hash，并保留calibration evidence hash作为selection
+provenance。完整结果与dense-horizon claim boundary见
+`analysis/stage_c_sc0_r1_carrier_calibration_20260711/sc0_r1_deep_analysis_and_freeze.md`。
+
+[Boundary] `p24/d64`按full-720 validation选择，并非逐horizon最优。ETTm1 H48相对三臂oracle仍有
+11.23% diagnostic regret；因此该profile用于因果归因而非all-horizon tuning claim，dense horizons仍必须
+完整报告。

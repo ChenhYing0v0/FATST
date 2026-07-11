@@ -1,0 +1,55 @@
+{
+  "stage": "StageC-UVHF",
+  "role": "frozen_mechanism_control",
+  "status": "frozen",
+  "frozen_date": "2026-07-11",
+  "protocol_profile": "stage_c_mechanism_control_frozen_v1",
+  "calibration_profile": "configs/stage_c_mechanism_control_r1.json",
+  "calibration_profile_hash": "3ebd07d647cdd4b0e8ea36a53eea9451d21f438a79164f74b8f4e8095426f31a",
+  "selection_evidence": "analysis/stage_c_sc0_r1_carrier_calibration_20260711/sc0_r1_summary.json",
+  "selected_arm": "sc0_p24_d64",
+  "datasets": ["Weather", "ETTm1", "ETTh2"],
+  "model": {
+    "seq_len": 720,
+    "pred_len": 720,
+    "encoder_mode": "timealign-token-mlp",
+    "readout_mode": "learned-basis-forecast-operator",
+    "patch_num": 24,
+    "patch_len": 30,
+    "d_model": 64,
+    "d_ff": 536,
+    "e_layers": 2,
+    "basis_rank": 256,
+    "state_width": 1536,
+    "active_forward_parameters": 719168,
+    "unused_proj_x_parameters": 1106640,
+    "dropout": 0.1,
+    "layer_norm": 1
+  },
+  "training": {
+    "objective": "full_720_pointwise_l1",
+    "target_horizons": [720],
+    "validation_horizons": [720],
+    "optimizer": "AdamW",
+    "learning_rate": 0.0001,
+    "lr_schedule": "cosine",
+    "effective_batch_size": 32,
+    "max_epochs": 20,
+    "enable_early_stopping": true,
+    "early_stopping_patience": 5,
+    "early_stopping_min_delta": 0.0,
+    "checkpoint_policy": "best-val",
+    "restore_best": true
+  },
+  "evaluation": {
+    "mechanism_gate_split": "val",
+    "dense_horizons": [48, 96, 144, 192, 288, 336, 512, 720],
+    "default_seeds": [2021, 2022, 2023]
+  },
+  "restrictions": [
+    "Do not change carrier fields per dataset, horizon, candidate, or test result.",
+    "A paper-core mechanism may change only its preregistered intervention fields and must retain a matched frozen-carrier control.",
+    "Source-faithful TimeAlign presets and native external baselines must be reported separately from this mechanism-control profile.",
+    "This full-720-selected profile is a causal research carrier, not a claim of per-horizon optimal tuning."
+  ]
+}

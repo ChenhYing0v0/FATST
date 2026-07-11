@@ -1,0 +1,21 @@
+{
+  "aggregate_winners": {
+    "median_seed": "sc0_p24_d64",
+    "pooled_mean": "sc0_p24_d64"
+  },
+  "candidate": "SC0-R1",
+  "complete": true,
+  "decision": "global_profile_selected_and_frozen",
+  "expected_runs": 27,
+  "profile_hash": "3ebd07d647cdd4b0e8ea36a53eea9451d21f438a79164f74b8f4e8095426f31a",
+  "seed_winners": {
+    "2021": "sc0_p24_d64",
+    "2022": "sc0_p12_d128",
+    "2023": "sc0_p24_d64"
+  },
+  "selected_arm": "sc0_p24_d64",
+  "selected_max_seed_dataset_regret": 0.014400856222567482,
+  "selected_pooled_max_dataset_regret": 0.012770506835358075,
+  "selected_seed_winner_count": 2,
+  "test_metrics_used_for_selection": false
+}

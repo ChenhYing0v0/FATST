@@ -11,9 +11,9 @@
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Time Series Forecasting |
 | `current_stage` | StageC active；StageB paused and closed as active research stage |
 | `source_evidence_carrier` | `A6-LBF-r256` on TimeAlign source-faithful presets |
-| `mechanism_control_carrier` | pending；SC0 fixed-20 selector不稳定，`SC0-R1`待Step 2/3 protocol redesign；`patch_num=1` forbidden |
+| `mechanism_control_carrier` | frozen `sc0_p24_d64`；P24/D64/d_ff536，max20/patience5/best-val；`patch_num=1` forbidden |
 | `active_stage_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `current_11_step` | StageC Step 2/3：standardized optimization/checkpoint protocol rollback |
+| `current_11_step` | StageC Step 1-3：SC1/SC2 prior-art boundary与problem existence |
 | `paper_core_status` | A6 performance evidence retained；final decoder/training contributions reopened under StageC gates |
 
 ## StageC Research Reset
@@ -51,6 +51,12 @@ gate，但last-checkpoint选择`p48/d32`。ETTh2三臂从best到last均恶化31.
 fixed-20 optimization/checkpoint protocol不稳定。StageC未冻结carrier、未启动confirmation seeds，并已
 回滚Step 2/3设计`SC0-R1`。这属于research-instrument failure，不构成对projective decoder或
 horizon-measure training方向的否定。
+
+[SC0-R1 Result] 修订后的统一max20/patience5/restore-best protocol完成27/27 runs。pooled-mean与
+median-seed都选择`p24/d64`，且在2/3 seeds保持global winner；所有regret gates通过。该profile现已冻结为
+StageC mechanism-control carrier。其作用是提供统一因果对照，不替代source-faithful或native external
+baseline；dense diagnostic显示ETTm1 H48仍有11.23% patch-profile regret，论文不得将其表述为
+all-horizon tuned configuration。
 
 以下 Phase5 sections保留历史 performance与failure evidence；其中出现的“当前 StageB candidate”不再表示
 active cursor。StageC 的 candidate status只以 active ledger为准。

@@ -10,9 +10,9 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Time Series Forecasting |
 | `current_stage` | StageC active；StageB paused/closed as active stage |
-| `current_11_step` | StageC Step 7/8：SC0-R1 implementation complete，等待remote effectiveness gate |
+| `current_11_step` | StageC Step 1-3：SC1/SC2 prior-art boundary与problem existence |
 | `source_evidence_carrier` | `A6-LBF-r256` source-faithful results |
-| `mechanism_control_carrier` | pending；SC0-R1 max20/patience5/full-arm三seedprotocol已冻结并通过local gate |
+| `mechanism_control_carrier` | frozen `sc0_p24_d64`；resolved contract SHA256 `86a30f99...2b6f` |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 
 ## Long Research Loop Rule
@@ -84,6 +84,14 @@ horizon-measure learning。
 以pooled-mean/median一致性、至少2/3 seed wins、pooled每dataset regret<=3%及任一seed-dataset
 regret<=5%作为effectiveness gate。实现与local semantic gate已通过；下一步只允许commit/push、GPU
 preflight和remote validation-only launch。
+
+[SC0-R1 Result] 27/27完成且所有gate通过：pooled/median均选择`p24/d64`，seed winners为
+`p24/p12/p24`，pooled max regret1.277%，seed-dataset max regret1.440%。StageC standardized carrier
+正式冻结。dense diagnostic同时显示其ETTm1 H48相对三臂oracle有11.23% regret，因此它是causal
+mechanism-control profile，而不是all-horizon tuned baseline。
+
+[Next Cursor] SC0 blocker关闭。StageC回到SC1-PFO/SC2-HML Step 1-3，先建立统一prior-art/problem
+matrix，再分别判断novelty与problem existence；当前不自动授权method implementation。
 
 ### StageC execution order
 
