@@ -1,0 +1,88 @@
+{
+  "stage": "StageC-UVHF",
+  "candidate": "SC0-MCP",
+  "protocol_class": "mechanism_control",
+  "protocol_profile": "stage_c_sc0_calibration_v1",
+  "selection_split": "val",
+  "selection_metric": "full_720_mse",
+  "datasets": [
+    "Weather",
+    "ETTm1",
+    "ETTh2"
+  ],
+  "common": {
+    "seq_len": 720,
+    "pred_len": 720,
+    "target_horizons": [
+      720
+    ],
+    "validation_horizons": [
+      720
+    ],
+    "evaluation_horizons": [
+      48,
+      96,
+      144,
+      192,
+      288,
+      336,
+      512,
+      720
+    ],
+    "encoder_mode": "timealign-token-mlp",
+    "readout_mode": "learned-basis-forecast-operator",
+    "basis_rank": 256,
+    "e_layers": 2,
+    "dropout": 0.1,
+    "layer_norm": 1,
+    "learning_rate": 0.0001,
+    "batch_size": 32,
+    "gradient_accumulation_steps": 1,
+    "effective_batch_size": 32,
+    "epochs": 20,
+    "pred_loss_mode": "full",
+    "checkpoint_policy": "best-val",
+    "final_evaluation_split": "val",
+    "initial_seed": 2021,
+    "confirmation_seeds": [
+      2022,
+      2023
+    ]
+  },
+  "arms": {
+    "sc0_p12_d128": {
+      "patch_num": 12,
+      "patch_len": 60,
+      "d_model": 128,
+      "d_ff": 256,
+      "state_width": 1536,
+      "active_forward_parameters": 718672,
+      "unused_proj_x_parameters": 1106640
+    },
+    "sc0_p24_d64": {
+      "patch_num": 24,
+      "patch_len": 30,
+      "d_model": 64,
+      "d_ff": 536,
+      "state_width": 1536,
+      "active_forward_parameters": 719168,
+      "unused_proj_x_parameters": 1106640
+    },
+    "sc0_p48_d32": {
+      "patch_num": 48,
+      "patch_len": 15,
+      "d_model": 32,
+      "d_ff": 1072,
+      "state_width": 1536,
+      "active_forward_parameters": 718576,
+      "unused_proj_x_parameters": 1106640
+    }
+  },
+  "gates": {
+    "max_per_dataset_regret": 0.03,
+    "tie_macro_score_delta": 0.005,
+    "required_confirmation_seed_direction_count": 2,
+    "active_parameter_relative_spread_max": 0.001
+  },
+  "selection_policy": "Choose one global arm from validation full-720 MSE only. Do not inspect test metrics before the profile is frozen. If no arm satisfies the per-dataset regret gate, return to StageC Step 2/3 instead of selecting dataset-specific profiles."
+}

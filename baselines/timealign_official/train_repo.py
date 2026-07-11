@@ -148,6 +148,11 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
     legacy_d_ff = preset.d_ff if args.legacy_d_ff is None else args.legacy_d_ff
     legacy_dropout = preset.dropout if args.legacy_dropout is None else args.legacy_dropout
     legacy_patch_num = preset.patch_num if args.legacy_patch_num is None else args.legacy_patch_num
+    legacy_layer_norm = (
+        preset.layer_norm
+        if args.legacy_layer_norm is None
+        else args.legacy_layer_norm
+    )
     if global_anchored_encoder:
         effective_dropout = args.history_ffn_dropout
     elif contextual_encoder:
@@ -244,7 +249,7 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         local_margin=preset.local_margin,
         global_margin=preset.global_margin,
         patch_num=legacy_patch_num,
-        layer_norm=preset.layer_norm,
+        layer_norm=legacy_layer_norm,
         pos=1,
         loc=1,
         glo=1,
@@ -609,8 +614,7 @@ def train(
 ]:
     train_data, train_loader = data_provider(official_args, "train")
     vali_data, vali_loader = data_provider(official_args, "val")
-    test_data, test_loader = data_provider(official_args, "test")
-    del train_data, vali_data, test_data, test_loader
+    del train_data, vali_data
 
     model = TimeAlign.Model(official_args).float().to(official_args.device)
     optimizer = optim.AdamW(model.parameters(), lr=official_args.learning_rate)
@@ -629,11 +633,16 @@ def train(
         recon_loss_values = []
         alignment_values = []
         train_steps = len(train_loader)
+        effective_train_steps = (
+            train_steps
+            if not args.max_train_batches
+            else min(train_steps, args.max_train_batches)
+        )
+        optimizer.zero_grad()
 
         for batch_idx, (batch_x, batch_y, _batch_x_mark, _batch_y_mark) in enumerate(train_loader):
             if args.max_train_batches and batch_idx >= args.max_train_batches:
                 break
-            optimizer.zero_grad()
             batch_x = batch_x.float().to(official_args.device)
             batch_y = batch_y.float().to(official_args.device)
             f_dim = -1 if official_args.features == "MS" else 0
@@ -692,8 +701,14 @@ def train(
                 alignment_loss = pred_loss.new_zeros(())
 
             loss = pred_loss + official_args.w_recon * recon_loss + official_args.w_align * alignment_loss
-            loss.backward()
-            optimizer.step()
+            (loss / args.gradient_accumulation_steps).backward()
+            should_step = (
+                (batch_idx + 1) % args.gradient_accumulation_steps == 0
+                or batch_idx + 1 == effective_train_steps
+            )
+            if should_step:
+                optimizer.step()
+                optimizer.zero_grad()
 
             total_loss.append(float(loss.detach().cpu()))
             pred_loss_values.append(float(pred_loss.detach().cpu()))
@@ -714,7 +729,7 @@ def train(
             model,
             vali_loader,
             official_args,
-            args.target_horizons,
+            args.validation_horizons,
             max_batches=args.max_eval_batches,
         )
         if val_mean_mse < best_val:
@@ -732,6 +747,13 @@ def train(
             "train_weighted_reconstruction_l1": official_args.w_recon * float(np.mean(recon_loss_values)),
             "train_weighted_alignment_loss": official_args.w_align * float(np.mean(alignment_values)),
             "pred_loss_mode": args.pred_loss_mode,
+            "gradient_accumulation_steps": args.gradient_accumulation_steps,
+            "effective_batch_size": (
+                args.batch_size * args.gradient_accumulation_steps
+            ),
+            "validation_horizons": ",".join(
+                str(horizon) for horizon in args.validation_horizons
+            ),
             "val_mean_mse": val_mean_mse,
             "lr": float(optimizer.param_groups[0]["lr"]),
             "epoch_seconds": time.time() - epoch_start,
@@ -773,7 +795,11 @@ def annotate_evaluation_rows(
         row["dataset"] = args.dataset
         row["pred_len"] = args.pred_len
         row["checkpoint_policy"] = checkpoint_policy
+        row["evaluation_split"] = args.final_evaluation_split
         row["official_test_mode"] = int(args.official_test_mode)
+        row["protocol_class"] = args.protocol_class
+        row["protocol_profile"] = args.protocol_profile
+        row["profile_hash"] = args.profile_hash
 
 
 def run(args: argparse.Namespace) -> None:
@@ -796,15 +822,19 @@ def run(args: argparse.Namespace) -> None:
             },
             "official_preset": asdict(preset),
             "source_note": (
-                "B14 prerequisite: PatchTST-derived contextual history encoder plus A6-LBF-r256 operator."
-                if args.encoder_mode == "contextual-patch-transformer"
+                "StageC standardized mechanism-control carrier calibration."
+                if args.protocol_class == "mechanism_control"
                 else (
-                    "C1 carrier normalization: full-window global anchor plus valid local patch tokens and explicit dropout sites."
-                    if args.encoder_mode == "global-anchored-patch-transformer"
+                    "B14 prerequisite: PatchTST-derived contextual history encoder plus A6-LBF-r256 operator."
+                    if args.encoder_mode == "contextual-patch-transformer"
                     else (
-                        "B14 prerequisite: accepted A6 carrier plus parameter-free hierarchical patch memory."
-                        if args.encoder_mode == "hierarchical-patch-memory"
-                        else "Clean TimeAlign adapter: official baseline plus A6-LBF-r256 unified carrier."
+                        "C1 carrier normalization: full-window global anchor plus valid local patch tokens and explicit dropout sites."
+                        if args.encoder_mode == "global-anchored-patch-transformer"
+                        else (
+                            "B14 prerequisite: accepted A6 carrier plus parameter-free hierarchical patch memory."
+                            if args.encoder_mode == "hierarchical-patch-memory"
+                            else "Clean TimeAlign adapter: official baseline plus A6-LBF-r256 unified carrier."
+                        )
                     )
                 )
             ),
@@ -839,7 +869,15 @@ def run(args: argparse.Namespace) -> None:
     torch.save(model.state_dict(), args.output_dir / "checkpoint.pt")
     dump_json(args.output_dir / "model_diagnostics.json", model_diagnostics(model))
 
-    _test_data, test_loader = data_provider(official_args, "test")
+    if args.final_evaluation_split == "none":
+        print(f"run_done output_dir={args.output_dir} evaluation_split=none", flush=True)
+        return
+
+    evaluation_data, evaluation_loader = data_provider(
+        official_args,
+        args.final_evaluation_split,
+    )
+    del evaluation_data
     if args.evaluate_dual_checkpoints:
         torch.save(last_state, args.output_dir / "checkpoint_last.pt")
         torch.save(best_state, args.output_dir / "checkpoint_best_val.pt")
@@ -854,9 +892,9 @@ def run(args: argparse.Namespace) -> None:
             model.load_state_dict(state)
             evaluation = evaluate(
                 model,
-                test_loader,
+                evaluation_loader,
                 official_args,
-                args.target_horizons,
+                args.evaluation_horizons,
                 max_batches=args.max_eval_batches,
                 is_training_flag=args.official_test_mode,
             )
@@ -879,9 +917,9 @@ def run(args: argparse.Namespace) -> None:
     else:
         main_rows, segment_metric_rows, preds, trues = evaluate(
             model,
-            test_loader,
+            evaluation_loader,
             official_args,
-            args.target_horizons,
+            args.evaluation_horizons,
             max_batches=args.max_eval_batches,
             is_training_flag=args.official_test_mode,
         )
@@ -889,8 +927,16 @@ def run(args: argparse.Namespace) -> None:
         annotate_evaluation_rows(segment_metric_rows, args, args.checkpoint_policy)
     write_csv(args.output_dir / "metrics_by_target_horizon.csv", main_rows)
     write_csv(args.output_dir / "metrics_by_segment.csv", segment_metric_rows)
-    np.savez_compressed(args.output_dir / "predictions_test.npz", pred=preds, true=trues)
-    print(f"run_done output_dir={args.output_dir}", flush=True)
+    np.savez_compressed(
+        args.output_dir / f"predictions_{args.final_evaluation_split}.npz",
+        pred=preds,
+        true=trues,
+    )
+    print(
+        f"run_done output_dir={args.output_dir} "
+        f"evaluation_split={args.final_evaluation_split}",
+        flush=True,
+    )
 
 
 def parse_args() -> argparse.Namespace:
@@ -902,6 +948,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--label-len", type=int, default=48)
     parser.add_argument("--pred-len", type=int, required=True)
     parser.add_argument("--target-horizons", type=parse_horizons, required=True)
+    parser.add_argument("--validation-horizons", type=parse_horizons, default=None)
+    parser.add_argument("--evaluation-horizons", type=parse_horizons, default=None)
     parser.add_argument("--e-layers", type=int, default=2)
     parser.add_argument(
         "--encoder-mode",
@@ -934,10 +982,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--legacy-d-model", type=int, default=None)
     parser.add_argument("--legacy-d-ff", type=int, default=None)
     parser.add_argument("--legacy-dropout", type=float, default=None)
+    parser.add_argument("--legacy-layer-norm", type=int, choices=[0, 1], default=None)
     parser.add_argument("--learning-rate", type=float, default=None)
     parser.add_argument("--w-recon", type=float, default=1.0)
     parser.add_argument("--w-align", type=float, default=None)
     parser.add_argument("--batch-size", type=int, default=32)
+    parser.add_argument("--gradient-accumulation-steps", type=int, default=1)
     parser.add_argument("--epochs", type=int, default=10)
     parser.add_argument("--patience", type=int, default=3)
     parser.add_argument("--seed", type=int, default=2021)
@@ -949,6 +999,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--device", default="auto")
     parser.add_argument("--use-amp", action="store_true")
     parser.add_argument("--official-test-mode", action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument(
+        "--final-evaluation-split",
+        choices=["train", "val", "test", "none"],
+        default="test",
+    )
+    parser.add_argument(
+        "--protocol-class",
+        choices=["source", "mechanism_control", "native_external"],
+        default="source",
+    )
+    parser.add_argument("--protocol-profile", default="")
+    parser.add_argument("--profile-hash", default="")
     parser.add_argument("--checkpoint-policy", choices=["official-last", "best-val"], default="official-last")
     parser.add_argument(
         "--evaluate-dual-checkpoints",
@@ -979,14 +1041,31 @@ def parse_args() -> argparse.Namespace:
         default="full",
     )
     args = parser.parse_args()
+    args.validation_horizons = args.validation_horizons or list(args.target_horizons)
+    args.evaluation_horizons = args.evaluation_horizons or list(args.target_horizons)
     if max(args.target_horizons) > args.pred_len:
         raise ValueError("target horizons cannot exceed pred_len")
+    if max(args.validation_horizons) > args.pred_len:
+        raise ValueError("validation horizons cannot exceed pred_len")
+    if max(args.evaluation_horizons) > args.pred_len:
+        raise ValueError("evaluation horizons cannot exceed pred_len")
     if args.mode == "fixed" and args.target_horizons != [args.pred_len]:
         raise ValueError("fixed mode expects target_horizons == [pred_len]")
     if args.mode == "unified" and args.pred_len != 720:
         raise ValueError("unified mode currently expects pred_len=720")
     if args.w_recon < 0.0:
         raise ValueError("w_recon must be non-negative")
+    if args.gradient_accumulation_steps <= 0:
+        raise ValueError("gradient accumulation steps must be positive")
+    if args.protocol_class == "mechanism_control":
+        if not args.protocol_profile or not args.profile_hash:
+            raise ValueError(
+                "mechanism_control requires protocol profile and profile hash"
+            )
+        if args.final_evaluation_split == "test":
+            raise ValueError(
+                "mechanism_control calibration cannot evaluate the test split"
+            )
     if args.history_patch_len <= 0 or args.history_patch_stride <= 0:
         raise ValueError("history patch length and stride must be positive")
     if args.history_patch_len > args.seq_len + args.history_patch_stride:
@@ -1015,6 +1094,7 @@ def parse_args() -> argparse.Namespace:
         args.legacy_d_model,
         args.legacy_d_ff,
         args.legacy_dropout,
+        args.legacy_layer_norm,
     )
     if any(value is not None for value in legacy_overrides):
         if args.encoder_mode not in {

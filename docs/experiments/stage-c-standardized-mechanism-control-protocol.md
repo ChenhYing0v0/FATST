@@ -143,13 +143,14 @@ selection或 gate 判定。
 
 ## 7. Required Implementation Artifacts
 
-计划新增但本 protocol 尚未授权跳过 local gate的文件：
+已实现且必须通过 local gate的文件：
 
 ```text
 configs/stage_c_mechanism_control.json
 scripts/check_stage_c_sc0_carrier_local.py
 scripts/remote/run_stage_c_sc0_carrier_calibration.sh
 scripts/analyze_stage_c_sc0_carrier_calibration.py
+scripts/sync_stage_c_sc0_carrier_calibration_results.sh
 ```
 
 `train_repo.py` 需要提供显式 standardized profile override，至少包括：
@@ -161,6 +162,11 @@ scripts/analyze_stage_c_sc0_carrier_calibration.py
 - protocol class/profile hash写入 `effective_config.json`。
 
 不得通过 shell 隐式覆盖而不写入 effective config。
+
+[Local Result] 当前实现已通过三臂 structural checks与 `ETTh2/ETTm1/Weather × 3 arms` one-batch CPU
+smoke。验证范围包括 patch boundary、`[B,C,1536]` state、active/unused parameters、full-objective单路径、
+validation-only dense metrics、dual checkpoint strict reload与analyzer complete summary。当前 profile SHA256为
+`79a037f751c0c24eea98ff0b516cb0dfeaef950871b3bbc515904754f54fd900`。
 
 ## 8. Local Gate
 
