@@ -10,9 +10,9 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Time Series Forecasting |
 | `current_stage` | StageC active；StageB paused/closed as active stage |
-| `current_11_step` | StageC Step 1-3：standardized carrier、prior-art boundary、problem existence |
+| `current_11_step` | StageC Step 2/3：standardized optimization/checkpoint protocol rollback |
 | `source_evidence_carrier` | `A6-LBF-r256` source-faithful results |
-| `mechanism_control_carrier` | pending `SC0-MCP` global profile freeze |
+| `mechanism_control_carrier` | pending；SC0 fixed-20 selector gate失败，`SC0-R1`待预注册 |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 
 ## Long Research Loop Rule
@@ -66,6 +66,18 @@ winner，不允许逐 dataset配置；selected profile经三 seed确认后冻结
 [Rollback] 若没有单一 profile在所有 datasets满足 `<=3%` validation regret，则 decision 为
 `common_token_mlp_profile_not_supported`，回 StageC Step 2/3重审 carrier topology；不得恢复
 dataset-specific presets作为 mechanism control。
+
+### SC0 seed2021 decision and rollback
+
+[Fact] SC0 seed2021 已完成9/9且未使用test。best-validation选择`p24/d64`，macro regret为0.4051%、
+最大dataset regret为1.2153%，但last-checkpoint选择`p48/d32`，未通过selector stability gate。
+ETTh2三臂的best epoch均为1-2，last较best恶化31.63%-44.95%，说明固定20 epoch policy存在明显
+optimization/checkpoint pathology。
+
+[Decision] 不冻结`p24/d64`，不启动原定confirmation seeds。StageC回滚到Step 2/3，打开control-only
+`SC0-R1`：先预注册统一validation-controlled stopping/checkpoint rule，并修复“只跑selected arm却要求
+确认global winner”的逻辑缺口。该失败不否定common carrier topology、projective decoder或
+horizon-measure learning。
 
 ### StageC execution order
 

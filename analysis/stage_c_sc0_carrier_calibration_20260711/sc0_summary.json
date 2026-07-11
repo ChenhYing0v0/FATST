@@ -1,0 +1,16 @@
+{
+  "candidate": "SC0-MCP",
+  "complete": true,
+  "decision": "common_token_mlp_profile_not_supported",
+  "expected_runs": 9,
+  "profile_hash": "79a037f751c0c24eea98ff0b516cb0dfeaef950871b3bbc515904754f54fd900",
+  "regret_gate": true,
+  "seed": 2021,
+  "selected_arm": "sc0_p24_d64",
+  "selector_stable": false,
+  "test_metrics_used_for_selection": false,
+  "winners": {
+    "best_val": "sc0_p24_d64",
+    "last": "sc0_p48_d32"
+  }
+}

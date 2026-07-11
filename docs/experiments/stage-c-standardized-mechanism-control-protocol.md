@@ -209,3 +209,22 @@ arm；它不能继续引用 SC0 frozen comparison作为严格因果对照。
 
 [Decision] 从 StageC 起，任何 paper-core mechanism claim必须以 frozen mechanism-control protocol 为主要
 归因证据；source-finetuned result只能作为外部 performance context。
+
+## 11. SC0 Seed2021 Outcome And Rollback
+
+[Result, 2026-07-11] 预注册矩阵已完成 `9/9`，无运行错误，selection只使用 validation artifacts。
+best-validation winner为 `sc0_p24_d64`，macro regret `0.4051%`、max dataset regret `1.2153%`，通过
+per-dataset regret gate；last-checkpoint winner为 `sc0_p48_d32`，因此条款 3 的 selector stability失败。
+
+[Failure Attribution] ETTh2 三臂 best epoch均在 1-2，last validation MSE较best恶化
+`31.63%-44.95%`；ETTm1恶化`2.42%-3.38%`。这说明 exact fixed-20 training policy存在共同的
+optimization/checkpoint pathology。结果只否定本版 SC0 research instrument，不否定 common token-MLP
+topology或StageC论文方向。
+
+[Protocol Audit] 条款 5 与“selected arm only追加 confirmation seeds”无法同时证明 global winner：若其他
+arms未在相同 seed运行，就无法重算winner。后续 SC0-R1 必须在launch前明确区分 full-arm winner
+confirmation 与 selected-arm absolute stability confirmation。
+
+[Decision] 原 profile不冻结，不启动原定 seeds 2022/2023；回到StageC Step 2/3设计统一的
+validation-controlled stopping/checkpoint policy。完整归因见
+`analysis/stage_c_sc0_carrier_calibration_20260711/sc0_failure_attribution_and_rollback.md`。

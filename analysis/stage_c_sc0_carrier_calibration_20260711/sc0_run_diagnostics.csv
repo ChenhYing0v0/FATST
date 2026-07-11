@@ -1,0 +1,10 @@
+dataset,arm,status,config_ok,parameter_ok,training_finite,dual_metrics_present,patch_num,d_model,d_ff,active_forward_parameters,unused_proj_x_parameters,mean_epoch_seconds,run_dir
+Weather,sc0_p12_d128,ok,1,1,1,1,12,128,256,718672,1106640,14.872476196289062,analysis/stage_c_sc0_carrier_calibration_20260711/raw/SC0_sc0_p12_d128_validation_only/Weather/h720_full/seed2021
+Weather,sc0_p24_d64,ok,1,1,1,1,24,64,536,719168,1106640,15.129739356040954,analysis/stage_c_sc0_carrier_calibration_20260711/raw/SC0_sc0_p24_d64_validation_only/Weather/h720_full/seed2021
+Weather,sc0_p48_d32,ok,1,1,1,1,48,32,1072,718576,1106640,17.53270491361618,analysis/stage_c_sc0_carrier_calibration_20260711/raw/SC0_sc0_p48_d32_validation_only/Weather/h720_full/seed2021
+ETTm1,sc0_p12_d128,ok,1,1,1,1,12,128,256,718672,1106640,12.18851158618927,analysis/stage_c_sc0_carrier_calibration_20260711/raw/SC0_sc0_p12_d128_validation_only/ETTm1/h720_full/seed2021
+ETTm1,sc0_p24_d64,ok,1,1,1,1,24,64,536,719168,1106640,12.302894949913025,analysis/stage_c_sc0_carrier_calibration_20260711/raw/SC0_sc0_p24_d64_validation_only/ETTm1/h720_full/seed2021
+ETTm1,sc0_p48_d32,ok,1,1,1,1,48,32,1072,718576,1106640,12.31558256149292,analysis/stage_c_sc0_carrier_calibration_20260711/raw/SC0_sc0_p48_d32_validation_only/ETTm1/h720_full/seed2021
+ETTh2,sc0_p12_d128,ok,1,1,1,1,12,128,256,718672,1106640,2.463127946853638,analysis/stage_c_sc0_carrier_calibration_20260711/raw/SC0_sc0_p12_d128_validation_only/ETTh2/h720_full/seed2021
+ETTh2,sc0_p24_d64,ok,1,1,1,1,24,64,536,719168,1106640,2.4649317860603333,analysis/stage_c_sc0_carrier_calibration_20260711/raw/SC0_sc0_p24_d64_validation_only/ETTh2/h720_full/seed2021
+ETTh2,sc0_p48_d32,ok,1,1,1,1,48,32,1072,718576,1106640,2.1533173322677612,analysis/stage_c_sc0_carrier_calibration_20260711/raw/SC0_sc0_p48_d32_validation_only/ETTh2/h720_full/seed2021
