@@ -123,6 +123,13 @@ metrics。Weather mean/max CV=0.323%/0.749%，ETTm1=0.707%/1.405%，ETTh2=2.094%
 3%/5% gate。ETTh2接近maximum gate边界，后续必须保留逐seed报告。natural dataset profiles以contract
 hash `254d85d4...a50c`冻结；SC0 blocker关闭，cursor回SC1/SC2 Step 1-3。
 
+[SC1/SC2 Step 1-3 Audit] A6 full-trajectory prefix slicing已经exact projectively consistent，因此SC1不能以
+“修复inconsistency”为problem，且ElasTST、TimePerceiver、FlowState、Implicit Forecaster、Shifting Time
+对horizon invariance、target queries、functional basis、implicit waves与continuous operator形成直接novelty
+压力。SC1回Step 2重定义horizon-adaptive/refinable computation。SC2的horizon-measure问题在数学上成立，
+但当前frozen control是single full-720 L1，不存在旧multi-prefix 14.39x重复加权；下一步只授权frozen-batch
+measure-gradient diagnostic，不实现新loss。
+
 ### StageC execution order
 
 1. `SC0-MCP`：实现、local gate、validation-only calibration、multi-seed profile freeze；

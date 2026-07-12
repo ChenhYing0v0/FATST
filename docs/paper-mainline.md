@@ -77,6 +77,12 @@ active mapping冻结为Weather=P12/D64/ff128、ETTm1=P24/D32/ff64、ETTh2=P12/D6
 selection或stability gate。ETTh2 maximum dense CV=4.867%，虽低于5%阈值但属于边界通过。SC0仅是
 research-instrument governance，不构成论文创新；当前返回SC1/SC2 Step 1-3，尚未授权method实现。
 
+[SC1/SC2 Audit] A6的prefix slicing已经提供exact projective consistency，所以“修复prefix inconsistency”不是
+真实problem；同时ElasTST、TimePerceiver、FlowState与Implicit Forecaster使简单placeholder/query/basis
+decoder的novelty空间拥挤。SC1回Step 2重定义horizon-adaptive/refinable computation。SC2的horizon-measure
+表述仍有理论价值，但当前frozen control使用single full-720 loss，不存在旧multi-prefix 14.39x加权病理；
+下一步只做fixed-batch gradient diagnostic，不把简单reweighting提前写成第二创新。
+
 以下 Phase5 sections保留历史 performance与failure evidence；其中出现的“当前 StageB candidate”不再表示
 active cursor。StageC 的 candidate status只以 active ledger为准。
 

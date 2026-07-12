@@ -24,8 +24,8 @@ mechanism-control protocol。StageB 的实验和负结果继续保存在 `phase5
 | --- | --- |
 | `current_11_step` | StageC Step 1-3：SC1-PFO/SC2-HML prior-art and problem-existence diagnostics |
 | `current_candidate` | `SC1-PFO` / `SC2-HML`（analysis_pending；method implementation未授权） |
-| `latest_decision` | R2C 9/9、72/72完整，三dataset stability gate通过；natural profiles正式冻结 |
-| `next_required_action` | 建立decoder/training prior-art matrix，并分别验证projective inconsistency与horizon-measure mismatch是否真实存在 |
+| `latest_decision` | SC1原projective-inconsistency假设在A6上为false；SC2 measure mismatch是problem candidate但当前full-720 control不存在旧nested-prefix重复加权 |
+| `next_required_action` | tensor-level prior-art boundary + frozen-batch horizon-measure gradient diagnostic；不训练method |
 | `rollback_point` | 若问题存在性或novelty boundary不成立，回Step 2重定义problem；禁止直接堆叠method |
 
 ## 11-Step Stage Record
@@ -66,8 +66,8 @@ TimeAlign official reproduction。
 | `SC0-DAP-R2A` | `passed_patch_selection` | 不匹配params时，dataset可从自然小grid选择patch granularity | `not_required`；control-only | 固定D64/ff128；dense validation regret选择 | Weather=P12、ETTm1=P24、ETTh2=P12 | R2A report/config/artifacts |
 | `SC0-DAP-R2B` | `passed_width_selection` | 在selected patch下dataset可选择自然representation width | `not_required`；control-only | D/ff={32/64,64/128,128/256}；复用medium run | Weather/ETTh2选D64；ETTm1选D32 | R2B report/artifacts |
 | `SC0-DAP-R2C` | `passed_and_frozen` | selected profiles在三seed下具有absolute validation stability | `not_required`；control-only | dataset mean/max dense MSE CV <=3%/5% | Weather 0.323/0.749%；ETTm1 0.707/1.405%；ETTh2 2.094/4.867%；不重证relative winner | R2C report/frozen contract |
-| `SC1-PFO` | `analysis_pending` | unified forecasting 应表示满足 projective consistency 的 forecast family，而不是 benchmark-horizon heads 或 full-trajectory clipping | 尚未通过；必须区别 DAM/FlowState/ElasTST/TimePerceiver，并明确 A6 special-case relation | dense seen/unseen horizons；exact consistency；matched controls；跨 dataset 和 seed | 等R2 active carrier冻结；可继续prior-art但不launch method | 待新增analysis |
-| `SC2-HML` | `analysis_pending` | training risk 应对应声明的 horizon measure，而不是由 `{96,192,336,720}` nested prefixes 隐式产生 early-step overweighting | 尚未通过；必须超越 ElasTST uniform-horizon harmonic reweighting与 generic task balancing | exposure/gradient mechanism先过Step3 | 等R2 active carrier冻结；可继续offline diagnostic | 待新增analysis |
+| `SC1-PFO` | `problem_redefinition_required` | unified forecasting 应表示满足 projective consistency 的 forecast family，而不是 benchmark-horizon heads 或 full-trajectory clipping | failed as stated：A6 prefix slicing已exact consistent；ElasTST/FlowState/TimePerceiver构成直接prior art | not evaluated | 回Step 2定义horizon-adaptive/refinable operator价值与novelty；不实现 | SC1/SC2 prior-art audit |
+| `SC2-HML` | `problem_candidate_diagnostic_required` | training risk 应对应声明的 horizon measure | partial：数学问题成立，但simple harmonic weighting被ElasTST覆盖；当前full-720 control无旧nested-prefix pathology | frozen-batch measure-gradient diagnostic先过Step3 | 实现offline gradient diagnostic，不训练method | diagnostic protocol/prior-art audit |
 | `SC3-JCO` | `deferred` | projective decoder 与 horizon-measure learning 有可解释、非冗余的 interaction | 只有 SC1/SC2 分别通过后才评估 | `2x2` factorial 必须显示两项独立主效应，joint arm 不能只由单项解释 | 不得提前实现 | none |
 | `SC4-XBG` | `deferred` | 核心 mechanism 不依赖 TimeAlign-derived encoder | generality gate，不单独作为 novelty | 至少第二 backbone、same mechanism direction、matched protocol | 等 SC1/SC2 小门通过 | none |
 
@@ -107,6 +107,7 @@ two token-MLP layers 与 `P*D=1536`，比较：
 | SC0-DAP-R2A result | `SC0-DAP-R2A` | validation-only patch selection | 9/9、0 errors；Weather=P12、ETTm1=P24、ETTh2=P12；ETTh2 P12 8/8 horizons最优 | `phase_a_patch_selected`；进入Phase B，不回调patch | `analysis/stage_c_dap_r2a_patch_screen_20260712/r2a_patch_screen_report.md` |
 | SC0-DAP-R2B result | `SC0-DAP-R2B` | validation-only width selection | 9/9 profiles完整；Weather=P12/D64、ETTm1=P24/D32、ETTh2=P12/D64；params/test未参与 | `phase_b_width_selected`；进入selected-only stability | `analysis/stage_c_dap_r2b_width_screen_20260712/r2b_width_screen_report.md` |
 | SC0-DAP-R2C result/freeze | `SC0-DAP-R2C` | selected-only absolute stability | 6 new + 3 reused runs；72 dense metrics；mean/max CV均过3%/5% gate，ETTh2 max=4.867%接近边界 | `dataset_profiles_stable_and_frozen`；SC0 blocker关闭 | `analysis/stage_c_dap_r2c_stability_20260712/r2c_stability_and_freeze_report.md` |
+| SC1/SC2 prior-art/problem audit | `SC1-PFO` / `SC2-HML` | Step 1-3 research audit | A6已exact prefix-consistent；current full-720 loss无14.39x nested-prefix pathology；latest decoders与ElasTST压缩novelty空间 | SC1回Step2；SC2停Step3并只授权gradient diagnostic | `analysis/stage_c_sc1_sc2_prior_art_problem_audit_20260712/sc1_sc2_prior_art_problem_audit.md` |
 
 ## Pending Tasks
 
