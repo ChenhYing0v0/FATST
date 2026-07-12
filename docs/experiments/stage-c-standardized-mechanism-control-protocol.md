@@ -317,3 +317,27 @@ source reproduction仍遵循作者说明的native last protocol。证据见
 同dataset内baseline、method、ablation和capacity/no-mechanism control必须使用同一profile。禁止test-driven
 切换、per-mechanism重选和扩大continuous grid。新dataset只允许同样三组registered profiles的一次性
 validation calibration。
+
+## 15. SC0-DAP-R2 Natural-Profile Calibration
+
+[Correction] Section 14 mapping来自capacity-matched grid，适合回答fixed-budget token allocation，却不应
+作为dataset profile选择的唯一搜索空间。active parameter差异不再作为carrier selection约束。Section 14
+mapping降级为`capacity_control_only`。
+
+R2使用两阶段自然grid：
+
+1. Phase A固定`D=64,d_ff=128`，比较`P={12,24,48}`；
+2. Phase B固定各dataset的selected P，比较`D/d_ff={32/64,64/128,128/256}`；
+3. Phase A的medium width可在Phase B复用，总remote budget为21 runs；
+4. params、FLOPs和latency只报告，不进入winner排序。
+
+profile selection使用H48/96/144/192/288/336/512/720 validation MSE。先在每个horizon内计算相对三候选
+best的normalized regret，再平均八个regrets；tie依次比较max regret、H720 regret和name。test完全禁止。
+
+seed2021用于coarse selection。最终selected profile补跑2022/2023只确认absolute stability，不声称
+selected-only confirmation能证明relative winner。完整config与实现见：
+
+- `configs/stage_c_dataset_profile_calibration_r2.json`；
+- `scripts/remote/run_stage_c_dap_r2a_patch_screen.sh`；
+- `scripts/analyze_stage_c_dap_r2a_patch_screen.py`；
+- `docs/code-explanation/stage-c-dap-r2-profile-calibration.md`。

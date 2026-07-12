@@ -10,9 +10,9 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Time Series Forecasting |
 | `current_stage` | StageC active；StageB paused/closed as active stage |
-| `current_11_step` | StageC Step 1-3：SC1/SC2 prior-art boundary与problem existence |
+| `current_11_step` | StageC Step 6/7：SC0-DAP-R2 natural-profile calibration |
 | `source_evidence_carrier` | `A6-LBF-r256` source-faithful results |
-| `mechanism_control_carrier` | active dataset-aware mapping：Weather=P12、ETTm1=P48、ETTh2=P24；SHA256 `a10414ac...fd88` |
+| `mechanism_control_carrier` | pending R2；旧P12/P48/P24 mapping降级为capacity-controlled diagnostic |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 
 ## Long Research Loop Rule
@@ -103,6 +103,11 @@ H720 last在9/9均差于best，mean test MSE +6.11%；因此当前A6 mechanism-c
 mapping：Weather=P12/D128，ETTm1=P48/D32，ETTh2=P24/D64。mapping来自同一三臂capacity-matched
 grid、三seed pooled validation，并在所有后续mechanism/control间冻结；test与per-mechanism reselection禁止。
 完整治理见`analysis/stage_c_sc0_checkpoint_test_gap_20260712/checkpoint_and_dataset_profile_governance_revision.md`。
+
+[Parameter Governance Correction] 用户进一步明确params差异无需参与dataset profile选择。旧mapping的
+`d_ff=536/1072`来自人为capacity match，因此降级为fixed-budget diagnostic。SC0-DAP-R2改用两阶段natural
+grid：先固定D64/ff128选P12/24/48，再固定P选择D/ff=32/64、64/128、128/256。winner只由dense
+validation regret决定，params仅报告。R2完成前暂停method launch。
 
 ### StageC execution order
 

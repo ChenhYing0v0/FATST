@@ -1,0 +1,63 @@
+{
+  "stage": "StageC-UVHF",
+  "candidate": "SC0-DAP-R2",
+  "protocol_class": "mechanism_control",
+  "protocol_profile": "stage_c_dataset_profile_calibration_r2",
+  "selection_split": "val",
+  "selection_metric": "dense_horizon_macro_normalized_regret",
+  "datasets": ["Weather", "ETTm1", "ETTh2"],
+  "common": {
+    "seq_len": 720,
+    "pred_len": 720,
+    "target_horizons": [720],
+    "validation_horizons": [720],
+    "evaluation_horizons": [48, 96, 144, 192, 288, 336, 512, 720],
+    "encoder_mode": "timealign-token-mlp",
+    "readout_mode": "learned-basis-forecast-operator",
+    "basis_rank": 256,
+    "e_layers": 2,
+    "dropout": 0.1,
+    "layer_norm": 1,
+    "learning_rate": 0.0001,
+    "batch_size": 32,
+    "gradient_accumulation_steps": 1,
+    "max_epochs": 20,
+    "early_stopping_patience": 5,
+    "early_stopping_min_delta": 0.0,
+    "checkpoint_policy": "best-val",
+    "pred_loss_mode": "full",
+    "final_evaluation_split": "val",
+    "screen_seed": 2021,
+    "confirmation_seeds": [2022, 2023]
+  },
+  "phase_a_patch_screen": {
+    "fixed_d_model": 64,
+    "fixed_d_ff": 128,
+    "profiles": {
+      "r2a_p12_d64_ff128": {"patch_num": 12, "patch_len": 60, "d_model": 64, "d_ff": 128},
+      "r2a_p24_d64_ff128": {"patch_num": 24, "patch_len": 30, "d_model": 64, "d_ff": 128},
+      "r2a_p48_d64_ff128": {"patch_num": 48, "patch_len": 15, "d_model": 64, "d_ff": 128}
+    }
+  },
+  "phase_b_width_screen": {
+    "rule": "Use the dataset-selected Phase A patch_num; compare natural widths with d_ff=2*d_model.",
+    "widths": {
+      "narrow": {"d_model": 32, "d_ff": 64},
+      "medium": {"d_model": 64, "d_ff": 128},
+      "wide": {"d_model": 128, "d_ff": 256}
+    }
+  },
+  "selection_policy": {
+    "primary": "For each dataset and candidate, compute regret relative to the best candidate separately at each dense validation horizon, then average the eight regrets.",
+    "tie_breakers": ["lower_max_dense_horizon_regret", "lower_h720_regret", "profile_name"],
+    "parameter_count_used_for_selection": false,
+    "test_metrics_used_for_selection": false
+  },
+  "budget": {
+    "phase_a_runs": 9,
+    "phase_b_new_runs": 6,
+    "confirmation_runs": 6,
+    "total_remote_runs": 21,
+    "continuous_search": false
+  }
+}
