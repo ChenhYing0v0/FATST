@@ -337,7 +337,18 @@ best的normalized regret，再平均八个regrets；tie依次比较max regret、
 seed2021用于coarse selection。最终selected profile补跑2022/2023只确认absolute stability，不声称
 selected-only confirmation能证明relative winner。完整config与实现见：
 
+Phase C在launch前冻结absolute stability gate。对每个dataset、每个dense horizon，用seeds
+`{2021,2022,2023}`的MSE计算sample coefficient of variation：
+
+$$CV_{d,h}=\frac{\operatorname{sample\_std}_s(MSE_{d,h,s})}{\operatorname{mean}_s(MSE_{d,h,s})}.$$
+
+每个dataset必须同时满足mean dense-horizon CV不超过3%、maximum dense-horizon CV不超过5%，且9个
+profile-seed实例、72个dense metrics完整、finite、validation-only。active params不参与gate。若失败，
+decision为`protocol_audit_required`并回Step 2/3；禁止读取test、重选winner或扩展grid。
+
 - `configs/stage_c_dataset_profile_calibration_r2.json`；
 - `scripts/remote/run_stage_c_dap_r2a_patch_screen.sh`；
 - `scripts/analyze_stage_c_dap_r2a_patch_screen.py`；
+- `scripts/remote/run_stage_c_dap_r2c_stability.sh`；
+- `scripts/analyze_stage_c_dap_r2c_stability.py`；
 - `docs/code-explanation/stage-c-dap-r2-profile-calibration.md`。

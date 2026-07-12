@@ -42,6 +42,11 @@ seed2021只做coarse selection。最终每dataset profile追加seeds2022/2023，
 validation stability，不声称selected-only runs能重新证明relative winner。若不稳定，不根据test或扩大grid
 追结果，而是回protocol gate。
 
+`run_stage_c_dap_r2c_stability.sh`从`r2b_summary.json`解析selected profile，只生成6个confirmation runs。
+analyzer复用Phase A/B的seed2021 artifacts，并按dataset、dense horizon计算三seed sample CV：
+$CV=s/\bar{x}$。每dataset的mean dense CV必须不超过3%，maximum dense CV必须不超过5%。params与test
+均不进入gate，输出中的`relative_winner_reconfirmed=false`明确限制结论。
+
 ## Verification
 
 local checker验证：三个patch均整除720；输出shape为`[B,720,C]`；observed active params确实不同；

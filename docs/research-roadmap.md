@@ -10,7 +10,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Time Series Forecasting |
 | `current_stage` | StageC active；StageB paused/closed as active stage |
-| `current_11_step` | StageC Step 7/8：SC0-DAP-R2 Phase B width screen |
+| `current_11_step` | StageC Step 7/8：SC0-DAP-R2 Phase C stability confirmation |
 | `source_evidence_carrier` | `A6-LBF-r256` source-faithful results |
 | `mechanism_control_carrier` | pending R2；旧P12/P48/P24 mapping降级为capacity-controlled diagnostic |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
@@ -112,6 +112,11 @@ validation regret决定，params仅报告。R2完成前暂停method launch。
 [R2A Result] 9/9 validation-only runs完成。固定D64/ff128后，dense selector选择Weather=P12、
 ETTm1=P24、ETTh2=P12；参数最多的P48没有在任何dataset胜出，但params未进入score。patch mapping冻结，
 下一步Phase B只筛natural width，不回调patch。
+
+[R2B Result] natural width screen选择Weather=P12/D64/ff128、ETTm1=P24/D32/ff64、
+ETTh2=P12/D64/ff128。三者mean dense regret分别为0.1354%/0.1674%/0.1132%；params只报告、未参与
+选择。下一步只对selected profiles补跑seeds2022/2023，以mean/max dense MSE CV <=3%/5%确认absolute
+stability；该步骤不重新证明relative winner。
 
 ### StageC execution order
 

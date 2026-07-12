@@ -1,0 +1,10 @@
+dataset,profile,status,patch_num,d_model,d_ff,active_forward_parameters,trained_epochs,best_epoch,reused_phase_a,run_dir
+Weather,r2b_p12_d32_ff64_narrow,ok,12,32,64,294064,14,9,0,analysis/stage_c_dap_r2b_width_screen_20260712/raw/SC0DAP_R2B_r2b_p12_d32_ff64_narrow/Weather/h720_full/seed2021
+Weather,r2b_p12_d64_ff128_medium,ok,12,64,128,419216,17,12,1,analysis/stage_c_dap_r2a_patch_screen_20260712/raw/SC0DAP_R2A_r2a_p12_d64_ff128/Weather/h720_full/seed2021
+Weather,r2b_p12_d128_ff256_wide,ok,12,128,256,718672,16,11,0,analysis/stage_c_dap_r2b_width_screen_20260712/raw/SC0DAP_R2B_r2b_p12_d128_ff256_wide/Weather/h720_full/seed2021
+ETTm1,r2b_p24_d32_ff64_narrow,ok,24,32,64,391408,8,3,0,analysis/stage_c_dap_r2b_width_screen_20260712/raw/SC0DAP_R2B_r2b_p24_d32_ff64_narrow/ETTm1/h720_full/seed2021
+ETTm1,r2b_p24_d64_ff128_medium,ok,24,64,128,613904,7,2,1,analysis/stage_c_dap_r2a_patch_screen_20260712/raw/SC0DAP_R2A_r2a_p24_d64_ff128/ETTm1/h720_full/seed2021
+ETTm1,r2b_p24_d128_ff256_wide,ok,24,128,256,1108048,6,1,0,analysis/stage_c_dap_r2b_width_screen_20260712/raw/SC0DAP_R2B_r2b_p24_d128_ff256_wide/ETTm1/h720_full/seed2021
+ETTh2,r2b_p12_d32_ff64_narrow,ok,12,32,64,294064,9,4,0,analysis/stage_c_dap_r2b_width_screen_20260712/raw/SC0DAP_R2B_r2b_p12_d32_ff64_narrow/ETTh2/h720_full/seed2021
+ETTh2,r2b_p12_d64_ff128_medium,ok,12,64,128,419216,7,2,1,analysis/stage_c_dap_r2a_patch_screen_20260712/raw/SC0DAP_R2A_r2a_p12_d64_ff128/ETTh2/h720_full/seed2021
+ETTh2,r2b_p12_d128_ff256_wide,ok,12,128,256,718672,6,1,0,analysis/stage_c_dap_r2b_width_screen_20260712/raw/SC0DAP_R2B_r2b_p12_d128_ff256_wide/ETTh2/h720_full/seed2021

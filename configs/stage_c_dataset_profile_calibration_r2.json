@@ -47,6 +47,15 @@
       "wide": {"d_model": 128, "d_ff": 256}
     }
   },
+  "phase_c_stability_confirmation": {
+    "rule": "Reuse seed 2021 selection artifacts and run only selected profiles at seeds 2022 and 2023. This confirms absolute validation stability, not the relative winner.",
+    "cv_definition": "sample_std(mse_across_three_seeds) / mean(mse_across_three_seeds)",
+    "dataset_mean_mse_cv_max": 0.03,
+    "dataset_max_mse_cv_max": 0.05,
+    "parameter_count_used_for_gate": false,
+    "test_metrics_used_for_gate": false,
+    "relative_winner_reconfirmed": false
+  },
   "selection_policy": {
     "primary": "For each dataset and candidate, compute regret relative to the best candidate separately at each dense validation horizon, then average the eight regrets.",
     "tie_breakers": ["lower_max_dense_horizon_regret", "lower_h720_regret", "profile_name"],
