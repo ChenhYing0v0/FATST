@@ -32,6 +32,10 @@ FLOPs和test均不进入winner排序。
 固定各dataset在Phase A选择的patch_num，比较自然width：`D/ff=32/64, 64/128, 128/256`。Phase A的
 `D64/ff128` run直接复用，因此只需6个新增run。
 
+`analyze_stage_c_dap_r2b_width_screen.py`同时读取Phase A medium artifacts和Phase B narrow/wide artifacts，
+使用相同dense regret selector。Phase B runner从`r2a_summary.json`解析dataset patch mapping，避免shell内
+手工重写winner。
+
 ## Confirmation Boundary
 
 seed2021只做coarse selection。最终每dataset profile追加seeds2022/2023，只确认finite training和absolute

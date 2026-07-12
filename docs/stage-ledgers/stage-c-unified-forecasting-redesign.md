@@ -22,10 +22,10 @@ mechanism-control protocol。StageB 的实验和负结果继续保存在 `phase5
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | StageC Step 8：SC0-DAP-R2 Phase A remote patch screen running |
-| `current_candidate` | `SC0-DAP-R2A`（control-only；running） |
-| `latest_decision` | commit`d0c8014`、profile`2bfb1f88...5f19`；三卡preflight/local gate通过，9 runs已启动 |
-| `next_required_action` | 监控9/9，sync后以dense validation regret冻结各dataset patch_num |
+| `current_11_step` | StageC Step 7/8：SC0-DAP-R2 Phase B width screen implementation/launch |
+| `current_candidate` | `SC0-DAP-R2B`（control-only；ready_to_launch） |
+| `latest_decision` | R2A 9/9完成；dense validation选择Weather=P12、ETTm1=P24、ETTh2=P12；params/test未参与 |
+| `next_required_action` | commit/push后Phase B新增6 runs；复用Phase A medium width |
 | `rollback_point` | R2若显示coarse grid不稳定，回Step 2/3重审profile rule；禁止扩大为精细search |
 
 ## 11-Step Stage Record
@@ -63,8 +63,8 @@ TimeAlign official reproduction。
 | `SC0-R1` | `passed_global_control_superseded` | 一个全局profile能否作为更严格control | `not_required`；control-only | 27/27下global winner=`p24/d64` | 保留历史证据；用户并不要求跨dataset同profile，不再作为active约束 | R1 result；uniform frozen config |
 | `SC0-CPA` | `passed_diagnostic` | SC0 validation degradation是否对应test degradation | `not_required`；post-freeze test diagnostic | 同一fixed20 best/last checkpoints；test不得反向选profile | H720 last 0/9 wins，mean test MSE +6.11%；dense last 29/72 wins | checkpoint test report |
 | `SC0-DAP` | `capacity_control_only` | fixed active budget下dataset偏好不同token allocation | `not_required`；diagnostic control | 三臂约72万active params | 保留P12/P48/P24 mapping为诊断；不再决定active carrier | old dataset-aware config；governance revision |
-| `SC0-DAP-R2A` | `running` | 不匹配params时，dataset可从自然小grid选择patch granularity | `not_required`；control-only | 固定D64/ff128；dense validation regret选择；params/test不入排序 | 9-run remote matrix运行中 | R2 config/analyzer/runner/code explanation；launch record |
-| `SC0-DAP-R2B` | `deferred` | 在selected patch下dataset可选择自然representation width | `not_required`；control-only | D/ff={32/64,64/128,128/256}；复用medium run | 等R2A patch mapping | R2 protocol |
+| `SC0-DAP-R2A` | `passed_patch_selection` | 不匹配params时，dataset可从自然小grid选择patch granularity | `not_required`；control-only | 固定D64/ff128；dense validation regret选择 | Weather=P12、ETTm1=P24、ETTh2=P12 | R2A report/config/artifacts |
+| `SC0-DAP-R2B` | `ready_to_launch` | 在selected patch下dataset可选择自然representation width | `not_required`；control-only | D/ff={32/64,64/128,128/256}；复用medium run | runner/analyzer通过static/dry gate；新增6 runs | R2 protocol/code explanation |
 | `SC1-PFO` | `analysis_pending` | unified forecasting 应表示满足 projective consistency 的 forecast family，而不是 benchmark-horizon heads 或 full-trajectory clipping | 尚未通过；必须区别 DAM/FlowState/ElasTST/TimePerceiver，并明确 A6 special-case relation | dense seen/unseen horizons；exact consistency；matched controls；跨 dataset 和 seed | 等R2 active carrier冻结；可继续prior-art但不launch method | 待新增analysis |
 | `SC2-HML` | `analysis_pending` | training risk 应对应声明的 horizon measure，而不是由 `{96,192,336,720}` nested prefixes 隐式产生 early-step overweighting | 尚未通过；必须超越 ElasTST uniform-horizon harmonic reweighting与 generic task balancing | exposure/gradient mechanism先过Step3 | 等R2 active carrier冻结；可继续offline diagnostic | 待新增analysis |
 | `SC3-JCO` | `deferred` | projective decoder 与 horizon-measure learning 有可解释、非冗余的 interaction | 只有 SC1/SC2 分别通过后才评估 | `2x2` factorial 必须显示两项独立主效应，joint arm 不能只由单项解释 | 不得提前实现 | none |
@@ -102,7 +102,8 @@ two token-MLP layers 与 `P*D=1536`，比较：
 | SC0 checkpoint test gap | `SC0-CPA` | post-freeze diagnostic | H720 last在9/9均差于best；mean test MSE +6.11%，远小于validation +14.72%；dense last有29/72 wins | A6 mechanism-control用best-val有证据；不能把validation 32%-45%写成test值；official TimeAlign仍遵循native last | `analysis/stage_c_sc0_checkpoint_test_gap_20260712/` |
 | Dataset-aware carrier revision | `SC0-DAP` | protocol governance | 用户允许dataset结构偏好；从同一三臂capacity-matched grid用三seed validation一次性冻结 | active mapping=`Weather:P12, ETTm1:P48, ETTh2:P24`；禁止test/per-mechanism重选 | `configs/stage_c_mechanism_control_dataset_aware.json` |
 | Dataset-profile parameter correction | `SC0-DAP-R2` | protocol governance | 用户明确params差异不应进入profile选择；旧`d_ff=536/1072`是capacity-match artifact | 旧mapping降级diagnostic；打开natural two-stage grid，params只报告 | `configs/stage_c_dataset_profile_calibration_r2.json` |
-| SC0-DAP-R2A launch | `SC0-DAP-R2A` | validation-only patch screen | D64/ff128下P12/P24/P48，active params差异自然保留；9 runs | `running`；params/test不参与selection | `analysis/stage_c_dap_r2a_patch_screen_20260712/launch_record.md` |
+| SC0-DAP-R2A launch | `SC0-DAP-R2A` | validation-only patch screen | D64/ff128下P12/P24/P48，active params差异自然保留；9 runs | `completed`；9/9、0 errors | `analysis/stage_c_dap_r2a_patch_screen_20260712/launch_record.md` |
+| SC0-DAP-R2A result | `SC0-DAP-R2A` | validation-only patch selection | 9/9、0 errors；Weather=P12、ETTm1=P24、ETTh2=P12；ETTh2 P12 8/8 horizons最优 | `phase_a_patch_selected`；进入Phase B，不回调patch | `analysis/stage_c_dap_r2a_patch_screen_20260712/r2a_patch_screen_report.md` |
 
 ## Pending Tasks
 
@@ -116,7 +117,8 @@ two token-MLP layers 与 `P*D=1536`，比较：
 | Design SC0-R1 training control | Codex | SC0 selector instability + optimization pathology | `completed` | max20/patience5/restore-best；全臂三seed gate已冻结 |
 | Run SC0-R1 validation-only calibration | Codex | protocol/local gate + commit/push + GPU preflight | `completed_pass` | `p24/d64`与frozen contract已落地 |
 | Freeze mechanism-control profile | Codex | parameter-governance correction | `reopened` | 完成R2A patch、R2B width与selected-only stability后再冻结 |
-| Run SC0-DAP-R2A patch screen | Codex | protocol/local gate | `running` | output `/home/yingch/exp_outputs/r-2026-fatst/stage_c_dap_r2a_patch_screen` |
+| Run SC0-DAP-R2A patch screen | Codex | protocol/local gate | `completed_pass` | patch mapping已冻结 |
+| Run SC0-DAP-R2B width screen | Codex | R2A pass | `pending` | 6 new runs；medium run复用 |
 | Build StageC prior-art matrix | Codex | R2可并行 | `pending` | carrier冻结后恢复active cursor |
 | Run SC1/SC2 problem diagnostics | Codex | prior-art matrix complete | `pending` | 先Step 2/3，后Step 4-6 narrative gate |
 

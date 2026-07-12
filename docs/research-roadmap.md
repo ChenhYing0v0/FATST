@@ -10,7 +10,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Time Series Forecasting |
 | `current_stage` | StageC active；StageB paused/closed as active stage |
-| `current_11_step` | StageC Step 6/7：SC0-DAP-R2 natural-profile calibration |
+| `current_11_step` | StageC Step 7/8：SC0-DAP-R2 Phase B width screen |
 | `source_evidence_carrier` | `A6-LBF-r256` source-faithful results |
 | `mechanism_control_carrier` | pending R2；旧P12/P48/P24 mapping降级为capacity-controlled diagnostic |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
@@ -108,6 +108,10 @@ grid、三seed pooled validation，并在所有后续mechanism/control间冻结�
 `d_ff=536/1072`来自人为capacity match，因此降级为fixed-budget diagnostic。SC0-DAP-R2改用两阶段natural
 grid：先固定D64/ff128选P12/24/48，再固定P选择D/ff=32/64、64/128、128/256。winner只由dense
 validation regret决定，params仅报告。R2完成前暂停method launch。
+
+[R2A Result] 9/9 validation-only runs完成。固定D64/ff128后，dense selector选择Weather=P12、
+ETTm1=P24、ETTh2=P12；参数最多的P48没有在任何dataset胜出，但params未进入score。patch mapping冻结，
+下一步Phase B只筛natural width，不回调patch。
 
 ### StageC execution order
 

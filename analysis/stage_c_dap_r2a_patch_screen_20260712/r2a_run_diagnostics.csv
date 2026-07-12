@@ -1,0 +1,10 @@
+dataset,profile,status,config_ok,training_ok,patch_num,d_model,d_ff,active_forward_parameters,trained_epochs,best_epoch,run_dir
+Weather,r2a_p12_d64_ff128,ok,1,1,12,64,128,419216,17,12,analysis/stage_c_dap_r2a_patch_screen_20260712/raw/SC0DAP_R2A_r2a_p12_d64_ff128/Weather/h720_full/seed2021
+Weather,r2a_p24_d64_ff128,ok,1,1,24,64,128,613904,9,4,analysis/stage_c_dap_r2a_patch_screen_20260712/raw/SC0DAP_R2A_r2a_p24_d64_ff128/Weather/h720_full/seed2021
+Weather,r2a_p48_d64_ff128,ok,1,1,48,64,128,1006160,13,8,analysis/stage_c_dap_r2a_patch_screen_20260712/raw/SC0DAP_R2A_r2a_p48_d64_ff128/Weather/h720_full/seed2021
+ETTm1,r2a_p12_d64_ff128,ok,1,1,12,64,128,419216,6,1,analysis/stage_c_dap_r2a_patch_screen_20260712/raw/SC0DAP_R2A_r2a_p12_d64_ff128/ETTm1/h720_full/seed2021
+ETTm1,r2a_p24_d64_ff128,ok,1,1,24,64,128,613904,7,2,analysis/stage_c_dap_r2a_patch_screen_20260712/raw/SC0DAP_R2A_r2a_p24_d64_ff128/ETTm1/h720_full/seed2021
+ETTm1,r2a_p48_d64_ff128,ok,1,1,48,64,128,1006160,7,2,analysis/stage_c_dap_r2a_patch_screen_20260712/raw/SC0DAP_R2A_r2a_p48_d64_ff128/ETTm1/h720_full/seed2021
+ETTh2,r2a_p12_d64_ff128,ok,1,1,12,64,128,419216,7,2,analysis/stage_c_dap_r2a_patch_screen_20260712/raw/SC0DAP_R2A_r2a_p12_d64_ff128/ETTh2/h720_full/seed2021
+ETTh2,r2a_p24_d64_ff128,ok,1,1,24,64,128,613904,6,1,analysis/stage_c_dap_r2a_patch_screen_20260712/raw/SC0DAP_R2A_r2a_p24_d64_ff128/ETTh2/h720_full/seed2021
+ETTh2,r2a_p48_d64_ff128,ok,1,1,48,64,128,1006160,7,2,analysis/stage_c_dap_r2a_patch_screen_20260712/raw/SC0DAP_R2A_r2a_p48_d64_ff128/ETTh2/h720_full/seed2021

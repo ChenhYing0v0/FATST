@@ -1,0 +1,14 @@
+{
+  "candidate": "SC0-DAP-R2A",
+  "complete": true,
+  "decision": "phase_a_patch_selected",
+  "expected_runs": 9,
+  "parameter_count_used_for_selection": false,
+  "profile_hash": "2bfb1f88d38a7dfca691302d166b543db74928813653873ffc1a05e93f285f19",
+  "selected_profiles": {
+    "ETTh2": "r2a_p12_d64_ff128",
+    "ETTm1": "r2a_p24_d64_ff128",
+    "Weather": "r2a_p12_d64_ff128"
+  },
+  "test_metrics_used_for_selection": false
+}

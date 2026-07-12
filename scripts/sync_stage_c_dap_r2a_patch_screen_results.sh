@@ -10,4 +10,4 @@ rsync -av --exclude 'checkpoint*.pt' --exclude 'predictions_val.npz' \
   "${REMOTE_HOST}:${REMOTE_ROOT}/" "${ANALYSIS_ROOT}/raw/"
 python scripts/analyze_stage_c_dap_r2a_patch_screen.py \
   --raw-root "${ANALYSIS_ROOT}/raw" --output-dir "${ANALYSIS_ROOT}" --config "${CONFIG_PATH}"
-echo "sync_stage_c_dap_r2a_done=$(date -Is)"
+echo "sync_stage_c_dap_r2a_done=$(date '+%Y-%m-%dT%H:%M:%S%z')"
