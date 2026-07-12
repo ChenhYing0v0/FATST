@@ -51,3 +51,12 @@ $CV=s/\bar{x}$。每dataset的mean dense CV必须不超过3%，maximum dense CV�
 
 local checker验证：三个patch均整除720；输出shape为`[B,720,C]`；observed active params确实不同；
 synthetic dense selector不读取params；ETTh2 one-batch smoke可early stop并只产生validation artifacts。
+
+## Final Contract
+
+R2C analyzer接受两层合法provenance：复用的seed2021 artifacts必须匹配Phase B summary记录的selection
+hash，新跑的seeds2022/2023必须匹配当前Phase C config hash。这避免把配置文件追加confirmation gate后
+产生的新hash错误地施加给历史选择artifact。
+
+最终contract为`configs/stage_c_mechanism_control_natural_dataset_profiles.json`。它冻结dataset到
+`patch_num/d_model/d_ff`的映射；后续runner应读取该contract，而不是重新执行selector。

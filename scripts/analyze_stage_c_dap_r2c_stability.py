@@ -97,7 +97,8 @@ def collect(
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     metrics: list[dict[str, Any]] = []
     diagnostics: list[dict[str, Any]] = []
-    expected_hash = file_hash(args.config)
+    current_hash = file_hash(args.config)
+    selection_hash = str(summary["profile_hash"])
     seeds = [int(config["common"]["screen_seed"])] + [
         int(seed) for seed in config["common"]["confirmation_seeds"]
     ]
@@ -135,6 +136,7 @@ def collect(
             training = read_csv(required[2])
             adapter = effective["adapter"]
             official = effective["official_args"]
+            expected_hash = selection_hash if seed == 2021 else current_hash
             config_ok = (
                 adapter.get("profile_hash") == expected_hash
                 and adapter.get("final_evaluation_split") == "val"

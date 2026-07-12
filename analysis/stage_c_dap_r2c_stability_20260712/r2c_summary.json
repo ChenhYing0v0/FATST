@@ -1,0 +1,17 @@
+{
+  "candidate": "SC0-DAP-R2C",
+  "complete": true,
+  "decision": "dataset_profiles_stable_and_frozen",
+  "expected_profile_seed_instances": 9,
+  "new_remote_runs": 6,
+  "parameter_count_used_for_gate": false,
+  "profile_hash": "6872f5ae5b55724dfc760da85a12c21e84dc7bd54ab4cdbd12a6205885c46921",
+  "relative_winner_reconfirmed": false,
+  "selected_profiles": {
+    "ETTh2": "r2b_p12_d64_ff128_medium",
+    "ETTm1": "r2b_p24_d32_ff64_narrow",
+    "Weather": "r2b_p12_d64_ff128_medium"
+  },
+  "stability_pass": true,
+  "test_metrics_used_for_gate": false
+}

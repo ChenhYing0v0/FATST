@@ -13,7 +13,7 @@ mechanism-control protocol。StageB 的实验和负结果继续保存在 `phase5
 | `paper_mainline_role` | 重建两项相互支撑的 paper-core innovation：decoder/operator 与 training principle |
 | `active_question` | 一个参数共享模型如何对任意 requested horizon 产生 projectively consistent、无需逐 horizon 特调且可与 specialists 竞争的预测？ |
 | `source_evidence_carrier` | `A6-LBF-r256` on source-faithful TimeAlign presets；仅保留历史 performance evidence |
-| `mechanism_control_carrier` | pending SC0-DAP-R2 natural-profile calibration；旧`a10414ac...fd88`降级为capacity-controlled diagnostic |
+| `mechanism_control_carrier` | frozen natural dataset profiles：Weather=P12/D64、ETTm1=P24/D32、ETTh2=P12/D64；contract `254d85d4...a50c` |
 | `entry_evidence` | A6 clean rerun；StageB mechanism failures；C0/C1 carrier controls；2024-2026 decoder/training prior-art audit |
 | `stage_exit_condition` | decoder 与 training strategy 分别通过 narrative/effectiveness gate，并在 frozen protocol 下显示独立主效应和 joint gain |
 | `stage_rollback_condition` | 若 standardized carrier 不成立、问题存在性不跨 dataset，或 prior art 无法形成清晰 novelty boundary，则回到 Step 2/3，不实现 paper-core method |
@@ -22,11 +22,11 @@ mechanism-control protocol。StageB 的实验和负结果继续保存在 `phase5
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | StageC Step 7/8：SC0-DAP-R2 Phase C selected-profile stability confirmation |
-| `current_candidate` | `SC0-DAP-R2C`（control-only；ready_to_launch） |
-| `latest_decision` | R2B选择Weather=P12/D64、ETTm1=P24/D32、ETTh2=P12/D64；params/test未参与 |
-| `next_required_action` | commit/push后补跑seeds2022/2023共6 runs；按预注册CV gate决定是否冻结 |
-| `rollback_point` | R2若显示coarse grid不稳定，回Step 2/3重审profile rule；禁止扩大为精细search |
+| `current_11_step` | StageC Step 1-3：SC1-PFO/SC2-HML prior-art and problem-existence diagnostics |
+| `current_candidate` | `SC1-PFO` / `SC2-HML`（analysis_pending；method implementation未授权） |
+| `latest_decision` | R2C 9/9、72/72完整，三dataset stability gate通过；natural profiles正式冻结 |
+| `next_required_action` | 建立decoder/training prior-art matrix，并分别验证projective inconsistency与horizon-measure mismatch是否真实存在 |
+| `rollback_point` | 若问题存在性或novelty boundary不成立，回Step 2重定义problem；禁止直接堆叠method |
 
 ## 11-Step Stage Record
 
@@ -65,7 +65,7 @@ TimeAlign official reproduction。
 | `SC0-DAP` | `capacity_control_only` | fixed active budget下dataset偏好不同token allocation | `not_required`；diagnostic control | 三臂约72万active params | 保留P12/P48/P24 mapping为诊断；不再决定active carrier | old dataset-aware config；governance revision |
 | `SC0-DAP-R2A` | `passed_patch_selection` | 不匹配params时，dataset可从自然小grid选择patch granularity | `not_required`；control-only | 固定D64/ff128；dense validation regret选择 | Weather=P12、ETTm1=P24、ETTh2=P12 | R2A report/config/artifacts |
 | `SC0-DAP-R2B` | `passed_width_selection` | 在selected patch下dataset可选择自然representation width | `not_required`；control-only | D/ff={32/64,64/128,128/256}；复用medium run | Weather/ETTh2选D64；ETTm1选D32 | R2B report/artifacts |
-| `SC0-DAP-R2C` | `ready_to_launch` | selected profiles在三seed下具有absolute validation stability | `not_required`；control-only | dataset mean/max dense MSE CV <=3%/5% | 只补seeds2022/2023；不重证relative winner | R2 protocol/runner/analyzer |
+| `SC0-DAP-R2C` | `passed_and_frozen` | selected profiles在三seed下具有absolute validation stability | `not_required`；control-only | dataset mean/max dense MSE CV <=3%/5% | Weather 0.323/0.749%；ETTm1 0.707/1.405%；ETTh2 2.094/4.867%；不重证relative winner | R2C report/frozen contract |
 | `SC1-PFO` | `analysis_pending` | unified forecasting 应表示满足 projective consistency 的 forecast family，而不是 benchmark-horizon heads 或 full-trajectory clipping | 尚未通过；必须区别 DAM/FlowState/ElasTST/TimePerceiver，并明确 A6 special-case relation | dense seen/unseen horizons；exact consistency；matched controls；跨 dataset 和 seed | 等R2 active carrier冻结；可继续prior-art但不launch method | 待新增analysis |
 | `SC2-HML` | `analysis_pending` | training risk 应对应声明的 horizon measure，而不是由 `{96,192,336,720}` nested prefixes 隐式产生 early-step overweighting | 尚未通过；必须超越 ElasTST uniform-horizon harmonic reweighting与 generic task balancing | exposure/gradient mechanism先过Step3 | 等R2 active carrier冻结；可继续offline diagnostic | 待新增analysis |
 | `SC3-JCO` | `deferred` | projective decoder 与 horizon-measure learning 有可解释、非冗余的 interaction | 只有 SC1/SC2 分别通过后才评估 | `2x2` factorial 必须显示两项独立主效应，joint arm 不能只由单项解释 | 不得提前实现 | none |
@@ -106,6 +106,7 @@ two token-MLP layers 与 `P*D=1536`，比较：
 | SC0-DAP-R2A launch | `SC0-DAP-R2A` | validation-only patch screen | D64/ff128下P12/P24/P48，active params差异自然保留；9 runs | `completed`；9/9、0 errors | `analysis/stage_c_dap_r2a_patch_screen_20260712/launch_record.md` |
 | SC0-DAP-R2A result | `SC0-DAP-R2A` | validation-only patch selection | 9/9、0 errors；Weather=P12、ETTm1=P24、ETTh2=P12；ETTh2 P12 8/8 horizons最优 | `phase_a_patch_selected`；进入Phase B，不回调patch | `analysis/stage_c_dap_r2a_patch_screen_20260712/r2a_patch_screen_report.md` |
 | SC0-DAP-R2B result | `SC0-DAP-R2B` | validation-only width selection | 9/9 profiles完整；Weather=P12/D64、ETTm1=P24/D32、ETTh2=P12/D64；params/test未参与 | `phase_b_width_selected`；进入selected-only stability | `analysis/stage_c_dap_r2b_width_screen_20260712/r2b_width_screen_report.md` |
+| SC0-DAP-R2C result/freeze | `SC0-DAP-R2C` | selected-only absolute stability | 6 new + 3 reused runs；72 dense metrics；mean/max CV均过3%/5% gate，ETTh2 max=4.867%接近边界 | `dataset_profiles_stable_and_frozen`；SC0 blocker关闭 | `analysis/stage_c_dap_r2c_stability_20260712/r2c_stability_and_freeze_report.md` |
 
 ## Pending Tasks
 
@@ -118,10 +119,10 @@ two token-MLP layers 与 `P*D=1536`，比较：
 | Confirm and freeze global profile | Codex | seed2021 gate passes | `blocked_by_gate` | 禁止启动原confirmation；SC0-R1重新过protocol gate后再决定 |
 | Design SC0-R1 training control | Codex | SC0 selector instability + optimization pathology | `completed` | max20/patience5/restore-best；全臂三seed gate已冻结 |
 | Run SC0-R1 validation-only calibration | Codex | protocol/local gate + commit/push + GPU preflight | `completed_pass` | `p24/d64`与frozen contract已落地 |
-| Freeze mechanism-control profile | Codex | parameter-governance correction | `reopened` | 完成R2A patch、R2B width与selected-only stability后再冻结 |
+| Freeze mechanism-control profile | Codex | parameter-governance correction | `completed` | natural dataset-profile contract hash `254d85d4...a50c` |
 | Run SC0-DAP-R2A patch screen | Codex | protocol/local gate | `completed_pass` | patch mapping已冻结 |
 | Run SC0-DAP-R2B width screen | Codex | R2A pass | `completed_pass` | selected profiles已冻结 |
-| Run SC0-DAP-R2C stability confirmation | Codex | R2B pass | `pending` | 6 new runs；mean/max dense CV gate=3%/5% |
+| Run SC0-DAP-R2C stability confirmation | Codex | R2B pass | `completed_pass` | 9/9、72/72；ETTh2 boundary-close风险保留 |
 | Build StageC prior-art matrix | Codex | R2可并行 | `pending` | carrier冻结后恢复active cursor |
 | Run SC1/SC2 problem diagnostics | Codex | prior-art matrix complete | `pending` | 先Step 2/3，后Step 4-6 narrative gate |
 

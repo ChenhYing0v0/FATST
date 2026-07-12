@@ -1,9 +1,10 @@
 {
   "stage": "StageC-UVHF",
   "role": "dataset_aware_mechanism_control",
-  "status": "active",
+  "status": "historical_capacity_control",
   "protocol_profile": "stage_c_dataset_aware_mechanism_control_v1",
   "supersedes": "configs/stage_c_mechanism_control_frozen.json",
+  "superseded_by": "configs/stage_c_mechanism_control_natural_dataset_profiles.json",
   "selection_evidence": "analysis/stage_c_sc0_r1_carrier_calibration_20260711/sc0_r1_validation_horizon_metrics.csv",
   "checkpoint_evidence": "analysis/stage_c_sc0_checkpoint_test_gap_20260712/sc0_checkpoint_test_report.md",
   "selection_split": "validation_only",

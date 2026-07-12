@@ -1,0 +1,4 @@
+dataset,profile,mean_dense_mse_cv,max_dense_mse_cv,mean_cv_limit,max_cv_limit,stability_pass
+Weather,r2b_p12_d64_ff128_medium,0.00322539480075964,0.007487654933902845,0.03,0.05,1
+ETTm1,r2b_p24_d32_ff64_narrow,0.007070241931122403,0.014047880516222565,0.03,0.05,1
+ETTh2,r2b_p12_d64_ff128_medium,0.020940394545436013,0.04867412433731217,0.03,0.05,1

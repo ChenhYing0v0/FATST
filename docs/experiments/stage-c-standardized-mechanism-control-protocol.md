@@ -352,3 +352,15 @@ decision为`protocol_audit_required`并回Step 2/3；禁止读取test、重选wi
 - `scripts/remote/run_stage_c_dap_r2c_stability.sh`；
 - `scripts/analyze_stage_c_dap_r2c_stability.py`；
 - `docs/code-explanation/stage-c-dap-r2-profile-calibration.md`。
+
+### 15.1 R2 Result And Frozen Contract
+
+[Result] Phase A/B/C共21个remote runs完成。最终selected profiles为Weather P12/D64、ETTm1 P24/D32、
+ETTh2 P12/D64。Phase C的Weather mean/max CV=0.323%/0.749%，ETTm1=0.707%/1.405%，
+ETTh2=2.094%/4.867%，均通过3%/5% gate；ETTh2明确标记为boundary-close。
+
+[Decision] active mechanism-control contract冻结为
+`configs/stage_c_mechanism_control_natural_dataset_profiles.json`，SHA256
+`254d85d47a9e5b7c212f8a8b88decf17a0328a1ea1df324c9cc65be4c672a50c`。Section 13 uniform profile与
+Section 14 capacity-matched mapping只保留为historical controls。后续同dataset method/control必须共享该
+contract，params差异不作为selection解释，test不得触发profile修改。

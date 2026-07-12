@@ -11,9 +11,9 @@
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Time Series Forecasting |
 | `current_stage` | StageC active；StageB paused and closed as active research stage |
 | `source_evidence_carrier` | `A6-LBF-r256` on TimeAlign source-faithful presets |
-| `mechanism_control_carrier` | pending SC0-DAP-R2 natural-profile calibration；旧capacity-matched mapping仅作diagnostic |
+| `mechanism_control_carrier` | frozen natural profiles：Weather=P12/D64、ETTm1=P24/D32、ETTh2=P12/D64 |
 | `active_stage_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `current_11_step` | StageC Step 6/7：dataset-profile calibration；SC1/SC2 method launch paused |
+| `current_11_step` | StageC Step 1-3：SC1/SC2 prior-art and problem-existence diagnostics |
 | `paper_core_status` | A6 performance evidence retained；final decoder/training contributions reopened under StageC gates |
 
 ## StageC Research Reset
@@ -71,6 +71,11 @@ last protocol，两种checkpoint口径必须分表报告。
 [Parameter-Governance Correction] capacity matching不应约束dataset profile selection。旧Weather=P12、
 ETTm1=P48、ETTh2=P24 mapping只保留为fixed-budget allocation evidence。active profile重新通过natural
 two-stage coarse grid选择；params/FLOPs只报告，不参与winner排序。完成R2前不launch SC1/SC2 method。
+
+[Natural Profile Freeze] R2两阶段validation-only coarse grid与selected-only三seed confirmation完成。
+active mapping冻结为Weather=P12/D64/ff128、ETTm1=P24/D32/ff64、ETTh2=P12/D64/ff128；参数差异未参与
+selection或stability gate。ETTh2 maximum dense CV=4.867%，虽低于5%阈值但属于边界通过。SC0仅是
+research-instrument governance，不构成论文创新；当前返回SC1/SC2 Step 1-3，尚未授权method实现。
 
 以下 Phase5 sections保留历史 performance与failure evidence；其中出现的“当前 StageB candidate”不再表示
 active cursor。StageC 的 candidate status只以 active ledger为准。

@@ -65,21 +65,17 @@ run_one() {
   echo "run_done=$(date -Is) dataset=${dataset} profile=${profile} seed=${seed} gpu=${gpu}"
 }
 
+worker() {
+  local worker_index="$1" gpu="$2" line_index
+  for ((line_index=worker_index; line_index<${#LINES[@]}; line_index+=${#GPU_IDS[@]})); do
+    run_one "${LINES[${line_index}]}" "${gpu}"
+  done
+}
+
 pids=()
-index=0
-for line in "${LINES[@]}"; do
-  gpu="${GPU_IDS[$((index % ${#GPU_IDS[@]}))]}"
-  run_one "${line}" "${gpu}" &
+for index in "${!GPU_IDS[@]}"; do
+  worker "${index}" "${GPU_IDS[${index}]}" &
   pids+=("$!")
-  index=$((index+1))
-  if (( ${#pids[@]} >= ${#GPU_IDS[@]} )); then
-    wait -n
-    remaining=()
-    for pid in "${pids[@]}"; do
-      if kill -0 "${pid}" 2>/dev/null; then remaining+=("${pid}"); fi
-    done
-    pids=("${remaining[@]}")
-  fi
 done
 for pid in "${pids[@]}"; do wait "${pid}"; done
 
