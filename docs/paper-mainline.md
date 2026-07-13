@@ -13,7 +13,7 @@
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；ETTh1/ETTm2 profile calibration pending |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | Contribution 1 slot open；SC1-D2 diagnostic_only active；SC2-MIPR held |
+| `paper_core_status` | Contribution 1 slot open；SC1-D2 partial_core3；SC2-MIPR held |
 
 ## Research Thesis
 
@@ -79,6 +79,12 @@ deep-linear factorization。已有matrix-factorization工作说明这可能改�
 Step 7。普通per-scale nonlinear extension会破坏automatic exact A6 containment，并引入新的activation、
 capacity与prior-art问题，必须作为新候选重新通过Step 2-5，不能事后挽救DS。Contribution 1 slot保持开放，
 current cursor回到Step 2/3的`SC1-D2`：先分离rank expansion、generic nonlinearity与true-scale alignment。
+
+[Diagnostic] D2 core3已完成99/99 frozen-memory probes。rank expansion与generic dense nonlinearity未形成
+共同正信号；true interval basis相对random basis在9/9 runs为正（macro `+2.3137%`），但true depth grouping
+相对同basis random grouping macro为`-0.2212%`，仅Weather稳定为正。初版合并random median会掩盖该差异，
+formal5前已拆成两个mandatory controls。当前只支持“future basis geometry有价值”，不支持“balanced depth
+grouping就是正确mechanism”，故不进入Step 4；等待ETTh1/ETTm2 profile freeze后的formal5。
 
 ### Contribution 2 Candidate: Measure-Induced Projective Risk
 
@@ -158,8 +164,8 @@ nonlinearity与random grouping，才允许回到Step 4提出新operator。
 6. Step 4 redesign audit已解释A6 function class、fixed partition与interface问题，并只把FPMO推进到Step 5；
 7. FPMO Step 5 embedding/restriction通过但capacity no-go使其仅partial pass；
 8. Step 6已判定DS claim无法脱离full-affine factorization解释，故FPMO不进入实现；
-9. rollback Step 2/3执行SC1-D2：rank-256 affine、full affine、dense nonlinear、true-scale grouped nonlinear与
-   random-coordinate/group controls只在frozen memory和validation上比较；
+9. SC1-D2 core3 partial只支持basis geometry、不支持depth grouping；先冻结ETTh1/ETTm2 profile，再以拆分的
+   random-group/random-basis controls完成formal5；
 10. 只有D2支持scale alignment、且新SC1重新通过Step 4-6并完成screening后，才恢复MIPR、`2x2` factorial与
     3-seed full matrix；第二 backbone与official native baselines最后做generality gate。
 

@@ -52,7 +52,8 @@ statistics。best epoch只看inner holdout；official validation只在训练结�
 
 ### Analyzer outputs
 
-- `d2_pairwise_metrics.csv`：同dataset/checkpoint seed内的四层归因gain；
+- `d2_pairwise_metrics.csv`：同dataset/checkpoint seed内的rank、nonlinearity、dense、random-group与
+  random-basis归因gain；random两类不得合并后代替各自gate；
 - `d2_dataset_summary.csv`：三seed mean/std与positive-seed count；
 - `d2_summary.json`：completeness、invariants、hard gates与decision；
 - `d2_diagnostic_report.md`：面向研究决策的中文解释。

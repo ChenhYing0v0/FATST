@@ -102,8 +102,20 @@ def pairwise_rows(metrics: list[dict[str, str]]) -> list[dict[str, Any]]:
         dense_mae = float(arms[dense_arm]["val_mae_eval"])
         true = float(arms["true_scale_grouped"]["val_mse_eval"])
         true_mae = float(arms["true_scale_grouped"]["val_mae_eval"])
-        random_values = sorted(float(row["val_mse_eval"]) for row in random_rows)
+        random_group_values = sorted(
+            float(row["val_mse_eval"])
+            for arm, row in arms.items()
+            if arm.startswith("random_group_")
+        )
+        random_basis_values = sorted(
+            float(row["val_mse_eval"])
+            for arm, row in arms.items()
+            if arm.startswith("random_basis_")
+        )
+        random_values = sorted(random_group_values + random_basis_values)
         random_median = 0.5 * (random_values[2] + random_values[3])
+        random_group_median = random_group_values[1]
+        random_basis_median = random_basis_values[1]
         outputs.append(
             {
                 "dataset": dataset,
@@ -114,12 +126,26 @@ def pairwise_rows(metrics: list[dict[str, str]]) -> list[dict[str, Any]]:
                 "best_dense_mse": dense,
                 "true_scale_mse": true,
                 "random_median_mse": random_median,
+                "random_group_median_mse": random_group_median,
+                "random_basis_median_mse": random_basis_median,
                 "full_vs_rank256_improvement": relative_improvement(rank, full),
                 "dense_vs_full_improvement": relative_improvement(full, dense),
                 "true_vs_dense_improvement": relative_improvement(dense, true),
                 "true_vs_random_median_improvement": relative_improvement(random_median, true),
+                "true_vs_random_group_median_improvement": relative_improvement(
+                    random_group_median, true
+                ),
+                "true_vs_random_basis_median_improvement": relative_improvement(
+                    random_basis_median, true
+                ),
                 "true_vs_dense_mae_improvement": relative_improvement(dense_mae, true_mae),
                 "random_controls_beaten": sum(true < value for value in random_values),
+                "random_group_controls_beaten": sum(
+                    true < value for value in random_group_values
+                ),
+                "random_basis_controls_beaten": sum(
+                    true < value for value in random_basis_values
+                ),
             }
         )
     return outputs
@@ -134,6 +160,8 @@ def dataset_summary(pairwise: list[dict[str, Any]]) -> list[dict[str, Any]]:
         "dense_vs_full_improvement",
         "true_vs_dense_improvement",
         "true_vs_random_median_improvement",
+        "true_vs_random_group_median_improvement",
+        "true_vs_random_basis_median_improvement",
         "true_vs_dense_mae_improvement",
     )
     outputs = []
@@ -149,6 +177,12 @@ def dataset_summary(pairwise: list[dict[str, Any]]) -> list[dict[str, Any]]:
             output[f"positive_seeds_{field}"] = sum(value > 0.0 for value in values)
         output["mean_random_controls_beaten"] = mean(
             [float(row["random_controls_beaten"]) for row in rows]
+        )
+        output["mean_random_group_controls_beaten"] = mean(
+            [float(row["random_group_controls_beaten"]) for row in rows]
+        )
+        output["mean_random_basis_controls_beaten"] = mean(
+            [float(row["random_basis_controls_beaten"]) for row in rows]
         )
         outputs.append(output)
     return outputs
@@ -199,17 +233,31 @@ def build_summary(
     scale_random_gate = comparison_gate(
         pairwise, summaries, "true_vs_random_median_improvement"
     )
+    scale_random_group_gate = comparison_gate(
+        pairwise, summaries, "true_vs_random_group_median_improvement"
+    )
+    scale_random_basis_gate = comparison_gate(
+        pairwise, summaries, "true_vs_random_basis_median_improvement"
+    )
     mae_macro = mean(
         [float(row["true_vs_dense_mae_improvement"]) for row in pairwise]
     )
     random_beaten = mean([float(row["random_controls_beaten"]) for row in pairwise])
+    random_group_beaten = mean(
+        [float(row["random_group_controls_beaten"]) for row in pairwise]
+    )
+    random_basis_beaten = mean(
+        [float(row["random_basis_controls_beaten"]) for row in pairwise]
+    )
     formal_authorized = expected_suite == "formal5" and complete and invariant_gate
     scale_alignment_pass = (
         formal_authorized
         and scale_dense_gate["pass"]
-        and scale_random_gate["pass"]
+        and scale_random_group_gate["pass"]
+        and scale_random_basis_gate["pass"]
         and mae_macro >= MAE_GUARD
-        and random_beaten >= 5.0
+        and random_group_beaten >= 2.5
+        and random_basis_beaten >= 2.5
     )
     if expected_suite == "core3":
         decision = "core3_precheck_only_formal5_pending"
@@ -231,8 +279,12 @@ def build_summary(
         "generic_nonlinearity_gate": nonlinear_gate,
         "scale_vs_dense_gate": scale_dense_gate,
         "scale_vs_random_gate": scale_random_gate,
+        "scale_vs_random_group_gate": scale_random_group_gate,
+        "scale_vs_random_basis_gate": scale_random_basis_gate,
         "scale_vs_dense_mae_macro_improvement": mae_macro,
         "mean_random_controls_beaten": random_beaten,
+        "mean_random_group_controls_beaten": random_group_beaten,
+        "mean_random_basis_controls_beaten": random_basis_beaten,
         "scale_alignment_pass": scale_alignment_pass,
         "decision": decision,
         "method_implementation_authorized": False,
@@ -241,7 +293,8 @@ def build_summary(
             "macro_mse_improvement": MSE_MARGIN,
             "datasets_with_2_of_3_positive_seeds": 3,
             "mae_macro_guard": MAE_GUARD,
-            "mean_random_controls_beaten": 5.0,
+            "mean_random_group_controls_beaten": 2.5,
+            "mean_random_basis_controls_beaten": 2.5,
         },
     }
     return pairwise, summaries, summary
@@ -269,8 +322,8 @@ def report_markdown(
         "",
         "所有数值均为相对control的validation evaluation-space MSE improvement；正值表示后者更好。",
         "",
-        "| Dataset | Full vs rank256 | Dense nonlinear vs full | True scale vs best dense | True scale vs random median | Random controls beaten |",
-        "| --- | ---: | ---: | ---: | ---: | ---: |",
+        "| Dataset | Full vs rank256 | Dense nonlinear vs full | True vs best dense | True vs random-group | True vs random-basis | Group/Basis beaten |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
     for row in summaries:
         lines.append(
@@ -278,8 +331,10 @@ def report_markdown(
             f"{row['mean_full_vs_rank256_improvement']:.4%} | "
             f"{row['mean_dense_vs_full_improvement']:.4%} | "
             f"{row['mean_true_vs_dense_improvement']:.4%} | "
-            f"{row['mean_true_vs_random_median_improvement']:.4%} | "
-            f"{row['mean_random_controls_beaten']:.2f}/6 |"
+            f"{row['mean_true_vs_random_group_median_improvement']:.4%} | "
+            f"{row['mean_true_vs_random_basis_median_improvement']:.4%} | "
+            f"{row['mean_random_group_controls_beaten']:.2f}/3 / "
+            f"{row['mean_random_basis_controls_beaten']:.2f}/3 |"
         )
     lines.extend(
         [
@@ -289,7 +344,8 @@ def report_markdown(
             f"- rank expansion macro：`{summary['rank_expansion_gate']['macro_improvement']:.4%}`；",
             f"- generic nonlinearity macro：`{summary['generic_nonlinearity_gate']['macro_improvement']:.4%}`；",
             f"- true scale vs strongest dense macro：`{summary['scale_vs_dense_gate']['macro_improvement']:.4%}`；",
-            f"- true scale vs random median macro：`{summary['scale_vs_random_gate']['macro_improvement']:.4%}`；",
+            f"- true scale vs random-group median macro：`{summary['scale_vs_random_group_gate']['macro_improvement']:.4%}`；",
+            f"- true scale vs random-basis median macro：`{summary['scale_vs_random_basis_gate']['macro_improvement']:.4%}`；",
             f"- true scale vs strongest dense MAE macro：`{summary['scale_vs_dense_mae_macro_improvement']:.4%}`。",
             "",
         ]

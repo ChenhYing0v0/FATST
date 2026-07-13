@@ -108,8 +108,11 @@ $$
 - `full_vs_rank256_improvement`：只支持rank/capacity bottleneck；
 - `dense_vs_full_improvement`：只支持generic nonlinear readout；
 - `true_vs_dense_improvement`：true scale相对strongest dense control；
-- `true_vs_random_median_improvement`：true scale相对6个random controls的median；
-- `random_controls_beaten`：true scale validation MSE严格低于多少个random controls；
+- `true_vs_random_group_median_improvement`：在同一true interval basis下，true depth groups相对3个random
+  row-group controls的median；它隔离**group semantics**；
+- `true_vs_random_basis_median_improvement`：相同contiguous group sizes下，true interval basis相对3个random
+  orthogonal bases的median；它隔离**basis semantics**；
+- `random_group/basis_controls_beaten`：true scale分别严格低于多少个同类random controls；
 - `true_vs_dense_mae_improvement`：MSE gate之外的MAE guard。
 
 ## 6. Formal Five-Dataset Hard Gate
@@ -118,9 +121,9 @@ formal pass必须同时满足：
 
 1. 五dataset × 三checkpoint seeds × 11 arms完整，且basis/Parseval/test/freeze invariants全部通过；
 2. true scale相对strongest dense的macro MSE gain至少`0.5%`；
-3. true scale相对random median的macro MSE gain至少`0.5%`；
-4. 上述两项分别至少3/5 datasets有2/3 seeds为正；
-5. 平均至少击败`5/6` random controls；
+3. true scale相对random-group median和random-basis median的macro MSE gain分别至少`0.5%`；
+4. true-vs-dense、true-vs-random-group、true-vs-random-basis分别至少3/5 datasets有2/3 seeds为正；
+5. 平均分别至少击败`2.5/3` random-group和`2.5/3` random-basis controls；
 6. true scale相对strongest dense的macro MAE gain不得低于`-0.25%`。
 
 结果解释：
@@ -129,8 +132,8 @@ formal pass必须同时满足：
 | --- | --- |
 | full affine only wins | `capacity_or_rank_problem_only` |
 | dense nonlinear wins，true scale不胜 | `generic_nonlinearity_only` |
-| true scale胜dense但不胜random | `grouped_parameterization_explains` |
-| true scale同时稳定胜dense与random | problem supported；只允许返回Step 4提出新idea |
+| true scale胜dense/basis-random但不胜random-group | true basis/regularization可能有效，scale grouping未获支持 |
+| true scale同时稳定胜dense、random-group与random-basis | problem supported；只允许返回Step 4提出新idea |
 | core3任意结果 | `precheck_only`；不得formal pass或方向级reject |
 
 ## 7. Failure Attribution
@@ -149,6 +152,13 @@ formal pass必须同时满足：
 当前ETTh2/ETTm1/Weather拥有冻结的三seed natural checkpoints，先执行`core3_precheck`检查pipeline、
 optimization与明显signal。ETTh1/ETTm2必须按five-dataset policy完成validation-only profile calibration后
 再加入formal gate；不得从旧FSA或archive继承配置。
+
+### Precheck gate amendment
+
+初次core3 analyzer把3个random-group与3个random-basis controls合并为一个median。raw artifacts显示
+random-basis整体更弱时，该统计会掩盖true grouping并未超过random grouping，无法回答D2的scale attribution
+问题。formal5运行前将其拆成两个mandatory gates；candidate、raw runs、seeds、threshold `0.5%`和control
+数量均未改变。这是`measurement_gate_fault_repaired_before_formal5`，不是根据结果修改candidate。
 
 ## 9. 11-Step Record
 

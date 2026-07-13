@@ -7,11 +7,11 @@
 | `stage` | `StageC-UVHF` |
 | `current_step` | Step 2/3 active；SC1-D2 frozen-memory diagnostic |
 | `active_question` | frozen ordered memory是否包含超出rank expansion与generic nonlinearity的scale-aligned conditional structure？ |
-| `active_candidates` | no paper-core SC1；`SC1-D2 diagnostic_only active`；`SC2-MIPR` held |
+| `active_candidates` | no paper-core SC1；`SC1-D2 partial_core3`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/experiments/stage-c-sc1-d2-operator-structure-diagnostic.md` |
 | `method_implementation` | `PMFO-RCT v1` frozen as failed evidence；new implementation unauthorized |
-| `rollback_point` | Step 2/3 active；D2失败则重定义Contribution 1 problem，不改Encoder |
+| `rollback_point` | Step 2/3 active；formal5不支持depth grouping则重定义Contribution 1 problem |
 
 ## Completed Foundation
 
@@ -158,6 +158,18 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 当前execution分两层：先在已冻结的ETTh2/ETTm1/Weather × 3 seeds运行`core3_precheck`，用于审计pipeline、
 optimization和明显signal；该结果不能formal pass或方向级reject。ETTh1/ETTm2完成validation-only natural
 profile freeze后，按相同11-arm contract运行formal5 hard gate。
+
+## SC1-D2 Core3 Precheck: Partial
+
+1. 99/99 head-only runs完成，test/freeze/validation/basis/Parseval invariants通过；
+2. full affine相对rank256 macro `-0.5661%`，不支持rank expansion是统一瓶颈；
+3. strongest dense nonlinear相对full affine macro `-6.4492%`；ETTh2虽fit/inner-holdout更低，official
+   validation恶化约19%-24%，属于temporal generalization failure而非未优化；
+4. true scale相对strongest dense macro `+4.0358%`被ETTh2 dense overfit放大，且只2/3 datasets为正；
+5. true interval basis相对random basis macro `+2.3137%`，3/3 datasets、9/9 seeds为正；
+6. true depth grouping相对同basis random grouping macro `-0.2212%`，仅Weather稳定为正；
+7. 初版combined random median会隐藏第6项，已在formal5前拆成random-group与random-basis两个mandatory gates；
+8. decision=`partial_core3_basis_geometry_signal_only`；不进入Step4，先完成两套profile calibration与formal5。
 
 并行control prerequisite：按validation-only natural grid校准ETTh1与ETTm2 profile。未来broad screen固定为
 五dataset全arms seed2021；通过后对五dataset全部decisive arms运行seeds2021/2022/2023。增加dataset降低

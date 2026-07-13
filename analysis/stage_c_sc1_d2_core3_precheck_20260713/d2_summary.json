@@ -1,0 +1,62 @@
+{
+  "candidate": "SC1-D2",
+  "complete": true,
+  "decision": "core3_precheck_only_formal5_pending",
+  "expected_datasets": [
+    "Weather",
+    "ETTm1",
+    "ETTh2"
+  ],
+  "expected_suite": "core3",
+  "generic_nonlinearity_gate": {
+    "datasets_with_at_least_2_positive_seeds": 2,
+    "macro_improvement": -0.06449172321910107,
+    "pass": false
+  },
+  "invariant_gate": true,
+  "mean_random_basis_controls_beaten": 3.0,
+  "mean_random_controls_beaten": 4.444444444444445,
+  "mean_random_group_controls_beaten": 1.4444444444444444,
+  "method_implementation_authorized": false,
+  "observed_datasets": [
+    "ETTh2",
+    "ETTm1",
+    "Weather"
+  ],
+  "rank_expansion_gate": {
+    "datasets_with_at_least_2_positive_seeds": 1,
+    "macro_improvement": -0.005661409070217739,
+    "pass": false
+  },
+  "role": "diagnostic_only",
+  "scale_alignment_pass": false,
+  "scale_vs_dense_gate": {
+    "datasets_with_at_least_2_positive_seeds": 2,
+    "macro_improvement": 0.04035838265906793,
+    "pass": false
+  },
+  "scale_vs_dense_mae_macro_improvement": 0.025806475591260893,
+  "scale_vs_random_basis_gate": {
+    "datasets_with_at_least_2_positive_seeds": 3,
+    "macro_improvement": 0.023137222680261263,
+    "pass": true
+  },
+  "scale_vs_random_gate": {
+    "datasets_with_at_least_2_positive_seeds": 3,
+    "macro_improvement": 0.01127996200041403,
+    "pass": true
+  },
+  "scale_vs_random_group_gate": {
+    "datasets_with_at_least_2_positive_seeds": 1,
+    "macro_improvement": -0.002211874717867762,
+    "pass": false
+  },
+  "thresholds": {
+    "datasets_with_2_of_3_positive_seeds": 3,
+    "macro_mse_improvement": 0.005,
+    "mae_macro_guard": -0.0025,
+    "mean_random_basis_controls_beaten": 2.5,
+    "mean_random_group_controls_beaten": 2.5
+  },
+  "uses_test_split": false
+}

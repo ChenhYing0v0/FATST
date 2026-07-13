@@ -8,6 +8,7 @@ import csv
 import hashlib
 import json
 import math
+import platform
 import random
 from copy import deepcopy
 from pathlib import Path
@@ -624,6 +625,10 @@ def run_checkpoint_seed(
         "diagnostic_role": "core3_precheck_nonblocking",
         "torch_version": torch.__version__,
         "cuda_version": torch.version.cuda,
+        "python_version": platform.python_version(),
+        "gpu_name": torch.cuda.get_device_name(device) if device.type == "cuda" else "cpu",
+        "dataset_root": official_args.root_path,
+        "dataset_file": official_args.data_path,
         "device": str(device),
     }
     return metric_rows, history_rows, metadata
