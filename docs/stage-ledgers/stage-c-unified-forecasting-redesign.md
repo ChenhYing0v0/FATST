@@ -22,10 +22,10 @@ mechanism-control protocol。StageB 的实验和负结果继续保存在 `phase5
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | StageC Step 1-3：SC1-PFO/SC2-HML prior-art and problem-existence diagnostics |
-| `current_candidate` | `SC1-PFO` / `SC2-HML`（analysis_pending；method implementation未授权） |
-| `latest_decision` | SC1原projective-inconsistency假设在A6上为false；SC2 measure mismatch是problem candidate但当前full-720 control不存在旧nested-prefix重复加权 |
-| `next_required_action` | tensor-level prior-art boundary + frozen-batch horizon-measure gradient diagnostic；不训练method |
+| `current_11_step` | StageC baseline establishment + Step 1-3 deep research reset |
+| `current_candidate` | `A6-LBF-natural-baseline-test`（control-only；ready_to_launch） |
+| `latest_decision` | 用户冻结A6-LBF-natural-baseline为所有后续实验共同起点；SC1禁止预设显式horizon conditioning，SC2价值重新评估 |
+| `next_required_action` | post-freeze 3-dataset × 3-seed dense test reference；active/archive cleanup；SC1/SC2 deep audit |
 | `rollback_point` | 若问题存在性或novelty boundary不成立，回Step 2重定义problem；禁止直接堆叠method |
 
 ## 11-Step Stage Record
@@ -108,6 +108,7 @@ two token-MLP layers 与 `P*D=1536`，比较：
 | SC0-DAP-R2B result | `SC0-DAP-R2B` | validation-only width selection | 9/9 profiles完整；Weather=P12/D64、ETTm1=P24/D32、ETTh2=P12/D64；params/test未参与 | `phase_b_width_selected`；进入selected-only stability | `analysis/stage_c_dap_r2b_width_screen_20260712/r2b_width_screen_report.md` |
 | SC0-DAP-R2C result/freeze | `SC0-DAP-R2C` | selected-only absolute stability | 6 new + 3 reused runs；72 dense metrics；mean/max CV均过3%/5% gate，ETTh2 max=4.867%接近边界 | `dataset_profiles_stable_and_frozen`；SC0 blocker关闭 | `analysis/stage_c_dap_r2c_stability_20260712/r2c_stability_and_freeze_report.md` |
 | SC1/SC2 prior-art/problem audit | `SC1-PFO` / `SC2-HML` | Step 1-3 research audit | A6已exact prefix-consistent；current full-720 loss无14.39x nested-prefix pathology；latest decoders与ElasTST压缩novelty空间 | SC1回Step2；SC2停Step3并只授权gradient diagnostic | `analysis/stage_c_sc1_sc2_prior_art_problem_audit_20260712/sc1_sc2_prior_art_problem_audit.md` |
+| Natural baseline test protocol | `A6-LBF-natural-baseline` | post-freeze reference | 复用9个validation-selected checkpoints；3 datasets × 3 seeds × 8 dense horizons | `ready_to_launch`；test不得改变frozen contract | `docs/experiments/stage-c-natural-baseline-test-protocol.md` |
 
 ## Pending Tasks
 
@@ -124,6 +125,7 @@ two token-MLP layers 与 `P*D=1536`，比较：
 | Run SC0-DAP-R2A patch screen | Codex | protocol/local gate | `completed_pass` | patch mapping已冻结 |
 | Run SC0-DAP-R2B width screen | Codex | R2A pass | `completed_pass` | selected profiles已冻结 |
 | Run SC0-DAP-R2C stability confirmation | Codex | R2B pass | `completed_pass` | 9/9、72/72；ETTh2 boundary-close风险保留 |
+| Establish natural-baseline test reference | Codex | frozen contract | `pending` | evaluator/local gate后commit/push、GPU preflight、remote evaluation |
 | Build StageC prior-art matrix | Codex | R2可并行 | `pending` | carrier冻结后恢复active cursor |
 | Run SC1/SC2 problem diagnostics | Codex | prior-art matrix complete | `pending` | 先Step 2/3，后Step 4-6 narrative gate |
 
