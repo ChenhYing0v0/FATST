@@ -1,0 +1,24 @@
+{
+  "current_step": "Step 7A local implementation/invariant gate",
+  "trains_forecast_model": false,
+  "uses_test_split": false,
+  "remote_training_authorized": false,
+  "step7b_fixed_datasets": [
+    "ETTm1",
+    "ETTh2",
+    "Weather"
+  ],
+  "shape_prefix_cases": 90,
+  "full_prefix_max_abs": 4.172325134277344e-07,
+  "refinement_recovery_max_abs": 2.384185791015625e-07,
+  "conservation_perturbation_max_abs": 2.682209014892578e-07,
+  "locality_outside_support_max_abs": 0.0,
+  "horizon_path_audit": {
+    "learned_module_calls": 10,
+    "learned_inputs_tensor_only": true,
+    "node_count_normalization_modules": [],
+    "pass": true
+  },
+  "tolerance": 1e-06,
+  "decision": "step7a_pass"
+}

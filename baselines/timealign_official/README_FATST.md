@@ -71,6 +71,20 @@ TimeAlign future-reconstruction architecture. The A6-LBF path:
 
 The official `--readout-mode official` path still keeps reconstruction and alignment for baseline reproduction.
 
+## StageC PMFO-RCT Step 7
+
+The active StageC decoder gate adds four prefix-native readouts after the same frozen A6 history memory:
+
+- `pmfo-rct`: shared parent-to-child states plus fixed conservative synthesis;
+- `pmfo-rct-no-transition`: direct history-to-scale coefficient control;
+- `pmfo-rct-no-conservation`: the same state tree with unconstrained child updates;
+- `dense-mlp-matched`: nonlinear dense control matched to the PMFO decoder parameter budget.
+
+All four require unified `pred_len=720`, disable the future reconstruction/alignment branch, and keep requested
+horizon out of learned module inputs. Their active protocol is
+`docs/experiments/stage-c-pmfo-rct-step7-protocol.md`; the older StageB sections below are retained for code
+traceability and do not authorize those archived methods.
+
 ## B14 Prerequisite Contextual Patch Encoder
 
 `--encoder-mode contextual-patch-transformer` replaces the inherited dataset-specific patch/token MLP with a

@@ -5,11 +5,11 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Step 4-6 completed；Step 7 local implementation next |
+| `current_step` | Step 7A local implementation/invariant gate passed；Step 7B pending |
 | `active_question` | PMFO-RCT的refinement-conservative mechanism能否在matched controls下产生独立effectiveness？ |
 | `active_candidates` | `SC1-PMFO-RCT`, `SC2-MIPR` |
 | `active_protocol` | `docs/experiments/stage-c-pmfo-rct-step7-protocol.md` |
-| `method_implementation` | PMFO-RCT local implementation authorized；remote training unauthorized |
+| `method_implementation` | PMFO-RCT与controls已实现；remote training unauthorized |
 | `rollback_point` | capacity/no-transition control explains -> Step 4；numeric/readout fault -> Step 6 |
 
 ## Completed Foundation
@@ -88,8 +88,9 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 
 ## Step 7-10: Active Conditional Path
 
-1. Step 7A实现PMFO-RCT module与local invariants，不训练；
-2. Step 7B在ETTm1+ETTh2 seed2021比较A6、dense matched、no-transition、no-conservation、PMFO-RCT；
+1. Step 7A已完成：90/90 shape-prefix cases及refinement/conservation/locality gate通过，不训练；
+2. Step 7B固定在ETTm1+ETTh2+Weather、seed2021比较A6、dense matched、no-transition、
+   no-conservation、PMFO-RCT；
 3. SC1通过后才实现MIPR，对比same-measure raw与random-projector control；
 4. `2x2` factorial：A6/PMFO × raw/MIPR；
 5. 3 datasets × 3 seeds × dense horizons；
@@ -100,9 +101,9 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 
 ## Next Concrete Action
 
-实现`PMFO-RCT`的最小local module与invariant tests，同步添加model code explanation。不得在Step 7A加入
-Encoder innovation、MIPR、MoE或remote training。Step 4-6完整审计见
-`analysis/stage_c_step46_pmfo_pir_theory_gate_20260713/step46_design_and_prior_art.md`。
+完成Step 7A文档、commit/push后，准备Step 7B三数据集runner与launch manifest；启动前必须按remote policy
+检查GPU并明确记录launch。Step 7B仍只使用full H720 MSE，不加入Encoder innovation、MIPR、MoE或
+per-horizon tuning。Step 7A artifact见`analysis/stage_c_step7a_pmfo_rct_local_20260713/`。
 
 ## Historical Boundary
 

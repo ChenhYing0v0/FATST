@@ -4,6 +4,11 @@ import torch.nn.functional as F
 
 from layers.Alignment import glocal_align_ablation
 from layers.Embed import PositionalEmbedding
+from layers.PMFO import (
+    DenseMLPMatchedReadout,
+    PMFONoTransitionReadout,
+    PMFORCTReadout,
+)
 from layers.StandardNorm import Normalize
 
 LEARNED_BASIS_READOUTS = {
@@ -21,6 +26,13 @@ STBO_READOUTS = {
     "subspace-tiled-basis-operator-bank",
     "subspace-tiled-basis-operator-dct",
     "subspace-tiled-basis-operator-independent",
+}
+
+PMFO_READOUTS = {
+    "pmfo-rct",
+    "pmfo-rct-no-transition",
+    "pmfo-rct-no-conservation",
+    "dense-mlp-matched",
 }
 
 ENCODER_MODES = {
@@ -330,11 +342,19 @@ class Model(nn.Module):
         if self.encoder_mode not in ENCODER_MODES:
             raise ValueError(f"Unsupported encoder mode: {self.encoder_mode}")
         self.readout_mode = getattr(configs, "readout_mode", "official")
-        if self.readout_mode not in {"official", *LEARNED_BASIS_READOUTS, *STBO_READOUTS}:
+        if self.readout_mode not in {
+            "official",
+            *LEARNED_BASIS_READOUTS,
+            *STBO_READOUTS,
+            *PMFO_READOUTS,
+        }:
             raise ValueError(
                 "Clean TimeAlign supports only 'official' and "
-                "learned-basis/stage-native/basis-conditioned/STBO readout modes"
+                "learned-basis/stage-native/basis-conditioned/STBO/PMFO "
+                "readout modes"
             )
+        if self.readout_mode in PMFO_READOUTS and self.pred_len != 720:
+            raise ValueError("StageC PMFO readouts require pred_len=720")
         self.has_future_recon_branch = self.readout_mode == "official"
         if (
             self.encoder_mode
@@ -543,6 +563,25 @@ class Model(nn.Module):
                     self._build_dct_basis(self.stbo_tile_len, self.stbo_rank),
                     persistent=False,
                 )
+        if self.readout_mode == "pmfo-rct":
+            self.pmfo_readout = PMFORCTReadout(
+                readout_dim,
+                state_dim=int(getattr(configs, "pmfo_state_dim", 32)),
+                conservative=True,
+            )
+        elif self.readout_mode == "pmfo-rct-no-transition":
+            self.pmfo_readout = PMFONoTransitionReadout(readout_dim)
+        elif self.readout_mode == "pmfo-rct-no-conservation":
+            self.pmfo_readout = PMFORCTReadout(
+                readout_dim,
+                state_dim=int(getattr(configs, "pmfo_state_dim", 32)),
+                conservative=False,
+            )
+        elif self.readout_mode == "dense-mlp-matched":
+            self.pmfo_readout = DenseMLPMatchedReadout(
+                readout_dim,
+                hidden_dim=int(getattr(configs, "pmfo_dense_hidden_dim", 144)),
+            )
 
         self.normalization_x = Normalize(configs.enc_in, affine=False)
         if self.has_future_recon_branch:
@@ -779,6 +818,8 @@ class Model(nn.Module):
             output = self._basis_conditioned_coefficient_field_operator(hidden, target_prefix)
         elif self.readout_mode in STBO_READOUTS:
             output = self._subspace_tiled_basis_operator(hidden, target_prefix)
+        elif self.readout_mode in PMFO_READOUTS:
+            output = self.pmfo_readout(hidden, target_prefix)
         else:
             raise ValueError(f"Unsupported readout mode: {self.readout_mode}")
         output = self.normalization_x(output, "denorm")

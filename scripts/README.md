@@ -12,6 +12,8 @@ StageC active entrypoints：
 - `analyze_stage_c_d1_offline_diagnostic.py`: D1 cross-dataset gate与报告；
 - `remote/run_stage_c_d1_offline_diagnostic.sh`: 3-dataset parallel runner；
 - `sync_stage_c_d1_offline_diagnostic_results.sh`: 同步并重新审计D1 artifacts。
+- `check_stage_c_pmfo_rct_step7a.py`: PMFO-RCT四variants的shape、prefix、refinement、conservation、
+  locality、horizon-path与parameter/FLOP local gate。
 
 历史 runner/analyzer 已移入 `scripts/archive/`，不得作为当前研究入口。下一步新增脚本只能服务
-`docs/experiments/stage-c-pmfo-pir-problem-diagnostic.md`，并须同步 code explanation。
+`docs/experiments/stage-c-pmfo-rct-step7-protocol.md`，并须同步 code explanation。

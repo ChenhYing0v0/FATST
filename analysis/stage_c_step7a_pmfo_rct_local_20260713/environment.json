@@ -1,0 +1,8 @@
+{
+  "python": "3.11.15 (main, Mar 11 2026, 17:14:47) [Clang 20.1.8 ]",
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "torch": "2.5.0",
+  "cuda_available": false,
+  "cuda_version": null,
+  "device": "cpu"
+}

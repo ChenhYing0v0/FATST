@@ -39,6 +39,18 @@ PREFIX_READOUT_MODES = {
     "subspace-tiled-basis-operator-bank",
     "subspace-tiled-basis-operator-dct",
     "subspace-tiled-basis-operator-independent",
+    "pmfo-rct",
+    "pmfo-rct-no-transition",
+    "pmfo-rct-no-conservation",
+    "dense-mlp-matched",
+}
+
+STAGE_C_ACTIVE_READOUTS = {
+    "learned-basis-forecast-operator",
+    "pmfo-rct",
+    "pmfo-rct-no-transition",
+    "pmfo-rct-no-conservation",
+    "dense-mlp-matched",
 }
 
 ACTIVE_STAGE_C_CONTRACT = {
@@ -293,6 +305,8 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         stbo_rank=args.stbo_rank,
         stbo_bank_count=args.stbo_bank_count,
         stbo_basis_init_std=args.stbo_basis_init_std,
+        pmfo_state_dim=args.pmfo_state_dim,
+        pmfo_dense_hidden_dim=args.pmfo_dense_hidden_dim,
     )
 
 
@@ -446,6 +460,26 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
             payload["stbo_tile_basis_l2"] = float(model.stbo_tile_basis.detach().cpu().norm().item())
         if hasattr(model, "stbo_dct_basis"):
             payload["stbo_dct_basis_l2"] = float(model.stbo_dct_basis.detach().cpu().norm().item())
+    if hasattr(model, "pmfo_readout"):
+        payload.update(
+            {
+                "pmfo_decoder_parameters": sum(
+                    parameter.numel()
+                    for parameter in model.pmfo_readout.parameters()
+                ),
+                "pmfo_state_dim": getattr(model.pmfo_readout, "state_dim", None),
+                "pmfo_dense_hidden_dim": getattr(
+                    model.pmfo_readout,
+                    "hidden_dim",
+                    None,
+                ),
+                "pmfo_conservative": getattr(
+                    model.pmfo_readout,
+                    "conservative",
+                    None,
+                ),
+            }
+        )
     return payload
 
 
@@ -1086,6 +1120,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--stbo-rank", type=int, default=16)
     parser.add_argument("--stbo-bank-count", type=int, default=4)
     parser.add_argument("--stbo-basis-init-std", type=float, default=0.0)
+    parser.add_argument("--pmfo-state-dim", type=int, default=32)
+    parser.add_argument("--pmfo-dense-hidden-dim", type=int, default=144)
     parser.add_argument(
         "--pred-loss-mode",
         choices=["full", "multi-prefix"],
@@ -1108,7 +1144,13 @@ def parse_args() -> argparse.Namespace:
         inactive = {
             name: value
             for name, value in active_values.items()
-            if value != ACTIVE_STAGE_C_CONTRACT[name]
+            if (
+                value != ACTIVE_STAGE_C_CONTRACT[name]
+                and not (
+                    name == "readout_mode"
+                    and value in STAGE_C_ACTIVE_READOUTS
+                )
+            )
         }
         if inactive:
             formatted = ", ".join(
@@ -1188,8 +1230,10 @@ def parse_args() -> argparse.Namespace:
             "hierarchical-patch-memory",
         }:
             raise ValueError("legacy encoder overrides require a token-MLP encoder mode")
-        if args.readout_mode != "learned-basis-forecast-operator":
-            raise ValueError("legacy encoder overrides are restricted to clean A6-LBF")
+        if args.readout_mode not in STAGE_C_ACTIVE_READOUTS:
+            raise ValueError(
+                "legacy encoder overrides are restricted to active StageC readouts"
+            )
     if args.legacy_patch_num is not None:
         if args.legacy_patch_num <= 0:
             raise ValueError("legacy patch_num must be positive")
@@ -1209,6 +1253,10 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("w_align must be non-negative")
     if args.basis_rank <= 0:
         raise ValueError("basis_rank must be positive")
+    if args.pmfo_state_dim <= 0:
+        raise ValueError("pmfo_state_dim must be positive")
+    if args.pmfo_dense_hidden_dim <= 0:
+        raise ValueError("pmfo_dense_hidden_dim must be positive")
     if args.stage_token_dim <= 0:
         raise ValueError("stage_token_dim must be positive")
     if args.stage_field_rank <= 0:

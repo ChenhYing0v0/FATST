@@ -1,0 +1,57 @@
+{
+  "seed": 20260713,
+  "profiles": {
+    "Weather": {
+      "profile": "r2b_p12_d64_ff128_medium",
+      "patch_num": 12,
+      "d_model": 64,
+      "d_ff": 128,
+      "channels": 21
+    },
+    "ETTm1": {
+      "profile": "r2b_p24_d32_ff64_narrow",
+      "patch_num": 24,
+      "d_model": 32,
+      "d_ff": 64,
+      "channels": 7
+    },
+    "ETTh2": {
+      "profile": "r2b_p12_d64_ff128_medium",
+      "patch_num": 12,
+      "d_model": 64,
+      "d_ff": 128,
+      "channels": 7
+    }
+  },
+  "variants": [
+    "learned-basis-forecast-operator",
+    "pmfo-rct",
+    "pmfo-rct-no-transition",
+    "pmfo-rct-no-conservation",
+    "dense-mlp-matched"
+  ],
+  "horizons": [
+    1,
+    48,
+    96,
+    192,
+    336,
+    720
+  ],
+  "pmfo_block_sizes": [
+    90,
+    30,
+    10,
+    5,
+    1
+  ],
+  "pmfo_radices": [
+    3,
+    3,
+    2,
+    5
+  ],
+  "pmfo_state_dim": 32,
+  "dense_hidden_dim": 144,
+  "tolerance": 1e-06
+}

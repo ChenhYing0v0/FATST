@@ -1,0 +1,16 @@
+dataset,profile,variant,total_parameters,decoder_parameters,active_forward_parameters_h720,active_decoder_parameters_h720,linear_dominant_flops_h1_per_series,linear_dominant_flops_h720_per_series
+Weather,r2b_p12_d64_ff128_medium,learned-basis-forecast-operator,972896,381904,419216,381904,1272320,1640448
+Weather,r2b_p12_d64_ff128_medium,pmfo-rct,803002,212010,249322,212010,1301342,3498144
+Weather,r2b_p12_d64_ff128_medium,pmfo-rct-no-transition,1144672,553680,590992,553680,1984606,1992864
+Weather,r2b_p12_d64_ff128_medium,pmfo-rct-no-conservation,803550,212558,249870,212558,1302375,3569984
+Weather,r2b_p12_d64_ff128_medium,dense-mlp-matched,806128,215136,252448,215136,1307136,1307136
+ETTm1,r2b_p24_d32_ff64_narrow,learned-basis-forecast-operator,945088,381904,391408,381904,833024,1201152
+ETTm1,r2b_p24_d32_ff64_narrow,pmfo-rct,775194,212010,221514,212010,862046,3058848
+ETTm1,r2b_p24_d32_ff64_narrow,pmfo-rct-no-transition,1116864,553680,563184,553680,1545310,1553568
+ETTm1,r2b_p24_d32_ff64_narrow,pmfo-rct-no-conservation,775742,212558,222062,212558,863079,3130688
+ETTm1,r2b_p24_d32_ff64_narrow,dense-mlp-matched,778320,215136,224640,215136,867840,867840
+ETTh2,r2b_p12_d64_ff128_medium,learned-basis-forecast-operator,972896,381904,419216,381904,1272320,1640448
+ETTh2,r2b_p12_d64_ff128_medium,pmfo-rct,803002,212010,249322,212010,1301342,3498144
+ETTh2,r2b_p12_d64_ff128_medium,pmfo-rct-no-transition,1144672,553680,590992,553680,1984606,1992864
+ETTh2,r2b_p12_d64_ff128_medium,pmfo-rct-no-conservation,803550,212558,249870,212558,1302375,3569984
+ETTh2,r2b_p12_d64_ff128_medium,dense-mlp-matched,806128,215136,252448,215136,1307136,1307136

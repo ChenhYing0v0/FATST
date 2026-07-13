@@ -1,7 +1,7 @@
 # Active Baselines
 
-- `timealign_official/`: StageC active carrier；仅 clean A6 `timealign-token-mlp` +
-  `learned-basis-forecast-operator` path 获得活动实验授权；
+- `timealign_official/`: StageC active carrier；clean A6 `timealign-token-mlp` Encoder + natural profiles保持
+  frozen；A6 readout及PMFO-RCT四个Step7 controls获得活动实现授权，remote training仍由active protocol gate控制；
 - `dlinear/`: 简单 external control，后续需按其 native protocol 使用。
 
 其余 local architecture candidates 已移入 `baselines/archive/`。archive 中代码不构成 active method，

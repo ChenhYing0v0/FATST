@@ -5,10 +5,10 @@
 | Field | Content |
 | --- | --- |
 | `candidate` | `SC1-PMFO-RCT` |
-| `current_step` | Step 7A local implementation/invariant gate |
+| `current_step` | Step 7A passed；Step 7B architecture-only screening pending |
 | `carrier` | frozen `A6-LBF-natural-baseline` Encoder contract |
 | `objective` | full H720 MSE only；MIPR forbidden in SC1 gate |
-| `implementation_authorized` | local module/tests only |
+| `implementation_authorized` | Step 7A complete；Step 7B runner preparation allowed |
 | `remote_training_authorized` | `false` |
 | `rollback` | invariant/readout fault -> Step 6；matched control explains -> Step 4 |
 
@@ -61,11 +61,22 @@ attribution。`dense-mlp-matched`与`no-transition`若解释收益，SC1不能�
 
 Step 7A通过后，先更新ledger、code explanation、commit/push；再按remote policy检查GPU并单独授权Step 7B。
 
+### Step 7A Result (2026-07-13)
+
+- 3 natural profiles × 5 arms（含A6）× 6 horizons，共90/90 shape-prefix cases通过；
+- full-versus-prefix `4.172e-7`；refinement recovery `2.384e-7`；
+- conservation perturbation `2.682e-7`；locality outside support `0`；
+- learned module inputs为tensor-only，decoder无node-count normalization；
+- dense matched decoder `215136` params，PMFO `212010` params，差异`1.47%`；
+- decision：`step7a_pass`，但没有forecast effectiveness证据，remote training仍未授权。
+
+artifact：`analysis/stage_c_step7a_pmfo_rct_local_20260713/`。
+
 ## Step 7B: Architecture-Only Screening
 
 ### Matrix
 
-- datasets：ETTm1、ETTh2；
+- datasets：ETTm1、ETTh2、Weather；
 - seed：2021；
 - profiles：已冻结natural profiles；
 - arms：A6、dense matched、no-transition、no-conservation、PMFO-RCT；
@@ -75,13 +86,14 @@ Step 7A通过后，先更新ledger、code explanation、commit/push；再按remo
 - checkpoint/stopping：沿用natural carrier contract，不重新调参。
 
 选择ETTm1是因为D1 ordered-memory/linear probe较强；选择ETTh2是因为其linear probe为负但frozen nonlinear
-head有效，是对decoder interface的stress test。该选择在method results前固定，不使用test performance做选择。
+head有效，是对decoder interface的stress test；Weather提供21-channel environmental dynamics与不同dataset
+family的跨域验证。三者在method results前固定，不使用test performance做选择。
 
 ### Screening gate
 
 Step 7B只形成`partial_pass`或rollback，不直接形成paper claim。`partial_pass`要求同时满足：
 
-1. PMFO-RCT相对A6在两dataset合并dense-horizon mean MSE至少改善`1.0%`；
+1. PMFO-RCT相对A6在三dataset合并dense-horizon mean MSE至少改善`1.0%`；
 2. 任一dataset的dense-horizon mean MSE不得稳定恶化超过`0.5%`；
 3. 相对best matched structural control仍至少改善`0.5%`；
 4. prefix/refinement invariants在trained checkpoint继续通过；

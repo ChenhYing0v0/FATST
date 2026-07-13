@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Step 4-6 completed；Step 7 PMFO-RCT local implementation/invariant gate next |
+| `current_11_step` | Step 7A PMFO-RCT local implementation/invariant gate passed；Step 7B pending |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` dataset profiles |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -38,8 +38,9 @@ detail不能改写parent coarse projection。目标性质：
 - contribution来自future-side refinement conservativity与domain execution，不是“又一个wavelet/continuous
   basis decoder”。
 
-当前状态：`narrative_ready / effectiveness_pending`。mixed-radix orthogonality、refinement recovery与
-pruned-prefix invariants均在`1.33e-15`以内通过。该结果只授权Step 7 local implementation；若
+当前状态：`narrative_ready / implementation_gate_passed / effectiveness_pending`。theory audit在float64下
+误差不超过`1.33e-15`；真实model float32 local gate的prefix/refinement/conservation误差不超过
+`4.172e-7`，locality support外变化为0。该结果只证明实现一致；若
 `dense-MLP`或`no-transition` matched control解释收益，PMFO-RCT不能成为paper core。
 
 [Diagnostic status] D1-v1作废；D1-v2在3 datasets x 3 seeds上通过PMFO problem gate。当前A6 Encoder
@@ -100,7 +101,8 @@ encoder repair 均不再是 active candidate。历史失败只按各自 failure 
 2. D1-A验证label/residual nested structure，D1-B验证A6 Encoder information sufficiency，D1-C验证
    learned basis geometry，同时审计measure/projected gradients；
 3. PMFO-RCT与MIPR已分别通过Step 4-6 narrative/theory gate；
-4. Step 7A local invariants；Step 7B ETTm1+ETTh2 seed2021 architecture controls，先只用full MSE；
+4. Step 7A local invariants已通过；Step 7B固定ETTm1+ETTh2+Weather、seed2021 architecture controls，
+   先只用full MSE；
 5. SC1通过后冻结operator contract，再做same-measure raw versus MIPR与random-projector control；
 6. `2x2` factorial 分离 decoder 与 training 的独立主效应；
 7. 3 datasets × 3 seeds × dense horizons full matrix；
@@ -119,6 +121,8 @@ loss 或更多 tuning 来掩盖失败。
 - `analysis/stage_c_d1_pmfo_pir_offline_20260713/`（v1 invalid audit evidence）
 - `analysis/stage_c_d1_pmfo_pir_offline_v2_20260713/research_interpretation.md`
 - `analysis/stage_c_step46_pmfo_pir_theory_gate_20260713/step46_design_and_prior_art.md`
+- `analysis/stage_c_step7a_pmfo_rct_local_20260713/step7a_local_gate_report.md`
+- `docs/code-explanation/stage-c-pmfo-rct-step7a.md`
 
 2026-07-13 reset 前主线完整 snapshot 位于
 `docs/archive/pre-stage-c-reset-20260713/`，仅作历史审计。
