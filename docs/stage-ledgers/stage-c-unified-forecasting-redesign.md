@@ -9,7 +9,7 @@
 | `active_question` | frozen ordered memory到future function之间是否存在超出rank expansion与generic nonlinearity的scale-aligned conditional structure？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` |
-| `active_candidates` | no paper-core SC1 candidate；`SC1-D2` diagnostic proposed；`SC2-MIPR` held |
+| `active_candidates` | no paper-core SC1 candidate；`SC1-D2 diagnostic_only active`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；ETTh1/ETTm2 profiles pending |
 | `stage_exit` | 两项分别过 narrative/effectiveness gate，`2x2` joint gate显示独立主效应与联合收益 |
 | `stage_rollback` | problem/novelty不跨 dataset -> Step 2；禁止直接堆叠 method |
@@ -18,10 +18,10 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Step 6 narrative gate failed；rollback Step 2/3 |
-| `current_candidate` | `SC1-D2` diagnostic_only proposed；FPMO family controls only；`SC2-MIPR` held |
+| `current_11_step` | Step 2/3 active；SC1-D2 frozen-memory diagnostic |
+| `current_candidate` | `SC1-D2 diagnostic_only active`；FPMO family controls only；`SC2-MIPR` held |
 | `latest_decision` | linear DS与DA同为full-affine class；剩余差异仅是非scale专属的factorized optimization bias |
-| `next_required_action` | 预注册D2，隔离rank、generic nonlinearity与true-scale alignment |
+| `next_required_action` | run core3 precheck；校准ETTh1/ETTm2后执行formal5 hard gate |
 | `method_training_authorized` | `false`；D2只可作为diagnostic，new SC1需重新通过Step 4-6 |
 | `rollback_point` | Step 2/3；不改Encoder、不叠加nonlinearity、MIPR或MoE来挽救FPMO-DS |
 
@@ -29,16 +29,16 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Step 6 complete；rollback Step 2/3 |
+| `current_step` | Step 2/3 active；D2 protocol/implementation ready |
 | `problem` | linear scale factorization不形成scale-specific function constraint；scale-aligned nonlinearity尚未验证 |
 | `existence_evidence` | D1 structure/memory evidence保留；Step5 algebra + Step6 full-affine equivalence/no-novelty audit |
 | `idea` | FPMO family降为controls；下一步D2比较rank/full-affine/dense-nonlinear/true-scale/random-scale heads |
 | `theory_check` | embedding/restriction pass；DS=DA full affine；factorization bias非scale专属；prefix efficiency claim fail |
-| `design` | A6/M0/Dense-FA/DA/DS-L/DS-R diagnostic contract冻结；无paper-core implementation |
+| `design` | 11-arm frozen-memory probes：rank/full/dense nonlinear/true-scale/6 random controls |
 | `narrative_gate` | `SC1-FPMO-DS rejected_by_narrative_gate`；SC2 held |
 | `effectiveness_gate` | v1 fail：macro vs A6 `-1.0955%`，worst ETTm1 `-2.0844%` |
-| `artifacts` | D1-v2、Step4 audit、Step5 proof/no-go report、Step6 narrative/control gate、baseline report |
-| `decision` | rollback Step 2/3；`SC1-D2 diagnostic_only` next；new implementation/training unauthorized |
+| `artifacts` | D1-v2、Step4-6 closure、D2 protocol/pipeline、baseline report |
+| `decision` | D2 core3 precheck authorized；formal decision waits five datasets；method training unauthorized |
 
 ## Frozen Carrier Contract
 
@@ -68,7 +68,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC1-FPMO-M0` | `control_only` | shared-latent exact A6 morph验证function preservation/restriction | not required | exact equality required | mandatory Step6 morphism control |
 | `SC1-FPMO-DA` | `control_only` | direct atom full-affine head隔离capacity/orthogonal coordinate effect | not required | matched function-class control | mandatory Step6 dense-equivalence control |
 | `SC1-FPMO-DS` | `rejected_by_narrative_gate` | independent scale factors提供native history-scale maps并包含A6 | fail：与DA同为full affine，factorization不依赖真实scale coordinates | not started | controls/evidence only；不进入Step 7 |
-| `SC1-D2` | `diagnostic_only` | true-scale nonlinear grouping是否超越rank expansion、generic nonlinearity与random grouping | not a method gate | validation-only diagnostic pending | 预注册五dataset frozen-memory probe matrix |
+| `SC1-D2` | `diagnostic_only_active` | true-scale nonlinear grouping是否超越rank expansion、generic nonlinearity与random grouping | not a method gate | core3 precheck pending；formal5 blocked by two profiles | run frozen-memory core3 precheck |
 | `SC2-MIPR` | `held` | measure-induced block metric去除decoder scales之间的cross coupling | pass for L2；log measure primary，benchmark weak | log off-block `0.205154`；benchmark `0.002480`；performance未测 | 等新SC1 contract冻结；不得先实现 |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
@@ -117,7 +117,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1 Step4 redesign audit | `completed` | FPMO source boundary与kill gates已冻结 |
 | SC1-FPMO Step5 theory feasibility | `completed_partial_pass` | M0/DA/DS boundary与no-go theorem已冻结 |
 | SC1-FPMO Step6 narrative/control design | `completed_rejected` | DS降为diagnostic control；不实现、不训练 |
-| SC1-D2 rank/nonlinearity/scale diagnostic | `proposed_diagnostic_only` | 预注册frozen-memory五dataset probe matrix与random controls |
+| SC1-D2 rank/nonlinearity/scale diagnostic | `active_core3_precheck` | protocol/pipeline ready；run 3 ready datasets，formal5 remains mandatory |
 | ETTh1/ETTm2 natural profile calibration | `pending_control` | 在下一次SC1 remote screen前按validation-only规则冻结 |
 
 ## Paper Mainline Sync Log
@@ -136,6 +136,6 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 1. 每次继续研究先读本 ledger 与Step6 gate report；
 2. old analysis可引用，archive脚本不得直接启动；
 3. diagnostic failure必须区分 hypothesis、intervention、readout、numeric与capacity control；
-4. Step6已关闭FPMO-DS；新model training未授权，先完成SC1-D2 problem diagnostic；
+4. Step6已关闭FPMO-DS；新model training未授权，SC1-D2只训练frozen-memory probes；
 5. test reference只用于最终对比，不能参与设计选择。
 6. future mechanism screen固定使用ETTh1/ETTh2/ETTm1/ETTm2/Weather；五dataset不能替代三seed确认。

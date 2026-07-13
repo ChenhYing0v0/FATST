@@ -5,11 +5,11 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Step 6 narrative gate failed；rollback Step 2/3 |
+| `current_step` | Step 2/3 active；SC1-D2 frozen-memory diagnostic |
 | `active_question` | frozen ordered memory是否包含超出rank expansion与generic nonlinearity的scale-aligned conditional structure？ |
-| `active_candidates` | no paper-core SC1；`SC1-D2` diagnostic proposed；`SC2-MIPR` held |
+| `active_candidates` | no paper-core SC1；`SC1-D2 diagnostic_only active`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_step6_fpmo_narrative_control_20260713/step6_narrative_control_gate.md` |
+| `active_protocol` | `docs/experiments/stage-c-sc1-d2-operator-structure-diagnostic.md` |
 | `method_implementation` | `PMFO-RCT v1` frozen as failed evidence；new implementation unauthorized |
 | `rollback_point` | Step 2/3 active；D2失败则重定义Contribution 1 problem，不改Encoder |
 
@@ -145,7 +145,7 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 
 ## Next Concrete Action
 
-进入`SC1-D2 Step 2/3 problem diagnostic`，不是实现新模型：
+`SC1-D2 Step 2/3 problem diagnostic`已进入执行，不是实现新模型：
 
 1. 使用frozen ordered memory与validation-only protocol，比较rank-256 affine和full affine，隔离rank/capacity；
 2. 比较parameter-matched dense nonlinear与full affine，隔离generic nonlinearity；
@@ -154,6 +154,10 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
    scale-aligned conditional structure；
 5. D2即使通过也只返回Step 4生成新idea，不自动复活FPMO-DS或获得Step 7授权；
 6. Encoder、MoE与MIPR继续冻结。
+
+当前execution分两层：先在已冻结的ETTh2/ETTm1/Weather × 3 seeds运行`core3_precheck`，用于审计pipeline、
+optimization和明显signal；该结果不能formal pass或方向级reject。ETTh1/ETTm2完成validation-only natural
+profile freeze后，按相同11-arm contract运行formal5 hard gate。
 
 并行control prerequisite：按validation-only natural grid校准ETTh1与ETTm2 profile。未来broad screen固定为
 五dataset全arms seed2021；通过后对五dataset全部decisive arms运行seeds2021/2022/2023。增加dataset降低

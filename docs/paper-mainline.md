@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC1-FPMO Step 6 narrative gate failed；rollback Step 2/3 |
+| `current_11_step` | SC1-D2 Step 2/3 frozen-memory diagnostic active |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` dataset profiles |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；ETTh1/ETTm2 profile calibration pending |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | Contribution 1 slot open；FPMO family controls only；SC1-D2 diagnostic proposed；SC2-MIPR held |
+| `paper_core_status` | Contribution 1 slot open；SC1-D2 diagnostic_only active；SC2-MIPR held |
 
 ## Research Thesis
 
