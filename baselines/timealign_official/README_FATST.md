@@ -13,6 +13,10 @@ path. FATST also maintains explicitly named local A6 encoder/readout paths in
   explicitly named local A6 encoder/readout candidates.
 - `train_repo.py` is the repo adapter for dataset roots, unified/fixed batch
   execution, seed control, and CSV artifact export.
+- The adapter exposes all four ETT datasets used by the active five-dataset
+  StageC validation suite. The `ETTh1` preset follows the vendored upstream
+  `scripts/ETTh1.sh`; active mechanism-control runs may still override its
+  patch and width through the preregistered dataset-profile calibration.
 - The only compatibility changes inside official files are:
   - `sktime` import is optional because ETT/Weather loaders do not use it.
   - `DataFrame.drop(['date'], 1)` is changed to

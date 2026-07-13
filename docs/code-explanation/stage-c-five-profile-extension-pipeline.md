@@ -12,6 +12,11 @@
 archive中的R2脚本只作为历史设计证据。本pipeline保留相同coarse-grid与CV gate，但使用独立protocol profile、
 profile hash、run prefix和artifact root，避免历史入口重新成为active dependency。
 
+首次远端preflight暴露`train_repo.py`尚未把ETTh1加入adapter preset registry，三个ETTh1 jobs在argument
+parsing阶段同时退出、未进入GPU或生成metrics。修复只新增ETTh1 dataset routing，字段来自vendored upstream
+`scripts/ETTh1.sh`：`ETTh1.csv`、hourly frequency、7 channels及其source defaults；active calibration仍由config
+显式覆盖patch/width/lr/dropout。该事件属于`protocol_adapter_missing`，不是模型或研究假设失败。
+
 ## Training And Artifact Flow
 
 每个run的输入是`batch_x: [B,720,C]`，TimeAlign encoder输出token memory，A6-LBF head产生

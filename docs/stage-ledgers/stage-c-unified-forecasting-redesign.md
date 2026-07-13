@@ -119,7 +119,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-FPMO Step5 theory feasibility | `completed_partial_pass` | M0/DA/DS boundary与no-go theorem已冻结 |
 | SC1-FPMO Step6 narrative/control design | `completed_rejected` | DS降为diagnostic control；不实现、不训练 |
 | SC1-D2 rank/nonlinearity/scale diagnostic | `partial_core3` | core3 99/99 complete；wait profile prerequisite then formal5 |
-| ETTh1/ETTm2 natural profile calibration | `implementation_ready` | active 14-run A/B/C pipeline已冻结；远端运行后生成five-dataset contract |
+| ETTh1/ETTm2 natural profile calibration | `adapter_repair_ready` | 首次launch因ETTh1未注册而pre-training退出；routing repair后重启14-run matrix |
 
 ## Paper Mainline Sync Log
 

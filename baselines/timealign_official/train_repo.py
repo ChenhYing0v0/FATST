@@ -82,6 +82,27 @@ class OfficialPreset:
 
 
 OFFICIAL_PRESETS: dict[str, dict[int, OfficialPreset]] = {
+    "ETTh1": {
+        horizon: OfficialPreset(
+            data="ETTh1",
+            data_path="ETTh1.csv",
+            relative_root="ETT-small",
+            freq="h",
+            enc_in=7,
+            dec_in=7,
+            c_out=7,
+            d_model=32,
+            d_ff=32,
+            learning_rate=0.0005,
+            dropout=0.1,
+            w_align=0.1,
+            patch_num=24,
+            local_margin=0.5,
+            global_margin=0.0,
+            layer_norm=1,
+        )
+        for horizon in HORIZONS
+    },
     "ETTh2": {
         horizon: OfficialPreset(
             data="ETTh2",
