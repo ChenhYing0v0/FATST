@@ -1,8 +1,9 @@
-# FSA Zotero Seed Papers
+# Project Paper Notes
 
-本索引来自 Zotero collection `FSA`，collection key: `UCWGBDUQ`。
+Zotero collection `FSA`（collection key: `UCWGBDUQ`）是seed/reference library，不是完整性或时效性的
+source of truth。专题调研默认使用external primary-source search，并把重要结果追加到本索引。
 
-## 条目
+## Zotero Seed 条目
 
 | 方向 | Paper note | Zotero key |
 | --- | --- | --- |
@@ -20,6 +21,12 @@
 | segment-wise MoE | [Seg-MoE](seg-moe-segment-wise-routing.md) | `PY6VZSMM` |
 | heterogeneous experts | [MoHETS](mohets-heterogeneous-experts.md) | `WSKUSM6X` |
 
+## External Thematic Audits
+
+| 方向 | Paper note | Search date |
+| --- | --- | --- |
+| varied-horizon decoder / training objective | [StageC external decoder/objective audit](stage-c-external-decoder-objective-audit.md) | 2026-07-13 |
+
 ## 初步聚类
 
 - one model for multi-horizon: ElasTST, TIMEPERCEIVER, SRP++, QDF, TransDF.
@@ -29,6 +36,8 @@
 
 ## 当前边界
 
-- 本批 notes 只使用 Zotero 中 `FSA` collection 的 metadata/full text extraction。
+- Zotero seed notes来自`FSA` collection；它们不代表完整或最新文献覆盖。
+- external thematic audits使用arXiv、OpenReview、正式会议论文集、official project page与official code；
+  投稿前仍需执行freshness search并将最终引用回填Zotero。
 - 未读取或迁移旧 `R_2026_FSA` 仓库内容。
 - 本批 notes 是第一版机制速读，不等价于完整复现审计。

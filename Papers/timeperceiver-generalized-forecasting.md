@@ -47,3 +47,11 @@
 
 - generalized task 与标准 LTSF benchmark 的训练成本、采样策略需要重新定义。
 - 如果 target query 表达不足，可能退化为普通 horizon embedding。
+
+## 2026-07-13 StageC Reassessment
+
+[Decision] 已通过[arXiv](https://arxiv.org/abs/2512.22550)与
+[official code](https://github.com/efficient-learning-lab/TimePerceiver)外部复核。上述“可采用target query”是
+早期seed-note建议，不再代表active StageC设计。当前PMFO保持requested H不进入learned query/state；
+TimePerceiver作为“target timestamp query + decoder/training co-design”prior-art boundary与external baseline
+候选。

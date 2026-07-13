@@ -33,8 +33,9 @@ Always use the global helper under `~/.codex/scripts/`.
   forecasting.
 - Main directions: one model for multi-horizon forecasting, future-aware
   architecture, and MoE-style conditional computation.
-- Literature source: Zotero is the source of truth. The user-curated `FSA`
-  subset currently contains the seed papers for the above directions.
+- Literature source: the user-curated Zotero `FSA` subset is a seed/reference
+  library, not the source of truth for discovery completeness or freshness.
+  External primary-source search is mandatory for research decisions.
 - Key comparison baseline: SRSNet. Its prior performance data may be consulted
   in `R_2026_FSA` only after explicit user approval for the exact evidence to
   import or summarize.
@@ -75,12 +76,17 @@ Always use the global helper under `~/.codex/scripts/`.
 
 ## Literature And Note Workflow
 
-- Treat Zotero as the source of truth for paper discovery and metadata.
-- For deep research steps, do not rely only on Zotero. Also search external
-  web sources, prioritizing primary sources such as arXiv, OpenReview,
-  conference proceedings, official project pages, and official code
-  repositories; record whether external evidence changes or only supports the
-  Zotero-derived view.
+- Treat Zotero as a user-curated seed/reference library. Its current coverage
+  is limited and may be stale, so do not use Zotero coverage as evidence that a
+  direction is novel, saturated, or absent from the literature.
+- For external literature research, default to broad web search and prioritize
+  primary sources: arXiv, OpenReview, conference proceedings, official project
+  pages, and official code repositories. Verify metadata against those primary
+  sources when possible.
+- Record the search date, query/topic scope, source type, and whether each key
+  paper was present in Zotero or discovered externally. Explicitly document
+  coverage gaps and lower confidence when full text or official code is
+  unavailable.
 - Write or update canonical project paper notes under the project's
   `Papers/`.
 - Default note language is Chinese unless the user explicitly changes it.

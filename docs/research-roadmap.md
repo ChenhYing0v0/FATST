@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Step 4-6 |
-| `active_question` | 如何把已确认的nested structure与measure-conditional risk转化为novel、可证明的operator/objective？ |
-| `active_candidates` | `SC1-PMFO`, `SC2-PIR` |
-| `active_protocol` | `docs/experiments/stage-c-pmfo-pir-problem-diagnostic.md` |
-| `method_implementation` | unauthorized pending narrative gate |
-| `rollback_point` | novelty/theory gate fails -> Step 2 |
+| `current_step` | Step 4-6 completed；Step 7 local implementation next |
+| `active_question` | PMFO-RCT的refinement-conservative mechanism能否在matched controls下产生独立effectiveness？ |
+| `active_candidates` | `SC1-PMFO-RCT`, `SC2-MIPR` |
+| `active_protocol` | `docs/experiments/stage-c-pmfo-rct-step7-protocol.md` |
+| `method_implementation` | PMFO-RCT local implementation authorized；remote training unauthorized |
+| `rollback_point` | capacity/no-transition control explains -> Step 4；numeric/readout fault -> Step 6 |
 
 ## Completed Foundation
 
@@ -45,7 +45,8 @@ PMFO/PIR diagnostic。
 - TransDF/QDF：label decorrelation与task covariance weighting。
 
 [Decision] explicit horizon conditioning、continuous coordinate query、simple functional basis、simple harmonic
-step weighting 都不能单独成为 paper core。Step 4-6 前仍需补做 wavelet/refinement/neural-operator 专项审计。
+step weighting 都不能单独成为 paper core。wavelet/refinement/neural-operator专项审计已在2026-07-13
+Step 4-6完成，并进一步排除了generic hierarchical interpolation与learnable lifting claim。
 
 ## Step 2-3: Completed Problem Diagnostics
 
@@ -72,33 +73,36 @@ increments 是否提供 raw step reweighting之外的解释量？
 Gate：至少 2/3 datasets 显示稳定 gradient direction变化；projected risk必须超越 ElasTST-style harmonic
 weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 protocol/evaluation定义。
 
-## Step 4-6: Active Design Gate
+## Step 4-6: Completed Design Gate
 
-当前执行：
+2026-07-13已完成：
 
-1. 给出 nested space、refinement identity、restriction proof 与 complexity；
-2. 定义 PIR 对 L2/Huber 的 exact/approximate边界；
-3. 完成 prior-art matrix 与 contribution boundary；
-4. 预注册 parameter/FLOP、no-refinement、fixed-basis、raw-weight controls；
-5. 明确每项 mechanism 的 falsification condition。
+1. external primary-source matrix表明arbitrary horizon、functional basis、hierarchical interpolation、
+   learned lifting与raw harmonic weighting均不能单独成文；
+2. SC1收紧为`PMFO-RCT`：future interval tree的detail位于父尺度正交补，H只做domain pruning；
+3. mixed-radix `(90,30,10,5,1)` orthogonality/refinement/prefix invariants均在`1.33e-15`内通过；
+4. SC2收紧为`MIPR`：$\widetilde W_\mu=\sum_lQ_lW_\mu Q_l$，是L2 measure-induced
+   block-diagonal surrogate，不是exact raw risk；
+5. 预注册dense/no-transition/no-conservation与raw/random-projector controls；
+6. SC1/SC2均标记`narrative_ready`，但SC2实现必须等待SC1 operator contract。
 
-## Step 7-10: Conditional Experiment Path
+## Step 7-10: Active Conditional Path
 
-1. 单 dataset/seed最小 gate；
-2. PMFO 与 PIR 分开过 effectiveness gate；
-3. `2x2` factorial：A6/PMFO × full/PIR；
-4. 3 datasets × 3 seeds × dense horizons；
-5. 第二 backbone generality；
-6. official native baseline reproduction 后再横向比较。
+1. Step 7A实现PMFO-RCT module与local invariants，不训练；
+2. Step 7B在ETTm1+ETTh2 seed2021比较A6、dense matched、no-transition、no-conservation、PMFO-RCT；
+3. SC1通过后才实现MIPR，对比same-measure raw与random-projector control；
+4. `2x2` factorial：A6/PMFO × raw/MIPR；
+5. 3 datasets × 3 seeds × dense horizons；
+6. 第二 backbone generality；
+7. official native baseline reproduction 后再横向比较。
 
 禁止在最小 gate 前加入 Encoder innovation、MoE、router、auxiliary reconstruction 或 per-horizon tuning。
 
 ## Next Concrete Action
 
-先完成SC1的multiresolution/lifting/multiwavelet/neural-operator专项prior-art与refinement/restriction proof；
-并行完成SC2的deployment measure、L2 exact decomposition、Huber/L1 boundary。实现顺序保持串行：operator
-contract稳定后才实现PIR，并预注册raw uniform/log与benchmark weighting controls。D1-v2解释见
-`analysis/stage_c_d1_pmfo_pir_offline_v2_20260713/research_interpretation.md`。
+实现`PMFO-RCT`的最小local module与invariant tests，同步添加model code explanation。不得在Step 7A加入
+Encoder innovation、MIPR、MoE或remote training。Step 4-6完整审计见
+`analysis/stage_c_step46_pmfo_pir_theory_gate_20260713/step46_design_and_prior_art.md`。
 
 ## Historical Boundary
 

@@ -49,3 +49,11 @@
 
 - Tunable RoPE 和 multi-patch 超参数对 dataset/horizon 可能敏感。
 - NMAE/NRMSE 指标与本仓库后续 MSE/MAE protocol 需要对齐。
+
+## 2026-07-13 StageC Reassessment
+
+[Decision] 已通过[arXiv](https://arxiv.org/abs/2411.01842)与
+[official code](https://github.com/microsoft/ProbTS/tree/elastst)外部复核。structured mask定义的horizon
+invariance继续作为hard control；official `get_weights('random')`确认raw harmonic/log-like step weighting
+已被直接实现，因此SC2只能以same-measure raw weighting为mandatory control，不能把horizon reweighting本身
+写成novelty。

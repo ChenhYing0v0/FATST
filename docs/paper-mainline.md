@@ -7,12 +7,12 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Step 4-6：PMFO/PIR prior-art、theory与narrative design gate |
+| `current_11_step` | Step 4-6 completed；Step 7 PMFO-RCT local implementation/invariant gate next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` dataset profiles |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | 两个 contribution slots 均为 candidate，尚未通过 narrative/effectiveness gate |
+| `paper_core_status` | SC1/SC2均通过narrative gate、effectiveness pending；remote training仍未授权 |
 
 ## Research Thesis
 
@@ -26,35 +26,40 @@ horizon ID、benchmark-specific embedding、per-horizon expert 或 per-horizon h
 
 ## Contribution Slots
 
-### Contribution 1 Candidate: Projective Multiresolution Forecast Operator
+### Contribution 1 Candidate: PMFO with Refinement-Conservative Tree
 
-PMFO 让 history 一次映射到 nested future function-space coefficients，再按 requested domain 做
-restriction/refinement。目标性质：
+PMFO的具体`narrative_ready`候选为`PMFO-RCT`。它从A6 history memory建立future interval tree，按
+`90 -> 30 -> 10 -> 5 -> 1`逐层生成scaling/detail coefficients，并用fixed orthogonal contrast保证fine
+detail不能改写parent coarse projection。目标性质：
 
-- exact nested-prefix consistency；
-- $H$ 不进入 learned coefficient path；
-- 将 single dense rank-256 future subspace重构为可限制、可细化的 nested spaces；
-- 通过local support/refinement减少dense `[H,256]` basis evaluation，而不是重复A6已有的`basis[:H]` slicing；
-- contribution 来自 refinement algebra 与 computation contract，不是“又一个 continuous basis decoder”。
+- exact refinement recovery与nested-prefix consistency；
+- $H$ 只prune与prefix相交的tree nodes，不进入learned state/query/router；
+- parent-to-child shared state transition + orthogonal detail complement + local support；
+- contribution来自future-side refinement conservativity与domain execution，不是“又一个wavelet/continuous
+  basis decoder”。
 
-当前状态：`problem_gate_passed / narrative_pending`。FlowState、TimePerceiver、ElasTST 等 prior art 已压缩
-novelty空间；必须通过专项prior-art与refinement proof gate。
+当前状态：`narrative_ready / effectiveness_pending`。mixed-radix orthogonality、refinement recovery与
+pruned-prefix invariants均在`1.33e-15`以内通过。该结果只授权Step 7 local implementation；若
+`dense-MLP`或`no-transition` matched control解释收益，PMFO-RCT不能成为paper core。
 
 [Diagnostic status] D1-v1作废；D1-v2在3 datasets x 3 seeds上通过PMFO problem gate。当前A6 Encoder
 保留为首轮carrier，但single dense basis不作为最终PMFO预设；尚无method performance evidence。
 
-### Contribution 2 Candidate: Projective Increment Risk
+### Contribution 2 Candidate: Measure-Induced Projective Risk
 
-Horizon measure 是有效的 deployment-risk 定义，但 simple step weighting 已接近 ElasTST，不足以独立成文。
-PIR 候选在 PMFO 的 nested projections 上分解 coarse trajectory 与 refinement increments，使 loss unit 与
-decoder unit一致，并由 deployment measure 决定 increment risk，而不是重复平均多个 overlapping prefixes。
+SC2保留`PIR` slot ID，formal objective收紧为`MIPR`。raw horizon measure的exact risk为
+$e^TW_\mu e$；MIPR定义$\widetilde W_\mu=\sum_lQ_lW_\mu Q_l$，在PMFO refinement blocks上保留
+within-scale weighting并删除cross-scale coupling。它是decoder-aligned structured surrogate，不是比raw
+risk“更measure-aligned”的等价改写。
 
-当前状态：`problem_gate_passed_conditional / narrative_pending`。必须解释projected increments为何在
-continuous deployment measure下超越raw harmonic weighting；否则退回training protocol，不强行包装为
-Contribution 2。
+当前状态：`narrative_ready / effectiveness_pending / implementation_serialized`。L2下quadratic algebra成立；
+Huber/L1没有exact block-metric等价，首轮不实现。`log_uniform_h` off-block energy为`0.205154`，
+`uniform_h/benchmark_h`只有`0.003456/0.002480`，因此贡献主场景必须是continuous dense-horizon
+deployment，不能只靠四个benchmark horizons。
 
 [Diagnostic status] D1-v2 aggregate PIR problem gate通过，但证据具有measure boundary：log-uniform强、
-uniform弱而跨dataset、benchmark projected excess 0/3。SC2只以`problem_gate_passed_conditional`进入Step4-6。
+uniform弱而跨dataset、benchmark projected excess 0/3。该历史边界已在Step4-6收紧为MIPR与
+same-measure raw control。
 
 ## Frozen Baseline Evidence
 
@@ -76,9 +81,14 @@ horizon、exact prefix consistency与output-side O(HK) computation。因此“�
 真正未解决的是：history memory是否保留多尺度可预测信息，以及single global dense basis是否能提供
 nested refinement、local support与operator-aligned risk decomposition。
 
-[Decision] A6 Encoder与learned basis均不被预设为PMFO最终组件。D1必须分别审计`memory: [B,C,P,D]`
-的information sufficiency和`basis: [720,256]`的capacity/localization geometry。若Encoder信息充分，优先
-只重构decoder；只有frozen probes证明history信息已经丢失时，才允许增加最小multiscale encoder interface。
+[Decision] horizon与resolution必须分离：$H$只定义prefix domain，refinement level定义同一future
+function的分辨率。禁止令短H选择fine branch、长H选择coarse branch。任何显式输出H个值的方法都有
+$\Omega(HC)$写出下界，PMFO只claim避免out-of-prefix atoms与global dense synthesis，不claim sublinear
+total generation。
+
+[Decision] D1已分别审计`memory: [B,C,P,D]`的information sufficiency和`basis: [720,256]`的
+capacity/localization geometry。当前保留A6 Encoder、替换dense basis/operator；只有后续stable probes证明
+history信息已经丢失时，才允许回滚并审计最小multiscale encoder interface。
 
 [Decision] 旧 StageB coefficient conditioning、STBO、GRU future composition、unit-specific retrieval 与
 encoder repair 均不再是 active candidate。历史失败只按各自 failure attribution 使用，不能被扩大为未经
@@ -89,11 +99,12 @@ encoder repair 均不再是 active candidate。历史失败只按各自 failure 
 1. 固定 natural A6 baseline 与 test reference；
 2. D1-A验证label/residual nested structure，D1-B验证A6 Encoder information sufficiency，D1-C验证
    learned basis geometry，同时审计measure/projected gradients；
-3. 分别通过 PMFO、PIR 的 Step 4-6 narrative/theory gate；
-4. 单 dataset最小 implementation gate；
-5. `2x2` factorial 分离 decoder 与 training 的独立主效应；
-6. 3 datasets × 3 seeds × dense horizons full matrix；
-7. 第二 backbone与 official native baselines 做 generality gate。
+3. PMFO-RCT与MIPR已分别通过Step 4-6 narrative/theory gate；
+4. Step 7A local invariants；Step 7B ETTm1+ETTh2 seed2021 architecture controls，先只用full MSE；
+5. SC1通过后冻结operator contract，再做same-measure raw versus MIPR与random-projector control；
+6. `2x2` factorial 分离 decoder 与 training 的独立主效应；
+7. 3 datasets × 3 seeds × dense horizons full matrix；
+8. 第二 backbone与 official native baselines 做 generality gate。
 
 任何 candidate 若在 problem或narrative gate失败，回滚 Step 2/3；不得通过叠加 Encoder、MoE、auxiliary
 loss 或更多 tuning 来掩盖失败。
@@ -107,6 +118,7 @@ loss 或更多 tuning 来掩盖失败。
 - `analysis/stage_c_natural_baseline_test_20260713/natural_baseline_test_report.md`
 - `analysis/stage_c_d1_pmfo_pir_offline_20260713/`（v1 invalid audit evidence）
 - `analysis/stage_c_d1_pmfo_pir_offline_v2_20260713/research_interpretation.md`
+- `analysis/stage_c_step46_pmfo_pir_theory_gate_20260713/step46_design_and_prior_art.md`
 
 2026-07-13 reset 前主线完整 snapshot 位于
 `docs/archive/pre-stage-c-reset-20260713/`，仅作历史审计。

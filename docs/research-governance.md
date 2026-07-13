@@ -2,6 +2,17 @@
 
 本文档定义项目级研究进度管理机制，目标是防止候选方案、阶段结论和论文主线之间发生上下文丢失。
 
+## External Literature Default
+
+- Zotero `FSA` collection是user-curated seed/reference library，不是文献完整性或时效性的source of truth。
+- 外部调研默认先做broad web search，并以arXiv、OpenReview、正式会议论文集、official project page与
+  official code等primary sources作为主要证据。
+- Zotero未收录、seed notes未提及或本地PDF缺失，都不能作为方向新颖、文献空白或现有方法不存在的证据。
+- 每次paper-core prior-art audit必须记录search date、topic/query scope、source type、full text/code状态，
+  以及该工作是Zotero seed还是external discovery。
+- 对coverage快速变化的方向，在method冻结与投稿前分别执行freshness search；未完成全文/代码核查时降低
+  claim confidence。
+
 ## 文档分层
 
 | Layer | 文件 | 职责 | 不应包含 |

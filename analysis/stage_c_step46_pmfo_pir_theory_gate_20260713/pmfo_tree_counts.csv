@@ -1,0 +1,7 @@
+horizon,active_coarse_coefficients,active_detail_l1,active_detail_l2,active_detail_l3,active_detail_l4,active_total_coefficients,boundary_overhead_vs_output,out_of_prefix_coefficients_avoided,active_fraction_of_full_tree,a6_dense_basis_scalar_products
+1,1,2,2,1,4,10,9,710,0.013888888888888888,256
+48,1,2,4,5,40,52,4,668,0.07222222222222222,12288
+96,2,4,8,10,80,104,8,616,0.14444444444444443,24576
+192,3,6,14,20,156,199,7,521,0.2763888888888889,49152
+336,4,8,24,34,272,342,6,378,0.475,86016
+720,8,16,48,72,576,720,0,0,1.0,184320

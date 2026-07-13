@@ -1,0 +1,36 @@
+{
+  "series_length": 720,
+  "block_sizes": [
+    90,
+    30,
+    10,
+    5,
+    1
+  ],
+  "radices": [
+    3,
+    3,
+    2,
+    5
+  ],
+  "coefficient_group_sizes": [
+    8,
+    16,
+    48,
+    72,
+    576
+  ],
+  "seed": 20260713,
+  "pmfo_invariant_gate": "pass",
+  "invariants": {
+    "orthogonality_max_abs": 1.3322676295501878e-15,
+    "projector_sum_max_abs": 0.0,
+    "projector_idempotence_max_abs": 2.220446049250313e-16,
+    "projector_cross_max_abs": 1.2927518066660927e-17,
+    "basis_projector_match_max_abs": 2.220446049250313e-16,
+    "prefix_restriction_max_abs": 4.440892098500626e-16,
+    "refinement_recovery_max_abs": 8.881784197001252e-16
+  },
+  "pir_theory_status": "valid_l2_measure_induced_block_diagonal_surrogate",
+  "method_effectiveness_evidence": false
+}
