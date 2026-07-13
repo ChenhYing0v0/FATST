@@ -48,6 +48,11 @@ validation只计算fixed probe的level-wise R2/NRMSE，输出`d1_probe_metrics.c
 deviation，两个relative SSE increase判断有序patch content是否实际参与预测。该counterfactual不能单独证明
 memory具备完备multiresolution semantics。
 
+该CSV各量均来自validation：`model_mse/zero_deviation_mse/shuffled_mse/collapsed_mse`分别是对应prediction
+的elementwise SSE除以元素数；`model_r2_vs_zero_deviation=1-model_sse/zero_sse`；两个
+`*_relative_sse_increase=counterfactual_sse/model_sse-1`；`forward_reconstruction_max_abs`验证direct memory
+decode与正式forward一致。
+
 ### D1-C basis and gradients
 
 对`learned_temporal_basis [720,256]`做SVD/QR，输出rank、condition、entropy、support与subspace overlap到
@@ -57,6 +62,10 @@ memory具备完备multiresolution semantics。
 $w(t)=\sum_{H\ge t}p(H)/H$。raw risk直接对error加权；projected risk先用nested block projections得到
 orthogonal increments，再去掉cross-scale terms。对encoder/coeff/basis/all参数分别导出gradient norm与
 cosine到`d1_gradient_metrics.csv`。v2在evaluation-space error上计算risk，使梯度与benchmark MSE尺度一致。
+Analyzer中的`raw_*_gradient_separation`定义为same measure raw gradient相对delta-720 raw gradient的
+`1-cos`；`projected_*_gradient_separation`定义为projected gradient相对same-measure raw gradient的`1-cos`。
+aggregate列对uniform/log-uniform/benchmark三种measure取均值，per-measure列必须同时报告以防单一measure
+主导结论。
 
 ## Analyzer Gates
 

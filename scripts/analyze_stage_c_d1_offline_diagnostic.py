@@ -198,6 +198,16 @@ def analyze_dataset(
     measure_gradient_separation = mean(
         [1.0 - float(row["cosine_to_raw_delta720"]) for row in raw_measure_rows]
     )
+    raw_separation_by_measure = {
+        measure: mean(
+            [
+                1.0 - float(row["cosine_to_raw_delta720"])
+                for row in raw_measure_rows
+                if row["measure"] == measure
+            ]
+        )
+        for measure in NONUNIFORM_MEASURES
+    }
     measure_gradient_pass = measure_gradient_separation >= 0.005
     projected_rows = [
         row
@@ -209,6 +219,16 @@ def analyze_dataset(
     projected_excess_separation = mean(
         [1.0 - float(row["cosine_to_same_measure_raw"]) for row in projected_rows]
     )
+    projected_separation_by_measure = {
+        measure: mean(
+            [
+                1.0 - float(row["cosine_to_same_measure_raw"])
+                for row in projected_rows
+                if row["measure"] == measure
+            ]
+        )
+        for measure in NONUNIFORM_MEASURES
+    }
     projected_separation_pass = projected_excess_separation >= 0.005
 
     return {
@@ -245,8 +265,14 @@ def analyze_dataset(
         "parseval_min_gradient_cosine": parseval_min_cosine,
         "parseval_pass": parseval_pass,
         "raw_measure_gradient_separation": measure_gradient_separation,
+        "raw_uniform_h_gradient_separation": raw_separation_by_measure["uniform_h"],
+        "raw_log_uniform_h_gradient_separation": raw_separation_by_measure["log_uniform_h"],
+        "raw_benchmark_h_gradient_separation": raw_separation_by_measure["benchmark_h"],
         "measure_gradient_pass": measure_gradient_pass,
         "projected_excess_gradient_separation": projected_excess_separation,
+        "projected_uniform_h_gradient_separation": projected_separation_by_measure["uniform_h"],
+        "projected_log_uniform_h_gradient_separation": projected_separation_by_measure["log_uniform_h"],
+        "projected_benchmark_h_gradient_separation": projected_separation_by_measure["benchmark_h"],
         "projected_separation_pass": projected_separation_pass,
     }
 
@@ -548,6 +574,24 @@ def main() -> None:
         f"[Decision] PIR problem gate: `{'pass' if pir_pass else 'fail'}`。Parseval invariant="
         f"`{'pass' if parseval_pass else 'fail'}`，measure passes=`{measure_passes}/3`，"
         f"projected-excess passes=`{projected_passes}/3`。",
+        "",
+        "### Per-Measure Separation Audit",
+        "",
+        *markdown_table(
+            dataset_rows,
+            [
+                ("Dataset", "dataset"),
+                ("Raw uniform", "raw_uniform_h_gradient_separation"),
+                ("Raw log", "raw_log_uniform_h_gradient_separation"),
+                ("Raw benchmark", "raw_benchmark_h_gradient_separation"),
+                ("PIR uniform", "projected_uniform_h_gradient_separation"),
+                ("PIR log", "projected_log_uniform_h_gradient_separation"),
+                ("PIR benchmark", "projected_benchmark_h_gradient_separation"),
+            ],
+        ),
+        "",
+        "[Scope] Aggregate PIR gate必须结合per-measure列解释，不能用log-uniform的强差异替代"
+        "benchmark measure下的独立证据。",
         "",
         "## Overall Decision And Failure Attribution",
         "",

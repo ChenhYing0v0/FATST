@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Step 2-3 |
-| `active_question` | nested future representation 与 projective risk 是否是跨 dataset 的真实问题？ |
+| `current_step` | Step 4-6 |
+| `active_question` | 如何把已确认的nested structure与measure-conditional risk转化为novel、可证明的operator/objective？ |
 | `active_candidates` | `SC1-PMFO`, `SC2-PIR` |
 | `active_protocol` | `docs/experiments/stage-c-pmfo-pir-problem-diagnostic.md` |
-| `method_implementation` | unauthorized |
-| `rollback_point` | problem evidence fails -> Step 2 |
+| `method_implementation` | unauthorized pending narrative gate |
+| `rollback_point` | novelty/theory gate fails -> Step 2 |
 
 ## Completed Foundation
 
@@ -47,7 +47,10 @@ PMFO/PIR diagnostic。
 [Decision] explicit horizon conditioning、continuous coordinate query、simple functional basis、simple harmonic
 step weighting 都不能单独成为 paper core。Step 4-6 前仍需补做 wavelet/refinement/neural-operator 专项审计。
 
-## Step 2-3: Active Problem Diagnostics
+## Step 2-3: Completed Problem Diagnostics
+
+[Decision] D1-v2已完成：PMFO structure与frozen ordered-memory gate均3/3；PIR aggregate gate 3/3。
+SC1通过problem gate；SC2以measure-conditional形式通过。以下内容转为已完成problem record。
 
 ### SC1-PMFO
 
@@ -69,9 +72,9 @@ increments 是否提供 raw step reweighting之外的解释量？
 Gate：至少 2/3 datasets 显示稳定 gradient direction变化；projected risk必须超越 ElasTST-style harmonic
 weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 protocol/evaluation定义。
 
-## Step 4-6: Conditional Design Gate
+## Step 4-6: Active Design Gate
 
-只有 Step 2-3通过后才执行：
+当前执行：
 
 1. 给出 nested space、refinement identity、restriction proof 与 complexity；
 2. 定义 PIR 对 L2/Huber 的 exact/approximate边界；
@@ -92,10 +95,10 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 
 ## Next Concrete Action
 
-执行`SC1/SC2-D1-v2`：从frozen train/validation batches、evaluation-space future deviation、natural-baseline
-residuals与encoder memory构造DCT/block/random projections、fixed ridge probes、frozen-decoder
-counterfactual、learned-basis geometry及measure/projected gradient tables。该阶段不读取test、不训练
-forecast model。v1已因measurement/gate fault标记`diagnostic_invalid_for_direction_rejection`，只保留审计。
+先完成SC1的multiresolution/lifting/multiwavelet/neural-operator专项prior-art与refinement/restriction proof；
+并行完成SC2的deployment measure、L2 exact decomposition、Huber/L1 boundary。实现顺序保持串行：operator
+contract稳定后才实现PIR，并预注册raw uniform/log与benchmark weighting controls。D1-v2解释见
+`analysis/stage_c_d1_pmfo_pir_offline_v2_20260713/research_interpretation.md`。
 
 ## Historical Boundary
 

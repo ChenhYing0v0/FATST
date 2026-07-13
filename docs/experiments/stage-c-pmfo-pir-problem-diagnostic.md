@@ -6,11 +6,12 @@
 | --- | --- |
 | `candidate` | `SC1-PMFO` / `SC2-PIR` |
 | `role` | `diagnostic_only` |
-| `current_step` | Step 2-3 |
+| `current_step` | Step 2-3 completed by D1-v2 |
 | `method_training_authorized` | `false` |
 | `carrier` | frozen `A6-LBF-natural-baseline` |
 | `data_boundary` | train用于结构/probe fitting/gradients；validation只评估fixed probes/counterfactual；test=false |
-| `rollback` | stable diagnostic fails -> exact problem candidate returns Step 2 |
+| `decision` | PMFO problem gate pass；PIR problem gate pass with measure-conditional boundary |
+| `rollback` | Step4-6 narrative/theory gate fails -> exact problem candidate returns Step 2 |
 
 ## Corrected A6 Contract
 
@@ -136,3 +137,14 @@ projection重构/Parseval、ridge solve或gradient extraction出现数值异常�
 
 v2只修复measurement space与gate，并加入frozen-decoder counterfactual；candidate、checkpoint、dataset、
 seed、batch budget和阈值方向均不因结果调参。v1保留为failure-attribution evidence，v2使用独立output root。
+
+## D1-v2 Outcome
+
+- structure：label/residual均`3/3`通过；
+- frozen ordered-memory use：`3/3`通过；ETTh2 linear probe仍失败，作为后续risk signal；
+- PIR aggregate：raw measure/projected excess均`3/3`通过，Parseval invariant通过；
+- boundary：projected excess在log-uniform强、uniform弱，benchmark measure为`0/3`。
+
+[Decision] SC1进入Step 4-6；SC2以`problem_gate_passed_but_measure_conditional`进入Step 4-6。该结果不构成
+method performance或paper contribution acceptance。完整解释见
+`analysis/stage_c_d1_pmfo_pir_offline_v2_20260713/research_interpretation.md`。

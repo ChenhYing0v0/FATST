@@ -17,27 +17,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Step 2-3 problem-existence diagnostics |
-| `current_candidate` | `SC1/SC2-D1`（diagnostic-only） |
-| `latest_decision` | D1-v1因negative-R2 gate漏洞与history-std source-space pathology无效，不得作方向结论；已修订v2 measurement/gate |
-| `next_required_action` | 运行D1-v2 evaluation-space structure、frozen decoder counterfactual与PIR gradient diagnostic |
+| `current_11_step` | Step 4-6 prior-art、theory与narrative design gate |
+| `current_candidate` | `SC1-PMFO`、`SC2-PIR`（problem gate passed；method未授权） |
+| `latest_decision` | D1-v2 3 datasets x 3 seeds problem gates通过；保留A6 Encoder作首轮carrier，重构basis/operator；PIR结论受deployment measure约束 |
+| `next_required_action` | PMFO multiresolution/lifting prior-art与refinement proof；PIR L2/Huber boundary及raw-weight controls preregistration |
 | `method_training_authorized` | `false` |
-| `rollback_point` | D1 gate fails -> Step 2 problem redefinition |
+| `rollback_point` | Step4-6 novelty/theory gate fails -> Step 2 problem redefinition |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Step 2-3 |
-| `problem` | A6已domain-only且按H直接求值，但single dense basis没有nested refinement；Encoder是否保留多尺度信息未知；simple horizon reweighting缺少novelty |
-| `existence_evidence` | A6 memory=`[B,C,P,D]`、hidden width=768、basis=`[720,256]`；D1-v1表面structure/PIR通过但measurement invalid，尚无可接受跨dataset结论 |
+| `current_step` | Step 4-6 |
+| `problem` | A6已domain-only但single dense basis没有nested refinement；有序memory可用但ETTh2线性重组风险仍在；simple horizon reweighting缺少novelty |
+| `existence_evidence` | D1-v2: structure 3/3、frozen ordered-memory use 3/3、raw/PIR gradient aggregate 3/3；benchmark-measure projected excess 0/3 |
 | `idea` | H只作为output domain；PMFO学习nested function coefficients，PIR在同一projection increments上定义risk |
 | `theory_check` | restriction consistency可由deterministic basis restriction保证；PIR对L2可建立正交分解，对L1尚无exact等价 |
-| `design` | D1 offline diagnostics -> Step4-6 prior-art/theory gate -> minimal implementation -> 2x2 -> full matrix |
+| `design` | active Step4-6 prior-art/theory gate -> minimal implementation -> separate gates -> 2x2 -> full matrix |
 | `narrative_gate` | refinement algebra、tensor/gradient path、prior-art boundary与mandatory controls全部清楚后才可实现 |
 | `effectiveness_gate` | frozen profiles、multi-seed、dense horizons、matched capacity/FLOPs、cross-dataset |
-| `artifacts` | active protocol、deep audit、baseline report |
-| `decision` | 只授权 diagnostic；PMFO/PIR 均未成为 accepted contribution |
+| `artifacts` | D1-v2 report/interpretation、active protocol、deep audit、baseline report |
+| `decision` | problem gates通过但两项仍非accepted contribution；method implementation等待narrative gate |
 
 ## Frozen Carrier Contract
 
@@ -58,8 +58,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
 | `A6-LBF-natural-baseline` | `control_only` | validation-frozen natural profiles可作为稳定共同起点 | not required | 72/72 test；3 seeds；dense horizons | `frozen_test_reference_ready`；只作固定reference |
-| `SC1-PMFO` | `diagnostic_only` | nested multiresolution future function在A6已有domain-only H之上提供refinement/local support | prior art/refinement proof未完成 | structure、encoder sufficiency至少2/3 datasets通过 | D1-A/B/C offline diagnostic |
-| `SC2-PIR` | `diagnostic_only` | operator-aligned increments提供raw horizon weights之外的risk/gradient信息 | L2/Huber理论边界与TransDF/QDF/ElasTST区分未完成 | 至少2/3 datasets nontrivial measure-gradient evidence | D1 offline gradient diagnostic |
+| `SC1-PMFO` | `problem_gate_passed` | nested multiresolution future function在A6已有domain-only H之上提供refinement/local support | prior art/refinement proof未完成 | D1 structure/frozen-memory 3/3；performance未测 | Step4-6 narrative/theory gate |
+| `SC2-PIR` | `problem_gate_passed_conditional` | operator-aligned increments提供raw horizon weights之外的risk/gradient信息 | L2/Huber边界与prior art区分未完成 | log/uniform有额外separation；benchmark 0/3 | Step4-6 measure/theory/control gate |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
 
@@ -84,6 +84,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1/SC2 deep reset | Step1-3 research audit | explicit-H与simple HML均不够；提出PMFO/PIR并定义falsification | 只授权D1 diagnostic | `analysis/stage_c_contribution_research_reset_20260713/stage_c_contribution_deep_audit.md` |
 | A6/PMFO architecture audit | Step2 correction | A6使用`coeff [B,C,256] × basis[:H] [H,256]`；旧“总生成H720”表述不准确 | PMFO问题收紧；扩展D1-A/B/C | `docs/experiments/stage-c-pmfo-pir-problem-diagnostic.md` |
 | D1-v1 offline diagnostic | diagnostic-invalid | ETTh2 full-hidden R2=-39.7831却被旧gate误判；Weather/ETTh2 normalized residual≈label | `diagnostic_invalid_for_direction_rejection`；保留raw evidence，运行v2 | `analysis/stage_c_d1_pmfo_pir_offline_20260713/` |
+| D1-v2 offline diagnostic | Step2-3 problem gate | structure/frozen-memory/aggregate PIR均3/3；ETTh2 linear probe fail；benchmark PIR excess 0/3 | SC1进入Step4-6；SC2 measure-conditional进入Step4-6 | `analysis/stage_c_d1_pmfo_pir_offline_v2_20260713/research_interpretation.md` |
 
 ## Pending Tasks
 
@@ -93,8 +94,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | Establish dense test reference | `completed` | 后续统一对比 |
 | Archive closed routes and clean active entrypoints | `completed` | archive只作证据 |
 | Implement D1 offline analyzer | `completed_v2` | evaluation-space source/gradient + strict probe + frozen decoder counterfactual |
-| Run D1 problem diagnostics | `v1_invalid_v2_pending` | no method training；独立output root |
-| PMFO/PIR Step4-6 gate | `blocked_on_D1` | problem evidence通过后再启动 |
+| Run D1 problem diagnostics | `completed_v2` | v1 invalid evidence与v2 accepted evidence分离 |
+| PMFO/PIR Step4-6 gate | `in_progress` | prior-art、proof、measure boundary、mandatory controls |
 
 ## Continuation Rules
 

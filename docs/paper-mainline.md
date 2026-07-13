@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Step 2-3：PMFO/PIR problem-existence diagnostics |
+| `current_11_step` | Step 4-6：PMFO/PIR prior-art、theory与narrative design gate |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` dataset profiles |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -37,11 +37,11 @@ restriction/refinement。目标性质：
 - 通过local support/refinement减少dense `[H,256]` basis evaluation，而不是重复A6已有的`basis[:H]` slicing；
 - contribution 来自 refinement algebra 与 computation contract，不是“又一个 continuous basis decoder”。
 
-当前状态：`problem/design candidate`。FlowState、TimePerceiver、ElasTST 等 prior art 已压缩 novelty 空间；
-必须先通过 nested increment problem diagnostic 和专项 prior-art gate。
+当前状态：`problem_gate_passed / narrative_pending`。FlowState、TimePerceiver、ElasTST 等 prior art 已压缩
+novelty空间；必须通过专项prior-art与refinement proof gate。
 
-[Diagnostic status] D1-v1因negative-R2 gate漏洞及history-std source-space pathology作废；这不是PMFO/PIR
-方向失败。v2改用evaluation-space future deviation/residual与frozen-decoder counterfactual，尚未返回结果。
+[Diagnostic status] D1-v1作废；D1-v2在3 datasets x 3 seeds上通过PMFO problem gate。当前A6 Encoder
+保留为首轮carrier，但single dense basis不作为最终PMFO预设；尚无method performance evidence。
 
 ### Contribution 2 Candidate: Projective Increment Risk
 
@@ -49,8 +49,12 @@ Horizon measure 是有效的 deployment-risk 定义，但 simple step weighting 
 PIR 候选在 PMFO 的 nested projections 上分解 coarse trajectory 与 refinement increments，使 loss unit 与
 decoder unit一致，并由 deployment measure 决定 increment risk，而不是重复平均多个 overlapping prefixes。
 
-当前状态：`problem candidate`。必须证明 projected increments 提供 raw harmonic step weighting之外的
-稳定信息；否则退回 training-only DRO/measure protocol，且不强行包装为 Contribution 2。
+当前状态：`problem_gate_passed_conditional / narrative_pending`。必须解释projected increments为何在
+continuous deployment measure下超越raw harmonic weighting；否则退回training protocol，不强行包装为
+Contribution 2。
+
+[Diagnostic status] D1-v2 aggregate PIR problem gate通过，但证据具有measure boundary：log-uniform强、
+uniform弱而跨dataset、benchmark projected excess 0/3。SC2只以`problem_gate_passed_conditional`进入Step4-6。
 
 ## Frozen Baseline Evidence
 
@@ -102,6 +106,7 @@ loss 或更多 tuning 来掩盖失败。
 - `analysis/stage_c_contribution_research_reset_20260713/stage_c_contribution_deep_audit.md`
 - `analysis/stage_c_natural_baseline_test_20260713/natural_baseline_test_report.md`
 - `analysis/stage_c_d1_pmfo_pir_offline_20260713/`（v1 invalid audit evidence）
+- `analysis/stage_c_d1_pmfo_pir_offline_v2_20260713/research_interpretation.md`
 
 2026-07-13 reset 前主线完整 snapshot 位于
 `docs/archive/pre-stage-c-reset-20260713/`，仅作历史审计。

@@ -1,0 +1,24 @@
+{
+  "candidate": "SC1/SC2-D1",
+  "complete": true,
+  "datasets": [
+    "Weather",
+    "ETTm1",
+    "ETTh2"
+  ],
+  "decision": "pmfo_pir_problem_gate_passed",
+  "gates": {
+    "encoder_sufficiency_dataset_passes": 3,
+    "label_structure_dataset_passes": 3,
+    "measure_gradient_dataset_passes": 3,
+    "parseval_pass": true,
+    "pir_problem_gate": true,
+    "pmfo_problem_gate": true,
+    "projected_separation_dataset_passes": 3,
+    "residual_structure_dataset_passes": 3
+  },
+  "seed_rows": 9,
+  "source_space": "evaluation_space_future_deviation_and_residual",
+  "trains_forecast_model": false,
+  "uses_test_split": false
+}
