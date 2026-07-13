@@ -8,6 +8,7 @@
 | `current_step` | Step 4 rollback after Step 7B；SC1 operator redesign |
 | `active_question` | 如何保留projectivity/conservation，同时避免v1 fixed-tree readout整体替换A6 function class造成的退化？ |
 | `active_candidates` | `SC1-projective-operator-redesign`；`SC2-MIPR` held |
+| `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_step7b_pmfo_rct_20260713/step7b_screening_report.md` |
 | `method_implementation` | `PMFO-RCT v1` frozen as failed evidence；new implementation unauthorized |
 | `rollback_point` | Step 4；先重审function class、partition与history-to-node interface，不改Encoder |
@@ -106,6 +107,11 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 3. 用offline representation/interface test区分`partition wrong`、`history-to-node interface wrong`与
    `readout function class too restrictive`；
 4. 仅在新候选通过Step 4-6 narrative/theory gate后重新授权Step 7；Encoder、MIPR、MoE继续冻结。
+
+并行control prerequisite：按validation-only natural grid校准ETTh1与ETTm2 profile。未来broad screen固定为
+五dataset全arms seed2021；通过后对五dataset全部decisive arms运行seeds2021/2022/2023。增加dataset降低
+cross-dataset偶然性，multi-seed才降低training stochasticity。协议见
+`docs/experiments/stage-c-five-dataset-validation-policy.md`。
 
 Step 7B证据见`analysis/stage_c_step7b_pmfo_rct_20260713/step7b_screening_report.md`。
 

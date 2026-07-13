@@ -11,6 +11,7 @@
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` dataset profiles |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
+| `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；ETTh1/ETTm2 profile calibration pending |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `paper_core_status` | SC1仍是open contribution slot，但PMFO-RCT v1关闭；SC2-MIPR held until operator refrozen |
 
@@ -113,6 +114,10 @@ encoder repair 均不再是 active candidate。历史失败只按各自 failure 
 7. 只有新SC1通过screening后，才恢复same-measure raw versus MIPR、`2x2` factorial、3-seed full matrix；
 8. 第二 backbone与 official native baselines 最后做 generality gate。
 
+未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
+generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成
+validation-only natural profile freeze。
+
 任何 candidate 若在 problem或narrative gate失败，回滚 Step 2/3；不得通过叠加 Encoder、MoE、auxiliary
 loss 或更多 tuning 来掩盖失败。
 
@@ -128,6 +133,8 @@ loss 或更多 tuning 来掩盖失败。
 - `analysis/stage_c_step46_pmfo_pir_theory_gate_20260713/step46_design_and_prior_art.md`
 - `analysis/stage_c_step7a_pmfo_rct_local_20260713/step7a_local_gate_report.md`
 - `analysis/stage_c_step7b_pmfo_rct_20260713/step7b_screening_report.md`
+- `analysis/stage_c_step7b_pmfo_rct_20260713/failure_attribution_addendum.md`
+- `docs/experiments/stage-c-five-dataset-validation-policy.md`
 - `docs/code-explanation/stage-c-pmfo-rct-step7a.md`
 
 2026-07-13 reset 前主线完整 snapshot 位于

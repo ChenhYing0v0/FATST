@@ -10,6 +10,7 @@
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` |
 | `active_candidates` | `SC1-projective-operator-redesign`；`SC2-MIPR` held |
+| `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；ETTh1/ETTm2 profiles pending |
 | `stage_exit` | 两项分别过 narrative/effectiveness gate，`2x2` joint gate显示独立主效应与联合收益 |
 | `stage_rollback` | problem/novelty不跨 dataset -> Step 2；禁止直接堆叠 method |
 
@@ -46,9 +47,14 @@
 | Weather | `r2b_p12_d64_ff128_medium` | 12 | 64 | 128 |
 | ETTm1 | `r2b_p24_d32_ff64_narrow` | 24 | 32 | 64 |
 | ETTh2 | `r2b_p12_d64_ff128_medium` | 12 | 64 | 128 |
+| ETTh1 | `calibration_pending` | TBD | TBD | TBD |
+| ETTm2 | `calibration_pending` | TBD | TBD | TBD |
 
 contract hash:
 `254d85d47a9e5b7c212f8a8b88decf17a0328a1ea1df324c9cc65be4c672a50c`。
+
+该hash只覆盖当前三dataset历史contract。未来five-dataset suite按
+`docs/experiments/stage-c-five-dataset-validation-policy.md`先校准ETTh1/ETTm2，再生成新hash。
 
 Governance：dataset之间允许不同自然偏好；params差异不参与选择；同一dataset后续所有机制共用同一
 profile；test、candidate identity与per-mechanism tuning不得改变profile。
@@ -103,6 +109,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | PMFO-RCT Step7A local implementation | `completed` | 四variants、local gate与code explanation已落地 |
 | PMFO-RCT Step7B architecture screening | `completed_rollback` | v1 closed；do not continue seeds/tuning |
 | SC1 Step4 redesign audit | `pending` | external source + A6 functional containment + partition/interface diagnostics |
+| ETTh1/ETTm2 natural profile calibration | `pending_control` | 在下一次SC1 remote screen前按validation-only规则冻结 |
 
 ## Paper Mainline Sync Log
 
@@ -119,3 +126,4 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 3. diagnostic failure必须区分 hypothesis、intervention、readout、numeric与capacity control；
 4. Step7B已完成并回滚；新model training未授权，先完成Step4 redesign audit；
 5. test reference只用于最终对比，不能参与设计选择。
+6. future mechanism screen固定使用ETTh1/ETTh2/ETTm1/ETTm2/Weather；五dataset不能替代三seed确认。
