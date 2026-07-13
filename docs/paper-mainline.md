@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC1-D2 Step 2/3 frozen-memory diagnostic active |
+| `current_11_step` | SC1 Step 2 rollback；basis-geometry problem reformulation |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` dataset profiles |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | Contribution 1 slot open；SC1-D2 formal5 next；SC2-MIPR held |
+| `paper_core_status` | Contribution 1 slot open；SC1-D2 closed；SC1-D3 diagnostic proposed；SC2-MIPR held |
 
 ## Research Thesis
 
@@ -80,11 +80,11 @@ Step 7。普通per-scale nonlinear extension会破坏automatic exact A6 containm
 capacity与prior-art问题，必须作为新候选重新通过Step 2-5，不能事后挽救DS。Contribution 1 slot保持开放，
 current cursor回到Step 2/3的`SC1-D2`：先分离rank expansion、generic nonlinearity与true-scale alignment。
 
-[Diagnostic] D2 core3已完成99/99 frozen-memory probes。rank expansion与generic dense nonlinearity未形成
-共同正信号；true interval basis相对random basis在9/9 runs为正（macro `+2.3137%`），但true depth grouping
-相对同basis random grouping macro为`-0.2212%`，仅Weather稳定为正。初版合并random median会掩盖该差异，
-formal5前已拆成两个mandatory controls。当前只支持“future basis geometry有价值”，不支持“balanced depth
-grouping就是正确mechanism”，故不进入Step 4；等待ETTh1/ETTm2 profile freeze后的formal5。
+[Diagnostic] D2 formal5已完成165/165 frozen-memory fits且invariants pass。true interval basis相对random basis
+macro `+3.0635%`，5/5 datasets、15/15 seeds为正；但true depth grouping相对same-basis random grouping只有
+`+0.0947%`，仅2/5 datasets达到2/3 seeds为正，未过mandatory gate。因此精确的scale-grouping problem关闭，
+rollback Step 2。basis signal保留但尚未由完整$2\times2$ factorial识别为独立main effect；下一步只允许
+设计`SC1-D3 crossed basis-group diagnostic`，不能直接升为decoder contribution。
 
 ### Contribution 2 Candidate: Measure-Induced Projective Risk
 

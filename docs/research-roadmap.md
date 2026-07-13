@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Step 2/3 active；SC1-D2 frozen-memory diagnostic |
-| `active_question` | frozen ordered memory是否包含超出rank expansion与generic nonlinearity的scale-aligned conditional structure？ |
-| `active_candidates` | no paper-core SC1；`SC1-D2 partial_core3`；`SC2-MIPR` held |
+| `current_step` | Step 2 rollback；SC1 problem reformulation |
+| `active_question` | balanced interval basis是否存在独立geometry main effect？ |
+| `active_candidates` | no paper-core SC1；`SC1-D2 closed`；`SC1-D3 proposed_diagnostic`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/experiments/stage-c-sc1-d2-operator-structure-diagnostic.md` |
 | `method_implementation` | `PMFO-RCT v1` frozen as failed evidence；new implementation unauthorized |
-| `rollback_point` | Step 2/3 active；formal5不支持depth grouping则重定义Contribution 1 problem |
+| `rollback_point` | Step 2 active；depth grouping已formal fail，不得继续stack method |
 
 ## Completed Foundation
 
@@ -146,19 +146,15 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 
 ## Next Concrete Action
 
-`SC1-D2 Step 2/3 problem diagnostic`已进入执行，不是实现新模型：
+`SC1-D2`已完成formal5并关闭exact depth-grouping problem。下一步只允许Step 2/3的
+`SC1-D3 crossed basis-group diagnostic`设计：
 
-1. 使用frozen ordered memory与validation-only protocol，比较rank-256 affine和full affine，隔离rank/capacity；
-2. 比较parameter-matched dense nonlinear与full affine，隔离generic nonlinearity；
-3. 比较true interval-scale grouped nonlinear与dense nonlinear；
-4. 加入random orthogonal basis与random row grouping controls，只有true-scale grouping稳定超过二者才支持
-   scale-aligned conditional structure；
-5. D2即使通过也只返回Step 4生成新idea，不自动复活FPMO-DS或获得Step 7授权；
+1. 冻结D2的true/random basis、true/random group、seeds与optimization，不修改carrier profile；
+2. 补齐`random basis × matched random group`缺失cell，构成paired $2\times2$ factorial；
+3. 预注册basis main effect、group main effect与interaction estimator及hard gate；
+4. 预计新增45个head-only fits；仍不加载test、不更新forecast model；
+5. D3通过也只返回Step 4做external source/prior-art audit，不能直接实现decoder；
 6. Encoder、MoE与MIPR继续冻结。
-
-当前execution分两层：先在已冻结的ETTh2/ETTm1/Weather × 3 seeds运行`core3_precheck`，用于审计pipeline、
-optimization和明显signal；该结果不能formal pass或方向级reject。ETTh1/ETTm2完成validation-only natural
-profile freeze后，按相同11-arm contract运行formal5 hard gate。
 
 ## SC1-D2 Core3 Precheck: Partial
 
@@ -176,6 +172,22 @@ profile freeze后，按相同11-arm contract运行formal5 hard gate。
 五dataset全arms seed2021；通过后对五dataset全部decisive arms运行seeds2021/2022/2023。增加dataset降低
 cross-dataset偶然性，multi-seed才降低training stochasticity。协议见
 `docs/experiments/stage-c-five-dataset-validation-policy.md`。
+
+## SC1-D2 Formal5: Closed
+
+1. five-dataset profiles已冻结；formal5完成165/165 fits，test/freeze/validation/basis/Parseval invariants pass；
+2. full affine相对rank256 macro `+0.6780%`，只3/5 datasets达到2/3 seeds为正；rank不是统一瓶颈；
+3. strongest dense相对full affine macro `-6.4715%`，ETTh1/ETTh2存在fit/holdout改善但official validation恶化的
+   temporal generalization gap；
+4. true scale相对strongest dense `+4.5202%`，但该值被上述dense gap放大，不能单独支持scale机制；
+5. true basis相对random basis `+3.0635%`，5/5 datasets、15/15 seeds为正；
+6. true grouping相对same-basis random grouping仅`+0.0947%`，只有2/5 datasets通过方向一致性，平均只击败
+   `1.53/3` controls；
+7. exact hypothesis=`hypothesis_false`；否定边界仅为final frozen-memory head上的balanced-depth independent
+   nonlinear grouping；
+8. decision=`scale_alignment_not_supported_reformulate_step2`；basis main effect因缺失factorial cell仍未识别。
+
+完整解释见`analysis/stage_c_sc1_d2_formal5_20260714/research_interpretation.md`。
 
 Step 7B证据见`analysis/stage_c_step7b_pmfo_rct_20260713/step7b_screening_report.md`。
 

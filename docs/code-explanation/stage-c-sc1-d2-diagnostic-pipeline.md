@@ -7,7 +7,9 @@
 - `scripts/run_stage_c_sc1_d2_diagnostic.py`：冻结checkpoint、提取memory、训练head-only probes；
 - `scripts/analyze_stage_c_sc1_d2_diagnostic.py`：完成paired attribution与formal/core3 gate；
 - `scripts/remote/run_stage_c_sc1_d2_diagnostic.sh`：三dataset GPU workers；
-- `scripts/sync_stage_c_sc1_d2_diagnostic_results.sh`：同步raw artifacts并本地重算。
+- `scripts/sync_stage_c_sc1_d2_diagnostic_results.sh`：同步core3 raw artifacts并本地重算；
+- `scripts/remote/run_stage_c_sc1_d2_formal5.sh`：五dataset workload-aware workers；
+- `scripts/sync_stage_c_sc1_d2_formal5_results.sh`：同步formal5 raw artifacts并本地重算。
 
 ## Forward Data Flow
 

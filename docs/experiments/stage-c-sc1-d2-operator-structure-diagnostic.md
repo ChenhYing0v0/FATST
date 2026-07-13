@@ -10,7 +10,7 @@
 | `problem` | frozen ordered memory是否包含超出rank expansion与generic nonlinearity的true-scale conditional structure？ |
 | `carrier` | frozen `A6-LBF-natural-baseline` Encoder checkpoints |
 | `formal_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather × seeds 2021/2022/2023 |
-| `current_precheck` | core3 partial；five-dataset profiles frozen；formal5 implementation ready |
+| `current_precheck` | formal5 complete；exact depth-grouping hypothesis closed |
 | `test_used` | `false` |
 | `forecast_model_updated` | `false` |
 | `method_training_authorized` | `false` |
@@ -175,6 +175,6 @@ random-basis整体更弱时，该统计会掩盖true grouping并未超过random 
 | `theory_check` | orthogonal coefficient MSE与time-space MSE等价 |
 | `design` | 11-arm frozen-memory probe matrix + formal5 hard gate |
 | `narrative_gate` | not applicable to diagnostic |
-| `effectiveness_gate` | not started |
-| `artifacts` | worker metrics/history/metadata + pairwise/dataset/summary report |
-| `decision` | formal5 next；method implementation unauthorized |
+| `effectiveness_gate` | diagnostic formal gate fail；basis positive，grouping negative |
+| `artifacts` | `analysis/stage_c_sc1_d2_formal5_20260714/` |
+| `decision` | rollback Step 2；D3 factorial diagnostic proposed；method implementation unauthorized |
