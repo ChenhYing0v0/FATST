@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Step 4 source-informed redesign complete；SC1-FPMO Step 5 theory feasibility |
+| `current_11_step` | SC1-FPMO Step 5 partial pass；Step 6 narrative/control design |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` dataset profiles |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；ETTh1/ETTm2 profile calibration pending |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | SC1-FPMO仅为theory-pending candidate；PMFO-RCT v1关闭；SC2-MIPR held |
+| `paper_core_status` | SC1-FPMO-DS partial pass；M0/DA controls；PMFO v1关闭；SC2-MIPR held |
 
 ## Research Thesis
 
@@ -61,9 +61,18 @@ memory直接进入scale coefficients，不经过shared recursive state作为唯�
 相交的supports。该候选不是“A6 output + residual patch”，也不能以tree、wavelet、lifting或network morphism
 单项作为novelty。
 
-[Status] `source_informed_candidate / theory_pending`。只有Step 5证明无dense bypass的exact A6 embedding、
-native restriction与arbitrary-length construction，Step 6再冻结tensor contract与controls。当前未重新获得
-implementation或training授权。
+[Fact] Step 5已构造任意正整数$T$的orthonormal interval transform，并在9个$T$、53个prefix cases上验证
+exact A6 embedding、perfect reconstruction与native restriction，max algebraic gap=`5.329e-14`。因此
+`FPMO-M0`可以在无dense bypass下完全复现A6；但它与A6只是bijective coordinate transform，只能作control。
+
+要让history-to-scale path真正不同，`FPMO-DS`为各tree depth设置独立history factors。该class包含A6，
+但T720下各group rank caps之和为720，等价于full affine readout。由此得到no-go boundary：exact包含全部
+A6、independent scale states与总latent budget 256不能同时满足。params差异不用于否定方法，但full-affine
+capacity必须由同function-class `FPMO-DA` control隔离。
+
+[Status] `FPMO-DS partial_pass / Step6 design only`。native restriction成立，但不claim比A6更快；M0为exact
+morph control，DA为full-affine/coordinate control。Step 6若无法证明DS相对DA具有非冗余mechanism，SC1应
+回滚而不是实现。当前仍未获得implementation或training授权。
 
 ### Contribution 2 Candidate: Measure-Induced Projective Risk
 
@@ -122,6 +131,10 @@ encoder repair 均不再是 active candidate。历史失败只按各自 failure 
 PRISM式history tree + fixed-H dense heads，不采用Asymmetric-MMF式global low-rank + hierarchy residual作为
 paper core。lifting、nested basis与network morphism只作为构造和proof evidence。
 
+[Decision] Step 5进一步排除“function-preserving transform本身就是创新”：M0没有新function，direct atom
+版本与dense affine正交等价，DS则有capacity expansion。Contribution 1必须在Step 6给出并验证
+`DS > matched DA`所对应的scale-native inductive bias，否则FPMO不能成为paper core。
+
 ## Main Experiment Logic
 
 1. 固定 natural A6 baseline 与 test reference；
@@ -131,9 +144,10 @@ paper core。lifting、nested basis与network morphism只作为构造和proof ev
 4. Step 7A local invariants通过；Step 7B使用frozen full-H720 pointwise L1完成15-run architecture controls；
 5. PMFO-RCT v1 effectiveness失败，回滚Step 4；MIPR、factorial与full matrix全部暂停；
 6. Step 4 redesign audit已解释A6 function class、fixed partition与interface问题，并只把FPMO推进到Step 5；
-7. FPMO必须依次通过embedding/restriction proof、Step 6 tensor/control gate，才可重新实现与screen；
-8. 只有新SC1通过screening后，才恢复same-measure raw versus MIPR、`2x2` factorial、3-seed full matrix；
-9. 第二 backbone与 official native baselines 最后做 generality gate。
+7. FPMO Step 5 embedding/restriction通过但capacity no-go使其仅partial pass；
+8. Step 6必须冻结M0/DA/DS controls并证明DS claim不能由full-affine capacity解释，才可重新实现与screen；
+9. 只有新SC1通过screening后，才恢复same-measure raw versus MIPR、`2x2` factorial、3-seed full matrix；
+10. 第二 backbone与 official native baselines 最后做 generality gate。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
 generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成
@@ -156,6 +170,7 @@ loss 或更多 tuning 来掩盖失败。
 - `analysis/stage_c_step7b_pmfo_rct_20260713/step7b_screening_report.md`
 - `analysis/stage_c_step7b_pmfo_rct_20260713/failure_attribution_addendum.md`
 - `analysis/stage_c_step4_source_informed_redesign_20260713/step4_source_informed_redesign_audit.md`
+- `analysis/stage_c_step5_fpmo_theory_20260713/step5_theory_feasibility.md`
 - `Papers/stage-c-external-decoder-objective-audit.md`
 - `docs/experiments/stage-c-five-dataset-validation-policy.md`
 - `docs/code-explanation/stage-c-pmfo-rct-step7a.md`

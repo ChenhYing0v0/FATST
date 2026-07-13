@@ -1,0 +1,25 @@
+{
+  "active_atom_bound_cases": 1571,
+  "active_atom_bound_gate": true,
+  "algebra_gate": true,
+  "candidate": "SC1-FPMO",
+  "lengths": [
+    1,
+    2,
+    3,
+    5,
+    7,
+    16,
+    96,
+    720,
+    721
+  ],
+  "max_algebraic_gap": 5.3290705182007514e-14,
+  "prefix_cases": 53,
+  "scale_native_extension_status": "capacity_confounded_theory_feasible",
+  "shared_latent_morph_role": "control_only",
+  "step": 5,
+  "step5_decision": "partial_pass_step6_design_only",
+  "tolerance": 1e-10,
+  "transform_cases": 9
+}

@@ -53,6 +53,19 @@ projectors上由deployment measure诱导的cross-scale-decoupled quadratic risk�
   transformation已有系统研究；StageC必须证明更具体的future restriction contract。
 - [Asymmetric MMF](https://arxiv.org/abs/1910.05132)：global low-rank + hierarchical residual已有直接
   matrix-factorization先例；因此拒绝“A6 output + multiresolution residual patch”作为paper core。
+- [Unbalanced Haar](https://doi.org/10.1198/016214507000000860)：arbitrary breakpoint/interval上的
+  orthonormal Haar-like basis已有统计学基础；FPMO采用data-independent midpoint版本解决non-dyadic $T$，
+  不采用其data-adaptive basis selection，也不claim interval wavelet novelty。
+
+## Step 5 Theory Outcome
+
+[Fact] arbitrary-length interval morphism、exact A6 embedding与native prefix restriction在9个$T$、53个
+$(T,H)$ cases上通过，max algebraic gap为`5.329e-14`。
+
+[Boundary] exact shared-latent morph只是A6的bijective coordinate transform，只能作control。独立scale maps
+虽然严格包含A6，但T720下扩展到full-affine class；它必须与同function-class dense control比较，不能把
+capacity gain写成multiresolution mechanism。完整proof/no-go audit见
+`analysis/stage_c_step5_fpmo_theory_20260713/step5_theory_feasibility.md`。
 
 ## Rejected Transfer
 

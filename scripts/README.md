@@ -21,6 +21,8 @@ StageC active entrypoints：
 - `sync_stage_c_step7b_pmfo_rct_results.sh`: 轻量同步并重算Step7B gate。
 - `analyze_stage_c_step4_operator_geometry.py`: 读取Step7B A6/PMFO checkpoints，审计effective operator
   rank、function-family dimension、fixed partition boundaries与history-to-root interface；不训练模型。
+- `check_stage_c_fpmo_step5_theory.py`: 构造任意长度interval transform，验证FPMO orthogonality、exact A6
+  embedding、native prefix restriction、scale factorization与T720 parameter/function-space budget；不训练模型。
 
 历史 runner/analyzer 已移入 `scripts/archive/`，不得作为当前研究入口。下一步新增脚本只能服务
 `docs/experiments/stage-c-pmfo-rct-step7-protocol.md`，并须同步 code explanation。
