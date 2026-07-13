@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC1-FPMO Step 5 partial pass；Step 6 narrative/control design |
+| `current_11_step` | SC1-FPMO Step 6 narrative gate failed；rollback Step 2/3 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` dataset profiles |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；ETTh1/ETTm2 profile calibration pending |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | SC1-FPMO-DS partial pass；M0/DA controls；PMFO v1关闭；SC2-MIPR held |
+| `paper_core_status` | Contribution 1 slot open；FPMO family controls only；SC1-D2 diagnostic proposed；SC2-MIPR held |
 
 ## Research Thesis
 
@@ -70,9 +70,15 @@ exact A6 embedding、perfect reconstruction与native restriction，max algebraic
 A6、independent scale states与总latent budget 256不能同时满足。params差异不用于否定方法，但full-affine
 capacity必须由同function-class `FPMO-DA` control隔离。
 
-[Status] `FPMO-DS partial_pass / Step6 design only`。native restriction成立，但不claim比A6更快；M0为exact
-morph control，DA为full-affine/coordinate control。Step 6若无法证明DS相对DA具有非冗余mechanism，SC1应
-回滚而不是实现。当前仍未获得implementation或training授权。
+[Fact] Step 6进一步证明，T720下linear DS与DA不仅capacity相近，而是拥有完全相同的full-affine
+function class；对任意orthogonal coordinates与任意row grouping也成立。DS增加的是non-identifiable
+deep-linear factorization。已有matrix-factorization工作说明这可能改变implicit optimization bias，但该
+差异不是future-scale专属机制，也不能直接从其GD理论外推到当前Adam + L1 joint training。
+
+[Decision] `FPMO-DS rejected_by_narrative_gate`。M0、DA与DS-L只保留为control/diagnostic artifacts，不进入
+Step 7。普通per-scale nonlinear extension会破坏automatic exact A6 containment，并引入新的activation、
+capacity与prior-art问题，必须作为新候选重新通过Step 2-5，不能事后挽救DS。Contribution 1 slot保持开放，
+current cursor回到Step 2/3的`SC1-D2`：先分离rank expansion、generic nonlinearity与true-scale alignment。
 
 ### Contribution 2 Candidate: Measure-Induced Projective Risk
 
@@ -135,6 +141,12 @@ paper core。lifting、nested basis与network morphism只作为构造和proof ev
 版本与dense affine正交等价，DS则有capacity expansion。Contribution 1必须在Step 6给出并验证
 `DS > matched DA`所对应的scale-native inductive bias，否则FPMO不能成为paper core。
 
+[Decision] Step 6 narrative audit已关闭该路径：DS与DA的function class相同，且factorization对random
+orthogonal/group controls同样成立；requested prefix虽可少生成inactive coefficients，但dense $D_l$仍要求
+先生成全部720维scale latents。由此否决的是当前linear DS design，而不是“future multiscale structure不存在”。
+下一步必须先以frozen-memory diagnostic证明true-scale nonlinear grouping超越full affine、matched dense
+nonlinearity与random grouping，才允许回到Step 4提出新operator。
+
 ## Main Experiment Logic
 
 1. 固定 natural A6 baseline 与 test reference；
@@ -145,9 +157,11 @@ paper core。lifting、nested basis与network morphism只作为构造和proof ev
 5. PMFO-RCT v1 effectiveness失败，回滚Step 4；MIPR、factorial与full matrix全部暂停；
 6. Step 4 redesign audit已解释A6 function class、fixed partition与interface问题，并只把FPMO推进到Step 5；
 7. FPMO Step 5 embedding/restriction通过但capacity no-go使其仅partial pass；
-8. Step 6必须冻结M0/DA/DS controls并证明DS claim不能由full-affine capacity解释，才可重新实现与screen；
-9. 只有新SC1通过screening后，才恢复same-measure raw versus MIPR、`2x2` factorial、3-seed full matrix；
-10. 第二 backbone与 official native baselines 最后做 generality gate。
+8. Step 6已判定DS claim无法脱离full-affine factorization解释，故FPMO不进入实现；
+9. rollback Step 2/3执行SC1-D2：rank-256 affine、full affine、dense nonlinear、true-scale grouped nonlinear与
+   random-coordinate/group controls只在frozen memory和validation上比较；
+10. 只有D2支持scale alignment、且新SC1重新通过Step 4-6并完成screening后，才恢复MIPR、`2x2` factorial与
+    3-seed full matrix；第二 backbone与official native baselines最后做generality gate。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
 generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成
@@ -171,6 +185,7 @@ loss 或更多 tuning 来掩盖失败。
 - `analysis/stage_c_step7b_pmfo_rct_20260713/failure_attribution_addendum.md`
 - `analysis/stage_c_step4_source_informed_redesign_20260713/step4_source_informed_redesign_audit.md`
 - `analysis/stage_c_step5_fpmo_theory_20260713/step5_theory_feasibility.md`
+- `analysis/stage_c_step6_fpmo_narrative_control_20260713/step6_narrative_control_gate.md`
 - `Papers/stage-c-external-decoder-objective-audit.md`
 - `docs/experiments/stage-c-five-dataset-validation-policy.md`
 - `docs/code-explanation/stage-c-pmfo-rct-step7a.md`

@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | decoder/operator 与 training principle 两项相互支撑的 paper-core innovations |
-| `active_question` | shared future function representation 与 aligned risk 是否能实现连续、统一、可细化的任意 horizon forecasting？ |
+| `active_question` | frozen ordered memory到future function之间是否存在超出rank expansion与generic nonlinearity的scale-aligned conditional structure？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` |
-| `active_candidates` | `SC1-FPMO-DS` partial pass；`SC2-MIPR` held |
+| `active_candidates` | no paper-core SC1 candidate；`SC1-D2` diagnostic proposed；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；ETTh1/ETTm2 profiles pending |
 | `stage_exit` | 两项分别过 narrative/effectiveness gate，`2x2` joint gate显示独立主效应与联合收益 |
 | `stage_rollback` | problem/novelty不跨 dataset -> Step 2；禁止直接堆叠 method |
@@ -18,27 +18,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Step 5 partial pass；Step 6 narrative/control design |
-| `current_candidate` | `SC1-FPMO-DS` partial pass；M0/DA controls frozen；`SC2-MIPR` held |
-| `latest_decision` | exact morph/restriction可行；shared morph只是坐标变换；independent scales在T720等价full-affine class |
-| `next_required_action` | isolate scale-native mechanism from dense-equivalence/capacity before implementation |
-| `method_training_authorized` | `false`；new SC1 implementation需重新通过Step 4-6 |
-| `rollback_point` | Step 2/4 if Step6 cannot isolate structure from capacity；不改Encoder、不叠加MIPR/MoE |
+| `current_11_step` | Step 6 narrative gate failed；rollback Step 2/3 |
+| `current_candidate` | `SC1-D2` diagnostic_only proposed；FPMO family controls only；`SC2-MIPR` held |
+| `latest_decision` | linear DS与DA同为full-affine class；剩余差异仅是非scale专属的factorized optimization bias |
+| `next_required_action` | 预注册D2，隔离rank、generic nonlinearity与true-scale alignment |
+| `method_training_authorized` | `false`；D2只可作为diagnostic，new SC1需重新通过Step 4-6 |
+| `rollback_point` | Step 2/3；不改Encoder、不叠加nonlinearity、MIPR或MoE来挽救FPMO-DS |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Step 5 complete；Step 6 active |
-| `problem` | exact containment、independent scale maps与same latent budget存在no-go trilemma |
-| `existence_evidence` | Step4 operator audit + 9 lengths/53 prefixes constructive algebra + T720 budget audit |
-| `idea` | M0 exact morph control；DA full-affine control；DS direct-scale factor candidate；MIPR held |
-| `theory_check` | embedding/restriction/arbitrary-T pass；efficiency claim withdrawn；DS capacity confound open |
-| `design` | only candidate/control algebra frozen；no model tensor contract or implementation |
-| `narrative_gate` | partial pass；Step6必须隔离dense-equivalence与capacity；SC2 held |
+| `current_step` | Step 6 complete；rollback Step 2/3 |
+| `problem` | linear scale factorization不形成scale-specific function constraint；scale-aligned nonlinearity尚未验证 |
+| `existence_evidence` | D1 structure/memory evidence保留；Step5 algebra + Step6 full-affine equivalence/no-novelty audit |
+| `idea` | FPMO family降为controls；下一步D2比较rank/full-affine/dense-nonlinear/true-scale/random-scale heads |
+| `theory_check` | embedding/restriction pass；DS=DA full affine；factorization bias非scale专属；prefix efficiency claim fail |
+| `design` | A6/M0/Dense-FA/DA/DS-L/DS-R diagnostic contract冻结；无paper-core implementation |
+| `narrative_gate` | `SC1-FPMO-DS rejected_by_narrative_gate`；SC2 held |
 | `effectiveness_gate` | v1 fail：macro vs A6 `-1.0955%`，worst ETTm1 `-2.0844%` |
-| `artifacts` | D1-v2、v1 evidence、Step4 audit、Step5 proof/no-go report、baseline report |
-| `decision` | `FPMO-DS partial_pass_step6_design_only`；new implementation/training unauthorized |
+| `artifacts` | D1-v2、Step4 audit、Step5 proof/no-go report、Step6 narrative/control gate、baseline report |
+| `decision` | rollback Step 2/3；`SC1-D2 diagnostic_only` next；new implementation/training unauthorized |
 
 ## Frozen Carrier Contract
 
@@ -67,7 +67,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC1-PMFO-RCT-v1` | `failed_as_core_candidate` | fixed mixed-radix conservative future tree | narrative/local pass | Step7B三dataset均不优于A6；no numeric pathology | archived as evidence；rollback Step 4 |
 | `SC1-FPMO-M0` | `control_only` | shared-latent exact A6 morph验证function preservation/restriction | not required | exact equality required | mandatory Step6 morphism control |
 | `SC1-FPMO-DA` | `control_only` | direct atom full-affine head隔离capacity/orthogonal coordinate effect | not required | matched function-class control | mandatory Step6 dense-equivalence control |
-| `SC1-FPMO-DS` | `partial_pass` | independent scale factors提供native history-scale maps并包含A6 | Step5 algebra pass；Step6 boundary pending | no implementation | prove claim survives DA/capacity control |
+| `SC1-FPMO-DS` | `rejected_by_narrative_gate` | independent scale factors提供native history-scale maps并包含A6 | fail：与DA同为full affine，factorization不依赖真实scale coordinates | not started | controls/evidence only；不进入Step 7 |
+| `SC1-D2` | `diagnostic_only` | true-scale nonlinear grouping是否超越rank expansion、generic nonlinearity与random grouping | not a method gate | validation-only diagnostic pending | 预注册五dataset frozen-memory probe matrix |
 | `SC2-MIPR` | `held` | measure-induced block metric去除decoder scales之间的cross coupling | pass for L2；log measure primary，benchmark weak | log off-block `0.205154`；benchmark `0.002480`；performance未测 | 等新SC1 contract冻结；不得先实现 |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
@@ -99,6 +100,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1 Step7B remote screen | architecture-only matched controls | 15/15 complete；PMFO vs A6 macro `-1.0955%`；conservation +`2.3393%` vs ablation；transition +`0.0486%` vs control | v1 `failed_as_core_candidate`；`readout_or_head_design_wrong`；rollback Step 4 | `analysis/stage_c_step7b_pmfo_rct_20260713/step7b_screening_report.md` |
 | SC1 Step4 source-informed redesign | external primary sources + 3-dataset checkpoint operator geometry | PMFO params 212,010 < A6-family dim 316,112；90/30 boundary ratios≈1；root patch-profile cosine 0.936-0.994 | v1 structural attribution strengthened；`SC1-FPMO` only advances to Step5 | `analysis/stage_c_step4_source_informed_redesign_20260713/step4_source_informed_redesign_audit.md` |
 | SC1-FPMO Step5 theory feasibility | arbitrary-T constructive proof + function-space/no-go audit | 9 lengths/53 prefixes max gap `5.329e-14`；T720 DS rank caps sum720 and equals full-affine class | `partial_pass_step6_design_only`；efficiency claim withdrawn；training false | `analysis/stage_c_step5_fpmo_theory_20260713/step5_theory_feasibility.md` |
+| SC1-FPMO Step6 narrative/control gate | external factorization prior art + function/control audit | DS=DA full affine；true/random grouping class不变；DS需全部720维scale latents | `rejected_by_narrative_gate`；rollback Step 2/3；D2 diagnostic next | `analysis/stage_c_step6_fpmo_narrative_control_20260713/step6_narrative_control_gate.md` |
 
 ## Pending Tasks
 
@@ -114,7 +116,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | PMFO-RCT Step7B architecture screening | `completed_rollback` | v1 closed；do not continue seeds/tuning |
 | SC1 Step4 redesign audit | `completed` | FPMO source boundary与kill gates已冻结 |
 | SC1-FPMO Step5 theory feasibility | `completed_partial_pass` | M0/DA/DS boundary与no-go theorem已冻结 |
-| SC1-FPMO Step6 narrative/control design | `active` | isolate DS from full-affine capacity and coordinate effects |
+| SC1-FPMO Step6 narrative/control design | `completed_rejected` | DS降为diagnostic control；不实现、不训练 |
+| SC1-D2 rank/nonlinearity/scale diagnostic | `proposed_diagnostic_only` | 预注册frozen-memory五dataset probe matrix与random controls |
 | ETTh1/ETTm2 natural profile calibration | `pending_control` | 在下一次SC1 remote screen前按validation-only规则冻结 |
 
 ## Paper Mainline Sync Log
@@ -126,12 +129,13 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-13 | Step7B effectiveness失败 | Current Position、Contribution 1/2、Boundary、Experiment Logic | candidate closure + rollback | v1关闭；conservation保留；MIPR held；回Step 4 |
 | 2026-07-13 | Step4 source-informed redesign完成 | Current Position、Contribution 1、Boundary、Experiment Logic | new provisional candidate + theory-only advance | `SC1-FPMO`进入Step5；implementation/training仍禁止 |
 | 2026-07-13 | FPMO Step5 partial pass | Contribution 1、Boundary、Experiment Logic | theorem pass + capacity trilemma | M0/DA降为controls；DS只进入Step6 design；training仍禁止 |
+| 2026-07-13 | FPMO Step6 narrative gate失败 | Contribution 1、Boundary、Experiment Logic | candidate closure + Step2/3 rollback | DS与DA同class且scale claim不成立；D2先诊断rank/nonlinearity/scale alignment |
 
 ## Continuation Rules
 
-1. 每次继续研究先读本 ledger 与`stage-c-pmfo-rct-step7-protocol.md`；
+1. 每次继续研究先读本 ledger 与Step6 gate report；
 2. old analysis可引用，archive脚本不得直接启动；
 3. diagnostic failure必须区分 hypothesis、intervention、readout、numeric与capacity control；
-4. Step5已partial pass；新model training未授权，先完成FPMO-DS Step6 dense/capacity narrative gate；
+4. Step6已关闭FPMO-DS；新model training未授权，先完成SC1-D2 problem diagnostic；
 5. test reference只用于最终对比，不能参与设计选择。
 6. future mechanism screen固定使用ETTh1/ETTh2/ETTm1/ETTm2/Weather；五dataset不能替代三seed确认。

@@ -1,0 +1,16 @@
+{
+  "candidate": "SC1-FPMO-DS",
+  "step": 6,
+  "step6_decision": "rejected_by_narrative_gate",
+  "linear_function_class": "full_affine_equal_to_FPMO_DA",
+  "scale_specific_function_constraint": false,
+  "optimization_difference_only": true,
+  "prefix_algebra": true,
+  "prefix_efficiency_claim": false,
+  "nonlinear_rescue_is_same_candidate": false,
+  "effectiveness_gate_started": false,
+  "method_implementation_authorized": false,
+  "sc2_mipr_status": "held",
+  "rollback_step": 2,
+  "next_task": "SC1_D2_rank_nonlinearity_scale_alignment_diagnostic"
+}

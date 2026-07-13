@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Step 5 partial pass；Step 6 narrative/control design |
-| `active_question` | FPMO scale-native factorization能否在full-affine matched control之外提供独立机制？ |
-| `active_candidates` | `SC1-FPMO-DS` partial pass；M0/DA controls；`SC2-MIPR` held |
+| `current_step` | Step 6 narrative gate failed；rollback Step 2/3 |
+| `active_question` | frozen ordered memory是否包含超出rank expansion与generic nonlinearity的scale-aligned conditional structure？ |
+| `active_candidates` | no paper-core SC1；`SC1-D2` diagnostic proposed；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_step5_fpmo_theory_20260713/step5_theory_feasibility.md` |
+| `active_protocol` | `analysis/stage_c_step6_fpmo_narrative_control_20260713/step6_narrative_control_gate.md` |
 | `method_implementation` | `PMFO-RCT v1` frozen as failed evidence；new implementation unauthorized |
-| `rollback_point` | Step6无法隔离structure/capacity -> Step 2/4；不改Encoder |
+| `rollback_point` | Step 2/3 active；D2失败则重定义Contribution 1 problem，不改Encoder |
 
 ## Completed Foundation
 
@@ -129,15 +129,31 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 6. native restriction成立，但全部scale latents仍可能对任意$H$执行，故撤销“比A6更快”claim；
 7. decision=`partial_pass_step6_design_only`；M0与direct-atom DA降为controls，DS尚未narrative-ready。
 
+## Step 6 FPMO Narrative / Control Gate: Rejected
+
+1. T720下每个group满足$k_l=n_l$，所以$D_lA_l$可表示任意block map；linear DS与DA拥有完全相同的
+   full-affine function class；
+2. 该等价对任意orthogonal coordinates与任意row grouping成立，当前factorization没有scale-specific
+   function constraint；
+3. deep linear/matrix factorization prior art支持“factorization可能改变implicit optimization bias”，
+   但这不构成新的future-scale operator；当前Adam + L1 joint training也不满足直接移植现有定理的条件；
+4. 加入per-scale nonlinearity会成为新候选：automatic exact A6 containment、matched dense/random controls
+   与prior-art boundary都需重新审计，不能作为DS的implementation detail；
+5. DS可少写出inactive atom coefficients，但dense scale factors仍需先构造全部720维scale latents，故
+   prefix algebra不产生独立efficiency claim；
+6. decision=`rejected_by_narrative_gate`；M0/DA/DS-L只作controls，rollback Step 2/3，MIPR继续held。
+
 ## Next Concrete Action
 
-进入`SC1-FPMO-DS Step 6`，只做narrative/control design：
+进入`SC1-D2 Step 2/3 problem diagnostic`，不是实现新模型：
 
-1. 冻结A6、M0、direct-atom full-affine DA、independent-scale DS的function-class mapping；
-2. 找到DS相对DA的非冗余mechanism claim；若只能归因于capacity或optimizer coordinates，关闭DS；
-3. 给出prefix tensor path与全部scale-latent overhead，不claim inference speedup；
-4. 预注册`DS <= DA -> architecture claim fail`与`DS只超过A6 -> capacity_control_explains`；
-5. Step 6通过前不实现model，不恢复MIPR。Encoder、MoE继续冻结。
+1. 使用frozen ordered memory与validation-only protocol，比较rank-256 affine和full affine，隔离rank/capacity；
+2. 比较parameter-matched dense nonlinear与full affine，隔离generic nonlinearity；
+3. 比较true interval-scale grouped nonlinear与dense nonlinear；
+4. 加入random orthogonal basis与random row grouping controls，只有true-scale grouping稳定超过二者才支持
+   scale-aligned conditional structure；
+5. D2即使通过也只返回Step 4生成新idea，不自动复活FPMO-DS或获得Step 7授权；
+6. Encoder、MoE与MIPR继续冻结。
 
 并行control prerequisite：按validation-only natural grid校准ETTh1与ETTm2 profile。未来broad screen固定为
 五dataset全arms seed2021；通过后对五dataset全部decisive arms运行seeds2021/2022/2023。增加dataset降低

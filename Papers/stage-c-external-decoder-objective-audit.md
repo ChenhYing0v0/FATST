@@ -3,19 +3,20 @@
 ## Scope
 
 - Search date: 2026-07-13
-- Role: PMFO/PIR initial Step 4-6 + PMFO-v1 failure后的source-informed redesign note
+- Role: PMFO/PIR initial Step 4-6 + PMFO-v1 redesign + FPMO Step5-6 theory/narrative audit
 - Discovery policy: Zotero is a seed/reference library；本轮以external primary-source search为主
-- Full-text/code status: ElasTST、N-HiTS、BasisFormer、Multiwavelet Operator、FlowState、TimePerceiver与
-  Implicit Forecaster均检查论文页面或全文及official implementation；2026部分preprint只作为freshness
-  pressure，不作为已确立SOTA事实
+- Full-text/code status: 上述forecasting/operator与matrix-factorization工作均检查论文页面或全文；对
+  source-informed implementation相关的forecasting工作另审计official code。2026部分preprint只作为
+  freshness pressure，不作为已确立SOTA事实
 
 ## Core Finding
 
-[Strong Evidence] “arbitrary horizon”“continuous basis”“hierarchical interpolation”“learned wavelet”与
-“harmonic horizon weighting”均已有直接prior art。PMFO-RCT v1又被Step 7B effectiveness gate否定，故
-fixed future tree本身也不再是active claim。SC1当前只保留更窄的source-informed边界：**future-domain
-function-preserving operator morphism + domain-only restriction + perfect reconstruction**。SC2继续是同一
-projectors上由deployment measure诱导的cross-scale-decoupled quadratic risk，但在新operator冻结前held。
+[Strong Evidence] “arbitrary horizon”“continuous basis”“hierarchical interpolation”“learned wavelet”、
+“harmonic horizon weighting”与“linear factorization带来implicit optimization bias”均已有直接prior art。
+PMFO-RCT v1被Step 7B effectiveness gate否定；FPMO-DS又在Step 6被证明与full-affine DA拥有同一function
+class，且该factorization不依赖真实scale coordinates。因此SC1目前没有paper-core candidate，先rollback
+Step 2/3诊断scale-aligned nonlinearity。SC2仍是在同一projectors上由deployment measure诱导的
+cross-scale-decoupled quadratic risk，但在新operator冻结前held。
 
 完整source matrix、tensor contract、proof、controls与decision见：
 
@@ -66,6 +67,24 @@ $(T,H)$ cases上通过，max algebraic gap为`5.329e-14`。
 虽然严格包含A6，但T720下扩展到full-affine class；它必须与同function-class dense control比较，不能把
 capacity gain写成multiresolution mechanism。完整proof/no-go audit见
 `analysis/stage_c_step5_fpmo_theory_20260713/step5_theory_feasibility.md`。
+
+## Step 6 Narrative Outcome
+
+- [Implicit Regularization in Matrix Factorization](https://proceedings.neurips.cc/paper_files/paper/2017/hash/58191d2a914c6dae66371c9dcdc91b41-Abstract.html)
+  与[Implicit Regularization in Deep Matrix Factorization](https://proceedings.neurips.cc/paper/2019/hash/c0c783b5fc0d7d808f1d14a6e9c8280d-Abstract.html)
+  说明full-dimensional linear factorization即使不改变可表示矩阵集合，也可能改变gradient-based
+  optimization的implicit bias。该mechanism category不是StageC的新贡献。
+- T720下`FPMO-DS`每个scale width等于该组row count，故`D_l A_l`可表示任意block affine map；其class与
+  `FPMO-DA`完全相同。把balanced interval basis换成random orthogonal basis、或随机分组rows，结论不变。
+- 当前TimeAlign使用的optimizer/loss/joint training不满足直接宣称minimum nuclear norm等既有理论的
+  条件；若DS实测改善，必须先视为optimization-parameterization hypothesis。
+- per-scale nonlinear extension不是当前DS的implementation detail：它需要重新解决exact A6 containment、
+  matched dense/random controls和N-HiTS/PRISM prior-art边界。
+
+[Decision] `FPMO-DS rejected_by_narrative_gate`，不实现、不训练。下一步D2只诊断rank、generic
+nonlinearity与true-scale alignment；若scale grouping不能稳定超过dense nonlinear和random controls，
+Contribution 1 problem需再次重定义。完整报告见
+`analysis/stage_c_step6_fpmo_narrative_control_20260713/step6_narrative_control_gate.md`。
 
 ## Rejected Transfer
 
