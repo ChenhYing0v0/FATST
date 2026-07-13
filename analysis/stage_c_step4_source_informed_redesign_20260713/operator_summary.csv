@@ -1,0 +1,4 @@
+dataset,a6_readout_parameters,pmfo_readout_parameters,pmfo_to_a6_parameter_ratio,rank256_affine_manifold_dimension,pmfo_dimension_gap,pmfo_parameter_dimension_sufficient_for_a6_containment,operator_effective_rank,operator_energy_rank_95,operator_energy_rank_99,operator_stable_rank
+ETTh2,381904,212010,0.5551395115002723,316112,-104102,False,144.25123101645985,188,234,8.739357889754984
+ETTm1,381904,212010,0.5551395115002723,316112,-104102,False,115.87801412614422,182,231,8.271591274785951
+Weather,381904,212010,0.5551395115002723,316112,-104102,False,30.480173599139604,142,213,3.021176572605236

@@ -1,0 +1,14 @@
+{
+  "a6_containment_dimension_gate": false,
+  "checkpoint_root": "/tmp/fatst-stagec-step4-audit/checkpoints",
+  "coarse_boundary_positive_datasets": {
+    "30": 2,
+    "90": 1
+  },
+  "datasets": [
+    "ETTh2",
+    "ETTm1",
+    "Weather"
+  ],
+  "pmfo_global_history_profile_datasets": 3
+}

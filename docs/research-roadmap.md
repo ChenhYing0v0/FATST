@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Step 4 rollback after Step 7B；SC1 operator redesign |
-| `active_question` | 如何保留projectivity/conservation，同时避免v1 fixed-tree readout整体替换A6 function class造成的退化？ |
-| `active_candidates` | `SC1-projective-operator-redesign`；`SC2-MIPR` held |
+| `current_step` | Step 4 source-informed redesign complete；Step 5 theory feasibility |
+| `active_question` | 能否在无dense bypass下把A6精确morph为native-prefix、perfect-reconstruction future operator？ |
+| `active_candidates` | `SC1-FPMO` theory-pending；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_step7b_pmfo_rct_20260713/step7b_screening_report.md` |
+| `active_protocol` | `analysis/stage_c_step4_source_informed_redesign_20260713/step4_source_informed_redesign_audit.md` |
 | `method_implementation` | `PMFO-RCT v1` frozen as failed evidence；new implementation unauthorized |
-| `rollback_point` | Step 4；先重审function class、partition与history-to-node interface，不改Encoder |
+| `rollback_point` | embedding/restriction theorem失败 -> Step 2；不改Encoder |
 
 ## Completed Foundation
 
@@ -98,15 +98,34 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 
 禁止在最小 gate 前加入 Encoder innovation、MoE、router、auxiliary reconstruction 或 per-horizon tuning。
 
+## Step 4 Redesign Audit: Completed
+
+2026-07-13 source-informed redesign audit完成：
+
+1. A6 effective operator为$W=BA\in\mathbb R^{720\times768}$；覆盖rank-256 affine family至少需要
+   `316,112`维，而PMFO v1 readout只有`212,010` parameters。因此同为256维latent不构成functional
+   containment；
+2. A6 operator在fixed block90/30 boundaries上的jump ratio仅`0.989-1.009`，没有跨dataset regime-change
+   证据；block90 rank16 capture又从ETTh2 `0.4595`到Weather `0.8025`，不支持统一激进local rank；
+3. PMFO 8 root nodes的history-patch profile cosine为`0.936-0.994`、entropy为`0.976-0.995`；nodes学习了
+   不同signed projection，但没有清晰history-region specialization；
+4. PRISM与LeapTS进一步占据generic multiresolution tree与adaptive scale scheduling；nested basis、lifting、
+   Net2Net/Network Morphism只可作为数学工具；global low-rank + hierarchy residual也已有Asymmetric MMF压力；
+5. 新候选暂定`SC1-FPMO`：future-domain function-preserving multiresolution operator morphism。它只通过
+   Step 4 source-level conditional gate，未通过Step 5 theory或Step 6 design gate。
+
+详细统计定义、source matrix与failure attribution见active protocol。PMFO-RCT v1继续关闭，不做调参复活。
+
 ## Next Concrete Action
 
-回到Step 4，先执行source-informed redesign audit而不是立刻写新模型：
+进入`SC1-FPMO Step 5`，只做theory feasibility：
 
-1. 审计A6 `coeff × temporal basis` function class与PMFO v1 coefficient generator的functional containment；
-2. 诊断固定`90/30/10/5/1` partition是否把H720因子分解误当成跨dataset future structure；
-3. 用offline representation/interface test区分`partition wrong`、`history-to-node interface wrong`与
-   `readout function class too restrictive`；
-4. 仅在新候选通过Step 4-6 narrative/theory gate后重新授权Step 7；Encoder、MIPR、MoE继续冻结。
+1. 构造$θ_{A6}\mapstoθ_{FPMO}$并证明对任意hidden的exact full-output equality；禁止dense bypass；
+2. 证明native partial execution满足$F(h;H)=R_HF(h;720)$，且不生成prefix外atoms；
+3. 给出任意$T,H\le T$的interval construction，不再依赖720质因数；
+4. 证明function-space budget包含A6，并将morphed checkpoint降级为diagnostic/control，保留from-scratch
+   main-method要求；
+5. Step 5通过后才进入Step 6 tensor contract与control preregistration。Encoder、MIPR、MoE继续冻结。
 
 并行control prerequisite：按validation-only natural grid校准ETTh1与ETTm2 profile。未来broad screen固定为
 五dataset全arms seed2021；通过后对五dataset全部decisive arms运行seeds2021/2022/2023。增加dataset降低

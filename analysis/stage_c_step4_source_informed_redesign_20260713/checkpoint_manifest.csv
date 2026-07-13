@@ -1,0 +1,7 @@
+arm,dataset,remote_path,sha256
+a6,ETTh2,/home/yingch/exp_outputs/r-2026-fatst/stage_c_step7b_pmfo_rct/a6/ETTh2/h720_full/seed2021/checkpoint.pt,b6178da4e329647e88bb5b340650926a4d86506eb06f5ff02831dae7cf27eacf
+a6,ETTm1,/home/yingch/exp_outputs/r-2026-fatst/stage_c_step7b_pmfo_rct/a6/ETTm1/h720_full/seed2021/checkpoint.pt,2433606f234dfa0e598a4f8132d2b916237bc8aeac9ba701e40b103c35264854
+a6,Weather,/home/yingch/exp_outputs/r-2026-fatst/stage_c_step7b_pmfo_rct/a6/Weather/h720_full/seed2021/checkpoint.pt,14b572a18f8ecc12dab40fc0f7c16e10953df982155b71eec6bfa77788f1073d
+pmfo_rct,ETTh2,/home/yingch/exp_outputs/r-2026-fatst/stage_c_step7b_pmfo_rct/pmfo_rct/ETTh2/h720_full/seed2021/checkpoint.pt,7e1a5ad2f875b44ddf9e188172fdb2d44dc831e5d8c48095f39f0fa278fdc062
+pmfo_rct,ETTm1,/home/yingch/exp_outputs/r-2026-fatst/stage_c_step7b_pmfo_rct/pmfo_rct/ETTm1/h720_full/seed2021/checkpoint.pt,ed64f1eeb85fc068f98361db5ccbe8c47fae814cc41dac15d13e70e7ab6a3e6f
+pmfo_rct,Weather,/home/yingch/exp_outputs/r-2026-fatst/stage_c_step7b_pmfo_rct/pmfo_rct/Weather/h720_full/seed2021/checkpoint.pt,690f2e84ee9683e84296335a37c3c0f40266cc8deac6cd790443fc85a1e28e7d
