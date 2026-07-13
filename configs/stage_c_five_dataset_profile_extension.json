@@ -1,0 +1,71 @@
+{
+  "stage": "StageC-UVHF",
+  "candidate": "SC0-FIVE-PROFILE-EXTENSION",
+  "role": "mechanism_control_profile_extension",
+  "protocol_profile": "stage_c_five_dataset_profile_extension_v1",
+  "selection_split": "val",
+  "selection_metric": "dense_horizon_macro_normalized_regret",
+  "extends_contract": "configs/stage_c_mechanism_control_natural_dataset_profiles.json",
+  "extends_contract_hash": "254d85d47a9e5b7c212f8a8b88decf17a0328a1ea1df324c9cc65be4c672a50c",
+  "datasets": ["ETTh1", "ETTm2"],
+  "common": {
+    "seq_len": 720,
+    "pred_len": 720,
+    "target_horizons": [720],
+    "validation_horizons": [720],
+    "evaluation_horizons": [48, 96, 144, 192, 288, 336, 512, 720],
+    "encoder_mode": "timealign-token-mlp",
+    "readout_mode": "learned-basis-forecast-operator",
+    "basis_rank": 256,
+    "e_layers": 2,
+    "dropout": 0.1,
+    "layer_norm": 1,
+    "learning_rate": 0.0001,
+    "batch_size": 32,
+    "gradient_accumulation_steps": 1,
+    "max_epochs": 20,
+    "early_stopping_patience": 5,
+    "early_stopping_min_delta": 0.0,
+    "checkpoint_policy": "best-val",
+    "pred_loss_mode": "full",
+    "final_evaluation_split": "val",
+    "screen_seed": 2021,
+    "confirmation_seeds": [2022, 2023]
+  },
+  "phase_a_patch_screen": {
+    "fixed_d_model": 64,
+    "fixed_d_ff": 128,
+    "profiles": {
+      "r2a_p12_d64_ff128": {"patch_num": 12, "patch_len": 60, "d_model": 64, "d_ff": 128},
+      "r2a_p24_d64_ff128": {"patch_num": 24, "patch_len": 30, "d_model": 64, "d_ff": 128},
+      "r2a_p48_d64_ff128": {"patch_num": 48, "patch_len": 15, "d_model": 64, "d_ff": 128}
+    }
+  },
+  "phase_b_width_screen": {
+    "widths": {
+      "narrow": {"d_model": 32, "d_ff": 64},
+      "medium": {"d_model": 64, "d_ff": 128},
+      "wide": {"d_model": 128, "d_ff": 256}
+    }
+  },
+  "phase_c_stability_confirmation": {
+    "dataset_mean_mse_cv_max": 0.03,
+    "dataset_max_mse_cv_max": 0.05,
+    "parameter_count_used_for_gate": false,
+    "test_metrics_used_for_gate": false,
+    "relative_winner_reconfirmed": false
+  },
+  "selection_policy": {
+    "primary": "minimum dense-horizon macro normalized regret",
+    "tie_breakers": ["lower_max_dense_horizon_regret", "lower_h720_regret", "profile_name"],
+    "parameter_count_used_for_selection": false,
+    "test_metrics_used_for_selection": false
+  },
+  "budget": {
+    "phase_a_runs": 6,
+    "phase_b_new_runs": 4,
+    "phase_c_runs": 4,
+    "total_remote_runs": 14,
+    "continuous_search": false
+  }
+}

@@ -9,8 +9,9 @@
 | `screen_seed` | 2021 |
 | `confirmation_seeds` | 2021, 2022, 2023 |
 | `current_ready_profiles` | ETTh2, ETTm1, Weather |
-| `profile_calibration_pending` | ETTh1, ETTm2 |
+| `profile_calibration_pending` | ETTh1, ETTm2；14-run extension pipeline ready |
 | `effective_after` | ETTh1/ETTm2 validation-only natural profiles frozen |
+| `extension_contract` | `configs/stage_c_five_dataset_profile_extension.json` |
 
 ## Why Five Datasets
 
@@ -29,6 +30,22 @@ training stochasticity；后者必须用paired multi-seed实验评估。
 
 ETTh1/ETTm2冻结后生成新的five-dataset contract hash；现有三dataset hash仍只描述历史Step 7B，不得被
 追溯改写。
+
+## ETTh1/ETTm2 Extension Protocol
+
+该extension严格复用历史R2的coarse-grid原则，但使用新的active config、runner与analyzer，不直接启动archive：
+
+1. Phase A：`patch_num={12,24,48}`，固定`d_model=64,d_ff=128`，每dataset只用seed2021；
+2. Phase B：固定Phase A选中的patch，比较`32/64`、`64/128`、`128/256`三档width；medium直接复用
+   Phase A结果，因此每dataset只新增narrow/wide两次训练；
+3. selection按8个dense horizons的macro normalized regret最小；依次用max regret、H720 regret和profile
+   name打破tie；parameter count不参与选择；
+4. Phase C：只为selected profile补seeds2022/2023。8 horizons的mean MSE CV不高于3%、max CV不高于
+   5%才允许freeze；
+5. 共`6 + 4 + 4 = 14`个validation-only runs，所有metrics的`evaluation_split`必须为`val`。
+
+若stability gate失败，不得切换到test或围绕D2单独调参；应回到control protocol审计失败源，再决定是增加
+confirmation seeds还是重开coarse profile calibration。
 
 ## Staged Experiment Rule
 

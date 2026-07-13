@@ -21,7 +21,7 @@
 | `current_11_step` | Step 2/3 active；SC1-D2 frozen-memory diagnostic |
 | `current_candidate` | `SC1-D2 partial_core3_basis_geometry_signal_only`；`SC2-MIPR` held |
 | `latest_decision` | true basis vs random basis 9/9 positive；true grouping vs random grouping macro -0.2212% |
-| `next_required_action` | 校准ETTh1/ETTm2 natural profiles；按split random gates执行formal5 |
+| `next_required_action` | 运行14-run ETTh1/ETTm2 validation-only calibration；通过后按split random gates执行formal5 |
 | `method_training_authorized` | `false`；D2只可作为diagnostic，new SC1需重新通过Step 4-6 |
 | `rollback_point` | Step 2/3；不改Encoder、不叠加nonlinearity、MIPR或MoE来挽救FPMO-DS |
 
@@ -119,7 +119,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-FPMO Step5 theory feasibility | `completed_partial_pass` | M0/DA/DS boundary与no-go theorem已冻结 |
 | SC1-FPMO Step6 narrative/control design | `completed_rejected` | DS降为diagnostic control；不实现、不训练 |
 | SC1-D2 rank/nonlinearity/scale diagnostic | `partial_core3` | core3 99/99 complete；wait profile prerequisite then formal5 |
-| ETTh1/ETTm2 natural profile calibration | `next_control` | 按validation-only two-stage natural grid冻结，随后立即formal5 |
+| ETTh1/ETTm2 natural profile calibration | `implementation_ready` | active 14-run A/B/C pipeline已冻结；远端运行后生成five-dataset contract |
 
 ## Paper Mainline Sync Log
 

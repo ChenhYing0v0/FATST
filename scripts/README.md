@@ -29,6 +29,10 @@ StageC active entrypoints：
   区分core3 precheck和formal5 hard gate。
 - `remote/run_stage_c_sc1_d2_diagnostic.sh`: 三套ready datasets的D2 core3 parallel precheck；
 - `sync_stage_c_sc1_d2_diagnostic_results.sh`: 同步D2 raw metrics/history/metadata并本地重算gate。
+- `analyze_stage_c_five_profile_extension.py`: ETTh1/ETTm2三阶段validation-only natural profile选择与
+  stability审计；parameter count不参与选择。
+- `remote/run_stage_c_five_profile_extension.sh`: 14-run profile extension matrix，按A/B/C阶段顺序执行并可续跑；
+- `sync_stage_c_five_profile_extension_results.sh`: 轻量同步extension artifacts并本地独立重算三阶段结论。
 
-历史 runner/analyzer 已移入 `scripts/archive/`，不得作为当前研究入口。下一步新增脚本只能服务
-`docs/experiments/stage-c-pmfo-rct-step7-protocol.md`，并须同步 code explanation。
+历史 runner/analyzer 已移入 `scripts/archive/`，不得作为当前研究入口。新增脚本必须服务active ledger中明确的
+next action，并同步对应experiment protocol与code explanation。
