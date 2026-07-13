@@ -17,18 +17,18 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Step 7A local implementation/invariant gate passed；Step 7B pending |
+| `current_11_step` | Step 7A passed；Step 7B runner implementation/remote launch preparation |
 | `current_candidate` | `SC1-PMFO-RCT`（implementation_gate_passed）、`SC2-MIPR`（narrative_ready）；effectiveness均pending |
 | `latest_decision` | PMFO-RCT四个variants已实现；90/90 shape-prefix与refinement/conservation/locality gate通过 |
-| `next_required_action` | 准备ETTm1/ETTh2/Weather Step7B runner；launch前commit/push并检查remote GPU |
-| `method_training_authorized` | `false` |
+| `next_required_action` | Step7B runner本地验证、commit/push；remote git pull与GPU preflight后启动15 runs |
+| `method_training_authorized` | `true`；仅限Step7B frozen architecture-only matrix |
 | `rollback_point` | capacity/no-transition control explains -> Step 4；numeric/readout fault -> Step 6 |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Step 7A complete；Step 7B pending |
+| `current_step` | Step 7A complete；Step 7B launch preparation |
 | `problem` | A6已domain-only但single dense basis没有nested refinement；有序memory可用但ETTh2线性重组风险仍在；simple horizon reweighting缺少novelty |
 | `existence_evidence` | D1-v2: structure 3/3、frozen ordered-memory use 3/3、raw/PIR gradient aggregate 3/3；benchmark-measure projected excess 0/3 |
 | `idea` | PMFO-RCT用future tree作conservative refinement；MIPR把measure metric投影到相同scale blocks |
@@ -37,7 +37,7 @@
 | `narrative_gate` | SC1 pass；SC2 pass with L2/measure boundary；两者均effectiveness pending |
 | `effectiveness_gate` | frozen profiles、multi-seed、dense horizons、matched capacity/FLOPs、cross-dataset |
 | `artifacts` | D1-v2、Step4-6 prior-art/theory report、Step7A local gate、baseline report |
-| `decision` | SC1 implementation gate通过但effectiveness pending；Step7B三数据集已预注册，remote training未授权 |
+| `decision` | SC1 implementation gate通过但effectiveness pending；Step7B三数据集matrix已获用户授权 |
 
 ## Frozen Carrier Contract
 
@@ -113,5 +113,5 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 1. 每次继续研究先读本 ledger 与`stage-c-pmfo-rct-step7-protocol.md`；
 2. old analysis可引用，archive脚本不得直接启动；
 3. diagnostic failure必须区分 hypothesis、intervention、readout、numeric与capacity control；
-4. narrative与Step7A implementation gate已完成；Step7B launch仍需单独remote preflight，且不得实现MIPR；
+4. narrative与Step7A implementation gate已完成；Step7B已获用户授权，但launch前必须remote preflight，且不得实现MIPR；
 5. test reference只用于最终对比，不能参与设计选择。

@@ -14,6 +14,11 @@ StageC active entrypoints：
 - `sync_stage_c_d1_offline_diagnostic_results.sh`: 同步并重新审计D1 artifacts。
 - `check_stage_c_pmfo_rct_step7a.py`: PMFO-RCT四variants的shape、prefix、refinement、conservation、
   locality、horizon-path与parameter/FLOP local gate。
+- `check_stage_c_step7b_local.py`: dense cumulative metrics与full-crop evaluation等价性检查；
+- `check_stage_c_step7b_checkpoint_invariants.py`: trained checkpoint prefix/refinement/locality审计；
+- `analyze_stage_c_step7b_pmfo_rct.py`: 三dataset、五arms dense-horizon gate与failure attribution；
+- `remote/run_stage_c_step7b_pmfo_rct.sh`: 3090固定GPU-worker 15-run matrix；
+- `sync_stage_c_step7b_pmfo_rct_results.sh`: 轻量同步并重算Step7B gate。
 
 历史 runner/analyzer 已移入 `scripts/archive/`，不得作为当前研究入口。下一步新增脚本只能服务
 `docs/experiments/stage-c-pmfo-rct-step7-protocol.md`，并须同步 code explanation。

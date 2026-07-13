@@ -5,11 +5,11 @@
 | Field | Content |
 | --- | --- |
 | `candidate` | `SC1-PMFO-RCT` |
-| `current_step` | Step 7A passed；Step 7B architecture-only screening pending |
+| `current_step` | Step 7A passed；Step 7B launch preparation |
 | `carrier` | frozen `A6-LBF-natural-baseline` Encoder contract |
-| `objective` | full H720 MSE only；MIPR forbidden in SC1 gate |
+| `objective` | frozen full-H720 pointwise L1 training；H720 validation-MSE selection；MIPR forbidden |
 | `implementation_authorized` | Step 7A complete；Step 7B runner preparation allowed |
-| `remote_training_authorized` | `false` |
+| `remote_training_authorized` | `true`；user authorized 2026-07-13，launch需GPU preflight |
 | `rollback` | invariant/readout fault -> Step 6；matched control explains -> Step 4 |
 
 ## Question
@@ -80,7 +80,8 @@ artifact：`analysis/stage_c_step7a_pmfo_rct_local_20260713/`。
 - seed：2021；
 - profiles：已冻结natural profiles；
 - arms：A6、dense matched、no-transition、no-conservation、PMFO-RCT；
-- loss：full H720 MSE；
+- training loss：沿用natural carrier的full-H720 pointwise L1；
+- checkpoint selection：best H720 validation MSE；
 - evaluation：all integer horizons `1..720`可由一次full prediction聚合，同时报告
   `48/96/192/336/720`与deployment-risk AUC；
 - checkpoint/stopping：沿用natural carrier contract，不重新调参。
@@ -93,9 +94,11 @@ family的跨域验证。三者在method results前固定，不使用test perform
 
 Step 7B只形成`partial_pass`或rollback，不直接形成paper claim。`partial_pass`要求同时满足：
 
-1. PMFO-RCT相对A6在三dataset合并dense-horizon mean MSE至少改善`1.0%`；
+1. 逐dataset计算dense-horizon MSE AUC relative improvement，再做三dataset macro mean；PMFO-RCT
+   相对A6至少改善`1.0%`；
 2. 任一dataset的dense-horizon mean MSE不得稳定恶化超过`0.5%`；
-3. 相对best matched structural control仍至少改善`0.5%`；
+3. 每个dataset分别选择dense/no-transition/no-conservation中最低AUC作为best control，PMFO相对它们的
+   三dataset macro improvement至少`0.5%`；
 4. prefix/refinement invariants在trained checkpoint继续通过；
 5. 无divergence、>100% degradation、validation/test protocol mismatch或明显numeric pathology。
 

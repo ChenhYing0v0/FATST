@@ -5,11 +5,11 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Step 7A local implementation/invariant gate passed；Step 7B pending |
+| `current_step` | Step 7A passed；Step 7B runner implementation and remote launch preparation |
 | `active_question` | PMFO-RCT的refinement-conservative mechanism能否在matched controls下产生独立effectiveness？ |
 | `active_candidates` | `SC1-PMFO-RCT`, `SC2-MIPR` |
 | `active_protocol` | `docs/experiments/stage-c-pmfo-rct-step7-protocol.md` |
-| `method_implementation` | PMFO-RCT与controls已实现；remote training unauthorized |
+| `method_implementation` | PMFO-RCT与controls已实现；Step7B remote matrix authorized，launch preflight pending |
 | `rollback_point` | capacity/no-transition control explains -> Step 4；numeric/readout fault -> Step 6 |
 
 ## Completed Foundation
@@ -102,7 +102,8 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 ## Next Concrete Action
 
 完成Step 7A文档、commit/push后，准备Step 7B三数据集runner与launch manifest；启动前必须按remote policy
-检查GPU并明确记录launch。Step 7B仍只使用full H720 MSE，不加入Encoder innovation、MIPR、MoE或
+检查GPU并明确记录launch。Step 7B沿用full-H720 pointwise L1训练和H720 validation-MSE selection，
+不加入Encoder innovation、MIPR、MoE或
 per-horizon tuning。Step 7A artifact见`analysis/stage_c_step7a_pmfo_rct_local_20260713/`。
 
 ## Historical Boundary

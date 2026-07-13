@@ -307,6 +307,12 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         stbo_basis_init_std=args.stbo_basis_init_std,
         pmfo_state_dim=args.pmfo_state_dim,
         pmfo_dense_hidden_dim=args.pmfo_dense_hidden_dim,
+        evaluation_prefix_mode=getattr(args, "evaluation_prefix_mode", "native"),
+        segment_horizons=getattr(
+            args,
+            "segment_horizons",
+            getattr(args, "evaluation_horizons", args.target_horizons),
+        ),
     )
 
 
@@ -484,13 +490,25 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
 
 
 def metric_rows(preds: np.ndarray, trues: np.ndarray, horizons: list[int]) -> list[dict[str, Any]]:
+    maximum_horizon = max(horizons)
+    if preds.shape[0] != trues.shape[0] or preds.shape[2] != trues.shape[2]:
+        raise ValueError("prediction and target batch/channel shapes must match")
+    if preds.shape[1] < maximum_horizon or trues.shape[1] < maximum_horizon:
+        raise ValueError("prediction or target length is shorter than requested horizon")
+    errors = preds[:, :maximum_horizon] - trues[:, :maximum_horizon]
+    squared_by_step = np.mean(errors**2, axis=(0, 2))
+    absolute_by_step = np.mean(np.abs(errors), axis=(0, 2))
+    cumulative_squared = np.cumsum(squared_by_step, dtype=np.float64)
+    cumulative_absolute = np.cumsum(absolute_by_step, dtype=np.float64)
     rows = []
     for horizon in horizons:
+        if horizon <= 0 or horizon > preds.shape[1]:
+            raise ValueError("evaluation horizon exceeds prediction length")
         rows.append(
             {
                 "target_horizon": horizon,
-                "mse": float(MSE(preds[:, :horizon, :], trues[:, :horizon, :])),
-                "mae": float(MAE(preds[:, :horizon, :], trues[:, :horizon, :])),
+                "mse": float(cumulative_squared[horizon - 1] / horizon),
+                "mae": float(cumulative_absolute[horizon - 1] / horizon),
                 "num_samples": int(preds.shape[0]),
                 "num_channels": int(preds.shape[-1]),
                 "eval_prefix_steps": horizon,
@@ -575,7 +593,7 @@ def evaluate(
     true_np = np.concatenate(trues, axis=0)
     main_rows = metric_rows(pred_np, true_np, horizons)
     all_segments: list[dict[str, Any]] = []
-    for horizon in horizons:
+    for horizon in official_args.segment_horizons:
         all_segments.extend(segment_rows(pred_np, true_np, horizon))
     return main_rows, all_segments, pred_np, true_np
 
@@ -588,6 +606,45 @@ def evaluate_a6_lbf(
     max_batches: int,
     is_training_flag: bool,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], np.ndarray, np.ndarray]:
+    if official_args.evaluation_prefix_mode == "full-crop":
+        preds = []
+        trues = []
+        f_dim = -1 if official_args.features == "MS" else 0
+        model.eval()
+        with torch.no_grad():
+            for batch_idx, (
+                batch_x,
+                batch_y,
+                _batch_x_mark,
+                _batch_y_mark,
+            ) in enumerate(loader):
+                if max_batches and batch_idx >= max_batches:
+                    break
+                batch_x = batch_x.float().to(official_args.device)
+                batch_y = batch_y.float().to(official_args.device)
+                outputs, _recon, _alignment = model(
+                    batch_x,
+                    batch_y[:, -official_args.pred_len :, :],
+                    is_training=is_training_flag,
+                    target_prefix=official_args.pred_len,
+                )
+                preds.append(outputs[:, :, f_dim:].detach().cpu().numpy())
+                trues.append(
+                    batch_y[:, -official_args.pred_len :, f_dim:]
+                    .detach()
+                    .cpu()
+                    .numpy()
+                )
+        if not preds:
+            raise RuntimeError("full-crop evaluation produced no batches")
+        pred_np = np.concatenate(preds, axis=0)
+        true_np = np.concatenate(trues, axis=0)
+        main_rows = metric_rows(pred_np, true_np, horizons)
+        all_segments = []
+        for horizon in official_args.segment_horizons:
+            all_segments.extend(segment_rows(pred_np, true_np, horizon))
+        return main_rows, all_segments, pred_np, true_np
+
     main_rows: list[dict[str, Any]] = []
     all_segments: list[dict[str, Any]] = []
     pred_for_npz: np.ndarray | None = None
@@ -616,7 +673,8 @@ def evaluate_a6_lbf(
             pred_np = np.concatenate(preds, axis=0)
             true_np = np.concatenate(trues, axis=0)
             main_rows.extend(metric_rows(pred_np, true_np, [horizon]))
-            all_segments.extend(segment_rows(pred_np, true_np, horizon))
+            if horizon in official_args.segment_horizons:
+                all_segments.extend(segment_rows(pred_np, true_np, horizon))
             if horizon == max(horizons):
                 pred_for_npz = pred_np
                 true_for_npz = true_np
@@ -901,18 +959,22 @@ def run(args: argparse.Namespace) -> None:
             },
             "official_preset": asdict(preset),
             "source_note": (
-                "StageC standardized mechanism-control carrier calibration."
-                if args.protocol_class == "mechanism_control"
+                "StageC PMFO-RCT architecture-only method screening."
+                if args.protocol_class == "method_screening"
                 else (
-                    "B14 prerequisite: PatchTST-derived contextual history encoder plus A6-LBF-r256 operator."
-                    if args.encoder_mode == "contextual-patch-transformer"
+                    "StageC standardized mechanism-control carrier calibration."
+                    if args.protocol_class == "mechanism_control"
                     else (
-                        "C1 carrier normalization: full-window global anchor plus valid local patch tokens and explicit dropout sites."
-                        if args.encoder_mode == "global-anchored-patch-transformer"
+                        "B14 prerequisite: PatchTST-derived contextual history encoder plus A6-LBF-r256 operator."
+                        if args.encoder_mode == "contextual-patch-transformer"
                         else (
-                            "B14 prerequisite: accepted A6 carrier plus parameter-free hierarchical patch memory."
-                            if args.encoder_mode == "hierarchical-patch-memory"
-                            else "Clean TimeAlign adapter: official baseline plus A6-LBF-r256 unified carrier."
+                            "C1 carrier normalization: full-window global anchor plus valid local patch tokens and explicit dropout sites."
+                            if args.encoder_mode == "global-anchored-patch-transformer"
+                            else (
+                                "B14 prerequisite: accepted A6 carrier plus parameter-free hierarchical patch memory."
+                                if args.encoder_mode == "hierarchical-patch-memory"
+                                else "Clean TimeAlign adapter: official baseline plus A6-LBF-r256 unified carrier."
+                            )
                         )
                     )
                 )
@@ -1006,11 +1068,12 @@ def run(args: argparse.Namespace) -> None:
         annotate_evaluation_rows(segment_metric_rows, args, args.checkpoint_policy)
     write_csv(args.output_dir / "metrics_by_target_horizon.csv", main_rows)
     write_csv(args.output_dir / "metrics_by_segment.csv", segment_metric_rows)
-    np.savez_compressed(
-        args.output_dir / f"predictions_{args.final_evaluation_split}.npz",
-        pred=preds,
-        true=trues,
-    )
+    if getattr(args, "save_predictions", True):
+        np.savez_compressed(
+            args.output_dir / f"predictions_{args.final_evaluation_split}.npz",
+            pred=preds,
+            true=trues,
+        )
     print(
         f"run_done output_dir={args.output_dir} "
         f"evaluation_split={args.final_evaluation_split}",
@@ -1029,6 +1092,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--target-horizons", type=parse_horizons, required=True)
     parser.add_argument("--validation-horizons", type=parse_horizons, default=None)
     parser.add_argument("--evaluation-horizons", type=parse_horizons, default=None)
+    parser.add_argument("--segment-horizons", type=parse_horizons, default=None)
+    parser.add_argument(
+        "--evaluation-prefix-mode",
+        choices=["native", "full-crop"],
+        default="native",
+    )
     parser.add_argument("--e-layers", type=int, default=2)
     parser.add_argument(
         "--encoder-mode",
@@ -1083,6 +1152,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--device", default="auto")
     parser.add_argument("--use-amp", action="store_true")
+    parser.add_argument(
+        "--save-predictions",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+    )
     parser.add_argument("--official-test-mode", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument(
         "--final-evaluation-split",
@@ -1091,7 +1165,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--protocol-class",
-        choices=["source", "mechanism_control", "native_external"],
+        choices=[
+            "source",
+            "mechanism_control",
+            "method_screening",
+            "native_external",
+        ],
         default="source",
     )
     parser.add_argument("--protocol-profile", default="")
@@ -1165,12 +1244,17 @@ def parse_args() -> argparse.Namespace:
             )
     args.validation_horizons = args.validation_horizons or list(args.target_horizons)
     args.evaluation_horizons = args.evaluation_horizons or list(args.target_horizons)
+    args.segment_horizons = args.segment_horizons or list(
+        args.evaluation_horizons
+    )
     if max(args.target_horizons) > args.pred_len:
         raise ValueError("target horizons cannot exceed pred_len")
     if max(args.validation_horizons) > args.pred_len:
         raise ValueError("validation horizons cannot exceed pred_len")
     if max(args.evaluation_horizons) > args.pred_len:
         raise ValueError("evaluation horizons cannot exceed pred_len")
+    if max(args.segment_horizons) > args.pred_len:
+        raise ValueError("segment horizons cannot exceed pred_len")
     if args.mode == "fixed" and args.target_horizons != [args.pred_len]:
         raise ValueError("fixed mode expects target_horizons == [pred_len]")
     if args.mode == "unified" and args.pred_len != 720:
@@ -1185,11 +1269,12 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("early stopping min delta must be non-negative")
     if args.enable_early_stopping and args.checkpoint_policy != "best-val":
         raise ValueError("early stopping requires checkpoint_policy=best-val")
-    if args.protocol_class == "mechanism_control":
+    if args.protocol_class in {"mechanism_control", "method_screening"}:
         if not args.protocol_profile or not args.profile_hash:
             raise ValueError(
-                "mechanism_control requires protocol profile and profile hash"
+                "controlled protocols require protocol profile and profile hash"
             )
+    if args.protocol_class == "mechanism_control":
         if args.final_evaluation_split == "test":
             raise ValueError(
                 "mechanism_control calibration cannot evaluate the test split"
