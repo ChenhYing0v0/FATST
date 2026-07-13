@@ -51,8 +51,10 @@ Fourier/Legendre basis 或 horizon query。
 
 ### 3.1 问题定义
 
-A6 对任意 $H\leq720$ 都先计算同一个 $\hat Y_{1:720}$，再返回 prefix。它已经 exact consistent，
-但计算并不 horizon-adaptive，也没有表示“从粗预测到细预测”的可细化结构。
+A6 对任意 $H\leq720$ 先计算同一个`coeff: [B,C,256]`，再使用
+`learned_temporal_basis[:H]: [H,256]`直接得到H步输出。它已经domain-only、exact consistent，且
+output-side matmul随H增长；旧“总先生成H720再裁剪”的表述不准确。真正缺少的是nested spaces、
+refinement identity、local support，以及对Encoder多尺度information sufficiency的证据。
 
 PMFO 要学习一个共享未来函数
 
@@ -66,7 +68,7 @@ relation。requested horizon $H$ 只决定求值域 $t\in[0,H]$ 以及哪些 com
 
 ### 3.2 Tensor contract
 
-1. Encoder 输出 `z: [B, C, D]`；
+1. A6 Encoder先输出`memory: [B,C,P,D]`；若D1-B证明信息充分，PMFO从该memory构造scale views；
 2. 一个共享 coefficient generator 输出多分辨率 coefficients
    `a: [B, C, N_coeff]`；
 3. deterministic refinement/restriction operator 根据 query coordinates 选择有效 support，形成
@@ -159,13 +161,14 @@ Huber 做理论/数值审计，不能在未证明时声称 L1 等价。若 proje
 
 ### C-D1：PMFO/PIR problem-existence diagnostics（当前 Step 2-3）
 
-只做 offline/no-training diagnostic：
+只做 offline/no-forecast-training diagnostic：
 
-1. 在 train split labels 与 baseline residuals 上构造 3-4 层 nested projection；
-2. 报告每层 increment energy、跨 horizon support、跨 seed/dataset稳定性；
-3. 对 full-720、uniform-H、log-uniform-H 三种 measure 计算 exact step risk 与 projected increment risk；
-4. 在固定 batch 上记录 encoder/decoder gradient cosine、norm、per-region influence；
-5. 用 DCT/fixed wavelet、random orthogonal、no-refinement local basis 做 controls。
+1. `D1-A`：在train labels与baseline residuals上构造DCT/block/random nested projections；
+2. `D1-B`：用fixed ridge probes比较full `[P,D]` memory、patch mean、per-sample shuffled memory与raw history，
+   判断coarse/mid/fine coefficients是否仍可恢复；
+3. `D1-C`：审计learned basis的effective rank、condition、temporal entropy、support与DCT/block overlap；
+4. 对delta-720、uniform-H、log-uniform-H和benchmark-H计算raw risk与projected increment risk；
+5. 在固定train batches记录encoder/coeff/basis/all gradient cosine与norm，并先验证uniform-weight Parseval invariant。
 
 Gate：至少 2/3 datasets 显示稳定 multiresolution increment structure；PIR 必须比 raw harmonic weighting
 提供额外且可解释的 gradient/risk separation。否则 PMFO/PIR 分别回滚 Step 2，不实现。

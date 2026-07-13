@@ -51,11 +51,14 @@ step weighting 都不能单独成为 paper core。Step 4-6 前仍需补做 wavel
 
 ### SC1-PMFO
 
-问题：A6 exact consistent但始终生成 H720；是否存在稳定的 nested coarse-to-fine future structure，使模型能
-在不读取 horizon ID 的前提下按输出域限制计算并增量细化？
+问题：A6 已按`basis[:H]`直接计算H步输出，但只提供single dense rank-256 future subspace。是否存在稳定
+的nested coarse-to-fine future structure，A6 `memory: [B,C,P,D]`是否保留该信息，以及新的operator能否在
+不读取horizon ID的前提下提供refinement/local-support computation？
 
-Gate：至少 2/3 datasets、3 seeds 支持 stable increment-energy structure；fixed nested basis必须优于 random
-orthogonal/no-refinement controls。若失败，rollback Step 2，重新审计 semigroup operator；不修 PMFO head。
+Gate：至少2/3 datasets、3 seeds支持label与baseline residual的stable increment structure；full patch
+memory的coarse/mid probe必须显著优于per-sample shuffled control，并保留raw-history linear recoverability。
+learned basis geometry用于区分“容量足够但缺层次”与“subspace本身不足”。若失败，rollback Step 2；
+不得用同步更换Encoder与decoder掩盖归因。
 
 ### SC2-PIR
 
@@ -88,9 +91,9 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 
 ## Next Concrete Action
 
-实现 `SC1/SC2-D1` offline diagnostic analyzer 与 code explanation：从 frozen train batches、labels 和
-natural-baseline residuals 构造 nested projections，输出 energy、reconstruction、measure risk 与 module
-gradient tables。先做本地 semantic smoke；该阶段不需要 remote training。
+执行`SC1/SC2-D1`：从frozen train/validation batches、labels、natural-baseline residuals与encoder memory
+构造DCT/block/random projections、fixed ridge probes、learned-basis geometry及measure/projected gradient
+tables。该阶段不读取test、不训练forecast model；完成本地semantic smoke后可在远端checkpoint上运行。
 
 ## Historical Boundary
 

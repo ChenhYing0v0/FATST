@@ -19,8 +19,8 @@
 | --- | --- |
 | `current_11_step` | Step 2-3 problem-existence diagnostics |
 | `current_candidate` | `SC1/SC2-D1`（diagnostic-only） |
-| `latest_decision` | baseline reference 72/72完成；历史活动入口已归档；PMFO/PIR取代过早的 explicit-H/HML 命名 |
-| `next_required_action` | 实现 nested projection + measure-gradient offline diagnostic |
+| `latest_decision` | A6已通过`basis[:H]`直接计算H步；PMFO创新边界收紧为nested refinement；Encoder与basis充分性均须先诊断 |
+| `next_required_action` | 实现并运行D1-A structure、D1-B encoder probe、D1-C basis/gradient offline diagnostic |
 | `method_training_authorized` | `false` |
 | `rollback_point` | D1 gate fails -> Step 2 problem redefinition |
 
@@ -29,8 +29,8 @@
 | Field | Current Record |
 | --- | --- |
 | `current_step` | Step 2-3 |
-| `problem` | A6 exact prefix-consistent但总生成H720；simple horizon reweighting不足以处理相关的nested future structure，也缺少novelty |
-| `existence_evidence` | A6计算contract；旧multi-prefix exposure；B13 large-unit heterogeneity；当前仍缺跨dataset nested increment证据 |
+| `problem` | A6已domain-only且按H直接求值，但single dense basis没有nested refinement；Encoder是否保留多尺度信息未知；simple horizon reweighting缺少novelty |
+| `existence_evidence` | A6 memory=`[B,C,P,D]`、hidden width=768、basis=`[720,256]`；当前仍缺structure/encoder/basis三条跨dataset证据 |
 | `idea` | H只作为output domain；PMFO学习nested function coefficients，PIR在同一projection increments上定义risk |
 | `theory_check` | restriction consistency可由deterministic basis restriction保证；PIR对L2可建立正交分解，对L1尚无exact等价 |
 | `design` | D1 offline diagnostics -> Step4-6 prior-art/theory gate -> minimal implementation -> 2x2 -> full matrix |
@@ -58,7 +58,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
 | `A6-LBF-natural-baseline` | `control_only` | validation-frozen natural profiles可作为稳定共同起点 | not required | 72/72 test；3 seeds；dense horizons | `frozen_test_reference_ready`；只作固定reference |
-| `SC1-PMFO` | `diagnostic_only` | nested multiresolution future function支持domain-only H与prefix-restricted computation | prior art/refinement proof未完成 | 至少2/3 datasets stable increment structure | D1 offline projection diagnostic |
+| `SC1-PMFO` | `diagnostic_only` | nested multiresolution future function在A6已有domain-only H之上提供refinement/local support | prior art/refinement proof未完成 | structure、encoder sufficiency至少2/3 datasets通过 | D1-A/B/C offline diagnostic |
 | `SC2-PIR` | `diagnostic_only` | operator-aligned increments提供raw horizon weights之外的risk/gradient信息 | L2/Huber理论边界与TransDF/QDF/ElasTST区分未完成 | 至少2/3 datasets nontrivial measure-gradient evidence | D1 offline gradient diagnostic |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
@@ -82,6 +82,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC0 checkpoint gap | diagnostic | validation 31.63%-44.95%不是test值；H720 mean test last-vs-best +6.11% | mechanism control使用best-val；source reproduction保留native last | `analysis/stage_c_sc0_checkpoint_test_gap_20260712/` |
 | Natural baseline test | post-freeze reference | 72/72；test未参与选择；ETTh2 H48 MSE CV=5.30% | `frozen_test_reference_ready` | `analysis/stage_c_natural_baseline_test_20260713/natural_baseline_test_report.md` |
 | SC1/SC2 deep reset | Step1-3 research audit | explicit-H与simple HML均不够；提出PMFO/PIR并定义falsification | 只授权D1 diagnostic | `analysis/stage_c_contribution_research_reset_20260713/stage_c_contribution_deep_audit.md` |
+| A6/PMFO architecture audit | Step2 correction | A6使用`coeff [B,C,256] × basis[:H] [H,256]`；旧“总生成H720”表述不准确 | PMFO问题收紧；扩展D1-A/B/C | `docs/experiments/stage-c-pmfo-pir-problem-diagnostic.md` |
 
 ## Pending Tasks
 
@@ -90,7 +91,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | Freeze natural carrier | `completed` | 不再调 profile |
 | Establish dense test reference | `completed` | 后续统一对比 |
 | Archive closed routes and clean active entrypoints | `completed` | archive只作证据 |
-| Implement D1 offline analyzer | `pending` | local semantic smoke + code explanation |
+| Implement D1 offline analyzer | `in_progress` | structure/probe/basis/gradient scripts + local smoke |
 | Run D1 problem diagnostics | `pending` | no method training |
 | PMFO/PIR Step4-6 gate | `blocked_on_D1` | problem evidence通过后再启动 |
 

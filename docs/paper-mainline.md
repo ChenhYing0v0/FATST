@@ -33,7 +33,8 @@ restriction/refinement。目标性质：
 
 - exact nested-prefix consistency；
 - $H$ 不进入 learned coefficient path；
-- 支持 prefix-restricted computation，而不是总先生成 H720；
+- 将 single dense rank-256 future subspace重构为可限制、可细化的 nested spaces；
+- 通过local support/refinement减少dense `[H,256]` basis evaluation，而不是重复A6已有的`basis[:H]` slicing；
 - contribution 来自 refinement algebra 与 computation contract，不是“又一个 continuous basis decoder”。
 
 当前状态：`problem/design candidate`。FlowState、TimePerceiver、ElasTST 等 prior art 已压缩 novelty 空间；
@@ -63,9 +64,14 @@ profile 与 checkpoint 均由 validation 预先冻结，test 不参与选择。�
 
 ## Contribution Boundary
 
-[Fact] A6 已通过 full trajectory restriction 获得 exact prefix consistency，因此“修复 prefix
-inconsistency”不是新问题。[Fact] A6 无论 requested horizon 多短都生成 H720，因此 horizon-adaptive
-computation 与 refinable representation 仍未解决。
+[Fact] A6 先生成`coeff: [B,C,256]`，再使用`basis[:H]: [H,256]`直接计算H步输出；它已经满足domain-only
+horizon、exact prefix consistency与output-side O(HK) computation。因此“避免先生成H720”不是新问题。
+真正未解决的是：history memory是否保留多尺度可预测信息，以及single global dense basis是否能提供
+nested refinement、local support与operator-aligned risk decomposition。
+
+[Decision] A6 Encoder与learned basis均不被预设为PMFO最终组件。D1必须分别审计`memory: [B,C,P,D]`
+的information sufficiency和`basis: [720,256]`的capacity/localization geometry。若Encoder信息充分，优先
+只重构decoder；只有frozen probes证明history信息已经丢失时，才允许增加最小multiscale encoder interface。
 
 [Decision] 旧 StageB coefficient conditioning、STBO、GRU future composition、unit-specific retrieval 与
 encoder repair 均不再是 active candidate。历史失败只按各自 failure attribution 使用，不能被扩大为未经
@@ -74,7 +80,8 @@ encoder repair 均不再是 active candidate。历史失败只按各自 failure 
 ## Main Experiment Logic
 
 1. 固定 natural A6 baseline 与 test reference；
-2. offline diagnostics 验证 nested representation 与 measure-gradient problem；
+2. D1-A验证label/residual nested structure，D1-B验证A6 Encoder information sufficiency，D1-C验证
+   learned basis geometry，同时审计measure/projected gradients；
 3. 分别通过 PMFO、PIR 的 Step 4-6 narrative/theory gate；
 4. 单 dataset最小 implementation gate；
 5. `2x2` factorial 分离 decoder 与 training 的独立主效应；
