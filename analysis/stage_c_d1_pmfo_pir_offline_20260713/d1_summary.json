@@ -1,0 +1,28 @@
+{
+  "candidate": "SC1/SC2-D1",
+  "complete": true,
+  "datasets": [
+    "Weather",
+    "ETTm1",
+    "ETTh2"
+  ],
+  "automated_v1_decision": "pmfo_pir_problem_gate_passed",
+  "decision": "diagnostic_invalid_for_direction_rejection",
+  "invalidity_reasons": [
+    "negative R2 differences could satisfy the v1 encoder gate",
+    "history-std normalized residual was dominated by low-variance windows and did not isolate frozen-A6 residual structure"
+  ],
+  "gates": {
+    "encoder_sufficiency_dataset_passes": 2,
+    "label_structure_dataset_passes": 3,
+    "measure_gradient_dataset_passes": 3,
+    "parseval_pass": true,
+    "pir_problem_gate": true,
+    "pmfo_problem_gate": true,
+    "projected_separation_dataset_passes": 3,
+    "residual_structure_dataset_passes": 3
+  },
+  "seed_rows": 9,
+  "trains_forecast_model": false,
+  "uses_test_split": false
+}

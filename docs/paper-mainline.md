@@ -40,6 +40,9 @@ restriction/refinement。目标性质：
 当前状态：`problem/design candidate`。FlowState、TimePerceiver、ElasTST 等 prior art 已压缩 novelty 空间；
 必须先通过 nested increment problem diagnostic 和专项 prior-art gate。
 
+[Diagnostic status] D1-v1因negative-R2 gate漏洞及history-std source-space pathology作废；这不是PMFO/PIR
+方向失败。v2改用evaluation-space future deviation/residual与frozen-decoder counterfactual，尚未返回结果。
+
 ### Contribution 2 Candidate: Projective Increment Risk
 
 Horizon measure 是有效的 deployment-risk 定义，但 simple step weighting 已接近 ElasTST，不足以独立成文。
@@ -98,6 +101,7 @@ loss 或更多 tuning 来掩盖失败。
 - `docs/experiments/stage-c-pmfo-pir-problem-diagnostic.md`
 - `analysis/stage_c_contribution_research_reset_20260713/stage_c_contribution_deep_audit.md`
 - `analysis/stage_c_natural_baseline_test_20260713/natural_baseline_test_report.md`
+- `analysis/stage_c_d1_pmfo_pir_offline_20260713/`（v1 invalid audit evidence）
 
 2026-07-13 reset 前主线完整 snapshot 位于
 `docs/archive/pre-stage-c-reset-20260713/`，仅作历史审计。

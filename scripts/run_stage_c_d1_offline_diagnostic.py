@@ -199,15 +199,13 @@ def projected_increment_risk(error: torch.Tensor, weights: torch.Tensor) -> torc
     return risk
 
 
-def normalized_history_and_target(
+def history_statistics(
     batch_x: torch.Tensor,
-    batch_y: torch.Tensor,
 ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
     mean = batch_x.mean(dim=1, keepdim=True).detach()
     std = torch.sqrt(batch_x.var(dim=1, keepdim=True, unbiased=False) + 1e-5).detach()
     history = (batch_x - mean) / std
-    target = (batch_y[:, -SERIES_LENGTH:, :] - mean) / std
-    return history, target, std
+    return history, mean, std
 
 
 def shuffled_patch_feature(memory: torch.Tensor, seed: int) -> torch.Tensor:
@@ -219,15 +217,37 @@ def shuffled_patch_feature(memory: torch.Tensor, seed: int) -> torch.Tensor:
     return torch.gather(memory_cpu, dim=1, index=gather_index).flatten(start_dim=1)
 
 
+def shuffled_patch_memory(memory: torch.Tensor, seed: int) -> torch.Tensor:
+    batch, channels, patches, width = memory.shape
+    rows = memory.reshape(batch * channels, patches, width)
+    generator = torch.Generator().manual_seed(seed)
+    permutations = torch.rand(rows.shape[0], patches, generator=generator).argsort(dim=1)
+    gather_index = permutations.to(memory.device).unsqueeze(-1).expand_as(rows)
+    return torch.gather(rows, dim=1, index=gather_index).reshape_as(memory)
+
+
+def decode_memory(model: Model, memory: torch.Tensor) -> torch.Tensor:
+    hidden = memory.flatten(start_dim=-2)
+    return model._learned_basis_forecast_operator(hidden, SERIES_LENGTH)
+
+
 def collect_split(
     model: Model,
     loader: torch.utils.data.DataLoader,
     device: torch.device,
     max_batches: int,
     shuffle_seed: int,
-) -> tuple[dict[str, torch.Tensor], dict[str, torch.Tensor]]:
+) -> tuple[dict[str, torch.Tensor], dict[str, torch.Tensor], dict[str, float]]:
     feature_parts = {name: [] for name in FEATURE_NAMES}
     source_parts = {name: [] for name in SOURCE_NAMES}
+    counterfactual_sums = {
+        "model_sse": 0.0,
+        "zero_deviation_sse": 0.0,
+        "shuffled_sse": 0.0,
+        "collapsed_sse": 0.0,
+        "element_count": 0.0,
+        "forward_reconstruction_max_abs": 0.0,
+    }
     model.eval()
     with torch.no_grad():
         for batch_index, (batch_x, batch_y, _batch_x_mark, _batch_y_mark) in enumerate(loader):
@@ -235,18 +255,40 @@ def collect_split(
                 break
             batch_x = batch_x.float().to(device)
             batch_y = batch_y.float().to(device)
-            history, target, std = normalized_history_and_target(batch_x, batch_y)
-            prediction, _recon, _alignment = model(
+            history, mean, std = history_statistics(batch_x)
+            target = batch_y[:, -SERIES_LENGTH:, :]
+            forward_prediction, _recon, _alignment = model(
                 batch_x,
-                batch_y[:, -SERIES_LENGTH:, :],
+                target,
                 is_training=False,
                 target_prefix=SERIES_LENGTH,
             )
-            prediction_normalized = (
-                prediction - batch_x.mean(dim=1, keepdim=True).detach()
-            ) / std
-            residual = target - prediction_normalized
             memory = model.encode_history(batch_x)
+            prediction_normalized = decode_memory(model, memory)
+            prediction = prediction_normalized * std + mean
+            shuffled_prediction = decode_memory(
+                model,
+                shuffled_patch_memory(memory, shuffle_seed + batch_index),
+            ) * std + mean
+            collapsed_memory = memory.mean(dim=2, keepdim=True).expand_as(memory)
+            collapsed_prediction = decode_memory(model, collapsed_memory) * std + mean
+            future_deviation = target - mean
+            residual = target - prediction
+
+            counterfactual_sums["model_sse"] += float(residual.square().sum().item())
+            counterfactual_sums["zero_deviation_sse"] += float(future_deviation.square().sum().item())
+            counterfactual_sums["shuffled_sse"] += float(
+                (target - shuffled_prediction).square().sum().item()
+            )
+            counterfactual_sums["collapsed_sse"] += float(
+                (target - collapsed_prediction).square().sum().item()
+            )
+            counterfactual_sums["element_count"] += float(target.numel())
+            counterfactual_sums["forward_reconstruction_max_abs"] = max(
+                counterfactual_sums["forward_reconstruction_max_abs"],
+                float((forward_prediction - prediction).abs().max().item()),
+            )
+
             batch, channels, patches, width = memory.shape
             memory_rows = memory.reshape(batch * channels, patches, width)
             history_rows = history.permute(0, 2, 1).reshape(batch * channels, SERIES_LENGTH)
@@ -258,7 +300,9 @@ def collect_split(
             )
             feature_parts["raw_history"].append(history_rows.cpu())
             source_parts["label"].append(
-                target.permute(0, 2, 1).reshape(batch * channels, SERIES_LENGTH).cpu()
+                future_deviation.permute(0, 2, 1)
+                .reshape(batch * channels, SERIES_LENGTH)
+                .cpu()
             )
             source_parts["residual"].append(
                 residual.permute(0, 2, 1).reshape(batch * channels, SERIES_LENGTH).cpu()
@@ -267,7 +311,33 @@ def collect_split(
         raise RuntimeError("split collection produced no batches")
     features = {name: torch.cat(parts, dim=0) for name, parts in feature_parts.items()}
     sources = {name: torch.cat(parts, dim=0) for name, parts in source_parts.items()}
-    return features, sources
+    return features, sources, counterfactual_sums
+
+
+def frozen_decoder_rows(
+    dataset: str,
+    seed: int,
+    sums: dict[str, float],
+) -> list[dict[str, Any]]:
+    model_sse = sums["model_sse"]
+    zero_sse = sums["zero_deviation_sse"]
+    count = sums["element_count"]
+    if model_sse <= 0.0 or zero_sse <= 0.0 or count <= 0.0:
+        raise RuntimeError("invalid frozen decoder counterfactual sums")
+    return [
+        {
+            "dataset": dataset,
+            "seed": seed,
+            "model_mse": model_sse / count,
+            "zero_deviation_mse": zero_sse / count,
+            "model_r2_vs_zero_deviation": 1.0 - model_sse / zero_sse,
+            "shuffled_mse": sums["shuffled_sse"] / count,
+            "shuffle_relative_sse_increase": sums["shuffled_sse"] / model_sse - 1.0,
+            "collapsed_mse": sums["collapsed_sse"] / count,
+            "collapse_relative_sse_increase": sums["collapsed_sse"] / model_sse - 1.0,
+            "forward_reconstruction_max_abs": sums["forward_reconstruction_max_abs"],
+        }
+    ]
 
 
 def source_targets(
@@ -667,7 +737,7 @@ def gradient_metrics(
         observed_batches += 1
         batch_x = batch_x.float().to(device)
         batch_y = batch_y.float().to(device)
-        _history, target, std = normalized_history_and_target(batch_x, batch_y)
+        target = batch_y[:, -SERIES_LENGTH:, :]
         for form in ("raw", "projected"):
             for measure_name in MEASURE_NAMES:
                 prediction, _recon, _alignment = model(
@@ -676,10 +746,7 @@ def gradient_metrics(
                     is_training=False,
                     target_prefix=SERIES_LENGTH,
                 )
-                prediction_normalized = (
-                    prediction - batch_x.mean(dim=1, keepdim=True).detach()
-                ) / std
-                error = prediction_normalized - target
+                error = prediction - target
                 if form == "raw":
                     loss = weighted_mse(error, weights[measure_name])
                 else:
@@ -772,21 +839,28 @@ def run_seed(
     contract: dict[str, Any],
     contract_hash: str,
     seed: int,
-) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
+) -> tuple[
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+    dict[str, Any],
+]:
     model, train_loader, val_loader, gradient_loader, official_args, directory = load_model_and_loaders(
         args, contract, seed
     )
     device = official_args.device
     dct = dct_basis(SERIES_LENGTH, DCT_RANK, device)
     random_q = random_basis(SERIES_LENGTH, DCT_RANK, device)
-    train_features, train_sources = collect_split(
+    train_features, train_sources, _train_counterfactual = collect_split(
         model,
         train_loader,
         device,
         args.train_batches,
         seed * 1000,
     )
-    val_features, val_sources = collect_split(
+    val_features, val_sources, val_counterfactual = collect_split(
         model,
         val_loader,
         device,
@@ -829,6 +903,11 @@ def run_seed(
         device,
         args.gradient_batches,
     )
+    frozen_decoder = frozen_decoder_rows(
+        args.dataset,
+        seed,
+        val_counterfactual,
+    )
     metadata = {
         "dataset": args.dataset,
         "seed": seed,
@@ -849,10 +928,12 @@ def run_seed(
         "val_batches": args.val_batches,
         "gradient_batches": args.gradient_batches,
         "ridge_lambda": args.ridge_lambda,
+        "source_space": "evaluation_space_future_deviation_and_residual",
+        "gradient_space": "evaluation_space_squared_error",
         "uses_test_split": False,
         "trains_forecast_model": False,
     }
-    return structure, probes, geometry, gradients, metadata
+    return structure, probes, geometry, gradients, frozen_decoder, metadata
 
 
 def synthetic_smoke() -> None:
@@ -877,6 +958,20 @@ def synthetic_smoke() -> None:
     prediction, _mean = ridge_predict(train_x, train_x, train_y, 1e-4, device)
     if float((prediction - train_y).square().mean().item()) > 1e-3:
         raise RuntimeError("ridge probe recovery invariant failed")
+    frozen_rows = frozen_decoder_rows(
+        "Weather",
+        2021,
+        {
+            "model_sse": 8.0,
+            "zero_deviation_sse": 10.0,
+            "shuffled_sse": 9.0,
+            "collapsed_sse": 9.5,
+            "element_count": 10.0,
+            "forward_reconstruction_max_abs": 0.0,
+        },
+    )
+    if frozen_rows[0]["model_r2_vs_zero_deviation"] <= 0.0:
+        raise RuntimeError("frozen decoder counterfactual invariant failed")
     print("stage_c_d1_synthetic_smoke=pass")
 
 
@@ -891,10 +986,11 @@ def main() -> None:
     probe_rows: list[dict[str, Any]] = []
     geometry_rows: list[dict[str, Any]] = []
     gradient_rows: list[dict[str, Any]] = []
+    frozen_decoder_rows_all: list[dict[str, Any]] = []
     metadata_rows: list[dict[str, Any]] = []
     for seed in contract["global_fields"]["default_seeds"]:
         print(f"d1_seed_start dataset={args.dataset} seed={seed}", flush=True)
-        structure, probes, geometry, gradients, metadata = run_seed(
+        structure, probes, geometry, gradients, frozen_decoder, metadata = run_seed(
             args,
             contract,
             contract_hash,
@@ -904,6 +1000,7 @@ def main() -> None:
         probe_rows.extend(probes)
         geometry_rows.extend(geometry)
         gradient_rows.extend(gradients)
+        frozen_decoder_rows_all.extend(frozen_decoder)
         metadata_rows.append(metadata)
         print(f"d1_seed_done dataset={args.dataset} seed={seed}", flush=True)
     output_dir = args.output_dir / args.dataset
@@ -911,6 +1008,7 @@ def main() -> None:
     write_csv(output_dir / "d1_probe_metrics.csv", probe_rows)
     write_csv(output_dir / "d1_basis_geometry.csv", geometry_rows)
     write_csv(output_dir / "d1_gradient_metrics.csv", gradient_rows)
+    write_csv(output_dir / "d1_frozen_decoder_metrics.csv", frozen_decoder_rows_all)
     (output_dir / "d1_metadata.json").write_text(
         json.dumps(metadata_rows, indent=2, sort_keys=True),
         encoding="utf-8",

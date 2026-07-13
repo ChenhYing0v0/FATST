@@ -19,8 +19,8 @@
 | --- | --- |
 | `current_11_step` | Step 2-3 problem-existence diagnostics |
 | `current_candidate` | `SC1/SC2-D1`（diagnostic-only） |
-| `latest_decision` | A6已通过`basis[:H]`直接计算H步；PMFO创新边界收紧为nested refinement；Encoder与basis充分性均须先诊断 |
-| `next_required_action` | 实现并运行D1-A structure、D1-B encoder probe、D1-C basis/gradient offline diagnostic |
+| `latest_decision` | D1-v1因negative-R2 gate漏洞与history-std source-space pathology无效，不得作方向结论；已修订v2 measurement/gate |
+| `next_required_action` | 运行D1-v2 evaluation-space structure、frozen decoder counterfactual与PIR gradient diagnostic |
 | `method_training_authorized` | `false` |
 | `rollback_point` | D1 gate fails -> Step 2 problem redefinition |
 
@@ -30,7 +30,7 @@
 | --- | --- |
 | `current_step` | Step 2-3 |
 | `problem` | A6已domain-only且按H直接求值，但single dense basis没有nested refinement；Encoder是否保留多尺度信息未知；simple horizon reweighting缺少novelty |
-| `existence_evidence` | A6 memory=`[B,C,P,D]`、hidden width=768、basis=`[720,256]`；当前仍缺structure/encoder/basis三条跨dataset证据 |
+| `existence_evidence` | A6 memory=`[B,C,P,D]`、hidden width=768、basis=`[720,256]`；D1-v1表面structure/PIR通过但measurement invalid，尚无可接受跨dataset结论 |
 | `idea` | H只作为output domain；PMFO学习nested function coefficients，PIR在同一projection increments上定义risk |
 | `theory_check` | restriction consistency可由deterministic basis restriction保证；PIR对L2可建立正交分解，对L1尚无exact等价 |
 | `design` | D1 offline diagnostics -> Step4-6 prior-art/theory gate -> minimal implementation -> 2x2 -> full matrix |
@@ -83,6 +83,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | Natural baseline test | post-freeze reference | 72/72；test未参与选择；ETTh2 H48 MSE CV=5.30% | `frozen_test_reference_ready` | `analysis/stage_c_natural_baseline_test_20260713/natural_baseline_test_report.md` |
 | SC1/SC2 deep reset | Step1-3 research audit | explicit-H与simple HML均不够；提出PMFO/PIR并定义falsification | 只授权D1 diagnostic | `analysis/stage_c_contribution_research_reset_20260713/stage_c_contribution_deep_audit.md` |
 | A6/PMFO architecture audit | Step2 correction | A6使用`coeff [B,C,256] × basis[:H] [H,256]`；旧“总生成H720”表述不准确 | PMFO问题收紧；扩展D1-A/B/C | `docs/experiments/stage-c-pmfo-pir-problem-diagnostic.md` |
+| D1-v1 offline diagnostic | diagnostic-invalid | ETTh2 full-hidden R2=-39.7831却被旧gate误判；Weather/ETTh2 normalized residual≈label | `diagnostic_invalid_for_direction_rejection`；保留raw evidence，运行v2 | `analysis/stage_c_d1_pmfo_pir_offline_20260713/` |
 
 ## Pending Tasks
 
@@ -91,8 +92,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | Freeze natural carrier | `completed` | 不再调 profile |
 | Establish dense test reference | `completed` | 后续统一对比 |
 | Archive closed routes and clean active entrypoints | `completed` | archive只作证据 |
-| Implement D1 offline analyzer | `in_progress` | structure/probe/basis/gradient scripts + local smoke |
-| Run D1 problem diagnostics | `pending` | no method training |
+| Implement D1 offline analyzer | `completed_v2` | evaluation-space source/gradient + strict probe + frozen decoder counterfactual |
+| Run D1 problem diagnostics | `v1_invalid_v2_pending` | no method training；独立output root |
 | PMFO/PIR Step4-6 gate | `blocked_on_D1` | problem evidence通过后再启动 |
 
 ## Continuation Rules

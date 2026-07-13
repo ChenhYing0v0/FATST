@@ -55,8 +55,9 @@ step weighting 都不能单独成为 paper core。Step 4-6 前仍需补做 wavel
 的nested coarse-to-fine future structure，A6 `memory: [B,C,P,D]`是否保留该信息，以及新的operator能否在
 不读取horizon ID的前提下提供refinement/local-support computation？
 
-Gate：至少2/3 datasets、3 seeds支持label与baseline residual的stable increment structure；full patch
-memory的coarse/mid probe必须显著优于per-sample shuffled control，并保留raw-history linear recoverability。
+Gate：至少2/3 datasets、3 seeds支持evaluation-space future deviation与baseline residual的stable increment
+structure；frozen A6必须优于zero-deviation baseline，且patch shuffle/collapse必须产生至少1%的SSE恶化。
+Linear probe只作辅助量，negative R2之间的差值不得形成pass。
 learned basis geometry用于区分“容量足够但缺层次”与“subspace本身不足”。若失败，rollback Step 2；
 不得用同步更换Encoder与decoder掩盖归因。
 
@@ -91,9 +92,10 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 
 ## Next Concrete Action
 
-执行`SC1/SC2-D1`：从frozen train/validation batches、labels、natural-baseline residuals与encoder memory
-构造DCT/block/random projections、fixed ridge probes、learned-basis geometry及measure/projected gradient
-tables。该阶段不读取test、不训练forecast model；完成本地semantic smoke后可在远端checkpoint上运行。
+执行`SC1/SC2-D1-v2`：从frozen train/validation batches、evaluation-space future deviation、natural-baseline
+residuals与encoder memory构造DCT/block/random projections、fixed ridge probes、frozen-decoder
+counterfactual、learned-basis geometry及measure/projected gradient tables。该阶段不读取test、不训练
+forecast model。v1已因measurement/gate fault标记`diagnostic_invalid_for_direction_rejection`，只保留审计。
 
 ## Historical Boundary
 

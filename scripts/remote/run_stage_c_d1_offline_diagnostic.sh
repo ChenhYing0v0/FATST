@@ -4,7 +4,7 @@ set -euo pipefail
 PHASE_A_ROOT="${PHASE_A_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/stage_c_dap_r2a_patch_screen}"
 PHASE_B_ROOT="${PHASE_B_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/stage_c_dap_r2b_width_screen}"
 PHASE_C_ROOT="${PHASE_C_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/stage_c_dap_r2c_stability}"
-OUTPUT_ROOT="${OUTPUT_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/stage_c_d1_pmfo_pir_offline}"
+OUTPUT_ROOT="${OUTPUT_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/stage_c_d1_pmfo_pir_offline_v2}"
 CONTRACT="${CONTRACT:-configs/stage_c_mechanism_control_natural_dataset_profiles.json}"
 CONDA_BIN="${CONDA_BIN:-/home/anaconda3/bin/conda}"
 CONDA_ENV="${CONDA_ENV:-moe}"

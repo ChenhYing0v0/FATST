@@ -8,7 +8,7 @@ StageC active entrypoints：
 - `remote/run_stage_c_natural_baseline_test.sh`: 3-dataset baseline evaluator；
 - `remote/check_529lab_3090_gpus.sh`: 远端 GPU preflight；
 - `check_project_structure.py`: 最小仓库结构检查。
-- `run_stage_c_d1_offline_diagnostic.py`: D1-A/B/C no-forecast-training worker；
+- `run_stage_c_d1_offline_diagnostic.py`: D1-A/B/C evaluation-space、frozen-counterfactual、no-forecast-training worker；
 - `analyze_stage_c_d1_offline_diagnostic.py`: D1 cross-dataset gate与报告；
 - `remote/run_stage_c_d1_offline_diagnostic.sh`: 3-dataset parallel runner；
 - `sync_stage_c_d1_offline_diagnostic_results.sh`: 同步并重新审计D1 artifacts。

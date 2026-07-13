@@ -9,7 +9,7 @@
 | `current_step` | Step 2-3 |
 | `method_training_authorized` | `false` |
 | `carrier` | frozen `A6-LBF-natural-baseline` |
-| `data_boundary` | train用于结构/probe fitting/gradients；validation只评估fixed probes；test=false |
+| `data_boundary` | train用于结构/probe fitting/gradients；validation只评估fixed probes/counterfactual；test=false |
 | `rollback` | stable diagnostic fails -> exact problem candidate returns Step 2 |
 
 ## Corrected A6 Contract
@@ -24,7 +24,9 @@
 
 ## D1-A: Future Structure
 
-在history-statistics normalized train labels与frozen A6 residuals上比较：
+在evaluation space中比较`future_deviation = y - history_mean`与
+`residual = y - frozen_A6(x)`。该定义保留A6 decoder真正需要解释的future deviation，同时避免按每个
+window的history std除法把低方差样本放大；dataset loader已有train-fitted channel scaling。
 
 - nested DCT ranks `{8,24,72,144,256}`；
 - nested localized block spaces，block sizes `{90,30,10,5,1}`；
@@ -53,12 +55,20 @@ Gate：在shared rank 144处，`max(DCT, block)-random`：label至少`0.10`、re
 Probe targets为label/residual的DCT coefficients与localized block coefficients。统计每个increment level的
 validation `R2`、`NRMSE`、`SSE/SST`。
 
-Gate：对label DCT coarse/mid levels（cumulative rank<=72），dataset mean满足：
+Linear probe只作recoverability辅助量。其严格有效条件为对label DCT coarse/mid levels
+（cumulative rank<=72），`R2(full_hidden)>=0.05`且
+`R2(full_hidden)-R2(patch_shuffled)>=0.01`；负R2之间的差值不得形成pass。
 
-- `R2(full_hidden)-R2(patch_shuffled) >= 0.01`；
-- 若`R2(raw_history)>0`，则`R2(full_hidden)/R2(raw_history) >= 0.80`。
+Primary Encoder gate使用frozen decoder counterfactual：
 
-至少2/3 datasets通过才允许“先保留Encoder、只重构decoder”。失败时不能立即判定PMFO失败：若D1-A
+1. 用原始有序`memory`、per-sample patch shuffle、patch-mean collapse分别通过同一frozen LBF head；
+2. 原始decoder必须相对zero-future-deviation baseline取得positive R2；
+3. shuffle或collapse至少使SSE相对原始path增加1%；
+4. direct memory decode与正式`forward`的max absolute gap必须`<=1e-5`。
+
+至少2/3 datasets通过才允许“先保留Encoder、只重构decoder”。该counterfactual只证明当前head利用了有序
+patch memory，不等价于Encoder已经产生完备multiresolution sufficient statistics。
+失败时不能立即判定PMFO失败：若D1-A
 通过而D1-B失败，应进入Step 2评估最小multiscale history interface，并保持Encoder改造为辅助贡献。
 
 ## D1-C: Basis Geometry And PIR Gradients
@@ -78,7 +88,7 @@ PMFO已存在；低capture则说明subspace容量/几何本身也可能是瓶颈
 
 ### PIR gradient audit
 
-固定train前2 batches，使用normalized squared error比较四种deployment measures：
+固定train前2 batches，使用evaluation-space squared error比较四种deployment measures：
 
 - `delta_720`；
 - `uniform_h` over all integer H；
@@ -112,3 +122,17 @@ PIR problem gate要求至少2/3 datasets同时满足：
 projection重构/Parseval、ridge solve或gradient extraction出现数值异常时，标记
 `diagnostic_invalid_for_direction_rejection`。Stable D1失败只否定当前PMFO/PIR problem formulation；不得
 扩大为所有multiresolution decoder、Encoder redesign或training strategy的方向级拒绝。
+
+## Protocol Amendment: v1 -> v2
+
+2026-07-13初次remote run已完整保留在
+`analysis/stage_c_d1_pmfo_pir_offline_20260713/`，但标记
+`diagnostic_invalid_for_direction_rejection`：
+
+- ETTh2 `full_hidden R2=-39.7831`，旧gate却因shuffled更差而误判pass；
+- Weather/ETTh2的history-std normalized residual几乎等于label，说明source space被低方差窗口主导，
+  没有可靠隔离A6已解释后的residual；
+- 因此旧summary中的`pmfo_pir_problem_gate_passed`作废，不能进入论文claim。
+
+v2只修复measurement space与gate，并加入frozen-decoder counterfactual；candidate、checkpoint、dataset、
+seed、batch budget和阈值方向均不因结果调参。v1保留为failure-attribution evidence，v2使用独立output root。

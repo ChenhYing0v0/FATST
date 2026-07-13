@@ -80,11 +80,13 @@ def analyze_dataset(
     probes: list[dict[str, str]],
     geometry: list[dict[str, str]],
     gradients: list[dict[str, str]],
+    frozen_decoder: list[dict[str, str]],
 ) -> dict[str, Any]:
     structure_dataset = [row for row in structure if row["dataset"] == dataset]
     probe_dataset = [row for row in probes if row["dataset"] == dataset]
     geometry_dataset = [row for row in geometry if row["dataset"] == dataset]
     gradient_dataset = [row for row in gradients if row["dataset"] == dataset]
+    frozen_dataset = [row for row in frozen_decoder if row["dataset"] == dataset]
 
     captures: dict[tuple[str, str], float] = {}
     for source in ("label", "residual"):
@@ -109,7 +111,25 @@ def analyze_dataset(
     raw_probe = probe_level_mean(probe_dataset, dataset, "raw_history")
     probe_gain = full_probe - shuffled_probe
     retention = full_probe / raw_probe if raw_probe > 0.0 else float("nan")
-    encoder_pass = probe_gain >= 0.01 and (raw_probe <= 0.0 or retention >= 0.80)
+    linear_probe_pass = full_probe >= 0.05 and probe_gain >= 0.01
+
+    model_r2 = mean([float(row["model_r2_vs_zero_deviation"]) for row in frozen_dataset])
+    shuffle_increase = mean(
+        [float(row["shuffle_relative_sse_increase"]) for row in frozen_dataset]
+    )
+    collapse_increase = mean(
+        [float(row["collapse_relative_sse_increase"]) for row in frozen_dataset]
+    )
+    reconstruction_max_abs = max(
+        (float(row["forward_reconstruction_max_abs"]) for row in frozen_dataset),
+        default=float("inf"),
+    )
+    ordered_memory_effect = max(shuffle_increase, collapse_increase)
+    frozen_decoder_pass = (
+        model_r2 > 0.0
+        and ordered_memory_effect >= 0.01
+        and reconstruction_max_abs <= 1e-5
+    )
 
     learned_label_capture = selected_mean(
         structure_dataset,
@@ -208,7 +228,13 @@ def analyze_dataset(
         "raw_history_coarse_mid_r2": raw_probe,
         "full_vs_shuffled_r2_gain": probe_gain,
         "full_vs_raw_r2_retention": retention,
-        "encoder_sufficiency_pass": encoder_pass,
+        "linear_probe_pass": linear_probe_pass,
+        "frozen_decoder_r2_vs_zero_deviation": model_r2,
+        "frozen_decoder_shuffle_relative_increase": shuffle_increase,
+        "frozen_decoder_collapse_relative_increase": collapse_increase,
+        "frozen_decoder_ordered_memory_effect": ordered_memory_effect,
+        "forward_reconstruction_max_abs": reconstruction_max_abs,
+        "encoder_sufficiency_pass": frozen_decoder_pass,
         "learned_basis_label_capture_rank256": learned_label_capture,
         "dct_label_capture_rank256": dct_label_capture,
         "learned_basis_residual_capture_rank256": learned_residual_capture,
@@ -337,7 +363,23 @@ def synthetic_smoke() -> None:
                 },
             ]
         )
-    row = analyze_dataset(dataset, structure, probes, geometry, gradients)
+    frozen_decoder = [
+        {
+            "dataset": dataset,
+            "model_r2_vs_zero_deviation": "0.2",
+            "shuffle_relative_sse_increase": "0.05",
+            "collapse_relative_sse_increase": "0.10",
+            "forward_reconstruction_max_abs": "0.0",
+        }
+    ]
+    row = analyze_dataset(
+        dataset,
+        structure,
+        probes,
+        geometry,
+        gradients,
+        frozen_decoder,
+    )
     if not row["label_structure_pass"] or not row["encoder_sufficiency_pass"] or not row["parseval_pass"]:
         raise RuntimeError("analyzer synthetic gate invariant failed")
     print("stage_c_d1_analyzer_synthetic_smoke=pass")
@@ -358,6 +400,7 @@ def main() -> None:
             "probes": dataset_root / "d1_probe_metrics.csv",
             "geometry": dataset_root / "d1_basis_geometry.csv",
             "gradients": dataset_root / "d1_gradient_metrics.csv",
+            "frozen_decoder": dataset_root / "d1_frozen_decoder_metrics.csv",
         }
         for name, path in required.items():
             if not path.exists():
@@ -375,6 +418,9 @@ def main() -> None:
         raise ValueError("D1 diagnostic must not use the test split")
     if any(row.get("trains_forecast_model") for row in metadata):
         raise ValueError("D1 diagnostic must not train a forecast model")
+    expected_source_space = "evaluation_space_future_deviation_and_residual"
+    if any(row.get("source_space") != expected_source_space for row in metadata):
+        raise ValueError("D1 v2 requires evaluation-space future deviation and residual")
 
     dataset_rows = [
         analyze_dataset(
@@ -383,6 +429,7 @@ def main() -> None:
             inputs["probes"],
             inputs["geometry"],
             inputs["gradients"],
+            inputs["frozen_decoder"],
         )
         for dataset in DATASETS
     ]
@@ -410,6 +457,7 @@ def main() -> None:
         "seed_rows": len(metadata),
         "uses_test_split": False,
         "trains_forecast_model": False,
+        "source_space": expected_source_space,
         "gates": {
             "label_structure_dataset_passes": label_structure_passes,
             "residual_structure_dataset_passes": residual_structure_passes,
@@ -436,8 +484,9 @@ def main() -> None:
         "",
         f"- datasets: `{', '.join(DATASETS)}`；seed/profile instances: `{len(metadata)}`；",
         "- test split: `false`；new forecast-model training: `false`；",
-        "- diagnostics: label/residual nested energy、frozen-encoder ridge probes、"
-        "learned-basis geometry、measure/projected gradients。",
+        "- primary space: evaluation-space future deviation / frozen-A6 residual；",
+        "- diagnostics: nested energy、frozen-encoder ridge probes、frozen-decoder "
+        "counterfactual、learned-basis geometry、measure/projected gradients。",
         "",
         "## PMFO Evidence",
         "",
@@ -449,7 +498,9 @@ def main() -> None:
                 ("Residual adv.", "residual_structured_advantage"),
                 ("Full R2", "full_hidden_coarse_mid_r2"),
                 ("Shuffle gain", "full_vs_shuffled_r2_gain"),
-                ("Raw retention", "full_vs_raw_r2_retention"),
+                ("Linear", "linear_probe_pass"),
+                ("Frozen R2", "frozen_decoder_r2_vs_zero_deviation"),
+                ("Order effect", "frozen_decoder_ordered_memory_effect"),
                 ("Encoder", "encoder_sufficiency_pass"),
             ],
         ),
@@ -457,6 +508,8 @@ def main() -> None:
         f"[Decision] PMFO problem gate: `{'pass' if pmfo_pass else 'fail'}`。Label structure passes="
         f"`{label_structure_passes}/3`，residual structure passes=`{residual_structure_passes}/3`，"
         f"encoder sufficiency passes=`{encoder_passes}/3`。",
+        "[Scope] Encoder gate只证明当前frozen decoder确实利用有序patch memory，"
+        "不等价于Encoder已经提供了完备的multiresolution sufficient statistics。",
         "",
         "## Basis Geometry",
         "",

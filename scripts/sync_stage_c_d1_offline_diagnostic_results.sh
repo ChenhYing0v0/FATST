@@ -2,8 +2,8 @@
 set -euo pipefail
 
 REMOTE_HOST="${REMOTE_HOST:-529_Lab-3090}"
-REMOTE_ROOT="${REMOTE_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/stage_c_d1_pmfo_pir_offline}"
-ANALYSIS_ROOT="${ANALYSIS_ROOT:-analysis/stage_c_d1_pmfo_pir_offline_20260713}"
+REMOTE_ROOT="${REMOTE_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/stage_c_d1_pmfo_pir_offline_v2}"
+ANALYSIS_ROOT="${ANALYSIS_ROOT:-analysis/stage_c_d1_pmfo_pir_offline_v2_20260713}"
 
 mkdir -p "${ANALYSIS_ROOT}/raw"
 rsync -av --exclude='*.pt' --exclude='*.npz' \
