@@ -9,7 +9,7 @@
 | `active_question` | shared future function representation 与 aligned risk 是否能实现连续、统一、可细化的任意 horizon forecasting？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` |
-| `active_candidates` | `SC1-PMFO-RCT`, `SC2-MIPR` |
+| `active_candidates` | `SC1-projective-operator-redesign`；`SC2-MIPR` held |
 | `stage_exit` | 两项分别过 narrative/effectiveness gate，`2x2` joint gate显示独立主效应与联合收益 |
 | `stage_rollback` | problem/novelty不跨 dataset -> Step 2；禁止直接堆叠 method |
 
@@ -17,27 +17,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Step 7B remote architecture screening running |
-| `current_candidate` | `SC1-PMFO-RCT`（implementation_gate_passed）、`SC2-MIPR`（narrative_ready）；effectiveness均pending |
-| `latest_decision` | Step7B protocol smoke通过；commit `8abe9b7`的15-run matrix已在三张3090启动 |
-| `next_required_action` | 长间隔监控15 runs；完成后同步、重算dense-horizon gate并做failure attribution |
-| `method_training_authorized` | `true`；仅限Step7B frozen architecture-only matrix |
-| `rollback_point` | capacity/no-transition control explains -> Step 4；numeric/readout fault -> Step 6 |
+| `current_11_step` | Step 4 rollback after Step 7B effectiveness failure |
+| `current_candidate` | SC1 contribution slot open；`PMFO-RCT v1` closed；`SC2-MIPR` held |
+| `latest_decision` | 15/15 runs与invariants完成；PMFO vs A6 macro `-1.0955%`；exact v1 rollback Step 4 |
+| `next_required_action` | source-informed redesign audit：function class、fixed partition、history-to-node interface |
+| `method_training_authorized` | `false`；new SC1 implementation需重新通过Step 4-6 |
+| `rollback_point` | Step 4；不改Encoder、不叠加MIPR/MoE |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Step 7B remote training/evaluation running |
+| `current_step` | Step 4 redesign；Step 7B v1 decision complete |
 | `problem` | A6已domain-only但single dense basis没有nested refinement；有序memory可用但ETTh2线性重组风险仍在；simple horizon reweighting缺少novelty |
 | `existence_evidence` | D1-v2: structure 3/3、frozen ordered-memory use 3/3、raw/PIR gradient aggregate 3/3；benchmark-measure projected excess 0/3 |
-| `idea` | PMFO-RCT用future tree作conservative refinement；MIPR把measure metric投影到相同scale blocks |
+| `idea` | projectivity/conservation保留；PMFO-RCT v1 transition与fixed partition撤回；MIPR held |
 | `theory_check` | mixed-radix invariants≤`1.33e-15`；MIPR对L2成立但不是exact raw risk；Huber/L1首轮拒绝 |
-| `design` | local invariants passed -> 3-dataset SC1 matched controls -> SC2 raw/random-projector controls -> 2x2 -> full matrix |
-| `narrative_gate` | SC1 pass；SC2 pass with L2/measure boundary；两者均effectiveness pending |
-| `effectiveness_gate` | frozen profiles、multi-seed、dense horizons、matched capacity/FLOPs、cross-dataset |
-| `artifacts` | D1-v2、Step4-6 prior-art/theory report、Step7A local gate、baseline report |
-| `decision` | SC1 implementation gate通过但effectiveness pending；Step7B三数据集matrix已获用户授权 |
+| `design` | v1 local invariants -> 3-dataset matched controls complete；joint/objective path paused |
+| `narrative_gate` | v1曾通过，但effectiveness反证要求回Step 4重审；SC2 held |
+| `effectiveness_gate` | v1 fail：macro vs A6 `-1.0955%`，worst ETTm1 `-2.0844%` |
+| `artifacts` | D1-v2、Step4-6 report、Step7A local gate、Step7B screen、baseline report |
+| `decision` | exact `PMFO-RCT v1` closed as paper core；conservation retained；rollback Step 4 |
 
 ## Frozen Carrier Contract
 
@@ -58,8 +58,9 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
 | `A6-LBF-natural-baseline` | `control_only` | validation-frozen natural profiles可作为稳定共同起点 | not required | 72/72 test；3 seeds；dense horizons | `frozen_test_reference_ready`；只作固定reference |
-| `SC1-PMFO-RCT` | `implementation_gate_passed` | conservative future-tree refinement提供dense basis之外的scale identity与domain-local execution | pass；medium novelty confidence，禁止generic wavelet/arbitrary-H claim | D1/algebra/local implementation pass；performance未测 | Step7B三数据集matched controls |
-| `SC2-MIPR` | `narrative_ready` | measure-induced block metric去除decoder scales之间的cross coupling | pass for L2；log measure primary，benchmark weak | log off-block `0.205154`；benchmark `0.002480`；performance未测 | 等SC1 contract冻结后实现raw/random-projector controls |
+| `SC1-PMFO-RCT-v1` | `failed_as_core_candidate` | fixed mixed-radix conservative future tree | narrative/local pass | Step7B三dataset均不优于A6；no numeric pathology | archived as evidence；rollback Step 4 |
+| `SC1-projective-operator-redesign` | `proposed` | 保留projectivity/conservation且不牺牲A6 function class | pending new Step4-6 | no implementation | 先做source-informed redesign audit |
+| `SC2-MIPR` | `held` | measure-induced block metric去除decoder scales之间的cross coupling | pass for L2；log measure primary，benchmark weak | log off-block `0.205154`；benchmark `0.002480`；performance未测 | 等新SC1 contract冻结；不得先实现 |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
 
@@ -87,7 +88,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | D1-v2 offline diagnostic | Step2-3 problem gate | structure/frozen-memory/aggregate PIR均3/3；ETTh2 linear probe fail；benchmark PIR excess 0/3 | SC1进入Step4-6；SC2 measure-conditional进入Step4-6 | `analysis/stage_c_d1_pmfo_pir_offline_v2_20260713/research_interpretation.md` |
 | SC1/SC2 Step4-6 theory gate | external prior-art + algebra audit | generic basis/wavelet/reweight claims被排除；PMFO invariants pass；MIPR measure geometry明确 | SC1/SC2均`narrative_ready`；remote training仍false | `analysis/stage_c_step46_pmfo_pir_theory_gate_20260713/step46_design_and_prior_art.md` |
 | SC1 Step7A local gate | model implementation + invariant audit | 90/90 shape-prefix；float32 max gap `4.172e-7`；conservation `2.682e-7`；locality `0` | `implementation_gate_passed`；effectiveness pending；remote training false | `analysis/stage_c_step7a_pmfo_rct_local_20260713/step7a_local_gate_report.md` |
-| SC1 Step7B remote screen | architecture-only matched controls | 15 runs launched；GPU0/1/2 preflight均15 MiB；protocol smoke pass | `running`；无performance decision | `analysis/stage_c_step7b_pmfo_rct_20260713/launch_record.md` |
+| SC1 Step7B remote screen | architecture-only matched controls | 15/15 complete；PMFO vs A6 macro `-1.0955%`；conservation +`2.3393%` vs ablation；transition +`0.0486%` vs control | v1 `failed_as_core_candidate`；`readout_or_head_design_wrong`；rollback Step 4 | `analysis/stage_c_step7b_pmfo_rct_20260713/step7b_screening_report.md` |
 
 ## Pending Tasks
 
@@ -100,7 +101,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | Run D1 problem diagnostics | `completed_v2` | v1 invalid evidence与v2 accepted evidence分离 |
 | PMFO/PIR Step4-6 gate | `completed` | narrative-ready decisions与paper-mainline已同步 |
 | PMFO-RCT Step7A local implementation | `completed` | 四variants、local gate与code explanation已落地 |
-| PMFO-RCT Step7B architecture screening | `running` | 15-run matrix；完成后同步/analyze，不引入MIPR |
+| PMFO-RCT Step7B architecture screening | `completed_rollback` | v1 closed；do not continue seeds/tuning |
+| SC1 Step4 redesign audit | `pending` | external source + A6 functional containment + partition/interface diagnostics |
 
 ## Paper Mainline Sync Log
 
@@ -108,11 +110,12 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | --- | --- | --- | --- | --- |
 | 2026-07-13 | Step4-6 narrative/theory gate完成 | Current Position、Contribution Slots、Contribution Boundary、Main Experiment Logic | contribution boundary + experiment order | PMFO收紧为RCT；PIR收紧为MIPR；Step7 local implementation next |
 | 2026-07-13 | Step7A local gate通过 | Current Position、Contribution 1、Main Experiment Logic | implementation evidence + screening scope | 三数据集Step7B固定；effectiveness仍pending |
+| 2026-07-13 | Step7B effectiveness失败 | Current Position、Contribution 1/2、Boundary、Experiment Logic | candidate closure + rollback | v1关闭；conservation保留；MIPR held；回Step 4 |
 
 ## Continuation Rules
 
 1. 每次继续研究先读本 ledger 与`stage-c-pmfo-rct-step7-protocol.md`；
 2. old analysis可引用，archive脚本不得直接启动；
 3. diagnostic failure必须区分 hypothesis、intervention、readout、numeric与capacity control；
-4. narrative与Step7A implementation gate已完成；Step7B已获用户授权，但launch前必须remote preflight，且不得实现MIPR；
+4. Step7B已完成并回滚；新model training未授权，先完成Step4 redesign audit；
 5. test reference只用于最终对比，不能参与设计选择。

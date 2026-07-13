@@ -1,0 +1,53 @@
+{
+  "decision": "rollback_step4",
+  "complete_runs": 15,
+  "expected_runs": 15,
+  "macro_pmfo_vs_a6_improvement_pct": -1.0955013276060077,
+  "minimum_dataset_pmfo_vs_a6_improvement_pct": -2.0843908448773485,
+  "macro_pmfo_vs_best_control_improvement_pct": -0.39525298498550204,
+  "dataset_results": [
+    {
+      "dataset": "ETTm1",
+      "pmfo_vs_a6_improvement_pct": -2.0843908448773485,
+      "best_control": "pmfo_no_transition",
+      "pmfo_vs_best_control_improvement_pct": -0.8739262023387262,
+      "pmfo_invariant_pass": true
+    },
+    {
+      "dataset": "ETTh2",
+      "pmfo_vs_a6_improvement_pct": -0.4782849017266777,
+      "best_control": "pmfo_no_transition",
+      "pmfo_vs_best_control_improvement_pct": 0.3199793242938731,
+      "pmfo_invariant_pass": true
+    },
+    {
+      "dataset": "Weather",
+      "pmfo_vs_a6_improvement_pct": -0.723828236213997,
+      "best_control": "dense_mlp_matched",
+      "pmfo_vs_best_control_improvement_pct": -0.6318120769116531,
+      "pmfo_invariant_pass": true
+    }
+  ],
+  "pairwise_macro_diagnostics": {
+    "pmfo_vs_a6_macro_improvement_pct": -1.0955013276060077,
+    "pmfo_vs_dense_mlp_matched_macro_improvement_pct": 0.7193137474752623,
+    "pmfo_vs_pmfo_no_transition_macro_improvement_pct": 0.04861755417986761,
+    "pmfo_vs_pmfo_no_conservation_macro_improvement_pct": 2.33929097758672
+  },
+  "gates": {
+    "macro_vs_a6_ge_1pct": false,
+    "each_dataset_not_worse_0_5pct": false,
+    "macro_vs_best_control_ge_0_5pct": false,
+    "trained_invariants_pass": true,
+    "no_numeric_pathology": true
+  },
+  "failure_attribution": "readout_or_head_design_wrong",
+  "direction_rejection_scope": "exact_pmfo_rct_v1_only",
+  "rollback_step": 4,
+  "component_status": {
+    "conservative_synthesis": "retained_for_redesign",
+    "recursive_transition": "not_supported_as_v1_claim",
+    "structured_projective_decoder": "weak_signal_not_gate_passed",
+    "encoder_sufficiency": "not_causally_tested_by_step7b"
+  }
+}

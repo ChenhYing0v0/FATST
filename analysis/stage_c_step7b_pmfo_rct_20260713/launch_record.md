@@ -32,3 +32,13 @@ best-val checkpoint、test full-crop metrics与checkpoint reload均通过。trai
 `2.98e-8`、refinement `3.58e-7`、conservation `2.98e-7`、locality outside support `0`。
 
 [Boundary] smoke不进入performance比较；正式gate只读取完整15-run output root。
+
+## Completion And Decision
+
+- completion time: `2026-07-13T19:25:46+08:00`；
+- completed runs/invariants: `15/15`, `15/15`；
+- primary result: PMFO-RCT vs A6 dense-MSE macro improvement `-1.0955%`；
+- decision: `rollback_step4`；failure attribution: `readout_or_head_design_wrong`；
+- scope: exact PMFO-RCT v1 only；conservative synthesis retained，recursive transition unsupported。
+
+完整结果见`step7b_screening_report.md`与`step7b_gate.json`。

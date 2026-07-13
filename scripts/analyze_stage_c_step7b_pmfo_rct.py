@@ -33,6 +33,13 @@ READOUTS = {
     "pmfo_rct": "pmfo-rct",
 }
 STANDARD_HORIZONS = (48, 96, 192, 336, 720)
+HORIZON_SEGMENTS = (
+    ("H1-48", 1, 48),
+    ("H49-96", 49, 96),
+    ("H97-192", 97, 192),
+    ("H193-336", 193, 336),
+    ("H337-720", 337, 720),
+)
 SEED = 2021
 
 
@@ -194,6 +201,78 @@ def comparison_rows(summary: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return rows
 
 
+def horizon_segment_rows(root: Path) -> list[dict[str, Any]]:
+    """Compare PMFO with each reference over fixed dense-horizon segments."""
+    rows = []
+    for dataset in DATASETS:
+        metric_by_arm: dict[str, dict[int, float]] = {}
+        for arm in ARMS:
+            metrics_path = (
+                run_dir(root, arm, dataset) / "metrics_by_target_horizon.csv"
+            )
+            if not metrics_path.is_file():
+                metric_by_arm = {}
+                break
+            metrics = read_csv(metrics_path)
+            metric_by_arm[arm] = {
+                int(row["target_horizon"]): finite_float(row["mse"])
+                for row in metrics
+            }
+            if sorted(metric_by_arm[arm]) != list(range(1, 721)):
+                metric_by_arm = {}
+                break
+        if not metric_by_arm:
+            continue
+        pmfo = metric_by_arm["pmfo_rct"]
+        for reference_arm in ("a6", *CONTROL_ARMS):
+            reference = metric_by_arm[reference_arm]
+            for segment, start, end in HORIZON_SEGMENTS:
+                horizons = range(start, end + 1)
+                pmfo_mean = mean(pmfo[horizon] for horizon in horizons)
+                reference_mean = mean(
+                    reference[horizon] for horizon in horizons
+                )
+                rows.append(
+                    {
+                        "dataset": dataset,
+                        "reference_arm": reference_arm,
+                        "segment": segment,
+                        "start_horizon": start,
+                        "end_horizon": end,
+                        "pmfo_mean_mse": pmfo_mean,
+                        "reference_mean_mse": reference_mean,
+                        "pmfo_improvement_pct": relative_improvement(
+                            pmfo_mean,
+                            reference_mean,
+                        ),
+                        "pmfo_winning_horizons": sum(
+                            pmfo[horizon] < reference[horizon]
+                            for horizon in horizons
+                        ),
+                        "segment_horizon_count": end - start + 1,
+                    }
+                )
+    return rows
+
+
+def pairwise_macro_diagnostics(
+    lookup: dict[tuple[str, str], dict[str, Any]],
+) -> dict[str, float]:
+    diagnostics = {}
+    for reference_arm in ("a6", *CONTROL_ARMS):
+        improvements = [
+            relative_improvement(
+                lookup[(dataset, "pmfo_rct")]["dense_mse_auc"],
+                lookup[(dataset, reference_arm)]["dense_mse_auc"],
+            )
+            for dataset in DATASETS
+        ]
+        diagnostics[f"pmfo_vs_{reference_arm}_macro_improvement_pct"] = mean(
+            improvements
+        )
+    return diagnostics
+
+
 def decide_gate(summary: list[dict[str, Any]]) -> dict[str, Any]:
     expected = len(DATASETS) * len(ARMS)
     valid = [row for row in summary if row["status"] == "ok"]
@@ -246,6 +325,7 @@ def decide_gate(summary: list[dict[str, Any]]) -> dict[str, Any]:
         "trained_invariants_pass": invariants_pass,
         "no_numeric_pathology": not numeric_pathology,
     }
+    pairwise = pairwise_macro_diagnostics(lookup)
     if all(gates.values()):
         decision = "partial_pass"
         attribution = "single_seed_architecture_signal_requires_three_seed_confirmation"
@@ -269,10 +349,10 @@ def decide_gate(summary: list[dict[str, Any]]) -> dict[str, Any]:
         for row in dataset_rows
     ):
         decision = "rollback_step4"
-        attribution = "recursive_transition_not_supported_or_control_explains"
+        attribution = "readout_or_head_design_wrong"
     else:
         decision = "rollback_step4"
-        attribution = "capacity_or_structural_control_explains"
+        attribution = "readout_or_head_design_wrong"
     return {
         "decision": decision,
         "complete_runs": len(valid),
@@ -281,8 +361,17 @@ def decide_gate(summary: list[dict[str, Any]]) -> dict[str, Any]:
         "minimum_dataset_pmfo_vs_a6_improvement_pct": minimum_dataset,
         "macro_pmfo_vs_best_control_improvement_pct": macro_control,
         "dataset_results": dataset_rows,
+        "pairwise_macro_diagnostics": pairwise,
         "gates": gates,
         "failure_attribution": attribution,
+        "direction_rejection_scope": "exact_pmfo_rct_v1_only",
+        "rollback_step": 4,
+        "component_status": {
+            "conservative_synthesis": "retained_for_redesign",
+            "recursive_transition": "not_supported_as_v1_claim",
+            "structured_projective_decoder": "weak_signal_not_gate_passed",
+            "encoder_sufficiency": "not_causally_tested_by_step7b",
+        },
     }
 
 
@@ -306,6 +395,7 @@ def render_report(
     output_dir: Path,
     summary: list[dict[str, Any]],
     gate: dict[str, Any],
+    segment_rows: list[dict[str, Any]],
 ) -> None:
     valid = [row for row in summary if row["status"] == "ok"]
     fields = [
@@ -341,11 +431,54 @@ def render_report(
         f"- failure attribution: `{gate['failure_attribution']}`；",
     ]
     if gate["decision"] != "analysis_pending":
+        pairwise = gate["pairwise_macro_diagnostics"]
+        a6_segment_rows = [
+            row for row in segment_rows if row["reference_arm"] == "a6"
+        ]
         lines.extend(
             [
                 f"- macro PMFO vs A6: `{gate['macro_pmfo_vs_a6_improvement_pct']:.4f}%`；",
                 f"- worst dataset PMFO vs A6: `{gate['minimum_dataset_pmfo_vs_a6_improvement_pct']:.4f}%`；",
                 f"- macro PMFO vs per-dataset best control: `{gate['macro_pmfo_vs_best_control_improvement_pct']:.4f}%`；",
+                "",
+                "## Mechanism Diagnostics",
+                "",
+                "| comparison | macro dense-MSE improvement | interpretation |",
+                "| --- | ---: | --- |",
+                f"| PMFO vs A6 | {pairwise['pmfo_vs_a6_macro_improvement_pct']:.4f}% | exact v1 effectiveness failed |",
+                f"| PMFO vs dense matched | {pairwise['pmfo_vs_dense_mlp_matched_macro_improvement_pct']:.4f}% | weak structured-decoder signal, not gate-level evidence |",
+                f"| PMFO vs no-transition | {pairwise['pmfo_vs_pmfo_no_transition_macro_improvement_pct']:.4f}% | recursive transition not independently supported |",
+                f"| PMFO vs no-conservation | {pairwise['pmfo_vs_pmfo_no_conservation_macro_improvement_pct']:.4f}% | conservation retained for redesign |",
+                "",
+                "### PMFO versus A6 by horizon segment",
+                "",
+                *markdown_table(
+                    a6_segment_rows,
+                    [
+                        "dataset",
+                        "segment",
+                        "pmfo_improvement_pct",
+                        "pmfo_winning_horizons",
+                        "segment_horizon_count",
+                    ],
+                ),
+                "",
+                "[Fact] 15/15 runs与15/15 trained invariants通过，无numeric、prefix或protocol pathology。",
+                "",
+                "[Strong Evidence] PMFO-RCT相对A6在三数据集dense-MSE AUC均退化；ETTm1的720个horizon无一胜出。",
+                "",
+                "[Strong Evidence] conservative synthesis相对no-conservation在三数据集均改善；该组件不因v1整体失败而被否定。",
+                "",
+                "[Strong Evidence] recursive transition相对no-transition的macro improvement接近零且跨数据集不一致，不能作为v1贡献。",
+                "",
+                "[Inference] 当前失败更符合readout/function-class replacement问题，而非Encoder不足：Step 7B没有操纵Encoder，",
+                "因此不能对Encoder sufficiency作因果结论。",
+                "",
+                "## Decision And Rollback",
+                "",
+                "`PMFO-RCT v1`作为paper-core候选关闭，回滚Step 4。关闭范围仅限当前固定mixed-radix tree、",
+                "state transition与A6 readout整体替换的组合，不拒绝projective operator方向。下一轮先诊断",
+                "A6 function class、fixed tree partition和history-to-node interface，禁止叠加MIPR、Encoder或MoE掩盖失败。",
                 "",
                 "[Boundary] 单seed只能形成`partial_pass`或rollback，不能形成effectiveness claim。",
             ]
@@ -365,15 +498,21 @@ def main() -> None:
         for arm in ARMS
     ]
     comparisons = comparison_rows(summary)
+    segments = horizon_segment_rows(args.raw_root)
     gate = decide_gate(summary)
     write_csv(args.output_dir / "run_summary.csv", summary)
     if comparisons:
         write_csv(args.output_dir / "comparisons.csv", comparisons)
+    if segments:
+        write_csv(
+            args.output_dir / "horizon_segment_comparisons.csv",
+            segments,
+        )
     (args.output_dir / "step7b_gate.json").write_text(
         json.dumps(gate, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
-    render_report(args.output_dir, summary, gate)
+    render_report(args.output_dir, summary, gate, segments)
     print(json.dumps(gate, ensure_ascii=False, sort_keys=True))
 
 

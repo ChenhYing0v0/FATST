@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Step 7B remote architecture screening running |
-| `active_question` | PMFO-RCT的refinement-conservative mechanism能否在matched controls下产生独立effectiveness？ |
-| `active_candidates` | `SC1-PMFO-RCT`, `SC2-MIPR` |
-| `active_protocol` | `docs/experiments/stage-c-pmfo-rct-step7-protocol.md` |
-| `method_implementation` | PMFO-RCT与controls已实现；15-run matrix running on 3090 GPU 0/1/2 |
-| `rollback_point` | capacity/no-transition control explains -> Step 4；numeric/readout fault -> Step 6 |
+| `current_step` | Step 4 rollback after Step 7B；SC1 operator redesign |
+| `active_question` | 如何保留projectivity/conservation，同时避免v1 fixed-tree readout整体替换A6 function class造成的退化？ |
+| `active_candidates` | `SC1-projective-operator-redesign`；`SC2-MIPR` held |
+| `active_protocol` | `analysis/stage_c_step7b_pmfo_rct_20260713/step7b_screening_report.md` |
+| `method_implementation` | `PMFO-RCT v1` frozen as failed evidence；new implementation unauthorized |
+| `rollback_point` | Step 4；先重审function class、partition与history-to-node interface，不改Encoder |
 
 ## Completed Foundation
 
@@ -86,25 +86,28 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 5. 预注册dense/no-transition/no-conservation与raw/random-projector controls；
 6. SC1/SC2均标记`narrative_ready`，但SC2实现必须等待SC1 operator contract。
 
-## Step 7-10: Active Conditional Path
+## Step 7-10: PMFO-RCT v1 Result
 
 1. Step 7A已完成：90/90 shape-prefix cases及refinement/conservation/locality gate通过，不训练；
-2. Step 7B固定在ETTm1+ETTh2+Weather、seed2021比较A6、dense matched、no-transition、
-   no-conservation、PMFO-RCT；
-3. SC1通过后才实现MIPR，对比same-measure raw与random-projector control；
-4. `2x2` factorial：A6/PMFO × raw/MIPR；
-5. 3 datasets × 3 seeds × dense horizons；
-6. 第二 backbone generality；
-7. official native baseline reproduction 后再横向比较。
+2. Step 7B完成ETTm1+ETTh2+Weather、seed2021的15-run matched-control screen；
+3. PMFO-RCT相对A6 macro `-1.0955%`且三dataset均退化，effectiveness gate失败；
+4. conservation相对no-conservation macro `+2.3393%`，保留；recursive transition相对no-transition仅
+   `+0.0486%`，v1 claim撤回；
+5. decision=`rollback_step4`；SC2-MIPR与joint factorial暂停，不得建立在失败operator上。
 
 禁止在最小 gate 前加入 Encoder innovation、MoE、router、auxiliary reconstruction 或 per-horizon tuning。
 
 ## Next Concrete Action
 
-以长间隔监控Step 7B的15 runs；报告dataset/run位置、epoch和ETA。全部完成后轻量同步并在本地重算gate，
-按capacity/no-transition/interface/numeric规则作failure attribution。运行期间不加入Encoder innovation、
-MIPR、MoE或per-horizon tuning。launch记录见
-`analysis/stage_c_step7b_pmfo_rct_20260713/launch_record.md`。
+回到Step 4，先执行source-informed redesign audit而不是立刻写新模型：
+
+1. 审计A6 `coeff × temporal basis` function class与PMFO v1 coefficient generator的functional containment；
+2. 诊断固定`90/30/10/5/1` partition是否把H720因子分解误当成跨dataset future structure；
+3. 用offline representation/interface test区分`partition wrong`、`history-to-node interface wrong`与
+   `readout function class too restrictive`；
+4. 仅在新候选通过Step 4-6 narrative/theory gate后重新授权Step 7；Encoder、MIPR、MoE继续冻结。
+
+Step 7B证据见`analysis/stage_c_step7b_pmfo_rct_20260713/step7b_screening_report.md`。
 
 ## Historical Boundary
 

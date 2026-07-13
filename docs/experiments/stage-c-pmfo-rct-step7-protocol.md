@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `candidate` | `SC1-PMFO-RCT` |
-| `current_step` | Step 7B remote screening running；launched 2026-07-13T19:13:48+08:00 |
+| `current_step` | Step 10 decision complete；`PMFO-RCT v1` rollback Step 4 |
 | `carrier` | frozen `A6-LBF-natural-baseline` Encoder contract |
 | `objective` | frozen full-H720 pointwise L1 training；H720 validation-MSE selection；MIPR forbidden |
-| `implementation_authorized` | Step 7A complete；Step 7B runner preparation allowed |
-| `remote_training_authorized` | `true`；15-run matrix running on GPU 0/1/2 |
-| `rollback` | invariant/readout fault -> Step 6；matched control explains -> Step 4 |
+| `implementation_authorized` | Step 7A complete；v1 implementation frozen as evidence |
+| `remote_training_authorized` | `false`；15/15 runs complete，no continuation sweep |
+| `rollback` | exact v1 `readout_or_head_design_wrong` -> Step 4 |
 
 ## Question
 
@@ -104,14 +104,30 @@ Step 7B只形成`partial_pass`或rollback，不直接形成paper claim。`partia
 
 单seed通过只授权3-seed confirmation；不允许写成effectiveness gate pass。
 
+### Step 7B Result (2026-07-13)
+
+- 15/15 runs与15/15 trained invariants完成；无numeric、protocol或prefix pathology；
+- PMFO-RCT相对A6 dense-MSE AUC：ETTm1 `-2.0844%`、ETTh2 `-0.4783%`、Weather
+  `-0.7238%`，macro `-1.0955%`；
+- PMFO相对matched dense control macro `+0.7193%`，仅为弱structured-decoder信号；
+- PMFO相对no-transition macro `+0.0486%`，recursive transition没有独立支持；
+- PMFO相对no-conservation三dataset均改善，macro `+2.3393%`，conservative synthesis保留为
+  redesign evidence；
+- decision：`rollback_step4`；关闭范围仅为fixed mixed-radix tree、v1 state transition与整体替换A6
+  readout的组合，不拒绝projective operator方向，也不据此判定Encoder不足。
+
+完整dense-horizon与failure-attribution报告：
+`analysis/stage_c_step7b_pmfo_rct_20260713/step7b_screening_report.md`。
+
 ## Failure Attribution
 
 - invariant失败：`readout_or_head_design_wrong`或`implementation_fault`，回Step 6；
-- PMFO≈dense matched：`capacity_control_explains`，回Step 4；
-- PMFO≈no-transition：recursive refinement mechanism不成立，回Step 4；
+- PMFO≈dense matched：tree geometry没有独立gate-level evidence，回Step 4；
+- PMFO≈no-transition：v1 recursive transition claim不成立，回Step 4；
 - 仅ETTh2失败且出现interface证据：`intervention_point_wrong`待审计，不直接更换Encoder；
 - divergence/异常退化：`optimization_or_numeric_pathology`，只能否定本实现；
-- 稳定且被controls击败：`failed_as_core_candidate`，不得叠加MIPR/Encoder/MoE掩盖。
+- 稳定且被controls击败：exact v1 `readout_or_head_design_wrong`，不得叠加MIPR/Encoder/MoE掩盖；
+- 若conservation/no-conservation产生跨dataset一致差异，只更新该组件状态，不把整体失败扩大为组件失败。
 
 ## Expected Artifacts
 

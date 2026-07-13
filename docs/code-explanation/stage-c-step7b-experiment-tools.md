@@ -75,6 +75,12 @@ smoke；`STATUS_ONLY=1`报告metrics/invariant完成数。
 `comparisons.csv`记录相对A6结果；`step7b_gate.json`保存预注册gate与failure attribution；报告只允许
 `partial_pass`或明确rollback，单seed不能写成effectiveness pass。
 
+`horizon_segment_comparisons.csv`进一步将H1..720固定分为`1-48/49-96/97-192/193-336/337-720`，记录
+PMFO相对A6及三个controls的segment mean MSE、relative improvement和逐H胜出数。它用于定位收益/退化
+发生在哪个domain区间，不改变预注册的uniform-horizon primary gate。`pairwise_macro_diagnostics`分别报告
+PMFO相对dense/no-transition/no-conservation的三dataset macro，用于把整体失败拆成tree geometry、transition
+与conservation组件证据；这些diagnostics不能覆盖primary A6 gate。
+
 ## 6. Verification Boundary
 
 本地`check_stage_c_step7b_local.py`验证cumulative metric与直接MSE/MAE等价，并对五arms比较native与
