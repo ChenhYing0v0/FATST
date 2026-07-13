@@ -1,42 +1,34 @@
 # R_2026_FATST
 
-Clean research repository for the next stage after `R_2026_FSA`.
+StageC research repository for unified varied-horizon time series forecasting.
 
-## Scope
+## Active Research
 
-This repository starts from a clean implementation and documentation base for a
-high-level SCI journal paper in time series forecasting.
+- carrier: frozen `A6-LBF-natural-baseline` on Weather, ETTm1, ETTh2;
+- decoder candidate: Projective Multiresolution Forecast Operator (PMFO);
+- training candidate: Projective Increment Risk (PIR);
+- current step: Step 2-3 problem-existence diagnostics; method training is not authorized yet.
 
-Confirmed research directions:
+Start from:
 
-- one model for multi-horizon forecasting
-- future-aware architecture
-- MoE-style conditional computation
+1. `docs/paper-mainline.md`
+2. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`
+3. `docs/research-roadmap.md`
+4. `docs/experiments/stage-c-pmfo-pir-problem-diagnostic.md`
 
-Confirmed evidence boundary:
+Historical scripts, local candidates, configs and documents are retained under explicit `archive/` directories.
+Detailed experiment evidence remains under `analysis/`.
 
-- Zotero is the source of truth for literature discovery and metadata.
-- The Zotero `FSA` subset is the seed paper set for this project.
-- SRSNet is the key comparison baseline.
-- Old `R_2026_FSA` code, configs, artifacts, and memory are not imported unless
-  the user approves a specific source and purpose.
-
-## Directory Layout
+## Repository Layout
 
 ```text
-analysis/              Analysis notebooks, reports, and post-processing notes.
-artifacts/             Generated outputs; large or reproducible outputs stay untracked.
-baselines/             Baseline reproduction notes and local wrappers.
-configs/               Experiment and model configs.
-data/                  Local data entry point; raw data should not be committed.
-docs/                  Project documentation.
-docs/code-explanation/ Code-facing explanations for implementation changes.
-docs/experiments/      Experiment plans, run logs, and result reports.
-docs/remote/           Remote execution and server usage notes.
-Papers/                Canonical Chinese paper notes from Zotero sources.
-scripts/               Utility scripts.
-src/fatst/             Local package for project code.
-tests/                 Targeted tests and verification scripts.
+analysis/              Detailed experiment evidence and reports.
+baselines/             Active carriers and external controls; old candidates are archived.
+configs/               Frozen active contract and its provenance.
+docs/                  Paper mainline, roadmap, active ledger and protocols.
+scripts/               Active runners/analyzers only; old scripts are archived.
+src/fatst/             Local package skeleton.
+tests/                 Targeted verification.
 ```
 
 ## First Checks
@@ -44,11 +36,4 @@ tests/                 Targeted tests and verification scripts.
 ```bash
 python scripts/check_project_structure.py
 scripts/remote/check_529lab_3090_gpus.sh
-```
-
-The remote GPU check assumes `529_Lab-3090` is a valid SSH alias. Pass a host
-explicitly if needed:
-
-```bash
-scripts/remote/check_529lab_3090_gpus.sh user@host
 ```

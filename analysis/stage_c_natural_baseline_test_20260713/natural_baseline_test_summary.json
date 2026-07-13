@@ -1,0 +1,30 @@
+{
+  "candidate": "A6-LBF-natural-baseline",
+  "complete": true,
+  "contract_hash": "254d85d47a9e5b7c212f8a8b88decf17a0328a1ea1df324c9cc65be4c672a50c",
+  "datasets": [
+    "Weather",
+    "ETTm1",
+    "ETTh2"
+  ],
+  "decision": "frozen_test_reference_ready",
+  "expected_rows": 72,
+  "horizons": [
+    48,
+    96,
+    144,
+    192,
+    288,
+    336,
+    512,
+    720
+  ],
+  "observed_rows": 72,
+  "seeds": [
+    2021,
+    2022,
+    2023
+  ],
+  "selection_used_test": false,
+  "test_role": "post_freeze_reference_only"
+}

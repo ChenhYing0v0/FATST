@@ -1,15 +1,8 @@
-# Code Explanation
+# Active Code Explanations
 
-模型结构或非平凡代码更新后，在本目录同步写 code-facing explanation。
+- `phase5-clean-timealign-a6-lbf.md`: active natural A6 forward path；
+- `stage-c-natural-baseline-test.md`: baseline evaluator/analyzer/runner。
+- `stage-c-active-mode-gate.md`: 默认 training CLI 对归档 encoder/readout/loss 的入口保护。
 
-模型文档优先按 forward computation flow 组织，说明 tensor names、shapes、
-operations，以及 changed tensor 进入下游模块的位置。
-
-非模型代码按 functional module 组织，例如 training、data loading、metrics、
-runner、diagnostics、remote scripts 或 analysis。
-
-## 当前 Phase5 入口
-
-- `phase5-clean-timealign-a6-lbf.md`: StageA 固化后的 clean official TimeAlign +
-  A6-LBF-r256 实现说明。
-- `docs/archive/phase5-stage-a/code-explanation/`: 旧 StageA 变体和诊断代码说明归档。
+下一次 model或diagnostic code 更新必须在本目录新增对应说明，并按 tensor/artifact flow定义 shape、统计列与
+code-theory consistency。历史说明已移入 `docs/archive/pre-stage-c-reset-20260713/code-explanation/`。

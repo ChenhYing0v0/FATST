@@ -1,9 +1,7 @@
-# Configs
+# Active Configs
 
-保存实验和模型配置。
+- `stage_c_mechanism_control_natural_dataset_profiles.json`: 后续所有 mechanism/control 的冻结 contract；
+- `stage_c_dataset_profile_calibration_r2.json`: contract 引用的 validation-only profile provenance。
 
-配置文件变更后，至少运行对应格式解析检查。实验配置应记录 seed、dataset、
-horizon、model、trainer、output path 等关键字段。
-
-- `stage_c_mechanism_control.json`：StageC `SC0-MCP` validation-only standardized carrier calibration；
-  winner冻结前禁止读取 test metrics进行配置选择。
+contract hash 为 `254d85d47a9e5b7c212f8a8b88decf17a0328a1ea1df324c9cc65be4c672a50c`。
+不得根据 test 或新 mechanism 重新选择 dataset profile。旧 configs 位于 `configs/archive/`。

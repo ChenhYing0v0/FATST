@@ -41,6 +41,13 @@ PREFIX_READOUT_MODES = {
     "subspace-tiled-basis-operator-independent",
 }
 
+ACTIVE_STAGE_C_CONTRACT = {
+    "mode": "unified",
+    "encoder_mode": "timealign-token-mlp",
+    "readout_mode": "learned-basis-forecast-operator",
+    "pred_loss_mode": "full",
+}
+
 
 @dataclass(frozen=True)
 class OfficialPreset:
@@ -1084,7 +1091,36 @@ def parse_args() -> argparse.Namespace:
         choices=["full", "multi-prefix"],
         default="full",
     )
+    parser.add_argument(
+        "--allow-archived-research-modes",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help="Opt in to historical modes that are not active StageC research paths.",
+    )
     args = parser.parse_args()
+    if not args.allow_archived_research_modes:
+        active_values = {
+            "mode": args.mode,
+            "encoder_mode": args.encoder_mode,
+            "readout_mode": args.readout_mode,
+            "pred_loss_mode": args.pred_loss_mode,
+        }
+        inactive = {
+            name: value
+            for name, value in active_values.items()
+            if value != ACTIVE_STAGE_C_CONTRACT[name]
+        }
+        if inactive:
+            formatted = ", ".join(
+                f"{name}={value!r}" for name, value in inactive.items()
+            )
+            raise ValueError(
+                "Inactive pre-StageC research mode requested: "
+                f"{formatted}. The default active contract is "
+                f"{ACTIVE_STAGE_C_CONTRACT}. Use "
+                "--allow-archived-research-modes only for an explicitly "
+                "authorized historical reproduction."
+            )
     args.validation_horizons = args.validation_horizons or list(args.target_horizons)
     args.evaluation_horizons = args.evaluation_horizons or list(args.target_horizons)
     if max(args.target_horizons) > args.pred_len:
