@@ -17,10 +17,10 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Step 7A passed；Step 7B runner implementation/remote launch preparation |
+| `current_11_step` | Step 7B remote architecture screening running |
 | `current_candidate` | `SC1-PMFO-RCT`（implementation_gate_passed）、`SC2-MIPR`（narrative_ready）；effectiveness均pending |
-| `latest_decision` | PMFO-RCT四个variants已实现；90/90 shape-prefix与refinement/conservation/locality gate通过 |
-| `next_required_action` | Step7B runner本地验证、commit/push；remote git pull与GPU preflight后启动15 runs |
+| `latest_decision` | Step7B protocol smoke通过；commit `8abe9b7`的15-run matrix已在三张3090启动 |
+| `next_required_action` | 长间隔监控15 runs；完成后同步、重算dense-horizon gate并做failure attribution |
 | `method_training_authorized` | `true`；仅限Step7B frozen architecture-only matrix |
 | `rollback_point` | capacity/no-transition control explains -> Step 4；numeric/readout fault -> Step 6 |
 
@@ -28,7 +28,7 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Step 7A complete；Step 7B launch preparation |
+| `current_step` | Step 7B remote training/evaluation running |
 | `problem` | A6已domain-only但single dense basis没有nested refinement；有序memory可用但ETTh2线性重组风险仍在；simple horizon reweighting缺少novelty |
 | `existence_evidence` | D1-v2: structure 3/3、frozen ordered-memory use 3/3、raw/PIR gradient aggregate 3/3；benchmark-measure projected excess 0/3 |
 | `idea` | PMFO-RCT用future tree作conservative refinement；MIPR把measure metric投影到相同scale blocks |
@@ -87,6 +87,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | D1-v2 offline diagnostic | Step2-3 problem gate | structure/frozen-memory/aggregate PIR均3/3；ETTh2 linear probe fail；benchmark PIR excess 0/3 | SC1进入Step4-6；SC2 measure-conditional进入Step4-6 | `analysis/stage_c_d1_pmfo_pir_offline_v2_20260713/research_interpretation.md` |
 | SC1/SC2 Step4-6 theory gate | external prior-art + algebra audit | generic basis/wavelet/reweight claims被排除；PMFO invariants pass；MIPR measure geometry明确 | SC1/SC2均`narrative_ready`；remote training仍false | `analysis/stage_c_step46_pmfo_pir_theory_gate_20260713/step46_design_and_prior_art.md` |
 | SC1 Step7A local gate | model implementation + invariant audit | 90/90 shape-prefix；float32 max gap `4.172e-7`；conservation `2.682e-7`；locality `0` | `implementation_gate_passed`；effectiveness pending；remote training false | `analysis/stage_c_step7a_pmfo_rct_local_20260713/step7a_local_gate_report.md` |
+| SC1 Step7B remote screen | architecture-only matched controls | 15 runs launched；GPU0/1/2 preflight均15 MiB；protocol smoke pass | `running`；无performance decision | `analysis/stage_c_step7b_pmfo_rct_20260713/launch_record.md` |
 
 ## Pending Tasks
 
@@ -99,7 +100,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | Run D1 problem diagnostics | `completed_v2` | v1 invalid evidence与v2 accepted evidence分离 |
 | PMFO/PIR Step4-6 gate | `completed` | narrative-ready decisions与paper-mainline已同步 |
 | PMFO-RCT Step7A local implementation | `completed` | 四variants、local gate与code explanation已落地 |
-| PMFO-RCT Step7B architecture screening | `pending` | 固定ETTm1/ETTh2/Weather、seed2021；先准备runner，不引入MIPR |
+| PMFO-RCT Step7B architecture screening | `running` | 15-run matrix；完成后同步/analyze，不引入MIPR |
 
 ## Paper Mainline Sync Log
 

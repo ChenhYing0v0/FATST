@@ -5,11 +5,11 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Step 7A passed；Step 7B runner implementation and remote launch preparation |
+| `current_step` | Step 7B remote architecture screening running |
 | `active_question` | PMFO-RCT的refinement-conservative mechanism能否在matched controls下产生独立effectiveness？ |
 | `active_candidates` | `SC1-PMFO-RCT`, `SC2-MIPR` |
 | `active_protocol` | `docs/experiments/stage-c-pmfo-rct-step7-protocol.md` |
-| `method_implementation` | PMFO-RCT与controls已实现；Step7B remote matrix authorized，launch preflight pending |
+| `method_implementation` | PMFO-RCT与controls已实现；15-run matrix running on 3090 GPU 0/1/2 |
 | `rollback_point` | capacity/no-transition control explains -> Step 4；numeric/readout fault -> Step 6 |
 
 ## Completed Foundation
@@ -101,10 +101,10 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 
 ## Next Concrete Action
 
-完成Step 7A文档、commit/push后，准备Step 7B三数据集runner与launch manifest；启动前必须按remote policy
-检查GPU并明确记录launch。Step 7B沿用full-H720 pointwise L1训练和H720 validation-MSE selection，
-不加入Encoder innovation、MIPR、MoE或
-per-horizon tuning。Step 7A artifact见`analysis/stage_c_step7a_pmfo_rct_local_20260713/`。
+以长间隔监控Step 7B的15 runs；报告dataset/run位置、epoch和ETA。全部完成后轻量同步并在本地重算gate，
+按capacity/no-transition/interface/numeric规则作failure attribution。运行期间不加入Encoder innovation、
+MIPR、MoE或per-horizon tuning。launch记录见
+`analysis/stage_c_step7b_pmfo_rct_20260713/launch_record.md`。
 
 ## Historical Boundary
 

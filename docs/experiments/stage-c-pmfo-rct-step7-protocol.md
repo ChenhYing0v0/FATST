@@ -5,11 +5,11 @@
 | Field | Content |
 | --- | --- |
 | `candidate` | `SC1-PMFO-RCT` |
-| `current_step` | Step 7A passed；Step 7B launch preparation |
+| `current_step` | Step 7B remote screening running；launched 2026-07-13T19:13:48+08:00 |
 | `carrier` | frozen `A6-LBF-natural-baseline` Encoder contract |
 | `objective` | frozen full-H720 pointwise L1 training；H720 validation-MSE selection；MIPR forbidden |
 | `implementation_authorized` | Step 7A complete；Step 7B runner preparation allowed |
-| `remote_training_authorized` | `true`；user authorized 2026-07-13，launch需GPU preflight |
+| `remote_training_authorized` | `true`；15-run matrix running on GPU 0/1/2 |
 | `rollback` | invariant/readout fault -> Step 6；matched control explains -> Step 4 |
 
 ## Question
