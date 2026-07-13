@@ -13,7 +13,7 @@
 
 1. `batch_x: [B,720,C]`按A6相同history mean/std归一化；
 2. frozen `_encode_normalized_history`产生`memory: [B,C,P,D]`；
-3. flatten为`features: [B*C,768]`；
+3. flatten为`features: [B*C,P*D]`；five-dataset contract下实际width为768/1536/3072；
 4. `batch_y[:,-720:,:]`用同一history mean/std变为`target: [B*C,720]`；
 5. time heads直接输出`[N,720]`；coefficient heads输出`alpha: [N,720]`；
 6. coefficient training使用`target @ Q.T`，validation通过`alpha @ Q`还原time output；
@@ -21,9 +21,11 @@
 
 ## Probe Modules
 
-`LowRankLinearHead`是无activation的`768 -> 256 -> 720`；`DenseNonlinearHead`提供两个预注册width；
-`GroupedNonlinearHead`为每个group建立独立`768 -> 32 -> n_l` block，并把outputs写回其coefficient indices。
-random-group只改变indices assignment，random-basis只改变fixed orthogonal matrix；模块大小和optimizer保持一致。
+`LowRankLinearHead`是无activation的`P*D -> 256 -> 720`；`DenseNonlinearHead`提供parameter-matched与
+same-total-units两个controls；`GroupedNonlinearHead`为每个group建立独立`P*D -> 32 -> n_l` block，并把
+outputs写回其coefficient indices。parameter-matched dense hidden按实际input width动态计算；768/1536/3072
+分别为197/250/291，matched parameter gap均低于0.5%。random-group只改变indices assignment，random-basis
+只改变fixed orthogonal matrix；模块大小和optimizer保持一致。
 
 ## Split And Optimization Safety
 

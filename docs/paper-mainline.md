@@ -11,9 +11,9 @@
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` dataset profiles |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
-| `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；ETTh1/ETTm2 profile calibration pending |
+| `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | Contribution 1 slot open；SC1-D2 partial_core3；SC2-MIPR held |
+| `paper_core_status` | Contribution 1 slot open；SC1-D2 formal5 next；SC2-MIPR held |
 
 ## Research Thesis
 

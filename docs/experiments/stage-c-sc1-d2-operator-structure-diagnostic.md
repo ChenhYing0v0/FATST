@@ -10,7 +10,7 @@
 | `problem` | frozen ordered memory是否包含超出rank expansion与generic nonlinearity的true-scale conditional structure？ |
 | `carrier` | frozen `A6-LBF-natural-baseline` Encoder checkpoints |
 | `formal_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather × seeds 2021/2022/2023 |
-| `current_precheck` | ETTh2, ETTm1, Weather；ETTh1/ETTm2 profiles pending |
+| `current_precheck` | core3 partial；five-dataset profiles frozen；formal5 implementation ready |
 | `test_used` | `false` |
 | `forecast_model_updated` | `false` |
 | `method_training_authorized` | `false` |
@@ -41,7 +41,7 @@ Encoder输出
 
 $$
 M\in\mathbb R^{B\times C\times P\times D},\qquad
-h=\operatorname{vec}(M)\in\mathbb R^{BC\times768}.
+h=\operatorname{vec}(M)\in\mathbb R^{BC\times(PD)}.
 $$
 
 probe target为同一history statistics下的full future：
@@ -72,13 +72,17 @@ $$
 
 | Arm | Mapping | Parameters | Attribution role |
 | --- | --- | ---: | --- |
-| `rank256_linear` | `768 -> 256 -> 720`，无activation | 381,904 | A6 affine-family rank control |
-| `full_affine` | `768 -> 720` | 553,680 | full-rank affine control |
-| `dense_nonlinear_param_h197` | `768 -> GELU(197) -> 720` | 294,053 | parameter-matched dense nonlinear control |
-| `dense_nonlinear_units_h352` | `768 -> GELU(352) -> 720` | 524,848 | same-total-hidden-units / stronger dense control |
-| `true_scale_grouped` | 11个独立`768 -> GELU(32) -> n_l` | 294,448 | tested scale-aligned hypothesis |
-| `random_group_s*` | true $Q$，随机把720 coefficients分成相同group sizes | 294,448 | row-group semantics control ×3 |
-| `random_basis_s*` | random orthogonal $Q$，使用相同contiguous group sizes | 294,448 | basis semantics control ×3 |
+| `rank256_linear` | `PD -> 256 -> 720`，无activation | dynamic | A6 affine-family rank control |
+| `full_affine` | `PD -> 720` | dynamic | full-rank affine control |
+| `dense_nonlinear_param_matched` | `PD -> GELU(h*) -> 720` | matched within 0.5% | parameter-matched dense nonlinear control |
+| `dense_nonlinear_units_h352` | `PD -> GELU(352) -> 720` | dynamic | same-total-hidden-units / stronger dense control |
+| `true_scale_grouped` | 11个独立`PD -> GELU(32) -> n_l` | dynamic | tested scale-aligned hypothesis |
+| `random_group_s*` | true $Q$，随机把720 coefficients分成相同group sizes | same as true | row-group semantics control ×3 |
+| `random_basis_s*` | random orthogonal $Q$，使用相同contiguous group sizes | same as true | basis semantics control ×3 |
+
+实际$PD$由frozen natural profile决定：三套旧profiles为768，ETTh1为1536，ETTm2为3072。parameter-matched
+dense hidden $h^*$分别为197、250、291。profile选择不考虑params；D2只在每个dataset内部保持controls公平，
+跨dataset比较使用normalized improvement。
 
 true scale group sizes固定为
 `[1,1,2,4,8,16,32,64,128,256,208]`；random control seeds固定为
@@ -149,9 +153,9 @@ formal pass必须同时满足：
 
 ## 8. Current Execution Boundary
 
-当前ETTh2/ETTm1/Weather拥有冻结的三seed natural checkpoints，先执行`core3_precheck`检查pipeline、
-optimization与明显signal。ETTh1/ETTm2必须按five-dataset policy完成validation-only profile calibration后
-再加入formal gate；不得从旧FSA或archive继承配置。
+ETTh2/ETTm1/Weather的core3 precheck已形成`partial_core3_basis_geometry_signal_only`。ETTh1/ETTm2已按
+five-dataset policy完成14-run validation-only calibration并冻结；formal5从两套artifact families显式加载
+checkpoint，不复制或重命名历史outputs。下一步直接运行五dataset × 三seeds × 11 arms hard gate。
 
 ### Precheck gate amendment
 
@@ -173,4 +177,4 @@ random-basis整体更弱时，该统计会掩盖true grouping并未超过random 
 | `narrative_gate` | not applicable to diagnostic |
 | `effectiveness_gate` | not started |
 | `artifacts` | worker metrics/history/metadata + pairwise/dataset/summary report |
-| `decision` | core3 precheck next；method implementation unauthorized |
+| `decision` | formal5 next；method implementation unauthorized |

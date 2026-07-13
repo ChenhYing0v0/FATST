@@ -8,10 +8,11 @@
 | `dataset_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `screen_seed` | 2021 |
 | `confirmation_seeds` | 2021, 2022, 2023 |
-| `current_ready_profiles` | ETTh2, ETTm1, Weather |
-| `profile_calibration_pending` | ETTh1, ETTm2；14-run extension pipeline ready |
-| `effective_after` | ETTh1/ETTm2 validation-only natural profiles frozen |
+| `current_ready_profiles` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
+| `profile_calibration_pending` | none |
+| `effective_after` | active since 2026-07-14 |
 | `extension_contract` | `configs/stage_c_five_dataset_profile_extension.json` |
+| `frozen_contract` | `configs/stage_c_five_dataset_natural_profiles.json` |
 
 ## Why Five Datasets
 

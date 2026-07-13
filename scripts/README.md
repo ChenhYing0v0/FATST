@@ -33,6 +33,8 @@ StageC active entrypoints：
   stability审计；parameter count不参与选择。
 - `remote/run_stage_c_five_profile_extension.sh`: 14-run profile extension matrix，按A/B/C阶段顺序执行并可续跑；
 - `sync_stage_c_five_profile_extension_results.sh`: 轻量同步extension artifacts并本地独立重算三阶段结论。
+- `remote/run_stage_c_sc1_d2_formal5.sh`: workload-aware五dataset × 三checkpoint seeds × 11 arms hard gate；
+- `sync_stage_c_sc1_d2_formal5_results.sh`: 同步formal5 artifacts并本地独立重算最终problem decision。
 
 历史 runner/analyzer 已移入 `scripts/archive/`，不得作为当前研究入口。新增脚本必须服务active ledger中明确的
 next action，并同步对应experiment protocol与code explanation。

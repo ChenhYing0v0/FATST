@@ -1,0 +1,12 @@
+{
+  "complete": true,
+  "decision": "phase_b_width_selected",
+  "parameter_count_used_for_selection": false,
+  "phase": "b",
+  "profile_hash": "ed033d420e8e94ce46363fabb12a8a34ab0e5cd538b60700046e9d9083d3debc",
+  "selected_profiles": {
+    "ETTh1": "r2b_p24_d64_ff128_medium",
+    "ETTm2": "r2b_p48_d64_ff128_medium"
+  },
+  "test_metrics_used_for_selection": false
+}

@@ -10,7 +10,7 @@
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` |
 | `active_candidates` | no paper-core SC1 candidate；`SC1-D2 partial_core3`；`SC2-MIPR` held |
-| `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；ETTh1/ETTm2 profiles pending |
+| `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `stage_exit` | 两项分别过 narrative/effectiveness gate，`2x2` joint gate显示独立主效应与联合收益 |
 | `stage_rollback` | problem/novelty不跨 dataset -> Step 2；禁止直接堆叠 method |
 
@@ -21,7 +21,7 @@
 | `current_11_step` | Step 2/3 active；SC1-D2 frozen-memory diagnostic |
 | `current_candidate` | `SC1-D2 partial_core3_basis_geometry_signal_only`；`SC2-MIPR` held |
 | `latest_decision` | true basis vs random basis 9/9 positive；true grouping vs random grouping macro -0.2212% |
-| `next_required_action` | 运行14-run ETTh1/ETTm2 validation-only calibration；通过后按split random gates执行formal5 |
+| `next_required_action` | 运行SC1-D2 formal5；按split random-group/random-basis gates决策 |
 | `method_training_authorized` | `false`；D2只可作为diagnostic，new SC1需重新通过Step 4-6 |
 | `rollback_point` | Step 2/3；不改Encoder、不叠加nonlinearity、MIPR或MoE来挽救FPMO-DS |
 
@@ -47,14 +47,16 @@
 | Weather | `r2b_p12_d64_ff128_medium` | 12 | 64 | 128 |
 | ETTm1 | `r2b_p24_d32_ff64_narrow` | 24 | 32 | 64 |
 | ETTh2 | `r2b_p12_d64_ff128_medium` | 12 | 64 | 128 |
-| ETTh1 | `calibration_pending` | TBD | TBD | TBD |
-| ETTm2 | `calibration_pending` | TBD | TBD | TBD |
+| ETTh1 | `r2b_p24_d64_ff128_medium` | 24 | 64 | 128 |
+| ETTm2 | `r2b_p48_d64_ff128_medium` | 48 | 64 | 128 |
 
 contract hash:
 `254d85d47a9e5b7c212f8a8b88decf17a0328a1ea1df324c9cc65be4c672a50c`。
 
-该hash只覆盖当前三dataset历史contract。未来five-dataset suite按
-`docs/experiments/stage-c-five-dataset-validation-policy.md`先校准ETTh1/ETTm2，再生成新hash。
+历史三dataset contract hash为
+`254d85d47a9e5b7c212f8a8b88decf17a0328a1ea1df324c9cc65be4c672a50c`；新的five-dataset contract为
+`configs/stage_c_five_dataset_natural_profiles.json`，hash
+`80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a`。
 
 Governance：dataset之间允许不同自然偏好；params差异不参与选择；同一dataset后续所有机制共用同一
 profile；test、candidate identity与per-mechanism tuning不得改变profile。
@@ -102,6 +104,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-FPMO Step5 theory feasibility | arbitrary-T constructive proof + function-space/no-go audit | 9 lengths/53 prefixes max gap `5.329e-14`；T720 DS rank caps sum720 and equals full-affine class | `partial_pass_step6_design_only`；efficiency claim withdrawn；training false | `analysis/stage_c_step5_fpmo_theory_20260713/step5_theory_feasibility.md` |
 | SC1-FPMO Step6 narrative/control gate | external factorization prior art + function/control audit | DS=DA full affine；true/random grouping class不变；DS需全部720维scale latents | `rejected_by_narrative_gate`；rollback Step 2/3；D2 diagnostic next | `analysis/stage_c_step6_fpmo_narrative_control_20260713/step6_narrative_control_gate.md` |
 | SC1-D2 core3 precheck | frozen-memory head-only 3 datasets × 3 seeds × 11 arms | rank `-0.5661%`；dense nonlinear `-6.4492%`；true vs random-group `-0.2212%`；vs random-basis `+2.3137%` | `partial_core3_basis_geometry_signal_only`；formal5 mandatory | `analysis/stage_c_sc1_d2_core3_precheck_20260713/research_interpretation.md` |
+| Five-profile extension | validation-only 14-run A/B/C | ETTh1=P24/D64；ETTm2=P48/D64；mean/max CV均pass | five-dataset contract frozen；formal5 ready | `analysis/stage_c_five_profile_extension_20260713/profile_extension_report.md` |
 
 ## Pending Tasks
 
@@ -119,7 +122,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-FPMO Step5 theory feasibility | `completed_partial_pass` | M0/DA/DS boundary与no-go theorem已冻结 |
 | SC1-FPMO Step6 narrative/control design | `completed_rejected` | DS降为diagnostic control；不实现、不训练 |
 | SC1-D2 rank/nonlinearity/scale diagnostic | `partial_core3` | core3 99/99 complete；wait profile prerequisite then formal5 |
-| ETTh1/ETTm2 natural profile calibration | `adapter_repair_ready` | 首次launch因ETTh1未注册而pre-training退出；routing repair后重启14-run matrix |
+| ETTh1/ETTm2 natural profile calibration | `completed_frozen` | 14/14 validation-only；ETTh1 P24/D64，ETTm2 P48/D64；stability pass |
+| SC1-D2 formal5 | `implementation_ready` | dynamic memory width与matched dense control已通过local invariants；remote launch next |
 
 ## Paper Mainline Sync Log
 

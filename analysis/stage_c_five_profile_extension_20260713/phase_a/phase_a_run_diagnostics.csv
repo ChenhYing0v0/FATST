@@ -1,0 +1,7 @@
+dataset,profile,status,config_ok,training_ok,horizons_ok,active_forward_parameters,trained_epochs,run_dir
+ETTh1,r2a_p12_d64_ff128,ok,1,1,1,419216,7,analysis/stage_c_five_profile_extension_20260713/raw/phase_a/SC0FIVE_R2A_r2a_p12_d64_ff128/ETTh1/h720_full/seed2021
+ETTh1,r2a_p24_d64_ff128,ok,1,1,1,613904,8,analysis/stage_c_five_profile_extension_20260713/raw/phase_a/SC0FIVE_R2A_r2a_p24_d64_ff128/ETTh1/h720_full/seed2021
+ETTh1,r2a_p48_d64_ff128,ok,1,1,1,1006160,6,analysis/stage_c_five_profile_extension_20260713/raw/phase_a/SC0FIVE_R2A_r2a_p48_d64_ff128/ETTh1/h720_full/seed2021
+ETTm2,r2a_p12_d64_ff128,ok,1,1,1,419216,11,analysis/stage_c_five_profile_extension_20260713/raw/phase_a/SC0FIVE_R2A_r2a_p12_d64_ff128/ETTm2/h720_full/seed2021
+ETTm2,r2a_p24_d64_ff128,ok,1,1,1,613904,6,analysis/stage_c_five_profile_extension_20260713/raw/phase_a/SC0FIVE_R2A_r2a_p24_d64_ff128/ETTm2/h720_full/seed2021
+ETTm2,r2a_p48_d64_ff128,ok,1,1,1,1006160,10,analysis/stage_c_five_profile_extension_20260713/raw/phase_a/SC0FIVE_R2A_r2a_p48_d64_ff128/ETTm2/h720_full/seed2021

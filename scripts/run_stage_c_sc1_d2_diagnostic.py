@@ -38,10 +38,8 @@ except ModuleNotFoundError:
 
 
 SERIES_LENGTH = 720
-STATE_WIDTH = 768
 SCALE_GROUP_SIZES = (1, 1, 2, 4, 8, 16, 32, 64, 128, 256, 208)
 GROUP_HIDDEN = 32
-DENSE_PARAM_HIDDEN = 197
 DENSE_UNIT_HIDDEN = GROUP_HIDDEN * len(SCALE_GROUP_SIZES)
 DATA_SEED = 20260713
 PROBE_SEED = 20260714
@@ -53,10 +51,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--phase-a-root", type=Path)
     parser.add_argument("--phase-b-root", type=Path)
     parser.add_argument("--phase-c-root", type=Path)
+    parser.add_argument("--five-phase-a-root", type=Path)
+    parser.add_argument("--five-phase-b-root", type=Path)
+    parser.add_argument("--five-phase-c-root", type=Path)
     parser.add_argument("--contract", type=Path)
     parser.add_argument("--output-dir", type=Path)
-    parser.add_argument("--dataset", choices=["Weather", "ETTm1", "ETTh2"])
+    parser.add_argument(
+        "--dataset", choices=["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"]
+    )
     parser.add_argument("--device", default="cuda")
+    parser.add_argument(
+        "--diagnostic-suite", choices=["core3", "formal5"], default="core3"
+    )
     parser.add_argument("--train-batches", type=int, default=16)
     parser.add_argument("--val-batches", type=int, default=8)
     parser.add_argument("--fit-fraction", type=float, default=0.8)
@@ -159,9 +165,9 @@ def random_groups(sizes: tuple[int, ...], seed: int) -> list[torch.Tensor]:
 
 
 class LowRankLinearHead(nn.Module):
-    def __init__(self) -> None:
+    def __init__(self, input_width: int) -> None:
         super().__init__()
-        self.down = nn.Linear(STATE_WIDTH, 256)
+        self.down = nn.Linear(input_width, 256)
         self.up = nn.Linear(256, SERIES_LENGTH)
 
     def forward(self, features: torch.Tensor) -> torch.Tensor:
@@ -169,10 +175,10 @@ class LowRankLinearHead(nn.Module):
 
 
 class DenseNonlinearHead(nn.Module):
-    def __init__(self, hidden: int) -> None:
+    def __init__(self, input_width: int, hidden: int) -> None:
         super().__init__()
         self.layers = nn.Sequential(
-            nn.Linear(STATE_WIDTH, hidden),
+            nn.Linear(input_width, hidden),
             nn.GELU(),
             nn.Linear(hidden, SERIES_LENGTH),
         )
@@ -182,13 +188,13 @@ class DenseNonlinearHead(nn.Module):
 
 
 class GroupedNonlinearHead(nn.Module):
-    def __init__(self, groups: list[torch.Tensor]) -> None:
+    def __init__(self, input_width: int, groups: list[torch.Tensor]) -> None:
         super().__init__()
         self.groups = [group.clone() for group in groups]
         self.blocks = nn.ModuleList(
             [
                 nn.Sequential(
-                    nn.Linear(STATE_WIDTH, GROUP_HIDDEN),
+                    nn.Linear(input_width, GROUP_HIDDEN),
                     nn.GELU(),
                     nn.Linear(GROUP_HIDDEN, int(group.numel())),
                 )
@@ -207,23 +213,33 @@ def count_parameters(module: nn.Module) -> int:
     return sum(parameter.numel() for parameter in module.parameters())
 
 
+def parameter_matched_dense_hidden(input_width: int) -> int:
+    grouped_without_output_bias = GROUP_HIDDEN * (
+        len(SCALE_GROUP_SIZES) * (input_width + 1) + SERIES_LENGTH
+    )
+    dense_per_hidden = input_width + SERIES_LENGTH + 1
+    return max(1, round(grouped_without_output_bias / dense_per_hidden))
+
+
 def build_arm(
     arm: str,
     device: torch.device,
     true_basis: torch.Tensor,
+    input_width: int,
 ) -> tuple[nn.Module, str, torch.Tensor | None, int | None]:
     set_seed(PROBE_SEED)
     if arm == "rank256_linear":
-        return LowRankLinearHead().to(device), "time", None, None
+        return LowRankLinearHead(input_width).to(device), "time", None, None
     if arm == "full_affine":
-        return nn.Linear(STATE_WIDTH, SERIES_LENGTH).to(device), "time", None, None
-    if arm == "dense_nonlinear_param_h197":
-        return DenseNonlinearHead(DENSE_PARAM_HIDDEN).to(device), "time", None, None
+        return nn.Linear(input_width, SERIES_LENGTH).to(device), "time", None, None
+    if arm in {"dense_nonlinear_param_matched", "dense_nonlinear_param_h197"}:
+        hidden = parameter_matched_dense_hidden(input_width)
+        return DenseNonlinearHead(input_width, hidden).to(device), "time", None, None
     if arm == "dense_nonlinear_units_h352":
-        return DenseNonlinearHead(DENSE_UNIT_HIDDEN).to(device), "time", None, None
+        return DenseNonlinearHead(input_width, DENSE_UNIT_HIDDEN).to(device), "time", None, None
     if arm == "true_scale_grouped":
         return (
-            GroupedNonlinearHead(contiguous_groups(SCALE_GROUP_SIZES)).to(device),
+            GroupedNonlinearHead(input_width, contiguous_groups(SCALE_GROUP_SIZES)).to(device),
             "coeff",
             true_basis.to(device),
             None,
@@ -238,14 +254,19 @@ def build_arm(
         basis = random_orthogonal_basis(SERIES_LENGTH, structure_seed)
     else:
         raise ValueError(f"unknown arm: {arm}")
-    return GroupedNonlinearHead(groups).to(device), "coeff", basis.to(device), structure_seed
+    return (
+        GroupedNonlinearHead(input_width, groups).to(device),
+        "coeff",
+        basis.to(device),
+        structure_seed,
+    )
 
 
 def arm_names() -> list[str]:
     names = [
         "rank256_linear",
         "full_affine",
-        "dense_nonlinear_param_h197",
+        "dense_nonlinear_param_matched",
         "dense_nonlinear_units_h352",
         "true_scale_grouped",
     ]
@@ -256,13 +277,38 @@ def arm_names() -> list[str]:
     return names
 
 
+def checkpoint_run_dir(
+    args: argparse.Namespace,
+    profile: dict[str, Any],
+    checkpoint_seed: int,
+) -> Path:
+    if profile.get("artifact_family", "legacy_r2") != "five_extension":
+        return run_dir(args, profile, checkpoint_seed)
+    name = profile["profile"]
+    if checkpoint_seed == 2021 and name.endswith("_medium"):
+        run_name = (
+            f"SC0FIVE_R2A_r2a_p{profile['patch_num']}_"
+            f"d{profile['d_model']}_ff{profile['d_ff']}"
+        )
+        root = args.five_phase_a_root
+    elif checkpoint_seed == 2021:
+        run_name = f"SC0FIVE_R2B_{name}"
+        root = args.five_phase_b_root
+    else:
+        run_name = f"SC0FIVE_R2C_{name}"
+        root = args.five_phase_c_root
+    if root is None:
+        raise ValueError(f"missing five-dataset artifact root for {args.dataset}")
+    return root / run_name / args.dataset / "h720_full" / f"seed{checkpoint_seed}"
+
+
 def load_model_and_loaders(
     args: argparse.Namespace,
     contract: dict[str, Any],
     checkpoint_seed: int,
 ) -> tuple[Model, Any, Any, SimpleNamespace, Path]:
     profile = contract["dataset_profiles"][args.dataset]
-    directory = run_dir(args, profile, checkpoint_seed)
+    directory = checkpoint_run_dir(args, profile, checkpoint_seed)
     effective = json.loads((directory / "effective_config.json").read_text(encoding="utf-8"))
     payload = effective["official_args"]
     expected = {
@@ -313,7 +359,7 @@ def collect_rows(
             target = batch_y[:, -SERIES_LENGTH:, :]
             normalized_target = (target - mean) / stdev
             batch, channels, _patches, _width = memory.shape
-            features.append(memory.reshape(batch * channels, STATE_WIDTH).cpu())
+            features.append(memory.reshape(batch * channels, -1).cpu())
             targets.append(
                 normalized_target.permute(0, 2, 1).reshape(batch * channels, SERIES_LENGTH).cpu()
             )
@@ -526,6 +572,12 @@ def run_checkpoint_seed(
     validation = collect_rows(model, val_loader, device, args.val_batches)
     fit, holdout = split_fit_holdout(train_rows, args.fit_fraction)
     fit, holdout, validation = standardize_features(fit, holdout, validation)
+    input_width = int(fit["features"].shape[1])
+    expected_width = int(official_args.patch_num * official_args.d_model)
+    if input_width != expected_width:
+        raise RuntimeError(
+            f"memory width mismatch: observed={input_width}, expected={expected_width}"
+        )
     true_basis, observed_sizes = balanced_interval_basis(SERIES_LENGTH)
     if tuple(observed_sizes) != SCALE_GROUP_SIZES:
         raise RuntimeError(f"unexpected scale groups: {observed_sizes}")
@@ -546,7 +598,9 @@ def run_checkpoint_seed(
             f"arm={arm} position={arm_index}/{len(arm_names())}",
             flush=True,
         )
-        head, output_space, basis, structure_seed = build_arm(arm, device, true_basis)
+        head, output_space, basis, structure_seed = build_arm(
+            arm, device, true_basis, input_width
+        )
         parameters = count_parameters(head)
         trained, history, best_epoch, final_fit, best_holdout = train_head(
             args,
@@ -604,7 +658,7 @@ def run_checkpoint_seed(
         "checkpoint_dir": str(directory),
         "profile": contract["dataset_profiles"][args.dataset]["profile"],
         "memory_shape": ["B", official_args.enc_in, official_args.patch_num, official_args.d_model],
-        "state_width": STATE_WIDTH,
+        "state_width": input_width,
         "fit_rows": int(fit["features"].shape[0]),
         "holdout_rows": int(holdout["features"].shape[0]),
         "validation_rows": int(validation["features"].shape[0]),
@@ -615,14 +669,18 @@ def run_checkpoint_seed(
         "random_control_seeds": list(RANDOM_CONTROL_SEEDS),
         "scale_group_sizes": list(SCALE_GROUP_SIZES),
         "group_hidden": GROUP_HIDDEN,
-        "dense_param_hidden": DENSE_PARAM_HIDDEN,
+        "dense_param_hidden": parameter_matched_dense_hidden(input_width),
         "dense_unit_hidden": DENSE_UNIT_HIDDEN,
         "basis_orthogonality_max_abs": orthogonality_gap,
         "parseval_relative_gap": parseval_gap,
         "uses_test_split": False,
         "forecast_model_updated": False,
         "official_validation_used_for_early_stopping": False,
-        "diagnostic_role": "core3_precheck_nonblocking",
+        "diagnostic_role": (
+            "formal5_problem_gate"
+            if args.diagnostic_suite == "formal5"
+            else "core3_precheck_nonblocking"
+        ),
         "torch_version": torch.__version__,
         "cuda_version": torch.version.cuda,
         "python_version": platform.python_version(),
@@ -641,32 +699,45 @@ def synthetic_smoke() -> None:
     identity = basis @ basis.transpose(0, 1)
     if not torch.allclose(identity, torch.eye(SERIES_LENGTH), atol=1e-5):
         raise RuntimeError("balanced interval basis is not orthogonal")
-    features = torch.randn(4, STATE_WIDTH)
     target = torch.randn(4, SERIES_LENGTH)
     coefficient_target = target @ basis.transpose(0, 1)
     reconstruction = coefficient_target @ basis
     if not torch.allclose(target, reconstruction, atol=1e-4):
         raise RuntimeError("coefficient reconstruction failed")
-    expected = {
+    expected_768 = {
         "rank256_linear": 381904,
         "full_affine": 553680,
-        "dense_nonlinear_param_h197": 294053,
+        "dense_nonlinear_param_matched": 294053,
         "dense_nonlinear_units_h352": 524848,
         "true_scale_grouped": 294448,
     }
-    for arm, expected_parameters in expected.items():
-        head, output_space, _basis, _seed = build_arm(arm, torch.device("cpu"), basis)
-        if head(features).shape != (4, SERIES_LENGTH):
-            raise RuntimeError(f"shape check failed for {arm}")
-        if count_parameters(head) != expected_parameters:
-            raise RuntimeError(f"parameter count changed for {arm}")
-        if output_space not in {"time", "coeff"}:
-            raise RuntimeError(f"invalid output space for {arm}")
-    random_head, _space, _basis, _seed = build_arm(
-        "random_group_s3101", torch.device("cpu"), basis
-    )
-    if random_head(features).shape != (4, SERIES_LENGTH):
-        raise RuntimeError("random group shape check failed")
+    for input_width in (768, 1536, 3072):
+        features = torch.randn(4, input_width)
+        for arm in expected_768:
+            head, output_space, _basis, _seed = build_arm(
+                arm, torch.device("cpu"), basis, input_width
+            )
+            if head(features).shape != (4, SERIES_LENGTH):
+                raise RuntimeError(f"shape check failed for width={input_width} {arm}")
+            if input_width == 768 and count_parameters(head) != expected_768[arm]:
+                raise RuntimeError(f"parameter count changed for {arm}")
+            if output_space not in {"time", "coeff"}:
+                raise RuntimeError(f"invalid output space for {arm}")
+        true_head, _space, _basis, _seed = build_arm(
+            "true_scale_grouped", torch.device("cpu"), basis, input_width
+        )
+        matched_head, _space, _basis, _seed = build_arm(
+            "dense_nonlinear_param_matched", torch.device("cpu"), basis, input_width
+        )
+        relative_gap = abs(count_parameters(true_head) - count_parameters(matched_head))
+        relative_gap /= count_parameters(true_head)
+        if relative_gap > 0.005:
+            raise RuntimeError(f"parameter matching failed for width={input_width}")
+        random_head, _space, _basis, _seed = build_arm(
+            "random_group_s3101", torch.device("cpu"), basis, input_width
+        )
+        if random_head(features).shape != (4, SERIES_LENGTH):
+            raise RuntimeError("random group shape check failed")
     print("stage_c_sc1_d2_synthetic_smoke=pass")
 
 

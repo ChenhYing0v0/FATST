@@ -18,8 +18,9 @@
 ### SC0 natural carrier
 
 [Decision] dataset 可有自然结构偏好，但不得为每个新机制重新精调。使用 validation-only 两阶段小 grid
-一次性冻结：Weather=P12/D64/ff128、ETTm1=P24/D32/ff64、ETTh2=P12/D64/ff128。params 差异只报告，
-不参与选择。9 profile-seed validation stability gate 已通过。
+一次性冻结：Weather=P12/D64/ff128、ETTm1=P24/D32/ff64、ETTh2=P12/D64/ff128、
+ETTh1=P24/D64/ff128、ETTm2=P48/D64/ff128。params 差异只报告，不参与选择。新增ETTh1/ETTm2的14-run
+validation-only extension与3-seed stability gate已通过；five-dataset contract已冻结。
 
 ### Natural baseline test reference
 

@@ -1,0 +1,7 @@
+dataset,profile,seed,status,config_ok,training_ok,horizons_ok,active_forward_parameters,trained_epochs,run_dir
+ETTh1,r2b_p24_d64_ff128_medium,2021,ok,1,1,1,613904,8,analysis/stage_c_five_profile_extension_20260713/raw/phase_a/SC0FIVE_R2A_r2a_p24_d64_ff128/ETTh1/h720_full/seed2021
+ETTh1,r2b_p24_d64_ff128_medium,2022,ok,1,1,1,613904,7,analysis/stage_c_five_profile_extension_20260713/raw/phase_c/SC0FIVE_R2C_r2b_p24_d64_ff128_medium/ETTh1/h720_full/seed2022
+ETTh1,r2b_p24_d64_ff128_medium,2023,ok,1,1,1,613904,7,analysis/stage_c_five_profile_extension_20260713/raw/phase_c/SC0FIVE_R2C_r2b_p24_d64_ff128_medium/ETTh1/h720_full/seed2023
+ETTm2,r2b_p48_d64_ff128_medium,2021,ok,1,1,1,1006160,10,analysis/stage_c_five_profile_extension_20260713/raw/phase_a/SC0FIVE_R2A_r2a_p48_d64_ff128/ETTm2/h720_full/seed2021
+ETTm2,r2b_p48_d64_ff128_medium,2022,ok,1,1,1,1006160,7,analysis/stage_c_five_profile_extension_20260713/raw/phase_c/SC0FIVE_R2C_r2b_p48_d64_ff128_medium/ETTm2/h720_full/seed2022
+ETTm2,r2b_p48_d64_ff128_medium,2023,ok,1,1,1,1006160,6,analysis/stage_c_five_profile_extension_20260713/raw/phase_c/SC0FIVE_R2C_r2b_p48_d64_ff128_medium/ETTm2/h720_full/seed2023

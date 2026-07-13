@@ -14,7 +14,8 @@ from typing import Any
 
 CORE3 = ("Weather", "ETTm1", "ETTh2")
 FORMAL5 = ("ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather")
-DENSE_ARMS = ("dense_nonlinear_param_h197", "dense_nonlinear_units_h352")
+DENSE_PARAM_ARMS = ("dense_nonlinear_param_matched", "dense_nonlinear_param_h197")
+DENSE_UNIT_ARM = "dense_nonlinear_units_h352"
 RANDOM_PREFIXES = ("random_group_", "random_basis_")
 EXPECTED_SEEDS = (2021, 2022, 2023)
 MSE_MARGIN = 0.005
@@ -82,22 +83,27 @@ def pairwise_rows(metrics: list[dict[str, str]]) -> list[dict[str, Any]]:
         grouped[key][row["arm"]] = row
     outputs: list[dict[str, Any]] = []
     for (dataset, seed), arms in sorted(grouped.items()):
+        available_param_arms = [name for name in DENSE_PARAM_ARMS if name in arms]
         required = {
             "rank256_linear",
             "full_affine",
             "true_scale_grouped",
-            *DENSE_ARMS,
+            DENSE_UNIT_ARM,
         }
         missing = sorted(required - set(arms))
         random_rows = [row for arm, row in arms.items() if is_random_arm(arm)]
-        if missing or len(random_rows) != 6:
+        if missing or len(available_param_arms) != 1 or len(random_rows) != 6:
             raise ValueError(
                 f"incomplete D2 arms for {dataset} seed{seed}: "
-                f"missing={missing}, random={len(random_rows)}"
+                f"missing={missing}, param_matched={available_param_arms}, "
+                f"random={len(random_rows)}"
             )
         rank = float(arms["rank256_linear"]["val_mse_eval"])
         full = float(arms["full_affine"]["val_mse_eval"])
-        dense_arm = min(DENSE_ARMS, key=lambda name: float(arms[name]["val_mse_eval"]))
+        dense_arms = (available_param_arms[0], DENSE_UNIT_ARM)
+        dense_arm = min(
+            dense_arms, key=lambda name: float(arms[name]["val_mse_eval"])
+        )
         dense = float(arms[dense_arm]["val_mse_eval"])
         dense_mae = float(arms[dense_arm]["val_mae_eval"])
         true = float(arms["true_scale_grouped"]["val_mse_eval"])
@@ -384,7 +390,8 @@ def synthetic_smoke() -> None:
     arms = [
         "rank256_linear",
         "full_affine",
-        *DENSE_ARMS,
+        "dense_nonlinear_param_matched",
+        DENSE_UNIT_ARM,
         "true_scale_grouped",
         "random_group_s3101",
         "random_group_s3102",

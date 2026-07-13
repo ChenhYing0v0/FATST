@@ -1,0 +1,27 @@
+{
+  "all_stable": true,
+  "complete": true,
+  "decision": "dataset_profiles_stable_and_ready_to_freeze",
+  "parameter_count_used_for_gate": false,
+  "phase": "c",
+  "profile_hash": "ed033d420e8e94ce46363fabb12a8a34ab0e5cd538b60700046e9d9083d3debc",
+  "selected_profile_specs": {
+    "ETTh1": {
+      "d_ff": 128,
+      "d_model": 64,
+      "patch_len": 30,
+      "patch_num": 24
+    },
+    "ETTm2": {
+      "d_ff": 128,
+      "d_model": 64,
+      "patch_len": 15,
+      "patch_num": 48
+    }
+  },
+  "selected_profiles": {
+    "ETTh1": "r2b_p24_d64_ff128_medium",
+    "ETTm2": "r2b_p48_d64_ff128_medium"
+  },
+  "test_metrics_used_for_gate": false
+}
