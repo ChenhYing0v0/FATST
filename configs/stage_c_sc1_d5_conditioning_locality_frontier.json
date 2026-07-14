@@ -1,0 +1,72 @@
+{
+  "candidate": "SC1-D5",
+  "role": "diagnostic_only",
+  "current_step": "Step 2/3",
+  "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"],
+  "checkpoint_seeds": [2021, 2022, 2023],
+  "structure_seeds": [3101, 3102, 3103],
+  "horizons": [48, 96, 144, 192, 288, 336, 512, 720],
+  "basis_families": [
+    "balanced_interval",
+    "dct2",
+    "pca_fit",
+    "block_dct2_b16",
+    "block_dct2_b32",
+    "block_dct2_b48",
+    "block_dct2_b96",
+    "block_dct2_b144",
+    "block_pca_fit_b16",
+    "block_pca_fit_b32",
+    "block_pca_fit_b48",
+    "block_pca_fit_b96",
+    "block_pca_fit_b144"
+  ],
+  "local_basis_families": [
+    "block_dct2_b16",
+    "block_dct2_b32",
+    "block_dct2_b48",
+    "block_dct2_b96",
+    "block_dct2_b144",
+    "block_pca_fit_b16",
+    "block_pca_fit_b32",
+    "block_pca_fit_b48",
+    "block_pca_fit_b96",
+    "block_pca_fit_b144"
+  ],
+  "fit_count": 585,
+  "selection": {
+    "uses_validation": false,
+    "maximum_active_atoms_h48": 96,
+    "rule": "minimum fit-target covariance off-diagonal ratio; ties use higher top-16 variance capture then family name"
+  },
+  "probe_contract": {
+    "series_length": 720,
+    "group_sizes": [1, 1, 2, 4, 8, 16, 32, 64, 128, 256, 208],
+    "group_hidden": 32,
+    "data_seed": 20260713,
+    "probe_seed": 20260714,
+    "train_batches": 16,
+    "val_batches": 8,
+    "fit_fraction": 0.8,
+    "batch_size": 1024,
+    "max_epochs": 120,
+    "patience": 15,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "official_validation_for_early_stopping": false,
+    "uses_test_split": false,
+    "forecast_model_updated": false
+  },
+  "gate": {
+    "minimum_selected_vs_balanced_reduction": 0.005,
+    "minimum_positive_datasets": 3,
+    "selected_vs_dct_noninferiority_margin": -0.005,
+    "selected_vs_pca_noninferiority_margin": -0.01,
+    "horizon_noninferiority_margin_vs_dct": -0.01,
+    "minimum_noninferior_horizons": 6,
+    "minimum_dct_gap_closure": 0.5,
+    "mae_guard_vs_balanced": -0.0025
+  },
+  "authorization_if_passed": "return_step4_source_informed_method_design",
+  "method_training_authorized": false
+}

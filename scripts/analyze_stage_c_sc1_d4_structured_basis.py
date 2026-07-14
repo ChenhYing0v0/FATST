@@ -248,6 +248,85 @@ def summarize_geometry(rows: list[dict[str, str]], horizons: list[int]) -> list[
     return outputs
 
 
+def rank_values(values: list[float]) -> list[float]:
+    order = sorted(range(len(values)), key=values.__getitem__)
+    ranks = [0.0] * len(values)
+    start = 0
+    while start < len(order):
+        end = start + 1
+        while end < len(order) and values[order[end]] == values[order[start]]:
+            end += 1
+        average_rank = 0.5 * (start + end - 1)
+        for position in range(start, end):
+            ranks[order[position]] = average_rank
+        start = end
+    return ranks
+
+
+def pearson(values_x: list[float], values_y: list[float]) -> float:
+    center_x = mean(values_x)
+    center_y = mean(values_y)
+    numerator = sum(
+        (value_x - center_x) * (value_y - center_y)
+        for value_x, value_y in zip(values_x, values_y, strict=True)
+    )
+    denominator_x = math.sqrt(sum((value - center_x) ** 2 for value in values_x))
+    denominator_y = math.sqrt(sum((value - center_y) ** 2 for value in values_y))
+    if denominator_x == 0.0 or denominator_y == 0.0:
+        return float("nan")
+    return numerator / (denominator_x * denominator_y)
+
+
+def mechanism_correlations(
+    metrics: list[dict[str, str]],
+    geometry: list[dict[str, str]],
+    horizons: list[int],
+) -> list[dict[str, Any]]:
+    metric_groups: dict[tuple[str, int, str], list[dict[str, str]]] = defaultdict(list)
+    geometry_groups: dict[tuple[str, int, str], list[dict[str, str]]] = defaultdict(list)
+    for row in metrics:
+        metric_groups[(row["dataset"], int(row["checkpoint_seed"]), row["family"])].append(row)
+    for row in geometry:
+        geometry_groups[(row["dataset"], int(row["checkpoint_seed"]), row["family"])].append(row)
+    geometry_fields = (
+        "covariance_offdiag_ratio",
+        "variance_capture_top16",
+        "variance_capture_top64",
+        "active_atoms_h48",
+    )
+    outputs = []
+    families = ("balanced_interval", *CONTROLS)
+    for dataset in DATASETS:
+        for checkpoint_seed in CHECKPOINT_SEEDS:
+            errors = []
+            geometry_values = {field: [] for field in geometry_fields}
+            for family in families:
+                metric_rows = metric_groups[(dataset, checkpoint_seed, family)]
+                geometry_rows = geometry_groups[(dataset, checkpoint_seed, family)]
+                log_errors = [
+                    math.log(float(row[f"val_mse_eval_h{horizon}"]))
+                    for row in metric_rows
+                    for horizon in horizons
+                ]
+                errors.append(mean(log_errors))
+                for field in geometry_fields:
+                    geometry_values[field].append(
+                        mean([float(row[field]) for row in geometry_rows])
+                    )
+            error_ranks = rank_values(errors)
+            output: dict[str, Any] = {
+                "dataset": dataset,
+                "checkpoint_seed": checkpoint_seed,
+                "family_count": len(families),
+            }
+            for field in geometry_fields:
+                output[f"spearman_log_mse_vs_{field}"] = pearson(
+                    error_ranks, rank_values(geometry_values[field])
+                )
+            outputs.append(output)
+    return outputs
+
+
 def invariant_gate(metadata: list[dict[str, Any]], metrics: list[dict[str, str]]) -> dict[str, Any]:
     hashes = {item["contract_hash"] for item in metadata}
     config_hashes = {item["d4_config_hash"] for item in metadata}
@@ -472,6 +551,7 @@ def main() -> None:
     checkpoint_overall, dataset_family = build_family_summary(checkpoints, horizons)
     macro_horizons = macro_horizon_summary(checkpoints, horizons)
     geometry_summary = summarize_geometry(geometry, horizons)
+    correlations = mechanism_correlations(metrics, geometry, horizons)
     summary = build_summary(
         checkpoint_overall,
         dataset_family,
@@ -487,6 +567,7 @@ def main() -> None:
     write_csv(args.output_dir / "d4_dataset_family_summary.csv", dataset_family)
     write_csv(args.output_dir / "d4_macro_horizon_summary.csv", macro_horizons)
     write_csv(args.output_dir / "d4_geometry_summary.csv", geometry_summary)
+    write_csv(args.output_dir / "d4_mechanism_correlations.csv", correlations)
     (args.output_dir / "d4_summary.json").write_text(
         json.dumps(summary, indent=2, sort_keys=True), encoding="utf-8"
     )

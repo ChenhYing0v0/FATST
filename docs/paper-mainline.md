@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC1 Step 4；basis-mechanism source-informed audit |
+| `current_11_step` | SC1 rollback Step 2/3；conditioning-locality problem formulation |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` dataset profiles |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | Contribution 1 slot open；SC1-D3 existence diagnostic pass；no new method yet；SC2-MIPR held |
+| `paper_core_status` | Contribution 1 slot open；SC1-D5 problem diagnostic launch-ready；no new method；SC2-MIPR held |
 
 ## Research Thesis
 
@@ -92,6 +92,21 @@ basis main MSE reduction为`+2.9174%`，在true groups与random groups下分别�
 main effect获得支持，并授权返回Step 4。但exact depth grouping仍为false；balanced interval basis本身也受
 Haar/wavelet/whitening prior art约束，尚不是Contribution 1。当前问题转为识别conditioning、energy
 compaction、local-support或prefix compatibility中的真实机制，并证明其原生服务unified horizons。
+
+[Diagnostic] D4已完成315/315 fits。balanced相对permuted interval的八horizon macro为`+1.6324%`，说明
+contiguous locality是真实机制；但相对DCT-II与fit-only PCA分别为`-0.8609%/-1.5050%`，且相对random
+interval tree仅`+0.2742%`。因此exact midpoint balancing与best-accuracy claim关闭，decision=
+`standard_structured_basis_explains_gain_return_step2`。这不否定把balanced interval basis用于forecast
+generation的组件级创新，而是要求paper-core novelty来自更完整的组合：future-prefix local support、
+horizon-agnostic restriction、predictive conditioning与实际selective synthesis共同成立。
+
+[Current Problem] 新问题暂命名`SC1-CLG`（Conditioning-Locality Gap）。D4的descriptive geometry显示
+log MSE与coefficient covariance off-diagonal ratio的平均Spearman为`+0.8405`，与top-16 energy capture为
+`-0.8357`；interval basis用约55个active atoms覆盖H48，而DCT/PCA需720个。下一步先判断local-support
+orthogonal family能否在conditioning与prefix sparsity之间形成稳定Pareto improvement，而不是直接实现新head。
+该problem现由`SC1-D5`检验：在同一frozen-memory head下，以fit-only geometry从预注册的block-local
+DCT/PCA families选择`H48 active atoms <= 96`的basis，并对balanced、global DCT与global PCA做五dataset、
+三checkpoint、八horizon比较。D5是problem diagnostic，不是新decoder候选。
 
 ### Contribution 2 Candidate: Measure-Induced Projective Risk
 
@@ -174,7 +189,8 @@ orthogonal/group controls同样成立；requested prefix虽可少生成inactive 
 9. SC1-D2 core3 partial只支持basis geometry、不支持depth grouping；先冻结ETTh1/ETTm2 profile，再以拆分的
    random-group/random-basis controls完成formal5；
 10. SC1-D3已确认basis main effect但否定grouping叙事；先以structured-basis/whitening controls和external
-    prior art完成Step 4 mechanism audit；只有新SC1重新通过Step 4-6并完成screening后，才恢复MIPR、
+    prior art完成Step 4 mechanism audit；
+11. SC1-D4确认locality但由DCT/PCA解释accuracy，故回Step 2/3诊断SC1-CLG；只有新SC1重新通过Step 4-6并完成screening后，才恢复MIPR、
     `2x2` factorial与3-seed full matrix；第二 backbone与official native baselines最后做generality gate。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
@@ -200,6 +216,7 @@ loss 或更多 tuning 来掩盖失败。
 - `analysis/stage_c_step4_source_informed_redesign_20260713/step4_source_informed_redesign_audit.md`
 - `analysis/stage_c_step5_fpmo_theory_20260713/step5_theory_feasibility.md`
 - `analysis/stage_c_step6_fpmo_narrative_control_20260713/step6_narrative_control_gate.md`
+- `analysis/stage_c_sc1_d4_structured_basis_20260714/research_interpretation.md`
 - `Papers/stage-c-external-decoder-objective-audit.md`
 - `docs/experiments/stage-c-five-dataset-validation-policy.md`
 - `docs/code-explanation/stage-c-pmfo-rct-step7a.md`

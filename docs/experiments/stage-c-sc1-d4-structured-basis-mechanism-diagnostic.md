@@ -6,13 +6,13 @@
 | --- | --- |
 | `candidate` | `SC1-D4` |
 | `role` | `diagnostic_only` |
-| `current_step` | Step 4 |
+| `current_step` | Step 4 complete；rollback Step 2/3 |
 | `question` | balanced interval优势是否超越standard structured bases，来自interval locality还是exact balancing？ |
 | `suite` | 5 datasets × 3 checkpoints × 3 grouping seeds × 7 bases = 315 fits |
 | `horizons` | 48, 96, 144, 192, 288, 336, 512, 720 |
 | `test_used` | false |
 | `forecast_model_updated` | false |
-| `method_training_authorized` | false |
+| `method_training_authorized` | false；decision=`standard_structured_basis_explains_gain_return_step2` |
 
 ## 1. Tensor And Split Contract
 

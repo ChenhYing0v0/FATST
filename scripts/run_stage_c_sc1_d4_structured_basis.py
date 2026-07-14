@@ -141,6 +141,51 @@ def pca_basis(covariance: torch.Tensor) -> torch.Tensor:
     return eigenvectors.flip(1).transpose(0, 1).float()
 
 
+def block_diagonal_basis(
+    length: int,
+    block_size: int,
+    block_builder: Any,
+    device: torch.device,
+) -> torch.Tensor:
+    if block_size <= 0 or block_size > length:
+        raise ValueError(f"invalid block size: {block_size}")
+    basis = torch.zeros((length, length), device=device)
+    for start in range(0, length, block_size):
+        end = min(start + block_size, length)
+        basis[start:end, start:end] = block_builder(start, end).to(device)
+    return basis
+
+
+def block_dct2_basis(length: int, block_size: int, device: torch.device) -> torch.Tensor:
+    return block_diagonal_basis(
+        length,
+        block_size,
+        lambda start, end: dct2_basis(end - start, device),
+        device,
+    )
+
+
+def block_pca_basis(
+    covariance: torch.Tensor,
+    block_size: int,
+    device: torch.device,
+) -> torch.Tensor:
+    length = int(covariance.shape[0])
+    return block_diagonal_basis(
+        length,
+        block_size,
+        lambda start, end: pca_basis(covariance[start:end, start:end]),
+        device,
+    )
+
+
+def parse_block_family(family: str, prefix: str) -> int | None:
+    marker = f"{prefix}_b"
+    if not family.startswith(marker):
+        return None
+    return int(family.removeprefix(marker))
+
+
 def build_basis(
     family: str,
     structure_seed: int,
@@ -156,6 +201,12 @@ def build_basis(
         return dct2_basis(SERIES_LENGTH, device), None
     if family == "pca_fit":
         return pca_basis(covariance).to(device), None
+    block_size = parse_block_family(family, "block_dct2")
+    if block_size is not None:
+        return block_dct2_basis(SERIES_LENGTH, block_size, device), None
+    block_size = parse_block_family(family, "block_pca_fit")
+    if block_size is not None:
+        return block_pca_basis(covariance, block_size, device), None
     if family == "permuted_interval":
         seed = structure_seed + 10000
         generator = torch.Generator(device="cpu").manual_seed(seed)
@@ -433,6 +484,17 @@ def synthetic_smoke() -> None:
         raise RuntimeError("balanced basis lost prefix-local support")
     if dct_geometry["active_atoms_h48"] != SERIES_LENGTH:
         raise RuntimeError("DCT unexpectedly became support local")
+    for block_size in (16, 48, 96, 144):
+        for family in (f"block_dct2_b{block_size}", f"block_pca_fit_b{block_size}"):
+            basis, _seed = build_basis(family, 3101, balanced, covariance, device)
+            gap = (basis @ basis.transpose(0, 1) - torch.eye(SERIES_LENGTH)).abs().max()
+            if float(gap.item()) > 2e-5:
+                raise RuntimeError(f"orthogonality failed for {family}: {gap}")
+            geometry = basis_geometry(basis, covariance, horizons)
+            expected_active = math.ceil(48 / block_size) * block_size
+            expected_active = min(expected_active, SERIES_LENGTH)
+            if geometry["active_atoms_h48"] != expected_active:
+                raise RuntimeError(f"unexpected H48 active set for {family}")
     print("stage_c_sc1_d4_worker_synthetic_smoke=pass")
 
 

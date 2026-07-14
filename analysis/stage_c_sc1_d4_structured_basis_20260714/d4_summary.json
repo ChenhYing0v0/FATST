@@ -1,0 +1,54 @@
+{
+  "authorization_if_passed": "step5_theory_feasibility_only",
+  "balance_specificity_gate": {
+    "mae_macro_reduction": 0.0011802414744356282,
+    "mse_macro_reduction": 0.0027424321173513677,
+    "pass": false,
+    "positive_datasets": 3,
+    "positive_horizons": 7
+  },
+  "candidate": "SC1-D4",
+  "decision": "standard_structured_basis_explains_gain_return_step2",
+  "global_noninferiority_gate": {
+    "details": {
+      "dct2": {
+        "macro_reduction": -0.008609405298306116,
+        "noninferior_datasets": 3,
+        "noninferior_horizons": 0,
+        "pass": false
+      },
+      "identity": {
+        "macro_reduction": 0.03529237297436094,
+        "noninferior_datasets": 5,
+        "noninferior_horizons": 8,
+        "pass": true
+      },
+      "pca_fit": {
+        "macro_reduction": -0.015049925950062715,
+        "noninferior_datasets": 1,
+        "noninferior_horizons": 0,
+        "pass": false
+      }
+    },
+    "pass": false
+  },
+  "invariant_gate": {
+    "fit_count": 315,
+    "metadata_count": 15,
+    "pass": true
+  },
+  "locality_gate": {
+    "mae_macro_reduction": 0.010306239975098386,
+    "mse_macro_reduction": 0.016324379877066808,
+    "pass": true,
+    "positive_datasets": 4,
+    "positive_horizons": 8
+  },
+  "method_training_authorized": false,
+  "random_replication_gate": {
+    "h720_reduction": 0.027181410015398755,
+    "pass": true,
+    "positive_datasets": 5
+  },
+  "role": "diagnostic_only"
+}

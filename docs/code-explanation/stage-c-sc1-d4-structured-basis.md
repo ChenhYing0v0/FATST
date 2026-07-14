@@ -40,6 +40,10 @@ evaluation-space MSE与time-space MSE等价。final validation先重建`predicti
 Analyzer先平均三个grouping seeds，再形成15个dataset-checkpoint primary units；所有effect使用
 `log(control_error / balanced_error)`，positive表示balanced更好。
 
+`d4_mechanism_correlations.csv`在每个dataset/checkpoint内以七个basis families为七个观测，计算八horizon
+平均log MSE与off-diagonal ratio、top-16/64 variance capture、H48 active atoms之间的Spearman相关。
+该统计只有七个family points，属于mechanism描述，不是显著性或gate证据。
+
 ## Artifacts
 
 每dataset worker输出：`d4_probe_metrics.csv`、`d4_training_history.csv`、

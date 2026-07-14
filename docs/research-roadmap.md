@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Step 4 source-informed basis-mechanism audit |
-| `active_question` | balanced basis能否同时超越standard bases并以interval locality原生服务dense horizons？ |
-| `active_candidates` | no paper-core SC1；`SC1-D3 pass`；`SC1-D4 diagnostic_only launch_ready`；`SC2-MIPR` held |
+| `current_step` | rollback Step 2/3；SC1-CLG problem formulation |
+| `active_question` | local-support orthogonal family能否缩小DCT/PCA conditioning gap并保留native prefix support？ |
+| `active_candidates` | no paper-core SC1；`SC1-D5 diagnostic_only launch_ready`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `docs/experiments/stage-c-sc1-d4-structured-basis-mechanism-diagnostic.md` |
+| `active_protocol` | `docs/experiments/stage-c-sc1-d5-conditioning-locality-frontier-diagnostic.md` |
 | `method_implementation` | `PMFO-RCT v1` frozen as failed evidence；new implementation unauthorized |
-| `rollback_point` | standard structured bases/whitening解释收益或novelty不足 -> Step 2 |
+| `rollback_point` | D4已触发Step 2/3；若local family无Pareto headroom，basis只保留为component |
 
 ## Completed Foundation
 
@@ -144,16 +144,22 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
    prefix algebra不产生独立efficiency claim；
 6. decision=`rejected_by_narrative_gate`；M0/DA/DS-L只作controls，rollback Step 2/3，MIPR继续held。
 
+## SC1-D4 Structured-Basis Audit: Completed And Rolled Back
+
+1. 315/315 frozen-memory fits完成，test未使用，PCA只由fit targets构造，315 fits均finite；
+2. D3 signal复现：H720 balanced相对random orthogonal `+2.7181%`，5/5 datasets通过；
+3. locality成立：balanced相对permuted interval八horizon macro `+1.6324%`，8/8 horizons为正；
+4. exact midpoint balancing不特异：相对random interval tree仅`+0.2742%`，未过0.5% gate；
+5. standard structured bases解释accuracy：balanced相对DCT-II/PCA-fit分别`-0.8609%/-1.5050%`；
+6. decision=`standard_structured_basis_explains_gain_return_step2`。fixed balanced basis可作generation component，
+   但不能以独特accuracy claim单独成为Contribution 1。
+
 ## Next Concrete Action
 
-`SC1-D3 crossed basis-group diagnostic`已完成并通过：
-
-1. 冻结D2的true/random basis、true/random group、seeds与optimization，不修改carrier profile；
-2. 补齐`random basis × matched random group`缺失cell，构成paired $2\times2$ factorial；
-3. 45/45 fits、15/15 primary units与所有invariants完整；
-4. basis main MSE reduction `+2.9174%`；true/random-group conditionals分别`+3.1164%/+2.7181%`；
-5. 5/5 datasets方向一致且interaction不主导，decision=`basis_main_effect_supported_return_step4`；
-6. 下一步为Step 4 external source + mechanism audit；Encoder、MoE、MIPR与method implementation继续冻结。
+返回Step 2/3建立`SC1-CLG`（Conditioning-Locality Gap）。D5已预注册10个block-local DCT/PCA bases与3个
+controls，通过fit-only covariance在`H48 active atoms <= 96`约束下选择family，再以五dataset、三checkpoints、
+八horizons检查是否改善balanced且接近global DCT/PCA。585-fit diagnostic通过才返回Step 4审计learned
+lifting/wavelet packet/local operator；Encoder、MoE、MIPR与method implementation继续冻结。
 
 ## SC1-D2 Core3 Precheck: Partial
 
