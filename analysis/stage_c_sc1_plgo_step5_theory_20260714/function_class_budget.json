@@ -1,0 +1,44 @@
+{
+  "a6_rank": 256,
+  "a6_readout_parameters": 381904,
+  "all_groups_full_row_rank": true,
+  "direct_atom_affine_parameters": 553680,
+  "direct_atom_to_a6_ratio": 1.449788428505593,
+  "global_rank": 16,
+  "group_names": [
+    "global_root",
+    "detail_depth_0",
+    "detail_depth_1",
+    "detail_depth_2",
+    "detail_depth_3",
+    "detail_depth_4",
+    "detail_depth_5"
+  ],
+  "group_rank_caps_for_exact_a6_containment": [
+    16,
+    16,
+    32,
+    64,
+    128,
+    256,
+    208
+  ],
+  "group_sizes": [
+    16,
+    16,
+    32,
+    64,
+    128,
+    256,
+    208
+  ],
+  "hidden_dim": 768,
+  "independent_group_class_equals_full_affine": true,
+  "independent_group_factor_parameters": 684496,
+  "independent_group_to_a6_ratio": 1.7923247727177511,
+  "length": 720,
+  "orthonormal_m0_function_class": "exactly_equal_to_a6",
+  "same_total_rank_budget_can_contain_all_a6_blocks": false,
+  "square_invertible_transform_adds_function_novelty": false,
+  "sum_group_rank_caps": 720
+}

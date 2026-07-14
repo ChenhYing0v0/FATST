@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Step 5 theory feasibility for SC1-PLGO |
-| `active_question` | projective local-global synthesis能否稳定重建、保持prefix restriction且避免capacity confound？ |
-| `active_candidates` | `SC1-PLGO provisional`；D6 problem pass；`SC2-MIPR` held |
+| `current_step` | Step 6 tensor/narrative/control design for SC1-PLGO |
+| `active_question` | shared atom-conditioned generator能否把RGNB转化为非dense-equivalent、可归因的forecast mechanism？ |
+| `active_candidates` | `SC1-PLGO partial`；RGNB scaffold pass；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | D6 accepted；PLGO Step5 theory protocol pending |
+| `active_protocol` | PLGO Step5 accepted；Step6 protocol pending |
 | `method_implementation` | `PMFO-RCT v1` frozen as failed evidence；new implementation unauthorized |
-| `rollback_point` | PLGO stable synthesis/function-class fail -> Step 4 redesign；不得直接实现或调参 |
+| `rollback_point` | Step6 coefficient mechanism无法隔离dense-equivalence -> Step 4 redesign；不得直接实现或调参 |
 
 ## Completed Foundation
 
@@ -154,11 +154,25 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 6. decision=`standard_structured_basis_explains_gain_return_step2`。fixed balanced basis可作generation component，
    但不能以独特accuracy claim单独成为Contribution 1。
 
+## SC1-PLGO Step 5 Theory Feasibility: Partial Pass
+
+1. 构造Restricted-Global Nested Basis：root保持global DCT subspace，balanced intervals递归生成children
+   scaling union相对parent的orthogonal local details；
+2. direct restricted-DCT QR暴露最高`3.110e17` condition number；stable local Chebyshev chart保持同span并将
+   最大condition降至`1.784e3`；
+3. 12个$(T,r_g)$、101个selected prefixes与3,731个all-$H$ bounds通过，max algebraic gap
+   `2.141e-13`；
+4. square `PLGO-ONB-M0`可exact morph A6，但只是isometric reparameterization，无新function；
+5. naive global/local union虽有frame bounds$[1,2]$，却有$r_g$维coefficient kernel；
+6. T720、$r_g=16$ independent-group rank caps sum=720且等价full affine，capacity control解释收益；
+7. native support pruning成立，但H1需102个active atoms，generator-level speedup未证明，效率claim撤回；
+8. decision=`partial_pass_step6_design_only`；RGNB只冻结为mathematical scaffold，method/training仍false。
+
 ## Next Concrete Action
 
-进入`SC1-PLGO Step 5 theory feasibility`，只审计stable analysis/synthesis、frame/coherence、arbitrary-prefix
-restriction、A6 function-class containment与active coefficient execution。不得先实现global+local union、
-horizon router或A6 residual；Encoder、MoE、MIPR与method training继续冻结。
+进入`SC1-PLGO Step 6 tensor/narrative/control design`。只允许设计shared atom-conditioned coefficient generator、
+matched dense/random-descriptor controls、function-class/parameter/FLOP边界与kill rules。禁止直接实现、训练、
+引入horizon router、A6 residual、Encoder、MoE或MIPR。
 
 ## SC1-D6 Confirmation And Step 4 Outcome
 

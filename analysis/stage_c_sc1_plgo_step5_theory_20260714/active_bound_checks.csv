@@ -1,0 +1,13 @@
+length,global_rank,horizon_cases,bound_pass,largest_bound_excess
+1,1,1,True,0
+2,2,2,True,0
+3,3,3,True,0
+5,4,5,True,0
+7,4,7,True,0
+16,4,16,True,0
+96,8,96,True,0
+720,1,720,True,0
+720,4,720,True,0
+720,8,720,True,0
+720,16,720,True,0
+721,16,721,True,0

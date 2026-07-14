@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | decoder/operator 与 training principle 两项相互支撑的 paper-core innovations |
-| `active_question` | PLGO能否在不形成overcomplete/full-affine confound下统一global coherence与prefix-local supports？ |
+| `active_question` | PLGO的shared atom-conditioned generator能否把已通过的RGNB骨架转化为非dense-equivalent机制？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` |
-| `active_candidates` | `SC1-PLGO provisional Step5`；D6 problem pass；`SC2-MIPR` held |
+| `active_candidates` | `SC1-PLGO partial Step6`；RGNB scaffold pass；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `stage_exit` | 两项分别过 narrative/effectiveness gate，`2x2` joint gate显示独立主效应与联合收益 |
 | `stage_rollback` | problem/novelty不跨 dataset -> Step 2；禁止直接堆叠 method |
@@ -18,27 +18,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Step 5 theory feasibility for `SC1-PLGO` |
-| `current_candidate` | `SC1-PLGO provisional`；`SC2-MIPR` held |
-| `latest_decision` | D6 pass：short +1.1964%、long -1.2675% vs DCT，12/15 crossing；Step4 conditional pass |
-| `next_required_action` | PLGO stable reconstruction/function-class/prefix restriction/no-go theory audit；不得实现method |
-| `method_training_authorized` | `false`；PLGO必须先通过Step 5与Step 6 |
-| `rollback_point` | stable local-global synthesis或capacity containment失败 -> Step 4 redesign，不做performance sweep |
+| `current_11_step` | Step 6 tensor/narrative/control design for `SC1-PLGO` |
+| `current_candidate` | `SC1-PLGO partial`；RGNB scaffold；`SC2-MIPR` held |
+| `latest_decision` | Step5 partial pass：RGNB algebra/prefix/A6 morph pass；M0等价换基，frame与group variants被confound阻断 |
+| `next_required_action` | 设计shared atom-conditioned coefficient generator及matched dense/random-descriptor controls；不得实现method |
+| `method_training_authorized` | `false`；PLGO尚未通过Step 6 narrative gate |
+| `rollback_point` | Step6无法形成非dense-equivalent coefficient mechanism -> Step 4 redesign，不做performance sweep |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Step 5 PLGO theory feasibility |
+| `current_step` | Step 6 PLGO tensor/narrative/control design |
 | `problem` | single fixed support scale无法同时服务short-prefix locality与long-domain global coherence |
 | `existence_evidence` | D6 disjoint window：short +1.1964%、long -1.2675%；12/15 crossed units；4/5与5/5 directions |
 | `idea` | `SC1-PLGO`：shared projective local-global synthesis；H只限制domain，不进入learned path |
-| `theory_check` | Step4 conditional pass；basis/wavelet/local-global单项不新；stable frame/function-class待Step5 |
-| `design` | global smooth subspace + interval-local support scaffold；具体construction尚未冻结 |
-| `narrative_gate` | PLGO conditional pass to Step5 only；SC2 held |
+| `theory_check` | RGNB在12 cases/101 prefixes max gap `2.141e-13`；M0无function novelty；frame/group no-go成立 |
+| `design` | RGNB冻结为数学scaffold；shared atom-conditioned coefficient generator尚未冻结 |
+| `narrative_gate` | Step5 partial pass to Step6 only；method/training false；SC2 held |
 | `effectiveness_gate` | v1 fail：macro vs A6 `-1.0955%`，worst ETTm1 `-2.0844%` |
-| `artifacts` | D1-v2、historical Step4-6 closure、D2-D6、PLGO source audit、five-profile contract |
-| `decision` | `horizon_support_scale_interaction_supported_return_step4`；PLGO conditional Step4 pass；training false |
+| `artifacts` | D1-v2、historical Step4-6 closure、D2-D6、PLGO source/Step5 theory audit、five-profile contract |
+| `decision` | `partial_pass_step6_design_only`；若Step6无法隔离dense-equivalence则rollback Step4 |
 
 ## Frozen Carrier Contract
 
@@ -73,7 +73,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC1-CLG` | `problem_gate_passed` | local prefix synthesis与long-domain coherence是否存在horizon-dependent support tradeoff | not required | D6 pass | evidence feeds PLGO Step4-5 |
 | `SC1-D5` | `diagnostic_only_design_fault` | fit-only selected local DCT/PCA能否改善balanced并接近global controls | not required | primary fail；b144 arm出现11/15 crossing | direction rejection invalid；design D6 |
 | `SC1-D6` | `diagnostic_only_pass` | b144 short-positive/long-negative interaction能否在disjoint validation window复现 | not required | all gates pass；12/15 crossing | return Step4 only；evidence complete |
-| `SC1-PLGO` | `provisional_step5` | projective local-global synthesis能否同时服务short prefix与long domain | conditional pass | not started | theory feasibility/no-go audit；no implementation |
+| `SC1-PLGO` | `partial_step6` | projective local-global synthesis能否同时服务short prefix与long domain | Step5 algebra pass；method narrative partial | not started | atom-conditioned generator/control gate；no implementation |
 | `SC2-MIPR` | `held` | measure-induced block metric去除decoder scales之间的cross coupling | pass for L2；log measure primary，benchmark weak | log off-block `0.205154`；benchmark `0.002480`；performance未测 | 等新SC1 problem/method contract；不得先实现 |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
@@ -113,6 +113,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-D4 structured-basis diagnostic | 5 datasets × 3 checkpoints × 3 grouping seeds × 7 bases | locality +1.6324% pass；balanced vs DCT/PCA -0.8609%/-1.5050%；vs random interval +0.2742% fail | `standard_structured_basis_explains_gain_return_step2`；建立SC1-CLG问题 | `analysis/stage_c_sc1_d4_structured_basis_20260714/research_interpretation.md` |
 | SC1-D5 conditioning-locality frontier | 5 datasets × 3 checkpoints × 3 grouping seeds × 13 bases | primary b96 selector fail；b144 vs DCT short +1.05%、long -1.15%，11/15 crossing | `design_fault_suspected`；不可方向否决；D6 disjoint confirmation | `analysis/stage_c_sc1_d5_conditioning_locality_20260714/research_interpretation.md` |
 | SC1-D6 support interaction confirmation | validation batches8-15；5 datasets × 3 checkpoints × 15 arms | short +1.1964%、long -1.2675%；12/15 crossing；all gates pass | problem supported；return Step4；PLGO conditional narrative pass | `analysis/stage_c_sc1_d6_horizon_support_interaction_20260714/research_interpretation.md` |
+| SC1-PLGO Step5 theory feasibility | 12 RGNB cases；101 selected prefixes；3,731 all-H bounds；frame/function no-go | max gap `2.141e-13`；M0=A6 reparameterization；frame kernel16；group caps sum720 | `partial_pass_step6_design_only`；training false | `analysis/stage_c_sc1_plgo_step5_theory_20260714/step5_theory_feasibility.md` |
 
 ## Pending Tasks
 
@@ -139,7 +140,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-D5 frontier diagnostic | `completed_design_fault` | 585/585；primary fail但pre-registered b144阻止方向否决 |
 | SC1-D6 interaction confirmation | `completed_pass` | 225/225；all gates pass；problem evidence frozen |
 | SC1-PLGO source-informed audit | `completed_conditional` | prior-art/rejected shortcuts已冻结；进入Step5 theory only |
-| SC1-PLGO theory feasibility | `next` | stable reconstruction、frame/coherence、A6 containment、prefix execution no-go audit |
+| SC1-PLGO theory feasibility | `completed_partial_pass` | RGNB scaffold pass；M0/frame/independent-group均非method；进入Step6 only |
+| SC1-PLGO Step6 design gate | `next` | shared atom-conditioned generator、matched dense/random-descriptor、capacity/FLOP与kill rules |
 
 ## Paper Mainline Sync Log
 
@@ -157,6 +159,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-14 | D4 structured-basis diagnostic完成 | Current Position、Contribution 1、Boundary、Experiment Logic | exact claim closure + Step 2/3 rollback | locality保留；balanced specificity与global accuracy不成立；转向SC1-CLG |
 | 2026-07-14 | D5 frontier diagnostic完成 | Current Position、Contribution 1、Boundary | primary fail + diagnostic redesign | b96 selector fail；b144出现support×horizon crossing；D6确认前不升method |
 | 2026-07-14 | D6 disjoint confirmation通过 | Current Position、Contribution 1、Boundary | problem pass + Step4 candidate reformulation | PLGO conditional narrative pass；Step5 theory next；training false |
+| 2026-07-14 | PLGO Step5 theory完成 | Current Position、Contribution 1、Boundary、Experiment Logic | constructive proof + function/no-go boundary | RGNB scaffold通过；actual method仍partial；Step6 design only |
 
 ## Continuation Rules
 
@@ -168,3 +171,4 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 6. future mechanism screen固定使用ETTh1/ETTh2/ETTm1/ETTm2/Weather；五dataset不能替代三seed确认。
 7. D3只支持probe-family basis main effect；Step 4必须先排除standard basis、whitening与static regularization解释。
 8. D4已完成上述排除：不得把fixed balanced midpoint basis单独升为Contribution 1；可将其保留为generation component，并研究conditioning-locality co-design。
+9. PLGO Step5只通过RGNB mathematical scaffold；不得把ONB换基、overcomplete union或full-affine group maps升为method。

@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC1-PLGO Step 5 theory feasibility |
+| `current_11_step` | SC1-PLGO Step 6 tensor/narrative/control design |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` dataset profiles |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | Contribution 1 provisional PLGO；problem + conditional narrative pass；theory pending；SC2-MIPR held |
+| `paper_core_status` | Contribution 1 PLGO partial；RGNB scaffold pass、actual mechanism pending；SC2-MIPR held |
 
 ## Research Thesis
 
@@ -123,8 +123,24 @@ global-domain coherence，但requested H只定义domain，不能成为learned se
 [Provisional Candidate] `SC1-PLGO`（Projective Local-Global Operator）通过Step 4 conditional narrative gate。
 它不是“首次basis/wavelet forecast”：N-BEATS、N-HiTS、BasisFormer、FBM、WaveToken、Implicit Forecaster与
 FlowState已占据相关单项。可辩护边界是global smooth atoms、interval-local supports、domain-only restriction与
-selective synthesis的组合。balanced interval basis保留为local support scaffold；具体operator尚未冻结，
-必须先通过Step5 stable reconstruction/function-class/capacity no-go audit。
+selective synthesis的组合。balanced interval basis保留为local support scaffold；Step 4当时只授权进入
+Step 5 stable reconstruction/function-class/capacity no-go audit。
+
+[Fact] PLGO Step 5已构造Restricted-Global Nested Basis (`RGNB`)：root保留global DCT subspace，每个balanced
+interval的detail是children scaling union相对parent的orthogonal complement。stable local Chebyshev chart修复了
+raw restricted-DCT最高`3.110e17`的conditioning pathology；12个$(T,r_g)$、101个selected prefixes与
+3,731个all-$H$ active-bound cases通过，max algebraic gap=`2.141e-13`。因此stable global-local synthesis、
+arbitrary-prefix restriction与无dense bypass的A6 morphism均可行。
+
+[Decision] 该结果只让mathematical scaffold通过。square `PLGO-ONB-M0`与A6是isometric
+reparameterization；direct global/local frame有$r_g$维coefficient kernel；independent support-group maps在
+T720的rank caps sum=720并退化为full affine。三者分别只能作为control、overcomplete control与rejected
+capacity-confounded design。support pruning也不等于generator-level speedup，效率claim继续撤销。
+
+[Hypothesis] Step 6唯一保留的问题是：一个不读取$H$的shared atom-conditioned generator，能否利用
+support/scale/global-local descriptors原生生成active coefficients，并超过matched dense与random-descriptor
+controls。该generator尚未通过function-class、capacity或prior-art gate，故PLGO为
+`partial_pass_step6_design_only`，不是paper-core method，禁止实现和训练。
 
 ### Contribution 2 Candidate: Measure-Induced Projective Risk
 
@@ -193,6 +209,11 @@ orthogonal/group controls同样成立；requested prefix虽可少生成inactive 
 后续D2/D3 frozen-memory diagnostics已经关闭depth grouping、支持basis main effect；当前已返回Step 4，
 但仍需排除standard structured basis与whitening解释后才可提出新operator。
 
+[Decision] 新PLGO Step5没有重复旧FPMO结论，而是把global smooth root与interval-local complements组成了
+stable square basis；但同样确认“fixed invertible transform本身不是method”。Contribution 1的新增机制必须
+位于coefficient generation path，并由matched dense/random-descriptor controls隔离。Step6若无法做到，回滚
+Step4，不以训练性能包装RGNB。
+
 ## Main Experiment Logic
 
 1. 固定 natural A6 baseline 与 test reference；
@@ -213,6 +234,8 @@ orthogonal/group controls同样成立；requested prefix虽可少生成inactive 
 12. SC1-D5 primary selector失败但b144出现short/long crossed interaction；D6使用disjoint validation window确认，
     pass只返回Step 4，不直接实现operator。
 13. D6全部gate通过；PLGO在external source audit后conditional进入Step5，method implementation仍false。
+14. PLGO Step5通过RGNB algebra/prefix/A6 morph，但ONB、frame与independent-group variants均被function/control
+    no-go限制；只进入Step6 generator design，method implementation仍false。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
 generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成
@@ -241,6 +264,7 @@ loss 或更多 tuning 来掩盖失败。
 - `analysis/stage_c_sc1_d5_conditioning_locality_20260714/research_interpretation.md`
 - `analysis/stage_c_sc1_d6_horizon_support_interaction_20260714/research_interpretation.md`
 - `analysis/stage_c_sc1_step4_projective_local_global_audit_20260714/source_informed_audit.md`
+- `analysis/stage_c_sc1_plgo_step5_theory_20260714/step5_theory_feasibility.md`
 - `Papers/stage-c-external-decoder-objective-audit.md`
 - `docs/experiments/stage-c-five-dataset-validation-policy.md`
 - `docs/code-explanation/stage-c-pmfo-rct-step7a.md`

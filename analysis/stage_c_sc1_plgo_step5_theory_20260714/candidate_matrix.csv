@@ -1,0 +1,5 @@
+candidate,stable_synthesis,coefficient_identifiable,exact_prefix_restriction,exact_a6_containment,new_function_class,selective_speedup_proven,status
+PLGO-ONB-M0,True,True,True,True,False,False,control_only_isometric_reparameterization
+PLGO-FRAME,True,False,True,True,True,False,control_only_overcomplete_capacity_confound
+PLGO-INDEPENDENT-GROUP,True,True,True,True,True,False,rejected_as_core_full_affine_capacity_confound
+PLGO-ATOM-CONDITIONED-GENERATOR,True,True,True,not_established,not_established,False,provisional_step6_design_question
