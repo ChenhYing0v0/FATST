@@ -178,3 +178,20 @@ Ledger；Roadmap 只在该切换改变 11-step rollback 或阶段状态时更新
 3. 失败是否可能由 intervention point 或 readout/head 设计导致？
 4. 哪些方向级问题仍未被测试？
 5. 下一步是修正诊断、重设 intervention point，还是才允许 rollback？
+
+## Frozen Component Replacement 公平性规则
+
+joint training得到的Encoder与Decoder会共同塑造中间representation。若冻结一个与原Decoder共同训练的
+Encoder，再只替换Decoder，则实验回答的是“新Decoder能否兼容A6-specific representation”，而不是“新
+Encoder-Decoder架构端到端训练后是否有效”。因此：
+
+1. frozen replacement只可作为`diagnostic_only`，用于information access、matched within-family attribution、
+   debugging或counterfactual；结论必须写明`conditional on frozen representation`；
+2. 当frozen component曾与control head联合训练时，replacement gap不得用于拒绝paper-core方向、判定method
+   readiness，或强制转入capacity-preserving redesign；
+3. paper-core effectiveness默认要求from-scratch end-to-end joint training，所有arms共享data split、dataset
+   profile、objective、optimizer class、checkpoint selection与evaluation protocol；
+4. warm-start、freeze/unfreeze、cross-swap或$2\times2$ encoder-decoder exchange只作为次级attribution，不作为
+   primary method gate；
+5. 若确需冻结实验，应尽可能使用对称controls，并分别报告representation compatibility、optimization与
+   architecture effectiveness，禁止将三者合并为一个pass/fail。

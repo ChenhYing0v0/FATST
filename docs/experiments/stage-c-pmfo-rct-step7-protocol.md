@@ -6,8 +6,8 @@
 | --- | --- |
 | `candidate` | `SC1-PMFO-RCT` |
 | `current_step` | Step 10 decision complete；`PMFO-RCT v1` rollback Step 4 |
-| `carrier` | frozen `A6-LBF-natural-baseline` Encoder contract |
-| `objective` | frozen full-H720 pointwise L1 training；H720 validation-MSE selection；MIPR forbidden |
+| `carrier` | fixed A6 Encoder architecture/profile contract；weights are jointly trained per arm |
+| `objective` | fixed full-H720 pointwise L1 training；H720 validation-MSE selection；MIPR forbidden |
 | `implementation_authorized` | Step 7A complete；v1 implementation frozen as evidence |
 | `remote_training_authorized` | `false`；15/15 runs complete，no continuation sweep |
 | `rollback` | exact v1 `readout_or_head_design_wrong` -> Step 4 |
@@ -17,6 +17,10 @@
 PMFO-RCT的refinement-conservative future tree，是否在不修改A6 Encoder、不读取horizon semantic feature的
 条件下，形成exact prefix projectivity、local support以及不能被dense/no-transition capacity control解释的
 forecast improvement？
+
+[Fairness audit 2026-07-14] “fixed/frozen contract”从未表示冻结Encoder weights。runner为每个arm新建完整model，
+optimizer接收`model.parameters()`；因此Step7B是end-to-end joint training，PMFO-RCT v1的exact architecture
+failure不受D7 frozen replacement confound影响。
 
 ## Frozen Tensor Contract
 

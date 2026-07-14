@@ -13,6 +13,22 @@
 | `return_if_pass` | Step 6冻结task-specific claim/method contract；随后才可授权Step 7 |
 | `close_if_fail` | descriptor-generator route；RGNB remains component only |
 
+## Post-Hoc Fairness Correction (2026-07-14)
+
+原protocol的geometry attribution仍有效，但`free_m0` gate不能评估method readiness。source Encoder由A6
+decoder共同训练；free-M0是其native-compatible readout，而PAF是replacement readout。该比较缺少
+Encoder-PAF joint adaptation，存在co-adaptation confound。
+
+因此历史threshold与raw metrics保持不变，但decision rule被审计性覆盖：
+
+- GEO vs PERM/RANDOM：`conditional on frozen A6 representation`；
+- GEO vs free-M0：只报告compatibility gap，不作architecture pass/fail；
+- 无论frozen free gap大小，PAF方向都必须经过from-scratch end-to-end gate；
+- accepted decision：`conditional_geometry_supported_end_to_end_gate_required`。
+
+完整审计与新protocol见`analysis/stage_c_frozen_replacement_fairness_audit_20260714/fairness_audit.md`和
+`docs/experiments/stage-c-sc1-d8-end-to-end-coadaptation-screen.md`。
+
 ## What We Plan To Test
 
 Step 6已经证明PAF tensor path可projective。generic mechanism存在prior-art overlap，但按项目修订规则，
@@ -114,13 +130,16 @@ matched model只靠memorizing 720 descriptors。
 
 ## Decision Rule
 
+以下是实验启动时的historical preregistration，已被本文件顶部2026-07-14 fairness correction覆盖其
+method-readiness解释，但保留用于审计raw decision如何产生：
+
 - invariants fail：`diagnostic_invalid_for_direction_rejection`；
 - geometry gates与free-control gate均pass：`descriptor_sufficiency_supported_return_step6_freeze`；
 - geometry gates pass但free-control fail：
   `descriptor_geometry_supported_paf_not_ready_return_step4`；
 - geometry gates fail：`descriptor_sufficiency_not_supported_close_paf`。
 
-该分层不改变预注册threshold或method hard gate，只执行项目强制failure attribution：free-control失败不能覆盖
-GEO相对PERM/RANDOM已成立的geometry evidence。
+该历史分层不改变预注册threshold；当前有效结论只保留GEO相对PERM/RANDOM的conditional geometry evidence，
+free-control不再是method hard gate。
 
 无论结果如何，D7都不授权future-unit retrieval、Encoder replacement、MoE或SC2-MIPR。

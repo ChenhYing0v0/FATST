@@ -1,10 +1,11 @@
 # SC1-D7 RGNB Descriptor Sufficiency Report
 
-- `decision`: `descriptor_geometry_supported_paf_not_ready_return_step4`
+- `decision`: `conditional_geometry_supported_end_to_end_gate_required`
 - invariant gate: `True`
 - geometry gate: `True`
 - free-control gate: `False`
-- method-readiness gate: `False`
+- protocol-fairness gate: `False`
+- method-readiness gate: `not evaluated by frozen replacement`
 - test used: `false`
 - forecast model updated: `false`
 

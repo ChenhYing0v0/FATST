@@ -2,7 +2,8 @@
 
 ## Scope
 
-三数据集、五arms、seed2021；训练保持frozen full-H720 pointwise L1，
+三数据集、五arms、seed2021；训练保持固定full-H720 pointwise L1，所有arms的Encoder/Decoder parameters均
+端到端joint training，并未冻结A6 Encoder weights；
 best checkpoint由H720 validation MSE选择；test一次生成H720后聚合H1..720 MSE/MAE。
 `dense_mse_auc`定义为720个prefix MSE的算术平均，对应uniform horizon measure。
 

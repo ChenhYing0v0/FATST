@@ -193,6 +193,26 @@ failure is direction-level or design-level, and the next rollback step. When in
 doubt, mark the result as `diagnostic_invalid_for_direction_rejection` or
 `design_fault_suspected`, not as a rejected direction.
 
+## Frozen Component Replacement Fairness
+
+- A component frozen from a jointly trained model is co-adapted with the
+  component that originally consumed its output. Replacing only the consumer
+  creates a conditional compatibility probe, not a fair architecture
+  effectiveness comparison.
+- Frozen replacement is allowed for information-access diagnostics,
+  within-family matched attribution, debugging, and counterfactual analysis.
+  Its conclusion must be labeled as conditional on the frozen representation.
+- A frozen replacement gap must not reject a paper-core method, establish
+  method readiness, or force a capacity-preserving redesign when the frozen
+  component was trained with the control head.
+- Paper-core effectiveness gates must default to end-to-end joint training from
+  the same initialization class and matched data, objective, optimization,
+  checkpoint, and evaluation protocols. Warm-start or cross-swap experiments
+  are secondary diagnostics only.
+- If a frozen probe is unavoidable, use symmetric controls when practical and
+  explicitly separate representation compatibility, optimization, and method
+  effectiveness.
+
 ## Research Path Traceability
 
 The project uses a layered research record system:

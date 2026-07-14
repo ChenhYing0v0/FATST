@@ -350,15 +350,16 @@ def build_summary(
     free_control_gate = matched["free_gap_mse"] >= float(
         gate["matched_free_m0_floor"]
     )
-    method_readiness_gate = geometry_gate and free_control_gate
+    # The free-M0 head is evaluated on an encoder co-trained with the A6
+    # decoder.  Its gap to a replacement PAF head is therefore a conditional
+    # frozen-representation statistic, not a fair end-to-end method gate.
+    protocol_fairness_gate = False
     if not invariant_pass:
         decision = "diagnostic_invalid_for_direction_rejection"
-    elif method_readiness_gate:
-        decision = "descriptor_sufficiency_supported_return_step6_freeze"
     elif geometry_gate:
-        decision = "descriptor_geometry_supported_paf_not_ready_return_step4"
+        decision = "conditional_geometry_supported_end_to_end_gate_required"
     else:
-        decision = "descriptor_sufficiency_not_supported_close_paf"
+        decision = "conditional_geometry_not_supported_end_to_end_gate_still_required"
     summary = {
         "candidate": "SC1-D7",
         "role": "diagnostic_only",
@@ -366,13 +367,15 @@ def build_summary(
         "descriptor_gate": {
             "geometry_pass": geometry_gate,
             "free_control_pass": free_control_gate,
-            "method_readiness_pass": method_readiness_gate,
+            "free_control_interpretation": "frozen_representation_compatibility_only",
+            "protocol_fairness_pass": protocol_fairness_gate,
+            "method_readiness_pass": None,
             "compact": compact,
             "matched": matched,
             "thresholds": gate,
         },
         "decision": decision,
-        "authorization_if_passed": config["authorization_if_passed"],
+        "authorization_if_passed": "end_to_end_gate_required_regardless_of_frozen_result",
         "method_training_authorized": False,
     }
     return summary, horizon_rows, checkpoint_rows, dataset_rows
@@ -389,7 +392,9 @@ def render_report(summary: dict[str, Any]) -> str:
             f"- invariant gate: `{summary['invariant_gate']['pass']}`",
             f"- geometry gate: `{summary['descriptor_gate']['geometry_pass']}`",
             f"- free-control gate: `{summary['descriptor_gate']['free_control_pass']}`",
-            f"- method-readiness gate: `{summary['descriptor_gate']['method_readiness_pass']}`",
+            "- protocol-fairness gate: "
+            f"`{summary['descriptor_gate']['protocol_fairness_pass']}`",
+            "- method-readiness gate: `not evaluated by frozen replacement`",
             "- test used: `false`",
             "- forecast model updated: `false`",
             "",
@@ -480,7 +485,7 @@ def synthetic_smoke() -> None:
     summary, _horizons, _checkpoints, _datasets = build_summary(
         metrics, metadata, config
     )
-    if summary["decision"] != "descriptor_sufficiency_supported_return_step6_freeze":
+    if summary["decision"] != "conditional_geometry_supported_end_to_end_gate_required":
         raise RuntimeError(f"D7 analyzer smoke failed: {summary}")
     print("stage_c_sc1_d7_analyzer_synthetic_smoke=pass")
 

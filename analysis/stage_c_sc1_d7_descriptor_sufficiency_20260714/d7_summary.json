@@ -1,7 +1,7 @@
 {
-  "authorization_if_passed": "return_step6_freeze_task_specific_method_contract",
+  "authorization_if_passed": "end_to_end_gate_required_regardless_of_frozen_result",
   "candidate": "SC1-D7",
-  "decision": "descriptor_geometry_supported_paf_not_ready_return_step4",
+  "decision": "conditional_geometry_supported_end_to_end_gate_required",
   "descriptor_gate": {
     "compact": {
       "descriptor_gain_mae": 0.09858079427422271,
@@ -10,6 +10,7 @@
       "free_gap_mse": -0.373835924618297,
       "positive_datasets": 5
     },
+    "free_control_interpretation": "frozen_representation_compatibility_only",
     "free_control_pass": false,
     "geometry_pass": true,
     "matched": {
@@ -19,7 +20,8 @@
       "free_gap_mse": -0.3910307632255427,
       "positive_datasets": 5
     },
-    "method_readiness_pass": false,
+    "method_readiness_pass": null,
+    "protocol_fairness_pass": false,
     "thresholds": {
       "descriptor_moment_tolerance": 1e-05,
       "mae_gain_floor": 0.0,

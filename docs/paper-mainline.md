@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | D7 Step 9-10 complete；return Step 4 capacity-preserving geometry redesign |
+| `current_11_step` | frozen replacement fairness correction complete；PLGO Step 6/7A end-to-end gate next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
-| `mechanism_control` | frozen `A6-LBF-natural-baseline` dataset profiles |
+| `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | Contribution 1 geometry evidence positive、exact PAF not ready；Step4 redesign；SC2-MIPR held |
+| `paper_core_status` | Contribution 1 conditional geometry positive；PAF reopened for fair E2E test；SC2-MIPR held |
 
 ## Research Thesis
 
@@ -86,6 +86,9 @@ macro `+3.0635%`，5/5 datasets、15/15 seeds为正；但true depth grouping相�
 rollback Step 2。basis signal当时尚未由完整$2\times2$ factorial识别为独立main effect，因此只授权了
 `SC1-D3 crossed basis-group diagnostic`，而未升为decoder contribution。
 
+[Fairness Boundary] 上述“关闭”仅针对frozen A6 representation上的final-head grouping设计，不能作为所有
+end-to-end scale grouping的方向级否定；当前PLGO也不依赖该已测试grouping。
+
 [Diagnostic] D3已补齐`random basis × random group` cell并形成15个dataset-checkpoint primary units。
 basis main MSE reduction为`+2.9174%`，在true groups与random groups下分别为`+3.1164%/+2.7181%`；
 5/5 datasets均通过方向一致性与interaction guard，MAE为`+2.3098%`。因此basis geometry作为独立probe
@@ -93,9 +96,9 @@ main effect获得支持，并授权返回Step 4。但exact depth grouping仍为f
 Haar/wavelet/whitening prior art约束，尚不是Contribution 1。当前问题转为识别conditioning、energy
 compaction、local-support或prefix compatibility中的真实机制，并证明其原生服务unified horizons。
 
-[Diagnostic] D4已完成315/315 fits。balanced相对permuted interval的八horizon macro为`+1.6324%`，说明
-contiguous locality是真实机制；但相对DCT-II与fit-only PCA分别为`-0.8609%/-1.5050%`，且相对random
-interval tree仅`+0.2742%`。因此exact midpoint balancing与best-accuracy claim关闭，decision=
+[Diagnostic] D4已完成315/315 frozen-memory fits。balanced相对permuted interval的八horizon macro为`+1.6324%`，说明
+contiguous locality在A6 representation/probe family中形成稳定conditional signal；但相对DCT-II与fit-only PCA分别为`-0.8609%/-1.5050%`，且相对random
+interval tree仅`+0.2742%`。因此exact midpoint balancing与best-accuracy claim在该conditional probe中不成立，decision=
 `standard_structured_basis_explains_gain_return_step2`。这不否定把balanced interval basis用于forecast
 generation的组件级创新，而是要求paper-core novelty来自更完整的组合：future-prefix local support、
 horizon-agnostic restriction、predictive conditioning与实际selective synthesis共同成立。
@@ -117,8 +120,9 @@ paper-core method。
 
 [Strong Evidence] D6在disjoint validation window完成225/225并通过全部gates：b144相对global DCT的short
 MSE为`+1.1964%`、long MSE为`-1.2675%`，12/15 primary units crossing；short-positive与long-negative
-分别覆盖4/5和5/5 datasets。由此SC1 problem收紧为：同一future function需要local-prefix synthesis与
-global-domain coherence，但requested H只定义domain，不能成为learned semantic condition。
+分别覆盖4/5和5/5 datasets。该结果支持A6 representation下存在support-scale interaction，并据此将SC1
+problem收紧为：同一future function需要local-prefix synthesis与global-domain coherence，但requested H只
+定义domain，不能成为learned semantic condition；它本身不证明任意end-to-end decoder都存在同样强度。
 
 [Provisional Candidate] `SC1-PLGO`（Projective Local-Global Operator）通过Step 4 conditional narrative gate。
 它不是“首次basis/wavelet forecast”：N-BEATS、N-HiTS、BasisFormer、FBM、WaveToken、Implicit Forecaster与
@@ -153,20 +157,27 @@ constant-slot controls解释；B14 model-independent retrieval-demand只有`1/6`
 因此atom-to-memory retrieval被明确删除，narrowed PAF只能读取与A6一致的shared flattened memory。
 
 [Decision] `SC1-PLGO-PAF` Step 6按完整`problem-constraint-mechanism-implementation-claim`链条获得
-conditional narrative pass，decision=`conditional_narrative_pass_d7_required`。不把generic atom query、
-branch-trunk或HyperNetwork单独写成创新；Contribution 1的候选边界是multi-horizon projective contract、RGNB
-local/global support geometry与atomwise generation的组合。Step 7前必须先完成D7 frozen-memory diagnostic；
-D7通过后返回Step 6冻结最终method contract，再授权实现。
+conditional narrative pass。不把generic atom query、branch-trunk或HyperNetwork单独写成创新；Contribution 1
+的候选边界是multi-horizon projective contract、RGNB local/global support geometry与atomwise generation的
+组合。D7 frozen-memory diagnostic只负责conditional geometry attribution，不能替代Step 7 end-to-end gate。
 
 [Strong Evidence] D7完成105/105 frozen-memory fits并使用fresh validation batches16-23。canonical RGNB
 descriptors相对PERM/RANDOM在compact/matched widths分别提升MSE `+13.8034%/+12.8418%`、MAE
 `+9.8581%/+9.3269%`，两个width均覆盖5/5 datasets；gain在H48最强并随horizon增长减弱，与D6 short-prefix
 local-support evidence一致。
 
-[Decision] exact descriptor-only PAF仍不具备method readiness：相对free-M0分别为`-37.3836%/-39.1031%`，
-near-budget width没有恢复性能。该结果否定exact PAF v1，不否定descriptor geometry；归因为
-`readout_or_head_design_wrong` strongly suspected，且epoch-cap使slow optimization未完全排除。Contribution 1
-返回Step4，研究capacity-preserving geometry-conditioned coefficient generation，不继续PAF width/epoch tuning。
+[Protocol Correction] D7相对free-M0的`-37.3836%/-39.1031%`是frozen A6 representation上的compatibility
+gap，不是method-readiness gate。A6 Encoder由A6 decoder共同塑造，free-M0天然兼容该representation；PAF
+replacement head没有机会反向塑造Encoder。raw metrics不变，但原“exact PAF v1失败并返回Step4”结论撤销。
+
+[Decision] PAF恢复为`narrative_ready`，下一步是`SC1-D8-E2E`：A6、GEO、PERM、RANDOM compact/matched
+七arms全部from scratch端到端joint training，五dataset seed2021先screen，再对decisive arms做三seed确认。
+只有stable E2E PAF仍失败，才返回Step4 capacity-preserving redesign；frozen cross-swap不再作为primary gate。
+
+[Tensor Boundary] `memory [B,C,P,D] -> hidden [B,C,R]`是$R=PD$的bijective flatten，不是pooling；patch
+identity没有在这一步丢失。A6与PAF都随后执行$R\rightarrow256$投影。PAF的真实风险是shared latent与
+descriptor-generated atom map构成的separable history-atom interaction，而不是shape从四维变三维本身。D8
+强制报告patch-block contributions与atom-patch Jacobian；B14未支持的atom retrieval不会未经新Step4-6直接加入。
 
 ### Contribution 2 Candidate: Measure-Induced Projective Risk
 
@@ -232,8 +243,8 @@ paper core。lifting、nested basis与network morphism只作为构造和proof ev
 [Decision] Step 6 narrative audit已关闭该路径：DS与DA的function class相同，且factorization对random
 orthogonal/group controls同样成立；requested prefix虽可少生成inactive coefficients，但dense $D_l$仍要求
 先生成全部720维scale latents。由此否决的是当前linear DS design，而不是“future multiscale structure不存在”。
-后续D2/D3 frozen-memory diagnostics已经关闭depth grouping、支持basis main effect；当前已返回Step 4，
-但仍需排除standard structured basis与whitening解释后才可提出新operator。
+后续D2/D3 frozen-memory diagnostics在A6 representation上不支持depth grouping、支持basis main effect；它们
+已经推动Step4机制审计，但不能作为end-to-end grouping direction的普遍否定。
 
 [Decision] 新PLGO Step5没有重复旧FPMO结论，而是把global smooth root与interval-local complements组成了
 stable square basis；但同样确认“fixed invertible transform本身不是method”。Contribution 1的新增机制必须
@@ -243,10 +254,11 @@ Step4，不以训练性能包装RGNB。
 ## Main Experiment Logic
 
 1. 固定 natural A6 baseline 与 test reference；
-2. D1-A验证label/residual nested structure，D1-B验证A6 Encoder information sufficiency，D1-C验证
+2. D1-A验证label/residual nested structure，D1-B验证当前A6 memory存在可访问forecast information，D1-C验证
    learned basis geometry，同时审计measure/projected gradients；
 3. PMFO-RCT与MIPR曾分别通过初版Step 4-6 narrative/theory gate；
-4. Step 7A local invariants通过；Step 7B使用frozen full-H720 pointwise L1完成15-run architecture controls；
+4. Step 7A local invariants通过；Step 7B使用固定full-H720 pointwise L1、所有model parameters端到端训练，
+   完成15-run architecture controls；
 5. PMFO-RCT v1 effectiveness失败，回滚Step 4；MIPR、factorial与full matrix全部暂停；
 6. Step 4 redesign audit已解释A6 function class、fixed partition与interface问题，并只把FPMO推进到Step 5；
 7. FPMO Step 5 embedding/restriction通过但capacity no-go使其仅partial pass；
@@ -262,10 +274,10 @@ Step4，不以训练性能包装RGNB。
 13. D6全部gate通过；PLGO在external source audit后conditional进入Step5，method implementation仍false。
 14. PLGO Step5通过RGNB algebra/prefix/A6 morph，但ONB、frame与independent-group variants均被function/control
     no-go限制；只进入Step6 generator design，method implementation仍false。
-15. PLGO Step6的PAF tensor/rank gate通过；external primitive overlap不再自动否决task-specific贡献，但
-    B11/B14要求先完成D7 attribution。当前conditional pass；D7前不实现forecast method。
-16. D7 geometry gate通过但free-control gate失败；exact PAF v1关闭为method candidate，RGNB geometry evidence
-    保留并返回Step4 capacity-preserving redesign。
+15. PLGO Step6的PAF tensor/rank gate通过；external primitive overlap不再自动否决task-specific贡献，
+    B11/B14促成D7 conditional attribution；D7现已完成并通过geometry gate。
+16. D7在frozen A6 memory上确认conditional geometry effect；free-control gap因Encoder-Decoder co-adaptation
+    不能判定method readiness。PAF重新开放，D8-E2E Step7A成为下一步。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
 generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成

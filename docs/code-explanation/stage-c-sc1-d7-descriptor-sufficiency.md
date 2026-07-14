@@ -1,5 +1,12 @@
 # SC1-D7 Descriptor Sufficiency Code Explanation
 
+## Fairness Semantics Correction (2026-07-14)
+
+analyzer现在将`free_m0` gap保留为frozen-representation compatibility statistic，不再把它与geometry gate组合成
+method readiness。`protocol_fairness_pass=false`明确记录A6 Encoder与free-M0/A6 decoder的co-adaptation；
+`method_readiness_pass=null`表示D7没有评估end-to-end architecture。geometry pass时decision改为
+`conditional_geometry_supported_end_to_end_gate_required`。CSV与raw metrics计算未改变。
+
 ## Scope
 
 D7是`diagnostic_only` frozen-memory probe，不是forecast model implementation。它读取冻结A6 encoder memory，

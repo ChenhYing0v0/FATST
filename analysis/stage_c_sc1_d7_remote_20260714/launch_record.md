@@ -34,3 +34,7 @@ workers均已存在。
 全部workers正常完成，GPU释放。远端raw analyzer给出method hard-gate fail；本地同步后按failure-attribution
 rule拆分为geometry gate pass、free-control gate fail，最终decision为
 `descriptor_geometry_supported_paf_not_ready_return_step4`。详见同阶段`research_interpretation.md`。
+
+[Post-hoc fairness correction, 2026-07-14] 上述为当时的raw/historical decision。A6 Encoder与free-M0/A6
+decoder存在co-adaptation，故free-control gap只能作为frozen compatibility statistic，不能评估PAF完整架构。
+有效decision已更正为`conditional_geometry_supported_end_to_end_gate_required`。
