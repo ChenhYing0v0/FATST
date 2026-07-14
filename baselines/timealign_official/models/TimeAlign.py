@@ -9,6 +9,7 @@ from layers.PMFO import (
     PMFONoTransitionReadout,
     PMFORCTReadout,
 )
+from layers.PLGO import PLGOPAFReadout
 from layers.StandardNorm import Normalize
 
 LEARNED_BASIS_READOUTS = {
@@ -33,6 +34,15 @@ PMFO_READOUTS = {
     "pmfo-rct-no-transition",
     "pmfo-rct-no-conservation",
     "dense-mlp-matched",
+}
+
+PLGO_PAF_READOUTS = {
+    "plgo-paf-geo-c256",
+    "plgo-paf-perm-c256",
+    "plgo-paf-random-c256",
+    "plgo-paf-geo-m694",
+    "plgo-paf-perm-m694",
+    "plgo-paf-random-m694",
 }
 
 ENCODER_MODES = {
@@ -347,14 +357,18 @@ class Model(nn.Module):
             *LEARNED_BASIS_READOUTS,
             *STBO_READOUTS,
             *PMFO_READOUTS,
+            *PLGO_PAF_READOUTS,
         }:
             raise ValueError(
                 "Clean TimeAlign supports only 'official' and "
                 "learned-basis/stage-native/basis-conditioned/STBO/PMFO "
                 "readout modes"
             )
-        if self.readout_mode in PMFO_READOUTS and self.pred_len != 720:
-            raise ValueError("StageC PMFO readouts require pred_len=720")
+        if (
+            self.readout_mode in PMFO_READOUTS | PLGO_PAF_READOUTS
+            and self.pred_len != 720
+        ):
+            raise ValueError("StageC projective readouts require pred_len=720")
         self.has_future_recon_branch = self.readout_mode == "official"
         if (
             self.encoder_mode
@@ -581,6 +595,21 @@ class Model(nn.Module):
             self.pmfo_readout = DenseMLPMatchedReadout(
                 readout_dim,
                 hidden_dim=int(getattr(configs, "pmfo_dense_hidden_dim", 144)),
+            )
+
+        if self.readout_mode in PLGO_PAF_READOUTS:
+            descriptor_name = self.readout_mode.split("-")[2]
+            width_code = self.readout_mode.split("-")[3]
+            trunk_width = 256 if width_code == "c256" else 694
+            self.plgo_paf_readout = PLGOPAFReadout(
+                readout_dim=readout_dim,
+                descriptor_name=descriptor_name,
+                trunk_width=trunk_width,
+                series_length=self.pred_len,
+                global_rank=int(getattr(configs, "plgo_global_rank", 16)),
+                latent_width=int(getattr(configs, "plgo_latent_width", 256)),
+                permutation_seed=int(getattr(configs, "plgo_permutation_seed", 7101)),
+                random_seed=int(getattr(configs, "plgo_random_descriptor_seed", 7102)),
             )
 
         self.normalization_x = Normalize(configs.enc_in, affine=False)
@@ -820,6 +849,8 @@ class Model(nn.Module):
             output = self._subspace_tiled_basis_operator(hidden, target_prefix)
         elif self.readout_mode in PMFO_READOUTS:
             output = self.pmfo_readout(hidden, target_prefix)
+        elif self.readout_mode in PLGO_PAF_READOUTS:
+            output = self.plgo_paf_readout(hidden, target_prefix)
         else:
             raise ValueError(f"Unsupported readout mode: {self.readout_mode}")
         output = self.normalization_x(output, "denorm")

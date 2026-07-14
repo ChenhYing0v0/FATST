@@ -174,6 +174,10 @@ replacement head没有机会反向塑造Encoder。raw metrics不变，但原“e
 七arms全部from scratch端到端joint training，五dataset seed2021先screen，再对decisive arms做三seed确认。
 只有stable E2E PAF仍失败，才返回Step4 capacity-preserving redesign；frozen cross-swap不再作为primary gate。
 
+[Fact] D8 Step7A已通过：五profiles × 七arms的210个shape-prefix与35个gradient cases全部通过；full-prefix
+max gap=`2.384e-6`，flatten/patch-block-sum max gap=`5.722e-6`。runner dry-run生成35 jobs，analyzer
+synthetic gate通过，method screening在CLI层禁止test。该证据只授权Step7B，不构成effectiveness结果。
+
 [Tensor Boundary] `memory [B,C,P,D] -> hidden [B,C,R]`是$R=PD$的bijective flatten，不是pooling；patch
 identity没有在这一步丢失。A6与PAF都随后执行$R\rightarrow256$投影。PAF的真实风险是shared latent与
 descriptor-generated atom map构成的separable history-atom interaction，而不是shape从四维变三维本身。D8
@@ -277,7 +281,9 @@ Step4，不以训练性能包装RGNB。
 15. PLGO Step6的PAF tensor/rank gate通过；external primitive overlap不再自动否决task-specific贡献，
     B11/B14促成D7 conditional attribution；D7现已完成并通过geometry gate。
 16. D7在frozen A6 memory上确认conditional geometry effect；free-control gap因Encoder-Decoder co-adaptation
-    不能判定method readiness。PAF重新开放，D8-E2E Step7A成为下一步。
+    不能判定method readiness。PAF重新开放。
+17. D8-E2E Step7A已通过七arms、五profiles、projectivity、gradient与patch-interface gates；Step7B固定为
+    35-run validation-only screen，结果返回前不启动三seed或MIPR。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
 generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成

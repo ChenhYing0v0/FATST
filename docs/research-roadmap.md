@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | frozen replacement fairness correction complete；PLGO Step 6/7A next |
+| `current_step` | SC1-D8 Step 7A passed；Step 7B remote screen active |
 | `active_question` | conditional RGNB signal能否转化为E2E收益，且shared latent是否保留patch-specific usage？ |
-| `active_candidates` | `SC1-PLGO-PAF narrative_ready`；`SC1-D8-E2E proposed`；`SC2-MIPR` held |
+| `active_candidates` | `SC1-PLGO-PAF narrative_ready`；`SC1-D8-E2E running`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/experiments/stage-c-sc1-d8-end-to-end-coadaptation-screen.md` |
-| `method_implementation` | D8 Step7A pending；remote training unauthorized |
+| `method_implementation` | D8 Step7A passed；35-run validation-only remote screen authorized |
 | `rollback_point` | stable E2E PAF fail -> Step4 redesign；pathology -> Step7 repair only |
 
 ## Completed Foundation
@@ -173,7 +173,9 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 `SC1-D7-RGNB-descriptor-sufficiency`已完成105/105 fits与本地独立复算：compact/matched GEO相对controls为
 +13.80%/+12.84%、均5/5 datasets，作为conditional geometry evidence保留。相对free-M0的
 -37.38%/-39.10%受A6 Encoder-Decoder co-adaptation影响，不能评估end-to-end method readiness。decision更正为
-`conditional_geometry_supported_end_to_end_gate_required`。下一步进入D8 Step7A，而非先做Step4 patch。
+`conditional_geometry_supported_end_to_end_gate_required`。D8 Step7A现已通过：五profiles × 七arms共210个
+shape-prefix cases、35个gradient cases全部通过；prefix max gap=`2.384e-6`，patch-block rewrite
+max gap=`5.722e-6`，test未使用。下一步执行Step7B 35-run validation-only screen，而非先做Step4 patch。
 
 ## SC1-PLGO Step 6 Design Gate: Conditional Pass, D7 Required
 

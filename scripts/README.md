@@ -34,6 +34,13 @@ StageC active entrypoints：
   descriptor gain、free-M0 gap与fit-holdout memorization hard gates。
 - `remote/run_stage_c_sc1_d7_descriptor_sufficiency.sh`: 三GPU workload-aware D7 runner；
 - `sync_stage_c_sc1_d7_descriptor_sufficiency_results.sh`: 同步D7 raw artifacts并本地独立重算decision。
+- `check_stage_c_sc1_d8_step7a.py`: 五profiles × 七arms的shape、prefix、gradient、RGNB descriptor与
+  patch-block exact rewrite本地gate；不训练forecast model。
+- `check_stage_c_sc1_d8_checkpoint_invariants.py`: 重载trained A6/PAF checkpoint，审计from-scratch、
+  projectivity、无冻结参数与patch artifact数值合同。
+- `analyze_stage_c_sc1_d8_e2e.py`: 五dataset × 七arms validation-only dense-horizon gate、matched descriptor
+  attribution与optimization/pathology审计。
+- `remote/run_stage_c_sc1_d8_e2e.sh`: 3090 workload-aware 35-run end-to-end joint-training screen；禁止test。
 - `run_stage_c_sc1_d2_diagnostic.py`: 从冻结A6 checkpoints提取`memory [B,C,P,D]`，训练rank/full-affine、
   dense nonlinear、true-scale grouped与random grouped head-only probes；不更新forecast model、不读取test。
 - `analyze_stage_c_sc1_d2_diagnostic.py`: 计算rank、generic nonlinearity与scale alignment的paired gains，

@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import math
 import os
 import random
 import sys
@@ -43,6 +44,12 @@ PREFIX_READOUT_MODES = {
     "pmfo-rct-no-transition",
     "pmfo-rct-no-conservation",
     "dense-mlp-matched",
+    "plgo-paf-geo-c256",
+    "plgo-paf-perm-c256",
+    "plgo-paf-random-c256",
+    "plgo-paf-geo-m694",
+    "plgo-paf-perm-m694",
+    "plgo-paf-random-m694",
 }
 
 STAGE_C_ACTIVE_READOUTS = {
@@ -51,6 +58,12 @@ STAGE_C_ACTIVE_READOUTS = {
     "pmfo-rct-no-transition",
     "pmfo-rct-no-conservation",
     "dense-mlp-matched",
+    "plgo-paf-geo-c256",
+    "plgo-paf-perm-c256",
+    "plgo-paf-random-c256",
+    "plgo-paf-geo-m694",
+    "plgo-paf-perm-m694",
+    "plgo-paf-random-m694",
 }
 
 ACTIVE_STAGE_C_CONTRACT = {
@@ -328,6 +341,10 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         stbo_basis_init_std=args.stbo_basis_init_std,
         pmfo_state_dim=args.pmfo_state_dim,
         pmfo_dense_hidden_dim=args.pmfo_dense_hidden_dim,
+        plgo_global_rank=args.plgo_global_rank,
+        plgo_latent_width=args.plgo_latent_width,
+        plgo_permutation_seed=args.plgo_permutation_seed,
+        plgo_random_descriptor_seed=args.plgo_random_descriptor_seed,
         evaluation_prefix_mode=getattr(args, "evaluation_prefix_mode", "native"),
         segment_horizons=getattr(
             args,
@@ -362,6 +379,9 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
     payload: dict[str, Any] = {
         "total_parameters": total_parameters,
         "trainable_parameters": sum(parameter.numel() for parameter in model.parameters() if parameter.requires_grad),
+        "frozen_parameter_tensors": sum(
+            not parameter.requires_grad for parameter in model.parameters()
+        ),
         "readout_mode": getattr(model, "readout_mode", ""),
         "encoder_mode": getattr(model, "encoder_mode", ""),
         "patch_num": int(getattr(model, "patch_num", 0)),
@@ -507,7 +527,168 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
                 ),
             }
         )
+    if hasattr(model, "plgo_paf_readout"):
+        readout = model.plgo_paf_readout
+        active_prefixes = (
+            "patch_emb_x.",
+            "encoder.",
+            "norm_x.",
+            "plgo_paf_readout.",
+        )
+        active_parameters = sum(
+            parameter.numel()
+            for name, parameter in model.named_parameters()
+            if name.startswith(active_prefixes)
+        )
+        payload.update(
+            {
+                "active_forward_parameters": active_parameters,
+                "unused_proj_x_parameters": sum(
+                    parameter.numel()
+                    for name, parameter in model.named_parameters()
+                    if name.startswith("proj_x.")
+                ),
+                "plgo_paf_decoder_parameters": sum(
+                    parameter.numel() for parameter in readout.parameters()
+                ),
+                "plgo_descriptor_family": readout.descriptor_name,
+                "plgo_trunk_width": int(readout.trunk_width),
+                "plgo_latent_width": int(readout.latent_width),
+                "plgo_global_rank": int(readout.global_rank),
+            }
+        )
     return payload
+
+
+def patch_interface_diagnostics(
+    model: nn.Module,
+    loader: torch.utils.data.DataLoader,
+    official_args: argparse.Namespace,
+    max_batches: int,
+) -> tuple[dict[str, Any], list[dict[str, Any]], np.ndarray | None]:
+    """Measure patch usage without changing checkpoint selection."""
+    readout_mode = str(getattr(model, "readout_mode", ""))
+    if readout_mode == "learned-basis-forecast-operator":
+        projection = model.learned_basis_coeff
+        interface = "a6_coefficient_projection"
+    elif hasattr(model, "plgo_paf_readout"):
+        projection = model.plgo_paf_readout.branch
+        interface = "plgo_shared_latent_branch"
+    else:
+        raise ValueError("patch diagnostics require A6 or PLGO-PAF readout")
+
+    patch_num = int(model.patch_num)
+    d_model = int(model.d_model)
+    latent_width = int(projection.out_features)
+    if projection.in_features != patch_num * d_model:
+        raise ValueError("projection width does not match patch tensor contract")
+    blocks = projection.weight.reshape(latent_width, patch_num, d_model)
+    weight_norm = blocks.square().sum(dim=(0, 2)).sqrt()
+    weight_share = weight_norm / weight_norm.sum().clamp_min(1e-12)
+    contribution_energy = torch.zeros(
+        patch_num,
+        device=official_args.device,
+        dtype=torch.float64,
+    )
+    contribution_elements = 0
+    flatten_block_sum_max_abs = 0.0
+    model.eval()
+    with torch.no_grad():
+        for batch_idx, (batch_x, _batch_y, _batch_x_mark, _batch_y_mark) in enumerate(loader):
+            if batch_idx >= max_batches:
+                break
+            batch_x = batch_x.float().to(official_args.device)
+            memory = model.encode_history(batch_x)
+            hidden = memory.flatten(start_dim=-2)
+            contributions = torch.einsum(
+                "bcpd,kpd->bcpk",
+                memory,
+                blocks,
+            )
+            contribution_energy += contributions.double().square().sum(
+                dim=(0, 1, 3)
+            )
+            contribution_elements += int(
+                contributions.shape[0]
+                * contributions.shape[1]
+                * contributions.shape[3]
+            )
+            direct = projection(hidden)
+            explicit = contributions.sum(dim=2) + projection.bias
+            flatten_block_sum_max_abs = max(
+                flatten_block_sum_max_abs,
+                float((direct - explicit).abs().max()),
+            )
+    if contribution_elements == 0:
+        raise RuntimeError("patch diagnostics received no validation batches")
+    contribution_energy /= contribution_elements
+    contribution_share = contribution_energy / contribution_energy.sum().clamp_min(
+        1e-12
+    )
+    entropy = float(
+        (
+            -(contribution_share * contribution_share.clamp_min(1e-12).log()).sum()
+            / math.log(patch_num)
+        ).item()
+    )
+    rows = [
+        {
+            "patch_index": index,
+            "weight_norm_share": float(weight_share[index]),
+            "latent_contribution_share": float(contribution_share[index]),
+        }
+        for index in range(patch_num)
+    ]
+    payload: dict[str, Any] = {
+        "readout_mode": readout_mode,
+        "interface": interface,
+        "source_split": "validation",
+        "max_batches": max_batches,
+        "patch_num": patch_num,
+        "d_model": d_model,
+        "state_width": patch_num * d_model,
+        "latent_width": latent_width,
+        "flatten_block_sum_max_abs": flatten_block_sum_max_abs,
+        "patch_contribution_entropy": entropy,
+        "finite": all(
+            math.isfinite(value)
+            for value in (
+                flatten_block_sum_max_abs,
+                entropy,
+                *weight_share.detach().cpu().tolist(),
+                *contribution_share.detach().cpu().tolist(),
+            )
+        ),
+    }
+    atom_patch_jacobian: np.ndarray | None = None
+    if hasattr(model, "plgo_paf_readout"):
+        readout = model.plgo_paf_readout
+        atom_features = readout.atom_features()
+        jacobian = torch.einsum("nk,kpd->npd", atom_features, blocks)
+        jacobian_norm = jacobian.square().sum(dim=-1).sqrt()
+        atom_patch_jacobian = jacobian_norm.detach().cpu().numpy()
+        group_profiles = []
+        for group_id in torch.unique(readout.atom_group_ids).tolist():
+            mask = readout.atom_group_ids == int(group_id)
+            profile = jacobian_norm[mask].mean(dim=0)
+            profile = profile / profile.sum().clamp_min(1e-12)
+            group_profiles.append(profile)
+        distances = []
+        for left in range(len(group_profiles)):
+            for right in range(left + 1, len(group_profiles)):
+                distances.append(
+                    float((group_profiles[left] - group_profiles[right]).abs().mean())
+                )
+        payload.update(
+            {
+                "atom_group_count": len(group_profiles),
+                "atom_patch_profile_diversity": (
+                    float(np.mean(distances)) if distances else 0.0
+                ),
+                "atom_patch_jacobian_shape": list(jacobian_norm.shape),
+            }
+        )
+    return payload, rows, atom_patch_jacobian
 
 
 def metric_rows(preds: np.ndarray, trues: np.ndarray, horizons: list[int]) -> list[dict[str, Any]]:
@@ -973,6 +1154,13 @@ def run(args: argparse.Namespace) -> None:
         args.output_dir / "effective_config.json",
         {
             "adapter": vars(args) | {"dataset_root": str(args.dataset_root), "output_dir": str(args.output_dir)},
+            "training_contract": {
+                "initialization": "from_scratch",
+                "checkpoint_input": None,
+                "encoder_trainable": True,
+                "decoder_trainable": True,
+                "expected_frozen_parameter_tensors": 0,
+            },
             "official_args": {
                 key: (str(value) if isinstance(value, torch.device) else value)
                 for key, value in vars(official_args).items()
@@ -980,7 +1168,7 @@ def run(args: argparse.Namespace) -> None:
             },
             "official_preset": asdict(preset),
             "source_note": (
-                "StageC PMFO-RCT architecture-only method screening."
+                "StageC end-to-end architecture method screening."
                 if args.protocol_class == "method_screening"
                 else (
                     "StageC standardized mechanism-control carrier calibration."
@@ -1030,6 +1218,28 @@ def run(args: argparse.Namespace) -> None:
     write_csv(args.output_dir / "training_log.csv", training_rows)
     torch.save(model.state_dict(), args.output_dir / "checkpoint.pt")
     dump_json(args.output_dir / "model_diagnostics.json", model_diagnostics(model))
+    if args.readout_mode in {
+        "learned-basis-forecast-operator",
+        *TimeAlign.PLGO_PAF_READOUTS,
+    }:
+        patch_data, patch_loader = data_provider(official_args, "val")
+        del patch_data
+        patch_payload, patch_rows, atom_patch_jacobian = patch_interface_diagnostics(
+            model,
+            patch_loader,
+            official_args,
+            max_batches=args.patch_diagnostic_batches,
+        )
+        dump_json(args.output_dir / "patch_diagnostics.json", patch_payload)
+        write_csv(
+            args.output_dir / "patch_diagnostics_by_patch.csv",
+            patch_rows,
+        )
+        if atom_patch_jacobian is not None:
+            np.savez_compressed(
+                args.output_dir / "atom_patch_jacobian_norm.npz",
+                norm=atom_patch_jacobian,
+            )
 
     if args.final_evaluation_split == "none":
         print(f"run_done output_dir={args.output_dir} evaluation_split=none", flush=True)
@@ -1222,6 +1432,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--stbo-basis-init-std", type=float, default=0.0)
     parser.add_argument("--pmfo-state-dim", type=int, default=32)
     parser.add_argument("--pmfo-dense-hidden-dim", type=int, default=144)
+    parser.add_argument("--plgo-global-rank", type=int, default=16)
+    parser.add_argument("--plgo-latent-width", type=int, default=256)
+    parser.add_argument("--plgo-permutation-seed", type=int, default=7101)
+    parser.add_argument("--plgo-random-descriptor-seed", type=int, default=7102)
+    parser.add_argument("--patch-diagnostic-batches", type=int, default=8)
     parser.add_argument(
         "--pred-loss-mode",
         choices=["full", "multi-prefix"],
@@ -1295,10 +1510,10 @@ def parse_args() -> argparse.Namespace:
             raise ValueError(
                 "controlled protocols require protocol profile and profile hash"
             )
-    if args.protocol_class == "mechanism_control":
+    if args.protocol_class in {"mechanism_control", "method_screening"}:
         if args.final_evaluation_split == "test":
             raise ValueError(
-                "mechanism_control calibration cannot evaluate the test split"
+                f"{args.protocol_class} cannot evaluate the test split"
             )
     if args.history_patch_len <= 0 or args.history_patch_stride <= 0:
         raise ValueError("history patch length and stride must be positive")
@@ -1363,6 +1578,12 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("pmfo_state_dim must be positive")
     if args.pmfo_dense_hidden_dim <= 0:
         raise ValueError("pmfo_dense_hidden_dim must be positive")
+    if args.plgo_global_rank <= 0 or args.plgo_global_rank > args.pred_len:
+        raise ValueError("plgo_global_rank must lie in [1, pred_len]")
+    if args.plgo_latent_width <= 0:
+        raise ValueError("plgo_latent_width must be positive")
+    if args.patch_diagnostic_batches <= 0:
+        raise ValueError("patch_diagnostic_batches must be positive")
     if args.stage_token_dim <= 0:
         raise ValueError("stage_token_dim must be positive")
     if args.stage_field_rank <= 0:

@@ -1,0 +1,16 @@
+{
+  "candidate": "SC1-D8-E2E",
+  "checkpoint_invariant_synthetic_readouts": 7,
+  "checkpoint_invariant_synthetic_pass": true,
+  "analyzer_synthetic_pass": true,
+  "runner_dry_run_pass": true,
+  "runner_jobs": 35,
+  "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"],
+  "arms": 7,
+  "seed": 2021,
+  "final_evaluation_split": "val",
+  "test_used": false,
+  "profile_hash": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a",
+  "decision": "step7b_support_pass",
+  "pass": true
+}

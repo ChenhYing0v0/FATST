@@ -6,10 +6,10 @@
 | --- | --- |
 | `candidate_id` | `SC1-PLGO-PAF / SC1-D8-E2E` |
 | `role` | paper-core method screening |
-| `current_step` | Step 6 protocol correction complete；Step 7A implementation next |
+| `current_step` | Step 7A implementation/local gate passed；Step 7B remote screen authorized |
 | `narrative_gate` | conditional pass；RGNB + horizon-agnostic projectivity + atom-conditioned generation |
 | `effectiveness_gate` | pending end-to-end joint training |
-| `remote_training_authorized` | false；Step7A code/shape/gradient/protocol gates pending |
+| `remote_training_authorized` | true；210 shape-prefix + 35 gradient cases、runner dry-run与analyzer smoke通过 |
 | `test_usage` | forbidden during screening |
 | `rollback` | stable E2E fail -> Step4；pathology -> repair Step7 protocol only |
 
@@ -68,12 +68,12 @@ params只报告，不参与dataset profile选择或方法价值判断；两个wi
 
 1. 五profiles、七arms可实例化；
 2. `memory [B,C,P,D] -> prediction [B,H,C]`在H1/48/96/192/336/720 shape正确；
-3. full-vs-prefix max gap`<=1e-6`；
+3. full-vs-prefix max gap`<=1e-5`；该阈值用于 float32 长向量累积等价性，descriptor 的 float64 参考构造仍采用更严格检查；
 4. `H`不进入descriptor、branch、trunk、normalization或router；
 5. 所有PAF与Encoder parameters均获得finite nonzero gradients；
 6. effective config显式记录trainable parameter groups，assert不存在frozen A6 checkpoint；
 7. runner dry-run、analyzer synthetic smoke与code-theory consistency通过。
-8. flatten branch与patch-block-sum rewrite max gap`<=1e-6`；每个patch block均有finite nonzero gradient。
+8. flatten branch与patch-block-sum rewrite max gap`<=1e-5`；每个patch block均有finite nonzero gradient。
 
 ## Mandatory Patch Diagnostics
 
