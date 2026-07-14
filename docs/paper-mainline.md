@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | frozen replacement fairness correction complete；PLGO Step 6/7A end-to-end gate next |
+| `current_11_step` | SC1-JAPO Step 4 complete；Step 5 theory feasibility next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | Contribution 1 conditional geometry positive；PAF reopened for fair E2E test；SC2-MIPR held |
+| `paper_core_status` | Contribution 1 geometry/projectivity retained；JAPO theory_pending；SC2-MIPR held |
 
 ## Research Thesis
 
@@ -193,6 +193,30 @@ projectivity或PLGO方向。当前回Step4审计patch-level intervention与reado
 identity没有在这一步丢失。A6与PAF都随后执行$R\rightarrow256$投影。PAF的真实风险是shared latent与
 descriptor-generated atom map构成的separable history-atom interaction，而不是shape从四维变三维本身。D8
 强制报告patch-block contributions与atom-patch Jacobian；B14未支持的atom retrieval不会未经新Step4-6直接加入。
+
+[Step 4 Redesign Decision] source-informed audit进一步证明，单纯增加geometry-only branches不能解除该失败：
+任何
+
+$$
+\alpha_j=\sum_e\pi_e(d_j)\psi_e(d_j)^TA_eh
+$$
+
+都可把加权trunks与branch matrices拼接为一个更宽的PAF。固定总rank时function class不变；扩rank时收益可由
+capacity解释。因此“scale/atom experts”本身不进入paper core。直接atom-to-patch cross-attention也不推进：
+flatten是bijective reshape，且history patch与future atom没有已证实的canonical alignment，B14与
+OFormer/GNOT/BasisFormer/TimePerceiver均对该shortcut形成压力。
+
+[Provisional Candidate] 当前只保留`SC1-JAPO`（Joint Atom-History Projective Operator）进入Step5 theory。
+它用free RGNB expert maps生成atom coefficients，但gate必须同时依赖history context与atom support geometry；
+requested $H$仍只选择active atoms，不进入router。与geometry-only mixture不同，history-dependent gate不能吸收为
+fixed temporal table，因此有机会解除D8的fixed separability。令所有experts表示同一A6-equivalent RGNB map时，
+任意convex gate仍复现A6，故候选原则上无需dense bypass即可包含A6。
+
+[Narrative Boundary] nonlinear decoder、operator MoE、geometry gating、structure-guided time-series MoE与
+step-specific representation均已有直接prior art。JAPO尚非`narrative_ready`；可辩护边界只能是joint
+history-atom conditional operator、RGNB exact projectivity与multi-horizon domain-only execution的完整组合。
+Step5必须先证明A6 containment、joint non-collapse、continuity与projectivity，并冻结uniform/history-only/
+atom-only/PERM/RANDOM controls。通过前不实现、不训练，SC2-MIPR继续held。
 
 ### Contribution 2 Candidate: Measure-Induced Projective Risk
 

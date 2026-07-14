@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC1-D8 Step 9-10 complete；rollback Step 4 redesign audit |
-| `active_question` | conditional RGNB signal能否转化为E2E收益，且shared latent是否保留patch-specific usage？ |
-| `active_candidates` | `SC1-PLGO geometry retained / return Step4`；`SC1-D8 exact PAF failed`；`SC2-MIPR` held |
+| `current_step` | SC1-JAPO Step 4 complete；Step 5 theory feasibility next |
+| `active_question` | joint history-atom operator能否解除fixed separability，并保持A6 containment与exact projectivity？ |
+| `active_candidates` | `SC1-JAPO theory_pending`；`SC1-PLGO geometry scaffold retained`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `docs/experiments/stage-c-sc1-d8-end-to-end-coadaptation-screen.md` |
-| `method_implementation` | false；D8 35/35 complete，不进三seed；新候选先重过Step4-6 |
-| `rollback_point` | Step4 shared-latent/intervention redesign；保留RGNB geometry/projectivity evidence |
+| `active_protocol` | `analysis/stage_c_sc1_plgo_step4_redesign_20260714/step4_source_informed_redesign.md` |
+| `method_implementation` | false；JAPO只获Step5 theory授权，未过Step5-6不编码、不训练 |
+| `rollback_point` | Step2/3 if JAPO theory gate fails；保留RGNB geometry/projectivity evidence |
 
 ## Completed Foundation
 
@@ -176,7 +176,25 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 `conditional_geometry_supported_end_to_end_gate_required`。D8 Step7A通过210个shape-prefix与35个gradient
 cases后，Step7B完成35/35 validation-only runs。GEO-c256相对A6 macro `-28.10%`，但相对matched
 descriptors `+14.33%`、5/5 datasets为正；m694只比c256改善`+0.58%`。因此exact shared-latent PAF失败，
-RGNB geometry retained，下一步回Step4审计intervention/readout redesign，不进入三seed。
+RGNB geometry retained；现已完成Step4 intervention/readout redesign，不进入三seed，转入JAPO Step5 theory。
+
+## SC1-PLGO Step 4 Redesign: JAPO Theory Pending
+
+1. `memory [B,C,P,D] -> h [B,C,PD]`是可逆reshape，不是pooling；D8失败不能归因于flatten本身；
+2. 真正边界是`alpha_j = psi(d_j)^T A h`：自由A6 temporal table被descriptor-generated fixed separable
+   operator替代；
+3. 直接atom-to-patch cross-attention缺少future-support/history-patch canonical alignment，且B14与OFormer/GNOT/
+   BasisFormer/TimePerceiver共同阻断该shortcut；
+4. geometry-only linear expert mixture可代数吸收到一个更宽PAF；固定总rank时无新function class，扩rank时由
+   capacity control解释，因此不推进；
+5. 唯一保留候选为`SC1-JAPO`：free RGNB expert maps生成coefficients，joint gate同时读取history context与atom
+   geometry；requested H只选择active atoms；
+6. 令所有experts表示同一A6-equivalent RGNB map时，任意convex gate仍精确复现A6，因此candidate理论上可在无
+   dense bypass下包含A6；formal construction仍需Step5验证；
+7. generic nonlinear decoder、MoE、geometry gating与step-specific representation均已有先例；novelty只允许落在
+   joint history-atom operator、RGNB projectivity与multi-horizon domain-only contract的完整组合；
+8. decision=`SC1-JAPO source_informed_candidate / theory_pending`；Step5必须证明containment、non-collapse、
+   projectivity、continuity与control identifiability，method/training仍false，SC2继续held。
 
 ## SC1-PLGO Step 6 Design Gate: Conditional Pass, D7 Required
 
