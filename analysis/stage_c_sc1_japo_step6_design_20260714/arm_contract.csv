@@ -1,0 +1,8 @@
+arm,expert_bank,gate,descriptor,primary_role
+A6-LBF-natural,none,none,none,accepted_carrier_reference
+JAPO-JOINT-GEO,paired_e2_k256,history_times_atom,canonical,complete_candidate
+JAPO-UNIFORM,paired_e2_k256,fixed_half_half,none,capacity_control
+JAPO-HISTORY,paired_e2_k256,history_only,none,sample_conditioning_control
+JAPO-ATOM,paired_e2_k256,atom_only,canonical,geometry_only_fixed_operator_control
+JAPO-JOINT-PERM,paired_e2_k256,history_times_atom,permuted,geometry_alignment_control
+JAPO-JOINT-RANDOM,paired_e2_k256,history_times_atom,moment_matched_random,descriptor_semantics_control

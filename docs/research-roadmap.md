@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC1-JAPO Step 5 complete；Step 6 method/control design next |
-| `active_question` | 如何将theory-pass JAPO收紧为可训练且能隔离capacity/history/geometry的最小E2 design？ |
-| `active_candidates` | `SC1-JAPO proposed (theory_pass/step6_design_pending)`；`SC1-PLGO geometry scaffold retained`；`SC2-MIPR` held |
+| `current_step` | SC1-JAPO Step 6 complete；Step 7A local implementation next |
+| `active_question` | production JAPO能否严格实现已冻结的E2/K256/G32、paired controls与prefix/gradient contracts？ |
+| `active_candidates` | `SC1-JAPO narrative_ready/step7a_pending`；`SC1-PLGO geometry scaffold retained`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_sc1_japo_step5_theory_20260714/step5_theory_feasibility.md` |
-| `method_implementation` | false；JAPO只获Step6 design授权，未过Step6不编码、不训练 |
-| `rollback_point` | Step4 if attribution design fails；Step2/3 if complete problem contract fails |
+| `active_protocol` | `analysis/stage_c_sc1_japo_step6_design_20260714/step6_method_control_design.md` |
+| `method_implementation` | Step7A local only；remote=false；SC2=false |
+| `rollback_point` | Step6 repair if local gate fails；Step4 if same-bank attribution fails；Step2/3 only by complete-contract failure |
 
 ## Completed Foundation
 
@@ -178,7 +178,7 @@ cases后，Step7B完成35/35 validation-only runs。GEO-c256相对A6 macro `-28.
 descriptors `+14.33%`、5/5 datasets为正；m694只比c256改善`+0.58%`。因此exact shared-latent PAF失败，
 RGNB geometry retained；现已完成Step4 intervention/readout redesign，不进入三seed，转入JAPO Step5 theory。
 
-## SC1-JAPO Step 5: Theory Pass, Step 6 Design Pending
+## SC1-JAPO Step 6: Narrative Ready, Step 7A Pending
 
 1. `memory [B,C,P,D] -> h [B,C,PD]`是可逆reshape，不是pooling；D8失败不能归因于flatten本身；
 2. 真正边界是`alpha_j = psi(d_j)^T A h`：自由A6 temporal table被descriptor-generated fixed separable
@@ -199,8 +199,12 @@ RGNB geometry retained；现已完成Step4 intervention/readout redesign，不�
 10. exact containment不是initialization recipe：identical experts使router gradient严格为0，首版必须independent
     from-scratch initialization；
 11. uniform/history-only/atom-only/PERM/RANDOM same-bank controls冻结；params差异不用于选择；
-12. decision=`SC1-JAPO theory_pass_step6_design_only`；Step6必须冻结最小E2 design与kill gates，method/training仍
-    false，SC2继续held。
+12. Step6冻结两个independent full-rank experts（$E=2,K=256$）与factorized multiplicative router（$G=32$）；
+13. basis init使用$\sqrt{E/K}$恢复uniform-mixture initial variance；router output std=`0.01`，五profiles entropy
+    min=`0.999855`、usage=`0.4980–0.5020`，所有joint gradients nonzero；
+14. seven arms固定为A6/JOINT/UNIFORM/HISTORY/ATOM/PERM/RANDOM；所有JAPO arms paired expert bank；
+15. seed2021先做35-run validation-only screen；严重失败早停，模糊结果只补seed2022，pass后补seed2023；
+16. decision=`SC1-JAPO narrative_ready_step7a_local_implementation_only`；Step7A可编码，remote/SC2仍false。
 
 ## SC1-PLGO Step 6 Design Gate: Conditional Pass, D7 Required
 

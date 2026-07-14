@@ -1,0 +1,7 @@
+stage,comparison,macro_requirement,dataset_requirement,decision
+seed2021_immediate_fail,joint_vs_a6,<= -10.0,positive <= 1,stop_exact_design_and_attribute
+seed2021_immediate_fail,joint_vs_same_bank_median,<= 0.0,positive <= 1,same_bank_controls_explain
+seed2021_provisional_pass,joint_vs_a6,> 0,positive >= 4,check_all_same_bank_controls
+seed2021_provisional_pass,joint_vs_each_same_bank_control,> 0 for every control,positive >= 3,provisional_pass_or_seed2022_if_ambiguous
+three_seed_confirmation,joint_vs_a6_and_each_control,> 0; median >= 1 percent,A6 positive >= 4; each control positive >= 3,paper_core_effectiveness_candidate_if_guards_pass
+three_seed_confirmation,mae_and_horizon_segments,MAE >= -2.0; short > 0; long > 0,report_all_five_datasets,guard_against_auc_only_gain

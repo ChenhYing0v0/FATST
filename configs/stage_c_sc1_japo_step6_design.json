@@ -1,0 +1,108 @@
+{
+  "stage": "StageC-UVHF",
+  "candidate": "SC1-JAPO",
+  "role": "step6_method_control_design",
+  "status": "narrative_ready",
+  "profile_contract": "configs/stage_c_five_dataset_natural_profiles.json",
+  "profile_contract_hash": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a",
+  "architecture": {
+    "series_length": 720,
+    "global_rank": 16,
+    "expert_count": 2,
+    "expert_rank": 256,
+    "router_width": 32,
+    "descriptor_dim": 8,
+    "history_normalization": "layer_norm_no_affine",
+    "history_projection_activation": "tanh",
+    "descriptor_projection_activation": "tanh",
+    "joint_feature": "rms_normalized_history_times_atom",
+    "router_logits": "linear_joint_feature_div_sqrt_router_width",
+    "router_output_init_std": 0.01,
+    "router_bias_init": 0.0,
+    "expert_basis_init_std": "sqrt_expert_count_div_sqrt_expert_rank",
+    "expert_coefficient_bias_init": 0.0,
+    "softmax_axis": "expert_only",
+    "hard_top_k": false,
+    "atom_axis_normalization": false,
+    "requested_horizon_in_learned_path": false,
+    "atom_to_patch_attention": false,
+    "auxiliary_routing_loss": "none"
+  },
+  "arms": [
+    "A6-LBF-natural",
+    "JAPO-JOINT-GEO",
+    "JAPO-UNIFORM",
+    "JAPO-HISTORY",
+    "JAPO-ATOM",
+    "JAPO-JOINT-PERM",
+    "JAPO-JOINT-RANDOM"
+  ],
+  "paired_initialization": {
+    "same_expert_bank_seed_across_japo_arms": true,
+    "same_encoder_seed_across_all_arms": true,
+    "experts_independently_initialized_within_bank": true,
+    "identical_expert_copy_forbidden": true,
+    "warm_start_forbidden": true,
+    "frozen_encoder_replacement_forbidden": true
+  },
+  "training_protocol": {
+    "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"],
+    "target_horizons": [720],
+    "validation_horizons": [720],
+    "evaluation_horizons": "dense_1_to_720",
+    "segment_horizons": [48, 96, 192, 336, 720],
+    "objective": "full_720_pointwise_l1",
+    "optimizer": "AdamW",
+    "learning_rate": 0.0001,
+    "lr_schedule": "cosine",
+    "effective_batch_size": 32,
+    "max_epochs": 20,
+    "early_stopping_patience": 5,
+    "checkpoint_policy": "best-val",
+    "final_evaluation_split": "validation",
+    "test_allowed": false,
+    "screen_seed": 2021,
+    "inconclusive_seed": 2022,
+    "confirmation_seed": 2023
+  },
+  "screening_gate": {
+    "primary_metric": "dense_mse_auc",
+    "improvement_definition": "100*(1-candidate/reference)",
+    "immediate_fail": {
+      "joint_vs_a6_macro_max": -10.0,
+      "joint_vs_a6_positive_datasets_max": 1,
+      "joint_vs_same_bank_median_macro_max": 0.0,
+      "joint_vs_same_bank_median_positive_datasets_max": 1
+    },
+    "provisional_pass": {
+      "joint_vs_a6_macro_min_exclusive": 0.0,
+      "joint_vs_a6_positive_datasets_min": 4,
+      "joint_vs_each_control_macro_min_exclusive": 0.0,
+      "joint_vs_each_control_positive_datasets_min": 3,
+      "joint_vs_same_bank_median_macro_min": 1.0,
+      "joint_vs_same_bank_median_positive_datasets_min": 4
+    },
+    "provisional_pass_next": "run_seed2022_and_seed2023_without_design_change",
+    "otherwise": "run_seed2022_without_design_change",
+    "after_seed2022": "apply_provisional_pass_thresholds_to_two_seed_means_then_run_seed2023_or_stop"
+  },
+  "confirmation_gate": {
+    "joint_vs_a6_three_seed_macro_min_exclusive": 0.0,
+    "joint_vs_a6_positive_datasets_min": 4,
+    "joint_vs_a6_positive_seed_macros_min": 2,
+    "joint_vs_each_control_macro_min_exclusive": 0.0,
+    "joint_vs_each_control_positive_datasets_min": 3,
+    "joint_vs_each_control_positive_seed_macros_min": 2,
+    "joint_vs_same_bank_median_macro_min": 1.0,
+    "joint_vs_same_bank_median_positive_datasets_min": 4,
+    "mae_macro_guard_min": -2.0,
+    "short_segment_improvement_min_exclusive": 0.0,
+    "long_segment_improvement_min_exclusive": 0.0
+  },
+  "rollback": {
+    "numeric_or_gradient_failure": "step6_design_repair",
+    "same_bank_controls_explain_gain": "step4_operator_redesign",
+    "a6_effectiveness_failure_with_mechanism_pass": "step4_readout_redesign",
+    "complete_contract_failure": "step2_3_problem_reformulation"
+  }
+}

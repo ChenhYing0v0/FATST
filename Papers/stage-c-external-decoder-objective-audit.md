@@ -149,3 +149,26 @@ global-domain coherence”的组合进入Step 5 theory feasibility；balanced in
 
 完整proof、source boundary与mandatory controls见
 `analysis/stage_c_sc1_japo_step5_theory_20260714/step5_theory_feasibility.md`。
+
+## 2026-07-14 JAPO Step 6 Source-Informed Design
+
+本轮external refresh核对了GNOT paper PDF与official code。GNOT明确以query-point coordinates输入MLP gate，
+对expert FFNs做softmax weighted average；official config默认`n_experts=2`。因此geometry-only gating不是JAPO的
+component novelty，也不能证明sample-specific forecasting operator。JAPO把该路线固定为`ATOM` control。
+
+MoNO与spatially conditioned operator-expert work进一步说明operator mixture与spatial domain decomposition均有
+直接先例。Step6不采用其PDE boundary/model-selection problem formulation，也不复制upstream module；它们只用于
+收紧claim和controls。
+
+Cluster-Aware Upcycling的arXiv abstract支持identical experts可能限制early specialization；本项目另有Step5
+gradient identity与Step6 autograd audit，因此只采用independent initialization原则，不采用cluster pretraining、
+teacher或distillation。Soft MoE的slot/token dispatch不符合JAPO atomwise projective contract，故不采用。
+
+最终source-informed边界：
+
+> 两个independent full-rank RGNB coefficient experts，由同一history sample与future atom geometry的
+> multiplicative interaction连续加权；requested $H$只作active-domain restriction；完整mechanism必须同时超过
+> UNIFORM、HISTORY、ATOM、PERM与RANDOM same-bank controls。
+
+完整tensor design、初始化、protocol与kill gates见
+`analysis/stage_c_sc1_japo_step6_design_20260714/step6_method_control_design.md`。
