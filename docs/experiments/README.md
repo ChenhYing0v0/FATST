@@ -5,6 +5,8 @@
 - `stage-c-pmfo-rct-step7-protocol.md`: 当前 Step 7A local implementation/invariant protocol。
 - `stage-c-sc1-d2-operator-structure-diagnostic.md`: 已完成并关闭的 D2 formal5 problem diagnostic；
 - `stage-c-sc1-d3-crossed-basis-group-diagnostic.md`: 当前 Step 2/3 paired 2×2 basis-group diagnostic。
+- `stage-c-sc1-d4-structured-basis-mechanism-diagnostic.md`: 当前 Step 4 standard-basis、locality与
+  exact-balancing diagnostic。
 
 完整结果写入 `analysis/`；ledger 只保留 decision、status、next action 与链接。Phase0-Phase5 protocols
 及已完成/被取代的 StageC calibration protocols 已移入

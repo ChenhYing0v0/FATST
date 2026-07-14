@@ -41,6 +41,12 @@ StageC active entrypoints：
   dataset-checkpoint units审计basis main effect、conditional effects与interaction。
 - `remote/run_stage_c_sc1_d3_crossed_diagnostic.sh`: 五dataset workload-aware D3 runner；
 - `sync_stage_c_sc1_d3_crossed_results.sh`: 同步D3 raw artifacts并结合既有D2 raw独立重算gate。
+- `run_stage_c_sc1_d4_structured_basis.py`: seven-basis × random-group frozen-memory worker，记录八个prefix
+  horizons与fit-target geometry；
+- `analyze_stage_c_sc1_d4_structured_basis.py`: standard-basis noninferiority、locality、exact-balancing与D3
+  replication gates；
+- `remote/run_stage_c_sc1_d4_structured_basis.sh`: workload-aware 315-fit remote diagnostic；
+- `sync_stage_c_sc1_d4_structured_basis_results.sh`: 同步raw artifacts并本地重算D4 decision。
 
 历史 runner/analyzer 已移入 `scripts/archive/`，不得作为当前研究入口。新增脚本必须服务active ledger中明确的
 next action，并同步对应experiment protocol与code explanation。

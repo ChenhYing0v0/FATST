@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage` | `StageC-UVHF` |
 | `current_step` | Step 4 source-informed basis-mechanism audit |
-| `active_question` | basis main effect能否转化为native unified-horizon mechanism，而非standard basis/whitening effect？ |
-| `active_candidates` | no paper-core SC1；`SC1-D2 closed`；`SC1-D3 diagnostic_only pass`；`SC2-MIPR` held |
+| `active_question` | balanced basis能否同时超越standard bases并以interval locality原生服务dense horizons？ |
+| `active_candidates` | no paper-core SC1；`SC1-D3 pass`；`SC1-D4 diagnostic_only launch_ready`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_sc1_d3_crossed_20260714/research_interpretation.md` |
+| `active_protocol` | `docs/experiments/stage-c-sc1-d4-structured-basis-mechanism-diagnostic.md` |
 | `method_implementation` | `PMFO-RCT v1` frozen as failed evidence；new implementation unauthorized |
 | `rollback_point` | standard structured bases/whitening解释收益或novelty不足 -> Step 2 |
 

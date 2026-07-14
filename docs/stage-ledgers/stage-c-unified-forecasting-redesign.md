@@ -9,7 +9,7 @@
 | `active_question` | balanced interval basis main effect由何种conditioning/locality机制产生，能否转化为native unified-horizon operator？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` |
-| `active_candidates` | no paper-core SC1 candidate；`SC1-D2 closed_formal_fail`；`SC1-D3 diagnostic_only pass`；`SC2-MIPR` held |
+| `active_candidates` | no paper-core SC1 candidate；`SC1-D3 diagnostic_only pass`；`SC1-D4 diagnostic_only launch_ready`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `stage_exit` | 两项分别过 narrative/effectiveness gate，`2x2` joint gate显示独立主效应与联合收益 |
 | `stage_rollback` | problem/novelty不跨 dataset -> Step 2；禁止直接堆叠 method |
@@ -19,9 +19,9 @@
 | Field | Content |
 | --- | --- |
 | `current_11_step` | Step 4 source-informed basis-mechanism audit |
-| `current_candidate` | no paper-core SC1；D3 evidence authorizes Step 4 problem development；`SC2-MIPR` held |
+| `current_candidate` | `SC1-D4 diagnostic_only launch_ready`；no paper-core SC1；`SC2-MIPR` held |
 | `latest_decision` | D3：basis main +2.9174%，true/random-group conditionals均pass，interaction 5/5 pass |
-| `next_required_action` | audit structured-basis prior art and offline mechanism decomposition；不得直接实现method |
+| `next_required_action` | run D4 315-fit structured-basis diagnostic；不得直接实现method |
 | `method_training_authorized` | `false`；D2只可作为diagnostic，new SC1需重新通过Step 4-6 |
 | `rollback_point` | 若standard basis/whitening解释收益或novelty不足，回Step 2；Encoder/MIPR/MoE保持冻结 |
 
@@ -32,9 +32,9 @@
 | `current_step` | Step 4 source-informed mechanism audit |
 | `problem` | basis geometry为何改善readout，以及是否原生服务unified varied-horizon forecasting |
 | `existence_evidence` | D3 main +2.9174%；true-group +3.1164%；random-group +2.7181%；5/5 consistency |
-| `idea` | none paper-core；先区分conditioning、energy compaction、locality与prefix compatibility |
-| `theory_check` | D3完整2×2 pass；exact depth grouping仍false；basis-only novelty未成立 |
-| `design` | external primary-source audit + structured-basis/whitening offline controls |
+| `idea` | provisional balanced-interval projective generation；尚非paper-core candidate |
+| `theory_check` | construction非新；forecast-generation有component novelty；组合novelty需D4支持 |
+| `design` | seven bases × random groups × 8 prefix horizons；315 frozen-memory fits |
 | `narrative_gate` | `SC1-FPMO-DS rejected_by_narrative_gate`；SC2 held |
 | `effectiveness_gate` | v1 fail：macro vs A6 `-1.0955%`，worst ETTm1 `-2.0844%` |
 | `artifacts` | D1-v2、Step4-6 closure、D2 formal5、D3 crossed diagnostic、five-profile contract |
@@ -69,6 +69,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC1-FPMO-DS` | `rejected_by_narrative_gate` | independent scale factors提供native history-scale maps并包含A6 | fail：与DA同为full affine，factorization不依赖真实scale coordinates | not started | controls/evidence only；不进入Step 7 |
 | `SC1-D2` | `closed_formal_fail` | true-scale nonlinear grouping是否超越rank expansion、generic nonlinearity与random grouping | not a method gate | basis gate pass；random-group mandatory gate fail | rollback Step 2；不得实现method |
 | `SC1-D3` | `diagnostic_only` | basis geometry是否为独立main effect而非basis-group interaction | not required | pass：main +2.9174%；both conditionals + 5/5 interaction guard | evidence complete；return Step 4 only |
+| `SC1-D4` | `diagnostic_only` | balanced basis是否超越standard bases，收益来自locality还是exact balancing | not required | preregistered standard/locality/specificity gates | launch 315 fits；pass only authorizes Step 5 |
 | `SC2-MIPR` | `held` | measure-induced block metric去除decoder scales之间的cross coupling | pass for L2；log measure primary，benchmark weak | log off-block `0.205154`；benchmark `0.002480`；performance未测 | 等新SC1 problem/method contract；不得先实现 |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
@@ -125,7 +126,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | ETTh1/ETTm2 natural profile calibration | `completed_frozen` | 14/14 validation-only；ETTh1 P24/D64，ETTm2 P48/D64；stability pass |
 | SC1-D2 formal5 | `completed_rollback` | `scale_alignment_not_supported_reformulate_step2` |
 | SC1-D3 crossed basis-group diagnostic | `completed_pass` | 45/45；15 primary units；all gates pass；只授权Step 4 source-informed audit |
-| SC1 basis mechanism Step 4 | `next` | audit structured bases/whitening/locality/prefix relevance；尚无paper-core candidate |
+| SC1 basis mechanism Step 4 | `source_audit_completed` | component novelty accepted；first-basis-generation claim rejected；组合novelty provisional |
+| SC1-D4 structured-basis diagnostic | `launch_ready` | worker/analyzer synthetic smoke、config、protocol完成；run 315 fits |
 
 ## Paper Mainline Sync Log
 
