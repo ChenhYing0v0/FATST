@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC1 Step 2 rollback；basis-geometry problem reformulation |
+| `current_11_step` | SC1 Step 4；basis-mechanism source-informed audit |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` dataset profiles |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | Contribution 1 slot open；SC1-D2 closed；SC1-D3 diagnostic proposed；SC2-MIPR held |
+| `paper_core_status` | Contribution 1 slot open；SC1-D3 existence diagnostic pass；no new method yet；SC2-MIPR held |
 
 ## Research Thesis
 
@@ -77,14 +77,21 @@ deep-linear factorization。已有matrix-factorization工作说明这可能改�
 
 [Decision] `FPMO-DS rejected_by_narrative_gate`。M0、DA与DS-L只保留为control/diagnostic artifacts，不进入
 Step 7。普通per-scale nonlinear extension会破坏automatic exact A6 containment，并引入新的activation、
-capacity与prior-art问题，必须作为新候选重新通过Step 2-5，不能事后挽救DS。Contribution 1 slot保持开放，
-current cursor回到Step 2/3的`SC1-D2`：先分离rank expansion、generic nonlinearity与true-scale alignment。
+capacity与prior-art问题，必须作为新候选重新通过Step 2-5，不能事后挽救DS。Contribution 1 slot保持开放；
+当时的cursor回到Step 2/3，以`SC1-D2`分离rank expansion、generic nonlinearity与true-scale alignment。
 
 [Diagnostic] D2 formal5已完成165/165 frozen-memory fits且invariants pass。true interval basis相对random basis
 macro `+3.0635%`，5/5 datasets、15/15 seeds为正；但true depth grouping相对same-basis random grouping只有
 `+0.0947%`，仅2/5 datasets达到2/3 seeds为正，未过mandatory gate。因此精确的scale-grouping problem关闭，
-rollback Step 2。basis signal保留但尚未由完整$2\times2$ factorial识别为独立main effect；下一步只允许
-设计`SC1-D3 crossed basis-group diagnostic`，不能直接升为decoder contribution。
+rollback Step 2。basis signal当时尚未由完整$2\times2$ factorial识别为独立main effect，因此只授权了
+`SC1-D3 crossed basis-group diagnostic`，而未升为decoder contribution。
+
+[Diagnostic] D3已补齐`random basis × random group` cell并形成15个dataset-checkpoint primary units。
+basis main MSE reduction为`+2.9174%`，在true groups与random groups下分别为`+3.1164%/+2.7181%`；
+5/5 datasets均通过方向一致性与interaction guard，MAE为`+2.3098%`。因此basis geometry作为独立probe
+main effect获得支持，并授权返回Step 4。但exact depth grouping仍为false；balanced interval basis本身也受
+Haar/wavelet/whitening prior art约束，尚不是Contribution 1。当前问题转为识别conditioning、energy
+compaction、local-support或prefix compatibility中的真实机制，并证明其原生服务unified horizons。
 
 ### Contribution 2 Candidate: Measure-Induced Projective Risk
 
@@ -150,8 +157,8 @@ paper core。lifting、nested basis与network morphism只作为构造和proof ev
 [Decision] Step 6 narrative audit已关闭该路径：DS与DA的function class相同，且factorization对random
 orthogonal/group controls同样成立；requested prefix虽可少生成inactive coefficients，但dense $D_l$仍要求
 先生成全部720维scale latents。由此否决的是当前linear DS design，而不是“future multiscale structure不存在”。
-下一步必须先以frozen-memory diagnostic证明true-scale nonlinear grouping超越full affine、matched dense
-nonlinearity与random grouping，才允许回到Step 4提出新operator。
+后续D2/D3 frozen-memory diagnostics已经关闭depth grouping、支持basis main effect；当前已返回Step 4，
+但仍需排除standard structured basis与whitening解释后才可提出新operator。
 
 ## Main Experiment Logic
 
@@ -166,8 +173,9 @@ nonlinearity与random grouping，才允许回到Step 4提出新operator。
 8. Step 6已判定DS claim无法脱离full-affine factorization解释，故FPMO不进入实现；
 9. SC1-D2 core3 partial只支持basis geometry、不支持depth grouping；先冻结ETTh1/ETTm2 profile，再以拆分的
    random-group/random-basis controls完成formal5；
-10. 只有D2支持scale alignment、且新SC1重新通过Step 4-6并完成screening后，才恢复MIPR、`2x2` factorial与
-    3-seed full matrix；第二 backbone与official native baselines最后做generality gate。
+10. SC1-D3已确认basis main effect但否定grouping叙事；先以structured-basis/whitening controls和external
+    prior art完成Step 4 mechanism audit；只有新SC1重新通过Step 4-6并完成screening后，才恢复MIPR、
+    `2x2` factorial与3-seed full matrix；第二 backbone与official native baselines最后做generality gate。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
 generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成

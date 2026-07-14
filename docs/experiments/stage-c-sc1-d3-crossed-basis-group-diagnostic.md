@@ -6,7 +6,7 @@
 | --- | --- |
 | `candidate` | `SC1-D3` |
 | `role` | `diagnostic_only` |
-| `current_step` | Step 2/3 |
+| `current_step` | Step 2/3 complete；return Step 4 authorized |
 | `problem` | D2的balanced-interval basis优势是独立main effect，还是basis-group interaction？ |
 | `carrier` | frozen `A6-LBF-natural-baseline` Encoder checkpoints |
 | `suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather × checkpoint seeds 2021/2022/2023 |
@@ -14,7 +14,7 @@
 | `test_used` | `false` |
 | `forecast_model_updated` | `false` |
 | `method_training_authorized` | `false` |
-| `pass_authorization` | 仅返回Step 4提出新的paper-core idea |
+| `pass_authorization` | gate passed；仅返回Step 4提出新的paper-core idea |
 
 ## 1. What We Plan To Test
 
@@ -62,7 +62,7 @@ $$
 [1,1,2,4,8,16,32,64,128,256,208].
 $$
 
-每组使用独立`PD -> GELU(32) -> n_l` block，输出$widehat\alpha$，再通过
+每组使用独立`PD -> GELU(32) -> n_l` block，输出$\widehat\alpha$，再通过
 $\widehat u=\widehat\alpha Q_r$还原。`basis_seed=group_seed`只用于与D2的同编号controls形成paired
 block；三个structure seeds是control replicates，不是三个额外checkpoint observations。
 
@@ -166,6 +166,6 @@ Decision mapping：
 | `theory_check` | 2×2 log-error factorial decomposition；structure seeds先聚合 |
 | `design` | 45 missing-cell fits + 15-unit hard gate |
 | `narrative_gate` | not applicable to diagnostic |
-| `effectiveness_gate` | preregistered；pending artifacts |
+| `effectiveness_gate` | pass：basis main +2.9174%；true/random group conditional均pass；interaction 5/5 pass |
 | `artifacts` | remote `stage_c_sc1_d3_crossed`；local `analysis/stage_c_sc1_d3_crossed_20260714/` |
-| `decision` | pending；任何pass只返回Step 4 |
+| `decision` | `basis_main_effect_supported_return_step4`；method training仍未授权 |

@@ -1,0 +1,53 @@
+{
+  "authorization_if_passed": "return_to_step4_only",
+  "basis_main_gate": {
+    "datasets_with_at_least_2_positive_checkpoints": 5,
+    "macro_log_effect": 0.029608537478282713,
+    "macro_relative_reduction": 0.029174499029089196,
+    "pass": true
+  },
+  "basis_random_group_gate": {
+    "datasets_with_at_least_2_positive_checkpoints": 5,
+    "macro_log_effect": 0.027557661791598152,
+    "macro_relative_reduction": 0.02718141352642678,
+    "pass": true
+  },
+  "basis_true_group_gate": {
+    "datasets_with_at_least_2_positive_checkpoints": 5,
+    "macro_log_effect": 0.03165941316496726,
+    "macro_relative_reduction": 0.031163501149838457,
+    "pass": true
+  },
+  "candidate": "SC1-D3",
+  "complete": true,
+  "current_step": "Step 2/3",
+  "dataset_count": 5,
+  "decision": "basis_main_effect_supported_return_step4",
+  "factorial_block_count": 45,
+  "gate_pass": true,
+  "interaction_guard": {
+    "datasets_where_abs_interaction_le_abs_main": 5,
+    "pass": true
+  },
+  "invariant_gate": {
+    "contract_hashes_match": true,
+    "d2_invariants_pass": true,
+    "d2_metadata_count": 15,
+    "d3_config_hash_count": 1,
+    "d3_invariants_pass": true,
+    "d3_metadata_count": 15,
+    "pass": true
+  },
+  "limitations": [
+    "The three paired structure seeds are averaged before gating and are not treated as independent checkpoints.",
+    "The diagonal seed pairing does not estimate every random-basis x random-group combination.",
+    "A pass identifies an effect only within the frozen-memory grouped nonlinear probe family; it does not establish method novelty."
+  ],
+  "mae_guard": {
+    "macro_relative_reduction": 0.023097990045110373,
+    "pass": true
+  },
+  "method_training_authorized": false,
+  "primary_unit_count": 15,
+  "role": "diagnostic_only"
+}

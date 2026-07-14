@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | decoder/operator 与 training principle 两项相互支撑的 paper-core innovations |
-| `active_question` | balanced interval basis优势是独立geometry main effect，还是basis-group interaction/structured regularization？ |
+| `active_question` | balanced interval basis main effect由何种conditioning/locality机制产生，能否转化为native unified-horizon operator？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` |
-| `active_candidates` | no paper-core SC1 candidate；`SC1-D2 closed_formal_fail`；`SC1-D3 launch_ready_diagnostic`；`SC2-MIPR` held |
+| `active_candidates` | no paper-core SC1 candidate；`SC1-D2 closed_formal_fail`；`SC1-D3 diagnostic_only pass`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `stage_exit` | 两项分别过 narrative/effectiveness gate，`2x2` joint gate显示独立主效应与联合收益 |
 | `stage_rollback` | problem/novelty不跨 dataset -> Step 2；禁止直接堆叠 method |
@@ -18,27 +18,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Step 2 rollback；SC1 problem reformulation |
-| `current_candidate` | `SC1-D3 crossed_basis_group diagnostic launch ready`；`SC2-MIPR` held |
-| `latest_decision` | D2 formal5：basis +3.0635% pass；group +0.0947% fail；rollback Step 2 |
-| `next_required_action` | 本地gate验证后运行D3的45个missing-cell diagnostic fits；method training仍未授权 |
+| `current_11_step` | Step 4 source-informed basis-mechanism audit |
+| `current_candidate` | no paper-core SC1；D3 evidence authorizes Step 4 problem development；`SC2-MIPR` held |
+| `latest_decision` | D3：basis main +2.9174%，true/random-group conditionals均pass，interaction 5/5 pass |
+| `next_required_action` | audit structured-basis prior art and offline mechanism decomposition；不得直接实现method |
 | `method_training_authorized` | `false`；D2只可作为diagnostic，new SC1需重新通过Step 4-6 |
-| `rollback_point` | Step 2/3；不改Encoder、不叠加nonlinearity、MIPR或MoE来挽救FPMO-DS |
+| `rollback_point` | 若standard basis/whitening解释收益或novelty不足，回Step 2；Encoder/MIPR/MoE保持冻结 |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Step 2 rollback active；D2 formal5 complete |
-| `problem` | depth grouping不成立后，basis geometry是否为独立main effect |
-| `existence_evidence` | basis vs random +3.0635%、5/5 datasets；group vs random-group仅+0.0947%、2/5 |
-| `idea` | none paper-core；proposed D3补random basis × random group缺失cell |
-| `theory_check` | 2×2 log-error estimand已冻结；structure seeds先聚合，避免pseudo-replication |
-| `design` | D3只补RR cell；45 fits形成15个dataset-checkpoint primary units |
+| `current_step` | Step 4 source-informed mechanism audit |
+| `problem` | basis geometry为何改善readout，以及是否原生服务unified varied-horizon forecasting |
+| `existence_evidence` | D3 main +2.9174%；true-group +3.1164%；random-group +2.7181%；5/5 consistency |
+| `idea` | none paper-core；先区分conditioning、energy compaction、locality与prefix compatibility |
+| `theory_check` | D3完整2×2 pass；exact depth grouping仍false；basis-only novelty未成立 |
+| `design` | external primary-source audit + structured-basis/whitening offline controls |
 | `narrative_gate` | `SC1-FPMO-DS rejected_by_narrative_gate`；SC2 held |
 | `effectiveness_gate` | v1 fail：macro vs A6 `-1.0955%`，worst ETTm1 `-2.0844%` |
-| `artifacts` | D1-v2、Step4-6 closure、D2 core3/formal5、five-profile contract、baseline report |
-| `decision` | `scale_alignment_not_supported_reformulate_step2`；D2 closed；method training false |
+| `artifacts` | D1-v2、Step4-6 closure、D2 formal5、D3 crossed diagnostic、five-profile contract |
+| `decision` | `basis_main_effect_supported_return_step4`；method training false；SC2 held |
 
 ## Frozen Carrier Contract
 
@@ -68,7 +68,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC1-FPMO-DA` | `control_only` | direct atom full-affine head隔离capacity/orthogonal coordinate effect | not required | matched function-class control | mandatory Step6 dense-equivalence control |
 | `SC1-FPMO-DS` | `rejected_by_narrative_gate` | independent scale factors提供native history-scale maps并包含A6 | fail：与DA同为full affine，factorization不依赖真实scale coordinates | not started | controls/evidence only；不进入Step 7 |
 | `SC1-D2` | `closed_formal_fail` | true-scale nonlinear grouping是否超越rank expansion、generic nonlinearity与random grouping | not a method gate | basis gate pass；random-group mandatory gate fail | rollback Step 2；不得实现method |
-| `SC1-D3` | `launch_ready_diagnostic` | basis geometry是否为独立main effect而非basis-group interaction | not applicable | local worker/analyzer smoke pass；remote pending | run 45 diagnostic fits；pass也只返回Step 4 |
+| `SC1-D3` | `diagnostic_only` | basis geometry是否为独立main effect而非basis-group interaction | not required | pass：main +2.9174%；both conditionals + 5/5 interaction guard | evidence complete；return Step 4 only |
 | `SC2-MIPR` | `held` | measure-induced block metric去除decoder scales之间的cross coupling | pass for L2；log measure primary，benchmark weak | log off-block `0.205154`；benchmark `0.002480`；performance未测 | 等新SC1 problem/method contract；不得先实现 |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
@@ -104,6 +104,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-D2 core3 precheck | frozen-memory head-only 3 datasets × 3 seeds × 11 arms | rank `-0.5661%`；dense nonlinear `-6.4492%`；true vs random-group `-0.2212%`；vs random-basis `+2.3137%` | `partial_core3_basis_geometry_signal_only`；formal5 mandatory | `analysis/stage_c_sc1_d2_core3_precheck_20260713/research_interpretation.md` |
 | Five-profile extension | validation-only 14-run A/B/C | ETTh1=P24/D64；ETTm2=P48/D64；mean/max CV均pass | five-dataset contract frozen；formal5 ready | `analysis/stage_c_five_profile_extension_20260713/profile_extension_report.md` |
 | SC1-D2 formal5 | 5 datasets × 3 checkpoints × 11 arms | basis +3.0635% 5/5 pass；group +0.0947% 2/5 fail；165/165 + invariants pass | exact depth-grouping hypothesis false；rollback Step 2 | `analysis/stage_c_sc1_d2_formal5_20260714/research_interpretation.md` |
+| SC1-D3 crossed diagnostic | 5 datasets × 3 checkpoints × 3 missing-cell controls | basis main +2.9174%；true/random-group +3.1164%/+2.7181%；interaction 5/5 pass | independent probe main effect supported；return Step 4，not method | `analysis/stage_c_sc1_d3_crossed_20260714/research_interpretation.md` |
 
 ## Pending Tasks
 
@@ -123,7 +124,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-D2 rank/nonlinearity/scale diagnostic | `completed_formal_fail` | formal5 165/165；basis signal retained，depth grouping rejected |
 | ETTh1/ETTm2 natural profile calibration | `completed_frozen` | 14/14 validation-only；ETTh1 P24/D64，ETTm2 P48/D64；stability pass |
 | SC1-D2 formal5 | `completed_rollback` | `scale_alignment_not_supported_reformulate_step2` |
-| SC1-D3 crossed basis-group diagnostic | `launch_ready` | estimator/gate/config已预注册；worker/analyzer/config/bash checks pass；launch 45 diagnostic fits |
+| SC1-D3 crossed basis-group diagnostic | `completed_pass` | 45/45；15 primary units；all gates pass；只授权Step 4 source-informed audit |
+| SC1 basis mechanism Step 4 | `next` | audit structured bases/whitening/locality/prefix relevance；尚无paper-core candidate |
 
 ## Paper Mainline Sync Log
 
@@ -137,6 +139,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-13 | FPMO Step6 narrative gate失败 | Contribution 1、Boundary、Experiment Logic | candidate closure + Step2/3 rollback | DS与DA同class且scale claim不成立；D2先诊断rank/nonlinearity/scale alignment |
 | 2026-07-13 | D2 core3 precheck完成 | Current Position、Contribution 1、Experiment Logic | diagnostic partial result + gate repair | basis geometry positive；depth grouping unsupported in core3；formal5 pending |
 | 2026-07-14 | D2 formal5完成 | Current Position、Contribution 1、Experiment Logic | exact problem closure + rollback | basis geometry retained；depth grouping rejected；回Step 2设计crossed diagnostic |
+| 2026-07-14 | D3 crossed diagnostic通过 | Current Position、Contribution 1、Experiment Logic | existence evidence + Step 4 authorization | basis independent main effect成立于probe；不等于basis method或novelty |
 
 ## Continuation Rules
 
@@ -146,3 +149,4 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 4. D2 formal5已关闭depth grouping problem；不得通过调profile、改group size或叠加method重开；
 5. test reference只用于最终对比，不能参与设计选择。
 6. future mechanism screen固定使用ETTh1/ETTh2/ETTm1/ETTm2/Weather；五dataset不能替代三seed确认。
+7. D3只支持probe-family basis main effect；Step 4必须先排除standard basis、whitening与static regularization解释。

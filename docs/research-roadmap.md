@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Step 2 rollback；SC1 problem reformulation |
-| `active_question` | balanced interval basis是否存在独立geometry main effect？ |
-| `active_candidates` | no paper-core SC1；`SC1-D2 closed`；`SC1-D3 launch_ready_diagnostic`；`SC2-MIPR` held |
+| `current_step` | Step 4 source-informed basis-mechanism audit |
+| `active_question` | basis main effect能否转化为native unified-horizon mechanism，而非standard basis/whitening effect？ |
+| `active_candidates` | no paper-core SC1；`SC1-D2 closed`；`SC1-D3 diagnostic_only pass`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `docs/experiments/stage-c-sc1-d3-crossed-basis-group-diagnostic.md` |
+| `active_protocol` | `analysis/stage_c_sc1_d3_crossed_20260714/research_interpretation.md` |
 | `method_implementation` | `PMFO-RCT v1` frozen as failed evidence；new implementation unauthorized |
-| `rollback_point` | Step 2 active；depth grouping已formal fail，不得继续stack method |
+| `rollback_point` | standard structured bases/whitening解释收益或novelty不足 -> Step 2 |
 
 ## Completed Foundation
 
@@ -146,15 +146,14 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 
 ## Next Concrete Action
 
-`SC1-D2`已完成formal5并关闭exact depth-grouping problem。Step 2/3的
-`SC1-D3 crossed basis-group diagnostic`已预注册：
+`SC1-D3 crossed basis-group diagnostic`已完成并通过：
 
 1. 冻结D2的true/random basis、true/random group、seeds与optimization，不修改carrier profile；
 2. 补齐`random basis × matched random group`缺失cell，构成paired $2\times2$ factorial；
-3. basis main effect、group main effect与interaction estimator及hard gate已冻结；
-4. 预计新增45个head-only fits；仍不加载test、不更新forecast model；
-5. D3通过也只返回Step 4做external source/prior-art audit，不能直接实现decoder；
-6. Encoder、MoE与MIPR继续冻结；下一步只运行45个missing-cell diagnostic fits。
+3. 45/45 fits、15/15 primary units与所有invariants完整；
+4. basis main MSE reduction `+2.9174%`；true/random-group conditionals分别`+3.1164%/+2.7181%`；
+5. 5/5 datasets方向一致且interaction不主导，decision=`basis_main_effect_supported_return_step4`；
+6. 下一步为Step 4 external source + mechanism audit；Encoder、MoE、MIPR与method implementation继续冻结。
 
 ## SC1-D2 Core3 Precheck: Partial
 
