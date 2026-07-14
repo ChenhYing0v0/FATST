@@ -45,7 +45,8 @@ einsum("bck,nk->bcn") -> coefficients [B,C,N]
 - verified proxy：synthetic nonlinear branch/trunk可以证明tensor invariance，不能证明forecast effectiveness；
 - function boundary：linear-in-history effective rank不超过256；free atom table才exact包含A6；
 - falsification：任何subset/prefix gap超过`1e-10`会阻断该tensor contract；本轮max为`4.547e-13`；
-- narrative boundary：algebra pass不能覆盖external novelty fail或B11/B14 internal negative evidence。
+- narrative boundary：external primitive overlap只收紧claim，不自动否决task-specific contribution；algebra pass
+  仍不能覆盖B11/B14 internal negative evidence，因此D7 attribution在Step 7前保持mandatory。
 
 ## Reproduction
 

@@ -9,13 +9,18 @@
 | `tensor_gate` | pass：atomwise subset/prefix invariance max gap `4.547e-13` |
 | `rank_gate` | pass：output effective rank不超过A6的256，不是full affine |
 | `horizon_gate` | pass：descriptor与generator均不读取requested $H$ |
-| `external_novelty_gate` | fail：generic form被DeepONet、NOMAD、BasisFormer与query decoders覆盖 |
+| `external_overlap_gate` | overlap present但非自动否决；generic primitive已有先例，task-specific组合边界仍成立 |
 | `internal_mechanism_gate` | fail/not established：B11 controls与B14 negative evidence不能被忽略 |
 | `exact_A6_containment` | false；free atom table control才与A6等价 |
 | `method_implementation` | `false` |
-| `Step6_decision` | `narrative_not_ready_rollback_step2_3_d7` |
+| `Step6_decision` | `conditional_narrative_pass_d7_required` |
 | `next` | `SC1-D7-RGNB-descriptor-sufficiency` diagnostic only |
-| `rollback` | Step 2/3；D7失败则关闭descriptor-generator路线，RGNB只保留为component |
+| `rollback` | D7失败则返回Step 4或关闭descriptor-generator路线；RGNB仍可保留为component |
+
+[Governance Revision] 2026-07-14起，prior-art primitive overlap只用于收紧claim，不再自动构成novelty
+否决。PLGO的可辩护边界按完整链条判断：multi-horizon unified forecasting问题、无显式$H$的projective
+prefix contract、RGNB local/global support geometry、atomwise coefficient generation与对应empirical controls。
+仅仅把branch-trunk或basis query迁移到forecasting仍不够，但这些primitive已有先例也不再单独阻断候选。
 
 ## 1. Reader Path
 
@@ -50,9 +55,10 @@
 | [WaveToken](https://arxiv.org/abs/2412.05244) | autoregressively forecast quantized wavelet coefficients | localized coefficient forecasting已占据 | RGNB coefficient generation不是首次 |
 | [Implicit Forecaster](https://papers.nips.cc/paper_files/paper/2025/hash/0e82ef0c89df6a6eff8734ea7e27c42f-Abstract-Conference.html) | 预测frequency/amplitude/phase形成future waves | implicit wave decoder已占据 | global wave generation不能作为claim |
 
-[Decision] generic `atom descriptor + shared branch/trunk/cross-attention`没有独立novelty。若PLGO继续，贡献边界
-必须来自**RGNB support algebra + atomwise separability + empirically identified geometry constraint**的组合，
-而不是generator primitive。
+[Decision] generic `atom descriptor + shared branch/trunk/cross-attention`没有component-level独立novelty，但这
+不等于PLGO没有contribution-level novelty。其贡献边界必须来自**multi-horizon projective contract + RGNB
+support algebra + atomwise separability + empirically identified geometry constraint**的完整组合，而不是单独
+claim generator primitive。
 
 ## 3. Internal Evidence Audit
 
@@ -172,7 +178,8 @@ mechanism attribution。
 
 ## 8. Narrative Gate And Failure Attribution
 
-[Decision] `SC1-PLGO-PAF`没有通过Step 6 narrative gate：
+[Decision] `SC1-PLGO-PAF`按修订后的overlap规则获得conditional narrative pass，但尚未通过mechanism
+attribution gate：
 
 - `hypothesis_false`：尚未证明。D6仍支持output support-scale interaction；
 - `intervention_point_wrong`：atom-to-memory retrieval被B14阻断；已从candidate删除；
@@ -180,15 +187,16 @@ mechanism attribution。
 - `optimization_or_numeric_pathology`：本轮未出现；33个algebra cases稳定；
 - `capacity_control_explains`：generic/free/matched descriptor generator存在实质风险，尚未被排除。
 
-否定边界是generic PAF作为paper method，不是RGNB数学scaffold。Step 6回滚Step 2/3，先验证一个更窄问题：
+当前阻断边界是“未证明descriptor geometry必要”，不是“generic primitive已有先例”。在进入Step 7前先验证：
 
 > canonical RGNB geometry是否能在相同frozen-memory、rank与optimization protocol下，比permuted/random
 > descriptors更有效地参数化coefficient-row structure？
 
 ## 9. SC1-D7 Authorization
 
-只授权`SC1-D7-RGNB-descriptor-sufficiency`，角色为`diagnostic_only`。D7通过也只能返回Step 4/6，不能直接
-升为method。D7必须：
+只授权`SC1-D7-RGNB-descriptor-sufficiency`，角色为`diagnostic_only`。D7通过后返回Step 6冻结最终
+task-specific claim与method contract，完成该记录后才可授权Step 7；D7本身不能直接把候选升为paper-core。
+D7必须：
 
 1. 使用五个frozen natural profiles与validation-only artifacts，不读test；
 2. 同时比较compact与near-budget widths，防止capacity reduction或memorization单独解释；
@@ -201,13 +209,13 @@ mechanism attribution。
 
 | Field | Record |
 | --- | --- |
-| `current_step` | Step 6 complete；rollback Step 2/3 |
+| `current_step` | Step 6 conditional complete；Step 3 D7 attribution feeds final closure |
 | `problem` | local-prefix/global-domain output support interaction已成立，但descriptor sufficiency未成立 |
 | `existence_evidence` | D6 supports RGNB scaffold；B11/B14 oppose generic descriptor/retrieval successors |
 | `idea` | atomwise PAF over RGNB coefficients |
-| `theory_check` | projectivity/rank pass；exact A6 containment、novelty与mechanism attribution fail/pending |
-| `design` | generic PAF不冻结为method；仅冻结D7 diagnostic arms |
-| `narrative_gate` | fail/not ready |
+| `theory_check` | projectivity/rank pass；external overlap非自动否决；exact A6 containment false；mechanism attribution pending |
+| `design` | PAF保留为provisional contribution candidate；先冻结D7 diagnostic arms |
+| `narrative_gate` | conditional pass；D7 attribution required before Step 7 |
 | `effectiveness_gate` | not started |
 | `artifacts` | 3 CSV/JSON artifacts、source matrix、protocol、code explanation、本报告 |
-| `decision` | `narrative_not_ready_rollback_step2_3_d7`；training false |
+| `decision` | `conditional_narrative_pass_d7_required`；method training仍false |

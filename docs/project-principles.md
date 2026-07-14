@@ -33,6 +33,9 @@
 - 模型最终评估需要覆盖 `96,192,336,720`，但训练过程可以把 horizon sampling、
   horizon subset、curriculum 和 loss weighting 作为独立设计变量。
 - 每个新 model component 都需要说明它服务的 mechanism claim。
+- prior-art mechanism overlap默认用于收紧claim而非自动否决；创新性按`problem -> constraint -> mechanism
+  composition -> implementation -> empirical claim`整体判断。已有primitive可以在multi-horizon unified
+  forecasting的新约束和新组合中形成contribution-level novelty，但仅改名、迁移任务或代码细节不同不够。
 - 每个实验结论都需要记录数据集、horizon、baseline、seed、环境和输出路径。
 - 强结论必须来自可复查 artifact，而不是聊天上下文。
 - 每个阶段必须维护 active Stage Ledger，用于记录 candidate queue、pending tasks、decision

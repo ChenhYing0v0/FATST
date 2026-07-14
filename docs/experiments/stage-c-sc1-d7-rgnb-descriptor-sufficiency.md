@@ -6,16 +6,17 @@
 | --- | --- |
 | `candidate_id` | `SC1-D7` |
 | `role` | `diagnostic_only` |
-| `current_step` | Step 2/3 problem/mechanism diagnostic |
+| `current_step` | Step 3 mechanism-attribution diagnostic feeding Step 6 closure |
 | `method_training_authorized` | false |
 | `forecast_test_usage` | forbidden |
-| `return_if_pass` | Step 4/6 redesign；not Step 7 |
+| `return_if_pass` | Step 6冻结task-specific claim/method contract；随后才可授权Step 7 |
 | `close_if_fail` | descriptor-generator route；RGNB remains component only |
 
 ## What We Plan To Test
 
-Step 6已经证明PAF tensor path可projective，但generic mechanism被prior art覆盖，且B11/B14给出negative internal
-evidence。D7只问：
+Step 6已经证明PAF tensor path可projective。generic mechanism存在prior-art overlap，但按项目修订规则，
+overlap只用于收紧claim，不自动否决面向multi-horizon unified forecasting的task-specific组合贡献；真正尚缺的
+是B11/B14 negative internal evidence下的geometry attribution。D7只问：
 
 > 在同一frozen A6 memory和rank budget下，canonical RGNB atom descriptors是否比permuted/random
 > descriptors提供可复现的forecast-relevant inductive bias？
@@ -109,7 +110,7 @@ matched model只靠memorizing 720 descriptors。
 
 ## Decision Rule
 
-- all gates pass：`descriptor_sufficiency_supported_return_step4_6`；
+- all gates pass：`descriptor_sufficiency_supported_return_step6_freeze`；
 - otherwise：`descriptor_sufficiency_not_supported_close_paf`。
 
 无论结果如何，D7都不授权future-unit retrieval、Encoder replacement、MoE或SC2-MIPR。

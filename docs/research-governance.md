@@ -13,6 +13,20 @@
 - 对coverage快速变化的方向，在method冻结与投稿前分别执行freshness search；未完成全文/代码核查时降低
   claim confidence。
 
+## Prior-Art Overlap Interpretation
+
+- mechanism primitive或operator family重叠不再自动判定`novelty fail`；external audit首先用于收紧claim、
+  识别必须对比的baseline和mandatory controls；
+- novelty按完整链条评估：`problem -> task-specific constraint -> mechanism composition -> implementation path
+  -> empirical claim`。已有primitive若服务于不同问题，并形成不同的数学约束、tensor path或训练/评估协议，
+  可以构成contribution-level novelty；
+- 必须区分`component novelty`与`contribution novelty`：单个组件未必新，但面向multi-horizon unified
+  forecasting的projectivity、prefix consistency、support geometry与生成路径组合可以是新的贡献边界；
+- 只有prior work实质覆盖相同问题、相同约束、相同主要实现路径和相同claim时，overlap才可单独阻断
+  narrative gate；
+- 反向约束同样成立：仅改名、仅迁移到forecasting、仅有实现细节差异，不足以证明创新；必须说明
+  task-specific coupling为什么必要，并用matched controls验证。
+
 ## 文档分层
 
 | Layer | 文件 | 职责 | 不应包含 |

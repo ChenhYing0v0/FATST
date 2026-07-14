@@ -353,13 +353,15 @@ def main() -> None:
         "no_atom_to_atom_mixing_gate": True,
         "rank256_not_full_affine_gate": True,
         "exact_a6_containment_gate": False,
-        "external_novelty_gate": False,
+        "external_primitive_overlap_present": True,
+        "external_overlap_is_automatic_rejection": False,
+        "task_specific_contribution_boundary_gate": True,
         "internal_mechanism_evidence_gate": False,
         "future_unit_retrieval_authorized": False,
         "method_implementation_authorized": False,
-        "step6_decision": "narrative_not_ready_rollback_step2_3_d7",
+        "step6_decision": "conditional_narrative_pass_d7_required",
         "next_diagnostic": "SC1-D7-RGNB-descriptor-sufficiency",
-        "rollback_point": "step2_3",
+        "rollback_point": "d7_fail_return_step4_or_close_descriptor_route",
     }
 
     args.output_dir.mkdir(parents=True, exist_ok=True)

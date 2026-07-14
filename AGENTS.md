@@ -150,6 +150,18 @@ stability, and mechanism diagnostics. Diagnostic experiments may bypass the
 narrative gate only if they are declared diagnostic before launch and are not
 later promoted to paper-core solely because metrics look good.
 
+Prior-art overlap is evidence for narrowing a claim, not an automatic novelty
+rejection. A familiar primitive may remain a valid contribution candidate when
+it is coupled to a materially different forecasting problem, mathematical
+contract, architecture path, or training/evaluation setting. Judge novelty at
+the level of the complete `problem -> constraint -> mechanism -> implementation
+-> claim` chain, and distinguish component novelty from contribution-level
+novelty. Reject on overlap only when prior work substantially covers that whole
+chain, not merely because it uses a similar operator family. Conversely,
+renaming a primitive, moving it to forecasting, or making superficial code
+changes is not enough by itself; the task-specific coupling and its necessity
+must be stated and empirically tested.
+
 When two paper-core candidates have similar expected or observed performance,
 prefer the option with stronger narrative potential and clearer SCI-level
 contribution over a small engineering patch.

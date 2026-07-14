@@ -2,7 +2,8 @@
   "atomwise_subset_invariance_gate": true,
   "candidate": "SC1-PLGO-PAF",
   "exact_a6_containment_gate": false,
-  "external_novelty_gate": false,
+  "external_overlap_is_automatic_rejection": false,
+  "external_primitive_overlap_present": true,
   "future_unit_retrieval_authorized": false,
   "internal_mechanism_evidence_gate": false,
   "max_projectivity_gap": 4.547473508864641e-13,
@@ -12,8 +13,9 @@
   "no_requested_horizon_feature_gate": true,
   "projectivity_cases": 33,
   "rank256_not_full_affine_gate": true,
-  "rollback_point": "step2_3",
+  "rollback_point": "d7_fail_return_step4_or_close_descriptor_route",
   "step": 6,
-  "step6_decision": "narrative_not_ready_rollback_step2_3_d7",
+  "step6_decision": "conditional_narrative_pass_d7_required",
+  "task_specific_contribution_boundary_gate": true,
   "tolerance": 1e-10
 }

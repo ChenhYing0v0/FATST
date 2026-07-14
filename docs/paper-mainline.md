@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | rollback Step 2/3；SC1-D7 descriptor-sufficiency diagnostic |
+| `current_11_step` | Step 3 SC1-D7 attribution，feeding Step 6 closure before Step 7 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` dataset profiles |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | Contribution 1 open；RGNB scaffold retained、generic PAF paused；SC2-MIPR held |
+| `paper_core_status` | Contribution 1 PLGO-PAF conditional narrative candidate；D7 pending；SC2-MIPR held |
 
 ## Research Thesis
 
@@ -139,22 +139,24 @@ capacity-confounded design。support pruning也不等于generator-level speedup�
 
 [Hypothesis] Step 6唯一保留的问题是：一个不读取$H$的shared atom-conditioned generator，能否利用
 support/scale/global-local descriptors原生生成active coefficients，并超过matched dense与random-descriptor
-controls。该generator尚未通过function-class、capacity或prior-art gate，故PLGO为
-`partial_pass_step6_design_only`，不是paper-core method，禁止实现和训练。
+controls。prior-art primitive overlap只收紧claim，不自动否决该task-specific组合；但generator尚未通过
+descriptor attribution与capacity controls，故PLGO为conditional narrative candidate，禁止直接训练method。
 
 [Fact] Step 6进一步审计后，atomwise PAF tensor contract本身成立：33个prefix cases的coefficient subset、
-prefix synthesis与paired-order invariance max gap=`4.547e-13`，且effective rank不超过256。但external
-source gate显示generic form已被DeepONet branch-trunk、NOMAD nonlinear decoder、BasisFormer basis
-coefficient attention、TimePerceiver target queries与FlowState functional basis覆盖。
+prefix synthesis与paired-order invariance max gap=`4.547e-13`，且effective rank不超过256。external
+source audit显示generic primitives已有DeepONet branch-trunk、NOMAD nonlinear decoder、BasisFormer basis
+coefficient attention、TimePerceiver target queries与FlowState functional basis先例；这些先例用于约束
+component claim和mandatory comparisons，不自动否决完整contribution。
 
 [Strong Evidence] internal evidence也不允许直接实现：B11 basis-conditioned field的收益被no-basis与
 constant-slot controls解释；B14 model-independent retrieval-demand只有`1/6` settings、`0/3` datasets通过。
 因此atom-to-memory retrieval被明确删除，narrowed PAF只能读取与A6一致的shared flattened memory。
 
-[Decision] `SC1-PLGO-PAF` Step 6 narrative gate未通过，decision=
-`narrative_not_ready_rollback_step2_3_d7`。当前不把generic atom query、branch-trunk或HyperNetwork写成
-Contribution 1，也不进入Step 7。只授权D7 frozen-memory diagnostic，检验canonical RGNB descriptors是否在
-compact与parameter-matched widths下同时超过permuted/random controls；通过后也只能返回Step 4/6。
+[Decision] `SC1-PLGO-PAF` Step 6按完整`problem-constraint-mechanism-implementation-claim`链条获得
+conditional narrative pass，decision=`conditional_narrative_pass_d7_required`。不把generic atom query、
+branch-trunk或HyperNetwork单独写成创新；Contribution 1的候选边界是multi-horizon projective contract、RGNB
+local/global support geometry与atomwise generation的组合。Step 7前必须先完成D7 frozen-memory diagnostic；
+D7通过后返回Step 6冻结最终method contract，再授权实现。
 
 ### Contribution 2 Candidate: Measure-Induced Projective Risk
 
@@ -250,8 +252,8 @@ Step4，不以训练性能包装RGNB。
 13. D6全部gate通过；PLGO在external source audit后conditional进入Step5，method implementation仍false。
 14. PLGO Step5通过RGNB algebra/prefix/A6 morph，但ONB、frame与independent-group variants均被function/control
     no-go限制；只进入Step6 generator design，method implementation仍false。
-15. PLGO Step6的PAF tensor/rank gate通过，但external novelty与B11/B14 internal mechanism gates失败；回滚
-    Step2/3，只实现D7 descriptor-sufficiency diagnostic，不实现forecast method。
+15. PLGO Step6的PAF tensor/rank gate通过；external primitive overlap不再自动否决task-specific贡献，但
+    B11/B14要求先完成D7 attribution。当前conditional pass；D7前不实现forecast method。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
 generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成

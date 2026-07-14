@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | rollback Step 2/3；SC1-D7 descriptor-sufficiency diagnostic |
+| `current_step` | Step 3 SC1-D7 attribution，feeding Step 6 closure before Step 7 |
 | `active_question` | true RGNB descriptors是否超越permuted/random descriptor controls？ |
-| `active_candidates` | `SC1-D7 proposed`；`SC1-PLGO-PAF paused`；`SC2-MIPR` held |
+| `active_candidates` | `SC1-PLGO-PAF conditional`；`SC1-D7 proposed`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | PLGO Step6 rollback accepted；D7 protocol ready |
+| `active_protocol` | PLGO Step6 conditional narrative pass；D7 protocol ready |
 | `method_implementation` | `PMFO-RCT v1` frozen as failed evidence；new implementation unauthorized |
-| `rollback_point` | D7 fail -> close descriptor-generator route；RGNB只保留component |
+| `rollback_point` | D7 fail -> return Step 4 or close descriptor-generator route；RGNB可保留component |
 
 ## Completed Foundation
 
@@ -174,18 +174,19 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 free-M0与GEO/PERM/RANDOM在compact width256和near-budget width694下的validation表现。禁止读取test、实现
 forecast method、atom retrieval、Encoder、MoE或MIPR。
 
-## SC1-PLGO Step 6 Design Gate: Rolled Back
+## SC1-PLGO Step 6 Design Gate: Conditional Pass, D7 Required
 
 1. `PLGO-PAF`的atomwise tensor contract在$T=16/96/720/721$共33个prefix cases通过，max gap
    `4.547e-13`；$H$不进入descriptor/generator，rank上界仍为256；
 2. generic branch-trunk、nonlinear query decoder、HyperNetwork、basis coefficient attention、timestamp query与
-   functional basis decoder已有DeepONet/NOMAD/HyperDeepONet/BasisFormer/TimePerceiver/FlowState直接先例；
+   functional basis decoder已有直接先例；overlap用于收紧component claim，不自动否决task-specific组合；
 3. internal B11 basis-conditioned field被no-basis/constant-slot controls解释，B14 retrieval demand只有1/6
    settings、0/3 datasets通过；新PAF不得复活atom-specific history retrieval；
 4. narrowed PAF只读取shared flattened memory，并以RGNB descriptors生成free temporal table的受限替代；
 5. compact width256参数仅为A6 readout的0.696-0.880，可能capacity-restricted；near-budget width694约为
    0.9996-0.9998，却可能memorize descriptors而失去geometry attribution；
-6. decision=`narrative_not_ready_rollback_step2_3_d7`。generic PAF不进入Step7；只授权D7 diagnostic。
+6. decision=`conditional_narrative_pass_d7_required`。PAF保留为provisional contribution candidate；D7通过并
+   返回Step6冻结method contract前不进入Step7。
 
 ## SC1-D6 Confirmation And Step 4 Outcome
 
