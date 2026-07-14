@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC1 rollback Step 2/3；conditioning-locality problem formulation |
+| `current_11_step` | SC1-PLGO Step 5 theory feasibility |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` dataset profiles |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | Contribution 1 slot open；SC1-D6 interaction confirmation launch-ready；no new method；SC2-MIPR held |
+| `paper_core_status` | Contribution 1 provisional PLGO；problem + conditional narrative pass；theory pending；SC2-MIPR held |
 
 ## Research Thesis
 
@@ -112,7 +112,19 @@ DCT/PCA families选择`H48 active atoms <= 96`的basis，并对balanced、global
 然而预注册的`block_dct2_b144`相对global DCT在short horizons约`+1.05%`、long horizons约`-1.15%`，
 11/15 primary units同时short-positive与long-negative；其H48 active atoms为144而非720。因此按failure
 attribution rule，D5只能否定`<=96 + offdiag selector`，不能否定local/global co-design。当前由D6在未使用的
-validation batches 8-15确认support-scale × horizon interaction；确认前仍无paper-core method。
+validation batches 8-15确认support-scale × horizon interaction；该确认现已完成，但仍无已通过theory gate的
+paper-core method。
+
+[Strong Evidence] D6在disjoint validation window完成225/225并通过全部gates：b144相对global DCT的short
+MSE为`+1.1964%`、long MSE为`-1.2675%`，12/15 primary units crossing；short-positive与long-negative
+分别覆盖4/5和5/5 datasets。由此SC1 problem收紧为：同一future function需要local-prefix synthesis与
+global-domain coherence，但requested H只定义domain，不能成为learned semantic condition。
+
+[Provisional Candidate] `SC1-PLGO`（Projective Local-Global Operator）通过Step 4 conditional narrative gate。
+它不是“首次basis/wavelet forecast”：N-BEATS、N-HiTS、BasisFormer、FBM、WaveToken、Implicit Forecaster与
+FlowState已占据相关单项。可辩护边界是global smooth atoms、interval-local supports、domain-only restriction与
+selective synthesis的组合。balanced interval basis保留为local support scaffold；具体operator尚未冻结，
+必须先通过Step5 stable reconstruction/function-class/capacity no-go audit。
 
 ### Contribution 2 Candidate: Measure-Induced Projective Risk
 
@@ -200,6 +212,7 @@ orthogonal/group controls同样成立；requested prefix虽可少生成inactive 
     `2x2` factorial与3-seed full matrix；第二 backbone与official native baselines最后做generality gate。
 12. SC1-D5 primary selector失败但b144出现short/long crossed interaction；D6使用disjoint validation window确认，
     pass只返回Step 4，不直接实现operator。
+13. D6全部gate通过；PLGO在external source audit后conditional进入Step5，method implementation仍false。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
 generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成
@@ -226,6 +239,8 @@ loss 或更多 tuning 来掩盖失败。
 - `analysis/stage_c_step6_fpmo_narrative_control_20260713/step6_narrative_control_gate.md`
 - `analysis/stage_c_sc1_d4_structured_basis_20260714/research_interpretation.md`
 - `analysis/stage_c_sc1_d5_conditioning_locality_20260714/research_interpretation.md`
+- `analysis/stage_c_sc1_d6_horizon_support_interaction_20260714/research_interpretation.md`
+- `analysis/stage_c_sc1_step4_projective_local_global_audit_20260714/source_informed_audit.md`
 - `Papers/stage-c-external-decoder-objective-audit.md`
 - `docs/experiments/stage-c-five-dataset-validation-policy.md`
 - `docs/code-explanation/stage-c-pmfo-rct-step7a.md`

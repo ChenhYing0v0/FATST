@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | decoder/operator 与 training principle 两项相互支撑的 paper-core innovations |
-| `active_question` | local support为何在short horizons优于global DCT、long horizons反向，crossing能否跨validation window复现？ |
+| `active_question` | PLGO能否在不形成overcomplete/full-affine confound下统一global coherence与prefix-local supports？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` |
-| `active_candidates` | no paper-core SC1 candidate；`SC1-D6 diagnostic_only launch_ready`；`SC2-MIPR` held |
+| `active_candidates` | `SC1-PLGO provisional Step5`；D6 problem pass；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `stage_exit` | 两项分别过 narrative/effectiveness gate，`2x2` joint gate显示独立主效应与联合收益 |
 | `stage_rollback` | problem/novelty不跨 dataset -> Step 2；禁止直接堆叠 method |
@@ -18,27 +18,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | rollback Step 2/3；`SC1-CLG` problem formulation |
-| `current_candidate` | `SC1-D6 diagnostic_only launch_ready`；no paper-core SC1；`SC2-MIPR` held |
-| `latest_decision` | D5 primary fail；但b144 vs DCT short +1.05%、long -1.15%，11/15 units crossing，方向不可否决 |
-| `next_required_action` | commit/push后在validation batches 8-15运行D6 225-fit confirmation |
-| `method_training_authorized` | `false`；D6只可确认problem，new SC1需重新通过Step 4-6 |
-| `rollback_point` | D6 fail -> D5 crossing降为exploratory并留在Step 2；D6 pass -> return Step 4 only |
+| `current_11_step` | Step 5 theory feasibility for `SC1-PLGO` |
+| `current_candidate` | `SC1-PLGO provisional`；`SC2-MIPR` held |
+| `latest_decision` | D6 pass：short +1.1964%、long -1.2675% vs DCT，12/15 crossing；Step4 conditional pass |
+| `next_required_action` | PLGO stable reconstruction/function-class/prefix restriction/no-go theory audit；不得实现method |
+| `method_training_authorized` | `false`；PLGO必须先通过Step 5与Step 6 |
+| `rollback_point` | stable local-global synthesis或capacity containment失败 -> Step 4 redesign，不做performance sweep |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | rollback Step 2/3；conditioning-locality problem diagnosis |
+| `current_step` | Step 5 PLGO theory feasibility |
 | `problem` | single fixed support scale无法同时服务short-prefix locality与long-domain global coherence |
-| `existence_evidence` | D5 b144 vs DCT：short +1.05%、long -1.15%；11/15 crossed units；尚属same-window exploratory |
-| `idea` | 暂无method；先确认horizon-support crossed interaction，不读取horizon ID |
-| `theory_check` | D5 selector design fail；b144 pre-registered arm阻止方向否决；D6需disjoint-window confirmation |
-| `design` | D6：validation batches8-15，balanced/global DCT/block DCT b48/b96/b144，225 fits |
-| `narrative_gate` | no paper-core SC1；`SC1-FPMO-DS` rejected；SC2 held |
+| `existence_evidence` | D6 disjoint window：short +1.1964%、long -1.2675%；12/15 crossed units；4/5与5/5 directions |
+| `idea` | `SC1-PLGO`：shared projective local-global synthesis；H只限制domain，不进入learned path |
+| `theory_check` | Step4 conditional pass；basis/wavelet/local-global单项不新；stable frame/function-class待Step5 |
+| `design` | global smooth subspace + interval-local support scaffold；具体construction尚未冻结 |
+| `narrative_gate` | PLGO conditional pass to Step5 only；SC2 held |
 | `effectiveness_gate` | v1 fail：macro vs A6 `-1.0955%`，worst ETTm1 `-2.0844%` |
-| `artifacts` | D1-v2、Step4-6 closure、D2/D3、D4 structured-basis report、five-profile contract |
-| `decision` | `standard_structured_basis_explains_gain_return_step2`；method training false；SC2 held |
+| `artifacts` | D1-v2、historical Step4-6 closure、D2-D6、PLGO source audit、five-profile contract |
+| `decision` | `horizon_support_scale_interaction_supported_return_step4`；PLGO conditional Step4 pass；training false |
 
 ## Frozen Carrier Contract
 
@@ -70,9 +70,10 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC1-D2` | `closed_formal_fail` | true-scale nonlinear grouping是否超越rank expansion、generic nonlinearity与random grouping | not a method gate | basis gate pass；random-group mandatory gate fail | rollback Step 2；不得实现method |
 | `SC1-D3` | `diagnostic_only` | basis geometry是否为独立main effect而非basis-group interaction | not required | pass：main +2.9174%；both conditionals + 5/5 interaction guard | evidence complete；return Step 4 only |
 | `SC1-D4` | `diagnostic_only_closed` | balanced basis是否超越standard bases，收益来自locality还是exact balancing | not required | locality pass；global noninferiority与balance specificity fail | return Step 2/3；exact balanced basis不升method |
-| `SC1-CLG` | `reformulated_problem` | local prefix synthesis与long-domain coherence是否存在horizon-dependent support tradeoff | not required | D6 confirmation pending | D6 pass才授权返回Step 4 |
+| `SC1-CLG` | `problem_gate_passed` | local prefix synthesis与long-domain coherence是否存在horizon-dependent support tradeoff | not required | D6 pass | evidence feeds PLGO Step4-5 |
 | `SC1-D5` | `diagnostic_only_design_fault` | fit-only selected local DCT/PCA能否改善balanced并接近global controls | not required | primary fail；b144 arm出现11/15 crossing | direction rejection invalid；design D6 |
-| `SC1-D6` | `diagnostic_only_launch_ready` | b144 short-positive/long-negative interaction能否在disjoint validation window复现 | not required | 225-fit confirmation pending | commit/push后remote run |
+| `SC1-D6` | `diagnostic_only_pass` | b144 short-positive/long-negative interaction能否在disjoint validation window复现 | not required | all gates pass；12/15 crossing | return Step4 only；evidence complete |
+| `SC1-PLGO` | `provisional_step5` | projective local-global synthesis能否同时服务short prefix与long domain | conditional pass | not started | theory feasibility/no-go audit；no implementation |
 | `SC2-MIPR` | `held` | measure-induced block metric去除decoder scales之间的cross coupling | pass for L2；log measure primary，benchmark weak | log off-block `0.205154`；benchmark `0.002480`；performance未测 | 等新SC1 problem/method contract；不得先实现 |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
@@ -111,6 +112,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-D3 crossed diagnostic | 5 datasets × 3 checkpoints × 3 missing-cell controls | basis main +2.9174%；true/random-group +3.1164%/+2.7181%；interaction 5/5 pass | independent probe main effect supported；return Step 4，not method | `analysis/stage_c_sc1_d3_crossed_20260714/research_interpretation.md` |
 | SC1-D4 structured-basis diagnostic | 5 datasets × 3 checkpoints × 3 grouping seeds × 7 bases | locality +1.6324% pass；balanced vs DCT/PCA -0.8609%/-1.5050%；vs random interval +0.2742% fail | `standard_structured_basis_explains_gain_return_step2`；建立SC1-CLG问题 | `analysis/stage_c_sc1_d4_structured_basis_20260714/research_interpretation.md` |
 | SC1-D5 conditioning-locality frontier | 5 datasets × 3 checkpoints × 3 grouping seeds × 13 bases | primary b96 selector fail；b144 vs DCT short +1.05%、long -1.15%，11/15 crossing | `design_fault_suspected`；不可方向否决；D6 disjoint confirmation | `analysis/stage_c_sc1_d5_conditioning_locality_20260714/research_interpretation.md` |
+| SC1-D6 support interaction confirmation | validation batches8-15；5 datasets × 3 checkpoints × 15 arms | short +1.1964%、long -1.2675%；12/15 crossing；all gates pass | problem supported；return Step4；PLGO conditional narrative pass | `analysis/stage_c_sc1_d6_horizon_support_interaction_20260714/research_interpretation.md` |
 
 ## Pending Tasks
 
@@ -135,7 +137,9 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-D4 structured-basis diagnostic | `completed_rollback` | 315/315；locality成立，standard basis与random interval controls阻断exact claim |
 | SC1-CLG conditioning-locality problem | `reformulated` | 从single Pareto point收紧为horizon-support crossed interaction |
 | SC1-D5 frontier diagnostic | `completed_design_fault` | 585/585；primary fail但pre-registered b144阻止方向否决 |
-| SC1-D6 interaction confirmation | `launch_ready` | disjoint validation batches8-15；225 fits；pass只返回Step 4 |
+| SC1-D6 interaction confirmation | `completed_pass` | 225/225；all gates pass；problem evidence frozen |
+| SC1-PLGO source-informed audit | `completed_conditional` | prior-art/rejected shortcuts已冻结；进入Step5 theory only |
+| SC1-PLGO theory feasibility | `next` | stable reconstruction、frame/coherence、A6 containment、prefix execution no-go audit |
 
 ## Paper Mainline Sync Log
 
@@ -152,6 +156,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-14 | D3 crossed diagnostic通过 | Current Position、Contribution 1、Experiment Logic | existence evidence + Step 4 authorization | basis independent main effect成立于probe；不等于basis method或novelty |
 | 2026-07-14 | D4 structured-basis diagnostic完成 | Current Position、Contribution 1、Boundary、Experiment Logic | exact claim closure + Step 2/3 rollback | locality保留；balanced specificity与global accuracy不成立；转向SC1-CLG |
 | 2026-07-14 | D5 frontier diagnostic完成 | Current Position、Contribution 1、Boundary | primary fail + diagnostic redesign | b96 selector fail；b144出现support×horizon crossing；D6确认前不升method |
+| 2026-07-14 | D6 disjoint confirmation通过 | Current Position、Contribution 1、Boundary | problem pass + Step4 candidate reformulation | PLGO conditional narrative pass；Step5 theory next；training false |
 
 ## Continuation Rules
 

@@ -1,0 +1,24 @@
+{
+  "authorization_if_passed": "return_step4_horizon_support_operator_audit",
+  "candidate": "SC1-D6",
+  "decision": "horizon_support_scale_interaction_supported_return_step4",
+  "interaction_gate": {
+    "crossed_primary_units": 12,
+    "long_mae_reduction_vs_dct": -0.007719769130986487,
+    "long_mse_reduction_vs_dct": -0.012674929388876377,
+    "long_negative_datasets_vs_dct": 5,
+    "pass": true,
+    "short_mae_reduction_vs_dct": 0.00586287252518114,
+    "short_mse_reduction_vs_balanced": 0.021394040066602282,
+    "short_mse_reduction_vs_dct": 0.0119642037354174,
+    "short_positive_datasets_vs_balanced": 4,
+    "short_positive_datasets_vs_dct": 4
+  },
+  "invariant_gate": {
+    "fit_count": 225,
+    "metadata_count": 15,
+    "pass": true
+  },
+  "method_training_authorized": false,
+  "role": "diagnostic_only_confirmation"
+}

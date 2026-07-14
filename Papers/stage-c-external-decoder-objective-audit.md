@@ -99,3 +99,17 @@ Contribution 1 problem需再次重定义。完整报告见
 
 [Risk] 2025-2026 arbitrary-horizon、wavelet/lifting与neural-operator工作增长快。本note不是absence proof。
 投稿前必须重新执行external search与citation chaining，并把最终采用的external papers回填Zotero。
+
+## 2026-07-14 D6 Projective Local-Global Update
+
+external primary-source refresh覆盖N-BEATS、N-HiTS、BasisFormer、FreTS、FBM、WaveToken、Implicit Forecaster
+与FlowState。basis forecast generation、wavelet coefficients、multiscale interpolation、frequency global view与
+dynamic target length均已有直接prior art。
+
+D6的新证据边界不是“balanced basis首次用于forecast”，而是同一full-domain readout中local b144相对global
+DCT在short horizons `+1.1964%`、long horizons `-1.2675%`，12/15 primary units crossing，并在disjoint
+validation window复现。provisional `SC1-PLGO`只以“domain restriction自然协调local-prefix synthesis与
+global-domain coherence”的组合进入Step 5 theory feasibility；balanced interval只保留为local support scaffold。
+
+详细source matrix与rejected shortcuts见
+`analysis/stage_c_sc1_step4_projective_local_global_audit_20260714/source_informed_audit.md`。

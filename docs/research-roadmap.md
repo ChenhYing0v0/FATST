@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | rollback Step 2/3；SC1-CLG problem formulation |
-| `active_question` | b144 local support的short-positive/long-negative interaction能否跨validation window复现？ |
-| `active_candidates` | no paper-core SC1；`SC1-D6 diagnostic_only launch_ready`；`SC2-MIPR` held |
+| `current_step` | Step 5 theory feasibility for SC1-PLGO |
+| `active_question` | projective local-global synthesis能否稳定重建、保持prefix restriction且避免capacity confound？ |
+| `active_candidates` | `SC1-PLGO provisional`；D6 problem pass；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `docs/experiments/stage-c-sc1-d6-horizon-support-interaction-confirmation.md` |
+| `active_protocol` | D6 accepted；PLGO Step5 theory protocol pending |
 | `method_implementation` | `PMFO-RCT v1` frozen as failed evidence；new implementation unauthorized |
-| `rollback_point` | D4已触发Step 2/3；若local family无Pareto headroom，basis只保留为component |
+| `rollback_point` | PLGO stable synthesis/function-class fail -> Step 4 redesign；不得直接实现或调参 |
 
 ## Completed Foundation
 
@@ -156,10 +156,17 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 
 ## Next Concrete Action
 
-D5的fit-only b96 selector未过primary gate，但pre-registered `block_dct2_b144`相对global DCT在short horizons
-约`+1.05%`、long horizons约`-1.15%`，11/15 primary units发生crossing。由于b144被`H48 active<=96`设计
-排除，本轮不能作方向否决。D6将在未使用的validation batches 8-15固定复验该interaction；225 fits通过才
-返回Step 4审计local/global support operator。Encoder、MoE、MIPR与method implementation继续冻结。
+进入`SC1-PLGO Step 5 theory feasibility`，只审计stable analysis/synthesis、frame/coherence、arbitrary-prefix
+restriction、A6 function-class containment与active coefficient execution。不得先实现global+local union、
+horizon router或A6 residual；Encoder、MoE、MIPR与method training继续冻结。
+
+## SC1-D6 Confirmation And Step 4 Outcome
+
+D6在未使用的validation batches8-15完成225/225：b144相对global DCT short `+1.1964%`、long
+`-1.2675%`，12/15 primary units crossing，short-positive/long-negative分别覆盖4/5与5/5 datasets。
+problem gate通过。external primary-source audit确认basis generation、wavelet coefficients、multiscale
+interpolation与dynamic target length均已有先例；provisional `SC1-PLGO`只以projective local-global co-synthesis
+进入Step5。balanced interval保留为local support scaffold，不claim exact midpoint novelty。
 
 ## SC1-D2 Core3 Precheck: Partial
 

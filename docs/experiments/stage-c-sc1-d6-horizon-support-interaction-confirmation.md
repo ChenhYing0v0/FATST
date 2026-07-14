@@ -6,12 +6,12 @@
 | --- | --- |
 | `candidate` | `SC1-D6` |
 | `role` | `diagnostic_only_confirmation` |
-| `current_step` | Step 2/3 |
+| `current_step` | Step 2/3 complete；pass，return Step 4 |
 | `question` | b144 local DCT的short-positive/long-negative crossed interaction能否在未使用validation window复现？ |
 | `suite` | 5 datasets × 3 checkpoints × 3 grouping seeds × 5 bases = 225 fits |
 | `evaluation_window` | official validation batches 8-15；D5使用0-7 |
 | `test_used` | false |
-| `method_training_authorized` | false |
+| `method_training_authorized` | false；Step 4 conditional narrative audit complete，Step 5 next |
 
 ## Design
 
