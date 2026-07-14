@@ -178,6 +178,17 @@ replacement head没有机会反向塑造Encoder。raw metrics不变，但原“e
 max gap=`2.384e-6`，flatten/patch-block-sum max gap=`5.722e-6`。runner dry-run生成35 jobs，analyzer
 synthetic gate通过，method screening在CLI层禁止test。该证据只授权Step7B，不构成effectiveness结果。
 
+[Strong Evidence] D8 Step7B完成35/35 validation-only runs。GEO-c256相对same-run A6 dense MSE macro
+`-28.10%`、5/5 datasets均负，MAE macro `-20.54%`，因此exact shared-latent PAF不能成为paper-core方法。
+但GEO相对PERM/RANDOM median为`+14.33%`、5/5为正；m694下geometry effect仍为`+14.71%`，而width
+扩展只比c256回收`+0.58%`。geometry mechanism成立，width/capacity不是主要失败原因。
+
+[Failure Attribution] GEO五dataset均hit epoch cap，但最后5 epochs validation只改善`0.02%–0.49%`；没有
+divergence、NaN或>100% degradation。patch entropy在4/5 datasets下降，但ETTh1 entropy几乎不变仍退化
+`35.62%`。因此关闭的是$\alpha_j=\psi(d_j)^TAh$这一exact shared/separable readout，而非RGNB、
+projectivity或PLGO方向。当前回Step4审计patch-level intervention与readout function class；不做三seed或
+无边界longer-epoch sweep，SC2继续held。
+
 [Tensor Boundary] `memory [B,C,P,D] -> hidden [B,C,R]`是$R=PD$的bijective flatten，不是pooling；patch
 identity没有在这一步丢失。A6与PAF都随后执行$R\rightarrow256$投影。PAF的真实风险是shared latent与
 descriptor-generated atom map构成的separable history-atom interaction，而不是shape从四维变三维本身。D8
@@ -284,6 +295,8 @@ Step4，不以训练性能包装RGNB。
     不能判定method readiness。PAF重新开放。
 17. D8-E2E Step7A已通过七arms、五profiles、projectivity、gradient与patch-interface gates；Step7B固定为
     35-run validation-only screen，结果返回前不启动三seed或MIPR。
+18. D8 Step7B已完成：exact PAF effectiveness fail、geometry attribution pass、m694不能救回A6 gap；
+    Contribution 1回Step4 redesign，三seed/MIPR/joint factorial继续暂停。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
 generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成

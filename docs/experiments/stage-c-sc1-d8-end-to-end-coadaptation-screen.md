@@ -6,12 +6,17 @@
 | --- | --- |
 | `candidate_id` | `SC1-PLGO-PAF / SC1-D8-E2E` |
 | `role` | paper-core method screening |
-| `current_step` | Step 7A implementation/local gate passed；Step 7B remote screen authorized |
+| `current_step` | Step 9-10 complete；exact PAF failed，rollback Step 4 |
 | `narrative_gate` | conditional pass；RGNB + horizon-agnostic projectivity + atom-conditioned generation |
-| `effectiveness_gate` | pending end-to-end joint training |
-| `remote_training_authorized` | true；210 shape-prefix + 35 gradient cases、runner dry-run与analyzer smoke通过 |
+| `effectiveness_gate` | fail：GEO-c256 vs A6 -28.10%；geometry vs matched +14.33%、5/5 retained |
+| `remote_training_authorized` | false；35/35 complete，不进入三seed；新候选需重过Step4-6 |
 | `test_usage` | forbidden during screening |
 | `rollback` | stable E2E fail -> Step4；pathology -> repair Step7 protocol only |
+
+最终failure attribution为`exact_paf_failed_geometry_retained_rollback_step4`。5/5 GEO hit epoch cap，但最后5
+epochs validation只改善0.02%-0.49%，不足以解释14%-46%的A6 gap；不做无边界longer-epoch sweep，也不把
+结果升级为PLGO方向级否决。详见
+`analysis/stage_c_sc1_d8_e2e_20260714/research_interpretation.md`。
 
 ## Primary Question
 

@@ -1,0 +1,37 @@
+{
+  "candidate": "SC1-D8-E2E",
+  "decision": "stable_screen_fail",
+  "pass": false,
+  "valid_runs": 35,
+  "expected_runs": 35,
+  "checks": {
+    "primary_vs_a6_macro": false,
+    "primary_vs_a6_worst_dataset": false,
+    "primary_vs_matched_macro": true,
+    "primary_vs_matched_positive_datasets": true,
+    "primary_mae_macro_nonnegative": false,
+    "no_over_100pct_degradation": true,
+    "not_epoch_cap_dominated": false
+  },
+  "primary_vs_a6_by_dataset_pct": {
+    "ETTh1": -35.61906312573093,
+    "ETTh2": -21.560857685856828,
+    "ETTm1": -46.208015078246525,
+    "ETTm2": -14.262350147285673,
+    "Weather": -22.868194430554944
+  },
+  "primary_vs_a6_macro_pct": -28.10369609353498,
+  "primary_vs_a6_worst_pct": -46.208015078246525,
+  "primary_vs_matched_by_dataset_pct": {
+    "ETTh1": 5.684781248038484,
+    "ETTh2": 13.5933137477952,
+    "ETTm1": 18.292263302203416,
+    "ETTm2": 18.694336522796807,
+    "Weather": 15.398224011587459
+  },
+  "primary_vs_matched_macro_pct": 14.332583766484273,
+  "primary_vs_matched_positive_datasets": 5,
+  "primary_vs_a6_mae_macro_pct": -20.544065798497677,
+  "primary_epoch_cap_count": 5,
+  "rollback_if_fail": "Step 4 failure attribution audit"
+}

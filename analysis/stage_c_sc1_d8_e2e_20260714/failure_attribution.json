@@ -1,0 +1,27 @@
+{
+  "candidate": "SC1-D8-E2E",
+  "decision": "exact_paf_failed_geometry_retained_rollback_step4",
+  "valid_runs": 35,
+  "test_used": false,
+  "geo_c256_vs_a6_mse_macro_pct": -28.10369609353498,
+  "geo_c256_vs_a6_mae_macro_pct": -20.544065798497677,
+  "geo_c256_vs_matched_mse_macro_pct": 14.332583766484273,
+  "geo_c256_vs_matched_positive_datasets": 5,
+  "geo_m694_vs_a6_mse_macro_pct": -27.33062849791379,
+  "geo_m694_vs_c256_mse_macro_pct": 0.5772031247385367,
+  "geo_m694_vs_matched_mse_macro_pct": 14.70671226557257,
+  "primary_epoch_cap_count": 5,
+  "geo_c256_patch_entropy_mean": 0.878452480557123,
+  "a6_patch_entropy_mean": 0.9400429123273255,
+  "geo_c256_atom_patch_diversity_mean": 0.008915049886508358,
+  "failure_attribution": {
+    "hypothesis_false": false,
+    "intervention_point_wrong": "suspected_not_sufficient",
+    "readout_or_head_design_wrong": "strongly_supported",
+    "optimization_or_numeric_pathology": "present_but_bounded",
+    "capacity_control_explains": false
+  },
+  "next_step": "Step 4 source-informed intervention/readout redesign audit",
+  "method_training_authorized": false,
+  "three_seed_confirmation_authorized": false
+}
