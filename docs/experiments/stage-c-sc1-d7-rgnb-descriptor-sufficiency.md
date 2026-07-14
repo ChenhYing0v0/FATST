@@ -8,6 +8,7 @@
 | `role` | `diagnostic_only` |
 | `current_step` | Step 3 mechanism-attribution diagnostic feeding Step 6 closure |
 | `method_training_authorized` | false |
+| `diagnostic_execution_authorized` | true；local implementation gate passed |
 | `forecast_test_usage` | forbidden |
 | `return_if_pass` | Step 6冻结task-specific claim/method contract；随后才可授权Step 7 |
 | `close_if_fail` | descriptor-generator route；RGNB remains component only |
@@ -30,7 +31,8 @@ D7不测试cross-attention、history retrieval、learned horizon routing或full 
 - source tensor: `memory [B,C,P,D]` from frozen A6 encoder；
 - target: normalized future `y [B,C,720]`；
 - basis: fixed RGNB `Q [720,720]`, global rank 16；
-- splits: reuse accepted frozen-memory fit/inner-holdout/official-validation boundaries；
+- splits: reuse accepted frozen-memory fit/inner-holdout protocol；official validation使用此前未消费的
+  batches16-23，避免复用D4 batches0-7或D6 batches8-15；
 - test: never loaded；
 - profile、basis rank、descriptor definition与width不得按dataset调整。
 
@@ -65,7 +67,8 @@ No arm receives requested $H$ as a feature. No atom accesses a different history
 | `random_m694` | 694 | fixed seeded random descriptors | matched-budget capacity control |
 
 The permutation/random seeds are global and frozen before dataset execution. They are structure seeds, not training
-seeds and cannot be selected from results.
+seeds and cannot be selected from results。RANDOM descriptors按列匹配canonical descriptors的mean/std，防止
+descriptor数值尺度成为control confound。
 
 ## Metrics
 
@@ -81,7 +84,8 @@ $$
 - `long_macro_mse`: mean over $H\ge336$；
 - `descriptor_gain`: GEO versus median(PERM,RANDOM) within the same width；
 - `free_gap`: GEO versus `free_m0`；
-- `fit_holdout_gap`: fit improvement minus inner-holdout improvement，diagnoses memorization；
+- `fit_holdout_gap`: GEO相对median(PERM,RANDOM)的fit improvement减去inner-holdout improvement，
+  diagnoses descriptor memorization；
 - `coefficient_row_reconstruction`: optional auxiliary statistic only；cannot override forecast-space gate。
 
 ## Hard Gates

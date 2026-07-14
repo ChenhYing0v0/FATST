@@ -445,6 +445,7 @@ def train_head(
     holdout: dict[str, torch.Tensor],
     device: torch.device,
     checkpoint_seed: int,
+    log_prefix: str = "d2",
 ) -> tuple[nn.Module, list[dict[str, Any]], int, float, float]:
     optimizer = torch.optim.AdamW(
         head.parameters(),
@@ -509,7 +510,7 @@ def train_head(
             stale_epochs += 1
         if epoch == 1 or epoch % 10 == 0:
             print(
-                f"d2_epoch dataset={args.dataset} checkpoint_seed={checkpoint_seed} "
+                f"{log_prefix}_epoch dataset={args.dataset} checkpoint_seed={checkpoint_seed} "
                 f"arm={arm} epoch={epoch}/{args.max_epochs} "
                 f"holdout_mse={holdout_loss:.8f}",
                 flush=True,

@@ -28,6 +28,12 @@ StageC active entrypoints：
   independent-group full-affine no-go；CPU-only，不训练模型。
 - `check_stage_c_plgo_step6_design.py`: 验证Projective Atom Functional的atomwise subset invariance、prefix
   synthesis、rank/parameter boundary与candidate-control matrix；只作Step6 design audit，不训练模型。
+- `run_stage_c_sc1_d7_descriptor_sufficiency.py`: 从冻结A6 memory训练free-M0与GEO/PERM/RANDOM
+  compact/matched PAF heads；使用validation batches16-23，不更新forecast model、不读取test。
+- `analyze_stage_c_sc1_d7_descriptor_sufficiency.py`: 审计105-fit completeness、parameter/projectivity invariants、
+  descriptor gain、free-M0 gap与fit-holdout memorization hard gates。
+- `remote/run_stage_c_sc1_d7_descriptor_sufficiency.sh`: 三GPU workload-aware D7 runner；
+- `sync_stage_c_sc1_d7_descriptor_sufficiency_results.sh`: 同步D7 raw artifacts并本地独立重算decision。
 - `run_stage_c_sc1_d2_diagnostic.py`: 从冻结A6 checkpoints提取`memory [B,C,P,D]`，训练rank/full-affine、
   dense nonlinear、true-scale grouped与random grouped head-only probes；不更新forecast model、不读取test。
 - `analyze_stage_c_sc1_d2_diagnostic.py`: 计算rank、generic nonlinearity与scale alignment的paired gains，

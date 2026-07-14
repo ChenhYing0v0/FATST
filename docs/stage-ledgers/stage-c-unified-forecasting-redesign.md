@@ -9,7 +9,7 @@
 | `active_question` | canonical RGNB descriptors是否比permuted/random descriptors提供跨dataset的coefficient-row inductive bias？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` |
-| `active_candidates` | `SC1-PLGO-PAF conditional`；`SC1-D7 diagnostic proposed`；`SC2-MIPR` held |
+| `active_candidates` | `SC1-PLGO-PAF conditional`；`SC1-D7 diagnostic implementation_ready`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `stage_exit` | 两项分别过 narrative/effectiveness gate，`2x2` joint gate显示独立主效应与联合收益 |
 | `stage_rollback` | problem/novelty不跨 dataset -> Step 2；禁止直接堆叠 method |
@@ -21,8 +21,8 @@
 | `current_11_step` | Step 3 `SC1-D7` attribution，feeding Step 6 closure before Step 7 |
 | `current_candidate` | `SC1-PLGO-PAF partial_pass`；`SC1-D7 diagnostic_only`；`SC2-MIPR` held |
 | `latest_decision` | Step6 tensor/rank pass；external overlap非自动否决；task-specific narrative conditional pass，D7 mandatory |
-| `next_required_action` | 实现D7 frozen-memory GEO/PERM/RANDOM × compact/matched diagnostic；不得实现forecast method |
-| `method_training_authorized` | `false`；只授权head-only D7 diagnostic |
+| `next_required_action` | commit/push后在3090启动D7五dataset × 三checkpoint × 七arm matrix |
+| `method_training_authorized` | `false`；head-only D7 remote diagnostic已通过local gate |
 | `rollback_point` | D7 fail -> return Step 4 or close PAF descriptor route；RGNB可保留component |
 
 ## 11-Step Record
@@ -74,7 +74,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC1-D5` | `diagnostic_only_design_fault` | fit-only selected local DCT/PCA能否改善balanced并接近global controls | not required | primary fail；b144 arm出现11/15 crossing | direction rejection invalid；design D6 |
 | `SC1-D6` | `diagnostic_only_pass` | b144 short-positive/long-negative interaction能否在disjoint validation window复现 | not required | all gates pass；12/15 crossing | return Step4 only；evidence complete |
 | `SC1-PLGO` | `partial_pass` | projective local-global synthesis能否同时服务short prefix与long domain | task-specific narrative conditional pass；descriptor attribution pending | not started | 等D7；no method implementation |
-| `SC1-D7` | `proposed_diagnostic` | true RGNB descriptors是否超越permuted/random descriptors | not required | not started | implement seven-arm frozen-memory diagnostic |
+| `SC1-D7` | `diagnostic_only` | true RGNB descriptors是否超越permuted/random descriptors | not required | local gate pass；remote pending | launch 105-fit validation-only matrix |
 | `SC2-MIPR` | `held` | measure-induced block metric去除decoder scales之间的cross coupling | pass for L2；log measure primary，benchmark weak | log off-block `0.205154`；benchmark `0.002480`；performance未测 | 等新SC1 problem/method contract；不得先实现 |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
@@ -116,6 +116,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-D6 support interaction confirmation | validation batches8-15；5 datasets × 3 checkpoints × 15 arms | short +1.1964%、long -1.2675%；12/15 crossing；all gates pass | problem supported；return Step4；PLGO conditional narrative pass | `analysis/stage_c_sc1_d6_horizon_support_interaction_20260714/research_interpretation.md` |
 | SC1-PLGO Step5 theory feasibility | 12 RGNB cases；101 selected prefixes；3,731 all-H bounds；frame/function no-go | max gap `2.141e-13`；M0=A6 reparameterization；frame kernel16；group caps sum720 | `partial_pass_step6_design_only`；training false | `analysis/stage_c_sc1_plgo_step5_theory_20260714/step5_theory_feasibility.md` |
 | SC1-PLGO Step6 design gate | external primary sources + B11/B14 audit + 33 PAF tensor cases | projectivity max `4.547e-13`、rank≤256；overlap非自动否决；internal attribution pending | `conditional_narrative_pass_d7_required` | `analysis/stage_c_sc1_plgo_step6_design_20260714/step6_design_gate.md` |
+| SC1-D7 local implementation gate | worker/analyzer smoke + runner dry-run | seven arms、parameter/descriptor/projectivity/gradient/analyzer contracts pass | remote diagnostic authorized；method false | `analysis/stage_c_sc1_d7_local_gate_20260714/local_gate_report.md` |
 
 ## Pending Tasks
 
@@ -144,7 +145,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-PLGO source-informed audit | `completed_conditional` | prior-art/rejected shortcuts已冻结；进入Step5 theory only |
 | SC1-PLGO theory feasibility | `completed_partial_pass` | RGNB scaffold pass；M0/frame/independent-group均非method；进入Step6 only |
 | SC1-PLGO Step6 design gate | `completed_conditional` | tensor/rank pass；task-specific narrative conditional；D7前不进入Step7 |
-| SC1-D7 descriptor sufficiency | `next` | implement head-only GEO/PERM/RANDOM compact/matched diagnostic；no test/no method |
+| SC1-D7 descriptor sufficiency | `implementation_ready` | commit/push；GPU preflight；launch 105-fit remote diagnostic |
 
 ## Paper Mainline Sync Log
 
