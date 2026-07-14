@@ -334,7 +334,7 @@ def build_summary(
         }
     compact = width_summary["c256"]
     matched = width_summary["m694"]
-    descriptor_gate = (
+    geometry_gate = (
         compact["descriptor_gain_mse"] >= float(gate["minimum_descriptor_gain_mse"])
         and matched["descriptor_gain_mse"]
         >= float(gate["minimum_descriptor_gain_mse"])
@@ -342,16 +342,21 @@ def build_summary(
         and matched["positive_datasets"] >= int(gate["minimum_positive_datasets"])
         and compact["descriptor_gain_mae"] >= float(gate["mae_gain_floor"])
         and matched["descriptor_gain_mae"] >= float(gate["mae_gain_floor"])
-        and matched["free_gap_mse"] >= float(gate["matched_free_m0_floor"])
         and compact["fit_holdout_gain_gap"]
         <= float(gate["maximum_fit_holdout_gain_gap"])
         and matched["fit_holdout_gain_gap"]
         <= float(gate["maximum_fit_holdout_gain_gap"])
     )
+    free_control_gate = matched["free_gap_mse"] >= float(
+        gate["matched_free_m0_floor"]
+    )
+    method_readiness_gate = geometry_gate and free_control_gate
     if not invariant_pass:
         decision = "diagnostic_invalid_for_direction_rejection"
-    elif descriptor_gate:
+    elif method_readiness_gate:
         decision = "descriptor_sufficiency_supported_return_step6_freeze"
+    elif geometry_gate:
+        decision = "descriptor_geometry_supported_paf_not_ready_return_step4"
     else:
         decision = "descriptor_sufficiency_not_supported_close_paf"
     summary = {
@@ -359,7 +364,9 @@ def build_summary(
         "role": "diagnostic_only",
         "invariant_gate": {"pass": invariant_pass, **invariant_checks},
         "descriptor_gate": {
-            "pass": descriptor_gate,
+            "geometry_pass": geometry_gate,
+            "free_control_pass": free_control_gate,
+            "method_readiness_pass": method_readiness_gate,
             "compact": compact,
             "matched": matched,
             "thresholds": gate,
@@ -380,7 +387,9 @@ def render_report(summary: dict[str, Any]) -> str:
             "",
             f"- `decision`: `{summary['decision']}`",
             f"- invariant gate: `{summary['invariant_gate']['pass']}`",
-            f"- descriptor gate: `{summary['descriptor_gate']['pass']}`",
+            f"- geometry gate: `{summary['descriptor_gate']['geometry_pass']}`",
+            f"- free-control gate: `{summary['descriptor_gate']['free_control_pass']}`",
+            f"- method-readiness gate: `{summary['descriptor_gate']['method_readiness_pass']}`",
             "- test used: `false`",
             "- forecast model updated: `false`",
             "",

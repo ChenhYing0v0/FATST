@@ -1,0 +1,47 @@
+{
+  "authorization_if_passed": "return_step6_freeze_task_specific_method_contract",
+  "candidate": "SC1-D7",
+  "decision": "descriptor_geometry_supported_paf_not_ready_return_step4",
+  "descriptor_gate": {
+    "compact": {
+      "descriptor_gain_mae": 0.09858079427422271,
+      "descriptor_gain_mse": 0.13803447576863492,
+      "fit_holdout_gain_gap": 0.004627254537555605,
+      "free_gap_mse": -0.373835924618297,
+      "positive_datasets": 5
+    },
+    "free_control_pass": false,
+    "geometry_pass": true,
+    "matched": {
+      "descriptor_gain_mae": 0.09326899008010323,
+      "descriptor_gain_mse": 0.12841828836644475,
+      "fit_holdout_gain_gap": 0.003937020123636687,
+      "free_gap_mse": -0.3910307632255427,
+      "positive_datasets": 5
+    },
+    "method_readiness_pass": false,
+    "thresholds": {
+      "descriptor_moment_tolerance": 1e-05,
+      "mae_gain_floor": 0.0,
+      "matched_free_m0_floor": -0.005,
+      "maximum_fit_holdout_gain_gap": 0.01,
+      "minimum_descriptor_gain_mse": 0.005,
+      "minimum_positive_checkpoints_per_dataset": 2,
+      "minimum_positive_datasets": 4,
+      "orthogonality_tolerance": 2e-05,
+      "projectivity_tolerance": 1e-05
+    }
+  },
+  "invariant_gate": {
+    "combination_complete": true,
+    "expected_fit_count": 105,
+    "finite_positive_metrics": true,
+    "fit_count": 105,
+    "metadata_count": 15,
+    "metadata_freeze_and_tensor_checks": true,
+    "parameter_algebra_match": true,
+    "pass": true
+  },
+  "method_training_authorized": false,
+  "role": "diagnostic_only"
+}

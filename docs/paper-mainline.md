@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Step 3 SC1-D7 attribution，feeding Step 6 closure before Step 7 |
+| `current_11_step` | D7 Step 9-10 complete；return Step 4 capacity-preserving geometry redesign |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` dataset profiles |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | Contribution 1 PLGO-PAF conditional narrative candidate；D7 pending；SC2-MIPR held |
+| `paper_core_status` | Contribution 1 geometry evidence positive、exact PAF not ready；Step4 redesign；SC2-MIPR held |
 
 ## Research Thesis
 
@@ -158,6 +158,16 @@ branch-trunk或HyperNetwork单独写成创新；Contribution 1的候选边界是
 local/global support geometry与atomwise generation的组合。Step 7前必须先完成D7 frozen-memory diagnostic；
 D7通过后返回Step 6冻结最终method contract，再授权实现。
 
+[Strong Evidence] D7完成105/105 frozen-memory fits并使用fresh validation batches16-23。canonical RGNB
+descriptors相对PERM/RANDOM在compact/matched widths分别提升MSE `+13.8034%/+12.8418%`、MAE
+`+9.8581%/+9.3269%`，两个width均覆盖5/5 datasets；gain在H48最强并随horizon增长减弱，与D6 short-prefix
+local-support evidence一致。
+
+[Decision] exact descriptor-only PAF仍不具备method readiness：相对free-M0分别为`-37.3836%/-39.1031%`，
+near-budget width没有恢复性能。该结果否定exact PAF v1，不否定descriptor geometry；归因为
+`readout_or_head_design_wrong` strongly suspected，且epoch-cap使slow optimization未完全排除。Contribution 1
+返回Step4，研究capacity-preserving geometry-conditioned coefficient generation，不继续PAF width/epoch tuning。
+
 ### Contribution 2 Candidate: Measure-Induced Projective Risk
 
 SC2保留`PIR` slot ID，formal objective收紧为`MIPR`。raw horizon measure的exact risk为
@@ -254,6 +264,8 @@ Step4，不以训练性能包装RGNB。
     no-go限制；只进入Step6 generator design，method implementation仍false。
 15. PLGO Step6的PAF tensor/rank gate通过；external primitive overlap不再自动否决task-specific贡献，但
     B11/B14要求先完成D7 attribution。当前conditional pass；D7前不实现forecast method。
+16. D7 geometry gate通过但free-control gate失败；exact PAF v1关闭为method candidate，RGNB geometry evidence
+    保留并返回Step4 capacity-preserving redesign。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
 generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成
@@ -284,6 +296,7 @@ loss 或更多 tuning 来掩盖失败。
 - `analysis/stage_c_sc1_step4_projective_local_global_audit_20260714/source_informed_audit.md`
 - `analysis/stage_c_sc1_plgo_step5_theory_20260714/step5_theory_feasibility.md`
 - `analysis/stage_c_sc1_plgo_step6_design_20260714/step6_design_gate.md`
+- `analysis/stage_c_sc1_d7_descriptor_sufficiency_20260714/research_interpretation.md`
 - `Papers/stage-c-external-decoder-objective-audit.md`
 - `docs/experiments/stage-c-five-dataset-validation-policy.md`
 - `docs/code-explanation/stage-c-pmfo-rct-step7a.md`

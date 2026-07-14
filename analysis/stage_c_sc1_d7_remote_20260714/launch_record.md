@@ -11,6 +11,8 @@
 | `output_root` | `/home/yingch/exp_outputs/r-2026-fatst/stage_c_sc1_d7_descriptor_sufficiency` |
 | `matrix` | 5 datasets × 3 frozen checkpoints × 7 arms = 105 fits |
 | `test_usage` | false |
+| `finish_time` | 2026-07-14T17:01:31+08:00 |
+| `completion` | 105/105 fits；5/5 dataset artifacts |
 
 GPU preflight：GPU0/1/2均为RTX 3090，启动前memory used=`15 MiB`、free=`24110 MiB`、utilization=`0%`。
 
@@ -28,3 +30,7 @@ GPU_IDS="0 1 2" bash scripts/remote/run_stage_c_sc1_d7_descriptor_sufficiency.sh
 
 启动后首轮观测GPU0/1/2 memory used约`441/438/456 MiB`，utilization约`17%/15%/26%`；三个首发dataset
 workers均已存在。
+
+全部workers正常完成，GPU释放。远端raw analyzer给出method hard-gate fail；本地同步后按failure-attribution
+rule拆分为geometry gate pass、free-control gate fail，最终decision为
+`descriptor_geometry_supported_paf_not_ready_return_step4`。详见同阶段`research_interpretation.md`。

@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Step 3 SC1-D7 attribution，feeding Step 6 closure before Step 7 |
-| `active_question` | true RGNB descriptors是否超越permuted/random descriptor controls？ |
-| `active_candidates` | `SC1-PLGO-PAF conditional`；`SC1-D7 proposed`；`SC2-MIPR` held |
+| `current_step` | D7 Step 9-10 complete；return Step 4 capacity-preserving geometry redesign |
+| `active_question` | 如何同时保留free atom-table expressiveness并利用已验证的RGNB geometry？ |
+| `active_candidates` | `SC1-PLGO redesign`；`SC1-D7 partial pass`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | PLGO Step6 conditional narrative pass；D7 protocol ready |
+| `active_protocol` | D7 completed；new Step4 source/function/control audit pending |
 | `method_implementation` | `PMFO-RCT v1` frozen as failed evidence；new implementation unauthorized |
-| `rollback_point` | D7 fail -> return Step 4 or close descriptor-generator route；RGNB可保留component |
+| `rollback_point` | capacity-preserving geometry无法隔离 -> RGNB保留component，重审Contribution 1 |
 
 ## Completed Foundation
 
@@ -170,9 +170,10 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 
 ## Next Concrete Action
 
-`SC1-D7-RGNB-descriptor-sufficiency` local implementation gate已通过，并于2026-07-14T16:58:44+08:00在
-3090 GPU0/1/2启动五datasets × 三checkpoints × 七arms共105 fits。完成后同步artifacts并执行Step 9
-hard-gate analysis。禁止读取test、实现forecast method、atom retrieval、Encoder、MoE或MIPR。
+`SC1-D7-RGNB-descriptor-sufficiency`已完成105/105 fits与本地独立复算：geometry gate通过，compact/matched
+GEO相对controls为+13.80%/+12.84%、均5/5 datasets；但相对free-M0为-37.38%/-39.10%，method-readiness
+失败。decision=`descriptor_geometry_supported_paf_not_ready_return_step4`。下一步只做capacity-preserving
+geometry integration的Step4 source/function/control audit，禁止直接实现或调PAF width/epoch。
 
 ## SC1-PLGO Step 6 Design Gate: Conditional Pass, D7 Required
 

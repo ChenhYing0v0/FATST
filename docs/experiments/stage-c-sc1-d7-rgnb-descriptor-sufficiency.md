@@ -114,7 +114,13 @@ matched model只靠memorizing 720 descriptors。
 
 ## Decision Rule
 
-- all gates pass：`descriptor_sufficiency_supported_return_step6_freeze`；
-- otherwise：`descriptor_sufficiency_not_supported_close_paf`。
+- invariants fail：`diagnostic_invalid_for_direction_rejection`；
+- geometry gates与free-control gate均pass：`descriptor_sufficiency_supported_return_step6_freeze`；
+- geometry gates pass但free-control fail：
+  `descriptor_geometry_supported_paf_not_ready_return_step4`；
+- geometry gates fail：`descriptor_sufficiency_not_supported_close_paf`。
+
+该分层不改变预注册threshold或method hard gate，只执行项目强制failure attribution：free-control失败不能覆盖
+GEO相对PERM/RANDOM已成立的geometry evidence。
 
 无论结果如何，D7都不授权future-unit retrieval、Encoder replacement、MoE或SC2-MIPR。

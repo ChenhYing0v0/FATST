@@ -65,6 +65,10 @@ prediction = alpha @ Q^T -> [N,720]
 | `d7_dataset_summary.csv` | 每dataset/width的三checkpoint方向与macro effect |
 | `d7_summary.json` | completeness、numeric、freeze、parameter、descriptor、projectivity与hard-gate decision |
 
+Analyzer将decision拆为三层且不移动任何预注册threshold：`geometry_gate`只判断GEO是否超过PERM/RANDOM，
+`free_control_gate`判断matched GEO是否接近free-M0，二者共同构成`method_readiness_gate`。这样free-control
+失败不会错误覆盖已经成立的geometry attribution。
+
 ## Code-Theory Consistency
 
 - intended theory：canonical RGNB geometry应对coefficient-row parameterization提供forecast-relevant inductive
