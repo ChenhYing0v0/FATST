@@ -8,6 +8,7 @@
 - `stage-c-five-profile-extension-pipeline.md`: ETTh1/ETTm2 validation-only profile calibration的
   training/artifact flow、统计量与freeze boundary。
 - `stage-c-sc1-d2-diagnostic-pipeline.md`: frozen-memory probes、dynamic memory width、split与artifact统计。
+- `stage-c-sc1-d3-crossed-diagnostic.md`: missing factorial cell worker、15-unit aggregation、gate与remote flow。
 
 下一次 model或diagnostic code 更新必须在本目录新增对应说明，并按 tensor/artifact flow定义 shape、统计列与
 code-theory consistency。历史说明已移入 `docs/archive/pre-stage-c-reset-20260713/code-explanation/`。

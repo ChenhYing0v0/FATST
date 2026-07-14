@@ -9,7 +9,7 @@
 | `active_question` | balanced interval basis优势是独立geometry main effect，还是basis-group interaction/structured regularization？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` |
-| `active_candidates` | no paper-core SC1 candidate；`SC1-D2 closed_formal_fail`；`SC1-D3 proposed_diagnostic`；`SC2-MIPR` held |
+| `active_candidates` | no paper-core SC1 candidate；`SC1-D2 closed_formal_fail`；`SC1-D3 launch_ready_diagnostic`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `stage_exit` | 两项分别过 narrative/effectiveness gate，`2x2` joint gate显示独立主效应与联合收益 |
 | `stage_rollback` | problem/novelty不跨 dataset -> Step 2；禁止直接堆叠 method |
@@ -19,9 +19,9 @@
 | Field | Content |
 | --- | --- |
 | `current_11_step` | Step 2 rollback；SC1 problem reformulation |
-| `current_candidate` | `SC1-D3 crossed_basis_group diagnostic proposed`；`SC2-MIPR` held |
+| `current_candidate` | `SC1-D3 crossed_basis_group diagnostic launch ready`；`SC2-MIPR` held |
 | `latest_decision` | D2 formal5：basis +3.0635% pass；group +0.0947% fail；rollback Step 2 |
-| `next_required_action` | 设计并预注册D3缺失factorial cell；implementation/training仍未授权 |
+| `next_required_action` | 本地gate验证后运行D3的45个missing-cell diagnostic fits；method training仍未授权 |
 | `method_training_authorized` | `false`；D2只可作为diagnostic，new SC1需重新通过Step 4-6 |
 | `rollback_point` | Step 2/3；不改Encoder、不叠加nonlinearity、MIPR或MoE来挽救FPMO-DS |
 
@@ -33,8 +33,8 @@
 | `problem` | depth grouping不成立后，basis geometry是否为独立main effect |
 | `existence_evidence` | basis vs random +3.0635%、5/5 datasets；group vs random-group仅+0.0947%、2/5 |
 | `idea` | none paper-core；proposed D3补random basis × random group缺失cell |
-| `theory_check` | D2 invariants pass；当前不是完整2×2 factorial，basis main effect仍未识别 |
-| `design` | D3需先冻结paired factorial estimator与gate；预计45 diagnostic fits |
+| `theory_check` | 2×2 log-error estimand已冻结；structure seeds先聚合，避免pseudo-replication |
+| `design` | D3只补RR cell；45 fits形成15个dataset-checkpoint primary units |
 | `narrative_gate` | `SC1-FPMO-DS rejected_by_narrative_gate`；SC2 held |
 | `effectiveness_gate` | v1 fail：macro vs A6 `-1.0955%`，worst ETTm1 `-2.0844%` |
 | `artifacts` | D1-v2、Step4-6 closure、D2 core3/formal5、five-profile contract、baseline report |
@@ -68,7 +68,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC1-FPMO-DA` | `control_only` | direct atom full-affine head隔离capacity/orthogonal coordinate effect | not required | matched function-class control | mandatory Step6 dense-equivalence control |
 | `SC1-FPMO-DS` | `rejected_by_narrative_gate` | independent scale factors提供native history-scale maps并包含A6 | fail：与DA同为full affine，factorization不依赖真实scale coordinates | not started | controls/evidence only；不进入Step 7 |
 | `SC1-D2` | `closed_formal_fail` | true-scale nonlinear grouping是否超越rank expansion、generic nonlinearity与random grouping | not a method gate | basis gate pass；random-group mandatory gate fail | rollback Step 2；不得实现method |
-| `SC1-D3` | `proposed_diagnostic` | basis geometry是否为独立main effect而非basis-group interaction | not applicable | missing factorial cell未测试 | Step 2/3 protocol design only |
+| `SC1-D3` | `launch_ready_diagnostic` | basis geometry是否为独立main effect而非basis-group interaction | not applicable | local worker/analyzer smoke pass；remote pending | run 45 diagnostic fits；pass也只返回Step 4 |
 | `SC2-MIPR` | `held` | measure-induced block metric去除decoder scales之间的cross coupling | pass for L2；log measure primary，benchmark weak | log off-block `0.205154`；benchmark `0.002480`；performance未测 | 等新SC1 problem/method contract；不得先实现 |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
@@ -123,7 +123,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-D2 rank/nonlinearity/scale diagnostic | `completed_formal_fail` | formal5 165/165；basis signal retained，depth grouping rejected |
 | ETTh1/ETTm2 natural profile calibration | `completed_frozen` | 14/14 validation-only；ETTh1 P24/D64，ETTm2 P48/D64；stability pass |
 | SC1-D2 formal5 | `completed_rollback` | `scale_alignment_not_supported_reformulate_step2` |
-| SC1-D3 crossed basis-group diagnostic | `proposed_next` | 先做Step 2/3 estimator/gate audit；不得直接launch或升为method |
+| SC1-D3 crossed basis-group diagnostic | `launch_ready` | estimator/gate/config已预注册；worker/analyzer/config/bash checks pass；launch 45 diagnostic fits |
 
 ## Paper Mainline Sync Log
 

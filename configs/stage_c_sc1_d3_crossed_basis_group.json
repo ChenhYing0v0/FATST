@@ -1,0 +1,58 @@
+{
+  "candidate": "SC1-D3",
+  "role": "diagnostic_only",
+  "current_step": "Step 2/3",
+  "question": "Is the balanced-interval basis advantage an independent main effect rather than a basis-group interaction?",
+  "datasets": [
+    "ETTh1",
+    "ETTh2",
+    "ETTm1",
+    "ETTm2",
+    "Weather"
+  ],
+  "checkpoint_seeds": [2021, 2022, 2023],
+  "structure_seeds": [3101, 3102, 3103],
+  "factorial_cells": {
+    "true_basis_true_group": "true_scale_grouped",
+    "true_basis_random_group": "random_group_s{structure_seed}",
+    "random_basis_true_group": "random_basis_s{structure_seed}",
+    "random_basis_random_group": "random_basis_random_group_s{structure_seed}"
+  },
+  "missing_cell_fits": 45,
+  "probe_contract": {
+    "series_length": 720,
+    "group_sizes": [1, 1, 2, 4, 8, 16, 32, 64, 128, 256, 208],
+    "group_hidden": 32,
+    "data_seed": 20260713,
+    "probe_seed": 20260714,
+    "train_batches": 16,
+    "val_batches": 8,
+    "fit_fraction": 0.8,
+    "batch_size": 1024,
+    "max_epochs": 120,
+    "patience": 15,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "official_validation_for_early_stopping": false,
+    "uses_test_split": false,
+    "forecast_model_updated": false
+  },
+  "estimand": {
+    "outcome": "log evaluation-space MSE",
+    "primary_unit": "dataset x checkpoint_seed after averaging three paired structure seeds",
+    "basis_main_effect": "0.5 * (log(RT/TT) + log(RR/TR))",
+    "basis_effect_true_group": "log(RT/TT)",
+    "basis_effect_random_group": "log(RR/TR)",
+    "interaction": "log(RT/TT) - log(RR/TR)",
+    "positive_direction": "lower error for true basis"
+  },
+  "gate": {
+    "minimum_macro_mse_reduction": 0.005,
+    "minimum_datasets_with_two_of_three_positive_checkpoints": 3,
+    "minimum_macro_mae_reduction": -0.0025,
+    "minimum_interaction_not_dominant_datasets": 3,
+    "conditional_basis_effects_must_each_pass": true
+  },
+  "authorization_if_passed": "return_to_step4_only",
+  "method_training_authorized": false
+}
