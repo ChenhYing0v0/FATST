@@ -9,6 +9,8 @@
   exact-balancing diagnostic；
 - `stage-c-sc1-d5-conditioning-locality-frontier-diagnostic.md`: 当前Step 2/3 local conditioning headroom
   diagnostic；只作problem existence，不是method training。
+- `stage-c-sc1-d6-horizon-support-interaction-confirmation.md`: 当前Step 2/3 disjoint-validation confirmation；
+  检验short/long horizon的support-scale crossing。
 
 完整结果写入 `analysis/`；ledger 只保留 decision、status、next action 与链接。Phase0-Phase5 protocols
 及已完成/被取代的 StageC calibration protocols 已移入

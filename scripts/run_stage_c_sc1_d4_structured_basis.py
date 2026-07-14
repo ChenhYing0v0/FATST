@@ -72,6 +72,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--train-batches", type=int, default=16)
     parser.add_argument("--val-batches", type=int, default=8)
+    parser.add_argument("--val-offset-batches", type=int, default=0)
     parser.add_argument("--fit-fraction", type=float, default=0.8)
     parser.add_argument("--batch-size", type=int, default=1024)
     parser.add_argument("--max-epochs", type=int, default=120)
@@ -293,6 +294,7 @@ def validate_config(config: dict[str, Any], args: argparse.Namespace) -> None:
         "probe_seed": PROBE_SEED,
         "train_batches": args.train_batches,
         "val_batches": args.val_batches,
+        "val_offset_batches": args.val_offset_batches,
         "fit_fraction": args.fit_fraction,
         "batch_size": args.batch_size,
         "max_epochs": args.max_epochs,
@@ -300,7 +302,11 @@ def validate_config(config: dict[str, Any], args: argparse.Namespace) -> None:
         "learning_rate": args.learning_rate,
         "weight_decay": args.weight_decay,
     }
-    if {key: probe[key] for key in expected} != expected:
+    observed = {
+        key: probe.get(key, 0) if key == "val_offset_batches" else probe[key]
+        for key in expected
+    }
+    if observed != expected:
         raise ValueError("runtime arguments do not match D4 preregistration")
 
 
@@ -315,7 +321,13 @@ def run_checkpoint_seed(
     )
     device = official_args.device
     train_rows = collect_rows(model, train_loader, device, args.train_batches)
-    validation = collect_rows(model, val_loader, device, args.val_batches)
+    validation = collect_rows(
+        model,
+        val_loader,
+        device,
+        args.val_batches,
+        start_batch=args.val_offset_batches,
+    )
     fit, holdout = split_fit_holdout(train_rows, args.fit_fraction)
     fit, holdout, validation = standardize_features(fit, holdout, validation)
     input_width = int(fit["features"].shape[1])
@@ -439,6 +451,7 @@ def run_checkpoint_seed(
         "fit_rows": int(fit["features"].shape[0]),
         "holdout_rows": int(holdout["features"].shape[0]),
         "validation_rows": int(validation["features"].shape[0]),
+        "validation_batch_offset": args.val_offset_batches,
         "basis_orthogonality_max_abs": max_orthogonality_gap,
         "uses_test_split": False,
         "forecast_model_updated": False,

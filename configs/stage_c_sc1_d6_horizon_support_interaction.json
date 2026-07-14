@@ -1,0 +1,50 @@
+{
+  "candidate": "SC1-D6",
+  "role": "diagnostic_only_confirmation",
+  "current_step": "Step 2/3",
+  "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"],
+  "checkpoint_seeds": [2021, 2022, 2023],
+  "structure_seeds": [3101, 3102, 3103],
+  "horizons": [48, 96, 144, 192, 288, 336, 512, 720],
+  "short_horizons": [48, 96, 144],
+  "long_horizons": [336, 512, 720],
+  "basis_families": [
+    "balanced_interval",
+    "dct2",
+    "block_dct2_b48",
+    "block_dct2_b96",
+    "block_dct2_b144"
+  ],
+  "candidate_family": "block_dct2_b144",
+  "fit_count": 225,
+  "probe_contract": {
+    "series_length": 720,
+    "group_sizes": [1, 1, 2, 4, 8, 16, 32, 64, 128, 256, 208],
+    "group_hidden": 32,
+    "data_seed": 20260713,
+    "probe_seed": 20260714,
+    "train_batches": 16,
+    "val_batches": 8,
+    "val_offset_batches": 8,
+    "fit_fraction": 0.8,
+    "batch_size": 1024,
+    "max_epochs": 120,
+    "patience": 15,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "official_validation_for_early_stopping": false,
+    "uses_test_split": false,
+    "forecast_model_updated": false
+  },
+  "gate": {
+    "minimum_short_reduction_vs_dct": 0.005,
+    "maximum_long_reduction_vs_dct": -0.005,
+    "minimum_short_reduction_vs_balanced": 0.005,
+    "minimum_crossed_primary_units": 9,
+    "minimum_directional_datasets": 3,
+    "short_mae_guard_vs_dct": 0.0,
+    "maximum_long_mae_reduction_vs_dct": 0.0
+  },
+  "authorization_if_passed": "return_step4_horizon_support_operator_audit",
+  "method_training_authorized": false
+}

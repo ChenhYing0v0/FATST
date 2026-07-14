@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage` | `StageC-UVHF` |
 | `current_step` | rollback Step 2/3；SC1-CLG problem formulation |
-| `active_question` | local-support orthogonal family能否缩小DCT/PCA conditioning gap并保留native prefix support？ |
-| `active_candidates` | no paper-core SC1；`SC1-D5 diagnostic_only launch_ready`；`SC2-MIPR` held |
+| `active_question` | b144 local support的short-positive/long-negative interaction能否跨validation window复现？ |
+| `active_candidates` | no paper-core SC1；`SC1-D6 diagnostic_only launch_ready`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `docs/experiments/stage-c-sc1-d5-conditioning-locality-frontier-diagnostic.md` |
+| `active_protocol` | `docs/experiments/stage-c-sc1-d6-horizon-support-interaction-confirmation.md` |
 | `method_implementation` | `PMFO-RCT v1` frozen as failed evidence；new implementation unauthorized |
 | `rollback_point` | D4已触发Step 2/3；若local family无Pareto headroom，basis只保留为component |
 
@@ -156,10 +156,10 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 
 ## Next Concrete Action
 
-返回Step 2/3建立`SC1-CLG`（Conditioning-Locality Gap）。D5已预注册10个block-local DCT/PCA bases与3个
-controls，通过fit-only covariance在`H48 active atoms <= 96`约束下选择family，再以五dataset、三checkpoints、
-八horizons检查是否改善balanced且接近global DCT/PCA。585-fit diagnostic通过才返回Step 4审计learned
-lifting/wavelet packet/local operator；Encoder、MoE、MIPR与method implementation继续冻结。
+D5的fit-only b96 selector未过primary gate，但pre-registered `block_dct2_b144`相对global DCT在short horizons
+约`+1.05%`、long horizons约`-1.15%`，11/15 primary units发生crossing。由于b144被`H48 active<=96`设计
+排除，本轮不能作方向否决。D6将在未使用的validation batches 8-15固定复验该interaction；225 fits通过才
+返回Step 4审计local/global support operator。Encoder、MoE、MIPR与method implementation继续冻结。
 
 ## SC1-D2 Core3 Precheck: Partial
 

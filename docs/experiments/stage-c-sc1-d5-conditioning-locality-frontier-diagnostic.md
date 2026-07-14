@@ -6,12 +6,12 @@
 | --- | --- |
 | `candidate` | `SC1-D5` |
 | `role` | `diagnostic_only` |
-| `current_step` | Step 2/3 problem existence |
+| `current_step` | Step 2/3 complete；direction-level rejection invalid，D6 confirmation next |
 | `problem` | local-support orthogonal family能否缩小DCT/PCA conditioning gap，同时保留small prefix active-set？ |
 | `suite` | 5 datasets × 3 checkpoints × 3 grouping seeds × 13 bases = 585 fits |
 | `test_used` | false |
 | `forecast_model_updated` | false |
-| `method_training_authorized` | false |
+| `method_training_authorized` | false；primary gate fail，b144 crossing requires D6 |
 
 ## 1. Why This Diagnostic Matters
 
@@ -54,6 +54,10 @@ $\log(E_{control}/E_{selected})$。输出的每个CSV定义如下：
 - `d5_selected_families.csv`：只由fit geometry得到的选择；
 - `d5_selected_comparisons.csv`：selected local对balanced/DCT/PCA的逐checkpoint-horizon log effect；
 - `d5_macro_comparisons.csv`：上述effects在15个primary units上的macro；
+- `d5_local_family_comparisons.csv`：所有预注册local families对三controls的逐unit-horizon描述性effects；
+- `d5_local_family_summary.csv`：上述family effects的macro与cross-dataset方向，仅用于检查selector是否掩盖反例；
+- `d5_local_family_dataset_summary.csv` / `d5_local_family_horizon_summary.csv`：全部local families的
+  dataset与horizon一致性审计；
 - `d5_summary.json`：gate与decision。
 
 ## 4. Preregistered Gate

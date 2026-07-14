@@ -339,6 +339,7 @@ def collect_rows(
     loader: Any,
     device: torch.device,
     max_batches: int,
+    start_batch: int = 0,
 ) -> dict[str, torch.Tensor]:
     features: list[torch.Tensor] = []
     targets: list[torch.Tensor] = []
@@ -348,7 +349,9 @@ def collect_rows(
     sample_cursor = 0
     with torch.no_grad():
         for batch_index, (batch_x, batch_y, _batch_x_mark, _batch_y_mark) in enumerate(loader):
-            if batch_index >= max_batches:
+            if batch_index < start_batch:
+                continue
+            if batch_index >= start_batch + max_batches:
                 break
             batch_x = batch_x.float().to(device)
             batch_y = batch_y.float().to(device)

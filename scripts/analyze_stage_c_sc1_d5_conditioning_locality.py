@@ -186,6 +186,131 @@ def compare_selected(
     return outputs
 
 
+def compare_local_families(
+    families: list[dict[str, Any]],
+    local_families: list[str],
+    horizons: list[int],
+    controls: tuple[str, ...] = ("balanced_interval", "dct2", "pca_fit"),
+) -> list[dict[str, Any]]:
+    index = {
+        (row["dataset"], int(row["checkpoint_seed"]), row["family"]): row
+        for row in families
+    }
+    outputs = []
+    primary_units = sorted({(row["dataset"], int(row["checkpoint_seed"])) for row in families})
+    for dataset, checkpoint_seed in primary_units:
+        for candidate_family in local_families:
+            candidate = index[(dataset, checkpoint_seed, candidate_family)]
+            for control_family in controls:
+                control = index[(dataset, checkpoint_seed, control_family)]
+                for horizon in horizons:
+                    mse_log_effect = math.log(
+                        float(control[f"mean_val_mse_h{horizon}"])
+                        / float(candidate[f"mean_val_mse_h{horizon}"])
+                    )
+                    mae_log_effect = math.log(
+                        float(control[f"mean_val_mae_h{horizon}"])
+                        / float(candidate[f"mean_val_mae_h{horizon}"])
+                    )
+                    outputs.append(
+                        {
+                            "dataset": dataset,
+                            "checkpoint_seed": checkpoint_seed,
+                            "candidate_family": candidate_family,
+                            "control_family": control_family,
+                            "horizon": horizon,
+                            "mse_log_effect": mse_log_effect,
+                            "mse_reduction": reduction(mse_log_effect),
+                            "mae_log_effect": mae_log_effect,
+                            "mae_reduction": reduction(mae_log_effect),
+                        }
+                    )
+    return outputs
+
+
+def summarize_local_families(comparisons: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    grouped: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    for row in comparisons:
+        grouped[(row["candidate_family"], row["control_family"])].append(row)
+    outputs = []
+    for (candidate, control), rows in sorted(grouped.items()):
+        dataset_checkpoint: dict[tuple[str, int], list[float]] = defaultdict(list)
+        for row in rows:
+            dataset_checkpoint[(row["dataset"], int(row["checkpoint_seed"]))].append(
+                float(row["mse_log_effect"])
+            )
+        positive_datasets = 0
+        for dataset in {key[0] for key in dataset_checkpoint}:
+            checkpoint_effects = [
+                mean(values)
+                for (row_dataset, _seed), values in dataset_checkpoint.items()
+                if row_dataset == dataset
+            ]
+            positive_datasets += sum(value > 0.0 for value in checkpoint_effects) >= 2
+        mse = mean([float(row["mse_log_effect"]) for row in rows])
+        mae = mean([float(row["mae_log_effect"]) for row in rows])
+        outputs.append(
+            {
+                "candidate_family": candidate,
+                "control_family": control,
+                "primary_horizon_units": len(rows),
+                "mse_reduction": reduction(mse),
+                "mae_reduction": reduction(mae),
+                "positive_datasets": positive_datasets,
+            }
+        )
+    return outputs
+
+
+def summarize_local_family_details(
+    comparisons: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    dataset_groups: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
+    horizon_groups: dict[tuple[str, str, int], list[dict[str, Any]]] = defaultdict(list)
+    for row in comparisons:
+        dataset_groups[
+            (row["candidate_family"], row["control_family"], row["dataset"])
+        ].append(row)
+        horizon_groups[
+            (row["candidate_family"], row["control_family"], int(row["horizon"]))
+        ].append(row)
+    dataset_outputs = []
+    for (candidate, control, dataset), rows in sorted(dataset_groups.items()):
+        checkpoint_groups: dict[int, list[float]] = defaultdict(list)
+        for row in rows:
+            checkpoint_groups[int(row["checkpoint_seed"])].append(
+                float(row["mse_log_effect"])
+            )
+        mse = mean([float(row["mse_log_effect"]) for row in rows])
+        mae = mean([float(row["mae_log_effect"]) for row in rows])
+        dataset_outputs.append(
+            {
+                "candidate_family": candidate,
+                "control_family": control,
+                "dataset": dataset,
+                "mse_reduction": reduction(mse),
+                "mae_reduction": reduction(mae),
+                "positive_checkpoints": sum(
+                    mean(values) > 0.0 for values in checkpoint_groups.values()
+                ),
+            }
+        )
+    horizon_outputs = []
+    for (candidate, control, horizon), rows in sorted(horizon_groups.items()):
+        mse = mean([float(row["mse_log_effect"]) for row in rows])
+        mae = mean([float(row["mae_log_effect"]) for row in rows])
+        horizon_outputs.append(
+            {
+                "candidate_family": candidate,
+                "control_family": control,
+                "horizon": horizon,
+                "mse_reduction": reduction(mse),
+                "mae_reduction": reduction(mae),
+            }
+        )
+    return dataset_outputs, horizon_outputs
+
+
 def macro_comparisons(comparisons: list[dict[str, Any]]) -> list[dict[str, Any]]:
     grouped: dict[tuple[str, int | str], list[dict[str, Any]]] = defaultdict(list)
     for row in comparisons:
@@ -426,7 +551,20 @@ def synthetic_smoke() -> None:
     }
     selections = select_local_families(geometries, config)
     comparisons = compare_selected(families, selections, horizons)
-    if len(families) != 4 or len(selections) != 1 or len(comparisons) != 6:
+    local_comparisons = compare_local_families(
+        families, config["local_basis_families"], horizons
+    )
+    local_summary = summarize_local_families(local_comparisons)
+    local_datasets, local_horizons = summarize_local_family_details(local_comparisons)
+    if (
+        len(families) != 4
+        or len(selections) != 1
+        or len(comparisons) != 6
+        or len(local_comparisons) != 6
+        or len(local_summary) != 3
+        or len(local_datasets) != 3
+        or len(local_horizons) != 6
+    ):
         raise RuntimeError("D5 synthetic aggregation counts changed")
     print("stage_c_sc1_d5_analyzer_synthetic_smoke=pass")
 
@@ -443,6 +581,11 @@ def main() -> None:
     geometries = summarize_checkpoint_geometry(geometry, horizons)
     selections = select_local_families(geometries, config)
     comparisons = compare_selected(families, selections, horizons)
+    local_comparisons = compare_local_families(
+        families, config["local_basis_families"], horizons
+    )
+    local_summary = summarize_local_families(local_comparisons)
+    local_datasets, local_horizons = summarize_local_family_details(local_comparisons)
     macros = macro_comparisons(comparisons)
     summary = build_summary(comparisons, selections, metadata, metrics, config)
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -451,6 +594,10 @@ def main() -> None:
     write_csv(args.output_dir / "d5_selected_families.csv", selections)
     write_csv(args.output_dir / "d5_selected_comparisons.csv", comparisons)
     write_csv(args.output_dir / "d5_macro_comparisons.csv", macros)
+    write_csv(args.output_dir / "d5_local_family_comparisons.csv", local_comparisons)
+    write_csv(args.output_dir / "d5_local_family_summary.csv", local_summary)
+    write_csv(args.output_dir / "d5_local_family_dataset_summary.csv", local_datasets)
+    write_csv(args.output_dir / "d5_local_family_horizon_summary.csv", local_horizons)
     (args.output_dir / "d5_summary.json").write_text(
         json.dumps(summary, indent=2, sort_keys=True), encoding="utf-8"
     )

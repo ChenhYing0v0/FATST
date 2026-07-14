@@ -1,0 +1,29 @@
+{
+  "authorization_if_passed": "return_step4_source_informed_method_design",
+  "candidate": "SC1-D5",
+  "decision": "local_family_headroom_not_supported_basis_component_only",
+  "global_conditioning_gate": {
+    "dct_gap_closure": 0.03759090670432011,
+    "noninferior_horizons_vs_dct": 5,
+    "pass": false,
+    "selected_vs_dct_mse_reduction": -0.008284433137931924,
+    "selected_vs_pca_mse_reduction": -0.014722878665364592
+  },
+  "headroom_gate": {
+    "pass": false,
+    "positive_datasets": 2,
+    "selected_vs_balanced_mae_reduction": -0.0010310942204787565,
+    "selected_vs_balanced_mse_reduction": 0.00032219822526668995
+  },
+  "invariant_gate": {
+    "fit_count": 585,
+    "metadata_count": 15,
+    "pass": true,
+    "selection_count": 15
+  },
+  "method_training_authorized": false,
+  "role": "diagnostic_only",
+  "selected_family_counts": {
+    "block_pca_fit_b96": 15
+  }
+}

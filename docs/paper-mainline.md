@@ -13,7 +13,7 @@
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | Contribution 1 slot open；SC1-D5 problem diagnostic launch-ready；no new method；SC2-MIPR held |
+| `paper_core_status` | Contribution 1 slot open；SC1-D6 interaction confirmation launch-ready；no new method；SC2-MIPR held |
 
 ## Research Thesis
 
@@ -108,6 +108,12 @@ orthogonal family能否在conditioning与prefix sparsity之间形成稳定Pareto
 DCT/PCA families选择`H48 active atoms <= 96`的basis，并对balanced、global DCT与global PCA做五dataset、
 三checkpoint、八horizon比较。D5是problem diagnostic，不是新decoder候选。
 
+[Diagnostic] D5 primary selector在15/15 units选择b96 PCA，但相对balanced仅`+0.0322%`，primary gate fail。
+然而预注册的`block_dct2_b144`相对global DCT在short horizons约`+1.05%`、long horizons约`-1.15%`，
+11/15 primary units同时short-positive与long-negative；其H48 active atoms为144而非720。因此按failure
+attribution rule，D5只能否定`<=96 + offdiag selector`，不能否定local/global co-design。当前由D6在未使用的
+validation batches 8-15确认support-scale × horizon interaction；确认前仍无paper-core method。
+
 ### Contribution 2 Candidate: Measure-Induced Projective Risk
 
 SC2保留`PIR` slot ID，formal objective收紧为`MIPR`。raw horizon measure的exact risk为
@@ -192,6 +198,8 @@ orthogonal/group controls同样成立；requested prefix虽可少生成inactive 
     prior art完成Step 4 mechanism audit；
 11. SC1-D4确认locality但由DCT/PCA解释accuracy，故回Step 2/3诊断SC1-CLG；只有新SC1重新通过Step 4-6并完成screening后，才恢复MIPR、
     `2x2` factorial与3-seed full matrix；第二 backbone与official native baselines最后做generality gate。
+12. SC1-D5 primary selector失败但b144出现short/long crossed interaction；D6使用disjoint validation window确认，
+    pass只返回Step 4，不直接实现operator。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
 generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成
@@ -217,6 +225,7 @@ loss 或更多 tuning 来掩盖失败。
 - `analysis/stage_c_step5_fpmo_theory_20260713/step5_theory_feasibility.md`
 - `analysis/stage_c_step6_fpmo_narrative_control_20260713/step6_narrative_control_gate.md`
 - `analysis/stage_c_sc1_d4_structured_basis_20260714/research_interpretation.md`
+- `analysis/stage_c_sc1_d5_conditioning_locality_20260714/research_interpretation.md`
 - `Papers/stage-c-external-decoder-objective-audit.md`
 - `docs/experiments/stage-c-five-dataset-validation-policy.md`
 - `docs/code-explanation/stage-c-pmfo-rct-step7a.md`

@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | decoder/operator 与 training principle 两项相互支撑的 paper-core innovations |
-| `active_question` | local-support orthogonal family能否缩小DCT/PCA揭示的conditioning gap，同时保持native prefix support？ |
+| `active_question` | local support为何在short horizons优于global DCT、long horizons反向，crossing能否跨validation window复现？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | frozen `A6-LBF-natural-baseline` |
-| `active_candidates` | no paper-core SC1 candidate；`SC1-D5 diagnostic_only launch_ready`；`SC2-MIPR` held |
+| `active_candidates` | no paper-core SC1 candidate；`SC1-D6 diagnostic_only launch_ready`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `stage_exit` | 两项分别过 narrative/effectiveness gate，`2x2` joint gate显示独立主效应与联合收益 |
 | `stage_rollback` | problem/novelty不跨 dataset -> Step 2；禁止直接堆叠 method |
@@ -19,22 +19,22 @@
 | Field | Content |
 | --- | --- |
 | `current_11_step` | rollback Step 2/3；`SC1-CLG` problem formulation |
-| `current_candidate` | `SC1-D5 diagnostic_only launch_ready`；no paper-core SC1；`SC2-MIPR` held |
-| `latest_decision` | D4：locality pass，但DCT/PCA分别领先0.8609%/1.5050%，exact balance specificity fail |
-| `next_required_action` | commit/push后在3090运行D5 585-fit diagnostic；不得直接实现method |
-| `method_training_authorized` | `false`；D5只可作为diagnostic，new SC1需重新通过Step 4-6 |
-| `rollback_point` | 已因standard bases解释accuracy返回Step 2/3；若local family不存在Pareto headroom，basis降为component |
+| `current_candidate` | `SC1-D6 diagnostic_only launch_ready`；no paper-core SC1；`SC2-MIPR` held |
+| `latest_decision` | D5 primary fail；但b144 vs DCT short +1.05%、long -1.15%，11/15 units crossing，方向不可否决 |
+| `next_required_action` | commit/push后在validation batches 8-15运行D6 225-fit confirmation |
+| `method_training_authorized` | `false`；D6只可确认problem，new SC1需重新通过Step 4-6 |
+| `rollback_point` | D6 fail -> D5 crossing降为exploratory并留在Step 2；D6 pass -> return Step 4 only |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
 | `current_step` | rollback Step 2/3；conditioning-locality problem diagnosis |
-| `problem` | prefix-local support与coefficient decorrelation/energy compaction之间是否存在可改进的Pareto gap |
-| `existence_evidence` | locality +1.6324% vs permutation；但balanced落后DCT 0.8609%、PCA 1.5050% |
-| `idea` | `SC1-CLG`：先搜索local orthogonal family的conditioning headroom，尚非method candidate |
-| `theory_check` | exact midpoint balancing不特异；component novelty可保留；combined operator novelty待重新审计 |
-| `design` | D5：balanced/DCT/PCA + 10 block-local bases，fit-only geometry selection，585 frozen-memory fits |
+| `problem` | single fixed support scale无法同时服务short-prefix locality与long-domain global coherence |
+| `existence_evidence` | D5 b144 vs DCT：short +1.05%、long -1.15%；11/15 crossed units；尚属same-window exploratory |
+| `idea` | 暂无method；先确认horizon-support crossed interaction，不读取horizon ID |
+| `theory_check` | D5 selector design fail；b144 pre-registered arm阻止方向否决；D6需disjoint-window confirmation |
+| `design` | D6：validation batches8-15，balanced/global DCT/block DCT b48/b96/b144，225 fits |
 | `narrative_gate` | no paper-core SC1；`SC1-FPMO-DS` rejected；SC2 held |
 | `effectiveness_gate` | v1 fail：macro vs A6 `-1.0955%`，worst ETTm1 `-2.0844%` |
 | `artifacts` | D1-v2、Step4-6 closure、D2/D3、D4 structured-basis report、five-profile contract |
@@ -70,8 +70,9 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC1-D2` | `closed_formal_fail` | true-scale nonlinear grouping是否超越rank expansion、generic nonlinearity与random grouping | not a method gate | basis gate pass；random-group mandatory gate fail | rollback Step 2；不得实现method |
 | `SC1-D3` | `diagnostic_only` | basis geometry是否为独立main effect而非basis-group interaction | not required | pass：main +2.9174%；both conditionals + 5/5 interaction guard | evidence complete；return Step 4 only |
 | `SC1-D4` | `diagnostic_only_closed` | balanced basis是否超越standard bases，收益来自locality还是exact balancing | not required | locality pass；global noninferiority与balance specificity fail | return Step 2/3；exact balanced basis不升method |
-| `SC1-CLG` | `problem_under_diagnostic` | local-support orthogonal family是否存在接近DCT/PCA conditioning的Pareto headroom | not required | D5 offline existence diagnostic pending | D5 pass才授权返回Step 4 |
-| `SC1-D5` | `diagnostic_only_launch_ready` | fit-only selected local DCT/PCA能否改善balanced并接近global controls | not required | 585-fit preregistered gates | commit/push后remote run |
+| `SC1-CLG` | `reformulated_problem` | local prefix synthesis与long-domain coherence是否存在horizon-dependent support tradeoff | not required | D6 confirmation pending | D6 pass才授权返回Step 4 |
+| `SC1-D5` | `diagnostic_only_design_fault` | fit-only selected local DCT/PCA能否改善balanced并接近global controls | not required | primary fail；b144 arm出现11/15 crossing | direction rejection invalid；design D6 |
+| `SC1-D6` | `diagnostic_only_launch_ready` | b144 short-positive/long-negative interaction能否在disjoint validation window复现 | not required | 225-fit confirmation pending | commit/push后remote run |
 | `SC2-MIPR` | `held` | measure-induced block metric去除decoder scales之间的cross coupling | pass for L2；log measure primary，benchmark weak | log off-block `0.205154`；benchmark `0.002480`；performance未测 | 等新SC1 problem/method contract；不得先实现 |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
@@ -109,6 +110,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-D2 formal5 | 5 datasets × 3 checkpoints × 11 arms | basis +3.0635% 5/5 pass；group +0.0947% 2/5 fail；165/165 + invariants pass | exact depth-grouping hypothesis false；rollback Step 2 | `analysis/stage_c_sc1_d2_formal5_20260714/research_interpretation.md` |
 | SC1-D3 crossed diagnostic | 5 datasets × 3 checkpoints × 3 missing-cell controls | basis main +2.9174%；true/random-group +3.1164%/+2.7181%；interaction 5/5 pass | independent probe main effect supported；return Step 4，not method | `analysis/stage_c_sc1_d3_crossed_20260714/research_interpretation.md` |
 | SC1-D4 structured-basis diagnostic | 5 datasets × 3 checkpoints × 3 grouping seeds × 7 bases | locality +1.6324% pass；balanced vs DCT/PCA -0.8609%/-1.5050%；vs random interval +0.2742% fail | `standard_structured_basis_explains_gain_return_step2`；建立SC1-CLG问题 | `analysis/stage_c_sc1_d4_structured_basis_20260714/research_interpretation.md` |
+| SC1-D5 conditioning-locality frontier | 5 datasets × 3 checkpoints × 3 grouping seeds × 13 bases | primary b96 selector fail；b144 vs DCT short +1.05%、long -1.15%，11/15 crossing | `design_fault_suspected`；不可方向否决；D6 disjoint confirmation | `analysis/stage_c_sc1_d5_conditioning_locality_20260714/research_interpretation.md` |
 
 ## Pending Tasks
 
@@ -131,8 +133,9 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-D3 crossed basis-group diagnostic | `completed_pass` | 45/45；15 primary units；all gates pass；只授权Step 4 source-informed audit |
 | SC1 basis mechanism Step 4 | `source_audit_completed` | component novelty accepted；first-basis-generation claim rejected；组合novelty provisional |
 | SC1-D4 structured-basis diagnostic | `completed_rollback` | 315/315；locality成立，standard basis与random interval controls阻断exact claim |
-| SC1-CLG conditioning-locality problem | `diagnostic_designed` | D5 protocol/config/worker/analyzer ready；method training保持false |
-| SC1-D5 frontier diagnostic | `launch_ready` | commit/push后检查GPU并运行585 fits；pass只返回Step 4 |
+| SC1-CLG conditioning-locality problem | `reformulated` | 从single Pareto point收紧为horizon-support crossed interaction |
+| SC1-D5 frontier diagnostic | `completed_design_fault` | 585/585；primary fail但pre-registered b144阻止方向否决 |
+| SC1-D6 interaction confirmation | `launch_ready` | disjoint validation batches8-15；225 fits；pass只返回Step 4 |
 
 ## Paper Mainline Sync Log
 
@@ -148,6 +151,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-14 | D2 formal5完成 | Current Position、Contribution 1、Experiment Logic | exact problem closure + rollback | basis geometry retained；depth grouping rejected；回Step 2设计crossed diagnostic |
 | 2026-07-14 | D3 crossed diagnostic通过 | Current Position、Contribution 1、Experiment Logic | existence evidence + Step 4 authorization | basis independent main effect成立于probe；不等于basis method或novelty |
 | 2026-07-14 | D4 structured-basis diagnostic完成 | Current Position、Contribution 1、Boundary、Experiment Logic | exact claim closure + Step 2/3 rollback | locality保留；balanced specificity与global accuracy不成立；转向SC1-CLG |
+| 2026-07-14 | D5 frontier diagnostic完成 | Current Position、Contribution 1、Boundary | primary fail + diagnostic redesign | b96 selector fail；b144出现support×horizon crossing；D6确认前不升method |
 
 ## Continuation Rules
 
