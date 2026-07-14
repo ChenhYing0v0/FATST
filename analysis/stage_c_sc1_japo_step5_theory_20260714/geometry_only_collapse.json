@@ -1,0 +1,8 @@
+{
+  "atoms": 17,
+  "collapse_max_abs": 8.881784197001252e-15,
+  "experts": 3,
+  "result": "geometry_only_mixture_is_fixed_linear_operator",
+  "samples": 13,
+  "total_rank": 15
+}

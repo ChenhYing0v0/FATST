@@ -1,0 +1,16 @@
+{
+  "descriptor_local_output_ratio": 6.802490125340755,
+  "epsilon": 1e-06,
+  "expert_output_disagreement": 3.82946024880361,
+  "geometry_gate_sensitivity": 0.8422723212142426,
+  "hard_top_k_used": false,
+  "history_gate_sensitivity": 0.11317534785221336,
+  "history_local_output_ratio": 7.393596926011224,
+  "joint_interaction_residual": 0.0017577241577448395,
+  "minimum_mean_expert_usage": 0.496659771585358,
+  "normalized_gate_entropy": 0.28518944554897196,
+  "ratios_finite": true,
+  "routing_effect_vs_uniform": 1.2107015007514064,
+  "scope": "metric_sanity_check_not_learned_specialization_evidence",
+  "softmax_axis": "expert_only"
+}

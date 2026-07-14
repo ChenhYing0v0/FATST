@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC1-JAPO Step 4 complete；Step 5 theory feasibility next |
+| `current_11_step` | SC1-JAPO Step 5 complete；Step 6 method/control design next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | Contribution 1 geometry/projectivity retained；JAPO theory_pending；SC2-MIPR held |
+| `paper_core_status` | Contribution 1 JAPO proposed (theory_pass/step6_design_pending)；SC2-MIPR held |
 
 ## Research Thesis
 
@@ -206,17 +206,24 @@ capacity解释。因此“scale/atom experts”本身不进入paper core。直�
 flatten是bijective reshape，且history patch与future atom没有已证实的canonical alignment，B14与
 OFormer/GNOT/BasisFormer/TimePerceiver均对该shortcut形成压力。
 
-[Provisional Candidate] 当前只保留`SC1-JAPO`（Joint Atom-History Projective Operator）进入Step5 theory。
+[Provisional Candidate] 当前只保留`SC1-JAPO`（Joint Atom-History Projective Operator）进入Step6 design。
 它用free RGNB expert maps生成atom coefficients，但gate必须同时依赖history context与atom support geometry；
 requested $H$仍只选择active atoms，不进入router。与geometry-only mixture不同，history-dependent gate不能吸收为
 fixed temporal table，因此有机会解除D8的fixed separability。令所有experts表示同一A6-equivalent RGNB map时，
 任意convex gate仍复现A6，故候选原则上无需dense bypass即可包含A6。
 
+[Theory Result] Step5已在4个$T$、22个prefix cases上验证A6 containment与exact projectivity，最大误差分别为
+`1.137e-13/1.172e-13`；constructive $f(h)=h\tanh(h)$证明joint gate严格超出fixed affine PAF，而
+geometry-only mixture仍collapse为fixed operator。requested $H$不进入learned path。
+
+[Optimization Boundary] exact containment只是function-class guarantee。identical experts会令router gradient为0并
+保持expert symmetry，因此首版必须independent from-scratch initialization，不能把containment构造用作复制初始化。
+
 [Narrative Boundary] nonlinear decoder、operator MoE、geometry gating、structure-guided time-series MoE与
-step-specific representation均已有直接prior art。JAPO尚非`narrative_ready`；可辩护边界只能是joint
-history-atom conditional operator、RGNB exact projectivity与multi-horizon domain-only execution的完整组合。
-Step5必须先证明A6 containment、joint non-collapse、continuity与projectivity，并冻结uniform/history-only/
-atom-only/PERM/RANDOM controls。通过前不实现、不训练，SC2-MIPR继续held。
+step-specific representation均已有直接prior art。可辩护边界只能是joint history-atom conditional operator、
+RGNB exact projectivity与multi-horizon domain-only execution的完整组合。JAPO正式status仍为`proposed`，
+research cursor为`theory_pass/step6_design_pending`；Step6必须冻结uniform/history-only/atom-only/PERM/RANDOM same-bank controls、
+最小E2 design与kill gates。通过前不实现、不训练，SC2-MIPR继续held。
 
 ### Contribution 2 Candidate: Measure-Induced Projective Risk
 
@@ -321,6 +328,9 @@ Step4，不以训练性能包装RGNB。
     35-run validation-only screen，结果返回前不启动三seed或MIPR。
 18. D8 Step7B已完成：exact PAF effectiveness fail、geometry attribution pass、m694不能救回A6 gap；
     Contribution 1回Step4 redesign，三seed/MIPR/joint factorial继续暂停。
+19. Step4排除flatten压缩、patch retrieval与geometry-only expert shortcuts，只保留joint history-atom JAPO。
+20. JAPO Step5通过A6 containment、exact projectivity与strict non-collapse；identical initialization被symmetry
+    audit禁止。当前只进入Step6 E2 design/control gate，不实现、不训练。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
 generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成
@@ -352,9 +362,12 @@ loss 或更多 tuning 来掩盖失败。
 - `analysis/stage_c_sc1_plgo_step5_theory_20260714/step5_theory_feasibility.md`
 - `analysis/stage_c_sc1_plgo_step6_design_20260714/step6_design_gate.md`
 - `analysis/stage_c_sc1_d7_descriptor_sufficiency_20260714/research_interpretation.md`
+- `analysis/stage_c_sc1_plgo_step4_redesign_20260714/step4_source_informed_redesign.md`
+- `analysis/stage_c_sc1_japo_step5_theory_20260714/step5_theory_feasibility.md`
 - `Papers/stage-c-external-decoder-objective-audit.md`
 - `docs/experiments/stage-c-five-dataset-validation-policy.md`
 - `docs/code-explanation/stage-c-pmfo-rct-step7a.md`
+- `docs/code-explanation/stage-c-sc1-japo-step5-theory.md`
 
 2026-07-13 reset 前主线完整 snapshot 位于
 `docs/archive/pre-stage-c-reset-20260713/`，仅作历史审计。

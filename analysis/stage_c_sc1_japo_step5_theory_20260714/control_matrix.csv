@@ -1,0 +1,8 @@
+arm,same_expert_bank_as_joint,history_in_gate,geometry_in_gate,descriptor_integrity,purpose
+A6-LBF-natural,False,False,False,none,accepted_carrier_and_dense_readout_reference
+JAPO-JOINT-GEO,True,True,True,canonical,candidate_complete_mechanism
+JAPO-UNIFORM,True,False,False,none,capacity_and_expert_ensemble_control
+JAPO-HISTORY,True,True,False,none,sample_conditioning_without_geometry_control
+JAPO-ATOM,True,False,True,canonical,analytic_fixed_operator_control
+JAPO-JOINT-PERM,True,True,True,permuted,canonical_geometry_necessity_control
+JAPO-JOINT-RANDOM,True,True,True,moment_matched_random,descriptor_semantics_control

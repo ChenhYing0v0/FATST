@@ -1,0 +1,12 @@
+metric,source,computation,meaning
+a6_containment_max_abs,arbitrary affine A6 output and identical JAPO experts,max absolute difference after RGNB coordinate transform,existence of a dense-bypass-free A6 embedding
+projective_coefficient_max_abs,full-atom and active-only joint gate evaluations,max difference on shared active atoms,requested horizon changes only the active set
+collapse_max_abs,geometry-only expert mixture and collapsed fixed map,max absolute output difference,geometry-only routing adds no sample-conditional operator
+affine_second_difference_abs,"constructive scalar joint gate at h in {-1,0,1}",abs(f(1)-2f(0)+f(-1)),positive value witnesses a function outside fixed affine PAF
+normalized_gate_entropy,expert probabilities per history-atom pair,mean entropy divided by log(E),"routing confidence, not specialization by itself"
+minimum_mean_expert_usage,expert probabilities,minimum expert mean probability,soft expert starvation indicator
+expert_output_disagreement,expert coefficient predictions,mean population variance across experts,whether routing can change the coefficient output
+history_gate_sensitivity,two histories with common atoms,mean absolute gate difference,whether routing is sample dependent
+geometry_gate_sensitivity,two atoms under common histories,mean absolute gate difference,whether routing uses atom geometry
+joint_interaction_residual,two histories crossed with two atoms,mean absolute two-way probability contrast,non-additive history-geometry interaction diagnostic
+routing_effect_vs_uniform,joint and uniform mixtures of the same expert outputs,mean absolute coefficient difference,functional influence of learned routing

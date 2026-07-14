@@ -1,0 +1,10 @@
+{
+  "affine_second_difference_abs": 1.5231883119115295,
+  "center_to_endpoint_abs": 0.7615941559557647,
+  "endpoint_equality_max_abs": 0.0,
+  "fixed_affine_representation_possible": false,
+  "history_minus_one": 0.7615941559557647,
+  "history_plus_one": 0.7615941559557647,
+  "history_zero": 0.0,
+  "scope": "constructive_function_class_witness_not_trainability_evidence"
+}

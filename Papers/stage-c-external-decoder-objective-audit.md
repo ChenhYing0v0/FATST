@@ -113,3 +113,39 @@ global-domain coherence”的组合进入Step 5 theory feasibility；balanced in
 
 详细source matrix与rejected shortcuts见
 `analysis/stage_c_sc1_step4_projective_local_global_audit_20260714/source_informed_audit.md`。
+
+## 2026-07-14 JAPO Step 4-5 Update
+
+### Search record
+
+- search date: 2026-07-14；
+- topics: nonlinear operator decoder、operator MoE、geometry-conditioned routing、time-series MoE、
+  step-specific representation、expert symmetry、specialization collapse；
+- source policy: external primary sources与official code优先；全部key additions由external search发现，未以Zotero
+  coverage判断方向是否新颖或饱和；
+- completeness: JAPO optimization部分只核对了Cluster-Aware Upcycling的arXiv metadata/abstract；另一个
+  OpenReview页面受challenge阻断，故只作低置信度风险提示，不用于method conclusion。
+
+### Contribution boundary
+
+- DeepONet/NOMAD、GNOT/OFormer/MIONet、MoNO、SRP/SRP++、AME-TS与MoHETS共同说明nonlinear decoder、
+  query-to-input interaction、operator mixture、geometry gate、structure-guided routing与step-specific
+  representation都不能单独构成JAPO novelty；
+- geometry-only expert mixture可严格吸收到fixed wider PAF；fixed rank无新class，expanded rank有capacity
+  confound；
+- 当前仅保留完整contract：RGNB future atoms上的history-geometry joint coefficient operator、requested-$H$
+  domain-only restriction、shared-atom exact projectivity与无dense bypass A6 containment。
+
+### Optimization evidence
+
+- [Cluster-Aware Upcycling](https://arxiv.org/abs/2604.13508)明确把identical expert initialization与expert
+  symmetry/limited early specialization联系起来；JAPO另有直接gradient identity证明router gradient在identical
+  expert outputs下为0，因此不依赖跨任务经验外推；
+- [Advancing Expert Specialization for Better MoE](https://openreview.net/forum?id=iydmH9boLb)提示load
+  balancing可能伴随expert overlap与过度uniform routing。由于本轮未获得完整网页文本，且其任务不同，首版JAPO
+  只把它作为“不用auxiliary loss掩盖decoder failure”的风险提示；
+- Step 5最终决定：containment是function-class theorem，不是复制初始化策略；首版固定independent from-scratch
+  experts，并以entropy、usage、expert disagreement与joint sensitivity作diagnostics，而非额外loss。
+
+完整proof、source boundary与mandatory controls见
+`analysis/stage_c_sc1_japo_step5_theory_20260714/step5_theory_feasibility.md`。

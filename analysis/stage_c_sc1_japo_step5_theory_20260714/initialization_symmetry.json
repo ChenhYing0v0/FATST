@@ -1,0 +1,7 @@
+{
+  "decision": "containment_is_function_class_only_identical_initialization_forbidden",
+  "distinct_expert_router_gradient_l2": 0.2609148005137056,
+  "identical_expert_gradient_max_pair_gap": 0.0,
+  "identical_expert_router_gradient_max_abs": 0.0,
+  "symmetry_trap_detected": true
+}
