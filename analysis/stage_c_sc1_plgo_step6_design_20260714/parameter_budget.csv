@@ -1,0 +1,11 @@
+dataset,history_width,design,trunk_width,descriptor_dim,a6_readout_parameters,paf_readout_parameters,paf_to_a6_ratio,output_rank_upper_bound,full_affine_output_class,exact_all_a6_table_containment
+Weather,768,compact_rank_width,256,8,381904,265680,0.6956722108173782,256,False,False
+Weather,768,near_a6_temporal_budget,694,8,381904,381750,0.999596757300264,256,False,False
+ETTm1,768,compact_rank_width,256,8,381904,265680,0.6956722108173782,256,False,False
+ETTm1,768,near_a6_temporal_budget,694,8,381904,381750,0.999596757300264,256,False,False
+ETTh2,768,compact_rank_width,256,8,381904,265680,0.6956722108173782,256,False,False
+ETTh2,768,near_a6_temporal_budget,694,8,381904,381750,0.999596757300264,256,False,False
+ETTh1,1536,compact_rank_width,256,8,578512,462288,0.799098376524601,256,False,False
+ETTh1,1536,near_a6_temporal_budget,694,8,578512,578358,0.9997337998174627,256,False,False
+ETTm2,3072,compact_rank_width,256,8,971728,855504,0.880394513691074,256,False,False
+ETTm2,3072,near_a6_temporal_budget,694,8,971728,971574,0.9998415194375381,256,False,False

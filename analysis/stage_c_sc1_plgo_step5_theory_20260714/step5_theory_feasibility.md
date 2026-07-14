@@ -34,7 +34,7 @@ global DCT在long domain更好。Step 4据此提出PLGO，但只给出了叙事�
 
 ## 2. Restricted-Global Nested Basis
 
-令最大future domain为$Omega_T=\{0,\ldots,T-1\}$，global prototype matrix
+令最大future domain为$\Omega_T=\{0,\ldots,T-1\}$，global prototype matrix
 $G\in\mathbb R^{T\times r_g}$取前$r_g$个orthonormal DCT-II modes。对balanced interval tree中的任意
 $I=[s,e)$，定义scaling space
 

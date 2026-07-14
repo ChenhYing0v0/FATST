@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Step 6 tensor/narrative/control design for SC1-PLGO |
-| `active_question` | shared atom-conditioned generator能否把RGNB转化为非dense-equivalent、可归因的forecast mechanism？ |
-| `active_candidates` | `SC1-PLGO partial`；RGNB scaffold pass；`SC2-MIPR` held |
+| `current_step` | rollback Step 2/3；SC1-D7 descriptor-sufficiency diagnostic |
+| `active_question` | true RGNB descriptors是否超越permuted/random descriptor controls？ |
+| `active_candidates` | `SC1-D7 proposed`；`SC1-PLGO-PAF paused`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | PLGO Step5 accepted；Step6 protocol pending |
+| `active_protocol` | PLGO Step6 rollback accepted；D7 protocol ready |
 | `method_implementation` | `PMFO-RCT v1` frozen as failed evidence；new implementation unauthorized |
-| `rollback_point` | Step6 coefficient mechanism无法隔离dense-equivalence -> Step 4 redesign；不得直接实现或调参 |
+| `rollback_point` | D7 fail -> close descriptor-generator route；RGNB只保留component |
 
 ## Completed Foundation
 
@@ -170,9 +170,22 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 
 ## Next Concrete Action
 
-进入`SC1-PLGO Step 6 tensor/narrative/control design`。只允许设计shared atom-conditioned coefficient generator、
-matched dense/random-descriptor controls、function-class/parameter/FLOP边界与kill rules。禁止直接实现、训练、
-引入horizon router、A6 residual、Encoder、MoE或MIPR。
+实现`SC1-D7-RGNB-descriptor-sufficiency` frozen-memory diagnostic：五datasets × 三checkpoints，比较
+free-M0与GEO/PERM/RANDOM在compact width256和near-budget width694下的validation表现。禁止读取test、实现
+forecast method、atom retrieval、Encoder、MoE或MIPR。
+
+## SC1-PLGO Step 6 Design Gate: Rolled Back
+
+1. `PLGO-PAF`的atomwise tensor contract在$T=16/96/720/721$共33个prefix cases通过，max gap
+   `4.547e-13`；$H$不进入descriptor/generator，rank上界仍为256；
+2. generic branch-trunk、nonlinear query decoder、HyperNetwork、basis coefficient attention、timestamp query与
+   functional basis decoder已有DeepONet/NOMAD/HyperDeepONet/BasisFormer/TimePerceiver/FlowState直接先例；
+3. internal B11 basis-conditioned field被no-basis/constant-slot controls解释，B14 retrieval demand只有1/6
+   settings、0/3 datasets通过；新PAF不得复活atom-specific history retrieval；
+4. narrowed PAF只读取shared flattened memory，并以RGNB descriptors生成free temporal table的受限替代；
+5. compact width256参数仅为A6 readout的0.696-0.880，可能capacity-restricted；near-budget width694约为
+   0.9996-0.9998，却可能memorize descriptors而失去geometry attribution；
+6. decision=`narrative_not_ready_rollback_step2_3_d7`。generic PAF不进入Step7；只授权D7 diagnostic。
 
 ## SC1-D6 Confirmation And Step 4 Outcome
 

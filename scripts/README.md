@@ -26,6 +26,8 @@ StageC active entrypoints：
 - `check_stage_c_plgo_step5_theory.py`: 构造Restricted-Global Nested Basis，验证global DCT subspace、
   interval-local complements、arbitrary-prefix restriction、A6 exact morphism，并审计overcomplete frame与
   independent-group full-affine no-go；CPU-only，不训练模型。
+- `check_stage_c_plgo_step6_design.py`: 验证Projective Atom Functional的atomwise subset invariance、prefix
+  synthesis、rank/parameter boundary与candidate-control matrix；只作Step6 design audit，不训练模型。
 - `run_stage_c_sc1_d2_diagnostic.py`: 从冻结A6 checkpoints提取`memory [B,C,P,D]`，训练rank/full-affine、
   dense nonlinear、true-scale grouped与random grouped head-only probes；不更新forecast model、不读取test。
 - `analyze_stage_c_sc1_d2_diagnostic.py`: 计算rank、generic nonlinearity与scale alignment的paired gains，
