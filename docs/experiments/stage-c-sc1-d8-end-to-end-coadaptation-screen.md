@@ -80,6 +80,9 @@ Step7B trained-checkpoint后验使用`2e-5`的patch-block absolute tolerance：�
 该修复只作用于代数等价性审计，不改变模型、训练、checkpoint selection或performance gate；prefix gate仍为
 `1e-5`。
 
+Runner支持`WORKER_OFFSET/WORKER_STRIDE`恢复原固定stride worker。若单个worker因后验审计退出，可在不重复
+其他active jobs的前提下只续跑其原job子序列；已有完整metrics/invariants/patch artifacts的run会跳过。
+
 ## Mandatory Patch Diagnostics
 
 以下统计不参与checkpoint selection，也不单独覆盖forecast gate：

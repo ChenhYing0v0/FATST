@@ -18,6 +18,8 @@ SEGMENT_HORIZONS="48,96,192,336,720"
 DENSE_HORIZONS="$(seq -s, 1 720)"
 export PYTHONHASHSEED="${SEED}"
 read -r -a GPU_IDS <<< "${GPU_IDS_STR}"
+WORKER_OFFSET="${WORKER_OFFSET:-0}"
+WORKER_STRIDE="${WORKER_STRIDE:-${#GPU_IDS[@]}}"
 
 profile_hash() {
   if command -v sha256sum >/dev/null 2>&1; then
@@ -30,6 +32,10 @@ PROFILE_HASH="$(profile_hash "${CONTRACT}")"
 
 if [[ "${#GPU_IDS[@]}" -lt 1 ]]; then
   echo "at least one GPU id is required" >&2
+  exit 2
+fi
+if [[ "${WORKER_OFFSET}" -lt 0 || "${WORKER_STRIDE}" -lt 1 ]]; then
+  echo "worker offset must be non-negative and stride must be positive" >&2
   exit 2
 fi
 
@@ -117,6 +123,8 @@ mkdir -p "${OUTPUT_ROOT}/_logs" "${OUTPUT_ROOT}/_analysis"
   echo "profile_hash=${PROFILE_HASH}"
   echo "protocol_profile=${PROTOCOL_PROFILE}"
   echo "gpu_ids=${GPU_IDS[*]}"
+  echo "worker_offset=${WORKER_OFFSET}"
+  echo "worker_stride=${WORKER_STRIDE}"
   echo "jobs=${#LINES[@]}"
   echo "initialization=from_scratch_all_arms"
   echo "training_objective=full_h720_pointwise_l1"
@@ -172,7 +180,7 @@ run_one() {
 
 worker() {
   local worker_index="$1" gpu="$2" line_index
-  for ((line_index=worker_index; line_index<${#LINES[@]}; line_index+=${#GPU_IDS[@]})); do
+  for ((line_index=WORKER_OFFSET + worker_index; line_index<${#LINES[@]}; line_index+=WORKER_STRIDE)); do
     run_one "${line_index}" "${LINES[${line_index}]}" "${gpu}"
   done
 }
