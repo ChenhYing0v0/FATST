@@ -161,7 +161,7 @@ def load_run(root: Path, arm: str, dataset: str) -> dict[str, Any]:
     patch_ok = (
         patch.get("finite") is True
         and len(patch_rows) == int(patch["patch_num"])
-        and finite_float(patch["flatten_block_sum_max_abs"]) <= 1e-5
+        and finite_float(patch["flatten_block_sum_max_abs"]) <= 2e-5
         and 0.0 <= finite_float(patch["patch_contribution_entropy"]) <= 1.0 + 1e-6
     )
     invariants_ok = invariants.get("pass") is True

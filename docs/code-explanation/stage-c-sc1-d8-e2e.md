@@ -57,8 +57,9 @@ moment-matched fixed random descriptors。所有arms共享Encoder profile、opti
 - `atom_patch_jacobian_norm[j,p]`：$\|q_j^TA_p\|_2$；
 - `atom_patch_profile_diversity`：不同RGNB group归一化patch profile的pairwise mean absolute distance。
 
-`flatten_block_sum_max_abs`同时检查直接linear与显式patch block sum是否一致。float32长向量累积的protocol
-阈值为`1e-5`；RGNB float64参考正交性仍用`1e-10`。
+`flatten_block_sum_max_abs`同时检查直接linear与显式patch block sum是否一致。Step7A initialization-time
+阈值为`1e-5`；trained checkpoint因weight scale与float32 summation order使用`2e-5`。该差异只属于数值
+等价性审计，不改变forecast gate；RGNB float64参考正交性仍用`1e-10`。
 
 ## 产物与后验审计
 

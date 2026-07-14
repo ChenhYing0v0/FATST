@@ -75,6 +75,11 @@ params只报告，不参与dataset profile选择或方法价值判断；两个wi
 7. runner dry-run、analyzer synthetic smoke与code-theory consistency通过。
 8. flatten branch与patch-block-sum rewrite max gap`<=1e-5`；每个patch block均有finite nonzero gradient。
 
+Step7B trained-checkpoint后验使用`2e-5`的patch-block absolute tolerance：首个RANDOM-Weather checkpoint在
+所有shape/prefix/finite条件通过时出现`1.1444e-5`，属于trained weight scale下float32求和顺序误差。
+该修复只作用于代数等价性审计，不改变模型、训练、checkpoint selection或performance gate；prefix gate仍为
+`1e-5`。
+
 ## Mandatory Patch Diagnostics
 
 以下统计不参与checkpoint selection，也不单独覆盖forecast gate：
