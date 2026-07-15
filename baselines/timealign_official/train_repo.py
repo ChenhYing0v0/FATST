@@ -446,8 +446,10 @@ def initialization_contract(model: nn.Module) -> dict[str, Any]:
                     )
                     .abs()
                     .max()
+                    .detach()
+                    .item()
                 ),
-                "initial_gate_entropy": float(entropy),
+                "initial_gate_entropy": float(entropy.detach().item()),
                 "initial_expert_usage": usage.detach().cpu().tolist(),
             }
         )
@@ -854,6 +856,8 @@ def patch_interface_diagnostics(
             )
             .abs()
             .max()
+            .detach()
+            .item()
         )
         payload.update(
             {

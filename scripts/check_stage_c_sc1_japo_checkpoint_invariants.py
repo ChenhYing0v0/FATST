@@ -143,6 +143,8 @@ def audit_model(
                 )
                 .abs()
                 .max()
+                .detach()
+                .item()
             )
             > 0.0
             and initialization is not None
