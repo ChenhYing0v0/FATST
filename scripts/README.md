@@ -89,6 +89,12 @@ StageC active entrypoints：
   6! mapping permutations与frozen gates。
 - `remote/run_stage_c_sc1_d10_raw_scale_identifiability.sh`: 三GPU workload-aware五dataset D10 runner；
 - `sync_stage_c_sc1_d10_raw_scale_identifiability_results.sh`: 同步D10 raw cells、metadata与aggregate decision。
+- `run_stage_c_sc1_d11_future_component_responsibility.py`：在五数据集A6 checkpoints上提取short/long
+  prefix risk的total gradients与exact future-component responsibilities；
+- `analyze_stage_c_sc1_d11_future_component_responsibility.py`：聚合seed/split/basis controls并应用strict
+  directional、support-specific、generic与magnitude-only gates；
+- `remote/run_stage_c_sc1_d11_future_component_responsibility.sh`：3090三GPU dataset-major runner；
+- `sync_stage_c_sc1_d11_future_component_responsibility_results.sh`：同步raw/aggregate evidence。
 
 历史 runner/analyzer 已移入 `scripts/archive/`，不得作为当前研究入口。新增脚本必须服务active ledger中明确的
 next action，并同步对应experiment protocol与code explanation。

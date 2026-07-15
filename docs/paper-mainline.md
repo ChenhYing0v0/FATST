@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Contribution 1 rollback Step 2 after D10；future-component problem reset |
+| `current_11_step` | Contribution 1 Step 2/3；SC1-D11 responsibility diagnostic frozen |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -281,6 +281,17 @@ Weather近零；不存在可支撑unified method的cross-dataset mapping。decis
 projectivity与D6 horizon-support crossing仍保留。下一Step2问题暂定为future global/local components在不同prefix
 losses下的error/gradient responsibility；在D11 source/theory audit前，不恢复SC2，也不实现adaptive router、new
 decoder或loss。
+
+[D11 Step2/3] source audit确认Time-o1已经直接提出transformed label alignment、label autocorrelation与
+forecast-step task overload；FreDF、DBLoss及withdrawn Hybrid Loss进一步覆盖frequency/component loss与动态调权。
+因此论文不能把“分解future再加component loss”作为创新。D11将边界收紧为prefix measure下的exact
+future-component gradient responsibility与intervention-point diagnosis。
+
+[D11 Frozen Diagnostic] 对complete orthogonal projectors有
+$\sum_gJ^TP_gv=J^Tv$，故可在不假设prefix mask与basis commute的情况下，把MSE/L1 output gradient精确归因到
+RGNB groups。五dataset × 三A6 checkpoints使用train/validation replication，比较RGNB、DCT与三个random bases，
+并分离strict negative conflict、low positive alignment、norm imbalance与coordinate artifact。任何positive结果只
+返回Step4，不直接授权decoder、loss、optimizer或SC2。
 
 [Narrative Boundary] nonlinear decoder、operator MoE、geometry gating、structure-guided time-series MoE与
 step-specific representation均已有直接prior art。可辩护边界只能是joint history-atom conditional operator、

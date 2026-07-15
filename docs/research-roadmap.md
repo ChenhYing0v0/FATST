@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Contribution 1 rollback Step 2 after D10 raw scale gate |
+| `current_step` | Contribution 1 Step 2/3；SC1-D11 responsibility diagnostic frozen |
 | `active_question` | multi-horizon conflict是否位于future-component error/gradient responsibility，而非history-scale access？ |
 | `active_candidates` | none；`SC1-JAPO exact_v1 failed_as_core_candidate`；`SC1-PLGO geometry scaffold retained`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_sc1_d10_raw_scale_identifiability_20260715/d10_result_and_rollback.md` |
-| `method_implementation` | false；D10 closed；D11 source/theory audit only；forecast method/test/SC2 false |
+| `active_protocol` | `analysis/stage_c_sc1_d11_future_component_responsibility_20260715/d11_step23_source_theory_audit.md` |
+| `method_implementation` | false；D11 diagnostic implementation only；forecast method/test/SC2 false |
 | `rollback_point` | Step2；history-scale routing mainline closed，future-side problem reset |
 
 ## Completed Foundation
@@ -242,6 +242,12 @@ RGNB geometry retained；现已完成Step4 intervention/readout redesign，不�
     effect/control=`4/5,4/5`但best-count=`0/5`、mapping permutation=`2/5`；
 40. decision=`raw_aligned_scale_not_supported_rollback_step2`。partial off-diagonal signal缺少跨dataset统一mapping，
     不得事后升级adaptive router；D9+D10共同关闭history-scale aligned routing，下一步审计future-component问题。
+41. D11 external audit确认Time-o1已覆盖transformed label alignment与task-overload，FreDF/DBLoss覆盖
+    frequency/component losses；generic component loss不能成为本项目创新边界；
+42. D11 exact identity冻结为`sum_g J^T P_g v = J^T v`，直接分解output gradient而非错误地相加prefix
+    component energies；MSE primary、L1 replication；
+43. strict directional conflict必须negative dot；low positive cosine与norm ratio分别归为heterogeneity和magnitude
+    imbalance。RGNB必须超过DCT/3 random controls才支持future-support-specific problem；remote前method/SC2/test false。
 
 ## SC1-PLGO Step 6 Design Gate: Conditional Pass, D7 Required
 
