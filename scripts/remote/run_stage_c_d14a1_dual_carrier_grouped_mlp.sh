@@ -158,6 +158,7 @@ run_one() {
   local index="$1" line="$2" gpu="$3"
   local dataset arm scale partition profile patch_num d_model d_ff output_dir run_log
   local encoder readout
+  local encoder_args=()
   IFS=$'\t' read -r dataset arm scale partition profile patch_num d_model d_ff <<< "${line}"
   output_dir="$(run_dir_for_line "${line}")"
   run_log="${LOG_ROOT}/${arm}_${dataset}.log"
@@ -170,6 +171,13 @@ run_one() {
     encoder="raw-history-identity"
   else
     encoder="timealign-token-mlp"
+    encoder_args=(
+      --legacy-patch-num "${patch_num}"
+      --legacy-d-model "${d_model}"
+      --legacy-d-ff "${d_ff}"
+      --legacy-dropout 0.1
+      --legacy-layer-norm 1
+    )
   fi
   if [[ "${arm}" == "a6_lbf" ]]; then
     readout="learned-basis-forecast-operator"
@@ -186,8 +194,7 @@ run_one() {
       --encoder-mode "${encoder}" --readout-mode "${readout}" --basis-rank 256 \
       --grouped-mlp-scale "${scale:-144}" --grouped-mlp-point-hidden-width 4 \
       --grouped-mlp-partition "${partition:-canonical}" --grouped-mlp-partition-seed 14101 \
-      --legacy-patch-num "${patch_num}" --legacy-d-model "${d_model}" \
-      --legacy-d-ff "${d_ff}" --legacy-dropout 0.1 --legacy-layer-norm 1 \
+      "${encoder_args[@]}" \
       --e-layers 2 --learning-rate 0.0001 --batch-size "${BATCH_SIZE}" \
       --gradient-accumulation-steps 1 --epochs "${EPOCHS}" --patience "${PATIENCE}" \
       --enable-early-stopping --early-stopping-min-delta 0 --seed "${SEED}" \

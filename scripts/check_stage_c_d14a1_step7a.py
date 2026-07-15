@@ -22,7 +22,11 @@ for import_root in (str(TIMEALIGN_ROOT), str(REPO_ROOT / "scripts")):
 
 from layers.GroupedMLP import GroupedMLPReadout  # noqa: E402
 from models import TimeAlign  # noqa: E402
-from train_repo import initialization_contract, model_diagnostics  # noqa: E402
+from train_repo import (  # noqa: E402
+    initialization_contract,
+    model_diagnostics,
+    parse_args as parse_training_args,
+)
 
 
 CHANNELS = {"ETTh1": 7, "ETTh2": 7, "ETTm1": 7, "ETTm2": 7, "Weather": 21}
@@ -293,6 +297,61 @@ def encoder_pairing_rows(
     return rows, all_paired
 
 
+def runner_cli_contract() -> bool:
+    original_argv = list(sys.argv)
+    common = [
+        "train_repo.py",
+        "--dataset-root",
+        "/tmp/d14a1_config_only",
+        "--dataset",
+        "ETTh2",
+        "--mode",
+        "unified",
+        "--pred-len",
+        "720",
+        "--target-horizons",
+        "720",
+        "--run-name",
+        "D14A1_CONFIG_ONLY",
+        "--output-dir",
+        "/tmp/d14a1_config_only/output",
+        "--readout-mode",
+        "grouped-mlp",
+        "--protocol-class",
+        "method_screening",
+        "--protocol-profile",
+        "stage_c_d14a1_config_only",
+        "--profile-hash",
+        "config_only",
+        "--checkpoint-policy",
+        "best-val",
+        "--enable-early-stopping",
+        "--final-evaluation-split",
+        "val",
+    ]
+    cases = [
+        [*common, "--encoder-mode", "raw-history-identity"],
+        [
+            *common,
+            "--encoder-mode",
+            "timealign-token-mlp",
+            "--legacy-patch-num",
+            "12",
+            "--legacy-d-model",
+            "64",
+            "--legacy-d-ff",
+            "128",
+        ],
+    ]
+    try:
+        for case in cases:
+            sys.argv = case
+            parse_training_args()
+    finally:
+        sys.argv = original_argv
+    return True
+
+
 def main() -> None:
     args = parse_args()
     design = json.loads(args.design.read_text(encoding="utf-8"))
@@ -306,6 +365,7 @@ def main() -> None:
     pairing_rows, pairing_pass = encoder_pairing_rows(
         design, profiles, args.seed
     )
+    cli_contract_pass = runner_cli_contract()
     gates = design["local_gates"]
     gate = {
         "diagnostic_id": design["diagnostic_id"],
@@ -327,6 +387,7 @@ def main() -> None:
         ),
         "gradient_gate_pass": gradient_pass,
         "encoder_pairing_pass": pairing_pass,
+        "runner_cli_contract_pass": cli_contract_pass,
         "uses_test_split": False,
         "forecast_training_performed": False,
     }
@@ -339,6 +400,7 @@ def main() -> None:
             "partition_gate_pass",
             "gradient_gate_pass",
             "encoder_pairing_pass",
+            "runner_cli_contract_pass",
         )
     )
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -358,6 +420,7 @@ def main() -> None:
         f"- max affine witness gap: {max_affine_gap:.8e}",
         f"- max prefix gap: {max_prefix_gap:.8e}",
         f"- encoder pairing: {pairing_pass}",
+        f"- runner CLI contract: {cli_contract_pass}",
         "- test=false；forecast training=false；A6 remote仍held。",
         "",
     ]

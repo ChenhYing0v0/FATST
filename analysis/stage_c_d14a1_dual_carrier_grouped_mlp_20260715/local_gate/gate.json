@@ -14,5 +14,6 @@
   "partition_gate_pass": true,
   "pass": true,
   "prefix_gate_pass": true,
+  "runner_cli_contract_pass": true,
   "uses_test_split": false
 }

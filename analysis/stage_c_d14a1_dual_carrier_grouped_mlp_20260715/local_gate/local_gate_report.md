@@ -7,4 +7,5 @@
 - max affine witness gap: 2.38418579e-07
 - max prefix gap: 0.00000000e+00
 - encoder pairing: True
+- runner CLI contract: True
 - test=false；forecast training=false；A6 remote仍held。

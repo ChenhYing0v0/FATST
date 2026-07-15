@@ -59,6 +59,9 @@ coupling effect。
   parameter-gap检查；
 - 既有`training_log.csv`、`metrics_by_target_horizon.csv`、`effective_config.json`与environment记录。
 
+Step7A还直接调用training CLI parser验证两套runner参数：neutral不得携带legacy encoder overrides；只有
+A6-natural传入冻结的`patch_num/d_model/d_ff`。这可在访问dataset或启动GPU前发现carrier参数串线。
+
 ## 5. Analyzer Statistics
 
 - `carrier_skill_relative_gain`：train-only selected fixed canonical scale相对persistence的validation MSE改善；
