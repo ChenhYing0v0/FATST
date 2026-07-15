@@ -10,8 +10,8 @@
 | `active_candidates` | provisional `SC1-PCSD` + `SC2-CCRL`；D14-A/B前method=false |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/experiments/stage-c-d14-output-coupling-granularity.md` |
-| `method_implementation` | false；只授权D14 source-informed diagnostic implementation；test=false |
-| `rollback_point` | D14-A fail -> Step2关闭coupling-adaptive route；A pass/B fail ->仅PCSD回Step4 |
+| `method_implementation` | false；D14-A0 remote diagnostic authorized；D14-B/paper method/test=false |
+| `rollback_point` | A0 invalid -> diagnostic redesign；valid fail -> failure attribution；positive ->仅回Step4-6 |
 
 ## Post-D11 Joint Mainline Reset
 
@@ -94,12 +94,12 @@ primitive都不能单独claim创新。
    `fixed past -> exact-prefix decoder -> point-to-global coupling spectrum -> counterfactual coupling policy -> no
    external strategy search`链条。
 
-[Next Gate] 新D14先做A/B串行diagnostic。D14-A比较neutral raw-history与A6 sensitivity carriers上的matched
-point/block/global heads、random partitions与capacity controls，要求至少3/5 datasets出现stable crossing且
-sample × bin oracle相对best fixed macro MSE headroom `>=0.5%`。A pass后D14-B使用train OOF regret labels，
+[Next Gate] 新D14先做A/B串行diagnostic。D14-A0使用neutral PCA64 carrier上的parameter-matched blockwise RRR，
+比较canonical point/block/global scopes及shifted/random partitions，要求至少3/5 datasets出现stable crossing且
+sample × bin oracle相对best fixed macro MSE headroom `>=0.5%`。A0通过后才重新评估A6 sensitivity与D14-B；B使用train OOF regret labels，
 要求history+target policy在至少3/5 datasets超过best fixed与target-only，macro gain `>=0.3%`。
 
-[Execution Order] D14-A -> D14-B -> formal Step4-6。A fail关闭PCSD/CCRL；A pass/B fail只让PCSD回Step4并
+[Execution Order] D14-A0 -> failure attribution/gate -> D14-B authorization decision -> formal Step4-6。A0 invalid不能关闭方向；valid fail先审计是否只否定linear RRR证据；A pass/B fail只让PCSD回Step4并
 重新设计Contribution 2；A/B pass也不直接授权method/remote/test。
 
 [Frozen Boundary] neutral raw-history carrier是primary；frozen A6只作sensitivity。最终effectiveness必须matched

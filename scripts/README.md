@@ -1,5 +1,14 @@
 # Active Scripts
 
+StageC D14-A0 output-coupling granularity diagnostic：
+
+- `run_stage_c_d14a_output_coupling_granularity.py`: 在neutral PCA64 carrier上拟合parameter-matched
+  blockwise reduced-rank output operators，保存三fold calibration/validation metrics与row-level bin losses；
+- `analyze_stage_c_d14a_output_coupling_granularity.py`: 计算carrier skill、stable crossing、canonical oracle
+  headroom与contiguity controls，并应用预注册D14-A0 gates；
+- `remote/run_stage_c_d14a_output_coupling_granularity.sh`: 在3090服务器按dataset-major顺序运行五数据集；
+- `sync_stage_c_d14a_output_coupling_granularity_results.sh`: 仅同步D14-A0必要metrics、metadata、logs与压缩loss artifacts。
+
 StageC active entrypoints：
 
 - `evaluate_stage_c_natural_baseline_test.py`: 从冻结 checkpoint 计算 dense-horizon test metrics；

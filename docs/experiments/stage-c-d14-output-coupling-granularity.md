@@ -9,11 +9,11 @@
 | `role` | `diagnostic_only` |
 | `active_candidates` | provisional `SC1-PCSD` + `SC2-CCRL` |
 | `method_training` | false |
-| `remote_training` | false；local source-informed implementation first |
+| `remote_training` | D14-A0 diagnostic authorized after local invariant gate；forecast training=false |
 | `test_access` | false |
 | `primary_carrier` | neutral train-only raw-history carrier |
-| `sensitivity_carrier` | frozen A6 representation；不作paper-core comparison |
-| `rollback` | D14-A fail -> Step 2 close coupling-adaptive route |
+| `sensitivity_carrier` | held；A0通过前不执行frozen A6 probe |
+| `rollback` | A0 invalid -> redesign diagnostic；valid fail -> formal failure attribution before route decision |
 
 ## What We Plan To Test
 
@@ -67,6 +67,31 @@ matched head family，首选：
 若C0与C1方向相反，不允许方向级拒绝或通过；必须审计representation compatibility。
 
 ## D14-A Coupling-Spectrum Headroom
+
+### Frozen A0 implementation (2026-07-15)
+
+source-informed audit排除了ordinary separable multi-output ridge：它与逐target ridge共享normal equations，不能
+检验output coupling。A0因此冻结为neutral PCA64 carrier上的closed-form blockwise reduced-rank regression：
+
+$$
+\hat Y_{B_j}=XW_j,\qquad \operatorname{rank}(W_j)\le r_s.
+$$
+
+scales/ranks固定为`1/1, 48/28, 144/45, 360/55, 720/60`，对应factor params分别为
+`46800/47040/46800/46640/47040`，最大relative gap为0.513%。point arm必须等价于unstructured full-affine；
+intermediate scales同时运行shifted contiguous与random partition controls。三chronological folds各用512 fit、
+128 train-calibration与256 official-validation windows；fit/cal observation gap至少1440。五数据集全部运行，
+不使用test。
+
+本地synthetic gate已验证point equivalence、rank上界、partition disjoint cover、parameter budget和analyzer gate
+logic。对应实现与定义见：
+
+- `configs/stage_c_d14a_output_coupling_granularity.json`；
+- `analysis/stage_c_d14a_output_coupling_granularity_20260715/d14a_source_and_design_audit.md`；
+- `docs/code-explanation/stage-c-d14a-output-coupling-granularity.md`。
+
+此前generic A0-A9列表由上述exact family取代；A6 sensitivity不属于本次首轮launch。A0 positive最多授权返回
+Step 4-6，不能直接授权D14-B或paper method；D14-B仍需按本protocol的串行gate单独授权。
 
 ### Coupling scales
 
@@ -133,7 +158,7 @@ $$
 5. 任一arm不得出现divergence、non-finite或`>100%` pathology；
 6. C0为primary；C1只能加强或触发compatibility audit。
 
-D14-A fail则取消D14-B。
+D14-A valid fail则取消D14-B并先完成failure attribution；carrier/numeric invalid不得用于方向否决。
 
 ## D14-B Cross-Fitted Regret Predictability
 

@@ -1,0 +1,76 @@
+{
+  "stage": "StageC-UVHF",
+  "diagnostic_id": "SC-D14-A0",
+  "role": "diagnostic_only_neutral_carrier",
+  "series_length": 720,
+  "feature_width": 64,
+  "coupling_scales": [1, 48, 144, 360, 720],
+  "expected_block_ranks": {
+    "1": 1,
+    "48": 28,
+    "144": 45,
+    "360": 55,
+    "720": 60
+  },
+  "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"],
+  "folds": [
+    {
+      "fold": 2021,
+      "fit_start_fraction": 0.0,
+      "fit_end_fraction": 0.35,
+      "calibration_start_fraction": 0.55,
+      "calibration_end_fraction": 0.65,
+      "partition_seed": 3101
+    },
+    {
+      "fold": 2022,
+      "fit_start_fraction": 0.15,
+      "fit_end_fraction": 0.5,
+      "calibration_start_fraction": 0.7,
+      "calibration_end_fraction": 0.8,
+      "partition_seed": 3102
+    },
+    {
+      "fold": 2023,
+      "fit_start_fraction": 0.3,
+      "fit_end_fraction": 0.65,
+      "calibration_start_fraction": 0.85,
+      "calibration_end_fraction": 1.0,
+      "partition_seed": 3103
+    }
+  ],
+  "fit_windows": 512,
+  "calibration_windows": 128,
+  "validation_windows": 256,
+  "normalization_epsilon": 1e-5,
+  "numeric_ridge": 1e-8,
+  "future_bins": [
+    {"name": "short", "start": 0, "end": 144},
+    {"name": "mid", "start": 144, "end": 360},
+    {"name": "long", "start": 360, "end": 720}
+  ],
+  "dense_horizons": [48, 96, 144, 192, 288, 336, 512, 720],
+  "gates": {
+    "dataset_required": 3,
+    "fold_direction_required": 2,
+    "crossing_relative_margin": 0.001,
+    "oracle_macro_gain_min": 0.005,
+    "carrier_skill_dataset_required": 3,
+    "carrier_skill_gain_min": 0.005,
+    "contiguity_dataset_required": 3,
+    "contiguity_macro_gain_min": 0.001,
+    "max_parameter_relative_gap": 0.01,
+    "max_feature_condition_number": 1000000.0,
+    "max_pca_orthogonality_gap": 1e-8,
+    "severe_degradation_threshold": 1.0
+  },
+  "authorization": {
+    "uses_train_split": true,
+    "uses_validation_split": true,
+    "uses_test_split": false,
+    "updates_forecast_model": false,
+    "trains_forecast_model": false,
+    "paper_method_implementation_authorized": false,
+    "d14_b_authorized": false
+  }
+}

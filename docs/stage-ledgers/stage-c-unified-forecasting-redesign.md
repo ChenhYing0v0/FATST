@@ -21,9 +21,9 @@
 | `current_11_step` | D14 output-coupling granularity audit，Step 2-3 |
 | `current_candidate` | `SC1-PCSD` + `SC2-CCRL` provisional pair；problem gates pending |
 | `latest_decision` | ordered patch memory降为auxiliary；主线重构为within-model adaptive output coupling |
-| `next_required_action` | source-informed实现D14-A matched coupling family；A pass后才实现D14-B；test=false |
-| `method_training_authorized` | false；D14 diagnostic_only；paper method=false，remote=false，test=false |
-| `rollback_point` | D14-A fail -> Step2关闭pair；A pass/B fail ->仅PCSD回Step4 |
+| `next_required_action` | 运行D14-A0 neutral PCA64 + matched RRR五数据集三fold；A gate后再决定B；test=false |
+| `method_training_authorized` | false；D14-A0 remote diagnostic=true；forecast/paper method=false，D14-B=false，test=false |
+| `rollback_point` | A0 invalid -> Step2-3 redesign；valid fail -> failure attribution；A pass只返回Step4-6 |
 
 ## 11-Step Record
 
@@ -34,11 +34,11 @@
 | `existence_evidence` | Direct/MIMO/DIRMO/Stratify为强外部问题先验；A6 global endpoint与D6 crossing为间接内部证据；direct evidence未验证 |
 | `idea` | PCSD projective point-to-global coupling spectrum + CCRL cross-fitted coupling-regret supervision |
 | `theory_check` | projectivity/A6 containment可构造；point-MSE只允许finite-sample sharing claim；routing/meta-learning prior art强，formal Step5未授权 |
-| `design` | D14-A neutral/A6 carriers + matched point/block/global heads；D14-B train-OOF regret predictability；5 datasets × 3 seeds；validation-only |
+| `design` | D14-A0 neutral PCA64 + parameter-matched blockwise RRR；5 scales × canonical/shifted/random controls；5 datasets × 3 chronological folds；validation-only |
 | `narrative_gate` | problem chain与multi-horizon直接对齐；candidate仍provisional；DIRMO+MoE equivalence与router predictability为最大风险 |
 | `effectiveness_gate` | not applicable until a new candidate passes Step4-6 |
 | `artifacts` | `analysis/stage_c_multi_horizon_coupling_mainline_reset_20260715/multi_horizon_coupling_mainline_reconstruction.md` |
-| `decision` | CADMO/CPGA退出active slots；只授权D14-A；A pass后才执行B；通过也只返回formal Step4-6 |
+| `decision` | A0 source/theory/local gates完成并授权remote diagnostic；D14-B与paper method仍held；A0 positive也只返回formal Step4-6 |
 
 ## Frozen Carrier Contract
 
@@ -91,7 +91,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC-D14-P` | `auxiliary_not_scheduled` | A6 patch memory是否含超越global coeff的ordered target-specific conditional information | not paper mainline | not started | 未来仅在decoder interface需要时做small probe |
 | `SC1-PCSD` | `proposed_step2_3` | one projective decoder是否需同时表示point/block/global coupling scopes | complete-chain novelty only；DIRMO/Stratify/CATS controls mandatory | not started | D14-A pass后才进入formal Step4-6 |
 | `SC2-CCRL` | `proposed_step2_3_dependent` | train-OOF coupling regret能否使history+target policy兑现oracle headroom | generic routing/regret overlap强；独立novelty未通过 | not started | D14-A pass后运行B；B pass才回Step4-6 |
-| `SC-D14-A/B` | `diagnostic_only_authorized` | coupling scale是否crossing且best scale能否由history+target预测 | not required；method=false | 5 datasets × 3 seeds/folds；neutral primary + A6 sensitivity；validation-only | source-informed implement A；A pass才实现B；test=false |
+| `SC-D14-A/B` | `a0_remote_authorized_b_held` | coupling scale是否crossing且best scale能否由history+target预测 | not required；method=false | A0=neutral PCA64 + matched RRR，5 datasets × 3 folds；B未实现 | run A0；A gate后重新授权B；test=false |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
 
@@ -196,7 +196,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | D13-A/B rolling-origin diagnostics | `deferred_next_paper` | protocol preserved；not active |
 | Fixed-past compression mainline reset | `superseded_by_narrative_scope` | CADMO/CPGA与patch-memory D14降为history-interface auxiliary；未执行 |
 | Multi-horizon coupling mainline reset | `completed_provisional_step2_3` | PCSD/CCRL proposed；完整prior-art boundary与D14-A/B gates已冻结；method remains false |
-| D14 output-coupling granularity | `diagnostic_only_authorized` | source-informed implement A；A pass后才运行B；validation-only；test=false |
+| D14 output-coupling granularity | `a0_remote_authorized` | source/theory/local invariant gates pass；运行neutral five-dataset diagnostic；B/method/test held |
 
 ## Paper Mainline Sync Log
 
