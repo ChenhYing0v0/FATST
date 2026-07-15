@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import math
 import os
@@ -50,6 +51,12 @@ PREFIX_READOUT_MODES = {
     "plgo-paf-geo-m694",
     "plgo-paf-perm-m694",
     "plgo-paf-random-m694",
+    "japo-joint-geo",
+    "japo-uniform",
+    "japo-history",
+    "japo-atom",
+    "japo-joint-perm",
+    "japo-joint-random",
 }
 
 STAGE_C_ACTIVE_READOUTS = {
@@ -64,6 +71,12 @@ STAGE_C_ACTIVE_READOUTS = {
     "plgo-paf-geo-m694",
     "plgo-paf-perm-m694",
     "plgo-paf-random-m694",
+    "japo-joint-geo",
+    "japo-uniform",
+    "japo-history",
+    "japo-atom",
+    "japo-joint-perm",
+    "japo-joint-random",
 }
 
 ACTIVE_STAGE_C_CONTRACT = {
@@ -345,6 +358,10 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         plgo_latent_width=args.plgo_latent_width,
         plgo_permutation_seed=args.plgo_permutation_seed,
         plgo_random_descriptor_seed=args.plgo_random_descriptor_seed,
+        japo_expert_count=args.japo_expert_count,
+        japo_expert_rank=args.japo_expert_rank,
+        japo_router_width=args.japo_router_width,
+        japo_router_output_init_std=args.japo_router_output_init_std,
         evaluation_prefix_mode=getattr(args, "evaluation_prefix_mode", "native"),
         segment_horizons=getattr(
             args,
@@ -372,6 +389,69 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
 def dump_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+
+
+def _tensor_hash(tensors: list[torch.Tensor]) -> str:
+    digest = hashlib.sha256()
+    for tensor in tensors:
+        digest.update(tensor.detach().cpu().contiguous().numpy().tobytes())
+    return digest.hexdigest()
+
+
+def initialization_contract(model: nn.Module) -> dict[str, Any]:
+    named_parameters = list(model.named_parameters())
+    encoder = [
+        parameter
+        for name, parameter in named_parameters
+        if name.startswith(("patch_emb_x.", "encoder.", "norm_x."))
+    ]
+    payload: dict[str, Any] = {
+        "encoder_initialization_hash": _tensor_hash(encoder),
+        "readout_mode": getattr(model, "readout_mode", ""),
+    }
+    if hasattr(model, "japo_readout"):
+        readout = model.japo_readout
+        experts = [
+            parameter
+            for name, parameter in named_parameters
+            if name.startswith(
+                (
+                    "japo_readout.expert_branches.",
+                    "japo_readout.atom_basis",
+                    "japo_readout.coefficient_bias",
+                )
+            )
+        ]
+        hidden = torch.linspace(
+            -1.0,
+            1.0,
+            steps=next(iter(readout.expert_branches)).in_features,
+            device=readout.atom_basis.device,
+        ).view(1, 1, -1)
+        with torch.no_grad():
+            gates = readout.gates(hidden)
+            entropy = -(
+                gates * gates.clamp_min(1e-12).log()
+            ).sum(dim=-1).mean() / math.log(readout.expert_count)
+            usage = gates.mean(dim=(0, 1, 2))
+        payload.update(
+            {
+                "expert_bank_initialization_hash": _tensor_hash(experts),
+                "basis_hash": _tensor_hash([readout.basis_rows]),
+                "descriptor_hash": _tensor_hash([readout.descriptors]),
+                "expert_pair_max_abs_difference": float(
+                    (
+                        readout.expert_branches[0].weight
+                        - readout.expert_branches[1].weight
+                    )
+                    .abs()
+                    .max()
+                ),
+                "initial_gate_entropy": float(entropy),
+                "initial_expert_usage": usage.detach().cpu().tolist(),
+            }
+        )
+    return payload
 
 
 def model_diagnostics(model: nn.Module) -> dict[str, Any]:
@@ -557,6 +637,46 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
                 "plgo_global_rank": int(readout.global_rank),
             }
         )
+    if hasattr(model, "japo_readout"):
+        readout = model.japo_readout
+        active_prefixes: tuple[str, ...] = (
+            "patch_emb_x.",
+            "encoder.",
+            "norm_x.",
+            "japo_readout.expert_branches.",
+            "japo_readout.atom_basis",
+            "japo_readout.coefficient_bias",
+        )
+        if readout.gate_mode in {"joint", "history"}:
+            active_prefixes += ("japo_readout.history_projection.",)
+        if readout.gate_mode in {"joint", "atom"}:
+            active_prefixes += ("japo_readout.descriptor_projection.",)
+        if readout.gate_mode != "uniform":
+            active_prefixes += ("japo_readout.gate_weight",)
+        active_parameters = sum(
+            parameter.numel()
+            for name, parameter in model.named_parameters()
+            if name.startswith(active_prefixes)
+        )
+        payload.update(
+            {
+                "active_forward_parameters": active_parameters,
+                "unused_proj_x_parameters": sum(
+                    parameter.numel()
+                    for name, parameter in model.named_parameters()
+                    if name.startswith("proj_x.")
+                ),
+                "japo_decoder_parameters": sum(
+                    parameter.numel() for parameter in readout.parameters()
+                ),
+                "japo_gate_mode": readout.gate_mode,
+                "japo_descriptor_family": readout.descriptor_name,
+                "japo_expert_count": int(readout.expert_count),
+                "japo_expert_rank": int(readout.expert_rank),
+                "japo_router_width": int(readout.router_width),
+                "plgo_global_rank": int(readout.global_rank),
+            }
+        )
     return payload
 
 
@@ -574,15 +694,31 @@ def patch_interface_diagnostics(
     elif hasattr(model, "plgo_paf_readout"):
         projection = model.plgo_paf_readout.branch
         interface = "plgo_shared_latent_branch"
+    elif hasattr(model, "japo_readout"):
+        projection = None
+        interface = "japo_independent_expert_branches"
     else:
-        raise ValueError("patch diagnostics require A6 or PLGO-PAF readout")
+        raise ValueError("patch diagnostics require A6, PLGO-PAF, or JAPO readout")
 
     patch_num = int(model.patch_num)
     d_model = int(model.d_model)
-    latent_width = int(projection.out_features)
-    if projection.in_features != patch_num * d_model:
-        raise ValueError("projection width does not match patch tensor contract")
-    blocks = projection.weight.reshape(latent_width, patch_num, d_model)
+    if projection is not None:
+        latent_width = int(projection.out_features)
+        if projection.in_features != patch_num * d_model:
+            raise ValueError("projection width does not match patch tensor contract")
+        blocks = projection.weight.reshape(latent_width, patch_num, d_model)
+        projection_bias = projection.bias
+    else:
+        readout = model.japo_readout
+        latent_width = int(readout.expert_count * readout.expert_rank)
+        blocks = torch.stack(
+            [branch.weight for branch in readout.expert_branches],
+            dim=0,
+        ).reshape(latent_width, patch_num, d_model)
+        projection_bias = torch.stack(
+            [branch.bias for branch in readout.expert_branches],
+            dim=0,
+        ).reshape(-1)
     weight_norm = blocks.square().sum(dim=(0, 2)).sqrt()
     weight_share = weight_norm / weight_norm.sum().clamp_min(1e-12)
     contribution_energy = torch.zeros(
@@ -592,6 +728,9 @@ def patch_interface_diagnostics(
     )
     contribution_elements = 0
     flatten_block_sum_max_abs = 0.0
+    gate_probability_sum = None
+    gate_entropy_sum = 0.0
+    gate_rows = 0
     model.eval()
     with torch.no_grad():
         for batch_idx, (batch_x, _batch_y, _batch_x_mark, _batch_y_mark) in enumerate(loader):
@@ -613,12 +752,30 @@ def patch_interface_diagnostics(
                 * contributions.shape[1]
                 * contributions.shape[3]
             )
-            direct = projection(hidden)
-            explicit = contributions.sum(dim=2) + projection.bias
+            if projection is not None:
+                direct = projection(hidden)
+            else:
+                direct = model.japo_readout.expert_latents(hidden).flatten(
+                    start_dim=-2
+                )
+            explicit = contributions.sum(dim=2) + projection_bias
             flatten_block_sum_max_abs = max(
                 flatten_block_sum_max_abs,
                 float((direct - explicit).abs().max()),
             )
+            if hasattr(model, "japo_readout"):
+                gates = model.japo_readout.gates(hidden)
+                reduced = gates.sum(dim=(0, 1, 2)).double()
+                gate_probability_sum = (
+                    reduced
+                    if gate_probability_sum is None
+                    else gate_probability_sum + reduced
+                )
+                entropy = -(
+                    gates * gates.clamp_min(1e-12).log()
+                ).sum(dim=-1) / math.log(model.japo_readout.expert_count)
+                gate_entropy_sum += float(entropy.double().sum())
+                gate_rows += int(entropy.numel())
     if contribution_elements == 0:
         raise RuntimeError("patch diagnostics received no validation batches")
     contribution_energy /= contribution_elements
@@ -686,6 +843,27 @@ def patch_interface_diagnostics(
                     float(np.mean(distances)) if distances else 0.0
                 ),
                 "atom_patch_jacobian_shape": list(jacobian_norm.shape),
+            }
+        )
+    if hasattr(model, "japo_readout"):
+        readout = model.japo_readout
+        expert_gap = float(
+            (
+                readout.expert_branches[0].weight
+                - readout.expert_branches[1].weight
+            )
+            .abs()
+            .max()
+        )
+        payload.update(
+            {
+                "japo_gate_mode": readout.gate_mode,
+                "japo_descriptor_family": readout.descriptor_name,
+                "japo_expert_pair_max_abs_difference": expert_gap,
+                "japo_gate_entropy": gate_entropy_sum / gate_rows,
+                "japo_expert_usage": (
+                    gate_probability_sum / gate_probability_sum.sum()
+                ).detach().cpu().tolist(),
             }
         )
     return payload, rows, atom_patch_jacobian
@@ -930,6 +1108,10 @@ def train(
     del train_data, vali_data
 
     model = TimeAlign.Model(official_args).float().to(official_args.device)
+    dump_json(
+        args.output_dir / "initialization_contract.json",
+        initialization_contract(model),
+    )
     optimizer = optim.AdamW(model.parameters(), lr=official_args.learning_rate)
     criterion = nn.L1Loss()
     training_rows: list[dict[str, Any]] = []
@@ -1221,6 +1403,7 @@ def run(args: argparse.Namespace) -> None:
     if args.readout_mode in {
         "learned-basis-forecast-operator",
         *TimeAlign.PLGO_PAF_READOUTS,
+        *TimeAlign.JAPO_READOUTS,
     }:
         patch_data, patch_loader = data_provider(official_args, "val")
         del patch_data
@@ -1436,6 +1619,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--plgo-latent-width", type=int, default=256)
     parser.add_argument("--plgo-permutation-seed", type=int, default=7101)
     parser.add_argument("--plgo-random-descriptor-seed", type=int, default=7102)
+    parser.add_argument("--japo-expert-count", type=int, default=2)
+    parser.add_argument("--japo-expert-rank", type=int, default=256)
+    parser.add_argument("--japo-router-width", type=int, default=32)
+    parser.add_argument("--japo-router-output-init-std", type=float, default=0.01)
     parser.add_argument("--patch-diagnostic-batches", type=int, default=8)
     parser.add_argument(
         "--pred-loss-mode",
@@ -1582,6 +1769,16 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("plgo_global_rank must lie in [1, pred_len]")
     if args.plgo_latent_width <= 0:
         raise ValueError("plgo_latent_width must be positive")
+    if args.japo_expert_count != 2:
+        raise ValueError("SC1-JAPO Step7A requires japo_expert_count=2")
+    if args.japo_expert_rank != 256:
+        raise ValueError("SC1-JAPO Step7A requires japo_expert_rank=256")
+    if args.japo_router_width != 32:
+        raise ValueError("SC1-JAPO Step7A requires japo_router_width=32")
+    if args.japo_router_output_init_std != 0.01:
+        raise ValueError(
+            "SC1-JAPO Step7A requires japo_router_output_init_std=0.01"
+        )
     if args.patch_diagnostic_batches <= 0:
         raise ValueError("patch_diagnostic_batches must be positive")
     if args.stage_token_dim <= 0:

@@ -16,6 +16,9 @@ PLGO_LATENT_WIDTH = 256
 PLGO_DESCRIPTOR_DIM = 8
 PLGO_PERMUTATION_SEED = 7101
 PLGO_RANDOM_DESCRIPTOR_SEED = 7102
+JAPO_EXPERT_COUNT = 2
+JAPO_EXPERT_RANK = 256
+JAPO_ROUTER_WIDTH = 32
 
 
 @dataclass(frozen=True)
@@ -327,6 +330,201 @@ class PLGOPAFReadout(nn.Module):
         patches = hidden.reshape(*hidden.shape[:-1], patch_num, d_model)
         blocks = self.branch.weight.reshape(self.latent_width, patch_num, d_model)
         return torch.einsum("bcpd,kpd->bck", patches, blocks) + self.branch.bias
+
+    def forward(
+        self,
+        hidden: torch.Tensor,
+        target_prefix: int | None = None,
+    ) -> torch.Tensor:
+        horizon = self.series_length if target_prefix is None else int(target_prefix)
+        active = self.active_indices(horizon)
+        coefficients = self.coefficients(hidden, active)
+        basis = self.basis_rows[active, :horizon].to(dtype=hidden.dtype)
+        output = torch.einsum("bcn,nh->bch", coefficients, basis)
+        return output.permute(0, 2, 1)
+
+
+class JAPOReadout(nn.Module):
+    """Jointly route history-conditioned RGNB coefficient experts."""
+
+    def __init__(
+        self,
+        readout_dim: int,
+        gate_mode: str,
+        descriptor_name: str,
+        series_length: int = PLGO_SERIES_LENGTH,
+        global_rank: int = PLGO_GLOBAL_RANK,
+        expert_count: int = JAPO_EXPERT_COUNT,
+        expert_rank: int = JAPO_EXPERT_RANK,
+        router_width: int = JAPO_ROUTER_WIDTH,
+        router_output_init_std: float = 0.01,
+        permutation_seed: int = PLGO_PERMUTATION_SEED,
+        random_seed: int = PLGO_RANDOM_DESCRIPTOR_SEED,
+    ) -> None:
+        super().__init__()
+        if gate_mode not in {"joint", "uniform", "history", "atom"}:
+            raise ValueError(f"unsupported JAPO gate mode: {gate_mode}")
+        if expert_count != 2:
+            raise ValueError("SC1-JAPO Step7A freezes expert_count=2")
+        synthesis, atoms = restricted_global_nested_basis(
+            series_length,
+            global_rank,
+        )
+        canonical = canonical_atom_descriptors(atoms)
+        descriptors = descriptor_family(
+            canonical,
+            descriptor_name,
+            permutation_seed,
+            random_seed,
+        )
+        self.series_length = series_length
+        self.global_rank = global_rank
+        self.expert_count = expert_count
+        self.expert_rank = expert_rank
+        self.router_width = router_width
+        self.gate_mode = gate_mode
+        self.descriptor_name = descriptor_name
+        self.history_norm = nn.LayerNorm(readout_dim, elementwise_affine=False)
+        self.expert_branches = nn.ModuleList(
+            nn.Linear(readout_dim, expert_rank) for _ in range(expert_count)
+        )
+        self.atom_basis = nn.Parameter(
+            torch.empty(expert_count, series_length, expert_rank)
+        )
+        self.coefficient_bias = nn.Parameter(
+            torch.zeros(expert_count, series_length)
+        )
+        self.history_projection = nn.Linear(readout_dim, router_width)
+        self.descriptor_projection = nn.Linear(
+            PLGO_DESCRIPTOR_DIM,
+            router_width,
+        )
+        self.gate_weight = nn.Parameter(
+            torch.empty(expert_count, router_width)
+        )
+        nn.init.normal_(
+            self.atom_basis,
+            mean=0.0,
+            std=math.sqrt(expert_count / expert_rank),
+        )
+        nn.init.normal_(
+            self.gate_weight,
+            mean=0.0,
+            std=router_output_init_std,
+        )
+        self.register_buffer("basis_rows", synthesis.T.float())
+        self.register_buffer("descriptors", descriptors)
+        self.register_buffer(
+            "atom_starts",
+            torch.tensor([atom.start for atom in atoms], dtype=torch.long),
+        )
+        self.register_buffer(
+            "atom_group_ids",
+            torch.tensor(
+                [0 if atom.kind == "global" else atom.depth + 1 for atom in atoms],
+                dtype=torch.long,
+            ),
+        )
+
+    @staticmethod
+    def _rms_normalize(value: torch.Tensor) -> torch.Tensor:
+        scale = value.square().mean(dim=-1, keepdim=True).add(1e-8).sqrt()
+        return value / scale
+
+    def active_indices(self, horizon: int) -> torch.Tensor:
+        if horizon <= 0 or horizon > self.series_length:
+            raise ValueError("horizon must lie in [1, series_length]")
+        return torch.nonzero(self.atom_starts < horizon, as_tuple=False).flatten()
+
+    def expert_latents(self, hidden: torch.Tensor) -> torch.Tensor:
+        return torch.stack(
+            [branch(hidden) for branch in self.expert_branches],
+            dim=-2,
+        )
+
+    def expert_coefficients(
+        self,
+        hidden: torch.Tensor,
+        indices: torch.Tensor | None = None,
+    ) -> torch.Tensor:
+        latents = self.expert_latents(hidden)
+        basis = self.atom_basis if indices is None else self.atom_basis[:, indices]
+        bias = (
+            self.coefficient_bias
+            if indices is None
+            else self.coefficient_bias[:, indices]
+        )
+        coefficients = torch.einsum("bcek,enk->bcne", latents, basis)
+        return coefficients + bias.T.view(1, 1, bias.shape[1], bias.shape[0])
+
+    def gates(
+        self,
+        hidden: torch.Tensor,
+        indices: torch.Tensor | None = None,
+    ) -> torch.Tensor:
+        descriptors = self.descriptors if indices is None else self.descriptors[indices]
+        atom_count = descriptors.shape[0]
+        if self.gate_mode == "uniform":
+            return hidden.new_full(
+                (*hidden.shape[:-1], atom_count, self.expert_count),
+                1.0 / self.expert_count,
+            )
+        if self.gate_mode in {"joint", "history"}:
+            history = torch.tanh(
+                self.history_projection(self.history_norm(hidden))
+            )
+            history = self._rms_normalize(history)
+        if self.gate_mode in {"joint", "atom"}:
+            atom = torch.tanh(self.descriptor_projection(descriptors))
+            atom = self._rms_normalize(atom)
+        if self.gate_mode == "history":
+            features = history.unsqueeze(-2).expand(
+                *history.shape[:-1],
+                atom_count,
+                self.router_width,
+            )
+        elif self.gate_mode == "atom":
+            features = atom.view(
+                *((1,) * (hidden.ndim - 1)),
+                atom_count,
+                self.router_width,
+            ).expand(*hidden.shape[:-1], atom_count, self.router_width)
+        else:
+            atom_view = atom.view(
+                *((1,) * (hidden.ndim - 1)),
+                atom_count,
+                self.router_width,
+            )
+            features = self._rms_normalize(history.unsqueeze(-2) * atom_view)
+        logits = torch.einsum("...ng,eg->...ne", features, self.gate_weight)
+        return torch.softmax(logits / math.sqrt(self.router_width), dim=-1)
+
+    def coefficients(
+        self,
+        hidden: torch.Tensor,
+        indices: torch.Tensor | None = None,
+    ) -> torch.Tensor:
+        experts = self.expert_coefficients(hidden, indices)
+        return (self.gates(hidden, indices) * experts).sum(dim=-1)
+
+    def latents_from_patch_blocks(
+        self,
+        hidden: torch.Tensor,
+        patch_num: int,
+        d_model: int,
+    ) -> torch.Tensor:
+        if patch_num * d_model != hidden.shape[-1]:
+            raise ValueError("patch shape does not match flattened history width")
+        patches = hidden.reshape(*hidden.shape[:-1], patch_num, d_model)
+        weights = torch.stack(
+            [branch.weight for branch in self.expert_branches],
+            dim=0,
+        ).reshape(self.expert_count, self.expert_rank, patch_num, d_model)
+        biases = torch.stack(
+            [branch.bias for branch in self.expert_branches],
+            dim=0,
+        )
+        return torch.einsum("bcpd,ekpd->bcek", patches, weights) + biases
 
     def forward(
         self,

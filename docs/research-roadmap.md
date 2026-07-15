@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC1-JAPO Step 6 complete；Step 7A local implementation next |
-| `active_question` | production JAPO能否严格实现已冻结的E2/K256/G32、paired controls与prefix/gradient contracts？ |
-| `active_candidates` | `SC1-JAPO narrative_ready/step7a_pending`；`SC1-PLGO geometry scaffold retained`；`SC2-MIPR` held |
+| `current_step` | SC1-JAPO Step 7A complete；Step 8 seed2021 remote screen next |
+| `active_question` | JAPO JOINT能否在五datasets中同时超过A6与UNIFORM/HISTORY/ATOM/PERM/RANDOM same-bank controls？ |
+| `active_candidates` | `SC1-JAPO narrative_ready/step8_authorized`；`SC1-PLGO geometry scaffold retained`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_sc1_japo_step6_design_20260714/step6_method_control_design.md` |
-| `method_implementation` | Step7A local only；remote=false；SC2=false |
-| `rollback_point` | Step6 repair if local gate fails；Step4 if same-bank attribution fails；Step2/3 only by complete-contract failure |
+| `active_protocol` | `analysis/stage_c_sc1_japo_step7a_local_20260714/step7a_local_gate_report.md` |
+| `method_implementation` | Step7A pass；seed2021 remote screen authorized；test=false；SC2=false |
+| `rollback_point` | Step7A/6 for protocol fault；Step4 if same-bank attribution fails；Step2/3 only by complete-contract failure |
 
 ## Completed Foundation
 
@@ -178,7 +178,7 @@ cases后，Step7B完成35/35 validation-only runs。GEO-c256相对A6 macro `-28.
 descriptors `+14.33%`、5/5 datasets为正；m694只比c256改善`+0.58%`。因此exact shared-latent PAF失败，
 RGNB geometry retained；现已完成Step4 intervention/readout redesign，不进入三seed，转入JAPO Step5 theory。
 
-## SC1-JAPO Step 6: Narrative Ready, Step 7A Pending
+## SC1-JAPO Step 7A: Production Gate Passed, Step 8 Authorized
 
 1. `memory [B,C,P,D] -> h [B,C,PD]`是可逆reshape，不是pooling；D8失败不能归因于flatten本身；
 2. 真正边界是`alpha_j = psi(d_j)^T A h`：自由A6 temporal table被descriptor-generated fixed separable
@@ -204,7 +204,12 @@ RGNB geometry retained；现已完成Step4 intervention/readout redesign，不�
     min=`0.999855`、usage=`0.4980–0.5020`，所有joint gradients nonzero；
 14. seven arms固定为A6/JOINT/UNIFORM/HISTORY/ATOM/PERM/RANDOM；所有JAPO arms paired expert bank；
 15. seed2021先做35-run validation-only screen；严重失败早停，模糊结果只补seed2022，pass后补seed2023；
-16. decision=`SC1-JAPO narrative_ready_step7a_local_implementation_only`；Step7A可编码，remote/SC2仍false。
+16. Step6 decision=`SC1-JAPO narrative_ready_step7a_local_implementation_only`；当时只授权本地编码；
+17. production `JAPOReadout`实现六个same-bank modes，requested $H$只选择active atoms；
+18. 210/210 prefix与35/35 gradient cases通过；最大gap分别为`4.768e-7`与patch rewrite `5.722e-6`；
+19. 七arms Encoder hashes paired，六JAPO arms expert-bank hashes paired且within-bank experts独立；
+20. runner/analyzer dry-run固定35 jobs、validation-only、full-H720 L1与best-val；
+21. decision=`step7a_pass_remote_screen_authorized`；只授权seed2021 Step8，test/SC2继续held。
 
 ## SC1-PLGO Step 6 Design Gate: Conditional Pass, D7 Required
 

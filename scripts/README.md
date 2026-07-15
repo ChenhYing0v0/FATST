@@ -31,6 +31,13 @@ StageC active entrypoints：
 - `check_stage_c_japo_step6_design.py`: 冻结JAPO的双full-rank expert bank、history-atom joint router、
   matched same-bank controls、初始化与分阶段effectiveness gate；只验证Step6 tensor/gradient/contract，
   不实现forecast model、不训练模型。
+- `check_stage_c_sc1_japo_step7a.py`: 五profiles × 七arms的210 prefix、35 gradient、paired initialization、
+  patch-block rewrite与horizon-path production gate；不训练forecast model。
+- `check_stage_c_sc1_japo_checkpoint_invariants.py`: synthetic或trained A6/JAPO checkpoint的prefix、
+  from-scratch、initialization、patch与expert contract审计。
+- `analyze_stage_c_sc1_japo_e2e.py`: 35-run validation-only completeness、paired hashes、same-bank controls与
+  seed2021 staged gate分析。
+- `remote/run_stage_c_sc1_japo_e2e.sh`: 3090 workload-aware JAPO seed2021 35-run end-to-end screen；禁止test。
 - `run_stage_c_sc1_d7_descriptor_sufficiency.py`: 从冻结A6 memory训练free-M0与GEO/PERM/RANDOM
   compact/matched PAF heads；使用validation batches16-23，不更新forecast model、不读取test。
 - `analyze_stage_c_sc1_d7_descriptor_sufficiency.py`: 审计105-fit completeness、parameter/projectivity invariants、

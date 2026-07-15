@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | decoder/operator 与 training principle 两项相互支撑的 paper-core innovations |
-| `active_question` | narrative-ready JAPO的production实现能否严格复现E2/K256/G32 tensor、initialization、projectivity与seven-arm protocol？ |
+| `active_question` | JAPO能否在五datasets end-to-end joint training中同时超过A6与五个same-bank controls？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | `SC1-JAPO narrative_ready/step7a_pending`；`SC1-PLGO geometry retained`；`SC1-D8-E2E exact design failed`；`SC2-MIPR` held |
+| `active_candidates` | `SC1-JAPO narrative_ready/step8_authorized`；`SC1-PLGO geometry retained`；`SC1-D8-E2E exact design failed`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `stage_exit` | 两项分别过 narrative/effectiveness gate，`2x2` joint gate显示独立主效应与联合收益 |
 | `stage_rollback` | problem/novelty不跨 dataset -> Step 2；禁止直接堆叠 method |
@@ -18,27 +18,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SC1-JAPO Step 6 complete；Step 7A local implementation next |
-| `current_candidate` | `SC1-JAPO narrative_ready/step7a_pending`；`SC1-PLGO geometry retained`；`SC2-MIPR` held |
-| `latest_decision` | E2/K256/G32 multiplicative router、independent init、seven-arm controls与staged seed gates全部冻结并通过design checker |
-| `next_required_action` | Step7A实现production module、runner/analyzer与210 prefix/35 gradient/local protocol gates |
-| `method_training_authorized` | `local_implementation_only`；Step7A前remote=false，SC2=false |
-| `rollback_point` | Step 6 repair if local invariants fail；Step 4 if same-bank attribution fails；Step 2/3 only if problem contract fails |
+| `current_11_step` | SC1-JAPO Step 7A complete；Step 8 seed2021 remote screen authorized |
+| `current_candidate` | `SC1-JAPO narrative_ready/step8_authorized`；`SC1-PLGO geometry retained`；`SC2-MIPR` held |
+| `latest_decision` | production 210 prefix、35 gradient、paired hashes、runner/analyzer dry-run全部通过 |
+| `next_required_action` | commit/push后执行3090 preflight并启动5 datasets × 7 arms seed2021 validation-only matrix |
+| `method_training_authorized` | `seed2021_remote_screen_only`；test=false，SC2=false |
+| `rollback_point` | Step 7A/6 if protocol or numeric fault；Step 4 if same-bank controls explain；Step 2/3 only if problem contract fails |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | SC1-JAPO Step 6 complete；Step 7A next |
+| `current_step` | SC1-JAPO Step 7A complete；Step 8 next |
 | `problem` | descriptor-generated fixed separable readout保留RGNB geometry，却无法保留A6 operator freedom |
 | `existence_evidence` | D6 support crossing；D8 GEO vs controls +14.33%且vs A6 -28.10% |
 | `idea` | joint history-atom routing over free RGNB expert coefficient maps；H只限制domain |
 | `theory_check` | containment/projectivity/non-collapse/continuity pass；geometry-only no-go；symmetry risk bounded |
 | `design` | E2/K256/G32、independent init、seven arms、staged seeds与hard gates frozen |
 | `narrative_gate` | pass for complete contract；candidate=`narrative_ready` |
-| `effectiveness_gate` | not started for JAPO；exact PAF failed |
-| `artifacts` | D6-D8 + Step4/5 + Step6 config/checker/CSV/JSON/design report |
-| `decision` | `narrative_ready_step7a_local_implementation_only`；remote/SC2 false |
+| `effectiveness_gate` | seed2021 frozen；not started |
+| `artifacts` | D6-D8 + Step4/5/6 + Step7A production code/checker/CSV/JSON/report |
+| `decision` | `step7a_pass_remote_screen_authorized`；test/SC2 false |
 
 ## Frozen Carrier Contract
 
@@ -74,7 +74,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC1-D5` | `diagnostic_only_design_fault` | fit-only selected local DCT/PCA能否改善balanced并接近global controls | not required | primary fail；b144 arm出现11/15 crossing | direction rejection invalid；design D6 |
 | `SC1-D6` | `diagnostic_only_pass` | b144 short-positive/long-negative interaction能否在disjoint validation window复现 | not required | all gates pass；12/15 crossing | return Step4 only；evidence complete |
 | `SC1-PLGO` | `geometry_scaffold_retained` | projective local-global synthesis能否同时服务short prefix与long domain | geometry/projectivity retained；exact PAF boundary withdrawn | D8 exact carrier fail | scaffold feeds JAPO Step5；不单独训练 |
-| `SC1-JAPO` | `narrative_ready` | joint history-atom operator能否解除fixed separability且保留A6/projectivity | complete contract pass；generic MoE/nonlinear decoder不作claim | validation gate frozen；not started | Step7A production implementation/local invariants |
+| `SC1-JAPO` | `narrative_ready` | joint history-atom operator能否解除fixed separability且保留A6/projectivity | complete contract pass；generic MoE/nonlinear decoder不作claim | Step7A local gate pass；remote not started | Step8 seed2021 35-run screen |
 | `SC1-D7` | `diagnostic_only` | true RGNB descriptors是否超越permuted/random descriptors | not required | conditional geometry pass；method readiness not evaluated | evidence complete；feeds D8 controls |
 | `SC1-D8-E2E` | `failed_exact_design` | joint Encoder-PAF adaptation是否消除frozen compatibility confound并保留geometry effect | geometry retained | vs A6 -28.10%；vs matched +14.33%；m694 no rescue | rollback Step4；no three-seed |
 | `SC2-MIPR` | `held` | measure-induced block metric去除decoder scales之间的cross coupling | pass for L2；log measure primary，benchmark weak | log off-block `0.205154`；benchmark `0.002480`；performance未测 | 等新SC1 problem/method contract；不得先实现 |
@@ -126,6 +126,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-PLGO Step4 intervention/readout redesign | external primary sources + D8 function-class/patch audit + geometry-only expert no-go | flatten bijective；patch retrieval unsupported；geometry-only experts collapse to wider PAF | `SC1-JAPO theory_pending`；Step5 only；training false | `analysis/stage_c_sc1_plgo_step4_redesign_20260714/step4_source_informed_redesign.md` |
 | SC1-JAPO Step5 theory feasibility | 4 lengths/22 prefixes + function-class witness + autograd symmetry + control audit | containment `1.137e-13`；projectivity `1.172e-13`；joint witness `1.523188`；identical-init router grad 0 | `theory_pass_step6_design_only`；implementation/training false | `analysis/stage_c_sc1_japo_step5_theory_20260714/step5_theory_feasibility.md` |
 | SC1-JAPO Step6 method/control design | external primary sources + 5-profile tensor/init/gradient/control audit | projectivity `3.331e-16`；entropy min `0.999855`；usage `0.4980–0.5020`；all gradients pass | `narrative_ready_step7a_local_implementation_only`；35-run remote false | `analysis/stage_c_sc1_japo_step6_design_20260714/step6_method_control_design.md` |
+| SC1-JAPO Step7A production gate | 5 profiles × 7 arms；210 prefix + 35 gradient + paired hashes + runner/analyzer dry-run | prefix `4.768e-7`；patch rewrite `5.722e-6`；entropy min `0.999944`；all gates pass | `step7a_pass_remote_screen_authorized`；test/SC2 false | `analysis/stage_c_sc1_japo_step7a_local_20260714/step7a_local_gate_report.md` |
 
 ## Pending Tasks
 
@@ -159,7 +160,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-PLGO intervention/readout redesign | `completed_step4` | JAPO为唯一保留候选；geometry-only experts与patch retrieval不推进 |
 | SC1-JAPO theory feasibility | `completed_pass` | A6 containment、joint non-collapse、projectivity、continuity与symmetry audit完成 |
 | SC1-JAPO Step6 method/control design | `completed_pass` | E2/K256/G32、independent init、seven-arm attribution与staged seed gates frozen |
-| SC1-JAPO Step7A local implementation | `next_step7a` | production module + 210 prefix/35 gradient + init hashes + runner/analyzer dry-run |
+| SC1-JAPO Step7A local implementation | `completed_pass` | production module + 210 prefix/35 gradient + paired hashes + runner/analyzer dry-run |
+| SC1-JAPO Step8 seed2021 remote screen | `authorized_not_started` | commit/push、GPU preflight、35-run validation-only launch |
 
 ## Paper Mainline Sync Log
 
@@ -186,10 +188,11 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-14 | SC1-PLGO Step4 redesign audit | Current Position、Contribution 1、Boundary | source/no-go audit + provisional successor | JAPO仅进入Step5；geometry-only experts、patch retrieval、dense bypass不推进 |
 | 2026-07-14 | SC1-JAPO Step5 theory feasibility | Current Position、Contribution 1、Boundary | containment/projectivity/non-collapse proof + optimization boundary | theory pass；identical init禁止；只进入Step6 design |
 | 2026-07-14 | SC1-JAPO Step6 narrative/control gate | Current Position、Contribution 1、Main Experiment Logic | concrete method + control/seed protocol freeze | JAPO=`narrative_ready`；只进入Step7A local implementation；remote/SC2 false |
+| 2026-07-14 | SC1-JAPO Step7A production gate | Current Position、Contribution 1、Main Experiment Logic | implementation evidence + remote authorization | 210/210 + 35/35 + paired hashes通过；seed2021 remote authorized；test/SC2 false |
 
 ## Continuation Rules
 
-1. 每次继续研究先读本 ledger 与active Step6 design report；Step7A不得静默改变E/K/G、init或controls；
+1. 每次继续研究先读本 ledger 与active Step7A report；remote不得静默改变E/K/G、init、controls或gates；
 2. old analysis可引用，archive脚本不得直接启动；
 3. diagnostic failure必须区分 hypothesis、intervention、readout、numeric与capacity control；
 4. D2 formal5只在frozen A6 representation/head family下不支持depth grouping；当前PLGO不使用该设计，若未来
@@ -206,5 +209,5 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 12. 以后freeze/replace默认只作conditional diagnostic；不得据此拒绝paper-core method或强制架构redesign。
 13. D8之后不得把flatten本身写成信息压缩；真正失败边界是fixed descriptor-generated separable operator。
 14. geometry-only linear expert mixture可吸收到更宽PAF；固定rank无新class，扩rank需capacity control，不得直接升method。
-15. JAPO已通过Step6 narrative/control gate，只获Step7A local implementation授权；atom-to-patch retrieval
-    仍被B14与prior art阻断，remote launch与SC2继续held。
+15. JAPO已通过Step7A production gate，只授权seed2021 validation-only screen；atom-to-patch retrieval仍被
+    B14与prior art阻断，test、architecture tuning与SC2继续held。

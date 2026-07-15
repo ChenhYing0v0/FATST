@@ -9,7 +9,7 @@ from layers.PMFO import (
     PMFONoTransitionReadout,
     PMFORCTReadout,
 )
-from layers.PLGO import PLGOPAFReadout
+from layers.PLGO import JAPOReadout, PLGOPAFReadout
 from layers.StandardNorm import Normalize
 
 LEARNED_BASIS_READOUTS = {
@@ -43,6 +43,24 @@ PLGO_PAF_READOUTS = {
     "plgo-paf-geo-m694",
     "plgo-paf-perm-m694",
     "plgo-paf-random-m694",
+}
+
+JAPO_READOUTS = {
+    "japo-joint-geo",
+    "japo-uniform",
+    "japo-history",
+    "japo-atom",
+    "japo-joint-perm",
+    "japo-joint-random",
+}
+
+JAPO_READOUT_CONFIG = {
+    "japo-joint-geo": ("joint", "geo"),
+    "japo-uniform": ("uniform", "geo"),
+    "japo-history": ("history", "geo"),
+    "japo-atom": ("atom", "geo"),
+    "japo-joint-perm": ("joint", "perm"),
+    "japo-joint-random": ("joint", "random"),
 }
 
 ENCODER_MODES = {
@@ -358,6 +376,7 @@ class Model(nn.Module):
             *STBO_READOUTS,
             *PMFO_READOUTS,
             *PLGO_PAF_READOUTS,
+            *JAPO_READOUTS,
         }:
             raise ValueError(
                 "Clean TimeAlign supports only 'official' and "
@@ -365,7 +384,7 @@ class Model(nn.Module):
                 "readout modes"
             )
         if (
-            self.readout_mode in PMFO_READOUTS | PLGO_PAF_READOUTS
+            self.readout_mode in PMFO_READOUTS | PLGO_PAF_READOUTS | JAPO_READOUTS
             and self.pred_len != 720
         ):
             raise ValueError("StageC projective readouts require pred_len=720")
@@ -611,6 +630,23 @@ class Model(nn.Module):
                 permutation_seed=int(getattr(configs, "plgo_permutation_seed", 7101)),
                 random_seed=int(getattr(configs, "plgo_random_descriptor_seed", 7102)),
             )
+        if self.readout_mode in JAPO_READOUTS:
+            gate_mode, descriptor_name = JAPO_READOUT_CONFIG[self.readout_mode]
+            self.japo_readout = JAPOReadout(
+                readout_dim=readout_dim,
+                gate_mode=gate_mode,
+                descriptor_name=descriptor_name,
+                series_length=self.pred_len,
+                global_rank=int(getattr(configs, "plgo_global_rank", 16)),
+                expert_count=int(getattr(configs, "japo_expert_count", 2)),
+                expert_rank=int(getattr(configs, "japo_expert_rank", 256)),
+                router_width=int(getattr(configs, "japo_router_width", 32)),
+                router_output_init_std=float(
+                    getattr(configs, "japo_router_output_init_std", 0.01)
+                ),
+                permutation_seed=int(getattr(configs, "plgo_permutation_seed", 7101)),
+                random_seed=int(getattr(configs, "plgo_random_descriptor_seed", 7102)),
+            )
 
         self.normalization_x = Normalize(configs.enc_in, affine=False)
         if self.has_future_recon_branch:
@@ -851,6 +887,8 @@ class Model(nn.Module):
             output = self.pmfo_readout(hidden, target_prefix)
         elif self.readout_mode in PLGO_PAF_READOUTS:
             output = self.plgo_paf_readout(hidden, target_prefix)
+        elif self.readout_mode in JAPO_READOUTS:
+            output = self.japo_readout(hidden, target_prefix)
         else:
             raise ValueError(f"Unsupported readout mode: {self.readout_mode}")
         output = self.normalization_x(output, "denorm")

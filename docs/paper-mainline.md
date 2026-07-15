@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC1-JAPO Step 6 complete；Step 7A local implementation next |
+| `current_11_step` | SC1-JAPO Step 7A complete；Step 8 seed2021 remote screen next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | Contribution 1 JAPO narrative_ready/step7a_pending；SC2-MIPR held |
+| `paper_core_status` | Contribution 1 JAPO narrative_ready/step8_authorized；SC2-MIPR held |
 
 ## Research Thesis
 
@@ -206,7 +206,7 @@ capacity解释。因此“scale/atom experts”本身不进入paper core。直�
 flatten是bijective reshape，且history patch与future atom没有已证实的canonical alignment，B14与
 OFormer/GNOT/BasisFormer/TimePerceiver均对该shortcut形成压力。
 
-[Method Candidate] 当前只保留`SC1-JAPO`（Joint Atom-History Projective Operator）进入Step7A implementation。
+[Method Candidate] 当前只保留`SC1-JAPO`（Joint Atom-History Projective Operator）进入Step8 effectiveness screen。
 它用free RGNB expert maps生成atom coefficients，但gate必须同时依赖history context与atom support geometry；
 requested $H$仍只选择active atoms，不进入router。与geometry-only mixture不同，history-dependent gate不能吸收为
 fixed temporal table，因此有机会解除D8的fixed separability。令所有experts表示同一A6-equivalent RGNB map时，
@@ -224,11 +224,15 @@ geometry-only mixture仍collapse为fixed operator。requested $H$不进入learne
 normalization、explicit H和auxiliary routing loss均禁止。五profiles design checker的projectivity最大误差
 `3.331e-16`，initial entropy最低`0.999855`，所有joint gradient paths通过。
 
+[Step7A Implementation] production `JAPOReadout`、six same-bank modes、checkpoint invariants与validation-only
+runner/analyzer已落地。五profiles × 七arms的210/210 prefix与35/35 gradient cases通过；最大prefix gap
+`4.768e-7`，patch-block rewrite gap `5.722e-6`；Encoder与expert-bank paired initialization hashes通过。
+
 [Narrative Boundary] nonlinear decoder、operator MoE、geometry gating、structure-guided time-series MoE与
 step-specific representation均已有直接prior art。可辩护边界只能是joint history-atom conditional operator、
 RGNB exact projectivity与multi-horizon domain-only execution的完整组合。JAPO status更新为`narrative_ready`；
-UNIFORM/HISTORY/ATOM/PERM/RANDOM same-bank controls与staged three-seed gates已冻结。当前只授权Step7A local
-implementation，不授权remote training，SC2-MIPR继续held。
+UNIFORM/HISTORY/ATOM/PERM/RANDOM same-bank controls与staged three-seed gates已冻结。当前只授权seed2021的
+五dataset × 七arm validation-only remote screen；不授权test或SC2-MIPR。
 
 ### Contribution 2 Candidate: Measure-Induced Projective Risk
 
@@ -337,7 +341,9 @@ Step4，不以训练性能包装RGNB。
 20. JAPO Step5通过A6 containment、exact projectivity与strict non-collapse；identical initialization被symmetry
     audit禁止。
 21. JAPO Step6已冻结E2/K256/G32、independent initialization、seven-arm matrix与staged seeds；candidate成为
-    `narrative_ready`，当前只进入Step7A local implementation，remote/SC2仍暂停。
+    `narrative_ready`。
+22. JAPO Step7A通过210 prefix、35 gradient、paired hashes与runner/analyzer gates；当前进入Step8 seed2021
+    validation-only screen，test/SC2仍暂停。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
 generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成
@@ -372,11 +378,13 @@ loss 或更多 tuning 来掩盖失败。
 - `analysis/stage_c_sc1_plgo_step4_redesign_20260714/step4_source_informed_redesign.md`
 - `analysis/stage_c_sc1_japo_step5_theory_20260714/step5_theory_feasibility.md`
 - `analysis/stage_c_sc1_japo_step6_design_20260714/step6_method_control_design.md`
+- `analysis/stage_c_sc1_japo_step7a_local_20260714/step7a_local_gate_report.md`
 - `Papers/stage-c-external-decoder-objective-audit.md`
 - `docs/experiments/stage-c-five-dataset-validation-policy.md`
 - `docs/code-explanation/stage-c-pmfo-rct-step7a.md`
 - `docs/code-explanation/stage-c-sc1-japo-step5-theory.md`
 - `docs/code-explanation/stage-c-sc1-japo-step6-design.md`
+- `docs/code-explanation/stage-c-sc1-japo-step7a.md`
 
 2026-07-13 reset 前主线完整 snapshot 位于
 `docs/archive/pre-stage-c-reset-20260713/`，仅作历史审计。
