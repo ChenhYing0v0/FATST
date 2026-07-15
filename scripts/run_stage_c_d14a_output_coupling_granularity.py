@@ -227,6 +227,17 @@ def loss_rows(prediction: torch.Tensor, target: torch.Tensor) -> tuple[np.ndarra
     )
 
 
+def arm_family_and_scale(name: str) -> tuple[str, int]:
+    for family in ("canonical", "shifted", "random"):
+        prefix = f"{family}_s"
+        if name.startswith(prefix):
+            scale_text = name.removeprefix(prefix)
+            if not scale_text.isdigit():
+                raise ValueError(f"malformed coupling arm: {name}")
+            return family, int(scale_text)
+    return "control", 0
+
+
 def append_region_metrics(
     rows: list[dict[str, Any]],
     base: dict[str, Any],
@@ -400,10 +411,7 @@ def run_dataset(args: argparse.Namespace, design: dict[str, Any]) -> None:
         ):
             for name in arm_names:
                 mse, mae = loss_rows(predictions[name], target)
-                family, scale = "control", 0
-                if "_s" in name:
-                    family, scale_text = name.rsplit("_s", 1)
-                    scale = int(scale_text)
+                family, scale = arm_family_and_scale(name)
                 append_region_metrics(
                     metric_rows,
                     {
@@ -513,6 +521,10 @@ def synthetic_smoke() -> None:
         raise RuntimeError("synthetic parameter matching failed")
     if not torch.isfinite(reduced).all():
         raise RuntimeError("synthetic finite invariant failed")
+    if arm_family_and_scale("canonical_s144") != ("canonical", 144):
+        raise RuntimeError("synthetic coupling arm parsing failed")
+    if arm_family_and_scale("train_selected_best") != ("control", 0):
+        raise RuntimeError("synthetic control arm parsing failed")
     print("stage_c_d14a_worker_synthetic_smoke=pass")
 
 
