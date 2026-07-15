@@ -1,0 +1,26 @@
+{
+  "counts": {
+    "directional_datasets": 0,
+    "generic_component_pressure_datasets": 3,
+    "magnitude_imbalance_datasets": 2,
+    "support_specific_component_datasets": 2
+  },
+  "decision": "transform_generic_pressure_sc2_only",
+  "diagnostic_id": "SC1-D11",
+  "directional_conflict_pass": false,
+  "generic_component_pressure_pass": true,
+  "invariant_checks": {
+    "forward_reconstruction": true,
+    "gradient_additivity": true,
+    "metadata_count": true,
+    "no_test": true,
+    "no_training": true,
+    "no_update": true,
+    "orthogonality": true
+  },
+  "invariant_pass": true,
+  "magnitude_imbalance_pass": false,
+  "method_implementation_authorized": false,
+  "sc2_authorized": false,
+  "support_specific_component_conflict_pass": false
+}

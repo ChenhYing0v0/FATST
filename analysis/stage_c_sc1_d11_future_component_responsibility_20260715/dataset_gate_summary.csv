@@ -1,0 +1,6 @@
+dataset,directional_support,best_directional_target,directional_seed_count,component_support,component_seed_count,generic_component_pressure,generic_seed_count,magnitude_support,magnitude_seed_count
+ETTh1,False,coeff_tensor,0,False,0,True,2,False,0
+ETTh2,False,coeff_tensor,0,True,3,True,3,False,0
+ETTm1,False,coeff_tensor,0,False,0,False,0,False,1
+ETTm2,False,coeff_tensor,0,True,2,True,2,True,3
+Weather,False,coeff_tensor,0,False,0,False,0,True,3

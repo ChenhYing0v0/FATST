@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Contribution 1 Step 2/3；SC1-D11 responsibility diagnostic frozen |
+| `current_11_step` | Contribution 2 Step 1-3；SC1-D11关闭gradient-conflict问题，coverage novelty/problem audit next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | Contribution 1 has no active method candidate；JAPO exact v1 failed；SC2-MIPR held |
+| `paper_core_status` | Contribution 1 has no active method candidate；SC1 conflict route closed；SC2-MIPR held pending Step1-3 re-audit |
 
 ## Research Thesis
 
@@ -292,6 +292,17 @@ $\sum_gJ^TP_gv=J^Tv$，故可在不假设prefix mask与basis commute的情况下
 RGNB groups。五dataset × 三A6 checkpoints使用train/validation replication，比较RGNB、DCT与三个random bases，
 并分离strict negative conflict、low positive alignment、norm imbalance与coordinate artifact。任何positive结果只
 返回Step4，不直接授权decoder、loss、optimizer或SC2。
+
+[D11 Result] accepted v2完成五dataset × 三checkpoints。strict short/long directional conflict为`0/5`，所有
+validation MSE total paths/batches均为positive dot；support-specific component gate仅`2/5`，且同一component跨
+short/long的negative fraction为0。formal decision=`transform_generic_pressure_sc2_only`，含义不是SC2通过，
+而是SC1 conflict-aware decoder问题关闭并回Step2暂停。
+
+[Coverage Boundary] RGNB responsibility distribution在3/5 datasets随prefix measure变化；short measure对最后两个
+projective groups严格zero-gradient，而long measure对二者的平均share约为`0.064107/0.020441`。这只建立
+`nested support -> unequal update opportunity` observation。Time-o1、per-step loss shaping与generic task
+weighting/sampling已有直接邻近工作，所以下一步仅允许Contribution 2 Step1-3 external novelty/problem audit；
+`SC2-MIPR`、coverage normalization、PCGrad、new loss、test与joint factorial仍不授权。
 
 [Narrative Boundary] nonlinear decoder、operator MoE、geometry gating、structure-guided time-series MoE与
 step-specific representation均已有直接prior art。可辩护边界只能是joint history-atom conditional operator、

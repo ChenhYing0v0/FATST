@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Contribution 1 Step 2/3；SC1-D11 responsibility diagnostic frozen |
-| `active_question` | multi-horizon conflict是否位于future-component error/gradient responsibility，而非history-scale access？ |
+| `current_step` | Contribution 2 Step 1-3；projective supervision coverage novelty/problem audit next |
+| `active_question` | nested projective supports的unequal update opportunity是否是独立于generic weighting的multi-horizon training problem？ |
 | `active_candidates` | none；`SC1-JAPO exact_v1 failed_as_core_candidate`；`SC1-PLGO geometry scaffold retained`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_sc1_d11_future_component_responsibility_20260715/d11_step23_source_theory_audit.md` |
-| `method_implementation` | false；D11 diagnostic implementation only；forecast method/test/SC2 false |
-| `rollback_point` | Step2；history-scale routing mainline closed，future-side problem reset |
+| `active_protocol` | `analysis/stage_c_sc1_d11_future_component_responsibility_20260715/d11_result_and_rollback.md` |
+| `method_implementation` | false；只授权SC2 Step1-3 audit；forecast method/test/SC2 implementation false |
+| `rollback_point` | SC1 Step2 paused；history-scale routing与future-gradient conflict mainlines closed |
 
 ## Completed Foundation
 
@@ -248,6 +248,15 @@ RGNB geometry retained；现已完成Step4 intervention/readout redesign，不�
     component energies；MSE primary、L1 replication；
 43. strict directional conflict必须negative dot；low positive cosine与norm ratio分别归为heterogeneity和magnitude
     imbalance。RGNB必须超过DCT/3 random controls才支持future-support-specific problem；remote前method/SC2/test false。
+44. D11 accepted v2完成15 checkpoints：strict directional conflict=`0/5 datasets`，support-specific component
+    gate=`2/5`，generic responsibility redistribution=`3/5`，magnitude=`2/5`；all invariants pass；
+45. 所有validation MSE total paths/batches均为positive dot，same-component跨short/long negative fraction也为0；
+    因此SC1 conflict-aware decoder问题为`hypothesis_false`，不是architecture或hyperparameter failure；
+46. short measure对RGNB groups 5/6严格zero-gradient，long shares分别约`0.064107/0.020441`；该现象收紧为
+    projective supervision coverage observation，只授权Contribution 2 Step1-3 prior-art/equivalence audit；
+47. Time-o1、Loss Shaping Constraints与generic task weighting/sampling形成强overlap压力。未经Step1-3证明完整
+    `measure -> inclusion probability -> unbiased/controlled risk -> non-equivalence -> falsifiable benefit`链条，
+    不实现coverage normalization、MIPR、PCGrad或joint factorial。
 
 ## SC1-PLGO Step 6 Design Gate: Conditional Pass, D7 Required
 
