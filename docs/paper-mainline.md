@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Contribution 1 rollback to Step 4 source-informed redesign audit |
+| `current_11_step` | Contribution 1 rollback to Step 2/3 after D9-A exact operator audit |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -256,6 +256,15 @@ comparison；只有A通过才做sample-dependent input-Jacobian确认。D9通过
 existence evidence，不能证明method effectiveness；失败则回Step2/3，而不是继续叠加MoE、router或training loss。详细复盘见
 `analysis/stage_c_sc1_post_japo_systematic_review_20260715/systematic_stage_review.md`。
 
+[D9-A Result] 15/15 exact operator audits与Parseval invariant通过，但ordered scale hypothesis未过gate：
+five-dataset macro rho=`0.173810`，positive effect datasets=`2/5`，atom-label permutation=`1/5`，
+random-history-basis=`0/5`。details相对global root整体更偏高频在15/15 units出现，但details depth 0-5内部不
+单调；该binary现象是post-hoc clue，不能挽救primary result。Contribution 1因此回Step2/3，D9-B取消。
+
+[New Problem Boundary] 下一步只设计`SC1-D10 Raw History–Future Scale Identifiability`，在独立raw-data evidence
+上区分binary global/detail、monotone multiscale与no-scale三种hypotheses。只有problem存在性与matched controls
+通过后，才允许重新形成Step4 architecture candidate；当前new model、test、SC2与factorial均不授权。
+
 [Narrative Boundary] nonlinear decoder、operator MoE、geometry gating、structure-guided time-series MoE与
 step-specific representation均已有直接prior art。可辩护边界只能是joint history-atom conditional operator、
 RGNB exact projectivity与multi-horizon domain-only execution的完整组合。JAPO status更新为`narrative_ready`；
@@ -378,6 +387,8 @@ Step4，不以训练性能包装RGNB。
     seed2023停止，Contribution 1回Step4 operator-intervention redesign，projective direction本身不作否定。
 25. post-JAPO系统复盘完成；下一步只执行SC1-D9 history-support operator diagnostic。D9过gate后才允许形成新的
     Step4-5 candidate，当前不授权model implementation、test、MIPR或joint factorial。
+26. D9-A exact operator gate失败且无numeric/protocol pathology；ordered history-scale alignment关闭，D9-B取消，
+    rollback Step2/3。binary global/detail只作D10 hypothesis，不作Contribution 1 evidence。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
 generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成
@@ -414,6 +425,7 @@ loss 或更多 tuning 来掩盖失败。
 - `analysis/stage_c_sc1_japo_step6_design_20260714/step6_method_control_design.md`
 - `analysis/stage_c_sc1_japo_step7a_local_20260714/step7a_local_gate_report.md`
 - `analysis/stage_c_sc1_post_japo_systematic_review_20260715/systematic_stage_review.md`
+- `analysis/stage_c_sc1_d9_history_support_operator_audit_20260715/d9_result_and_rollback.md`
 - `Papers/stage-c-external-decoder-objective-audit.md`
 - `docs/experiments/stage-c-five-dataset-validation-policy.md`
 - `docs/code-explanation/stage-c-pmfo-rct-step7a.md`

@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Contribution 1 rollback to Step 4 source-informed redesign audit |
+| `current_step` | Contribution 1 rollback to Step 2/3 after D9-A exact operator audit |
 | `active_question` | 如何让history与support geometry直接改变projective operator，而非弱convex expert mixing？ |
 | `active_candidates` | none；`SC1-JAPO exact_v1 failed_as_core_candidate`；`SC1-PLGO geometry scaffold retained`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_sc1_post_japo_systematic_review_20260715/systematic_stage_review.md` |
-| `method_implementation` | false；当前仅授权`SC1-D9 diagnostic_only`的design/analysis，不授权新model、test或SC2 |
-| `rollback_point` | Step4；problem/geometry retained，exact JAPO weak-mixing head closed |
+| `active_protocol` | `analysis/stage_c_sc1_d9_history_support_operator_audit_20260715/d9_result_and_rollback.md` |
+| `method_implementation` | false；D9-B canceled；只授权`SC1-D10` Step2/3 protocol design |
+| `rollback_point` | Step2/3；future geometry retained，history-scale problem reopened |
 
 ## Completed Foundation
 
@@ -230,6 +230,10 @@ RGNB geometry retained；现已完成Step4 intervention/readout redesign，不�
 34. 下一步为`SC1-D9 History-Support Operator Evidence Audit`：从A6 learned operator验证history-scale ×
     future-support coupling是否超越scale permutation/random controls。该实验预注册为`diagnostic_only`，通过也只
     授权Step4-5候选设计，失败则回Step2/3。
+35. D9-A完成15/15 exact audits，Parseval max gap=`7.5381e-16`；macro rho=`0.173810`，positive
+    datasets=`2/5`，permutation/random-basis gates=`1/5`与`0/5`，故primary hypothesis失败；
+36. global-root与details之间存在15/15正向binary contrast，但它是post-hoc observation且details内部不单调，
+    不能挽救D9。D9-B取消，回Step2/3设计D10 raw history–future scale identifiability。
 
 ## SC1-PLGO Step 6 Design Gate: Conditional Pass, D7 Required
 

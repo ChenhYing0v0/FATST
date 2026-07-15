@@ -20,25 +20,25 @@
 | --- | --- |
 | `current_11_step` | Contribution 1 rollback to Step 4 source-informed redesign audit |
 | `current_candidate` | none；JAPO exact v1 closed；PLGO/RGNB geometry scaffold retained；SC2 held |
-| `latest_decision` | 70/70 two-seed gate fail：JOINT vs A6 `-1.2435%`、0/5；vs same-bank median `-0.1175%`、1/5 |
-| `next_required_action` | `SC1-D9 History-Support Operator Evidence Audit`（diagnostic_only）：先验证history-scale与future-support的算子耦合是否真实存在，再设计新candidate |
+| `latest_decision` | D9-A exact operator gate fail：macro rho `0.173810`；positive datasets `2/5`；permutation/random controls `1/5`与`0/5` |
+| `next_required_action` | rollback Step2/3；设计`SC1-D10 Raw History–Future Scale Identifiability`，区分binary global/detail、monotone scale与no-scale hypotheses |
 | `method_training_authorized` | false；seed2023=false，test=false，SC2=false |
-| `rollback_point` | Step 4；problem/geometry evidence retained，exact two-expert weak-mixing design closed |
+| `rollback_point` | Step 2/3；future geometry retained，history-scale alignment problem需重新验证 |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Contribution 1 Step 4 rollback |
-| `problem` | descriptor-generated fixed separable readout保留RGNB geometry，却无法保留A6 operator freedom |
-| `existence_evidence` | D6 support crossing；D8 GEO vs controls +14.33%且vs A6 -28.10% |
-| `idea` | joint history-atom routing over free RGNB expert coefficient maps；H只限制domain |
-| `theory_check` | containment/projectivity/non-collapse/continuity pass；geometry-only no-go；symmetry risk bounded |
-| `design` | E2/K256/G32、independent init、seven arms、staged seeds与hard gates frozen |
-| `narrative_gate` | pass for complete contract；candidate=`narrative_ready` |
-| `effectiveness_gate` | failed exact v1：two-seed vs A6 `-1.2435%`、0/5；capacity control explains=true |
-| `artifacts` | `analysis/stage_c_sc1_japo_e2e_20260715/two_seed/` + repo-external remote raw artifacts |
-| `decision` | `failed_as_core_candidate`；rollback Step4；direction rejection=false；test/SC2 false |
+| `current_step` | Contribution 1 rollback Step 2/3 after D9-A |
+| `problem` | history-scale routing是否为真实、可利用的问题尚未成立；future support geometry证据仍保留 |
+| `existence_evidence` | D9仅见post-hoc global/detail二分；ordered seven-level scale coupling未过controls |
+| `idea` | D10在raw history→future relation上区分binary、monotone与no-scale hypotheses |
+| `theory_check` | pending；必须先给出capacity-matched subspace/probe contract |
+| `design` | pending；D9-B取消，forecast method implementation false |
+| `narrative_gate` | pending；无active method candidate |
+| `effectiveness_gate` | not applicable until a new candidate passes Step4-6 |
+| `artifacts` | `analysis/stage_c_sc1_d9_history_support_operator_audit_20260715/` |
+| `decision` | `operator_scale_hypothesis_not_supported`；rollback Step2/3；SC2/test false |
 
 ## Frozen Carrier Contract
 
@@ -77,7 +77,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC1-JAPO` | `failed_as_core_candidate` | joint history-atom operator能否解除fixed separability且保留A6/projectivity | complete contract仍有效 | two-seed vs A6 0/5；same-bank hard gate fail；near-uniform routing replicated | exact v1 stop；rollback Step4，seed2023 false |
 | `SC1-D7` | `diagnostic_only` | true RGNB descriptors是否超越permuted/random descriptors | not required | conditional geometry pass；method readiness not evaluated | evidence complete；feeds D8 controls |
 | `SC1-D8-E2E` | `failed_exact_design` | joint Encoder-PAF adaptation是否消除frozen compatibility confound并保留geometry effect | geometry retained | vs A6 -28.10%；vs matched +14.33%；m694 no rescue | rollback Step4；no three-seed |
-| `SC1-D9` | `diagnostic_only_designing` | A6 learned operator中是否存在超越位置/随机controls的history-scale × future-support结构 | not required；method=false | pending | 完成operator-path audit与matched diagnostic design；通过后也只授权Step4-5 candidate设计 |
+| `SC1-D9` | `diagnostic_only_failed` | A6 learned operator中是否存在超越随机controls的history-scale × future-support结构 | not required；method=false | macro rho 0.173810；2/5 effect；1/5 permutation；0/5 random basis | D9-B canceled；rollback Step2/3；binary clue exploratory only |
+| `SC1-D10` | `diagnostic_only_proposed` | raw history→future关系支持binary global/detail、monotone scale还是no-scale | not required；method=false | pending | 先完成Step2/3 theory/protocol；不得直接实现method |
 | `SC2-MIPR` | `held` | measure-induced block metric去除decoder scales之间的cross coupling | pass for L2；log measure primary，benchmark weak | log off-block `0.205154`；benchmark `0.002480`；performance未测 | 等新SC1 problem/method contract；不得先实现 |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
@@ -131,6 +132,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-JAPO Step8 seed2021 screen | 5 datasets × 7 arms；35/35 validation-only；paired from-scratch initialization | JOINT vs A6 macro `-1.3754%`、0/5；vs same-bank median `-0.0780%`、2/5；router entropy min `0.993263` | stable/inconclusive；不作方向否定或调参；只补seed2022 | `analysis/stage_c_sc1_japo_e2e_20260715/research_interpretation.md` |
 | SC1-JAPO Step8 two-seed gate | 5 datasets × 7 arms × 2 seeds；70/70 validation-only | vs A6 `-1.2435%`、0/5；vs median `-0.1175%`、1/5；UNIFORM/HISTORY/ATOM均优于JOINT | exact v1 failed；capacity control explains；rollback Step4，direction remains open | `analysis/stage_c_sc1_japo_e2e_20260715/two_seed/research_interpretation.md` |
 | Post-JAPO systematic review | full StageC evidence chain + external primary-source audit | geometry/projectivity retained；rigid replacement、fixed separability与weak mixing依次失败；flatten不是信息压缩 | no active method；先执行SC1-D9 existence diagnostic | `analysis/stage_c_sc1_post_japo_systematic_review_20260715/systematic_stage_review.md` |
+| SC1-D9-A exact operator audit | 5 datasets × 3 A6 seeds；1024 atom permutations；64 random history bases | macro rho 0.173810；2/5 positive effect；1/5 permutation；0/5 random basis；Parseval pass | scale hypothesis unsupported；D9-B canceled；rollback Step2/3 | `analysis/stage_c_sc1_d9_history_support_operator_audit_20260715/d9_result_and_rollback.md` |
 
 ## Pending Tasks
 
@@ -168,7 +170,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-JAPO Step8 seed2021 remote screen | `completed_inconclusive` | 35/35；protocol/numeric pass；只授权seed2022 unchanged |
 | SC1-JAPO Step8 seed2022 confirmation | `completed_fail` | 35/35；70/70 combined；seed2023 stopped；exact v1 closed |
 | Contribution 1 Step4 systematic review | `completed` | 支持“support-identifiable local-global projective operator”问题类，但尚未形成method candidate |
-| SC1-D9 history-support operator evidence audit | `designing` | 审计A6真实tensor/operator path；优先exact operator decomposition，必要时才用sample-dependent Jacobian |
+| SC1-D9 history-support operator evidence audit | `completed_fail` | exact audit 15/15 valid；D9-B按gate取消 |
+| SC1-D10 raw scale identifiability | `proposed_step2_3` | binary/global-detail clue需独立raw-data evidence；protocol先于实现 |
 
 ## Paper Mainline Sync Log
 
@@ -201,6 +204,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-15 | SC1-JAPO seed2022 launch | Current Position、Main Experiment Logic | staged confirmation running | commit3d37440；3×3090；35-run unchanged validation-only；test/SC2 held |
 | 2026-07-15 | SC1-JAPO two-seed gate | Current Position、Contribution 1、Boundary | exact candidate closure + Step4 rollback | 70/70 valid；capacity controls explain；exact v1 failed；projective direction retained |
 | 2026-07-15 | Post-JAPO systematic review | Current Position、Contribution 1、Boundary、Experiment Logic | evidence synthesis + next diagnostic boundary | 不直接提出新method；SC1-D9先验证history-scale × future-support operator evidence |
+| 2026-07-15 | SC1-D9-A exact operator gate | Current Position、Contribution 1、Boundary、Experiment Logic | hypothesis failure + Step2/3 rollback | ordered scale coupling unsupported；binary clue仅exploratory；D9-B取消，D10 protocol next |
 
 ## Continuation Rules
 
@@ -228,3 +232,5 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 17. 系统复盘后，下一步固定为`SC1-D9 diagnostic_only`：先从A6 learned operator检验history-scale与
     future-support是否存在canonical coupling。D9通过不等于method有效，只授权新候选进入Step4-5；若跨dataset/
     seed不优于matched permutation/random controls，则回Step2/3，不实现local-global operator。
+18. D9-A已失败且protocol有效：不得启动D9-B或用post-hoc binary contrast挽救primary decision。下一步只能在
+    Step2/3设计D10 raw-data identifiability，先区分binary、monotone与no-scale hypotheses。
