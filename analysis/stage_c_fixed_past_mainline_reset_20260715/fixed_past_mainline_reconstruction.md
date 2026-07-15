@@ -1,5 +1,9 @@
 # StageC Fixed-Past 主线重构与创新点审计
 
+> [Superseded 2026-07-15] 本报告提出的CADMO/CPGA仅围绕history compression/interface，用户指出其无法
+> 充分服务multi-horizon核心叙事。两项未实现，现已标记`rejected_by_narrative_scope`。active reconstruction见
+> `analysis/stage_c_multi_horizon_coupling_mainline_reset_20260715/multi_horizon_coupling_mainline_reconstruction.md`。
+
 日期：2026-07-15
 状态：Step 1 external audit completed；Step 2-3 problem formulation；method implementation / remote training /
 test均未授权。

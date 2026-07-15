@@ -6,39 +6,39 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | decoder/operator 与 training principle 两项相互支撑的 paper-core innovations |
-| `active_question` | 给定A6 global coeff后，ordered patch memory是否仍含跨dataset target-specific predictive information？ |
+| `active_question` | 一个fixed-past unified decoder是否需要自适应future-output coupling granularity？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | provisional `SC1-CADMO` + `SC2-CPGA`；均为Step2-3 proposed，D14前不实现 |
+| `active_candidates` | provisional `SC1-PCSD` + `SC2-CCRL`；均为Step2-3 proposed，D14-A/B前不实现 |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
-| `stage_rollback` | problem/novelty不跨 dataset -> Step 2；禁止直接堆叠 method |
+| `stage_rollback` | D14-A无crossing -> Step 2；D14-B不可预测 ->关闭CCRL；禁止直接堆叠method |
 
 ## Decision Cursor
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | D14 conditional patch-memory headroom audit，Step 2-3 |
-| `current_candidate` | `SC1-CADMO` + `SC2-CPGA` provisional pair；problem gate pending |
-| `latest_decision` | revision surface转为next-paper idea；当前回到fixed-past，以global compression sufficiency为problem gate |
-| `next_required_action` | 实现D14-A/B frozen representation diagnostic与matched controls；test=false |
-| `method_training_authorized` | false；D14 diagnostic_only；new method=false，remote=false，test=false |
-| `rollback_point` | D14 fail -> Step 2关闭当前A6-memory conditional-headroom route |
+| `current_11_step` | D14 output-coupling granularity audit，Step 2-3 |
+| `current_candidate` | `SC1-PCSD` + `SC2-CCRL` provisional pair；problem gates pending |
+| `latest_decision` | ordered patch memory降为auxiliary；主线重构为within-model adaptive output coupling |
+| `next_required_action` | source-informed实现D14-A matched coupling family；A pass后才实现D14-B；test=false |
+| `method_training_authorized` | false；D14 diagnostic_only；paper method=false，remote=false，test=false |
+| `rollback_point` | D14-A fail -> Step2关闭pair；A pass/B fail ->仅PCSD回Step4 |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | joint Contribution 1/2 Step 2-3；D14 problem verification pending |
-| `problem` | single global coefficient state是否是所有future targets的充分history representation，还是压缩后仍需direct patch evidence |
-| `existence_evidence` | compression boundary为code fact；D1/D3-D6提供间接支持；D2/B14形成负证据；conditional headroom尚未验证 |
-| `idea` | CADMO global-state/full-memory dual path + CPGA conditional predictive-gain accounting |
-| `theory_check` | nested representation MSE projection成立；cross-attention/global-local/IB/orthogonality prior art已收紧claim；正式Step5未授权 |
-| `design` | provisional only：D14-A linear partial-out + D14-B structured query probe；5 datasets × 3 A6 checkpoints；train-fit + chronological validation；test=false |
-| `narrative_gate` | provisional chain coherent；未通过formal Step4-6；CATS-like overlap与conditional headroom为最大风险 |
+| `current_step` | joint Contribution 1/2 Step 2-3；D14-A/B problem verification pending |
+| `problem` | 现有unified decoder固定point/block/global coupling scope；最佳future-output sharing是否随target region与history变化 |
+| `existence_evidence` | Direct/MIMO/DIRMO/Stratify为强外部问题先验；A6 global endpoint与D6 crossing为间接内部证据；direct evidence未验证 |
+| `idea` | PCSD projective point-to-global coupling spectrum + CCRL cross-fitted coupling-regret supervision |
+| `theory_check` | projectivity/A6 containment可构造；point-MSE只允许finite-sample sharing claim；routing/meta-learning prior art强，formal Step5未授权 |
+| `design` | D14-A neutral/A6 carriers + matched point/block/global heads；D14-B train-OOF regret predictability；5 datasets × 3 seeds；validation-only |
+| `narrative_gate` | problem chain与multi-horizon直接对齐；candidate仍provisional；DIRMO+MoE equivalence与router predictability为最大风险 |
 | `effectiveness_gate` | not applicable until a new candidate passes Step4-6 |
-| `artifacts` | `analysis/stage_c_fixed_past_mainline_reset_20260715/fixed_past_mainline_reconstruction.md` |
-| `decision` | 只授权D14 diagnostic implementation；通过也只让CADMO返回Step4-6；CPGA串行等待CADMO evidence |
+| `artifacts` | `analysis/stage_c_multi_horizon_coupling_mainline_reset_20260715/multi_horizon_coupling_mainline_reconstruction.md` |
+| `decision` | CADMO/CPGA退出active slots；只授权D14-A；A pass后才执行B；通过也只返回formal Step4-6 |
 
 ## Frozen Carrier Contract
 
@@ -86,9 +86,12 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC1-NIFRO` | `deferred_next_paper` | causal patch-level information increments形成forecast-revision surface | independent-paper idea；不占当前slot | not started | 转移到`New-idea.md`；D13未来重启 |
 | `SC2-IARL` | `deferred_next_paper` | revision energy由same-target accuracy gain解释 | independent-paper idea；不占当前slot | not started | 转移到`New-idea.md`；D13未来重启 |
 | `SC-D13-A/B` | `deferred_next_paper` | rolling-origin revision efficiency与new-patch information | not current paper | not started | protocol保留，不执行 |
-| `SC1-CADMO` | `proposed_step2_3` | full patch memory在global coeff之外是否支持projective target-specific direct access | provisional only；CATS/global-local overlap待审 | not started | D14通过后才进入formal Step4-6 |
-| `SC2-CPGA` | `proposed_step2_3_dependent` | full-memory path的prediction change能否由conditional predictive gain核算 | provisional only；orthogonality/deep-supervision overlap待审 | not started | 等待CADMO point-loss E2E evidence；不得并行实现 |
-| `SC-D14` | `diagnostic_only_authorized` | A6 patch memory是否含超越global coeff的ordered target-specific conditional information | not required；method=false | 5 datasets × 3 checkpoints；train-fit controls；validation-only | implement exporter/probes/analyzer；test=false |
+| `SC1-CADMO` | `rejected_by_narrative_scope` | full patch memory在global coeff之外是否支持projective target-specific direct access | 与multi-horizon核心问题不直接对齐 | not started | 不占active slot；仅保留历史设计 |
+| `SC2-CPGA` | `rejected_with_parent_route` | full-memory path的prediction change能否由conditional predictive gain核算 | 脱离CADMO后退化为generic accounting | not started | 不实现；不占active slot |
+| `SC-D14-P` | `auxiliary_not_scheduled` | A6 patch memory是否含超越global coeff的ordered target-specific conditional information | not paper mainline | not started | 未来仅在decoder interface需要时做small probe |
+| `SC1-PCSD` | `proposed_step2_3` | one projective decoder是否需同时表示point/block/global coupling scopes | complete-chain novelty only；DIRMO/Stratify/CATS controls mandatory | not started | D14-A pass后才进入formal Step4-6 |
+| `SC2-CCRL` | `proposed_step2_3_dependent` | train-OOF coupling regret能否使history+target policy兑现oracle headroom | generic routing/regret overlap强；独立novelty未通过 | not started | D14-A pass后运行B；B pass才回Step4-6 |
+| `SC-D14-A/B` | `diagnostic_only_authorized` | coupling scale是否crossing且best scale能否由history+target预测 | not required；method=false | 5 datasets × 3 seeds/folds；neutral primary + A6 sensitivity；validation-only | source-informed implement A；A pass才实现B；test=false |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
 
@@ -191,8 +194,9 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | D12 predictable-frame feasibility | `completed_fail_rollback_step2` | v1 invalid for rejection；v2 valid support 1/5；CAPE/joint route closed；D12-B canceled |
 | Post-D12 systematic mainline redesign | `deferred_next_paper` | NIFRO/IARL与D13转移到`New-idea.md`；不再占当前slots |
 | D13-A/B rolling-origin diagnostics | `deferred_next_paper` | protocol preserved；not active |
-| Fixed-past mainline reset | `completed_provisional_step2_3` | CADMO/CPGA proposed；primitive-level novelty claims excluded；method remains false |
-| D14 conditional patch-memory headroom | `diagnostic_only_authorized` | implement five-dataset three-checkpoint train-control/validation gate；test=false |
+| Fixed-past compression mainline reset | `superseded_by_narrative_scope` | CADMO/CPGA与patch-memory D14降为history-interface auxiliary；未执行 |
+| Multi-horizon coupling mainline reset | `completed_provisional_step2_3` | PCSD/CCRL proposed；完整prior-art boundary与D14-A/B gates已冻结；method remains false |
+| D14 output-coupling granularity | `diagnostic_only_authorized` | source-informed implement A；A pass后才运行B；validation-only；test=false |
 
 ## Paper Mainline Sync Log
 
@@ -234,6 +238,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-15 | D12 v1/v2 final gate | Current Position、Thesis、Contribution Slots、Experiment Logic | risk mismatch repair + candidate closure + Step2 rollback | v2 valid 1/5；CAPE closed；PRISM joint route retired；D12-B canceled；two slots open |
 | 2026-07-15 | Post-D12 systematic mainline redesign | Thesis、Contribution 1/2、Boundary、Experiment Logic | new provisional problem chain + D13 gate | NIFRO/IARL proposed；forecast grid/stability penalty不计创新；只授权D13-A |
 | 2026-07-15 | Fixed-past mainline restoration | Thesis、Contribution 1/2、Boundary、Experiment Logic | next-paper archive + current-paper Step2/3 reset | NIFRO/IARL转入`New-idea.md`；CADMO/CPGA provisional；只授权D14 |
+| 2026-07-15 | Multi-horizon narrative correction | Thesis、Contribution 1/2、Boundary、Experiment Logic | CADMO/CPGA narrative rejection + Step2/3 reconstruction | ordered patch降为auxiliary；PCSD/CCRL provisional；新D14-A/B active |
 
 ## Continuation Rules
 

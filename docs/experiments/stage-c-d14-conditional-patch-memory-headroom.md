@@ -1,18 +1,22 @@
-# StageC D14 Conditional Patch-Memory Headroom Audit
+# StageC D14-P Auxiliary Conditional Patch-Memory Probe
+
+> [Superseded 2026-07-15] 用户指出ordered patch memory只属于Encoder–Decoder interface，不足以支撑
+> multi-horizon paper mainline。该protocol未执行，现降为`auxiliary_not_scheduled`。active problem gate已改为
+> `stage-c-d14-output-coupling-granularity.md`。以下内容仅保留为未来interface ablation设计，不再决定paper slots。
 
 ## Status
 
 | Field | Value |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Step 2-3 problem verification |
-| `role` | `diagnostic_only` |
-| `active_candidate` | provisional `SC1-CADMO` |
+| `current_step` | deferred auxiliary interface probe |
+| `role` | `auxiliary_diagnostic_only` |
+| `active_candidate` | none；historical `SC1-CADMO` rejected by narrative scope |
 | `method_training` | false |
 | `remote_training` | false；先local artifact/probe implementation |
 | `test_access` | false |
 | `effectiveness_claim` | prohibited；frozen representation conditional diagnostic |
-| `rollback` | D14 fail -> Step 2，关闭当前A6-memory conditional-headroom route |
+| `rollback` | not applicable；不再是paper-mainline gate |
 
 ## What We Plan To Test
 

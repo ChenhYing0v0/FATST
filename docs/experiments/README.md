@@ -1,7 +1,9 @@
 # Active Experiment Protocols
 
-- `stage-c-d14-conditional-patch-memory-headroom.md`: 当前Step 2-3 diagnostic_only protocol；检验A6 ordered
-  patch memory在global coeff之外是否仍有target-specific conditional information；method/remote/test=false；
+- `stage-c-d14-output-coupling-granularity.md`: 当前Step 2-3 diagnostic_only protocol；先检验point/block/global
+  output coupling是否稳定crossing，再检验train-OOF regret能否由history+target预测；method/remote/test=false；
+- `stage-c-d14-conditional-patch-memory-headroom.md`: 已降级为`D14-P auxiliary_not_scheduled`；仅保留future
+  decoder-interface ablation，不占paper slots、不决定mainline；
 - `stage-c-d13-rolling-origin-revision-efficiency.md`: `deferred_next_paper`；forecast-revision idea的未来problem
   protocol，保留但当前不执行，入口见根目录`New-idea.md`；
 - `stage-c-natural-baseline-test-protocol.md`: 已完成的 post-freeze test reference；

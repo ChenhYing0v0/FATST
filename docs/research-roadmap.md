@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D14 conditional patch-memory headroom audit，Step 2-3 |
-| `active_question` | 给定A6 global coeff后，ordered patch memory是否仍含跨dataset target-specific predictive information？ |
-| `active_candidates` | provisional `SC1-CADMO` + `SC2-CPGA`；D14前method=false |
+| `current_step` | D14 output-coupling granularity audit，Step 2-3 |
+| `active_question` | fixed-past unified model是否需要在一个projective decoder内自适应future-output coupling scope？ |
+| `active_candidates` | provisional `SC1-PCSD` + `SC2-CCRL`；D14-A/B前method=false |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `docs/experiments/stage-c-d14-conditional-patch-memory-headroom.md` |
-| `method_implementation` | false；只授权D14 frozen diagnostic implementation；test=false |
-| `rollback_point` | D14 fail -> Step2关闭当前A6-memory conditional-headroom route |
+| `active_protocol` | `docs/experiments/stage-c-d14-output-coupling-granularity.md` |
+| `method_implementation` | false；只授权D14 source-informed diagnostic implementation；test=false |
+| `rollback_point` | D14-A fail -> Step2关闭coupling-adaptive route；A pass/B fail ->仅PCSD回Step4 |
 
 ## Post-D11 Joint Mainline Reset
 
@@ -56,39 +56,54 @@ $F(o,\tau)=E[Y_\tau\mid\mathcal F_o]$：row是multi-horizon forecast，column是
 [Decision] 用户确认该问题适合作为下一篇独立SCI核心。完整idea已转移到根目录`New-idea.md`；D13 protocol
 保留为未来restart artifact，当前状态`deferred_next_paper`，不再执行。
 
-## Fixed-Past Mainline Reset: Beyond Global Compression
+## Fixed-Past Mainline Reset: Adaptive Output Coupling
 
-[Fact] A6的`memory [B,C,P,D] -> flatten [B,C,PD]`不丢元素；真正压缩发生在
-`[B,C,PD] -> global_coeff [B,C,256]`。之后全部future targets共享同一global state。A6已经满足domain-only
-$H$与exact prefix equality，因此这些不是新贡献。
+[Accepted Critique] ordered patch memory只描述Encoder–Decoder information interface；即使full patch memory有用，
+该问题也同样适用于single-horizon forecasting，不能成为multi-horizon论文主线。旧`CADMO/CPGA`因此标记
+`rejected_by_narrative_scope`，原patch-memory D14降为`D14-P auxiliary_interface_probe`且当前不执行。
 
-[Internal Boundary] D3-D6支持future support geometry/local-global crossing；D8/JAPO说明rigid query/basis或
-atom-expert replacement会损失A6 free function class；D2/B14又不支持generic full-affine或unit-specific
-retrieval捷径。patch direct path仍是未验证问题。
+[Core Problem] Direct、AR、MIMO、DIRMO与future-query decoder的核心差异之一，是future targets共享
+predictive function的scope。经典方法通常固定一个strategy或在模型外选择block size；unified multi-horizon
+model若只统一输出长度，却固定一种output coupling，仍未统一forecasting strategy。
 
-[External Boundary] CATS已覆盖future-query patch cross-attention；BasisFormer已覆盖learned basis matching；
-MQTransformer/TimePerceiver已覆盖context/target queries；Memory Guided Transformer、DeepGLO与forecasting IB
-工作使generic global-local、memory与compression claim均不足。
+[Theory Boundary] deterministic separable MSE的Bayes predictor可逐target写成conditional mean，显式future
+dependency不是population-risk必要条件。新主线只研究finite-sample/finite-capacity下parameter sharing引起的
+bias–variance–flexibility trade-off。
+
+[Internal Evidence]
+
+1. A6是global low-rank/MIMO-like endpoint；
+2. D6在disjoint validation上出现short/local `+1.1964%`、long/local `-1.2675%`与12/15 crossing，但该证据
+   属于basis support，只有间接意义；
+3. D8/JAPO要求新operator contain A6 global function，而不是整体替换；
+4. B13/PMFO未支持current recurrent transition，首版不采用AR output feedback；
+5. history-conditioned coupling choice尚无直接证据，D9-D10/JAPO形成高风险先验。
+
+[External Boundary] Direct/MIMO/DIRMO与2025 Stratify已覆盖fixed strategy与output-size continuum；CATS、
+MQTransformer、TimePerceiver覆盖future/target queries；Implicit Forecaster覆盖global wave decoding；MQF2覆盖
+probabilistic future dependency；dynamic ensemble、meta-learning与TimeRouter覆盖expert/model routing。因此任一
+primitive都不能单独claim创新。
 
 [Provisional Mainline]
 
-1. `SC1-CADMO`同时保留compact global state $g=C(M)$与full patch memory $M$；$g$负责global coherence，
-   independent future coordinates只在需要时直接读取ordered patches；patch-disabled arm必须contain A6；
-2. `SC2-CPGA`显式监督global-only与full-memory forecasts，并核算full-memory change带来的conditional
-   predictive gain；generic orthogonality/deep supervision不计创新；
+1. `SC1-PCSD`：Projective Coupling-Spectrum Decoder在同一fixed future domain内表示point、multiple block与
+   global sharing scopes；policy依赖history与target coordinate，不读取requested $H$；global arm contain A6；
+2. `SC2-CCRL`：Cross-fitted Coupling-Regret Learning用train-only OOF losses为sample × target-region coupling
+   policy提供counterfactual supervision；generic cross-validation/regret/routing不计创新；
 3. novelty只允许落在完整
-   `fixed-past -> compression boundary -> projective dual memory -> conditional gain accounting`链条。
+   `fixed past -> exact-prefix decoder -> point-to-global coupling spectrum -> counterfactual coupling policy -> no
+   external strategy search`链条。
 
-[Next Gate] D14固定5 datasets × 3 A6 checkpoints，使用train-fit、chronological-validation、test=false的
-frozen representation probes，比较global-only、full-memory、structured patch-query、generic nonlinear、
-capacity、per-sample permutation与target-shift controls。至少3/5 datasets、2/3 seeds且macro MSE gain
-`>=0.5%`才pass。
+[Next Gate] 新D14先做A/B串行diagnostic。D14-A比较neutral raw-history与A6 sensitivity carriers上的matched
+point/block/global heads、random partitions与capacity controls，要求至少3/5 datasets出现stable crossing且
+sample × bin oracle相对best fixed macro MSE headroom `>=0.5%`。A pass后D14-B使用train OOF regret labels，
+要求history+target policy在至少3/5 datasets超过best fixed与target-only，macro gain `>=0.3%`。
 
-[Execution Order] D14通过只让CADMO返回formal Step4-6；CADMO point-loss model通过E2E gate后才诊断CPGA
-practical necessity，最后执行`CADMO on/off × CPGA on/off` factorial。二者串行，不并行堆叠。
+[Execution Order] D14-A -> D14-B -> formal Step4-6。A fail关闭PCSD/CCRL；A pass/B fail只让PCSD回Step4并
+重新设计Contribution 2；A/B pass也不直接授权method/remote/test。
 
-[Rollback] D14失败关闭当前“A6 patch memory超越global compression”route并回Step2；frozen pathology只允许
-判tested diagnostic invalid，不能否定所有未来Encoder/patch architecture。
+[Frozen Boundary] neutral raw-history carrier是primary；frozen A6只作sensitivity。最终effectiveness必须matched
+E2E joint training，不能用frozen replacement gap通过或拒绝paper method。
 
 ## Completed Foundation
 
@@ -247,11 +262,11 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 
 ## Next Concrete Action
 
-实现`SC-D14 Conditional Patch-Memory Headroom Audit`的tensor exporter、fit-only probe matrix、analyzer与
-invariant tests。第一阶段只读取既有A6 train/validation representations，禁止test与method training。D14-A/B
-必须同时隔离global-only、generic nonlinear、capacity、per-sample patch permutation与target-shift；通过后也只
-返回CADMO formal Step4-6。完整协议见
-`docs/experiments/stage-c-d14-conditional-patch-memory-headroom.md`。
+source-informed实现`SC-D14-A Output-Coupling Granularity Audit`的matched head family、parameter/DoF accounting、
+neutral raw-history carrier、A6 sensitivity carrier、random/permuted partition与oracle-headroom analyzer。第一阶段
+只使用train/validation，禁止test与paper-method training。D14-A pass后才实现D14-B train-OOF regret
+predictability；通过也只返回PCSD/CCRL formal Step4-6。完整协议见
+`docs/experiments/stage-c-d14-output-coupling-granularity.md`。
 
 ## SC1-JAPO Step 7A: Production Gate Passed, Step 8 Authorized
 

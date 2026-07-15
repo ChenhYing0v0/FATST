@@ -26,6 +26,7 @@ source of truth。专题调研默认使用external primary-source search，并�
 | 方向 | Paper note | Search date |
 | --- | --- | --- |
 | varied-horizon decoder / training objective | [StageC external decoder/objective audit](stage-c-external-decoder-objective-audit.md) | 2026-07-13 |
+| multi-horizon output coupling / forecasting strategy | [Multi-horizon output coupling audit](multi-horizon-output-coupling-audit.md) | 2026-07-15 |
 
 ## 初步聚类
 
