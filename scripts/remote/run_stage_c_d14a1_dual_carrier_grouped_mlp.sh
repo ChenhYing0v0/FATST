@@ -163,7 +163,7 @@ run_one() {
   IFS=$'\t' read -r dataset arm scale partition profile patch_num d_model d_ff <<< "${line}"
   output_dir="$(run_dir_for_line "${line}")"
   run_log="${LOG_ROOT}/${arm}_${dataset}.log"
-  if is_complete "${line}"; then
+  if [[ "${REEVALUATE}" != "1" ]] && is_complete "${line}"; then
     echo "skip_existing=$(date -Is) job=$((index + 1))/${#LINES[@]} arm=${arm} dataset=${dataset}"
     return 0
   fi
