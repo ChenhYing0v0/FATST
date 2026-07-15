@@ -5,15 +5,15 @@
 | Field | Content |
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
-| `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
+| `working_title` | Learning What Can Be Predicted, Where It Must Be Accurate: Projective Forecast Frames for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Contribution 2 Step 1-3；SC1-D11关闭gradient-conflict问题，coverage novelty/problem audit next |
+| `current_11_step` | joint Contribution 1/2 Step 2-3；D12 predictable-frame feasibility next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | Contribution 1 has no active method candidate；SC1 conflict route closed；SC2-MIPR held pending Step1-3 re-audit |
+| `paper_core_status` | provisional `PRISM` + `CAPE` proposed_step2_3；old SC1 exact designs closed；SC2-MIPR retired |
 
 ## Research Thesis
 
@@ -22,12 +22,42 @@
 > 一个共享模型如何表示一族可限制、可细化的未来预测，并用与该函数族一致的风险定义进行训练，
 > 从而在任意 requested horizon 上保持连续、统一且可比较的行为？
 
+Post-D11主线进一步收紧为：当decoder只有$r<T$个future degrees of freedom时，capacity应同时由
+`where accuracy is requested`（nested prefix deployment risk）与`what history can predict`
+（conditional-mean covariance）决定。D11只关闭gradient-conflict动机，没有关闭Contribution 1。
+
 requested horizon 在当前主线中只定义输出域与计算域，不作为 learned semantic feature。禁止将离散
 horizon ID、benchmark-specific embedding、per-horizon expert 或 per-horizon hyperparameter 作为核心机制。
 
 ## Contribution Slots
 
-### Contribution 1 Slot: Projective Forecast Operator Redesign
+### Provisional Contribution 1: PRISM Decoder
+
+`PRISM`（Prefix-Risk Isometric Synthesis Module）保留A6的free coefficient path：
+
+$$
+M[B,C,P,D]\rightarrow a[B,C,256]\rightarrow U_\mu[:H,:][H,256]\rightarrow\hat y_H[B,C,H].
+$$
+
+$U_\mu^TW_\mu U_\mu=I$，并用prefix family诱导的
+$\mathbb E_H\|\operatorname{offdiag}(U^TW_HU)\|_F^2$控制short-prefix locality与global compaction的
+Pareto tradeoff。$H$只crop rows，不进入learned path。当前status=`proposed_step2_3`；它不是basis、PCA或
+orthogonality本身的claim。
+
+### Provisional Contribution 2: CAPE Frame Learning
+
+`CAPE`（Cross-fitted Adaptive Predictable-Energy frame learning）不再修改future-step loss weights，而是用
+train-only out-of-fold predictions估计$\Sigma_m=\operatorname{Cov}(\mathbb E[y\mid x])$。rank-limited frame
+应最大化$\operatorname{tr}(U^TW_\mu\Sigma_mW_\mu U)$，避免raw-label PCA把capacity分配给不可预测noise。
+
+`localization on/off × predictable/raw covariance`形成预注册`2x2` factorial。旧`MIPR`因D11不支持conflict、
+benchmark measure headroom弱且与Time-o1/QDF/Loss Shaping邻近，降为`retired_as_core_candidate`；
+$W_\mu$只保留为exact risk protocol/control。
+
+完整source/theory audit与D12 gates见
+`analysis/stage_c_post_d11_paper_mainline_redesign_20260715/mainline_redesign_audit.md`。
+
+### Historical Contribution 1 Record: Projective Forecast Operator Redesign
 
 历史`narrative_ready`候选为`PMFO-RCT`。它从A6 history memory建立future interval tree，按
 `90 -> 30 -> 10 -> 5 -> 1`逐层生成scaling/detail coefficients，并用fixed orthogonal contrast保证fine
@@ -311,14 +341,15 @@ UNIFORM/HISTORY/ATOM/PERM/RANDOM same-bank controls与staged three-seed gates已
 seed2022五dataset × 七arm validation-only confirmation；two-seed mean未过gate则停止exact JAPO并归因，只有
 通过才授权seed2023。test与SC2-MIPR仍不授权。
 
-### Contribution 2 Candidate: Measure-Induced Projective Risk
+### Historical Contribution 2 Record: Measure-Induced Projective Risk
 
 SC2保留`PIR` slot ID，formal objective收紧为`MIPR`。raw horizon measure的exact risk为
 $e^TW_\mu e$；MIPR定义$\widetilde W_\mu=\sum_lQ_lW_\mu Q_l$，在PMFO refinement blocks上保留
 within-scale weighting并删除cross-scale coupling。它是decoder-aligned structured surrogate，不是比raw
 risk“更measure-aligned”的等价改写。
 
-当前状态：`narrative_ready / effectiveness_pending / held_after_SC1_rollback`。L2下quadratic algebra成立；
+历史状态曾为`narrative_ready / effectiveness_pending / held_after_SC1_rollback`；post-D11现已更新为
+`retired_as_core_candidate`。L2下quadratic algebra成立；
 Huber/L1没有exact block-metric等价，首轮不实现。`log_uniform_h` off-block energy为`0.205154`，
 `uniform_h/benchmark_h`只有`0.003456/0.002480`，因此贡献主场景必须是continuous dense-horizon
 deployment，不能只靠四个benchmark horizons。

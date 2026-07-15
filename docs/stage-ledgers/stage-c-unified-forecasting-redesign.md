@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | decoder/operator 与 training principle 两项相互支撑的 paper-core innovations |
-| `active_question` | nested projective supports是否造成跨prefix-measure的supervision coverage不均，并且该问题能否超越generic weighting prior art？ |
+| `active_question` | rank-limited future frame能否同时捕获history-predictable energy与nested prefix locality？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | no active method candidate；`SC1-JAPO exact_v1 failed_as_core_candidate`；`SC1-PLGO geometry retained`；`SC2-MIPR` held |
+| `active_candidates` | provisional `PRISM` + `CAPE` proposed_step2_3；old SC1 exact designs closed；`SC2-MIPR` retired |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `stage_exit` | 两项分别过 narrative/effectiveness gate，`2x2` joint gate显示独立主效应与联合收益 |
 | `stage_rollback` | problem/novelty不跨 dataset -> Step 2；禁止直接堆叠 method |
@@ -18,27 +18,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Contribution 2 Step 1-3；D11已关闭SC1 gradient-conflict hypothesis，coverage novelty/problem audit next |
-| `current_candidate` | none；JAPO exact v1 closed；PLGO/RGNB geometry scaffold retained；SC2 held |
-| `latest_decision` | D11 strict conflict `0/5`、support-specific `2/5`；只保留`3/5` responsibility redistribution，formal=`transform_generic_pressure_sc2_only` |
-| `next_required_action` | SC2 Step1-3 external prior-art + measure-level coverage theorem audit；不得先实现loss或sampling strategy |
-| `method_training_authorized` | false；forecast training=false，test=false，SC2=false |
-| `rollback_point` | SC1 Step 2 paused；SC2 Step1-3，future geometry retained，history-scale与gradient-conflict mainlines closed |
+| `current_11_step` | joint Contribution 1/2 Step 2-3；D12 predictable-frame feasibility next |
+| `current_candidate` | provisional PRISM/CAPE；均未过problem/narrative gate；MIPR retired |
+| `latest_decision` | D11不否定Contribution 1；post-D11 external audit关闭generic coverage/loss路线，提出risk-localized + predictable-energy frame主线 |
+| `next_required_action` | D12-A cross-fitted predictable covariance audit；通过后才执行D12-B PRISM Pareto probe |
+| `method_training_authorized` | false；只允许train/validation diagnostic；forecast method=false，test=false |
+| `rollback_point` | D12失败回Step 2并关闭forecast-frame主线；history-scale、gradient-conflict与MIPR closed |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Contribution 2 Step 1-3 source/problem audit；SC1-D11 completed |
-| `problem` | variable prefix measure下，nested projective groups是否因activation probability不同而获得不均等有效监督 |
-| `existence_evidence` | D11 strict conflict 0/5；RGNB responsibility redistribution 3/5；short对最后两个groups严格zero-gradient |
-| `idea` | 先把coverage asymmetry写成measure-level estimand，并审计其与importance sampling、step weighting、GradNorm、Time-o1的等价/非等价边界 |
-| `theory_check` | pending；D11只证明exact responsibility与coverage observation，不证明coverage normalization有新意或有效 |
-| `design` | pending Step1-3；当前不得实现、训练或读取test |
-| `narrative_gate` | pending；无active method candidate |
+| `current_step` | joint Contribution 1/2 Step 2-3；post-D11 mainline reset completed |
+| `problem` | A6 rank-256 decoder是否因global compaction、prefix locality与unpredictable label noise之间的tradeoff而受限 |
+| `existence_evidence` | D6 crossing；D7/D8 geometry main effect；A6 strong free operator；D11只关闭conflict、不关闭coverage/locality |
+| `idea` | PRISM prefix-risk-isometric frame + CAPE cross-fitted predictable-energy estimation |
+| `theory_check` | weighted low-rank conditional-mean theorem provisional pass；estimator stability与Pareto usefulness pending D12 |
+| `design` | D12 train/validation diagnostic only；rank256；five profiles；test=false |
+| `narrative_gate` | pending Step4-6；当前仅proposed_step2_3 |
 | `effectiveness_gate` | not applicable until a new candidate passes Step4-6 |
-| `artifacts` | `analysis/stage_c_sc1_d11_future_component_responsibility_20260715/` |
-| `decision` | D11=`transform_generic_pressure_sc2_only`；SC1 conflict route回Step2并暂停，只授权SC2 Step1-3 audit；method/SC2/test false |
+| `artifacts` | `analysis/stage_c_post_d11_paper_mainline_redesign_20260715/mainline_redesign_audit.md` |
+| `decision` | 不直接转SC2；MIPR retired；PRISM/CAPE进入D12 Step2-3 problem feasibility；method/test false |
 
 ## Frozen Carrier Contract
 
@@ -80,7 +80,9 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC1-D9` | `diagnostic_only_failed` | A6 learned operator中是否存在超越随机controls的history-scale × future-support结构 | not required；method=false | macro rho 0.173810；2/5 effect；1/5 permutation；0/5 random basis | D9-B canceled；rollback Step2/3；binary clue exploratory only |
 | `SC1-D10` | `diagnostic_only_failed` | raw history→future关系支持binary global/detail、detail-monotone还是no aligned scale | not required；method=false | binary all gates fail；monotone best 0/5、mapping 2/5 | aligned scale closed；rollback Step2；off-diagonal exploratory only |
 | `SC1-D11` | `diagnostic_only_completed_rollback` | multi-horizon conflict是否位于future component gradient responsibility | not required；method=false | strict 0/5；support-specific 2/5；generic redistribution 3/5；all invariants pass | SC1 conflict hypothesis关闭；只把coverage observation交给SC2 Step1-3 |
-| `SC2-MIPR` | `held_pending_novelty_reaudit` | measure-induced block metric去除decoder scales之间的cross coupling | pass for L2；log measure primary，benchmark weak | D11未支持conflict，只暴露nested coverage；performance未测 | Step1-3重审coverage/MIPR与prior art边界；不得先实现 |
+| `SC1-PRISM` | `proposed_step2_3` | prefix-risk-isometric frame能否同时保持global compaction与short-prefix locality | pending D12 + Step4-6 | not applicable | D12-B Pareto/probe audit；method=false |
+| `SC2-CAPE` | `proposed_step2_3` | conditional-mean covariance能否比raw label covariance更好分配rank-256 decoder capacity | pending D12 + Step4-6 | not applicable | D12-A cross-fitted estimator audit；method=false |
+| `SC2-MIPR` | `retired_as_core_candidate` | measure-induced block metric去除decoder scales之间的cross coupling | historical L2 pass；current problem/novelty fail | not started | raw $W_\mu$保留为protocol/control；MIPR不实现 |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
 
@@ -177,7 +179,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-D9 history-support operator evidence audit | `completed_fail` | exact audit 15/15 valid；D9-B按gate取消 |
 | SC1-D10 raw scale identifiability | `completed_fail` | all artifacts/invariants valid；binary与detail-monotone primary gates均fail |
 | SC1-D11 future-component responsibility | `completed_rollback` | accepted v2 complete；do not implement conflict-aware method |
-| SC2 projective supervision coverage audit | `pending_step1_3` | external source audit + measure estimand/equivalence theorem；no implementation |
+| Post-D11 paper-mainline redesign | `completed_step2_3_design` | D11不关闭C1；PRISM/CAPE proposed；MIPR retired；D12 next |
+| D12 predictable-frame feasibility | `pending_diagnostic_only` | D12-A cross-fitted estimator → D12-B prefix-locality Pareto；method/test false |
 
 ## Paper Mainline Sync Log
 
@@ -215,6 +218,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-15 | SC1-D10 result gate | Current Position、Contribution 1、Boundary、Experiment Logic | aligned-scale closure + Step2 rollback | partial cross-scale signal不构成unified mapping；history routing mainline关闭；D11 question proposed |
 | 2026-07-15 | SC1-D11 Step2/3 design gate | Current Position、Contribution 1/2 Boundary、Experiment Logic | prior-art boundary + exact responsibility identity + frozen gates | component loss/gradient surgery不作novelty；strict negative、magnitude与basis controls后再判问题 |
 | 2026-07-15 | SC1-D11 remote result gate | Current Position、Contribution 1/2 Boundary、Experiment Logic | conflict hypothesis closure + Step1-3 pivot | strict 0/5、component 2/5；coverage observation只允许SC2 novelty/problem audit |
+| 2026-07-15 | Post-D11 paper-mainline redesign | Thesis、Contribution 1/2、Experiment Logic | joint Step2-3 reset + old SC2 closure | D11不否定C1；PRISM/CAPE proposed；MIPR retired；D12 diagnostic next |
 
 ## Continuation Rules
 
@@ -257,3 +261,9 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 23. short measure对RGNB最后两个groups的zero responsibility只支持nested supervision coverage observation。
     下一步仅授权SC2 Step1-3审计；在证明其不等价于generic importance sampling、step weighting、GradNorm、
     transformed-label loss或existing MIPR前，不实现任何training strategy。
+24. post-D11 external audit已经完成上述审计：generic coverage sampling不是足够的新贡献，且完整label可用时raw
+    $W_\mu$ risk可精确计算；MIPR正式retired，不再实现。
+25. 新主线只允许D12 diagnostic：先验证cross-fitted predictable covariance，再验证PRISM localization Pareto。
+    PRISM/CAPE当前均为`proposed_step2_3`，不得因论文需要两个贡献就跳过problem/narrative gate。
+26. CAPE frame必须由train-only OOF predictions构造；final model从头训练，不复用pilot weights。任何frozen A6
+    memory probe只作symmetric conditional diagnostic，不能充当method effectiveness gate。
