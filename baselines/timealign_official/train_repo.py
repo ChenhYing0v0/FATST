@@ -57,6 +57,7 @@ PREFIX_READOUT_MODES = {
     "japo-atom",
     "japo-joint-perm",
     "japo-joint-random",
+    "grouped-mlp",
 }
 
 STAGE_C_ACTIVE_READOUTS = {
@@ -77,6 +78,7 @@ STAGE_C_ACTIVE_READOUTS = {
     "japo-atom",
     "japo-joint-perm",
     "japo-joint-random",
+    "grouped-mlp",
 }
 
 ACTIVE_STAGE_C_CONTRACT = {
@@ -362,6 +364,10 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         japo_expert_rank=args.japo_expert_rank,
         japo_router_width=args.japo_router_width,
         japo_router_output_init_std=args.japo_router_output_init_std,
+        grouped_mlp_scale=args.grouped_mlp_scale,
+        grouped_mlp_point_hidden_width=args.grouped_mlp_point_hidden_width,
+        grouped_mlp_partition=args.grouped_mlp_partition,
+        grouped_mlp_partition_seed=args.grouped_mlp_partition_seed,
         evaluation_prefix_mode=getattr(args, "evaluation_prefix_mode", "native"),
         segment_horizons=getattr(
             args,
@@ -451,6 +457,20 @@ def initialization_contract(model: nn.Module) -> dict[str, Any]:
                 ),
                 "initial_gate_entropy": float(entropy.detach().item()),
                 "initial_expert_usage": usage.detach().cpu().tolist(),
+            }
+        )
+    if hasattr(model, "grouped_mlp_readout"):
+        readout = model.grouped_mlp_readout
+        payload.update(
+            {
+                "grouped_mlp_initialization_hash": _tensor_hash(
+                    list(readout.parameters())
+                ),
+                "grouped_mlp_scale": int(readout.scale),
+                "grouped_mlp_partition": readout.partition,
+                "grouped_mlp_group_indices_hash": _tensor_hash(
+                    [readout.group_indices]
+                ),
             }
         )
     return payload
@@ -677,6 +697,34 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
                 "japo_expert_rank": int(readout.expert_rank),
                 "japo_router_width": int(readout.router_width),
                 "plgo_global_rank": int(readout.global_rank),
+            }
+        )
+    if hasattr(model, "grouped_mlp_readout"):
+        readout = model.grouped_mlp_readout
+        active_prefixes = (
+            "patch_emb_x.",
+            "encoder.",
+            "norm_x.",
+            "grouped_mlp_readout.",
+        )
+        active_parameters = sum(
+            parameter.numel()
+            for name, parameter in model.named_parameters()
+            if name.startswith(active_prefixes)
+        )
+        payload.update(
+            {
+                "active_forward_parameters": active_parameters,
+                "grouped_mlp_decoder_parameters": readout.decoder_parameters,
+                "grouped_mlp_scale": int(readout.scale),
+                "grouped_mlp_group_count": int(readout.group_count),
+                "grouped_mlp_hidden_width": int(readout.hidden_width),
+                "grouped_mlp_partition": readout.partition,
+                "grouped_mlp_parameter_relative_gap": (
+                    readout.parameter_relative_gap
+                ),
+                "grouped_mlp_affine_minimum_width": 2
+                * min(readout.readout_dim, readout.scale),
             }
         )
     return payload
@@ -1520,6 +1568,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--encoder-mode",
         choices=[
+            "raw-history-identity",
             "timealign-token-mlp",
             "contextual-patch-transformer",
             "global-anchored-patch-transformer",
@@ -1627,6 +1676,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--japo-expert-rank", type=int, default=256)
     parser.add_argument("--japo-router-width", type=int, default=32)
     parser.add_argument("--japo-router-output-init-std", type=float, default=0.01)
+    parser.add_argument("--grouped-mlp-scale", type=int, default=144)
+    parser.add_argument("--grouped-mlp-point-hidden-width", type=int, default=4)
+    parser.add_argument(
+        "--grouped-mlp-partition",
+        choices=["canonical", "random"],
+        default="canonical",
+    )
+    parser.add_argument("--grouped-mlp-partition-seed", type=int, default=14101)
     parser.add_argument("--patch-diagnostic-batches", type=int, default=8)
     parser.add_argument(
         "--pred-loss-mode",
@@ -1650,12 +1707,14 @@ def parse_args() -> argparse.Namespace:
         inactive = {
             name: value
             for name, value in active_values.items()
-            if (
-                value != ACTIVE_STAGE_C_CONTRACT[name]
-                and not (
-                    name == "readout_mode"
-                    and value in STAGE_C_ACTIVE_READOUTS
-                )
+            if value != ACTIVE_STAGE_C_CONTRACT[name]
+            and not (
+                name == "readout_mode" and value in STAGE_C_ACTIVE_READOUTS
+            )
+            and not (
+                name == "encoder_mode"
+                and value == "raw-history-identity"
+                and args.readout_mode == "grouped-mlp"
             )
         }
         if inactive:
@@ -1783,6 +1842,15 @@ def parse_args() -> argparse.Namespace:
         raise ValueError(
             "SC1-JAPO Step7A requires japo_router_output_init_std=0.01"
         )
+    if args.grouped_mlp_scale <= 0 or args.pred_len % args.grouped_mlp_scale:
+        raise ValueError("grouped MLP scale must divide pred_len")
+    if args.grouped_mlp_point_hidden_width < 2:
+        raise ValueError("grouped MLP point hidden width must be at least two")
+    if (
+        args.grouped_mlp_partition == "random"
+        and args.grouped_mlp_scale in {1, args.pred_len}
+    ):
+        raise ValueError("random grouped MLP endpoint partitions are invalid")
     if args.patch_diagnostic_batches <= 0:
         raise ValueError("patch_diagnostic_batches must be positive")
     if args.stage_token_dim <= 0:

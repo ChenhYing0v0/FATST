@@ -4,6 +4,7 @@ import torch.nn.functional as F
 
 from layers.Alignment import glocal_align_ablation
 from layers.Embed import PositionalEmbedding
+from layers.GroupedMLP import GroupedMLPReadout
 from layers.PMFO import (
     DenseMLPMatchedReadout,
     PMFONoTransitionReadout,
@@ -64,11 +65,14 @@ JAPO_READOUT_CONFIG = {
 }
 
 ENCODER_MODES = {
+    "raw-history-identity",
     "timealign-token-mlp",
     "contextual-patch-transformer",
     "global-anchored-patch-transformer",
     "hierarchical-patch-memory",
 }
+
+GROUPED_MLP_READOUTS = {"grouped-mlp"}
 
 
 class PatchEmbed(nn.Module):
@@ -377,6 +381,7 @@ class Model(nn.Module):
             *PMFO_READOUTS,
             *PLGO_PAF_READOUTS,
             *JAPO_READOUTS,
+            *GROUPED_MLP_READOUTS,
         }:
             raise ValueError(
                 "Clean TimeAlign supports only 'official' and "
@@ -403,7 +408,10 @@ class Model(nn.Module):
             )
 
         self.e_layers = configs.e_layers
-        if self.encoder_mode in {
+        if self.encoder_mode == "raw-history-identity":
+            self.patch_num = 1
+            self.d_model = self.seq_len
+        elif self.encoder_mode in {
             "timealign-token-mlp",
             "hierarchical-patch-memory",
         }:
@@ -495,7 +503,7 @@ class Model(nn.Module):
             if self.has_future_recon_branch:
                 self.norm_y = nn.ModuleList([nn.LayerNorm(configs.d_model) for _ in range(configs.e_layers)])
 
-        readout_dim = configs.d_model * self.patch_num
+        readout_dim = self.d_model * self.patch_num
         if self.has_future_recon_branch or self.encoder_mode in {
             "timealign-token-mlp",
             "hierarchical-patch-memory",
@@ -647,6 +655,21 @@ class Model(nn.Module):
                 permutation_seed=int(getattr(configs, "plgo_permutation_seed", 7101)),
                 random_seed=int(getattr(configs, "plgo_random_descriptor_seed", 7102)),
             )
+        if self.readout_mode in GROUPED_MLP_READOUTS:
+            self.grouped_mlp_readout = GroupedMLPReadout(
+                readout_dim=readout_dim,
+                series_length=self.pred_len,
+                scale=int(getattr(configs, "grouped_mlp_scale", 144)),
+                point_hidden_width=int(
+                    getattr(configs, "grouped_mlp_point_hidden_width", 4)
+                ),
+                partition=str(
+                    getattr(configs, "grouped_mlp_partition", "canonical")
+                ),
+                partition_seed=int(
+                    getattr(configs, "grouped_mlp_partition_seed", 14101)
+                ),
+            )
 
         self.normalization_x = Normalize(configs.enc_in, affine=False)
         if self.has_future_recon_branch:
@@ -655,6 +678,8 @@ class Model(nn.Module):
     def _encode_normalized_history(self, x):
         # x: [B, L, C] -> memory: [B, C, P, D]
         batch, seq_len, channels = x.shape
+        if self.encoder_mode == "raw-history-identity":
+            return x.permute(0, 2, 1).unsqueeze(2)
         if self.encoder_mode == "contextual-patch-transformer":
             return self.history_encoder(x.permute(0, 2, 1))
         if self.encoder_mode == "global-anchored-patch-transformer":
@@ -889,6 +914,8 @@ class Model(nn.Module):
             output = self.plgo_paf_readout(hidden, target_prefix)
         elif self.readout_mode in JAPO_READOUTS:
             output = self.japo_readout(hidden, target_prefix)
+        elif self.readout_mode in GROUPED_MLP_READOUTS:
+            output = self.grouped_mlp_readout(hidden, target_prefix)
         else:
             raise ValueError(f"Unsupported readout mode: {self.readout_mode}")
         output = self.normalization_x(output, "denorm")

@@ -1,0 +1,18 @@
+{
+  "affine_gate_pass": true,
+  "diagnostic_id": "SC-D14-A1",
+  "encoder_pairing_cases": 5,
+  "encoder_pairing_pass": true,
+  "forecast_training_performed": false,
+  "forward_cases": 20,
+  "gradient_gate_pass": true,
+  "max_affine_witness_gap": 2.384185791015625e-07,
+  "max_parameter_relative_gap": 0.0016455387615797173,
+  "max_prefix_equivalence_gap": 0.0,
+  "parameter_cases": 80,
+  "parameter_gate_pass": true,
+  "partition_gate_pass": true,
+  "pass": true,
+  "prefix_gate_pass": true,
+  "uses_test_split": false
+}

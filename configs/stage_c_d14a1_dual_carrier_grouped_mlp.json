@@ -1,0 +1,76 @@
+{
+  "stage": "StageC-UVHF",
+  "diagnostic_id": "SC-D14-A1",
+  "role": "diagnostic_only_dual_carrier_e2e",
+  "series_length": 720,
+  "coupling_scales": [1, 48, 144, 360, 720],
+  "random_partition_scales": [48, 144, 360],
+  "point_hidden_width": 4,
+  "partition_seed": 14101,
+  "carriers": {
+    "neutral_raw": {
+      "encoder_mode": "raw-history-identity",
+      "evidence_role": "primary_direction_gate",
+      "dataset_profiles_used": false
+    },
+    "a6_natural": {
+      "encoder_mode": "timealign-token-mlp",
+      "evidence_role": "paper_carrier_sensitivity_only",
+      "dataset_profiles_used": true
+    }
+  },
+  "training": {
+    "screen_seed": 2021,
+    "confirmation_seeds": [2022, 2023],
+    "max_epochs": 20,
+    "early_stopping_patience": 5,
+    "learning_rate": 0.0001,
+    "batch_size": 32,
+    "objective": "full_720_pointwise_l1",
+    "checkpoint_policy": "best-val",
+    "evaluation_split": "validation",
+    "evaluation_prefix_mode": "full-crop"
+  },
+  "future_bins": [
+    {"name": "short", "start": 0, "end": 144},
+    {"name": "mid", "start": 144, "end": 360},
+    {"name": "long", "start": 360, "end": 720}
+  ],
+  "dense_horizons": [48, 96, 144, 192, 288, 336, 512, 720],
+  "local_gates": {
+    "max_parameter_relative_gap": 0.01,
+    "max_prefix_equivalence_gap": 1e-6,
+    "max_affine_witness_gap": 1e-5,
+    "require_full_affine_containment": true,
+    "require_exact_partition_cover": true,
+    "require_exact_sharing_topology": true,
+    "require_all_gradients": true
+  },
+  "remote_gates": {
+    "minimum_prediction_disagreement": 0.005,
+    "function_separation_dataset_required": 3,
+    "carrier_skill_gain_min": 0.005,
+    "carrier_skill_dataset_required": 3,
+    "crossing_relative_margin": 0.001,
+    "stable_crossing_dataset_required": 3,
+    "oracle_macro_gain_min": 0.005,
+    "contiguity_dataset_required": 3,
+    "contiguity_macro_gain_min": 0.001,
+    "severe_degradation_threshold": 1.0
+  },
+  "staging": {
+    "neutral_seed2021_first": true,
+    "a6_sensitivity_requires_neutral_problem_pass": true,
+    "confirmation_requires_neutral_and_a6_review": true,
+    "a6_failure_can_reject_scale_hypothesis": false
+  },
+  "authorization": {
+    "uses_train_split": true,
+    "uses_validation_split": true,
+    "uses_test_split": false,
+    "paper_method_implementation_authorized": false,
+    "d14_b_authorized": false,
+    "neutral_remote_authorized": true,
+    "a6_remote_authorized": false
+  }
+}

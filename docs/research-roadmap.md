@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D14-A0 Step 9-11 complete；rollback Step 2-3 for one repaired A1 audit |
+| `current_step` | D14-A1 Step 7A passed；Step 7B neutral seed2021 authorized |
 | `active_question` | fixed-past unified model是否需要在一个projective decoder内自适应future-output coupling scope？ |
 | `active_candidates` | at-risk `SC1-PCSD`；`SC2-CCRL` held；A1 repaired evidence before any method |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/experiments/stage-c-d14-output-coupling-granularity.md` |
-| `method_implementation` | false；A0 complete；A1 remote/D14-B/paper method/test=false |
+| `method_implementation` | false；A1 neutral diagnostic remote=true；A6/D14-B/paper method/test=false |
 | `rollback_point` | A1 theory infeasible或repaired evidence fail ->关闭PCSD/CCRL pair |
 
 ## Post-D11 Joint Mainline Reset
@@ -102,11 +102,16 @@ PCA64 + linear RRR evidence失败。
 最多0.04036%，没有形成足够function-level contrast。故方向级拒绝无效，归因为
 `intervention_point_wrong + capacity_control_incomplete`。
 
-[Execution Order] 一次A1 source/theory feasibility -> repaired D14-A evidence -> D14-B authorization decision ->
-formal Step4-6。A1前remote/method/B/test均false；A1 infeasible或repaired evidence仍fail则关闭PCSD/CCRL pair。
+[A1 Design Gate] A1不再调A0 rank，而以E2E grouped nonlinear head改变point/block/global hidden-bank sharing。
+所有scales均经GELU正负对构造证明包含full-affine map；80个parameter/partition/affine与20个forward/gradient
+local cases通过，最大parameter gap 0.1646%。neutral raw-history carrier是primary direction gate；A6-natural只作
+paper-carrier sensitivity。由于A6 architecture/profile围绕global basis decoder形成，A6-negative不能拒绝scale。
 
-[Frozen Boundary] neutral raw-history carrier是primary；frozen A6只作sensitivity。最终effectiveness必须matched
-E2E joint training，不能用frozen replacement gap通过或拒绝paper method。
+[Execution Order] neutral seed2021 remote -> neutral gate -> 仅在problem pass时运行A6-natural sensitivity ->
+multi-seed confirmation decision。D14-B/paper method/test仍false；neutral valid fail则关闭PCSD/CCRL pair。
+
+[Frozen Boundary] neutral raw-history carrier是primary；A6 sensitivity也从头E2E joint training，但其negative只表示
+carrier interface/profile不确认。最终paper effectiveness仍须matched E2E，不能用frozen replacement gap通过或拒绝。
 
 ## Completed Foundation
 

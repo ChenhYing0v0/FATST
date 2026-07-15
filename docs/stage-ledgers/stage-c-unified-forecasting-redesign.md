@@ -18,27 +18,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | D14-A0 Step 9-11 completed；rollback Step 2-3 for one A1 redesign audit |
+| `current_11_step` | D14-A1 Step 4-7A passed；Step 7B neutral seed2021 next |
 | `current_candidate` | `SC1-PCSD` + `SC2-CCRL` provisional pair；problem gates pending |
 | `latest_decision` | A0 exact gate fail；factor-param matching不等于effective DoF且arms近等价，不能方向级拒绝 |
-| `next_required_action` | source-informed评估A1 effective-DoF matched structured shrinkage；实现前先过Step 4-6 diagnostic design gate |
-| `method_training_authorized` | false；A1 remote=false；forecast/paper method=false，D14-B=false，test=false |
+| `next_required_action` | commit/push后在3090运行neutral raw-history E2E 5 datasets × 8 arms；先分析再决定A6 |
+| `method_training_authorized` | false；A1 neutral diagnostic=true；A6=false，paper method=false，D14-B=false，test=false |
 | `rollback_point` | A1 feasibility fail或repaired evidence fail -> Step2关闭PCSD/CCRL pair |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | A0 returned negative but direction rejection invalid；joint pair rollback Step 2-3 |
+| `current_step` | A1 source/theory/Step7A local gate passed；neutral Step7B pending |
 | `problem` | 现有unified decoder固定point/block/global coupling scope；最佳future-output sharing是否随target region与history变化 |
-| `existence_evidence` | external strategy prior + D6 indirect crossing；A0 stable crossing 0/5且oracle 0.0586%，direct evidence仍unsupported |
+| `existence_evidence` | external task-sharing prior + D6 indirect crossing；A0 direct evidence unsupported；A1已建立有效nonlinear intervention但尚无remote result |
 | `idea` | PCSD projective point-to-global coupling spectrum + CCRL cross-fitted coupling-regret supervision |
 | `theory_check` | projectivity/A6 containment可构造；point-MSE只允许finite-sample sharing claim；routing/meta-learning prior art强，formal Step5未授权 |
-| `design` | A0 completed；factor params matched但rank-manifold DoF未匹配，risk spread <=0.04036%；A1 only after source/theory repair |
+| `design` | A1 grouped nonlinear sharing topology；all scales contain full-affine maps；neutral primary/A6 sensitivity串行dual-carrier |
 | `narrative_gate` | problem chain与multi-horizon直接对齐；candidate仍provisional；DIRMO+MoE equivalence与router predictability为最大风险 |
-| `effectiveness_gate` | A0 fail：crossing 0/5；oracle 0.0586%；contiguity -0.1427%；direction-level gate invalid |
-| `artifacts` | `analysis/stage_c_d14a_output_coupling_granularity_20260715/d14a_result_and_failure_attribution.md` |
-| `decision` | exact linear RRR probe closed；one A1 diagnostic repair maximum；D14-B/paper method/test remain false |
+| `effectiveness_gate` | A1 remote pending；neutral需function separation、carrier skill、crossing、oracle与contiguity全部通过 |
+| `artifacts` | `analysis/stage_c_d14a1_dual_carrier_grouped_mlp_20260715/` |
+| `decision` | Step7A pass_neutral_remote_only；A6-negative不能拒绝scale；D14-B/paper method/test remain false |
 
 ## Frozen Carrier Contract
 
@@ -91,7 +91,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC-D14-P` | `auxiliary_not_scheduled` | A6 patch memory是否含超越global coeff的ordered target-specific conditional information | not paper mainline | not started | 未来仅在decoder interface需要时做small probe |
 | `SC1-PCSD` | `proposed_step2_3_at_risk` | one projective decoder是否需同时表示point/block/global coupling scopes | complete-chain novelty only；DIRMO/Stratify/CATS controls mandatory | A0 direct evidence fail but rejection invalid | one A1 repair；failure closes pair |
 | `SC2-CCRL` | `held_dependent` | train-OOF coupling regret能否使history+target policy兑现oracle headroom | generic routing/regret overlap强；独立novelty未通过 | A0 oracle insufficient | do not run D14-B before repaired A pass |
-| `SC-D14-A/B` | `a0_fail_design_fault_a1_theory_only` | coupling scale是否crossing且best scale能否由history+target预测 | not required；method=false | A0 crossing 0/5，oracle 0.0586%，random explains；DoF control incomplete | A1 source/theory audit only；remote/test=false |
+| `SC-D14-A/B` | `a1_step7a_pass_neutral_remote_only` | coupling scale是否crossing且best scale能否由history+target预测 | diagnostic design pass；method=false | local 80 parameter + 20 forward cases pass；remote pending | neutral seed2021；A6 requires neutral pass；test=false |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
 
@@ -196,7 +196,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | D13-A/B rolling-origin diagnostics | `deferred_next_paper` | protocol preserved；not active |
 | Fixed-past compression mainline reset | `superseded_by_narrative_scope` | CADMO/CPGA与patch-memory D14降为history-interface auxiliary；未执行 |
 | Multi-horizon coupling mainline reset | `completed_provisional_step2_3` | PCSD/CCRL proposed；完整prior-art boundary与D14-A/B gates已冻结；method remains false |
-| D14 output-coupling granularity | `a0_completed_fail_design_fault` | 5×3 complete；numeric valid；crossing/oracle/contiguity fail；direction rejection invalid；A1 theory audit next |
+| D14 output-coupling granularity | `a1_step7a_pass_neutral_remote_next` | A0 direction rejection invalid；A1 nonlinear topology、affine containment、params与gradient gates通过；A6 causal boundary frozen |
 
 ## Paper Mainline Sync Log
 
@@ -240,6 +240,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-15 | Fixed-past mainline restoration | Thesis、Contribution 1/2、Boundary、Experiment Logic | next-paper archive + current-paper Step2/3 reset | NIFRO/IARL转入`New-idea.md`；CADMO/CPGA provisional；只授权D14 |
 | 2026-07-15 | Multi-horizon narrative correction | Thesis、Contribution 1/2、Boundary、Experiment Logic | CADMO/CPGA narrative rejection + Step2/3 reconstruction | ordered patch降为auxiliary；PCSD/CCRL provisional；新D14-A/B active |
 | 2026-07-15 | D14-A0 remote result and failure attribution | Current Position、Contribution Slots、Experiment Logic | exact probe closure + direction-rejection correction | crossing 0/5；oracle 0.0586%；DoF/contrast不足；one A1 theory audit；B/method/test held |
+| 2026-07-15 | D14-A1 source/theory and Step7A | Current Position、Experiment Logic、failure attribution | neutral-first nonlinear E2E diagnostic | 80+20 local cases pass；neutral remote only；A6 fail不能方向拒绝 |
 
 ## Continuation Rules
 

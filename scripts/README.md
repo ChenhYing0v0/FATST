@@ -1,6 +1,16 @@
 # Active Scripts
 
-StageC D14-A0 output-coupling granularity diagnostic：
+StageC D14-A1 active output-coupling diagnostic：
+
+- `check_stage_c_d14a1_step7a.py`: 验证80组parameter/partition/affine cases、20组forward/gradient cases与
+  A6 encoder initialization pairing；
+- `evaluate_stage_c_d14a1_checkpoint.py`: 从best-val checkpoint生成validation row×bin losses、persistence与
+  aligned prediction probes；
+- `analyze_stage_c_d14a1.py`: 分开应用neutral primary gate与A6 sensitivity gate；A6-negative不能方向拒绝；
+- `remote/run_stage_c_d14a1_dual_carrier_grouped_mlp.sh`: neutral-first串行runner，只有neutral pass才允许A6；
+- `sync_stage_c_d14a1_dual_carrier_grouped_mlp_results.sh`: 同步必要configs、metrics、row diagnostics与gate。
+
+StageC D14-A0 archived evidence entrypoints：
 
 - `run_stage_c_d14a_output_coupling_granularity.py`: 在neutral PCA64 carrier上拟合parameter-matched
   blockwise reduced-rank output operators，保存三fold calibration/validation metrics与row-level bin losses；

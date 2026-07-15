@@ -5,15 +5,15 @@
 | Field | Value |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D14-A0 Step 9-11 complete；rollback Step 2-3 for one A1 design audit |
+| `current_step` | D14-A1 Step 7A passed；Step 7B neutral seed2021 authorized |
 | `role` | `diagnostic_only` |
 | `active_candidates` | provisional `SC1-PCSD` + `SC2-CCRL` |
 | `method_training` | false |
-| `remote_training` | A0 complete；A1 not authorized；forecast training=false |
+| `remote_training` | A0 complete；A1 neutral diagnostic authorized；A6 sensitivity held；paper method=false |
 | `test_access` | false |
 | `primary_carrier` | neutral train-only raw-history carrier |
-| `sensitivity_carrier` | held；A0通过前不执行frozen A6 probe |
-| `rollback` | A0 exact gate fail + direction rejection invalid；one A1 source/theory audit before pair closure |
+| `sensitivity_carrier` | A6-natural E2E architecture，只有neutral problem pass后才授权 |
+| `rollback` | neutral valid fail -> Step 2 close pair；neutral invalid -> repair diagnostic；A6 fail不能拒绝scale hypothesis |
 
 ## What We Plan To Test
 
@@ -59,12 +59,12 @@ matched head family，首选：
 从normalized raw history构造train-only fixed features；不得使用与任一candidate head共同训练的representation。
 可选PCA/DCT/random projection须固定维度并由train fit。
 
-### C1 A6 carrier — sensitivity only
+### C1 A6-natural architecture carrier — sensitivity only
 
-导出同一best-validation A6 checkpoint的`patch_memory`或`global_coeff`。所有coupling heads读取同一tensor，
-但结论必须标记conditional on co-adapted A6 representation。
-
-若C0与C1方向相反，不允许方向级拒绝或通过；必须审计representation compatibility。
+复用五数据集natural profile的`timealign-token-mlp` architecture，但不加载A6 checkpoint；encoder与candidate
+decoder从头E2E joint training。由于这些profiles与encoder本来围绕global basis decoder形成，即使candidate在
+A6上失败，也可能是carrier/head interface或profile inductive bias。故A6-negative不能拒绝scale hypothesis；
+A6-positive也不能在neutral invalid时单独通过problem gate。
 
 ## D14-A Coupling-Spectrum Headroom
 
@@ -103,6 +103,31 @@ aggregate risk spread也只有0.000004%-0.04036%，未形成足够function-level
 当前PCA64 + linear RRR probe，方向级拒绝标记`design_fault_suspected`。D14-B取消；A1实现前必须先通过
 effective-DoF matched structured-shrinkage source/theory audit。完整报告见
 `analysis/stage_c_d14a_output_coupling_granularity_20260715/d14a_result_and_failure_attribution.md`。
+
+### A1 repaired nonlinear E2E diagnostic
+
+A1改用真正改变parameter-sharing topology的grouped nonlinear head。对carrier
+$h\in\mathbb R^R$与scale $s$的每个future group $B_g$：
+
+$$
+z_g=\operatorname{GELU}(hA_g+a_g),\qquad \hat y_{B_g}=z_gB_g+b_g.
+$$
+
+$s=1$为每个future target独立hidden bank，$s=720$为全future共享bank，中间scale为block sharing；
+random partition保持相同scale、width与params，只改变future coordinates的membership。requested $H$不进入网络，
+只crop full-domain output。
+
+point width固定为4，其余width按总decoder params最近整数匹配。利用exact identity
+$\operatorname{GELU}(u)-\operatorname{GELU}(-u)=u$，所有scale均满足
+$k_s\ge2\min(R,s)$，因而都包含任意full-affine history-to-future map；linear capacity差异不能解释结果。
+
+Step7A已通过80个parameter/partition/affine cases与20个full forward/gradient cases：最大parameter gap
+0.1646%，最大affine witness gap $2.3842\times10^{-7}$，prefix gap 0，五profiles的A6 encoder initialization
+pairing通过。由此只授权`neutral_raw, seed=2021`的Step7B；A6-natural仍由neutral gate串行控制。完整设计与gate见：
+
+- `analysis/stage_c_d14a1_dual_carrier_grouped_mlp_20260715/source_theory_design_audit.md`；
+- `analysis/stage_c_d14a1_dual_carrier_grouped_mlp_20260715/local_gate/local_gate_report.md`；
+- `configs/stage_c_d14a1_dual_carrier_grouped_mlp.json`。
 
 ### Coupling scales
 
