@@ -83,6 +83,12 @@ StageC active entrypoints：
   record中保留GPU preflight、commit与protocol boundary。
 - `sync_stage_c_sc1_d9_history_support_operator_results.sh`: 只同步D9-A CSV/JSON/report等轻量结果，不同步原始
   baseline checkpoints。
+- `run_stage_c_sc1_d10_raw_scale_identifiability.py`: 从official train/validation raw windows构造history DCT ×
+  future RGNB capacity-matched ridge probes；输出七组matrix与binary 2×2 cells，不读取test。
+- `analyze_stage_c_sc1_d10_raw_scale_identifiability.py`: 聚合binary/detail-monotone metrics、paired controls、
+  6! mapping permutations与frozen gates。
+- `remote/run_stage_c_sc1_d10_raw_scale_identifiability.sh`: 三GPU workload-aware五dataset D10 runner；
+- `sync_stage_c_sc1_d10_raw_scale_identifiability_results.sh`: 同步D10 raw cells、metadata与aggregate decision。
 
 历史 runner/analyzer 已移入 `scripts/archive/`，不得作为当前研究入口。新增脚本必须服务active ledger中明确的
 next action，并同步对应experiment protocol与code explanation。

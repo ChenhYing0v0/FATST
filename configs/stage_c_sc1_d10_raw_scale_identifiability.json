@@ -1,0 +1,38 @@
+{
+  "stage": "StageC-UVHF",
+  "diagnostic_id": "SC1-D10",
+  "role": "diagnostic_only",
+  "series_length": 720,
+  "future_global_rank": 16,
+  "group_sizes": [16, 16, 32, 64, 128, 256, 208],
+  "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"],
+  "fit_windows": 256,
+  "holdout_windows": 128,
+  "validation_windows": 256,
+  "fit_region_end_fraction": 0.6,
+  "holdout_region_start_fraction": 0.8,
+  "sketch_width": 16,
+  "sketch_seeds": [20260715, 20260716, 20260717],
+  "ridge_lambdas": [0.001, 0.01, 0.1],
+  "normalization_epsilon": 1e-5,
+  "gates": {
+    "dataset_required": 4,
+    "replicate_positive_required": 36,
+    "binary_interaction_min": 0.01,
+    "binary_control_gain_min": 0.005,
+    "monotone_gain_min": 0.01,
+    "monotone_best_count_min": 4,
+    "monotone_permutation_p_max": 0.05,
+    "monotone_control_gain_min": 0.005,
+    "orthogonality_max_abs": 1e-8
+  },
+  "authorization": {
+    "uses_train_split": true,
+    "uses_validation_split": true,
+    "uses_test_split": false,
+    "updates_forecast_model": false,
+    "trains_forecast_model": false,
+    "method_implementation_authorized": false,
+    "sc2_authorized": false
+  }
+}

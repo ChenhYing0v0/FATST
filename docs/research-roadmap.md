@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Contribution 1 rollback to Step 2/3 after D9-A exact operator audit |
+| `current_step` | Contribution 1 Step 2/3；SC1-D10 raw scale identifiability design frozen |
 | `active_question` | 如何让history与support geometry直接改变projective operator，而非弱convex expert mixing？ |
 | `active_candidates` | none；`SC1-JAPO exact_v1 failed_as_core_candidate`；`SC1-PLGO geometry scaffold retained`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_sc1_d9_history_support_operator_audit_20260715/d9_result_and_rollback.md` |
-| `method_implementation` | false；D9-B canceled；只授权`SC1-D10` Step2/3 protocol design |
+| `active_protocol` | `analysis/stage_c_sc1_d10_raw_scale_identifiability_20260715/d10_step23_diagnostic_design.md` |
+| `method_implementation` | false；只授权D10 diagnostic analyzer/local/remote evidence；forecast method/test/SC2 false |
 | `rollback_point` | Step2/3；future geometry retained，history-scale problem reopened |
 
 ## Completed Foundation
@@ -234,6 +234,10 @@ RGNB geometry retained；现已完成Step4 intervention/readout redesign，不�
     datasets=`2/5`，permutation/random-basis gates=`1/5`与`0/5`，故primary hypothesis失败；
 36. global-root与details之间存在15/15正向binary contrast，但它是post-hoc observation且details内部不单调，
     不能挽救D9。D9-B取消，回Step2/3设计D10 raw history–future scale identifiability。
+37. D10 Step2/3 protocol已冻结：history DCT与future RGNB使用相同七组sizes，但所有cells进一步固定为16→16；
+    binary 2×2与detail-only 6×6 monotone gates分离，paired history/future permutations阻断coordinate/capacity解释；
+38. D10使用chronological train fit、20% temporal gap、train holdout与official validation；不读取test，不训练
+    forecast model。当前只授权diagnostic implementation与remote evidence。
 
 ## SC1-PLGO Step 6 Design Gate: Conditional Pass, D7 Required
 

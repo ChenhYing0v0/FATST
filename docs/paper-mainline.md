@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Contribution 1 rollback to Step 2/3 after D9-A exact operator audit |
+| `current_11_step` | Contribution 1 Step 2/3；SC1-D10 raw scale identifiability diagnostic |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -265,6 +265,12 @@ random-history-basis=`0/5`。details相对global root整体更偏高频在15/15 
 上区分binary global/detail、monotone multiscale与no-scale三种hypotheses。只有problem存在性与matched controls
 通过后，才允许重新形成Step4 architecture candidate；当前new model、test、SC2与factorial均不授权。
 
+[D10 Frozen Design] history使用七个DCT frequency bands，future使用RGNB global root与六层details；两侧group
+sizes天然相同，但每个cell仍whiten并固定为16→16 sketched ridge以排除capacity差异。binary gate使用独立2×2
+global/detail interaction，monotone gate只检查details内部6×6 diagonal，防止global/detail粗二分伪造多尺度证据。
+fit/holdout按train时间区间隔离，final evidence只用official validation；paired history/future permutations为mandatory
+controls。当前授权仅限diagnostic，不是model implementation。
+
 [Narrative Boundary] nonlinear decoder、operator MoE、geometry gating、structure-guided time-series MoE与
 step-specific representation均已有直接prior art。可辩护边界只能是joint history-atom conditional operator、
 RGNB exact projectivity与multi-horizon domain-only execution的完整组合。JAPO status更新为`narrative_ready`；
@@ -389,6 +395,8 @@ Step4，不以训练性能包装RGNB。
     Step4-5 candidate，当前不授权model implementation、test、MIPR或joint factorial。
 26. D9-A exact operator gate失败且无numeric/protocol pathology；ordered history-scale alignment关闭，D9-B取消，
     rollback Step2/3。binary global/detail只作D10 hypothesis，不作Contribution 1 evidence。
+27. D10 Step2/3 design冻结binary、detail-monotone与no-aligned-scale三选一gate；通过只返回Step4，失败则继续
+    rollback Step2，不允许从exploratory off-diagonal matrix事后生成method。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
 generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成
@@ -426,6 +434,7 @@ loss 或更多 tuning 来掩盖失败。
 - `analysis/stage_c_sc1_japo_step7a_local_20260714/step7a_local_gate_report.md`
 - `analysis/stage_c_sc1_post_japo_systematic_review_20260715/systematic_stage_review.md`
 - `analysis/stage_c_sc1_d9_history_support_operator_audit_20260715/d9_result_and_rollback.md`
+- `analysis/stage_c_sc1_d10_raw_scale_identifiability_20260715/d10_step23_diagnostic_design.md`
 - `Papers/stage-c-external-decoder-objective-audit.md`
 - `docs/experiments/stage-c-five-dataset-validation-policy.md`
 - `docs/code-explanation/stage-c-pmfo-rct-step7a.md`
