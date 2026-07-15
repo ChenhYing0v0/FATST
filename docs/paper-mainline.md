@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC1-JAPO Step 8 seed2021 remote screen running |
+| `current_11_step` | SC1-JAPO Step 8 seed2022 confirmation authorized |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | Contribution 1 JAPO running/step8_seed2021；SC2-MIPR held |
+| `paper_core_status` | Contribution 1 JAPO narrative-ready/effectiveness-inconclusive；SC2-MIPR held |
 
 ## Research Thesis
 
@@ -228,14 +228,18 @@ normalization、explicit H和auxiliary routing loss均禁止。五profiles desig
 runner/analyzer已落地。五profiles × 七arms的210/210 prefix与35/35 gradient cases通过；最大prefix gap
 `4.768e-7`，patch-block rewrite gap `5.722e-6`；Encoder与expert-bank paired initialization hashes通过。
 
-[Step8 Running] commit `90e4164`已在`529_Lab-3090` GPUs0/1/2启动seed2021的35-run validation-only matrix；
-test、SC2与seed2022/2023均未启动。当前状态只表示实验运行中，不构成effectiveness evidence。
+[Step8 Evidence] seed2021的35/35 validation-only runs、paired from-scratch initialization与全部artifact/invariant
+audit均通过。JOINT相对A6的dense MSE macro为`-1.3754%`、0/5 datasets正向；相对same-bank control median为
+`-0.0780%`、2/5正向。该结果没有达到严重失败阈值，也没有达到provisional-pass阈值，因此是
+`inconclusive`而不是pass或方向级fail。router normalized entropy最低`0.993263`，提示当前训练可能未形成明显
+expert specialization，但单seed不能区分optimization variance与exact design weakness。
 
 [Narrative Boundary] nonlinear decoder、operator MoE、geometry gating、structure-guided time-series MoE与
 step-specific representation均已有直接prior art。可辩护边界只能是joint history-atom conditional operator、
 RGNB exact projectivity与multi-horizon domain-only execution的完整组合。JAPO status更新为`narrative_ready`；
-UNIFORM/HISTORY/ATOM/PERM/RANDOM same-bank controls与staged three-seed gates已冻结。当前只授权seed2021的
-五dataset × 七arm validation-only remote screen；不授权test或SC2-MIPR。
+UNIFORM/HISTORY/ATOM/PERM/RANDOM same-bank controls与staged three-seed gates已冻结。当前只授权不改变design的
+seed2022五dataset × 七arm validation-only confirmation；two-seed mean未过gate则停止exact JAPO并归因，只有
+通过才授权seed2023。test与SC2-MIPR仍不授权。
 
 ### Contribution 2 Candidate: Measure-Induced Projective Risk
 
@@ -345,8 +349,9 @@ Step4，不以训练性能包装RGNB。
     audit禁止。
 21. JAPO Step6已冻结E2/K256/G32、independent initialization、seven-arm matrix与staged seeds；candidate成为
     `narrative_ready`。
-22. JAPO Step7A通过210 prefix、35 gradient、paired hashes与runner/analyzer gates；当前进入Step8 seed2021
-    validation-only screen，test/SC2仍暂停。
+22. JAPO Step7A通过210 prefix、35 gradient、paired hashes与runner/analyzer gates；
+23. JAPO seed2021完成35/35且无protocol/numeric pathology，但vs A6 macro `-1.3754%`、0/5，仅构成
+    stable/inconclusive evidence；按冻结gate只补seed2022，不调architecture/hyperparameters，test/SC2仍暂停。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
 generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成

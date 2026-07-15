@@ -126,8 +126,8 @@ mkdir -p "${OUTPUT_ROOT}/_logs" "${OUTPUT_ROOT}/_analysis"
   echo "test_used=false"
   nvidia-smi --query-gpu=index,name,memory.total,memory.used,memory.free,utilization.gpu \
     --format=csv,noheader,nounits
-} | tee "${OUTPUT_ROOT}/launch_record.txt"
-printf '%s\n' "${LINES[@]}" >"${OUTPUT_ROOT}/jobs.tsv"
+} | tee "${OUTPUT_ROOT}/launch_record_seed${SEED}.txt"
+printf '%s\n' "${LINES[@]}" >"${OUTPUT_ROOT}/jobs_seed${SEED}.tsv"
 
 run_one() {
   local index="$1" line="$2" gpu="$3"
@@ -193,8 +193,17 @@ if [[ "${status}" != "0" ]]; then
   exit 1
 fi
 
-"${CONDA_BIN}" run --no-capture-output -n "${CONDA_ENV}" \
-  python scripts/analyze_stage_c_sc1_japo_e2e.py \
-    --raw-root "${OUTPUT_ROOT}" --output-dir "${OUTPUT_ROOT}/_analysis" \
-    --seed "${SEED}"
+if [[ "${SEED}" == "2022" ]]; then
+  "${CONDA_BIN}" run --no-capture-output -n "${CONDA_ENV}" \
+    python scripts/analyze_stage_c_sc1_japo_e2e.py \
+      --raw-root "${OUTPUT_ROOT}" \
+      --output-dir "${OUTPUT_ROOT}/_analysis_seed2021_2022" \
+      --seeds 2021,2022
+else
+  "${CONDA_BIN}" run --no-capture-output -n "${CONDA_ENV}" \
+    python scripts/analyze_stage_c_sc1_japo_e2e.py \
+      --raw-root "${OUTPUT_ROOT}" \
+      --output-dir "${OUTPUT_ROOT}/_analysis_seed${SEED}" \
+      --seed "${SEED}"
+fi
 echo "stage_c_sc1_japo_done=$(date -Is)"

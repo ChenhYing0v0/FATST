@@ -69,9 +69,11 @@ requested $H$不进入Linear、LayerNorm、tanh或softmax，仅选择active rows
   trained routing entropy/usage；
 - `check_stage_c_sc1_japo_checkpoint_invariants.py`重载checkpoint，审计prefix、from-scratch、patch与expert
   contracts；
-- `analyze_stage_c_sc1_japo_e2e.py`先要求35/35 artifacts与paired hashes完整，再执行冻结的immediate-fail、
-  provisional-pass或inconclusive gate；
-- `remote/run_stage_c_sc1_japo_e2e.sh`固定五datasets、七arms、seed2021、validation-only与35-job matrix。
+- `analyze_stage_c_sc1_japo_e2e.py`先要求每个seed的35/35 artifacts与paired hashes完整，再执行冻结的
+  immediate-fail、provisional-pass或inconclusive gate；seed2022返回后先对每个dataset/arm求two-seed metric
+  mean，再原样复用provisional-pass threshold，禁止事后改变gate；
+- `remote/run_stage_c_sc1_japo_e2e.sh`固定五datasets、七arms、validation-only与每seed 35-job matrix；seed2022
+  完成后只读取seed2021/2022并执行冻结two-seed mean gate。
 
 ## Code-Theory Consistency
 

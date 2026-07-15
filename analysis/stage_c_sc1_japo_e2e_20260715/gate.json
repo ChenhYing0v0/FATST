@@ -1,0 +1,52 @@
+{
+  "candidate": "SC1-JAPO",
+  "decision": "seed2021_inconclusive_run_seed2022_only",
+  "expected_runs": 35,
+  "immediate_fail": false,
+  "individual_seed_joint_vs_a6_macro_pct": {
+    "2021": -1.3753563608390307
+  },
+  "initialization_checks": {
+    "paired_basis": true,
+    "paired_encoder_initialization": true,
+    "paired_expert_bank_initialization": true
+  },
+  "joint_vs_a6_by_dataset_pct": {
+    "ETTh1": -1.417499499494812,
+    "ETTh2": -2.3382125938084197,
+    "ETTm1": -0.5392191772159771,
+    "ETTm2": -2.4786781208259168,
+    "Weather": -0.10317241285002776
+  },
+  "joint_vs_a6_macro_pct": -1.3753563608390307,
+  "joint_vs_a6_positive_datasets": 0,
+  "joint_vs_each_control_macro_pct": {
+    "atom": -0.3863770642143338,
+    "history": -0.09958641989259887,
+    "joint_perm": 0.27532338379086196,
+    "joint_random": 0.13765517765898627,
+    "uniform": -0.3966920842731869
+  },
+  "joint_vs_each_control_positive_datasets": {
+    "atom": 2,
+    "history": 2,
+    "joint_perm": 3,
+    "joint_random": 3,
+    "uniform": 2
+  },
+  "joint_vs_same_bank_median_by_dataset_pct": {
+    "ETTh1": -0.0639731956213252,
+    "ETTh2": -0.649668899793121,
+    "ETTm1": 0.6814142279362168,
+    "ETTm2": -0.5278770708418312,
+    "Weather": 0.1699645366772362
+  },
+  "joint_vs_same_bank_median_macro_pct": -0.0780280803285649,
+  "joint_vs_same_bank_median_positive_datasets": 2,
+  "pass": false,
+  "provisional_pass": false,
+  "seeds": [
+    2021
+  ],
+  "valid_runs": 35
+}

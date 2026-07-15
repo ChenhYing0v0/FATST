@@ -35,9 +35,10 @@ StageC active entrypoints：
   patch-block rewrite与horizon-path production gate；不训练forecast model。
 - `check_stage_c_sc1_japo_checkpoint_invariants.py`: synthetic或trained A6/JAPO checkpoint的prefix、
   from-scratch、initialization、patch与expert contract审计。
-- `analyze_stage_c_sc1_japo_e2e.py`: 35-run validation-only completeness、paired hashes、same-bank controls与
-  seed2021 staged gate分析。
-- `remote/run_stage_c_sc1_japo_e2e.sh`: 3090 workload-aware JAPO seed2021 35-run end-to-end screen；禁止test。
+- `analyze_stage_c_sc1_japo_e2e.py`: validation-only completeness、paired hashes、same-bank controls、
+  seed2021 staged gate与冻结two-seed mean gate分析。
+- `remote/run_stage_c_sc1_japo_e2e.sh`: 3090 workload-aware JAPO单seed 35-run end-to-end screen；seed2022完成后
+  自动执行seed2021/2022 frozen mean gate；禁止test。
 - `run_stage_c_sc1_d7_descriptor_sufficiency.py`: 从冻结A6 memory训练free-M0与GEO/PERM/RANDOM
   compact/matched PAF heads；使用validation batches16-23，不更新forecast model、不读取test。
 - `analyze_stage_c_sc1_d7_descriptor_sufficiency.py`: 审计105-fit completeness、parameter/projectivity invariants、

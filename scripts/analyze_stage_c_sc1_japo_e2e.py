@@ -46,6 +46,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--raw-root", type=Path)
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--seed", type=int, default=2021)
+    parser.add_argument(
+        "--seeds",
+        type=str,
+        help="Comma-separated seeds for a frozen multi-seed mean gate.",
+    )
     parser.add_argument("--synthetic-smoke", action="store_true")
     return parser.parse_args()
 
@@ -105,6 +110,7 @@ def load_run(
     missing = [name for name, path in required.items() if not path.is_file()]
     if missing:
         return {
+            "seed": seed,
             "dataset": dataset,
             "arm": arm,
             "status": "missing",
@@ -115,6 +121,7 @@ def load_run(
     by_horizon = {int(row["target_horizon"]): row for row in metric_rows}
     if sorted(by_horizon) != list(range(1, 721)):
         return {
+            "seed": seed,
             "dataset": dataset,
             "arm": arm,
             "status": "incomplete_dense_horizons",
@@ -168,6 +175,7 @@ def load_run(
         else "audit_fail"
     )
     row: dict[str, Any] = {
+        "seed": seed,
         "dataset": dataset,
         "arm": arm,
         "status": status,
@@ -216,10 +224,11 @@ def initialization_gate(summary: list[dict[str, Any]]) -> dict[str, bool]:
             {
                 row["encoder_initialization_hash"]
                 for row in valid
-                if row["dataset"] == dataset
+                if row["dataset"] == dataset and row["seed"] == seed
             }
         )
         == 1
+        for seed in sorted({int(row["seed"]) for row in valid})
         for dataset in DATASETS
     )
     expert_paired = all(
@@ -227,10 +236,13 @@ def initialization_gate(summary: list[dict[str, Any]]) -> dict[str, bool]:
             {
                 row["expert_bank_initialization_hash"]
                 for row in valid
-                if row["dataset"] == dataset and row["arm"] != "a6"
+                if row["dataset"] == dataset
+                and row["seed"] == seed
+                and row["arm"] != "a6"
             }
         )
         == 1
+        for seed in sorted({int(row["seed"]) for row in valid})
         for dataset in DATASETS
     )
     basis_paired = all(
@@ -238,10 +250,13 @@ def initialization_gate(summary: list[dict[str, Any]]) -> dict[str, bool]:
             {
                 row["basis_hash"]
                 for row in valid
-                if row["dataset"] == dataset and row["arm"] != "a6"
+                if row["dataset"] == dataset
+                and row["seed"] == seed
+                and row["arm"] != "a6"
             }
         )
         == 1
+        for seed in sorted({int(row["seed"]) for row in valid})
         for dataset in DATASETS
     )
     return {
@@ -251,9 +266,100 @@ def initialization_gate(summary: list[dict[str, Any]]) -> dict[str, bool]:
     }
 
 
-def decide_gate(summary: list[dict[str, Any]]) -> dict[str, Any]:
+def aggregate_seed_means(
+    summary: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    rows = []
+    for dataset in DATASETS:
+        for arm in ARMS:
+            group = [
+                row
+                for row in summary
+                if row.get("status") == "ok"
+                and row["dataset"] == dataset
+                and row["arm"] == arm
+            ]
+            rows.append(
+                {
+                    "dataset": dataset,
+                    "arm": arm,
+                    "dense_mse_auc": mean(
+                        float(row["dense_mse_auc"]) for row in group
+                    ),
+                    "dense_mae_auc": mean(
+                        float(row["dense_mae_auc"]) for row in group
+                    ),
+                    **{
+                        f"{label}_mse": mean(
+                            float(row[f"{label}_mse"]) for row in group
+                        )
+                        for label, _start, _end in SEGMENTS
+                    },
+                }
+            )
+    return rows
+
+
+def comparison_statistics(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    lookup = {(row["dataset"], row["arm"]): row for row in rows}
+    versus_a6 = {
+        dataset: improvement(
+            float(lookup[(dataset, PRIMARY)]["dense_mse_auc"]),
+            float(lookup[(dataset, "a6")]["dense_mse_auc"]),
+        )
+        for dataset in DATASETS
+    }
+    versus_controls = {
+        control: {
+            dataset: improvement(
+                float(lookup[(dataset, PRIMARY)]["dense_mse_auc"]),
+                float(lookup[(dataset, control)]["dense_mse_auc"]),
+            )
+            for dataset in DATASETS
+        }
+        for control in CONTROLS
+    }
+    versus_median = {
+        dataset: improvement(
+            float(lookup[(dataset, PRIMARY)]["dense_mse_auc"]),
+            median(
+                float(lookup[(dataset, control)]["dense_mse_auc"])
+                for control in CONTROLS
+            ),
+        )
+        for dataset in DATASETS
+    }
+    return {
+        "joint_vs_a6_by_dataset_pct": versus_a6,
+        "joint_vs_a6_macro_pct": mean(versus_a6.values()),
+        "joint_vs_a6_positive_datasets": sum(
+            value > 0.0 for value in versus_a6.values()
+        ),
+        "joint_vs_each_control_macro_pct": {
+            control: mean(values.values())
+            for control, values in versus_controls.items()
+        },
+        "joint_vs_each_control_positive_datasets": {
+            control: sum(value > 0.0 for value in values.values())
+            for control, values in versus_controls.items()
+        },
+        "joint_vs_same_bank_median_by_dataset_pct": versus_median,
+        "joint_vs_same_bank_median_macro_pct": mean(versus_median.values()),
+        "joint_vs_same_bank_median_positive_datasets": sum(
+            value > 0.0 for value in versus_median.values()
+        ),
+    }
+
+
+def decide_gate(
+    summary: list[dict[str, Any]],
+    seeds: tuple[int, ...] | None = None,
+) -> dict[str, Any]:
+    selected_seeds = seeds or tuple(
+        sorted({int(row.get("seed", 2021)) for row in summary})
+    )
     valid = [row for row in summary if row.get("status") == "ok"]
-    expected = len(DATASETS) * len(ARMS)
+    expected = len(DATASETS) * len(ARMS) * len(selected_seeds)
     if len(valid) != expected:
         return {
             "candidate": "SC1-JAPO",
@@ -272,46 +378,18 @@ def decide_gate(summary: list[dict[str, Any]]) -> dict[str, Any]:
             "initialization_checks": init_checks,
             "pass": False,
         }
-    lookup = {(row["dataset"], row["arm"]): row for row in valid}
-    versus_a6 = {
-        dataset: improvement(
-            lookup[(dataset, PRIMARY)]["dense_mse_auc"],
-            lookup[(dataset, "a6")]["dense_mse_auc"],
-        )
-        for dataset in DATASETS
-    }
-    versus_controls = {
-        control: {
-            dataset: improvement(
-                lookup[(dataset, PRIMARY)]["dense_mse_auc"],
-                lookup[(dataset, control)]["dense_mse_auc"],
-            )
-            for dataset in DATASETS
-        }
-        for control in CONTROLS
-    }
-    versus_median = {
-        dataset: improvement(
-            lookup[(dataset, PRIMARY)]["dense_mse_auc"],
-            median(
-                lookup[(dataset, control)]["dense_mse_auc"]
-                for control in CONTROLS
-            ),
-        )
-        for dataset in DATASETS
-    }
-    a6_macro = mean(versus_a6.values())
-    a6_positive = sum(value > 0.0 for value in versus_a6.values())
-    median_macro = mean(versus_median.values())
-    median_positive = sum(value > 0.0 for value in versus_median.values())
-    control_macros = {
-        control: mean(values.values())
-        for control, values in versus_controls.items()
-    }
-    control_positive = {
-        control: sum(value > 0.0 for value in values.values())
-        for control, values in versus_controls.items()
-    }
+    gate_rows = valid if len(selected_seeds) == 1 else aggregate_seed_means(valid)
+    statistics = comparison_statistics(gate_rows)
+    a6_macro = statistics["joint_vs_a6_macro_pct"]
+    a6_positive = statistics["joint_vs_a6_positive_datasets"]
+    median_macro = statistics["joint_vs_same_bank_median_macro_pct"]
+    median_positive = statistics[
+        "joint_vs_same_bank_median_positive_datasets"
+    ]
+    control_macros = statistics["joint_vs_each_control_macro_pct"]
+    control_positive = statistics[
+        "joint_vs_each_control_positive_datasets"
+    ]
     immediate_fail = (
         (a6_macro <= -10.0 and a6_positive <= 1)
         or (median_macro <= 0.0 and median_positive <= 1)
@@ -324,32 +402,139 @@ def decide_gate(summary: list[dict[str, Any]]) -> dict[str, Any]:
         and median_macro >= 1.0
         and median_positive >= 4
     )
-    decision = (
-        "seed2021_immediate_fail_attribute_and_stop"
-        if immediate_fail
-        else (
-            "seed2021_provisional_pass_run_seeds2022_2023"
-            if provisional_pass
-            else "seed2021_inconclusive_run_seed2022_only"
+    if len(selected_seeds) == 1:
+        decision = (
+            "seed2021_immediate_fail_attribute_and_stop"
+            if immediate_fail
+            else (
+                "seed2021_provisional_pass_run_seeds2022_2023"
+                if provisional_pass
+                else "seed2021_inconclusive_run_seed2022_only"
+            )
         )
-    )
+    else:
+        decision = (
+            "two_seed_mean_pass_run_seed2023"
+            if provisional_pass
+            else "two_seed_mean_fail_stop_and_attribute"
+        )
     return {
         "candidate": "SC1-JAPO",
         "decision": decision,
         "valid_runs": len(valid),
         "expected_runs": expected,
+        "seeds": list(selected_seeds),
         "initialization_checks": init_checks,
-        "joint_vs_a6_by_dataset_pct": versus_a6,
-        "joint_vs_a6_macro_pct": a6_macro,
-        "joint_vs_a6_positive_datasets": a6_positive,
-        "joint_vs_each_control_macro_pct": control_macros,
-        "joint_vs_each_control_positive_datasets": control_positive,
-        "joint_vs_same_bank_median_by_dataset_pct": versus_median,
-        "joint_vs_same_bank_median_macro_pct": median_macro,
-        "joint_vs_same_bank_median_positive_datasets": median_positive,
+        **statistics,
+        "individual_seed_joint_vs_a6_macro_pct": {
+            str(seed): comparison_statistics(
+                [row for row in valid if int(row["seed"]) == seed]
+            )["joint_vs_a6_macro_pct"]
+            for seed in selected_seeds
+        },
         "immediate_fail": immediate_fail,
         "provisional_pass": provisional_pass,
         "pass": provisional_pass,
+    }
+
+
+def comparison_rows(summary: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    valid = [row for row in summary if row.get("status") == "ok"]
+    lookup = {
+        (int(row["seed"]), row["dataset"], row["arm"]): row
+        for row in valid
+    }
+    rows = []
+    for seed in sorted({int(row["seed"]) for row in valid}):
+        for dataset in DATASETS:
+            required = [
+                (seed, dataset, arm)
+                for arm in (PRIMARY, "a6", *CONTROLS)
+            ]
+            if not all(key in lookup for key in required):
+                continue
+            candidate = lookup[(seed, dataset, PRIMARY)]
+            for reference in ("a6", *CONTROLS):
+                control = lookup[(seed, dataset, reference)]
+                rows.append(
+                    {
+                        "seed": seed,
+                        "dataset": dataset,
+                        "candidate": PRIMARY,
+                        "reference": reference,
+                        "dense_mse_improvement_pct": improvement(
+                            float(candidate["dense_mse_auc"]),
+                            float(control["dense_mse_auc"]),
+                        ),
+                        "dense_mae_improvement_pct": improvement(
+                            float(candidate["dense_mae_auc"]),
+                            float(control["dense_mae_auc"]),
+                        ),
+                        **{
+                            f"{label}_mse_improvement_pct": improvement(
+                                float(candidate[f"{label}_mse"]),
+                                float(control[f"{label}_mse"]),
+                            )
+                            for label, _start, _end in SEGMENTS
+                        },
+                    }
+                )
+    return rows
+
+
+def failure_attribution(
+    summary: list[dict[str, Any]],
+    gate: dict[str, Any],
+) -> dict[str, Any]:
+    valid = [row for row in summary if row.get("status") == "ok"]
+    joint = [row for row in valid if row["arm"] == PRIMARY]
+    entropies = [
+        float(row["trained_gate_entropy"])
+        for row in joint
+        if row.get("trained_gate_entropy", "") != ""
+    ]
+    complete = all(
+        key in gate
+        for key in (
+            "joint_vs_same_bank_median_macro_pct",
+            "joint_vs_same_bank_median_positive_datasets",
+            "joint_vs_a6_macro_pct",
+            "joint_vs_a6_positive_datasets",
+        )
+    )
+    return {
+        "candidate": "SC1-JAPO",
+        "protocol_or_artifact_pathology": len(valid) != gate["expected_runs"],
+        "numeric_pathology": False,
+        "capacity_control_explains": complete
+        and (
+            gate["joint_vs_same_bank_median_macro_pct"] <= 0.0
+            and gate["joint_vs_same_bank_median_positive_datasets"] <= 1
+        ),
+        "router_under_specialization_suspected": bool(entropies)
+        and min(entropies) >= 0.99,
+        "minimum_joint_router_entropy": min(entropies) if entropies else None,
+        "a6_effectiveness_supported": complete
+        and (
+            gate["joint_vs_a6_macro_pct"] > 0.0
+            and gate["joint_vs_a6_positive_datasets"] >= 4
+        ),
+        "direction_level_rejection_authorized": False,
+        "interpretation": (
+            "Artifacts or protocol are incomplete; method attribution is "
+            "invalid until the matrix passes the audit."
+            if not complete
+            else (
+                "The completed matrix is stable; apply only the frozen gate. "
+                "Near-uniform routing, when present, is a design/optimization "
+                "suspicion rather than a direction-level rejection."
+            )
+        ),
+        "next_action": (
+            "run_seed2022_without_design_change"
+            if gate["decision"] == "seed2021_inconclusive_run_seed2022_only"
+            else "follow_frozen_gate"
+        ),
     }
 
 
@@ -368,10 +553,15 @@ def synthetic_smoke() -> None:
         for arm in ARMS:
             rows.append(
                 {
+                    "seed": 2021,
                     "dataset": dataset,
                     "arm": arm,
                     "status": "ok",
                     "dense_mse_auc": mse[arm],
+                    "dense_mae_auc": mse[arm],
+                    "short_h1_96_mse": mse[arm],
+                    "middle_h97_336_mse": mse[arm],
+                    "long_h337_720_mse": mse[arm],
                     "encoder_initialization_hash": f"encoder-{dataset}",
                     "expert_bank_initialization_hash": (
                         "" if arm == "a6" else f"expert-{dataset}"
@@ -382,6 +572,25 @@ def synthetic_smoke() -> None:
     gate = decide_gate(rows)
     if gate["decision"] != "seed2021_provisional_pass_run_seeds2022_2023":
         raise AssertionError(gate)
+    two_seed_rows = rows + [
+        row | {"seed": 2022}
+        for row in rows
+    ]
+    two_seed_gate = decide_gate(two_seed_rows, (2021, 2022))
+    if two_seed_gate["decision"] != "two_seed_mean_pass_run_seed2023":
+        raise AssertionError(two_seed_gate)
+    incomplete_rows = [row.copy() for row in rows]
+    incomplete_rows[0]["status"] = "missing"
+    incomplete_gate = decide_gate(incomplete_rows, (2021,))
+    incomplete_attribution = failure_attribution(
+        incomplete_rows,
+        incomplete_gate,
+    )
+    if (
+        incomplete_gate["decision"] != "incomplete_or_invalid"
+        or incomplete_attribution["protocol_or_artifact_pathology"] is not True
+    ):
+        raise AssertionError(incomplete_attribution)
     with tempfile.TemporaryDirectory() as directory:
         path = Path(directory) / "gate.json"
         path.write_text(json.dumps(gate), encoding="utf-8")
@@ -396,16 +605,32 @@ def main() -> None:
         return
     if args.raw_root is None or args.output_dir is None:
         raise ValueError("--raw-root and --output-dir are required")
+    seeds = (
+        tuple(int(value) for value in args.seeds.split(",") if value)
+        if args.seeds
+        else (args.seed,)
+    )
+    if not seeds or len(set(seeds)) != len(seeds):
+        raise ValueError("--seeds must contain unique integer seeds")
     summary = [
-        load_run(args.raw_root, arm, dataset, args.seed)
+        load_run(args.raw_root, arm, dataset, seed)
+        for seed in seeds
         for dataset in DATASETS
         for arm in ARMS
     ]
-    gate = decide_gate(summary)
+    gate = decide_gate(summary, seeds)
+    comparisons = comparison_rows(summary)
+    attribution = failure_attribution(summary, gate)
     args.output_dir.mkdir(parents=True, exist_ok=True)
     write_csv(args.output_dir / "run_summary.csv", summary)
+    if comparisons:
+        write_csv(args.output_dir / "control_comparisons.csv", comparisons)
     (args.output_dir / "gate.json").write_text(
         json.dumps(gate, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    (args.output_dir / "failure_attribution.json").write_text(
+        json.dumps(attribution, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
     (args.output_dir / "research_interpretation.md").write_text(
@@ -415,6 +640,7 @@ def main() -> None:
                 "",
                 f"- decision: `{gate['decision']}`",
                 f"- valid runs: `{gate['valid_runs']}/{gate['expected_runs']}`",
+                f"- seeds: `{list(seeds)}`",
                 "- evaluation split: `validation` only",
                 "- test used: `false`",
                 "",

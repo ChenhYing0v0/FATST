@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC1-JAPO Step 8 seed2021 remote screen running |
+| `current_step` | SC1-JAPO Step 8 seed2022 confirmation authorized |
 | `active_question` | JAPO JOINT能否在五datasets中同时超过A6与UNIFORM/HISTORY/ATOM/PERM/RANDOM same-bank controls？ |
-| `active_candidates` | `SC1-JAPO running/step8_seed2021`；`SC1-PLGO geometry scaffold retained`；`SC2-MIPR` held |
+| `active_candidates` | `SC1-JAPO narrative_ready/seed2022_authorized`；`SC1-PLGO geometry scaffold retained`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_sc1_japo_step7a_local_20260714/step7a_local_gate_report.md` |
-| `method_implementation` | Step7A pass；seed2021 35-run remote screen running；test=false；SC2=false |
+| `method_implementation` | Step7A pass；seed2021 35/35 stable/inconclusive；seed2022 unchanged authorized；test=false；SC2=false |
 | `rollback_point` | Step7A/6 for protocol fault；Step4 if same-bank attribution fails；Step2/3 only by complete-contract failure |
 
 ## Completed Foundation
@@ -210,8 +210,14 @@ RGNB geometry retained；现已完成Step4 intervention/readout redesign，不�
 19. 七arms Encoder hashes paired，六JAPO arms expert-bank hashes paired且within-bank experts独立；
 20. runner/analyzer dry-run固定35 jobs、validation-only、full-H720 L1与best-val；
 21. decision=`step7a_pass_remote_screen_authorized`；只授权seed2021 Step8，test/SC2继续held。
-22. commit `90e4164`已在3090 GPUs0/1/2启动35-run matrix；output root固定为repo-external路径；
-23. current decision=`step8_seed2021_running`；完成前不解释metrics、不启动seed2022/2023。
+22. commit `90e4164`在3090 GPUs0/1/2完成seed2021 35-run matrix；output root固定为repo-external路径；
+23. 35/35 artifacts、protocol、from-scratch paired initialization、prefix与patch invariants均通过，无numeric pathology；
+24. JOINT vs A6 dense MSE macro=`-1.3754%`、0/5 positive；vs same-bank median macro=`-0.0780%`、2/5；
+25. immediate-fail=false、provisional-pass=false，冻结decision=`seed2021_inconclusive_run_seed2022_only`；
+26. 五个JOINT router normalized entropy均不低于`0.993263`，提示under-specialization，但单seed不足以区分
+    optimization variance与exact design weakness，不能据此拒绝理论方向或临时改loss；
+27. two-seed gate固定为先对每个dataset/arm求seed2021/2022 metric mean，再原样执行Step6 provisional threshold；
+28. current decision=`seed2022_only_authorized`；不改architecture/hyperparameters，不启动test、SC2或seed2023。
 
 ## SC1-PLGO Step 6 Design Gate: Conditional Pass, D7 Required
 
