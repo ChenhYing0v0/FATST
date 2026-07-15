@@ -28,6 +28,8 @@ COMPONENT_METRICS = (
     "long_negative_pair_fraction",
     "same_component_cosine",
     "same_component_negative_fraction",
+    "short_zero_group_count",
+    "long_zero_group_count",
     "short_alignment_efficiency",
     "long_alignment_efficiency",
     "short_cancellation",

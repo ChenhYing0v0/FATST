@@ -267,13 +267,21 @@ def component_summary(
         for left in range(len(parts)):
             for right in range(left + 1, len(parts)):
                 dot = float(torch.dot(parts[left].flatten(), parts[right].flatten()).item())
-                cosines.append(cosine(parts[left], parts[right]))
+                if float(parts[left].norm().item()) > 1e-12 and float(
+                    parts[right].norm().item()
+                ) > 1e-12:
+                    cosines.append(cosine(parts[left], parts[right]))
                 negatives.append(float(dot < 0.0))
-        return sum(cosines) / len(cosines), sum(negatives) / len(negatives)
+        mean_cosine = sum(cosines) / len(cosines) if cosines else 0.0
+        return mean_cosine, sum(negatives) / len(negatives)
 
     short_pair_cosine, short_negative_fraction = pair_stats(short_parts)
     long_pair_cosine, long_negative_fraction = pair_stats(long_parts)
-    same_cosines = [cosine(short, long) for short, long in zip(short_parts, long_parts)]
+    same_cosines = [
+        cosine(short, long)
+        for short, long in zip(short_parts, long_parts)
+        if float(short.norm().item()) > 1e-12 and float(long.norm().item()) > 1e-12
+    ]
     same_negatives = [
         float(torch.dot(short.flatten(), long.flatten()).item() < 0.0)
         for short, long in zip(short_parts, long_parts)
@@ -289,7 +297,11 @@ def component_summary(
                 "long_norm": float(long_norm.item()),
                 "short_share": float((short_norm / short_norms.sum().clamp_min(1e-12)).item()),
                 "long_share": float((long_norm / long_norms.sum().clamp_min(1e-12)).item()),
-                "same_component_cosine": same_cosines[index],
+                "same_component_cosine": (
+                    cosine(short_parts[index], long_parts[index])
+                    if float(short_norm.item()) > 1e-12 and float(long_norm.item()) > 1e-12
+                    else 0.0
+                ),
                 "same_component_negative": bool(same_negatives[index]),
             }
         )
@@ -300,8 +312,12 @@ def component_summary(
             "long_pair_cosine": long_pair_cosine,
             "short_negative_pair_fraction": short_negative_fraction,
             "long_negative_pair_fraction": long_negative_fraction,
-            "same_component_cosine": sum(same_cosines) / len(same_cosines),
+            "same_component_cosine": (
+                sum(same_cosines) / len(same_cosines) if same_cosines else 0.0
+            ),
             "same_component_negative_fraction": sum(same_negatives) / len(same_negatives),
+            "short_zero_group_count": int((short_norms <= 1e-12).sum().item()),
+            "long_zero_group_count": int((long_norms <= 1e-12).sum().item()),
             "short_alignment_efficiency": short_efficiency,
             "long_alignment_efficiency": long_efficiency,
             "short_cancellation": 1.0 - short_efficiency,

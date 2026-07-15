@@ -35,7 +35,8 @@ D11只读取A6 natural checkpoints，在fixed train/validation batches上提取g
 - `component_metrics.csv`：每行再按basis区分；`responsibility_js`是short/long component norm-share的
   Jensen-Shannon divergence；三个`*_negative_fraction`分别表示short内部、long内部和同component跨regime的
   negative-dot比例；`alignment_efficiency=||sum_g r_g||/sum_g||r_g||`，`cancellation=1-efficiency`；
-  `*_additivity_relative_gap`是component sum与total coeff gradient之差除total norm；
+  `*_additivity_relative_gap`是component sum与total coeff gradient之差除total norm；zero responsibility不计为
+  conflict，cosine只在双方非零的active pairs上取均值，`*_zero_group_count`显式记录不可达groups；
 - `component_group_metrics.csv`：逐group的short/long norm、share、same-component cosine与negative flag；
 - `reachability_metrics.csv`：residual落入A6 learned temporal span及其orthogonal complement的energy share；
 - `metadata.json`：checkpoint、profile、hash、runtime、forward/additivity/orthogonality invariants和data boundary；
