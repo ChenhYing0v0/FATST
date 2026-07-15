@@ -1,7 +1,7 @@
 # Active Experiment Protocols
 
-- `stage-c-d14-output-coupling-granularity.md`: 当前Step 2-3 diagnostic_only protocol；先检验point/block/global
-  output coupling是否稳定crossing，再检验train-OOF regret能否由history+target预测；method/remote/test=false；
+- `stage-c-d14-output-coupling-granularity.md`: D14-A0已完成；numeric/carrier gate有效但crossing/oracle/contiguity
+  均fail，且factor params不等于effective DoF，故回Step 2-3做一次A1 source/theory audit；D14-B/method/test=false；
 - `stage-c-d14-conditional-patch-memory-headroom.md`: 已降级为`D14-P auxiliary_not_scheduled`；仅保留future
   decoder-interface ablation，不占paper slots、不决定mainline；
 - `stage-c-d13-rolling-origin-revision-efficiency.md`: `deferred_next_paper`；forecast-revision idea的未来problem

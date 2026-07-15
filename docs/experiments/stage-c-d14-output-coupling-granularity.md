@@ -5,15 +5,15 @@
 | Field | Value |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Step 2-3 problem verification |
+| `current_step` | D14-A0 Step 9-11 complete；rollback Step 2-3 for one A1 design audit |
 | `role` | `diagnostic_only` |
 | `active_candidates` | provisional `SC1-PCSD` + `SC2-CCRL` |
 | `method_training` | false |
-| `remote_training` | D14-A0 diagnostic authorized after local invariant gate；forecast training=false |
+| `remote_training` | A0 complete；A1 not authorized；forecast training=false |
 | `test_access` | false |
 | `primary_carrier` | neutral train-only raw-history carrier |
 | `sensitivity_carrier` | held；A0通过前不执行frozen A6 probe |
-| `rollback` | A0 invalid -> redesign diagnostic；valid fail -> formal failure attribution before route decision |
+| `rollback` | A0 exact gate fail + direction rejection invalid；one A1 source/theory audit before pair closure |
 
 ## What We Plan To Test
 
@@ -92,6 +92,17 @@ logic。对应实现与定义见：
 
 此前generic A0-A9列表由上述exact family取代；A6 sensitivity不属于本次首轮launch。A0 positive最多授权返回
 Step 4-6，不能直接授权D14-B或paper method；D14-B仍需按本protocol的串行gate单独授权。
+
+### A0 returned result and correction
+
+A0完成5 datasets × 3 folds：carrier skill 4/5、numeric/split invariants全部通过，但stable crossing 0/5、
+sample × bin oracle macro gain仅0.0586%、canonical-vs-random为-0.1427%。因此exact A0 statistical gate失败。
+
+failure attribution同时发现：预注册匹配的是factor storage params，不是rank-manifold effective DoF；五scale的
+aggregate risk spread也只有0.000004%-0.04036%，未形成足够function-level intervention contrast。故A0只能关闭
+当前PCA64 + linear RRR probe，方向级拒绝标记`design_fault_suspected`。D14-B取消；A1实现前必须先通过
+effective-DoF matched structured-shrinkage source/theory audit。完整报告见
+`analysis/stage_c_d14a_output_coupling_granularity_20260715/d14a_result_and_failure_attribution.md`。
 
 ### Coupling scales
 

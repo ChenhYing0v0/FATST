@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | D14 output-coupling granularity audit，Step 2-3 |
+| `current_11_step` | D14-A0 complete；direction rejection invalid；rollback Step 2-3 for one A1 audit |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | provisional PCSD/CCRL pair；D14-A/B problem gates pending；method/test not authorized |
+| `paper_core_status` | PCSD at risk、CCRL held；A0未给出direct evidence；A1前method/test not authorized |
 
 ## Research Thesis
 
@@ -43,8 +43,10 @@ forecast-revision surface已转移到根目录`New-idea.md`，状态`deferred_ne
 [Decision] `CADMO/CPGA`因问题范围只落在history-interface而退出active slots；它们不是实验方向级失败，而是
 `rejected_by_narrative_scope`。ordered patch memory只保留为`D14-P auxiliary_interface_probe`，不决定论文主线。
 
-两个active slots由`PCSD/CCRL` provisional占用，均处于Step 2-3。新D14-A先验证coupling-scale crossing；
-只有A通过才运行D14-B验证counterfactual regret predictability。通过也只返回formal Step 4-6。
+两个active slots曾由`PCSD/CCRL` provisional占用。D14-A0的neutral linear RRR gate已返回：stable crossing
+0/5、sample × bin oracle macro 0.0586%、canonical-vs-random -0.1427%。但其factor params并不等于
+rank-manifold effective DoF，且scale risks最多只相差0.04036%，所以方向级拒绝无效。PCSD降为at-risk，CCRL
+保持held；最多允许一次effective-DoF matched A1 repair，A1前不运行D14-B。
 
 ### Provisional Contribution 1: PCSD
 
@@ -88,8 +90,8 @@ PCSD回答“一个unified decoder能表示哪些future-output sharing strategie
 policy提供可识别、无in-sample self-evaluation leakage的选择证据”。二者共同把multi-horizon统一从“同一模型
 输出多个长度”推进为“同一模型内部学习future targets应如何共享forecasting function”。
 
-[Execution Order] D14-A -> D14-B -> PCSD/CCRL formal Step 4-6 -> PCSD E2E main effect -> CCRL main effect ->
-`PCSD on/off × CCRL on/off` factorial。D14-A fail则两项同时关闭；A pass/B fail则只让PCSD返回Step 4。
+[Execution Order] A1 source/theory audit -> repaired D14-A decision -> D14-B authorization decision -> formal
+Step 4-6。A1 infeasible或repaired evidence仍fail则关闭pair；A pass/B fail才允许PCSD单独返回Step 4。
 
 ### Closed Candidate: PRISM Decoder
 

@@ -1,0 +1,22 @@
+{
+  "canonical_oracle_macro_gain": 0.0005858478911311877,
+  "canonical_oracle_pass": false,
+  "carrier_skill_dataset_count": 4,
+  "carrier_skill_pass": true,
+  "contiguity_dataset_count": 0,
+  "contiguity_macro_gain": -0.0014269263216532806,
+  "contiguity_pass": false,
+  "decision": "d14_a0_neutral_rrr_fail_requires_failure_attribution",
+  "diagnostic_id": "SC-D14-A0",
+  "diagnostic_valid": true,
+  "invariants_pass": true,
+  "maximum_parameter_relative_gap": 0.005128205128205128,
+  "paper_method_implemented": false,
+  "parameter_budget_pass": true,
+  "problem_evidence_pass": false,
+  "role": "diagnostic_only_neutral_carrier",
+  "rollback_step": "Step 2-3 failure-attribution audit",
+  "stable_crossing_dataset_count": 0,
+  "stable_crossing_pass": false,
+  "test_used": false
+}

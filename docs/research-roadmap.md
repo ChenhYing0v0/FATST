@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D14 output-coupling granularity audit，Step 2-3 |
+| `current_step` | D14-A0 Step 9-11 complete；rollback Step 2-3 for one repaired A1 audit |
 | `active_question` | fixed-past unified model是否需要在一个projective decoder内自适应future-output coupling scope？ |
-| `active_candidates` | provisional `SC1-PCSD` + `SC2-CCRL`；D14-A/B前method=false |
+| `active_candidates` | at-risk `SC1-PCSD`；`SC2-CCRL` held；A1 repaired evidence before any method |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/experiments/stage-c-d14-output-coupling-granularity.md` |
-| `method_implementation` | false；D14-A0 remote diagnostic authorized；D14-B/paper method/test=false |
-| `rollback_point` | A0 invalid -> diagnostic redesign；valid fail -> failure attribution；positive ->仅回Step4-6 |
+| `method_implementation` | false；A0 complete；A1 remote/D14-B/paper method/test=false |
+| `rollback_point` | A1 theory infeasible或repaired evidence fail ->关闭PCSD/CCRL pair |
 
 ## Post-D11 Joint Mainline Reset
 
@@ -94,13 +94,16 @@ primitive都不能单独claim创新。
    `fixed past -> exact-prefix decoder -> point-to-global coupling spectrum -> counterfactual coupling policy -> no
    external strategy search`链条。
 
-[Next Gate] 新D14先做A/B串行diagnostic。D14-A0使用neutral PCA64 carrier上的parameter-matched blockwise RRR，
-比较canonical point/block/global scopes及shifted/random partitions，要求至少3/5 datasets出现stable crossing且
-sample × bin oracle相对best fixed macro MSE headroom `>=0.5%`。A0通过后才重新评估A6 sensitivity与D14-B；B使用train OOF regret labels，
-要求history+target policy在至少3/5 datasets超过best fixed与target-only，macro gain `>=0.3%`。
+[Returned Gate] D14-A0在neutral PCA64 carrier上完成5 datasets × 3 folds。carrier skill 4/5且numeric/split
+invariants pass，但stable crossing 0/5、sample × bin oracle仅0.0586%、canonical-vs-random -0.1427%。exact
+PCA64 + linear RRR evidence失败。
 
-[Execution Order] D14-A0 -> failure attribution/gate -> D14-B authorization decision -> formal Step4-6。A0 invalid不能关闭方向；valid fail先审计是否只否定linear RRR证据；A pass/B fail只让PCSD回Step4并
-重新设计Contribution 2；A/B pass也不直接授权method/remote/test。
+[Failure Correction] A0匹配factor params但未匹配rank-manifold effective DoF，且five-scale full-risk spread
+最多0.04036%，没有形成足够function-level contrast。故方向级拒绝无效，归因为
+`intervention_point_wrong + capacity_control_incomplete`。
+
+[Execution Order] 一次A1 source/theory feasibility -> repaired D14-A evidence -> D14-B authorization decision ->
+formal Step4-6。A1前remote/method/B/test均false；A1 infeasible或repaired evidence仍fail则关闭PCSD/CCRL pair。
 
 [Frozen Boundary] neutral raw-history carrier是primary；frozen A6只作sensitivity。最终effectiveness必须matched
 E2E joint training，不能用frozen replacement gap通过或拒绝paper method。
