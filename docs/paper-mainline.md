@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC1-JAPO Step 7A complete；Step 8 seed2021 remote screen next |
+| `current_11_step` | SC1-JAPO Step 8 seed2021 remote screen running |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | Contribution 1 JAPO narrative_ready/step8_authorized；SC2-MIPR held |
+| `paper_core_status` | Contribution 1 JAPO running/step8_seed2021；SC2-MIPR held |
 
 ## Research Thesis
 
@@ -227,6 +227,9 @@ normalization、explicit H和auxiliary routing loss均禁止。五profiles desig
 [Step7A Implementation] production `JAPOReadout`、six same-bank modes、checkpoint invariants与validation-only
 runner/analyzer已落地。五profiles × 七arms的210/210 prefix与35/35 gradient cases通过；最大prefix gap
 `4.768e-7`，patch-block rewrite gap `5.722e-6`；Encoder与expert-bank paired initialization hashes通过。
+
+[Step8 Running] commit `90e4164`已在`529_Lab-3090` GPUs0/1/2启动seed2021的35-run validation-only matrix；
+test、SC2与seed2022/2023均未启动。当前状态只表示实验运行中，不构成effectiveness evidence。
 
 [Narrative Boundary] nonlinear decoder、operator MoE、geometry gating、structure-guided time-series MoE与
 step-specific representation均已有直接prior art。可辩护边界只能是joint history-atom conditional operator、
