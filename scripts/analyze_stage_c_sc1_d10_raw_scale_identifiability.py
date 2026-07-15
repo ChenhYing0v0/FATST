@@ -188,6 +188,35 @@ def build_dataset_metrics(
     return rows
 
 
+def aggregate_cell_rows(
+    rows: list[dict[str, str]],
+    index_fields: tuple[str, str],
+) -> list[dict[str, Any]]:
+    values: defaultdict[tuple[str, str, str, int, int], list[float]] = defaultdict(list)
+    left_field, right_field = index_fields
+    for row in rows:
+        key = (
+            row["dataset"],
+            row["family"],
+            row["split"],
+            int(row[left_field]),
+            int(row[right_field]),
+        )
+        values[key].append(float(row["r2"]))
+    return [
+        {
+            "dataset": key[0],
+            "family": key[1],
+            "split": key[2],
+            left_field: key[3],
+            right_field: key[4],
+            "replicate_count": len(cell_values),
+            "mean_r2": sum(cell_values) / len(cell_values),
+        }
+        for key, cell_values in sorted(values.items())
+    ]
+
+
 def apply_gate(
     replicate_rows: list[dict[str, Any]],
     dataset_rows: list[dict[str, Any]],
@@ -430,6 +459,12 @@ def synthetic_smoke() -> None:
                                 )
     replicate_rows = build_replicate_metrics(matrix_rows, binary_rows)
     dataset_rows = build_dataset_metrics(matrix_rows, binary_rows)
+    dataset_matrix_cells = aggregate_cell_rows(
+        matrix_rows, ("future_group_index", "history_group_index")
+    )
+    dataset_binary_cells = aggregate_cell_rows(
+        binary_rows, ("future_binary_index", "history_binary_index")
+    )
     metadata = [
         {
             "uses_test_split": False,
@@ -496,10 +531,18 @@ def main() -> None:
         raise RuntimeError("capacity-matched width invariant failed")
     replicate_rows = build_replicate_metrics(matrix_rows, binary_rows)
     dataset_rows = build_dataset_metrics(matrix_rows, binary_rows)
+    dataset_matrix_cells = aggregate_cell_rows(
+        matrix_rows, ("future_group_index", "history_group_index")
+    )
+    dataset_binary_cells = aggregate_cell_rows(
+        binary_rows, ("future_binary_index", "history_binary_index")
+    )
     gate = apply_gate(replicate_rows, dataset_rows, metadata, design)
     args.output_dir.mkdir(parents=True, exist_ok=True)
     write_csv(args.output_dir / "replicate_metrics.csv", replicate_rows)
     write_csv(args.output_dir / "dataset_metrics.csv", dataset_rows)
+    write_csv(args.output_dir / "dataset_matrix_cells.csv", dataset_matrix_cells)
+    write_csv(args.output_dir / "dataset_binary_cells.csv", dataset_binary_cells)
     (args.output_dir / "gate.json").write_text(
         json.dumps(gate, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )

@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Contribution 1 Step 2/3；SC1-D10 raw scale identifiability diagnostic |
+| `current_11_step` | Contribution 1 rollback Step 2 after D10；future-component problem reset |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -271,6 +271,17 @@ global/detail interaction，monotone gate只检查details内部6×6 diagonal，�
 fit/holdout按train时间区间隔离，final evidence只用official validation；paired history/future permutations为mandatory
 controls。当前授权仅限diagnostic，不是model implementation。
 
+[D10 Result] binary hypothesis所有五项gate均失败：effect/control只有2/5，两个directional selectivities同时为正
+为0/5。detail-only diagonal相对median与paired controls在4/5 datasets为正，但canonical band从未在任何dataset的
+至少4/6 rows成为最佳，6! mapping也仅2/5通过。ETTh1/ETTh2、ETTm1/ETTm2呈现不同off-diagonal patterns，
+Weather近零；不存在可支撑unified method的cross-dataset mapping。decision为
+`raw_aligned_scale_not_supported_rollback_step2`。
+
+[Boundary Reset] D9 learned-operator层与D10 raw-data层共同关闭history-scale aligned routing。future-side RGNB、
+projectivity与D6 horizon-support crossing仍保留。下一Step2问题暂定为future global/local components在不同prefix
+losses下的error/gradient responsibility；在D11 source/theory audit前，不恢复SC2，也不实现adaptive router、new
+decoder或loss。
+
 [Narrative Boundary] nonlinear decoder、operator MoE、geometry gating、structure-guided time-series MoE与
 step-specific representation均已有直接prior art。可辩护边界只能是joint history-atom conditional operator、
 RGNB exact projectivity与multi-horizon domain-only execution的完整组合。JAPO status更新为`narrative_ready`；
@@ -397,6 +408,8 @@ Step4，不以训练性能包装RGNB。
     rollback Step2/3。binary global/detail只作D10 hypothesis，不作Contribution 1 evidence。
 27. D10 Step2/3 design冻结binary、detail-monotone与no-aligned-scale三选一gate；通过只返回Step4，失败则继续
     rollback Step2，不允许从exploratory off-diagonal matrix事后生成method。
+28. D10 primary gate失败且protocol有效；history-scale routing从Contribution 1 mainline关闭。下一步只审计
+    future-component responsibility problem，不把generic adaptive multiscale mixing改名为新贡献。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
 generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成
@@ -435,6 +448,7 @@ loss 或更多 tuning 来掩盖失败。
 - `analysis/stage_c_sc1_post_japo_systematic_review_20260715/systematic_stage_review.md`
 - `analysis/stage_c_sc1_d9_history_support_operator_audit_20260715/d9_result_and_rollback.md`
 - `analysis/stage_c_sc1_d10_raw_scale_identifiability_20260715/d10_step23_diagnostic_design.md`
+- `analysis/stage_c_sc1_d10_raw_scale_identifiability_20260715/d10_result_and_rollback.md`
 - `Papers/stage-c-external-decoder-objective-audit.md`
 - `docs/experiments/stage-c-five-dataset-validation-policy.md`
 - `docs/code-explanation/stage-c-pmfo-rct-step7a.md`

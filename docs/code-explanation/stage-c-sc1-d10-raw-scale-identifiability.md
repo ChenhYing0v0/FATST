@@ -23,7 +23,20 @@ D10只新增raw-data diagnostic worker、aggregate analyzer与remote/sync wrappe
 2. 对每个dataset/family/sketch/lambda/split重建矩阵；
 3. 计算binary directional selectivity、interaction、detail-only diagonal gain、best count与6! mapping p-value；
 4. 先聚合9 replicates，再应用dataset replication、paired control与holdout/validation gates；
-5. decision严格三选一：detail-monotone、binary-only或no-aligned-scale。无论哪种结果，method/test/SC2均false。
+5. 另将7×7与2×2 cells按`dataset/family/split/row/column`聚合，保留跨9个
+   `sketch_seed × ridge_lambda` replicates的mean $R^2$，供off-diagonal pattern审计；
+6. decision严格三选一：detail-monotone、binary-only或no-aligned-scale。无论哪种结果，method/test/SC2均false。
+
+## Aggregate Artifact Schema
+
+- `dataset_matrix_cells.csv`：`future_group_index/history_group_index`分别指future RGNB group与history DCT
+  band；`mean_r2`为同dataset、family、split、cell的replicate均值，`replicate_count`应为9；
+- `dataset_binary_cells.csv`：两个index分别是global/detail二分后的future/history cell，其他聚合定义相同；
+- `replicate_metrics.csv`：每行对应一个dataset、family、split、sketch seed与ridge lambda，存放该7×7/2×2
+  matrix导出的五项统计；
+- `dataset_metrics.csv`：将`replicate_metrics.csv`按dataset、family、split聚合；
+- `gate.json`：记录invariants、每项冻结gate的布尔值与计数、最终decision及authorization boundary；
+- `research_interpretation.md`：只报告canonical validation聚合和direction boundary，不替代详细结果报告。
 
 ## Code-Theory Consistency
 

@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | decoder/operator 与 training principle 两项相互支撑的 paper-core innovations |
-| `active_question` | raw history→future relation支持binary global/detail、detail-level monotone alignment，还是不支持aligned-scale routing？ |
+| `active_question` | multi-horizon冲突是否位于future components跨prefix的error/gradient responsibility，而非history scale access？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
 | `active_candidates` | no active method candidate；`SC1-JAPO exact_v1 failed_as_core_candidate`；`SC1-PLGO geometry retained`；`SC2-MIPR` held |
@@ -18,27 +18,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Contribution 1 Step 2/3；SC1-D10 raw scale identifiability design frozen |
+| `current_11_step` | Contribution 1 rollback Step 2 after D10；future-component problem reset |
 | `current_candidate` | none；JAPO exact v1 closed；PLGO/RGNB geometry scaffold retained；SC2 held |
-| `latest_decision` | D9-A exact operator gate fail：macro rho `0.173810`；positive datasets `2/5`；permutation/random controls `1/5`与`0/5` |
-| `next_required_action` | 实现`SC1-D10 diagnostic_only` analyzer与local invariants；通过前不形成Step4 method candidate |
+| `latest_decision` | D10 binary fail；detail gain partial但best-count `0/5`、mapping permutation `2/5`；aligned history-scale routing closed |
+| `next_required_action` | Step2 source/theory audit for proposed `SC1-D11 Future-Component Responsibility`；未冻结前不实现 |
 | `method_training_authorized` | false；seed2023=false，test=false，SC2=false |
-| `rollback_point` | Step 2/3；future geometry retained，history-scale alignment problem需重新验证 |
+| `rollback_point` | Step 2；future geometry retained，history-scale alignment mainline closed |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Contribution 1 rollback Step 2/3 after D9-A |
-| `problem` | history-scale routing是否为真实、可利用的问题尚未成立；future support geometry证据仍保留 |
-| `existence_evidence` | D9仅见post-hoc global/detail二分；ordered seven-level scale coupling未过controls |
-| `idea` | D10在raw history→future relation上区分binary、monotone与no-scale hypotheses |
-| `theory_check` | 7组维数匹配；所有cells固定16→16；binary 2×2与detail-only 6×6 metrics分离 |
-| `design` | frozen：5 datasets；chronological fit/gap/holdout + official validation；3 sketches × 3 fixed lambdas；paired controls |
+| `current_step` | Contribution 1 Step 2 problem reset after D10 |
+| `problem` | history-scale access不是统一problem；future component responsibility conflict待定义与验证 |
+| `existence_evidence` | D6 horizon-support crossing与future geometry retained；D10 aligned-scale hypotheses failed |
+| `idea` | proposed D11审计prefix error/gradient在global/local future components间的责任分配 |
+| `theory_check` | pending；需先区分coordinate artifact、loss scale与true gradient conflict |
+| `design` | pending；D10 closed，new decoder/loss/SC2 false |
 | `narrative_gate` | pending；无active method candidate |
 | `effectiveness_gate` | not applicable until a new candidate passes Step4-6 |
-| `artifacts` | `analysis/stage_c_sc1_d9_history_support_operator_audit_20260715/` |
-| `decision` | `operator_scale_hypothesis_not_supported`；rollback Step2/3；SC2/test false |
+| `artifacts` | `analysis/stage_c_sc1_d10_raw_scale_identifiability_20260715/` |
+| `decision` | `raw_aligned_scale_not_supported_rollback_step2`；history-scale mainline closed；SC2/test false |
 
 ## Frozen Carrier Contract
 
@@ -78,7 +78,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC1-D7` | `diagnostic_only` | true RGNB descriptors是否超越permuted/random descriptors | not required | conditional geometry pass；method readiness not evaluated | evidence complete；feeds D8 controls |
 | `SC1-D8-E2E` | `failed_exact_design` | joint Encoder-PAF adaptation是否消除frozen compatibility confound并保留geometry effect | geometry retained | vs A6 -28.10%；vs matched +14.33%；m694 no rescue | rollback Step4；no three-seed |
 | `SC1-D9` | `diagnostic_only_failed` | A6 learned operator中是否存在超越随机controls的history-scale × future-support结构 | not required；method=false | macro rho 0.173810；2/5 effect；1/5 permutation；0/5 random basis | D9-B canceled；rollback Step2/3；binary clue exploratory only |
-| `SC1-D10` | `diagnostic_only_design_frozen` | raw history→future关系支持binary global/detail、detail-monotone还是no aligned scale | not required；method=false | pending | 实现analyzer/local invariants；remote前commit/push；forecast method false |
+| `SC1-D10` | `diagnostic_only_failed` | raw history→future关系支持binary global/detail、detail-monotone还是no aligned scale | not required；method=false | binary all gates fail；monotone best 0/5、mapping 2/5 | aligned scale closed；rollback Step2；off-diagonal exploratory only |
+| `SC1-D11` | `diagnostic_only_proposed` | multi-horizon conflict是否位于future component error/gradient responsibility | not required；method=false | pending | source/theory audit first；protocol未冻结前不实现 |
 | `SC2-MIPR` | `held` | measure-induced block metric去除decoder scales之间的cross coupling | pass for L2；log measure primary，benchmark weak | log off-block `0.205154`；benchmark `0.002480`；performance未测 | 等新SC1 problem/method contract；不得先实现 |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
@@ -133,6 +134,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-JAPO Step8 two-seed gate | 5 datasets × 7 arms × 2 seeds；70/70 validation-only | vs A6 `-1.2435%`、0/5；vs median `-0.1175%`、1/5；UNIFORM/HISTORY/ATOM均优于JOINT | exact v1 failed；capacity control explains；rollback Step4，direction remains open | `analysis/stage_c_sc1_japo_e2e_20260715/two_seed/research_interpretation.md` |
 | Post-JAPO systematic review | full StageC evidence chain + external primary-source audit | geometry/projectivity retained；rigid replacement、fixed separability与weak mixing依次失败；flatten不是信息压缩 | no active method；先执行SC1-D9 existence diagnostic | `analysis/stage_c_sc1_post_japo_systematic_review_20260715/systematic_stage_review.md` |
 | SC1-D9-A exact operator audit | 5 datasets × 3 A6 seeds；1024 atom permutations；64 random history bases | macro rho 0.173810；2/5 positive effect；1/5 permutation；0/5 random basis；Parseval pass | scale hypothesis unsupported；D9-B canceled；rollback Step2/3 | `analysis/stage_c_sc1_d9_history_support_operator_audit_20260715/d9_result_and_rollback.md` |
+| SC1-D10 raw scale identifiability | 5 datasets；3 sketches × 3 lambdas；3 families；holdout+validation | binary 0/5 directional；monotone effect/control 4/5但best 0/5、mapping 2/5 | aligned scale unsupported；history routing closed；rollback Step2 | `analysis/stage_c_sc1_d10_raw_scale_identifiability_20260715/d10_result_and_rollback.md` |
 
 ## Pending Tasks
 
@@ -171,7 +173,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-JAPO Step8 seed2022 confirmation | `completed_fail` | 35/35；70/70 combined；seed2023 stopped；exact v1 closed |
 | Contribution 1 Step4 systematic review | `completed` | 支持“support-identifiable local-global projective operator”问题类，但尚未形成method candidate |
 | SC1-D9 history-support operator evidence audit | `completed_fail` | exact audit 15/15 valid；D9-B按gate取消 |
-| SC1-D10 raw scale identifiability | `design_frozen_local_smoke_pass` | capacity-matched worker/analyzer已通过synthetic invariants；remote diagnostic待执行 |
+| SC1-D10 raw scale identifiability | `completed_fail` | all artifacts/invariants valid；binary与detail-monotone primary gates均fail |
+| SC1-D11 future-component responsibility | `proposed_step2` | source/theory audit before diagnostic design |
 
 ## Paper Mainline Sync Log
 
@@ -206,6 +209,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-15 | Post-JAPO systematic review | Current Position、Contribution 1、Boundary、Experiment Logic | evidence synthesis + next diagnostic boundary | 不直接提出新method；SC1-D9先验证history-scale × future-support operator evidence |
 | 2026-07-15 | SC1-D9-A exact operator gate | Current Position、Contribution 1、Boundary、Experiment Logic | hypothesis failure + Step2/3 rollback | ordered scale coupling unsupported；binary clue仅exploratory；D9-B取消，D10 protocol next |
 | 2026-07-15 | SC1-D10 Step2/3 design | Current Position、Contribution 1、Experiment Logic | raw-data hypotheses + matched probe freeze | binary/detail-monotone/no-scale gates冻结；只授权diagnostic remote evidence |
+| 2026-07-15 | SC1-D10 result gate | Current Position、Contribution 1、Boundary、Experiment Logic | aligned-scale closure + Step2 rollback | partial cross-scale signal不构成unified mapping；history routing mainline关闭；D11 question proposed |
 
 ## Continuation Rules
 
@@ -237,3 +241,5 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
     Step2/3设计D10 raw-data identifiability，先区分binary、monotone与no-scale hypotheses。
 19. D10的binary 2×2与detail-only 6×6 gates已在结果前冻结；off-diagonal matrix没有primary gate，不得在同批
     artifacts上事后升级。D10通过只返回Step4，失败只关闭raw linear aligned-scale evidence。
+20. D10已失败且invariants完整：不得从ETT子集off-diagonal patterns事后提出adaptive router。D9+D10共同关闭
+    history-scale aligned routing mainline；下一步回Step2审计future-component responsibility，不自动恢复SC2。

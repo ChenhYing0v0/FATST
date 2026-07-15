@@ -1,0 +1,43 @@
+{
+  "binary_checks": {
+    "dataset_effect": false,
+    "directional_selectivity": false,
+    "holdout_validation_sign": false,
+    "paired_controls": false,
+    "replicate_sign": false
+  },
+  "binary_pass": false,
+  "counts": {
+    "binary_control_datasets": 2,
+    "binary_direction_datasets": 0,
+    "binary_effect_datasets": 2,
+    "binary_positive_replicates": 32,
+    "binary_split_stability_datasets": 2,
+    "monotone_best_datasets": 0,
+    "monotone_control_datasets": 4,
+    "monotone_effect_datasets": 4,
+    "monotone_permutation_datasets": 2,
+    "monotone_positive_replicates": 36
+  },
+  "decision": "raw_aligned_scale_not_supported_rollback_step2",
+  "detail_monotone_pass": false,
+  "diagnostic_id": "SC1-D10",
+  "invariant_checks": {
+    "fit_holdout_disjoint": true,
+    "metadata_count": true,
+    "no_forecast_update": true,
+    "no_test": true,
+    "orthogonality": true,
+    "row_widths": true
+  },
+  "invariant_pass": true,
+  "method_implementation_authorized": false,
+  "monotone_checks": {
+    "canonical_best": false,
+    "dataset_effect": true,
+    "mapping_permutation": false,
+    "paired_controls": true,
+    "replicate_sign": true
+  },
+  "sc2_authorized": false
+}
