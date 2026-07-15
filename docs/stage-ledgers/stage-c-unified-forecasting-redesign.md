@@ -18,27 +18,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | joint Contribution 1/2 Step 2-3；D12 predictable-frame feasibility next |
+| `current_11_step` | joint Contribution 1/2 Step 2-3；D12-A implemented，remote evidence pending |
 | `current_candidate` | provisional PRISM/CAPE；均未过problem/narrative gate；MIPR retired |
-| `latest_decision` | D11不否定Contribution 1；post-D11 external audit关闭generic coverage/loss路线，提出risk-localized + predictable-energy frame主线 |
-| `next_required_action` | D12-A cross-fitted predictable covariance audit；通过后才执行D12-B PRISM Pareto probe |
-| `method_training_authorized` | false；只允许train/validation diagnostic；forecast method=false，test=false |
+| `latest_decision` | D12-A source/theory/protocol与local implementation gate通过；仍未获得cross-dataset problem evidence |
+| `next_required_action` | 在3090执行D12-A train-only cross-fitted covariance audit；至少3/5通过后才执行D12-B |
+| `method_training_authorized` | false；只允许train-only diagnostic pilots；forecast method=false，validation/test=false |
 | `rollback_point` | D12失败回Step 2并关闭forecast-frame主线；history-scale、gradient-conflict与MIPR closed |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | joint Contribution 1/2 Step 2-3；post-D11 mainline reset completed |
+| `current_step` | joint Contribution 1/2 Step 2-3；D12-A implementation completed，remote evidence pending |
 | `problem` | A6 rank-256 decoder是否因global compaction、prefix locality与unpredictable label noise之间的tradeoff而受限 |
 | `existence_evidence` | D6 crossing；D7/D8 geometry main effect；A6 strong free operator；D11只关闭conflict、不关闭coverage/locality |
 | `idea` | PRISM prefix-risk-isometric frame + CAPE cross-fitted predictable-energy estimation |
-| `theory_check` | weighted low-rank conditional-mean theorem provisional pass；estimator stability与Pareto usefulness pending D12 |
-| `design` | D12 train/validation diagnostic only；rank256；five profiles；test=false |
+| `theory_check` | generic predictable subspace非novel；prefix-risk coupling仍provisional；time-safe estimator gate frozen |
+| `design` | D12-A train-only two-fold purged cross-fit；A6 + DCT-ridge pilots；rank256；five profiles；validation/test=false |
 | `narrative_gate` | pending Step4-6；当前仅proposed_step2_3 |
 | `effectiveness_gate` | not applicable until a new candidate passes Step4-6 |
-| `artifacts` | `analysis/stage_c_post_d11_paper_mainline_redesign_20260715/mainline_redesign_audit.md` |
-| `decision` | 不直接转SC2；MIPR retired；PRISM/CAPE进入D12 Step2-3 problem feasibility；method/test false |
+| `artifacts` | `analysis/stage_c_d12_predictable_frame_feasibility_20260715/d12_step23_protocol.md`；`configs/stage_c_d12_predictable_frame_feasibility.json` |
+| `decision` | D12-A local gate pass并授权remote diagnostic；D12-B、method、validation/test仍false |
 
 ## Frozen Carrier Contract
 
@@ -180,7 +180,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-D10 raw scale identifiability | `completed_fail` | all artifacts/invariants valid；binary与detail-monotone primary gates均fail |
 | SC1-D11 future-component responsibility | `completed_rollback` | accepted v2 complete；do not implement conflict-aware method |
 | Post-D11 paper-mainline redesign | `completed_step2_3_design` | D11不关闭C1；PRISM/CAPE proposed；MIPR retired；D12 next |
-| D12 predictable-frame feasibility | `pending_diagnostic_only` | D12-A cross-fitted estimator → D12-B prefix-locality Pareto；method/test false |
+| D12 predictable-frame feasibility | `remote_pending_diagnostic_only` | D12-A source/protocol/implementation local pass；train-only remote cross-fit next；D12-B/method/test false |
 
 ## Paper Mainline Sync Log
 

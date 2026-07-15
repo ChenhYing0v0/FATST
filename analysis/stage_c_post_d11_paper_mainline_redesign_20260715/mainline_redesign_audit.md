@@ -83,7 +83,7 @@ function-space discretization consistency。
 ### 3.1 Core problem
 
 令最大future domain为$T$，requested horizon为$H$，prefix mask为$M_H$。一个共享模型预测同一个future
-function $hat y(x)\in\mathbb R^T$，部署时只返回$hat y_{1:H}$。若deployment horizon distribution为
+function $\hat y(x)\in\mathbb R^T$，部署时只返回$\hat y_{1:H}$。若deployment horizon distribution为
 $\mu(H)$，平均prefix MSE为
 
 $$
@@ -239,10 +239,10 @@ $$
 -\lambda\mathcal L_{prefix}(U).
 $$
 
-- $lambda=0$：CAPE-only predictable global frame；
-- raw $operatorname{Cov}(y)$ + $lambda>0$：PRISM-only prefix-localized frame；
-- predictable covariance + $lambda>0$：joint PRISM-CAPE；
-- raw covariance + $lambda=0$：PCA-like matched control。
+- $\lambda=0$：CAPE-only predictable global frame；
+- raw $\operatorname{Cov}(y)$ + $\lambda>0$：PRISM-only prefix-localized frame；
+- predictable covariance + $\lambda>0$：joint PRISM-CAPE；
+- raw covariance + $\lambda=0$：PCA-like matched control。
 
 这形成自然`2x2` factorial，而不是把两个名称绑定成无法归因的一次改动。
 
@@ -274,7 +274,7 @@ control；coverage-aware sampling只保留为将来compute-constrained场景的b
 | --- | --- | --- |
 | one model如何服务任意prefix？ | $H$只crop同一$U_\mu$，exact projectivity | frame estimation完全不读取requested $H$ ID |
 | rank-256 capacity放在哪里？ | prefix-risk locality决定“where accuracy matters” | predictable covariance决定“what history can predict” |
-| 如何解释D6 crossing？ | $mathcal L_{prefix}$对抗global compaction | predictable energy避免locality以捕获noise为代价 |
+| 如何解释D6 crossing？ | $\mathcal L_{prefix}$对抗global compaction | predictable energy避免locality以捕获noise为代价 |
 | 如何避免旧SC1失败？ | 保留A6 free coefficient head；无tree transition、separable PAF、MoE | final model从头训练；不freeze/replace co-adapted A6 Encoder |
 | 如何避免旧SC2/prior-art重叠？ | architecture geometry来自prefix family | 不改写loss weights；估计decoder subspace而非做component loss |
 
@@ -301,7 +301,7 @@ control；coverage-aware sampling只保留为将来compute-constrained场景的b
 
 ### 7.2 D12-A: existence and estimator audit
 
-1. 比较$operatorname{Cov}(y)$、$operatorname{Cov}(\tilde m)$与residual covariance的spectrum/subspace angles；
+1. 比较$\operatorname{Cov}(y)$、$\operatorname{Cov}(\tilde m)$与residual covariance的spectrum/subspace angles；
 2. 检查OOF folds/seeds间predictable subspace稳定性；
 3. 审计train-only provenance、PSD、centering与$W_\mu$ conditioning；
 4. 用linear/DLinear pilot作至少一个model-bias control；
@@ -341,7 +341,7 @@ frozen A6 memory probe只作conditional diagnostic，所有frame使用同一memo
 ## 8. Later Experiment Stages If D12 Passes
 
 1. **Step 4-6**：补全conditional-mean theorem、cross-fit consistency、full-text prior-art与claim boundary；冻结
-   $mu$、$lambda$ rule、frame solver及controls。
+   $\mu$、$\lambda$ rule、frame solver及controls。
 2. **Step 7A**：实现PRISM/CAPE production path；验证shape、prefix equality、$W_\mu$-orthonormality、train-only
    provenance、gradient、parameter budget及code-theory consistency。
 3. **Step 8 seed2021 screen**：五datasets validation-only；A6、raw-global、CAPE-global、PRISM-raw、
