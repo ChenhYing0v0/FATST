@@ -21,7 +21,7 @@
 | `current_11_step` | Contribution 1 rollback to Step 4 source-informed redesign audit |
 | `current_candidate` | none；JAPO exact v1 closed；PLGO/RGNB geometry scaffold retained；SC2 held |
 | `latest_decision` | 70/70 two-seed gate fail：JOINT vs A6 `-1.2435%`、0/5；vs same-bank median `-0.1175%`、1/5 |
-| `next_required_action` | Step4审计operator-level modulation与optimization contract；新candidate须重新过Step4-6 |
+| `next_required_action` | `SC1-D9 History-Support Operator Evidence Audit`（diagnostic_only）：先验证history-scale与future-support的算子耦合是否真实存在，再设计新candidate |
 | `method_training_authorized` | false；seed2023=false，test=false，SC2=false |
 | `rollback_point` | Step 4；problem/geometry evidence retained，exact two-expert weak-mixing design closed |
 
@@ -77,6 +77,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC1-JAPO` | `failed_as_core_candidate` | joint history-atom operator能否解除fixed separability且保留A6/projectivity | complete contract仍有效 | two-seed vs A6 0/5；same-bank hard gate fail；near-uniform routing replicated | exact v1 stop；rollback Step4，seed2023 false |
 | `SC1-D7` | `diagnostic_only` | true RGNB descriptors是否超越permuted/random descriptors | not required | conditional geometry pass；method readiness not evaluated | evidence complete；feeds D8 controls |
 | `SC1-D8-E2E` | `failed_exact_design` | joint Encoder-PAF adaptation是否消除frozen compatibility confound并保留geometry effect | geometry retained | vs A6 -28.10%；vs matched +14.33%；m694 no rescue | rollback Step4；no three-seed |
+| `SC1-D9` | `diagnostic_only_designing` | A6 learned operator中是否存在超越位置/随机controls的history-scale × future-support结构 | not required；method=false | pending | 完成operator-path audit与matched diagnostic design；通过后也只授权Step4-5 candidate设计 |
 | `SC2-MIPR` | `held` | measure-induced block metric去除decoder scales之间的cross coupling | pass for L2；log measure primary，benchmark weak | log off-block `0.205154`；benchmark `0.002480`；performance未测 | 等新SC1 problem/method contract；不得先实现 |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
@@ -129,6 +130,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-JAPO Step7A production gate | 5 profiles × 7 arms；210 prefix + 35 gradient + paired hashes + runner/analyzer dry-run | prefix `4.768e-7`；patch rewrite `5.722e-6`；entropy min `0.999944`；all gates pass | `step7a_pass_remote_screen_authorized`；test/SC2 false | `analysis/stage_c_sc1_japo_step7a_local_20260714/step7a_local_gate_report.md` |
 | SC1-JAPO Step8 seed2021 screen | 5 datasets × 7 arms；35/35 validation-only；paired from-scratch initialization | JOINT vs A6 macro `-1.3754%`、0/5；vs same-bank median `-0.0780%`、2/5；router entropy min `0.993263` | stable/inconclusive；不作方向否定或调参；只补seed2022 | `analysis/stage_c_sc1_japo_e2e_20260715/research_interpretation.md` |
 | SC1-JAPO Step8 two-seed gate | 5 datasets × 7 arms × 2 seeds；70/70 validation-only | vs A6 `-1.2435%`、0/5；vs median `-0.1175%`、1/5；UNIFORM/HISTORY/ATOM均优于JOINT | exact v1 failed；capacity control explains；rollback Step4，direction remains open | `analysis/stage_c_sc1_japo_e2e_20260715/two_seed/research_interpretation.md` |
+| Post-JAPO systematic review | full StageC evidence chain + external primary-source audit | geometry/projectivity retained；rigid replacement、fixed separability与weak mixing依次失败；flatten不是信息压缩 | no active method；先执行SC1-D9 existence diagnostic | `analysis/stage_c_sc1_post_japo_systematic_review_20260715/systematic_stage_review.md` |
 
 ## Pending Tasks
 
@@ -165,7 +167,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-JAPO Step7A local implementation | `completed_pass` | production module + 210 prefix/35 gradient + paired hashes + runner/analyzer dry-run |
 | SC1-JAPO Step8 seed2021 remote screen | `completed_inconclusive` | 35/35；protocol/numeric pass；只授权seed2022 unchanged |
 | SC1-JAPO Step8 seed2022 confirmation | `completed_fail` | 35/35；70/70 combined；seed2023 stopped；exact v1 closed |
-| Contribution 1 Step4 redesign audit | `pending` | direct operator modulation + optimization contract；先source/theory，后candidate |
+| Contribution 1 Step4 systematic review | `completed` | 支持“support-identifiable local-global projective operator”问题类，但尚未形成method candidate |
+| SC1-D9 history-support operator evidence audit | `designing` | 审计A6真实tensor/operator path；优先exact operator decomposition，必要时才用sample-dependent Jacobian |
 
 ## Paper Mainline Sync Log
 
@@ -197,6 +200,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-15 | SC1-JAPO seed2021 result audit | Current Position、Contribution 1、Main Experiment Logic | inconclusive effectiveness evidence + staged continuation | 35/35 valid；无pathology；不改design，只补seed2022；test/SC2 held |
 | 2026-07-15 | SC1-JAPO seed2022 launch | Current Position、Main Experiment Logic | staged confirmation running | commit3d37440；3×3090；35-run unchanged validation-only；test/SC2 held |
 | 2026-07-15 | SC1-JAPO two-seed gate | Current Position、Contribution 1、Boundary | exact candidate closure + Step4 rollback | 70/70 valid；capacity controls explain；exact v1 failed；projective direction retained |
+| 2026-07-15 | Post-JAPO systematic review | Current Position、Contribution 1、Boundary、Experiment Logic | evidence synthesis + next diagnostic boundary | 不直接提出新method；SC1-D9先验证history-scale × future-support operator evidence |
 
 ## Continuation Rules
 
@@ -221,3 +225,6 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
     调E/K/G。two-seed mean未过冻结gate则停止exact JAPO并做failure attribution；只有通过才授权seed2023。
 16. two-seed gate已失败：不得补seed2023、tune exact v1或提前启动SC2。JAPO containment/projectivity只保留为
     theory evidence；新的paper-core route必须回Step4，解决weak expert mixing与operator intervention问题。
+17. 系统复盘后，下一步固定为`SC1-D9 diagnostic_only`：先从A6 learned operator检验history-scale与
+    future-support是否存在canonical coupling。D9通过不等于method有效，只授权新候选进入Step4-5；若跨dataset/
+    seed不优于matched permutation/random controls，则回Step2/3，不实现local-global operator。

@@ -244,6 +244,18 @@ specialization可重复。`SC1-JAPO exact v1`因此降为`failed_as_core_candida
 projective operator方向。Contribution 1回Step4 source-informed redesign；新candidate过Step4-6前不实现，test、
 SC2-MIPR与joint factorial继续held。
 
+[Systematic Review] 全阶段证据支持的不是“再加一个basis/router”，而是更窄的问题：A6已具有强free operator与
+domain-only prefix consistency，RGNB提供future-side local/global support坐标；尚未证明的是history memory中是否
+存在与这些support尺度可识别对应的operator structure。flatten `[B,C,P,D] -> [B,C,PD]`为bijective reshape，
+所以当前不把信息压缩当作失败原因，而把“multiscale structure是否可访问、是否值得显式建模”作为待检验问题。
+
+[Next Diagnostic] `SC1-D9 History-Support Operator Evidence Audit`预注册为`diagnostic_only`。D9-A先精确恢复
+A6 memory-to-future operator，把history侧分成global/coarse/mid/local scale coordinates，把future侧分成global
+root与local support/detail coordinates，并与atom-label permutation和random orthogonal history bases作matched
+comparison；只有A通过才做sample-dependent input-Jacobian确认。D9通过只说明新local-global operator具有
+existence evidence，不能证明method effectiveness；失败则回Step2/3，而不是继续叠加MoE、router或training loss。详细复盘见
+`analysis/stage_c_sc1_post_japo_systematic_review_20260715/systematic_stage_review.md`。
+
 [Narrative Boundary] nonlinear decoder、operator MoE、geometry gating、structure-guided time-series MoE与
 step-specific representation均已有直接prior art。可辩护边界只能是joint history-atom conditional operator、
 RGNB exact projectivity与multi-horizon domain-only execution的完整组合。JAPO status更新为`narrative_ready`；
@@ -364,6 +376,8 @@ Step4，不以训练性能包装RGNB。
     stable/inconclusive evidence；按冻结gate只补seed2022，不调architecture/hyperparameters，test/SC2仍暂停。
 24. JAPO two-seed 70/70 gate最终失败：vs A6 `-1.2435%`、0/5，same-bank hard gate触发；exact v1关闭，
     seed2023停止，Contribution 1回Step4 operator-intervention redesign，projective direction本身不作否定。
+25. post-JAPO系统复盘完成；下一步只执行SC1-D9 history-support operator diagnostic。D9过gate后才允许形成新的
+    Step4-5 candidate，当前不授权model implementation、test、MIPR或joint factorial。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
 generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成
@@ -399,6 +413,7 @@ loss 或更多 tuning 来掩盖失败。
 - `analysis/stage_c_sc1_japo_step5_theory_20260714/step5_theory_feasibility.md`
 - `analysis/stage_c_sc1_japo_step6_design_20260714/step6_method_control_design.md`
 - `analysis/stage_c_sc1_japo_step7a_local_20260714/step7a_local_gate_report.md`
+- `analysis/stage_c_sc1_post_japo_systematic_review_20260715/systematic_stage_review.md`
 - `Papers/stage-c-external-decoder-objective-audit.md`
 - `docs/experiments/stage-c-five-dataset-validation-policy.md`
 - `docs/code-explanation/stage-c-pmfo-rct-step7a.md`

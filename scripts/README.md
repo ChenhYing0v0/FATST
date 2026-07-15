@@ -76,6 +76,13 @@ StageC active entrypoints：
   replication gates；
 - `remote/run_stage_c_sc1_d4_structured_basis.sh`: workload-aware 315-fit remote diagnostic；
 - `sync_stage_c_sc1_d4_structured_basis_results.sh`: 同步raw artifacts并本地重算D4 decision。
+- `analyze_stage_c_sc1_d9_history_support_operator.py`: 从15个frozen natural A6 checkpoints精确合成
+  `W = learned_temporal_basis @ learned_basis_coeff.weight`，审计history patch scale与future RGNB support
+  coupling；不读取data split、不训练head。
+- `remote/run_stage_c_sc1_d9_history_support_operator.sh`: 在3090服务器执行CPU-only D9-A audit，并在launch
+  record中保留GPU preflight、commit与protocol boundary。
+- `sync_stage_c_sc1_d9_history_support_operator_results.sh`: 只同步D9-A CSV/JSON/report等轻量结果，不同步原始
+  baseline checkpoints。
 
 历史 runner/analyzer 已移入 `scripts/archive/`，不得作为当前研究入口。新增脚本必须服务active ledger中明确的
 next action，并同步对应experiment protocol与code explanation。

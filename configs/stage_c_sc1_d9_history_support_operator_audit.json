@@ -1,0 +1,32 @@
+{
+  "stage": "StageC-UVHF",
+  "diagnostic_id": "SC1-D9-A",
+  "role": "diagnostic_only",
+  "series_length": 720,
+  "future_global_rank": 16,
+  "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"],
+  "checkpoint_seeds": [2021, 2022, 2023],
+  "random_seed": 20260715,
+  "atom_label_permutations": 1024,
+  "random_history_bases": 64,
+  "gates": {
+    "macro_scale_rho_min": 0.25,
+    "dataset_positive_contrast_min": 0.05,
+    "dataset_positive_required": 4,
+    "unit_positive_required": 12,
+    "dataset_permutation_p_max": 0.05,
+    "dataset_permutation_required": 4,
+    "dataset_random_basis_percentile_min": 0.95,
+    "dataset_random_basis_required": 4,
+    "parseval_relative_gap_max": 1e-8
+  },
+  "authorization": {
+    "reads_data_samples": false,
+    "uses_test_split": false,
+    "updates_forecast_model": false,
+    "trains_diagnostic_head": false,
+    "pass_authorizes": "SC1-D9-B sample-dependent input-Jacobian confirmation only",
+    "method_implementation_authorized": false,
+    "sc2_authorized": false
+  }
+}

@@ -9,8 +9,8 @@
 | `active_question` | 如何让history与support geometry直接改变projective operator，而非弱convex expert mixing？ |
 | `active_candidates` | none；`SC1-JAPO exact_v1 failed_as_core_candidate`；`SC1-PLGO geometry scaffold retained`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_sc1_japo_step7a_local_20260714/step7a_local_gate_report.md` |
-| `method_implementation` | JAPO two-seed effectiveness fail；seed2023/test/SC2 false；new implementation unauthorized |
+| `active_protocol` | `analysis/stage_c_sc1_post_japo_systematic_review_20260715/systematic_stage_review.md` |
+| `method_implementation` | false；当前仅授权`SC1-D9 diagnostic_only`的design/analysis，不授权新model、test或SC2 |
 | `rollback_point` | Step4；problem/geometry retained，exact JAPO weak-mixing head closed |
 
 ## Completed Foundation
@@ -225,6 +225,11 @@ RGNB geometry retained；现已完成Step4 intervention/readout redesign，不�
     projective conditional operator方向级否定；
 32. decision=`two_seed_mean_fail_stop_and_attribute`：JAPO exact v1关闭，seed2023/test/SC2停止，回Step4
     source-informed redesign audit。
+33. 2026-07-15系统复盘把正证据收紧为RGNB geometry、exact projectivity、local-support crossing与A6自由算子；
+    把fixed tree、shared separable PAF和weak expert mixing关闭为exact designs，而非方向级否定；
+34. 下一步为`SC1-D9 History-Support Operator Evidence Audit`：从A6 learned operator验证history-scale ×
+    future-support coupling是否超越scale permutation/random controls。该实验预注册为`diagnostic_only`，通过也只
+    授权Step4-5候选设计，失败则回Step2/3。
 
 ## SC1-PLGO Step 6 Design Gate: Conditional Pass, D7 Required
 
