@@ -6,39 +6,39 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | decoder/operator 与 training principle 两项相互支撑的 paper-core innovations |
-| `active_question` | rank-limited future frame能否同时捕获history-predictable energy与nested prefix locality？ |
+| `active_question` | D6-D12后仍跨dataset成立的unified multi-horizon bottleneck是什么？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | provisional `PRISM` + `CAPE` proposed_step2_3；old SC1 exact designs closed；`SC2-MIPR` retired |
+| `active_candidates` | none；PRISM/CAPE exact mainline closed；two contribution slots open |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
-| `stage_exit` | 两项分别过 narrative/effectiveness gate，`2x2` joint gate显示独立主效应与联合收益 |
+| `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
 | `stage_rollback` | problem/novelty不跨 dataset -> Step 2；禁止直接堆叠 method |
 
 ## Decision Cursor
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | joint Contribution 1/2 Step 2-3；D12-A-v1 invalid for rejection，risk-aligned v2 remote pending |
-| `current_candidate` | provisional PRISM/CAPE；均未过problem/narrative gate；MIPR retired |
-| `latest_decision` | v1 support 1/5但uniform normalized measure与raw risk不一致；标记`diagnostic_invalid_for_direction_rejection` |
-| `next_required_action` | 执行D12-A-v2 std-squared risk-weighted OOF covariance；复用v1 pilots；至少3/5后才执行D12-B |
-| `method_training_authorized` | false；只允许train-only diagnostic pilots；forecast method=false，validation/test=false |
-| `rollback_point` | D12失败回Step 2并关闭forecast-frame主线；history-scale、gradient-conflict与MIPR closed |
+| `current_11_step` | joint Contribution 1/2 Step 2 reset after D12 completed failure |
+| `current_candidate` | none；PRISM retired without effectiveness test；CAPE failed problem gate |
+| `latest_decision` | D12-v2 valid support 1/5；CAPE与joint forecast-frame route关闭；D12-B canceled |
+| `next_required_action` | Step2 evidence synthesis + external primary-source problem audit；先形成新problem hypotheses |
+| `method_training_authorized` | false；problem/source audit only；forecast method=false，validation/test=false |
+| `rollback_point` | completed to Step2；不得绕过D12 gate继续PRISM-only或换rank/pilot rescue CAPE |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | joint Contribution 1/2 Step 2-3；v1 failure attribution完成；v2 local pass，remote pending |
+| `current_step` | joint Contribution 1/2 Step 2 reset；D12 Step9-10 complete |
 | `problem` | A6 rank-256 decoder是否因global compaction、prefix locality与unpredictable label noise之间的tradeoff而受限 |
 | `existence_evidence` | D6 crossing；D7/D8 geometry main effect；A6 strong free operator；D11只关闭conflict、不关闭coverage/locality |
 | `idea` | PRISM prefix-risk-isometric frame + CAPE cross-fitted predictable-energy estimation |
-| `theory_check` | generic predictable subspace非novel；prefix-risk coupling仍provisional；time-safe estimator gate frozen |
-| `design` | D12-A-v2 train-only purged cross-fit；$s_x^2$ risk weights；reuse v1 A6 pilots；rank256；validation/test=false |
-| `narrative_gate` | pending Step4-6；当前仅proposed_step2_3 |
+| `theory_check` | v1 risk mismatch resolved；v2 conditional-mean headroom fails cross-dataset practical gate |
+| `design` | completed：v1 uniform diagnostic + v2 $s_x^2$ risk repair；same pilots/rank/folds；validation/test=false |
+| `narrative_gate` | failed before Step4：joint problem chain不成立；new candidates not proposed |
 | `effectiveness_gate` | not applicable until a new candidate passes Step4-6 |
-| `artifacts` | `analysis/stage_c_d12_predictable_frame_feasibility_20260715/d12_v1_failure_attribution_and_v2_protocol.md`；`configs/stage_c_d12_predictable_frame_feasibility_v2.json` |
-| `decision` | v1不能方向级否定；v2 local gate pass并授权remote；D12-B、method、validation/test仍false |
+| `artifacts` | `analysis/stage_c_d12_predictable_frame_feasibility_20260715/d12_final_result_and_rollback.md` |
+| `decision` | CAPE closed；PRISM joint route retired；D12-B canceled；rollback Step2；method/validation/test false |
 
 ## Frozen Carrier Contract
 
@@ -80,8 +80,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC1-D9` | `diagnostic_only_failed` | A6 learned operator中是否存在超越随机controls的history-scale × future-support结构 | not required；method=false | macro rho 0.173810；2/5 effect；1/5 permutation；0/5 random basis | D9-B canceled；rollback Step2/3；binary clue exploratory only |
 | `SC1-D10` | `diagnostic_only_failed` | raw history→future关系支持binary global/detail、detail-monotone还是no aligned scale | not required；method=false | binary all gates fail；monotone best 0/5、mapping 2/5 | aligned scale closed；rollback Step2；off-diagonal exploratory only |
 | `SC1-D11` | `diagnostic_only_completed_rollback` | multi-horizon conflict是否位于future component gradient responsibility | not required；method=false | strict 0/5；support-specific 2/5；generic redistribution 3/5；all invariants pass | SC1 conflict hypothesis关闭；只把coverage observation交给SC2 Step1-3 |
-| `SC1-PRISM` | `proposed_step2_3` | prefix-risk-isometric frame能否同时保持global compaction与short-prefix locality | pending D12 + Step4-6 | not applicable | D12-B Pareto/probe audit；method=false |
-| `SC2-CAPE` | `proposed_step2_3` | conditional-mean covariance能否比raw label covariance更好分配rank-256 decoder capacity | pending D12 + Step4-6 | not applicable | D12-A cross-fitted estimator audit；method=false |
+| `SC1-PRISM` | `retired_without_effectiveness_test` | prefix-risk-isometric frame能否同时保持global compaction与short-prefix locality | D12 joint prerequisite failed | not started | D12-B canceled；D6 evidence retained，not active |
+| `SC2-CAPE` | `failed_problem_gate` | conditional-mean covariance能否比raw label covariance更好分配rank-256 decoder capacity | risk-aligned v2 support 1/5 | not applicable | closed；no rank/pilot rescue |
 | `SC2-MIPR` | `retired_as_core_candidate` | measure-induced block metric去除decoder scales之间的cross coupling | historical L2 pass；current problem/novelty fail | not started | raw $W_\mu$保留为protocol/control；MIPR不实现 |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
@@ -180,7 +180,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-D10 raw scale identifiability | `completed_fail` | all artifacts/invariants valid；binary与detail-monotone primary gates均fail |
 | SC1-D11 future-component responsibility | `completed_rollback` | accepted v2 complete；do not implement conflict-aware method |
 | Post-D11 paper-mainline redesign | `completed_step2_3_design` | D11不关闭C1；PRISM/CAPE proposed；MIPR retired；D12 next |
-| D12 predictable-frame feasibility | `v2_remote_pending_diagnostic_only` | v1 1/5但risk mismatch；v2 std-squared weighted local pass并reuse pilots；D12-B/method/test false |
+| D12 predictable-frame feasibility | `completed_fail_rollback_step2` | v1 invalid for rejection；v2 valid support 1/5；CAPE/joint route closed；D12-B canceled |
 
 ## Paper Mainline Sync Log
 
@@ -219,10 +219,11 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-15 | SC1-D11 Step2/3 design gate | Current Position、Contribution 1/2 Boundary、Experiment Logic | prior-art boundary + exact responsibility identity + frozen gates | component loss/gradient surgery不作novelty；strict negative、magnitude与basis controls后再判问题 |
 | 2026-07-15 | SC1-D11 remote result gate | Current Position、Contribution 1/2 Boundary、Experiment Logic | conflict hypothesis closure + Step1-3 pivot | strict 0/5、component 2/5；coverage observation只允许SC2 novelty/problem audit |
 | 2026-07-15 | Post-D11 paper-mainline redesign | Thesis、Contribution 1/2、Experiment Logic | joint Step2-3 reset + old SC2 closure | D11不否定C1；PRISM/CAPE proposed；MIPR retired；D12 diagnostic next |
+| 2026-07-15 | D12 v1/v2 final gate | Current Position、Thesis、Contribution Slots、Experiment Logic | risk mismatch repair + candidate closure + Step2 rollback | v2 valid 1/5；CAPE closed；PRISM joint route retired；D12-B canceled；two slots open |
 
 ## Continuation Rules
 
-1. 每次继续研究先读本 ledger 与active Step7A report；remote不得静默改变E/K/G、init、controls或gates；
+1. 每次继续研究先读本 ledger 与active protocol；remote不得静默改变frozen profiles、rank、init、controls或gates；
 2. old analysis可引用，archive脚本不得直接启动；
 3. diagnostic failure必须区分 hypothesis、intervention、readout、numeric与capacity control；
 4. D2 formal5只在frozen A6 representation/head family下不支持depth grouping；当前PLGO不使用该设计，若未来
@@ -263,7 +264,9 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
     transformed-label loss或existing MIPR前，不实现任何training strategy。
 24. post-D11 external audit已经完成上述审计：generic coverage sampling不是足够的新贡献，且完整label可用时raw
     $W_\mu$ risk可精确计算；MIPR正式retired，不再实现。
-25. 新主线只允许D12 diagnostic：先验证cross-fitted predictable covariance，再验证PRISM localization Pareto。
-    PRISM/CAPE当前均为`proposed_step2_3`，不得因论文需要两个贡献就跳过problem/narrative gate。
-26. CAPE frame必须由train-only OOF predictions构造；final model从头训练，不复用pilot weights。任何frozen A6
+25. D12启动时只允许diagnostic：先验证cross-fitted predictable covariance，再验证PRISM localization Pareto；
+    当时PRISM/CAPE均为`proposed_step2_3`，未因论文需要两个贡献而跳过problem/narrative gate。
+26. D12 CAPE frame由train-only OOF predictions构造；final model不复用pilot weights。任何frozen A6
     memory probe只作symmetric conditional diagnostic，不能充当method effectiveness gate。
+27. D12-v1因uniform normalized risk mismatch不能方向级否定；risk-aligned v2复用相同pilots后仅1/5支持，
+    因此CAPE与joint PRISM route关闭、D12-B取消并回滚Step2。不得通过改rank、换pilot或PRISM-only probe绕过gate。

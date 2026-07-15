@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | joint Contribution 1/2 Step 2-3；D12-A-v1 invalid for rejection，risk-aligned v2 remote pending |
-| `active_question` | rank-limited future frame能否同时捕获history-predictable energy与nested prefix locality？ |
-| `active_candidates` | provisional `PRISM` + `CAPE` proposed_step2_3；old SC1 exact designs closed；SC2-MIPR retired |
+| `current_step` | joint Contribution 1/2 Step 2 reset after D12 completed failure |
+| `active_question` | D6-D12后仍跨dataset成立的unified multi-horizon bottleneck是什么？ |
+| `active_candidates` | none；PRISM/CAPE exact mainline closed；two contribution slots open |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_d12_predictable_frame_feasibility_20260715/d12_v1_failure_attribution_and_v2_protocol.md` |
-| `method_implementation` | false；只授权D12-A train-only diagnostic pilots；forecast method、validation/test false |
-| `rollback_point` | D12失败回Step 2并关闭forecast-frame主线；history-scale routing、future-gradient conflict与MIPR closed |
+| `active_protocol` | `analysis/stage_c_d12_predictable_frame_feasibility_20260715/d12_final_result_and_rollback.md` |
+| `method_implementation` | false；Step2 problem/source audit only；forecast method、validation/test false |
+| `rollback_point` | completed to Step 2；forecast-frame、history-scale、future-gradient-conflict与MIPR routes closed |
 
 ## Post-D11 Joint Mainline Reset
 
@@ -19,17 +19,18 @@
 geometry或Contribution 1 slot。不能从D11直接跳到Contribution 2；旧MIPR也因problem evidence与prior-art边界
 不足而关闭。
 
-新主线把unified multi-horizon forecasting定义为同一future function在nested prefix-risk family下的rank-limited
-逼近：
+历史post-D11主线曾把unified multi-horizon forecasting定义为同一future function在nested prefix-risk family下的
+rank-limited逼近：
 
 1. `PRISM`用$W_\mu$-isometric、prefix-localized forecast frame替换A6 unconstrained basis，保留free
    coefficient head与domain-only crop；
 2. `CAPE`用train-only cross-fitted predictions估计conditional-mean covariance，使frame优先保留history可预测
    的future energy，而不是raw-label noise；
 3. 两者形成`prefix localization on/off × predictable/raw covariance`的`2x2` factorial；
-4. 当前只进入D12 Step 2-3 diagnostic；不实现method、不读test、不改Encoder。
+4. D12只进入Step 2-3 diagnostic；不实现method、不读test、不改Encoder。
 
-理论、prior-art、风险与完整实验gate见active protocol。
+D12 risk-aligned v2最终只支持1/5 datasets：CAPE关闭，PRISM joint route未进入D12-B，整条forecast-frame
+mainline按预注册规则关闭并回滚Step 2。上述内容只作为历史设计，不是当前论文claim。
 
 ## Completed Foundation
 
@@ -279,6 +280,8 @@ RGNB geometry retained；现已完成Step4 intervention/readout redesign，不�
     importance sampling不构成必要机制；MIPR删除cross-scale terms但D11没有支持删除必要性，正式retired；
 49. 新主线回到joint Step2-3：PRISM从nested prefix family推导risk-localized frame，CAPE以train-only
     cross-fitted predictions估计predictable covariance；两者先过D12，不直接实现method或读取test。
+50. D12-v1暴露uniform normalized risk mismatch；v2以$s_x^2$对齐raw MSE并复用相同pilots，所有invariants
+    通过但只1/5 datasets支持。CAPE与joint PRISM route关闭，D12-B取消；回滚Step2并重新开放两个slots。
 
 ## SC1-PLGO Step 6 Design Gate: Conditional Pass, D7 Required
 

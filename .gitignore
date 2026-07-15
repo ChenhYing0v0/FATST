@@ -23,6 +23,7 @@ artifacts/**
 data/**
 !data/.gitkeep
 analysis/**/raw/
+analysis/**/raw_v2/
 
 # Logs and temporary files
 *.log

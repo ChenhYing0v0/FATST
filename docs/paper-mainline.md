@@ -5,15 +5,15 @@
 | Field | Content |
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
-| `working_title` | Learning What Can Be Predicted, Where It Must Be Accurate: Projective Forecast Frames for Unified Multi-Horizon Forecasting |
+| `working_title` | TBD after D12 Step-2 reset；predictable-frame title retired |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | joint Contribution 1/2 Step 2-3；D12 predictable-frame feasibility next |
+| `current_11_step` | joint Contribution 1/2 Step 2 reset after D12 failure |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | provisional `PRISM` + `CAPE` proposed_step2_3；old SC1 exact designs closed；SC2-MIPR retired |
+| `paper_core_status` | no active paper-core candidate；PRISM/CAPE exact mainline closed；two contribution slots open |
 
 ## Research Thesis
 
@@ -22,16 +22,19 @@
 > 一个共享模型如何表示一族可限制、可细化的未来预测，并用与该函数族一致的风险定义进行训练，
 > 从而在任意 requested horizon 上保持连续、统一且可比较的行为？
 
-Post-D11主线进一步收紧为：当decoder只有$r<T$个future degrees of freedom时，capacity应同时由
-`where accuracy is requested`（nested prefix deployment risk）与`what history can predict`
-（conditional-mean covariance）决定。D11只关闭gradient-conflict动机，没有关闭Contribution 1。
+D12已经否定post-D11 predictable-frame主线的跨dataset practical necessity：risk-aligned v2只在1/5 datasets
+支持CAPE，且rank256 raw-label frame在主要datasets已覆盖绝大部分A6 predictable variation。PRISM未被单独
+证伪，但其joint route与D12-B按预注册gate关闭。当前回到Step 2重新寻找真实、跨dataset且能同时支撑
+decoder/operator与training strategy的problem formulation。
 
 requested horizon 在当前主线中只定义输出域与计算域，不作为 learned semantic feature。禁止将离散
 horizon ID、benchmark-specific embedding、per-horizon expert 或 per-horizon hyperparameter 作为核心机制。
 
 ## Contribution Slots
 
-### Provisional Contribution 1: PRISM Decoder
+[Decision] 两个slots当前均开放；下面PRISM/CAPE只保留为D12关闭记录，不是active proposal。
+
+### Closed Candidate: PRISM Decoder
 
 `PRISM`（Prefix-Risk Isometric Synthesis Module）保留A6的free coefficient path：
 
@@ -41,10 +44,10 @@ $$
 
 $U_\mu^TW_\mu U_\mu=I$，并用prefix family诱导的
 $\mathbb E_H\|\operatorname{offdiag}(U^TW_HU)\|_F^2$控制short-prefix locality与global compaction的
-Pareto tradeoff。$H$只crop rows，不进入learned path。当前status=`proposed_step2_3`；它不是basis、PCA或
-orthogonality本身的claim。
+Pareto tradeoff。$H$只crop rows，不进入learned path。D12-A未直接证伪其locality hypothesis，但其前置joint
+problem gate失败，D12-B取消；status=`retired_without_effectiveness_test`。D6 crossing只保留为历史evidence。
 
-### Provisional Contribution 2: CAPE Frame Learning
+### Closed Candidate: CAPE Frame Learning
 
 `CAPE`（Cross-fitted Adaptive Predictable-Energy frame learning）不再修改future-step loss weights，而是用
 train-only out-of-fold predictions估计$\Sigma_m=\operatorname{Cov}(\mathbb E[y\mid x])$。rank-limited frame
@@ -54,8 +57,12 @@ train-only out-of-fold predictions估计$\Sigma_m=\operatorname{Cov}(\mathbb E[y
 benchmark measure headroom弱且与Time-o1/QDF/Loss Shaping邻近，降为`retired_as_core_candidate`；
 $W_\mu$只保留为exact risk protocol/control。
 
+D12-A-v1因uniform normalized risk mismatch不能方向级否定；修复后的v2复用相同pilots并与raw MSE对齐，
+最终仅ETTh1支持，`1/5 < 3/5`。ETTm1/ETTm2/Weather的A6 raw gap@256仅`0.18%-0.34%`；CAPE
+status=`failed_problem_gate / closed_as_core_candidate`。
+
 完整source/theory audit与D12 gates见
-`analysis/stage_c_post_d11_paper_mainline_redesign_20260715/mainline_redesign_audit.md`。
+`analysis/stage_c_d12_predictable_frame_feasibility_20260715/d12_final_result_and_rollback.md`。
 
 ### Historical Contribution 1 Record: Projective Forecast Operator Redesign
 
