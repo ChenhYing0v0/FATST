@@ -1,0 +1,81 @@
+{
+  "candidate": "SC1-JAPO",
+  "decision": "two_seed_mean_fail_stop_and_attribute",
+  "expected_runs": 70,
+  "immediate_fail": true,
+  "individual_seed_joint_vs_a6_macro_pct": {
+    "2021": -1.3753563608390307,
+    "2022": -1.1128967019577773
+  },
+  "initialization_checks": {
+    "paired_basis": true,
+    "paired_encoder_initialization": true,
+    "paired_expert_bank_initialization": true
+  },
+  "joint_vs_a6_by_dataset_pct": {
+    "ETTh1": -0.8886264338965333,
+    "ETTh2": -2.544245672342682,
+    "ETTm1": -0.6934458175186009,
+    "ETTm2": -1.4051810487872185,
+    "Weather": -0.6862064685719593
+  },
+  "joint_vs_a6_by_dataset_segment_pct": {
+    "ETTh1": {
+      "long_h337_720": -0.34993323504695084,
+      "middle_h97_336": -1.5266737891717952,
+      "short_h1_96": -2.696892022676023
+    },
+    "ETTh2": {
+      "long_h337_720": -2.4372278284299886,
+      "middle_h97_336": -2.7619747654966,
+      "short_h1_96": -2.7428757959903294
+    },
+    "ETTm1": {
+      "long_h337_720": -0.7726905074159518,
+      "middle_h97_336": -0.7108223696840055,
+      "short_h1_96": 0.21537171975887226
+    },
+    "ETTm2": {
+      "long_h337_720": -1.0733384966025383,
+      "middle_h97_336": -1.8001823329218736,
+      "short_h1_96": -3.2681728404232224
+    },
+    "Weather": {
+      "long_h337_720": -0.33777249247344265,
+      "middle_h97_336": -0.6232935292893149,
+      "short_h1_96": -3.217397445086956
+    }
+  },
+  "joint_vs_a6_macro_pct": -1.2435410882233988,
+  "joint_vs_a6_positive_datasets": 0,
+  "joint_vs_each_control_macro_pct": {
+    "atom": -0.4041600269789214,
+    "history": -0.1476909736738441,
+    "joint_perm": 0.22286732472845738,
+    "joint_random": 0.125919422055778,
+    "uniform": -0.4090829560933429
+  },
+  "joint_vs_each_control_positive_datasets": {
+    "atom": 1,
+    "history": 1,
+    "joint_perm": 4,
+    "joint_random": 3,
+    "uniform": 1
+  },
+  "joint_vs_same_bank_median_by_dataset_pct": {
+    "ETTh1": -0.24123009844843057,
+    "ETTh2": -0.33019267921687856,
+    "ETTm1": 0.5052912366311113,
+    "ETTm2": -0.3249640079900029,
+    "Weather": -0.19640681334931465
+  },
+  "joint_vs_same_bank_median_macro_pct": -0.11750047247470308,
+  "joint_vs_same_bank_median_positive_datasets": 1,
+  "pass": false,
+  "provisional_pass": false,
+  "seeds": [
+    2021,
+    2022
+  ],
+  "valid_runs": 70
+}

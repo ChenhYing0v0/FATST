@@ -1,0 +1,13 @@
+{
+  "a6_effectiveness_supported": false,
+  "candidate": "SC1-JAPO",
+  "capacity_control_explains": true,
+  "direction_level_rejection_authorized": false,
+  "exact_design_rejection_authorized": true,
+  "interpretation": "The frozen two-seed gate rejects the exact JAPO design. Same-bank controls explain the result, while valid theory and artifacts prevent a broader direction-level rejection.",
+  "minimum_joint_router_entropy": 0.9932629600739034,
+  "next_action": "stop_seed2023_and_rollback_step4",
+  "numeric_pathology": false,
+  "protocol_or_artifact_pathology": false,
+  "router_under_specialization_suspected": true
+}

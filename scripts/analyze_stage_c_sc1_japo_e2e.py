@@ -329,12 +329,23 @@ def comparison_statistics(rows: list[dict[str, Any]]) -> dict[str, Any]:
         )
         for dataset in DATASETS
     }
+    versus_a6_segments = {
+        dataset: {
+            label: improvement(
+                float(lookup[(dataset, PRIMARY)][f"{label}_mse"]),
+                float(lookup[(dataset, "a6")][f"{label}_mse"]),
+            )
+            for label, _start, _end in SEGMENTS
+        }
+        for dataset in DATASETS
+    }
     return {
         "joint_vs_a6_by_dataset_pct": versus_a6,
         "joint_vs_a6_macro_pct": mean(versus_a6.values()),
         "joint_vs_a6_positive_datasets": sum(
             value > 0.0 for value in versus_a6.values()
         ),
+        "joint_vs_a6_by_dataset_segment_pct": versus_a6_segments,
         "joint_vs_each_control_macro_pct": {
             control: mean(values.values())
             for control, values in versus_controls.items()
@@ -502,6 +513,9 @@ def failure_attribution(
             "joint_vs_a6_positive_datasets",
         )
     )
+    two_seed_fail = gate.get("decision") == (
+        "two_seed_mean_fail_stop_and_attribute"
+    )
     return {
         "candidate": "SC1-JAPO",
         "protocol_or_artifact_pathology": len(valid) != gate["expected_runs"],
@@ -519,21 +533,36 @@ def failure_attribution(
             gate["joint_vs_a6_macro_pct"] > 0.0
             and gate["joint_vs_a6_positive_datasets"] >= 4
         ),
+        "exact_design_rejection_authorized": two_seed_fail,
         "direction_level_rejection_authorized": False,
         "interpretation": (
             "Artifacts or protocol are incomplete; method attribution is "
             "invalid until the matrix passes the audit."
             if not complete
             else (
-                "The completed matrix is stable; apply only the frozen gate. "
-                "Near-uniform routing, when present, is a design/optimization "
-                "suspicion rather than a direction-level rejection."
+                (
+                    "The frozen two-seed gate rejects the exact JAPO design. "
+                    "Same-bank controls explain the result, while valid "
+                    "theory and artifacts prevent a broader direction-level "
+                    "rejection."
+                )
+                if two_seed_fail
+                else (
+                    "The completed matrix is stable; apply only the frozen "
+                    "gate. Near-uniform routing, when present, is a design/"
+                    "optimization suspicion rather than a direction-level "
+                    "rejection."
+                )
             )
         ),
         "next_action": (
             "run_seed2022_without_design_change"
             if gate["decision"] == "seed2021_inconclusive_run_seed2022_only"
-            else "follow_frozen_gate"
+            else (
+                "stop_seed2023_and_rollback_step4"
+                if two_seed_fail
+                else "follow_frozen_gate"
+            )
         ),
     }
 

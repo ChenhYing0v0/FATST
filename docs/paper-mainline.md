@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Projective Forecasting: Decoder-Objective Co-Design for Unified Varied-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC1-JAPO Step 8 seed2022 confirmation running |
+| `current_11_step` | Contribution 1 rollback to Step 4 source-informed redesign audit |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | Contribution 1 JAPO running/seed2022 confirmation；SC2-MIPR held |
+| `paper_core_status` | Contribution 1 has no active method candidate；JAPO exact v1 failed；SC2-MIPR held |
 
 ## Research Thesis
 
@@ -234,8 +234,15 @@ audit均通过。JOINT相对A6的dense MSE macro为`-1.3754%`、0/5 datasets正�
 `inconclusive`而不是pass或方向级fail。router normalized entropy最低`0.993263`，提示当前训练可能未形成明显
 expert specialization，但单seed不能区分optimization variance与exact design weakness。
 
-[Step8 Running] commit `3d37440`已在`529_Lab-3090` GPUs0/1/2启动不改变design的seed2022 35-run matrix；
-runner完成后自动执行seed2021/2022 frozen mean gate。test、SC2与seed2023均未启动。
+[Step8 Decision] seed2022 unchanged matrix完成后，70/70 artifacts与paired contracts全部通过。two-seed mean下
+JOINT相对A6为`-1.2435%`、0/5，且相对same-bank median为`-0.1175%`、仅1/5；UNIFORM/HISTORY/ATOM均在
+macro上优于JOINT，触发`capacity_control_explains` hard gate。两个seed的router entropy都接近1，说明weak
+specialization可重复。`SC1-JAPO exact v1`因此降为`failed_as_core_candidate`，seed2023停止。
+
+[Rollback Boundary] 本结果否定当前`two free RGNB experts + factorized softmax weak mixing`作为paper-core实现，
+不否定A6 containment、RGNB projectivity、canonical geometry的PERM/RANDOM小幅正向信号，亦不否定conditional
+projective operator方向。Contribution 1回Step4 source-informed redesign；新candidate过Step4-6前不实现，test、
+SC2-MIPR与joint factorial继续held。
 
 [Narrative Boundary] nonlinear decoder、operator MoE、geometry gating、structure-guided time-series MoE与
 step-specific representation均已有直接prior art。可辩护边界只能是joint history-atom conditional operator、
@@ -355,6 +362,8 @@ Step4，不以训练性能包装RGNB。
 22. JAPO Step7A通过210 prefix、35 gradient、paired hashes与runner/analyzer gates；
 23. JAPO seed2021完成35/35且无protocol/numeric pathology，但vs A6 macro `-1.3754%`、0/5，仅构成
     stable/inconclusive evidence；按冻结gate只补seed2022，不调architecture/hyperparameters，test/SC2仍暂停。
+24. JAPO two-seed 70/70 gate最终失败：vs A6 `-1.2435%`、0/5，same-bank hard gate触发；exact v1关闭，
+    seed2023停止，Contribution 1回Step4 operator-intervention redesign，projective direction本身不作否定。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
 generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成

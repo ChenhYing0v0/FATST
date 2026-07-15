@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC1-JAPO Step 8 seed2022 confirmation running |
-| `active_question` | JAPO JOINT能否在五datasets中同时超过A6与UNIFORM/HISTORY/ATOM/PERM/RANDOM same-bank controls？ |
-| `active_candidates` | `SC1-JAPO running/seed2022`；`SC1-PLGO geometry scaffold retained`；`SC2-MIPR` held |
+| `current_step` | Contribution 1 rollback to Step 4 source-informed redesign audit |
+| `active_question` | 如何让history与support geometry直接改变projective operator，而非弱convex expert mixing？ |
+| `active_candidates` | none；`SC1-JAPO exact_v1 failed_as_core_candidate`；`SC1-PLGO geometry scaffold retained`；`SC2-MIPR` held |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_sc1_japo_step7a_local_20260714/step7a_local_gate_report.md` |
-| `method_implementation` | Step7A pass；seed2021 stable/inconclusive；seed2022 unchanged 35-run matrix running；test=false；SC2=false |
-| `rollback_point` | Step7A/6 for protocol fault；Step4 if same-bank attribution fails；Step2/3 only by complete-contract failure |
+| `method_implementation` | JAPO two-seed effectiveness fail；seed2023/test/SC2 false；new implementation unauthorized |
+| `rollback_point` | Step4；problem/geometry retained，exact JAPO weak-mixing head closed |
 
 ## Completed Foundation
 
@@ -217,8 +217,14 @@ RGNB geometry retained；现已完成Step4 intervention/readout redesign，不�
 26. 五个JOINT router normalized entropy均不低于`0.993263`，提示under-specialization，但单seed不足以区分
     optimization variance与exact design weakness，不能据此拒绝理论方向或临时改loss；
 27. two-seed gate固定为先对每个dataset/arm求seed2021/2022 metric mean，再原样执行Step6 provisional threshold；
-28. commit `3d37440`已于`2026-07-15T11:37:11+08:00`在GPUs0/1/2启动seed2022 unchanged matrix；
-29. current decision=`step8_seed2022_running`；不改architecture/hyperparameters，不启动test、SC2或seed2023。
+28. commit `3d37440`于`2026-07-15T11:37:11+08:00`在GPUs0/1/2启动并完成seed2022 unchanged matrix；
+29. 70/70 audit通过；two-seed JOINT vs A6=`-1.2435%`、0/5，vs same-bank median=`-0.1175%`、1/5；
+30. canonical geometry相对PERM/RANDOM仍为`+0.2229%/+0.1259%`，但JOINT不及UNIFORM/HISTORY/ATOM，
+    `capacity_control_explains=true`；
+31. 两seed router entropy均接近1，under-specialization复现；这支持exact head/intervention weakness，不构成
+    projective conditional operator方向级否定；
+32. decision=`two_seed_mean_fail_stop_and_attribute`：JAPO exact v1关闭，seed2023/test/SC2停止，回Step4
+    source-informed redesign audit。
 
 ## SC1-PLGO Step 6 Design Gate: Conditional Pass, D7 Required
 
