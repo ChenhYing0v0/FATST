@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D14-A1 Step 7A passed；Step 7B neutral seed2021 authorized |
+| `current_step` | D14-A1 neutral seed2021 problem pass；A6 sensitivity running |
 | `active_question` | fixed-past unified model是否需要在一个projective decoder内自适应future-output coupling scope？ |
 | `active_candidates` | at-risk `SC1-PCSD`；`SC2-CCRL` held；A1 repaired evidence before any method |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/experiments/stage-c-d14-output-coupling-granularity.md` |
-| `method_implementation` | false；A1 neutral diagnostic remote=true；A6/D14-B/paper method/test=false |
+| `method_implementation` | false；neutral complete；A6 diagnostic=true；D14-B/paper method/test=false |
 | `rollback_point` | A1 theory infeasible或repaired evidence fail ->关闭PCSD/CCRL pair |
 
 ## Post-D11 Joint Mainline Reset
@@ -109,6 +109,10 @@ paper-carrier sensitivity。由于A6 architecture/profile围绕global basis deco
 
 [Execution Order] neutral seed2021 remote -> neutral gate -> 仅在problem pass时运行A6-natural sensitivity ->
 multi-seed confirmation decision。D14-B/paper method/test仍false；neutral valid fail则关闭PCSD/CCRL pair。
+
+[A1 Neutral Returned] 40/40 complete；function separation、carrier skill、crossing均5/5；oracle macro 7.6753%；
+canonical-vs-random 0.8945%且5/5正。sequential row re-evaluation修复了official validation shuffle造成的artifact
+alignment fault，未重训checkpoint。neutral只授权A6 sensitivity；single-seed不能直接形成paper claim。
 
 [Frozen Boundary] neutral raw-history carrier是primary；A6 sensitivity也从头E2E joint training，但其negative只表示
 carrier interface/profile不确认。最终paper effectiveness仍须matched E2E，不能用frozen replacement gap通过或拒绝。

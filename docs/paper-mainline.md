@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | D14-A1 Step 7A passed；neutral Step 7B next |
+| `current_11_step` | D14-A1 neutral seed2021 pass；A6 sensitivity running |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | PCSD at risk、CCRL held；A1 neutral diagnostic authorized；method/D14-B/test held |
+| `paper_core_status` | PCSD problem evidence strengthened by neutral A1；CCRL held；A6/stability pending；method/B/test held |
 
 ## Research Thesis
 
@@ -48,6 +48,11 @@ forecast-revision surface已转移到根目录`New-idea.md`，状态`deferred_ne
 rank-manifold effective DoF，且scale risks最多只相差0.04036%，所以方向级拒绝无效。PCSD降为at-risk，CCRL
 保持held。A1已完成source/theory与Step7A：以matched grouped nonlinear heads强制不同sharing topology，且全部
 scales包含full-affine map。当前只运行neutral raw-history primary gate；A6-natural sensitivity必须等neutral pass。
+
+neutral seed2021现已返回：40/40 complete，function separation/carrier skill/crossing均5/5，sample × bin oracle
+macro 7.6753%，canonical-vs-random 0.8945%且5/5正。train-only fixed scale跨datasets落在48/360/720，说明一个
+固定scope没有统一支配。该结果是problem evidence，不是PCSD performance；A6 sensitivity与multi-seed stability
+尚未返回，D14-B也未授权。
 
 ### Provisional Contribution 1: PCSD
 

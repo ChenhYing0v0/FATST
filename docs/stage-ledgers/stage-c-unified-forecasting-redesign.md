@@ -18,11 +18,11 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | D14-A1 Step 4-7A passed；Step 7B neutral seed2021 next |
+| `current_11_step` | D14-A1 neutral Step 8-10 pass；A6 sensitivity Step 8 running |
 | `current_candidate` | `SC1-PCSD` + `SC2-CCRL` provisional pair；problem gates pending |
-| `latest_decision` | A0 exact gate fail；factor-param matching不等于effective DoF且arms近等价，不能方向级拒绝 |
-| `next_required_action` | commit/push后在3090运行neutral raw-history E2E 5 datasets × 8 arms；先分析再决定A6 |
-| `method_training_authorized` | false；A1 neutral diagnostic=true；A6=false，paper method=false，D14-B=false，test=false |
+| `latest_decision` | neutral 5/5 crossing，oracle 7.6753%，contiguity 0.8945%；授权A6 sensitivity但不授权method |
+| `next_required_action` | 等待A6 45-run matrix返回；按dual-carrier matrix解释，不自动启动confirmation |
+| `method_training_authorized` | false；neutral complete；A6 sensitivity=true，paper method=false，D14-B=false，test=false |
 | `rollback_point` | A1 feasibility fail或repaired evidence fail -> Step2关闭PCSD/CCRL pair |
 
 ## 11-Step Record
@@ -31,14 +31,14 @@
 | --- | --- |
 | `current_step` | A1 source/theory/Step7A local gate passed；neutral Step7B pending |
 | `problem` | 现有unified decoder固定point/block/global coupling scope；最佳future-output sharing是否随target region与history变化 |
-| `existence_evidence` | external task-sharing prior + D6 indirect crossing；A0 direct evidence unsupported；A1已建立有效nonlinear intervention但尚无remote result |
+| `existence_evidence` | A1 neutral direct pass：5/5 crossing、oracle 7.6753%、contiguity 5/5 positive；single seed待carrier/stability review |
 | `idea` | PCSD projective point-to-global coupling spectrum + CCRL cross-fitted coupling-regret supervision |
 | `theory_check` | projectivity/A6 containment可构造；point-MSE只允许finite-sample sharing claim；routing/meta-learning prior art强，formal Step5未授权 |
 | `design` | A1 grouped nonlinear sharing topology；all scales contain full-affine maps；neutral primary/A6 sensitivity串行dual-carrier |
 | `narrative_gate` | problem chain与multi-horizon直接对齐；candidate仍provisional；DIRMO+MoE equivalence与router predictability为最大风险 |
-| `effectiveness_gate` | A1 remote pending；neutral需function separation、carrier skill、crossing、oracle与contiguity全部通过 |
-| `artifacts` | `analysis/stage_c_d14a1_dual_carrier_grouped_mlp_20260715/` |
-| `decision` | Step7A pass_neutral_remote_only；A6-negative不能拒绝scale；D14-B/paper method/test remain false |
+| `effectiveness_gate` | neutral全部problem gates pass；A6 sensitivity running；multi-seed stability not tested |
+| `artifacts` | `analysis/stage_c_d14a1_dual_carrier_grouped_mlp_20260715/neutral_seed2021_result.md` |
+| `decision` | authorize A6 sensitivity only；A6-negative不能拒绝scale；D14-B/paper method/test remain false |
 
 ## Frozen Carrier Contract
 
@@ -91,7 +91,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC-D14-P` | `auxiliary_not_scheduled` | A6 patch memory是否含超越global coeff的ordered target-specific conditional information | not paper mainline | not started | 未来仅在decoder interface需要时做small probe |
 | `SC1-PCSD` | `proposed_step2_3_at_risk` | one projective decoder是否需同时表示point/block/global coupling scopes | complete-chain novelty only；DIRMO/Stratify/CATS controls mandatory | A0 direct evidence fail but rejection invalid | one A1 repair；failure closes pair |
 | `SC2-CCRL` | `held_dependent` | train-OOF coupling regret能否使history+target policy兑现oracle headroom | generic routing/regret overlap强；独立novelty未通过 | A0 oracle insufficient | do not run D14-B before repaired A pass |
-| `SC-D14-A/B` | `a1_step7a_pass_neutral_remote_only` | coupling scale是否crossing且best scale能否由history+target预测 | diagnostic design pass；method=false | local 80 parameter + 20 forward cases pass；remote pending | neutral seed2021；A6 requires neutral pass；test=false |
+| `SC-D14-A/B` | `a1_neutral_pass_a6_running` | coupling scale是否crossing且best scale能否由history+target预测 | diagnostic design pass；method=false | neutral 5/5 crossing；oracle 7.6753%；A6 pending | wait A6；confirmation/B/test=false |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
 

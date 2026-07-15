@@ -5,11 +5,11 @@
 | Field | Value |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D14-A1 Step 7A passed；Step 7B neutral seed2021 authorized |
+| `current_step` | D14-A1 neutral seed2021 passed；A6-natural sensitivity running |
 | `role` | `diagnostic_only` |
 | `active_candidates` | provisional `SC1-PCSD` + `SC2-CCRL` |
 | `method_training` | false |
-| `remote_training` | A0 complete；A1 neutral diagnostic authorized；A6 sensitivity held；paper method=false |
+| `remote_training` | neutral 40/40 complete/pass；A6 45-run matrix running；paper method=false |
 | `test_access` | false |
 | `primary_carrier` | neutral train-only raw-history carrier |
 | `sensitivity_carrier` | A6-natural E2E architecture，只有neutral problem pass后才授权 |
@@ -128,6 +128,17 @@ pairing通过。由此只授权`neutral_raw, seed=2021`的Step7B；A6-natural仍
 - `analysis/stage_c_d14a1_dual_carrier_grouped_mlp_20260715/source_theory_design_audit.md`；
 - `analysis/stage_c_d14a1_dual_carrier_grouped_mlp_20260715/local_gate/local_gate_report.md`；
 - `configs/stage_c_d14a1_dual_carrier_grouped_mlp.json`。
+
+### A1 neutral seed2021 returned gate
+
+neutral完成5 datasets × 8 arms，40/40 complete。本地独立重算与远端一致：function separation、carrier skill、
+crossing均5/5；sample × bin oracle macro gain 7.6753%；canonical-vs-random macro gain 0.8945%且5/5为正；
+所有invariants通过。train-only fixed scale为ETTh1/ETTm1/Weather=`s360`、ETTh2=`s720`、ETTm2=`s48`。
+
+首次聚合因official validation shuffle触发row-alignment hard failure；随后使用sequential loader从同一checkpoints重算，
+未重训、未读取test。该问题只属于artifact alignment fault。neutral decision为
+`neutral_problem_pass_authorize_a6_sensitivity`；A6 sensitivity已启动，但confirmation/D14-B/method/test仍false。
+完整报告见`analysis/stage_c_d14a1_dual_carrier_grouped_mlp_20260715/neutral_seed2021_result.md`。
 
 ### Coupling scales
 
