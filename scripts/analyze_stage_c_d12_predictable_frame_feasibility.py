@@ -111,6 +111,8 @@ def analyze(
         "a6_rank256_optimal_capture",
         "a6_rank256_raw_capture",
         "a6_rank256_raw_relative_gap",
+        "weight_effective_sample_fraction",
+        "weight_max_share",
         "a6_predictability_pass",
         "a6_trace_pass",
         "a6_fold_stability_pass",
@@ -129,7 +131,7 @@ def analyze(
         encoding="utf-8",
     )
     report_lines = [
-        "# StageC D12-A Predictable-Covariance Diagnostic Result",
+        f"# StageC {design['diagnostic_id']} Predictable-Covariance Diagnostic Result",
         "",
         "## Decision Summary",
         "",
@@ -140,18 +142,19 @@ def analyze(
         f"| `all_invariants_pass` | `{str(invariant_pass).lower()}` |",
         f"| `decision` | `{decision}` |",
         f"| `D12-B_authorized` | `{str(d12_b_authorized).lower()}` |",
+        f"| `risk_weight_mode` | `{design.get('risk_weight_mode', 'uniform')}` |",
         "| `method/test_authorized` | `false / false` |",
         "",
         "## Dataset Results",
         "",
         "| Dataset | A6 OOF R2 | Min fold R2 | Ridge R2 | Pred trace/label | "
-        "A6 fold overlap@32 | A6-ridge overlap@32 | Raw gap@256 | Support | Decision |",
-        "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- |",
+        "A6 fold overlap@32 | A6-ridge overlap@32 | Raw gap@256 | Weight ESS | Support | Decision |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- |",
     ]
     for row in rows:
         report_lines.append(
             "| {dataset} | {a6_r2} | {min_r2} | {ridge_r2} | {trace} | "
-            "{fold_overlap} | {pilot_overlap} | {gap} | {support} | `{decision}` |".format(
+            "{fold_overlap} | {pilot_overlap} | {gap} | {weight_ess} | {support} | `{decision}` |".format(
                 dataset=row["dataset"],
                 a6_r2=fmt(row["a6_mean_oof_r2"]),
                 min_r2=fmt(row["a6_min_fold_oof_r2"]),
@@ -160,6 +163,7 @@ def analyze(
                 fold_overlap=fmt(row["a6_fold_top32_overlap"]),
                 pilot_overlap=fmt(row["a6_ridge_rank32_overlap"]),
                 gap=fmt(row["a6_rank256_raw_relative_gap"], 6),
+                weight_ess=fmt(row["weight_effective_sample_fraction"]),
                 support=fmt(row["dataset_support"]),
                 decision=row["decision"],
             )
@@ -174,6 +178,7 @@ def analyze(
             "- `fold overlap@32`：两个forward folds的top-32 predictable subspace overlap；",
             "- `A6-ridge overlap@32`：nonlinear A6与DCT-ridge pilot的aggregate top-32 overlap；",
             "- `Raw gap@256`：optimal predictable frame相对raw-label PCA frame多捕获的predictable energy；",
+            "- `Weight ESS`：risk weights的effective sample size除以row count；",
             "- support要求上述五项与所有covariance invariants同时通过。",
             "",
             "## Failure Attribution",
@@ -214,6 +219,7 @@ def analyze(
             "- train split only；validation/test未读取；",
             "- two-fold forward cross-fitting，history+future raw intervals之间purge 1439 windows；",
             "- pilot固定20 epochs，不用OOF选择checkpoint；",
+            f"- risk weight=`{design.get('risk_weight_mode', 'uniform')}`；",
             "- final paper model不复用pilot weights；",
             "- 详细fold/covariance statistics保存在各dataset目录。",
             "",
@@ -242,6 +248,8 @@ def synthetic_smoke() -> None:
         "a6_rank256_optimal_capture": 0.99,
         "a6_rank256_raw_capture": 0.98,
         "a6_rank256_raw_relative_gap": 0.01,
+        "weight_effective_sample_fraction": 0.8,
+        "weight_max_share": 0.001,
         "a6_predictability_pass": True,
         "a6_trace_pass": True,
         "a6_fold_stability_pass": True,

@@ -51,6 +51,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--design", type=Path)
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument(
+        "--pilot-cache-root",
+        type=Path,
+        help="Optional prior diagnostic root containing fold pilot checkpoints.",
+    )
+    parser.add_argument(
         "--dataset",
         choices=["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"],
     )
@@ -322,11 +327,14 @@ def fit_ridge_pilot(
 
 
 class MomentAccumulator:
-    """Accumulate centered covariance sufficient statistics on one device."""
+    """Accumulate risk-weighted covariance sufficient statistics."""
 
     def __init__(self, device: torch.device) -> None:
         self.device = device
         self.count = 0
+        self.weight_sum = 0.0
+        self.weight_square_sum = 0.0
+        self.weight_max = 0.0
         self.sums = {
             name: torch.zeros(SERIES_LENGTH, dtype=torch.float64, device=device)
             for name in ("label", "a6", "ridge", "a6_residual", "ridge_residual")
@@ -349,6 +357,7 @@ class MomentAccumulator:
         label: torch.Tensor,
         a6: torch.Tensor,
         ridge: torch.Tensor,
+        weights: torch.Tensor,
         std_min: float,
     ) -> None:
         values = {
@@ -359,23 +368,41 @@ class MomentAccumulator:
             "ridge_residual": (ridge - label).double(),
         }
         rows = int(label.shape[0])
+        weights = weights.double().reshape(-1)
+        if weights.shape[0] != rows or bool((weights <= 0.0).any()):
+            raise ValueError("risk weights must be positive and match row count")
         self.count += rows
+        self.weight_sum += float(weights.sum().item())
+        self.weight_square_sum += float(weights.square().sum().item())
+        self.weight_max = max(self.weight_max, float(weights.max().item()))
         self.std_min = min(self.std_min, std_min)
         for name, tensor in values.items():
-            self.sums[name] += tensor.sum(dim=0)
-            self.outers[name] += tensor.T @ tensor
-        self.a6_sse += float((a6 - label).double().square().sum().item())
-        self.ridge_sse += float((ridge - label).double().square().sum().item())
+            weighted = tensor * weights.unsqueeze(1)
+            self.sums[name] += weighted.sum(dim=0)
+            self.outers[name] += tensor.T @ weighted
+        self.a6_sse += float(
+            ((a6 - label).double().square() * weights.unsqueeze(1)).sum().item()
+        )
+        self.ridge_sse += float(
+            ((ridge - label).double().square() * weights.unsqueeze(1)).sum().item()
+        )
 
     def covariance(self, name: str) -> torch.Tensor:
-        if self.count < 2:
+        if self.count < 2 or self.weight_sum <= 0.0:
             raise RuntimeError("insufficient covariance rows")
-        mean_outer = torch.outer(self.sums[name], self.sums[name]) / self.count
-        return (self.outers[name] - mean_outer) / (self.count - 1)
+        mean_outer = (
+            torch.outer(self.sums[name], self.sums[name]) / self.weight_sum
+        )
+        return (self.outers[name] - mean_outer) / self.weight_sum
 
     def export(self) -> dict[str, np.ndarray]:
         payload: dict[str, np.ndarray] = {
             "count": np.asarray(self.count, dtype=np.int64),
+            "weight_sum": np.asarray(self.weight_sum, dtype=np.float64),
+            "weight_square_sum": np.asarray(
+                self.weight_square_sum, dtype=np.float64
+            ),
+            "weight_max": np.asarray(self.weight_max, dtype=np.float64),
             "a6_sse": np.asarray(self.a6_sse, dtype=np.float64),
             "ridge_sse": np.asarray(self.ridge_sse, dtype=np.float64),
             "std_min": np.asarray(self.std_min, dtype=np.float64),
@@ -454,9 +481,23 @@ def evaluate_fold(
                 future_rows,
                 a6_rows,
                 ridge_rows,
+                risk_weights(std, design),
                 float(std.min().item()),
             )
     return accumulator, forward_gap
+
+
+def risk_weights(std: torch.Tensor, design: dict[str, Any]) -> torch.Tensor:
+    """Map RevIN scale [B,1,C] to row weights matching [B*C,720]."""
+    row_std = std.squeeze(1).reshape(-1)
+    mode = design.get("risk_weight_mode", "uniform")
+    if mode == "uniform":
+        return torch.ones_like(row_std)
+    if mode == "history_std":
+        return row_std
+    if mode == "history_std_squared":
+        return row_std.square()
+    raise ValueError(f"unsupported risk_weight_mode: {mode}")
 
 
 def eigensystem(covariance: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
@@ -513,15 +554,24 @@ def analyze_moments(
         label_sst = float(
             (
                 accumulator.outers["label"].trace()
-                - accumulator.sums["label"].square().sum() / accumulator.count
+                - accumulator.sums["label"].square().sum()
+                / accumulator.weight_sum
             ).item()
         )
-        a6_mse = accumulator.a6_sse / (accumulator.count * SERIES_LENGTH)
-        ridge_mse = accumulator.ridge_sse / (accumulator.count * SERIES_LENGTH)
-        zero_mse = label_sst / (accumulator.count * SERIES_LENGTH)
+        denominator = accumulator.weight_sum * SERIES_LENGTH
+        a6_mse = accumulator.a6_sse / denominator
+        ridge_mse = accumulator.ridge_sse / denominator
+        zero_mse = label_sst / denominator
         row: dict[str, Any] = {
             "fold": fold,
             "row_count": accumulator.count,
+            "weight_sum": accumulator.weight_sum,
+            "weight_effective_sample_fraction": (
+                accumulator.weight_sum**2
+                / accumulator.weight_square_sum
+                / accumulator.count
+            ),
+            "weight_max_share": accumulator.weight_max / accumulator.weight_sum,
             "a6_oof_mse": a6_mse,
             "ridge_oof_mse": ridge_mse,
             "zero_mse": zero_mse,
@@ -600,14 +650,22 @@ def analyze_moments(
     label_sst = float(
         (
             aggregate.outers["label"].trace()
-            - aggregate.sums["label"].square().sum() / aggregate.count
+            - aggregate.sums["label"].square().sum() / aggregate.weight_sum
         ).item()
     )
-    zero_mse = label_sst / (aggregate.count * SERIES_LENGTH)
+    denominator = aggregate.weight_sum * SERIES_LENGTH
+    zero_mse = label_sst / denominator
     summary: dict[str, Any] = {
         "row_count": aggregate.count,
-        "a6_mean_oof_mse": aggregate.a6_sse / (aggregate.count * SERIES_LENGTH),
-        "ridge_mean_oof_mse": aggregate.ridge_sse / (aggregate.count * SERIES_LENGTH),
+        "weight_sum": aggregate.weight_sum,
+        "weight_effective_sample_fraction": (
+            aggregate.weight_sum**2
+            / aggregate.weight_square_sum
+            / aggregate.count
+        ),
+        "weight_max_share": aggregate.weight_max / aggregate.weight_sum,
+        "a6_mean_oof_mse": aggregate.a6_sse / denominator,
+        "ridge_mean_oof_mse": aggregate.ridge_sse / denominator,
         "zero_mse": zero_mse,
         "normalization_std_min": aggregate.std_min,
     }
@@ -680,6 +738,11 @@ def analyze_moments(
 def merge_accumulators(accumulators: list[MomentAccumulator]) -> MomentAccumulator:
     merged = MomentAccumulator(accumulators[0].device)
     merged.count = sum(value.count for value in accumulators)
+    merged.weight_sum = sum(value.weight_sum for value in accumulators)
+    merged.weight_square_sum = sum(
+        value.weight_square_sum for value in accumulators
+    )
+    merged.weight_max = max(value.weight_max for value in accumulators)
     merged.a6_sse = sum(value.a6_sse for value in accumulators)
     merged.ridge_sse = sum(value.ridge_sse for value in accumulators)
     merged.std_min = min(value.std_min for value in accumulators)
@@ -714,6 +777,10 @@ def dataset_gate(
         >= float(gates["covariance_psd_min_eigenvalue"])
         and summary["normalization_std_min"]
         >= float(gates["normalization_std_min"])
+        and summary["weight_effective_sample_fraction"]
+        >= float(gates.get("weight_effective_sample_fraction_min", 0.0))
+        and summary["weight_max_share"]
+        <= float(gates.get("weight_max_share_max", 1.0))
     )
     checks = {
         "invariants_pass": invariant_pass,
@@ -772,7 +839,13 @@ def synthetic_smoke() -> None:
     a6 = latent @ basis.T
     ridge = 0.9 * a6
     accumulator = MomentAccumulator(device)
-    accumulator.update(label, a6, ridge, 1.0)
+    accumulator.update(
+        label,
+        a6,
+        ridge,
+        torch.ones(label.shape[0], dtype=torch.float64),
+        1.0,
+    )
     covariance = accumulator.covariance("label")
     metrics = covariance_metrics(covariance)
     if metrics["symmetry_max_abs"] > 1e-10:
@@ -784,6 +857,22 @@ def synthetic_smoke() -> None:
         raise RuntimeError("predictable capture smoke failed")
     if values[7] <= 0.0:
         raise RuntimeError("predictable spectrum smoke failed")
+    weighted = MomentAccumulator(device)
+    weights = torch.linspace(0.1, 2.0, label.shape[0], dtype=torch.float64)
+    weighted.update(label, a6, ridge, weights, 1.0)
+    mean = (label * weights.unsqueeze(1)).sum(dim=0) / weights.sum()
+    expected = (
+        (label - mean).T @ ((label - mean) * weights.unsqueeze(1))
+    ) / weights.sum()
+    if not torch.allclose(weighted.covariance("label"), expected, atol=1e-10):
+        raise RuntimeError("weighted covariance smoke failed")
+    shaped_std = torch.tensor([[[2.0, 3.0]], [[4.0, 5.0]]])
+    shaped_weights = risk_weights(
+        shaped_std,
+        {"risk_weight_mode": "history_std_squared"},
+    )
+    if not torch.equal(shaped_weights, torch.tensor([4.0, 9.0, 16.0, 25.0])):
+        raise RuntimeError("risk weight row-order smoke failed")
     folds = fold_ranges(
         7201,
         {
@@ -815,9 +904,15 @@ def main() -> None:
     folds = fold_ranges(len(train_dataset), design)
     output_dir = args.output_dir / args.dataset
     output_dir.mkdir(parents=True, exist_ok=True)
+    pilot_directory = (
+        args.pilot_cache_root / args.dataset
+        if args.pilot_cache_root is not None
+        else output_dir
+    )
 
     accumulators: list[MomentAccumulator] = []
     fold_metadata: list[dict[str, Any]] = []
+    pilot_cache_hits: list[bool] = []
     for fold_range in folds:
         fold = int(fold_range["fold"])
         train_indices = list(
@@ -828,13 +923,17 @@ def main() -> None:
             fold_range["oof_end"],
             int(design["oof_windows_per_fold"]),
         )
+        pilot_checkpoint = pilot_directory / f"fold{fold}_a6_pilot.pt"
+        pilot_history = pilot_directory / f"fold{fold}_training_history.csv"
+        pilot_cache_hit = pilot_checkpoint.exists() and pilot_history.exists()
+        pilot_cache_hits.append(pilot_cache_hit)
         model, training_rows = train_a6_pilot(
             official_args,
             train_dataset,
             train_indices,
             design,
-            output_dir / f"fold{fold}_a6_pilot.pt",
-            output_dir / f"fold{fold}_training_history.csv",
+            pilot_checkpoint,
+            pilot_history,
         )
         ridge = fit_ridge_pilot(
             train_dataset,
@@ -866,6 +965,8 @@ def main() -> None:
                 "ridge_row_count": int(ridge["row_count"]),
                 "ridge_alpha": float(ridge["alpha"]),
                 "forward_reconstruction_max_abs": forward_gap,
+                "pilot_cache_directory": str(pilot_directory),
+                "pilot_cache_hit": pilot_cache_hit,
             }
         )
         del model, ridge
@@ -903,7 +1004,14 @@ def main() -> None:
         "uses_train_split": True,
         "uses_validation_split": False,
         "uses_test_split": False,
-        "trains_diagnostic_pilots": True,
+        "reuses_cached_diagnostic_pilots": all(pilot_cache_hits),
+        "trains_diagnostic_pilots": not all(pilot_cache_hits),
+        "risk_weight_mode": design.get("risk_weight_mode", "uniform"),
+        "pilot_cache_root": (
+            str(args.pilot_cache_root)
+            if args.pilot_cache_root is not None
+            else None
+        ),
         "updates_paper_forecast_model": False,
         "python_version": platform.python_version(),
         "torch_version": torch.__version__,

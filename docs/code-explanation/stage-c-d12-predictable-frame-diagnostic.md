@@ -6,6 +6,9 @@ D12-A只诊断一个问题：在A6的rank-256 future synthesis coordinates中，
 variation是否形成稳定、且不同于raw-label PCA的subspace。它不会实现PRISM/CAPE forecast method，不读取
 validation/test，也不会把diagnostic pilot权重交给最终模型。
 
+v1使用uniform normalized rows，remote evidence暴露其与raw forecast risk不一致；active v2改用
+`history_std_squared` weights，并复用v1 pilot checkpoints。v1证据保留作failure-attribution record。
+
 入口包括：
 
 - `scripts/run_stage_c_d12_predictable_frame_feasibility.py`：单dataset cross-fit worker；
@@ -63,8 +66,10 @@ baseline或method candidate。
 - `a6_residual=a6-label`；
 - `ridge_residual=ridge-label`。
 
-covariance由$(X^TX-n\bar x\bar x^T)/(n-1)$恢复。OOF MSE和fold-centered zero MSE都按
-`N*720`归一化，因此`oof_r2=1-oof_mse/zero_mse`口径一致。
+v2对row $n$使用$w_n=s_{x,n}^2$，covariance由
+$[\sum_nw_nx_nx_n^T-(\sum_nw_nx_n)(\sum_nw_nx_n)^T/\sum_nw_n]/\sum_nw_n$恢复。
+OOF SSE和fold-centered zero SST都按`weight_sum*720`归一化，因此
+`oof_r2=1-oof_mse/zero_mse`与raw-space MSE一致。
 
 ## 3. 输出字段定义
 
@@ -78,6 +83,8 @@ covariance由$(X^TX-n\bar x\bar x^T)/(n-1)$恢复。OOF MSE和fold-centered zero
 - `*_effective_rank`：covariance非负eigenvalue分布的entropy effective rank；
 - `*_minimum_eigenvalue` / `*_symmetry_max_abs`：PSD与对称性invariant；
 - `*_predictable_trace_fraction`：prediction covariance trace除以label covariance trace。
+- `weight_effective_sample_fraction`：weighted ESS除以row count；
+- `weight_max_share`：单row最大weight占总weight的比例。
 
 ### 3.2 `subspace_metrics.csv`
 
@@ -97,7 +104,8 @@ support才允许D12-B；无论结果如何，D12-A均不直接授权method imple
 
 remote runner按`Weather`、`ETTm1+ETTh2`、`ETTm2+ETTh1`分配三张GPU，并支持检测
 `dataset_summary.json`后断点跳过。pilot checkpoints与`720x720` moment archives保留在repo外remote
-output root；sync脚本只取复核结论所需的CSV、JSON、training history与logs。
+output root；v2从v1 root读取pilot checkpoint，只重算ridge、OOF与moments。sync脚本只取复核结论所需的
+CSV、JSON、training history与logs。
 
 ## 5. Code-Theory Consistency
 

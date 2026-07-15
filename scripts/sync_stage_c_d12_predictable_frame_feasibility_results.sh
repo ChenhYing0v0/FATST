@@ -2,8 +2,8 @@
 set -euo pipefail
 
 REMOTE_HOST="${REMOTE_HOST:-529_Lab-3090}"
-REMOTE_ROOT="${REMOTE_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/stage_c_d12_predictable_frame_feasibility}"
-LOCAL_ROOT="${LOCAL_ROOT:-analysis/stage_c_d12_predictable_frame_feasibility_20260715/raw}"
+REMOTE_ROOT="${REMOTE_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/stage_c_d12_predictable_frame_feasibility_v2}"
+LOCAL_ROOT="${LOCAL_ROOT:-analysis/stage_c_d12_predictable_frame_feasibility_20260715/raw_v2}"
 
 mkdir -p "${LOCAL_ROOT}"
 rsync -av \

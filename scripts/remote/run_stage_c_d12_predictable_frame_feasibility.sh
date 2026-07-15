@@ -7,9 +7,10 @@ LEGACY_C_ROOT="${LEGACY_C_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/stage_c_da
 FIVE_A_ROOT="${FIVE_A_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/stage_c_five_profile_extension_a}"
 FIVE_B_ROOT="${FIVE_B_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/stage_c_five_profile_extension_b}"
 FIVE_C_ROOT="${FIVE_C_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/stage_c_five_profile_extension_c}"
-OUTPUT_ROOT="${OUTPUT_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/stage_c_d12_predictable_frame_feasibility}"
+OUTPUT_ROOT="${OUTPUT_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/stage_c_d12_predictable_frame_feasibility_v2}"
+PILOT_CACHE_ROOT="${PILOT_CACHE_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/stage_c_d12_predictable_frame_feasibility}"
 CONTRACT="${CONTRACT:-configs/stage_c_five_dataset_natural_profiles.json}"
-DESIGN="${DESIGN:-configs/stage_c_d12_predictable_frame_feasibility.json}"
+DESIGN="${DESIGN:-configs/stage_c_d12_predictable_frame_feasibility_v2.json}"
 CONDA_BIN="${CONDA_BIN:-/home/anaconda3/bin/conda}"
 CONDA_ENV="${CONDA_ENV:-moe}"
 GPU_IDS_STR="${GPU_IDS:-0 1 2}"
@@ -41,11 +42,13 @@ mkdir -p "${OUTPUT_ROOT}/_logs"
   echo "commit=$(git rev-parse HEAD)"
   echo "cwd=$(pwd)"
   echo "output_root=${OUTPUT_ROOT}"
+  echo "pilot_cache_root=${PILOT_CACHE_ROOT}"
   echo "role=diagnostic_only"
   echo "uses_train_split=true"
   echo "uses_validation_split=false"
   echo "uses_test_split=false"
-  echo "trains_diagnostic_pilots=true"
+  echo "reuses_v1_diagnostic_pilots=true"
+  echo "trains_diagnostic_pilots=only_if_cache_missing"
   echo "updates_forecast_model=false"
   nvidia-smi --query-gpu=index,name,memory.used,memory.free,utilization.gpu \
     --format=csv,noheader,nounits
@@ -64,6 +67,7 @@ run_dataset() {
       --phase-c-root "${LEGACY_C_ROOT}" --five-phase-a-root "${FIVE_A_ROOT}" \
       --five-phase-b-root "${FIVE_B_ROOT}" --five-phase-c-root "${FIVE_C_ROOT}" \
       --contract "${CONTRACT}" --design "${DESIGN}" --output-dir "${OUTPUT_ROOT}" \
+      --pilot-cache-root "${PILOT_CACHE_ROOT}" \
       --dataset "${dataset}" --device cuda \
       >"${OUTPUT_ROOT}/_logs/${dataset}.log" 2>&1
   echo "worker_done=$(date -Is) dataset=${dataset} gpu=${gpu}"

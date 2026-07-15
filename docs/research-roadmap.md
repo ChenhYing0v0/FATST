@@ -5,11 +5,11 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | joint Contribution 1/2 Step 2-3；D12-A implemented，remote evidence pending |
+| `current_step` | joint Contribution 1/2 Step 2-3；D12-A-v1 invalid for rejection，risk-aligned v2 remote pending |
 | `active_question` | rank-limited future frame能否同时捕获history-predictable energy与nested prefix locality？ |
 | `active_candidates` | provisional `PRISM` + `CAPE` proposed_step2_3；old SC1 exact designs closed；SC2-MIPR retired |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_d12_predictable_frame_feasibility_20260715/d12_step23_protocol.md` |
+| `active_protocol` | `analysis/stage_c_d12_predictable_frame_feasibility_20260715/d12_v1_failure_attribution_and_v2_protocol.md` |
 | `method_implementation` | false；只授权D12-A train-only diagnostic pilots；forecast method、validation/test false |
 | `rollback_point` | D12失败回Step 2并关闭forecast-frame主线；history-scale routing、future-gradient conflict与MIPR closed |
 
