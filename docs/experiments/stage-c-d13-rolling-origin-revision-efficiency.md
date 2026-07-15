@@ -4,14 +4,20 @@
 
 | Field | Value |
 | --- | --- |
-| stage | StageC-UVHF |
-| current_step | Step 2-3 problem verification |
+| stage | future independent forecast-revision project |
+| current_step | deferred Step 2-3 problem verification |
 | role | diagnostic_only |
 | method_training | false |
 | test_access | false |
-| D13-A | authorized for implementation |
-| D13-B | conditional on D13-A pass |
+| current_project_status | `deferred_next_paper`；not active |
+| restart_entry | root `New-idea.md` |
+| D13-A | not currently authorized |
+| D13-B | conditional on future D13-A pass |
 | rollback | D13-A fail -> Step 2；D13-B fail -> NIFRO patch-direct hypothesis Step 2 |
+
+[Decision] 2026-07-15起，该protocol随forecast-revision surface转为下一篇独立SCI idea。当前
+`R_2026_FATST`主线已回到fixed-past unified multi-horizon generation，active protocol为D14。本文件只作未来
+restart artifact，不得由当前ledger直接启动。
 
 ## What We Plan To Test
 

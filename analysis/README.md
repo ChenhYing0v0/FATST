@@ -8,9 +8,9 @@
 ## Active StageC Entry
 
 - `stage_c_natural_baseline_test_20260713/`: frozen 3-dataset × 3-seed × 8-horizon test reference；
-- `stage_c_contribution_research_reset_20260713/`: PMFO/PIR Step 1-3 deep audit；
-- `stage_c_d1_pmfo_pir_offline_v2_20260713/`: accepted D1 problem diagnostics；
-- `stage_c_step46_pmfo_pir_theory_gate_20260713/`: external prior-art、mixed-radix proof与MIPR measure geometry。
+- `stage_c_fixed_past_mainline_reset_20260715/`: 当前fixed-past主线复盘、external audit、CADMO/CPGA
+  provisional design与D14 gate；
+- `stage_c_post_d12_revision_surface_mainline_20260715/`: 已转入`New-idea.md`的future-paper历史复盘，非active。
 
 其余目录是不可变历史 evidence store，不是 active candidate queue。继续研究应从
 `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` 进入；不得因某个旧 analysis 目录存在就直接

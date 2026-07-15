@@ -5,78 +5,87 @@
 | Field | Content |
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
-| `working_title` | Learning Forecasts That Evolve with Information: Causal Revision Surfaces for Unified Multi-Horizon Forecasting |
+| `working_title` | Beyond Global Compression: Information-Accounted Dual-Memory Operators for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | D13 rolling-origin revision problem verification，Step 2-3 |
+| `current_11_step` | D14 conditional patch-memory headroom audit，Step 2-3 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | provisional NIFRO/IARL pair；problem gate pending；method/test not authorized |
+| `paper_core_status` | provisional CADMO/CPGA pair；D14 problem gate pending；method/test not authorized |
 
 ## Research Thesis
 
-论文研究问题不是“为几个 benchmark horizons 分别训练或 condition 一个 head”，也不再只是为单个
-origin的一条future row寻找更好的basis，而是：
+论文研究对象重新固定为`fixed-past unified multi-horizon generation`：
 
-> 一个共享模型如何同时统一future target axis与information-update axis，使同一target的预测在
-> nested information sets下以有accuracy收益、可统计account的innovation方式演化，同时保持任意
-> requested horizon的exact prefix behavior？
+> 给定同一段fixed past，一个共享模型如何生成任意requested horizon的统一future prefix，并在不把$H$
+> 变成learned semantic condition的前提下，同时保持global trajectory coherence与target-specific
+> historical evidence access？
 
-D12已经否定post-D11 predictable-frame主线的跨dataset practical necessity。post-D12系统复盘进一步确认：
-D3-D8留下的是future-support geometry与short/local、long/global crossing；D9-D12分别关闭history-scale
-routing、future-component conflict与predictable-frame allocation。新主线因此把基本预测对象改为
-$F(o,\tau)=E[Y_\tau\mid\mathcal F_o]$组成的causal forecast-revision surface。固定$o$的一行是usual
-multi-horizon forecast；固定$\tau$的一列是same-target revision path；$H$只裁剪latest-origin row。
+D12已经否定predictable-frame allocation主线的跨dataset practical necessity。A6的`flatten`是bijective
+reshape，真正尚未验证的信息边界是`patch_memory [B,C,P,D] -> global_coeff [B,C,256]`：全部future targets
+随后只读取同一压缩状态。新主线不预设patch memory一定更有用，而是先问：给定global state后，完整ordered
+patch memory是否仍包含可泛化、target-specific的conditional predictive information？
+
+若D14支持该问题，论文将同时保留compact global state与uncompressed patch memory，并用conditional
+predictive-gain accounting约束额外memory path。若D14失败，该主线在Step 2关闭，不通过叠加basis、MoE或
+Encoder innovation挽救。
 
 requested horizon 在当前主线中只定义输出域与计算域，不作为 learned semantic feature。禁止将离散
 horizon ID、benchmark-specific embedding、per-horizon expert 或 per-horizon hyperparameter 作为核心机制。
 
+forecast-revision surface已转移到根目录`New-idea.md`，状态`deferred_next_paper`；它不再是当前论文问题。
+
 ## Contribution Slots
 
-[Decision] 两个slots由NIFRO/IARL provisional占用，但二者都只处于Step 2-3。D13-A失败将关闭joint route；
-D13-B失败只关闭patch-direct architecture，不自动把IARL提升为paper core。下面PRISM/CAPE只保留为D12关闭记录。
+[Decision] 两个slots由CADMO/CPGA provisional占用，但二者都只处于Step 2-3。D14通过后仅CADMO进入formal
+Step 4-6；CPGA必须等待point-loss CADMO出现有效主效应与accounting gap。下面PRISM/CAPE只保留为D12关闭记录。
 
-### Provisional Contribution 1: NIFRO
+### Provisional Contribution 1: CADMO
 
-`NIFRO`（Nested-Information Forecast Revision Operator）把A6的single-origin row改写为
-`origin × target` causal surface。causal patch memory为`M[B,C,P,D]`；revision tensor为
-`Delta[B,C,P,T]`；沿origin axis做prefix scan得到`F[B,C,P,T]`，最终输出只读取`F[:,:,P,1:H]`。
-requested $H$不进入encoder、query、router或revision cell。
-
-它的最小linear control利用
-$W\operatorname{vec}(M)=\sum_p W_pM_p$重写A6 readout，因此latest-origin row可包含A6 linear class；
-正式新增机制只能位于由D13-B支持的new-patch/context-conditioned revision path。必须满足causality、
-origin-prefix equality、target-prefix equality、A6 linear containment和direct patch-to-target gradient。
-
-[Novelty Boundary] Forking-Sequences与MQ-RNN已覆盖multi-FCD grid；target query、causal attention和
-forecast martingale也不是新primitive。可探索的贡献仅是nested-information factorization、dual projectivity、
-patch-conditioned revision与IARL的完整task-specific chain。D13前status=`proposed_step2_3`。
-
-### Provisional Contribution 2: IARL
-
-`IARL`（Innovation-Accounted Revision Learning）不直接惩罚revision magnitude。对same target定义
-$\Delta=F(o+1,\tau)-F(o,\tau)$、$e_{new}=Y_\tau-F(o+1,\tau)$，conditional projection要求：
+`CADMO`（Compression-Aware Dual-Memory Operator）保留两个nested history representations：
 
 $$
-E[e_{new}\Delta]=0,
-\qquad
-E[e_{old}^2-e_{new}^2]=E[\Delta^2].
+M[B,C,P,D]\rightarrow g=C(M)[B,C,256],
 $$
 
-因此revision可以很大，但其energy应由new-information带来的accuracy gain解释。provisional loss为
-batch × channel × distance-bin上的normalized revision-error moment，并与all-cell point loss共同训练。
-generic stability penalty、accuracy/stability加权和forecast rationality test本身均不claim创新。
+其中$g$负责global trajectory coherence；每个future coordinate $q_\tau$还可直接读取完整ordered patch memory
+$M$，形成target-specific context。requested $H$只选择$q_{1:H}$；future queries之间不传递state，从而保持
+exact prefix equality。patch-disabled arm必须恢复A6 function，避免再次用rigid query/basis整体替换free A6 head。
 
-[Gate] D13-A必须先证明A6 revision整体有用但存在跨dataset inefficiency，且train-fit scalar calibration
-在validation有headroom；否则IARL没有practical necessity。D13前status=`proposed_step2_3`。
+[Novelty Boundary] CATS已覆盖future-query cross-attention，BasisFormer已覆盖learned basis/history-basis
+matching，MQTransformer/TimePerceiver已覆盖context/target queries，Memory Guided Transformer与DeepGLO已覆盖
+generic local/global组合。因此CADMO只能claim完整链：fixed-past global-compression boundary、dual-memory
+contract、projective target-specific access与CPGA co-design。D14前status=`proposed_step2_3`。
+
+### Provisional Contribution 2: CPGA
+
+`CPGA`（Conditional Predictive-Gain Accounting）显式产生global-only与full-memory两组预测：
+
+$$
+\hat Y_g=f_g(g),\qquad
+\hat Y_f=f(g,M),\qquad
+\Delta=\hat Y_f-\hat Y_g.
+$$
+
+在MSE projection下，完整memory相对compressed state的理想risk reduction等于conditional-mean difference
+energy，且full-model residual应与$\Delta$正交。provisional objective包含full prediction loss、global branch
+loss与distance-bin normalized accounting moment。global loss防止joint encoder故意削弱$g$，虚构patch gain。
+
+[Novelty Boundary] conditional expectation/MMSE orthogonality是经典理论；deep supervision、global/local auxiliary
+loss与generic orthogonality penalty也不是新贡献。CPGA必须证明它对nested `g vs (g,M)` forecast pair有独立
+主效应，并超越global-only auxiliary、stop-gradient、random cache和capacity controls。
 
 ### Joint Story
 
-NIFRO提供可学习的revision surface，IARL定义什么样的revision值得保留；前者没有后者会退化为多个
-独立origin heads，后者没有前者只能成为generic rolling-window regularizer。两者共同构成一个
-architecture + training principle闭环，最终inference仍是one model、latest row、arbitrary prefix。
+CADMO定义“fixed past的信息以什么层级进入每个future target”；CPGA定义“额外full-memory path何时有资格
+改变global prediction”。前者没有后者容易退化为generic dual-branch attention；后者没有前者则没有清晰的
+nested information carriers，只剩generic auxiliary loss。两者共同构成architecture + training principle闭环，
+最终inference仍是one model、one fixed past、arbitrary future prefix。
+
+[Execution Order] 两者串行推进：D14 -> CADMO Step4-10 -> CPGA problem/theory gate -> `2x2` joint factorial。
+不能并行实现两个method，否则无法判断patch route与loss各自是否必要。
 
 ### Closed Candidate: PRISM Decoder
 
@@ -424,32 +433,31 @@ profile 与 checkpoint 均由 validation 预先冻结，test 不参与选择。�
 
 ## Contribution Boundary
 
-[Current Boundary] 新主线不claim首次multi-origin grid、forking-sequences、forecast stability、target query、
-causal attention或martingale theory。NIFRO只能claim nested-information patch-to-target revision operator
-及origin/target dual projectivity；IARL只能claim把revision rationality moment转化为neural forecast surface
-上的innovation-accounted learning。二者都以D13跨dataset problem evidence为前置条件。
+[Current Boundary] 新主线不claim future-query cross-attention、learned basis、global/local dual branch、
+information bottleneck或MMSE orthogonality本身。CATS、BasisFormer、MQTransformer、TimePerceiver、DeepGLO、
+Memory Guided Transformer与forecasting IB工作均构成mandatory novelty controls。可探索的贡献单位是完整
+`fixed-past -> global compression boundary -> projective dual memory -> conditional gain accounting`链条。
 
 [Current Boundary] A6的`flatten [B,C,P,D] -> [B,C,PD]`不丢元素，但其
-`[B,C,PD] -> [B,C,256]` global compaction使所有targets共享同一coefficient state。patch-level direct
-access仍是未验证假设，只能由D13-B授权；不能从D8失败直接推断它必然有效。
+`[B,C,PD] -> [B,C,256]` global compaction使所有targets共享同一coefficient state。
 
-[Current Boundary] A6 rolling windows前移时会同时add new points与expire old points，effective inputs并非
-严格nested。IARL的conditional-projection relation是full-information ideal；D13必须隔离window-expiry
-effect。若signal由expired block解释，NIFRO名称、nested-state claim与joint mainline均需回Step 2/4重构。
+[Current Boundary] patch-level direct access仍是未验证假设，只能由D14授权；不能从D8/JAPO失败、也不能从
+“patch更清晰”的直觉推断它必然有效。D14 frozen probe只判断A6 representation中的conditional accessibility，
+不能代替matched end-to-end effectiveness gate。
 
 [Fact] A6 先生成`coeff: [B,C,256]`，再使用`basis[:H]: [H,256]`直接计算H步输出；它已经满足domain-only
 horizon、exact prefix consistency与output-side O(HK) computation。因此“避免先生成H720”不是新问题。
-真正未解决的是：history memory是否保留多尺度可预测信息，以及single global dense basis是否能提供
-nested refinement、local support与operator-aligned risk decomposition。
+真正未解决的是：给定single global compressed state后，ordered patch memory是否仍含target-specific
+conditional predictive information，以及如何在保留global coherence时让这部分信息被可核算地使用。
 
 [Decision] horizon与resolution必须分离：$H$只定义prefix domain，refinement level定义同一future
 function的分辨率。禁止令短H选择fine branch、长H选择coarse branch。任何显式输出H个值的方法都有
 $\Omega(HC)$写出下界，PMFO只claim避免out-of-prefix atoms与global dense synthesis，不claim sublinear
 total generation。
 
-[Decision] D1已分别审计`memory: [B,C,P,D]`的information sufficiency和`basis: [720,256]`的
-capacity/localization geometry。当前保留A6 Encoder、替换dense basis/operator；只有后续stable probes证明
-history信息已经丢失时，才允许回滚并审计最小multiscale encoder interface。
+[Decision] 当前先保留A6 Encoder与global basis path，把`memory: [B,C,P,D]`视为patch cache。只有D14证明
+raw/history有增量predictive information、但A6 memory没有，才允许回滚Step 4审计最小Encoder interface；
+不能同时更换Encoder/decoder掩盖归因。
 
 [Decision] 旧 StageB coefficient conditioning、STBO、GRU future composition、unit-specific retrieval 与
 encoder repair 均不再是 active candidate。历史失败只按各自 failure attribution 使用，不能被扩大为未经
@@ -533,9 +541,14 @@ Step4，不以训练性能包装RGNB。
     两个contribution slots回到Step2。
 31. post-D12系统复盘提出NIFRO/IARL：基本对象由single forecast row改为nested-information
     forecast-revision surface；Forking-Sequences与generic stability loss被列为mandatory prior-art controls。
-32. 下一步只执行D13-A：5 datasets × 3 A6 seeds，origin gaps 15/30/60，train-fit controls、validation gate、
-    test=false；D13-A通过后才执行D13-B new-patch information probe。
-33. D13-A/B通过也只授权formal Step4-6 source/theory/design audit；不直接授权NIFRO/IARL implementation。
+32. 用户确认forecast revision应作为下一篇独立SCI问题；已转移到`New-idea.md`，D13改为
+    `deferred_next_paper`，不再是当前active cursor。
+33. fixed-past主线重构为CADMO/CPGA provisional pair：前者保留global state与full patch memory，后者核算
+    extra-memory path的conditional predictive gain；两项均未通过problem gate。
+34. 下一步只执行D14：5 datasets × 3 A6 checkpoints，train-fit frozen-representation probes、chronological
+    validation gate、test=false；同时隔离global-only、generic nonlinear、capacity、permutation与target-shift。
+35. D14通过也只授权CADMO formal Step4-6；CADMO point-loss E2E过gate后才允许审计CPGA，最后做`2x2`
+    factorial。禁止两个method并行堆叠。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
 generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成
@@ -546,7 +559,8 @@ loss 或更多 tuning 来掩盖失败。
 
 ## Canonical Active Artifacts
 
-- `analysis/stage_c_post_d12_revision_surface_mainline_20260715/systematic_review_and_mainline_redesign.md`
+- `analysis/stage_c_fixed_past_mainline_reset_20260715/fixed_past_mainline_reconstruction.md`
+- `docs/experiments/stage-c-d14-conditional-patch-memory-headroom.md`
 - `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`
 - `docs/research-roadmap.md`
 - `docs/experiments/stage-c-pmfo-pir-problem-diagnostic.md`

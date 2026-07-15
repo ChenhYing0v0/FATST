@@ -1,7 +1,9 @@
 # Active Experiment Protocols
 
-- `stage-c-d13-rolling-origin-revision-efficiency.md`: 当前Step 2-3 diagnostic_only protocol；先执行
-  D13-A revision-efficiency gate，通过后才允许D13-B new-patch information gate；method/test=false；
+- `stage-c-d14-conditional-patch-memory-headroom.md`: 当前Step 2-3 diagnostic_only protocol；检验A6 ordered
+  patch memory在global coeff之外是否仍有target-specific conditional information；method/remote/test=false；
+- `stage-c-d13-rolling-origin-revision-efficiency.md`: `deferred_next_paper`；forecast-revision idea的未来problem
+  protocol，保留但当前不执行，入口见根目录`New-idea.md`；
 - `stage-c-natural-baseline-test-protocol.md`: 已完成的 post-freeze test reference；
 - `stage-c-pmfo-pir-problem-diagnostic.md`: 已完成的 Step 2-3 D1 protocol；
 - `stage-c-pmfo-rct-step7-protocol.md`: 已关闭的 PMFO-RCT Step 7 protocol；

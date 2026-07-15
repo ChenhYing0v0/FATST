@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D13 rolling-origin revision problem verification，Step 2-3 |
-| `active_question` | A6 same-target revisions是否有用但低效，且new patch是否包含可预测的ideal correction？ |
-| `active_candidates` | provisional `SC1-NIFRO` + `SC2-IARL`；D13前method=false |
+| `current_step` | D14 conditional patch-memory headroom audit，Step 2-3 |
+| `active_question` | 给定A6 global coeff后，ordered patch memory是否仍含跨dataset target-specific predictive information？ |
+| `active_candidates` | provisional `SC1-CADMO` + `SC2-CPGA`；D14前method=false |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `docs/experiments/stage-c-d13-rolling-origin-revision-efficiency.md` |
-| `method_implementation` | false；只授权D13-A diagnostic；D13-B conditional；test=false |
-| `rollback_point` | D13-A fail -> Step2关闭joint route；D13-B fail -> patch-direct architecture rollback Step2 |
+| `active_protocol` | `docs/experiments/stage-c-d14-conditional-patch-memory-headroom.md` |
+| `method_implementation` | false；只授权D14 frozen diagnostic implementation；test=false |
+| `rollback_point` | D14 fail -> Step2关闭当前A6-memory conditional-headroom route |
 
 ## Post-D11 Joint Mainline Reset
 
@@ -32,7 +32,7 @@ rank-limited逼近：
 D12 risk-aligned v2最终只支持1/5 datasets：CAPE关闭，PRISM joint route未进入D12-B，整条forecast-frame
 mainline按预注册规则关闭并回滚Step 2。上述内容只作为历史设计，不是当前论文claim。
 
-## Post-D12 Forecast-Revision Surface Reset
+## Deferred Post-D12 Forecast-Revision Surface Idea
 
 [Strong Evidence] D3-D8只稳定保留future-support geometry、short/local与long/global crossing及A6 free
 operator capacity；D9-D12依次关闭history-scale mapping、future-component conflict与predictable-frame
@@ -44,7 +44,7 @@ Stability与Forecast AC已覆盖generic revision/stability optimization；foreca
 conditional-mean revision moment。因此grid、stability penalty、martingale theory与continuous target query
 均不能单独claim创新。
 
-[Provisional Mainline] 把基本对象定义为
+[Historical Provisional Mainline] 把基本对象定义为
 $F(o,\tau)=E[Y_\tau\mid\mathcal F_o]$：row是multi-horizon forecast，column是same-target revision path。
 
 1. `SC1-NIFRO`：causal patch memory产生`Delta[B,C,P,T]`，沿origin axis prefix scan得到forecast surface；
@@ -53,14 +53,42 @@ $F(o,\tau)=E[Y_\tau\mid\mathcal F_o]$：row是multi-horizon forecast，column是
    $E[e_{new}\Delta]=0$与$E[e_{old}^2-e_{new}^2]=E[\Delta^2]$，使revision energy由accuracy gain解释。
 3. 两项status均为`proposed_step2_3`；它们共享surface object，但尚无internal practical headroom evidence。
 
-[Next Gate] D13-A固定5 datasets × 3 A6 seeds、origin gaps 15/30/60、train-fit scalar controls与
-validation-only final gate；若A6更新整体有用、revision efficiency跨dataset偏离1且calibration有MSE
-headroom，则执行D13-B new-patch information probe。D13-A/B通过也只返回formal Step4-6，不能直接实现method。
-D13还必须把rolling-window的added block与expired block分开归因；后者若解释主要signal，则
-full-information nested claim不成立，joint route不能pass。
+[Decision] 用户确认该问题适合作为下一篇独立SCI核心。完整idea已转移到根目录`New-idea.md`；D13 protocol
+保留为未来restart artifact，当前状态`deferred_next_paper`，不再执行。
 
-[Rollback] D13-A失败关闭NIFRO/IARL joint route并回Step2；D13-B失败只关闭patch-direct NIFRO hypothesis，
-不得自动把IARL升级为paper core。
+## Fixed-Past Mainline Reset: Beyond Global Compression
+
+[Fact] A6的`memory [B,C,P,D] -> flatten [B,C,PD]`不丢元素；真正压缩发生在
+`[B,C,PD] -> global_coeff [B,C,256]`。之后全部future targets共享同一global state。A6已经满足domain-only
+$H$与exact prefix equality，因此这些不是新贡献。
+
+[Internal Boundary] D3-D6支持future support geometry/local-global crossing；D8/JAPO说明rigid query/basis或
+atom-expert replacement会损失A6 free function class；D2/B14又不支持generic full-affine或unit-specific
+retrieval捷径。patch direct path仍是未验证问题。
+
+[External Boundary] CATS已覆盖future-query patch cross-attention；BasisFormer已覆盖learned basis matching；
+MQTransformer/TimePerceiver已覆盖context/target queries；Memory Guided Transformer、DeepGLO与forecasting IB
+工作使generic global-local、memory与compression claim均不足。
+
+[Provisional Mainline]
+
+1. `SC1-CADMO`同时保留compact global state $g=C(M)$与full patch memory $M$；$g$负责global coherence，
+   independent future coordinates只在需要时直接读取ordered patches；patch-disabled arm必须contain A6；
+2. `SC2-CPGA`显式监督global-only与full-memory forecasts，并核算full-memory change带来的conditional
+   predictive gain；generic orthogonality/deep supervision不计创新；
+3. novelty只允许落在完整
+   `fixed-past -> compression boundary -> projective dual memory -> conditional gain accounting`链条。
+
+[Next Gate] D14固定5 datasets × 3 A6 checkpoints，使用train-fit、chronological-validation、test=false的
+frozen representation probes，比较global-only、full-memory、structured patch-query、generic nonlinear、
+capacity、per-sample permutation与target-shift controls。至少3/5 datasets、2/3 seeds且macro MSE gain
+`>=0.5%`才pass。
+
+[Execution Order] D14通过只让CADMO返回formal Step4-6；CADMO point-loss model通过E2E gate后才诊断CPGA
+practical necessity，最后执行`CADMO on/off × CPGA on/off` factorial。二者串行，不并行堆叠。
+
+[Rollback] D14失败关闭当前“A6 patch memory超越global compression”route并回Step2；frozen pathology只允许
+判tested diagnostic invalid，不能否定所有未来Encoder/patch architecture。
 
 ## Completed Foundation
 
@@ -219,13 +247,11 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 
 ## Next Concrete Action
 
-`SC1-D7-RGNB-descriptor-sufficiency`已完成105/105 fits与本地独立复算：compact/matched GEO相对controls为
-+13.80%/+12.84%、均5/5 datasets，作为conditional geometry evidence保留。相对free-M0的
--37.38%/-39.10%受A6 Encoder-Decoder co-adaptation影响，不能评估end-to-end method readiness。decision更正为
-`conditional_geometry_supported_end_to_end_gate_required`。D8 Step7A通过210个shape-prefix与35个gradient
-cases后，Step7B完成35/35 validation-only runs。GEO-c256相对A6 macro `-28.10%`，但相对matched
-descriptors `+14.33%`、5/5 datasets为正；m694只比c256改善`+0.58%`。因此exact shared-latent PAF失败，
-RGNB geometry retained；现已完成Step4 intervention/readout redesign，不进入三seed，转入JAPO Step5 theory。
+实现`SC-D14 Conditional Patch-Memory Headroom Audit`的tensor exporter、fit-only probe matrix、analyzer与
+invariant tests。第一阶段只读取既有A6 train/validation representations，禁止test与method training。D14-A/B
+必须同时隔离global-only、generic nonlinear、capacity、per-sample patch permutation与target-shift；通过后也只
+返回CADMO formal Step4-6。完整协议见
+`docs/experiments/stage-c-d14-conditional-patch-memory-headroom.md`。
 
 ## SC1-JAPO Step 7A: Production Gate Passed, Step 8 Authorized
 
