@@ -12,6 +12,7 @@ from typing import Any
 
 import numpy as np
 import torch
+from torch.utils.data import DataLoader
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -54,7 +55,16 @@ def evaluate(args: argparse.Namespace) -> None:
     device = torch.device(args.device)
     design = json.loads(args.design.read_text(encoding="utf-8"))
     model, config, official_args = load_model(args.run_dir, device)
-    validation_data, validation_loader = data_provider(official_args, "val")
+    validation_data, _shuffled_validation_loader = data_provider(
+        official_args, "val"
+    )
+    validation_loader = DataLoader(
+        validation_data,
+        batch_size=official_args.batch_size,
+        shuffle=False,
+        num_workers=official_args.num_workers,
+        drop_last=False,
+    )
     bin_mse: list[np.ndarray] = []
     bin_mae: list[np.ndarray] = []
     persistence_bin_mse: list[np.ndarray] = []
@@ -133,6 +143,7 @@ def evaluate(args: argparse.Namespace) -> None:
         "partition": adapter.get("grouped_mlp_partition", "control"),
         "validation_rows": int(payload["row_bin_mse"].shape[0]),
         "probe_rows": int(payload["probe_predictions"].shape[0]),
+        "row_order": "dataset_sequential",
         "all_finite": all_finite,
         "uses_test_split": False,
         "final_evaluation_split": adapter["final_evaluation_split"],

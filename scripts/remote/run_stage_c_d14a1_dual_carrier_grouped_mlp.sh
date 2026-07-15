@@ -15,6 +15,7 @@ PATIENCE="${PATIENCE:-5}"
 BATCH_SIZE="${BATCH_SIZE:-32}"
 DRY_RUN="${DRY_RUN:-0}"
 STATUS_ONLY="${STATUS_ONLY:-0}"
+REEVALUATE="${REEVALUATE:-0}"
 WORKER_OFFSET="${WORKER_OFFSET:-0}"
 PROTOCOL_PROFILE="stage_c_d14a1_dual_carrier_grouped_mlp_v1"
 EVALUATION_HORIZONS="48,96,144,192,288,336,512,720"
@@ -183,6 +184,20 @@ run_one() {
     readout="learned-basis-forecast-operator"
   else
     readout="grouped-mlp"
+  fi
+  if [[ "${REEVALUATE}" == "1" ]]; then
+    if [[ "${arm}" == "a6_lbf" ]]; then
+      echo "skip_control_reevaluation arm=${arm} dataset=${dataset}"
+      return 0
+    fi
+    test -s "${output_dir}/checkpoint.pt"
+    echo "reevaluate_start=$(date -Is) job=$((index + 1))/${#LINES[@]} carrier=${CARRIER} arm=${arm} dataset=${dataset} gpu=${gpu}"
+    CUDA_VISIBLE_DEVICES="${gpu}" "${CONDA_BIN}" run --no-capture-output -n "${CONDA_ENV}" \
+      python scripts/evaluate_stage_c_d14a1_checkpoint.py \
+        --run-dir "${output_dir}" --design "${DESIGN}" --device cuda \
+        >"${run_log}" 2>&1
+    echo "reevaluate_done=$(date -Is) job=$((index + 1))/${#LINES[@]} carrier=${CARRIER} arm=${arm} dataset=${dataset}"
+    return 0
   fi
   echo "run_start=$(date -Is) job=$((index + 1))/${#LINES[@]} carrier=${CARRIER} arm=${arm} dataset=${dataset} gpu=${gpu}"
   CUDA_VISIBLE_DEVICES="${gpu}" "${CONDA_BIN}" run --no-capture-output -n "${CONDA_ENV}" \

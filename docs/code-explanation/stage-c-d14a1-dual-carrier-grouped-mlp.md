@@ -62,6 +62,11 @@ coupling effect。
 Step7A还直接调用training CLI parser验证两套runner参数：neutral不得携带legacy encoder overrides；只有
 A6-natural传入冻结的`patch_num/d_model/d_ff`。这可在访问dataset或启动GPU前发现carrier参数串线。
 
+official `data_provider(..., "val")`默认shuffle validation。训练期aggregate validation mean不受row order影响，
+但sample-wise oracle要求不同arms逐行对齐。因此checkpoint evaluator会基于同一个validation dataset重建
+`shuffle=False`的sequential loader，并在`trained_invariants.json`记录
+`row_order=dataset_sequential`。`REEVALUATE=1`可只覆盖row diagnostics而不重训checkpoint。
+
 ## 5. Analyzer Statistics
 
 - `carrier_skill_relative_gain`：train-only selected fixed canonical scale相对persistence的validation MSE改善；

@@ -174,6 +174,7 @@ def dataset_metrics(
         arm["invariant"]["pass"]
         and not arm["invariant"]["uses_test_split"]
         and arm["invariant"]["frozen_parameter_tensors"] == 0
+        and arm["invariant"].get("row_order") == "dataset_sequential"
         for arm in by_arm.values()
     )
     maximum_parameter_gap = max(
