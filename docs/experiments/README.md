@@ -1,5 +1,7 @@
 # Active Experiment Protocols
 
+- `stage-c-d13-rolling-origin-revision-efficiency.md`: 当前Step 2-3 diagnostic_only protocol；先执行
+  D13-A revision-efficiency gate，通过后才允许D13-B new-patch information gate；method/test=false；
 - `stage-c-natural-baseline-test-protocol.md`: 已完成的 post-freeze test reference；
 - `stage-c-pmfo-pir-problem-diagnostic.md`: 已完成的 Step 2-3 D1 protocol；
 - `stage-c-pmfo-rct-step7-protocol.md`: 已关闭的 PMFO-RCT Step 7 protocol；

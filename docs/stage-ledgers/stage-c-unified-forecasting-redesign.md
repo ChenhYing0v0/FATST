@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | decoder/operator 与 training principle 两项相互支撑的 paper-core innovations |
-| `active_question` | D6-D12后仍跨dataset成立的unified multi-horizon bottleneck是什么？ |
+| `active_question` | 同一future target在nested information sets下是否存在跨dataset的excess / inefficient forecast revision？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | none；PRISM/CAPE exact mainline closed；two contribution slots open |
+| `active_candidates` | provisional `SC1-NIFRO` + `SC2-IARL`；均为Step2-3 proposed，D13前不实现 |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
 | `stage_rollback` | problem/novelty不跨 dataset -> Step 2；禁止直接堆叠 method |
@@ -18,27 +18,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | joint Contribution 1/2 Step 2 reset after D12 completed failure |
-| `current_candidate` | none；PRISM retired without effectiveness test；CAPE failed problem gate |
-| `latest_decision` | D12-v2 valid support 1/5；CAPE与joint forecast-frame route关闭；D12-B canceled |
-| `next_required_action` | Step2 evidence synthesis + external primary-source problem audit；先形成新problem hypotheses |
-| `method_training_authorized` | false；problem/source audit only；forecast method=false，validation/test=false |
-| `rollback_point` | completed to Step2；不得绕过D12 gate继续PRISM-only或换rank/pilot rescue CAPE |
+| `current_11_step` | D13 rolling-origin revision problem verification，Step 2-3 |
+| `current_candidate` | `SC1-NIFRO` + `SC2-IARL` provisional pair；problem gate pending |
+| `latest_decision` | post-D12 evidence/source audit提出forecast-revision surface mainline；Forking-Sequences与generic stability不计创新 |
+| `next_required_action` | 先执行D13-A revision-efficiency audit；通过后才执行D13-B new-patch information gate |
+| `method_training_authorized` | false；D13 diagnostic_only；new method=false，test=false |
+| `rollback_point` | D13-A fail -> Step 2关闭joint route；D13-B fail -> 只关闭patch-direct architecture，不自动关闭training question |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | joint Contribution 1/2 Step 2 reset；D12 Step9-10 complete |
-| `problem` | A6 rank-256 decoder是否因global compaction、prefix locality与unpredictable label noise之间的tradeoff而受限 |
-| `existence_evidence` | D6 crossing；D7/D8 geometry main effect；A6 strong free operator；D11只关闭conflict、不关闭coverage/locality |
-| `idea` | PRISM prefix-risk-isometric frame + CAPE cross-fitted predictable-energy estimation |
-| `theory_check` | v1 risk mismatch resolved；v2 conditional-mean headroom fails cross-dataset practical gate |
-| `design` | completed：v1 uniform diagnostic + v2 $s_x^2$ risk repair；same pilots/rank/folds；validation/test=false |
-| `narrative_gate` | failed before Step4：joint problem chain不成立；new candidates not proposed |
+| `current_step` | joint Contribution 1/2 Step 2-3；D13 problem verification pending |
+| `problem` | unified model是否只学习single-origin forecast row，而没有使same-target revisions与new-information accuracy gain一致 |
+| `existence_evidence` | external stability/revision literature确认问题类；internal A6 cross-dataset headroom尚未验证；D13是mandatory gate |
+| `idea` | NIFRO causal patch-to-target revision surface + IARL innovation-accounted moment training |
+| `theory_check` | conditional-mean revision identity成立；Forking-Sequences、generic stability loss和forecast rationality prior art已收紧claim；正式Step5未授权 |
+| `design` | provisional only：D13-A gaps 15/30/60；added-vs-expired window attribution；D13-B conditional；5 datasets × 3 A6 seeds；train controls + validation gate；test=false |
+| `narrative_gate` | provisional chain coherent；未通过formal Step4-6；Forking-Sequences non-equivalence为最大风险 |
 | `effectiveness_gate` | not applicable until a new candidate passes Step4-6 |
-| `artifacts` | `analysis/stage_c_d12_predictable_frame_feasibility_20260715/d12_final_result_and_rollback.md` |
-| `decision` | CAPE closed；PRISM joint route retired；D12-B canceled；rollback Step2；method/validation/test false |
+| `artifacts` | `analysis/stage_c_post_d12_revision_surface_mainline_20260715/systematic_review_and_mainline_redesign.md` |
+| `decision` | 只授权D13-A diagnostic；通过后D13-B；两者通过也只返回Step4-6，不直接实现method |
 
 ## Frozen Carrier Contract
 
@@ -83,6 +83,10 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC1-PRISM` | `retired_without_effectiveness_test` | prefix-risk-isometric frame能否同时保持global compaction与short-prefix locality | D12 joint prerequisite failed | not started | D12-B canceled；D6 evidence retained，not active |
 | `SC2-CAPE` | `failed_problem_gate` | conditional-mean covariance能否比raw label covariance更好分配rank-256 decoder capacity | risk-aligned v2 support 1/5 | not applicable | closed；no rank/pilot rescue |
 | `SC2-MIPR` | `retired_as_core_candidate` | measure-induced block metric去除decoder scales之间的cross coupling | historical L2 pass；current problem/novelty fail | not started | raw $W_\mu$保留为protocol/control；MIPR不实现 |
+| `SC1-NIFRO` | `proposed_step2_3` | causal patch-level information increments能否形成dual-projective forecast-revision surface并保留A6 linear class | provisional only；Forking-Sequences non-equivalence待审 | not started | D13-A/B通过后才进入formal Step4-6 |
+| `SC2-IARL` | `proposed_step2_3` | revision energy是否应由same-target accuracy gain解释，而非被generic stability penalty直接压小 | provisional only；rationality/stability formula overlap待审 | not started | D13-A通过后才进入formal Step4-6 |
+| `SC-D13-A` | `diagnostic_only_proposed` | A6 same-target revisions是否有用但统计低效，且scalar calibration存在validation headroom | not required；method=false | 5 datasets × 3 seeds；train-fit controls；validation-only | implement protocol/analyzer；test=false |
+| `SC-D13-B` | `diagnostic_only_conditional` | new patch是否超越old-state与time-shift controls预测ideal correction | not required；method=false | only if D13-A pass | D13-A前禁止执行 |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
 
@@ -139,6 +143,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-D10 raw scale identifiability | 5 datasets；3 sketches × 3 lambdas；3 families；holdout+validation | binary 0/5 directional；monotone effect/control 4/5但best 0/5、mapping 2/5 | aligned scale unsupported；history routing closed；rollback Step2 | `analysis/stage_c_sc1_d10_raw_scale_identifiability_20260715/d10_result_and_rollback.md` |
 | SC1-D11 Step2/3 source-theory gate | external primary sources + exact gradient identity + synthetic controls | Time-o1/FreDF/DBLoss收紧component-loss claim；MSE/L1 additivity与strict conflict definitions冻结 | `theory_pass_diagnostic_protocol_frozen`；remote evidence only | `analysis/stage_c_sc1_d11_future_component_responsibility_20260715/d11_step23_source_theory_audit.md` |
 | SC1-D11 remote responsibility gate | 5 datasets × 3 A6 checkpoints；train/validation；MSE/L1；RGNB/DCT/3 random | strict conflict 0/5；support-specific 2/5；generic redistribution 3/5；same-component cross-regime negative=0 | `transform_generic_pressure_sc2_only`；SC1回Step2暂停；SC2仅Step1-3 audit | `analysis/stage_c_sc1_d11_future_component_responsibility_20260715/d11_result_and_rollback.md` |
+| Post-D12 systematic mainline audit | D3-D12 synthesis + external primary-source audit + theory/narrative review | retained support geometry；closed scale/conflict/frame explanations；Forking-Sequences/stability/operator overlap mapped | provisional NIFRO/IARL pair；D13-A only authorized | `analysis/stage_c_post_d12_revision_surface_mainline_20260715/systematic_review_and_mainline_redesign.md` |
 
 ## Pending Tasks
 
@@ -181,6 +186,9 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-D11 future-component responsibility | `completed_rollback` | accepted v2 complete；do not implement conflict-aware method |
 | Post-D11 paper-mainline redesign | `completed_step2_3_design` | D11不关闭C1；PRISM/CAPE proposed；MIPR retired；D12 next |
 | D12 predictable-frame feasibility | `completed_fail_rollback_step2` | v1 invalid for rejection；v2 valid support 1/5；CAPE/joint route closed；D12-B canceled |
+| Post-D12 systematic mainline redesign | `completed_provisional_step2_3` | NIFRO/IARL proposed；generic grid/stability claims excluded；method remains false |
+| D13-A rolling-origin revision efficiency | `proposed_diagnostic_only` | implement five-dataset three-seed train-control/validation gate；test=false |
+| D13-B new-patch information gate | `conditional_not_started` | only after D13-A passes |
 
 ## Paper Mainline Sync Log
 
@@ -220,6 +228,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-15 | SC1-D11 remote result gate | Current Position、Contribution 1/2 Boundary、Experiment Logic | conflict hypothesis closure + Step1-3 pivot | strict 0/5、component 2/5；coverage observation只允许SC2 novelty/problem audit |
 | 2026-07-15 | Post-D11 paper-mainline redesign | Thesis、Contribution 1/2、Experiment Logic | joint Step2-3 reset + old SC2 closure | D11不否定C1；PRISM/CAPE proposed；MIPR retired；D12 diagnostic next |
 | 2026-07-15 | D12 v1/v2 final gate | Current Position、Thesis、Contribution Slots、Experiment Logic | risk mismatch repair + candidate closure + Step2 rollback | v2 valid 1/5；CAPE closed；PRISM joint route retired；D12-B canceled；two slots open |
+| 2026-07-15 | Post-D12 systematic mainline redesign | Thesis、Contribution 1/2、Boundary、Experiment Logic | new provisional problem chain + D13 gate | NIFRO/IARL proposed；forecast grid/stability penalty不计创新；只授权D13-A |
 
 ## Continuation Rules
 

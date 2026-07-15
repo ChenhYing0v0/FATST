@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | joint Contribution 1/2 Step 2 reset after D12 completed failure |
-| `active_question` | D6-D12后仍跨dataset成立的unified multi-horizon bottleneck是什么？ |
-| `active_candidates` | none；PRISM/CAPE exact mainline closed；two contribution slots open |
+| `current_step` | D13 rolling-origin revision problem verification，Step 2-3 |
+| `active_question` | A6 same-target revisions是否有用但低效，且new patch是否包含可预测的ideal correction？ |
+| `active_candidates` | provisional `SC1-NIFRO` + `SC2-IARL`；D13前method=false |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_d12_predictable_frame_feasibility_20260715/d12_final_result_and_rollback.md` |
-| `method_implementation` | false；Step2 problem/source audit only；forecast method、validation/test false |
-| `rollback_point` | completed to Step 2；forecast-frame、history-scale、future-gradient-conflict与MIPR routes closed |
+| `active_protocol` | `docs/experiments/stage-c-d13-rolling-origin-revision-efficiency.md` |
+| `method_implementation` | false；只授权D13-A diagnostic；D13-B conditional；test=false |
+| `rollback_point` | D13-A fail -> Step2关闭joint route；D13-B fail -> patch-direct architecture rollback Step2 |
 
 ## Post-D11 Joint Mainline Reset
 
@@ -31,6 +31,36 @@ rank-limited逼近：
 
 D12 risk-aligned v2最终只支持1/5 datasets：CAPE关闭，PRISM joint route未进入D12-B，整条forecast-frame
 mainline按预注册规则关闭并回滚Step 2。上述内容只作为历史设计，不是当前论文claim。
+
+## Post-D12 Forecast-Revision Surface Reset
+
+[Strong Evidence] D3-D8只稳定保留future-support geometry、short/local与long/global crossing及A6 free
+operator capacity；D9-D12依次关闭history-scale mapping、future-component conflict与predictable-frame
+allocation。A6 flatten是bijective reshape，但`PD -> 256`一次global compaction使所有future targets共享
+同一coefficient state；patch-direct target access仍未被验证。
+
+[External Boundary] MQ-RNN与Forking-Sequences已覆盖multi-FCD forecast grid；N-BEATS-S、On Forecast
+Stability与Forecast AC已覆盖generic revision/stability optimization；forecast rationality literature已给出
+conditional-mean revision moment。因此grid、stability penalty、martingale theory与continuous target query
+均不能单独claim创新。
+
+[Provisional Mainline] 把基本对象定义为
+$F(o,\tau)=E[Y_\tau\mid\mathcal F_o]$：row是multi-horizon forecast，column是same-target revision path。
+
+1. `SC1-NIFRO`：causal patch memory产生`Delta[B,C,P,T]`，沿origin axis prefix scan得到forecast surface；
+   $H$只裁剪latest row；linear control必须contain A6 readout。
+2. `SC2-IARL`：不压小所有revision，而约束
+   $E[e_{new}\Delta]=0$与$E[e_{old}^2-e_{new}^2]=E[\Delta^2]$，使revision energy由accuracy gain解释。
+3. 两项status均为`proposed_step2_3`；它们共享surface object，但尚无internal practical headroom evidence。
+
+[Next Gate] D13-A固定5 datasets × 3 A6 seeds、origin gaps 15/30/60、train-fit scalar controls与
+validation-only final gate；若A6更新整体有用、revision efficiency跨dataset偏离1且calibration有MSE
+headroom，则执行D13-B new-patch information probe。D13-A/B通过也只返回formal Step4-6，不能直接实现method。
+D13还必须把rolling-window的added block与expired block分开归因；后者若解释主要signal，则
+full-information nested claim不成立，joint route不能pass。
+
+[Rollback] D13-A失败关闭NIFRO/IARL joint route并回Step2；D13-B失败只关闭patch-direct NIFRO hypothesis，
+不得自动把IARL升级为paper core。
 
 ## Completed Foundation
 

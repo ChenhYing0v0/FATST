@@ -5,34 +5,78 @@
 | Field | Content |
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
-| `working_title` | TBD after D12 Step-2 reset；predictable-frame title retired |
+| `working_title` | Learning Forecasts That Evolve with Information: Causal Revision Surfaces for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | joint Contribution 1/2 Step 2 reset after D12 failure |
+| `current_11_step` | D13 rolling-origin revision problem verification，Step 2-3 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | no active paper-core candidate；PRISM/CAPE exact mainline closed；two contribution slots open |
+| `paper_core_status` | provisional NIFRO/IARL pair；problem gate pending；method/test not authorized |
 
 ## Research Thesis
 
-论文研究问题不是“为几个 benchmark horizons 分别训练或 condition 一个 head”，而是：
+论文研究问题不是“为几个 benchmark horizons 分别训练或 condition 一个 head”，也不再只是为单个
+origin的一条future row寻找更好的basis，而是：
 
-> 一个共享模型如何表示一族可限制、可细化的未来预测，并用与该函数族一致的风险定义进行训练，
-> 从而在任意 requested horizon 上保持连续、统一且可比较的行为？
+> 一个共享模型如何同时统一future target axis与information-update axis，使同一target的预测在
+> nested information sets下以有accuracy收益、可统计account的innovation方式演化，同时保持任意
+> requested horizon的exact prefix behavior？
 
-D12已经否定post-D11 predictable-frame主线的跨dataset practical necessity：risk-aligned v2只在1/5 datasets
-支持CAPE，且rank256 raw-label frame在主要datasets已覆盖绝大部分A6 predictable variation。PRISM未被单独
-证伪，但其joint route与D12-B按预注册gate关闭。当前回到Step 2重新寻找真实、跨dataset且能同时支撑
-decoder/operator与training strategy的problem formulation。
+D12已经否定post-D11 predictable-frame主线的跨dataset practical necessity。post-D12系统复盘进一步确认：
+D3-D8留下的是future-support geometry与short/local、long/global crossing；D9-D12分别关闭history-scale
+routing、future-component conflict与predictable-frame allocation。新主线因此把基本预测对象改为
+$F(o,\tau)=E[Y_\tau\mid\mathcal F_o]$组成的causal forecast-revision surface。固定$o$的一行是usual
+multi-horizon forecast；固定$\tau$的一列是same-target revision path；$H$只裁剪latest-origin row。
 
 requested horizon 在当前主线中只定义输出域与计算域，不作为 learned semantic feature。禁止将离散
 horizon ID、benchmark-specific embedding、per-horizon expert 或 per-horizon hyperparameter 作为核心机制。
 
 ## Contribution Slots
 
-[Decision] 两个slots当前均开放；下面PRISM/CAPE只保留为D12关闭记录，不是active proposal。
+[Decision] 两个slots由NIFRO/IARL provisional占用，但二者都只处于Step 2-3。D13-A失败将关闭joint route；
+D13-B失败只关闭patch-direct architecture，不自动把IARL提升为paper core。下面PRISM/CAPE只保留为D12关闭记录。
+
+### Provisional Contribution 1: NIFRO
+
+`NIFRO`（Nested-Information Forecast Revision Operator）把A6的single-origin row改写为
+`origin × target` causal surface。causal patch memory为`M[B,C,P,D]`；revision tensor为
+`Delta[B,C,P,T]`；沿origin axis做prefix scan得到`F[B,C,P,T]`，最终输出只读取`F[:,:,P,1:H]`。
+requested $H$不进入encoder、query、router或revision cell。
+
+它的最小linear control利用
+$W\operatorname{vec}(M)=\sum_p W_pM_p$重写A6 readout，因此latest-origin row可包含A6 linear class；
+正式新增机制只能位于由D13-B支持的new-patch/context-conditioned revision path。必须满足causality、
+origin-prefix equality、target-prefix equality、A6 linear containment和direct patch-to-target gradient。
+
+[Novelty Boundary] Forking-Sequences与MQ-RNN已覆盖multi-FCD grid；target query、causal attention和
+forecast martingale也不是新primitive。可探索的贡献仅是nested-information factorization、dual projectivity、
+patch-conditioned revision与IARL的完整task-specific chain。D13前status=`proposed_step2_3`。
+
+### Provisional Contribution 2: IARL
+
+`IARL`（Innovation-Accounted Revision Learning）不直接惩罚revision magnitude。对same target定义
+$\Delta=F(o+1,\tau)-F(o,\tau)$、$e_{new}=Y_\tau-F(o+1,\tau)$，conditional projection要求：
+
+$$
+E[e_{new}\Delta]=0,
+\qquad
+E[e_{old}^2-e_{new}^2]=E[\Delta^2].
+$$
+
+因此revision可以很大，但其energy应由new-information带来的accuracy gain解释。provisional loss为
+batch × channel × distance-bin上的normalized revision-error moment，并与all-cell point loss共同训练。
+generic stability penalty、accuracy/stability加权和forecast rationality test本身均不claim创新。
+
+[Gate] D13-A必须先证明A6 revision整体有用但存在跨dataset inefficiency，且train-fit scalar calibration
+在validation有headroom；否则IARL没有practical necessity。D13前status=`proposed_step2_3`。
+
+### Joint Story
+
+NIFRO提供可学习的revision surface，IARL定义什么样的revision值得保留；前者没有后者会退化为多个
+独立origin heads，后者没有前者只能成为generic rolling-window regularizer。两者共同构成一个
+architecture + training principle闭环，最终inference仍是one model、latest row、arbitrary prefix。
 
 ### Closed Candidate: PRISM Decoder
 
@@ -380,6 +424,19 @@ profile 与 checkpoint 均由 validation 预先冻结，test 不参与选择。�
 
 ## Contribution Boundary
 
+[Current Boundary] 新主线不claim首次multi-origin grid、forking-sequences、forecast stability、target query、
+causal attention或martingale theory。NIFRO只能claim nested-information patch-to-target revision operator
+及origin/target dual projectivity；IARL只能claim把revision rationality moment转化为neural forecast surface
+上的innovation-accounted learning。二者都以D13跨dataset problem evidence为前置条件。
+
+[Current Boundary] A6的`flatten [B,C,P,D] -> [B,C,PD]`不丢元素，但其
+`[B,C,PD] -> [B,C,256]` global compaction使所有targets共享同一coefficient state。patch-level direct
+access仍是未验证假设，只能由D13-B授权；不能从D8失败直接推断它必然有效。
+
+[Current Boundary] A6 rolling windows前移时会同时add new points与expire old points，effective inputs并非
+严格nested。IARL的conditional-projection relation是full-information ideal；D13必须隔离window-expiry
+effect。若signal由expired block解释，NIFRO名称、nested-state claim与joint mainline均需回Step 2/4重构。
+
 [Fact] A6 先生成`coeff: [B,C,256]`，再使用`basis[:H]: [H,256]`直接计算H步输出；它已经满足domain-only
 horizon、exact prefix consistency与output-side O(HK) computation。因此“避免先生成H720”不是新问题。
 真正未解决的是：history memory是否保留多尺度可预测信息，以及single global dense basis是否能提供
@@ -470,6 +527,15 @@ Step4，不以训练性能包装RGNB。
     rollback Step2，不允许从exploratory off-diagonal matrix事后生成method。
 28. D10 primary gate失败且protocol有效；history-scale routing从Contribution 1 mainline关闭。下一步只审计
     future-component responsibility problem，不把generic adaptive multiscale mixing改名为新贡献。
+29. D11 strict future-component conflict为0/5，support-specific gate为2/5；conflict-aware decoder/loss关闭，
+    只把projective coverage observation交给Step1-3 problem audit。
+30. D12 risk-aligned predictable-frame support仅1/5；CAPE关闭、PRISM joint route retired、D12-B取消，
+    两个contribution slots回到Step2。
+31. post-D12系统复盘提出NIFRO/IARL：基本对象由single forecast row改为nested-information
+    forecast-revision surface；Forking-Sequences与generic stability loss被列为mandatory prior-art controls。
+32. 下一步只执行D13-A：5 datasets × 3 A6 seeds，origin gaps 15/30/60，train-fit controls、validation gate、
+    test=false；D13-A通过后才执行D13-B new-patch information probe。
+33. D13-A/B通过也只授权formal Step4-6 source/theory/design audit；不直接授权NIFRO/IARL implementation。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
 generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成
@@ -480,6 +546,7 @@ loss 或更多 tuning 来掩盖失败。
 
 ## Canonical Active Artifacts
 
+- `analysis/stage_c_post_d12_revision_surface_mainline_20260715/systematic_review_and_mainline_redesign.md`
 - `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`
 - `docs/research-roadmap.md`
 - `docs/experiments/stage-c-pmfo-pir-problem-diagnostic.md`
