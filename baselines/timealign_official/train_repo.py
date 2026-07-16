@@ -23,12 +23,23 @@ if str(BASE_DIR) not in sys.path:
     sys.path.insert(0, str(BASE_DIR))
 
 from data_provider.data_factory import data_provider  # noqa: E402
+from layers.PCC import (  # noqa: E402
+    PCC_FINAL_ROUTE_WEIGHT,
+    PCC_FINAL_SKILL_FLOOR,
+    PCC_OBJECTIVE_MODES,
+    PCC_RAMP_FRACTION,
+    PCC_SKILL_WEIGHT,
+    PCC_STANDARDIZATION_EPSILON,
+    PCC_TEMPERATURE,
+    projective_coupling_credit_loss,
+)
 from models import TimeAlign  # noqa: E402
 from utils.metrics import MAE, MSE  # noqa: E402
 from utils.tools import adjust_learning_rate  # noqa: E402
 
 
 HORIZONS = [96, 192, 336, 720]
+PCC_DISABLED = "off"
 PREFIX_READOUT_MODES = {
     "learned-basis-forecast-operator",
     "stage-native-coefficient-field",
@@ -1376,6 +1387,7 @@ def train(
         pred_loss_values = []
         pred_full_loss_values = []
         pred_component_values: dict[str, list[float]] = {}
+        pcc_diagnostic_values: dict[str, list[float]] = {}
         recon_loss_values = []
         alignment_values = []
         train_steps = len(train_loader)
@@ -1385,6 +1397,10 @@ def train(
             else min(train_steps, args.max_train_batches)
         )
         optimizer.zero_grad()
+        updates_per_epoch = math.ceil(
+            effective_train_steps / args.gradient_accumulation_steps
+        )
+        planned_updates = args.epochs * updates_per_epoch
 
         for batch_idx, (batch_x, batch_y, _batch_x_mark, _batch_y_mark) in enumerate(train_loader):
             if args.max_train_batches and batch_idx >= args.max_train_batches:
@@ -1394,7 +1410,43 @@ def train(
             f_dim = -1 if official_args.features == "MS" else 0
             target_y = batch_y[:, -official_args.pred_len :, f_dim:]
 
-            if args.readout_mode == "official":
+            pcc_result = None
+            if args.pcc_objective_mode != PCC_DISABLED:
+                outputs, _recon, _alignment_loss, pcsd_details = model(
+                    batch_x,
+                    batch_y[:, -official_args.pred_len :, :],
+                    is_training=True,
+                    target_prefix=official_args.pred_len,
+                    return_pcsd_training_details=True,
+                )
+                outputs = outputs[:, -official_args.pred_len :, f_dim:]
+                channel_slice = slice(-1, None) if f_dim == -1 else slice(None)
+                arm_forecasts = pcsd_details["arm_forecasts"][
+                    :, channel_slice, :, :
+                ].permute(0, 1, 3, 2)
+                policy = pcsd_details["policy"][:, channel_slice, :, :]
+                update_index = (
+                    epoch * updates_per_epoch
+                    + batch_idx // args.gradient_accumulation_steps
+                )
+                progress = (
+                    update_index / (planned_updates - 1)
+                    if planned_updates > 1
+                    else 1.0
+                )
+                pcc_result = projective_coupling_credit_loss(
+                    outputs,
+                    arm_forecasts,
+                    policy,
+                    target_y,
+                    mode=args.pcc_objective_mode,
+                    progress=progress,
+                )
+                pred_loss = pcc_result.total_loss
+                pred_components = {"full": criterion(outputs, target_y)}
+                recon_loss = pred_loss.new_zeros(())
+                alignment_loss = pred_loss.new_zeros(())
+            elif args.readout_mode == "official":
                 outputs, recon, alignment_loss = model(
                     batch_x,
                     batch_y[:, -official_args.pred_len :, :],
@@ -1457,13 +1509,21 @@ def train(
                 optimizer.zero_grad()
 
             total_loss.append(float(loss.detach().cpu()))
-            pred_loss_values.append(float(pred_loss.detach().cpu()))
+            logged_prediction_loss = (
+                pcc_result.fused_loss if pcc_result is not None else pred_loss
+            )
+            pred_loss_values.append(float(logged_prediction_loss.detach().cpu()))
             pred_full_loss_values.append(float(pred_components["full"].detach().cpu()))
             recon_loss_values.append(float(recon_loss.detach().cpu()))
             alignment_values.append(float(alignment_loss.detach().cpu()))
             for name, component in pred_components.items():
                 if name != "full":
                     pred_component_values.setdefault(name, []).append(float(component.detach().cpu()))
+            if pcc_result is not None:
+                for name, value in pcc_result.diagnostics.items():
+                    pcc_diagnostic_values.setdefault(name, []).append(
+                        float(value.detach().cpu())
+                    )
 
             if (batch_idx + 1) % 100 == 0:
                 print(
@@ -1505,6 +1565,7 @@ def train(
             "train_weighted_reconstruction_l1": official_args.w_recon * float(np.mean(recon_loss_values)),
             "train_weighted_alignment_loss": official_args.w_align * float(np.mean(alignment_values)),
             "pred_loss_mode": args.pred_loss_mode,
+            "pcc_objective_mode": args.pcc_objective_mode,
             "gradient_accumulation_steps": args.gradient_accumulation_steps,
             "effective_batch_size": (
                 args.batch_size * args.gradient_accumulation_steps
@@ -1525,6 +1586,9 @@ def train(
         for name, values in sorted(pred_component_values.items()):
             if values:
                 row[f"train_prediction_{name}_l1"] = float(np.mean(values))
+        for name, values in sorted(pcc_diagnostic_values.items()):
+            if values:
+                row[f"train_{name}"] = float(np.mean(values))
         training_rows.append(row)
         print(
             "Epoch: {epoch}, Steps: {steps} | Train Loss: {train_loss:.7f} Vali Loss: {val:.7f}".format(
@@ -1625,6 +1689,18 @@ def run(args: argparse.Namespace) -> None:
                 if args.readout_mode in PREFIX_READOUT_MODES
                 else "Official TimeAlign keeps the inherited reconstruction/alignment objective."
             ),
+            "pcc_training_objective": {
+                "mode": args.pcc_objective_mode,
+                "temperature": PCC_TEMPERATURE,
+                "standardization_epsilon": PCC_STANDARDIZATION_EPSILON,
+                "final_skill_floor": PCC_FINAL_SKILL_FLOOR,
+                "ramp_fraction": PCC_RAMP_FRACTION,
+                "lambda_skill": PCC_SKILL_WEIGHT,
+                "final_lambda_route": PCC_FINAL_ROUTE_WEIGHT,
+                "capability_stop_gradient": True,
+                "requested_horizon_feature": False,
+                "inference_graph_changed": False,
+            },
         },
     )
     dump_json(
@@ -1642,7 +1718,9 @@ def run(args: argparse.Namespace) -> None:
     print(
         f"run_start dataset={args.dataset} mode={args.mode} pred_len={args.pred_len} "
         f"target_horizons={args.target_horizons} encoder_mode={args.encoder_mode} "
-        f"readout_mode={args.readout_mode} output_dir={args.output_dir}",
+        f"readout_mode={args.readout_mode} "
+        f"pcc_objective_mode={args.pcc_objective_mode} "
+        f"output_dir={args.output_dir}",
         flush=True,
     )
     model, training_rows, last_state, best_state = train(args, official_args)
@@ -1904,6 +1982,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--pcsd-partition-seed", type=int, default=15101)
     parser.add_argument("--pcsd-group-chunk-size", type=int, default=64)
     parser.add_argument("--pcsd-target-chunk-size", type=int, default=128)
+    parser.add_argument(
+        "--pcc-objective-mode",
+        choices=[PCC_DISABLED, *sorted(PCC_OBJECTIVE_MODES)],
+        default=PCC_DISABLED,
+    )
     parser.add_argument("--patch-diagnostic-batches", type=int, default=8)
     parser.add_argument(
         "--pred-loss-mode",
@@ -2081,6 +2164,19 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("PCSD-CF v1 requires pcsd_policy_hidden_dim=64")
     if args.pcsd_group_chunk_size <= 0 or args.pcsd_target_chunk_size <= 0:
         raise ValueError("PCSD chunk sizes must be positive")
+    if args.pcc_objective_mode != PCC_DISABLED:
+        if args.readout_mode != "pcsd-coupling-field":
+            raise ValueError(
+                "PCC objectives require readout_mode=pcsd-coupling-field"
+            )
+        if args.pcsd_policy_mode != "direct":
+            raise ValueError("PCC Phase A requires pcsd_policy_mode=direct")
+        if args.mode != "unified" or args.pred_len != 720:
+            raise ValueError("PCC Phase A requires unified full-T=720 training")
+        if args.pred_loss_mode != "full":
+            raise ValueError(
+                "PCC controls replace pred_loss_mode with dense-prefix measure"
+            )
     if args.patch_diagnostic_batches <= 0:
         raise ValueError("patch_diagnostic_batches must be positive")
     if args.stage_token_dim <= 0:

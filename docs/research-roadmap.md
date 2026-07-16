@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | PCC-v1-TI Step6 pass；Step7A local implementation next |
+| `current_step` | PCC-v1-TI Step7A pass；Step7B prelaunch audit next |
 | `active_question` | projective nested-risk credit能否恢复same-run arms并超过pointwise/prior controls？ |
 | `active_candidates` | `SC1-PCSD-CF-v1` exact method rejected；`SC2-PCC-v1-TI` design-pass/method-untested |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `docs/experiments/stage-c-sc2-pcc-step6.md` |
-| `method_implementation` | PCC-v1-TI Step7A local authorized；remote/test/confirmation=false |
+| `active_protocol` | `docs/experiments/stage-c-sc2-pcc-step7a.md` |
+| `method_implementation` | PCC-v1-TI local objective/training path 35/35 pass；remote/test/confirmation=false |
 | `rollback_point` | PCC generic controls explain -> Step4；shared-field arm ceiling -> SC1 Step4；numeric pathology -> redesign |
 
 ## Post-D11 Joint Mainline Reset
@@ -359,6 +359,16 @@ exact nested-risk/transport identity误差`0`，19/19 local design cases通过�
 5 datasets validation matrix已冻结。narrative gate仅conditional pass：full transport必须超过A6、plain、pointwise v0
 与pointwise prior composition，并显著恢复25个arm pairs；否则按generic control、readout ceiling、shared-gradient或
 numeric pathology分别回Step4/5。decision=`step6_pass_step7a_local_authorized`，remote/test false。
+
+## SC2-PCC-v1-TI Step 7A Local Implementation
+
+`layers/PCC.py`已实现nine frozen modes、dense-prefix measure、pointwise/prefix capability、harmonic transport与continuous
+schedule；TimeAlign只增加显式training-details path，默认三元组、parameter count与inference output不变。real PCSD batch
+中的raw-scale arm fusion gap为`8.88e-16`，arbitrary prefix gap为`0`，五个scope auxiliary gradients均非零。
+
+35/35 gates通过：vectorized/direct loop最大差`2.22e-16`、transport identity gap`0`、nine decompositions 9/9、
+adapter optimizer step finite且只访问train/val。该结果只建立implementation correctness，不建立effectiveness。
+decision=`step7a_pass_prelaunch_audit_next`；下一步仅做45-run runner/analyzer/resource audit，remote/test仍false。
 
 ## SC1-JAPO Step 7A: Production Gate Passed, Step 8 Authorized
 

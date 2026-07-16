@@ -5,11 +5,11 @@
 | Field | Value |
 | --- | --- |
 | `candidate` | `SC2-PCC-v1-TI` |
-| `current_step` | Step6 pass；Step7A local implementation next |
+| `current_step` | Step6 archived；Step7A 35/35 pass；Step7B prelaunch audit next |
 | `test_informed` | true；SC-D15-T1 exposed |
 | `model carrier` | PCSD-CF shared coupling field；exact v1 architecture已effectiveness fail |
 | `method role` | nested-prefix risk到target-coordinate的same-forward credit transport |
-| `local implementation` | authorized |
+| `local implementation` | completed；见`docs/experiments/stage-c-sc2-pcc-step7a.md` |
 | `remote/test` | false / false |
 
 ## Non-Negotiable Contract
@@ -39,3 +39,6 @@
 10. test loader、remote runner与checkpoint mutation均不可达。
 
 Step7A任一失败返回Step5/6修复。全部通过后仍需单独做remote resource smoke与prelaunch gate。
+
+2026-07-16 update：上述gates已35/35通过；未触发rollback。remote/test仍未授权，当前active protocol转为
+`docs/experiments/stage-c-sc2-pcc-step7a.md`。

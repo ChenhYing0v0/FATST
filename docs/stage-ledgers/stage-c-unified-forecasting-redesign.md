@@ -9,7 +9,7 @@
 | `active_question` | nested-prefix credit transport能否特异性修复test-confirmed same-run arm starvation？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | `SC1-PCSD-CF-v1` effectiveness rejected；`SC2-PCC-v1-TI` Step6 pass/Step7A next |
+| `active_candidates` | `SC1-PCSD-CF-v1` effectiveness rejected；`SC2-PCC-v1-TI` Step7A pass/prelaunch next |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
 | `stage_rollback` | PCC退化为generic skill floor -> Step4；shared-field arm ceiling -> SC1 Step4 redesign |
@@ -18,27 +18,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SC2-PCC-v1-TI Step6 pass；Step7A local implementation |
+| `current_11_step` | SC2-PCC-v1-TI Step7A pass；Step7B prelaunch audit next |
 | `current_candidate` | `SC2-PCC-v1-TI` narrative/design conditional pass；effectiveness unready |
-| `latest_decision` | v0 prior-art overlap；v1 nested-risk transport 19/19 pass；45-run matrix frozen |
-| `next_required_action` | 实现objective、nine-arm losses、diagnostics与Step7A invariants |
-| `method_training_authorized` | local implementation only；remote/test/confirmation=false |
+| `latest_decision` | v1 objective/training path 35/35 local gates pass；inference unchanged |
+| `next_required_action` | 45-run manifest/runner/analyzer与remote resource prelaunch audit |
+| `method_training_authorized` | local implementation passed；remote/test/confirmation=false |
 | `rollback_point` | generic balancing explains -> Step4；shared-field arm ceiling -> SC1 Step4；invalid math -> Step5 redesign |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | PCC-v1-TI Step6 complete；Step7A local implementation next |
+| `current_step` | PCC-v1-TI Step7A complete；Step7B prelaunch audit next |
 | `problem` | 现有unified decoder固定point/block/global coupling scope；最佳future-output sharing是否随target region与history变化 |
 | `existence_evidence` | three-seed neutral+A6 5/5 stable crossing；strict 7.1107%/9.1259%；instance 6.7948%/8.5990% |
 | `idea` | PCSD field + dense nested-prefix capability + harmonic target-coordinate credit transport |
-| `theory_check` | transport identity gap 0；19/19 simplex/floor/stopgrad/schedule/protocol cases pass |
-| `design` | one-forward L1 prefix risk；continuous equal-to-capability schedule；9 arms × 5 datasets controls |
+| `theory_check` | Step6 19/19；Step7A 35/35；loop max gap 2.22e-16、identity/output/prefix gaps 0 |
+| `design` | one-forward raw-scale L1；continuous equal-to-capability schedule；9 arms × 5 datasets controls |
 | `narrative_gate` | conditional pass；generic expert loss/loss-teacher/gradient balancing excluded；must beat pointwise controls |
-| `effectiveness_gate` | official test fail：DIRECT vs A6 -1.3994%、1/5；all control macro gains negative；oracle +2.0197% |
-| `artifacts` | `analysis/stage_c_pcsd_cf_test_audit_seed2021_20260716/test_audit_report.md`；`analysis/stage_c_sc2_pcc_step5_theory_20260716/step5_theory_feasibility.md` |
-| `decision` | exact PCSD-CF-v1 rejected；PCC-v0 demoted control；PCC-v1-TI Step7A local authorized |
+| `effectiveness_gate` | PCC untested；carrier exact v1 test fail：DIRECT vs A6 -1.3994%、1/5；oracle +2.0197% |
+| `artifacts` | `analysis/stage_c_pcsd_cf_test_audit_seed2021_20260716/test_audit_report.md`；`analysis/stage_c_sc2_pcc_step7a_local_20260716/step7a_local_gate_report.md` |
+| `decision` | exact PCSD-CF-v1 rejected；PCC-v0 control；PCC-v1-TI Step7A pass/prelaunch next；remote false |
 
 ## Frozen Carrier Contract
 
@@ -94,7 +94,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC2-CCRL` | `retired_as_core_diagnostic_only` | cross-fit relative risk能否增益matched direct fusion | generic overlap high；two-stage teacher/student inconsistency | not implemented | retain report/config as history；not scheduled |
 | `SC2-ICC` | `superseded_by_pcc` | same-forward marginal coupling credit能否修复direct policy misallocation | working hypothesis已由D15-A收紧 | not implemented | historical name only |
 | `SC2-PCC-v0` | `superseded_pointwise_control` | pointwise same-forward capability + skill floor | expert loss与loss-teacher gate已有直接prior art | 15/15 theory cases；method untested | mandatory pointwise/prior controls only |
-| `SC2-PCC-v1-TI` | `step6_pass_step7a_local` | nested-prefix capability能否经harmonic incidence输运为target-coordinate credit | complete-chain conditional pass；必须超过pointwise/prior composition | 19/19 design cases；method untested | Step7A objective/diagnostic implementation；remote false |
+| `SC2-PCC-v1-TI` | `step7a_pass_prelaunch_next` | nested-prefix capability能否经harmonic incidence输运为target-coordinate credit | complete-chain conditional pass；必须超过pointwise/prior composition | Step6 19/19；Step7A 35/35；method untested | Step7B prelaunch audit；remote false |
 | `SC-D14-A/B` | `a_confirmed_b_retired` | coupling crossing与conditional-risk predictability | A pass；B retired before implementation | A confirmed；B not run | A evidence retained；B closed |
 | `SC-D15-A` | `completed_training_blocked` | native PCSD-CF representation、direct trainability与credit-problem existence | Step4-6 conditional pass | 60/60；method fail；25/25 arm starvation | no confirmation；feeds PCC Step2-4 |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
@@ -203,6 +203,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | Multi-horizon coupling mainline reset | `superseded_by_native_pcsd_reset` | PCSD/CCRL曾proposed；D14-A evidence保留，CCRL后续retired |
 | D14 output-coupling granularity | `a_confirmed_b_retired` | A1 dual-carrier 255/255 confirmed；B1未implementation；remote false |
 | PCSD-CF native architecture reset | `step10_training_blocked` | 60/60 result；DIRECT vs A6 0/5；25/25 arm starvation；PCC Step5 conditional pass |
+| PCC-v1-TI Step7A local implementation | `completed_pass` | 35/35；one-forward objective、CLI与adapter smoke通过；Step7B prelaunch next |
 
 ## Paper Mainline Sync Log
 
@@ -258,6 +259,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-16 | milestone test policy + SC-D15-T1 authorization | Evaluation Rule、Experiment Logic | test becomes primary effectiveness gate | frozen v1 12×5 audit；no retraining；PCC Step6 held |
 | 2026-07-16 | SC-D15-T1 complete test audit | Current Position、Contribution 1/2、Evaluation Rule | exact v1 closure + test-informed rollback | 60/60；DIRECT vs A6 -1.3994%、1/5；oracle +2.0197%；PCC Step6 design only |
 | 2026-07-16 | PCC Step6 source-informed redesign | Contribution 2、Boundary、Experiment Logic | v0 prior-art demotion + v1 projective transport | 19/19 pass；9×5 controls frozen；Step7A local only |
+| 2026-07-16 | PCC-v1-TI Step7A local gate | Current Position、Contribution 2、Experiment Logic | production objective + training-path invariants | 35/35 pass；inference unchanged；Step7B prelaunch next；remote/test false |
 
 ## Continuation Rules
 

@@ -920,7 +920,14 @@ class Model(nn.Module):
         output = output[:, :, :horizon]
         return output.permute(0, 2, 1)
 
-    def forward(self, x, y, is_training=True, target_prefix=None):
+    def forward(
+        self,
+        x,
+        y,
+        is_training=True,
+        target_prefix=None,
+        return_pcsd_training_details=False,
+    ):
         # x: [B, seq_len, C], y: [B, pred_len, C]
         batch, seq_len, channels = x.shape
         _batch_y, pred_len, _channels_y = y.shape
@@ -968,7 +975,15 @@ class Model(nn.Module):
         elif self.readout_mode in GROUPED_MLP_READOUTS:
             output = self.grouped_mlp_readout(hidden, target_prefix)
         elif self.readout_mode in PCSD_READOUTS:
-            output = self.pcsd_readout(hidden, target_prefix)
+            if return_pcsd_training_details:
+                output, pcsd_arms, pcsd_policy = (
+                    self.pcsd_readout.forward_with_diagnostics(
+                        hidden,
+                        target_prefix,
+                    )
+                )
+            else:
+                output = self.pcsd_readout(hidden, target_prefix)
         elif self.readout_mode == "pcsd-coupling-field-m0":
             output = self.pcsd_m0_readout(hidden, target_prefix)
         elif self.readout_mode == "pcsd-dense-nonlinear-matched":
@@ -982,4 +997,31 @@ class Model(nn.Module):
             recon = recon.permute(0, 2, 1)
             recon = self.normalization_y(recon, "denorm")
 
-        return output[:, -self.pred_len :, :], recon, align_loss
+        result = (output[:, -self.pred_len :, :], recon, align_loss)
+        if not return_pcsd_training_details:
+            return result
+        if self.readout_mode not in PCSD_READOUTS:
+            raise ValueError(
+                "PCSD training details require readout_mode=pcsd-coupling-field"
+            )
+        if self.normalization_x.affine:
+            raise RuntimeError("scoped PCSD denormalization expects affine=False")
+        if self.normalization_x.non_norm:
+            denormalized_arms = pcsd_arms
+        else:
+            scale = (
+                self.normalization_x.stdev.squeeze(1)
+                .unsqueeze(-1)
+                .unsqueeze(-1)
+            )
+            if self.normalization_x.subtract_last:
+                center = self.normalization_x.last.squeeze(1)
+            else:
+                center = self.normalization_x.mean.squeeze(1)
+            center = center.unsqueeze(-1).unsqueeze(-1)
+            denormalized_arms = pcsd_arms * scale + center
+        details = {
+            "arm_forecasts": denormalized_arms,
+            "policy": pcsd_policy,
+        }
+        return (*result, details)

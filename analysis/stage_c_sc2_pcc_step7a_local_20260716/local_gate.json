@@ -1,0 +1,11 @@
+{
+  "all_pass": true,
+  "candidate": "SC2-PCC-v1-TI",
+  "cases_passed": 35,
+  "cases_total": 35,
+  "checkpoint_mutated": false,
+  "current_step": "Step7A local implementation gate",
+  "decision": "step7a_pass_prelaunch_audit_next",
+  "remote_authorized": false,
+  "test_accessed": false
+}

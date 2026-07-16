@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | PCC-v1-TI Step6 pass；Step7A local implementation next |
+| `current_11_step` | PCC-v1-TI Step7A pass；Step7B prelaunch audit next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | exact PCSD-CF-v1 rejected；PCC-v1-TI narrative/design conditional pass；effectiveness unknown |
+| `paper_core_status` | exact PCSD-CF-v1 rejected；PCC-v1-TI narrative/design/local implementation pass；effectiveness unknown |
 
 [Evaluation Rule] official test split现固定为paper-core effectiveness与Step9-10继续/回滚的primary gate；validation只
 负责checkpoint selection、普通超参数选择与低成本mechanism screen。每个冻结candidate version默认只做一次完整
@@ -166,7 +166,10 @@ surgery均不计novelty。完整claim只允许落在
 `nested projective risks -> harmonic credit transport -> target-coordinate coupling arm/router co-training`；且必须在
 同一matrix超过`POINTWISE_PCC_V0`与`POINTWISE_PRIOR_COMPOSED`才能保留。
 
-status=`step6_pass_step7a_local_authorized`；只授权objective、diagnostics与local invariants实现，remote/test false。
+Step7A现已完成：35/35 local gates通过，vectorized/direct loop最大差`2.22e-16`，raw-scale arm fusion
+gap`8.88e-16`，默认inference output、parameter count与prefix projectivity不变；real PCSD batch五个scope均获非零
+auxiliary output gradient。status=`step7a_pass_prelaunch_audit_next`；这些结果只证明implementation correctness，
+不证明performance。下一步仅授权Step7B prelaunch audit，remote/test仍false。
 
 ### Joint Story
 
@@ -176,7 +179,7 @@ coupling arms与target router的training credit”，而不能依赖外部teache
 
 [Execution Order] D14-A problem confirmed -> CCRL retired -> PCSD-CF Step4-7 -> validation screen fail/credit clue ->
 PCC-v0 Step2-5 -> frozen PCSD-CF-v1 test audit fail-with-headroom -> Step6 prior-art rollback -> PCC-v1-TI nested-risk
-transport Step5b/6 pass。下一步只做Step7A local implementation；remote、test与seeds仍false。
+transport Step5b/6 pass -> Step7A 35/35 pass。下一步只做Step7B prelaunch audit；remote、test与seeds仍false。
 
 ### Closed Candidate: PRISM Decoder
 

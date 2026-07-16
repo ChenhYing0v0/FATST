@@ -1,0 +1,36 @@
+case,value,threshold,pass
+vectorized_prefix_risk_vs_nested_loop,2.220446049250313e-16,<=1e-12,True
+vectorized_transport_vs_nested_loop,2.220446049250313e-16,<=1e-12,True
+nested_risk_transport_identity,0.0,<=1e-12,True
+identical_arms_uniform_capability,0.0,<=1e-12,True
+transported_skill_floor,0.05982133307486216,>=0.04,True
+stopgrad_value_invariance,0.0,<=1e-12,True
+authorized_credit_has_no_gradient,False,False,True
+conditional_no_stopgrad_has_gradient,True,True,True
+control_decomposition_equal_skill,0.0,<=1e-12 and exact active terms/diagnostics,True
+control_decomposition_measure_only,0.0,<=1e-12 and exact active terms/diagnostics,True
+control_decomposition_pcc_transport_full,0.0,<=1e-12 and exact active terms/diagnostics,True
+control_decomposition_pointwise_capability_skill_only,0.0,<=1e-12 and exact active terms/diagnostics,True
+control_decomposition_pointwise_pcc_v0,0.0,<=1e-12 and exact active terms/diagnostics,True
+control_decomposition_pointwise_prior_composed,0.0,<=1e-12 and exact active terms/diagnostics,True
+control_decomposition_pointwise_route_only,0.0,<=1e-12 and exact active terms/diagnostics,True
+control_decomposition_transport_route_only,0.0,<=1e-12 and exact active terms/diagnostics,True
+control_decomposition_transport_skill_only,0.0,<=1e-12 and exact active terms/diagnostics,True
+transport_not_pointwise_control,0.6189312163326621,>=1e-3,True
+continuous_schedule_endpoints,True,True,True
+continuous_schedule_monotonicity,True,True,True
+continuous_schedule_reaches_final_at_ramp,True,True,True
+default_forward_signature_unchanged,3,3,True
+details_forward_output_invariance,0.0,<=1e-12,True
+raw_scale_arm_fusion_identity,8.881784197001252e-16,<=1e-10,True
+arbitrary_prefix_is_full_crop,0.0,<=1e-12,True
+parameter_count_unchanged,1775109,1775109,True
+real_pcsd_all_scope_aux_gradients_nonzero,0.07842299444958817,>0,True
+real_pcsd_one_batch_parameter_gradients_finite,True,True,True
+frozen_nine_arm_matrix_exact,9,9 exact modes,True
+local_only_protocol_boundary,True,True,True
+pcc_cli_contract_parses,True,True,True
+pcc_cli_rejects_non_pcsd_readout,True,True,True
+training_adapter_one_update_finite,2.3411457538604736,finite,True
+training_adapter_diagnostics_complete,True,True,True
+training_adapter_never_accesses_test,"train,val","train,val",True
