@@ -5,11 +5,11 @@
 | Field | Value |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D14-B1 Step 4-6 conditional pass；Step7A local implementation next |
+| `current_step` | D14-A confirmed；D14-B1 retired before Step7A；active work moved to D15-A |
 | `role` | `diagnostic_only` |
-| `active_candidates` | `SC1-PCSD` problem-supported；`SC2-CCRL` high-risk diagnostic candidate |
+| `active_candidates` | D14 retains `SC1-PCSD` problem evidence；native `PCSD-CF` continues in D15-A |
 | `method_training` | false |
-| `remote_training` | D14-A 255/255 complete；D14-B1 local=true，remote=false，paper method=false |
+| `remote_training` | D14-A 255/255 complete；D14-B1 canceled，no implementation/remote/test |
 | `test_access` | false |
 | `primary_carrier` | neutral train-only raw-history carrier |
 | `sensitivity_carrier` | A6-natural E2E architecture，只有neutral problem pass后才授权 |
@@ -241,6 +241,11 @@ D14-A valid fail则取消D14-B并先完成failure attribution；carrier/numeric 
 
 ## D14-B1 Cross-Fitted Conditional-Risk Predictability
 
+> [Superseded 2026-07-16] 本节保留冻结设计作为历史diagnostic/control evidence，但其Step7A授权已撤销。
+> consistency audit确认独立fold experts、partial OOF labels与最终joint PCSD之间存在teacher-student mismatch和
+> stale-target问题，工程链也不属于最终推理图。CCRL降为`diagnostic_only_not_scheduled`；active protocol转至
+> `docs/experiments/stage-c-d15-native-pcsd-direct-control.md`。
+
 ### Step 4-6 source/theory correction
 
 TimeFuse已覆盖sample-level meta-feature fusion；TimeRouter已覆盖oracle-best expert labels、context/CV/forecast
@@ -309,17 +314,16 @@ secondary control，不计novelty。
 至少3/5超过hard-oracle与in-sample hybrid；permuted/random controls不得复制收益，且不能出现collapse、non-finite
 或validation reversal。B-P通过而B-C失败只支持generic adaptive fusion，CCRL关闭。
 
-[Decision] narrative gate对`diagnostic_only` conditional pass；只授权Step7A local implementation。remote、paper
-method与test仍false。冻结设计见`configs/stage_c_d14b_crossfit_regret.json`。
+[Historical Decision] 本节曾对`diagnostic_only` conditional pass；后续一致性审计已覆盖该授权。当前local、
+remote、paper method与test均false。冻结设计仅作history，见`configs/stage_c_d14b_crossfit_regret.json`。
 
 ## Decision Matrix
 
 | D14-A | D14-B | Decision |
 | --- | --- | --- |
 | fail | canceled | PCSD/CCRL关闭；rollback Step 2 |
-| pass | B-P fail | PCSD返回Step 4；关闭instance-adaptive coupling claim与CCRL |
-| pass | B-P pass / B-C fail | 只支持generic adaptive fusion；CCRL关闭，PCSD返回Step 4 |
-| pass | B-P + B-C pass | PCSD/CCRL返回formal method Step 4-6；method/remote/test仍false |
+| pass | B canceled before implementation | 保留PCSD problem evidence；CCRL关闭；native PCSD返回Step 4-6 |
+| pass | any hypothetical B result | 不再作为active decision path；只可作未来secondary control |
 | invalid | any | 修复diagnostic；不得方向级否决 |
 
 ## Failure Attribution

@@ -1,8 +1,9 @@
 # Active Experiment Protocols
 
-- `stage-c-d14-output-coupling-granularity.md`: D14-A1 three-seed dual-carrier confirmation已通过；D14-B1
-  Step4-6将regret收紧为actual fusion loss的auxiliary cross-fitted risk supervision，并冻结B-P/B-C gates；
-  当前只授权Step7A local implementation，remote/method/test=false；
+- `stage-c-d15-native-pcsd-direct-control.md`: 当前active protocol；PCSD-CF Step4-6 conditional pass，只授权
+  native shared coupling-field module与A6 containment/projectivity/topology local gates；remote/SC2/test=false；
+- `stage-c-d14-output-coupling-granularity.md`: D14-A1 three-seed dual-carrier confirmation已通过；D14-B1因
+  cross-fit teacher/student inconsistency在Step7A前取消，CCRL只保留为historical diagnostic；
 - `stage-c-d14-conditional-patch-memory-headroom.md`: 已降级为`D14-P auxiliary_not_scheduled`；仅保留future
   decoder-interface ablation，不占paper slots、不决定mainline；
 - `stage-c-d13-rolling-origin-revision-efficiency.md`: `deferred_next_paper`；forecast-revision idea的未来problem

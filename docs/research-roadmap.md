@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D14-B1 Step 4-6 conditional pass；Step7A local implementation next |
+| `current_step` | PCSD-CF Step 4-6 conditional pass；D15-A Step7A local implementation next |
 | `active_question` | fixed-past unified model是否需要在一个projective decoder内自适应future-output coupling scope？ |
-| `active_candidates` | `SC1-PCSD` problem-supported/method-unready；`SC2-CCRL` high-risk Step7A diagnostic |
+| `active_candidates` | `SC1-PCSD-CF` narrative-ready/effectiveness-unready；SC2 slot open，`ICC` hypothesis only |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `docs/experiments/stage-c-d14-output-coupling-granularity.md` |
-| `method_implementation` | D14-B1 local diagnostic=true；remote/paper method/test=false |
-| `rollback_point` | B-P fail ->关闭instance claim；B-C fail ->关闭CCRL、PCSD返回Step4 |
+| `active_protocol` | `docs/experiments/stage-c-d15-native-pcsd-direct-control.md` |
+| `method_implementation` | PCSD-CF Step7A local=true；remote/effectiveness claim/SC2/test=false |
+| `rollback_point` | local invariant fail -> Step5/6；native arms unskilled -> Step4；credit problem absent -> SC2 remains open |
 
 ## Post-D11 Joint Mainline Reset
 
@@ -84,7 +84,7 @@ MQTransformer、TimePerceiver覆盖future/target queries；Implicit Forecaster�
 probabilistic future dependency；dynamic ensemble、meta-learning与TimeRouter覆盖expert/model routing。因此任一
 primitive都不能单独claim创新。
 
-[Provisional Mainline]
+[Historical Provisional Mainline, Superseded By PCSD-CF Reset]
 
 1. `SC1-PCSD`：Projective Coupling-Spectrum Decoder在同一fixed future domain内表示point、multiple block与
    global sharing scopes；policy依赖history与target coordinate，不读取requested $H$；global arm contain A6；
@@ -93,6 +93,9 @@ primitive都不能单独claim创新。
 3. novelty只允许落在完整
    `fixed past -> exact-prefix decoder -> point-to-global coupling spectrum -> counterfactual coupling policy -> no
    external strategy search`链条。
+
+该版本中的CCRL已因two-stage teacher/student inconsistency在Step7A前退出paper core；当前active mainline为
+`PCSD-CF direct control first`，见后文`CCRL Retirement And PCSD-CF Reset`。
 
 [Returned Gate] D14-A0在neutral PCA64 carrier上完成5 datasets × 3 folds。carrier skill 4/5且numeric/split
 invariants pass，但stable crossing 0/5、sample × bin oracle仅0.0586%、canonical-vs-random -0.1427%。exact
@@ -108,7 +111,7 @@ local cases通过，最大parameter gap 0.1646%。neutral raw-history carrier是
 paper-carrier sensitivity。由于A6 architecture/profile围绕global basis decoder形成，A6-negative不能拒绝scale。
 
 [Completed Execution Order] neutral seed2021 -> neutral gate -> A6-natural sensitivity -> seeds2022/2023
-dual-carrier confirmation。该串行协议已完成；D14-B只返回Step4-6，paper method/test仍false。
+dual-carrier confirmation。该D14-A串行协议已完成；D14-B后来在Step7A前被consistency audit取消。
 
 [A1 Neutral Returned] 40/40 complete；function separation、carrier skill、crossing均5/5；oracle macro 7.6753%；
 canonical-vs-random 0.8945%且5/5正。sequential row re-evaluation修复了official validation shuffle造成的artifact
@@ -132,6 +135,15 @@ MSE；故CCRL收紧为`actual fused forecast loss + auxiliary cross-fitted cente
 history+target predictability，B-C要求hybrid相对matched direct fusion、hard-oracle与in-sample controls有独立增量。
 只授权Step7A local implementation；remote/method/test仍false。完整设计见
 `analysis/stage_c_d14b_crossfit_regret_20260716/d14b_step46_source_theory_design_audit.md`。
+
+[CCRL Retirement And PCSD-CF Reset] 后续training-consistency audit确认D14-B1需要独立fold × scale teachers、
+只覆盖部分training samples的OOF labels，再监督architecture不同且持续更新的joint PCSD arms；因此存在
+teacher-student mismatch、stale target和非最终图工程成本。CCRL在Step7A前取消并降为
+`diagnostic_only_not_scheduled`。研究返回PCSD Step4-6，提出`PCSD-CF`：一个shared history-to-future mode
+field经scope pooling产生全部point/block/global states，使用direct synthesis而非A6 residual，且以构造性映射
+exact contain A6。external audit将DeepONet coordinate synthesis、PoU local operator mixture、Soft MoE与
+TimeFuse direct fusion列为mandatory boundaries。narrative gate只对local implementation conditional pass；完整
+报告见`analysis/stage_c_pcsd_native_reset_20260716/pcsd_cf_step46_source_theory_design_audit.md`。
 
 [Frozen Boundary] neutral raw-history carrier是primary；A6 sensitivity也从头E2E joint training，但其negative只表示
 carrier interface/profile不确认。最终paper effectiveness仍须matched E2E，不能用frozen replacement gap通过或拒绝。
@@ -293,10 +305,12 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 
 ## Next Concrete Action
 
-实现`SC-D14-B1` Step7A local gate：purged outer/inner split、official-validation isolation、36-d history与11-d
-target features、centered-risk identity、matched 64-64 policy arms、projectivity与synthetic leakage falsification。
-本地gate通过前remote=false；paper method/test始终false。完整设计见
-`analysis/stage_c_d14b_crossfit_regret_20260716/d14b_step46_source_theory_design_audit.md`。
+实现`SC-D15-A / SC1-PCSD-CF-v1` Step7A local gate：five-profile tensor shapes、fixed DCT coordinate field、
+scope pooling、A6 exact containment、prefix equality、Jacobian sharing topology、random-parameter arm separation、
+canonical/random partition parameter equality及parameter/DoF/FLOP/activation accounting。同步创建model code-facing
+explanation。本地gate通过前remote=false；Contribution 2与test仍false。冻结设计见
+`analysis/stage_c_pcsd_native_reset_20260716/pcsd_cf_step46_source_theory_design_audit.md`与
+`configs/stage_c_pcsd_cf_native_direct.json`。
 
 ## SC1-JAPO Step 7A: Production Gate Passed, Step 8 Authorized
 

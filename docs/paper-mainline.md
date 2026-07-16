@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | D14-B1 Step 4-6 conditional pass；Step7A local implementation next |
+| `current_11_step` | PCSD-CF Step 4-6 conditional pass；D15-A Step7A local implementation next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | PCSD problem-supported/method-unready；CCRL high-novelty-risk diagnostic ready；test held |
+| `paper_core_status` | PCSD-CF narrative-ready/effectiveness-unready；CCRL retired as core；Contribution 2 problem unverified；test held |
 
 ## Research Thesis
 
@@ -43,7 +43,8 @@ forecast-revision surface已转移到根目录`New-idea.md`，状态`deferred_ne
 [Decision] `CADMO/CPGA`因问题范围只落在history-interface而退出active slots；它们不是实验方向级失败，而是
 `rejected_by_narrative_scope`。ordered patch memory只保留为`D14-P auxiliary_interface_probe`，不决定论文主线。
 
-两个active slots曾由`PCSD/CCRL` provisional占用。D14-A0的neutral linear RRR gate已返回：stable crossing
+两个active slots曾由`PCSD/CCRL` provisional占用；2026-07-16 training-consistency audit已将CCRL降为
+`diagnostic_only_not_scheduled`，第二slot重新开放。D14-A0的neutral linear RRR gate已返回：stable crossing
 0/5、sample × bin oracle macro 0.0586%、canonical-vs-random -0.1427%。但其factor params并不等于
 rank-manifold effective DoF，且scale risks最多只相差0.04036%，所以方向级拒绝无效。A1随后以matched grouped
 nonlinear heads强制不同sharing topology，且全部scales包含full-affine map；neutral raw-history作为primary gate，
@@ -60,25 +61,34 @@ dual-carrier、three-seed direct evidence。contiguity仅在两carrier各4/5 dat
 temporal grouping law。另一方面，GroupedMLP相对A6-LBF H720仍落后2.6886%，所以D14-A确认的是研究问题，
 不是Contribution 1 method performance。
 
-### Provisional Contribution 1: PCSD
+### Contribution 1 Candidate: PCSD-CF
 
-`PCSD`（Projective Coupling-Spectrum Decoder）在固定future domain上表示多个output-sharing scopes：
+`PCSD-CF`（Projective Coupling-Spectrum Decoder with a Coupling Field）在固定future domain上表示多个
+output-sharing scopes：
 
 $$
 \mathcal S=\{1,b_1,b_2,\ldots,T\},\qquad
 \hat y_\tau=\sum_{s\in\mathcal S}\alpha_s(X,\tau)\hat y_\tau^{(s)}.
 $$
 
-$s=1$接近Direct/independent query，$s=T$包含A6 global MIMO-like arm，中间$s$是parallel block-MIMO scopes。
-requested $H$不进入operator或policy，只执行$F_H=\mathcal R_HF_T$。首版不读取previous predicted values，
-避免AR error accumulation；global arm必须functionally contain A6，避免再次牺牲强carrier class。
+$s=1$接近Direct/independent query，$s=T$包含A6 global MIMO-like arm，中间$s$是parallel block scopes。
+它不是五个完整models：同一history state先生成一个shared mode field，future-coordinate descriptors再按scope
+pooling成point/block/global predictive states，并共享target synthesis rows。requested $H$不进入operator或
+policy，只执行$F_H=\mathcal R_HF_T$。
+
+固定coordinate field的constant mode与zero-mean modes允许构造任意A6 mapping：令nonconstant mode maps及
+nonlinear synthesis weights为零，global pooling即精确退化为`coeff [B,C,256] × basis [T,256]`。这是
+function-class containment，不是warm-start或learned-capacity preservation。首个control只使用actual fused
+forecast loss端到端训练，不加入risk、oracle、balance、diversity或counterfactual auxiliary loss。
 
 [Novelty Boundary] Direct/MIMO/DIRMO/Stratify已覆盖固定strategy与block-size continuum；CATS、MQTransformer、
 TimePerceiver已覆盖future/target queries；Implicit Forecaster已覆盖global wave decoding。因此PCSD只能claim完整
-链条：`one projective neural decoder -> simultaneous point-to-global coupling spectrum -> sample/target-region policy
--> no requested-H semantics -> no external strategy search`。status=`problem_supported_method_unready`。
+链条：`one projective parameter field -> scope pooling changes future-output state sharing -> simultaneous
+point-to-global operators -> exact A6 subspace -> sample/target policy -> no requested-H semantics`。
+DeepONet/PoU-MoE已覆盖coordinate synthesis与local operator mixture，因此这些primitive不计novelty。
+status=`pcsd_cf_step7a_local_ready / effectiveness_unready`。
 
-### Provisional Contribution 2: CCRL
+### Retired Core Candidate: CCRL
 
 `CCRL`（Cross-fitted Coupling-Regret Learning）不期待ordinary mixture loss自动产生expert specialization。它在
 train split内chronological cross-fit每个coupling arm，对held-out training sample与target region构造centered
@@ -93,22 +103,33 @@ weighted expert risk只是mixture loss上界，不能把$\operatorname{softmax}(
 principle固定为actual fused forecast loss + auxiliary cross-fitted risk distillation；matched direct-fusion是mandatory
 control。
 
-[Novelty Boundary] FFORMA/TimeFuse已覆盖feature-based sample fusion；TimeRouter已覆盖oracle labels、context/CV/
-forecast features与nonlinear routing；AME-TS已覆盖structural-prior KL。CCRL不能claim这些primitive。它只有在
-“同一projective decoder内部output coupling scopes的chronological cross-fitted sample × target-region risk”相对
-matched direct fusion、hard oracle、in-sample、target-only与permuted controls具有独立主效应时，才可能成为
-Contribution 2。status=`d14b_step7a_local_ready / high novelty risk`。
+[Retirement Reason] FFORMA/TimeFuse已覆盖feature-based sample fusion；TimeRouter已覆盖oracle labels、context/CV/
+forecast features与nonlinear routing。更关键的是，CCRL需要独立fold experts生成稀疏OOF labels，再监督共享
+representation的最终PCSD；teacher/student architecture不一致，labels会随joint arms更新而stale，额外工程不属于
+最终推理图。它技术上可作辅助loss，但不是统一的single-run end-to-end training principle。
+
+[Decision] status=`diagnostic_only_not_scheduled`；D14-B1在Step7A前取消。旧source/theory/config保留为历史control，
+不得继续实现或作为Contribution 2 claim。
+
+### Open Contribution 2 Slot
+
+第二个contribution必须原生依赖PCSD的same-run arms，并直接服务最终fused forecast。当前只保留working
+hypothesis `SC2-ICC`（same-forward interventional coupling credit），但尚未证明direct PCSD存在credit-assignment
+failure，因此不冻结名称、loss或claim。
+
+只有D15-A同时证明“same-run arms有skill与marginal/oracle headroom”以及“direct history × target policy没有利用
+这些headroom”，并排除arm under-training、capacity与numeric explanations，SC2才允许进入Step2-4。否则不为填满
+第二slot而添加training mechanism。
 
 ### Joint Story
 
-PCSD回答“一个unified decoder能表示哪些future-output sharing strategies”；CCRL回答“训练时如何给coupling
-policy提供可识别、无in-sample self-evaluation leakage的选择证据”。二者共同把multi-horizon统一从“同一模型
-输出多个长度”推进为“同一模型内部学习future targets应如何共享forecasting function”。
+PCSD-CF回答“一个unified decoder如何用同一parameter field表示不同future-output sharing strategies”。
+Contribution 2未来只能回答“在same-run joint decoder中，若ordinary task loss无法正确分配scope credit，应如何
+用同一次forward的forecast evidence修复”，而不能再依赖外部teacher pipeline。
 
-[Execution Order] D14-A three-seed gate已通过 -> D14-B1 Step4-6 conditional pass -> Step7A local invariants ->
-neutral seed2021 dual gate -> A6 sensitivity -> confirmation。当前只允许local diagnostic implementation。B-P
-predictability fail关闭instance-adaptive claim；B-P pass但B-C contribution gate fail则关闭CCRL并让PCSD单独返回
-Step 4。
+[Execution Order] D14-A problem confirmed -> CCRL consistency audit and retirement -> PCSD-CF Step4-6 conditional
+pass -> D15-A Step7A local invariants -> five-dataset seed2021 direct-control screen。只有direct-control screen形成
+可归因的credit failure，SC2才回到Step2-4。当前remote、test与Contribution-2 implementation均false。
 
 ### Closed Candidate: PRISM Decoder
 
@@ -477,7 +498,7 @@ hypothesis。新D14必须用neutral carrier、matched point/block/global heads�
 直接检验；frozen A6只作sensitivity。
 
 [Decision] ordered patch memory降为optional Encoder–Decoder interface ablation。未来若PCSD需要更丰富history
-access，可运行`D14-P`；其positive/negative均不能单独通过或拒绝PCSD/CCRL。
+access，可运行`D14-P`；其positive/negative均不能单独通过或拒绝PCSD-CF，也不能建立当前open SC2 slot。
 
 [Decision] 旧 StageB coefficient conditioning、STBO、GRU future composition、unit-specific retrieval 与
 encoder repair 均不再是 active candidate。历史失败只按各自 failure attribution 使用，不能被扩大为未经
@@ -573,6 +594,8 @@ Step4，不以训练性能包装RGNB。
     history+target regret predictability。neutral raw-history carrier为primary，frozen A6只作sensitivity；test=false。
 37. D14-A fail关闭pair；A pass/B fail只让PCSD回Step4并重找SC2；A/B pass也只返回formal Step4-6，不能直接
     实现method或启动remote training。
+38. D14-A最终通过；D14-B1在implementation前因cross-fit teacher/student mismatch退出paper core。PCSD-CF
+    已完成native Step4-6，只授权D15-A local invariants；SC2 slot保持open，remote/test=false。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
 generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成

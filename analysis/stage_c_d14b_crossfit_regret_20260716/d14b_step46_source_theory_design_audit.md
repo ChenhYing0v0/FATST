@@ -4,13 +4,18 @@
 
 | Field | Value |
 | --- | --- |
-| `current_step` | D14-B Step 4-6 complete；Step7A local implementation next |
+| `current_step` | superseded before Step7A；retained as historical diagnostic design |
 | `role` | `diagnostic_only_crossfit_coupling_risk_predictability` |
-| `narrative_gate` | conditional pass for diagnostic；paper contribution still unproven |
+| `narrative_gate` | historical conditional pass；later consistency audit retired paper-core route |
 | `remote_training` | false |
 | `paper_method` | false |
 | `test_access` | false |
-| `rollback` | problem fail ->关闭instance-adaptive claim；CCRL-specific fail ->关闭SC2并保留PCSD problem evidence |
+| `rollback` | completed：CCRL retired；PCSD returned to native architecture Step4-6 |
+
+> [Supersession 2026-07-16] 后续审计确认独立fold experts、partial OOF labels与最终joint PCSD之间存在
+> teacher-student architecture mismatch、stale supervision和不属于最终推理图的工程开销。本设计未进入Step7A，
+> 只保留为未来secondary control。active route见
+> `analysis/stage_c_pcsd_native_reset_20260716/pcsd_cf_step46_source_theory_design_audit.md`。
 
 ## 1. What We Plan To Test
 
@@ -232,5 +237,6 @@ negative最多关闭SC2-CCRL，PCSD仍返回Step4重新寻找与multi-horizon sh
 prior art。CCRL只能作为与PCSD不可分割的training principle，且必须在matched direct-fusion/hard-oracle controls
 上形成独立增量。否则关闭SC2，不用改名保留。
 
-[Decision] `authorize_d14b1_step7a_local_only`。remote、paper method与test继续false。Step7A若不能证明split、
-OOF、objective与projectivity invariants，则返回Step6修复；不得启动remote。
+[Historical Decision, Superseded] 本报告曾给出`authorize_d14b1_step7a_local_only`，但后续training-consistency
+audit已在implementation前撤销该授权。当前D14-B1 local/remote/paper method/test均false；active decision为
+`authorize_pcsd_cf_step7a_local_only`。

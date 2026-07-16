@@ -9,36 +9,36 @@
 | `active_question` | 一个fixed-past unified decoder是否需要自适应future-output coupling granularity？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | `SC1-PCSD` problem-supported/method-unready；`SC2-CCRL` high-risk D14-B1 Step7A diagnostic |
+| `active_candidates` | `SC1-PCSD-CF` narrative-ready/effectiveness-unready；SC2 slot open，`ICC` hypothesis only |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
-| `stage_rollback` | D14-A无crossing -> Step 2；D14-B不可预测 ->关闭CCRL；禁止直接堆叠method |
+| `stage_rollback` | PCSD-CF local invalid -> Step5/6；native arms unskilled -> Step4；SC2需direct credit problem evidence |
 
 ## Decision Cursor
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | D14-B1 Step 4-6 conditional pass；Step7A local implementation next |
-| `current_candidate` | `SC1-PCSD` retained；`SC2-CCRL` contribution-specific diagnostic pending |
-| `latest_decision` | generic router novelty insufficient；CCRL must beat direct-fusion/hard-oracle/in-sample controls |
-| `next_required_action` | implement D14-B1 local split/leakage/objective/projectivity gates |
-| `method_training_authorized` | D14-B1 local diagnostic=true；remote=false，paper method=false，test=false |
-| `rollback_point` | B-P fail ->关闭instance claim；B-C fail ->关闭CCRL、PCSD返回Step4 |
+| `current_11_step` | PCSD-CF Step 4-6 conditional pass；D15-A Step7A local implementation next |
+| `current_candidate` | `SC1-PCSD-CF-v1`；SC2 unfilled，`SC2-ICC` only a blocked hypothesis |
+| `latest_decision` | CCRL retired for two-stage mismatch；native shared coupling field precedes any training innovation |
+| `next_required_action` | implement PCSD-CF module and local containment/projectivity/topology/accounting gates |
+| `method_training_authorized` | PCSD-CF local implementation=true；remote/effectiveness claim/SC2/test=false |
+| `rollback_point` | local invalid -> Step5/6；carrier/arm skill fail -> Step4；direct misallocation evidence -> SC2 Step2-4 |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | D14-B1 source/theory/design complete；local Step7A next |
+| `current_step` | PCSD-CF source/theory/design complete；D15-A local Step7A next |
 | `problem` | 现有unified decoder固定point/block/global coupling scope；最佳future-output sharing是否随target region与history变化 |
 | `existence_evidence` | three-seed neutral+A6 5/5 stable crossing；strict 7.1107%/9.1259%；instance 6.7948%/8.5990% |
-| `idea` | PCSD coupling spectrum + CCRL actual fusion loss with auxiliary cross-fitted centered-risk supervision |
-| `theory_check` | OOF risk differences identifiable；expert-risk仅为mixture-loss上界；requested-H-free projectivity preserved |
-| `design` | two purged outer folds；36-d history + 11-d target features；B-P predictability与B-C contribution gates |
-| `narrative_gate` | conditional diagnostic pass；TimeFuse/TimeRouter/AME-TS overlap使generic routing claim无效 |
-| `effectiveness_gate` | pending；must beat fixed/target-only and matched direct-fusion/hard/in-sample controls |
-| `artifacts` | `analysis/stage_c_d14b_crossfit_regret_20260716/d14b_step46_source_theory_design_audit.md` |
-| `decision` | authorize_d14b1_step7a_local_only；remote/method/test held |
+| `idea` | one shared coupling field + scope pooling + direct end-to-end history × target policy |
+| `theory_check` | DCT nonconstant modes zero-mean；constructive A6 containment gap 0；requested-H-free projectivity |
+| `design` | shared mode maps `[Dq,R,K]`；five pooling operators；identity+GELU synthesis；D15 direct controls |
+| `narrative_gate` | conditional pass；DeepONet/PoU/SoftMoE primitives excluded from novelty claim |
+| `effectiveness_gate` | pending；must beat A6/equal/static and survive dense/random controls |
+| `artifacts` | `analysis/stage_c_pcsd_native_reset_20260716/pcsd_cf_step46_source_theory_design_audit.md` |
+| `decision` | authorize_pcsd_cf_step7a_local_only；CCRL retired；remote/SC2/test held |
 
 ## Frozen Carrier Contract
 
@@ -89,9 +89,12 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC1-CADMO` | `rejected_by_narrative_scope` | full patch memory在global coeff之外是否支持projective target-specific direct access | 与multi-horizon核心问题不直接对齐 | not started | 不占active slot；仅保留历史设计 |
 | `SC2-CPGA` | `rejected_with_parent_route` | full-memory path的prediction change能否由conditional predictive gain核算 | 脱离CADMO后退化为generic accounting | not started | 不实现；不占active slot |
 | `SC-D14-P` | `auxiliary_not_scheduled` | A6 patch memory是否含超越global coeff的ordered target-specific conditional information | not paper mainline | not started | 未来仅在decoder interface需要时做small probe |
-| `SC1-PCSD` | `problem_supported_method_unready` | one projective decoder是否需同时表示point/block/global coupling scopes | complete-chain novelty only；DIRMO/Stratify/CATS controls mandatory | D14-A1 three-seed dual-carrier pass；GroupedMLP below LBF | retain；formal method Step4-6 waits for B evidence |
-| `SC2-CCRL` | `d14b1_step7a_local_ready_high_risk` | cross-fit relative risk能否增益matched direct fusion | generic routing已被TimeFuse/TimeRouter覆盖；只保留within-decoder coupling chain | D14-A prerequisite pass；B-P/B-C pending | implement local invariants only；remote=false |
-| `SC-D14-A/B` | `a_confirmed_b1_step7a_next` | coupling crossing与conditional-risk predictability | A pass；B conditional diagnostic pass；method=false | A confirmed；B untested | D14-B1 Step7A；test=false |
+| `SC1-PCSD` | `problem_supported_parent` | one projective decoder是否需同时表示point/block/global coupling scopes | complete-chain novelty only；DIRMO/Stratify/CATS controls mandatory | D14-A1 three-seed dual-carrier pass；GroupedMLP below LBF | parent retained；native child PCSD-CF active |
+| `SC1-PCSD-CF` | `narrative_ready_step7a_next` | one shared parameter field能否经scope pooling形成skilled point/block/global arms并contain A6 | DeepONet/PoU/soft routing excluded；field-pooling chain only | theory/containment pass；effectiveness untested | implement D15-A local invariants；remote=false |
+| `SC2-CCRL` | `retired_as_core_diagnostic_only` | cross-fit relative risk能否增益matched direct fusion | generic overlap high；two-stage teacher/student inconsistency | not implemented | retain report/config as history；not scheduled |
+| `SC2-ICC` | `hypothesis_only_blocked` | same-forward marginal coupling credit能否修复direct policy misallocation | counterfactual credit primitive not novel；task-specific chain unassessed | credit problem not established | wait for D15-A direct-control evidence |
+| `SC-D14-A/B` | `a_confirmed_b_retired` | coupling crossing与conditional-risk predictability | A pass；B retired before implementation | A confirmed；B not run | A evidence retained；B closed |
+| `SC-D15-A` | `step7a_local_next` | native PCSD-CF representation、direct trainability与credit-problem existence | Step4-6 conditional pass | local/remote pending | Step7A only；test=false |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
 
@@ -195,8 +198,9 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | Post-D12 systematic mainline redesign | `deferred_next_paper` | NIFRO/IARL与D13转移到`New-idea.md`；不再占当前slots |
 | D13-A/B rolling-origin diagnostics | `deferred_next_paper` | protocol preserved；not active |
 | Fixed-past compression mainline reset | `superseded_by_narrative_scope` | CADMO/CPGA与patch-memory D14降为history-interface auxiliary；未执行 |
-| Multi-horizon coupling mainline reset | `completed_provisional_step2_3` | PCSD/CCRL proposed；完整prior-art boundary与D14-A/B gates已冻结；method remains false |
-| D14 output-coupling granularity | `a_confirmed_b1_step7a_local_next` | A1 dual-carrier 255/255 confirmed；B1 source/theory/design conditional pass；remote false |
+| Multi-horizon coupling mainline reset | `superseded_by_native_pcsd_reset` | PCSD/CCRL曾proposed；D14-A evidence保留，CCRL后续retired |
+| D14 output-coupling granularity | `a_confirmed_b_retired` | A1 dual-carrier 255/255 confirmed；B1未implementation；remote false |
+| PCSD-CF native architecture reset | `step7a_local_next` | shared field/scope pooling/A6 containment Step4-6 conditional pass；D15-A active |
 
 ## Paper Mainline Sync Log
 
@@ -243,6 +247,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-15 | D14-A1 source/theory and Step7A | Current Position、Experiment Logic、failure attribution | neutral-first nonlinear E2E diagnostic | 80+20 local cases pass；neutral remote only；A6 fail不能方向拒绝 |
 | 2026-07-16 | D14-A1 three-seed confirmation | Current Position、Contribution Slots、Experiment Logic | problem gate confirmation + next-step authorization | dual-carrier 5/5 stable crossing；strict 7.11%/9.13%；D14-B仅返回Step4-6 |
 | 2026-07-16 | D14-B1 Step4-6 source/theory/design | Contribution 2、Boundary、Experiment Logic | novelty tightening + objective correction + local authorization | TimeFuse/TimeRouter controls mandatory；hybrid risk auxiliary；Step7A local only |
+| 2026-07-16 | CCRL consistency audit + PCSD-CF reset | Contribution 1/2、Boundary、Experiment Logic | SC2 retirement + SC1 native Step4-6 | CCRL diagnostic-only；shared coupling field conditional pass；D15-A Step7A next |
 
 ## Continuation Rules
 

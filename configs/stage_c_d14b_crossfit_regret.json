@@ -1,6 +1,8 @@
 {
   "stage": "StageC-UVHF",
   "diagnostic_id": "SC-D14-B1",
+  "status": "superseded_before_step7a_diagnostic_only_not_scheduled",
+  "superseded_by": "configs/stage_c_pcsd_cf_native_direct.json",
   "role": "diagnostic_only_crossfit_coupling_risk_predictability",
   "series_length": 720,
   "coupling_scales": [1, 48, 144, 360, 720],
@@ -131,7 +133,7 @@
     "paper_method_requires_later_a6_containment_and_lbf_effectiveness": true
   },
   "authorization": {
-    "step7a_local_implementation_authorized": true,
+    "step7a_local_implementation_authorized": false,
     "remote_training_authorized": false,
     "paper_method_implementation_authorized": false,
     "test_access_authorized": false

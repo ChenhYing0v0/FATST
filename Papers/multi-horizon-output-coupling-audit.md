@@ -2,9 +2,9 @@
 
 ## Scope
 
-- Search dates: 2026-07-15 initial audit；2026-07-16 D14-B freshness extension
+- Search dates: 2026-07-15 initial audit；2026-07-16 D14-B and PCSD-native reset extensions
 - Topic: multi-step forecasting strategy、Direct/MIMO/DIRMO、future-query decoder、joint future decoding、
-  dynamic multi-output ensembles、expert selection与regret supervision
+  dynamic multi-output ensembles、expert selection、regret supervision、coordinate operator与local/global MoE
 - Discovery policy: external primary-source search为主；Zotero只作seed/reference
 - Source types: formal proceedings、publisher paper page、OpenReview、arXiv official page、official code page
 - Confidence: classic strategy、CATS、MQF2、Implicit Forecaster与TimePerceiver为高；2026 preprint只作freshness
@@ -36,6 +36,11 @@
 | [Learning to Defer](https://proceedings.mlr.press/v119/mozannar20b.html) | cost-sensitive expert selection与consistent surrogate | regret/cost-sensitive reduction不是novelty |
 | [Calibrated Learning to Defer](https://proceedings.mlr.press/v162/verma22c.html) | one-vs-all calibrated expert correctness | hard oracle/OvA router必须是control |
 | [Temporal horizons trade-off](https://openreview.net/forum?id=BeudQIxT1R) | AR training horizon影响loss landscape与learnability | 只适用于AR-family evidence，不能直接外推到A6 direct decoder |
+| [DeepONet](https://doi.org/10.1038/s42256-021-00302-5) | branch编码input function、trunk编码output coordinates并以内积合成operator | coordinate field、branch/trunk与separable synthesis不是PCSD novelty |
+| [PoU-MoE DeepONet](https://arxiv.org/abs/2405.11907) | spatial partition-of-unity local experts与operator mixture | local/global operator mixture与spatial locality不是component novelty |
+| [Soft MoE](https://openreview.net/forum?id=jxpsAj7ltE) | fully differentiable soft expert assignment | soft routing不是training contribution |
+| [SMEAR](https://openreview.net/forum?id=7I199lc54z) | parameter-space soft expert merging并用standard gradients训练 | parameter merging不是PCSD novelty捷径 |
+| [sMCL](https://proceedings.neurips.cc/paper/2016/hash/20d135f0f28185b84a4cf7aa51f29500-Abstract.html) | oracle loss驱动multiple predictors并行specialization | online best-arm/oracle target不是Contribution 2 novelty |
 
 ## Key Synthesis
 
@@ -61,13 +66,20 @@ margin/diversity gate与CV-inverse fallback。StageC只吸收这些实现作为c
 `DIRECT_FUSION`与forecast-feature/hard-oracle arms必须运行，selective fallback不计novelty。本地不新增XGBoost
 依赖，nonlinear sensitivity使用已有sklearn HistGradientBoosting。
 
+[Training-Consistency Correction] CCRL虽可把预计算OOF risk作为最终auxiliary loss，但其teachers是独立scale
+models，student是持续更新的shared PCSD arms；risk targets只覆盖部分training samples且会stale。该两阶段流程
+没有形成与复杂度相称的novelty，故在Step7A前退出paper core。它只保留为未来严格secondary control。
+
+[Native Architecture Reset] 新PCSD-CF不保存五个完整decoders。一个shared history-to-future mode field经
+future-coordinate group pooling产生point/block/global states，并共享target synthesis rows。constant coordinate
+mode给出A6 exact subspace，nonconstant zero-mean modes提供scope separation；direct task loss是首个control。
+
 ## Novelty Opportunity
 
 primitive-level novelty已被大量占据。当前仅保留以下complete-chain机会：
 
-> one fixed-past projective neural decoder + explicit point-to-global coupling spectrum + sample/target-region
-> coupling policy + train-only counterfactual regret supervision + no requested-H semantics + no external strategy
-> search.
+> one fixed-past projective parameter field + scope pooling changes future-output state sharing + simultaneous
+> point-to-global operators + exact A6 subspace + direct history/target allocation + no requested-H semantics.
 
 该链必须同时超过：
 
@@ -77,9 +89,9 @@ primitive-level novelty已被大量占据。当前仅保留以下complete-chain�
 - equal/static mixture；
 - ordinary task-loss router；
 - TimeFuse-style matched direct fusion；
-- TimeRouter-style hard oracle/forecast-feature router；
-- in-sample best-expert pseudo-label；
-- dynamic ensemble/meta-learning controls；
+- TimeRouter-style hard oracle/forecast-feature router（只在未来SC2审计需要时）；
+- in-sample best-expert pseudo-label与generic counterfactual credit（不得直接升级SC2）；
+- dynamic ensemble/meta-learning、Soft MoE与SMEAR controls；
 - same-parameter generic capacity与random partition controls。
 
 ## Rejected Claims
@@ -101,11 +113,12 @@ primitive-level novelty已被大量占据。当前仅保留以下complete-chain�
 - TimeRouter本轮OpenReview PDF受challenge限制，搜索索引返回了方法摘要与公式片段；它只用于提高overlap风险，
   不作为absence/novelty结论的唯一证据；
 - classic DIRMO原始论文与Stratify引用链应在formal Step 4下载全文逐项核对；
-- 若发现within-model、per-target adaptive Direct-to-MIMO coupling的直接先例，PCSD/CCRL必须重新收窄或关闭；
+- 若发现within-model、per-target adaptive Direct-to-MIMO coupling field的直接先例，PCSD-CF必须重新收窄或关闭；
 - 最终采用的论文应回填Zotero，但Zotero缺失不能作为novelty evidence。
 
 ## Current Decision
 
-D14-A1 three-seed dual-carrier problem gate已通过。D14-B1 Step4-6对diagnostic conditional pass，只授权local
-Step7A。CCRL novelty风险为high；只有`cross-fitted hybrid > matched direct fusion + hard-oracle/in-sample controls`
-时才保留Contribution 2资格。remote、paper method与test仍false。
+D14-A1 three-seed dual-carrier problem gate已通过。D14-B1/CCRL因training inconsistency与engineering-to-novelty
+失衡在Step7A前关闭为paper core。PCSD-CF Step4-6对local implementation conditional pass；下一步只执行D15-A
+A6 containment、projectivity、scope topology与accounting gates。Contribution 2 slot保持open，remote、test与
+SC2 implementation仍false。

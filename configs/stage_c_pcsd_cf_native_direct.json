@@ -1,0 +1,107 @@
+{
+  "stage": "StageC-UVHF",
+  "candidate_id": "SC1-PCSD-CF-v1",
+  "diagnostic_id": "SC-D15-A",
+  "status": "step7a_local_authorized",
+  "role": "paper_core_architecture_candidate_with_direct_control",
+  "series_length": 720,
+  "coupling_scales": [1, 48, 144, 360, 720],
+  "carrier_profile": "configs/stage_c_five_dataset_natural_profiles.json",
+  "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"],
+  "seeds": {
+    "screen": 2021,
+    "confirmation": [2022, 2023]
+  },
+  "coupling_field": {
+    "coordinate_family": "fixed-low-order-dct",
+    "coordinate_dim": 4,
+    "constant_mode": true,
+    "nonconstant_modes_zero_mean": true,
+    "mode_rank": 256,
+    "mode_bias": true,
+    "scope_operator": "canonical-group-mean-pooling",
+    "feature_lift": ["identity", "gelu"],
+    "shared_mode_maps": true,
+    "shared_target_synthesis_rows": true,
+    "separate_full_decoder_per_scale": false,
+    "a6_exact_subspace_required": true,
+    "forecast_residual_path": false
+  },
+  "policy": {
+    "history_projection_dim": 32,
+    "hidden_dim": 64,
+    "inputs": ["normalized_history_state", "natural_target_coordinate"],
+    "requested_horizon_feature": false,
+    "dataset_id_feature": false,
+    "future_truth_feature": false,
+    "output": "per-target-five-scope-softmax",
+    "logit_initialization": "equal-zero"
+  },
+  "training": {
+    "objective": "full-720-pointwise-l1-of-fused-forecast",
+    "crossfit_risk_loss": false,
+    "oracle_loss": false,
+    "load_balance_loss": false,
+    "diversity_loss": false,
+    "counterfactual_credit_loss": false,
+    "from_scratch": true,
+    "joint_encoder_decoder_training": true,
+    "frozen_replacement": false,
+    "warm_start": false,
+    "checkpoint_policy": "best-validation-h720-mse",
+    "test_used": false
+  },
+  "step7a_invariants": [
+    "five-profile-shape-contract",
+    "exact-full-domain-prefix-crop",
+    "float64-and-float32-a6-containment",
+    "scope-jacobian-sharing-topology",
+    "random-parameter-arm-separation",
+    "canonical-random-partition-parameter-equality",
+    "finite-forward-and-gradients",
+    "parameter-dof-flop-activation-accounting",
+    "no-requested-h-or-test-access"
+  ],
+  "step7b_arms": [
+    "A6_LBF_E2E",
+    "PCSD_CF_M0",
+    "PCSD_CF_FIXED_1",
+    "PCSD_CF_FIXED_48",
+    "PCSD_CF_FIXED_144",
+    "PCSD_CF_FIXED_360",
+    "PCSD_CF_FIXED_720",
+    "PCSD_CF_EQUAL",
+    "PCSD_CF_STATIC_TARGET",
+    "PCSD_CF_DIRECT",
+    "PCSD_CF_RANDOM_PARTITION",
+    "DENSE_NONLINEAR_MATCHED"
+  ],
+  "effectiveness_gate": {
+    "direct_over_a6_dataset_required": 3,
+    "direct_over_a6_macro_gain_min": 0.003,
+    "direct_over_equal_dataset_required": 3,
+    "direct_over_equal_macro_gain_min": 0.002,
+    "direct_over_static_dataset_required": 3,
+    "direct_over_static_macro_gain_min": 0.002,
+    "dense_capacity_control_may_explain_gain": false,
+    "random_partition_may_explain_gain": false,
+    "same_run_arm_skill_required": true,
+    "same_run_arm_separation_required": true,
+    "policy_collapse_allowed": false
+  },
+  "contribution2_problem_gate": {
+    "requires_same_run_oracle_or_marginal_headroom": true,
+    "requires_direct_policy_misalignment": true,
+    "requires_a6_containment_valid": true,
+    "requires_arm_undertraining_excluded": true,
+    "requires_capacity_and_numeric_explanations_excluded": true,
+    "candidate_after_pass": "SC2-ICC-working-hypothesis-only"
+  },
+  "authorization": {
+    "step7a_local_implementation_authorized": true,
+    "remote_training_authorized": false,
+    "paper_method_effectiveness_claim_authorized": false,
+    "contribution2_implementation_authorized": false,
+    "test_access_authorized": false
+  }
+}
