@@ -2,7 +2,7 @@
 
 ## Scope
 
-- Search date: 2026-07-15
+- Search dates: 2026-07-15 initial audit；2026-07-16 D14-B freshness extension
 - Topic: multi-step forecasting strategy、Direct/MIMO/DIRMO、future-query decoder、joint future decoding、
   dynamic multi-output ensembles、expert selection与regret supervision
 - Discovery policy: external primary-source search为主；Zotero只作seed/reference
@@ -28,7 +28,13 @@
 | [MQF2, AISTATS 2022](https://proceedings.mlr.press/v151/kan22a.html) | probabilistic multi-horizon中直接建模跨future-time dependency | 不claim首次联合future dependency；point-MSE与probabilistic dependency必须区分 |
 | [Multi-output Ensembles](https://arxiv.org/abs/2306.14563) | 比较multi-output dynamic ensembles与horizon-wise/joint weighting；长horizon下dynamic methods常难胜equal mixture | dynamic weighting、regret与meta-learning是mandatory controls，不是SC2 novelty |
 | [Two-Step Meta-Learning Ensemble](https://arxiv.org/abs/2011.10545) | 由time-series features预测model ranking与ensemble size | history-feature-based model/expert selection已有先例 |
-| [TimeRouter](https://openreview.net/pdf?id=zwDRjyd0md) | 以context与forecast evidence选择TSFM expert或ensemble fallback | discriminative forecast-model routing已被占据；仅作2026 freshness pressure |
+| [FFORMA](https://www.sciencedirect.com/science/article/pii/S0169207019300895) | 由series features学习forecast-method combination weights，并区分随机model selection objective与最终weighted average | feature-based weighting、meta-learning与soft combination不是SC2 novelty |
+| [TimeFuse, ICML 2025](https://proceedings.mlr.press/v267/liu25cm.html) | sample-level meta-features驱动heterogeneous forecast models的adaptive fusion | sample-level fusion与direct fused loss必须成为matched control |
+| [TimeRouter](https://arxiv.org/abs/2606.11625) | context/CV/forecast features、oracle-best labels、nonlinear router、selective fallback与OOF threshold selection | oracle labels、forecast snippets、nonlinear routing与fallback已被占据；仅作2026 freshness pressure |
+| [AME-TS](https://arxiv.org/abs/2605.25166) | interpretable temporal descriptors形成soft expert prior，以KL alignment稳定specialization | structural-prior routing与KL supervision不能claim |
+| [TimeExpert](https://arxiv.org/abs/2509.23145) | local timestamp experts、shared global expert与query-dependent routing | local/global expert mixture不是component novelty；其history-attention作用点与output coupling不同 |
+| [Learning to Defer](https://proceedings.mlr.press/v119/mozannar20b.html) | cost-sensitive expert selection与consistent surrogate | regret/cost-sensitive reduction不是novelty |
+| [Calibrated Learning to Defer](https://proceedings.mlr.press/v162/verma22c.html) | one-vs-all calibrated expert correctness | hard oracle/OvA router必须是control |
 | [Temporal horizons trade-off](https://openreview.net/forum?id=BeudQIxT1R) | AR training horizon影响loss landscape与learnability | 只适用于AR-family evidence，不能直接外推到A6 direct decoder |
 
 ## Key Synthesis
@@ -45,6 +51,16 @@ Forecaster采用global waves。现有工作并未因为都叫“unified model”
 StageC只能把output coupling解释为有限样本/有限capacity下的shared inductive bias，不能把probabilistic
 dependency文献直接转换为point-MSE theorem。
 
+[D14-B Theory Correction] per-expert weighted risk不是weighted-average forecast的实际MSE；两者相差非负的
+prediction-diversity项。因此`softmax(-regret)`不能被直接称为optimal fusion。cross-fitted regret只能作为
+auxiliary conditional-risk supervision，actual fused forecast loss必须是primary objective。
+
+[Official Code Boundary] TimeFuse官方`ModelFusor`为linear-softmax fusor并直接优化weighted forecasts；其feature
+extractor覆盖statistics、ACF/stationarity、AR与spectrum。TimeRouter官方实现冻结四个TSFMs，使用XGBoost、
+margin/diversity gate与CV-inverse fallback。StageC只吸收这些实现作为control/default证据，不直接复制模块：
+`DIRECT_FUSION`与forecast-feature/hard-oracle arms必须运行，selective fallback不计novelty。本地不新增XGBoost
+依赖，nonlinear sensitivity使用已有sklearn HistGradientBoosting。
+
 ## Novelty Opportunity
 
 primitive-level novelty已被大量占据。当前仅保留以下complete-chain机会：
@@ -60,6 +76,8 @@ primitive-level novelty已被大量占据。当前仅保留以下complete-chain�
 - fixed DIRMO block sizes；
 - equal/static mixture；
 - ordinary task-loss router；
+- TimeFuse-style matched direct fusion；
+- TimeRouter-style hard oracle/forecast-feature router；
 - in-sample best-expert pseudo-label；
 - dynamic ensemble/meta-learning controls；
 - same-parameter generic capacity与random partition controls。
@@ -74,7 +92,10 @@ primitive-level novelty已被大量占据。当前仅保留以下complete-chain�
 - first multiscale/local-global forecast generation；
 - first future dependency modeling。
 
-## Search Gaps And Freshness Risk
+## Discovery And Freshness Risk
+
+- FFORMA、TimeFuse、TimeRouter、AME-TS、TimeExpert与learning-to-defer sources均由2026-07-16 external search
+  发现或重新核验；本轮未以Zotero presence作筛选，Zotero收录状态未核验；
 
 - 2026 adaptive decoder/MoE work仍在快速增长；投稿前必须再次执行external search与citation chaining；
 - TimeRouter本轮OpenReview PDF受challenge限制，搜索索引返回了方法摘要与公式片段；它只用于提高overlap风险，
@@ -85,5 +106,6 @@ primitive-level novelty已被大量占据。当前仅保留以下complete-chain�
 
 ## Current Decision
 
-`PCSD + CCRL`仅为`proposed_step2_3`。先运行D14验证coupling-scale crossing与regret predictability；D14通过
-也只允许返回formal Step 4-6，不直接实现paper method。
+D14-A1 three-seed dual-carrier problem gate已通过。D14-B1 Step4-6对diagnostic conditional pass，只授权local
+Step7A。CCRL novelty风险为high；只有`cross-fitted hybrid > matched direct fusion + hard-oracle/in-sample controls`
+时才保留Contribution 2资格。remote、paper method与test仍false。

@@ -5,11 +5,11 @@
 | Field | Value |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D14-A1 three-seed Step 9-10 confirmed；D14-B returns Step 4-6 |
+| `current_step` | D14-B1 Step 4-6 conditional pass；Step7A local implementation next |
 | `role` | `diagnostic_only` |
-| `active_candidates` | provisional `SC1-PCSD` + `SC2-CCRL` |
+| `active_candidates` | `SC1-PCSD` problem-supported；`SC2-CCRL` high-risk diagnostic candidate |
 | `method_training` | false |
-| `remote_training` | three seeds × (neutral 40 + A6 45) = 255/255 complete；D14-B design=true；implementation=false |
+| `remote_training` | D14-A 255/255 complete；D14-B1 local=true，remote=false，paper method=false |
 | `test_access` | false |
 | `primary_carrier` | neutral train-only raw-history carrier |
 | `sensitivity_carrier` | A6-natural E2E architecture，只有neutral problem pass后才授权 |
@@ -239,66 +239,87 @@ $$
 
 D14-A valid fail则取消D14-B并先完成failure attribution；carrier/numeric invalid不得用于方向否决。
 
-## D14-B Cross-Fitted Regret Predictability
+## D14-B1 Cross-Fitted Conditional-Risk Predictability
 
-### Label construction
+### Step 4-6 source/theory correction
 
-仅使用train chronological cross-fitting predictions。对held-out train sample $i$、bin $b$与scale $s$：
+TimeFuse已覆盖sample-level meta-feature fusion；TimeRouter已覆盖oracle-best expert labels、context/CV/forecast
+features、nonlinear routing与OOF threshold selection；AME-TS已覆盖structural-prior KL routing。因此generic
+history-conditioned router不构成CCRL novelty。
+
+原`softmax(-realized regret)`也不能直接解释为optimal mixture weight。对mixture $f_p=\sum_sp_sf_s$：
 
 $$
-R^{cf}_{i,b,s}=L^{cf}_{i,b,s}-\min_jL^{cf}_{i,b,j},
-\qquad
-q_{i,b,s}=\operatorname{softmax}(-R^{cf}_{i,b,s}/\tau_r).
+\sum_sp_s(Y-f_s)^2-(Y-f_p)^2=\sum_sp_s(f_s-f_p)^2\ge0.
 $$
 
-$\tau_r$只能在train内部选择。validation labels不得用于policy fit或temperature selection。
+expert-risk objective只是mixture loss上界，会遗漏prediction cancellation。D14-B1因此改为：actual fused forecast
+loss是primary，chronological cross-fitted centered risk只作auxiliary identifiable supervision。完整审计见
+`analysis/stage_c_d14b_crossfit_regret_20260716/d14b_step46_source_theory_design_audit.md`。
 
-### Policy arms
+### Leakage-free construction
 
-1. `B0_CONSTANT_PRIOR`；
+两个purged forward outer folds使用train windows的`[0.6,0.8)`与`[0.8,1.0)`作为OOF ranges，raw
+past+future coverage之间保持1439-window purge。每个fit prefix内部另设purged inner tail选择expert epoch；最终
+experts在full train按median inner-best epoch refit。official validation不参与expert checkpoint、policy、temperature
+或$\lambda$选择。
+
+对OOF sample $i$、region $b$与scale $s$，primary target为centered risk：
+
+$$
+r^{cf}_{i,b,s}=L^{cf}_{i,b,s}-\frac1{|\mathcal S|}\sum_jL^{cf}_{i,b,j}.
+$$
+
+centering保留pairwise risk differences；hard oracle只作prior-art control。requested $H$、dataset ID、validation
+performance与future truth均不得进入deployed policy。
+
+### Frozen policy arms
+
+1. `B0_OOF_BEST_FIXED`；
 2. `B1_EQUAL_MIXTURE`；
-3. `B2_TARGET_ONLY`；
-4. `B3_HISTORY_ONLY`；
-5. `B4_HISTORY_TARGET`；
-6. `B5_IN_SAMPLE_PSEUDOLABEL`；
-7. `B6_PERMUTED_REGRET_LABEL`；
-8. `B7_RANDOM_HISTORY_FEATURE`；
-9. `B8_ORACLE_UPPER_BOUND`。
+3. `B2_TARGET_ONLY_RISK`；
+4. `B3_HISTORY_ONLY_RISK`；
+5. `B4_HISTORY_TARGET_RISK`；
+6. `B5_HISTORY_TARGET_DIRECT_FUSION`；
+7. `B6_CCRL_HYBRID`；
+8. `B7_HARD_ORACLE_HYBRID`；
+9. `B8_IN_SAMPLE_REGRET_HYBRID`；
+10. `B9_PERMUTED_CROSSFIT_REGRET`；
+11. `B10_RANDOM_HISTORY_HYBRID`；
+12. `B11_FORECAST_FEATURE_CCRL_CONTROL`；
+13. `B12_ORACLE_UPPER_BOUND`。
 
-history features必须在inference时可得；禁止future label、requested $H$、validation arm performance与dataset-specific
-manual rule。
+primary policy是matched 64-64 GELU MLP；target-only/history-only通过zero mask保持相同input slots。另运行
+`HistGradientBoostingRegressor`排除弱regression head造成的假失败。forecast-feature arm是TimeRouter-style
+secondary control，不计novelty。
 
-### Statistics
+### Gate B-P: predictability problem
 
-- validation forecast MSE/MAE of routed/soft-mixture output；
-- gain over best fixed scale and equal mixture；
-- gain of history+target over target-only；
-- regret calibration与top-1 scale accuracy；
-- router entropy、scale usage、expert disagreement；
-- in-sample vs cross-fitted pseudo-label generalization gap；
-- permuted-label falsification。
+`B4_HISTORY_TARGET_RISK`必须：
 
-forecast gain是primary；classification accuracy只是mechanism diagnostic。
+1. 至少3/5 datasets超过`B0`，macro MSE gain `>=0.3%`；
+2. 至少3/5超过`B2`且macro `>=0.2%`；
+3. 至少3/5超过`B3`且macro `>=0.1%`；
+4. confirmation至少2/3 seeds同方向；
+5. MLP fail但tree positive只触发readout redesign，不形成direction pass/fail。
 
-### D14-B gate
+### Gate B-C: contribution-specific value
 
-CCRL problem pass需要：
+`B6_CCRL_HYBRID`必须在至少3/5 datasets超过matched `B5_DIRECT_FUSION`，macro MSE gain `>=0.2%`，并在
+至少3/5超过hard-oracle与in-sample hybrid；permuted/random controls不得复制收益，且不能出现collapse、non-finite
+或validation reversal。B-P通过而B-C失败只支持generic adaptive fusion，CCRL关闭。
 
-1. `B4_HISTORY_TARGET`在至少3/5 datasets超过train-selected best fixed scale；
-2. five-dataset macro MSE gain `>=0.3%`；
-3. 至少3/5 datasets超过`B2_TARGET_ONLY`，证明instance information有增量；
-4. 至少2/3 seeds/folds同方向；
-5. `B6/B7`不复制收益；
-6. 无router collapse或validation reversal解释。
+[Decision] narrative gate对`diagnostic_only` conditional pass；只授权Step7A local implementation。remote、paper
+method与test仍false。冻结设计见`configs/stage_c_d14b_crossfit_regret.json`。
 
 ## Decision Matrix
 
 | D14-A | D14-B | Decision |
 | --- | --- | --- |
 | fail | canceled | PCSD/CCRL关闭；rollback Step 2 |
-| pass | fail | PCSD返回Step 4；CCRL关闭并重找SC2 |
-| pass | target-only only | 只保留distance policy evidence；instance-adaptive claim关闭 |
-| pass | history+target pass | PCSD/CCRL返回formal Step 4-6；method/remote/test仍false |
+| pass | B-P fail | PCSD返回Step 4；关闭instance-adaptive coupling claim与CCRL |
+| pass | B-P pass / B-C fail | 只支持generic adaptive fusion；CCRL关闭，PCSD返回Step 4 |
+| pass | B-P + B-C pass | PCSD/CCRL返回formal method Step 4-6；method/remote/test仍false |
 | invalid | any | 修复diagnostic；不得方向级否决 |
 
 ## Failure Attribution

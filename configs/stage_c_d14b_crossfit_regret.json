@@ -1,0 +1,139 @@
+{
+  "stage": "StageC-UVHF",
+  "diagnostic_id": "SC-D14-B1",
+  "role": "diagnostic_only_crossfit_coupling_risk_predictability",
+  "series_length": 720,
+  "coupling_scales": [1, 48, 144, 360, 720],
+  "target_regions": [
+    {"name": "short", "start": 0, "end": 144},
+    {"name": "mid", "start": 144, "end": 360},
+    {"name": "long", "start": 360, "end": 720}
+  ],
+  "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"],
+  "seeds": {
+    "screen": 2021,
+    "confirmation": [2022, 2023],
+    "stable_seed_required": 2
+  },
+  "carriers": {
+    "neutral_raw": {
+      "role": "primary_predictability_gate",
+      "run_first": true
+    },
+    "a6_natural": {
+      "role": "paper_carrier_sensitivity",
+      "requires_neutral_problem_and_contribution_gate": true
+    }
+  },
+  "chronological_crossfit": {
+    "outer_fold_count": 2,
+    "outer_oof_start_fractions": [0.6, 0.8],
+    "outer_oof_end_fractions": [0.8, 1.0],
+    "purge_windows": 1439,
+    "oof_windows_per_fold": 512,
+    "inner_validation_tail_fraction": 0.1,
+    "checkpoint_selection": "best-inner-validation-h720-mse",
+    "full_refit_epoch": "rounded-median-inner-best-epoch",
+    "official_validation_used_for_selection": false,
+    "evaluation_split": "official-validation",
+    "test_used": false
+  },
+  "expert_training": {
+    "objective": "full-720-pointwise-l1",
+    "max_epochs": 20,
+    "batch_size": 32,
+    "learning_rate": 0.0001,
+    "from_scratch": true,
+    "warm_start": false,
+    "frozen_replacement": false
+  },
+  "feature_contract": {
+    "history_descriptor_dim": 36,
+    "history_descriptor_groups": {
+      "distribution": 5,
+      "dynamics": 5,
+      "autocorrelation": 8,
+      "spectrum": 6,
+      "recent_multiresolution": 12
+    },
+    "autocorrelation_lags": [1, 3, 6, 12, 24, 48, 96, 192],
+    "recent_windows": [24, 48, 96, 192],
+    "target_coordinate_dim": 11,
+    "target_coordinate": "region-center-and-width-plus-fourier-k1-to-k4",
+    "requested_horizon_feature": false,
+    "dataset_id_feature": false,
+    "random_history_control_dim": 36,
+    "random_feature_seed": 14121,
+    "forecast_feature_arm_is_secondary_prior_art_control": true
+  },
+  "risk_target": {
+    "loss": "per-row-per-region-normalized-mse",
+    "center": "subtract-per-row-region-mean-across-scales",
+    "robust_clip_quantiles": [0.01, 0.99],
+    "clip_fit_scope": "outer-oof-train-only",
+    "hard_oracle_is_control_only": true,
+    "softmax_teacher_is_not_assumed_optimal_for_mixture": true
+  },
+  "policy": {
+    "primary_family": "two-layer-risk-mlp",
+    "hidden_dims": [64, 64],
+    "activation": "gelu",
+    "output_dim": 5,
+    "weight_map": "softmax-negative-predicted-risk-over-temperature",
+    "temperature_candidates": [0.1, 0.3, 1.0, 3.0],
+    "temperature_selection": "blocked-inner-oof-only",
+    "capacity_sensitivity_family": "sklearn-hist-gradient-boosting",
+    "direction_rejection_requires_both_nonlinear_families_fail": true
+  },
+  "objectives": {
+    "risk": "smooth-l1-predicted-vs-crossfit-centered-risk",
+    "direct_fusion": "mse-of-weighted-oof-forecast",
+    "hybrid": "direct-fusion-plus-lambda-risk",
+    "hybrid_lambda_candidates": [0.1, 0.3, 1.0],
+    "hybrid_lambda_selection": "blocked-inner-oof-only"
+  },
+  "arms": [
+    "B0_OOF_BEST_FIXED",
+    "B1_EQUAL_MIXTURE",
+    "B2_TARGET_ONLY_RISK",
+    "B3_HISTORY_ONLY_RISK",
+    "B4_HISTORY_TARGET_RISK",
+    "B5_HISTORY_TARGET_DIRECT_FUSION",
+    "B6_CCRL_HYBRID",
+    "B7_HARD_ORACLE_HYBRID",
+    "B8_IN_SAMPLE_REGRET_HYBRID",
+    "B9_PERMUTED_CROSSFIT_REGRET",
+    "B10_RANDOM_HISTORY_HYBRID",
+    "B11_FORECAST_FEATURE_CCRL_CONTROL",
+    "B12_ORACLE_UPPER_BOUND"
+  ],
+  "problem_gate": {
+    "history_target_over_best_fixed_dataset_required": 3,
+    "history_target_over_best_fixed_macro_gain_min": 0.003,
+    "history_target_over_target_only_dataset_required": 3,
+    "history_target_over_target_only_macro_gain_min": 0.002,
+    "history_target_over_history_only_dataset_required": 3,
+    "history_target_over_history_only_macro_gain_min": 0.001
+  },
+  "contribution_specific_gate": {
+    "hybrid_over_direct_fusion_dataset_required": 3,
+    "hybrid_over_direct_fusion_macro_gain_min": 0.002,
+    "hybrid_over_hard_oracle_dataset_required": 3,
+    "hybrid_over_in_sample_dataset_required": 3,
+    "permuted_or_random_control_may_replicate_gain": false,
+    "no_router_collapse": true,
+    "no_validation_reversal": true
+  },
+  "staging": {
+    "neutral_seed2021_first": true,
+    "a6_seed2021_requires_neutral_dual_gate": true,
+    "confirmation_requires_both_carriers_review": true,
+    "paper_method_requires_later_a6_containment_and_lbf_effectiveness": true
+  },
+  "authorization": {
+    "step7a_local_implementation_authorized": true,
+    "remote_training_authorized": false,
+    "paper_method_implementation_authorized": false,
+    "test_access_authorized": false
+  }
+}

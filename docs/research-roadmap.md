@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D14-A1 three-seed dual-carrier confirmed；D14-B Step 4-6 next |
+| `current_step` | D14-B1 Step 4-6 conditional pass；Step7A local implementation next |
 | `active_question` | fixed-past unified model是否需要在一个projective decoder内自适应future-output coupling scope？ |
-| `active_candidates` | `SC1-PCSD` problem-supported但method-unready；`SC2-CCRL`进入D14-B Step 4-6 audit |
+| `active_candidates` | `SC1-PCSD` problem-supported/method-unready；`SC2-CCRL` high-risk Step7A diagnostic |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/experiments/stage-c-d14-output-coupling-granularity.md` |
-| `method_implementation` | false；D14-B design=true；D14-B implementation/paper method/test=false |
-| `rollback_point` | D14-B fail ->关闭CCRL、PCSD返回Step4；target-only解释 ->关闭instance-adaptive claim |
+| `method_implementation` | D14-B1 local diagnostic=true；remote/paper method/test=false |
+| `rollback_point` | B-P fail ->关闭instance claim；B-C fail ->关闭CCRL、PCSD返回Step4 |
 
 ## Post-D11 Joint Mainline Reset
 
@@ -122,8 +122,16 @@ contiguity 0.6661%且5/5正。neutral strict/sample分别6.9978%/6.7555%，dual-
 [A1 Three-Seed Confirmation] 新增170/170 runs完成，three-seed dual-carrier gate均pass。neutral/A6均为5/5
 stable crossing；strict oracle为7.1107%/9.1259%，sample-over-bin为6.7948%/8.5990%。contiguity均为4/5 stable
 datasets，故只能claim broad default而非universal law。A6 train-selected/validation-best GroupedMLP相对LBF仍为
--2.6886%/-1.4879%，所以problem confirmed但method仍未ready。下一步固定为D14-B Step4-6 source/theory/narrative
-audit；implementation、paper method与test继续false。
+-2.6886%/-1.4879%，所以problem confirmed但method仍未ready。该时点只授权D14-B Step4-6
+source/theory/narrative audit；最终设计判定见下一段。
+
+[D14-B1 Step4-6] 2026-07-16 external audit确认TimeFuse已覆盖sample-level adaptive fusion，TimeRouter已覆盖
+oracle-best labels、context/CV/forecast features与nonlinear router，AME-TS已覆盖structural-prior KL。CCRL novelty
+风险上调为high。理论上OOF squared-error differences可识别conditional relative risk，但expert-risk不是mixture
+MSE；故CCRL收紧为`actual fused forecast loss + auxiliary cross-fitted centered-risk`。冻结两个gate：B-P检验
+history+target predictability，B-C要求hybrid相对matched direct fusion、hard-oracle与in-sample controls有独立增量。
+只授权Step7A local implementation；remote/method/test仍false。完整设计见
+`analysis/stage_c_d14b_crossfit_regret_20260716/d14b_step46_source_theory_design_audit.md`。
 
 [Frozen Boundary] neutral raw-history carrier是primary；A6 sensitivity也从头E2E joint training，但其negative只表示
 carrier interface/profile不确认。最终paper effectiveness仍须matched E2E，不能用frozen replacement gap通过或拒绝。
@@ -285,11 +293,10 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 
 ## Next Concrete Action
 
-source-informed实现`SC-D14-A Output-Coupling Granularity Audit`的matched head family、parameter/DoF accounting、
-neutral raw-history carrier、A6 sensitivity carrier、random/permuted partition与oracle-headroom analyzer。第一阶段
-只使用train/validation，禁止test与paper-method training。D14-A pass后才实现D14-B train-OOF regret
-predictability；通过也只返回PCSD/CCRL formal Step4-6。完整协议见
-`docs/experiments/stage-c-d14-output-coupling-granularity.md`。
+实现`SC-D14-B1` Step7A local gate：purged outer/inner split、official-validation isolation、36-d history与11-d
+target features、centered-risk identity、matched 64-64 policy arms、projectivity与synthetic leakage falsification。
+本地gate通过前remote=false；paper method/test始终false。完整设计见
+`analysis/stage_c_d14b_crossfit_regret_20260716/d14b_step46_source_theory_design_audit.md`。
 
 ## SC1-JAPO Step 7A: Production Gate Passed, Step 8 Authorized
 

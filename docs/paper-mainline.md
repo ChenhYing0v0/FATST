@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | D14-A1 three-seed dual-carrier problem confirmed；D14-B Step 4-6 next |
+| `current_11_step` | D14-B1 Step 4-6 conditional pass；Step7A local implementation next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | PCSD problem evidence three-seed confirmed；method not ready；CCRL/D14-B design pending；test held |
+| `paper_core_status` | PCSD problem-supported/method-unready；CCRL high-novelty-risk diagnostic ready；test held |
 
 ## Research Thesis
 
@@ -81,20 +81,23 @@ TimePerceiver已覆盖future/target queries；Implicit Forecaster已覆盖global
 ### Provisional Contribution 2: CCRL
 
 `CCRL`（Cross-fitted Coupling-Regret Learning）不期待ordinary mixture loss自动产生expert specialization。它在
-train split内chronological cross-fit每个coupling arm，对held-out training sample与target bin构造：
+train split内chronological cross-fit每个coupling arm，对held-out training sample与target region构造centered
+relative risk：
 
 $$
-R^{cf}_{i,b,s}=L^{cf}_{i,b,s}-\min_jL^{cf}_{i,b,j},\qquad
-q_{i,b,s}\propto\exp(-R^{cf}_{i,b,s}/\tau_r),
+r^{cf}_{i,b,s}=L^{cf}_{i,b,s}-\frac1{|\mathcal S|}\sum_jL^{cf}_{i,b,j}.
 $$
 
-再让policy仅由inference可见history与target coordinate预测$q$。候选objective由final mixture loss、per-arm
-forecast loss与stop-gradient counterfactual supervision组成；D14-B前不冻结具体形式。
+policy仅由inference可见history与target coordinate预测relative risk。Step4-6审计已纠正原soft-label解释：对MSE，
+weighted expert risk只是mixture loss上界，不能把$\operatorname{softmax}(-r)$称为optimal fusion。因此候选training
+principle固定为actual fused forecast loss + auxiliary cross-fitted risk distillation；matched direct-fusion是mandatory
+control。
 
-[Novelty Boundary] cross-validation、regret minimization、meta-learning与dynamic ensembles已有大量prior art，
-CCRL不能claim这些primitive。它只有在“同一decoder内部output coupling scopes的sample × target-region
-counterfactual supervision”相对ordinary router、equal mixture、target-only、in-sample pseudo-label与permuted
-controls具有独立主效应时，才可能成为Contribution 2。status=`d14b_step4_6_audit / medium-low novelty confidence`。
+[Novelty Boundary] FFORMA/TimeFuse已覆盖feature-based sample fusion；TimeRouter已覆盖oracle labels、context/CV/
+forecast features与nonlinear routing；AME-TS已覆盖structural-prior KL。CCRL不能claim这些primitive。它只有在
+“同一projective decoder内部output coupling scopes的chronological cross-fitted sample × target-region risk”相对
+matched direct fusion、hard oracle、in-sample、target-only与permuted controls具有独立主效应时，才可能成为
+Contribution 2。status=`d14b_step7a_local_ready / high novelty risk`。
 
 ### Joint Story
 
@@ -102,9 +105,10 @@ PCSD回答“一个unified decoder能表示哪些future-output sharing strategie
 policy提供可识别、无in-sample self-evaluation leakage的选择证据”。二者共同把multi-horizon统一从“同一模型
 输出多个长度”推进为“同一模型内部学习future targets应如何共享forecasting function”。
 
-[Execution Order] D14-A three-seed gate已通过 -> D14-B source/theory/narrative Step 4-6 -> 只有D14-B gate-ready后才
-讨论implementation。A6 architecture/profile与global basis decoder共适配，因此GroupedMLP performance gap不否定
-scale；D14-B fail则关闭CCRL并让PCSD单独返回Step 4，target-only解释则关闭instance-adaptive claim。
+[Execution Order] D14-A three-seed gate已通过 -> D14-B1 Step4-6 conditional pass -> Step7A local invariants ->
+neutral seed2021 dual gate -> A6 sensitivity -> confirmation。当前只允许local diagnostic implementation。B-P
+predictability fail关闭instance-adaptive claim；B-P pass但B-C contribution gate fail则关闭CCRL并让PCSD单独返回
+Step 4。
 
 ### Closed Candidate: PRISM Decoder
 
