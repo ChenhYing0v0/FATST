@@ -1,0 +1,7 @@
+dataset,readout_dim,forward_finite,loss_finite,all_gradient_tensors_finite_two_steps,core_active_step1,policy_active_step2,pass,scope
+ETTh1,1536,True,True,True,True,True,True,
+ETTh2,768,True,True,True,True,True,True,
+ETTm1,768,True,True,True,True,True,True,
+ETTm2,3072,True,True,True,True,True,True,
+Weather,768,True,True,True,True,True,True,
+ETTh2,768,True,True,True,checked-in-module-rows,True,True,a6-natural-e2e-model

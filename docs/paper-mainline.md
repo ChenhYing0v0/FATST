@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | PCSD-CF Step 4-6 conditional pass；D15-A Step7A local implementation next |
+| `current_11_step` | PCSD-CF D15-A Step7A local gate passed；Step7B design/runner audit next，remote held |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | PCSD-CF narrative-ready/effectiveness-unready；CCRL retired as core；Contribution 2 problem unverified；test held |
+| `paper_core_status` | PCSD-CF narrative/local-contract ready但effectiveness-unready；CCRL retired；Contribution 2 problem unverified；test held |
 
 ## Research Thesis
 
@@ -86,7 +86,13 @@ TimePerceiver已覆盖future/target queries；Implicit Forecaster已覆盖global
 链条：`one projective parameter field -> scope pooling changes future-output state sharing -> simultaneous
 point-to-global operators -> exact A6 subspace -> sample/target policy -> no requested-H semantics`。
 DeepONet/PoU-MoE已覆盖coordinate synthesis与local operator mixture，因此这些primitive不计novelty。
-status=`pcsd_cf_step7a_local_ready / effectiveness_unready`。
+Step7A production implementation现已通过全部9类local gates：five-profile shape/integration、65个dense/arbitrary
+prefix cases、float32/float64 A6 containment、720/15/5/2/1 Jacobian-sharing topology、random-parameter arm
+separation、partition-only parameter equality、module与真实Encoder-PCSD two-step gradients、static accounting及
+protocol exclusion均通过。float32 containment maximum output gap为`3.815e-6`，float64为`3.109e-15`；
+canonical/random minimum pairwise arm NRMSE为`0.130247/0.023056`。PCSD field core相对A6 decoder参数为
+`3.0291-3.6184x`，含policy为`3.1006-3.7224x`，所以dense capacity control仍是Step7B硬要求。
+status=`pcsd_cf_step7a_local_pass / effectiveness_unready`。
 
 ### Retired Core Candidate: CCRL
 
@@ -128,8 +134,9 @@ Contribution 2未来只能回答“在same-run joint decoder中，若ordinary ta
 用同一次forward的forecast evidence修复”，而不能再依赖外部teacher pipeline。
 
 [Execution Order] D14-A problem confirmed -> CCRL consistency audit and retirement -> PCSD-CF Step4-6 conditional
-pass -> D15-A Step7A local invariants -> five-dataset seed2021 direct-control screen。只有direct-control screen形成
-可归因的credit failure，SC2才回到Step2-4。当前remote、test与Contribution-2 implementation均false。
+pass -> D15-A Step7A local invariants passed -> Step7B design/runner audit -> separately authorized five-dataset
+seed2021 direct-control screen。只有direct-control screen形成可归因的credit failure，SC2才回到Step2-4。当前
+remote、test与Contribution-2 implementation均false。
 
 ### Closed Candidate: PRISM Decoder
 
@@ -595,7 +602,8 @@ Step4，不以训练性能包装RGNB。
 37. D14-A fail关闭pair；A pass/B fail只让PCSD回Step4并重找SC2；A/B pass也只返回formal Step4-6，不能直接
     实现method或启动remote training。
 38. D14-A最终通过；D14-B1在implementation前因cross-fit teacher/student mismatch退出paper core。PCSD-CF
-    已完成native Step4-6，只授权D15-A local invariants；SC2 slot保持open，remote/test=false。
+    已完成native Step4-6与D15-A Step7A local gate（9/9 categories pass）；下一步为Step7B experiment tooling，
+    SC2 slot保持open，remote/test=false。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
 generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成

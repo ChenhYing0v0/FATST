@@ -1,0 +1,6 @@
+scale,group_count,distinct_target_jacobians,expected_distinct_jacobians,within_group_jacobian_max_abs,same_group_pair_max_abs,cross_group_pair_max_abs,global_nonconstant_rms,pass
+1,720,720,720,0.0,,0.00024235248565673828,0.9999999981227892,True
+48,15,15,15,0.0,0.0,0.5053377151489258,0.9915251394087894,True
+144,5,5,5,0.0,0.0,1.8680933713912964,0.9272771487187338,True
+360,2,2,2,0.0,0.0,1.8006341457366943,0.5479158647002509,True
+720,1,1,1,0.0,0.0,,0.0,True

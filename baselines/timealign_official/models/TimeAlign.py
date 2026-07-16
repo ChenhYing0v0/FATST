@@ -11,6 +11,7 @@ from layers.PMFO import (
     PMFORCTReadout,
 )
 from layers.PLGO import JAPOReadout, PLGOPAFReadout
+from layers.PCSD import PCSDCouplingFieldReadout
 from layers.StandardNorm import Normalize
 
 LEARNED_BASIS_READOUTS = {
@@ -73,6 +74,7 @@ ENCODER_MODES = {
 }
 
 GROUPED_MLP_READOUTS = {"grouped-mlp"}
+PCSD_READOUTS = {"pcsd-coupling-field"}
 
 
 class PatchEmbed(nn.Module):
@@ -382,14 +384,16 @@ class Model(nn.Module):
             *PLGO_PAF_READOUTS,
             *JAPO_READOUTS,
             *GROUPED_MLP_READOUTS,
+            *PCSD_READOUTS,
         }:
             raise ValueError(
                 "Clean TimeAlign supports only 'official' and "
                 "learned-basis/stage-native/basis-conditioned/STBO/PMFO "
-                "readout modes"
+                "PLGO/JAPO/grouped-MLP/PCSD readout modes"
             )
         if (
-            self.readout_mode in PMFO_READOUTS | PLGO_PAF_READOUTS | JAPO_READOUTS
+            self.readout_mode
+            in PMFO_READOUTS | PLGO_PAF_READOUTS | JAPO_READOUTS | PCSD_READOUTS
             and self.pred_len != 720
         ):
             raise ValueError("StageC projective readouts require pred_len=720")
@@ -670,6 +674,29 @@ class Model(nn.Module):
                     getattr(configs, "grouped_mlp_partition_seed", 14101)
                 ),
             )
+        if self.readout_mode in PCSD_READOUTS:
+            self.pcsd_readout = PCSDCouplingFieldReadout(
+                readout_dim=readout_dim,
+                series_length=self.pred_len,
+                coordinate_dim=int(getattr(configs, "pcsd_coordinate_dim", 4)),
+                mode_rank=int(getattr(configs, "pcsd_mode_rank", 256)),
+                policy_history_dim=int(
+                    getattr(configs, "pcsd_policy_history_dim", 32)
+                ),
+                policy_hidden_dim=int(
+                    getattr(configs, "pcsd_policy_hidden_dim", 64)
+                ),
+                policy_mode=str(getattr(configs, "pcsd_policy_mode", "direct")),
+                fixed_scale=int(getattr(configs, "pcsd_fixed_scale", 720)),
+                partition=str(getattr(configs, "pcsd_partition", "canonical")),
+                partition_seed=int(getattr(configs, "pcsd_partition_seed", 15101)),
+                group_chunk_size=int(
+                    getattr(configs, "pcsd_group_chunk_size", 64)
+                ),
+                target_chunk_size=int(
+                    getattr(configs, "pcsd_target_chunk_size", 128)
+                ),
+            )
 
         self.normalization_x = Normalize(configs.enc_in, affine=False)
         if self.has_future_recon_branch:
@@ -916,6 +943,8 @@ class Model(nn.Module):
             output = self.japo_readout(hidden, target_prefix)
         elif self.readout_mode in GROUPED_MLP_READOUTS:
             output = self.grouped_mlp_readout(hidden, target_prefix)
+        elif self.readout_mode in PCSD_READOUTS:
+            output = self.pcsd_readout(hidden, target_prefix)
         else:
             raise ValueError(f"Unsupported readout mode: {self.readout_mode}")
         output = self.normalization_x(output, "denorm")

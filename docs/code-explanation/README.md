@@ -12,6 +12,8 @@
 - `stage-c-sc1-d4-structured-basis.md`: seven-basis worker、dense-horizon evaluation、geometry与gate flow。
 - `stage-c-d14a1-dual-carrier-grouped-mlp.md`: neutral/A6双carrier、GroupedMLP sharing topology、
   affine containment、validation artifacts与串行causal gate。
+- `stage-c-pcsd-cf-step7a.md`: PCSD shared mode field、scope pooling、shared target synthesis、direct/control
+  policies、chunked execution、A6 containment与Step7A artifact definitions。
 
 下一次 model或diagnostic code 更新必须在本目录新增对应说明，并按 tensor/artifact flow定义 shape、统计列与
 code-theory consistency。历史说明已移入 `docs/archive/pre-stage-c-reset-20260713/code-explanation/`。

@@ -1,0 +1,15 @@
+contract,observed,pass
+cli_prefix_readout_registered,True,True
+cli_active_readout_registered,True,True
+cli_native_contract_parses,True,True
+cli_frozen_dimensions,True,True
+adapter_propagates_pcsd_contract,True,True
+requested_horizon_feature_false,True,True
+future_truth_feature_false,True,True
+full_domain_objective,True,True
+joint_training_true,True,True
+frozen_replacement_false,True,True
+warm_start_false,True,True
+test_access_false,True,True
+remote_false,True,True
+sc2_false,True,True

@@ -1,0 +1,34 @@
+{
+  "stage": "StageC-UVHF",
+  "candidate_id": "SC1-PCSD-CF-v1",
+  "diagnostic_id": "SC-D15-A",
+  "current_step": "Step7A local implementation gate",
+  "design_path": "configs/stage_c_pcsd_cf_native_direct.json",
+  "design_sha256": "5f31063ed811ed06024f5b61e3b3ef62e1332e1eff54fba8caea522f3f618be9",
+  "profile_path": "configs/stage_c_five_dataset_natural_profiles.json",
+  "profile_sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a",
+  "seed": 20260716,
+  "python_version": "3.11.15 (main, Mar 11 2026, 17:14:47) [Clang 20.1.8 ]",
+  "torch_version": "2.5.0",
+  "execution_device": "cpu",
+  "categories": {
+    "shape_prefix_checks": true,
+    "model_integration_checks": true,
+    "containment_checks": true,
+    "topology_checks": true,
+    "separation_checks": true,
+    "partition_checks": true,
+    "gradient_checks": true,
+    "accounting": true,
+    "protocol_contract_checks": true
+  },
+  "overall_pass": true,
+  "authorization_after_gate": {
+    "step7a_local": true,
+    "step7b_remote": false,
+    "effectiveness_claim": false,
+    "contribution2": false,
+    "test_access": false
+  },
+  "decision": "step7a_local_pass_step7b_design_only_next"
+}

@@ -18,18 +18,18 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | PCSD-CF Step 4-6 conditional pass；D15-A Step7A local implementation next |
+| `current_11_step` | PCSD-CF D15-A Step7A local passed；Step7B experiment implementation/prelaunch audit next |
 | `current_candidate` | `SC1-PCSD-CF-v1`；SC2 unfilled，`SC2-ICC` only a blocked hypothesis |
-| `latest_decision` | CCRL retired for two-stage mismatch；native shared coupling field precedes any training innovation |
-| `next_required_action` | implement PCSD-CF module and local containment/projectivity/topology/accounting gates |
-| `method_training_authorized` | PCSD-CF local implementation=true；remote/effectiveness claim/SC2/test=false |
+| `latest_decision` | PCSD-CF 9/9 local gates pass；implementation/theory contract成立但effectiveness未测试 |
+| `next_required_action` | freeze Step7B runners、same-run diagnostics、checkpoint invariants与remote resource smoke plan |
+| `method_training_authorized` | local implementation complete；remote launch/effectiveness claim/SC2/test=false |
 | `rollback_point` | local invalid -> Step5/6；carrier/arm skill fail -> Step4；direct misallocation evidence -> SC2 Step2-4 |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | PCSD-CF source/theory/design complete；D15-A local Step7A next |
+| `current_step` | PCSD-CF Step7A local complete；Step7B experiment tooling next |
 | `problem` | 现有unified decoder固定point/block/global coupling scope；最佳future-output sharing是否随target region与history变化 |
 | `existence_evidence` | three-seed neutral+A6 5/5 stable crossing；strict 7.1107%/9.1259%；instance 6.7948%/8.5990% |
 | `idea` | one shared coupling field + scope pooling + direct end-to-end history × target policy |
@@ -37,8 +37,8 @@
 | `design` | shared mode maps `[Dq,R,K]`；five pooling operators；identity+GELU synthesis；D15 direct controls |
 | `narrative_gate` | conditional pass；DeepONet/PoU/SoftMoE primitives excluded from novelty claim |
 | `effectiveness_gate` | pending；must beat A6/equal/static and survive dense/random controls |
-| `artifacts` | `analysis/stage_c_pcsd_native_reset_20260716/pcsd_cf_step46_source_theory_design_audit.md` |
-| `decision` | authorize_pcsd_cf_step7a_local_only；CCRL retired；remote/SC2/test held |
+| `artifacts` | `analysis/stage_c_pcsd_native_reset_20260716/pcsd_cf_step46_source_theory_design_audit.md`；`analysis/stage_c_pcsd_cf_step7a_local_20260716/step7a_local_gate_report.md` |
+| `decision` | step7a_local_pass_step7b_design_only_next；remote/SC2/test held |
 
 ## Frozen Carrier Contract
 
@@ -90,11 +90,11 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC2-CPGA` | `rejected_with_parent_route` | full-memory path的prediction change能否由conditional predictive gain核算 | 脱离CADMO后退化为generic accounting | not started | 不实现；不占active slot |
 | `SC-D14-P` | `auxiliary_not_scheduled` | A6 patch memory是否含超越global coeff的ordered target-specific conditional information | not paper mainline | not started | 未来仅在decoder interface需要时做small probe |
 | `SC1-PCSD` | `problem_supported_parent` | one projective decoder是否需同时表示point/block/global coupling scopes | complete-chain novelty only；DIRMO/Stratify/CATS controls mandatory | D14-A1 three-seed dual-carrier pass；GroupedMLP below LBF | parent retained；native child PCSD-CF active |
-| `SC1-PCSD-CF` | `narrative_ready_step7a_next` | one shared parameter field能否经scope pooling形成skilled point/block/global arms并contain A6 | DeepONet/PoU/soft routing excluded；field-pooling chain only | theory/containment pass；effectiveness untested | implement D15-A local invariants；remote=false |
+| `SC1-PCSD-CF` | `step7a_local_pass_effectiveness_unready` | one shared parameter field能否经scope pooling形成skilled point/block/global arms并contain A6 | DeepONet/PoU/soft routing excluded；field-pooling chain only | 9/9 local gates pass；effectiveness untested | Step7B tooling/prelaunch audit；remote=false |
 | `SC2-CCRL` | `retired_as_core_diagnostic_only` | cross-fit relative risk能否增益matched direct fusion | generic overlap high；two-stage teacher/student inconsistency | not implemented | retain report/config as history；not scheduled |
 | `SC2-ICC` | `hypothesis_only_blocked` | same-forward marginal coupling credit能否修复direct policy misallocation | counterfactual credit primitive not novel；task-specific chain unassessed | credit problem not established | wait for D15-A direct-control evidence |
 | `SC-D14-A/B` | `a_confirmed_b_retired` | coupling crossing与conditional-risk predictability | A pass；B retired before implementation | A confirmed；B not run | A evidence retained；B closed |
-| `SC-D15-A` | `step7a_local_next` | native PCSD-CF representation、direct trainability与credit-problem existence | Step4-6 conditional pass | local/remote pending | Step7A only；test=false |
+| `SC-D15-A` | `step7a_local_pass_step7b_tooling_next` | native PCSD-CF representation、direct trainability与credit-problem existence | Step4-6 conditional pass | local contract pass；remote pending | freeze Step7B tooling；test=false |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
 
@@ -200,7 +200,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | Fixed-past compression mainline reset | `superseded_by_narrative_scope` | CADMO/CPGA与patch-memory D14降为history-interface auxiliary；未执行 |
 | Multi-horizon coupling mainline reset | `superseded_by_native_pcsd_reset` | PCSD/CCRL曾proposed；D14-A evidence保留，CCRL后续retired |
 | D14 output-coupling granularity | `a_confirmed_b_retired` | A1 dual-carrier 255/255 confirmed；B1未implementation；remote false |
-| PCSD-CF native architecture reset | `step7a_local_next` | shared field/scope pooling/A6 containment Step4-6 conditional pass；D15-A active |
+| PCSD-CF native architecture reset | `step7a_local_pass` | 9/9 local categories pass；field/policy total params 3.10-3.72x A6；Step7B tooling next |
 
 ## Paper Mainline Sync Log
 
@@ -248,6 +248,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-16 | D14-A1 three-seed confirmation | Current Position、Contribution Slots、Experiment Logic | problem gate confirmation + next-step authorization | dual-carrier 5/5 stable crossing；strict 7.11%/9.13%；D14-B仅返回Step4-6 |
 | 2026-07-16 | D14-B1 Step4-6 source/theory/design | Contribution 2、Boundary、Experiment Logic | novelty tightening + objective correction + local authorization | TimeFuse/TimeRouter controls mandatory；hybrid risk auxiliary；Step7A local only |
 | 2026-07-16 | CCRL consistency audit + PCSD-CF reset | Contribution 1/2、Boundary、Experiment Logic | SC2 retirement + SC1 native Step4-6 | CCRL diagnostic-only；shared coupling field conditional pass；D15-A Step7A next |
+| 2026-07-16 | PCSD-CF D15-A Step7A local gate | Current Position、Contribution 1、Experiment Logic | production implementation + theory contract | 9/9 local gates pass；effectiveness/remote/SC2/test held；Step7B tooling next |
 
 ## Continuation Rules
 

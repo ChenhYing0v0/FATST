@@ -2,7 +2,7 @@
   "stage": "StageC-UVHF",
   "candidate_id": "SC1-PCSD-CF-v1",
   "diagnostic_id": "SC-D15-A",
-  "status": "step7a_local_authorized",
+  "status": "step7a_local_pass_step7b_design_only_next",
   "role": "paper_core_architecture_candidate_with_direct_control",
   "series_length": 720,
   "coupling_scales": [1, 48, 144, 360, 720],
@@ -36,6 +36,16 @@
     "future_truth_feature": false,
     "output": "per-target-five-scope-softmax",
     "logit_initialization": "equal-zero"
+  },
+  "implementation": {
+    "readout_mode": "pcsd-coupling-field",
+    "supported_policy_modes": ["direct", "equal", "static-target", "fixed"],
+    "partition_modes": ["canonical", "random"],
+    "group_chunk_size": 64,
+    "target_chunk_size": 128,
+    "local_gate_script": "scripts/check_stage_c_pcsd_cf_step7a.py",
+    "local_gate_artifact": "analysis/stage_c_pcsd_cf_step7a_local_20260716/step7a_local_gate.json",
+    "local_gate_passed": true
   },
   "training": {
     "objective": "full-720-pointwise-l1-of-fused-forecast",

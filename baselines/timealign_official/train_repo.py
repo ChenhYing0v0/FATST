@@ -58,6 +58,7 @@ PREFIX_READOUT_MODES = {
     "japo-joint-perm",
     "japo-joint-random",
     "grouped-mlp",
+    "pcsd-coupling-field",
 }
 
 STAGE_C_ACTIVE_READOUTS = {
@@ -79,6 +80,7 @@ STAGE_C_ACTIVE_READOUTS = {
     "japo-joint-perm",
     "japo-joint-random",
     "grouped-mlp",
+    "pcsd-coupling-field",
 }
 
 ACTIVE_STAGE_C_CONTRACT = {
@@ -368,6 +370,16 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         grouped_mlp_point_hidden_width=args.grouped_mlp_point_hidden_width,
         grouped_mlp_partition=args.grouped_mlp_partition,
         grouped_mlp_partition_seed=args.grouped_mlp_partition_seed,
+        pcsd_coordinate_dim=args.pcsd_coordinate_dim,
+        pcsd_mode_rank=args.pcsd_mode_rank,
+        pcsd_policy_history_dim=args.pcsd_policy_history_dim,
+        pcsd_policy_hidden_dim=args.pcsd_policy_hidden_dim,
+        pcsd_policy_mode=args.pcsd_policy_mode,
+        pcsd_fixed_scale=args.pcsd_fixed_scale,
+        pcsd_partition=args.pcsd_partition,
+        pcsd_partition_seed=args.pcsd_partition_seed,
+        pcsd_group_chunk_size=args.pcsd_group_chunk_size,
+        pcsd_target_chunk_size=args.pcsd_target_chunk_size,
         evaluation_prefix_mode=getattr(args, "evaluation_prefix_mode", "native"),
         segment_horizons=getattr(
             args,
@@ -471,6 +483,41 @@ def initialization_contract(model: nn.Module) -> dict[str, Any]:
                 "grouped_mlp_group_indices_hash": _tensor_hash(
                     [readout.group_indices]
                 ),
+            }
+        )
+    if hasattr(model, "pcsd_readout"):
+        readout = model.pcsd_readout
+        hidden = torch.linspace(
+            -1.0,
+            1.0,
+            steps=readout.readout_dim,
+            device=readout.mode_weight.device,
+        ).view(1, 1, -1)
+        with torch.no_grad():
+            weights = readout.policy_weights(hidden)
+            entropy = -(
+                weights * weights.clamp_min(1e-12).log()
+            ).sum(dim=-1).mean() / math.log(len(readout.scales))
+            usage = weights.mean(dim=(0, 1, 2))
+        payload.update(
+            {
+                "pcsd_initialization_hash": _tensor_hash(
+                    list(readout.parameters())
+                ),
+                "pcsd_coordinate_hash": _tensor_hash(
+                    [readout.coordinate_field]
+                ),
+                "pcsd_partition_hash": _tensor_hash(
+                    [
+                        readout.group_indices(index)
+                        for index in range(len(readout.scales))
+                    ]
+                ),
+                "pcsd_scales": list(readout.scales),
+                "pcsd_partition": readout.partition,
+                "pcsd_policy_mode": readout.policy_mode,
+                "pcsd_initial_policy_entropy": float(entropy),
+                "pcsd_initial_scope_usage": usage.detach().cpu().tolist(),
             }
         )
     return payload
@@ -725,6 +772,66 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
                 ),
                 "grouped_mlp_affine_minimum_width": 2
                 * min(readout.readout_dim, readout.scale),
+            }
+        )
+    if hasattr(model, "pcsd_readout"):
+        readout = model.pcsd_readout
+        active_prefixes = (
+            "patch_emb_x.",
+            "encoder.",
+            "norm_x.",
+            "pcsd_readout.mode_weight",
+            "pcsd_readout.mode_bias",
+            "pcsd_readout.identity_synthesis",
+            "pcsd_readout.nonlinear_synthesis",
+            "pcsd_readout.temporal_bias",
+        )
+        if readout.policy_mode in {"direct", "static-target"}:
+            active_prefixes += (
+                "pcsd_readout.policy_hidden.",
+                "pcsd_readout.policy_output.",
+            )
+        if readout.policy_mode == "direct":
+            active_prefixes += ("pcsd_readout.history_projection.",)
+        active_parameters = sum(
+            parameter.numel()
+            for name, parameter in model.named_parameters()
+            if name.startswith(active_prefixes)
+        )
+        with torch.no_grad():
+            hidden = torch.zeros(
+                1,
+                1,
+                readout.readout_dim,
+                device=readout.mode_weight.device,
+            )
+            weights = readout.policy_weights(hidden)
+            entropy = -(
+                weights * weights.clamp_min(1e-12).log()
+            ).sum(dim=-1).mean() / math.log(len(readout.scales))
+            usage = weights.mean(dim=(0, 1, 2))
+        payload.update(
+            {
+                "active_forward_parameters": active_parameters,
+                "unused_proj_x_parameters": sum(
+                    parameter.numel()
+                    for name, parameter in model.named_parameters()
+                    if name.startswith("proj_x.")
+                ),
+                "pcsd_decoder_parameters": sum(
+                    parameter.numel() for parameter in readout.parameters()
+                ),
+                "pcsd_coupling_field_parameters": (
+                    readout.coupling_field_parameters
+                ),
+                "pcsd_policy_parameters": readout.policy_parameters,
+                "pcsd_scales": list(readout.scales),
+                "pcsd_coordinate_dim": readout.coordinate_dim,
+                "pcsd_mode_rank": readout.mode_rank,
+                "pcsd_partition": readout.partition,
+                "pcsd_policy_mode": readout.policy_mode,
+                "pcsd_policy_entropy": float(entropy),
+                "pcsd_scope_usage": usage.detach().cpu().tolist(),
             }
         )
     return payload
@@ -1684,6 +1791,29 @@ def parse_args() -> argparse.Namespace:
         default="canonical",
     )
     parser.add_argument("--grouped-mlp-partition-seed", type=int, default=14101)
+    parser.add_argument("--pcsd-coordinate-dim", type=int, default=4)
+    parser.add_argument("--pcsd-mode-rank", type=int, default=256)
+    parser.add_argument("--pcsd-policy-history-dim", type=int, default=32)
+    parser.add_argument("--pcsd-policy-hidden-dim", type=int, default=64)
+    parser.add_argument(
+        "--pcsd-policy-mode",
+        choices=["direct", "equal", "static-target", "fixed"],
+        default="direct",
+    )
+    parser.add_argument(
+        "--pcsd-fixed-scale",
+        type=int,
+        choices=[1, 48, 144, 360, 720],
+        default=720,
+    )
+    parser.add_argument(
+        "--pcsd-partition",
+        choices=["canonical", "random"],
+        default="canonical",
+    )
+    parser.add_argument("--pcsd-partition-seed", type=int, default=15101)
+    parser.add_argument("--pcsd-group-chunk-size", type=int, default=64)
+    parser.add_argument("--pcsd-target-chunk-size", type=int, default=128)
     parser.add_argument("--patch-diagnostic-batches", type=int, default=8)
     parser.add_argument(
         "--pred-loss-mode",
@@ -1851,6 +1981,16 @@ def parse_args() -> argparse.Namespace:
         and args.grouped_mlp_scale in {1, args.pred_len}
     ):
         raise ValueError("random grouped MLP endpoint partitions are invalid")
+    if args.pcsd_coordinate_dim != 4:
+        raise ValueError("PCSD-CF v1 requires pcsd_coordinate_dim=4")
+    if args.pcsd_mode_rank != 256:
+        raise ValueError("PCSD-CF v1 requires pcsd_mode_rank=256")
+    if args.pcsd_policy_history_dim != 32:
+        raise ValueError("PCSD-CF v1 requires pcsd_policy_history_dim=32")
+    if args.pcsd_policy_hidden_dim != 64:
+        raise ValueError("PCSD-CF v1 requires pcsd_policy_hidden_dim=64")
+    if args.pcsd_group_chunk_size <= 0 or args.pcsd_target_chunk_size <= 0:
+        raise ValueError("PCSD chunk sizes must be positive")
     if args.patch_diagnostic_batches <= 0:
         raise ValueError("patch_diagnostic_batches must be positive")
     if args.stage_token_dim <= 0:

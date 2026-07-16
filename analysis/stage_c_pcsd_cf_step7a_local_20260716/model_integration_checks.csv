@@ -1,0 +1,6 @@
+dataset,memory_shape,hidden_shape,arms_shape,weights_shape,full_shape,prefix_shape,prefix_max_abs,initialization_contract_pass,model_diagnostics_pass,pass
+ETTh1,"(1, 7, 24, 64)","(1, 7, 1536)","(1, 7, 5, 720)","(1, 7, 720, 5)","(1, 720, 7)","(1, 336, 7)",0.0,True,True,True
+ETTh2,"(1, 7, 12, 64)","(1, 7, 768)","(1, 7, 5, 720)","(1, 7, 720, 5)","(1, 720, 7)","(1, 336, 7)",0.0,True,True,True
+ETTm1,"(1, 7, 24, 32)","(1, 7, 768)","(1, 7, 5, 720)","(1, 7, 720, 5)","(1, 720, 7)","(1, 336, 7)",0.0,True,True,True
+ETTm2,"(1, 7, 48, 64)","(1, 7, 3072)","(1, 7, 5, 720)","(1, 7, 720, 5)","(1, 720, 7)","(1, 336, 7)",0.0,True,True,True
+Weather,"(1, 21, 12, 64)","(1, 21, 768)","(1, 21, 5, 720)","(1, 21, 720, 5)","(1, 720, 21)","(1, 336, 21)",0.0,True,True,True

@@ -5,14 +5,15 @@
 | Field | Value |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | `SC1-PCSD-CF-v1` Step7A local implementation next |
+| `current_step` | `SC1-PCSD-CF-v1` Step7A local passed；Step7B design/runner audit next |
 | `role` | architecture candidate + Contribution-2 problem diagnostic |
 | `narrative_gate` | conditional pass |
-| `local_implementation` | authorized |
+| `local_implementation` | passed（9/9 gate categories） |
 | `remote_training` | false |
 | `test_access` | false |
 | `config` | `configs/stage_c_pcsd_cf_native_direct.json` |
 | `analysis` | `analysis/stage_c_pcsd_native_reset_20260716/pcsd_cf_step46_source_theory_design_audit.md` |
+| `step7a_artifact` | `analysis/stage_c_pcsd_cf_step7a_local_20260716/step7a_local_gate_report.md` |
 
 ## What We Plan To Test
 
@@ -53,6 +54,18 @@ requested $H$只用于最后crop。五个scopes共享mode maps与target synthesi
 
 任一项失败只返回Step5/6修复，不启动remote。
 
+### Returned local result
+
+2026-07-16返回`overall_pass=true`：5 profiles × 13 horizons共65个direct prefix cases及5个真实A6-natural
+integration cases均为exact crop（max gap `0`）；arbitrary-A6 containment的float32最大output/arm gap分别为
+`3.815e-6/2.384e-6`，float64分别为`3.109e-15/5.329e-15`。point/block/global Jacobian-sharing classes为
+`720/15/5/2/1`；canonical/random arm最小pairwise normalized RMSE分别为`0.130247/0.023056`，初始policy
+uniform gap为`0`。五profile module与ETTh2真实Encoder-PCSD E2E two-step gradients均finite/active。
+
+PCSD coupling-field core相对A6 decoder参数为`3.0291-3.6184x`，含policy总计`3.1006-3.7224x`；static
+FLOP估算为A6的`7.97-13.93x`。因此local contract成立，但Step7B的dense nonlinear capacity control与remote
+memory/runtime smoke为mandatory，不能将local pass解释为性能优势。
+
 ## Step7B Frozen Arms
 
 - `A6_LBF_E2E`；
@@ -80,5 +93,6 @@ PCSD-CF method gate要求`DIRECT`至少3/5 datasets超过A6且macro `>=0.3%`，�
 
 ## Decision
 
-`authorize_step7a_local_only`。D14-B1/CCRL不再active。remote、test、effectiveness claim与SC2 implementation均
-保持false。
+`step7a_local_pass_step7b_design_only_next`。下一步只允许冻结Step7B runner、checkpoint diagnostics、same-run
+arm/policy artifacts与remote resource smoke；正式remote launch仍需单独授权。D14-B1/CCRL不再active，test、
+effectiveness claim与SC2 implementation保持false。
