@@ -1,0 +1,11 @@
+pcsd_test_audit_start=2026-07-16T19:06:51+08:00
+commit=24596c05a1f5d38a8cac6a685eccef8a1edeadf5
+candidate_version=SC1-PCSD-CF-v1
+test_role=primary_milestone_effectiveness_gate
+checkpoint_selection=historical_best_validation_h720_mse
+checkpoint_retraining=false
+jobs=60
+gpu_ids=0 1 2
+0, NVIDIA GeForce RTX 3090, 24576, 15, 24110, 0
+1, NVIDIA GeForce RTX 3090, 24576, 15, 24110, 0
+2, NVIDIA GeForce RTX 3090, 24576, 15, 24110, 0

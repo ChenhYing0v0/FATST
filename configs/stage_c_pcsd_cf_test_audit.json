@@ -2,7 +2,7 @@
   "stage": "StageC-UVHF",
   "audit_id": "SC-D15-T1",
   "candidate_version": "SC1-PCSD-CF-v1",
-  "status": "authorized_prelaunch",
+  "status": "completed_test_fail_with_arm_headroom",
   "purpose": "complete frozen-checkpoint milestone test effectiveness audit before PCC Step6",
   "test_informed_after_completion": true,
   "matrix": {
@@ -36,6 +36,18 @@
     "per_dataset_or_horizon_tuning_allowed": false,
     "partial_matrix_reporting_allowed": false,
     "formal_test_access_count_for_version": 1
+  },
+  "completion": {
+    "test_access_date": "2026-07-16",
+    "valid_runs": 60,
+    "checkpoint_hash_unchanged": true,
+    "method_pass": false,
+    "direct_over_a6_macro_gain_percent": -1.399448503954941,
+    "direct_over_a6_dataset_wins": 1,
+    "same_run_oracle_headroom_macro_percent": 2.019733779514443,
+    "positive_same_run_oracle_headroom_datasets": 3,
+    "decision": "test_fail_with_arm_headroom",
+    "pcc_step6_status": "authorized_test_informed_design_only"
   },
   "metrics": {
     "primary": "test_dense_h1_h720_mse_auc",

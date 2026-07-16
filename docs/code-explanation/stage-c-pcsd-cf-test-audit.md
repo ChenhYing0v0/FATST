@@ -44,6 +44,17 @@ arms、comparisons和thresholds；aggregate输出写入独立test audit目录，
 deep dive继续生成逐H relative-gain curves、fixed-scope summary、same-run oracle及DIRECT-arm-vs-fixed表，
 但所有source tensors均来自`pcsd_test_audit_diagnostics.npz`。
 
+`scripts/analyze_stage_c_pcsd_cf_test_audit.py`随后读取validation/test两个aggregate目录。它以
+`(reference, dataset)`为key对齐`direct_comparisons.csv`，输出：
+
+- `validation_gain_percent/test_gain_percent`：DIRECT相对同一reference的dense-H1..720 MSE AUC gain；
+- `test_minus_validation_pp`：test gain减validation gain，单位percentage point；
+- `sign_reversal`：两个split上的gain符号是否不同；
+- `audit_decision.json`：60-file invariant、frozen-checkpoint、A6 gate、oracle headroom与PCC授权状态。
+
+decision不由sign reversal单独决定：method pass仍使用预注册A6 threshold；只有method fail且存在positive same-run
+oracle headroom时才映射为`test_fail_with_arm_headroom`。
+
 ### Remote runner
 
 `scripts/remote/run_stage_c_pcsd_cf_test_audit.sh`遍历12 × 5 frozen run directories。三个GPU只执行forward

@@ -23,6 +23,8 @@ StageC D14-A1 active output-coupling diagnostic：
   official test dense-H1..720 evaluation，前后核对checkpoint hash并生成独立test aggregate。
 - `check_stage_c_pcsd_cf_test_audit.py`: 冻结candidate/matrix/test授权/no-retraining/hash规则，并验证prefix
   cumulative MSE/MAE与直接计算等价；21/21才允许remote test audit。
+- `analyze_stage_c_pcsd_cf_test_audit.py`: 对齐冻结validation与official test aggregate，输出逐reference/dataset
+  gain reversal、60-run invariant accounting与`test_fail_with/without_arm_headroom`决策。
 
 StageC D14-A0 archived evidence entrypoints：
 

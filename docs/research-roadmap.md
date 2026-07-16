@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | PCSD-CF-v1 return Step9/10 milestone test audit；PCC Step6 held |
+| `current_step` | PCSD-CF-v1 Step10 test fail；PCC Step6 test-informed design |
 | `active_question` | validation failure与25/25 arm starvation是否在frozen-checkpoint official test上成立？ |
-| `active_candidates` | `SC1-PCSD-CF` representation-signal/training-blocked；`SC2-PCC-v0` theory-feasible/design-unready |
+| `active_candidates` | `SC1-PCSD-CF-v1` exact method rejected；`SC2-PCC-v0` design-authorized/method-untested |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/experiments/stage-c-d15-native-pcsd-direct-control.md` |
 | `method_implementation` | PCSD training frozen；12×5 test evaluator/runner prelaunch；retraining=false |
-| `rollback_point` | test fail no headroom -> SC1 Step4；test fail with headroom -> PCC Step6 test-informed；reversal -> audit |
+| `rollback_point` | PCC generic controls explain -> Step4；shared-field arm ceiling -> SC1 Step4；numeric pathology -> redesign |
 
 ## Post-D11 Joint Mainline Reset
 
@@ -327,6 +327,17 @@ capacity/random explanations排除。25/25 DIRECT same-run scope arms相对独�
 89.95%，failure attribution=`design_fault_suspected_joint_credit_starvation`。SC1不跑confirmation，回Step4保留
 training-aware representation question；SC2-PCC完成Step2-5 source/theory audit，15/15 local cases通过，下一步只做
 Step6 control matrix、optimization与rollback design。Contribution-2 implementation、test与confirmation seeds保持false。
+
+## PCSD-CF Milestone Test Audit: Exact V1 Rejected
+
+2026-07-16冻结的12 arms × 5 datasets official test audit完成60/60，checkpoint hash与no-retraining invariants全过。
+DIRECT相对A6为-1.3994%、1/5；相对equal/static/dense/random的macro gain均为负。validation上的dense advantage
+发生test reversal，但A6 primary gate在两split均失败，exact PCSD-CF-v1因此在Step10关闭。
+
+same-run oracle test headroom为+2.0197%、3/5，且25/25 DIRECT arms仍under-trained，median 90.6647%。按预注册
+decision map归为`test_fail_with_arm_headroom`：PCC可进入test-informed Step6 design，但不得据此宣布training机制成立，
+也不得按test dataset/horizon调参。下一rollback point是PCC是否超越measure-only、equal-skill、capability-only、
+route-only及generic balancing controls。
 
 ## SC2-PCC Step 5 Theory Feasibility
 

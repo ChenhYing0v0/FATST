@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | PCSD-CF-v1 return Step9/10 milestone test audit；PCC Step6 held |
+| `current_11_step` | PCSD-CF-v1 Step10 test fail；PCC进入test-informed Step6 design |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | PCSD-CF validation fail/test unknown；60-checkpoint frozen test audit authorized；PCC held |
+| `paper_core_status` | exact PCSD-CF-v1 rejected；coupling problem保留；PCC Step6 design only |
 
 [Evaluation Rule] official test split现固定为paper-core effectiveness与Step9-10继续/回滚的primary gate；validation只
 负责checkpoint selection、普通超参数选择与低成本mechanism screen。每个冻结candidate version默认只做一次完整
@@ -108,9 +108,14 @@ full PCSD arms共享完全相同的trainable initialization；dense control参�
 `+0.4499%`。25/25 DIRECT same-run arms相对对应fixed E2E training退化，median `89.95%`，因此状态收紧为
 `partial_representation_signal_training_blocked`；不启动confirmation seeds。
 
-上述结论目前只来自validation。用户已于2026-07-16授权`SC-D15-T1`：不重训、不改变best-validation checkpoint，
-对相同12 arms × 5 datasets执行一次dense-H1..720 official test audit。该test结果将成为PCSD-CF-v1 Step9-10
-primary effectiveness decision；PCC Step6在完整60/60 test matrix返回前暂停。
+`SC-D15-T1` frozen official test audit已于2026-07-16完成60/60。DIRECT相对A6 test macro `-1.3994%`、1/5；
+相对equal/static/dense/random分别为`-0.4984/-0.5304/-0.8942/-0.1164%`，method gate失败。validation上的
+`DIRECT > dense` +2.3492%在test反转，但DIRECT相对A6在validation/test均整体失败。因此exact PCSD-CF-v1
+status=`rejected_effectiveness_test`，不得作为paper claim或运行confirmation seeds。
+
+test仍显示same-run oracle macro +2.0197%、3/5 datasets为正，且25/25 DIRECT arms低于对应independent fixed
+training，median degradation 90.6647%。这保留了joint credit starvation线索，但不证明PCC有效；预注册decision为
+`test_fail_with_arm_headroom`，只授权PCC进入`test_informed` Step6 design。
 
 ### Retired Core Candidate: CCRL
 
@@ -146,7 +151,8 @@ PCC只允许one-forward、one-stage、from-scratch E2E：same-forward arm errors
 skill floor防止低权重arm失去训练，router学习forecast-risk credit；full-domain prefix measure只作为credit积分规则，
 不把requested $H$输入模型。Step5的15/15 local cases已通过：plain/PCC梯度恒等式误差不超过`5.20e-18`，
 dense-prefix identity误差`4.44e-16`，crossed synthetic router KL=`1.50e-11`、argmax accuracy=`1.0`。
-该结果只证明algebra与toy recoverability，当前status=`conditional_pass_step6_design_only`，implementation仍false。
+该结果只证明algebra与toy recoverability。完成test audit后status更新为
+`test_informed_step6_design_authorized`，implementation与remote仍false。
 
 ### Joint Story
 
@@ -155,8 +161,8 @@ Contribution 2未来只能回答“在same-run joint decoder中，若ordinary ta
 用同一次forward的forecast evidence修复”，而不能再依赖外部teacher pipeline。
 
 [Execution Order] D14-A problem confirmed -> CCRL retired -> PCSD-CF Step4-7 -> validation screen fail/credit clue ->
-PCC Step2-5 -> user-authorized frozen PCSD-CF-v1 milestone test audit。下一步先完成60/60 test Step9-10 decision；
-PCC Step6、seeds2022/2023与Contribution-2 implementation在此之前保持false。
+PCC Step2-5 -> frozen PCSD-CF-v1 test audit fail-with-headroom。下一步为PCC Step6 source-informed control/optimization/
+rollback design；任何architecture/objective update升级为test-informed新version，implementation、remote与seeds仍false。
 
 ### Closed Candidate: PRISM Decoder
 

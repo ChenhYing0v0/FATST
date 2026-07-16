@@ -6,7 +6,7 @@
 | --- | --- |
 | `audit_id` | `SC-D15-T1` |
 | `candidate_version` | `SC1-PCSD-CF-v1`（frozen after validation screen） |
-| `current_step` | prelaunch 21/21 pass；pre-PCC Step6；return PCSD-CF Step9-10 test gate |
+| `current_step` | 60/60 completed；PCSD-CF-v1 Step10 fail；PCC Step6 test-informed design authorized |
 | `role` | primary milestone test audit；not retraining |
 | `user_authorization` | 2026-07-16 explicit |
 | `test_access_count` | one formal complete-matrix audit for v1 |
@@ -14,7 +14,7 @@
 | `test_retraining/checkpoint_selection` | false / historical best-validation-H720 |
 | `matrix` | 12 arms × 5 datasets × seed2021 = 60 frozen checkpoints |
 | `test_horizons` | dense H1..720；full-H720 output only prefix crop |
-| `PCC Step6` | held until audit decision |
+| `PCC Step6` | authorized for design only；implementation/remote仍false |
 
 Local prelaunch artifact：
 `analysis/stage_c_pcsd_cf_test_audit_prelaunch_20260716/prelaunch_gate_report.md`。
@@ -79,3 +79,31 @@ primary method threshold复用test访问前已冻结的Step7B threshold：DIRECT
 
 aggregate写入远程`_test_audit_seed2021/`，返回后同步至新的`analysis/`目录并形成Step9-10报告。所有report必须
 记录test exposure，后续PCC设计不得再声称official test完全untouched。
+
+## Completed Result And Decision
+
+2026-07-16一次性official test audit已完成，60/60 runs、60/60 invariant files与checkpoint hash gate均通过；
+所有checkpoint均为historical best-validation checkpoint，`checkpoint_retrained=false`。
+
+| Reference | Validation macro gain | Test macro gain | Test wins |
+| --- | ---: | ---: | ---: |
+| A6 | -1.5833% | -1.3994% | 1/5 |
+| EQUAL | -0.0294% | -0.4984% | 1/5 |
+| STATIC | -0.6266% | -0.5304% | 2/5 |
+| DENSE matched | +2.3492% | -0.8942% | 1/5 |
+| RANDOM partition | +0.4499% | -0.1164% | 2/5 |
+
+DIRECT相对A6仅ETTh1为正（+1.5338%），ETTh2/ETTm1/ETTm2/Weather分别为
+-0.7352%/-2.6867%/-3.8896%/-1.2196%。因此primary method gate明确失败，PCSD-CF-v1不得成为paper claim。
+validation上的`DIRECT > DENSE`发生明显test reversal，但`DIRECT > A6`在两split均为整体失败，不能把结论归因于
+validation-only误判。
+
+另一方面，same-run oracle test headroom macro为+2.0197%，3/5 datasets为正；25/25 DIRECT arms仍低于对应
+independent fixed training，median degradation 90.6647%。故预注册decision为`test_fail_with_arm_headroom`：
+
+- exact PCSD-CF-v1 method被拒绝；
+- coupling-scope问题与same-run credit starvation线索保留；
+- PCC只获准进入`test_informed` Step6 design，不获准实现或远程训练；
+- 新设计必须升级candidate version，且不得根据本次test逐dataset/horizon调参。
+
+正式报告：`analysis/stage_c_pcsd_cf_test_audit_seed2021_20260716/test_audit_report.md`。
