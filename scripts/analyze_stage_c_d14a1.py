@@ -61,6 +61,18 @@ def train_score(directory: Path) -> float:
     return min(values)
 
 
+def horizon_mse(directory: Path, horizon: int = 720) -> float:
+    rows = read_csv(directory / "metrics_by_target_horizon.csv")
+    matches = [
+        float(row["mse"])
+        for row in rows
+        if int(row["target_horizon"]) == horizon
+    ]
+    if len(matches) != 1 or not math.isfinite(matches[0]):
+        raise RuntimeError(f"invalid horizon metric: {directory} H={horizon}")
+    return matches[0]
+
+
 def relative_gain(reference: float, candidate: float) -> float:
     return (reference - candidate) / max(reference, np.finfo(np.float64).tiny)
 
@@ -163,6 +175,13 @@ def dataset_metrics(
     )
     canonical_oracle = canonical_stack.min(axis=0)
     random_oracle = random_stack.min(axis=0)
+    canonical_arm_risk = canonical_stack.mean(axis=(1, 2))
+    validation_best_index = int(canonical_arm_risk.argmin())
+    validation_best_risk = float(canonical_arm_risk[validation_best_index])
+    validation_bin_policy_risk = float(
+        canonical_stack.mean(axis=1).min(axis=0).mean()
+    )
+    canonical_oracle_risk = float(canonical_oracle.mean())
     min_disagreement, median_disagreement, max_disagreement = prediction_disagreement(
         canonical
     )
@@ -183,11 +202,41 @@ def dataset_metrics(
     )
     carrier_gain = relative_gain(float(persistence.mean()), float(selected.mean()))
     oracle_gain = relative_gain(float(selected.mean()), float(canonical_oracle.mean()))
+    strict_oracle_gain = relative_gain(
+        validation_best_risk,
+        canonical_oracle_risk,
+    )
+    bin_policy_gain = relative_gain(
+        validation_best_risk,
+        validation_bin_policy_risk,
+    )
+    sample_over_bin_gain = relative_gain(
+        validation_bin_policy_risk,
+        canonical_oracle_risk,
+    )
     contiguity_gain = relative_gain(float(random_oracle.mean()), float(canonical_oracle.mean()))
     worst = float(canonical_stack.mean(axis=(1, 2)).max())
     severe = relative_gain(float(persistence.mean()), worst) < -float(
         design["remote_gates"]["severe_degradation_threshold"]
     )
+    a6_lbf_h720_mse: float | None = None
+    train_selected_vs_a6_lbf_h720_gain: float | None = None
+    validation_best_vs_a6_lbf_h720_gain: float | None = None
+    if carrier == "a6_natural":
+        control_directory = run_dir(root=raw_root, carrier=carrier, arm="a6_lbf", dataset=dataset, seed=seed)
+        a6_lbf_h720_mse = horizon_mse(control_directory)
+        train_selected_h720 = horizon_mse(canonical[selected_index]["directory"])
+        validation_best_h720 = min(
+            horizon_mse(arm["directory"]) for arm in canonical
+        )
+        train_selected_vs_a6_lbf_h720_gain = relative_gain(
+            a6_lbf_h720_mse,
+            train_selected_h720,
+        )
+        validation_best_vs_a6_lbf_h720_gain = relative_gain(
+            a6_lbf_h720_mse,
+            validation_best_h720,
+        )
     return {
         "dataset": dataset,
         "carrier": carrier,
@@ -200,7 +249,14 @@ def dataset_metrics(
         "crossing": bool(pairs),
         "crossing_pairs": ";".join(pairs),
         "canonical_oracle_relative_gain": oracle_gain,
+        "validation_best_fixed_arm": CANONICAL_ARMS[validation_best_index],
+        "oracle_vs_validation_best_fixed_gain": strict_oracle_gain,
+        "validation_bin_policy_vs_fixed_gain": bin_policy_gain,
+        "sample_oracle_vs_validation_bin_policy_gain": sample_over_bin_gain,
         "canonical_vs_random_oracle_relative_gain": contiguity_gain,
+        "a6_lbf_h720_mse": a6_lbf_h720_mse,
+        "train_selected_vs_a6_lbf_h720_gain": train_selected_vs_a6_lbf_h720_gain,
+        "validation_best_vs_a6_lbf_h720_gain": validation_best_vs_a6_lbf_h720_gain,
         "maximum_parameter_relative_gap": maximum_parameter_gap,
         "severe_degradation": severe,
         "invariants_pass": all_invariants,
@@ -222,6 +278,12 @@ def apply_gate(
     )
     crossing_count = sum(bool(row["crossing"]) for row in rows)
     oracle_macro = mean(row["canonical_oracle_relative_gain"] for row in rows)
+    strict_oracle_macro = mean(
+        row["oracle_vs_validation_best_fixed_gain"] for row in rows
+    )
+    sample_over_bin_macro = mean(
+        row["sample_oracle_vs_validation_bin_policy_gain"] for row in rows
+    )
     contiguity_count = sum(
         row["canonical_vs_random_oracle_relative_gain"] > 0.0 for row in rows
     )
@@ -271,12 +333,24 @@ def apply_gate(
         "carrier_skill_dataset_count": skill_count,
         "crossing_dataset_count": crossing_count,
         "canonical_oracle_macro_gain": oracle_macro,
+        "strict_oracle_vs_validation_best_fixed_macro_gain": strict_oracle_macro,
+        "sample_oracle_vs_validation_bin_policy_macro_gain": sample_over_bin_macro,
         "contiguity_dataset_count": contiguity_count,
         "contiguity_macro_gain": contiguity_macro,
         "invariants_pass": invariants_pass,
         "diagnostic_valid": diagnostic_valid,
         "problem_pass": problem_pass,
         "a6_failure_can_reject_scale_hypothesis": False,
+        "a6_train_selected_vs_lbf_h720_macro_gain": (
+            mean(row["train_selected_vs_a6_lbf_h720_gain"] for row in rows)
+            if carrier == "a6_natural"
+            else None
+        ),
+        "a6_validation_best_vs_lbf_h720_macro_gain": (
+            mean(row["validation_best_vs_a6_lbf_h720_gain"] for row in rows)
+            if carrier == "a6_natural"
+            else None
+        ),
         "test_used": False,
         "decision": decision,
         "next_action": next_action,
@@ -308,6 +382,8 @@ def analyze(args: argparse.Namespace) -> None:
         f"- carrier skill: {gate['carrier_skill_dataset_count']}/5",
         f"- crossing: {gate['crossing_dataset_count']}/5",
         f"- oracle macro gain: {gate['canonical_oracle_macro_gain']:.6%}",
+        f"- strict oracle vs validation-best fixed: {gate['strict_oracle_vs_validation_best_fixed_macro_gain']:.6%}",
+        f"- sample oracle vs validation-bin policy: {gate['sample_oracle_vs_validation_bin_policy_macro_gain']:.6%}",
         f"- contiguity macro gain: {gate['contiguity_macro_gain']:.6%}",
         "- test=false；A6 failure cannot reject the scale hypothesis.",
         "",
@@ -339,7 +415,11 @@ def synthetic_smoke() -> None:
             "carrier_skill_relative_gain": 0.01,
             "crossing": True,
             "canonical_oracle_relative_gain": 0.01,
+            "oracle_vs_validation_best_fixed_gain": 0.009,
+            "sample_oracle_vs_validation_bin_policy_gain": 0.008,
             "canonical_vs_random_oracle_relative_gain": 0.01,
+            "train_selected_vs_a6_lbf_h720_gain": -0.01,
+            "validation_best_vs_a6_lbf_h720_gain": -0.005,
             "invariants_pass": True,
             "severe_degradation": False,
             "maximum_parameter_relative_gap": 0.001,

@@ -46,14 +46,20 @@ DESIGN_HASH="$(profile_hash "${DESIGN}")"
 CONTRACT_HASH="$(profile_hash "${CONTRACT}")"
 
 if [[ "${CARRIER}" == "a6_natural" ]]; then
-  NEUTRAL_GATE="${OUTPUT_ROOT}/_analysis_neutral_raw_seed${SEED}/gate.json"
+  if [[ "${SEED}" == "2021" ]]; then
+    NEUTRAL_GATE="${OUTPUT_ROOT}/_analysis_neutral_raw_seed2021/gate.json"
+    EXPECTED_GATE="neutral_problem_pass_authorize_a6_sensitivity"
+  else
+    NEUTRAL_GATE="${OUTPUT_ROOT}/_analysis_a6_natural_seed2021/gate.json"
+    EXPECTED_GATE="a6_sensitivity_confirming"
+  fi
   python3 -c '
 import json,sys
 gate=json.load(open(sys.argv[1]))
-expected="neutral_problem_pass_authorize_a6_sensitivity"
+expected=sys.argv[2]
 if gate.get("decision") != expected:
-    raise SystemExit(f"A6 sensitivity held: neutral decision={gate.get('decision')!r}")
-' "${NEUTRAL_GATE}"
+    raise SystemExit(f"A6 sensitivity held: prerequisite decision={gate.get('decision')!r}")
+' "${NEUTRAL_GATE}" "${EXPECTED_GATE}"
 fi
 
 LINES=()

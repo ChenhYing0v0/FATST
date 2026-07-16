@@ -1,0 +1,22 @@
+{
+  "a6_failure_can_reject_scale_hypothesis": false,
+  "a6_train_selected_vs_lbf_h720_macro_gain": -0.029435413755231694,
+  "a6_validation_best_vs_lbf_h720_macro_gain": -0.016855023365847432,
+  "canonical_oracle_macro_gain": 0.09989156223546208,
+  "carrier": "a6_natural",
+  "carrier_skill_dataset_count": 5,
+  "contiguity_dataset_count": 5,
+  "contiguity_macro_gain": 0.006660504207908176,
+  "crossing_dataset_count": 5,
+  "dataset_count": 5,
+  "decision": "a6_sensitivity_confirming",
+  "diagnostic_id": "SC-D14-A1",
+  "diagnostic_valid": true,
+  "function_separation_dataset_count": 5,
+  "invariants_pass": true,
+  "next_action": "combine only through the preregistered interpretation matrix",
+  "problem_pass": true,
+  "sample_oracle_vs_validation_bin_policy_macro_gain": 0.08542858950803475,
+  "strict_oracle_vs_validation_best_fixed_macro_gain": 0.09150413126095752,
+  "test_used": false
+}

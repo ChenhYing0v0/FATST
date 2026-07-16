@@ -7,7 +7,11 @@ StageC D14-A1 active output-coupling diagnostic：
 - `evaluate_stage_c_d14a1_checkpoint.py`: 从best-val checkpoint生成validation row×bin losses、persistence与
   aligned prediction probes；
 - `analyze_stage_c_d14a1.py`: 分开应用neutral primary gate与A6 sensitivity gate；A6-negative不能方向拒绝；
+- `analyze_stage_c_d14a1_multiseed.py`: 聚合2021/2022/2023，在dataset内要求2/3 seed stable crossing，并应用
+  strict oracle、sample-over-bin oracle与dual-carrier confirmation gate；
 - `remote/run_stage_c_d14a1_dual_carrier_grouped_mlp.sh`: neutral-first串行runner，只有neutral pass才允许A6；
+- `remote/run_stage_c_d14a1_confirmation.sh`: 在seed2021 dual-carrier review后串行运行2022/2023 neutral+A6，
+  最后生成multi-seed gate；不自动启动D14-B；
 - `sync_stage_c_d14a1_dual_carrier_grouped_mlp_results.sh`: 同步必要configs、metrics、row diagnostics与gate。
 
 StageC D14-A0 archived evidence entrypoints：

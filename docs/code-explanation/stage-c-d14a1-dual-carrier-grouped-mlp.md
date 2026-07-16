@@ -75,11 +75,19 @@ official `data_provider(..., "val")`默认shuffle validation。训练期aggregat
 - `crossing`：至少一对canonical scales在short/mid/long bins中出现大于0.1%的双向胜负；
 - `canonical_oracle_relative_gain`：逐sample × bin选择最佳canonical scale，相对train-only selected fixed scale的
   MSE headroom；
+- `oracle_vs_validation_best_fixed_gain`：相对validation上事后最佳fixed scale的严格oracle headroom；它不用于
+  选method，只用于排除train-to-validation static scale-selection gap；
+- `sample_oracle_vs_validation_bin_policy_gain`：sample × bin oracle相对“每个future bin固定一个scale”的增量，
+  隔离instance-specific headroom；
 - `canonical_vs_random_oracle_relative_gain`：canonical oracle相对matched random-partition oracle的改善；
 - `severe_degradation`：最差canonical arm相对persistence恶化超过100%的numeric/optimization pathology标记。
 
 neutral只有同时通过invariants、function separation、carrier skill、crossing、oracle与contiguity gates，才授权A6。
 A6结果单独报告，不与neutral平均。
+
+三seed confirmation由`analyze_stage_c_d14a1_multiseed.py`聚合：一个crossing pair、function separation、carrier
+skill或contiguity必须在同dataset至少2/3 seeds复现；strict oracle、instance oracle和contiguity再做five-dataset
+macro gate。A6-LBF performance只报告carrier compatibility，不参与scale problem gate。
 
 ## 6. Code-Theory Consistency
 

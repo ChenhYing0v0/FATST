@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | D14-A1 neutral seed2021 pass；A6 sensitivity running |
+| `current_11_step` | D14-A1 seed2021 dual-carrier pass；multi-seed confirmation next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | PCSD problem evidence strengthened by neutral A1；CCRL held；A6/stability pending；method/B/test held |
+| `paper_core_status` | PCSD problem evidence dual-carrier positive；method not ready；stability/CCRL/B/test pending |
 
 ## Research Thesis
 
@@ -53,6 +53,11 @@ neutral seed2021现已返回：40/40 complete，function separation/carrier skil
 macro 7.6753%，canonical-vs-random 0.8945%且5/5正。train-only fixed scale跨datasets落在48/360/720，说明一个
 固定scope没有统一支配。该结果是problem evidence，不是PCSD performance；A6 sensitivity与multi-seed stability
 尚未返回，D14-B也未授权。
+
+A6-natural也已返回5/5 crossing。更严格地扣除validation-best fixed scale和per-bin fixed policy后，neutral/A6的
+sample-specific oracle仍为6.7555%/8.5429%，说明headroom主要不来自static scale selection。另一方面，fixed
+GroupedMLP相对A6-LBF H720 macro仍落后2.9435%，所以这不是Contribution 1 method pass；它只把“adaptive
+coupling是否值得研究”从间接假设提升为需要multi-seed确认的direct problem evidence。
 
 ### Provisional Contribution 1: PCSD
 

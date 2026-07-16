@@ -5,11 +5,11 @@
 | Field | Value |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D14-A1 neutral seed2021 passed；A6-natural sensitivity running |
+| `current_step` | D14-A1 dual-carrier seed2021 pass；seeds2022/2023 confirmation authorized |
 | `role` | `diagnostic_only` |
 | `active_candidates` | provisional `SC1-PCSD` + `SC2-CCRL` |
 | `method_training` | false |
-| `remote_training` | neutral 40/40 complete/pass；A6 45-run matrix running；paper method=false |
+| `remote_training` | seed2021 neutral 40/40 + A6 45/45 pass；confirmation=true；paper method=false |
 | `test_access` | false |
 | `primary_carrier` | neutral train-only raw-history carrier |
 | `sensitivity_carrier` | A6-natural E2E architecture，只有neutral problem pass后才授权 |
@@ -139,6 +139,22 @@ crossing均5/5；sample × bin oracle macro gain 7.6753%；canonical-vs-random m
 未重训、未读取test。该问题只属于artifact alignment fault。neutral decision为
 `neutral_problem_pass_authorize_a6_sensitivity`；A6 sensitivity已启动，但confirmation/D14-B/method/test仍false。
 完整报告见`analysis/stage_c_d14a1_dual_carrier_grouped_mlp_20260715/neutral_seed2021_result.md`。
+
+### A1 A6-natural returned and strict review
+
+A6 sensitivity 45/45 complete：function separation/carrier skill/crossing均5/5；原oracle 9.9892%；
+canonical-vs-random 0.6661%且5/5正。A6 decision=`a6_sensitivity_confirming`。
+
+为排除train-selected fixed scale不稳定造成的oracle膨胀，confirmation前增加更严格的robustness accounting：A6相对
+validation-best fixed scale的oracle仍9.1504%，sample oracle相对validation-bin policy仍8.5429%；neutral分别为
+6.9978%与6.7555%。因此instance × future-region headroom不是static scale selection解释。
+
+但train-selected GroupedMLP在H720相对exact A6-LBF macro为-2.9435%，validation-best GroupedMLP仍为-1.6855%。
+故当前fixed grouped heads只通过problem diagnostic，不是paper method。完整review见
+`analysis/stage_c_d14a1_dual_carrier_grouped_mlp_20260715/dual_carrier_seed2021_review.md`。
+
+[Decision] 授权seeds2022/2023 dual-carrier confirmation；multi-seed stable gate通过后才允许D14-B返回Step4-6设计。
+D14-B implementation、PCSD/CCRL method与test仍false。
 
 ### Coupling scales
 

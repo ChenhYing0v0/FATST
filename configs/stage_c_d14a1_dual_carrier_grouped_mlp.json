@@ -58,6 +58,15 @@
     "contiguity_macro_gain_min": 0.001,
     "severe_degradation_threshold": 1.0
   },
+  "confirmation_gates": {
+    "seeds": [2021, 2022, 2023],
+    "stable_seed_required": 2,
+    "dataset_required": 3,
+    "strict_oracle_macro_gain_min": 0.005,
+    "sample_over_bin_policy_macro_gain_min": 0.005,
+    "contiguity_macro_gain_min": 0.001,
+    "a6_lbf_performance_is_problem_gate": false
+  },
   "staging": {
     "neutral_seed2021_first": true,
     "a6_sensitivity_requires_neutral_problem_pass": true,
@@ -71,6 +80,7 @@
     "paper_method_implementation_authorized": false,
     "d14_b_authorized": false,
     "neutral_remote_authorized": true,
-    "a6_remote_authorized": false
+    "a6_remote_authorized": true,
+    "confirmation_remote_authorized": true
   }
 }

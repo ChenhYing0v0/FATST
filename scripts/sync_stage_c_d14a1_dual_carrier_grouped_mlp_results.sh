@@ -22,6 +22,9 @@ rsync -av \
   --include='_analysis_*/dataset_metrics.csv' \
   --include='_analysis_*/gate.json' \
   --include='_analysis_*/research_interpretation.md' \
+  --include='_analysis_multiseed/multiseed_dataset_metrics.csv' \
+  --include='_analysis_multiseed/gate.json' \
+  --include='_analysis_multiseed/research_interpretation.md' \
   --exclude='*' \
   "${REMOTE_HOST}:${REMOTE_ROOT}/" "${LOCAL_ROOT}/"
 

@@ -1,5 +1,7 @@
 {
   "a6_failure_can_reject_scale_hypothesis": false,
+  "a6_train_selected_vs_lbf_h720_macro_gain": null,
+  "a6_validation_best_vs_lbf_h720_macro_gain": null,
   "canonical_oracle_macro_gain": 0.07675319015856848,
   "carrier": "neutral_raw",
   "carrier_skill_dataset_count": 5,
@@ -14,5 +16,7 @@
   "invariants_pass": true,
   "next_action": "run A6-natural sensitivity without changing neutral decision",
   "problem_pass": true,
+  "sample_oracle_vs_validation_bin_policy_macro_gain": 0.06755464183272267,
+  "strict_oracle_vs_validation_best_fixed_macro_gain": 0.06997757202925455,
   "test_used": false
 }
