@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | PCSD-CF Step9/10 complete；SC2-PCC Step5 conditional pass；Step6 concrete design next |
-| `active_question` | same-forward projective credit能否解除plain fused loss造成的scope-arm starvation？ |
+| `current_step` | PCSD-CF-v1 return Step9/10 milestone test audit；PCC Step6 held |
+| `active_question` | validation failure与25/25 arm starvation是否在frozen-checkpoint official test上成立？ |
 | `active_candidates` | `SC1-PCSD-CF` representation-signal/training-blocked；`SC2-PCC-v0` theory-feasible/design-unready |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/experiments/stage-c-d15-native-pcsd-direct-control.md` |
-| `method_implementation` | seed2021 60/60 analyzed；PCC Step5 15/15；implementation/remote/test=false |
-| `rollback_point` | PCC generic skill-floor only -> Step4；shared-field cancellation/ceiling -> SC1 Step4；Step6 confounded -> redesign |
+| `method_implementation` | PCSD training frozen；12×5 test evaluator/runner prelaunch；retraining=false |
+| `rollback_point` | test fail no headroom -> SC1 Step4；test fail with headroom -> PCC Step6 test-informed；reversal -> audit |
 
 ## Post-D11 Joint Mainline Reset
 

@@ -54,6 +54,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--run-summary", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--seed", type=int, default=2021)
+    parser.add_argument(
+        "--evaluation-split",
+        choices=("validation", "test-audit"),
+        default="validation",
+    )
     return parser.parse_args()
 
 
@@ -83,8 +88,19 @@ def run_dir(root: Path, arm: str, dataset: str, seed: int) -> Path:
     return root / arm / dataset / "h720_full" / f"seed{seed}"
 
 
-def horizon_mse(root: Path, arm: str, dataset: str, seed: int) -> list[float]:
-    path = run_dir(root, arm, dataset, seed) / "metrics_by_target_horizon.csv"
+def horizon_mse(
+    root: Path,
+    arm: str,
+    dataset: str,
+    seed: int,
+    evaluation_split: str,
+) -> list[float]:
+    filename = (
+        "test_audit_metrics_by_target_horizon.csv"
+        if evaluation_split == "test-audit"
+        else "metrics_by_target_horizon.csv"
+    )
+    path = run_dir(root, arm, dataset, seed) / filename
     rows = read_csv(path)
     by_horizon = {int(row["target_horizon"]): float(row["mse"]) for row in rows}
     expected = list(range(1, 721))
@@ -109,7 +125,11 @@ def main() -> None:
     for dataset in DATASETS:
         for arm in ("pcsd_direct", *REFERENCES):
             horizon_cache[(dataset, arm)] = horizon_mse(
-                args.raw_root, arm, dataset, args.seed
+                args.raw_root,
+                arm,
+                dataset,
+                args.seed,
+                args.evaluation_split,
             )
         direct = horizon_cache[(dataset, "pcsd_direct")]
         for reference in REFERENCES:
@@ -204,9 +224,14 @@ def main() -> None:
                 "usage_scope_720": usage[4],
             }
         )
+        diagnostic_filename = (
+            "pcsd_test_audit_diagnostics.npz"
+            if args.evaluation_split == "test-audit"
+            else "pcsd_validation_diagnostics.npz"
+        )
         diagnostic_path = (
             run_dir(args.raw_root, "pcsd_direct", dataset, args.seed)
-            / "pcsd_validation_diagnostics.npz"
+            / diagnostic_filename
         )
         with np.load(diagnostic_path, allow_pickle=False) as payload:
             arm_losses = payload["arm_row_bin_mse"].astype(np.float64)
@@ -237,7 +262,7 @@ def main() -> None:
                     dataset,
                     args.seed,
                 )
-                / "pcsd_validation_diagnostics.npz"
+                / diagnostic_filename
             )
             with np.load(fixed_path, allow_pickle=False) as fixed_payload:
                 fixed_fused_mse = float(
@@ -304,6 +329,7 @@ def main() -> None:
     )
     deep_dive = {
         "seed": args.seed,
+        "evaluation_split": args.evaluation_split,
         "positive_same_run_oracle_headroom_datasets": positive_oracle_datasets,
         "best_fixed_scope_over_a6_datasets": best_fixed_over_a6,
         "a6_m0_max_dense_mse_auc_absolute_gap": a6_m0_max_auc_gap,
@@ -365,7 +391,12 @@ def main() -> None:
     handles, labels = axes.flat[0].get_legend_handles_labels()
     figure.legend(handles, labels, loc="lower right", bbox_to_anchor=(0.93, 0.08))
     figure.supxlabel("Requested prefix horizon H")
-    figure.suptitle("PCSD-CF DIRECT relative validation MSE by horizon")
+    split_label = (
+        "test" if args.evaluation_split == "test-audit" else "validation"
+    )
+    figure.suptitle(
+        f"PCSD-CF DIRECT relative {split_label} MSE by horizon"
+    )
     figure.tight_layout(rect=(0.0, 0.04, 1.0, 0.97))
     svg_path = args.output_dir / "horizon_gain_curves.svg"
     figure.savefig(svg_path)

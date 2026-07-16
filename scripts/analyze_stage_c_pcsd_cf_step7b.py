@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Analyze the validation-only PCSD-CF Step7B seed screen."""
+"""Analyze a PCSD-CF validation screen or frozen-checkpoint test audit."""
 
 from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import math
 import tempfile
@@ -65,6 +66,11 @@ def parse_args() -> argparse.Namespace:
         default=Path("configs/stage_c_pcsd_cf_native_direct.json"),
     )
     parser.add_argument("--seed", type=int, default=2021)
+    parser.add_argument(
+        "--evaluation-split",
+        choices=("validation", "test-audit"),
+        default="validation",
+    )
     parser.add_argument("--synthetic-smoke", action="store_true")
     return parser.parse_args()
 
@@ -98,6 +104,14 @@ def finite_float(value: Any) -> float:
     if not math.isfinite(number):
         raise ValueError(f"non-finite value: {value}")
     return number
+
+
+def file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def relative_gain(candidate: float, reference: float) -> float:
@@ -162,16 +176,33 @@ def load_run(
     dataset: str,
     seed: int,
     design: dict[str, Any],
+    evaluation_split: str,
 ) -> dict[str, Any]:
     directory = run_dir(root, arm, dataset, seed)
+    is_test_audit = evaluation_split == "test-audit"
     required = {
-        "metrics": directory / "metrics_by_target_horizon.csv",
+        "metrics": directory
+        / (
+            "test_audit_metrics_by_target_horizon.csv"
+            if is_test_audit
+            else "metrics_by_target_horizon.csv"
+        ),
         "training": directory / "training_log.csv",
         "config": directory / "effective_config.json",
         "diagnostics": directory / "model_diagnostics.json",
         "initialization": directory / "initialization_contract.json",
-        "invariants": directory / "trained_invariants.json",
-        "pcsd_validation": directory / "pcsd_validation_diagnostics.npz",
+        "invariants": directory
+        / (
+            "test_audit_invariants.json"
+            if is_test_audit
+            else "trained_invariants.json"
+        ),
+        "pcsd_evidence": directory
+        / (
+            "pcsd_test_audit_diagnostics.npz"
+            if is_test_audit
+            else "pcsd_validation_diagnostics.npz"
+        ),
     }
     missing = [name for name, path in required.items() if not path.is_file()]
     if missing:
@@ -232,6 +263,19 @@ def load_run(
         and contract["checkpoint_input"] is None
         and diagnostics["frozen_parameter_tensors"] == 0
     )
+    if is_test_audit:
+        protocol_ok = protocol_ok and bool(
+            invariants.get("evaluation_split") == "test"
+            and invariants.get("uses_test_split") is True
+            and invariants.get("test_access_authorized") is True
+            and invariants.get("checkpoint_retrained") is False
+            and invariants.get("checkpoint_sha256")
+            == file_sha256(directory / "checkpoint.pt")
+        )
+    else:
+        protocol_ok = protocol_ok and bool(
+            invariants.get("uses_test_split") is False
+        )
     if "policy" in spec:
         protocol_ok = protocol_ok and (
             adapter["pcsd_policy_mode"] == spec["policy"]
@@ -295,8 +339,10 @@ def load_run(
             "pcsd_dense_parameter_relative_gap", ""
         ),
         "run_dir": str(directory),
+        "evaluation_split": evaluation_split,
+        "checkpoint_sha256": invariants.get("checkpoint_sha256", ""),
     }
-    row.update(mechanism_statistics(required["pcsd_validation"]))
+    row.update(mechanism_statistics(required["pcsd_evidence"]))
     return row
 
 
@@ -526,7 +572,14 @@ def main() -> None:
         raise ValueError("raw-root and output-dir are required outside synthetic smoke")
     args.output_dir.mkdir(parents=True, exist_ok=True)
     summary = [
-        load_run(args.raw_root, arm, dataset, args.seed, design)
+        load_run(
+            args.raw_root,
+            arm,
+            dataset,
+            args.seed,
+            design,
+            args.evaluation_split,
+        )
         for arm in ARMS
         for dataset in DATASETS
     ]
@@ -547,6 +600,7 @@ def main() -> None:
         "candidate_id": design["candidate_id"],
         "diagnostic_id": design["diagnostic_id"],
         "seed": args.seed,
+        "evaluation_split": args.evaluation_split,
         "expected_runs": len(ARMS) * len(DATASETS),
         "valid_runs": len(valid),
         "complete": complete,

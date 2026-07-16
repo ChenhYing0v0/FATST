@@ -179,6 +179,41 @@ Ledger；Roadmap 只在该切换改变 11-step rollback 或阶段状态时更新
 4. 哪些方向级问题仍未被测试？
 5. 下一步是修正诊断、重设 intervention point，还是才允许 rollback？
 
+## Milestone Test Audit 规则
+
+本项目将official test split固定为paper-core effectiveness与Step 9-10继续/回滚决策的主要性能证据。此前
+“test只在最终论文表格中使用”的规则废止；但test也不得退化为逐次调参反馈。固定职责如下：
+
+| Split | 固定职责 | 禁止事项 |
+| --- | --- | --- |
+| Train | parameter optimization与train-only diagnostics | 伪装成generalization evidence |
+| Validation | early stopping、best checkpoint、普通超参数选择、低成本机制筛选 | 把validation gain写成最终effectiveness |
+| Test | 冻结candidate version的里程碑effectiveness gate与最终paper result | 选epoch、选checkpoint、逐dataset/horizon反向调参 |
+
+每次test audit必须在访问test前完成文本与machine-readable preregistration，至少冻结：
+
+1. `candidate_version`、architecture/objective与source commit；
+2. dataset profiles、seeds、checkpoint policy及checkpoint hashes；
+3. 完整candidate/control matrix、全部horizons、primary/secondary metrics与pass thresholds；
+4. `test_role`、用户授权日期、是否允许retraining以及访问次数；
+5. 各种结果对应的继续、confirmation、rollback或candidate-version升级动作。
+
+一个冻结candidate version默认只允许一次完整test audit。audit必须运行全部预注册dataset × arm × seed matrix，
+不得只报告正向dataset、horizon或control。test可以决定该version是否继续，但不能选择checkpoint，也不能直接用于
+per-dataset/per-horizon超参数优化。
+
+观察test后发生的任何architecture、objective、loss coefficient、training schedule或control变化，都必须创建新的
+candidate version，并标记`test_informed=true`及其具体来源。后续报告不得把official test重新描述为完全untouched。
+若确需对同一version重跑test，必须由用户显式授权，并记录原因、变化范围及是否只是artifact repair。
+
+test performance是effectiveness的primary gate，但不是mechanism attribution的替代品：paper-core pass仍需
+validation/train diagnostics、matched capacity/random/equal controls与failure attribution。若validation与test排序
+反转，必须标记`validation_test_reversal`并优先检查split representativeness、checkpoint rule与seed stability，
+不得隐藏其中任一侧。
+
+每份test audit报告必须记录：`test_access_date`、`user_authorization`、`candidate_version`、`checkpoint_hash`、
+`checkpoint_retrained`、`test_role`、`matrix_complete`、test metrics、validation-test comparison及Step 9-10 decision。
+
 ## Frozen Component Replacement 公平性规则
 
 joint training得到的Encoder与Decoder会共同塑造中间representation。若冻结一个与原Decoder共同训练的

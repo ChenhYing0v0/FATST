@@ -1,0 +1,118 @@
+{
+  "audit_id": "SC-D15-T1",
+  "candidate_version": "SC1-PCSD-CF-v1",
+  "case_count": 21,
+  "passed_cases": 21,
+  "overall_pass": true,
+  "remote_test_audit_authorized": true,
+  "checkpoint_retraining_authorized": false,
+  "pcc_step6_authorized": false,
+  "decision": "prelaunch_pass_remote_test_audit_only",
+  "cases": [
+    {
+      "case": "candidate_version_frozen",
+      "pass": true,
+      "value": "SC1-PCSD-CF-v1"
+    },
+    {
+      "case": "dataset_matrix_exact",
+      "pass": true,
+      "value": 5
+    },
+    {
+      "case": "arm_matrix_exact",
+      "pass": true,
+      "value": 12
+    },
+    {
+      "case": "matrix_unique",
+      "pass": true,
+      "value": 60
+    },
+    {
+      "case": "expected_runs_exact",
+      "pass": true,
+      "value": 60
+    },
+    {
+      "case": "dense_horizon_contract",
+      "pass": true,
+      "value": "dense_h1_h720"
+    },
+    {
+      "case": "explicit_user_authorization",
+      "pass": true,
+      "value": "2026-07-16"
+    },
+    {
+      "case": "test_primary_milestone_role",
+      "pass": true,
+      "value": "primary-milestone-effectiveness-gate"
+    },
+    {
+      "case": "historical_best_val_checkpoint",
+      "pass": true,
+      "value": "historical-best-validation-h720-mse"
+    },
+    {
+      "case": "retraining_forbidden",
+      "pass": true,
+      "value": false
+    },
+    {
+      "case": "checkpoint_mutation_forbidden",
+      "pass": true,
+      "value": false
+    },
+    {
+      "case": "per_dataset_tuning_forbidden",
+      "pass": true,
+      "value": false
+    },
+    {
+      "case": "partial_reporting_forbidden",
+      "pass": true,
+      "value": false
+    },
+    {
+      "case": "single_formal_access",
+      "pass": true,
+      "value": 1
+    },
+    {
+      "case": "full_matrix_gate",
+      "pass": true,
+      "value": true
+    },
+    {
+      "case": "checkpoint_hash_gate",
+      "pass": true,
+      "value": true
+    },
+    {
+      "case": "runner_has_no_training_entrypoint",
+      "pass": true,
+      "value": false
+    },
+    {
+      "case": "runner_checks_checkpoint_hash",
+      "pass": true,
+      "value": 2
+    },
+    {
+      "case": "runner_uses_test_evaluator",
+      "pass": true,
+      "value": true
+    },
+    {
+      "case": "dense_prefix_mse_exact",
+      "pass": true,
+      "value": 6.661338147750939e-16
+    },
+    {
+      "case": "dense_prefix_mae_exact",
+      "pass": true,
+      "value": 9.992007221626409e-16
+    }
+  ]
+}

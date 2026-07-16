@@ -340,6 +340,37 @@ actually ran.
 - Do not call a result reproducible until the artifacts needed to rerun it
   actually exist.
 
+## Milestone Test Audit Policy
+
+- Final paper effectiveness claims and Step 9-10 continuation decisions must
+  use the official test split as the primary performance gate. Validation-only
+  evidence may establish mechanism plausibility, select checkpoints, or stop an
+  obviously weak design, but it must not be presented as final effectiveness.
+- Validation remains the only split used for early stopping, checkpoint
+  selection, ordinary hyperparameter choice, and low-cost implementation
+  iteration. Test labels must never select an epoch or checkpoint.
+- Test access is milestone-based rather than continuous. Before every test
+  audit, freeze and record the candidate version, architecture, objective,
+  dataset profiles, seeds, checkpoint rule, full comparison matrix, metrics,
+  gates, and rollback consequences. One frozen candidate version receives one
+  formal complete-matrix test audit unless the user explicitly authorizes a
+  separately documented exception.
+- A test audit must evaluate the full preregistered dataset/horizon/control
+  matrix and report negative results; it may not select only favorable
+  datasets, horizons, arms, or seeds. Dataset-specific or horizon-specific
+  tuning from test results is forbidden.
+- Any method redesign made after observing test results creates a new candidate
+  version and must record the previous test exposure as `test_informed`. The
+  new version must pass a new narrative/design gate before implementation; do
+  not silently treat the official test split as untouched evidence.
+- Test performance is primary for effectiveness, but mechanism claims still
+  require validation/train diagnostics and matched controls. A positive test
+  result without attribution cannot establish the proposed mechanism; a
+  validation/test reversal must be reported and audited rather than hidden.
+- Every test audit must record `test_access_date`, `user_authorization`,
+  `candidate_version`, `checkpoint_hash`, `checkpoint_retrained`,
+  `test_role`, `matrix_complete`, and the resulting Step 9-10 decision.
+
 ## Git Preference
 
 - When a commit is requested, use Conventional Commits.

@@ -7,13 +7,18 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | PCSD-CF Step9/10 complete；SC1 training-blocked；SC2-PCC Step5 conditional pass，Step6 next |
+| `current_11_step` | PCSD-CF-v1 return Step9/10 milestone test audit；PCC Step6 held |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | PCSD-CF representation signal retained/training-blocked；PCC theory-feasible/design-unready；test held |
+| `paper_core_status` | PCSD-CF validation fail/test unknown；60-checkpoint frozen test audit authorized；PCC held |
+
+[Evaluation Rule] official test split现固定为paper-core effectiveness与Step9-10继续/回滚的primary gate；validation只
+负责checkpoint selection、普通超参数选择与低成本mechanism screen。每个冻结candidate version默认只做一次完整
+test matrix；test后发生的architecture/objective/schedule变化必须升级version并标记`test_informed`，禁止按单一
+dataset或horizon反向调参。
 
 ## Research Thesis
 
@@ -103,6 +108,10 @@ full PCSD arms共享完全相同的trainable initialization；dense control参�
 `+0.4499%`。25/25 DIRECT same-run arms相对对应fixed E2E training退化，median `89.95%`，因此状态收紧为
 `partial_representation_signal_training_blocked`；不启动confirmation seeds。
 
+上述结论目前只来自validation。用户已于2026-07-16授权`SC-D15-T1`：不重训、不改变best-validation checkpoint，
+对相同12 arms × 5 datasets执行一次dense-H1..720 official test audit。该test结果将成为PCSD-CF-v1 Step9-10
+primary effectiveness decision；PCC Step6在完整60/60 test matrix返回前暂停。
+
 ### Retired Core Candidate: CCRL
 
 `CCRL`（Cross-fitted Coupling-Regret Learning）不期待ordinary mixture loss自动产生expert specialization。它在
@@ -145,9 +154,9 @@ PCSD-CF回答“一个unified decoder如何用同一parameter field表示不同f
 Contribution 2未来只能回答“在same-run joint decoder中，若ordinary task loss无法正确分配scope credit，应如何
 用同一次forward的forecast evidence修复”，而不能再依赖外部teacher pipeline。
 
-[Execution Order] D14-A problem confirmed -> CCRL retired -> PCSD-CF Step4-7 -> D15-A seed2021 60-run screen ->
-SC1 plain-training gate fail but 25/25 credit starvation -> SC2-PCC Step2-5 source/theory audit。下一步仅做PCC
-Step6 control matrix、optimization与rollback design；当前test、seeds2022/2023与Contribution-2 implementation均false。
+[Execution Order] D14-A problem confirmed -> CCRL retired -> PCSD-CF Step4-7 -> validation screen fail/credit clue ->
+PCC Step2-5 -> user-authorized frozen PCSD-CF-v1 milestone test audit。下一步先完成60/60 test Step9-10 decision；
+PCC Step6、seeds2022/2023与Contribution-2 implementation在此之前保持false。
 
 ### Closed Candidate: PRISM Decoder
 

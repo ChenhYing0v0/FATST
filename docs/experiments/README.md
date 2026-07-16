@@ -1,5 +1,7 @@
 # Active Experiment Protocols
 
+- `stage-c-pcsd-cf-test-audit.md`: 当前active protocol；在PCC Step6前对PCSD-CF-v1既有12 arms × 5 datasets
+  frozen best-validation checkpoints执行一次完整test audit；禁止重训与test checkpoint selection；
 - `stage-c-d15-native-pcsd-direct-control.md`: 当前active protocol；PCSD-CF Step7B seed2021 60/60完成；
   method gate失败但25/25 joint-arm credit starvation成立；SC2-PCC Step5 conditional pass、Step6 design next，
   implementation/test/confirmation false；

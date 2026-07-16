@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Audit one trained PCSD-CF Step7B checkpoint on sequential validation rows."""
+"""Audit one frozen PCSD-CF checkpoint on sequential validation or test rows."""
 
 from __future__ import annotations
 
 import argparse
+import csv
+import hashlib
 import json
 import math
 import sys
@@ -40,6 +42,16 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--probe-rows", type=int, default=256)
+    parser.add_argument(
+        "--evaluation-split",
+        choices=("val", "test"),
+        default="val",
+    )
+    parser.add_argument(
+        "--test-audit-config",
+        type=Path,
+        default=Path("configs/stage_c_pcsd_cf_test_audit.json"),
+    )
     parser.add_argument("--synthetic-smoke", action="store_true")
     return parser.parse_args()
 
@@ -66,17 +78,39 @@ def load_model(
     return model, config, official_args
 
 
-def sequential_validation_loader(
+def sequential_loader(
     official_args: SimpleNamespace,
+    split: str,
 ) -> DataLoader:
-    validation_data, _loader = data_provider(official_args, "val")
+    evaluation_data, _loader = data_provider(official_args, split)
     return DataLoader(
-        validation_data,
+        evaluation_data,
         batch_size=official_args.batch_size,
         shuffle=False,
         num_workers=official_args.num_workers,
         drop_last=False,
     )
+
+
+def file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
+    if not rows:
+        raise ValueError(f"cannot write empty CSV: {path}")
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=list(rows[0]),
+            lineterminator="\n",
+        )
+        writer.writeheader()
+        writer.writerows(rows)
 
 
 def bin_reduce(
@@ -154,9 +188,14 @@ def evaluate(args: argparse.Namespace) -> None:
         raise ValueError("probe_rows must be positive")
     device = torch.device(args.device)
     design = json.loads(args.design.read_text(encoding="utf-8"))
+    test_audit = None
+    if args.evaluation_split == "test":
+        test_audit = json.loads(
+            args.test_audit_config.read_text(encoding="utf-8")
+        )
     bins = design["step7b_protocol"]["future_bins"]
     model, config, official_args = load_model(args.run_dir, device)
-    loader = sequential_validation_loader(official_args)
+    loader = sequential_loader(official_args, args.evaluation_split)
     adapter = config["adapter"]
     training_contract = config["training_contract"]
     initialization = json.loads(
@@ -179,6 +218,9 @@ def evaluate(args: argparse.Namespace) -> None:
     all_finite = True
     prefix_rows: list[dict[str, Any]] | None = None
     prefix_gap = 0.0
+    step_squared_error = torch.zeros(720, dtype=torch.float64)
+    step_absolute_error = torch.zeros(720, dtype=torch.float64)
+    element_rows = 0
 
     with torch.no_grad():
         for batch_x, batch_y, _batch_x_mark, _batch_y_mark in loader:
@@ -187,6 +229,10 @@ def evaluate(args: argparse.Namespace) -> None:
             if prefix_rows is None:
                 prefix_rows, prefix_gap = prefix_audit(model, batch_x[:1], target[:1])
             fused = model(batch_x, target, is_training=False, target_prefix=720)[0]
+            errors = (fused - target).detach().to(torch.float64).cpu()
+            step_squared_error += errors.square().sum(dim=(0, 2))
+            step_absolute_error += errors.abs().sum(dim=(0, 2))
+            element_rows += int(errors.shape[0] * errors.shape[2])
             fused_rows = (fused - target).permute(0, 2, 1).reshape(-1, 720)
             persistence = batch_x[:, -1:, :].expand_as(target)
             persistence_rows = (
@@ -271,8 +317,10 @@ def evaluate(args: argparse.Namespace) -> None:
                 torch.isfinite(fused).all() and torch.isfinite(target).all()
             )
 
-    if not fused_bin_mse or prefix_rows is None:
-        raise RuntimeError("validation evaluation produced no rows")
+    if not fused_bin_mse or prefix_rows is None or element_rows <= 0:
+        raise RuntimeError(
+            f"{args.evaluation_split} evaluation produced no rows"
+        )
     payload: dict[str, np.ndarray] = {
         "fused_row_bin_mse": np.concatenate(fused_bin_mse).astype(np.float32),
         "fused_row_bin_mae": np.concatenate(fused_bin_mae).astype(np.float32),
@@ -299,10 +347,51 @@ def evaluate(args: argparse.Namespace) -> None:
                 "probe_targets": np.concatenate(probe_targets).astype(np.float32),
             }
         )
+    artifact_prefix = (
+        "validation" if args.evaluation_split == "val" else "test_audit"
+    )
     np.savez_compressed(
-        args.run_dir / "pcsd_validation_diagnostics.npz",
+        args.run_dir / f"pcsd_{artifact_prefix}_diagnostics.npz",
         **payload,
     )
+
+    if args.evaluation_split == "test":
+        cumulative_squared = torch.cumsum(step_squared_error, dim=0)
+        cumulative_absolute = torch.cumsum(step_absolute_error, dim=0)
+        metric_rows = []
+        for horizon in range(1, 721):
+            denominator = float(element_rows * horizon)
+            metric_rows.append(
+                {
+                    "target_horizon": horizon,
+                    "mse": float(cumulative_squared[horizon - 1] / denominator),
+                    "mae": float(cumulative_absolute[horizon - 1] / denominator),
+                    "num_rows_channels": element_rows,
+                    "evaluation_split": "test",
+                    "checkpoint_policy": adapter["checkpoint_policy"],
+                    "candidate_version": test_audit["candidate_version"],
+                }
+            )
+        write_csv(
+            args.run_dir / "test_audit_metrics_by_target_horizon.csv",
+            metric_rows,
+        )
+
+    test_authorized = args.evaluation_split == "val"
+    if test_audit is not None:
+        authorization = test_audit["authorization"]
+        test_authorized = bool(
+            test_audit["candidate_version"] == "SC1-PCSD-CF-v1"
+            and test_audit["status"] == "authorized_prelaunch"
+            and test_audit["matrix"]["expected_runs"] == 60
+            and authorization["user_authorized"] is True
+            and authorization["checkpoint_retraining_allowed"] is False
+            and authorization["checkpoint_selection"]
+            == "historical-best-validation-h720-mse"
+            and authorization["test_role"]
+            == "primary-milestone-effectiveness-gate"
+            and authorization["formal_test_access_count_for_version"] == 1
+        )
 
     protocol_pass = bool(
         adapter["mode"] == "unified"
@@ -317,6 +406,7 @@ def evaluate(args: argparse.Namespace) -> None:
         and training_contract["initialization"] == "from_scratch"
         and training_contract["checkpoint_input"] is None
         and diagnostics["frozen_parameter_tensors"] == 0
+        and test_authorized
     )
     readout_contract_pass = True
     if hasattr(model, "pcsd_readout"):
@@ -352,13 +442,17 @@ def evaluate(args: argparse.Namespace) -> None:
         "partition": adapter.get("pcsd_partition", "control"),
         "prefix_rows": prefix_rows,
         "full_prefix_max_abs": prefix_gap,
-        "validation_rows": int(payload["fused_row_bin_mse"].shape[0]),
+        "evaluation_split": args.evaluation_split,
+        "evaluation_rows": int(payload["fused_row_bin_mse"].shape[0]),
         "arm_diagnostics_present": "arm_row_bin_mse" in payload,
         "probe_rows": int(payload.get("probe_arms", np.empty((0,))).shape[0]),
         "all_finite": all_finite,
         "protocol_pass": protocol_pass,
         "readout_contract_pass": readout_contract_pass,
-        "uses_test_split": False,
+        "uses_test_split": args.evaluation_split == "test",
+        "test_access_authorized": test_authorized,
+        "checkpoint_sha256": file_sha256(args.run_dir / "checkpoint.pt"),
+        "checkpoint_retrained": False,
         "pass": bool(
             all_finite
             and math.isfinite(prefix_gap)
@@ -367,7 +461,12 @@ def evaluate(args: argparse.Namespace) -> None:
             and readout_contract_pass
         ),
     }
-    (args.run_dir / "trained_invariants.json").write_text(
+    invariant_name = (
+        "trained_invariants.json"
+        if args.evaluation_split == "val"
+        else "test_audit_invariants.json"
+    )
+    (args.run_dir / invariant_name).write_text(
         json.dumps(invariant, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
@@ -375,7 +474,8 @@ def evaluate(args: argparse.Namespace) -> None:
         raise RuntimeError(f"trained invariant failed: {invariant}")
     print(
         f"pcsd_checkpoint=pass dataset={invariant['dataset']} "
-        f"readout={invariant['readout_mode']} rows={invariant['validation_rows']}"
+        f"readout={invariant['readout_mode']} split={args.evaluation_split} "
+        f"rows={invariant['evaluation_rows']}"
     )
 
 

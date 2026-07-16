@@ -1,0 +1,64 @@
+{
+  "stage": "StageC-UVHF",
+  "audit_id": "SC-D15-T1",
+  "candidate_version": "SC1-PCSD-CF-v1",
+  "status": "authorized_prelaunch",
+  "purpose": "complete frozen-checkpoint milestone test effectiveness audit before PCC Step6",
+  "test_informed_after_completion": true,
+  "matrix": {
+    "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"],
+    "arms": [
+      "a6",
+      "pcsd_m0",
+      "pcsd_fixed_1",
+      "pcsd_fixed_48",
+      "pcsd_fixed_144",
+      "pcsd_fixed_360",
+      "pcsd_fixed_720",
+      "pcsd_equal",
+      "pcsd_static",
+      "pcsd_direct",
+      "pcsd_random",
+      "dense_matched"
+    ],
+    "seed": 2021,
+    "expected_runs": 60,
+    "horizons": "dense_h1_h720",
+    "checkpoint_source": "stage_c_pcsd_cf_step7b_seed2021_historical_runs"
+  },
+  "authorization": {
+    "user_authorized": true,
+    "authorization_date": "2026-07-16",
+    "test_role": "primary-milestone-effectiveness-gate",
+    "checkpoint_selection": "historical-best-validation-h720-mse",
+    "checkpoint_retraining_allowed": false,
+    "checkpoint_mutation_allowed": false,
+    "per_dataset_or_horizon_tuning_allowed": false,
+    "partial_matrix_reporting_allowed": false,
+    "formal_test_access_count_for_version": 1
+  },
+  "metrics": {
+    "primary": "test_dense_h1_h720_mse_auc",
+    "secondary": [
+      "test_h720_mse",
+      "test_dense_h1_h720_mae_auc",
+      "test_arm_skill_and_oracle_headroom",
+      "validation_test_gain_reversal"
+    ]
+  },
+  "gates": {
+    "reuse_frozen_step7b_thresholds": true,
+    "direct_over_a6_dataset_required": 3,
+    "direct_over_a6_macro_gain_min": 0.003,
+    "full_matrix_required": true,
+    "checkpoint_hash_unchanged_required": true,
+    "no_retraining_required": true
+  },
+  "decision_map": {
+    "test_method_pass": "authorize_seed_confirmation_design_before_pcc",
+    "test_fail_with_arm_headroom": "retain_training_blocked_status_and_continue_pcc_step6_test_informed",
+    "test_fail_without_arm_headroom": "rollback_sc1_step4_before_pcc_implementation",
+    "validation_test_reversal": "audit_split_checkpoint_and_seed_stability_before_method_claim",
+    "artifact_or_hash_failure": "invalidate_test_audit_and_repair_artifacts_only"
+  }
+}
