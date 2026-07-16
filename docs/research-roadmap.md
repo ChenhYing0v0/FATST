@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | PCC-v1-TI Step7A pass；Step7B prelaunch audit next |
+| `current_step` | PCC-v1-TI Step7B prelaunch pass；11-step Step8 remote launch next |
 | `active_question` | projective nested-risk credit能否恢复same-run arms并超过pointwise/prior controls？ |
 | `active_candidates` | `SC1-PCSD-CF-v1` exact method rejected；`SC2-PCC-v1-TI` design-pass/method-untested |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `docs/experiments/stage-c-sc2-pcc-step7a.md` |
-| `method_implementation` | PCC-v1-TI local objective/training path 35/35 pass；remote/test/confirmation=false |
+| `active_protocol` | `docs/experiments/stage-c-sc2-pcc-step7b.md` |
+| `method_implementation` | local 35/35 + prelaunch 8/8；seed2021 validation remote=true；test/confirmation=false |
 | `rollback_point` | PCC generic controls explain -> Step4；shared-field arm ceiling -> SC1 Step4；numeric pathology -> redesign |
 
 ## Post-D11 Joint Mainline Reset
@@ -369,6 +369,17 @@ schedule；TimeAlign只增加显式training-details path，默认三元组、par
 35/35 gates通过：vectorized/direct loop最大差`2.22e-16`、transport identity gap`0`、nine decompositions 9/9、
 adapter optimizer step finite且只访问train/val。该结果只建立implementation correctness，不建立effectiveness。
 decision=`step7a_pass_prelaunch_audit_next`；下一步仅做45-run runner/analyzer/resource audit，remote/test仍false。
+
+## SC2-PCC-v1-TI Step 7B Prelaunch
+
+45-run Phase-A matrix已按dataset-major slow-first顺序固定：nine objective modes × Weather/ETTm1/ETTm2/ETTh1/
+ETTh2。45个production CLI contracts、frozen hashes、endpoint-mode initialization pairing、validation-only authorization、
+shared-gradient evaluator与analyzer synthetic smoke均通过；prelaunch categories为8/8。
+
+新runs只训练PCSD DIRECT架构的nine objectives；A6/plain DIRECT/dense/five fixed scopes复用冻结seed2021 references，
+不重训。analyzer同时执行performance、pointwise-prior specificity、25-pair arm recovery、pairwise NRMSE retention、policy
+collapse与best-val shared-gradient diagnostics。decision=`step7b_prelaunch_pass_remote_seed2021_authorized`；只授权45-run
+validation Phase A，test、confirmation seeds与conditional Phase B继续false。
 
 ## SC1-JAPO Step 7A: Production Gate Passed, Step 8 Authorized
 

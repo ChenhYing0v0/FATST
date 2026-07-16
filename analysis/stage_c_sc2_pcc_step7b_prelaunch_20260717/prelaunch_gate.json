@@ -1,0 +1,20 @@
+{
+  "candidate": "SC2-PCC-v1-TI",
+  "categories": {
+    "cli_contracts": true,
+    "dataset_major_workload_order": true,
+    "frozen_hashes": true,
+    "objective_matrix": true,
+    "paired_initialization": true,
+    "step7a_gate": true,
+    "tooling_present": true,
+    "validation_only_authorization": true
+  },
+  "config_sha256": "e547ed3c0da11d5c117967bf72da71999c913755ed9183703fbed86deb21cce7",
+  "current_step": "Step7B prelaunch gate",
+  "decision": "step7b_prelaunch_pass_remote_seed2021_authorized",
+  "expected_jobs": 45,
+  "overall_pass": true,
+  "profile_sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a",
+  "test_used": false
+}

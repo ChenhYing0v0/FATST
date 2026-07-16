@@ -5,10 +5,10 @@
 | Field | Value |
 | --- | --- |
 | `candidate` | `SC2-PCC-v1-TI` |
-| `current_step` | Step7A pass；Step7B prelaunch audit next |
+| `current_step` | Step7A archived；Step7B prelaunch 8/8 pass；remote seed2021 authorized |
 | `local gate` | 35/35 |
 | `effectiveness` | unknown |
-| `remote_authorized` | false |
+| `remote_authorized` | true；仅45-run seed2021 validation Phase A |
 | `test_accessed/authorized` | false / false |
 | `rollback` | Step7A failure -> Step5/6；当前未触发 |
 
@@ -50,6 +50,6 @@ conda run -n r2026-fsa python scripts/check_stage_c_sc2_pcc_step7a.py
 
 ## Next Gate
 
-Step7B prelaunch audit必须先构造并静态验证`9 modes × 5 datasets × seed2021 = 45 runs`，包括profile/hash、
-initialization pairing、validation-only、best-val-H720、resume/status、GPU workload ordering、result completeness与analyzer
-dry-run。通过后才可单独授权3090 remote screen。conditional Phase B、test与confirmation seeds继续held。
+Step7B prelaunch audit已8/8 categories通过，45个CLI contracts与dataset-major queue均成立。active protocol转为
+`docs/experiments/stage-c-sc2-pcc-step7b.md`；只授权3090 seed2021 validation Phase A。conditional Phase B、test与
+confirmation seeds继续held。

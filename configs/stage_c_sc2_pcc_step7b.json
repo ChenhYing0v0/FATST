@@ -1,0 +1,123 @@
+{
+  "stage": "StageC-UVHF",
+  "candidate": "SC2-PCC-v1-TI",
+  "status": "step7b_prelaunch_pass_remote_seed2021_authorized",
+  "current_step": "Step7B validation-only remote screen",
+  "test_informed": true,
+  "seed": 2021,
+  "datasets": ["Weather", "ETTm1", "ETTm2", "ETTh1", "ETTh2"],
+  "objective_modes": [
+    "measure_only",
+    "equal_skill",
+    "pointwise_route_only",
+    "pointwise_capability_skill_only",
+    "pointwise_prior_composed",
+    "pointwise_pcc_v0",
+    "transport_skill_only",
+    "transport_route_only",
+    "pcc_transport_full"
+  ],
+  "expected_runs": 45,
+  "profiles": {
+    "path": "configs/stage_c_five_dataset_natural_profiles.json",
+    "sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a"
+  },
+  "step6_design": {
+    "path": "configs/stage_c_sc2_pcc_step6.json",
+    "sha256": "1ba0cf786390fb35a806dcd50fe8ebe9c46cb58b06cbbc6e68bf38550e6af32f"
+  },
+  "pcsd_design": {
+    "path": "configs/stage_c_pcsd_cf_native_direct.json",
+    "sha256": "d103468ba63acf2d2c3ea1031b11d39b81526a9eda1cbd4ae796443dc2324684"
+  },
+  "step7a_gate": {
+    "path": "analysis/stage_c_sc2_pcc_step7a_local_20260716/local_gate.json",
+    "sha256": "85facd22cd31411e41c1bf3dc204093314af4a277b26a13a02788ad26240124f",
+    "cases": 35,
+    "passed": true
+  },
+  "training": {
+    "from_scratch": true,
+    "joint_encoder_decoder": true,
+    "one_forward": true,
+    "pred_len": 720,
+    "target_horizons": [720],
+    "validation_horizons": [720],
+    "evaluation_horizons": "dense_h1_h720",
+    "evaluation_prefix_mode": "full-crop",
+    "final_evaluation_split": "val",
+    "checkpoint_policy": "best-val-h720-mse",
+    "epochs": 20,
+    "patience": 5,
+    "batch_size": 32,
+    "learning_rate": 0.0001,
+    "test_used": false
+  },
+  "architecture": {
+    "encoder_mode": "timealign-token-mlp",
+    "readout_mode": "pcsd-coupling-field",
+    "policy_mode": "direct",
+    "partition": "canonical",
+    "mode_rank": 256,
+    "coordinate_dim": 4,
+    "policy_history_dim": 32,
+    "policy_hidden_dim": 64,
+    "requested_horizon_feature": false,
+    "inference_graph_changed": false
+  },
+  "reference": {
+    "remote_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_pcsd_cf_step7b",
+    "local_root": "analysis/stage_c_pcsd_cf_step7b_seed2021_20260716/raw",
+    "arms": [
+      "a6",
+      "pcsd_direct",
+      "dense_matched",
+      "pcsd_fixed_1",
+      "pcsd_fixed_48",
+      "pcsd_fixed_144",
+      "pcsd_fixed_360",
+      "pcsd_fixed_720"
+    ],
+    "retrain": false
+  },
+  "diagnostics": {
+    "checkpoint_snapshot": "best-val-h720",
+    "gradient_batch": "first-sequential-train-row",
+    "shared_gradient_parameters": [
+      "mode_weight",
+      "mode_bias",
+      "identity_synthesis",
+      "nonlinear_synthesis",
+      "temporal_bias"
+    ],
+    "gradient_surgery": false,
+    "required_training_log_prefix": "train_pcc_"
+  },
+  "gates": {
+    "pcc_over_a6_dataset_wins_min": 3,
+    "pcc_over_a6_macro_gain_min": 0.003,
+    "pcc_over_plain_dataset_wins_min": 3,
+    "pcc_over_plain_macro_gain_min": 0.005,
+    "pcc_over_pointwise_pcc_dataset_wins_min": 3,
+    "pcc_over_pointwise_pcc_macro_gain_min": 0.002,
+    "pcc_over_prior_composed_dataset_wins_min": 3,
+    "pcc_over_prior_composed_macro_gain_min": 0.002,
+    "arm_degradation_median_relative_reduction_min": 0.3,
+    "arm_pairs_improved_min": 15,
+    "pairwise_nrmse_retention_fraction_min": 0.5,
+    "policy_normalized_entropy_min": 0.3,
+    "policy_usage_max": 0.9
+  },
+  "authorization": {
+    "user_authorized_remote_after_prelaunch": true,
+    "remote_training_authorized": true,
+    "remote_scope": "seed2021_validation_only_45_run_phase_a",
+    "test_access_authorized": false,
+    "confirmation_seeds_authorized": false,
+    "conditional_phase_b_authorized": false
+  },
+  "output": {
+    "remote_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_sc2_pcc_step7b",
+    "local_analysis_root": "analysis/stage_c_sc2_pcc_step7b_seed2021_20260717"
+  }
+}
