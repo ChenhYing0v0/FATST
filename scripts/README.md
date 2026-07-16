@@ -13,6 +13,12 @@ StageC D14-A1 active output-coupling diagnostic：
 - `remote/run_stage_c_d14a1_confirmation.sh`: 在seed2021 dual-carrier review后串行运行2022/2023 neutral+A6，
   最后生成multi-seed gate；不自动启动D14-B；
 - `sync_stage_c_d14a1_dual_carrier_grouped_mlp_results.sh`: 同步必要configs、metrics、row diagnostics与gate。
+- `sync_stage_c_pcsd_cf_step7b_results.sh`: 排除checkpoints后同步PCSD-CF Step7B完整validation diagnostics，
+  本地独立重算formal gate与horizon/arm-credit deep dive。
+- `analyze_stage_c_pcsd_cf_step7b_deep_dive.py`: 不改变formal gate，展开逐horizon/bin、same-run oracle、
+  policy variation及DIRECT arm相对独立fixed E2E training的credit-starvation归因。
+- `check_stage_c_sc2_pcc_step5.py`: 用float64 autograd验证PCC gradient identities、dense-prefix measure、
+  full-domain projectivity与crossed synthetic router recoverability；只授权Step6 design。
 
 StageC D14-A0 archived evidence entrypoints：
 

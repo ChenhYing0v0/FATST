@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | PCSD-CF Step7B effectiveness screen / 11-step Step8 running；seed2021 validation-only |
-| `active_question` | fixed-past unified model是否需要在一个projective decoder内自适应future-output coupling scope？ |
-| `active_candidates` | `SC1-PCSD-CF` narrative-ready/effectiveness-unready；SC2 slot open，`ICC` hypothesis only |
+| `current_step` | PCSD-CF Step9/10 complete；SC2-PCC Step5 conditional pass；Step6 concrete design next |
+| `active_question` | same-forward projective credit能否解除plain fused loss造成的scope-arm starvation？ |
+| `active_candidates` | `SC1-PCSD-CF` representation-signal/training-blocked；`SC2-PCC-v0` theory-feasible/design-unready |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/experiments/stage-c-d15-native-pcsd-direct-control.md` |
-| `method_implementation` | 12-arm runner/evaluator/analyzer/prelaunch complete；3×3090 remote running；effectiveness/SC2/test=false |
-| `rollback_point` | local invariant fail -> Step5/6；native arms unskilled -> Step4；credit problem absent -> SC2 remains open |
+| `method_implementation` | seed2021 60/60 analyzed；PCC Step5 15/15；implementation/remote/test=false |
+| `rollback_point` | PCC generic skill-floor only -> Step4；shared-field cancellation/ceiling -> SC1 Step4；Step6 confounded -> redesign |
 
 ## Post-D11 Joint Mainline Reset
 
@@ -319,13 +319,23 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 7. decision=`step7a_local_pass_step7b_design_only_next`。该结果只通过implementation/theory contract，不是
    effectiveness evidence；remote、SC2、test均false。
 
-## PCSD-CF Step 7B Remote Screen: Running
+## PCSD-CF Step 7B Step9/10 Result
 
-Weather-direct batch32 one-batch resource smoke已通过；12 arms × 5 datasets的seed2021 validation-only screen
-已于2026-07-16 16:10:33在GPU 0/1/2启动。runner按arm-major/slow-dataset-spread调度，outputs写入repo外
-`/home/yingch/exp_outputs/r-2026-fatst/stage_c_pcsd_cf_step7b`。首次状态检查确认三个worker存活且首个
-`A6/ETTh1` run完成；下一步等待60/60 artifacts，执行Step9 analyzer与Step10 gate。Contribution 2、test与
-confirmation seeds保持false。
+seed2021 validation-only screen于17:26:52正常结束，60/60 protocol/artifacts与paired initialization通过。DIRECT
+相对A6 macro -1.5833%、0/5，method gate失败；相对dense matched +2.3492%、5/5，相对random +0.4499%、3/5，
+capacity/random explanations排除。25/25 DIRECT same-run scope arms相对独立fixed E2E training退化，median
+89.95%，failure attribution=`design_fault_suspected_joint_credit_starvation`。SC1不跑confirmation，回Step4保留
+training-aware representation question；SC2-PCC完成Step2-5 source/theory audit，15/15 local cases通过，下一步只做
+Step6 control matrix、optimization与rollback design。Contribution-2 implementation、test与confirmation seeds保持false。
+
+## SC2-PCC Step 5 Theory Feasibility
+
+plain fused arm/router与PCC附加credit的四个gradient identities均以float64 autograd验证，最大误差
+`5.20e-18`；dense-prefix measure identity误差`4.44e-16`，full-domain prefix crop gap为`0`。history × target
+crossed synthetic policy达到capability KL `1.50e-11`与argmax accuracy `1.0`。这只证明output-level skill floor、
+router credit与projective measure可同时成立；shared-parameter gradient cancellation、moving target、arm
+homogenization与真实capability predictability仍未解决。decision=`conditional_pass_step6_design_only`；下一步必须
+冻结`MEASURE_ONLY/EQUAL_SKILL/CAPABILITY_SKILL_ONLY/ROUTE_ONLY/full PCC`等controls后才可讨论Step7A。
 
 ## SC1-JAPO Step 7A: Production Gate Passed, Step 8 Authorized
 

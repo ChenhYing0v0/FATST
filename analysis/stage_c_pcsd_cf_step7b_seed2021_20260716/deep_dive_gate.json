@@ -1,0 +1,16 @@
+{
+  "seed": 2021,
+  "positive_same_run_oracle_headroom_datasets": 3,
+  "best_fixed_scope_over_a6_datasets": 2,
+  "a6_m0_max_dense_mse_auc_absolute_gap": 2.571081919588991e-08,
+  "direct_arm_undertrained_pairs": 25,
+  "direct_arm_total_pairs": 25,
+  "direct_arm_degradation_percent_min": 9.665519187098571,
+  "direct_arm_degradation_percent_median": 89.94954830013353,
+  "direct_arm_degradation_percent_max": 392.54028884477714,
+  "target_usage_max_pairwise_l1_min": 0.005118059446190398,
+  "target_usage_max_pairwise_l1_max": 0.044016420576775545,
+  "posthoc_cross_dataset_arm_competitiveness_gate": false,
+  "formal_preregistered_gate_remains": "direct_credit_problem_supported_sc2_step2_4_only",
+  "research_interpretation": "joint_fused_loss_arm_credit_starvation_supported_but_target_specific_credit_mechanism_unproven"
+}

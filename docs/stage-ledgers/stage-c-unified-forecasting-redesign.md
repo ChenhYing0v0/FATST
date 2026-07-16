@@ -6,39 +6,39 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | decoder/operator 与 training principle 两项相互支撑的 paper-core innovations |
-| `active_question` | 一个fixed-past unified decoder是否需要自适应future-output coupling granularity？ |
+| `active_question` | 如何在projective shared field中维持scope-arm skill并学习future-region capability credit？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | `SC1-PCSD-CF` narrative-ready/effectiveness-unready；SC2 slot open，`ICC` hypothesis only |
+| `active_candidates` | `SC1-PCSD-CF` representation-signal/training-blocked；`SC2-PCC-v0` Step5 conditional pass |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
-| `stage_rollback` | PCSD-CF local invalid -> Step5/6；native arms unskilled -> Step4；SC2需direct credit problem evidence |
+| `stage_rollback` | PCC退化为generic skill floor -> Step4；shared-field arm ceiling -> SC1 Step4 redesign |
 
 ## Decision Cursor
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | PCSD-CF Step7B effectiveness screen / 11-step Step8 running；seed2021 validation-only |
-| `current_candidate` | `SC1-PCSD-CF-v1`；SC2 unfilled，`SC2-ICC` only a blocked hypothesis |
-| `latest_decision` | GPU audit/resource smoke通过；60-run matrix于16:10:33在GPU 0/1/2启动，首run已完成 |
-| `next_required_action` | 等待60/60 artifacts -> Step9 analyzer -> Step10 effectiveness/failure attribution decision |
-| `method_training_authorized` | seed2021 validation-only remote=true；effectiveness claim/SC2/test/confirmation=false |
-| `rollback_point` | local invalid -> Step5/6；carrier/arm skill fail -> Step4；direct misallocation evidence -> SC2 Step2-4 |
+| `current_11_step` | SC1 Step9/10 complete；SC2-PCC Step5 conditional pass；Step6 concrete design next |
+| `current_candidate` | `SC1-PCSD-CF-v1` training-blocked；`SC2-PCC-v0` theory-feasible/design-unready |
+| `latest_decision` | DIRECT vs A6 0/5；25/25 arms undertrained；capacity/numeric excluded；no confirmation |
+| `next_required_action` | PCC Step6 controls、optimization schedule、diagnostics与hard rollback gate；remote=false |
+| `method_training_authorized` | PCC Step6 design only；implementation/remote/effectiveness/test/confirmation=false |
+| `rollback_point` | generic balancing explains -> Step4；shared-field arm ceiling -> SC1 Step4；invalid math -> Step5 redesign |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | PCSD-CF Step7B remote seed2021 screen running（11-step Step8） |
+| `current_step` | PCSD-CF Step9/10 decision complete；PCC Step5 theory feasibility complete |
 | `problem` | 现有unified decoder固定point/block/global coupling scope；最佳future-output sharing是否随target region与history变化 |
 | `existence_evidence` | three-seed neutral+A6 5/5 stable crossing；strict 7.1107%/9.1259%；instance 6.7948%/8.5990% |
 | `idea` | one shared coupling field + scope pooling + direct end-to-end history × target policy |
 | `theory_check` | DCT nonconstant modes zero-mean；constructive A6 containment gap 0；requested-H-free projectivity |
 | `design` | shared mode maps `[Dq,R,K]`；five pooling operators；identity+GELU synthesis；D15 direct controls |
 | `narrative_gate` | conditional pass；DeepONet/PoU/SoftMoE primitives excluded from novelty claim |
-| `effectiveness_gate` | pending；must beat A6/equal/static and survive dense/random controls |
-| `artifacts` | `analysis/stage_c_pcsd_native_reset_20260716/pcsd_cf_step46_source_theory_design_audit.md`；`analysis/stage_c_pcsd_cf_step7a_local_20260716/step7a_local_gate_report.md`；`analysis/stage_c_pcsd_cf_step7b_prelaunch_20260716/remote_launch_record.md` |
-| `decision` | step7b_remote_seed2021_running；SC2/test/confirmation held |
+| `effectiveness_gate` | plain training fail：DIRECT vs A6 0/5；dense/random specificity pass；25/25 arm starvation |
+| `artifacts` | `analysis/stage_c_pcsd_cf_step7b_seed2021_20260716/step9_10_result_and_failure_attribution.md`；`analysis/stage_c_sc2_pcc_step5_theory_20260716/step5_theory_feasibility.md` |
+| `decision` | SC1 training-blocked not direction-rejected；PCC Step5 conditional pass；Step6 design only |
 
 ## Frozen Carrier Contract
 
@@ -90,11 +90,12 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC2-CPGA` | `rejected_with_parent_route` | full-memory path的prediction change能否由conditional predictive gain核算 | 脱离CADMO后退化为generic accounting | not started | 不实现；不占active slot |
 | `SC-D14-P` | `auxiliary_not_scheduled` | A6 patch memory是否含超越global coeff的ordered target-specific conditional information | not paper mainline | not started | 未来仅在decoder interface需要时做small probe |
 | `SC1-PCSD` | `problem_supported_parent` | one projective decoder是否需同时表示point/block/global coupling scopes | complete-chain novelty only；DIRMO/Stratify/CATS controls mandatory | D14-A1 three-seed dual-carrier pass；GroupedMLP below LBF | parent retained；native child PCSD-CF active |
-| `SC1-PCSD-CF` | `step7b_remote_running_effectiveness_unready` | one shared parameter field能否经scope pooling形成skilled point/block/global arms并contain A6 | DeepONet/PoU/soft routing excluded；field-pooling chain only | local/prelaunch pass；seed2021 running | wait artifacts then Step9/10 |
+| `SC1-PCSD-CF` | `partial_representation_signal_training_blocked` | one shared parameter field能否经scope pooling形成skilled point/block/global arms并contain A6 | field-pooling chain retained | DIRECT vs A6 0/5；vs dense 5/5；25/25 arms undertrained | return Step4 with PCC theory audit |
 | `SC2-CCRL` | `retired_as_core_diagnostic_only` | cross-fit relative risk能否增益matched direct fusion | generic overlap high；two-stage teacher/student inconsistency | not implemented | retain report/config as history；not scheduled |
-| `SC2-ICC` | `hypothesis_only_blocked` | same-forward marginal coupling credit能否修复direct policy misallocation | counterfactual credit primitive not novel；task-specific chain unassessed | credit problem not established | wait for D15-A direct-control evidence |
+| `SC2-ICC` | `superseded_by_pcc` | same-forward marginal coupling credit能否修复direct policy misallocation | working hypothesis已由D15-A收紧 | not implemented | historical name only |
+| `SC2-PCC` | `step5_conditional_pass_step6_design_only` | same-forward capability target + skill floor能否修复joint arm starvation并保持projectivity | generic load balance/loss shaping/stacking excluded；complete-chain medium confidence | 15/15 algebra/projectivity/synthetic cases；method untested | Step6 controls/optimization/rollback design |
 | `SC-D14-A/B` | `a_confirmed_b_retired` | coupling crossing与conditional-risk predictability | A pass；B retired before implementation | A confirmed；B not run | A evidence retained；B closed |
-| `SC-D15-A` | `step7b_remote_running` | native PCSD-CF representation、direct trainability与credit-problem existence | Step4-6 conditional pass | local/prelaunch/smoke pass；60-run remote running | wait 60/60；test=false |
+| `SC-D15-A` | `completed_training_blocked` | native PCSD-CF representation、direct trainability与credit-problem existence | Step4-6 conditional pass | 60/60；method fail；25/25 arm starvation | no confirmation；feeds PCC Step2-4 |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
 
@@ -200,7 +201,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | Fixed-past compression mainline reset | `superseded_by_narrative_scope` | CADMO/CPGA与patch-memory D14降为history-interface auxiliary；未执行 |
 | Multi-horizon coupling mainline reset | `superseded_by_native_pcsd_reset` | PCSD/CCRL曾proposed；D14-A evidence保留，CCRL后续retired |
 | D14 output-coupling granularity | `a_confirmed_b_retired` | A1 dual-carrier 255/255 confirmed；B1未implementation；remote false |
-| PCSD-CF native architecture reset | `step7b_prelaunch_pass` | 60/60 contracts；A6/M0 exact；dense gap<0.1%；seed2021 remote authorized |
+| PCSD-CF native architecture reset | `step10_training_blocked` | 60/60 result；DIRECT vs A6 0/5；25/25 arm starvation；PCC Step5 conditional pass |
 
 ## Paper Mainline Sync Log
 
@@ -251,6 +252,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-16 | PCSD-CF D15-A Step7A local gate | Current Position、Contribution 1、Experiment Logic | production implementation + theory contract | 9/9 local gates pass；effectiveness/remote/SC2/test held；Step7B tooling next |
 | 2026-07-16 | PCSD-CF Step7B prelaunch gate | Current Position、Contribution 1、Experiment Logic | controls + runner + diagnostics + authorization | 60/60 contracts pass；seed2021 validation-only remote authorized；test/SC2 held |
 | 2026-07-16 | PCSD-CF Step7B remote launch | Current Position、Experiment Logic | running-state + exact launch provenance | commit b9693ec；GPU 0/1/2；60-run validation-only matrix；test/SC2/confirmation held |
+| 2026-07-16 | PCSD-CF Step9/10 + PCC Step2-4 | Current Position、Contribution 1/2、Experiment Logic | effectiveness failure attribution + training-candidate reset | DIRECT vs A6 0/5；25/25 arms starved；PCC Step5 local only |
+| 2026-07-16 | PCC Step5 theory feasibility | Contribution 2、Experiment Logic | algebra/projectivity/synthetic gate | 15/15 pass；Step6 design only；implementation/remote/test held |
 
 ## Continuation Rules
 

@@ -155,6 +155,25 @@ Step7B新增：
 - `remote/run_stage_c_pcsd_cf_step7b.sh`：60-job resumable/status/dry-run/resource-smoke runner，输出根目录固定在
   repo外`/home/yingch/exp_outputs/r-2026-fatst/stage_c_pcsd_cf_step7b`。
 
+Returned-result analysis新增两层：`analyze_stage_c_pcsd_cf_step7b.py`负责冻结的formal gate，逐run读取720个
+prefix metrics、training/config、initialization contract、trained invariants与validation diagnostics，输出
+`run_summary.csv`、`direct_comparisons.csv`和`gate.json`。其中`dense_mse_auc`是H1..720 prefix MSE算术平均；
+`same_run_oracle_headroom`是DIRECT checkpoint内`arm_row_bin_mse`逐row/逐bin最小值相对fused MSE的收益。
+
+`analyze_stage_c_pcsd_cf_step7b_deep_dive.py`不改变formal gate，只补充failure attribution：
+
+- `horizon_gain_by_reference.csv`与`horizon_bin_gain.csv`定义逐H和冻结八bin的DIRECT相对收益；
+- `fixed_scope_summary.csv`记录独立fixed-scope E2E run相对A6的dense AUC；
+- `mechanism_by_dataset.csv`与`same_run_oracle_by_bin.csv`记录oracle、arm separation、policy usage及其
+  target/instance variation；
+- `direct_arm_vs_fixed_training.csv`把DIRECT checkpoint内每个scope arm的row-bin MSE与相同scope独立E2E
+  fixed run比较，用于识别joint fused-loss credit starvation；
+- `horizon_gain_curves.svg/png`可视化逐H relative gain，`deep_dive_gate.json`严格区分preregistered formal
+  decision与post-hoc research interpretation。
+
+`sync_stage_c_pcsd_cf_step7b_results.sh`排除checkpoints/predictions，同步其余validation evidence后依次运行
+formal analyzer与deep dive。raw目录由`.gitignore`排除，仅aggregate CSV/JSON/figures/report进入版本库。
+
 ## 5. Code-Theory Consistency Evaluation
 
 | Intended theory | Code realization | Remaining proxy / limit |

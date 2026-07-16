@@ -1,0 +1,58 @@
+{
+  "candidate_id": "SC1-PCSD-CF-v1",
+  "diagnostic_id": "SC-D15-A",
+  "seed": 2021,
+  "expected_runs": 60,
+  "valid_runs": 60,
+  "complete": true,
+  "initialization_audit": {
+    "paired_encoder_initialization": true,
+    "paired_pcsd_initialization": true,
+    "a6_m0_exact_initialization": true
+  },
+  "gates": {
+    "direct_over_a6": false,
+    "direct_over_equal": false,
+    "direct_over_static": false,
+    "dense_capacity_control": true,
+    "random_partition_specificity": true,
+    "same_run_arm_separation": true,
+    "same_run_arm_skill": true,
+    "policy_not_collapsed": true
+  },
+  "macro_comparisons": {
+    "a6": {
+      "gain_fraction": -0.015833402741805492,
+      "gain_percent": -1.5833402741805491,
+      "dataset_wins": 0
+    },
+    "pcsd_equal": {
+      "gain_fraction": -0.00029444956603978943,
+      "gain_percent": -0.029444956603978945,
+      "dataset_wins": 3
+    },
+    "pcsd_static": {
+      "gain_fraction": -0.006265748304656848,
+      "gain_percent": -0.6265748304656849,
+      "dataset_wins": 3
+    },
+    "dense_matched": {
+      "gain_fraction": 0.023492361706122546,
+      "gain_percent": 2.3492361706122544,
+      "dataset_wins": 5
+    },
+    "pcsd_random": {
+      "gain_fraction": 0.004499163847458254,
+      "gain_percent": 0.4499163847458254,
+      "dataset_wins": 3
+    }
+  },
+  "arm_separation_dataset_count": 5,
+  "same_run_arm_skill_dataset_count": 5,
+  "same_run_oracle_headroom_macro": 0.03944415225843212,
+  "policy_entropy_min": 0.5477941005672723,
+  "policy_usage_max": 0.7555175499941138,
+  "method_pass": false,
+  "credit_problem_supported": true,
+  "decision": "direct_credit_problem_supported_sc2_step2_4_only"
+}

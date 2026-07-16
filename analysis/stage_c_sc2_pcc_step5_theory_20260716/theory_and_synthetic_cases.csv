@@ -1,0 +1,16 @@
+case,value,threshold,pass
+plain_fused_arm_gradient_identity,3.469446951953614e-18,<=1e-12,True
+plain_fused_router_gradient_identity,5.204170427930421e-18,<=1e-12,True
+pcc_arm_gradient_identity,3.469446951953614e-18,<=1e-12,True
+pcc_router_gradient_identity,3.469446951953614e-18,<=1e-12,True
+skill_floor_lower_bound,0.026288088047625516,>=0.02,True
+skill_floor_numeric_gap,0.006288088047625515,finite,True
+dense_prefix_measure_identity,4.440892098500626e-16,<=1e-12,True
+prefix_measure_normalization,5.551115123125783e-16,<=1e-12,True
+prefix_measure_monotone,1.0,==1,True
+full_domain_prefix_projectivity,0.0,==0,True
+synthetic_router_kl,1.5047817152087627e-11,<=1e-4,True
+synthetic_router_argmax_accuracy,1.0,>=0.99,True
+synthetic_target_crossing_fraction,1.0,>=0.5,True
+synthetic_history_crossing_fraction,1.0,>=0.5,True
+synthetic_used_scopes,4.0,>=4,True

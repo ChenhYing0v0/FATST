@@ -5,17 +5,18 @@
 | Field | Value |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | `SC1-PCSD-CF-v1` Step7B effectiveness screen / 11-step Step8 running |
+| `current_step` | Step9/10 complete；SC1 training-blocked；SC2-PCC Step5 conditional pass |
 | `role` | architecture candidate + Contribution-2 problem diagnostic |
 | `narrative_gate` | conditional pass |
 | `local_implementation` | passed（9/9 gate categories） |
-| `remote_training` | seed2021 validation-only 60-run screen running；3×RTX 3090 |
+| `remote_training` | seed2021 validation-only 60/60 complete；runner normal exit |
 | `test_access` | false |
 | `config` | `configs/stage_c_pcsd_cf_native_direct.json` |
 | `analysis` | `analysis/stage_c_pcsd_native_reset_20260716/pcsd_cf_step46_source_theory_design_audit.md` |
 | `step7a_artifact` | `analysis/stage_c_pcsd_cf_step7a_local_20260716/step7a_local_gate_report.md` |
 | `step7b_artifact` | `analysis/stage_c_pcsd_cf_step7b_prelaunch_20260716/prelaunch_gate_report.md` |
 | `launch_record` | `analysis/stage_c_pcsd_cf_step7b_prelaunch_20260716/remote_launch_record.md` |
+| `result` | `analysis/stage_c_pcsd_cf_step7b_seed2021_20260716/step9_10_result_and_failure_attribution.md` |
 
 ## What We Plan To Test
 
@@ -114,7 +115,9 @@ PCSD-CF method gate要求`DIRECT`至少3/5 datasets超过A6且macro `>=0.3%`，�
 
 ## Decision
 
-`step7b_remote_seed2021_running`。GPU audit与Weather-direct batch32 one-batch resource smoke均通过；完整矩阵已于
-2026-07-16 16:10:33在GPU 0/1/2启动。首轮三个位置为`A6/Weather`、`A6/ETTm1`、`A6/ETTh1`，且
-`A6/ETTh1`已正常完成并进入下一run。当前只等待validation artifacts；paper effectiveness claim、test、
-seeds2022/2023与SC2 implementation仍未授权。
+`pcsd_cf_representation_signal_retained_but_joint_training_blocked`。60/60 artifacts与protocol audit通过；DIRECT
+相对A6为0/5、macro -1.5833%，不通过method gate，因此不启动seeds2022/2023。DIRECT相对dense matched为5/5、
++2.3492%，canonical相对random为+0.4499%，所以capacity与random partition不能解释结果。关键归因是DIRECT
+checkpoint的25/25 dataset×scope arms相对相同scope独立fixed E2E training均退化，median 89.95%；plain fused
+loss存在joint arm credit starvation。SC1只保留为training-blocked representation candidate；SC2-PCC已完成
+Step2-5 source/theory audit，15/15 local cases通过，但只授权Step6 design，implementation与test仍false。

@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | PCSD-CF Step7B effectiveness screen / 11-step Step8 running；seed2021 validation-only |
+| `current_11_step` | PCSD-CF Step9/10 complete；SC1 training-blocked；SC2-PCC Step5 conditional pass，Step6 next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | PCSD-CF narrative/local-contract ready但effectiveness-unready；CCRL retired；Contribution 2 problem unverified；test held |
+| `paper_core_status` | PCSD-CF representation signal retained/training-blocked；PCC theory-feasible/design-unready；test held |
 
 ## Research Thesis
 
@@ -98,7 +98,10 @@ status=`pcsd_cf_step7a_local_pass / effectiveness_unready`。
 Step7B production/prelaunch现已冻结：A6、exact-paired M0、five fixed scopes、equal、static-target、direct、random
 partition与dense nonlinear matched共12 arms × 5 datasets。A6/M0相同seed的operator hash与初始输出gap均为`0`；
 full PCSD arms共享完全相同的trainable initialization；dense control参数gap低于`0.1%`。primary metric在结果返回前
-固定为validation dense-H1..720 MSE AUC，test=false。用户已授权seed2021 screen，但effectiveness仍未观察。
+固定为validation dense-H1..720 MSE AUC，test=false。seed2021现已60/60返回：DIRECT相对A6为0/5、macro
+`-1.5833%`，plain-training method gate失败；相对dense matched为5/5、`+2.3492%`，相对random为3/5、
+`+0.4499%`。25/25 DIRECT same-run arms相对对应fixed E2E training退化，median `89.95%`，因此状态收紧为
+`partial_representation_signal_training_blocked`；不启动confirmation seeds。
 
 ### Retired Core Candidate: CCRL
 
@@ -125,13 +128,16 @@ representation的最终PCSD；teacher/student architecture不一致，labels会�
 
 ### Open Contribution 2 Slot
 
-第二个contribution必须原生依赖PCSD的same-run arms，并直接服务最终fused forecast。当前只保留working
-hypothesis `SC2-ICC`（same-forward interventional coupling credit），但尚未证明direct PCSD存在credit-assignment
-failure，因此不冻结名称、loss或claim。
+第二个contribution必须原生依赖PCSD的same-run arms，并直接服务最终fused forecast。D15-A现已证明generic
+capacity/numeric不是主因，并发现25/25 DIRECT-run arms相对相同scope独立fixed E2E training退化，median
+89.95%；learned policy虽非one-hot collapse，但future-bin usage variation仅L1 0.0051-0.0440。因此旧working
+hypothesis `SC2-ICC`收紧为`SC2-PCC-v0`（Projective Coupling Credit）。
 
-只有D15-A同时证明“same-run arms有skill与marginal/oracle headroom”以及“direct history × target policy没有利用
-这些headroom”，并排除arm under-training、capacity与numeric explanations，SC2才允许进入Step2-4。否则不为填满
-第二slot而添加training mechanism。
+PCC只允许one-forward、one-stage、from-scratch E2E：same-forward arm errors形成stop-gradient capability target，
+skill floor防止低权重arm失去训练，router学习forecast-risk credit；full-domain prefix measure只作为credit积分规则，
+不把requested $H$输入模型。Step5的15/15 local cases已通过：plain/PCC梯度恒等式误差不超过`5.20e-18`，
+dense-prefix identity误差`4.44e-16`，crossed synthetic router KL=`1.50e-11`、argmax accuracy=`1.0`。
+该结果只证明algebra与toy recoverability，当前status=`conditional_pass_step6_design_only`，implementation仍false。
 
 ### Joint Story
 
@@ -139,10 +145,9 @@ PCSD-CF回答“一个unified decoder如何用同一parameter field表示不同f
 Contribution 2未来只能回答“在same-run joint decoder中，若ordinary task loss无法正确分配scope credit，应如何
 用同一次forward的forecast evidence修复”，而不能再依赖外部teacher pipeline。
 
-[Execution Order] D14-A problem confirmed -> CCRL consistency audit and retirement -> PCSD-CF Step4-6 conditional
-pass -> D15-A Step7A local invariants passed -> Step7B prelaunch passed -> GPU resource smoke -> authorized
-five-dataset seed2021 direct-control screen。只有direct-control screen形成可归因的credit failure，SC2才回到
-Step2-4。当前test、seeds2022/2023与Contribution-2 implementation均false。
+[Execution Order] D14-A problem confirmed -> CCRL retired -> PCSD-CF Step4-7 -> D15-A seed2021 60-run screen ->
+SC1 plain-training gate fail but 25/25 credit starvation -> SC2-PCC Step2-5 source/theory audit。下一步仅做PCC
+Step6 control matrix、optimization与rollback design；当前test、seeds2022/2023与Contribution-2 implementation均false。
 
 ### Closed Candidate: PRISM Decoder
 
@@ -620,6 +625,9 @@ loss 或更多 tuning 来掩盖失败。
 
 ## Canonical Active Artifacts
 
+- `analysis/stage_c_pcsd_cf_step7b_seed2021_20260716/step9_10_result_and_failure_attribution.md`
+- `analysis/stage_c_sc2_projective_coupling_credit_step24_20260716/source_theory_audit.md`
+- `analysis/stage_c_sc2_pcc_step5_theory_20260716/step5_theory_feasibility.md`
 - `analysis/stage_c_multi_horizon_coupling_mainline_reset_20260715/multi_horizon_coupling_mainline_reconstruction.md`
 - `Papers/multi-horizon-output-coupling-audit.md`
 - `docs/experiments/stage-c-d14-output-coupling-granularity.md`
