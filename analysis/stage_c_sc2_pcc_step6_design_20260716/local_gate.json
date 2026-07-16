@@ -1,0 +1,14 @@
+{
+  "candidate": "SC2-PCC-v1-TI",
+  "parent_candidate": "SC2-PCC-v0",
+  "test_informed": true,
+  "cases": 19,
+  "passed": 19,
+  "overall_pass": true,
+  "maximum_transport_identity_gap": 0.0,
+  "pointwise_transport_max_gap": 0.6164066766378996,
+  "decision": "step6_pass_step7a_local_authorized",
+  "implementation_authorized": true,
+  "remote_authorized": false,
+  "test_access_authorized": false
+}

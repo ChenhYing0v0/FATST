@@ -19,6 +19,8 @@ StageC D14-A1 active output-coupling diagnostic：
   policy variation及DIRECT arm相对独立fixed E2E training的credit-starvation归因。
 - `check_stage_c_sc2_pcc_step5.py`: 用float64 autograd验证PCC gradient identities、dense-prefix measure、
   full-domain projectivity与crossed synthetic router recoverability；只授权Step6 design。
+- `check_stage_c_sc2_pcc_step6_design.py`: 验证PCC-v1 nested-prefix capability到target-coordinate credit的
+  exact transport identity、simplex/floor/stop-gradient/continuous schedule与45-run control contract。
 - `remote/run_stage_c_pcsd_cf_test_audit.sh`: 不重训；对PCSD-CF-v1既有60个best-validation checkpoints执行
   official test dense-H1..720 evaluation，前后核对checkpoint hash并生成独立test aggregate。
 - `check_stage_c_pcsd_cf_test_audit.py`: 冻结candidate/matrix/test授权/no-retraining/hash规则，并验证prefix

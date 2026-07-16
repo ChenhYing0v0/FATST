@@ -1,0 +1,20 @@
+case,value,threshold,pass
+prefix_risk_shape,"[3, 4, 31, 5]","[3,4,31,5]",True
+prefix_capability_simplex,3.3306690738754696e-16,<=1e-12,True
+transported_credit_simplex,4.440892098500626e-16,<=1e-12,True
+transported_credit_nonnegative,0.021637876329806575,>=0,True
+transported_skill_floor,0.057310301063845256,>=0.04,True
+nested_prefix_transport_identity,0.0,<=1e-12,True
+constant_credit_fixed_point,1.1102230246251565e-16,<=1e-12,True
+identical_arms_uniform_capability,0.0,<=1e-12,True
+positive_affine_error_invariance,2.0039525594484076e-14,<=1e-9,True
+transport_not_pointwise_credit,0.6164066766378996,>=1e-3,True
+stopgrad_credit_no_gradient_path,False,False,True
+skill_gradient_finite,True,True,True
+schedule_starts_equal_skill,1.0,1.0,True
+schedule_starts_route_off,0.0,0.0,True
+schedule_reaches_final_floor,0.19999999999999996,0.2,True
+schedule_reaches_route_weight,0.1,0.1,True
+control_matrix_exact,9,9 exact arms,True
+phase_a_run_count,45,45,True
+protocol_contract,True,True,True

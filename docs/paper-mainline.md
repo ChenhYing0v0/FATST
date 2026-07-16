@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | PCSD-CF-v1 Step10 test fail；PCC进入test-informed Step6 design |
+| `current_11_step` | PCC-v1-TI Step6 pass；Step7A local implementation next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | exact PCSD-CF-v1 rejected；coupling problem保留；PCC Step6 design only |
+| `paper_core_status` | exact PCSD-CF-v1 rejected；PCC-v1-TI narrative/design conditional pass；effectiveness unknown |
 
 [Evaluation Rule] official test split现固定为paper-core effectiveness与Step9-10继续/回滚的primary gate；validation只
 负责checkpoint selection、普通超参数选择与低成本mechanism screen。每个冻结candidate version默认只做一次完整
@@ -140,29 +140,43 @@ representation的最终PCSD；teacher/student architecture不一致，labels会�
 [Decision] status=`diagnostic_only_not_scheduled`；D14-B1在Step7A前取消。旧source/theory/config保留为历史control，
 不得继续实现或作为Contribution 2 claim。
 
-### Open Contribution 2 Slot
+### Contribution 2 Candidate: PCC-v1-TI
 
 第二个contribution必须原生依赖PCSD的same-run arms，并直接服务最终fused forecast。D15-A现已证明generic
 capacity/numeric不是主因，并发现25/25 DIRECT-run arms相对相同scope独立fixed E2E training退化，median
 89.95%；learned policy虽非one-hot collapse，但future-bin usage variation仅L1 0.0051-0.0440。因此旧working
-hypothesis `SC2-ICC`收紧为`SC2-PCC-v0`（Projective Coupling Credit）。
+hypothesis `SC2-ICC`先收紧为`SC2-PCC-v0`（Projective Coupling Credit）。但Step6 external audit发现forecasting
+Expert Loss Integration已覆盖direct expert loss，ICLR 2026 graph MoE也已覆盖negative per-expert loss teacher、
+gate KL与uniform warm-up。故pointwise v0不再作为paper candidate，只保留mandatory control。
 
-PCC只允许one-forward、one-stage、from-scratch E2E：same-forward arm errors形成stop-gradient capability target，
-skill floor防止低权重arm失去训练，router学习forecast-risk credit；full-domain prefix measure只作为credit积分规则，
-不把requested $H$输入模型。Step5的15/15 local cases已通过：plain/PCC梯度恒等式误差不超过`5.20e-18`，
-dense-prefix identity误差`4.44e-16`，crossed synthetic router KL=`1.50e-11`、argmax accuracy=`1.0`。
-该结果只证明algebra与toy recoverability。完成test audit后status更新为
-`test_informed_step6_design_authorized`，implementation与remote仍false。
+新candidate `SC2-PCC-v1-TI`从全部dense nested prefixes构造scope risk
+$R_s(H)=H^{-1}\sum_{t\le H}e_s(t)$与capability $q_s(H)$，再按prefix-target incidence输运到natural target：
+
+$$
+c_s(t)=\frac{\sum_{H=t}^{T}q_s(H)/H}{\sum_{H=t}^{T}1/H}.
+$$
+
+这样router仍不接收requested $H$，但其target明确核算target $t$在全部包含它的forecast prefixes中的scope credit。
+带floor的transport训练arms，无floor transport训练router；continuous schedule从equal skill平滑过渡到capability
+credit，不冻结参数、不使用teacher checkpoint、EMA或second forward。19/19 Step5b/6 cases通过，exact transport
+identity gap为`0`，crossed case相对pointwise target差`0.616407`。
+
+[Novelty Boundary] generic expert loss、loss-teacher gate、warm-up、load balancing、router-expert coupling与gradient
+surgery均不计novelty。完整claim只允许落在
+`nested projective risks -> harmonic credit transport -> target-coordinate coupling arm/router co-training`；且必须在
+同一matrix超过`POINTWISE_PCC_V0`与`POINTWISE_PRIOR_COMPOSED`才能保留。
+
+status=`step6_pass_step7a_local_authorized`；只授权objective、diagnostics与local invariants实现，remote/test false。
 
 ### Joint Story
 
 PCSD-CF回答“一个unified decoder如何用同一parameter field表示不同future-output sharing strategies”。
-Contribution 2未来只能回答“在same-run joint decoder中，若ordinary task loss无法正确分配scope credit，应如何
-用同一次forward的forecast evidence修复”，而不能再依赖外部teacher pipeline。
+Contribution 2回答“nested multi-horizon risks如何在不输入requested H的情况下，被守恒地输运为same-run
+coupling arms与target router的training credit”，而不能依赖外部teacher pipeline。
 
 [Execution Order] D14-A problem confirmed -> CCRL retired -> PCSD-CF Step4-7 -> validation screen fail/credit clue ->
-PCC Step2-5 -> frozen PCSD-CF-v1 test audit fail-with-headroom。下一步为PCC Step6 source-informed control/optimization/
-rollback design；任何architecture/objective update升级为test-informed新version，implementation、remote与seeds仍false。
+PCC-v0 Step2-5 -> frozen PCSD-CF-v1 test audit fail-with-headroom -> Step6 prior-art rollback -> PCC-v1-TI nested-risk
+transport Step5b/6 pass。下一步只做Step7A local implementation；remote、test与seeds仍false。
 
 ### Closed Candidate: PRISM Decoder
 

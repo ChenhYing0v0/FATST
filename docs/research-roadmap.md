@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | PCSD-CF-v1 Step10 test fail；PCC Step6 test-informed design |
-| `active_question` | validation failure与25/25 arm starvation是否在frozen-checkpoint official test上成立？ |
-| `active_candidates` | `SC1-PCSD-CF-v1` exact method rejected；`SC2-PCC-v0` design-authorized/method-untested |
+| `current_step` | PCC-v1-TI Step6 pass；Step7A local implementation next |
+| `active_question` | projective nested-risk credit能否恢复same-run arms并超过pointwise/prior controls？ |
+| `active_candidates` | `SC1-PCSD-CF-v1` exact method rejected；`SC2-PCC-v1-TI` design-pass/method-untested |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `docs/experiments/stage-c-d15-native-pcsd-direct-control.md` |
-| `method_implementation` | PCSD training frozen；12×5 test evaluator/runner prelaunch；retraining=false |
+| `active_protocol` | `docs/experiments/stage-c-sc2-pcc-step6.md` |
+| `method_implementation` | PCC-v1-TI Step7A local authorized；remote/test/confirmation=false |
 | `rollback_point` | PCC generic controls explain -> Step4；shared-field arm ceiling -> SC1 Step4；numeric pathology -> redesign |
 
 ## Post-D11 Joint Mainline Reset
@@ -347,6 +347,18 @@ crossed synthetic policy达到capability KL `1.50e-11`与argmax accuracy `1.0`�
 router credit与projective measure可同时成立；shared-parameter gradient cancellation、moving target、arm
 homogenization与真实capability predictability仍未解决。decision=`conditional_pass_step6_design_only`；下一步必须
 冻结`MEASURE_ONLY/EQUAL_SKILL/CAPABILITY_SKILL_ONLY/ROUTE_ONLY/full PCC`等controls后才可讨论Step7A。
+
+## SC2-PCC Step 6 Source-Informed Redesign
+
+fresh external search发现time-series Expert Loss Integration已直接训练expert losses，ICLR 2026 graph MoE也已使用
+negative per-expert loss teacher、gate KL与uniform warm-up。因此原pointwise PCC-v0不能承担Contribution 2，降为
+closest-prior control。研究显式回滚Step4/5后提出test-informed `PCC-v1-TI`：先计算全部$H=1..720$的scope
+prefix risks，再用harmonic prefix-target incidence把capability输运为不含requested-H的target-coordinate credit。
+
+exact nested-risk/transport identity误差`0`，19/19 local design cases通过；全局固定continuous schedule与9 new arms ×
+5 datasets validation matrix已冻结。narrative gate仅conditional pass：full transport必须超过A6、plain、pointwise v0
+与pointwise prior composition，并显著恢复25个arm pairs；否则按generic control、readout ceiling、shared-gradient或
+numeric pathology分别回Step4/5。decision=`step6_pass_step7a_local_authorized`，remote/test false。
 
 ## SC1-JAPO Step 7A: Production Gate Passed, Step 8 Authorized
 

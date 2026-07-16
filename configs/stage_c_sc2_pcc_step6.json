@@ -1,0 +1,89 @@
+{
+  "stage": "StageC-UVHF",
+  "candidate": "SC2-PCC-v1-TI",
+  "parent_candidate": "SC2-PCC-v0",
+  "name": "Projective Coupling Credit with Nested-Risk Transport",
+  "status": "step6_pass_step7a_local_authorized",
+  "test_informed": true,
+  "test_information_source": "SC-D15-T1 PCSD-CF-v1 complete official test audit",
+  "current_step": "Step6 complete; Step7A local implementation next",
+  "implementation_authorized": true,
+  "remote_authorized": false,
+  "test_access_authorized": false,
+  "contract": {
+    "one_forward": true,
+    "one_stage_training": true,
+    "from_scratch_e2e": true,
+    "requested_horizon_feature": false,
+    "offline_teacher": false,
+    "ema_teacher": false,
+    "second_forward": false,
+    "full_domain_length": 720,
+    "scope_count": 5,
+    "point_loss": "L1",
+    "inference_graph_changed": false
+  },
+  "objective": {
+    "temperature": 1.0,
+    "standardization_epsilon": 1e-06,
+    "final_skill_floor": 0.2,
+    "ramp_fraction": 0.25,
+    "lambda_skill": 1.0,
+    "lambda_route": 0.1,
+    "route_kl_normalization": "divide_by_log_scope_count",
+    "capability_stop_gradient": true,
+    "credit_source": "all_dense_prefix_risks_h1_h720",
+    "credit_destination": "natural_target_coordinates_t1_t720",
+    "transport_complexity": "O(B*C*T*S)",
+    "transport_storage": "O(B*C*T*S)"
+  },
+  "profiles": "configs/stage_c_five_dataset_natural_profiles.json",
+  "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"],
+  "seed": 2021,
+  "phase_a": {
+    "evaluation_split": "validation",
+    "checkpoint_policy": "best-val-h720-mse",
+    "reference_arms": ["a6", "pcsd_direct", "dense_matched"],
+    "reference_source": "analysis/stage_c_pcsd_cf_step7b_seed2021_20260716",
+    "training_arms": [
+      "measure_only",
+      "equal_skill",
+      "pointwise_route_only",
+      "pointwise_capability_skill_only",
+      "pointwise_prior_composed",
+      "pointwise_pcc_v0",
+      "transport_skill_only",
+      "transport_route_only",
+      "pcc_transport_full"
+    ],
+    "new_training_runs": 45,
+    "partial_reporting_allowed": false
+  },
+  "conditional_phase_b": {
+    "authorized": false,
+    "requires_phase_a_method_and_specificity_pass": true,
+    "arms": ["pcc_transport_no_floor", "pcc_transport_no_stopgrad"]
+  },
+  "gates": {
+    "pcc_over_a6_dataset_wins_min": 3,
+    "pcc_over_a6_macro_gain_min": 0.003,
+    "pcc_over_plain_dataset_wins_min": 3,
+    "pcc_over_plain_macro_gain_min": 0.005,
+    "pcc_over_pointwise_pcc_dataset_wins_min": 3,
+    "pcc_over_pointwise_pcc_macro_gain_min": 0.002,
+    "pcc_over_prior_composed_dataset_wins_min": 3,
+    "pcc_over_prior_composed_macro_gain_min": 0.002,
+    "arm_degradation_median_relative_reduction_min": 0.3,
+    "arm_pairs_improved_min": 15,
+    "pairwise_nrmse_retention_fraction_min": 0.5,
+    "policy_normalized_entropy_min": 0.3,
+    "policy_usage_max": 0.9
+  },
+  "rollback": {
+    "generic_or_pointwise_control_explains": "return_step4_and_demote_pcc_to_training_control",
+    "arms_recover_but_a6_not_beaten": "return_sc1_step4_shared_field_readout_redesign",
+    "no_arm_skill_recovery": "return_step4_intervention_or_shared_gradient_audit",
+    "numeric_or_moving_target_pathology": "return_step5_objective_redesign",
+    "phase_a_pass": "authorize_conditional_phase_b_before_confirmation"
+  }
+}

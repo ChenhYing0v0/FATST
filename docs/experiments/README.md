@@ -1,10 +1,11 @@
 # Active Experiment Protocols
 
-- `stage-c-pcsd-cf-test-audit.md`: 当前active protocol；在PCC Step6前对PCSD-CF-v1既有12 arms × 5 datasets
-  frozen best-validation checkpoints执行一次完整test audit；禁止重训与test checkpoint selection；
+- `stage-c-sc2-pcc-step6.md`: 当前active protocol；PCC-v0因prior-art overlap收紧为`PCC-v1-TI` nested-risk
+  credit transport；Step6已通过，只授权Step7A local implementation，remote/test false；
+- `stage-c-pcsd-cf-test-audit.md`: 已完成protocol；PCSD-CF-v1 12 arms × 5 datasets frozen checkpoint test
+  audit完成60/60，exact v1 effectiveness rejected；
 - `stage-c-d15-native-pcsd-direct-control.md`: 当前active protocol；PCSD-CF Step7B seed2021 60/60完成；
-  method gate失败但25/25 joint-arm credit starvation成立；SC2-PCC Step5 conditional pass、Step6 design next，
-  implementation/test/confirmation false；
+  method gate失败但25/25 joint-arm credit starvation成立；SC2-PCC-v1-TI Step6 pass、Step7A next；
 - `stage-c-d14-output-coupling-granularity.md`: D14-A1 three-seed dual-carrier confirmation已通过；D14-B1因
   cross-fit teacher/student inconsistency在Step7A前取消，CCRL只保留为historical diagnostic；
 - `stage-c-d14-conditional-patch-memory-headroom.md`: 已降级为`D14-P auxiliary_not_scheduled`；仅保留future
