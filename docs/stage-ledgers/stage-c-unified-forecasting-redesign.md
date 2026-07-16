@@ -9,7 +9,7 @@
 | `active_question` | nested-prefix credit transport能否特异性修复test-confirmed same-run arm starvation？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | `SC1-PCSD-CF-v1` effectiveness rejected；`SC2-PCC-v1-TI` Step7B prelaunch pass/remote authorized |
+| `active_candidates` | `SC1-PCSD-CF-v1` effectiveness rejected；`SC2-PCC-v1-TI` Step8 seed2021 remote running |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
 | `stage_rollback` | PCC退化为generic skill floor -> Step4；shared-field arm ceiling -> SC1 Step4 redesign |
@@ -18,10 +18,10 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SC2-PCC-v1-TI Step7B prelaunch pass；11-step Step8 remote launch next |
+| `current_11_step` | SC2-PCC-v1-TI 11-step Step8 remote seed2021 running |
 | `current_candidate` | `SC2-PCC-v1-TI` narrative/design conditional pass；effectiveness unready |
-| `latest_decision` | 8/8 prelaunch categories、45 CLI、gradient/analyzer dry-runs pass |
-| `next_required_action` | commit/push -> remote pull/GPU audit/resource smoke -> background launch |
+| `latest_decision` | remote dry-run/resource smoke pass；3×3090后台启动45-run validation matrix |
+| `next_required_action` | 45/45返回后执行Step9 artifact/analyzer audit与Step10 decision |
 | `method_training_authorized` | seed2021 validation Phase A remote=true；test/confirmation/Phase B=false |
 | `rollback_point` | generic balancing explains -> Step4；shared-field arm ceiling -> SC1 Step4；invalid math -> Step5 redesign |
 
@@ -29,7 +29,7 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | PCC-v1-TI Step7B prelaunch complete；11-step Step8 remote execution next |
+| `current_step` | PCC-v1-TI 11-step Step8 remote seed2021 running |
 | `problem` | 现有unified decoder固定point/block/global coupling scope；最佳future-output sharing是否随target region与history变化 |
 | `existence_evidence` | three-seed neutral+A6 5/5 stable crossing；strict 7.1107%/9.1259%；instance 6.7948%/8.5990% |
 | `idea` | PCSD field + dense nested-prefix capability + harmonic target-coordinate credit transport |
@@ -37,8 +37,8 @@
 | `design` | one-forward raw-scale L1；continuous equal-to-capability schedule；9 arms × 5 datasets controls |
 | `narrative_gate` | conditional pass；generic expert loss/loss-teacher/gradient balancing excluded；must beat pointwise controls |
 | `effectiveness_gate` | PCC untested；carrier exact v1 test fail：DIRECT vs A6 -1.3994%、1/5；oracle +2.0197% |
-| `artifacts` | `analysis/stage_c_sc2_pcc_step7a_local_20260716/step7a_local_gate_report.md`；`analysis/stage_c_sc2_pcc_step7b_prelaunch_20260717/prelaunch_gate_report.md` |
-| `decision` | PCC-v1-TI Step7B prelaunch pass；45-run seed2021 validation remote authorized；test false |
+| `artifacts` | `analysis/stage_c_sc2_pcc_step7a_local_20260716/step7a_local_gate_report.md`；`analysis/stage_c_sc2_pcc_step7b_prelaunch_20260717/prelaunch_gate_report.md`；`analysis/stage_c_sc2_pcc_step7b_prelaunch_20260717/remote_launch_record.md` |
+| `decision` | PCC-v1-TI 45-run seed2021 validation matrix remote running；test false |
 
 ## Frozen Carrier Contract
 
@@ -94,7 +94,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC2-CCRL` | `retired_as_core_diagnostic_only` | cross-fit relative risk能否增益matched direct fusion | generic overlap high；two-stage teacher/student inconsistency | not implemented | retain report/config as history；not scheduled |
 | `SC2-ICC` | `superseded_by_pcc` | same-forward marginal coupling credit能否修复direct policy misallocation | working hypothesis已由D15-A收紧 | not implemented | historical name only |
 | `SC2-PCC-v0` | `superseded_pointwise_control` | pointwise same-forward capability + skill floor | expert loss与loss-teacher gate已有直接prior art | 15/15 theory cases；method untested | mandatory pointwise/prior controls only |
-| `SC2-PCC-v1-TI` | `step7b_prelaunch_pass_remote_authorized` | nested-prefix capability能否经harmonic incidence输运为target-coordinate credit | complete-chain conditional pass；必须超过pointwise/prior composition | Step6 19/19；Step7A 35/35；prelaunch 8/8；method untested | launch 45-run validation Phase A；test false |
+| `SC2-PCC-v1-TI` | `step8_remote_seed2021_running` | nested-prefix capability能否经harmonic incidence输运为target-coordinate credit | complete-chain conditional pass；必须超过pointwise/prior composition | Step6 19/19；Step7A 35/35；prelaunch 8/8；45-run running | 45/45后Step9/10；test false |
 | `SC-D14-A/B` | `a_confirmed_b_retired` | coupling crossing与conditional-risk predictability | A pass；B retired before implementation | A confirmed；B not run | A evidence retained；B closed |
 | `SC-D15-A` | `completed_training_blocked` | native PCSD-CF representation、direct trainability与credit-problem existence | Step4-6 conditional pass | 60/60；method fail；25/25 arm starvation | no confirmation；feeds PCC Step2-4 |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
@@ -262,6 +262,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-16 | PCC Step6 source-informed redesign | Contribution 2、Boundary、Experiment Logic | v0 prior-art demotion + v1 projective transport | 19/19 pass；9×5 controls frozen；Step7A local only |
 | 2026-07-16 | PCC-v1-TI Step7A local gate | Current Position、Contribution 2、Experiment Logic | production objective + training-path invariants | 35/35 pass；inference unchanged；Step7B prelaunch next；remote/test false |
 | 2026-07-17 | PCC-v1-TI Step7B prelaunch gate | Current Position、Contribution 2、Experiment Logic | 45-run tooling + remote authorization | 8/8 pass；seed2021 validation remote authorized；test/confirmation/Phase B false |
+| 2026-07-17 | PCC-v1-TI Step8 remote launch | Current Position、Contribution 2、Experiment Logic | running-state + exact launch provenance | commit282b96c；GPU0/1/2；45-run validation matrix running；test/confirmation/Phase B false |
 
 ## Continuation Rules
 

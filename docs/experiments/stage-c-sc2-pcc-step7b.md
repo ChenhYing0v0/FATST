@@ -5,7 +5,7 @@
 | Field | Value |
 | --- | --- |
 | `candidate` | `SC2-PCC-v1-TI` |
-| `current_step` | Step7B prelaunch pass；11-step Step8 remote seed2021 authorized |
+| `current_step` | 11-step Step8 remote seed2021 running |
 | `prelaunch_gate` | 8/8 categories；45 CLI contracts |
 | `matrix` | 9 objective modes × 5 datasets × seed2021 = 45 runs |
 | `evaluation` | validation dense H1..720 full-crop |
@@ -95,3 +95,11 @@ GPU_IDS="0 1 2" SEED=2021 bash scripts/remote/run_stage_c_sc2_pcc_step7b.sh
 
 `step7b_prelaunch_pass_remote_seed2021_authorized`。本结果只证明protocol/tooling可以启动。remote run返回前，
 PCC effectiveness、Contribution 2 claim与joint paper story仍为unknown。
+
+## Remote Launch
+
+2026-07-17已在commit `282b96c49ec1230a2ccb703781ad53d10334f916`上完成remote dry-run与GPU0
+resource smoke，并以GPU 0/1/2后台启动45-run matrix。启动检查时前三个Weather jobs已进入training，输出根目录为
+`/home/yingch/exp_outputs/r-2026-fatst/stage_c_sc2_pcc_step7b`。当前decision为
+`step7b_remote_seed2021_running`；不长期值守，test、confirmation与Phase B保持false。完整provenance见
+`analysis/stage_c_sc2_pcc_step7b_prelaunch_20260717/remote_launch_record.md`。

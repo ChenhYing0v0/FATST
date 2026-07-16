@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | PCC-v1-TI Step7B prelaunch pass；11-step Step8 remote launch next |
+| `current_step` | PCC-v1-TI 11-step Step8 remote seed2021 running |
 | `active_question` | projective nested-risk credit能否恢复same-run arms并超过pointwise/prior controls？ |
 | `active_candidates` | `SC1-PCSD-CF-v1` exact method rejected；`SC2-PCC-v1-TI` design-pass/method-untested |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/experiments/stage-c-sc2-pcc-step7b.md` |
-| `method_implementation` | local 35/35 + prelaunch 8/8；seed2021 validation remote=true；test/confirmation=false |
+| `method_implementation` | local 35/35 + prelaunch 8/8；45-run seed2021 validation remote running；test/confirmation=false |
 | `rollback_point` | PCC generic controls explain -> Step4；shared-field arm ceiling -> SC1 Step4；numeric pathology -> redesign |
 
 ## Post-D11 Joint Mainline Reset
@@ -380,6 +380,11 @@ shared-gradient evaluator与analyzer synthetic smoke均通过；prelaunch catego
 不重训。analyzer同时执行performance、pointwise-prior specificity、25-pair arm recovery、pairwise NRMSE retention、policy
 collapse与best-val shared-gradient diagnostics。decision=`step7b_prelaunch_pass_remote_seed2021_authorized`；只授权45-run
 validation Phase A，test、confirmation seeds与conditional Phase B继续false。
+
+2026-07-17 remote dry-run和GPU0 resource smoke通过，commit `282b96c`已在GPU 0/1/2后台启动45-run
+matrix。单次startup audit确认三个Weather jobs进入training、显存占用正常、runner与workers存活。当前进入11-step
+Step8，停止长期值守；45/45返回后再进入Step9/10。launch provenance见
+`analysis/stage_c_sc2_pcc_step7b_prelaunch_20260717/remote_launch_record.md`。
 
 ## SC1-JAPO Step 7A: Production Gate Passed, Step 8 Authorized
 
