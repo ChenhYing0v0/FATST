@@ -1,7 +1,7 @@
 # Active Experiment Protocols
 
-- `stage-c-d15-native-pcsd-direct-control.md`: 当前active protocol；PCSD-CF Step7A local 9/9 categories通过，
-  下一步冻结Step7B runners/diagnostics/prelaunch audit；正式remote、SC2与test仍false；
+- `stage-c-d15-native-pcsd-direct-control.md`: 当前active protocol；PCSD-CF Step7B 60-run prelaunch通过，
+  seed2021 validation-only remote已授权；SC2、test与confirmation seeds仍false；
 - `stage-c-d14-output-coupling-granularity.md`: D14-A1 three-seed dual-carrier confirmation已通过；D14-B1因
   cross-fit teacher/student inconsistency在Step7A前取消，CCRL只保留为historical diagnostic；
 - `stage-c-d14-conditional-patch-memory-headroom.md`: 已降级为`D14-P auxiliary_not_scheduled`；仅保留future

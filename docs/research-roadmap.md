@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | PCSD-CF D15-A Step7A local passed；Step7B design/runner audit next，remote held |
+| `current_step` | PCSD-CF Step7B prelaunch passed；GPU smoke后启动seed2021 validation-only remote screen |
 | `active_question` | fixed-past unified model是否需要在一个projective decoder内自适应future-output coupling scope？ |
 | `active_candidates` | `SC1-PCSD-CF` narrative-ready/effectiveness-unready；SC2 slot open，`ICC` hypothesis only |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/experiments/stage-c-d15-native-pcsd-direct-control.md` |
-| `method_implementation` | PCSD-CF module/readout/CLI/local gate complete；Step7B runner not frozen；remote/effectiveness/SC2/test=false |
+| `method_implementation` | 12-arm runner/evaluator/analyzer/prelaunch complete；seed2021 remote authorized；effectiveness/SC2/test=false |
 | `rollback_point` | local invariant fail -> Step5/6；native arms unskilled -> Step4；credit problem absent -> SC2 remains open |
 
 ## Post-D11 Joint Mainline Reset
@@ -311,7 +311,7 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 3. arbitrary-A6 mapping在$R=768/1536/3072$的float32 maximum output/arm gap为
    `3.815e-6/2.384e-6`，float64为`3.109e-15/5.329e-15`；
 4. scope Jacobian-sharing classes严格为`720/15/5/2/1`；canonical/random minimum arm NRMSE为
-   `0.130247/0.023056`，equal-zero initial policy gap为`0`；
+   修正fan-in初始化后为`0.131493/0.023079`，equal-zero initial policy gap为`0`；
 5. five-profile module与ETTh2真实Encoder-PCSD E2E two-step gradients finite/active；canonical/random trainable
    parameter values与shapes相同，只改变fixed partition buffers；
 6. coupling-field core参数为A6 decoder的`3.0291-3.6184x`，含policy为`3.1006-3.7224x`，FLOP静态估算为
@@ -321,9 +321,9 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 
 ## Next Concrete Action
 
-完成Step7B experiment implementation/prelaunch audit：冻结A6/M0/five fixed/equal/static/direct/random/dense
-matched arms的runner与effective-config contracts，补充same-run arm/policy diagnostics、checkpoint invariant checker
-及单batch GPU memory/runtime smoke方案。正式3090 launch仍需单独授权，Contribution 2与test保持false。
+在3090先执行Weather-direct batch32 one-batch resource smoke；通过后启动12 arms × 5 datasets的seed2021
+validation-only screen。使用3个安全GPU时按arm-major/slow-dataset-spread调度，outputs写入repo外
+`/home/yingch/exp_outputs/r-2026-fatst/stage_c_pcsd_cf_step7b`。Contribution 2、test与confirmation seeds保持false。
 
 ## SC1-JAPO Step 7A: Production Gate Passed, Step 8 Authorized
 

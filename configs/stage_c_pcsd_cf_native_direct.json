@@ -2,7 +2,7 @@
   "stage": "StageC-UVHF",
   "candidate_id": "SC1-PCSD-CF-v1",
   "diagnostic_id": "SC-D15-A",
-  "status": "step7a_local_pass_step7b_design_only_next",
+  "status": "step7b_prelaunch_pass_remote_seed2021_authorized",
   "role": "paper_core_architecture_candidate_with_direct_control",
   "series_length": 720,
   "coupling_scales": [1, 48, 144, 360, 720],
@@ -86,6 +86,45 @@
     "PCSD_CF_RANDOM_PARTITION",
     "DENSE_NONLINEAR_MATCHED"
   ],
+  "step7b_protocol": {
+    "seed": 2021,
+    "datasets": ["Weather", "ETTm1", "ETTm2", "ETTh1", "ETTh2"],
+    "primary_metric": "validation_dense_h1_h720_mse_auc",
+    "secondary_metrics": ["validation_h720_mse", "validation_dense_h1_h720_mae_auc"],
+    "objective": "full_h720_pointwise_l1",
+    "checkpoint": "best_validation_h720_mse",
+    "evaluation_prefix_mode": "full-crop",
+    "final_evaluation_split": "val",
+    "test_used": false,
+    "epochs": 20,
+    "patience": 5,
+    "batch_size": 32,
+    "learning_rate": 0.0001,
+    "dense_parameter_gap_max": 0.001,
+    "future_bins": [
+      {"name": "h1_48", "start": 0, "end": 48},
+      {"name": "h49_96", "start": 48, "end": 96},
+      {"name": "h97_144", "start": 96, "end": 144},
+      {"name": "h145_192", "start": 144, "end": 192},
+      {"name": "h193_288", "start": 192, "end": 288},
+      {"name": "h289_336", "start": 288, "end": 336},
+      {"name": "h337_512", "start": 336, "end": 512},
+      {"name": "h513_720", "start": 512, "end": 720}
+    ],
+    "specificity_gates": {
+      "direct_over_dense_dataset_required": 3,
+      "direct_over_dense_macro_gain_min": 0.0,
+      "direct_over_random_dataset_required": 3,
+      "direct_over_random_macro_gain_min": 0.002
+    },
+    "trained_mechanism_gates": {
+      "arm_separation_dataset_required": 4,
+      "minimum_pairwise_probe_nrmse": 0.01,
+      "policy_entropy_min": 0.1,
+      "policy_max_usage_max": 0.95,
+      "same_run_oracle_headroom_min": 0.002
+    }
+  },
   "effectiveness_gate": {
     "direct_over_a6_dataset_required": 3,
     "direct_over_a6_macro_gain_min": 0.003,
@@ -109,7 +148,9 @@
   },
   "authorization": {
     "step7a_local_implementation_authorized": true,
-    "remote_training_authorized": false,
+    "remote_training_authorized": true,
+    "remote_training_scope": "step7b_seed2021_validation_only_sixty_run_screen",
+    "authorization_basis": "explicit_user_request_after_step7a_and_step7b_prelaunch_pass",
     "paper_method_effectiveness_claim_authorized": false,
     "contribution2_implementation_authorized": false,
     "test_access_authorized": false

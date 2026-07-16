@@ -1,0 +1,17 @@
+{
+  "candidate_id": "SC1-PCSD-CF-v1",
+  "diagnostic_id": "SC-D15-A",
+  "current_step": "Step7B prelaunch gate",
+  "expected_jobs": 60,
+  "design_sha256": "d103468ba63acf2d2c3ea1031b11d39b81526a9eda1cbd4ae796443dc2324684",
+  "profile_sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a",
+  "categories": {
+    "sixty_arm_dataset_contracts": true,
+    "paired_initialization_and_m0": true,
+    "validation_only_protocol": true,
+    "dense_capacity_match": true
+  },
+  "overall_pass": true,
+  "test_used": false,
+  "decision": "step7b_prelaunch_pass_remote_seed2021_authorizable"
+}

@@ -5,15 +5,16 @@
 | Field | Value |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | `SC1-PCSD-CF-v1` Step7A local passed；Step7B design/runner audit next |
+| `current_step` | `SC1-PCSD-CF-v1` Step7B prelaunch passed；seed2021 remote screen authorized |
 | `role` | architecture candidate + Contribution-2 problem diagnostic |
 | `narrative_gate` | conditional pass |
 | `local_implementation` | passed（9/9 gate categories） |
-| `remote_training` | false |
+| `remote_training` | seed2021 validation-only 60-run screen authorized；not yet launched |
 | `test_access` | false |
 | `config` | `configs/stage_c_pcsd_cf_native_direct.json` |
 | `analysis` | `analysis/stage_c_pcsd_native_reset_20260716/pcsd_cf_step46_source_theory_design_audit.md` |
 | `step7a_artifact` | `analysis/stage_c_pcsd_cf_step7a_local_20260716/step7a_local_gate_report.md` |
+| `step7b_artifact` | `analysis/stage_c_pcsd_cf_step7b_prelaunch_20260716/prelaunch_gate_report.md` |
 
 ## What We Plan To Test
 
@@ -59,7 +60,8 @@ requested $H$只用于最后crop。五个scopes共享mode maps与target synthesi
 2026-07-16返回`overall_pass=true`：5 profiles × 13 horizons共65个direct prefix cases及5个真实A6-natural
 integration cases均为exact crop（max gap `0`）；arbitrary-A6 containment的float32最大output/arm gap分别为
 `3.815e-6/2.384e-6`，float64分别为`3.109e-15/5.329e-15`。point/block/global Jacobian-sharing classes为
-`720/15/5/2/1`；canonical/random arm最小pairwise normalized RMSE分别为`0.130247/0.023056`，初始policy
+`720/15/5/2/1`；修正fan-in初始化后canonical/random arm最小pairwise normalized RMSE分别为
+`0.131493/0.023079`，初始policy
 uniform gap为`0`。五profile module与ETTh2真实Encoder-PCSD E2E two-step gradients均finite/active。
 
 PCSD coupling-field core相对A6 decoder参数为`3.0291-3.6184x`，含policy总计`3.1006-3.7224x`；static
@@ -80,6 +82,24 @@ memory/runtime smoke为mandatory，不能将local pass解释为性能优势。
 所有method/control使用相同A6-natural dataset profile、full-H720 pointwise L1、from-scratch E2E、best-validation
 H720 checkpoint。seed2021 five-dataset screen需在Step7A通过后另行授权。
 
+### Returned prelaunch result
+
+Step7B local prelaunch返回4/4 categories pass、60/60 dataset-arm contracts pass：
+
+- `A6_LBF_E2E`与`PCSD_CF_M0`按相同seed构造时operator initialization hash与初始输出严格相同，五profile
+  maximum gap均为`0`；
+- 五profile内所有12 arms的Encoder initialization hash一致，所有full PCSD arms的trainable parameter values、
+  shapes与hash一致，policy/partition只改变active path或fixed buffers；
+- 修正了Step7A实现中`mode_weight` Kaiming方向错误：现在按history width $R$使用
+  $[-R^{-1/2},R^{-1/2}]$ uniform initialization，五profile empirical std与理论值误差均低于`0.06%`；
+- `DENSE_NONLINEAR_MATCHED`按dataset state width自动选hidden width，decoder parameter gap约`0.01-0.04%`，
+  低于冻结的`0.1%`；
+- primary metric冻结为validation dense-H1..720 MSE AUC；secondary为H720 MSE与dense MAE AUC；所有run
+  full-H720 L1、best-val-H720 checkpoint、full-crop validation，test=false。
+
+runner固定12 arms × 5 datasets = 60 jobs，并按arm-major、slow-dataset-spread顺序把Weather/ETTm1/ETTh1分散到
+不同GPU。正式矩阵前必须先通过Weather-direct、batch32、one-batch GPU resource smoke。
+
 ## Gates And Failure Attribution
 
 PCSD-CF method gate要求`DIRECT`至少3/5 datasets超过A6且macro `>=0.3%`，并至少3/5超过equal/static且macro
@@ -93,6 +113,6 @@ PCSD-CF method gate要求`DIRECT`至少3/5 datasets超过A6且macro `>=0.3%`，�
 
 ## Decision
 
-`step7a_local_pass_step7b_design_only_next`。下一步只允许冻结Step7B runner、checkpoint diagnostics、same-run
-arm/policy artifacts与remote resource smoke；正式remote launch仍需单独授权。D14-B1/CCRL不再active，test、
-effectiveness claim与SC2 implementation保持false。
+`step7b_prelaunch_pass_remote_seed2021_authorized`。用户已明确授权在3090启动validation-only seed2021 screen；
+先执行GPU audit与resource smoke，再启动60-run matrix。paper effectiveness claim、test、seeds2022/2023与SC2
+implementation仍未授权。

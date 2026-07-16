@@ -53,6 +53,11 @@ z [B,C,R]
 
 五个arms不各自保存`Linear(R,K)`。`_scope_forecast`用相应$\bar Q^{(s)}$对同一个$Z$做contract：
 
+Step7B prelaunch audit纠正了首版初始化的tensor方向：`mode_weight [Dq,R,K]`不能reshape成`[Dq*R,K]`
+再使用Kaiming，否则fan-in会被误判为$K$。当前代码直接采用与`Linear(R,K)`一致的
+$\mathcal U[-R^{-1/2},R^{-1/2}]$，`mode_bias`使用同一bound。该修正不改变operator、containment或projectivity，
+但避免跨dataset state width的激活尺度错误。
+
 ```text
 Z [B,C,Dq,K] x pooled_coordinates_s [G_s,Dq]
   -> group state A_s [B,C,G_s,K]
@@ -112,6 +117,15 @@ synthesis或policy，因而任意native horizon都严格等于同一full-H720 ou
 coefficient map写入constant mode、将A6 basis写入identity synthesis，并把nonconstant modes与nonlinear
 synthesis置零；这时五个arms完全相同且等于A6。
 
+Step7B production controls另增加：
+
+- `PCSDM0Readout`：按与A6完全相同的parameter creation/init顺序实现`Linear(R,256) × basis [720,256]`；
+  相同seed下A6/M0 operator hash与初始输出严格一致，用于排除runner或morphism差异；
+- `PCSDDenseMatchedReadout`：`Linear(R,W) -> GELU -> Linear(W,720)`，按每个profile的PCSD总decoder参数自动
+  选择最接近的整数$W$；五profile gap均低于`0.1%`；
+- fixed policy的training forward只计算被选scope；`forward_with_diagnostics`仍计算全部arms。二者输出严格一致，
+  避免五个fixed controls无意义支付five-arm FLOPs。
+
 ## 4. Training Adapter And Artifacts
 
 `train_repo.py`已注册`pcsd-coupling-field`为active prefix readout，并把coordinate/rank/policy/partition/chunk
@@ -129,6 +143,17 @@ synthesis置零；这时五个arms完全相同且等于A6。
 - `accounting.csv`：decoder parameter/DoF、static multiply-add FLOP与chunk activation估算；
 - `protocol_contract_checks.csv`：CLI propagation与remote/test/SC2/requested-H exclusion；
 - `step7a_local_gate.json`与`step7a_local_gate_report.md`：machine-readable gate和research decision。
+
+Step7B新增：
+
+- `check_stage_c_pcsd_cf_step7b.py`：60个dataset-arm contracts、A6/M0 exact pairing、PCSD pairing、fan-in
+  initialization、fixed fast path、dense parameter matching与validation-only protocol；
+- `evaluate_stage_c_pcsd_cf_checkpoint.py`：按sequential validation rows保存fused/arm/persistence bin losses、
+  per-bin policy usage与probe predictions，并复核trained prefix/config/checkpoint invariants；
+- `analyze_stage_c_pcsd_cf_step7b.py`：冻结dense-H1..720 MSE AUC comparison、same-run arm/oracle/policy statistics、
+  capacity/random specificity gates与failure attribution；
+- `remote/run_stage_c_pcsd_cf_step7b.sh`：60-job resumable/status/dry-run/resource-smoke runner，输出根目录固定在
+  repo外`/home/yingch/exp_outputs/r-2026-fatst/stage_c_pcsd_cf_step7b`。
 
 ## 5. Code-Theory Consistency Evaluation
 

@@ -9,6 +9,130 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
+def pcsd_parameter_count(
+    readout_dim: int,
+    series_length: int = 720,
+    scale_count: int = 5,
+    coordinate_dim: int = 4,
+    mode_rank: int = 256,
+    policy_history_dim: int = 32,
+    policy_hidden_dim: int = 64,
+) -> int:
+    """Return the trainable parameter count of the full PCSD-CF readout."""
+    field = coordinate_dim * readout_dim * mode_rank
+    field += coordinate_dim * mode_rank
+    field += 2 * series_length * mode_rank + series_length
+    policy = readout_dim * policy_history_dim + policy_history_dim
+    policy += (
+        (policy_history_dim + coordinate_dim) * policy_hidden_dim
+        + policy_hidden_dim
+    )
+    policy += policy_hidden_dim * scale_count + scale_count
+    return field + policy
+
+
+class PCSDM0Readout(nn.Module):
+    """Exact A6-equivalent morphism control with paired initialization order."""
+
+    def __init__(
+        self,
+        readout_dim: int,
+        series_length: int = 720,
+        mode_rank: int = 256,
+    ) -> None:
+        super().__init__()
+        self.readout_dim = int(readout_dim)
+        self.series_length = int(series_length)
+        self.mode_rank = int(mode_rank)
+        if self.readout_dim <= 0 or self.series_length <= 0 or self.mode_rank <= 0:
+            raise ValueError("PCSD M0 dimensions must be positive")
+        self.coefficient = nn.Linear(self.readout_dim, self.mode_rank)
+        self.identity_synthesis = nn.Parameter(
+            torch.empty(self.series_length, self.mode_rank)
+        )
+        self.temporal_bias = nn.Parameter(torch.zeros(self.series_length))
+        nn.init.normal_(
+            self.identity_synthesis,
+            mean=0.0,
+            std=self.mode_rank**-0.5,
+        )
+
+    def forward(
+        self,
+        hidden: torch.Tensor,
+        target_prefix: int | None = None,
+    ) -> torch.Tensor:
+        horizon = self.series_length if target_prefix is None else int(target_prefix)
+        if horizon <= 0 or horizon > self.series_length:
+            raise ValueError("target_prefix must lie in [1, series_length]")
+        coefficients = self.coefficient(hidden)
+        full = torch.einsum(
+            "tk,bck->bct",
+            self.identity_synthesis.to(dtype=hidden.dtype),
+            coefficients,
+        )
+        full = full + self.temporal_bias.to(dtype=hidden.dtype).view(1, 1, -1)
+        return full[:, :, :horizon].permute(0, 2, 1)
+
+
+class PCSDDenseMatchedReadout(nn.Module):
+    """Generic dense nonlinear control matched to full PCSD parameter storage."""
+
+    def __init__(
+        self,
+        readout_dim: int,
+        series_length: int = 720,
+        target_parameters: int | None = None,
+    ) -> None:
+        super().__init__()
+        self.readout_dim = int(readout_dim)
+        self.series_length = int(series_length)
+        self.target_parameters = int(
+            pcsd_parameter_count(self.readout_dim, self.series_length)
+            if target_parameters is None
+            else target_parameters
+        )
+        if self.readout_dim <= 0 or self.series_length <= 0:
+            raise ValueError("dense matched dimensions must be positive")
+        denominator = self.readout_dim + self.series_length + 1
+        real_width = (self.target_parameters - self.series_length) / denominator
+        candidates = {
+            max(1, int(real_width)),
+            max(1, int(real_width) + 1),
+        }
+        self.hidden_dim = min(
+            candidates,
+            key=lambda width: abs(
+                width * denominator
+                + self.series_length
+                - self.target_parameters
+            ),
+        )
+        self.input = nn.Linear(self.readout_dim, self.hidden_dim)
+        self.output = nn.Linear(self.hidden_dim, self.series_length)
+
+    @property
+    def decoder_parameters(self) -> int:
+        return sum(parameter.numel() for parameter in self.parameters())
+
+    @property
+    def parameter_relative_gap(self) -> float:
+        return abs(self.decoder_parameters - self.target_parameters) / float(
+            self.target_parameters
+        )
+
+    def forward(
+        self,
+        hidden: torch.Tensor,
+        target_prefix: int | None = None,
+    ) -> torch.Tensor:
+        horizon = self.series_length if target_prefix is None else int(target_prefix)
+        if horizon <= 0 or horizon > self.series_length:
+            raise ValueError("target_prefix must lie in [1, series_length]")
+        full = self.output(F.gelu(self.input(hidden)))
+        return full[:, :, :horizon].permute(0, 2, 1)
+
+
 class PCSDCouplingFieldReadout(nn.Module):
     """Generate multiple future-output coupling scopes from one parameter field.
 
@@ -155,12 +279,11 @@ class PCSDCouplingFieldReadout(nn.Module):
         return indices.reshape(self.series_length // scale, scale)
 
     def reset_parameters(self) -> None:
-        nn.init.kaiming_uniform_(
-            self.mode_weight.reshape(
-                self.coordinate_dim * self.readout_dim,
-                self.mode_rank,
-            ),
-            a=5.0**0.5,
+        bound = self.readout_dim**-0.5
+        nn.init.uniform_(
+            self.mode_weight,
+            -bound,
+            bound,
         )
         nn.init.normal_(
             self.identity_synthesis,
@@ -172,7 +295,7 @@ class PCSDCouplingFieldReadout(nn.Module):
             mean=0.0,
             std=self.mode_rank**-0.5,
         )
-        nn.init.zeros_(self.mode_bias)
+        nn.init.uniform_(self.mode_bias, -bound, bound)
         nn.init.zeros_(self.temporal_bias)
         self.history_projection.reset_parameters()
         self.policy_hidden.reset_parameters()
@@ -320,6 +443,18 @@ class PCSDCouplingFieldReadout(nn.Module):
         hidden: torch.Tensor,
         target_prefix: int | None = None,
     ) -> torch.Tensor:
+        if self.policy_mode == "fixed":
+            horizon = (
+                self.series_length if target_prefix is None else int(target_prefix)
+            )
+            if horizon <= 0 or horizon > self.series_length:
+                raise ValueError("target_prefix must lie in [1, series_length]")
+            modes = self.history_modes(hidden)
+            output = self._scope_forecast(
+                modes,
+                self.scales.index(self.fixed_scale),
+            )
+            return output[:, :, :horizon].permute(0, 2, 1)
         output, _arms, _weights = self.forward_with_diagnostics(
             hidden,
             target_prefix,

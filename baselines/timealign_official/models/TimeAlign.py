@@ -11,7 +11,11 @@ from layers.PMFO import (
     PMFORCTReadout,
 )
 from layers.PLGO import JAPOReadout, PLGOPAFReadout
-from layers.PCSD import PCSDCouplingFieldReadout
+from layers.PCSD import (
+    PCSDCouplingFieldReadout,
+    PCSDDenseMatchedReadout,
+    PCSDM0Readout,
+)
 from layers.StandardNorm import Normalize
 
 LEARNED_BASIS_READOUTS = {
@@ -75,6 +79,10 @@ ENCODER_MODES = {
 
 GROUPED_MLP_READOUTS = {"grouped-mlp"}
 PCSD_READOUTS = {"pcsd-coupling-field"}
+PCSD_CONTROL_READOUTS = {
+    "pcsd-coupling-field-m0",
+    "pcsd-dense-nonlinear-matched",
+}
 
 
 class PatchEmbed(nn.Module):
@@ -385,6 +393,7 @@ class Model(nn.Module):
             *JAPO_READOUTS,
             *GROUPED_MLP_READOUTS,
             *PCSD_READOUTS,
+            *PCSD_CONTROL_READOUTS,
         }:
             raise ValueError(
                 "Clean TimeAlign supports only 'official' and "
@@ -393,7 +402,11 @@ class Model(nn.Module):
             )
         if (
             self.readout_mode
-            in PMFO_READOUTS | PLGO_PAF_READOUTS | JAPO_READOUTS | PCSD_READOUTS
+            in PMFO_READOUTS
+            | PLGO_PAF_READOUTS
+            | JAPO_READOUTS
+            | PCSD_READOUTS
+            | PCSD_CONTROL_READOUTS
             and self.pred_len != 720
         ):
             raise ValueError("StageC projective readouts require pred_len=720")
@@ -697,6 +710,17 @@ class Model(nn.Module):
                     getattr(configs, "pcsd_target_chunk_size", 128)
                 ),
             )
+        if self.readout_mode == "pcsd-coupling-field-m0":
+            self.pcsd_m0_readout = PCSDM0Readout(
+                readout_dim=readout_dim,
+                series_length=self.pred_len,
+                mode_rank=int(getattr(configs, "pcsd_mode_rank", 256)),
+            )
+        if self.readout_mode == "pcsd-dense-nonlinear-matched":
+            self.pcsd_dense_readout = PCSDDenseMatchedReadout(
+                readout_dim=readout_dim,
+                series_length=self.pred_len,
+            )
 
         self.normalization_x = Normalize(configs.enc_in, affine=False)
         if self.has_future_recon_branch:
@@ -945,6 +969,10 @@ class Model(nn.Module):
             output = self.grouped_mlp_readout(hidden, target_prefix)
         elif self.readout_mode in PCSD_READOUTS:
             output = self.pcsd_readout(hidden, target_prefix)
+        elif self.readout_mode == "pcsd-coupling-field-m0":
+            output = self.pcsd_m0_readout(hidden, target_prefix)
+        elif self.readout_mode == "pcsd-dense-nonlinear-matched":
+            output = self.pcsd_dense_readout(hidden, target_prefix)
         else:
             raise ValueError(f"Unsupported readout mode: {self.readout_mode}")
         output = self.normalization_x(output, "denorm")

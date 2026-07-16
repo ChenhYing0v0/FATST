@@ -59,6 +59,8 @@ PREFIX_READOUT_MODES = {
     "japo-joint-random",
     "grouped-mlp",
     "pcsd-coupling-field",
+    "pcsd-coupling-field-m0",
+    "pcsd-dense-nonlinear-matched",
 }
 
 STAGE_C_ACTIVE_READOUTS = {
@@ -81,6 +83,8 @@ STAGE_C_ACTIVE_READOUTS = {
     "japo-joint-random",
     "grouped-mlp",
     "pcsd-coupling-field",
+    "pcsd-coupling-field-m0",
+    "pcsd-dense-nonlinear-matched",
 }
 
 ACTIVE_STAGE_C_CONTRACT = {
@@ -427,6 +431,15 @@ def initialization_contract(model: nn.Module) -> dict[str, Any]:
         "encoder_initialization_hash": _tensor_hash(encoder),
         "readout_mode": getattr(model, "readout_mode", ""),
     }
+    if getattr(model, "readout_mode", "") == "learned-basis-forecast-operator":
+        payload["operator_initialization_hash"] = _tensor_hash(
+            [
+                model.learned_basis_coeff.weight,
+                model.learned_basis_coeff.bias,
+                model.learned_temporal_basis,
+                model.learned_temporal_bias,
+            ]
+        )
     if hasattr(model, "japo_readout"):
         readout = model.japo_readout
         experts = [
@@ -519,6 +532,27 @@ def initialization_contract(model: nn.Module) -> dict[str, Any]:
                 "pcsd_initial_policy_entropy": float(entropy),
                 "pcsd_initial_scope_usage": usage.detach().cpu().tolist(),
             }
+        )
+    if hasattr(model, "pcsd_m0_readout"):
+        readout = model.pcsd_m0_readout
+        payload.update(
+            {
+                "operator_initialization_hash": _tensor_hash(
+                    [
+                        readout.coefficient.weight,
+                        readout.coefficient.bias,
+                        readout.identity_synthesis,
+                        readout.temporal_bias,
+                    ]
+                ),
+                "pcsd_m0_initialization_hash": _tensor_hash(
+                    list(readout.parameters())
+                ),
+            }
+        )
+    if hasattr(model, "pcsd_dense_readout"):
+        payload["pcsd_dense_initialization_hash"] = _tensor_hash(
+            list(model.pcsd_dense_readout.parameters())
         )
     return payload
 
@@ -832,6 +866,62 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
                 "pcsd_policy_mode": readout.policy_mode,
                 "pcsd_policy_entropy": float(entropy),
                 "pcsd_scope_usage": usage.detach().cpu().tolist(),
+            }
+        )
+    if hasattr(model, "pcsd_m0_readout"):
+        readout = model.pcsd_m0_readout
+        active_prefixes = (
+            "patch_emb_x.",
+            "encoder.",
+            "norm_x.",
+            "pcsd_m0_readout.",
+        )
+        active_parameters = sum(
+            parameter.numel()
+            for name, parameter in model.named_parameters()
+            if name.startswith(active_prefixes)
+        )
+        payload.update(
+            {
+                "active_forward_parameters": active_parameters,
+                "unused_proj_x_parameters": sum(
+                    parameter.numel()
+                    for name, parameter in model.named_parameters()
+                    if name.startswith("proj_x.")
+                ),
+                "pcsd_m0_decoder_parameters": sum(
+                    parameter.numel() for parameter in readout.parameters()
+                ),
+                "pcsd_m0_mode_rank": readout.mode_rank,
+            }
+        )
+    if hasattr(model, "pcsd_dense_readout"):
+        readout = model.pcsd_dense_readout
+        active_prefixes = (
+            "patch_emb_x.",
+            "encoder.",
+            "norm_x.",
+            "pcsd_dense_readout.",
+        )
+        active_parameters = sum(
+            parameter.numel()
+            for name, parameter in model.named_parameters()
+            if name.startswith(active_prefixes)
+        )
+        payload.update(
+            {
+                "active_forward_parameters": active_parameters,
+                "unused_proj_x_parameters": sum(
+                    parameter.numel()
+                    for name, parameter in model.named_parameters()
+                    if name.startswith("proj_x.")
+                ),
+                "pcsd_dense_decoder_parameters": readout.decoder_parameters,
+                "pcsd_dense_target_parameters": readout.target_parameters,
+                "pcsd_dense_parameter_relative_gap": (
+                    readout.parameter_relative_gap
+                ),
+                "pcsd_dense_hidden_dim": readout.hidden_dim,
             }
         )
     return payload

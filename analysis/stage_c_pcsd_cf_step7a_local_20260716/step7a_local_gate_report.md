@@ -41,8 +41,8 @@ sharing topology -> arm/policy/gradient -> accounting -> decision。
 
 | partition | min_pair_nrmse | mean_pair_nrmse | uniform_gap | pass |
 | --- | --- | --- | --- | --- |
-| canonical | 0.130247 | 0.664654 | 0.000e+00 | True |
-| random | 0.023056 | 0.616374 | 0.000e+00 | True |
+| canonical | 0.131493 | 0.671231 | 0.000e+00 | True |
+| random | 0.023079 | 0.624918 | 0.000e+00 | True |
 
 ### Static accounting
 

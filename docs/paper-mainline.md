@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | PCSD-CF D15-A Step7A local gate passed；Step7B design/runner audit next，remote held |
+| `current_11_step` | PCSD-CF Step7B 60-run prelaunch gate passed；seed2021 validation-only remote screen authorized |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -90,9 +90,15 @@ Step7A production implementation现已通过全部9类local gates：five-profile
 prefix cases、float32/float64 A6 containment、720/15/5/2/1 Jacobian-sharing topology、random-parameter arm
 separation、partition-only parameter equality、module与真实Encoder-PCSD two-step gradients、static accounting及
 protocol exclusion均通过。float32 containment maximum output gap为`3.815e-6`，float64为`3.109e-15`；
-canonical/random minimum pairwise arm NRMSE为`0.130247/0.023056`。PCSD field core相对A6 decoder参数为
+修正fan-in初始化后canonical/random minimum pairwise arm NRMSE为`0.131493/0.023079`。PCSD field core相对
+A6 decoder参数为
 `3.0291-3.6184x`，含policy为`3.1006-3.7224x`，所以dense capacity control仍是Step7B硬要求。
 status=`pcsd_cf_step7a_local_pass / effectiveness_unready`。
+
+Step7B production/prelaunch现已冻结：A6、exact-paired M0、five fixed scopes、equal、static-target、direct、random
+partition与dense nonlinear matched共12 arms × 5 datasets。A6/M0相同seed的operator hash与初始输出gap均为`0`；
+full PCSD arms共享完全相同的trainable initialization；dense control参数gap低于`0.1%`。primary metric在结果返回前
+固定为validation dense-H1..720 MSE AUC，test=false。用户已授权seed2021 screen，但effectiveness仍未观察。
 
 ### Retired Core Candidate: CCRL
 
@@ -134,9 +140,9 @@ Contribution 2未来只能回答“在same-run joint decoder中，若ordinary ta
 用同一次forward的forecast evidence修复”，而不能再依赖外部teacher pipeline。
 
 [Execution Order] D14-A problem confirmed -> CCRL consistency audit and retirement -> PCSD-CF Step4-6 conditional
-pass -> D15-A Step7A local invariants passed -> Step7B design/runner audit -> separately authorized five-dataset
-seed2021 direct-control screen。只有direct-control screen形成可归因的credit failure，SC2才回到Step2-4。当前
-remote、test与Contribution-2 implementation均false。
+pass -> D15-A Step7A local invariants passed -> Step7B prelaunch passed -> GPU resource smoke -> authorized
+five-dataset seed2021 direct-control screen。只有direct-control screen形成可归因的credit failure，SC2才回到
+Step2-4。当前test、seeds2022/2023与Contribution-2 implementation均false。
 
 ### Closed Candidate: PRISM Decoder
 
@@ -602,8 +608,8 @@ Step4，不以训练性能包装RGNB。
 37. D14-A fail关闭pair；A pass/B fail只让PCSD回Step4并重找SC2；A/B pass也只返回formal Step4-6，不能直接
     实现method或启动remote training。
 38. D14-A最终通过；D14-B1在implementation前因cross-fit teacher/student mismatch退出paper core。PCSD-CF
-    已完成native Step4-6与D15-A Step7A local gate（9/9 categories pass）；下一步为Step7B experiment tooling，
-    SC2 slot保持open，remote/test=false。
+    已完成native Step4-6、D15-A Step7A与Step7B prelaunch gate；seed2021 remote screen已授权，SC2 slot保持
+    open，test=false。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset
 generality，seeds2021/2022/2023用于stochastic confirmation；两者不能互相替代。ETTh1/ETTm2必须先完成

@@ -4,7 +4,7 @@
   "diagnostic_id": "SC-D15-A",
   "current_step": "Step7A local implementation gate",
   "design_path": "configs/stage_c_pcsd_cf_native_direct.json",
-  "design_sha256": "5f31063ed811ed06024f5b61e3b3ef62e1332e1eff54fba8caea522f3f618be9",
+  "design_sha256": "09e8087730b3f57d5539344859bd39808076317b4640b5b92b4d2e0563fa6150",
   "profile_path": "configs/stage_c_five_dataset_natural_profiles.json",
   "profile_sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a",
   "seed": 20260716,
