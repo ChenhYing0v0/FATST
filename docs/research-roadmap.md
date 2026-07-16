@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | PCSD-CF Step7B prelaunch passed；GPU smoke后启动seed2021 validation-only remote screen |
+| `current_step` | PCSD-CF Step7B effectiveness screen / 11-step Step8 running；seed2021 validation-only |
 | `active_question` | fixed-past unified model是否需要在一个projective decoder内自适应future-output coupling scope？ |
 | `active_candidates` | `SC1-PCSD-CF` narrative-ready/effectiveness-unready；SC2 slot open，`ICC` hypothesis only |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/experiments/stage-c-d15-native-pcsd-direct-control.md` |
-| `method_implementation` | 12-arm runner/evaluator/analyzer/prelaunch complete；seed2021 remote authorized；effectiveness/SC2/test=false |
+| `method_implementation` | 12-arm runner/evaluator/analyzer/prelaunch complete；3×3090 remote running；effectiveness/SC2/test=false |
 | `rollback_point` | local invariant fail -> Step5/6；native arms unskilled -> Step4；credit problem absent -> SC2 remains open |
 
 ## Post-D11 Joint Mainline Reset
@@ -319,11 +319,13 @@ weights 的必然结果。若失败，关闭 PIR；horizon measure 只保留为 
 7. decision=`step7a_local_pass_step7b_design_only_next`。该结果只通过implementation/theory contract，不是
    effectiveness evidence；remote、SC2、test均false。
 
-## Next Concrete Action
+## PCSD-CF Step 7B Remote Screen: Running
 
-在3090先执行Weather-direct batch32 one-batch resource smoke；通过后启动12 arms × 5 datasets的seed2021
-validation-only screen。使用3个安全GPU时按arm-major/slow-dataset-spread调度，outputs写入repo外
-`/home/yingch/exp_outputs/r-2026-fatst/stage_c_pcsd_cf_step7b`。Contribution 2、test与confirmation seeds保持false。
+Weather-direct batch32 one-batch resource smoke已通过；12 arms × 5 datasets的seed2021 validation-only screen
+已于2026-07-16 16:10:33在GPU 0/1/2启动。runner按arm-major/slow-dataset-spread调度，outputs写入repo外
+`/home/yingch/exp_outputs/r-2026-fatst/stage_c_pcsd_cf_step7b`。首次状态检查确认三个worker存活且首个
+`A6/ETTh1` run完成；下一步等待60/60 artifacts，执行Step9 analyzer与Step10 gate。Contribution 2、test与
+confirmation seeds保持false。
 
 ## SC1-JAPO Step 7A: Production Gate Passed, Step 8 Authorized
 

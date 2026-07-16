@@ -5,16 +5,17 @@
 | Field | Value |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | `SC1-PCSD-CF-v1` Step7B prelaunch passed；seed2021 remote screen authorized |
+| `current_step` | `SC1-PCSD-CF-v1` Step7B effectiveness screen / 11-step Step8 running |
 | `role` | architecture candidate + Contribution-2 problem diagnostic |
 | `narrative_gate` | conditional pass |
 | `local_implementation` | passed（9/9 gate categories） |
-| `remote_training` | seed2021 validation-only 60-run screen authorized；not yet launched |
+| `remote_training` | seed2021 validation-only 60-run screen running；3×RTX 3090 |
 | `test_access` | false |
 | `config` | `configs/stage_c_pcsd_cf_native_direct.json` |
 | `analysis` | `analysis/stage_c_pcsd_native_reset_20260716/pcsd_cf_step46_source_theory_design_audit.md` |
 | `step7a_artifact` | `analysis/stage_c_pcsd_cf_step7a_local_20260716/step7a_local_gate_report.md` |
 | `step7b_artifact` | `analysis/stage_c_pcsd_cf_step7b_prelaunch_20260716/prelaunch_gate_report.md` |
+| `launch_record` | `analysis/stage_c_pcsd_cf_step7b_prelaunch_20260716/remote_launch_record.md` |
 
 ## What We Plan To Test
 
@@ -113,6 +114,7 @@ PCSD-CF method gate要求`DIRECT`至少3/5 datasets超过A6且macro `>=0.3%`，�
 
 ## Decision
 
-`step7b_prelaunch_pass_remote_seed2021_authorized`。用户已明确授权在3090启动validation-only seed2021 screen；
-先执行GPU audit与resource smoke，再启动60-run matrix。paper effectiveness claim、test、seeds2022/2023与SC2
-implementation仍未授权。
+`step7b_remote_seed2021_running`。GPU audit与Weather-direct batch32 one-batch resource smoke均通过；完整矩阵已于
+2026-07-16 16:10:33在GPU 0/1/2启动。首轮三个位置为`A6/Weather`、`A6/ETTm1`、`A6/ETTh1`，且
+`A6/ETTh1`已正常完成并进入下一run。当前只等待validation artifacts；paper effectiveness claim、test、
+seeds2022/2023与SC2 implementation仍未授权。

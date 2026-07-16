@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | PCSD-CF Step7B 60-run prelaunch gate passed；seed2021 validation-only remote screen authorized |
+| `current_11_step` | PCSD-CF Step7B effectiveness screen / 11-step Step8 running；seed2021 validation-only |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -608,7 +608,7 @@ Step4，不以训练性能包装RGNB。
 37. D14-A fail关闭pair；A pass/B fail只让PCSD回Step4并重找SC2；A/B pass也只返回formal Step4-6，不能直接
     实现method或启动remote training。
 38. D14-A最终通过；D14-B1在implementation前因cross-fit teacher/student mismatch退出paper core。PCSD-CF
-    已完成native Step4-6、D15-A Step7A与Step7B prelaunch gate；seed2021 remote screen已授权，SC2 slot保持
+    已完成native Step4-6、D15-A Step7A与Step7B prelaunch gate；seed2021 remote screen已在3×3090启动，SC2 slot保持
     open，test=false。
 
 未来candidate screening固定扩展到ETTh1、ETTh2、ETTm1、ETTm2、Weather。五dataset用于cross-dataset

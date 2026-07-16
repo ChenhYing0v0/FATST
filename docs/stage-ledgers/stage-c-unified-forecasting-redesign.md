@@ -18,10 +18,10 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | PCSD-CF Step7B prelaunch passed；seed2021 remote screen authorized，GPU smoke next |
+| `current_11_step` | PCSD-CF Step7B effectiveness screen / 11-step Step8 running；seed2021 validation-only |
 | `current_candidate` | `SC1-PCSD-CF-v1`；SC2 unfilled，`SC2-ICC` only a blocked hypothesis |
-| `latest_decision` | 60/60 arm-profile contracts、A6/M0 pairing、dense match与validation-only protocol通过 |
-| `next_required_action` | 3090 GPU audit -> Weather-direct resource smoke -> launch seed2021 60-run matrix |
+| `latest_decision` | GPU audit/resource smoke通过；60-run matrix于16:10:33在GPU 0/1/2启动，首run已完成 |
+| `next_required_action` | 等待60/60 artifacts -> Step9 analyzer -> Step10 effectiveness/failure attribution decision |
 | `method_training_authorized` | seed2021 validation-only remote=true；effectiveness claim/SC2/test/confirmation=false |
 | `rollback_point` | local invalid -> Step5/6；carrier/arm skill fail -> Step4；direct misallocation evidence -> SC2 Step2-4 |
 
@@ -29,7 +29,7 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | PCSD-CF Step7B tooling/prelaunch complete；remote resource smoke next |
+| `current_step` | PCSD-CF Step7B remote seed2021 screen running（11-step Step8） |
 | `problem` | 现有unified decoder固定point/block/global coupling scope；最佳future-output sharing是否随target region与history变化 |
 | `existence_evidence` | three-seed neutral+A6 5/5 stable crossing；strict 7.1107%/9.1259%；instance 6.7948%/8.5990% |
 | `idea` | one shared coupling field + scope pooling + direct end-to-end history × target policy |
@@ -37,8 +37,8 @@
 | `design` | shared mode maps `[Dq,R,K]`；five pooling operators；identity+GELU synthesis；D15 direct controls |
 | `narrative_gate` | conditional pass；DeepONet/PoU/SoftMoE primitives excluded from novelty claim |
 | `effectiveness_gate` | pending；must beat A6/equal/static and survive dense/random controls |
-| `artifacts` | `analysis/stage_c_pcsd_native_reset_20260716/pcsd_cf_step46_source_theory_design_audit.md`；`analysis/stage_c_pcsd_cf_step7a_local_20260716/step7a_local_gate_report.md` |
-| `decision` | step7b_prelaunch_pass_remote_seed2021_authorized；SC2/test/confirmation held |
+| `artifacts` | `analysis/stage_c_pcsd_native_reset_20260716/pcsd_cf_step46_source_theory_design_audit.md`；`analysis/stage_c_pcsd_cf_step7a_local_20260716/step7a_local_gate_report.md`；`analysis/stage_c_pcsd_cf_step7b_prelaunch_20260716/remote_launch_record.md` |
+| `decision` | step7b_remote_seed2021_running；SC2/test/confirmation held |
 
 ## Frozen Carrier Contract
 
@@ -90,11 +90,11 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC2-CPGA` | `rejected_with_parent_route` | full-memory path的prediction change能否由conditional predictive gain核算 | 脱离CADMO后退化为generic accounting | not started | 不实现；不占active slot |
 | `SC-D14-P` | `auxiliary_not_scheduled` | A6 patch memory是否含超越global coeff的ordered target-specific conditional information | not paper mainline | not started | 未来仅在decoder interface需要时做small probe |
 | `SC1-PCSD` | `problem_supported_parent` | one projective decoder是否需同时表示point/block/global coupling scopes | complete-chain novelty only；DIRMO/Stratify/CATS controls mandatory | D14-A1 three-seed dual-carrier pass；GroupedMLP below LBF | parent retained；native child PCSD-CF active |
-| `SC1-PCSD-CF` | `step7b_remote_authorized_effectiveness_unready` | one shared parameter field能否经scope pooling形成skilled point/block/global arms并contain A6 | DeepONet/PoU/soft routing excluded；field-pooling chain only | local/prelaunch pass；effectiveness untested | GPU smoke then seed2021 matrix |
+| `SC1-PCSD-CF` | `step7b_remote_running_effectiveness_unready` | one shared parameter field能否经scope pooling形成skilled point/block/global arms并contain A6 | DeepONet/PoU/soft routing excluded；field-pooling chain only | local/prelaunch pass；seed2021 running | wait artifacts then Step9/10 |
 | `SC2-CCRL` | `retired_as_core_diagnostic_only` | cross-fit relative risk能否增益matched direct fusion | generic overlap high；two-stage teacher/student inconsistency | not implemented | retain report/config as history；not scheduled |
 | `SC2-ICC` | `hypothesis_only_blocked` | same-forward marginal coupling credit能否修复direct policy misallocation | counterfactual credit primitive not novel；task-specific chain unassessed | credit problem not established | wait for D15-A direct-control evidence |
 | `SC-D14-A/B` | `a_confirmed_b_retired` | coupling crossing与conditional-risk predictability | A pass；B retired before implementation | A confirmed；B not run | A evidence retained；B closed |
-| `SC-D15-A` | `step7b_remote_authorized` | native PCSD-CF representation、direct trainability与credit-problem existence | Step4-6 conditional pass | local/prelaunch pass；remote pending launch | GPU smoke then 60 runs；test=false |
+| `SC-D15-A` | `step7b_remote_running` | native PCSD-CF representation、direct trainability与credit-problem existence | Step4-6 conditional pass | local/prelaunch/smoke pass；60-run remote running | wait 60/60；test=false |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
 
@@ -250,6 +250,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-16 | CCRL consistency audit + PCSD-CF reset | Contribution 1/2、Boundary、Experiment Logic | SC2 retirement + SC1 native Step4-6 | CCRL diagnostic-only；shared coupling field conditional pass；D15-A Step7A next |
 | 2026-07-16 | PCSD-CF D15-A Step7A local gate | Current Position、Contribution 1、Experiment Logic | production implementation + theory contract | 9/9 local gates pass；effectiveness/remote/SC2/test held；Step7B tooling next |
 | 2026-07-16 | PCSD-CF Step7B prelaunch gate | Current Position、Contribution 1、Experiment Logic | controls + runner + diagnostics + authorization | 60/60 contracts pass；seed2021 validation-only remote authorized；test/SC2 held |
+| 2026-07-16 | PCSD-CF Step7B remote launch | Current Position、Experiment Logic | running-state + exact launch provenance | commit b9693ec；GPU 0/1/2；60-run validation-only matrix；test/SC2/confirmation held |
 
 ## Continuation Rules
 
