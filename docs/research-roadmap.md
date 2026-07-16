@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D14-A1 dual-carrier seed2021 pass；multi-seed confirmation next |
+| `current_step` | D14-A1 three-seed dual-carrier confirmed；D14-B Step 4-6 next |
 | `active_question` | fixed-past unified model是否需要在一个projective decoder内自适应future-output coupling scope？ |
-| `active_candidates` | at-risk `SC1-PCSD`；`SC2-CCRL` held；A1 repaired evidence before any method |
+| `active_candidates` | `SC1-PCSD` problem-supported但method-unready；`SC2-CCRL`进入D14-B Step 4-6 audit |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/experiments/stage-c-d14-output-coupling-granularity.md` |
-| `method_implementation` | false；confirmation diagnostic=true；D14-B/paper method/test=false |
-| `rollback_point` | A1 theory infeasible或repaired evidence fail ->关闭PCSD/CCRL pair |
+| `method_implementation` | false；D14-B design=true；D14-B implementation/paper method/test=false |
+| `rollback_point` | D14-B fail ->关闭CCRL、PCSD返回Step4；target-only解释 ->关闭instance-adaptive claim |
 
 ## Post-D11 Joint Mainline Reset
 
@@ -107,8 +107,8 @@ PCA64 + linear RRR evidence失败。
 local cases通过，最大parameter gap 0.1646%。neutral raw-history carrier是primary direction gate；A6-natural只作
 paper-carrier sensitivity。由于A6 architecture/profile围绕global basis decoder形成，A6-negative不能拒绝scale。
 
-[Execution Order] neutral seed2021 remote -> neutral gate -> 仅在problem pass时运行A6-natural sensitivity ->
-multi-seed confirmation decision。D14-B/paper method/test仍false；neutral valid fail则关闭PCSD/CCRL pair。
+[Completed Execution Order] neutral seed2021 -> neutral gate -> A6-natural sensitivity -> seeds2022/2023
+dual-carrier confirmation。该串行协议已完成；D14-B只返回Step4-6，paper method/test仍false。
 
 [A1 Neutral Returned] 40/40 complete；function separation、carrier skill、crossing均5/5；oracle macro 7.6753%；
 canonical-vs-random 0.8945%且5/5正。sequential row re-evaluation修复了official validation shuffle造成的artifact
@@ -117,7 +117,13 @@ alignment fault，未重训checkpoint。neutral只授权A6 sensitivity；single-
 [A1 A6 Returned] 45/45 complete；A6同样5/5 crossing，strict oracle 9.1504%，sample-over-bin 8.5429%，
 contiguity 0.6661%且5/5正。neutral strict/sample分别6.9978%/6.7555%，dual-carrier problem evidence一致。
 但train-selected/validation-best GroupedMLP相对A6-LBF H720 macro为-2.9435%/-1.6855%，所以fixed grouped head
-不是method candidate。只授权seeds2022/2023 confirmation；stable pass后才返回D14-B Step4-6。
+不是method candidate。该single-seed结果当时只授权seeds2022/2023 confirmation，最终判定见下一段。
+
+[A1 Three-Seed Confirmation] 新增170/170 runs完成，three-seed dual-carrier gate均pass。neutral/A6均为5/5
+stable crossing；strict oracle为7.1107%/9.1259%，sample-over-bin为6.7948%/8.5990%。contiguity均为4/5 stable
+datasets，故只能claim broad default而非universal law。A6 train-selected/validation-best GroupedMLP相对LBF仍为
+-2.6886%/-1.4879%，所以problem confirmed但method仍未ready。下一步固定为D14-B Step4-6 source/theory/narrative
+audit；implementation、paper method与test继续false。
 
 [Frozen Boundary] neutral raw-history carrier是primary；A6 sensitivity也从头E2E joint training，但其negative只表示
 carrier interface/profile不确认。最终paper effectiveness仍须matched E2E，不能用frozen replacement gap通过或拒绝。

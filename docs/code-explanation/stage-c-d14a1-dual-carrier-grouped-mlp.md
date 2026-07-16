@@ -3,8 +3,8 @@
 ## 1. Scope And Authorization
 
 本实现是`diagnostic_only`，用于修复D14-A0不同scale几乎产生同一函数的问题，不是PCSD/CCRL paper method。
-当前只授权`neutral_raw, seed2021`的validation-only远程screen；A6-natural、D14-B、test与paper-method training均
-由串行gate拦截。
+seeds2021/2022/2023 dual-carrier confirmation已完成；D14-A problem gate通过。当前只授权D14-B返回Step4-6
+设计审计；D14-B implementation、test与paper-method training仍由串行gate拦截。
 
 ## 2. Model Forward Flow
 
@@ -103,8 +103,9 @@ group ownership决定hidden bank sharing，random partition隔离temporal contig
 
 ### Remaining proxy
 
-fixed groups仍不是adaptive PCSD，单seed crossing也不是稳定性证据；neutral raw-history head和A6 profiles的优化难度
-可能不同。A6-negative尤其可能来自原A6 encoder/global-basis共适配，不是scale hypothesis为假。
+fixed groups仍不是adaptive PCSD。three-seed crossing已经形成稳定problem evidence，但oracle使用真实future loss，
+尚未证明inference-visible history能预测scale choice。neutral raw-history head和A6 profiles的优化难度可能不同；
+GroupedMLP相对A6-LBF仍弱，不能升为method。
 
 ### Falsification boundary
 

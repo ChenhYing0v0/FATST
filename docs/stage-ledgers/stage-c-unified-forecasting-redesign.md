@@ -9,7 +9,7 @@
 | `active_question` | 一个fixed-past unified decoder是否需要自适应future-output coupling granularity？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | provisional `SC1-PCSD` + `SC2-CCRL`；均为Step2-3 proposed，D14-A/B前不实现 |
+| `active_candidates` | `SC1-PCSD` problem-supported/method-unready；`SC2-CCRL` enters D14-B Step4-6 audit |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
 | `stage_rollback` | D14-A无crossing -> Step 2；D14-B不可预测 ->关闭CCRL；禁止直接堆叠method |
@@ -18,27 +18,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | D14-A1 seed2021 dual-carrier Step 9-10 pass；confirmation Step 8 next |
-| `current_candidate` | `SC1-PCSD` + `SC2-CCRL` provisional pair；problem gates pending |
-| `latest_decision` | neutral+A6均5/5 crossing；strict oracle 6.9978%/9.1504%；GroupedMLP vs A6-LBF仍负 |
-| `next_required_action` | 执行seeds2022/2023 dual-carrier confirmation与2/3-seed stable gate |
-| `method_training_authorized` | false；confirmation diagnostic=true，paper method=false，D14-B=false，test=false |
-| `rollback_point` | A1 feasibility fail或repaired evidence fail -> Step2关闭PCSD/CCRL pair |
+| `current_11_step` | D14-A1 three-seed Step 9-10 confirmed；D14-B Step 4-6 next |
+| `current_candidate` | `SC1-PCSD` problem-supported/method-unready；`SC2-CCRL` enters theory/design audit |
+| `latest_decision` | both carriers 5/5 stable crossing；strict oracle 7.1107%/9.1259%；GroupedMLP vs LBF仍负 |
+| `next_required_action` | D14-B source-informed redesign、theory feasibility、controls与narrative gate |
+| `method_training_authorized` | false；D14-B design=true，D14-B implementation=false，paper method=false，test=false |
+| `rollback_point` | D14-B fail ->关闭CCRL、PCSD返回Step4；target-only解释 ->关闭instance-adaptive claim |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | A1 source/theory/Step7A local gate passed；neutral Step7B pending |
+| `current_step` | A1 three-seed dual-carrier effectiveness/problem gate completed；D14-B returns Step4-6 |
 | `problem` | 现有unified decoder固定point/block/global coupling scope；最佳future-output sharing是否随target region与history变化 |
-| `existence_evidence` | seed2021 neutral+A6 direct pass；strict oracle 6.9978%/9.1504%；instance-over-bin 6.7555%/8.5429% |
+| `existence_evidence` | three-seed neutral+A6 5/5 stable crossing；strict 7.1107%/9.1259%；instance 6.7948%/8.5990% |
 | `idea` | PCSD projective point-to-global coupling spectrum + CCRL cross-fitted coupling-regret supervision |
 | `theory_check` | projectivity/A6 containment可构造；point-MSE只允许finite-sample sharing claim；routing/meta-learning prior art强，formal Step5未授权 |
 | `design` | A1 grouped nonlinear sharing topology；all scales contain full-affine maps；neutral primary/A6 sensitivity串行dual-carrier |
 | `narrative_gate` | problem chain与multi-horizon直接对齐；candidate仍provisional；DIRMO+MoE equivalence与router predictability为最大风险 |
-| `effectiveness_gate` | diagnostic problem pass；GroupedMLP H720 vs A6-LBF -2.9435%；multi-seed stability pending |
-| `artifacts` | `analysis/stage_c_d14a1_dual_carrier_grouped_mlp_20260715/dual_carrier_seed2021_review.md` |
-| `decision` | problem_gate_positive_but_method_not_ready；authorize confirmation only；B/method/test held |
+| `effectiveness_gate` | diagnostic problem confirmed；GroupedMLP H720 vs A6-LBF -2.6886%；method performance未通过 |
+| `artifacts` | `analysis/stage_c_d14a1_dual_carrier_grouped_mlp_20260715/multiseed_confirmation_report.md` |
+| `decision` | dual_carrier_confirmation_pass_authorize_d14b_design；implementation/method/test held |
 
 ## Frozen Carrier Contract
 
@@ -89,9 +89,9 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC1-CADMO` | `rejected_by_narrative_scope` | full patch memory在global coeff之外是否支持projective target-specific direct access | 与multi-horizon核心问题不直接对齐 | not started | 不占active slot；仅保留历史设计 |
 | `SC2-CPGA` | `rejected_with_parent_route` | full-memory path的prediction change能否由conditional predictive gain核算 | 脱离CADMO后退化为generic accounting | not started | 不实现；不占active slot |
 | `SC-D14-P` | `auxiliary_not_scheduled` | A6 patch memory是否含超越global coeff的ordered target-specific conditional information | not paper mainline | not started | 未来仅在decoder interface需要时做small probe |
-| `SC1-PCSD` | `proposed_step2_3_at_risk` | one projective decoder是否需同时表示point/block/global coupling scopes | complete-chain novelty only；DIRMO/Stratify/CATS controls mandatory | A0 direct evidence fail but rejection invalid | one A1 repair；failure closes pair |
-| `SC2-CCRL` | `held_dependent` | train-OOF coupling regret能否使history+target policy兑现oracle headroom | generic routing/regret overlap强；独立novelty未通过 | A0 oracle insufficient | do not run D14-B before repaired A pass |
-| `SC-D14-A/B` | `a1_seed2021_dual_pass_confirmation_next` | coupling scale是否crossing且best scale能否由history+target预测 | diagnostic design pass；method=false | both carriers 5/5 crossing；strict oracle strong；fixed head below LBF | seeds2022/2023；B/test=false |
+| `SC1-PCSD` | `problem_supported_method_unready` | one projective decoder是否需同时表示point/block/global coupling scopes | complete-chain novelty only；DIRMO/Stratify/CATS controls mandatory | D14-A1 three-seed dual-carrier pass；GroupedMLP below LBF | retain；formal method Step4-6 waits for B evidence |
+| `SC2-CCRL` | `step4_6_audit_next` | train-OOF coupling regret能否使history+target policy兑现oracle headroom | generic routing/regret overlap强；独立novelty未通过 | D14-A oracle prerequisite confirmed；predictability untested | source/theory/controls first；implementation=false |
+| `SC-D14-A/B` | `a1_confirmed_b_design_next` | coupling scale是否crossing且best scale能否由history+target预测 | A1 diagnostic pass；B narrative pending；method=false | both carriers 5/5 stable crossing；strict 7.11%/9.13%；head below LBF | D14-B Step4-6；test=false |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
 | `SC4-XBG` | `deferred` | mechanism不依赖TimeAlign-derived encoder | generality gate | second backbone | 等full matrix |
 
@@ -196,7 +196,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | D13-A/B rolling-origin diagnostics | `deferred_next_paper` | protocol preserved；not active |
 | Fixed-past compression mainline reset | `superseded_by_narrative_scope` | CADMO/CPGA与patch-memory D14降为history-interface auxiliary；未执行 |
 | Multi-horizon coupling mainline reset | `completed_provisional_step2_3` | PCSD/CCRL proposed；完整prior-art boundary与D14-A/B gates已冻结；method remains false |
-| D14 output-coupling granularity | `a1_step7a_pass_neutral_remote_next` | A0 direction rejection invalid；A1 nonlinear topology、affine containment、params与gradient gates通过；A6 causal boundary frozen |
+| D14 output-coupling granularity | `a1_three_seed_confirmed_b_step4_6_next` | dual-carrier 255/255；5/5 stable crossing；problem confirmed；GroupedMLP below LBF；B implementation false |
 
 ## Paper Mainline Sync Log
 
@@ -241,6 +241,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-15 | Multi-horizon narrative correction | Thesis、Contribution 1/2、Boundary、Experiment Logic | CADMO/CPGA narrative rejection + Step2/3 reconstruction | ordered patch降为auxiliary；PCSD/CCRL provisional；新D14-A/B active |
 | 2026-07-15 | D14-A0 remote result and failure attribution | Current Position、Contribution Slots、Experiment Logic | exact probe closure + direction-rejection correction | crossing 0/5；oracle 0.0586%；DoF/contrast不足；one A1 theory audit；B/method/test held |
 | 2026-07-15 | D14-A1 source/theory and Step7A | Current Position、Experiment Logic、failure attribution | neutral-first nonlinear E2E diagnostic | 80+20 local cases pass；neutral remote only；A6 fail不能方向拒绝 |
+| 2026-07-16 | D14-A1 three-seed confirmation | Current Position、Contribution Slots、Experiment Logic | problem gate confirmation + next-step authorization | dual-carrier 5/5 stable crossing；strict 7.11%/9.13%；D14-B仅返回Step4-6 |
 
 ## Continuation Rules
 

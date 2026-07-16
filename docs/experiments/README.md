@@ -1,7 +1,8 @@
 # Active Experiment Protocols
 
-- `stage-c-d14-output-coupling-granularity.md`: D14-A0已完成；numeric/carrier gate有效但crossing/oracle/contiguity
-  均fail，且factor params不等于effective DoF，故回Step 2-3做一次A1 source/theory audit；D14-B/method/test=false；
+- `stage-c-d14-output-coupling-granularity.md`: D14-A1 three-seed dual-carrier confirmation已通过；5/5 stable
+  crossing且strict/instance oracle显著为正；GroupedMLP仍低于A6-LBF，故只授权D14-B返回Step4-6，
+  implementation/method/test=false；
 - `stage-c-d14-conditional-patch-memory-headroom.md`: 已降级为`D14-P auxiliary_not_scheduled`；仅保留future
   decoder-interface ablation，不占paper slots、不决定mainline；
 - `stage-c-d13-rolling-origin-revision-efficiency.md`: `deferred_next_paper`；forecast-revision idea的未来problem

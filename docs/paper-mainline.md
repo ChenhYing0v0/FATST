@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | D14-A1 seed2021 dual-carrier pass；multi-seed confirmation next |
+| `current_11_step` | D14-A1 three-seed dual-carrier problem confirmed；D14-B Step 4-6 next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | PCSD problem evidence dual-carrier positive；method not ready；stability/CCRL/B/test pending |
+| `paper_core_status` | PCSD problem evidence three-seed confirmed；method not ready；CCRL/D14-B design pending；test held |
 
 ## Research Thesis
 
@@ -45,19 +45,20 @@ forecast-revision surface已转移到根目录`New-idea.md`，状态`deferred_ne
 
 两个active slots曾由`PCSD/CCRL` provisional占用。D14-A0的neutral linear RRR gate已返回：stable crossing
 0/5、sample × bin oracle macro 0.0586%、canonical-vs-random -0.1427%。但其factor params并不等于
-rank-manifold effective DoF，且scale risks最多只相差0.04036%，所以方向级拒绝无效。PCSD降为at-risk，CCRL
-保持held。A1已完成source/theory与Step7A：以matched grouped nonlinear heads强制不同sharing topology，且全部
-scales包含full-affine map。当前只运行neutral raw-history primary gate；A6-natural sensitivity必须等neutral pass。
+rank-manifold effective DoF，且scale risks最多只相差0.04036%，所以方向级拒绝无效。A1随后以matched grouped
+nonlinear heads强制不同sharing topology，且全部scales包含full-affine map；neutral raw-history作为primary gate，
+A6-natural作为from-scratch E2E sensitivity carrier。
 
 neutral seed2021现已返回：40/40 complete，function separation/carrier skill/crossing均5/5，sample × bin oracle
 macro 7.6753%，canonical-vs-random 0.8945%且5/5正。train-only fixed scale跨datasets落在48/360/720，说明一个
-固定scope没有统一支配。该结果是problem evidence，不是PCSD performance；A6 sensitivity与multi-seed stability
-尚未返回，D14-B也未授权。
+固定scope没有统一支配。该结果是problem evidence，不是PCSD performance，随后已由A6与multi-seed gate复核。
 
-A6-natural也已返回5/5 crossing。更严格地扣除validation-best fixed scale和per-bin fixed policy后，neutral/A6的
-sample-specific oracle仍为6.7555%/8.5429%，说明headroom主要不来自static scale selection。另一方面，fixed
-GroupedMLP相对A6-LBF H720 macro仍落后2.9435%，所以这不是Contribution 1 method pass；它只把“adaptive
-coupling是否值得研究”从间接假设提升为需要multi-seed确认的direct problem evidence。
+A6-natural也已返回5/5 crossing。three-seed confirmation进一步确认：neutral/A6均为5/5 stable crossing；扣除
+validation-best fixed scale后的strict oracle为7.1107%/9.1259%，再扣除每个future bin固定scale后的
+sample-specific headroom仍为6.7948%/8.5990%。因此adaptive coupling problem已从single-seed clue升级为
+dual-carrier、three-seed direct evidence。contiguity仅在两carrier各4/5 datasets稳定，不能claim universal
+temporal grouping law。另一方面，GroupedMLP相对A6-LBF H720仍落后2.6886%，所以D14-A确认的是研究问题，
+不是Contribution 1 method performance。
 
 ### Provisional Contribution 1: PCSD
 
@@ -75,7 +76,7 @@ requested $H$不进入operator或policy，只执行$F_H=\mathcal R_HF_T$。首�
 [Novelty Boundary] Direct/MIMO/DIRMO/Stratify已覆盖固定strategy与block-size continuum；CATS、MQTransformer、
 TimePerceiver已覆盖future/target queries；Implicit Forecaster已覆盖global wave decoding。因此PCSD只能claim完整
 链条：`one projective neural decoder -> simultaneous point-to-global coupling spectrum -> sample/target-region policy
--> no requested-H semantics -> no external strategy search`。status=`proposed_step2_3`。
+-> no requested-H semantics -> no external strategy search`。status=`problem_supported_method_unready`。
 
 ### Provisional Contribution 2: CCRL
 
@@ -93,7 +94,7 @@ forecast loss与stop-gradient counterfactual supervision组成；D14-B前不冻�
 [Novelty Boundary] cross-validation、regret minimization、meta-learning与dynamic ensembles已有大量prior art，
 CCRL不能claim这些primitive。它只有在“同一decoder内部output coupling scopes的sample × target-region
 counterfactual supervision”相对ordinary router、equal mixture、target-only、in-sample pseudo-label与permuted
-controls具有独立主效应时，才可能成为Contribution 2。status=`proposed_step2_3 / medium-low novelty confidence`。
+controls具有独立主效应时，才可能成为Contribution 2。status=`d14b_step4_6_audit / medium-low novelty confidence`。
 
 ### Joint Story
 
@@ -101,9 +102,9 @@ PCSD回答“一个unified decoder能表示哪些future-output sharing strategie
 policy提供可识别、无in-sample self-evaluation leakage的选择证据”。二者共同把multi-horizon统一从“同一模型
 输出多个长度”推进为“同一模型内部学习future targets应如何共享forecasting function”。
 
-[Execution Order] neutral A1 seed2021 -> neutral gate -> A6-natural sensitivity if authorized -> multi-seed decision ->
-D14-B authorization decision -> formal Step 4-6。A6 architecture/profile与global basis decoder共适配，因此A6 fail
-不能否定scale；neutral valid fail才关闭pair，A pass/B fail才允许PCSD单独返回Step 4。
+[Execution Order] D14-A three-seed gate已通过 -> D14-B source/theory/narrative Step 4-6 -> 只有D14-B gate-ready后才
+讨论implementation。A6 architecture/profile与global basis decoder共适配，因此GroupedMLP performance gap不否定
+scale；D14-B fail则关闭CCRL并让PCSD单独返回Step 4，target-only解释则关闭instance-adaptive claim。
 
 ### Closed Candidate: PRISM Decoder
 

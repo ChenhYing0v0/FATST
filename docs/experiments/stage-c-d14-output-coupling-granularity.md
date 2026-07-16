@@ -5,11 +5,11 @@
 | Field | Value |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D14-A1 dual-carrier seed2021 pass；seeds2022/2023 confirmation authorized |
+| `current_step` | D14-A1 three-seed Step 9-10 confirmed；D14-B returns Step 4-6 |
 | `role` | `diagnostic_only` |
 | `active_candidates` | provisional `SC1-PCSD` + `SC2-CCRL` |
 | `method_training` | false |
-| `remote_training` | seed2021 neutral 40/40 + A6 45/45 pass；confirmation=true；paper method=false |
+| `remote_training` | three seeds × (neutral 40 + A6 45) = 255/255 complete；D14-B design=true；implementation=false |
 | `test_access` | false |
 | `primary_carrier` | neutral train-only raw-history carrier |
 | `sensitivity_carrier` | A6-natural E2E architecture，只有neutral problem pass后才授权 |
@@ -155,6 +155,22 @@ validation-best fixed scale的oracle仍9.1504%，sample oracle相对validation-b
 
 [Decision] 授权seeds2022/2023 dual-carrier confirmation；multi-seed stable gate通过后才允许D14-B返回Step4-6设计。
 D14-B implementation、PCSD/CCRL method与test仍false。
+
+### A1 seeds2022/2023 confirmation returned
+
+本轮新增170/170 runs完成；与seed2021合并后，本地从原始artifacts独立重算three-seed gate。neutral与A6的
+function separation、carrier skill、stable crossing均为5/5 datasets。neutral strict oracle / sample-over-bin为
+7.1107% / 6.7948%，A6为9.1259% / 8.5990%。contiguity在两carrier均为4/5 stable datasets，macro分别
+0.4230% / 0.4667%；neutral ETTh2与A6 ETTh1没有达到2/3-seed稳定，因此contiguous grouping只能作为有根据的
+default与control，不能写成universal temporal law。
+
+A6 train-selected / validation-best GroupedMLP相对A6-LBF H720的three-seed macro仍为-2.6886% / -1.4879%。
+这确认了coupling-choice problem，而没有确认当前diagnostic head或PCSD method。所有invariants通过，未读取test。
+
+[Decision] `dual_carrier_confirmation_pass_authorize_d14b_design`。D14-A problem gate正式通过；只授权D14-B
+返回Step 4-6进行source-informed design、theory与narrative audit。D14-B implementation、paper method与test仍
+为false。完整报告见
+`analysis/stage_c_d14a1_dual_carrier_grouped_mlp_20260715/multiseed_confirmation_report.md`。
 
 ### Coupling scales
 

@@ -1,0 +1,42 @@
+{
+  "a6": {
+    "a6_lbf_performance_is_problem_gate": false,
+    "carrier": "a6_natural",
+    "carrier_skill_dataset_count": 5,
+    "confirmation_pass": true,
+    "contiguity_dataset_count": 4,
+    "contiguity_macro_gain": 0.004667257694776362,
+    "function_separation_dataset_count": 5,
+    "invariants_pass": true,
+    "sample_over_bin_policy_macro_gain": 0.0859901167496359,
+    "seed_count": 3,
+    "stable_crossing_dataset_count": 5,
+    "stable_seed_required": 2,
+    "strict_oracle_macro_gain": 0.09125918249404236
+  },
+  "a6_failure_can_reject_scale_hypothesis": false,
+  "decision": "dual_carrier_confirmation_pass_authorize_d14b_design",
+  "diagnostic_id": "SC-D14-A1",
+  "neutral": {
+    "a6_lbf_performance_is_problem_gate": false,
+    "carrier": "neutral_raw",
+    "carrier_skill_dataset_count": 5,
+    "confirmation_pass": true,
+    "contiguity_dataset_count": 4,
+    "contiguity_macro_gain": 0.0042300414382066215,
+    "function_separation_dataset_count": 5,
+    "invariants_pass": true,
+    "sample_over_bin_policy_macro_gain": 0.06794756807716355,
+    "seed_count": 3,
+    "stable_crossing_dataset_count": 5,
+    "stable_seed_required": 2,
+    "strict_oracle_macro_gain": 0.07110712793224198
+  },
+  "next_action": "return to D14-B Step 4-6; method implementation and test remain held",
+  "seeds": [
+    2021,
+    2022,
+    2023
+  ],
+  "test_used": false
+}
