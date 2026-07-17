@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SIFF/MCCA Step5 theory feasibility pass；Step6 source/control design next |
+| `current_step` | SIFF/MCCA Step6 source/method/control design 22/22 pass；Step7A local next |
 | `active_question` | scale-identifiable decoder与competitive projective credit能否同时保skill与specialization？ |
-| `active_candidates` | `SC1-SIFF`/`SC2-MCCA` theory-feasible；narrative/method unready |
+| `active_candidates` | `SC1-SIFF-v1`/`SC2-MCCA-v1` conditional narrative pass；not implemented |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/experiments/stage-c-post-pcc-siff-mcca.md` |
-| `method_implementation` | Step5 10/10；implementation/remote/test/confirmation=false |
-| `rollback_point` | Step5 proof fail -> Step4；generic width/OT/diversity explains -> redesign/close |
+| `method_implementation` | Step7A local authorized；remote/test/confirmation=false |
+| `rollback_point` | local contract fail -> Step6；generic width/independent/same-mass PCC/OT explains -> Step4 |
 
 ## Post-D11 Joint Mainline Reset
 
@@ -413,6 +413,27 @@ best-scope mass相对uniform增加`0.6667`，dominant-arm case minimum scope mas
 production rank/parameter/marginal也未冻结。decision=`step5_theory_pass_step6_source_design_next`；下一步Step6，不授权
 implementation、remote或test。详见
 `analysis/stage_c_post_pcc_step5_theory_20260717/step5_theory_feasibility.md`。
+
+## SIFF/MCCA Step6 Source-Informed Design
+
+external-first primary-source audit确认：DirMO/Stratify已覆盖固定block-size strategy；CViT/conditioned neural fields/
+HyperDeepONet覆盖coordinate-conditioned operators；BASE/Expert Choice/Selective Sinkhorn覆盖balanced assignment与
+expert capacity。因此SIFF不能claim coordinate field primitive，MCCA不能claim OT/Sinkhorn或anti-starvation primitive。
+
+production SIFF-v1固定$Q=2,D=4,K=256$：`hidden [B,C,R] -> component modes [B,C,Q,D,K] -> log-scale
+basis [S,Q] -> scale-indexed modes [B,C,S,D,K] -> existing scope pooling/shared synthesis`。Q1 exact containment与
+same-parameter constant control成立；Q1-wide和independent-scope integer-rank controls在五profiles上的最大parameter
+gap为`0.3893%`。params只作attribution，不作profile/candidate选择。
+
+MCCA-v1把batch-channel-target rows的projective mass与scope columns做log-domain I-projection。column marginal被定义为
+current PCC在同一progress下给予每个scope的**完全相同总skill mass**，所以方法差异只剩credit放置位置：PCC逐target
+均匀撒floor，MCCA在global coverage下竞争分配。float64/float32 marginal gap为`3.86e-10/1.04e-7`，same-mass gap
+`5.55e-17/2.98e-8`，22/22 design cases通过。
+
+Phase A冻结`PCSD/SIFF × EQUAL/PCC/MCCA`的$2\times3$ factorial，加SIFF constant/permuted、Q1-wide、independent、
+dense matched与pointwise/uniform-OT controls。narrative gate=`conditional_pass`，只授权Step7A local implementation；
+remote、confirmation和test均false。详见
+`analysis/stage_c_post_pcc_step6_design_20260717/step6_source_method_control_design.md`。
 
 ## SC1-JAPO Step 7A: Production Gate Passed, Step 8 Authorized
 

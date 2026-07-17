@@ -1,0 +1,153 @@
+{
+  "stage": "StageC-UVHF",
+  "current_step": "post-PCC Step6 source-informed method/control design",
+  "architecture_candidate": "SC1-SIFF-v1",
+  "training_candidate": "SC2-MCCA-v1",
+  "status": "step6_conditional_pass_step7a_local_authorized",
+  "test_informed": true,
+  "contract": {
+    "full_domain_length": 720,
+    "scopes": [1, 48, 144, 360, 720],
+    "requested_horizon_feature": false,
+    "full_output_then_prefix_crop": true,
+    "one_forward": true,
+    "one_stage_training": true,
+    "from_scratch_e2e": true,
+    "frozen_replacement": false,
+    "offline_teacher": false,
+    "ema_teacher": false,
+    "second_forward": false,
+    "test_used": false
+  },
+  "siff": {
+    "scale_coordinate": "log_s_over_log_T",
+    "scale_basis": ["constant", "centered_rms_normalized_linear"],
+    "components": 2,
+    "coordinate_dim": 4,
+    "mode_rank": 256,
+    "mode_weight_shape": "[Q,D,R,K]",
+    "mode_bias_shape": "[Q,D,K]",
+    "history_mode_shape": "[B,C,S,D,K]",
+    "scope_arm_shape": "[B,C,S,T]",
+    "shared_across_scales": [
+      "identity_synthesis[T,K]",
+      "nonlinear_synthesis[T,K]",
+      "temporal_bias[T]",
+      "policy_network"
+    ],
+    "q1_contains_pcsd": true,
+    "requested_horizon_enters_field": false,
+    "forecast_residual_path": false,
+    "initialization": {
+      "constant_component": "same_initialization_class_as_PCSD_mode_weight_and_bias",
+      "linear_component": "independent_zero_mean_same_fan_in_class",
+      "policy_logits": "zero_equal"
+    }
+  },
+  "mcca": {
+    "point_loss": "L1",
+    "capability_source": "detached_dense_prefix_risk_h1_h720_then_harmonic_transport",
+    "capability_temperature": 1.0,
+    "standardization_epsilon": 1e-6,
+    "ramp_fraction": 0.25,
+    "final_global_skill_floor": 0.2,
+    "row_units": "flattened_batch_channel_target",
+    "row_marginal": "omega_t_divided_by_batch_channel_count",
+    "column_marginal": "0.8_times_ramped_capability_marginal_plus_0.2_uniform",
+    "reference_measure": "row_marginal_times_ramped_capability",
+    "objective": "KL_I_projection_to_row_and_column_marginals",
+    "solver": "log_domain_sinkhorn",
+    "kernel_floor": 1e-8,
+    "iterations": 64,
+    "terminal_float32_gap_max": 2e-5,
+    "stop_gradient_assignment": true,
+    "lambda_skill": 1.0,
+    "lambda_route": 0.1,
+    "route_kl_normalization": "divide_by_log_scope_count",
+    "inference_graph_changed": false,
+    "generic_ot_novelty_claim": false
+  },
+  "controls": {
+    "core_factorial": {
+      "architectures": ["PCSD", "SIFF"],
+      "training": ["EQUAL_SKILL", "PCC_MIXED", "MCCA"],
+      "arms": [
+        "PCSD_EQUAL",
+        "PCSD_PCC",
+        "PCSD_MCCA",
+        "SIFF_EQUAL",
+        "SIFF_PCC",
+        "SIFF_MCCA"
+      ]
+    },
+    "architecture_attribution": [
+      "SIFF_CONST_MCCA",
+      "SIFF_PERMUTED_SCALE_MCCA",
+      "PCSD_Q1_WIDE_MCCA",
+      "INDEPENDENT_SCOPE_MATCHED_MCCA",
+      "DENSE_SIFF_MATCHED"
+    ],
+    "training_attribution": [
+      "PCSD_POINTWISE_MCCA",
+      "PCSD_UNIFORM_BALANCED_OT"
+    ],
+    "locked_references": ["A6_LBF_E2E", "PCSD_DIRECT", "DENSE_PCSD_MATCHED"],
+    "reusable_unchanged_training_references": ["PCSD_EQUAL", "PCSD_PCC"],
+    "parameter_matching": {
+      "selection_role": false,
+      "attribution_role": true,
+      "integer_rank_relative_gap_max": 0.005,
+      "q1_wide_rank_rule": "nearest_integer_matching_SIFF_field_parameters",
+      "independent_scope_rank_rule": "nearest_integer_matching_SIFF_field_parameters"
+    }
+  },
+  "phase_a": {
+    "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"],
+    "seed": 2021,
+    "evaluation_split": "validation",
+    "checkpoint_policy": "best-validation-h720-mse",
+    "primary_metric": "validation_dense_h1_h720_mse_auc",
+    "new_candidate_runs": 55,
+    "reference_reuse": "allowed_only_after_config_checkpoint_and_metric_hash_verification",
+    "confirmation_seeds_authorized": false,
+    "test_access_authorized": false
+  },
+  "gates": {
+    "scale_basis_constant_gap_max": 1e-12,
+    "scale_basis_linear_mean_max": 1e-12,
+    "scale_basis_linear_rms_gap_max": 1e-12,
+    "siff_containment_gap_max": 1e-10,
+    "siff_constant_control_gap_max": 1e-10,
+    "parameter_match_relative_gap_max": 0.005,
+    "sinkhorn_float64_gap_max": 1e-9,
+    "sinkhorn_float32_gap_max": 2e-5,
+    "pcc_mcca_column_mass_gap_max": 1e-7,
+    "mcca_kl_advantage_min": 1e-6,
+    "minimum_final_scope_mass": 0.04,
+    "gradient_norm_min": 1e-10,
+    "architecture_main_effect_dataset_wins_min": 3,
+    "architecture_main_effect_macro_gain_min": 0.003,
+    "mcca_over_pcc_dataset_wins_min": 3,
+    "mcca_over_pcc_macro_gain_min": 0.002,
+    "joint_over_a6_dataset_wins_min": 3,
+    "joint_over_a6_macro_gain_min": 0.003,
+    "pairwise_diversity_retention_fraction_min": 0.5,
+    "policy_normalized_entropy_min": 0.3,
+    "policy_usage_max": 0.9
+  },
+  "rollback": {
+    "siff_explained_by_const_or_width": "return_step4_architecture_problem",
+    "siff_explained_by_independent_experts": "narrow_claim_or_return_step4",
+    "mcca_explained_by_uniform_balanced_ot": "demote_mcca_to_control_and_return_step4_training",
+    "mcca_no_gain_over_same_mass_pcc": "reject_exact_mcca_and_return_step4_training",
+    "numeric_or_moving_target_pathology": "return_step5_solver_or_marginal_design",
+    "factorial_no_attributable_main_effect": "do_not_stack_mechanisms_return_step4",
+    "phase_a_pass": "authorize_step9_analysis_before_any_confirmation_or_test"
+  },
+  "authorization": {
+    "step7a_local_implementation": true,
+    "remote": false,
+    "confirmation_seeds": false,
+    "test": false
+  }
+}

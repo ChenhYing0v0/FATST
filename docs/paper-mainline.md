@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SIFF/MCCA Step5 theory feasibility pass；Step6 design next |
+| `current_11_step` | SIFF/MCCA Step6 source/method/control design 22/22 pass；Step7A local next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | exact PCSD/PCC closed；SIFF/MCCA theory-feasible but narrative/method unready |
+| `paper_core_status` | exact PCSD/PCC closed；SIFF-v1/MCCA-v1 conditional narrative pass，effectiveness unready |
 
 [Evaluation Rule] official test split现固定为paper-core effectiveness与Step9-10继续/回滚的primary gate；validation只
 负责checkpoint selection、普通超参数选择与低成本mechanism screen。每个冻结candidate version默认只做一次完整
@@ -176,19 +176,30 @@ Step7B最终45/45完成。full PCC相对A6为`+0.9627%`、3/5，相对plain为`+
 `20.57%-41.13%`。`EQUAL_SKILL`已解释full PCC相对A6 gain的88.90%。因此exact PCC-v1-TI status=
 `validation_screen_failed_exact_design`：不进入Phase B、confirmation或test，回Step4。
 
-### Joint Story
+### Active Contribution Pair After Step6
 
-原PCSD-CF/PCC pair现在只保留为problem evidence：前者暴露arm starvation，后者证明direct supervision可恢复skill，
-同时暴露same-label homogenization。provisional新pair把问题收紧为：(1) coupling scale作为decoder internal coordinate
-生成可辨识、连续共享的history operators；(2) all-prefix target measure与scope skill budget共同约束competitive credit。
-两者都不输入requested $H$。Step5的10/10 synthetic/algebra cases已通过，但production budget、generic controls与
-narrative boundary仍未完成Step6，不能写入paper claim。
+原PCSD-CF/PCC pair只保留为problem evidence：前者暴露arm starvation，后者证明direct supervision可恢复skill，
+同时暴露same-label homogenization。Step6已把新pair冻结为：
+
+1. `SC1-SIFF-v1`：固定$Q=2$的Scale-Indexed Forecast Field，用continuous log-scale basis从同一history生成
+   `modes [B,C,S,D,K]`，再经真实point/block/global pooling生成完整$T=720$ function；
+2. `SC2-MCCA-v1`：在all-prefix projective target measure下，把与PCC**完全相同的per-scope total skill mass**从
+   per-target uniform floor改为competitive target assignment。
+
+两者都不输入requested $H$，也不使用teacher、second forward或two-stage labels。conditioned neural fields、
+HyperDeepONet、DirMO/Stratify、BASE、Expert Choice与Sinkhorn已覆盖底层primitives，因此允许的paper claim只能是
+task-specific complete chain，不能把scale coordinate或balanced OT单独写成创新。
+
+Step6 22/22通过：SIFF Q1/constant containment成立；five-profile Q1-wide/independent matched controls最大parameter
+gap `0.3893%`；MCCA float32 marginal gap `1.04e-7`，与PCC same column mass gap `2.98e-8`。实验固定为
+`PCSD/SIFF × EQUAL/PCC/MCCA`的$2\times3$ factorial和七个归因controls。status=
+`conditional_narrative_pass / effectiveness_unready`；只授权Step7A local implementation。
 
 [Execution Order] D14-A problem confirmed -> CCRL retired -> PCSD-CF Step4-7 -> validation screen fail/credit clue ->
 PCC-v0 Step2-5 -> frozen PCSD-CF-v1 test audit fail-with-headroom -> Step6 prior-art rollback -> PCC-v1-TI nested-risk
 transport Step5b/6 pass -> Step7A 35/35 pass -> Step7B 45/45 validation screen -> prior specificity/diversity fail ->
-Step4 scale-identifiability/competitive-credit redesign -> SIFF/MCCA Step5 10/10 theory pass。下一步Step6
-source/control design；implementation、test、remote、confirmation false。
+Step4 scale-identifiability/competitive-credit redesign -> SIFF/MCCA Step5 10/10 theory pass -> Step6 22/22
+source/method/control pass。下一步Step7A local implementation；remote、test、confirmation false。
 
 ### Closed Candidate: PRISM Decoder
 
