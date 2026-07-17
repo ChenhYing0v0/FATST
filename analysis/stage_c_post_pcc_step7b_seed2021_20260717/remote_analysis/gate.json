@@ -1,0 +1,28 @@
+{
+  "candidate": "SC1-SIFF-v1/SC2-MCCA-v1",
+  "seed": 2021,
+  "expected_new_runs": 55,
+  "valid_new_runs": 55,
+  "valid_reference_runs": 25,
+  "complete": true,
+  "paired_encoder_initialization": true,
+  "test_used": false,
+  "gates": {
+    "architecture_main_effect": false,
+    "mcca_over_same_mass_pcc": false,
+    "joint_over_a6": false,
+    "diversity_and_policy": true,
+    "ordered_over_constant": false,
+    "ordered_over_permuted": true,
+    "mcca_over_uniform_ot": true
+  },
+  "method_pass": false,
+  "architecture_main_effect_macro_gain": -0.015014923547006167,
+  "architecture_main_effect_dataset_wins": 2,
+  "mcca_main_effect_macro_gain": -0.00024975410813933286,
+  "mcca_main_effect_dataset_wins": 2,
+  "diversity_retention_min": 2.5821543380769483,
+  "policy_normalized_entropy_min": 0.9693848677261153,
+  "policy_usage_max": 0.2574748915667708,
+  "decision": "phase_a_gate_fail_step9_failure_attribution_required"
+}

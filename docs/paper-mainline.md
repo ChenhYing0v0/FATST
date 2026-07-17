@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SIFF/MCCA Step8 / Step7B seed2021 validation 55-run remote running |
+| `current_11_step` | SC-D16-CTD Step5/6 design complete；Step7A local implementation next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | exact PCSD/PCC closed；SIFF-v1/MCCA-v1 implemented，conditional narrative pass，effectiveness pending |
+| `paper_core_status` | exact PCSD/PCC/SIFF/MCCA closed；PHMA standalone narrative fail；no active paper-core pair |
 
 [Evaluation Rule] official test split现固定为paper-core effectiveness与Step9-10继续/回滚的primary gate；validation只
 负责checkpoint selection、普通超参数选择与低成本mechanism screen。每个冻结candidate version默认只做一次完整
@@ -176,7 +176,7 @@ Step7B最终45/45完成。full PCC相对A6为`+0.9627%`、3/5，相对plain为`+
 `20.57%-41.13%`。`EQUAL_SKILL`已解释full PCC相对A6 gain的88.90%。因此exact PCC-v1-TI status=
 `validation_screen_failed_exact_design`：不进入Phase B、confirmation或test，回Step4。
 
-### Active Contribution Pair After Step6
+### Closed Contribution Pair: SIFF-v1 / MCCA-v1
 
 原PCSD-CF/PCC pair只保留为problem evidence：前者暴露arm starvation，后者证明direct supervision可恢复skill，
 同时暴露same-label homogenization。Step6已把新pair冻结为：
@@ -195,15 +195,59 @@ gap `0.3893%`；MCCA float32 marginal gap `1.04e-7`，与PCC same column mass ga
 `PCSD/SIFF × EQUAL/PCC/MCCA`的$2\times3$ factorial和七个归因controls。status=
 `conditional_narrative_pass / effectiveness_pending`。Step7A production gate随后36/36通过：Q1/A6 exact gap `0`，
 constant collapse `3.55e-15`，float32 MCCA marginal gap `4.47e-8`，same-mass PCC gap最大`2.78e-17`。Step7B
-prelaunch 8/8通过并冻结55个new runs；commit `7a9e5c7`已在GPU0/1/2启动seed2021 validation-only remote，
-test/confirmation仍false。
+prelaunch 8/8通过并冻结55个new runs；最终55/55 new与25/25 references均有效，test=false。
+
+Step9/10 formal result：
+
+- SIFF architecture main effect `-1.5015%`、2/5 datasets；
+- MCCA over same-mass PCC `-0.0250%`、2/5；
+- SIFF+MCCA over A6 `-0.5621%`、4/5；
+- ordered over permuted `+1.1177%`、5/5，但ordered未超过Q1-wide/independent macro gate；
+- PCSD MCCA over PCC为`-0.1092%`、0/5；transport over pointwise为`+0.4736%`、4/5，
+  capability marginal over uniform OT为`+0.1182%`、5/5。
+
+[Decision] exact SIFF-v1/MCCA-v1均关闭，不进入confirmation、Phase B或test。MCCA exact competition hypothesis
+被否定；transport与capability marginal只保留为ingredients。
+
+SIFF的失败存在明确short-prefix pathology：ETTm2 SIFF+MCCA相对PCSD+MCCA在H1为`-669.49%`，H720却为
+`+0.6013%`。dense all-prefix MSE AUC的target measure为：
+
+$$
+\frac1T\sum_{H=1}^{T}\frac1H\sum_{t\le H}e_t
+=\sum_{t=1}^{T}\left(\frac1T\sum_{H=t}^{T}\frac1H\right)e_t.
+$$
+
+code audit确认PCSD/SIFF EQUAL/PCC/MCCA的fused training loss已使用同一exact harmonic target measure，但
+error norm为L1；所有checkpoint仍按H720 MSE选择，primary screen是dense MSE AUC。因此architecture paired
+failure不能归因于flat training，未决边界收紧为Q2 readout optimization、L1/MSE mismatch或checkpoint selection。
+由于H1出现>100%局部恶化，formal status=
+`validation_screen_failed_exact_design / diagnostic_invalid_for_direction_rejection`：关闭exact v1 candidate，
+但在per-epoch trajectory audit前不关闭ordered scale-coordinate问题类。
+
+当前没有active contribution pair。`SC-D16` external-first audit已确认：NeurIPS 2024 ElasTST直接从uniform
+random horizon推导harmonic horizon reweighting，并在官方实现中同时用于training与weighted validation
+checkpoint；ICML 2024 Loss Shaping与ICLR 2026 QDF进一步覆盖per-step error shaping与non-uniform future-task
+weights。因此`SC2-PHMA`作为standalone contribution已被narrative gate否决。
+
+code audit同时否定了新增HR matrix的必要性：harmonic-L1 training本来就存在。保留的
+`SC-D16-CTD`仅为`diagnostic_only_checkpoint_trajectory_audit`：拟先在ETTm2上复跑
+PCSD-EQUAL/SIFF-EQUAL/SIFF-CONSTANT/Q1-WIDE四条完全matched trajectories，每epoch保存dense risk，并离线比较
+best-H720、best-dense-MSE与best-dense-MAE。只有dense checkpoint同时消除pathology并恢复architecture/control
+effect，才扩展five-dataset confirmation。
+
+Step5/6现已冻结20-epoch no-stop trajectory、three selected-state retention与kill gates：SIFF best-dense
+H1/PCSD ratio必须$\le2$，并同时超过PCSD、constant、Q1-wide，long-bin相对其own best-H720退化不得超过1%。
+decision=`diagnostic_design_pass_step7a_local_only`；当前implementation/remote/test均false。
 
 [Execution Order] D14-A problem confirmed -> CCRL retired -> PCSD-CF Step4-7 -> validation screen fail/credit clue ->
 PCC-v0 Step2-5 -> frozen PCSD-CF-v1 test audit fail-with-headroom -> Step6 prior-art rollback -> PCC-v1-TI nested-risk
 transport Step5b/6 pass -> Step7A 35/35 pass -> Step7B 45/45 validation screen -> prior specificity/diversity fail ->
 Step4 scale-identifiability/competitive-credit redesign -> SIFF/MCCA Step5 10/10 theory pass -> Step6 22/22
 source/method/control pass -> Step7A 36/36 implementation pass -> Step7B prelaunch 8/8 pass -> seed2021
-validation-only 55-run remote running。下一步等待完整artifacts后进入Step9；test、confirmation false。
+validation-only 55/55 complete -> Step9/10 exact pair fail -> short-prefix measure pathology audit ->
+SC-D16 source/code audit finds ElasTST prior and existing harmonic-L1 path -> PHMA/HR closed ->
+CTD Step5/6 design pass -> Step7A local tooling next。
+test、confirmation false。
 
 ### Closed Candidate: PRISM Decoder
 

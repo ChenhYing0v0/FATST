@@ -5,13 +5,56 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SIFF/MCCA Step8 / Step7B 55-run seed2021 validation remote running |
-| `active_question` | scale-identifiable decoder与competitive projective credit能否同时保skill与specialization？ |
-| `active_candidates` | `SC1-SIFF-v1`/`SC2-MCCA-v1` conditional narrative pass；production implemented，effectiveness pending |
+| `current_step` | SC-D16-CTD Step5/6 design complete；Step7A local implementation next |
+| `active_question` | H720 checkpoint是否丢弃了SIFF更健康的dense-risk epoch？ |
+| `active_candidates` | no paper-core candidate；`SC-D16-CTD` diagnostic_only |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `docs/experiments/stage-c-post-pcc-siff-mcca.md` |
-| `method_implementation` | Step7A complete；commit `7a9e5c7` GPU0/1/2 running；test/confirmation=false |
-| `rollback_point` | local contract fail -> Step6；generic width/independent/same-mass PCC/OT explains -> Step4 |
+| `active_protocol` | `analysis/stage_c_d16_ctd_step56_20260717/step56_diagnostic_design.md` |
+| `method_implementation` | false；four-run trajectory protocol frozen；Step7A tooling next |
+| `rollback_point` | trajectory fail -> Step2 close scale-field direction；pass -> five-dataset confirmation |
+
+## SIFF/MCCA Step 9–10 Result And Measure Rollback
+
+55/55 new validation runs与25/25 matched references通过protocol audit。SIFF architecture main effect为
+`-1.5015%`、2/5 datasets；MCCA相对same-mass PCC为`-0.0250%`、2/5；joint相对A6为
+`-0.5621%`、4/5。exact SIFF-v1/MCCA-v1均未通过Phase-A，confirmation、Phase B与test保持false。
+
+controls给出两个局部正信号：ordered SIFF相对permuted为`+1.1177%`、5/5；MCCA transport相对pointwise为
+`+0.4736%`、4/5，capability marginal相对uniform OT为`+0.1182%`、5/5。但ordered未超过Q1-wide/
+independent macro gate，PCSD MCCA相对PCC为0/5，因此这些结果不能挽救exact methods。
+
+failure attribution发现SIFF不是全面fit失败：ETTm2 SIFF+MCCA相对PCSD+MCCA在H1为`-669.49%`，H720却为
+`+0.6013%`。dense all-prefix AUC等价于target weight
+$w_t=T^{-1}\sum_{H=t}^{T}H^{-1}$。code audit随后确认PCSD/SIFF coupling arms的fused training loss已经使用
+exact harmonic target measure（L1），所以不能归因于flat training；未决问题是L1-vs-MSE与H720 checkpoint。
+
+decision：关闭exact SIFF-v1；因>100%局部pathology，不作scale-coordinate方向级否决。关闭exact MCCA-v1，
+保留transport/marginal ingredients。回滚Step4执行`SC-D16` external-first measure audit。
+
+source audit现已完成：NeurIPS 2024 ElasTST直接覆盖harmonic horizon reweighting与weighted checkpoint；
+Loss Shaping/QDF进一步覆盖future-step weighting。standalone PHMA narrative fail，新增HR arms也因现有training
+已exact harmonic而冗余。只保留`SC-D16-CTD diagnostic_only`：下一步Step5/6冻结ETTm2上的
+PCSD/SIFF/constant/Q1四条per-epoch trajectories；implementation/remote/test仍false。
+
+详见
+`analysis/stage_c_post_pcc_step7b_seed2021_20260717/step9_10_result_and_failure_attribution.md`。
+source audit见
+`analysis/stage_c_post_pcc_step4_measure_audit_20260717/source_informed_measure_audit.md`。
+
+## SC-D16-CTD Step 5/6 Design
+
+diagnostic已冻结为ETTm2 pathology-locus四条trajectory：
+`PCSD_EQUAL/SIFF_EQUAL/SIFF_CONSTANT_EQUAL/Q1_WIDE_EQUAL`。四arms共享seed2021、equal-skill exact
+harmonic-L1 objective、batch32与learning rate $10^{-4}$，固定运行20 epochs而不由H720 early stopping截断；
+每epoch一次full validation forward生成dense H1..720 MSE/MAE。
+
+同一trajectory离线选择`best_h720_mse`、`best_dense_mse_auc`与`best_dense_mae_auc`。只有SIFF best-dense
+同时移除H1>100% pathology、超过PCSD/constant/Q1且不以long-bin >1%退化换取，才允许five-dataset
+confirmation。若所有checkpoint rules下H1 ratio仍>2，回Step2关闭scale-field方向。
+
+decision=`diagnostic_design_pass_step7a_local_only`；下一步实现per-epoch evaluator与selected-state retention，
+remote/test仍false。详见
+`analysis/stage_c_d16_ctd_step56_20260717/step56_diagnostic_design.md`。
 
 ## Post-D11 Joint Mainline Reset
 

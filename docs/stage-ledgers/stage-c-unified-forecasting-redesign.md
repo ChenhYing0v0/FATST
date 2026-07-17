@@ -6,39 +6,39 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | decoder/operator 与 training principle 两项相互支撑的 paper-core innovations |
-| `active_question` | 如何同时保留coupling-scope identifiability、arm skill与projective multi-horizon credit？ |
+| `active_question` | SIFF short-prefix pathology来自H720 checkpoint selection，还是贯穿全部training trajectory？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | `SC1-SIFF-v1`/`SC2-MCCA-v1` Step8 / Step7B seed2021 remote running |
+| `active_candidates` | no paper-core candidate；`SC-D16-CTD` checkpoint-trajectory diagnostic only |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
-| `stage_rollback` | current rollback=Step4；scale-indexed field或competitive credit theory fail则继续Step4 redesign |
+| `stage_rollback` | PHMA/HR closed；SC-D16-CTD Step5/6 pass，Step7A local next |
 
 ## Decision Cursor
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SIFF/MCCA Step8 / Step7B 55-run seed2021 validation remote running |
-| `current_candidate` | `SC1-SIFF-v1` + `SC2-MCCA-v1` conditional narrative pass |
-| `latest_decision` | commit `7a9e5c7`、resource smoke通过；GPU0/1/2后台启动55 runs |
-| `next_required_action` | 不值守；等待用户通知完成后做55/55 completeness audit与Step9 attribution |
-| `method_training_authorized` | seed2021 validation remote=running；test/confirmation/Phase B=false |
-| `rollback_point` | local contract fail -> Step6；generic width/independent experts/same-mass PCC/OT explains -> Step4 |
+| `current_11_step` | SC-D16-CTD Step5/6 design complete；Step7A local implementation next |
+| `current_candidate` | no paper-core candidate；`SC-D16-CTD` diagnostic_only |
+| `latest_decision` | ETTm2 4 trajectories、20 epochs、3 checkpoint rules与pathology gates已冻结 |
+| `next_required_action` | implement per-epoch dense evaluator/state retention；run local identity/dry-run gates |
+| `method_training_authorized` | false；diagnostic implementation/remote/test/confirmation/Phase B=false |
+| `rollback_point` | trajectory fail -> Step2 close scale-field direction；pass -> five-dataset confirmation |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | PCC Step9/10 complete；SIFF/MCCA Step8 / Step7B remote running |
-| `problem` | same-label arm supervision修复skill但使shared-field scope outputs同质化，coupling identity与credit coverage冲突 |
+| `current_step` | SC-D16-CTD Step5/6 complete；Step7A local next |
+| `problem` | matched harmonic-L1 training下SIFF short-prefix显著退化；per-epoch dense trajectory未知 |
 | `existence_evidence` | three-seed neutral+A6 5/5 stable crossing；strict 7.1107%/9.1259%；instance 6.7948%/8.5990% |
-| `idea` | Q2 scale-indexed history modes + same-total-skill-mass competitive projective assignment |
-| `theory_check` | Step5 10/10；Step6 float32 marginal `1.04e-7`、same-mass gap `2.98e-8`、22/22 |
-| `design` | $Q=2,D=4,K=256$；batch-channel-target rows；log-domain I-projection；$2\times3$ factorial + 7 attribution controls |
-| `narrative_gate` | conditional pass；conditioned field/DirMO/balanced OT均只作primitive prior，complete-chain claim待effectiveness |
-| `effectiveness_gate` | PCC val vs A6 +0.9627%、3/5；vs prior +0.1050% fail；diversity retention 20.57%-41.13% fail |
-| `artifacts` | Step6 report/config；`analysis/stage_c_post_pcc_step7a_local_20260717/`；`analysis/stage_c_post_pcc_step7b_prelaunch_20260717/`；`configs/stage_c_post_pcc_step7b.json` |
-| `decision` | Step7A/prelaunch pass；commit `7a9e5c7` 55-run remote running；test/confirmation false |
+| `idea` | rerun exact ETTm2 trajectories并保存每epoch dense risk，隔离checkpoint vs readout failure |
+| `theory_check` | one-forward dense trajectory exact；3 counterfactual checkpoint rules；20-epoch no-stop rationale pass |
+| `design` | PCSD/SIFF/constant/Q1 × ETTm2 × seed2021；4 runs；MCCA excluded |
+| `narrative_gate` | standalone PHMA fail；SC-D16仅diagnostic，可绕过method narrative gate |
+| `effectiveness_gate` | SIFF main -1.5015%、2/5；MCCA main -0.0250%、2/5；joint -0.5621%、4/5；all fail |
+| `artifacts` | Step9/10 result；Step4 source/code audit；`analysis/stage_c_d16_ctd_step56_20260717/` |
+| `decision` | exact pair closed；CTD Step5/6 pass；Step7A local implementation next；remote/test=false |
 
 ## Frozen Carrier Contract
 
@@ -95,8 +95,9 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC2-ICC` | `superseded_by_pcc` | same-forward marginal coupling credit能否修复direct policy misallocation | working hypothesis已由D15-A收紧 | not implemented | historical name only |
 | `SC2-PCC-v0` | `superseded_pointwise_control` | pointwise same-forward capability + skill floor | expert loss与loss-teacher gate已有直接prior art | 15/15 theory cases；method untested | mandatory pointwise/prior controls only |
 | `SC2-PCC-v1-TI` | `validation_screen_failed_exact_design` | nested-prefix capability能否经harmonic incidence输运为target-coordinate credit | exact claim fail；generic/prior explains most gain | val vs A6 +0.9627%、3/5；vs prior +0.1050% fail；diversity fail | no Phase B/test/seeds；return Step4 |
-| `SC1-SIFF-v1` | `step7b_seed2021_remote_authorized` | coupling scale能否作为internal coordinate生成可辨识且连续共享的history modes | conditioned fields/DirMO覆盖primitive；完整fixed-past chain conditional pass | Step7A exact contracts pass；effectiveness pending | 55-run validation screen |
-| `SC2-MCCA-v1` | `step7b_seed2021_remote_authorized` | same total scope skill mass能否竞争性分配而避免per-target homogenization | BASE/Expert Choice/OT覆盖solver；same-mass projective chain conditional pass | Step7A numeric/gradient contracts pass；effectiveness pending | 55-run validation screen |
+| `SC1-SIFF-v1` | `validation_screen_failed_exact_design` | coupling scale能否作为internal coordinate生成可辨识且连续共享的history modes | complete-chain conditional pass | main -1.5015%、2/5；ordered>permuted 5/5；ETTm2 H1 -669.49%、H720 +0.60% | no seeds/test；direction rejection invalid；return Step4 |
+| `SC2-MCCA-v1` | `validation_screen_failed_exact_hypothesis` | same total scope skill mass能否竞争性分配而避免per-target homogenization | complete-chain conditional pass | main -0.0250%、2/5；PCSD vs PCC 0/5；transport 4/5、capability marginal 5/5 | exact competition closed；return Step4 |
+| `SC-D16-CTD` | `step6_design_pass_step7a_local_only` | H720 checkpoint是否丢弃healthy SIFF dense-risk epoch | diagnostic only；weighted checkpoint prior-covered | not implemented；test=false | implement trajectory tooling；remote false |
 | `SC-D14-A/B` | `a_confirmed_b_retired` | coupling crossing与conditional-risk predictability | A pass；B retired before implementation | A confirmed；B not run | A evidence retained；B closed |
 | `SC-D15-A` | `completed_training_blocked` | native PCSD-CF representation、direct trainability与credit-problem existence | Step4-6 conditional pass | 60/60；method fail；25/25 arm starvation | no confirmation；feeds PCC Step2-4 |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
@@ -159,6 +160,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | Fixed-past mainline reset | internal compression/failure audit + external decoder/memory/IB review | revision idea deferred；global compression boundary identified；CATS/query/global-local overlap mapped | provisional CADMO/CPGA；only D14 diagnostic authorized | `analysis/stage_c_fixed_past_mainline_reset_20260715/fixed_past_mainline_reconstruction.md` |
 | SIFF/MCCA Step7A production gate | production modules + 36 algebra/numeric/gradient/matched-rank cases | 36/36；Q1/A6 gap 0；float32 marginal `4.47e-8`；test=false | implementation pass；Step7B prelaunch | `analysis/stage_c_post_pcc_step7a_local_20260717/step7a_implementation_gate_report.md` |
 | SIFF/MCCA Step7B prelaunch | 55 CLI + model constructors + runner/evaluator/analyzer dry-run | 8/8 categories；dataset-major 3-worker matrix；test=false | seed2021 validation remote authorized | `analysis/stage_c_post_pcc_step7b_prelaunch_20260717/prelaunch_report.md` |
+| SIFF/MCCA Step9/10 result | 55 new + 25 matched references；factorial/control/horizon attribution | SIFF main -1.5015%；MCCA -0.0250%；joint -0.5621%；ETTm2 H1 pathology | exact pair closed；SIFF direction rejection invalid；MCCA hypothesis false；return Step4 | `analysis/stage_c_post_pcc_step7b_seed2021_20260717/step9_10_result_and_failure_attribution.md` |
+| SC-D16-CTD Step5/6 | source/code correction + trajectory theory/design | 4 ETTm2 arms；20 epochs；3 checkpoint rules；frozen pathology gates | `diagnostic_design_pass_step7a_local_only` | `analysis/stage_c_d16_ctd_step56_20260717/step56_diagnostic_design.md` |
 
 ## Pending Tasks
 
@@ -210,7 +213,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | PCC-v1-TI Step7A local implementation | `completed_pass` | 35/35；one-forward objective、CLI与adapter smoke通过；Step7B prelaunch next |
 | PCC-v1-TI Step7B prelaunch | `completed_pass` | 8/8；45 CLI；dataset-major runner、gradient/analyzer smoke通过；remote seed2021 authorized |
 | SIFF/MCCA Step7A production implementation | `completed_pass` | 36/36；production tensor/objective/control contracts通过 |
-| SIFF/MCCA Step7B remote screen | `running_no_watch` | commit `7a9e5c7`；GPU0/1/2；55-run validation-only；等待用户通知 |
+| SIFF/MCCA Step7B remote screen | `completed_fail_rollback_step4` | 55/55+25/25；exact pair closed；no test/seeds |
+| SC-D16-CTD trajectory diagnostic | `step6_design_complete` | four-run epoch/gates frozen；Step7A local tooling next；remote false |
 
 ## Paper Mainline Sync Log
 
@@ -275,6 +279,9 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-17 | SIFF/MCCA Step7A implementation | Current Position、Contribution 1/2、Experiment Logic | production code + exact/numeric/gradient evidence | 36/36 pass；effectiveness pending；Step7B prelaunch next |
 | 2026-07-17 | SIFF/MCCA Step7B prelaunch | Current Position、Experiment Logic | 55-run tooling + validation-only remote authorization | 8/8 pass；seed2021 remote launch next；test/confirmation false |
 | 2026-07-17 | SIFF/MCCA Step8 remote launch | Current Position、Experiment Logic | exact launch provenance + running state | commit `7a9e5c7`；GPU0/1/2；55-run validation matrix；test/confirmation false |
+| 2026-07-17 | SIFF/MCCA Step9/10 result | Current Position、Contribution 1/2、Experiment Logic | exact candidate closure + measure-mismatch rollback | 55/55；SIFF/MCCA main effects fail；short-prefix pathology blocks direction rejection；SC-D16 source audit next |
+| 2026-07-17 | SC-D16 Step4 source/code audit | Current Position、Contribution Boundary、Experiment Logic | attribution correction + diagnostic narrowing | harmonic-L1已在coupling training；PHMA/HR关闭；CTD four-run进入Step5/6 design only |
+| 2026-07-17 | SC-D16-CTD Step5/6 design | Current Position、Experiment Logic | trajectory/checkpoint gate freeze | ETTm2 four-run、20 epochs、three rules；Step7A local only；remote/test false |
 
 ## Continuation Rules
 
@@ -327,3 +334,12 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
     memory probe只作symmetric conditional diagnostic，不能充当method effectiveness gate。
 27. D12-v1因uniform normalized risk mismatch不能方向级否定；risk-aligned v2复用相同pilots后仅1/5支持，
     因此CAPE与joint PRISM route关闭、D12-B取消并回滚Step2。不得通过改rank、换pilot或PRISM-only probe绕过gate。
+28. SIFF/MCCA Phase-A已完成55/55 new + 25/25 references。exact SIFF-v1/MCCA-v1均关闭，不补seed、不test、
+    不调Q、Sinkhorn或capacity。
+29. `ordered > permuted` 5/5只证明scope order含信息；由于ordered未超过Q1-wide/independent的macro gate，
+    不得把该control单独升级为architecture contribution。
+30. ETTm2 SIFF-vs-PCSD在H1为-669.49%而H720为+0.60%，属于>100% short-prefix
+    `checkpoint_or_readout_pathology`；因此结果可关闭exact Q2 candidate，但trajectory audit前不得关闭方向。
+31. `SC-D16` source audit确认ElasTST已覆盖harmonic reweighting/weighted checkpoint；code audit确认coupling
+    arms已使用exact harmonic-L1 fused loss。HR rerun属于重复，只保留`SC-D16-CTD` per-epoch trajectory；
+    Step5/6冻结前不得实现或remote。

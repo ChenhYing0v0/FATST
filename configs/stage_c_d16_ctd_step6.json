@@ -1,0 +1,80 @@
+{
+  "diagnostic": "SC-D16-CTD",
+  "version": "v1",
+  "role": "diagnostic_only",
+  "current_step": "step6_design_frozen_step7a_local_next",
+  "dataset": "ETTm2",
+  "profile": "r2b_p48_d64_ff128_medium",
+  "seed": 2021,
+  "pred_len": 720,
+  "expected_runs": 4,
+  "arms": [
+    {
+      "id": "pcsd_equal_trajectory",
+      "readout_mode": "pcsd-coupling-field",
+      "objective_mode": "equal_skill"
+    },
+    {
+      "id": "siff_equal_trajectory",
+      "readout_mode": "siff-coupling-field",
+      "objective_mode": "equal_skill"
+    },
+    {
+      "id": "siff_constant_equal_trajectory",
+      "readout_mode": "siff-constant-control",
+      "objective_mode": "equal_skill"
+    },
+    {
+      "id": "q1_wide_equal_trajectory",
+      "readout_mode": "siff-q1-wide-control",
+      "objective_mode": "equal_skill"
+    }
+  ],
+  "training": {
+    "epochs": 20,
+    "early_stopping_enabled": false,
+    "reference_patience": 5,
+    "batch_size": 32,
+    "learning_rate": 0.0001,
+    "pred_loss_mode": "full",
+    "effective_fused_target_measure": "exact_dense_prefix_harmonic",
+    "effective_fused_error_norm": "l1",
+    "gradient_surgery": false
+  },
+  "trajectory_metrics": {
+    "evaluation_split": "val",
+    "evaluate_every_epoch": true,
+    "target_horizons": "dense_1_to_720",
+    "checkpoint_rules": [
+      "best_h720_mse",
+      "best_dense_mse_auc",
+      "best_dense_mae_auc"
+    ],
+    "retain_selected_states_only": true
+  },
+  "gates": {
+    "protocol_runs_required": 4,
+    "all_epochs_required": 20,
+    "test_used": false,
+    "original_best_h720_dense_auc_relative_tolerance": 0.005,
+    "siff_best_dense_h1_to_pcsd_ratio_max": 2.0,
+    "siff_best_dense_gain_over_pcsd_min": 0.0,
+    "siff_best_dense_gain_over_constant_min": 0.0,
+    "siff_best_dense_gain_over_q1_wide_min": 0.0,
+    "siff_long_bin_degradation_vs_own_best_h720_max": 0.01
+  },
+  "decision_rules": {
+    "all_rescue_gates_pass": "checkpoint_pathology_supported_five_dataset_confirmation_only",
+    "h1_recovers_but_controls_fail": "checkpoint_protocol_repair_siff_still_closed",
+    "h1_ratio_stays_above_two": "trajectory_readout_failure_return_step2_close_scale_field",
+    "protocol_or_numeric_failure": "diagnostic_invalid_redesign_step6"
+  },
+  "prohibitions": {
+    "test": true,
+    "mcca": true,
+    "hyperparameter_tuning": true,
+    "requested_h_input": true,
+    "paper_method_promotion": true,
+    "remote_before_step7a": true
+  }
+}

@@ -6,11 +6,13 @@
 | --- | --- |
 | `architecture_candidate` | `SC1-SIFF` |
 | `training_candidate` | `SC2-MCCA` |
-| `current_step` | Step8 / Step7B seed2021 validation-only 55-run remote running |
+| `current_step` | Step9/10 complete；rollback Step4 |
 | `problem_gate` | PCC arm recovery positive；same-label homogenization confirmed |
 | `theory_gate` | 10/10 pass |
 | `narrative_gate` | conditional pass |
-| `implementation/remote/test` | Step7A complete / commit `7a9e5c7` on GPU0/1/2 running / false |
+| `implementation/remote/test` | Step7A complete / 55/55 remote complete / false |
+| `effectiveness_gate` | SIFF main -1.5015%；MCCA main -0.0250%；joint -0.5621%；all fail |
+| `decision` | exact pair closed；SC-D16-CTD Step5/6 pass；Step7A local next |
 
 ## Candidate Contracts
 
@@ -65,6 +67,7 @@ attribution，不作dataset profile或candidate选择。
 - `analysis/stage_c_post_pcc_step7a_local_20260717/step7a_implementation_gate_report.md`；
 - `analysis/stage_c_post_pcc_step7b_prelaunch_20260717/prelaunch_report.md`；
 - `analysis/stage_c_post_pcc_step7b_prelaunch_20260717/remote_launch_record.md`；
+- `analysis/stage_c_post_pcc_step7b_seed2021_20260717/step9_10_result_and_failure_attribution.md`；
 - `configs/stage_c_post_pcc_step6.json`；
 - `configs/stage_c_post_pcc_step7b.json`。
 
@@ -77,4 +80,36 @@ five-profile matched-rank最大gap `0.383856%`；MCCA float64/float32 marginal g
 Step7B prelaunch 8/8 categories通过，冻结55个new runs。runner按dataset-major slow-first在3个GPU worker间调度，
 先执行Weather；每个run保存dense validation metrics、trained invariants与mechanism diagnostics。remote启动前必须完成
 resource smoke。`2026-07-17T14:59:22+08:00`已从commit `7a9e5c7`在GPU0/1/2启动；启动后不轮询值守，
-等待用户通知完成。test与confirmation seeds仍未授权。
+当时按约定等待用户通知，随后55/55完成。test与confirmation seeds始终未授权。
+
+## Step9/10 Result
+
+55/55 new runs与25/25 matched references通过protocol audit。SIFF architecture main effect为
+`-1.5015%`、2/5；MCCA over same-mass PCC为`-0.0250%`、2/5；joint over A6为`-0.5621%`、4/5。
+formal Phase-A gate失败，不运行confirmation、Phase B或test。
+
+ordered SIFF相对permuted为`+1.1177%`、5/5，说明scope order含信息；但Q1-wide/independent controls仍解释
+macro performance。PCSD MCCA相对PCC为0/5，关闭exact competitive assignment；transport over pointwise
+4/5与capability marginal over uniform OT 5/5只保留为ingredients。
+
+ETTm2 SIFF+MCCA相对PCSD+MCCA在H1为`-669.49%`，H720为`+0.6013%`。由于dense all-prefix AUC与flat
+H720 training/checkpoint measure不一致，该>100% short-prefix pathology只允许关闭exact SIFF-v1，不允许
+方向级否决scale-coordinate。下一步回Step4执行source/code audit；gate前不实现或remote。
+
+## Post-result Step4 Source Audit
+
+ElasTST（NeurIPS 2024）已直接从uniform random horizon推导harmonic horizon reweighting，其官方实现同时
+使用weighted training loss与weighted validation checkpoint。Loss Shaping Constraints（ICML 2024）与QDF
+（ICLR 2026）进一步覆盖per-step error distribution与non-uniform future-task weighting。
+
+code audit进一步确认：EQUAL/PCC/MCCA coupling arms的fused training loss已经使用exact harmonic target
+measure（L1）；新增HR training arms是重复。`SC2-PHMA`不得作为standalone Contribution 2。保留
+`SC-D16-CTD diagnostic_only`，拟在Step5/6冻结ETTm2上的PCSD/SIFF/constant/Q1四条per-epoch trajectories，
+区分H720 checkpoint selection与Q2 readout failure。当前implementation/remote/test=false。详见
+`analysis/stage_c_post_pcc_step4_measure_audit_20260717/source_informed_measure_audit.md`。
+
+SC-D16-CTD Step5/6随后冻结：ETTm2上PCSD/SIFF/constant/Q1四条equal-skill trajectories，固定20 epochs，
+每epoch保存dense MSE/MAE，并离线比较best-H720、best-dense-MSE与best-dense-MAE。只有H1 pathology消失、
+SIFF同时超过三个controls且long-bin退化不超过1%，才扩展five-dataset confirmation。当前只授权Step7A local
+tooling；remote/test=false。详见
+`analysis/stage_c_d16_ctd_step56_20260717/step56_diagnostic_design.md`。
