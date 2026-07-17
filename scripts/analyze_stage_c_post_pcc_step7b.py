@@ -165,8 +165,8 @@ def load_run(
         "h720_mse": h720_mse,
         "h720_mae": h720_mae,
         "readout_mode": adapter["readout_mode"],
-        "objective_mode": adapter["pcc_objective_mode"],
-        "mode_rank": adapter["pcsd_mode_rank"],
+        "objective_mode": adapter.get("pcc_objective_mode", "not_applicable"),
+        "mode_rank": adapter.get("pcsd_mode_rank", "not_applicable"),
         "encoder_initialization_hash": initialization.get(
             "encoder_initialization_hash", ""
         ),
