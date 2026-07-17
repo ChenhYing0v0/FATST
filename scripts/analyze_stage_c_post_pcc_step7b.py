@@ -106,6 +106,7 @@ def load_run(
     expected_readout: str | None = None,
     expected_objective: str | None = None,
     coupling: bool = False,
+    require_gradient: bool = True,
 ) -> dict[str, Any]:
     directory = run_dir(root, arm, dataset, seed)
     required = {
@@ -116,6 +117,7 @@ def load_run(
     }
     if coupling:
         required["diagnostics"] = directory / "pcsd_validation_diagnostics.npz"
+    if coupling and require_gradient:
         required["gradient"] = directory / "pcc_shared_gradient_diagnostics.json"
     missing = [name for name, path in required.items() if not path.is_file()]
     if missing:
@@ -148,7 +150,7 @@ def load_run(
             or adapter["pcc_objective_mode"] == expected_objective
         )
     )
-    if coupling:
+    if coupling and require_gradient:
         gradient = json.loads(required["gradient"].read_text(encoding="utf-8"))
         protocol_pass = protocol_pass and bool(
             gradient.get("pass") is True
@@ -457,6 +459,7 @@ def main() -> None:
             dataset,
             args.seed,
             coupling=arm == "pcsd_direct",
+            require_gradient=False,
         )
         for dataset in DATASETS
         for arm in PCSD_REFERENCES
