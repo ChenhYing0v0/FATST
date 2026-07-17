@@ -1,0 +1,19 @@
+{
+  "audit_id": "SC-RETRO-FAIR-T1",
+  "candidate_version": "SC-RETRO-FAIR-v1",
+  "categories": {
+    "profile_hash": true,
+    "matrix_size": true,
+    "unique_arms": true,
+    "comparison_references": true,
+    "checkpoint_rule": true,
+    "test_authorization": true,
+    "cli_contracts": true,
+    "model_construction": true,
+    "paired_encoder_initialization": true
+  },
+  "jobs": 70,
+  "construction_cases": 40,
+  "overall_pass": true,
+  "remote_authorized": true
+}

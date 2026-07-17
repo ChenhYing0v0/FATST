@@ -1,6 +1,6 @@
 {
   "protocol": "FATST-paper-facing-evaluation",
-  "version": "1.0",
+  "version": "1.1",
   "effective_date": "2026-07-17",
   "standard_long_term_forecasting": {
     "horizons": [96, 192, 336, 720],
@@ -17,8 +17,8 @@
   },
   "split_roles": {
     "train": "parameter_optimization_and_train_only_diagnostics",
-    "validation": "routine_development_checkpoint_selection_and_low_cost_screening",
-    "test": "frozen_candidate_milestone_effectiveness_main_result_and_formal_ablation"
+    "validation": "checkpoint_selection_hyperparameter_choice_debugging_and_explanatory_diagnostics_only",
+    "test": "formal_mechanism_effectiveness_main_result_and_formal_ablation"
   },
   "dense_evaluation": {
     "default_role": "diagnostic_and_unified_horizon_supporting_evidence",
@@ -32,7 +32,10 @@
     "primary_use_requires_preregistration": true
   },
   "test_audit": {
-    "continuous_feedback_forbidden": true,
+    "benchmark_role": "test_primary_test_informed_candidate_decision_surface",
+    "formal_mechanism_evaluation_requires_test": true,
+    "validation_cannot_pass_or_reject_mechanism": true,
+    "per_dataset_horizon_or_cell_tuning_forbidden": true,
     "freeze_before_access": [
       "candidate_version",
       "source_commit",
@@ -47,6 +50,17 @@
       "gates",
       "rollback_consequences"
     ],
-    "post_test_redesign_creates_test_informed_candidate": true
+    "post_test_redesign_creates_test_informed_candidate": true,
+    "untouched_holdout_claim_forbidden": true,
+    "risk_controls": [
+      "complete_frozen_matrix",
+      "negative_result_reporting",
+      "matched_controls",
+      "multi_seed_confirmation"
+    ]
+  },
+  "historical_checkpoint_fairness": {
+    "h720_only_checkpoint_must_be_retrained": true,
+    "matched_arms_share_four_horizon_validation_selector": true
   }
 }

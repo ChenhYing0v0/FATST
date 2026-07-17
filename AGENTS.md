@@ -353,9 +353,11 @@ actually ran.
   deviation is frozen before the run. The machine-readable project default is
   `configs/paper_facing_evaluation_protocol.json`.
 - Routine method development must use the validation split with the same
-  paper-facing horizon set. Rank candidates by preregistered paired relative
-  gains, macro gain, dataset wins, and the complete per-cell table; do not
-  average raw MSE or MAE across heterogeneous datasets as the sole gate.
+  paper-facing horizon set only for checkpoint selection, ordinary
+  hyperparameter choice, implementation debugging, and explanatory
+  diagnostics. A validation result must not pass or reject a forecasting
+  mechanism. Formal mechanism screening, main results, and formal ablations
+  must use the official test split and the complete preregistered matrix.
 - Dense horizon curves, dense-prefix AUC, horizon bins, per-epoch trajectories,
   gradients, and routing statistics are diagnostic or unified-horizon evidence
   by default. They must not silently replace the standard-horizon development
@@ -367,13 +369,16 @@ actually ran.
   iteration. Test labels must never select an epoch or checkpoint. For new
   unified-horizon candidates, the default checkpoint score is the mean
   validation MSE over `{96, 192, 336, 720}`; any normalization or alternative
-  score must be frozen in advance and shared by matched arms.
-- Test access is milestone-based rather than continuous. Before every test
-  audit, freeze and record the candidate version, architecture, objective,
-  dataset profiles, seeds, checkpoint rule, full comparison matrix, metrics,
-  gates, and rollback consequences. One frozen candidate version receives one
-  formal complete-matrix test audit unless the user explicitly authorizes a
-  separately documented exception.
+  score must be frozen in advance and shared by matched arms. Historical arms
+  selected by `H720` alone must be retrained under this four-horizon selector
+  before they enter a matched paper-facing comparison.
+- The official test split is the project's standard mechanism-effectiveness
+  and paper-facing benchmark surface. Before every formal mechanism evaluation,
+  freeze and record the candidate version, architecture, objective, dataset
+  profiles, seeds, checkpoint rule, full comparison matrix, metrics, gates,
+  and rollback consequences. This repeated benchmark use is explicitly
+  `test_informed`; do not describe later candidates or the final paper table as
+  based on an untouched holdout.
 - A test audit must evaluate the full preregistered dataset/horizon/control
   matrix and report negative results; it may not select only favorable
   datasets, horizons, arms, or seeds. Dataset-specific or horizon-specific
@@ -386,10 +391,11 @@ actually ran.
   require validation/train diagnostics and matched controls. A positive test
   result without attribution cannot establish the proposed mechanism; a
   validation/test reversal must be reported and audited rather than hidden.
-- The final model and all paper-facing ablations may share one official test
-  audit only after the full main/ablation matrix is frozen. Results from that
-  audit are paper evidence, not permission for iterative redesign on the same
-  test. Any subsequent redesign creates a new `test_informed` candidate.
+- The final model and all paper-facing ablations use the same standard test
+  scorecard. Any redesign after a test result creates a new `test_informed`
+  candidate and requires a newly frozen full matrix. Test feedback may motivate
+  a new hypothesis, but it must not trigger per-dataset, per-horizon, or
+  per-cell tuning.
 - Every test audit must record `test_access_date`, `user_authorization`,
   `candidate_version`, `checkpoint_hash`, `checkpoint_retrained`,
   `test_role`, `matrix_complete`, and the resulting Step 9-10 decision.

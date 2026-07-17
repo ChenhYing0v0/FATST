@@ -181,20 +181,22 @@ Ledger；Roadmap 只在该切换改变 11-step rollback 或阶段状态时更新
 
 ## Paper-Facing Evaluation 与 Milestone Test Audit 规则
 
-本项目将official test split固定为paper-core effectiveness与Step 9-10继续/回滚决策的主要性能证据。此前
-“test只在最终论文表格中使用”的规则废止；但test也不得退化为逐次调参反馈。固定职责如下：
+本项目将official test split固定为所有**正式机制评估**、paper-core effectiveness与Step 9-10继续/回滚决策的
+主要性能证据。此前“validation可以决定机制是否有效”以及“test只在最终论文表格中使用”的规则均废止。由于
+本项目已观察到明显的validation/test排序反转，validation不再承担机制pass/fail职责；但test也不得退化为逐
+dataset或逐horizon调参反馈。固定职责如下：
 
 | Split | 固定职责 | 禁止事项 |
 | --- | --- | --- |
 | Train | parameter optimization与train-only diagnostics | 伪装成generalization evidence |
-| Validation | 与论文horizon对齐的日常开发、early stopping、checkpoint与低成本机制筛选 | 把validation gain写成最终effectiveness |
-| Test | 冻结candidate version的里程碑effectiveness gate、main result与formal ablation | 选epoch、选checkpoint、逐次机制搜索或逐dataset/horizon反向调参 |
+| Validation | early stopping、checkpoint、普通超参数选择、implementation debugging与解释性diagnostics | 判定机制pass/fail；把validation gain写成effectiveness |
+| Test | 每个冻结candidate version的正式机制评估、effectiveness gate、main result与formal ablation | 选epoch、选checkpoint、逐dataset/horizon/cell反向调参 |
 
 ### 默认 paper-facing scorecard
 
-标准long-term forecasting任务默认使用$H\in\{96,192,336,720\}$。main result、formal ablation和常规
-validation development screen必须逐dataset、逐horizon报告MSE与MAE。若任务或dataset不支持该集合，必须在
-结果产生前冻结替代集合及原因。
+标准long-term forecasting任务默认使用$H\in\{96,192,336,720\}$。正式机制评估、main result与formal
+ablation必须在official test逐dataset、逐horizon报告MSE与MAE。validation使用同一集合选择checkpoint，
+但其排序不再作为机制有效性结论。若任务或dataset不支持该集合，必须在结果产生前冻结替代集合及原因。
 
 machine-readable默认协议保存在`configs/paper_facing_evaluation_protocol.json`。候选protocol可以增加更严格
 threshold或task-specific evidence，但不得静默删除该默认scorecard。
@@ -216,7 +218,8 @@ S_{\mathrm{val,std}}=\frac14\sum_{H\in\{96,192,336,720\}}L_{\mathrm{val}}(H).
 $$
 
 所有matched arms必须共享该规则。若要用baseline normalization、dense AUC或其他checkpoint score，必须在结果
-前说明其与paper claim的关系并预注册，不能在看到结果后切换。
+前说明其与paper claim的关系并预注册，不能在看到结果后切换。历史上只按validation H720选择的checkpoint不
+得直接进入新的matched paper-facing comparison；对应baseline与candidate必须按四horizon selector重新训练。
 
 ### Dense 与机制诊断的职责
 
@@ -229,7 +232,9 @@ H1..720 dense curve、dense-prefix AUC、horizon bins、per-epoch trajectory、g
 它们默认不替代四个标准horizon的常规ranking gate。若某项dense metric要成为primary method gate，必须由论文
 问题直接要求并在实验前冻结。历史dense结果保留，不因新规则被删除；重新评估时应标为retrospective diagnostic。
 
-每次test audit必须在访问test前完成文本与machine-readable preregistration，至少冻结：
+### Test-primary机制评估与test-informed边界
+
+每个正式机制评估都必须在访问test前完成文本与machine-readable preregistration，至少冻结：
 
 1. `candidate_version`、architecture/objective与source commit；
 2. dataset profiles、seeds、checkpoint policy及checkpoint hashes；
@@ -237,23 +242,25 @@ H1..720 dense curve、dense-prefix AUC、horizon bins、per-epoch trajectory、g
 4. `test_role`、用户授权日期、是否允许retraining以及访问次数；
 5. 各种结果对应的继续、confirmation、rollback或candidate-version升级动作。
 
-一个冻结candidate version默认只允许一次完整test audit。audit必须运行全部预注册dataset × arm × seed matrix，
-不得只报告正向dataset、horizon或control。test可以决定该version是否继续，但不能选择checkpoint，也不能直接用于
-per-dataset/per-horizon超参数优化。
+每个冻结candidate version运行一次完整test evaluation matrix。必须运行全部预注册dataset × arm × seed，
+不得只报告正向dataset、horizon或control。test决定该version是否继续，但不能选择checkpoint，也不能直接用于
+per-dataset/per-horizon/per-cell超参数优化。
 
 观察test后发生的任何architecture、objective、loss coefficient、training schedule或control变化，都必须创建新的
 candidate version，并标记`test_informed=true`及其具体来源。后续报告不得把official test重新描述为完全untouched。
-若确需对同一version重跑test，必须由用户显式授权，并记录原因、变化范围及是否只是artifact repair。
+本项目选择以official test作为统一benchmark decision surface，因此后续candidate默认都是`test_informed`；
+这提高了对当前chronological test distribution的决策相关性，但降低了“独立holdout”意义上的统计纯度。必须用
+完整冻结矩阵、negative-result reporting、matched controls与multi-seed confirmation约束adaptive test overfitting。
+若确需对同一version重跑test，仍须记录原因、变化范围及是否只是artifact repair。
 
 test performance是effectiveness的primary gate，但不是mechanism attribution的替代品：paper-core pass仍需
 validation/train diagnostics、matched capacity/random/equal controls与failure attribution。若validation与test排序
 反转，必须标记`validation_test_reversal`并优先检查split representativeness、checkpoint rule与seed stability，
 不得隐藏其中任一侧。
 
-最终模型与论文中的formal ablations可以在同一次完整official test audit中展示，但必须先一次性冻结main/ablation
-matrix。该结果用于论文报告，不授权根据某个test cell继续修改机制。若观察test后修改architecture、objective、
-loss coefficient、training schedule或control definition，新版本必须标记`test_informed=true`并重新经过
-narrative/design gate。
+最终模型与论文中的formal ablations使用同一标准test scorecard，并在运行前冻结main/ablation matrix。若观察
+test后修改architecture、objective、loss coefficient、training schedule或control definition，新版本必须标记
+`test_informed=true`、重新经过narrative/design gate，并重新冻结完整矩阵；不得只修补失败cell。
 
 每份test audit报告必须记录：`test_access_date`、`user_authorization`、`candidate_version`、`checkpoint_hash`、
 `checkpoint_retrained`、`test_role`、`matrix_complete`、test metrics、validation-test comparison及Step 9-10 decision。

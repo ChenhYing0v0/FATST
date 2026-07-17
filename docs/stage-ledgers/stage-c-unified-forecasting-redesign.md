@@ -6,40 +6,40 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | decoder/operator 与 training principle 两项相互支撑的 paper-core innovations |
-| `active_question` | SIFF standard-horizon failure来自H720 checkpoint selection，还是贯穿全部training trajectory？ |
+| `active_question` | PCSD/PCC/SIFF在四-horizon checkpoint与test-primary scorecard下的公平论文级表现如何？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | no paper-core candidate；`SC-D16-CTD` checkpoint-trajectory diagnostic only |
+| `active_candidates` | no paper-core candidate；`SC-RETRO-FAIR-v1` retrospective audit active；`SC-D16-CTD` paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
-| `stage_rollback` | PHMA/HR closed；SC-D16-CTD Step5/6 pass，Step7A local next |
+| `stage_rollback` | CTD design retained but paused；先完成PCSD/PCC/SIFF公平test重评估 |
 
 ## Decision Cursor
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SC-D16-CTD Step5/6 design complete；Step7A local implementation next |
-| `current_candidate` | no paper-core candidate；`SC-D16-CTD` diagnostic_only |
-| `latest_decision` | four-H重评估仍fail；ETTm2 4 trajectories、20 epochs、4 checkpoint rules已重冻结 |
-| `next_required_action` | implement per-epoch standard+dense evaluator/state retention；run local identity/dry-run gates |
-| `method_training_authorized` | false；diagnostic implementation/remote/test/confirmation/Phase B=false |
-| `rollback_point` | trajectory fail -> Step2 close scale-field direction；pass -> five-dataset confirmation |
+| `current_11_step` | SC-RETRO-FAIR-v1 Step7A local gate passed；Step7B remote next |
+| `current_candidate` | no paper-core candidate；fair retrospective audit only；CTD paused |
+| `latest_decision` | test固定为正式机制评估集；旧H720-selected arms必须按four-H selector重训 |
+| `next_required_action` | commit/push；3090 resource smoke；launch 14 arms × 5 datasets × seed2021 |
+| `method_training_authorized` | fair audit 70-run E2E+test authorized；new method/CTD/confirmation=false |
+| `rollback_point` | fair result归档exact mechanisms；positive arm仅进入seed2022/2023 confirmation |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | SC-D16-CTD Step5/6 complete；Step7A local next |
-| `problem` | SIFF four-H main -2.3509%，H96 -6.3186%、H720 +0.5698%；per-epoch trajectory未知 |
+| `current_step` | SC-RETRO-FAIR-v1 Step7A complete；Step7B remote next |
+| `problem` | 历史PCSD/PCC/SIFF使用best-H720与validation-heavy gate，无法公平回答paper-facing test表现 |
 | `existence_evidence` | three-seed neutral+A6 5/5 stable crossing；strict 7.1107%/9.1259%；instance 6.7948%/8.5990% |
-| `idea` | rerun exact ETTm2 trajectories并保存每epoch standard+dense risk，隔离checkpoint vs readout failure |
-| `theory_check` | one-forward standard/dense trajectory exact；4 checkpoint rules；20-epoch no-stop rationale pass |
-| `design` | PCSD/SIFF/constant/Q1 × ETTm2 × seed2021；4 runs；MCCA excluded |
-| `narrative_gate` | standalone PHMA fail；SC-D16仅diagnostic，可绕过method narrative gate |
-| `effectiveness_gate` | four-H SIFF -2.3509%、2/5；MCCA -0.1357%、1/5；joint -1.3325%、4/5；all fail |
-| `artifacts` | Step9/10 result；Step4 source/code audit；`analysis/stage_c_d16_ctd_step56_20260717/` |
-| `decision` | exact pair closed；CTD Step5/6 v1.1 refrozen；Step7A local implementation next；remote/test=false |
+| `idea` | 所有A6/PCSD/PCC/SIFF arms按同一four-H validation selector从头训练，正式效果统一看test four-H |
+| `theory_check` | test-primary解决observed split reversal；adaptive test overfit风险以test_informed+frozen matrix控制 |
+| `design` | 14 arms × 5 datasets × seed2021 = 70 runs；280 test cells；matched controls完整 |
+| `narrative_gate` | retrospective audit，不提升新method；可绕过method narrative gate |
+| `effectiveness_gate` | macro ≥0.3%、dataset wins≥3、horizon wins≥3、cell wins≥11；positive需two-seed confirmation |
+| `artifacts` | `configs/stage_c_fair_reaudit_v1.json`；`analysis/stage_c_fair_reaudit_v1_20260717/` |
+| `decision` | Step7A 9/9 categories pass；remote authorized；CTD paused |
 
 ## Frozen Carrier Contract
 
@@ -98,7 +98,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC2-PCC-v1-TI` | `validation_screen_failed_exact_design` | nested-prefix capability能否经harmonic incidence输运为target-coordinate credit | exact claim fail；generic/prior explains most gain | val vs A6 +0.9627%、3/5；vs prior +0.1050% fail；diversity fail | no Phase B/test/seeds；return Step4 |
 | `SC1-SIFF-v1` | `validation_screen_failed_exact_design` | coupling scale能否作为internal coordinate生成可辨识且连续共享的history modes | complete-chain conditional pass | four-H main -2.3509%、2/5；H96 -6.3186%、H720 +0.5698% | no seeds/test；direction rejection invalid；return Step4 |
 | `SC2-MCCA-v1` | `validation_screen_failed_exact_hypothesis` | same total scope skill mass能否竞争性分配而避免per-target homogenization | complete-chain conditional pass | four-H main -0.1357%、1/5；transport 4/5、capability marginal 5/5 | exact competition closed；return Step4 |
-| `SC-D16-CTD` | `step6_design_refrozen_v1_1_step7a_local_only` | H720 checkpoint是否丢弃healthy SIFF four-H epoch | diagnostic only；weighted checkpoint prior-covered | not implemented；test=false | implement standard+dense trajectory tooling；remote false |
+| `SC-D16-CTD` | `deferred_paused_by_user` | H720 checkpoint是否丢弃healthy SIFF four-H epoch | diagnostic only；weighted checkpoint prior-covered | not implemented | design retained；resume only after user authorization |
+| `SC-RETRO-FAIR-v1` | `step7a_pass_step7b_remote_authorized` | PCSD/PCC/SIFF在新checkpoint与test-primary规则下是否仍成立 | retrospective audit；not a method | 70 CLI、40 construction、9/9 categories pass | launch five-dataset seed2021 full test matrix |
 | `SC-D14-A/B` | `a_confirmed_b_retired` | coupling crossing与conditional-risk predictability | A pass；B retired before implementation | A confirmed；B not run | A evidence retained；B closed |
 | `SC-D15-A` | `completed_training_blocked` | native PCSD-CF representation、direct trainability与credit-problem existence | Step4-6 conditional pass | 60/60；method fail；25/25 arm starvation | no confirmation；feeds PCC Step2-4 |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
@@ -216,7 +217,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | PCC-v1-TI Step7B prelaunch | `completed_pass` | 8/8；45 CLI；dataset-major runner、gradient/analyzer smoke通过；remote seed2021 authorized |
 | SIFF/MCCA Step7A production implementation | `completed_pass` | 36/36；production tensor/objective/control contracts通过 |
 | SIFF/MCCA Step7B remote screen | `completed_fail_rollback_step4` | 55/55+25/25；exact pair closed；no test/seeds |
-| SC-D16-CTD trajectory diagnostic | `step6_design_refrozen_v1_1` | four-run standard+dense epoch/gates frozen；Step7A local tooling next；remote false |
+| SC-D16-CTD trajectory diagnostic | `paused_by_user` | design retained；Step7A/remote均不继续 |
+| PCSD/PCC/SIFF fair test re-audit | `step7a_pass_remote_next` | 14 arms × 5 datasets；four-H checkpoint；test-primary；70/70 CLI gate |
 
 ## Paper Mainline Sync Log
 
@@ -285,6 +287,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-17 | SC-D16 Step4 source/code audit | Current Position、Contribution Boundary、Experiment Logic | attribution correction + diagnostic narrowing | harmonic-L1已在coupling training；PHMA/HR关闭；CTD four-run进入Step5/6 design only |
 | 2026-07-17 | SC-D16-CTD Step5/6 design | Current Position、Experiment Logic | trajectory/checkpoint gate freeze | ETTm2 four-run、20 epochs、three rules；Step7A local only；remote/test false |
 | 2026-07-17 | paper-facing evaluation governance + retrospective audit | Evaluation Protocol、Current Position、Experiment Logic | four-H default + dense diagnostic boundary | SIFF/MCCA four-H仍fail；CTD v1.1改为best-standard primary；test false |
+| 2026-07-17 | test-primary governance + fair re-audit Step7A | Current Position、Candidate Queue、Evaluation Protocol | validation职责收缩 + CTD暂停 + 70-run matrix freeze | 9/9 local categories pass；remote test matrix authorized |
 
 ## Continuation Rules
 
@@ -293,7 +296,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 3. diagnostic failure必须区分 hypothesis、intervention、readout、numeric与capacity control；
 4. D2 formal5只在frozen A6 representation/head family下不支持depth grouping；当前PLGO不使用该设计，若未来
    重新提出end-to-end grouping method，必须作为新候选通过Step2-6；
-5. test reference只用于最终对比，不能参与设计选择。
+5. official test是正式机制评估与paper-facing primary gate；不得选择checkpoint或用于逐dataset/horizon/cell调参。
+   test后新candidate必须标记`test_informed`并重新冻结完整矩阵。
 6. D14-A0只匹配factor storage count而未匹配rank-manifold DoF；其exact negative不得关闭PCSD方向。A1必须
    先证明effective-capacity matching与minimum function contrast；A1仍失败则关闭pair，不继续换head。
 6. future mechanism screen固定使用ETTh1/ETTh2/ETTm1/ETTm2/Weather；五dataset不能替代三seed确认。
@@ -346,6 +350,6 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 31. `SC-D16` source audit确认ElasTST已覆盖harmonic reweighting/weighted checkpoint；code audit确认coupling
     arms已使用exact harmonic-L1 fused loss。HR rerun属于重复，只保留`SC-D16-CTD` per-epoch trajectory；
     Step5/6冻结前不得实现或remote。
-32. 常规development与paper main/ablation默认使用validation/test H96/H192/H336/H720 MSE/MAE；dense
-    H1..720默认只作diagnostic与unified-horizon补充。test只用于冻结candidate的完整milestone audit，不能作为
-    逐次机制搜索反馈。旧dense evidence保留，但candidate ranking按新scorecard回溯或前瞻重算。
+32. validation与test均使用H96/H192/H336/H720 MSE/MAE，但职责不同：validation只选checkpoint、
+    hyperparameter与做diagnostic；test统一决定正式机制effectiveness与paper main/ablation。dense H1..720默认
+    只作diagnostic。后续candidate均为`test_informed`，但禁止逐dataset/horizon/cell反向调参。

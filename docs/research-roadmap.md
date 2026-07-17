@@ -5,13 +5,28 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC-D16-CTD Step5/6 design complete；Step7A local implementation next |
-| `active_question` | H720 checkpoint是否丢弃了SIFF更健康的four-H epoch？ |
-| `active_candidates` | no paper-core candidate；`SC-D16-CTD` diagnostic_only |
+| `current_step` | SC-RETRO-FAIR-v1 Step7A local gate passed；Step7B remote next |
+| `active_question` | PCSD/PCC/SIFF在four-H checkpoint与test-primary规则下的公平表现如何？ |
+| `active_candidates` | no paper-core candidate；fair retrospective audit active；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_d16_ctd_step56_20260717/step56_diagnostic_design.md` |
-| `method_implementation` | false；four-run standard+dense trajectory protocol v1.1 frozen；Step7A tooling next |
-| `rollback_point` | trajectory fail -> Step2 close scale-field direction；pass -> five-dataset confirmation |
+| `active_protocol` | `analysis/stage_c_fair_reaudit_v1_20260717/preregistered_protocol.md` |
+| `method_implementation` | no new method；70-run matched historical re-audit authorized |
+| `rollback_point` | exact mechanisms按fair test归档；positive只授权seed2022/2023 confirmation |
+
+## Test-Primary Fair Historical Re-audit
+
+用户决定暂停CTD，先按最新规则公平评估PCSD、PCC与SIFF。规则现明确：validation只选择checkpoint与支持
+debug/diagnostic；正式机制pass/fail统一看official test的H96/H192/H336/H720。历史best-H720 checkpoints不直接
+复用，A6与所有candidate/control均from-scratch重训，并由四horizon validation MSE平均选择checkpoint。
+
+冻结矩阵包含14 arms × 5 datasets × seed2021，共70 runs与280 test cells。它同时覆盖A6→PCSD、PCC相对
+equal/prior controls、SIFF在equal/prior/PCC下相对PCSD，以及constant/permuted/Q1-wide/independent controls。
+Step7A已通过70 CLI、40 model construction、prefix identity、profile hash与paired Encoder initialization共9类
+gate。下一步commit/push后执行3090 resource smoke与remote matrix。
+
+由于test已成为统一benchmark decision surface，所有后续candidate均标记`test_informed`；项目不再声称test是
+untouched holdout。完整协议见
+`analysis/stage_c_fair_reaudit_v1_20260717/preregistered_protocol.md`。
 
 ## SIFF/MCCA Step 9–10 Result And Measure Rollback
 
@@ -68,6 +83,9 @@ rules下H1 ratio仍>2，回Step2关闭scale-field方向。
 decision=`diagnostic_design_pass_step7a_local_only`；下一步实现per-epoch evaluator与selected-state retention，
 remote/test仍false。详见
 `analysis/stage_c_d16_ctd_step56_20260717/step56_diagnostic_design.md`。
+
+[Pause] 2026-07-17用户明确暂停CTD。上述design与rollback边界保留，但Step7A、remote与test均不继续；当前cursor
+已切换到PCSD/PCC/SIFF公平重评估。
 
 ## Post-D11 Joint Mainline Reset
 

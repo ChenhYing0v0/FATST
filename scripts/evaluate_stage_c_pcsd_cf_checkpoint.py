@@ -113,6 +113,50 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         writer.writerows(rows)
 
 
+def expected_matrix_size(audit: dict[str, Any]) -> int:
+    matrix = audit["matrix"]
+    datasets = audit.get("datasets", matrix.get("datasets", []))
+    arms = audit.get("arms", matrix.get("arms", []))
+    seeds = audit.get("seeds")
+    if seeds is None:
+        seeds = [matrix["seed"]] if "seed" in matrix else []
+    return len(datasets) * len(arms) * len(seeds)
+
+
+def test_audit_authorized(audit: dict[str, Any]) -> bool:
+    authorization = audit["authorization"]
+    if audit.get("candidate_version") == "SC1-PCSD-CF-v1":
+        return bool(
+            audit["status"] in {
+                "authorized_prelaunch",
+                "completed_test_fail_with_arm_headroom",
+            }
+            and audit["matrix"]["expected_runs"] == 60
+            and authorization["user_authorized"] is True
+            and authorization["checkpoint_retraining_allowed"] is False
+            and authorization["checkpoint_selection"]
+            == "historical-best-validation-h720-mse"
+            and authorization["test_role"]
+            == "primary-milestone-effectiveness-gate"
+            and authorization["formal_test_access_count_for_version"] == 1
+        )
+    return bool(
+        audit.get("status") == "authorized_prelaunch"
+        and audit["matrix"]["expected_runs"] == expected_matrix_size(audit)
+        and authorization.get("user_authorized") is True
+        and authorization.get("authorization_date")
+        and authorization.get("test_role")
+        == "primary-mechanism-effectiveness-and-paper-benchmark"
+        and authorization.get("checkpoint_selection")
+        == "best-validation-mean-mse-h96-h192-h336-h720"
+        and authorization.get("checkpoint_retraining_allowed") is True
+        and authorization.get("checkpoint_mutation_during_test_allowed") is False
+        and authorization.get("per_dataset_horizon_or_cell_tuning_allowed")
+        is False
+        and authorization.get("formal_test_access_count_for_version") == 1
+    )
+
+
 def bin_reduce(
     values: torch.Tensor,
     bins: list[dict[str, Any]],
@@ -377,32 +421,31 @@ def evaluate(args: argparse.Namespace) -> None:
             metric_rows,
         )
 
-    test_authorized = args.evaluation_split == "val"
-    if test_audit is not None:
-        authorization = test_audit["authorization"]
-        test_authorized = bool(
-            test_audit["candidate_version"] == "SC1-PCSD-CF-v1"
-            and test_audit["status"] == "authorized_prelaunch"
-            and test_audit["matrix"]["expected_runs"] == 60
-            and authorization["user_authorized"] is True
-            and authorization["checkpoint_retraining_allowed"] is False
-            and authorization["checkpoint_selection"]
-            == "historical-best-validation-h720-mse"
-            and authorization["test_role"]
-            == "primary-milestone-effectiveness-gate"
-            and authorization["formal_test_access_count_for_version"] == 1
-        )
+    test_authorized = (
+        args.evaluation_split == "val"
+        or test_audit is not None
+        and test_audit_authorized(test_audit)
+    )
+    expected_validation_horizons = [720]
+    expected_final_split = "val"
+    if test_audit is not None and "training" in test_audit:
+        expected_validation_horizons = test_audit["training"][
+            "validation_horizons"
+        ]
+        expected_final_split = test_audit["training"][
+            "training_final_evaluation_split"
+        ]
 
     protocol_pass = bool(
         adapter["mode"] == "unified"
         and int(adapter["pred_len"]) == 720
         and adapter["target_horizons"] == [720]
-        and adapter["validation_horizons"] == [720]
+        and adapter["validation_horizons"] == expected_validation_horizons
         and adapter["checkpoint_policy"] == "best-val"
         and adapter["pred_loss_mode"] == "full"
         and adapter["protocol_class"] == "method_screening"
         and adapter["evaluation_prefix_mode"] == "full-crop"
-        and adapter["final_evaluation_split"] == "val"
+        and adapter["final_evaluation_split"] == expected_final_split
         and training_contract["initialization"] == "from_scratch"
         and training_contract["checkpoint_input"] is None
         and diagnostics["frozen_parameter_tensors"] == 0
@@ -426,15 +469,28 @@ def evaluate(args: argparse.Namespace) -> None:
             and diagnostics.get("pcsd_m0_mode_rank") == 256
         )
     elif hasattr(model, "pcsd_dense_readout"):
+        dense_gap_limit = design.get("gates", {}).get(
+            "dense_parameter_gap_max",
+            design.get("step7b_protocol", {}).get(
+                "dense_parameter_gap_max",
+                0.005,
+            ),
+        )
         readout_contract_pass = bool(
             initialization.get("pcsd_dense_initialization_hash")
             and diagnostics.get("pcsd_dense_parameter_relative_gap", 1.0)
-            <= design["step7b_protocol"]["dense_parameter_gap_max"]
+            <= dense_gap_limit
         )
 
     invariant = {
-        "candidate_id": design["candidate_id"],
-        "diagnostic_id": design["diagnostic_id"],
+        "candidate_id": design.get(
+            "candidate_id",
+            design.get("candidate_version", "PCSD-CF"),
+        ),
+        "diagnostic_id": design.get(
+            "diagnostic_id",
+            design.get("audit_id", "PCSD-CF-checkpoint-audit"),
+        ),
         "dataset": adapter["dataset"],
         "readout_mode": adapter["readout_mode"],
         "policy_mode": adapter.get("pcsd_policy_mode", "control"),
@@ -452,7 +508,13 @@ def evaluate(args: argparse.Namespace) -> None:
         "uses_test_split": args.evaluation_split == "test",
         "test_access_authorized": test_authorized,
         "checkpoint_sha256": file_sha256(args.run_dir / "checkpoint.pt"),
-        "checkpoint_retrained": False,
+        "checkpoint_retrained": bool(
+            test_audit is not None
+            and test_audit["authorization"].get(
+                "checkpoint_retraining_allowed",
+                False,
+            )
+        ),
         "pass": bool(
             all_finite
             and math.isfinite(prefix_gap)

@@ -2,7 +2,10 @@
   "diagnostic": "SC-D16-CTD",
   "version": "v1.1",
   "role": "diagnostic_only",
-  "current_step": "step6_design_frozen_step7a_local_next",
+  "current_step": "paused_by_user_before_step7a",
+  "status": "deferred_diagnostic_design_retained",
+  "pause_date": "2026-07-17",
+  "pause_reason": "fair paper-facing test reevaluation of PCSD PCC and SIFF takes precedence",
   "dataset": "ETTm2",
   "profile": "r2b_p48_d64_ff128_medium",
   "seed": 2021,
@@ -77,6 +80,7 @@
     "hyperparameter_tuning": true,
     "requested_h_input": true,
     "paper_method_promotion": true,
-    "remote_before_step7a": true
+    "remote_before_step7a": true,
+    "resume_without_user_authorization": true
   }
 }

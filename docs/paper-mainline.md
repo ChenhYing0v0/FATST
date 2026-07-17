@@ -7,18 +7,22 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC-D16-CTD Step5/6 design complete；Step7A local implementation next |
+| `current_11_step` | SC-RETRO-FAIR-v1 Step7A local pass；Step7B remote next；CTD paused |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | exact PCSD/PCC/SIFF/MCCA closed；PHMA standalone narrative fail；no active paper-core pair |
+| `paper_core_status` | no active paper-core pair；PCSD/PCC/SIFF exact conclusions正在fair test re-audit |
 
-[Evaluation Rule] official test split现固定为paper-core effectiveness与Step9-10继续/回滚的primary gate；validation只
-负责checkpoint selection、普通超参数选择与低成本mechanism screen。每个冻结candidate version默认只做一次完整
-test matrix；test后发生的architecture/objective/schedule变化必须升级version并标记`test_informed`，禁止按单一
-dataset或horizon反向调参。
+[Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
+primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
+pass/fail。默认checkpoint score为validation H96/H192/H336/H720 MSE平均。test已成为
+`test_informed benchmark decision surface`，不再声称untouched；禁止按dataset/horizon/cell反向调参。
+
+[Current Audit] CTD已按用户决定暂停。当前先对A6、PCSD、PCC、SIFF执行14 arms × 5 datasets × seed2021的
+from-scratch公平重评估。旧best-H720 checkpoints全部弃用；70 runs共享four-H selector并在test产生280个
+paper-facing cells。Step7A local gate 9/9 categories通过，remote launch next。
 
 ## Research Thesis
 
@@ -244,7 +248,7 @@ PCSD-EQUAL/SIFF-EQUAL/SIFF-CONSTANT/Q1-WIDE四条完全matched trajectories，�
 Step5/6 v1.1现已冻结20-epoch no-stop trajectory、four-rule deduplicated state retention与kill gates：SIFF
 best-standard H1/PCSD ratio必须$\le2$，并在四标准horizon同时超过PCSD、constant、Q1-wide，long-bin相对其
 own best-H720退化不得超过1%。decision=`diagnostic_design_refrozen_v1_1_step7a_local_only`；当前
-implementation/remote/test均false。
+implementation/remote/test均false。2026-07-17该diagnostic被用户暂停；design保留但不占active cursor。
 
 [Execution Order] D14-A problem confirmed -> CCRL retired -> PCSD-CF Step4-7 -> validation screen fail/credit clue ->
 PCC-v0 Step2-5 -> frozen PCSD-CF-v1 test audit fail-with-headroom -> Step6 prior-art rollback -> PCC-v1-TI nested-risk
@@ -253,7 +257,8 @@ Step4 scale-identifiability/competitive-credit redesign -> SIFF/MCCA Step5 10/10
 source/method/control pass -> Step7A 36/36 implementation pass -> Step7B prelaunch 8/8 pass -> seed2021
 validation-only 55/55 complete -> Step9/10 exact pair fail -> short-prefix measure pathology audit ->
 SC-D16 source/code audit finds ElasTST prior and existing harmonic-L1 path -> PHMA/HR closed ->
-CTD Step5/6 design pass -> Step7A local tooling next。
+CTD Step5/6 design pass -> user pauses CTD -> test-primary governance ->
+PCSD/PCC/SIFF 70-run fair re-audit Step7A pass -> Step7B remote next。
 test、confirmation false。
 
 ### Closed Candidate: PRISM Decoder
