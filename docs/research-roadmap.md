@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SIFF/MCCA Step7A 36/36 + Step7B prelaunch 8/8 pass；remote seed2021 launch next |
+| `current_step` | SIFF/MCCA Step8 / Step7B 55-run seed2021 validation remote running |
 | `active_question` | scale-identifiable decoder与competitive projective credit能否同时保skill与specialization？ |
 | `active_candidates` | `SC1-SIFF-v1`/`SC2-MCCA-v1` conditional narrative pass；production implemented，effectiveness pending |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/experiments/stage-c-post-pcc-siff-mcca.md` |
-| `method_implementation` | Step7A complete；seed2021 validation remote authorized；test/confirmation=false |
+| `method_implementation` | Step7A complete；commit `7a9e5c7` GPU0/1/2 running；test/confirmation=false |
 | `rollback_point` | local contract fail -> Step6；generic width/independent/same-mass PCC/OT explains -> Step4 |
 
 ## Post-D11 Joint Mainline Reset
@@ -444,7 +444,8 @@ effectiveness。
 
 Step7B prelaunch 8/8通过；冻结11 new arms × five datasets = 55 runs，复用未改变的`PCSD_EQUAL/PCSD_PCC`
 及A6/PCSD/dense references。seed2021 validation-only remote现已授权；test、confirmation与conditional Phase B仍为
-false。remote resource smoke失败回Step7A；55-run artifacts返回后进入Step9 attribution，不允许依据partial runs改设计。
+false。remote resource smoke已通过，55-run matrix于`2026-07-17T14:59:22+08:00`从commit `7a9e5c7`启动；
+artifacts返回后进入Step9 attribution，不允许依据partial runs改设计。
 详见`analysis/stage_c_post_pcc_step7a_local_20260717/step7a_implementation_gate_report.md`和
 `analysis/stage_c_post_pcc_step7b_prelaunch_20260717/prelaunch_report.md`。
 

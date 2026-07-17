@@ -9,7 +9,7 @@
 | `active_question` | 如何同时保留coupling-scope identifiability、arm skill与projective multi-horizon credit？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | `SC1-SIFF-v1`/`SC2-MCCA-v1` Step7A implemented；Step7B seed2021 validation remote authorized |
+| `active_candidates` | `SC1-SIFF-v1`/`SC2-MCCA-v1` Step8 / Step7B seed2021 remote running |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
 | `stage_rollback` | current rollback=Step4；scale-indexed field或competitive credit theory fail则继续Step4 redesign |
@@ -18,18 +18,18 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SIFF/MCCA Step7A 36/36 + Step7B prelaunch 8/8 pass；remote launch next |
+| `current_11_step` | SIFF/MCCA Step8 / Step7B 55-run seed2021 validation remote running |
 | `current_candidate` | `SC1-SIFF-v1` + `SC2-MCCA-v1` conditional narrative pass |
-| `latest_decision` | production/local contracts通过；55-run seed2021 validation matrix冻结并授权remote |
-| `next_required_action` | commit/push，remote git pull + GPU preflight + resource smoke +后台启动55 runs |
-| `method_training_authorized` | seed2021 validation remote=true；test/confirmation/Phase B=false |
+| `latest_decision` | commit `7a9e5c7`、resource smoke通过；GPU0/1/2后台启动55 runs |
+| `next_required_action` | 不值守；等待用户通知完成后做55/55 completeness audit与Step9 attribution |
+| `method_training_authorized` | seed2021 validation remote=running；test/confirmation/Phase B=false |
 | `rollback_point` | local contract fail -> Step6；generic width/independent experts/same-mass PCC/OT explains -> Step4 |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | PCC Step9/10 complete；SIFF/MCCA Step7A/prelaunch complete；Step7B launch next |
+| `current_step` | PCC Step9/10 complete；SIFF/MCCA Step8 / Step7B remote running |
 | `problem` | same-label arm supervision修复skill但使shared-field scope outputs同质化，coupling identity与credit coverage冲突 |
 | `existence_evidence` | three-seed neutral+A6 5/5 stable crossing；strict 7.1107%/9.1259%；instance 6.7948%/8.5990% |
 | `idea` | Q2 scale-indexed history modes + same-total-skill-mass competitive projective assignment |
@@ -38,7 +38,7 @@
 | `narrative_gate` | conditional pass；conditioned field/DirMO/balanced OT均只作primitive prior，complete-chain claim待effectiveness |
 | `effectiveness_gate` | PCC val vs A6 +0.9627%、3/5；vs prior +0.1050% fail；diversity retention 20.57%-41.13% fail |
 | `artifacts` | Step6 report/config；`analysis/stage_c_post_pcc_step7a_local_20260717/`；`analysis/stage_c_post_pcc_step7b_prelaunch_20260717/`；`configs/stage_c_post_pcc_step7b.json` |
-| `decision` | Step7A 36/36、prelaunch 8/8 pass；seed2021 validation remote authorized；test/confirmation false |
+| `decision` | Step7A/prelaunch pass；commit `7a9e5c7` 55-run remote running；test/confirmation false |
 
 ## Frozen Carrier Contract
 
@@ -210,7 +210,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | PCC-v1-TI Step7A local implementation | `completed_pass` | 35/35；one-forward objective、CLI与adapter smoke通过；Step7B prelaunch next |
 | PCC-v1-TI Step7B prelaunch | `completed_pass` | 8/8；45 CLI；dataset-major runner、gradient/analyzer smoke通过；remote seed2021 authorized |
 | SIFF/MCCA Step7A production implementation | `completed_pass` | 36/36；production tensor/objective/control contracts通过 |
-| SIFF/MCCA Step7B prelaunch | `completed_pass_remote_launch_next` | 8/8；55-run validation-only matrix冻结；commit/push + resource smoke next |
+| SIFF/MCCA Step7B remote screen | `running_no_watch` | commit `7a9e5c7`；GPU0/1/2；55-run validation-only；等待用户通知 |
 
 ## Paper Mainline Sync Log
 
@@ -274,6 +274,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-17 | SIFF/MCCA Step6 source/method/control design | Contribution 1/2、Boundary、Experiment Logic | Q2 field + same-mass I-projection + $2\times3$ factorial | 22/22 pass；Step7A local only；remote/test/confirmation false |
 | 2026-07-17 | SIFF/MCCA Step7A implementation | Current Position、Contribution 1/2、Experiment Logic | production code + exact/numeric/gradient evidence | 36/36 pass；effectiveness pending；Step7B prelaunch next |
 | 2026-07-17 | SIFF/MCCA Step7B prelaunch | Current Position、Experiment Logic | 55-run tooling + validation-only remote authorization | 8/8 pass；seed2021 remote launch next；test/confirmation false |
+| 2026-07-17 | SIFF/MCCA Step8 remote launch | Current Position、Experiment Logic | exact launch provenance + running state | commit `7a9e5c7`；GPU0/1/2；55-run validation matrix；test/confirmation false |
 
 ## Continuation Rules
 

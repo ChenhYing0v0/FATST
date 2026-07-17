@@ -6,11 +6,11 @@
 | --- | --- |
 | `architecture_candidate` | `SC1-SIFF` |
 | `training_candidate` | `SC2-MCCA` |
-| `current_step` | Step7A implementation 36/36 pass；Step7B prelaunch 8/8 pass；remote seed2021 launch next |
+| `current_step` | Step8 / Step7B seed2021 validation-only 55-run remote running |
 | `problem_gate` | PCC arm recovery positive；same-label homogenization confirmed |
 | `theory_gate` | 10/10 pass |
 | `narrative_gate` | conditional pass |
-| `implementation/remote/test` | Step7A complete / seed2021 validation-only authorized / false |
+| `implementation/remote/test` | Step7A complete / commit `7a9e5c7` on GPU0/1/2 running / false |
 
 ## Candidate Contracts
 
@@ -64,6 +64,7 @@ attribution，不作dataset profile或candidate选择。
 - `analysis/stage_c_post_pcc_step6_design_20260717/step6_source_method_control_design.md`；
 - `analysis/stage_c_post_pcc_step7a_local_20260717/step7a_implementation_gate_report.md`；
 - `analysis/stage_c_post_pcc_step7b_prelaunch_20260717/prelaunch_report.md`；
+- `analysis/stage_c_post_pcc_step7b_prelaunch_20260717/remote_launch_record.md`；
 - `configs/stage_c_post_pcc_step6.json`；
 - `configs/stage_c_post_pcc_step7b.json`。
 
@@ -75,4 +76,5 @@ five-profile matched-rank最大gap `0.383856%`；MCCA float64/float32 marginal g
 
 Step7B prelaunch 8/8 categories通过，冻结55个new runs。runner按dataset-major slow-first在3个GPU worker间调度，
 先执行Weather；每个run保存dense validation metrics、trained invariants与mechanism diagnostics。remote启动前必须完成
-resource smoke；启动后不轮询值守，等待用户通知完成。test与confirmation seeds仍未授权。
+resource smoke。`2026-07-17T14:59:22+08:00`已从commit `7a9e5c7`在GPU0/1/2启动；启动后不轮询值守，
+等待用户通知完成。test与confirmation seeds仍未授权。
