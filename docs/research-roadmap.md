@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC-RETRO-FAIR-v1 Step7A local gate passed；Step7B remote next |
+| `current_step` | SC-RETRO-FAIR-v1 Step8 remote running |
 | `active_question` | PCSD/PCC/SIFF在four-H checkpoint与test-primary规则下的公平表现如何？ |
 | `active_candidates` | no paper-core candidate；fair retrospective audit active；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_fair_reaudit_v1_20260717/preregistered_protocol.md` |
-| `method_implementation` | no new method；70-run matched historical re-audit authorized |
+| `method_implementation` | no new method；70-run matched historical re-audit running on GPU0/1/2 |
 | `rollback_point` | exact mechanisms按fair test归档；positive只授权seed2022/2023 confirmation |
 
 ## Test-Primary Fair Historical Re-audit
@@ -22,7 +22,8 @@ debug/diagnostic；正式机制pass/fail统一看official test的H96/H192/H336/H
 冻结矩阵包含14 arms × 5 datasets × seed2021，共70 runs与280 test cells。它同时覆盖A6→PCSD、PCC相对
 equal/prior controls、SIFF在equal/prior/PCC下相对PCSD，以及constant/permuted/Q1-wide/independent controls。
 Step7A已通过70 CLI、40 model construction、prefix identity、profile hash与paired Encoder initialization共9类
-gate。下一步commit/push后执行3090 resource smoke与remote matrix。
+gate。commit `d294aab`已推送；三张3090均空闲约24.1 GB，Weather × SIFF-PCC resource smoke通过。70-run
+matrix已于2026-07-17T21:45:08+08:00启动，等待完成后进入Step9/10。
 
 由于test已成为统一benchmark decision surface，所有后续candidate均标记`test_informed`；项目不再声称test是
 untouched holdout。完整协议见

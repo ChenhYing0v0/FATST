@@ -114,4 +114,5 @@ machine-readable结果：
 coupling-spectrum、credit assignment或scale-coordinate研究方向。若出现数值病态、checkpoint hash变化、
 matrix缺失或protocol mismatch，结论为artifact/protocol invalid；只允许修复相同version，不允许挑选正向cells。
 
-`next_action`: commit/push后检查3090 GPU，执行resource smoke，再启动70-run dataset-major remote matrix。
+`launch`: commit `d294aab`；三张3090 resource check与Weather × SIFF-PCC smoke通过；70-run matrix已于
+2026-07-17T21:45:08+08:00启动。`next_action`: 等待70/70完成后同步artifacts并执行Step9/10 analyzer。

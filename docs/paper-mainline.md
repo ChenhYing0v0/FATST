@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC-RETRO-FAIR-v1 Step7A local pass；Step7B remote next；CTD paused |
+| `current_11_step` | SC-RETRO-FAIR-v1 Step8 remote running；CTD paused |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -22,7 +22,7 @@ pass/fail。默认checkpoint score为validation H96/H192/H336/H720 MSE平均。t
 
 [Current Audit] CTD已按用户决定暂停。当前先对A6、PCSD、PCC、SIFF执行14 arms × 5 datasets × seed2021的
 from-scratch公平重评估。旧best-H720 checkpoints全部弃用；70 runs共享four-H selector并在test产生280个
-paper-facing cells。Step7A local gate 9/9 categories通过，remote launch next。
+paper-facing cells。Step7A local gate 9/9 categories通过；commit `d294aab`已在GPU0/1/2启动70-run matrix。
 
 ## Research Thesis
 
@@ -258,7 +258,7 @@ source/method/control pass -> Step7A 36/36 implementation pass -> Step7B prelaun
 validation-only 55/55 complete -> Step9/10 exact pair fail -> short-prefix measure pathology audit ->
 SC-D16 source/code audit finds ElasTST prior and existing harmonic-L1 path -> PHMA/HR closed ->
 CTD Step5/6 design pass -> user pauses CTD -> test-primary governance ->
-PCSD/PCC/SIFF 70-run fair re-audit Step7A pass -> Step7B remote next。
+PCSD/PCC/SIFF 70-run fair re-audit Step7A pass -> Step8 remote running。
 test、confirmation false。
 
 ### Closed Candidate: PRISM Decoder

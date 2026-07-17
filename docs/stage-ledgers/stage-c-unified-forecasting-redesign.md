@@ -19,10 +19,10 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SC-RETRO-FAIR-v1 Step7A local gate passed；Step7B remote next |
+| `current_11_step` | SC-RETRO-FAIR-v1 Step8 remote running |
 | `current_candidate` | no paper-core candidate；fair retrospective audit only；CTD paused |
-| `latest_decision` | test固定为正式机制评估集；旧H720-selected arms必须按four-H selector重训 |
-| `next_required_action` | commit/push；3090 resource smoke；launch 14 arms × 5 datasets × seed2021 |
+| `latest_decision` | commit d294aab；resource smoke pass；70-run fair test matrix launched on GPU0/1/2 |
+| `next_required_action` | wait for 70/70；sync artifacts；run Step9/10 analyzer |
 | `method_training_authorized` | fair audit 70-run E2E+test authorized；new method/CTD/confirmation=false |
 | `rollback_point` | fair result归档exact mechanisms；positive arm仅进入seed2022/2023 confirmation |
 
@@ -30,7 +30,7 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | SC-RETRO-FAIR-v1 Step7A complete；Step7B remote next |
+| `current_step` | SC-RETRO-FAIR-v1 Step8 remote running |
 | `problem` | 历史PCSD/PCC/SIFF使用best-H720与validation-heavy gate，无法公平回答paper-facing test表现 |
 | `existence_evidence` | three-seed neutral+A6 5/5 stable crossing；strict 7.1107%/9.1259%；instance 6.7948%/8.5990% |
 | `idea` | 所有A6/PCSD/PCC/SIFF arms按同一four-H validation selector从头训练，正式效果统一看test four-H |
@@ -39,7 +39,7 @@
 | `narrative_gate` | retrospective audit，不提升新method；可绕过method narrative gate |
 | `effectiveness_gate` | macro ≥0.3%、dataset wins≥3、horizon wins≥3、cell wins≥11；positive需two-seed confirmation |
 | `artifacts` | `configs/stage_c_fair_reaudit_v1.json`；`analysis/stage_c_fair_reaudit_v1_20260717/` |
-| `decision` | Step7A 9/9 categories pass；remote authorized；CTD paused |
+| `decision` | Step7A 9/9 categories pass；Step8 launched 2026-07-17T21:45:08+08:00；CTD paused |
 
 ## Frozen Carrier Contract
 
@@ -99,7 +99,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC1-SIFF-v1` | `validation_screen_failed_exact_design` | coupling scale能否作为internal coordinate生成可辨识且连续共享的history modes | complete-chain conditional pass | four-H main -2.3509%、2/5；H96 -6.3186%、H720 +0.5698% | no seeds/test；direction rejection invalid；return Step4 |
 | `SC2-MCCA-v1` | `validation_screen_failed_exact_hypothesis` | same total scope skill mass能否竞争性分配而避免per-target homogenization | complete-chain conditional pass | four-H main -0.1357%、1/5；transport 4/5、capability marginal 5/5 | exact competition closed；return Step4 |
 | `SC-D16-CTD` | `deferred_paused_by_user` | H720 checkpoint是否丢弃healthy SIFF four-H epoch | diagnostic only；weighted checkpoint prior-covered | not implemented | design retained；resume only after user authorization |
-| `SC-RETRO-FAIR-v1` | `step7a_pass_step7b_remote_authorized` | PCSD/PCC/SIFF在新checkpoint与test-primary规则下是否仍成立 | retrospective audit；not a method | 70 CLI、40 construction、9/9 categories pass | launch five-dataset seed2021 full test matrix |
+| `SC-RETRO-FAIR-v1` | `step8_remote_running` | PCSD/PCC/SIFF在新checkpoint与test-primary规则下是否仍成立 | retrospective audit；not a method | 70 CLI、40 construction、9/9 categories pass | wait 70/70 then Step9/10 |
 | `SC-D14-A/B` | `a_confirmed_b_retired` | coupling crossing与conditional-risk predictability | A pass；B retired before implementation | A confirmed；B not run | A evidence retained；B closed |
 | `SC-D15-A` | `completed_training_blocked` | native PCSD-CF representation、direct trainability与credit-problem existence | Step4-6 conditional pass | 60/60；method fail；25/25 arm starvation | no confirmation；feeds PCC Step2-4 |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
@@ -218,7 +218,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SIFF/MCCA Step7A production implementation | `completed_pass` | 36/36；production tensor/objective/control contracts通过 |
 | SIFF/MCCA Step7B remote screen | `completed_fail_rollback_step4` | 55/55+25/25；exact pair closed；no test/seeds |
 | SC-D16-CTD trajectory diagnostic | `paused_by_user` | design retained；Step7A/remote均不继续 |
-| PCSD/PCC/SIFF fair test re-audit | `step7a_pass_remote_next` | 14 arms × 5 datasets；four-H checkpoint；test-primary；70/70 CLI gate |
+| PCSD/PCC/SIFF fair test re-audit | `step8_remote_running` | commit d294aab；GPU0/1/2；14 arms × 5 datasets；test-primary |
 
 ## Paper Mainline Sync Log
 
@@ -288,6 +288,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-17 | SC-D16-CTD Step5/6 design | Current Position、Experiment Logic | trajectory/checkpoint gate freeze | ETTm2 four-run、20 epochs、three rules；Step7A local only；remote/test false |
 | 2026-07-17 | paper-facing evaluation governance + retrospective audit | Evaluation Protocol、Current Position、Experiment Logic | four-H default + dense diagnostic boundary | SIFF/MCCA four-H仍fail；CTD v1.1改为best-standard primary；test false |
 | 2026-07-17 | test-primary governance + fair re-audit Step7A | Current Position、Candidate Queue、Evaluation Protocol | validation职责收缩 + CTD暂停 + 70-run matrix freeze | 9/9 local categories pass；remote test matrix authorized |
+| 2026-07-17 | fair re-audit Step8 launch | Current Position、Experiment Ledger | resource smoke + launch provenance | commit d294aab；GPU0/1/2；70-run test-primary matrix running |
 
 ## Continuation Rules
 
