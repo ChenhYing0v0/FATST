@@ -16,6 +16,7 @@ from layers.PCSD import (
     PCSDDenseMatchedReadout,
     PCSDM0Readout,
 )
+from layers.SIFF import SIFFCouplingFieldReadout, siff_parameter_count
 from layers.StandardNorm import Normalize
 
 LEARNED_BASIS_READOUTS = {
@@ -83,6 +84,16 @@ PCSD_CONTROL_READOUTS = {
     "pcsd-coupling-field-m0",
     "pcsd-dense-nonlinear-matched",
 }
+SIFF_READOUT_CONFIG = {
+    "siff-coupling-field": (2, "ordered"),
+    "siff-constant-control": (2, "constant"),
+    "siff-permuted-scale-control": (2, "permuted"),
+    "siff-q1-wide-control": (1, "ordered"),
+    "siff-independent-scope-control": (5, "independent"),
+}
+SIFF_READOUTS = set(SIFF_READOUT_CONFIG)
+SIFF_CONTROL_READOUTS = {"siff-dense-nonlinear-matched"}
+COUPLING_READOUTS = PCSD_READOUTS | SIFF_READOUTS
 
 
 class PatchEmbed(nn.Module):
@@ -394,6 +405,8 @@ class Model(nn.Module):
             *GROUPED_MLP_READOUTS,
             *PCSD_READOUTS,
             *PCSD_CONTROL_READOUTS,
+            *SIFF_READOUTS,
+            *SIFF_CONTROL_READOUTS,
         }:
             raise ValueError(
                 "Clean TimeAlign supports only 'official' and "
@@ -407,6 +420,8 @@ class Model(nn.Module):
             | JAPO_READOUTS
             | PCSD_READOUTS
             | PCSD_CONTROL_READOUTS
+            | SIFF_READOUTS
+            | SIFF_CONTROL_READOUTS
             and self.pred_len != 720
         ):
             raise ValueError("StageC projective readouts require pred_len=720")
@@ -710,6 +725,34 @@ class Model(nn.Module):
                     getattr(configs, "pcsd_target_chunk_size", 128)
                 ),
             )
+        if self.readout_mode in SIFF_READOUTS:
+            scale_components, scale_basis_mode = SIFF_READOUT_CONFIG[
+                self.readout_mode
+            ]
+            self.pcsd_readout = SIFFCouplingFieldReadout(
+                readout_dim=readout_dim,
+                series_length=self.pred_len,
+                coordinate_dim=int(getattr(configs, "pcsd_coordinate_dim", 4)),
+                mode_rank=int(getattr(configs, "pcsd_mode_rank", 256)),
+                scale_components=scale_components,
+                scale_basis_mode=scale_basis_mode,
+                policy_history_dim=int(
+                    getattr(configs, "pcsd_policy_history_dim", 32)
+                ),
+                policy_hidden_dim=int(
+                    getattr(configs, "pcsd_policy_hidden_dim", 64)
+                ),
+                policy_mode=str(getattr(configs, "pcsd_policy_mode", "direct")),
+                fixed_scale=int(getattr(configs, "pcsd_fixed_scale", 720)),
+                partition=str(getattr(configs, "pcsd_partition", "canonical")),
+                partition_seed=int(getattr(configs, "pcsd_partition_seed", 15101)),
+                group_chunk_size=int(
+                    getattr(configs, "pcsd_group_chunk_size", 64)
+                ),
+                target_chunk_size=int(
+                    getattr(configs, "pcsd_target_chunk_size", 128)
+                ),
+            )
         if self.readout_mode == "pcsd-coupling-field-m0":
             self.pcsd_m0_readout = PCSDM0Readout(
                 readout_dim=readout_dim,
@@ -720,6 +763,26 @@ class Model(nn.Module):
             self.pcsd_dense_readout = PCSDDenseMatchedReadout(
                 readout_dim=readout_dim,
                 series_length=self.pred_len,
+            )
+        if self.readout_mode == "siff-dense-nonlinear-matched":
+            self.pcsd_dense_readout = PCSDDenseMatchedReadout(
+                readout_dim=readout_dim,
+                series_length=self.pred_len,
+                target_parameters=siff_parameter_count(
+                    readout_dim=readout_dim,
+                    series_length=self.pred_len,
+                    coordinate_dim=int(
+                        getattr(configs, "pcsd_coordinate_dim", 4)
+                    ),
+                    mode_rank=256,
+                    scale_components=2,
+                    policy_history_dim=int(
+                        getattr(configs, "pcsd_policy_history_dim", 32)
+                    ),
+                    policy_hidden_dim=int(
+                        getattr(configs, "pcsd_policy_hidden_dim", 64)
+                    ),
+                ),
             )
 
         self.normalization_x = Normalize(configs.enc_in, affine=False)
@@ -974,7 +1037,7 @@ class Model(nn.Module):
             output = self.japo_readout(hidden, target_prefix)
         elif self.readout_mode in GROUPED_MLP_READOUTS:
             output = self.grouped_mlp_readout(hidden, target_prefix)
-        elif self.readout_mode in PCSD_READOUTS:
+        elif self.readout_mode in COUPLING_READOUTS:
             if return_pcsd_training_details:
                 output, pcsd_arms, pcsd_policy = (
                     self.pcsd_readout.forward_with_diagnostics(
@@ -986,7 +1049,10 @@ class Model(nn.Module):
                 output = self.pcsd_readout(hidden, target_prefix)
         elif self.readout_mode == "pcsd-coupling-field-m0":
             output = self.pcsd_m0_readout(hidden, target_prefix)
-        elif self.readout_mode == "pcsd-dense-nonlinear-matched":
+        elif self.readout_mode in {
+            "pcsd-dense-nonlinear-matched",
+            "siff-dense-nonlinear-matched",
+        }:
             output = self.pcsd_dense_readout(hidden, target_prefix)
         else:
             raise ValueError(f"Unsupported readout mode: {self.readout_mode}")
@@ -1000,9 +1066,9 @@ class Model(nn.Module):
         result = (output[:, -self.pred_len :, :], recon, align_loss)
         if not return_pcsd_training_details:
             return result
-        if self.readout_mode not in PCSD_READOUTS:
+        if self.readout_mode not in COUPLING_READOUTS:
             raise ValueError(
-                "PCSD training details require readout_mode=pcsd-coupling-field"
+                "coupling training details require a PCSD/SIFF coupling readout"
             )
         if self.normalization_x.affine:
             raise RuntimeError("scoped PCSD denormalization expects affine=False")

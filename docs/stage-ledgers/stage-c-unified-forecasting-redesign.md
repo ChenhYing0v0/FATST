@@ -9,7 +9,7 @@
 | `active_question` | 如何同时保留coupling-scope identifiability、arm skill与projective multi-horizon credit？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | `SC1-SIFF-v1`/`SC2-MCCA-v1` Step6 conditional pass；Step7A local next |
+| `active_candidates` | `SC1-SIFF-v1`/`SC2-MCCA-v1` Step7A implemented；Step7B seed2021 validation remote authorized |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
 | `stage_rollback` | current rollback=Step4；scale-indexed field或competitive credit theory fail则继续Step4 redesign |
@@ -18,18 +18,18 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SIFF/MCCA Step6 design 22/22 pass；Step7A local implementation next |
+| `current_11_step` | SIFF/MCCA Step7A 36/36 + Step7B prelaunch 8/8 pass；remote launch next |
 | `current_candidate` | `SC1-SIFF-v1` + `SC2-MCCA-v1` conditional narrative pass |
-| `latest_decision` | Q2 field、same-mass I-projection与$2\times3$ factorial冻结；只授权Step7A local |
-| `next_required_action` | 实现SIFF/MCCA production modules、CLI、diagnostics与local code-theory gate |
-| `method_training_authorized` | Step7A local=true；remote/test/confirmation/Phase B=false |
+| `latest_decision` | production/local contracts通过；55-run seed2021 validation matrix冻结并授权remote |
+| `next_required_action` | commit/push，remote git pull + GPU preflight + resource smoke +后台启动55 runs |
+| `method_training_authorized` | seed2021 validation remote=true；test/confirmation/Phase B=false |
 | `rollback_point` | local contract fail -> Step6；generic width/independent experts/same-mass PCC/OT explains -> Step4 |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | PCC Step9/10 complete；SIFF/MCCA Step6 22/22 pass；Step7A local next |
+| `current_step` | PCC Step9/10 complete；SIFF/MCCA Step7A/prelaunch complete；Step7B launch next |
 | `problem` | same-label arm supervision修复skill但使shared-field scope outputs同质化，coupling identity与credit coverage冲突 |
 | `existence_evidence` | three-seed neutral+A6 5/5 stable crossing；strict 7.1107%/9.1259%；instance 6.7948%/8.5990% |
 | `idea` | Q2 scale-indexed history modes + same-total-skill-mass competitive projective assignment |
@@ -37,8 +37,8 @@
 | `design` | $Q=2,D=4,K=256$；batch-channel-target rows；log-domain I-projection；$2\times3$ factorial + 7 attribution controls |
 | `narrative_gate` | conditional pass；conditioned field/DirMO/balanced OT均只作primitive prior，complete-chain claim待effectiveness |
 | `effectiveness_gate` | PCC val vs A6 +0.9627%、3/5；vs prior +0.1050% fail；diversity retention 20.57%-41.13% fail |
-| `artifacts` | `analysis/stage_c_post_pcc_step6_design_20260717/step6_source_method_control_design.md`；`configs/stage_c_post_pcc_step6.json`；`analysis/stage_c_post_pcc_step6_design_20260717/local_gate.json` |
-| `decision` | Step6 conditional pass；Step7A local true；remote/validation training/test/confirmation false |
+| `artifacts` | Step6 report/config；`analysis/stage_c_post_pcc_step7a_local_20260717/`；`analysis/stage_c_post_pcc_step7b_prelaunch_20260717/`；`configs/stage_c_post_pcc_step7b.json` |
+| `decision` | Step7A 36/36、prelaunch 8/8 pass；seed2021 validation remote authorized；test/confirmation false |
 
 ## Frozen Carrier Contract
 
@@ -95,8 +95,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC2-ICC` | `superseded_by_pcc` | same-forward marginal coupling credit能否修复direct policy misallocation | working hypothesis已由D15-A收紧 | not implemented | historical name only |
 | `SC2-PCC-v0` | `superseded_pointwise_control` | pointwise same-forward capability + skill floor | expert loss与loss-teacher gate已有直接prior art | 15/15 theory cases；method untested | mandatory pointwise/prior controls only |
 | `SC2-PCC-v1-TI` | `validation_screen_failed_exact_design` | nested-prefix capability能否经harmonic incidence输运为target-coordinate credit | exact claim fail；generic/prior explains most gain | val vs A6 +0.9627%、3/5；vs prior +0.1050% fail；diversity fail | no Phase B/test/seeds；return Step4 |
-| `SC1-SIFF-v1` | `step6_conditional_pass_step7a_next` | coupling scale能否作为internal coordinate生成可辨识且连续共享的history modes | conditioned fields/DirMO覆盖primitive；完整fixed-past chain conditional pass | Q2/Q1/constant/matched-rank design pass；not implemented | Step7A local implementation |
-| `SC2-MCCA-v1` | `step6_conditional_pass_step7a_next` | same total scope skill mass能否竞争性分配而避免per-target homogenization | BASE/Expert Choice/OT覆盖solver；same-mass projective chain conditional pass | float32/64 marginals、same-mass identity、KL witness pass；not implemented | Step7A local implementation |
+| `SC1-SIFF-v1` | `step7b_seed2021_remote_authorized` | coupling scale能否作为internal coordinate生成可辨识且连续共享的history modes | conditioned fields/DirMO覆盖primitive；完整fixed-past chain conditional pass | Step7A exact contracts pass；effectiveness pending | 55-run validation screen |
+| `SC2-MCCA-v1` | `step7b_seed2021_remote_authorized` | same total scope skill mass能否竞争性分配而避免per-target homogenization | BASE/Expert Choice/OT覆盖solver；same-mass projective chain conditional pass | Step7A numeric/gradient contracts pass；effectiveness pending | 55-run validation screen |
 | `SC-D14-A/B` | `a_confirmed_b_retired` | coupling crossing与conditional-risk predictability | A pass；B retired before implementation | A confirmed；B not run | A evidence retained；B closed |
 | `SC-D15-A` | `completed_training_blocked` | native PCSD-CF representation、direct trainability与credit-problem existence | Step4-6 conditional pass | 60/60；method fail；25/25 arm starvation | no confirmation；feeds PCC Step2-4 |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
@@ -157,6 +157,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-D11 remote responsibility gate | 5 datasets × 3 A6 checkpoints；train/validation；MSE/L1；RGNB/DCT/3 random | strict conflict 0/5；support-specific 2/5；generic redistribution 3/5；same-component cross-regime negative=0 | `transform_generic_pressure_sc2_only`；SC1回Step2暂停；SC2仅Step1-3 audit | `analysis/stage_c_sc1_d11_future_component_responsibility_20260715/d11_result_and_rollback.md` |
 | Post-D12 systematic mainline audit | D3-D12 synthesis + external primary-source audit + theory/narrative review | retained support geometry；closed scale/conflict/frame explanations；Forking-Sequences/stability/operator overlap mapped | provisional NIFRO/IARL pair；D13-A only authorized | `analysis/stage_c_post_d12_revision_surface_mainline_20260715/systematic_review_and_mainline_redesign.md` |
 | Fixed-past mainline reset | internal compression/failure audit + external decoder/memory/IB review | revision idea deferred；global compression boundary identified；CATS/query/global-local overlap mapped | provisional CADMO/CPGA；only D14 diagnostic authorized | `analysis/stage_c_fixed_past_mainline_reset_20260715/fixed_past_mainline_reconstruction.md` |
+| SIFF/MCCA Step7A production gate | production modules + 36 algebra/numeric/gradient/matched-rank cases | 36/36；Q1/A6 gap 0；float32 marginal `4.47e-8`；test=false | implementation pass；Step7B prelaunch | `analysis/stage_c_post_pcc_step7a_local_20260717/step7a_implementation_gate_report.md` |
+| SIFF/MCCA Step7B prelaunch | 55 CLI + model constructors + runner/evaluator/analyzer dry-run | 8/8 categories；dataset-major 3-worker matrix；test=false | seed2021 validation remote authorized | `analysis/stage_c_post_pcc_step7b_prelaunch_20260717/prelaunch_report.md` |
 
 ## Pending Tasks
 
@@ -207,6 +209,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | PCSD-CF native architecture reset | `step10_training_blocked` | 60/60 result；DIRECT vs A6 0/5；25/25 arm starvation；PCC Step5 conditional pass |
 | PCC-v1-TI Step7A local implementation | `completed_pass` | 35/35；one-forward objective、CLI与adapter smoke通过；Step7B prelaunch next |
 | PCC-v1-TI Step7B prelaunch | `completed_pass` | 8/8；45 CLI；dataset-major runner、gradient/analyzer smoke通过；remote seed2021 authorized |
+| SIFF/MCCA Step7A production implementation | `completed_pass` | 36/36；production tensor/objective/control contracts通过 |
+| SIFF/MCCA Step7B prelaunch | `completed_pass_remote_launch_next` | 8/8；55-run validation-only matrix冻结；commit/push + resource smoke next |
 
 ## Paper Mainline Sync Log
 
@@ -268,6 +272,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-17 | PCC-v1-TI Step9/10 + Step4 rollback | Current Position、Contribution 1/2、Experiment Logic | specificity/diversity failure attribution + source-informed redesign | 45/45；vs A6 +0.9627%；prior/diversity fail；new pair Step5 theory only |
 | 2026-07-17 | SIFF/MCCA Step5 theory feasibility | Contribution 1/2、Experiment Logic | containment/projectivity + balanced competitive allocation | 10/10 pass；Step6 only；implementation/remote/test false |
 | 2026-07-17 | SIFF/MCCA Step6 source/method/control design | Contribution 1/2、Boundary、Experiment Logic | Q2 field + same-mass I-projection + $2\times3$ factorial | 22/22 pass；Step7A local only；remote/test/confirmation false |
+| 2026-07-17 | SIFF/MCCA Step7A implementation | Current Position、Contribution 1/2、Experiment Logic | production code + exact/numeric/gradient evidence | 36/36 pass；effectiveness pending；Step7B prelaunch next |
+| 2026-07-17 | SIFF/MCCA Step7B prelaunch | Current Position、Experiment Logic | 55-run tooling + validation-only remote authorization | 8/8 pass；seed2021 remote launch next；test/confirmation false |
 
 ## Continuation Rules
 

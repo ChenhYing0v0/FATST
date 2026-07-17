@@ -31,7 +31,14 @@ from layers.PCC import (  # noqa: E402
     PCC_SKILL_WEIGHT,
     PCC_STANDARDIZATION_EPSILON,
     PCC_TEMPERATURE,
+    prefix_measure,
     projective_coupling_credit_loss,
+)
+from layers.MCCA import (  # noqa: E402
+    MCCA_KERNEL_FLOOR,
+    MCCA_OBJECTIVE_MODES,
+    MCCA_SINKHORN_ITERATIONS,
+    measure_constrained_competitive_loss,
 )
 from models import TimeAlign  # noqa: E402
 from utils.metrics import MAE, MSE  # noqa: E402
@@ -72,6 +79,12 @@ PREFIX_READOUT_MODES = {
     "pcsd-coupling-field",
     "pcsd-coupling-field-m0",
     "pcsd-dense-nonlinear-matched",
+    "siff-coupling-field",
+    "siff-constant-control",
+    "siff-permuted-scale-control",
+    "siff-q1-wide-control",
+    "siff-independent-scope-control",
+    "siff-dense-nonlinear-matched",
 }
 
 STAGE_C_ACTIVE_READOUTS = {
@@ -96,6 +109,12 @@ STAGE_C_ACTIVE_READOUTS = {
     "pcsd-coupling-field",
     "pcsd-coupling-field-m0",
     "pcsd-dense-nonlinear-matched",
+    "siff-coupling-field",
+    "siff-constant-control",
+    "siff-permuted-scale-control",
+    "siff-q1-wide-control",
+    "siff-independent-scope-control",
+    "siff-dense-nonlinear-matched",
 }
 
 ACTIVE_STAGE_C_CONTRACT = {
@@ -544,6 +563,19 @@ def initialization_contract(model: nn.Module) -> dict[str, Any]:
                 "pcsd_initial_scope_usage": usage.detach().cpu().tolist(),
             }
         )
+        if hasattr(readout, "scale_basis"):
+            payload.update(
+                {
+                    "siff_scale_components": int(readout.scale_components),
+                    "siff_scale_basis_mode": readout.scale_basis_mode,
+                    "siff_scale_basis": readout.scale_basis.detach()
+                    .cpu()
+                    .tolist(),
+                    "siff_scale_basis_hash": _tensor_hash(
+                        [readout.scale_basis]
+                    ),
+                }
+            )
     if hasattr(model, "pcsd_m0_readout"):
         readout = model.pcsd_m0_readout
         payload.update(
@@ -879,6 +911,19 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
                 "pcsd_scope_usage": usage.detach().cpu().tolist(),
             }
         )
+        if hasattr(readout, "scale_basis"):
+            payload.update(
+                {
+                    "siff_scale_components": int(readout.scale_components),
+                    "siff_scale_basis_mode": readout.scale_basis_mode,
+                    "siff_scale_basis": readout.scale_basis.detach()
+                    .cpu()
+                    .tolist(),
+                    "siff_scale_basis_hash": _tensor_hash(
+                        [readout.scale_basis]
+                    ),
+                }
+            )
     if hasattr(model, "pcsd_m0_readout"):
         readout = model.pcsd_m0_readout
         active_prefixes = (
@@ -1411,7 +1456,30 @@ def train(
             target_y = batch_y[:, -official_args.pred_len :, f_dim:]
 
             pcc_result = None
-            if args.pcc_objective_mode != PCC_DISABLED:
+            if (
+                args.pcc_objective_mode == "measure_only"
+                and args.readout_mode not in TimeAlign.COUPLING_READOUTS
+            ):
+                outputs, _recon, _alignment_loss = model(
+                    batch_x,
+                    batch_y[:, -official_args.pred_len :, :],
+                    is_training=True,
+                    target_prefix=official_args.pred_len,
+                )
+                outputs = outputs[:, -official_args.pred_len :, f_dim:]
+                measure = prefix_measure(
+                    official_args.pred_len,
+                    device=outputs.device,
+                    dtype=outputs.dtype,
+                )
+                pred_loss = (
+                    (outputs - target_y).abs()
+                    * measure.view(1, -1, 1)
+                ).sum(dim=1).mean()
+                pred_components = {"full": criterion(outputs, target_y)}
+                recon_loss = pred_loss.new_zeros(())
+                alignment_loss = pred_loss.new_zeros(())
+            elif args.pcc_objective_mode != PCC_DISABLED:
                 outputs, _recon, _alignment_loss, pcsd_details = model(
                     batch_x,
                     batch_y[:, -official_args.pred_len :, :],
@@ -1434,7 +1502,12 @@ def train(
                     if planned_updates > 1
                     else 1.0
                 )
-                pcc_result = projective_coupling_credit_loss(
+                objective = (
+                    measure_constrained_competitive_loss
+                    if args.pcc_objective_mode in MCCA_OBJECTIVE_MODES
+                    else projective_coupling_credit_loss
+                )
+                pcc_result = objective(
                     outputs,
                     arm_forecasts,
                     policy,
@@ -1700,6 +1773,10 @@ def run(args: argparse.Namespace) -> None:
                 "capability_stop_gradient": True,
                 "requested_horizon_feature": False,
                 "inference_graph_changed": False,
+                "mcca_modes": sorted(MCCA_OBJECTIVE_MODES),
+                "mcca_solver": "log_domain_sinkhorn",
+                "mcca_sinkhorn_iterations": MCCA_SINKHORN_ITERATIONS,
+                "mcca_kernel_floor": MCCA_KERNEL_FLOOR,
             },
         },
     )
@@ -1984,7 +2061,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--pcsd-target-chunk-size", type=int, default=128)
     parser.add_argument(
         "--pcc-objective-mode",
-        choices=[PCC_DISABLED, *sorted(PCC_OBJECTIVE_MODES)],
+        choices=[
+            PCC_DISABLED,
+            *sorted(PCC_OBJECTIVE_MODES | MCCA_OBJECTIVE_MODES),
+        ],
         default=PCC_DISABLED,
     )
     parser.add_argument("--patch-diagnostic-batches", type=int, default=8)
@@ -2156,8 +2236,14 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("random grouped MLP endpoint partitions are invalid")
     if args.pcsd_coordinate_dim != 4:
         raise ValueError("PCSD-CF v1 requires pcsd_coordinate_dim=4")
-    if args.pcsd_mode_rank != 256:
-        raise ValueError("PCSD-CF v1 requires pcsd_mode_rank=256")
+    if args.readout_mode in {
+        "siff-q1-wide-control",
+        "siff-independent-scope-control",
+    }:
+        if args.pcsd_mode_rank <= 0:
+            raise ValueError("matched SIFF control rank must be positive")
+    elif args.pcsd_mode_rank != 256:
+        raise ValueError("PCSD/SIFF primary readouts require pcsd_mode_rank=256")
     if args.pcsd_policy_history_dim != 32:
         raise ValueError("PCSD-CF v1 requires pcsd_policy_history_dim=32")
     if args.pcsd_policy_hidden_dim != 64:
@@ -2165,12 +2251,18 @@ def parse_args() -> argparse.Namespace:
     if args.pcsd_group_chunk_size <= 0 or args.pcsd_target_chunk_size <= 0:
         raise ValueError("PCSD chunk sizes must be positive")
     if args.pcc_objective_mode != PCC_DISABLED:
-        if args.readout_mode != "pcsd-coupling-field":
+        if (
+            args.pcc_objective_mode != "measure_only"
+            and args.readout_mode not in TimeAlign.COUPLING_READOUTS
+        ):
             raise ValueError(
-                "PCC objectives require readout_mode=pcsd-coupling-field"
+                "scope-credit objectives require a PCSD/SIFF coupling readout"
             )
-        if args.pcsd_policy_mode != "direct":
-            raise ValueError("PCC Phase A requires pcsd_policy_mode=direct")
+        if (
+            args.readout_mode in TimeAlign.COUPLING_READOUTS
+            and args.pcsd_policy_mode != "direct"
+        ):
+            raise ValueError("PCC/MCCA Phase A requires pcsd_policy_mode=direct")
         if args.mode != "unified" or args.pred_len != 720:
             raise ValueError("PCC Phase A requires unified full-T=720 training")
         if args.pred_loss_mode != "full":

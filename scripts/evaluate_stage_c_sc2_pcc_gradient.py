@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit per-scope shared-field gradients at one PCC checkpoint."""
+"""Audit per-scope shared-field gradients at one PCSD/SIFF checkpoint."""
 
 from __future__ import annotations
 
@@ -192,9 +192,11 @@ def main() -> None:
     adapter = config["adapter"]
     if (
         adapter.get("pcc_objective_mode") == "off"
-        or adapter.get("readout_mode") != "pcsd-coupling-field"
+        or adapter.get("readout_mode") not in TimeAlign.COUPLING_READOUTS
     ):
-        raise ValueError("gradient audit requires a trained PCC PCSD run")
+        raise ValueError(
+            "gradient audit requires a trained PCSD/SIFF coupling run"
+        )
     loader = sequential_loader(official_args, "train")
     batch_x, batch_y, _batch_x_mark, _batch_y_mark = next(iter(loader))
     batch_x = batch_x[: args.rows].float().to(device)
@@ -202,7 +204,7 @@ def main() -> None:
     payload = scope_gradient_payload(model, batch_x, target)
     payload.update(
         {
-            "candidate": "SC2-PCC-v1-TI",
+            "candidate": "SC1-SIFF-v1/SC2-MCCA-v1",
             "dataset": adapter["dataset"],
             "objective_mode": adapter["pcc_objective_mode"],
             "checkpoint_pcsd_parameter_hash": initialization_contract(model).get(

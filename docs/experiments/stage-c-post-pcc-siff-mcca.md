@@ -6,11 +6,11 @@
 | --- | --- |
 | `architecture_candidate` | `SC1-SIFF` |
 | `training_candidate` | `SC2-MCCA` |
-| `current_step` | Step6 source-informed method/control design complete；Step7A local implementation next |
+| `current_step` | Step7A implementation 36/36 pass；Step7B prelaunch 8/8 pass；remote seed2021 launch next |
 | `problem_gate` | PCC arm recovery positive；same-label homogenization confirmed |
 | `theory_gate` | 10/10 pass |
 | `narrative_gate` | conditional pass |
-| `implementation/remote/test` | Step7A local true / false / false |
+| `implementation/remote/test` | Step7A complete / seed2021 validation-only authorized / false |
 
 ## Candidate Contracts
 
@@ -62,4 +62,17 @@ attribution，不作dataset profile或candidate选择。
 - `analysis/stage_c_post_pcc_step4_redesign_20260717/source_informed_redesign_audit.md`；
 - `analysis/stage_c_post_pcc_step5_theory_20260717/step5_theory_feasibility.md`；
 - `analysis/stage_c_post_pcc_step6_design_20260717/step6_source_method_control_design.md`；
-- `configs/stage_c_post_pcc_step6.json`。
+- `analysis/stage_c_post_pcc_step7a_local_20260717/step7a_implementation_gate_report.md`；
+- `analysis/stage_c_post_pcc_step7b_prelaunch_20260717/prelaunch_report.md`；
+- `configs/stage_c_post_pcc_step6.json`；
+- `configs/stage_c_post_pcc_step7b.json`。
+
+## Step7A / Step7B Prelaunch Result
+
+Step7A共36/36 cases通过：SIFF Q1/A6 containment gap均为`0`，constant collapse gap `3.55e-15`，
+five-profile matched-rank最大gap `0.383856%`；MCCA float64/float32 marginal gap分别为`1.11e-16`与
+`4.47e-8`，same-mass PCC gap最大`2.78e-17`，arm/policy gradient均非零。
+
+Step7B prelaunch 8/8 categories通过，冻结55个new runs。runner按dataset-major slow-first在3个GPU worker间调度，
+先执行Weather；每个run保存dense validation metrics、trained invariants与mechanism diagnostics。remote启动前必须完成
+resource smoke；启动后不轮询值守，等待用户通知完成。test与confirmation seeds仍未授权。

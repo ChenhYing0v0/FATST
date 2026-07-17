@@ -1,0 +1,20 @@
+{
+  "candidate": "SC1-SIFF-v1/SC2-MCCA-v1",
+  "categories": {
+    "cli_contracts": true,
+    "dataset_major_workload_order": true,
+    "frozen_hashes": true,
+    "model_construction": true,
+    "new_run_matrix": true,
+    "step7a_gate": true,
+    "tooling_present": true,
+    "validation_only_authorization": true
+  },
+  "config_sha256": "cf677dc28a7cc9b0dcf785f7e9b84c219283b8cc91f7743ebb0057cbc372a371",
+  "current_step": "Step7B prelaunch gate",
+  "decision": "step7b_prelaunch_pass_remote_seed2021_authorized",
+  "expected_jobs": 55,
+  "overall_pass": true,
+  "profile_sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a",
+  "test_used": false
+}

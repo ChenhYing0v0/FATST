@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SIFF/MCCA Step6 source/method/control design 22/22 pass；Step7A local next |
+| `current_11_step` | SIFF/MCCA Step7A 36/36 + Step7B prelaunch 8/8 pass；seed2021 validation remote launch next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | exact PCSD/PCC closed；SIFF-v1/MCCA-v1 conditional narrative pass，effectiveness unready |
+| `paper_core_status` | exact PCSD/PCC closed；SIFF-v1/MCCA-v1 implemented，conditional narrative pass，effectiveness pending |
 
 [Evaluation Rule] official test split现固定为paper-core effectiveness与Step9-10继续/回滚的primary gate；validation只
 负责checkpoint selection、普通超参数选择与低成本mechanism screen。每个冻结candidate version默认只做一次完整
@@ -193,13 +193,16 @@ task-specific complete chain，不能把scale coordinate或balanced OT单独写�
 Step6 22/22通过：SIFF Q1/constant containment成立；five-profile Q1-wide/independent matched controls最大parameter
 gap `0.3893%`；MCCA float32 marginal gap `1.04e-7`，与PCC same column mass gap `2.98e-8`。实验固定为
 `PCSD/SIFF × EQUAL/PCC/MCCA`的$2\times3$ factorial和七个归因controls。status=
-`conditional_narrative_pass / effectiveness_unready`；只授权Step7A local implementation。
+`conditional_narrative_pass / effectiveness_pending`。Step7A production gate随后36/36通过：Q1/A6 exact gap `0`，
+constant collapse `3.55e-15`，float32 MCCA marginal gap `4.47e-8`，same-mass PCC gap最大`2.78e-17`。Step7B
+prelaunch 8/8通过并冻结55个new runs；只授权seed2021 validation-only remote，test/confirmation仍false。
 
 [Execution Order] D14-A problem confirmed -> CCRL retired -> PCSD-CF Step4-7 -> validation screen fail/credit clue ->
 PCC-v0 Step2-5 -> frozen PCSD-CF-v1 test audit fail-with-headroom -> Step6 prior-art rollback -> PCC-v1-TI nested-risk
 transport Step5b/6 pass -> Step7A 35/35 pass -> Step7B 45/45 validation screen -> prior specificity/diversity fail ->
 Step4 scale-identifiability/competitive-credit redesign -> SIFF/MCCA Step5 10/10 theory pass -> Step6 22/22
-source/method/control pass。下一步Step7A local implementation；remote、test、confirmation false。
+source/method/control pass -> Step7A 36/36 implementation pass -> Step7B prelaunch 8/8 pass。下一步seed2021
+validation-only 55-run remote screen；test、confirmation false。
 
 ### Closed Candidate: PRISM Decoder
 

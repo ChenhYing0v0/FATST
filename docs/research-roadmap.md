@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SIFF/MCCA Step6 source/method/control design 22/22 pass；Step7A local next |
+| `current_step` | SIFF/MCCA Step7A 36/36 + Step7B prelaunch 8/8 pass；remote seed2021 launch next |
 | `active_question` | scale-identifiable decoder与competitive projective credit能否同时保skill与specialization？ |
-| `active_candidates` | `SC1-SIFF-v1`/`SC2-MCCA-v1` conditional narrative pass；not implemented |
+| `active_candidates` | `SC1-SIFF-v1`/`SC2-MCCA-v1` conditional narrative pass；production implemented，effectiveness pending |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/experiments/stage-c-post-pcc-siff-mcca.md` |
-| `method_implementation` | Step7A local authorized；remote/test/confirmation=false |
+| `method_implementation` | Step7A complete；seed2021 validation remote authorized；test/confirmation=false |
 | `rollback_point` | local contract fail -> Step6；generic width/independent/same-mass PCC/OT explains -> Step4 |
 
 ## Post-D11 Joint Mainline Reset
@@ -434,6 +434,19 @@ Phase A冻结`PCSD/SIFF × EQUAL/PCC/MCCA`的$2\times3$ factorial，加SIFF cons
 dense matched与pointwise/uniform-OT controls。narrative gate=`conditional_pass`，只授权Step7A local implementation；
 remote、confirmation和test均false。详见
 `analysis/stage_c_post_pcc_step6_design_20260717/step6_source_method_control_design.md`。
+
+## SIFF/MCCA Step7A Implementation and Step7B Prelaunch
+
+production `SIFFCouplingFieldReadout`、MCCA objective与dense measure-only control已落地。Step7A 36/36通过：
+Q1/A6 containment gap `0`，constant collapse `3.55e-15`，float32 MCCA marginal gap `4.47e-8`，same-mass
+PCC gap最大`2.78e-17`，arm/policy gradients均非零。该证据只完成implementation/numeric gate，不等于method
+effectiveness。
+
+Step7B prelaunch 8/8通过；冻结11 new arms × five datasets = 55 runs，复用未改变的`PCSD_EQUAL/PCSD_PCC`
+及A6/PCSD/dense references。seed2021 validation-only remote现已授权；test、confirmation与conditional Phase B仍为
+false。remote resource smoke失败回Step7A；55-run artifacts返回后进入Step9 attribution，不允许依据partial runs改设计。
+详见`analysis/stage_c_post_pcc_step7a_local_20260717/step7a_implementation_gate_report.md`和
+`analysis/stage_c_post_pcc_step7b_prelaunch_20260717/prelaunch_report.md`。
 
 ## SC1-JAPO Step 7A: Production Gate Passed, Step 8 Authorized
 
