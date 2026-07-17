@@ -4,16 +4,16 @@
 
 | Field | Value |
 | --- | --- |
-| `current_step` | Step 5 theory feasibility + Step 6 diagnostic design |
+| `current_step` | Step 5 theory feasibility + Step 6 v1.1 diagnostic redesign |
 | `problem` | SIFF ETTm2 short-prefix pathology可能来自H720 checkpoint，而非全部training epochs |
 | `existence_evidence` | SIFF-vs-PCSD H1 -669.49%，H720 +0.6013%；all finite |
-| `idea` | 保存same-training trajectory的per-epoch dense risk，做checkpoint counterfactual |
-| `theory_check` | dense AUC可由one full prediction精确计算；不改training gradients |
-| `design` | ETTm2 × 4 matched arms × seed2021；20 epochs；3 checkpoint rules |
+| `idea` | 保存same-training trajectory的per-epoch standard/dense risk，做checkpoint counterfactual |
+| `theory_check` | 四标准horizon与dense AUC均可由one full prediction精确计算；不改training gradients |
+| `design` | ETTm2 × 4 matched arms × seed2021；20 epochs；4 checkpoint rules |
 | `narrative_gate` | diagnostic only；weighted checkpoint由ElasTST覆盖，不是Contribution |
 | `effectiveness_gate` | 不适用paper effectiveness；只判failure attribution |
 | `artifacts` | `configs/stage_c_d16_ctd_step6.json` |
-| `decision` | Step5/6 pass for Step7A local implementation only；remote/test=false |
+| `decision` | v1.1 refrozen for Step7A local implementation only；remote/test=false |
 
 ## 2. 为什么不能直接关闭scale-field方向
 
@@ -44,16 +44,17 @@ L_{\mathrm{MAE}}^{(e)}(H)
 =\frac1H\sum_{t=1}^{H}|\hat y_t^{(e)}-y_t|.
 $$
 
-因此每个epoch只需一次full validation forward，即可得到H1..720、dense AUC与五个horizon bins；requested
-horizon不进入模型。
+因此每个epoch只需一次full validation forward，即可得到paper-facing H96/H192/H336/H720，以及H1..720、
+dense AUC与五个horizon bins；requested horizon不进入模型。
 
 ### 3.2 Counterfactual checkpoint rules
 
-同一条training trajectory冻结三个selection functions：
+同一条training trajectory冻结四个selection functions：
 
-1. `best_h720_mse`：复现当前协议；
-2. `best_dense_mse_auc`：匹配primary screening metric；
-3. `best_dense_mae_auc`：匹配harmonic-L1 fused training norm。
+1. `best_standard_mse`：按新项目规则最小化四个paper-facing horizon validation MSE的算术平均，作为primary；
+2. `best_h720_mse`：复现历史协议；
+3. `best_dense_mse_auc`：旧primary screening metric的counterfactual；
+4. `best_dense_mae_auc`：harmonic-L1 fused training norm的counterfactual。
 
 这些rules只读取validation，不读取test。它们比较同一trajectory，不重新训练、不改变gradient。
 
@@ -91,8 +92,8 @@ optimization与原协议一致，额外epochs只用于failure attribution，不�
 - original-patience counter；
 - checkpoint hash。
 
-每条trajectory只保留三个selected state dicts，避免保存20个full checkpoints。最终对三个selected states重新
-生成dense metrics与trained invariants。
+每条trajectory只保留四个selection rules对应的state dicts；若多个rules选择同一epoch则按hash去重，避免保存
+20个full checkpoints。最终对selected states重新生成standard/dense metrics与trained invariants。
 
 ## 6. Frozen gates
 
@@ -108,31 +109,32 @@ optimization与原协议一致，额外epochs只用于failure attribution，不�
 
 ### 6.2 Pathology gate
 
-在各arm自己的`best_dense_mse_auc` checkpoint下：
+在各arm自己的`best_standard_mse` checkpoint下：
 
 - SIFF H1 MSE / PCSD H1 MSE $\le 2.0$，即不再出现>100% degradation；
-- SIFF dense-MSE gain over PCSD $\ge 0$；
-- SIFF dense-MSE gain over constant $\ge 0$；
-- SIFF dense-MSE gain over Q1-wide $\ge 0$；
+- SIFF四标准horizon MSE macro gain over PCSD $\ge 0$；
+- SIFF四标准horizon MSE macro gain over constant $\ge 0$；
+- SIFF四标准horizon MSE macro gain over Q1-wide $\ge 0$；
 - SIFF H337–720 bin相对其自身best-H720 checkpoint退化不超过1%。
 
-所有条件同时成立才称`checkpoint_pathology_supported`。这些thresholds在result前冻结，不得按trajectory调整。
+所有条件同时成立才称`standard_checkpoint_pathology_supported`。H1与long bin仍只用于failure attribution；
+candidate ranking以四标准horizon为准。这些thresholds在result前冻结，不得按trajectory调整。
 
 ## 7. Decisions
 
 1. **all gates pass**：
-   只说明原H720 checkpoint造成假失败；随后才允许five-dataset unchanged confirmation。SIFF不立即恢复为paper
-   candidate，HR/checkpoint也不计Contribution。
+   只说明原H720 checkpoint造成paper-facing假失败；随后才允许five-dataset unchanged validation confirmation。
+   SIFF不立即恢复为paper candidate，checkpoint protocol也不计Contribution。
 2. **H1 recovers but architecture/controls fail**：
    修正未来checkpoint protocol，但SIFF exact design仍关闭。
-3. **SIFF best-dense H1 ratio仍>2**：
+3. **SIFF best-standard H1 ratio仍>2**：
    pathology贯穿trajectory；`readout_or_head_design_wrong`获得稳定证据，回Step2关闭scale-field方向。
 4. **protocol/numeric fail**：
    diagnostic无效，回Step6修复工具，不作方向判断。
 
 ## 8. Step 6 decision
 
-`diagnostic_design_pass_step7a_local_only`
+`diagnostic_design_refrozen_v1_1_step7a_local_only`
 
-下一步只实现per-epoch dense evaluator、three-state retention、local synthetic identity与dry-run。Step7A通过前不得
-remote；该diagnostic永不访问test，也不得升级为Contribution 2。
+下一步只实现per-epoch standard+dense evaluator、four-rule deduplicated state retention、local synthetic identity与
+dry-run。Step7A通过前不得remote；该diagnostic永不访问test，也不得升级为Contribution 2。

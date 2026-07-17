@@ -1,0 +1,27 @@
+{
+  "candidate": "SC1-SIFF-v1/SC2-MCCA-v1",
+  "evaluation_role": "retrospective_development_screen",
+  "evaluation_split": "validation",
+  "test_used": false,
+  "seed": 2021,
+  "paper_facing_horizons": [
+    96,
+    192,
+    336,
+    720
+  ],
+  "checkpoint_rule_inherited": "best_validation_h720_mse",
+  "checkpoint_reselected": false,
+  "threshold_source": "original_frozen_step7b_gate",
+  "cell_wins_role": "descriptive_only",
+  "gates": {
+    "architecture_main_effect": false,
+    "mcca_main_effect": false,
+    "joint_over_a6": false,
+    "ordered_over_constant": false,
+    "ordered_over_permuted": true,
+    "capability_over_uniform_ot": true
+  },
+  "method_pass": false,
+  "decision": "retrospective_standard_horizon_screen_fail"
+}

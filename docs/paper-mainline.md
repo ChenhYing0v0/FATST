@@ -209,6 +209,12 @@ Step9/10 formal result：
 [Decision] exact SIFF-v1/MCCA-v1均关闭，不进入confirmation、Phase B或test。MCCA exact competition hypothesis
 被否定；transport与capability marginal只保留为ingredients。
 
+按新的paper-facing评估规则，旧artifacts已在validation H96/H192/H336/H720上回溯重算：SIFF architecture
+main effect为`-2.3509%`、8/20 cells、2/5 datasets；MCCA为`-0.1357%`、7/20、1/5；joint vs A6为
+`-1.3325%`、14/20、4/5，三项仍fail。SIFF architecture按horizon为H96 `-6.3186%`、H192
+`-2.6027%`、H336 `-1.0522%`、H720 `+0.5698%`，所以short/mid-to-long tradeoff在标准论文horizon下仍成立，
+不是dense H1单独造成。该结果继承历史best-H720 checkpoint、未访问test；exact pair关闭不变。
+
 SIFF的失败存在明确short-prefix pathology：ETTm2 SIFF+MCCA相对PCSD+MCCA在H1为`-669.49%`，H720却为
 `+0.6013%`。dense all-prefix MSE AUC的target measure为：
 
@@ -231,13 +237,14 @@ weights。因此`SC2-PHMA`作为standalone contribution已被narrative gate否�
 
 code audit同时否定了新增HR matrix的必要性：harmonic-L1 training本来就存在。保留的
 `SC-D16-CTD`仅为`diagnostic_only_checkpoint_trajectory_audit`：拟先在ETTm2上复跑
-PCSD-EQUAL/SIFF-EQUAL/SIFF-CONSTANT/Q1-WIDE四条完全matched trajectories，每epoch保存dense risk，并离线比较
-best-H720、best-dense-MSE与best-dense-MAE。只有dense checkpoint同时消除pathology并恢复architecture/control
-effect，才扩展five-dataset confirmation。
+PCSD-EQUAL/SIFF-EQUAL/SIFF-CONSTANT/Q1-WIDE四条完全matched trajectories，每epoch保存standard+dense risk，
+并离线比较best-standard、best-H720、best-dense-MSE与best-dense-MAE。只有best-standard同时消除pathology并
+恢复四horizon architecture/control effect，才扩展five-dataset validation confirmation。
 
-Step5/6现已冻结20-epoch no-stop trajectory、three selected-state retention与kill gates：SIFF best-dense
-H1/PCSD ratio必须$\le2$，并同时超过PCSD、constant、Q1-wide，long-bin相对其own best-H720退化不得超过1%。
-decision=`diagnostic_design_pass_step7a_local_only`；当前implementation/remote/test均false。
+Step5/6 v1.1现已冻结20-epoch no-stop trajectory、four-rule deduplicated state retention与kill gates：SIFF
+best-standard H1/PCSD ratio必须$\le2$，并在四标准horizon同时超过PCSD、constant、Q1-wide，long-bin相对其
+own best-H720退化不得超过1%。decision=`diagnostic_design_refrozen_v1_1_step7a_local_only`；当前
+implementation/remote/test均false。
 
 [Execution Order] D14-A problem confirmed -> CCRL retired -> PCSD-CF Step4-7 -> validation screen fail/credit clue ->
 PCC-v0 Step2-5 -> frozen PCSD-CF-v1 test audit fail-with-headroom -> Step6 prior-art rollback -> PCC-v1-TI nested-risk

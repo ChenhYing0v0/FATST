@@ -1,5 +1,10 @@
 # SIFF/MCCA Step 9–10 结果、失败归因与回滚
 
+> Evaluation update（2026-07-17）：本报告保留当时冻结的dense-AUC历史判定。项目后续常规ranking已改为
+> validation/test H96/H192/H336/H720；回溯重评估仍fail，详见
+> `analysis/stage_c_post_pcc_standard_horizon_reevaluation_20260717/standard_horizon_reevaluation_report.md`。
+> Dense结果继续作为mechanism diagnostic，不再是默认paper-facing ranking。
+
 ## 1. 当前节点
 
 | Field | Value |

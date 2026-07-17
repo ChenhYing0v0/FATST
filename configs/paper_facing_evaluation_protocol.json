@@ -1,0 +1,52 @@
+{
+  "protocol": "FATST-paper-facing-evaluation",
+  "version": "1.0",
+  "effective_date": "2026-07-17",
+  "standard_long_term_forecasting": {
+    "horizons": [96, 192, 336, 720],
+    "primary_metric": "mse",
+    "secondary_metric": "mae",
+    "required_reporting": [
+      "per_dataset_horizon_metrics",
+      "paired_relative_gain",
+      "macro_relative_gain",
+      "cell_wins",
+      "dataset_wins"
+    ],
+    "default_validation_checkpoint_score": "mean_mse_h96_h192_h336_h720"
+  },
+  "split_roles": {
+    "train": "parameter_optimization_and_train_only_diagnostics",
+    "validation": "routine_development_checkpoint_selection_and_low_cost_screening",
+    "test": "frozen_candidate_milestone_effectiveness_main_result_and_formal_ablation"
+  },
+  "dense_evaluation": {
+    "default_role": "diagnostic_and_unified_horizon_supporting_evidence",
+    "includes": [
+      "dense_h1_to_h720_curve",
+      "dense_prefix_auc",
+      "horizon_bins",
+      "per_epoch_trajectory",
+      "gradient_router_and_arm_statistics"
+    ],
+    "primary_use_requires_preregistration": true
+  },
+  "test_audit": {
+    "continuous_feedback_forbidden": true,
+    "freeze_before_access": [
+      "candidate_version",
+      "source_commit",
+      "architecture",
+      "objective",
+      "dataset_profiles",
+      "seeds",
+      "checkpoint_rule",
+      "checkpoint_hashes",
+      "main_and_ablation_matrix",
+      "metrics",
+      "gates",
+      "rollback_consequences"
+    ],
+    "post_test_redesign_creates_test_informed_candidate": true
+  }
+}

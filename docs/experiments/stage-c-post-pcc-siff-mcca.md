@@ -11,8 +11,8 @@
 | `theory_gate` | 10/10 pass |
 | `narrative_gate` | conditional pass |
 | `implementation/remote/test` | Step7A complete / 55/55 remote complete / false |
-| `effectiveness_gate` | SIFF main -1.5015%；MCCA main -0.0250%；joint -0.5621%；all fail |
-| `decision` | exact pair closed；SC-D16-CTD Step5/6 pass；Step7A local next |
+| `effectiveness_gate` | four-H SIFF main -2.3509%；MCCA -0.1357%；joint -1.3325%；all fail |
+| `decision` | exact pair closed；SC-D16-CTD v1.1 refrozen；Step7A local next |
 
 ## Candidate Contracts
 
@@ -88,6 +88,21 @@ resource smoke。`2026-07-17T14:59:22+08:00`已从commit `7a9e5c7`在GPU0/1/2启
 `-1.5015%`、2/5；MCCA over same-mass PCC为`-0.0250%`、2/5；joint over A6为`-0.5621%`、4/5。
 formal Phase-A gate失败，不运行confirmation、Phase B或test。
 
+## Paper-Facing Four-Horizon Reevaluation
+
+项目评估规则现固定为：日常development使用validation
+$H\in\{96,192,336,720\}$；冻结candidate后才执行同horizon official test audit；dense H1..720默认只作
+mechanism/unified-horizon diagnostic。使用旧artifacts回溯重算后：
+
+- SIFF architecture main effect `-2.3509%` MSE、`-1.6146%` MAE，8/20 cells、2/5 datasets；
+- MCCA main effect `-0.1357%` MSE、`-0.2075%` MAE，7/20 cells、1/5 datasets；
+- SIFF+MCCA vs A6 `-1.3325%` MSE、`-0.9874%` MAE，14/20 cells、4/5 datasets。
+
+architecture按horizon为H96 `-6.3186%`、H192 `-2.6027%`、H336 `-1.0522%`、H720 `+0.5698%`。
+因此旧dense判定未反转，且short/mid pathology在标准H96已可见。结果仍是validation-only、seed2021，并继承
+best-H720 checkpoint；未重选epoch、未访问test。详见
+`analysis/stage_c_post_pcc_standard_horizon_reevaluation_20260717/standard_horizon_reevaluation_report.md`。
+
 ordered SIFF相对permuted为`+1.1177%`、5/5，说明scope order含信息；但Q1-wide/independent controls仍解释
 macro performance。PCSD MCCA相对PCC为0/5，关闭exact competitive assignment；transport over pointwise
 4/5与capability marginal over uniform OT 5/5只保留为ingredients。
@@ -109,7 +124,7 @@ measure（L1）；新增HR training arms是重复。`SC2-PHMA`不得作为standa
 `analysis/stage_c_post_pcc_step4_measure_audit_20260717/source_informed_measure_audit.md`。
 
 SC-D16-CTD Step5/6随后冻结：ETTm2上PCSD/SIFF/constant/Q1四条equal-skill trajectories，固定20 epochs，
-每epoch保存dense MSE/MAE，并离线比较best-H720、best-dense-MSE与best-dense-MAE。只有H1 pathology消失、
-SIFF同时超过三个controls且long-bin退化不超过1%，才扩展five-dataset confirmation。当前只授权Step7A local
-tooling；remote/test=false。详见
+每epoch保存standard+dense MSE/MAE，并离线比较best-standard、best-H720、best-dense-MSE与best-dense-MAE。
+只有best-standard同时消除H1 pathology、在四标准horizon超过三个controls且long-bin退化不超过1%，才扩展
+five-dataset validation confirmation。当前只授权Step7A local tooling；remote/test=false。详见
 `analysis/stage_c_d16_ctd_step56_20260717/step56_diagnostic_design.md`。

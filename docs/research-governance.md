@@ -179,7 +179,7 @@ Ledger；Roadmap 只在该切换改变 11-step rollback 或阶段状态时更新
 4. 哪些方向级问题仍未被测试？
 5. 下一步是修正诊断、重设 intervention point，还是才允许 rollback？
 
-## Milestone Test Audit 规则
+## Paper-Facing Evaluation 与 Milestone Test Audit 规则
 
 本项目将official test split固定为paper-core effectiveness与Step 9-10继续/回滚决策的主要性能证据。此前
 “test只在最终论文表格中使用”的规则废止；但test也不得退化为逐次调参反馈。固定职责如下：
@@ -187,8 +187,47 @@ Ledger；Roadmap 只在该切换改变 11-step rollback 或阶段状态时更新
 | Split | 固定职责 | 禁止事项 |
 | --- | --- | --- |
 | Train | parameter optimization与train-only diagnostics | 伪装成generalization evidence |
-| Validation | early stopping、best checkpoint、普通超参数选择、低成本机制筛选 | 把validation gain写成最终effectiveness |
-| Test | 冻结candidate version的里程碑effectiveness gate与最终paper result | 选epoch、选checkpoint、逐dataset/horizon反向调参 |
+| Validation | 与论文horizon对齐的日常开发、early stopping、checkpoint与低成本机制筛选 | 把validation gain写成最终effectiveness |
+| Test | 冻结candidate version的里程碑effectiveness gate、main result与formal ablation | 选epoch、选checkpoint、逐次机制搜索或逐dataset/horizon反向调参 |
+
+### 默认 paper-facing scorecard
+
+标准long-term forecasting任务默认使用$H\in\{96,192,336,720\}$。main result、formal ablation和常规
+validation development screen必须逐dataset、逐horizon报告MSE与MAE。若任务或dataset不支持该集合，必须在
+结果产生前冻结替代集合及原因。
+
+machine-readable默认协议保存在`configs/paper_facing_evaluation_protocol.json`。候选protocol可以增加更严格
+threshold或task-specific evidence，但不得静默删除该默认scorecard。
+
+内部candidate排序默认使用paired relative gain：
+
+$$
+G(A,B;d,H)=100\left(1-\frac{L_A(d,H)}{L_B(d,H)}\right).
+$$
+
+正值表示candidate更好。报告至少包含完整cell table、所有dataset-horizon cells的equal-weight macro gain、
+cell wins，以及先在每个dataset内跨horizon平均后得到的dataset wins。不同dataset的raw MSE/MAE不可直接混成
+唯一总分；各candidate protocol仍需在结果返回前冻结具体gain与wins threshold。
+
+新unified-horizon candidate的默认checkpoint score为validation上四个标准horizon MSE的算术平均：
+
+$$
+S_{\mathrm{val,std}}=\frac14\sum_{H\in\{96,192,336,720\}}L_{\mathrm{val}}(H).
+$$
+
+所有matched arms必须共享该规则。若要用baseline normalization、dense AUC或其他checkpoint score，必须在结果
+前说明其与paper claim的关系并预注册，不能在看到结果后切换。
+
+### Dense 与机制诊断的职责
+
+H1..720 dense curve、dense-prefix AUC、horizon bins、per-epoch trajectory、gradient/router/arm statistics默认属于：
+
+1. 机制为何成功或失败的`diagnostic_only`证据；
+2. 证明unified-horizon连续行为的补充paper evidence；
+3. 发现standard horizons掩盖的局部pathology。
+
+它们默认不替代四个标准horizon的常规ranking gate。若某项dense metric要成为primary method gate，必须由论文
+问题直接要求并在实验前冻结。历史dense结果保留，不因新规则被删除；重新评估时应标为retrospective diagnostic。
 
 每次test audit必须在访问test前完成文本与machine-readable preregistration，至少冻结：
 
@@ -210,6 +249,11 @@ test performance是effectiveness的primary gate，但不是mechanism attribution
 validation/train diagnostics、matched capacity/random/equal controls与failure attribution。若validation与test排序
 反转，必须标记`validation_test_reversal`并优先检查split representativeness、checkpoint rule与seed stability，
 不得隐藏其中任一侧。
+
+最终模型与论文中的formal ablations可以在同一次完整official test audit中展示，但必须先一次性冻结main/ablation
+matrix。该结果用于论文报告，不授权根据某个test cell继续修改机制。若观察test后修改architecture、objective、
+loss coefficient、training schedule或control definition，新版本必须标记`test_informed=true`并重新经过
+narrative/design gate。
 
 每份test audit报告必须记录：`test_access_date`、`user_authorization`、`candidate_version`、`checkpoint_hash`、
 `checkpoint_retrained`、`test_role`、`matrix_complete`、test metrics、validation-test comparison及Step 9-10 decision。

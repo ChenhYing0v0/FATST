@@ -6,11 +6,11 @@
 | --- | --- |
 | `stage` | `StageC-UVHF` |
 | `current_step` | SC-D16-CTD Step5/6 design complete；Step7A local implementation next |
-| `active_question` | H720 checkpoint是否丢弃了SIFF更健康的dense-risk epoch？ |
+| `active_question` | H720 checkpoint是否丢弃了SIFF更健康的four-H epoch？ |
 | `active_candidates` | no paper-core candidate；`SC-D16-CTD` diagnostic_only |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_d16_ctd_step56_20260717/step56_diagnostic_design.md` |
-| `method_implementation` | false；four-run trajectory protocol frozen；Step7A tooling next |
+| `method_implementation` | false；four-run standard+dense trajectory protocol v1.1 frozen；Step7A tooling next |
 | `rollback_point` | trajectory fail -> Step2 close scale-field direction；pass -> five-dataset confirmation |
 
 ## SIFF/MCCA Step 9–10 Result And Measure Rollback
@@ -41,16 +41,29 @@ PCSD/SIFF/constant/Q1四条per-epoch trajectories；implementation/remote/test�
 source audit见
 `analysis/stage_c_post_pcc_step4_measure_audit_20260717/source_informed_measure_audit.md`。
 
+## Paper-Facing Four-Horizon Reevaluation
+
+项目规则现固定为validation development与official test main/ablation均使用H96/H192/H336/H720；dense curve/AUC
+默认只作mechanism diagnostic与unified-horizon补充证据。旧Step7B artifacts回溯重算后，SIFF architecture为
+`-2.3509%`、8/20 cells、2/5 datasets；MCCA为`-0.1357%`、7/20、1/5；joint vs A6为`-1.3325%`、
+14/20、4/5。三项均fail，旧decision不反转。
+
+SIFF architecture按horizon为`-6.3186/-2.6027/-1.0522/+0.5698%`，对应H96/192/336/720。说明问题不是
+dense H1指标单独制造，而是明确的short/mid-to-long tradeoff。该audit为validation-only retrospective screen，
+继承best-H720 checkpoint且未重选epoch；test=false。详见
+`analysis/stage_c_post_pcc_standard_horizon_reevaluation_20260717/standard_horizon_reevaluation_report.md`。
+
 ## SC-D16-CTD Step 5/6 Design
 
 diagnostic已冻结为ETTm2 pathology-locus四条trajectory：
 `PCSD_EQUAL/SIFF_EQUAL/SIFF_CONSTANT_EQUAL/Q1_WIDE_EQUAL`。四arms共享seed2021、equal-skill exact
 harmonic-L1 objective、batch32与learning rate $10^{-4}$，固定运行20 epochs而不由H720 early stopping截断；
-每epoch一次full validation forward生成dense H1..720 MSE/MAE。
+每epoch一次full validation forward生成paper-facing H96/H192/H336/H720与dense H1..720 MSE/MAE。
 
-同一trajectory离线选择`best_h720_mse`、`best_dense_mse_auc`与`best_dense_mae_auc`。只有SIFF best-dense
-同时移除H1>100% pathology、超过PCSD/constant/Q1且不以long-bin >1%退化换取，才允许five-dataset
-confirmation。若所有checkpoint rules下H1 ratio仍>2，回Step2关闭scale-field方向。
+同一trajectory离线选择`best_standard_mse`、`best_h720_mse`、`best_dense_mse_auc`与
+`best_dense_mae_auc`。只有SIFF best-standard同时移除H1>100% pathology、在四标准horizon超过
+PCSD/constant/Q1且不以long-bin >1%退化换取，才允许five-dataset validation confirmation。若所有checkpoint
+rules下H1 ratio仍>2，回Step2关闭scale-field方向。
 
 decision=`diagnostic_design_pass_step7a_local_only`；下一步实现per-epoch evaluator与selected-state retention，
 remote/test仍false。详见

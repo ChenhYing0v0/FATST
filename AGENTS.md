@@ -340,15 +340,34 @@ actually ran.
 - Do not call a result reproducible until the artifacts needed to rerun it
   actually exist.
 
-## Milestone Test Audit Policy
+## Paper-Facing Evaluation And Milestone Test Audit Policy
 
 - Final paper effectiveness claims and Step 9-10 continuation decisions must
   use the official test split as the primary performance gate. Validation-only
   evidence may establish mechanism plausibility, select checkpoints, or stop an
   obviously weak design, but it must not be presented as final effectiveness.
+- For standard long-term forecasting experiments, the default paper-facing
+  horizon set is `{96, 192, 336, 720}`. Main results and formal ablations should
+  report MSE and MAE for every preregistered dataset-horizon cell. A different
+  horizon set is allowed only when the task or dataset requires it and the
+  deviation is frozen before the run. The machine-readable project default is
+  `configs/paper_facing_evaluation_protocol.json`.
+- Routine method development must use the validation split with the same
+  paper-facing horizon set. Rank candidates by preregistered paired relative
+  gains, macro gain, dataset wins, and the complete per-cell table; do not
+  average raw MSE or MAE across heterogeneous datasets as the sole gate.
+- Dense horizon curves, dense-prefix AUC, horizon bins, per-epoch trajectories,
+  gradients, and routing statistics are diagnostic or unified-horizon evidence
+  by default. They must not silently replace the standard-horizon development
+  gate. If a dense metric is intended as a primary method or checkpoint metric,
+  that role must be justified by the paper claim and preregistered before
+  results are observed.
 - Validation remains the only split used for early stopping, checkpoint
   selection, ordinary hyperparameter choice, and low-cost implementation
-  iteration. Test labels must never select an epoch or checkpoint.
+  iteration. Test labels must never select an epoch or checkpoint. For new
+  unified-horizon candidates, the default checkpoint score is the mean
+  validation MSE over `{96, 192, 336, 720}`; any normalization or alternative
+  score must be frozen in advance and shared by matched arms.
 - Test access is milestone-based rather than continuous. Before every test
   audit, freeze and record the candidate version, architecture, objective,
   dataset profiles, seeds, checkpoint rule, full comparison matrix, metrics,
@@ -367,6 +386,10 @@ actually ran.
   require validation/train diagnostics and matched controls. A positive test
   result without attribution cannot establish the proposed mechanism; a
   validation/test reversal must be reported and audited rather than hidden.
+- The final model and all paper-facing ablations may share one official test
+  audit only after the full main/ablation matrix is frozen. Results from that
+  audit are paper evidence, not permission for iterative redesign on the same
+  test. Any subsequent redesign creates a new `test_informed` candidate.
 - Every test audit must record `test_access_date`, `user_authorization`,
   `candidate_version`, `checkpoint_hash`, `checkpoint_retrained`,
   `test_role`, `matrix_complete`, and the resulting Step 9-10 decision.

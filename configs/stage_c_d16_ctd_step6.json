@@ -1,6 +1,6 @@
 {
   "diagnostic": "SC-D16-CTD",
-  "version": "v1",
+  "version": "v1.1",
   "role": "diagnostic_only",
   "current_step": "step6_design_frozen_step7a_local_next",
   "dataset": "ETTm2",
@@ -44,8 +44,10 @@
   "trajectory_metrics": {
     "evaluation_split": "val",
     "evaluate_every_epoch": true,
-    "target_horizons": "dense_1_to_720",
+    "primary_target_horizons": [96, 192, 336, 720],
+    "diagnostic_target_horizons": "dense_1_to_720",
     "checkpoint_rules": [
+      "best_standard_mse",
       "best_h720_mse",
       "best_dense_mse_auc",
       "best_dense_mae_auc"
@@ -57,14 +59,14 @@
     "all_epochs_required": 20,
     "test_used": false,
     "original_best_h720_dense_auc_relative_tolerance": 0.005,
-    "siff_best_dense_h1_to_pcsd_ratio_max": 2.0,
-    "siff_best_dense_gain_over_pcsd_min": 0.0,
-    "siff_best_dense_gain_over_constant_min": 0.0,
-    "siff_best_dense_gain_over_q1_wide_min": 0.0,
-    "siff_long_bin_degradation_vs_own_best_h720_max": 0.01
+    "siff_best_standard_h1_to_pcsd_ratio_max": 2.0,
+    "siff_best_standard_gain_over_pcsd_min": 0.0,
+    "siff_best_standard_gain_over_constant_min": 0.0,
+    "siff_best_standard_gain_over_q1_wide_min": 0.0,
+    "siff_best_standard_long_bin_degradation_vs_own_best_h720_max": 0.01
   },
   "decision_rules": {
-    "all_rescue_gates_pass": "checkpoint_pathology_supported_five_dataset_confirmation_only",
+    "all_rescue_gates_pass": "standard_checkpoint_pathology_supported_five_dataset_confirmation_only",
     "h1_recovers_but_controls_fail": "checkpoint_protocol_repair_siff_still_closed",
     "h1_ratio_stays_above_two": "trajectory_readout_failure_return_step2_close_scale_field",
     "protocol_or_numeric_failure": "diagnostic_invalid_redesign_step6"
