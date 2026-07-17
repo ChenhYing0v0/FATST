@@ -75,3 +75,18 @@ dataset-horizon cells等权；`dataset win`先在一个dataset内平均四horizo
   `test_informed` benchmark evidence。
 - Falsification：任一Encoder init不匹配、checkpoint被test阶段修改、280 cells不完整、或candidate只在未预注册
   metric上正向，都不能通过本次gate。
+
+## 7. Step9 attribution analyzer
+
+`scripts/analyze_stage_c_fair_reaudit_step9.py`同时读取聚合test scorecard和各run的validation
+`metrics_by_target_horizon.csv`。它输出：
+
+- `comparison_scorecard.csv`：每个comparison在validation/test、MSE/MAE上的macro gain、cell wins、
+  dataset wins、horizon wins与pre-registered gate；
+- `comparison_test_cells.csv`：每个comparison的20个test MSE cells；
+- `all_arms_vs_a6.csv`：所有非A6 arms相对A6的exploratory MSE/MAE scorecard；
+- `checkpoint_epochs.csv`：每个run实际训练epoch、selected best epoch与early-stopping状态；
+- `step9_attribution.json`：区分performance pass、mechanism specificity、missing controls和rollback。
+
+其中validation/test相对增益使用各自split的同dataset、同horizon MSE或MAE；不会跨dataset直接平均raw loss。
+`all_arms_vs_a6.csv`属于结果解释，不是事后新增的method gate。

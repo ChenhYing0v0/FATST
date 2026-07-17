@@ -1,0 +1,24 @@
+{
+  "encoder_initialization_hash": "c2c2e9b86495fab13cd35f89d3d908f66c5c89cdf37a5bbfcbcb0ad4f3c27cbe",
+  "pcsd_coordinate_hash": "200a3c7a20a5ce5fb048ea51164b6f72cf81849032489260aff58244405ddad9",
+  "pcsd_initial_policy_entropy": 1.0,
+  "pcsd_initial_scope_usage": [
+    0.20000000298023224,
+    0.20000000298023224,
+    0.20000000298023224,
+    0.20000000298023224,
+    0.20000000298023224
+  ],
+  "pcsd_initialization_hash": "81ca544cc0000d2058061b296b2f9170eb4eb26bdc20b80477cd93ecd866a277",
+  "pcsd_partition": "canonical",
+  "pcsd_partition_hash": "e380155d03757efd1adcbceddbcde235d309384258636fb58d0c3c6d59dd185a",
+  "pcsd_policy_mode": "direct",
+  "pcsd_scales": [
+    1,
+    48,
+    144,
+    360,
+    720
+  ],
+  "readout_mode": "pcsd-coupling-field"
+}

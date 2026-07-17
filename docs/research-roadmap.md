@@ -5,13 +5,30 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC-RETRO-FAIR-v1 Step8 remote running |
-| `active_question` | PCSD/PCC/SIFF在four-H checkpoint与test-primary规则下的公平表现如何？ |
-| `active_candidates` | no paper-core candidate；fair retrospective audit active；CTD paused |
+| `current_step` | SC-RETRO-FAIR-v1 Step9/10 complete；SIFF rollback Step6 |
+| `active_question` | SIFF_EQUAL正收益能否超过EQUAL-context specificity controls？ |
+| `active_candidates` | SIFF partial pass only；PCC/PCSD exact v1 closed；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_fair_reaudit_v1_20260717/preregistered_protocol.md` |
-| `method_implementation` | no new method；70-run matched historical re-audit running on GPU0/1/2 |
-| `rollback_point` | exact mechanisms按fair test归档；positive只授权seed2022/2023 confirmation |
+| `method_implementation` | false；new attribution matrix not yet authorized |
+| `rollback_point` | SIFF Step6 attribution repair；Contribution 2 Step2/4 redesign |
+
+## Fair Re-audit Step 9–10 Result
+
+70/70 runs与280/280 test cells通过protocol。结论发生三层分化：
+
+1. PCSD_DIRECT相对A6为`-0.8562%`，exact architecture继续关闭；
+2. PCC相对prior仅`+0.0806%`，且在SIFF上相对EQUAL为`-0.2663%`，exact PCC关闭；
+3. SIFF_EQUAL相对PCSD_EQUAL为`+0.5906%`并通过预注册gate；相对A6为`+1.6436%` MSE、
+   `+0.9084%` MAE，是当前最佳carrier；
+4. SIFF+PCC相对A6虽为`+1.3812%`并通过performance gate，但PCC降低SIFF_EQUAL性能，不能形成双贡献归因。
+
+旧best-H720下SIFF_EQUAL vs PCSD_EQUAL四-horizon validation为`-2.3897%`，本次four-H checkpoint下变为
+validation `+0.1469%`、test `+0.5906%`。旧SIFF failure包含明确checkpoint假失败。但SIFF在PRIOR/PCC下不稳，
+且未超过independent control的macro gate，因此只能标记`partial_pass_attribution_blocked`。
+
+下一步不是直接补seed，而是回Step6冻结EQUAL-context controls与`A6_MEASURE_ONLY`。详见
+`analysis/stage_c_fair_reaudit_v1_20260717/step9_10_conclusion.md`。
 
 ## Test-Primary Fair Historical Re-audit
 
@@ -21,9 +38,8 @@ debug/diagnostic；正式机制pass/fail统一看official test的H96/H192/H336/H
 
 冻结矩阵包含14 arms × 5 datasets × seed2021，共70 runs与280 test cells。它同时覆盖A6→PCSD、PCC相对
 equal/prior controls、SIFF在equal/prior/PCC下相对PCSD，以及constant/permuted/Q1-wide/independent controls。
-Step7A已通过70 CLI、40 model construction、prefix identity、profile hash与paired Encoder initialization共9类
-gate。commit `d294aab`已推送；三张3090均空闲约24.1 GB，Weather × SIFF-PCC resource smoke通过。70-run
-matrix已于2026-07-17T21:45:08+08:00启动，等待完成后进入Step9/10。
+Step7A通过70 CLI、40 model construction、prefix identity、profile hash与paired Encoder initialization共9类
+gate；Step8于2026-07-18 00:52完成70/70，Step9/10结论见上节。
 
 由于test已成为统一benchmark decision surface，所有后续candidate均标记`test_informed`；项目不再声称test是
 untouched holdout。完整协议见

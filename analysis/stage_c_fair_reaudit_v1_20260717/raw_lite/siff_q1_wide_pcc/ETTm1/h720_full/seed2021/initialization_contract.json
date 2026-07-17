@@ -1,0 +1,44 @@
+{
+  "encoder_initialization_hash": "43f924bf4a49ddb9564e5b4b8f87f0034d1e369206e6ee48cf7dcd53c43eeac7",
+  "pcsd_coordinate_hash": "200a3c7a20a5ce5fb048ea51164b6f72cf81849032489260aff58244405ddad9",
+  "pcsd_initial_policy_entropy": 1.0,
+  "pcsd_initial_scope_usage": [
+    0.20000000298023224,
+    0.20000000298023224,
+    0.20000000298023224,
+    0.20000000298023224,
+    0.20000000298023224
+  ],
+  "pcsd_initialization_hash": "3264cedc21315bbfc43bc6118b262d8e937824a7c54be15a1e2aa2b4cf86aca5",
+  "pcsd_partition": "canonical",
+  "pcsd_partition_hash": "e380155d03757efd1adcbceddbcde235d309384258636fb58d0c3c6d59dd185a",
+  "pcsd_policy_mode": "direct",
+  "pcsd_scales": [
+    1,
+    48,
+    144,
+    360,
+    720
+  ],
+  "readout_mode": "siff-q1-wide-control",
+  "siff_scale_basis": [
+    [
+      1.0
+    ],
+    [
+      1.0
+    ],
+    [
+      1.0
+    ],
+    [
+      1.0
+    ],
+    [
+      1.0
+    ]
+  ],
+  "siff_scale_basis_hash": "f603f94b1d517d5138cdeae0c125779455d596b548a58e5cb4d941f97a1a242a",
+  "siff_scale_basis_mode": "ordered",
+  "siff_scale_components": 1
+}

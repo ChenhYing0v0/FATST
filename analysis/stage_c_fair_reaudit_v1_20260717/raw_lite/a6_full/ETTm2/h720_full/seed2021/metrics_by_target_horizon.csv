@@ -1,0 +1,5 @@
+target_horizon,mse,mae,num_samples,num_channels,eval_prefix_steps,mode,run_name,dataset,pred_len,checkpoint_policy,evaluation_split,official_test_mode,protocol_class,protocol_profile,profile_hash
+96,0.11226977916279186,0.22919831005856395,10801,7,96,unified,FAIR_REAUDIT_a6_full,ETTm2,720,best-val,val,1,method_screening,stage_c_fair_reaudit_v1,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a
+192,0.15205569904840863,0.26719702570699155,10801,7,192,unified,FAIR_REAUDIT_a6_full,ETTm2,720,best-val,val,1,method_screening,stage_c_fair_reaudit_v1,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a
+336,0.19879004327092498,0.3043369593630944,10801,7,336,unified,FAIR_REAUDIT_a6_full,ETTm2,720,best-val,val,1,method_screening,stage_c_fair_reaudit_v1,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a
+720,0.28115178919397293,0.35736764688044786,10801,7,720,unified,FAIR_REAUDIT_a6_full,ETTm2,720,best-val,val,1,method_screening,stage_c_fair_reaudit_v1,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a

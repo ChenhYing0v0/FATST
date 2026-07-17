@@ -7,22 +7,23 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC-RETRO-FAIR-v1 Step8 remote running；CTD paused |
+| `current_11_step` | SC-RETRO-FAIR-v1 Step9/10 complete；SIFF rollback Step6；CTD paused |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | no active paper-core pair；PCSD/PCC/SIFF exact conclusions正在fair test re-audit |
+| `paper_core_status` | SIFF_EQUAL performance partial pass；PCSD/PCC exact v1 closed；no attributable contribution pair |
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
 pass/fail。默认checkpoint score为validation H96/H192/H336/H720 MSE平均。test已成为
 `test_informed benchmark decision surface`，不再声称untouched；禁止按dataset/horizon/cell反向调参。
 
-[Current Audit] CTD已按用户决定暂停。当前先对A6、PCSD、PCC、SIFF执行14 arms × 5 datasets × seed2021的
-from-scratch公平重评估。旧best-H720 checkpoints全部弃用；70 runs共享four-H selector并在test产生280个
-paper-facing cells。Step7A local gate 9/9 categories通过；commit `d294aab`已在GPU0/1/2启动70-run matrix。
+[Current Audit] 70/70公平重评估已完成。`SIFF_EQUAL`相对A6为`+1.6436%` MSE、`+0.9084%` MAE，
+17/20 MSE cells、4/5 datasets、4/4 horizons，是当前最佳performance carrier。`SIFF+PCC`虽相对A6
+`+1.3812%`，但PCC相对SIFF_EQUAL为`-0.2663%`，因此不能解释为双贡献joint成功。PCSD_DIRECT
+`-0.8562%`，PCC specificity与SIFF objective-robustness均fail；当前没有可归因的paper-core pair。
 
 ## Research Thesis
 
@@ -258,7 +259,8 @@ source/method/control pass -> Step7A 36/36 implementation pass -> Step7B prelaun
 validation-only 55/55 complete -> Step9/10 exact pair fail -> short-prefix measure pathology audit ->
 SC-D16 source/code audit finds ElasTST prior and existing harmonic-L1 path -> PHMA/HR closed ->
 CTD Step5/6 design pass -> user pauses CTD -> test-primary governance ->
-PCSD/PCC/SIFF 70-run fair re-audit Step7A pass -> Step8 remote running。
+PCSD/PCC/SIFF 70-run fair re-audit complete -> SIFF performance partial pass / attribution blocked ->
+SIFF return Step6；PCC return Step2/4；CTD remains paused。
 test、confirmation false。
 
 ### Closed Candidate: PRISM Decoder

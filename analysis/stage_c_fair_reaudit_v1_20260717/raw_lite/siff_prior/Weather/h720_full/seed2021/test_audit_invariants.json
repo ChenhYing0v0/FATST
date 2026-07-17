@@ -1,0 +1,78 @@
+{
+  "all_finite": true,
+  "arm_diagnostics_present": true,
+  "candidate_id": "SC-RETRO-FAIR-v1",
+  "checkpoint_retrained": true,
+  "checkpoint_sha256": "efdaff95c36322e6a18cc6aa24becab1f80c7edac334bfd73a1c1ed9636be64d",
+  "dataset": "Weather",
+  "diagnostic_id": "SC-RETRO-FAIR-v1",
+  "evaluation_rows": 206220,
+  "evaluation_split": "test",
+  "fixed_scale": 720,
+  "full_prefix_max_abs": 0.0,
+  "partition": "canonical",
+  "pass": true,
+  "policy_mode": "direct",
+  "prefix_rows": [
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 1,
+      "shape": [
+        1,
+        1,
+        21
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 48,
+      "shape": [
+        1,
+        48,
+        21
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 96,
+      "shape": [
+        1,
+        96,
+        21
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 192,
+      "shape": [
+        1,
+        192,
+        21
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 336,
+      "shape": [
+        1,
+        336,
+        21
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 720,
+      "shape": [
+        1,
+        720,
+        21
+      ]
+    }
+  ],
+  "probe_rows": 256,
+  "protocol_pass": true,
+  "readout_contract_pass": true,
+  "readout_mode": "siff-coupling-field",
+  "test_access_authorized": true,
+  "uses_test_split": true
+}

@@ -1,0 +1,117 @@
+{
+  "audit_id": "SC-RETRO-FAIR-T1",
+  "candidate_version": "SC-RETRO-FAIR-v1",
+  "test_access_date": "2026-07-17",
+  "user_authorization": {
+    "user_authorized": true,
+    "authorization_date": "2026-07-17",
+    "test_role": "primary-mechanism-effectiveness-and-paper-benchmark",
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+    "checkpoint_retraining_allowed": true,
+    "checkpoint_mutation_during_test_allowed": false,
+    "per_dataset_horizon_or_cell_tuning_allowed": false,
+    "formal_test_access_count_for_version": 1
+  },
+  "checkpoint_retrained": true,
+  "checkpoint_rule": "mean_mse_h96_h192_h336_h720",
+  "test_role": "primary-mechanism-effectiveness-and-paper-benchmark",
+  "matrix_complete": true,
+  "test_informed": true,
+  "encoder_initialization_matched": true,
+  "primary_gates": {
+    "pcsd_architecture_pass": false,
+    "pcc_specificity_pcsd_pass": false,
+    "pcc_specificity_siff_pass": false,
+    "siff_architecture_pcc_pass": false,
+    "joint_over_a6_pass": true,
+    "siff_all_specificity_controls_pass": false
+  },
+  "macro_comparisons": {
+    "pcsd_over_a6": {
+      "gain_percent": -0.8561637734125077,
+      "cell_wins": 10,
+      "dataset_wins": 2,
+      "horizon_wins": 0
+    },
+    "pcsd_over_dense_capacity": {
+      "gain_percent": 0.09595026754465552,
+      "cell_wins": 10,
+      "dataset_wins": 2,
+      "horizon_wins": 2
+    },
+    "pcc_over_equal_pcsd": {
+      "gain_percent": 0.1688721933152526,
+      "cell_wins": 10,
+      "dataset_wins": 2,
+      "horizon_wins": 4
+    },
+    "pcc_over_prior_pcsd": {
+      "gain_percent": 0.08059395385225487,
+      "cell_wins": 13,
+      "dataset_wins": 2,
+      "horizon_wins": 4
+    },
+    "siff_over_pcsd_equal": {
+      "gain_percent": 0.5906180909420944,
+      "cell_wins": 14,
+      "dataset_wins": 3,
+      "horizon_wins": 4
+    },
+    "siff_over_pcsd_prior": {
+      "gain_percent": 0.06134462411413244,
+      "cell_wins": 8,
+      "dataset_wins": 2,
+      "horizon_wins": 3
+    },
+    "siff_over_pcsd_pcc": {
+      "gain_percent": 0.15475109286284372,
+      "cell_wins": 9,
+      "dataset_wins": 2,
+      "horizon_wins": 3
+    },
+    "pcc_over_equal_siff": {
+      "gain_percent": -0.2662642666668852,
+      "cell_wins": 7,
+      "dataset_wins": 1,
+      "horizon_wins": 1
+    },
+    "pcc_over_prior_siff": {
+      "gain_percent": 0.17247360655985255,
+      "cell_wins": 14,
+      "dataset_wins": 3,
+      "horizon_wins": 4
+    },
+    "joint_over_a6": {
+      "gain_percent": 1.3812014269883943,
+      "cell_wins": 16,
+      "dataset_wins": 4,
+      "horizon_wins": 4
+    },
+    "ordered_over_constant": {
+      "gain_percent": 0.6986252591467379,
+      "cell_wins": 18,
+      "dataset_wins": 5,
+      "horizon_wins": 4
+    },
+    "ordered_over_permuted": {
+      "gain_percent": 0.2948992089258573,
+      "cell_wins": 15,
+      "dataset_wins": 3,
+      "horizon_wins": 4
+    },
+    "ordered_over_q1_wide": {
+      "gain_percent": 0.865750417100371,
+      "cell_wins": 12,
+      "dataset_wins": 3,
+      "horizon_wins": 4
+    },
+    "ordered_over_independent": {
+      "gain_percent": 0.16001286065651543,
+      "cell_wins": 12,
+      "dataset_wins": 3,
+      "horizon_wins": 3
+    }
+  },
+  "confirmation_required": true,
+  "decision": "positive_effects_require_seed2022_2023_confirmation"
+}

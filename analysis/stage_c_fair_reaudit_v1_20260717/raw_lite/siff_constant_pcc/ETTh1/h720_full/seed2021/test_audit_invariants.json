@@ -1,0 +1,78 @@
+{
+  "all_finite": true,
+  "arm_diagnostics_present": true,
+  "candidate_id": "SC-RETRO-FAIR-v1",
+  "checkpoint_retrained": true,
+  "checkpoint_sha256": "47d3cef8bfd874073e91411768914cb94a9643ee13663a8c0c7bb7d5802a3268",
+  "dataset": "ETTh1",
+  "diagnostic_id": "SC-RETRO-FAIR-v1",
+  "evaluation_rows": 15127,
+  "evaluation_split": "test",
+  "fixed_scale": 720,
+  "full_prefix_max_abs": 0.0,
+  "partition": "canonical",
+  "pass": true,
+  "policy_mode": "direct",
+  "prefix_rows": [
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 1,
+      "shape": [
+        1,
+        1,
+        7
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 48,
+      "shape": [
+        1,
+        48,
+        7
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 96,
+      "shape": [
+        1,
+        96,
+        7
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 192,
+      "shape": [
+        1,
+        192,
+        7
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 336,
+      "shape": [
+        1,
+        336,
+        7
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 720,
+      "shape": [
+        1,
+        720,
+        7
+      ]
+    }
+  ],
+  "probe_rows": 256,
+  "protocol_pass": true,
+  "readout_contract_pass": true,
+  "readout_mode": "siff-constant-control",
+  "test_access_authorized": true,
+  "uses_test_split": true
+}

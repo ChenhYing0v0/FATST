@@ -1,0 +1,35 @@
+{
+  "audit_id": "SC-RETRO-FAIR-T1",
+  "matrix_complete": true,
+  "valid_runs": 70,
+  "valid_test_cells": 280,
+  "all_test_invariants_pass": true,
+  "checkpoint_rule": "mean_mse_h96_h192_h336_h720",
+  "test_informed": true,
+  "preregistered_comparison_passes": [
+    "joint_over_a6",
+    "ordered_over_constant",
+    "ordered_over_q1_wide",
+    "siff_over_pcsd_equal"
+  ],
+  "pcsd_exact_conclusion": "failed_architecture_effect",
+  "pcc_exact_conclusion": "failed_specificity_and_harms_siff_equal",
+  "siff_exact_conclusion": "partial_pass_under_equal_skill_but_not_objective_robust_or_fully_specific",
+  "joint_conclusion": "performance_pass_but_two_contribution_attribution_fail",
+  "best_paper_facing_arm": "siff_equal",
+  "best_arm_over_a6_test_mse_percent": 1.6435773728978327,
+  "best_arm_over_a6_test_mae_percent": 0.9083527627092691,
+  "joint_over_a6_test_mse_percent": 1.3812014269883943,
+  "pcc_on_siff_test_mse_percent": -0.2662642666668852,
+  "dense_measure_over_a6_test_mse_percent": 0.869567880751072,
+  "missing_attribution_controls": [
+    "a6_measure_only",
+    "siff_constant_equal",
+    "siff_permuted_equal",
+    "siff_q1_wide_equal",
+    "siff_independent_equal"
+  ],
+  "confirmation_status": "held_until_siff_equal_attribution_controls_define_new_test_informed_candidate",
+  "ctd_status": "paused",
+  "rollback": "return_siff_to_step6_attribution_repair_close_pcc_v1"
+}

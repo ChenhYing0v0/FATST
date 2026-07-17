@@ -1,0 +1,5 @@
+{
+  "encoder_initialization_hash": "3b8977b5bc25ce41e6d0d7dfa6abdabb4baa41d4420a9d94b2bb3fdb625ef41e",
+  "pcsd_dense_initialization_hash": "fd34df4b743e309b9cf5884ec7c20a3ddabe9920c4a38f1ebcdc812102de5341",
+  "readout_mode": "siff-dense-nonlinear-matched"
+}
