@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | PCC-v1-TI 11-step Step8 remote seed2021 running |
+| `current_11_step` | SIFF/MCCA Step5 theory feasibility pass；Step6 design next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | exact PCSD-CF-v1 rejected；PCC-v1-TI 45-run validation screen running；effectiveness unknown |
+| `paper_core_status` | exact PCSD/PCC closed；SIFF/MCCA theory-feasible but narrative/method unready |
 
 [Evaluation Rule] official test split现固定为paper-core effectiveness与Step9-10继续/回滚的primary gate；validation只
 负责checkpoint selection、普通超参数选择与低成本mechanism screen。每个冻结candidate version默认只做一次完整
@@ -171,20 +171,24 @@ gap`8.88e-16`，默认inference output、parameter count与prefix projectivity�
 auxiliary output gradient。status=`step7a_pass_prelaunch_audit_next`；这些结果只证明implementation correctness，
 不证明performance；该节点只曾授权Step7B prelaunch audit。
 
-Step7B prelaunch现已8/8 categories通过：45个production CLI、dataset-major workload queue、paired initialization、
-validation-only contract、shared-gradient evaluator与analyzer dry-run均成立。当前只授权seed2021的45-run validation Phase A；
-old A6/plain/fixed/dense checkpoints只读复用。test、confirmation seeds与conditional Phase B仍false，paper claim不变。
+Step7B最终45/45完成。full PCC相对A6为`+0.9627%`、3/5，相对plain为`+2.4927%`、5/5，25/25 arms
+恢复；但相对closest prior composition仅`+0.1050%`，且pairwise arm-output diversity只保留plain的
+`20.57%-41.13%`。`EQUAL_SKILL`已解释full PCC相对A6 gain的88.90%。因此exact PCC-v1-TI status=
+`validation_screen_failed_exact_design`：不进入Phase B、confirmation或test，回Step4。
 
 ### Joint Story
 
-PCSD-CF回答“一个unified decoder如何用同一parameter field表示不同future-output sharing strategies”。
-Contribution 2回答“nested multi-horizon risks如何在不输入requested H的情况下，被守恒地输运为same-run
-coupling arms与target router的training credit”，而不能依赖外部teacher pipeline。
+原PCSD-CF/PCC pair现在只保留为problem evidence：前者暴露arm starvation，后者证明direct supervision可恢复skill，
+同时暴露same-label homogenization。provisional新pair把问题收紧为：(1) coupling scale作为decoder internal coordinate
+生成可辨识、连续共享的history operators；(2) all-prefix target measure与scope skill budget共同约束competitive credit。
+两者都不输入requested $H$。Step5的10/10 synthetic/algebra cases已通过，但production budget、generic controls与
+narrative boundary仍未完成Step6，不能写入paper claim。
 
 [Execution Order] D14-A problem confirmed -> CCRL retired -> PCSD-CF Step4-7 -> validation screen fail/credit clue ->
 PCC-v0 Step2-5 -> frozen PCSD-CF-v1 test audit fail-with-headroom -> Step6 prior-art rollback -> PCC-v1-TI nested-risk
-transport Step5b/6 pass -> Step7A 35/35 pass -> Step7B prelaunch 8/8 pass。下一步启动seed2021 validation Phase A；
-test、confirmation seeds与Phase B仍false。
+transport Step5b/6 pass -> Step7A 35/35 pass -> Step7B 45/45 validation screen -> prior specificity/diversity fail ->
+Step4 scale-identifiability/competitive-credit redesign -> SIFF/MCCA Step5 10/10 theory pass。下一步Step6
+source/control design；implementation、test、remote、confirmation false。
 
 ### Closed Candidate: PRISM Decoder
 
@@ -662,6 +666,10 @@ loss 或更多 tuning 来掩盖失败。
 
 ## Canonical Active Artifacts
 
+- `analysis/stage_c_sc2_pcc_step7b_seed2021_20260717/step9_10_result_and_failure_attribution.md`
+- `analysis/stage_c_post_pcc_step4_redesign_20260717/source_informed_redesign_audit.md`
+- `analysis/stage_c_post_pcc_step5_theory_20260717/step5_theory_feasibility.md`
+- `docs/experiments/stage-c-post-pcc-siff-mcca.md`
 - `analysis/stage_c_pcsd_cf_step7b_seed2021_20260716/step9_10_result_and_failure_attribution.md`
 - `analysis/stage_c_sc2_projective_coupling_credit_step24_20260716/source_theory_audit.md`
 - `analysis/stage_c_sc2_pcc_step5_theory_20260716/step5_theory_feasibility.md`

@@ -5,7 +5,7 @@
 | Field | Value |
 | --- | --- |
 | `candidate` | `SC2-PCC-v1-TI` |
-| `current_step` | 11-step Step8 remote seed2021 running |
+| `current_step` | Step9/10 validation screen complete；rollback Step4 |
 | `prelaunch_gate` | 8/8 categories；45 CLI contracts |
 | `matrix` | 9 objective modes × 5 datasets × seed2021 = 45 runs |
 | `evaluation` | validation dense H1..720 full-crop |
@@ -103,3 +103,14 @@ resource smoke，并以GPU 0/1/2后台启动45-run matrix。启动检查时前�
 `/home/yingch/exp_outputs/r-2026-fatst/stage_c_sc2_pcc_step7b`。当前decision为
 `step7b_remote_seed2021_running`；不长期值守，test、confirmation与Phase B保持false。完整provenance见
 `analysis/stage_c_sc2_pcc_step7b_prelaunch_20260717/remote_launch_record.md`。
+
+## Step9/10 Result
+
+45/45 runs与15/15 locked references通过artifact/protocol/paired-initialization audit。full PCC相对A6 macro
+`+0.9627%`、3/5，相对plain DIRECT `+2.4927%`、5/5，并改善25/25 arm pairs；但相对
+`POINTWISE_PRIOR_COMPOSED`只有`+0.1050%`，且pairwise arm-output NRMSE retention仅`20.57%-41.13%`。
+
+因此formal `method_pass=false`，decision=`generic_or_pointwise_control_explains_return_step4`。exact PCC-v1-TI不进入
+Phase B、confirmation或official test；保留arm recovery evidence，回Step4联合审计scope-identifiable architecture与
+non-homogenizing credit。完整报告见
+`analysis/stage_c_sc2_pcc_step7b_seed2021_20260717/step9_10_result_and_failure_attribution.md`。

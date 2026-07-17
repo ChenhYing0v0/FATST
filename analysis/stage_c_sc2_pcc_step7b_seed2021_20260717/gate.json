@@ -1,0 +1,90 @@
+{
+  "candidate": "SC2-PCC-v1-TI",
+  "seed": 2021,
+  "expected_runs": 45,
+  "valid_runs": 45,
+  "valid_reference_runs": 15,
+  "complete": true,
+  "paired_pcc_initialization": true,
+  "test_used": false,
+  "gates": {
+    "pcc_over_a6": true,
+    "pcc_over_plain": true,
+    "pcc_over_pointwise_pcc": true,
+    "pcc_over_prior_composed": false,
+    "arm_degradation_recovery": true,
+    "pairwise_nrmse_retention": false,
+    "policy_not_collapsed": true
+  },
+  "method_pass": false,
+  "decision": "generic_or_pointwise_control_explains_return_step4",
+  "macro_comparisons": {
+    "a6": {
+      "gain_fraction": 0.00962748076247546,
+      "gain_percent": 0.962748076247546,
+      "dataset_wins": 3
+    },
+    "pcsd_direct": {
+      "gain_fraction": 0.02492670589920649,
+      "gain_percent": 2.492670589920649,
+      "dataset_wins": 5
+    },
+    "dense_matched": {
+      "gain_fraction": 0.04784449624314473,
+      "gain_percent": 4.7844496243144725,
+      "dataset_wins": 5
+    },
+    "measure_only": {
+      "gain_fraction": 0.006708501604787842,
+      "gain_percent": 0.6708501604787842,
+      "dataset_wins": 4
+    },
+    "equal_skill": {
+      "gain_fraction": 0.0010912444290365642,
+      "gain_percent": 0.10912444290365642,
+      "dataset_wins": 3
+    },
+    "pointwise_route_only": {
+      "gain_fraction": 0.010923870749606435,
+      "gain_percent": 1.0923870749606435,
+      "dataset_wins": 5
+    },
+    "pointwise_capability_skill_only": {
+      "gain_fraction": 0.004701254337785432,
+      "gain_percent": 0.47012543377854316,
+      "dataset_wins": 4
+    },
+    "pointwise_prior_composed": {
+      "gain_fraction": 0.001049607145635445,
+      "gain_percent": 0.1049607145635445,
+      "dataset_wins": 3
+    },
+    "pointwise_pcc_v0": {
+      "gain_fraction": 0.005178744324670981,
+      "gain_percent": 0.5178744324670981,
+      "dataset_wins": 4
+    },
+    "transport_skill_only": {
+      "gain_fraction": 0.0023080060000373326,
+      "gain_percent": 0.23080060000373326,
+      "dataset_wins": 3
+    },
+    "transport_route_only": {
+      "gain_fraction": 0.007206374294462692,
+      "gain_percent": 0.7206374294462692,
+      "dataset_wins": 5
+    }
+  },
+  "arm_degradation_median_relative_reduction": 0.9800623462783521,
+  "arm_pairs_improved": 25,
+  "pairwise_nrmse_retention_by_dataset": {
+    "ETTh1": 0.29352539654881155,
+    "ETTh2": 0.4113134478204862,
+    "ETTm1": 0.2362884509423846,
+    "ETTm2": 0.20566586440945084,
+    "Weather": 0.40360594660550253
+  },
+  "pairwise_nrmse_retention_min": 0.20566586440945084,
+  "policy_normalized_entropy_min": 0.9313488576804724,
+  "policy_usage_max": 0.3587609354282997
+}

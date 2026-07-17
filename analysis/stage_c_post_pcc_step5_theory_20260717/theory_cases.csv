@@ -1,0 +1,11 @@
+case,value,threshold,pass
+siff_q1_containment,3.552713678800501e-15,1e-10,True
+siff_prefix_projectivity,0.0,1e-10,True
+current_constant_scope_indistinguishable,0.0,1e-12,True
+siff_constant_scope_contrast,1.0,0.0001,True
+mcca_row_marginal,6.245004513516506e-17,1e-09,True
+mcca_column_marginal,1.1102230246251565e-16,1e-09,True
+mcca_crossed_specialization,0.6666666666666656,0.2,True
+mcca_starvation_protection,0.2,0.1,True
+mcca_skill_gradient,0.07643097643097645,1e-10,True
+mcca_router_gradient,0.31103761027934196,1e-10,True

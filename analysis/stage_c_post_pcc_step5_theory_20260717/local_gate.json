@@ -1,0 +1,12 @@
+{
+  "architecture_candidate": "SC1-SIFF",
+  "training_candidate": "SC2-MCCA",
+  "cases": 10,
+  "passed_cases": 10,
+  "pass": true,
+  "test_used": false,
+  "implementation_authorized": false,
+  "remote_authorized": false,
+  "step6_authorized": true,
+  "decision": "step5_theory_pass_step6_source_design_next"
+}

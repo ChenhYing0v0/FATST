@@ -1,0 +1,48 @@
+{
+  "stage": "StageC-UVHF",
+  "current_step": "post-PCC Step5 theory feasibility",
+  "architecture_candidate": "SC1-SIFF",
+  "training_candidate": "SC2-MCCA",
+  "status": "step5_theory_pass_step6_authorized",
+  "contract": {
+    "full_domain_length": 720,
+    "requested_horizon_feature": false,
+    "full_output_then_prefix_crop": true,
+    "offline_teacher": false,
+    "second_forward": false,
+    "inference_objective_dependency": false
+  },
+  "siff": {
+    "scale_coordinate": "log_s_over_log_T",
+    "scale_basis": ["constant", "linear", "quadratic"],
+    "q1_contains_pcsd": true,
+    "production_rank": null,
+    "production_parameter_budget": null
+  },
+  "mcca": {
+    "row_marginal": "projective_target_measure",
+    "column_marginal": "scope_skill_budget",
+    "solver": "entropic_sinkhorn",
+    "epsilon": 0.08,
+    "iterations": 500,
+    "stop_gradient_assignment": true,
+    "generic_ot_novelty_claim": false
+  },
+  "gates": {
+    "containment_gap_max": 1e-10,
+    "prefix_gap_max": 1e-10,
+    "current_constant_scope_gap_max": 1e-12,
+    "new_constant_scope_gap_min": 1e-4,
+    "sinkhorn_row_gap_max": 1e-9,
+    "sinkhorn_column_gap_max": 1e-9,
+    "best_scope_mass_gain_over_uniform_min": 0.2,
+    "starvation_column_mass_min": 0.1,
+    "gradient_norm_min": 1e-10
+  },
+  "authorization": {
+    "implementation": false,
+    "remote": false,
+    "test": false,
+    "step6": true
+  }
+}

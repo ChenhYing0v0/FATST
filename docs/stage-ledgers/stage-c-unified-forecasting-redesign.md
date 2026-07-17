@@ -6,39 +6,39 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | decoder/operator 与 training principle 两项相互支撑的 paper-core innovations |
-| `active_question` | nested-prefix credit transport能否特异性修复test-confirmed same-run arm starvation？ |
+| `active_question` | 如何同时保留coupling-scope identifiability、arm skill与projective multi-horizon credit？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | `SC1-PCSD-CF-v1` effectiveness rejected；`SC2-PCC-v1-TI` Step8 seed2021 remote running |
+| `active_candidates` | `SC1-SIFF`/`SC2-MCCA` Step5 theory pass；Step6 design pending |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
-| `stage_rollback` | PCC退化为generic skill floor -> Step4；shared-field arm ceiling -> SC1 Step4 redesign |
+| `stage_rollback` | current rollback=Step4；scale-indexed field或competitive credit theory fail则继续Step4 redesign |
 
 ## Decision Cursor
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SC2-PCC-v1-TI 11-step Step8 remote seed2021 running |
-| `current_candidate` | `SC2-PCC-v1-TI` narrative/design conditional pass；effectiveness unready |
-| `latest_decision` | remote dry-run/resource smoke pass；3×3090后台启动45-run validation matrix |
-| `next_required_action` | 45/45返回后执行Step9 artifact/analyzer audit与Step10 decision |
-| `method_training_authorized` | seed2021 validation Phase A remote=true；test/confirmation/Phase B=false |
-| `rollback_point` | generic balancing explains -> Step4；shared-field arm ceiling -> SC1 Step4；invalid math -> Step5 redesign |
+| `current_11_step` | SIFF/MCCA Step5 theory feasibility pass；Step6 source/control design next |
+| `current_candidate` | `SC1-SIFF` + `SC2-MCCA` theory-feasible；not narrative ready |
+| `latest_decision` | 10/10 theory cases pass；只授权Step6，implementation/remote/test false |
+| `next_required_action` | Step6 production tensor/budget/marginal/control matrix与narrative gate |
+| `method_training_authorized` | false；remote/test/confirmation/Phase B=false |
+| `rollback_point` | Step5 proof fail -> Step4；generic width/OT/diversity control explains -> redesign/close |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | PCC-v1-TI 11-step Step8 remote seed2021 running |
-| `problem` | 现有unified decoder固定point/block/global coupling scope；最佳future-output sharing是否随target region与history变化 |
+| `current_step` | PCC Step9/10 complete；SIFF/MCCA Step5 10/10 pass；Step6 next |
+| `problem` | same-label arm supervision修复skill但使shared-field scope outputs同质化，coupling identity与credit coverage冲突 |
 | `existence_evidence` | three-seed neutral+A6 5/5 stable crossing；strict 7.1107%/9.1259%；instance 6.7948%/8.5990% |
-| `idea` | PCSD field + dense nested-prefix capability + harmonic target-coordinate credit transport |
-| `theory_check` | Step6 19/19；Step7A 35/35；loop max gap 2.22e-16、identity/output/prefix gaps 0 |
-| `design` | one-forward raw-scale L1；continuous equal-to-capability schedule；9 arms × 5 datasets controls |
-| `narrative_gate` | conditional pass；generic expert loss/loss-teacher/gradient balancing excluded；must beat pointwise controls |
-| `effectiveness_gate` | PCC untested；carrier exact v1 test fail：DIRECT vs A6 -1.3994%、1/5；oracle +2.0197% |
-| `artifacts` | `analysis/stage_c_sc2_pcc_step7a_local_20260716/step7a_local_gate_report.md`；`analysis/stage_c_sc2_pcc_step7b_prelaunch_20260717/prelaunch_gate_report.md`；`analysis/stage_c_sc2_pcc_step7b_prelaunch_20260717/remote_launch_record.md` |
-| `decision` | PCC-v1-TI 45-run seed2021 validation matrix remote running；test false |
+| `idea` | provisional scale-indexed history modes + projective measure-constrained competitive skill mass |
+| `theory_check` | SIFF containment `3.55e-15`、prefix gap 0、scope witness 1.0；MCCA marginals约`1e-16`；10/10 |
+| `design` | $Q=1$ containment/$Q>1$ scale field；target-measure rows + scope-budget columns；$2\times2$ factorial |
+| `narrative_gate` | not ready；generic heterogeneous experts/OT/diversity必须在Step6排除 |
+| `effectiveness_gate` | PCC val vs A6 +0.9627%、3/5；vs prior +0.1050% fail；diversity retention 20.57%-41.13% fail |
+| `artifacts` | `analysis/stage_c_sc2_pcc_step7b_seed2021_20260717/step9_10_result_and_failure_attribution.md`；`analysis/stage_c_post_pcc_step4_redesign_20260717/source_informed_redesign_audit.md`；`analysis/stage_c_post_pcc_step5_theory_20260717/step5_theory_feasibility.md` |
+| `decision` | exact PCC fail；SIFF/MCCA theory pass，Step6 only；implementation/remote/test false |
 
 ## Frozen Carrier Contract
 
@@ -94,7 +94,9 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC2-CCRL` | `retired_as_core_diagnostic_only` | cross-fit relative risk能否增益matched direct fusion | generic overlap high；two-stage teacher/student inconsistency | not implemented | retain report/config as history；not scheduled |
 | `SC2-ICC` | `superseded_by_pcc` | same-forward marginal coupling credit能否修复direct policy misallocation | working hypothesis已由D15-A收紧 | not implemented | historical name only |
 | `SC2-PCC-v0` | `superseded_pointwise_control` | pointwise same-forward capability + skill floor | expert loss与loss-teacher gate已有直接prior art | 15/15 theory cases；method untested | mandatory pointwise/prior controls only |
-| `SC2-PCC-v1-TI` | `step8_remote_seed2021_running` | nested-prefix capability能否经harmonic incidence输运为target-coordinate credit | complete-chain conditional pass；必须超过pointwise/prior composition | Step6 19/19；Step7A 35/35；prelaunch 8/8；45-run running | 45/45后Step9/10；test false |
+| `SC2-PCC-v1-TI` | `validation_screen_failed_exact_design` | nested-prefix capability能否经harmonic incidence输运为target-coordinate credit | exact claim fail；generic/prior explains most gain | val vs A6 +0.9627%、3/5；vs prior +0.1050% fail；diversity fail | no Phase B/test/seeds；return Step4 |
+| `SC1-SIFF` | `step5_theory_pass_step6_pending` | coupling scale能否作为internal coordinate生成可辨识且连续共享的history modes | current-field witness pass；heterogeneous experts/width overlap未排除 | 4/4 theory cases；not implemented | Step6 tensor/budget/control design |
+| `SC2-MCCA` | `step5_theory_pass_step6_pending` | target-measure与scope-budget双marginal能否兼顾coverage和specialization | algebra pass；BASE/SSR/orthogonality overlap未排除 | 6/6 theory cases；not implemented | Step6 marginal/control design |
 | `SC-D14-A/B` | `a_confirmed_b_retired` | coupling crossing与conditional-risk predictability | A pass；B retired before implementation | A confirmed；B not run | A evidence retained；B closed |
 | `SC-D15-A` | `completed_training_blocked` | native PCSD-CF representation、direct trainability与credit-problem existence | Step4-6 conditional pass | 60/60；method fail；25/25 arm starvation | no confirmation；feeds PCC Step2-4 |
 | `SC3-JOINT` | `deferred` | decoder与objective co-design存在非冗余interaction | SC1/SC2分别通过后评估 | `2x2` factorial独立主效应 | 不得提前实现 |
@@ -263,6 +265,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-16 | PCC-v1-TI Step7A local gate | Current Position、Contribution 2、Experiment Logic | production objective + training-path invariants | 35/35 pass；inference unchanged；Step7B prelaunch next；remote/test false |
 | 2026-07-17 | PCC-v1-TI Step7B prelaunch gate | Current Position、Contribution 2、Experiment Logic | 45-run tooling + remote authorization | 8/8 pass；seed2021 validation remote authorized；test/confirmation/Phase B false |
 | 2026-07-17 | PCC-v1-TI Step8 remote launch | Current Position、Contribution 2、Experiment Logic | running-state + exact launch provenance | commit282b96c；GPU0/1/2；45-run validation matrix running；test/confirmation/Phase B false |
+| 2026-07-17 | PCC-v1-TI Step9/10 + Step4 rollback | Current Position、Contribution 1/2、Experiment Logic | specificity/diversity failure attribution + source-informed redesign | 45/45；vs A6 +0.9627%；prior/diversity fail；new pair Step5 theory only |
+| 2026-07-17 | SIFF/MCCA Step5 theory feasibility | Contribution 1/2、Experiment Logic | containment/projectivity + balanced competitive allocation | 10/10 pass；Step6 only；implementation/remote/test false |
 
 ## Continuation Rules
 

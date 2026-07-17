@@ -1,0 +1,29 @@
+{
+  "seed": 2021,
+  "evaluation_split": "validation",
+  "expected_runs": 45,
+  "valid_runs": 45,
+  "paired_pcc_initialization": true,
+  "test_used": false,
+  "formal_method_pass": false,
+  "formal_decision": "generic_or_pointwise_control_explains_return_step4",
+  "pcc_macro_gain_over_a6_percent": 0.962748076247546,
+  "equal_skill_macro_gain_over_a6_percent": 0.855847436259991,
+  "equal_skill_fraction_of_pcc_a6_gain": 0.8889630188572112,
+  "pcc_gain_over_equal_skill_percent": 0.10912444290365642,
+  "pcc_gain_over_prior_composed_percent": 0.1049607145635445,
+  "pcc_gain_over_pointwise_pcc_percent": 0.5178744324670981,
+  "arm_pairs_improved": 25,
+  "arm_degradation_median_relative_reduction": 0.9800623462783521,
+  "pairwise_nrmse_retention_min": 0.20566586440945084,
+  "credit_argmax_accuracy_min": 0.30832320559611653,
+  "credit_argmax_accuracy_max": 0.41413901708876305,
+  "failure_attribution": {
+    "hypothesis_false": false,
+    "intervention_point_wrong": "partially_supported_skill_supervision_homogenizes_scopes",
+    "readout_or_head_design_wrong": "remains_possible_shared_field_specialization_not_preserved",
+    "optimization_or_numeric_pathology": false,
+    "capacity_control_explains": "generic_equal_skill_and_prior_composition_explain_most_gain"
+  },
+  "research_decision": "exact_pcc_v1_ti_fail_retain_arm_recovery_signal_return_step4"
+}

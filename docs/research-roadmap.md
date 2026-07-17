@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | PCC-v1-TI 11-step Step8 remote seed2021 running |
-| `active_question` | projective nested-risk credit能否恢复same-run arms并超过pointwise/prior controls？ |
-| `active_candidates` | `SC1-PCSD-CF-v1` exact method rejected；`SC2-PCC-v1-TI` design-pass/method-untested |
+| `current_step` | SIFF/MCCA Step5 theory feasibility pass；Step6 source/control design next |
+| `active_question` | scale-identifiable decoder与competitive projective credit能否同时保skill与specialization？ |
+| `active_candidates` | `SC1-SIFF`/`SC2-MCCA` theory-feasible；narrative/method unready |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `docs/experiments/stage-c-sc2-pcc-step7b.md` |
-| `method_implementation` | local 35/35 + prelaunch 8/8；45-run seed2021 validation remote running；test/confirmation=false |
-| `rollback_point` | PCC generic controls explain -> Step4；shared-field arm ceiling -> SC1 Step4；numeric pathology -> redesign |
+| `active_protocol` | `docs/experiments/stage-c-post-pcc-siff-mcca.md` |
+| `method_implementation` | Step5 10/10；implementation/remote/test/confirmation=false |
+| `rollback_point` | Step5 proof fail -> Step4；generic width/OT/diversity explains -> redesign/close |
 
 ## Post-D11 Joint Mainline Reset
 
@@ -385,6 +385,34 @@ validation Phase A，test、confirmation seeds与conditional Phase B继续false�
 matrix。单次startup audit确认三个Weather jobs进入training、显存占用正常、runner与workers存活。当前进入11-step
 Step8，停止长期值守；45/45返回后再进入Step9/10。launch provenance见
 `analysis/stage_c_sc2_pcc_step7b_prelaunch_20260717/remote_launch_record.md`。
+
+## SC2-PCC-v1-TI Step9/10 Result And Step4 Rollback
+
+45/45 PCC runs与15/15 references通过本地复算。full PCC相对A6 macro `+0.9627%`、3/5，相对plain
+`+2.4927%`、5/5，25/25 arm pairs改善且median relative reduction `98.01%`。但相对closest prior composed
+仅`+0.1050%`，低于`0.2%`门槛；five-dataset pairwise NRMSE retention仅`20.57%-41.13%`，低于50%。
+
+formal decision=`generic_or_pointwise_control_explains_return_step4`。`EQUAL_SKILL`已经解释full PCC相对A6 gain的
+88.90%，说明arm recovery主要通过same-label homogenization完成；harmonic transport未形成独立performance/horizon
+signature。exact v1不进入Phase B、seeds或test。
+
+Step4 external-first audit进一步确认generic expert loss、structural routing prior、heterogeneous experts、orthogonality/
+variance diversity与balanced OT assignment均已有直接prior art。provisional next pair为：(1) coupling scale作为internal
+coordinate生成scope-conditioned history modes；(2) projective target-measure rows与scope-skill-budget columns约束的
+competitive credit。两者只进入Step5 proof，不实现、不remote。详见
+`analysis/stage_c_sc2_pcc_step7b_seed2021_20260717/step9_10_result_and_failure_attribution.md`与
+`analysis/stage_c_post_pcc_step4_redesign_20260717/source_informed_redesign_audit.md`。
+
+## SIFF/MCCA Step5 Theory Feasibility
+
+10/10 float64 cases通过：SIFF的Q1 containment gap `3.5527e-15`、prefix gap `0`，current constant-coordinate
+scope gap `0`而SIFF witness gap `1.0`；MCCA row/column marginal gaps分别`6.25e-17/1.11e-16`，crossed
+best-scope mass相对uniform增加`0.6667`，dominant-arm case minimum scope mass `0.2`，skill/router gradients均finite。
+
+该pass只证明algebraic feasibility。generic wider head、heterogeneous experts与BASE/SSR-style OT仍可能解释完整primitive，
+production rank/parameter/marginal也未冻结。decision=`step5_theory_pass_step6_source_design_next`；下一步Step6，不授权
+implementation、remote或test。详见
+`analysis/stage_c_post_pcc_step5_theory_20260717/step5_theory_feasibility.md`。
 
 ## SC1-JAPO Step 7A: Production Gate Passed, Step 8 Authorized
 
