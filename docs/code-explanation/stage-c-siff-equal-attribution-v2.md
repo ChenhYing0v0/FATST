@@ -136,3 +136,15 @@ paths、两类matched-rank controls、5个component cases、evaluator/analyzer s
 
 结果为13/13 categories pass；remote与formal test仍为false。详细证据见
 `analysis/stage_c_siff_equal_attribution_step7a_20260718/step7a_implementation_gate_report.md`。
+
+## 7. Step 7B prelaunch control
+
+`check_stage_c_siff_equal_attribution_step7b.py`不修改模型。它读取committed Step7A gate与job manifest，验证
+candidate identity、profile hash、50-run/200-cell matrix、four-horizon checkpoint、正式test授权、
+`test_audit_authorized`返回值、confirmation hold以及remote runner executable/syntax。
+
+remote runner在dry-run时只执行Step7B checker与evaluator/analyzer synthetic smoke，所有临时gate写入repo-external
+output root。正式路径仅在`remote_training_authorized`和`formal_test_access_authorized`同时为true时开放；
+resource smoke只要求remote authorization，且使用`final_evaluation_split=none`，不会读取test。
+
+Step7B machine gate为9/9。该结果只授权seed2021 Phase A，不授权seeds2022/2023。

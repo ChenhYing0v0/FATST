@@ -4,7 +4,8 @@
 - `stage_c_dataset_profile_calibration_r2.json`: contract 引用的 validation-only profile provenance。
 - `stage_c_post_pcc_step6.json`: SIFF-v1/MCCA-v1 Step6冻结tensor、same-mass assignment、controls、gates与rollback。
 - `stage_c_siff_equal_attribution_v2.json`: `SIFF_EQUAL` 的10-arm EQUAL-context归因矩阵，冻结四层评估、
-  seven hard comparisons、Phase-A/confirmation规模；Step7A local已通过，Step7B prelaunch前remote/test仍关闭。
+  seven hard comparisons、Phase-A/confirmation规模；Step7B 9/9已通过并只授权seed2021 remote/test，
+  confirmation仍关闭。
 - `paper_facing_evaluation_protocol.json`: paper-facing four-horizon scorecard、checkpoint selector、test-informed
   边界与统一四层机制评估规则。
 

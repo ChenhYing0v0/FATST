@@ -89,9 +89,8 @@ fi
 
 if [[ "${DRY_RUN}" == "1" ]]; then
   "${CONDA_BIN}" run --no-capture-output -n "${CONDA_ENV}" \
-    python scripts/check_stage_c_siff_equal_attribution_step6.py >/dev/null
-  "${CONDA_BIN}" run --no-capture-output -n "${CONDA_ENV}" \
-    python scripts/check_stage_c_siff_equal_attribution_step7a.py >/dev/null
+    python scripts/check_stage_c_siff_equal_attribution_step7b.py \
+      --output-dir "${OUTPUT_ROOT}/_prelaunch" >/dev/null
   "${CONDA_BIN}" run --no-capture-output -n "${CONDA_ENV}" \
     python scripts/evaluate_stage_c_pcsd_cf_checkpoint.py \
       --synthetic-smoke >/dev/null

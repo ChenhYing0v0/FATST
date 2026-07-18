@@ -1,0 +1,25 @@
+{
+  "candidate_version": "SC1-SIFF-v2-EQ-ATTR-v1",
+  "current_step": "Step7B prelaunch gate",
+  "categories": {
+    "candidate_identity": true,
+    "step7a_evidence": true,
+    "profile_hash": true,
+    "phase_a_job_contract": true,
+    "paper_facing_matrix": true,
+    "formal_authorization": true,
+    "checkpoint_evaluator_authorization": true,
+    "confirmation_held": true,
+    "runner_syntax_and_mode": true
+  },
+  "categories_passed": 9,
+  "categories_total": 9,
+  "jobs": 50,
+  "test_cells": 200,
+  "profile_hash": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a",
+  "overall_pass": true,
+  "remote_training_authorized": true,
+  "formal_test_access_authorized": true,
+  "confirmation_authorized": false,
+  "next_step": "remote dry-run resource smoke and Phase-A launch"
+}

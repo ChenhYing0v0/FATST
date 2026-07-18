@@ -142,6 +142,8 @@ next action，并同步对应experiment protocol与code explanation。
   seven hard comparisons、四层decision boundary与Step7A-only授权，生成machine-readable Step6 gate。
 - `check_stage_c_siff_equal_attribution_step7a.py`: 生成50-job manifest并审计CLI、35个model constructors、
   paired Encoder initialization、matched ranks、10条gradient paths、scale-component artifact与authorization guard。
+- `check_stage_c_siff_equal_attribution_step7b.py`: 审计committed Step7A evidence、50-run/200-cell Phase-A matrix、
+  formal test/checkpoint authorization、evaluator access、confirmation hold与remote runner syntax。
 - `analyze_stage_c_siff_equal_attribution_v2.py`: 对完整test matrix计算MSE/MAE hard comparisons、trained internal
   health与failure attribution；只有四层通过时才授权confirmation。
 - `evaluate_stage_c_pcsd_cf_checkpoint.py`: PCSD/SIFF共享checkpoint evaluator；SIFF额外导出

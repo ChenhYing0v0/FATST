@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | `SC1-SIFF-v2-EQ-ATTR` Step7A local pass；Step7B prelaunch next |
+| `current_step` | `SC1-SIFF-v2-EQ-ATTR` Step7B prelaunch pass；Step8 launch next |
 | `active_question` | SIFF_EQUAL正收益能否同时超过A6/PCSD与四个EQUAL-context specificity controls？ |
 | `active_candidates` | `SC1-SIFF-v2-EQ-ATTR-v1` narrative-ready；PCC/PCSD exact v1 closed；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_siff_equal_attribution_step6_20260718/step6_attribution_protocol.md` |
-| `method_implementation` | Step7A 13/13 categories pass；remote/test/confirmation false |
+| `method_implementation` | Step7B 9/9；seed2021 remote/test authorized；confirmation false |
 | `rollback_point` | construction/control contract fail回Step6；effectiveness/attribution fail回Step4/6 |
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
@@ -37,6 +37,11 @@ checkpoint evaluator与四层analyzer smoke均通过，remote runner在authoriza
 
 Decision=`step7a_local_pass / step7b_prelaunch_next`。详见
 `analysis/stage_c_siff_equal_attribution_step7a_20260718/step7a_implementation_gate_report.md`。
+
+Step7B prelaunch进一步以9/9 categories冻结正式授权：50 runs/200 test cells、four-horizon validation
+checkpoint、official test primary gate、single formal access与confirmation hold。3090三张GPU预检均约15 MiB
+used、无训练进程；远程历史dirty CSV与本次路径不重叠并必须保留。下一步为pull、dry-run、resource smoke与后台
+launch。详见`analysis/stage_c_siff_equal_attribution_step7b_prelaunch_20260718/prelaunch_report.md`。
 
 ## Fair Re-audit Step 9–10 Result
 
