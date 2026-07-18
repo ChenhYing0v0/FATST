@@ -19,27 +19,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | `SC1-SIFF-v2-CCSF-v1-tau25` frozen；formal Phase-A Step7B prelaunch next |
+| `current_11_step` | `SC1-SIFF-v2-CCSF-v1-tau25` formal Phase-A Step7B prelaunch 15/15 pass；remote launch next |
 | `current_candidate` | v1 immutable parent + CCSF tau0.25 formal candidate |
-| `latest_decision` | retry1 15/15、60/60、audit9/9；tau0.25 frozen；pilot checkpoint reuse=false |
-| `next_required_action` | implement 50-run formal runner/evaluator/internal/four-layer prelaunch gate；不启动test |
-| `method_training_authorized` | no；formal prelaunch local only；Phase A/test/confirmation=false |
+| `latest_decision` | formal prelaunch 15/15；50 runs/200 cells与10 hard comparisons完整；Phase A/test authorized |
+| `next_required_action` | commit/push；3090 preflight；三batch resource smoke；启动50-run formal Phase A |
+| `method_training_authorized` | Phase A/official-test=true；confirmation=false |
 | `rollback_point` | formal tooling fail回Step7A；contract conflict回Step6；不重选tau |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | post-pilot formal candidate freeze complete；Step7B formal prelaunch next |
+| `current_step` | Step7B formal prelaunch complete；Step8 remote Phase-A launch next |
 | `problem` | `SIFF_EQUAL`有正向test performance，但旧PCC-context controls无法证明收益来自ordered scale coordinate |
 | `existence_evidence` | v1 fusion gap + contrast cross-fit：vs coordinate +1.8348%、vs shuffled +1.7085%、5/5 gates |
 | `idea` | v1 logits + scope-shared target-free contrast correction；confidence-weighted relative competence weak supervision |
 | `theory_check` | projectivity、v1 inclusion、no target at inference、contrast identifiability pass；fused gain/stability conditional |
 | `design` | tau0.25；10 arms × 5 datasets × seed2021；50 runs/200 official-test cells |
 | `narrative_gate` | conditional pass；C1=contrast-conditioned projective scope fusion，C2=co-designed relative competence calibration |
-| `effectiveness_gate` | not started；pilot只选择temperature，不能pass/reject机制 |
-| `artifacts` | Step5/6/7A/runtime repair + retry1 raw/audit + formal candidate config |
-| `decision` | tau0.25 candidate frozen；effectiveness not started；formal Phase A/test/confirmation false |
+| `effectiveness_gate` | tooling ready but not started；正式50-run test matrix返回后才判断 |
+| `artifacts` | formal config + 50-job runner + CCSF evaluator + four-layer analyzer + prelaunch 15/15 |
+| `decision` | formal Phase A/test authorized；confirmation false；remote smoke/launch next |
 
 ## Frozen Carrier Contract
 
@@ -98,7 +98,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC2-PCC-v1-TI` | `rejected_effectiveness_test_fair` | nested-prefix capability能否经harmonic incidence输运为target-coordinate credit | exact claim fail；generic/prior explains most gain | fair test vs prior PCSD +0.0806% fail；on SIFF vs equal -0.2663% | exact v1 closed；return Step2/4 |
 | `SC1-SIFF-v1` | `partial_pass_attribution_blocked` | coupling scale能否作为internal coordinate生成可辨识且连续共享的history modes | complete-chain conditional pass | EQUAL vs PCSD +0.5906% pass；vs A6 +1.6436%；prior/PCC/independent specificity fail | return Step6；EQUAL-context controls before seeds |
 | `SC1-SIFF-v2-EQ-ATTR-v1` | `frozen_performance_near_candidate_attribution_blocked` | EQUAL-trained ordered scale field能否同时超过A6/PCSD与matched EQUAL-context specificity controls | conditional；完整claim未成立 | main 2/3；controls 3/4；internal 7/7 | immutable parent；Step4 source-informed redesign，不补v1 seeds |
-| `SC1-SIFF-v2-CCSF-v1-tau25` | `formal_candidate_frozen_prelaunch_next` | target-free scope contrast能否让policy识别relative competence；relative teacher只作co-designed弱监督 | Step6 conditional pass；generic gating/calibration first claims excluded | pilot only；formal E2E not started | implement formal Phase-A prelaunch；remote/test false |
+| `SC1-SIFF-v2-CCSF-v1-tau25` | `formal_phase_a_authorized_launch_next` | target-free scope contrast能否让policy识别relative competence；relative teacher只作co-designed弱监督 | Step6 conditional pass；generic gating/calibration first claims excluded | pilot only；formal E2E not started | 3090 smoke后启动50-run/200-cell Phase A；confirmation false |
 | `SC2-MCCA-v1` | `historical_validation_negative_fair_test_not_reaudited` | same total scope skill mass能否竞争性分配而避免per-target homogenization | complete-chain conditional pass | old best-H720 validation four-H -0.1357%、1/5；not in 70-run audit | inactive；reuse前回Step4重审相对EQUAL/MEASURE的必要性 |
 | `SC-D16-CTD` | `deferred_paused_by_user` | H720 checkpoint是否丢弃healthy SIFF four-H epoch | diagnostic only；weighted checkpoint prior-covered | not implemented | design retained；resume only after user authorization |
 | `SC-RETRO-FAIR-v1` | `completed_partial_pass_attribution_blocked` | PCSD/PCC/SIFF在新checkpoint与test-primary规则下是否仍成立 | retrospective audit；not a method | 70/70；280/280；joint pass；two-contribution attribution fail | archive result；SIFF Step6/PCC Step2-4 |
@@ -181,6 +181,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | CCSF Step8 first-attempt failure + repair | 0/15 completion audit + traceback + zero-contrast gradient reproducer | three Weather runs NaN；pre-fix 7200 NaN grads；post-fix 0；three-temp nine steps finite | numeric implementation fault；direction rejection invalid；retry smoke next | `analysis/stage_c_siff_ccsf_runtime_repair_20260718/runtime_failure_and_repair_report.md` |
 | CCSF Step8 repaired retry1 launch | three-batch Weather smoke + 3-GPU background launch | train/val finite；checkpoint/metrics pass；commit`7045c80`；driver PID683945 | retry1 running；do not monitor；formal test held | `analysis/stage_c_siff_ccsf_temperature_pilot_retry1_step8_remote_20260718/remote_relaunch_record.md` |
 | CCSF pilot retry1 result + candidate freeze | 15-run/60-cell validation audit + selection stability | 9/9；tau0.25；MSE0.568165；17/20 cells、4/5 datasets、4/4 horizons | formal candidate frozen；Step7B formal prelaunch next；test false | `analysis/stage_c_siff_ccsf_temperature_pilot_retry1_result_20260718/pilot_result_and_candidate_freeze.md` |
+| CCSF tau0.25 formal Phase-A prelaunch | 50-job runner + official-test evaluator + CCSF internal artifacts + four-layer analyzer | 15/15；50 runs/200 cells；10 hard comparisons；runtime/nonmutation/test metadata pass | Phase A/test true；remote smoke/launch next；confirmation false | `analysis/stage_c_siff_ccsf_v1_tau25_phase_a_20260718/formal_phase_a_prelaunch_report.md` |
 
 ## Pending Tasks
 
@@ -325,6 +326,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-18 | CCSF Step8 failure audit + Step7A repair | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | numeric failure attribution + regression gate | first attempt 0/15；zero-RMS derivative repaired；3/3 + recheck15/15；retry smoke next |
 | 2026-07-18 | CCSF Step8 repaired retry1 launch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | repair smoke + commit/resource/process provenance | `7045c80`；3 GPUs；15-run validation retry running；formal test false |
 | 2026-07-18 | CCSF retry1 result + formal freeze | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | validation selection + formal identity freeze | 15/15、9/9；tau0.25；Step7B formal prelaunch next；test false |
+| 2026-07-18 | CCSF tau0.25 formal Phase-A prelaunch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | 50-run matrix + test authorization + four-layer artifact gate | 15/15；Phase A/test true；confirmation false；remote launch next |
 
 ## Continuation Rules
 
@@ -438,3 +440,6 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
     mechanism gain。`SC1-SIFF-v2-CCSF-v1-tau25`的50-run Phase A必须全部from-scratch，不复用pilot checkpoints；
     下一步只授权formal prelaunch tooling。remote Phase A、official test与confirmation仍为false，直到新的完整
     runner/evaluator/internal-artifact gate通过并记录test metadata。
+48. formal Phase-A prelaunch现为15/15，50-job/200-cell、10 hard comparisons、official-test authorization、
+    checkpoint non-mutation、CCSF internal artifacts与four-layer analyzer均通过。Phase A/test现已授权；正式启动前
+    仍必须commit/push、remote pull、`nvidia-smi`与Weather CCSF_RELCAL三batch smoke。confirmation seeds保持false。

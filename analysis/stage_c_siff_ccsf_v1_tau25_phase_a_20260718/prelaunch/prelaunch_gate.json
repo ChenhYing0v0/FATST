@@ -1,0 +1,38 @@
+{
+  "candidate_version": "SC1-SIFF-v2-CCSF-v1-tau25",
+  "categories": {
+    "checkpoint_nonmutation_check": true,
+    "cli_contract_all_jobs": true,
+    "contract_hashes": true,
+    "evaluator_ccsf_diagnostics": true,
+    "formal_test_full_matrix_only": true,
+    "four_layer_analyzer": true,
+    "matrix_200_test_cells": true,
+    "matrix_50_runs": true,
+    "pilot_gate_passed": true,
+    "profile_hash": true,
+    "runner_dry_run_50": true,
+    "runtime_repair_preserved": true,
+    "ten_hard_comparisons": true,
+    "test_audit_authorized": true,
+    "three_batch_resource_smoke_contract": true
+  },
+  "categories_passed": 15,
+  "categories_total": 15,
+  "config_sha256": "5bd9d7cffe2eca8d5c5babc3b4578b775f18a45e0f103ae8e4b4da576b5e8ed9",
+  "confirmation_authorized": false,
+  "contract_hashes": {
+    "pilot_result_gate": true,
+    "pilot_selection": true,
+    "runtime_repair": true,
+    "step6_design": true,
+    "step7a_implementation": true
+  },
+  "current_step": "Step7B-formal-prelaunch",
+  "expected_runs": 50,
+  "expected_test_cells": 200,
+  "gate_id": "SC1-SIFF-v2-CCSF-v1-tau25-PhaseA-Step7B",
+  "overall_pass": true,
+  "remote_phase_a_authorized": true,
+  "rollback_if_fail": "Step7A for tooling/runtime; Step6 for contract conflict"
+}

@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | `SC1-SIFF-v2-CCSF-v1-tau25` frozen；formal Phase-A Step7B prelaunch next |
+| `current_11_step` | `SC1-SIFF-v2-CCSF-v1-tau25` formal Phase-A prelaunch 15/15；remote launch next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | SIFF_EQUAL v1 frozen parent；CCSF tau0.25 formal candidate frozen / Phase A-test false |
+| `paper_core_status` | SIFF_EQUAL v1 frozen parent；CCSF tau0.25 formal Phase A/test authorized；confirmation false |
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
@@ -173,6 +173,13 @@ MSE/MAE=`0.568165/0.453679`，相对tau0.1 MSE +0.1415%、相对tau0.05 +0.2991%
 formal candidate现冻结为`SC1-SIFF-v2-CCSF-v1-tau25`，pilot weights不复用。下一步只实现50-run正式Phase-A
 prelaunch tooling，remote/test仍为false。详见
 `analysis/stage_c_siff_ccsf_temperature_pilot_retry1_result_20260718/pilot_result_and_candidate_freeze.md`。
+
+formal Phase-A Step7B prelaunch现已15/15通过。新runner固定10 arms × 5 datasets × seed2021 = 50个from-scratch
+runs与200个official-test标准cells；每个run仍只用validation四horizon mean MSE选checkpoint，test evaluator验证
+授权并禁止checkpoint mutation。CCSF内部artifact新增final/base policy、base/correction logits与contrast descriptor，
+four-layer analyzer将10项hard comparisons、interaction、internal health和failure attribution分开。Phase A/test现已
+授权，confirmation仍为false；下一步是commit/push、3090 resource smoke与正式启动。详见
+`analysis/stage_c_siff_ccsf_v1_tau25_phase_a_20260718/formal_phase_a_prelaunch_report.md`。
 
 ### Historical Contribution 1 Parent: PCSD-CF
 

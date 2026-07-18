@@ -2,7 +2,7 @@
   "stage": "StageC-UVHF",
   "candidate_id": "SC1-SIFF-v2-CCSF",
   "candidate_version": "SC1-SIFF-v2-CCSF-v1-tau25",
-  "status": "post_pilot_frozen_formal_phase_a_prelaunch_next",
+  "status": "authorized_prelaunch",
   "test_informed": true,
   "parent_candidate": "SC1-SIFF-v2-EQ-ATTR-v1",
   "contracts": {
@@ -28,8 +28,10 @@
     }
   },
   "datasets": ["Weather", "ETTm1", "ETTm2", "ETTh1", "ETTh2"],
+  "seeds": [2021],
   "phase_a_seeds": [2021],
   "confirmation_seeds": [2022, 2023],
+  "coupling_scales": [1, 48, 144, 360, 720],
   "profiles": {
     "path": "configs/stage_c_five_dataset_natural_profiles.json",
     "sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a"
@@ -82,7 +84,8 @@
     "batch_size": 32,
     "learning_rate": 0.0001,
     "evaluation_prefix_mode": "full-crop",
-    "final_evaluation_split": "test",
+    "training_final_evaluation_split": "val",
+    "formal_evaluation_split": "test",
     "test_labels_select_checkpoint": false
   },
   "matrix": {
@@ -99,22 +102,43 @@
     "four_layer_evaluation_required": true,
     "pilot_validation_cannot_pass_effectiveness": true
   },
+  "diagnostic_protocol": {
+    "future_bins": [
+      {"name": "h1_48", "start": 0, "end": 48},
+      {"name": "h49_96", "start": 48, "end": 96},
+      {"name": "h97_144", "start": 96, "end": 144},
+      {"name": "h145_192", "start": 144, "end": 192},
+      {"name": "h193_288", "start": 192, "end": 288},
+      {"name": "h289_336", "start": 288, "end": 336},
+      {"name": "h337_512", "start": 336, "end": 512},
+      {"name": "h513_720", "start": 512, "end": 720}
+    ]
+  },
   "test_audit_metadata": {
     "test_access_date": null,
-    "user_authorization": null,
+    "user_authorization": "2026-07-18 user requested continuation of the planned formal experiment",
     "candidate_version": "SC1-SIFF-v2-CCSF-v1-tau25",
     "checkpoint_hash": null,
     "checkpoint_retrained": true,
-    "test_role": "formal_phase_a_effectiveness_and_attribution",
+    "test_role": "primary-mechanism-effectiveness-and-paper-benchmark",
     "matrix_complete": false
   },
   "authorization": {
     "formal_candidate_frozen": true,
     "step7b_formal_prelaunch_authorized": true,
-    "remote_training_authorized": false,
-    "formal_phase_a_authorized": false,
-    "formal_test_access_authorized": false,
-    "confirmation_authorized": false
+    "remote_training_authorized": true,
+    "formal_phase_a_authorized": true,
+    "formal_test_access_authorized": true,
+    "confirmation_authorized": false,
+    "user_authorized": true,
+    "authorization_date": "2026-07-18",
+    "test_access_date": null,
+    "test_role": "primary-mechanism-effectiveness-and-paper-benchmark",
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+    "checkpoint_retraining_allowed": true,
+    "checkpoint_mutation_during_test_allowed": false,
+    "per_dataset_horizon_or_cell_tuning_allowed": false,
+    "formal_test_access_count_for_version": 1
   },
   "output": {
     "remote_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_ccsf_v1_tau25_phase_a",

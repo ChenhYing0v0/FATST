@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | `SC1-SIFF-v2-CCSF-v1-tau25` frozen；formal Phase-A Step7B prelaunch next |
+| `current_step` | formal Phase-A Step7B prelaunch 15/15 pass；Step8 remote launch next |
 | `active_question` | 为什么healthy multi-arm SIFF未把conditional headroom转成超过A6_MEASURE/independent的fused forecast？ |
 | `active_candidates` | v1 frozen performance-near parent；CCSF tau0.25 formal candidate；PCSD/PCC closed；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_siff_ccsf_temperature_pilot_retry1_result_20260718/pilot_result_and_candidate_freeze.md` |
-| `method_implementation` | retry1 15/15 + audit9/9；tau0.25 frozen；formal runner/evaluator not implemented |
+| `active_protocol` | `analysis/stage_c_siff_ccsf_v1_tau25_phase_a_20260718/formal_phase_a_prelaunch_report.md` |
+| `method_implementation` | formal runner/evaluator/internal/four-layer analyzer ready；prelaunch 15/15 |
 | `rollback_point` | formal prelaunch tooling/contract fail回Step7A/Step6；不重新选择temperature |
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
@@ -179,6 +179,20 @@ formal candidate固定为`SC1-SIFF-v2-CCSF-v1-tau25`，所有10 arms从头训练
 decision=`freeze_tau025_formal_candidate_prelaunch_next`；下一步实现50-run official-test Phase-A runner/evaluator/
 internal artifacts/four-layer analyzer并通过新的prelaunch gate，remote/test仍未授权。详见
 `analysis/stage_c_siff_ccsf_temperature_pilot_retry1_result_20260718/pilot_result_and_candidate_freeze.md`。
+
+## CCSF tau0.25 Formal Phase-A Prelaunch
+
+formal Step7B已实现并通过15/15 categories。matrix固定为10 arms × 5 datasets × seed2021 = 50 runs与
+200 official-test cells；训练只以validation四horizon mean MSE选择checkpoint，之后单次test evaluator读取完整
+H96/192/336/720 scorecard并验证checkpoint hash不变。
+
+新增internal artifacts保存final/base policy、base/correction logits与六维contrast descriptor；four-layer analyzer
+同时执行Step6的10项hard comparisons、architecture-objective interaction、internal health与failure attribution。
+所有50条CLI、contract hashes、runtime repair、三batch smoke合同与test authorization均通过。
+
+Decision=`formal_phase_a_prelaunch_pass_remote_launch_next`。Phase A/test已授权，confirmation seeds仍为false；
+下一步必须commit/push、remote pull、`nvidia-smi`与Weather CCSF_RELCAL三batch smoke后再启动正式矩阵。详见
+`analysis/stage_c_siff_ccsf_v1_tau25_phase_a_20260718/formal_phase_a_prelaunch_report.md`。
 
 ## Fair Re-audit Step 9–10 Result
 

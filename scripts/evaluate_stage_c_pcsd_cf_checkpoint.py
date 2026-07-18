@@ -229,6 +229,26 @@ def denormalized_arms(
     return torch.stack(outputs, dim=2), weights
 
 
+def denormalized_ccsf_tensors(
+    model: TimeAlign.Model,
+    batch_x: torch.Tensor,
+) -> tuple[torch.Tensor, dict[str, torch.Tensor]] | None:
+    """Return denormalized CCSF arms and full diagnostic tensors."""
+    readout = model.pcsd_readout
+    if not hasattr(readout, "forward_with_ccsf_diagnostics"):
+        return None
+    memory = model.encode_history(batch_x)
+    hidden = memory.flatten(start_dim=-2)
+    _fused, arms, _weights, tensors = (
+        readout.forward_with_ccsf_diagnostics(hidden, 720)
+    )
+    outputs = []
+    for scale_index in range(arms.shape[2]):
+        normalized = arms[:, :, scale_index].permute(0, 2, 1)
+        outputs.append(model.normalization_x(normalized, "denorm"))
+    return torch.stack(outputs, dim=2), tensors
+
+
 def denormalized_scale_component_contributions(
     model: TimeAlign.Model,
     batch_x: torch.Tensor,
@@ -294,6 +314,11 @@ def evaluate(args: argparse.Namespace) -> None:
     probe_fused: list[np.ndarray] = []
     probe_targets: list[np.ndarray] = []
     scale_component_contribution: list[np.ndarray] = []
+    probe_policy: list[np.ndarray] = []
+    probe_base_policy: list[np.ndarray] = []
+    probe_base_logits: list[np.ndarray] = []
+    probe_correction_logits: list[np.ndarray] = []
+    probe_contrast_descriptor: list[np.ndarray] = []
     probe_count = 0
     all_finite = True
     prefix_rows: list[dict[str, Any]] | None = None
@@ -329,7 +354,13 @@ def evaluate(args: argparse.Namespace) -> None:
             )
 
             if hasattr(model, "pcsd_readout"):
-                arms, weights = denormalized_arms(model, batch_x)
+                ccsf_tensors = denormalized_ccsf_tensors(model, batch_x)
+                if ccsf_tensors is None:
+                    arms, weights = denormalized_arms(model, batch_x)
+                    policy_tensors = None
+                else:
+                    arms, policy_tensors = ccsf_tensors
+                    weights = policy_tensors["policy"]
                 arm_errors = arms - target.unsqueeze(2)
                 arm_rows = arm_errors.permute(0, 3, 2, 1).reshape(
                     -1,
@@ -389,6 +420,42 @@ def evaluate(args: argparse.Namespace) -> None:
                         .cpu()
                         .numpy()
                     )
+                    if policy_tensors is not None:
+                        row_shape = (-1, 720, weights.shape[-1])
+                        probe_policy.append(
+                            policy_tensors["policy"]
+                            .reshape(row_shape)[:count]
+                            .cpu()
+                            .numpy()
+                        )
+                        probe_base_policy.append(
+                            policy_tensors["base_policy"]
+                            .reshape(row_shape)[:count]
+                            .cpu()
+                            .numpy()
+                        )
+                        probe_base_logits.append(
+                            policy_tensors["base_logits"]
+                            .reshape(row_shape)[:count]
+                            .cpu()
+                            .numpy()
+                        )
+                        probe_correction_logits.append(
+                            policy_tensors["correction_logits"]
+                            .reshape(row_shape)[:count]
+                            .cpu()
+                            .numpy()
+                        )
+                        probe_contrast_descriptor.append(
+                            policy_tensors["contrast_descriptor"].reshape(
+                                -1,
+                                720,
+                                weights.shape[-1],
+                                policy_tensors["contrast_descriptor"].shape[-1],
+                            )[:count]
+                            .cpu()
+                            .numpy()
+                        )
                     component_delta = None
                     if (
                         adapter["readout_mode"] == "siff-coupling-field"
@@ -415,6 +482,11 @@ def evaluate(args: argparse.Namespace) -> None:
                 all_finite = all_finite and bool(
                     torch.isfinite(arms).all() and torch.isfinite(weights).all()
                 )
+                if policy_tensors is not None:
+                    all_finite = all_finite and all(
+                        bool(torch.isfinite(value).all())
+                        for value in policy_tensors.values()
+                    )
             all_finite = all_finite and bool(
                 torch.isfinite(fused).all() and torch.isfinite(target).all()
             )
@@ -453,6 +525,26 @@ def evaluate(args: argparse.Namespace) -> None:
             payload["scale_component_contribution"] = np.concatenate(
                 scale_component_contribution
             ).astype(np.float32)
+        if probe_policy:
+            payload.update(
+                {
+                    "probe_policy": np.concatenate(probe_policy).astype(
+                        np.float32
+                    ),
+                    "probe_base_policy": np.concatenate(
+                        probe_base_policy
+                    ).astype(np.float32),
+                    "probe_base_logits": np.concatenate(
+                        probe_base_logits
+                    ).astype(np.float32),
+                    "probe_correction_logits": np.concatenate(
+                        probe_correction_logits
+                    ).astype(np.float32),
+                    "probe_contrast_descriptor": np.concatenate(
+                        probe_contrast_descriptor
+                    ).astype(np.float32),
+                }
+            )
     artifact_prefix = (
         "validation" if args.evaluation_split == "val" else "test_audit"
     )
@@ -654,6 +746,34 @@ def main() -> None:
         ):
             raise RuntimeError("SIFF checkpoint evaluator synthetic smoke failed")
         print("siff_checkpoint_evaluator_synthetic_smoke=pass")
+        ccsf_config = SimpleNamespace(**vars(config))
+        ccsf_config.readout_mode = "ccsf-coupling-field"
+        ccsf_config.ccsf_correction_hidden_dim = 64
+        torch.manual_seed(2021)
+        ccsf_model = TimeAlign.Model(ccsf_config).float().eval()
+        with torch.no_grad():
+            result = denormalized_ccsf_tensors(ccsf_model, x)
+        if result is None:
+            raise RuntimeError("CCSF checkpoint diagnostic hook is missing")
+        ccsf_arms, tensors = result
+        expected_shapes = {
+            "policy": (2, 7, 720, 5),
+            "base_policy": (2, 7, 720, 5),
+            "base_logits": (2, 7, 720, 5),
+            "correction_logits": (2, 7, 720, 5),
+            "contrast_descriptor": (2, 7, 720, 5, 6),
+        }
+        if (
+            tuple(ccsf_arms.shape) != (2, 720, 5, 7)
+            or any(
+                key not in tensors
+                or tuple(tensors[key].shape) != expected_shape
+                or not bool(torch.isfinite(tensors[key]).all())
+                for key, expected_shape in expected_shapes.items()
+            )
+        ):
+            raise RuntimeError("CCSF checkpoint evaluator synthetic smoke failed")
+        print("ccsf_checkpoint_evaluator_synthetic_smoke=pass")
         return
     evaluate(args)
 
