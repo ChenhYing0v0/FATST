@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | `SC1-SIFF-v2-EQ-ATTR` Step7B prelaunch pass；Step8 launch next |
+| `current_step` | `SC1-SIFF-v2-EQ-ATTR` Step8 Phase A running |
 | `active_question` | SIFF_EQUAL正收益能否同时超过A6/PCSD与四个EQUAL-context specificity controls？ |
 | `active_candidates` | `SC1-SIFF-v2-EQ-ATTR-v1` narrative-ready；PCC/PCSD exact v1 closed；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_siff_equal_attribution_step6_20260718/step6_attribution_protocol.md` |
-| `method_implementation` | Step7B 9/9；seed2021 remote/test authorized；confirmation false |
+| `method_implementation` | commit c4c4730；50-run seed2021 Phase A running；confirmation false |
 | `rollback_point` | construction/control contract fail回Step6；effectiveness/attribution fail回Step4/6 |
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
@@ -42,6 +42,11 @@ Step7B prelaunch进一步以9/9 categories冻结正式授权：50 runs/200 test 
 checkpoint、official test primary gate、single formal access与confirmation hold。3090三张GPU预检均约15 MiB
 used、无训练进程；远程历史dirty CSV与本次路径不重叠并必须保留。下一步为pull、dry-run、resource smoke与后台
 launch。详见`analysis/stage_c_siff_equal_attribution_step7b_prelaunch_20260718/prelaunch_report.md`。
+
+Step8已于2026-07-18 11:12:03在3090 GPU0/1/2启动。remote dry-run与Weather-SIFF_EQUAL resource smoke先行
+通过，首批Weather的A6_FULL/A6_MEASURE/PCSD_MEASURE正常进入epoch 3/3/1。当前不高频值守；50/50完成后同步
+完整test metrics、invariants与component artifacts，再执行四层Step9。详见
+`analysis/stage_c_siff_equal_attribution_step8_remote_20260718/remote_launch_record.md`。
 
 ## Fair Re-audit Step 9–10 Result
 

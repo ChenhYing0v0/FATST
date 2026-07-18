@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | `SC1-SIFF-v2-EQ-ATTR` Step7B prelaunch pass；Step8 launch next；CTD paused |
+| `current_11_step` | `SC1-SIFF-v2-EQ-ATTR` Step8 Phase A running；CTD paused |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -30,7 +30,7 @@ pass/fail。默认checkpoint score为validation H96/H192/H336/H720 MSE平均。t
 constant/permuted/Q1-wide/independent EQUAL controls。七项comparison必须逐项通过，内部oracle、arm
 difference、policy entropy与component-use只解释机制健康度，不能替代paper-facing effectiveness或matched
 attribution。Step6为16/16，Step7A为13/13，Step7B prelaunch为9/9；seed2021的完整50-run official-test
-Phase A已获授权，seeds2022/2023 confirmation仍为false。
+Phase A已于commit `c4c4730`在GPU0/1/2启动，seeds2022/2023 confirmation仍为false。
 
 ## Research Thesis
 
@@ -93,7 +93,7 @@ equal-skill objective缓解same-run arms的credit starvation。fair test已证�
 
 status=`step7b_prelaunch_pass / effectiveness_and_attribution_pending`。50-job wiring、component intervention artifact与
 四层analyzer已实现；random-init component witness不构成trained mechanism evidence。Step7B现已通过并只授权
-seed2021 Phase A；confirmation仍未授权。
+seed2021 Phase A；当前status=`step8_phase_a_running`，confirmation仍未授权。
 
 ### Historical Contribution 1 Parent: PCSD-CF
 
