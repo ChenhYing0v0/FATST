@@ -9,7 +9,7 @@
 | `active_question` | 为什么healthy multi-arm SIFF未把conditional headroom转成超过A6_MEASURE/independent的fused forecast？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | v1 frozen performance-near parent；CCSF runtime-repaired preformal candidate；CTD paused |
+| `active_candidates` | v1 frozen performance-near parent；CCSF runtime-repaired retry1 running；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
@@ -19,18 +19,18 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step7A runtime repair pass；retry smoke next |
+| `current_11_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step8 repaired validation pilot retry1 running |
 | `current_candidate` | v1 immutable parent + CCSF implemented preformal candidate |
-| `latest_decision` | first pilot 0/15 NaN；root cause confirmed；repair 3/3，Step7B recheck 15/15 |
-| `next_required_action` | commit/push后remote三batch smoke；通过才relaunch retry1，不启动formal test |
-| `method_training_authorized` | repair smoke only；pilot retry conditional；formal Phase A/test/confirmation=false |
+| `latest_decision` | repair commit`7045c80`；three-batch smoke finite；retry1 started on GPU0/1/2 |
+| `next_required_action` | 用户通知完成后核验15/15、60/60、finite/no-test与selection；不轮询 |
+| `method_training_authorized` | retry1 running only；formal Phase A/test/confirmation=false |
 | `rollback_point` | remote smoke仍non-finite则继续Step7A；通过后retry原pilot；完整后formal-candidate prelaunch |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Step7A runtime repair complete；remote stability smoke next |
+| `current_step` | Step8 repaired validation pilot retry1 running |
 | `problem` | `SIFF_EQUAL`有正向test performance，但旧PCC-context controls无法证明收益来自ordered scale coordinate |
 | `existence_evidence` | v1 fusion gap + contrast cross-fit：vs coordinate +1.8348%、vs shuffled +1.7085%、5/5 gates |
 | `idea` | v1 logits + scope-shared target-free contrast correction；confidence-weighted relative competence weak supervision |
@@ -39,7 +39,7 @@
 | `narrative_gate` | conditional pass；C1=contrast-conditioned projective scope fusion，C2=co-designed relative competence calibration |
 | `effectiveness_gate` | not started；pilot只选择temperature，不能pass/reject机制 |
 | `artifacts` | Step5/6/7A + `analysis/stage_c_siff_ccsf_step7b_prelaunch_20260718/` + pilot config/runner/analyzer/checker |
-| `decision` | first attempt invalid 0/15；repair local pass；temperature仍unknown；formal Phase A/test false |
+| `decision` | first attempt invalid 0/15；repair smoke pass；retry1 running；temperature/formal effectiveness unknown |
 
 ## Frozen Carrier Contract
 
@@ -98,7 +98,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC2-PCC-v1-TI` | `rejected_effectiveness_test_fair` | nested-prefix capability能否经harmonic incidence输运为target-coordinate credit | exact claim fail；generic/prior explains most gain | fair test vs prior PCSD +0.0806% fail；on SIFF vs equal -0.2663% | exact v1 closed；return Step2/4 |
 | `SC1-SIFF-v1` | `partial_pass_attribution_blocked` | coupling scale能否作为internal coordinate生成可辨识且连续共享的history modes | complete-chain conditional pass | EQUAL vs PCSD +0.5906% pass；vs A6 +1.6436%；prior/PCC/independent specificity fail | return Step6；EQUAL-context controls before seeds |
 | `SC1-SIFF-v2-EQ-ATTR-v1` | `frozen_performance_near_candidate_attribution_blocked` | EQUAL-trained ordered scale field能否同时超过A6/PCSD与matched EQUAL-context specificity controls | conditional；完整claim未成立 | main 2/3；controls 3/4；internal 7/7 | immutable parent；Step4 source-informed redesign，不补v1 seeds |
-| `SC1-SIFF-v2-CCSF-v1-preimplementation` | `runtime_repair_local_pass_retry_pending` | target-free scope contrast能否让policy识别relative competence；relative teacher只作co-designed弱监督 | Step6 conditional pass；generic gating/calibration first claims excluded | first pilot 0/15 numeric invalid；repair 3/3；formal E2E not started | remote three-batch smoke then retry same pilot |
+| `SC1-SIFF-v2-CCSF-v1-preimplementation` | `step8_repaired_temperature_pilot_running` | target-free scope contrast能否让policy识别relative competence；relative teacher只作co-designed弱监督 | Step6 conditional pass；generic gating/calibration first claims excluded | first pilot invalid；repair smoke pass；retry1 running；formal E2E not started | wait for user completion notice；audit and select shared tau |
 | `SC2-MCCA-v1` | `historical_validation_negative_fair_test_not_reaudited` | same total scope skill mass能否竞争性分配而避免per-target homogenization | complete-chain conditional pass | old best-H720 validation four-H -0.1357%、1/5；not in 70-run audit | inactive；reuse前回Step4重审相对EQUAL/MEASURE的必要性 |
 | `SC-D16-CTD` | `deferred_paused_by_user` | H720 checkpoint是否丢弃healthy SIFF four-H epoch | diagnostic only；weighted checkpoint prior-covered | not implemented | design retained；resume only after user authorization |
 | `SC-RETRO-FAIR-v1` | `completed_partial_pass_attribution_blocked` | PCSD/PCC/SIFF在新checkpoint与test-primary规则下是否仍成立 | retrospective audit；not a method | 70/70；280/280；joint pass；two-contribution attribution fail | archive result；SIFF Step6/PCC Step2-4 |
@@ -179,6 +179,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | CCSF Step7B temperature-pilot prelaunch | shared selection config + 15-job runner + completeness analyzer + remote preflight | 14/14；15 runs/60 validation cells；synthetic tie与no-test boundary pass；3 GPUs idle | pilot remote authorized；formal Phase A/test/confirmation false | `analysis/stage_c_siff_ccsf_step7b_prelaunch_20260718/prelaunch_report.md` |
 | CCSF Step8 temperature-pilot launch | commit sync + dry-run + resource smoke + 3-GPU background launch | commit`06d0ffc`；driver PID654232；first Weather jobs active；test=false | pilot running；do not monitor；formal Phase A held | `analysis/stage_c_siff_ccsf_temperature_pilot_step8_remote_20260718/remote_launch_record.md` |
 | CCSF Step8 first-attempt failure + repair | 0/15 completion audit + traceback + zero-contrast gradient reproducer | three Weather runs NaN；pre-fix 7200 NaN grads；post-fix 0；three-temp nine steps finite | numeric implementation fault；direction rejection invalid；retry smoke next | `analysis/stage_c_siff_ccsf_runtime_repair_20260718/runtime_failure_and_repair_report.md` |
+| CCSF Step8 repaired retry1 launch | three-batch Weather smoke + 3-GPU background launch | train/val finite；checkpoint/metrics pass；commit`7045c80`；driver PID683945 | retry1 running；do not monitor；formal test held | `analysis/stage_c_siff_ccsf_temperature_pilot_retry1_step8_remote_20260718/remote_relaunch_record.md` |
 
 ## Pending Tasks
 
@@ -236,7 +237,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | Fair re-audit internal mechanism health | `completed_diagnostic` | DIRECT arms失衡；PCC oracle增大但policy近均匀；SIFF_EQUAL未collapse；MCCA不在矩阵 |
 | SIFF_EQUAL EQUAL-context attribution freeze | `completed_exact_v1_closed` | 50/50；main 2/3、controls 3/4、internal 7/7；回Step4，不补confirmation |
 | SIFF v1 portfolio freeze | `completed_retained_attribution_blocked` | immutable manifest complete；作为当前best candidate与v2 parent，不改Step9 failure |
-| SIFF contrast-calibrated redesign | `runtime_repair_local_pass_retry_pending` | remote three-batch smoke通过后重启15-run pilot；formal Phase A/test仍禁止 |
+| SIFF contrast-calibrated redesign | `step8_repaired_validation_pilot_running` | 用户通知完成后做完整性与shared-temperature audit；formal Phase A/test仍禁止 |
 
 ## Paper Mainline Sync Log
 
@@ -321,6 +322,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-18 | CCSF Step7B temperature-pilot prelaunch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | shared hyperparameter selection + remote authorization boundary | 14/14；pilot remote true；formal Phase A/test/confirmation false |
 | 2026-07-18 | CCSF Step8 temperature-pilot launch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | commit/resource/process provenance | `06d0ffc`；3 GPUs；15-run validation pilot running；formal test false |
 | 2026-07-18 | CCSF Step8 failure audit + Step7A repair | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | numeric failure attribution + regression gate | first attempt 0/15；zero-RMS derivative repaired；3/3 + recheck15/15；retry smoke next |
+| 2026-07-18 | CCSF Step8 repaired retry1 launch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | repair smoke + commit/resource/process provenance | `7045c80`；3 GPUs；15-run validation retry running；formal test false |
 
 ## Continuation Rules
 
@@ -427,3 +429,6 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
     于zero-contrast group RMS的0点反向，属于`optimization_or_numeric_pathology`；只否定旧implementation。
     epsilon repair通过3/3 local runtime gate，Step7B recheck为15/15。retry前必须通过三batch真实Weather smoke，且
     retry使用独立external root；协议、test=false与formal authorization不得改变。
+46. repair commit`7045c80`的三batch真实Weather smoke已finite，retry1已启动。运行中不得pull、修改协议或访问test；
+    用户明确不要求值守。retry完成后仍只允许选择shared temperature，不能从validation pilot宣称paper-core
+    effectiveness；formal Phase A必须另行冻结candidate identity、完整10-arm matrix与四层gate。

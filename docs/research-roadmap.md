@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step7A runtime repair pass；retry smoke next |
+| `current_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step8 repaired validation pilot retry1 running |
 | `active_question` | 为什么healthy multi-arm SIFF未把conditional headroom转成超过A6_MEASURE/independent的fused forecast？ |
 | `active_candidates` | v1 frozen performance-near parent；CCSF v1 temperature-pilot ready；PCSD/PCC closed；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_siff_ccsf_runtime_repair_20260718/runtime_failure_and_repair_report.md` |
-| `method_implementation` | first pilot 0/15 numeric fail；runtime repair 3/3；Step7B recheck 15/15；retry smoke pending |
-| `rollback_point` | 三batchremote smoke失败继续Step7A；通过则retry同一validation pilot；formal test仍held |
+| `active_protocol` | `analysis/stage_c_siff_ccsf_temperature_pilot_retry1_step8_remote_20260718/remote_relaunch_record.md` |
+| `method_implementation` | first pilot 0/15 invalid；repair smoke finite；15-run retry1 running；formal Phase A/test=false |
+| `rollback_point` | retry non-finite回Step7A；完整则选shared tau并进入formal-candidate prelaunch audit |
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 
@@ -163,6 +163,11 @@ completeness与selection artifact audit，再冻结formal candidate identity。�
 
 Decision=`runtime_repair_local_pass_remote_smoke_next`；formal Phase A/test/confirmation仍为false。详见
 `analysis/stage_c_siff_ccsf_runtime_repair_20260718/runtime_failure_and_repair_report.md`。
+
+三batch真实Weather smoke随后通过：3-step train loss 1.785318、validation MSE 1.221736，checkpoint/metrics存在且
+无nan/inf。commit`7045c80`的retry1于15:54:21在GPU0/1/2启动15-run matrix。当前decision=
+`step8_repaired_validation_pilot_running`；用户通知完成前不轮询。详见
+`analysis/stage_c_siff_ccsf_temperature_pilot_retry1_step8_remote_20260718/remote_relaunch_record.md`。
 
 ## Fair Re-audit Step 9–10 Result
 
