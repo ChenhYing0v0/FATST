@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | formal Phase-A Step7B prelaunch 15/15 pass；Step8 remote launch next |
+| `current_step` | Step8 formal Phase-A 50-run matrix running on 3×3090 |
 | `active_question` | 为什么healthy multi-arm SIFF未把conditional headroom转成超过A6_MEASURE/independent的fused forecast？ |
 | `active_candidates` | v1 frozen performance-near parent；CCSF tau0.25 formal candidate；PCSD/PCC closed；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_siff_ccsf_v1_tau25_phase_a_20260718/formal_phase_a_prelaunch_report.md` |
-| `method_implementation` | formal runner/evaluator/internal/four-layer analyzer ready；prelaunch 15/15 |
+| `method_implementation` | commit604e1b8；prelaunch15/15；three-batch smoke pass；remote running |
 | `rollback_point` | formal prelaunch tooling/contract fail回Step7A/Step6；不重新选择temperature |
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
@@ -193,6 +193,11 @@ H96/192/336/720 scorecard并验证checkpoint hash不变。
 Decision=`formal_phase_a_prelaunch_pass_remote_launch_next`。Phase A/test已授权，confirmation seeds仍为false；
 下一步必须commit/push、remote pull、`nvidia-smi`与Weather CCSF_RELCAL三batch smoke后再启动正式矩阵。详见
 `analysis/stage_c_siff_ccsf_v1_tau25_phase_a_20260718/formal_phase_a_prelaunch_report.md`。
+
+Step8已于`2026-07-18T17:27:08+08:00`从commit`604e1b8`在GPU0/1/2启动。remote 15/15 gate与Weather
+CCSF_RELCAL三batch smoke先行通过，首批三个Weather jobs均已进入训练。运行期间不值守、不改协议；50/50返回后
+先审计200/200 test cells、实际test dates、checkpoint non-mutation与CCSF internal artifacts，再执行four-layer
+Step9。详见`analysis/stage_c_siff_ccsf_v1_tau25_phase_a_20260718/remote_launch_record.md`。
 
 ## Fair Re-audit Step 9–10 Result
 

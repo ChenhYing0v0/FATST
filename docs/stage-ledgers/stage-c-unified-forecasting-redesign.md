@@ -19,10 +19,10 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | `SC1-SIFF-v2-CCSF-v1-tau25` formal Phase-A Step7B prelaunch 15/15 pass；remote launch next |
+| `current_11_step` | `SC1-SIFF-v2-CCSF-v1-tau25` Step8 formal Phase-A running on 3×3090 |
 | `current_candidate` | v1 immutable parent + CCSF tau0.25 formal candidate |
-| `latest_decision` | formal prelaunch 15/15；50 runs/200 cells与10 hard comparisons完整；Phase A/test authorized |
-| `next_required_action` | commit/push；3090 preflight；三batch resource smoke；启动50-run formal Phase A |
+| `latest_decision` | commit604e1b8；remote prelaunch15/15 + three-batch smoke pass；50-run matrix launched |
+| `next_required_action` | 不值守/不改协议；用户通知完成后同步50 runs并执行four-layer Step9 |
 | `method_training_authorized` | Phase A/official-test=true；confirmation=false |
 | `rollback_point` | formal tooling fail回Step7A；contract conflict回Step6；不重选tau |
 
@@ -30,7 +30,7 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Step7B formal prelaunch complete；Step8 remote Phase-A launch next |
+| `current_step` | Step8 remote formal Phase-A running；Step9 pending returned artifacts |
 | `problem` | `SIFF_EQUAL`有正向test performance，但旧PCC-context controls无法证明收益来自ordered scale coordinate |
 | `existence_evidence` | v1 fusion gap + contrast cross-fit：vs coordinate +1.8348%、vs shuffled +1.7085%、5/5 gates |
 | `idea` | v1 logits + scope-shared target-free contrast correction；confidence-weighted relative competence weak supervision |
@@ -39,7 +39,7 @@
 | `narrative_gate` | conditional pass；C1=contrast-conditioned projective scope fusion，C2=co-designed relative competence calibration |
 | `effectiveness_gate` | tooling ready but not started；正式50-run test matrix返回后才判断 |
 | `artifacts` | formal config + 50-job runner + CCSF evaluator + four-layer analyzer + prelaunch 15/15 |
-| `decision` | formal Phase A/test authorized；confirmation false；remote smoke/launch next |
+| `decision` | formal Phase A running；effectiveness unresolved；confirmation false |
 
 ## Frozen Carrier Contract
 
@@ -98,7 +98,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC2-PCC-v1-TI` | `rejected_effectiveness_test_fair` | nested-prefix capability能否经harmonic incidence输运为target-coordinate credit | exact claim fail；generic/prior explains most gain | fair test vs prior PCSD +0.0806% fail；on SIFF vs equal -0.2663% | exact v1 closed；return Step2/4 |
 | `SC1-SIFF-v1` | `partial_pass_attribution_blocked` | coupling scale能否作为internal coordinate生成可辨识且连续共享的history modes | complete-chain conditional pass | EQUAL vs PCSD +0.5906% pass；vs A6 +1.6436%；prior/PCC/independent specificity fail | return Step6；EQUAL-context controls before seeds |
 | `SC1-SIFF-v2-EQ-ATTR-v1` | `frozen_performance_near_candidate_attribution_blocked` | EQUAL-trained ordered scale field能否同时超过A6/PCSD与matched EQUAL-context specificity controls | conditional；完整claim未成立 | main 2/3；controls 3/4；internal 7/7 | immutable parent；Step4 source-informed redesign，不补v1 seeds |
-| `SC1-SIFF-v2-CCSF-v1-tau25` | `formal_phase_a_authorized_launch_next` | target-free scope contrast能否让policy识别relative competence；relative teacher只作co-designed弱监督 | Step6 conditional pass；generic gating/calibration first claims excluded | pilot only；formal E2E not started | 3090 smoke后启动50-run/200-cell Phase A；confirmation false |
+| `SC1-SIFF-v2-CCSF-v1-tau25` | `formal_phase_a_running` | target-free scope contrast能否让policy识别relative competence；relative teacher只作co-designed弱监督 | Step6 conditional pass；generic gating/calibration first claims excluded | 50-run Phase A running；result unknown | wait for returned artifacts；four-layer Step9；confirmation false |
 | `SC2-MCCA-v1` | `historical_validation_negative_fair_test_not_reaudited` | same total scope skill mass能否竞争性分配而避免per-target homogenization | complete-chain conditional pass | old best-H720 validation four-H -0.1357%、1/5；not in 70-run audit | inactive；reuse前回Step4重审相对EQUAL/MEASURE的必要性 |
 | `SC-D16-CTD` | `deferred_paused_by_user` | H720 checkpoint是否丢弃healthy SIFF four-H epoch | diagnostic only；weighted checkpoint prior-covered | not implemented | design retained；resume only after user authorization |
 | `SC-RETRO-FAIR-v1` | `completed_partial_pass_attribution_blocked` | PCSD/PCC/SIFF在新checkpoint与test-primary规则下是否仍成立 | retrospective audit；not a method | 70/70；280/280；joint pass；two-contribution attribution fail | archive result；SIFF Step6/PCC Step2-4 |
@@ -182,6 +182,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | CCSF Step8 repaired retry1 launch | three-batch Weather smoke + 3-GPU background launch | train/val finite；checkpoint/metrics pass；commit`7045c80`；driver PID683945 | retry1 running；do not monitor；formal test held | `analysis/stage_c_siff_ccsf_temperature_pilot_retry1_step8_remote_20260718/remote_relaunch_record.md` |
 | CCSF pilot retry1 result + candidate freeze | 15-run/60-cell validation audit + selection stability | 9/9；tau0.25；MSE0.568165；17/20 cells、4/5 datasets、4/4 horizons | formal candidate frozen；Step7B formal prelaunch next；test false | `analysis/stage_c_siff_ccsf_temperature_pilot_retry1_result_20260718/pilot_result_and_candidate_freeze.md` |
 | CCSF tau0.25 formal Phase-A prelaunch | 50-job runner + official-test evaluator + CCSF internal artifacts + four-layer analyzer | 15/15；50 runs/200 cells；10 hard comparisons；runtime/nonmutation/test metadata pass | Phase A/test true；remote smoke/launch next；confirmation false | `analysis/stage_c_siff_ccsf_v1_tau25_phase_a_20260718/formal_phase_a_prelaunch_report.md` |
+| CCSF tau0.25 formal Phase-A launch | commit/pull + 3-GPU preflight + three-batch smoke + background driver | commit`604e1b8`；GPUs0/1/2；first Weather jobs active | Step8 running；do not monitor/change；confirmation false | `analysis/stage_c_siff_ccsf_v1_tau25_phase_a_20260718/remote_launch_record.md` |
 
 ## Pending Tasks
 
@@ -327,6 +328,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-18 | CCSF Step8 repaired retry1 launch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | repair smoke + commit/resource/process provenance | `7045c80`；3 GPUs；15-run validation retry running；formal test false |
 | 2026-07-18 | CCSF retry1 result + formal freeze | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | validation selection + formal identity freeze | 15/15、9/9；tau0.25；Step7B formal prelaunch next；test false |
 | 2026-07-18 | CCSF tau0.25 formal Phase-A prelaunch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | 50-run matrix + test authorization + four-layer artifact gate | 15/15；Phase A/test true；confirmation false；remote launch next |
+| 2026-07-18 | CCSF tau0.25 formal Phase-A launch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | commit/resource/process provenance | `604e1b8`；3×3090；50-run matrix running；confirmation false |
 
 ## Continuation Rules
 
@@ -443,3 +445,6 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 48. formal Phase-A prelaunch现为15/15，50-job/200-cell、10 hard comparisons、official-test authorization、
     checkpoint non-mutation、CCSF internal artifacts与four-layer analyzer均通过。Phase A/test现已授权；正式启动前
     仍必须commit/push、remote pull、`nvidia-smi`与Weather CCSF_RELCAL三batch smoke。confirmation seeds保持false。
+49. commit`604e1b8`已完成remote pull、15/15复核与Weather CCSF_RELCAL三batch smoke；50-run formal Phase A于
+    `2026-07-18T17:27:08+08:00`在GPU0/1/2启动。运行期间不pull或改协议，不高频值守；完成后先做50/50、
+    200/200、test date/checkpoint hash与internal artifacts audit，再进入Step9，confirmation仍为false。

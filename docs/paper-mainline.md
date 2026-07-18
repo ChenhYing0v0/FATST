@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | `SC1-SIFF-v2-CCSF-v1-tau25` formal Phase-A prelaunch 15/15；remote launch next |
+| `current_11_step` | `SC1-SIFF-v2-CCSF-v1-tau25` Step8 formal Phase-A running |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -180,6 +180,11 @@ runs与200个official-test标准cells；每个run仍只用validation四horizon m
 four-layer analyzer将10项hard comparisons、interaction、internal health和failure attribution分开。Phase A/test现已
 授权，confirmation仍为false；下一步是commit/push、3090 resource smoke与正式启动。详见
 `analysis/stage_c_siff_ccsf_v1_tau25_phase_a_20260718/formal_phase_a_prelaunch_report.md`。
+
+commit`604e1b8`已在3090完成remote prelaunch复核与Weather/CCSF_RELCAL三batch resource smoke，正式50-run
+Phase A于`2026-07-18T17:27:08+08:00`使用GPU0/1/2启动。首批为Weather的A6_MEASURE、SIFF-v1 EQUAL与
+SIFF-v1 RELCAL。当前只记录running状态，不预判effectiveness；完成后执行完整four-layer Step9，confirmation仍
+未授权。启动记录见`analysis/stage_c_siff_ccsf_v1_tau25_phase_a_20260718/remote_launch_record.md`。
 
 ### Historical Contribution 1 Parent: PCSD-CF
 
