@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | `SC1-SIFF-v2-EQ-ATTR` Step8 Phase A running |
-| `active_question` | SIFF_EQUAL正收益能否同时超过A6/PCSD与四个EQUAL-context specificity controls？ |
-| `active_candidates` | `SC1-SIFF-v2-EQ-ATTR-v1` narrative-ready；PCC/PCSD exact v1 closed；CTD paused |
+| `current_step` | `SC1-SIFF-v2-EQ-ATTR` Step9 complete；rollback Step4 |
+| `active_question` | 为什么healthy multi-arm SIFF未把conditional headroom转成超过A6_MEASURE/independent的fused forecast？ |
+| `active_candidates` | no active method candidate；SIFF/PCSD/PCC exact versions closed；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_siff_equal_attribution_step6_20260718/step6_attribution_protocol.md` |
-| `method_implementation` | commit c4c4730；50-run seed2021 Phase A running；confirmation false |
-| `rollback_point` | construction/control contract fail回Step6；effectiveness/attribution fail回Step4/6 |
+| `method_implementation` | 50/50 complete；main 2/3、attribution 3/4、internal 7/7；confirmation false |
+| `rollback_point` | exact SIFF v1 closed；return Step4，不补seeds、不调当前rank/policy/scale set |
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 
@@ -47,6 +47,20 @@ Step8已于2026-07-18 11:12:03在3090 GPU0/1/2启动。remote dry-run与Weather-
 通过，首批Weather的A6_FULL/A6_MEASURE/PCSD_MEASURE正常进入epoch 3/3/1。当前不高频值守；50/50完成后同步
 完整test metrics、invariants与component artifacts，再执行四层Step9。详见
 `analysis/stage_c_siff_equal_attribution_step8_remote_20260718/remote_launch_record.md`。
+
+## SIFF_EQUAL Attribution Step 9 Result
+
+Phase A已50/50完成，200/200 standard-horizon test cells、50/50 invariants与paired initialization均通过。
+七项hard comparisons中：
+
+1. SIFF_EQUAL超过A6_FULL `+1.6436%`与PCSD_EQUAL `+0.5906%`，但低于A6_MEASURE `-0.2366%`；
+2. ordered超过constant `+0.9393%`、permuted `+0.3959%`、Q1-wide `+1.1619%`，但相对independent仅
+   `+0.2580%`，未达冻结`0.3%`；
+3. internal health 7/7，通过finite、projectivity、oracle、diversity、entropy与component-use gates。
+
+结论不是mechanism未执行，而是simple objective与independent-scope controls解释了paper-facing gain。exact v1关闭，
+confirmation保持false，回Step4重新研究conditional headroom到learned fusion的转化问题。详见
+`analysis/stage_c_siff_equal_attribution_step9_20260718/step9_four_layer_diagnostic.md`。
 
 ## Fair Re-audit Step 9–10 Result
 

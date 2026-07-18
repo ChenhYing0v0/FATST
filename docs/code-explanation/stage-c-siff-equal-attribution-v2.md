@@ -148,3 +148,30 @@ output root。正式路径仅在`remote_training_authorized`和`formal_test_acce
 resource smoke只要求remote authorization，且使用`final_evaluation_split=none`，不会读取test。
 
 Step7B machine gate为9/9。该结果只授权seed2021 Phase A，不授权seeds2022/2023。
+
+## 8. Step 9 analysis module
+
+Remote runner完成50/50后自动运行`analyze_stage_c_siff_equal_attribution_v2.py`。该模块先逐run验证
+`effective_config`、test invariant、checkpoint SHA-256、initialization contract与四个standard horizons，再按冻结
+comparison计算cell-wise relative gain。`macro_gain_percent`是20个dataset-horizon relative gains的平均值，不是把
+不同dataset的absolute MSE直接平均。
+
+输出文件定义如下：
+
+- `run_audit.csv`：每个dataset-arm run的protocol status、checkpoint hash、encoder initialization hash与路径；
+- `test_metrics_standard_horizons.csv`：50 runs × 4 horizons的official-test MSE/MAE；
+- `comparison_cells.csv`：12个comparisons × 2 metrics × 20 cells的candidate/reference值与relative gain；
+- `comparison_summary.csv`：每个comparison-metric的macro gain、cell/dataset/horizon wins；
+- `mechanism_health.csv`：SIFF_EQUAL的oracle、arm diversity、policy entropy、component intervention、
+  ordered-vs-constant contrast与projectivity；
+- `summary.json`：四层machine decision与confirmation authorization。
+
+补充的`analyze_stage_c_fair_reaudit_mechanisms.py`扫描50份diagnostic NPZ，并对其中包含multi-arm tensors的40个
+arm-dataset runs计算row-bin oracle、best fixed arm、arm loss CV、probe diversity、policy entropy及usage range。
+两个A6 arms不包含该multi-arm schema，因此不进入deep table。该分析用于解释credit starvation和fusion headroom，
+不改变primary gate，也不把same-run oracle当成paper-facing performance。
+
+Step9结果为50/50 runs、200/200 test cells完整；三项main effectiveness通过2项，四项EQUAL-context attribution
+通过3项，internal health 7/7。由于`SIFF_EQUAL`未超过`A6_MEASURE`且未达到对independent control的冻结margin，
+exact v1关闭，confirmation保持false。完整解释见
+`analysis/stage_c_siff_equal_attribution_step9_20260718/step9_four_layer_diagnostic.md`。

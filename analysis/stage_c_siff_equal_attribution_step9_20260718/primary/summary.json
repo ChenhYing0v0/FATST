@@ -1,0 +1,54 @@
+{
+  "candidate_version": "SC1-SIFF-v2-EQ-ATTR-v1",
+  "test_access_date": "2026-07-18",
+  "user_authorization": {
+    "step6_user_authorized": true,
+    "step7b_user_authorized": true,
+    "user_authorized": true,
+    "authorization_date": "2026-07-18",
+    "test_access_date": "2026-07-18",
+    "step7a_local_implementation_authorized": true,
+    "remote_training_authorized": true,
+    "formal_test_access_authorized": true,
+    "test_role": "primary-mechanism-effectiveness-and-paper-benchmark",
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+    "checkpoint_retraining_allowed": true,
+    "checkpoint_mutation_during_test_allowed": false,
+    "formal_test_access_count_for_version": 1,
+    "phase_a_seed": 2021,
+    "confirmation_authorized": false,
+    "source_commit_freeze_stage": "Step7B",
+    "per_dataset_horizon_or_cell_tuning_allowed": false
+  },
+  "checkpoint_retrained": true,
+  "test_role": "primary-mechanism-effectiveness-and-paper-benchmark",
+  "matrix_complete": true,
+  "test_informed": true,
+  "encoder_initialization_matched": true,
+  "hard_comparisons": {
+    "siff_equal_over_a6_full": true,
+    "siff_equal_over_a6_measure": false,
+    "siff_equal_over_pcsd_equal": true,
+    "ordered_over_constant_equal": true,
+    "ordered_over_permuted_equal": true,
+    "ordered_over_q1_wide_equal": true,
+    "ordered_over_independent_equal": false
+  },
+  "internal_health": {
+    "finite": true,
+    "prefix_projectivity": true,
+    "oracle_headroom": true,
+    "arm_diversity": true,
+    "policy_entropy": true,
+    "nonconstant_component_use": true,
+    "ordered_constant_contrast": true
+  },
+  "evaluation_layers": {
+    "paper_facing_effectiveness": false,
+    "matched_mechanism_attribution": false,
+    "internal_mechanism_health": true,
+    "failure_attribution": "hypothesis_or_implementation_effectiveness_not_supported",
+    "decision": "close_exact_candidate_effectiveness_fail",
+    "confirmation_authorized": false
+  }
+}
