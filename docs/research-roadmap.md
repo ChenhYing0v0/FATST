@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step8 repaired validation pilot retry1 running |
+| `current_step` | `SC1-SIFF-v2-CCSF-v1-tau25` frozen；formal Phase-A Step7B prelaunch next |
 | `active_question` | 为什么healthy multi-arm SIFF未把conditional headroom转成超过A6_MEASURE/independent的fused forecast？ |
-| `active_candidates` | v1 frozen performance-near parent；CCSF v1 temperature-pilot ready；PCSD/PCC closed；CTD paused |
+| `active_candidates` | v1 frozen performance-near parent；CCSF tau0.25 formal candidate；PCSD/PCC closed；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_siff_ccsf_temperature_pilot_retry1_step8_remote_20260718/remote_relaunch_record.md` |
-| `method_implementation` | first pilot 0/15 invalid；repair smoke finite；15-run retry1 running；formal Phase A/test=false |
-| `rollback_point` | retry non-finite回Step7A；完整则选shared tau并进入formal-candidate prelaunch audit |
+| `active_protocol` | `analysis/stage_c_siff_ccsf_temperature_pilot_retry1_result_20260718/pilot_result_and_candidate_freeze.md` |
+| `method_implementation` | retry1 15/15 + audit9/9；tau0.25 frozen；formal runner/evaluator not implemented |
+| `rollback_point` | formal prelaunch tooling/contract fail回Step7A/Step6；不重新选择temperature |
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 
@@ -168,6 +168,17 @@ Decision=`runtime_repair_local_pass_remote_smoke_next`；formal Phase A/test/con
 无nan/inf。commit`7045c80`的retry1于15:54:21在GPU0/1/2启动15-run matrix。当前decision=
 `step8_repaired_validation_pilot_running`；用户通知完成前不轮询。详见
 `analysis/stage_c_siff_ccsf_temperature_pilot_retry1_step8_remote_20260718/remote_relaunch_record.md`。
+
+## CCSF Pilot Result And Formal Candidate Freeze
+
+retry1已完成15/15 runs与60/60 validation cells，9/9 protocol/result categories通过。tau0.25的macro MSE为
+0.568165，相对tau0.1与tau0.05分别+0.1415%/+0.2991%；cell/dataset/horizon wins为17/20、4/5、4/4。
+ETTm1中长horizon偏好更低tau，但per-dataset selection被预注册规则禁止。
+
+formal candidate固定为`SC1-SIFF-v2-CCSF-v1-tau25`，所有10 arms从头训练，不复用pilot checkpoint。当前
+decision=`freeze_tau025_formal_candidate_prelaunch_next`；下一步实现50-run official-test Phase-A runner/evaluator/
+internal artifacts/four-layer analyzer并通过新的prelaunch gate，remote/test仍未授权。详见
+`analysis/stage_c_siff_ccsf_temperature_pilot_retry1_result_20260718/pilot_result_and_candidate_freeze.md`。
 
 ## Fair Re-audit Step 9–10 Result
 

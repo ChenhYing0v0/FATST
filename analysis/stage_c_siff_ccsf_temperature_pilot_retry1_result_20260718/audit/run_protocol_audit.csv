@@ -1,0 +1,16 @@
+temperature,dataset,complete,finite,protocol_pass,evaluation_split,official_test_mode,checkpoint_policy
+0.05,Weather,True,True,True,val,False,best-val
+0.05,ETTm1,True,True,True,val,False,best-val
+0.05,ETTm2,True,True,True,val,False,best-val
+0.05,ETTh1,True,True,True,val,False,best-val
+0.05,ETTh2,True,True,True,val,False,best-val
+0.1,Weather,True,True,True,val,False,best-val
+0.1,ETTm1,True,True,True,val,False,best-val
+0.1,ETTm2,True,True,True,val,False,best-val
+0.1,ETTh1,True,True,True,val,False,best-val
+0.1,ETTh2,True,True,True,val,False,best-val
+0.25,Weather,True,True,True,val,False,best-val
+0.25,ETTm1,True,True,True,val,False,best-val
+0.25,ETTm2,True,True,True,val,False,best-val
+0.25,ETTh1,True,True,True,val,False,best-val
+0.25,ETTh2,True,True,True,val,False,best-val

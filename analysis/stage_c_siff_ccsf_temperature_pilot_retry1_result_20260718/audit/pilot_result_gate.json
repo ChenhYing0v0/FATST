@@ -1,0 +1,31 @@
+{
+  "pilot_id": "SC1-SIFF-v2-CCSF-TEMP-PILOT-v1",
+  "formal_candidate_version": "SC1-SIFF-v2-CCSF-v1-tau25",
+  "selected_temperature": 0.25,
+  "selected_macro_mse": 0.5681649939354421,
+  "selected_macro_mae": 0.4536789513548599,
+  "gain_vs_tau005_percent": 0.29911549622874584,
+  "gain_vs_tau01_percent": 0.14145332062740115,
+  "cell_wins": 17,
+  "dataset_wins": 4,
+  "horizon_wins": 4,
+  "categories": {
+    "runs_complete": true,
+    "validation_cells_complete": true,
+    "finite_metrics_and_training": true,
+    "validation_only_protocol": true,
+    "checkpoint_hashes_complete": true,
+    "selection_recomputed": true,
+    "selected_temperature_is_macro_best": true,
+    "pilot_checkpoint_not_reused": true,
+    "formal_test_remains_unauthorized": true
+  },
+  "categories_passed": 9,
+  "categories_total": 9,
+  "overall_pass": true,
+  "decision": "freeze_tau025_formal_candidate_prelaunch_next",
+  "formal_phase_a_authorized": false,
+  "formal_test_access_authorized": false,
+  "config_sha256": "46cf93dc6cf537e42081471b50480da356c060419bc282d880ae2b8809c80f43",
+  "selected_artifact_sha256": "4590fdba2a979561b7cf2c63fcd6cf021860ced93d69c5ec6afdb0af68baacb5"
+}
