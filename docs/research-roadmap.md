@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step7B temperature-pilot prelaunch pass；pilot launch next |
+| `current_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step8 validation-temperature pilot running |
 | `active_question` | 为什么healthy multi-arm SIFF未把conditional headroom转成超过A6_MEASURE/independent的fused forecast？ |
 | `active_candidates` | v1 frozen performance-near parent；CCSF v1 temperature-pilot ready；PCSD/PCC closed；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_siff_ccsf_step7b_prelaunch_20260718/prelaunch_report.md` |
-| `method_implementation` | Step7A 18/18；Step7B prelaunch 14/14；pilot remote=true，formal Phase A/test=false |
+| `active_protocol` | `analysis/stage_c_siff_ccsf_temperature_pilot_step8_remote_20260718/remote_launch_record.md` |
+| `method_implementation` | Step7A 18/18；Step7B 14/14；15-run validation pilot running，formal Phase A/test=false |
 | `rollback_point` | pilot不完整只补缺失run；numeric pathology回Step7A；完整选择后进入formal-candidate prelaunch audit |
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
@@ -143,6 +143,16 @@ comparison；实际pilot选定temperature后，必须生成新的formal candidat
 evaluator、internal artifacts与test metadata。当前只授权validation pilot remote，formal Phase A、official test与
 confirmation仍为false。Decision=`step7b_temperature_pilot_prelaunch_pass`。详见
 `analysis/stage_c_siff_ccsf_step7b_prelaunch_20260718/prelaunch_report.md`。
+
+## CCSF Step 8 Validation Pilot Launch
+
+commit`06d0ffc`已同步至3090远端；dry-run 15/15与Weather/tau0.1 resource smoke通过。完整pilot于
+2026-07-18 15:31:11启动，GPU0/1/2并行执行三个Weather temperatures，driver PID=`654232`。输出固定在
+`/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_ccsf_temperature_pilot_v1`。
+
+当前decision=`step8_validation_temperature_pilot_running`。不值守、不访问test；完成后先做15-run/60-cell
+completeness与selection artifact audit，再冻结formal candidate identity。详见
+`analysis/stage_c_siff_ccsf_temperature_pilot_step8_remote_20260718/remote_launch_record.md`。
 
 ## Fair Re-audit Step 9–10 Result
 

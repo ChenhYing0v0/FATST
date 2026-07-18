@@ -9,7 +9,7 @@
 | `active_question` | 为什么healthy multi-arm SIFF未把conditional headroom转成超过A6_MEASURE/independent的fused forecast？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | v1 frozen performance-near parent；`SC1-SIFF-v2-CCSF-v1-preimplementation` Step7B pilot-ready；CTD paused |
+| `active_candidates` | v1 frozen performance-near parent；`SC1-SIFF-v2-CCSF-v1-preimplementation` Step8 pilot running；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
@@ -19,18 +19,18 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step7B temperature-pilot prelaunch pass；pilot launch next |
+| `current_11_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step8 validation-temperature pilot running |
 | `current_candidate` | v1 immutable parent + CCSF implemented preformal candidate |
-| `latest_decision` | Step7B prelaunch 14/14；15-run validation-only shared-temperature pilot authorized |
-| `next_required_action` | commit/push后remote pull、dry-run/resource smoke并启动pilot；不启动formal Phase A/test |
-| `method_training_authorized` | pilot only；validation pilot remote=true，formal Phase A/test/confirmation=false |
+| `latest_decision` | commit`06d0ffc`；resource smoke pass；15-run validation pilot started on GPU0/1/2 |
+| `next_required_action` | 用户通知完成后核验15/15、60/60与selection artifacts；不轮询、不启动formal test |
+| `method_training_authorized` | pilot running only；formal Phase A/test/confirmation=false |
 | `rollback_point` | pilot incomplete只补缺失run；numeric pathology回Step7A；完整后进入formal-candidate prelaunch audit |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Step7B validation-pilot prelaunch complete；pilot launch next |
+| `current_step` | Step8 validation-temperature pilot running |
 | `problem` | `SIFF_EQUAL`有正向test performance，但旧PCC-context controls无法证明收益来自ordered scale coordinate |
 | `existence_evidence` | v1 fusion gap + contrast cross-fit：vs coordinate +1.8348%、vs shuffled +1.7085%、5/5 gates |
 | `idea` | v1 logits + scope-shared target-free contrast correction；confidence-weighted relative competence weak supervision |
@@ -39,7 +39,7 @@
 | `narrative_gate` | conditional pass；C1=contrast-conditioned projective scope fusion，C2=co-designed relative competence calibration |
 | `effectiveness_gate` | not started；pilot只选择temperature，不能pass/reject机制 |
 | `artifacts` | Step5/6/7A + `analysis/stage_c_siff_ccsf_step7b_prelaunch_20260718/` + pilot config/runner/analyzer/checker |
-| `decision` | Step7B 14/14 pass；pilot remote authorized；formal Phase A/test/confirmation false |
+| `decision` | Step8 pilot running；completion/temperature unknown；formal Phase A/test/confirmation false |
 
 ## Frozen Carrier Contract
 
@@ -98,7 +98,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC2-PCC-v1-TI` | `rejected_effectiveness_test_fair` | nested-prefix capability能否经harmonic incidence输运为target-coordinate credit | exact claim fail；generic/prior explains most gain | fair test vs prior PCSD +0.0806% fail；on SIFF vs equal -0.2663% | exact v1 closed；return Step2/4 |
 | `SC1-SIFF-v1` | `partial_pass_attribution_blocked` | coupling scale能否作为internal coordinate生成可辨识且连续共享的history modes | complete-chain conditional pass | EQUAL vs PCSD +0.5906% pass；vs A6 +1.6436%；prior/PCC/independent specificity fail | return Step6；EQUAL-context controls before seeds |
 | `SC1-SIFF-v2-EQ-ATTR-v1` | `frozen_performance_near_candidate_attribution_blocked` | EQUAL-trained ordered scale field能否同时超过A6/PCSD与matched EQUAL-context specificity controls | conditional；完整claim未成立 | main 2/3；controls 3/4；internal 7/7 | immutable parent；Step4 source-informed redesign，不补v1 seeds |
-| `SC1-SIFF-v2-CCSF-v1-preimplementation` | `step7b_temperature_pilot_ready` | target-free scope contrast能否让policy识别relative competence；relative teacher只作co-designed弱监督 | Step6 conditional pass；generic gating/calibration first claims excluded | local 18/18；pilot not run；formal E2E not started | launch 15-run validation pilot；formal Phase A/test false |
+| `SC1-SIFF-v2-CCSF-v1-preimplementation` | `step8_temperature_pilot_running` | target-free scope contrast能否让policy识别relative competence；relative teacher只作co-designed弱监督 | Step6 conditional pass；generic gating/calibration first claims excluded | local 18/18；pilot running；formal E2E not started | wait for user completion notice；audit 15/15 and select shared tau |
 | `SC2-MCCA-v1` | `historical_validation_negative_fair_test_not_reaudited` | same total scope skill mass能否竞争性分配而避免per-target homogenization | complete-chain conditional pass | old best-H720 validation four-H -0.1357%、1/5；not in 70-run audit | inactive；reuse前回Step4重审相对EQUAL/MEASURE的必要性 |
 | `SC-D16-CTD` | `deferred_paused_by_user` | H720 checkpoint是否丢弃healthy SIFF four-H epoch | diagnostic only；weighted checkpoint prior-covered | not implemented | design retained；resume only after user authorization |
 | `SC-RETRO-FAIR-v1` | `completed_partial_pass_attribution_blocked` | PCSD/PCC/SIFF在新checkpoint与test-primary规则下是否仍成立 | retrospective audit；not a method | 70/70；280/280；joint pass；two-contribution attribution fail | archive result；SIFF Step6/PCC Step2-4 |
@@ -177,6 +177,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | CCSF Step6 narrative/control gate | 2×2 architecture/objective + teacher/capacity/semantic/field controls | 10 arms；50 Phase-A runs/200 cells；static 5/5；parameter gap <0.5% | narrative-ready；Step7A local only；validation pilot/remote/test false | `analysis/stage_c_siff_ccsf_step6_20260718/step6_narrative_control_gate.md` |
 | CCSF Step7A local implementation | production contrast path + 2 objectives + 10-arm adapters + construction gate | 18/18；50 CLI；30 constructors；10 gradients；4 projectivity；two-step correction pass | local pass；Step7B prelaunch next；pilot/remote/test false | `analysis/stage_c_siff_ccsf_step7a_20260718/step7a_implementation_gate_report.md` |
 | CCSF Step7B temperature-pilot prelaunch | shared selection config + 15-job runner + completeness analyzer + remote preflight | 14/14；15 runs/60 validation cells；synthetic tie与no-test boundary pass；3 GPUs idle | pilot remote authorized；formal Phase A/test/confirmation false | `analysis/stage_c_siff_ccsf_step7b_prelaunch_20260718/prelaunch_report.md` |
+| CCSF Step8 temperature-pilot launch | commit sync + dry-run + resource smoke + 3-GPU background launch | commit`06d0ffc`；driver PID654232；first Weather jobs active；test=false | pilot running；do not monitor；formal Phase A held | `analysis/stage_c_siff_ccsf_temperature_pilot_step8_remote_20260718/remote_launch_record.md` |
 
 ## Pending Tasks
 
@@ -234,7 +235,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | Fair re-audit internal mechanism health | `completed_diagnostic` | DIRECT arms失衡；PCC oracle增大但policy近均匀；SIFF_EQUAL未collapse；MCCA不在矩阵 |
 | SIFF_EQUAL EQUAL-context attribution freeze | `completed_exact_v1_closed` | 50/50；main 2/3、controls 3/4、internal 7/7；回Step4，不补confirmation |
 | SIFF v1 portfolio freeze | `completed_retained_attribution_blocked` | immutable manifest complete；作为当前best candidate与v2 parent，不改Step9 failure |
-| SIFF contrast-calibrated redesign | `step7b_prelaunch_pass_pilot_authorized` | commit/push后启动15-run validation-only pilot；formal Phase A/test仍禁止 |
+| SIFF contrast-calibrated redesign | `step8_validation_pilot_running` | 用户通知完成后核验完整性并选择shared temperature；formal Phase A/test仍禁止 |
 
 ## Paper Mainline Sync Log
 
@@ -317,6 +318,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-18 | CCSF Step6 narrative/control gate | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | contribution split + 10-arm factorial/control freeze + rollback map | static 5/5；Step7A local only；validation pilot/remote/test false |
 | 2026-07-18 | CCSF Step7A local implementation | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | production tensor/objective/control paths + construction evidence | 18/18；Step7B next；pilot/remote/test false |
 | 2026-07-18 | CCSF Step7B temperature-pilot prelaunch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | shared hyperparameter selection + remote authorization boundary | 14/14；pilot remote true；formal Phase A/test/confirmation false |
+| 2026-07-18 | CCSF Step8 temperature-pilot launch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | commit/resource/process provenance | `06d0ffc`；3 GPUs；15-run validation pilot running；formal test false |
 
 ## Continuation Rules
 
@@ -416,3 +418,6 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
     selection必须等待60/60 cells完整后，以五dataset×四horizon macro validation MSE选择一个shared temperature；
     tie取更大值。不得per-dataset/test选择，不得复用pilot checkpoint。选择完成后必须生成formal candidate version并
     重新完成Phase-A prelaunch audit；当前formal Phase A、official test与confirmation仍未授权。
+44. CCSF temperature pilot已从commit`06d0ffc`启动。运行中不得pull、改变temperature grid/profile/selection、追加
+    arms或访问test；用户明确不要求值守。完成后必须先验证15/15 runs、60/60 cells和selection artifacts，pilot
+    checkpoint不得复用。只有formal candidate identity与新prelaunch audit冻结后，才可讨论Phase A授权。

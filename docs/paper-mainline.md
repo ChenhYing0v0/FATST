@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step7B temperature-pilot prelaunch pass；pilot launch next |
+| `current_11_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step8 validation-temperature pilot running |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | SIFF_EQUAL v1 frozen parent；CCSF Step7B prelaunch 14/14；validation pilot remote authorized / formal Phase A-test false |
+| `paper_core_status` | SIFF_EQUAL v1 frozen parent；CCSF 15-run validation pilot running / formal Phase A-test false |
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
@@ -148,6 +148,12 @@ validation MSE平均选择checkpoint，再以5×4 macro validation MSE选择一�
 规则选择更大值，不允许per-dataset/test选择。pilot checkpoint不复用；选定temperature后才创建formal candidate并
 重新训练完整10-arm matrix。当前只授权pilot remote，formal Phase A、official test与confirmation仍为false。
 详见`analysis/stage_c_siff_ccsf_step7b_prelaunch_20260718/prelaunch_report.md`。
+
+Step8 validation pilot已从commit`06d0ffc`在3张RTX 3090上启动。首批三个Weather temperatures分别占用
+GPU0/1/2；resource smoke、15-job dry-run与no-test guard均通过。运行期间不值守、不改变协议；完成后必须先验证
+15/15 runs和60/60 validation cells，再选择唯一shared temperature。该pilot不是effectiveness gate，formal Phase A、
+official test与confirmation仍为false。启动记录见
+`analysis/stage_c_siff_ccsf_temperature_pilot_step8_remote_20260718/remote_launch_record.md`。
 
 ### Historical Contribution 1 Parent: PCSD-CF
 
