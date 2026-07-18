@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step7A local pass；Step7B prelaunch next |
+| `current_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step7B temperature-pilot prelaunch pass；pilot launch next |
 | `active_question` | 为什么healthy multi-arm SIFF未把conditional headroom转成超过A6_MEASURE/independent的fused forecast？ |
-| `active_candidates` | v1 frozen performance-near parent；CCSF v1 local implementation pass；PCSD/PCC closed；CTD paused |
+| `active_candidates` | v1 frozen performance-near parent；CCSF v1 temperature-pilot ready；PCSD/PCC closed；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_siff_ccsf_step7a_20260718/step7a_implementation_gate_report.md` |
-| `method_implementation` | Step7A 18/18；Step7B prelaunch next；validation pilot/remote/test=false |
-| `rollback_point` | Step7B construction/authorization failure回Step7A；后续contrast/loss/field failures按预冻结decision map分别回Step4/7A |
+| `active_protocol` | `analysis/stage_c_siff_ccsf_step7b_prelaunch_20260718/prelaunch_report.md` |
+| `method_implementation` | Step7A 18/18；Step7B prelaunch 14/14；pilot remote=true，formal Phase A/test=false |
+| `rollback_point` | pilot不完整只补缺失run；numeric pathology回Step7A；完整选择后进入formal-candidate prelaunch audit |
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 
@@ -130,6 +130,19 @@ exit 4。
 Decision=`step7a_local_pass_step7b_next`；下一步先设计Step7B validation pilot/prelaunch boundary，不得直接启动
 pilot、remote或test。详见
 `analysis/stage_c_siff_ccsf_step7a_20260718/step7a_implementation_gate_report.md`。
+
+## CCSF Step 7B Temperature-Pilot Prelaunch
+
+Step7B把temperature selection与formal effectiveness严格拆开。pilot固定为唯一`ccsf_relcal` arm、5 datasets、
+`{0.05,0.1,0.25}`和seed2021，共15 runs/60 validation cells。checkpoint仍由H96/H192/H336/H720 validation MSE
+平均选择；shared temperature则由完整5×4 validation macro MSE选择，并列取更大temperature。禁止per-dataset、
+per-horizon或test-informed selection。
+
+本地prelaunch gate=14/14；runner dry-run=15 jobs，synthetic tie选择器通过。pilot weights/checkpoints不会进入formal
+comparison；实际pilot选定temperature后，必须生成新的formal candidate version并重新审核50-run Phase A的runner、
+evaluator、internal artifacts与test metadata。当前只授权validation pilot remote，formal Phase A、official test与
+confirmation仍为false。Decision=`step7b_temperature_pilot_prelaunch_pass`。详见
+`analysis/stage_c_siff_ccsf_step7b_prelaunch_20260718/prelaunch_report.md`。
 
 ## Fair Re-audit Step 9–10 Result
 

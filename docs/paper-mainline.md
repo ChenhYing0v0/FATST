@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step7A local pass；Step7B prelaunch next |
+| `current_11_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step7B temperature-pilot prelaunch pass；pilot launch next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | SIFF_EQUAL v1 frozen parent；CCSF local implementation 18/18；no confirmed contribution pair / pilot-remote-test false |
+| `paper_core_status` | SIFF_EQUAL v1 frozen parent；CCSF Step7B prelaunch 14/14；validation pilot remote authorized / formal Phase A-test false |
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
@@ -141,6 +141,13 @@ zero/permuted controls的tensor/gradient semantics及两步optimization path均�
 10 objective gradient paths与diagnostic tensors已就绪，但所有证据均为synthetic construction，不包含dataset
 training。status=`step7a_local_pass_step7b_next`；15-run temperature pilot、remote、test、confirmation仍为false。
 详见`analysis/stage_c_siff_ccsf_step7a_20260718/step7a_implementation_gate_report.md`。
+
+Step7B现已冻结validation-only shared-temperature pilot并通过14/14 prelaunch categories。只训练
+`ccsf_relcal`，使用5 datasets × 3 temperatures × seed2021 = 15 runs/60 validation cells；每个run由四horizon
+validation MSE平均选择checkpoint，再以5×4 macro validation MSE选择一个全局共享temperature。并列时按预注册
+规则选择更大值，不允许per-dataset/test选择。pilot checkpoint不复用；选定temperature后才创建formal candidate并
+重新训练完整10-arm matrix。当前只授权pilot remote，formal Phase A、official test与confirmation仍为false。
+详见`analysis/stage_c_siff_ccsf_step7b_prelaunch_20260718/prelaunch_report.md`。
 
 ### Historical Contribution 1 Parent: PCSD-CF
 

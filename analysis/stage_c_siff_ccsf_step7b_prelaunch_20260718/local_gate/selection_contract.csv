@@ -1,0 +1,4 @@
+temperature,datasets,horizons,validation_cells,shared_selection,test_access,pilot_checkpoint_reuse
+0.05,5,4,20,True,False,False
+0.1,5,4,20,True,False,False
+0.25,5,4,20,True,False,False

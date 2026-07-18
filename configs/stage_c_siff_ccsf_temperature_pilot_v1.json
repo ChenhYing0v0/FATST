@@ -1,0 +1,84 @@
+{
+  "stage": "StageC-UVHF",
+  "pilot_id": "SC1-SIFF-v2-CCSF-TEMP-PILOT-v1",
+  "candidate_version": "SC1-SIFF-v2-CCSF-v1-preimplementation",
+  "status": "step7b_validation_pilot_prelaunch",
+  "purpose": "select one shared relative-competence temperature before freezing the formal 10-arm candidate",
+  "test_informed": true,
+  "step7a_contract": {
+    "path": "configs/stage_c_siff_ccsf_step7a.json",
+    "sha256": "3c8b9717d4d43271e493dbb29a4b1a2f3f1503b00017f3c5de7d774ae5e3b9bb",
+    "local_gate_path": "analysis/stage_c_siff_ccsf_step7a_20260718/local_gate/local_gate.json",
+    "local_gate_sha256": "6446abafa70c9e4c444d01c8ed1c9e94c7c9b7b40bab795d4a9948eeff41954b"
+  },
+  "datasets": ["Weather", "ETTm1", "ETTm2", "ETTh1", "ETTh2"],
+  "temperatures": [0.05, 0.1, 0.25],
+  "seed": 2021,
+  "profiles": {
+    "path": "configs/stage_c_five_dataset_natural_profiles.json",
+    "sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a"
+  },
+  "pilot_arm": {
+    "id": "ccsf_relcal",
+    "readout_mode": "ccsf-coupling-field",
+    "objective_mode": "ccsf_relative_calibration",
+    "mode_rank": 256,
+    "correction_mode": "true"
+  },
+  "training": {
+    "from_scratch": true,
+    "joint_encoder_decoder": true,
+    "pred_len": 720,
+    "target_horizons": [720],
+    "validation_horizons": [96, 192, 336, 720],
+    "validation_checkpoint_score": "mean_mse_h96_h192_h336_h720",
+    "checkpoint_policy": "best-val",
+    "epochs": 20,
+    "patience": 5,
+    "batch_size": 32,
+    "learning_rate": 0.0001,
+    "evaluation_prefix_mode": "full-crop",
+    "final_evaluation_split": "val",
+    "test_labels_allowed": false,
+    "save_predictions": false
+  },
+  "matrix": {
+    "expected_runs": 15,
+    "expected_validation_cells": 60,
+    "full_matrix_required": true,
+    "partial_selection_allowed": false
+  },
+  "selection": {
+    "primary_score": "macro_mean_validation_mse_across_five_datasets_and_four_horizons",
+    "secondary_report": "macro_mean_validation_mae_across_five_datasets_and_four_horizons",
+    "one_temperature_shared_by_all_datasets": true,
+    "tie_tolerance": 1e-12,
+    "tie_break": "prefer_larger_temperature",
+    "test_labels_allowed": false,
+    "selected_temperature_reuses_pilot_checkpoint": false,
+    "selected_temperature_creates_formal_candidate_version": true,
+    "formal_candidate_version_template": "SC1-SIFF-v2-CCSF-v1-tau{temperature_tag}"
+  },
+  "authorization": {
+    "user_authorization": "2026-07-18 user requested continuation into Step7B",
+    "validation_temperature_pilot_authorized": true,
+    "pilot_remote_training_authorized": true,
+    "remote_training_authorized": false,
+    "formal_phase_a_authorized": false,
+    "formal_test_access_authorized": false,
+    "confirmation_authorized": false,
+    "per_dataset_temperature_tuning_allowed": false,
+    "per_horizon_or_cell_tuning_allowed": false
+  },
+  "decision_map": {
+    "pilot_complete": "select one shared temperature then return to post-pilot formal-candidate prelaunch audit",
+    "pilot_incomplete": "do not select; resume only missing frozen runs",
+    "numeric_pathology": "return Step7A implementation repair without accessing test",
+    "temperature_tie": "apply frozen larger-temperature tie break",
+    "formal_phase_a_before_selection": "forbidden"
+  },
+  "output": {
+    "remote_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_ccsf_temperature_pilot_v1",
+    "local_analysis_root": "analysis/stage_c_siff_ccsf_step7b_prelaunch_20260718"
+  }
+}

@@ -1,0 +1,16 @@
+job_index,dataset,temperature,readout_mode,objective_mode,mode_rank,profile,patch_num,d_model,d_ff,seed,evaluation_split,checkpoint_policy,test_access
+1,Weather,0.05,ccsf-coupling-field,ccsf_relative_calibration,256,r2b_p12_d64_ff128_medium,12,64,128,2021,val,best-val,False
+2,Weather,0.1,ccsf-coupling-field,ccsf_relative_calibration,256,r2b_p12_d64_ff128_medium,12,64,128,2021,val,best-val,False
+3,Weather,0.25,ccsf-coupling-field,ccsf_relative_calibration,256,r2b_p12_d64_ff128_medium,12,64,128,2021,val,best-val,False
+4,ETTm1,0.05,ccsf-coupling-field,ccsf_relative_calibration,256,r2b_p24_d32_ff64_narrow,24,32,64,2021,val,best-val,False
+5,ETTm1,0.1,ccsf-coupling-field,ccsf_relative_calibration,256,r2b_p24_d32_ff64_narrow,24,32,64,2021,val,best-val,False
+6,ETTm1,0.25,ccsf-coupling-field,ccsf_relative_calibration,256,r2b_p24_d32_ff64_narrow,24,32,64,2021,val,best-val,False
+7,ETTm2,0.05,ccsf-coupling-field,ccsf_relative_calibration,256,r2b_p48_d64_ff128_medium,48,64,128,2021,val,best-val,False
+8,ETTm2,0.1,ccsf-coupling-field,ccsf_relative_calibration,256,r2b_p48_d64_ff128_medium,48,64,128,2021,val,best-val,False
+9,ETTm2,0.25,ccsf-coupling-field,ccsf_relative_calibration,256,r2b_p48_d64_ff128_medium,48,64,128,2021,val,best-val,False
+10,ETTh1,0.05,ccsf-coupling-field,ccsf_relative_calibration,256,r2b_p24_d64_ff128_medium,24,64,128,2021,val,best-val,False
+11,ETTh1,0.1,ccsf-coupling-field,ccsf_relative_calibration,256,r2b_p24_d64_ff128_medium,24,64,128,2021,val,best-val,False
+12,ETTh1,0.25,ccsf-coupling-field,ccsf_relative_calibration,256,r2b_p24_d64_ff128_medium,24,64,128,2021,val,best-val,False
+13,ETTh2,0.05,ccsf-coupling-field,ccsf_relative_calibration,256,r2b_p12_d64_ff128_medium,12,64,128,2021,val,best-val,False
+14,ETTh2,0.1,ccsf-coupling-field,ccsf_relative_calibration,256,r2b_p12_d64_ff128_medium,12,64,128,2021,val,best-val,False
+15,ETTh2,0.25,ccsf-coupling-field,ccsf_relative_calibration,256,r2b_p12_d64_ff128_medium,12,64,128,2021,val,best-val,False

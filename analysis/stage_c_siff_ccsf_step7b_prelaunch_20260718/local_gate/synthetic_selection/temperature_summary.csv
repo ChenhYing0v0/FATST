@@ -1,0 +1,4 @@
+temperature,validation_cells,macro_mse,macro_mae,dataset_count,horizon_count
+0.05,20,1.0,1.1,5,4
+0.1,20,0.9,1.0,5,4
+0.25,20,0.9,1.0,5,4

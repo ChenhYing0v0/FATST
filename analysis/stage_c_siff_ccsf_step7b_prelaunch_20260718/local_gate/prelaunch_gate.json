@@ -1,0 +1,29 @@
+{
+  "pilot_id": "SC1-SIFF-v2-CCSF-TEMP-PILOT-v1",
+  "current_step": "Step7B validation-pilot prelaunch",
+  "categories": {
+    "step7a_config_hash": true,
+    "step7a_local_gate_hash": true,
+    "step7a_gate_passed": true,
+    "profile_hash": true,
+    "temperature_grid": true,
+    "matrix_size": true,
+    "workload_order": true,
+    "cli_contracts": true,
+    "validation_only_selection": true,
+    "authorization_boundary": true,
+    "formal_temperature_unselected": true,
+    "runner_contract": true,
+    "selection_analyzer_smoke": true,
+    "external_output_root": true
+  },
+  "categories_passed": 14,
+  "categories_total": 14,
+  "pilot_jobs": 15,
+  "validation_cells": 60,
+  "overall_pass": true,
+  "decision": "step7b_temperature_pilot_prelaunch_pass",
+  "pilot_remote_training_authorized": true,
+  "formal_phase_a_authorized": false,
+  "formal_test_access_authorized": false
+}
