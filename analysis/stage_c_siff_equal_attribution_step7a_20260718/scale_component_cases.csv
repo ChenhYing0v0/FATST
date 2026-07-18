@@ -1,0 +1,6 @@
+case,value,threshold,pass
+component_ablation_shape,"(2, 3, 2, 720)","(2,3,2,720)",True
+full_path_consistency,0.0,0.0,True
+nonconstant_component_active,0.48267072439193726,>0,True
+ordered_constant_contrast,1.4878520965576172,>0,True
+nonconstant_component_gradient,0.1251869648694992,>0,True

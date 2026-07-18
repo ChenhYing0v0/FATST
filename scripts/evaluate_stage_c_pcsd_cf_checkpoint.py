@@ -140,9 +140,13 @@ def test_audit_authorized(audit: dict[str, Any]) -> bool:
             == "primary-milestone-effectiveness-gate"
             and authorization["formal_test_access_count_for_version"] == 1
         )
+    expected_runs = audit["matrix"].get(
+        "expected_runs",
+        audit["matrix"].get("phase_a_expected_runs"),
+    )
     return bool(
         audit.get("status") == "authorized_prelaunch"
-        and audit["matrix"]["expected_runs"] == expected_matrix_size(audit)
+        and expected_runs == expected_matrix_size(audit)
         and authorization.get("user_authorized") is True
         and authorization.get("authorization_date")
         and authorization.get("test_role")
@@ -225,6 +229,37 @@ def denormalized_arms(
     return torch.stack(outputs, dim=2), weights
 
 
+def denormalized_scale_component_contributions(
+    model: TimeAlign.Model,
+    batch_x: torch.Tensor,
+) -> torch.Tensor | None:
+    """Return leave-one-component-out deltas as ``[B,C,Q,T]``."""
+    readout = model.pcsd_readout
+    if not hasattr(readout, "component_ablation_forecasts"):
+        return None
+    memory = model.encode_history(batch_x)
+    hidden = memory.flatten(start_dim=-2)
+    full, ablated = readout.component_ablation_forecasts(hidden)
+    full_denormalized = model.normalization_x(
+        full.permute(0, 2, 1),
+        "denorm",
+    )
+    ablated_outputs = []
+    for component_index in range(ablated.shape[2]):
+        normalized = ablated[:, :, component_index].permute(0, 2, 1)
+        ablated_outputs.append(model.normalization_x(normalized, "denorm"))
+    ablated_denormalized = torch.stack(ablated_outputs, dim=2)
+    return (
+        full_denormalized.unsqueeze(2) - ablated_denormalized
+    ).permute(0, 3, 2, 1)
+
+
+def diagnostic_bins(design: dict[str, Any]) -> list[dict[str, Any]]:
+    if "diagnostic_protocol" in design:
+        return design["diagnostic_protocol"]["future_bins"]
+    return design["step7b_protocol"]["future_bins"]
+
+
 def evaluate(args: argparse.Namespace) -> None:
     if args.run_dir is None:
         raise ValueError("run-dir is required outside synthetic smoke")
@@ -237,7 +272,7 @@ def evaluate(args: argparse.Namespace) -> None:
         test_audit = json.loads(
             args.test_audit_config.read_text(encoding="utf-8")
         )
-    bins = design["step7b_protocol"]["future_bins"]
+    bins = diagnostic_bins(design)
     model, config, official_args = load_model(args.run_dir, device)
     loader = sequential_loader(official_args, args.evaluation_split)
     adapter = config["adapter"]
@@ -258,6 +293,7 @@ def evaluate(args: argparse.Namespace) -> None:
     probe_arms: list[np.ndarray] = []
     probe_fused: list[np.ndarray] = []
     probe_targets: list[np.ndarray] = []
+    scale_component_contribution: list[np.ndarray] = []
     probe_count = 0
     all_finite = True
     prefix_rows: list[dict[str, Any]] | None = None
@@ -353,6 +389,28 @@ def evaluate(args: argparse.Namespace) -> None:
                         .cpu()
                         .numpy()
                     )
+                    component_delta = None
+                    if (
+                        adapter["readout_mode"] == "siff-coupling-field"
+                        and adapter["pcc_objective_mode"] == "equal_skill"
+                    ):
+                        component_delta = denormalized_scale_component_contributions(
+                            model,
+                            batch_x,
+                        )
+                    if component_delta is not None:
+                        scale_component_contribution.append(
+                            component_delta.reshape(
+                                -1,
+                                component_delta.shape[2],
+                                720,
+                            )[:count]
+                            .cpu()
+                            .numpy()
+                        )
+                        all_finite = all_finite and bool(
+                            torch.isfinite(component_delta).all()
+                        )
                     probe_count += count
                 all_finite = all_finite and bool(
                     torch.isfinite(arms).all() and torch.isfinite(weights).all()
@@ -391,6 +449,10 @@ def evaluate(args: argparse.Namespace) -> None:
                 "probe_targets": np.concatenate(probe_targets).astype(np.float32),
             }
         )
+        if scale_component_contribution:
+            payload["scale_component_contribution"] = np.concatenate(
+                scale_component_contribution
+            ).astype(np.float32)
     artifact_prefix = (
         "validation" if args.evaluation_split == "val" else "test_audit"
     )
@@ -502,6 +564,9 @@ def evaluate(args: argparse.Namespace) -> None:
         "evaluation_rows": int(payload["fused_row_bin_mse"].shape[0]),
         "arm_diagnostics_present": "arm_row_bin_mse" in payload,
         "probe_rows": int(payload.get("probe_arms", np.empty((0,))).shape[0]),
+        "scale_component_diagnostics_present": (
+            "scale_component_contribution" in payload
+        ),
         "all_finite": all_finite,
         "protocol_pass": protocol_pass,
         "readout_contract_pass": readout_contract_pass,
@@ -549,7 +614,7 @@ def main() -> None:
             seq_len=720,
             pred_len=720,
             encoder_mode="timealign-token-mlp",
-            readout_mode="pcsd-coupling-field",
+            readout_mode="siff-coupling-field",
             e_layers=2,
             patch_num=12,
             d_model=64,
@@ -576,15 +641,19 @@ def main() -> None:
         rows, gap = prefix_audit(model, x[:1], target[:1])
         with torch.no_grad():
             arms, weights = denormalized_arms(model, x)
+            components = denormalized_scale_component_contributions(model, x)
         if (
             len(rows) != len(HORIZONS)
             or gap != 0.0
             or tuple(arms.shape) != (2, 720, 5, 7)
             or tuple(weights.shape) != (2, 7, 720, 5)
+            or components is None
+            or tuple(components.shape) != (2, 7, 2, 720)
             or not bool(torch.isfinite(arms).all())
+            or not bool(torch.isfinite(components).all())
         ):
-            raise RuntimeError("PCSD checkpoint evaluator synthetic smoke failed")
-        print("pcsd_checkpoint_evaluator_synthetic_smoke=pass")
+            raise RuntimeError("SIFF checkpoint evaluator synthetic smoke failed")
+        print("siff_checkpoint_evaluator_synthetic_smoke=pass")
         return
     evaluate(args)
 

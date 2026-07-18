@@ -2,8 +2,8 @@
   "stage": "StageC-UVHF",
   "candidate_id": "SC1-SIFF-v2-EQ-ATTR",
   "candidate_version": "SC1-SIFF-v2-EQ-ATTR-v1",
-  "status": "step6_protocol_frozen_step7a_authorized",
-  "current_step": "Step6 complete",
+  "status": "step7a_local_pass_step7b_prelaunch_pending",
+  "current_step": "Step7A local implementation gate passed",
   "purpose": "attribute the SIFF_EQUAL test gain to the ordered scale coordinate under a matched equal-skill objective",
   "test_informed": true,
   "test_informed_sources": [
@@ -257,6 +257,24 @@
     "ordered_vs_constant_probe_nrmse_min": 0.01,
     "diagnostics_cannot_override_effectiveness": true
   },
+  "diagnostic_protocol": {
+    "future_bins": [
+      {"name": "h1_48", "start": 0, "end": 48},
+      {"name": "h49_96", "start": 48, "end": 96},
+      {"name": "h97_144", "start": 96, "end": 144},
+      {"name": "h145_192", "start": 144, "end": 192},
+      {"name": "h193_288", "start": 192, "end": 288},
+      {"name": "h289_336", "start": 288, "end": 336},
+      {"name": "h337_512", "start": 336, "end": 512},
+      {"name": "h513_720", "start": 512, "end": 720}
+    ],
+    "scale_component_statistic": {
+      "source": "full forecast minus leave-one-scale-component-out forecast with policy held fixed",
+      "artifact": "scale_component_contribution",
+      "shape": "[row_channel,Q,T]",
+      "nonadditive_intervention": true
+    }
+  },
   "narrative_gate": {
     "status": "conditional_pass_for_attribution",
     "claim_if_full_pass": "ordered continuous coupling-scale coordinate improves unified multi-horizon generation beyond measure alignment generic width wrong ordering and independent scope experts",
@@ -285,6 +303,6 @@
   },
   "output": {
     "remote_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_equal_attribution_v2",
-    "local_analysis_root": "analysis/stage_c_siff_equal_attribution_step6_20260718"
+    "local_analysis_root": "analysis/stage_c_siff_equal_attribution_step7a_20260718"
   }
 }

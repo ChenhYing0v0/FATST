@@ -2,8 +2,9 @@
 
 ## 1. 功能边界
 
-本次更新冻结归因协议与 Step 6 checker，没有修改 model forward。代码产物负责把论文问题转写成可审计的
-10-arm matrix，并阻止缺失 control、错误 objective、错误 checkpoint selector 或越权 remote/test launch。
+该版本先冻结Step 6归因协议，再完成Step 7A production implementation。forecast forward公式未改变；新增代码负责
+把论文问题转写成可审计的10-arm matrix、导出scale-component intervention artifact，并阻止缺失control、错误
+objective、错误checkpoint selector或越权remote/test launch。
 
 ## 2. 文件与数据流
 
@@ -65,8 +66,8 @@ checkpoint rule 与四层 decision boundary 同时存在。
 
 ### Remaining proxy
 
-Step 6 只证明设计可执行。ordered component 是否真正改变 forecast、policy 是否使用 scale field、各 arms 是否
-保持差异，仍需 Step 7A artifact contract 与 Step 9 internal diagnostics 验证。
+Step 7A只证明所有路径可构造、可前向/反向并能生成所需artifact。trained ordered component是否足够大、policy是否
+使用scale field、各arms是否保持差异，仍需Step 9 internal diagnostics验证。
 
 ### Falsification evidence
 
@@ -91,3 +92,47 @@ Step 7A 必须补齐：
 - remote/test authorization 保持 false。
 
 如果 production code 无法满足任一冻结 contract，应回 Step 6 重新评估设计，而不是在 runner 中静默降级。
+
+## 5. Step 7A forward与artifact路径
+
+### SIFF component path
+
+`SIFFCouplingFieldReadout`中的实际shape流为：
+
+1. Encoder output flatten：`hidden [B,C,R]`；
+2. `component_history_modes`：
+   `hidden [B,C,R] × mode_weight [Q,D,R,K] -> components [B,C,Q,D,K]`；
+3. `scale_basis [S,Q] × components -> history_modes [B,C,S,D,K]`；
+4. 每个scope执行pooling/synthesis，得到`arms [B,C,S,T]`；
+5. `policy_weights [B,C,T,S]`融合为`full [B,C,T]`；
+6. domain-only crop后返回`forecast [B,H,C]`。
+
+新增`component_ablation_forecasts`固定第5步policy，逐个把
+`components[:,:,q]`置零并重新走第3-5步，输出：
+
+- `full [B,C,T]`；
+- `ablated [B,C,Q,T]`。
+
+checkpoint evaluator将full和ablated分别denormalize，再保存
+`scale_component_contribution [row_channel,Q,T] = full - ablated`。该统计是non-additive intervention：
+SIFF含nonlinear synthesis，因此不能把各component delta直接相加解释为forecast decomposition。生产评估只为
+`siff-coupling-field + equal_skill` candidate导出该artifact，避免在不需要该统计的controls上重复高成本反事实前向。
+
+### Analyzer path
+
+`analyze_stage_c_siff_equal_attribution_v2.py`读取：
+
+- `test_audit_metrics_by_target_horizon.csv`：四个standard horizons的MSE/MAE；
+- `pcsd_test_audit_diagnostics.npz`：fused、arms、policy、probe和component tensors；
+- `test_audit_invariants.json`：projectivity、protocol、checkpoint hash与test authorization。
+
+它依次计算effectiveness、matched attribution、internal health与failure attribution；只有前三层全部通过时才把
+`confirmation_authorized`设为true。
+
+## 6. Step 7A gate
+
+`check_stage_c_siff_equal_attribution_step7a.py`覆盖50 CLI jobs、35个unique constructors、10个objective gradient
+paths、两类matched-rank controls、5个component cases、evaluator/analyzer smoke和remote authorization guard。
+
+结果为13/13 categories pass；remote与formal test仍为false。详细证据见
+`analysis/stage_c_siff_equal_attribution_step7a_20260718/step7a_implementation_gate_report.md`。

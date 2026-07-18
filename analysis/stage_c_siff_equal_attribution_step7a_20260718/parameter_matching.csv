@@ -1,0 +1,11 @@
+dataset,control,target_parameters,actual_parameters,relative_gap,pass
+ETTh1,q1_dataset_matched,3569013,3565841,0.0008887611224727958,True
+ETTh1,independent_dataset_matched,3569013,3560217,0.0024645469209554575,True
+ETTh2,q1_dataset_matched,1971573,1969901,0.0008480538128692166,True
+ETTh2,independent_dataset_matched,1971573,1979141,0.0038385593635132964,True
+ETTm1,q1_dataset_matched,1971573,1969901,0.0008480538128692166,True
+ETTm1,independent_dataset_matched,1971573,1979141,0.0038385593635132964,True
+ETTm2,q1_dataset_matched,6763893,6761769,0.0003140203430184363,True
+ETTm2,independent_dataset_matched,6763893,6769149,0.0007770672895032491,True
+Weather,q1_dataset_matched,1971573,1969901,0.0008480538128692166,True
+Weather,independent_dataset_matched,1971573,1979141,0.0038385593635132964,True

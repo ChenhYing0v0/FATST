@@ -140,3 +140,11 @@ next action，并同步对应experiment protocol与code explanation。
 
 - `check_stage_c_siff_equal_attribution_step6.py`: 静态审计`SIFF_EQUAL` 10-arm归因矩阵、dataset profile hash、
   seven hard comparisons、四层decision boundary与Step7A-only授权，生成machine-readable Step6 gate。
+- `check_stage_c_siff_equal_attribution_step7a.py`: 生成50-job manifest并审计CLI、35个model constructors、
+  paired Encoder initialization、matched ranks、10条gradient paths、scale-component artifact与authorization guard。
+- `analyze_stage_c_siff_equal_attribution_v2.py`: 对完整test matrix计算MSE/MAE hard comparisons、trained internal
+  health与failure attribution；只有四层通过时才授权confirmation。
+- `evaluate_stage_c_pcsd_cf_checkpoint.py`: PCSD/SIFF共享checkpoint evaluator；SIFF额外导出
+  `scale_component_contribution [row_channel,Q,T]` leave-one-component-out artifact。
+- `remote/run_stage_c_siff_equal_attribution_v2.sh`: 50-run dataset-major production runner；当前由config guard阻止
+  remote/test launch，需Step7B显式授权后才可运行。

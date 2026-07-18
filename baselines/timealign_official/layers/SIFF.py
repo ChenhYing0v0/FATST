@@ -174,20 +174,59 @@ class SIFFCouplingFieldReadout(PCSDCouplingFieldReadout):
     def history_modes(self, hidden: torch.Tensor) -> torch.Tensor:
         """Return scale-indexed modes with shape ``[B,C,S,D,K]``."""
         components = self.component_history_modes(hidden)
+        return self._history_modes_from_components(components)
+
+    def _history_modes_from_components(
+        self,
+        components: torch.Tensor,
+    ) -> torch.Tensor:
+        """Combine ``[B,C,Q,D,K]`` components into ``[B,C,S,D,K]``."""
         return torch.einsum(
             "sq,bcqdk->bcsdk",
-            self.scale_basis.to(dtype=hidden.dtype),
+            self.scale_basis.to(dtype=components.dtype),
             components,
         )
 
-    def arm_forecasts(self, hidden: torch.Tensor) -> torch.Tensor:
-        """Return scale arms with shape ``[B,C,S,T]``."""
-        modes = self.history_modes(hidden)
+    def _arm_forecasts_from_components(
+        self,
+        components: torch.Tensor,
+    ) -> torch.Tensor:
+        modes = self._history_modes_from_components(components)
         arms = [
             self._scope_forecast(modes[:, :, scale_index], scale_index)
             for scale_index in range(len(self.scales))
         ]
         return torch.stack(arms, dim=2)
+
+    def arm_forecasts(self, hidden: torch.Tensor) -> torch.Tensor:
+        """Return scale arms with shape ``[B,C,S,T]``."""
+        return self._arm_forecasts_from_components(
+            self.component_history_modes(hidden)
+        )
+
+    def component_ablation_forecasts(
+        self,
+        hidden: torch.Tensor,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        """Return full and leave-one-component-out normalized forecasts.
+
+        The policy is held fixed while each scale-field component is removed.
+        The outputs have shapes ``[B,C,T]`` and ``[B,C,Q,T]``.  This is a
+        diagnostic decomposition; it does not alter the training/inference
+        path and is not assumed to be additive because synthesis is nonlinear.
+        """
+        components = self.component_history_modes(hidden)
+        weights = self.policy_weights(hidden).permute(0, 1, 3, 2)
+        full_arms = self._arm_forecasts_from_components(components)
+        full = (full_arms * weights).sum(dim=2)
+        ablated = []
+        for component_index in range(self.scale_components):
+            mask = components.new_ones(self.scale_components)
+            mask[component_index] = 0.0
+            masked = components * mask.view(1, 1, -1, 1, 1)
+            arms = self._arm_forecasts_from_components(masked)
+            ablated.append((arms * weights).sum(dim=2))
+        return full, torch.stack(ablated, dim=2)
 
     def forward(
         self,

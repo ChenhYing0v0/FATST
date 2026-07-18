@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | `SC1-SIFF-v2-EQ-ATTR` Step6 complete；Step7A local next |
+| `current_step` | `SC1-SIFF-v2-EQ-ATTR` Step7A local pass；Step7B prelaunch next |
 | `active_question` | SIFF_EQUAL正收益能否同时超过A6/PCSD与四个EQUAL-context specificity controls？ |
 | `active_candidates` | `SC1-SIFF-v2-EQ-ATTR-v1` narrative-ready；PCC/PCSD exact v1 closed；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_siff_equal_attribution_step6_20260718/step6_attribution_protocol.md` |
-| `method_implementation` | Step7A local authorized；remote/test/confirmation false |
+| `method_implementation` | Step7A 13/13 categories pass；remote/test/confirmation false |
 | `rollback_point` | construction/control contract fail回Step6；effectiveness/attribution fail回Step4/6 |
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
@@ -23,12 +23,20 @@
 3. `SIFF_EQUAL`必须逐项超过A6_FULL、A6_MEASURE、PCSD_EQUAL、constant、permuted、Q1-wide与independent；
 4. 统一结论分为paper-facing effectiveness、matched mechanism attribution、internal mechanism health与failure
    attribution四层，内部健康度不得挽救negative performance gate；
-5. 16/16 Step6 static checks已通过，只授权Step7A production wiring、artifact与analyzer；remote/test仍未授权。
+5. Step6 16/16与Step7A 13/13 categories已通过；下一步只做Step7B prelaunch，remote/test仍未授权。
 
 若`SIFF_MEASURE`未超过`PCSD_MEASURE`但EQUAL comparison通过，claim只能收紧为equal-skill-trained scale
 field。只有Phase A七项hard comparisons全部通过，才允许seeds2022/2023 confirmation。
 
 详见`analysis/stage_c_siff_equal_attribution_step6_20260718/step6_attribution_protocol.md`。
+
+Step7A现已完成50-job CLI wiring、35个unique model constructors、10条objective gradient paths、matched
+parameter accounting与scale-component intervention artifact。新增component统计固定policy并逐个移除
+scale-field component，保存raw-scale `full - ablated`；它是non-additive diagnostic，不改变production forward。
+checkpoint evaluator与四层analyzer smoke均通过，remote runner在authorization=false时固定拒绝launch。
+
+Decision=`step7a_local_pass / step7b_prelaunch_next`。详见
+`analysis/stage_c_siff_equal_attribution_step7a_20260718/step7a_implementation_gate_report.md`。
 
 ## Fair Re-audit Step 9–10 Result
 
