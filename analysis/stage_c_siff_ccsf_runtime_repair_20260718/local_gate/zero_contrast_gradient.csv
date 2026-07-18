@@ -1,0 +1,2 @@
+case,descriptor_finite,gradient_finite,gradient_nan_count,group_rms_min,expected_epsilon_floor,pass
+identical_arms_zero_contrast,True,True,0,0.0010000000474974513,0.001,True

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 CONFIG="${CONFIG:-configs/stage_c_siff_ccsf_temperature_pilot_v1.json}"
-OUTPUT_ROOT="${OUTPUT_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_ccsf_temperature_pilot_v1}"
+OUTPUT_ROOT="${OUTPUT_ROOT:-$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["output"]["remote_root"])' "${CONFIG}")}"
 DATASET_ROOT="${DATASET_ROOT:-/home/yingch/dataset}"
 CONDA_ENV="${CONDA_ENV:-moe}"
 CONDA_BIN="${CONDA_BIN:-/home/anaconda3/bin/conda}"
@@ -110,7 +110,7 @@ run_training_command() {
   IFS=$'\t' read -r dataset temperature profile patch_num d_model d_ff <<< "${line}"
   if [[ "${smoke}" == "1" ]]; then
     run_args=(
-      --max-train-batches 1 --max-eval-batches 1 --epochs 1 --patience 1
+      --max-train-batches 3 --max-eval-batches 1 --epochs 1 --patience 1
     )
   else
     run_args=(--epochs 20 --patience 5)

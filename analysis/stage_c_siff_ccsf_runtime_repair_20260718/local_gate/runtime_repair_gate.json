@@ -1,0 +1,16 @@
+{
+  "repair_id": "SC1-SIFF-v2-CCSF-RUNTIME-REPAIR-v1",
+  "failure_attribution": "optimization_or_numeric_pathology",
+  "root_cause": "zero_contrast_group_rms_sqrt_derivative",
+  "categories": {
+    "zero_contrast_forward_and_backward_finite": true,
+    "three_step_all_temperatures_finite": true,
+    "three_steps_executed_per_temperature": true
+  },
+  "categories_passed": 3,
+  "categories_total": 3,
+  "overall_pass": true,
+  "remote_pilot_relaunch_authorized": false,
+  "formal_phase_a_authorized": false,
+  "formal_test_access_authorized": false
+}

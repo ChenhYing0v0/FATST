@@ -278,6 +278,8 @@ def main() -> None:
     step7a = json.loads(step7a_path.read_text(encoding="utf-8"))
     local_gate_path = Path(config["step7a_contract"]["local_gate_path"])
     local_gate = json.loads(local_gate_path.read_text(encoding="utf-8"))
+    repair_path = Path(config["runtime_repair_contract"]["path"])
+    repair_gate = json.loads(repair_path.read_text(encoding="utf-8"))
     profile_path = Path(config["profiles"]["path"])
     profiles = json.loads(profile_path.read_text(encoding="utf-8"))[
         "dataset_profiles"
@@ -297,6 +299,14 @@ def main() -> None:
             local_gate["overall_pass"]
             and local_gate["categories_passed"] == 18
             and local_gate["categories_total"] == 18
+        ),
+        "runtime_repair_gate": bool(
+            file_hash(repair_path)
+            == config["runtime_repair_contract"]["sha256"]
+            and repair_gate["overall_pass"]
+            and repair_gate["categories_passed"] == 3
+            and repair_gate["categories_total"] == 3
+            and repair_gate["formal_test_access_authorized"] is False
         ),
         "profile_hash": file_hash(profile_path) == config["profiles"]["sha256"],
         "temperature_grid": config["temperatures"] == [0.05, 0.1, 0.25],

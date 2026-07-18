@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step8 validation-temperature pilot running |
+| `current_11_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step7A runtime repair pass；retry smoke next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | SIFF_EQUAL v1 frozen parent；CCSF 15-run validation pilot running / formal Phase A-test false |
+| `paper_core_status` | SIFF_EQUAL v1 frozen parent；CCSF first pilot 0/15 numeric fail；repair local 3/3 + prelaunch 15/15 / formal Phase A-test false |
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
@@ -154,6 +154,13 @@ GPU0/1/2；resource smoke、15-job dry-run与no-test guard均通过。运行期�
 15/15 runs和60/60 validation cells，再选择唯一shared temperature。该pilot不是effectiveness gate，formal Phase A、
 official test与confirmation仍为false。启动记录见
 `analysis/stage_c_siff_ccsf_temperature_pilot_step8_remote_20260718/remote_launch_record.md`。
+
+[Runtime Correction] 首次driver虽退出，但实际为0/15：三个Weather temperatures均在首次parameter update后进入
+NaN，未产生checkpoint/metrics/selection，test未访问。原因定位为zero contrast时
+`sqrt(mean(group_contrast²))`的0点反向不定义；这属于`optimization_or_numeric_pathology`，不能拒绝CCSF方向。
+加入同一`1e-6` epsilon后，identical-arm NaN gradients由7200降为0，三temperature × 三AdamW steps共9/9 finite；
+prelaunch现为15/15。下一步只执行三batch remote smoke与同协议retry，不改变temperature/dataset/selection。
+详见`analysis/stage_c_siff_ccsf_runtime_repair_20260718/runtime_failure_and_repair_report.md`。
 
 ### Historical Contribution 1 Parent: PCSD-CF
 

@@ -153,7 +153,9 @@ class CCSFCouplingFieldReadout(SIFFCouplingFieldReadout):
             indices = self.group_indices(scale_index)
             values = normalized[:, :, scale_index, :][:, :, indices]
             group_mean = values.mean(dim=-1)
-            group_rms = values.square().mean(dim=-1).sqrt()
+            group_rms = torch.sqrt(
+                values.square().mean(dim=-1) + self.contrast_epsilon
+            )
             endpoint = values[..., -1] - values[..., 0]
             labels = self.target_group_labels(scale_index)
             descriptors.append(

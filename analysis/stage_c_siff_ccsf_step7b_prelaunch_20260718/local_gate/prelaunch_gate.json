@@ -5,6 +5,7 @@
     "step7a_config_hash": true,
     "step7a_local_gate_hash": true,
     "step7a_gate_passed": true,
+    "runtime_repair_gate": true,
     "profile_hash": true,
     "temperature_grid": true,
     "matrix_size": true,
@@ -17,8 +18,8 @@
     "selection_analyzer_smoke": true,
     "external_output_root": true
   },
-  "categories_passed": 14,
-  "categories_total": 14,
+  "categories_passed": 15,
+  "categories_total": 15,
   "pilot_jobs": 15,
   "validation_cells": 60,
   "overall_pass": true,

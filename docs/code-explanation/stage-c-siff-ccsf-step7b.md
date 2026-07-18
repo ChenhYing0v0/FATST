@@ -17,8 +17,11 @@
 4. 强制`best-val`、四horizon validation selector、`final_evaluation_split=val`、no official test和no predictions；
 5. 全部完成后才调用shared-temperature analyzer。
 
-`DRY_RUN=1`只打印15条合同；`RESOURCE_SMOKE=1`运行Weather/tau0.1的一batch smoke；`STATUS_ONLY=1`只统计
+`DRY_RUN=1`只打印15条合同；`RESOURCE_SMOKE=1`运行Weather/tau0.1的三batch smoke；`STATUS_ONLY=1`只统计
 完整run。正式运行可恢复已完成job，但完整性由四个核心artifact共同判断。
+
+三batch要求来自首次runtime failure：单batch只验证初始forward/backward，无法覆盖correction head更新后梯度进入
+contrast descriptor的第二步路径。runner同时从pilot config读取`remote_root`，使失败attempt与retry artifacts隔离。
 
 ## 3. Shared-temperature analyzer
 
@@ -41,8 +44,8 @@ $$
 ## 4. Prelaunch checker
 
 `scripts/check_stage_c_siff_ccsf_step7b.py`检查Step7A config/local-gate hashes、profile hash、temperature grid、
-15 jobs、workload order、15次CLI parse、validation-only选择边界、授权隔离、runner dry-run、synthetic tie和external
-output root。它生成`pilot_jobs.csv`、`selection_contract.csv`与`prelaunch_gate.json`。
+15 jobs、workload order、15次CLI parse、validation-only选择边界、runtime repair hash、授权隔离、runner dry-run、
+synthetic tie和external output root。它生成`pilot_jobs.csv`、`selection_contract.csv`与`prelaunch_gate.json`。
 
 synthetic smoke中tau0.1与tau0.25并列且必须选tau0.25；这里只证明tie-break实现与配置一致，不表示实际pilot应选
 tau0.25。

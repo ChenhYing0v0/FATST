@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step8 validation-temperature pilot running |
+| `current_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step7A runtime repair pass；retry smoke next |
 | `active_question` | 为什么healthy multi-arm SIFF未把conditional headroom转成超过A6_MEASURE/independent的fused forecast？ |
 | `active_candidates` | v1 frozen performance-near parent；CCSF v1 temperature-pilot ready；PCSD/PCC closed；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_siff_ccsf_temperature_pilot_step8_remote_20260718/remote_launch_record.md` |
-| `method_implementation` | Step7A 18/18；Step7B 14/14；15-run validation pilot running，formal Phase A/test=false |
-| `rollback_point` | pilot不完整只补缺失run；numeric pathology回Step7A；完整选择后进入formal-candidate prelaunch audit |
+| `active_protocol` | `analysis/stage_c_siff_ccsf_runtime_repair_20260718/runtime_failure_and_repair_report.md` |
+| `method_implementation` | first pilot 0/15 numeric fail；runtime repair 3/3；Step7B recheck 15/15；retry smoke pending |
+| `rollback_point` | 三batchremote smoke失败继续Step7A；通过则retry同一validation pilot；formal test仍held |
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 
@@ -153,6 +153,16 @@ commit`06d0ffc`已同步至3090远端；dry-run 15/15与Weather/tau0.1 resource 
 当前decision=`step8_validation_temperature_pilot_running`。不值守、不访问test；完成后先做15-run/60-cell
 completeness与selection artifact audit，再冻结formal candidate identity。详见
 `analysis/stage_c_siff_ccsf_temperature_pilot_step8_remote_20260718/remote_launch_record.md`。
+
+### Runtime failure correction
+
+首次driver于15:41退出，但completion audit为0/15。三个Weather temperatures均从epoch1开始NaN；direction rejection
+无效。定向复现证明旧group RMS在exact zero contrast处forward finite、backward有7200个NaN gradients。加入
+`contrast_epsilon`后zero-contrast gate与三个temperature的三步optimization共3/3 categories通过；Step7B重新检查
+15/15 categories通过。resource smoke收紧为三train batches，retry写入独立external root。
+
+Decision=`runtime_repair_local_pass_remote_smoke_next`；formal Phase A/test/confirmation仍为false。详见
+`analysis/stage_c_siff_ccsf_runtime_repair_20260718/runtime_failure_and_repair_report.md`。
 
 ## Fair Re-audit Step 9–10 Result
 

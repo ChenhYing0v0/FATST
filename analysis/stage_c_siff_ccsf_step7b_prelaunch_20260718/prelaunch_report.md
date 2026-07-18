@@ -2,7 +2,7 @@
 
 ## 1. 当前结论
 
-[Fact] `SC1-SIFF-v2-CCSF-TEMP-PILOT-v1`已通过14/14类本地prelaunch gate。Step7B现只授权一个
+[Fact] `SC1-SIFF-v2-CCSF-TEMP-PILOT-v1`在runtime repair后已通过15/15类本地prelaunch gate。Step7B现只授权一个
 validation-only shared-temperature pilot，不授权formal Phase A、official test或confirmation。
 
 - 矩阵：5 datasets × 3 temperatures × seed2021 = 15 runs；
@@ -47,7 +47,7 @@ analyzer输出：
 - `temperature_summary.csv`：每个temperature的20-cell macro MSE/MAE与完整性统计；
 - `selected_temperature.json`：唯一选择、formal candidate name、config/profile hashes与禁止复用/禁止test标记。
 
-本地证据位于`local_gate/`：`prelaunch_gate.json`为14/14，`pilot_jobs.csv`为15 jobs，
+本地证据位于`local_gate/`：`prelaunch_gate.json`为15/15（新增runtime-repair gate），`pilot_jobs.csv`为15 jobs，
 `selection_contract.csv`为3×20 cells。
 
 ## 4. 远程只读preflight
@@ -61,7 +61,8 @@ analyzer输出：
 - remote repo为`main`，HEAD=`c4c4730`，尚未包含本轮代码；
 - remote worktree已有3个与本轮无关的historical analysis CSV修改，必须保留，后续`git pull`前需确认不会冲突。
 
-本轮没有remote pull、resource smoke、pilot launch或test access。
+首次launch随后暴露zero-contrast RMS gradient NaN，0/15 complete；其failure attribution、最小修复与retry合同见
+`analysis/stage_c_siff_ccsf_runtime_repair_20260718/runtime_failure_and_repair_report.md`。retry不访问test。
 
 ## 5. 11-step与决策边界
 
@@ -76,7 +77,7 @@ analyzer输出：
 | `narrative_gate` | 继承Step6 conditional pass；pilot本身不是contribution |
 | `effectiveness_gate` | not started；formal official-test Phase A仍未授权 |
 | `artifacts` | config、runner、analyzer、checker、local gate与本报告 |
-| `decision` | `step7b_temperature_pilot_prelaunch_pass`；只允许后续启动pilot |
+| `decision` | runtime-repaired `step7b_temperature_pilot_prelaunch_pass`；三batch remote smoke后才允许retry pilot |
 
 Rollback：若pilot不完整则只补缺失的冻结run；若出现numeric pathology则回Step7A修复；若完整则选择一个shared
 temperature并返回post-pilot formal-candidate prelaunch audit。不得从pilot validation直接宣称机制成功，也不得在
