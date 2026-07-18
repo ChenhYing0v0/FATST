@@ -225,3 +225,18 @@ Machine decision=`close_exact_candidate_effectiveness_fail`；人工四层复核
 - local raw evidence（gitignored）：`analysis/stage_c_siff_equal_attribution_step9_20260718/raw/`；
 - remote root：`/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_equal_attribution_v2`；
 - frozen source commit：`c4c4730be09f4c6471653018a39b6a9cba365bee`。
+
+## 12. Post-Step9 portfolio decision（2026-07-18）
+
+用户在完整获知上述negative attribution gate后，决定仍将该exact model保留为本阶段
+`frozen_performance_near_candidate`，因为它是当前正式公平矩阵中最接近论文可发表performance的模型。
+
+该决定不修改本报告的实验判断：“不升级为`passed_core_candidate`”仍成立；变化仅在candidate portfolio层面：
+
+1. v1的source/config/profile/checkpoint/results全部冻结，不允许事后修改；
+2. v1成为当前best candidate、reproducibility target与下一轮redesign的mandatory parent；
+3. attribution status仍是`performance_partial_pass_attribution_blocked`，seeds2022/2023不自动授权；
+4. 任意policy、objective、scale field或architecture修改均创建新的`test_informed` candidate。
+
+不可变清单见`configs/stage_c_siff_equal_attribution_v1_candidate_freeze.json`；后续improvement audit见
+`analysis/stage_c_siff_candidate_step4_source_audit_20260718/source_informed_improvement_audit.md`。

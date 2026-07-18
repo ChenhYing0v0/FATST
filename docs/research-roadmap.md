@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | `SC1-SIFF-v2-EQ-ATTR` Step9 complete；rollback Step4 |
+| `current_step` | `SC1-SIFF-v2-EQ-ATTR-v1` frozen candidate；Step4 source-informed redesign active |
 | `active_question` | 为什么healthy multi-arm SIFF未把conditional headroom转成超过A6_MEASURE/independent的fused forecast？ |
-| `active_candidates` | no active method candidate；SIFF/PCSD/PCC exact versions closed；CTD paused |
+| `active_candidates` | `SC1-SIFF-v2-EQ-ATTR-v1` frozen performance-near candidate；PCSD/PCC closed；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_siff_equal_attribution_step6_20260718/step6_attribution_protocol.md` |
-| `method_implementation` | 50/50 complete；main 2/3、attribution 3/4、internal 7/7；confirmation false |
-| `rollback_point` | exact SIFF v1 closed；return Step4，不补seeds、不调当前rank/policy/scale set |
+| `active_protocol` | `analysis/stage_c_siff_candidate_step4_source_audit_20260718/source_informed_improvement_audit.md` |
+| `method_implementation` | v1 frozen；50/50 complete；main 2/3、attribution 3/4、internal 7/7；new training false |
+| `rollback_point` | keep exact v1 immutable；Step4→5 redesign，不补v1 seeds、不事后调v1 |
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 
@@ -61,6 +61,23 @@ Phase A已50/50完成，200/200 standard-horizon test cells、50/50 invariants�
 结论不是mechanism未执行，而是simple objective与independent-scope controls解释了paper-facing gain。exact v1关闭，
 confirmation保持false，回Step4重新研究conditional headroom到learned fusion的转化问题。详见
 `analysis/stage_c_siff_equal_attribution_step9_20260718/step9_four_layer_diagnostic.md`。
+
+## Post-Step9 Candidate Freeze And Step4 Improvement Audit
+
+用户决定把`SC1-SIFF-v2-EQ-ATTR-v1`保留为本阶段最接近论文级performance的候选。该决定只改变portfolio
+status，不推翻Step9 attribution failure：v1固定为`frozen_performance_near_candidate / performance_partial_pass`，
+其source commit、config/profile hash与五个checkpoint hashes记录于
+`configs/stage_c_siff_equal_attribution_v1_candidate_freeze.json`。
+
+复用现有artifacts的diagnostic表明，SIFF_EQUAL policy best-arm match为29.24%、skill alignment为0.0277，
+policy-weighted expected arm loss相对uniform仅+0.0762%；two-fold static convex fusion却比learned fusion高
+2.2112%且8/10 dataset-fold为正。bounded affine相对convex只多0.1203%，因此首要问题是router看不到/学不到
+relative arm competence，而不是softmax convex hull太窄。
+
+决策：保留v1作为当前candidate与mandatory parent reference；研究正式进入Step4 source-informed redesign，
+优先将`arm-contrast-aware policy + synchronous competence calibration`送入Step5 theory feasibility，并同时审计
+`A6_MEASURE anchor containment`。generic deeper MLP、top-k、entropy loss、直接扩Q/rank/scales不进入下一步。
+详见`analysis/stage_c_siff_candidate_step4_source_audit_20260718/source_informed_improvement_audit.md`。
 
 ## Fair Re-audit Step 9–10 Result
 

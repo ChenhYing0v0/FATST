@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | `SC1-SIFF-v2-EQ-ATTR` Step9 complete；exact v1 closed；rollback Step4 |
+| `current_11_step` | `SC1-SIFF-v2-EQ-ATTR-v1` frozen candidate；Step4 source-informed redesign active |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | SIFF_EQUAL exact v2、PCSD/PCC exact v1均closed；no active method candidate / no confirmed contribution pair |
+| `paper_core_status` | SIFF_EQUAL v1保留为performance-near candidate，但仍attribution-blocked；no confirmed contribution pair |
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
@@ -32,7 +32,8 @@ difference、policy entropy与component-use只解释机制健康度，不能替�
 attribution。Step6为16/16，Step7A为13/13，Step7B prelaunch为9/9；seed2021的完整50-run official-test
 Phase A现已完成。结果为main effectiveness 2/3、EQUAL-context attribution 3/4、internal health 7/7：
 `SIFF_EQUAL`未超过`A6_MEASURE`（MSE `-0.2366%`、MAE `-0.3961%`），且对independent control仅
-`+0.2580%`，低于冻结`0.3%` gate。exact v1关闭，seeds2022/2023 confirmation保持false。
+`+0.2580%`，低于冻结`0.3%` gate。Step9 paper-core gate仍失败，seeds2022/2023 confirmation保持false；但用户在
+Step9后将该exact artifact保留为`frozen_performance_near_candidate`，作为当前最强候选与下一轮redesign parent。
 
 ## Research Thesis
 
@@ -80,7 +81,7 @@ dual-carrier、three-seed direct evidence。contiguity仅在两carrier各4/5 dat
 temporal grouping law。另一方面，GroupedMLP相对A6-LBF H720仍落后2.6886%，所以D14-A确认的是研究问题，
 不是Contribution 1 method performance。
 
-### Closed Contribution 1 Candidate: SIFF_EQUAL v2
+### Retained Contribution 1 Candidate: SIFF_EQUAL v2
 
 `SIFF_EQUAL`在PCSD coupling field上用ordered continuous scale coordinate生成共享history modes，并由
 equal-skill objective缓解same-run arms的credit starvation。Step9确认equal-skill确实把SIFF arm loss CV从
@@ -96,12 +97,19 @@ Contribution 1。
 
 50/50 runs与200/200 test cells通过protocol。`SIFF_EQUAL`分别超过A6_FULL、PCSD_EQUAL、constant、permuted与
 Q1-wide controls，但没有超过A6_MEASURE，且对independent control的`+0.2580%`未达冻结margin。内部路径7/7
-健康不能挽救negative effectiveness/attribution gate。status=`closed_exact_v1_return_step4`；confirmation未授权。
+健康不能挽救negative effectiveness/attribution gate。实验结论仍为
+`performance_partial_pass_attribution_blocked`；portfolio status更新为`frozen_performance_near_candidate`，
+confirmation未授权。完整不可变清单见
+`configs/stage_c_siff_equal_attribution_v1_candidate_freeze.json`。
 
 [Retained Evidence] ordered scale information相对constant/permuted/Q1-wide有稳定局部价值，equal-skill能修复
 SIFF-specific arm starvation，D14 coupling-crossing problem仍成立。下一轮不能继续微调当前SIFF；必须先解释为何
 simple A6_MEASURE已经取得主要收益，以及如何把multi-arm conditional headroom转成超过A6_MEASURE和independent
-scope的fused forecast。
+scope的fused forecast。现有artifact进一步显示：SIFF_EQUAL policy的best-arm match仅29.24%、skill alignment
+0.0277；two-fold static convex fusion比learned fusion高2.2112%，而bounded affine相对convex仅多0.1203%。
+因此首要瓶颈定位为fusion calibration/information set，而非convex geometry；当前正式进入以v1为parent的Step4
+source-informed redesign，优先评估arm-contrast-aware policy与synchronous competence calibration。详见
+`analysis/stage_c_siff_candidate_step4_source_audit_20260718/source_informed_improvement_audit.md`。
 
 ### Historical Contribution 1 Parent: PCSD-CF
 

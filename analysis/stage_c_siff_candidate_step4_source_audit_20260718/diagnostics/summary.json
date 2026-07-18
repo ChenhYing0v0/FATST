@@ -1,0 +1,38 @@
+{
+  "raw_root": "analysis/stage_c_siff_equal_attribution_step9_20260718/raw",
+  "seed": 2021,
+  "definitions": {
+    "policy_best_arm_match_rate": "Fraction of row-bin cells where the most-used arm is the lowest-MSE arm among the five same-run arms.",
+    "policy_skill_centered_alignment": "Mean centered cosine alignment across arms between policy weights and negative arm MSE; +1 is perfect skill alignment.",
+    "policy_allocation_gain_over_uniform_percent": "Gain of policy-weighted expected arm MSE over uniform expected arm MSE. This is an allocation proxy, not fused-forecast MSE.",
+    "crossfit_convex_mse": "Static nonnegative sum-to-one weights fitted on one half of the saved probe rows and evaluated on the other half.",
+    "crossfit_bounded_affine_mse": "Static sum-to-one weights in [-1, 1] fitted and evaluated with the same two-fold row split."
+  },
+  "boundary": "The probe batch has 256 rows per dataset and is diagnostic only. Static cross-fit stacking does not establish a new model's test effectiveness; it localizes whether calibration or convex geometry is a plausible bottleneck.",
+  "summary": {
+    "siff_equal": {
+      "datasets": 5,
+      "policy_best_arm_match_rate": 0.2924258521606108,
+      "policy_skill_centered_alignment": 0.027708650680323355,
+      "policy_allocation_gain_over_uniform_percent": 0.07616639382912238,
+      "convex_gain_over_learned_percent": 2.211213345403304,
+      "affine_gain_over_learned_percent": 2.334928169130504,
+      "affine_gain_over_convex_percent": 0.12034076480640143,
+      "convex_positive_dataset_folds": 8,
+      "affine_over_convex_positive_dataset_folds": 6,
+      "dataset_folds": 10
+    },
+    "siff_independent_equal": {
+      "datasets": 5,
+      "policy_best_arm_match_rate": 0.2448056787835707,
+      "policy_skill_centered_alignment": 0.012507028748031102,
+      "policy_allocation_gain_over_uniform_percent": -0.10695371549737098,
+      "convex_gain_over_learned_percent": 0.7680057013178554,
+      "affine_gain_over_learned_percent": 1.4845352515004617,
+      "affine_gain_over_convex_percent": 0.7160071154936942,
+      "convex_positive_dataset_folds": 8,
+      "affine_over_convex_positive_dataset_folds": 3,
+      "dataset_folds": 10
+    }
+  }
+}

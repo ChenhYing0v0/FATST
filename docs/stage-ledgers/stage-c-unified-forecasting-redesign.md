@@ -9,7 +9,7 @@
 | `active_question` | 为什么healthy multi-arm SIFF未把conditional headroom转成超过A6_MEASURE/independent的fused forecast？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | no active method candidate；SIFF/PCSD/PCC exact versions closed；CTD paused |
+| `active_candidates` | `SC1-SIFF-v2-EQ-ATTR-v1` frozen performance-near candidate；PCSD/PCC closed；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
@@ -19,27 +19,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | `SC1-SIFF-v2-EQ-ATTR` Step9 complete；rollback Step4 |
-| `current_candidate` | none；`SC1-SIFF-v2-EQ-ATTR-v1` exact version closed |
-| `latest_decision` | 50/50；effectiveness 2/3、attribution 3/4、internal 7/7；confirmation blocked |
-| `next_required_action` | Step4复盘conditional headroom到learned fusion的转化；不补seed、不微调exact v1 |
-| `method_training_authorized` | no active method training；seeds2022/2023 confirmation=false |
-| `rollback_point` | Step4；A6_MEASURE与independent controls必须成为下一候选的mandatory baselines |
+| `current_11_step` | v1 candidate freeze complete；Step4 source-informed redesign active |
+| `current_candidate` | `SC1-SIFF-v2-EQ-ATTR-v1` frozen performance-near candidate / attribution blocked |
+| `latest_decision` | v1保留；artifact diagnostic定位fusion calibration；convex +2.2112%，affine额外+0.1203% |
+| `next_required_action` | Route A arm-contrast/calibration + Route B A6 anchor进入Step5 theory feasibility |
+| `method_training_authorized` | no new method training；v1 seeds2022/2023 confirmation=false |
+| `rollback_point` | Step4/5；v1 immutable；A6_MEASURE与independent为下一候选mandatory controls |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | `SC1-SIFF-v2-EQ-ATTR` Step9 complete；Step10 exact-v1 closure |
+| `current_step` | Step4 source-informed redesign；v1已作为candidate冻结 |
 | `problem` | `SIFF_EQUAL`有正向test performance，但旧PCC-context controls无法证明收益来自ordered scale coordinate |
 | `existence_evidence` | 50/50；SIFF vs A6_FULL `+1.6436%`，vs A6_MEASURE `-0.2366%`；internal health 7/7 |
-| `idea` | 在EQUAL context下联合分解harmonic measure、equal-skill supervision、SIFF architecture与四类specificity controls |
-| `theory_check` | 10-arm decomposition分别回答objective、architecture、ordering、partition与cross-arm interaction；diagnostic health不能替代effectiveness/attribution |
-| `design` | 10 arms × 5 datasets × seed2021 = 50 runs / 200 test cells；通过后才允许seeds2022/2023 100 runs / 400 cells |
-| `narrative_gate` | conditional pass；七项hard comparisons全部通过前只能称performance carrier |
-| `effectiveness_gate` | 三项main + 四项EQUAL-context controls逐项应用MSE gate；main另要求MAE macro非负 |
-| `artifacts` | `analysis/stage_c_siff_equal_attribution_step9_20260718/`；remote output `/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_equal_attribution_v2` |
-| `decision` | exact v1 closed；capacity/objective controls explain；return Step4；confirmation false |
+| `idea` | v1作为immutable parent；研究arm-contrast-aware policy、synchronous competence calibration与A6 anchor containment |
+| `theory_check` | static convex已超过learned +2.2112%，affine只额外+0.1203%；首要瓶颈是calibration/information，不是fusion geometry |
+| `design` | 当前只复用256-row probes做two-fold diagnostic；新v2需另过Step5/6并冻结完整test-informed matrix |
+| `narrative_gate` | v1 conditional/blocked；provisional v2未通过，generic router patch明确拒绝 |
+| `effectiveness_gate` | v1 Step9不变；新v2必须超过v1、A6_MEASURE、independent及generic capacity/router controls |
+| `artifacts` | candidate freeze JSON + `analysis/stage_c_siff_candidate_step4_source_audit_20260718/` |
+| `decision` | retain v1；Step4→5 source-informed redesign；no training/confirmation authorized |
 
 ## Frozen Carrier Contract
 
@@ -97,7 +97,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC2-PCC-v0` | `superseded_pointwise_control` | pointwise same-forward capability + skill floor | expert loss与loss-teacher gate已有直接prior art | 15/15 theory cases；method untested | mandatory pointwise/prior controls only |
 | `SC2-PCC-v1-TI` | `rejected_effectiveness_test_fair` | nested-prefix capability能否经harmonic incidence输运为target-coordinate credit | exact claim fail；generic/prior explains most gain | fair test vs prior PCSD +0.0806% fail；on SIFF vs equal -0.2663% | exact v1 closed；return Step2/4 |
 | `SC1-SIFF-v1` | `partial_pass_attribution_blocked` | coupling scale能否作为internal coordinate生成可辨识且连续共享的history modes | complete-chain conditional pass | EQUAL vs PCSD +0.5906% pass；vs A6 +1.6436%；prior/PCC/independent specificity fail | return Step6；EQUAL-context controls before seeds |
-| `SC1-SIFF-v2-EQ-ATTR` | `closed_exact_v1_return_step4` | EQUAL-trained ordered scale field能否同时超过A6/PCSD与matched EQUAL-context specificity controls | prelaunch conditional pass；result不支持完整claim | main 2/3；controls 3/4；internal 7/7 | no confirmation；保留order/equal-skill信号，回Step4 |
+| `SC1-SIFF-v2-EQ-ATTR-v1` | `frozen_performance_near_candidate_attribution_blocked` | EQUAL-trained ordered scale field能否同时超过A6/PCSD与matched EQUAL-context specificity controls | conditional；完整claim未成立 | main 2/3；controls 3/4；internal 7/7 | immutable parent；Step4 source-informed redesign，不补v1 seeds |
+| `SC1-SIFF-v2-CCSF` | `proposed_step5_not_training_authorized` | arm contrast与同步competence calibration能否把healthy headroom转成可归因fusion gain | Step4 source-informed boundary ready | not started；must beat v1/A6_MEASURE/independent/generic router | Step5 theory feasibility + A6 anchor containment audit |
 | `SC2-MCCA-v1` | `historical_validation_negative_fair_test_not_reaudited` | same total scope skill mass能否竞争性分配而避免per-target homogenization | complete-chain conditional pass | old best-H720 validation four-H -0.1357%、1/5；not in 70-run audit | inactive；reuse前回Step4重审相对EQUAL/MEASURE的必要性 |
 | `SC-D16-CTD` | `deferred_paused_by_user` | H720 checkpoint是否丢弃healthy SIFF four-H epoch | diagnostic only；weighted checkpoint prior-covered | not implemented | design retained；resume only after user authorization |
 | `SC-RETRO-FAIR-v1` | `completed_partial_pass_attribution_blocked` | PCSD/PCC/SIFF在新checkpoint与test-primary规则下是否仍成立 | retrospective audit；not a method | 70/70；280/280；joint pass；two-contribution attribution fail | archive result；SIFF Step6/PCC Step2-4 |
@@ -171,6 +172,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SIFF_EQUAL attribution Step7B prelaunch | formal authorization + remote environment + command gate | 9/9；3 GPUs idle；50 runs/200 cells；confirmation held | seed2021 Phase A launch authorized | `analysis/stage_c_siff_equal_attribution_step7b_prelaunch_20260718/prelaunch_report.md` |
 | SIFF_EQUAL attribution Step8 launch | remote execution | commit c4c4730；dry-run/smoke pass；GPU0/1/2 jobs1-3 active | Phase A running；no confirmation | `analysis/stage_c_siff_equal_attribution_step8_remote_20260718/remote_launch_record.md` |
 | SIFF_EQUAL attribution Step9 | 50 runs/200 test cells + four-layer attribution | vs A6_MEASURE -0.2366%；vs independent +0.2580%；internal 7/7 | exact v1 closed；return Step4；no confirmation | `analysis/stage_c_siff_equal_attribution_step9_20260718/step9_four_layer_diagnostic.md` |
+| SIFF v1 candidate freeze + Step4 audit | immutable candidate manifest + existing-artifact routing/fusion audit + external sources | policy match 29.24%；static convex +2.2112%；affine extra +0.1203% | v1 retained/attribution blocked；CCSF provisional Step5；no training | `analysis/stage_c_siff_candidate_step4_source_audit_20260718/source_informed_improvement_audit.md` |
 
 ## Pending Tasks
 
@@ -227,6 +229,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | PCSD/PCC/SIFF fair test re-audit | `completed_partial_pass` | 70/70；SIFF_EQUAL best +1.6436%；PCC harms SIFF；checkpoint false-failure corrected |
 | Fair re-audit internal mechanism health | `completed_diagnostic` | DIRECT arms失衡；PCC oracle增大但policy近均匀；SIFF_EQUAL未collapse；MCCA不在矩阵 |
 | SIFF_EQUAL EQUAL-context attribution freeze | `completed_exact_v1_closed` | 50/50；main 2/3、controls 3/4、internal 7/7；回Step4，不补confirmation |
+| SIFF v1 portfolio freeze | `completed_retained_attribution_blocked` | immutable manifest complete；作为当前best candidate与v2 parent，不改Step9 failure |
+| SIFF contrast-calibrated redesign | `step4_complete_step5_next` | CCSF theory feasibility + A6_MEASURE anchor containment；training false |
 
 ## Paper Mainline Sync Log
 
@@ -304,6 +308,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-18 | SIFF_EQUAL attribution Step7B prelaunch | Current Position、Candidate Queue、Experiment Logic | formal test authorization + remote launch freeze | 9/9；seed2021 Phase A authorized；confirmation false |
 | 2026-07-18 | SIFF_EQUAL attribution Step8 launch | Current Position、Experiment Ledger | commit/resource/process provenance | c4c4730；3 workers；50-run Phase A running；confirmation false |
 | 2026-07-18 | SIFF_EQUAL attribution Step9 | Current Position、Candidate Queue、Experiment Ledger | four-layer result + exact candidate closure | A6_MEASURE/independent explain；internal healthy；rollback Step4 |
+| 2026-07-18 | SIFF v1 freeze + Step4 improvement audit | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | portfolio retention + fusion bottleneck localization + source boundary | v1 immutable；calibration primary；CCSF Step5 next；training false |
 
 ## Continuation Rules
 
@@ -383,5 +388,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 37. Step8已从commit `c4c4730`启动。运行中不得pull新代码、修改config/gates或追加arms；50/50完成后必须先同步
     完整metrics、invariants与component artifacts，再执行四层Step9，不能只查看macro MSE。
 38. Step9已完成且exact v1未通过：不得补seeds2022/2023、调当前rank/scale/policy或从内部oracle选择有利arm。
+39. Step9后的portfolio decision将exact v1保留为`frozen_performance_near_candidate`，但不推翻其attribution failure。
+    v1 manifest、checkpoints与结果不可变；任何改进均建立新`test_informed` candidate，并先完成Step4-6。
     后续新候选必须回Step4，显式超过A6_MEASURE与independent-scope control，并解释如何把conditional headroom
     转成learned fused forecast；order/equal-skill局部信号只能作为design evidence。

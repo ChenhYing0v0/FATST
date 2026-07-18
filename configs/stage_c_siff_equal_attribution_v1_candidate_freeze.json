@@ -1,0 +1,58 @@
+{
+  "candidate_version": "SC1-SIFF-v2-EQ-ATTR-v1",
+  "candidate_alias": "SIFF_EQUAL",
+  "freeze_date": "2026-07-18",
+  "portfolio_status": "frozen_performance_near_candidate",
+  "paper_core_status": "performance_partial_pass_attribution_blocked",
+  "test_informed": true,
+  "source_commit": "c4c4730be09f4c6471653018a39b6a9cba365bee",
+  "experiment_config": {
+    "path": "configs/stage_c_siff_equal_attribution_v2.json",
+    "sha256": "f0600be7c5b79445a1055463e0a41486a52f16daa20068c610d56457bd03836a"
+  },
+  "dataset_profile_contract": {
+    "path": "configs/stage_c_five_dataset_natural_profiles.json",
+    "sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a"
+  },
+  "model_contract": {
+    "readout_mode": "pcsd-coupling-field",
+    "objective_mode": "equal_skill",
+    "scales": [1, 48, 144, 360, 720],
+    "scale_field": "ordered_continuous_q2_log_scale_coordinate",
+    "policy": "hidden_plus_future_coordinate_softmax_over_five_arms",
+    "prediction_domain": 720,
+    "requested_horizon_behavior": "prefix_crop_only",
+    "checkpoint_selection": "mean_validation_mse_h96_h192_h336_h720",
+    "formal_seed": 2021
+  },
+  "checkpoint_sha256": {
+    "ETTh1": "a19fac474a50ec3272ce57fc445d6287560c378117758dfdd4bcf9061155097e",
+    "ETTh2": "93120f3f30fb8b025b7057034ae1a6f7bcf74f647b754844dd19669d18823b8c",
+    "ETTm1": "bd0a231b743fba13f8308ebad6f55b5240417f05a51d3dc1dd6125606b48f92c",
+    "ETTm2": "030049c885d28ef9f9e7bfd472a01c63980468a856084bf3dc0b55aedbe23e12",
+    "Weather": "71054994db3e367ae33cdc41e768d8c3347d374e0b7c923ad84e220497d91dcd"
+  },
+  "frozen_test_result": {
+    "runs": 50,
+    "standard_horizon_cells": 200,
+    "gain_over_a6_full_mse_percent": 1.6436,
+    "gain_over_a6_full_mae_percent": 0.9084,
+    "gain_over_a6_measure_mse_percent": -0.2366,
+    "gain_over_pcsd_equal_mse_percent": 0.5906,
+    "gain_over_independent_equal_mse_percent": 0.2580,
+    "internal_health_gates_passed": "7/7"
+  },
+  "allowed_roles": [
+    "current_best_performance_near_candidate",
+    "frozen_reproducibility_target",
+    "mandatory_parent_reference_for_source_informed_v2",
+    "paper_facing_candidate_if_later_confirmation_and_attribution_are_completed"
+  ],
+  "blocked_actions": [
+    "retroactive_change_to_this_candidate_identity",
+    "dataset_or_horizon_specific_tuning_from_test_results",
+    "claiming_passed_core_candidate_from_internal_health",
+    "confirmation_seeds_without_a_new_preregistered_decision"
+  ],
+  "decision_boundary": "Retaining the exact model in the candidate portfolio does not reverse its frozen Step9 attribution failures. Any architecture, policy, objective, scale-field, or optimization change creates a new test-informed candidate version."
+}
