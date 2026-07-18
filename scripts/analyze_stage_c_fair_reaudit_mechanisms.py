@@ -24,10 +24,19 @@ def relative_gain(candidate: float, reference: float) -> float:
     return 100.0 * (1.0 - candidate / reference)
 
 
-def analyze_run(path: Path, raw_root: Path) -> dict[str, Any]:
+def analyze_run(path: Path, raw_root: Path) -> dict[str, Any] | None:
     relative = path.relative_to(raw_root)
     arm, dataset, _, seed_dir, _ = relative.parts
     with np.load(path) as payload:
+        required_arrays = {
+            "fused_row_bin_mse",
+            "arm_row_bin_mse",
+            "policy_row_bin_usage",
+            "probe_arms",
+            "probe_targets",
+        }
+        if not required_arrays.issubset(payload.files):
+            return None
         fused_loss = payload["fused_row_bin_mse"].astype(np.float64)
         arm_loss = payload["arm_row_bin_mse"].astype(np.float64)
         policy_usage = payload["policy_row_bin_usage"].astype(np.float64)
@@ -148,7 +157,10 @@ def main() -> None:
             f"No PCSD diagnostic artifacts under {args.raw_root}"
         )
 
-    rows = [analyze_run(path, args.raw_root) for path in diagnostic_paths]
+    analyzed = [analyze_run(path, args.raw_root) for path in diagnostic_paths]
+    rows = [row for row in analyzed if row is not None]
+    if not rows:
+        raise ValueError("No diagnostic artifacts contained arm-level arrays")
     summaries = summarize(rows)
     args.output_dir.mkdir(parents=True, exist_ok=True)
     write_csv(args.output_dir / "mechanism_health_by_run.csv", rows)
