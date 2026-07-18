@@ -9,6 +9,7 @@ import hashlib
 import json
 import math
 import sys
+from datetime import datetime
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
@@ -663,6 +664,11 @@ def evaluate(args: argparse.Namespace) -> None:
         "protocol_pass": protocol_pass,
         "readout_contract_pass": readout_contract_pass,
         "uses_test_split": args.evaluation_split == "test",
+        "test_access_date": (
+            datetime.now().astimezone().date().isoformat()
+            if args.evaluation_split == "test"
+            else None
+        ),
         "test_access_authorized": test_authorized,
         "checkpoint_sha256": file_sha256(args.run_dir / "checkpoint.pt"),
         "checkpoint_retrained": bool(

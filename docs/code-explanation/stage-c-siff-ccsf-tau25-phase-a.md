@@ -13,7 +13,7 @@ CCSF训练后的正式evaluator沿真实forward计算：
 `scripts/evaluate_stage_c_pcsd_cf_checkpoint.py`把arms denormalize后用于error audit，同时保持policy/logits/
 descriptor在model计算域中保存。probe张量统一把`B,C`展平成`row`：arms为`[row,S,T]`，policy/logits为
 `[row,T,S]`，descriptor为`[row,T,S,6]`。它不修改checkpoint，并在test前验证授权与best-validation checkpoint
-合同。
+合同；只有实际进入test evaluator时，才按服务器本地日期写入`test_access_date`。
 
 ## Runner
 

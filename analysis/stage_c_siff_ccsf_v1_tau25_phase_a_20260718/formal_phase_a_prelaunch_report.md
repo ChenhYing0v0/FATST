@@ -32,7 +32,8 @@ effectiveness baseline，pilot validation margin不参与机制判定。
 
 evaluator新增保存`probe_policy`、`probe_base_policy`、`probe_base_logits`、`probe_correction_logits`和
 `probe_contrast_descriptor`。这些张量来自同一次forward，不读取future label构造policy；label只用于离线核算
-best-arm match、skill alignment与allocation效果。
+best-arm match、skill alignment与allocation效果。`test_access_date`由每个run在实际进入test evaluator时写入，
+prelaunch config中的null不会被当作实际访问日期。
 
 ## 4. Metric meanings
 

@@ -140,6 +140,7 @@ def load_run(
         "status": "ok" if protocol_pass else "audit_fail",
         "protocol_pass": protocol_pass,
         "checkpoint_sha256": invariant.get("checkpoint_sha256", ""),
+        "test_access_date": invariant.get("test_access_date"),
         "encoder_initialization_hash": initialization.get(
             "encoder_initialization_hash", ""
         ),
@@ -523,7 +524,13 @@ def main() -> None:
     )
     summary = {
         "candidate_version": config["candidate_version"],
-        "test_access_date": config["authorization"].get("test_access_date"),
+        "test_access_dates": sorted(
+            {
+                row["test_access_date"]
+                for row in runs
+                if row.get("test_access_date")
+            }
+        ),
         "user_authorization": config["authorization"],
         "checkpoint_retrained": True,
         "test_role": config["authorization"]["test_role"],
