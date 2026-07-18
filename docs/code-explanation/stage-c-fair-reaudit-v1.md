@@ -90,3 +90,17 @@ dataset-horizon cells等权；`dataset win`先在一个dataset内平均四horizo
 
 其中validation/test相对增益使用各自split的同dataset、同horizon MSE或MAE；不会跨dataset直接平均raw loss。
 `all_arms_vs_a6.csv`属于结果解释，不是事后新增的method gate。
+
+## 8. Internal mechanism-health analyzer
+
+`scripts/analyze_stage_c_fair_reaudit_mechanisms.py`读取每个run保存的
+`pcsd_test_audit_diagnostics.npz`，将paper-facing performance与内部arm状态分开：
+
+- `oracle_headroom_percent`：每个sample-horizon-bin选择最低MSE arm的oracle相对learned fusion的增益；
+- `best_fixed_over_fused_percent`：同一run内全局最佳单arm相对learned fusion的增益；
+- `arm_loss_cv_percent`：五个arms平均MSE的coefficient of variation；
+- `pairwise_probe_nrmse`：保存probe batch上两两arm预测RMSE除以target RMS；
+- `policy_entropy`与`usage_min/max`：row-bin policy的归一化entropy与平均使用范围。
+
+这些统计回答arms是否有差异、是否存在未利用的conditional headroom，以及policy是否近似均匀或集中。它们不能替代
+same-run arms与**独立训练fixed-scope arms**的比较；因此只能补充failure attribution，不能单独通过method gate。
