@@ -1,0 +1,114 @@
+{
+  "candidate_version": "SC1-SIFF-v2-CCSF-v0-theory",
+  "config": "configs/stage_c_siff_ccsf_step5_theory.json",
+  "definitions": {
+    "contrast_features": "Per-arm mean, standard deviation, RMS, and end-minus-start slope after subtracting the five-arm pointwise consensus, plus three fixed future-bin coordinates. No target is used.",
+    "expected_arm_mse": "Actual held-out arm MSE averaged under classifier probabilities.",
+    "crossfit": "Fit on 128 saved probe rows and evaluate on the other 128, then reverse the row halves."
+  },
+  "boundary": "Passing supports target-free contrast identifiability and allows Step5 method theory to remain conditional. Failing blocks the exact low-dimensional contrast descriptor but cannot reject the broader coupling-scope direction because the saved probe omits the full encoder hidden state and is test-derived diagnostic evidence only.",
+  "feature_summary": {
+    "consensus_plus_coordinate": {
+      "best_arm_accuracy": 0.40068359375,
+      "allocation_gain_over_uniform_percent": 4.436467405061054
+    },
+    "contrast_plus_coordinate": {
+      "best_arm_accuracy": 0.44140625,
+      "allocation_gain_over_uniform_percent": 5.403359530721629
+    },
+    "coordinate_only": {
+      "best_arm_accuracy": 0.34716796875,
+      "allocation_gain_over_uniform_percent": 3.6392465265193286
+    },
+    "existing_policy": {
+      "best_arm_accuracy": 0.28828125,
+      "allocation_gain_over_uniform_percent": -0.15022120055424795
+    },
+    "full_summary": {
+      "best_arm_accuracy": 0.4556640625,
+      "allocation_gain_over_uniform_percent": 5.795520685825767
+    },
+    "shuffled_contrast_plus_coordinate": {
+      "best_arm_accuracy": 0.33984375,
+      "allocation_gain_over_uniform_percent": 3.7620191642583753
+    }
+  },
+  "comparison_summary": {
+    "contrast_vs_coordinate": {
+      "expected_mse_gain_percent": 1.8347765133741045,
+      "accuracy_gain_points": 0.09423828125,
+      "positive_expected_mse_folds": 10,
+      "positive_accuracy_folds": 9,
+      "folds": 10
+    },
+    "contrast_vs_existing_policy": {
+      "expected_mse_gain_percent": 5.422014950870981,
+      "accuracy_gain_points": 0.153125,
+      "positive_expected_mse_folds": 10,
+      "positive_accuracy_folds": 10,
+      "folds": 10
+    },
+    "contrast_vs_shuffled": {
+      "expected_mse_gain_percent": 1.7084520501282974,
+      "accuracy_gain_points": 0.1015625,
+      "positive_expected_mse_folds": 10,
+      "positive_accuracy_folds": 10,
+      "folds": 10
+    },
+    "full_vs_contrast": {
+      "expected_mse_gain_percent": 0.4104353222411394,
+      "accuracy_gain_points": 0.0142578125,
+      "positive_expected_mse_folds": 8,
+      "positive_accuracy_folds": 7,
+      "folds": 10
+    }
+  },
+  "gate_results": {
+    "allocation_gain_over_coordinate_macro": true,
+    "allocation_gain_over_coordinate_folds": true,
+    "allocation_gain_over_shuffled_macro": true,
+    "allocation_gain_over_shuffled_folds": true,
+    "accuracy_gain_over_existing_policy": true
+  },
+  "passed_gates": 5,
+  "total_gates": 5,
+  "decision": "contrast_identifiability_supported",
+  "teacher_geometry_macro": {
+    "pcc_std_t1.0": {
+      "normalized_entropy": 0.8031726521579661,
+      "confidence_weight_mean": 0.19682734784203393,
+      "probability_max_mean": 0.4490714349791129,
+      "confidence_dispersion_correlation": -0.4046571848846903
+    },
+    "relative_regret_t0.05": {
+      "normalized_entropy": 0.6221326686770883,
+      "confidence_weight_mean": 0.37786733132291167,
+      "probability_max_mean": 0.5798185808476666,
+      "confidence_dispersion_correlation": 0.5149131864471913
+    },
+    "relative_regret_t0.1": {
+      "normalized_entropy": 0.8012084467491694,
+      "confidence_weight_mean": 0.1987915532508308,
+      "probability_max_mean": 0.4360831141462434,
+      "confidence_dispersion_correlation": 0.6410344324594812
+    },
+    "relative_regret_t0.25": {
+      "normalized_entropy": 0.9345823061143251,
+      "confidence_weight_mean": 0.06541769388567495,
+      "probability_max_mean": 0.3066487679804334,
+      "confidence_dispersion_correlation": 0.8208944353630813
+    },
+    "relative_regret_t0.5": {
+      "normalized_entropy": 0.9752546661786965,
+      "confidence_weight_mean": 0.02474533382130322,
+      "probability_max_mean": 0.2551476391098458,
+      "confidence_dispersion_correlation": 0.9228172020658743
+    },
+    "relative_regret_t1.0": {
+      "normalized_entropy": 0.9915085455443112,
+      "confidence_weight_mean": 0.008491454455688809,
+      "probability_max_mean": 0.2281031820984527,
+      "confidence_dispersion_correlation": 0.9461778351848482
+    }
+  }
+}

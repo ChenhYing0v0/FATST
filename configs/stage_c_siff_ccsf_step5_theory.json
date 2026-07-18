@@ -1,0 +1,44 @@
+{
+  "candidate_version": "SC1-SIFF-v2-CCSF-v0-theory",
+  "status": "step5_diagnostic_only",
+  "test_informed": true,
+  "parent_candidate": "SC1-SIFF-v2-EQ-ATTR-v1",
+  "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"],
+  "seed": 2021,
+  "probe_rows_per_dataset": 256,
+  "future_bins": [
+    [1, 48],
+    [49, 96],
+    [97, 144],
+    [145, 192],
+    [193, 288],
+    [289, 336],
+    [337, 512],
+    [513, 720]
+  ],
+  "row_folds": 2,
+  "primary_feature_set": "contrast_plus_coordinate",
+  "controls": [
+    "coordinate_only",
+    "consensus_plus_coordinate",
+    "shuffled_contrast_plus_coordinate",
+    "existing_policy"
+  ],
+  "classifier": {
+    "type": "standardized_multinomial_logistic_regression",
+    "regularization_c": 1.0,
+    "max_iterations": 1000,
+    "class_weight": null
+  },
+  "relative_regret_temperature_diagnostic_grid": [0.05, 0.1, 0.25, 0.5, 1.0],
+  "diagnostic_gates": {
+    "allocation_gain_over_coordinate_macro_percent_min": 0.5,
+    "allocation_gain_over_coordinate_positive_folds_min": 7,
+    "allocation_gain_over_shuffled_macro_percent_min": 0.5,
+    "allocation_gain_over_shuffled_positive_folds_min": 7,
+    "best_arm_accuracy_gain_over_existing_policy_points_min": 0.02
+  },
+  "decision_boundary": "Passing supports target-free contrast identifiability and allows Step5 method theory to remain conditional. Failing blocks the exact low-dimensional contrast descriptor but cannot reject the broader coupling-scope direction because the saved probe omits the full encoder hidden state and is test-derived diagnostic evidence only.",
+  "training_authorized": false,
+  "remote_authorized": false
+}

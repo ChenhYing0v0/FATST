@@ -1,0 +1,36 @@
+{
+  "candidate_version": "SC1-SIFF-v2-CCSF-v0-theory",
+  "current_step": 5,
+  "decision": "conditional_theory_pass_to_step6",
+  "contrast_identifiability": {
+    "passed_gates": 5,
+    "total_gates": 5,
+    "contrast_vs_coordinate_expected_mse_gain_percent": 1.8347765133741045,
+    "contrast_vs_coordinate_positive_folds": 10,
+    "contrast_vs_shuffled_expected_mse_gain_percent": 1.7084520501282974,
+    "contrast_vs_shuffled_positive_folds": 10,
+    "contrast_best_arm_accuracy": 0.44140625,
+    "existing_policy_best_arm_accuracy": 0.28828125
+  },
+  "theory_gates": {
+    "target_free_inference": true,
+    "strict_prefix_projectivity": true,
+    "v1_function_class_inclusion": true,
+    "generic_prior_art_boundary_recorded": true,
+    "a6_anchor_in_method": false,
+    "end_to_end_effectiveness_tested": false,
+    "implementation_authorized": false,
+    "remote_authorized": false
+  },
+  "next_step": "Step6 factorial narrative and control design",
+  "mandatory_controls": [
+    "v1_equal",
+    "old_policy_plus_relative_calibration",
+    "ccsf_equal",
+    "ccsf_relative_calibration_full",
+    "ccsf_shuffled_or_zero_contrast",
+    "parameter_matched_generic_logit_correction",
+    "independent_field_ccsf",
+    "a6_measure"
+  ]
+}

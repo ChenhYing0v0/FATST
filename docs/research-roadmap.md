@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | `SC1-SIFF-v2-EQ-ATTR-v1` frozen candidate；Step4 source-informed redesign active |
+| `current_step` | `SC1-SIFF-v2-CCSF-v0-theory` Step5 conditional pass；Step6 next |
 | `active_question` | 为什么healthy multi-arm SIFF未把conditional headroom转成超过A6_MEASURE/independent的fused forecast？ |
-| `active_candidates` | `SC1-SIFF-v2-EQ-ATTR-v1` frozen performance-near candidate；PCSD/PCC closed；CTD paused |
+| `active_candidates` | v1 frozen performance-near parent；CCSF v0 theory conditional；PCSD/PCC closed；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_siff_candidate_step4_source_audit_20260718/source_informed_improvement_audit.md` |
-| `method_implementation` | v1 frozen；50/50 complete；main 2/3、attribution 3/4、internal 7/7；new training false |
-| `rollback_point` | keep exact v1 immutable；Step4→5 redesign，不补v1 seeds、不事后调v1 |
+| `active_protocol` | `analysis/stage_c_siff_ccsf_step5_theory_20260718/step5_theory_feasibility.md` |
+| `method_implementation` | CCSF theory only；implementation/remote=false；v1 remains immutable |
+| `rollback_point` | Step6 control design；contrast/loss/full effects必须factorize，失败按architecture/objective分开回滚 |
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 
@@ -78,6 +78,26 @@ relative arm competence，而不是softmax convex hull太窄。
 优先将`arm-contrast-aware policy + synchronous competence calibration`送入Step5 theory feasibility，并同时审计
 `A6_MEASURE anchor containment`。generic deeper MLP、top-k、entropy loss、直接扩Q/rank/scales不进入下一步。
 详见`analysis/stage_c_siff_candidate_step4_source_audit_20260718/source_informed_improvement_audit.md`。
+
+## CCSF Step 5 Theory Feasibility
+
+代码审计确认旧PCC已实现same-forward detached arm-error route supervision，因此Step4中“同步calibration”不能作为
+未测试创新。CCSF核心收紧为target-free arm-contrast information path；calibration只作为co-designed weak
+supervision，并必须设置loss-only control。
+
+预冻结contrast diagnostic使用5 datasets × 2 row folds。contrast相对coordinate-only expected arm MSE
+`+1.8348%`、10/10 folds正；相对shuffled `+1.7085%`、10/10；best-arm accuracy相对existing policy提高
+15.31 percentage points。5/5 gates通过，支持contrast identifiability，但仍是test-derived offline evidence。
+
+Step5冻结的provisional operator保留v1 logits，并用scope-shared scorer读取dimensionless pointwise/scope-group
+contrast；correction为零时包含v1。full T computation + prefix crop给出strict projectivity。旧PCC teacher除以
+cross-arm std，会放大near-equal arms的噪声；provisional relative-regret teacher改按mean error归一化，并用
+`1-normalized entropy`降低ambiguous supervision。temperature grid只作geometry evidence，禁止从test选择。
+
+显式A6 anchor branch因capacity/ensemble confound退出method，A6_MEASURE保留为mandatory external baseline。
+Decision=`conditional_theory_pass_to_step6`；Step6必须冻结v1、loss-only、architecture-only、full、shuffled/zero、
+generic capacity、independent与A6 controls，当前implementation/remote均false。详见
+`analysis/stage_c_siff_ccsf_step5_theory_20260718/step5_theory_feasibility.md`。
 
 ## Fair Re-audit Step 9–10 Result
 

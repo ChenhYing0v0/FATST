@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | `SC1-SIFF-v2-EQ-ATTR-v1` frozen candidate；Step4 source-informed redesign active |
+| `current_11_step` | `SC1-SIFF-v2-CCSF-v0-theory` Step5 conditional pass；Step6 next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | SIFF_EQUAL v1保留为performance-near candidate，但仍attribution-blocked；no confirmed contribution pair |
+| `paper_core_status` | SIFF_EQUAL v1 frozen；CCSF theory-conditional；no confirmed contribution pair / no training authorized |
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
@@ -110,6 +110,18 @@ scope的fused forecast。现有artifact进一步显示：SIFF_EQUAL policy的bes
 因此首要瓶颈定位为fusion calibration/information set，而非convex geometry；当前正式进入以v1为parent的Step4
 source-informed redesign，优先评估arm-contrast-aware policy与synchronous competence calibration。详见
 `analysis/stage_c_siff_candidate_step4_source_audit_20260718/source_informed_improvement_audit.md`。
+
+Step5现已完成关键修正与理论审计。旧PCC已覆盖same-forward detached-error route supervision，因此calibration loss
+本身不再claim novelty；CCSF的核心变量收紧为`policy读取target-free arm contrast`。现有probe的two-fold
+diagnostic 5/5 gates通过：contrast相对coordinate-only expected arm MSE allocation为`+1.8348%`且10/10 folds
+为正，相对shuffled contrast为`+1.7085%`且10/10，best-arm accuracy由existing policy的28.83%升至44.14%。
+
+provisional CCSF在v1 logits上加入scope-shared contrast-conditioned correction，令correction为零时严格退化到v1；
+完整T domain计算后再crop，projectivity保持。training只保留为co-designed weak supervision：使用relative regret而非
+旧PCC的cross-arm std standardization，并以teacher entropy downweight ambiguous cells。显式A6_MEASURE anchor branch
+因capacity/ensemble confound退出method，A6_MEASURE继续作为mandatory baseline。status=
+`conditional_theory_pass_to_step6 / implementation_false`。详见
+`analysis/stage_c_siff_ccsf_step5_theory_20260718/step5_theory_feasibility.md`。
 
 ### Historical Contribution 1 Parent: PCSD-CF
 
