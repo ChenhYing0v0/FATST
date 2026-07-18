@@ -1,0 +1,51 @@
+{
+  "diagnostic_id": "SC1-SIFF-v2-CCSF-D1-post-E2E-sufficiency",
+  "candidate_version": "SC1-SIFF-v2-CCSF-v1-tau25",
+  "status": "diagnostic_only_test_derived",
+  "current_step": "rollback_Step2_4_diagnostic",
+  "datasets": ["Weather", "ETTm1", "ETTm2", "ETTh1", "ETTh2"],
+  "seed": 2021,
+  "row_folds": 2,
+  "future_bins": [
+    {"name": "h1_48", "start": 0, "end": 48},
+    {"name": "h49_96", "start": 48, "end": 96},
+    {"name": "h97_144", "start": 96, "end": 144},
+    {"name": "h145_192", "start": 144, "end": 192},
+    {"name": "h193_288", "start": 192, "end": 288},
+    {"name": "h289_336", "start": 288, "end": 336},
+    {"name": "h337_512", "start": 336, "end": 512},
+    {"name": "h513_720", "start": 512, "end": 720}
+  ],
+  "classifier": {
+    "type": "standardized_multinomial_logistic_regression",
+    "regularization_c": 1.0,
+    "max_iterations": 1000,
+    "class_weight": null,
+    "random_state": 0
+  },
+  "feature_sets": [
+    "coordinate_only",
+    "base_logits_plus_coordinate",
+    "contrast_plus_coordinate",
+    "base_logits_plus_contrast_plus_coordinate",
+    "shuffled_contrast_plus_base"
+  ],
+  "diagnostic_gates": {
+    "contrast_over_base_expected_arm_mse_macro_percent_min": 0.5,
+    "contrast_over_base_positive_folds_min": 7,
+    "contrast_over_shuffled_expected_arm_mse_macro_percent_min": 0.5,
+    "contrast_over_shuffled_positive_folds_min": 7,
+    "posthoc_over_final_policy_expected_arm_mse_macro_percent_min": 0.5,
+    "posthoc_over_final_policy_positive_folds_min": 7,
+    "posthoc_over_final_policy_mixture_mse_macro_percent_min": 0.3,
+    "posthoc_over_final_policy_mixture_positive_folds_min": 7
+  },
+  "decision_map": {
+    "all_gates_pass": "descriptor_signal_retained_objective_or_readout_wrong_return_step4_6",
+    "contrast_specificity_pass_policy_gap_fail": "signal_weak_or_not_actionable_return_step4",
+    "contrast_specificity_fail": "exact_contrast_descriptor_hypothesis_false_return_step2_4"
+  },
+  "boundary": "This is a test-derived post-E2E diagnostic. It may attribute the failed formal candidate and choose a rollback point, but it cannot pass a paper-core method, select a new hyperparameter, or rescue the negative official-test effectiveness gate.",
+  "method_training_authorized": false,
+  "confirmation_authorized": false
+}

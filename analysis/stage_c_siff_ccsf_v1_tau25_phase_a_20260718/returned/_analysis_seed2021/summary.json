@@ -1,0 +1,61 @@
+{
+  "candidate_version": "SC1-SIFF-v2-CCSF-v1-tau25",
+  "test_access_dates": [
+    "2026-07-18"
+  ],
+  "user_authorization": {
+    "formal_candidate_frozen": true,
+    "step7b_formal_prelaunch_authorized": true,
+    "remote_training_authorized": true,
+    "formal_phase_a_authorized": true,
+    "formal_test_access_authorized": true,
+    "confirmation_authorized": false,
+    "user_authorized": true,
+    "authorization_date": "2026-07-18",
+    "test_access_date": null,
+    "test_role": "primary-mechanism-effectiveness-and-paper-benchmark",
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+    "checkpoint_retraining_allowed": true,
+    "checkpoint_mutation_during_test_allowed": false,
+    "per_dataset_horizon_or_cell_tuning_allowed": false,
+    "formal_test_access_count_for_version": 1
+  },
+  "checkpoint_retrained": true,
+  "test_role": "primary-mechanism-effectiveness-and-paper-benchmark",
+  "matrix_complete": true,
+  "test_informed": true,
+  "encoder_initialization_matched": true,
+  "hard_comparisons": {
+    "full_over_a6_measure": false,
+    "full_over_v1": false,
+    "architecture_over_v1": false,
+    "architecture_over_capacity": false,
+    "calibration_on_ccsf": false,
+    "full_over_loss_only": false,
+    "relative_over_standardized_teacher": false,
+    "contrast_over_full_capacity": false,
+    "contrast_over_permuted": true,
+    "ordered_over_independent": false
+  },
+  "interaction_macro_gain_percent": 0.47537061486985,
+  "interaction_pass": true,
+  "internal_health": {
+    "finite": true,
+    "prefix_projectivity": true,
+    "oracle_headroom": true,
+    "arm_diversity": true,
+    "policy_entropy": false,
+    "best_arm_accuracy_gain": true,
+    "policy_skill_alignment": false,
+    "allocation_gain": false,
+    "contrast_correction_use": true
+  },
+  "evaluation_layers": {
+    "paper_facing_effectiveness": false,
+    "matched_mechanism_attribution": false,
+    "internal_mechanism_health": false,
+    "failure_attribution": "hypothesis_false_or_readout_design_wrong",
+    "decision": "close_exact_candidate_effectiveness_fail",
+    "confirmation_authorized": false
+  }
+}

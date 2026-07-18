@@ -1,0 +1,15 @@
+{
+  "diagnostic_id": "SC1-CCSF-D2-granularity-sufficiency",
+  "test_derived": true,
+  "gate_results": {
+    "multiple_scope_native_widths_pass": true,
+    "region_expected_advantage_over_pointwise": true,
+    "region_mixture_advantage_over_pointwise": false
+  },
+  "scope_native_widths_passing": 3,
+  "best_diagnostic_width": 144,
+  "passed_gates": 2,
+  "total_gates": 3,
+  "decision": "region_contrast_not_stable_close_exact_route_return_step2",
+  "boundary": "Widths are fixed full-domain contiguous partitions aligned to coupling scopes, not benchmark forecast horizons. This test-derived diagnostic can support or reject the region-granularity problem but cannot select a production width, pass a method, or authorize training."
+}

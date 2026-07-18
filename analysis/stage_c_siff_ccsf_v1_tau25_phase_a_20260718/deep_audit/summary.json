@@ -1,0 +1,11 @@
+{
+  "candidate_version": "SC1-SIFF-v2-CCSF-v1-tau25",
+  "matrix_complete": true,
+  "formal_decision": "close_exact_candidate_effectiveness_fail",
+  "formal_failure_attribution": "hypothesis_false_or_readout_design_wrong",
+  "post_e2e_decision": "descriptor_signal_retained_objective_or_readout_wrong_return_step4_6",
+  "post_e2e_passed_gates": 8,
+  "post_e2e_total_gates": 8,
+  "training_numeric_pathology": false,
+  "rollback": "Step4/6 objective-readout redesign; no confirmation"
+}

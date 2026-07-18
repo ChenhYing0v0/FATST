@@ -1,0 +1,36 @@
+{
+  "diagnostic_id": "SC1-CCSF-D2-granularity-sufficiency",
+  "status": "diagnostic_only_test_derived",
+  "candidate_parent": "SC1-SIFF-v2-CCSF-v1-tau25",
+  "datasets": ["Weather", "ETTm1", "ETTm2", "ETTh1", "ETTh2"],
+  "seed": 2021,
+  "domain_length": 720,
+  "pooling_widths": [1, 48, 144, 360, 720],
+  "scope_native_widths": [48, 144, 360],
+  "row_folds": 2,
+  "maximum_training_regions_per_fold": 16384,
+  "classifier": {
+    "type": "standardized_multinomial_logistic_regression",
+    "regularization_c": 1.0,
+    "max_iterations": 500,
+    "class_weight": null,
+    "random_state": 0
+  },
+  "per_width_gate": {
+    "contrast_over_base_expected_arm_mse_percent_min": 0.5,
+    "contrast_over_shuffled_expected_arm_mse_percent_min": 0.5,
+    "contrast_over_shuffled_mixture_mse_percent_min": 0.3,
+    "positive_datasets_min": 4
+  },
+  "diagnostic_gate": {
+    "scope_native_widths_passing_min": 2,
+    "best_region_expected_gain_over_pointwise_margin_percent_min": 0.5,
+    "best_region_mixture_gain_over_pointwise_margin_percent_min": 0.3
+  },
+  "decision_map": {
+    "pass": "region_granularity_problem_supported_advance_step5_theory",
+    "fail": "region_contrast_not_stable_close_exact_route_return_step2"
+  },
+  "boundary": "Widths are fixed full-domain contiguous partitions aligned to coupling scopes, not benchmark forecast horizons. This test-derived diagnostic can support or reject the region-granularity problem but cannot select a production width, pass a method, or authorize training.",
+  "method_training_authorized": false
+}

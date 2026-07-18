@@ -1,0 +1,55 @@
+{
+  "diagnostic_id": "SC1-SIFF-v2-CCSF-D1-post-E2E-sufficiency",
+  "candidate_version": "SC1-SIFF-v2-CCSF-v1-tau25",
+  "test_derived": true,
+  "boundary": "This is a test-derived post-E2E diagnostic. It may attribute the failed formal candidate and choose a rollback point, but it cannot pass a paper-core method, select a new hyperparameter, or rescue the negative official-test effectiveness gate.",
+  "comparison_summary": {
+    "final_policy_over_base_policy": {
+      "expected_arm_mse_gain_percent": -0.25067977922770934,
+      "expected_arm_mse_positive_folds": 2,
+      "mixture_mse_gain_percent": -0.009461246723909689,
+      "mixture_mse_positive_folds": 4,
+      "accuracy_gain_points": 0.009765625,
+      "folds": 10
+    },
+    "posthoc_contrast_over_base_features": {
+      "expected_arm_mse_gain_percent": 1.5462112799482952,
+      "expected_arm_mse_positive_folds": 9,
+      "mixture_mse_gain_percent": 0.7511824339634299,
+      "mixture_mse_positive_folds": 6,
+      "accuracy_gain_points": 0.0466796875,
+      "folds": 10
+    },
+    "posthoc_contrast_over_final_policy": {
+      "expected_arm_mse_gain_percent": 6.121548798798466,
+      "expected_arm_mse_positive_folds": 10,
+      "mixture_mse_gain_percent": 2.7066517613226093,
+      "mixture_mse_positive_folds": 9,
+      "accuracy_gain_points": 0.19306640625,
+      "folds": 10
+    },
+    "posthoc_contrast_over_shuffled": {
+      "expected_arm_mse_gain_percent": 1.4442698718919544,
+      "expected_arm_mse_positive_folds": 9,
+      "mixture_mse_gain_percent": 0.8827479528377835,
+      "mixture_mse_positive_folds": 8,
+      "accuracy_gain_points": 0.0830078125,
+      "folds": 10
+    }
+  },
+  "gate_results": {
+    "contrast_over_base_macro": true,
+    "contrast_over_base_folds": true,
+    "contrast_over_shuffled_macro": true,
+    "contrast_over_shuffled_folds": true,
+    "posthoc_over_final_expected_macro": true,
+    "posthoc_over_final_expected_folds": true,
+    "posthoc_over_final_mixture_macro": true,
+    "posthoc_over_final_mixture_folds": true
+  },
+  "passed_gates": 8,
+  "total_gates": 8,
+  "correction_skill_centered_alignment": -0.34156064543119047,
+  "policy_shift_l1": 0.1901642760721855,
+  "decision": "descriptor_signal_retained_objective_or_readout_wrong_return_step4_6"
+}

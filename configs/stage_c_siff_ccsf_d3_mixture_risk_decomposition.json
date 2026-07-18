@@ -1,0 +1,56 @@
+{
+  "candidate": "SC1-SIFF-v2-CCSF-D3-mixture-risk-decomposition",
+  "stage": "Stage-C",
+  "current_step": "Step 2/3 diagnostic_only",
+  "purpose": "Separate individual-arm competence from fused-mixture risk and test whether missing residual cross terms explain the D2 utility gap.",
+  "source_artifacts": {
+    "root": "analysis/stage_c_siff_ccsf_v1_tau25_phase_a_20260718/returned/ccsf_relcal",
+    "datasets": [
+      "ETTh1",
+      "ETTh2",
+      "ETTm1",
+      "ETTm2",
+      "Weather"
+    ],
+    "seed": 2021,
+    "required_file": "pcsd_test_audit_diagnostics.npz"
+  },
+  "region_widths": [
+    1,
+    48,
+    144,
+    360,
+    720
+  ],
+  "arm_order": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "oracle_contract": {
+    "best_arm": "For each sample-region, select the single arm with the lowest target MSE.",
+    "simplex_mixture": "For each sample-region, minimize fused residual MSE over non-negative arm weights summing to one.",
+    "warning": "Both are target-label oracles and diagnose objective geometry only; neither is a deployable policy."
+  },
+  "problem_gate": {
+    "eligible_widths": [
+      48,
+      144,
+      360,
+      720
+    ],
+    "minimum_passing_widths": 2,
+    "minimum_dataset_pass_count": 4,
+    "minimum_simplex_gain_over_best_arm_pct": 1.0,
+    "minimum_simplex_gain_over_learned_final_pct": 3.0,
+    "minimum_cross_term_share": 0.2
+  },
+  "decision_contract": {
+    "pass": "mixture_risk_mismatch_supported_advance_step4_source_audit",
+    "fail": "mixture_risk_mismatch_not_supported_close_objective_redesign"
+  },
+  "test_role": "diagnostic_only on already authorized official-test artifacts; no checkpoint or candidate selection",
+  "test_informed": true
+}

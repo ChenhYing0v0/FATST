@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | `SC1-SIFF-v2-CCSF-v1-tau25` Step8 formal Phase-A running |
+| `current_11_step` | post-CCSF Step2/4 paper-mainline reset |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | SIFF_EQUAL v1 frozen parent；CCSF tau0.25 formal Phase A/test authorized；confirmation false |
+| `paper_core_status` | SIFF-v2-EQ-ATTR-v1 frozen performance-near parent；CCSF closed；no active two-contribution method |
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
@@ -185,6 +185,19 @@ commit`604e1b8`已在3090完成remote prelaunch复核与Weather/CCSF_RELCAL三ba
 Phase A于`2026-07-18T17:27:08+08:00`使用GPU0/1/2启动。首批为Weather的A6_MEASURE、SIFF-v1 EQUAL与
 SIFF-v1 RELCAL。当前只记录running状态，不预判effectiveness；完成后执行完整four-layer Step9，confirmation仍
 未授权。启动记录见`analysis/stage_c_siff_ccsf_v1_tau25_phase_a_20260718/remote_launch_record.md`。
+
+formal artifacts现已50/50 runs、200/200 official-test cells完整。CCSF_RELCAL相对A6_MEASURE为
+`-0.8567%` MSE/`-0.7251%` MAE，相对SIFF-v1 EQUAL为`-0.6159%/-0.3262%`；architecture-only、
+objective-only、true-vs-zero contrast与ordered-vs-independent均为负。唯一正向hard control是true contrast
+相对permuted `+0.3568%`，只能说明semantic sensitivity，不能说明net utility。confirmation因此取消。
+
+随后D2-D4完成failure attribution：region aggregation能把contrast的expected-arm specificity稳定提高到
+`+1.29%–+1.87%`，但相对pointwise的额外mixture utility不足；simplex mixture相对best single arm只多
+`+1.34%–+1.38%`，不支持covariance为主矛盾；global sharpening/hard routing在scope-native widths全部失败。
+因此`contrast descriptor + competence teacher + readout temperature`整条exact route关闭。SIFF-v2-EQ-ATTR-v1
+只作为性能接近发表水平但归因阻塞的immutable parent，当前论文没有可声称的两项core contributions，正式回到
+Step2/4重构。详见
+`analysis/stage_c_siff_ccsf_v1_tau25_phase_a_20260718/step9_four_layer_and_redesign_audit.md`。
 
 ### Historical Contribution 1 Parent: PCSD-CF
 

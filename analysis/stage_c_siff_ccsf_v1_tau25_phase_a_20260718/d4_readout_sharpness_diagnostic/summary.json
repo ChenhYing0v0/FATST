@@ -1,0 +1,15 @@
+{
+  "diagnostic_id": "SC1-CCSF-D4-readout-sharpness",
+  "test_derived": true,
+  "best_global_diagnostic_arm": {
+    "width": 48,
+    "exponent": 2.0,
+    "macro_gain_over_exponent_1_pct": -0.018638831301568404,
+    "positive_datasets": 1,
+    "macro_true_over_shuffled_gain_pct": 0.6334793165699093
+  },
+  "passing_global_arms": [],
+  "gate_pass": false,
+  "decision": "softness_not_primary_close_contrast_policy_route_return_step2",
+  "boundary": "All exponents and hard routing are simultaneous diagnostic arms. Test-derived results cannot select a production temperature, pass a method, or support a temperature novelty claim."
+}

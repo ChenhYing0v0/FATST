@@ -1,0 +1,55 @@
+{
+  "diagnostic_id": "SC1-CCSF-D4-readout-sharpness",
+  "status": "diagnostic_only_test_derived",
+  "candidate_parent": "SC1-SIFF-v2-CCSF-v1-tau25",
+  "raw_root": "analysis/stage_c_siff_ccsf_v1_tau25_phase_a_20260718/returned/ccsf_relcal",
+  "datasets": [
+    "Weather",
+    "ETTm1",
+    "ETTm2",
+    "ETTh1",
+    "ETTh2"
+  ],
+  "seed": 2021,
+  "domain_length": 720,
+  "pooling_widths": [
+    1,
+    48,
+    144,
+    360,
+    720
+  ],
+  "row_folds": 2,
+  "maximum_training_regions_per_fold": 16384,
+  "classifier": {
+    "type": "standardized_multinomial_logistic_regression",
+    "regularization_c": 1.0,
+    "max_iterations": 500,
+    "class_weight": null,
+    "random_state": 0
+  },
+  "probability_exponents": [
+    0.5,
+    1.0,
+    2.0,
+    4.0,
+    8.0
+  ],
+  "include_hard_argmax": true,
+  "diagnostic_gate": {
+    "eligible_widths": [
+      48,
+      144,
+      360
+    ],
+    "minimum_macro_gain_over_exponent_1_pct": 0.3,
+    "minimum_positive_datasets": 4,
+    "minimum_true_over_shuffled_gain_pct": 0.3
+  },
+  "decision_map": {
+    "pass": "softness_bottleneck_supported_return_step4_readout_redesign",
+    "fail": "softness_not_primary_close_contrast_policy_route_return_step2"
+  },
+  "boundary": "All exponents and hard routing are simultaneous diagnostic arms. Test-derived results cannot select a production temperature, pass a method, or support a temperature novelty claim.",
+  "method_training_authorized": false
+}

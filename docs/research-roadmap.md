@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Step8 formal Phase-A 50-run matrix running on 3×3090 |
-| `active_question` | 为什么healthy multi-arm SIFF未把conditional headroom转成超过A6_MEASURE/independent的fused forecast？ |
-| `active_candidates` | v1 frozen performance-near parent；CCSF tau0.25 formal candidate；PCSD/PCC closed；CTD paused |
+| `current_step` | post-CCSF Step2/4 source-informed mainline reset |
+| `active_question` | contrast-policy关闭后，fixed-past unified multi-horizon generation还需要什么native decoder contract与training principle？ |
+| `active_candidates` | SIFF-v2-EQ-ATTR-v1 frozen performance-near parent；no active child method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_siff_ccsf_v1_tau25_phase_a_20260718/formal_phase_a_prelaunch_report.md` |
-| `method_implementation` | commit604e1b8；prelaunch15/15；three-batch smoke pass；remote running |
-| `rollback_point` | formal prelaunch tooling/contract fail回Step7A/Step6；不重新选择temperature |
+| `active_protocol` | `analysis/stage_c_siff_ccsf_v1_tau25_phase_a_20260718/step9_four_layer_and_redesign_audit.md` |
+| `method_implementation` | none authorized；CCSF exact route closed |
+| `rollback_point` | Contribution 1=Step2/4；Contribution 2=Step2；no router-auxiliary patch sweep |
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 
@@ -198,6 +198,22 @@ Step8已于`2026-07-18T17:27:08+08:00`从commit`604e1b8`在GPU0/1/2启动。remo
 CCSF_RELCAL三batch smoke先行通过，首批三个Weather jobs均已进入训练。运行期间不值守、不改协议；50/50返回后
 先审计200/200 test cells、实际test dates、checkpoint non-mutation与CCSF internal artifacts，再执行four-layer
 Step9。详见`analysis/stage_c_siff_ccsf_v1_tau25_phase_a_20260718/remote_launch_record.md`。
+
+## CCSF Formal Result And D2–D4 Closure
+
+formal Phase-A已完成50/50 runs与200/200 test cells。full CCSF相对A6_MEASURE为`-0.8567%`，相对SIFF-v1
+EQUAL为`-0.6159%`；architecture、objective、zero-contrast与ordered-field specificity均失败。internal arms未
+collapse且oracle为5.30%–12.50%，但learned allocation相对uniform五dataset全部为负。
+
+D2证明region aggregation改善individual-arm competence identifiability，却没有满足相对pointwise的mixture-margin
+gate；D3证明convex-mixture cross terms相对best-arm只贡献约`1.34%–1.38%`，不足以支持covariance-aware主线；
+D4证明sharpening与hard routing不能修复soft policy。故exact CCSF与其region/covariance/temperature修补全部关闭，
+confirmation不启动。
+
+Decision=`close_contrast_policy_family_return_step2_4`。SIFF-v2-EQ-ATTR-v1继续冻结为performance-near parent，
+但当前无active child method、无training authorization。下一步必须从fixed-past unified multi-horizon generation的
+decoder contract重新做Step2/4 external-source与历史failure-boundary审计，不得转入router auxiliary sweep。完整
+报告见`analysis/stage_c_siff_ccsf_v1_tau25_phase_a_20260718/step9_four_layer_and_redesign_audit.md`。
 
 ## Fair Re-audit Step 9–10 Result
 

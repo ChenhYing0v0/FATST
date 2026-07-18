@@ -1,0 +1,75 @@
+{
+  "candidate": "SC1-SIFF-v2-CCSF-D3-mixture-risk-decomposition",
+  "current_step": "Step 2/3 diagnostic_only",
+  "width_summaries": [
+    {
+      "width": 1,
+      "dataset_count": 5,
+      "macro_best_arm_gain_over_uniform_pct": 31.10240671882003,
+      "macro_simplex_gain_over_uniform_pct": 31.471972075261498,
+      "macro_simplex_gain_over_best_arm_pct": 0.5962953362653032,
+      "macro_simplex_gain_over_learned_final_pct": 31.72232130512096,
+      "macro_cross_term_share_of_uniform_to_simplex_gap": 0.010537447362622333,
+      "macro_zero_simplex_loss_fraction": 0.26345811631944444,
+      "dataset_pass_count": 0,
+      "width_pass": false
+    },
+    {
+      "width": 48,
+      "dataset_count": 5,
+      "macro_best_arm_gain_over_uniform_pct": 8.496259697602591,
+      "macro_simplex_gain_over_uniform_pct": 9.744618865580758,
+      "macro_simplex_gain_over_best_arm_pct": 1.3590035868089574,
+      "macro_simplex_gain_over_learned_final_pct": 10.044572880445635,
+      "macro_cross_term_share_of_uniform_to_simplex_gap": 0.12646288976444514,
+      "macro_zero_simplex_loss_fraction": 0.0,
+      "dataset_pass_count": 1,
+      "width_pass": false
+    },
+    {
+      "width": 144,
+      "dataset_count": 5,
+      "macro_best_arm_gain_over_uniform_pct": 5.894189876986569,
+      "macro_simplex_gain_over_uniform_pct": 7.20418697752404,
+      "macro_simplex_gain_over_best_arm_pct": 1.3823676526959647,
+      "macro_simplex_gain_over_learned_final_pct": 7.511527311707605,
+      "macro_cross_term_share_of_uniform_to_simplex_gap": 0.18672672578616847,
+      "macro_zero_simplex_loss_fraction": 0.0,
+      "dataset_pass_count": 3,
+      "width_pass": false
+    },
+    {
+      "width": 360,
+      "dataset_count": 5,
+      "macro_best_arm_gain_over_uniform_pct": 4.210493757219344,
+      "macro_simplex_gain_over_uniform_pct": 5.502941415808458,
+      "macro_simplex_gain_over_best_arm_pct": 1.337437046433938,
+      "macro_simplex_gain_over_learned_final_pct": 5.815749608519976,
+      "macro_cross_term_share_of_uniform_to_simplex_gap": 0.25186165305404146,
+      "macro_zero_simplex_loss_fraction": 0.0,
+      "dataset_pass_count": 3,
+      "width_pass": false
+    },
+    {
+      "width": 720,
+      "dataset_count": 5,
+      "macro_best_arm_gain_over_uniform_pct": 2.6922038082267954,
+      "macro_simplex_gain_over_uniform_pct": 4.046684516265612,
+      "macro_simplex_gain_over_best_arm_pct": 1.3797454798241655,
+      "macro_simplex_gain_over_learned_final_pct": 4.363762026276707,
+      "macro_cross_term_share_of_uniform_to_simplex_gap": 0.37813015661083704,
+      "macro_zero_simplex_loss_fraction": 0.0,
+      "dataset_pass_count": 3,
+      "width_pass": false
+    }
+  ],
+  "passing_eligible_width_count": 0,
+  "minimum_passing_widths": 2,
+  "problem_gate_pass": false,
+  "decision": "mixture_risk_mismatch_not_supported_close_objective_redesign",
+  "limitations": [
+    "Oracle weights use target labels and are not deployable.",
+    "A large simplex oracle gap establishes objective mismatch, not descriptor predictability.",
+    "Classical forecast-combination and covariance-aware weighting are strong prior-art constraints on any subsequent method claim."
+  ]
+}
