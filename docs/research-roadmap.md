@@ -5,13 +5,30 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC-RETRO-FAIR-v1 Step9/10 complete；SIFF rollback Step6 |
-| `active_question` | SIFF_EQUAL正收益能否超过EQUAL-context specificity controls？ |
-| `active_candidates` | SIFF partial pass only；PCC/PCSD exact v1 closed；CTD paused |
+| `current_step` | `SC1-SIFF-v2-EQ-ATTR` Step6 complete；Step7A local next |
+| `active_question` | SIFF_EQUAL正收益能否同时超过A6/PCSD与四个EQUAL-context specificity controls？ |
+| `active_candidates` | `SC1-SIFF-v2-EQ-ATTR-v1` narrative-ready；PCC/PCSD exact v1 closed；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_fair_reaudit_v1_20260717/preregistered_protocol.md` |
-| `method_implementation` | false；new attribution matrix not yet authorized |
-| `rollback_point` | SIFF Step6 attribution repair；Contribution 2 Step2/4 redesign |
+| `active_protocol` | `analysis/stage_c_siff_equal_attribution_step6_20260718/step6_attribution_protocol.md` |
+| `method_implementation` | Step7A local authorized；remote/test/confirmation false |
+| `rollback_point` | construction/control contract fail回Step6；effectiveness/attribution fail回Step4/6 |
+
+## SIFF_EQUAL Attribution Step 6 Freeze
+
+`SIFF_EQUAL` 已从“性能正向但归因阻塞”推进为 `SC1-SIFF-v2-EQ-ATTR-v1`：
+
+1. 10-arm matrix同时包含`A6_FULL/A6_MEASURE`、`PCSD_MEASURE/PCSD_EQUAL`、
+   `SIFF_MEASURE/SIFF_EQUAL`和四个EQUAL-context SIFF controls；
+2. Phase A固定为5 datasets × 10 arms × seed2021，共50 runs与200个standard-horizon test cells；
+3. `SIFF_EQUAL`必须逐项超过A6_FULL、A6_MEASURE、PCSD_EQUAL、constant、permuted、Q1-wide与independent；
+4. 统一结论分为paper-facing effectiveness、matched mechanism attribution、internal mechanism health与failure
+   attribution四层，内部健康度不得挽救negative performance gate；
+5. 16/16 Step6 static checks已通过，只授权Step7A production wiring、artifact与analyzer；remote/test仍未授权。
+
+若`SIFF_MEASURE`未超过`PCSD_MEASURE`但EQUAL comparison通过，claim只能收紧为equal-skill-trained scale
+field。只有Phase A七项hard comparisons全部通过，才允许seeds2022/2023 confirmation。
+
+详见`analysis/stage_c_siff_equal_attribution_step6_20260718/step6_attribution_protocol.md`。
 
 ## Fair Re-audit Step 9–10 Result
 

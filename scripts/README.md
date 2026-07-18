@@ -137,3 +137,6 @@ StageC active entrypoints：
 
 历史 runner/analyzer 已移入 `scripts/archive/`，不得作为当前研究入口。新增脚本必须服务active ledger中明确的
 next action，并同步对应experiment protocol与code explanation。
+
+- `check_stage_c_siff_equal_attribution_step6.py`: 静态审计`SIFF_EQUAL` 10-arm归因矩阵、dataset profile hash、
+  seven hard comparisons、四层decision boundary与Step7A-only授权，生成machine-readable Step6 gate。

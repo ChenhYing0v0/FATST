@@ -1,0 +1,330 @@
+{
+  "candidate_version": "SC1-SIFF-v2-EQ-ATTR-v1",
+  "current_step": "Step6 complete",
+  "cases": [
+    {
+      "name": "candidate_identity",
+      "passed": true,
+      "observed": "SC1-SIFF-v2-EQ-ATTR-v1",
+      "expected": "SC1-SIFF-v2-EQ-ATTR-v1"
+    },
+    {
+      "name": "test_informed",
+      "passed": true,
+      "observed": true,
+      "expected": true
+    },
+    {
+      "name": "datasets",
+      "passed": true,
+      "observed": [
+        "Weather",
+        "ETTm1",
+        "ETTm2",
+        "ETTh1",
+        "ETTh2"
+      ],
+      "expected": [
+        "Weather",
+        "ETTm1",
+        "ETTm2",
+        "ETTh1",
+        "ETTh2"
+      ]
+    },
+    {
+      "name": "arm_contracts",
+      "passed": true,
+      "observed": {
+        "a6_full": [
+          "learned-basis-forecast-operator",
+          "off",
+          "fixed_256"
+        ],
+        "a6_measure": [
+          "learned-basis-forecast-operator",
+          "measure_only",
+          "fixed_256"
+        ],
+        "pcsd_measure": [
+          "pcsd-coupling-field",
+          "measure_only",
+          "fixed_256"
+        ],
+        "pcsd_equal": [
+          "pcsd-coupling-field",
+          "equal_skill",
+          "fixed_256"
+        ],
+        "siff_measure": [
+          "siff-coupling-field",
+          "measure_only",
+          "fixed_256"
+        ],
+        "siff_equal": [
+          "siff-coupling-field",
+          "equal_skill",
+          "fixed_256"
+        ],
+        "siff_constant_equal": [
+          "siff-constant-control",
+          "equal_skill",
+          "fixed_256"
+        ],
+        "siff_permuted_equal": [
+          "siff-permuted-scale-control",
+          "equal_skill",
+          "fixed_256"
+        ],
+        "siff_q1_wide_equal": [
+          "siff-q1-wide-control",
+          "equal_skill",
+          "q1_dataset_matched"
+        ],
+        "siff_independent_equal": [
+          "siff-independent-scope-control",
+          "equal_skill",
+          "independent_dataset_matched"
+        ]
+      },
+      "expected": {
+        "a6_full": [
+          "learned-basis-forecast-operator",
+          "off",
+          "fixed_256"
+        ],
+        "a6_measure": [
+          "learned-basis-forecast-operator",
+          "measure_only",
+          "fixed_256"
+        ],
+        "pcsd_measure": [
+          "pcsd-coupling-field",
+          "measure_only",
+          "fixed_256"
+        ],
+        "pcsd_equal": [
+          "pcsd-coupling-field",
+          "equal_skill",
+          "fixed_256"
+        ],
+        "siff_measure": [
+          "siff-coupling-field",
+          "measure_only",
+          "fixed_256"
+        ],
+        "siff_equal": [
+          "siff-coupling-field",
+          "equal_skill",
+          "fixed_256"
+        ],
+        "siff_constant_equal": [
+          "siff-constant-control",
+          "equal_skill",
+          "fixed_256"
+        ],
+        "siff_permuted_equal": [
+          "siff-permuted-scale-control",
+          "equal_skill",
+          "fixed_256"
+        ],
+        "siff_q1_wide_equal": [
+          "siff-q1-wide-control",
+          "equal_skill",
+          "q1_dataset_matched"
+        ],
+        "siff_independent_equal": [
+          "siff-independent-scope-control",
+          "equal_skill",
+          "independent_dataset_matched"
+        ]
+      }
+    },
+    {
+      "name": "no_pcc_or_mcca_objective",
+      "passed": true,
+      "observed": [
+        "equal_skill",
+        "measure_only",
+        "off"
+      ],
+      "expected": [
+        "equal_skill",
+        "measure_only",
+        "off"
+      ]
+    },
+    {
+      "name": "profile_hash",
+      "passed": true,
+      "observed": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a",
+      "expected": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a"
+    },
+    {
+      "name": "phase_a_matrix",
+      "passed": true,
+      "observed": [
+        50,
+        200
+      ],
+      "expected": [
+        50,
+        200
+      ]
+    },
+    {
+      "name": "confirmation_matrix",
+      "passed": true,
+      "observed": [
+        100,
+        400
+      ],
+      "expected": [
+        100,
+        400
+      ]
+    },
+    {
+      "name": "hard_comparison_set",
+      "passed": true,
+      "observed": [
+        "ordered_over_constant_equal",
+        "ordered_over_independent_equal",
+        "ordered_over_permuted_equal",
+        "ordered_over_q1_wide_equal",
+        "siff_equal_over_a6_full",
+        "siff_equal_over_a6_measure",
+        "siff_equal_over_pcsd_equal"
+      ],
+      "expected": [
+        "ordered_over_constant_equal",
+        "ordered_over_independent_equal",
+        "ordered_over_permuted_equal",
+        "ordered_over_q1_wide_equal",
+        "siff_equal_over_a6_full",
+        "siff_equal_over_a6_measure",
+        "siff_equal_over_pcsd_equal"
+      ]
+    },
+    {
+      "name": "hard_comparisons_defined",
+      "passed": true,
+      "observed": [
+        "equal_skill_effect_on_pcsd",
+        "equal_skill_effect_on_siff",
+        "measure_effect_on_a6",
+        "ordered_over_constant_equal",
+        "ordered_over_independent_equal",
+        "ordered_over_permuted_equal",
+        "ordered_over_q1_wide_equal",
+        "pcsd_architecture_under_measure",
+        "siff_architecture_under_measure",
+        "siff_equal_over_a6_full",
+        "siff_equal_over_a6_measure",
+        "siff_equal_over_pcsd_equal"
+      ],
+      "expected": [
+        "ordered_over_constant_equal",
+        "ordered_over_independent_equal",
+        "ordered_over_permuted_equal",
+        "ordered_over_q1_wide_equal",
+        "siff_equal_over_a6_full",
+        "siff_equal_over_a6_measure",
+        "siff_equal_over_pcsd_equal"
+      ]
+    },
+    {
+      "name": "all_comparison_arms_defined",
+      "passed": true,
+      "observed": true,
+      "expected": true
+    },
+    {
+      "name": "checkpoint_contract",
+      "passed": true,
+      "observed": [
+        [
+          96,
+          192,
+          336,
+          720
+        ],
+        "mean_mse_h96_h192_h336_h720",
+        false
+      ],
+      "expected": [
+        [
+          96,
+          192,
+          336,
+          720
+        ],
+        "mean_mse_h96_h192_h336_h720",
+        false
+      ]
+    },
+    {
+      "name": "joint_from_scratch",
+      "passed": true,
+      "observed": [
+        true,
+        true
+      ],
+      "expected": [
+        true,
+        true
+      ]
+    },
+    {
+      "name": "four_layer_protocol",
+      "passed": true,
+      "observed": [
+        "failure_attribution",
+        "internal_mechanism_health",
+        "matched_mechanism_attribution",
+        "paper_facing_effectiveness"
+      ],
+      "expected": [
+        "failure_attribution",
+        "internal_mechanism_health",
+        "matched_mechanism_attribution",
+        "paper_facing_effectiveness"
+      ]
+    },
+    {
+      "name": "internal_health_cannot_rescue_effectiveness",
+      "passed": true,
+      "observed": true,
+      "expected": true
+    },
+    {
+      "name": "authorization_boundary",
+      "passed": true,
+      "observed": {
+        "step6_user_authorized": true,
+        "authorization_date": "2026-07-18",
+        "step7a_local_implementation_authorized": true,
+        "remote_training_authorized": false,
+        "formal_test_access_authorized": false,
+        "source_commit_freeze_stage": "Step7A",
+        "per_dataset_horizon_or_cell_tuning_allowed": false
+      },
+      "expected": "Step7A local only"
+    }
+  ],
+  "checks_passed": 16,
+  "checks_total": 16,
+  "passed_cases": 16,
+  "total_cases": 16,
+  "passed": true,
+  "profile_contract_hash": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a",
+  "phase_a_runs": 50,
+  "phase_a_test_cells": 200,
+  "confirmation_runs": 100,
+  "confirmation_test_cells": 400,
+  "next_step": "Step7A local implementation",
+  "remote_authorized": false,
+  "test_authorized": false,
+  "remote_training_authorized": false,
+  "formal_test_access_authorized": false
+}

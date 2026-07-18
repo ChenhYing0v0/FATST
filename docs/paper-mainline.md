@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC-RETRO-FAIR-v1 Step9/10 complete；SIFF rollback Step6；CTD paused |
+| `current_11_step` | `SC1-SIFF-v2-EQ-ATTR` Step6 complete；Step7A local next；CTD paused |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | SIFF_EQUAL performance partial pass；PCSD/PCC exact v1 closed；no attributable contribution pair |
+| `paper_core_status` | SIFF_EQUAL attribution candidate narrative-ready；PCSD/PCC exact v1 closed；no confirmed contribution pair |
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
@@ -24,6 +24,12 @@ pass/fail。默认checkpoint score为validation H96/H192/H336/H720 MSE平均。t
 17/20 MSE cells、4/5 datasets、4/4 horizons，是当前最佳performance carrier。`SIFF+PCC`虽相对A6
 `+1.3812%`，但PCC相对SIFF_EQUAL为`-0.2663%`，因此不能解释为双贡献joint成功。PCSD_DIRECT
 `-0.8562%`，PCC specificity与SIFF objective-robustness均fail；当前没有可归因的paper-core pair。
+
+[Attribution Freeze] `SC1-SIFF-v2-EQ-ATTR-v1`已冻结10-arm EQUAL-context matrix。主效果比较为
+`SIFF_EQUAL`分别对A6_FULL、A6_MEASURE与PCSD_EQUAL；机制specificity比较为其分别对
+constant/permuted/Q1-wide/independent EQUAL controls。七项comparison必须逐项通过，内部oracle、arm
+difference、policy entropy与component-use只解释机制健康度，不能替代paper-facing effectiveness或matched
+attribution。Step6 checker为16/16；当前仅授权Step7A local implementation，remote/test/confirmation仍为false。
 
 ## Research Thesis
 
@@ -71,7 +77,23 @@ dual-carrier、three-seed direct evidence。contiguity仅在两carrier各4/5 dat
 temporal grouping law。另一方面，GroupedMLP相对A6-LBF H720仍落后2.6886%，所以D14-A确认的是研究问题，
 不是Contribution 1 method performance。
 
-### Contribution 1 Candidate: PCSD-CF
+### Active Contribution 1 Attribution Candidate: SIFF_EQUAL
+
+`SIFF_EQUAL`在PCSD coupling field上用ordered continuous scale coordinate生成共享history modes，并由
+equal-skill objective缓解same-run arms的credit starvation。fair test已证明它是当前最佳performance carrier，
+但这还不是可归因的Contribution 1。
+
+新冻结的`SC1-SIFF-v2-EQ-ATTR-v1`不再只问“SIFF是否比PCSD更准”，而是要求完整链条同时成立：
+
+1. 相对A6_FULL、A6_MEASURE和PCSD_EQUAL具有paper-facing effectiveness；
+2. 相对constant、permuted、Q1-wide和independent EQUAL controls具有architecture specificity；
+3. arms、policy与ordered component内部路径健康且不collapse；
+4. 失败时按hypothesis/intervention/readout/optimization/capacity归因，不能用oracle headroom挽救negative gate。
+
+status=`narrative_ready_step7a / effectiveness_and_attribution_pending`。Step7A只实现production wiring与四层
+analyzer；remote/test/confirmation均未授权。
+
+### Historical Contribution 1 Parent: PCSD-CF
 
 `PCSD-CF`（Projective Coupling-Spectrum Decoder with a Coupling Field）在固定future domain上表示多个
 output-sharing scopes：

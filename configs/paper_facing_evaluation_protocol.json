@@ -1,7 +1,7 @@
 {
   "protocol": "FATST-paper-facing-evaluation",
-  "version": "1.1",
-  "effective_date": "2026-07-17",
+  "version": "1.2",
+  "effective_date": "2026-07-18",
   "standard_long_term_forecasting": {
     "horizons": [96, 192, 336, 720],
     "primary_metric": "mse",
@@ -62,5 +62,54 @@
   "historical_checkpoint_fairness": {
     "h720_only_checkpoint_must_be_retrained": true,
     "matched_arms_share_four_horizon_validation_selector": true
+  },
+  "mechanism_evaluation_layers": {
+    "required": [
+      "paper_facing_effectiveness",
+      "matched_mechanism_attribution",
+      "internal_mechanism_health",
+      "failure_attribution"
+    ],
+    "paper_facing_effectiveness": {
+      "source": "official_test_complete_frozen_matrix",
+      "required_metrics": ["mse", "mae"],
+      "role": "performance_viability"
+    },
+    "matched_mechanism_attribution": {
+      "required_control_types": [
+        "same_objective_architecture",
+        "same_architecture_objective",
+        "capacity_or_width",
+        "order_or_mapping",
+        "matched_initialization"
+      ],
+      "role": "claim_specificity"
+    },
+    "internal_mechanism_health": {
+      "default_diagnostics": [
+        "arm_skill",
+        "prediction_diversity",
+        "oracle_headroom",
+        "policy_usage_and_entropy",
+        "gradient_activity",
+        "component_contribution",
+        "horizon_signature"
+      ],
+      "cannot_override_negative_effectiveness": true,
+      "role": "path_health_and_failure_localization"
+    },
+    "failure_attribution": {
+      "required_classes": [
+        "hypothesis_false",
+        "intervention_point_wrong",
+        "readout_or_head_design_wrong",
+        "optimization_or_numeric_pathology",
+        "capacity_control_explains"
+      ],
+      "requires_rollback_step": true,
+      "role": "minimum_rejection_boundary"
+    },
+    "positive_effectiveness_without_attribution_status": "performance_partial_pass",
+    "all_layers_required_for_passed_core_candidate": true
   }
 }

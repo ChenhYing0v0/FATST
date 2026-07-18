@@ -400,6 +400,33 @@ actually ran.
   `candidate_version`, `checkpoint_hash`, `checkpoint_retrained`,
   `test_role`, `matrix_complete`, and the resulting Step 9-10 decision.
 
+### Four-Layer Mechanism Evaluation Rule
+
+Every paper-core mechanism decision must keep four evidence layers separate:
+
+1. `paper_facing_effectiveness`: official-test MSE/MAE on the complete frozen
+   dataset-horizon matrix decides whether the candidate is performance-viable.
+2. `matched_mechanism_attribution`: same-objective architecture controls,
+   same-architecture objective controls, capacity/random/order controls, and
+   matched initialization decide whether the gain belongs to the claimed
+   mechanism.
+3. `internal_mechanism_health`: arm skill, prediction diversity, oracle
+   headroom, policy usage/entropy, gradients, component contribution, and
+   horizon signatures test whether the internal path behaves as theorized.
+4. `failure_attribution`: map the combined evidence to `hypothesis_false`,
+   `intervention_point_wrong`, `readout_or_head_design_wrong`,
+   `optimization_or_numeric_pathology`, or `capacity_control_explains`, and
+   state the exact rollback step.
+
+Official-test performance is necessary but not sufficient for a paper-core
+claim. Internal diagnostics cannot rescue a negative effectiveness gate, and a
+positive effectiveness gate without matched attribution is only
+`performance_partial_pass`. Large oracle headroom, diversity, entropy, or
+gradient activity is not itself evidence of a useful mechanism unless the
+learned fused forecast realizes the claimed benefit. Every Step 9-10 report
+must include all four layers or explicitly mark the missing layer and block
+promotion to `passed_core_candidate`.
+
 ## Git Preference
 
 - When a commit is requested, use Conventional Commits.

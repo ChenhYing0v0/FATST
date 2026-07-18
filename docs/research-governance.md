@@ -258,6 +258,27 @@ validation/train diagnostics、matched capacity/random/equal controls与failure 
 反转，必须标记`validation_test_reversal`并优先检查split representativeness、checkpoint rule与seed stability，
 不得隐藏其中任一侧。
 
+### 四层统一机制评估
+
+任何paper-core candidate在Step 9-10都必须分别回答四个问题，不能用一个macro MSE代替全部判断：
+
+| Layer | 核心问题 | 必需证据 | 决策职责 |
+| --- | --- | --- | --- |
+| `paper_facing_effectiveness` | 最终模型是否真的更准？ | official test完整dataset × horizon矩阵的MSE/MAE、cell/dataset/horizon wins | 决定是否具备performance viability |
+| `matched_mechanism_attribution` | 提升是否属于所claim的机制？ | same-objective architecture controls、same-architecture objective controls、capacity/random/order controls、matched initialization | 排除generic capacity、training objective与错误mapping解释 |
+| `internal_mechanism_health` | 内部路径是否按理论工作？ | arm skill/diversity、oracle headroom、policy usage/entropy、gradient、component contribution、horizon signature | 定位有效路径、unused headroom与collapse |
+| `failure_attribution` | 若未通过，究竟哪里失败？ | hypothesis/intervention/readout/optimization/capacity五类归因 | 决定最小否定边界与11-step rollback |
+
+固定解释边界：
+
+1. test MSE/MAE是正式effectiveness的必要条件，但不是充分的mechanism evidence；
+2. internal diagnostic不能挽救negative test gate，也不能单独把candidate升为paper-core；
+3. positive test但matched attribution缺失时，状态只能是`performance_partial_pass`或
+   `attribution_blocked`；
+4. oracle headroom、diversity、entropy或non-zero gradient只说明内部存在可利用差异，不证明learned fusion已经
+   利用该差异；
+5. 每份Step 9-10报告必须完整呈现四层；缺失任一层时必须写明缺口并阻断`passed_core_candidate`。
+
 最终模型与论文中的formal ablations使用同一标准test scorecard，并在运行前冻结main/ablation matrix。若观察
 test后修改architecture、objective、loss coefficient、training schedule或control definition，新版本必须标记
 `test_informed=true`、重新经过narrative/design gate，并重新冻结完整矩阵；不得只修补失败cell。

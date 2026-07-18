@@ -9,37 +9,37 @@
 | `active_question` | SIFF_EQUAL的test正收益来自ordered scale coordinate，还是generic measure/multi-arm capacity？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | no paper-core candidate；SIFF partial pass awaiting attribution；PCC closed；CTD paused |
+| `active_candidates` | `SC1-SIFF-v2-EQ-ATTR-v1` narrative-ready attribution candidate；PCC closed；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
-| `stage_rollback` | SIFF return Step6 attribution repair；Contribution 2 return Step2/4；CTD remains paused |
+| `stage_rollback` | SIFF hard control fail则回Step4/6；Contribution 2 return Step2/4；CTD remains paused |
 
 ## Decision Cursor
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SC-RETRO-FAIR-v1 Step9/10 complete；SIFF rollback Step6 |
-| `current_candidate` | `SIFF_EQUAL` performance carrier only；not paper-core；PCC closed；CTD paused |
-| `latest_decision` | SIFF_EQUAL vs A6 +1.6436% MSE/+0.9084% MAE；joint pass但PCC attribution fail |
-| `next_required_action` | freeze SIFF EQUAL-context controls and A6_MEASURE as new test-informed attribution version |
-| `method_training_authorized` | false；new attribution matrix、confirmation、CTD均待Step6 gate/用户授权 |
-| `rollback_point` | SIFF Step6 attribution repair；PCC Step2/4 redesign；PCSD exact v1 closed |
+| `current_11_step` | `SC1-SIFF-v2-EQ-ATTR` Step6 complete；Step7A local next |
+| `current_candidate` | `SC1-SIFF-v2-EQ-ATTR-v1`；10-arm EQUAL-context attribution candidate |
+| `latest_decision` | Step6 checker 16/16；50-run/200-cell Phase A与七项hard comparisons已冻结 |
+| `next_required_action` | Step7A production wiring、scale-component artifact与四层analyzer local gate |
+| `method_training_authorized` | Step7A local implementation=true；remote/test/confirmation=false |
+| `rollback_point` | construction/control contract fail回Step6；effectiveness/attribution fail回Step4/6；PCSD exact v1 closed |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | SC-RETRO-FAIR-v1 Step9/10 complete；rollback SIFF Step6 |
-| `problem` | 历史PCSD/PCC/SIFF使用best-H720与validation-heavy gate，无法公平回答paper-facing test表现 |
-| `existence_evidence` | three-seed neutral+A6 5/5 stable crossing；strict 7.1107%/9.1259%；instance 6.7948%/8.5990% |
-| `idea` | 所有A6/PCSD/PCC/SIFF arms按同一four-H validation selector从头训练，正式效果统一看test four-H |
-| `theory_check` | test-primary解决observed split reversal；adaptive test overfit风险以test_informed+frozen matrix控制 |
-| `design` | 14 arms × 5 datasets × seed2021 = 70 runs；280 test cells；matched controls完整 |
-| `narrative_gate` | retrospective audit，不提升新method；可绕过method narrative gate |
-| `effectiveness_gate` | joint +1.3812% pass；SIFF_EQUAL vs PCSD_EQUAL +0.5906% pass；PCSD/PCC specificity fail |
-| `artifacts` | `configs/stage_c_fair_reaudit_v1.json`；`analysis/stage_c_fair_reaudit_v1_20260717/` |
-| `decision` | performance partial pass；two-contribution attribution fail；SIFF回Step6，PCC回Step2/4，CTD paused |
+| `current_step` | `SC1-SIFF-v2-EQ-ATTR` Step6 complete |
+| `problem` | `SIFF_EQUAL`有正向test performance，但旧PCC-context controls无法证明收益来自ordered scale coordinate |
+| `existence_evidence` | fair test vs A6 `+1.6436%` MSE/`+0.9084%` MAE；oracle `6.394%`、pairwise NRMSE `0.133`、entropy `0.812`，排除simple arm collapse但不完成归因 |
+| `idea` | 在EQUAL context下联合分解harmonic measure、equal-skill supervision、SIFF architecture与四类specificity controls |
+| `theory_check` | 10-arm decomposition分别回答objective、architecture、ordering、partition与cross-arm interaction；diagnostic health不能替代effectiveness/attribution |
+| `design` | 10 arms × 5 datasets × seed2021 = 50 runs / 200 test cells；通过后才允许seeds2022/2023 100 runs / 400 cells |
+| `narrative_gate` | conditional pass；七项hard comparisons全部通过前只能称performance carrier |
+| `effectiveness_gate` | 三项main + 四项EQUAL-context controls逐项应用MSE gate；main另要求MAE macro非负 |
+| `artifacts` | `configs/stage_c_siff_equal_attribution_v2.json`；`analysis/stage_c_siff_equal_attribution_step6_20260718/` |
+| `decision` | Step6 16/16 pass；Step7A local authorized；remote/test/confirmation false |
 
 ## Frozen Carrier Contract
 
@@ -97,6 +97,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC2-PCC-v0` | `superseded_pointwise_control` | pointwise same-forward capability + skill floor | expert loss与loss-teacher gate已有直接prior art | 15/15 theory cases；method untested | mandatory pointwise/prior controls only |
 | `SC2-PCC-v1-TI` | `rejected_effectiveness_test_fair` | nested-prefix capability能否经harmonic incidence输运为target-coordinate credit | exact claim fail；generic/prior explains most gain | fair test vs prior PCSD +0.0806% fail；on SIFF vs equal -0.2663% | exact v1 closed；return Step2/4 |
 | `SC1-SIFF-v1` | `partial_pass_attribution_blocked` | coupling scale能否作为internal coordinate生成可辨识且连续共享的history modes | complete-chain conditional pass | EQUAL vs PCSD +0.5906% pass；vs A6 +1.6436%；prior/PCC/independent specificity fail | return Step6；EQUAL-context controls before seeds |
+| `SC1-SIFF-v2-EQ-ATTR` | `narrative_ready_step7a` | EQUAL-trained ordered scale field能否同时超过A6/PCSD与matched EQUAL-context specificity controls | conditional pass；完整归因链已冻结 | pending；七项hard comparisons不可互相抵消 | Step7A local implementation；remote/test/confirmation false |
 | `SC2-MCCA-v1` | `historical_validation_negative_fair_test_not_reaudited` | same total scope skill mass能否竞争性分配而避免per-target homogenization | complete-chain conditional pass | old best-H720 validation four-H -0.1357%、1/5；not in 70-run audit | inactive；reuse前回Step4重审相对EQUAL/MEASURE的必要性 |
 | `SC-D16-CTD` | `deferred_paused_by_user` | H720 checkpoint是否丢弃healthy SIFF four-H epoch | diagnostic only；weighted checkpoint prior-covered | not implemented | design retained；resume only after user authorization |
 | `SC-RETRO-FAIR-v1` | `completed_partial_pass_attribution_blocked` | PCSD/PCC/SIFF在新checkpoint与test-primary规则下是否仍成立 | retrospective audit；not a method | 70/70；280/280；joint pass；two-contribution attribution fail | archive result；SIFF Step6/PCC Step2-4 |
@@ -165,6 +166,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SIFF/MCCA Step9/10 result | 55 new + 25 matched references；factorial/control/horizon attribution | SIFF main -1.5015%；MCCA -0.0250%；joint -0.5621%；ETTm2 H1 pathology | exact pair closed；SIFF direction rejection invalid；MCCA hypothesis false；return Step4 | `analysis/stage_c_post_pcc_step7b_seed2021_20260717/step9_10_result_and_failure_attribution.md` |
 | SIFF/MCCA four-H reevaluation | retrospective validation scorecard | SIFF -2.3509%；MCCA -0.1357%；joint -1.3325%；decision unchanged | dense降diagnostic；CTD按best-standard重冻结 | `analysis/stage_c_post_pcc_standard_horizon_reevaluation_20260717/standard_horizon_reevaluation_report.md` |
 | SC-D16-CTD Step5/6 | source/code correction + trajectory theory/design | 4 ETTm2 arms；20 epochs；4 checkpoint rules；standard+dense gates | `diagnostic_design_refrozen_v1_1_step7a_local_only` | `analysis/stage_c_d16_ctd_step56_20260717/step56_diagnostic_design.md` |
+| SIFF_EQUAL attribution Step6 | test-informed mechanism attribution freeze | 10 arms × 5 datasets；50 runs/200 test cells；16/16 static checks | narrative-ready；Step7A local only | `analysis/stage_c_siff_equal_attribution_step6_20260718/step6_attribution_protocol.md` |
 
 ## Pending Tasks
 
@@ -220,6 +222,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC-D16-CTD trajectory diagnostic | `paused_by_user` | design retained；Step7A/remote均不继续 |
 | PCSD/PCC/SIFF fair test re-audit | `completed_partial_pass` | 70/70；SIFF_EQUAL best +1.6436%；PCC harms SIFF；checkpoint false-failure corrected |
 | Fair re-audit internal mechanism health | `completed_diagnostic` | DIRECT arms失衡；PCC oracle增大但policy近均匀；SIFF_EQUAL未collapse；MCCA不在矩阵 |
+| SIFF_EQUAL EQUAL-context attribution freeze | `step6_complete_step7a_next` | 实现10-arm production wiring、scale-component artifact与四层analyzer；remote/test false |
 
 ## Paper Mainline Sync Log
 
@@ -292,6 +295,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-17 | fair re-audit Step8 launch | Current Position、Experiment Ledger | resource smoke + launch provenance | commit d294aab；GPU0/1/2；70-run test-primary matrix running |
 | 2026-07-18 | fair re-audit Step9/10 | Current Position、Candidate Queue、Experiment Ledger | effectiveness + attribution correction | SIFF partial pass；PCSD/PCC close；joint performance pass but paper-pair fail |
 | 2026-07-18 | fair re-audit mechanism-health correction | Candidate Queue、Failure Attribution、MCCA boundary | internal arm audit + evaluation-scope correction | DIRECT training-blocked；PCC headroom unused；MCCA fair-test unaudited |
+| 2026-07-18 | SIFF_EQUAL attribution Step6 | Current Position、Candidate Queue、Experiment Logic | four-layer rule + 10-arm EQUAL-context freeze | 16/16；Step7A local only；remote/test/confirmation false |
 
 ## Continuation Rules
 
@@ -358,3 +362,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 32. validation与test均使用H96/H192/H336/H720 MSE/MAE，但职责不同：validation只选checkpoint、
     hyperparameter与做diagnostic；test统一决定正式机制effectiveness与paper main/ablation。dense H1..720默认
     只作diagnostic。后续candidate均为`test_informed`，但禁止逐dataset/horizon/cell反向调参。
+33. 后续所有机制结论必须依次报告paper-facing effectiveness、matched mechanism attribution、internal mechanism
+    health与failure attribution。performance是必要但不充分条件；internal diagnostic不能挽救negative effectiveness，
+    正向test但归因失败只能标记`partial_pass_attribution_blocked`。
+34. `SC1-SIFF-v2-EQ-ATTR-v1`已冻结10-arm EQUAL-context矩阵。Phase A七项hard comparisons全部通过前不得补
+    seeds、修改controls或升级paper claim；Step7A construction失败必须回Step6，remote/test需新的prelaunch授权。
