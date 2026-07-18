@@ -17,7 +17,8 @@
 
 70/70 runs与280/280 test cells通过protocol。结论发生三层分化：
 
-1. PCSD_DIRECT相对A6为`-0.8562%`，exact architecture继续关闭；
+1. PCSD_DIRECT相对A6为`-0.8562%`，exact direct candidate继续关闭；内部诊断仍保留representation与
+   credit-starvation线索；
 2. PCC相对prior仅`+0.0806%`，且在SIFF上相对EQUAL为`-0.2663%`，exact PCC关闭；
 3. SIFF_EQUAL相对PCSD_EQUAL为`+0.5906%`并通过预注册gate；相对A6为`+1.6436%` MSE、
    `+0.9084%` MAE，是当前最佳carrier；
@@ -29,6 +30,12 @@ validation `+0.1469%`、test `+0.5906%`。旧SIFF failure包含明确checkpoint�
 
 下一步不是直接补seed，而是回Step6冻结EQUAL-context controls与`A6_MEASURE_ONLY`。详见
 `analysis/stage_c_fair_reaudit_v1_20260717/step9_10_conclusion.md`。
+
+补充internal mechanism audit确认：PCSD_DIRECT arms的loss CV为`36.11%`，同一run最佳固定arm仍比fused差
+`18.05%`；PCSD_PCC/SIFF_PCC的row-bin oracle headroom达到`16.17%/18.17%`，但policy entropy为
+`0.965/0.975`，说明PCC增加了未利用的conditional headroom而非形成有效routing。SIFF_EQUAL则同时保持
+`+1.6436%` test gain、`6.39%` oracle headroom与非零arm差异。MCCA没有进入本次14-arm矩阵，其状态修正为
+`historical_validation_negative / fair_test_not_reaudited / inactive`。
 
 ## Test-Primary Fair Historical Re-audit
 
@@ -60,8 +67,9 @@ failure attribution发现SIFF不是全面fit失败：ETTm2 SIFF+MCCA相对PCSD+M
 $w_t=T^{-1}\sum_{H=t}^{T}H^{-1}$。code audit随后确认PCSD/SIFF coupling arms的fused training loss已经使用
 exact harmonic target measure（L1），所以不能归因于flat training；未决问题是L1-vs-MSE与H720 checkpoint。
 
-decision：关闭exact SIFF-v1；因>100%局部pathology，不作scale-coordinate方向级否决。关闭exact MCCA-v1，
-保留transport/marginal ingredients。回滚Step4执行`SC-D16` external-first measure audit。
+当时decision：停止exact SIFF-v1/MCCA-v1 development；因>100%局部pathology，不作scale-coordinate方向级否决，
+MCCA只保留transport/marginal ingredients。按后续test-primary治理，该段不是formal test rejection：SIFF已公平
+复评并修正为partial pass，MCCA尚未公平复评且保持inactive。回滚Step4执行`SC-D16` external-first measure audit。
 
 source audit现已完成：NeurIPS 2024 ElasTST直接覆盖harmonic horizon reweighting与weighted checkpoint；
 Loss Shaping/QDF进一步覆盖future-step weighting。standalone PHMA narrative fail，新增HR arms也因现有training

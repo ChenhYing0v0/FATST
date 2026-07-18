@@ -17,7 +17,8 @@
 [Decision] 结果不是“PCSD、PCC、SIFF全部失败”，也不是“原两项contribution已经成立”，而是：
 
 > `SIFF_EQUAL`形成了目前最强、跨四horizon稳定的paper-facing performance carrier；旧SIFF失败包含明显的
-> best-H720 checkpoint假失败。但PCSD架构本身仍失败，PCC specificity失败，SIFF也尚未通过完整的
+> best-H720 checkpoint假失败。PCSD-CF-v1的direct end-to-end candidate仍未通过effectiveness gate，但历史与
+> 本次internal diagnostics都保留representation/conditional headroom；PCC specificity失败，SIFF也尚未通过完整的
 > objective-robust与control-specific attribution。因此当前状态是
 > `performance_partial_pass / two-contribution_attribution_fail`。
 
@@ -65,11 +66,17 @@ Primary MSE gate要求macro $\ge0.3\%$、至少11/20 cells、3/5 datasets与3/4 
 ## 5. PCSD结论
 
 [Strong Evidence] `PCSD_DIRECT vs A6=-0.8562%`，且validation/test分别为`-1.5853%/-0.8562%`，
-无numeric或protocol pathology。因此PCSD-CF v1的native coupling-field architecture仍是exact failure。
+无numeric或protocol pathology。因此PCSD-CF-v1的**当前direct end-to-end实现**是exact effectiveness failure。
+这不等于“coupling-field representation没有信息”。
 
 PCSD在EQUAL/PRIOR/PCC下相对A6分别约`+1.0578%/+1.1472%/+1.2266%`，但`PCSD_MEASURE`本身已达到
 `+1.0219%`，而EQUAL/PCC相对MEASURE只增加`+0.0177%/+0.1842%` MSE且MAE反而更差。更合理的解释是
 measure-aligned training或generic auxiliary supervision提供了主要收益，不是PCSD架构成立。
+
+历史D15 matched diagnostic还发现：25/25 same-run arms相对独立训练fixed-scope arms均退化，test median
+degradation约`90.66%`，但same-run oracle仍有`+2.0197%` macro headroom。它把failure locus指向joint
+arm training/credit与fusion，而不是tensor contract、capacity或完全无signal。第12节用本次four-H checkpoints
+重新检查了同一模式。
 
 ## 6. PCC结论
 
@@ -132,12 +139,61 @@ effectiveness audit。
 这些不是为失败cell调参，而是现有positive result必需的mechanism attribution controls；由于已观察test，
 后续必须建立新版本并标记`test_informed`。
 
-## 11. Step 10决策
+## 11. 本次fair audit没有包含MCCA
 
-- `PCSD-CF-v1`: exact architecture failure，关闭；
+[Fact] `configs/stage_c_fair_reaudit_v1.json`的14 arms只覆盖A6、PCSD、PCC、SIFF及SIFF controls，**没有
+MCCA arm**。因此本轮70-run、280-cell结论不能用于宣称MCCA已完成four-H checkpoint + official test公平复评。
+
+MCCA目前只有旧best-H720 checkpoint、validation-only证据：
+
+- four-H main effect相对same-mass PCC为`-0.1357%`，7/20 cells、1/5 datasets；
+- PCSD carrier上的MCCA相对PCC为0/5；
+- 但prefix transport相对pointwise为`+0.4736%`、4/5，capability marginal相对uniform OT为
+  `+0.1182%`、5/5。
+
+[Decision] 应把状态写成
+`historical_validation_negative / fair_test_not_reaudited / inactive`，而不是
+`fair_test_rejected`。旧证据反对完整global competitive assignment，却保留transport与capability marginal两个
+ingredients。由于本次PCC本身已失败且降低SIFF_EQUAL性能，不应机械补跑原MCCA-v1；若重新启用，需先回Step4
+重新定义它相对EQUAL/MEASURE而不是相对失败PCC的必要性。
+
+## 12. 新checkpoint下的内部机制健康度
+
+`mechanism_analysis/mechanism_health_summary.csv`从70-run矩阵中60个包含arm tensors的PCSD/SIFF runs复算
+arm loss spread、probe diversity、row-bin oracle与policy usage。关键结果如下：
+
+| Arm | Oracle headroom | Best fixed arm vs fused | Arm loss CV | Pairwise probe NRMSE | Policy entropy |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| PCSD_DIRECT | +4.405% | -18.052% | 36.109% | 0.905 | 0.671 |
+| PCSD_EQUAL | +7.587% | -0.058% | 1.435% | 0.113 | 0.837 |
+| PCSD_PCC | +16.172% | -0.842% | 2.360% | 0.175 | 0.965 |
+| SIFF_EQUAL | +6.394% | -0.314% | 3.449% | 0.133 | 0.812 |
+| SIFF_PCC | +18.170% | -0.612% | 6.528% | 0.225 | 0.975 |
+
+这里的“best fixed arm”是同一run内固定使用一个arm，不是独立训练fixed-scope control。
+
+[Strong Evidence] 这些结果把failure/success进一步收紧为：
+
+1. `PCSD_DIRECT`不是arms输出完全相同的collapse，而是arms质量高度失衡；平均最优单arm仍比fused差18.05%，
+   与历史“same-run arms没有独立训练到足够skill”的结论一致；
+2. EQUAL supervision把PCSD arms的loss CV从36.11%降到1.43%，说明它主要修复arm skill floor，但同时使arms
+   更相似；
+3. PCC把PCSD/SIFF oracle headroom提高到16.17%/18.17%，却使policy entropy达到0.965/0.975、接近均匀；
+   它制造或保留了conditional差异，却没有学会利用这些差异，因此fused test没有超过EQUAL；
+4. `SIFF_EQUAL`同时具备正向test performance、非零arm diversity和6.39% oracle headroom，不属于内部完全
+   collapse；但同一EQUAL objective下的constant/permuted/Q1/independent controls仍缺失，不能完成归因。
+
+[Boundary] Oracle headroom大并不自动代表好模型；`SIFF_INDEPENDENT_PCC`的headroom更大，但paper-facing性能并未
+因此最好。有效机制必须同时满足：最终test提升、matched controls、内部路径按理论工作，以及gain不能由generic
+capacity/training解释。
+
+## 13. Step 10决策
+
+- `PCSD-CF-v1`: exact direct end-to-end candidate失败，关闭；representation/credit-starvation问题保留；
 - `PCC-v1-TI`: exact contribution failure，关闭并rollback Step2/4；
 - `SIFF-v1`: 从失败修正为partial pass，rollback Step6补齐EQUAL-context attribution；
 - `SIFF+PCC`: performance pass，但joint contribution attribution fail；
+- `MCCA-v1`: 本次未复评；旧validation negative，标记fair-test unaudited且inactive；
 - `CTD`: 继续暂停；
 - `paper_status`: 已获得一个有希望的`SIFF_EQUAL` performance carrier，但尚不足以支撑“两项创新”的论文主体。
 

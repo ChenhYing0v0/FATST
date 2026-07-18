@@ -140,7 +140,11 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
     if not rows:
         raise ValueError(f"No rows available for {path}")
     with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=list(rows[0]),
+            lineterminator="\n",
+        )
         writer.writeheader()
         writer.writerows(rows)
 

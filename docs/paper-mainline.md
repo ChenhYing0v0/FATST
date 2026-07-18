@@ -181,7 +181,7 @@ Step7B最终45/45完成。full PCC相对A6为`+0.9627%`、3/5，相对plain为`+
 `20.57%-41.13%`。`EQUAL_SKILL`已解释full PCC相对A6 gain的88.90%。因此exact PCC-v1-TI status=
 `validation_screen_failed_exact_design`：不进入Phase B、confirmation或test，回Step4。
 
-### Closed Contribution Pair: SIFF-v1 / MCCA-v1
+### Historical Validation-Negative Pair: SIFF-v1 / MCCA-v1
 
 原PCSD-CF/PCC pair只保留为problem evidence：前者暴露arm starvation，后者证明direct supervision可恢复skill，
 同时暴露same-label homogenization。Step6已把新pair冻结为：
@@ -211,8 +211,10 @@ Step9/10 formal result：
 - PCSD MCCA over PCC为`-0.1092%`、0/5；transport over pointwise为`+0.4736%`、4/5，
   capability marginal over uniform OT为`+0.1182%`、5/5。
 
-[Decision] exact SIFF-v1/MCCA-v1均关闭，不进入confirmation、Phase B或test。MCCA exact competition hypothesis
-被否定；transport与capability marginal只保留为ingredients。
+[Historical Decision] 在当时的validation-only、best-H720 checkpoint规则下停止exact SIFF-v1/MCCA-v1，
+不进入confirmation、Phase B或test。后续fair test已把SIFF修正为partial pass；MCCA没有进入70-run公平复评，
+因此其当前边界是`historical_validation_negative / fair_test_not_reaudited / inactive`，不能写成formal
+test rejection。旧证据反对完整competitive assignment，transport与capability marginal仍只保留为ingredients。
 
 按新的paper-facing评估规则，旧artifacts已在validation H96/H192/H336/H720上回溯重算：SIFF architecture
 main effect为`-2.3509%`、8/20 cells、2/5 datasets；MCCA为`-0.1357%`、7/20、1/5；joint vs A6为

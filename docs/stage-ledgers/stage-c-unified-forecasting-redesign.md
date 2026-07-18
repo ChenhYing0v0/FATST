@@ -91,13 +91,13 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC2-CPGA` | `rejected_with_parent_route` | full-memory path的prediction change能否由conditional predictive gain核算 | 脱离CADMO后退化为generic accounting | not started | 不实现；不占active slot |
 | `SC-D14-P` | `auxiliary_not_scheduled` | A6 patch memory是否含超越global coeff的ordered target-specific conditional information | not paper mainline | not started | 未来仅在decoder interface需要时做small probe |
 | `SC1-PCSD` | `problem_supported_parent` | one projective decoder是否需同时表示point/block/global coupling scopes | complete-chain novelty only；DIRMO/Stratify/CATS controls mandatory | D14-A1 three-seed dual-carrier pass；GroupedMLP below LBF | parent retained；native child PCSD-CF active |
-| `SC1-PCSD-CF` | `rejected_effectiveness_test_fair_confirmed` | one shared parameter field能否经scope pooling形成skilled point/block/global arms并contain A6 | field-pooling chain retained as evidence | fair test DIRECT vs A6 -0.8562%；0/4 horizon wins | exact v1 closed；measure gains不归因于architecture |
+| `SC1-PCSD-CF` | `rejected_effectiveness_test_representation_signal_retained` | one shared parameter field能否经scope pooling形成skilled point/block/global arms并contain A6 | field-pooling chain retained as evidence | fair test DIRECT vs A6 -0.8562%；arms高度失衡；oracle +4.41% | exact direct v1 closed；representation/credit-starvation retained |
 | `SC2-CCRL` | `retired_as_core_diagnostic_only` | cross-fit relative risk能否增益matched direct fusion | generic overlap high；two-stage teacher/student inconsistency | not implemented | retain report/config as history；not scheduled |
 | `SC2-ICC` | `superseded_by_pcc` | same-forward marginal coupling credit能否修复direct policy misallocation | working hypothesis已由D15-A收紧 | not implemented | historical name only |
 | `SC2-PCC-v0` | `superseded_pointwise_control` | pointwise same-forward capability + skill floor | expert loss与loss-teacher gate已有直接prior art | 15/15 theory cases；method untested | mandatory pointwise/prior controls only |
 | `SC2-PCC-v1-TI` | `rejected_effectiveness_test_fair` | nested-prefix capability能否经harmonic incidence输运为target-coordinate credit | exact claim fail；generic/prior explains most gain | fair test vs prior PCSD +0.0806% fail；on SIFF vs equal -0.2663% | exact v1 closed；return Step2/4 |
 | `SC1-SIFF-v1` | `partial_pass_attribution_blocked` | coupling scale能否作为internal coordinate生成可辨识且连续共享的history modes | complete-chain conditional pass | EQUAL vs PCSD +0.5906% pass；vs A6 +1.6436%；prior/PCC/independent specificity fail | return Step6；EQUAL-context controls before seeds |
-| `SC2-MCCA-v1` | `validation_screen_failed_exact_hypothesis` | same total scope skill mass能否竞争性分配而避免per-target homogenization | complete-chain conditional pass | four-H main -0.1357%、1/5；transport 4/5、capability marginal 5/5 | exact competition closed；return Step4 |
+| `SC2-MCCA-v1` | `historical_validation_negative_fair_test_not_reaudited` | same total scope skill mass能否竞争性分配而避免per-target homogenization | complete-chain conditional pass | old best-H720 validation four-H -0.1357%、1/5；not in 70-run audit | inactive；reuse前回Step4重审相对EQUAL/MEASURE的必要性 |
 | `SC-D16-CTD` | `deferred_paused_by_user` | H720 checkpoint是否丢弃healthy SIFF four-H epoch | diagnostic only；weighted checkpoint prior-covered | not implemented | design retained；resume only after user authorization |
 | `SC-RETRO-FAIR-v1` | `completed_partial_pass_attribution_blocked` | PCSD/PCC/SIFF在新checkpoint与test-primary规则下是否仍成立 | retrospective audit；not a method | 70/70；280/280；joint pass；two-contribution attribution fail | archive result；SIFF Step6/PCC Step2-4 |
 | `SC-D14-A/B` | `a_confirmed_b_retired` | coupling crossing与conditional-risk predictability | A pass；B retired before implementation | A confirmed；B not run | A evidence retained；B closed |
@@ -219,6 +219,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SIFF/MCCA Step7B remote screen | `completed_fail_rollback_step4` | 55/55+25/25；exact pair closed；no test/seeds |
 | SC-D16-CTD trajectory diagnostic | `paused_by_user` | design retained；Step7A/remote均不继续 |
 | PCSD/PCC/SIFF fair test re-audit | `completed_partial_pass` | 70/70；SIFF_EQUAL best +1.6436%；PCC harms SIFF；checkpoint false-failure corrected |
+| Fair re-audit internal mechanism health | `completed_diagnostic` | DIRECT arms失衡；PCC oracle增大但policy近均匀；SIFF_EQUAL未collapse；MCCA不在矩阵 |
 
 ## Paper Mainline Sync Log
 
@@ -290,6 +291,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-17 | test-primary governance + fair re-audit Step7A | Current Position、Candidate Queue、Evaluation Protocol | validation职责收缩 + CTD暂停 + 70-run matrix freeze | 9/9 local categories pass；remote test matrix authorized |
 | 2026-07-17 | fair re-audit Step8 launch | Current Position、Experiment Ledger | resource smoke + launch provenance | commit d294aab；GPU0/1/2；70-run test-primary matrix running |
 | 2026-07-18 | fair re-audit Step9/10 | Current Position、Candidate Queue、Experiment Ledger | effectiveness + attribution correction | SIFF partial pass；PCSD/PCC close；joint performance pass but paper-pair fail |
+| 2026-07-18 | fair re-audit mechanism-health correction | Candidate Queue、Failure Attribution、MCCA boundary | internal arm audit + evaluation-scope correction | DIRECT training-blocked；PCC headroom unused；MCCA fair-test unaudited |
 
 ## Continuation Rules
 
@@ -343,8 +345,9 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
     memory probe只作symmetric conditional diagnostic，不能充当method effectiveness gate。
 27. D12-v1因uniform normalized risk mismatch不能方向级否定；risk-aligned v2复用相同pilots后仅1/5支持，
     因此CAPE与joint PRISM route关闭、D12-B取消并回滚Step2。不得通过改rank、换pilot或PRISM-only probe绕过gate。
-28. SIFF/MCCA Phase-A已完成55/55 new + 25/25 references。exact SIFF-v1/MCCA-v1均关闭，不补seed、不test、
-    不调Q、Sinkhorn或capacity。
+28. SIFF/MCCA旧Phase-A已完成55/55 new + 25/25 references；它使用best-H720 checkpoint且validation-only。
+    当时停止exact pair是合理的development decision，但按当前治理不能写成fair-test rejection。SIFF已由后续公平
+    test修正为partial pass；MCCA未进入70-run audit，状态为inactive/fair-test unaudited，不补seed或机械调Sinkhorn。
 29. `ordered > permuted` 5/5只证明scope order含信息；由于ordered未超过Q1-wide/independent的macro gate，
     不得把该control单独升级为architecture contribution。
 30. ETTm2 SIFF-vs-PCSD在H1为-669.49%而H720为+0.60%，属于>100% short-prefix
