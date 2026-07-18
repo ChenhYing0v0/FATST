@@ -1,0 +1,149 @@
+{
+  "stage": "StageC-UVHF",
+  "candidate_id": "SC1-SIFF-v2-CCSF",
+  "candidate_version": "SC1-SIFF-v2-CCSF-v1-preimplementation",
+  "status": "step7a_local_pass_step7b_next",
+  "test_informed": true,
+  "parent_candidate": "SC1-SIFF-v2-EQ-ATTR-v1",
+  "design_contract": {
+    "path": "configs/stage_c_siff_ccsf_step6.json",
+    "sha256": "890cf8c9ddecbc0757890bbe39fd93905976975a64b3db154d53e84362afe987"
+  },
+  "datasets": ["Weather", "ETTm1", "ETTm2", "ETTh1", "ETTh2"],
+  "seeds": [2021],
+  "confirmation_seeds": [2022, 2023],
+  "profiles": {
+    "path": "configs/stage_c_five_dataset_natural_profiles.json",
+    "sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a"
+  },
+  "arms": [
+    {
+      "id": "a6_measure",
+      "readout_mode": "learned-basis-forecast-operator",
+      "objective_mode": "measure_only",
+      "correction_mode": "none",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "siff_v1_equal",
+      "readout_mode": "siff-coupling-field",
+      "objective_mode": "equal_skill",
+      "correction_mode": "none",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "siff_v1_relcal",
+      "readout_mode": "siff-coupling-field",
+      "objective_mode": "ccsf_relative_calibration",
+      "correction_mode": "none",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "ccsf_equal",
+      "readout_mode": "ccsf-coupling-field",
+      "objective_mode": "equal_skill",
+      "correction_mode": "true",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "ccsf_relcal",
+      "readout_mode": "ccsf-coupling-field",
+      "objective_mode": "ccsf_relative_calibration",
+      "correction_mode": "true",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "ccsf_stdcal",
+      "readout_mode": "ccsf-coupling-field",
+      "objective_mode": "ccsf_standardized_calibration",
+      "correction_mode": "true",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "ccsf_no_contrast_equal",
+      "readout_mode": "ccsf-no-contrast-control",
+      "objective_mode": "equal_skill",
+      "correction_mode": "zero",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "ccsf_no_contrast_relcal",
+      "readout_mode": "ccsf-no-contrast-control",
+      "objective_mode": "ccsf_relative_calibration",
+      "correction_mode": "zero",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "ccsf_permuted_contrast_relcal",
+      "readout_mode": "ccsf-permuted-contrast-control",
+      "objective_mode": "ccsf_relative_calibration",
+      "correction_mode": "permuted",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "ccsf_independent_relcal",
+      "readout_mode": "ccsf-independent-scope-control",
+      "objective_mode": "ccsf_relative_calibration",
+      "correction_mode": "true",
+      "rank_rule": "independent_dataset_matched"
+    }
+  ],
+  "matched_ranks": {
+    "ETTh1": {"independent_dataset_matched": 109},
+    "ETTh2": {"independent_dataset_matched": 116},
+    "ETTm1": {"independent_dataset_matched": 116},
+    "ETTm2": {"independent_dataset_matched": 106},
+    "Weather": {"independent_dataset_matched": 116}
+  },
+  "method": {
+    "coupling_scales": [1, 48, 144, 360, 720],
+    "contrast_dimension": 6,
+    "correction_hidden_dimension": 64,
+    "correction_parameters": 2881,
+    "permutation": "cyclic_left_shift_one_no_fixed_scope",
+    "final_layer_zero_initialized": true,
+    "full_domain_then_prefix_crop": true,
+    "requested_horizon_input": false,
+    "benchmark_horizon_bin_input": false
+  },
+  "objective": {
+    "calibration_weight": 0.1,
+    "local_smoke_temperature": 0.1,
+    "local_smoke_temperature_is_formal_selection": false,
+    "formal_temperature_grid": [0.05, 0.1, 0.25],
+    "formal_temperature_selected": false,
+    "teacher_stop_gradient": true
+  },
+  "training": {
+    "from_scratch": true,
+    "joint_encoder_decoder": true,
+    "pred_len": 720,
+    "target_horizons": [720],
+    "validation_horizons": [96, 192, 336, 720],
+    "validation_checkpoint_score": "mean_mse_h96_h192_h336_h720",
+    "checkpoint_policy": "best-val",
+    "epochs": 20,
+    "patience": 5,
+    "batch_size": 32,
+    "learning_rate": 0.0001,
+    "evaluation_prefix_mode": "full-crop",
+    "training_final_evaluation_split": "val",
+    "test_labels_select_checkpoint": false
+  },
+  "matrix": {
+    "phase_a_expected_runs": 50,
+    "phase_a_expected_test_cells": 200,
+    "horizons": [96, 192, 336, 720]
+  },
+  "authorization": {
+    "step7a_local_implementation_authorized": true,
+    "validation_temperature_pilot_authorized": false,
+    "remote_training_authorized": false,
+    "formal_test_access_authorized": false,
+    "confirmation_authorized": false
+  },
+  "output": {
+    "remote_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_ccsf_v1",
+    "local_analysis_root": "analysis/stage_c_siff_ccsf_step7a_20260718"
+  }
+}

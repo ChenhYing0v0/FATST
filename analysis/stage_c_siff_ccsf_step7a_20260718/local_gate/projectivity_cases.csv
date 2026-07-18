@@ -1,0 +1,5 @@
+readout_mode,max_prefix_gap,threshold,pass
+ccsf-coupling-field,0.0,1e-07,True
+ccsf-no-contrast-control,0.0,1e-07,True
+ccsf-permuted-contrast-control,0.0,1e-07,True
+ccsf-independent-scope-control,0.0,1e-07,True

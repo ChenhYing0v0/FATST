@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step6 pass；Step7A local next |
+| `current_11_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step7A local pass；Step7B prelaunch next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | SIFF_EQUAL v1 frozen parent；CCSF narrative-ready/preimplementation；no confirmed contribution pair / remote-test false |
+| `paper_core_status` | SIFF_EQUAL v1 frozen parent；CCSF local implementation 18/18；no confirmed contribution pair / pilot-remote-test false |
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
@@ -132,6 +132,15 @@ contrast与parameter-matched independent-field controls。完整Phase A为10 arm
 pilot、remote、formal test与confirmation仍为false。两项paper claim只有在10项hard comparisons与内部健康层同时
 通过后才成立；否则按architecture/objective/field/numeric层分别回滚。详见
 `analysis/stage_c_siff_ccsf_step6_20260718/step6_narrative_control_gate.md`。
+
+Step7A production implementation现已通过18/18 local categories。CCSF不改Encoder/SIFF arms，而是在
+`arms [B,C,S,T]`后构造`contrast [B,C,T,S,6]`，以共享`43 -> 64 -> 1` scorer修正v1 logits；新增2,881
+parameters。相同seed下三个ordered CCSF controls与v1的base hash一致、initial output gap为0；四类CCSF readout
+在5个prefix上的projectivity gap均为0。relative teacher满足stop-gradient、scale invariance与tie-confidence contract，
+zero/permuted controls的tensor/gradient semantics及两步optimization path均通过。50-job adapters、30 constructors、
+10 objective gradient paths与diagnostic tensors已就绪，但所有证据均为synthetic construction，不包含dataset
+training。status=`step7a_local_pass_step7b_next`；15-run temperature pilot、remote、test、confirmation仍为false。
+详见`analysis/stage_c_siff_ccsf_step7a_20260718/step7a_implementation_gate_report.md`。
 
 ### Historical Contribution 1 Parent: PCSD-CF
 

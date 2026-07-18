@@ -1,0 +1,9 @@
+case,value,threshold,pass
+objective_modes_registered,"ccsf_relative_calibration,ccsf_standardized_calibration",2,True
+relative_finite,2.158829689025879,finite,True
+standardized_finite,2.205801248550415,finite,True
+equal_skill_equivalence,0.0,1e-06,True
+relative_scale_invariance,7.152557373046875e-07,1e-06,True
+tie_confidence_zero,0.0,1e-07,True
+teacher_stop_gradient,False,False,True
+policy_gradient_nonzero,0.009125414304435253,>0,True

@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step6 pass；Step7A local next |
+| `current_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step7A local pass；Step7B prelaunch next |
 | `active_question` | 为什么healthy multi-arm SIFF未把conditional headroom转成超过A6_MEASURE/independent的fused forecast？ |
-| `active_candidates` | v1 frozen performance-near parent；CCSF v1 narrative-ready/preimplementation；PCSD/PCC closed；CTD paused |
+| `active_candidates` | v1 frozen performance-near parent；CCSF v1 local implementation pass；PCSD/PCC closed；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_siff_ccsf_step6_20260718/step6_narrative_control_gate.md` |
-| `method_implementation` | Step7A local authorized；validation pilot/remote/test=false；v1 remains immutable |
-| `rollback_point` | Step7A construction failure回Step6；后续contrast/loss/field failures按预冻结decision map分别回Step4/7A |
+| `active_protocol` | `analysis/stage_c_siff_ccsf_step7a_20260718/step7a_implementation_gate_report.md` |
+| `method_implementation` | Step7A 18/18；Step7B prelaunch next；validation pilot/remote/test=false |
+| `rollback_point` | Step7B construction/authorization failure回Step7A；后续contrast/loss/field failures按预冻结decision map分别回Step4/7A |
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 
@@ -114,6 +114,22 @@ zero-contrast same-capacity、permuted-contrast与matched-independent controls�
 Decision=`step6_pass_step7a_local_only`。下一步只实现production forward/objective/control adapters、prefix/gradient/
 parameter tests与remote refusal gate；10项hard comparisons全部通过前不得形成joint claim。详见
 `analysis/stage_c_siff_ccsf_step6_20260718/step6_narrative_control_gate.md`。
+
+## CCSF Step 7A Local Implementation
+
+production path已实现`arms [B,C,S,T] -> contrast [B,C,T,S,6] -> shared 43-64-1 correction -> v1 logits +
+correction -> projective fusion`。新增参数严格2,881；ordered/independent总参数gap最大0.3833%。相同seed的v1与
+三个ordered CCSF controls具有相同base hash和initial forecast，gap为0。true/zero/permuted descriptors及nonzero
+intervention、contrast-to-arm gradient均通过，四readout的prefix gap均为0。
+
+relative/standardized calibration objectives、50-job adapters、30 constructors、10 gradient paths、two-step correction
+optimization与diagnostic tensor contract全部就绪。local gate=18/18。`tau=0.1`只作synthetic smoke；正式shared
+temperature没有选择。remote template在当前authorization下exit 3，即使手工改authorization也因Step7B未冻结而
+exit 4。
+
+Decision=`step7a_local_pass_step7b_next`；下一步先设计Step7B validation pilot/prelaunch boundary，不得直接启动
+pilot、remote或test。详见
+`analysis/stage_c_siff_ccsf_step7a_20260718/step7a_implementation_gate_report.md`。
 
 ## Fair Re-audit Step 9–10 Result
 

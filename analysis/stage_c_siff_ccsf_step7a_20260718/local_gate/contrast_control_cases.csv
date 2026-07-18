@@ -1,0 +1,8 @@
+case,value,threshold,pass
+descriptor_shape,"(2, 3, 720, 5, 6)","(2,3,720,5,6)",True
+true_contrast_nonzero,0.8695889711380005,>0,True
+zero_control_exact,0.0,0.0,True
+permutation_control_exact,0.0,0.0,True
+true_vs_zero_correction_contrast,0.24694739282131195,>0,True
+true_vs_permuted_correction_contrast,0.2884517014026642,>0,True
+contrast_to_arm_gradient,0.009271765127778053,>0,True

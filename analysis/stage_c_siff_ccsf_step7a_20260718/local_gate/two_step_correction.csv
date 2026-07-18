@@ -1,0 +1,5 @@
+readout_mode,correction_mode,first_output_gradient_norm,second_hidden_gradient_norm,second_contrast_column_gradient_norm,second_correction_rms,pass
+ccsf-coupling-field,true,0.16730627417564392,2.66286515397951e-05,2.440415664750617e-05,0.00013656303053721786,True
+ccsf-no-contrast-control,zero,0.0766930803656578,4.562771664495813e-06,0.0,3.1825475161895156e-05,True
+ccsf-permuted-contrast-control,permuted,0.15497319400310516,2.0799203412025236e-05,1.7499225577921607e-05,0.00021597444720100611,True
+ccsf-independent-scope-control,true,0.03365631401538849,1.5488868712054682e-06,1.5090695342223626e-06,3.065192504436709e-05,True

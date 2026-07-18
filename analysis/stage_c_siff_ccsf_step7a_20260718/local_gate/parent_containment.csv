@@ -1,0 +1,4 @@
+readout_mode,base_hash_equal,initial_output_gap,correction_output_zero,pass
+ccsf-coupling-field,True,0.0,True,True
+ccsf-no-contrast-control,True,0.0,True,True
+ccsf-permuted-contrast-control,True,0.0,True,True

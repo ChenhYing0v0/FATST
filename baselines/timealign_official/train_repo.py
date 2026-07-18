@@ -34,6 +34,11 @@ from layers.PCC import (  # noqa: E402
     prefix_measure,
     projective_coupling_credit_loss,
 )
+from layers.CCSF import (  # noqa: E402
+    CCSF_CALIBRATION_WEIGHT,
+    CCSF_OBJECTIVE_MODES,
+    contrast_scope_calibration_loss,
+)
 from layers.MCCA import (  # noqa: E402
     MCCA_KERNEL_FLOOR,
     MCCA_OBJECTIVE_MODES,
@@ -85,6 +90,10 @@ PREFIX_READOUT_MODES = {
     "siff-q1-wide-control",
     "siff-independent-scope-control",
     "siff-dense-nonlinear-matched",
+    "ccsf-coupling-field",
+    "ccsf-no-contrast-control",
+    "ccsf-permuted-contrast-control",
+    "ccsf-independent-scope-control",
 }
 
 STAGE_C_ACTIVE_READOUTS = {
@@ -115,6 +124,10 @@ STAGE_C_ACTIVE_READOUTS = {
     "siff-q1-wide-control",
     "siff-independent-scope-control",
     "siff-dense-nonlinear-matched",
+    "ccsf-coupling-field",
+    "ccsf-no-contrast-control",
+    "ccsf-permuted-contrast-control",
+    "ccsf-independent-scope-control",
 }
 
 ACTIVE_STAGE_C_CONTRACT = {
@@ -414,6 +427,7 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         pcsd_partition_seed=args.pcsd_partition_seed,
         pcsd_group_chunk_size=args.pcsd_group_chunk_size,
         pcsd_target_chunk_size=args.pcsd_target_chunk_size,
+        ccsf_correction_hidden_dim=args.ccsf_correction_hidden_dim,
         evaluation_prefix_mode=getattr(args, "evaluation_prefix_mode", "native"),
         segment_horizons=getattr(
             args,
@@ -573,6 +587,26 @@ def initialization_contract(model: nn.Module) -> dict[str, Any]:
                     .tolist(),
                     "siff_scale_basis_hash": _tensor_hash(
                         [readout.scale_basis]
+                    ),
+                }
+            )
+        if hasattr(readout, "correction_mode"):
+            payload.update(
+                {
+                    "ccsf_correction_mode": readout.correction_mode,
+                    "ccsf_contrast_dimension": int(
+                        readout.contrast_dimension
+                    ),
+                    "ccsf_correction_hidden_dim": int(
+                        readout.correction_hidden_dim
+                    ),
+                    "ccsf_correction_parameters": int(
+                        readout.correction_parameters
+                    ),
+                    "ccsf_contrast_permutation": (
+                        readout.ccsf_contrast_permutation.detach()
+                        .cpu()
+                        .tolist()
                     ),
                 }
             )
@@ -921,6 +955,26 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
                     .tolist(),
                     "siff_scale_basis_hash": _tensor_hash(
                         [readout.scale_basis]
+                    ),
+                }
+            )
+        if hasattr(readout, "correction_mode"):
+            payload.update(
+                {
+                    "ccsf_correction_mode": readout.correction_mode,
+                    "ccsf_contrast_dimension": int(
+                        readout.contrast_dimension
+                    ),
+                    "ccsf_correction_hidden_dim": int(
+                        readout.correction_hidden_dim
+                    ),
+                    "ccsf_correction_parameters": int(
+                        readout.correction_parameters
+                    ),
+                    "ccsf_contrast_permutation": (
+                        readout.ccsf_contrast_permutation.detach()
+                        .cpu()
+                        .tolist()
                     ),
                 }
             )
@@ -1502,19 +1556,35 @@ def train(
                     if planned_updates > 1
                     else 1.0
                 )
-                objective = (
-                    measure_constrained_competitive_loss
-                    if args.pcc_objective_mode in MCCA_OBJECTIVE_MODES
-                    else projective_coupling_credit_loss
-                )
-                pcc_result = objective(
-                    outputs,
-                    arm_forecasts,
-                    policy,
-                    target_y,
-                    mode=args.pcc_objective_mode,
-                    progress=progress,
-                )
+                if args.pcc_objective_mode in MCCA_OBJECTIVE_MODES:
+                    pcc_result = measure_constrained_competitive_loss(
+                        outputs,
+                        arm_forecasts,
+                        policy,
+                        target_y,
+                        mode=args.pcc_objective_mode,
+                        progress=progress,
+                    )
+                elif args.pcc_objective_mode in CCSF_OBJECTIVE_MODES:
+                    pcc_result = contrast_scope_calibration_loss(
+                        outputs,
+                        arm_forecasts,
+                        policy,
+                        target_y,
+                        mode=args.pcc_objective_mode,
+                        progress=progress,
+                        temperature=args.ccsf_calibration_temperature,
+                        calibration_weight=args.ccsf_calibration_weight,
+                    )
+                else:
+                    pcc_result = projective_coupling_credit_loss(
+                        outputs,
+                        arm_forecasts,
+                        policy,
+                        target_y,
+                        mode=args.pcc_objective_mode,
+                        progress=progress,
+                    )
                 pred_loss = pcc_result.total_loss
                 pred_components = {"full": criterion(outputs, target_y)}
                 recon_loss = pred_loss.new_zeros(())
@@ -1777,6 +1847,9 @@ def run(args: argparse.Namespace) -> None:
                 "mcca_solver": "log_domain_sinkhorn",
                 "mcca_sinkhorn_iterations": MCCA_SINKHORN_ITERATIONS,
                 "mcca_kernel_floor": MCCA_KERNEL_FLOOR,
+                "ccsf_modes": sorted(CCSF_OBJECTIVE_MODES),
+                "ccsf_temperature": args.ccsf_calibration_temperature,
+                "ccsf_calibration_weight": args.ccsf_calibration_weight,
             },
         },
     )
@@ -2059,11 +2132,26 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--pcsd-partition-seed", type=int, default=15101)
     parser.add_argument("--pcsd-group-chunk-size", type=int, default=64)
     parser.add_argument("--pcsd-target-chunk-size", type=int, default=128)
+    parser.add_argument("--ccsf-correction-hidden-dim", type=int, default=64)
+    parser.add_argument(
+        "--ccsf-calibration-temperature",
+        type=float,
+        default=0.1,
+    )
+    parser.add_argument(
+        "--ccsf-calibration-weight",
+        type=float,
+        default=CCSF_CALIBRATION_WEIGHT,
+    )
     parser.add_argument(
         "--pcc-objective-mode",
         choices=[
             PCC_DISABLED,
-            *sorted(PCC_OBJECTIVE_MODES | MCCA_OBJECTIVE_MODES),
+            *sorted(
+                PCC_OBJECTIVE_MODES
+                | MCCA_OBJECTIVE_MODES
+                | CCSF_OBJECTIVE_MODES
+            ),
         ],
         default=PCC_DISABLED,
     )
@@ -2239,6 +2327,7 @@ def parse_args() -> argparse.Namespace:
     if args.readout_mode in {
         "siff-q1-wide-control",
         "siff-independent-scope-control",
+        "ccsf-independent-scope-control",
     }:
         if args.pcsd_mode_rank <= 0:
             raise ValueError("matched SIFF control rank must be positive")
@@ -2250,6 +2339,17 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("PCSD-CF v1 requires pcsd_policy_hidden_dim=64")
     if args.pcsd_group_chunk_size <= 0 or args.pcsd_target_chunk_size <= 0:
         raise ValueError("PCSD chunk sizes must be positive")
+    if args.ccsf_correction_hidden_dim != 64:
+        raise ValueError("CCSF v1 requires ccsf_correction_hidden_dim=64")
+    if args.ccsf_calibration_temperature not in {0.05, 0.1, 0.25}:
+        raise ValueError("CCSF temperature must lie in the frozen shared grid")
+    if not math.isclose(
+        args.ccsf_calibration_weight,
+        CCSF_CALIBRATION_WEIGHT,
+        rel_tol=0.0,
+        abs_tol=1e-12,
+    ):
+        raise ValueError("CCSF v1 requires calibration_weight=0.1")
     if args.pcc_objective_mode != PCC_DISABLED:
         if (
             args.pcc_objective_mode != "measure_only"

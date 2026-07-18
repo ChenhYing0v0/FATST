@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from layers.Alignment import glocal_align_ablation
+from layers.CCSF import CCSFCouplingFieldReadout
 from layers.Embed import PositionalEmbedding
 from layers.GroupedMLP import GroupedMLPReadout
 from layers.PMFO import (
@@ -93,7 +94,14 @@ SIFF_READOUT_CONFIG = {
 }
 SIFF_READOUTS = set(SIFF_READOUT_CONFIG)
 SIFF_CONTROL_READOUTS = {"siff-dense-nonlinear-matched"}
-COUPLING_READOUTS = PCSD_READOUTS | SIFF_READOUTS
+CCSF_READOUT_CONFIG = {
+    "ccsf-coupling-field": (2, "ordered", "true"),
+    "ccsf-no-contrast-control": (2, "ordered", "zero"),
+    "ccsf-permuted-contrast-control": (2, "ordered", "permuted"),
+    "ccsf-independent-scope-control": (5, "independent", "true"),
+}
+CCSF_READOUTS = set(CCSF_READOUT_CONFIG)
+COUPLING_READOUTS = PCSD_READOUTS | SIFF_READOUTS | CCSF_READOUTS
 
 
 class PatchEmbed(nn.Module):
@@ -407,6 +415,7 @@ class Model(nn.Module):
             *PCSD_CONTROL_READOUTS,
             *SIFF_READOUTS,
             *SIFF_CONTROL_READOUTS,
+            *CCSF_READOUTS,
         }:
             raise ValueError(
                 "Clean TimeAlign supports only 'official' and "
@@ -422,6 +431,7 @@ class Model(nn.Module):
             | PCSD_CONTROL_READOUTS
             | SIFF_READOUTS
             | SIFF_CONTROL_READOUTS
+            | CCSF_READOUTS
             and self.pred_len != 720
         ):
             raise ValueError("StageC projective readouts require pred_len=720")
@@ -753,6 +763,38 @@ class Model(nn.Module):
                     getattr(configs, "pcsd_target_chunk_size", 128)
                 ),
             )
+        if self.readout_mode in CCSF_READOUTS:
+            scale_components, scale_basis_mode, correction_mode = (
+                CCSF_READOUT_CONFIG[self.readout_mode]
+            )
+            self.pcsd_readout = CCSFCouplingFieldReadout(
+                readout_dim=readout_dim,
+                series_length=self.pred_len,
+                coordinate_dim=int(getattr(configs, "pcsd_coordinate_dim", 4)),
+                mode_rank=int(getattr(configs, "pcsd_mode_rank", 256)),
+                scale_components=scale_components,
+                scale_basis_mode=scale_basis_mode,
+                policy_history_dim=int(
+                    getattr(configs, "pcsd_policy_history_dim", 32)
+                ),
+                policy_hidden_dim=int(
+                    getattr(configs, "pcsd_policy_hidden_dim", 64)
+                ),
+                policy_mode=str(getattr(configs, "pcsd_policy_mode", "direct")),
+                fixed_scale=int(getattr(configs, "pcsd_fixed_scale", 720)),
+                partition=str(getattr(configs, "pcsd_partition", "canonical")),
+                partition_seed=int(getattr(configs, "pcsd_partition_seed", 15101)),
+                group_chunk_size=int(
+                    getattr(configs, "pcsd_group_chunk_size", 64)
+                ),
+                target_chunk_size=int(
+                    getattr(configs, "pcsd_target_chunk_size", 128)
+                ),
+                correction_mode=correction_mode,
+                correction_hidden_dim=int(
+                    getattr(configs, "ccsf_correction_hidden_dim", 64)
+                ),
+            )
         if self.readout_mode == "pcsd-coupling-field-m0":
             self.pcsd_m0_readout = PCSDM0Readout(
                 readout_dim=readout_dim,
@@ -1039,12 +1081,24 @@ class Model(nn.Module):
             output = self.grouped_mlp_readout(hidden, target_prefix)
         elif self.readout_mode in COUPLING_READOUTS:
             if return_pcsd_training_details:
-                output, pcsd_arms, pcsd_policy = (
-                    self.pcsd_readout.forward_with_diagnostics(
-                        hidden,
-                        target_prefix,
+                if hasattr(
+                    self.pcsd_readout,
+                    "forward_with_ccsf_diagnostics",
+                ):
+                    output, pcsd_arms, pcsd_policy, ccsf_details = (
+                        self.pcsd_readout.forward_with_ccsf_diagnostics(
+                            hidden,
+                            target_prefix,
+                        )
                     )
-                )
+                else:
+                    output, pcsd_arms, pcsd_policy = (
+                        self.pcsd_readout.forward_with_diagnostics(
+                            hidden,
+                            target_prefix,
+                        )
+                    )
+                    ccsf_details = None
             else:
                 output = self.pcsd_readout(hidden, target_prefix)
         elif self.readout_mode == "pcsd-coupling-field-m0":
@@ -1090,4 +1144,6 @@ class Model(nn.Module):
             "arm_forecasts": denormalized_arms,
             "policy": pcsd_policy,
         }
+        if ccsf_details is not None:
+            details.update(ccsf_details)
         return (*result, details)
