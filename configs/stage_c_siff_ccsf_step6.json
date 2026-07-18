@@ -1,0 +1,294 @@
+{
+  "stage": "StageC-UVHF",
+  "candidate_id": "SC1-SIFF-v2-CCSF",
+  "candidate_version": "SC1-SIFF-v2-CCSF-v1-preimplementation",
+  "status": "step6_narrative_ready_step7a_local_only",
+  "test_informed": true,
+  "parent_candidate": "SC1-SIFF-v2-EQ-ATTR-v1",
+  "datasets": ["Weather", "ETTm1", "ETTm2", "ETTh1", "ETTh2"],
+  "phase_a_seeds": [2021],
+  "confirmation_seeds": [2022, 2023],
+  "coupling_scales": [1, 48, 144, 360, 720],
+  "profiles": {
+    "path": "configs/stage_c_five_dataset_natural_profiles.json",
+    "sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a"
+  },
+  "method": {
+    "parent_readout": "siff-coupling-field",
+    "parent_scale_components": 2,
+    "parent_scale_basis": "ordered",
+    "contrast_descriptor": {
+      "dimension": 6,
+      "features": [
+        "pointwise_centered_normalized_contrast",
+        "pointwise_absolute_normalized_contrast",
+        "scope_group_contrast_mean",
+        "scope_group_contrast_rms",
+        "scope_group_contrast_endpoint_difference",
+        "log_relative_disagreement"
+      ],
+      "target_free": true,
+      "requested_horizon_input": false,
+      "benchmark_horizon_bin_input": false,
+      "scope_native_grouping": true
+    },
+    "correction_scorer": {
+      "history_dimension": 32,
+      "target_coordinate_dimension": 4,
+      "scale_coordinate_dimension": 1,
+      "contrast_dimension": 6,
+      "hidden_dimension": 64,
+      "output_dimension": 1,
+      "shared_across_scopes": true,
+      "final_layer_zero_initialized": true,
+      "base_logits_retained": true,
+      "parameter_formula": "(32+4+1+6)*64+64+64+1",
+      "expected_parameters": 2881
+    },
+    "fusion": "softmax_convex_sum",
+    "prediction_domain": 720,
+    "requested_horizon_behavior": "full_domain_then_prefix_crop"
+  },
+  "objective": {
+    "fused_loss": "dense_prefix_harmonic_l1",
+    "equal_skill_weight": 1.0,
+    "calibration": "confidence_weighted_relative_competence",
+    "arm_error": "absolute_error",
+    "relative_regret_denominator": "mean_arm_error_plus_epsilon",
+    "teacher_stop_gradient": true,
+    "confidence": "one_minus_normalized_teacher_entropy",
+    "calibration_weight": 0.1,
+    "temperature_selection": {
+      "role": "validation_only_shared_hyperparameter",
+      "grid": [0.05, 0.1, 0.25],
+      "expected_runs": 15,
+      "selection_score": "macro_mean_validation_mse_h96_h192_h336_h720_across_all_five_datasets",
+      "one_temperature_shared_by_all_datasets": true,
+      "tie_break": "prefer_larger_temperature",
+      "test_labels_allowed": false,
+      "selection_creates_formal_candidate_version": true
+    }
+  },
+  "arms": [
+    {
+      "id": "a6_measure",
+      "role": "external_effectiveness_baseline",
+      "architecture": "a6",
+      "objective": "measure_only",
+      "correction": "none",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "siff_v1_equal",
+      "role": "frozen_parent_control",
+      "architecture": "siff_v1",
+      "objective": "equal_skill",
+      "correction": "none",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "siff_v1_relcal",
+      "role": "loss_only_control",
+      "architecture": "siff_v1",
+      "objective": "relative_calibration",
+      "correction": "none",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "ccsf_equal",
+      "role": "architecture_only_arm",
+      "architecture": "ccsf_ordered",
+      "objective": "equal_skill",
+      "correction": "true_contrast",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "ccsf_relcal",
+      "role": "full_candidate",
+      "architecture": "ccsf_ordered",
+      "objective": "relative_calibration",
+      "correction": "true_contrast",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "ccsf_stdcal",
+      "role": "teacher_geometry_control",
+      "architecture": "ccsf_ordered",
+      "objective": "pcc_standardized_calibration",
+      "correction": "true_contrast",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "ccsf_no_contrast_equal",
+      "role": "architecture_capacity_control",
+      "architecture": "ccsf_ordered",
+      "objective": "equal_skill",
+      "correction": "zero_contrast_same_parameters",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "ccsf_no_contrast_relcal",
+      "role": "full_capacity_control",
+      "architecture": "ccsf_ordered",
+      "objective": "relative_calibration",
+      "correction": "zero_contrast_same_parameters",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "ccsf_permuted_contrast_relcal",
+      "role": "contrast_semantic_alignment_control",
+      "architecture": "ccsf_ordered",
+      "objective": "relative_calibration",
+      "correction": "fixed_arm_axis_permutation",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "ccsf_independent_relcal",
+      "role": "ordered_field_specificity_control",
+      "architecture": "ccsf_independent",
+      "objective": "relative_calibration",
+      "correction": "true_contrast",
+      "rank_rule": "independent_dataset_matched"
+    }
+  ],
+  "matched_ranks": {
+    "ETTh1": {"independent_dataset_matched": 109},
+    "ETTh2": {"independent_dataset_matched": 116},
+    "ETTm1": {"independent_dataset_matched": 116},
+    "ETTm2": {"independent_dataset_matched": 106},
+    "Weather": {"independent_dataset_matched": 116}
+  },
+  "parameter_reference": {
+    "ordered_base_total": {
+      "ETTh1": 3569013,
+      "ETTh2": 1971573,
+      "ETTm1": 1971573,
+      "ETTm2": 6763893,
+      "Weather": 1971573
+    },
+    "independent_matched_base_total": {
+      "ETTh1": 3560217,
+      "ETTh2": 1979141,
+      "ETTm1": 1979141,
+      "ETTm2": 6769149,
+      "Weather": 1979141
+    },
+    "matched_relative_gap_max": 0.005
+  },
+  "training": {
+    "from_scratch": true,
+    "joint_encoder_decoder": true,
+    "pred_len": 720,
+    "target_horizons": [720],
+    "validation_horizons": [96, 192, 336, 720],
+    "validation_checkpoint_score": "mean_mse_h96_h192_h336_h720",
+    "checkpoint_policy": "best-val",
+    "epochs": 20,
+    "patience": 5,
+    "batch_size": 32,
+    "learning_rate": 0.0001,
+    "evaluation_prefix_mode": "full-crop",
+    "test_labels_select_checkpoint": false
+  },
+  "matrix": {
+    "phase_a_expected_runs": 50,
+    "phase_a_expected_test_cells": 200,
+    "confirmation_expected_runs": 100,
+    "confirmation_expected_test_cells": 400,
+    "horizons": [96, 192, 336, 720],
+    "metrics": ["mse", "mae"],
+    "full_matrix_required": true,
+    "partial_reporting_allowed": false
+  },
+  "comparisons": [
+    {"id": "full_over_a6_measure", "candidate": "ccsf_relcal", "reference": "a6_measure", "role": "main_effectiveness"},
+    {"id": "full_over_v1", "candidate": "ccsf_relcal", "reference": "siff_v1_equal", "role": "main_effectiveness"},
+    {"id": "architecture_over_v1", "candidate": "ccsf_equal", "reference": "siff_v1_equal", "role": "architecture_attribution"},
+    {"id": "architecture_over_capacity", "candidate": "ccsf_equal", "reference": "ccsf_no_contrast_equal", "role": "architecture_attribution"},
+    {"id": "calibration_on_ccsf", "candidate": "ccsf_relcal", "reference": "ccsf_equal", "role": "objective_attribution"},
+    {"id": "full_over_loss_only", "candidate": "ccsf_relcal", "reference": "siff_v1_relcal", "role": "interaction_attribution"},
+    {"id": "relative_over_standardized_teacher", "candidate": "ccsf_relcal", "reference": "ccsf_stdcal", "role": "teacher_attribution"},
+    {"id": "contrast_over_full_capacity", "candidate": "ccsf_relcal", "reference": "ccsf_no_contrast_relcal", "role": "contrast_attribution"},
+    {"id": "contrast_over_permuted", "candidate": "ccsf_relcal", "reference": "ccsf_permuted_contrast_relcal", "role": "contrast_attribution"},
+    {"id": "ordered_over_independent", "candidate": "ccsf_relcal", "reference": "ccsf_independent_relcal", "role": "field_specificity"},
+    {"id": "loss_effect_without_contrast", "candidate": "siff_v1_relcal", "reference": "siff_v1_equal", "role": "diagnostic_interaction_term"}
+  ],
+  "hard_gates": {
+    "comparison_ids": [
+      "full_over_a6_measure",
+      "full_over_v1",
+      "architecture_over_v1",
+      "architecture_over_capacity",
+      "calibration_on_ccsf",
+      "full_over_loss_only",
+      "relative_over_standardized_teacher",
+      "contrast_over_full_capacity",
+      "contrast_over_permuted",
+      "ordered_over_independent"
+    ],
+    "per_comparison": {
+      "mse_macro_gain_percent_min": 0.3,
+      "mse_dataset_wins_min": 3,
+      "mse_horizon_wins_min": 3,
+      "mse_cell_wins_min": 11
+    },
+    "main_mae_macro_gain_percent_min": 0.0,
+    "main_mae_comparison_ids": ["full_over_a6_measure", "full_over_v1"],
+    "interaction": {
+      "definition": "gain(ccsf_relcal,ccsf_equal)-gain(siff_v1_relcal,siff_v1_equal)",
+      "macro_gain_percent_min": 0.2
+    },
+    "all_hard_comparisons_must_pass_for_joint_claim": true
+  },
+  "internal_mechanism_health": {
+    "finite_values_required": true,
+    "prefix_projectivity_gap_max": 1e-7,
+    "oracle_positive_datasets_min": 4,
+    "mean_pairwise_probe_nrmse_min": 0.05,
+    "policy_entropy_min": 0.2,
+    "policy_entropy_max": 0.95,
+    "best_arm_accuracy_gain_over_v1_points_min": 0.05,
+    "policy_skill_centered_alignment_min": 0.1,
+    "policy_allocation_gain_over_uniform_percent_min": 0.3,
+    "contrast_correction_rms_ratio_min": 0.01,
+    "diagnostics_cannot_override_effectiveness": true
+  },
+  "claim_control_map": {
+    "paper_performance": ["full_over_a6_measure", "full_over_v1"],
+    "contrast_architecture": ["architecture_over_v1", "architecture_over_capacity", "contrast_over_full_capacity", "contrast_over_permuted"],
+    "relative_calibration": ["calibration_on_ccsf", "relative_over_standardized_teacher"],
+    "architecture_objective_interaction": ["full_over_loss_only", "loss_effect_without_contrast"],
+    "ordered_scale_field": ["ordered_over_independent"]
+  },
+  "narrative_gate": {
+    "status": "conditional_pass_step7a_local_only",
+    "contribution_1_if_pass": "contrast-conditioned projective scope fusion for unified multi-horizon generation",
+    "contribution_2_if_pass": "confidence-weighted relative competence calibration co-designed for output-coupling scopes",
+    "joint_story_if_pass": "scope forecasts expose target-wise deterministic contrast and relative competence supervision teaches the projective fusion policy when that contrast is trustworthy",
+    "forbidden_claims": [
+      "first output-aware mixture of experts",
+      "first error-supervised routing",
+      "best-arm accuracy guarantees fused MSE improvement",
+      "explicit A6 anchor is part of CCSF",
+      "test-derived temperature is a clean hyperparameter choice"
+    ]
+  },
+  "decision_map": {
+    "all_hard_and_internal_pass": "authorize confirmation seeds after Step9 review",
+    "architecture_pass_objective_fail": "retain CCSF architecture candidate and return Contribution2 to Step4",
+    "architecture_fail_objective_pass": "reject CCSF architecture; training-only result is insufficient for the current two-contribution paper",
+    "performance_pass_attribution_fail": "retain performance_partial_pass only and rollback to the failed control layer",
+    "ordered_vs_independent_fail": "return Step4 scale-field necessity; do not reject contrast fusion",
+    "numeric_pathology": "invalidate exact implementation and return Step7A without direction rejection"
+  },
+  "authorization": {
+    "step6_user_authorized": true,
+    "step7a_local_implementation_authorized": true,
+    "validation_temperature_pilot_authorized": false,
+    "remote_training_authorized": false,
+    "formal_test_access_authorized": false,
+    "confirmation_authorized": false,
+    "per_dataset_temperature_tuning_allowed": false,
+    "per_dataset_horizon_or_cell_tuning_allowed": false
+  }
+}

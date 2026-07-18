@@ -1,0 +1,6 @@
+claim,controls,control_count,all_exist,hard_control_count,pass
+paper_performance,"full_over_a6_measure,full_over_v1",2,True,2,True
+contrast_architecture,"architecture_over_v1,architecture_over_capacity,contrast_over_full_capacity,contrast_over_permuted",4,True,4,True
+relative_calibration,"calibration_on_ccsf,relative_over_standardized_teacher",2,True,2,True
+architecture_objective_interaction,"full_over_loss_only,loss_effect_without_contrast",2,True,1,True
+ordered_scale_field,ordered_over_independent,1,True,1,True

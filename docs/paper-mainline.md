@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | `SC1-SIFF-v2-CCSF-v0-theory` Step5 conditional pass；Step6 next |
+| `current_11_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step6 pass；Step7A local next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | SIFF_EQUAL v1 frozen；CCSF theory-conditional；no confirmed contribution pair / no training authorized |
+| `paper_core_status` | SIFF_EQUAL v1 frozen parent；CCSF narrative-ready/preimplementation；no confirmed contribution pair / remote-test false |
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
@@ -122,6 +122,16 @@ provisional CCSF在v1 logits上加入scope-shared contrast-conditioned correctio
 因capacity/ensemble confound退出method，A6_MEASURE继续作为mandatory baseline。status=
 `conditional_theory_pass_to_step6 / implementation_false`。详见
 `analysis/stage_c_siff_ccsf_step5_theory_20260718/step5_theory_feasibility.md`。
+
+Step6已把候选冻结为`SC1-SIFF-v2-CCSF-v1-preimplementation`。Contribution 1是projective coupling scopes上的
+target-free arm-contrast-conditioned fusion；Contribution 2是与该information path共同设计的confidence-weighted
+relative competence calibration，而不是泛称首个error-supervised routing。核心2×2为
+`SIFF-v1/CCSF × EQUAL/RELCAL`；另加入A6_MEASURE、standardized teacher、zero-contrast same-capacity、permuted
+contrast与parameter-matched independent-field controls。完整Phase A为10 arms × 5 datasets × seed2021 = 50 runs/
+200 official-test cells，但本Step只通过5/5 static gates并授权Step7A local implementation；validation temperature
+pilot、remote、formal test与confirmation仍为false。两项paper claim只有在10项hard comparisons与内部健康层同时
+通过后才成立；否则按architecture/objective/field/numeric层分别回滚。详见
+`analysis/stage_c_siff_ccsf_step6_20260718/step6_narrative_control_gate.md`。
 
 ### Historical Contribution 1 Parent: PCSD-CF
 

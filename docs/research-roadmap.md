@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | `SC1-SIFF-v2-CCSF-v0-theory` Step5 conditional pass；Step6 next |
+| `current_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step6 pass；Step7A local next |
 | `active_question` | 为什么healthy multi-arm SIFF未把conditional headroom转成超过A6_MEASURE/independent的fused forecast？ |
-| `active_candidates` | v1 frozen performance-near parent；CCSF v0 theory conditional；PCSD/PCC closed；CTD paused |
+| `active_candidates` | v1 frozen performance-near parent；CCSF v1 narrative-ready/preimplementation；PCSD/PCC closed；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_siff_ccsf_step5_theory_20260718/step5_theory_feasibility.md` |
-| `method_implementation` | CCSF theory only；implementation/remote=false；v1 remains immutable |
-| `rollback_point` | Step6 control design；contrast/loss/full effects必须factorize，失败按architecture/objective分开回滚 |
+| `active_protocol` | `analysis/stage_c_siff_ccsf_step6_20260718/step6_narrative_control_gate.md` |
+| `method_implementation` | Step7A local authorized；validation pilot/remote/test=false；v1 remains immutable |
+| `rollback_point` | Step7A construction failure回Step6；后续contrast/loss/field failures按预冻结decision map分别回Step4/7A |
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 
@@ -98,6 +98,22 @@ cross-arm std，会放大near-equal arms的噪声；provisional relative-regret 
 Decision=`conditional_theory_pass_to_step6`；Step6必须冻结v1、loss-only、architecture-only、full、shuffled/zero、
 generic capacity、independent与A6 controls，当前implementation/remote均false。详见
 `analysis/stage_c_siff_ccsf_step5_theory_20260718/step5_theory_feasibility.md`。
+
+## CCSF Step 6 Narrative And Control Gate
+
+候选版本冻结为`SC1-SIFF-v2-CCSF-v1-preimplementation`，并通过5/5 static gates。method保留v1 logits，使用
+scope-shared六维target-free contrast descriptor产生零初始化logit correction；完整T=720计算后才crop，requested
+horizon与benchmark bins不进入model。新增scorer为2,881参数，ordered/independent CCSF在五dataset上的总参数gap
+均低于0.5%。
+
+归因矩阵以`SIFF-v1/CCSF × EQUAL/RELCAL` 2×2为核心，另含A6_MEASURE、old standardized teacher、
+zero-contrast same-capacity、permuted-contrast与matched-independent controls，共10 arms。temperature只允许从
+`{0.05,0.1,0.25}`通过五dataset共同validation macro score选择，不允许per-dataset或test选择；该15-run pilot尚未
+授权。正式Phase A冻结为50 runs/200 cells，confirmation为100 runs/400 cells，但remote/test/confirmation均false。
+
+Decision=`step6_pass_step7a_local_only`。下一步只实现production forward/objective/control adapters、prefix/gradient/
+parameter tests与remote refusal gate；10项hard comparisons全部通过前不得形成joint claim。详见
+`analysis/stage_c_siff_ccsf_step6_20260718/step6_narrative_control_gate.md`。
 
 ## Fair Re-audit Step 9–10 Result
 

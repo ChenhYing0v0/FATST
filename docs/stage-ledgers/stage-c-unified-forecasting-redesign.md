@@ -9,7 +9,7 @@
 | `active_question` | 为什么healthy multi-arm SIFF未把conditional headroom转成超过A6_MEASURE/independent的fused forecast？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | v1 frozen performance-near parent；`SC1-SIFF-v2-CCSF-v0-theory` conditional；CTD paused |
+| `active_candidates` | v1 frozen performance-near parent；`SC1-SIFF-v2-CCSF-v1-preimplementation` narrative-ready；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
@@ -19,27 +19,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | `SC1-SIFF-v2-CCSF-v0-theory` Step5 conditional pass；Step6 next |
-| `current_candidate` | v1 immutable parent + CCSF theory candidate；not implemented |
-| `latest_decision` | contrast identifiability 5/5；projectivity/v1 inclusion pass；explicit A6 anchor rejected |
-| `next_required_action` | Step6 factorial narrative/control design；architecture与calibration effects分离 |
-| `method_training_authorized` | no；implementation=false，remote=false，v1 confirmation=false |
-| `rollback_point` | Step6；architecture-only、loss-only、full失败必须分开归因 |
+| `current_11_step` | `SC1-SIFF-v2-CCSF-v1-preimplementation` Step6 pass；Step7A local next |
+| `current_candidate` | v1 immutable parent + CCSF narrative-ready preimplementation candidate |
+| `latest_decision` | Step6 static 5/5；10-arm claim-control contract frozen；local implementation only |
+| `next_required_action` | Step7A production forward/objective/control adapters与construction gates |
+| `method_training_authorized` | Step7A local only；validation pilot=false，remote=false，formal test=false |
+| `rollback_point` | Step7A failure回Step6；后续architecture/objective/field/numeric按decision map分开回滚 |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Step5 theory feasibility complete；Step6 narrative/control design next |
+| `current_step` | Step6 narrative/control design complete；Step7A local implementation next |
 | `problem` | `SIFF_EQUAL`有正向test performance，但旧PCC-context controls无法证明收益来自ordered scale coordinate |
 | `existence_evidence` | v1 fusion gap + contrast cross-fit：vs coordinate +1.8348%、vs shuffled +1.7085%、5/5 gates |
 | `idea` | v1 logits + scope-shared target-free contrast correction；confidence-weighted relative competence weak supervision |
 | `theory_check` | projectivity、v1 inclusion、no target at inference、contrast identifiability pass；fused gain/stability conditional |
-| `design` | Step5 tensor/loss/proof only；Step6需8类factorial controls；A6 anchor不进method |
-| `narrative_gate` | conditional complete-chain pass；generic output-aware/error-supervised routing不claim first |
-| `effectiveness_gate` | not started；must beat v1/A6_MEASURE/generic/shuffle/independent under formal test matrix |
-| `artifacts` | `analysis/stage_c_siff_ccsf_step5_theory_20260718/` + frozen diagnostic config |
-| `decision` | conditional Step5 pass；Step6 next；implementation/remote false |
+| `design` | 10 arms；2×2 architecture/objective + teacher/capacity/semantic/field controls；shared validation temperature protocol |
+| `narrative_gate` | conditional pass；C1=contrast-conditioned projective scope fusion，C2=co-designed relative competence calibration |
+| `effectiveness_gate` | not started；10 hard comparisons + internal health；official test完整矩阵后才判定 |
+| `artifacts` | Step5 theory + `analysis/stage_c_siff_ccsf_step6_20260718/` + frozen Step6 config |
+| `decision` | Step6 pass；Step7A local implementation authorized；remote/test/confirmation false |
 
 ## Frozen Carrier Contract
 
@@ -98,7 +98,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC2-PCC-v1-TI` | `rejected_effectiveness_test_fair` | nested-prefix capability能否经harmonic incidence输运为target-coordinate credit | exact claim fail；generic/prior explains most gain | fair test vs prior PCSD +0.0806% fail；on SIFF vs equal -0.2663% | exact v1 closed；return Step2/4 |
 | `SC1-SIFF-v1` | `partial_pass_attribution_blocked` | coupling scale能否作为internal coordinate生成可辨识且连续共享的history modes | complete-chain conditional pass | EQUAL vs PCSD +0.5906% pass；vs A6 +1.6436%；prior/PCC/independent specificity fail | return Step6；EQUAL-context controls before seeds |
 | `SC1-SIFF-v2-EQ-ATTR-v1` | `frozen_performance_near_candidate_attribution_blocked` | EQUAL-trained ordered scale field能否同时超过A6/PCSD与matched EQUAL-context specificity controls | conditional；完整claim未成立 | main 2/3；controls 3/4；internal 7/7 | immutable parent；Step4 source-informed redesign，不补v1 seeds |
-| `SC1-SIFF-v2-CCSF-v0-theory` | `conditional_theory_pass_step6_next` | target-free scope contrast能否让policy识别relative competence；relative teacher只作弱监督 | complete-chain conditional；generic gating/calibration claims excluded | offline identifiability 5/5；E2E not started | Step6 factorial control/narrative gate；training false |
+| `SC1-SIFF-v2-CCSF-v1-preimplementation` | `narrative_ready_step7a_local_only` | target-free scope contrast能否让policy识别relative competence；relative teacher只作co-designed弱监督 | Step6 conditional pass；generic gating/calibration first claims excluded | static 5/5；E2E not started | Step7A local implementation；validation pilot/remote/test false |
 | `SC2-MCCA-v1` | `historical_validation_negative_fair_test_not_reaudited` | same total scope skill mass能否竞争性分配而避免per-target homogenization | complete-chain conditional pass | old best-H720 validation four-H -0.1357%、1/5；not in 70-run audit | inactive；reuse前回Step4重审相对EQUAL/MEASURE的必要性 |
 | `SC-D16-CTD` | `deferred_paused_by_user` | H720 checkpoint是否丢弃healthy SIFF four-H epoch | diagnostic only；weighted checkpoint prior-covered | not implemented | design retained；resume only after user authorization |
 | `SC-RETRO-FAIR-v1` | `completed_partial_pass_attribution_blocked` | PCSD/PCC/SIFF在新checkpoint与test-primary规则下是否仍成立 | retrospective audit；not a method | 70/70；280/280；joint pass；two-contribution attribution fail | archive result；SIFF Step6/PCC Step2-4 |
@@ -174,6 +174,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SIFF_EQUAL attribution Step9 | 50 runs/200 test cells + four-layer attribution | vs A6_MEASURE -0.2366%；vs independent +0.2580%；internal 7/7 | exact v1 closed；return Step4；no confirmation | `analysis/stage_c_siff_equal_attribution_step9_20260718/step9_four_layer_diagnostic.md` |
 | SIFF v1 candidate freeze + Step4 audit | immutable candidate manifest + existing-artifact routing/fusion audit + external sources | policy match 29.24%；static convex +2.2112%；affine extra +0.1203% | v1 retained/attribution blocked；CCSF provisional Step5；no training | `analysis/stage_c_siff_candidate_step4_source_audit_20260718/source_informed_improvement_audit.md` |
 | CCSF Step5 theory feasibility | target-free contrast cross-fit + teacher geometry + projectivity/inclusion/source audit | 5/5 gates；contrast vs coordinate +1.8348%；vs shuffled +1.7085%；A6 anchor rejected | conditional pass to Step6；implementation/remote false | `analysis/stage_c_siff_ccsf_step5_theory_20260718/step5_theory_feasibility.md` |
+| CCSF Step6 narrative/control gate | 2×2 architecture/objective + teacher/capacity/semantic/field controls | 10 arms；50 Phase-A runs/200 cells；static 5/5；parameter gap <0.5% | narrative-ready；Step7A local only；validation pilot/remote/test false | `analysis/stage_c_siff_ccsf_step6_20260718/step6_narrative_control_gate.md` |
 
 ## Pending Tasks
 
@@ -231,7 +232,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | Fair re-audit internal mechanism health | `completed_diagnostic` | DIRECT arms失衡；PCC oracle增大但policy近均匀；SIFF_EQUAL未collapse；MCCA不在矩阵 |
 | SIFF_EQUAL EQUAL-context attribution freeze | `completed_exact_v1_closed` | 50/50；main 2/3、controls 3/4、internal 7/7；回Step4，不补confirmation |
 | SIFF v1 portfolio freeze | `completed_retained_attribution_blocked` | immutable manifest complete；作为当前best candidate与v2 parent，不改Step9 failure |
-| SIFF contrast-calibrated redesign | `step5_completed_conditional_pass` | Step6 freeze 2x2 architecture/objective + shuffle/capacity/independent/A6 controls |
+| SIFF contrast-calibrated redesign | `step6_completed_step7a_local_only` | implement production CCSF/objective/10-arm adapters与construction tests；不得启动validation pilot或remote |
 
 ## Paper Mainline Sync Log
 
@@ -311,6 +312,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-18 | SIFF_EQUAL attribution Step9 | Current Position、Candidate Queue、Experiment Ledger | four-layer result + exact candidate closure | A6_MEASURE/independent explain；internal healthy；rollback Step4 |
 | 2026-07-18 | SIFF v1 freeze + Step4 improvement audit | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | portfolio retention + fusion bottleneck localization + source boundary | v1 immutable；calibration primary；CCSF Step5 next；training false |
 | 2026-07-18 | CCSF Step5 theory feasibility | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | contrast identifiability + tensor/loss/proof/source boundary | 5/5；A6 anchor removed；Step6 next；training false |
+| 2026-07-18 | CCSF Step6 narrative/control gate | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | contribution split + 10-arm factorial/control freeze + rollback map | static 5/5；Step7A local only；validation pilot/remote/test false |
 
 ## Continuation Rules
 
@@ -397,3 +399,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 40. CCSF Step5只通过target-free contrast identifiability与theory gate，不授权implementation。旧PCC已覆盖同步
     error-supervised routing，所以calibration loss不得单独claim创新；Step6必须分离loss-only、architecture-only与
     full interaction，并加入generic correction、shuffle/zero、independent field和A6_MEASURE controls。
+41. CCSF Step6已冻结`SC1-SIFF-v2-CCSF-v1-preimplementation`的10-arm contract。Step7A只能实现local
+    forward/objective/adapters与construction gates；不得启动15-run validation temperature pilot、remote或formal
+    test。以后不得删减A6_MEASURE、loss-only、architecture-only、standardized-teacher、zero/permuted-contrast或
+    matched-independent controls。joint claim要求10项hard comparisons和internal health共同通过；部分失败必须按
+    architecture/objective/field/numeric decision map回滚，不能用oracle headroom补救。

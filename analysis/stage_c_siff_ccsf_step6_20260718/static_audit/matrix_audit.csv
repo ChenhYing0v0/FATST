@@ -1,0 +1,10 @@
+check,actual,expected,pass
+exact_arm_set,10,10,True
+comparison_references_exist,11,11,True
+hard_comparisons_exist,10,10,True
+phase_a_runs,50,50,True
+phase_a_test_cells,200,200,True
+temperature_pilot_runs,15,15,True
+horizon_not_model_input,False,False,True
+benchmark_bins_not_model_input,False,False,True
+remote_not_authorized,False,False,True

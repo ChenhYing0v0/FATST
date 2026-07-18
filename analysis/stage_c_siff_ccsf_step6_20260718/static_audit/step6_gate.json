@@ -1,0 +1,17 @@
+{
+  "candidate_version": "SC1-SIFF-v2-CCSF-v1-preimplementation",
+  "current_step": 6,
+  "gate_results": {
+    "matrix_contract": true,
+    "parameter_contract": true,
+    "claim_control_contract": true,
+    "narrative_conditional": true,
+    "step7a_local_only": true
+  },
+  "passed_gates": 5,
+  "total_gates": 5,
+  "decision": "step6_pass_step7a_local_only",
+  "implementation_authorized": true,
+  "remote_authorized": false,
+  "formal_test_authorized": false
+}
