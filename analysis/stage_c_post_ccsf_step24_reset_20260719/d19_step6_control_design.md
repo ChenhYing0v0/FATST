@@ -1,5 +1,9 @@
 # SC-D19-IFC Step 6 Control Design
 
+> Superseded note（2026-07-19）：本文件的v1把upstream 96-point lookback误作本地history contract。
+> A6 natural实际使用`seq_len=720`。活动设计已修复为`SC-D19-IFC-control-v1.1`，见
+> `d19_step6_contract_repair.md`与`configs/stage_c_d19_if_control_step6_v1_1.json`。v1不得进入训练。
+
 ## 1. Decision
 
 | Field | Content |

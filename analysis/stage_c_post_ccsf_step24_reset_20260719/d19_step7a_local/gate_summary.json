@@ -1,0 +1,71 @@
+{
+  "authorization_after_gate": {
+    "official_test": false,
+    "paper_method": false,
+    "remote": false,
+    "step7a_local_complete": true,
+    "step7b_prelaunch_next": true
+  },
+  "candidate_version": "SC-D19-IFC-control-v1.1",
+  "categories": {
+    "cli": {
+      "overall_pass": true,
+      "passed": 15,
+      "total": 15
+    },
+    "governance": {
+      "overall_pass": true,
+      "passed": 5,
+      "total": 5
+    },
+    "gradient": {
+      "overall_pass": true,
+      "passed": 10,
+      "total": 10
+    },
+    "initialization": {
+      "overall_pass": true,
+      "passed": 2,
+      "total": 2
+    },
+    "model_wiring": {
+      "overall_pass": true,
+      "passed": 3,
+      "total": 3
+    },
+    "numeric": {
+      "overall_pass": true,
+      "passed": 2,
+      "total": 2
+    },
+    "parameters": {
+      "overall_pass": true,
+      "passed": 12,
+      "total": 12
+    },
+    "prediction_deformation": {
+      "overall_pass": true,
+      "passed": 2,
+      "total": 2
+    },
+    "shape_projectivity": {
+      "overall_pass": true,
+      "passed": 60,
+      "total": 60
+    },
+    "source_invariant": {
+      "overall_pass": true,
+      "passed": 3,
+      "total": 3
+    }
+  },
+  "checks_passed": 114,
+  "checks_total": 114,
+  "deformation": {
+    "if_direct_nrmse": 2.323723316192627,
+    "if_no_skip_nrmse": 1.0632127523422241,
+    "max_prefix_gap": 0.0
+  },
+  "manifest_rows": 15,
+  "overall_pass": true
+}

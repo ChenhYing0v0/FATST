@@ -6,6 +6,10 @@ from layers.Alignment import glocal_align_ablation
 from layers.CCSF import CCSFCouplingFieldReadout
 from layers.Embed import PositionalEmbedding
 from layers.GroupedMLP import GroupedMLPReadout
+from layers.ImplicitForecast import (
+    DirectNonlinearMatchedReadout,
+    ImplicitFrequencyReadout,
+)
 from layers.PMFO import (
     DenseMLPMatchedReadout,
     PMFONoTransitionReadout,
@@ -102,6 +106,12 @@ CCSF_READOUT_CONFIG = {
 }
 CCSF_READOUTS = set(CCSF_READOUT_CONFIG)
 COUPLING_READOUTS = PCSD_READOUTS | SIFF_READOUTS | CCSF_READOUTS
+D19_IMPLICIT_READOUTS = {
+    "implicit-frequency-readout",
+    "implicit-frequency-noskip-control",
+}
+D19_DIRECT_READOUTS = {"implicit-direct-nonlinear-matched"}
+D19_READOUTS = D19_IMPLICIT_READOUTS | D19_DIRECT_READOUTS
 
 
 class PatchEmbed(nn.Module):
@@ -416,6 +426,7 @@ class Model(nn.Module):
             *SIFF_READOUTS,
             *SIFF_CONTROL_READOUTS,
             *CCSF_READOUTS,
+            *D19_READOUTS,
         }:
             raise ValueError(
                 "Clean TimeAlign supports only 'official' and "
@@ -432,6 +443,7 @@ class Model(nn.Module):
             | SIFF_READOUTS
             | SIFF_CONTROL_READOUTS
             | CCSF_READOUTS
+            | D19_READOUTS
             and self.pred_len != 720
         ):
             raise ValueError("StageC projective readouts require pred_len=720")
@@ -826,6 +838,29 @@ class Model(nn.Module):
                     ),
                 ),
             )
+        if self.readout_mode in D19_IMPLICIT_READOUTS:
+            self.implicit_frequency_readout = ImplicitFrequencyReadout(
+                readout_dim=readout_dim,
+                history_length=self.seq_len,
+                series_length=self.pred_len,
+                hidden_width=int(getattr(configs, "if_hidden_width", 2048)),
+                dropout=float(getattr(configs, "if_head_dropout", 0.1)),
+                fourier_norm=str(getattr(configs, "if_fourier_norm", "ortho")),
+                use_input_spectrum=(
+                    self.readout_mode == "implicit-frequency-readout"
+                ),
+            )
+        if self.readout_mode in D19_DIRECT_READOUTS:
+            self.implicit_direct_readout = DirectNonlinearMatchedReadout(
+                readout_dim=readout_dim,
+                hidden_width=int(
+                    getattr(configs, "if_direct_hidden_width", 4143)
+                ),
+                history_length=self.seq_len,
+                series_length=self.pred_len,
+                dropout=float(getattr(configs, "if_head_dropout", 0.1)),
+                fourier_norm=str(getattr(configs, "if_fourier_norm", "ortho")),
+            )
 
         self.normalization_x = Normalize(configs.enc_in, affine=False)
         if self.has_future_recon_branch:
@@ -1038,6 +1073,7 @@ class Model(nn.Module):
         _batch_y, pred_len, _channels_y = y.shape
 
         x = self.normalization_x(x, "norm")
+        normalized_history = x
 
         recon = None
         if self.has_future_recon_branch and is_training:
@@ -1108,6 +1144,18 @@ class Model(nn.Module):
             "siff-dense-nonlinear-matched",
         }:
             output = self.pcsd_dense_readout(hidden, target_prefix)
+        elif self.readout_mode in D19_IMPLICIT_READOUTS:
+            output = self.implicit_frequency_readout(
+                hidden,
+                normalized_history,
+                target_prefix,
+            )
+        elif self.readout_mode in D19_DIRECT_READOUTS:
+            output = self.implicit_direct_readout(
+                hidden,
+                normalized_history,
+                target_prefix,
+            )
         else:
             raise ValueError(f"Unsupported readout mode: {self.readout_mode}")
         output = self.normalization_x(output, "denorm")

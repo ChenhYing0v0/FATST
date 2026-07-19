@@ -1,0 +1,47 @@
+{
+  "candidate_version": "SC-D19-IFC-control-v1.1",
+  "role": "control_only",
+  "current_step": "Step7A local implementation",
+  "step6_contract": "configs/stage_c_d19_if_control_step6_v1_1.json",
+  "profiles": "configs/stage_c_five_dataset_natural_profiles.json",
+  "profile_hash": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a",
+  "protocol_profile": "stage_c_d19_if_control_v1_1",
+  "datasets": ["Weather", "ETTm1", "ETTh1", "ETTh2", "ETTm2"],
+  "seed": 2021,
+  "training": {
+    "seq_len": 720,
+    "pred_len": 720,
+    "validation_horizons": [96, 192, 336, 720],
+    "evaluation_horizons": [96, 192, 336, 720],
+    "objective_mode": "measure_only",
+    "checkpoint_policy": "best-val",
+    "batch_size": 32,
+    "epochs": 20,
+    "patience": 5,
+    "learning_rate": 0.0001
+  },
+  "local_gates": {
+    "shape_cases_min": 60,
+    "prefix_max_abs_max": 0.000001,
+    "parameter_gap_percent_max": 0.1,
+    "prediction_nrmse_min": 0.000001,
+    "gradient_groups_required": [
+      "encoder",
+      "amplitude",
+      "phase_sine",
+      "phase_cosine",
+      "direct"
+    ],
+    "all_gradients_finite": true,
+    "if_no_skip_initialization_equal": true,
+    "paired_encoder_initialization_equal": true,
+    "manifest_rows": 15,
+    "cli_rows": 15
+  },
+  "authorization": {
+    "local_implementation": true,
+    "remote": false,
+    "official_test": false,
+    "paper_method": false
+  }
+}

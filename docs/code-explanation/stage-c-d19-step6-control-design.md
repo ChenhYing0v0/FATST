@@ -1,5 +1,8 @@
 # Stage C D19 Step 6 Control Design Tooling
 
+> Superseded：本文件解释的是v1 49-bin design。活动v1.1已改为same A6 720-point history / 361 bins；
+> 参见`stage-c-d19-step7a-implicit-control.md`。
+
 ## 1. Config
 
 `configs/stage_c_d19_if_control_step6.json`冻结D19 control identity、source provenance、five-dataset profiles、

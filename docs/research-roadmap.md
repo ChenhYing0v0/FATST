@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D18 Step9/10 closed；Contribution 1/2 Step2；D19 control Step6 pass / Step7A next |
+| `current_step` | D18 Step9/10 closed；Contribution 1/2 Step2；D19 control Step7A pass / Step7B prelaunch next |
 | `active_question` | trajectory-level structured decoding相对A6_MEASURE learned-basis control是否仍有headroom？ |
-| `active_candidates` | SIFF-v2 frozen parent；D18 closed；SC-D19-IFC control Step6 pass；no method；CTD paused |
+| `active_candidates` | SIFF-v2 frozen parent；D18 closed；SC-D19-IFC-control-v1.1 Step7A pass；no method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step6_control_design.md` |
-| `method_implementation` | D19 Step7A local control implementation only；remote/test/paper method false |
+| `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step7a_local/step7a_implementation_gate_report.md` |
+| `method_implementation` | D19 local control implementation pass；Step7B prelaunch next；remote/test/paper method false |
 | `rollback_point` | D19 no headroom → fixed-past decoder paper viability review；Contribution 2=Step2 |
 
 ## post-CCSF Step 2/4 Reset
@@ -65,8 +65,16 @@ IF/direct逐profile参数差不超过0.1%的matched control；静态gate为9/9�
 `step6_pass_step7a_local_only`；下一步只实现production heads与shape/projectivity/gradient/parameter/CLI
 local gate，remote/test/paper method继续false。
 
+Step7A code-theory audit发现v1错误继承upstream 96-point lookback，而A6 natural真实`seq_len=720`。由于尚未
+发生D19 training/test，v1被审计性保留并由v1.1修复：Encoder、IF skip与matched direct均读取同一720-point
+history，history rFFT为361 bins，direct重新匹配后parameter gap为0.0036%–0.0098%。
+
+v1.1 production implementation现已114/114通过：15 CLI、60 shape/projectivity、12 parameter、
+10 gradient、paired initialization、numeric、source-reference与model wiring全部pass；maximum prefix gap=0。
+Decision=`step7a_pass_step7b_prelaunch_next`。该结果只证明control可正确构造，remote/test仍false。
+
 详见`analysis/stage_c_post_ccsf_step24_reset_20260719/d18_step9/d18_step9_four_layer_diagnostic.md`与
-`analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step6_control_design.md`。
+`analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step7a_local/step7a_implementation_gate_report.md`。
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 

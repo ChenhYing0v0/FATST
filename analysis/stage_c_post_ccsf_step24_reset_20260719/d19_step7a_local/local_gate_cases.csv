@@ -1,0 +1,115 @@
+category,case,value,threshold,pass
+governance,candidate_supersession_identity,SC-D19-IFC-control-v1.1,SC-D19-IFC-control-v1.1,True
+governance,same_history_spectrum_contract,720/361,720/361,True
+governance,three_new_arm_mapping,"{""DIRECT_NONLINEAR_MATCHED_MEASURE"": ""implicit-direct-nonlinear-matched"", ""IF_MEASURE"": ""implicit-frequency-readout"", ""IF_NOSKIP_MEASURE"": ""implicit-frequency-noskip-control""}","{""DIRECT_NONLINEAR_MATCHED_MEASURE"": ""implicit-direct-nonlinear-matched"", ""IF_MEASURE"": ""implicit-frequency-readout"", ""IF_NOSKIP_MEASURE"": ""implicit-frequency-noskip-control""}",True
+governance,frozen_profile_hash,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a,True
+governance,authorization_boundary,"{""local_implementation"": true, ""official_test"": false, ""paper_method"": false, ""remote"": false}",local-only,True
+cli,Weather_IF_MEASURE,implicit-frequency-readout,frozen D19 CLI,True
+cli,Weather_IF_NOSKIP_MEASURE,implicit-frequency-noskip-control,frozen D19 CLI,True
+cli,Weather_DIRECT_NONLINEAR_MATCHED_MEASURE,implicit-direct-nonlinear-matched,frozen D19 CLI,True
+cli,ETTm1_IF_MEASURE,implicit-frequency-readout,frozen D19 CLI,True
+cli,ETTm1_IF_NOSKIP_MEASURE,implicit-frequency-noskip-control,frozen D19 CLI,True
+cli,ETTm1_DIRECT_NONLINEAR_MATCHED_MEASURE,implicit-direct-nonlinear-matched,frozen D19 CLI,True
+cli,ETTh1_IF_MEASURE,implicit-frequency-readout,frozen D19 CLI,True
+cli,ETTh1_IF_NOSKIP_MEASURE,implicit-frequency-noskip-control,frozen D19 CLI,True
+cli,ETTh1_DIRECT_NONLINEAR_MATCHED_MEASURE,implicit-direct-nonlinear-matched,frozen D19 CLI,True
+cli,ETTh2_IF_MEASURE,implicit-frequency-readout,frozen D19 CLI,True
+cli,ETTh2_IF_NOSKIP_MEASURE,implicit-frequency-noskip-control,frozen D19 CLI,True
+cli,ETTh2_DIRECT_NONLINEAR_MATCHED_MEASURE,implicit-direct-nonlinear-matched,frozen D19 CLI,True
+cli,ETTm2_IF_MEASURE,implicit-frequency-readout,frozen D19 CLI,True
+cli,ETTm2_IF_NOSKIP_MEASURE,implicit-frequency-noskip-control,frozen D19 CLI,True
+cli,ETTm2_DIRECT_NONLINEAR_MATCHED_MEASURE,implicit-direct-nonlinear-matched,frozen D19 CLI,True
+parameters,r2b_p12_d64_ff128_medium_implicit_formula,9161787,9161787,True
+parameters,r2b_p12_d64_ff128_medium_direct_formula,9160893,9160893,True
+parameters,r2b_p12_d64_ff128_medium_relative_gap,0.009757921680562973,0.1,True
+parameters,r2b_p24_d32_ff64_narrow_implicit_formula,9161787,9161787,True
+parameters,r2b_p24_d32_ff64_narrow_direct_formula,9160893,9160893,True
+parameters,r2b_p24_d32_ff64_narrow_relative_gap,0.009757921680562973,0.1,True
+parameters,r2b_p24_d64_ff128_medium_implicit_formula,13880379,13880379,True
+parameters,r2b_p24_d64_ff128_medium_direct_formula,13879881,13879881,True
+parameters,r2b_p24_d64_ff128_medium_relative_gap,0.0035877982870640636,0.1,True
+parameters,r2b_p48_d64_ff128_medium_implicit_formula,23317563,23317563,True
+parameters,r2b_p48_d64_ff128_medium_direct_formula,23316180,23316180,True
+parameters,r2b_p48_d64_ff128_medium_relative_gap,0.005931151553016068,0.1,True
+source_invariant,alu_w0_5_reference,0.0,0.0,True
+source_invariant,atan2_quadrant_reference,0.0,1e-12,True
+source_invariant,orthonormal_fft_roundtrip,1.3322676295501878e-15,1e-12,True
+initialization,paired_encoder_hash_all_four_arms,1,1,True
+initialization,if_no_skip_decoder_hash,True,True,True
+shape_projectivity,IF_h1,0.0,1e-06,True
+shape_projectivity,IF_h2,0.0,1e-06,True
+shape_projectivity,IF_h47,0.0,1e-06,True
+shape_projectivity,IF_h48,0.0,1e-06,True
+shape_projectivity,IF_h95,0.0,1e-06,True
+shape_projectivity,IF_h96,0.0,1e-06,True
+shape_projectivity,IF_h143,0.0,1e-06,True
+shape_projectivity,IF_h144,0.0,1e-06,True
+shape_projectivity,IF_h191,0.0,1e-06,True
+shape_projectivity,IF_h192,0.0,1e-06,True
+shape_projectivity,IF_h287,0.0,1e-06,True
+shape_projectivity,IF_h288,0.0,1e-06,True
+shape_projectivity,IF_h335,0.0,1e-06,True
+shape_projectivity,IF_h336,0.0,1e-06,True
+shape_projectivity,IF_h511,0.0,1e-06,True
+shape_projectivity,IF_h512,0.0,1e-06,True
+shape_projectivity,IF_h600,0.0,1e-06,True
+shape_projectivity,IF_h719,0.0,1e-06,True
+shape_projectivity,IF_h720,0.0,1e-06,True
+shape_projectivity,IF_h360,0.0,1e-06,True
+shape_projectivity,IF_NOSKIP_h1,0.0,1e-06,True
+shape_projectivity,IF_NOSKIP_h2,0.0,1e-06,True
+shape_projectivity,IF_NOSKIP_h47,0.0,1e-06,True
+shape_projectivity,IF_NOSKIP_h48,0.0,1e-06,True
+shape_projectivity,IF_NOSKIP_h95,0.0,1e-06,True
+shape_projectivity,IF_NOSKIP_h96,0.0,1e-06,True
+shape_projectivity,IF_NOSKIP_h143,0.0,1e-06,True
+shape_projectivity,IF_NOSKIP_h144,0.0,1e-06,True
+shape_projectivity,IF_NOSKIP_h191,0.0,1e-06,True
+shape_projectivity,IF_NOSKIP_h192,0.0,1e-06,True
+shape_projectivity,IF_NOSKIP_h287,0.0,1e-06,True
+shape_projectivity,IF_NOSKIP_h288,0.0,1e-06,True
+shape_projectivity,IF_NOSKIP_h335,0.0,1e-06,True
+shape_projectivity,IF_NOSKIP_h336,0.0,1e-06,True
+shape_projectivity,IF_NOSKIP_h511,0.0,1e-06,True
+shape_projectivity,IF_NOSKIP_h512,0.0,1e-06,True
+shape_projectivity,IF_NOSKIP_h600,0.0,1e-06,True
+shape_projectivity,IF_NOSKIP_h719,0.0,1e-06,True
+shape_projectivity,IF_NOSKIP_h720,0.0,1e-06,True
+shape_projectivity,IF_NOSKIP_h360,0.0,1e-06,True
+shape_projectivity,DIRECT_h1,0.0,1e-06,True
+shape_projectivity,DIRECT_h2,0.0,1e-06,True
+shape_projectivity,DIRECT_h47,0.0,1e-06,True
+shape_projectivity,DIRECT_h48,0.0,1e-06,True
+shape_projectivity,DIRECT_h95,0.0,1e-06,True
+shape_projectivity,DIRECT_h96,0.0,1e-06,True
+shape_projectivity,DIRECT_h143,0.0,1e-06,True
+shape_projectivity,DIRECT_h144,0.0,1e-06,True
+shape_projectivity,DIRECT_h191,0.0,1e-06,True
+shape_projectivity,DIRECT_h192,0.0,1e-06,True
+shape_projectivity,DIRECT_h287,0.0,1e-06,True
+shape_projectivity,DIRECT_h288,0.0,1e-06,True
+shape_projectivity,DIRECT_h335,0.0,1e-06,True
+shape_projectivity,DIRECT_h336,0.0,1e-06,True
+shape_projectivity,DIRECT_h511,0.0,1e-06,True
+shape_projectivity,DIRECT_h512,0.0,1e-06,True
+shape_projectivity,DIRECT_h600,0.0,1e-06,True
+shape_projectivity,DIRECT_h719,0.0,1e-06,True
+shape_projectivity,DIRECT_h720,0.0,1e-06,True
+shape_projectivity,DIRECT_h360,0.0,1e-06,True
+prediction_deformation,if_vs_no_skip_nrmse,1.0632127523422241,1e-06,True
+prediction_deformation,if_vs_direct_nrmse,2.323723316192627,1e-06,True
+gradient,implicit-frequency-readout_encoder,0.030300769154373852,finite and >0,True
+gradient,implicit-frequency-readout_amplitude,0.7105695487603831,finite and >0,True
+gradient,implicit-frequency-readout_phase_sine,0.0013386640129404036,finite and >0,True
+gradient,implicit-frequency-readout_phase_cosine,0.016350933951359455,finite and >0,True
+gradient,implicit-frequency-noskip-control_encoder,0.0032843441629049073,finite and >0,True
+gradient,implicit-frequency-noskip-control_amplitude,0.015487321737539441,finite and >0,True
+gradient,implicit-frequency-noskip-control_phase_sine,0.0003757071845644716,finite and >0,True
+gradient,implicit-frequency-noskip-control_phase_cosine,0.00035007097051940346,finite and >0,True
+gradient,implicit-direct-nonlinear-matched_encoder,0.09457673013485093,finite and >0,True
+gradient,implicit-direct-nonlinear-matched_direct,2.442280692838529,finite and >0,True
+numeric,near_zero_history_phase_gradient,0.03803470116378592,finite and >0,True
+numeric,amplitude_nonzero,0.2634186119516134,>0,True
+model_wiring,implicit-frequency-readout,0.0,1e-06,True
+model_wiring,implicit-frequency-noskip-control,0.0,1e-06,True
+model_wiring,implicit-direct-nonlinear-matched,0.0,1e-06,True

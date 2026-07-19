@@ -1,5 +1,8 @@
 # SC-D19-IFC Step 4/5 Source、Theory 与 Control Audit
 
+> Follow-up boundary：本source audit记录upstream默认lookback=96，但本地A6 natural carrier为`seq_len=720`。
+> Step7A前已由v1.1将IF skip适配为same 720-point history；详见`d19_step6_contract_repair.md`。
+
 ## 1. 当前节点
 
 | Field | Content |

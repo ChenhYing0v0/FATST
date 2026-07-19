@@ -1,0 +1,119 @@
+{
+  "candidate_version": "SC-D19-IFC-control-v1.1",
+  "supersedes": "SC-D19-IFC-control-v1",
+  "supersession_reason": "repair history-spectrum contract from upstream lookback 96 to the matched A6 natural history length 720",
+  "role": "control_only",
+  "current_step": 6,
+  "test_informed": true,
+  "method_claim_authorized": false,
+  "source": {
+    "paper": "https://papers.nips.cc/paper_files/paper/2025/hash/0e82ef0c89df6a6eff8734ea7e27c42f-Abstract-Conference.html",
+    "official_code": "https://github.com/rakuyorain/Implicit-Forecaster",
+    "audit_date": "2026-07-19"
+  },
+  "data": {
+    "profiles": "configs/stage_c_five_dataset_natural_profiles.json",
+    "datasets": ["Weather", "ETTm1", "ETTh1", "ETTh2", "ETTm2"],
+    "seed": 2021,
+    "history_length": 720,
+    "full_prediction_length": 720,
+    "paper_horizons": [96, 192, 336, 720]
+  },
+  "shared_training": {
+    "prediction_loss_mode": "measure_only",
+    "error_norm": "l1",
+    "checkpoint_rule": "mean_validation_mse_h96_h192_h336_h720",
+    "optimizer": "adamw",
+    "learning_rate": 0.0001,
+    "batch_size": 32,
+    "max_epochs": 20,
+    "early_stopping_patience": 5
+  },
+  "implicit_forecaster": {
+    "spectrum_size": 720,
+    "spectrum_bins": 361,
+    "history_spectrum_bins": 361,
+    "fourier_norm": "ortho",
+    "hidden_width": 2048,
+    "head_dropout": 0.1,
+    "amplitude_activation": "alu_w0.5",
+    "phase_activation": "tanh_sin_cos_atan2",
+    "irfft_length_explicit": 720
+  },
+  "arms": [
+    {
+      "id": "A6_MEASURE",
+      "readout_mode": "learned-basis-forecast-operator",
+      "training_new": false
+    },
+    {
+      "id": "IF_MEASURE",
+      "readout_mode": "implicit-frequency-readout",
+      "training_new": true
+    },
+    {
+      "id": "IF_NOSKIP_MEASURE",
+      "readout_mode": "implicit-frequency-noskip-control",
+      "training_new": true
+    },
+    {
+      "id": "DIRECT_NONLINEAR_MATCHED_MEASURE",
+      "readout_mode": "implicit-direct-nonlinear-matched",
+      "training_new": true
+    }
+  ],
+  "profile_contracts": {
+    "r2b_p12_d64_ff128_medium": {
+      "readout_dim": 768,
+      "if_decoder_parameters": 9161787,
+      "direct_hidden_width": 4143,
+      "direct_decoder_parameters": 9160893,
+      "absolute_parameter_gap": 894,
+      "relative_parameter_gap_percent": 0.009757921680562973
+    },
+    "r2b_p24_d32_ff64_narrow": {
+      "readout_dim": 768,
+      "if_decoder_parameters": 9161787,
+      "direct_hidden_width": 4143,
+      "direct_decoder_parameters": 9160893,
+      "absolute_parameter_gap": 894,
+      "relative_parameter_gap_percent": 0.009757921680562973
+    },
+    "r2b_p24_d64_ff128_medium": {
+      "readout_dim": 1536,
+      "if_decoder_parameters": 13880379,
+      "direct_hidden_width": 4659,
+      "direct_decoder_parameters": 13879881,
+      "absolute_parameter_gap": 498,
+      "relative_parameter_gap_percent": 0.0035877982870640636
+    },
+    "r2b_p48_d64_ff128_medium": {
+      "readout_dim": 3072,
+      "if_decoder_parameters": 23317563,
+      "direct_hidden_width": 5164,
+      "direct_decoder_parameters": 23316180,
+      "absolute_parameter_gap": 1383,
+      "relative_parameter_gap_percent": 0.005931151553016068
+    }
+  },
+  "phase_a": {
+    "new_training_runs": 15,
+    "reused_reference_runs": 5,
+    "artifact_units": 20,
+    "official_test_cells": 80,
+    "confirmation_seeds_authorized": false
+  },
+  "hard_gates": {
+    "parameter_gap_percent_max": 0.1,
+    "prefix_max_abs_max": 0.000001,
+    "all_finite": true,
+    "paired_encoder_initialization": true,
+    "if_no_skip_identical_decoder_initialization": true
+  },
+  "authorization": {
+    "step7a_local": true,
+    "remote": false,
+    "official_test": false,
+    "paper_method": false
+  }
+}

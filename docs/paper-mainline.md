@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD — Fixed-Past Projective Multi-Horizon Generation |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | D18 Step9/10 closed；Contribution 1/2 Step2；D19 control Step6 pass / Step7A next |
+| `current_11_step` | D18 Step9/10 closed；Contribution 1/2 Step2；D19 control Step7A pass / Step7B prelaunch next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | no active two-contribution method；SIFF-v2 parent frozen；D19 control Step6 pass，method=false |
+| `paper_core_status` | no active two-contribution method；SIFF-v2 parent frozen；D19 control v1.1 Step7A pass，method=false |
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
@@ -68,7 +68,13 @@ spectrum skip，不能用单一IF-vs-A6结果判断wave mechanism。
 Step6已将`A6_MEASURE/IF_MEASURE/IF_NOSKIP_MEASURE/DIRECT_NONLINEAR_MATCHED_MEASURE`四arm、
 five datasets、seed2021、four-horizon validation selector与80个official-test cells完整冻结，静态gate 9/9。
 IF与matched-direct逐profile参数差小于0.1%，用于分离polar/frequency structure与generic nonlinear/capacity。
-当前仅授权Step7A local implementation；remote、official test与paper-method promotion仍未授权。
+Step7A发现v1误把upstream 96-point lookback作为本地skip contract，而A6 natural实际读取720 points；v1在任何
+training/test前被v1.1替代。v1.1让Encoder、IF skip和matched direct读取相同720-point normalized history，
+并重新匹配参数。
+
+v1.1 Step7A现已114/114通过，maximum prefix gap为0，paired Encoder与IF/no-skip decoder hashes、required
+gradients、numeric与production CLI均通过。当前只进入Step7B prelaunch；remote、official test与paper-method
+promotion仍未授权。
 
 forecast-revision surface已转移到根目录`New-idea.md`，状态`deferred_next_paper`；它不再是当前论文问题。
 
@@ -887,6 +893,10 @@ loss 或更多 tuning 来掩盖失败。
 - `analysis/stage_c_post_ccsf_step24_reset_20260719/post_d18_step2_mainline_viability_audit.md`
 - `analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step45_source_theory_control_audit.md`
 - `analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step6_control_design.md`
+- `analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step6_contract_repair.md`
+- `analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step7a_local/step7a_implementation_gate_report.md`
+- `configs/stage_c_d19_if_control_step6_v1_1.json`
+- `configs/stage_c_d19_if_control_step7a.json`
 - `configs/stage_c_d19_if_control_step6.json`
 - `Papers/implicit-forecaster-neurips2025.md`
 - `analysis/stage_c_sc2_pcc_step7b_seed2021_20260717/step9_10_result_and_failure_attribution.md`

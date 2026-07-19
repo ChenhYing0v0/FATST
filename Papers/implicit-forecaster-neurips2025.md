@@ -96,6 +96,6 @@ task adaptation，不是exact reproduction。
 
 ## Uncertainty
 
-[Boundary] paper与核心official implementation现已核对；D19 Step 6已冻结local matched direct control、
-zero-spectrum no-skip treatment与paired A6 Encoder initialization。当前只授权Step7A local implementation；
-Step7A与后续Step7B prelaunch通过前不得启动远程实验或读取official test。
+[Boundary] paper与核心official implementation现已核对。upstream lookback=96只作为source default，不作为
+本地A6 contract；活动D19 v1.1已将IF skip适配为same 720-point history，并通过Step7A 114/114 local gate。
+当前进入Step7B prelaunch；其通过前不得启动远程实验或读取official test。

@@ -94,6 +94,9 @@ PREFIX_READOUT_MODES = {
     "ccsf-no-contrast-control",
     "ccsf-permuted-contrast-control",
     "ccsf-independent-scope-control",
+    "implicit-frequency-readout",
+    "implicit-frequency-noskip-control",
+    "implicit-direct-nonlinear-matched",
 }
 
 STAGE_C_ACTIVE_READOUTS = {
@@ -128,6 +131,9 @@ STAGE_C_ACTIVE_READOUTS = {
     "ccsf-no-contrast-control",
     "ccsf-permuted-contrast-control",
     "ccsf-independent-scope-control",
+    "implicit-frequency-readout",
+    "implicit-frequency-noskip-control",
+    "implicit-direct-nonlinear-matched",
 }
 
 ACTIVE_STAGE_C_CONTRACT = {
@@ -428,6 +434,10 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         pcsd_group_chunk_size=args.pcsd_group_chunk_size,
         pcsd_target_chunk_size=args.pcsd_target_chunk_size,
         ccsf_correction_hidden_dim=args.ccsf_correction_hidden_dim,
+        if_hidden_width=args.if_hidden_width,
+        if_direct_hidden_width=args.if_direct_hidden_width,
+        if_head_dropout=args.if_head_dropout,
+        if_fourier_norm=args.if_fourier_norm,
         evaluation_prefix_mode=getattr(args, "evaluation_prefix_mode", "native"),
         segment_horizons=getattr(
             args,
@@ -630,6 +640,22 @@ def initialization_contract(model: nn.Module) -> dict[str, Any]:
     if hasattr(model, "pcsd_dense_readout"):
         payload["pcsd_dense_initialization_hash"] = _tensor_hash(
             list(model.pcsd_dense_readout.parameters())
+        )
+    if hasattr(model, "implicit_frequency_readout"):
+        readout = model.implicit_frequency_readout
+        payload.update(
+            {
+                "implicit_frequency_initialization_hash": _tensor_hash(
+                    list(readout.parameters())
+                ),
+                "implicit_frequency_use_input_spectrum": bool(
+                    readout.use_input_spectrum
+                ),
+            }
+        )
+    if hasattr(model, "implicit_direct_readout"):
+        payload["implicit_direct_initialization_hash"] = _tensor_hash(
+            list(model.implicit_direct_readout.parameters())
         )
     return payload
 
@@ -883,6 +909,38 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
                 ),
                 "grouped_mlp_affine_minimum_width": 2
                 * min(readout.readout_dim, readout.scale),
+            }
+        )
+    if hasattr(model, "implicit_frequency_readout"):
+        readout = model.implicit_frequency_readout
+        payload.update(
+            {
+                "implicit_decoder_parameters": readout.decoder_parameters,
+                "implicit_history_length": int(readout.history_length),
+                "implicit_history_spectrum_bins": int(
+                    readout.history_spectrum_bins
+                ),
+                "implicit_spectrum_bins": int(readout.spectrum_bins),
+                "implicit_hidden_width": int(readout.hidden_width),
+                "implicit_head_dropout": float(readout.dropout),
+                "implicit_fourier_norm": readout.fourier_norm,
+                "implicit_use_input_spectrum": bool(
+                    readout.use_input_spectrum
+                ),
+            }
+        )
+    if hasattr(model, "implicit_direct_readout"):
+        readout = model.implicit_direct_readout
+        payload.update(
+            {
+                "implicit_direct_decoder_parameters": (
+                    readout.decoder_parameters
+                ),
+                "implicit_direct_hidden_width": int(readout.hidden_width),
+                "implicit_direct_history_spectrum_bins": int(
+                    readout.history_spectrum_bins
+                ),
+                "implicit_direct_fourier_norm": readout.fourier_norm,
             }
         )
     if hasattr(model, "pcsd_readout"):
@@ -2133,6 +2191,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--pcsd-group-chunk-size", type=int, default=64)
     parser.add_argument("--pcsd-target-chunk-size", type=int, default=128)
     parser.add_argument("--ccsf-correction-hidden-dim", type=int, default=64)
+    parser.add_argument("--if-hidden-width", type=int, default=2048)
+    parser.add_argument("--if-direct-hidden-width", type=int, default=4143)
+    parser.add_argument("--if-head-dropout", type=float, default=0.1)
+    parser.add_argument(
+        "--if-fourier-norm",
+        choices=["backward", "forward", "ortho"],
+        default="ortho",
+    )
     parser.add_argument(
         "--ccsf-calibration-temperature",
         type=float,
@@ -2349,6 +2415,41 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("PCSD chunk sizes must be positive")
     if args.ccsf_correction_hidden_dim != 64:
         raise ValueError("CCSF v1 requires ccsf_correction_hidden_dim=64")
+    if args.if_hidden_width <= 0 or args.if_direct_hidden_width <= 0:
+        raise ValueError("D19 hidden widths must be positive")
+    if not 0.0 <= args.if_head_dropout < 1.0:
+        raise ValueError("D19 head dropout must lie in [0, 1)")
+    if args.readout_mode in TimeAlign.D19_READOUTS:
+        if args.if_hidden_width != 2048:
+            raise ValueError("D19 IF control requires hidden width 2048")
+        if args.if_head_dropout != 0.1:
+            raise ValueError("D19 IF control requires head dropout 0.1")
+        if args.if_fourier_norm != "ortho":
+            raise ValueError("D19 IF control requires orthonormal FFT")
+        if args.seq_len != 720 or args.pred_len != 720:
+            raise ValueError("D19 controls require matched history/output length 720")
+        if args.readout_mode in TimeAlign.D19_DIRECT_READOUTS:
+            patch_num = (
+                args.legacy_patch_num
+                if args.legacy_patch_num is not None
+                else OFFICIAL_PRESETS[args.dataset][args.pred_len].patch_num
+            )
+            d_model = (
+                args.legacy_d_model
+                if args.legacy_d_model is not None
+                else OFFICIAL_PRESETS[args.dataset][args.pred_len].d_model
+            )
+            expected_widths = {768: 4143, 1536: 4659, 3072: 5164}
+            readout_dim = int(patch_num) * int(d_model)
+            if readout_dim not in expected_widths:
+                raise ValueError(
+                    f"unsupported D19 readout_dim for matched direct: {readout_dim}"
+                )
+            if args.if_direct_hidden_width != expected_widths[readout_dim]:
+                raise ValueError(
+                    "D19 matched direct hidden width mismatch: "
+                    f"expected {expected_widths[readout_dim]}"
+                )
     if args.ccsf_calibration_temperature not in {0.05, 0.1, 0.25}:
         raise ValueError("CCSF temperature must lie in the frozen shared grid")
     if not math.isclose(
