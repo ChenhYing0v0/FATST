@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD — Fixed-Past Projective Multi-Horizon Generation |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | D18/D19 Step9/10 closed；Contribution 1 Step2/4；Contribution 2 Step2 |
+| `current_11_step` | D19 closed；Contribution 1 Step2/4 audit complete；D20 diagnostic Step6 next；Contribution 2 Step2 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | no active two-contribution method；SIFF-v2 parent frozen；D19 control negative closed |
+| `paper_core_status` | no active two-contribution method；SIFF-v2 parent frozen；D20 diagnostic_only proposed |
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
@@ -87,6 +87,18 @@ A6参数量的7.94×–10.29×且12/15 new arms在epoch1达到best checkpoint，
 `readout_or_head_design_wrong`并怀疑readout-scale/optimization mismatch；不能据此方向级否定所有trajectory-
 structured decoder。Contribution 1回Step2/4，history-spectrum skip只作为后续compact method的设计证据，
 不能单独充当multi-horizon Contribution。
+
+[Post-D19 Step2/4 Boundary] external primary-source refresh进一步确认：FITS、FBM、Implicit Forecaster、
+PhaseFormer、BasisFormer、FlowState、N-HiTS与TimePerceiver已分别覆盖compact spectrum interpolation、
+time-frequency basis、amplitude/phase synthesis、compact phase routing、functional basis与target-coordinate
+decoding。可逆linear transform后接unconstrained linear head也不产生独立function class。因此smaller IF与
+history-phase-continued atoms未通过method narrative gate；“直接接入spectrum”也不能成为Contribution 1。
+
+当前只保留`SC-D20-CST diagnostic_only`：检验D19的history-spectrum skip收益能否transfer到A6 full-trajectory
+coefficient operator，并超过same-dimensional fixed random orthogonal history projection。三臂必须共同from-scratch
+E2E训练且共享A6 Encoder、learned basis、measure objective、full-T generation与prefix crop。只有SPEC同时超过
+A6与RANDOM并通过internal health，才允许回Step4设计native non-residual coefficient operator；D20本身和generic
+concat head均禁止结果后升级为paper method。当前Step6 next，implementation/remote/test均false。
 
 forecast-revision surface已转移到根目录`New-idea.md`，状态`deferred_next_paper`；它不再是当前论文问题。
 

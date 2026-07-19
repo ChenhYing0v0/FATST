@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D18/D19 Step9/10 closed；Contribution 1 Step2/4；Contribution 2 Step2 |
-| `active_question` | compact structured generation与direct history statistic能否形成paper-relevant fixed-past multi-horizon problem？ |
-| `active_candidates` | SIFF-v2 frozen parent；D18/D19 closed；no active method；CTD paused |
+| `current_step` | D19 closed；Contribution 1 Step2/4 audit complete；D20 Step2/3 proposed，Step6 next；Contribution 2 Step2 |
+| `active_question` | compact history-spectrum information能否transfer到A6 coefficient operator并超过同维random history projection？ |
+| `active_candidates` | SIFF-v2 frozen parent；D20 diagnostic_only proposed；no active method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step9/d19_step9_deep_audit.md` |
-| `method_implementation` | D19 control negative；no implementation authorized；paper method=false |
-| `rollback_point` | Contribution 1=Step2/4 viability audit；Contribution 2=Step2 |
+| `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/post_d19_step24_compact_statistic_viability_audit.md` |
+| `method_implementation` | D20仅进入Step6 exact diagnostic design；implementation/remote/paper method=false |
+| `rollback_point` | D20=Step2/4；Contribution 1 positive diagnostic后回Step4；Contribution 2=Step2 |
 
 ## post-CCSF Step 2/4 Reset
 
@@ -89,6 +89,25 @@ statistic是否能形成新的paper problem。
 
 详见`analysis/stage_c_post_ccsf_step24_reset_20260719/d18_step9/d18_step9_four_layer_diagnostic.md`与
 `analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step9/d19_step9_deep_audit.md`。
+
+## Post-D19 Contribution 1 Step 2/4 Viability Audit
+
+external primary-source refresh确认FITS、FBM、Implicit Forecaster、PhaseFormer、BasisFormer、FlowState、N-HiTS与
+TimePerceiver已经覆盖compact frequency interpolation、time-frequency basis、amplitude/phase synthesis、phase
+routing、functional basis与target-coordinate decoding等邻近链条；ICML 2024 linear-model analysis进一步限制了
+“Fourier coordinates本身构成新function class”的说法。因此smaller IF与history-phase-continued atoms均未通过
+method narrative gate，不能用D19 negative后的width/LR rescue启动新candidate。
+
+D19只留下一个尚未验证的问题：720-history spectrum在IF内相对no-skip为正，能否transfer到strong A6 coefficient
+operator，并超过同维fixed random orthogonal history projection。下一步冻结为`SC-D20-CST diagnostic_only`：
+`A6_MEASURE_RETRAIN/A6_CST_SPEC/A6_CST_RANDOM`共同from-scratch E2E训练，保持full-T synthesis、prefix crop、
+five datasets、four-horizon validation selector与official-test完整矩阵。SPEC必须同时通过vs A6 transfer与vs RANDOM
+specificity，才能只返回Step4设计native non-residual operator；generic concat head不得因结果正向而升级为paper method。
+
+Decision=`step2_4_complete_d20_diagnostic_step6_next`。当前只授权Step6 exact dimension/normalization/bin/init/matrix
+freeze，不授权implementation、remote、test access或Contribution claim。详见
+`analysis/stage_c_post_ccsf_step24_reset_20260719/post_d19_step24_compact_statistic_viability_audit.md`与
+`Papers/post-d19-compact-statistic-decoder-audit.md`。
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 
