@@ -95,7 +95,12 @@ def build_jobs(config: dict[str, Any]) -> list[dict[str, Any]]:
 
 
 def local_control_audit(config: dict[str, Any]) -> bool:
-    root = Path(config["control_source"]["local_audit_root"])
+    remote_root = Path(config["control_source"]["remote_root"])
+    root = (
+        remote_root
+        if remote_root.is_dir()
+        else Path(config["control_source"]["local_audit_root"])
+    )
     for dataset in config["datasets"]:
         hashes: dict[str, set[str]] = {
             "encoder": set(),

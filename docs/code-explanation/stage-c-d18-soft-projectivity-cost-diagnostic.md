@@ -48,6 +48,9 @@ checks保持不变。
 reuse只写新的audit artifacts与`source_manifest.json`，不复制或修改历史checkpoint。runner在evaluation前后计算
 SHA-256，任何变化立即失败。任务顺序以Weather、ETTm1优先，并分配到GPU0/1/2。
 
+prelaunch checker在3090上优先审计`control_source.remote_root`中的原始controls；本地不存在该路径时才读取
+`local_audit_root`同步副本。两条路径执行相同initialization、parameter与invariant checks，不构成fallback放宽。
+
 ## 5. Analyzer
 
 `scripts/analyze_stage_c_d18_soft_projectivity_cost.py`读取：
