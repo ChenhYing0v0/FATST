@@ -186,7 +186,7 @@ $H\in\{96,192,336,720\}$的MSE。
 
 ### 6.4 预冻结gate
 
-D17只有以下六项全部通过，才把future-context problem升到Step 4：
+D17只有以下条件全部通过，才把future-context problem升到Step 4：
 
 1. causal相对pointwise macro MSE gain $\geq0.5\%$；
 2. causal相对row-shuffled macro MSE gain $\geq0.3\%$；
@@ -224,3 +224,23 @@ evaluate。作废说明见`d17_projective_future_context/INVALID_PROTOCOL.md`。
 - 无论结果如何，不再在SIFF/CCSF上追加router、teacher、temperature或scale sweeps。若连dual-carrier signal也
   不存在，需要诚实评估fixed-past unified multi-horizon是否还能支撑“两项native contribution”的整篇论文，而
   不是继续为既定标题找模块。
+
+## 8. D17返回后的实际决策
+
+D17-v1已完成10/10 validation exports，所有protocol、readout、checkpoint与prefix invariants通过。正式结果为：
+
+- causal vs pointwise `-3.0356%`；
+- causal vs row-shuffled `-2.3616%`；
+- pointwise vs parent `-28.7314%`；
+- causal vs parent `-32.6392%`；
+- carriers 0/2、datasets 3/5、horizons 1/4；
+- ETTh2存在超过100%的correction degradation。
+
+因此D17没有通过problem gate。failure attribution为
+`exact_protocol_failed / calibration_transfer_pathology / direction_unresolved`：只否定frozen
+validation-fitted correction，不方向级否定jointly trained future-context，但也不授权其Step 4 method design。
+
+Step 2现转向检验exact projectivity自身的accuracy cost。`SC-D18-SPC`将用同一A6 full-domain architecture比较
+H96/H192/H336-specific loss arms与强`A6_MEASURE` unified control；只有specific arms在own horizons上稳定超过
+measure control，才有理由研究controlled soft projectivity。详见
+`d17_result_and_failure_attribution.md`与`soft_projectivity_step2_problem_audit.md`。

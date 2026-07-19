@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | post-CCSF Step2/4：projectivity no-go + D17 problem diagnostic |
-| `active_question` | fixed-past exact-projective设定下，prefix-safe future-coordinate interaction是否具有超越pointwise control的增量价值？ |
-| `active_candidates` | SIFF-v2-EQ-ATTR-v1 frozen parent；SC-D17-PFC diagnostic_only；no active child method；CTD paused |
+| `current_step` | D17 Step2 negative；D18 soft-projectivity-cost Step2/3 |
+| `active_question` | horizon-specific loss能否稳定超过A6_MEASURE，从而证明exact projectivity存在accuracy cost？ |
+| `active_candidates` | SIFF-v2 frozen parent；D17 exact protocol closed；SC-D18-SPC diagnostic proposed；no method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/step24_problem_and_source_audit.md` |
+| `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/soft_projectivity_step2_problem_audit.md` |
 | `method_implementation` | none authorized；CCSF exact route closed |
-| `rollback_point` | Contribution 1=Step2/4；Contribution 2=Step2；no router-auxiliary patch sweep |
+| `rollback_point` | D18 fail → Contribution 1 Step2/mainline viability audit；Contribution 2=Step2；no router/future-context rescue sweep |
 
 ## post-CCSF Step 2/4 Reset
 
@@ -20,13 +20,17 @@ $F_H(x)=P_HF_T(x)$。因此requested horizon不能改变共享prefix；“exact-
 不再作为论文问题。ElasTST已覆盖varied-horizon invariance与horizon reweighting，ProNet与Implicit Forecaster又
 覆盖output dependency和global wave decoding，普通multi-scale/future-dependency表述不足以形成Contribution 1。
 
-当前唯一保留的问题family是prefix-safe future-context operator：
-$\hat y_\tau=\Phi(x,\tau,\tilde y_{1:\tau})$。D17-v0的same-test row cross-fit因sample/channel/time邻域跨fold而
-protocol invalid；其表面正结果不得使用。D17-v1现冻结为validation-fit → existing authorized test-probe evaluation，
-使用SIFF_EQUAL与PCSD_EQUAL两个frozen carriers。该实验只可把问题升为`problem_supported`，不能通过method gate；
+prefix-safe future-context D17-v1已完成。正式validation→test结果为causal vs pointwise `-3.0356%`、causal vs
+shuffled `-2.3616%`；pointwise本身相对parent `-28.7314%`，并有>100%局部退化。故exact post-hoc protocol关闭，
+future-context保持direction unresolved但不进入Step4。
+
+当前转向`SC-D18-SPC` problem diagnostic：使用相同full-domain A6 architecture，分别以H96/H192/H336 prefix loss
+训练horizon-specific oracle controls，并与强A6_MEASURE比较own-H test performance。D18只回答exact projectivity
+是否存在accuracy cost；separate models不是贡献。D18 static/machine-readable freeze前不训练、不访问test，
 Contribution 2继续停在Step2。
 
-详见`analysis/stage_c_post_ccsf_step24_reset_20260719/step24_problem_and_source_audit.md`。
+详见`analysis/stage_c_post_ccsf_step24_reset_20260719/d17_result_and_failure_attribution.md`与
+`analysis/stage_c_post_ccsf_step24_reset_20260719/soft_projectivity_step2_problem_audit.md`。
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 

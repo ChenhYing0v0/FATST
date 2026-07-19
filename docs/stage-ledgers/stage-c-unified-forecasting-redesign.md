@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | decoder/operator 与 training principle 两项相互支撑的 paper-core innovations |
-| `active_question` | exact projectivity排除requested-H adaptation后，prefix-safe future-coordinate interaction是否具有可泛化增量价值？ |
+| `active_question` | strong A6_MEASURE unified control相对horizon-specialized loss是否付出可测accuracy cost，从而需要controlled soft projectivity？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | `SC1-SIFF-v2-EQ-ATTR-v1` frozen parent；`SC-D17-PFC-v1` diagnostic_only；no active child method；CTD paused |
+| `active_candidates` | `SC1-SIFF-v2-EQ-ATTR-v1` frozen parent；D17 conditional negative；`SC-D18-SPC` diagnostic proposed；no method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
@@ -19,27 +19,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Step2/4 projectivity no-go complete；D17 validation-to-test problem diagnostic pending |
-| `current_candidate` | immutable `SC1-SIFF-v2-EQ-ATTR-v1` parent + `SC-D17-PFC-v1 diagnostic_only`；no method |
-| `latest_decision` | requested-H adaptation under exact projectivity closed；D17-v0 same-test cross-fit invalidated；v1 protocol corrected |
-| `next_required_action` | 从existing checkpoints导出validation probes并执行dual-carrier validation-fit → test-evaluation D17 |
-| `method_training_authorized` | false；只授权checkpoint-preserving validation inference与offline diagnostic |
+| `current_11_step` | D17 Step2 negative；D18 soft-projectivity-cost Step2/3 protocol design |
+| `current_candidate` | immutable SIFF-v2 parent；`SC-D18-SPC diagnostic_only` proposed；no method |
+| `latest_decision` | D17 exact post-hoc correction failed with validation→test pathology；future-context unresolved/not promoted |
+| `next_required_action` | D18 static feasibility、machine-readable matrix与prelaunch gate；尚不训练 |
+| `method_training_authorized` | false；D18 remote/test false until frozen prelaunch |
 | `rollback_point` | Contribution 1=Step2/4；Contribution 2=Step2；不得继续contrast-router auxiliary sweep |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Contribution 1 Step2/4；Contribution 2 Step2 |
-| `problem` | strong full-domain draft中是否存在prefix-safe future-coordinate context value，而非requested-H或best-arm selection |
-| `existence_evidence` | D14/D6保留output heterogeneity；D17-v0表面signal因same-test fold leakage不可用；v1待validation-to-test |
-| `idea` | diagnostic hypothesis：$\hat y_\tau=\Phi(x,\tau,\tilde y_{1:\tau})$；尚未定义method |
-| `theory_check` | exact projectivity no-go排除H-adaptation；prefix-causal draft operator代数上保持crop invariance，但只改变factorization/inductive bias |
-| `design` | dual frozen carriers；validation-only fit；existing authorized test-probe evaluate；pointwise/shuffled/symmetric controls |
+| `current_step` | Contribution 1 Step2/3；Contribution 2 Step2 |
+| `problem` | exact projectivity是否以horizon-specific accuracy为代价，还是A6_MEASURE已解释该trade-off |
+| `existence_evidence` | D17 correction transfer fail；exact-projectivity no-go成立；horizon specialization headroom尚未测量 |
+| `idea` | D18以same full-domain A6 architecture训练H96/H192/H336-specific loss oracles，对比A6_MEASURE |
+| `theory_check` | finite consistency penalty才允许H adaptation；但generic soft consistency不构成novelty，必须先证明accuracy cost |
+| `design` | 15 new diagnostic runs；5 datasets；seed2021；own-H test cells；same profiles/params/init class |
 | `narrative_gate` | no active child candidate |
 | `effectiveness_gate` | CCSF false；SIFF-v2 parent为performance-near但attribution blocked |
-| `artifacts` | post-CCSF Step2/4 audit + D17 config/analyzer/remote validation exporter |
-| `decision` | no method candidate；D17通过只升problem_supported并进入Step4，失败保持direction_unresolved due frozen carriers |
+| `artifacts` | D17 result/failure attribution + soft-projectivity Step2 problem audit |
+| `decision` | D17 not promoted；D18 protocol design only；no method/training authorization |
 
 ## Frozen Carrier Contract
 
@@ -102,7 +102,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC1-CCSF-D2` | `diagnostic_only_closed` | region aggregation能否把contrast competence转成更强mixture utility | not a method gate | expected-arm signal 4 widths/5 datasets稳定；相对pointwise mixture margin不足，2/3 gates | region retained as analysis scale only；do not train |
 | `SC1-CCSF-D3` | `diagnostic_only_closed` | residual covariance/cancellation是否解释best-arm teacher与fusion不一致 | not a method gate | simplex vs best-arm仅约+1.34%–1.38%；0 widths过dataset gate | covariance-aware redesign unsupported；return Step2 |
 | `SC1-CCSF-D4` | `diagnostic_only_closed` | soft policy是否只需global sharpening或hard routing | not a method gate | best native arm仍-0.0186%、1/5；hard routing更差 | softness not primary；close contrast-policy route |
-| `SC-D17-PFC-v1` | `diagnostic_only_protocol_corrected_pending` | frozen full-domain draft的ordered prefix context能否超越pointwise与row-shuffled controls并跨validation→test transfer | not a method gate；dual-carrier conditional evidence only | v0 same-test row split invalid；v1 pending | validation inference only；no training/new test access |
+| `SC-D17-PFC-v1` | `diagnostic_only_conditional_negative_closed_exact_protocol` | frozen full-domain draft的ordered prefix context能否超越pointwise与row-shuffled controls并跨validation→test transfer | not a method gate；dual-carrier conditional evidence only | causal vs pointwise -3.0356%；vs shuffled -2.3616%；pointwise vs parent -28.7314%；1/7 gates | exact post-hoc protocol closed；direction unresolved；no E2E rescue |
+| `SC-D18-SPC` | `diagnostic_only_step2_protocol_proposed` | horizon-specific loss是否稳定超过A6_MEASURE，从而证明exact projectivity有accuracy cost | not a method gate；soft projectivity not yet a contribution | not run | Step3 static/machine-readable freeze；remote/test false |
 | `SC2-MCCA-v1` | `historical_validation_negative_fair_test_not_reaudited` | same total scope skill mass能否竞争性分配而避免per-target homogenization | complete-chain conditional pass | old best-H720 validation four-H -0.1357%、1/5；not in 70-run audit | inactive；reuse前回Step4重审相对EQUAL/MEASURE的必要性 |
 | `SC-D16-CTD` | `deferred_paused_by_user` | H720 checkpoint是否丢弃healthy SIFF four-H epoch | diagnostic only；weighted checkpoint prior-covered | not implemented | design retained；resume only after user authorization |
 | `SC-RETRO-FAIR-v1` | `completed_partial_pass_attribution_blocked` | PCSD/PCC/SIFF在新checkpoint与test-primary规则下是否仍成立 | retrospective audit；not a method | 70/70；280/280；joint pass；two-contribution attribution fail | archive result；SIFF Step6/PCC Step2-4 |
@@ -193,6 +194,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | CCSF D4 readout sharpness | exponents + hard argmax | best native -0.0186%、1/5；hard更差 | softness不是主矛盾；Contribution 1回Step2/4 | `analysis/stage_c_siff_ccsf_v1_tau25_phase_a_20260718/d4_readout_sharpness_diagnostic/` |
 | post-CCSF Step2/4 reset | projectivity proof + external primary-source audit + historical boundary | exact-projective requested-H adaptation形成no-go；future-coordinate context为唯一待诊断family | D17 diagnostic only；Contribution 2 held | `analysis/stage_c_post_ccsf_step24_reset_20260719/step24_problem_and_source_audit.md` |
 | D17-v0 protocol audit | same-test 256-row cross-fit + pointwise/shuffled controls | 表面6/6，但pointwise +21.27%；flattened sample×channel跨fold，protocol invalid | result prohibited；改validation-fit→test | `analysis/stage_c_post_ccsf_step24_reset_20260719/d17_projective_future_context/INVALID_PROTOCOL.md` |
+| D17-v1 validation-to-test | 10 checkpoint-preserving validation exports + existing test probes | causal-pointwise -3.0356%；causal-shuffled -2.3616%；pointwise-parent -28.7314%；prefix gap 0 | exact protocol fail；transfer pathology；direction unresolved | `analysis/stage_c_post_ccsf_step24_reset_20260719/d17_result_and_failure_attribution.md` |
+| D18 soft-projectivity problem audit | no-go relaxation + primary-source boundary + 15-run oracle design | protocol design complete；problem untested | Step3/static freeze next；remote/test false | `analysis/stage_c_post_ccsf_step24_reset_20260719/soft_projectivity_step2_problem_audit.md` |
 
 ## Pending Tasks
 
@@ -468,3 +471,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 52. D17-v1只允许从既有checkpoints导出validation probes，在validation labels上fit固定diagnostic ridge，并在
     既有authorized test probes评估；不训练模型、不新增test access、不改checkpoint。即使全gate通过，也只把
     prefix-safe future-context标记为`problem_supported`并进入Step4，不能直接升级Contribution 1。
+53. D17-v1正式结果只通过prefix invariance，pointwise与causal correction均发生严重validation→test reversal。
+    exact post-hoc route关闭；因frozen carrier与>100%局部退化，future-context方向保持unresolved，不得启动E2E
+    refiner作为结果抢救。
+54. D18只测exact projectivity的accuracy cost。separate horizon-specific arms是oracle/problem controls，不是
+    contribution；只有相对A6_MEASURE的own-H gates全部通过，才允许进入controlled soft-projectivity Step4。

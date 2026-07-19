@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD — Fixed-Past Projective Multi-Horizon Generation |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | post-CCSF Step2/4：projectivity no-go + D17 problem diagnostic |
+| `current_11_step` | D17 Step2 negative；D18 soft-projectivity-cost Step2/3 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | no active two-contribution method；SIFF-v2 parent frozen；D17 diagnostic_only |
+| `paper_core_status` | no active two-contribution method；SIFF-v2 parent frozen；D18 problem diagnostic proposed |
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
@@ -44,27 +44,21 @@ Step9–10后撤回为historical hypothesis，不能继续作为当前论文主�
 $F_H(x)=P_HF_T(x)$。requested horizon因此不能改变共享prefix。当前论文不再同时声称“shared-prefix严格不变”
 与“prediction随requested horizon自适应”。
 
-暂定研究问题收紧为：
+prefix-safe future-context D17没有通过problem gate：causal相对pointwise `-3.0356%`、相对shuffled
+`-2.3616%`，pointwise correction相对parent亦为`-28.7314%`。该结果带有validation→test transfer pathology，
+只关闭frozen post-hoc correction，不方向级否定E2E operator；但没有正向证据时不允许进入Step4实现。
 
-> 一个强full-domain draft已经由fixed past并行产生后，是否存在只读取
-> $\tilde y_{1:\tau}$、不读取requested $H$或prefix外坐标的future-domain operator，使同一模型在全部prefix上
-> 保持exact crop invariance，并通过future-coordinate interaction改善预测？
+当前仅保留新的Step2问题：
 
-这只是Step2 problem hypothesis，不是Contribution 1。D17必须先用validation-fit → test-evaluation和dual frozen
-carriers排除same-test calibration、pointwise capacity与row-shuffled context解释；通过后才允许进入Step4定义
-native operator。Contribution 2必须来自该operator真实存在的training mismatch，当前仍为空。
+> 一个强A6_MEASURE exact-projective model，相比同architecture但分别优化H96/H192/H336的horizon-specific
+> oracle controls，是否在各自horizon上付出稳定accuracy cost？
 
-A6已经满足one-model、domain-only crop与exact prefix equality；它的`global_coeff [B,C,256] × basis[:H]`
-属于global low-rank/MIMO-like coupling endpoint。CATS-like independent future queries代表point/direct endpoint，
-DIRMO则以固定block size位于两者之间。新主线研究一个multi-horizon任务独有的问题：point、block与global
-sharing scope是否应在同一projective decoder中共存并由数据选择。
+`SC-D18-SPC`将在不实现新method的前提下测量该headroom。若不存在，controlled soft projectivity没有研究必要；
+若稳定存在，才进入Step4研究有限$\lambda$下的accuracy–consistency frontier。separate horizon-specific models
+只是problem controls，不是Contribution 1。Contribution 2仍为空。
 
-[Theory Boundary] 对deterministic separable MSE，显式future dependency不是Bayes point predictor的必要条件。
-本论文只claim有限样本、有限capacity下parameter sharing的bias–variance–flexibility trade-off，不能把
-probabilistic trajectory dependency直接写成point-MSE必然收益。
-
-requested horizon 在当前主线中只定义输出域与计算域，不作为 learned semantic feature。禁止将离散
-horizon ID、benchmark-specific embedding、per-horizon expert 或 per-horizon hyperparameter 作为核心机制。
+在D18通过前，requested horizon仍不作为learned semantic feature，旧point/block/global adaptive coupling thesis
+与SIFF/CCSF只保留为historical evidence，不再描述当前论文机制。
 
 forecast-revision surface已转移到根目录`New-idea.md`，状态`deferred_next_paper`；它不再是当前论文问题。
 

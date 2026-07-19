@@ -1,0 +1,12 @@
+d17_start=2026-07-19T12:42:49+08:00
+commit=746721be77c3cfd20ffa9d6c925240c1470491b7
+source_root=/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_equal_attribution_v2
+d17_root=/home/yingch/exp_outputs/r-2026-fatst/stage_c_d17_projective_future_context_v1
+gpu_ids=0 1 2
+jobs=10
+fit_split=validation
+evaluation_split=existing_authorized_test_probe
+checkpoint_mutation=false
+0, NVIDIA GeForce RTX 3090, 24576, 15, 24110, 0
+1, NVIDIA GeForce RTX 3090, 24576, 15, 24110, 0
+2, NVIDIA GeForce RTX 3090, 24576, 15, 24110, 0

@@ -1,0 +1,80 @@
+{
+  "all_finite": true,
+  "arm_diagnostics_present": true,
+  "candidate_id": "SC1-SIFF-v2-EQ-ATTR",
+  "checkpoint_retrained": false,
+  "checkpoint_sha256": "67bd263334a2dcb36db9efee87471019b7a0e56e21bf63f3689be754ebf11ee4",
+  "dataset": "ETTm2",
+  "diagnostic_id": "PCSD-CF-checkpoint-audit",
+  "evaluation_rows": 75607,
+  "evaluation_split": "val",
+  "fixed_scale": 720,
+  "full_prefix_max_abs": 0.0,
+  "partition": "canonical",
+  "pass": true,
+  "policy_mode": "direct",
+  "prefix_rows": [
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 1,
+      "shape": [
+        1,
+        1,
+        7
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 48,
+      "shape": [
+        1,
+        48,
+        7
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 96,
+      "shape": [
+        1,
+        96,
+        7
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 192,
+      "shape": [
+        1,
+        192,
+        7
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 336,
+      "shape": [
+        1,
+        336,
+        7
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 720,
+      "shape": [
+        1,
+        720,
+        7
+      ]
+    }
+  ],
+  "probe_rows": 256,
+  "protocol_pass": true,
+  "readout_contract_pass": true,
+  "readout_mode": "pcsd-coupling-field",
+  "scale_component_diagnostics_present": false,
+  "test_access_authorized": true,
+  "test_access_date": null,
+  "uses_test_split": false
+}

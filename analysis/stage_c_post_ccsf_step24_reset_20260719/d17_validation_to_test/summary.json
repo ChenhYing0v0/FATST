@@ -1,0 +1,78 @@
+{
+  "candidate_id": "SC-D17-PFC-v1",
+  "config_path": "configs/stage_c_d17_projective_future_context_diagnostic.json",
+  "config_sha256": "d81eec99b7f1f87fbc81633ae2239031ee227fa6c9e585d057a25c741bbe7399",
+  "validation_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_d17_projective_future_context_v1/validation",
+  "test_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_equal_attribution_v2",
+  "definitions": {
+    "pointwise_wide": "Fixed-alpha ridge residual correction using only the current parent forecast and coordinate polynomial/Fourier features.",
+    "causal_ordered": "The pointwise control plus ordered parent-forecast lags. Every coordinate uses only draft coordinates at or before itself.",
+    "causal_row_shuffled": "A same-dimensional control whose lag context comes from a different probe row under a deterministic derangement.",
+    "symmetric_ordered": "A non-projective upper control using both lagged and leading parent-forecast coordinates.",
+    "relative_gain_percent": "100 * (1 - candidate MSE / reference MSE); positive is better."
+  },
+  "boundary": "This is a test-informed diagnostic. A fixed residual corrector is fitted only on saved validation probes and evaluated on separate saved test probes. It may support a conditional problem hypothesis, but it is not an end-to-end forecasting method, formal ablation, or paper-facing effectiveness result.",
+  "summary": {
+    "causal_gain_over_pointwise_percent": -3.035626737705832,
+    "causal_gain_over_shuffled_percent": -2.3616309456282014,
+    "pointwise_gain_over_parent_percent": -28.73142165729896,
+    "causal_gain_over_parent_percent": -32.63922711295677,
+    "symmetric_gain_over_pointwise_percent": -3.7090158448843003,
+    "carrier_causal_gain_over_pointwise_percent": {
+      "siff_equal": -3.3807142700904347,
+      "pcsd_equal": -2.7045107211460806
+    },
+    "dataset_causal_gain_over_pointwise_percent": {
+      "ETTh1": -0.8600671179295194,
+      "ETTh2": 0.07641046055495426,
+      "ETTm1": 1.3676625517933694,
+      "ETTm2": 1.8653433946191456,
+      "Weather": -15.477195436823399
+    },
+    "carrier_dataset_causal_gain_over_pointwise_percent": {
+      "siff_equal/ETTh1": -1.9616157053400807,
+      "siff_equal/ETTh2": -0.4069052621481051,
+      "siff_equal/ETTm1": 1.6472231686514571,
+      "siff_equal/ETTm2": 2.5915997790954215,
+      "siff_equal/Weather": -14.84973612255811,
+      "pcsd_equal/ETTh1": 0.17306029327156525,
+      "pcsd_equal/ETTh2": 0.47862029075768087,
+      "pcsd_equal/ETTm1": 1.0929768113845606,
+      "pcsd_equal/ETTm2": 1.148902836605059,
+      "pcsd_equal/Weather": -16.152976602419166
+    },
+    "horizon_causal_gain_over_pointwise_percent": {
+      "96": 2.6502522959343744,
+      "192": -4.3320635549095154,
+      "336": -3.5662145103133813,
+      "720": -4.669206822486038
+    },
+    "positive_datasets": 3,
+    "positive_carriers": 0,
+    "positive_carrier_datasets": 6,
+    "positive_horizons": 1,
+    "prefix_invariance_max_abs_gap": 0.0,
+    "prefix_invariance_by_dataset": {
+      "siff_equal/ETTh1": 0.0,
+      "siff_equal/ETTh2": 0.0,
+      "siff_equal/ETTm1": 0.0,
+      "siff_equal/ETTm2": 0.0,
+      "siff_equal/Weather": 0.0,
+      "pcsd_equal/ETTh1": 0.0,
+      "pcsd_equal/ETTh2": 0.0,
+      "pcsd_equal/ETTm1": 0.0,
+      "pcsd_equal/ETTm2": 0.0,
+      "pcsd_equal/Weather": 0.0
+    },
+    "gate_results": {
+      "causal_gain_over_pointwise": false,
+      "causal_gain_over_shuffled": false,
+      "positive_datasets": false,
+      "positive_carriers": false,
+      "positive_carrier_datasets": false,
+      "positive_horizons": false,
+      "prefix_invariance": true
+    },
+    "all_gates_pass": false
+  }
+}
