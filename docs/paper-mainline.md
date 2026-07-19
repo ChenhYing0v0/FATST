@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD — Fixed-Past Projective Multi-Horizon Generation |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | D19 closed；Contribution 1 Step2/4 audit complete；D20 diagnostic Step6 next；Contribution 2 Step2 |
+| `current_11_step` | D19 closed；D20 diagnostic Step6 complete，Step7A local next；Contribution 2 Step2 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | no active two-contribution method；SIFF-v2 parent frozen；D20 diagnostic_only proposed |
+| `paper_core_status` | no active two-contribution method；SIFF-v2 parent frozen；D20 diagnostic_only design frozen |
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
@@ -98,7 +98,18 @@ history-phase-continued atoms未通过method narrative gate；“直接接入spe
 coefficient operator，并超过same-dimensional fixed random orthogonal history projection。三臂必须共同from-scratch
 E2E训练且共享A6 Encoder、learned basis、measure objective、full-T generation与prefix crop。只有SPEC同时超过
 A6与RANDOM并通过internal health，才允许回Step4设计native non-residual coefficient operator；D20本身和generic
-concat head均禁止结果后升级为paper method。当前Step6 next，implementation/remote/test均false。
+concat head均禁止结果后升级为paper method。当时只授权Step6，implementation/remote/test均false。
+
+[D20 Step6 Freeze] exact diagnostic使用`A6_MEASURE_RETRAIN/A6_CST_SPEC/A6_CST_RANDOM`三臂。SPEC与RANDOM
+分别以fixed 64-dimensional real low-frequency Fourier subspace和same-dimensional Gaussian-QR orthogonal
+subspace读取normalized 720-history；两者共享`Linear(R+64,256)`、learned temporal basis与full-T prefix-crop
+contract。summary columns zero-init且base block/Encoder/basis paired，使三臂初始prediction完全一致，但summary
+weight首步gradient非零。
+
+five datasets × seed2021形成15个from-scratch runs/60 test cells，不复用A6 checkpoint。SPEC必须同时对A6
+transfer和对RANDOM specificity通过对称gates；只超过A6仍由generic history access/capacity解释。Step6 static
+gate为14/14，decision=`step6_pass_step7a_local_only`。当前只授权local implementation；remote/test/confirmation/
+paper method仍false。
 
 forecast-revision surface已转移到根目录`New-idea.md`，状态`deferred_next_paper`；它不再是当前论文问题。
 

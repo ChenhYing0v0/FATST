@@ -1,0 +1,182 @@
+{
+  "stage": "StageC-UVHF",
+  "diagnostic_id": "SC-D20-CST",
+  "candidate_version": "SC-D20-CST-v1-step6",
+  "status": "step6_design_frozen",
+  "role": "diagnostic_only",
+  "test_informed": true,
+  "paper_method_authorized": false,
+  "problem": "Does a compact history-spectrum subspace transfer to the A6 full-trajectory coefficient operator and outperform an equally sized fixed random history subspace?",
+  "source_audit": {
+    "path": "Papers/post-d19-compact-statistic-decoder-audit.md",
+    "search_date": "2026-07-19",
+    "boundary": [
+      "frequency coordinates alone are not a novel function class",
+      "compact spectrum concatenation is diagnostic only",
+      "frequency specificity requires a same-dimensional projection control"
+    ]
+  },
+  "carrier": {
+    "profiles_path": "configs/stage_c_five_dataset_natural_profiles.json",
+    "profiles_sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a",
+    "history_length": 720,
+    "full_prediction_length": 720,
+    "basis_rank": 256,
+    "encoder_mode": "timealign-token-mlp",
+    "normalization_source": "Model.forward normalized_history after normalization_x(norm)",
+    "hidden_contract": "memory[B,C,P,D] -> flatten[B,C,R]",
+    "generation_contract": "coeff[B,C,256] x learned_basis[720,256] -> full_prediction[B,720,C] -> prefix crop"
+  },
+  "summary_contract": {
+    "dimension": 64,
+    "trainable_projection": false,
+    "input_tensor": "normalized_history[B,720,C]",
+    "projection_tensor": "Q[720,64]",
+    "output_tensor": "summary[B,C,64]",
+    "operation": "normalized_history.permute(0,2,1) @ Q",
+    "spectrum": {
+      "id": "fixed_real_fourier_low32",
+      "frequencies": {
+        "start_inclusive": 1,
+        "end_inclusive": 32
+      },
+      "column_order": "cos_k_then_sin_k_for_each_k",
+      "cosine_definition": "sqrt(2/720) * cos(2*pi*k*t/720)",
+      "sine_definition": "sqrt(2/720) * sin(2*pi*k*t/720)",
+      "time_indices": "t=0,...,719",
+      "dc_excluded_reason": "per-sample per-channel normalized history is mean centered",
+      "selection_rule": "fixed before training; no dataset-specific bins and no spectral-energy ranking"
+    },
+    "random_control": {
+      "id": "fixed_gaussian_qr_s20260719",
+      "seed": 20260719,
+      "construction": "float64 Gaussian[720,64] -> reduced QR -> positive-diagonal sign canonicalization",
+      "shared_across_datasets": true,
+      "trainable": false
+    }
+  },
+  "coefficient_operator": {
+    "a6": "Linear(R,256)",
+    "statistic_arms": "Linear(R+64,256)",
+    "activation": "none",
+    "dropout": 0.0,
+    "temporal_basis": "same learned_temporal_basis[720,256]",
+    "temporal_bias": "same learned_temporal_bias[720]",
+    "requested_horizon_input": false,
+    "residual_prediction_path": false
+  },
+  "paired_initialization": {
+    "encoder": "identical state by dataset and training seed across all arms",
+    "temporal_basis_and_bias": "identical state across all arms",
+    "base_coefficient_block": "statistic W[:,:R] and bias equal A6 coefficient weight and bias",
+    "summary_coefficient_block": "zero initialized W[:,R:R+64]",
+    "spec_random_full_head": "identical weights at initialization; only fixed Q differs",
+    "initial_function_contract": "all three arms produce the same output before optimization",
+    "interpretation": "function-preserving initialization parity only; not preserved learned capacity"
+  },
+  "arms": [
+    {
+      "id": "A6_MEASURE_RETRAIN",
+      "readout_mode": "learned-basis-forecast-operator",
+      "summary_mode": "none",
+      "training_new": true,
+      "role": "same-run end-to-end anchor"
+    },
+    {
+      "id": "A6_CST_SPEC",
+      "readout_mode": "learned-basis-compact-history-statistic",
+      "summary_mode": "fixed_real_fourier_low32",
+      "training_new": true,
+      "role": "transfer candidate"
+    },
+    {
+      "id": "A6_CST_RANDOM",
+      "readout_mode": "learned-basis-compact-history-statistic",
+      "summary_mode": "fixed_gaussian_qr_s20260719",
+      "training_new": true,
+      "role": "same-dimensional generic history-access and parameter control"
+    }
+  ],
+  "training": {
+    "datasets": ["Weather", "ETTm1", "ETTh1", "ETTh2", "ETTm2"],
+    "seed": 2021,
+    "target_horizons": [720],
+    "validation_horizons": [96, 192, 336, 720],
+    "checkpoint_rule": "mean_validation_mse_h96_h192_h336_h720",
+    "prediction_loss_mode": "full",
+    "objective_mode": "measure_only",
+    "optimizer": "AdamW",
+    "learning_rate": 0.0001,
+    "batch_size": 32,
+    "max_epochs": 20,
+    "early_stopping_patience": 5,
+    "initialization": "from_scratch_paired_by_dataset_and_seed",
+    "final_training_evaluation_split": "validation"
+  },
+  "matrix": {
+    "datasets": 5,
+    "arms": 3,
+    "seeds": [2021],
+    "expected_runs": 15,
+    "new_training_runs": 15,
+    "reused_runs": 0,
+    "paper_horizons": [96, 192, 336, 720],
+    "metrics": ["mse", "mae"],
+    "official_test_cells": 60,
+    "confirmation_seeds": [2022, 2023],
+    "confirmation_authorized": false
+  },
+  "primary_comparisons": [
+    {
+      "id": "transfer_spec_vs_a6",
+      "candidate": "A6_CST_SPEC",
+      "reference": "A6_MEASURE_RETRAIN"
+    },
+    {
+      "id": "specificity_spec_vs_random",
+      "candidate": "A6_CST_SPEC",
+      "reference": "A6_CST_RANDOM"
+    }
+  ],
+  "primary_gates": {
+    "transfer_spec_vs_a6": {
+      "mse_macro_gain_percent_min": 0.3,
+      "mse_cell_wins_min": 11,
+      "mse_dataset_wins_min": 3,
+      "mse_horizon_wins_min": 3,
+      "mae_macro_gain_percent_min": 0.0
+    },
+    "specificity_spec_vs_random": {
+      "mse_macro_gain_percent_min": 0.3,
+      "mse_cell_wins_min": 11,
+      "mse_dataset_wins_min": 3,
+      "mse_horizon_wins_min": 3,
+      "mae_macro_gain_percent_min": 0.0
+    }
+  },
+  "internal_health_gates": {
+    "all_finite": true,
+    "projection_orthogonality_max_abs_max": 1e-10,
+    "projection_dc_leakage_max_abs_max": 1e-10,
+    "prefix_max_abs_max": 1e-6,
+    "spec_random_parameter_gap": 0,
+    "initial_output_max_abs_max": 1e-10,
+    "summary_gradient_norm_min": 1e-12,
+    "summary_weight_norm_min": 1e-12,
+    "prediction_deformation_nrmse_min": 1e-6,
+    "checkpoint_budget_ceiling_fraction_max": 0.8
+  },
+  "decision_map": {
+    "spec_fails_a6": "close direct compact-spectrum route and return Contribution 1 to Step2",
+    "spec_beats_a6_not_random": "generic direct history access or capacity explains; reject frequency claim and return Step2/4",
+    "performance_pass_internal_invalid": "diagnostic_invalid_for_direction_rejection; repair Step6/7 once",
+    "all_primary_and_internal_pass": "problem_supported_only; run conditional confirmation only after authorization, then return Step4 for a native non-residual operator"
+  },
+  "authorization": {
+    "step7a_local_implementation": true,
+    "remote_training": false,
+    "official_test_access": false,
+    "confirmation": false,
+    "paper_method": false
+  }
+}

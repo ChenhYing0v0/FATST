@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D19 closed；Contribution 1 Step2/4 audit complete；D20 Step2/3 proposed，Step6 next；Contribution 2 Step2 |
+| `current_step` | D19 closed；D20 Step6 complete，Step7A local next；Contribution 2 Step2 |
 | `active_question` | compact history-spectrum information能否transfer到A6 coefficient operator并超过同维random history projection？ |
-| `active_candidates` | SIFF-v2 frozen parent；D20 diagnostic_only proposed；no active method；CTD paused |
+| `active_candidates` | SIFF-v2 frozen parent；D20 diagnostic_only design frozen；no active method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/post_d19_step24_compact_statistic_viability_audit.md` |
-| `method_implementation` | D20仅进入Step6 exact diagnostic design；implementation/remote/paper method=false |
+| `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/d20_step6/step6_diagnostic_design.md` |
+| `method_implementation` | D20 Step7A local=true；remote/test/confirmation/paper method=false |
 | `rollback_point` | D20=Step2/4；Contribution 1 positive diagnostic后回Step4；Contribution 2=Step2 |
 
 ## post-CCSF Step 2/4 Reset
@@ -104,10 +104,24 @@ operator，并超过同维fixed random orthogonal history projection。下一步
 five datasets、four-horizon validation selector与official-test完整矩阵。SPEC必须同时通过vs A6 transfer与vs RANDOM
 specificity，才能只返回Step4设计native non-residual operator；generic concat head不得因结果正向而升级为paper method。
 
-Decision=`step2_4_complete_d20_diagnostic_step6_next`。当前只授权Step6 exact dimension/normalization/bin/init/matrix
+Decision=`step2_4_complete_d20_diagnostic_step6_next`。当时只授权Step6 exact dimension/normalization/bin/init/matrix
 freeze，不授权implementation、remote、test access或Contribution claim。详见
 `analysis/stage_c_post_ccsf_step24_reset_20260719/post_d19_step24_compact_statistic_viability_audit.md`与
 `Papers/post-d19-compact-statistic-decoder-audit.md`。
+
+D20 Step6现已冻结：normalized history经fixed orthonormal projection得到`[B,C,64]` summary；SPEC使用
+32组non-DC real Fourier cos/sin modes，RANDOM使用seed20260719 Gaussian QR subspace。两者以相同
+`Linear(R+64,256)`进入A6 learned-basis coefficient operator，并通过zero-init summary columns与paired
+Encoder/basis/base-head保持三臂初始function完全相同。所有arms仍先生成full 720 trajectory，再做prefix crop。
+
+matrix固定为`A6_MEASURE_RETRAIN/A6_CST_SPEC/A6_CST_RANDOM` × five datasets × seed2021，共15个from-scratch
+runs与60个official-test cells；SPEC必须分别对A6与RANDOM通过相同`0.3% + 11/20 + 3/5 datasets + 3/4
+horizons + nonnegative MAE` gates。static checker为14/14，projection orthogonality误差不超过`3.763e-15`、
+initial/prefix gap为0、summary path gradient与deformation均非零。
+
+Decision=`step6_pass_step7a_local_only`。下一步只实现production buffers/readout/paired initialization/CLI与local
+shape-projectivity-gradient-hash tests；remote、official test、confirmation与paper-method仍false。详见
+`analysis/stage_c_post_ccsf_step24_reset_20260719/d20_step6/step6_diagnostic_design.md`。
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 

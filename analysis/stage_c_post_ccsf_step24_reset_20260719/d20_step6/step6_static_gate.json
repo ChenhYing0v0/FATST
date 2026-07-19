@@ -1,0 +1,266 @@
+{
+  "candidate_version": "SC-D20-CST-v1-step6",
+  "config_path": "configs/stage_c_d20_cst_step6.json",
+  "config_sha256": "ae7408801edf26f4cff793bbbc70f18ebac8b9528cfec8425c1749e68e86594d",
+  "checks_passed": 14,
+  "checks_total": 14,
+  "overall_pass": true,
+  "projection_diagnostics": {
+    "spectrum_orthogonality_max_abs": 3.7629065083882855e-15,
+    "random_orthogonality_max_abs": 8.881784197001252e-16,
+    "spectrum_dc_leakage_max_abs": 1.715294573045867e-14,
+    "cross_subspace_singular_value_max": 0.5547969019398499
+  },
+  "parameter_rows": [
+    {
+      "dataset": "ETTh1",
+      "readout_dim": 1536,
+      "a6_decoder_parameters": 578512,
+      "spectrum_decoder_parameters": 594896,
+      "random_decoder_parameters": 594896,
+      "augmentation_parameters": 16384
+    },
+    {
+      "dataset": "ETTh2",
+      "readout_dim": 768,
+      "a6_decoder_parameters": 381904,
+      "spectrum_decoder_parameters": 398288,
+      "random_decoder_parameters": 398288,
+      "augmentation_parameters": 16384
+    },
+    {
+      "dataset": "ETTm1",
+      "readout_dim": 768,
+      "a6_decoder_parameters": 381904,
+      "spectrum_decoder_parameters": 398288,
+      "random_decoder_parameters": 398288,
+      "augmentation_parameters": 16384
+    },
+    {
+      "dataset": "ETTm2",
+      "readout_dim": 3072,
+      "a6_decoder_parameters": 971728,
+      "spectrum_decoder_parameters": 988112,
+      "random_decoder_parameters": 988112,
+      "augmentation_parameters": 16384
+    },
+    {
+      "dataset": "Weather",
+      "readout_dim": 768,
+      "a6_decoder_parameters": 381904,
+      "spectrum_decoder_parameters": 398288,
+      "random_decoder_parameters": 398288,
+      "augmentation_parameters": 16384
+    }
+  ],
+  "initialization_diagnostics": {
+    "a6_vs_spectrum_max_abs": 0.0,
+    "a6_vs_random_max_abs": 0.0,
+    "spectrum_vs_random_max_abs": 0.0,
+    "prefix_max_abs": 0.0,
+    "active_prediction_deformation_nrmse": 0.2730604514518202,
+    "zero_init_summary_weight_gradient_norm": 3331.4683652842114
+  },
+  "checks": [
+    {
+      "name": "diagnostic_identity_and_boundary",
+      "pass": true,
+      "details": {
+        "candidate_version": "SC-D20-CST-v1-step6",
+        "role": "diagnostic_only",
+        "paper_method_authorized": false
+      }
+    },
+    {
+      "name": "profile_contract_hash",
+      "pass": true,
+      "details": {
+        "computed": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a",
+        "frozen": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a"
+      }
+    },
+    {
+      "name": "five_dataset_contract",
+      "pass": true,
+      "details": [
+        "Weather",
+        "ETTm1",
+        "ETTh1",
+        "ETTh2",
+        "ETTm2"
+      ]
+    },
+    {
+      "name": "three_arm_contract",
+      "pass": true,
+      "details": [
+        "A6_MEASURE_RETRAIN",
+        "A6_CST_SPEC",
+        "A6_CST_RANDOM"
+      ]
+    },
+    {
+      "name": "projection_shapes",
+      "pass": true,
+      "details": {
+        "spectrum": [
+          720,
+          64
+        ],
+        "random": [
+          720,
+          64
+        ],
+        "dimension": 64
+      }
+    },
+    {
+      "name": "projection_orthogonality",
+      "pass": true,
+      "details": {
+        "spectrum_max_abs": 3.7629065083882855e-15,
+        "random_max_abs": 8.881784197001252e-16,
+        "tolerance": 1e-10
+      }
+    },
+    {
+      "name": "spectrum_dc_exclusion",
+      "pass": true,
+      "details": {
+        "column_sum_max_abs": 1.715294573045867e-14,
+        "tolerance": 1e-10
+      }
+    },
+    {
+      "name": "spec_random_parameter_and_shape_match",
+      "pass": true,
+      "details": [
+        {
+          "dataset": "ETTh1",
+          "readout_dim": 1536,
+          "a6_decoder_parameters": 578512,
+          "spectrum_decoder_parameters": 594896,
+          "random_decoder_parameters": 594896,
+          "augmentation_parameters": 16384
+        },
+        {
+          "dataset": "ETTh2",
+          "readout_dim": 768,
+          "a6_decoder_parameters": 381904,
+          "spectrum_decoder_parameters": 398288,
+          "random_decoder_parameters": 398288,
+          "augmentation_parameters": 16384
+        },
+        {
+          "dataset": "ETTm1",
+          "readout_dim": 768,
+          "a6_decoder_parameters": 381904,
+          "spectrum_decoder_parameters": 398288,
+          "random_decoder_parameters": 398288,
+          "augmentation_parameters": 16384
+        },
+        {
+          "dataset": "ETTm2",
+          "readout_dim": 3072,
+          "a6_decoder_parameters": 971728,
+          "spectrum_decoder_parameters": 988112,
+          "random_decoder_parameters": 988112,
+          "augmentation_parameters": 16384
+        },
+        {
+          "dataset": "Weather",
+          "readout_dim": 768,
+          "a6_decoder_parameters": 381904,
+          "spectrum_decoder_parameters": 398288,
+          "random_decoder_parameters": 398288,
+          "augmentation_parameters": 16384
+        }
+      ]
+    },
+    {
+      "name": "function_preserving_paired_initialization",
+      "pass": true,
+      "details": {
+        "a6_vs_spectrum_max_abs": 0.0,
+        "a6_vs_random_max_abs": 0.0,
+        "spectrum_vs_random_max_abs": 0.0,
+        "prefix_max_abs": 0.0,
+        "active_prediction_deformation_nrmse": 0.2730604514518202,
+        "zero_init_summary_weight_gradient_norm": 3331.4683652842114
+      }
+    },
+    {
+      "name": "active_summary_full_trajectory_prefix_crop",
+      "pass": true,
+      "details": {
+        "a6_vs_spectrum_max_abs": 0.0,
+        "a6_vs_random_max_abs": 0.0,
+        "spectrum_vs_random_max_abs": 0.0,
+        "prefix_max_abs": 0.0,
+        "active_prediction_deformation_nrmse": 0.2730604514518202,
+        "zero_init_summary_weight_gradient_norm": 3331.4683652842114
+      }
+    },
+    {
+      "name": "summary_path_trainability_and_deformation",
+      "pass": true,
+      "details": {
+        "a6_vs_spectrum_max_abs": 0.0,
+        "a6_vs_random_max_abs": 0.0,
+        "spectrum_vs_random_max_abs": 0.0,
+        "prefix_max_abs": 0.0,
+        "active_prediction_deformation_nrmse": 0.2730604514518202,
+        "zero_init_summary_weight_gradient_norm": 3331.4683652842114
+      }
+    },
+    {
+      "name": "matrix_accounting",
+      "pass": true,
+      "details": {
+        "datasets": 5,
+        "arms": 3,
+        "seeds": [
+          2021
+        ],
+        "expected_runs": 15,
+        "new_training_runs": 15,
+        "reused_runs": 0,
+        "paper_horizons": [
+          96,
+          192,
+          336,
+          720
+        ],
+        "metrics": [
+          "mse",
+          "mae"
+        ],
+        "official_test_cells": 60,
+        "confirmation_seeds": [
+          2022,
+          2023
+        ],
+        "confirmation_authorized": false
+      }
+    },
+    {
+      "name": "transfer_and_specificity_gates",
+      "pass": true,
+      "details": [
+        "specificity_spec_vs_random",
+        "transfer_spec_vs_a6"
+      ]
+    },
+    {
+      "name": "authorization_boundary",
+      "pass": true,
+      "details": {
+        "step7a_local_implementation": true,
+        "remote_training": false,
+        "official_test_access": false,
+        "confirmation": false,
+        "paper_method": false
+      }
+    }
+  ]
+}

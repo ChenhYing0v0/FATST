@@ -9,7 +9,7 @@
 | `active_question` | compact history-spectrum information能否transfer到A6 coefficient operator并超过同维random history projection？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | `SC1-SIFF-v2-EQ-ATTR-v1` frozen parent；`SC-D20-CST diagnostic_only` proposed；no active method；CTD paused |
+| `active_candidates` | `SC1-SIFF-v2-EQ-ATTR-v1` frozen parent；`SC-D20-CST diagnostic_only` design frozen；no active method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
@@ -19,27 +19,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | D19 closed；Contribution 1 Step2/4 audit complete；D20 Step2/3 proposed，Step6 next；Contribution 2 Step2 |
-| `current_candidate` | immutable SIFF-v2 parent；D20 diagnostic_only proposed；no method |
-| `latest_decision` | smaller IF/history-phase atoms narrative fail；D20只测spectrum-to-A6 transfer与frequency specificity |
-| `next_required_action` | D20 Step6 exact freeze：summary dimension/bins/normalization/init、three-arm matrix、local gates；不实现/不remote |
-| `method_training_authorized` | false；D20 implementation/remote/test=false；paper method=false |
+| `current_11_step` | D19 closed；D20 Step6 complete，Step7A local next；Contribution 2 Step2 |
+| `current_candidate` | immutable SIFF-v2 parent；D20 diagnostic_only design frozen；no method |
+| `latest_decision` | D20 q64 spectrum/random matched contract + 15-run matrix frozen；static gate 14/14 |
+| `next_required_action` | D20 Step7A production readout/buffer/init/CLI + shape/projectivity/gradient/hash local gate |
+| `method_training_authorized` | false；Step7A local=true；remote/test/confirmation/paper method=false |
 | `rollback_point` | D20=Step2/4；positive只回Step4；Contribution 2=Step2 |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Contribution 1 Step2/4 complete；D20 diagnostic Step2/3 proposed，Step6 next；Contribution 2 Step2 |
+| `current_step` | D20 diagnostic Step6 complete，Step7A local next；Contribution 2 Step2 |
 | `problem` | IF内有效的compact history-spectrum information是否能transfer到A6 coefficient operator且具有frequency specificity |
 | `existence_evidence` | D19 skip vs no-skip +1.6191%/16 of 20 cells；但IF vs A6 -3.6117%、vs direct -0.8075% |
-| `idea` | same A6 operator输入compact spectrum或同维fixed random orthogonal history summary，分离transfer与specificity |
-| `theory_check` | invertible linear transform不改变affine class；compact subspace须超过random control；full-T crop保持projectivity |
-| `design` | proposed three-arm from-scratch E2E diagnostic；five datasets × four horizons；Step6尚未冻结精确summary contract |
-| `narrative_gate` | smaller IF/history-phase atoms fail；D20 diagnostic bypass only，禁止结果后升paper method |
+| `idea` | same A6 operator输入q64 fixed spectrum或同维fixed Gaussian-QR history summary，分离transfer与specificity |
+| `theory_check` | 两个projection orthonormal；zero-init paired function；active summary仍full-T crop；static 14/14 |
+| `design` | three-arm 15-run from-scratch E2E；five datasets × four horizons；SPEC同时对A6/RANDOM过对称gates |
+| `narrative_gate` | diagnostic design pass；smaller IF/history-phase methods fail；D20禁止结果后升paper method |
 | `effectiveness_gate` | not started；SPEC必须同时超过A6与RANDOM，internal health不能替代test gate |
-| `artifacts` | D19 deep audit + post-D19 external prior-art note + Step2/4 viability audit |
-| `decision` | `step2_4_complete_d20_diagnostic_step6_next`；implementation/remote/test/paper method false |
+| `artifacts` | D19 deep audit + prior-art/Step2/4 audit + D20 Step6 config/checker/14-of-14 report |
+| `decision` | `step6_pass_step7a_local_only`；remote/test/confirmation/paper method false |
 
 ## Frozen Carrier Contract
 
@@ -105,7 +105,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC-D17-PFC-v1` | `diagnostic_only_conditional_negative_closed_exact_protocol` | frozen full-domain draft的ordered prefix context能否超越pointwise与row-shuffled controls并跨validation→test transfer | not a method gate；dual-carrier conditional evidence only | causal vs pointwise -3.0356%；vs shuffled -2.3616%；pointwise vs parent -28.7314%；1/7 gates | exact post-hoc protocol closed；direction unresolved；no E2E rescue |
 | `SC-D18-SPC` | `diagnostic_only_closed_problem_false` | horizon-specific loss是否稳定超过A6_MEASURE，从而证明exact projectivity有accuracy cost | not a method gate | 25/25；vs A6_MEASURE +0.1659%、7/15；2/7 gates | no seeds；soft route closed；rollback Step2 |
 | `SC-D19-IFC-control-v1.1` | `control_only_closed_negative_return_step2_4` | source-informed implicit trajectory decoder是否超过A6 learned-basis control | not a contribution；IF prior mandatory | IF vs A6 -3.6117%；vs direct -0.8075%；skip positive；health pass | no seeds/sweep；retain skip evidence；rollback Step2/4 |
-| `SC-D20-CST` | `diagnostic_only_proposed_step6_next` | IF内的compact history-spectrum信息能否transfer到A6并超过同维random history projection | diagnostic bypass only；generic concat与frequency primitive均非method | not started | Step6冻结three-arm exact contract；implementation/remote/test=false |
+| `SC-D20-CST` | `diagnostic_only_step6_pass_step7a_next` | IF内的compact history-spectrum信息能否transfer到A6并超过同维random history projection | diagnostic bypass only；generic concat与frequency primitive均非method | static 14/14；training not started | q64 three-arm contract frozen；Step7A local only；remote/test=false |
 | `SC2-MCCA-v1` | `historical_validation_negative_fair_test_not_reaudited` | same total scope skill mass能否竞争性分配而避免per-target homogenization | complete-chain conditional pass | old best-H720 validation four-H -0.1357%、1/5；not in 70-run audit | inactive；reuse前回Step4重审相对EQUAL/MEASURE的必要性 |
 | `SC-D16-CTD` | `deferred_paused_by_user` | H720 checkpoint是否丢弃healthy SIFF four-H epoch | diagnostic only；weighted checkpoint prior-covered | not implemented | design retained；resume only after user authorization |
 | `SC-RETRO-FAIR-v1` | `completed_partial_pass_attribution_blocked` | PCSD/PCC/SIFF在新checkpoint与test-primary规则下是否仍成立 | retrospective audit；not a method | 70/70；280/280；joint pass；two-contribution attribution fail | archive result；SIFF Step6/PCC Step2-4 |
@@ -210,6 +210,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | D19 IF control Step8 launch | remote pull + dual resource smoke + 3-GPU background driver | commit`da011c8`；Weather IF/ETTm2 direct finite；first 3 jobs entered training | running；no monitoring/config changes；confirmation false | `analysis/stage_c_post_ccsf_step24_reset_20260719/d19_remote_launch_record.md` |
 | D19 IF control Step9/10 | 20-unit/80-cell test scorecard + validation/checkpoint + polar health + capacity audit | IF vs A6 -3.6117%；vs direct -0.8075%；skip vs no-skip +1.6191%；health pass | exact control closed；no seeds/sweep；`readout_or_head_design_wrong`；rollback Step2/4 | `analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step9/d19_step9_deep_audit.md` |
 | Post-D19 Contribution 1 Step2/4 audit | external primary sources + algebraic function-class boundary + D19 evidence synthesis | smaller IF/history-phase atoms narrative fail；compact spectrum transfer/specificity未验证 | D20 diagnostic_only Step6 next；method/remote/test false | `analysis/stage_c_post_ccsf_step24_reset_20260719/post_d19_step24_compact_statistic_viability_audit.md` |
+| D20 compact-statistic Step6 | exact q64 Fourier/random projections + paired initialization + matrix/gates + static checker | 14/14；orthogonality <=3.763e-15；init/prefix gap 0；gradient/deformation nonzero | `step6_pass_step7a_local_only`；remote/test/confirmation false | `analysis/stage_c_post_ccsf_step24_reset_20260719/d20_step6/step6_diagnostic_design.md` |
 
 ## Pending Tasks
 
@@ -272,7 +273,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | D18 soft-projectivity cost diagnostic | `completed_fail_rollback_step2` | 25/25；2/7 gates；不补seeds；soft route closed |
 | D19 source-informed implicit decoder control | `completed_negative_rollback_step2_4` | exact control closed；retain skip evidence；no seeds/width/LR sweep |
 | Post-D19 compact statistic viability audit | `completed_step2_4` | D20 diagnostic family保留；smaller IF/history-phase method routes关闭 |
-| SC-D20-CST transfer/specificity diagnostic | `step6_next` | 冻结q/bins/normalization/random projection/init、three-arm matrix与local falsification gates；当前不实现 |
+| SC-D20-CST transfer/specificity diagnostic | `step6_pass_step7a_next` | 实现production readout/buffers/paired init/CLI与local shape-projectivity-gradient-hash gate |
 
 ## Paper Mainline Sync Log
 
@@ -369,6 +370,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-19 | D19 Step8 remote launch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | commit/resource/process provenance | `da011c8`；3×3090；15-run matrix running；no monitoring/confirmation |
 | 2026-07-19 | D19 Step9/10 deep audit | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | four-layer result + validation/checkpoint/capacity attribution | 20/20；IF negative；skip positive；exact control closed；rollback Step2/4 |
 | 2026-07-19 | post-D19 Contribution 1 Step2/4 audit | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | external novelty boundary + transfer/specificity problem freeze | smaller IF/phase atoms blocked；D20 diagnostic Step6 next；method/remote/test false |
+| 2026-07-19 | D20 compact-statistic Step6 | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | exact tensor/projection/init/matrix/gate freeze + static audit | 14/14；Step7A local true；remote/test/confirmation/paper method false |
 
 ## Continuation Rules
 
@@ -529,3 +531,11 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 63. smaller IF与history-phase-continued atoms已被FITS/FBM/IF/PhaseFormer等prior-art和function-class boundary
     挡在narrative gate外。D20 Step6前implementation/remote/test=false；不得以width/LR sweep或删除random control
     抢救frequency claim。
+64. D20 Step6固定$q=64$：32组non-DC real Fourier cos/sin modes对比same-dimensional seed20260719
+    Gaussian-QR orthogonal projection。二者必须读取同一normalized history、共享head shape与trainable weights，
+    且不得做dataset-specific bins、energy ranking或dimension sweep。
+65. D20三臂必须from-scratch paired E2E；summary columns zero-init只表示initial function parity，不是preserved
+    learned capacity。SPEC必须同时超过A6与RANDOM；positive只建立problem evidence，不能升级generic concat为method。
+66. Step6 static 14/14只授权Step7A local implementation。Step7A需验证real-batch shape、normalization source、
+    projection buffers、paired hashes、zero-init equality、summary gradients、active prediction deformation与prefix
+    crop；通过前remote/test/confirmation继续false。
