@@ -178,7 +178,12 @@ if [[ "${RESOURCE_SMOKE}" == "1" ]]; then
   for directory in "${smoke_root}"/*_seed"${SEED}"; do
     test -s "${directory}/training_log.csv"
     test -s "${directory}/effective_config.json"
-    ! rg -n "Traceback|CUDA out of memory|nan|inf" "${directory}/smoke.log"
+    failure_pattern="Traceback|CUDA out of memory|(^|[^[:alnum:]_])(nan|inf)([^[:alnum:]_]|$)"
+    if command -v rg >/dev/null 2>&1; then
+      ! rg -ni "${failure_pattern}" "${directory}/smoke.log"
+    else
+      ! grep -Ein "${failure_pattern}" "${directory}/smoke.log"
+    fi
   done
   echo "d19_resource_smoke_done=$(date -Is) output=${smoke_root}"
   exit 0
