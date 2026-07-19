@@ -1,0 +1,67 @@
+{
+  "candidate_version": "SC-D18-SPC-v1",
+  "matrix_complete": true,
+  "valid_runs": 25,
+  "unique_checkpoint_hashes": 25,
+  "max_prefix_gap": 3.5762786865234375e-07,
+  "test_macro_specialist_over_measure_percent": 0.16589046081497769,
+  "test_macro_measure_over_full_percent": 1.7979628333669024,
+  "test_macro_specialist_over_full_percent": 1.9574138416499303,
+  "validation_macro_specialist_over_measure_percent": 0.42045516393329246,
+  "validation_positive_cells": 7,
+  "validation_positive_datasets": 4,
+  "validation_positive_horizons": 2,
+  "validation_minimum_horizon_gain_percent": -0.7301497506769339,
+  "validation_test_sign_agreement_cells": 9,
+  "best_epoch_at_budget_boundary_runs": 0,
+  "h96_probe_positive_intervals": 4,
+  "h96_probe_total_intervals": 10,
+  "h96_probe_interval_macro_gain_percent": -1.6282576016893835,
+  "remote_gate_result": {
+    "macro_gain_percent": 0.16589046081497769,
+    "positive_cells": 7,
+    "dataset_gains": {
+      "Weather": -0.15949866333503002,
+      "ETTm1": 0.09082709166952085,
+      "ETTh1": -0.11555978713826409,
+      "ETTh2": 1.0272268149483195,
+      "ETTm2": -0.013543152069657912
+    },
+    "horizon_gains": {
+      "96": 1.2747808829037899,
+      "192": -0.1386105711168062,
+      "336": -0.6384989293420507
+    },
+    "positive_datasets": 2,
+    "positive_horizons": 1,
+    "minimum_horizon_gain_percent": -0.6384989293420507,
+    "macro_gain_over_a6_full_percent": 1.9574138416499303,
+    "prediction_nrmse_min": 0.017435744790782866,
+    "pathology": false,
+    "matched_initialization_and_parameter_count": true,
+    "categories": {
+      "macro_gain": false,
+      "horizon_support": false,
+      "dataset_support": false,
+      "cell_support": false,
+      "no_horizon_regression": false,
+      "prediction_deformation": true,
+      "protocol_numeric_and_matched_initialization": true
+    },
+    "categories_passed": 2,
+    "categories_total": 7,
+    "overall_pass": false,
+    "decision": "measure_training_explains_close_soft_architecture_route_return_step2"
+  },
+  "failure_attribution": {
+    "primary": "hypothesis_false",
+    "exact_scope": "stable_cross_dataset_multi_horizon_accuracy_cost_of_exact_projectivity_relative_to_a6_measure",
+    "not_supported": [
+      "optimization_or_numeric_pathology",
+      "capacity_or_initialization_mismatch",
+      "test_only_reversal_as_primary_explanation"
+    ],
+    "retained_signal": "H96 specialization headroom is positive but not sufficient for a multi-horizon soft-projectivity mainline",
+    "decision": "measure_training_explains_close_soft_architecture_route_return_step2"
+  }
+}

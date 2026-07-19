@@ -1,0 +1,132 @@
+{
+  "candidate_version": "SC-D19-IFC-control-v1",
+  "checks_passed": 9,
+  "checks_total": 9,
+  "overall_pass": true,
+  "checks": [
+    {
+      "name": "candidate_identity",
+      "pass": true,
+      "details": "SC-D19-IFC-control-v1"
+    },
+    {
+      "name": "control_only_boundary",
+      "pass": true,
+      "details": {
+        "role": "control_only",
+        "method_claim_authorized": false
+      }
+    },
+    {
+      "name": "five_dataset_matrix",
+      "pass": true,
+      "details": [
+        "Weather",
+        "ETTm1",
+        "ETTh1",
+        "ETTh2",
+        "ETTm2"
+      ]
+    },
+    {
+      "name": "four_arm_matrix",
+      "pass": true,
+      "details": [
+        "A6_MEASURE",
+        "IF_MEASURE",
+        "IF_NOSKIP_MEASURE",
+        "DIRECT_NONLINEAR_MATCHED_MEASURE"
+      ]
+    },
+    {
+      "name": "full_trajectory_contract",
+      "pass": true,
+      "details": {
+        "prediction_length": 720,
+        "spectrum_size": 720,
+        "irfft_length": 720
+      }
+    },
+    {
+      "name": "shared_measure_and_checkpoint",
+      "pass": true,
+      "details": {
+        "prediction_loss_mode": "measure_only",
+        "error_norm": "l1",
+        "checkpoint_rule": "mean_validation_mse_h96_h192_h336_h720",
+        "optimizer": "adam",
+        "learning_rate": 0.0001,
+        "batch_size": 32,
+        "max_epochs": 20,
+        "early_stopping_patience": 5
+      }
+    },
+    {
+      "name": "parameter_formula_and_tolerance",
+      "pass": true,
+      "details": [
+        {
+          "profile": "r2b_p12_d64_ff128_medium",
+          "readout_dim": 768,
+          "if_parameters_computed": 7244859,
+          "if_parameters_frozen": 7244859,
+          "direct_hidden_width": 4565,
+          "direct_parameters_computed": 7245375,
+          "direct_parameters_frozen": 7245375,
+          "relative_gap_percent": 0.007122291821000243
+        },
+        {
+          "profile": "r2b_p24_d32_ff64_narrow",
+          "readout_dim": 768,
+          "if_parameters_computed": 7244859,
+          "if_parameters_frozen": 7244859,
+          "direct_hidden_width": 4565,
+          "direct_parameters_computed": 7245375,
+          "direct_parameters_frozen": 7245375,
+          "relative_gap_percent": 0.007122291821000243
+        },
+        {
+          "profile": "r2b_p24_d64_ff128_medium",
+          "readout_dim": 1536,
+          "if_parameters_computed": 11963451,
+          "if_parameters_frozen": 11963451,
+          "direct_hidden_width": 5080,
+          "direct_parameters_computed": 11964120,
+          "direct_parameters_frozen": 11964120,
+          "relative_gap_percent": 0.0055920319312546185
+        },
+        {
+          "profile": "r2b_p48_d64_ff128_medium",
+          "readout_dim": 3072,
+          "if_parameters_computed": 21400635,
+          "if_parameters_frozen": 21400635,
+          "direct_hidden_width": 5500,
+          "direct_parameters_computed": 21401220,
+          "direct_parameters_frozen": 21401220,
+          "relative_gap_percent": 0.0027335637470570382
+        }
+      ]
+    },
+    {
+      "name": "phase_a_matrix_accounting",
+      "pass": true,
+      "details": {
+        "new_training_runs": 15,
+        "reused_reference_runs": 5,
+        "artifact_units": 20,
+        "official_test_cells": 80,
+        "confirmation_seeds_authorized": false
+      }
+    },
+    {
+      "name": "authorization_boundary",
+      "pass": true,
+      "details": {
+        "step7a_local": true,
+        "remote": false,
+        "official_test": false,
+        "paper_method": false
+      }
+    }
+  ]
+}

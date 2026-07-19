@@ -1,0 +1,5 @@
+comparison,split,macro_gain_percent,positive_cells
+a6_measure_over_a6_full,test,1.7979628333669024,15
+specialist_over_a6_full,test,1.9574138416499303,15
+specialist_over_a6_measure,test,0.16589046081497769,7
+specialist_over_a6_measure,validation,0.42045516393329246,7

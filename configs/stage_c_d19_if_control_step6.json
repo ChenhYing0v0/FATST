@@ -1,0 +1,160 @@
+{
+  "candidate_version": "SC-D19-IFC-control-v1",
+  "role": "control_only",
+  "current_step": 6,
+  "test_informed": true,
+  "method_claim_authorized": false,
+  "source": {
+    "paper": "https://papers.nips.cc/paper_files/paper/2025/hash/0e82ef0c89df6a6eff8734ea7e27c42f-Abstract-Conference.html",
+    "official_code": "https://github.com/rakuyorain/Implicit-Forecaster",
+    "audit_date": "2026-07-19"
+  },
+  "data": {
+    "profiles": "configs/stage_c_five_dataset_natural_profiles.json",
+    "datasets": [
+      "Weather",
+      "ETTm1",
+      "ETTh1",
+      "ETTh2",
+      "ETTm2"
+    ],
+    "seed": 2021,
+    "lookback": 96,
+    "full_prediction_length": 720,
+    "paper_horizons": [
+      96,
+      192,
+      336,
+      720
+    ]
+  },
+  "shared_training": {
+    "prediction_loss_mode": "measure_only",
+    "error_norm": "l1",
+    "checkpoint_rule": "mean_validation_mse_h96_h192_h336_h720",
+    "optimizer": "adam",
+    "learning_rate": 0.0001,
+    "batch_size": 32,
+    "max_epochs": 20,
+    "early_stopping_patience": 5
+  },
+  "implicit_forecaster": {
+    "spectrum_size": 720,
+    "spectrum_bins": 361,
+    "history_spectrum_bins": 49,
+    "fourier_norm": "ortho",
+    "hidden_width": 2048,
+    "head_dropout": 0.1,
+    "amplitude_activation": "alu_w0.5",
+    "phase_activation": "tanh_sin_cos_atan2",
+    "irfft_length_explicit": 720
+  },
+  "arms": [
+    {
+      "id": "A6_MEASURE",
+      "readout": "learned-basis-forecast-operator",
+      "input_spectrum": false,
+      "purpose": "mandatory_effectiveness_reference"
+    },
+    {
+      "id": "IF_MEASURE",
+      "readout": "implicit-frequency-amplitude-phase",
+      "input_spectrum": true,
+      "purpose": "source_informed_trajectory_control"
+    },
+    {
+      "id": "IF_NOSKIP_MEASURE",
+      "readout": "implicit-frequency-amplitude-phase",
+      "input_spectrum": "zero_replacement_same_shape",
+      "purpose": "input_spectrum_skip_attribution"
+    },
+    {
+      "id": "DIRECT_NONLINEAR_MATCHED_MEASURE",
+      "readout": "direct-nonlinear-matched",
+      "input_spectrum": true,
+      "purpose": "generic_nonlinearity_and_capacity_control"
+    }
+  ],
+  "profile_contracts": {
+    "r2b_p12_d64_ff128_medium": {
+      "readout_dim": 768,
+      "if_decoder_parameters": 7244859,
+      "direct_hidden_width": 4565,
+      "direct_decoder_parameters": 7245375,
+      "absolute_parameter_gap": 516,
+      "relative_parameter_gap_percent": 0.007122291821004545
+    },
+    "r2b_p24_d32_ff64_narrow": {
+      "readout_dim": 768,
+      "if_decoder_parameters": 7244859,
+      "direct_hidden_width": 4565,
+      "direct_decoder_parameters": 7245375,
+      "absolute_parameter_gap": 516,
+      "relative_parameter_gap_percent": 0.007122291821004545
+    },
+    "r2b_p24_d64_ff128_medium": {
+      "readout_dim": 1536,
+      "if_decoder_parameters": 11963451,
+      "direct_hidden_width": 5080,
+      "direct_decoder_parameters": 11964120,
+      "absolute_parameter_gap": 669,
+      "relative_parameter_gap_percent": 0.005592031931245245
+    },
+    "r2b_p48_d64_ff128_medium": {
+      "readout_dim": 3072,
+      "if_decoder_parameters": 21400635,
+      "direct_hidden_width": 5500,
+      "direct_decoder_parameters": 21401220,
+      "absolute_parameter_gap": 585,
+      "relative_parameter_gap_percent": 0.002733563747048251
+    }
+  },
+  "phase_a": {
+    "new_training_runs": 15,
+    "reused_reference_runs": 5,
+    "artifact_units": 20,
+    "official_test_cells": 80,
+    "confirmation_seeds_authorized": false
+  },
+  "hard_gates": {
+    "if_over_a6": {
+      "mse_macro_gain_percent_min": 0.3,
+      "mse_positive_cells_min": 11,
+      "mse_positive_datasets_min": 3,
+      "mse_positive_horizons_min": 3,
+      "mae_macro_gain_percent_min": 0.0
+    },
+    "if_over_direct_matched": {
+      "mse_macro_gain_percent_min": 0.3,
+      "mse_positive_cells_min": 11,
+      "mse_positive_datasets_min": 3,
+      "mse_positive_horizons_min": 3,
+      "mae_macro_gain_percent_min": 0.0
+    },
+    "if_over_no_skip": {
+      "mse_macro_gain_percent_min": 0.0,
+      "mse_positive_datasets_min": 3
+    },
+    "protocol": {
+      "matrix_complete": true,
+      "all_finite": true,
+      "prefix_max_abs_max": 1e-06,
+      "paired_encoder_initialization_per_dataset": true,
+      "if_no_skip_identical_decoder_initialization": true,
+      "direct_parameter_gap_percent_max": 0.1
+    }
+  },
+  "decision_map": {
+    "if_beats_a6_and_direct": "trajectory_structure_headroom_supported_return_step2_4_for_novel_method_research",
+    "if_beats_a6_not_direct": "generic_nonlinear_capacity_explains_no_wave_claim",
+    "direct_beats_a6_if_not": "generic_direct_headroom_only_no_implicit_claim",
+    "neither_beats_a6": "close_implicit_trajectory_control_and_start_fixed_past_decoder_viability_review",
+    "numeric_or_protocol_failure": "repair_exact_control_implementation_only"
+  },
+  "authorization": {
+    "step7a_local": true,
+    "remote": false,
+    "official_test": false,
+    "paper_method": false
+  }
+}

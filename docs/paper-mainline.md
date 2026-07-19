@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD — Fixed-Past Projective Multi-Horizon Generation |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | D17 Step2 negative；D18 Step8 diagnostic running |
+| `current_11_step` | D18 Step9/10 closed；Contribution 1/2 Step2；D19 control Step6 pass / Step7A next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | no active two-contribution method；SIFF-v2 parent frozen；D18 diagnostic authorized，method=false |
+| `paper_core_status` | no active two-contribution method；SIFF-v2 parent frozen；D19 control Step6 pass，method=false |
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
@@ -48,23 +48,27 @@ prefix-safe future-context D17没有通过problem gate：causal相对pointwise `
 `-2.3616%`，pointwise correction相对parent亦为`-28.7314%`。该结果带有validation→test transfer pathology，
 只关闭frozen post-hoc correction，不方向级否定E2E operator；但没有正向证据时不允许进入Step4实现。
 
-当前仅保留新的Step2问题：
+D18现已关闭该问题。25/25 artifact units与15/15 own-H official-test cells完整：specialists相对
+`A6_MEASURE`仅`+0.1659%` MSE、7/15 cells、2/5 datasets与1/3 horizons为正，七项gates只通过2项；
+`A6_MEASURE`相对`A6_FULL`却为`+1.7980%`且15/15 cells全正。因此表面specialization收益由measure training
+解释，未证明exact projectivity存在稳定accuracy cost。
 
-> 一个强A6_MEASURE exact-projective model，相比同architecture但分别优化H96/H192/H336的horizon-specific
-> oracle controls，是否在各自horizon上付出稳定accuracy cost？
+[Decision] controlled soft projectivity、consistency penalty sweep与requested-H feature关闭，不补D18 seeds。
+Contribution 1/2均回Step2。当前新的问题收紧为：
 
-`SC-D18-SPC`将在不实现新method的前提下测量该headroom。若不存在，controlled soft projectivity没有研究必要；
-若稳定存在，才进入Step4研究有限$\lambda$下的accuracy–consistency frontier。separate horizon-specific models
-只是problem controls，不是Contribution 1。Contribution 2仍为空。
+> 在不把requested horizon作为semantic input、保持single full-$T$ trajectory与prefix crop的条件下，
+> trajectory-level structured decoder是否仍能超过strong A6_MEASURE learned-basis generator？
 
-D18 Step3现已冻结并通过`11/11` prelaunch gate：五dataset上新增15个specialist runs，并复用10个
-A6_MEASURE/A6_FULL controls；15个local gradient checks确认prefix有梯度、tail gradient严格为0，full-crop
-prefix gap为0。formal test角色为`test_informed problem-existence diagnostic`，不允许按dataset/horizon调参。
-remote matrix已于`2026-07-19T14:31:07+08:00`从commit`c843178`在GPU0/1/2启动；此运行不等于
-soft-projective method authorization。
+下一步`SC-D19-IFC`只把Implicit Forecaster作为source-informed control，比较frequency/amplitude/phase wave
+generation与A6 learned basis，并加入no-skip和matched MLP controls。IF已有NeurIPS 2025直接prior，不能作为本项目
+Contribution 1；D19只判断decoder forecasting phase是否还有真实headroom。Step4/5 code audit已确认upstream
+本身固定生成720 points再crop，因此projectivity可直接保持；但IF同时增加nonlinear synthesis与raw input
+spectrum skip，不能用单一IF-vs-A6结果判断wave mechanism。
 
-在D18通过前，requested horizon仍不作为learned semantic feature，旧point/block/global adaptive coupling thesis
-与SIFF/CCSF只保留为historical evidence，不再描述当前论文机制。
+Step6已将`A6_MEASURE/IF_MEASURE/IF_NOSKIP_MEASURE/DIRECT_NONLINEAR_MATCHED_MEASURE`四arm、
+five datasets、seed2021、four-horizon validation selector与80个official-test cells完整冻结，静态gate 9/9。
+IF与matched-direct逐profile参数差小于0.1%，用于分离polar/frequency structure与generic nonlinear/capacity。
+当前仅授权Step7A local implementation；remote、official test与paper-method promotion仍未授权。
 
 forecast-revision surface已转移到根目录`New-idea.md`，状态`deferred_next_paper`；它不再是当前论文问题。
 
@@ -879,6 +883,12 @@ loss 或更多 tuning 来掩盖失败。
 
 ## Canonical Active Artifacts
 
+- `analysis/stage_c_post_ccsf_step24_reset_20260719/d18_step9/d18_step9_four_layer_diagnostic.md`
+- `analysis/stage_c_post_ccsf_step24_reset_20260719/post_d18_step2_mainline_viability_audit.md`
+- `analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step45_source_theory_control_audit.md`
+- `analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step6_control_design.md`
+- `configs/stage_c_d19_if_control_step6.json`
+- `Papers/implicit-forecaster-neurips2025.md`
 - `analysis/stage_c_sc2_pcc_step7b_seed2021_20260717/step9_10_result_and_failure_attribution.md`
 - `analysis/stage_c_post_pcc_step4_redesign_20260717/source_informed_redesign_audit.md`
 - `analysis/stage_c_post_pcc_step5_theory_20260717/step5_theory_feasibility.md`

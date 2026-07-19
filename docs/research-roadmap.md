@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D17 Step2 negative；D18 Step8 diagnostic running |
-| `active_question` | horizon-specific loss能否稳定超过A6_MEASURE，从而证明exact projectivity存在accuracy cost？ |
-| `active_candidates` | SIFF-v2 frozen parent；D17 closed；SC-D18-SPC diagnostic running；no method；CTD paused |
+| `current_step` | D18 Step9/10 closed；Contribution 1/2 Step2；D19 control Step6 pass / Step7A next |
+| `active_question` | trajectory-level structured decoding相对A6_MEASURE learned-basis control是否仍有headroom？ |
+| `active_candidates` | SIFF-v2 frozen parent；D18 closed；SC-D19-IFC control Step6 pass；no method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/d18_prelaunch/step3_prelaunch_report.md` |
-| `method_implementation` | none authorized；CCSF exact route closed |
-| `rollback_point` | D18 fail → Contribution 1 Step2/mainline viability audit；Contribution 2=Step2；no router/future-context rescue sweep |
+| `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step6_control_design.md` |
+| `method_implementation` | D19 Step7A local control implementation only；remote/test/paper method false |
+| `rollback_point` | D19 no headroom → fixed-past decoder paper viability review；Contribution 2=Step2 |
 
 ## post-CCSF Step 2/4 Reset
 
@@ -39,6 +39,34 @@ Step3与代码契约见
 remote preflight与Weather SPEC96 resource smoke通过后，D18于`2026-07-19T14:31:07+08:00`在GPU0/1/2启动。
 运行中保持commit`c843178`、config/gates与25-unit matrix不变；完成后先执行完整problem gate，不查看或挑选局部
 有利cells。
+
+## D18 Step 9–10 Result And Step 2 Rollback
+
+D18现已25/25 artifact units完整。specialists相对`A6_MEASURE`仅`+0.1659%` MSE、`7/15` cells、
+`2/5` datasets与`1/3` horizons为正；七项预注册categories仅通过prediction deformation与protocol/numeric两项。
+相反，`A6_MEASURE`相对`A6_FULL`为`+1.7980%`且15/15 cells正向，说明表面specialization收益主要由统一
+measure training解释，而不是strict projectivity的accuracy cost。
+
+validation也只为`+0.4205%`、7/15 cells，且H336为`-0.7301%`；15个specialists没有best epoch卡训练预算。
+因此失败不是test-only reversal、arms collapse或明显optimization pathology。decision=
+`measure_training_explains_close_soft_architecture_route_return_step2`。
+
+soft projectivity、consistency-$\lambda$ sweep与requested-H feature全部关闭。下一步先以最新Implicit Forecaster作为
+`SC-D19-IFC control_only`完成source/code/theory audit：比较A6 learned basis与implicit frequency/amplitude/phase
+trajectory generation是否还有真实headroom。IF本身已有NeurIPS 2025直接prior，不是本项目method。harmonic
+measure weighting也继续只作mandatory control。
+
+D19 Step4/5现已完成。official implementation确认所有pred_len都先用`spectrum_size=720`经iFFT生成full
+trajectory，再crop loss prefix；因此synthesis天然满足当前projectivity contract，但upstream仍按horizon分别训练。
+IF相对A6同时引入nonlinear polar synthesis与raw input spectrum skip，所以Step6必须冻结`A6_MEASURE`、
+`IF_MEASURE`、`IF_NOSKIP_MEASURE`与`DIRECT_NONLINEAR_MATCHED_MEASURE`四arm，不能只做IF-vs-A6。
+Step6现已冻结five datasets、seed2021、four-horizon validation selector、15个新训练run + 5个复用A6，以及
+IF/direct逐profile参数差不超过0.1%的matched control；静态gate为9/9。Decision=
+`step6_pass_step7a_local_only`；下一步只实现production heads与shape/projectivity/gradient/parameter/CLI
+local gate，remote/test/paper method继续false。
+
+详见`analysis/stage_c_post_ccsf_step24_reset_20260719/d18_step9/d18_step9_four_layer_diagnostic.md`与
+`analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step6_control_design.md`。
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 
