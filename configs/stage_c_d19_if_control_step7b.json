@@ -1,0 +1,247 @@
+{
+  "stage": "StageC-UVHF",
+  "diagnostic_id": "D19",
+  "candidate_version": "SC-D19-IFC-control-v1.1",
+  "status": "authorized_prelaunch",
+  "role": "control_only",
+  "test_informed": true,
+  "method_claim_authorized": false,
+  "paper_method_authorized": false,
+  "checkpoint_selection_contract": "best-validation-mean-mse-h96-h192-h336-h720",
+  "profiles": {
+    "path": "configs/stage_c_five_dataset_natural_profiles.json",
+    "sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a"
+  },
+  "contracts": {
+    "step6_path": "configs/stage_c_d19_if_control_step6_v1_1.json",
+    "step6_sha256": "edb803f4349113a369548a1c29df5199606dcac8f2cf1c4681916d23f1e47917",
+    "step7a_path": "configs/stage_c_d19_if_control_step7a.json",
+    "step7a_sha256": "022a5355b0589231fafde303695de792bd2cf31309a140f42f3859bf371e9fb7",
+    "step7a_gate_path": "analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step7a_local/gate_summary.json",
+    "step7a_gate_sha256": "d8a023ffed3b262f5ff85178b8b7c6c85432c328d650f6da7fe692d94d5681cc",
+    "timealign_model_path": "baselines/timealign_official/models/TimeAlign.py",
+    "timealign_model_sha256": "5d950a8a49c67dd38769d5ff29f297a85ba5df5a4705e63d5a4e8a7e1373346d",
+    "implicit_layer_path": "baselines/timealign_official/layers/ImplicitForecast.py",
+    "implicit_layer_sha256": "133ecddead25dac2ad99cb54afaccd2ed71d9216036e1db6b654f5e47f962424"
+  },
+  "datasets": ["Weather", "ETTm1", "ETTh1", "ETTh2", "ETTm2"],
+  "seeds": [2021],
+  "arms": [
+    {
+      "id": "a6_measure",
+      "readout_mode": "learned-basis-forecast-operator",
+      "objective_mode": "measure_only",
+      "training_new": false
+    },
+    {
+      "id": "if_measure",
+      "readout_mode": "implicit-frequency-readout",
+      "objective_mode": "measure_only",
+      "training_new": true
+    },
+    {
+      "id": "if_noskip_measure",
+      "readout_mode": "implicit-frequency-noskip-control",
+      "objective_mode": "measure_only",
+      "training_new": true
+    },
+    {
+      "id": "direct_nonlinear_matched_measure",
+      "readout_mode": "implicit-direct-nonlinear-matched",
+      "objective_mode": "measure_only",
+      "training_new": true
+    }
+  ],
+  "matrix": {
+    "datasets": ["Weather", "ETTm1", "ETTh1", "ETTh2", "ETTm2"],
+    "arms": [
+      "a6_measure",
+      "if_measure",
+      "if_noskip_measure",
+      "direct_nonlinear_matched_measure"
+    ],
+    "seed": 2021,
+    "horizons": [96, 192, 336, 720],
+    "metrics": ["mse", "mae"],
+    "expected_runs": 20,
+    "new_training_runs": 15,
+    "reused_reference_runs": 5,
+    "official_test_cells": 80
+  },
+  "training": {
+    "target_horizons": [720],
+    "validation_horizons": [96, 192, 336, 720],
+    "pred_loss_mode": "full",
+    "pcc_objective_mode": "measure_only",
+    "training_final_evaluation_split": "val",
+    "checkpoint_policy": "best-val",
+    "optimizer": "AdamW",
+    "learning_rate": 0.0001,
+    "batch_size": 32,
+    "max_epochs": 20,
+    "early_stopping_patience": 5,
+    "initialization": "from_scratch_paired_by_seed"
+  },
+  "training_contracts": [
+    {
+      "target_horizons": [720],
+      "validation_horizons": [96, 192, 336, 720],
+      "pred_loss_mode": "full",
+      "pcc_objective_mode": "measure_only",
+      "training_final_evaluation_split": "val"
+    }
+  ],
+  "implicit_forecaster": {
+    "history_length": 720,
+    "series_length": 720,
+    "history_spectrum_bins": 361,
+    "spectrum_bins": 361,
+    "fourier_norm": "ortho",
+    "hidden_width": 2048,
+    "head_dropout": 0.1
+  },
+  "profile_contracts": {
+    "r2b_p12_d64_ff128_medium": {
+      "readout_dim": 768,
+      "if_decoder_parameters": 9161787,
+      "direct_hidden_width": 4143,
+      "direct_decoder_parameters": 9160893,
+      "relative_parameter_gap_percent": 0.009757921680562973
+    },
+    "r2b_p24_d32_ff64_narrow": {
+      "readout_dim": 768,
+      "if_decoder_parameters": 9161787,
+      "direct_hidden_width": 4143,
+      "direct_decoder_parameters": 9160893,
+      "relative_parameter_gap_percent": 0.009757921680562973
+    },
+    "r2b_p24_d64_ff128_medium": {
+      "readout_dim": 1536,
+      "if_decoder_parameters": 13880379,
+      "direct_hidden_width": 4659,
+      "direct_decoder_parameters": 13879881,
+      "relative_parameter_gap_percent": 0.0035877982870640636
+    },
+    "r2b_p48_d64_ff128_medium": {
+      "readout_dim": 3072,
+      "if_decoder_parameters": 23317563,
+      "direct_hidden_width": 5164,
+      "direct_decoder_parameters": 23316180,
+      "relative_parameter_gap_percent": 0.005931151553016068
+    }
+  },
+  "control_source": {
+    "arm_id": "a6_measure",
+    "remote_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_equal_attribution_v2",
+    "protocol_profile": "stage_c_siff_equal_attribution_v2",
+    "selection_rule": "best-validation-mean-mse-h96-h192-h336-h720"
+  },
+  "comparisons": [
+    {
+      "id": "if_vs_a6",
+      "candidate": "if_measure",
+      "reference": "a6_measure",
+      "role": "carrier_effectiveness"
+    },
+    {
+      "id": "if_vs_direct",
+      "candidate": "if_measure",
+      "reference": "direct_nonlinear_matched_measure",
+      "role": "structured_synthesis_attribution"
+    },
+    {
+      "id": "if_vs_noskip",
+      "candidate": "if_measure",
+      "reference": "if_noskip_measure",
+      "role": "history_spectrum_skip_attribution"
+    }
+  ],
+  "effectiveness_gates": {
+    "if_vs_a6": {
+      "mse_macro_gain_percent_min": 0.3,
+      "mse_cell_wins_min": 11,
+      "mse_dataset_wins_min": 3,
+      "mse_horizon_wins_min": 3,
+      "mae_macro_gain_percent_min": 0.0
+    },
+    "if_vs_direct": {
+      "mse_macro_gain_percent_min": 0.3,
+      "mse_cell_wins_min": 11,
+      "mse_dataset_wins_min": 3,
+      "mse_horizon_wins_min": 3,
+      "mae_macro_gain_percent_min": 0.0
+    },
+    "if_vs_noskip": {
+      "mse_macro_gain_percent_min": 0.0,
+      "mse_cell_wins_min": 10,
+      "mse_dataset_wins_min": 3,
+      "mse_horizon_wins_min": 2,
+      "mae_macro_gain_percent_min": -1000000000.0
+    }
+  },
+  "internal_health_gates": {
+    "all_finite": true,
+    "prefix_max_abs_max": 0.000001,
+    "parameter_gap_percent_max": 0.1,
+    "paired_encoder_initialization": true,
+    "if_no_skip_identical_decoder_initialization": true,
+    "prediction_deformation_nrmse_min": 0.000001,
+    "amplitude_standard_deviation_min": 0.000001,
+    "phase_radius_mean_min": 0.000001
+  },
+  "diagnostic_protocol": {
+    "probe_rows": 256,
+    "future_bins": [
+      {"name": "H1_48", "start": 0, "end": 48},
+      {"name": "H49_96", "start": 48, "end": 96},
+      {"name": "H97_144", "start": 96, "end": 144},
+      {"name": "H145_192", "start": 144, "end": 192},
+      {"name": "H193_288", "start": 192, "end": 288},
+      {"name": "H289_336", "start": 288, "end": 336},
+      {"name": "H337_512", "start": 336, "end": 512},
+      {"name": "H513_720", "start": 512, "end": 720}
+    ]
+  },
+  "launch_order": [
+    ["Weather", "if_measure"],
+    ["Weather", "if_noskip_measure"],
+    ["ETTm1", "if_measure"],
+    ["Weather", "direct_nonlinear_matched_measure"],
+    ["ETTm1", "if_noskip_measure"],
+    ["ETTm1", "direct_nonlinear_matched_measure"],
+    ["ETTh1", "if_measure"],
+    ["ETTh1", "if_noskip_measure"],
+    ["ETTh1", "direct_nonlinear_matched_measure"],
+    ["ETTh2", "if_measure"],
+    ["ETTh2", "if_noskip_measure"],
+    ["ETTh2", "direct_nonlinear_matched_measure"],
+    ["ETTm2", "if_measure"],
+    ["ETTm2", "if_noskip_measure"],
+    ["ETTm2", "direct_nonlinear_matched_measure"]
+  ],
+  "authorization": {
+    "user_authorized": true,
+    "authorization_date": "2026-07-19",
+    "user_authorization_basis": "continue the experiment and do not monitor after remote launch",
+    "remote_training_authorized": true,
+    "formal_test_access_authorized": true,
+    "formal_phase_a_authorized": true,
+    "checkpoint_retraining_allowed": true,
+    "checkpoint_mutation_during_test_allowed": false,
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+    "test_role": "primary-problem-existence-diagnostic",
+    "formal_test_access_count_for_version": 1,
+    "per_dataset_horizon_or_cell_tuning_allowed": false,
+    "reused_control_protocol_profiles": [
+      "stage_c_siff_equal_attribution_v2"
+    ],
+    "confirmation_seeds_authorized": false,
+    "paper_method_authorized": false
+  },
+  "rollback": {
+    "on_effectiveness_failure": "Step 2/4",
+    "on_attribution_failure": "Step 4",
+    "on_numeric_or_protocol_pathology": "Step 6/7A",
+    "forbidden_promotion": "D19 remains control_only regardless of a positive scorecard"
+  }
+}

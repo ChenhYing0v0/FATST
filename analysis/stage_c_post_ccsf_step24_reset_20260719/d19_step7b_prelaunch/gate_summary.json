@@ -1,0 +1,53 @@
+{
+  "artifact_units": 20,
+  "authorization_after_gate": {
+    "confirmation_seeds": false,
+    "official_test": true,
+    "paper_method": false,
+    "remote": true
+  },
+  "candidate_version": "SC-D19-IFC-control-v1.1",
+  "categories": {
+    "analyzer": {
+      "overall_pass": true,
+      "passed": 1,
+      "total": 1
+    },
+    "authorization": {
+      "overall_pass": true,
+      "passed": 2,
+      "total": 2
+    },
+    "cli": {
+      "overall_pass": true,
+      "passed": 15,
+      "total": 15
+    },
+    "contracts": {
+      "overall_pass": true,
+      "passed": 6,
+      "total": 6
+    },
+    "evaluator": {
+      "overall_pass": true,
+      "passed": 1,
+      "total": 1
+    },
+    "matrix": {
+      "overall_pass": true,
+      "passed": 4,
+      "total": 4
+    },
+    "runner": {
+      "overall_pass": true,
+      "passed": 2,
+      "total": 2
+    }
+  },
+  "checks_passed": 31,
+  "checks_total": 31,
+  "manifest_rows": 15,
+  "official_test_cells": 80,
+  "overall_pass": true,
+  "role": "control_only"
+}

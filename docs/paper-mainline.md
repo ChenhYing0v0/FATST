@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD — Fixed-Past Projective Multi-Horizon Generation |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | D18 Step9/10 closed；Contribution 1/2 Step2；D19 control Step7A pass / Step7B prelaunch next |
+| `current_11_step` | D18 Step9/10 closed；Contribution 1/2 Step2；D19 control Step7B prelaunch pass / Step8 launch next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | no active two-contribution method；SIFF-v2 parent frozen；D19 control v1.1 Step7A pass，method=false |
+| `paper_core_status` | no active two-contribution method；SIFF-v2 parent frozen；D19 control v1.1 Step7B prelaunch pass，method=false |
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
@@ -73,8 +73,9 @@ training/test前被v1.1替代。v1.1让Encoder、IF skip和matched direct读取�
 并重新匹配参数。
 
 v1.1 Step7A现已114/114通过，maximum prefix gap为0，paired Encoder与IF/no-skip decoder hashes、required
-gradients、numeric与production CLI均通过。当前只进入Step7B prelaunch；remote、official test与paper-method
-promotion仍未授权。
+gradients、numeric与production CLI均通过。Step7B prelaunch又以31/31通过，冻结15个new runs、5个复用A6、
+80个official-test cells与四层诊断。seed2021一次remote/test control audit已授权；confirmation seeds与
+paper-method promotion仍未授权。
 
 forecast-revision surface已转移到根目录`New-idea.md`，状态`deferred_next_paper`；它不再是当前论文问题。
 

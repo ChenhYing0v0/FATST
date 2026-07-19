@@ -1,0 +1,32 @@
+category,case,value,threshold,pass
+contracts,step6,edb803f4349113a369548a1c29df5199606dcac8f2cf1c4681916d23f1e47917,edb803f4349113a369548a1c29df5199606dcac8f2cf1c4681916d23f1e47917,True
+contracts,step7a,022a5355b0589231fafde303695de792bd2cf31309a140f42f3859bf371e9fb7,022a5355b0589231fafde303695de792bd2cf31309a140f42f3859bf371e9fb7,True
+contracts,step7a_gate,d8a023ffed3b262f5ff85178b8b7c6c85432c328d650f6da7fe692d94d5681cc,d8a023ffed3b262f5ff85178b8b7c6c85432c328d650f6da7fe692d94d5681cc,True
+contracts,timealign_model,5d950a8a49c67dd38769d5ff29f297a85ba5df5a4705e63d5a4e8a7e1373346d,5d950a8a49c67dd38769d5ff29f297a85ba5df5a4705e63d5a4e8a7e1373346d,True
+contracts,implicit_layer,133ecddead25dac2ad99cb54afaccd2ed71d9216036e1db6b654f5e47f962424,133ecddead25dac2ad99cb54afaccd2ed71d9216036e1db6b654f5e47f962424,True
+contracts,dataset_profiles,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a,True
+matrix,new_training_runs,15,15,True
+matrix,artifact_units,20,20,True
+matrix,official_test_cells,80,80,True
+matrix,three_new_arms,3,3,True
+cli,Weather_if_measure,implicit-frequency-readout,frozen D19 training contract,True
+cli,Weather_if_noskip_measure,implicit-frequency-noskip-control,frozen D19 training contract,True
+cli,ETTm1_if_measure,implicit-frequency-readout,frozen D19 training contract,True
+cli,Weather_direct_nonlinear_matched_measure,implicit-direct-nonlinear-matched,frozen D19 training contract,True
+cli,ETTm1_if_noskip_measure,implicit-frequency-noskip-control,frozen D19 training contract,True
+cli,ETTm1_direct_nonlinear_matched_measure,implicit-direct-nonlinear-matched,frozen D19 training contract,True
+cli,ETTh1_if_measure,implicit-frequency-readout,frozen D19 training contract,True
+cli,ETTh1_if_noskip_measure,implicit-frequency-noskip-control,frozen D19 training contract,True
+cli,ETTh1_direct_nonlinear_matched_measure,implicit-direct-nonlinear-matched,frozen D19 training contract,True
+cli,ETTh2_if_measure,implicit-frequency-readout,frozen D19 training contract,True
+cli,ETTh2_if_noskip_measure,implicit-frequency-noskip-control,frozen D19 training contract,True
+cli,ETTh2_direct_nonlinear_matched_measure,implicit-direct-nonlinear-matched,frozen D19 training contract,True
+cli,ETTm2_if_measure,implicit-frequency-readout,frozen D19 training contract,True
+cli,ETTm2_if_noskip_measure,implicit-frequency-noskip-control,frozen D19 training contract,True
+cli,ETTm2_direct_nonlinear_matched_measure,implicit-direct-nonlinear-matched,frozen D19 training contract,True
+authorization,formal_test_audit,"{""authorization_date"": ""2026-07-19"", ""checkpoint_mutation_during_test_allowed"": false, ""checkpoint_retraining_allowed"": true, ""checkpoint_selection"": ""best-validation-mean-mse-h96-h192-h336-h720"", ""confirmation_seeds_authorized"": false, ""formal_phase_a_authorized"": true, ""formal_test_access_authorized"": true, ""formal_test_access_count_for_version"": 1, ""paper_method_authorized"": false, ""per_dataset_horizon_or_cell_tuning_allowed"": false, ""remote_training_authorized"": true, ""reused_control_protocol_profiles"": [""stage_c_siff_equal_attribution_v2""], ""test_role"": ""primary-problem-existence-diagnostic"", ""user_authorization_basis"": ""continue the experiment and do not monitor after remote launch"", ""user_authorized"": true}",authorized_prelaunch,True
+authorization,control_only_boundary,control_only,control_only,True
+runner,bash_syntax,pass,pass,True
+runner,dry_run_15_jobs,d19_dry_run=pass jobs=15 config_hash=60c30fa672884c1acf01ac81e9042f1fccc45dcc21981749af4b8544ac354fe8 profile_hash=80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a remote_authorized=true test_authorized=true,jobs=15,True
+evaluator,d19_internal_tensor_smoke,d19_checkpoint_evaluator_synthetic_smoke=pass,pass,True
+analyzer,four_layer_synthetic_smoke,d19_analyzer_synthetic_smoke=pass,pass,True

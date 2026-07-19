@@ -9,7 +9,7 @@
 | `active_question` | trajectory-level structured decoder相对strong A6_MEASURE learned-basis control是否仍有可测headroom？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | `SC1-SIFF-v2-EQ-ATTR-v1` frozen parent；D18 closed；`SC-D19-IFC-control-v1.1 control_only` Step7A pass / Step7B prelaunch next；no method；CTD paused |
+| `active_candidates` | `SC1-SIFF-v2-EQ-ATTR-v1` frozen parent；D18 closed；`SC-D19-IFC-control-v1.1 control_only` Step7B prelaunch pass / Step8 launch next；no method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
@@ -19,18 +19,18 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | D18 Step9/10 closed；Contribution 1/2 Step2；D19 control Step7A pass / Step7B prelaunch next |
-| `current_candidate` | immutable SIFF-v2 parent；`SC-D19-IFC-control-v1.1 control_only` Step7B prelaunch next；no method |
+| `current_11_step` | D18 Step9/10 closed；Contribution 1/2 Step2；D19 control Step7B prelaunch pass / Step8 launch next |
+| `current_candidate` | immutable SIFF-v2 parent；`SC-D19-IFC-control-v1.1 control_only` Step8 remote launch next；no method |
 | `latest_decision` | specialists vs A6_MEASURE仅+0.1659%、7/15；measure explains；soft projectivity closed |
-| `next_required_action` | 实现D19 15-run runner、real-batch/resource smoke、completeness/analyzer与remote/test authorization gate |
-| `method_training_authorized` | false；D19 Step7A=114/114；Step7B prelaunch only；remote/test/paper method=false |
+| `next_required_action` | commit/push后在3090执行preflight、Weather IF + ETTm2 direct resource smoke并后台启动15-run matrix |
+| `method_training_authorized` | false；D19 Step7B=31/31；seed2021 control remote/test=true；confirmation/paper method=false |
 | `rollback_point` | D19 control无headroom → fixed-past decoder paper viability review；Contribution 2=Step2 |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Contribution 1 Step2；Contribution 2 Step2；D19 control Step7B prelaunch next |
+| `current_step` | Contribution 1 Step2；Contribution 2 Step2；D19 control Step8 launch next |
 | `problem` | strict projectivity cost不成立后，forecasting phase是否仍存在超越A6 learned-basis的trajectory-structure headroom |
 | `existence_evidence` | D18 specialists vs A6_MEASURE仅+0.1659%；A6_MEASURE vs A6_FULL +1.798%、15/15 |
 | `idea` | source-informed IF作为control，与A6_MEASURE及matched MLP做from-scratch E2E比较 |
@@ -38,8 +38,8 @@
 | `design` | v1.1修复为same 720-history；A6/IF/IF-no-skip/matched-direct × five datasets；Step7A 114/114 |
 | `narrative_gate` | no active child candidate |
 | `effectiveness_gate` | CCSF false；SIFF-v2 parent为performance-near但attribution blocked |
-| `artifacts` | D18 report + IF note + D19 v1.1 repair/config + Step7A manifest/cases/report |
-| `decision` | D19 v1 superseded before training；v1.1 Step7A pass；只进入Step7B prelaunch，no remote/method |
+| `artifacts` | D18 report + IF note + D19 v1.1 repair + Step7A + Step7B config/manifest/gates/runner/analyzer |
+| `decision` | D19 v1 superseded before training；v1.1 Step7B 31/31；一次seed2021 control remote/test已授权，no method/confirmation |
 
 ## Frozen Carrier Contract
 
@@ -104,7 +104,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC1-CCSF-D4` | `diagnostic_only_closed` | soft policy是否只需global sharpening或hard routing | not a method gate | best native arm仍-0.0186%、1/5；hard routing更差 | softness not primary；close contrast-policy route |
 | `SC-D17-PFC-v1` | `diagnostic_only_conditional_negative_closed_exact_protocol` | frozen full-domain draft的ordered prefix context能否超越pointwise与row-shuffled controls并跨validation→test transfer | not a method gate；dual-carrier conditional evidence only | causal vs pointwise -3.0356%；vs shuffled -2.3616%；pointwise vs parent -28.7314%；1/7 gates | exact post-hoc protocol closed；direction unresolved；no E2E rescue |
 | `SC-D18-SPC` | `diagnostic_only_closed_problem_false` | horizon-specific loss是否稳定超过A6_MEASURE，从而证明exact projectivity有accuracy cost | not a method gate | 25/25；vs A6_MEASURE +0.1659%、7/15；2/7 gates | no seeds；soft route closed；rollback Step2 |
-| `SC-D19-IFC-control-v1.1` | `control_only_step7a_pass_step7b_prelaunch_next` | source-informed implicit trajectory decoder是否超过A6 learned-basis control | not a contribution；IF prior mandatory | 114/114 local；effectiveness not started | build 15-run prelaunch/resource/completeness gate；remote/test false |
+| `SC-D19-IFC-control-v1.1` | `control_only_step7b_prelaunch_pass_step8_launch_next` | source-informed implicit trajectory decoder是否超过A6 learned-basis control | not a contribution；IF prior mandatory | Step7A 114/114；Step7B 31/31；effectiveness not started | 3090 resource smoke + 15-run launch；confirmation false |
 | `SC2-MCCA-v1` | `historical_validation_negative_fair_test_not_reaudited` | same total scope skill mass能否竞争性分配而避免per-target homogenization | complete-chain conditional pass | old best-H720 validation four-H -0.1357%、1/5；not in 70-run audit | inactive；reuse前回Step4重审相对EQUAL/MEASURE的必要性 |
 | `SC-D16-CTD` | `deferred_paused_by_user` | H720 checkpoint是否丢弃healthy SIFF four-H epoch | diagnostic only；weighted checkpoint prior-covered | not implemented | design retained；resume only after user authorization |
 | `SC-RETRO-FAIR-v1` | `completed_partial_pass_attribution_blocked` | PCSD/PCC/SIFF在新checkpoint与test-primary规则下是否仍成立 | retrospective audit；not a method | 70/70；280/280；joint pass；two-contribution attribution fail | archive result；SIFF Step6/PCC Step2-4 |
@@ -205,6 +205,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | D19 IF control Step6 | four-arm exact contract + parameter-matched direct/no-skip controls + decision map | 9/9 static；15 new runs + 5 reused A6；80 official-test cells frozen | Step7A local implementation only；remote/test/paper method false | `analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step6_control_design.md` |
 | D19 Step6 v1.1 contract repair | A6 natural seq_len audit + same-history fairness correction | v1的96-history/49-bin contract不匹配A6 720 history；改为361 bins并重新parameter-match | v1 superseded before training；v1.1进入Step7A | `analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step6_contract_repair.md` |
 | D19 IF control Step7A | three production readouts + 15 CLI + shape/projectivity/gradient/init/source gates | 114/114；max prefix gap 0；IF/no-skip hash相同；all gradients finite/nonzero | Step7A pass；Step7B prelaunch next；remote/test/paper method false | `analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step7a_local/step7a_implementation_gate_report.md` |
+| D19 IF control Step7B prelaunch | frozen runner + checkpoint-preserving test evaluator + amplitude/phase artifacts + four-layer analyzer | 31/31；15 new + 5 reused A6；80 test cells；all contracts/CLI/smokes pass | seed2021 control remote/test true；confirmation/paper method false；Step8 launch next | `analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step7b_prelaunch/prelaunch_gate_report.md` |
 
 ## Pending Tasks
 
@@ -265,7 +266,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SIFF v1 portfolio freeze | `completed_retained_attribution_blocked` | immutable manifest complete；作为当前best candidate与v2 parent，不改Step9 failure |
 | SIFF contrast-calibrated redesign | `formal_candidate_frozen_prelaunch_next` | 实现50-run formal prelaunch tooling；Phase A/test仍禁止 |
 | D18 soft-projectivity cost diagnostic | `completed_fail_rollback_step2` | 25/25；2/7 gates；不补seeds；soft route closed |
-| D19 source-informed implicit decoder control | `step7a_pass_step7b_prelaunch_next` | implement 15-run runner、real-batch/resource smoke、completeness/analyzer与authorization gate；remote/test false |
+| D19 source-informed implicit decoder control | `step7b_prelaunch_pass_step8_launch_next` | commit/push；3090 preflight + dual resource smoke + 15-run background launch；confirmation false |
 
 ## Paper Mainline Sync Log
 
@@ -358,6 +359,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-19 | D18 Step9–10 + post-D18 viability audit | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | problem closure + Step2 rollback + next control boundary | 25/25；2/7 gates；measure explains；soft route closed；D19 control audit next |
 | 2026-07-19 | D19 Step4–6 source/theory/control freeze | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | official-code boundary + four-arm matched control design | Step6 9/9；Step7A local only；remote/test/paper method false |
 | 2026-07-19 | D19 v1.1 repair + Step7A | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | same-history fairness repair + production implementation | v1 superseded；v1.1 114/114；Step7B prelaunch next；remote/test false |
+| 2026-07-19 | D19 Step7B formal prelaunch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | 15-run runner + 80-cell audit + internal IF diagnostics + four-layer analyzer | 31/31；seed2021 remote/test true；confirmation/paper method false |
 
 ## Continuation Rules
 

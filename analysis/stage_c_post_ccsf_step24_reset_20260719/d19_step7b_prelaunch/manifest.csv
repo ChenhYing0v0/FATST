@@ -1,0 +1,16 @@
+job_index,dataset,arm,readout_mode,profile,patch_num,d_model,d_ff,direct_hidden_width,seed
+1,Weather,if_measure,implicit-frequency-readout,r2b_p12_d64_ff128_medium,12,64,128,4143,2021
+2,Weather,if_noskip_measure,implicit-frequency-noskip-control,r2b_p12_d64_ff128_medium,12,64,128,4143,2021
+3,ETTm1,if_measure,implicit-frequency-readout,r2b_p24_d32_ff64_narrow,24,32,64,4143,2021
+4,Weather,direct_nonlinear_matched_measure,implicit-direct-nonlinear-matched,r2b_p12_d64_ff128_medium,12,64,128,4143,2021
+5,ETTm1,if_noskip_measure,implicit-frequency-noskip-control,r2b_p24_d32_ff64_narrow,24,32,64,4143,2021
+6,ETTm1,direct_nonlinear_matched_measure,implicit-direct-nonlinear-matched,r2b_p24_d32_ff64_narrow,24,32,64,4143,2021
+7,ETTh1,if_measure,implicit-frequency-readout,r2b_p24_d64_ff128_medium,24,64,128,4659,2021
+8,ETTh1,if_noskip_measure,implicit-frequency-noskip-control,r2b_p24_d64_ff128_medium,24,64,128,4659,2021
+9,ETTh1,direct_nonlinear_matched_measure,implicit-direct-nonlinear-matched,r2b_p24_d64_ff128_medium,24,64,128,4659,2021
+10,ETTh2,if_measure,implicit-frequency-readout,r2b_p12_d64_ff128_medium,12,64,128,4143,2021
+11,ETTh2,if_noskip_measure,implicit-frequency-noskip-control,r2b_p12_d64_ff128_medium,12,64,128,4143,2021
+12,ETTh2,direct_nonlinear_matched_measure,implicit-direct-nonlinear-matched,r2b_p12_d64_ff128_medium,12,64,128,4143,2021
+13,ETTm2,if_measure,implicit-frequency-readout,r2b_p48_d64_ff128_medium,48,64,128,5164,2021
+14,ETTm2,if_noskip_measure,implicit-frequency-noskip-control,r2b_p48_d64_ff128_medium,48,64,128,5164,2021
+15,ETTm2,direct_nonlinear_matched_measure,implicit-direct-nonlinear-matched,r2b_p48_d64_ff128_medium,48,64,128,5164,2021

@@ -83,3 +83,26 @@ exact decoder initialization。
 代码已经实现matched information、matched initialization、full-trajectory projectivity与capacity control；
 尚未证明IF、skip或wave synthesis提高forecast accuracy。Step7B必须先通过real-batch finite/resource smoke和
 formal matrix audit，才能授权remote experiment。
+
+## 6. Step 7B formal evaluation path
+
+`configs/stage_c_d19_if_control_step7b.json`把正式矩阵冻结为5 datasets × 4 arms × seed2021，
+其中15个D19 arms重新训练，5个`A6_MEASURE`复用已按相同four-horizon validation selector训练的reference。
+正式scorecard为80个dataset-arm-horizon test cells；test不参与checkpoint选择。
+
+`scripts/evaluate_stage_c_pcsd_cf_checkpoint.py`在不修改checkpoint的test forward中新增：
+
+- `probe_if_amplitude[Q,361]`；
+- `probe_if_phase_sine[Q,361]`；
+- `probe_if_phase_cosine[Q,361]`；
+- `probe_fused[Q,720]`与逐H1..H720累计MSE/MAE。
+
+`scripts/analyze_stage_c_d19_if_control.py`分四层判定：
+
+1. `paper_facing_effectiveness`：IF是否超过A6；
+2. `matched_mechanism_attribution`：IF是否同时超过parameter-matched direct与no-skip；
+3. `internal_mechanism_health`：finite、projectivity、paired initialization、prediction deformation、
+   amplitude与phase是否非退化；
+4. `failure_attribution`：映射到Step2/4、Step4或Step6/7A rollback。
+
+即使四层全部通过，D19仍固定为`control_only`；Implicit Forecaster prior禁止其被直接晋升为论文方法。

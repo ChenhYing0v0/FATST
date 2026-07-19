@@ -287,6 +287,23 @@ def denormalized_scale_component_contributions(
     ).permute(0, 3, 2, 1)
 
 
+def implicit_frequency_tensors(
+    model: TimeAlign.Model,
+    batch_x: torch.Tensor,
+) -> dict[str, torch.Tensor] | None:
+    """Return the normalized D19 amplitude/phase tensors for attribution."""
+    if not hasattr(model, "implicit_frequency_readout"):
+        return None
+    normalized_history = model.normalization_x(batch_x, "norm")
+    memory = model._encode_normalized_history(normalized_history)
+    hidden = memory.flatten(start_dim=-2)
+    _forecast, tensors = model.implicit_frequency_readout.full_forecast(
+        hidden,
+        normalized_history,
+    )
+    return tensors
+
+
 def diagnostic_bins(design: dict[str, Any]) -> list[dict[str, Any]]:
     if "diagnostic_protocol" in design:
         return design["diagnostic_protocol"]["future_bins"]
@@ -391,6 +408,9 @@ def evaluate(args: argparse.Namespace) -> None:
     probe_base_logits: list[np.ndarray] = []
     probe_correction_logits: list[np.ndarray] = []
     probe_contrast_descriptor: list[np.ndarray] = []
+    probe_if_amplitude: list[np.ndarray] = []
+    probe_if_phase_sine: list[np.ndarray] = []
+    probe_if_phase_cosine: list[np.ndarray] = []
     probe_count = 0
     all_finite = True
     prefix_rows: list[dict[str, Any]] | None = None
@@ -561,6 +581,32 @@ def evaluate(args: argparse.Namespace) -> None:
                         bool(torch.isfinite(value).all())
                         for value in policy_tensors.values()
                     )
+            if probe_batch_count:
+                if_tensors = implicit_frequency_tensors(model, batch_x)
+                if if_tensors is not None:
+                    row_shape = (-1, if_tensors["amplitude"].shape[-1])
+                    probe_if_amplitude.append(
+                        if_tensors["amplitude"]
+                        .reshape(row_shape)[:probe_batch_count]
+                        .cpu()
+                        .numpy()
+                    )
+                    probe_if_phase_sine.append(
+                        if_tensors["phase_sine"]
+                        .reshape(row_shape)[:probe_batch_count]
+                        .cpu()
+                        .numpy()
+                    )
+                    probe_if_phase_cosine.append(
+                        if_tensors["phase_cosine"]
+                        .reshape(row_shape)[:probe_batch_count]
+                        .cpu()
+                        .numpy()
+                    )
+                    all_finite = all_finite and all(
+                        bool(torch.isfinite(value).all())
+                        for value in if_tensors.values()
+                    )
             all_finite = all_finite and bool(
                 torch.isfinite(fused).all() and torch.isfinite(target).all()
             )
@@ -577,7 +623,10 @@ def evaluate(args: argparse.Namespace) -> None:
             np.float32
         ),
         "bin_names": np.asarray([entry["name"] for entry in bins]),
-        "scales": np.asarray(design["coupling_scales"], dtype=np.int64),
+        "scales": np.asarray(
+            design.get("coupling_scales", []),
+            dtype=np.int64,
+        ),
     }
     if probe_fused:
         payload.update(
@@ -627,6 +676,20 @@ def evaluate(args: argparse.Namespace) -> None:
                     ).astype(np.float32),
                 }
             )
+    if probe_if_amplitude:
+        payload.update(
+            {
+                "probe_if_amplitude": np.concatenate(
+                    probe_if_amplitude
+                ).astype(np.float32),
+                "probe_if_phase_sine": np.concatenate(
+                    probe_if_phase_sine
+                ).astype(np.float32),
+                "probe_if_phase_cosine": np.concatenate(
+                    probe_if_phase_cosine
+                ).astype(np.float32),
+            }
+        )
     artifact_prefix = (
         "validation" if args.evaluation_split == "val" else "test_audit"
     )
@@ -710,6 +773,36 @@ def evaluate(args: argparse.Namespace) -> None:
             and diagnostics.get("pcsd_dense_parameter_relative_gap", 1.0)
             <= dense_gap_limit
         )
+    elif hasattr(model, "implicit_frequency_readout"):
+        implicit = design["implicit_forecaster"]
+        expect_input_spectrum = (
+            adapter["readout_mode"] == "implicit-frequency-readout"
+        )
+        readout_contract_pass = bool(
+            initialization.get("implicit_frequency_initialization_hash")
+            and initialization.get("implicit_frequency_use_input_spectrum")
+            is expect_input_spectrum
+            and diagnostics.get("implicit_decoder_parameters", 0) > 0
+            and diagnostics.get("implicit_hidden_width")
+            == implicit["hidden_width"]
+            and diagnostics.get("implicit_history_spectrum_bins")
+            == implicit["history_spectrum_bins"]
+            and diagnostics.get("implicit_spectrum_bins")
+            == implicit["spectrum_bins"]
+            and diagnostics.get("implicit_fourier_norm")
+            == implicit["fourier_norm"]
+            and "probe_if_amplitude" in payload
+        )
+    elif hasattr(model, "implicit_direct_readout"):
+        implicit = design["implicit_forecaster"]
+        readout_contract_pass = bool(
+            initialization.get("implicit_direct_initialization_hash")
+            and diagnostics.get("implicit_direct_decoder_parameters", 0) > 0
+            and diagnostics.get("implicit_direct_history_spectrum_bins")
+            == implicit["history_spectrum_bins"]
+            and diagnostics.get("implicit_direct_fourier_norm")
+            == implicit["fourier_norm"]
+        )
 
     invariant = {
         "candidate_id": design.get(
@@ -733,6 +826,9 @@ def evaluate(args: argparse.Namespace) -> None:
         "probe_rows": int(payload.get("probe_fused", np.empty((0,))).shape[0]),
         "scale_component_diagnostics_present": (
             "scale_component_contribution" in payload
+        ),
+        "implicit_frequency_diagnostics_present": (
+            "probe_if_amplitude" in payload
         ),
         "all_finite": all_finite,
         "protocol_pass": protocol_pass,
@@ -859,6 +955,49 @@ def main() -> None:
         ):
             raise RuntimeError("CCSF checkpoint evaluator synthetic smoke failed")
         print("ccsf_checkpoint_evaluator_synthetic_smoke=pass")
+        if_config = SimpleNamespace(**vars(config))
+        if_config.readout_mode = "implicit-frequency-readout"
+        if_config.if_hidden_width = 16
+        if_config.if_direct_hidden_width = 32
+        if_config.if_head_dropout = 0.1
+        if_config.if_fourier_norm = "ortho"
+        torch.manual_seed(2021)
+        if_model = TimeAlign.Model(if_config).float().eval()
+        with torch.no_grad():
+            if_rows, if_gap = prefix_audit(
+                if_model,
+                x[:1],
+                target[:1],
+            )
+            if_tensors = implicit_frequency_tensors(if_model, x)
+        if (
+            len(if_rows) != len(HORIZONS)
+            or if_gap != 0.0
+            or if_tensors is None
+            or any(
+                tuple(if_tensors[key].shape) != (2, 7, 361)
+                or not bool(torch.isfinite(if_tensors[key]).all())
+                for key in (
+                    "amplitude",
+                    "phase",
+                    "phase_sine",
+                    "phase_cosine",
+                )
+            )
+        ):
+            raise RuntimeError("D19 IF checkpoint evaluator smoke failed")
+        direct_config = SimpleNamespace(**vars(if_config))
+        direct_config.readout_mode = "implicit-direct-nonlinear-matched"
+        torch.manual_seed(2021)
+        direct_model = TimeAlign.Model(direct_config).float().eval()
+        direct_rows, direct_gap = prefix_audit(
+            direct_model,
+            x[:1],
+            target[:1],
+        )
+        if len(direct_rows) != len(HORIZONS) or direct_gap != 0.0:
+            raise RuntimeError("D19 direct checkpoint evaluator smoke failed")
+        print("d19_checkpoint_evaluator_synthetic_smoke=pass")
         return
     evaluate(args)
 
