@@ -1,0 +1,9 @@
+{
+  "candidate_version": "SC-D18-SPC-v1",
+  "checks": 15,
+  "max_prefix_gap": 0.0,
+  "max_tail_gradient_abs": 0.0,
+  "positive_prefix_gradient_checks": 15,
+  "same_initialization_and_parameter_count_by_dataset": true,
+  "overall_pass": true
+}

@@ -1,0 +1,29 @@
+{
+  "candidate_version": "SC-D18-SPC-v1",
+  "current_step": "Step3 frozen diagnostic prelaunch",
+  "categories": {
+    "diagnostic_identity_and_scope": true,
+    "profile_hash": true,
+    "matrix": true,
+    "same_architecture_loss_selector_only": true,
+    "local_reused_control_lineage": true,
+    "frozen_gates_and_rollback": true,
+    "formal_authorization": true,
+    "checkpoint_evaluator_authorization": true,
+    "shape_projectivity_and_gradient_contract": true,
+    "analyzer_synthetic_smoke": true,
+    "runner_syntax_and_mode": true
+  },
+  "categories_passed": 11,
+  "categories_total": 11,
+  "jobs": 25,
+  "new_training_runs": 15,
+  "reused_control_runs": 10,
+  "primary_own_horizon_cells": 15,
+  "overall_pass": true,
+  "method_implementation_authorized": false,
+  "remote_training_authorized": true,
+  "formal_test_access_authorized": true,
+  "rollback_step": "Step2",
+  "next_step": "remote dry-run resource smoke and 15-run problem diagnostic"
+}

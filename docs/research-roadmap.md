@@ -5,11 +5,11 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D17 Step2 negative；D18 soft-projectivity-cost Step2/3 |
+| `current_step` | D17 Step2 negative；D18 Step3 frozen/prelaunch passed |
 | `active_question` | horizon-specific loss能否稳定超过A6_MEASURE，从而证明exact projectivity存在accuracy cost？ |
-| `active_candidates` | SIFF-v2 frozen parent；D17 exact protocol closed；SC-D18-SPC diagnostic proposed；no method；CTD paused |
+| `active_candidates` | SIFF-v2 frozen parent；D17 closed；SC-D18-SPC diagnostic authorized；no method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/soft_projectivity_step2_problem_audit.md` |
+| `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/d18_prelaunch/step3_prelaunch_report.md` |
 | `method_implementation` | none authorized；CCSF exact route closed |
 | `rollback_point` | D18 fail → Contribution 1 Step2/mainline viability audit；Contribution 2=Step2；no router/future-context rescue sweep |
 
@@ -26,11 +26,15 @@ future-context保持direction unresolved但不进入Step4。
 
 当前转向`SC-D18-SPC` problem diagnostic：使用相同full-domain A6 architecture，分别以H96/H192/H336 prefix loss
 训练horizon-specific oracle controls，并与强A6_MEASURE比较own-H test performance。D18只回答exact projectivity
-是否存在accuracy cost；separate models不是贡献。D18 static/machine-readable freeze前不训练、不访问test，
-Contribution 2继续停在Step2。
+是否存在accuracy cost；separate models不是贡献。machine-readable protocol与prelaunch已`11/11`通过，
+15个shape/projectivity/gradient checks全部通过；现只授权15个new training runs与完整test-informed problem audit，
+不授权method implementation。Contribution 2继续停在Step2。
 
 详见`analysis/stage_c_post_ccsf_step24_reset_20260719/d17_result_and_failure_attribution.md`与
 `analysis/stage_c_post_ccsf_step24_reset_20260719/soft_projectivity_step2_problem_audit.md`。
+
+Step3与代码契约见
+`analysis/stage_c_post_ccsf_step24_reset_20260719/d18_prelaunch/step3_prelaunch_report.md`。
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 

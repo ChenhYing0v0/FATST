@@ -1,0 +1,202 @@
+{
+  "stage": "StageC-UVHF",
+  "candidate_id": "SC-D18-SPC",
+  "diagnostic_id": "SC-D18-SPC-v1",
+  "candidate_version": "SC-D18-SPC-v1",
+  "role": "test_informed_problem_existence_diagnostic_only",
+  "status": "authorized_prelaunch",
+  "current_step": "Step3 frozen diagnostic protocol",
+  "purpose": "measure whether exact-projective unified A6_MEASURE pays a stable own-horizon accuracy cost relative to same-architecture horizon-specialized optimization",
+  "test_informed": true,
+  "datasets": ["Weather", "ETTm1", "ETTh1", "ETTh2", "ETTm2"],
+  "seeds": [2021],
+  "coupling_scales": [1, 48, 144, 360, 720],
+  "profiles": {
+    "path": "configs/stage_c_five_dataset_natural_profiles.json",
+    "sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a"
+  },
+  "arms": [
+    {
+      "id": "a6_measure",
+      "role": "strong_unified_control",
+      "training_new": false,
+      "readout_mode": "learned-basis-forecast-operator",
+      "pcc_objective_mode": "measure_only",
+      "pred_loss_mode": "full",
+      "target_horizons": [720],
+      "validation_horizons": [96, 192, 336, 720]
+    },
+    {
+      "id": "a6_full",
+      "role": "weak_unified_control",
+      "training_new": false,
+      "readout_mode": "learned-basis-forecast-operator",
+      "pcc_objective_mode": "off",
+      "pred_loss_mode": "full",
+      "target_horizons": [720],
+      "validation_horizons": [96, 192, 336, 720]
+    },
+    {
+      "id": "a6_spec96",
+      "role": "horizon_specialist_oracle_control",
+      "training_new": true,
+      "own_horizon": 96,
+      "readout_mode": "learned-basis-forecast-operator",
+      "pcc_objective_mode": "off",
+      "pred_loss_mode": "multi-prefix",
+      "target_horizons": [96],
+      "validation_horizons": [96]
+    },
+    {
+      "id": "a6_spec192",
+      "role": "horizon_specialist_oracle_control",
+      "training_new": true,
+      "own_horizon": 192,
+      "readout_mode": "learned-basis-forecast-operator",
+      "pcc_objective_mode": "off",
+      "pred_loss_mode": "multi-prefix",
+      "target_horizons": [192],
+      "validation_horizons": [192]
+    },
+    {
+      "id": "a6_spec336",
+      "role": "horizon_specialist_oracle_control",
+      "training_new": true,
+      "own_horizon": 336,
+      "readout_mode": "learned-basis-forecast-operator",
+      "pcc_objective_mode": "off",
+      "pred_loss_mode": "multi-prefix",
+      "target_horizons": [336],
+      "validation_horizons": [336]
+    }
+  ],
+  "training_contracts": [
+    {
+      "id": "a6_measure",
+      "target_horizons": [720],
+      "validation_horizons": [96, 192, 336, 720],
+      "pred_loss_mode": "full",
+      "pcc_objective_mode": "measure_only",
+      "training_final_evaluation_split": "val"
+    },
+    {
+      "id": "a6_full",
+      "target_horizons": [720],
+      "validation_horizons": [96, 192, 336, 720],
+      "pred_loss_mode": "full",
+      "pcc_objective_mode": "off",
+      "training_final_evaluation_split": "val"
+    },
+    {
+      "id": "a6_spec96",
+      "target_horizons": [96],
+      "validation_horizons": [96],
+      "pred_loss_mode": "multi-prefix",
+      "pcc_objective_mode": "off",
+      "training_final_evaluation_split": "val"
+    },
+    {
+      "id": "a6_spec192",
+      "target_horizons": [192],
+      "validation_horizons": [192],
+      "pred_loss_mode": "multi-prefix",
+      "pcc_objective_mode": "off",
+      "training_final_evaluation_split": "val"
+    },
+    {
+      "id": "a6_spec336",
+      "target_horizons": [336],
+      "validation_horizons": [336],
+      "pred_loss_mode": "multi-prefix",
+      "pcc_objective_mode": "off",
+      "training_final_evaluation_split": "val"
+    }
+  ],
+  "training": {
+    "from_scratch": true,
+    "joint_encoder_decoder": true,
+    "pred_len": 720,
+    "output_domain": 720,
+    "checkpoint_policy": "best-val",
+    "epochs": 20,
+    "patience": 5,
+    "batch_size": 32,
+    "learning_rate": 0.0001,
+    "evaluation_prefix_mode": "full-crop",
+    "training_final_evaluation_split": "val",
+    "test_labels_select_checkpoint": false,
+    "same_architecture_parameter_count_required": true,
+    "same_initialization_hash_by_dataset_required": true
+  },
+  "checkpoint_selection_contract": "arm-specific-validation-mse-frozen-by-protocol",
+  "matrix": {
+    "expected_runs": 25,
+    "new_training_runs": 15,
+    "reused_control_runs": 10,
+    "expected_test_metric_rows": 18000,
+    "primary_own_horizon_cells": 15,
+    "own_horizons": [96, 192, 336],
+    "metrics": ["mse", "mae"],
+    "full_matrix_required": true,
+    "partial_reporting_allowed": false
+  },
+  "gates": {
+    "macro_own_horizon_mse_gain_over_a6_measure_percent_min": 0.5,
+    "positive_horizons_min": 2,
+    "positive_datasets_min": 4,
+    "positive_cells_min": 10,
+    "minimum_horizon_macro_gain_percent": -0.5,
+    "shared_prefix_prediction_nrmse_min": 0.000001,
+    "maximum_absolute_cell_degradation_percent": 100.0,
+    "all_protocol_and_initialization_invariants_required": true
+  },
+  "diagnostic_protocol": {
+    "probe_rows": 256,
+    "prediction_divergence": {
+      "statistic": "sqrt(mean((specialist_prefix-a6_measure_prefix)^2))/sqrt(mean(a6_measure_prefix^2))",
+      "source": "same ordered official-test rows from probe_fused",
+      "meaning": "nonzero values verify that horizon-specialized optimization actually deforms the shared prefix"
+    },
+    "future_bins": [
+      {"name": "h1_48", "start": 0, "end": 48},
+      {"name": "h49_96", "start": 48, "end": 96},
+      {"name": "h97_144", "start": 96, "end": 144},
+      {"name": "h145_192", "start": 144, "end": 192},
+      {"name": "h193_288", "start": 192, "end": 288},
+      {"name": "h289_336", "start": 288, "end": 336},
+      {"name": "h337_512", "start": 336, "end": 512},
+      {"name": "h513_720", "start": 512, "end": 720}
+    ]
+  },
+  "control_source": {
+    "remote_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_equal_attribution_v2",
+    "local_audit_root": "analysis/stage_c_siff_equal_attribution_step9_20260718/raw",
+    "protocol_profiles": ["stage_c_siff_equal_attribution_v2"],
+    "checkpoint_mutation_allowed": false
+  },
+  "authorization": {
+    "user_authorized": true,
+    "authorization_date": "2026-07-19",
+    "user_authorization_basis": "continue the frozen SC-D18-SPC next-step plan",
+    "remote_training_authorized": true,
+    "formal_test_access_authorized": true,
+    "test_role": "primary-problem-existence-diagnostic",
+    "checkpoint_selection": "arm-specific-validation-mse-frozen-by-protocol",
+    "checkpoint_retraining_allowed": true,
+    "checkpoint_mutation_during_test_allowed": false,
+    "reused_control_protocol_profiles": ["stage_c_siff_equal_attribution_v2"],
+    "per_dataset_horizon_or_cell_tuning_allowed": false,
+    "formal_test_access_count_for_version": 1,
+    "method_implementation_authorized": false
+  },
+  "decision_map": {
+    "all_problem_gates_pass": "problem_supported_return_step4_design_controlled_soft_projectivity",
+    "specialists_beat_a6_full_only": "measure_training_explains_close_soft_architecture_route_return_step2",
+    "specialists_do_not_beat_a6_measure": "exact_projectivity_accuracy_cost_not_supported_return_step2",
+    "protocol_or_numeric_pathology": "invalidate_exact_protocol_only_repair_without_direction_rejection"
+  },
+  "output": {
+    "remote_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_d18_soft_projectivity_cost_v1",
+    "local_analysis_root": "analysis/stage_c_post_ccsf_step24_reset_20260719/d18_prelaunch"
+  }
+}

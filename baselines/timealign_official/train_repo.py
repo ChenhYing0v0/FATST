@@ -2187,6 +2187,14 @@ def parse_args() -> argparse.Namespace:
                 and value == "raw-history-identity"
                 and args.readout_mode == "grouped-mlp"
             )
+            and not (
+                name == "pred_loss_mode"
+                and value == "multi-prefix"
+                and args.protocol_profile
+                == "stage_c_d18_soft_projectivity_cost_v1"
+                and args.readout_mode
+                == "learned-basis-forecast-operator"
+            )
         }
         if inactive:
             formatted = ", ".join(

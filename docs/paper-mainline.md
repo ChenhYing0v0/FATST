@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD — Fixed-Past Projective Multi-Horizon Generation |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | D17 Step2 negative；D18 soft-projectivity-cost Step2/3 |
+| `current_11_step` | D17 Step2 negative；D18 Step3 protocol/prelaunch passed |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | no active two-contribution method；SIFF-v2 parent frozen；D18 problem diagnostic proposed |
+| `paper_core_status` | no active two-contribution method；SIFF-v2 parent frozen；D18 diagnostic authorized，method=false |
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
@@ -56,6 +56,11 @@ prefix-safe future-context D17没有通过problem gate：causal相对pointwise `
 `SC-D18-SPC`将在不实现新method的前提下测量该headroom。若不存在，controlled soft projectivity没有研究必要；
 若稳定存在，才进入Step4研究有限$\lambda$下的accuracy–consistency frontier。separate horizon-specific models
 只是problem controls，不是Contribution 1。Contribution 2仍为空。
+
+D18 Step3现已冻结并通过`11/11` prelaunch gate：五dataset上新增15个specialist runs，并复用10个
+A6_MEASURE/A6_FULL controls；15个local gradient checks确认prefix有梯度、tail gradient严格为0，full-crop
+prefix gap为0。formal test角色为`test_informed problem-existence diagnostic`，不允许按dataset/horizon调参。
+remote matrix可在GPU preflight与resource smoke后启动，但此授权不等于soft-projective method authorization。
 
 在D18通过前，requested horizon仍不作为learned semantic feature，旧point/block/global adaptive coupling thesis
 与SIFF/CCSF只保留为historical evidence，不再描述当前论文机制。

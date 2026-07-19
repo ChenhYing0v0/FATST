@@ -150,15 +150,22 @@ def test_audit_authorized(audit: dict[str, Any]) -> bool:
         "expected_runs",
         audit["matrix"].get("phase_a_expected_runs"),
     )
+    expected_checkpoint_selection = audit.get(
+        "checkpoint_selection_contract",
+        "best-validation-mean-mse-h96-h192-h336-h720",
+    )
+    accepted_test_roles = {
+        "primary-mechanism-effectiveness-and-paper-benchmark",
+        "primary-problem-existence-diagnostic",
+    }
     return bool(
         audit.get("status") == "authorized_prelaunch"
         and expected_runs == expected_matrix_size(audit)
         and authorization.get("user_authorized") is True
         and authorization.get("authorization_date")
-        and authorization.get("test_role")
-        == "primary-mechanism-effectiveness-and-paper-benchmark"
+        and authorization.get("test_role") in accepted_test_roles
         and authorization.get("checkpoint_selection")
-        == "best-validation-mean-mse-h96-h192-h336-h720"
+        == expected_checkpoint_selection
         and authorization.get("checkpoint_retraining_allowed") is True
         and authorization.get("checkpoint_mutation_during_test_allowed") is False
         and authorization.get("per_dataset_horizon_or_cell_tuning_allowed")
@@ -286,6 +293,58 @@ def diagnostic_bins(design: dict[str, Any]) -> list[dict[str, Any]]:
     return design["step7b_protocol"]["future_bins"]
 
 
+def protocol_training_contracts(
+    protocol_config: dict[str, Any] | None,
+) -> list[dict[str, Any]]:
+    if protocol_config is None:
+        return [
+            {
+                "target_horizons": [720],
+                "validation_horizons": [720],
+                "pred_loss_mode": "full",
+                "pcc_objective_mode": None,
+                "training_final_evaluation_split": "val",
+            }
+        ]
+    if "training_contracts" in protocol_config:
+        return list(protocol_config["training_contracts"])
+    training = protocol_config.get("training", {})
+    return [
+        {
+            "target_horizons": training.get("target_horizons", [720]),
+            "validation_horizons": training.get(
+                "validation_horizons",
+                [720],
+            ),
+            "pred_loss_mode": training.get("pred_loss_mode", "full"),
+            "pcc_objective_mode": None,
+            "training_final_evaluation_split": training.get(
+                "training_final_evaluation_split",
+                "val",
+            ),
+        }
+    ]
+
+
+def adapter_matches_training_contract(
+    adapter: dict[str, Any],
+    contract: dict[str, Any],
+) -> bool:
+    objective = contract.get("pcc_objective_mode")
+    return bool(
+        adapter["target_horizons"] == contract["target_horizons"]
+        and adapter["validation_horizons"]
+        == contract["validation_horizons"]
+        and adapter["pred_loss_mode"] == contract["pred_loss_mode"]
+        and adapter["final_evaluation_split"]
+        == contract["training_final_evaluation_split"]
+        and (
+            objective is None
+            or adapter["pcc_objective_mode"] == objective
+        )
+    )
+
+
 def evaluate(args: argparse.Namespace) -> None:
     if args.run_dir is None:
         raise ValueError("run-dir is required outside synthetic smoke")
@@ -347,6 +406,20 @@ def evaluate(args: argparse.Namespace) -> None:
             if prefix_rows is None:
                 prefix_rows, prefix_gap = prefix_audit(model, batch_x[:1], target[:1])
             fused = model(batch_x, target, is_training=False, target_prefix=720)[0]
+            probe_batch_count = 0
+            if probe_count < args.probe_rows:
+                fused_probe_rows = fused.permute(0, 2, 1).reshape(-1, 720)
+                target_probe_rows = target.permute(0, 2, 1).reshape(-1, 720)
+                probe_batch_count = min(
+                    args.probe_rows - probe_count,
+                    fused_probe_rows.shape[0],
+                )
+                probe_fused.append(
+                    fused_probe_rows[:probe_batch_count].cpu().numpy()
+                )
+                probe_targets.append(
+                    target_probe_rows[:probe_batch_count].cpu().numpy()
+                )
             errors = (fused - target).detach().to(torch.float64).cpu()
             step_squared_error += errors.square().sum(dim=(0, 2))
             step_absolute_error += errors.abs().sum(dim=(0, 2))
@@ -414,22 +487,11 @@ def evaluate(args: argparse.Namespace) -> None:
                         dim=1,
                     ).cpu().numpy()
                 )
-                if probe_count < args.probe_rows:
-                    rows_available = arm_rows.shape[0]
-                    count = min(args.probe_rows - probe_count, rows_available)
+                if probe_batch_count:
+                    count = probe_batch_count
                     probe_arms.append(
                         arms.permute(0, 3, 2, 1)
                         .reshape(-1, arms.shape[2], 720)[:count]
-                        .cpu()
-                        .numpy()
-                    )
-                    probe_fused.append(
-                        fused.permute(0, 2, 1).reshape(-1, 720)[:count]
-                        .cpu()
-                        .numpy()
-                    )
-                    probe_targets.append(
-                        target.permute(0, 2, 1).reshape(-1, 720)[:count]
                         .cpu()
                         .numpy()
                     )
@@ -491,7 +553,6 @@ def evaluate(args: argparse.Namespace) -> None:
                         all_finite = all_finite and bool(
                             torch.isfinite(component_delta).all()
                         )
-                    probe_count += count
                 all_finite = all_finite and bool(
                     torch.isfinite(arms).all() and torch.isfinite(weights).all()
                 )
@@ -503,6 +564,7 @@ def evaluate(args: argparse.Namespace) -> None:
             all_finite = all_finite and bool(
                 torch.isfinite(fused).all() and torch.isfinite(target).all()
             )
+            probe_count += probe_batch_count
 
     if not fused_bin_mse or prefix_rows is None or element_rows <= 0:
         raise RuntimeError(
@@ -517,6 +579,15 @@ def evaluate(args: argparse.Namespace) -> None:
         "bin_names": np.asarray([entry["name"] for entry in bins]),
         "scales": np.asarray(design["coupling_scales"], dtype=np.int64),
     }
+    if probe_fused:
+        payload.update(
+            {
+                "probe_fused": np.concatenate(probe_fused).astype(np.float32),
+                "probe_targets": np.concatenate(probe_targets).astype(
+                    np.float32
+                ),
+            }
+        )
     if arm_bin_mse:
         payload.update(
             {
@@ -530,8 +601,6 @@ def evaluate(args: argparse.Namespace) -> None:
                     np.float32
                 ),
                 "probe_arms": np.concatenate(probe_arms).astype(np.float32),
-                "probe_fused": np.concatenate(probe_fused).astype(np.float32),
-                "probe_targets": np.concatenate(probe_targets).astype(np.float32),
             }
         )
         if scale_component_contribution:
@@ -593,26 +662,19 @@ def evaluate(args: argparse.Namespace) -> None:
         or test_audit is not None
         and test_audit_authorized(test_audit)
     )
-    expected_validation_horizons = [720]
-    expected_final_split = "val"
-    if protocol_config is not None and "training" in protocol_config:
-        expected_validation_horizons = protocol_config["training"][
-            "validation_horizons"
-        ]
-        expected_final_split = protocol_config["training"][
-            "training_final_evaluation_split"
-        ]
+    training_contracts = protocol_training_contracts(protocol_config)
+    matched_training_contract = any(
+        adapter_matches_training_contract(adapter, contract)
+        for contract in training_contracts
+    )
 
     protocol_pass = bool(
         adapter["mode"] == "unified"
         and int(adapter["pred_len"]) == 720
-        and adapter["target_horizons"] == [720]
-        and adapter["validation_horizons"] == expected_validation_horizons
         and adapter["checkpoint_policy"] == "best-val"
-        and adapter["pred_loss_mode"] == "full"
         and adapter["protocol_class"] == "method_screening"
         and adapter["evaluation_prefix_mode"] == "full-crop"
-        and adapter["final_evaluation_split"] == expected_final_split
+        and matched_training_contract
         and training_contract["initialization"] == "from_scratch"
         and training_contract["checkpoint_input"] is None
         and diagnostics["frozen_parameter_tensors"] == 0
@@ -668,7 +730,7 @@ def evaluate(args: argparse.Namespace) -> None:
         "evaluation_split": args.evaluation_split,
         "evaluation_rows": int(payload["fused_row_bin_mse"].shape[0]),
         "arm_diagnostics_present": "arm_row_bin_mse" in payload,
-        "probe_rows": int(payload.get("probe_arms", np.empty((0,))).shape[0]),
+        "probe_rows": int(payload.get("probe_fused", np.empty((0,))).shape[0]),
         "scale_component_diagnostics_present": (
             "scale_component_contribution" in payload
         ),
@@ -688,6 +750,11 @@ def evaluate(args: argparse.Namespace) -> None:
             and test_audit["authorization"].get(
                 "checkpoint_retraining_allowed",
                 False,
+            )
+            and adapter.get("protocol_profile")
+            not in test_audit["authorization"].get(
+                "reused_control_protocol_profiles",
+                [],
             )
         ),
         "pass": bool(
