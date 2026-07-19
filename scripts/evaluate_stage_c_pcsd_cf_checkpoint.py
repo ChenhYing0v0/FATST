@@ -37,6 +37,11 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-dir", type=Path)
     parser.add_argument(
+        "--artifact-dir",
+        type=Path,
+        help="Optional output directory; defaults to run-dir.",
+    )
+    parser.add_argument(
         "--design",
         type=Path,
         default=Path("configs/stage_c_pcsd_cf_native_direct.json"),
@@ -286,13 +291,20 @@ def evaluate(args: argparse.Namespace) -> None:
         raise ValueError("run-dir is required outside synthetic smoke")
     if args.probe_rows <= 0:
         raise ValueError("probe_rows must be positive")
+    artifact_dir = args.artifact_dir or args.run_dir
+    artifact_dir.mkdir(parents=True, exist_ok=True)
     device = torch.device(args.device)
     design = json.loads(args.design.read_text(encoding="utf-8"))
-    test_audit = None
-    if args.evaluation_split == "test":
-        test_audit = json.loads(
+    protocol_config = None
+    if args.test_audit_config.is_file():
+        protocol_config = json.loads(
             args.test_audit_config.read_text(encoding="utf-8")
         )
+    test_audit = None
+    if args.evaluation_split == "test":
+        test_audit = protocol_config
+        if test_audit is None:
+            raise FileNotFoundError(args.test_audit_config)
     bins = diagnostic_bins(design)
     model, config, official_args = load_model(args.run_dir, device)
     loader = sequential_loader(official_args, args.evaluation_split)
@@ -550,7 +562,7 @@ def evaluate(args: argparse.Namespace) -> None:
         "validation" if args.evaluation_split == "val" else "test_audit"
     )
     np.savez_compressed(
-        args.run_dir / f"pcsd_{artifact_prefix}_diagnostics.npz",
+        artifact_dir / f"pcsd_{artifact_prefix}_diagnostics.npz",
         **payload,
     )
 
@@ -572,7 +584,7 @@ def evaluate(args: argparse.Namespace) -> None:
                 }
             )
         write_csv(
-            args.run_dir / "test_audit_metrics_by_target_horizon.csv",
+            artifact_dir / "test_audit_metrics_by_target_horizon.csv",
             metric_rows,
         )
 
@@ -583,11 +595,11 @@ def evaluate(args: argparse.Namespace) -> None:
     )
     expected_validation_horizons = [720]
     expected_final_split = "val"
-    if test_audit is not None and "training" in test_audit:
-        expected_validation_horizons = test_audit["training"][
+    if protocol_config is not None and "training" in protocol_config:
+        expected_validation_horizons = protocol_config["training"][
             "validation_horizons"
         ]
-        expected_final_split = test_audit["training"][
+        expected_final_split = protocol_config["training"][
             "training_final_evaluation_split"
         ]
 
@@ -691,7 +703,7 @@ def evaluate(args: argparse.Namespace) -> None:
         if args.evaluation_split == "val"
         else "test_audit_invariants.json"
     )
-    (args.run_dir / invariant_name).write_text(
+    (artifact_dir / invariant_name).write_text(
         json.dumps(invariant, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )

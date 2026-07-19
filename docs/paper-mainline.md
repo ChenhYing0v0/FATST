@@ -5,15 +5,15 @@
 | Field | Content |
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
-| `working_title` | Beyond a Fixed Forecasting Strategy: Coupling-Adaptive Decoding for Unified Multi-Horizon Forecasting |
+| `working_title` | TBD — Fixed-Past Projective Multi-Horizon Generation |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | post-CCSF Step2/4 paper-mainline reset |
+| `current_11_step` | post-CCSF Step2/4：projectivity no-go + D17 problem diagnostic |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | SIFF-v2-EQ-ATTR-v1 frozen performance-near parent；CCSF closed；no active two-contribution method |
+| `paper_core_status` | no active two-contribution method；SIFF-v2 parent frozen；D17 diagnostic_only |
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
@@ -37,12 +37,22 @@ Step9后将该exact artifact保留为`frozen_performance_near_candidate`，作�
 
 ## Research Thesis
 
-论文研究对象固定为`fixed-past unified multi-horizon generation`，但核心问题不再是Encoder–Decoder接口：
+论文研究对象仍固定为`fixed-past unified multi-horizon generation`，但旧coupling-adaptive thesis已在CCSF
+Step9–10后撤回为historical hypothesis，不能继续作为当前论文主张。
 
-> 给定同一段fixed past，一个共享模型不仅要生成任意requested horizon的exact future prefix，还应决定不同
-> future targets以多大范围共享predictive structure。现有Direct、AR、MIMO、DIRMO与future-query decoders
-> 通常固定一种output coupling granularity，或在模型外按dataset/horizon选择strategy；这并不是真正统一的
-> forecasting strategy。
+[Fact] 若要求对任意$H\leq K$满足$F_H(x)=P_HF_K(x)$，则必有
+$F_H(x)=P_HF_T(x)$。requested horizon因此不能改变共享prefix。当前论文不再同时声称“shared-prefix严格不变”
+与“prediction随requested horizon自适应”。
+
+暂定研究问题收紧为：
+
+> 一个强full-domain draft已经由fixed past并行产生后，是否存在只读取
+> $\tilde y_{1:\tau}$、不读取requested $H$或prefix外坐标的future-domain operator，使同一模型在全部prefix上
+> 保持exact crop invariance，并通过future-coordinate interaction改善预测？
+
+这只是Step2 problem hypothesis，不是Contribution 1。D17必须先用validation-fit → test-evaluation和dual frozen
+carriers排除same-test calibration、pointwise capacity与row-shuffled context解释；通过后才允许进入Step4定义
+native operator。Contribution 2必须来自该operator真实存在的training mismatch，当前仍为空。
 
 A6已经满足one-model、domain-only crop与exact prefix equality；它的`global_coeff [B,C,256] × basis[:H]`
 属于global low-rank/MIMO-like coupling endpoint。CATS-like independent future queries代表point/direct endpoint，

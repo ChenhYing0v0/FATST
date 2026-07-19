@@ -5,13 +5,28 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | post-CCSF Step2/4 source-informed mainline reset |
-| `active_question` | contrast-policy关闭后，fixed-past unified multi-horizon generation还需要什么native decoder contract与training principle？ |
-| `active_candidates` | SIFF-v2-EQ-ATTR-v1 frozen performance-near parent；no active child method；CTD paused |
+| `current_step` | post-CCSF Step2/4：projectivity no-go + D17 problem diagnostic |
+| `active_question` | fixed-past exact-projective设定下，prefix-safe future-coordinate interaction是否具有超越pointwise control的增量价值？ |
+| `active_candidates` | SIFF-v2-EQ-ATTR-v1 frozen parent；SC-D17-PFC diagnostic_only；no active child method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_siff_ccsf_v1_tau25_phase_a_20260718/step9_four_layer_and_redesign_audit.md` |
+| `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/step24_problem_and_source_audit.md` |
 | `method_implementation` | none authorized；CCSF exact route closed |
 | `rollback_point` | Contribution 1=Step2/4；Contribution 2=Step2；no router-auxiliary patch sweep |
+
+## post-CCSF Step 2/4 Reset
+
+exact projectivity给出一个直接约束：对任意$H\leq K$，若$F_H(x)=P_HF_K(x)$，则整个family必可写为
+$F_H(x)=P_HF_T(x)$。因此requested horizon不能改变共享prefix；“exact-projective且$H$-adaptive prediction”
+不再作为论文问题。ElasTST已覆盖varied-horizon invariance与horizon reweighting，ProNet与Implicit Forecaster又
+覆盖output dependency和global wave decoding，普通multi-scale/future-dependency表述不足以形成Contribution 1。
+
+当前唯一保留的问题family是prefix-safe future-context operator：
+$\hat y_\tau=\Phi(x,\tau,\tilde y_{1:\tau})$。D17-v0的same-test row cross-fit因sample/channel/time邻域跨fold而
+protocol invalid；其表面正结果不得使用。D17-v1现冻结为validation-fit → existing authorized test-probe evaluation，
+使用SIFF_EQUAL与PCSD_EQUAL两个frozen carriers。该实验只可把问题升为`problem_supported`，不能通过method gate；
+Contribution 2继续停在Step2。
+
+详见`analysis/stage_c_post_ccsf_step24_reset_20260719/step24_problem_and_source_audit.md`。
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 

@@ -1,0 +1,51 @@
+{
+  "candidate_id": "SC-D17-PFC-v1",
+  "role": "test_informed_diagnostic_only",
+  "parent_arms": [
+    "siff_equal",
+    "pcsd_equal"
+  ],
+  "datasets": [
+    "ETTh1",
+    "ETTh2",
+    "ETTm1",
+    "ETTm2",
+    "Weather"
+  ],
+  "horizons": [
+    96,
+    192,
+    336,
+    720
+  ],
+  "lags": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32,
+    64,
+    128
+  ],
+  "coordinate_harmonics": 8,
+  "ridge_alpha": 1.0,
+  "seed": 2021,
+  "fit_split": "validation",
+  "evaluation_split": "test",
+  "gates": {
+    "causal_gain_over_pointwise_percent_min": 0.5,
+    "causal_gain_over_shuffled_percent_min": 0.3,
+    "positive_datasets_min": 4,
+    "positive_carriers_min": 2,
+    "positive_carrier_datasets_min": 8,
+    "positive_horizons_min": 3,
+    "prefix_invariance_max_abs_gap_max": 1e-10
+  },
+  "authorization": {
+    "method_implementation": false,
+    "remote_training": false,
+    "new_test_access": false,
+    "reuse_existing_authorized_test_probe": true
+  }
+}

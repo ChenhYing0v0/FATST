@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | decoder/operator 与 training principle 两项相互支撑的 paper-core innovations |
-| `active_question` | 在contrast-policy、pointwise/region competence teacher均关闭后，unified multi-horizon decoder还存在什么可归因、可发表的native generation contract？ |
+| `active_question` | exact projectivity排除requested-H adaptation后，prefix-safe future-coordinate interaction是否具有可泛化增量价值？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | `SC1-SIFF-v2-EQ-ATTR-v1`冻结为performance-near parent；CCSF/contrast-policy closed；CTD paused |
+| `active_candidates` | `SC1-SIFF-v2-EQ-ATTR-v1` frozen parent；`SC-D17-PFC-v1` diagnostic_only；no active child method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
@@ -19,27 +19,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | post-CCSF Step2/4 source-informed mainline reset |
-| `current_candidate` | immutable `SC1-SIFF-v2-EQ-ATTR-v1` parent only；no active child method |
-| `latest_decision` | CCSF 50/50、200/200 complete但effectiveness/attribution fail；D2/D3/D4关闭region/covariance/sharpness修补 |
-| `next_required_action` | 重新定义fixed-past unified multi-horizon generation的decoder problem与两项contribution边界；先过source/narrative gate |
-| `method_training_authorized` | false；CCSF confirmation canceled；新candidate未冻结 |
+| `current_11_step` | Step2/4 projectivity no-go complete；D17 validation-to-test problem diagnostic pending |
+| `current_candidate` | immutable `SC1-SIFF-v2-EQ-ATTR-v1` parent + `SC-D17-PFC-v1 diagnostic_only`；no method |
+| `latest_decision` | requested-H adaptation under exact projectivity closed；D17-v0 same-test cross-fit invalidated；v1 protocol corrected |
+| `next_required_action` | 从existing checkpoints导出validation probes并执行dual-carrier validation-fit → test-evaluation D17 |
+| `method_training_authorized` | false；只授权checkpoint-preserving validation inference与offline diagnostic |
 | `rollback_point` | Contribution 1=Step2/4；Contribution 2=Step2；不得继续contrast-router auxiliary sweep |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Step2/4 rollback after formal Step9–10 and D2–D4 |
-| `problem` | SIFF_EQUAL具备paper-near performance与multi-scope oracle，但ordered-field与routing-specific attribution均未成立 |
-| `existence_evidence` | SIFF_EQUAL vs A6 +1.6436%；CCSF oracle 5.30%–12.50%；region best-arm oracle vs uniform +2.69%–8.50% |
-| `idea` | none frozen；contrast-conditioned policy、RELCAL、region teacher、covariance correction与sharpness均不再active |
-| `theory_check` | arms specialization真实；contrast只提供弱soft-allocation signal；simplex cross-term增量仅约1.34%–1.38% |
-| `design` | 新method未设计；下一步先做external source + historical failure boundary audit |
+| `current_step` | Contribution 1 Step2/4；Contribution 2 Step2 |
+| `problem` | strong full-domain draft中是否存在prefix-safe future-coordinate context value，而非requested-H或best-arm selection |
+| `existence_evidence` | D14/D6保留output heterogeneity；D17-v0表面signal因same-test fold leakage不可用；v1待validation-to-test |
+| `idea` | diagnostic hypothesis：$\hat y_\tau=\Phi(x,\tau,\tilde y_{1:\tau})$；尚未定义method |
+| `theory_check` | exact projectivity no-go排除H-adaptation；prefix-causal draft operator代数上保持crop invariance，但只改变factorization/inductive bias |
+| `design` | dual frozen carriers；validation-only fit；existing authorized test-probe evaluate；pointwise/shuffled/symmetric controls |
 | `narrative_gate` | no active child candidate |
 | `effectiveness_gate` | CCSF false；SIFF-v2 parent为performance-near但attribution blocked |
-| `artifacts` | formal four-layer result + post-E2E + D2 granularity + D3 risk decomposition + D4 sharpness |
-| `decision` | CCSF exact route closed；confirmation canceled；return Contribution 1 Step2/4 and Contribution 2 Step2 |
+| `artifacts` | post-CCSF Step2/4 audit + D17 config/analyzer/remote validation exporter |
+| `decision` | no method candidate；D17通过只升problem_supported并进入Step4，失败保持direction_unresolved due frozen carriers |
 
 ## Frozen Carrier Contract
 
@@ -102,6 +102,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC1-CCSF-D2` | `diagnostic_only_closed` | region aggregation能否把contrast competence转成更强mixture utility | not a method gate | expected-arm signal 4 widths/5 datasets稳定；相对pointwise mixture margin不足，2/3 gates | region retained as analysis scale only；do not train |
 | `SC1-CCSF-D3` | `diagnostic_only_closed` | residual covariance/cancellation是否解释best-arm teacher与fusion不一致 | not a method gate | simplex vs best-arm仅约+1.34%–1.38%；0 widths过dataset gate | covariance-aware redesign unsupported；return Step2 |
 | `SC1-CCSF-D4` | `diagnostic_only_closed` | soft policy是否只需global sharpening或hard routing | not a method gate | best native arm仍-0.0186%、1/5；hard routing更差 | softness not primary；close contrast-policy route |
+| `SC-D17-PFC-v1` | `diagnostic_only_protocol_corrected_pending` | frozen full-domain draft的ordered prefix context能否超越pointwise与row-shuffled controls并跨validation→test transfer | not a method gate；dual-carrier conditional evidence only | v0 same-test row split invalid；v1 pending | validation inference only；no training/new test access |
 | `SC2-MCCA-v1` | `historical_validation_negative_fair_test_not_reaudited` | same total scope skill mass能否竞争性分配而避免per-target homogenization | complete-chain conditional pass | old best-H720 validation four-H -0.1357%、1/5；not in 70-run audit | inactive；reuse前回Step4重审相对EQUAL/MEASURE的必要性 |
 | `SC-D16-CTD` | `deferred_paused_by_user` | H720 checkpoint是否丢弃healthy SIFF four-H epoch | diagnostic only；weighted checkpoint prior-covered | not implemented | design retained；resume only after user authorization |
 | `SC-RETRO-FAIR-v1` | `completed_partial_pass_attribution_blocked` | PCSD/PCC/SIFF在新checkpoint与test-primary规则下是否仍成立 | retrospective audit；not a method | 70/70；280/280；joint pass；two-contribution attribution fail | archive result；SIFF Step6/PCC Step2-4 |
@@ -190,6 +191,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | CCSF D2 granularity | horizon-agnostic widths + row cross-fit | region expected-arm specificity稳定；best native mixture margin over pointwise仅+0.1478pp；2/3 gates | region route不升method | `analysis/stage_c_siff_ccsf_v1_tau25_phase_a_20260718/d2_granularity_diagnostic/` |
 | CCSF D3 mixture-risk decomposition | best-arm vs simplex oracle | simplex相对best-arm约+1.34%–1.38%；0 eligible widths pass | covariance不是主矛盾；route closed | `analysis/stage_c_siff_ccsf_v1_tau25_phase_a_20260718/d3_mixture_risk_decomposition/` |
 | CCSF D4 readout sharpness | exponents + hard argmax | best native -0.0186%、1/5；hard更差 | softness不是主矛盾；Contribution 1回Step2/4 | `analysis/stage_c_siff_ccsf_v1_tau25_phase_a_20260718/d4_readout_sharpness_diagnostic/` |
+| post-CCSF Step2/4 reset | projectivity proof + external primary-source audit + historical boundary | exact-projective requested-H adaptation形成no-go；future-coordinate context为唯一待诊断family | D17 diagnostic only；Contribution 2 held | `analysis/stage_c_post_ccsf_step24_reset_20260719/step24_problem_and_source_audit.md` |
+| D17-v0 protocol audit | same-test 256-row cross-fit + pointwise/shuffled controls | 表面6/6，但pointwise +21.27%；flattened sample×channel跨fold，protocol invalid | result prohibited；改validation-fit→test | `analysis/stage_c_post_ccsf_step24_reset_20260719/d17_projective_future_context/INVALID_PROTOCOL.md` |
 
 ## Pending Tasks
 
@@ -457,3 +460,11 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 49. commit`604e1b8`已完成remote pull、15/15复核与Weather CCSF_RELCAL三batch smoke；50-run formal Phase A于
     `2026-07-18T17:27:08+08:00`在GPU0/1/2启动。运行期间不pull或改协议，不高频值守；完成后先做50/50、
     200/200、test date/checkpoint hash与internal artifacts audit，再进入Step9，confirmation仍为false。
+50. exact projectivity下，requested horizon不能改变shared prefix；任何新method不得同时claim exact crop
+    invariance与requested-H adaptive shared-prefix prediction。显式或隐式按crop长度归一化future coordinate均视为
+    horizon leakage。
+51. D17-v0的same-test 256-row two-fold结果因flattened sample×channel rows跨fold而protocol invalid。其
+    pointwise +21.27%、causal +3.42%等数值不得用于problem promotion、method设计或paper claim。
+52. D17-v1只允许从既有checkpoints导出validation probes，在validation labels上fit固定diagnostic ridge，并在
+    既有authorized test probes评估；不训练模型、不新增test access、不改checkpoint。即使全gate通过，也只把
+    prefix-safe future-context标记为`problem_supported`并进入Step4，不能直接升级Contribution 1。
