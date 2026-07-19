@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D18 Step9/10 closed；Contribution 1/2 Step2；D19 control Step7B prelaunch pass / Step8 remote launch next |
+| `current_step` | D18 Step9/10 closed；Contribution 1/2 Step2；D19 control Step8 remote running |
 | `active_question` | trajectory-level structured decoding相对A6_MEASURE learned-basis control是否仍有headroom？ |
-| `active_candidates` | SIFF-v2 frozen parent；D18 closed；SC-D19-IFC-control-v1.1 Step7B prelaunch pass；no method；CTD paused |
+| `active_candidates` | SIFF-v2 frozen parent；D18 closed；SC-D19-IFC-control-v1.1 Step8 running；no method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step7b_prelaunch/prelaunch_gate_report.md` |
-| `method_implementation` | D19 Step7B 31/31 pass；一次冻结的remote/test control audit已授权；paper method=false |
+| `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/d19_remote_launch_record.md` |
+| `method_implementation` | D19 Step8 running on GPU0/1/2；15-run matrix immutable；paper method=false |
 | `rollback_point` | D19 no headroom → fixed-past decoder paper viability review；Contribution 2=Step2 |
 
 ## post-CCSF Step 2/4 Reset
@@ -74,6 +74,10 @@ v1.1 production implementation现已114/114通过：15 CLI、60 shape/projectivi
 Step7B进一步以31/31冻结15个new runs、5个复用A6、80个official-test cells、四层analyzer、checkpoint
 non-mutation与D19 amplitude/phase diagnostics。Decision=`step7b_prelaunch_pass_step8_launch_next`；
 只授权seed2021一次冻结的control audit，confirmation与paper-method promotion仍false。
+
+Step8已于`2026-07-19T18:52:43+08:00`以commit `da011c8`在GPU0/1/2后台启动。Weather IF与ETTm2
+matched-direct双resource smoke均finite、无OOM；首批Weather IF、Weather IF-no-skip与ETTm1 IF已进入训练。
+当前不值守；完成后执行20-unit completeness与四层Step9。
 
 详见`analysis/stage_c_post_ccsf_step24_reset_20260719/d18_step9/d18_step9_four_layer_diagnostic.md`与
 `analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step7a_local/step7a_implementation_gate_report.md`。
