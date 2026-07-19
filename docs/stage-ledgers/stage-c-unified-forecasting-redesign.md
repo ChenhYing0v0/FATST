@@ -9,7 +9,7 @@
 | `active_question` | strong A6_MEASURE unified control相对horizon-specialized loss是否付出可测accuracy cost，从而需要controlled soft projectivity？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | `SC1-SIFF-v2-EQ-ATTR-v1` frozen parent；D17 closed；`SC-D18-SPC` Step3 authorized diagnostic；no method；CTD paused |
+| `active_candidates` | `SC1-SIFF-v2-EQ-ATTR-v1` frozen parent；D17 closed；`SC-D18-SPC` Step8 diagnostic running；no method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
@@ -19,18 +19,18 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | D17 Step2 negative；D18 Step3 protocol/prelaunch passed |
-| `current_candidate` | immutable SIFF-v2 parent；`SC-D18-SPC diagnostic_only` authorized；no method |
+| `current_11_step` | D17 Step2 negative；D18 Step8 diagnostic running |
+| `current_candidate` | immutable SIFF-v2 parent；`SC-D18-SPC diagnostic_only` running；no method |
 | `latest_decision` | D17 exact post-hoc correction failed with validation→test pathology；future-context unresolved/not promoted |
-| `next_required_action` | commit/push后remote pull、GPU preflight、dry-run、resource smoke与15-run D18 launch |
-| `method_training_authorized` | method=false；D18 diagnostic remote/test=true after 11/11 prelaunch |
+| `next_required_action` | 等待25/25 artifacts；之后Step9 protocol + own-H problem gate |
+| `method_training_authorized` | method=false；D18 diagnostic running on GPUs0/1/2 |
 | `rollback_point` | Contribution 1=Step2/4；Contribution 2=Step2；不得继续contrast-router auxiliary sweep |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Contribution 1 D18 Step3 diagnostic launch boundary；Contribution 2 Step2 |
+| `current_step` | Contribution 1 D18 Step8 diagnostic running；Contribution 2 Step2 |
 | `problem` | exact projectivity是否以horizon-specific accuracy为代价，还是A6_MEASURE已解释该trade-off |
 | `existence_evidence` | D17 correction transfer fail；exact-projectivity no-go成立；horizon specialization headroom尚未测量 |
 | `idea` | D18以same full-domain A6 architecture训练H96/H192/H336-specific loss oracles，对比A6_MEASURE |
@@ -39,7 +39,7 @@
 | `narrative_gate` | no active child candidate |
 | `effectiveness_gate` | CCSF false；SIFF-v2 parent为performance-near但attribution blocked |
 | `artifacts` | D17 result + D18 Step2 audit + D18 11/11 prelaunch/gradient contract |
-| `decision` | D17 not promoted；D18 diagnostic launch authorized；no soft-projective method authorization |
+| `decision` | D17 not promoted；D18 running；no soft-projective method authorization |
 
 ## Frozen Carrier Contract
 
@@ -103,7 +103,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC1-CCSF-D3` | `diagnostic_only_closed` | residual covariance/cancellation是否解释best-arm teacher与fusion不一致 | not a method gate | simplex vs best-arm仅约+1.34%–1.38%；0 widths过dataset gate | covariance-aware redesign unsupported；return Step2 |
 | `SC1-CCSF-D4` | `diagnostic_only_closed` | soft policy是否只需global sharpening或hard routing | not a method gate | best native arm仍-0.0186%、1/5；hard routing更差 | softness not primary；close contrast-policy route |
 | `SC-D17-PFC-v1` | `diagnostic_only_conditional_negative_closed_exact_protocol` | frozen full-domain draft的ordered prefix context能否超越pointwise与row-shuffled controls并跨validation→test transfer | not a method gate；dual-carrier conditional evidence only | causal vs pointwise -3.0356%；vs shuffled -2.3616%；pointwise vs parent -28.7314%；1/7 gates | exact post-hoc protocol closed；direction unresolved；no E2E rescue |
-| `SC-D18-SPC` | `diagnostic_only_step3_prelaunch_passed` | horizon-specific loss是否稳定超过A6_MEASURE，从而证明exact projectivity有accuracy cost | not a method gate；soft projectivity not yet a contribution | 11/11 prelaunch；15/15 gradient contracts | remote preflight/smoke后启动15 new runs |
+| `SC-D18-SPC` | `diagnostic_only_step8_running` | horizon-specific loss是否稳定超过A6_MEASURE，从而证明exact projectivity有accuracy cost | not a method gate；soft projectivity not yet a contribution | 11/11 prelaunch；15/15 gradient；remote first tasks healthy | wait 25/25 then Step9 gate |
 | `SC2-MCCA-v1` | `historical_validation_negative_fair_test_not_reaudited` | same total scope skill mass能否竞争性分配而避免per-target homogenization | complete-chain conditional pass | old best-H720 validation four-H -0.1357%、1/5；not in 70-run audit | inactive；reuse前回Step4重审相对EQUAL/MEASURE的必要性 |
 | `SC-D16-CTD` | `deferred_paused_by_user` | H720 checkpoint是否丢弃healthy SIFF four-H epoch | diagnostic only；weighted checkpoint prior-covered | not implemented | design retained；resume only after user authorization |
 | `SC-RETRO-FAIR-v1` | `completed_partial_pass_attribution_blocked` | PCSD/PCC/SIFF在新checkpoint与test-primary规则下是否仍成立 | retrospective audit；not a method | 70/70；280/280；joint pass；two-contribution attribution fail | archive result；SIFF Step6/PCC Step2-4 |
@@ -197,6 +197,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | D17-v1 validation-to-test | 10 checkpoint-preserving validation exports + existing test probes | causal-pointwise -3.0356%；causal-shuffled -2.3616%；pointwise-parent -28.7314%；prefix gap 0 | exact protocol fail；transfer pathology；direction unresolved | `analysis/stage_c_post_ccsf_step24_reset_20260719/d17_result_and_failure_attribution.md` |
 | D18 soft-projectivity problem audit | no-go relaxation + primary-source boundary + 15-run oracle design | protocol design complete；problem untested | Step3/static freeze next；remote/test false | `analysis/stage_c_post_ccsf_step24_reset_20260719/soft_projectivity_step2_problem_audit.md` |
 | D18 Step3 prelaunch | machine-readable 25-unit matrix + gradient/probe/authorization gate | 11/11；15/15 gradient；prefix/tail gaps=0；CLI/probe smoke pass | 15-run diagnostic remote/test authorized；method=false | `analysis/stage_c_post_ccsf_step24_reset_20260719/d18_prelaunch/step3_prelaunch_report.md` |
+| D18 Step8 launch | remote pull + 11/11 recheck + Weather SPEC96 smoke + 3-GPU launch | commit`c843178`；GPUs0/1/2；first three specialists healthy | running；no config/pull/selection；method=false | `analysis/stage_c_post_ccsf_step24_reset_20260719/d18_remote_launch_record.md` |
 
 ## Pending Tasks
 
@@ -256,7 +257,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SIFF_EQUAL EQUAL-context attribution freeze | `completed_exact_v1_closed` | 50/50；main 2/3、controls 3/4、internal 7/7；回Step4，不补confirmation |
 | SIFF v1 portfolio freeze | `completed_retained_attribution_blocked` | immutable manifest complete；作为当前best candidate与v2 parent，不改Step9 failure |
 | SIFF contrast-calibrated redesign | `formal_candidate_frozen_prelaunch_next` | 实现50-run formal prelaunch tooling；Phase A/test仍禁止 |
-| D18 soft-projectivity cost diagnostic | `step3_prelaunch_passed` | commit/push、remote pull、GPU/resource smoke后启动；结果不自动升method |
+| D18 soft-projectivity cost diagnostic | `step8_running` | 等待25/25；完成后执行完整problem gate，结果不自动升method |
 
 ## Paper Mainline Sync Log
 
@@ -481,3 +482,6 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 55. D18 Step3固定25个artifact units，其中只新增15个specialist训练并复用10个A6 controls。所有arms保持
     T720 A6 architecture与matched initialization；只允许loss support和validation selector变化。11/11
     prelaunch通过只授权problem diagnostic，不授权soft-projective method或Contribution claim。
+56. D18已从commit`c843178`启动。运行中不得pull、改gates、改checkpoint selector或按局部test cells调参；
+    25/25后必须完整报告15个own-H cells、A6_MEASURE/A6_FULL comparisons、prediction NRMSE与所有protocol
+    invariants，再决定Step4或Step2 rollback。

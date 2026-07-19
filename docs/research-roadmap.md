@@ -5,9 +5,9 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D17 Step2 negative；D18 Step3 frozen/prelaunch passed |
+| `current_step` | D17 Step2 negative；D18 Step8 diagnostic running |
 | `active_question` | horizon-specific loss能否稳定超过A6_MEASURE，从而证明exact projectivity存在accuracy cost？ |
-| `active_candidates` | SIFF-v2 frozen parent；D17 closed；SC-D18-SPC diagnostic authorized；no method；CTD paused |
+| `active_candidates` | SIFF-v2 frozen parent；D17 closed；SC-D18-SPC diagnostic running；no method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/d18_prelaunch/step3_prelaunch_report.md` |
 | `method_implementation` | none authorized；CCSF exact route closed |
@@ -35,6 +35,10 @@ future-context保持direction unresolved但不进入Step4。
 
 Step3与代码契约见
 `analysis/stage_c_post_ccsf_step24_reset_20260719/d18_prelaunch/step3_prelaunch_report.md`。
+
+remote preflight与Weather SPEC96 resource smoke通过后，D18于`2026-07-19T14:31:07+08:00`在GPU0/1/2启动。
+运行中保持commit`c843178`、config/gates与25-unit matrix不变；完成后先执行完整problem gate，不查看或挑选局部
+有利cells。
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 

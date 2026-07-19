@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD — Fixed-Past Projective Multi-Horizon Generation |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | D17 Step2 negative；D18 Step3 protocol/prelaunch passed |
+| `current_11_step` | D17 Step2 negative；D18 Step8 diagnostic running |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -60,7 +60,8 @@ prefix-safe future-context D17没有通过problem gate：causal相对pointwise `
 D18 Step3现已冻结并通过`11/11` prelaunch gate：五dataset上新增15个specialist runs，并复用10个
 A6_MEASURE/A6_FULL controls；15个local gradient checks确认prefix有梯度、tail gradient严格为0，full-crop
 prefix gap为0。formal test角色为`test_informed problem-existence diagnostic`，不允许按dataset/horizon调参。
-remote matrix可在GPU preflight与resource smoke后启动，但此授权不等于soft-projective method authorization。
+remote matrix已于`2026-07-19T14:31:07+08:00`从commit`c843178`在GPU0/1/2启动；此运行不等于
+soft-projective method authorization。
 
 在D18通过前，requested horizon仍不作为learned semantic feature，旧point/block/global adaptive coupling thesis
 与SIFF/CCSF只保留为historical evidence，不再描述当前论文机制。
