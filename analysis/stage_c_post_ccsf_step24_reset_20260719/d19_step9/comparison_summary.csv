@@ -1,0 +1,7 @@
+comparison,role,metric,macro_gain_percent,cell_wins,dataset_wins,horizon_wins
+if_vs_a6,carrier_effectiveness,mse,-3.6117173213330585,3,1,0
+if_vs_a6,carrier_effectiveness,mae,-3.651874052868334,2,0,0
+if_vs_direct,structured_synthesis_attribution,mse,-0.8074625188312534,10,2,1
+if_vs_direct,structured_synthesis_attribution,mae,-1.7096382271909882,4,1,0
+if_vs_noskip,history_spectrum_skip_attribution,mse,1.6191364678788178,16,4,4
+if_vs_noskip,history_spectrum_skip_attribution,mae,0.8962703424618407,15,4,4

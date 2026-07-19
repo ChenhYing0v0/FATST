@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD — Fixed-Past Projective Multi-Horizon Generation |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | D18 Step9/10 closed；Contribution 1/2 Step2；D19 control Step8 remote running |
+| `current_11_step` | D18/D19 Step9/10 closed；Contribution 1 Step2/4；Contribution 2 Step2 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | no active two-contribution method；SIFF-v2 parent frozen；D19 control v1.1 Step8 running，method=false |
+| `paper_core_status` | no active two-contribution method；SIFF-v2 parent frozen；D19 control negative closed |
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
@@ -75,8 +75,18 @@ training/test前被v1.1替代。v1.1让Encoder、IF skip和matched direct读取�
 v1.1 Step7A现已114/114通过，maximum prefix gap为0，paired Encoder与IF/no-skip decoder hashes、required
 gradients、numeric与production CLI均通过。Step7B prelaunch又以31/31通过，冻结15个new runs、5个复用A6、
 80个official-test cells与四层诊断。seed2021一次remote/test control audit已授权；confirmation seeds与
-paper-method promotion仍未授权。Step8已于2026-07-19以commit `da011c8`在GPU0/1/2后台启动；完成前不改变
-candidate、matrix、checkpoint rule或gates。
+paper-method promotion仍未授权。
+
+D19 Step9现已完成：IF相对A6为`-3.6117%` MSE、`-3.6519%` MAE，仅3/20 MSE cells；相对
+parameter-matched direct为`-0.8075%` MSE。IF相对no-skip则为`+1.6191%` MSE、16/20 cells，说明720-point
+history-spectrum shortcut提供了真实信息，但polar/frequency synthesis没有得到matched-control支持。全部internal
+health gates通过，validation上IF对A6也为`-10.9950%`、0/20，因此不是collapse或test-only reversal。
+
+[Decision] D19 exact control关闭，不补confirmation seeds，也不做width/LR engineering sweep。由于D19 heads为
+A6参数量的7.94×–10.29×且12/15 new arms在epoch1达到best checkpoint，失败归因为当前
+`readout_or_head_design_wrong`并怀疑readout-scale/optimization mismatch；不能据此方向级否定所有trajectory-
+structured decoder。Contribution 1回Step2/4，history-spectrum skip只作为后续compact method的设计证据，
+不能单独充当multi-horizon Contribution。
 
 forecast-revision surface已转移到根目录`New-idea.md`，状态`deferred_next_paper`；它不再是当前论文问题。
 

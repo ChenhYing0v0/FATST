@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D18 Step9/10 closed；Contribution 1/2 Step2；D19 control Step8 remote running |
-| `active_question` | trajectory-level structured decoding相对A6_MEASURE learned-basis control是否仍有headroom？ |
-| `active_candidates` | SIFF-v2 frozen parent；D18 closed；SC-D19-IFC-control-v1.1 Step8 running；no method；CTD paused |
+| `current_step` | D18/D19 Step9/10 closed；Contribution 1 Step2/4；Contribution 2 Step2 |
+| `active_question` | compact structured generation与direct history statistic能否形成paper-relevant fixed-past multi-horizon problem？ |
+| `active_candidates` | SIFF-v2 frozen parent；D18/D19 closed；no active method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/d19_remote_launch_record.md` |
-| `method_implementation` | D19 Step8 running on GPU0/1/2；15-run matrix immutable；paper method=false |
-| `rollback_point` | D19 no headroom → fixed-past decoder paper viability review；Contribution 2=Step2 |
+| `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step9/d19_step9_deep_audit.md` |
+| `method_implementation` | D19 control negative；no implementation authorized；paper method=false |
+| `rollback_point` | Contribution 1=Step2/4 viability audit；Contribution 2=Step2 |
 
 ## post-CCSF Step 2/4 Reset
 
@@ -77,10 +77,18 @@ non-mutation与D19 amplitude/phase diagnostics。Decision=`step7b_prelaunch_pass
 
 Step8已于`2026-07-19T18:52:43+08:00`以commit `da011c8`在GPU0/1/2后台启动。Weather IF与ETTm2
 matched-direct双resource smoke均finite、无OOM；首批Weather IF、Weather IF-no-skip与ETTm1 IF已进入训练。
-当前不值守；完成后执行20-unit completeness与四层Step9。
+Step9现已20/20 units、80/80 test cells完整。IF相对A6为`-3.6117%` MSE、`-3.6519%` MAE、
+3/20 MSE cells；相对matched direct为`-0.8075%` MSE；只有history-spectrum skip相对no-skip为
+`+1.6191%` MSE、16/20 cells。internal health全部通过，故不是collapse或numeric pathology。
+
+Validation上IF相对A6也为`-10.9950%`、0/20 cells，排除test-only reversal；但D19 total params为A6的
+7.94×–10.29×，且12/15 new arms在epoch1达到best checkpoint，故failure attribution收紧为
+`readout_or_head_design_wrong + readout-scale/optimization mismatch suspected`，不能方向级否定所有structured
+decoder。D19 control关闭，不补seeds、不做width/LR sweep；回Step2/4评估compact generation与direct history
+statistic是否能形成新的paper problem。
 
 详见`analysis/stage_c_post_ccsf_step24_reset_20260719/d18_step9/d18_step9_four_layer_diagnostic.md`与
-`analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step7a_local/step7a_implementation_gate_report.md`。
+`analysis/stage_c_post_ccsf_step24_reset_20260719/d19_step9/d19_step9_deep_audit.md`。
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 

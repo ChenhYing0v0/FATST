@@ -1,0 +1,39 @@
+{
+  "artifact_runs": 20,
+  "candidate_version": "SC-D19-IFC-control-v1.1",
+  "failure_attribution": {
+    "category": "hypothesis_false_or_readout_design_wrong",
+    "decision": "control_negative",
+    "paper_method_promotion_forbidden": true,
+    "rollback_step": "Step 2/4"
+  },
+  "internal_mechanism_health": {
+    "gates": {
+      "all_finite": true,
+      "all_protocols": true,
+      "amplitude_noncollapsed": true,
+      "if_no_skip_identical_decoder_initialization": true,
+      "paired_encoder_initialization": true,
+      "phase_noncollapsed": true,
+      "prediction_deformation": true,
+      "prefix_projectivity": true
+    },
+    "pass": true
+  },
+  "matched_mechanism_attribution": {
+    "if_vs_direct_pass": false,
+    "if_vs_noskip_pass": true,
+    "pass": false
+  },
+  "matrix_complete": true,
+  "official_test_cells": 80,
+  "paper_facing_effectiveness": {
+    "gates": {
+      "if_vs_a6": false,
+      "if_vs_direct": false,
+      "if_vs_noskip": true
+    },
+    "if_vs_a6_pass": false
+  },
+  "role": "control_only"
+}
