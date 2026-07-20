@@ -1,0 +1,1063 @@
+{
+  "candidate_version": "SC-D20-CST-v1-step7a",
+  "config_sha256": "d54f43421d51458776fd2dfd6c63505645622e6d6c442cceab62c00db9fd9353",
+  "checks_passed": 9,
+  "checks_total": 9,
+  "overall_pass": true,
+  "counts": {
+    "cli_cases": 15,
+    "model_constructors": 15,
+    "shape_prefix_cases": 60,
+    "summary_gradient_cases": 10
+  },
+  "max_initial_output_gap": 0.0,
+  "max_prefix_gap": 0.0,
+  "max_projection_orthogonality_gap": 3.1359465690883326e-08,
+  "max_spectrum_dc_leakage": 1.601874828338623e-07,
+  "minimum_spec_random_summary_gradient_difference": 0.07691510021686554,
+  "checks": [
+    {
+      "name": "frozen_input_hashes",
+      "pass": true,
+      "details": {
+        "step6": "ae7408801edf26f4cff793bbbc70f18ebac8b9528cfec8425c1749e68e86594d",
+        "profiles": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a"
+      }
+    },
+    {
+      "name": "production_cli_cases",
+      "pass": true,
+      "details": [
+        {
+          "dataset": "Weather",
+          "arm": "A6_MEASURE_RETRAIN",
+          "readout_mode": "learned-basis-forecast-operator",
+          "history_statistic_mode": "fixed-real-fourier-low32"
+        },
+        {
+          "dataset": "Weather",
+          "arm": "A6_CST_SPEC",
+          "readout_mode": "learned-basis-compact-history-statistic",
+          "history_statistic_mode": "fixed-real-fourier-low32"
+        },
+        {
+          "dataset": "Weather",
+          "arm": "A6_CST_RANDOM",
+          "readout_mode": "learned-basis-compact-history-statistic",
+          "history_statistic_mode": "fixed-gaussian-qr"
+        },
+        {
+          "dataset": "ETTm1",
+          "arm": "A6_MEASURE_RETRAIN",
+          "readout_mode": "learned-basis-forecast-operator",
+          "history_statistic_mode": "fixed-real-fourier-low32"
+        },
+        {
+          "dataset": "ETTm1",
+          "arm": "A6_CST_SPEC",
+          "readout_mode": "learned-basis-compact-history-statistic",
+          "history_statistic_mode": "fixed-real-fourier-low32"
+        },
+        {
+          "dataset": "ETTm1",
+          "arm": "A6_CST_RANDOM",
+          "readout_mode": "learned-basis-compact-history-statistic",
+          "history_statistic_mode": "fixed-gaussian-qr"
+        },
+        {
+          "dataset": "ETTh1",
+          "arm": "A6_MEASURE_RETRAIN",
+          "readout_mode": "learned-basis-forecast-operator",
+          "history_statistic_mode": "fixed-real-fourier-low32"
+        },
+        {
+          "dataset": "ETTh1",
+          "arm": "A6_CST_SPEC",
+          "readout_mode": "learned-basis-compact-history-statistic",
+          "history_statistic_mode": "fixed-real-fourier-low32"
+        },
+        {
+          "dataset": "ETTh1",
+          "arm": "A6_CST_RANDOM",
+          "readout_mode": "learned-basis-compact-history-statistic",
+          "history_statistic_mode": "fixed-gaussian-qr"
+        },
+        {
+          "dataset": "ETTh2",
+          "arm": "A6_MEASURE_RETRAIN",
+          "readout_mode": "learned-basis-forecast-operator",
+          "history_statistic_mode": "fixed-real-fourier-low32"
+        },
+        {
+          "dataset": "ETTh2",
+          "arm": "A6_CST_SPEC",
+          "readout_mode": "learned-basis-compact-history-statistic",
+          "history_statistic_mode": "fixed-real-fourier-low32"
+        },
+        {
+          "dataset": "ETTh2",
+          "arm": "A6_CST_RANDOM",
+          "readout_mode": "learned-basis-compact-history-statistic",
+          "history_statistic_mode": "fixed-gaussian-qr"
+        },
+        {
+          "dataset": "ETTm2",
+          "arm": "A6_MEASURE_RETRAIN",
+          "readout_mode": "learned-basis-forecast-operator",
+          "history_statistic_mode": "fixed-real-fourier-low32"
+        },
+        {
+          "dataset": "ETTm2",
+          "arm": "A6_CST_SPEC",
+          "readout_mode": "learned-basis-compact-history-statistic",
+          "history_statistic_mode": "fixed-real-fourier-low32"
+        },
+        {
+          "dataset": "ETTm2",
+          "arm": "A6_CST_RANDOM",
+          "readout_mode": "learned-basis-compact-history-statistic",
+          "history_statistic_mode": "fixed-gaussian-qr"
+        }
+      ]
+    },
+    {
+      "name": "model_constructor_count",
+      "pass": true,
+      "details": 15
+    },
+    {
+      "name": "paired_initialization",
+      "pass": true,
+      "details": [
+        {
+          "dataset": "Weather",
+          "encoder_hash_count": 1,
+          "base_operator_hash_count": 1,
+          "projection_hash_count": 2,
+          "summary_initial_weight_norms": [
+            0.0,
+            0.0
+          ],
+          "spec_random_summary_gradient_difference": 0.07691510021686554
+        },
+        {
+          "dataset": "ETTm1",
+          "encoder_hash_count": 1,
+          "base_operator_hash_count": 1,
+          "projection_hash_count": 2,
+          "summary_initial_weight_norms": [
+            0.0,
+            0.0
+          ],
+          "spec_random_summary_gradient_difference": 0.1402214765548706
+        },
+        {
+          "dataset": "ETTh1",
+          "encoder_hash_count": 1,
+          "base_operator_hash_count": 1,
+          "projection_hash_count": 2,
+          "summary_initial_weight_norms": [
+            0.0,
+            0.0
+          ],
+          "spec_random_summary_gradient_difference": 0.14175480604171753
+        },
+        {
+          "dataset": "ETTh2",
+          "encoder_hash_count": 1,
+          "base_operator_hash_count": 1,
+          "projection_hash_count": 2,
+          "summary_initial_weight_norms": [
+            0.0,
+            0.0
+          ],
+          "spec_random_summary_gradient_difference": 0.13561135530471802
+        },
+        {
+          "dataset": "ETTm2",
+          "encoder_hash_count": 1,
+          "base_operator_hash_count": 1,
+          "projection_hash_count": 2,
+          "summary_initial_weight_norms": [
+            0.0,
+            0.0
+          ],
+          "spec_random_summary_gradient_difference": 0.13128897547721863
+        }
+      ]
+    },
+    {
+      "name": "parameter_accounting",
+      "pass": true,
+      "details": [
+        {
+          "dataset": "Weather",
+          "a6_active_parameters": 419216,
+          "spectrum_active_parameters": 435600,
+          "random_active_parameters": 435600,
+          "augmentation": 16384
+        },
+        {
+          "dataset": "ETTm1",
+          "a6_active_parameters": 391408,
+          "spectrum_active_parameters": 407792,
+          "random_active_parameters": 407792,
+          "augmentation": 16384
+        },
+        {
+          "dataset": "ETTh1",
+          "a6_active_parameters": 613904,
+          "spectrum_active_parameters": 630288,
+          "random_active_parameters": 630288,
+          "augmentation": 16384
+        },
+        {
+          "dataset": "ETTh2",
+          "a6_active_parameters": 419216,
+          "spectrum_active_parameters": 435600,
+          "random_active_parameters": 435600,
+          "augmentation": 16384
+        },
+        {
+          "dataset": "ETTm2",
+          "a6_active_parameters": 1006160,
+          "spectrum_active_parameters": 1022544,
+          "random_active_parameters": 1022544,
+          "augmentation": 16384
+        }
+      ]
+    },
+    {
+      "name": "production_projection_contract",
+      "pass": true,
+      "details": {
+        "max_orthogonality_gap": 3.1359465690883326e-08,
+        "max_spectrum_dc_leakage": 1.601874828338623e-07
+      }
+    },
+    {
+      "name": "shape_projectivity_and_finite",
+      "pass": true,
+      "details": [
+        {
+          "dataset": "Weather",
+          "arm": "A6_MEASURE_RETRAIN",
+          "horizon": 96,
+          "shape": [
+            2,
+            96,
+            21
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "Weather",
+          "arm": "A6_MEASURE_RETRAIN",
+          "horizon": 192,
+          "shape": [
+            2,
+            192,
+            21
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "Weather",
+          "arm": "A6_MEASURE_RETRAIN",
+          "horizon": 336,
+          "shape": [
+            2,
+            336,
+            21
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "Weather",
+          "arm": "A6_MEASURE_RETRAIN",
+          "horizon": 720,
+          "shape": [
+            2,
+            720,
+            21
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "Weather",
+          "arm": "A6_CST_SPEC",
+          "horizon": 96,
+          "shape": [
+            2,
+            96,
+            21
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "Weather",
+          "arm": "A6_CST_SPEC",
+          "horizon": 192,
+          "shape": [
+            2,
+            192,
+            21
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "Weather",
+          "arm": "A6_CST_SPEC",
+          "horizon": 336,
+          "shape": [
+            2,
+            336,
+            21
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "Weather",
+          "arm": "A6_CST_SPEC",
+          "horizon": 720,
+          "shape": [
+            2,
+            720,
+            21
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "Weather",
+          "arm": "A6_CST_RANDOM",
+          "horizon": 96,
+          "shape": [
+            2,
+            96,
+            21
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "Weather",
+          "arm": "A6_CST_RANDOM",
+          "horizon": 192,
+          "shape": [
+            2,
+            192,
+            21
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "Weather",
+          "arm": "A6_CST_RANDOM",
+          "horizon": 336,
+          "shape": [
+            2,
+            336,
+            21
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "Weather",
+          "arm": "A6_CST_RANDOM",
+          "horizon": 720,
+          "shape": [
+            2,
+            720,
+            21
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTm1",
+          "arm": "A6_MEASURE_RETRAIN",
+          "horizon": 96,
+          "shape": [
+            2,
+            96,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTm1",
+          "arm": "A6_MEASURE_RETRAIN",
+          "horizon": 192,
+          "shape": [
+            2,
+            192,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTm1",
+          "arm": "A6_MEASURE_RETRAIN",
+          "horizon": 336,
+          "shape": [
+            2,
+            336,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTm1",
+          "arm": "A6_MEASURE_RETRAIN",
+          "horizon": 720,
+          "shape": [
+            2,
+            720,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTm1",
+          "arm": "A6_CST_SPEC",
+          "horizon": 96,
+          "shape": [
+            2,
+            96,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTm1",
+          "arm": "A6_CST_SPEC",
+          "horizon": 192,
+          "shape": [
+            2,
+            192,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTm1",
+          "arm": "A6_CST_SPEC",
+          "horizon": 336,
+          "shape": [
+            2,
+            336,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTm1",
+          "arm": "A6_CST_SPEC",
+          "horizon": 720,
+          "shape": [
+            2,
+            720,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTm1",
+          "arm": "A6_CST_RANDOM",
+          "horizon": 96,
+          "shape": [
+            2,
+            96,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTm1",
+          "arm": "A6_CST_RANDOM",
+          "horizon": 192,
+          "shape": [
+            2,
+            192,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTm1",
+          "arm": "A6_CST_RANDOM",
+          "horizon": 336,
+          "shape": [
+            2,
+            336,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTm1",
+          "arm": "A6_CST_RANDOM",
+          "horizon": 720,
+          "shape": [
+            2,
+            720,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTh1",
+          "arm": "A6_MEASURE_RETRAIN",
+          "horizon": 96,
+          "shape": [
+            2,
+            96,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTh1",
+          "arm": "A6_MEASURE_RETRAIN",
+          "horizon": 192,
+          "shape": [
+            2,
+            192,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTh1",
+          "arm": "A6_MEASURE_RETRAIN",
+          "horizon": 336,
+          "shape": [
+            2,
+            336,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTh1",
+          "arm": "A6_MEASURE_RETRAIN",
+          "horizon": 720,
+          "shape": [
+            2,
+            720,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTh1",
+          "arm": "A6_CST_SPEC",
+          "horizon": 96,
+          "shape": [
+            2,
+            96,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTh1",
+          "arm": "A6_CST_SPEC",
+          "horizon": 192,
+          "shape": [
+            2,
+            192,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTh1",
+          "arm": "A6_CST_SPEC",
+          "horizon": 336,
+          "shape": [
+            2,
+            336,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTh1",
+          "arm": "A6_CST_SPEC",
+          "horizon": 720,
+          "shape": [
+            2,
+            720,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTh1",
+          "arm": "A6_CST_RANDOM",
+          "horizon": 96,
+          "shape": [
+            2,
+            96,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTh1",
+          "arm": "A6_CST_RANDOM",
+          "horizon": 192,
+          "shape": [
+            2,
+            192,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTh1",
+          "arm": "A6_CST_RANDOM",
+          "horizon": 336,
+          "shape": [
+            2,
+            336,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTh1",
+          "arm": "A6_CST_RANDOM",
+          "horizon": 720,
+          "shape": [
+            2,
+            720,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTh2",
+          "arm": "A6_MEASURE_RETRAIN",
+          "horizon": 96,
+          "shape": [
+            2,
+            96,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTh2",
+          "arm": "A6_MEASURE_RETRAIN",
+          "horizon": 192,
+          "shape": [
+            2,
+            192,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTh2",
+          "arm": "A6_MEASURE_RETRAIN",
+          "horizon": 336,
+          "shape": [
+            2,
+            336,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTh2",
+          "arm": "A6_MEASURE_RETRAIN",
+          "horizon": 720,
+          "shape": [
+            2,
+            720,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTh2",
+          "arm": "A6_CST_SPEC",
+          "horizon": 96,
+          "shape": [
+            2,
+            96,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTh2",
+          "arm": "A6_CST_SPEC",
+          "horizon": 192,
+          "shape": [
+            2,
+            192,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTh2",
+          "arm": "A6_CST_SPEC",
+          "horizon": 336,
+          "shape": [
+            2,
+            336,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTh2",
+          "arm": "A6_CST_SPEC",
+          "horizon": 720,
+          "shape": [
+            2,
+            720,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTh2",
+          "arm": "A6_CST_RANDOM",
+          "horizon": 96,
+          "shape": [
+            2,
+            96,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTh2",
+          "arm": "A6_CST_RANDOM",
+          "horizon": 192,
+          "shape": [
+            2,
+            192,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTh2",
+          "arm": "A6_CST_RANDOM",
+          "horizon": 336,
+          "shape": [
+            2,
+            336,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTh2",
+          "arm": "A6_CST_RANDOM",
+          "horizon": 720,
+          "shape": [
+            2,
+            720,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTm2",
+          "arm": "A6_MEASURE_RETRAIN",
+          "horizon": 96,
+          "shape": [
+            2,
+            96,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTm2",
+          "arm": "A6_MEASURE_RETRAIN",
+          "horizon": 192,
+          "shape": [
+            2,
+            192,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTm2",
+          "arm": "A6_MEASURE_RETRAIN",
+          "horizon": 336,
+          "shape": [
+            2,
+            336,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTm2",
+          "arm": "A6_MEASURE_RETRAIN",
+          "horizon": 720,
+          "shape": [
+            2,
+            720,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTm2",
+          "arm": "A6_CST_SPEC",
+          "horizon": 96,
+          "shape": [
+            2,
+            96,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTm2",
+          "arm": "A6_CST_SPEC",
+          "horizon": 192,
+          "shape": [
+            2,
+            192,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTm2",
+          "arm": "A6_CST_SPEC",
+          "horizon": 336,
+          "shape": [
+            2,
+            336,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTm2",
+          "arm": "A6_CST_SPEC",
+          "horizon": 720,
+          "shape": [
+            2,
+            720,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTm2",
+          "arm": "A6_CST_RANDOM",
+          "horizon": 96,
+          "shape": [
+            2,
+            96,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTm2",
+          "arm": "A6_CST_RANDOM",
+          "horizon": 192,
+          "shape": [
+            2,
+            192,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTm2",
+          "arm": "A6_CST_RANDOM",
+          "horizon": 336,
+          "shape": [
+            2,
+            336,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        },
+        {
+          "dataset": "ETTm2",
+          "arm": "A6_CST_RANDOM",
+          "horizon": 720,
+          "shape": [
+            2,
+            720,
+            7
+          ],
+          "prefix_gap": 0.0,
+          "finite": true
+        }
+      ]
+    },
+    {
+      "name": "gradient_paths_and_semantic_difference",
+      "pass": true,
+      "details": [
+        {
+          "dataset": "Weather",
+          "arm": "A6_CST_SPEC",
+          "loss": 0.9185287952423096,
+          "summary_gradient_norm": 0.05651609136640653,
+          "base_gradient_norm": 0.2662573709455865,
+          "encoder_gradient_norm": 0.03788145818221644
+        },
+        {
+          "dataset": "Weather",
+          "arm": "A6_CST_RANDOM",
+          "loss": 0.918834388256073,
+          "summary_gradient_norm": 0.05495407799790769,
+          "base_gradient_norm": 0.26356922412276845,
+          "encoder_gradient_norm": 0.038035624797101604
+        },
+        {
+          "dataset": "ETTm1",
+          "arm": "A6_CST_SPEC",
+          "loss": 0.926855742931366,
+          "summary_gradient_norm": 0.10047649017662387,
+          "base_gradient_norm": 0.4093496303021424,
+          "encoder_gradient_norm": 0.041641115337199344
+        },
+        {
+          "dataset": "ETTm1",
+          "arm": "A6_CST_RANDOM",
+          "loss": 0.9266756772994995,
+          "summary_gradient_norm": 0.09923990907187019,
+          "base_gradient_norm": 0.40914466988165954,
+          "encoder_gradient_norm": 0.04162791922455498
+        },
+        {
+          "dataset": "ETTh1",
+          "arm": "A6_CST_SPEC",
+          "loss": 0.9343108534812927,
+          "summary_gradient_norm": 0.09883164646931013,
+          "base_gradient_norm": 0.5850094188835758,
+          "encoder_gradient_norm": 0.045447537868535906
+        },
+        {
+          "dataset": "ETTh1",
+          "arm": "A6_CST_RANDOM",
+          "loss": 0.932540237903595,
+          "summary_gradient_norm": 0.09681323528778697,
+          "base_gradient_norm": 0.578555623731914,
+          "encoder_gradient_norm": 0.04528789839869578
+        },
+        {
+          "dataset": "ETTh2",
+          "arm": "A6_CST_SPEC",
+          "loss": 0.9027794003486633,
+          "summary_gradient_norm": 0.09189870062730025,
+          "base_gradient_norm": 0.37456061105031035,
+          "encoder_gradient_norm": 0.06351240554200245
+        },
+        {
+          "dataset": "ETTh2",
+          "arm": "A6_CST_RANDOM",
+          "loss": 0.903766930103302,
+          "summary_gradient_norm": 0.09403404387519115,
+          "base_gradient_norm": 0.3760223250574211,
+          "encoder_gradient_norm": 0.06288826187173323
+        },
+        {
+          "dataset": "ETTm2",
+          "arm": "A6_CST_SPEC",
+          "loss": 0.9218825697898865,
+          "summary_gradient_norm": 0.0976555736837534,
+          "base_gradient_norm": 0.82931042470288,
+          "encoder_gradient_norm": 0.03212379936410183
+        },
+        {
+          "dataset": "ETTm2",
+          "arm": "A6_CST_RANDOM",
+          "loss": 0.9222492575645447,
+          "summary_gradient_norm": 0.09266299781974445,
+          "base_gradient_norm": 0.8326028148458612,
+          "encoder_gradient_norm": 0.032237558479825366
+        }
+      ]
+    },
+    {
+      "name": "authorization_boundary",
+      "pass": true,
+      "details": {
+        "step7a_local": true,
+        "step7b_prelaunch": false,
+        "remote_training": false,
+        "official_test_access": false,
+        "confirmation": false,
+        "paper_method": false
+      }
+    }
+  ]
+}

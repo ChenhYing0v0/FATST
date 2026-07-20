@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD — Fixed-Past Projective Multi-Horizon Generation |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | D19 closed；D20 diagnostic Step6 complete，Step7A local next；Contribution 2 Step2 |
+| `current_11_step` | D19 closed；D20 diagnostic Step7A/7B complete，Step8 remote launch next；Contribution 2 Step2 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -110,6 +110,12 @@ five datasets × seed2021形成15个from-scratch runs/60 test cells，不复用A
 transfer和对RANDOM specificity通过对称gates；只超过A6仍由generic history access/capacity解释。Step6 static
 gate为14/14，decision=`step6_pass_step7a_local_only`。当前只授权local implementation；remote/test/confirmation/
 paper method仍false。
+
+[D20 Step7A/7B] production实现保持A6 base coefficient path，并加入独立zero-init summary-to-coefficient path；SPEC与
+RANDOM只在fixed projection geometry上不同。local gate为9/9，initial/prefix gap均为0；prelaunch为10/10，
+15-run/60-cell matrix、validation four-horizon checkpoint selector、formal-test授权、checkpoint non-mutation与四层
+analyzer均已冻结。当前decision=`step7b_prelaunch_pass_step8_authorized`；该实验仍是test-informed
+problem diagnostic，不是Contribution 1 method。
 
 forecast-revision surface已转移到根目录`New-idea.md`，状态`deferred_next_paper`；它不再是当前论文问题。
 

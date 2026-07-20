@@ -26,6 +26,7 @@ from layers.StandardNorm import Normalize
 
 LEARNED_BASIS_READOUTS = {
     "learned-basis-forecast-operator",
+    "learned-basis-compact-history-statistic",
     "stage-native-coefficient-field",
     "stage-native-coefficient-field-no-stage",
     "basis-conditioned-coefficient-field",
@@ -112,6 +113,38 @@ D19_IMPLICIT_READOUTS = {
 }
 D19_DIRECT_READOUTS = {"implicit-direct-nonlinear-matched"}
 D19_READOUTS = D19_IMPLICIT_READOUTS | D19_DIRECT_READOUTS
+D20_READOUTS = {"learned-basis-compact-history-statistic"}
+
+
+def _real_fourier_projection(length, dimension):
+    if dimension <= 0 or dimension % 2:
+        raise ValueError("history statistic dimension must be positive and even")
+    max_frequency = dimension // 2
+    steps = torch.arange(length, dtype=torch.float64)
+    scale = (2.0 / float(length)) ** 0.5
+    columns = []
+    for frequency in range(1, max_frequency + 1):
+        angle = 2.0 * torch.pi * float(frequency) * steps / float(length)
+        columns.extend((scale * torch.cos(angle), scale * torch.sin(angle)))
+    return torch.stack(columns, dim=1).float()
+
+
+def _random_orthogonal_projection(length, dimension, seed):
+    generator = torch.Generator(device="cpu")
+    generator.manual_seed(seed)
+    matrix = torch.randn(
+        length,
+        dimension,
+        generator=generator,
+        dtype=torch.float64,
+    )
+    projection, upper = torch.linalg.qr(matrix, mode="reduced")
+    signs = torch.where(
+        torch.diagonal(upper) < 0.0,
+        -torch.ones(dimension, dtype=torch.float64),
+        torch.ones(dimension, dtype=torch.float64),
+    )
+    return (projection * signs.unsqueeze(0)).float()
 
 
 class PatchEmbed(nn.Module):
@@ -444,6 +477,7 @@ class Model(nn.Module):
             | SIFF_CONTROL_READOUTS
             | CCSF_READOUTS
             | D19_READOUTS
+            | D20_READOUTS
             and self.pred_len != 720
         ):
             raise ValueError("StageC projective readouts require pred_len=720")
@@ -572,6 +606,50 @@ class Model(nn.Module):
             self.learned_temporal_basis = nn.Parameter(torch.empty(configs.pred_len, self.basis_rank))
             self.learned_temporal_bias = nn.Parameter(torch.zeros(configs.pred_len))
             nn.init.normal_(self.learned_temporal_basis, mean=0.0, std=self.basis_rank ** -0.5)
+            if self.readout_mode in D20_READOUTS:
+                self.history_statistic_dim = int(
+                    getattr(configs, "history_statistic_dim", 64)
+                )
+                self.history_statistic_mode = str(
+                    getattr(
+                        configs,
+                        "history_statistic_mode",
+                        "fixed-real-fourier-low32",
+                    )
+                )
+                self.history_statistic_random_seed = int(
+                    getattr(configs, "history_statistic_random_seed", 20260719)
+                )
+                if self.seq_len != 720 or self.pred_len != 720:
+                    raise ValueError("D20 requires matched history/output length 720")
+                if self.basis_rank != 256 or self.history_statistic_dim != 64:
+                    raise ValueError("D20 requires basis_rank=256 and statistic_dim=64")
+                if self.history_statistic_mode == "fixed-real-fourier-low32":
+                    projection = _real_fourier_projection(
+                        self.seq_len,
+                        self.history_statistic_dim,
+                    )
+                elif self.history_statistic_mode == "fixed-gaussian-qr":
+                    projection = _random_orthogonal_projection(
+                        self.seq_len,
+                        self.history_statistic_dim,
+                        self.history_statistic_random_seed,
+                    )
+                else:
+                    raise ValueError(
+                        "Unsupported history statistic mode: "
+                        f"{self.history_statistic_mode}"
+                    )
+                self.register_buffer(
+                    "history_statistic_projection",
+                    projection,
+                )
+                self.history_statistic_coeff = nn.Linear(
+                    self.history_statistic_dim,
+                    self.basis_rank,
+                    bias=False,
+                )
+                nn.init.zeros_(self.history_statistic_coeff.weight)
             if self.readout_mode.startswith("stage-native-coefficient-field"):
                 self.stage_boundaries = self._build_stage_boundaries(configs)
                 self.stage_count = len(self.stage_boundaries)
@@ -935,6 +1013,30 @@ class Model(nn.Module):
         output = torch.einsum("hk,bck->bch", basis, coeff) + bias.view(1, 1, -1)
         return output.permute(0, 2, 1)
 
+    def _compact_history_statistic_operator(
+        self,
+        hidden,
+        normalized_history,
+        target_prefix,
+    ):
+        # hidden: [B,C,R], normalized_history: [B,T,C] -> output: [B,H,C]
+        horizon = self.pred_len if target_prefix is None else int(target_prefix)
+        projection = self.history_statistic_projection.to(
+            dtype=normalized_history.dtype
+        )
+        summary = torch.einsum(
+            "btc,tq->bcq",
+            normalized_history,
+            projection,
+        )
+        coeff = self.learned_basis_coeff(hidden)
+        coeff = coeff + self.history_statistic_coeff(summary)
+        basis = self.learned_temporal_basis[:horizon].to(dtype=hidden.dtype)
+        bias = self.learned_temporal_bias[:horizon].to(dtype=hidden.dtype)
+        output = torch.einsum("hk,bck->bch", basis, coeff)
+        output = output + bias.view(1, 1, -1)
+        return output.permute(0, 2, 1)
+
     def _stage_segments(self, horizon):
         segments = []
         start = 0
@@ -1101,6 +1203,12 @@ class Model(nn.Module):
             output = self.proj_x(hidden).permute(0, 2, 1)
         elif self.readout_mode == "learned-basis-forecast-operator":
             output = self._learned_basis_forecast_operator(hidden, target_prefix)
+        elif self.readout_mode in D20_READOUTS:
+            output = self._compact_history_statistic_operator(
+                hidden,
+                normalized_history,
+                target_prefix,
+            )
         elif self.readout_mode.startswith("stage-native-coefficient-field"):
             output = self._stage_native_coefficient_field_operator(hidden, target_prefix)
         elif self.readout_mode.startswith("basis-conditioned-coefficient-field"):

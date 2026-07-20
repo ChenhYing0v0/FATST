@@ -97,6 +97,7 @@ PREFIX_READOUT_MODES = {
     "implicit-frequency-readout",
     "implicit-frequency-noskip-control",
     "implicit-direct-nonlinear-matched",
+    "learned-basis-compact-history-statistic",
 }
 
 STAGE_C_ACTIVE_READOUTS = {
@@ -134,6 +135,7 @@ STAGE_C_ACTIVE_READOUTS = {
     "implicit-frequency-readout",
     "implicit-frequency-noskip-control",
     "implicit-direct-nonlinear-matched",
+    "learned-basis-compact-history-statistic",
 }
 
 ACTIVE_STAGE_C_CONTRACT = {
@@ -438,6 +440,9 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         if_direct_hidden_width=args.if_direct_hidden_width,
         if_head_dropout=args.if_head_dropout,
         if_fourier_norm=args.if_fourier_norm,
+        history_statistic_mode=args.history_statistic_mode,
+        history_statistic_dim=args.history_statistic_dim,
+        history_statistic_random_seed=args.history_statistic_random_seed,
         evaluation_prefix_mode=getattr(args, "evaluation_prefix_mode", "native"),
         segment_horizons=getattr(
             args,
@@ -485,14 +490,40 @@ def initialization_contract(model: nn.Module) -> dict[str, Any]:
         "encoder_initialization_hash": _tensor_hash(encoder),
         "readout_mode": getattr(model, "readout_mode", ""),
     }
-    if getattr(model, "readout_mode", "") == "learned-basis-forecast-operator":
+    if getattr(model, "readout_mode", "") in {
+        "learned-basis-forecast-operator",
+        *TimeAlign.D20_READOUTS,
+    }:
+        base_tensors = [
+            model.learned_basis_coeff.weight,
+            model.learned_basis_coeff.bias,
+            model.learned_temporal_basis,
+            model.learned_temporal_bias,
+        ]
         payload["operator_initialization_hash"] = _tensor_hash(
-            [
-                model.learned_basis_coeff.weight,
-                model.learned_basis_coeff.bias,
-                model.learned_temporal_basis,
-                model.learned_temporal_bias,
-            ]
+            base_tensors
+        )
+        payload["operator_base_initialization_hash"] = _tensor_hash(
+            base_tensors
+        )
+    if hasattr(model, "history_statistic_coeff"):
+        payload.update(
+            {
+                "history_statistic_initialization_hash": _tensor_hash(
+                    list(model.history_statistic_coeff.parameters())
+                ),
+                "history_statistic_projection_hash": _tensor_hash(
+                    [model.history_statistic_projection]
+                ),
+                "history_statistic_mode": model.history_statistic_mode,
+                "history_statistic_dim": int(model.history_statistic_dim),
+                "history_statistic_random_seed": int(
+                    model.history_statistic_random_seed
+                ),
+                "history_statistic_initial_weight_norm": float(
+                    model.history_statistic_coeff.weight.norm().item()
+                ),
+            }
         )
     if hasattr(model, "japo_readout"):
         readout = model.japo_readout
@@ -673,7 +704,10 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
         "patch_num": int(getattr(model, "patch_num", 0)),
         "d_model": int(getattr(model, "d_model", 0)),
     }
-    if getattr(model, "readout_mode", "") == "learned-basis-forecast-operator":
+    if getattr(model, "readout_mode", "") in {
+        "learned-basis-forecast-operator",
+        *TimeAlign.D20_READOUTS,
+    }:
         active_prefixes = (
             "patch_emb_x.",
             "encoder.",
@@ -682,6 +716,7 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
             "learned_basis_coeff.",
             "learned_temporal_basis",
             "learned_temporal_bias",
+            "history_statistic_coeff.",
         )
         active_parameters = sum(
             parameter.numel()
@@ -700,6 +735,40 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
                 "inactive_or_other_parameters": total_parameters - active_parameters,
             }
         )
+        if hasattr(model, "history_statistic_coeff"):
+            projection = model.history_statistic_projection.double()
+            identity = torch.eye(
+                projection.shape[1],
+                dtype=projection.dtype,
+                device=projection.device,
+            )
+            payload.update(
+                {
+                    "history_statistic_mode": model.history_statistic_mode,
+                    "history_statistic_dim": int(
+                        model.history_statistic_dim
+                    ),
+                    "history_statistic_random_seed": int(
+                        model.history_statistic_random_seed
+                    ),
+                    "history_statistic_projection_shape": list(
+                        projection.shape
+                    ),
+                    "history_statistic_projection_orthogonality_max_abs": float(
+                        (projection.T @ projection - identity).abs().max()
+                    ),
+                    "history_statistic_projection_dc_leakage_max_abs": float(
+                        projection.sum(dim=0).abs().max()
+                    ),
+                    "history_statistic_decoder_parameters": sum(
+                        parameter.numel()
+                        for parameter in model.history_statistic_coeff.parameters()
+                    ),
+                    "history_statistic_weight_norm": float(
+                        model.history_statistic_coeff.weight.norm().item()
+                    ),
+                }
+            )
     if hasattr(model, "history_encoder"):
         history_payload = {
             "history_patch_len": int(model.history_encoder.patch_len),
@@ -1103,7 +1172,10 @@ def patch_interface_diagnostics(
 ) -> tuple[dict[str, Any], list[dict[str, Any]], np.ndarray | None]:
     """Measure patch usage without changing checkpoint selection."""
     readout_mode = str(getattr(model, "readout_mode", ""))
-    if readout_mode == "learned-basis-forecast-operator":
+    if readout_mode in {
+        "learned-basis-forecast-operator",
+        *TimeAlign.D20_READOUTS,
+    }:
         projection = model.learned_basis_coeff
         interface = "a6_coefficient_projection"
     elif hasattr(model, "plgo_paf_readout"):
@@ -2200,6 +2272,17 @@ def parse_args() -> argparse.Namespace:
         default="ortho",
     )
     parser.add_argument(
+        "--history-statistic-mode",
+        choices=["fixed-real-fourier-low32", "fixed-gaussian-qr"],
+        default="fixed-real-fourier-low32",
+    )
+    parser.add_argument("--history-statistic-dim", type=int, default=64)
+    parser.add_argument(
+        "--history-statistic-random-seed",
+        type=int,
+        default=20260719,
+    )
+    parser.add_argument(
         "--ccsf-calibration-temperature",
         type=float,
         default=0.1,
@@ -2450,6 +2533,13 @@ def parse_args() -> argparse.Namespace:
                     "D19 matched direct hidden width mismatch: "
                     f"expected {expected_widths[readout_dim]}"
                 )
+    if args.readout_mode in TimeAlign.D20_READOUTS:
+        if args.seq_len != 720 or args.pred_len != 720:
+            raise ValueError("D20 requires matched history/output length 720")
+        if args.basis_rank != 256 or args.history_statistic_dim != 64:
+            raise ValueError("D20 requires basis_rank=256 and statistic_dim=64")
+        if args.history_statistic_random_seed != 20260719:
+            raise ValueError("D20 requires random projection seed 20260719")
     if args.ccsf_calibration_temperature not in {0.05, 0.1, 0.25}:
         raise ValueError("CCSF temperature must lie in the frozen shared grid")
     if not math.isclose(

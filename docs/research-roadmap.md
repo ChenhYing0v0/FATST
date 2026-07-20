@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D19 closed；D20 Step6 complete，Step7A local next；Contribution 2 Step2 |
+| `current_step` | D19 closed；D20 Step7A/7B complete，Step8 remote launch next；Contribution 2 Step2 |
 | `active_question` | compact history-spectrum information能否transfer到A6 coefficient operator并超过同维random history projection？ |
 | `active_candidates` | SIFF-v2 frozen parent；D20 diagnostic_only design frozen；no active method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/d20_step6/step6_diagnostic_design.md` |
-| `method_implementation` | D20 Step7A local=true；remote/test/confirmation/paper method=false |
+| `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/d20_step7b/prelaunch_report.md` |
+| `method_implementation` | D20 diagnostic production=true；seed2021 remote/test=true；confirmation/paper method=false |
 | `rollback_point` | D20=Step2/4；Contribution 1 positive diagnostic后回Step4；Contribution 2=Step2 |
 
 ## post-CCSF Step 2/4 Reset
@@ -122,6 +122,14 @@ initial/prefix gap为0、summary path gradient与deformation均非零。
 Decision=`step6_pass_step7a_local_only`。下一步只实现production buffers/readout/paired initialization/CLI与local
 shape-projectivity-gradient-hash tests；remote、official test、confirmation与paper-method仍false。详见
 `analysis/stage_c_post_ccsf_step24_reset_20260719/d20_step6/step6_diagnostic_design.md`。
+
+D20 Step7A production gate现为`9/9`：15个CLI cases、15个constructors、60个shape/prefix cases与10个
+summary-gradient cases全部通过，initial output gap与prefix gap均为0；SPEC/RANDOM各增加16,384参数，且paired
+Encoder/basis/base-head hash逐dataset一致。Step7B prelaunch进一步为`10/10`，冻结15个from-scratch runs、60个
+official-test cells、validation four-horizon mean-MSE checkpoint selector、checkpoint non-mutation与四层analyzer。
+
+Decision=`step7b_prelaunch_pass_step8_authorized`。当前允许seed2021一次完整remote/test diagnostic；confirmation与
+paper-method promotion继续false。即使结果双门槛正向，也只能返回Step4设计native non-residual operator。
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 

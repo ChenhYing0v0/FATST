@@ -1,0 +1,201 @@
+{
+  "stage": "StageC-UVHF",
+  "diagnostic_id": "SC-D20-CST",
+  "candidate_version": "SC-D20-CST-v1",
+  "status": "authorized_prelaunch",
+  "role": "diagnostic_only",
+  "test_informed": true,
+  "paper_method_authorized": false,
+  "checkpoint_selection_contract": "best-validation-mean-mse-h96-h192-h336-h720",
+  "contracts": {
+    "step6_path": "configs/stage_c_d20_cst_step6.json",
+    "step6_sha256": "ae7408801edf26f4cff793bbbc70f18ebac8b9528cfec8425c1749e68e86594d",
+    "step7a_path": "configs/stage_c_d20_cst_step7a.json",
+    "step7a_sha256": "d54f43421d51458776fd2dfd6c63505645622e6d6c442cceab62c00db9fd9353",
+    "step7a_gate_path": "analysis/stage_c_post_ccsf_step24_reset_20260719/d20_step7a/gate_summary.json",
+    "step7a_gate_sha256": "a8d224fe1dfe84092be9d41ccddadf38e81fe671f316ce61aaa8b8d0d9f4d32e",
+    "model_path": "baselines/timealign_official/models/TimeAlign.py",
+    "model_sha256": "ae7495e20c3cb7e23d1175a687ad8e0bcdb1966c9275cb8ea098a2b87acc7e9b",
+    "trainer_path": "baselines/timealign_official/train_repo.py",
+    "trainer_sha256": "1760f0b745648794480ab41650d1b8ba171f6881848bee058d434aa777cfb823",
+    "evaluator_path": "scripts/evaluate_stage_c_pcsd_cf_checkpoint.py",
+    "evaluator_sha256": "d0fd9babed46496cdecc576040b83b2498e430ab23ae09ba78663577f48c25ad",
+    "analyzer_path": "scripts/analyze_stage_c_d20_cst.py",
+    "analyzer_sha256": "aa2909c6bb9ba497908eb2287058496550c2f3d341eeaf3bbd7cc137c4d66e00",
+    "runner_path": "scripts/remote/run_stage_c_d20_cst_v1.sh",
+    "runner_sha256": "de613e9569cfbae6ad01ec61eb34e122b287f2dec6410f3eb9c91bb2424742ff"
+  },
+  "profiles": {
+    "path": "configs/stage_c_five_dataset_natural_profiles.json",
+    "sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a"
+  },
+  "datasets": ["Weather", "ETTm1", "ETTh1", "ETTh2", "ETTm2"],
+  "seeds": [2021],
+  "arms": [
+    {
+      "id": "A6_MEASURE_RETRAIN",
+      "readout_mode": "learned-basis-forecast-operator",
+      "history_statistic_mode": "fixed-real-fourier-low32",
+      "objective_mode": "measure_only",
+      "training_new": true
+    },
+    {
+      "id": "A6_CST_SPEC",
+      "readout_mode": "learned-basis-compact-history-statistic",
+      "history_statistic_mode": "fixed-real-fourier-low32",
+      "objective_mode": "measure_only",
+      "training_new": true
+    },
+    {
+      "id": "A6_CST_RANDOM",
+      "readout_mode": "learned-basis-compact-history-statistic",
+      "history_statistic_mode": "fixed-gaussian-qr",
+      "objective_mode": "measure_only",
+      "training_new": true
+    }
+  ],
+  "summary_contract": {
+    "dimension": 64,
+    "random_seed": 20260719,
+    "basis_rank": 256,
+    "history_length": 720,
+    "prediction_length": 720
+  },
+  "matrix": {
+    "datasets": ["Weather", "ETTm1", "ETTh1", "ETTh2", "ETTm2"],
+    "arms": ["A6_MEASURE_RETRAIN", "A6_CST_SPEC", "A6_CST_RANDOM"],
+    "seed": 2021,
+    "expected_runs": 15,
+    "new_training_runs": 15,
+    "reused_runs": 0,
+    "horizons": [96, 192, 336, 720],
+    "metrics": ["mse", "mae"],
+    "official_test_cells": 60,
+    "matrix_complete_required": true
+  },
+  "training": {
+    "target_horizons": [720],
+    "validation_horizons": [96, 192, 336, 720],
+    "pred_loss_mode": "full",
+    "pcc_objective_mode": "measure_only",
+    "training_final_evaluation_split": "val",
+    "checkpoint_policy": "best-val",
+    "optimizer": "AdamW",
+    "learning_rate": 0.0001,
+    "batch_size": 32,
+    "max_epochs": 20,
+    "early_stopping_patience": 5,
+    "initialization": "from_scratch_paired_by_dataset_and_seed"
+  },
+  "training_contracts": [
+    {
+      "target_horizons": [720],
+      "validation_horizons": [96, 192, 336, 720],
+      "pred_loss_mode": "full",
+      "pcc_objective_mode": "measure_only",
+      "training_final_evaluation_split": "val"
+    }
+  ],
+  "primary_comparisons": [
+    {
+      "id": "transfer_spec_vs_a6",
+      "candidate": "A6_CST_SPEC",
+      "reference": "A6_MEASURE_RETRAIN",
+      "role": "history_statistic_transfer"
+    },
+    {
+      "id": "specificity_spec_vs_random",
+      "candidate": "A6_CST_SPEC",
+      "reference": "A6_CST_RANDOM",
+      "role": "frequency_specificity"
+    }
+  ],
+  "effectiveness_gates": {
+    "transfer_spec_vs_a6": {
+      "mse_macro_gain_percent_min": 0.3,
+      "mse_cell_wins_min": 11,
+      "mse_dataset_wins_min": 3,
+      "mse_horizon_wins_min": 3,
+      "mae_macro_gain_percent_min": 0.0
+    },
+    "specificity_spec_vs_random": {
+      "mse_macro_gain_percent_min": 0.3,
+      "mse_cell_wins_min": 11,
+      "mse_dataset_wins_min": 3,
+      "mse_horizon_wins_min": 3,
+      "mae_macro_gain_percent_min": 0.0
+    }
+  },
+  "internal_health_gates": {
+    "all_finite": true,
+    "prefix_max_abs_max": 0.00002,
+    "production_projection_orthogonality_max_abs_max": 0.00001,
+    "initial_summary_weight_norm_max": 0.0,
+    "trained_summary_weight_norm_min": 1e-12,
+    "summary_coefficient_std_min": 1e-8,
+    "summary_prediction_contribution_std_min": 1e-8,
+    "spec_random_prediction_nrmse_min": 1e-6,
+    "paired_encoder_initialization": true,
+    "paired_base_operator_initialization": true,
+    "projection_hashes_different": true
+  },
+  "diagnostic_protocol": {
+    "probe_rows": 256,
+    "future_bins": [
+      {"name": "H1_48", "start": 0, "end": 48},
+      {"name": "H49_96", "start": 48, "end": 96},
+      {"name": "H97_144", "start": 96, "end": 144},
+      {"name": "H145_192", "start": 144, "end": 192},
+      {"name": "H193_288", "start": 192, "end": 288},
+      {"name": "H289_336", "start": 288, "end": 336},
+      {"name": "H337_512", "start": 336, "end": 512},
+      {"name": "H513_720", "start": 512, "end": 720}
+    ]
+  },
+  "step7b_protocol": {
+    "production_projection_orthogonality_max_abs_max": 0.00001,
+    "checkpoint_nonmutation_required": true,
+    "resource_smoke_train_batches": 2,
+    "resource_smoke_eval_batches": 2,
+    "workers": 3,
+    "default_gpus": [0, 1, 2]
+  },
+  "launch_order": [
+    ["Weather", "A6_CST_SPEC"],
+    ["Weather", "A6_CST_RANDOM"],
+    ["ETTm1", "A6_CST_SPEC"],
+    ["Weather", "A6_MEASURE_RETRAIN"],
+    ["ETTm1", "A6_CST_RANDOM"],
+    ["ETTm1", "A6_MEASURE_RETRAIN"],
+    ["ETTh1", "A6_CST_SPEC"],
+    ["ETTh1", "A6_CST_RANDOM"],
+    ["ETTh1", "A6_MEASURE_RETRAIN"],
+    ["ETTh2", "A6_CST_SPEC"],
+    ["ETTh2", "A6_CST_RANDOM"],
+    ["ETTh2", "A6_MEASURE_RETRAIN"],
+    ["ETTm2", "A6_CST_SPEC"],
+    ["ETTm2", "A6_CST_RANDOM"],
+    ["ETTm2", "A6_MEASURE_RETRAIN"]
+  ],
+  "decision_map": {
+    "spec_fails_a6_internal_valid": "close direct compact-spectrum route and return Contribution 1 to Step2",
+    "spec_beats_a6_not_random": "capacity_control_explains or generic history access; reject frequency claim and return Step2/4",
+    "internal_invalid": "diagnostic_invalid_for_direction_rejection; repair exact Step7 implementation only",
+    "all_pass": "problem_supported_only; request confirmation authorization before returning to Step4"
+  },
+  "authorization": {
+    "user_authorized": true,
+    "user_authorization_basis": "continue experiments through remote training launch; no monitoring required",
+    "authorization_date": "2026-07-19",
+    "remote_training_authorized": true,
+    "formal_test_access_authorized": true,
+    "test_role": "primary-problem-existence-diagnostic",
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+    "checkpoint_retraining_allowed": true,
+    "checkpoint_mutation_during_test_allowed": false,
+    "per_dataset_horizon_or_cell_tuning_allowed": false,
+    "formal_test_access_count_for_version": 1,
+    "confirmation": false,
+    "paper_method": false
+  }
+}

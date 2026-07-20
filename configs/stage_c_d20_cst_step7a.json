@@ -1,0 +1,76 @@
+{
+  "stage": "StageC-UVHF",
+  "diagnostic_id": "SC-D20-CST",
+  "candidate_version": "SC-D20-CST-v1-step7a",
+  "status": "local_implementation_gate",
+  "role": "diagnostic_only",
+  "test_informed": true,
+  "step6": {
+    "path": "configs/stage_c_d20_cst_step6.json",
+    "sha256": "ae7408801edf26f4cff793bbbc70f18ebac8b9528cfec8425c1749e68e86594d"
+  },
+  "profiles": {
+    "path": "configs/stage_c_five_dataset_natural_profiles.json",
+    "sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a"
+  },
+  "datasets": ["Weather", "ETTm1", "ETTh1", "ETTh2", "ETTm2"],
+  "horizons": [96, 192, 336, 720],
+  "seed": 2021,
+  "arms": [
+    {
+      "id": "A6_MEASURE_RETRAIN",
+      "readout_mode": "learned-basis-forecast-operator",
+      "history_statistic_mode": "fixed-real-fourier-low32"
+    },
+    {
+      "id": "A6_CST_SPEC",
+      "readout_mode": "learned-basis-compact-history-statistic",
+      "history_statistic_mode": "fixed-real-fourier-low32"
+    },
+    {
+      "id": "A6_CST_RANDOM",
+      "readout_mode": "learned-basis-compact-history-statistic",
+      "history_statistic_mode": "fixed-gaussian-qr"
+    }
+  ],
+  "implementation_contract": {
+    "history_statistic_dim": 64,
+    "history_statistic_random_seed": 20260719,
+    "basis_rank": 256,
+    "projection_trainable": false,
+    "summary_weight_initialization": "zeros",
+    "coefficient_composition": "learned_basis_coeff(hidden) + history_statistic_coeff(summary)",
+    "full_prediction_length": 720,
+    "requested_horizon_input": false
+  },
+  "expected_counts": {
+    "cli_cases": 15,
+    "model_constructors": 15,
+    "shape_prefix_cases": 60,
+    "summary_gradient_cases": 10,
+    "dataset_initialization_groups": 5
+  },
+  "gates": {
+    "all_finite": true,
+    "initial_output_max_abs_max": 1e-6,
+    "prefix_max_abs_max": 1e-6,
+    "production_projection_orthogonality_max_abs_max": 1e-5,
+    "spectrum_dc_leakage_max_abs_max": 1e-5,
+    "summary_gradient_norm_min": 1e-12,
+    "base_gradient_norm_min": 1e-12,
+    "encoder_gradient_norm_min": 1e-12,
+    "spec_random_summary_gradient_difference_min": 1e-6,
+    "spec_random_parameter_gap": 0,
+    "augmentation_parameters": 16384,
+    "common_initialization_hashes_equal": true,
+    "projection_hashes_different": true
+  },
+  "authorization": {
+    "step7a_local": true,
+    "step7b_prelaunch": false,
+    "remote_training": false,
+    "official_test_access": false,
+    "confirmation": false,
+    "paper_method": false
+  }
+}

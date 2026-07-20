@@ -304,6 +304,35 @@ def implicit_frequency_tensors(
     return tensors
 
 
+def compact_history_statistic_tensors(
+    model: TimeAlign.Model,
+    batch_x: torch.Tensor,
+) -> dict[str, torch.Tensor] | None:
+    """Return normalized D20 summary and coefficient contributions."""
+    if not hasattr(model, "history_statistic_coeff"):
+        return None
+    normalized_history = model.normalization_x(batch_x, "norm")
+    projection = model.history_statistic_projection.to(
+        dtype=normalized_history.dtype
+    )
+    summary = torch.einsum(
+        "btc,tq->bcq",
+        normalized_history,
+        projection,
+    )
+    coefficient = model.history_statistic_coeff(summary)
+    prediction = torch.einsum(
+        "tk,bck->btc",
+        model.learned_temporal_basis.to(dtype=coefficient.dtype),
+        coefficient,
+    )
+    return {
+        "summary": summary,
+        "coefficient": coefficient,
+        "prediction_contribution": prediction,
+    }
+
+
 def diagnostic_bins(design: dict[str, Any]) -> list[dict[str, Any]]:
     if "diagnostic_protocol" in design:
         return design["diagnostic_protocol"]["future_bins"]
@@ -411,6 +440,9 @@ def evaluate(args: argparse.Namespace) -> None:
     probe_if_amplitude: list[np.ndarray] = []
     probe_if_phase_sine: list[np.ndarray] = []
     probe_if_phase_cosine: list[np.ndarray] = []
+    probe_history_summary: list[np.ndarray] = []
+    probe_history_coefficient: list[np.ndarray] = []
+    probe_history_prediction_contribution: list[np.ndarray] = []
     probe_count = 0
     all_finite = True
     prefix_rows: list[dict[str, Any]] | None = None
@@ -607,6 +639,40 @@ def evaluate(args: argparse.Namespace) -> None:
                         bool(torch.isfinite(value).all())
                         for value in if_tensors.values()
                     )
+                history_tensors = compact_history_statistic_tensors(
+                    model,
+                    batch_x,
+                )
+                if history_tensors is not None:
+                    count = probe_batch_count
+                    probe_history_summary.append(
+                        history_tensors["summary"]
+                        .reshape(-1, history_tensors["summary"].shape[-1])[
+                            :count
+                        ]
+                        .cpu()
+                        .numpy()
+                    )
+                    probe_history_coefficient.append(
+                        history_tensors["coefficient"]
+                        .reshape(
+                            -1,
+                            history_tensors["coefficient"].shape[-1],
+                        )[:count]
+                        .cpu()
+                        .numpy()
+                    )
+                    probe_history_prediction_contribution.append(
+                        history_tensors["prediction_contribution"]
+                        .permute(0, 2, 1)
+                        .reshape(-1, 720)[:count]
+                        .cpu()
+                        .numpy()
+                    )
+                    all_finite = all_finite and all(
+                        bool(torch.isfinite(value).all())
+                        for value in history_tensors.values()
+                    )
             all_finite = all_finite and bool(
                 torch.isfinite(fused).all() and torch.isfinite(target).all()
             )
@@ -687,6 +753,20 @@ def evaluate(args: argparse.Namespace) -> None:
                 ).astype(np.float32),
                 "probe_if_phase_cosine": np.concatenate(
                     probe_if_phase_cosine
+                ).astype(np.float32),
+            }
+        )
+    if probe_history_summary:
+        payload.update(
+            {
+                "probe_history_summary": np.concatenate(
+                    probe_history_summary
+                ).astype(np.float32),
+                "probe_history_coefficient": np.concatenate(
+                    probe_history_coefficient
+                ).astype(np.float32),
+                "probe_history_prediction_contribution": np.concatenate(
+                    probe_history_prediction_contribution
                 ).astype(np.float32),
             }
         )
@@ -803,6 +883,35 @@ def evaluate(args: argparse.Namespace) -> None:
             and diagnostics.get("implicit_direct_fourier_norm")
             == implicit["fourier_norm"]
         )
+    elif hasattr(model, "history_statistic_coeff"):
+        summary_contract = design["summary_contract"]
+        expected_mode = adapter["history_statistic_mode"]
+        projection_tolerance = design["step7b_protocol"][
+            "production_projection_orthogonality_max_abs_max"
+        ]
+        readout_contract_pass = bool(
+            initialization.get("history_statistic_initialization_hash")
+            and initialization.get("history_statistic_projection_hash")
+            and initialization.get("history_statistic_mode")
+            == expected_mode
+            and initialization.get("history_statistic_dim")
+            == summary_contract["dimension"]
+            and initialization.get("history_statistic_initial_weight_norm")
+            == 0.0
+            and diagnostics.get("history_statistic_mode") == expected_mode
+            and diagnostics.get("history_statistic_dim")
+            == summary_contract["dimension"]
+            and diagnostics.get(
+                "history_statistic_projection_orthogonality_max_abs",
+                math.inf,
+            )
+            <= projection_tolerance
+            and diagnostics.get("history_statistic_decoder_parameters")
+            == summary_contract["dimension"] * 256
+            and "probe_history_summary" in payload
+            and "probe_history_coefficient" in payload
+            and "probe_history_prediction_contribution" in payload
+        )
 
     invariant = {
         "candidate_id": design.get(
@@ -829,6 +938,9 @@ def evaluate(args: argparse.Namespace) -> None:
         ),
         "implicit_frequency_diagnostics_present": (
             "probe_if_amplitude" in payload
+        ),
+        "compact_history_diagnostics_present": (
+            "probe_history_summary" in payload
         ),
         "all_finite": all_finite,
         "protocol_pass": protocol_pass,
@@ -998,6 +1110,41 @@ def main() -> None:
         if len(direct_rows) != len(HORIZONS) or direct_gap != 0.0:
             raise RuntimeError("D19 direct checkpoint evaluator smoke failed")
         print("d19_checkpoint_evaluator_synthetic_smoke=pass")
+        d20_config = SimpleNamespace(**vars(config))
+        d20_config.readout_mode = "learned-basis-compact-history-statistic"
+        d20_config.basis_rank = 256
+        d20_config.history_statistic_mode = "fixed-real-fourier-low32"
+        d20_config.history_statistic_dim = 64
+        d20_config.history_statistic_random_seed = 20260719
+        torch.manual_seed(2021)
+        d20_model = TimeAlign.Model(d20_config).float().eval()
+        with torch.no_grad():
+            d20_rows, d20_gap = prefix_audit(
+                d20_model,
+                x[:1],
+                target[:1],
+            )
+            d20_tensors = compact_history_statistic_tensors(d20_model, x)
+        if (
+            len(d20_rows) != len(HORIZONS)
+            or d20_gap > PREFIX_TOLERANCE
+            or d20_tensors is None
+            or tuple(d20_tensors["summary"].shape) != (2, 7, 64)
+            or tuple(d20_tensors["coefficient"].shape) != (2, 7, 256)
+            or tuple(d20_tensors["prediction_contribution"].shape)
+            != (2, 720, 7)
+            or any(
+                not bool(torch.isfinite(value).all())
+                for value in d20_tensors.values()
+            )
+        ):
+            raise RuntimeError(
+                "D20 checkpoint evaluator smoke failed: "
+                f"rows={len(d20_rows)} gap={d20_gap} "
+                "shapes="
+                f"{None if d20_tensors is None else {key: tuple(value.shape) for key, value in d20_tensors.items()}}"
+            )
+        print("d20_checkpoint_evaluator_synthetic_smoke=pass")
         return
     evaluate(args)
 

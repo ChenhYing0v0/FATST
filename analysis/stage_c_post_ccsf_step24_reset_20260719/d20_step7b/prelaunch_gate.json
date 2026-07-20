@@ -1,0 +1,231 @@
+{
+  "candidate_version": "SC-D20-CST-v1",
+  "config_path": "configs/stage_c_d20_cst_step7b.json",
+  "config_sha256": "4c67b038bd85bca511cc3f4d69084135b391c3947be79573089796977b06101f",
+  "checks_passed": 10,
+  "checks_total": 10,
+  "overall_pass": true,
+  "matrix": {
+    "runs": 15,
+    "official_test_cells": 60,
+    "datasets": 5,
+    "arms": 3,
+    "seed": 2021
+  },
+  "authorization": {
+    "user_authorized": true,
+    "user_authorization_basis": "continue experiments through remote training launch; no monitoring required",
+    "authorization_date": "2026-07-19",
+    "remote_training_authorized": true,
+    "formal_test_access_authorized": true,
+    "test_role": "primary-problem-existence-diagnostic",
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+    "checkpoint_retraining_allowed": true,
+    "checkpoint_mutation_during_test_allowed": false,
+    "per_dataset_horizon_or_cell_tuning_allowed": false,
+    "formal_test_access_count_for_version": 1,
+    "confirmation": false,
+    "paper_method": false
+  },
+  "checks": [
+    {
+      "name": "frozen_contract_hashes",
+      "pass": true,
+      "details": [
+        {
+          "contract": "step6",
+          "computed": "ae7408801edf26f4cff793bbbc70f18ebac8b9528cfec8425c1749e68e86594d",
+          "frozen": "ae7408801edf26f4cff793bbbc70f18ebac8b9528cfec8425c1749e68e86594d"
+        },
+        {
+          "contract": "step7a",
+          "computed": "d54f43421d51458776fd2dfd6c63505645622e6d6c442cceab62c00db9fd9353",
+          "frozen": "d54f43421d51458776fd2dfd6c63505645622e6d6c442cceab62c00db9fd9353"
+        },
+        {
+          "contract": "step7a_gate",
+          "computed": "a8d224fe1dfe84092be9d41ccddadf38e81fe671f316ce61aaa8b8d0d9f4d32e",
+          "frozen": "a8d224fe1dfe84092be9d41ccddadf38e81fe671f316ce61aaa8b8d0d9f4d32e"
+        },
+        {
+          "contract": "model",
+          "computed": "ae7495e20c3cb7e23d1175a687ad8e0bcdb1966c9275cb8ea098a2b87acc7e9b",
+          "frozen": "ae7495e20c3cb7e23d1175a687ad8e0bcdb1966c9275cb8ea098a2b87acc7e9b"
+        },
+        {
+          "contract": "trainer",
+          "computed": "1760f0b745648794480ab41650d1b8ba171f6881848bee058d434aa777cfb823",
+          "frozen": "1760f0b745648794480ab41650d1b8ba171f6881848bee058d434aa777cfb823"
+        },
+        {
+          "contract": "evaluator",
+          "computed": "d0fd9babed46496cdecc576040b83b2498e430ab23ae09ba78663577f48c25ad",
+          "frozen": "d0fd9babed46496cdecc576040b83b2498e430ab23ae09ba78663577f48c25ad"
+        },
+        {
+          "contract": "analyzer",
+          "computed": "aa2909c6bb9ba497908eb2287058496550c2f3d341eeaf3bbd7cc137c4d66e00",
+          "frozen": "aa2909c6bb9ba497908eb2287058496550c2f3d341eeaf3bbd7cc137c4d66e00"
+        },
+        {
+          "contract": "runner",
+          "computed": "de613e9569cfbae6ad01ec61eb34e122b287f2dec6410f3eb9c91bb2424742ff",
+          "frozen": "de613e9569cfbae6ad01ec61eb34e122b287f2dec6410f3eb9c91bb2424742ff"
+        }
+      ]
+    },
+    {
+      "name": "step7a_gate_dependency",
+      "pass": true,
+      "details": {
+        "checks": [
+          9,
+          9
+        ],
+        "counts": {
+          "cli_cases": 15,
+          "model_constructors": 15,
+          "shape_prefix_cases": 60,
+          "summary_gradient_cases": 10
+        }
+      }
+    },
+    {
+      "name": "complete_unique_matrix",
+      "pass": true,
+      "details": [
+        [
+          "Weather",
+          "A6_CST_SPEC"
+        ],
+        [
+          "Weather",
+          "A6_CST_RANDOM"
+        ],
+        [
+          "ETTm1",
+          "A6_CST_SPEC"
+        ],
+        [
+          "Weather",
+          "A6_MEASURE_RETRAIN"
+        ],
+        [
+          "ETTm1",
+          "A6_CST_RANDOM"
+        ],
+        [
+          "ETTm1",
+          "A6_MEASURE_RETRAIN"
+        ],
+        [
+          "ETTh1",
+          "A6_CST_SPEC"
+        ],
+        [
+          "ETTh1",
+          "A6_CST_RANDOM"
+        ],
+        [
+          "ETTh1",
+          "A6_MEASURE_RETRAIN"
+        ],
+        [
+          "ETTh2",
+          "A6_CST_SPEC"
+        ],
+        [
+          "ETTh2",
+          "A6_CST_RANDOM"
+        ],
+        [
+          "ETTh2",
+          "A6_MEASURE_RETRAIN"
+        ],
+        [
+          "ETTm2",
+          "A6_CST_SPEC"
+        ],
+        [
+          "ETTm2",
+          "A6_CST_RANDOM"
+        ],
+        [
+          "ETTm2",
+          "A6_MEASURE_RETRAIN"
+        ]
+      ]
+    },
+    {
+      "name": "formal_test_authorization_contract",
+      "pass": true,
+      "details": {
+        "user_authorized": true,
+        "user_authorization_basis": "continue experiments through remote training launch; no monitoring required",
+        "authorization_date": "2026-07-19",
+        "remote_training_authorized": true,
+        "formal_test_access_authorized": true,
+        "test_role": "primary-problem-existence-diagnostic",
+        "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+        "checkpoint_retraining_allowed": true,
+        "checkpoint_mutation_during_test_allowed": false,
+        "per_dataset_horizon_or_cell_tuning_allowed": false,
+        "formal_test_access_count_for_version": 1,
+        "confirmation": false,
+        "paper_method": false
+      }
+    },
+    {
+      "name": "promotion_boundary",
+      "pass": true,
+      "details": {
+        "confirmation": false,
+        "paper_method": false
+      }
+    },
+    {
+      "name": "runner_shell_syntax",
+      "pass": true,
+      "details": "scripts/remote/run_stage_c_d20_cst_v1.sh"
+    },
+    {
+      "name": "runner_dry_run",
+      "pass": true,
+      "details": {
+        "job_lines": 15,
+        "footer": "d20_dry_run=pass jobs=15 config_hash=4c67b038bd85bca511cc3f4d69084135b391c3947be79573089796977b06101f profile_hash=80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a remote_authorized=true test_authorized=true"
+      }
+    },
+    {
+      "name": "checkpoint_evaluator_smoke",
+      "pass": true,
+      "details": [
+        "siff_checkpoint_evaluator_synthetic_smoke=pass",
+        "ccsf_checkpoint_evaluator_synthetic_smoke=pass",
+        "d19_checkpoint_evaluator_synthetic_smoke=pass",
+        "d20_checkpoint_evaluator_synthetic_smoke=pass"
+      ]
+    },
+    {
+      "name": "analyzer_smoke",
+      "pass": true,
+      "details": "d20_analyzer_synthetic_smoke=pass"
+    },
+    {
+      "name": "gates_and_rollback_map",
+      "pass": true,
+      "details": {
+        "effectiveness": [
+          "specificity_spec_vs_random",
+          "transfer_spec_vs_a6"
+        ],
+        "decision_map": [
+          "all_pass",
+          "internal_invalid",
+          "spec_beats_a6_not_random",
+          "spec_fails_a6_internal_valid"
+        ]
+      }
+    }
+  ]
+}
