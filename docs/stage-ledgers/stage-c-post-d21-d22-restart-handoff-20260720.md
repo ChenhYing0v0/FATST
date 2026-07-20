@@ -14,9 +14,10 @@
 5. `analysis/stage_c_post_d21_unconstrained_reset_20260720/d22c_result_and_step4_handoff.md`；
 6. `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_fcmi_step46_design_audit.md`；
 7. `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_fcmi_step7a_implementation_audit.md`；
-8. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
-9. `docs/paper-mainline.md`；
-10. `docs/research-roadmap.md`。
+8. `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step7b_prelaunch/prelaunch_report.md`；
+9. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
+10. `docs/paper-mainline.md`；
+11. `docs/research-roadmap.md`。
 
 若上述文件与更旧的聊天、archive或历史段落冲突，以本文件和三份主线文档顶部的最新cursor为准。
 
@@ -27,14 +28,14 @@
 | `project` | R_2026_FATST |
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-20 |
-| `source_parent_commit` | `4a3e8a8` |
-| `current_step` | SC-D23-FCMI Step7A local 11/11 pass；Step7B design freeze next |
+| `source_parent_commit` | `2e48583` |
+| `current_step` | SC-D23-FCMI Step7B prelaunch 21/21 pass；Step8 held |
 | `active_problem` | generic evidence main effect与future-coordinate interaction如何可识别地共存并原生fallback？ |
-| `active_method` | none trained；FCMI production-local candidate |
+| `active_method` | none trained；FCMI formal identity frozen/not trained |
 | `method_training_authorized` | false |
-| `remote_training_authorized` | false；FCMI Step7A complete，Step7B only |
-| `next_action` | freeze dense capacity control、formal matrix、effectiveness/attribution gates |
-| `conditional_next` | Step7B完整通过并获得独立授权后才可remote/test |
+| `remote_training_authorized` | false；official test false；runner拒绝非dry-run |
+| `next_action` | 等待用户对frozen 40-run/160-test-cell matrix给出独立remote/test授权 |
+| `conditional_next` | 获授权后才做commit-pinned remote pull、GPU preflight、resource smoke与Step8 |
 | `rollback` | Step7B attribution fault回Step6；matched/narrative fail回Step4；不自动pivot task |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
@@ -96,7 +97,9 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
    0/15 arm-dataset Pareto dominance；decision=`finite_capacity_frontier_not_supported`；
 8. A6_MEASURE相对A6_FULL在五个lead-time bins全部5/5正向；H96只保留局部optimization clue；
 9. D22-C static/prelaunch已通过；仅冻结的neutral/raw-history diagnostic remote/test获授权，paper method仍未授权。
-10. D22-C v1.1已完整通过problem gate；FCMI Step7A production-local 11/11通过，尚未训练。
+10. D22-C v1.1已完整通过problem gate；FCMI Step7A production-local 11/11通过，尚未训练；
+11. FCMI Step7B prelaunch 21/21通过；40 runs、160 official-test cells、160 validation cells和dense
+    capacity control已冻结，但remote/test仍未授权。
 
 ## 5. D22-HFA 的执行顺序
 
@@ -153,6 +156,13 @@ interaction，generic和standard query均为contained cases，并用matched dual
 Step4-6 conditional pass；Step7A现已11/11通过，remote/test/paper promotion仍false。FCMI相对A6 active
 parameters少83%–95%，后续formal design必须加入dense capacity-matched control。
 
+Step7B现已21/21通过。`DENSE_DUAL_MATCHED`使用profile-specific low-rank temporal residual，使五个profiles
+与A6 active parameters差距仅`0.0914%–0.1321%`，同时zero-init保持standard-dual initial function；
+coefficient与basis的分阶段gradient及active residual均通过。formal matrix固定8 arms × 5 datasets ×
+seed2021 = 40 runs：全部8 arms进入160个official-test cells和160个validation cells。
+`TARGET_SHUFFLED_QUERY`原拟validation-only，但因参与方向级attribution，在任何test access前修正为formal
+control。dense arm是capacity attribution control，不是第二个method或Contribution 2。
+
 ## 6. 研究与实验治理
 
 - 外部调研默认广泛web search并优先primary sources；Zotero只作seed；
@@ -170,10 +180,10 @@ parameters少83%–95%，后续formal design必须加入dense capacity-matched c
 
 ## 7. 当前执行定义
 
-1. 读取D22-C result、FCMI Step4-6与Step7A audit；
-2. 冻结formal arms，加入dense capacity-matched control；
-3. 定义validation/test角色、四层gates、failure attribution与rollback；
-4. Step7B通过后仍需独立remote/test授权；
+1. 读取D22-C result、FCMI Step4-6、Step7A与Step7B audit；
+2. 保持frozen 40-run identity、profiles、seed、selector、controls和gates不变；
+3. 等待用户对remote training与official-test audit给出独立授权；
+4. 获授权后先commit-pinned remote pull、`nvidia-smi`和resource smoke，再启动Step8；
 5. 不恢复H embedding/router、D17-D21 rescue、CTD或Contribution 2预设。
 
 ## 8. 禁止无损重启时发生的漂移
@@ -200,17 +210,20 @@ parameters少83%–95%，后续formal design必须加入dense capacity-matched c
 4. analysis/stage_c_post_d21_unconstrained_reset_20260720/d22c_result_and_step4_handoff.md
 5. analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_fcmi_step46_design_audit.md
 6. analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_fcmi_step7a_implementation_audit.md
-7. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
-8. docs/paper-mainline.md
-9. docs/research-roadmap.md
+7. analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step7b_prelaunch/prelaunch_report.md
+8. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
+9. docs/paper-mainline.md
+10. docs/research-roadmap.md
 
-当前权威状态是：D22-C v1.1完整problem gate已通过，decision=`target_coordinate_information_access_supported`；SC-D23-FCMI Step7A production-local gate为11/11 pass，decision=`step7a_local_pass_step7b_design_freeze_next`。exact projectivity、requested-H禁用、full-T prefix crop、A6 interface compatibility以及预设decoder+loss双贡献均不再是硬约束；但在fixed past、pointwise MSE且H不携带额外信息时，同一future coordinate的Bayes conditional mean不依赖requested horizon，因此不得直接实现H embedding/router。
+当前权威状态是：D22-C v1.1完整problem gate已通过，decision=`target_coordinate_information_access_supported`；SC-D23-FCMI Step7B prelaunch gate为21/21 pass，decision=`step7b_prelaunch_pass_waiting_remote_test_authorization`。exact projectivity、requested-H禁用、full-T prefix crop、A6 interface compatibility以及预设decoder+loss双贡献均不再是硬约束；但在fixed past、pointwise MSE且H不携带额外信息时，同一future coordinate的Bayes conditional mean不依赖requested horizon，因此不得直接实现H embedding/router。
 
-A6-LBF仅是strong carrier/control/possible component，不足以standalone承载论文；SIFF-v2是冻结历史候选；D17-D21均已关闭，不做seed、readout、representation或参数rescue；CTD保持paused。FCMI已实现production-local tensor path但尚未训练；remote/test未授权。
+A6-LBF仅是strong carrier/control/possible component，不足以standalone承载论文；SIFF-v2是冻结历史候选；D17-D21均已关闭，不做seed、readout、representation或参数rescue；CTD保持paused。FCMI formal identity已经冻结但尚未训练；remote/test未授权。
 
 已确认D22-C ordered相对generic为test MSE `+2.5228%`、MAE `+1.6484%`、15/20 cells、4/5 datasets、4/4 horizons；其余四controls均20/20正向。Weather相对generic 4/4负向，必须保留generic fallback并禁止universal claim。
 
-Step7A已验证zero-mean interaction、standard-query exact morph、main/interaction/query/output gradients、dual parameter matching与35个production CLI cases。FCMI相对A6 active parameters少83%–95%，下一步Step7B必须冻结dense capacity-matched control、formal matrix、四层gates与rollback。CATS/TimePerceiver等已覆盖query-to-history primitive；FCMI只在main–interaction decomposition与generic/standard containment的完整chain上作provisional claim。不得启动remote/test，不得设计第二loss/router。
+Step7A已验证zero-mean interaction、standard-query exact morph、main/interaction/query/output gradients、dual parameter matching与35个production CLI cases。Step7B又冻结`DENSE_DUAL_MATCHED`、8 arms × 5 datasets × seed2021的40-run matrix、160个official-test cells、160个validation cells、四层gates与failure rollback。dense control相对A6 active parameter gap为`0.0914%–0.1321%`，只作capacity attribution，不是method或第二项contribution。CATS/TimePerceiver等已覆盖query-to-history primitive；FCMI只在main–interaction decomposition与generic/standard containment的完整chain上作provisional claim。
+
+下一步必须先获得对frozen matrix的独立remote/test授权；获授权后才可commit-pinned remote pull、`nvidia-smi`、resource smoke和Step8。当前不得启动remote/test，不得设计第二loss/router。
 
 完成后同步更新analysis report、docs/paper-mainline.md、docs/research-roadmap.md和Stage C ledger，执行最小诚实验证，并按AGENTS.md提交、推送。请从专业时序预测研究员角度进行审计，不要为了凑两个contributions而预先设计第二个loss/router。
 ```

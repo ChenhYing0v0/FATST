@@ -448,6 +448,7 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         fcmi_n_heads=args.fcmi_n_heads,
         fcmi_dropout=args.fcmi_dropout,
         fcmi_permutation_seed=args.fcmi_permutation_seed,
+        fcmi_dense_rank=args.fcmi_dense_rank,
         evaluation_prefix_mode=getattr(args, "evaluation_prefix_mode", "native"),
         segment_horizons=getattr(
             args,
@@ -751,6 +752,23 @@ def initialization_contract(model: nn.Module) -> dict[str, Any]:
         else:
             payload["fcmi_standard_initialization_hash"] = _tensor_hash(
                 list(readout.standard_projection.parameters())
+            )
+        if readout.mode == "fcmi-dense-capacity-matched":
+            payload.update(
+                {
+                    "fcmi_dense_initialization_hash": _tensor_hash(
+                        [
+                            *readout.dense_coefficient.parameters(),
+                            readout.dense_temporal_basis,
+                            readout.dense_temporal_bias,
+                        ]
+                    ),
+                    "fcmi_dense_initial_output_norm": float(
+                        readout.dense_coefficient.weight.norm().item()
+                        + readout.dense_coefficient.bias.norm().item()
+                        + readout.dense_temporal_bias.norm().item()
+                    ),
+                }
             )
     return payload
 
@@ -1102,8 +1120,23 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
                 "fcmi_dual": readout.is_dual,
                 "fcmi_n_heads": readout.n_heads,
                 "fcmi_dropout": readout.dropout,
+                "fcmi_dense_rank": readout.dense_rank,
             }
         )
+        if readout.mode == "fcmi-dense-capacity-matched":
+            payload.update(
+                {
+                    "fcmi_dense_coefficient_weight_norm": float(
+                        readout.dense_coefficient.weight.norm().item()
+                    ),
+                    "fcmi_dense_temporal_basis_norm": float(
+                        readout.dense_temporal_basis.norm().item()
+                    ),
+                    "fcmi_dense_temporal_bias_norm": float(
+                        readout.dense_temporal_bias.norm().item()
+                    ),
+                }
+            )
     if hasattr(model, "pcsd_readout"):
         readout = model.pcsd_readout
         active_prefixes = (
@@ -2381,6 +2414,7 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=20260720,
     )
+    parser.add_argument("--fcmi-dense-rank", type=int, default=0)
     parser.add_argument(
         "--ccsf-calibration-temperature",
         type=float,
@@ -2656,6 +2690,20 @@ def parse_args() -> argparse.Namespace:
         if args.fcmi_permutation_seed != 20260720:
             raise ValueError(
                 "D23 FCMI requires permutation seed 20260720"
+            )
+        if (
+            args.readout_mode == "fcmi-dense-capacity-matched"
+            and args.fcmi_dense_rank <= 0
+        ):
+            raise ValueError(
+                "FCMI dense capacity control requires fcmi_dense_rank > 0"
+            )
+        if (
+            args.readout_mode != "fcmi-dense-capacity-matched"
+            and args.fcmi_dense_rank != 0
+        ):
+            raise ValueError(
+                "fcmi_dense_rank is restricted to the dense capacity control"
             )
     if args.ccsf_calibration_temperature not in {0.05, 0.1, 0.25}:
         raise ValueError("CCSF temperature must lie in the frozen shared grid")

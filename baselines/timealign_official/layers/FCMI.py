@@ -15,6 +15,7 @@ STANDARD_DUAL_MODE = "fcmi-standard-dual-matched"
 GENERIC_DUAL_MODE = "fcmi-generic-dual-matched"
 ORDER_SHUFFLED_MODE = "fcmi-order-shuffled"
 TARGET_SHUFFLED_MODE = "fcmi-target-shuffled-query"
+DENSE_CAPACITY_MODE = "fcmi-dense-capacity-matched"
 
 FCMI_READOUT_MODES = {
     FCMI_MODE,
@@ -23,6 +24,7 @@ FCMI_READOUT_MODES = {
     GENERIC_DUAL_MODE,
     ORDER_SHUFFLED_MODE,
     TARGET_SHUFFLED_MODE,
+    DENSE_CAPACITY_MODE,
 }
 FCMI_DUAL_MODES = FCMI_READOUT_MODES - {STANDARD_QUERY_MODE}
 
@@ -56,6 +58,7 @@ class FutureCoordinateMainInteractionReadout(nn.Module):
         dropout: float,
         mode: str,
         permutation_seed: int,
+        dense_rank: int = 0,
     ) -> None:
         super().__init__()
         if mode not in FCMI_READOUT_MODES:
@@ -73,6 +76,11 @@ class FutureCoordinateMainInteractionReadout(nn.Module):
         self.n_heads = int(n_heads)
         self.dropout = float(dropout)
         self.mode = mode
+        self.dense_rank = int(dense_rank)
+        if mode == DENSE_CAPACITY_MODE and self.dense_rank <= 0:
+            raise ValueError("dense capacity control requires dense_rank > 0")
+        if mode != DENSE_CAPACITY_MODE and self.dense_rank != 0:
+            raise ValueError("dense_rank is restricted to the dense control")
 
         self.query_encoder = nn.Sequential(
             nn.Linear(memory_dim, memory_dim),
@@ -106,6 +114,25 @@ class FutureCoordinateMainInteractionReadout(nn.Module):
                 self.main_projection.state_dict()
             )
         self.output_projection = nn.Linear(memory_dim, 1)
+        if mode == DENSE_CAPACITY_MODE:
+            readout_dim = patch_count * memory_dim
+            self.dense_coefficient = nn.Linear(
+                readout_dim,
+                self.dense_rank,
+            )
+            self.dense_temporal_basis = nn.Parameter(
+                torch.empty(prediction_length, self.dense_rank)
+            )
+            self.dense_temporal_bias = nn.Parameter(
+                torch.zeros(prediction_length)
+            )
+            nn.init.zeros_(self.dense_coefficient.weight)
+            nn.init.zeros_(self.dense_coefficient.bias)
+            nn.init.normal_(
+                self.dense_temporal_basis,
+                mean=0.0,
+                std=self.dense_rank ** -0.5,
+            )
 
         generator = torch.Generator(device="cpu")
         generator.manual_seed(permutation_seed)
@@ -165,7 +192,7 @@ class FutureCoordinateMainInteractionReadout(nn.Module):
                 )
             evidence = self.standard_projection(context)
             interaction_used = False
-        elif effective_mode == STANDARD_DUAL_MODE:
+        elif effective_mode in {STANDARD_DUAL_MODE, DENSE_CAPACITY_MODE}:
             evidence = 0.5 * (
                 self.main_projection(context)
                 + self.interaction_projection(context)
@@ -245,6 +272,18 @@ class FutureCoordinateMainInteractionReadout(nn.Module):
         )
         state, details = self.compose_context(context, query)
         output = self.output_projection(F.gelu(state)).squeeze(-1)
+        dense_residual = None
+        if self.mode == DENSE_CAPACITY_MODE:
+            dense_coefficient = self.dense_coefficient(
+                content.flatten(start_dim=1)
+            )
+            dense_residual = torch.einsum(
+                "tr,nr->nt",
+                self.dense_temporal_basis.to(dtype=content.dtype),
+                dense_coefficient,
+            )
+            dense_residual = dense_residual + self.dense_temporal_bias
+            output = output + dense_residual
         output = output.reshape(
             batch,
             channels,
@@ -262,6 +301,7 @@ class FutureCoordinateMainInteractionReadout(nn.Module):
                 "context": context,
                 "attention": attention,
                 "output": output,
+                "dense_residual": dense_residual,
             }
         )
         return output, details

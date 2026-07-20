@@ -1,0 +1,330 @@
+{
+  "stage": "StageC-UVHF",
+  "candidate_id": "SC-D23-FCMI",
+  "candidate_version": "SC-D23-FCMI-v1",
+  "status": "prelaunch_ready_waiting_authorization",
+  "role": "paper_core_candidate_formal_screen",
+  "test_informed": true,
+  "paper_method_authorized": false,
+  "checkpoint_selection_contract": "best-validation-mean-mse-h96-h192-h336-h720",
+  "contracts": {
+    "step46_path": "analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_fcmi_step46_design_audit.md",
+    "step46_sha256": "a496416a676c61b08dc5a5a880cf78295dc068e7129b1ce0759cf0bd9d5166aa",
+    "step7a_config_path": "configs/stage_c_d23_fcmi_step7a.json",
+    "step7a_config_sha256": "df75e0ff97f4e3021104a3e06b4bafb549dbba7bef604be1ed135e35a34025fc",
+    "step7a_gate_path": "analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_fcmi_step7a_gate.json",
+    "step7a_gate_sha256": "cf5be6ebf583144ff9f1b164a9f985b59ba956b00799bd78720520733318ce55",
+    "layer_path": "baselines/timealign_official/layers/FCMI.py",
+    "layer_sha256": "ae0a3adc1eddbc7fd39836d43b1dc4dab9bb4180c6b2366198b0f334c858cad4",
+    "model_path": "baselines/timealign_official/models/TimeAlign.py",
+    "model_sha256": "65d6549bb2c639d4d54f463801a4c59e5589287105cad6be72625e43372d36f0",
+    "trainer_path": "baselines/timealign_official/train_repo.py",
+    "trainer_sha256": "aee92c62fa70c34f65b75dbf9b3b2b4f1556eed6c2e39bfef382be89fb309552",
+    "evaluator_path": "scripts/evaluate_stage_c_pcsd_cf_checkpoint.py",
+    "evaluator_sha256": "c8efcd64cf41b6f708caf76ca16cde84b4a543e22af00fef58e825c6dcab6f2f",
+    "analyzer_path": "scripts/analyze_stage_c_d23_fcmi.py",
+    "analyzer_sha256": "274143db5865dc840300e0c780e565d5305a33f5de13f1d567eb3100b70665ea",
+    "runner_path": "scripts/remote/run_stage_c_d23_fcmi_v1.sh",
+    "runner_sha256": "564ed24abb27021b186a4ec08d33e1be5705486d6374ee3e7b1b07bf7d40bb06"
+  },
+  "profiles": {
+    "path": "configs/stage_c_five_dataset_natural_profiles.json",
+    "sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a"
+  },
+  "datasets": ["Weather", "ETTm1", "ETTh1", "ETTh2", "ETTm2"],
+  "seeds": [2021],
+  "arms": [
+    {
+      "id": "A6_MEASURE",
+      "readout_mode": "learned-basis-forecast-operator",
+      "evaluation_role": "formal_test",
+      "objective_mode": "measure_only"
+    },
+    {
+      "id": "STANDARD_QUERY",
+      "readout_mode": "fcmi-standard-query",
+      "evaluation_role": "formal_test",
+      "objective_mode": "measure_only"
+    },
+    {
+      "id": "STANDARD_DUAL_MATCHED",
+      "readout_mode": "fcmi-standard-dual-matched",
+      "evaluation_role": "formal_test",
+      "objective_mode": "measure_only"
+    },
+    {
+      "id": "GENERIC_DUAL_MATCHED",
+      "readout_mode": "fcmi-generic-dual-matched",
+      "evaluation_role": "formal_test",
+      "objective_mode": "measure_only"
+    },
+    {
+      "id": "FCMI",
+      "readout_mode": "fcmi",
+      "evaluation_role": "formal_test",
+      "objective_mode": "measure_only"
+    },
+    {
+      "id": "FCMI_ORDER_SHUFFLED",
+      "readout_mode": "fcmi-order-shuffled",
+      "evaluation_role": "formal_test",
+      "objective_mode": "measure_only"
+    },
+    {
+      "id": "DENSE_DUAL_MATCHED",
+      "readout_mode": "fcmi-dense-capacity-matched",
+      "evaluation_role": "formal_test",
+      "objective_mode": "measure_only"
+    },
+    {
+      "id": "TARGET_SHUFFLED_QUERY",
+      "readout_mode": "fcmi-target-shuffled-query",
+      "evaluation_role": "formal_test",
+      "objective_mode": "measure_only"
+    }
+  ],
+  "fcmi_contract": {
+    "prediction_length": 720,
+    "n_heads": 8,
+    "dropout": 0.0,
+    "permutation_seed": 20260720,
+    "requested_horizon_input": false,
+    "router": false,
+    "second_loss": false,
+    "dense_control": "zero-output-initialized global trajectory residual on standard-dual path",
+    "dense_rank_selection": "nearest rank derived only from frozen A6-FCMI active parameter gap",
+    "dense_ranks": {
+      "Weather": 234,
+      "ETTm1": 250,
+      "ETTh1": 241,
+      "ETTh2": 234,
+      "ETTm2": 247
+    },
+    "dense_a6_active_parameter_relative_gap_max": 0.002
+  },
+  "matrix": {
+    "expected_runs": 40,
+    "expected_training_runs": 40,
+    "formal_test_runs": 40,
+    "validation_only_runs": 0,
+    "new_training_runs": 40,
+    "reused_runs": 0,
+    "horizons": [96, 192, 336, 720],
+    "metrics": ["mse", "mae"],
+    "validation_cells": 160,
+    "official_test_cells": 160,
+    "matrix_complete_required": true
+  },
+  "training": {
+    "target_horizons": [720],
+    "validation_horizons": [96, 192, 336, 720],
+    "pred_loss_mode": "full",
+    "pcc_objective_mode": "measure_only",
+    "training_final_evaluation_split": "val",
+    "checkpoint_policy": "best-val",
+    "optimizer": "AdamW",
+    "learning_rate": 0.0001,
+    "batch_size": 32,
+    "max_epochs": 20,
+    "early_stopping_patience": 5,
+    "initialization": "from_scratch_paired_by_dataset_and_seed"
+  },
+  "training_contracts": [
+    {
+      "target_horizons": [720],
+      "validation_horizons": [96, 192, 336, 720],
+      "pred_loss_mode": "full",
+      "pcc_objective_mode": "measure_only",
+      "training_final_evaluation_split": "val"
+    }
+  ],
+  "test_comparisons": [
+    {
+      "id": "effectiveness_fcmi_vs_a6",
+      "candidate": "FCMI",
+      "reference": "A6_MEASURE",
+      "layer": "paper_facing_effectiveness"
+    },
+    {
+      "id": "decomposition_fcmi_vs_standard_dual",
+      "candidate": "FCMI",
+      "reference": "STANDARD_DUAL_MATCHED",
+      "layer": "matched_mechanism_attribution"
+    },
+    {
+      "id": "interaction_fcmi_vs_generic_dual",
+      "candidate": "FCMI",
+      "reference": "GENERIC_DUAL_MATCHED",
+      "layer": "matched_mechanism_attribution"
+    },
+    {
+      "id": "order_fcmi_vs_order_shuffled",
+      "candidate": "FCMI",
+      "reference": "FCMI_ORDER_SHUFFLED",
+      "layer": "matched_mechanism_attribution"
+    },
+    {
+      "id": "capacity_fcmi_vs_dense_dual",
+      "candidate": "FCMI",
+      "reference": "DENSE_DUAL_MATCHED",
+      "layer": "matched_mechanism_attribution"
+    },
+    {
+      "id": "source_fcmi_vs_standard_query",
+      "candidate": "FCMI",
+      "reference": "STANDARD_QUERY",
+      "layer": "source_family_context"
+    },
+    {
+      "id": "target_coordinate_fcmi_vs_target_shuffle",
+      "candidate": "FCMI",
+      "reference": "TARGET_SHUFFLED_QUERY",
+      "layer": "matched_mechanism_attribution"
+    }
+  ],
+  "validation_comparisons": [],
+  "comparison_gates": {
+    "effectiveness_fcmi_vs_a6": {
+      "mse_macro_gain_percent_min": 0.3,
+      "mse_cell_wins_min": 11,
+      "mse_dataset_wins_min": 3,
+      "mse_horizon_wins_min": 3,
+      "mae_macro_gain_percent_min": 0.0
+    },
+    "decomposition_fcmi_vs_standard_dual": {
+      "mse_macro_gain_percent_min": 0.3,
+      "mse_cell_wins_min": 11,
+      "mse_dataset_wins_min": 3,
+      "mse_horizon_wins_min": 3,
+      "mae_macro_gain_percent_min": 0.0
+    },
+    "interaction_fcmi_vs_generic_dual": {
+      "mse_macro_gain_percent_min": 0.3,
+      "mse_cell_wins_min": 11,
+      "mse_dataset_wins_min": 3,
+      "mse_horizon_wins_min": 3,
+      "mae_macro_gain_percent_min": 0.0
+    },
+    "order_fcmi_vs_order_shuffled": {
+      "mse_macro_gain_percent_min": 0.3,
+      "mse_cell_wins_min": 11,
+      "mse_dataset_wins_min": 3,
+      "mse_horizon_wins_min": 3,
+      "mae_macro_gain_percent_min": 0.0
+    },
+    "capacity_fcmi_vs_dense_dual": {
+      "mse_macro_gain_percent_min": 0.0,
+      "mse_cell_wins_min": 10,
+      "mse_dataset_wins_min": 3,
+      "mse_horizon_wins_min": 2,
+      "mae_macro_gain_percent_min": -0.1
+    },
+    "target_coordinate_fcmi_vs_target_shuffle": {
+      "mse_macro_gain_percent_min": 0.3,
+      "mse_cell_wins_min": 11,
+      "mse_dataset_wins_min": 3,
+      "mse_horizon_wins_min": 3,
+      "mae_macro_gain_percent_min": 0.0
+    }
+  },
+  "internal_health_gates": {
+    "all_finite": true,
+    "prefix_max_abs_max": 0.00002,
+    "paired_encoder_initialization": true,
+    "paired_common_initialization": true,
+    "paired_dual_branch_initialization": true,
+    "fcmi_context_coordinate_std_min": 1e-8,
+    "fcmi_main_rms_min": 1e-8,
+    "fcmi_interaction_rms_min": 1e-8,
+    "fcmi_attention_target_dispersion_min": 1e-8,
+    "fcmi_interaction_prediction_std_min": 1e-8,
+    "dense_trained_coefficient_weight_norm_min": 1e-8,
+    "dense_prediction_residual_std_min": 1e-8
+  },
+  "diagnostic_protocol": {
+    "probe_rows": 256,
+    "future_bins": [
+      {"name": "H1_48", "start": 0, "end": 48},
+      {"name": "H49_96", "start": 48, "end": 96},
+      {"name": "H97_144", "start": 96, "end": 144},
+      {"name": "H145_192", "start": 144, "end": 192},
+      {"name": "H193_288", "start": 192, "end": 288},
+      {"name": "H289_336", "start": 288, "end": 336},
+      {"name": "H337_512", "start": 336, "end": 512},
+      {"name": "H513_720", "start": 512, "end": 720}
+    ]
+  },
+  "step7b_protocol": {
+    "checkpoint_nonmutation_required": true,
+    "resource_smoke_train_batches": 2,
+    "resource_smoke_eval_batches": 2,
+    "workers": 3,
+    "default_gpus": [0, 1, 2],
+    "step7a_regression_required": true,
+    "normal_launch_must_exit_when_unauthorized": true
+  },
+  "launch_order": [
+    ["Weather", "FCMI"],
+    ["Weather", "DENSE_DUAL_MATCHED"],
+    ["Weather", "A6_MEASURE"],
+    ["Weather", "STANDARD_DUAL_MATCHED"],
+    ["Weather", "GENERIC_DUAL_MATCHED"],
+    ["Weather", "FCMI_ORDER_SHUFFLED"],
+    ["Weather", "STANDARD_QUERY"],
+    ["Weather", "TARGET_SHUFFLED_QUERY"],
+    ["ETTm1", "FCMI"],
+    ["ETTm1", "DENSE_DUAL_MATCHED"],
+    ["ETTm1", "A6_MEASURE"],
+    ["ETTm1", "STANDARD_DUAL_MATCHED"],
+    ["ETTm1", "GENERIC_DUAL_MATCHED"],
+    ["ETTm1", "FCMI_ORDER_SHUFFLED"],
+    ["ETTm1", "STANDARD_QUERY"],
+    ["ETTm1", "TARGET_SHUFFLED_QUERY"],
+    ["ETTh1", "FCMI"],
+    ["ETTh1", "DENSE_DUAL_MATCHED"],
+    ["ETTh1", "A6_MEASURE"],
+    ["ETTh1", "STANDARD_DUAL_MATCHED"],
+    ["ETTh1", "GENERIC_DUAL_MATCHED"],
+    ["ETTh1", "FCMI_ORDER_SHUFFLED"],
+    ["ETTh1", "STANDARD_QUERY"],
+    ["ETTh1", "TARGET_SHUFFLED_QUERY"],
+    ["ETTh2", "FCMI"],
+    ["ETTh2", "DENSE_DUAL_MATCHED"],
+    ["ETTh2", "A6_MEASURE"],
+    ["ETTh2", "STANDARD_DUAL_MATCHED"],
+    ["ETTh2", "GENERIC_DUAL_MATCHED"],
+    ["ETTh2", "FCMI_ORDER_SHUFFLED"],
+    ["ETTh2", "STANDARD_QUERY"],
+    ["ETTh2", "TARGET_SHUFFLED_QUERY"],
+    ["ETTm2", "FCMI"],
+    ["ETTm2", "DENSE_DUAL_MATCHED"],
+    ["ETTm2", "A6_MEASURE"],
+    ["ETTm2", "STANDARD_DUAL_MATCHED"],
+    ["ETTm2", "GENERIC_DUAL_MATCHED"],
+    ["ETTm2", "FCMI_ORDER_SHUFFLED"],
+    ["ETTm2", "STANDARD_QUERY"],
+    ["ETTm2", "TARGET_SHUFFLED_QUERY"]
+  ],
+  "decision_map": {
+    "numeric_or_protocol_invalid": "diagnostic_invalid_for_direction_rejection; return Step7 and repair exact implementation",
+    "fails_a6_internal_valid": "close FCMI-v1 as paper-core candidate; rollback Step4 within deterministic fixed-past task",
+    "beats_a6_but_attribution_fails": "performance_partial_pass; map failed control to capacity_control_explains or mechanism-specific rollback Step4/6",
+    "attribution_pass_internal_fails": "readout_or_head_design_wrong or inactive mechanism; no promotion, return Step5/7",
+    "all_seed2021_gates_pass": "performance_partial_pass_confirmation_required; freeze candidate before any additional seed or dataset"
+  },
+  "authorization": {
+    "user_authorized": false,
+    "user_authorization_basis": "Step7B local design and prelaunch only",
+    "authorization_date": null,
+    "remote_training_authorized": false,
+    "formal_test_access_authorized": false,
+    "test_role": "primary-mechanism-effectiveness-and-paper-benchmark",
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+    "checkpoint_retraining_allowed": true,
+    "checkpoint_mutation_during_test_allowed": false,
+    "per_dataset_horizon_or_cell_tuning_allowed": false,
+    "formal_test_access_count_for_version": 1,
+    "confirmation_seeds_authorized": false,
+    "paper_method": false
+  }
+}

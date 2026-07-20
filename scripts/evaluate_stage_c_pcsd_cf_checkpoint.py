@@ -333,6 +333,68 @@ def compact_history_statistic_tensors(
     }
 
 
+def fcmi_tensors(
+    model: TimeAlign.Model,
+    batch_x: torch.Tensor,
+) -> dict[str, torch.Tensor] | None:
+    """Return reduced FCMI health tensors without retaining full activations."""
+    if not hasattr(model, "fcmi_readout"):
+        return None
+    normalized_history = model.normalization_x(batch_x, "norm")
+    memory = model._encode_normalized_history(normalized_history)
+    normalized_output, details = model.fcmi_readout(
+        memory,
+        target_prefix=720,
+        return_details=True,
+    )
+    context = details["context"]
+    main = details["main"]
+    interaction = details["interaction"]
+    attention = details["attention"]
+    if attention is None:
+        raise RuntimeError("FCMI diagnostic attention is missing")
+    attention_safe = attention.clamp_min(1e-12)
+    entropy = -(attention_safe * attention_safe.log()).sum(dim=-1)
+    if attention.shape[-1] > 1:
+        entropy = entropy / math.log(attention.shape[-1])
+    else:
+        entropy = torch.zeros_like(entropy)
+    payload = {
+        "context_coordinate_std": context.std(
+            dim=1,
+            unbiased=False,
+        ).mean(dim=-1),
+        "main_rms": main.square().mean(dim=(-2, -1)).sqrt(),
+        "interaction_rms": interaction.square().mean(dim=(-2, -1)).sqrt(),
+        "attention_entropy": entropy.mean(dim=1),
+        "attention_target_dispersion": attention.std(
+            dim=1,
+            unbiased=False,
+        ).mean(dim=-1),
+        "normalized_output": normalized_output.permute(0, 2, 1).reshape(
+            -1,
+            720,
+        ),
+    }
+    if model.readout_mode == "fcmi":
+        main_state = model.fcmi_readout.main_projection(main)
+        main_state = main_state + details["query"]
+        main_output = model.fcmi_readout.output_projection(
+            torch.nn.functional.gelu(main_state)
+        ).squeeze(-1)
+        full_output = normalized_output.permute(0, 2, 1).reshape(-1, 720)
+        payload["main_only_output"] = main_output
+        payload["interaction_prediction_contribution"] = (
+            full_output - main_output
+        )
+    if model.readout_mode == "fcmi-dense-capacity-matched":
+        dense_residual = details["dense_residual"]
+        if dense_residual is None:
+            raise RuntimeError("FCMI dense residual diagnostic is missing")
+        payload["dense_residual"] = dense_residual
+    return payload
+
+
 def diagnostic_bins(design: dict[str, Any]) -> list[dict[str, Any]]:
     if "diagnostic_protocol" in design:
         return design["diagnostic_protocol"]["future_bins"]
@@ -443,6 +505,14 @@ def evaluate(args: argparse.Namespace) -> None:
     probe_history_summary: list[np.ndarray] = []
     probe_history_coefficient: list[np.ndarray] = []
     probe_history_prediction_contribution: list[np.ndarray] = []
+    probe_fcmi_context_coordinate_std: list[np.ndarray] = []
+    probe_fcmi_main_rms: list[np.ndarray] = []
+    probe_fcmi_interaction_rms: list[np.ndarray] = []
+    probe_fcmi_attention_entropy: list[np.ndarray] = []
+    probe_fcmi_attention_target_dispersion: list[np.ndarray] = []
+    probe_fcmi_main_only_output: list[np.ndarray] = []
+    probe_fcmi_interaction_contribution: list[np.ndarray] = []
+    probe_fcmi_dense_residual: list[np.ndarray] = []
     probe_count = 0
     all_finite = True
     prefix_rows: list[dict[str, Any]] | None = None
@@ -673,6 +743,51 @@ def evaluate(args: argparse.Namespace) -> None:
                         bool(torch.isfinite(value).all())
                         for value in history_tensors.values()
                     )
+                fcmi_health = fcmi_tensors(model, batch_x)
+                if fcmi_health is not None:
+                    count = probe_batch_count
+                    probe_fcmi_context_coordinate_std.append(
+                        fcmi_health["context_coordinate_std"][:count]
+                        .cpu()
+                        .numpy()
+                    )
+                    probe_fcmi_main_rms.append(
+                        fcmi_health["main_rms"][:count].cpu().numpy()
+                    )
+                    probe_fcmi_interaction_rms.append(
+                        fcmi_health["interaction_rms"][:count].cpu().numpy()
+                    )
+                    probe_fcmi_attention_entropy.append(
+                        fcmi_health["attention_entropy"][:count].cpu().numpy()
+                    )
+                    probe_fcmi_attention_target_dispersion.append(
+                        fcmi_health["attention_target_dispersion"][:count]
+                        .cpu()
+                        .numpy()
+                    )
+                    if "main_only_output" in fcmi_health:
+                        probe_fcmi_main_only_output.append(
+                            fcmi_health["main_only_output"][:count]
+                            .cpu()
+                            .numpy()
+                        )
+                        probe_fcmi_interaction_contribution.append(
+                            fcmi_health[
+                                "interaction_prediction_contribution"
+                            ][:count]
+                            .cpu()
+                            .numpy()
+                        )
+                    if "dense_residual" in fcmi_health:
+                        probe_fcmi_dense_residual.append(
+                            fcmi_health["dense_residual"][:count]
+                            .cpu()
+                            .numpy()
+                        )
+                    all_finite = all_finite and all(
+                        bool(torch.isfinite(value).all())
+                        for value in fcmi_health.values()
+                    )
             all_finite = all_finite and bool(
                 torch.isfinite(fused).all() and torch.isfinite(target).all()
             )
@@ -770,6 +885,39 @@ def evaluate(args: argparse.Namespace) -> None:
                 ).astype(np.float32),
             }
         )
+    if probe_fcmi_context_coordinate_std:
+        payload.update(
+            {
+                "probe_fcmi_context_coordinate_std": np.concatenate(
+                    probe_fcmi_context_coordinate_std
+                ).astype(np.float32),
+                "probe_fcmi_main_rms": np.concatenate(
+                    probe_fcmi_main_rms
+                ).astype(np.float32),
+                "probe_fcmi_interaction_rms": np.concatenate(
+                    probe_fcmi_interaction_rms
+                ).astype(np.float32),
+                "probe_fcmi_attention_entropy": np.concatenate(
+                    probe_fcmi_attention_entropy
+                ).astype(np.float32),
+                "probe_fcmi_attention_target_dispersion": np.concatenate(
+                    probe_fcmi_attention_target_dispersion
+                ).astype(np.float32),
+            }
+        )
+        if probe_fcmi_main_only_output:
+            payload["probe_fcmi_main_only_output"] = np.concatenate(
+                probe_fcmi_main_only_output
+            ).astype(np.float32)
+            payload[
+                "probe_fcmi_interaction_prediction_contribution"
+            ] = np.concatenate(
+                probe_fcmi_interaction_contribution
+            ).astype(np.float32)
+        if probe_fcmi_dense_residual:
+            payload["probe_fcmi_dense_residual"] = np.concatenate(
+                probe_fcmi_dense_residual
+            ).astype(np.float32)
     artifact_prefix = (
         "validation" if args.evaluation_split == "val" else "test_audit"
     )
@@ -911,6 +1059,44 @@ def evaluate(args: argparse.Namespace) -> None:
             and "probe_history_summary" in payload
             and "probe_history_coefficient" in payload
             and "probe_history_prediction_contribution" in payload
+        )
+    elif hasattr(model, "fcmi_readout"):
+        fcmi_contract = design["fcmi_contract"]
+        expected_dense_rank = (
+            fcmi_contract["dense_ranks"].get(adapter["dataset"], 0)
+            if adapter["readout_mode"]
+            == "fcmi-dense-capacity-matched"
+            else 0
+        )
+        readout_contract_pass = bool(
+            initialization.get("fcmi_common_initialization_hash")
+            and initialization.get("fcmi_memory_position_hash")
+            and initialization.get("fcmi_target_position_hash")
+            and diagnostics.get("fcmi_n_heads")
+            == fcmi_contract["n_heads"]
+            and diagnostics.get("fcmi_dropout")
+            == fcmi_contract["dropout"]
+            and diagnostics.get("fcmi_dense_rank")
+            == expected_dense_rank
+            and "probe_fcmi_context_coordinate_std" in payload
+            and "probe_fcmi_main_rms" in payload
+            and "probe_fcmi_interaction_rms" in payload
+            and "probe_fcmi_attention_entropy" in payload
+            and "probe_fcmi_attention_target_dispersion" in payload
+            and (
+                adapter["readout_mode"] != "fcmi"
+                or "probe_fcmi_interaction_prediction_contribution"
+                in payload
+            )
+            and (
+                adapter["readout_mode"]
+                != "fcmi-dense-capacity-matched"
+                or (
+                    initialization.get("fcmi_dense_initial_output_norm")
+                    == 0.0
+                    and "probe_fcmi_dense_residual" in payload
+                )
+            )
         )
 
     invariant = {
@@ -1145,6 +1331,47 @@ def main() -> None:
                 f"{None if d20_tensors is None else {key: tuple(value.shape) for key, value in d20_tensors.items()}}"
             )
         print("d20_checkpoint_evaluator_synthetic_smoke=pass")
+        fcmi_config = SimpleNamespace(**vars(config))
+        fcmi_config.readout_mode = "fcmi"
+        fcmi_config.fcmi_n_heads = 8
+        fcmi_config.fcmi_dropout = 0.0
+        fcmi_config.fcmi_permutation_seed = 20260720
+        fcmi_config.fcmi_dense_rank = 0
+        torch.manual_seed(2021)
+        fcmi_model = TimeAlign.Model(fcmi_config).float().eval()
+        with torch.no_grad():
+            fcmi_rows, fcmi_gap = prefix_audit(
+                fcmi_model,
+                x[:1],
+                target[:1],
+            )
+            fcmi_health = fcmi_tensors(fcmi_model, x)
+        if (
+            len(fcmi_rows) != len(HORIZONS)
+            or fcmi_gap > PREFIX_TOLERANCE
+            or fcmi_health is None
+            or "interaction_prediction_contribution" not in fcmi_health
+            or any(
+                not bool(torch.isfinite(value).all())
+                for value in fcmi_health.values()
+            )
+        ):
+            raise RuntimeError("D23 FCMI evaluator smoke failed")
+        dense_config = SimpleNamespace(**vars(fcmi_config))
+        dense_config.readout_mode = "fcmi-dense-capacity-matched"
+        dense_config.fcmi_dense_rank = 16
+        torch.manual_seed(2021)
+        dense_model = TimeAlign.Model(dense_config).float().eval()
+        with torch.no_grad():
+            dense_health = fcmi_tensors(dense_model, x)
+        if (
+            dense_health is None
+            or tuple(dense_health["dense_residual"].shape)
+            != (2 * 7, 720)
+            or float(dense_health["dense_residual"].abs().max()) != 0.0
+        ):
+            raise RuntimeError("D23 dense FCMI evaluator smoke failed")
+        print("d23_fcmi_checkpoint_evaluator_synthetic_smoke=pass")
         return
     evaluate(args)
 

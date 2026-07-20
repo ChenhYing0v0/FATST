@@ -1,0 +1,523 @@
+{
+  "all_pass": true,
+  "authorization": {
+    "official_test_access": false,
+    "paper_method_effectiveness_claim": false,
+    "remote_training": false,
+    "step7a_local": true,
+    "step7b_prelaunch": false
+  },
+  "candidate_version": "SC-D23-FCMI-v1-step7a",
+  "decision": "step7a_local_pass_step7b_design_freeze_next",
+  "gate_count": 11,
+  "notes": {
+    "a6_parameter_gap": "A future formal matrix must add a dense dual matched control for every profile whose A6-FCMI gap exceeds 1%.",
+    "official_test": "not authorized",
+    "remote_training": "not authorized"
+  },
+  "pass_count": 11,
+  "results": [
+    {
+      "details": {
+        "profiles": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a",
+        "step46": "a496416a676c61b08dc5a5a880cf78295dc068e7129b1ce0759cf0bd9d5166aa"
+      },
+      "name": "frozen_input_hashes",
+      "pass": true
+    },
+    {
+      "details": [
+        {
+          "arm": "A6_MEASURE",
+          "dataset": "Weather",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "learned-basis-forecast-operator"
+        },
+        {
+          "arm": "STANDARD_QUERY",
+          "dataset": "Weather",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-standard-query"
+        },
+        {
+          "arm": "STANDARD_DUAL_MATCHED",
+          "dataset": "Weather",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-standard-dual-matched"
+        },
+        {
+          "arm": "GENERIC_DUAL_MATCHED",
+          "dataset": "Weather",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-generic-dual-matched"
+        },
+        {
+          "arm": "FCMI",
+          "dataset": "Weather",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi"
+        },
+        {
+          "arm": "FCMI_ORDER_SHUFFLED",
+          "dataset": "Weather",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-order-shuffled"
+        },
+        {
+          "arm": "TARGET_SHUFFLED_QUERY",
+          "dataset": "Weather",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-target-shuffled-query"
+        },
+        {
+          "arm": "A6_MEASURE",
+          "dataset": "ETTm1",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "learned-basis-forecast-operator"
+        },
+        {
+          "arm": "STANDARD_QUERY",
+          "dataset": "ETTm1",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-standard-query"
+        },
+        {
+          "arm": "STANDARD_DUAL_MATCHED",
+          "dataset": "ETTm1",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-standard-dual-matched"
+        },
+        {
+          "arm": "GENERIC_DUAL_MATCHED",
+          "dataset": "ETTm1",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-generic-dual-matched"
+        },
+        {
+          "arm": "FCMI",
+          "dataset": "ETTm1",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi"
+        },
+        {
+          "arm": "FCMI_ORDER_SHUFFLED",
+          "dataset": "ETTm1",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-order-shuffled"
+        },
+        {
+          "arm": "TARGET_SHUFFLED_QUERY",
+          "dataset": "ETTm1",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-target-shuffled-query"
+        },
+        {
+          "arm": "A6_MEASURE",
+          "dataset": "ETTh1",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "learned-basis-forecast-operator"
+        },
+        {
+          "arm": "STANDARD_QUERY",
+          "dataset": "ETTh1",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-standard-query"
+        },
+        {
+          "arm": "STANDARD_DUAL_MATCHED",
+          "dataset": "ETTh1",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-standard-dual-matched"
+        },
+        {
+          "arm": "GENERIC_DUAL_MATCHED",
+          "dataset": "ETTh1",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-generic-dual-matched"
+        },
+        {
+          "arm": "FCMI",
+          "dataset": "ETTh1",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi"
+        },
+        {
+          "arm": "FCMI_ORDER_SHUFFLED",
+          "dataset": "ETTh1",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-order-shuffled"
+        },
+        {
+          "arm": "TARGET_SHUFFLED_QUERY",
+          "dataset": "ETTh1",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-target-shuffled-query"
+        },
+        {
+          "arm": "A6_MEASURE",
+          "dataset": "ETTh2",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "learned-basis-forecast-operator"
+        },
+        {
+          "arm": "STANDARD_QUERY",
+          "dataset": "ETTh2",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-standard-query"
+        },
+        {
+          "arm": "STANDARD_DUAL_MATCHED",
+          "dataset": "ETTh2",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-standard-dual-matched"
+        },
+        {
+          "arm": "GENERIC_DUAL_MATCHED",
+          "dataset": "ETTh2",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-generic-dual-matched"
+        },
+        {
+          "arm": "FCMI",
+          "dataset": "ETTh2",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi"
+        },
+        {
+          "arm": "FCMI_ORDER_SHUFFLED",
+          "dataset": "ETTh2",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-order-shuffled"
+        },
+        {
+          "arm": "TARGET_SHUFFLED_QUERY",
+          "dataset": "ETTh2",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-target-shuffled-query"
+        },
+        {
+          "arm": "A6_MEASURE",
+          "dataset": "ETTm2",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "learned-basis-forecast-operator"
+        },
+        {
+          "arm": "STANDARD_QUERY",
+          "dataset": "ETTm2",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-standard-query"
+        },
+        {
+          "arm": "STANDARD_DUAL_MATCHED",
+          "dataset": "ETTm2",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-standard-dual-matched"
+        },
+        {
+          "arm": "GENERIC_DUAL_MATCHED",
+          "dataset": "ETTm2",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-generic-dual-matched"
+        },
+        {
+          "arm": "FCMI",
+          "dataset": "ETTm2",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi"
+        },
+        {
+          "arm": "FCMI_ORDER_SHUFFLED",
+          "dataset": "ETTm2",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-order-shuffled"
+        },
+        {
+          "arm": "TARGET_SHUFFLED_QUERY",
+          "dataset": "ETTm2",
+          "final_split": "none",
+          "objective": "measure_only",
+          "readout_mode": "fcmi-target-shuffled-query"
+        }
+      ],
+      "name": "production_cli_synthetic_cases",
+      "pass": true
+    },
+    {
+      "details": [
+        {
+          "branch_max_abs_gaps": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "common_hash_count": 1,
+          "dataset": "Weather",
+          "encoder_hash_count": 1
+        },
+        {
+          "branch_max_abs_gaps": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "common_hash_count": 1,
+          "dataset": "ETTm1",
+          "encoder_hash_count": 1
+        },
+        {
+          "branch_max_abs_gaps": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "common_hash_count": 1,
+          "dataset": "ETTh1",
+          "encoder_hash_count": 1
+        },
+        {
+          "branch_max_abs_gaps": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "common_hash_count": 1,
+          "dataset": "ETTh2",
+          "encoder_hash_count": 1
+        },
+        {
+          "branch_max_abs_gaps": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "common_hash_count": 1,
+          "dataset": "ETTm2",
+          "encoder_hash_count": 1
+        }
+      ],
+      "name": "paired_initialization_contract",
+      "pass": true
+    },
+    {
+      "details": [
+        {
+          "a6_active": 419216,
+          "a6_fcmi_relative_gap": 0.8317597610778215,
+          "dataset": "Weather",
+          "dual_active_counts": [
+            70529
+          ],
+          "dual_decoder_counts": [
+            33217
+          ],
+          "fcmi_active": 70529,
+          "future_dense_control_required": true,
+          "standard_active": 66433
+        },
+        {
+          "a6_active": 391408,
+          "a6_fcmi_relative_gap": 0.9542140170870294,
+          "dataset": "ETTm1",
+          "dual_active_counts": [
+            17921
+          ],
+          "dual_decoder_counts": [
+            8417
+          ],
+          "fcmi_active": 17921,
+          "future_dense_control_required": true,
+          "standard_active": 16897
+        },
+        {
+          "a6_active": 613904,
+          "a6_fcmi_relative_gap": 0.8882414840105294,
+          "dataset": "ETTh1",
+          "dual_active_counts": [
+            68609
+          ],
+          "dual_decoder_counts": [
+            33217
+          ],
+          "fcmi_active": 68609,
+          "future_dense_control_required": true,
+          "standard_active": 64513
+        },
+        {
+          "a6_active": 419216,
+          "a6_fcmi_relative_gap": 0.8317597610778215,
+          "dataset": "ETTh2",
+          "dual_active_counts": [
+            70529
+          ],
+          "dual_decoder_counts": [
+            33217
+          ],
+          "fcmi_active": 70529,
+          "future_dense_control_required": true,
+          "standard_active": 66433
+        },
+        {
+          "a6_active": 1006160,
+          "a6_fcmi_relative_gap": 0.9327651665739047,
+          "dataset": "ETTm2",
+          "dual_active_counts": [
+            67649
+          ],
+          "dual_decoder_counts": [
+            33217
+          ],
+          "fcmi_active": 67649,
+          "future_dense_control_required": true,
+          "standard_active": 63553
+        }
+      ],
+      "name": "dual_parameter_matching_and_a6_gap_audit",
+      "pass": true
+    },
+    {
+      "details": {
+        "context": [
+          6,
+          720,
+          64
+        ],
+        "interaction": [
+          6,
+          720,
+          64
+        ],
+        "main": [
+          6,
+          1,
+          64
+        ],
+        "memory": [
+          2,
+          3,
+          12,
+          64
+        ],
+        "output": [
+          2,
+          720,
+          3
+        ],
+        "production_full": [
+          2,
+          720,
+          3
+        ],
+        "production_prefix": [
+          2,
+          96,
+          3
+        ],
+        "production_prefix_max_abs": 0.0,
+        "query": [
+          6,
+          720,
+          64
+        ],
+        "state": [
+          6,
+          720,
+          64
+        ]
+      },
+      "name": "tensor_shapes",
+      "pass": true
+    },
+    {
+      "details": {
+        "max_abs": 1.8195973439105728e-07
+      },
+      "name": "zero_mean_interaction",
+      "pass": true
+    },
+    {
+      "details": {
+        "max_abs": 6.332993507385254e-08
+      },
+      "name": "standard_query_exact_initial_morph",
+      "pass": true
+    },
+    {
+      "details": {
+        "interaction_used": false,
+        "zero_mean_perturbation_max_abs": 1.1920928955078125e-07
+      },
+      "name": "generic_control_excludes_interaction",
+      "pass": true
+    },
+    {
+      "details": {
+        "interaction": 0.00012261862593444773,
+        "main": 0.038472315539359585,
+        "output": 0.05610149965807676,
+        "query": 0.02113550119624567
+      },
+      "name": "main_interaction_query_output_gradients",
+      "pass": true
+    },
+    {
+      "details": {
+        "binding_max_abs": 4.184257507324219,
+        "marginal_max_abs": 0.0,
+        "output_max_abs": 0.0026125088334083557
+      },
+      "name": "order_shuffle_value_position_binding",
+      "pass": true
+    },
+    {
+      "details": {
+        "output_max_abs": 0.1269330233335495
+      },
+      "name": "target_shuffle_local_sanity",
+      "pass": true
+    }
+  ]
+}

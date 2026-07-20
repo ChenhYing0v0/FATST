@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC-D23-FCMI Step7A local 11/11 pass；Step7B design freeze next |
+| `current_step` | SC-D23-FCMI Step7B prelaunch 21/21 pass；等待独立remote/test授权 |
 | `active_question` | 如何原生分离generic evidence main effect与future-coordinate interaction，并包含二者fallback？ |
-| `active_candidates` | FCMI production-local/not trained；A6 control；SIFF-v2 frozen history |
+| `active_candidates` | FCMI formal candidate frozen/not trained；A6/dense/matched controls；SIFF-v2 frozen history |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_fcmi_step7a_implementation_audit.md` |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step7b_prelaunch/prelaunch_report.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | production-local complete；FCMI remote/test false |
+| `method_implementation` | production-local与formal prelaunch complete；FCMI remote/test false |
 | `rollback_point` | Step6 if prelaunch attribution incomplete；Step4 if matched/narrative fails |
 
 ## Post-D21 Unconstrained Reset
@@ -59,7 +59,16 @@ Step7A production gate现为11/11 pass。memory/query/context/main/interaction/o
 $\operatorname{mean}_t\Delta_t$最大`1.82e-7`，FCMI与standard-dual initial morph最大差`6.33e-8`；
 generic control不读取interaction，四条关键gradient均finite/nonzero，order shuffle保持value marginal并改变
 value-position binding。五个profiles内dual controls参数严格相等。FCMI相对A6 active parameters少83%–95%，
-故Step7B必须冻结dense capacity-matched control后才能讨论remote matrix。当前remote/test仍false。
+故Step7B必须冻结dense capacity-matched control后才能讨论remote matrix。
+
+Step7B prelaunch现为21/21 pass。dense control用zero-init low-rank temporal residual匹配A6 active parameters；
+五个profiles采用rank `234/250/234/241/247`（Weather/ETTm1/ETTh2/ETTh1/ETTm2），实际参数gap仅
+`0.0914%–0.1321%`，initial standard-dual function gap不超过`8.94e-8`，两阶段gradient与非零residual均通过。
+formal matrix冻结8 arms × 5 datasets × seed2021 = 40 runs；全部arms形成160个official-test cells和
+160个validation cells。target-shuffle原拟validation-only，但因其参与方向级attribution，在任何test access前
+改为formal control。validation只作four-horizon checkpoint selection与健康诊断，official test才承担
+effectiveness与matched attribution。runner在authorization=false时固定exit 3。
+decision=`step7b_prelaunch_pass_waiting_remote_test_authorization`；当前remote/test仍false。
 
 用户2026-07-20决定暂不承担task pivot成本。该scope决定把上一版“D22-C有效失败即停止整个
 deterministic-MSE search”改为：关闭exact D22-C v1并回joint Step2/3，在同一task边界寻找不同的falsifiable

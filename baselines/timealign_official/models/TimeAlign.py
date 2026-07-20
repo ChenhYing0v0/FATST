@@ -957,6 +957,7 @@ class Model(nn.Module):
                 permutation_seed=int(
                     getattr(configs, "fcmi_permutation_seed", 20260720)
                 ),
+                dense_rank=int(getattr(configs, "fcmi_dense_rank", 0)),
             )
 
         self.normalization_x = Normalize(configs.enc_in, affine=False)
