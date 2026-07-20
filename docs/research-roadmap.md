@@ -5,14 +5,14 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Post-D21 unconstrained reset；SC-D22-HFA Step2 proposed |
-| `active_question` | 放宽projectivity/H禁用约束后，哪一种horizon freedom具有真实统计或有限容量必要性？ |
+| `current_step` | SC-D22-HFA Step2/3；D22-A/B complete，D22-C design-only |
+| `active_question` | finite-capacity frontier不支持后，target-coordinate raw-history access是否具有split-stable必要性？ |
 | `active_candidates` | no active method；A6 strong carrier/control；SIFF-v2 frozen historical parent |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/step2_problem_and_a6_viability_audit.md` |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d22_ab_bayes_frontier_audit.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | false；D22 problem diagnostic only |
-| `rollback_point` | joint Step2；若D22失败则停止当前deterministic-MSE architecture search |
+| `method_implementation` | false；D22-C implementation/remote/test均未授权 |
+| `rollback_point` | joint Step2/3；D22-C有效失败则停止当前deterministic-MSE architecture search |
 
 ## Post-D21 Unconstrained Reset
 
@@ -27,9 +27,16 @@ information access、nonseparable/decision risk、future context、compute/resol
 A6-LBF经重新评估后保留为strong carrier/control，不作为standalone paper core：其性能证据可用，但basis、
 projectivity与harmonic measure的独立novelty不足，且现代varied-horizon baseline comparison仍不完整。
 
-下一步`SC-D22-HFA`先复用D18判断finite-capacity frontier；若仍弱，再执行小型target-coordinate
-information-access diagnostic。ordered patch memory只作诊断载体。通过后才允许source-informed设计
-`lead-time-conditioned evidence operator`；第二contribution只能从首个E2E operator暴露的真实训练瓶颈中产生，
+`SC-D22-HFA` D22-A/B现已完成。D18 H1..720 full-test curves显示：SPEC96 own-H为`+1.2748%`且5/5
+datasets正向，但SPEC192/SPEC336分别为`-0.1386%/-0.6385%`；三个specialists在standard-horizon向量上均
+0/5 dataset Pareto-dominate A6_MEASURE。A6_MEASURE相对A6_FULL在五个lead-time bins全部5/5正向。
+因此decision=`finite_capacity_frontier_not_supported`，H96只保留为局部optimization clue。
+
+D22-A/B不能直接回答target-coordinate raw-history information access。D14 dual-carrier three-seed headroom使
+D22-C具有条件合理性，但当前只冻结design：neutral/raw-history为primary，global/pooled/order-shuffled/
+target-shuffled/matched-generic为controls，A6只作symmetric frozen sensitivity。ordered patch memory不是论文
+主线；完成独立static/prelaunch gate前不实现、不训练、不访问新test。只有D22-C通过，才允许source-informed设计
+`lead-time-conditioned evidence operator`；第二contribution只能来自首个E2E operator暴露的真实训练瓶颈，
 不得预先指定loss/router。详见active protocol。
 
 本节以下的post-CCSF、D17-D21与SIFF记录均为chronological history；新会话不得从其中恢复已关闭候选或重新施加

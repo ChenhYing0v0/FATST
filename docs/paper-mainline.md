@@ -7,14 +7,14 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD — Unified Multi-Horizon Forecasting（projectivity不再是强制主线） |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Post-D21 unconstrained reset；SC-D22-HFA Step2 proposed |
+| `current_11_step` | SC-D22-HFA Step2/3；D22-A/B complete，D22-C design-only |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | no active method；A6为strong carrier/control但不足以standalone承载论文；D22 problem audit next |
+| `paper_core_status` | no active method；finite-capacity frontier not supported；D22-C target-access diagnostic尚未授权实现 |
 
 [Constraint Reset, 2026-07-20] 后续不再把exact projectivity、requested horizon禁用、A6 interface compatibility或
 full-$T$ prefix crop当作新方法的先验硬约束。它们可以成为合理设计或matched controls，但必须由problem、理论与
@@ -26,8 +26,22 @@ probabilistic joint target。
 [A6 Role Audit] A6-LBF保留为strong carrier、mandatory control与possible component，不直接升级为standalone
 paper core。其性能收益真实，但learned basis、projectivity与harmonic horizon measure分别存在N-BEATS/N-HiTS、
 FlowState/Implicit Forecaster与ElasTST等强prior，当前也缺少相对最新target-query/varied-horizon方法的完整优势。
-下一步为`SC-D22-HFA`：先审计finite-capacity horizon frontier，再用小型target-coordinate information-access
-diagnostic决定是否允许`lead-time-conditioned evidence operator`进入Step4；Contribution 2不预先指定。
+本轮`SC-D22-HFA`先审计finite-capacity horizon frontier，再按证据决定是否设计小型target-coordinate
+information-access diagnostic；Contribution 2不预先指定。
+
+[D22-A/B Decision] Bayes/task audit确认：在同一fixed past、pointwise MSE且requested H不改变information set、
+distribution或utility时，同一future coordinate的Bayes conditional mean不依赖H。D18 H1..720 official-test curves
+进一步给出`finite_capacity_frontier_not_supported`：SPEC96 own-H虽为`+1.2748%`且5/5 datasets正向，但
+SPEC192/SPEC336分别为`-0.1386%/-0.6385%`；三个specialists在`{96,192,336,720}`上均0/5 dataset
+Pareto-dominate A6_MEASURE。A6_MEASURE相对A6_FULL在五个lead-time bins全部5/5正向，measure control解释
+主要稳定收益。
+
+H96只保留为局部optimization clue，不授权soft projectivity、H embedding、router或seeds。D22-A/B不能直接回答
+target coordinate是否需要对raw history作specific evidence access；D14 dual-carrier three-seed headroom使一次
+D22-C小诊断具有条件合理性。当前只冻结neutral/raw-history primary、global/pooled/order-shuffled/
+target-shuffled/matched-generic controls与A6 symmetric sensitivity的design；ordered patch memory不是论文主语，
+implementation、remote training、official test与paper method均false。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/d22_ab_bayes_frontier_audit.md`。
 
 [Supersession Notice] 本文件后续D17-D21、projectivity与旧Contribution slots段落属于历史证据，不得覆盖顶部
 `Constraint Reset`与restart handoff。旧文中“requested-H关闭”“full-T必须保留”等决定只关闭当时exact candidate，
