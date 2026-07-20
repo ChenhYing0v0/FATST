@@ -98,6 +98,10 @@ phase router，而审计另一个更基础的问题：frozen strong carrier是�
 deformation。协议只访问validation，按forecast origin使用first/middle/last thirds作fit/purge/evaluate，并以
 sorted-history和target-shuffled排除marginal/capacity解释。即使通过也只返回Step4，不授权method、training或test。
 
+D24-v1 10/10返回后发现regularization semantics错误：$X^\top X+\lambda I$没有按数万fit rows归一化，导致
+conditional maps severe extrapolation。该结果按`design_fault_suspected`处理，不能拒绝problem。v1.1仅修正为
+$X^\top X+n\lambda I$，冻结normalized $\lambda=\{0.01,0.1,1\}$，其余matrix与gates不变。
+
 用户2026-07-20决定暂不承担task pivot成本。该scope决定把上一版“D22-C有效失败即停止整个
 deterministic-MSE search”改为：关闭exact D22-C v1并回joint Step2/3，在同一task边界寻找不同的falsifiable
 problem；不允许D22-C seed/width/readout/representation rescue，也不恢复D17-D21。

@@ -1,0 +1,13 @@
+launch_time=2026-07-20T20:35:31+08:00
+commit=bfba1b7b209721c4ba90f3e9f7bd96945f2c190b
+config=configs/stage_c_d24_conditional_trajectory_bias.json
+config_sha256=0ac8fa9eae94d3a9d4587b117a7403352b6dbd81d70fe0566c7a0f6853b4c6ce
+source_root=/home/yingch/exp_outputs/r-2026-fatst/stage_c_d23_fcmi_v1
+output_root=/home/yingch/exp_outputs/r-2026-fatst/stage_c_d24_ctb_v1
+evaluation_split=val
+remote_training_authorized=false
+official_test_access_authorized=false
+gpus=0 1 2
+0, NVIDIA GeForce RTX 3090, 18, 24576
+1, NVIDIA GeForce RTX 3090, 18, 24576
+2, NVIDIA GeForce RTX 3090, 18, 24576

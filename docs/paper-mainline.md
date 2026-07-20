@@ -109,6 +109,11 @@ last-third evaluate；official test、training、method、router与第二loss均
 `+0.03%` derivative-specific gain且被curvature/shift controls解释，故phase router路线关闭。详见
 `analysis/stage_c_post_d21_unconstrained_reset_20260720/d24_ctb_step23_design_audit.md`。
 
+D24-v1的10/10 inference与checkpoint invariants通过，但发现ridge penalty未按fit row count归一化，
+使$\lambda$在数万rows下近似无效并造成severe chronological extrapolation。v1标记
+`design_fault_suspected`，不得用于problem rejection。v1.1只改为$X^\top X+n\lambda I$并冻结normalized
+$\lambda=\{0.01,0.1,1\}$；其余validation-only contract不变。
+
 [Scope Decision, 2026-07-20] 用户明确要求当前项目暂不转出`deterministic-MSE fixed-past architecture search`。
 因此D22-C有效失败只关闭exact v1并回joint Step2/3，不再自动停止整个search；但不得用seed、width、readout或
 representation rescue重开D22-C，也不得恢复D17-D21或预设第二loss/router。

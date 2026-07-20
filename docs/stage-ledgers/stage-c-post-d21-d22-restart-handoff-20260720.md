@@ -36,7 +36,7 @@
 | `active_method` | none；FCMI-v1 closed；A6/dense controls |
 | `method_training_authorized` | false |
 | `remote_training_authorized` | false；仅D24 frozen-checkpoint validation inference authorized |
-| `next_action` | commit/push、remote pull、GPU preflight与single-run validation smoke |
+| `next_action` | commit/push、remote pull与D24-v1.1 normalized-ridge validation retry |
 | `conditional_next` | D24 gate通过也只返回Step4 source/narrative audit |
 | `rollback` | D24 negative关闭exact diagnostic并留在Step2/3 |
 
@@ -108,6 +108,8 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
     DENSE vs A6仅`-0.3284%`；FCMI-v1关闭并回Step2/3。
 15. phase/time-warp probe specificity仅约`+0.03%`且direct prior充分；phase router关闭。D24-CTB冻结为
     validation-only raw-history conditional coarse-deformation diagnostic。
+16. D24-v1 10/10 protocol valid但ridge penalty未按fit rows归一化，severe extrapolation标记
+    `design_fault_suspected`；v1.1只修正normalized ridge semantics后重跑。
 
 ## 5. D22-HFA 的执行顺序
 
@@ -242,7 +244,7 @@ Step7A已验证zero-mean interaction、standard-query exact morph、main/interac
 
 Step9/10中decomposition、generic与target controls通过，但order和capacity失败；internal health 5/5，negative不是numeric pathology。validation-fit dense/FCMI、dense-plus-interaction和A6-plus-interaction diagnostics全部test反转，且只属于frozen cross-model conditional evidence。A6/DENSE allocation同样没有split-stable、validation-identifiable正证据。direct dense+FCMI successor未过Step4 narrative gate。
 
-下一步执行`SC-D24-CTB` validation-only diagnostic：只读取D23 A6/DENSE冻结checkpoint，使用first-third fit、middle-third purge、last-third evaluate与ordered/marginal/sorted/target-shuffled controls。不得把frozen correction升method，不得访问official test、训练模型或设计第二loss/router。
+下一步执行`SC-D24-CTB-v1.1` validation-only retry：只读取D23 A6/DENSE冻结checkpoint，使用first-third fit、middle-third purge、last-third evaluate与ordered/marginal/sorted/target-shuffled controls；ridge改为$X^\top X+n\lambda I$。不得把frozen correction升method，不得访问official test、训练模型或设计第二loss/router。
 
 完成后同步更新analysis report、docs/paper-mainline.md、docs/research-roadmap.md和Stage C ledger，执行最小诚实验证，并按AGENTS.md提交、推送。请从专业时序预测研究员角度进行审计，不要为了凑两个contributions而预先设计第二个loss/router。
 ```

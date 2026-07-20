@@ -1,0 +1,39 @@
+{
+  "candidate_version": "SC-D24-CTB-v1",
+  "checks": {
+    "A6_MEASURE:ordered_vs_marginal:lambda=0.1": false,
+    "A6_MEASURE:ordered_vs_marginal:lambda=1.0": false,
+    "A6_MEASURE:ordered_vs_marginal:lambda=10.0": false,
+    "A6_MEASURE:ordered_vs_marginal:primary": false,
+    "A6_MEASURE:ordered_vs_sorted:lambda=0.1": true,
+    "A6_MEASURE:ordered_vs_sorted:lambda=1.0": true,
+    "A6_MEASURE:ordered_vs_sorted:lambda=10.0": true,
+    "A6_MEASURE:ordered_vs_sorted:primary": true,
+    "A6_MEASURE:ordered_vs_target_shuffled:lambda=0.1": false,
+    "A6_MEASURE:ordered_vs_target_shuffled:lambda=1.0": false,
+    "A6_MEASURE:ordered_vs_target_shuffled:lambda=10.0": false,
+    "A6_MEASURE:ordered_vs_target_shuffled:primary": false,
+    "DENSE_DUAL_MATCHED:ordered_vs_marginal:lambda=0.1": false,
+    "DENSE_DUAL_MATCHED:ordered_vs_marginal:lambda=1.0": false,
+    "DENSE_DUAL_MATCHED:ordered_vs_marginal:lambda=10.0": false,
+    "DENSE_DUAL_MATCHED:ordered_vs_marginal:primary": false,
+    "DENSE_DUAL_MATCHED:ordered_vs_sorted:lambda=0.1": true,
+    "DENSE_DUAL_MATCHED:ordered_vs_sorted:lambda=1.0": true,
+    "DENSE_DUAL_MATCHED:ordered_vs_sorted:lambda=10.0": true,
+    "DENSE_DUAL_MATCHED:ordered_vs_sorted:primary": true,
+    "DENSE_DUAL_MATCHED:ordered_vs_target_shuffled:lambda=0.1": false,
+    "DENSE_DUAL_MATCHED:ordered_vs_target_shuffled:lambda=1.0": false,
+    "DENSE_DUAL_MATCHED:ordered_vs_target_shuffled:lambda=10.0": false,
+    "DENSE_DUAL_MATCHED:ordered_vs_target_shuffled:primary": false
+  },
+  "consequence": "close exact coarse linear diagnostic; remain Step2/3",
+  "decision": "coarse_linear_deformation_not_supported",
+  "matrix": {
+    "comparison_cells": 720,
+    "metric_rows": 840,
+    "official_test_cells": 0,
+    "runs": 10
+  },
+  "problem_gate_supported": false,
+  "protocol_valid": true
+}

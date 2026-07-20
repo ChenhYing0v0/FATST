@@ -1,0 +1,15 @@
+{
+  "all_finite": true,
+  "arm": "A6_MEASURE",
+  "candidate_version": "SC-D24-CTB-v1",
+  "checkpoint_mutated": false,
+  "checkpoint_sha256": "5cfa4eb8bd58d0c524afe747aa58665e18e9ef0490ff082d5355d9ba059c6e69",
+  "config_sha256": "0ac8fa9eae94d3a9d4587b117a7403352b6dbd81d70fe0566c7a0f6853b4c6ce",
+  "dataset": "ETTh1",
+  "evaluation_origin_count": 721,
+  "evaluation_split": "val",
+  "fit_origin_count": 720,
+  "origin_count": 2161,
+  "purge_origin_count": 720,
+  "row_count": 15127
+}

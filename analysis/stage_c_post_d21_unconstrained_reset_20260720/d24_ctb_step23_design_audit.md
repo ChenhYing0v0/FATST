@@ -4,7 +4,7 @@
 
 | Field | Content |
 | --- | --- |
-| `current_step` | Post-D23 Step2/3；SC-D24-CTB validation diagnostic frozen |
+| `current_step` | Post-D23 Step2/3；SC-D24-CTB-v1.1 validation diagnostic frozen |
 | `problem` | strong fixed trajectory synthesis是否仍留下可由ordered raw history识别的coarse future deformation？ |
 | `existence_evidence` | DENSE几乎恢复A6但无稳定allocation；D22 target access pass；phase probe specificity不足 |
 | `idea` | 在frozen A6/DENSE validation forecasts上测量past-identifiable 48-step trajectory-bias surface |
@@ -94,18 +94,36 @@ $$
 +48a_{i,b}^2.
 $$
 
-$g$是multi-output ridge regression；$\lambda\in\{0.1,1,10\}$全部报告，primary为1。H96/H192/H336/H720
+$g$是multi-output ridge regression，目标按fit rows归一化；$\lambda\in\{0.01,0.1,1\}$全部报告，
+primary为0.1。H96/H192/H336/H720
 分别聚合前2/4/7/15 blocks。
+
+### 4.5 v1 protocol correction
+
+v1的10/10 validation inference与checkpoint/protocol均finite，但ridge实现使用
+$X^\top X+\lambda I$。fit partition含数万channel rows，故$\lambda\in\{0.1,1,10\}$相对$X^\top X$近似为零；
+ordered、marginal乃至channel maps在chronological transfer上出现最高数倍退化。这是
+`readout_or_head_design_wrong / design_fault_suspected`，不能用于problem rejection。
+
+v1.1只修正regularization semantics为
+
+$$
+X^\top X+n\lambda I,
+$$
+
+对应$\frac1n\|X\beta-y\|^2+\lambda\|\beta\|^2$。同时冻结normalized grid
+$\{0.01,0.1,1\}$、primary 0.1；data、features、chronological thirds、controls与gates不变。v1 artifacts保留，
+不得删除或与v1.1混合。
 
 ## 5. Gate与failure attribution
 
-Primary $\lambda=1$下，两个carriers都必须满足：
+Primary $\lambda=0.1$下，两个carriers都必须满足：
 
 1. ordered vs marginal macro MSE gain $\ge0.3\%$；
 2. ordered vs sorted $\ge0.2\%$；
 3. ordered vs target-shuffled $\ge0.3\%$；
 4. 每项至少11/20 cells、3/5 datasets、3/4 horizons为正；
-5. $\lambda=0.1,10$的macro sign仍为正。
+5. $\lambda=0.01,1$的macro sign仍为正。
 
 通过时decision只能是`past_identifiable_coarse_deformation_supported_on_validation`，随后回Step4进行prior与native
 operator gate；remote training/test仍需另行冻结和授权。

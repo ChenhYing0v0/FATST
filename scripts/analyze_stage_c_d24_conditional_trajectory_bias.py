@@ -102,7 +102,11 @@ def ridge_predict(
         axis=1,
     )
     gram = fit_design.T @ fit_design
-    regularizer = np.eye(gram.shape[0]) * ridge_lambda
+    regularizer = (
+        np.eye(gram.shape[0])
+        * ridge_lambda
+        * fit_design.shape[0]
+    )
     regularizer[0, 0] = 0.0
     coefficients = np.linalg.solve(
         gram + regularizer,
@@ -716,7 +720,7 @@ def synthetic_smoke(config: dict[str, Any]) -> None:
         fit_features,
         fit_targets,
         evaluation_features,
-        0.1,
+        1e-8,
     )
     if np.mean((expected - predicted) ** 2) > 1e-4:
         raise AssertionError("ridge synthetic recovery failed")

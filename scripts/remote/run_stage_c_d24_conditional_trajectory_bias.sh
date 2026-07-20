@@ -3,7 +3,7 @@ set -euo pipefail
 
 CONFIG="${CONFIG:-configs/stage_c_d24_conditional_trajectory_bias.json}"
 SOURCE_ROOT="${SOURCE_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/stage_c_d23_fcmi_v1}"
-OUTPUT_ROOT="${OUTPUT_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/stage_c_d24_ctb_v1}"
+OUTPUT_ROOT="${OUTPUT_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/stage_c_d24_ctb_v1_1}"
 CONDA_ENV="${CONDA_ENV:-moe}"
 CONDA_BIN="${CONDA_BIN:-/home/anaconda3/bin/conda}"
 GPU_IDS_STR="${GPU_IDS:-0 1 2}"

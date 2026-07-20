@@ -1,0 +1,15 @@
+{
+  "all_finite": true,
+  "arm": "DENSE_DUAL_MATCHED",
+  "candidate_version": "SC-D24-CTB-v1",
+  "checkpoint_mutated": false,
+  "checkpoint_sha256": "a5c7cda0f93f6b57dd12dd3c1d527eddaad4755ad8c1934454b48e053c12c864",
+  "config_sha256": "0ac8fa9eae94d3a9d4587b117a7403352b6dbd81d70fe0566c7a0f6853b4c6ce",
+  "dataset": "ETTm2",
+  "evaluation_origin_count": 3601,
+  "evaluation_split": "val",
+  "fit_origin_count": 3600,
+  "origin_count": 10801,
+  "purge_origin_count": 3600,
+  "row_count": 75607
+}

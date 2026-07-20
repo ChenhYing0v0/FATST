@@ -54,6 +54,17 @@ $$
 H96/H192/H336/H720分别聚合2/4/7/15 blocks。`target_shuffled`在forecast-origin层面打乱fit residual，
 保持feature width与ridge capacity。
 
+v1首次validation execution暴露ridge penalty没有按fit row count归一化：在数万rows下
+$X^\top X+\lambda I$使冻结的$\lambda$几乎无效，所有conditional maps发生严重chronological
+extrapolation。v1因此标记`design_fault_suspected`。v1.1改为标准normalized objective：
+
+$$
+\frac{1}{n}\|X\beta-y\|_2^2+\lambda\|\beta\|_2^2,
+$$
+
+即normal equation使用$X^\top X+n\lambda I$；intercept不penalize。统一冻结
+$\lambda\in\{0.01,0.1,1\}$，primary为0.1，不作dataset-specific选择。
+
 ## 5. Code-theory consistency
 
 - Intended theory：检验strong fixed trajectory carrier是否遗漏raw-history可识别的coarse output freedom。
