@@ -7,14 +7,14 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD — Unified Multi-Horizon Forecasting（projectivity不再是强制主线） |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Post-D24 Step2/4 paper-story and evidence consolidation |
+| `current_11_step` | SC-MNB Step1-3 modern native-baseline reproduction protocol |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | no active method；D24/FCMI closed；A6/dense controls |
+| `paper_core_status` | no active method；problem boundary coherent but method narrative incomplete |
 
 [Constraint Reset, 2026-07-20] 后续不再把exact projectivity、requested horizon禁用、A6 interface compatibility或
 full-$T$ prefix crop当作新方法的先验硬约束。它们可以成为合理设计或matched controls，但必须由problem、理论与
@@ -121,6 +121,28 @@ access为0。ordered history相对marginal在A6/DENSE上为`-8.5950%/-8.6168%`�
 hypothesis关闭，不做feature/bin/lambda/nonlinear rescue；broader direction只记为
 `unresolved_but_unsupported`。当前回Step2/4 consolidation，不启动D25。详见
 `analysis/stage_c_post_d21_unconstrained_reset_20260720/d24_ctb_result_and_rollback.md`。
+
+[Post-D24 Consolidation] `Bayes boundary -> finite frontier negative -> target access positive -> capacity
+explanation`形成scientifically coherent problem boundary，但没有形成完整method-paper narrative。pure requested-H
+不提供新Bayes information；future coordinate仍可能需要不同history computation；D23进一步表明target access与
+strong trajectory function class是两个必须独立控制的维度。当前最强主张是design/control principle，不是
+paper-core method。
+
+modern native-baseline gap现为blocking：P0必须包括ElasTST、CATS、TimePerceiver、SRSNet及A6_FULL/
+A6_MEASURE。外部baseline必须在official repositories按native contract复现，并把single-weight varied-horizon、
+per-H fixed-model与foundation/pretrained结果分表。当前只进入`SC-MNB Step1-3` protocol设计；
+implementation、remote training与official test仍false。若A6不具modern competitiveness，后续不得继续围绕其
+interface堆叠architecture。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/post_d24_paper_story_and_modern_baseline_gap_audit.md`。
+
+[SC-MNB Source Audit] 四个P0 official sources已在repo外只读审计并固定commit。ElasTST是唯一
+single-weight P0 baseline；CATS、TimePerceiver与SRSNet均为per-H独立训练。source audit还发现CATS/
+TimePerceiver每epoch读取test loss、CATS ETTm2-H96 dataset identifier typo、SRSNet file-level license/
+metric-equivalence待证和
+ElasTST `limit_train_batches=10`待确认。decision=
+`source_set_frozen_protocol_repairs_required_before_prelaunch`；当前local patch、remote training和official test
+仍false。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/sc_mnb_step13_source_and_protocol_audit.md`。
 
 [Scope Decision, 2026-07-20] 用户明确要求当前项目暂不转出`deterministic-MSE fixed-past architecture search`。
 因此D22-C有效失败只关闭exact v1并回joint Step2/3，不再自动停止整个search；但不得用seed、width、readout或

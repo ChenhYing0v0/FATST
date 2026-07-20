@@ -5,14 +5,14 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Post-D24 Step2/4 paper-story and evidence consolidation |
-| `active_question` | Bayes boundary、capacity controls与target-access evidence能否形成完整可发表问题链？ |
+| `current_step` | SC-MNB Step1-3 modern native-baseline reproduction protocol |
+| `active_question` | A6/MEASURE在modern native varied-horizon、target-query与selective-patch baselines下是否仍具carrier viability？ |
 | `active_candidates` | none；A6/dense controls；D24/FCMI closed；SIFF-v2 frozen history |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d24_ctb_result_and_rollback.md` |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/sc_mnb_step13_source_and_protocol_audit.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | FCMI-v1 closed；new implementation/remote/test false |
-| `rollback_point` | Step2/4 consolidation；no D25 architecture before narrative gate |
+| `method_implementation` | no active method；SC-MNB execution/remote/test false |
+| `rollback_point` | Step1-3 baseline viability；no D25 architecture |
 
 ## Post-D21 Unconstrained Reset
 
@@ -107,6 +107,25 @@ D24-v1.1 10/10 protocol valid且official test access为0。ordered vs marginal�
 `-14.1002%/-13.4974%`；所有primary horizons均0/4正向。strong shrinkage也未恢复absolute transfer。
 Decision=`close_exact_coarse_deformation_probe_return_step2_4_consolidation`。不做D24 feature/bin/lambda/
 nonlinear/seed rescue；broader nonlinear direction不被方向拒绝，但没有candidate authorization。
+
+Post-D24 consolidation现完成。现有链条通过scientific problem-boundary gate，但未通过method-paper narrative
+gate：它区分了pure requested-H、future-coordinate evidence access与trajectory capacity，却没有给出同时满足
+三者的正向paper-core method。故不启动D25，也不把negative/control evidence包装成contributions。
+
+下一步为`SC-MNB Step1-3`：冻结ElasTST、CATS、TimePerceiver、SRSNet及A6_FULL/A6_MEASURE的modern
+native-baseline reproduction protocol。ElasTST承担single-weight varied-horizon角色；CATS与TimePerceiver承担
+future/target-query角色；SRSNet承担modern selective-patch performance角色。per-H fixed models、single-weight
+models与foundation/pretrained models必须分表。当前只允许source/protocol/prelaunch audit，execution、remote
+training与official test仍false。若A6广泛落后，后续不得继续在A6 interface上堆叠method。
+
+SC-MNB Step1-3 source audit现完成。official commits固定为ElasTST
+`d49f7e41c2db7ac3208816225885b6e3f61c0fb3`、CATS
+`58854fc759d608ce400f378be83f4513960e505d`、TimePerceiver
+`7e30cc07b51c709f408409fd60a34c81ae8990be`与SRSNet
+`6ee35d498f48eefecf84530b362b137de38e6592`。CATS/TimePerceiver training loop的per-epoch test access、
+CATS ETTm2-H96 typo、SRSNet file-level license trace/metric equivalence与ElasTST 10-batch semantics均是
+launch blockers。
+planned matrix为65 external runs/80 cells，但local protocol patch、remote training与official test继续false。
 
 用户2026-07-20决定暂不承担task pivot成本。该scope决定把上一版“D22-C有效失败即停止整个
 deterministic-MSE search”改为：关闭exact D22-C v1并回joint Step2/3，在同一task边界寻找不同的falsifiable

@@ -1,0 +1,233 @@
+{
+  "protocol_id": "SC-MNB-v0.1",
+  "protocol_date": "2026-07-20",
+  "role": "modern_native_baseline_carrier_viability",
+  "current_step": "step1_3_source_contract_audit_complete",
+  "datasets": [
+    "ETTh1",
+    "ETTh2",
+    "ETTm1",
+    "ETTm2",
+    "Weather"
+  ],
+  "paper_facing_horizons": [
+    96,
+    192,
+    336,
+    720
+  ],
+  "internal_references": [
+    "A6_FULL",
+    "A6_MEASURE"
+  ],
+  "external_sources": [
+    {
+      "id": "ELASTST",
+      "repository": "https://github.com/microsoft/ProbTS.git",
+      "branch": "elastst",
+      "commit": "d49f7e41c2db7ac3208816225885b6e3f61c0fb3",
+      "license": "MIT",
+      "paper_role": "single_weight_varied_horizon",
+      "native_seed": 1,
+      "native_context_length": 96,
+      "native_training_contract": {
+        "checkpoints_per_dataset": 1,
+        "train_prediction_length": 720,
+        "validation_prediction_length": 720,
+        "test_prediction_lengths": [
+          24,
+          96,
+          192,
+          336,
+          720,
+          1024
+        ],
+        "checkpoint_monitor": "val_weighted_ND",
+        "sampling_weight_scheme": "random",
+        "max_epochs": 100,
+        "limit_train_batches": 10
+      },
+      "native_entrypoint": "python run.py --config config/baselines/{dataset}/elastst.yaml",
+      "dataset_ids": {
+        "ETTh1": "etth1",
+        "ETTh2": "etth2",
+        "ETTm1": "ettm1",
+        "ETTm2": "ettm2",
+        "Weather": "weather_ltsf"
+      },
+      "protocol_faults": [
+        {
+          "id": "confirm_limit_train_batches",
+          "description": "Official configs set limit_train_batches=10; preserve until source-faithful smoke confirms that this is intentional and reproducible.",
+          "launch_blocking": true
+        },
+        {
+          "id": "native_selector_differs",
+          "description": "Native checkpoint monitor and H720 validation contract differ from FATST four-horizon MSE selection; report as native-source role, not matched-control role.",
+          "launch_blocking": false
+        }
+      ],
+      "allowed_source_patch": "none_before_fault_resolution"
+    },
+    {
+      "id": "CATS",
+      "repository": "https://github.com/dongbeank/CATS.git",
+      "branch": "main",
+      "commit": "58854fc759d608ce400f378be83f4513960e505d",
+      "license": "MIT",
+      "paper_role": "fixed_h_future_query",
+      "native_seed": 2021,
+      "native_context_length": 512,
+      "native_training_contract": {
+        "checkpoints_per_dataset": 4,
+        "one_checkpoint_per_horizon": true,
+        "loss": "MSE",
+        "checkpoint_monitor": "validation_MSE"
+      },
+      "native_entrypoints": {
+        "ETTh1": "bash scripts/ETTh1_512_input.sh",
+        "ETTh2": "bash scripts/ETTh2_512_input.sh",
+        "ETTm1": "bash scripts/ETTm1_512_input.sh",
+        "ETTm2": "bash scripts/ETTm2_512_input.sh",
+        "Weather": "bash scripts/Weather_512_input.sh"
+      },
+      "protocol_faults": [
+        {
+          "id": "per_epoch_test_access",
+          "description": "exp/exp_main.py evaluates test_loader every training epoch for logging, although early stopping uses validation only.",
+          "launch_blocking": true
+        },
+        {
+          "id": "ettm2_h96_dataset_typo",
+          "description": "scripts/ETTm2_512_input.sh uses --data ETTm1 for the H96 command while data_path and model_id are ETTm2.",
+          "launch_blocking": true
+        }
+      ],
+      "allowed_source_patch": "remove training-epoch test evaluation and correct only the ETTm2 H96 dataset identifier"
+    },
+    {
+      "id": "TIMEPERCEIVER",
+      "repository": "https://github.com/efficient-learning-lab/TimePerceiver.git",
+      "branch": "main",
+      "commit": "7e30cc07b51c709f408409fd60a34c81ae8990be",
+      "license": "MIT",
+      "paper_role": "fixed_h_generalized_target_position",
+      "native_seed": 2025,
+      "native_context_length": 384,
+      "native_training_contract": {
+        "checkpoints_per_dataset": 4,
+        "one_checkpoint_per_horizon": true,
+        "loss": "MSE",
+        "checkpoint_monitor": "validation_MSE",
+        "generalized": 1,
+        "standard": 0
+      },
+      "native_entrypoints": {
+        "ETTh1": "bash scripts/ETT/TimePerceiver_ETTh1.sh",
+        "ETTh2": "bash scripts/ETT/TimePerceiver_ETTh2.sh",
+        "ETTm1": "bash scripts/ETT/TimePerceiver_ETTm1.sh",
+        "ETTm2": "bash scripts/ETT/TimePerceiver_ETTm2.sh",
+        "Weather": "bash scripts/Weather/TimePerceiver.sh"
+      },
+      "protocol_faults": [
+        {
+          "id": "per_epoch_test_access",
+          "description": "exp/exp_main.py evaluates test_loader every training epoch for logging, although early stopping uses validation only.",
+          "launch_blocking": true
+        },
+        {
+          "id": "paper_averages_input_lengths",
+          "description": "The paper reports averages over L={96,384,768}, while official scripts use L=384; SC-MNB freezes L=384 and must not select input length from test.",
+          "launch_blocking": false
+        }
+      ],
+      "allowed_source_patch": "remove training-epoch test evaluation only"
+    },
+    {
+      "id": "SRSNET",
+      "repository": "https://github.com/decisionintelligence/SRSNet.git",
+      "branch": "main",
+      "commit": "6ee35d498f48eefecf84530b362b137de38e6592",
+      "license": "MIT top-level; file-level dependency license audit required",
+      "paper_role": "fixed_h_selective_patch_representation",
+      "native_seed": 2021,
+      "native_training_contract": {
+        "checkpoints_per_dataset": 4,
+        "one_checkpoint_per_horizon": true,
+        "loss": "MSE",
+        "checkpoint_monitor": "validation_MSE",
+        "evaluation_framework": "TFB rolling_forecast",
+        "reported_primary_metrics": [
+          "mse_norm",
+          "mae_norm"
+        ],
+        "horizon_specific_hyperparameters": true
+      },
+      "native_entrypoints": {
+        "ETTh1": "bash scripts/multivariate_forecast/ETTh1_script/SRSNet.sh",
+        "ETTh2": "bash scripts/multivariate_forecast/ETTh2_script/SRSNet.sh",
+        "ETTm1": "bash scripts/multivariate_forecast/ETTm1_script/SRSNet.sh",
+        "ETTm2": "bash scripts/multivariate_forecast/ETTm2_script/SRSNet.sh",
+        "Weather": "bash scripts/multivariate_forecast/Weather_script/SRSNet.sh"
+      },
+      "protocol_faults": [
+        {
+          "id": "file_level_license_trace",
+          "description": "The top-level repository is MIT, but ts_benchmark/baselines/srsnet/utils/losses.py carries an inherited N-BEATS CC BY-NC 4.0 notice; prove whether this file is outside the executed MSE path and record the distributable source boundary.",
+          "launch_blocking": true
+        },
+        {
+          "id": "metric_equivalence_audit",
+          "description": "TFB reports normalized rolling metrics; equivalence to FATST dataset-standardized MSE/MAE must be proven from saved predictions or a source-faithful metric audit.",
+          "launch_blocking": true
+        },
+        {
+          "id": "background_gpu_assignments",
+          "description": "Official scripts hard-code GPUs 2-5 and background jobs; the wrapper may change scheduling only, not model hyperparameters.",
+          "launch_blocking": true
+        }
+      ],
+      "allowed_source_patch": "change scheduling/output paths only after metric-equivalence audit"
+    }
+  ],
+  "planned_matrix": {
+    "external_training_runs": 65,
+    "external_test_cells": 80,
+    "elastst_runs": 5,
+    "cats_runs": 20,
+    "timeperceiver_runs": 20,
+    "srsnet_runs": 20,
+    "internal_a6_retraining": false
+  },
+  "result_tables": [
+    "single_weight_varied_horizon",
+    "native_fixed_h_accuracy",
+    "foundation_pretrained_optional_separate"
+  ],
+  "test_governance": {
+    "validation_selects_checkpoints": true,
+    "test_selects_config": false,
+    "per_epoch_test_evaluation_allowed": false,
+    "full_five_dataset_four_horizon_reporting": true,
+    "published_tables_can_replace_local_reproduction": false,
+    "test_informed": true
+  },
+  "authorization": {
+    "source_audit": true,
+    "local_protocol_patch": false,
+    "remote_training": false,
+    "official_test": false,
+    "paper_method": false,
+    "d25_architecture": false
+  },
+  "prelaunch_requirements": [
+    "resolve all launch-blocking protocol faults",
+    "record isolated external checkout paths and source hashes",
+    "freeze dataset path and split equivalence",
+    "freeze artifact schema and completeness checker",
+    "freeze GPU/resource smoke",
+    "freeze carrier-viability decision thresholds before test access",
+    "obtain independent user authorization for remote training and official test"
+  ],
+  "decision": "source_set_frozen_protocol_repairs_required_before_prelaunch"
+}

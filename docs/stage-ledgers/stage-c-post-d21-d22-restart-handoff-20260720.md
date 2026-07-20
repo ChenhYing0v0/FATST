@@ -18,9 +18,11 @@
 9. `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step8_remote/d23_step9_10_result_and_rollback.md`；
 10. `analysis/stage_c_post_d21_unconstrained_reset_20260720/d24_ctb_step23_design_audit.md`；
 11. `analysis/stage_c_post_d21_unconstrained_reset_20260720/d24_ctb_result_and_rollback.md`；
-12. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
-13. `docs/paper-mainline.md`；
-14. `docs/research-roadmap.md`。
+12. `analysis/stage_c_post_d21_unconstrained_reset_20260720/post_d24_paper_story_and_modern_baseline_gap_audit.md`；
+13. `analysis/stage_c_post_d21_unconstrained_reset_20260720/sc_mnb_step13_source_and_protocol_audit.md`；
+14. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
+15. `docs/paper-mainline.md`；
+16. `docs/research-roadmap.md`。
 
 若上述文件与更旧的聊天、archive或历史段落冲突，以本文件和三份主线文档顶部的最新cursor为准。
 
@@ -31,15 +33,15 @@
 | `project` | R_2026_FATST |
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-20 |
-| `source_parent_commit` | `571af57` |
-| `current_step` | Post-D24 Step2/4 paper-story and evidence consolidation |
-| `active_problem` | Bayes boundary、capacity controls与target-access evidence能否形成完整paper problem chain？ |
+| `source_parent_commit` | `7213fce` |
+| `current_step` | SC-MNB Step1-3 modern native-baseline reproduction protocol |
+| `active_problem` | A6/MEASURE相对modern native baselines是否仍具carrier viability？ |
 | `active_method` | none；FCMI-v1 closed；A6/dense controls |
 | `method_training_authorized` | false |
 | `remote_training_authorized` | false；new diagnostic/training/test all false |
-| `next_action` | Step2/4 paper-story、source与minimal modern-baseline gap audit |
-| `conditional_next` | consolidation narrative gate通过后再决定是否需要任何新execution |
-| `rollback` | no D25 architecture；不自动pivot task |
+| `next_action` | resolve SC-MNB test-hygiene、metric-equivalence与source-config blockers |
+| `conditional_next` | protocol repairs和prelaunch通过并获授权后，才允许native baseline execution |
+| `rollback` | no D25 architecture；不自动pivot task；baseline execution false |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
 
@@ -113,6 +115,13 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
     `design_fault_suspected`；v1.1只修正normalized ridge semantics后重跑。
 17. D24-v1.1 10/10、840 metrics、720 comparisons完整，test access=0；ordered相对marginal/sorted/shuffled
     全部macro negative且0/4 horizons；exact probe关闭并回Step2/4 consolidation。
+18. Post-D24 consolidation确认完整证据链scientifically coherent，但method-paper narrative incomplete；
+    当前没有正向paper-core method，modern native-baseline gap成为blocking gate。
+19. `SC-MNB` P0固定ElasTST、CATS、TimePerceiver、SRSNet与A6_FULL/A6_MEASURE；当前只允许Step1-3
+    source/protocol audit，implementation、remote training与official test均false。
+20. 四个official commits与65-run/80-cell roles已冻结；CATS/TimePerceiver per-epoch test access、CATS
+    ETTm2-H96 typo、SRSNet file-level license trace/metric equivalence与ElasTST 10-batch semantics阻塞
+    prelaunch。
 
 ## 5. D22-HFA 的执行顺序
 
@@ -201,9 +210,9 @@ decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。
 
 1. 读取D23 Step9/10、D24 design与D24 result；
 2. 关闭FCMI、phase/time-warp与D24 exact coarse deformation，不做rescue/router；
-3. 当前只做paper-story/evidence/source consolidation；
+3. paper-story consolidation已完成；当前只做SC-MNB source/native reproduction protocol；
 4. official test、training、diagnostic与paper method均false；
-5. consolidation gate前不得启动D25；
+5. SC-MNB carrier viability gate前不得启动D25；
 6. 不恢复H embedding/router、D17-D21 rescue、CTD或Contribution 2预设。
 
 ## 8. 禁止无损重启时发生的漂移
@@ -234,9 +243,11 @@ decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。
 8. analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step8_remote/d23_step9_10_result_and_rollback.md
 9. analysis/stage_c_post_d21_unconstrained_reset_20260720/d24_ctb_step23_design_audit.md
 10. analysis/stage_c_post_d21_unconstrained_reset_20260720/d24_ctb_result_and_rollback.md
-11. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
-12. docs/paper-mainline.md
-13. docs/research-roadmap.md
+11. analysis/stage_c_post_d21_unconstrained_reset_20260720/post_d24_paper_story_and_modern_baseline_gap_audit.md
+12. analysis/stage_c_post_d21_unconstrained_reset_20260720/sc_mnb_step13_source_and_protocol_audit.md
+13. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
+14. docs/paper-mainline.md
+15. docs/research-roadmap.md
 
 当前权威状态是：D22-C v1.1 problem gate仍为`target_coordinate_information_access_supported`；SC-D23-FCMI 40-run/160-cell Step9/10已完成，decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。FCMI相对A6 test MSE为`-21.7343%`、0/20；DENSE相对STANDARD_DUAL为`+15.4825%`、19/20且相对A6仅`-0.3284%`。exact projectivity、requested-H禁用、full-T prefix crop、A6 interface compatibility以及预设decoder+loss双贡献均不再是硬约束；但在fixed past、pointwise MSE且H不携带额外信息时，同一future coordinate的Bayes conditional mean不依赖requested horizon，因此不得直接实现H embedding/router。
 
@@ -250,7 +261,7 @@ Step9/10中decomposition、generic与target controls通过，但order和capacity
 
 SC-D24-CTB-v1.1已完成：10/10、840 metrics、720 comparisons，official test access为0。ordered history相对marginal约`-8.6%`、相对sorted约`-9%`、相对target-shuffled约`-14%`，所有primary horizons均0/4正向。exact coarse deformation probe关闭，不做feature/bin/lambda/nonlinear/seed rescue。
 
-下一步只做Step2/4 paper-story/evidence consolidation：审计`Bayes task boundary -> finite frontier negative -> target access positive -> capacity-control explanation`能否形成完整SCI叙事，并列出现代varied-horizon/native baselines的最小缺口。consolidation gate前不得启动D25、remote training、official test或第二loss/router。
+Post-D24 consolidation已完成：`Bayes task boundary -> finite frontier negative -> target access positive -> capacity-control explanation`形成scientifically coherent problem boundary，但没有形成完整method-paper narrative。SC-MNB Step1-3已固定四个official commits及65-run/80-cell roles；CATS/TimePerceiver per-epoch test access、CATS ETTm2-H96 typo、SRSNet file-level license trace/metric equivalence与ElasTST `limit_train_batches=10`仍阻塞prelaunch。local patch、remote training、official test、D25与第二loss/router均未授权。
 
 完成后同步更新analysis report、docs/paper-mainline.md、docs/research-roadmap.md和Stage C ledger，执行最小诚实验证，并按AGENTS.md提交、推送。请从专业时序预测研究员角度进行审计，不要为了凑两个contributions而预先设计第二个loss/router。
 ```
