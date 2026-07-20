@@ -1,0 +1,5 @@
+target_horizon,mse,mae,num_samples,num_channels,eval_prefix_steps,mode,run_name,dataset,pred_len,checkpoint_policy,evaluation_split,official_test_mode,protocol_class,protocol_profile,profile_hash
+96,0.23794827315335473,0.34010349540039897,2161,7,96,unified,D23_A6_MEASURE,ETTh2,720,best-val,val,1,method_screening,stage_c_d23_fcmi_v1,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a
+192,0.31730930825384956,0.3877565228225042,2161,7,192,unified,D23_A6_MEASURE,ETTh2,720,best-val,val,1,method_screening,stage_c_d23_fcmi_v1,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a
+336,0.4176896775496148,0.4444543732152808,2161,7,336,unified,D23_A6_MEASURE,ETTh2,720,best-val,val,1,method_screening,stage_c_d23_fcmi_v1,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a
+720,0.6381410531906618,0.5545940778528651,2161,7,720,unified,D23_A6_MEASURE,ETTh2,720,best-val,val,1,method_screening,stage_c_d23_fcmi_v1,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a

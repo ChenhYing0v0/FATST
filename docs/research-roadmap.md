@@ -5,14 +5,14 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC-D23-FCMI Step8 40-run matrix running |
-| `active_question` | 如何原生分离generic evidence main effect与future-coordinate interaction，并包含二者fallback？ |
-| `active_candidates` | FCMI formal candidate frozen/not trained；A6/dense/matched controls；SIFF-v2 frozen history |
+| `current_step` | Post-D23 Step2/3 fixed-past problem reset |
+| `active_question` | 在强trajectory synthesis已解释capacity gap后，何种新fixed-past problem仍有split-stable necessity？ |
+| `active_candidates` | none；A6/dense controls；SIFF-v2 frozen history；FCMI-v1 closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step7b_prelaunch/prelaunch_report.md` |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step8_remote/d23_step9_10_result_and_rollback.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | production-local与formal prelaunch complete；seed2021 remote/test true |
-| `rollback_point` | Step6 if prelaunch attribution incomplete；Step4 if matched/narrative fails |
+| `method_implementation` | FCMI-v1 closed；new implementation/remote/test false |
+| `rollback_point` | Step2/3；direct dense+FCMI successor narrative blocked |
 
 ## Post-D21 Unconstrained Reset
 
@@ -78,6 +78,19 @@ Step8已于`2026-07-20T17:57:10+08:00`从commit `4ff439c`在GPU0/1/2启动。pre
 Weather-FCMI与ETTm2-DENSE两项2-batch smoke finite/pass；首批Weather FCMI/DENSE/A6进入训练。
 40/40完整前不得pull、改matrix或启动confirmation。launch provenance见
 `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step8_remote/remote_launch_record.md`。
+
+Step9/10现已完成。FCMI vs A6 test MSE为`-21.7343%`、0/20；validation也为`-16.1434%`、0/20。
+decomposition/generic/target controls通过，但order与capacity失败；五dataset internal health全过。DENSE vs
+STANDARD_DUAL为`+15.4825%`、19/20，DENSE vs A6仅`-0.3284%`，说明effective
+capacity/function-class解释主要差距。validation-fit dense/FCMI、dense-plus-interaction与A6-plus-interaction
+三项conditional diagnostics均test反转。A6/DENSE validation-fit blend也从validation `+0.5127%`反转test
+`-0.1707%`；固定等权虽test `+1.4680%`，validation却为`-0.4009%`，不能据此选择allocation或router。
+
+机器decision=`fails_a6_internal_valid`；研究decision=
+`fcmi_v1_failed_capacity_control_explains_return_step2_3`。FCMI-v1关闭且不补rescue；target-coordinate
+problem evidence保留。Implicit Forecaster、BasisFormer、S2TX与attention attribution prior又阻止把
+“dense trajectory main + coordinate interaction”本身写成新贡献，故direct Step4 successor不通过，
+回同一task的Step2/3。
 
 用户2026-07-20决定暂不承担task pivot成本。该scope决定把上一版“D22-C有效失败即停止整个
 deterministic-MSE search”改为：关闭exact D22-C v1并回joint Step2/3，在同一task边界寻找不同的falsifiable

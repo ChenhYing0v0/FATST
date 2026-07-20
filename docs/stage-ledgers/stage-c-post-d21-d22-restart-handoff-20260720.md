@@ -15,9 +15,10 @@
 6. `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_fcmi_step46_design_audit.md`；
 7. `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_fcmi_step7a_implementation_audit.md`；
 8. `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step7b_prelaunch/prelaunch_report.md`；
-9. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
-10. `docs/paper-mainline.md`；
-11. `docs/research-roadmap.md`。
+9. `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step8_remote/d23_step9_10_result_and_rollback.md`；
+10. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
+11. `docs/paper-mainline.md`；
+12. `docs/research-roadmap.md`。
 
 若上述文件与更旧的聊天、archive或历史段落冲突，以本文件和三份主线文档顶部的最新cursor为准。
 
@@ -28,15 +29,15 @@
 | `project` | R_2026_FATST |
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-20 |
-| `source_parent_commit` | `4ff439c` |
-| `current_step` | SC-D23-FCMI Step8 40-run matrix running |
-| `active_problem` | generic evidence main effect与future-coordinate interaction如何可识别地共存并原生fallback？ |
-| `active_method` | none trained；FCMI formal identity frozen/not trained |
+| `source_parent_commit` | `a151646` |
+| `current_step` | Post-D23 Step2/3 fixed-past problem reset |
+| `active_problem` | strong trajectory synthesis解释capacity后，何种新fixed-past问题仍有split-stable necessity？ |
+| `active_method` | none；FCMI-v1 closed；A6/dense controls |
 | `method_training_authorized` | false |
-| `remote_training_authorized` | true；仅frozen seed2021 40-run matrix |
-| `next_action` | 等待40/40完整artifacts；不得改config或选择局部结果 |
-| `conditional_next` | 完整后执行冻结four-layer analyzer；confirmation仍false |
-| `rollback` | Step7B attribution fault回Step6；matched/narrative fail回Step4；不自动pivot task |
+| `remote_training_authorized` | false；D23 complete；new method/test false |
+| `next_action` | Step2/3 problem audit；禁止FCMI/dense rescue |
+| `conditional_next` | 新problem existence与narrative gate通过后才可Step4-6 |
+| `rollback` | deterministic-MSE fixed-past Step2/3；不自动pivot task |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
 
@@ -101,7 +102,9 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
 11. FCMI Step7B prelaunch 21/21通过；40 runs、160 official-test cells、160 validation cells和dense
     capacity control已冻结；
 12. 用户2026-07-20已独立授权上述seed2021 remote/test matrix；confirmation与paper method仍未授权；
-13. commit `4ff439c`已通过三卡preflight与两项resource smoke；40-run matrix自17:57:10起运行。
+13. commit `4ff439c`已通过三卡preflight与两项resource smoke；40-run matrix完整结束；
+14. FCMI vs A6为`-21.7343%`、0/20；DENSE vs STANDARD_DUAL为`+15.4825%`、19/20，
+    DENSE vs A6仅`-0.3284%`；FCMI-v1关闭并回Step2/3。
 
 ## 5. D22-HFA 的执行顺序
 
@@ -165,6 +168,12 @@ seed2021 = 40 runs：全部8 arms进入160个official-test cells和160个validat
 `TARGET_SHUFFLED_QUERY`原拟validation-only，但因参与方向级attribution，在任何test access前修正为formal
 control。dense arm是capacity attribution control，不是第二个method或Contribution 2。
 
+Step9/10已完成：40/40 protocol valid，FCMI vs A6 test MSE/MAE为`-21.7343%/-10.9242%`、0/20。
+decomposition/generic/target controls通过，但order与capacity失败；internal health 5/5。DENSE几乎恢复A6，
+并相对STANDARD_DUAL为`+15.4825%`。三种FCMI validation-fit conditional blends全部test反转；
+A6/DENSE validation-fit blend同样test反转，固定等权只有test-only正信号，不能授权allocation/router。
+decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。
+
 ## 6. 研究与实验治理
 
 - 外部调研默认广泛web search并优先primary sources；Zotero只作seed；
@@ -182,11 +191,12 @@ control。dense arm是capacity attribution control，不是第二个method或Con
 
 ## 7. 当前执行定义
 
-1. 读取D22-C result、FCMI Step4-6、Step7A与Step7B audit；
-2. 保持frozen 40-run identity、profiles、seed、selector、controls和gates不变；
-3. commit/push authorization，再做remote pull、`nvidia-smi`与两项resource smoke；
-4. smoke通过后启动Step8，完整矩阵返回前不得改config或选择结果；
-5. 不恢复H embedding/router、D17-D21 rescue、CTD或Contribution 2预设。
+1. 读取D23 Step9/10 result与failure attribution；
+2. 关闭FCMI-v1，不做seed/width/readout/rank/objective rescue；
+3. 不把DENSE control或frozen blend升级method；
+4. 在deterministic-MSE fixed-past task内回Step2/3寻找新problem necessity；
+5. 新problem通过前implementation/remote/test均false；
+6. 不恢复H embedding/router、D17-D21 rescue、CTD或Contribution 2预设。
 
 ## 8. 禁止无损重启时发生的漂移
 
@@ -213,19 +223,22 @@ control。dense arm是capacity attribution control，不是第二个method或Con
 5. analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_fcmi_step46_design_audit.md
 6. analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_fcmi_step7a_implementation_audit.md
 7. analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step7b_prelaunch/prelaunch_report.md
-8. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
-9. docs/paper-mainline.md
-10. docs/research-roadmap.md
+8. analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step8_remote/d23_step9_10_result_and_rollback.md
+9. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
+10. docs/paper-mainline.md
+11. docs/research-roadmap.md
 
-当前权威状态是：D22-C v1.1完整problem gate已通过，decision=`target_coordinate_information_access_supported`；SC-D23-FCMI Step7B prelaunch gate为21/21 pass，frozen seed2021 40-run/160-cell Step8 matrix已从commit `4ff439c`在GPU0/1/2启动。exact projectivity、requested-H禁用、full-T prefix crop、A6 interface compatibility以及预设decoder+loss双贡献均不再是硬约束；但在fixed past、pointwise MSE且H不携带额外信息时，同一future coordinate的Bayes conditional mean不依赖requested horizon，因此不得直接实现H embedding/router。
+当前权威状态是：D22-C v1.1 problem gate仍为`target_coordinate_information_access_supported`；SC-D23-FCMI 40-run/160-cell Step9/10已完成，decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。FCMI相对A6 test MSE为`-21.7343%`、0/20；DENSE相对STANDARD_DUAL为`+15.4825%`、19/20且相对A6仅`-0.3284%`。exact projectivity、requested-H禁用、full-T prefix crop、A6 interface compatibility以及预设decoder+loss双贡献均不再是硬约束；但在fixed past、pointwise MSE且H不携带额外信息时，同一future coordinate的Bayes conditional mean不依赖requested horizon，因此不得直接实现H embedding/router。
 
-A6-LBF仅是strong carrier/control/possible component，不足以standalone承载论文；SIFF-v2是冻结历史候选；D17-D21均已关闭，不做seed、readout、representation或参数rescue；CTD保持paused。FCMI Step8正在运行；confirmation与paper method未授权。
+A6-LBF仅是strong carrier/control/possible component，不足以standalone承载论文；SIFF-v2是冻结历史候选；D17-D21均已关闭，不做seed、readout、representation或参数rescue；CTD保持paused。FCMI-v1已关闭，不补seed/width/readout/rank/objective rescue；当前没有active method，new implementation/remote/test均未授权。
 
 已确认D22-C ordered相对generic为test MSE `+2.5228%`、MAE `+1.6484%`、15/20 cells、4/5 datasets、4/4 horizons；其余四controls均20/20正向。Weather相对generic 4/4负向，必须保留generic fallback并禁止universal claim。
 
 Step7A已验证zero-mean interaction、standard-query exact morph、main/interaction/query/output gradients、dual parameter matching与35个production CLI cases。Step7B又冻结`DENSE_DUAL_MATCHED`、8 arms × 5 datasets × seed2021的40-run matrix、160个official-test cells、160个validation cells、四层gates与failure rollback。dense control相对A6 active parameter gap为`0.0914%–0.1321%`，只作capacity attribution，不是method或第二项contribution。CATS/TimePerceiver等已覆盖query-to-history primitive；FCMI只在main–interaction decomposition与generic/standard containment的完整chain上作provisional claim。
 
-Step8已通过commit-pinned remote pull、`nvidia-smi`、Weather-FCMI与ETTm2-DENSE resource smoke并启动。下一步等待40/40完整artifacts，再由冻结analyzer执行一次全矩阵Step9/10；不得改matrix/profile/gates，不得用局部test结果选择，不得设计第二loss/router。
+Step9/10中decomposition、generic与target controls通过，但order和capacity失败；internal health 5/5，negative不是numeric pathology。validation-fit dense/FCMI、dense-plus-interaction和A6-plus-interaction diagnostics全部test反转，且只属于frozen cross-model conditional evidence。A6/DENSE allocation同样没有split-stable、validation-identifiable正证据。direct dense+FCMI successor未过Step4 narrative gate。
+
+下一步在同一deterministic-MSE fixed-past task内回Step2/3，审计新的split-stable problem necessity。不得把DENSE control升method，不得重开FCMI rescue，不得设计第二loss/router。新problem gate完成前不得implementation、remote或test。
 
 完成后同步更新analysis report、docs/paper-mainline.md、docs/research-roadmap.md和Stage C ledger，执行最小诚实验证，并按AGENTS.md提交、推送。请从专业时序预测研究员角度进行审计，不要为了凑两个contributions而预先设计第二个loss/router。
 ```

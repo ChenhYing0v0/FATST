@@ -1,0 +1,15 @@
+comparison,layer,metric,macro_gain_percent,cell_wins,dataset_wins,horizon_wins
+effectiveness_fcmi_vs_a6,paper_facing_effectiveness,mse,-21.734289521828323,0,0,0
+effectiveness_fcmi_vs_a6,paper_facing_effectiveness,mae,-10.924198357065627,0,0,0
+decomposition_fcmi_vs_standard_dual,matched_mechanism_attribution,mse,1.3408610440449757,15,5,4
+decomposition_fcmi_vs_standard_dual,matched_mechanism_attribution,mae,0.5354174228404002,13,4,4
+interaction_fcmi_vs_generic_dual,matched_mechanism_attribution,mse,6.005996477451041,16,4,4
+interaction_fcmi_vs_generic_dual,matched_mechanism_attribution,mae,3.039684691338027,20,5,4
+order_fcmi_vs_order_shuffled,matched_mechanism_attribution,mse,-0.4536059671610815,8,2,0
+order_fcmi_vs_order_shuffled,matched_mechanism_attribution,mae,-0.01512964282729401,12,3,2
+capacity_fcmi_vs_dense_dual,matched_mechanism_attribution,mse,-21.710704551805556,1,0,0
+capacity_fcmi_vs_dense_dual,matched_mechanism_attribution,mae,-10.833559049841273,0,0,0
+source_fcmi_vs_standard_query,source_family_context,mse,2.416808428804413,17,4,4
+source_fcmi_vs_standard_query,source_family_context,mae,1.1890058645298378,17,4,4
+target_coordinate_fcmi_vs_target_shuffle,matched_mechanism_attribution,mse,9.207140819562154,16,4,4
+target_coordinate_fcmi_vs_target_shuffle,matched_mechanism_attribution,mae,4.318251464332482,16,4,4

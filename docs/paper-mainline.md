@@ -7,14 +7,14 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD — Unified Multi-Horizon Forecasting（projectivity不再是强制主线） |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC-D23-FCMI Step8 40-run matrix running |
+| `current_11_step` | Post-D23 Step2/3 fixed-past problem reset |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | no active trained method；FCMI formal candidate frozen/not trained，seed2021 remote/test true |
+| `paper_core_status` | no active method；FCMI-v1 closed；A6/dense remain controls |
 
 [Constraint Reset, 2026-07-20] 后续不再把exact projectivity、requested horizon禁用、A6 interface compatibility或
 full-$T$ prefix crop当作新方法的先验硬约束。它们可以成为合理设计或matched controls，但必须由problem、理论与
@@ -87,6 +87,20 @@ ETTm2-DENSE resource smoke；smoke finite且无OOM。40-run matrix于`2026-07-20
 GPU0/1/2启动，首批Weather FCMI/DENSE/A6均进入训练。运行期间不改config/gates，不启动confirmation；
 完整40/40返回后才执行冻结four-layer analyzer。详见
 `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step8_remote/remote_launch_record.md`。
+
+[SC-D23-FCMI Result] 40/40 runs、160/160 validation与160/160 official-test cells完整，protocol/internal
+health全部通过，但FCMI相对A6 test MSE/MAE为`-21.7343%/-10.9242%`、0/20 cells。FCMI相对
+standard-dual、generic-dual与target-shuffle分别为`+1.3409%/+6.0060%/+9.2071%`，说明
+main–interaction与coordinate semantics在弱query family内有效；但order control为`-0.4536%`且
+validation/test反转。
+
+capacity control给出决定性解释：DENSE相对STANDARD_DUAL test MSE为`+15.4825%`、19/20，DENSE相对A6
+仅`-0.3284%`。三种FCMI validation-fit frozen complementarity diagnostics全部在test反转；A6/DENSE
+validation-fit blend也从validation `+0.5127%`反转test `-0.1707%`，而固定等权仅出现test-only正信号。因此
+decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`：关闭FCMI-v1，不补seed/width/readout，
+也不把dense main直接升级successor；D22-C problem evidence保留，当前回deterministic-MSE fixed-past
+Step2/3。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step8_remote/d23_step9_10_result_and_rollback.md`。
 
 [Scope Decision, 2026-07-20] 用户明确要求当前项目暂不转出`deterministic-MSE fixed-past architecture search`。
 因此D22-C有效失败只关闭exact v1并回joint Step2/3，不再自动停止整个search；但不得用seed、width、readout或

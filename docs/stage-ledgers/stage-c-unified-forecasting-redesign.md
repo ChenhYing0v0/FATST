@@ -6,41 +6,41 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | D22-C problem pass后，如何分离generic evidence main与future-coordinate interaction并原生fallback？ |
+| `active_question` | strong trajectory synthesis解释capacity gap后，下一split-stable fixed-past problem是什么？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | FCMI formal candidate frozen/not trained；A6/dense/matched controls；D22-C diagnostic pass；SIFF-v2 frozen |
+| `active_candidates` | none；A6/dense controls；D22-C problem evidence retained；SIFF-v2 frozen；FCMI-v1 closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
 | `stage_exit` | 新problem先通过existence/narrative gate，再决定一项或两项可归因contributions |
-| `stage_rollback` | FCMI Step7B attribution缺失回Step6；matched/narrative fail回Step4；CTD paused |
+| `stage_rollback` | Post-D23 Step2/3；direct dense+FCMI successor blocked；CTD paused |
 
 ## Decision Cursor
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SC-D23-FCMI Step8 40-run matrix running |
-| `current_candidate` | FCMI formal identity frozen；not trained |
-| `latest_decision` | `step8_running_wait_complete_matrix` |
-| `next_required_action` | 等待40/40完整artifacts，再执行冻结four-layer analyzer |
-| `method_training_authorized` | seed2021 40-run remote/test true；confirmation/H router/第二loss=false |
-| `rollback_point` | Step6 prelaunch attribution fault；Step4 matched/narrative failure |
+| `current_11_step` | Post-D23 Step2/3 fixed-past problem reset |
+| `current_candidate` | none |
+| `latest_decision` | `fcmi_v1_failed_capacity_control_explains_return_step2_3` |
+| `next_required_action` | audit new problem necessity；不得做FCMI/dense rescue |
+| `method_training_authorized` | false；new implementation/remote/test/confirmation=false |
+| `rollback_point` | Step2/3 |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | SC-D23-FCMI Step8 running |
+| `current_step` | SC-D23-FCMI Step9/10 complete；Step2/3 reset |
 | `problem` | standard query context entangles generic evidence main与coordinate interaction，且Weather要求fallback |
 | `existence_evidence` | D22-C ordered vs generic +2.5228% test/+2.5410% val；15/20；4/5；Weather -1.0900% |
 | `idea` | $S_t=\bar S+\Delta_t$；分别变换main与zero-mean interaction |
 | `theory_check` | generic $W_int=0$；standard query $W_main=W_int$；不输入H |
 | `design` | A6 encoder + FCMI；standard/generic/order/dense controls；40-run matrix；same measure objective |
 | `narrative_gate` | conditional pass；claim complete coupling，不claim attention/query primitive |
-| `effectiveness_gate` | pending；Step7B prelaunch 21/21；seed2021 remote/test authorized |
-| `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step7b_prelaunch/prelaunch_report.md` |
-| `decision` | `step8_seed2021_remote_test_authorized_preflight_next` |
+| `effectiveness_gate` | fail；FCMI vs A6 -21.7343% MSE、0/20；internal 5/5 |
+| `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step8_remote/d23_step9_10_result_and_rollback.md` |
+| `decision` | `fcmi_v1_failed_capacity_control_explains_return_step2_3` |
 
 ## Frozen Carrier Contract
 
@@ -66,7 +66,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | --- | --- | --- | --- | --- | --- |
 | `A6-LBF-natural-baseline` | `control_only` | validation-frozen natural profiles可作为稳定共同起点 | not required | 72/72 test；3 seeds；dense horizons | `frozen_test_reference_ready`；只作固定reference |
 | `SC-D22-HFA` | `completed_target_access_supported` | target-coordinate-specific access是否超越matched generic与shuffles | problem evidence pass；not method effectiveness | ordered vs generic +2.5228%；15/20；4/5；all five controls pass | handoff D23 Step4 |
-| `SC-D23-FCMI` | `step8_running` | generic main与coordinate interaction能否可识别分解并原生fallback | conditional pass | Step7B 21/21；effectiveness pending | 40-run matrix running；confirmation false |
+| `SC-D23-FCMI` | `closed_capacity_control_explains` | generic main与coordinate interaction能否可识别分解并原生fallback | conditional pass | FCMI vs A6 -21.7343%；capacity/order fail；internal pass | no seeds/rescue；return Step2/3 |
 | `SC1-PMFO-RCT-v1` | `failed_as_core_candidate` | fixed mixed-radix conservative future tree | narrative/local pass | Step7B三dataset均不优于A6；no numeric pathology | archived as evidence；rollback Step 4 |
 | `SC1-FPMO-M0` | `control_only` | shared-latent exact A6 morph验证function preservation/restriction | not required | exact equality required | mandatory Step6 morphism control |
 | `SC1-FPMO-DA` | `control_only` | direct atom full-affine head隔离capacity/orthogonal coordinate effect | not required | matched function-class control | mandatory Step6 dense-equivalence control |
@@ -231,6 +231,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | D23-FCMI Step7A | production layer + 35 CLI + morph/gradient/parameter/order gates | 11/11；morph `6.33e-8`；dual params exact；A6 gap 83%–95% | local pass；dense control mandatory；remote/test false | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_fcmi_step7a_implementation_audit.md` |
 | D23-FCMI Step7B prelaunch | 40-run matrix + dense capacity control + evaluator/analyzer/runner refusal | 21/21；dense gap `0.0914%–0.1321%`；160 test + 160 val cells frozen | prelaunch pass；等待独立remote/test授权 | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step7b_prelaunch/prelaunch_report.md` |
 | D23-FCMI Step8 launch | commit-pinned pull + 3-GPU preflight + dual resource smoke + background driver | commit `4ff439c`；smokes finite；first Weather jobs active | running；40/40后four-layer analyzer；confirmation false | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step8_remote/remote_launch_record.md` |
+| D23-FCMI Step9/10 | 40 runs + 160 val/test cells + matched controls + internal health + conditional complementarity | FCMI vs A6 -21.7343%；DENSE vs STD +15.4825%；internal 5/5；FCMI/A6-DENSE allocation split-unstable | FCMI-v1 closed；capacity explains；direct successor blocked；return Step2/3 | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step8_remote/d23_step9_10_result_and_rollback.md` |
 
 ## Pending Tasks
 
@@ -298,7 +299,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC-D21-EVS problem audit | `completed_closed_split_unstable` | no seeds/representation rescue；evidence retained；joint Step2 |
 | SC-D22-HFA D22-A/B | `completed_frontier_not_supported` | pure-request Bayes boundary冻结；D22-C conditional design only |
 | SC-D22-HFA D22-C | `completed_problem_supported` | full artifacts；ordered > all controls；Weather generic negative retained |
-| SC-D23-FCMI | `step8_running` | commit `4ff439c`；3 GPUs；40 runs、160 test/160 val cells；confirmation false |
+| SC-D23-FCMI | `completed_fail_return_step2_3` | 40/40；FCMI vs A6 -21.7343%；capacity/order fail；no rescue |
 
 ## Paper Mainline Sync Log
 
@@ -411,6 +412,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-20 | D23-FCMI Step7B prelaunch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | dense capacity attribution + formal matrix/tooling/authorization boundary | 21/21 pass；等待独立remote/test授权；no training result |
 | 2026-07-20 | D23-FCMI Step8 authorization | Current Position、Candidate Queue、11-Step Record | frozen seed2021 40-run/160-cell remote/test scope | user authorized；preflight/smoke next；confirmation/paper method false |
 | 2026-07-20 | D23-FCMI Step8 launch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | commit/resource/smoke/process provenance | `4ff439c`；3×3090；40-run matrix running；confirmation false |
+| 2026-07-20 | D23-FCMI Step9/10 | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | full effectiveness + capacity/order attribution + Step4 source rollback | exact v1 closed；dense/function class explains；direct successor blocked；return Step2/3 |
 
 ## Continuation Rules
 
@@ -633,3 +635,14 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
     profile/arm/gate修改；Step8必须先通过commit-pinned remote pull、GPU preflight与两项resource smoke。
 87. Step8已从commit `4ff439c`启动。运行中不得remote pull、修改config/profile/arms/gates或查看局部
     official-test结果作选择；40/40完整后只能由冻结analyzer生成一次全矩阵Step9/10 decision。
+88. D23 40/40与160/160 test cells完整。FCMI vs A6为`-21.7343%`、0/20；DENSE vs
+    STANDARD_DUAL为`+15.4825%`、19/20，DENSE vs A6仅`-0.3284%`。internal health 5/5，
+    故primary attribution为`effective capacity/function-class explains`，不是numeric pathology。
+89. decomposition、generic与target-shuffle controls通过，只能保留为weak-family evidence；order从validation
+    `+1.7757%`反转test `-0.4536%`。三项validation-fit frozen complementarity diagnostics也全部test-negative，
+    且有cross-model co-adaptation confound，不得升级method或方向拒绝。
+90. `SC-D23-FCMI-v1`关闭，不补seed/width/readout/rank/objective rescue。D22-C target-access evidence保留；
+    direct dense+FCMI successor因conditional necessity不稳定且与IF/BasisFormer/S2TX primitives重叠而未过
+    Step4 narrative gate。A6/DENSE validation-fit blend也发生test反转，固定等权仅有test-only正信号，
+    不授权allocation/router。当前回deterministic-MSE fixed-past Step2/3，
+    new implementation/remote/test=false。

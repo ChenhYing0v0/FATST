@@ -1,0 +1,5 @@
+target_horizon,mse,mae,num_samples,num_channels,eval_prefix_steps,mode,run_name,dataset,pred_len,checkpoint_policy,evaluation_split,official_test_mode,protocol_class,protocol_profile,profile_hash
+96,0.4191844202578068,0.2579086480351786,4551,21,96,unified,D23_STANDARD_DUAL_MATCHED,Weather,720,best-val,val,1,method_screening,stage_c_d23_fcmi_v1,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a
+192,0.4664955288171768,0.29787221744967,4551,21,192,unified,D23_STANDARD_DUAL_MATCHED,Weather,720,best-val,val,1,method_screening,stage_c_d23_fcmi_v1,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a
+336,0.5216272553162915,0.3407374092244676,4551,21,336,unified,D23_STANDARD_DUAL_MATCHED,Weather,720,best-val,val,1,method_screening,stage_c_d23_fcmi_v1,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a
+720,0.5987941742771201,0.3914075383916497,4551,21,720,unified,D23_STANDARD_DUAL_MATCHED,Weather,720,best-val,val,1,method_screening,stage_c_d23_fcmi_v1,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a

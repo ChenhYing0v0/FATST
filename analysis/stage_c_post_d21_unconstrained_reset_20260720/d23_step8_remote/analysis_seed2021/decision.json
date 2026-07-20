@@ -1,0 +1,61 @@
+{
+  "candidate_version": "SC-D23-FCMI-v1",
+  "comparison_passes": {
+    "capacity_fcmi_vs_dense_dual": false,
+    "decomposition_fcmi_vs_standard_dual": true,
+    "effectiveness_fcmi_vs_a6": false,
+    "interaction_fcmi_vs_generic_dual": true,
+    "order_fcmi_vs_order_shuffled": false,
+    "target_coordinate_fcmi_vs_target_shuffle": true
+  },
+  "decision": "fails_a6_internal_valid",
+  "decision_consequence": "close FCMI-v1 as paper-core candidate; rollback Step4 within deterministic fixed-past task",
+  "internal_health_passes": {
+    "ETTh1": true,
+    "ETTh2": true,
+    "ETTm1": true,
+    "ETTm2": true,
+    "Weather": true
+  },
+  "matrix": {
+    "expected_runs": 40,
+    "expected_training_runs": 40,
+    "formal_test_runs": 40,
+    "horizons": [
+      96,
+      192,
+      336,
+      720
+    ],
+    "matrix_complete_required": true,
+    "metrics": [
+      "mse",
+      "mae"
+    ],
+    "new_training_runs": 40,
+    "official_test_cells": 160,
+    "reused_runs": 0,
+    "validation_cells": 160,
+    "validation_only_runs": 0
+  },
+  "protocol_valid": true,
+  "seed": 2021,
+  "test_access": {
+    "authorization": {
+      "authorization_date": "2026-07-20",
+      "checkpoint_mutation_during_test_allowed": false,
+      "checkpoint_retraining_allowed": true,
+      "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+      "confirmation_seeds_authorized": false,
+      "formal_test_access_authorized": true,
+      "formal_test_access_count_for_version": 1,
+      "paper_method": false,
+      "per_dataset_horizon_or_cell_tuning_allowed": false,
+      "remote_training_authorized": true,
+      "test_role": "primary-mechanism-effectiveness-and-paper-benchmark",
+      "user_authorization_basis": "2026-07-20 user instruction: \u6309\u8ba1\u5212\u7ee7\u7eed\u63a8\u8fdb\u5de5\u4f5c",
+      "user_authorized": true
+    },
+    "test_informed": true
+  }
+}
