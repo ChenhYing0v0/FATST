@@ -6,41 +6,41 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | strong fixed trajectory synthesis是否留下raw-history可识别的coarse future deformation？ |
+| `active_question` | Bayes boundary、capacity controls与target-access evidence能否形成完整paper problem chain？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | none；SC-D24-CTB diagnostic_only；A6/dense controls；FCMI-v1 closed |
+| `active_candidates` | none；A6/dense controls；D24/FCMI closed；SIFF-v2 frozen |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
 | `stage_exit` | 新problem先通过existence/narrative gate，再决定一项或两项可归因contributions |
-| `stage_rollback` | D24 negative回Step2/3；direct dense+FCMI blocked；CTD paused |
+| `stage_rollback` | Post-D24 Step2/4 consolidation；D25 architecture blocked；CTD paused |
 
 ## Decision Cursor
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SC-D24-CTB Step2/3 validation diagnostic prelaunch |
+| `current_11_step` | Post-D24 Step2/4 paper-story and evidence consolidation |
 | `current_candidate` | none |
-| `latest_decision` | `d24_v1_design_fault_v1_1_regularized_retry_next` |
-| `next_required_action` | commit/push；remote pull；v1.1 frozen validation retry |
-| `method_training_authorized` | false；D24 frozen-checkpoint validation inference only |
-| `rollback_point` | Step2/3 |
+| `latest_decision` | `close_exact_coarse_deformation_probe_return_step2_4_consolidation` |
+| `next_required_action` | audit complete paper chain and minimal modern-baseline gap；no D25 |
+| `method_training_authorized` | false；new diagnostic/training/test all false |
+| `rollback_point` | Step2/4 |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | SC-D24-CTB Step2/3 validation diagnostic prelaunch |
-| `problem` | dataset-global fixed trajectory synthesis是否遗漏past-identifiable coarse output freedom？ |
-| `existence_evidence` | A6/DENSE strong；allocation split-unstable；phase specificity约+0.03%并关闭 |
-| `idea` | ordered raw-history summaries预测48-step future block deformation，只作diagnostic |
-| `theory_check` | fixed past、无H；finite-function-class freedom；不改变Bayes target |
-| `design` | A6/DENSE frozen checkpoints；chronological thirds；marginal/sorted/shuffled controls |
-| `narrative_gate` | not applicable；problem diagnostic only |
-| `effectiveness_gate` | not applicable；validation only；official test false |
-| `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d24_ctb_step23_design_audit.md` |
-| `decision` | `d24_ctb_protocol_frozen_validation_inference_next` |
+| `current_step` | SC-D24 complete；Post-D24 Step2/4 consolidation |
+| `problem` | fixed-past unified forecasting的可发表主问题是否应定位为task boundary与capacity attribution？ |
+| `existence_evidence` | D18 frontier negative；D22 target access positive；D23 capacity explains；D24 coarse deformation negative |
+| `idea` | 先审计完整paper chain与baseline gap，不预设新module |
+| `theory_check` | pure-request Bayes invariance；finite-model evidence必须由matched controls解释 |
+| `design` | paper-story/narrative/source audit only |
+| `narrative_gate` | pending consolidation |
+| `effectiveness_gate` | not applicable；no active method |
+| `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d24_ctb_result_and_rollback.md` |
+| `decision` | `return_step2_4_consolidation_no_d25` |
 
 ## Frozen Carrier Contract
 
@@ -67,7 +67,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `A6-LBF-natural-baseline` | `control_only` | validation-frozen natural profiles可作为稳定共同起点 | not required | 72/72 test；3 seeds；dense horizons | `frozen_test_reference_ready`；只作固定reference |
 | `SC-D22-HFA` | `completed_target_access_supported` | target-coordinate-specific access是否超越matched generic与shuffles | problem evidence pass；not method effectiveness | ordered vs generic +2.5228%；15/20；4/5；all five controls pass | handoff D23 Step4 |
 | `SC-D23-FCMI` | `closed_capacity_control_explains` | generic main与coordinate interaction能否可识别分解并原生fallback | conditional pass | FCMI vs A6 -21.7343%；capacity/order fail；internal pass | no seeds/rescue；return Step2/3 |
-| `SC-D24-CTB` | `diagnostic_only_v1_1_prelaunch` | strong fixed trajectory synthesis是否留下ordered-history可识别coarse deformation | not method gate | v1 design fault；v1.1 validation-only pending；test=false | normalized-ridge frozen retry |
+| `SC-D24-CTB` | `diagnostic_only_closed_exact_negative` | strong fixed trajectory synthesis是否留下ordered-history可识别coarse deformation | not method gate | v1.1 ordered loses all primary controls；test=0 | no rescue；return Step2/4 consolidation |
 | `SC1-PMFO-RCT-v1` | `failed_as_core_candidate` | fixed mixed-radix conservative future tree | narrative/local pass | Step7B三dataset均不优于A6；no numeric pathology | archived as evidence；rollback Step 4 |
 | `SC1-FPMO-M0` | `control_only` | shared-latent exact A6 morph验证function preservation/restriction | not required | exact equality required | mandatory Step6 morphism control |
 | `SC1-FPMO-DA` | `control_only` | direct atom full-affine head隔离capacity/orthogonal coordinate effect | not required | matched function-class control | mandatory Step6 dense-equivalence control |
@@ -234,6 +234,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | D23-FCMI Step8 launch | commit-pinned pull + 3-GPU preflight + dual resource smoke + background driver | commit `4ff439c`；smokes finite；first Weather jobs active | running；40/40后four-layer analyzer；confirmation false | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step8_remote/remote_launch_record.md` |
 | D23-FCMI Step9/10 | 40 runs + 160 val/test cells + matched controls + internal health + conditional complementarity | FCMI vs A6 -21.7343%；DENSE vs STD +15.4825%；internal 5/5；FCMI/A6-DENSE allocation split-unstable | FCMI-v1 closed；capacity explains；direct successor blocked；return Step2/3 | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step8_remote/d23_step9_10_result_and_rollback.md` |
 | D24-CTB Step2/3 prelaunch | A6/DENSE frozen validation inference + chronological transfer + ordered/marginal/sorted/shuffled controls | v1 10/10但ridge unnormalized design fault；v1.1 normalized grid frozen | diagnostic only；remote training/test false | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d24_ctb_step23_design_audit.md` |
+| D24-CTB v1.1 result | 10 frozen runs + 840 metrics + 720 comparisons + zero test access | ordered vs marginal -8.60%；vs sorted about -9%；vs shuffled about -14%；0/4 horizons | exact probe closed；broader direction unsupported/unresolved；Step2/4 consolidation | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d24_ctb_result_and_rollback.md` |
 
 ## Pending Tasks
 
@@ -302,7 +303,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC-D22-HFA D22-A/B | `completed_frontier_not_supported` | pure-request Bayes boundary冻结；D22-C conditional design only |
 | SC-D22-HFA D22-C | `completed_problem_supported` | full artifacts；ordered > all controls；Weather generic negative retained |
 | SC-D23-FCMI | `completed_fail_return_step2_3` | 40/40；FCMI vs A6 -21.7343%；capacity/order fail；no rescue |
-| SC-D24-CTB | `v1_1_validation_retry_prelaunch` | v1 artifacts保留；commit/push后重跑10 frozen inferences |
+| SC-D24-CTB | `completed_exact_negative` | v1/v1.1 artifacts保留；no feature/bin/lambda/nonlinear rescue |
 
 ## Paper Mainline Sync Log
 
@@ -417,6 +418,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-20 | D23-FCMI Step8 launch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | commit/resource/smoke/process provenance | `4ff439c`；3×3090；40-run matrix running；confirmation false |
 | 2026-07-20 | D23-FCMI Step9/10 | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | full effectiveness + capacity/order attribution + Step4 source rollback | exact v1 closed；dense/function class explains；direct successor blocked；return Step2/3 |
 | 2026-07-20 | D24-CTB Step2/3 prelaunch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | phase closure + raw-history conditional coarse-deformation protocol | local synthetic pass；frozen validation inference only；training/test false |
+| 2026-07-20 | D24-CTB v1/v1.1 result | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | v1 design fault correction + v1.1 full validation attribution | exact negative；test=0；no rescue；return Step2/4 consolidation |
 
 ## Continuation Rules
 
@@ -656,3 +658,9 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 92. D24-v1 10/10虽protocol/finite/checkpoint pass，但ridge使用$X^\top X+\lambda I$且未按数万fit rows归一化，
     severe extrapolation属于`design_fault_suspected`，不得作problem rejection。v1.1只改为
     $X^\top X+n\lambda I$与normalized grid；data/features/splits/controls/gates不变。
+93. D24-v1.1 10/10、840 metrics、720 comparisons完整且test access为0。ordered history相对marginal、
+    sorted与target-shuffled在A6/DENSE上全部macro negative，所有primary horizons均0/4；exact coarse
+    deformation hypothesis关闭。
+94. D24 negative不得方向级拒绝所有nonlinear native synthesis，但也不授权feature/bin/lambda/nonlinear/seed
+    rescue。当前没有active method，回Step2/4审计`Bayes boundary -> frontier -> target access -> capacity
+    attribution`完整paper chain与modern baseline gap；narrative gate前不得启动D25。

@@ -5,14 +5,14 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC-D24-CTB Step2/3 validation diagnostic prelaunch |
-| `active_question` | strong fixed trajectory synthesis是否留下ordered raw-history可识别的coarse future deformation？ |
-| `active_candidates` | none；D24 diagnostic_only；A6/dense controls；FCMI-v1 closed |
+| `current_step` | Post-D24 Step2/4 paper-story and evidence consolidation |
+| `active_question` | Bayes boundary、capacity controls与target-access evidence能否形成完整可发表问题链？ |
+| `active_candidates` | none；A6/dense controls；D24/FCMI closed；SIFF-v2 frozen history |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d24_ctb_step23_design_audit.md` |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d24_ctb_result_and_rollback.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
 | `method_implementation` | FCMI-v1 closed；new implementation/remote/test false |
-| `rollback_point` | Step2/3；D24 negative只关闭exact coarse linear diagnostic |
+| `rollback_point` | Step2/4 consolidation；no D25 architecture before narrative gate |
 
 ## Post-D21 Unconstrained Reset
 
@@ -101,6 +101,12 @@ sorted-history和target-shuffled排除marginal/capacity解释。即使通过也�
 D24-v1 10/10返回后发现regularization semantics错误：$X^\top X+\lambda I$没有按数万fit rows归一化，导致
 conditional maps severe extrapolation。该结果按`design_fault_suspected`处理，不能拒绝problem。v1.1仅修正为
 $X^\top X+n\lambda I$，冻结normalized $\lambda=\{0.01,0.1,1\}$，其余matrix与gates不变。
+
+D24-v1.1 10/10 protocol valid且official test access为0。ordered vs marginal为
+`-8.5950%/-8.6168%`（A6/DENSE），vs sorted为`-9.4741%/-8.8197%`，vs target-shuffled为
+`-14.1002%/-13.4974%`；所有primary horizons均0/4正向。strong shrinkage也未恢复absolute transfer。
+Decision=`close_exact_coarse_deformation_probe_return_step2_4_consolidation`。不做D24 feature/bin/lambda/
+nonlinear/seed rescue；broader nonlinear direction不被方向拒绝，但没有candidate authorization。
 
 用户2026-07-20决定暂不承担task pivot成本。该scope决定把上一版“D22-C有效失败即停止整个
 deterministic-MSE search”改为：关闭exact D22-C v1并回joint Step2/3，在同一task边界寻找不同的falsifiable

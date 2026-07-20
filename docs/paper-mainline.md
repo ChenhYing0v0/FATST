@@ -7,14 +7,14 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD — Unified Multi-Horizon Forecasting（projectivity不再是强制主线） |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC-D24-CTB Step2/3 validation diagnostic prelaunch |
+| `current_11_step` | Post-D24 Step2/4 paper-story and evidence consolidation |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | no active method；D24 diagnostic_only；FCMI-v1 closed |
+| `paper_core_status` | no active method；D24/FCMI closed；A6/dense controls |
 
 [Constraint Reset, 2026-07-20] 后续不再把exact projectivity、requested horizon禁用、A6 interface compatibility或
 full-$T$ prefix crop当作新方法的先验硬约束。它们可以成为合理设计或matched controls，但必须由problem、理论与
@@ -113,6 +113,14 @@ D24-v1的10/10 inference与checkpoint invariants通过，但发现ridge penalty�
 使$\lambda$在数万rows下近似无效并造成severe chronological extrapolation。v1标记
 `design_fault_suspected`，不得用于problem rejection。v1.1只改为$X^\top X+n\lambda I$并冻结normalized
 $\lambda=\{0.01,0.1,1\}$；其余validation-only contract不变。
+
+[SC-D24-CTB Result] v1.1 normalized-ridge 10/10、840 metric rows、720 comparison cells完整，official test
+access为0。ordered history相对marginal在A6/DENSE上为`-8.5950%/-8.6168%`，相对sorted为
+`-9.4741%/-8.8197%`，相对target-shuffled为`-14.1002%/-13.4974%`；所有primary horizon aggregates
+均0/4正向。即使$\lambda=1$，ordered correction相对原forecast仍约`-15%`。exact coarse deformation
+hypothesis关闭，不做feature/bin/lambda/nonlinear rescue；broader direction只记为
+`unresolved_but_unsupported`。当前回Step2/4 consolidation，不启动D25。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/d24_ctb_result_and_rollback.md`。
 
 [Scope Decision, 2026-07-20] 用户明确要求当前项目暂不转出`deterministic-MSE fixed-past architecture search`。
 因此D22-C有效失败只关闭exact v1并回joint Step2/3，不再自动停止整个search；但不得用seed、width、readout或

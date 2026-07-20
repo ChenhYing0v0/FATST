@@ -1,0 +1,15 @@
+{
+  "all_finite": true,
+  "arm": "DENSE_DUAL_MATCHED",
+  "candidate_version": "SC-D24-CTB-v1.1",
+  "checkpoint_mutated": false,
+  "checkpoint_sha256": "4a7c5ff7edbae81ac8cf7ada1b3ea09cbbf27049a87bb54a19bdf91c82ca76e9",
+  "config_sha256": "603c26666929fb8d593456ebe8bed7bdcf5eaf63ce150c333bbc96c264703d1d",
+  "dataset": "Weather",
+  "evaluation_origin_count": 1517,
+  "evaluation_split": "val",
+  "fit_origin_count": 1517,
+  "origin_count": 4551,
+  "purge_origin_count": 1517,
+  "row_count": 95571
+}
