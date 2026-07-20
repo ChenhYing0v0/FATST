@@ -7,14 +7,14 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD — Unified Multi-Horizon Forecasting（projectivity不再是强制主线） |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC-D22-HFA Step2/3；D22-A/B complete，D22-C design-only |
+| `current_11_step` | SC-D22-HFA D22-C Step3/7A；static/prelaunch pass，problem gate pending |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | no active method；finite-capacity frontier not supported；D22-C target-access diagnostic尚未授权实现 |
+| `paper_core_status` | no active method；D22-C neutral/raw target-access diagnostic已授权remote/test，method仍未授权 |
 
 [Constraint Reset, 2026-07-20] 后续不再把exact projectivity、requested horizon禁用、A6 interface compatibility或
 full-$T$ prefix crop当作新方法的先验硬约束。它们可以成为合理设计或matched controls，但必须由problem、理论与
@@ -38,10 +38,16 @@ Pareto-dominate A6_MEASURE。A6_MEASURE相对A6_FULL在五个lead-time bins全�
 
 H96只保留为局部optimization clue，不授权soft projectivity、H embedding、router或seeds。D22-A/B不能直接回答
 target coordinate是否需要对raw history作specific evidence access；D14 dual-carrier three-seed headroom使一次
-D22-C小诊断具有条件合理性。当前只冻结neutral/raw-history primary、global/pooled/order-shuffled/
-target-shuffled/matched-generic controls与A6 symmetric sensitivity的design；ordered patch memory不是论文主语，
-implementation、remote training、official test与paper method均false。详见
-`analysis/stage_c_post_d21_unconstrained_reset_20260720/d22_ab_bayes_frontier_audit.md`。
+D22-C小诊断具有条件合理性。D22-C现已完成static/prelaunch：neutral/raw-history六臂共用完全相同module、
+trainable parameters、seed initialization与selector，只改变global/pooled/ordered/order-shuffled/
+target-shuffled/generic retrieval contract；local synthetic smoke与aggregator均通过。ordered patch memory仍不是
+论文主语，A6 sensitivity、paper method和Contribution 2均未授权。用户已授权冻结seed2021 five-dataset完整
+problem gate；remote/test只在commit/push与GPU preflight后启动。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/d22c_prelaunch_design_audit.md`。
+
+[Scope Decision, 2026-07-20] 用户明确要求当前项目暂不转出`deterministic-MSE fixed-past architecture search`。
+因此D22-C有效失败只关闭exact v1并回joint Step2/3，不再自动停止整个search；但不得用seed、width、readout或
+representation rescue重开D22-C，也不得恢复D17-D21或预设第二loss/router。
 
 [Supersession Notice] 本文件后续D17-D21、projectivity与旧Contribution slots段落属于历史证据，不得覆盖顶部
 `Constraint Reset`与restart handoff。旧文中“requested-H关闭”“full-T必须保留”等决定只关闭当时exact candidate，

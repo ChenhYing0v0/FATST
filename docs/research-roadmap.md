@@ -5,14 +5,14 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC-D22-HFA Step2/3；D22-A/B complete，D22-C design-only |
+| `current_step` | SC-D22-HFA D22-C Step3/7A；static/prelaunch pass |
 | `active_question` | finite-capacity frontier不支持后，target-coordinate raw-history access是否具有split-stable必要性？ |
 | `active_candidates` | no active method；A6 strong carrier/control；SIFF-v2 frozen historical parent |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d22_ab_bayes_frontier_audit.md` |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d22c_prelaunch_design_audit.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | false；D22-C implementation/remote/test均未授权 |
-| `rollback_point` | joint Step2/3；D22-C有效失败则停止当前deterministic-MSE architecture search |
+| `method_implementation` | false；仅D22-C diagnostic remote/test在commit/push与GPU preflight后授权 |
+| `rollback_point` | joint Step2/3；有效失败关闭D22-C exact v1，但按用户决定不自动pivot task |
 
 ## Post-D21 Unconstrained Reset
 
@@ -33,11 +33,16 @@ datasets正向，但SPEC192/SPEC336分别为`-0.1386%/-0.6385%`；三个speciali
 因此decision=`finite_capacity_frontier_not_supported`，H96只保留为局部optimization clue。
 
 D22-A/B不能直接回答target-coordinate raw-history information access。D14 dual-carrier three-seed headroom使
-D22-C具有条件合理性，但当前只冻结design：neutral/raw-history为primary，global/pooled/order-shuffled/
-target-shuffled/matched-generic为controls，A6只作symmetric frozen sensitivity。ordered patch memory不是论文
-主线；完成独立static/prelaunch gate前不实现、不训练、不访问新test。只有D22-C通过，才允许source-informed设计
+D22-C具有条件合理性。D22-C static/prelaunch现已通过：neutral/raw-history为primary，六臂复用完全相同参数集与
+初始化；global/pooled/order-shuffled/target-shuffled/generic为controls，A6 sensitivity尚未授权。local synthetic
+execution与machine decision pipeline通过，seed2021 five-dataset完整validation/test problem gate已获授权，等待
+commit/push和3090 GPU preflight。只有D22-C通过，才允许source-informed设计
 `lead-time-conditioned evidence operator`；第二contribution只能来自首个E2E operator暴露的真实训练瓶颈，
-不得预先指定loss/router。详见active protocol。
+不得预先指定loss/router。
+
+用户2026-07-20决定暂不承担task pivot成本。该scope决定把上一版“D22-C有效失败即停止整个
+deterministic-MSE search”改为：关闭exact D22-C v1并回joint Step2/3，在同一task边界寻找不同的falsifiable
+problem；不允许D22-C seed/width/readout/representation rescue，也不恢复D17-D21。
 
 本节以下的post-CCSF、D17-D21与SIFF记录均为chronological history；新会话不得从其中恢复已关闭候选或重新施加
 已被顶部unconstrained reset撤销的hard constraints。

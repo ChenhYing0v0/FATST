@@ -9,38 +9,38 @@
 | `active_question` | finite-capacity frontier已不支持；target-coordinate raw-history information access是否具有split-stable必要性？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | no active method；A6 strong carrier/control；D22-A/B complete；D22-C design-only；SIFF-v2 frozen history |
+| `active_candidates` | no active method；A6 control；D22-C diagnostic prelaunch passed；SIFF-v2 frozen history |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
 | `stage_exit` | 新problem先通过existence/narrative gate，再决定一项或两项可归因contributions |
-| `stage_rollback` | joint Step2/3；D22-C有效失败则停止当前deterministic-MSE architecture search；CTD paused |
+| `stage_rollback` | joint Step2/3；D22-C fail关闭exact v1但不自动pivot task；CTD paused |
 
 ## Decision Cursor
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SC-D22-HFA Step2/3；D22-A/B complete，D22-C design-only |
-| `current_candidate` | no active method；D22-C proposed diagnostic only |
-| `latest_decision` | `finite_capacity_frontier_not_supported`；H96局部线索不足以授权H-conditioned method |
-| `next_required_action` | 独立完成D22-C static/prelaunch authorization gate；当前不实现、不训练、不访问新test |
-| `method_training_authorized` | false；D22-C implementation/remote/test均false；不得实现H embedding、router或第二loss |
-| `rollback_point` | joint Step2/3；D22-C valid fail -> deterministic-MSE architecture search stop |
+| `current_11_step` | SC-D22-HFA D22-C Step3/7A；static/prelaunch pass |
+| `current_candidate` | no active method；D22-C diagnostic only |
+| `latest_decision` | `d22c_prelaunch_pass_remote_test_problem_gate_authorized` |
+| `next_required_action` | commit/push；3090 GPU preflight；seed2021 five-dataset complete gate |
+| `method_training_authorized` | false；仅D22-C diagnostic remote/test=true；H embedding/router/第二loss=false |
+| `rollback_point` | joint Step2/3；valid fail closes exact D22-C v1 without automatic task pivot |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | SC-D22-HFA Step2/3；D22-A/B complete，D22-C design frozen |
+| `current_step` | SC-D22-HFA D22-C Step3/7A；static/prelaunch complete |
 | `problem` | finite-capacity specialization不成立后，target coordinate是否需要对raw history作specific evidence access？ |
 | `existence_evidence` | D18 frontier不支持；H96 5/5局部正；D14 dual-carrier three-seed headroom；D21 interaction split-unstable |
 | `idea` | neutral/raw-history ordered target access对比global/pooled/order-shuffled/query-shuffled/generic controls |
 | `theory_check` | pure request H不改变Bayes mean；coordinate query只可组织同一information set的finite computation |
-| `design` | D22-C六臂neutral primary + A6 symmetric sensitivity；当前只冻结design，不实现 |
-| `narrative_gate` | diagnostic necessity conditional；generic query/memory prior-covered；paper method未授权 |
+| `design` | 完全同参数六臂neutral primary；A6 sensitivity held；seed2021 five-dataset frozen |
+| `narrative_gate` | diagnostic pass；query/memory primitive prior-covered；paper method未授权 |
 | `effectiveness_gate` | not applicable before problem gate |
-| `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d22_ab_bayes_frontier_audit.md` |
-| `decision` | `finite_capacity_frontier_not_supported_d22_c_design_only` |
+| `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d22c_prelaunch_design_audit.md` |
+| `decision` | `d22c_prelaunch_pass_remote_test_problem_gate_authorized` |
 
 ## Frozen Carrier Contract
 
@@ -65,7 +65,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
 | `A6-LBF-natural-baseline` | `control_only` | validation-frozen natural profiles可作为稳定共同起点 | not required | 72/72 test；3 seeds；dense horizons | `frozen_test_reference_ready`；只作固定reference |
-| `SC-D22-HFA` | `d22_ab_complete_d22_c_design_only` | relaxed constraints后是否存在finite-capacity horizon frontier或target-coordinate-specific information access | finite-capacity fail；target-access conditional diagnostic only | A/B complete；C not started | D22-C需独立static/prelaunch授权；implementation/remote/test false |
+| `SC-D22-HFA` | `d22c_prelaunch_pass_diagnostic_pending` | relaxed constraints后是否存在finite-capacity frontier或target-coordinate-specific access | finite-capacity fail；target-access diagnostic gate pending | A/B complete；C local/prelaunch pass | commit/push后3090完整problem gate |
 | `SC1-PMFO-RCT-v1` | `failed_as_core_candidate` | fixed mixed-radix conservative future tree | narrative/local pass | Step7B三dataset均不优于A6；no numeric pathology | archived as evidence；rollback Step 4 |
 | `SC1-FPMO-M0` | `control_only` | shared-latent exact A6 morph验证function preservation/restriction | not required | exact equality required | mandatory Step6 morphism control |
 | `SC1-FPMO-DA` | `control_only` | direct atom full-affine head隔离capacity/orthogonal coordinate effect | not required | matched function-class control | mandatory Step6 dense-equivalence control |
@@ -291,7 +291,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC-D20-D1 contribution direction/scale | `completed_coadaptation_explains` | no D20-v2；evidence feeds Step2/3 only |
 | SC-D21-EVS problem audit | `completed_closed_split_unstable` | no seeds/representation rescue；evidence retained；joint Step2 |
 | SC-D22-HFA D22-A/B | `completed_frontier_not_supported` | pure-request Bayes boundary冻结；D22-C conditional design only |
-| SC-D22-HFA D22-C | `design_only_not_authorized` | 先完成neutral/raw-history static/prelaunch gate；不实现、不训练、不访问新test |
+| SC-D22-HFA D22-C | `prelaunch_pass_remote_test_authorized` | seed2021 five-dataset × six-arm complete problem gate next |
 
 ## Paper Mainline Sync Log
 
@@ -396,6 +396,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-20 | D21-EVS problem/narrative gate + Step7A | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | replace vague support with past × future-region interaction | external boundaries frozen；192-feature/synthetic checks pass；Step7B next |
 | 2026-07-20 | D21-EVS Step8/9/10 | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | full test gate + oracle accounting + split-stability failure attribution | 100/100；0/2 readouts pass；additive explains；exact EVS closed；joint Step2 |
 | 2026-07-20 | D22-A/B Bayes + frontier audit | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | theorem/source refresh + existing-artifact dense frontier decision | frontier not supported；H96 local clue retained；D22-C design-only，implementation/remote/test false |
+| 2026-07-20 | D22-C static/prelaunch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | source/code/theory + identical-parameter six-arm contract + synthetic execution | prelaunch pass；seed2021 remote/test true after commit/push and GPU preflight；paper method false |
 
 ## Continuation Rules
 
@@ -585,3 +586,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 75. D22-C当前只冻结neutral/raw-history diagnostic design。ordered patch memory不是paper mainline；A6 sensitivity
     必须是symmetric frozen conditional evidence。完成独立static/prelaunch gate前，implementation、remote training、
     official test与paper method均false；Contribution 2继续open。
+76. D22-C static/prelaunch已完成：六臂共享完全相同module、parameters、seed initialization、optimizer与selector；
+    local synthetic execution和machine aggregator通过。仅冻结diagnostic的remote/test获授权，paper method、A6
+    sensitivity与Contribution 2仍false。
+77. 用户2026-07-20决定暂不pivot出deterministic-MSE fixed-past task。D22-C有效失败只关闭exact v1并回joint
+    Step2/3；不得做seed/width/readout/representation rescue，也不得恢复D17-D21。

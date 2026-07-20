@@ -1,0 +1,78 @@
+{
+  "stage": "StageC-UVHF",
+  "diagnostic_id": "SC-D22-HFA-D22-C",
+  "candidate_version": "d22c-neutral-target-access-v1",
+  "role": "diagnostic_only_raw_history_primary",
+  "series_length": 720,
+  "prediction_length": 720,
+  "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"],
+  "arms": [
+    "GLOBAL_COMPRESSED",
+    "POOLED_MEMORY",
+    "ORDERED_TARGET_ACCESS",
+    "ORDER_SHUFFLED",
+    "TARGET_SHUFFLED_QUERY",
+    "GENERIC_MATCHED"
+  ],
+  "primary_arm": "ORDERED_TARGET_ACCESS",
+  "seed": 2021,
+  "model": {
+    "patch_count": 24,
+    "d_model": 32,
+    "n_heads": 4,
+    "dropout": 0.1,
+    "permutation_bank_size": 127
+  },
+  "optimization": {
+    "epochs": 12,
+    "patience": 4,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "batch_size": 16,
+    "train_windows": 4096,
+    "validation_windows": 1024,
+    "num_workers": 0,
+    "gradient_clip_norm": 1.0
+  },
+  "checkpoint_selector": {
+    "split": "validation",
+    "metric": "mean_mse",
+    "horizons": [96, 192, 336, 720],
+    "shared_across_arms": true
+  },
+  "paper_facing_horizons": [96, 192, 336, 720],
+  "coordinate_bins": [
+    {"name": "h1_48", "start": 0, "end": 48},
+    {"name": "h49_96", "start": 48, "end": 96},
+    {"name": "h97_192", "start": 96, "end": 192},
+    {"name": "h193_336", "start": 192, "end": 336},
+    {"name": "h337_720", "start": 336, "end": 720}
+  ],
+  "gates": {
+    "ordered_over_each_control_macro_mse_min": 0.003,
+    "ordered_over_global_macro_mse_min": 0.005,
+    "ordered_over_generic_macro_mse_min": 0.005,
+    "key_control_positive_cells_min": 11,
+    "key_control_positive_datasets_min": 3,
+    "key_control_positive_horizons_min": 3,
+    "ordered_over_each_control_macro_mae_min": 0.0,
+    "max_parameter_relative_gap": 0.01,
+    "severe_cell_degradation_threshold": 1.0,
+    "validation_test_key_comparison_same_sign": true
+  },
+  "roles": {
+    "train": "fit diagnostic arms only",
+    "validation": "checkpoint selection only; no direction decision",
+    "test": "one-shot test-informed problem gate on the complete frozen matrix"
+  },
+  "authorization": {
+    "user_authorization_date": "2026-07-20",
+    "user_authorization_scope": "continue deterministic-MSE fixed-past research until a preliminary satisfactory result",
+    "diagnostic_implementation_authorized": true,
+    "remote_training_authorized_after_static_gate": true,
+    "official_test_access_authorized_after_static_gate": true,
+    "paper_method_implementation_authorized": false,
+    "a6_frozen_sensitivity_authorized": false,
+    "contribution_2_design_authorized": false
+  }
+}

@@ -24,15 +24,15 @@
 | `project` | R_2026_FATST |
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-20 |
-| `source_parent_commit` | `73755fd` |
-| `current_step` | SC-D22-HFA Step 2/3；D22-A/B complete，D22-C design-only |
+| `source_parent_commit` | `1319a4a` |
+| `current_step` | SC-D22-HFA D22-C Step3/7A；static/prelaunch pass |
 | `active_problem` | finite-capacity frontier不支持后，target-coordinate raw-history access是否具有split-stable必要性？ |
 | `active_method` | none |
 | `method_training_authorized` | false |
-| `remote_training_authorized` | false |
-| `next_action` | D22-C需独立完成static/prelaunch authorization gate；当前不实现、不训练、不访问新test |
+| `remote_training_authorized` | true for frozen D22-C diagnostic after commit/push and GPU preflight |
+| `next_action` | commit/push冻结protocol；3090 preflight后启动five-dataset seed2021完整problem gate |
 | `conditional_next` | 只有D22-C problem diagnostic通过，才返回Step4设计lead-time-conditioned evidence operator |
-| `rollback` | D22-C有效失败则停止当前deterministic-MSE fixed-past architecture search |
+| `rollback` | 有效失败关闭D22-C exact v1并回joint Step2/3；按用户决定不自动pivot task |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
 
@@ -92,7 +92,7 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
 7. D22-A/B dense复核后，SPEC96 own-H为`+1.2748%`、5/5 datasets，但SPEC192/SPEC336为负，
    0/15 arm-dataset Pareto dominance；decision=`finite_capacity_frontier_not_supported`；
 8. A6_MEASURE相对A6_FULL在五个lead-time bins全部5/5正向；H96只保留局部optimization clue；
-9. D22-C当前只冻结neutral/raw-history diagnostic design，implementation/remote/test均未授权。
+9. D22-C static/prelaunch已通过；仅冻结的neutral/raw-history diagnostic remote/test获授权，paper method仍未授权。
 
 ## 5. D22-HFA 的执行顺序
 
@@ -113,7 +113,7 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
 本步骤没有训练新模型、没有访问新test选择candidate、没有恢复CTD。完整结果见
 `analysis/stage_c_post_d21_unconstrained_reset_20260720/d22_ab_bayes_frontier_audit.md`。
 
-### D22-C：conditional design frozen；not authorized
+### D22-C：static/prelaunch passed；diagnostic authorized
 
 问题限定为future coordinate与history token/patch的joint access是否稳定超越：
 
@@ -126,9 +126,13 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
 ordered patch memory只作诊断载体，不作论文主语。neutral/raw-history为primary，A6为sensitivity。frozen
 component replacement只能形成conditional evidence，不能方向级拒绝E2E method。
 
-当前只完成controls、split、statistics、gate与rollback设计；implementation、remote training与official test access
-均为false。只有D22 problem gate通过，Contribution 1才允许回Step4 source-informed design，暂定问题族为
-`lead-time-conditioned evidence operator`。Contribution 2必须来自首个E2E operator暴露的真实训练瓶颈，不得预设。
+六臂neutral/raw-history runner与machine aggregator已实现；所有arms共享完全相同trainable parameter set、
+seed2021 initialization、optimizer、window selection与validation selector。local synthetic smoke已完成六臂
+forward/backward、checkpoint、validation/test和decision artifacts；parameter gap为0。
+
+用户已授权继续该task边界下研究，因此冻结的five-dataset diagnostic remote/test在commit/push与GPU preflight后
+可执行。只有D22 problem gate通过，Contribution 1才允许回Step4 source-informed design，暂定问题族为
+`lead-time-conditioned evidence operator`。A6 sensitivity、paper method与Contribution 2仍未授权。
 
 ## 6. 研究与实验治理
 
@@ -145,14 +149,13 @@ component replacement只能形成conditional evidence，不能方向级拒绝E2E
 当前five-dataset profiles保持：ETTh1、ETTh2、ETTm1、ETTm2、Weather。dataset之间允许不同自然profile；
 同一dataset的机制比较必须共享profile，params差异不参与profile选择。
 
-## 7. 新会话第一轮的完成定义
+## 7. 当前执行定义
 
-新会话第一轮只完成以下结果，不应直接进入model implementation：
-
-1. 读取D22-A/B completed report与`finite_capacity_frontier_not_supported`决定；
-2. 审计D22-C neutral/raw-history six-arm design是否满足static/data-leakage/matched-capacity要求；
-3. 只有完整prelaunch gate通过后，才能另行请求implementation/remote/test授权；
-4. 不恢复H embedding/router、D17-D21 rescue、CTD或Contribution 2预设。
+1. commit/push D22-C frozen diagnostic protocol；
+2. 按AGENTS.md检查3090 GPU memory/process；
+3. 运行seed2021 five datasets × six arms，validation只选择checkpoint，official test一次性完整审计；
+4. 同步artifacts、执行machine gate与failure attribution；
+5. 不恢复H embedding/router、D17-D21 rescue、CTD或Contribution 2预设。
 
 ## 8. 禁止无损重启时发生的漂移
 
@@ -179,13 +182,13 @@ component replacement只能形成conditional evidence，不能方向级拒绝E2E
 5. docs/paper-mainline.md
 6. docs/research-roadmap.md
 
-当前权威状态是：SC-D22-HFA Step 2/3，D22-A/B已完成，decision=`finite_capacity_frontier_not_supported`。exact projectivity、requested-H禁用、full-T prefix crop、A6 interface compatibility以及预设decoder+loss双贡献均不再是硬约束；但在fixed past、pointwise MSE且H不携带额外信息时，同一future coordinate的Bayes conditional mean不依赖requested horizon，因此不得直接实现H embedding/router。
+当前权威状态是：SC-D22-HFA D22-C Step3/7A，D22-A/B已完成且D22-C static/prelaunch通过。exact projectivity、requested-H禁用、full-T prefix crop、A6 interface compatibility以及预设decoder+loss双贡献均不再是硬约束；但在fixed past、pointwise MSE且H不携带额外信息时，同一future coordinate的Bayes conditional mean不依赖requested horizon，因此不得直接实现H embedding/router。
 
-A6-LBF仅是strong carrier/control/possible component，不足以standalone承载论文；SIFF-v2是冻结历史候选；D17-D21均已关闭，不做seed、readout、representation或参数rescue；CTD保持paused；当前没有active method，model/remote training均未授权。
+A6-LBF仅是strong carrier/control/possible component，不足以standalone承载论文；SIFF-v2是冻结历史候选；D17-D21均已关闭，不做seed、readout、representation或参数rescue；CTD保持paused；当前没有active method。仅冻结的D22-C diagnostic remote/test获授权，paper method未授权。
 
 已确认D18中SPEC96 own-H为`+1.2748%`、5/5 datasets，但SPEC192/SPEC336为负，三个specialists均没有standard-horizon Pareto dominance；A6_MEASURE相对A6_FULL在五个lead-time bins全部5/5正向。H96只保留局部optimization clue，不做seed或soft-projectivity rescue。
 
-下一步只允许审计D22-C的小型target-coordinate information-access diagnostic prelaunch条件。ordered patch memory只能作诊断载体，不是论文主线；neutral/raw-history为primary，A6为sensitivity；frozen replacement不得用于方向级拒绝。当前implementation、remote training与official test access均未授权；在static/data leakage/matched-capacity/validation-selector gate完成前不得启动。
+下一步提交并推送D22-C frozen protocol，完成3090 GPU preflight后运行seed2021 five-dataset × six-arm完整problem gate。ordered patch memory只能作诊断载体，不是论文主线；neutral/raw-history为primary，A6 sensitivity未授权；frozen replacement不得用于方向级拒绝。
 
 完成后同步更新analysis report、docs/paper-mainline.md、docs/research-roadmap.md和Stage C ledger，执行最小诚实验证，并按AGENTS.md提交、推送。请从专业时序预测研究员角度进行审计，不要为了凑两个contributions而预先设计第二个loss/router。
 ```
