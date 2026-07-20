@@ -16,9 +16,10 @@
 7. `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_fcmi_step7a_implementation_audit.md`；
 8. `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step7b_prelaunch/prelaunch_report.md`；
 9. `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step8_remote/d23_step9_10_result_and_rollback.md`；
-10. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
-11. `docs/paper-mainline.md`；
-12. `docs/research-roadmap.md`。
+10. `analysis/stage_c_post_d21_unconstrained_reset_20260720/d24_ctb_step23_design_audit.md`；
+11. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
+12. `docs/paper-mainline.md`；
+13. `docs/research-roadmap.md`。
 
 若上述文件与更旧的聊天、archive或历史段落冲突，以本文件和三份主线文档顶部的最新cursor为准。
 
@@ -30,14 +31,14 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-20 |
 | `source_parent_commit` | `a151646` |
-| `current_step` | Post-D23 Step2/3 fixed-past problem reset |
-| `active_problem` | strong trajectory synthesis解释capacity后，何种新fixed-past问题仍有split-stable necessity？ |
+| `current_step` | SC-D24-CTB Step2/3 validation diagnostic prelaunch |
+| `active_problem` | strong fixed trajectory synthesis是否留下raw-history可识别的coarse future deformation？ |
 | `active_method` | none；FCMI-v1 closed；A6/dense controls |
 | `method_training_authorized` | false |
-| `remote_training_authorized` | false；D23 complete；new method/test false |
-| `next_action` | Step2/3 problem audit；禁止FCMI/dense rescue |
-| `conditional_next` | 新problem existence与narrative gate通过后才可Step4-6 |
-| `rollback` | deterministic-MSE fixed-past Step2/3；不自动pivot task |
+| `remote_training_authorized` | false；仅D24 frozen-checkpoint validation inference authorized |
+| `next_action` | commit/push、remote pull、GPU preflight与single-run validation smoke |
+| `conditional_next` | D24 gate通过也只返回Step4 source/narrative audit |
+| `rollback` | D24 negative关闭exact diagnostic并留在Step2/3 |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
 
@@ -105,6 +106,8 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
 13. commit `4ff439c`已通过三卡preflight与两项resource smoke；40-run matrix完整结束；
 14. FCMI vs A6为`-21.7343%`、0/20；DENSE vs STANDARD_DUAL为`+15.4825%`、19/20，
     DENSE vs A6仅`-0.3284%`；FCMI-v1关闭并回Step2/3。
+15. phase/time-warp probe specificity仅约`+0.03%`且direct prior充分；phase router关闭。D24-CTB冻结为
+    validation-only raw-history conditional coarse-deformation diagnostic。
 
 ## 5. D22-HFA 的执行顺序
 
@@ -191,11 +194,11 @@ decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。
 
 ## 7. 当前执行定义
 
-1. 读取D23 Step9/10 result与failure attribution；
-2. 关闭FCMI-v1，不做seed/width/readout/rank/objective rescue；
-3. 不把DENSE control或frozen blend升级method；
-4. 在deterministic-MSE fixed-past task内回Step2/3寻找新problem necessity；
-5. 新problem通过前implementation/remote/test均false；
+1. 读取D23 Step9/10与D24 Step2/3 design audit；
+2. 关闭FCMI与phase/time-warp路线，不做rescue/router；
+3. D24只运行A6/DENSE frozen-checkpoint validation inference；
+4. official test、training与paper method均false；
+5. D24通过后先回Step4 prior/narrative gate，不直接实现；
 6. 不恢复H embedding/router、D17-D21 rescue、CTD或Contribution 2预设。
 
 ## 8. 禁止无损重启时发生的漂移
@@ -224,13 +227,14 @@ decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。
 6. analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_fcmi_step7a_implementation_audit.md
 7. analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step7b_prelaunch/prelaunch_report.md
 8. analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step8_remote/d23_step9_10_result_and_rollback.md
-9. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
-10. docs/paper-mainline.md
-11. docs/research-roadmap.md
+9. analysis/stage_c_post_d21_unconstrained_reset_20260720/d24_ctb_step23_design_audit.md
+10. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
+11. docs/paper-mainline.md
+12. docs/research-roadmap.md
 
 当前权威状态是：D22-C v1.1 problem gate仍为`target_coordinate_information_access_supported`；SC-D23-FCMI 40-run/160-cell Step9/10已完成，decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。FCMI相对A6 test MSE为`-21.7343%`、0/20；DENSE相对STANDARD_DUAL为`+15.4825%`、19/20且相对A6仅`-0.3284%`。exact projectivity、requested-H禁用、full-T prefix crop、A6 interface compatibility以及预设decoder+loss双贡献均不再是硬约束；但在fixed past、pointwise MSE且H不携带额外信息时，同一future coordinate的Bayes conditional mean不依赖requested horizon，因此不得直接实现H embedding/router。
 
-A6-LBF仅是strong carrier/control/possible component，不足以standalone承载论文；SIFF-v2是冻结历史候选；D17-D21均已关闭，不做seed、readout、representation或参数rescue；CTD保持paused。FCMI-v1已关闭，不补seed/width/readout/rank/objective rescue；当前没有active method，new implementation/remote/test均未授权。
+A6-LBF仅是strong carrier/control/possible component，不足以standalone承载论文；SIFF-v2是冻结历史候选；D17-D21均已关闭，不做seed、readout、representation或参数rescue；CTD保持paused。FCMI-v1已关闭，不补seed/width/readout/rank/objective rescue；当前没有active method。仅D24 diagnostic implementation与frozen-checkpoint validation inference已授权；training、official test与paper method均未授权。
 
 已确认D22-C ordered相对generic为test MSE `+2.5228%`、MAE `+1.6484%`、15/20 cells、4/5 datasets、4/4 horizons；其余四controls均20/20正向。Weather相对generic 4/4负向，必须保留generic fallback并禁止universal claim。
 
@@ -238,7 +242,7 @@ Step7A已验证zero-mean interaction、standard-query exact morph、main/interac
 
 Step9/10中decomposition、generic与target controls通过，但order和capacity失败；internal health 5/5，negative不是numeric pathology。validation-fit dense/FCMI、dense-plus-interaction和A6-plus-interaction diagnostics全部test反转，且只属于frozen cross-model conditional evidence。A6/DENSE allocation同样没有split-stable、validation-identifiable正证据。direct dense+FCMI successor未过Step4 narrative gate。
 
-下一步在同一deterministic-MSE fixed-past task内回Step2/3，审计新的split-stable problem necessity。不得把DENSE control升method，不得重开FCMI rescue，不得设计第二loss/router。新problem gate完成前不得implementation、remote或test。
+下一步执行`SC-D24-CTB` validation-only diagnostic：只读取D23 A6/DENSE冻结checkpoint，使用first-third fit、middle-third purge、last-third evaluate与ordered/marginal/sorted/target-shuffled controls。不得把frozen correction升method，不得访问official test、训练模型或设计第二loss/router。
 
 完成后同步更新analysis report、docs/paper-mainline.md、docs/research-roadmap.md和Stage C ledger，执行最小诚实验证，并按AGENTS.md提交、推送。请从专业时序预测研究员角度进行审计，不要为了凑两个contributions而预先设计第二个loss/router。
 ```

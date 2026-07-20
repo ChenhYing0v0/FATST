@@ -5,14 +5,14 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | Post-D23 Step2/3 fixed-past problem reset |
-| `active_question` | 在强trajectory synthesis已解释capacity gap后，何种新fixed-past problem仍有split-stable necessity？ |
-| `active_candidates` | none；A6/dense controls；SIFF-v2 frozen history；FCMI-v1 closed |
+| `current_step` | SC-D24-CTB Step2/3 validation diagnostic prelaunch |
+| `active_question` | strong fixed trajectory synthesis是否留下ordered raw-history可识别的coarse future deformation？ |
+| `active_candidates` | none；D24 diagnostic_only；A6/dense controls；FCMI-v1 closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step8_remote/d23_step9_10_result_and_rollback.md` |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d24_ctb_step23_design_audit.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
 | `method_implementation` | FCMI-v1 closed；new implementation/remote/test false |
-| `rollback_point` | Step2/3；direct dense+FCMI successor narrative blocked |
+| `rollback_point` | Step2/3；D24 negative只关闭exact coarse linear diagnostic |
 
 ## Post-D21 Unconstrained Reset
 
@@ -91,6 +91,12 @@ capacity/function-class解释主要差距。validation-fit dense/FCMI、dense-pl
 problem evidence保留。Implicit Forecaster、BasisFormer、S2TX与attention attribution prior又阻止把
 “dense trajectory main + coordinate interaction”本身写成新贡献，故direct Step4 successor不通过，
 回同一task的Step2/3。
+
+Step2/3 phase/time-warp probe已关闭：A6/DENSE的一阶derivative相对affine control仅约`+0.03%`，且curvature与
+shifted-derivative controls不弱；PULSE、PhaseFormer与prediction-delay work又构成直接prior。SC-D24-CTB因此不做
+phase router，而审计另一个更基础的问题：frozen strong carrier是否存在raw-history可识别的48-step coarse future
+deformation。协议只访问validation，按forecast origin使用first/middle/last thirds作fit/purge/evaluate，并以
+sorted-history和target-shuffled排除marginal/capacity解释。即使通过也只返回Step4，不授权method、training或test。
 
 用户2026-07-20决定暂不承担task pivot成本。该scope决定把上一版“D22-C有效失败即停止整个
 deterministic-MSE search”改为：关闭exact D22-C v1并回joint Step2/3，在同一task边界寻找不同的falsifiable

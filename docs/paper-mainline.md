@@ -7,14 +7,14 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD — Unified Multi-Horizon Forecasting（projectivity不再是强制主线） |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Post-D23 Step2/3 fixed-past problem reset |
+| `current_11_step` | SC-D24-CTB Step2/3 validation diagnostic prelaunch |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | no active method；FCMI-v1 closed；A6/dense remain controls |
+| `paper_core_status` | no active method；D24 diagnostic_only；FCMI-v1 closed |
 
 [Constraint Reset, 2026-07-20] 后续不再把exact projectivity、requested horizon禁用、A6 interface compatibility或
 full-$T$ prefix crop当作新方法的先验硬约束。它们可以成为合理设计或matched controls，但必须由problem、理论与
@@ -101,6 +101,13 @@ decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`：关闭FCMI-
 也不把dense main直接升级successor；D22-C problem evidence保留，当前回deterministic-MSE fixed-past
 Step2/3。详见
 `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step8_remote/d23_step9_10_result_and_rollback.md`。
+
+[SC-D24-CTB] Step2/3现冻结一个validation-only problem diagnostic：在D23的A6与DENSE冻结checkpoint上，
+检验ordered raw history能否超越global、channel/marginal、recent、order-destroyed sorted-history与
+target-shuffled controls，识别48-step coarse future deformation。first-third fit、middle-third purge、
+last-third evaluate；official test、training、method、router与第二loss均false。256-row phase probe仅给出约
+`+0.03%` derivative-specific gain且被curvature/shift controls解释，故phase router路线关闭。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/d24_ctb_step23_design_audit.md`。
 
 [Scope Decision, 2026-07-20] 用户明确要求当前项目暂不转出`deterministic-MSE fixed-past architecture search`。
 因此D22-C有效失败只关闭exact v1并回joint Step2/3，不再自动停止整个search；但不得用seed、width、readout或
