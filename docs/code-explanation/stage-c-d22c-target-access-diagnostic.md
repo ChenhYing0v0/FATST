@@ -40,8 +40,11 @@ identity；`GENERIC_MATCHED`只让memory retrieval不再受coordinate控制，ca
 
 ## 3. Training、selector与artifacts
 
-每个arm从相同`base_state`开始，重新创建相同AdamW optimizer与相同seed DataLoader order。training loss是720
-coordinates的normalized MSE；validation selector是standardized-scale的H96/H192/H336/H720 prefix MSE平均。
+每个arm从相同`base_state`开始，重新创建相同AdamW optimizer与相同seed DataLoader order。model先输出
+normalized forecast，再用window/channel的history mean/std重建到dataset-standardized scale；training loss与
+validation selector都在该scale计算pointwise MSE。v1曾在normalized scale直接计算loss，Weather/ETTm2被
+near-zero history variance rows放大到$10^3$量级；该run在任何完整dataset/test artifact前终止，由v1.1取代。
+validation selector是H96/H192/H336/H720 prefix MSE平均。
 best checkpoint选定后才评估official test。
 
 每个`dataset/arm`写出：

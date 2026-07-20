@@ -2,7 +2,7 @@
 set -euo pipefail
 
 DATASET_ROOT="${DATASET_ROOT:-/home/yingch/dataset}"
-OUTPUT_ROOT="${OUTPUT_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/stage_c_d22c_target_access_v1}"
+OUTPUT_ROOT="${OUTPUT_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/stage_c_d22c_target_access_v1_1}"
 CONFIG="${CONFIG:-configs/stage_c_d22c_target_access_diagnostic.json}"
 CONDA_BIN="${CONDA_BIN:-/home/anaconda3/bin/conda}"
 CONDA_ENV="${CONDA_ENV:-moe}"

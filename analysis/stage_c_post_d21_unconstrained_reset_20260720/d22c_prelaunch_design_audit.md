@@ -13,7 +13,7 @@
 | `narrative_gate` | diagnostic-only pass；query/cross-attention primitive prior-covered，不能作为novelty |
 | `effectiveness_gate` | not applicable；本轮只做problem gate |
 | `artifacts` | config、runner、analyzer、remote/sync scripts；local synthetic smoke |
-| `decision` | `d22c_prelaunch_pass_remote_test_problem_gate_authorized` |
+| `decision` | `d22c_v1_numeric_invalid_before_test_v1_1_prelaunch_pass` |
 
 ## 2. 为什么该问题仍不同于requested-H adaptation
 
@@ -121,6 +121,27 @@ prediction coordinate dispersion、checkpoint hash与parameter audit。
 - [Pass] model不输入requested H、future labels、time marks或A6 representation；
 - [Pass] A6 sensitivity与paper method implementation仍未授权；
 - [Pass] remote runner先记录commit、GPU、environment、split role与output path。
+
+### 8.1 v1 numeric-path correction
+
+首次remote launch在首个arm的training-only log中暴露：Weather与ETTm2的normalized loss分别约$10^3$与
+$5\times10^3$，而dataset-standardized validation MSE处于正常量级。原因是直接在RevIN-normalized target上计算
+MSE，使near-zero within-window variance rows获得极大隐式权重；这不再是冻结的benchmark pointwise MSE。
+
+该launch在任何dataset完成、official-test artifact或comparison可见前终止。failure attribution为
+`optimization_or_numeric_pathology`，不得解释研究方向。v1.1只修正loss scale：
+
+$$
+\mathcal{L}
+=\operatorname{MSE}\left(
+\hat{y}^{norm}\sigma_x+\mu_x,\;
+y^{norm}\sigma_x+\mu_x
+\right),
+$$
+
+即与paper-facing evaluation相同的dataset-standardized scale。architecture、arms、initialization、data、
+selector、gates与seed不变；candidate identity更新为`d22c-neutral-target-access-v1.1`，remote output使用新目录，
+不复用v1 partial checkpoints。
 
 ## 9. Failure attribution与scope decision
 

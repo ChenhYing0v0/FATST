@@ -507,7 +507,9 @@ def train_arm(
             )
             optimizer.zero_grad(set_to_none=True)
             prediction, _health = model(history, row_ids, arm)
-            loss = (prediction - target).square().mean()
+            prediction_scaled = prediction * _std + _mean
+            target_scaled = target * _std + _mean
+            loss = (prediction_scaled - target_scaled).square().mean()
             if not torch.isfinite(loss):
                 raise RuntimeError(f"non-finite training loss arm={arm} epoch={epoch}")
             loss.backward()
@@ -541,14 +543,15 @@ def train_arm(
             {
                 "arm": arm,
                 "epoch": epoch,
-                "train_normalized_mse": loss_sum / element_count,
+                "train_standardized_mse": loss_sum / element_count,
                 "validation_selector_mse": selector,
                 "best_so_far": int(improved),
                 "epoch_seconds": time.time() - epoch_start,
             }
         )
         print(
-            f"arm={arm} epoch={epoch} train_mse={loss_sum / element_count:.7f} "
+            f"arm={arm} epoch={epoch} "
+            f"train_standardized_mse={loss_sum / element_count:.7f} "
             f"val_selector={selector:.7f} best_epoch={best_epoch}",
             flush=True,
         )

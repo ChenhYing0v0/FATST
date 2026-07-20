@@ -45,6 +45,11 @@ target-shuffled/generic retrieval contract；local synthetic smoke与aggregator�
 problem gate；remote/test只在commit/push与GPU preflight后启动。详见
 `analysis/stage_c_post_d21_unconstrained_reset_20260720/d22c_prelaunch_design_audit.md`。
 
+[D22-C v1 Numeric Correction] 首次remote launch在training-only阶段发现Weather/ETTm2的RevIN-normalized loss被
+near-zero within-window variance放大到$10^3$量级；在任何dataset/test artifact完成前终止。该run只说明
+`optimization_or_numeric_pathology`，不作problem判断。v1.1保持architecture、arms、seed、selector与gates不变，
+只将training loss移到与evaluation一致的dataset-standardized scale，并使用全新output/checkpoints。
+
 [Scope Decision, 2026-07-20] 用户明确要求当前项目暂不转出`deterministic-MSE fixed-past architecture search`。
 因此D22-C有效失败只关闭exact v1并回joint Step2/3，不再自动停止整个search；但不得用seed、width、readout或
 representation rescue重开D22-C，也不得恢复D17-D21或预设第二loss/router。

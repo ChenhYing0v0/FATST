@@ -1,7 +1,7 @@
 {
   "stage": "StageC-UVHF",
   "diagnostic_id": "SC-D22-HFA-D22-C",
-  "candidate_version": "d22c-neutral-target-access-v1",
+  "candidate_version": "d22c-neutral-target-access-v1.1",
   "role": "diagnostic_only_raw_history_primary",
   "series_length": 720,
   "prediction_length": 720,
@@ -24,6 +24,7 @@
     "permutation_bank_size": 127
   },
   "optimization": {
+    "loss_scale": "dataset_standardized_after_revin_reconstruction",
     "epochs": 12,
     "patience": 4,
     "learning_rate": 0.001,

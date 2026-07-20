@@ -22,8 +22,8 @@
 | --- | --- |
 | `current_11_step` | SC-D22-HFA D22-C Step3/7A；static/prelaunch pass |
 | `current_candidate` | no active method；D22-C diagnostic only |
-| `latest_decision` | `d22c_prelaunch_pass_remote_test_problem_gate_authorized` |
-| `next_required_action` | commit/push；3090 GPU preflight；seed2021 five-dataset complete gate |
+| `latest_decision` | `d22c_v1_numeric_invalid_before_test_v1_1_prelaunch_pass` |
+| `next_required_action` | commit/push v1.1；3090 GPU preflight；fresh complete gate |
 | `method_training_authorized` | false；仅D22-C diagnostic remote/test=true；H embedding/router/第二loss=false |
 | `rollback_point` | joint Step2/3；valid fail closes exact D22-C v1 without automatic task pivot |
 
@@ -40,7 +40,7 @@
 | `narrative_gate` | diagnostic pass；query/memory primitive prior-covered；paper method未授权 |
 | `effectiveness_gate` | not applicable before problem gate |
 | `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d22c_prelaunch_design_audit.md` |
-| `decision` | `d22c_prelaunch_pass_remote_test_problem_gate_authorized` |
+| `decision` | `d22c_v1_numeric_invalid_before_test_v1_1_prelaunch_pass` |
 
 ## Frozen Carrier Contract
 
@@ -291,7 +291,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC-D20-D1 contribution direction/scale | `completed_coadaptation_explains` | no D20-v2；evidence feeds Step2/3 only |
 | SC-D21-EVS problem audit | `completed_closed_split_unstable` | no seeds/representation rescue；evidence retained；joint Step2 |
 | SC-D22-HFA D22-A/B | `completed_frontier_not_supported` | pure-request Bayes boundary冻结；D22-C conditional design only |
-| SC-D22-HFA D22-C | `prelaunch_pass_remote_test_authorized` | seed2021 five-dataset × six-arm complete problem gate next |
+| SC-D22-HFA D22-C | `v1_numeric_invalid_v1_1_prelaunch_pass` | fresh seed2021 five-dataset × six-arm complete gate next |
 
 ## Paper Mainline Sync Log
 
@@ -397,6 +397,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-20 | D21-EVS Step8/9/10 | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | full test gate + oracle accounting + split-stability failure attribution | 100/100；0/2 readouts pass；additive explains；exact EVS closed；joint Step2 |
 | 2026-07-20 | D22-A/B Bayes + frontier audit | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | theorem/source refresh + existing-artifact dense frontier decision | frontier not supported；H96 local clue retained；D22-C design-only，implementation/remote/test false |
 | 2026-07-20 | D22-C static/prelaunch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | source/code/theory + identical-parameter six-arm contract + synthetic execution | prelaunch pass；seed2021 remote/test true after commit/push and GPU preflight；paper method false |
+| 2026-07-20 | D22-C v1 early numeric audit | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | training-loss scale pathology before any complete/test artifact | v1 invalid；stop；v1.1 standardized-scale loss only；fresh rerun |
 
 ## Continuation Rules
 
@@ -591,3 +592,5 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
     sensitivity与Contribution 2仍false。
 77. 用户2026-07-20决定暂不pivot出deterministic-MSE fixed-past task。D22-C有效失败只关闭exact v1并回joint
     Step2/3；不得做seed/width/readout/representation rescue，也不得恢复D17-D21。
+78. D22-C v1在training-only阶段因RevIN-normalized loss对near-zero variance rows产生$10^3$量级隐式放大而终止；
+    没有complete/test result。v1.1只改dataset-standardized loss scale，必须新目录、新checkpoints完整重跑。

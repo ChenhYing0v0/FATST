@@ -30,7 +30,7 @@
 | `active_method` | none |
 | `method_training_authorized` | false |
 | `remote_training_authorized` | true for frozen D22-C diagnostic after commit/push and GPU preflight |
-| `next_action` | commit/push冻结protocol；3090 preflight后启动five-dataset seed2021完整problem gate |
+| `next_action` | commit/push v1.1 numeric correction；重新3090 preflight并从新目录启动完整problem gate |
 | `conditional_next` | 只有D22-C problem diagnostic通过，才返回Step4设计lead-time-conditioned evidence operator |
 | `rollback` | 有效失败关闭D22-C exact v1并回joint Step2/3；按用户决定不自动pivot task |
 
@@ -129,6 +129,10 @@ component replacement只能形成conditional evidence，不能方向级拒绝E2E
 六臂neutral/raw-history runner与machine aggregator已实现；所有arms共享完全相同trainable parameter set、
 seed2021 initialization、optimizer、window selection与validation selector。local synthetic smoke已完成六臂
 forward/backward、checkpoint、validation/test和decision artifacts；parameter gap为0。
+
+首次v1 remote launch在training-only阶段发现RevIN-normalized loss被near-zero history variance放大；在任何
+dataset/official-test artifact完成前终止。v1.1只改为RevIN重建后的dataset-standardized MSE，architecture、
+arms、seed、selector与gates不变；必须使用新output/checkpoints完整重跑。
 
 用户已授权继续该task边界下研究，因此冻结的five-dataset diagnostic remote/test在commit/push与GPU preflight后
 可执行。只有D22 problem gate通过，Contribution 1才允许回Step4 source-informed design，暂定问题族为

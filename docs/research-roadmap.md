@@ -40,6 +40,11 @@ commit/push和3090 GPU preflight。只有D22-C通过，才允许source-informed�
 `lead-time-conditioned evidence operator`；第二contribution只能来自首个E2E operator暴露的真实训练瓶颈，
 不得预先指定loss/router。
 
+首次v1 remote launch在training-only log中发现RevIN-normalized loss对near-zero variance rows产生$10^3$量级
+隐式放大；在任何dataset/test artifact完成前终止。v1.1只把loss改为RevIN重建后的dataset-standardized MSE，
+其余冻结合同不变，并从新目录/新checkpoints重跑。该修正属于
+`optimization_or_numeric_pathology`，不构成problem result。
+
 用户2026-07-20决定暂不承担task pivot成本。该scope决定把上一版“D22-C有效失败即停止整个
 deterministic-MSE search”改为：关闭exact D22-C v1并回joint Step2/3，在同一task边界寻找不同的falsifiable
 problem；不允许D22-C seed/width/readout/representation rescue，也不恢复D17-D21。
