@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC-D21-EVS Step7A complete；Step7B frozen-checkpoint evaluation next；Contribution 2 Step2 |
+| `current_step` | SC-D21-EVS Step8 frozen-checkpoint evaluation running；Contribution 2 Step2 |
 | `active_question` | internal route validity是否存在past × future-region non-separable、split-stable surface？ |
 | `active_candidates` | SIFF-v2 frozen parent；D21-EVS diagnostic_only active；no active method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_d21_evidence_validity_surface_20260720/step23_problem_and_design_audit.md` |
-| `method_implementation` | no active method；D21 diagnostic implemented；new forecasting training/confirmation=false |
+| `method_implementation` | no active method；D21 Step8 running；new forecasting training/confirmation=false |
 | `rollback_point` | Contribution 1=Step2 unless D21 interaction gate passes；Contribution 2=Step2 |
 
 ## post-CCSF Step 2/4 Reset

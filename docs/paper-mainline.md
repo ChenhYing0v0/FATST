@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD — Fixed-Past Projective Multi-Horizon Generation |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC-D21-EVS Step7A complete；Step7B frozen-checkpoint evaluation next；Contribution 2 Step2 |
+| `current_11_step` | SC-D21-EVS Step8 frozen-checkpoint evaluation running；Contribution 2 Step2 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -146,8 +146,8 @@ D14-A dual-carrier、three-seed crossing与sample-over-bin oracle是problem head
 边界。D21 seed2021使用五个独立训练的D14 canonical scope arms，在validation拟合past-only centered log-risk，
 official test只评估transfer。TimeFuse、TimeRouter、Synapse、TimeMixer、MQTransformer、TimePerceiver与ElasTST
 分别构成external model fusion、routing、multiscale predictor、target-query与projectivity mandatory boundaries。
-当前problem narrative/design gate与Step7A local implementation已通过；100个frozen-checkpoint val/test evaluations是
-下一步。new forecasting model training、paper method与confirmation seeds仍未授权。
+当前problem narrative/design gate与Step7A local implementation已通过；100个frozen-checkpoint val/test evaluations
+已于commit `53661b1`在三张3090启动。new forecasting model training、paper method与confirmation seeds仍未授权。
 
 [Provisional Two-Slot Logic] 只有D21 problem gate通过后，两个slots才可进入Step4：Contribution 1负责在single
 projective decoder内表示past-by-coordinate route validity；Contribution 2负责在同一end-to-end forward graph中给

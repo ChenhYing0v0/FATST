@@ -19,10 +19,10 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SC-D21-EVS Step7A complete；Step7B remote checkpoint evaluation next；Contribution 2 Step2 |
+| `current_11_step` | SC-D21-EVS Step8 remote checkpoint evaluation running；Contribution 2 Step2 |
 | `current_candidate` | immutable SIFF-v2 parent；D21-EVS diagnostic_only；no method |
 | `latest_decision` | future-distance support收紧为Evidence-Validity Surface；problem narrative/design gate通过 |
-| `next_required_action` | commit/push后启动D21 seed2021 dual-carrier validation-fit→test-evaluation |
+| `next_required_action` | wait for 100/100 exports；sync后运行validation-fit→test Step9 analyzer |
 | `method_training_authorized` | false；D21只授权读取frozen D14 checkpoints；new forecasting training=false |
 | `rollback_point` | Contribution 1 Step2/4；R3 unsupported则Step2；Contribution 2 Step2 |
 
@@ -30,7 +30,7 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | SC-D21-EVS Step7A complete；Step7B next；Contribution 2 Step2 |
+| `current_step` | SC-D21-EVS Step8 running；Contribution 2 Step2 |
 | `problem` | independently useful internal routes是否存在past × future-region non-separable relative-risk surface |
 | `existence_evidence` | D14 dual-carrier three-seed crossing/oracle；D20/D1仅限定co-adaptation failure boundary |
 | `idea` | validation拟合past-only centered-risk；official test比较interaction与region/sample/additive/permuted controls |
@@ -39,7 +39,7 @@
 | `narrative_gate` | problem-level pass；external fusion/routing/multiscale/query/projectivity boundaries frozen |
 | `effectiveness_gate` | not applicable；D21只决定是否授权Step4 method design |
 | `artifacts` | EVS prior-art audit + Step2/3 design + config + evaluator/analyzer/runner + Step7A checker |
-| `decision` | `d21_evs_step7a_pass_remote_checkpoint_evaluation_next` |
+| `decision` | `d21_evs_step8_running_no_new_training` |
 
 ## Frozen Carrier Contract
 
