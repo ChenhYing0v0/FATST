@@ -5,41 +5,41 @@
 | Field | Content |
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
-| `paper_role` | decoder/operator 与 training principle 两项相互支撑的 paper-core innovations |
-| `active_question` | EVS已关闭；重新寻找具有test-stable multi-horizon necessity与two-contribution causal chain的问题 |
+| `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
+| `active_question` | 放宽projectivity/H禁用后，哪一种horizon freedom具有真实统计或有限容量必要性？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | SIFF-v2 frozen parent；D21-EVS closed；no active problem/method；CTD paused |
+| `active_candidates` | no active method；A6 strong carrier/control；D22-HFA proposed；SIFF-v2 frozen history |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
-| `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
-| `stage_rollback` | Contributions 1/2 joint Step2 problem reconstruction；CTD paused |
+| `stage_exit` | 新problem先通过existence/narrative gate，再决定一项或两项可归因contributions |
+| `stage_rollback` | joint Step2；D22失败则停止当前deterministic-MSE architecture search；CTD paused |
 
 ## Decision Cursor
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SC-D21-EVS Step9/10 closed；Contributions 1/2 joint Step2 |
-| `current_candidate` | immutable SIFF-v2 parent；no active problem/method |
-| `latest_decision` | D21 oracle remains large，但interaction由additive解释且validation→test不稳定；exact EVS closed |
-| `next_required_action` | Step2系统重构论文problem；不得做EVS representation/readout rescue |
-| `method_training_authorized` | false；new diagnostic/method需重新通过problem/narrative gate |
-| `rollback_point` | Contributions 1/2 joint Step2 |
+| `current_11_step` | Post-D21 unconstrained reset；SC-D22-HFA Step2 proposed |
+| `current_candidate` | no active method；D22 problem diagnostic only |
+| `latest_decision` | A6 standalone novelty不足；projectivity/H禁用撤销为hard constraints；自由度仍须problem evidence |
+| `next_required_action` | D22-A/B理论与既有artifact审计；必要时D22-C小型target-coordinate access diagnostic |
+| `method_training_authorized` | false；不得直接实现H embedding、router或第二loss |
+| `rollback_point` | joint Step2；D22 failure -> deterministic-MSE architecture search stop |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | SC-D21-EVS Step9/10 closed；joint Step2 |
-| `problem` | independently useful internal routes是否存在past × future-region non-separable relative-risk surface |
-| `existence_evidence` | D14 oracle/crossing retained；D21显示其大部分不可由split-stable interaction兑现 |
-| `idea` | validation拟合past-only centered-risk；official test比较interaction与region/sample/additive/permuted controls |
-| `theory_check` | exact projectivity；requested H禁用；interaction是multi-horizon specificity；expert selection只作保守witness |
-| `design` | 2 carriers × 5 datasets × 5 canonical D14 arms × val/test；100 checkpoint evaluations；no new model training |
-| `narrative_gate` | prelaunch pass；returned evidence fails necessity/transfer gate |
-| `effectiveness_gate` | problem gate failed；ridge/HGB 0/2 complete passes |
-| `artifacts` | 100/100 exports + Step9 scorecards/gate/deep audit + validation-forward attribution |
-| `decision` | `close_exact_evs_problem_split_stability_failed_return_step2` |
+| `current_step` | SC-D22-HFA Step2 proposed |
+| `problem` | relaxed constraints下，requested-H、lead-time coordinate或有限容量tradeoff中哪一个真实要求新operator？ |
+| `existence_evidence` | A6/MEASURE正；D18 specialist weak；D14 oracle大；D21 interaction split-unstable |
+| `idea` | 先分离Bayes invariance、finite-capacity frontier与target-coordinate evidence access |
+| `theory_check` | separable MSE Bayes mean对pure request H不变；其他自由度必须有额外信息/risk/compute/task来源 |
+| `design` | D22-A theorem/source；D22-B existing artifacts；D22-C only if needed, small diagnostic |
+| `narrative_gate` | pending；A6 standalone fail；lead-time operator未授权 |
+| `effectiveness_gate` | not applicable before problem gate |
+| `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/step2_problem_and_a6_viability_audit.md` |
+| `decision` | `a6_standalone_not_supported_d22_problem_audit_next` |
 
 ## Frozen Carrier Contract
 
@@ -64,6 +64,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
 | `A6-LBF-natural-baseline` | `control_only` | validation-frozen natural profiles可作为稳定共同起点 | not required | 72/72 test；3 seeds；dense horizons | `frozen_test_reference_ready`；只作固定reference |
+| `SC-D22-HFA` | `proposed_diagnostic_only` | relaxed constraints后是否存在finite-capacity horizon frontier或target-coordinate-specific information access | pending problem gate；not method | not started | D22-A/B existing-evidence audit；必要时D22-C small diagnostic |
 | `SC1-PMFO-RCT-v1` | `failed_as_core_candidate` | fixed mixed-radix conservative future tree | narrative/local pass | Step7B三dataset均不优于A6；no numeric pathology | archived as evidence；rollback Step 4 |
 | `SC1-FPMO-M0` | `control_only` | shared-latent exact A6 morph验证function preservation/restriction | not required | exact equality required | mandatory Step6 morphism control |
 | `SC1-FPMO-DA` | `control_only` | direct atom full-affine head隔离capacity/orthogonal coordinate effect | not required | matched function-class control | mandatory Step6 dense-equivalence control |

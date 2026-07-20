@@ -5,13 +5,31 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC-D21-EVS Step9/10 closed；Contributions 1/2 joint Step2 |
-| `active_question` | 重新寻找test-stable、multi-horizon-specific且能自然要求architecture+training两项贡献的问题 |
-| `active_candidates` | SIFF-v2 frozen parent；D21-EVS closed；no active problem/method；CTD paused |
+| `current_step` | Post-D21 unconstrained reset；SC-D22-HFA Step2 proposed |
+| `active_question` | 放宽projectivity/H禁用约束后，哪一种horizon freedom具有真实统计或有限容量必要性？ |
+| `active_candidates` | no active method；A6 strong carrier/control；SIFF-v2 frozen historical parent |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_d21_evidence_validity_surface_20260720/step9/deep_audit.md` |
-| `method_implementation` | no active method；D21 rescue/confirmation=false |
-| `rollback_point` | Contributions 1/2 joint Step2 problem reconstruction |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/step2_problem_and_a6_viability_audit.md` |
+| `method_implementation` | false；D22 problem diagnostic only |
+| `rollback_point` | joint Step2；若D22失败则停止当前deterministic-MSE architecture search |
+
+## Post-D21 Unconstrained Reset
+
+用户与研究审计共同确认：过去的`exact projectivity + requested-H禁用 + full-T prefix crop`组合显著压缩了真正的
+horizon-adaptive自由度。后续这些contract不再是强制设计约束，只作为可能机制或controls，由理论与实验选择。
+
+但pointwise MSE下，同一fixed past与future coordinate的Bayes conditional mean并不因requested horizon改变；所以
+简单加入H embedding没有自动的统计必要性。新的Step2将自由度来源分为finite-capacity tradeoff、target-coordinate
+information access、nonseparable/decision risk、future context、compute/resolution与probabilistic joint target。
+当前task保持deterministic MSE/MAE，优先审计前两项。
+
+A6-LBF经重新评估后保留为strong carrier/control，不作为standalone paper core：其性能证据可用，但basis、
+projectivity与harmonic measure的独立novelty不足，且现代varied-horizon baseline comparison仍不完整。
+
+下一步`SC-D22-HFA`先复用D18判断finite-capacity frontier；若仍弱，再执行小型target-coordinate
+information-access diagnostic。ordered patch memory只作诊断载体。通过后才允许source-informed设计
+`lead-time-conditioned evidence operator`；第二contribution只能从首个E2E operator暴露的真实训练瓶颈中产生，
+不得预先指定loss/router。详见active protocol。
 
 ## post-CCSF Step 2/4 Reset
 

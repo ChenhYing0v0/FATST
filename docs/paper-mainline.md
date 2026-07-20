@@ -5,15 +5,28 @@
 | Field | Content |
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
-| `working_title` | TBD — Fixed-Past Projective Multi-Horizon Generation |
+| `working_title` | TBD — Unified Multi-Horizon Forecasting（projectivity不再是强制主线） |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC-D21-EVS Step9/10 closed；Contributions 1/2 joint Step2 |
+| `current_11_step` | Post-D21 unconstrained reset；SC-D22-HFA Step2 proposed |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | no active problem/method；SIFF-v2 remains frozen performance parent；EVS closed |
+| `paper_core_status` | no active method；A6为strong carrier/control但不足以standalone承载论文；D22 problem audit next |
+
+[Constraint Reset, 2026-07-20] 后续不再把exact projectivity、requested horizon禁用、A6 interface compatibility或
+full-$T$ prefix crop当作新方法的先验硬约束。它们可以成为合理设计或matched controls，但必须由problem、理论与
+实验选择。与此同时，放宽约束不等于自动支持H-conditioned shared-prefix：在separable pointwise MSE下，同一fixed
+past与future coordinate的Bayes conditional mean不依赖requested horizon。新自由度必须明确来自finite-capacity
+tradeoff、target-coordinate evidence access、nonseparable risk、future context、compute/resolution contract或
+probabilistic joint target。
+
+[A6 Role Audit] A6-LBF保留为strong carrier、mandatory control与possible component，不直接升级为standalone
+paper core。其性能收益真实，但learned basis、projectivity与harmonic horizon measure分别存在N-BEATS/N-HiTS、
+FlowState/Implicit Forecaster与ElasTST等强prior，当前也缺少相对最新target-query/varied-horizon方法的完整优势。
+下一步为`SC-D22-HFA`：先审计finite-capacity horizon frontier，再用小型target-coordinate information-access
+diagnostic决定是否允许`lead-time-conditioned evidence operator`进入Step4；Contribution 2不预先指定。
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
