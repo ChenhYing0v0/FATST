@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D19 closed；D20 Step7A/7B complete，Step8 remote launch next；Contribution 2 Step2 |
+| `current_step` | D19 closed；D20 Step8 remote running；Contribution 2 Step2 |
 | `active_question` | compact history-spectrum information能否transfer到A6 coefficient operator并超过同维random history projection？ |
 | `active_candidates` | SIFF-v2 frozen parent；D20 diagnostic_only design frozen；no active method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/d20_step7b/prelaunch_report.md` |
-| `method_implementation` | D20 diagnostic production=true；seed2021 remote/test=true；confirmation/paper method=false |
+| `method_implementation` | D20 diagnostic production=true；seed2021 15-run matrix running；confirmation/paper method=false |
 | `rollback_point` | D20=Step2/4；Contribution 1 positive diagnostic后回Step4；Contribution 2=Step2 |
 
 ## post-CCSF Step 2/4 Reset
@@ -130,6 +130,10 @@ official-test cells、validation four-horizon mean-MSE checkpoint selector、che
 
 Decision=`step7b_prelaunch_pass_step8_authorized`。当前允许seed2021一次完整remote/test diagnostic；confirmation与
 paper-method promotion继续false。即使结果双门槛正向，也只能返回Step4设计native non-residual operator。
+
+Step8已于`2026-07-20T11:55:45+08:00`以commit`9573cd7`在GPU0/1/2后台启动。Weather-SPEC与ETTm2-RANDOM
+resource smoke均finite且无OOM；首批Weather-SPEC、Weather-RANDOM与ETTm1-SPEC已进入epoch 1。当前不值守，
+完成后进入Step9完整15-unit/60-cell四层审计。
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 
