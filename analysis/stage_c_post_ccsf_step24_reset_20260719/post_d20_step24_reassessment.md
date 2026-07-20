@@ -94,9 +94,20 @@ Step4前必须进一步检索并用problem diagnostic证明support envelope不�
 
 D1只决定下一次Step2/4问题诊断的优先级，不授权D20-v2、R3 implementation、remote training或paper claim。
 
+## 5.1 D1 returned result
+
+D1的90行oracle audit全部finite、重构误差为0。SPEC contribution相对其co-adapted base平均`+26.8928%`，39/40
+future-bin cells有益，median optimal alpha为`1.2649`；RANDOM也为`+9.0422%`、35/40、alpha`1.4115`。因此
+scalar shrinkage不是答案。新增path在joint model内部很重要但完整model仍差于A6，说明prediction responsibility被
+重新分配，而不是证明新增独立information。
+
+D1也没有证明future-distance support：SPEC contribution几乎所有bins均有益。R3继续`problem_unverified`，下一步
+必须回Step2/3寻找跨机制、跨split且past-identifiable的existence evidence，不能进入method Step4。
+
 ## 6. Decision
 
-`d20_closed_rollback_step2_4_d1_next`。
+`d1_complete_scalar_fix_rejected_coadaptation_explains_return_step2_3`。
 
-不做confirmation、不做D20小修补；先完成D1，再决定是否值得设计一个train-only、split-stable的predictive-support
-existence diagnostic。Contribution 2继续停在Step2，直到Contribution 1出现真实training mismatch。
+不做confirmation、不做D20小修补。下一步只允许设计一个train-only、split-stable的predictive-support existence
+diagnostic；在其problem gate通过前，Support-Calibrated Operator与Retrospective Support Calibration均不实现。
+Contribution 2继续停在Step2，直到Contribution 1出现真实training mismatch。

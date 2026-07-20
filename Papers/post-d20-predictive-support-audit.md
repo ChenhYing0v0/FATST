@@ -50,3 +50,10 @@ trajectory，并且不能读取requested horizon。该chain目前只是hypothesi
 
 最近工作的overlap会收紧claim，但不自动否决完整chain。相反，如果后续只实现frequency reweighting或普通
 coordinate gate，就会被上述prior substantially覆盖。
+
+## D20-D1 update
+
+D1显示SPEC contribution相对其co-adapted base在39/40 bins有益、macro gain `+26.89%`，median oracle scale
+`1.26`；RANDOM path也在35/40 bins有益。由于完整SPEC/RANDOM仍差于same-run A6，within-model importance主要
+反映joint responsibility relocation，而非新增信息。该结果否定scalar shrink rescue，也没有建立future-distance
+support。两项provisional contributions继续保持`problem_unverified / method_not_authorized`。

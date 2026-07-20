@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D20 closed at Step10；Contribution 1 rollback Step2/4；D20-D1 diagnostic next；Contribution 2 Step2 |
-| `active_question` | D20失败来自summary direction、injection scale还是joint co-adaptation/generalization？ |
+| `current_step` | D20/D20-D1 closed；Contribution 1 Step2/3 problem re-audit；Contribution 2 Step2 |
+| `active_question` | future-distance predictive support能否从past识别并跨split稳定，而非co-adaptation artifact？ |
 | `active_candidates` | SIFF-v2 frozen parent；D20 exact design closed；future-distance support family provisional；no active method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/d20_d1_contribution_diagnostic/design.md` |
-| `method_implementation` | D20-D1 posthoc diagnostic only；new training/confirmation/paper method=false |
+| `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/d20_d1_contribution_diagnostic/result.md` |
+| `method_implementation` | no active method；next problem diagnostic not designed；training/confirmation=false |
 | `rollback_point` | Contribution 1=Step2/4；future-distance support only after stable problem evidence；Contribution 2=Step2 |
 
 ## post-CCSF Step 2/4 Reset
@@ -150,6 +150,14 @@ exact D20关闭，不补seeds、不做scalar gate/width/LR sweep；Contribution 
 generic spectral robustness已被Frequency Matters、DropoutTS、Fremen与AEA覆盖。只保留future-distance
 predictive-support作为provisional problem family，先执行D20-D1 within-model contribution direction/scale oracle，
 不授权新training或method。
+
+D20-D1现已完成：SPEC contribution相对其co-adapted base为`+26.8928%`、39/40 bins有益、median oracle
+alpha=`1.2649`；RANDOM也为`+9.0422%`、35/40。scalar shrink/normalization rescue被否定；新增path的重要性主要
+反映joint responsibility relocation，而非对A6的独立增量。D1也没有支持future-distance envelope，因为SPEC path
+几乎所有bins内部有益。Decision=`d1_complete_scalar_fix_rejected_coadaptation_explains_return_step2_3`。
+
+下一步不实现operator，而是先设计跨机制、train-only、validation→test的problem diagnostic，检验support是否
+past-identifiable且split-stable；失败则关闭该provisional family。
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 

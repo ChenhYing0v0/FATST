@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD — Fixed-Past Projective Multi-Horizon Generation |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | D20 closed at Step10；Contribution 1 Step2/4 + D20-D1 next；Contribution 2 Step2 |
+| `current_11_step` | D20/D20-D1 closed；Contribution 1 Step2/3 problem re-audit；Contribution 2 Step2 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -129,6 +129,11 @@ q64 additive coefficient injection；failure attribution为`validation_test_mism
 [Post-D20 Boundary] scalar gate/normalization rescue与generic spectral robustness均不进入method。当前仅保留
 `future-distance predictive support`为provisional problem：同一history evidence对不同future coordinates的有效性
 可能不同，但尚未证明past-identifiable或split-stable。先执行D20-D1 contribution oracle；Contribution 2继续Step2。
+
+[D20-D1 Result] SPEC contribution相对其co-adapted base为`+26.8928%`、39/40 bins有益，median oracle alpha
+`1.2649`；RANDOM也为`+9.0422%`、35/40。完整两臂却都差于A6，证明within-model path importance不能当作
+incremental mechanism evidence；joint model发生了non-identifiable responsibility relocation。scalar shrink rescue
+关闭，future-distance support也未被D1支持，继续停在problem-unverified Step2/3。
 
 forecast-revision surface已转移到根目录`New-idea.md`，状态`deferred_next_paper`；它不再是当前论文问题。
 

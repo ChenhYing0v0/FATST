@@ -1,0 +1,44 @@
+{
+  "all_finite": true,
+  "arms": 2,
+  "candidate_version": "SC-D20-CST-v1",
+  "datasets": 5,
+  "diagnostic_id": "SC-D20-D1-CONTRIB",
+  "direction_rejection_allowed": false,
+  "max_reconstruction_abs": 0.0,
+  "method_promotion_allowed": false,
+  "region_rows": 90,
+  "summaries": [
+    {
+      "actual_harm_but_positive_shrinkage_cells": 0,
+      "actual_help_cells": 39,
+      "actual_macro_gain_vs_base_percent": 26.89277053066214,
+      "all_finite": true,
+      "alpha_between_zero_and_one_cells": 10,
+      "alpha_nonpositive_cells": 1,
+      "arm": "A6_CST_SPEC",
+      "full_horizon_actual_gain_mean_percent": 21.473003425649285,
+      "full_horizon_optimal_alpha_median": 1.2968536198538867,
+      "max_reconstruction_abs": 0.0,
+      "median_optimal_alpha": 1.2649417469513888,
+      "oracle_macro_gain_vs_base_percent": 30.35165853087896,
+      "region_cells": 40
+    },
+    {
+      "actual_harm_but_positive_shrinkage_cells": 1,
+      "actual_help_cells": 35,
+      "actual_macro_gain_vs_base_percent": 9.042193366426345,
+      "all_finite": true,
+      "alpha_between_zero_and_one_cells": 8,
+      "alpha_nonpositive_cells": 4,
+      "arm": "A6_CST_RANDOM",
+      "full_horizon_actual_gain_mean_percent": 8.847375596059328,
+      "full_horizon_optimal_alpha_median": 1.4801451311302019,
+      "max_reconstruction_abs": 0.0,
+      "median_optimal_alpha": 1.4114831357869477,
+      "oracle_macro_gain_vs_base_percent": 14.411907821234804,
+      "region_cells": 40
+    }
+  ],
+  "test_oracle_diagnostic_only": true
+}

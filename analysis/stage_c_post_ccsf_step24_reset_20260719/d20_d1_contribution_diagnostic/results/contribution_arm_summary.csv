@@ -1,0 +1,3 @@
+arm,region_cells,actual_macro_gain_vs_base_percent,actual_help_cells,oracle_macro_gain_vs_base_percent,median_optimal_alpha,alpha_between_zero_and_one_cells,alpha_nonpositive_cells,actual_harm_but_positive_shrinkage_cells,full_horizon_actual_gain_mean_percent,full_horizon_optimal_alpha_median,max_reconstruction_abs,all_finite
+A6_CST_SPEC,40,26.89277053066214,39,30.35165853087896,1.2649417469513888,10,1,0,21.473003425649285,1.2968536198538867,0.0,True
+A6_CST_RANDOM,40,9.042193366426345,35,14.411907821234804,1.4114831357869477,8,4,1,8.847375596059328,1.4801451311302019,0.0,True
