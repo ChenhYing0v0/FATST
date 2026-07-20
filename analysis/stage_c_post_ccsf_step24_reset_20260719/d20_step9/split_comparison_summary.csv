@@ -1,0 +1,13 @@
+split,comparison,metric,macro_gain_percent,cell_wins,dataset_wins,horizon_wins
+validation,transfer_spec_vs_a6,mse,0.5755014454255997,13,4,4
+validation,transfer_spec_vs_a6,mae,-0.14472276249672955,6,1,1
+validation,specificity_spec_vs_random,mse,0.7287708416869021,15,4,4
+validation,specificity_spec_vs_random,mae,0.2886154388537926,13,3,4
+validation,capacity_random_vs_a6,mse,-0.1580239322975785,8,2,0
+validation,capacity_random_vs_a6,mae,-0.43512681427050726,6,2,0
+test,transfer_spec_vs_a6,mse,-0.7613745915788483,8,2,0
+test,transfer_spec_vs_a6,mae,-0.5830854493870891,3,0,0
+test,specificity_spec_vs_random,mse,0.14124016277625995,14,4,3
+test,specificity_spec_vs_random,mae,0.027279307025795396,12,3,3
+test,capacity_random_vs_a6,mse,-0.9027607067468874,7,1,0
+test,capacity_random_vs_a6,mae,-0.6110990949989581,3,1,0

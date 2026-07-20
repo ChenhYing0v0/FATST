@@ -1,0 +1,53 @@
+{
+  "candidate_version": "SC-D20-CST-v1",
+  "confirmation_authorized": false,
+  "deep_failure_attribution": "optimization_or_numeric_pathology(validation_test_mismatch)+intervention_point_wrong",
+  "direction_rejection_valid": false,
+  "exact_design_closed": true,
+  "internal_health_all_pass": true,
+  "matrix_complete": true,
+  "remote_frozen_decision": "compact_spectrum_transfer_failed",
+  "rollback": "Contribution1 Step2/4 source-informed redesign",
+  "specificity_directional_only": true,
+  "standard_test": {
+    "specificity_spec_vs_random_mse": {
+      "cell_wins": 14,
+      "comparison": "specificity_spec_vs_random",
+      "dataset_wins": 4,
+      "horizon_wins": 3,
+      "macro_gain_percent": 0.14124016277625995,
+      "metric": "mse",
+      "split": "test"
+    },
+    "transfer_spec_vs_a6_mse": {
+      "cell_wins": 8,
+      "comparison": "transfer_spec_vs_a6",
+      "dataset_wins": 2,
+      "horizon_wins": 0,
+      "macro_gain_percent": -0.7613745915788483,
+      "metric": "mse",
+      "split": "test"
+    }
+  },
+  "transfer_validation_test_reversal": true,
+  "validation": {
+    "specificity_spec_vs_random_mse": {
+      "cell_wins": 15,
+      "comparison": "specificity_spec_vs_random",
+      "dataset_wins": 4,
+      "horizon_wins": 4,
+      "macro_gain_percent": 0.7287708416869021,
+      "metric": "mse",
+      "split": "validation"
+    },
+    "transfer_spec_vs_a6_mse": {
+      "cell_wins": 13,
+      "comparison": "transfer_spec_vs_a6",
+      "dataset_wins": 4,
+      "horizon_wins": 4,
+      "macro_gain_percent": 0.5755014454255997,
+      "metric": "mse",
+      "split": "validation"
+    }
+  }
+}

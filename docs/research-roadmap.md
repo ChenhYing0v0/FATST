@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D19 closed；D20 Step8 remote running；Contribution 2 Step2 |
-| `active_question` | compact history-spectrum information能否transfer到A6 coefficient operator并超过同维random history projection？ |
-| `active_candidates` | SIFF-v2 frozen parent；D20 diagnostic_only design frozen；no active method；CTD paused |
+| `current_step` | D20 closed at Step10；Contribution 1 rollback Step2/4；D20-D1 diagnostic next；Contribution 2 Step2 |
+| `active_question` | D20失败来自summary direction、injection scale还是joint co-adaptation/generalization？ |
+| `active_candidates` | SIFF-v2 frozen parent；D20 exact design closed；future-distance support family provisional；no active method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/d20_step7b/prelaunch_report.md` |
-| `method_implementation` | D20 diagnostic production=true；seed2021 15-run matrix running；confirmation/paper method=false |
-| `rollback_point` | D20=Step2/4；Contribution 1 positive diagnostic后回Step4；Contribution 2=Step2 |
+| `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/d20_d1_contribution_diagnostic/design.md` |
+| `method_implementation` | D20-D1 posthoc diagnostic only；new training/confirmation/paper method=false |
+| `rollback_point` | Contribution 1=Step2/4；future-distance support only after stable problem evidence；Contribution 2=Step2 |
 
 ## post-CCSF Step 2/4 Reset
 
@@ -134,6 +134,22 @@ paper-method promotion继续false。即使结果双门槛正向，也只能返�
 Step8已于`2026-07-20T11:55:45+08:00`以commit`9573cd7`在GPU0/1/2后台启动。Weather-SPEC与ETTm2-RANDOM
 resource smoke均finite且无OOM；首批Weather-SPEC、Weather-RANDOM与ETTm1-SPEC已进入epoch 1。当前不值守，
 完成后进入Step9完整15-unit/60-cell四层审计。
+
+## D20 Step 9–10 Result And Step 2/4 Rollback
+
+D20现已15/15 runs、60/60 official-test cells完整。SPEC相对A6为`-0.7614%` MSE、`-0.5831%` MAE，
+8/20 MSE cells、2/5 datasets与0/4 horizons；transfer gate明确失败。SPEC相对RANDOM为`+0.1412%` MSE、
+14/20 cells、4/5 datasets、3/4 horizons，属于weak directional specificity但低于冻结0.3% gate。
+
+11项internal health全部通过；SPEC prediction contribution为RANDOM的1.78–4.44×，不是collapse。validation上SPEC
+相对A6为`+0.5755%`，到test发生sign reversal；SPEC-vs-RANDOM也从`+0.7288%`衰减到`+0.1412%`。因此formal
+decision保留`compact_spectrum_transfer_failed`，但failure attribution收紧为
+`validation_test_mismatch + intervention_point_wrong`，不得方向级解释为history spectrum无价值。
+
+exact D20关闭，不补seeds、不做scalar gate/width/LR sweep；Contribution 1回Step2/4。最新external refresh表明
+generic spectral robustness已被Frequency Matters、DropoutTS、Fremen与AEA覆盖。只保留future-distance
+predictive-support作为provisional problem family，先执行D20-D1 within-model contribution direction/scale oracle，
+不授权新training或method。
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 

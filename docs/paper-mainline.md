@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD — Fixed-Past Projective Multi-Horizon Generation |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | D19 closed；D20 diagnostic Step8 remote running；Contribution 2 Step2 |
+| `current_11_step` | D20 closed at Step10；Contribution 1 Step2/4 + D20-D1 next；Contribution 2 Step2 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | no active two-contribution method；SIFF-v2 parent frozen；D20 diagnostic_only design frozen |
+| `paper_core_status` | no active two-contribution method；SIFF-v2 parent frozen；D20 exact design closed；support family provisional |
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
@@ -119,6 +119,16 @@ problem diagnostic，不是Contribution 1 method。
 
 [D20 Step8] commit`9573cd7`的15-run/60-cell matrix已于`2026-07-20T11:55:45+08:00`在三张3090后台启动；
 双resource smoke与首批三任务启动检查通过。当前不值守；结果返回前不改变candidate、matrix、checkpoint或gate。
+
+[D20 Step9–10] 15/15 runs与60/60 test cells完整。SPEC-vs-A6为`-0.7614%` MSE、8/20 cells、2/5
+datasets、0/4 horizons，transfer fail；SPEC-vs-RANDOM为`+0.1412%`、14/20、4/5、3/4，只有弱directional
+specificity且未达0.3% gate。11项internal health全过，validation SPEC-vs-A6 `+0.5755%`到test反转，因此只关闭
+q64 additive coefficient injection；failure attribution为`validation_test_mismatch + intervention_point_wrong`，不能
+方向级否定history-spectrum。
+
+[Post-D20 Boundary] scalar gate/normalization rescue与generic spectral robustness均不进入method。当前仅保留
+`future-distance predictive support`为provisional problem：同一history evidence对不同future coordinates的有效性
+可能不同，但尚未证明past-identifiable或split-stable。先执行D20-D1 contribution oracle；Contribution 2继续Step2。
 
 forecast-revision surface已转移到根目录`New-idea.md`，状态`deferred_next_paper`；它不再是当前论文问题。
 
