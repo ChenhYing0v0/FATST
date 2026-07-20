@@ -1,0 +1,84 @@
+{
+  "candidate_version": "d22c-neutral-target-access-v1.1",
+  "decision": "target_coordinate_information_access_supported",
+  "diagnostic_id": "SC-D22-HFA-D22-C",
+  "errors": [],
+  "failure_attribution": "none",
+  "gate_results": [
+    {
+      "conditions": {
+        "macro_mae": true,
+        "macro_mse": true,
+        "matrix_complete": true,
+        "no_severe_degradation": true,
+        "positive_cells": true,
+        "positive_datasets": true,
+        "positive_horizons": true,
+        "validation_test_same_sign": true
+      },
+      "control": "GLOBAL_COMPRESSED",
+      "observed_macro_mae_gain": 0.11741473600548329,
+      "observed_macro_mse_gain": 0.17290967593443535,
+      "passed": true,
+      "required_macro_mse_gain": 0.005
+    },
+    {
+      "conditions": {
+        "macro_mae": true,
+        "macro_mse": true,
+        "matrix_complete": true,
+        "no_severe_degradation": true
+      },
+      "control": "POOLED_MEMORY",
+      "observed_macro_mae_gain": 0.12061137282696635,
+      "observed_macro_mse_gain": 0.17530751344181514,
+      "passed": true,
+      "required_macro_mse_gain": 0.003
+    },
+    {
+      "conditions": {
+        "macro_mae": true,
+        "macro_mse": true,
+        "matrix_complete": true,
+        "no_severe_degradation": true
+      },
+      "control": "ORDER_SHUFFLED",
+      "observed_macro_mae_gain": 0.1163139508095846,
+      "observed_macro_mse_gain": 0.17082625196676499,
+      "passed": true,
+      "required_macro_mse_gain": 0.003
+    },
+    {
+      "conditions": {
+        "macro_mae": true,
+        "macro_mse": true,
+        "matrix_complete": true,
+        "no_severe_degradation": true
+      },
+      "control": "TARGET_SHUFFLED_QUERY",
+      "observed_macro_mae_gain": 0.09210287410101989,
+      "observed_macro_mse_gain": 0.13744920736015165,
+      "passed": true,
+      "required_macro_mse_gain": 0.003
+    },
+    {
+      "conditions": {
+        "macro_mae": true,
+        "macro_mse": true,
+        "matrix_complete": true,
+        "no_severe_degradation": true,
+        "positive_cells": true,
+        "positive_datasets": true,
+        "positive_horizons": true,
+        "validation_test_same_sign": true
+      },
+      "control": "GENERIC_MATCHED",
+      "observed_macro_mae_gain": 0.016483705880435844,
+      "observed_macro_mse_gain": 0.025228281096010868,
+      "passed": true,
+      "required_macro_mse_gain": 0.005
+    }
+  ],
+  "matrix_complete": true,
+  "maximum_parameter_relative_gap": 0.0
+}

@@ -5,14 +5,14 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC-D22-HFA D22-C Step3/7A；static/prelaunch pass |
-| `active_question` | finite-capacity frontier不支持后，target-coordinate raw-history access是否具有split-stable必要性？ |
-| `active_candidates` | no active method；A6 strong carrier/control；SIFF-v2 frozen historical parent |
+| `current_step` | SC-D23-FCMI Step4-6 conditional pass；Step7A local next |
+| `active_question` | 如何原生分离generic evidence main effect与future-coordinate interaction，并包含二者fallback？ |
+| `active_candidates` | FCMI narrative-ready/not implemented；A6 control；SIFF-v2 frozen history |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d22c_prelaunch_design_audit.md` |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_fcmi_step46_design_audit.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | false；仅D22-C diagnostic remote/test在commit/push与GPU preflight后授权 |
-| `rollback_point` | joint Step2/3；有效失败关闭D22-C exact v1，但按用户决定不自动pivot task |
+| `method_implementation` | Step7A local only；FCMI remote/test false |
+| `rollback_point` | Step5/6 if local morph fails；Step4 if matched control/narrative fails |
 
 ## Post-D21 Unconstrained Reset
 
@@ -44,6 +44,16 @@ commit/push和3090 GPU preflight。只有D22-C通过，才允许source-informed�
 隐式放大；在任何dataset/test artifact完成前终止。v1.1只把loss改为RevIN重建后的dataset-standardized MSE，
 其余冻结合同不变，并从新目录/新checkpoints重跑。该修正属于
 `optimization_or_numeric_pathology`，不构成problem result。
+
+D22-C v1.1正式decision=`target_coordinate_information_access_supported`。ordered相对最关键generic control为
+test MSE `+2.5228%`、MAE `+1.6484%`，15/20 cells、4/5 datasets、4/4 horizons；validation MSE为
+`+2.5410%`，parameter gap为0。相对其余四controls均约`+13.7%–17.5%`且20/20 cells正向。Weather对generic
+为`-1.0900%`，完整保留为heterogeneity evidence。
+
+由于CATS/TimePerceiver/MQTransformer/TQNet已覆盖query-to-history retrieval，D22-C arm不能升级method。
+Step4-6现冻结`SC-D23-FCMI`：将query context精确拆为trajectory-wide main与zero-mean coordinate interaction，
+分别变换后合成；generic与standard query decoder均为exact contained cases。matched dual-branch control用于排除
+multi-branch capacity解释。narrative gate conditional pass，只授权local Step7A，不授权remote/test或第二loss。
 
 用户2026-07-20决定暂不承担task pivot成本。该scope决定把上一版“D22-C有效失败即停止整个
 deterministic-MSE search”改为：关闭exact D22-C v1并回joint Step2/3，在同一task边界寻找不同的falsifiable

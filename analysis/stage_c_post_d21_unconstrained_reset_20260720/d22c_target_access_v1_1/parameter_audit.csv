@@ -1,0 +1,6 @@
+dataset,minimum_parameters,maximum_parameters,relative_gap,arm_count,exact_match
+ETTh1,11553,11553,0.0,6,1
+ETTh2,11553,11553,0.0,6,1
+ETTm1,11553,11553,0.0,6,1
+ETTm2,11553,11553,0.0,6,1
+Weather,11553,11553,0.0,6,1

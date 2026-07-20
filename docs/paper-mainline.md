@@ -7,14 +7,14 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD — Unified Multi-Horizon Forecasting（projectivity不再是强制主线） |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC-D22-HFA D22-C Step3/7A；static/prelaunch pass，problem gate pending |
+| `current_11_step` | SC-D23-FCMI Step4-6 conditional pass；Step7A local only |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | no active method；D22-C neutral/raw target-access diagnostic已授权remote/test，method仍未授权 |
+| `paper_core_status` | no active method；D22-C problem gate pass；FCMI narrative-ready candidate，remote/test false |
 
 [Constraint Reset, 2026-07-20] 后续不再把exact projectivity、requested horizon禁用、A6 interface compatibility或
 full-$T$ prefix crop当作新方法的先验硬约束。它们可以成为合理设计或matched controls，但必须由problem、理论与
@@ -49,6 +49,25 @@ problem gate；remote/test只在commit/push与GPU preflight后启动。详见
 near-zero within-window variance放大到$10^3$量级；在任何dataset/test artifact完成前终止。该run只说明
 `optimization_or_numeric_pathology`，不作problem判断。v1.1保持architecture、arms、seed、selector与gates不变，
 只将training loss移到与evaluation一致的dataset-standardized scale，并使用全新output/checkpoints。
+
+[D22-C Result] v1.1完整five-dataset × six-arm problem gate通过。`ORDERED_TARGET_ACCESS`相对
+global/pooled/order-shuffled/target-shuffled的test MSE gain分别为`+17.2910%/+17.5308%/+17.0826%/
++13.7449%`，均20/20 cells、5/5 datasets正向；相对最强`GENERIC_MATCHED`为MSE `+2.5228%`、MAE
+`+1.6484%`、15/20 cells、4/5 datasets、4/4 horizons，validation/test macro为`+2.5410%/+2.5228%`。
+parameter gap为0，ordered attention与prediction均未collapse。decision=
+`target_coordinate_information_access_supported`。
+
+该结果只通过problem/matched-attribution gate，不是paper-facing method effectiveness。Weather相对generic在
+4/4 horizons为负、dataset macro `-1.0900%`，因此不能claim universal target-query superiority。CATS、
+TimePerceiver、MQTransformer与TQNet已直接覆盖future/temporal query读取history；raw cross-attention不能升级为
+Contribution 1。
+
+[SC-D23-FCMI] Step4-6提出`Future-Coordinate Main–Interaction operator`：对standard query context
+$S_t$计算trajectory main $\bar S$与zero-mean interaction $\Delta_t=S_t-\bar S$，再以
+$W_{\rm main}\bar S+W_{\rm int}\Delta_t$作native forecast state。$W_{\rm int}=0$精确包含generic case，
+$W_{\rm main}=W_{\rm int}$精确包含standard query decoder；没有H embedding、router或第二loss。narrative gate
+为`conditional_pass`，下一步只授权Step7A local shape/morphism/gradient/parameter gate，remote/test仍false。
+Contribution 2继续open。
 
 [Scope Decision, 2026-07-20] 用户明确要求当前项目暂不转出`deterministic-MSE fixed-past architecture search`。
 因此D22-C有效失败只关闭exact v1并回joint Step2/3，不再自动停止整个search；但不得用seed、width、readout或
