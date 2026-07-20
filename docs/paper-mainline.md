@@ -13,6 +13,7 @@
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
+| `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
 | `paper_core_status` | no active method；A6为strong carrier/control但不足以standalone承载论文；D22 problem audit next |
 
 [Constraint Reset, 2026-07-20] 后续不再把exact projectivity、requested horizon禁用、A6 interface compatibility或
@@ -27,6 +28,10 @@ paper core。其性能收益真实，但learned basis、projectivity与harmonic 
 FlowState/Implicit Forecaster与ElasTST等强prior，当前也缺少相对最新target-query/varied-horizon方法的完整优势。
 下一步为`SC-D22-HFA`：先审计finite-capacity horizon frontier，再用小型target-coordinate information-access
 diagnostic决定是否允许`lead-time-conditioned evidence operator`进入Step4；Contribution 2不预先指定。
+
+[Supersession Notice] 本文件后续D17-D21、projectivity与旧Contribution slots段落属于历史证据，不得覆盖顶部
+`Constraint Reset`与restart handoff。旧文中“requested-H关闭”“full-T必须保留”等决定只关闭当时exact candidate，
+不再是新问题的全局硬约束。
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制

@@ -12,6 +12,7 @@
 | `active_candidates` | no active method；A6 strong carrier/control；D22-HFA proposed；SIFF-v2 frozen history |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
+| `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
 | `stage_exit` | 新problem先通过existence/narrative gate，再决定一项或两项可归因contributions |
 | `stage_rollback` | joint Step2；D22失败则停止当前deterministic-MSE architecture search；CTD paused |
 

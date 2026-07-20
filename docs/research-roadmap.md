@@ -10,6 +10,7 @@
 | `active_candidates` | no active method；A6 strong carrier/control；SIFF-v2 frozen historical parent |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/step2_problem_and_a6_viability_audit.md` |
+| `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
 | `method_implementation` | false；D22 problem diagnostic only |
 | `rollback_point` | joint Step2；若D22失败则停止当前deterministic-MSE architecture search |
 
@@ -30,6 +31,9 @@ projectivity与harmonic measure的独立novelty不足，且现代varied-horizon 
 information-access diagnostic。ordered patch memory只作诊断载体。通过后才允许source-informed设计
 `lead-time-conditioned evidence operator`；第二contribution只能从首个E2E operator暴露的真实训练瓶颈中产生，
 不得预先指定loss/router。详见active protocol。
+
+本节以下的post-CCSF、D17-D21与SIFF记录均为chronological history；新会话不得从其中恢复已关闭候选或重新施加
+已被顶部unconstrained reset撤销的hard constraints。
 
 ## post-CCSF Step 2/4 Reset
 
