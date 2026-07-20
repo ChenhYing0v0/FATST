@@ -32,4 +32,6 @@ Prelaunch checks:
 - completed anchor exports contained 4096 probe rows and 192 past-only features;
 - non-anchor exports correctly reported zero descriptor features and only stored aligned losses.
 
-Current decision: `step8_running_no_new_training`。结果完整前不改变problem gate、policy controls、readout或threshold。
+Completion：`2026-07-20T13:00:06+08:00`，`100/100` jobs complete，`100/100` NPZ与`100/100`
+invariant JSON。同步后Step9 decision为`close_exact_evs_problem_split_stability_failed_return_step2`；未改变problem
+gate、policy controls、readout或threshold。

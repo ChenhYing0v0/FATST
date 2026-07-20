@@ -6,40 +6,40 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | decoder/operator 与 training principle 两项相互支撑的 paper-core innovations |
-| `active_question` | internal route validity是否具有past × future-region、validation→test稳定的non-separable surface？ |
+| `active_question` | EVS已关闭；重新寻找具有test-stable multi-horizon necessity与two-contribution causal chain的问题 |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | SIFF-v2 frozen parent；SC-D21-EVS problem diagnostic implemented；no active method；CTD paused |
+| `active_candidates` | SIFF-v2 frozen parent；D21-EVS closed；no active problem/method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
-| `stage_rollback` | Contribution 1 Step2/4；support family需新problem evidence；Contribution 2 Step2；CTD paused |
+| `stage_rollback` | Contributions 1/2 joint Step2 problem reconstruction；CTD paused |
 
 ## Decision Cursor
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SC-D21-EVS Step8 remote checkpoint evaluation running；Contribution 2 Step2 |
-| `current_candidate` | immutable SIFF-v2 parent；D21-EVS diagnostic_only；no method |
-| `latest_decision` | future-distance support收紧为Evidence-Validity Surface；problem narrative/design gate通过 |
-| `next_required_action` | wait for 100/100 exports；sync后运行validation-fit→test Step9 analyzer |
-| `method_training_authorized` | false；D21只授权读取frozen D14 checkpoints；new forecasting training=false |
-| `rollback_point` | Contribution 1 Step2/4；R3 unsupported则Step2；Contribution 2 Step2 |
+| `current_11_step` | SC-D21-EVS Step9/10 closed；Contributions 1/2 joint Step2 |
+| `current_candidate` | immutable SIFF-v2 parent；no active problem/method |
+| `latest_decision` | D21 oracle remains large，但interaction由additive解释且validation→test不稳定；exact EVS closed |
+| `next_required_action` | Step2系统重构论文problem；不得做EVS representation/readout rescue |
+| `method_training_authorized` | false；new diagnostic/method需重新通过problem/narrative gate |
+| `rollback_point` | Contributions 1/2 joint Step2 |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | SC-D21-EVS Step8 running；Contribution 2 Step2 |
+| `current_step` | SC-D21-EVS Step9/10 closed；joint Step2 |
 | `problem` | independently useful internal routes是否存在past × future-region non-separable relative-risk surface |
-| `existence_evidence` | D14 dual-carrier three-seed crossing/oracle；D20/D1仅限定co-adaptation failure boundary |
+| `existence_evidence` | D14 oracle/crossing retained；D21显示其大部分不可由split-stable interaction兑现 |
 | `idea` | validation拟合past-only centered-risk；official test比较interaction与region/sample/additive/permuted controls |
 | `theory_check` | exact projectivity；requested H禁用；interaction是multi-horizon specificity；expert selection只作保守witness |
 | `design` | 2 carriers × 5 datasets × 5 canonical D14 arms × val/test；100 checkpoint evaluations；no new model training |
-| `narrative_gate` | problem-level pass；external fusion/routing/multiscale/query/projectivity boundaries frozen |
-| `effectiveness_gate` | not applicable；D21只决定是否授权Step4 method design |
-| `artifacts` | EVS prior-art audit + Step2/3 design + config + evaluator/analyzer/runner + Step7A checker |
-| `decision` | `d21_evs_step8_running_no_new_training` |
+| `narrative_gate` | prelaunch pass；returned evidence fails necessity/transfer gate |
+| `effectiveness_gate` | problem gate failed；ridge/HGB 0/2 complete passes |
+| `artifacts` | 100/100 exports + Step9 scorecards/gate/deep audit + validation-forward attribution |
+| `decision` | `close_exact_evs_problem_split_stability_failed_return_step2` |
 
 ## Frozen Carrier Contract
 
@@ -107,7 +107,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC-D19-IFC-control-v1.1` | `control_only_closed_negative_return_step2_4` | source-informed implicit trajectory decoder是否超过A6 learned-basis control | not a contribution；IF prior mandatory | IF vs A6 -3.6117%；vs direct -0.8075%；skip positive；health pass | no seeds/sweep；retain skip evidence；rollback Step2/4 |
 | `SC-D20-CST` | `diagnostic_only_closed_failed_transfer_weak_specificity` | IF内的compact history-spectrum信息能否transfer到A6并超过同维random history projection | diagnostic only；generic concat与frequency primitive非method | SPEC-vs-A6 -0.7614%；vs random +0.1412%；health 11/11；val/test reversal | no seeds/sweep；rollback Step2/4；direction not rejected |
 | `SC-D20-D1-CONTRIB` | `diagnostic_only_completed_coadaptation_explains` | D20失败是否只是contribution direction/scale错误 | posthoc test oracle；not method | SPEC +26.89% vs co-adapted base/39 of40；RANDOM +9.04%/35 of40；alpha medians >1 | scalar fix rejected；within-model importance non-incremental；return Step2/3 |
-| `SC-D21-EVS` | `diagnostic_only_step7a_pass` | route validity是否为past × future-region non-separable surface | problem narrative/design pass；not a method | D14 oracle confirmed；past-identifiability未测试 | commit/push后Step7B；no new training/method |
+| `SC-D21-EVS` | `diagnostic_only_closed_split_unstable` | route validity是否为past × future-region non-separable surface | prelaunch pass；post-result paper necessity fail | oracle 7.64%/10.41%；neutral HGB vs additive +0.0347%；A6 -0.0069%；0/2 readouts pass | no seeds/rescue；joint rollback Step2 |
 | `SC2-MCCA-v1` | `historical_validation_negative_fair_test_not_reaudited` | same total scope skill mass能否竞争性分配而避免per-target homogenization | complete-chain conditional pass | old best-H720 validation four-H -0.1357%、1/5；not in 70-run audit | inactive；reuse前回Step4重审相对EQUAL/MEASURE的必要性 |
 | `SC-D16-CTD` | `deferred_paused_by_user` | H720 checkpoint是否丢弃healthy SIFF four-H epoch | diagnostic only；weighted checkpoint prior-covered | not implemented | design retained；resume only after user authorization |
 | `SC-RETRO-FAIR-v1` | `completed_partial_pass_attribution_blocked` | PCSD/PCC/SIFF在新checkpoint与test-primary规则下是否仍成立 | retrospective audit；not a method | 70/70；280/280；joint pass；two-contribution attribution fail | archive result；SIFF Step6/PCC Step2-4 |
@@ -221,6 +221,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | D20-D1 contribution diagnostic design | saved-probe base/contribution recovery + actual/oracle scale by future bins | design/tool frozen；result not started | remote artifact read only；test oracle diagnostic；no checkpoint mutation/training | `analysis/stage_c_post_ccsf_step24_reset_20260719/d20_d1_contribution_diagnostic/design.md` |
 | D20-D1 contribution diagnostic result | 90-row actual/oracle alpha + within-model base removal | SPEC +26.89%/39 of40；RANDOM +9.04%/35 of40；median alpha >1 | scalar rescue false；co-adaptation explains importance；return Step2/3 | `analysis/stage_c_post_ccsf_step24_reset_20260719/d20_d1_contribution_diagnostic/result.md` |
 | D21-EVS Step2/3 + Step7A | external prior-art boundary + validation→test past × region interaction diagnostic | problem definition/narrative/design frozen；192-feature descriptor；synthetic policy recovery pass | only frozen D14 checkpoint evaluation authorized；new training/method false | `analysis/stage_c_d21_evidence_validity_surface_20260720/step23_problem_and_design_audit.md` |
+| D21-EVS Step8/9/10 | 100 frozen-checkpoint exports + validation-fit/test interaction controls + posthoc forward attribution | oracle 7.64%/10.41%；neutral HGB vs additive +0.0347%；A6 -0.0069%；validation forward +0.3092%/+0.4406% | exact split-stable EVS closed；no seeds/rescue；rollback joint Step2 | `analysis/stage_c_d21_evidence_validity_surface_20260720/step9/deep_audit.md` |
 
 ## Pending Tasks
 
@@ -285,7 +286,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | Post-D19 compact statistic viability audit | `completed_step2_4` | D20 diagnostic family保留；smaller IF/history-phase method routes关闭 |
 | SC-D20-CST transfer/specificity diagnostic | `completed_negative_rollback_step2_4` | exact design closed；保留weak specificity与split-mismatch evidence |
 | SC-D20-D1 contribution direction/scale | `completed_coadaptation_explains` | no D20-v2；evidence feeds Step2/3 only |
-| SC-D21-EVS problem audit | `step7a_pass_remote_next` | 100 frozen-checkpoint val/test exports；interaction vs region/sample/additive/permuted |
+| SC-D21-EVS problem audit | `completed_closed_split_unstable` | no seeds/representation rescue；evidence retained；joint Step2 |
 
 ## Paper Mainline Sync Log
 
@@ -388,6 +389,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-20 | D20 Step9/10 + Step2/4 reassessment | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | four-layer result + failure correction + external boundary | transfer fail；weak specificity；val/test mismatch；exact D20 closed；D20-D1 next |
 | 2026-07-20 | D20-D1 contribution oracle | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | within-model direction/scale attribution | scale not culprit；co-adaptation responsibility relocation；Step2/3 next |
 | 2026-07-20 | D21-EVS problem/narrative gate + Step7A | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | replace vague support with past × future-region interaction | external boundaries frozen；192-feature/synthetic checks pass；Step7B next |
+| 2026-07-20 | D21-EVS Step8/9/10 | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | full test gate + oracle accounting + split-stability failure attribution | 100/100；0/2 readouts pass；additive explains；exact EVS closed；joint Step2 |
 
 ## Continuation Rules
 
@@ -564,3 +566,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
     generic coordinate/capacity controls，才允许进入Step4 method；Contribution 2不得提前实现。
 70. D20-D1中SPEC/RANDOM相对各自co-adapted base均高度有益，但完整models仍差于A6；这证明path importance不等于
     incremental information。不得用within-model ablation、oracle alpha或component norm为D20/SCTO promotion背书。
+71. D21-EVS official-test problem gate为0/2 readouts pass。不得把large oracle、region/permutation positives或把
+    0.1% threshold事后降为0来升级EVS；neutral/A6 interaction相对additive的test gain分别为+0.0347%/-0.0069%。
+72. D21 validation-forward nonlinear interaction存在但到test缩小/反转，说明局部learnability不等于split-stable
+    paper necessity。D21不补seed、不做encoder-representation/readout rescue；两个contribution slots共同回Step2。

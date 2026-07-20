@@ -123,3 +123,18 @@ Step2/3 problem diagnostic. It is not a paper method. The problem may enter
 Step4 only if validation-fitted policies transfer to official test and the
 past-by-region interaction beats region-only, sample-only/additive, and
 permuted-history controls.
+
+## Returned evidence
+
+D21 completed 100/100 frozen-checkpoint exports. The official-test gate failed.
+The strongest neutral-carrier HGB interaction improved over region-only by
+`0.6325%` and over permuted history by `0.6206%`, but improved over the
+mandatory additive sample+region control by only `0.0347%`, below the frozen
+`0.1%` margin. On the A6 carrier the corresponding additive comparison was
+`-0.0069%`.
+
+A posthoc chronological validation-forward audit found nonlinear interaction
+increments of `+0.3092%` and `+0.4406%` for neutral/A6, which collapsed or
+reversed on official test. Thus the exact problem's split-stability clause is
+unsupported. Status is `diagnostic_only_closed_split_unstable`; EVS does not
+enter Step4 or occupy a paper contribution slot.

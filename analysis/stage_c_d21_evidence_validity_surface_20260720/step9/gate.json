@@ -1,0 +1,44 @@
+{
+  "decision": "exact_descriptor_readout_probe_failed_direction_unresolved",
+  "diagnostic_id": "SC-D21-EVS",
+  "evaluation_split": "test",
+  "fit_split": "validation",
+  "gate_by_readout": {
+    "hist_gradient_boosting": {
+      "checks": {
+        "a6_vs_region_datasets": true,
+        "a6_vs_region_macro": true,
+        "neutral_vs_additive_datasets": true,
+        "neutral_vs_additive_macro": false,
+        "neutral_vs_history_global": true,
+        "neutral_vs_permuted_datasets": true,
+        "neutral_vs_permuted_macro": true,
+        "neutral_vs_region_datasets": true,
+        "neutral_vs_region_macro": true,
+        "no_severe_degradation": true
+      },
+      "passed": false,
+      "severely_degraded_datasets": 0
+    },
+    "ridge": {
+      "checks": {
+        "a6_vs_region_datasets": true,
+        "a6_vs_region_macro": true,
+        "neutral_vs_additive_datasets": false,
+        "neutral_vs_additive_macro": false,
+        "neutral_vs_history_global": false,
+        "neutral_vs_permuted_datasets": true,
+        "neutral_vs_permuted_macro": true,
+        "neutral_vs_region_datasets": false,
+        "neutral_vs_region_macro": false,
+        "no_severe_degradation": true
+      },
+      "passed": false,
+      "severely_degraded_datasets": 0
+    }
+  },
+  "matrix_complete": true,
+  "paper_method_authorized": false,
+  "step4_source_design_authorized": false,
+  "test_informed": true
+}

@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD — Fixed-Past Projective Multi-Horizon Generation |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC-D21-EVS Step8 frozen-checkpoint evaluation running；Contribution 2 Step2 |
+| `current_11_step` | SC-D21-EVS Step9/10 closed；Contributions 1/2 joint Step2 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | no active two-contribution method；SIFF-v2 parent frozen；EVS problem diagnostic active |
+| `paper_core_status` | no active problem/method；SIFF-v2 remains frozen performance parent；EVS closed |
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
@@ -153,6 +153,13 @@ official test只评估transfer。TimeFuse、TimeRouter、Synapse、TimeMixer、M
 projective decoder内表示past-by-coordinate route validity；Contribution 2负责在同一end-to-end forward graph中给
 这些routes分配与最终fused forecast一致的credit。offline oracle teacher、stale cross-fit labels与requested-H
 conditioning均被排除。当前这只是可证伪的论文蓝图，不是method claim。
+
+[D21 Returned Decision] 100/100 exports完整。D14 oracle opportunity在official test仍为neutral `+7.6399%`、A6
+`+10.4053%`，但neutral HGB interaction相对mandatory additive control只有`+0.0347%`，低于冻结`0.1%`；A6为
+`-0.0069%`。validation chronological forward interaction曾有`+0.3092%/+0.4406%`，到test缩小或反转。因此
+exact EVS的split-stability与material non-separability没有成立；generic sample/additive effects解释了大部分可学习
+收益。`SC-D21-EVS`关闭，不补seeds、不做representation rescue。上述Provisional Two-Slot Logic作为失败的
+historical hypothesis保留，不能再写成active paper thesis；两个slots共同回Step2。
 
 forecast-revision surface已转移到根目录`New-idea.md`，状态`deferred_next_paper`；它不再是当前论文问题。
 

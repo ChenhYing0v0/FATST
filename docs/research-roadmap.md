@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC-D21-EVS Step8 frozen-checkpoint evaluation running；Contribution 2 Step2 |
-| `active_question` | internal route validity是否存在past × future-region non-separable、split-stable surface？ |
-| `active_candidates` | SIFF-v2 frozen parent；D21-EVS diagnostic_only active；no active method；CTD paused |
+| `current_step` | SC-D21-EVS Step9/10 closed；Contributions 1/2 joint Step2 |
+| `active_question` | 重新寻找test-stable、multi-horizon-specific且能自然要求architecture+training两项贡献的问题 |
+| `active_candidates` | SIFF-v2 frozen parent；D21-EVS closed；no active problem/method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_d21_evidence_validity_surface_20260720/step23_problem_and_design_audit.md` |
-| `method_implementation` | no active method；D21 Step8 running；new forecasting training/confirmation=false |
-| `rollback_point` | Contribution 1=Step2 unless D21 interaction gate passes；Contribution 2=Step2 |
+| `active_protocol` | `analysis/stage_c_d21_evidence_validity_surface_20260720/step9/deep_audit.md` |
+| `method_implementation` | no active method；D21 rescue/confirmation=false |
+| `rollback_point` | Contributions 1/2 joint Step2 problem reconstruction |
 
 ## post-CCSF Step 2/4 Reset
 
@@ -165,6 +165,13 @@ crossing/oracle作为headroom；D20/D1不作正向existence evidence。validatio
 评估transfer；global/region/history-global/additive/permuted/oracle controls全部冻结。Step7A descriptor为192维，
 synthetic policy recovery与static invariants通过。decision=`d21_evs_step7a_pass_remote_checkpoint_evaluation_next`；
 只授权读取seed2021 frozen D14 checkpoints，不授权new forecasting training、method或confirmation。
+
+[D21-EVS Step9/10] 100/100 exports与完整official-test gate完成。Oracle相对region仍有neutral `+7.6399%`、A6
+`+10.4053%` headroom，但最强neutral HGB interaction相对additive仅`+0.0347%`，低于冻结`0.1%`；A6为
+`-0.0069%`。validation chronological forward HGB曾为`+0.3092%/+0.4406%`，到test缩小或反转，证明paper定义所需
+split stability不成立。Permuted controls表明past signal存在，但additive sample+region解释大部分realized gain。
+Decision=`close_exact_evs_problem_split_stability_failed_return_step2`；不补seed、不做representation/readout rescue，
+Contributions 1/2共同回Step2。
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 
