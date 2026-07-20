@@ -5,7 +5,7 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC-D23-FCMI Step8 remote/test authorized；commit-pinned preflight next |
+| `current_step` | SC-D23-FCMI Step8 40-run matrix running |
 | `active_question` | 如何原生分离generic evidence main effect与future-coordinate interaction，并包含二者fallback？ |
 | `active_candidates` | FCMI formal candidate frozen/not trained；A6/dense/matched controls；SIFF-v2 frozen history |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
@@ -73,6 +73,11 @@ decision=`step7b_prelaunch_pass_waiting_remote_test_authorization`；该节点�
 用户2026-07-20以“按计划继续推进工作”独立授权冻结的seed2021 40-run/160-cell formal matrix。该授权只覆盖
 remote training与一次official-test audit；confirmation seeds、paper-method promotion、matrix/profile/gate修改
 仍为false。Step8必须先commit/push、remote pull、`nvidia-smi`以及Weather-FCMI和ETTm2-DENSE resource smoke。
+
+Step8已于`2026-07-20T17:57:10+08:00`从commit `4ff439c`在GPU0/1/2启动。preflight显示三卡空闲，
+Weather-FCMI与ETTm2-DENSE两项2-batch smoke finite/pass；首批Weather FCMI/DENSE/A6进入训练。
+40/40完整前不得pull、改matrix或启动confirmation。launch provenance见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step8_remote/remote_launch_record.md`。
 
 用户2026-07-20决定暂不承担task pivot成本。该scope决定把上一版“D22-C有效失败即停止整个
 deterministic-MSE search”改为：关闭exact D22-C v1并回joint Step2/3，在同一task边界寻找不同的falsifiable

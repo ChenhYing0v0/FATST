@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD — Unified Multi-Horizon Forecasting（projectivity不再是强制主线） |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC-D23-FCMI Step8 remote/test已授权；commit-pinned preflight next |
+| `current_11_step` | SC-D23-FCMI Step8 40-run matrix running |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -81,6 +81,12 @@ Step7B本身只得到`step7b_prelaunch_pass_waiting_remote_test_authorization`�
 2026-07-20以“按计划继续推进工作”独立授权冻结的seed2021 40-run/160-cell remote/test matrix；
 confirmation seeds与method promotion仍为false。下一步先做commit-pinned remote pull、GPU preflight和两项
 resource smoke。dense control不是method component或第二项contribution。
+
+[SC-D23-FCMI Step8] commit `4ff439c`已完成remote pull、三张RTX 3090 preflight以及Weather-FCMI/
+ETTm2-DENSE resource smoke；smoke finite且无OOM。40-run matrix于`2026-07-20T17:57:10+08:00`在
+GPU0/1/2启动，首批Weather FCMI/DENSE/A6均进入训练。运行期间不改config/gates，不启动confirmation；
+完整40/40返回后才执行冻结four-layer analyzer。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step8_remote/remote_launch_record.md`。
 
 [Scope Decision, 2026-07-20] 用户明确要求当前项目暂不转出`deterministic-MSE fixed-past architecture search`。
 因此D22-C有效失败只关闭exact v1并回joint Step2/3，不再自动停止整个search；但不得用seed、width、readout或

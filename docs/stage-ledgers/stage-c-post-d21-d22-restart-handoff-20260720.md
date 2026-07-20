@@ -28,14 +28,14 @@
 | `project` | R_2026_FATST |
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-20 |
-| `source_parent_commit` | `b29df3e` |
-| `current_step` | SC-D23-FCMI Step8 seed2021 remote/test authorized；preflight next |
+| `source_parent_commit` | `4ff439c` |
+| `current_step` | SC-D23-FCMI Step8 40-run matrix running |
 | `active_problem` | generic evidence main effect与future-coordinate interaction如何可识别地共存并原生fallback？ |
 | `active_method` | none trained；FCMI formal identity frozen/not trained |
 | `method_training_authorized` | false |
 | `remote_training_authorized` | true；仅frozen seed2021 40-run matrix |
-| `next_action` | commit/push、remote pull、GPU preflight、Weather-FCMI与ETTm2-DENSE smoke |
-| `conditional_next` | smoke通过后启动40-run/160-test-cell Step8；confirmation仍false |
+| `next_action` | 等待40/40完整artifacts；不得改config或选择局部结果 |
+| `conditional_next` | 完整后执行冻结four-layer analyzer；confirmation仍false |
 | `rollback` | Step7B attribution fault回Step6；matched/narrative fail回Step4；不自动pivot task |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
@@ -100,7 +100,8 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
 10. D22-C v1.1已完整通过problem gate；FCMI Step7A production-local 11/11通过，尚未训练；
 11. FCMI Step7B prelaunch 21/21通过；40 runs、160 official-test cells、160 validation cells和dense
     capacity control已冻结；
-12. 用户2026-07-20已独立授权上述seed2021 remote/test matrix；confirmation与paper method仍未授权。
+12. 用户2026-07-20已独立授权上述seed2021 remote/test matrix；confirmation与paper method仍未授权；
+13. commit `4ff439c`已通过三卡preflight与两项resource smoke；40-run matrix自17:57:10起运行。
 
 ## 5. D22-HFA 的执行顺序
 
@@ -216,15 +217,15 @@ control。dense arm是capacity attribution control，不是第二个method或Con
 9. docs/paper-mainline.md
 10. docs/research-roadmap.md
 
-当前权威状态是：D22-C v1.1完整problem gate已通过，decision=`target_coordinate_information_access_supported`；SC-D23-FCMI Step7B prelaunch gate为21/21 pass，用户已独立授权frozen seed2021 40-run/160-cell Step8 remote/test matrix。exact projectivity、requested-H禁用、full-T prefix crop、A6 interface compatibility以及预设decoder+loss双贡献均不再是硬约束；但在fixed past、pointwise MSE且H不携带额外信息时，同一future coordinate的Bayes conditional mean不依赖requested horizon，因此不得直接实现H embedding/router。
+当前权威状态是：D22-C v1.1完整problem gate已通过，decision=`target_coordinate_information_access_supported`；SC-D23-FCMI Step7B prelaunch gate为21/21 pass，frozen seed2021 40-run/160-cell Step8 matrix已从commit `4ff439c`在GPU0/1/2启动。exact projectivity、requested-H禁用、full-T prefix crop、A6 interface compatibility以及预设decoder+loss双贡献均不再是硬约束；但在fixed past、pointwise MSE且H不携带额外信息时，同一future coordinate的Bayes conditional mean不依赖requested horizon，因此不得直接实现H embedding/router。
 
-A6-LBF仅是strong carrier/control/possible component，不足以standalone承载论文；SIFF-v2是冻结历史候选；D17-D21均已关闭，不做seed、readout、representation或参数rescue；CTD保持paused。FCMI formal identity已经冻结但尚未训练；seed2021 remote/test已授权，confirmation与paper method未授权。
+A6-LBF仅是strong carrier/control/possible component，不足以standalone承载论文；SIFF-v2是冻结历史候选；D17-D21均已关闭，不做seed、readout、representation或参数rescue；CTD保持paused。FCMI Step8正在运行；confirmation与paper method未授权。
 
 已确认D22-C ordered相对generic为test MSE `+2.5228%`、MAE `+1.6484%`、15/20 cells、4/5 datasets、4/4 horizons；其余四controls均20/20正向。Weather相对generic 4/4负向，必须保留generic fallback并禁止universal claim。
 
 Step7A已验证zero-mean interaction、standard-query exact morph、main/interaction/query/output gradients、dual parameter matching与35个production CLI cases。Step7B又冻结`DENSE_DUAL_MATCHED`、8 arms × 5 datasets × seed2021的40-run matrix、160个official-test cells、160个validation cells、四层gates与failure rollback。dense control相对A6 active parameter gap为`0.0914%–0.1321%`，只作capacity attribution，不是method或第二项contribution。CATS/TimePerceiver等已覆盖query-to-history primitive；FCMI只在main–interaction decomposition与generic/standard containment的完整chain上作provisional claim。
 
-下一步先commit/push authorization，再做commit-pinned remote pull、`nvidia-smi`、Weather-FCMI与ETTm2-DENSE resource smoke；smoke通过后启动Step8。不得改matrix/profile/gates，不得设计第二loss/router。
+Step8已通过commit-pinned remote pull、`nvidia-smi`、Weather-FCMI与ETTm2-DENSE resource smoke并启动。下一步等待40/40完整artifacts，再由冻结analyzer执行一次全矩阵Step9/10；不得改matrix/profile/gates，不得用局部test结果选择，不得设计第二loss/router。
 
 完成后同步更新analysis report、docs/paper-mainline.md、docs/research-roadmap.md和Stage C ledger，执行最小诚实验证，并按AGENTS.md提交、推送。请从专业时序预测研究员角度进行审计，不要为了凑两个contributions而预先设计第二个loss/router。
 ```

@@ -20,10 +20,10 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SC-D23-FCMI Step8 remote/test authorized；preflight next |
+| `current_11_step` | SC-D23-FCMI Step8 40-run matrix running |
 | `current_candidate` | FCMI formal identity frozen；not trained |
-| `latest_decision` | `step8_seed2021_remote_test_authorized_preflight_next` |
-| `next_required_action` | commit/push、remote pull、GPU preflight与两项resource smoke |
+| `latest_decision` | `step8_running_wait_complete_matrix` |
+| `next_required_action` | 等待40/40完整artifacts，再执行冻结four-layer analyzer |
 | `method_training_authorized` | seed2021 40-run remote/test true；confirmation/H router/第二loss=false |
 | `rollback_point` | Step6 prelaunch attribution fault；Step4 matched/narrative failure |
 
@@ -31,7 +31,7 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | SC-D23-FCMI Step8 authorized；preflight next |
+| `current_step` | SC-D23-FCMI Step8 running |
 | `problem` | standard query context entangles generic evidence main与coordinate interaction，且Weather要求fallback |
 | `existence_evidence` | D22-C ordered vs generic +2.5228% test/+2.5410% val；15/20；4/5；Weather -1.0900% |
 | `idea` | $S_t=\bar S+\Delta_t$；分别变换main与zero-mean interaction |
@@ -66,7 +66,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | --- | --- | --- | --- | --- | --- |
 | `A6-LBF-natural-baseline` | `control_only` | validation-frozen natural profiles可作为稳定共同起点 | not required | 72/72 test；3 seeds；dense horizons | `frozen_test_reference_ready`；只作固定reference |
 | `SC-D22-HFA` | `completed_target_access_supported` | target-coordinate-specific access是否超越matched generic与shuffles | problem evidence pass；not method effectiveness | ordered vs generic +2.5228%；15/20；4/5；all five controls pass | handoff D23 Step4 |
-| `SC-D23-FCMI` | `step8_authorized_preflight_next` | generic main与coordinate interaction能否可识别分解并原生fallback | conditional pass | Step7B 21/21；effectiveness pending | seed2021 remote/test true；confirmation false |
+| `SC-D23-FCMI` | `step8_running` | generic main与coordinate interaction能否可识别分解并原生fallback | conditional pass | Step7B 21/21；effectiveness pending | 40-run matrix running；confirmation false |
 | `SC1-PMFO-RCT-v1` | `failed_as_core_candidate` | fixed mixed-radix conservative future tree | narrative/local pass | Step7B三dataset均不优于A6；no numeric pathology | archived as evidence；rollback Step 4 |
 | `SC1-FPMO-M0` | `control_only` | shared-latent exact A6 morph验证function preservation/restriction | not required | exact equality required | mandatory Step6 morphism control |
 | `SC1-FPMO-DA` | `control_only` | direct atom full-affine head隔离capacity/orthogonal coordinate effect | not required | matched function-class control | mandatory Step6 dense-equivalence control |
@@ -230,6 +230,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | D23-FCMI Step4-6 | source boundary + main/interaction decomposition + contained controls | generic/standard containment；matched dual/order controls | conditional narrative pass；Step7A local only | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_fcmi_step46_design_audit.md` |
 | D23-FCMI Step7A | production layer + 35 CLI + morph/gradient/parameter/order gates | 11/11；morph `6.33e-8`；dual params exact；A6 gap 83%–95% | local pass；dense control mandatory；remote/test false | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_fcmi_step7a_implementation_audit.md` |
 | D23-FCMI Step7B prelaunch | 40-run matrix + dense capacity control + evaluator/analyzer/runner refusal | 21/21；dense gap `0.0914%–0.1321%`；160 test + 160 val cells frozen | prelaunch pass；等待独立remote/test授权 | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step7b_prelaunch/prelaunch_report.md` |
+| D23-FCMI Step8 launch | commit-pinned pull + 3-GPU preflight + dual resource smoke + background driver | commit `4ff439c`；smokes finite；first Weather jobs active | running；40/40后four-layer analyzer；confirmation false | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step8_remote/remote_launch_record.md` |
 
 ## Pending Tasks
 
@@ -297,7 +298,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC-D21-EVS problem audit | `completed_closed_split_unstable` | no seeds/representation rescue；evidence retained；joint Step2 |
 | SC-D22-HFA D22-A/B | `completed_frontier_not_supported` | pure-request Bayes boundary冻结；D22-C conditional design only |
 | SC-D22-HFA D22-C | `completed_problem_supported` | full artifacts；ordered > all controls；Weather generic negative retained |
-| SC-D23-FCMI | `step8_authorized_preflight_next` | 21/21；40 runs、160 test/160 val cells冻结；seed2021 remote/test true |
+| SC-D23-FCMI | `step8_running` | commit `4ff439c`；3 GPUs；40 runs、160 test/160 val cells；confirmation false |
 
 ## Paper Mainline Sync Log
 
@@ -409,6 +410,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-20 | D23-FCMI Step7A | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | production tensor path + morph/gradient/parameter/CLI audit | 11/11 pass；Step7B design freeze next；remote/test false |
 | 2026-07-20 | D23-FCMI Step7B prelaunch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | dense capacity attribution + formal matrix/tooling/authorization boundary | 21/21 pass；等待独立remote/test授权；no training result |
 | 2026-07-20 | D23-FCMI Step8 authorization | Current Position、Candidate Queue、11-Step Record | frozen seed2021 40-run/160-cell remote/test scope | user authorized；preflight/smoke next；confirmation/paper method false |
+| 2026-07-20 | D23-FCMI Step8 launch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | commit/resource/smoke/process provenance | `4ff439c`；3×3090；40-run matrix running；confirmation false |
 
 ## Continuation Rules
 
@@ -629,3 +631,5 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 86. 用户2026-07-20以“按计划继续推进工作”独立授权`SC-D23-FCMI-v1`的seed2021 40-run/160-cell
     remote/test matrix。该授权不覆盖confirmation seeds、paper-method promotion、H/router/第二loss或任何
     profile/arm/gate修改；Step8必须先通过commit-pinned remote pull、GPU preflight与两项resource smoke。
+87. Step8已从commit `4ff439c`启动。运行中不得remote pull、修改config/profile/arms/gates或查看局部
+    official-test结果作选择；40/40完整后只能由冻结analyzer生成一次全矩阵Step9/10 decision。
