@@ -7,14 +7,14 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD — Unified Multi-Horizon Forecasting（projectivity不再是强制主线） |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC-D23-FCMI Step4-6 conditional pass；Step7A local only |
+| `current_11_step` | SC-D23-FCMI Step7A local 11/11 pass；Step7B design freeze next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | no active method；D22-C problem gate pass；FCMI narrative-ready candidate，remote/test false |
+| `paper_core_status` | no active trained method；FCMI production-local candidate，remote/test false |
 
 [Constraint Reset, 2026-07-20] 后续不再把exact projectivity、requested horizon禁用、A6 interface compatibility或
 full-$T$ prefix crop当作新方法的先验硬约束。它们可以成为合理设计或matched controls，但必须由problem、理论与
@@ -65,9 +65,11 @@ Contribution 1。
 [SC-D23-FCMI] Step4-6提出`Future-Coordinate Main–Interaction operator`：对standard query context
 $S_t$计算trajectory main $\bar S$与zero-mean interaction $\Delta_t=S_t-\bar S$，再以
 $W_{\rm main}\bar S+W_{\rm int}\Delta_t$作native forecast state。$W_{\rm int}=0$精确包含generic case，
-$W_{\rm main}=W_{\rm int}$精确包含standard query decoder；没有H embedding、router或第二loss。narrative gate
-为`conditional_pass`，下一步只授权Step7A local shape/morphism/gradient/parameter gate，remote/test仍false。
-Contribution 2继续open。
+$W_{\rm main}=W_{\rm int}$精确包含standard query decoder；没有H embedding、router或第二loss。Step7A production
+implementation现为11/11 pass：zero-mean residual最大`1.82e-7`，standard morph最大差`6.33e-8`，
+main/interaction/query/output gradients均finite/nonzero，dual controls在五个natural profiles参数严格相等。
+FCMI相对A6 active parameters少约83%–95%，故未来formal matrix必须增加dense capacity-matched control。
+下一步只做Step7B design/prelaunch freeze；remote/test仍false，Contribution 2继续open。
 
 [Scope Decision, 2026-07-20] 用户明确要求当前项目暂不转出`deterministic-MSE fixed-past architecture search`。
 因此D22-C有效失败只关闭exact v1并回joint Step2/3，不再自动停止整个search；但不得用seed、width、readout或

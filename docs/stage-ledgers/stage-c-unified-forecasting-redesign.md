@@ -9,38 +9,38 @@
 | `active_question` | D22-C problem pass后，如何分离generic evidence main与future-coordinate interaction并原生fallback？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | FCMI narrative-ready/not implemented；A6 control；D22-C diagnostic pass；SIFF-v2 frozen |
+| `active_candidates` | FCMI production-local/not trained；A6 control；D22-C diagnostic pass；SIFF-v2 frozen |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
 | `stage_exit` | 新problem先通过existence/narrative gate，再决定一项或两项可归因contributions |
-| `stage_rollback` | FCMI local fail回Step5/6；matched/narrative fail回Step4；CTD paused |
+| `stage_rollback` | FCMI Step7B attribution缺失回Step6；matched/narrative fail回Step4；CTD paused |
 
 ## Decision Cursor
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SC-D23-FCMI Step4-6 conditional pass |
-| `current_candidate` | FCMI narrative-ready；not implemented |
-| `latest_decision` | `d22c_problem_supported_fcmi_step46_conditional_pass` |
-| `next_required_action` | FCMI Step7A local tensor/morphism/gradient/parameter/CLI gate |
-| `method_training_authorized` | local Step7A only；remote/test/H router/第二loss=false |
-| `rollback_point` | Step5/6 local fault；Step4 matched/narrative failure |
+| `current_11_step` | SC-D23-FCMI Step7A local 11/11 pass |
+| `current_candidate` | FCMI production-local；not trained |
+| `latest_decision` | `step7a_local_pass_step7b_design_freeze_next` |
+| `next_required_action` | Step7B freeze dense capacity control、formal matrix、gates与rollback |
+| `method_training_authorized` | false；remote/test/H router/第二loss=false |
+| `rollback_point` | Step6 prelaunch attribution fault；Step4 matched/narrative failure |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | SC-D23-FCMI Step4-6 |
+| `current_step` | SC-D23-FCMI Step7A complete；Step7B next |
 | `problem` | standard query context entangles generic evidence main与coordinate interaction，且Weather要求fallback |
 | `existence_evidence` | D22-C ordered vs generic +2.5228% test/+2.5410% val；15/20；4/5；Weather -1.0900% |
 | `idea` | $S_t=\bar S+\Delta_t$；分别变换main与zero-mean interaction |
 | `theory_check` | generic $W_int=0$；standard query $W_main=W_int$；不输入H |
 | `design` | A6 encoder + FCMI；standard/generic/dual-matched/order controls；same measure objective |
 | `narrative_gate` | conditional pass；claim complete coupling，不claim attention/query primitive |
-| `effectiveness_gate` | pending；remote/test false |
-| `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_fcmi_step46_design_audit.md` |
-| `decision` | `step46_conditional_pass_step7a_local_only` |
+| `effectiveness_gate` | pending；local implementation 11/11；remote/test false |
+| `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_fcmi_step7a_implementation_audit.md` |
+| `decision` | `step7a_local_pass_step7b_design_freeze_next` |
 
 ## Frozen Carrier Contract
 
@@ -66,7 +66,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | --- | --- | --- | --- | --- | --- |
 | `A6-LBF-natural-baseline` | `control_only` | validation-frozen natural profiles可作为稳定共同起点 | not required | 72/72 test；3 seeds；dense horizons | `frozen_test_reference_ready`；只作固定reference |
 | `SC-D22-HFA` | `completed_target_access_supported` | target-coordinate-specific access是否超越matched generic与shuffles | problem evidence pass；not method effectiveness | ordered vs generic +2.5228%；15/20；4/5；all five controls pass | handoff D23 Step4 |
-| `SC-D23-FCMI` | `narrative_ready_local_only` | generic main与coordinate interaction能否可识别分解并原生fallback | conditional pass | not implemented | Step7A local gate |
+| `SC-D23-FCMI` | `production_local_pass_not_trained` | generic main与coordinate interaction能否可识别分解并原生fallback | conditional pass | Step7A 11/11；effectiveness pending | Step7B design freeze |
 | `SC1-PMFO-RCT-v1` | `failed_as_core_candidate` | fixed mixed-radix conservative future tree | narrative/local pass | Step7B三dataset均不优于A6；no numeric pathology | archived as evidence；rollback Step 4 |
 | `SC1-FPMO-M0` | `control_only` | shared-latent exact A6 morph验证function preservation/restriction | not required | exact equality required | mandatory Step6 morphism control |
 | `SC1-FPMO-DA` | `control_only` | direct atom full-affine head隔离capacity/orthogonal coordinate effect | not required | matched function-class control | mandatory Step6 dense-equivalence control |
@@ -226,6 +226,9 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | D21-EVS Step2/3 + Step7A | external prior-art boundary + validation→test past × region interaction diagnostic | problem definition/narrative/design frozen；192-feature descriptor；synthetic policy recovery pass | only frozen D14 checkpoint evaluation authorized；new training/method false | `analysis/stage_c_d21_evidence_validity_surface_20260720/step23_problem_and_design_audit.md` |
 | D21-EVS Step8/9/10 | 100 frozen-checkpoint exports + validation-fit/test interaction controls + posthoc forward attribution | oracle 7.64%/10.41%；neutral HGB vs additive +0.0347%；A6 -0.0069%；validation forward +0.3092%/+0.4406% | exact split-stable EVS closed；no seeds/rescue；rollback joint Step2 | `analysis/stage_c_d21_evidence_validity_surface_20260720/step9/deep_audit.md` |
 | D22-A/B Bayes + frontier audit | primary-source refresh + D18 H1..720 dense curves + A6_MEASURE/A6_FULL + checkpoint/seed sensitivity | own-H +0.1659%、7/15；SPEC96 +1.2748%/5 of5但H192/H336负；0/15 arm-dataset Pareto；measure five bins均5/5正 | `finite_capacity_frontier_not_supported`；D22-C design-only；method/remote/test false | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d22_ab_bayes_frontier_audit.md` |
+| D22-C target-access problem gate | neutral/raw-history six-arm matched diagnostic | ordered vs generic +2.5228%；15/20 cells、4/5 datasets；Weather -1.0900% | target-coordinate access supported；not method effectiveness | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d22c_result_and_step4_handoff.md` |
+| D23-FCMI Step4-6 | source boundary + main/interaction decomposition + contained controls | generic/standard containment；matched dual/order controls | conditional narrative pass；Step7A local only | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_fcmi_step46_design_audit.md` |
+| D23-FCMI Step7A | production layer + 35 CLI + morph/gradient/parameter/order gates | 11/11；morph `6.33e-8`；dual params exact；A6 gap 83%–95% | local pass；dense control mandatory；remote/test false | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_fcmi_step7a_implementation_audit.md` |
 
 ## Pending Tasks
 
@@ -293,7 +296,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC-D21-EVS problem audit | `completed_closed_split_unstable` | no seeds/representation rescue；evidence retained；joint Step2 |
 | SC-D22-HFA D22-A/B | `completed_frontier_not_supported` | pure-request Bayes boundary冻结；D22-C conditional design only |
 | SC-D22-HFA D22-C | `completed_problem_supported` | full artifacts；ordered > all controls；Weather generic negative retained |
-| SC-D23-FCMI | `step46_conditional_pass` | local implementation only；remote/test false |
+| SC-D23-FCMI | `step7a_local_pass_step7b_next` | 11/11；dense capacity control mandatory；remote/test false |
 
 ## Paper Mainline Sync Log
 
@@ -402,6 +405,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-20 | D22-C v1 early numeric audit | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | training-loss scale pathology before any complete/test artifact | v1 invalid；stop；v1.1 standardized-scale loss only；fresh rerun |
 | 2026-07-20 | D22-C v1.1 Step9/10 | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | complete matched problem gate + heterogeneity/internal audit | target-access supported；generic +2.5228%；Weather negative；return Step4 |
 | 2026-07-20 | D23-FCMI Step4-6 | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | prior boundary + main-interaction decomposition + containment/controls | conditional narrative pass；Step7A local only |
+| 2026-07-20 | D23-FCMI Step7A | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | production tensor path + morph/gradient/parameter/CLI audit | 11/11 pass；Step7B design freeze next；remote/test false |
 
 ## Continuation Rules
 
@@ -605,3 +609,6 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 81. CATS/TimePerceiver/MQTransformer/TQNet已覆盖query-to-history primitive。FCMI的provisional claim只在
     `problem evidence -> main/interaction decomposition -> generic/standard containment -> matched attribution`
     完整chain；Step7A前remote/test false。
+82. FCMI Step7A为11/11 pass；zero-mean与standard exact morph数值通过，dual controls参数严格相等，四条关键
+    gradients均finite/nonzero。FCMI相对A6 active params少83%–95%，Step7B必须增加dense capacity-matched
+    control并冻结formal gates；remote/test继续false。

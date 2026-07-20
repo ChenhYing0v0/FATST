@@ -1,0 +1,100 @@
+{
+  "stage": "StageC-UVHF",
+  "candidate_id": "SC-D23-FCMI",
+  "candidate_version": "SC-D23-FCMI-v1-step7a",
+  "status": "local_implementation_gate",
+  "role": "paper_core_candidate_local_only",
+  "test_informed": true,
+  "step46": {
+    "path": "analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_fcmi_step46_design_audit.md",
+    "sha256": "a496416a676c61b08dc5a5a880cf78295dc068e7129b1ce0759cf0bd9d5166aa"
+  },
+  "profiles": {
+    "path": "configs/stage_c_five_dataset_natural_profiles.json",
+    "sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a"
+  },
+  "datasets": ["Weather", "ETTm1", "ETTh1", "ETTh2", "ETTm2"],
+  "horizons": [96, 192, 336, 720],
+  "seed": 2021,
+  "arms": [
+    {
+      "id": "A6_MEASURE",
+      "readout_mode": "learned-basis-forecast-operator",
+      "role": "strong_carrier_control"
+    },
+    {
+      "id": "STANDARD_QUERY",
+      "readout_mode": "fcmi-standard-query",
+      "role": "lower_parameter_source_family_control"
+    },
+    {
+      "id": "STANDARD_DUAL_MATCHED",
+      "readout_mode": "fcmi-standard-dual-matched",
+      "role": "matched_multi_branch_control"
+    },
+    {
+      "id": "GENERIC_DUAL_MATCHED",
+      "readout_mode": "fcmi-generic-dual-matched",
+      "role": "matched_generic_contained_control"
+    },
+    {
+      "id": "FCMI",
+      "readout_mode": "fcmi",
+      "role": "candidate"
+    },
+    {
+      "id": "FCMI_ORDER_SHUFFLED",
+      "readout_mode": "fcmi-order-shuffled",
+      "role": "order_specificity_control"
+    },
+    {
+      "id": "TARGET_SHUFFLED_QUERY",
+      "readout_mode": "fcmi-target-shuffled-query",
+      "role": "local_sanity_only"
+    }
+  ],
+  "implementation_contract": {
+    "prediction_length": 720,
+    "fcmi_n_heads": 8,
+    "fcmi_dropout": 0.0,
+    "fcmi_permutation_seed": 20260720,
+    "memory_position": "fixed_sinusoidal",
+    "target_query": "fixed_sinusoidal_then_shared_mlp",
+    "full_trajectory_before_prefix_crop": true,
+    "requested_horizon_input": false,
+    "router": false,
+    "second_loss": false,
+    "training_objective": "harmonic_prefix_measure_l1"
+  },
+  "expected_counts": {
+    "production_cli_cases": 35,
+    "dataset_parameter_groups": 5,
+    "tensor_profile": "ETTh2",
+    "synthetic_batch": 2,
+    "synthetic_channels": 3
+  },
+  "gates": {
+    "all_finite": true,
+    "interaction_mean_abs_max": 1e-6,
+    "standard_morph_output_max_abs": 1e-6,
+    "full_model_prefix_max_abs": 1e-6,
+    "generic_zero_mean_perturbation_max_abs": 1e-6,
+    "gradient_norm_min": 1e-10,
+    "dual_active_parameter_gap": 0,
+    "dual_decoder_parameter_gap": 0,
+    "dual_common_initialization_hashes_equal": true,
+    "dual_branch_initialization_max_abs": 0.0,
+    "order_shuffle_marginal_max_abs": 1e-7,
+    "order_shuffle_binding_min_abs": 1e-8,
+    "order_shuffle_output_min_abs": 1e-8,
+    "target_shuffle_output_min_abs": 1e-8,
+    "a6_fcmi_parameter_relative_gap_requires_future_dense_control": 0.01
+  },
+  "authorization": {
+    "step7a_local": true,
+    "step7b_prelaunch": false,
+    "remote_training": false,
+    "official_test_access": false,
+    "paper_method_effectiveness_claim": false
+  }
+}

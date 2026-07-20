@@ -5,6 +5,10 @@ import torch.nn.functional as F
 from layers.Alignment import glocal_align_ablation
 from layers.CCSF import CCSFCouplingFieldReadout
 from layers.Embed import PositionalEmbedding
+from layers.FCMI import (
+    FCMI_READOUT_MODES,
+    FutureCoordinateMainInteractionReadout,
+)
 from layers.GroupedMLP import GroupedMLPReadout
 from layers.ImplicitForecast import (
     DirectNonlinearMatchedReadout,
@@ -114,6 +118,7 @@ D19_IMPLICIT_READOUTS = {
 D19_DIRECT_READOUTS = {"implicit-direct-nonlinear-matched"}
 D19_READOUTS = D19_IMPLICIT_READOUTS | D19_DIRECT_READOUTS
 D20_READOUTS = {"learned-basis-compact-history-statistic"}
+FCMI_READOUTS = FCMI_READOUT_MODES
 
 
 def _real_fourier_projection(length, dimension):
@@ -460,6 +465,7 @@ class Model(nn.Module):
             *SIFF_CONTROL_READOUTS,
             *CCSF_READOUTS,
             *D19_READOUTS,
+            *FCMI_READOUTS,
         }:
             raise ValueError(
                 "Clean TimeAlign supports only 'official' and "
@@ -478,6 +484,7 @@ class Model(nn.Module):
             | CCSF_READOUTS
             | D19_READOUTS
             | D20_READOUTS
+            | FCMI_READOUTS
             and self.pred_len != 720
         ):
             raise ValueError("StageC projective readouts require pred_len=720")
@@ -939,6 +946,18 @@ class Model(nn.Module):
                 dropout=float(getattr(configs, "if_head_dropout", 0.1)),
                 fourier_norm=str(getattr(configs, "if_fourier_norm", "ortho")),
             )
+        if self.readout_mode in FCMI_READOUTS:
+            self.fcmi_readout = FutureCoordinateMainInteractionReadout(
+                memory_dim=self.d_model,
+                prediction_length=self.pred_len,
+                patch_count=self.patch_num,
+                n_heads=int(getattr(configs, "fcmi_n_heads", 8)),
+                dropout=float(getattr(configs, "fcmi_dropout", 0.0)),
+                mode=self.readout_mode,
+                permutation_seed=int(
+                    getattr(configs, "fcmi_permutation_seed", 20260720)
+                ),
+            )
 
         self.normalization_x = Normalize(configs.enc_in, affine=False)
         if self.has_future_recon_branch:
@@ -1264,6 +1283,8 @@ class Model(nn.Module):
                 normalized_history,
                 target_prefix,
             )
+        elif self.readout_mode in FCMI_READOUTS:
+            output = self.fcmi_readout(memory, target_prefix)
         else:
             raise ValueError(f"Unsupported readout mode: {self.readout_mode}")
         output = self.normalization_x(output, "denorm")

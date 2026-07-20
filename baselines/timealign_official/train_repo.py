@@ -98,6 +98,7 @@ PREFIX_READOUT_MODES = {
     "implicit-frequency-noskip-control",
     "implicit-direct-nonlinear-matched",
     "learned-basis-compact-history-statistic",
+    *TimeAlign.FCMI_READOUTS,
 }
 
 STAGE_C_ACTIVE_READOUTS = {
@@ -136,6 +137,7 @@ STAGE_C_ACTIVE_READOUTS = {
     "implicit-frequency-noskip-control",
     "implicit-direct-nonlinear-matched",
     "learned-basis-compact-history-statistic",
+    *TimeAlign.FCMI_READOUTS,
 }
 
 ACTIVE_STAGE_C_CONTRACT = {
@@ -443,6 +445,9 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         history_statistic_mode=args.history_statistic_mode,
         history_statistic_dim=args.history_statistic_dim,
         history_statistic_random_seed=args.history_statistic_random_seed,
+        fcmi_n_heads=args.fcmi_n_heads,
+        fcmi_dropout=args.fcmi_dropout,
+        fcmi_permutation_seed=args.fcmi_permutation_seed,
         evaluation_prefix_mode=getattr(args, "evaluation_prefix_mode", "native"),
         segment_horizons=getattr(
             args,
@@ -688,6 +693,65 @@ def initialization_contract(model: nn.Module) -> dict[str, Any]:
         payload["implicit_direct_initialization_hash"] = _tensor_hash(
             list(model.implicit_direct_readout.parameters())
         )
+    if hasattr(model, "fcmi_readout"):
+        readout = model.fcmi_readout
+        common_parameters = [
+            parameter
+            for name, parameter in readout.named_parameters()
+            if name.startswith(
+                (
+                    "query_encoder.",
+                    "cross_attention.",
+                    "output_projection.",
+                )
+            )
+        ]
+        payload.update(
+            {
+                "fcmi_common_initialization_hash": _tensor_hash(
+                    common_parameters
+                ),
+                "fcmi_memory_position_hash": _tensor_hash(
+                    [readout.memory_positions]
+                ),
+                "fcmi_target_position_hash": _tensor_hash(
+                    [readout.target_positions]
+                ),
+                "fcmi_memory_permutation_hash": _tensor_hash(
+                    [readout.memory_permutation]
+                ),
+                "fcmi_target_permutation_hash": _tensor_hash(
+                    [readout.target_permutation]
+                ),
+            }
+        )
+        if readout.is_dual:
+            payload.update(
+                {
+                    "fcmi_main_initialization_hash": _tensor_hash(
+                        list(readout.main_projection.parameters())
+                    ),
+                    "fcmi_interaction_initialization_hash": _tensor_hash(
+                        list(readout.interaction_projection.parameters())
+                    ),
+                    "fcmi_branch_initial_max_abs_gap": max(
+                        float(
+                            (
+                                main_parameter
+                                - interaction_parameter
+                            ).abs().max().item()
+                        )
+                        for main_parameter, interaction_parameter in zip(
+                            readout.main_projection.parameters(),
+                            readout.interaction_projection.parameters(),
+                        )
+                    ),
+                }
+            )
+        else:
+            payload["fcmi_standard_initialization_hash"] = _tensor_hash(
+                list(readout.standard_projection.parameters())
+            )
     return payload
 
 
@@ -1010,6 +1074,34 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
                     readout.history_spectrum_bins
                 ),
                 "implicit_direct_fourier_norm": readout.fourier_norm,
+            }
+        )
+    if hasattr(model, "fcmi_readout"):
+        readout = model.fcmi_readout
+        active_prefixes = (
+            "patch_emb_x.",
+            "encoder.",
+            "norm_x.",
+            "fcmi_readout.",
+        )
+        active_parameters = sum(
+            parameter.numel()
+            for name, parameter in model.named_parameters()
+            if name.startswith(active_prefixes)
+        )
+        payload.update(
+            {
+                "active_forward_parameters": active_parameters,
+                "unused_proj_x_parameters": sum(
+                    parameter.numel()
+                    for name, parameter in model.named_parameters()
+                    if name.startswith("proj_x.")
+                ),
+                "fcmi_decoder_parameters": readout.decoder_parameters,
+                "fcmi_mode": readout.mode,
+                "fcmi_dual": readout.is_dual,
+                "fcmi_n_heads": readout.n_heads,
+                "fcmi_dropout": readout.dropout,
             }
         )
     if hasattr(model, "pcsd_readout"):
@@ -2282,6 +2374,13 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=20260719,
     )
+    parser.add_argument("--fcmi-n-heads", type=int, default=8)
+    parser.add_argument("--fcmi-dropout", type=float, default=0.0)
+    parser.add_argument(
+        "--fcmi-permutation-seed",
+        type=int,
+        default=20260720,
+    )
     parser.add_argument(
         "--ccsf-calibration-temperature",
         type=float,
@@ -2540,6 +2639,24 @@ def parse_args() -> argparse.Namespace:
             raise ValueError("D20 requires basis_rank=256 and statistic_dim=64")
         if args.history_statistic_random_seed != 20260719:
             raise ValueError("D20 requires random projection seed 20260719")
+    if args.readout_mode in TimeAlign.FCMI_READOUTS:
+        effective_d_model = (
+            args.legacy_d_model
+            if args.legacy_d_model is not None
+            else OFFICIAL_PRESETS[args.dataset][args.pred_len].d_model
+        )
+        if args.pred_len != 720:
+            raise ValueError("D23 FCMI requires pred_len=720")
+        if args.fcmi_n_heads <= 0 or effective_d_model % args.fcmi_n_heads:
+            raise ValueError(
+                "FCMI d_model must be divisible by fcmi_n_heads"
+            )
+        if not 0.0 <= args.fcmi_dropout < 1.0:
+            raise ValueError("FCMI dropout must lie in [0, 1)")
+        if args.fcmi_permutation_seed != 20260720:
+            raise ValueError(
+                "D23 FCMI requires permutation seed 20260720"
+            )
     if args.ccsf_calibration_temperature not in {0.05, 0.1, 0.25}:
         raise ValueError("CCSF temperature must lie in the frozen shared grid")
     if not math.isclose(

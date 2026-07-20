@@ -5,14 +5,14 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC-D23-FCMI Step4-6 conditional pass；Step7A local next |
+| `current_step` | SC-D23-FCMI Step7A local 11/11 pass；Step7B design freeze next |
 | `active_question` | 如何原生分离generic evidence main effect与future-coordinate interaction，并包含二者fallback？ |
-| `active_candidates` | FCMI narrative-ready/not implemented；A6 control；SIFF-v2 frozen history |
+| `active_candidates` | FCMI production-local/not trained；A6 control；SIFF-v2 frozen history |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_fcmi_step46_design_audit.md` |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_fcmi_step7a_implementation_audit.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | Step7A local only；FCMI remote/test false |
-| `rollback_point` | Step5/6 if local morph fails；Step4 if matched control/narrative fails |
+| `method_implementation` | production-local complete；FCMI remote/test false |
+| `rollback_point` | Step6 if prelaunch attribution incomplete；Step4 if matched/narrative fails |
 
 ## Post-D21 Unconstrained Reset
 
@@ -54,6 +54,12 @@ test MSE `+2.5228%`、MAE `+1.6484%`，15/20 cells、4/5 datasets、4/4 horizons
 Step4-6现冻结`SC-D23-FCMI`：将query context精确拆为trajectory-wide main与zero-mean coordinate interaction，
 分别变换后合成；generic与standard query decoder均为exact contained cases。matched dual-branch control用于排除
 multi-branch capacity解释。narrative gate conditional pass，只授权local Step7A，不授权remote/test或第二loss。
+
+Step7A production gate现为11/11 pass。memory/query/context/main/interaction/output shapes正确；
+$\operatorname{mean}_t\Delta_t$最大`1.82e-7`，FCMI与standard-dual initial morph最大差`6.33e-8`；
+generic control不读取interaction，四条关键gradient均finite/nonzero，order shuffle保持value marginal并改变
+value-position binding。五个profiles内dual controls参数严格相等。FCMI相对A6 active parameters少83%–95%，
+故Step7B必须冻结dense capacity-matched control后才能讨论remote matrix。当前remote/test仍false。
 
 用户2026-07-20决定暂不承担task pivot成本。该scope决定把上一版“D22-C有效失败即停止整个
 deterministic-MSE search”改为：关闭exact D22-C v1并回joint Step2/3，在同一task边界寻找不同的falsifiable
