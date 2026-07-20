@@ -20,27 +20,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SC-D23-FCMI Step7B prelaunch 21/21 pass |
+| `current_11_step` | SC-D23-FCMI Step8 remote/test authorized；preflight next |
 | `current_candidate` | FCMI formal identity frozen；not trained |
-| `latest_decision` | `step7b_prelaunch_pass_waiting_remote_test_authorization` |
-| `next_required_action` | 等待独立remote/test授权；获授权后才执行Step8 commit-pinned preflight |
-| `method_training_authorized` | false；remote/test/H router/第二loss=false |
+| `latest_decision` | `step8_seed2021_remote_test_authorized_preflight_next` |
+| `next_required_action` | commit/push、remote pull、GPU preflight与两项resource smoke |
+| `method_training_authorized` | seed2021 40-run remote/test true；confirmation/H router/第二loss=false |
 | `rollback_point` | Step6 prelaunch attribution fault；Step4 matched/narrative failure |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | SC-D23-FCMI Step7B complete；Step8 held |
+| `current_step` | SC-D23-FCMI Step8 authorized；preflight next |
 | `problem` | standard query context entangles generic evidence main与coordinate interaction，且Weather要求fallback |
 | `existence_evidence` | D22-C ordered vs generic +2.5228% test/+2.5410% val；15/20；4/5；Weather -1.0900% |
 | `idea` | $S_t=\bar S+\Delta_t$；分别变换main与zero-mean interaction |
 | `theory_check` | generic $W_int=0$；standard query $W_main=W_int$；不输入H |
 | `design` | A6 encoder + FCMI；standard/generic/order/dense controls；40-run matrix；same measure objective |
 | `narrative_gate` | conditional pass；claim complete coupling，不claim attention/query primitive |
-| `effectiveness_gate` | pending；Step7B prelaunch 21/21；remote/test false |
+| `effectiveness_gate` | pending；Step7B prelaunch 21/21；seed2021 remote/test authorized |
 | `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step7b_prelaunch/prelaunch_report.md` |
-| `decision` | `step7b_prelaunch_pass_waiting_remote_test_authorization` |
+| `decision` | `step8_seed2021_remote_test_authorized_preflight_next` |
 
 ## Frozen Carrier Contract
 
@@ -66,7 +66,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | --- | --- | --- | --- | --- | --- |
 | `A6-LBF-natural-baseline` | `control_only` | validation-frozen natural profiles可作为稳定共同起点 | not required | 72/72 test；3 seeds；dense horizons | `frozen_test_reference_ready`；只作固定reference |
 | `SC-D22-HFA` | `completed_target_access_supported` | target-coordinate-specific access是否超越matched generic与shuffles | problem evidence pass；not method effectiveness | ordered vs generic +2.5228%；15/20；4/5；all five controls pass | handoff D23 Step4 |
-| `SC-D23-FCMI` | `formal_prelaunch_pass_waiting_authorization` | generic main与coordinate interaction能否可识别分解并原生fallback | conditional pass | Step7B 21/21；effectiveness pending | 独立授权后Step8；当前remote/test false |
+| `SC-D23-FCMI` | `step8_authorized_preflight_next` | generic main与coordinate interaction能否可识别分解并原生fallback | conditional pass | Step7B 21/21；effectiveness pending | seed2021 remote/test true；confirmation false |
 | `SC1-PMFO-RCT-v1` | `failed_as_core_candidate` | fixed mixed-radix conservative future tree | narrative/local pass | Step7B三dataset均不优于A6；no numeric pathology | archived as evidence；rollback Step 4 |
 | `SC1-FPMO-M0` | `control_only` | shared-latent exact A6 morph验证function preservation/restriction | not required | exact equality required | mandatory Step6 morphism control |
 | `SC1-FPMO-DA` | `control_only` | direct atom full-affine head隔离capacity/orthogonal coordinate effect | not required | matched function-class control | mandatory Step6 dense-equivalence control |
@@ -297,7 +297,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC-D21-EVS problem audit | `completed_closed_split_unstable` | no seeds/representation rescue；evidence retained；joint Step2 |
 | SC-D22-HFA D22-A/B | `completed_frontier_not_supported` | pure-request Bayes boundary冻结；D22-C conditional design only |
 | SC-D22-HFA D22-C | `completed_problem_supported` | full artifacts；ordered > all controls；Weather generic negative retained |
-| SC-D23-FCMI | `step7b_prelaunch_pass_waiting_authorization` | 21/21；40 runs、160 test/160 val cells冻结；remote/test false |
+| SC-D23-FCMI | `step8_authorized_preflight_next` | 21/21；40 runs、160 test/160 val cells冻结；seed2021 remote/test true |
 
 ## Paper Mainline Sync Log
 
@@ -408,6 +408,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-20 | D23-FCMI Step4-6 | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | prior boundary + main-interaction decomposition + containment/controls | conditional narrative pass；Step7A local only |
 | 2026-07-20 | D23-FCMI Step7A | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | production tensor path + morph/gradient/parameter/CLI audit | 11/11 pass；Step7B design freeze next；remote/test false |
 | 2026-07-20 | D23-FCMI Step7B prelaunch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | dense capacity attribution + formal matrix/tooling/authorization boundary | 21/21 pass；等待独立remote/test授权；no training result |
+| 2026-07-20 | D23-FCMI Step8 authorization | Current Position、Candidate Queue、11-Step Record | frozen seed2021 40-run/160-cell remote/test scope | user authorized；preflight/smoke next；confirmation/paper method false |
 
 ## Continuation Rules
 
@@ -625,3 +626,6 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 85. `step7b_prelaunch_pass_waiting_remote_test_authorization`不等于Step8授权。当前config中remote、official
     test与paper-method flags均为false，runner非dry-run固定exit 3；只有用户独立授权后才可commit-pinned
     remote pull、`nvidia-smi`、resource smoke与formal matrix。
+86. 用户2026-07-20以“按计划继续推进工作”独立授权`SC-D23-FCMI-v1`的seed2021 40-run/160-cell
+    remote/test matrix。该授权不覆盖confirmation seeds、paper-method promotion、H/router/第二loss或任何
+    profile/arm/gate修改；Step8必须先通过commit-pinned remote pull、GPU preflight与两项resource smoke。

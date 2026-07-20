@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC-D23-FCMI Step7B prelaunch 21/21 pass；等待独立remote/test授权 |
+| `current_step` | SC-D23-FCMI Step8 remote/test authorized；commit-pinned preflight next |
 | `active_question` | 如何原生分离generic evidence main effect与future-coordinate interaction，并包含二者fallback？ |
 | `active_candidates` | FCMI formal candidate frozen/not trained；A6/dense/matched controls；SIFF-v2 frozen history |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step7b_prelaunch/prelaunch_report.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | production-local与formal prelaunch complete；FCMI remote/test false |
+| `method_implementation` | production-local与formal prelaunch complete；seed2021 remote/test true |
 | `rollback_point` | Step6 if prelaunch attribution incomplete；Step4 if matched/narrative fails |
 
 ## Post-D21 Unconstrained Reset
@@ -68,7 +68,11 @@ formal matrix冻结8 arms × 5 datasets × seed2021 = 40 runs；全部arms形成
 160个validation cells。target-shuffle原拟validation-only，但因其参与方向级attribution，在任何test access前
 改为formal control。validation只作four-horizon checkpoint selection与健康诊断，official test才承担
 effectiveness与matched attribution。runner在authorization=false时固定exit 3。
-decision=`step7b_prelaunch_pass_waiting_remote_test_authorization`；当前remote/test仍false。
+decision=`step7b_prelaunch_pass_waiting_remote_test_authorization`；该节点当时remote/test为false。
+
+用户2026-07-20以“按计划继续推进工作”独立授权冻结的seed2021 40-run/160-cell formal matrix。该授权只覆盖
+remote training与一次official-test audit；confirmation seeds、paper-method promotion、matrix/profile/gate修改
+仍为false。Step8必须先commit/push、remote pull、`nvidia-smi`以及Weather-FCMI和ETTm2-DENSE resource smoke。
 
 用户2026-07-20决定暂不承担task pivot成本。该scope决定把上一版“D22-C有效失败即停止整个
 deterministic-MSE search”改为：关闭exact D22-C v1并回joint Step2/3，在同一task边界寻找不同的falsifiable
