@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | decoder/operator 与 training principle 两项相互支撑的 paper-core innovations |
-| `active_question` | future-distance predictive support能否从past识别并跨split稳定，而非co-adaptation artifact？ |
+| `active_question` | internal route validity是否具有past × future-region、validation→test稳定的non-separable surface？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | SIFF-v2 frozen parent；D20 exact design closed；future-distance support provisional；no active method；CTD paused |
+| `active_candidates` | SIFF-v2 frozen parent；SC-D21-EVS problem diagnostic implemented；no active method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `stage_exit` | 新两项分别过 narrative/effectiveness gate并形成可归因joint story |
@@ -19,27 +19,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | D20/D20-D1 closed；Contribution 1 Step2/3 problem re-audit；Contribution 2 Step2 |
-| `current_candidate` | immutable SIFF-v2 parent；future-distance support provisional；no method |
-| `latest_decision` | D1 scalar fix rejected；SPEC/RANDOM internal importance由co-adaptation解释；support仍unverified |
-| `next_required_action` | Step2/3设计train-only validation→test support-identifiability problem diagnostic |
-| `method_training_authorized` | false；next problem diagnostic implementation/remote/test均未授权 |
+| `current_11_step` | SC-D21-EVS Step7A complete；Step7B remote checkpoint evaluation next；Contribution 2 Step2 |
+| `current_candidate` | immutable SIFF-v2 parent；D21-EVS diagnostic_only；no method |
+| `latest_decision` | future-distance support收紧为Evidence-Validity Surface；problem narrative/design gate通过 |
+| `next_required_action` | commit/push后启动D21 seed2021 dual-carrier validation-fit→test-evaluation |
+| `method_training_authorized` | false；D21只授权读取frozen D14 checkpoints；new forecasting training=false |
 | `rollback_point` | Contribution 1 Step2/4；R3 unsupported则Step2；Contribution 2 Step2 |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | D20/D20-D1 closed；Contribution 1 Step2/3；Contribution 2 Step2 |
-| `problem` | history evidence是否具有future-distance-dependent且split-stable predictive support |
-| `existence_evidence` | D20 weak specificity/decay；D1显示SPEC 39/40 internal helpful但不增益A6，co-adaptation解释 |
-| `idea` | 检验support能否由past-only evidence识别并validation→test transfer；未支持前不设计operator |
-| `theory_check` | exact projectivity保留；within-model importance不等于incremental information；requested H禁用 |
-| `design` | next diagnostic not frozen；必须train-only fit、held-out split test、跨机制controls、无method training |
-| `narrative_gate` | no method；scalar repair与generic spectral robustness fail；support family provisional |
-| `effectiveness_gate` | D20 failed；D1 attribution only；new problem/candidate not started |
-| `artifacts` | D20 Step9 + post-D20 reassessment + D20-D1 design/result/config/tool |
-| `decision` | `d1_complete_scalar_fix_rejected_coadaptation_explains_return_step2_3` |
+| `current_step` | SC-D21-EVS Step7A complete；Step7B next；Contribution 2 Step2 |
+| `problem` | independently useful internal routes是否存在past × future-region non-separable relative-risk surface |
+| `existence_evidence` | D14 dual-carrier three-seed crossing/oracle；D20/D1仅限定co-adaptation failure boundary |
+| `idea` | validation拟合past-only centered-risk；official test比较interaction与region/sample/additive/permuted controls |
+| `theory_check` | exact projectivity；requested H禁用；interaction是multi-horizon specificity；expert selection只作保守witness |
+| `design` | 2 carriers × 5 datasets × 5 canonical D14 arms × val/test；100 checkpoint evaluations；no new model training |
+| `narrative_gate` | problem-level pass；external fusion/routing/multiscale/query/projectivity boundaries frozen |
+| `effectiveness_gate` | not applicable；D21只决定是否授权Step4 method design |
+| `artifacts` | EVS prior-art audit + Step2/3 design + config + evaluator/analyzer/runner + Step7A checker |
+| `decision` | `d21_evs_step7a_pass_remote_checkpoint_evaluation_next` |
 
 ## Frozen Carrier Contract
 
@@ -107,7 +107,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC-D19-IFC-control-v1.1` | `control_only_closed_negative_return_step2_4` | source-informed implicit trajectory decoder是否超过A6 learned-basis control | not a contribution；IF prior mandatory | IF vs A6 -3.6117%；vs direct -0.8075%；skip positive；health pass | no seeds/sweep；retain skip evidence；rollback Step2/4 |
 | `SC-D20-CST` | `diagnostic_only_closed_failed_transfer_weak_specificity` | IF内的compact history-spectrum信息能否transfer到A6并超过同维random history projection | diagnostic only；generic concat与frequency primitive非method | SPEC-vs-A6 -0.7614%；vs random +0.1412%；health 11/11；val/test reversal | no seeds/sweep；rollback Step2/4；direction not rejected |
 | `SC-D20-D1-CONTRIB` | `diagnostic_only_completed_coadaptation_explains` | D20失败是否只是contribution direction/scale错误 | posthoc test oracle；not method | SPEC +26.89% vs co-adapted base/39 of40；RANDOM +9.04%/35 of40；alpha medians >1 | scalar fix rejected；within-model importance non-incremental；return Step2/3 |
-| `SC-D21-FDS` | `provisional_problem_not_designed` | future-distance predictive support是否past-identifiable且split-stable | no narrative/method gate yet | D20 decay clue；D1 does not support envelope | Step2/3 source/control/problem design only；implementation false |
+| `SC-D21-EVS` | `diagnostic_only_step7a_pass` | route validity是否为past × future-region non-separable surface | problem narrative/design pass；not a method | D14 oracle confirmed；past-identifiability未测试 | commit/push后Step7B；no new training/method |
 | `SC2-MCCA-v1` | `historical_validation_negative_fair_test_not_reaudited` | same total scope skill mass能否竞争性分配而避免per-target homogenization | complete-chain conditional pass | old best-H720 validation four-H -0.1357%、1/5；not in 70-run audit | inactive；reuse前回Step4重审相对EQUAL/MEASURE的必要性 |
 | `SC-D16-CTD` | `deferred_paused_by_user` | H720 checkpoint是否丢弃healthy SIFF four-H epoch | diagnostic only；weighted checkpoint prior-covered | not implemented | design retained；resume only after user authorization |
 | `SC-RETRO-FAIR-v1` | `completed_partial_pass_attribution_blocked` | PCSD/PCC/SIFF在新checkpoint与test-primary规则下是否仍成立 | retrospective audit；not a method | 70/70；280/280；joint pass；two-contribution attribution fail | archive result；SIFF Step6/PCC Step2-4 |
@@ -220,6 +220,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | Post-D20 Contribution 1 Step2/4 reassessment | external robustness/frequency refresh + result synthesis + candidate screening | scalar repair/generic robustness fail narrative；support family provisional | D20-D1 posthoc next；new training/method false | `analysis/stage_c_post_ccsf_step24_reset_20260719/post_d20_step24_reassessment.md` |
 | D20-D1 contribution diagnostic design | saved-probe base/contribution recovery + actual/oracle scale by future bins | design/tool frozen；result not started | remote artifact read only；test oracle diagnostic；no checkpoint mutation/training | `analysis/stage_c_post_ccsf_step24_reset_20260719/d20_d1_contribution_diagnostic/design.md` |
 | D20-D1 contribution diagnostic result | 90-row actual/oracle alpha + within-model base removal | SPEC +26.89%/39 of40；RANDOM +9.04%/35 of40；median alpha >1 | scalar rescue false；co-adaptation explains importance；return Step2/3 | `analysis/stage_c_post_ccsf_step24_reset_20260719/d20_d1_contribution_diagnostic/result.md` |
+| D21-EVS Step2/3 + Step7A | external prior-art boundary + validation→test past × region interaction diagnostic | problem definition/narrative/design frozen；192-feature descriptor；synthetic policy recovery pass | only frozen D14 checkpoint evaluation authorized；new training/method false | `analysis/stage_c_d21_evidence_validity_surface_20260720/step23_problem_and_design_audit.md` |
 
 ## Pending Tasks
 
@@ -284,7 +285,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | Post-D19 compact statistic viability audit | `completed_step2_4` | D20 diagnostic family保留；smaller IF/history-phase method routes关闭 |
 | SC-D20-CST transfer/specificity diagnostic | `completed_negative_rollback_step2_4` | exact design closed；保留weak specificity与split-mismatch evidence |
 | SC-D20-D1 contribution direction/scale | `completed_coadaptation_explains` | no D20-v2；evidence feeds Step2/3 only |
-| SC-D21-FDS problem audit | `provisional_not_designed` | source/control audit；定义past-only fit与validation→test transfer gate |
+| SC-D21-EVS problem audit | `step7a_pass_remote_next` | 100 frozen-checkpoint val/test exports；interaction vs region/sample/additive/permuted |
 
 ## Paper Mainline Sync Log
 
@@ -386,6 +387,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-20 | D20 Step8 remote launch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | commit/resource/process provenance | `9573cd7`；3×3090；15-run matrix running；no monitoring/confirmation |
 | 2026-07-20 | D20 Step9/10 + Step2/4 reassessment | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | four-layer result + failure correction + external boundary | transfer fail；weak specificity；val/test mismatch；exact D20 closed；D20-D1 next |
 | 2026-07-20 | D20-D1 contribution oracle | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | within-model direction/scale attribution | scale not culprit；co-adaptation responsibility relocation；Step2/3 next |
+| 2026-07-20 | D21-EVS problem/narrative gate + Step7A | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | replace vague support with past × future-region interaction | external boundaries frozen；192-feature/synthetic checks pass；Step7B next |
 
 ## Continuation Rules
 

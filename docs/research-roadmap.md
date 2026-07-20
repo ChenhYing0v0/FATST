@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | D20/D20-D1 closed；Contribution 1 Step2/3 problem re-audit；Contribution 2 Step2 |
-| `active_question` | future-distance predictive support能否从past识别并跨split稳定，而非co-adaptation artifact？ |
-| `active_candidates` | SIFF-v2 frozen parent；D20 exact design closed；future-distance support family provisional；no active method；CTD paused |
+| `current_step` | SC-D21-EVS Step7A complete；Step7B frozen-checkpoint evaluation next；Contribution 2 Step2 |
+| `active_question` | internal route validity是否存在past × future-region non-separable、split-stable surface？ |
+| `active_candidates` | SIFF-v2 frozen parent；D21-EVS diagnostic_only active；no active method；CTD paused |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_ccsf_step24_reset_20260719/d20_d1_contribution_diagnostic/result.md` |
-| `method_implementation` | no active method；next problem diagnostic not designed；training/confirmation=false |
-| `rollback_point` | Contribution 1=Step2/4；future-distance support only after stable problem evidence；Contribution 2=Step2 |
+| `active_protocol` | `analysis/stage_c_d21_evidence_validity_surface_20260720/step23_problem_and_design_audit.md` |
+| `method_implementation` | no active method；D21 diagnostic implemented；new forecasting training/confirmation=false |
+| `rollback_point` | Contribution 1=Step2 unless D21 interaction gate passes；Contribution 2=Step2 |
 
 ## post-CCSF Step 2/4 Reset
 
@@ -156,8 +156,15 @@ alpha=`1.2649`；RANDOM也为`+9.0422%`、35/40。scalar shrink/normalization re
 反映joint responsibility relocation，而非对A6的独立增量。D1也没有支持future-distance envelope，因为SPEC path
 几乎所有bins内部有益。Decision=`d1_complete_scalar_fix_rejected_coadaptation_explains_return_step2_3`。
 
-下一步不实现operator，而是先设计跨机制、train-only、validation→test的problem diagnostic，检验support是否
+下一步不实现operator，而是先设计跨机制、validation-fit→official-test的problem diagnostic，检验support是否
 past-identifiable且split-stable；失败则关闭该provisional family。
+
+[D21-EVS Step2/3] 宽泛`future-distance support`经external source audit收紧为Evidence-Validity Surface：route
+relative risk必须包含past × future-region interaction，而不是region-only或sample-only主效应。D14-A两carrier三seed
+crossing/oracle作为headroom；D20/D1不作正向existence evidence。validation拟合centered log-risk，official test只
+评估transfer；global/region/history-global/additive/permuted/oracle controls全部冻结。Step7A descriptor为192维，
+synthetic policy recovery与static invariants通过。decision=`d21_evs_step7a_pass_remote_checkpoint_evaluation_next`；
+只授权读取seed2021 frozen D14 checkpoints，不授权new forecasting training、method或confirmation。
 
 ## SIFF_EQUAL Attribution Step 6 Freeze
 

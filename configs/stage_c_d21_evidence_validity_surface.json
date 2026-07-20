@@ -1,0 +1,68 @@
+{
+  "stage": "StageC-UVHF",
+  "diagnostic_id": "SC-D21-EVS",
+  "role": "problem_gate_validation_to_test_past_identifiability",
+  "series_length": 720,
+  "seed": 2021,
+  "carriers": ["neutral_raw", "a6_natural"],
+  "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"],
+  "canonical_arms": ["c_s1", "c_s48", "c_s144", "c_s360", "c_s720"],
+  "descriptor_anchor_arm": "c_s1",
+  "probe_rows": 4096,
+  "future_bins": [
+    {"name": "short", "start": 0, "end": 144},
+    {"name": "mid", "start": 144, "end": 360},
+    {"name": "long", "start": 360, "end": 720}
+  ],
+  "history_descriptor": {
+    "mean_pool_width": 12,
+    "recent_values": 48,
+    "fourier_non_dc_coefficients": 32,
+    "autocorrelation_lags": [1, 6, 12, 24, 48, 96, 168, 336],
+    "recent_stat_windows": [24, 48, 96, 192],
+    "normalization_epsilon": 1e-5
+  },
+  "risk_target": "centered_log_bin_mse",
+  "readouts": {
+    "primary": {
+      "name": "ridge",
+      "alpha": 10.0
+    },
+    "sensitivity": {
+      "name": "hist_gradient_boosting",
+      "max_iter": 100,
+      "max_leaf_nodes": 15,
+      "learning_rate": 0.05,
+      "l2_regularization": 1.0,
+      "random_state": 20260720
+    }
+  },
+  "controls": [
+    "global_fixed",
+    "region_fixed",
+    "history_global",
+    "additive_history_region",
+    "evs_interaction",
+    "permuted_history",
+    "oracle"
+  ],
+  "gates": {
+    "neutral_interaction_vs_region_macro_gain_min": 0.003,
+    "neutral_interaction_vs_region_dataset_required": 3,
+    "a6_interaction_vs_region_macro_gain_min": 0.0,
+    "a6_interaction_vs_region_dataset_required": 3,
+    "neutral_interaction_vs_additive_macro_gain_min": 0.001,
+    "neutral_interaction_vs_additive_dataset_required": 3,
+    "neutral_interaction_vs_permuted_macro_gain_min": 0.002,
+    "neutral_interaction_vs_permuted_dataset_required": 3,
+    "maximum_policy_degradation": 0.1,
+    "maximum_severely_degraded_datasets": 1
+  },
+  "authorization": {
+    "uses_validation_split_for_fit": true,
+    "uses_test_split_for_evaluation": true,
+    "new_forecasting_model_training": false,
+    "paper_method_implementation": false,
+    "confirmation_seeds": false
+  }
+}

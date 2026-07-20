@@ -7,13 +7,13 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD — Fixed-Past Projective Multi-Horizon Generation |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | D20/D20-D1 closed；Contribution 1 Step2/3 problem re-audit；Contribution 2 Step2 |
+| `current_11_step` | SC-D21-EVS Step7A complete；Step7B frozen-checkpoint evaluation next；Contribution 2 Step2 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `paper_core_status` | no active two-contribution method；SIFF-v2 parent frozen；D20 exact design closed；support family provisional |
+| `paper_core_status` | no active two-contribution method；SIFF-v2 parent frozen；EVS problem diagnostic active |
 
 [Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
 primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
@@ -134,6 +134,25 @@ q64 additive coefficient injection；failure attribution为`validation_test_mism
 `1.2649`；RANDOM也为`+9.0422%`、35/40。完整两臂却都差于A6，证明within-model path importance不能当作
 incremental mechanism evidence；joint model发生了non-identifiable responsibility relocation。scalar shrink rescue
 关闭，future-distance support也未被D1支持，继续停在problem-unverified Step2/3。
+
+[D21 Problem Redefinition] 外部primary-source审计后，宽泛的`future-distance support`已被替换为
+`Evidence-Validity Surface (EVS)`：在一次full-$T$、prefix-projective生成中，internal forecast-construction
+route的conditional relative risk是否是past pattern $x$与future coordinate $\tau$的non-separable函数。该定义要求
+past × future-region interaction同时超过global fixed、region-only、sample-only、additive sample+region与permuted
+history controls。若region-only解释收益，问题退化为静态segmented decoder；若sample-only解释，问题退化为
+generic adaptive fusion，均不能支撑当前multi-horizon主线。
+
+D14-A dual-carrier、three-seed crossing与sample-over-bin oracle是problem headroom；D20/D1只限定co-adaptation
+边界。D21 seed2021使用五个独立训练的D14 canonical scope arms，在validation拟合past-only centered log-risk，
+official test只评估transfer。TimeFuse、TimeRouter、Synapse、TimeMixer、MQTransformer、TimePerceiver与ElasTST
+分别构成external model fusion、routing、multiscale predictor、target-query与projectivity mandatory boundaries。
+当前problem narrative/design gate与Step7A local implementation已通过；100个frozen-checkpoint val/test evaluations是
+下一步。new forecasting model training、paper method与confirmation seeds仍未授权。
+
+[Provisional Two-Slot Logic] 只有D21 problem gate通过后，两个slots才可进入Step4：Contribution 1负责在single
+projective decoder内表示past-by-coordinate route validity；Contribution 2负责在同一end-to-end forward graph中给
+这些routes分配与最终fused forecast一致的credit。offline oracle teacher、stale cross-fit labels与requested-H
+conditioning均被排除。当前这只是可证伪的论文蓝图，不是method claim。
 
 forecast-revision surface已转移到根目录`New-idea.md`，状态`deferred_next_paper`；它不再是当前论文问题。
 
