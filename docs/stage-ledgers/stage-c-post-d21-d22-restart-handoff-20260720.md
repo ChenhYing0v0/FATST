@@ -43,13 +43,14 @@
 34. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step9_10_20260721/step9_10_result_and_rollback.md`；
 35. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_post_cpsi_step45_20260721/step4_5_scope_independence_narrative_gate.md`；
 36. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step7b_prelaunch_20260721/prelaunch_report.md`；
-37. `docs/code-explanation/stage-c-iscf-v0-sac-step7b.md`；
-38. `configs/stage_c_iscf_v0_scope_attribution_confirmation.json`；
-39. `configs/stage_c_iscf_v0_carrier.json`；
-40. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
-41. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
-42. `docs/paper-mainline.md`；
-43. `docs/research-roadmap.md`。
+37. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step8_remote_20260721/remote_authorization_and_launch.md`；
+38. `docs/code-explanation/stage-c-iscf-v0-sac-step7b.md`；
+39. `configs/stage_c_iscf_v0_scope_attribution_confirmation.json`；
+40. `configs/stage_c_iscf_v0_carrier.json`；
+41. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
+42. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
+43. `docs/paper-mainline.md`；
+44. `docs/research-roadmap.md`。
 
 若上述文件与更旧的聊天、archive或历史段落冲突，以本文件和三份主线文档顶部的最新cursor为准。
 
@@ -61,12 +62,12 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-21 |
 | `source_parent_commit` | `37fd4f3`（ISCF post-CPSI Step4/5 + SAC design） |
-| `current_step` | ISCF-v0 SAC Step7B prelaunch pass；remote authorization pending |
+| `current_step` | ISCF-v0 SAC Step8 remote training authorized；formal test pending |
 | `active_problem` | scope-specific maps与contiguous/nested output partitions是否超越near-matched shared-width和exact random grouping？ |
 | `active_method` | none；ISCF-v0 conditional paperization candidate，not promoted |
-| `method_training_authorized` | false；candidate code unchanged；SAC runner/analyzer/25-job manifest ready |
-| `remote_training_authorized` | false pending explicit SAC remote authorization |
-| `next_action` | explicit authorization -> commit-pinned pull、GPU preflight、dual resource smoke；do not launch yet |
+| `method_training_authorized` | true for frozen 25-run SAC matrix；candidate code unchanged |
+| `remote_training_authorized` | true；formal test false |
+| `next_action` | commit-pinned pull、GPU preflight、dual resource smoke；pass后launch training only |
 | `conditional_next` | Q1-WIDE + RANDOM primary gates both pass -> modern baselines/generalization |
 | `rollback` | either primary fail -> ISCF carrier-only；no rank/seed/partition/loss/router rescue |
 
@@ -325,9 +326,10 @@ decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。
 3. ISCF-v0 candidate code、direct policy、equal-skill objective、ranks与profiles保持exact frozen；
 4. 当前只把ISCF记为`conditional paperization candidate`，active paper-core method仍为none；
 5. SAC设计只新增Q1-WIDE seeds2022/2023和RANDOM-PARTITION三seed，共25个control trainings；
-6. 当前没有SAC remote training或formal-test授权，不得直接启动；
-7. SAC Step7B local prelaunch已18/18通过；25 new jobs、35 historical references与60-run analyzer均冻结；
-8. SC-MNB保留为supporting source/control inventory；不恢复CCSF、D17-D21、H embedding、router、second loss或Contribution 2预设。
+6. SAC Step7B local prelaunch已18/18通过；25 new jobs、35 historical references与60-run analyzer均冻结；
+7. 用户已授权SAC 25-run remote training，但formal test仍false；先commit-pinned pull/GPU/resource smoke；
+8. 25/25 training完成后必须停下等待test授权；不得自动运行`FORMAL_TEST_ONLY=1`；
+9. SC-MNB保留为supporting source/control inventory；不恢复CCSF、D17-D21、H embedding、router、second loss或Contribution 2预设。
 
 ## 8. 禁止无损重启时发生的漂移
 
@@ -373,7 +375,7 @@ ISCF-v0相对A6_FULL的existing three-seed test-informed MSE/MAE=`+1.3584%/+0.91
 
 Decision=`conditional_pass_as_output_coupling_scope_architecture_pending_sac`。下一步Scope Attribution Confirmation只检验：1) ISCF是否超过active-param gap不超过`0.4646%`的Q1-WIDE shared map；2) canonical contiguous/nested partitions是否超过same-parameter/initialization RANDOM-PARTITION。新增10个Q1-WIDE与15个RANDOM trainings；candidate code、direct policy、equal-skill objective与ranks不变。
 
-SAC Step7B local prelaunch现已18/18通过：25 new jobs、35 historical references、60-run analyzer与training/test隔离runner已冻结；candidate code不变。当前active paper-core method仍为none，remote training与formal test仍未授权。取得明确授权前不得启动；之后先commit-pinned pull、GPU preflight和dual resource smoke。两项primary gates都通过才进入modern baselines；任一失败则ISCF降为strong carrier/control，不做rank、seed、partition、loss或router rescue。
+SAC Step7B local prelaunch现已18/18通过：25 new jobs、35 historical references、60-run analyzer与training/test隔离runner已冻结；candidate code不变。用户现已授权25-run remote training，但formal test仍未授权。下一步先commit-pinned pull、GPU preflight和dual resource smoke，smoke通过后launch training-only；25/25后必须停下。两项primary gates都通过才进入modern baselines；任一失败则ISCF降为strong carrier/control，不做rank、seed、partition、loss或router rescue。
 
 完成后同步更新analysis report、docs/paper-mainline.md、docs/research-roadmap.md和Stage C ledger，执行最小诚实验证，并按AGENTS.md提交、推送。请从专业时序预测研究员角度进行审计，不要为了凑两个contributions而预先设计第二个loss/router。
 ```

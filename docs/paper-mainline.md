@@ -7,14 +7,22 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；paperization identity暂为`ISCF-v0`，not final title |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF-v0 Scope Attribution Confirmation Step7B prelaunch pass；waiting remote authorization |
+| `current_11_step` | ISCF-v0 SAC Step8 remote training authorized；preflight/resource smoke next；formal test false |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | active method none；ISCF-v0 conditional paperization candidate；SAC 25-run execution pending authorization；exact CPSI-v1 closed |
+| `paper_core_status` | active method none；ISCF-v0 conditional candidate；SAC 25-run training authorized；formal test/modern baselines false |
+
+[ISCF-v0 SAC Step8 Authorization, 2026-07-21] 用户明确授权继续SAC remote training。授权范围严格限定为
+Step7B冻结的25 new runs；formal test仍false，25/25 training完成后必须停在validation artifacts并等待独立授权。
+下一动作是commit-pinned remote pull、三卡`nvidia-smi`与Weather-RANDOM/ETTm2-Q1 dual resource smoke；smoke
+finite/no-OOM后才启动正式matrix。candidate、gates、partition seed、rank、loss与policy均不变。
+
+Decision=`step8_remote_training_authorized_formal_test_pending`。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step8_remote_20260721/remote_authorization_and_launch.md`。
 
 [ISCF-v0 SAC Step7B, 2026-07-21] candidate code未修改。SAC runner、three-source analyzer与frozen
 manifest已实现，local prelaunch `18/18`通过。新矩阵为Q1-WIDE seeds2022/2023的10 runs与

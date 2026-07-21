@@ -3,8 +3,8 @@
   "candidate_id": "SC1-ISCF-v0-SAC",
   "candidate_version": "SC1-ISCF-v0-SAC-v1",
   "date": "2026-07-21",
-  "status": "step7b_prelaunch_frozen_remote_not_authorized",
-  "current_step": "Scope Attribution Confirmation Step7B implementation and prelaunch",
+  "status": "authorized_prelaunch_training_only",
+  "current_step": "Scope Attribution Confirmation Step8 remote training authorized; formal test pending",
   "role": "matched_scope_attribution_for_conditional_paperization_candidate",
   "test_informed": true,
   "purpose": "test whether ISCF-v0 gains require independent scope-specific history maps and canonical contiguous nested future-output partitions rather than near-matched shared width or arbitrary independent branches",
@@ -222,11 +222,11 @@
     "both_pass": "iscf_scope_architecture_supported_pending_modern_baselines"
   },
   "authorization": {
-    "user_authorization_basis": "2026-07-21 user instruction: continue SAC according to the frozen plan",
+    "user_authorization_basis": "2026-07-21 user instruction: 继续推进SAC remote training",
     "step7b_design_and_prelaunch_authorized": true,
-    "user_authorized": false,
-    "authorization_date": null,
-    "remote_training_authorized": false,
+    "user_authorized": true,
+    "authorization_date": "2026-07-21",
+    "remote_training_authorized": true,
     "formal_test_access_authorized": false,
     "test_role": "primary-mechanism-effectiveness-and-paper-benchmark",
     "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
@@ -242,5 +242,5 @@
     "second_loss": false,
     "requested_h_conditioning": false
   },
-  "decision": "step7b_prelaunch_implementation_authorized_remote_and_formal_test_pending"
+  "decision": "step8_remote_training_authorized_formal_test_pending"
 }

@@ -20,11 +20,11 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | ISCF-v0 SAC Step7B prelaunch pass；remote authorization pending |
+| `current_11_step` | ISCF-v0 SAC Step8 remote training authorized；formal test pending |
 | `current_candidate` | ISCF-v0 conditional paperization candidate；scope attribution pending |
-| `latest_decision` | `step7b_prelaunch_pass_waiting_remote_authorization` |
-| `next_required_action` | explicit authorization -> commit-pinned remote pull/GPU/resource smoke；do not launch yet |
-| `method_training_authorized` | false；local runner/analyzer ready；25 new control trainings and formal test not authorized |
+| `latest_decision` | `step8_remote_training_authorized_formal_test_pending` |
+| `next_required_action` | commit-pinned remote pull、GPU preflight、dual resource smoke；pass后launch 25 trainings |
+| `method_training_authorized` | true for frozen 25-run SAC matrix；formal test false |
 | `rollback_point` | Q1-WIDE或RANDOM primary gate fail -> carrier-only；no rank/seed/partition/loss/router rescue |
 
 ## 11-Step Record
@@ -40,7 +40,7 @@
 | `narrative_gate` | conditional pass；complete-chain novelty pending scope attribution |
 | `effectiveness_gate` | carrier pass vs A6_FULL；Q1-WIDE/RANDOM specificity pending |
 | `artifacts` | Step4/5 gate + `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step7b_prelaunch_20260721/` |
-| `decision` | 18/18 prelaunch pass；ISCF-v0 conditional candidate；active paper-core method none；remote/test false |
+| `decision` | 18/18 prelaunch pass；25-run remote training true；formal test false；active paper-core method none |
 
 ## Frozen Carrier Contract
 
@@ -65,7 +65,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
 | `A6-LBF-natural-baseline` | `control_only` | validation-frozen natural profiles可作为稳定共同起点 | not required | 72/72 test；3 seeds；dense horizons | `frozen_test_reference_ready`；只作固定reference |
-| `ISCF-v0` | `conditional_paperization_candidate_sac_prelaunch_ready` | independent future-output coupling scopes是否超越near-matched shared-width与exact random grouping | post-CPSI Step4/5 conditional pass；generic multi-branch claim prohibited | vs A6_FULL +1.3584%；D1.1 15/15；SAC test pending | SAC 18/18 prelaunch；25 jobs ready；remote/test false；both gates before modern baselines |
+| `ISCF-v0` | `conditional_paperization_candidate_sac_training_authorized` | independent future-output coupling scopes是否超越near-matched shared-width与exact random grouping | post-CPSI Step4/5 conditional pass；generic multi-branch claim prohibited | vs A6_FULL +1.3584%；D1.1 15/15；SAC test pending | 25-run training true；formal test false；preflight/smoke next |
 | `ISCF-v1-CPSI` | `closed_material_effectiveness_fail` | common scope state应在native synthesis前非线性调制private deviation | design valid；exact mechanism falsified | vs ISCF -2.2128% MSE；vs A6 -0.7775%；health pass；LINEAR tie | no seeds/rescue；return Step4/5 |
 | `SC-D22-HFA` | `completed_target_access_supported` | target-coordinate-specific access是否超越matched generic与shuffles | problem evidence pass；not method effectiveness | ordered vs generic +2.5228%；15/20；4/5；all five controls pass | handoff D23 Step4 |
 | `SC-D23-FCMI` | `closed_capacity_control_explains` | generic main与coordinate interaction能否可识别分解并原生fallback | conditional pass | FCMI vs A6 -21.7343%；capacity/order fail；internal pass | no seeds/rescue；return Step2/3 |
@@ -254,6 +254,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | ISCF-v1-CPSI Step9/10 | 25 new + 10 references；formal test + four-layer audit | vs ISCF -2.2128% MSE；LINEAR +0.0217% tie；health 25/25 | exact v1 closed；active method none；rollback Step4/5 | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step9_10_20260721/step9_10_result_and_rollback.md` |
 | ISCF-v0 post-CPSI Step4/5 | latest primary-source audit + output-coupling tensor/theory boundary + matched attribution design | carrier stable；generic multi-scale/multi-branch prior crowded；Q1-WIDE and RANDOM gaps identified | conditional paperization candidate；25-control-run SAC designed；remote/test false | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_post_cpsi_step45_20260721/step4_5_scope_independence_narrative_gate.md` |
 | ISCF-v0 SAC Step7B prelaunch | 25-job manifest + 35-reference hash audit + exact partition contract + runner/analyzer | 18/18；60 effective runs；Q1 gap max 0.464638%；unauthorized launch exit 3 | prelaunch pass；remote/test false；explicit authorization next | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step7b_prelaunch_20260721/prelaunch_report.md` |
+| ISCF-v0 SAC Step8 authorization | user-scoped training authorization + frozen launch sequence | 25 new trainings true；formal test false；candidate/gates unchanged | commit/pull/GPU/dual smoke next；25/25后stop | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step8_remote_20260721/remote_authorization_and_launch.md` |
 | SIFF-v2 FCC Step8 launch | commit-pinned pull + 3-GPU preflight + dual resource smoke + background driver | `87bea35`；smokes finite/no-OOM；first three Weather jobs active；test 0/30 | training active；30/30 before one formal test | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/remote_launch_record.md` |
 | SIFF-v2 FCC Step9/10 | 30 new E2E runs + one formal test + 45-run/180-cell three-seed audit | vs A6_FULL MSE/MAE +1.2497%/+0.7549%；vs independent -0.1272%/-0.1733%；health 6/6 | performance pass but attribution fail；stop promotion；portfolio decision | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1/step9_10_result_and_portfolio_decision.md` |
 

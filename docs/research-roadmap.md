@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | ISCF-v0 SAC Step7B prelaunch pass；remote/test authorization pending |
+| `current_step` | ISCF-v0 SAC Step8 remote training authorized；formal test pending |
 | `active_question` | future-output coupling scope-specific maps与contiguous/nested partitions是否分别超越near-matched shared width与exact random grouping？ |
 | `active_candidates` | ISCF-v0 conditional paperization candidate；not promoted；exact CPSI closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `configs/stage_c_iscf_v0_scope_attribution_confirmation.json` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | ISCF code unchanged；SAC runner/analyzer/manifest complete；25 new control trainings/remote/test false |
+| `method_implementation` | ISCF code unchanged；25-run remote training true；formal test/modern baselines false |
 | `rollback_point` | SAC attribution；Q1-WIDE或RANDOM任一fail则ISCF carrier-only，no rescue |
 
 ## ISCF-v0 Post-CPSI Step4/5 Decision
@@ -47,6 +47,15 @@ analyzer smoke、remote scanner fallback和unauthorized-launch rejection均通�
 Decision=`step7b_prelaunch_pass_waiting_remote_authorization`。当前不含training/validation/test evidence，active method仍
 none。下一步仅在显式授权后执行commit-pinned remote pull、`nvidia-smi`、Weather-RANDOM与ETTm2-Q1 resource
 smokes；通过后启动25-run matrix。formal test、modern baselines、router、second loss仍不自动授权。
+
+## ISCF-v0 SAC Step8 Training Authorization
+
+用户于`2026-07-21`明确授权“继续推进SAC remote training”。config现只开放25个frozen new trainings；
+`formal_test_access_authorized=false`保持不变。training继续使用four-horizon validation mean MSE选择checkpoint，
+不得因validation排序删除arm或改变gate。
+
+Decision=`step8_remote_training_authorized_formal_test_pending`。下一步先commit/push、remote fast-forward、三卡
+preflight与Weather-RANDOM/ETTm2-Q1 resource smoke；smoke通过才launch。25/25完成后不自动执行test。
 
 ## ISCF-v1-CPSI Step9/10 Decision
 
