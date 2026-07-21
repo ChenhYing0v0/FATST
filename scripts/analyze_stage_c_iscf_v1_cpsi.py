@@ -49,6 +49,15 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         writer.writerows(rows)
 
 
+def numeric_arrays_are_finite(arrays: Any) -> bool:
+    """Check numeric NPZ members while allowing string metadata arrays."""
+    return all(
+        np.isfinite(value).all()
+        for name in arrays.files
+        if np.issubdtype((value := arrays[name]).dtype, np.number)
+    )
+
+
 def run_dir(root: Path, arm: str, dataset: str, seed: int) -> Path:
     return root / arm / dataset / "h720_full" / f"seed{seed}"
 
@@ -148,9 +157,7 @@ def load_run(
             "output_projection_norm": float(
                 model_health["cpsi_output_projection_norm"]
             ),
-            "all_finite": bool(
-                all(np.isfinite(arrays[name]).all() for name in arrays.files)
-            ),
+            "all_finite": bool(numeric_arrays_are_finite(arrays)),
         }
     return metrics, {
         "dataset": dataset,
@@ -285,6 +292,16 @@ def decide(
 
 
 def synthetic_smoke(config: dict[str, Any]) -> None:
+    class SyntheticArrays:
+        files = ("numeric", "labels")
+
+        def __getitem__(self, name: str) -> np.ndarray:
+            if name == "numeric":
+                return np.asarray([1.0, 2.0], dtype=np.float32)
+            return np.asarray(["H96", "H192"])
+
+    if not numeric_arrays_are_finite(SyntheticArrays()):
+        raise RuntimeError("mixed-dtype finite audit failed")
     metrics = []
     for arm in config["effective_arms"]:
         factor = 0.99 if arm["id"] == "iscf_v1_cpsi" else 1.0

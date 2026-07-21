@@ -33,6 +33,9 @@ decision先检查35-run protocol completeness，再独立计算：paper-facing e
 internal health和failure attribution。controls不会在validation阶段删除candidate；只有完整test table后才影响机制
 claim。synthetic smoke构造CPSI严格优于其他arms的矩阵，验证240 comparison cells和positive decision path。
 
+NPZ同时包含numeric diagnostics与string `bin_names` metadata。finite audit只对numeric dtype执行`np.isfinite`，
+string metadata仍保留但不进入numeric health；synthetic smoke包含mixed-dtype regression，防止再次误判。
+
 ## 4. Code-theory consistency
 
 理论要求是“test-first effectiveness + diagnostic-only controls”，代码通过全量manifest与test前25/25 completeness
