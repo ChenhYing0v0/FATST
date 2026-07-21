@@ -63,12 +63,12 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-21 |
 | `source_parent_commit` | `78cbcf4`（SAC training authorization） |
-| `current_step` | ISCF-v0 SAC Step8 validation audit complete；formal test false |
+| `current_step` | ISCF-v0 SAC Step9 formal test authorized；launch pending |
 | `active_problem` | scope-specific maps与contiguous/nested output partitions是否超越near-matched shared-width和exact random grouping？ |
 | `active_method` | none；ISCF-v0 conditional paperization candidate，not promoted |
 | `method_training_authorized` | true for frozen 25-run SAC matrix；candidate code unchanged |
-| `remote_training_authorized` | true；formal test false |
-| `next_action` | obtain separate formal-test authorization；then one frozen 25-run test audit |
+| `remote_training_authorized` | training complete；single formal test true；retraining false |
+| `next_action` | commit/push；remote hash/GPU preflight；one frozen 25-run formal test |
 | `conditional_next` | Q1-WIDE + RANDOM primary gates both pass -> modern baselines/generalization |
 | `rollback` | either primary fail -> ISCF carrier-only；no rank/seed/partition/loss/router rescue |
 
@@ -245,6 +245,8 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
 71. validation中ISCF over Q1-WIDE MSE/MAE=`+1.0704%/+0.7538%`；canonical over RANDOM=
     `-0.1823%/-0.3075%`。后者是negative lead但不能作validation-level rejection。
 72. Decision=`formal_test_ready_pending_user_authorization`；active method仍none，formal test access仍false。
+73. 用户于`2026-07-21`独立回复“授权SAC formal test”；config status=`authorized_prelaunch`、formal test true，
+    只开放现有25 checkpoints的一次完整test，禁止retraining/mutation/tuning。
 
 ## 5. D22-HFA 的执行顺序
 
@@ -338,8 +340,8 @@ decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。
 5. SAC设计只新增Q1-WIDE seeds2022/2023和RANDOM-PARTITION三seed，共25个control trainings；
 6. SAC Step7B local prelaunch已18/18通过；25 new jobs、35 historical references与60-run analyzer均冻结；
 7. commit `78cbcf4`已remote pull，GPU0/1/2与dual resource smoke通过；25-run training已完成；
-8. validation artifact audit为60/60 runs、240/240 rows、health 15/15；formal test仍等待独立授权；
-9. 未授权前不得运行`FORMAL_TEST_ONLY=1`，也不得按validation negative lead修改candidate；
+8. validation artifact audit为60/60 runs、240/240 rows、health 15/15；single formal test现已独立授权；
+9. commit-pinned preflight后仅运行一次`FORMAL_TEST_ONLY=1`，不得按validation negative lead修改candidate；
 10. SC-MNB保留为supporting source/control inventory；不恢复CCSF、D17-D21、H embedding、router、second loss或Contribution 2预设。
 
 ## 8. 禁止无损重启时发生的漂移
@@ -387,7 +389,7 @@ ISCF-v0相对A6_FULL的existing three-seed test-informed MSE/MAE=`+1.3584%/+0.91
 
 Decision=`conditional_pass_as_output_coupling_scope_architecture_pending_sac`。下一步Scope Attribution Confirmation只检验：1) ISCF是否超过active-param gap不超过`0.4646%`的Q1-WIDE shared map；2) canonical contiguous/nested partitions是否超过same-parameter/initialization RANDOM-PARTITION。新增10个Q1-WIDE与15个RANDOM trainings；candidate code、direct policy、equal-skill objective与ranks不变。
 
-SAC Step7B local prelaunch为18/18；training现已25/25完成，formal test为0/25。联合35 historical references的validation audit为60/60 runs、240/240 rows、internal health 15/15。validation中ISCF over Q1-WIDE MSE/MAE=`+1.0704%/+0.7538%`，canonical over RANDOM=`-0.1823%/-0.3075%`；后者是negative lead，但validation不得拒绝机制。Decision=`formal_test_ready_pending_user_authorization`。formal test仍未授权；只有独立授权后才运行一次冻结25-run test。两项official-test primary gates都通过才进入modern baselines；任一失败则ISCF降为strong carrier/control，不做rank、seed、partition、loss或router rescue。
+SAC Step7B local prelaunch为18/18；training现已25/25完成，formal test为0/25。联合35 historical references的validation audit为60/60 runs、240/240 rows、internal health 15/15。validation中ISCF over Q1-WIDE MSE/MAE=`+1.0704%/+0.7538%`，canonical over RANDOM=`-0.1823%/-0.3075%`；后者是negative lead，但validation不得拒绝机制。用户现已独立授权一次冻结25-run formal test，Decision=`step9_formal_test_authorized`。下一步commit/push并做remote hash/GPU preflight后运行`FORMAL_TEST_ONLY=1`。两项official-test primary gates都通过才进入modern baselines；任一失败则ISCF降为strong carrier/control，不做rank、seed、partition、loss或router rescue。
 
 完成后同步更新analysis report、docs/paper-mainline.md、docs/research-roadmap.md和Stage C ledger，执行最小诚实验证，并按AGENTS.md提交、推送。请从专业时序预测研究员角度进行审计，不要为了凑两个contributions而预先设计第二个loss/router。
 ```

@@ -88,3 +88,11 @@ official-test审计。test前不得改candidate、rank、partition seed、object
 若Q1-WIDE或RANDOM任一official-test primary gate失败，ISCF-v0回到strong carrier/control portfolio；不进行
 seed、rank、partition、loss、router或requested-H rescue。
 
+## 7. Formal-test authorization
+
+用户于`2026-07-21`独立回复“授权SAC formal test”。授权只覆盖冻结SC1-ISCF-v0-SAC-v1的单次25-run new
+official-test matrix；training checkpoints、candidate、controls、ranks、partition seed、objective、checkpoint rule、
+metrics与gates均不变。config status切换为`authorized_prelaunch`，`formal_test_access_authorized=true`。
+
+Decision=`step9_formal_test_authorized`。下一步commit/push后remote fast-forward，核验training仍25/25、test仍0/25、
+checkpoint SHA256与pretest manifest一致，再运行`FORMAL_TEST_ONLY=1`。

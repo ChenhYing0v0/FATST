@@ -74,3 +74,9 @@ validation observation为ISCF over Q1-WIDE MSE/MAE `+1.0704%/+0.7538%`，canonic
 
 Decision=`formal_test_ready_pending_user_authorization`；formal test仍未授权、test access仍为0。详见
 `validation_artifact_audit_and_test_handoff.md`。
+
+用户随后于`2026-07-21`明确回复“授权SAC formal test”。该独立授权只开放冻结25-run new checkpoint matrix的一次
+official-test audit；不开放重训、checkpoint mutation或任何per-dataset/horizon/cell tuning。
+
+Decision=`step9_formal_test_authorized`。formal-test launch前必须提交并push authorization config，remote
+fast-forward后复核25/25 training、0/25 test与pretest hashes。

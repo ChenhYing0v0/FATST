@@ -7,14 +7,21 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；paperization identity暂为`ISCF-v0`，not final title |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF-v0 SAC Step8 validation-artifact audit complete；formal test pending authorization |
+| `current_11_step` | ISCF-v0 SAC Step9 formal test authorized；launch pending |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | active method none；ISCF-v0 conditional candidate；SAC training 25/25；formal test/modern baselines false |
+| `paper_core_status` | active method none；ISCF-v0 conditional candidate；SAC training 25/25；single formal test authorized；modern baselines false |
+
+[ISCF-v0 SAC Step9 Formal-test Authorization, 2026-07-21] 用户独立回复“授权SAC formal test”。授权只覆盖
+SC1-ISCF-v0-SAC-v1冻结的25个new checkpoints的一次official-test audit；candidate、controls、ranks、partition seed、
+objective、checkpoint rule、metrics与gates不变，禁止重训与checkpoint mutation。
+
+Decision=`step9_formal_test_authorized`。下一步commit/push、remote fast-forward、checkpoint/hash与GPU preflight后，
+只运行`FORMAL_TEST_ONLY=1`；完成后联合35个historical references执行60-run/240-cell Step9/10 analyzer。
 
 [ISCF-v0 SAC Step8 Validation Audit, 2026-07-21] frozen new training已`25/25`完成，remote checkpoints与
 validation artifacts均`25/25`，formal-test artifacts为`0/25`。联合35个hashed historical references后，validation
