@@ -20,10 +20,10 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SC1-SIFF-v3-TSAF Step8 seed2021 remote/test authorized；preflight pending |
+| `current_11_step` | SC1-SIFF-v3-TSAF Step8 25-run training active；formal test held until 25/25 |
 | `current_candidate` | provisional `SC1-SIFF-v3-TSAF-v1` |
-| `latest_decision` | `step8_seed2021_remote_and_single_formal_test_authorized` |
-| `next_required_action` | commit/push -> remote pull -> GPU recheck -> two-arm resource smoke |
+| `latest_decision` | `step8_resource_smoke_pass_25run_training_active` |
+| `next_required_action` | monitor training completeness；25/25后single formal-test mode |
 | `method_training_authorized` | seed2021 25-run training + one complete formal test；confirmation false |
 | `rollback_point` | TSAF Step4/6；immutable SIFF-v2 parent |
 
@@ -31,7 +31,7 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | TSAF Step8 authorized；preflight pending；no training result |
+| `current_step` | TSAF Step8 training active；initial 0/25；formal test 0/25 |
 | `problem` | unified decoder如何组织future-coordinate-specific coupling scale且不假设requested H或sample-wise competence提供信息？ |
 | `existence_evidence` | D18 frontier negative；D22 target access positive；D23 capacity explains；D24 coarse deformation negative |
 | `idea` | 保留SIFF scale-indexed arms，以target-scale allocation field替代history-conditioned generic router |
@@ -40,7 +40,7 @@
 | `narrative_gate` | conditional pass；contribution-level novelty provisional |
 | `effectiveness_gate` | seed2021 one complete official test authorized；45 runs/180 cells frozen |
 | `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step8_remote_authorization_and_launch.md` |
-| `decision` | `step8_seed2021_remote_and_single_formal_test_authorized` |
+| `decision` | `step8_resource_smoke_pass_25run_training_active` |
 
 ## Frozen Carrier Contract
 
@@ -69,7 +69,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC-D23-FCMI` | `closed_capacity_control_explains` | generic main与coordinate interaction能否可识别分解并原生fallback | conditional pass | FCMI vs A6 -21.7343%；capacity/order fail；internal pass | no seeds/rescue；return Step2/3 |
 | `SC-D24-CTB` | `diagnostic_only_closed_exact_negative` | strong fixed trajectory synthesis是否留下ordered-history可识别coarse deformation | not method gate | v1.1 ordered loses all primary controls；test=0 | no rescue；return Step2/4 consolidation |
 | `SC-MNB` | `source_audit_complete_protocol_blocked` | A6/MEASURE是否仍具modern native carrier viability | problem boundary coherent；method narrative incomplete | source set frozen；65-run/80-cell execution false | repair test hygiene/metric equivalence/config semantics |
-| `SC1-SIFF-v3-TSAF-v1` | `step8_authorized_preflight_pending` | target-scale allocation能否修复SIFF learned fusion而不依赖sample-wise competence | conditional pass；single method contribution | seed2021 25-run training + one 180-cell formal test authorized；not launched | commit/pull/GPU/resource smoke |
+| `SC1-SIFF-v3-TSAF-v1` | `step8_training_active` | target-scale allocation能否修复SIFF learned fusion而不依赖sample-wise competence | conditional pass；single method contribution | smokes pass；25-run training active；formal test 0/25 | monitor 25/25 then formal test |
 | `SC1-PMFO-RCT-v1` | `failed_as_core_candidate` | fixed mixed-radix conservative future tree | narrative/local pass | Step7B三dataset均不优于A6；no numeric pathology | archived as evidence；rollback Step 4 |
 | `SC1-FPMO-M0` | `control_only` | shared-latent exact A6 morph验证function preservation/restriction | not required | exact equality required | mandatory Step6 morphism control |
 | `SC1-FPMO-DA` | `control_only` | direct atom full-affine head隔离capacity/orthogonal coordinate effect | not required | matched function-class control | mandatory Step6 dense-equivalence control |
@@ -240,6 +240,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SIFF-v3 TSAF Step4-7A | primary-source/narrative audit + production allocation path | Step4-6 conditional pass；Step7A 26/26；history-free allocation、history-dependent arms | Step7B prelaunch only；remote/test false | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_reactivation_and_tsaf_step46_audit.md` |
 | SIFF-v3 TSAF Step7B prelaunch | 9 effective arms；20 references + 25 new runs；capacity/init/gradient/runner/analyzer gates | 15/15 cases、10/10 categories；20/20 remote reference hashes；max capacity gap 0.3619%；3 GPUs idle | prelaunch pass；waiting independent remote/test authorization；no performance result | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step7b_prelaunch_report.md` |
 | SIFF-v3 TSAF Step8 authorization | user authorization + evaluator matrix contract + split training/test runner | 15/15 authorization gate；25 training + one complete 180-cell test；confirmation false | authorized；remote preflight/resource smoke next | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step8_remote_authorization_and_launch.md` |
+| SIFF-v3 TSAF Step8 launch | commit-pinned pull + dual resource smoke + three-worker launch | `6cef063`；smokes finite/no-OOM；first Weather jobs active；test 0/25 | training active；25/25 before formal test | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step8_remote_authorization_and_launch.md` |
 
 ## Pending Tasks
 
@@ -310,7 +311,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC-D23-FCMI | `completed_fail_return_step2_3` | 40/40；FCMI vs A6 -21.7343%；capacity/order fail；no rescue |
 | SC-D24-CTB | `completed_exact_negative` | v1/v1.1 artifacts保留；no feature/bin/lambda/nonlinear rescue |
 | SC1-SIFF-v3-TSAF Step7B | `completed_prelaunch_waiting_authorization` | independent authorization后才可remote pull/resource smoke；training/test仍false |
-| SC1-SIFF-v3-TSAF Step8 | `authorized_preflight_pending` | commit/pull/GPU/two-arm smoke；25/25 training前不得formal test |
+| SC1-SIFF-v3-TSAF Step8 | `training_active` | monitor 25 runs；25/25 completeness后formal-test mode |
 
 ## Paper Mainline Sync Log
 
@@ -429,6 +430,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-21 | SIFF-v3 TSAF Step4-7A | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | SIFF-first reset + single-contribution allocation design + production path | Step4-6 conditional pass；Step7A 26/26；remote/test false |
 | 2026-07-21 | SIFF-v3 TSAF Step7B prelaunch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | 45-run effective matrix + reference reuse + capacity/init/gradient/tooling freeze | 15/15、10/10；remote/test/confirmation false；waiting authorization |
 | 2026-07-21 | SIFF-v3 TSAF Step8 authorization | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | explicit seed2021 remote/test authorization + evaluator/runner contract | 25 training + one complete test true；confirmation false；preflight next |
+| 2026-07-21 | SIFF-v3 TSAF Step8 launch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | commit/resource/smoke/process provenance | `6cef063`；GPU0/1/2；25-run training active；test 0/25 |
 
 ## Continuation Rules
 
@@ -702,3 +704,5 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
      执行，checkpoint nonmutation为硬门；confirmation/paper promotion仍false。
 106. generic evaluator已支持`effective_arms`并核对45-run matrix；TSAF config补齐coupling scales、equal-skill
      training contract与future bins。先commit/pull/GPU/resource smoke，smoke通过前不得launch。
+107. commit `6cef063`已pull，两项resource smoke finite/no-OOM；25-run training于10:17:06在GPU0/1/2启动。
+     训练期间不pull、不改config/gates；training 25/25前formal test保持0/25。

@@ -39,4 +39,35 @@ checkpoint。
 
 ## 4. Launch record
 
-等待commit/push、remote pull与resource smoke后填写。当前尚未执行remote training或official test。
+### 4.1 Commit and remote state
+
+- commit：`6cef063ecfa4cc12aaa3eb0e5e1bbbfcca42092b`；
+- remote repo：`/home/yingch/projects/FATST`，`git pull --ff-only`成功；
+- 三份历史dirty analysis CSV原样保留，未stash、清理或覆盖；
+- config SHA256：`32ec229c66c5683a48793b5bbde3c4f6e99790e4f6e05e4076ec6284c351e748`；
+- profile SHA256：`80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a`。
+
+### 4.2 Resource smoke
+
+2026-07-21 10:16+08:00，GPU0/1：
+
+| Smoke | Train steps | Train loss | Validation mean MSE | Result |
+| --- | ---: | ---: | ---: | --- |
+| Weather `tsaf` | 2 | 1.748264 | 1.279264 | finite；no OOM；policy=`target-scale-field` |
+| ETTm2 `siff_independent_target_only` | 2 | 0.994514 | 0.338739 | finite；no OOM；policy=`static-target` |
+
+smoke只使用training/validation batch，`evaluation_split=none`，不构成performance evidence。
+
+### 4.3 Training launch
+
+- launch time：`2026-07-21T10:17:06+08:00`；
+- output root：`/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_v3_tsaf_v1`；
+- driver PID：`1705027`；runner PID：`1705029`；
+- workers：GPU 0/1/2；dataset-major 25 jobs；
+- first jobs：Weather `tsaf` / `siff_categorical_target_only` / `tsaf_permuted_scale`；
+- initial active memory：1645/2004/1646 MiB，utilization 85/89/83%；
+- initial status：training 0/25 complete，formal test 0/25；
+- formal-test mode没有启动。
+
+训练期间不得remote pull或修改config/gates。只有training 25/25且artifact completeness通过，才允许单独启动
+`FORMAL_TEST_ONLY=1`。

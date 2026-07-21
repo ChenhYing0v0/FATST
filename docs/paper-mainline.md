@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Scale-Indexed Forecast Fields for Unified Multi-Horizon Time-Series Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC1-SIFF-v3-TSAF Step8 seed2021 remote/test authorized；preflight pending |
+| `current_11_step` | SC1-SIFF-v3-TSAF Step8 seed2021 25-run training active；formal test held until 25/25 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -172,6 +172,10 @@ synthetic smoke均通过。validation只选checkpoint；runner不执行test。�
 修改仍false。training runner与formal-test evaluator已分离，test mode要求checkpoint SHA256 nonmutation；当前尚未
 remote pull、resource smoke、training或test。详见
 `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step8_remote_authorization_and_launch.md`。
+
+[TSAF Step8 Launch] commit `6cef063`已remote fast-forward；Weather-TSAF与ETTm2-independent两项2-batch resource
+smoke finite且无OOM。25-run training于`2026-07-21T10:17:06+08:00`在GPU0/1/2启动，首批三个Weather jobs进入
+epoch 1，初始显存约1.6–2.0 GiB。formal test保持0/25，只有training 25/25完整后才单独启动。
 
 [Scope Decision, 2026-07-20] 用户明确要求当前项目暂不转出`deterministic-MSE fixed-past architecture search`。
 因此D22-C有效失败只关闭exact v1并回joint Step2/3，不再自动停止整个search；但不得用seed、width、readout或

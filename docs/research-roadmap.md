@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC1-SIFF-v3-TSAF Step8 seed2021 remote/test authorized；preflight pending |
+| `current_step` | SC1-SIFF-v3-TSAF Step8 25-run training active；formal test held until 25/25 |
 | `active_question` | target-coordinate × ordered-scale allocation能否让SIFF稳定超过frozen parent与A6_MEASURE？ |
 | `active_candidates` | provisional `SC1-SIFF-v3-TSAF-v1`；SIFF-v2 immutable parent |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step8_remote_authorization_and_launch.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | TSAF Step7A/7B pass；seed2021 remote + one formal test authorized；not launched |
+| `method_implementation` | TSAF Step7A/7B pass；resource smoke pass；25-run training active on GPU0/1/2 |
 | `rollback_point` | TSAF Step4/6；SIFF-v2 remains immutable |
 
 ## Post-D21 Unconstrained Reset
@@ -149,6 +149,10 @@ categories，25/25 CLI、5/5 two-step gradients、paired initialization、runner
 formal test。generic evaluator现识别`effective_arms`，config补齐equal-skill training contract、coupling scales与
 future bins；runner将training与`FORMAL_TEST_ONLY`严格分离。当前等待commit/push、remote pull与两项resource smoke；
 confirmation、paper promotion和post-hoc matrix/gate修改仍false。
+
+commit `6cef063`已remote pull，两项resource smoke finite/no-OOM；25-run training于10:17:06在GPU0/1/2启动。
+首批Weather candidate/categorical/permuted进入epoch 1。当前training 0/25、formal test 0/25；训练期间不再pull，
+25/25 completeness前不得启动formal-test mode。
 
 用户2026-07-20决定暂不承担task pivot成本。该scope决定把上一版“D22-C有效失败即停止整个
 deterministic-MSE search”改为：关闭exact D22-C v1并回joint Step2/3，在同一task边界寻找不同的falsifiable

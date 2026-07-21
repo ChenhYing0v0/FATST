@@ -41,13 +41,13 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-21 |
 | `source_parent_commit` | `d647874`（Step7B开始前parent） |
-| `current_step` | SC1-SIFF-v3-TSAF Step8 seed2021 remote/test authorized；preflight pending |
+| `current_step` | SC1-SIFF-v3-TSAF Step8 25-run training active；formal test held until 25/25 |
 | `active_problem` | target-coordinate × ordered-scale allocation能否修复SIFF-v2 fusion并超过parent/A6_MEASURE？ |
 | `active_method` | provisional `SC1-SIFF-v3-TSAF-v1`；SIFF-v2 immutable parent |
 | `method_training_authorized` | seed2021 25-run Phase A only |
 | `remote_training_authorized` | true；one complete formal test true；confirmation false |
-| `next_action` | commit/push -> remote pull -> GPU recheck -> two-arm resource smoke |
-| `conditional_next` | smoke通过后launch 25-run training；25/25前不得formal test |
+| `next_action` | monitor 25-run training by dataset/run/epoch；no remote pull |
+| `conditional_next` | training 25/25 + completeness后单独launch formal-test mode |
 | `rollback` | TSAF exact design回Step4/6；SIFF-v2不变；SC-MNB execution false |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
@@ -144,6 +144,9 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
 28. 用户2026-07-21授权冻结的seed2021 25-run training与一次完整formal test；confirmation仍false。
 29. evaluator已补齐`effective_arms` matrix support，runner分离training与formal-test mode；下一步先commit-pinned
     remote pull与两项resource smoke，25/25 training前不得访问test。
+30. commit `6cef063`已pull；Weather-TSAF与ETTm2-independent resource smoke finite/no-OOM。
+31. 25-run training于`2026-07-21T10:17:06+08:00`在GPU0/1/2启动；initial training/test=0/25，formal-test mode
+    未启动。训练期间不得pull或修改config/gates。
 
 ## 5. D22-HFA 的执行顺序
 
