@@ -356,8 +356,8 @@ def build_summary(
             "cross_seed_topology_stability": topology_stable,
         },
         "decision": decision,
-        "method_effectiveness_established": false,
-        "new_training_or_test_access": false,
+        "method_effectiveness_established": False,
+        "new_training_or_test_access": False,
     }
 
 
@@ -394,6 +394,27 @@ def synthetic_smoke() -> None:
         raise RuntimeError("synthetic low-dimensional relation was not recovered")
     if len(pairs) != 10 or len(bins) != 40:
         raise RuntimeError("synthetic audit output shape mismatch")
+    summary = build_summary(
+        [dict(metrics) for _ in range(15)],
+        [
+            {
+                "dataset": dataset,
+                "median_seed_topology_spearman": 0.9,
+            }
+            for dataset in DATASETS
+        ],
+        {
+            "low_dimensional_run_count_min": 12,
+            "common_residual_run_count_min": 12,
+            "topology_seed_rho_min": 0.5,
+            "topology_dataset_count_min": 4,
+            "private_energy_median_min": 0.05,
+            "oracle_headroom_median_min_percent": 1.0,
+            "unique_best_scopes_median_min": 2.0,
+        },
+    )
+    if summary["method_effectiveness_established"] is not False:
+        raise RuntimeError("diagnostic-only boundary was not preserved")
     print("iscf_v0_function_audit_synthetic_smoke=pass")
 
 
