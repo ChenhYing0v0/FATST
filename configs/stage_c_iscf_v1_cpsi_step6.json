@@ -1,0 +1,143 @@
+{
+  "stage_id": "StageC-UVHF",
+  "candidate_id": "ISCF-v1-CPSI",
+  "parent": "ISCF-v0",
+  "freeze_date": "2026-07-21",
+  "current_step": "step6_design_complete_step7a_local_next",
+  "user_governance": {
+    "instruction": "treat SELF LINEAR COMMON and POST-SYNTH as intermediate diagnostics; do not abandon the mechanism for mild negative results; decide effectiveness using test MSE and MAE",
+    "controls_block_test_access": false,
+    "all_protocol_valid_arms_reach_test": true,
+    "negative_results_must_be_reported": true
+  },
+  "shared_contract": {
+    "scope_count": 5,
+    "coordinate_dim": 4,
+    "prediction_length": 720,
+    "pre_synthesis_rank": 32,
+    "parameter_formula": "3*L*r where L=D*K",
+    "bias": false,
+    "output_projection_init": "zeros",
+    "input_projection_init": "paired_fan_in",
+    "requested_horizon_input": false,
+    "scale_order_input": false,
+    "objective": "equal_skill",
+    "policy": "direct",
+    "checkpoint_policy": "best_val_mean_mse_h96_h192_h336_h720"
+  },
+  "arms": {
+    "iscf_v1_cpsi": {
+      "role": "candidate",
+      "input": "X[B,C,S,L]",
+      "formula": "X_s + W_o*(GELU(W_c*mean_s(X))*GELU(W_p*(X_s-mean_s(X))))",
+      "parameters": "3*L*r",
+      "parent_morph": "W_o=0"
+    },
+    "iscf_v1_cpsi_self": {
+      "role": "intermediate_nonlinear_capacity_diagnostic",
+      "formula": "X_s + W_o*(GELU(W_a*X_s)*GELU(W_b*X_s))",
+      "parameters": "3*L*r_exact",
+      "parent_morph": "W_o=0"
+    },
+    "iscf_v1_cpsi_linear": {
+      "role": "intermediate_linear_sharing_diagnostic",
+      "formula": "X_s + W_o*(W_c*mean_s(X)+W_p*(X_s-mean_s(X)))",
+      "parameters": "3*L*r_exact",
+      "parent_morph": "W_o=0"
+    },
+    "iscf_v1_cpsi_common": {
+      "role": "intermediate_common_only_diagnostic",
+      "formula": "X_s + broadcast_s(W_o*(GELU(W_a*mean_s(X))*GELU(W_b*mean_s(X))))",
+      "parameters": "3*L*r_exact",
+      "parent_morph": "W_o=0"
+    },
+    "iscf_v1_cpsi_post": {
+      "role": "intermediate_placement_diagnostic",
+      "input": "A[B,C,S,T] after scope synthesis before policy fusion",
+      "formula": "A_s + U_o*(GELU(U_c*mean_s(A))*GELU(U_p*(A_s-mean_s(A))))",
+      "post_rank_rule": "round(L*r/T)",
+      "parameters": "3*T*r_post",
+      "parent_morph": "U_o=0",
+      "max_module_parameter_gap_percent": 1.9495,
+      "max_total_model_parameter_gap_percent": 0.04013
+    }
+  },
+  "profiles": {
+    "ETTh1": {"mode_rank": 109, "L": 436, "cpsi_parameters": 41856, "post_rank": 19, "post_parameters": 41040, "module_gap_percent": -1.9495, "total_gap_percent": -0.02243},
+    "ETTh2": {"mode_rank": 116, "L": 464, "cpsi_parameters": 44544, "post_rank": 21, "post_parameters": 45360, "module_gap_percent": 1.8319, "total_gap_percent": 0.03959},
+    "ETTm1": {"mode_rank": 116, "L": 464, "cpsi_parameters": 44544, "post_rank": 21, "post_parameters": 45360, "module_gap_percent": 1.8319, "total_gap_percent": 0.04013},
+    "ETTm2": {"mode_rank": 106, "L": 424, "cpsi_parameters": 40704, "post_rank": 19, "post_parameters": 41040, "module_gap_percent": 0.8255, "total_gap_percent": 0.00491},
+    "Weather": {"mode_rank": 116, "L": 464, "cpsi_parameters": 44544, "post_rank": 21, "post_parameters": 45360, "module_gap_percent": 1.8319, "total_gap_percent": 0.03959}
+  },
+  "step7a_hard_blockers": [
+    "shape_or_permutation_contract_failure",
+    "parameter_contract_failure",
+    "initial_morph_max_abs_error_above_1e-6",
+    "nan_or_inf_output_loss_or_gradient",
+    "zero_output_projection_gradient_on_first_backward",
+    "input_projection_gradient_remains_zero_after_output_projection_update",
+    "no_forecast_response_to_nonzero_interaction",
+    "oom_or_nonexecutable_training_path"
+  ],
+  "split_roles": {
+    "validation": "checkpoint selection early stopping and internal health only; never pass or reject an arm",
+    "test": "complete frozen effectiveness and attribution matrix",
+    "test_informed": true
+  },
+  "severity": {
+    "initial_test_supported": {
+      "cpsi_vs_iscf_macro_mse_gain_percent_min": 0.3,
+      "dataset_wins_min": 3,
+      "cell_wins_min": 10,
+      "macro_mae_gain_percent_min": -0.3
+    },
+    "test_inconclusive": {
+      "macro_mse_gain_percent_lower_inclusive": -0.5,
+      "macro_mse_gain_percent_upper_exclusive": 0.3,
+      "direction_rejection": false
+    },
+    "material_test_negative": {
+      "macro_mse_gain_percent_max": -0.5,
+      "dataset_losses_min": 4,
+      "single_dataset_degradation_percent_catastrophic": 5.0
+    },
+    "control_attribution_band_percent": 0.3
+  },
+  "formal_matrix": {
+    "new_arms": [
+      "iscf_v1_cpsi",
+      "iscf_v1_cpsi_self",
+      "iscf_v1_cpsi_linear",
+      "iscf_v1_cpsi_common",
+      "iscf_v1_cpsi_post"
+    ],
+    "historical_references": ["iscf_v0", "a6_full"],
+    "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"],
+    "seed": 2021,
+    "new_training_runs": 25,
+    "effective_runs": 35,
+    "horizons": [96, 192, 336, 720],
+    "test_mse_cells": 140,
+    "test_mae_cells": 140,
+    "test_access": "once_after_25_of_25_training_complete"
+  },
+  "decision_states": [
+    "initial_core_candidate_pass_confirmation_pending",
+    "performance_partial_pass_claim_blocked",
+    "test_inconclusive_keep_candidate_no_claim",
+    "cpsi_v1_exact_performance_fail_return_step4_5",
+    "diagnostic_invalid_for_direction_rejection_repair_design"
+  ],
+  "narrative_gate": "step6_design_pass_with_test_first_effectiveness_and_diagnostic_controls",
+  "decision": "step6_pass_step7a_local_authorized",
+  "authorization": {
+    "active_candidate": "ISCF-v1-CPSI",
+    "active_method": "none_until_step7a_implementation_pass",
+    "local_implementation": true,
+    "remote_training": false,
+    "formal_test_execution": false,
+    "confirmation_seeds": false,
+    "router": false,
+    "second_loss": false
+  }
+}

@@ -32,11 +32,13 @@
 23. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_step4_scope_relation_20260721/step4_result_and_step5_handoff.md`；
 24. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_step5_common_private_interaction_20260721/step5_theory_and_narrative_gate.md`；
 25. `configs/stage_c_iscf_v1_cpsi_step5.json`；
-26. `configs/stage_c_iscf_v0_carrier.json`；
-27. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
-28. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
-29. `docs/paper-mainline.md`；
-30. `docs/research-roadmap.md`。
+26. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step6_design_20260721/step6_control_design_and_test_policy.md`；
+27. `configs/stage_c_iscf_v1_cpsi_step6.json`；
+28. `configs/stage_c_iscf_v0_carrier.json`；
+29. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
+30. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
+31. `docs/paper-mainline.md`；
+32. `docs/research-roadmap.md`。
 
 若上述文件与更旧的聊天、archive或历史段落冲突，以本文件和三份主线文档顶部的最新cursor为准。
 
@@ -48,14 +50,14 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-21 |
 | `source_parent_commit` | `d647874`（Step7B开始前parent） |
-| `current_step` | ISCF Step5 theory conditional pass；advance Step6 concrete control/design audit |
-| `active_problem` | common–private pre-synthesis interaction能否超越linear reparameterization、generic nonlinear capacity和late placement？ |
-| `active_method` | none；`ISCF-v1-CPSI` is a proposed working candidate only |
-| `method_training_authorized` | false；Step6 design audit only |
+| `current_step` | ISCF-v1-CPSI Step6 design pass；advance Step7A production-local implementation |
+| `active_problem` | CPSI能否通过local hard-validity gate并按test-first协议建立effectiveness与attribution？ |
+| `active_method` | none until Step7A pass；`ISCF-v1-CPSI` is the active working candidate |
+| `method_training_authorized` | local implementation true；remote training false until Step7B |
 | `remote_training_authorized` | false；D1/D1.1 validation frozen inference complete；formal test false |
-| `next_action` | freeze exact SELF/LINEAR/COMMON/POST-SYNTH formulas, parameter matching, rank rule and local falsification suite |
-| `conditional_next` | Step6 full control/design gate before any implementation or remote run |
-| `rollback` | unmatched capacity/placement or generic-only mechanism returns Step4/ISCF-v0 carrier；ordered/router/loss remain blocked |
+| `next_action` | implement CPSI/SELF/LINEAR/COMMON/POST and verify shape, morphism, pairing, two-step gradients, parameters and CLI |
+| `conditional_next` | Step7A pass -> Step7B prelaunch -> commit/GPU preflight -> 25 training -> one complete test audit |
+| `rollback` | hard local invalidity repairs design；mild diagnostic negatives continue to test；ordered/router/loss remain blocked |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
 
@@ -188,6 +190,13 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
     modes；scope-equivariant、无requested H/order/target，`W_o=0`精确包含ISCF-v0；只允许finite-capacity解释。
 46. Decision=`step5_theory_pass_step6_control_design_next`；full method gate仍未通过。Step6必须解决exact SELF/
     LINEAR/COMMON及诚实POST-SYNTH control；implementation、training、test、router、second loss均false。
+47. 用户要求四个controls作为intermediate diagnostics，不能因轻微负向在test前放弃mechanism。Step6因此冻结
+    validation只作selector/health，全部protocol-valid arms进入同一次official-test audit。
+48. SELF/LINEAR/COMMON均exact `3Lr`；POST直接作用于forecast arms，derived rank使total-model parameter gap
+    小于0.041%。r=32、zero-init morph与paired initialization已冻结。
+49. formal matrix为25 new trainings + 10 historical references = 35 effective runs、140 MSE和140 MAE cells。
+    test inconclusive band为CPSI vs ISCF `[-0.5%,+0.3%)`；轻微负向不方向级拒绝。
+50. Decision=`step6_pass_step7a_local_authorized`；当前只授权local implementation，remote/test须等待Step7A/7B。
 
 ## 5. D22-HFA 的执行顺序
 
@@ -276,9 +285,9 @@ decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。
 
 1. 读取ISCF-v0 carrier、Step4 relation confirmation与Step5 CPSI theory gate；
 2. 保持ISCF-v0 frozen carrier，不改写SIFF-v2 ordered-attribution failure；
-3. Step5只条件通过working candidate `ISCF-v1-CPSI`，active_method仍为none；
-4. Step6必须先解决SELF/LINEAR/COMMON/POST-SYNTH matched controls、global rank与morphism；
-5. 当前没有model implementation、new official test、remote training或confirmation授权；
+3. Step6已通过test-first design gate；active_method仍为none，Step7A local implementation已授权；
+4. SELF/LINEAR/COMMON/POST均为intermediate diagnostics且进入formal test，不作validation淘汰门；
+5. 当前没有remote training、official test execution或confirmation授权，须先完成Step7A/7B；
 6. SC-MNB保留为supporting source/control inventory，不执行65-run matrix；
 7. 不恢复CCSF、D17-D21、H embedding、router、second loss或Contribution 2预设。
 
@@ -310,9 +319,11 @@ decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。
 3. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_step4_scope_relation_20260721/step4_result_and_step5_handoff.md
 4. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_step5_common_private_interaction_20260721/step5_theory_and_narrative_gate.md
 5. configs/stage_c_iscf_v1_cpsi_step5.json
-6. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
-7. docs/paper-mainline.md
-8. docs/research-roadmap.md
+6. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step6_design_20260721/step6_control_design_and_test_policy.md
+7. configs/stage_c_iscf_v1_cpsi_step6.json
+8. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
+9. docs/paper-mainline.md
+10. docs/research-roadmap.md
 
 当前权威状态是：用户已将FCC matched independent-scope model冻结为`ISCF-v0` carrier。existing complete test table中，ISCF-v0相对A6_FULL MSE/MAE=`+1.3584%/+0.9144%`，5/5 datasets、4/4 horizons、3/3 seeds正向；这是test-informed carrier evidence，不是新method promotion。SIFF-v2 ordered attribution仍失败且immutable，TSAF/CCSF/D17-D21均关闭，CTD paused。
 
@@ -324,7 +335,11 @@ working candidate为`ISCF-v1-CPSI`：对`[B,C,S,D,K]` modes计算scope mean与ze
 
 最新external primary-source audit确认Deep Sets/Set Transformer/Cross-Stitch/MoLE/DMSC v5/TimeExpert已覆盖generic set、shared-private、expert mixture及multi-scale coordination primitives。因此允许的paper boundary只能是`future-output coupling scopes -> controlled common/private response evidence -> linear reparameterization boundary -> pre-synthesis multiplicative interaction -> matched attribution`完整链，不能claim首次multi-scale/expert interaction。
 
-Decision=`step5_theory_pass_step6_control_design_next`，narrative仅为conditional pass。Step6必须冻结exact-parameter `CPSI-SELF`、`CPSI-LINEAR`、`CPSI-COMMON`与诚实`POST-SYNTH` placement control、global rank rule、morphism和failure gates；若无法解决placement/capacity matching，则实现前关闭或降低claim。当前`active_method=none`，method implementation、remote training、formal test、router、second loss均未授权。
+用户要求SELF/LINEAR/COMMON/POST作为intermediate diagnostics，不因轻微负向在test前关闭mechanism。Step6现已完成：前三者exact `3Lr` matching；POST直接作用于forecast arms，derived rank使total-model parameter gap小于0.041%；global `r=32`冻结。validation只作selector/health，全部protocol-valid arms进入一次完整official-test audit。
+
+formal matrix为25 new trainings，加ISCF-v0/A6_FULL 10 historical references，共35 effective runs、140 MSE与140 MAE cells。CPSI vs ISCF macro MSE `[-0.5%,+0.3%)`定义为inconclusive，不方向级拒绝；initial support要求`>=+0.3%`、3/5 datasets、10/20 cells与MAE guard。controls使用`±0.3%` attribution tie band。
+
+Decision=`step6_pass_step7a_local_authorized`。当前`active_method=none`，只授权实现five arms与local shape/morphism/paired-init/two-step-gradient/parameter/CLI checks。remote training与formal test execution须等待Step7A、Step7B、commit-pinned pull、GPU preflight和25/25 training完成；confirmation、router、second loss均未授权。
 
 完成后同步更新analysis report、docs/paper-mainline.md、docs/research-roadmap.md和Stage C ledger，执行最小诚实验证，并按AGENTS.md提交、推送。请从专业时序预测研究员角度进行审计，不要为了凑两个contributions而预先设计第二个loss/router。
 ```

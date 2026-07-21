@@ -7,14 +7,34 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；`ISCF-v1-CPSI` is a working research ID, not final title |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF Step5 theory conditional pass；advance Step6 concrete control/design audit |
+| `current_11_step` | ISCF-v1-CPSI Step6 design pass；advance Step7A production-local implementation |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | ISCF-v0 frozen strong carrier；CPSI working candidate only；active_method=none |
+| `paper_core_status` | ISCF-v0 frozen carrier；CPSI active working candidate pending implementation/effectiveness；active_method=none |
+
+[ISCF-v1-CPSI Step6 Design, 2026-07-21] 用户要求四个controls作为intermediate diagnostics，不因轻微负向
+提前关闭机制，并走到official-test MSE/MAE后判断effectiveness。Step6据此将validation角色限定为checkpoint与health：
+所有protocol-valid arms无论validation排序都进入同一次冻结test audit；controls只决定claim attribution，不决定test access。
+
+四个controls现已完成公平设计。SELF、LINEAR、COMMON与CPSI完全同为`3Lr`参数、无bias、`W_o=0` exact
+ISCF morph；COMMON用two common projections的product而非dormant padding。POST-SYNTH直接作用于
+`[B,C,S,T]` forecasts，不使用任意fixed projection；derived `r_post=round(Lr/T)`使added-module gap小于
+1.95%、total-model gap小于0.041%。global pre-synthesis rank冻结为`r=32`。
+
+formal matrix预注册为five new arms × five datasets × seed2021=`25` new trainings，另复用并审核ISCF-v0与
+A6_FULL的10个historical references；全部35 effective runs形成140 MSE与140 MAE test cells。轻微test结果进入
+`test_inconclusive`：CPSI vs ISCF macro MSE在`[-0.5%,+0.3%)`不方向级拒绝。initial support要求至少`+0.3%`、
+3/5 datasets、10/20 cells且MAE不低于`-0.3%`；material negative要求macro不高于`-0.5%`且4/5 datasets为负，
+或单dataset退化达到5%。这些阈值在implementation/test前冻结。
+
+Decision=`step6_pass_step7a_local_authorized`。当前只授权local implementation与shape/morphism/gradient/parameter/
+CLI checks；remote/test须等待Step7A与Step7B prelaunch、commit-pinned pull及GPU preflight。confirmation、router和
+second loss仍为false。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step6_design_20260721/step6_control_design_and_test_policy.md`。
 
 [ISCF Step5 Theory Gate, 2026-07-21] 代码与数学审计确认：对独立affine scope modes做任何fixed linear mixing，
 均可精确吸收到新的`mode_weight/mode_bias`，所以Cross-Stitch式`5×5` matrix、linear common/private sharing与

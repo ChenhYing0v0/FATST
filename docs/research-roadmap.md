@@ -5,14 +5,33 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | ISCF Step5 theory conditional pass；advance Step6 concrete control/design audit |
-| `active_question` | CPSI能否以matched SELF/LINEAR/COMMON/POST-SYNTH controls证明common–private pre-synthesis interaction而非generic capacity？ |
-| `active_candidates` | no active paper method；`ISCF-v0` frozen carrier；`ISCF-v1-CPSI` working candidate proposed only |
+| `current_step` | ISCF-v1-CPSI Step6 design pass；advance Step7A production-local implementation |
+| `active_question` | CPSI在完整test MSE/MAE前能否通过shape/morphism/gradient/parameter local production gate？ |
+| `active_candidates` | `ISCF-v0` frozen carrier；`ISCF-v1-CPSI` active working candidate；active_method=none pending Step7A |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_step5_common_private_interaction_20260721/step5_theory_and_narrative_gate.md` |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step6_design_20260721/step6_control_design_and_test_policy.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | active_method=none；Step6 design audit only；implementation/remote/test false |
-| `rollback_point` | Step6 control/placement design；unmatched or generic interaction returns Step4/ISCF-v0 carrier |
+| `method_implementation` | local Step7A authorized；remote/test false until implementation/prelaunch gates |
+| `rollback_point` | hard local pathology repairs Step6/7A；mild diagnostics do not reject；official test decides exact CPSI-v1 effectiveness |
+
+## ISCF-v1-CPSI Step6 Design Decision
+
+用户将SELF/LINEAR/COMMON/POST-SYNTH定位为intermediate diagnostics，并要求不因轻微负向在official test前关闭
+mechanism。Step6将这一要求转化为可审计协议：validation只选checkpoint和监测health，全部protocol-valid arms都进入
+冻结test；controls在test上决定attribution，而不决定是否允许test access。
+
+SELF、LINEAR、COMMON已实现formula-level exact `3Lr` matching；COMMON使用
+$W_o[\mathrm{GELU}(W_a\mu)\odot\mathrm{GELU}(W_b\mu)]$ broadcast，避免dummy parameters。POST-SYNTH直接在
+`[B,C,S,720]` forecasts上作同构interaction，`r_post=round(Lr/720)`；module gap小于1.95%，total-model gap小于
+0.041%，因此可作诚实placement diagnostic。global $r=32$在test前冻结。
+
+formal matrix为25 new trainings，加ISCF-v0/A6_FULL 10 historical references，经hash/contract审计后形成35 effective
+runs与140 test MSE/MAE cells。CPSI vs ISCF macro MSE `[-0.5%,+0.3%)`定义为inconclusive而非direction failure；
+initial support要求`>=+0.3%`、3/5 datasets、10/20 cells及MAE guard。controls的`±0.3%`是attribution tie band，
+不能用轻微差异claim necessity。
+
+Decision=`step6_pass_step7a_local_authorized`。下一步只实现production modes、five arms与local checker，并同步
+code explanation；remote/test execution在Step7B前保持false。
 
 ## ISCF Step5 Common–Private Interaction Decision
 
