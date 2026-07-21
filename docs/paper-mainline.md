@@ -7,14 +7,14 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Scale-Indexed Forecast Fields for Unified Multi-Horizon Time-Series Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC1-SIFF-v3-TSAF Step9/10 complete；exact v1 closed；return Step2/4 |
+| `current_11_step` | SIFF-v2 final paper-claim Step4-6 complete；FCC matrix frozen，waiting authorization |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | SIFF-v2 immutable paperization parent；TSAF-v1 failed；no active successor method |
+| `paper_core_status` | SIFF-v2 conditional single-contribution candidate；FCC effectiveness pending；no successor method |
 
 [Constraint Reset, 2026-07-20] 后续不再把exact projectivity、requested horizon禁用、A6 interface compatibility或
 full-$T$ prefix crop当作新方法的先验硬约束。它们可以成为合理设计或matched controls，但必须由problem、理论与
@@ -194,6 +194,33 @@ capacity-matched independent target-only相对parent有MSE `+0.2383%`、MAE `+0.
 `close_tsaf_v1_shared_field_design_keep_siff_v2_immutable_parent`：关闭TSAF-v1 exact shared field，不做
 seed/rank/width/readout/loss rescue；SIFF-v2 identity不变，当前无active successor method，回SIFF-first Step2/4。
 详见`analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step9_10_result_and_rollback.md`。
+
+[Post-TSAF 2x2 Problem Audit] `independent target-only`不是“移除SIFF history router”的单因素arm：它同时把
+Q2 ordered field改为Q5 independent fields、把direct policy改为static-target，并在ETTh2/ETTm1/Weather改变
+rank 116到115。四个existing E2E arms的factorial audit显示，全20-cell test interaction MSE/MAE虽为
+`+0.5265%/+0.4246%`，严格same-rank ETTh1+ETTm2子集却为`-0.3097%/-0.1175%`；validation same-rank
+近零，Weather发生split reversal。因此`+0.2383%` weak gain不能归因于target-only、independent field或二者
+stable interaction。Decision=`independent_target_only_weak_lead_not_supported_for_step4`；不补seed/rank/router
+rescue，不创建successor。
+
+SIFF-v2的paper claim同步收紧：保留其相对A6_FULL、PCSD_EQUAL、constant、permuted与Q1-wide的正证据，
+但不claim ordered field严格优于independent、history-conditioned policy不可替代、target-only allocation已成立，
+或SIFF-v2已超过A6_MEASURE。下一节点先完成immutable SIFF-v2 final paper-claim consolidation；在该narrative
+gate前不执行modern-baseline performance matrix、不实现新method、不启动remote training，也不预设第二loss/router。
+详见`analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_post_tsaf_independent_factorial_audit.md`。
+
+[SIFF-v2 Final Paper-Claim Gate] 原样SIFF-v2以单一architecture contribution获得conditional narrative pass：把
+future-output coupling extent作为ordered log-scale coordinate，以共享history-conditioned components生成nested
+full-domain forecast operators并target-wise融合。论文不claim首次multi-scale、MoE、future query或H conditioning；
+direct policy不作为novel router，`equal_skill`只作共同训练contract，不包装为第二method contribution。
+
+这不是paper-core effectiveness pass。A6_MEASURE与independent仍是两个hard blockers。FCC现冻结
+`SIFF_EQUAL/A6_MEASURE/SIFF_INDEPENDENT_EQUAL × 5 datasets × seeds2022/2023`共30 new runs，复用seed2021
+形成three-seed evidence。两项primary comparisons均须通过MSE `+0.3%`、MAE为正、3/5 datasets、3/4 horizons
+与至少2/3 seed macro为正；任一失败即停止SIFF paper-core rescue，不回rank/loss/router/readout tuning。只有FCC
+通过才进入modern native baselines与formal ablations。Decision=
+`freeze_siff_v2_single_contribution_fcc_design_wait_authorization`；当前remote training与official test均false。
+详见`analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_final_paper_claim_and_confirmation_design.md`。
 
 [Scope Decision, 2026-07-20] 用户明确要求当前项目暂不转出`deterministic-MSE fixed-past architecture search`。
 因此D22-C有效失败只关闭exact v1并回joint Step2/3，不再自动停止整个search；但不得用seed、width、readout或

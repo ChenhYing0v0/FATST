@@ -5,14 +5,14 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC1-SIFF-v3-TSAF Step9/10 complete；exact v1 closed；return Step2/4 |
-| `active_question` | independent target-only weak signal是否值得新的SIFF-first paper problem，而非post-hoc control promotion？ |
-| `active_candidates` | no active successor method；SIFF-v2 immutable paperization parent |
+| `current_step` | SIFF-v2 final paper-claim Step4-6 complete；FCC matrix frozen，waiting authorization |
+| `active_question` | three-seed SIFF-v2能否同时超过A6_MEASURE与independent control？ |
+| `active_candidates` | `SC1-SIFF-v2-FCC-v1` conditional paperization candidate；no successor method |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step9_10_result_and_rollback.md` |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_final_paper_claim_and_confirmation_design.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | TSAF-v1 implementation healthy but effectiveness/attribution fail；no active implementation |
-| `rollback_point` | Step2/4；SIFF-v2 remains immutable |
+| `method_implementation` | SIFF-v2 unchanged；FCC is evaluation-only；remote/test false |
+| `rollback_point` | FCC fail -> paper portfolio decision；no SIFF method rescue |
 
 ## Post-D21 Unconstrained Reset
 
@@ -168,6 +168,34 @@ independent target-only相对parent的MSE `+0.2383%`只保留为single-seed weak
 且其预注册角色是control，不能post-hoc晋升。Decision=
 `close_tsaf_v1_shared_field_design_keep_siff_v2_immutable_parent`。TSAF-v1不补seed/rank/width/readout/loss rescue；
 SIFF-v2继续immutable，当前没有active successor method，回SIFF-first Step2/4。
+
+post-TSAF Step2现用四个existing E2E arms完成field-family × policy-information的$2\times2$ audit。
+`independent target-only`同时把Q2 ordered field改为Q5 independent fields、把direct policy改为static-target，
+并在ETTh2/ETTm1/Weather把rank从116改为115，因此其`+0.2383%`不是单因素effect。全20-cell test interaction
+MSE/MAE为`+0.5265%/+0.4246%`，但严格同rank的ETTh1+ETTm2子集为`-0.3097%/-0.1175%`；validation
+same-rank近零，Weather split reversal。latest primary-source audit还显示independent experts、query-specific
+selection、multi-scale gating与shared-plus-residual gating均已有强覆盖。Decision=
+`independent_target_only_weak_lead_not_supported_for_step4`。
+
+该决定只关闭weak control的post-hoc promotion，不关闭SIFF-v2。下一节点是immutable SIFF-v2 final paper-claim
+consolidation：允许陈述其相对A6_FULL、PCSD_EQUAL、constant、permuted与Q1-wide的正证据；不得陈述ordered
+strictly superior to independent、target-only allocation成立或已超过A6_MEASURE。claim gate完成前不实现successor、
+不执行SC-MNB performance matrix、不启动remote training，也不预设第二loss/router。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_post_tsaf_independent_factorial_audit.md`。
+
+SIFF-v2 final paper-claim Step4-6现完成。narrative gate为
+`conditional_pass_as_single_architecture_contribution`：唯一method contribution收紧为“把future-output coupling
+extent作为ordered log-scale coordinate，以共享history-conditioned components生成nested full-domain forecast
+operators并target-wise融合”。不claim首次multi-scale、MoE、future query或requested-H conditioning；equal-skill
+只作共同训练contract，不包装为第二loss contribution。
+
+该narrative pass不覆盖effectiveness blockers。FCC固定三个arms：`SIFF_EQUAL`、`A6_MEASURE`与
+`SIFF_INDEPENDENT_EQUAL`，在五datasets补seeds2022/2023共30 new runs，复用seed2021形成45 effective runs/
+180 test cells。两项SIFF comparisons都沿用MSE `+0.3%`、MAE为正、3/5 datasets、3/4 horizons与至少2/3
+seed macro为正的gates。只有同时通过才进入modern baselines；任一失败即停止SIFF paper-core rescue，不回rank、
+loss、router或readout tuning。Decision=`freeze_siff_v2_single_contribution_fcc_design_wait_authorization`；当前
+remote training与official test均未授权。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_final_paper_claim_and_confirmation_design.md`。
 
 用户2026-07-20决定暂不承担task pivot成本。该scope决定把上一版“D22-C有效失败即停止整个
 deterministic-MSE search”改为：关闭exact D22-C v1并回joint Step2/3，在同一task边界寻找不同的falsifiable
