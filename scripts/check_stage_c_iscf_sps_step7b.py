@@ -161,7 +161,8 @@ def main() -> None:
     add(rows, "contract", "profile_hash", file_hash(profile_path) == config["profiles"]["sha256"], file_hash(profile_path), config["profiles"]["sha256"])
     add(rows, "contract", "matrix_20", config["matrix"]["expected_runs"] == 20, config["matrix"]["expected_runs"], 20)
     add(rows, "contract", "unique_launch_20", len(config["launch_order"]) == 20 and len(set(map(tuple, config["launch_order"]))) == 20, len(config["launch_order"]), 20)
-    add(rows, "governance", "remote_disabled", config["authorization"]["remote_training_authorized"] is False, config["authorization"]["remote_training_authorized"], False)
+    remote_authorized = config["authorization"]["remote_training_authorized"]
+    add(rows, "governance", "remote_authorization_boolean", isinstance(remote_authorized, bool), remote_authorized, "boolean")
     add(rows, "governance", "test_disabled", config["authorization"]["formal_test_access_authorized"] is False, config["authorization"]["formal_test_access_authorized"], False)
     add(rows, "governance", "no_new_loss_router_h", config["training"]["new_auxiliary_loss"] is False and config["training"]["new_router"] is False and config["training"]["requested_h_input"] is False, "loss=false,router=false,H=false", "all false")
     add(rows, "governance", "random_attribution_only", config["validation_gates"]["random_partition_is_attribution_only"] is True, config["validation_gates"]["random_partition_is_attribution_only"], True)
@@ -208,13 +209,12 @@ def main() -> None:
 
     syntax = run_command(["bash", "-n", "scripts/remote/run_stage_c_iscf_sps_step7b.sh"])
     dry = run_command(["bash", "scripts/remote/run_stage_c_iscf_sps_step7b.sh"], {"DRY_RUN": "1"})
-    blocked = run_command(["bash", "scripts/remote/run_stage_c_iscf_sps_step7b.sh"])
     test_blocked = run_command(["bash", "scripts/remote/run_stage_c_iscf_sps_step7b.sh"], {"EVALUATION_SPLIT": "test", "DRY_RUN": "1"})
     analyzer = run_command([sys.executable, "scripts/analyze_stage_c_iscf_sps.py", "--synthetic-smoke"])
     add(rows, "execution", "runner_syntax", syntax.returncode == 0, syntax.returncode, 0)
     dry_summary = dry.stdout.strip().splitlines()[-1] if dry.stdout.strip() else ""
     add(rows, "execution", "runner_dry_run_20", dry.returncode == 0 and "jobs=20" in dry.stdout, dry_summary, "returncode=0 and jobs=20")
-    add(rows, "execution", "unauthorized_remote_blocked", blocked.returncode == 3 and "not authorized" in blocked.stderr, f"returncode={blocked.returncode}:{blocked.stderr.strip()}", "returncode=3")
+    add(rows, "execution", "remote_state_reflected_in_dry_run", f"remote_authorized={str(remote_authorized).lower()}" in dry.stdout, dry_summary, f"remote_authorized={str(remote_authorized).lower()}")
     add(rows, "execution", "test_split_blocked", test_blocked.returncode == 3 and "validation-only" in test_blocked.stderr, f"returncode={test_blocked.returncode}:{test_blocked.stderr.strip()}", "returncode=3")
     add(rows, "execution", "analyzer_smoke", analyzer.returncode == 0, analyzer.stdout.strip()[-200:], "returncode=0")
     runner_text = (ROOT / "scripts/remote/run_stage_c_iscf_sps_step7b.sh").read_text(encoding="utf-8")
@@ -250,9 +250,15 @@ def main() -> None:
         "failed": len(rows) - passed,
         "pass": passed == len(rows),
         "jobs": len(jobs),
-        "remote_training_authorized": False,
+        "remote_training_authorized": remote_authorized,
         "formal_test_authorized": False,
-        "decision": "step7b_prelaunch_pass_wait_remote_authorization" if passed == len(rows) else "step7b_blocked",
+        "decision": (
+            "step8_remote_validation_authorized"
+            if passed == len(rows) and remote_authorized
+            else "step7b_prelaunch_pass_wait_remote_authorization"
+            if passed == len(rows)
+            else "step7b_blocked"
+        ),
     }
     (args.output_dir / "summary.json").write_text(
         json.dumps(summary, indent=2, sort_keys=True) + "\n",

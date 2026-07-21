@@ -51,13 +51,14 @@
 42. `configs/stage_c_iscf_sps_v0.json`；
 43. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_sps_step7b_prelaunch_20260721/prelaunch_report.md`；
 44. `configs/stage_c_iscf_sps_step7b.json`；
-45. `docs/code-explanation/stage-c-iscf-v0-sac-step7b.md`；
-46. `configs/stage_c_iscf_v0_scope_attribution_confirmation.json`；
-47. `configs/stage_c_iscf_v0_carrier.json`；
-48. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
-49. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
-50. `docs/paper-mainline.md`；
-51. `docs/research-roadmap.md`。
+45. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_sps_step8_remote_20260722/remote_authorization_and_launch.md`；
+46. `docs/code-explanation/stage-c-iscf-v0-sac-step7b.md`；
+47. `configs/stage_c_iscf_v0_scope_attribution_confirmation.json`；
+48. `configs/stage_c_iscf_v0_carrier.json`；
+49. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
+50. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
+51. `docs/paper-mainline.md`；
+52. `docs/research-roadmap.md`。
 
 若上述文件与更旧的聊天、archive或历史段落冲突，以本文件和三份主线文档顶部的最新cursor为准。
 
@@ -69,12 +70,12 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-21 |
 | `source_parent_commit` | `fb4057d`（ISCF-SPS Step7A implementation） |
-| `current_step` | ISCF-SPS Step7B validation prelaunch pass；await remote-training authorization |
+| `current_step` | ISCF-SPS Step8 frozen remote validation authorized；preflight/launch in progress |
 | `active_problem` | scope extent如何原生约束arm forecast/gradient并形成有用functional specialization |
 | `active_method` | local candidate=`SC-ISCF-SPS-v0`；ISCF-v0 exact parent/control |
-| `method_training_authorized` | false；local implementation only |
-| `remote_training_authorized` | false；new formal test/modern baselines false |
-| `next_action` | explicit authorization后remote preflight/resource smoke/20-run validation training |
+| `method_training_authorized` | true for frozen 20-run validation matrix |
+| `remote_training_authorized` | true for frozen training；formal test/modern baselines false |
+| `next_action` | commit-pinned remote pull、GPU/resource preflight、launch 20-run validation training |
 | `conditional_next` | 20/20 validation artifacts完成后先做Step9 validation audit；formal test另议 |
 | `rollback` | local fault Step5/6；candidate<=global或validation negative Step4；no loss/router/per-dataset rescue |
 

@@ -62,3 +62,6 @@ GPU preflight hook与`rg/grep` log scanner fallback均通过。
 
 Decision=`step7b_prelaunch_pass_wait_remote_authorization`。当前没有training/validation结果；remote training、formal test、
 confirmation seeds与modern baselines均未授权。
+
+> 2026-07-22 authorization update：用户随后明确授权启动冻结20-run validation matrix。prelaunch evidence与gates不变；
+> 当前remote-training状态以Step8 launch record和config为准，formal test仍未授权。

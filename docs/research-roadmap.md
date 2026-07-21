@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | ISCF-SPS Step7B validation prelaunch pass；await remote-training authorization |
+| `current_step` | ISCF-SPS Step8 frozen 20-run remote validation authorized；preflight/launch in progress |
 | `active_question` | 如何让ISCF scope extent原生约束arm forecast与gradient，从而形成functional specialization |
 | `active_candidates` | `SC-ISCF-SPS-v0`；ISCF-v0 parent/carrier；exact SAC/CPSI closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `configs/stage_c_iscf_sps_step7b.json` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | SPS production/diagnostic/runner integration complete；remote training/test/modern baselines false |
+| `method_implementation` | SPS 20-run remote validation authorized；formal test/modern baselines false |
 | `rollback_point` | local fault -> Step5/6；validation negative/global explains -> Step4；no loss/router/per-dataset rescue |
 
 ## ISCF-SPS Step4–7A Decision
@@ -50,6 +50,14 @@ test split也在dry-run前硬拒绝。
 Decision=`step7b_prelaunch_pass_wait_remote_authorization`。下一步只有在明确授权后才commit-pinned remote pull、执行
 `nvidia-smi`、dual resource smoke并启动20-run validation matrix。validation结果返回前不设计formal test；test、confirmation
 seeds与modern baselines仍false。
+
+## ISCF-SPS Step8 Remote Authorization
+
+用户于`2026-07-22`明确授权“启动20-run validation matrix”。authorization只开放seed2021的20个frozen trainings；
+`formal_test_access_authorized=false`保持不变。启动顺序固定为local commit/push、remote fast-forward、three-GPU preflight、
+Weather scope/identity resource smoke、正式matrix。20/20完成后先分析validation，不自动执行test。
+
+Decision=`step8_remote_validation_authorized_formal_test_disabled`。
 
 ## ISCF-v0 SAC Step9/10 Decision
 

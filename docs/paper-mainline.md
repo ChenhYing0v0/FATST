@@ -7,14 +7,21 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture=`ISCF-SPS` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF-SPS Step7B validation prelaunch pass；await remote-training authorization |
+| `current_11_step` | ISCF-SPS Step8 frozen 20-run remote validation authorized；preflight/launch in progress |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | active candidate=`SC-ISCF-SPS-v0`；20-run validation matrix frozen；remote/test/modern baselines false |
+| `paper_core_status` | active candidate=`SC-ISCF-SPS-v0`；20-run validation training authorized；formal test/modern baselines false |
+
+[ISCF-SPS Step8 Remote Authorization, 2026-07-22] 用户明确授权并启动冻结20-run validation matrix。授权只覆盖
+scope/identity/global/random × five datasets × seed2021的from-scratch training；formal test、confirmation seeds和modern
+baselines不包含在内。下一动作是commit-pinned remote pull、GPU preflight、two-arm resource smoke，通过后启动正式matrix。
+
+Decision=`step8_remote_validation_authorized_formal_test_disabled`。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_sps_step8_remote_20260722/remote_authorization_and_launch.md`。
 
 [ISCF-SPS Step7B Prelaunch, 2026-07-21] validation-first matrix已冻结为scope/identity/global/random四arms ×
 ETTh1/ETTh2/ETTm1/ETTm2/Weather × seed2021，共20个from-scratch matched runs、80个standard-horizon validation cells。

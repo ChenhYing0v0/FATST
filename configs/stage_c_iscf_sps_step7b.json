@@ -4,7 +4,7 @@
   "candidate_version": "SC-ISCF-SPS-v0-step7b",
   "parent_candidate": "ISCF-v0",
   "date": "2026-07-21",
-  "status": "step7b_prelaunch_remote_not_authorized",
+  "status": "step8_remote_validation_authorized",
   "role": "validation_first_method_screen",
   "test_informed": true,
   "purpose": "test whether scope-native output projection improves the utilization and specialization of the frozen ISCF multi-scope architecture",
@@ -219,11 +219,13 @@
   },
   "authorization": {
     "step7b_design_and_local_prelaunch_authorized": true,
-    "remote_training_authorized": false,
+    "user_authorization_basis": "2026-07-22 user instruction: authorize and launch the frozen 20-run validation matrix",
+    "authorization_date": "2026-07-22",
+    "remote_training_authorized": true,
     "formal_test_access_authorized": false,
     "confirmation_seeds_authorized": false,
     "modern_baselines_authorized": false,
     "per_dataset_horizon_or_cell_tuning_allowed": false
   },
-  "decision": "freeze Step7B and wait for explicit remote-training authorization after local prelaunch pass"
+  "decision": "launch the frozen 20-run validation matrix after commit-pinned remote and GPU/resource preflight; formal test remains disabled"
 }
