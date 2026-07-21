@@ -89,6 +89,7 @@ PREFIX_READOUT_MODES = {
     "siff-permuted-scale-control",
     "siff-q1-wide-control",
     "siff-independent-scope-control",
+    "iscf-scope-projected-synthesis",
     *TimeAlign.CPSI_READOUTS,
     "siff-dense-nonlinear-matched",
     "ccsf-coupling-field",
@@ -129,6 +130,7 @@ STAGE_C_ACTIVE_READOUTS = {
     "siff-permuted-scale-control",
     "siff-q1-wide-control",
     "siff-independent-scope-control",
+    "iscf-scope-projected-synthesis",
     *TimeAlign.CPSI_READOUTS,
     "siff-dense-nonlinear-matched",
     "ccsf-coupling-field",
@@ -439,6 +441,7 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         pcsd_partition_seed=args.pcsd_partition_seed,
         pcsd_group_chunk_size=args.pcsd_group_chunk_size,
         pcsd_target_chunk_size=args.pcsd_target_chunk_size,
+        sps_projection_mode=args.sps_projection_mode,
         ccsf_correction_hidden_dim=args.ccsf_correction_hidden_dim,
         if_hidden_width=args.if_hidden_width,
         if_direct_hidden_width=args.if_direct_hidden_width,
@@ -636,6 +639,19 @@ def initialization_contract(model: nn.Module) -> dict[str, Any]:
                     .tolist(),
                     "siff_scale_basis_hash": _tensor_hash(
                         [readout.scale_basis]
+                    ),
+                }
+            )
+        if hasattr(readout, "projection_mode"):
+            payload.update(
+                {
+                    "sps_projection_mode": readout.projection_mode,
+                    "sps_projection_ranks": list(readout.projection_ranks),
+                    "sps_projection_basis_hash": _tensor_hash(
+                        [
+                            readout.projection_basis(index)
+                            for index in range(len(readout.scales))
+                        ]
                     ),
                 }
             )
@@ -1268,6 +1284,23 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
                     "siff_scale_basis_hash": _tensor_hash(
                         [readout.scale_basis]
                     ),
+                }
+            )
+        if hasattr(readout, "projection_mode"):
+            payload.update(
+                {
+                    "sps_projection_mode": readout.projection_mode,
+                    "sps_projection_ranks": list(readout.projection_ranks),
+                    "sps_projected_degrees": [
+                        int(rank * (readout.series_length // scale))
+                        if readout.projection_mode != "global"
+                        else int(rank)
+                        for rank, scale in zip(
+                            readout.projection_ranks,
+                            readout.scales,
+                            strict=True,
+                        )
+                    ],
                 }
             )
         if hasattr(readout, "interaction_mode"):
@@ -2488,6 +2521,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--pcsd-partition-seed", type=int, default=15101)
     parser.add_argument("--pcsd-group-chunk-size", type=int, default=64)
     parser.add_argument("--pcsd-target-chunk-size", type=int, default=128)
+    parser.add_argument(
+        "--sps-projection-mode",
+        choices=["scope", "global", "identity"],
+        default="scope",
+    )
     parser.add_argument("--ccsf-correction-hidden-dim", type=int, default=64)
     parser.add_argument("--if-hidden-width", type=int, default=2048)
     parser.add_argument("--if-direct-hidden-width", type=int, default=4143)
@@ -2718,6 +2756,7 @@ def parse_args() -> argparse.Namespace:
     if args.readout_mode in {
         "siff-q1-wide-control",
         "siff-independent-scope-control",
+        "iscf-scope-projected-synthesis",
         "ccsf-independent-scope-control",
         *TimeAlign.CPSI_READOUTS,
     }:
@@ -2734,6 +2773,11 @@ def parse_args() -> argparse.Namespace:
             raise ValueError("ISCF-v1-CPSI requires cpsi_rank=32")
         if args.pcsd_policy_mode != "direct":
             raise ValueError("ISCF-v1-CPSI requires pcsd_policy_mode=direct")
+    if (
+        args.readout_mode == "iscf-scope-projected-synthesis"
+        and args.pcsd_policy_mode != "direct"
+    ):
+        raise ValueError("ISCF-SPS v0 requires pcsd_policy_mode=direct")
     if args.pcsd_group_chunk_size <= 0 or args.pcsd_target_chunk_size <= 0:
         raise ValueError("PCSD chunk sizes must be positive")
     if args.ccsf_correction_hidden_dim != 64:

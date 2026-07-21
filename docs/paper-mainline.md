@@ -5,16 +5,34 @@
 | Field | Content |
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
-| `working_title` | TBD；ISCF-v0不再作为paperization identity |
+| `working_title` | TBD；provisional architecture=`ISCF-SPS` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF-v0 SAC Step10 complete；rollback Step2/4 portfolio consolidation |
+| `current_11_step` | ISCF-SPS Step7A local contract pass；freeze Step7B validation design |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | active method none；ISCF-v0 strong carrier/control only；SAC attribution fail；modern baselines false |
+| `paper_core_status` | active candidate=`SC-ISCF-SPS-v0`；local implementation only；remote/test/modern baselines false |
+
+[ISCF-SPS Step4–7A, 2026-07-21] 用户将ISCF multi-scope architecture固定为本项目的design prior，并要求从
+arm specialization/utilization继续研究。SAC negative完整保留，但角色从stop decision改为design diagnosis：ISCF超过
+Q1-WIDE说明independent maps有效，而canonical不超过random、fusion仅9/15超过best fixed arm，说明现有shared
+unrestricted target synthesis没有充分兑现scope geometry。
+
+新candidate=`SC-ISCF-SPS-v0 — Scope-Projected Synthesis`。它保留五个independent maps、scope groups、direct
+policy、single objective和full-T crop，在每个raw arm进入fusion前施加scope-native orthonormal local-DCT projector。
+projector不仅约束forward resolution，也以$P_s^\top=P_s$过滤该scope map收到的error gradient；不增加trainable
+parameters、second loss、router或requested-H input。identity/global/random controls已冻结，NHITS/N-BEATS/TimeMixer/
+FreqMoE及2025–2026 expert-specialization literature限定了claim只能位于完整task-specific chain。
+
+Step7A local contract通过：identity-parent max gap=`8.34e-7`，prefix gap=`0`，basis orthonormal/projector
+idempotence errors=`3.22e-15/1.53e-16`，five scope gradient norms全部finite/nonzero，canonical/random/global
+outputs可辨，production model `[1,720,2]`与CLI contract通过。Decision=
+`conditional_pass_as_scope_utilization_architecture_step7a_complete`。下一步只冻结validation-first Step7B matrix；remote
+training、formal test与modern baselines仍未授权。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_sps_step46_20260721/step4_6_design_and_step7a_audit.md`。
 
 [ISCF-v0 SAC Step9/10 Result, 2026-07-21] 25/25 new formal tests与60/60 effective audits完整，240/240
 standard-horizon rows、25/25 checkpoint nonmutation和15/15 internal-health checks通过。首次launch的missing-bin

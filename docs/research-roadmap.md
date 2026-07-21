@@ -5,14 +5,36 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | ISCF-v0 SAC Step10 complete；rollback Step2/4 consolidation |
-| `active_question` | post-SAC paper contribution boundary；temporal-scope mechanism不成立 |
-| `active_candidates` | none；ISCF-v0 carrier/control；exact SAC/CPSI closed |
+| `current_step` | ISCF-SPS Step7A local contract pass；freeze Step7B validation design |
+| `active_question` | 如何让ISCF scope extent原生约束arm forecast与gradient，从而形成functional specialization |
+| `active_candidates` | `SC-ISCF-SPS-v0`；ISCF-v0 parent/carrier；exact SAC/CPSI closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `configs/stage_c_iscf_v0_scope_attribution_confirmation.json` |
+| `active_protocol` | `configs/stage_c_iscf_sps_v0.json` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | ISCF code unchanged；SAC complete；new method/modern baselines false |
-| `rollback_point` | Step2/4 portfolio consolidation；no ISCF rank/seed/partition/loss/router rescue |
+| `method_implementation` | SPS production/local integration complete；remote training/test/modern baselines false |
+| `rollback_point` | local fault -> Step5/6；validation negative/global explains -> Step4；no loss/router/per-dataset rescue |
+
+## ISCF-SPS Step4–7A Decision
+
+用户将ISCF multi-scope architecture固定为design prior。SAC negative不删除，但不再作为停止研究的条件；其新的解释是
+“当前实现没有充分利用scope”。代码审计定位到具体缺口：五个scopes虽有independent history maps和不同group states，
+却共同使用逐target unrestricted `identity_synthesis/nonlinear_synthesis [T,K]`，因此coarse scope仍可生成generalist
+full forecast，scope extent不会持续约束output/gradient。
+
+`SC-ISCF-SPS-v0`在raw arms进入既有direct fusion前加入scope-native local-DCT projector。rank规则为
+$r_s=\min(s,\max(1,\mathrm{round}(Ks/720)))$；$P_s=C_sC_s^\top$同时定义forecast subspace与该scope map收到的
+backward error subspace。candidate新增0 trainable parameters，保持single MSE/equal-skill objective，不增加router、
+requested-H或auxiliary specialization loss。
+
+Step4–6 narrative gate为`conditional_pass`。NHITS/N-BEATS已覆盖hierarchical interpolation/additive components，
+TimeMixer/FreqMoE已覆盖multi-scale predictors/frequency experts，MoE specialization objectives也有直接prior；所以claim
+限定为`future-output coupling scopes -> scope-native synthesis/gradient subspaces -> target-wise full-domain composition`
+及matched attribution，不claim DCT、interpolation或expert diversity primitive。
+
+Step7A全部通过：paired parent/identity/candidate/global/random parameter hash一致；identity-parent max gap
+`8.34e-7`；prefix gap`0`；orthonormal/idempotence errors `3.22e-15/1.53e-16`；five gradients非零；production
+model/CLI通过。Decision=`conditional_pass_as_scope_utilization_architecture_step7a_complete`。下一步冻结candidate/
+identity/global/random的validation-first Step7B matrix；remote training与formal test均false。
 
 ## ISCF-v0 SAC Step9/10 Decision
 

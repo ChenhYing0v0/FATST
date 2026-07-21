@@ -46,13 +46,16 @@
 37. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step8_remote_20260721/remote_authorization_and_launch.md`；
 38. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step8_remote_20260721/validation_artifact_audit_and_test_handoff.md`；
 39. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step9_10_20260721/step9_10_result_and_rollback.md`；
-40. `docs/code-explanation/stage-c-iscf-v0-sac-step7b.md`；
-41. `configs/stage_c_iscf_v0_scope_attribution_confirmation.json`；
-42. `configs/stage_c_iscf_v0_carrier.json`；
-43. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
-44. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
-45. `docs/paper-mainline.md`；
-46. `docs/research-roadmap.md`。
+40. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_sps_step46_20260721/step4_6_design_and_step7a_audit.md`；
+41. `docs/code-explanation/iscf-sps-v0.md`；
+42. `configs/stage_c_iscf_sps_v0.json`；
+43. `docs/code-explanation/stage-c-iscf-v0-sac-step7b.md`；
+44. `configs/stage_c_iscf_v0_scope_attribution_confirmation.json`；
+45. `configs/stage_c_iscf_v0_carrier.json`；
+46. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
+47. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
+48. `docs/paper-mainline.md`；
+49. `docs/research-roadmap.md`。
 
 若上述文件与更旧的聊天、archive或历史段落冲突，以本文件和三份主线文档顶部的最新cursor为准。
 
@@ -63,20 +66,32 @@
 | `project` | R_2026_FATST |
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-21 |
-| `source_parent_commit` | `6bbc3fc`（SAC formal-test runtime repair） |
-| `current_step` | ISCF-v0 SAC Step10 complete；rollback Step2/4 consolidation |
-| `active_problem` | post-SAC paper contribution boundary；temporal-scope necessity不成立 |
-| `active_method` | none；ISCF-v0 strong carrier/control only |
-| `method_training_authorized` | false；SAC complete |
-| `remote_training_authorized` | false；formal test consumed；modern baselines false |
-| `next_action` | portfolio/contribution-boundary consolidation；no ISCF rescue |
-| `conditional_next` | new paper-core route必须重新通过Step2-6；ISCF只可作carrier |
-| `rollback` | Step2/4；no rank/seed/partition/loss/router/requested-H rescue |
+| `source_parent_commit` | `d9208e0`（SAC Step9/10 closure） |
+| `current_step` | ISCF-SPS Step7A local contract pass；freeze Step7B validation design |
+| `active_problem` | scope extent如何原生约束arm forecast/gradient并形成有用functional specialization |
+| `active_method` | local candidate=`SC-ISCF-SPS-v0`；ISCF-v0 exact parent/control |
+| `method_training_authorized` | false；local implementation only |
+| `remote_training_authorized` | false；new formal test/modern baselines false |
+| `next_action` | freeze candidate/identity/global/random validation matrix and specialization diagnostics |
+| `conditional_next` | Step7B prelaunch pass后仍需用户授权remote training；validation pass后另议formal test |
+| `rollback` | local fault Step5/6；candidate<=global或validation negative Step4；no loss/router/per-dataset rescue |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
 
 - `SRP-7C55/`；
 - `analysis/phase5_timealign_hss_h1c_capacity_preserving_gate_20260701_partial/`。
+
+### 1.1 ISCF-SPS current decision
+
+用户已把ISCF multi-scope architecture固定为本轮design prior。SAC negative不得删除或改写为positive；它现在作为
+“current scope geometry underutilized”的motivation。active candidate=`SC-ISCF-SPS-v0`在五个raw arms进入既有direct
+fusion前加入scope-native orthonormal local-DCT projectors，使$P_s$同时限定forward forecast与backward error
+subspace。candidate新增0 trainable parameters，不增加loss/router/requested-H。
+
+Step7A local contract已通过：identity-parent gap `8.34e-7`、prefix gap `0`、projector errors不超过
+`3.22e-15`、five scope gradients nonzero、canonical/random/global outputs可辨、production model/CLI通过。该结果不含
+training/validation/test evidence。下一步只允许冻结Step7B validation-first matrix；不得直接remote launch或访问formal
+test。
 
 ## 2. 本轮正式转向
 

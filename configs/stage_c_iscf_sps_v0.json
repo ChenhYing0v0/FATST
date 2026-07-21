@@ -1,0 +1,62 @@
+{
+  "candidate_version": "SC-ISCF-SPS-v0",
+  "status": "step7a_local_only",
+  "current_step": "ISCF-SPS Step7A local implementation and contract audit",
+  "user_direction": "freeze ISCF multi-scope architecture and study stronger arm specialization/utilization",
+  "parent": {
+    "identity": "ISCF-v0",
+    "readout_mode": "siff-independent-scope-control",
+    "scopes": [1, 48, 144, 360, 720],
+    "policy": "direct",
+    "objective": "equal_skill",
+    "requested_h_input": false
+  },
+  "candidate": {
+    "readout_mode": "iscf-scope-projected-synthesis",
+    "projection_mode": "scope",
+    "projection_family": "orthonormal_local_dct",
+    "rank_rule": "min(scope, max(1, round(mode_rank * scope / 720)))",
+    "new_trainable_parameters": 0,
+    "second_loss": false,
+    "new_router": false,
+    "full_domain_before_crop": true
+  },
+  "problem": "ISCF independent history maps are effective, but a shared unrestricted target synthesis lets nominally different scope arms remain functionally substitutable and weakens scope-specific gradient allocation.",
+  "idea": "Project every arm forecast onto a scope-native local interpolation subspace before the existing target-wise fusion, so the forward role and backward error spectrum are tied to that arm's output-coupling extent.",
+  "controls": [
+    "iscf_v0_parent",
+    "sps_identity_code_path",
+    "sps_global_projection",
+    "sps_random_partition",
+    "sps_scope_projection"
+  ],
+  "split_roles": {
+    "train": "same-objective from-scratch optimization only",
+    "validation": "checkpoint selection and first effectiveness/specialization screen",
+    "test": "disabled until a separately frozen complete matrix and explicit authorization"
+  },
+  "step7a_gates": {
+    "shape_and_finite": true,
+    "orthonormal_and_idempotent": true,
+    "identity_path_exact_parent": true,
+    "paired_parameter_initialization": true,
+    "scope_gradient_nonzero": true,
+    "canonical_random_binding_differs": true,
+    "production_cli_smoke": true
+  },
+  "step7b_provisional_validation_gates": {
+    "candidate_vs_parent_macro_mse_percent": 0.3,
+    "dataset_wins_min": 3,
+    "horizon_wins_min": 3,
+    "candidate_vs_global_projection_macro_mse_positive": true,
+    "scope_specialization_health_required": true,
+    "negative_cells_reported": true
+  },
+  "authorization": {
+    "local_implementation": true,
+    "remote_training": false,
+    "formal_test": false,
+    "modern_baselines": false
+  },
+  "rollback": "If the local contract fails, return Step5/6. If validation performance or specialization is not better than parent/global controls, reject exact SPS-v0 and return Step4 without adding a loss, router, or per-dataset tuning."
+}

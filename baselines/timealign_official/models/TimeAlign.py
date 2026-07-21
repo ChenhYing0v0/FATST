@@ -31,6 +31,7 @@ from layers.PCSD import (
     PCSDM0Readout,
 )
 from layers.SIFF import SIFFCouplingFieldReadout, siff_parameter_count
+from layers.SPS import ScopeProjectedSynthesisReadout
 from layers.StandardNorm import Normalize
 
 LEARNED_BASIS_READOUTS = {
@@ -108,6 +109,7 @@ SIFF_READOUT_CONFIG = {
 }
 SIFF_READOUTS = set(SIFF_READOUT_CONFIG)
 SIFF_CONTROL_READOUTS = {"siff-dense-nonlinear-matched"}
+SPS_READOUTS = {"iscf-scope-projected-synthesis"}
 CPSI_READOUTS = set(CPSI_READOUT_MODES)
 CCSF_READOUT_CONFIG = {
     "ccsf-coupling-field": (2, "ordered", "true"),
@@ -117,7 +119,11 @@ CCSF_READOUT_CONFIG = {
 }
 CCSF_READOUTS = set(CCSF_READOUT_CONFIG)
 COUPLING_READOUTS = (
-    PCSD_READOUTS | SIFF_READOUTS | CPSI_READOUTS | CCSF_READOUTS
+    PCSD_READOUTS
+    | SIFF_READOUTS
+    | SPS_READOUTS
+    | CPSI_READOUTS
+    | CCSF_READOUTS
 )
 D19_IMPLICIT_READOUTS = {
     "implicit-frequency-readout",
@@ -471,6 +477,7 @@ class Model(nn.Module):
             *PCSD_CONTROL_READOUTS,
             *SIFF_READOUTS,
             *SIFF_CONTROL_READOUTS,
+            *SPS_READOUTS,
             *CPSI_READOUTS,
             *CCSF_READOUTS,
             *D19_READOUTS,
@@ -498,6 +505,7 @@ class Model(nn.Module):
             | PCSD_CONTROL_READOUTS
             | SIFF_READOUTS
             | SIFF_CONTROL_READOUTS
+            | SPS_READOUTS
             | CPSI_READOUTS
             | CCSF_READOUTS
             | D19_READOUTS
@@ -861,6 +869,32 @@ class Model(nn.Module):
                 mode_rank=int(getattr(configs, "pcsd_mode_rank", 256)),
                 scale_components=scale_components,
                 scale_basis_mode=scale_basis_mode,
+                policy_history_dim=int(
+                    getattr(configs, "pcsd_policy_history_dim", 32)
+                ),
+                policy_hidden_dim=int(
+                    getattr(configs, "pcsd_policy_hidden_dim", 64)
+                ),
+                policy_mode=str(getattr(configs, "pcsd_policy_mode", "direct")),
+                fixed_scale=int(getattr(configs, "pcsd_fixed_scale", 720)),
+                partition=str(getattr(configs, "pcsd_partition", "canonical")),
+                partition_seed=int(getattr(configs, "pcsd_partition_seed", 15101)),
+                group_chunk_size=int(
+                    getattr(configs, "pcsd_group_chunk_size", 64)
+                ),
+                target_chunk_size=int(
+                    getattr(configs, "pcsd_target_chunk_size", 128)
+                ),
+            )
+        if self.readout_mode in SPS_READOUTS:
+            self.pcsd_readout = ScopeProjectedSynthesisReadout(
+                readout_dim=readout_dim,
+                series_length=self.pred_len,
+                coordinate_dim=int(getattr(configs, "pcsd_coordinate_dim", 4)),
+                mode_rank=int(getattr(configs, "pcsd_mode_rank", 256)),
+                projection_mode=str(
+                    getattr(configs, "sps_projection_mode", "scope")
+                ),
                 policy_history_dim=int(
                     getattr(configs, "pcsd_policy_history_dim", 32)
                 ),

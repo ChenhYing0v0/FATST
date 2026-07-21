@@ -6,41 +6,41 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | post-SAC contribution boundary；ISCF temporal-scope narrative已被matched random control否定 |
+| `active_question` | fixed ISCF architecture下，scope-native output/gradient subspaces能否诱导有用arm specialization |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | none；ISCF-v0 strong carrier/control；exact SAC/CPSI closed |
+| `active_candidates` | `SC-ISCF-SPS-v0` local candidate；ISCF-v0 parent/carrier；exact SAC/CPSI closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
 | `stage_exit` | 新problem先通过existence/narrative gate，再决定一项或两项可归因contributions |
-| `stage_rollback` | SAC任一primary attribution fail -> ISCF carrier-only portfolio；no rescue；CTD paused |
+| `stage_rollback` | SPS local fault -> Step5/6；validation/global attribution fail -> Step4；CTD paused |
 
 ## Decision Cursor
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | ISCF-v0 SAC Step10 complete；rollback Step2/4 |
-| `current_candidate` | none；ISCF-v0 carrier/control only |
-| `latest_decision` | `temporal_scope_structure_not_supported_generic_independent_branches_explain` |
-| `next_required_action` | paper contribution-boundary/portfolio consolidation；no ISCF rescue |
-| `method_training_authorized` | false；SAC complete；modern baselines false |
-| `rollback_point` | Q1-WIDE或RANDOM primary gate fail -> carrier-only；no rank/seed/partition/loss/router rescue |
+| `current_11_step` | ISCF-SPS Step7A local contract pass；Step7B design freeze |
+| `current_candidate` | `SC-ISCF-SPS-v0`；ISCF-v0 exact parent/control |
+| `latest_decision` | `conditional_pass_as_scope_utilization_architecture_step7a_complete` |
+| `next_required_action` | freeze validation-first candidate/identity/global/random matrix and specialization diagnostics |
+| `method_training_authorized` | false；local implementation only；formal test/modern baselines false |
+| `rollback_point` | local fault -> Step5/6；candidate<=global or validation material negative -> Step4 |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | ISCF-v0 SAC Step9/10 complete；rollback Step2/4 contribution consolidation |
-| `problem` | one full-domain decoder是否需要多种future-output coupling extents及各自独立history-to-mode maps？ |
-| `existence_evidence` | vs A6_FULL three-seed +1.3584%/+0.9144%；D1.1 nonredundant responses；ordered/CPSI extensions fail |
-| `idea` | 不增加interaction；把ISCF本身限定为native output-coupling scope factorization |
-| `theory_check` | no requested-H information；finite-capacity sharing bias only；generic multi-branch novelty prohibited |
-| `design` | frozen ISCF vs near-matched Q1-WIDE（max gap 0.464638%）and exact RANDOM-PARTITION；25-job manifest ready |
-| `narrative_gate` | fail after matched attribution；independent-map benefit remains but temporal-scope necessity false |
-| `effectiveness_gate` | vs A6 +1.3584%；Q1 pass；RANDOM -0.1990% MSE and all guards fail |
-| `artifacts` | Step4/5 + Step7B/8 + `iscf_v0_sac_step9_10_20260721/step9_10_result_and_rollback.md` |
-| `decision` | SAC complete；ISCF carrier/control only；rollback Step2/4；active method none |
+| `current_step` | ISCF-SPS Step7A local implementation/audit complete |
+| `problem` | shared unrestricted target synthesis使不同scope arms仍可学成generalist，scope extent未持续约束forward/gradient |
+| `existence_evidence` | independent>Q1；oracle headroom 8.58%；fusion 9/15；360/720 winners 86.67%；canonical<=random |
+| `idea` | scope-native orthogonal local-DCT projector同时过滤arm forecast与该independent map收到的error gradient |
+| `theory_check` | $P_s^2=P_s=P_s^\top$；no new information/H/loss/router；NHITS/N-BEATS closest-prior boundary recorded |
+| `design` | parent/identity/global/random/scope paths；0 new trainable params；validation-first before any formal test |
+| `narrative_gate` | conditional pass at complete problem->scope projection->gradient specialization->matched controls chain |
+| `effectiveness_gate` | pending；local shape/numeric/gradient/production contracts pass only |
+| `artifacts` | `iscf_sps_step46_20260721/step4_6_design_and_step7a_audit.md` + config/code explanation/checker |
+| `decision` | Step7A pass；active candidate SPS-v0；remote/test false；freeze Step7B design next |
 
 ## Frozen Carrier Contract
 
@@ -65,6 +65,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
 | `A6-LBF-natural-baseline` | `control_only` | validation-frozen natural profiles可作为稳定共同起点 | not required | 72/72 test；3 seeds；dense horizons | `frozen_test_reference_ready`；只作固定reference |
+| `SC-ISCF-SPS-v0` | `step7a_local_pass` | scope-native synthesis/gradient subspaces能否让independent arms学习不同resolution features并更有效组合 | conditional pass；NHITS/N-BEATS primitives prior-covered | local invariants/gradients/production pass；E2E pending | freeze validation matrix；remote/test require later authorization |
 | `ISCF-v0` | `carrier_only_sac_temporal_scope_fail` | independent future-output coupling scopes是否超越near-matched shared-width与exact random grouping | exact narrative fail；generic independent branch claim prohibited | Q1 +0.8496% pass；RANDOM -0.1990% fail；vs A6 +1.3584% | no rescue；rollback Step2/4 portfolio consolidation |
 | `ISCF-v1-CPSI` | `closed_material_effectiveness_fail` | common scope state应在native synthesis前非线性调制private deviation | design valid；exact mechanism falsified | vs ISCF -2.2128% MSE；vs A6 -0.7775%；health pass；LINEAR tie | no seeds/rescue；return Step4/5 |
 | `SC-D22-HFA` | `completed_target_access_supported` | target-coordinate-specific access是否超越matched generic与shuffles | problem evidence pass；not method effectiveness | ordered vs generic +2.5228%；15/20；4/5；all five controls pass | handoff D23 Step4 |
@@ -260,6 +261,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | ISCF-v0 SAC Step9 authorization | independent user authorization for one frozen official-test matrix | 25 checkpoints fixed；retraining/mutation/tuning false；access count 1 | `step9_formal_test_authorized`；commit-pinned launch next | `configs/stage_c_iscf_v0_scope_attribution_confirmation.json` |
 | ISCF-v0 SAC Step9 runtime repair | first three jobs stopped before test loader due missing diagnostic bins | test 0/25；checkpoint unchanged；not model/result failure | add 8-bin contract + runner assertion + val smoke；then unchanged relaunch | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step8_remote_20260721/remote_authorization_and_launch.md` |
 | ISCF-v0 SAC Step9/10 | 25 new tests + 35 historical refs；two primary matched attribution gates | 60/60；Q1 +0.8496% pass；RANDOM -0.1990% fail；health/nonmutation pass | temporal scope unsupported；ISCF carrier-only；rollback Step2/4 | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step9_10_20260721/step9_10_result_and_rollback.md` |
+| ISCF-SPS Step4–7A | source audit + synthesis bottleneck audit + scope/global/identity/random implementation | identity gap 8.34e-7；projector errors <=3.22e-15；five gradients nonzero；production pass | conditional architecture pass；remote/test false；freeze Step7B validation design | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_sps_step46_20260721/step4_6_design_and_step7a_audit.md` |
 | SIFF-v2 FCC Step8 launch | commit-pinned pull + 3-GPU preflight + dual resource smoke + background driver | `87bea35`；smokes finite/no-OOM；first three Weather jobs active；test 0/30 | training active；30/30 before one formal test | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/remote_launch_record.md` |
 | SIFF-v2 FCC Step9/10 | 30 new E2E runs + one formal test + 45-run/180-cell three-seed audit | vs A6_FULL MSE/MAE +1.2497%/+0.7549%；vs independent -0.1272%/-0.1733%；health 6/6 | performance pass but attribution fail；stop promotion；portfolio decision | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1/step9_10_result_and_portfolio_decision.md` |
 
@@ -269,6 +271,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | --- | --- | --- |
 | Freeze natural carrier | `completed` | 不再调 profile |
 | ISCF-v0 SAC formal test | `completed_attribution_fail` | no rerun/rescue；use complete negative result in portfolio decision |
+| ISCF-SPS Step7A local implementation | `completed_pass` | freeze validation-first Step7B matrix；do not launch remote yet |
 | Establish dense test reference | `completed` | 后续统一对比 |
 | Archive closed routes and clean active entrypoints | `completed` | archive只作证据 |
 | Implement D1 offline analyzer | `completed_v2` | evaluation-space source/gradient + strict probe + frozen decoder counterfactual |
