@@ -1,0 +1,19 @@
+category,case,value,threshold,pass
+contract,profile_hash,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a,True
+contract,launch_25_exact,25,25,True
+contract,matrix_60_effective,60,60,True
+governance,candidate_unchanged,iscf_v0,frozen iscf_v0,True
+governance,remote_not_authorized,False,False,True
+governance,formal_test_not_authorized,False,False,True
+gate,primary_margins_frozen,"[0.5, 0.3]","[0.5, 0.3]",True
+reference,historical_35_exact,35,35,True
+reference,historical_protocol_pass,35,35,True
+model,canonical_random_exact_contract,True,True,True
+model,endpoint_partitions_match,True,True,True
+model,middle_partitions_differ,True,True,True
+model,q1_parameter_gaps,0.4646379821436204,0.4646379821436204,True
+execution,runner_syntax,,0,True
+execution,runner_dry_run_25,25,25,True
+execution,unauthorized_launch_blocked,3,3,True
+execution,analyzer_synthetic_smoke,iscf_v0_sac_analyzer_synthetic_smoke=pass,returncode=0,True
+execution,remote_log_scanner_fallback,rg+grep,rg+grep,True

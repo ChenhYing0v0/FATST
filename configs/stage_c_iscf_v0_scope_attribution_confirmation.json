@@ -2,48 +2,29 @@
   "stage": "StageC-UVHF",
   "candidate_id": "SC1-ISCF-v0-SAC",
   "candidate_version": "SC1-ISCF-v0-SAC-v1",
-  "status": "step6_design_frozen_remote_not_authorized",
-  "current_step": "post-CPSI Step4/5 conditional pass; scope attribution confirmation designed",
+  "date": "2026-07-21",
+  "status": "step7b_prelaunch_frozen_remote_not_authorized",
+  "current_step": "Scope Attribution Confirmation Step7B implementation and prelaunch",
+  "role": "matched_scope_attribution_for_conditional_paperization_candidate",
   "test_informed": true,
-  "candidate": {
-    "id": "iscf_v0",
-    "readout_mode": "siff-independent-scope-control",
-    "policy_mode": "direct",
-    "objective_mode": "equal_skill",
-    "partition": "canonical",
-    "coupling_scales": [1, 48, 144, 360, 720],
-    "coordinate_dim": 4,
-    "series_length": 720,
-    "code_change": false
-  },
-  "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"],
-  "seeds": [2021, 2022, 2023],
+  "purpose": "test whether ISCF-v0 gains require independent scope-specific history maps and canonical contiguous nested future-output partitions rather than near-matched shared width or arbitrary independent branches",
   "profiles": {
     "path": "configs/stage_c_five_dataset_natural_profiles.json",
     "sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a"
   },
-  "ranks": {
-    "independent": {
-      "ETTh1": 109,
-      "ETTh2": 116,
-      "ETTm1": 116,
-      "ETTm2": 106,
-      "Weather": 116
-    },
-    "q1_wide": {
-      "ETTh1": 463,
-      "ETTh2": 430,
-      "ETTm1": 430,
-      "ETTm2": 485,
-      "Weather": 430
-    }
-  },
+  "datasets": ["Weather", "ETTm1", "ETTh1", "ETTm2", "ETTh2"],
+  "seeds": [2021, 2022, 2023],
+  "coupling_scales": [1, 48, 144, 360, 720],
   "arms": [
     {
       "id": "iscf_v0",
       "role": "frozen_candidate_reference",
-      "source": "existing_three_seed_FCC_checkpoints",
-      "new_training": false
+      "readout_mode": "siff-independent-scope-control",
+      "policy_mode": "direct",
+      "objective_mode": "equal_skill",
+      "partition": "canonical",
+      "partition_seed": 15101,
+      "rank_rule": "independent_dataset_matched"
     },
     {
       "id": "iscf_q1_wide",
@@ -52,33 +33,63 @@
       "policy_mode": "direct",
       "objective_mode": "equal_skill",
       "partition": "canonical",
-      "historical_seeds": [2021],
-      "new_seeds": [2022, 2023],
-      "new_runs": 10
+      "partition_seed": 15101,
+      "rank_rule": "q1_dataset_matched"
     },
     {
       "id": "iscf_random_partition",
-      "role": "matched_parameter_temporal_structure_control",
+      "role": "exact_parameter_temporal_structure_control",
       "readout_mode": "siff-independent-scope-control",
       "policy_mode": "direct",
       "objective_mode": "equal_skill",
       "partition": "random",
       "partition_seed": 15101,
-      "new_seeds": [2021, 2022, 2023],
-      "new_runs": 15
+      "rank_rule": "independent_dataset_matched"
     },
     {
       "id": "a6_full",
       "role": "frozen_package_performance_reference",
-      "source": "existing_three_seed_FCC_checkpoints",
-      "new_training": false
-    },
-    {
-      "id": "siff_ordered",
-      "role": "frozen_ordered_field_context",
-      "source": "existing_three_seed_FCC_checkpoints",
-      "new_training": false
+      "readout_mode": "learned-basis-forecast-operator",
+      "policy_mode": "direct",
+      "objective_mode": "off",
+      "partition": "control",
+      "partition_seed": 15101,
+      "rank_rule": "fixed_256"
     }
+  ],
+  "matched_ranks": {
+    "ETTh1": {"independent_dataset_matched": 109, "q1_dataset_matched": 463},
+    "ETTh2": {"independent_dataset_matched": 116, "q1_dataset_matched": 430},
+    "ETTm1": {"independent_dataset_matched": 116, "q1_dataset_matched": 430},
+    "ETTm2": {"independent_dataset_matched": 106, "q1_dataset_matched": 485},
+    "Weather": {"independent_dataset_matched": 116, "q1_dataset_matched": 430}
+  },
+  "launch_order": [
+    [2021, "Weather", "iscf_random_partition"],
+    [2022, "Weather", "iscf_q1_wide"],
+    [2022, "Weather", "iscf_random_partition"],
+    [2023, "Weather", "iscf_q1_wide"],
+    [2023, "Weather", "iscf_random_partition"],
+    [2021, "ETTm1", "iscf_random_partition"],
+    [2022, "ETTm1", "iscf_q1_wide"],
+    [2022, "ETTm1", "iscf_random_partition"],
+    [2023, "ETTm1", "iscf_q1_wide"],
+    [2023, "ETTm1", "iscf_random_partition"],
+    [2021, "ETTh1", "iscf_random_partition"],
+    [2022, "ETTh1", "iscf_q1_wide"],
+    [2022, "ETTh1", "iscf_random_partition"],
+    [2023, "ETTh1", "iscf_q1_wide"],
+    [2023, "ETTh1", "iscf_random_partition"],
+    [2021, "ETTm2", "iscf_random_partition"],
+    [2022, "ETTm2", "iscf_q1_wide"],
+    [2022, "ETTm2", "iscf_random_partition"],
+    [2023, "ETTm2", "iscf_q1_wide"],
+    [2023, "ETTm2", "iscf_random_partition"],
+    [2021, "ETTh2", "iscf_random_partition"],
+    [2022, "ETTh2", "iscf_q1_wide"],
+    [2022, "ETTh2", "iscf_random_partition"],
+    [2023, "ETTh2", "iscf_q1_wide"],
+    [2023, "ETTh2", "iscf_random_partition"]
   ],
   "training": {
     "from_scratch": true,
@@ -93,18 +104,74 @@
     "batch_size": 32,
     "learning_rate": 0.0001,
     "evaluation_prefix_mode": "full-crop",
-    "test_labels_select_checkpoint": false
+    "pred_loss_mode": "full",
+    "objective_mode": "equal_skill",
+    "training_final_evaluation_split": "val",
+    "test_labels_select_checkpoint": false,
+    "per_dataset_horizon_or_cell_tuning": false
   },
   "matrix": {
+    "expected_runs": 60,
+    "effective_arms": 4,
+    "effective_runs": 60,
     "new_training_runs": 25,
     "historical_reference_runs": 35,
-    "effective_runs": 60,
-    "standard_horizons": [96, 192, 336, 720],
+    "new_q1_runs": 10,
+    "new_random_partition_runs": 15,
+    "horizons": [96, 192, 336, 720],
     "metrics": ["mse", "mae"],
+    "new_validation_cells": 100,
+    "new_official_test_cells": 100,
+    "effective_official_test_cells": 240,
     "full_matrix_required": true,
     "partial_reporting_allowed": false,
     "formal_test_before_all_training_complete": false
   },
+  "artifact_sources": [
+    {
+      "id": "seed2021_attribution",
+      "kind": "historical",
+      "seeds": [2021],
+      "arms": ["iscf_v0", "iscf_q1_wide", "a6_full"],
+      "arm_aliases": {
+        "iscf_v0": "siff_independent_equal",
+        "iscf_q1_wide": "siff_q1_wide_equal",
+        "a6_full": "a6_full"
+      },
+      "remote_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_equal_attribution_v2",
+      "local_root": "analysis/stage_c_siff_equal_attribution_step9_20260718/raw",
+      "run_audit": "analysis/stage_c_siff_equal_attribution_step9_20260718/primary/run_audit.csv",
+      "run_audit_sha256": "64d89c07ee5151b6dcdd50d6eee60fad15f5df03fdbf6a68fb4847772f08e366",
+      "config": "configs/stage_c_siff_equal_attribution_v2.json",
+      "config_sha256": "f0600be7c5b79445a1055463e0a41486a52f16daa20068c610d56457bd03836a",
+      "protocol_profile": "stage_c_siff_equal_attribution_v2"
+    },
+    {
+      "id": "seed2022_2023_fcc",
+      "kind": "historical",
+      "seeds": [2022, 2023],
+      "arms": ["iscf_v0", "a6_full"],
+      "arm_aliases": {
+        "iscf_v0": "siff_independent_equal",
+        "a6_full": "a6_full"
+      },
+      "remote_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_v2_fcc_v1",
+      "local_root": "analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1/raw_lite",
+      "run_audit": "analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1/primary/run_audit.csv",
+      "run_audit_sha256": "8597b5d1e970a6f347c0414be2d67d5447b25591f14c2378da3d34cca7ff8bbb",
+      "config": "configs/stage_c_siff_v2_fcc_v1.json",
+      "config_sha256": "bd936240b3e77c028a51373ef910264900d178f6cda8617a8ed71e2623ea680a",
+      "protocol_profile": "stage_c_siff_v2_fcc_v1"
+    },
+    {
+      "id": "sac_new",
+      "kind": "new",
+      "seeds": [2021, 2022, 2023],
+      "arms": ["iscf_q1_wide", "iscf_random_partition"],
+      "remote_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_iscf_v0_sac_v1",
+      "protocol_profile": "stage_c_iscf_v0_sac_v1"
+    }
+  ],
   "primary_comparisons": [
     {
       "id": "independent_over_q1_wide",
@@ -128,7 +195,8 @@
     "mse_horizon_wins_min": 3,
     "mse_positive_seed_macros_min": 2,
     "mae_macro_gain_percent_min_exclusive": 0.0,
-    "all_primary_comparisons_must_pass": true
+    "all_primary_comparisons_must_pass": true,
+    "complete_reporting_required": true
   },
   "q1_active_parameter_audit": {
     "gap_definition": "100 * (iscf_active_forward_parameters - q1_active_forward_parameters) / iscf_active_forward_parameters",
@@ -138,19 +206,41 @@
     "ETTm2": 0.10847228834344737,
     "Weather": 0.4582303678786463
   },
+  "internal_health": {
+    "finite_metrics_required": true,
+    "random_partition_hash_must_differ_from_canonical": true,
+    "random_and_canonical_parameter_initialization_must_match": true,
+    "endpoint_scopes_must_match": [1, 720],
+    "middle_scopes_must_differ": [48, 144, 360],
+    "diagnostics_cannot_override_primary_gates": true,
+    "existing_scope_response_evidence": "analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_step4_scope_relation_20260721/d1_1_confirmation/summary.json"
+  },
   "failure_attribution": {
     "q1_wide_fails": "capacity_or_shared_width_explains; ISCF remains carrier only",
     "random_partition_fails": "temporal_scope_structure_not_supported; generic independent branches explain",
-    "numeric_or_protocol_pathology": "repair exact protocol without direction rejection",
+    "numeric_or_protocol_pathology": "diagnostic_invalid_for_direction_rejection; repair exact protocol only",
     "both_pass": "iscf_scope_architecture_supported_pending_modern_baselines"
   },
   "authorization": {
-    "model_change": false,
-    "remote_training": false,
-    "formal_test": false,
-    "confirmation_seeds": false,
+    "user_authorization_basis": "2026-07-21 user instruction: continue SAC according to the frozen plan",
+    "step7b_design_and_prelaunch_authorized": true,
+    "user_authorized": false,
+    "authorization_date": null,
+    "remote_training_authorized": false,
+    "formal_test_access_authorized": false,
+    "test_role": "primary-mechanism-effectiveness-and-paper-benchmark",
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+    "checkpoint_retraining_allowed": true,
+    "checkpoint_mutation_during_test_allowed": false,
+    "reused_control_protocol_profiles": [
+      "stage_c_siff_equal_attribution_v2",
+      "stage_c_siff_v2_fcc_v1"
+    ],
+    "formal_test_access_count_for_version": 1,
+    "per_dataset_horizon_or_cell_tuning_allowed": false,
     "router": false,
     "second_loss": false,
     "requested_h_conditioning": false
-  }
+  },
+  "decision": "step7b_prelaunch_implementation_authorized_remote_and_formal_test_pending"
 }

@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | post-CPSI ISCF-v0 Step4/5 conditional pass；SAC design frozen |
+| `current_step` | ISCF-v0 SAC Step7B prelaunch pass；remote/test authorization pending |
 | `active_question` | future-output coupling scope-specific maps与contiguous/nested partitions是否分别超越near-matched shared width与exact random grouping？ |
 | `active_candidates` | ISCF-v0 conditional paperization candidate；not promoted；exact CPSI closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `configs/stage_c_iscf_v0_scope_attribution_confirmation.json` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | ISCF code unchanged；25 new control trainings/remote/test false pending authorization |
+| `method_implementation` | ISCF code unchanged；SAC runner/analyzer/manifest complete；25 new control trainings/remote/test false |
 | `rollback_point` | SAC attribution；Q1-WIDE或RANDOM任一fail则ISCF carrier-only，no rescue |
 
 ## ISCF-v0 Post-CPSI Step4/5 Decision
@@ -32,6 +32,21 @@ Decision=`conditional_pass_as_output_coupling_scope_architecture_pending_sac`。
 
 新增training仅为Q1-WIDE seeds2022/2023的10 runs与RANDOM三seed的15 runs。candidate不改、loss/router不改；remote
 training和single formal test仍需新授权。两项test gate都过才进入modern baselines；任一失败即回portfolio decision。
+
+## ISCF-v0 SAC Step7B Prelaunch Decision
+
+SAC local execution chain已完成且`18/18`通过。25个new jobs精确覆盖Q1-WIDE seeds2022/2023与
+RANDOM-PARTITION seeds2021/2022/2023；35个historical references由two source config/run-audit SHA256 contracts
+冻结，合计60 effective runs和240 standard-horizon rows。validation只选checkpoint；formal test必须等待25/25
+training并在单独process中执行。
+
+five-profile static contracts确认canonical/random parameter count、readout/Encoder initialization与global RNG
+post-state一致；endpoint scopes相同、中间scopes不同。Q1 max active-parameter gap=`0.464638%`。runner syntax、dry-run、
+analyzer smoke、remote scanner fallback和unauthorized-launch rejection均通过。
+
+Decision=`step7b_prelaunch_pass_waiting_remote_authorization`。当前不含training/validation/test evidence，active method仍
+none。下一步仅在显式授权后执行commit-pinned remote pull、`nvidia-smi`、Weather-RANDOM与ETTm2-Q1 resource
+smokes；通过后启动25-run matrix。formal test、modern baselines、router、second loss仍不自动授权。
 
 ## ISCF-v1-CPSI Step9/10 Decision
 

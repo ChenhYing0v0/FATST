@@ -7,14 +7,29 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；paperization identity暂为`ISCF-v0`，not final title |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | post-CPSI ISCF-v0 Step4/5 narrative conditional pass；Scope Attribution Confirmation design frozen |
+| `current_11_step` | ISCF-v0 Scope Attribution Confirmation Step7B prelaunch pass；waiting remote authorization |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | active method none；ISCF-v0 conditional paperization candidate；SAC attribution pending；exact CPSI-v1 closed |
+| `paper_core_status` | active method none；ISCF-v0 conditional paperization candidate；SAC 25-run execution pending authorization；exact CPSI-v1 closed |
+
+[ISCF-v0 SAC Step7B, 2026-07-21] candidate code未修改。SAC runner、three-source analyzer与frozen
+manifest已实现，local prelaunch `18/18`通过。新矩阵为Q1-WIDE seeds2022/2023的10 runs与
+RANDOM-PARTITION three seeds的15 runs；另以两份SHA256-frozen source audits复用ISCF-v0/A6_FULL各15 runs
+及Q1 seed2021五runs，形成60 effective runs、240 standard-horizon metric rows。
+
+canonical/random在five profiles上的active parameters、PCSD/Encoder initialization和post-construction RNG均匹配；
+scope1/720 partitions相同、48/144/360不同，输出finite且非恒等。Q1 signed active-param gaps复核一致，最大绝对值
+`0.464638%`。runner将validation-only training和formal test分离，25/25 training前拒绝test，且当前未授权normal
+launch会以exit code 3终止。
+
+Decision=`step7b_prelaunch_pass_waiting_remote_authorization`。ISCF仍未promote；remote training、formal test、modern
+baselines、router与second loss均false。获得明确授权后才做commit-pinned pull、GPU preflight、dual resource smoke与
+25-run training。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step7b_prelaunch_20260721/prelaunch_report.md`。
 
 [ISCF-v0 Post-CPSI Step4/5 Gate, 2026-07-21] CPSI的material failure没有被反向包装成“independence最优”。研究改为审计
 ISCF-v0本身能否成为单一architecture contribution：五个scope不是input resolutions或requested horizons，而是规定
@@ -30,8 +45,8 @@ ISCF最初是control且结果已test-informed，仍不能直接promote。最新T
 Decision=`conditional_pass_as_output_coupling_scope_architecture_pending_sac`。下一步Scope Attribution Confirmation只回答
 两项阻塞归因：ISCF是否超过active-param gap不超过`0.4646%`的near-matched `Q1-WIDE` shared map，以及是否超过same-parameter
 `RANDOM-PARTITION`，后者破坏中间scopes的temporal contiguity/nesting。两项都通过才进入modern baselines；任一失败，
-ISCF降为strong carrier/control，不做rank、seed、partition、loss或router rescue。candidate code不变，25个new
-control trainings与formal test尚未授权。详见
+ISCF降为strong carrier/control，不做rank、seed、partition、loss或router rescue。candidate code不变；25个new
+control trainings与formal test仍未授权，但Step7B local prelaunch已通过。详见
 `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_post_cpsi_step45_20260721/step4_5_scope_independence_narrative_gate.md`与
 `configs/stage_c_iscf_v0_scope_attribution_confirmation.json`。
 

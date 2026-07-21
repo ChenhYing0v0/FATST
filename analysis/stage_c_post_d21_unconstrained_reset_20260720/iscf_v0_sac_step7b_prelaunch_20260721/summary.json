@@ -1,0 +1,13 @@
+{
+  "candidate": "SC1-ISCF-v0-SAC-v1",
+  "checks": 18,
+  "decision": "step7b_prelaunch_pass_waiting_remote_authorization",
+  "effective_runs": 60,
+  "failed": 0,
+  "formal_test_authorized": false,
+  "historical_runs": 35,
+  "new_runs": 25,
+  "pass": true,
+  "passed": 18,
+  "remote_training_authorized": false
+}
