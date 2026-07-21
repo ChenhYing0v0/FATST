@@ -90,3 +90,12 @@ training/test=`25/25,0/25`，GPU已释放；没有test metric、test invariant�
 failure attribution=`exact_protocol_preflight_gap`，不是model/numeric/result failure。repair只补入FCC/CPSI已使用的8个
 连续future bins，并在runner formal-test入口加入`[0,720)`边界断言。重启前必须用真实checkpoint在validation split
 执行repo-external evaluator smoke，再复核25个hash与test=0/25。
+
+repair commit `6bbc3fc`通过ETTh2-RANDOM seed2021 validation-split real-checkpoint smoke（15,127 rows），25个
+pretest hashes再次一致。formal test于`21:04:16+08:00`重启，`21:07:02+08:00`完成：25/25 new tests、
+60/60 effective audits、240/240 standard rows，checkpoint nonmutation 25/25。
+
+Q1-WIDE comparison pass（MSE/MAE `+0.8496%/+0.5996%`）；RANDOM-PARTITION comparison fail
+（`-0.1990%/-0.4347%`，1/5 datasets、0/4 horizons、1/3 seeds）。Decision=
+`temporal_scope_structure_not_supported_generic_independent_branches_explain`。详见
+`../iscf_v0_sac_step9_10_20260721/step9_10_result_and_rollback.md`。

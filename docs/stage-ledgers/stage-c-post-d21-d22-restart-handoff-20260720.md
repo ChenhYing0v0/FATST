@@ -45,13 +45,14 @@
 36. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step7b_prelaunch_20260721/prelaunch_report.md`；
 37. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step8_remote_20260721/remote_authorization_and_launch.md`；
 38. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step8_remote_20260721/validation_artifact_audit_and_test_handoff.md`；
-39. `docs/code-explanation/stage-c-iscf-v0-sac-step7b.md`；
-40. `configs/stage_c_iscf_v0_scope_attribution_confirmation.json`；
-41. `configs/stage_c_iscf_v0_carrier.json`；
-42. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
-43. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
-44. `docs/paper-mainline.md`；
-45. `docs/research-roadmap.md`。
+39. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step9_10_20260721/step9_10_result_and_rollback.md`；
+40. `docs/code-explanation/stage-c-iscf-v0-sac-step7b.md`；
+41. `configs/stage_c_iscf_v0_scope_attribution_confirmation.json`；
+42. `configs/stage_c_iscf_v0_carrier.json`；
+43. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
+44. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
+45. `docs/paper-mainline.md`；
+46. `docs/research-roadmap.md`。
 
 若上述文件与更旧的聊天、archive或历史段落冲突，以本文件和三份主线文档顶部的最新cursor为准。
 
@@ -62,15 +63,15 @@
 | `project` | R_2026_FATST |
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-21 |
-| `source_parent_commit` | `78cbcf4`（SAC training authorization） |
-| `current_step` | ISCF-v0 SAC Step9 authorized；exact runtime repair prelaunch |
-| `active_problem` | scope-specific maps与contiguous/nested output partitions是否超越near-matched shared-width和exact random grouping？ |
-| `active_method` | none；ISCF-v0 conditional paperization candidate，not promoted |
-| `method_training_authorized` | true for frozen 25-run SAC matrix；candidate code unchanged |
-| `remote_training_authorized` | training complete；single formal test true；retraining false |
-| `next_action` | diagnostic-bin repair；val real-checkpoint smoke；rehash；unchanged formal-test relaunch |
-| `conditional_next` | Q1-WIDE + RANDOM primary gates both pass -> modern baselines/generalization |
-| `rollback` | either primary fail -> ISCF carrier-only；no rank/seed/partition/loss/router rescue |
+| `source_parent_commit` | `6bbc3fc`（SAC formal-test runtime repair） |
+| `current_step` | ISCF-v0 SAC Step10 complete；rollback Step2/4 consolidation |
+| `active_problem` | post-SAC paper contribution boundary；temporal-scope necessity不成立 |
+| `active_method` | none；ISCF-v0 strong carrier/control only |
+| `method_training_authorized` | false；SAC complete |
+| `remote_training_authorized` | false；formal test consumed；modern baselines false |
+| `next_action` | portfolio/contribution-boundary consolidation；no ISCF rescue |
+| `conditional_next` | new paper-core route必须重新通过Step2-6；ISCF只可作carrier |
+| `rollback` | Step2/4；no rank/seed/partition/loss/router/requested-H rescue |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
 
@@ -249,6 +250,12 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
     只开放现有25 checkpoints的一次完整test，禁止retraining/mutation/tuning。
 74. 首次formal launch因missing diagnostic bins在test loader前停止；test=0/25、checkpoint unchanged。exact repair只补
     8-bin contract与runner assertion，val smoke后按原matrix重启。
+75. repair commit `6bbc3fc`的validation real-checkpoint smoke通过；formal test于`21:04:16`重启并于`21:07:02`
+    完成，25/25 new tests、60/60 effective audits、240/240 standard rows与25/25 nonmutation完整。
+76. Q1-WIDE gate通过：MSE/MAE=`+0.8496%/+0.5996%`；RANDOM gate失败：
+    `-0.1990%/-0.4347%`，仅1/5 datasets、0/4 horizons、1/3 seeds。
+77. Decision=`temporal_scope_structure_not_supported_generic_independent_branches_explain`；ISCF降为carrier-only，
+    modern baselines false，rollback Step2/4。
 
 ## 5. D22-HFA 的执行顺序
 
@@ -337,14 +344,15 @@ decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。
 
 1. 读取CPSI Step9/10 rollback与ISCF-v0 post-CPSI Step4/5 scope-independence gate；
 2. exact CPSI-v1/SELF/COMMON关闭，LINEAR只作optimization evidence，POST不promote；
-3. ISCF-v0 candidate code、direct policy、equal-skill objective、ranks与profiles保持exact frozen；
-4. 当前只把ISCF记为`conditional paperization candidate`，active paper-core method仍为none；
+3. ISCF-v0 candidate code、direct policy、equal-skill objective、ranks与profiles保持historically frozen；
+4. ISCF现为strong carrier/control，active paper-core method为none；
 5. SAC设计只新增Q1-WIDE seeds2022/2023和RANDOM-PARTITION三seed，共25个control trainings；
 6. SAC Step7B local prelaunch已18/18通过；25 new jobs、35 historical references与60-run analyzer均冻结；
 7. commit `78cbcf4`已remote pull，GPU0/1/2与dual resource smoke通过；25-run training已完成；
-8. validation artifact audit为60/60 runs、240/240 rows、health 15/15；single formal test现已独立授权；
-9. commit-pinned preflight后仅运行一次`FORMAL_TEST_ONLY=1`，不得按validation negative lead修改candidate；
-10. SC-MNB保留为supporting source/control inventory；不恢复CCSF、D17-D21、H embedding、router、second loss或Contribution 2预设。
+8. validation artifact audit为60/60 runs、240/240 rows、health 15/15；
+9. formal test已25/25完成：Q1 pass、RANDOM fail，exact temporal-scope narrative关闭；
+10. 不运行modern baselines，不做ISCF rank/seed/partition/loss/router rescue；
+11. SC-MNB保留为supporting source/control inventory；不恢复CCSF、D17-D21、H embedding、router、second loss或Contribution 2预设。
 
 ## 8. 禁止无损重启时发生的漂移
 
@@ -376,12 +384,13 @@ decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。
 2. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step9_10_20260721/step9_10_result_and_rollback.md
 3. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_post_cpsi_step45_20260721/step4_5_scope_independence_narrative_gate.md
 4. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step8_remote_20260721/validation_artifact_audit_and_test_handoff.md
-5. configs/stage_c_iscf_v0_scope_attribution_confirmation.json
-6. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_function_audit_20260721/result_and_step4_handoff.md
-7. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_step4_scope_relation_20260721/step4_result_and_step5_handoff.md
-8. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
-9. docs/paper-mainline.md
-10. docs/research-roadmap.md
+5. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step9_10_20260721/step9_10_result_and_rollback.md
+6. configs/stage_c_iscf_v0_scope_attribution_confirmation.json
+7. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_function_audit_20260721/result_and_step4_handoff.md
+8. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_step4_scope_relation_20260721/step4_result_and_step5_handoff.md
+9. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
+10. docs/paper-mainline.md
+11. docs/research-roadmap.md
 
 当前权威状态是：CPSI-v1已完成25/25 training与formal test，relative ISCF MSE/MAE=`-2.2128%/-1.6987%`，exact product material fail并关闭；LINEAR relative ISCF仅`+0.0217%/+0.0472%` tie，不promote。不得做CPSI seed/rank/loss/router rescue。
 
@@ -389,9 +398,9 @@ ISCF-v0相对A6_FULL的existing three-seed test-informed MSE/MAE=`+1.3584%/+0.91
 
 最新primary-source audit确认TimeMixer、FreqMoE、MAFS、HMformer与M2FMoE已覆盖multi-scale predictors、independent experts、forecasting sub-task agents、multi-branch complementarity和adaptive fusion。因此ISCF只能claim完整`future-output coupling partition -> independent history-to-mode maps -> shared full-T synthesis -> target-wise fusion`链，不能claim generic multi-scale/MoE。
 
-Decision=`conditional_pass_as_output_coupling_scope_architecture_pending_sac`。下一步Scope Attribution Confirmation只检验：1) ISCF是否超过active-param gap不超过`0.4646%`的Q1-WIDE shared map；2) canonical contiguous/nested partitions是否超过same-parameter/initialization RANDOM-PARTITION。新增10个Q1-WIDE与15个RANDOM trainings；candidate code、direct policy、equal-skill objective与ranks不变。
+SAC已按冻结设计检验两项归因：1) ISCF是否超过active-param gap不超过`0.4646%`的Q1-WIDE shared map；2) canonical contiguous/nested partitions是否超过same-parameter/initialization RANDOM-PARTITION。新增10个Q1-WIDE与15个RANDOM trainings；candidate code、direct policy、equal-skill objective与ranks未改变。
 
-SAC Step7B local prelaunch为18/18；training现已25/25完成，formal test为0/25。联合35 historical references的validation audit为60/60 runs、240/240 rows、internal health 15/15。validation中ISCF over Q1-WIDE MSE/MAE=`+1.0704%/+0.7538%`，canonical over RANDOM=`-0.1823%/-0.3075%`；后者是negative lead，但validation不得拒绝机制。用户现已独立授权一次冻结25-run formal test。首次launch因missing diagnostic bins在test loader前停止，test仍0/25且checkpoint unchanged；当前只做8-bin exact protocol repair、runner assertion与validation-split smoke，之后按原matrix重启。两项official-test primary gates都通过才进入modern baselines；任一失败则ISCF降为strong carrier/control，不做rank、seed、partition、loss或router rescue。
+SAC formal test已完整结束：25/25 new tests、60/60 effective audits、240/240 standard rows、25/25 checkpoint nonmutation与15/15 health通过。ISCF over Q1-WIDE MSE/MAE=`+0.8496%/+0.5996%`，primary gate通过；canonical over RANDOM=`-0.1990%/-0.4347%`，仅1/5 datasets、0/4 horizons、1/3 seeds，primary gate失败。Decision=`temporal_scope_structure_not_supported_generic_independent_branches_explain`。ISCF-v0保留为strong carrier/control但不再是conditional paperization candidate；active method none，modern baselines false，rollback Step2/4，不做rank、seed、partition、loss、router或requested-H rescue。
 
 完成后同步更新analysis report、docs/paper-mainline.md、docs/research-roadmap.md和Stage C ledger，执行最小诚实验证，并按AGENTS.md提交、推送。请从专业时序预测研究员角度进行审计，不要为了凑两个contributions而预先设计第二个loss/router。
 ```

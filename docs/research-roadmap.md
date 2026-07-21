@@ -5,14 +5,27 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | ISCF-v0 SAC Step9 formal test authorized；launch pending |
-| `active_question` | future-output coupling scope-specific maps与contiguous/nested partitions是否分别超越near-matched shared width与exact random grouping？ |
-| `active_candidates` | ISCF-v0 conditional paperization candidate；not promoted；exact CPSI closed |
+| `current_step` | ISCF-v0 SAC Step10 complete；rollback Step2/4 consolidation |
+| `active_question` | post-SAC paper contribution boundary；temporal-scope mechanism不成立 |
+| `active_candidates` | none；ISCF-v0 carrier/control；exact SAC/CPSI closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `configs/stage_c_iscf_v0_scope_attribution_confirmation.json` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | ISCF code unchanged；25-run training complete；single formal test true；modern baselines false |
-| `rollback_point` | SAC attribution；Q1-WIDE或RANDOM任一fail则ISCF carrier-only，no rescue |
+| `method_implementation` | ISCF code unchanged；SAC complete；new method/modern baselines false |
+| `rollback_point` | Step2/4 portfolio consolidation；no ISCF rank/seed/partition/loss/router rescue |
+
+## ISCF-v0 SAC Step9/10 Decision
+
+formal matrix完整：25/25 new tests、60/60 effective runs、240/240 standard rows、15/15 internal health与25/25
+checkpoint nonmutation。Q1-WIDE gate通过：MSE/MAE=`+0.8496%/+0.5996%`，5/5 datasets、4/4 horizons、
+2/3 seeds。RANDOM gate失败：`-0.1990%/-0.4347%`，1/5 datasets、0/4 horizons、1/3 seeds。
+
+ISCF相对A6_FULL仍有`+1.3584%/+0.9144%`，所以它是strong performance carrier；但canonical contiguous/nested
+grouping没有超过same-parameter random grouping，exact收益只能归因到generic independent branches。该剩余claim受现有
+multi-branch/independent-expert prior覆盖，不能单独paperize。
+
+Decision=`temporal_scope_structure_not_supported_generic_independent_branches_explain`。关闭ISCF exact
+paperization，active method清空，modern baselines保持false；rollback Step2/4，不做任何test-informed rescue。
 
 ## ISCF-v0 Post-CPSI Step4/5 Decision
 

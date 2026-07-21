@@ -5,16 +5,30 @@
 | Field | Content |
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
-| `working_title` | TBD；paperization identity暂为`ISCF-v0`，not final title |
+| `working_title` | TBD；ISCF-v0不再作为paperization identity |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF-v0 SAC Step9 formal test authorized；launch pending |
+| `current_11_step` | ISCF-v0 SAC Step10 complete；rollback Step2/4 portfolio consolidation |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | active method none；ISCF-v0 conditional candidate；SAC training 25/25；single formal test authorized；modern baselines false |
+| `paper_core_status` | active method none；ISCF-v0 strong carrier/control only；SAC attribution fail；modern baselines false |
+
+[ISCF-v0 SAC Step9/10 Result, 2026-07-21] 25/25 new formal tests与60/60 effective audits完整，240/240
+standard-horizon rows、25/25 checkpoint nonmutation和15/15 internal-health checks通过。首次launch的missing-bin
+preflight gap已通过8-bin repair与validation real-checkpoint smoke解决，正式test access count为1。
+
+ISCF-v0 over Q1-WIDE MSE/MAE=`+0.8496%/+0.5996%`，5/5 datasets、4/4 horizons、2/3 seeds，primary
+gate通过；independent maps的收益不是shared-width capacity。canonical over RANDOM-PARTITION为
+`-0.1990%/-0.4347%`，仅1/5 datasets、0/4 horizons、1/3 seeds，所有primary guards失败。ISCF相对A6_FULL
+仍为`+1.3584%/+0.9144%`，说明performance carrier强，但不能建立temporal-scope mechanism claim。
+
+Decision=`temporal_scope_structure_not_supported_generic_independent_branches_explain`。ISCF-v0降为strong
+carrier/control，exact paperization route关闭；不做rank、seed、partition、loss、router或requested-H rescue，modern
+baselines不启动。rollback到Step2/4 contribution-boundary consolidation。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step9_10_20260721/step9_10_result_and_rollback.md`。
 
 [ISCF-v0 SAC Step9 Formal-test Authorization, 2026-07-21] 用户独立回复“授权SAC formal test”。授权只覆盖
 SC1-ISCF-v0-SAC-v1冻结的25个new checkpoints的一次official-test audit；candidate、controls、ranks、partition seed、

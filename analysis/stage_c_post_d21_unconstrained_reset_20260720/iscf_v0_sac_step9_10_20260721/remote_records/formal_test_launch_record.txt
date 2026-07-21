@@ -1,0 +1,17 @@
+iscf_sac_start=2026-07-21T21:04:16+08:00
+commit=6bbc3fc962829cb7261197c9b67905000580ed16
+output_root=/home/yingch/exp_outputs/r-2026-fatst/stage_c_iscf_v0_sac_v1
+seed2021_root=/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_equal_attribution_v2
+fcc_root=/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_v2_fcc_v1
+config_hash=f1be23adc831180cb2689d24d6411a46f261d31f52b7d3abd1908e376ae7b42a
+profile_hash=80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a
+gpu_ids=0 1 2
+new_runs=25
+historical_runs=35
+effective_runs=60
+checkpoint_selection=best_val_mean_mse_h96_h192_h336_h720
+formal_test_execution_mode=1
+test_informed=true
+0, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0
+1, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0
+2, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0

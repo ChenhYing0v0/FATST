@@ -1,0 +1,24 @@
+{
+  "comparison_results": {
+    "canonical_over_random_partition": {
+      "dataset_wins": 1,
+      "horizon_wins": 0,
+      "mae_macro_gain_percent": -0.434692835200034,
+      "mse_macro_gain_percent": -0.19902082160633475,
+      "pass": false,
+      "positive_seed_macros": 1
+    },
+    "independent_over_q1_wide": {
+      "dataset_wins": 5,
+      "horizon_wins": 4,
+      "mae_macro_gain_percent": 0.5995544383583423,
+      "mse_macro_gain_percent": 0.8496192473416335,
+      "pass": true,
+      "positive_seed_macros": 2
+    }
+  },
+  "decision": "temporal_scope_structure_not_supported; generic independent branches explain",
+  "internal_health_pass": true,
+  "modern_baselines_authorized": false,
+  "paper_core_promoted": false
+}
