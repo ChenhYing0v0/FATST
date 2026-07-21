@@ -1,0 +1,112 @@
+{
+  "stage": "StageC-UVHF",
+  "carrier_id": "ISCF-v0",
+  "carrier_name": "Independent-Scope Coupling Field",
+  "status": "strong_research_carrier_frozen_paper_core_pending",
+  "frozen_date": "2026-07-21",
+  "user_authorization": "freeze the existing matched independent-scope model as the subsequent research carrier and audit existing checkpoints",
+  "test_informed": true,
+  "source_identity": {
+    "fcc_arm": "siff_independent_equal",
+    "implementation_readout_mode": "siff-independent-scope-control",
+    "implementation_class": "SIFFCouplingFieldReadout",
+    "scale_basis_mode": "independent",
+    "scale_components": 5,
+    "scale_basis": "I_5",
+    "renaming_boundary": "ISCF-v0 is a new carrier identity; it does not rewrite or inherit the failed ordered-field claim of SIFF-v2"
+  },
+  "architecture": {
+    "seq_len": 720,
+    "pred_len": 720,
+    "encoder_mode": "timealign-token-mlp",
+    "coupling_scales": [
+      1,
+      48,
+      144,
+      360,
+      720
+    ],
+    "coordinate_dim": 4,
+    "policy_mode": "direct",
+    "objective_mode": "equal_skill",
+    "evaluation_prefix_mode": "full-crop",
+    "requested_horizon_input": false
+  },
+  "profiles": {
+    "path": "configs/stage_c_five_dataset_natural_profiles.json",
+    "sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a"
+  },
+  "matched_ranks": {
+    "ETTh1": 109,
+    "ETTh2": 116,
+    "ETTm1": 116,
+    "ETTm2": 106,
+    "Weather": 116
+  },
+  "training_contract": {
+    "from_scratch": true,
+    "joint_encoder_decoder": true,
+    "seeds": [
+      2021,
+      2022,
+      2023
+    ],
+    "epochs": 20,
+    "patience": 5,
+    "batch_size": 32,
+    "learning_rate": 0.0001,
+    "checkpoint_policy": "best-val",
+    "validation_checkpoint_score": "mean_mse_h96_h192_h336_h720",
+    "official_test_horizons": [
+      96,
+      192,
+      336,
+      720
+    ]
+  },
+  "frozen_evidence": {
+    "source_report": "analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1/step9_10_result_and_portfolio_decision.md",
+    "independent_vs_a6_full_role": "post_hoc_derived_from_existing_complete_fcc_test_table",
+    "test_mse_macro_gain_percent": 1.3584022731264571,
+    "test_mae_macro_gain_percent": 0.9144321893551696,
+    "mse_cell_wins": 49,
+    "mse_dataset_wins": 5,
+    "mse_horizon_wins": 4,
+    "mse_seed_wins": 3
+  },
+  "artifact_roots": {
+    "seed2021": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_equal_attribution_v2/siff_independent_equal",
+    "seed2022_2023": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_v2_fcc_v1/siff_independent_equal",
+    "repository_metrics": "analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1/primary/test_metrics_standard_horizons.csv"
+  },
+  "function_audit": {
+    "role": "diagnostic_only_test_informed_reuse",
+    "new_training": false,
+    "new_test_label_access": false,
+    "source_tensor": "existing pcsd_test_audit_diagnostics.npz",
+    "probe_rows": 256,
+    "shuffle_repetitions": 64,
+    "questions": [
+      "Do independent scope forecasts contain an aligned low-dimensional relation beyond marginal-preserving shifts?",
+      "Do scopes retain both shared residual structure and private complementary skill?",
+      "Is pairwise scope topology stable across seeds within datasets?",
+      "Does canonical scale order re-emerge in function space without ordered parameter sharing?"
+    ],
+    "gates": {
+      "low_dimensional_run_count_min": 12,
+      "common_residual_run_count_min": 12,
+      "topology_seed_rho_min": 0.5,
+      "topology_dataset_count_min": 4,
+      "private_energy_median_min": 0.05,
+      "oracle_headroom_median_min_percent": 1.0,
+      "unique_best_scopes_median_min": 2.0
+    },
+    "decision_boundary": "The audit may support a new Step4 scope-relation problem, but cannot establish method effectiveness, select a paper method, or reject an end-to-end direction."
+  },
+  "authorization": {
+    "function_audit_authorized": true,
+    "new_model_implementation_authorized": false,
+    "remote_training_authorized": false,
+    "new_formal_test_access_authorized": false
+  }
+}
