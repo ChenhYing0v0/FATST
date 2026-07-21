@@ -27,9 +27,10 @@
 18. `docs/code-explanation/stage-c-siff-v3-tsaf-step7b.md`；
 19. `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step8_remote_authorization_and_launch.md`；
 20. `docs/code-explanation/stage-c-siff-v3-tsaf-step8.md`；
-21. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
-22. `docs/paper-mainline.md`；
-23. `docs/research-roadmap.md`。
+21. `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step9_10_result_and_rollback.md`；
+22. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
+23. `docs/paper-mainline.md`；
+24. `docs/research-roadmap.md`。
 
 若上述文件与更旧的聊天、archive或历史段落冲突，以本文件和三份主线文档顶部的最新cursor为准。
 
@@ -41,14 +42,14 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-21 |
 | `source_parent_commit` | `d647874`（Step7B开始前parent） |
-| `current_step` | SC1-SIFF-v3-TSAF Step8 25-run training active；formal test held until 25/25 |
-| `active_problem` | target-coordinate × ordered-scale allocation能否修复SIFF-v2 fusion并超过parent/A6_MEASURE？ |
-| `active_method` | provisional `SC1-SIFF-v3-TSAF-v1`；SIFF-v2 immutable parent |
-| `method_training_authorized` | seed2021 25-run Phase A only |
-| `remote_training_authorized` | true；one complete formal test true；confirmation false |
-| `next_action` | monitor 25-run training by dataset/run/epoch；no remote pull |
-| `conditional_next` | training 25/25 + completeness后单独launch formal-test mode |
-| `rollback` | TSAF exact design回Step4/6；SIFF-v2不变；SC-MNB execution false |
+| `current_step` | SC1-SIFF-v3-TSAF Step9/10 complete；exact v1 closed；return Step2/4 |
+| `active_problem` | independent target-only weak signal是否能形成新的SIFF-first paper problem？ |
+| `active_method` | none；SIFF-v2 immutable paperization parent |
+| `method_training_authorized` | completed seed2021 matrix only；new candidate/confirmation false |
+| `remote_training_authorized` | no new run；completed one formal test on 2026-07-21 |
+| `next_action` | consolidate paper problem/narrative；do not promote control post-hoc |
+| `conditional_next` | new Step2/4 and narrative/design gate before any implementation or remote run |
+| `rollback` | TSAF-v1 closed，Step2/4；SIFF-v2不变；SC-MNB execution false |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
 
@@ -92,7 +93,7 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
 | `A6-LBF-natural-baseline` | strong carrier / mandatory control / possible component | 不足以standalone承载高水平论文；新设计无需强制兼容 |
 | `A6_MEASURE` | strong training control | harmonic horizon measure受ElasTST直接prior覆盖，不能单独claim |
 | `SIFF-v2-EQ-ATTR-v1` | immutable performance-near parent | internal 7/7，但未超过A6_MEASURE且independent control阻塞归因；不修改exact v2 |
-| `SIFF-v3-TSAF-v1` | provisional narrative-ready successor | target-scale field替代unsupported sample-conditioned router；尚无result |
+| `SIFF-v3-TSAF-v1` | closed exact candidate | effectiveness/attribution fail，internal health pass；不补confirmation/rescue |
 | `D14 crossing/oracle` | historical clue | oracle不等于past-identifiable benefit；D21已证明interaction split-unstable |
 | `D17-D21` | closed evidence | 不做representation/readout/seed rescue |
 | `CTD` | paused by user | 新会话不得自动恢复 |
@@ -147,6 +148,16 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
 30. commit `6cef063`已pull；Weather-TSAF与ETTm2-independent resource smoke finite/no-OOM。
 31. 25-run training于`2026-07-21T10:17:06+08:00`在GPU0/1/2启动；initial training/test=0/25，formal-test mode
     未启动。训练期间不得pull或修改config/gates。
+32. TSAF Phase A已25/25 new training、25/25 new formal test和45/45 effective audit完整；formal-test commit
+    `4cc96f21e23c159e37757c66ec2e5c68358c5718`，checkpoint nonmutation 25/25通过。
+33. TSAF相对A6_MEASURE test MSE/MAE为`-1.2854%/-1.3146%`，相对SIFF-v2 parent为
+    `-1.0422%/-0.9183%`，两项均0/4 horizon wins，paper-facing effectiveness fail。
+34. ordered-field、ordered-scale、target-coordinate、shared-field comparisons的MSE分别为
+    `-1.0191%/-0.0796%/-0.0405%/-1.2785%`；matched attribution全fail。internal health全过不能覆盖结果。
+35. validation中TSAF相对parent为`+0.7700%`，test反转。independent target-only相对parent的`+0.2383%`
+    只作single-seed weak lead，低于0.3% primary threshold，不得post-hoc promotion。
+36. Decision=`close_tsaf_v1_shared_field_design_keep_siff_v2_immutable_parent`。当前无active successor method，
+    no confirmation/rescue，回SIFF-first Step2/4；SC-MNB execution和Contribution 2继续false。
 
 ## 5. D22-HFA 的执行顺序
 
@@ -233,19 +244,21 @@ decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。
 
 ## 7. 当前执行定义
 
-1. 读取SIFF-v2 freeze/Step9、CCSF closure、Post-D24 consolidation与TSAF Step4-6；
+1. 读取SIFF-v2 freeze/Step9、CCSF closure、Post-D24 consolidation与TSAF Step9/10 result；
 2. 保持SIFF-v2 immutable，不改写其A6_MEASURE/independent failures；
-3. `SC1-SIFF-v3-TSAF-v1` Step7A已26/26；当前只做Step7B prelaunch；
-4. official test、remote training与confirmation均false；
+3. `SC1-SIFF-v3-TSAF-v1`已关闭；不得补seed、rank、width、readout、loss或selector rescue；
+4. 当前没有new official test、remote training、confirmation或method implementation授权；
 5. SC-MNB保留为supporting source/control inventory，不执行65-run matrix；
-6. 不恢复CCSF、D17-D21、H embedding、region/covariance/temperature或Contribution 2预设。
+6. 下一步回Step2/4形成新的problem/narrative/design gate；independent control不得post-hoc晋升；
+7. 不恢复CCSF、D17-D21、H embedding、region/covariance/temperature或Contribution 2预设。
 
 ## 8. 禁止无损重启时发生的漂移
 
 - 不把A6重新写成已经成立的论文主体；
 - 不把SIFF内部健康度写成paper-core pass；
 - 不把SIFF-v2历史failure改写为pass，也不直接修改其immutable identity；
-- 不把TSAF称为已有效；当前只有conditional narrative/design pass；
+- 不把TSAF称为有效或仍active；它已在完整formal test上失败并关闭exact v1；
+- 不把independent target-only的`+0.2383%` weak signal直接改名为method或补confirmation；
 - 不恢复EVS、CCSF、PCC、PCSD、JAPO、D19或D20的参数/seed rescue；
 - 不因为放宽约束就直接实现explicit H embedding；
 - 不把ordered patch memory升格为论文主线；
@@ -275,9 +288,10 @@ decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。
 13. analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_reactivation_and_tsaf_step46_audit.md
 14. analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step7a_implementation_audit.md
 15. docs/code-explanation/stage-c-siff-v3-tsaf-step7a.md
-16. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
-17. docs/paper-mainline.md
-18. docs/research-roadmap.md
+16. analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step9_10_result_and_rollback.md
+17. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
+18. docs/paper-mainline.md
+19. docs/research-roadmap.md
 
 当前权威状态是：D22-C v1.1 problem gate仍为`target_coordinate_information_access_supported`；SC-D23-FCMI 40-run/160-cell Step9/10已完成，decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。FCMI相对A6 test MSE为`-21.7343%`、0/20；DENSE相对STANDARD_DUAL为`+15.4825%`、19/20且相对A6仅`-0.3284%`。exact projectivity、requested-H禁用、full-T prefix crop、A6 interface compatibility以及预设decoder+loss双贡献均不再是硬约束；但在fixed past、pointwise MSE且H不携带额外信息时，同一future coordinate的Bayes conditional mean不依赖requested horizon，因此不得直接实现H embedding/router。
 
@@ -291,7 +305,9 @@ Step9/10中decomposition、generic与target controls通过，但order和capacity
 
 SC-D24-CTB-v1.1已完成：10/10、840 metrics、720 comparisons，official test access为0。ordered history相对marginal约`-8.6%`、相对sorted约`-9%`、相对target-shuffled约`-14%`，所有primary horizons均0/4正向。exact coarse deformation probe关闭，不做feature/bin/lambda/nonlinear/seed rescue。
 
-用户2026-07-21明确选择SIFF-first paperization。provisional `SC1-SIFF-v3-TSAF-v1`保留SIFF scale-indexed history-conditioned arms，以future-coordinate × ordered-log-scale field产生sample-shared allocation，删除unsupported history-conditioned routing freedom；不输入requested H，不增加第二loss。Step4-6 narrative/design conditional pass，Step7A production-local 26/26通过；下一步只做Step7B prelaunch。SC-MNB降为supporting inventory；remote training、official test、confirmation与65-run baseline execution均未授权。
+用户2026-07-21明确选择SIFF-first paperization。`SC1-SIFF-v3-TSAF-v1`的25/25 new training、25/25 formal test与45/45 effective audit现已完成。TSAF相对A6_MEASURE test MSE/MAE为`-1.2854%/-1.3146%`，相对SIFF-v2 parent为`-1.0422%/-0.9183%`；ordered-field、ordered-scale、target-coordinate与shared-field attribution均fail。internal health全过只说明路径活跃，不改变negative effectiveness。validation中相对parent的`+0.7700%`在test反转。
+
+Decision=`close_tsaf_v1_shared_field_design_keep_siff_v2_immutable_parent`。TSAF-v1关闭，不补seed/rank/width/readout/loss rescue；SIFF-v2继续immutable paperization parent。independent target-only相对parent的`+0.2383%`仅为低于primary threshold的single-seed control weak lead，不得post-hoc晋升。当前无active successor method，回SIFF-first Step2/4；new implementation、remote/test、confirmation、Contribution 2和SC-MNB execution均未授权。
 
 完成后同步更新analysis report、docs/paper-mainline.md、docs/research-roadmap.md和Stage C ledger，执行最小诚实验证，并按AGENTS.md提交、推送。请从专业时序预测研究员角度进行审计，不要为了凑两个contributions而预先设计第二个loss/router。
 ```

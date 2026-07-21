@@ -5,14 +5,14 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC1-SIFF-v3-TSAF Step8 25-run training active；formal test held until 25/25 |
-| `active_question` | target-coordinate × ordered-scale allocation能否让SIFF稳定超过frozen parent与A6_MEASURE？ |
-| `active_candidates` | provisional `SC1-SIFF-v3-TSAF-v1`；SIFF-v2 immutable parent |
+| `current_step` | SC1-SIFF-v3-TSAF Step9/10 complete；exact v1 closed；return Step2/4 |
+| `active_question` | independent target-only weak signal是否值得新的SIFF-first paper problem，而非post-hoc control promotion？ |
+| `active_candidates` | no active successor method；SIFF-v2 immutable paperization parent |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step8_remote_authorization_and_launch.md` |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step9_10_result_and_rollback.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | TSAF Step7A/7B pass；resource smoke pass；25-run training active on GPU0/1/2 |
-| `rollback_point` | TSAF Step4/6；SIFF-v2 remains immutable |
+| `method_implementation` | TSAF-v1 implementation healthy but effectiveness/attribution fail；no active implementation |
+| `rollback_point` | Step2/4；SIFF-v2 remains immutable |
 
 ## Post-D21 Unconstrained Reset
 
@@ -141,18 +141,33 @@ constructor。Step7B现冻结9 effective arms/45 runs/180 test cells，其中4�
 hash复核后复用，5个new arms共25 runs必须from-scratch joint training。旧direct-policy independent没有复用；
 target-only independent ranks重新按TSAF active parameters匹配，最大gap 0.3619%。prelaunch为15/15 cases、10/10
 categories，25/25 CLI、5/5 two-step gradients、paired initialization、runner refusal与analyzer synthetic smoke均
-通过。只读remote preflight显示3 GPUs idle、20/20 reference hashes一致；但未pull、未resource-batch smoke、未训练、
-未test。下一步等待独立remote/test authorization；confirmation和SC-MNB execution均false。详见
+通过。prelaunch时只读remote preflight显示3 GPUs idle、20/20 reference hashes一致；尚未pull、resource-batch smoke、
+training或test，且当时需等待独立remote/test authorization。confirmation和SC-MNB execution均false。详见
 `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step7b_prelaunch_report.md`。
 
 2026-07-21用户已独立授权冻结的25-run seed2021 remote training，以及25/25 training完整后的一次45-run/180-cell
 formal test。generic evaluator现识别`effective_arms`，config补齐equal-skill training contract、coupling scales与
-future bins；runner将training与`FORMAL_TEST_ONLY`严格分离。当前等待commit/push、remote pull与两项resource smoke；
+future bins；runner将training与`FORMAL_TEST_ONLY`严格分离。授权记录时等待commit/push、remote pull与两项resource smoke；
 confirmation、paper promotion和post-hoc matrix/gate修改仍false。
 
 commit `6cef063`已remote pull，两项resource smoke finite/no-OOM；25-run training于10:17:06在GPU0/1/2启动。
-首批Weather candidate/categorical/permuted进入epoch 1。当前training 0/25、formal test 0/25；训练期间不再pull，
+首批Weather candidate/categorical/permuted进入epoch 1。该launch snapshot为training 0/25、formal test 0/25；训练期间不再pull，
 25/25 completeness前不得启动formal-test mode。
+
+Step9/10现已完成。25/25 new training、25/25 new formal test与45/45 effective audit完整；45个checkpoint hashes
+unique，逐dataset encoder initialization一致，checkpoint nonmutation 25/25通过。TSAF相对A6_MEASURE test
+MSE/MAE为`-1.2854%/-1.3146%`，相对SIFF-v2 parent为`-1.0422%/-0.9183%`，两项均0/4 horizon
+wins，paper-facing effectiveness fail。
+
+matched attribution同样全部失败：ordered field vs categorical `-1.0191%`，ordered scale vs permuted
+`-0.0796%`，target coordinate vs global `-0.0405%`，shared field vs independent `-1.2785%`。internal health
+全过说明实现路径活跃且不是numeric pathology，但不能覆盖negative effectiveness。validation中TSAF相对parent
+`+0.7700%`，test反转为`-1.0422%`，禁止换selector或按test重选epoch。
+
+independent target-only相对parent的MSE `+0.2383%`只保留为single-seed weak lead：低于0.3% primary threshold，
+且其预注册角色是control，不能post-hoc晋升。Decision=
+`close_tsaf_v1_shared_field_design_keep_siff_v2_immutable_parent`。TSAF-v1不补seed/rank/width/readout/loss rescue；
+SIFF-v2继续immutable，当前没有active successor method，回SIFF-first Step2/4。
 
 用户2026-07-20决定暂不承担task pivot成本。该scope决定把上一版“D22-C有效失败即停止整个
 deterministic-MSE search”改为：关闭exact D22-C v1并回joint Step2/3，在同一task边界寻找不同的falsifiable

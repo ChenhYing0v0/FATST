@@ -7,14 +7,14 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Scale-Indexed Forecast Fields for Unified Multi-Horizon Time-Series Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC1-SIFF-v3-TSAF Step8 seed2021 25-run training active；formal test held until 25/25 |
+| `current_11_step` | SC1-SIFF-v3-TSAF Step9/10 complete；exact v1 closed；return Step2/4 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | SIFF-v2 immutable parent；TSAF Step7B-ready provisional candidate；no performance result |
+| `paper_core_status` | SIFF-v2 immutable paperization parent；TSAF-v1 failed；no active successor method |
 
 [Constraint Reset, 2026-07-20] 后续不再把exact projectivity、requested horizon禁用、A6 interface compatibility或
 full-$T$ prefix crop当作新方法的先验硬约束。它们可以成为合理设计或matched controls，但必须由problem、理论与
@@ -163,19 +163,37 @@ references经remote checkpoint SHA256 20/20复核后复用，5个new arms共25 r
 旧history-conditioned independent reference没有复用；新的independent target-only ranks重新按TSAF active parameters
 匹配为ETTh1/ETTh2/ETTm1/ETTm2/Weather=`109/115/115/106/115`，最大relative gap 0.3619%。25/25 CLI、
 5/5 two-step policy gradients、逐dataset encoder/TSAF initialization pairing、runner refusal与four-layer analyzer
-synthetic smoke均通过。validation只选checkpoint；runner不执行test。当前仍为
+synthetic smoke均通过。validation只选checkpoint；runner不执行test。在该prelaunch节点
 `remote training=false / official test=false / confirmation=false`，因此该节点不是performance pass。详见
 `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step7b_prelaunch_report.md`。
 
 [TSAF Step8 Authorization] 用户于2026-07-21授权冻结的25-run seed2021 remote training，并授权在25/25 training
 完整后对45-run/180-cell effective matrix执行一次formal test。confirmation seeds、paper-core promotion与matrix/gate
-修改仍false。training runner与formal-test evaluator已分离，test mode要求checkpoint SHA256 nonmutation；当前尚未
+修改仍false。training runner与formal-test evaluator已分离，test mode要求checkpoint SHA256 nonmutation；授权记录时尚未
 remote pull、resource smoke、training或test。详见
 `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step8_remote_authorization_and_launch.md`。
 
 [TSAF Step8 Launch] commit `6cef063`已remote fast-forward；Weather-TSAF与ETTm2-independent两项2-batch resource
 smoke finite且无OOM。25-run training于`2026-07-21T10:17:06+08:00`在GPU0/1/2启动，首批三个Weather jobs进入
 epoch 1，初始显存约1.6–2.0 GiB。formal test保持0/25，只有training 25/25完整后才单独启动。
+
+[TSAF Step9/10 Result] 25/25 new training、25/25 new formal test与45/45 effective-run audit均完整；
+formal-test commit为`4cc96f21e23c159e37757c66ec2e5c68358c5718`，45个checkpoint SHA256 unique，逐dataset
+encoder initialization完全matched且test nonmutation 25/25通过。TSAF相对`A6_MEASURE` test MSE/MAE为
+`-1.2854%/-1.3146%`，相对SIFF-v2 parent为`-1.0422%/-0.9183%`，两项均0/4 horizon wins，
+paper-facing effectiveness fail。
+
+四个matched questions也全部fail：ordered-field vs categorical `-1.0191%`，ordered-scale vs permuted
+`-0.0796%`，target-coordinate vs global `-0.0405%`，shared-field vs independent `-1.2785%`。all-finite、
+arm diversity、nonconstant target-scale surface、order sensitivity、allocation entropy、scale-component contribution
+与request invariance全部通过，只证明路径活跃，不能覆盖negative effectiveness。validation中TSAF相对parent曾为
+`+0.7700%`，formal test反转为`-1.0422%`，所以不得换selector或按test重选epoch。
+
+capacity-matched independent target-only相对parent有MSE `+0.2383%`、MAE `+0.0898%`的single-seed weak signal，
+但低于0.3% primary threshold，且预注册角色是control；不得post-hoc改名或直接补confirmation。Decision=
+`close_tsaf_v1_shared_field_design_keep_siff_v2_immutable_parent`：关闭TSAF-v1 exact shared field，不做
+seed/rank/width/readout/loss rescue；SIFF-v2 identity不变，当前无active successor method，回SIFF-first Step2/4。
+详见`analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step9_10_result_and_rollback.md`。
 
 [Scope Decision, 2026-07-20] 用户明确要求当前项目暂不转出`deterministic-MSE fixed-past architecture search`。
 因此D22-C有效失败只关闭exact v1并回joint Step2/3，不再自动停止整个search；但不得用seed、width、readout或

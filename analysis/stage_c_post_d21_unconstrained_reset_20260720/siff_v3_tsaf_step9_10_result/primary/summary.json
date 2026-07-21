@@ -1,0 +1,57 @@
+{
+  "candidate_version": "SC1-SIFF-v3-TSAF-v1",
+  "test_access_date": "",
+  "user_authorization": {
+    "user_authorization_basis": "2026-07-21 user instruction: 继续推进远程实验",
+    "step7b_design_and_prelaunch_authorized": true,
+    "user_authorized": true,
+    "authorization_date": "2026-07-21",
+    "remote_training_authorized": true,
+    "formal_test_access_authorized": true,
+    "test_role": "primary-mechanism-effectiveness-and-paper-benchmark",
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+    "checkpoint_retraining_allowed": true,
+    "checkpoint_mutation_during_test_allowed": false,
+    "phase_a_seed": 2021,
+    "confirmation_seeds_authorized": false,
+    "confirmation_authorized": false,
+    "test_role_if_later_authorized": "primary-mechanism-effectiveness-and-paper-benchmark",
+    "formal_test_access_count_for_version": 1,
+    "per_dataset_horizon_or_cell_tuning_allowed": false
+  },
+  "checkpoint_retrained": true,
+  "test_role": "primary-mechanism-effectiveness-and-paper-benchmark",
+  "matrix_complete": true,
+  "test_informed": true,
+  "performance_gates": {
+    "primary": {
+      "effectiveness_vs_a6_measure": false,
+      "effectiveness_vs_parent": false
+    },
+    "matched_controls": {
+      "ordered_field_vs_categorical": false,
+      "ordered_scale_vs_permuted": false,
+      "target_coordinate_vs_global": false
+    },
+    "shared_field_positive": false,
+    "shared_field_strict_superiority": false
+  },
+  "internal_health": {
+    "all_finite": true,
+    "arm_prediction_diversity": true,
+    "nonconstant_target_scale_surface": true,
+    "scale_order_sensitivity": true,
+    "allocation_entropy": true,
+    "scale_component_contribution": true,
+    "request_invariance": true
+  },
+  "evaluation_layers": {
+    "paper_facing_effectiveness": false,
+    "matched_mechanism_attribution": false,
+    "internal_mechanism_health": true,
+    "shared_field_strict_superiority": false,
+    "failure_attribution": "history_free_allocation_hypothesis_or_exact_design_not_supported",
+    "decision": "close_exact_candidate_effectiveness_fail_rollback_step2_or_4",
+    "confirmation_authorized": false
+  }
+}

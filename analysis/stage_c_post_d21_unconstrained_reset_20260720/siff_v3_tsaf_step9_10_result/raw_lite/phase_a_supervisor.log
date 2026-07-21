@@ -1,0 +1,89 @@
+training_exit=2026-07-21T11:39:00+08:00 tsaf_status=2026-07-21T11:39:00+08:00 training=25/25 test=0/25
+来自 github.com:ChenhYing0v0/FATST
+   6cef063..4cc96f2  main       -> origin/main
+更新 6cef063..4cc96f2
+Fast-forward
+ ...3_tsaf_step8_remote_authorization_and_launch.md | 38 +++++++++++++++++++++-
+ .../code-explanation/stage-c-siff-v3-tsaf-step8.md |  3 +-
+ docs/paper-mainline.md                             |  6 +++-
+ docs/research-roadmap.md                           |  8 +++--
+ ...tage-c-post-d21-d22-restart-handoff-20260720.md |  9 +++--
+ .../stage-c-unified-forecasting-redesign.md        | 18 ++++++----
+ scripts/remote/run_stage_c_siff_v3_tsaf_v1.sh      | 11 +++++--
+ 7 files changed, 76 insertions(+), 17 deletions(-)
+formal_test_commit=4cc96f21e23c159e37757c66ec2e5c68358c5718
+0, NVIDIA GeForce RTX 3090, 18, 24107, 0
+1, NVIDIA GeForce RTX 3090, 18, 24107, 0
+2, NVIDIA GeForce RTX 3090, 18, 24107, 0
+tsaf_start=2026-07-21T11:39:06+08:00
+commit=4cc96f21e23c159e37757c66ec2e5c68358c5718
+output_root=/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_v3_tsaf_v1
+config_hash=32ec229c66c5683a48793b5bbde3c4f6e99790e4f6e05e4076ec6284c351e748
+profile_hash=80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a
+gpu_ids=0 1 2
+new_training_runs=25
+reused_reference_runs=20
+effective_runs=45
+checkpoint_selection=best_val_mean_mse_h96_h192_h336_h720
+formal_test_execution_mode=1
+test_informed=true
+0, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0
+1, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0
+2, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0
+worker_start=2026-07-21T11:39:06+08:00 worker=0 gpu=0 pid=1810976
+worker_start=2026-07-21T11:39:06+08:00 worker=1 gpu=1 pid=1810980
+worker_start=2026-07-21T11:39:06+08:00 worker=2 gpu=2 pid=1810987
+test_start=2026-07-21T11:39:06+08:00 job=1/25 arm=tsaf dataset=Weather gpu=0
+test_start=2026-07-21T11:39:06+08:00 job=2/25 arm=siff_categorical_target_only dataset=Weather gpu=1
+test_start=2026-07-21T11:39:06+08:00 job=3/25 arm=tsaf_permuted_scale dataset=Weather gpu=2
+test_done=2026-07-21T11:39:33+08:00 job=1/25 arm=tsaf dataset=Weather gpu=0
+test_start=2026-07-21T11:39:33+08:00 job=4/25 arm=tsaf_no_target_global dataset=Weather gpu=0
+test_done=2026-07-21T11:39:33+08:00 job=3/25 arm=tsaf_permuted_scale dataset=Weather gpu=2
+test_start=2026-07-21T11:39:33+08:00 job=6/25 arm=tsaf dataset=ETTm1 gpu=2
+test_done=2026-07-21T11:39:36+08:00 job=2/25 arm=siff_categorical_target_only dataset=Weather gpu=1
+test_start=2026-07-21T11:39:36+08:00 job=5/25 arm=siff_independent_target_only dataset=Weather gpu=1
+test_done=2026-07-21T11:39:51+08:00 job=6/25 arm=tsaf dataset=ETTm1 gpu=2
+test_start=2026-07-21T11:39:51+08:00 job=9/25 arm=tsaf_no_target_global dataset=ETTm1 gpu=2
+test_done=2026-07-21T11:39:58+08:00 job=5/25 arm=siff_independent_target_only dataset=Weather gpu=1
+test_start=2026-07-21T11:39:58+08:00 job=8/25 arm=tsaf_permuted_scale dataset=ETTm1 gpu=1
+test_done=2026-07-21T11:40:00+08:00 job=4/25 arm=tsaf_no_target_global dataset=Weather gpu=0
+test_start=2026-07-21T11:40:00+08:00 job=7/25 arm=siff_categorical_target_only dataset=ETTm1 gpu=0
+test_done=2026-07-21T11:40:10+08:00 job=9/25 arm=tsaf_no_target_global dataset=ETTm1 gpu=2
+test_start=2026-07-21T11:40:10+08:00 job=12/25 arm=siff_categorical_target_only dataset=ETTh1 gpu=2
+test_done=2026-07-21T11:40:17+08:00 job=8/25 arm=tsaf_permuted_scale dataset=ETTm1 gpu=1
+test_start=2026-07-21T11:40:17+08:00 job=11/25 arm=tsaf dataset=ETTh1 gpu=1
+test_done=2026-07-21T11:40:19+08:00 job=12/25 arm=siff_categorical_target_only dataset=ETTh1 gpu=2
+test_done=2026-07-21T11:40:19+08:00 job=7/25 arm=siff_categorical_target_only dataset=ETTm1 gpu=0
+test_start=2026-07-21T11:40:19+08:00 job=15/25 arm=siff_independent_target_only dataset=ETTh1 gpu=2
+test_start=2026-07-21T11:40:19+08:00 job=10/25 arm=siff_independent_target_only dataset=ETTm1 gpu=0
+test_done=2026-07-21T11:40:26+08:00 job=11/25 arm=tsaf dataset=ETTh1 gpu=1
+test_start=2026-07-21T11:40:26+08:00 job=14/25 arm=tsaf_no_target_global dataset=ETTh1 gpu=1
+test_done=2026-07-21T11:40:28+08:00 job=15/25 arm=siff_independent_target_only dataset=ETTh1 gpu=2
+test_start=2026-07-21T11:40:28+08:00 job=18/25 arm=tsaf_permuted_scale dataset=ETTh2 gpu=2
+test_done=2026-07-21T11:40:34+08:00 job=14/25 arm=tsaf_no_target_global dataset=ETTh1 gpu=1
+test_start=2026-07-21T11:40:35+08:00 job=17/25 arm=siff_categorical_target_only dataset=ETTh2 gpu=1
+test_done=2026-07-21T11:40:36+08:00 job=18/25 arm=tsaf_permuted_scale dataset=ETTh2 gpu=2
+test_start=2026-07-21T11:40:36+08:00 job=21/25 arm=tsaf dataset=ETTm2 gpu=2
+test_done=2026-07-21T11:40:37+08:00 job=10/25 arm=siff_independent_target_only dataset=ETTm1 gpu=0
+test_start=2026-07-21T11:40:37+08:00 job=13/25 arm=tsaf_permuted_scale dataset=ETTh1 gpu=0
+test_done=2026-07-21T11:40:43+08:00 job=17/25 arm=siff_categorical_target_only dataset=ETTh2 gpu=1
+test_start=2026-07-21T11:40:43+08:00 job=20/25 arm=siff_independent_target_only dataset=ETTh2 gpu=1
+test_done=2026-07-21T11:40:46+08:00 job=13/25 arm=tsaf_permuted_scale dataset=ETTh1 gpu=0
+test_start=2026-07-21T11:40:46+08:00 job=16/25 arm=tsaf dataset=ETTh2 gpu=0
+test_done=2026-07-21T11:40:52+08:00 job=20/25 arm=siff_independent_target_only dataset=ETTh2 gpu=1
+test_start=2026-07-21T11:40:53+08:00 job=23/25 arm=tsaf_permuted_scale dataset=ETTm2 gpu=1
+test_done=2026-07-21T11:40:54+08:00 job=16/25 arm=tsaf dataset=ETTh2 gpu=0
+test_start=2026-07-21T11:40:54+08:00 job=19/25 arm=tsaf_no_target_global dataset=ETTh2 gpu=0
+test_done=2026-07-21T11:40:55+08:00 job=21/25 arm=tsaf dataset=ETTm2 gpu=2
+test_start=2026-07-21T11:40:55+08:00 job=24/25 arm=tsaf_no_target_global dataset=ETTm2 gpu=2
+test_done=2026-07-21T11:41:03+08:00 job=19/25 arm=tsaf_no_target_global dataset=ETTh2 gpu=0
+test_start=2026-07-21T11:41:03+08:00 job=22/25 arm=siff_categorical_target_only dataset=ETTm2 gpu=0
+test_done=2026-07-21T11:41:11+08:00 job=23/25 arm=tsaf_permuted_scale dataset=ETTm2 gpu=1
+test_done=2026-07-21T11:41:13+08:00 job=24/25 arm=tsaf_no_target_global dataset=ETTm2 gpu=2
+test_done=2026-07-21T11:41:22+08:00 job=22/25 arm=siff_categorical_target_only dataset=ETTm2 gpu=0
+test_start=2026-07-21T11:41:22+08:00 job=25/25 arm=siff_independent_target_only dataset=ETTm2 gpu=0
+test_done=2026-07-21T11:41:42+08:00 job=25/25 arm=siff_independent_target_only dataset=ETTm2 gpu=0
+tsaf_formal_test_done=2026-07-21T11:41:42+08:00
+formal_test_exit=2026-07-21T11:41:42+08:00 tsaf_status=2026-07-21T11:41:42+08:00 training=25/25 test=25/25
+{"candidate_version": "SC1-SIFF-v3-TSAF-v1", "checkpoint_retrained": true, "evaluation_layers": {"confirmation_authorized": false, "decision": "close_exact_candidate_effectiveness_fail_rollback_step2_or_4", "failure_attribution": "history_free_allocation_hypothesis_or_exact_design_not_supported", "internal_mechanism_health": true, "matched_mechanism_attribution": false, "paper_facing_effectiveness": false, "shared_field_strict_superiority": false}, "internal_health": {"all_finite": true, "allocation_entropy": true, "arm_prediction_diversity": true, "nonconstant_target_scale_surface": true, "request_invariance": true, "scale_component_contribution": true, "scale_order_sensitivity": true}, "matrix_complete": true, "performance_gates": {"matched_controls": {"ordered_field_vs_categorical": false, "ordered_scale_vs_permuted": false, "target_coordinate_vs_global": false}, "primary": {"effectiveness_vs_a6_measure": false, "effectiveness_vs_parent": false}, "shared_field_positive": false, "shared_field_strict_superiority": false}, "test_access_date": "", "test_informed": true, "test_role": "primary-mechanism-effectiveness-and-paper-benchmark", "user_authorization": {"authorization_date": "2026-07-21", "checkpoint_mutation_during_test_allowed": false, "checkpoint_retraining_allowed": true, "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720", "confirmation_authorized": false, "confirmation_seeds_authorized": false, "formal_test_access_authorized": true, "formal_test_access_count_for_version": 1, "per_dataset_horizon_or_cell_tuning_allowed": false, "phase_a_seed": 2021, "remote_training_authorized": true, "step7b_design_and_prelaunch_authorized": true, "test_role": "primary-mechanism-effectiveness-and-paper-benchmark", "test_role_if_later_authorized": "primary-mechanism-effectiveness-and-paper-benchmark", "user_authorization_basis": "2026-07-21 user instruction: 继续推进远程实验", "user_authorized": true}}
+phase_a_supervisor_done=2026-07-21T11:41:45+08:00

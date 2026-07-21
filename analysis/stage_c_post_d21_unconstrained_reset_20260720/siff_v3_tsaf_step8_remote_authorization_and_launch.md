@@ -76,3 +76,13 @@ output-root supervisor PID=`1713424`，只等待training runner PID=`1705029`退
 
 训练期间不得remote pull或修改config/gates。只有training 25/25且artifact completeness通过，才允许单独启动
 `FORMAL_TEST_ONLY=1`。
+
+## 5. Completion pointer
+
+本轮已于2026-07-21完成25/25 new training、25/25 new formal test与45/45 effective-run analyzer。formal-test
+commit为`4cc96f21e23c159e37757c66ec2e5c68358c5718`，checkpoint nonmutation 25/25通过。
+
+最终decision为`close_tsaf_v1_shared_field_design_keep_siff_v2_immutable_parent`：TSAF相对A6_MEASURE和
+SIFF-v2 parent的test MSE分别为`-1.2854%/-1.0422%`，全部matched attribution gates失败；internal health通过。
+完整统计、validation/test reversal与failure attribution见
+`siff_v3_tsaf_step9_10_result_and_rollback.md`。

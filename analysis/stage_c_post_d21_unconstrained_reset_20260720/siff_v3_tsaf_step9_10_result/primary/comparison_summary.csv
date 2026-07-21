@@ -1,0 +1,17 @@
+comparison,layer,metric,candidate,reference,macro_gain_percent,cell_wins,dataset_wins,horizon_wins
+effectiveness_vs_a6_measure,paper_facing_effectiveness,mse,tsaf,a6_measure,-1.28541707179705,9,2,0
+effectiveness_vs_a6_measure,paper_facing_effectiveness,mae,tsaf,a6_measure,-1.31461315946563,5,1,0
+effectiveness_vs_parent,paper_facing_effectiveness,mse,tsaf,siff_v2_direct_parent,-1.042236246904225,7,1,0
+effectiveness_vs_parent,paper_facing_effectiveness,mae,tsaf,siff_v2_direct_parent,-0.9182585145064753,4,1,0
+context_vs_a6_full,source_family_context,mse,tsaf,a6_full,0.619208989942428,12,3,3
+context_vs_a6_full,source_family_context,mae,tsaf,a6_full,-0.0018599313665990103,11,3,3
+context_vs_pcsd_equal,source_family_context,mse,tsaf,pcsd_equal,-0.45005727022480013,12,3,2
+context_vs_pcsd_equal,source_family_context,mae,tsaf,pcsd_equal,-0.4024772167341706,13,3,0
+ordered_field_vs_categorical,matched_mechanism_attribution,mse,tsaf,siff_categorical_target_only,-1.019129504523597,7,2,0
+ordered_field_vs_categorical,matched_mechanism_attribution,mae,tsaf,siff_categorical_target_only,-0.8795452097604223,6,1,0
+ordered_scale_vs_permuted,matched_mechanism_attribution,mse,tsaf,tsaf_permuted_scale,-0.07957429575599084,6,2,0
+ordered_scale_vs_permuted,matched_mechanism_attribution,mae,tsaf,tsaf_permuted_scale,-0.06250227995820035,6,1,0
+target_coordinate_vs_global,matched_mechanism_attribution,mse,tsaf,tsaf_no_target_global,-0.0405385842958178,9,3,1
+target_coordinate_vs_global,matched_mechanism_attribution,mae,tsaf,tsaf_no_target_global,-0.014482398825244047,9,3,1
+shared_field_vs_independent,matched_mechanism_attribution,mse,tsaf,siff_independent_target_only,-1.2784793241985182,4,0,0
+shared_field_vs_independent,matched_mechanism_attribution,mae,tsaf,siff_independent_target_only,-1.0067271499110757,2,0,0
