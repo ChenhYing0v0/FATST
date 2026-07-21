@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | CPSI 25-run matrix能否通过remote resource/optimization/artifact gate并完成frozen test？ |
+| `active_question` | running CPSI 25-run matrix能否完成且无remote pathology？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
 | `active_candidates` | ISCF-v1-CPSI formal-screen active candidate；ISCF-v0/A6_FULL frozen references |
@@ -20,10 +20,10 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | ISCF-v1-CPSI Step7B prelaunch complete；advance Step8 remote |
+| `current_11_step` | ISCF-v1-CPSI Step8 seed2021 training active；test 0/25 |
 | `current_candidate` | ISCF-v1-CPSI formal-screen ready；effectiveness pending |
-| `latest_decision` | `step7b_prelaunch_pass_step8_authorized` |
-| `next_required_action` | commit/push；remote pull/GPU preflight；dual resource smoke；25-run training |
+| `latest_decision` | `step8_remote_training_launched_commit_5d2330e` |
+| `next_required_action` | monitor 25/25 training；audit artifacts；only then launch single formal test |
 | `method_training_authorized` | seed2021 remote + 25/25后single formal test true；confirmation false |
 | `rollback_point` | remote numeric/artifact fault repairs Step7；mild control results cannot reject before test |
 
@@ -250,6 +250,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SIFF-v2 final claim Step4-6 | tensor/theory/prior/evidence audit + single-contribution boundary + three-seed FCC design | narrative conditional pass；main and independent gaps remain blockers；30 new runs frozen | FCC waiting authorization；method unchanged；modern baselines remain blocked | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_final_paper_claim_and_confirmation_design.md` |
 | SIFF-v2 FCC Step7B prelaunch | A6_FULL comparator freeze + 30-job runner + 15-reference audit + three-seed analyzer | 25/25 checks；30/30 jobs；15/15 references complete/unique/init-paired；A6_MEASURE absent | remote/test authorized；commit-pinned preflight/resource smoke next | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/prelaunch_report.md` |
 | ISCF-v1-CPSI Step7B prelaunch | five new arms + ISCF/A6_FULL references + test-first controls | 19/19；25 new/35 effective；10/10 hashes；remote scanner fallback repaired | seed2021 remote + 25/25后single test true；confirmation false | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step7b_prelaunch_20260721/prelaunch_report.md` |
+| ISCF-v1-CPSI Step8 launch | commit-pinned pull + 3-GPU preflight + dual resource smoke + supervisor | `5d2330e`；smokes finite/no-OOM；initial training/test 0/25 | training active；25/25前test hard-blocked | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step8_remote_20260721/remote_launch_record.md` |
 | SIFF-v2 FCC Step8 launch | commit-pinned pull + 3-GPU preflight + dual resource smoke + background driver | `87bea35`；smokes finite/no-OOM；first three Weather jobs active；test 0/30 | training active；30/30 before one formal test | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/remote_launch_record.md` |
 | SIFF-v2 FCC Step9/10 | 30 new E2E runs + one formal test + 45-run/180-cell three-seed audit | vs A6_FULL MSE/MAE +1.2497%/+0.7549%；vs independent -0.1272%/-0.1733%；health 6/6 | performance pass but attribution fail；stop promotion；portfolio decision | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1/step9_10_result_and_portfolio_decision.md` |
 

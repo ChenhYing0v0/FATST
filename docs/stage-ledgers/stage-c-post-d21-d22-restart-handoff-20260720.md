@@ -39,11 +39,12 @@
 30. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step7b_prelaunch_20260721/prelaunch_report.md`；
 31. `docs/code-explanation/stage-c-iscf-v1-cpsi-step7b.md`；
 32. `configs/stage_c_iscf_v1_cpsi_step7b.json`；
-33. `configs/stage_c_iscf_v0_carrier.json`；
-34. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
-35. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
-36. `docs/paper-mainline.md`；
-37. `docs/research-roadmap.md`。
+33. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step8_remote_20260721/remote_launch_record.md`；
+34. `configs/stage_c_iscf_v0_carrier.json`；
+35. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
+36. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
+37. `docs/paper-mainline.md`；
+38. `docs/research-roadmap.md`。
 
 若上述文件与更旧的聊天、archive或历史段落冲突，以本文件和三份主线文档顶部的最新cursor为准。
 
@@ -55,12 +56,12 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-21 |
 | `source_parent_commit` | `b0b9d7c`（Step7B worktree parent） |
-| `current_step` | ISCF-v1-CPSI Step7B prelaunch 19/19 pass；advance Step8 remote |
-| `active_problem` | 25 new runs能否无numeric/artifact pathology完成并在frozen test MSE/MAE上支持CPSI？ |
+| `current_step` | ISCF-v1-CPSI Step8 seed2021 training active；formal test 0/25 |
+| `active_problem` | running 25 new runs能否无pathology完成并在frozen test MSE/MAE上支持CPSI？ |
 | `active_method` | ISCF-v1-CPSI formal-screen candidate；effectiveness pending |
 | `method_training_authorized` | seed2021 25-run remote true；confirmation false |
 | `remote_training_authorized` | true；25/25后single complete formal test true；不得提前test |
-| `next_action` | commit/push -> remote pull/GPU preflight -> dual resource smoke -> 25 training |
+| `next_action` | monitor 25/25 training -> artifact audit -> single formal test -> four-layer analysis |
 | `conditional_next` | 25/25 training/artifact pass -> one complete 25-run test -> four-layer decision |
 | `rollback` | numeric/artifact pathology repairsStep7；mild diagnostic negatives continue to test；router/loss remain blocked |
 
@@ -216,6 +217,8 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
     negative不能淘汰任何arm。
 57. Decision=`step7b_prelaunch_pass_step8_authorized`；用户授权seed2021 remote与训练完成后的single formal test；
     confirmation、router、second loss仍false。
+58. commit `5d2330e`已remote pull；三卡preflight空闲，修复后的Weather-CPSI/ETTm2-POST resource smokes通过。
+59. 25-run training于`17:09:43+08:00`启动，initial training/test=`0/25,0/25`；25/25前test hard-blocked。
 
 ## 5. D22-HFA 的执行顺序
 

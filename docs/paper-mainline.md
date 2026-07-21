@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；`ISCF-v1-CPSI` is a working research ID, not final title |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF-v1-CPSI Step7B prelaunch 19/19 pass；advance commit-pinned remote Step8 |
+| `current_11_step` | ISCF-v1-CPSI Step8 seed2021 training active；formal test 0/25 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -31,6 +31,10 @@ Decision=`step7b_prelaunch_pass_step8_authorized`。用户已授权seed2021的25
 test；confirmation仍false。下一步为commit/push、remote pull、GPU preflight和Weather-CPSI/ETTm2-POST resource
 smokes。详见
 `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step7b_prelaunch_20260721/prelaunch_report.md`。
+
+[ISCF-v1-CPSI Step8 Launch, 2026-07-21] commit `5d2330e`已remote pull；三张3090 preflight为空闲。
+修复remote无`rg`导致的scanner false-pass风险后，Weather-CPSI与ETTm2-POST resource smokes均finite/no-OOM。
+25-run matrix于`17:09:43+08:00`启动，initial=`training 0/25, test 0/25`，formal-test mode未启动。
 
 [ISCF-v1-CPSI Step7A, 2026-07-21] production implementation新增五个readout modes，在parent ISCF初始化后创建
 interaction matrices，保持paired base RNG path。local checker在conda `r2026-fsa`中81/81通过：readout 50/50、

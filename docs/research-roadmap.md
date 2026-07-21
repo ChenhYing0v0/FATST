@@ -5,8 +5,8 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | ISCF-v1-CPSI Step7B prelaunch 19/19 pass；advance Step8 remote training |
-| `active_question` | 25/25 new runs能否在frozen protocol下完成且无numeric/artifact pathology？ |
+| `current_step` | ISCF-v1-CPSI Step8 seed2021 training active；formal test 0/25 |
+| `active_question` | 25/25 new runs能否在commit 5d2330e frozen protocol下完成且无pathology？ |
 | `active_candidates` | ISCF-v1-CPSI formal-screen candidate；ISCF-v0/A6_FULL frozen references |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step6_design_20260721/step6_control_design_and_test_policy.md` |
@@ -27,6 +27,9 @@ matched attribution、health与failure cause。
 
 Decision=`step7b_prelaunch_pass_step8_authorized`。下一步commit-pinned remote pull、GPU preflight、dual resource smoke后
 启动25-run seed2021 matrix；25/25后才执行single formal test。confirmation、router、second loss保持false。
+
+Step8已在commit `5d2330e`启动。三张3090 preflight空闲；修复scanner fallback后Weather-CPSI与ETTm2-POST
+resource smokes通过。初始状态training/test=`0/25,0/25`，formal-test mode为0；25/25前继续禁止test。
 
 ## ISCF-v1-CPSI Step7A Implementation Decision
 
