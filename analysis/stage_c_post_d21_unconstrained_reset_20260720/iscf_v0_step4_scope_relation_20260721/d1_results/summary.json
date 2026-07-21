@@ -1,0 +1,18 @@
+{
+  "all_arrays_finite": true,
+  "decision": "scope_response_relation_seed_unstable",
+  "diagnostic_id": "ISCF-SRA-D1",
+  "gates": {
+    "cross_seed_topology_stability": false,
+    "learned_above_random_init": true,
+    "scope_specific_noncollapse": true,
+    "synchronized_above_direction_null": true
+  },
+  "learned_above_random_init_run_count": 15,
+  "median_pairwise_response_distance": 1.3295204048030382,
+  "median_private_response_energy": 0.7080902860896796,
+  "median_synchronized_common_energy": 0.2919097139103204,
+  "run_count": 15,
+  "stable_topology_dataset_count": 2,
+  "synchronized_above_direction_null_run_count": 15
+}

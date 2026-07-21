@@ -29,10 +29,12 @@
 20. `docs/code-explanation/stage-c-siff-v3-tsaf-step8.md`；
 21. `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step9_10_result_and_rollback.md`；
 22. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_function_audit_20260721/result_and_step4_handoff.md`；
-23. `configs/stage_c_iscf_v0_carrier.json`；
-24. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
-25. `docs/paper-mainline.md`；
-26. `docs/research-roadmap.md`。
+23. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_step4_scope_relation_20260721/step4_result_and_step5_handoff.md`；
+24. `configs/stage_c_iscf_v0_carrier.json`；
+25. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
+26. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
+27. `docs/paper-mainline.md`；
+28. `docs/research-roadmap.md`。
 
 若上述文件与更旧的聊天、archive或历史段落冲突，以本文件和三份主线文档顶部的最新cursor为准。
 
@@ -44,14 +46,14 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-21 |
 | `source_parent_commit` | `d647874`（Step7B开始前parent） |
-| `current_step` | ISCF-v0 carrier freeze + existing-artifact function audit Step2/3 complete；return narrow Step4 |
-| `active_problem` | non-ordered common/scope-specific relation是否可干预，而非shared target difficulty或low-rank/ordered假象？ |
-| `active_method` | none；ISCF-v0 is frozen strong research carrier only |
-| `method_training_authorized` | false；new implementation/confirmation false |
-| `remote_training_authorized` | false；本轮仅CPU复用existing NPZ，无new test access |
-| `next_action` | source-informed ISCF Step4 problem/narrative audit；do not implement low-rank matrix/router/loss |
-| `conditional_next` | narrative/design gate before any implementation or remote run |
-| `rollback` | function relation unresolved；Step4；SIFF ordered claim保持关闭；SC-MNB execution false |
+| `current_step` | ISCF-v0 Step4 response-relation existence/narrative complete；advance Step5 theory/design |
+| `active_problem` | confirmed pre-synthesis scope-response dependence如何形成task-specific non-ordered operator，而非generic set mixing？ |
+| `active_method` | none；scope-set response coupling is working concept only |
+| `method_training_authorized` | false；Step5 theory/design only |
+| `remote_training_authorized` | false；D1/D1.1 validation frozen inference complete；formal test false |
+| `next_action` | study Deep Sets/Set Transformer/Cross-Stitch source；define `[B,C,S,D,K]` operator、morphism与matched controls |
+| `conditional_next` | Step5 theory+narrative/design gate before implementation or remote run |
+| `rollback` | generic-overlap/design fail returns ISCF-v0 carrier；ordered/low-rank/router/loss remain blocked |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
 
@@ -96,7 +98,7 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
 | `A6_MEASURE` | strong training control | harmonic horizon measure受ElasTST直接prior覆盖，不能单独claim |
 | `SIFF-v2-EQ-ATTR-v1` | immutable performance-near parent | internal 7/7，但未超过A6_MEASURE且independent control阻塞归因；不修改exact v2 |
 | `SIFF-v3-TSAF-v1` | closed exact candidate | effectiveness/attribution fail，internal health pass；不补confirmation/rescue |
-| `ISCF-v0` | frozen strong research carrier | independent $Q=5$ carrier；paper-core pending；不继承ordered SIFF claim |
+| `ISCF-v0` | frozen strong research carrier；Step4 problem pass | D1.1 relation confirmed；paper method pending；不继承ordered SIFF claim |
 | `D14 crossing/oracle` | historical clue | oracle不等于past-identifiable benefit；D21已证明interaction split-unstable |
 | `D17-D21` | closed evidence | 不做representation/readout/seed rescue |
 | `CTD` | paused by user | 新会话不得自动恢复 |
@@ -168,6 +170,15 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
 39. 15-run function audit仅复用existing NPZ：common/private、complementarity、topology通过，aligned low-dimension
     `0/15`失败；decision=`function_relation_unresolved_requires_narrow_step4_audit`。当前不实现method、不训练、
     不访问new test，下一步为non-ordered common/scope-specific relation的Step4 source/narrative gate。
+40. Step4指出residual common受shared target difficulty混淆，改用validation-label-free hidden directional response；
+    D1 primary在16 directions下relation/random/noncollapse pass，但topology仅2/5。
+41. 预先声明的64-direction estimator validity check把topology恢复到5/5，故primary topology failure归为
+    `diagnostic_estimator_variance`，不得方向级拒绝或post-hoc promotion。
+42. 新冻结D1.1使用disjoint validation rows offset64、新seed、64 directions、128 null与8 random-init controls：
+    15/15超过两类controls，common/private=`0.2803/0.7197`，4/5 topology稳定；无targets/training/test。
+43. Decision=`scope_response_relation_confirmed_for_step5_theory`；narrative conditional pass为single pre-synthesis
+    architecture problem。active_method仍none；下一步只做`[B,C,S,D,K]` non-ordered operator、morphism与matched
+    controls的Step5 theory/design，generic set mixing、router、second loss与remote/test均未授权。
 
 ## 5. D22-HFA 的执行顺序
 

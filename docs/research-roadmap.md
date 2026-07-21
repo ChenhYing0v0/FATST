@@ -5,14 +5,29 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | ISCF-v0 frozen；function-level Step2/3 audit complete；return narrow Step4 |
-| `active_question` | ISCF-v0 scopes是否具有可干预的non-ordered common/scope-specific relation，而非shared target difficulty或低秩/ordered假象？ |
-| `active_candidates` | no paper method；`ISCF-v0` frozen strong research carrier；narrative pending |
+| `current_step` | ISCF-v0 Step4 complete；advance Step5 theory/design |
+| `active_question` | 如何以task-specific、non-ordered pre-synthesis operator表达已确认的scope response dependence，并超越generic set mixing？ |
+| `active_candidates` | no paper method；`ISCF-v0` frozen carrier；scope-set response coupling is Step5 working concept only |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_function_audit_20260721/result_and_step4_handoff.md` |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_step4_scope_relation_20260721/step4_result_and_step5_handoff.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | active_method=none；new implementation/remote/test false；ISCF-v0 carrier only |
-| `rollback_point` | Step4 source/narrative audit；low-rank relation matrix and ordered SIFF restoration blocked |
+| `method_implementation` | active_method=none；Step5 theory/design only；implementation/remote/test false |
+| `rollback_point` | Step5 narrative/design；generic set mixing、low-rank matrix and ordered restoration blocked |
+
+## ISCF Step4 Response-Relation Decision
+
+Step4将上一轮common residual降为shared-target-confounded clue，并以validation-label-free local response重新审计。
+D1 primary的relation、random-init和noncollapse gates通过，但16-direction topology仅2/5；64-direction validity check恢复
+5/5，归因`diagnostic_estimator_variance`。新冻结D1.1改用disjoint rows offset64、新seed与64 directions，最终15/15
+超过direction-null和matched random-init，common/private median=`0.2803/0.7197`，4/5 datasets topology稳定。
+
+Decision=`scope_response_relation_confirmed_for_step5_theory`。存在问题被收紧为：independent future-output scopes已经学习
+pre-synthesis response dependence，但ISCF-v0只在完整forecast后late fusion。Narrative=
+`conditional_pass_to_step5_as_single_pre_synthesis_architecture_problem`。
+
+这不支持two-factor output compression、ordered scale、universal fixed graph或router。Step5只允许研究作用于
+`[B,C,S,D,K]` modes、permutation-equivariant、zero-interaction包含ISCF-v0的最小operator；Deep Sets、Set Transformer、
+Cross-Stitch、MoLE和multiscale coordination是mandatory boundaries。generic primitive不足以通过method narrative gate。
 
 ## ISCF-v0 Carrier Freeze and Function Audit
 

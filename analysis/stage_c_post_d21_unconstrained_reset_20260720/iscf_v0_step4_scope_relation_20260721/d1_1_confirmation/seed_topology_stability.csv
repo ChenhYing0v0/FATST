@@ -1,0 +1,6 @@
+dataset,seed_count,pair_count,median_cross_seed_topology_spearman,stable
+ETTh1,3,3,0.5878787878787879,1
+ETTh2,3,3,0.41818181818181815,0
+ETTm1,3,3,0.8545454545454545,1
+ETTm2,3,3,0.5515151515151515,1
+Weather,3,3,0.7575757575757576,1

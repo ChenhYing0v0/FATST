@@ -5,16 +5,30 @@
 | Field | Content |
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
-| `working_title` | TBD after ISCF-v0 non-ordered scope-relation narrative gate；former SIFF title retired |
+| `working_title` | TBD after ISCF Step5 operator design；former SIFF title retired |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF-v0 carrier frozen；existing-artifact function audit Step2/3 complete；return narrow Step4 |
+| `current_11_step` | ISCF-v0 Step4 response-relation existence/narrative gate complete；advance Step5 theory/design |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | ISCF-v0 is frozen strong research carrier；paper-core narrative pending；active_method=none |
+| `paper_core_status` | ISCF-v0 frozen strong carrier；single pre-synthesis architecture problem conditional pass；active_method=none |
+
+[ISCF-v0 Step4 Response Relation, 2026-07-21] test residual common被确认含shared-target confound，故不再作为
+existence gate。新的label-free `ISCF-SRA-D1/D1.1`在frozen validation histories上测量五个scope对共同hidden
+perturbation的central response。primary 16-direction topology仅2/5稳定；预先声明的64-direction validity check恢复
+5/5，说明原估计存在Monte Carlo design fault。随后D1.1使用disjoint validation rows与新seed确认：15/15 runs同时
+超过independent-direction null和architecture-identical random-init p95，median common/private response=
+`0.2803/0.7197`，pair distance=`1.3440`，4/5 datasets topology跨seed稳定。Decision=
+`scope_response_relation_confirmed_for_step5_theory`。
+
+Step4 narrative仅以single architecture problem conditional pass：ISCF scopes学得pre-synthesis response dependence，但
+当前只在完整arm forecasts后做late scalar fusion。下一步研究non-ordered scope-set interaction；Deep Sets/Set Transformer、
+Cross-Stitch、MoLE与multiscale forecasting mixing均是mandatory prior/control，generic set mixing本身不可claim。
+active_method仍为none；不实现、不训练、不访问formal test，不新增router/second loss。
+详见`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_step4_scope_relation_20260721/step4_result_and_step5_handoff.md`。
 
 [ISCF-v0 Freeze and Function Audit, 2026-07-21] 用户明确将FCC的matched independent-scope arm固定为
 `ISCF-v0 — Independent-Scope Coupling Field`后续研究基底。code仍使用

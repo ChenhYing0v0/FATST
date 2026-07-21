@@ -1,0 +1,30 @@
+{
+  "all_arrays_finite": true,
+  "decision": "scope_response_relation_confirmed_for_step5_theory",
+  "diagnostic_id": "ISCF-SRA-D1.1",
+  "effective_probe": {
+    "direction_null_repetitions": 128,
+    "hidden_row_offset": 64,
+    "hidden_rows": 32,
+    "rademacher_directions": 64,
+    "random_init_controls": 8,
+    "relative_epsilon": 0.001,
+    "response_chunk_rows": 256,
+    "seed": 20260722,
+    "split": "val",
+    "target_values_used": false
+  },
+  "gates": {
+    "cross_seed_topology_stability": true,
+    "learned_above_random_init": true,
+    "scope_specific_noncollapse": true,
+    "synchronized_above_direction_null": true
+  },
+  "learned_above_random_init_run_count": 15,
+  "median_pairwise_response_distance": 1.3440226951826157,
+  "median_private_response_energy": 0.7196726554697499,
+  "median_synchronized_common_energy": 0.2803273445302501,
+  "run_count": 15,
+  "stable_topology_dataset_count": 4,
+  "synchronized_above_direction_null_run_count": 15
+}
