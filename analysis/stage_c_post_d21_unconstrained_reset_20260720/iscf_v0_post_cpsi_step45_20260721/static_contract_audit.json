@@ -1,0 +1,61 @@
+{
+  "audit_date": "2026-07-21",
+  "environment": "conda:r2026-fsa",
+  "candidate_mode": "siff-independent-scope-control",
+  "random_partition_contract": {
+    "definition": "canonical and random models use the same seed, readout shape, rank, policy, objective-compatible module, and parameter tensors; only fixed group-index buffers differ",
+    "all_profiles_parameter_match": true,
+    "all_profiles_initialization_match": true,
+    "all_profiles_rng_post_state_match": true,
+    "all_profiles_middle_partition_diff": true,
+    "all_profiles_shape_and_finite_pass": true,
+    "profiles": {
+      "ETTh1": {
+        "readout_parameters": 3560217,
+        "forecast_max_abs_diff": 1.1498019695281982
+      },
+      "ETTh2": {
+        "readout_parameters": 1979141,
+        "forecast_max_abs_diff": 1.4715944528579712
+      },
+      "ETTm1": {
+        "readout_parameters": 1979141,
+        "forecast_max_abs_diff": 1.5240265130996704
+      },
+      "ETTm2": {
+        "readout_parameters": 6769149,
+        "forecast_max_abs_diff": 1.4831891059875488
+      },
+      "Weather": {
+        "readout_parameters": 1979141,
+        "forecast_max_abs_diff": 1.2524662017822266
+      }
+    }
+  },
+  "q1_wide_historical_parameter_audit": {
+    "source": "analysis/stage_c_siff_equal_attribution_step9_20260718/raw/*/model_diagnostics.json",
+    "gap_definition": "100 * (iscf_active_forward_parameters - q1_active_forward_parameters) / iscf_active_forward_parameters",
+    "maximum_absolute_gap_percent": 0.4646379821436204,
+    "profiles": {
+      "ETTh1": -0.15641300263738353,
+      "ETTh2": 0.4582303678786463,
+      "ETTm1": 0.4646379821436204,
+      "ETTm2": 0.10847228834344737,
+      "Weather": 0.4582303678786463
+    },
+    "decision": "near_matched_not_exact; use a 0.5 percent MSE macro margin and report the gap"
+  },
+  "q1_wide_historical_seed2021_effect": {
+    "source": "analysis/stage_c_siff_equal_attribution_step9_20260718/primary/test_metrics_standard_horizons.csv",
+    "gain_definition": "100 * (1 - iscf_metric / q1_metric)",
+    "mse_macro_gain_percent": 0.8980228125634897,
+    "mse_cell_wins": 15,
+    "mse_dataset_wins": 3,
+    "mse_horizon_wins": 4,
+    "mae_macro_gain_percent": 0.6406067776068253,
+    "mae_cell_wins": 15,
+    "mae_dataset_wins": 4,
+    "mae_horizon_wins": 4,
+    "role": "test_informed_single_seed_lead_only"
+  }
+}

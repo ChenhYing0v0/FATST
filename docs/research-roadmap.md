@@ -5,14 +5,33 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | ISCF-v1-CPSI Step9/10 complete material fail；rollback Step4/5 |
-| `active_question` | 哪类non-absorbable scope operator能保留D1.1 relation evidence而避免CPSI product failure？ |
-| `active_candidates` | none；ISCF-v0 frozen strong carrier；LINEAR optimization evidence only |
+| `current_step` | post-CPSI ISCF-v0 Step4/5 conditional pass；SAC design frozen |
+| `active_question` | future-output coupling scope-specific maps与contiguous/nested partitions是否分别超越near-matched shared width与exact random grouping？ |
+| `active_candidates` | ISCF-v0 conditional paperization candidate；not promoted；exact CPSI closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step6_design_20260721/step6_control_design_and_test_policy.md` |
+| `active_protocol` | `configs/stage_c_iscf_v0_scope_attribution_confirmation.json` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | exact CPSI-v1 closed；new implementation/remote/test false pending new Step4-6 |
-| `rollback_point` | Step4/5 operator hypothesis and function-class redesign；no seed/rank/loss/router rescue |
+| `method_implementation` | ISCF code unchanged；25 new control trainings/remote/test false pending authorization |
+| `rollback_point` | SAC attribution；Q1-WIDE或RANDOM任一fail则ISCF carrier-only，no rescue |
+
+## ISCF-v0 Post-CPSI Step4/5 Decision
+
+exact CPSI-v1关闭后，没有继续搜索interaction operator。新的problem boundary把ISCF定义为future-output coupling-scope
+factorization：五个independent maps改变的是future coordinates在nonlinear synthesis前的latent sharing extent，而不是
+history sampling scale、requested horizon或expert task ID。
+
+现有ISCF vs A6_FULL three-seed MSE/MAE=`+1.3584%/+0.9144%`，5/5 datasets、4/4 horizons、3/3 seeds；
+D1.1 15/15超过direction/random-init controls，private response median=`0.7197`。但这些都是test-informed carrier/problem
+evidence；ISCF最初作为SIFF control，不能post-hoc直接promote。2024--2026 primary sources也已覆盖generic multi-scale
+predictors、multi-branch complementarity、expert gating与forecasting sub-task agents。
+
+Decision=`conditional_pass_as_output_coupling_scope_architecture_pending_sac`。SAC冻结两项primary controls：
+
+1. `Q1-WIDE`：相同五scope/synthesis/policy/objective，active-param gap最大`0.4646%`，只用一个wide shared mode map；
+2. `RANDOM-PARTITION`：与ISCF相同readout/rank/params，只随机化48/144/360 scopes的future grouping。
+
+新增training仅为Q1-WIDE seeds2022/2023的10 runs与RANDOM三seed的15 runs。candidate不改、loss/router不改；remote
+training和single formal test仍需新授权。两项test gate都过才进入modern baselines；任一失败即回portfolio decision。
 
 ## ISCF-v1-CPSI Step9/10 Decision
 

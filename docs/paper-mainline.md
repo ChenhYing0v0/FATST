@@ -5,16 +5,35 @@
 | Field | Content |
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
-| `working_title` | TBD；`ISCF-v1-CPSI` is a working research ID, not final title |
+| `working_title` | TBD；paperization identity暂为`ISCF-v0`，not final title |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF-v1-CPSI Step9/10 material fail；rollback Step4/5 |
+| `current_11_step` | post-CPSI ISCF-v0 Step4/5 narrative conditional pass；Scope Attribution Confirmation design frozen |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | active method none；ISCF-v0 retained carrier；exact CPSI-v1 closed |
+| `paper_core_status` | active method none；ISCF-v0 conditional paperization candidate；SAC attribution pending；exact CPSI-v1 closed |
+
+[ISCF-v0 Post-CPSI Step4/5 Gate, 2026-07-21] CPSI的material failure没有被反向包装成“independence最优”。研究改为审计
+ISCF-v0本身能否成为单一architecture contribution：五个scope不是input resolutions或requested horizons，而是规定
+哪些future coordinates在nonlinear synthesis前共享latent state；每个scope拥有独立`history -> mode` map，但仍共享
+Encoder、target synthesis与final policy。
+
+现有three-seed carrier evidence相对A6_FULL MSE/MAE为`+1.3584%/+0.9144%`，5/5 datasets、4/4 horizons、
+3/3 seeds正向；D1.1确认scope-specific responses非随机冗余；ordered SIFF与CPSI interaction均未超过ISCF。然而
+ISCF最初是control且结果已test-informed，仍不能直接promote。最新TimeMixer、FreqMoE、MAFS、HMformer与M²FMoE
+已覆盖multi-scale predictors、independent experts、sub-task agents和multi-branch fusion，故generic“多分支/多尺度”
+不是贡献。
+
+Decision=`conditional_pass_as_output_coupling_scope_architecture_pending_sac`。下一步Scope Attribution Confirmation只回答
+两项阻塞归因：ISCF是否超过active-param gap不超过`0.4646%`的near-matched `Q1-WIDE` shared map，以及是否超过same-parameter
+`RANDOM-PARTITION`，后者破坏中间scopes的temporal contiguity/nesting。两项都通过才进入modern baselines；任一失败，
+ISCF降为strong carrier/control，不做rank、seed、partition、loss或router rescue。candidate code不变，25个new
+control trainings与formal test尚未授权。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_post_cpsi_step45_20260721/step4_5_scope_independence_narrative_gate.md`与
+`configs/stage_c_iscf_v0_scope_attribution_confirmation.json`。
 
 [ISCF-v1-CPSI Step9/10, 2026-07-21] 25/25 trainings、25/25 formal tests与10 historical references全部
 protocol valid。CPSI相对ISCF-v0 test MSE/MAE为`-2.2128%/-1.6987%`，仅4/20与5/20 cells、1/5 datasets

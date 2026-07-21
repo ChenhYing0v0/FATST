@@ -1,0 +1,156 @@
+{
+  "stage": "StageC-UVHF",
+  "candidate_id": "SC1-ISCF-v0-SAC",
+  "candidate_version": "SC1-ISCF-v0-SAC-v1",
+  "status": "step6_design_frozen_remote_not_authorized",
+  "current_step": "post-CPSI Step4/5 conditional pass; scope attribution confirmation designed",
+  "test_informed": true,
+  "candidate": {
+    "id": "iscf_v0",
+    "readout_mode": "siff-independent-scope-control",
+    "policy_mode": "direct",
+    "objective_mode": "equal_skill",
+    "partition": "canonical",
+    "coupling_scales": [1, 48, 144, 360, 720],
+    "coordinate_dim": 4,
+    "series_length": 720,
+    "code_change": false
+  },
+  "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"],
+  "seeds": [2021, 2022, 2023],
+  "profiles": {
+    "path": "configs/stage_c_five_dataset_natural_profiles.json",
+    "sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a"
+  },
+  "ranks": {
+    "independent": {
+      "ETTh1": 109,
+      "ETTh2": 116,
+      "ETTm1": 116,
+      "ETTm2": 106,
+      "Weather": 116
+    },
+    "q1_wide": {
+      "ETTh1": 463,
+      "ETTh2": 430,
+      "ETTm1": 430,
+      "ETTm2": 485,
+      "Weather": 430
+    }
+  },
+  "arms": [
+    {
+      "id": "iscf_v0",
+      "role": "frozen_candidate_reference",
+      "source": "existing_three_seed_FCC_checkpoints",
+      "new_training": false
+    },
+    {
+      "id": "iscf_q1_wide",
+      "role": "near_matched_width_shared_map_control",
+      "readout_mode": "siff-q1-wide-control",
+      "policy_mode": "direct",
+      "objective_mode": "equal_skill",
+      "partition": "canonical",
+      "historical_seeds": [2021],
+      "new_seeds": [2022, 2023],
+      "new_runs": 10
+    },
+    {
+      "id": "iscf_random_partition",
+      "role": "matched_parameter_temporal_structure_control",
+      "readout_mode": "siff-independent-scope-control",
+      "policy_mode": "direct",
+      "objective_mode": "equal_skill",
+      "partition": "random",
+      "partition_seed": 15101,
+      "new_seeds": [2021, 2022, 2023],
+      "new_runs": 15
+    },
+    {
+      "id": "a6_full",
+      "role": "frozen_package_performance_reference",
+      "source": "existing_three_seed_FCC_checkpoints",
+      "new_training": false
+    },
+    {
+      "id": "siff_ordered",
+      "role": "frozen_ordered_field_context",
+      "source": "existing_three_seed_FCC_checkpoints",
+      "new_training": false
+    }
+  ],
+  "training": {
+    "from_scratch": true,
+    "joint_encoder_decoder": true,
+    "pred_len": 720,
+    "target_horizons": [720],
+    "validation_horizons": [96, 192, 336, 720],
+    "checkpoint_score": "mean_validation_mse_h96_h192_h336_h720",
+    "checkpoint_policy": "best-val",
+    "epochs": 20,
+    "patience": 5,
+    "batch_size": 32,
+    "learning_rate": 0.0001,
+    "evaluation_prefix_mode": "full-crop",
+    "test_labels_select_checkpoint": false
+  },
+  "matrix": {
+    "new_training_runs": 25,
+    "historical_reference_runs": 35,
+    "effective_runs": 60,
+    "standard_horizons": [96, 192, 336, 720],
+    "metrics": ["mse", "mae"],
+    "full_matrix_required": true,
+    "partial_reporting_allowed": false,
+    "formal_test_before_all_training_complete": false
+  },
+  "primary_comparisons": [
+    {
+      "id": "independent_over_q1_wide",
+      "candidate": "iscf_v0",
+      "reference": "iscf_q1_wide",
+      "tests": "scope-specific mode maps beyond near-matched shared width",
+      "mse_macro_gain_percent_min": 0.5,
+      "maximum_absolute_active_parameter_gap_percent": 0.4646379821436204
+    },
+    {
+      "id": "canonical_over_random_partition",
+      "candidate": "iscf_v0",
+      "reference": "iscf_random_partition",
+      "tests": "contiguous nested future-output grouping beyond arbitrary branches",
+      "mse_macro_gain_percent_min": 0.3,
+      "exact_parameter_and_initialization_match": true
+    }
+  ],
+  "gates": {
+    "mse_dataset_wins_min": 3,
+    "mse_horizon_wins_min": 3,
+    "mse_positive_seed_macros_min": 2,
+    "mae_macro_gain_percent_min_exclusive": 0.0,
+    "all_primary_comparisons_must_pass": true
+  },
+  "q1_active_parameter_audit": {
+    "gap_definition": "100 * (iscf_active_forward_parameters - q1_active_forward_parameters) / iscf_active_forward_parameters",
+    "ETTh1": -0.15641300263738353,
+    "ETTh2": 0.4582303678786463,
+    "ETTm1": 0.4646379821436204,
+    "ETTm2": 0.10847228834344737,
+    "Weather": 0.4582303678786463
+  },
+  "failure_attribution": {
+    "q1_wide_fails": "capacity_or_shared_width_explains; ISCF remains carrier only",
+    "random_partition_fails": "temporal_scope_structure_not_supported; generic independent branches explain",
+    "numeric_or_protocol_pathology": "repair exact protocol without direction rejection",
+    "both_pass": "iscf_scope_architecture_supported_pending_modern_baselines"
+  },
+  "authorization": {
+    "model_change": false,
+    "remote_training": false,
+    "formal_test": false,
+    "confirmation_seeds": false,
+    "router": false,
+    "second_loss": false,
+    "requested_h_conditioning": false
+  }
+}
