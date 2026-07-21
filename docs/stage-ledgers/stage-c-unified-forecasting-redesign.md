@@ -6,41 +6,41 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | CPSI 25 new / 35 effective matrix能否通过Step7B prelaunch并保持training/test严格分离？ |
+| `active_question` | CPSI 25-run matrix能否通过remote resource/optimization/artifact gate并完成frozen test？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | ISCF-v1-CPSI implementation-ready active candidate；ISCF-v0/A6_FULL frozen references |
+| `active_candidates` | ISCF-v1-CPSI formal-screen active candidate；ISCF-v0/A6_FULL frozen references |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
 | `stage_exit` | 新problem先通过existence/narrative gate，再决定一项或两项可归因contributions |
-| `stage_rollback` | Step7A 81/81 pass；Step7B protocol gate next；mild diagnostics continue to frozen test；CTD paused |
+| `stage_rollback` | Step7A 81/81、Step7B 18/18 pass；mild diagnostics continue to frozen test；CTD paused |
 
 ## Decision Cursor
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | ISCF-v1-CPSI Step7A local complete；advance Step7B prelaunch |
-| `current_candidate` | ISCF-v1-CPSI implementation-ready；effectiveness pending |
-| `latest_decision` | `step7a_local_pass_step7b_prelaunch_next` |
-| `next_required_action` | build/audit 25-run manifest, training/test separation, historical refs, internal metrics and analyzer |
-| `method_training_authorized` | remote/test false until Step7B + commit/GPU preflight |
-| `rollback_point` | protocol/hard artifact fault repairs Step7B；mild control results cannot reject before test |
+| `current_11_step` | ISCF-v1-CPSI Step7B prelaunch complete；advance Step8 remote |
+| `current_candidate` | ISCF-v1-CPSI formal-screen ready；effectiveness pending |
+| `latest_decision` | `step7b_prelaunch_pass_step8_authorized` |
+| `next_required_action` | commit/push；remote pull/GPU preflight；dual resource smoke；25-run training |
+| `method_training_authorized` | seed2021 remote + 25/25后single formal test true；confirmation false |
+| `rollback_point` | remote numeric/artifact fault repairs Step7；mild control results cannot reject before test |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | ISCF Step7A local implementation complete；Step7B prelaunch next |
+| `current_step` | ISCF Step7B prelaunch complete；Step8 remote next |
 | `problem` | confirmed common/private scope response dependence能否超越linear reparameterization和generic nonlinear capacity？ |
 | `existence_evidence` | D1.1 15/15 above direction/random controls；common/private `0.2803/0.7197`；topology 4/5；low-rank/output order仍fail |
 | `idea` | common mean × scope-private deviation multiplicative interaction before `_scope_forecast`；no router/loss |
 | `theory_check` | linear mixing exact absorbable；product path nonlinear、equivariant、`W_o=0` exact ISCF morph；Bayes set unchanged |
-| `design` | five production readouts implemented；81/81 local gate；25 new / 35 effective matrix retained |
-| `narrative_gate` | Step6 pass；Step7A implementation pass；effectiveness pending |
-| `effectiveness_gate` | not applicable；ISCF carrier evidence retained；no new method |
-| `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step7a_20260721/step7a_implementation_audit.md`；`docs/code-explanation/stage-c-iscf-v1-cpsi-step7a.md` |
-| `decision` | `step7a_local_pass_step7b_prelaunch_next`；remote/test false |
+| `design` | five production readouts；81/81 local；18/18 prelaunch；25 new / 35 effective matrix frozen |
+| `narrative_gate` | Step6 pass；Step7A/7B pass；effectiveness pending |
+| `effectiveness_gate` | pending official test；validation/control mild negative cannot eliminate |
+| `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step7b_prelaunch_20260721/prelaunch_report.md`；`docs/code-explanation/stage-c-iscf-v1-cpsi-step7b.md` |
+| `decision` | `step7b_prelaunch_pass_step8_authorized`；confirmation false |
 
 ## Frozen Carrier Contract
 
@@ -66,7 +66,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | --- | --- | --- | --- | --- | --- |
 | `A6-LBF-natural-baseline` | `control_only` | validation-frozen natural profiles可作为稳定共同起点 | not required | 72/72 test；3 seeds；dense horizons | `frozen_test_reference_ready`；只作固定reference |
 | `ISCF-v0` | `strong_carrier_step5_theory_parent` | independent scopes已确认non-ordered response dependence；late-only fusion可能是architecture mismatch | Step4 problem pass；carrier only | vs A6_FULL +1.3584%；D1.1 15/15 controls、4/5 topology | frozen parent/control |
-| `ISCF-v1-CPSI` | `step7a_local_pass_step7b_next` | common scope state应在native synthesis前非线性调制private deviation | test-first design pass；generic set/multiscale claim forbidden | implementation 81/81；no performance result | Step7B prelaunch；remote/test still false |
+| `ISCF-v1-CPSI` | `step7b_prelaunch_pass_step8_authorized` | common scope state应在native synthesis前非线性调制private deviation | test-first design pass；generic set/multiscale claim forbidden | implementation 81/81；prelaunch 18/18；no performance result | commit-pinned Step8 remote；25/25后single test |
 | `SC-D22-HFA` | `completed_target_access_supported` | target-coordinate-specific access是否超越matched generic与shuffles | problem evidence pass；not method effectiveness | ordered vs generic +2.5228%；15/20；4/5；all five controls pass | handoff D23 Step4 |
 | `SC-D23-FCMI` | `closed_capacity_control_explains` | generic main与coordinate interaction能否可识别分解并原生fallback | conditional pass | FCMI vs A6 -21.7343%；capacity/order fail；internal pass | no seeds/rescue；return Step2/3 |
 | `SC-D24-CTB` | `diagnostic_only_closed_exact_negative` | strong fixed trajectory synthesis是否留下ordered-history可识别coarse deformation | not method gate | v1.1 ordered loses all primary controls；test=0 | no rescue；return Step2/4 consolidation |
@@ -249,6 +249,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SIFF post-TSAF 2x2 Step2 audit | four existing E2E arms + field/policy interaction + same-rank/split sensitivity + latest primary sources | same-rank test interaction MSE/MAE `-0.3097%/-0.1175%`；full positive rank-confounded | weak lead not supported for Step4；SIFF-v2 narrow claim consolidation next | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_post_tsaf_independent_factorial_audit.md` |
 | SIFF-v2 final claim Step4-6 | tensor/theory/prior/evidence audit + single-contribution boundary + three-seed FCC design | narrative conditional pass；main and independent gaps remain blockers；30 new runs frozen | FCC waiting authorization；method unchanged；modern baselines remain blocked | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_final_paper_claim_and_confirmation_design.md` |
 | SIFF-v2 FCC Step7B prelaunch | A6_FULL comparator freeze + 30-job runner + 15-reference audit + three-seed analyzer | 25/25 checks；30/30 jobs；15/15 references complete/unique/init-paired；A6_MEASURE absent | remote/test authorized；commit-pinned preflight/resource smoke next | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/prelaunch_report.md` |
+| ISCF-v1-CPSI Step7B prelaunch | five new arms + ISCF/A6_FULL references + test-first controls | 18/18；25 new/35 effective；10/10 hashes；runner/analyzer/evaluator pass | seed2021 remote + 25/25后single test true；confirmation false | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step7b_prelaunch_20260721/prelaunch_report.md` |
 | SIFF-v2 FCC Step8 launch | commit-pinned pull + 3-GPU preflight + dual resource smoke + background driver | `87bea35`；smokes finite/no-OOM；first three Weather jobs active；test 0/30 | training active；30/30 before one formal test | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/remote_launch_record.md` |
 | SIFF-v2 FCC Step9/10 | 30 new E2E runs + one formal test + 45-run/180-cell three-seed audit | vs A6_FULL MSE/MAE +1.2497%/+0.7549%；vs independent -0.1272%/-0.1733%；health 6/6 | performance pass but attribution fail；stop promotion；portfolio decision | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1/step9_10_result_and_portfolio_decision.md` |
 

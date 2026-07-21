@@ -5,14 +5,27 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | ISCF-v1-CPSI Step7A local 81/81 pass；advance Step7B prelaunch |
-| `active_question` | 25 new / 35 effective formal matrix能否通过runner、artifact、hash、diagnostic和test-separation prelaunch？ |
-| `active_candidates` | ISCF-v1-CPSI implementation-ready active candidate；ISCF-v0/A6_FULL frozen references |
+| `current_step` | ISCF-v1-CPSI Step7B prelaunch 18/18 pass；advance Step8 remote training |
+| `active_question` | 25/25 new runs能否在frozen protocol下完成且无numeric/artifact pathology？ |
+| `active_candidates` | ISCF-v1-CPSI formal-screen candidate；ISCF-v0/A6_FULL frozen references |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step6_design_20260721/step6_control_design_and_test_policy.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | Step7A pass；Step7B tooling next；remote/test false |
-| `rollback_point` | Step7B protocol invalidity repairs tooling；mild validation diagnostics do not reject；official test decides exact v1 |
+| `method_implementation` | Step7A + Step7B pass；seed2021 remote/one complete test authorized；confirmation false |
+| `rollback_point` | remote pathology repairs Step7；mild validation diagnostics do not reject；official test decides exact v1 |
+
+## ISCF-v1-CPSI Step7B Prelaunch Decision
+
+frozen matrix为25 new trainings + 10 hashed historical references；35 effective runs覆盖H96/192/336/720的140 MSE
+与140 MAE cells。runner将validation-only training与formal test拆开，并要求25/25 training artifacts齐全才开放一次
+test。SELF/LINEAR/COMMON/POST始终是intermediate diagnostics，不因validation排序删除。
+
+18/18 machine checks通过：profile/config/auth、control governance、reference hashes、five constructors、paired parent
+hash、runner syntax/dry-run与analyzer smoke。evaluator已落盘六类CPSI internal RMS；analyzer分别裁决effectiveness、
+matched attribution、health与failure cause。
+
+Decision=`step7b_prelaunch_pass_step8_authorized`。下一步commit-pinned remote pull、GPU preflight、dual resource smoke后
+启动25-run seed2021 matrix；25/25后才执行single formal test。confirmation、router、second loss保持false。
 
 ## ISCF-v1-CPSI Step7A Implementation Decision
 

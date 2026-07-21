@@ -1,0 +1,19 @@
+category,case,value,threshold,pass
+contract,profile_hash,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a,True
+contract,matrix_35,35,35,True
+contract,launch_25,25,25,True
+contract,test_authorized,True,True,True
+governance,controls_intermediate,True,True,True
+governance,controls_do_not_block_test,True,True,True
+reference,source_config_hash,f0600be7c5b79445a1055463e0a41486a52f16daa20068c610d56457bd03836a,f0600be7c5b79445a1055463e0a41486a52f16daa20068c610d56457bd03836a,True
+reference,source_audit_hash,64d89c07ee5151b6dcdd50d6eee60fad15f5df03fdbf6a68fb4847772f08e366,64d89c07ee5151b6dcdd50d6eee60fad15f5df03fdbf6a68fb4847772f08e366,True
+reference,ten_frozen_runs,True,True,True
+model,iscf_v1_cpsi,41856,>0 and finite,True
+model,iscf_v1_cpsi_self,41856,>0 and finite,True
+model,iscf_v1_cpsi_linear,41856,>0 and finite,True
+model,iscf_v1_cpsi_common,41856,>0 and finite,True
+model,iscf_v1_cpsi_post,41040,>0 and finite,True
+model,paired_parent_hash,1,1,True
+execution,runner_syntax,,returncode=0,True
+execution,runner_dry_run,5 config_hash=bb7bfe58ef9d11eb239c6d3f4f027581cd8574faba716052a402068ed80554f9 profile_hash=80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a remote_authorized=true test_authorized=true,returncode=0,True
+execution,analyzer_smoke,cpsi_analyzer_synthetic_smoke=pass,returncode=0,True

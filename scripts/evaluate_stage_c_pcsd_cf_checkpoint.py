@@ -398,6 +398,24 @@ def fcmi_tensors(
     return payload
 
 
+def cpsi_tensors(
+    model: TimeAlign.Model,
+    batch_x: torch.Tensor,
+) -> dict[str, torch.Tensor] | None:
+    """Return reduced CPSI interaction health tensors per series row."""
+    readout = getattr(model, "pcsd_readout", None)
+    if readout is None or not hasattr(readout, "interaction_diagnostics"):
+        return None
+    memory = model.encode_history(batch_x)
+    hidden = memory.flatten(start_dim=-2)
+    tensors = readout.interaction_diagnostics(hidden)
+    payload = {}
+    for name in ("common", "private", "left", "right", "latent", "message"):
+        value = tensors[name]
+        payload[name] = value.square().mean(dim=(-2, -1)).sqrt()
+    return payload
+
+
 def diagnostic_bins(design: dict[str, Any]) -> list[dict[str, Any]]:
     if "diagnostic_protocol" in design:
         return design["diagnostic_protocol"]["future_bins"]
@@ -516,6 +534,10 @@ def evaluate(args: argparse.Namespace) -> None:
     probe_fcmi_main_only_output: list[np.ndarray] = []
     probe_fcmi_interaction_contribution: list[np.ndarray] = []
     probe_fcmi_dense_residual: list[np.ndarray] = []
+    probe_cpsi: dict[str, list[np.ndarray]] = {
+        name: []
+        for name in ("common", "private", "left", "right", "latent", "message")
+    }
     probe_count = 0
     all_finite = True
     prefix_rows: list[dict[str, Any]] | None = None
@@ -791,6 +813,17 @@ def evaluate(args: argparse.Namespace) -> None:
                         bool(torch.isfinite(value).all())
                         for value in fcmi_health.values()
                     )
+                cpsi_health = cpsi_tensors(model, batch_x)
+                if cpsi_health is not None:
+                    count = probe_batch_count
+                    for name, value in cpsi_health.items():
+                        probe_cpsi[name].append(
+                            value.reshape(-1)[:count].cpu().numpy()
+                        )
+                    all_finite = all_finite and all(
+                        bool(torch.isfinite(value).all())
+                        for value in cpsi_health.values()
+                    )
             all_finite = all_finite and bool(
                 torch.isfinite(fused).all() and torch.isfinite(target).all()
             )
@@ -921,6 +954,11 @@ def evaluate(args: argparse.Namespace) -> None:
             payload["probe_fcmi_dense_residual"] = np.concatenate(
                 probe_fcmi_dense_residual
             ).astype(np.float32)
+    if probe_cpsi["common"]:
+        for name, values in probe_cpsi.items():
+            payload[f"probe_cpsi_{name}_rms"] = np.concatenate(values).astype(
+                np.float32
+            )
     artifact_prefix = (
         "validation" if args.evaluation_split == "val" else "test_audit"
     )
@@ -975,7 +1013,28 @@ def evaluate(args: argparse.Namespace) -> None:
         and test_authorized
     )
     readout_contract_pass = True
-    if hasattr(model, "pcsd_readout"):
+    if (
+        hasattr(model, "pcsd_readout")
+        and hasattr(model.pcsd_readout, "interaction_diagnostics")
+    ):
+        readout_contract_pass = bool(
+            initialization.get("cpsi_parent_initialization_hash")
+            and initialization.get("cpsi_input_initialization_hash")
+            and diagnostics.get("cpsi_interaction_rank") == 32
+            and diagnostics.get("cpsi_interaction_parameters", 0) > 0
+            and all(
+                f"probe_cpsi_{name}_rms" in payload
+                for name in (
+                    "common",
+                    "private",
+                    "left",
+                    "right",
+                    "latent",
+                    "message",
+                )
+            )
+        )
+    elif hasattr(model, "pcsd_readout"):
         readout_contract_pass = bool(
             initialization.get("pcsd_initialization_hash")
             and initialization.get("pcsd_coordinate_hash")
@@ -1131,6 +1190,7 @@ def evaluate(args: argparse.Namespace) -> None:
         "compact_history_diagnostics_present": (
             "probe_history_summary" in payload
         ),
+        "cpsi_diagnostics_present": "probe_cpsi_message_rms" in payload,
         "all_finite": all_finite,
         "protocol_pass": protocol_pass,
         "readout_contract_pass": readout_contract_pass,

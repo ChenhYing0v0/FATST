@@ -7,14 +7,29 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；`ISCF-v1-CPSI` is a working research ID, not final title |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF-v1-CPSI Step7A local 81/81 pass；advance Step7B prelaunch |
+| `current_11_step` | ISCF-v1-CPSI Step7B prelaunch 18/18 pass；advance commit-pinned remote Step8 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | CPSI implementation-ready active candidate；effectiveness/attribution pending；remote/test false |
+| `paper_core_status` | CPSI formal-screen active candidate；effectiveness/attribution pending；seed2021 remote + one complete test authorized |
+
+[ISCF-v1-CPSI Step7B, 2026-07-21] frozen config将CPSI/SELF/LINEAR/COMMON/POST五arms × five datasets
+固定为25个new trainings，并以checkpoint hash复用ISCF-v0/A6_FULL 10个historical references，构成35 effective
+runs、140 MSE cells与140 MAE cells。validation只作four-horizon checkpoint selector与health；runner在25/25
+training artifacts完成前硬拒绝formal test，且test前后核验checkpoint nonmutation。
+
+machine prelaunch为18/18：matrix/auth/governance、10 references、five model constructors、paired parent hash、runner
+syntax/dry-run与analyzer smoke全过。evaluator新增common/private/left/right/latent/message RMS和trained output norm，
+用于区分dead path、capacity explanation与mechanism attribution。四controls保持intermediate diagnostics：轻微负向不会
+阻断test；只有完整test MSE/MAE后才按Step6 severity决定exact v1。
+
+Decision=`step7b_prelaunch_pass_step8_authorized`。用户已授权seed2021的25-run training及全部完成后的单次formal
+test；confirmation仍false。下一步为commit/push、remote pull、GPU preflight和Weather-CPSI/ETTm2-POST resource
+smokes。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step7b_prelaunch_20260721/prelaunch_report.md`。
 
 [ISCF-v1-CPSI Step7A, 2026-07-21] production implementation新增五个readout modes，在parent ISCF初始化后创建
 interaction matrices，保持paired base RNG path。local checker在conda `r2026-fsa`中81/81通过：readout 50/50、

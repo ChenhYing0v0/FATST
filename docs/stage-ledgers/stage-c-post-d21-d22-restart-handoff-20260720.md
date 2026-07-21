@@ -36,11 +36,14 @@
 27. `configs/stage_c_iscf_v1_cpsi_step6.json`；
 28. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step7a_20260721/step7a_implementation_audit.md`；
 29. `docs/code-explanation/stage-c-iscf-v1-cpsi-step7a.md`；
-30. `configs/stage_c_iscf_v0_carrier.json`；
-31. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
-32. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
-33. `docs/paper-mainline.md`；
-34. `docs/research-roadmap.md`。
+30. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step7b_prelaunch_20260721/prelaunch_report.md`；
+31. `docs/code-explanation/stage-c-iscf-v1-cpsi-step7b.md`；
+32. `configs/stage_c_iscf_v1_cpsi_step7b.json`；
+33. `configs/stage_c_iscf_v0_carrier.json`；
+34. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
+35. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
+36. `docs/paper-mainline.md`；
+37. `docs/research-roadmap.md`。
 
 若上述文件与更旧的聊天、archive或历史段落冲突，以本文件和三份主线文档顶部的最新cursor为准。
 
@@ -51,15 +54,15 @@
 | `project` | R_2026_FATST |
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-21 |
-| `source_parent_commit` | `d647874`（Step7B开始前parent） |
-| `current_step` | ISCF-v1-CPSI Step7A local 81/81 pass；advance Step7B prelaunch |
-| `active_problem` | 25 new / 35 effective test-first matrix能否通过protocol、hash、artifact与resource prelaunch？ |
-| `active_method` | ISCF-v1-CPSI implementation-ready；effectiveness pending |
-| `method_training_authorized` | remote training false until Step7B and commit/GPU preflight |
-| `remote_training_authorized` | false；D1/D1.1 validation frozen inference complete；formal test false |
-| `next_action` | build runner/analyzer, audit historical refs, freeze internal diagnostics and execute Step7B machine gate |
-| `conditional_next` | Step7B pass -> commit/GPU preflight -> 25 training -> one complete test audit |
-| `rollback` | hard local invalidity repairs design；mild diagnostic negatives continue to test；ordered/router/loss remain blocked |
+| `source_parent_commit` | `b0b9d7c`（Step7B worktree parent） |
+| `current_step` | ISCF-v1-CPSI Step7B prelaunch 18/18 pass；advance Step8 remote |
+| `active_problem` | 25 new runs能否无numeric/artifact pathology完成并在frozen test MSE/MAE上支持CPSI？ |
+| `active_method` | ISCF-v1-CPSI formal-screen candidate；effectiveness pending |
+| `method_training_authorized` | seed2021 25-run remote true；confirmation false |
+| `remote_training_authorized` | true；25/25后single complete formal test true；不得提前test |
+| `next_action` | commit/push -> remote pull/GPU preflight -> dual resource smoke -> 25 training |
+| `conditional_next` | 25/25 training/artifact pass -> one complete 25-run test -> four-layer decision |
+| `rollback` | numeric/artifact pathology repairsStep7；mild diagnostic negatives continue to test；router/loss remain blocked |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
 
@@ -205,6 +208,14 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
     zero message、two-stage gradients与profile parameters均pass；没有training/validation/test。
 53. Decision=`step7a_local_pass_step7b_prelaunch_next`；active method为implementation-ready/effectiveness pending，
     下一步只做Step7B，remote/test继续false。
+54. Step7B冻结25 new trainings + ISCF/A6_FULL 10 historical references；35 effective runs形成140 MSE与140 MAE
+    official-test cells，validation只作selector/health。
+55. prelaunch machine gate 18/18通过；10/10 reference hashes、five constructors、paired parent hash、runner dry-run、
+    analyzer smoke与CPSI internal probes均pass。
+56. SELF/LINEAR/COMMON/POST保持intermediate diagnostics；runner在25/25 training前硬拒绝test，轻微validation
+    negative不能淘汰任何arm。
+57. Decision=`step7b_prelaunch_pass_step8_authorized`；用户授权seed2021 remote与训练完成后的single formal test；
+    confirmation、router、second loss仍false。
 
 ## 5. D22-HFA 的执行顺序
 
