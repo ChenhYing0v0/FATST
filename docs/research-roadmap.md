@@ -5,14 +5,25 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | ISCF-v1-CPSI Step6 design pass；advance Step7A production-local implementation |
-| `active_question` | CPSI在完整test MSE/MAE前能否通过shape/morphism/gradient/parameter local production gate？ |
-| `active_candidates` | `ISCF-v0` frozen carrier；`ISCF-v1-CPSI` active working candidate；active_method=none pending Step7A |
+| `current_step` | ISCF-v1-CPSI Step7A local 81/81 pass；advance Step7B prelaunch |
+| `active_question` | 25 new / 35 effective formal matrix能否通过runner、artifact、hash、diagnostic和test-separation prelaunch？ |
+| `active_candidates` | ISCF-v1-CPSI implementation-ready active candidate；ISCF-v0/A6_FULL frozen references |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step6_design_20260721/step6_control_design_and_test_policy.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | local Step7A authorized；remote/test false until implementation/prelaunch gates |
-| `rollback_point` | hard local pathology repairs Step6/7A；mild diagnostics do not reject；official test decides exact CPSI-v1 effectiveness |
+| `method_implementation` | Step7A pass；Step7B tooling next；remote/test false |
+| `rollback_point` | Step7B protocol invalidity repairs tooling；mild validation diagnostics do not reject；official test decides exact v1 |
+
+## ISCF-v1-CPSI Step7A Implementation Decision
+
+five production modes已接入`TimeAlign` coupling path与active CLI。81/81 local cases覆盖zero-init exact parent morph、
+scope equivariance、private-absent zero message、two-stage gradient opening、真实model full/prefix forward、five CLI和five
+profile parameter formulas。五arms base initialization hash相同，morph gap均为0；未发现NaN、permanent zero path或shape/
+parameter mismatch。
+
+Decision=`step7a_local_pass_step7b_prelaunch_next`。active method状态提升为
+`implementation_ready_effectiveness_pending`，但这不是performance pass。下一步只做Step7B runner/analyzer、historical
+reference contract与resource prelaunch；remote/test execution仍false。
 
 ## ISCF-v1-CPSI Step6 Design Decision
 

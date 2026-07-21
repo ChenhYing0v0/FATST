@@ -1,0 +1,82 @@
+{
+  "cases": 81,
+  "categories": {
+    "cli": {
+      "cases": 5,
+      "passed": 5
+    },
+    "equivariance": {
+      "cases": 5,
+      "passed": 5
+    },
+    "gradient": {
+      "cases": 10,
+      "passed": 10
+    },
+    "model": {
+      "cases": 5,
+      "passed": 5
+    },
+    "profile_parameters": {
+      "cases": 5,
+      "passed": 5
+    },
+    "readout": {
+      "cases": 50,
+      "passed": 50
+    },
+    "semantics": {
+      "cases": 1,
+      "passed": 1
+    }
+  },
+  "decision": "step7a_local_pass_step7b_prelaunch_next",
+  "passed": 81,
+  "readouts": {
+    "iscf-v1-cpsi": {
+      "effective_rank": 32,
+      "interaction_mode": "common-private",
+      "interaction_parameters": 1536,
+      "interaction_width": 16,
+      "morph_gap": 0.0,
+      "parent_gap": 0.0,
+      "pass": true
+    },
+    "iscf-v1-cpsi-common": {
+      "effective_rank": 32,
+      "interaction_mode": "common",
+      "interaction_parameters": 1536,
+      "interaction_width": 16,
+      "morph_gap": 0.0,
+      "parent_gap": 0.0,
+      "pass": true
+    },
+    "iscf-v1-cpsi-linear": {
+      "effective_rank": 32,
+      "interaction_mode": "linear",
+      "interaction_parameters": 1536,
+      "interaction_width": 16,
+      "morph_gap": 0.0,
+      "parent_gap": 0.0,
+      "pass": true
+    },
+    "iscf-v1-cpsi-post": {
+      "effective_rank": 1,
+      "interaction_mode": "post-synthesis",
+      "interaction_parameters": 2160,
+      "interaction_width": 720,
+      "morph_gap": 0.0,
+      "parent_gap": 0.0,
+      "pass": true
+    },
+    "iscf-v1-cpsi-self": {
+      "effective_rank": 32,
+      "interaction_mode": "self",
+      "interaction_parameters": 1536,
+      "interaction_width": 16,
+      "morph_gap": 0.0,
+      "parent_gap": 0.0,
+      "pass": true
+    }
+  }
+}

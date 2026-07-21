@@ -89,6 +89,7 @@ PREFIX_READOUT_MODES = {
     "siff-permuted-scale-control",
     "siff-q1-wide-control",
     "siff-independent-scope-control",
+    *TimeAlign.CPSI_READOUTS,
     "siff-dense-nonlinear-matched",
     "ccsf-coupling-field",
     "ccsf-no-contrast-control",
@@ -128,6 +129,7 @@ STAGE_C_ACTIVE_READOUTS = {
     "siff-permuted-scale-control",
     "siff-q1-wide-control",
     "siff-independent-scope-control",
+    *TimeAlign.CPSI_READOUTS,
     "siff-dense-nonlinear-matched",
     "ccsf-coupling-field",
     "ccsf-no-contrast-control",
@@ -647,6 +649,38 @@ def initialization_contract(model: nn.Module) -> dict[str, Any]:
                     ),
                     "tsaf_allocation_scale_hash": _tensor_hash(
                         [readout.allocation_scale_features]
+                    ),
+                }
+            )
+        if hasattr(readout, "interaction_mode"):
+            parent_parameters = [
+                parameter
+                for name, parameter in readout.named_parameters()
+                if name
+                not in {
+                    "common_projection",
+                    "private_projection",
+                    "interaction_output",
+                }
+            ]
+            payload.update(
+                {
+                    "cpsi_parent_initialization_hash": _tensor_hash(
+                        parent_parameters
+                    ),
+                    "cpsi_input_initialization_hash": _tensor_hash(
+                        [
+                            readout.common_projection,
+                            readout.private_projection,
+                        ]
+                    ),
+                    "cpsi_output_initial_max_abs": float(
+                        readout.interaction_output.abs().max().item()
+                    ),
+                    "cpsi_interaction_mode": readout.interaction_mode,
+                    "cpsi_interaction_rank": int(readout.interaction_rank),
+                    "cpsi_effective_interaction_rank": int(
+                        readout.effective_interaction_rank
                     ),
                 }
             )
@@ -1176,6 +1210,12 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
                 "pcsd_readout.target_scale_allocation_bias",
                 "pcsd_readout.target_scale_allocation_output.",
             )
+        if hasattr(readout, "interaction_mode"):
+            active_prefixes += (
+                "pcsd_readout.common_projection",
+                "pcsd_readout.private_projection",
+                "pcsd_readout.interaction_output",
+            )
         active_parameters = sum(
             parameter.numel()
             for name, parameter in model.named_parameters()
@@ -1227,6 +1267,29 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
                     .tolist(),
                     "siff_scale_basis_hash": _tensor_hash(
                         [readout.scale_basis]
+                    ),
+                }
+            )
+        if hasattr(readout, "interaction_mode"):
+            payload.update(
+                {
+                    "cpsi_interaction_mode": readout.interaction_mode,
+                    "cpsi_interaction_rank": int(readout.interaction_rank),
+                    "cpsi_effective_interaction_rank": int(
+                        readout.effective_interaction_rank
+                    ),
+                    "cpsi_interaction_width": int(readout.interaction_width),
+                    "cpsi_interaction_parameters": int(
+                        readout.interaction_parameters
+                    ),
+                    "cpsi_common_projection_norm": float(
+                        readout.common_projection.norm().item()
+                    ),
+                    "cpsi_private_projection_norm": float(
+                        readout.private_projection.norm().item()
+                    ),
+                    "cpsi_output_projection_norm": float(
+                        readout.interaction_output.norm().item()
                     ),
                 }
             )
@@ -2395,6 +2458,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--grouped-mlp-partition-seed", type=int, default=14101)
     parser.add_argument("--pcsd-coordinate-dim", type=int, default=4)
     parser.add_argument("--pcsd-mode-rank", type=int, default=256)
+    parser.add_argument("--cpsi-rank", type=int, default=32)
     parser.add_argument("--pcsd-policy-history-dim", type=int, default=32)
     parser.add_argument("--pcsd-policy-hidden-dim", type=int, default=64)
     parser.add_argument(
@@ -2655,6 +2719,7 @@ def parse_args() -> argparse.Namespace:
         "siff-q1-wide-control",
         "siff-independent-scope-control",
         "ccsf-independent-scope-control",
+        *TimeAlign.CPSI_READOUTS,
     }:
         if args.pcsd_mode_rank <= 0:
             raise ValueError("matched SIFF control rank must be positive")
@@ -2664,6 +2729,11 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("PCSD-CF v1 requires pcsd_policy_history_dim=32")
     if args.pcsd_policy_hidden_dim != 64:
         raise ValueError("PCSD-CF v1 requires pcsd_policy_hidden_dim=64")
+    if args.readout_mode in TimeAlign.CPSI_READOUTS:
+        if args.cpsi_rank != 32:
+            raise ValueError("ISCF-v1-CPSI requires cpsi_rank=32")
+        if args.pcsd_policy_mode != "direct":
+            raise ValueError("ISCF-v1-CPSI requires pcsd_policy_mode=direct")
     if args.pcsd_group_chunk_size <= 0 or args.pcsd_target_chunk_size <= 0:
         raise ValueError("PCSD chunk sizes must be positive")
     if args.ccsf_correction_hidden_dim != 64:

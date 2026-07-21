@@ -7,14 +7,26 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；`ISCF-v1-CPSI` is a working research ID, not final title |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF-v1-CPSI Step6 design pass；advance Step7A production-local implementation |
+| `current_11_step` | ISCF-v1-CPSI Step7A local 81/81 pass；advance Step7B prelaunch |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | ISCF-v0 frozen carrier；CPSI active working candidate pending implementation/effectiveness；active_method=none |
+| `paper_core_status` | CPSI implementation-ready active candidate；effectiveness/attribution pending；remote/test false |
+
+[ISCF-v1-CPSI Step7A, 2026-07-21] production implementation新增五个readout modes，在parent ISCF初始化后创建
+interaction matrices，保持paired base RNG path。local checker在conda `r2026-fsa`中81/81通过：readout 50/50、
+equivariance 5/5、semantics 1/1、two-stage gradient 10/10、真实`TimeAlign.Model` 5/5、CLI 5/5、profile
+parameters 5/5。五arms的parent/output/arm/policy morph gap均为0，model parent hash一致；首次backward只打开
+zero-init output projection，一次synthetic update后两组input gradients和message全部finite/nonzero。
+
+Decision=`step7a_local_pass_step7b_prelaunch_next`。该结果只排除hard implementation pathology，不含validation/test
+MSE/MAE。下一步实现25-run manifest、training/test separation、historical ISCF/A6 hash audit、internal diagnostics和冻结
+analyzer；remote/test仍false。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step7a_20260721/step7a_implementation_audit.md`与
+`docs/code-explanation/stage-c-iscf-v1-cpsi-step7a.md`。
 
 [ISCF-v1-CPSI Step6 Design, 2026-07-21] 用户要求四个controls作为intermediate diagnostics，不因轻微负向
 提前关闭机制，并走到official-test MSE/MAE后判断effectiveness。Step6据此将validation角色限定为checkpoint与health：

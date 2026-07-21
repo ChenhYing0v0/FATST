@@ -34,11 +34,13 @@
 25. `configs/stage_c_iscf_v1_cpsi_step5.json`；
 26. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step6_design_20260721/step6_control_design_and_test_policy.md`；
 27. `configs/stage_c_iscf_v1_cpsi_step6.json`；
-28. `configs/stage_c_iscf_v0_carrier.json`；
-29. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
-30. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
-31. `docs/paper-mainline.md`；
-32. `docs/research-roadmap.md`。
+28. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step7a_20260721/step7a_implementation_audit.md`；
+29. `docs/code-explanation/stage-c-iscf-v1-cpsi-step7a.md`；
+30. `configs/stage_c_iscf_v0_carrier.json`；
+31. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
+32. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
+33. `docs/paper-mainline.md`；
+34. `docs/research-roadmap.md`。
 
 若上述文件与更旧的聊天、archive或历史段落冲突，以本文件和三份主线文档顶部的最新cursor为准。
 
@@ -50,13 +52,13 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-21 |
 | `source_parent_commit` | `d647874`（Step7B开始前parent） |
-| `current_step` | ISCF-v1-CPSI Step6 design pass；advance Step7A production-local implementation |
-| `active_problem` | CPSI能否通过local hard-validity gate并按test-first协议建立effectiveness与attribution？ |
-| `active_method` | none until Step7A pass；`ISCF-v1-CPSI` is the active working candidate |
-| `method_training_authorized` | local implementation true；remote training false until Step7B |
+| `current_step` | ISCF-v1-CPSI Step7A local 81/81 pass；advance Step7B prelaunch |
+| `active_problem` | 25 new / 35 effective test-first matrix能否通过protocol、hash、artifact与resource prelaunch？ |
+| `active_method` | ISCF-v1-CPSI implementation-ready；effectiveness pending |
+| `method_training_authorized` | remote training false until Step7B and commit/GPU preflight |
 | `remote_training_authorized` | false；D1/D1.1 validation frozen inference complete；formal test false |
-| `next_action` | implement CPSI/SELF/LINEAR/COMMON/POST and verify shape, morphism, pairing, two-step gradients, parameters and CLI |
-| `conditional_next` | Step7A pass -> Step7B prelaunch -> commit/GPU preflight -> 25 training -> one complete test audit |
+| `next_action` | build runner/analyzer, audit historical refs, freeze internal diagnostics and execute Step7B machine gate |
+| `conditional_next` | Step7B pass -> commit/GPU preflight -> 25 training -> one complete test audit |
 | `rollback` | hard local invalidity repairs design；mild diagnostic negatives continue to test；ordered/router/loss remain blocked |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
@@ -197,6 +199,12 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
 49. formal matrix为25 new trainings + 10 historical references = 35 effective runs、140 MSE和140 MAE cells。
     test inconclusive band为CPSI vs ISCF `[-0.5%,+0.3%)`；轻微负向不方向级拒绝。
 50. Decision=`step6_pass_step7a_local_authorized`；当前只授权local implementation，remote/test须等待Step7A/7B。
+51. CPSI/SELF/LINEAR/COMMON/POST五个production readouts已实现；parent initialization后再创建interaction
+    matrices，保持base RNG path与ISCF exact paired。
+52. Step7A local checker在`r2026-fsa`中81/81通过：five model/CLI、zero morph、equivariance、private-absent
+    zero message、two-stage gradients与profile parameters均pass；没有training/validation/test。
+53. Decision=`step7a_local_pass_step7b_prelaunch_next`；active method为implementation-ready/effectiveness pending，
+    下一步只做Step7B，remote/test继续false。
 
 ## 5. D22-HFA 的执行顺序
 
@@ -321,9 +329,11 @@ decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。
 5. configs/stage_c_iscf_v1_cpsi_step5.json
 6. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step6_design_20260721/step6_control_design_and_test_policy.md
 7. configs/stage_c_iscf_v1_cpsi_step6.json
-8. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
-9. docs/paper-mainline.md
-10. docs/research-roadmap.md
+8. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step7a_20260721/step7a_implementation_audit.md
+9. docs/code-explanation/stage-c-iscf-v1-cpsi-step7a.md
+10. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
+11. docs/paper-mainline.md
+12. docs/research-roadmap.md
 
 当前权威状态是：用户已将FCC matched independent-scope model冻结为`ISCF-v0` carrier。existing complete test table中，ISCF-v0相对A6_FULL MSE/MAE=`+1.3584%/+0.9144%`，5/5 datasets、4/4 horizons、3/3 seeds正向；这是test-informed carrier evidence，不是新method promotion。SIFF-v2 ordered attribution仍失败且immutable，TSAF/CCSF/D17-D21均关闭，CTD paused。
 
@@ -339,7 +349,9 @@ working candidate为`ISCF-v1-CPSI`：对`[B,C,S,D,K]` modes计算scope mean与ze
 
 formal matrix为25 new trainings，加ISCF-v0/A6_FULL 10 historical references，共35 effective runs、140 MSE与140 MAE cells。CPSI vs ISCF macro MSE `[-0.5%,+0.3%)`定义为inconclusive，不方向级拒绝；initial support要求`>=+0.3%`、3/5 datasets、10/20 cells与MAE guard。controls使用`±0.3%` attribution tie band。
 
-Decision=`step6_pass_step7a_local_authorized`。当前`active_method=none`，只授权实现five arms与local shape/morphism/paired-init/two-step-gradient/parameter/CLI checks。remote training与formal test execution须等待Step7A、Step7B、commit-pinned pull、GPU preflight和25/25 training完成；confirmation、router、second loss均未授权。
+Step7A production implementation现已完成。五个readout modes在parent ISCF初始化后创建interaction matrices；local checker在conda `r2026-fsa`中81/81通过。parent/output/arms/policy morph gap均为0，scope equivariance、private-absent zero message、five real `TimeAlign.Model` forwards、CLI、profile parameter formulas与two-stage gradient opening全部通过。没有training、validation comparison或test access。
+
+Decision=`step7a_local_pass_step7b_prelaunch_next`。`ISCF-v1-CPSI`现为implementation-ready/effectiveness-pending active method。下一步只允许构建并审核25-run manifest、training/test separation、historical ISCF/A6 hashes、internal diagnostics与frozen analyzer。remote training与formal test execution仍须等待Step7B、commit-pinned pull、GPU preflight和25/25 training完成；confirmation、router、second loss均未授权。
 
 完成后同步更新analysis report、docs/paper-mainline.md、docs/research-roadmap.md和Stage C ledger，执行最小诚实验证，并按AGENTS.md提交、推送。请从专业时序预测研究员角度进行审计，不要为了凑两个contributions而预先设计第二个loss/router。
 ```

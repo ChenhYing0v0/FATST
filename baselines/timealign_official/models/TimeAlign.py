@@ -4,6 +4,11 @@ import torch.nn.functional as F
 
 from layers.Alignment import glocal_align_ablation
 from layers.CCSF import CCSFCouplingFieldReadout
+from layers.CPSI import (
+    CPSI_READOUT_CONFIG,
+    CPSI_READOUT_MODES,
+    CPSIReadout,
+)
 from layers.Embed import PositionalEmbedding
 from layers.FCMI import (
     FCMI_READOUT_MODES,
@@ -103,6 +108,7 @@ SIFF_READOUT_CONFIG = {
 }
 SIFF_READOUTS = set(SIFF_READOUT_CONFIG)
 SIFF_CONTROL_READOUTS = {"siff-dense-nonlinear-matched"}
+CPSI_READOUTS = set(CPSI_READOUT_MODES)
 CCSF_READOUT_CONFIG = {
     "ccsf-coupling-field": (2, "ordered", "true"),
     "ccsf-no-contrast-control": (2, "ordered", "zero"),
@@ -110,7 +116,9 @@ CCSF_READOUT_CONFIG = {
     "ccsf-independent-scope-control": (5, "independent", "true"),
 }
 CCSF_READOUTS = set(CCSF_READOUT_CONFIG)
-COUPLING_READOUTS = PCSD_READOUTS | SIFF_READOUTS | CCSF_READOUTS
+COUPLING_READOUTS = (
+    PCSD_READOUTS | SIFF_READOUTS | CPSI_READOUTS | CCSF_READOUTS
+)
 D19_IMPLICIT_READOUTS = {
     "implicit-frequency-readout",
     "implicit-frequency-noskip-control",
@@ -463,6 +471,7 @@ class Model(nn.Module):
             *PCSD_CONTROL_READOUTS,
             *SIFF_READOUTS,
             *SIFF_CONTROL_READOUTS,
+            *CPSI_READOUTS,
             *CCSF_READOUTS,
             *D19_READOUTS,
             *FCMI_READOUTS,
@@ -489,6 +498,7 @@ class Model(nn.Module):
             | PCSD_CONTROL_READOUTS
             | SIFF_READOUTS
             | SIFF_CONTROL_READOUTS
+            | CPSI_READOUTS
             | CCSF_READOUTS
             | D19_READOUTS
             | D20_READOUTS
@@ -851,6 +861,31 @@ class Model(nn.Module):
                 mode_rank=int(getattr(configs, "pcsd_mode_rank", 256)),
                 scale_components=scale_components,
                 scale_basis_mode=scale_basis_mode,
+                policy_history_dim=int(
+                    getattr(configs, "pcsd_policy_history_dim", 32)
+                ),
+                policy_hidden_dim=int(
+                    getattr(configs, "pcsd_policy_hidden_dim", 64)
+                ),
+                policy_mode=str(getattr(configs, "pcsd_policy_mode", "direct")),
+                fixed_scale=int(getattr(configs, "pcsd_fixed_scale", 720)),
+                partition=str(getattr(configs, "pcsd_partition", "canonical")),
+                partition_seed=int(getattr(configs, "pcsd_partition_seed", 15101)),
+                group_chunk_size=int(
+                    getattr(configs, "pcsd_group_chunk_size", 64)
+                ),
+                target_chunk_size=int(
+                    getattr(configs, "pcsd_target_chunk_size", 128)
+                ),
+            )
+        if self.readout_mode in CPSI_READOUTS:
+            self.pcsd_readout = CPSIReadout(
+                readout_dim=readout_dim,
+                series_length=self.pred_len,
+                coordinate_dim=int(getattr(configs, "pcsd_coordinate_dim", 4)),
+                mode_rank=int(getattr(configs, "pcsd_mode_rank", 256)),
+                interaction_rank=int(getattr(configs, "cpsi_rank", 32)),
+                interaction_mode=CPSI_READOUT_CONFIG[self.readout_mode],
                 policy_history_dim=int(
                     getattr(configs, "pcsd_policy_history_dim", 32)
                 ),

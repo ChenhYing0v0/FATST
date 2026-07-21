@@ -1,0 +1,82 @@
+category,case,passed,value,threshold
+readout,iscf-v1-cpsi:output_shape,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi:arm_shape,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi:policy_shape,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi:parent_pair,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi:output_morph,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi:arm_morph,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi:policy_morph,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi:parameter_count,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi:zero_output_projection,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi:diagnostic_finite,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-self:output_shape,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-self:arm_shape,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-self:policy_shape,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-self:parent_pair,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-self:output_morph,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-self:arm_morph,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-self:policy_morph,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-self:parameter_count,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-self:zero_output_projection,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-self:diagnostic_finite,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-linear:output_shape,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-linear:arm_shape,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-linear:policy_shape,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-linear:parent_pair,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-linear:output_morph,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-linear:arm_morph,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-linear:policy_morph,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-linear:parameter_count,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-linear:zero_output_projection,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-linear:diagnostic_finite,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-common:output_shape,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-common:arm_shape,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-common:policy_shape,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-common:parent_pair,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-common:output_morph,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-common:arm_morph,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-common:policy_morph,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-common:parameter_count,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-common:zero_output_projection,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-common:diagnostic_finite,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 1536}",production contract
+readout,iscf-v1-cpsi-post:output_shape,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 2160}",production contract
+readout,iscf-v1-cpsi-post:arm_shape,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 2160}",production contract
+readout,iscf-v1-cpsi-post:policy_shape,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 2160}",production contract
+readout,iscf-v1-cpsi-post:parent_pair,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 2160}",production contract
+readout,iscf-v1-cpsi-post:output_morph,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 2160}",production contract
+readout,iscf-v1-cpsi-post:arm_morph,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 2160}",production contract
+readout,iscf-v1-cpsi-post:policy_morph,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 2160}",production contract
+readout,iscf-v1-cpsi-post:parameter_count,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 2160}",production contract
+readout,iscf-v1-cpsi-post:zero_output_projection,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 2160}",production contract
+readout,iscf-v1-cpsi-post:diagnostic_finite,True,"{'parent_gap': 0.0, 'morph_gap': 0.0, 'arm_gap': 0.0, 'policy_gap': 0.0, 'parameters': 2160}",production contract
+equivariance,common-private,True,1.1920928955078125e-07,<=1e-6
+equivariance,self,True,0.0,<=1e-6
+equivariance,linear,True,2.384185791015625e-07,<=1e-6
+equivariance,common,True,1.1920928955078125e-07,<=1e-6
+equivariance,post-synthesis,True,2.384185791015625e-07,<=1e-6
+semantics,candidate_zero_when_private_absent,True,3.725290298461914e-09,<=1e-7
+gradient,common-private:first_backward,True,"{'loss': 0.9949373602867126, 'output': 0.048222776502370834, 'common': 0.0, 'private': 0.0}",output>0; inputs=0 at zero-output morph
+gradient,common-private:second_backward,True,"{'loss': 0.9947049617767334, 'common': 0.00017200193542521447, 'private': 0.00020647725614253432, 'message_rms': 0.00019213718769606203}",input gradients and message >0 after output step
+gradient,self:first_backward,True,"{'loss': 0.9949373602867126, 'output': 0.16138441860675812, 'common': 0.0, 'private': 0.0}",output>0; inputs=0 at zero-output morph
+gradient,self:second_backward,True,"{'loss': 0.9923387169837952, 'common': 0.003005547448992729, 'private': 0.003413374535739422, 'message_rms': 0.0024150549434125423}",input gradients and message >0 after output step
+gradient,linear:first_backward,True,"{'loss': 0.9949373602867126, 'output': 0.6090632081031799, 'common': 0.0, 'private': 0.0}",output>0; inputs=0 at zero-output morph
+gradient,linear:second_backward,True,"{'loss': 0.9584363102912903, 'common': 0.004806964658200741, 'private': 0.012791336514055729, 'message_rms': 0.02438645251095295}",input gradients and message >0 after output step
+gradient,common:first_backward,True,"{'loss': 0.9949373602867126, 'output': 0.02190754935145378, 'common': 0.0, 'private': 0.0}",output>0; inputs=0 at zero-output morph
+gradient,common:second_backward,True,"{'loss': 0.9948893785476685, 'common': 4.847696618526243e-05, 'private': 7.1358161221724e-05, 'message_rms': 6.171585846459493e-05}",input gradients and message >0 after output step
+gradient,post-synthesis:first_backward,True,"{'loss': 0.9925897717475891, 'output': 0.0035630997736006975, 'common': 0.0, 'private': 0.0}",output>0; inputs=0 at zero-output morph
+gradient,post-synthesis:second_backward,True,"{'loss': 0.9925885200500488, 'common': 2.591336851764936e-05, 'private': 1.1638306204986293e-05, 'message_rms': 3.489999699013424e-06}",input gradients and message >0 after output step
+model,iscf-v1-cpsi,True,"{'full_shape': (1, 720, 2), 'short_shape': (1, 96, 2), 'prefix_gap': 0.0, 'parent_hash': 'e9f3c1cb2c7442ff290ff403c96fb42fc2f3df3132a288f4c630bc8801529167', 'parameters': 1536}",production model integration
+model,iscf-v1-cpsi-self,True,"{'full_shape': (1, 720, 2), 'short_shape': (1, 96, 2), 'prefix_gap': 0.0, 'parent_hash': 'e9f3c1cb2c7442ff290ff403c96fb42fc2f3df3132a288f4c630bc8801529167', 'parameters': 1536}",production model integration
+model,iscf-v1-cpsi-linear,True,"{'full_shape': (1, 720, 2), 'short_shape': (1, 96, 2), 'prefix_gap': 0.0, 'parent_hash': 'e9f3c1cb2c7442ff290ff403c96fb42fc2f3df3132a288f4c630bc8801529167', 'parameters': 1536}",production model integration
+model,iscf-v1-cpsi-common,True,"{'full_shape': (1, 720, 2), 'short_shape': (1, 96, 2), 'prefix_gap': 0.0, 'parent_hash': 'e9f3c1cb2c7442ff290ff403c96fb42fc2f3df3132a288f4c630bc8801529167', 'parameters': 1536}",production model integration
+model,iscf-v1-cpsi-post,True,"{'full_shape': (1, 720, 2), 'short_shape': (1, 96, 2), 'prefix_gap': 0.0, 'parent_hash': 'e9f3c1cb2c7442ff290ff403c96fb42fc2f3df3132a288f4c630bc8801529167', 'parameters': 2160}",production model integration
+cli,iscf-v1-cpsi,True,"{'rank': 32, 'mode_rank': 109, 'objective': 'equal_skill'}",frozen CLI contract
+cli,iscf-v1-cpsi-self,True,"{'rank': 32, 'mode_rank': 109, 'objective': 'equal_skill'}",frozen CLI contract
+cli,iscf-v1-cpsi-linear,True,"{'rank': 32, 'mode_rank': 109, 'objective': 'equal_skill'}",frozen CLI contract
+cli,iscf-v1-cpsi-common,True,"{'rank': 32, 'mode_rank': 109, 'objective': 'equal_skill'}",frozen CLI contract
+cli,iscf-v1-cpsi-post,True,"{'rank': 32, 'mode_rank': 109, 'objective': 'equal_skill'}",frozen CLI contract
+profile_parameters,ETTh1,True,41856,41856
+profile_parameters,ETTh2,True,44544,44544
+profile_parameters,ETTm1,True,44544,44544
+profile_parameters,ETTm2,True,40704,40704
+profile_parameters,Weather,True,44544,44544
