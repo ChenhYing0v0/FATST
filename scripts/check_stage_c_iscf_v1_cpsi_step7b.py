@@ -225,6 +225,17 @@ def main() -> None:
             check=False,
         )
         add(rows, "execution", name, result.returncode == 0, result.stdout.strip()[-200:], "returncode=0")
+    runner_text = (ROOT / "scripts/remote/run_stage_c_iscf_v1_cpsi.sh").read_text(
+        encoding="utf-8"
+    )
+    add(
+        rows,
+        "execution",
+        "remote_log_scanner_fallback",
+        "command -v rg" in runner_text and "grep -Ein" in runner_text,
+        "rg+grep" if "grep -Ein" in runner_text else "rg-only",
+        "rg+grep",
+    )
 
     passed = sum(bool(row["pass"]) for row in rows)
     args.output_dir.mkdir(parents=True, exist_ok=True)

@@ -56,13 +56,17 @@ dataset退化至少5%）且无pathology，才关闭exact CPSI-v1并回Step4/5。
 
 ## 6. 本地验证
 
-machine gate为18/18：
+machine gate原始为18/18；首次远端resource smoke暴露remote image缺少`rg`，旧日志扫描的negated command会把
+`command not found`误当作clean log。训练logs本身finite，但该verdict被标记为`design_fault_suspected`。runner随后
+加入`command -v rg`与`grep -Ein` fallback，machine gate扩展为19/19，并要求重新执行resource smoke。
+
+修复后的gate覆盖：
 
 - profile/config/matrix/test-authorization contracts：4/4；
 - user control governance：2/2；
 - historical source/hash audit：3/3；
 - five production constructors与paired parent hash：6/6；
-- runner syntax、25-job dry-run、analyzer synthetic smoke：3/3。
+- runner syntax、25-job dry-run、analyzer synthetic smoke与remote scanner fallback：4/4。
 
 五个ETTh1 constructors的interaction parameters分别为41856/41856/41856/41856/41040；parent initialization
 hash只有一个unique value。所有probe tensors finite。`py_compile`、JSON parse、`bash -n`均通过。

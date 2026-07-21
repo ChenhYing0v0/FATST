@@ -5,7 +5,7 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | ISCF-v1-CPSI Step7B prelaunch 18/18 pass；advance Step8 remote training |
+| `current_step` | ISCF-v1-CPSI Step7B prelaunch 19/19 pass；advance Step8 remote training |
 | `active_question` | 25/25 new runs能否在frozen protocol下完成且无numeric/artifact pathology？ |
 | `active_candidates` | ISCF-v1-CPSI formal-screen candidate；ISCF-v0/A6_FULL frozen references |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
@@ -20,8 +20,9 @@ frozen matrix为25 new trainings + 10 hashed historical references；35 effectiv
 与140 MAE cells。runner将validation-only training与formal test拆开，并要求25/25 training artifacts齐全才开放一次
 test。SELF/LINEAR/COMMON/POST始终是intermediate diagnostics，不因validation排序删除。
 
-18/18 machine checks通过：profile/config/auth、control governance、reference hashes、five constructors、paired parent
-hash、runner syntax/dry-run与analyzer smoke。evaluator已落盘六类CPSI internal RMS；analyzer分别裁决effectiveness、
+初始18/18后，remote smoke发现缺少`rg`会导致negated scanner false pass；加入`grep` fallback并扩展为19/19。
+profile/config/auth、control governance、reference hashes、five constructors、paired parent hash、runner syntax/dry-run、
+scanner与analyzer smoke均通过。evaluator已落盘六类CPSI internal RMS；analyzer分别裁决effectiveness、
 matched attribution、health与failure cause。
 
 Decision=`step7b_prelaunch_pass_step8_authorized`。下一步commit-pinned remote pull、GPU preflight、dual resource smoke后

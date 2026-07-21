@@ -10,6 +10,9 @@ runner把training与formal test拆成两个互斥阶段。普通模式只写chec
 contracts；`FORMAL_TEST_ONLY=1`先逐run检查六类training artifacts，并在25/25齐全后调用checkpoint evaluator。
 evaluation前后计算checkpoint SHA256，任何变化都会使job失败。
 
+resource smoke日志扫描先检测`rg`是否存在；精简remote image无`rg`时改用`grep -Ein`。两条路径共用同一
+Traceback/OOM/NaN/Inf pattern，避免negated missing command产生false pass。
+
 ## 2. CPSI evaluator diagnostics
 
 `cpsi_tensors()`先执行`encode_history(batch_x)`，得到memory并flatten为SIFF/ISCF hidden，再调用readout的

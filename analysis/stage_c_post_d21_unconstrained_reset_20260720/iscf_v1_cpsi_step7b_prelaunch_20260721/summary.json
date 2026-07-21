@@ -1,8 +1,8 @@
 {
   "candidate": "ISCF-v1-CPSI-v1",
-  "checks": 18,
+  "checks": 19,
   "decision": "step7b_prelaunch_pass",
   "failed": 0,
   "pass": true,
-  "passed": 18
+  "passed": 19
 }

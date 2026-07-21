@@ -55,7 +55,7 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-21 |
 | `source_parent_commit` | `b0b9d7c`（Step7B worktree parent） |
-| `current_step` | ISCF-v1-CPSI Step7B prelaunch 18/18 pass；advance Step8 remote |
+| `current_step` | ISCF-v1-CPSI Step7B prelaunch 19/19 pass；advance Step8 remote |
 | `active_problem` | 25 new runs能否无numeric/artifact pathology完成并在frozen test MSE/MAE上支持CPSI？ |
 | `active_method` | ISCF-v1-CPSI formal-screen candidate；effectiveness pending |
 | `method_training_authorized` | seed2021 25-run remote true；confirmation false |
@@ -210,8 +210,8 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
     下一步只做Step7B，remote/test继续false。
 54. Step7B冻结25 new trainings + ISCF/A6_FULL 10 historical references；35 effective runs形成140 MSE与140 MAE
     official-test cells，validation只作selector/health。
-55. prelaunch machine gate 18/18通过；10/10 reference hashes、five constructors、paired parent hash、runner dry-run、
-    analyzer smoke与CPSI internal probes均pass。
+55. prelaunch初始18/18；remote resource smoke暴露无`rg`时negated scanner false pass，训练本身finite但verdict无效。
+    加入`grep` fallback后machine gate为19/19；必须在正式训练前重跑smoke。
 56. SELF/LINEAR/COMMON/POST保持intermediate diagnostics；runner在25/25 training前硬拒绝test，轻微validation
     negative不能淘汰任何arm。
 57. Decision=`step7b_prelaunch_pass_step8_authorized`；用户授权seed2021 remote与训练完成后的single formal test；

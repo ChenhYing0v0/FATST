@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；`ISCF-v1-CPSI` is a working research ID, not final title |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF-v1-CPSI Step7B prelaunch 18/18 pass；advance commit-pinned remote Step8 |
+| `current_11_step` | ISCF-v1-CPSI Step7B prelaunch 19/19 pass；advance commit-pinned remote Step8 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -21,8 +21,9 @@
 runs、140 MSE cells与140 MAE cells。validation只作four-horizon checkpoint selector与health；runner在25/25
 training artifacts完成前硬拒绝formal test，且test前后核验checkpoint nonmutation。
 
-machine prelaunch为18/18：matrix/auth/governance、10 references、five model constructors、paired parent hash、runner
-syntax/dry-run与analyzer smoke全过。evaluator新增common/private/left/right/latent/message RMS和trained output norm，
+machine prelaunch初始18/18；remote smoke发现remote image无`rg`会使negated log scanner false pass，故在正式训练前
+加入`grep` fallback并扩展为19/19。matrix/auth/governance、10 references、five model constructors、paired parent hash、
+runner syntax/dry-run、scanner与analyzer smoke全过。evaluator新增common/private/left/right/latent/message RMS和trained output norm，
 用于区分dead path、capacity explanation与mechanism attribution。四controls保持intermediate diagnostics：轻微负向不会
 阻断test；只有完整test MSE/MAE后才按Step6 severity决定exact v1。
 
