@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；paperization identity暂为`ISCF-v0`，not final title |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF-v0 SAC Step8 remote training authorized；preflight/resource smoke next；formal test false |
+| `current_11_step` | ISCF-v0 SAC Step8 training active；formal test false |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -23,6 +23,13 @@ finite/no-OOM后才启动正式matrix。candidate、gates、partition seed、ran
 
 Decision=`step8_remote_training_authorized_formal_test_pending`。详见
 `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step8_remote_20260721/remote_authorization_and_launch.md`。
+
+[ISCF-v0 SAC Step8 Launch, 2026-07-21] commit `78cbcf4`已remote fast-forward；GPU0/1/2 preflight均为
+18 MiB、0% utilization且无compute process。Weather-RANDOM seed2021与ETTm2-Q1 seed2023 resource smokes
+finite/no-OOM。25-run training于`18:58:40+08:00`启动，supervisor PID=`2383292`；首批三个Weather jobs进入
+epoch 1，初始training/test=`0/25,0/25`。formal-test execution mode为0且config authorization=false。
+
+Decision=`step8_training_active_formal_test_not_authorized`。训练期间不pull、不改matrix/gates；25/25后停止并等待test授权。
 
 [ISCF-v0 SAC Step7B, 2026-07-21] candidate code未修改。SAC runner、three-source analyzer与frozen
 manifest已实现，local prelaunch `18/18`通过。新矩阵为Q1-WIDE seeds2022/2023的10 runs与

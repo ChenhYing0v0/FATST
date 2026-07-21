@@ -5,7 +5,7 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | ISCF-v0 SAC Step8 remote training authorized；formal test pending |
+| `current_step` | ISCF-v0 SAC Step8 training active；formal test not authorized |
 | `active_question` | future-output coupling scope-specific maps与contiguous/nested partitions是否分别超越near-matched shared width与exact random grouping？ |
 | `active_candidates` | ISCF-v0 conditional paperization candidate；not promoted；exact CPSI closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
@@ -56,6 +56,11 @@ smokes；通过后启动25-run matrix。formal test、modern baselines、router�
 
 Decision=`step8_remote_training_authorized_formal_test_pending`。下一步先commit/push、remote fast-forward、三卡
 preflight与Weather-RANDOM/ETTm2-Q1 resource smoke；smoke通过才launch。25/25完成后不自动执行test。
+
+remote现已fast-forward到commit `78cbcf4`；三卡preflight空闲，两项resource smoke finite/no-OOM。25-run
+training于`18:58:40+08:00`在GPU0/1/2启动，supervisor PID=`2383292`，首批三个Weather jobs active，
+training/test=`0/25,0/25`。Decision=`step8_training_active_formal_test_not_authorized`；训练期间冻结repo/config/gates，
+完成后等待test授权。
 
 ## ISCF-v1-CPSI Step9/10 Decision
 

@@ -61,13 +61,13 @@
 | `project` | R_2026_FATST |
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-21 |
-| `source_parent_commit` | `37fd4f3`（ISCF post-CPSI Step4/5 + SAC design） |
-| `current_step` | ISCF-v0 SAC Step8 remote training authorized；formal test pending |
+| `source_parent_commit` | `78cbcf4`（SAC training authorization） |
+| `current_step` | ISCF-v0 SAC Step8 training active；formal test false |
 | `active_problem` | scope-specific maps与contiguous/nested output partitions是否超越near-matched shared-width和exact random grouping？ |
 | `active_method` | none；ISCF-v0 conditional paperization candidate，not promoted |
 | `method_training_authorized` | true for frozen 25-run SAC matrix；candidate code unchanged |
 | `remote_training_authorized` | true；formal test false |
-| `next_action` | commit-pinned pull、GPU preflight、dual resource smoke；pass后launch training only |
+| `next_action` | wait for 25/25 training；then validation-artifact audit and separate test authorization |
 | `conditional_next` | Q1-WIDE + RANDOM primary gates both pass -> modern baselines/generalization |
 | `rollback` | either primary fail -> ISCF carrier-only；no rank/seed/partition/loss/router rescue |
 
@@ -235,6 +235,10 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
     local prelaunch `18/18`通过。
 66. canonical/random在five profiles上parameter/init/Encoder/RNG exact paired，endpoint scopes相同、中间scopes不同；
     Q1 max active-param gap=`0.464638%`。Decision=`step7b_prelaunch_pass_waiting_remote_authorization`。
+67. 用户授权SAC training-only；commit `78cbcf4`已remote fast-forward，三卡preflight空闲。
+68. Weather-RANDOM seed2021与ETTm2-Q1 seed2023 resource smokes finite/no-OOM。
+69. 25-run training于`2026-07-21T18:58:40+08:00`启动，PID=`2383292`，initial training/test=`0/25,0/25`；
+    formal test仍false，完成后必须停下等待授权。
 
 ## 5. D22-HFA 的执行顺序
 
@@ -327,7 +331,7 @@ decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。
 4. 当前只把ISCF记为`conditional paperization candidate`，active paper-core method仍为none；
 5. SAC设计只新增Q1-WIDE seeds2022/2023和RANDOM-PARTITION三seed，共25个control trainings；
 6. SAC Step7B local prelaunch已18/18通过；25 new jobs、35 historical references与60-run analyzer均冻结；
-7. 用户已授权SAC 25-run remote training，但formal test仍false；先commit-pinned pull/GPU/resource smoke；
+7. commit `78cbcf4`已remote pull，GPU0/1/2与dual resource smoke通过；25-run training active；
 8. 25/25 training完成后必须停下等待test授权；不得自动运行`FORMAL_TEST_ONLY=1`；
 9. SC-MNB保留为supporting source/control inventory；不恢复CCSF、D17-D21、H embedding、router、second loss或Contribution 2预设。
 
@@ -375,7 +379,7 @@ ISCF-v0相对A6_FULL的existing three-seed test-informed MSE/MAE=`+1.3584%/+0.91
 
 Decision=`conditional_pass_as_output_coupling_scope_architecture_pending_sac`。下一步Scope Attribution Confirmation只检验：1) ISCF是否超过active-param gap不超过`0.4646%`的Q1-WIDE shared map；2) canonical contiguous/nested partitions是否超过same-parameter/initialization RANDOM-PARTITION。新增10个Q1-WIDE与15个RANDOM trainings；candidate code、direct policy、equal-skill objective与ranks不变。
 
-SAC Step7B local prelaunch现已18/18通过：25 new jobs、35 historical references、60-run analyzer与training/test隔离runner已冻结；candidate code不变。用户现已授权25-run remote training，但formal test仍未授权。下一步先commit-pinned pull、GPU preflight和dual resource smoke，smoke通过后launch training-only；25/25后必须停下。两项primary gates都通过才进入modern baselines；任一失败则ISCF降为strong carrier/control，不做rank、seed、partition、loss或router rescue。
+SAC Step7B local prelaunch现已18/18通过：25 new jobs、35 historical references、60-run analyzer与training/test隔离runner已冻结；candidate code不变。commit `78cbcf4`已remote fast-forward，GPU0/1/2 preflight与dual resource smoke通过；25-run training于`18:58:40+08:00`启动，PID=`2383292`，initial training/test=`0/25,0/25`。formal test仍未授权，25/25后必须停下。两项primary gates都通过才进入modern baselines；任一失败则ISCF降为strong carrier/control，不做rank、seed、partition、loss或router rescue。
 
 完成后同步更新analysis report、docs/paper-mainline.md、docs/research-roadmap.md和Stage C ledger，执行最小诚实验证，并按AGENTS.md提交、推送。请从专业时序预测研究员角度进行审计，不要为了凑两个contributions而预先设计第二个loss/router。
 ```
