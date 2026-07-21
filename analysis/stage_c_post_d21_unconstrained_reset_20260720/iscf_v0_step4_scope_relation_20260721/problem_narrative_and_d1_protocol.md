@@ -127,3 +127,15 @@ run ISCF-SRA-D1 on frozen validation checkpoints only
 
 若local smoke与prelaunch checks通过，可commit/push后运行remote frozen diagnostic；结果必须回写本目录并重新执行Step4
 narrative decision。
+
+## 8. Post-result validity-check boundary
+
+D1 primary结果后若只有topology gate失败，允许一次post-hoc estimator check：固定同一15-run matrix，把Rademacher
+directions从16增至64，保留32 hidden rows，并把random-init controls降至4以控制计算量。该结果只回答16-direction
+topology是否受Monte Carlo variance影响：
+
+- primary D1 gate与machine decision不得改写；
+- 64-direction topology若仍失败，归因为`fine_pairwise_relation_seed_unstable`；
+- 若明显恢复，则D1 topology estimator标记`design_fault_suspected`，需要新的pre-registered validation diagnostic，不能
+  post-hoc promotion；
+- common/private、random-init或method gate不从该sensitivity重新选择。

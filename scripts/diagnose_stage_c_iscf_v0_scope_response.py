@@ -47,6 +47,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--datasets", nargs="*")
     parser.add_argument("--seeds", nargs="*", type=int)
+    parser.add_argument("--hidden-rows", type=int)
+    parser.add_argument("--directions", type=int)
+    parser.add_argument("--relative-epsilon", type=float)
+    parser.add_argument("--null-repetitions", type=int)
+    parser.add_argument("--random-controls", type=int)
     parser.add_argument("--synthetic-smoke", action="store_true")
     return parser.parse_args()
 
@@ -406,6 +411,18 @@ def main() -> None:
         run_synthetic_smoke()
         return
     protocol = json.loads(args.protocol.read_text(encoding="utf-8"))
+    overrides = {
+        "hidden_rows": args.hidden_rows,
+        "rademacher_directions": args.directions,
+        "relative_epsilon": args.relative_epsilon,
+        "direction_null_repetitions": args.null_repetitions,
+        "random_init_controls": args.random_controls,
+    }
+    for key, value in overrides.items():
+        if value is not None:
+            if isinstance(value, (int, float)) and value <= 0:
+                raise ValueError(f"{key} override must be positive")
+            protocol["probe"][key] = value
     carrier = json.loads(args.carrier_config.read_text(encoding="utf-8"))
     output_dir = args.output_dir or Path(protocol["output"]["local_root"])
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -444,6 +461,7 @@ def main() -> None:
                 flush=True,
             )
     summary, topology_rows = summarize(run_rows, topology, protocol)
+    summary["effective_probe"] = dict(protocol["probe"])
     write_csv(output_dir / "seed_topology_stability.csv", topology_rows)
     (output_dir / "summary.json").write_text(
         json.dumps(summary, indent=2, sort_keys=True) + "\n",
