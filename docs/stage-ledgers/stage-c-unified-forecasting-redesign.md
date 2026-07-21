@@ -6,41 +6,41 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | SIFF package positive但ordered attribution失败后，是否降格保存或回Step2/4寻找新paper core？ |
+| `active_question` | ISCF-v0是否具有可干预的non-ordered common/scope-specific relation，而不是shared target difficulty或low-rank/ordered假象？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | none；SIFF-v2 FCC closed from paper-core promotion |
+| `active_candidates` | no paper method；ISCF-v0 frozen strong research carrier；narrative pending |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
 | `stage_exit` | 新problem先通过existence/narrative gate，再决定一项或两项可归因contributions |
-| `stage_rollback` | SIFF-v2 FCC attribution fail；paper portfolio decision or new Step2/4；SC-MNB supporting only；CTD paused |
+| `stage_rollback` | ISCF function audit low-dim fail/unresolved；narrow Step4 source/narrative audit；SC-MNB supporting only；CTD paused |
 
 ## Decision Cursor
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SIFF-v2 FCC Step9/10 complete；paper portfolio decision |
-| `current_candidate` | none；immutable SIFF-v2 retained as performance-positive/attribution-negative history |
-| `latest_decision` | `performance_pass_attribution_blocked_stop_fcc_promotion` |
-| `next_required_action` | explicit paper portfolio decision or new Step2/4；no SIFF rescue/baseline launch |
-| `method_training_authorized` | false；FCC complete；no active method or further test authorization |
-| `rollback_point` | paper portfolio decision or new Step2/4；not SIFF tuning |
+| `current_11_step` | ISCF-v0 freeze + existing-artifact function audit Step2/3 complete；return narrow Step4 |
+| `current_candidate` | ISCF-v0 carrier only；no paper method；SIFF-v2 retained as attribution-negative history |
+| `latest_decision` | `function_relation_unresolved_requires_narrow_step4_audit` |
+| `next_required_action` | source-informed non-ordered common/scope-specific relation Step4 gate；no implementation |
+| `method_training_authorized` | false；no new training/test；existing-artifact audit complete |
+| `rollback_point` | Step4 problem/narrative；low-rank mixing、ordered restoration、router/loss blocked |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | SIFF-v2 FCC Step9/10 complete |
-| `problem` | future-output coupling scope能否作为ordered coordinate构成一个single-model varied-horizon operator field？ |
-| `existence_evidence` | vs A6_FULL package +1.2497% MSE stable；ordered vs independent -0.1272%；validation attribution negative；A6_MEASURE history negative |
-| `idea` | immutable Q2 ordered SIFF；single architecture contribution；no TSAF/loss/router |
-| `theory_check` | shared history-conditioned components over log-scale；nested synthesis；requested H only final crop |
-| `design` | FCC: SIFF/A6_FULL/independent × five datasets × seeds2022/2023；reuse seed2021；45 effective runs/180 test cells |
-| `narrative_gate` | `conditional_pass_as_single_architecture_contribution` |
-| `effectiveness_gate` | package pass；matched attribution fail；internal health pass；not paper-core confirmed |
-| `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1/step9_10_result_and_portfolio_decision.md` |
-| `decision` | `performance_pass_attribution_blocked_stop_fcc_promotion` |
+| `current_step` | ISCF-v0 Step2/3 function audit complete；return Step4 |
+| `problem` | independent output-coupling scopes是否存在stable non-ordered relation，可支持一个native common/scope-specific operator problem？ |
+| `existence_evidence` | ISCF vs A6_FULL post-hoc derived `+1.3584%` MSE；common/private、complementarity、topology pass；aligned low-dim 0/15 fail |
+| `idea` | 先固定ISCF-v0 strong carrier，再以existing functions判断scope relation；不从oracle直接设计router |
+| `theory_check` | shared residual不等于causal shared component；frozen function关系不等于E2E method gain；requested H无新增信息 |
+| `design` | 5 datasets × 3 seeds existing NPZ；`[256,5,720]` probes；shift null；no new training/test access |
+| `narrative_gate` | pending narrow Step4；generic low-rank/shared-private/multi-scale prior strong |
+| `effectiveness_gate` | not applicable；ISCF carrier evidence retained；no new method |
+| `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_function_audit_20260721/result_and_step4_handoff.md` |
+| `decision` | `function_relation_unresolved_requires_narrow_step4_audit` |
 
 ## Frozen Carrier Contract
 
@@ -65,6 +65,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
 | `A6-LBF-natural-baseline` | `control_only` | validation-frozen natural profiles可作为稳定共同起点 | not required | 72/72 test；3 seeds；dense horizons | `frozen_test_reference_ready`；只作固定reference |
+| `ISCF-v0` | `strong_research_carrier_frozen_paper_core_pending` | independent future-output coupling scopes提供稳定性能基底，并可能含non-ordered common/specific relation | pending；generic shared-private/multi-scale claims forbidden | vs A6_FULL derived +1.3584%；function audit 3/4 gates，low-dim 0/15 | narrow Step4 source/narrative audit；no implementation/training/test |
 | `SC-D22-HFA` | `completed_target_access_supported` | target-coordinate-specific access是否超越matched generic与shuffles | problem evidence pass；not method effectiveness | ordered vs generic +2.5228%；15/20；4/5；all five controls pass | handoff D23 Step4 |
 | `SC-D23-FCMI` | `closed_capacity_control_explains` | generic main与coordinate interaction能否可识别分解并原生fallback | conditional pass | FCMI vs A6 -21.7343%；capacity/order fail；internal pass | no seeds/rescue；return Step2/3 |
 | `SC-D24-CTB` | `diagnostic_only_closed_exact_negative` | strong fixed trajectory synthesis是否留下ordered-history可识别coarse deformation | not method gate | v1.1 ordered loses all primary controls；test=0 | no rescue；return Step2/4 consolidation |

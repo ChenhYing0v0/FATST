@@ -28,9 +28,11 @@
 19. `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step8_remote_authorization_and_launch.md`；
 20. `docs/code-explanation/stage-c-siff-v3-tsaf-step8.md`；
 21. `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step9_10_result_and_rollback.md`；
-22. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
-23. `docs/paper-mainline.md`；
-24. `docs/research-roadmap.md`。
+22. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_function_audit_20260721/result_and_step4_handoff.md`；
+23. `configs/stage_c_iscf_v0_carrier.json`；
+24. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
+25. `docs/paper-mainline.md`；
+26. `docs/research-roadmap.md`。
 
 若上述文件与更旧的聊天、archive或历史段落冲突，以本文件和三份主线文档顶部的最新cursor为准。
 
@@ -42,14 +44,14 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-21 |
 | `source_parent_commit` | `d647874`（Step7B开始前parent） |
-| `current_step` | SC1-SIFF-v3-TSAF Step9/10 complete；exact v1 closed；return Step2/4 |
-| `active_problem` | independent target-only weak signal是否能形成新的SIFF-first paper problem？ |
-| `active_method` | none；SIFF-v2 immutable paperization parent |
-| `method_training_authorized` | completed seed2021 matrix only；new candidate/confirmation false |
-| `remote_training_authorized` | no new run；completed one formal test on 2026-07-21 |
-| `next_action` | consolidate paper problem/narrative；do not promote control post-hoc |
-| `conditional_next` | new Step2/4 and narrative/design gate before any implementation or remote run |
-| `rollback` | TSAF-v1 closed，Step2/4；SIFF-v2不变；SC-MNB execution false |
+| `current_step` | ISCF-v0 carrier freeze + existing-artifact function audit Step2/3 complete；return narrow Step4 |
+| `active_problem` | non-ordered common/scope-specific relation是否可干预，而非shared target difficulty或low-rank/ordered假象？ |
+| `active_method` | none；ISCF-v0 is frozen strong research carrier only |
+| `method_training_authorized` | false；new implementation/confirmation false |
+| `remote_training_authorized` | false；本轮仅CPU复用existing NPZ，无new test access |
+| `next_action` | source-informed ISCF Step4 problem/narrative audit；do not implement low-rank matrix/router/loss |
+| `conditional_next` | narrative/design gate before any implementation or remote run |
+| `rollback` | function relation unresolved；Step4；SIFF ordered claim保持关闭；SC-MNB execution false |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
 
@@ -94,6 +96,7 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
 | `A6_MEASURE` | strong training control | harmonic horizon measure受ElasTST直接prior覆盖，不能单独claim |
 | `SIFF-v2-EQ-ATTR-v1` | immutable performance-near parent | internal 7/7，但未超过A6_MEASURE且independent control阻塞归因；不修改exact v2 |
 | `SIFF-v3-TSAF-v1` | closed exact candidate | effectiveness/attribution fail，internal health pass；不补confirmation/rescue |
+| `ISCF-v0` | frozen strong research carrier | independent $Q=5$ carrier；paper-core pending；不继承ordered SIFF claim |
 | `D14 crossing/oracle` | historical clue | oracle不等于past-identifiable benefit；D21已证明interaction split-unstable |
 | `D17-D21` | closed evidence | 不做representation/readout/seed rescue |
 | `CTD` | paused by user | 新会话不得自动恢复 |
@@ -158,6 +161,13 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
     只作single-seed weak lead，低于0.3% primary threshold，不得post-hoc promotion。
 36. Decision=`close_tsaf_v1_shared_field_design_keep_siff_v2_immutable_parent`。当前无active successor method，
     no confirmation/rescue，回SIFF-first Step2/4；SC-MNB execution和Contribution 2继续false。
+37. 用户2026-07-21明确把FCC `SIFF_INDEPENDENT_EQUAL`以`ISCF-v0`新identity固定为后续research carrier；
+    code identity、ranks、profiles、direct policy、equal-skill和three-seed checkpoints保持exact frozen。
+38. existing complete test table派生ISCF vs A6_FULL MSE/MAE=`+1.3584%/+0.9144%`，5/5 datasets、
+    4/4 horizons、3/3 seeds正向；该结果是post-hoc carrier evidence，不是method promotion。
+39. 15-run function audit仅复用existing NPZ：common/private、complementarity、topology通过，aligned low-dimension
+    `0/15`失败；decision=`function_relation_unresolved_requires_narrow_step4_audit`。当前不实现method、不训练、
+    不访问new test，下一步为non-ordered common/scope-specific relation的Step4 source/narrative gate。
 
 ## 5. D22-HFA 的执行顺序
 

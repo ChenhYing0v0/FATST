@@ -5,16 +5,31 @@
 | Field | Content |
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
-| `working_title` | Scale-Indexed Forecast Fields for Unified Multi-Horizon Time-Series Forecasting |
+| `working_title` | TBD after ISCF-v0 non-ordered scope-relation narrative gate；former SIFF title retired |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SIFF-v2 FCC Step9/10 complete；package pass，ordered attribution fail；paper portfolio decision |
+| `current_11_step` | ISCF-v0 carrier frozen；existing-artifact function audit Step2/3 complete；return narrow Step4 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | SIFF-v2 not promoted；A6_FULL package positive retained；ordered-field claim closed；active_method=none |
+| `paper_core_status` | ISCF-v0 is frozen strong research carrier；paper-core narrative pending；active_method=none |
+
+[ISCF-v0 Freeze and Function Audit, 2026-07-21] 用户明确将FCC的matched independent-scope arm固定为
+`ISCF-v0 — Independent-Scope Coupling Field`后续研究基底。code仍使用
+`siff-independent-scope-control`以保持15个checkpoints exact-compatible；$Q=5$、`I_5` scale basis、direct
+policy、equal-skill objective、dataset-wise ranks、natural profiles与four-horizon selector全部冻结。由既有完整FCC
+test table派生的ISCF-v0 vs A6_FULL MSE/MAE为`+1.3584%/+0.9144%`，5/5 datasets、4/4 horizons、
+3/3 seeds正向；该比较为test-informed post-hoc carrier evidence，不是新method gate。
+
+existing NPZ function audit现完成：common/private residual、scope complementarity与cross-seed topology三项通过，
+aligned low-dimensional relation为`0/15`失败。median common/private energy=`0.9320/0.0680`，oracle headroom
+`8.5813%`，4/5 datasets topology稳定；但EV2 `0.6281`低于shift-null p95 `0.7223`，scale-order rho仅
+`0.2121`，fusion只在9/15 runs超过best fixed arm。Decision=
+`function_relation_unresolved_requires_narrow_step4_audit`。这阻止立即实现low-rank relation matrix、恢复ordered
+SIFF或新增router/loss；下一节点仅为non-ordered common/scope-specific relation的Step4 source/narrative audit。
+详见`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_function_audit_20260721/result_and_step4_handoff.md`。
 
 [Constraint Reset, 2026-07-20] 后续不再把exact projectivity、requested horizon禁用、A6 interface compatibility或
 full-$T$ prefix crop当作新方法的先验硬约束。它们可以成为合理设计或matched controls，但必须由problem、理论与

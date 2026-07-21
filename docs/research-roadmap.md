@@ -5,14 +5,37 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SIFF-v2 FCC Step9/10 complete；paper portfolio decision |
-| `active_question` | package performance positive但ordered-field attribution失败后，是否降格保存SIFF或回Step2/4寻找新paper core？ |
-| `active_candidates` | none；`SC1-SIFF-v2-FCC-v1` closed from paper-core promotion |
+| `current_step` | ISCF-v0 frozen；function-level Step2/3 audit complete；return narrow Step4 |
+| `active_question` | ISCF-v0 scopes是否具有可干预的non-ordered common/scope-specific relation，而非shared target difficulty或低秩/ordered假象？ |
+| `active_candidates` | no paper method；`ISCF-v0` frozen strong research carrier；narrative pending |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1/step9_10_result_and_portfolio_decision.md` |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_function_audit_20260721/result_and_step4_handoff.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | active_method=none；remote/test false；no SIFF rescue |
-| `rollback_point` | paper portfolio decision or new Step2/4；not SIFF tuning |
+| `method_implementation` | active_method=none；new implementation/remote/test false；ISCF-v0 carrier only |
+| `rollback_point` | Step4 source/narrative audit；low-rank relation matrix and ordered SIFF restoration blocked |
+
+## ISCF-v0 Carrier Freeze and Function Audit
+
+用户于`2026-07-21`授权把FCC的`SIFF_INDEPENDENT_EQUAL`以新identity `ISCF-v0`固定为后续research carrier。
+该动作不改写SIFF-v2的ordered-attribution failure，也不把control role自动升级为paper method。exact contract由
+`configs/stage_c_iscf_v0_carrier.json`冻结：五个independent scopes、direct policy、equal-skill、dataset-wise
+ranks、natural profiles和three-seed checkpoint protocol保持不变。
+
+由existing 60-cell × MSE/MAE table派生，ISCF-v0相对A6_FULL为`+1.3584%/+0.9144%`，MSE在
+5/5 datasets、4/4 horizons、3/3 seeds正向。该结果确立strong carrier角色，但仍是test-informed post-hoc
+comparison，不是独立预注册method claim。
+
+低成本function audit只复用15个existing diagnostic NPZ，没有training、dataset loader或new test access。四项gate：
+
+1. aligned low dimension：`0/15`，fail；median EV2 `0.6281`低于shift-null p95 `0.7223`；
+2. common/private：15/15 common高于null，median private `0.0680`，pass但dataset heterogeneity显著；
+3. complementarity：median oracle headroom `8.5813%`、unique best scopes `3`，pass；
+4. topology：4/5 datasets cross-seed stable，pass；但canonical order rho median仅`0.2121`。
+
+Decision=`function_relation_unresolved_requires_narrow_step4_audit`。generic shared-private、low-rank task relation、
+multi-scale mixing与adaptive experts已有Cross-Stitch/Factorial MTL/TimeMixer/Pathformer/Moirai-MoE/M2FMoE等强prior。
+下一步必须先完成non-ordered common/scope-specific relation的source-informed Step4 gate；不实现method，不新增
+router/loss，不按test选择scope set。
 
 ## Post-D21 Unconstrained Reset
 

@@ -1,0 +1,33 @@
+{
+  "all_arrays_finite": true,
+  "audit_role": "diagnostic_only_test_informed_reuse",
+  "carrier_id": "ISCF-v0",
+  "decision": "function_relation_unresolved_requires_narrow_step4_audit",
+  "gates": {
+    "common_and_private_structure": true,
+    "cross_seed_topology_stability": true,
+    "low_dimensional_relation": false,
+    "scope_complementarity": true
+  },
+  "method_effectiveness_established": false,
+  "new_training_or_test_access": false,
+  "run_units": 15,
+  "statistics": {
+    "common_residual_above_null_count": 15,
+    "low_dimensional_above_null_count": 0,
+    "median_centered_scope_ev2": 0.628104804462928,
+    "median_fused_gain_over_best_fixed_percent": 0.4041329945286302,
+    "median_oracle_headroom_percent": 8.581295514124612,
+    "median_pairwise_prediction_nrmse": 0.16675566762848304,
+    "median_pairwise_residual_correlation": 0.9150843012227409,
+    "median_policy_entropy": 0.8117576711829546,
+    "median_residual_common_energy_ratio": 0.9319680112194665,
+    "median_residual_private_energy_ratio": 0.06803198878053351,
+    "median_scale_distance_spearman": 0.2121212121212121,
+    "median_shift_null_common_energy_p95": 0.2565492689945973,
+    "median_shift_null_ev2_p95": 0.7223376401557945,
+    "median_unique_best_scopes": 3.0,
+    "positive_scale_order_count": 11,
+    "stable_topology_dataset_count": 4
+  }
+}
