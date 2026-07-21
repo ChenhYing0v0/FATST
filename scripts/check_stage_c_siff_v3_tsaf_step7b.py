@@ -24,6 +24,9 @@ if str(BASELINE_ROOT) not in sys.path:
 
 from models import TimeAlign  # noqa: E402
 import train_repo  # noqa: E402
+from evaluate_stage_c_pcsd_cf_checkpoint import (  # noqa: E402
+    test_audit_authorized,
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -376,7 +379,10 @@ def two_step_gradient_case(
     }
 
 
-def runner_checks(config_path: Path) -> dict[str, Any]:
+def runner_checks(
+    config_path: Path,
+    authorized: bool,
+) -> dict[str, Any]:
     runner = ROOT / "scripts/remote/run_stage_c_siff_v3_tsaf_v1.sh"
     syntax = subprocess.run(
         ["bash", "-n", str(runner)],
@@ -395,26 +401,33 @@ def runner_checks(config_path: Path) -> dict[str, Any]:
         capture_output=True,
         text=True,
     )
-    blocked_env = os.environ.copy()
-    blocked_env.update({"CONFIG": str(config_path), "DRY_RUN": "0"})
-    blocked = subprocess.run(
-        ["bash", str(runner)],
-        cwd=ROOT,
-        env=blocked_env,
-        check=False,
-        capture_output=True,
-        text=True,
-    )
+    blocked_returncode = None
+    blocked_stderr = "not run because remote training is authorized"
+    if not authorized:
+        blocked_env = os.environ.copy()
+        blocked_env.update({"CONFIG": str(config_path), "DRY_RUN": "0"})
+        blocked = subprocess.run(
+            ["bash", str(runner)],
+            cwd=ROOT,
+            env=blocked_env,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        blocked_returncode = blocked.returncode
+        blocked_stderr = blocked.stderr.strip()
     return {
         "syntax_pass": syntax.returncode == 0,
         "executable": os.access(runner, os.X_OK),
         "dry_run_pass": dry.returncode == 0
         and "tsaf_dry_run=pass jobs=25" in dry.stdout,
-        "normal_launch_refused": blocked.returncode == 3,
+        "authorization_mode": "authorized" if authorized else "held",
+        "authorization_boundary_pass": authorized
+        or blocked_returncode == 3,
         "dry_run_last_line": dry.stdout.strip().splitlines()[-1]
         if dry.stdout.strip()
         else "",
-        "blocked_stderr": blocked.stderr.strip(),
+        "blocked_stderr": blocked_stderr,
     }
 
 
@@ -667,7 +680,9 @@ def main() -> None:
         "5/5 finite nonzero",
     )
 
-    runner = runner_checks(config_path)
+    authorization = config["authorization"]
+    remote_authorized = authorization["remote_training_authorized"] is True
+    runner = runner_checks(config_path, remote_authorized)
     add_case(
         cases,
         "runner",
@@ -678,24 +693,25 @@ def main() -> None:
                 "syntax_pass",
                 "executable",
                 "dry_run_pass",
-                "normal_launch_refused",
+                "authorization_boundary_pass",
             )
         ),
         runner,
-        "all true; unauthorized normal launch exits 3",
+        "syntax/executable/dry-run true and authorization boundary honored",
     )
-    authorization = config["authorization"]
     add_case(
         cases,
         "authorization",
-        "remote_test_confirmation_held",
+        "seed2021_remote_and_single_test_authorized",
         authorization["step7b_design_and_prelaunch_authorized"] is True
-        and authorization["remote_training_authorized"] is False
-        and authorization["formal_test_access_authorized"] is False
+        and authorization["user_authorized"] is True
+        and authorization["remote_training_authorized"] is True
+        and authorization["formal_test_access_authorized"] is True
         and authorization["confirmation_seeds_authorized"] is False
-        and authorization["formal_test_access_count_for_version"] == 0,
+        and authorization["formal_test_access_count_for_version"] == 1
+        and test_audit_authorized(config),
         authorization,
-        "prelaunch only; remote/test/confirmation false",
+        "seed2021 remote/test true; confirmation false; evaluator accepts",
     )
     schema = config["artifact_schema"]
     add_case(
@@ -733,11 +749,13 @@ def main() -> None:
         "effective_runs": 45,
         "effective_official_test_cells": 180,
         "overall_pass": overall_pass,
-        "remote_training_authorized": False,
-        "formal_test_access_authorized": False,
+        "remote_training_authorized": remote_authorized,
+        "formal_test_access_authorized": bool(
+            authorization["formal_test_access_authorized"]
+        ),
         "confirmation_seeds_authorized": False,
         "decision": (
-            "step7b_prelaunch_pass_waiting_remote_and_test_authorization"
+            "step8_seed2021_remote_and_test_authorized"
             if overall_pass
             else "repair_step7b_prelaunch"
         ),

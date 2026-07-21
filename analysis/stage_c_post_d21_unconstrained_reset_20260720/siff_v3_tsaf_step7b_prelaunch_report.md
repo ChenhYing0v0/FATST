@@ -4,7 +4,7 @@
 
 | Field | Content |
 | --- | --- |
-| `current_step` | Step7B prelaunch complete；等待独立remote/test authorization |
+| `current_step` | Step7B prelaunch complete；2026-07-21 seed2021 remote/test已独立授权 |
 | `problem` | 在不恢复requested-H或sample-conditioned router的条件下，TSAF能否形成可归因、可复现的formal matrix？ |
 | `existence_evidence` | SIFF-v2有可观performance但direct policy attribution不足；TSAF Step7A 26/26 local pass |
 | `idea` | future-coordinate × ordered-log-scale shared allocation field；history只进入五个SIFF arms |
@@ -146,7 +146,9 @@ capacity/initialization/gradient/runner/analyzer边界均通过。
 
 [Fact] 这不是performance结果，也没有形成`passed_core_candidate`。当前权限仍为：
 
-`Step7B prelaunch=true / remote training=false / official test=false / confirmation=false`。
+Step7B完成时权限为`remote/test=false`；2026-07-21用户随后独立授权冻结的seed2021 Phase A，当前为
+`remote training=true / one formal test=true / confirmation=false`。
 
-[Decision] `SC1-SIFF-v3-TSAF-v1`进入`step7b_prelaunch_pass_waiting_remote_and_test_authorization`；下一步只能在独立
-授权后执行remote resource smoke与25-run seed2021 training。不得将GPU空闲或synthetic smoke写成method evidence。
+[Decision] `SC1-SIFF-v3-TSAF-v1`已从`step7b_prelaunch_pass_waiting_remote_and_test_authorization`推进到
+`step8_seed2021_remote_and_test_authorized`。下一步按Step8 record执行commit-pinned pull与resource smoke；不得将GPU
+空闲或synthetic smoke写成method evidence。

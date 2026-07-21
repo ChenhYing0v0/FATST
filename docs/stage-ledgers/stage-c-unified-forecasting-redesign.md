@@ -20,27 +20,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SC1-SIFF-v3-TSAF Step7B prelaunch complete；waiting remote/test authorization |
+| `current_11_step` | SC1-SIFF-v3-TSAF Step8 seed2021 remote/test authorized；preflight pending |
 | `current_candidate` | provisional `SC1-SIFF-v3-TSAF-v1` |
-| `latest_decision` | `step7b_prelaunch_pass_waiting_remote_and_test_authorization` |
-| `next_required_action` | independent authorization；then commit-pinned remote pull + resource smoke；no launch yet |
-| `method_training_authorized` | false；new diagnostic/training/test all false |
+| `latest_decision` | `step8_seed2021_remote_and_single_formal_test_authorized` |
+| `next_required_action` | commit/push -> remote pull -> GPU recheck -> two-arm resource smoke |
+| `method_training_authorized` | seed2021 25-run training + one complete formal test；confirmation false |
 | `rollback_point` | TSAF Step4/6；immutable SIFF-v2 parent |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | TSAF Step7B prelaunch complete；no training result |
+| `current_step` | TSAF Step8 authorized；preflight pending；no training result |
 | `problem` | unified decoder如何组织future-coordinate-specific coupling scale且不假设requested H或sample-wise competence提供信息？ |
 | `existence_evidence` | D18 frontier negative；D22 target access positive；D23 capacity explains；D24 coarse deformation negative |
 | `idea` | 保留SIFF scale-indexed arms，以target-scale allocation field替代history-conditioned generic router |
 | `theory_check` | allocation依赖future coordinate与ordered scale，不依赖requested H；history dependence留在arms |
 | `design` | 9 effective arms；20 reused references + 25 new E2E runs；Step7A 26/26、Step7B 15/15 |
 | `narrative_gate` | conditional pass；contribution-level novelty provisional |
-| `effectiveness_gate` | pending official test；45 runs/180 cells frozen；remote/test false |
-| `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step7b_prelaunch_report.md` |
-| `decision` | `step7b_prelaunch_pass_waiting_remote_and_test_authorization` |
+| `effectiveness_gate` | seed2021 one complete official test authorized；45 runs/180 cells frozen |
+| `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step8_remote_authorization_and_launch.md` |
+| `decision` | `step8_seed2021_remote_and_single_formal_test_authorized` |
 
 ## Frozen Carrier Contract
 
@@ -69,7 +69,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC-D23-FCMI` | `closed_capacity_control_explains` | generic main与coordinate interaction能否可识别分解并原生fallback | conditional pass | FCMI vs A6 -21.7343%；capacity/order fail；internal pass | no seeds/rescue；return Step2/3 |
 | `SC-D24-CTB` | `diagnostic_only_closed_exact_negative` | strong fixed trajectory synthesis是否留下ordered-history可识别coarse deformation | not method gate | v1.1 ordered loses all primary controls；test=0 | no rescue；return Step2/4 consolidation |
 | `SC-MNB` | `source_audit_complete_protocol_blocked` | A6/MEASURE是否仍具modern native carrier viability | problem boundary coherent；method narrative incomplete | source set frozen；65-run/80-cell execution false | repair test hygiene/metric equivalence/config semantics |
-| `SC1-SIFF-v3-TSAF-v1` | `step7b_prelaunch_pass_waiting_authorization` | target-scale allocation能否修复SIFF learned fusion而不依赖sample-wise competence | conditional pass；single method contribution | 15/15 cases、10/10 categories；45-run/180-cell freeze；no performance result | independent remote/test authorization |
+| `SC1-SIFF-v3-TSAF-v1` | `step8_authorized_preflight_pending` | target-scale allocation能否修复SIFF learned fusion而不依赖sample-wise competence | conditional pass；single method contribution | seed2021 25-run training + one 180-cell formal test authorized；not launched | commit/pull/GPU/resource smoke |
 | `SC1-PMFO-RCT-v1` | `failed_as_core_candidate` | fixed mixed-radix conservative future tree | narrative/local pass | Step7B三dataset均不优于A6；no numeric pathology | archived as evidence；rollback Step 4 |
 | `SC1-FPMO-M0` | `control_only` | shared-latent exact A6 morph验证function preservation/restriction | not required | exact equality required | mandatory Step6 morphism control |
 | `SC1-FPMO-DA` | `control_only` | direct atom full-affine head隔离capacity/orthogonal coordinate effect | not required | matched function-class control | mandatory Step6 dense-equivalence control |
@@ -239,6 +239,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | D24-CTB v1.1 result | 10 frozen runs + 840 metrics + 720 comparisons + zero test access | ordered vs marginal -8.60%；vs sorted about -9%；vs shuffled about -14%；0/4 horizons | exact probe closed；broader direction unsupported/unresolved；Step2/4 consolidation | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d24_ctb_result_and_rollback.md` |
 | SIFF-v3 TSAF Step4-7A | primary-source/narrative audit + production allocation path | Step4-6 conditional pass；Step7A 26/26；history-free allocation、history-dependent arms | Step7B prelaunch only；remote/test false | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_reactivation_and_tsaf_step46_audit.md` |
 | SIFF-v3 TSAF Step7B prelaunch | 9 effective arms；20 references + 25 new runs；capacity/init/gradient/runner/analyzer gates | 15/15 cases、10/10 categories；20/20 remote reference hashes；max capacity gap 0.3619%；3 GPUs idle | prelaunch pass；waiting independent remote/test authorization；no performance result | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step7b_prelaunch_report.md` |
+| SIFF-v3 TSAF Step8 authorization | user authorization + evaluator matrix contract + split training/test runner | 15/15 authorization gate；25 training + one complete 180-cell test；confirmation false | authorized；remote preflight/resource smoke next | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step8_remote_authorization_and_launch.md` |
 
 ## Pending Tasks
 
@@ -309,6 +310,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC-D23-FCMI | `completed_fail_return_step2_3` | 40/40；FCMI vs A6 -21.7343%；capacity/order fail；no rescue |
 | SC-D24-CTB | `completed_exact_negative` | v1/v1.1 artifacts保留；no feature/bin/lambda/nonlinear rescue |
 | SC1-SIFF-v3-TSAF Step7B | `completed_prelaunch_waiting_authorization` | independent authorization后才可remote pull/resource smoke；training/test仍false |
+| SC1-SIFF-v3-TSAF Step8 | `authorized_preflight_pending` | commit/pull/GPU/two-arm smoke；25/25 training前不得formal test |
 
 ## Paper Mainline Sync Log
 
@@ -426,6 +428,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-20 | D24-CTB v1/v1.1 result | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | v1 design fault correction + v1.1 full validation attribution | exact negative；test=0；no rescue；return Step2/4 consolidation |
 | 2026-07-21 | SIFF-v3 TSAF Step4-7A | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | SIFF-first reset + single-contribution allocation design + production path | Step4-6 conditional pass；Step7A 26/26；remote/test false |
 | 2026-07-21 | SIFF-v3 TSAF Step7B prelaunch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | 45-run effective matrix + reference reuse + capacity/init/gradient/tooling freeze | 15/15、10/10；remote/test/confirmation false；waiting authorization |
+| 2026-07-21 | SIFF-v3 TSAF Step8 authorization | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | explicit seed2021 remote/test authorization + evaluator/runner contract | 25 training + one complete test true；confirmation false；preflight next |
 
 ## Continuation Rules
 
@@ -695,3 +698,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
      confirmation均false。GPU idle与synthetic analyzer不是performance evidence。
 104. 下一步必须先取得独立remote/test authorization，再commit-pinned pull与两arm resource smoke。CCSF、D17-D21、
      region/covariance/temperature、seed/width/rank/readout sweep均不得恢复。
+105. 2026-07-21用户已授权冻结seed2021的25-run training与一次完整formal test。test只能在25/25 training完整后
+     执行，checkpoint nonmutation为硬门；confirmation/paper promotion仍false。
+106. generic evaluator已支持`effective_arms`并核对45-run matrix；TSAF config补齐coupling scales、equal-skill
+     training contract与future bins。先commit/pull/GPU/resource smoke，smoke通过前不得launch。

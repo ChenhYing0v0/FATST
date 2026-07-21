@@ -11,6 +11,7 @@ SEED="${SEED:-2021}"
 DRY_RUN="${DRY_RUN:-0}"
 STATUS_ONLY="${STATUS_ONLY:-0}"
 RESOURCE_SMOKE="${RESOURCE_SMOKE:-0}"
+FORMAL_TEST_ONLY="${FORMAL_TEST_ONLY:-0}"
 EPOCHS="${EPOCHS:-20}"
 PATIENCE="${PATIENCE:-5}"
 BATCH_SIZE="${BATCH_SIZE:-32}"
@@ -82,12 +83,24 @@ is_complete() {
     && -s "${output_dir}/model_diagnostics.json" ]]
 }
 
+is_test_complete() {
+  local line="$1" output_dir
+  output_dir="$(run_dir_for_line "${line}")"
+  [[ -s "${output_dir}/test_audit_metrics_by_target_horizon.csv" \
+    && -s "${output_dir}/test_audit_invariants.json" \
+    && -s "${output_dir}/pcsd_test_audit_diagnostics.npz" ]]
+}
+
 if [[ "${STATUS_ONLY}" == "1" ]]; then
   completed=0
+  test_completed=0
   for line in "${LINES[@]}"; do
     if is_complete "${line}"; then completed=$((completed + 1)); fi
+    if is_test_complete "${line}"; then
+      test_completed=$((test_completed + 1))
+    fi
   done
-  echo "tsaf_status=$(date -Is) completed=${completed}/${#LINES[@]}"
+  echo "tsaf_status=$(date -Is) training=${completed}/${#LINES[@]} test=${test_completed}/${#LINES[@]}"
   find "${OUTPUT_ROOT}/_logs_seed${SEED}" -name '*.log' -type f -print0 \
     2>/dev/null | xargs -0 -r tail -n 1
   exit 0
@@ -102,6 +115,14 @@ fi
 if [[ "${REMOTE_AUTHORIZED}" != "true" ]]; then
   echo "TSAF remote launch is not authorized by ${CONFIG}" >&2
   exit 3
+fi
+if [[ "${FORMAL_TEST_ONLY}" == "1" && "${TEST_AUTHORIZED}" != "true" ]]; then
+  echo "TSAF formal test is not authorized by ${CONFIG}" >&2
+  exit 3
+fi
+if [[ "${RESOURCE_SMOKE}" == "1" && "${FORMAL_TEST_ONLY}" == "1" ]]; then
+  echo "RESOURCE_SMOKE and FORMAL_TEST_ONLY are mutually exclusive" >&2
+  exit 2
 fi
 
 run_training_command() {
@@ -202,7 +223,7 @@ mkdir -p "${LOG_ROOT}"
   echo "reused_reference_runs=20"
   echo "effective_runs=45"
   echo "checkpoint_selection=best_val_mean_mse_h96_h192_h336_h720"
-  echo "formal_test_executed=false"
+  echo "formal_test_execution_mode=${FORMAL_TEST_ONLY}"
   echo "test_informed=true"
   nvidia-smi --query-gpu=index,name,memory.total,memory.used,memory.free,utilization.gpu \
     --format=csv,noheader,nounits
@@ -212,11 +233,35 @@ printf '%s\n' "${LINES[@]}" >"${OUTPUT_ROOT}/jobs_seed${SEED}.tsv"
 run_one() {
   local index="$1" line="$2" gpu="$3"
   local dataset arm readout policy objective rank profile patch_num d_model d_ff
-  local output_dir run_log
+  local output_dir run_log checkpoint_before checkpoint_after
   IFS=$'\t' read -r dataset arm readout policy objective rank profile \
     patch_num d_model d_ff <<< "${line}"
   output_dir="$(run_dir_for_line "${line}")"
   run_log="${LOG_ROOT}/${arm}_${dataset}_seed${SEED}.log"
+  if [[ "${FORMAL_TEST_ONLY}" == "1" ]]; then
+    if ! is_complete "${line}"; then
+      echo "training_incomplete arm=${arm} dataset=${dataset}" >&2
+      return 1
+    fi
+    if is_test_complete "${line}"; then
+      echo "skip_existing_test=$(date -Is) job=$((index + 1))/${#LINES[@]} arm=${arm} dataset=${dataset} gpu=${gpu}"
+      return 0
+    fi
+    checkpoint_before="$(sha256_file "${output_dir}/checkpoint.pt")"
+    echo "test_start=$(date -Is) job=$((index + 1))/${#LINES[@]} arm=${arm} dataset=${dataset} gpu=${gpu}"
+    CUDA_VISIBLE_DEVICES="${gpu}" "${CONDA_BIN}" run --no-capture-output \
+      -n "${CONDA_ENV}" python scripts/evaluate_stage_c_pcsd_cf_checkpoint.py \
+        --run-dir "${output_dir}" --design "${CONFIG}" \
+        --test-audit-config "${CONFIG}" --evaluation-split test \
+        --device cuda >>"${run_log}" 2>&1
+    checkpoint_after="$(sha256_file "${output_dir}/checkpoint.pt")"
+    if [[ "${checkpoint_before}" != "${checkpoint_after}" ]]; then
+      echo "checkpoint_mutated arm=${arm} dataset=${dataset}" >&2
+      return 1
+    fi
+    echo "test_done=$(date -Is) job=$((index + 1))/${#LINES[@]} arm=${arm} dataset=${dataset} gpu=${gpu}"
+    return 0
+  fi
   if is_complete "${line}"; then
     echo "skip_existing=$(date -Is) job=$((index + 1))/${#LINES[@]} arm=${arm} dataset=${dataset} gpu=${gpu}"
     return 0
@@ -249,4 +294,8 @@ if [[ "${status}" != "0" ]]; then
   echo "tsaf_worker_failure=$(date -Is)" >&2
   exit 1
 fi
-echo "tsaf_training_done=$(date -Is) formal_test_executed=false"
+if [[ "${FORMAL_TEST_ONLY}" == "1" ]]; then
+  echo "tsaf_formal_test_done=$(date -Is)"
+else
+  echo "tsaf_training_done=$(date -Is) formal_test_executed=false"
+fi

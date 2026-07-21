@@ -122,7 +122,10 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
 def expected_matrix_size(audit: dict[str, Any]) -> int:
     matrix = audit["matrix"]
     datasets = audit.get("datasets", matrix.get("datasets", []))
-    arms = audit.get("arms", matrix.get("arms", []))
+    arms = audit.get(
+        "arms",
+        audit.get("effective_arms", matrix.get("arms", [])),
+    )
     seeds = audit.get("seeds")
     if seeds is None:
         seeds = [matrix["seed"]] if "seed" in matrix else []

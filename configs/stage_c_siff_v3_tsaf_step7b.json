@@ -4,7 +4,7 @@
   "candidate_version": "SC1-SIFF-v3-TSAF-v1",
   "parent_candidate": "SC1-SIFF-v2-EQ-ATTR-v1",
   "date": "2026-07-21",
-  "status": "step7b_prelaunch_frozen_waiting_remote_authorization",
+  "status": "authorized_prelaunch",
   "role": "paper_core_candidate_formal_screen",
   "test_informed": true,
   "purpose": "test whether a future-coordinate by ordered-log-scale allocation field improves the SIFF carrier without sample-conditioned routing",
@@ -26,6 +26,7 @@
   "seeds": [2021],
   "confirmation_seeds": [2022, 2023],
   "scales": [1, 48, 144, 360, 720],
+  "coupling_scales": [1, 48, 144, 360, 720],
   "effective_arms": [
     {
       "id": "a6_full",
@@ -162,6 +163,7 @@
     }
   },
   "matrix": {
+    "expected_runs": 45,
     "effective_arms": 9,
     "effective_runs": 45,
     "new_training_arms": 5,
@@ -194,6 +196,28 @@
     "early_stopping_patience": 5,
     "initialization": "from_scratch_paired_by_dataset_and_seed",
     "test_labels_select_checkpoint_or_config": false
+  },
+  "training_contracts": [
+    {
+      "target_horizons": [720],
+      "validation_horizons": [96, 192, 336, 720],
+      "pred_loss_mode": "full",
+      "pcc_objective_mode": "equal_skill",
+      "training_final_evaluation_split": "val"
+    }
+  ],
+  "diagnostic_protocol": {
+    "probe_rows": 256,
+    "future_bins": [
+      {"name": "H1_48", "start": 0, "end": 48},
+      {"name": "H49_96", "start": 48, "end": 96},
+      {"name": "H97_144", "start": 96, "end": 144},
+      {"name": "H145_192", "start": 144, "end": 192},
+      {"name": "H193_288", "start": 192, "end": 288},
+      {"name": "H289_336", "start": 288, "end": 336},
+      {"name": "H337_512", "start": 336, "end": 512},
+      {"name": "H513_720", "start": 512, "end": 720}
+    ]
   },
   "comparisons": [
     {"id": "effectiveness_vs_a6_measure", "candidate": "tsaf", "reference": "a6_measure", "layer": "paper_facing_effectiveness"},
@@ -293,14 +317,22 @@
     "numeric_or_gradient_pathology": "optimization_or_numeric_pathology; repair Step7 without direction rejection"
   },
   "authorization": {
-    "user_authorization_basis": "2026-07-21 user instruction: 继续推进TSAF Step7B的工作",
+    "user_authorization_basis": "2026-07-21 user instruction: 继续推进远程实验",
     "step7b_design_and_prelaunch_authorized": true,
-    "remote_training_authorized": false,
-    "formal_test_access_authorized": false,
+    "user_authorized": true,
+    "authorization_date": "2026-07-21",
+    "remote_training_authorized": true,
+    "formal_test_access_authorized": true,
+    "test_role": "primary-mechanism-effectiveness-and-paper-benchmark",
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+    "checkpoint_retraining_allowed": true,
+    "checkpoint_mutation_during_test_allowed": false,
+    "phase_a_seed": 2021,
     "confirmation_seeds_authorized": false,
+    "confirmation_authorized": false,
     "test_role_if_later_authorized": "primary-mechanism-effectiveness-and-paper-benchmark",
-    "formal_test_access_count_for_version": 0,
+    "formal_test_access_count_for_version": 1,
     "per_dataset_horizon_or_cell_tuning_allowed": false
   },
-  "decision": "step7b_prelaunch_freeze_only_remote_and_test_held"
+  "decision": "step8_seed2021_remote_training_and_single_formal_test_authorized"
 }

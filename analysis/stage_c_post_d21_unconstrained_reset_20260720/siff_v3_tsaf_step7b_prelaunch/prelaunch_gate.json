@@ -1,7 +1,7 @@
 {
   "gate_id": "SC1-SIFF-v3-TSAF-v1-Step7B-prelaunch",
   "candidate_version": "SC1-SIFF-v3-TSAF-v1",
-  "config_sha256": "dcbfce14e22c968f50f1758f32ae29eeba65cafc14a795a3dfe6d94578ee0353",
+  "config_sha256": "32ec229c66c5683a48793b5bbde3c4f6e99790e4f6e05e4076ec6284c351e748",
   "profile_sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a",
   "categories": {
     "artifact": true,
@@ -24,8 +24,8 @@
   "effective_runs": 45,
   "effective_official_test_cells": 180,
   "overall_pass": true,
-  "remote_training_authorized": false,
-  "formal_test_access_authorized": false,
+  "remote_training_authorized": true,
+  "formal_test_access_authorized": true,
   "confirmation_seeds_authorized": false,
-  "decision": "step7b_prelaunch_pass_waiting_remote_and_test_authorization"
+  "decision": "step8_seed2021_remote_and_test_authorized"
 }

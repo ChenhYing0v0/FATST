@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Scale-Indexed Forecast Fields for Unified Multi-Horizon Time-Series Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC1-SIFF-v3-TSAF Step7B prelaunch complete；waiting remote/test authorization |
+| `current_11_step` | SC1-SIFF-v3-TSAF Step8 seed2021 remote/test authorized；preflight pending |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -166,6 +166,12 @@ references经remote checkpoint SHA256 20/20复核后复用，5个new arms共25 r
 synthetic smoke均通过。validation只选checkpoint；runner不执行test。当前仍为
 `remote training=false / official test=false / confirmation=false`，因此该节点不是performance pass。详见
 `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step7b_prelaunch_report.md`。
+
+[TSAF Step8 Authorization] 用户于2026-07-21授权冻结的25-run seed2021 remote training，并授权在25/25 training
+完整后对45-run/180-cell effective matrix执行一次formal test。confirmation seeds、paper-core promotion与matrix/gate
+修改仍false。training runner与formal-test evaluator已分离，test mode要求checkpoint SHA256 nonmutation；当前尚未
+remote pull、resource smoke、training或test。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step8_remote_authorization_and_launch.md`。
 
 [Scope Decision, 2026-07-20] 用户明确要求当前项目暂不转出`deterministic-MSE fixed-past architecture search`。
 因此D22-C有效失败只关闭exact v1并回joint Step2/3，不再自动停止整个search；但不得用seed、width、readout或

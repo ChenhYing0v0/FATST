@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC1-SIFF-v3-TSAF Step7B prelaunch complete；waiting remote/test authorization |
+| `current_step` | SC1-SIFF-v3-TSAF Step8 seed2021 remote/test authorized；preflight pending |
 | `active_question` | target-coordinate × ordered-scale allocation能否让SIFF稳定超过frozen parent与A6_MEASURE？ |
 | `active_candidates` | provisional `SC1-SIFF-v3-TSAF-v1`；SIFF-v2 immutable parent |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step7b_prelaunch_report.md` |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step8_remote_authorization_and_launch.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | TSAF Step7A 26/26；Step7B 15/15、10/10；remote/test false |
+| `method_implementation` | TSAF Step7A/7B pass；seed2021 remote + one formal test authorized；not launched |
 | `rollback_point` | TSAF Step4/6；SIFF-v2 remains immutable |
 
 ## Post-D21 Unconstrained Reset
@@ -144,6 +144,11 @@ categories，25/25 CLI、5/5 two-step gradients、paired initialization、runner
 通过。只读remote preflight显示3 GPUs idle、20/20 reference hashes一致；但未pull、未resource-batch smoke、未训练、
 未test。下一步等待独立remote/test authorization；confirmation和SC-MNB execution均false。详见
 `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step7b_prelaunch_report.md`。
+
+2026-07-21用户已独立授权冻结的25-run seed2021 remote training，以及25/25 training完整后的一次45-run/180-cell
+formal test。generic evaluator现识别`effective_arms`，config补齐equal-skill training contract、coupling scales与
+future bins；runner将training与`FORMAL_TEST_ONLY`严格分离。当前等待commit/push、remote pull与两项resource smoke；
+confirmation、paper promotion和post-hoc matrix/gate修改仍false。
 
 用户2026-07-20决定暂不承担task pivot成本。该scope决定把上一版“D22-C有效失败即停止整个
 deterministic-MSE search”改为：关闭exact D22-C v1并回joint Step2/3，在同一task边界寻找不同的falsifiable

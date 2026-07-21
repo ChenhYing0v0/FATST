@@ -25,9 +25,11 @@
 16. `docs/code-explanation/stage-c-siff-v3-tsaf-step7a.md`；
 17. `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step7b_prelaunch_report.md`；
 18. `docs/code-explanation/stage-c-siff-v3-tsaf-step7b.md`；
-19. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
-20. `docs/paper-mainline.md`；
-21. `docs/research-roadmap.md`。
+19. `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step8_remote_authorization_and_launch.md`；
+20. `docs/code-explanation/stage-c-siff-v3-tsaf-step8.md`；
+21. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
+22. `docs/paper-mainline.md`；
+23. `docs/research-roadmap.md`。
 
 若上述文件与更旧的聊天、archive或历史段落冲突，以本文件和三份主线文档顶部的最新cursor为准。
 
@@ -39,13 +41,13 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-21 |
 | `source_parent_commit` | `d647874`（Step7B开始前parent） |
-| `current_step` | SC1-SIFF-v3-TSAF Step7B prelaunch complete；waiting remote/test authorization |
+| `current_step` | SC1-SIFF-v3-TSAF Step8 seed2021 remote/test authorized；preflight pending |
 | `active_problem` | target-coordinate × ordered-scale allocation能否修复SIFF-v2 fusion并超过parent/A6_MEASURE？ |
 | `active_method` | provisional `SC1-SIFF-v3-TSAF-v1`；SIFF-v2 immutable parent |
-| `method_training_authorized` | false |
-| `remote_training_authorized` | false；new diagnostic/training/test all false |
-| `next_action` | 等待独立remote/test授权；不得自行launch |
-| `conditional_next` | 授权后先commit-pinned remote pull、GPU recheck与两arm resource smoke |
+| `method_training_authorized` | seed2021 25-run Phase A only |
+| `remote_training_authorized` | true；one complete formal test true；confirmation false |
+| `next_action` | commit/push -> remote pull -> GPU recheck -> two-arm resource smoke |
+| `conditional_next` | smoke通过后launch 25-run training；25/25前不得formal test |
 | `rollback` | TSAF exact design回Step4/6；SIFF-v2不变；SC-MNB execution false |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
@@ -138,8 +140,10 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
 25. 20/20 remote reference checkpoint hashes与frozen audit一致；旧direct independent不得复用为target-only control。
 26. target-only independent matched ranks为ETTh1/ETTh2/ETTm1/ETTm2/Weather=`109/115/115/106/115`，最大
     active-parameter gap 0.3619%。
-27. 只读remote preflight显示3 GPUs idle，但未pull、未resource-batch smoke、未训练、未test；当前runner normal
-    launch exit 3，remote/test/confirmation仍false。
+27. 只读remote preflight显示3 GPUs idle；当时未pull、未resource-batch smoke、未训练、未test。
+28. 用户2026-07-21授权冻结的seed2021 25-run training与一次完整formal test；confirmation仍false。
+29. evaluator已补齐`effective_arms` matrix support，runner分离training与formal-test mode；下一步先commit-pinned
+    remote pull与两项resource smoke，25/25 training前不得访问test。
 
 ## 5. D22-HFA 的执行顺序
 
