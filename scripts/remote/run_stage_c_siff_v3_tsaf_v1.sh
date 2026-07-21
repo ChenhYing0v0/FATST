@@ -212,6 +212,13 @@ fi
 
 LOG_ROOT="${OUTPUT_ROOT}/_logs_seed${SEED}"
 mkdir -p "${LOG_ROOT}"
+if [[ "${FORMAL_TEST_ONLY}" == "1" ]]; then
+  LAUNCH_RECORD="${OUTPUT_ROOT}/formal_test_launch_record_seed${SEED}.txt"
+  JOB_RECORD="${OUTPUT_ROOT}/formal_test_jobs_seed${SEED}.tsv"
+else
+  LAUNCH_RECORD="${OUTPUT_ROOT}/launch_record_seed${SEED}.txt"
+  JOB_RECORD="${OUTPUT_ROOT}/jobs_seed${SEED}.tsv"
+fi
 {
   echo "tsaf_start=$(date -Is)"
   echo "commit=$(git rev-parse HEAD)"
@@ -227,8 +234,8 @@ mkdir -p "${LOG_ROOT}"
   echo "test_informed=true"
   nvidia-smi --query-gpu=index,name,memory.total,memory.used,memory.free,utilization.gpu \
     --format=csv,noheader,nounits
-} | tee "${OUTPUT_ROOT}/launch_record_seed${SEED}.txt"
-printf '%s\n' "${LINES[@]}" >"${OUTPUT_ROOT}/jobs_seed${SEED}.tsv"
+} | tee "${LAUNCH_RECORD}"
+printf '%s\n' "${LINES[@]}" >"${JOB_RECORD}"
 
 run_one() {
   local index="$1" line="$2" gpu="$3"

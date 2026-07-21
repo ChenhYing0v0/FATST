@@ -22,7 +22,8 @@ runner现在有三个互斥执行角色：
 3. `FORMAL_TEST_ONLY=1`：要求training artifacts已完整，只读取checkpoint并生成formal-test artifacts。
 
 formal-test mode在每个run前后计算`checkpoint.pt` SHA256；任何变化立即失败。`STATUS_ONLY=1`分别报告training与test
-完成数。dry-run不触发conda、dataset或test访问。
+完成数。training与formal-test分别写`launch_record_seed*.txt`和`formal_test_launch_record_seed*.txt`，防止后者
+覆盖training provenance。dry-run不触发conda、dataset或test访问。
 
 ## 3. Authorization boundary
 
