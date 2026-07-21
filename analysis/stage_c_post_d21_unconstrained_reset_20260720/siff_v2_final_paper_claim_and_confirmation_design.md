@@ -5,7 +5,7 @@
 | Field | Record |
 | --- | --- |
 | `audit_date` | `2026-07-21` |
-| `current_step` | SIFF-first Step 4-6 complete；A6_FULL-scope FCC Step8 training active；formal test 0/30 |
+| `current_step` | SIFF-first Step 4-6 complete；A6_FULL-scope FCC Step9/10 complete；portfolio decision |
 | `candidate_version` | immutable `SC1-SIFF-v2-EQ-ATTR-v1`；evaluation tag `SC1-SIFF-v2-FCC-v1` |
 | `problem` | one full-domain varied-horizon decoder如何把future-output coupling scope作为结构坐标，而不是把requested H、input scale或任意expert identity混为一谈？ |
 | `existence_evidence` | SIFF超过A6_FULL、constant/permuted/Q1-wide与PCSD_EQUAL；internal 7/7；但未通过independent gate；A6_MEASURE历史negative保留但退出FCC |
@@ -13,9 +13,9 @@
 | `theory_check` | Q2 field在ordered log-scale上共享history-conditioned operator components；requested H不进入forecast graph；direct policy只作既有fusion，不claim novelty |
 | `design` | final claim confirmation不实现新method；SIFF/A6_FULL/independent × 5 datasets × 2 new seeds，复用seed2021形成three-seed evidence |
 | `narrative_gate` | `conditional_pass_as_single_architecture_contribution` |
-| `effectiveness_gate` | blocked pending FCC；A6_FULL承担method-package performance，independent承担ordered-field attribution |
+| `effectiveness_gate` | A6_FULL package pass；independent attribution fail；SIFF paper-core promotion closed |
 | `artifacts` | SIFF Step9 four-layer audit、post-TSAF factorial audit、latest primary-source audit、FCC config/runner/analyzer/prelaunch/launch reports |
-| `decision` | `step8_training_active_formal_test_not_started` |
+| `decision` | `performance_pass_attribution_blocked_stop_fcc_promotion` |
 
 ## 2. Decision
 
@@ -185,14 +185,17 @@ dataset/seed的Encoder initialization需paired，independent arm按现有paramet
 
 - narrative gate：conditional pass；
 - code/model implementation：无变化，不需要Step7A；
-- remote training：commit `87bea35`于`2026-07-21T12:54:37+08:00`启动，30-run matrix active；
-- official test：用户已授权但尚未启动，只允许在30/30 training完整后执行一次；
+- remote training：30/30 complete；
+- official test：30/30 new runs与45-run three-seed analyzer complete；single access consumed；
 - local prelaunch：25/25 checks、30/30 jobs、15/15 historical references通过；
-- 若FCC通过，下一步才是modern native baselines与完整formal ablations；
-- 若FCC失败，回paper portfolio decision，而不是回SIFF rank/loss/router tuning。
+- FCC result：vs A6_FULL package pass；vs independent attribution fail；
+- 下一步回paper portfolio decision，不进入modern baselines/formal ablations，也不回SIFF rank/loss/router tuning。
 
 最终decision：
 
 ```text
-step8_training_active_formal_test_not_started
+performance_pass_attribution_blocked_stop_fcc_promotion
 ```
+
+完整结果见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1/step9_10_result_and_portfolio_decision.md`。

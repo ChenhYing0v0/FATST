@@ -1,0 +1,5 @@
+target_horizon,mse,mae,num_samples,num_channels,eval_prefix_steps,mode,run_name,dataset,pred_len,checkpoint_policy,evaluation_split,official_test_mode,protocol_class,protocol_profile,profile_hash
+96,0.8243453583369652,0.6156896126146117,2161,7,96,unified,SIFF_FCC_a6_full_seed2022,ETTh1,720,best-val,val,1,method_screening,stage_c_siff_v2_fcc_v1,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a
+192,1.0510854724173744,0.6926074144430459,2161,7,192,unified,SIFF_FCC_a6_full_seed2022,ETTh1,720,best-val,val,1,method_screening,stage_c_siff_v2_fcc_v1,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a
+336,1.2611405091981094,0.7649507067565408,2161,7,336,unified,SIFF_FCC_a6_full_seed2022,ETTh1,720,best-val,val,1,method_screening,stage_c_siff_v2_fcc_v1,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a
+720,1.4141880079276032,0.8231748785823584,2161,7,720,unified,SIFF_FCC_a6_full_seed2022,ETTh1,720,best-val,val,1,method_screening,stage_c_siff_v2_fcc_v1,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a

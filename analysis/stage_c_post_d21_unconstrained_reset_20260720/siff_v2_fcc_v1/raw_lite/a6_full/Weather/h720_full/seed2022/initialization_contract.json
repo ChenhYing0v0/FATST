@@ -1,0 +1,6 @@
+{
+  "encoder_initialization_hash": "f34e77580f742e4135e682b568763c91743931e1e2f803ff2fb1cc51204c10f6",
+  "operator_base_initialization_hash": "b9f42f3ca1a0288934be2b620ee9c2215a4022033b53f3a030dc91f68faf9a6c",
+  "operator_initialization_hash": "b9f42f3ca1a0288934be2b620ee9c2215a4022033b53f3a030dc91f68faf9a6c",
+  "readout_mode": "learned-basis-forecast-operator"
+}

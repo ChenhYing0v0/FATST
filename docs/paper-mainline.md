@@ -7,14 +7,14 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Scale-Indexed Forecast Fields for Unified Multi-Horizon Time-Series Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SIFF-v2 FCC Step8 training active；30-run matrix running；formal test 0/30 |
+| `current_11_step` | SIFF-v2 FCC Step9/10 complete；package pass，ordered attribution fail；paper portfolio decision |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | SIFF-v2 conditional single-contribution candidate；A6_FULL-scope FCC effectiveness pending；no successor method |
+| `paper_core_status` | SIFF-v2 not promoted；A6_FULL package positive retained；ordered-field claim closed；active_method=none |
 
 [Constraint Reset, 2026-07-20] 后续不再把exact projectivity、requested horizon禁用、A6 interface compatibility或
 full-$T$ prefix crop当作新方法的先验硬约束。它们可以成为合理设计或matched controls，但必须由problem、理论与
@@ -232,6 +232,20 @@ Weather-SIFF seed2022与ETTm2-independent seed2023 two-batch smokes finite且无
 `2026-07-21T12:54:37+08:00`在三张RTX 3090启动，首批Weather的SIFF/A6_FULL/independent均已进入训练。
 formal test仍为0/30，只在30/30 training完整后执行。详见
 `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/remote_launch_record.md`。
+
+[SIFF-v2 FCC Step9/10 Result] 30/30 new training、30/30 formal test与45/45 effective-run audit完整；180/180
+official-test cells、45 unique checkpoint hashes、paired initialization与test nonmutation全部通过。SIFF相对
+`A6_FULL`的test MSE/MAE为`+1.2497%/+0.7549%`，5/5 datasets、4/4 horizons、3/3 seeds正向，确认完整
+method package相对用户指定source carrier稳定提升。
+
+但是ordered-field attribution失败：SIFF相对same-objective capacity-matched independent control的test MSE/MAE为
+`-0.1272%/-0.1733%`，仅2/5与1/5 dataset wins、2/4与0/4 horizon wins、1/3 seed wins；validation也为
+`-0.3224%/-0.5015%`，不是split reversal或单seed异常。internal health六项均通过，只说明路径活跃，不能覆盖
+negative attribution。Decision=`performance_pass_attribution_blocked_stop_fcc_promotion`，failure attribution=
+`capacity_control_explains`。SIFF-v2不晋升paper core，不补seed/rank/width/readout/router/loss，不启动modern
+baseline matrix或formal ablations；当前回paper portfolio decision，`active_method=none`。A6_MEASURE历史negative
+继续保留。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1/step9_10_result_and_portfolio_decision.md`。
 
 [Scope Decision, 2026-07-20] 用户明确要求当前项目暂不转出`deterministic-MSE fixed-past architecture search`。
 因此D22-C有效失败只关闭exact v1并回joint Step2/3，不再自动停止整个search；但不得用seed、width、readout或

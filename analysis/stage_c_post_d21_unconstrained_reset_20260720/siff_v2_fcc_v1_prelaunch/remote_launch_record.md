@@ -72,3 +72,14 @@ active memory约GPU0/1/2=`2003/434/1474 MiB`，保留充足安全余量。根据
 ```text
 step8_training_active_formal_test_not_started
 ```
+
+## 6. Completion update
+
+- 30/30 training于`2026-07-21T14:06:38+08:00`完成；
+- formal test于`2026-07-21T14:09:02+08:00`启动；
+- 30/30 new test与45-run/180-cell analyzer于`2026-07-21T14:12:05+08:00`完成；
+- checkpoint nonmutation、matrix completeness、unique hashes与initialization pairing全部通过；
+- final decision=`performance_pass_attribution_blocked_stop_fcc_promotion`。
+
+结果报告：
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1/step9_10_result_and_portfolio_decision.md`。

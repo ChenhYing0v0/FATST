@@ -1,0 +1,58 @@
+{
+  "active_forward_parameters": 6798325,
+  "d_model": 64,
+  "encoder_mode": "timealign-token-mlp",
+  "frozen_parameter_tensors": 0,
+  "patch_num": 48,
+  "pcsd_coordinate_dim": 4,
+  "pcsd_coupling_field_parameters": 6662864,
+  "pcsd_decoder_parameters": 6763893,
+  "pcsd_mode_rank": 256,
+  "pcsd_partition": "canonical",
+  "pcsd_policy_entropy": 0.9993770122528076,
+  "pcsd_policy_mode": "direct",
+  "pcsd_policy_parameters": 101029,
+  "pcsd_scales": [
+    1,
+    48,
+    144,
+    360,
+    720
+  ],
+  "pcsd_scope_usage": [
+    0.196788027882576,
+    0.1977507323026657,
+    0.2016942799091339,
+    0.19989705085754395,
+    0.20386989414691925
+  ],
+  "readout_mode": "siff-coupling-field",
+  "siff_scale_basis": [
+    [
+      1.0,
+      -1.8397070169448853
+    ],
+    [
+      1.0,
+      -0.16840499639511108
+    ],
+    [
+      1.0,
+      0.30589559674263
+    ],
+    [
+      1.0,
+      0.7014830112457275
+    ],
+    [
+      1.0,
+      1.0007333755493164
+    ]
+  ],
+  "siff_scale_basis_hash": "497d7059e9c2e3fbf54767d509ea6e793f4c37ee4a6d8cc4ed9ac6a76477db52",
+  "siff_scale_basis_mode": "ordered",
+  "siff_scale_components": 2,
+  "total_parameters": 9010885,
+  "trainable_parameters": 9010885,
+  "unused_proj_x_parameters": 2212560
+}

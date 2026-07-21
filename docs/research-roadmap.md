@@ -5,14 +5,14 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SIFF-v2 FCC Step8 training active；30-run matrix running；formal test 0/30 |
-| `active_question` | three-seed SIFF-v2 method package能否超过A6_FULL，且ordered field能否超过independent control？ |
-| `active_candidates` | `SC1-SIFF-v2-FCC-v1` conditional paperization candidate；no successor method |
+| `current_step` | SIFF-v2 FCC Step9/10 complete；paper portfolio decision |
+| `active_question` | package performance positive但ordered-field attribution失败后，是否降格保存SIFF或回Step2/4寻找新paper core？ |
+| `active_candidates` | none；`SC1-SIFF-v2-FCC-v1` closed from paper-core promotion |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/prelaunch_report.md` |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1/step9_10_result_and_portfolio_decision.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | SIFF-v2 unchanged；FCC 30-run training active；formal test blocked until 30/30 |
-| `rollback_point` | FCC fail -> paper portfolio decision；no SIFF method rescue |
+| `method_implementation` | active_method=none；remote/test false；no SIFF rescue |
+| `rollback_point` | paper portfolio decision or new Step2/4；not SIFF tuning |
 
 ## Post-D21 Unconstrained Reset
 
@@ -206,6 +206,15 @@ Step8已从commit `87bea35`启动：remote fast-forward、三张3090 preflight�
 resource smokes均通过。30-run training于`2026-07-21T12:54:37+08:00`开始，首批三个Weather jobs active；
 formal test为0/30，runner在30/30 training前拒绝test mode。详见
 `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/remote_launch_record.md`。
+
+FCC Step9/10现完整结束。SIFF相对A6_FULL的test MSE/MAE为`+1.2497%/+0.7549%`，5/5 datasets、4/4
+horizons、3/3 seeds正向，package effectiveness通过；相对independent control却为`-0.1272%/-0.1733%`，
+validation也为`-0.3224%/-0.5015%`。45/45 protocol、unique hashes、paired initialization、checkpoint
+nonmutation及internal health均通过，因此不是design/numeric fault。Decision=
+`performance_pass_attribution_blocked_stop_fcc_promotion`，failure attribution=`capacity_control_explains`。
+SIFF-v2不晋升paper core，不补任何rescue，不执行modern baselines/formal ablations；当前回paper portfolio decision，
+`active_method=none`。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1/step9_10_result_and_portfolio_decision.md`。
 
 用户2026-07-20决定暂不承担task pivot成本。该scope决定把上一版“D22-C有效失败即停止整个
 deterministic-MSE search”改为：关闭exact D22-C v1并回joint Step2/3，在同一task边界寻找不同的falsifiable

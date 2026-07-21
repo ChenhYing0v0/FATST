@@ -1,0 +1,55 @@
+{
+  "candidate_version": "SC1-SIFF-v2-FCC-v1",
+  "checkpoint_hashes_unique": true,
+  "checkpoint_retrained": true,
+  "comparator_change": {
+    "authorization_date": "2026-07-21",
+    "claim_boundary": "SIFF_EQUAL versus A6_FULL is a method-package comparison because architecture and training objective both differ; ordered-field attribution is carried only by SIFF_INDEPENDENT_EQUAL",
+    "historical_a6_measure_negative_evidence_retained": true,
+    "removed_from_fcc": "a6_measure",
+    "replacement": "a6_full",
+    "requested_by_user": true
+  },
+  "comparison_gates": {
+    "ordered_over_independent_equal": false,
+    "siff_over_a6_full": true
+  },
+  "decision": "performance_pass_attribution_blocked_stop_fcc_promotion",
+  "effective_runs": 45,
+  "effective_test_cells": 180,
+  "encoder_initialization_matched": true,
+  "failure_attribution": "capacity_control_explains",
+  "internal_health_gates": {
+    "arm_diversity": true,
+    "finite": true,
+    "nonconstant_component_use": true,
+    "oracle_headroom": true,
+    "policy_entropy": true,
+    "prefix_projectivity": true
+  },
+  "internal_mechanism_health": true,
+  "matched_mechanism_attribution": false,
+  "matrix_complete": true,
+  "paper_facing_effectiveness": true,
+  "test_role": "primary-mechanism-effectiveness-and-paper-benchmark",
+  "user_authorization": {
+    "authorization_date": "2026-07-21",
+    "authorization_scope": "run the frozen FCC with A6_FULL replacing A6_MEASURE",
+    "checkpoint_mutation_during_test_allowed": false,
+    "checkpoint_retraining_allowed": true,
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+    "confirmation_seeds": [
+      2022,
+      2023
+    ],
+    "formal_test_access_authorized": true,
+    "formal_test_access_count_for_version": 1,
+    "per_dataset_horizon_or_cell_tuning_allowed": false,
+    "remote_training_authorized": true,
+    "reused_control_protocol_profiles": [
+      "stage_c_siff_equal_attribution_v2"
+    ],
+    "test_role": "primary-mechanism-effectiveness-and-paper-benchmark",
+    "user_authorized": true
+  }
+}

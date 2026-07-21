@@ -1,0 +1,12 @@
+{
+  "active_forward_parameters": 391408,
+  "d_model": 32,
+  "encoder_mode": "timealign-token-mlp",
+  "frozen_parameter_tensors": 0,
+  "inactive_or_other_parameters": 553680,
+  "patch_num": 24,
+  "readout_mode": "learned-basis-forecast-operator",
+  "total_parameters": 945088,
+  "trainable_parameters": 945088,
+  "unused_proj_x_parameters": 553680
+}

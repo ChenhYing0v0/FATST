@@ -1,0 +1,5 @@
+comparison,role,metric,candidate,reference,macro_gain_percent,cell_wins,dataset_wins,horizon_wins,seed_wins,seed2021_gain_percent,seed2022_gain_percent,seed2023_gain_percent
+siff_over_a6_full,method_package_effectiveness,mse,siff_equal,a6_full,1.249737416595564,47,5,4,3,1.6435773728978327,0.6680041587315161,1.437630718157343
+siff_over_a6_full,method_package_effectiveness,mae,siff_equal,a6_full,0.7549417372723453,46,5,4,3,0.9083527627092691,0.42457678900090834,0.9318956601068584
+ordered_over_independent_equal,ordered_field_attribution,mse,siff_equal,siff_independent_equal,-0.12724386123476594,28,2,2,1,0.25804728246195785,-0.43492259133785294,-0.20485627482840274
+ordered_over_independent_equal,ordered_field_attribution,mae,siff_equal,siff_independent_equal,-0.1732632671756499,19,1,0,1,0.2847839242168587,-0.4352358944024115,-0.36933783134139697
