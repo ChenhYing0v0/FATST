@@ -20,10 +20,10 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SIFF-v2 FCC Step7B prelaunch 25/25 pass；Step8 remote/test authorized，remote preflight pending |
+| `current_11_step` | SIFF-v2 FCC Step8 training active；30-run matrix running；formal test 0/30 |
 | `current_candidate` | immutable SIFF-v2；evaluation tag `SC1-SIFF-v2-FCC-v1` |
-| `latest_decision` | `step7b_prelaunch_pass_proceed_commit_remote_preflight` |
-| `next_required_action` | commit/push；remote fast-forward pull；GPU preflight；two resource smokes；launch frozen 30-run training |
+| `latest_decision` | `step8_training_active_formal_test_not_started` |
+| `next_required_action` | wait for 30/30 training；then run one complete formal test and three-seed analyzer |
 | `method_training_authorized` | true for frozen FCC；single formal test true only after 30/30 training；no method change |
 | `rollback_point` | FCC fail -> paper portfolio decision；no SIFF method rescue |
 
@@ -31,16 +31,16 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | SIFF-v2 FCC Step7B prelaunch complete；Step8 execution boundary |
+| `current_step` | SIFF-v2 FCC Step8 training active；formal test boundary |
 | `problem` | future-output coupling scope能否作为ordered coordinate构成一个single-model varied-horizon operator field？ |
 | `existence_evidence` | vs A6_FULL/constant/permuted/Q1-wide/PCSD positive；internal 7/7；independent attribution blocked；A6_MEASURE historical negative retained but non-gating |
 | `idea` | immutable Q2 ordered SIFF；single architecture contribution；no TSAF/loss/router |
 | `theory_check` | shared history-conditioned components over log-scale；nested synthesis；requested H only final crop |
 | `design` | FCC: SIFF/A6_FULL/independent × five datasets × seeds2022/2023；reuse seed2021；45 effective runs/180 test cells |
 | `narrative_gate` | `conditional_pass_as_single_architecture_contribution` |
-| `effectiveness_gate` | blocked pending FCC；remote authorized；single formal test only after 30/30 training |
-| `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/prelaunch_report.md` |
-| `decision` | `step7b_prelaunch_pass_proceed_commit_remote_preflight` |
+| `effectiveness_gate` | blocked pending FCC；training active；single formal test only after 30/30 training |
+| `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/remote_launch_record.md` |
+| `decision` | `step8_training_active_formal_test_not_started` |
 
 ## Frozen Carrier Contract
 
@@ -247,6 +247,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SIFF post-TSAF 2x2 Step2 audit | four existing E2E arms + field/policy interaction + same-rank/split sensitivity + latest primary sources | same-rank test interaction MSE/MAE `-0.3097%/-0.1175%`；full positive rank-confounded | weak lead not supported for Step4；SIFF-v2 narrow claim consolidation next | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_post_tsaf_independent_factorial_audit.md` |
 | SIFF-v2 final claim Step4-6 | tensor/theory/prior/evidence audit + single-contribution boundary + three-seed FCC design | narrative conditional pass；main and independent gaps remain blockers；30 new runs frozen | FCC waiting authorization；method unchanged；modern baselines remain blocked | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_final_paper_claim_and_confirmation_design.md` |
 | SIFF-v2 FCC Step7B prelaunch | A6_FULL comparator freeze + 30-job runner + 15-reference audit + three-seed analyzer | 25/25 checks；30/30 jobs；15/15 references complete/unique/init-paired；A6_MEASURE absent | remote/test authorized；commit-pinned preflight/resource smoke next | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/prelaunch_report.md` |
+| SIFF-v2 FCC Step8 launch | commit-pinned pull + 3-GPU preflight + dual resource smoke + background driver | `87bea35`；smokes finite/no-OOM；first three Weather jobs active；test 0/30 | training active；30/30 before one formal test | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/remote_launch_record.md` |
 
 ## Pending Tasks
 
@@ -319,7 +320,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-SIFF-v3-TSAF Step7B | `completed_prelaunch_then_executed` | frozen 45-run/180-cell matrix executed once；no gate modification |
 | SC1-SIFF-v3-TSAF Step8-10 | `completed_fail_rollback_step2_4` | 25/25 new training/test；45/45 effective audit；effectiveness/attribution fail；health pass；no confirmation |
 | SC-SIFF-POST-TSAF-2x2 | `completed_weak_lead_not_supported` | existing artifacts only；do not promote independent control；next is SIFF-v2 claim consolidation |
-| SC1-SIFF-v2-FCC-v1 | `step7b_prelaunch_pass_remote_test_authorized` | commit/push；remote pull/GPU preflight；two resource smokes；launch 30-run training；test only after 30/30 |
+| SC1-SIFF-v2-FCC-v1 | `step8_training_active_formal_test_not_started` | wait 30/30 training；run one complete formal test；then three-seed four-layer analysis |
 
 ## Paper Mainline Sync Log
 
@@ -443,6 +444,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-21 | SIFF post-TSAF 2x2 audit | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | existing-artifact field × policy interaction + rank/split/prior audit | weak lead not supported；no successor/seed rescue；SIFF claim consolidation |
 | 2026-07-21 | SIFF-v2 final paper-claim Step4-6 | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | single contribution/prohibited claims + immutable three-seed FCC design | conditional narrative pass；30-run FCC frozen；remote/test false |
 | 2026-07-21 | SIFF-v2 FCC A6_FULL Step7B prelaunch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | user-selected comparator + exact matrix/gates/tooling/authorization freeze | 25/25 pass；30 new + 15 historical；remote/test authorized；preflight next |
+| 2026-07-21 | SIFF-v2 FCC Step8 launch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | commit/resource/smoke/process provenance | `87bea35`；GPU0/1/2；30-run training active；test 0/30 |
 
 ## Continuation Rules
 
@@ -751,3 +753,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
      initialization paired，runner/analyzer smokes通过。
 121. Decision=`step7b_prelaunch_pass_proceed_commit_remote_preflight`。remote training已授权；single formal test只在
      30/30 training后执行。FCC失败则停止SIFF paper-core rescue，通过后才进入modern native baselines与formal ablations。
+122. Step8已从commit `87bea35`完成remote fast-forward、三张3090 preflight及两项resource smoke；smokes finite且
+     无OOM。30-run training于`2026-07-21T12:54:37+08:00`启动，首批三个Weather jobs active，formal test 0/30。
+123. 当前Decision=`step8_training_active_formal_test_not_started`。training期间不得改matrix/gates；30/30完整后才
+     允许一次formal test，随后必须联合three seeds执行45-run/180-cell analyzer。

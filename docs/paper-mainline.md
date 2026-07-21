@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Scale-Indexed Forecast Fields for Unified Multi-Horizon Time-Series Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SIFF-v2 FCC Step7B prelaunch 25/25 pass；Step8 remote/test authorized，remote preflight pending |
+| `current_11_step` | SIFF-v2 FCC Step8 training active；30-run matrix running；formal test 0/30 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -226,6 +226,12 @@ FCC matrix、metrics与machine gate，但其历史negative evidence保留在limi
 training，并授权30/30 training完整后执行一次formal test；下一步为commit-pinned remote pull、GPU preflight与
 两项resource smoke。Decision=`step7b_prelaunch_pass_proceed_commit_remote_preflight`。详见
 `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/prelaunch_report.md`。
+
+[SIFF-v2 FCC Step8 Launch] commit `87bea35`已remote fast-forward；GPU0/1/2 preflight均约24.1 GiB free，
+Weather-SIFF seed2022与ETTm2-independent seed2023 two-batch smokes finite且无OOM。30-run training于
+`2026-07-21T12:54:37+08:00`在三张RTX 3090启动，首批Weather的SIFF/A6_FULL/independent均已进入训练。
+formal test仍为0/30，只在30/30 training完整后执行。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/remote_launch_record.md`。
 
 [Scope Decision, 2026-07-20] 用户明确要求当前项目暂不转出`deterministic-MSE fixed-past architecture search`。
 因此D22-C有效失败只关闭exact v1并回joint Step2/3，不再自动停止整个search；但不得用seed、width、readout或

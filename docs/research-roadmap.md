@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SIFF-v2 FCC Step7B prelaunch 25/25 pass；Step8 remote/test authorized，remote preflight pending |
+| `current_step` | SIFF-v2 FCC Step8 training active；30-run matrix running；formal test 0/30 |
 | `active_question` | three-seed SIFF-v2 method package能否超过A6_FULL，且ordered field能否超过independent control？ |
 | `active_candidates` | `SC1-SIFF-v2-FCC-v1` conditional paperization candidate；no successor method |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/prelaunch_report.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | SIFF-v2 unchanged；FCC evaluation tooling ready；remote/test authorized but not started |
+| `method_implementation` | SIFF-v2 unchanged；FCC 30-run training active；formal test blocked until 30/30 |
 | `rollback_point` | FCC fail -> paper portfolio decision；no SIFF method rescue |
 
 ## Post-D21 Unconstrained Reset
@@ -201,6 +201,11 @@ readout tuning。local prelaunch现25/25通过，30/30 jobs与15/15 historical r
 training及30/30 training后的single formal test已获授权但尚未启动。Decision=
 `step7b_prelaunch_pass_proceed_commit_remote_preflight`。详见
 `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/prelaunch_report.md`。
+
+Step8已从commit `87bea35`启动：remote fast-forward、三张3090 preflight及Weather-SIFF/ETTm2-independent
+resource smokes均通过。30-run training于`2026-07-21T12:54:37+08:00`开始，首批三个Weather jobs active；
+formal test为0/30，runner在30/30 training前拒绝test mode。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/remote_launch_record.md`。
 
 用户2026-07-20决定暂不承担task pivot成本。该scope决定把上一版“D22-C有效失败即停止整个
 deterministic-MSE search”改为：关闭exact D22-C v1并回joint Step2/3，在同一task边界寻找不同的falsifiable
