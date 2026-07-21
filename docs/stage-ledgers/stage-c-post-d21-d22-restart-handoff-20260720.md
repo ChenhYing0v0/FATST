@@ -40,11 +40,12 @@
 31. `docs/code-explanation/stage-c-iscf-v1-cpsi-step7b.md`；
 32. `configs/stage_c_iscf_v1_cpsi_step7b.json`；
 33. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step8_remote_20260721/remote_launch_record.md`；
-34. `configs/stage_c_iscf_v0_carrier.json`；
-35. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
-36. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
-37. `docs/paper-mainline.md`；
-38. `docs/research-roadmap.md`。
+34. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step9_10_20260721/step9_10_result_and_rollback.md`；
+35. `configs/stage_c_iscf_v0_carrier.json`；
+36. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
+37. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
+38. `docs/paper-mainline.md`；
+39. `docs/research-roadmap.md`。
 
 若上述文件与更旧的聊天、archive或历史段落冲突，以本文件和三份主线文档顶部的最新cursor为准。
 
@@ -56,14 +57,14 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-21 |
 | `source_parent_commit` | `b0b9d7c`（Step7B worktree parent） |
-| `current_step` | ISCF-v1-CPSI Step8 seed2021 training active；formal test 0/25 |
-| `active_problem` | running 25 new runs能否无pathology完成并在frozen test MSE/MAE上支持CPSI？ |
-| `active_method` | ISCF-v1-CPSI formal-screen candidate；effectiveness pending |
-| `method_training_authorized` | seed2021 25-run remote true；confirmation false |
-| `remote_training_authorized` | true；25/25后single complete formal test true；不得提前test |
-| `next_action` | monitor 25/25 training -> artifact audit -> single formal test -> four-layer analysis |
-| `conditional_next` | 25/25 training/artifact pass -> one complete 25-run test -> four-layer decision |
-| `rollback` | numeric/artifact pathology repairsStep7；mild diagnostic negatives continue to test；router/loss remain blocked |
+| `current_step` | CPSI Step9/10 material fail；rollback Step4/5 |
+| `active_problem` | scope relation evidence需要哪类non-absorbable operator，而非CPSI elementwise product？ |
+| `active_method` | none；ISCF-v0 strong carrier retained |
+| `method_training_authorized` | false；formal matrix complete；confirmation false |
+| `remote_training_authorized` | false pending new Step4-6 gate |
+| `next_action` | source-informed Step4/5 problem/function-class redesign；do not implement yet |
+| `conditional_next` | new narrative/theory/control gate pass -> only then Step6/7A |
+| `rollback` | exact CPSI/SELF/COMMON closed；LINEAR control only；POST not promoted；router/loss blocked |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
 
@@ -219,6 +220,10 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
     confirmation、router、second loss仍false。
 58. commit `5d2330e`已remote pull；三卡preflight空闲，修复后的Weather-CPSI/ETTm2-POST resource smokes通过。
 59. 25-run training于`17:09:43+08:00`启动，initial training/test=`0/25,0/25`；25/25前test hard-blocked。
+60. training与formal test均25/25完成；checkpoint nonmutation、protocol与health通过。
+61. CPSI vs ISCF test MSE/MAE=`-2.2128%/-1.6987%`，1/5 datasets；vs A6_FULL亦负，触发material fail。
+62. LINEAR是最强control但vs ISCF仅`+0.0217%/+0.0472%` tie且function-class可吸收；不promote。
+63. Decision=`cpsi_v1_exact_performance_fail_return_step4_5`；active method none，confirmation/rescue false。
 
 ## 5. D22-HFA 的执行顺序
 

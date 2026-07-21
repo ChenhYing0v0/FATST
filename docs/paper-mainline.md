@@ -7,14 +7,29 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；`ISCF-v1-CPSI` is a working research ID, not final title |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF-v1-CPSI Step8 seed2021 training active；formal test 0/25 |
+| `current_11_step` | ISCF-v1-CPSI Step9/10 material fail；rollback Step4/5 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | CPSI formal-screen active candidate；effectiveness/attribution pending；seed2021 remote + one complete test authorized |
+| `paper_core_status` | active method none；ISCF-v0 retained carrier；exact CPSI-v1 closed |
+
+[ISCF-v1-CPSI Step9/10, 2026-07-21] 25/25 trainings、25/25 formal tests与10 historical references全部
+protocol valid。CPSI相对ISCF-v0 test MSE/MAE为`-2.2128%/-1.6987%`，仅4/20与5/20 cells、1/5 datasets
+正向；H96/H192/H336/H720 MSE均负，ETTh2平均退化`5.0538%`。相对A6_FULL亦为
+`-0.7775%/-1.0606%`。这同时满足预注册material-negative macro/dataset与single-dataset条款。
+
+internal health 25/25 pass，CPSI message/latent/output norms均finite/nonzero，故不是dead path或numeric pathology。
+CPSI虽优于SELF与COMMON，却分别落后LINEAR/POST `2.2586%/1.7093%` MSE。最强LINEAR相对ISCF仅
+`+0.0217%/+0.0472%` MSE/MAE，落在tie band且理论上可被independent affine scope maps吸收，只能作optimization
+control，不能升级为贡献。
+
+Decision=`cpsi_v1_exact_performance_fail_return_step4_5`。关闭exact CPSI-v1、confirmation与rescue；保留ISCF-v0
+strong carrier。更广义scope interaction未被方向级否定，但任何新operator必须重新通过Step4/5 function-class与narrative
+gate，不得增加router/second loss掩盖失败。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step9_10_20260721/step9_10_result_and_rollback.md`。
 
 [ISCF-v1-CPSI Step7B, 2026-07-21] frozen config将CPSI/SELF/LINEAR/COMMON/POST五arms × five datasets
 固定为25个new trainings，并以checkpoint hash复用ISCF-v0/A6_FULL 10个historical references，构成35 effective
@@ -34,7 +49,7 @@ smokes。详见
 
 [ISCF-v1-CPSI Step8 Launch, 2026-07-21] commit `5d2330e`已remote pull；三张3090 preflight为空闲。
 修复remote无`rg`导致的scanner false-pass风险后，Weather-CPSI与ETTm2-POST resource smokes均finite/no-OOM。
-25-run matrix于`17:09:43+08:00`启动，initial=`training 0/25, test 0/25`，formal-test mode未启动。
+25-run matrix于`17:09:43+08:00`启动；training于18:03:54完成，formal test于18:10:55完成，均25/25。
 
 [ISCF-v1-CPSI Step7A, 2026-07-21] production implementation新增五个readout modes，在parent ISCF初始化后创建
 interaction matrices，保持paired base RNG path。local checker在conda `r2026-fsa`中81/81通过：readout 50/50、

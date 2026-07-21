@@ -1,0 +1,81 @@
+{
+  "active_forward_parameters": 2033189,
+  "cpsi_common_projection_norm": 8.179483413696289,
+  "cpsi_effective_interaction_rank": 32,
+  "cpsi_interaction_mode": "common-private",
+  "cpsi_interaction_parameters": 44544,
+  "cpsi_interaction_rank": 32,
+  "cpsi_interaction_width": 464,
+  "cpsi_output_projection_norm": 1.0806975364685059,
+  "cpsi_private_projection_norm": 8.380898475646973,
+  "d_model": 32,
+  "encoder_mode": "timealign-token-mlp",
+  "frozen_parameter_tensors": 0,
+  "patch_num": 24,
+  "pcsd_coordinate_dim": 4,
+  "pcsd_coupling_field_parameters": 1951840,
+  "pcsd_decoder_parameters": 2023685,
+  "pcsd_mode_rank": 116,
+  "pcsd_partition": "canonical",
+  "pcsd_policy_entropy": 0.9989916086196899,
+  "pcsd_policy_mode": "direct",
+  "pcsd_policy_parameters": 27301,
+  "pcsd_scales": [
+    1,
+    48,
+    144,
+    360,
+    720
+  ],
+  "pcsd_scope_usage": [
+    0.1984003335237503,
+    0.19576629996299744,
+    0.1937207728624344,
+    0.2074684053659439,
+    0.20464420318603516
+  ],
+  "readout_mode": "iscf-v1-cpsi",
+  "siff_scale_basis": [
+    [
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "siff_scale_basis_hash": "db9cfa822939ca910341700ef70747122786be37306629f9c64fb7b0042abd6f",
+  "siff_scale_basis_mode": "independent",
+  "siff_scale_components": 5,
+  "total_parameters": 2586869,
+  "trainable_parameters": 2586869,
+  "unused_proj_x_parameters": 553680
+}

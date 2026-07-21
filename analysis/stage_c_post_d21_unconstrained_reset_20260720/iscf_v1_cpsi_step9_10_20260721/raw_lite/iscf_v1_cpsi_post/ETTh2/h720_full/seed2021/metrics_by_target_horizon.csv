@@ -1,0 +1,5 @@
+target_horizon,mse,mae,num_samples,num_channels,eval_prefix_steps,mode,run_name,dataset,pred_len,checkpoint_policy,evaluation_split,official_test_mode,protocol_class,protocol_profile,profile_hash
+96,0.24158717800552645,0.3457617531530559,2161,7,96,unified,CPSI_iscf_v1_cpsi_post,ETTh2,720,best-val,val,1,method_screening,stage_c_iscf_v1_cpsi_v1,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a
+192,0.3268878785117219,0.3973367131159951,2161,7,192,unified,CPSI_iscf_v1_cpsi_post,ETTh2,720,best-val,val,1,method_screening,stage_c_iscf_v1_cpsi_v1,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a
+336,0.43073482035348815,0.4547308723752697,2161,7,336,unified,CPSI_iscf_v1_cpsi_post,ETTh2,720,best-val,val,1,method_screening,stage_c_iscf_v1_cpsi_v1,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a
+720,0.6523776923823688,0.5630051167267892,2161,7,720,unified,CPSI_iscf_v1_cpsi_post,ETTh2,720,best-val,val,1,method_screening,stage_c_iscf_v1_cpsi_v1,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a

@@ -31,3 +31,11 @@ launch record明确`formal_test_execution_mode=0`；本阶段只训练与validat
 
 formal test只有在25/25 training artifacts完整后才允许由独立`FORMAL_TEST_ONLY=1`调用。不得依据validation结果删arm、
 改rank或改dataset/horizon。confirmation seeds仍未授权。
+
+## Completion
+
+- training：25/25，`2026-07-21T18:03:54+08:00`完成；
+- formal test：25/25，`2026-07-21T18:10:55+08:00`完成；
+- formal-test launch commit：`c4e3669b81b6316019483fdd47df035b9a9c2d57`；
+- checkpoint nonmutation / protocol / all-finite：25/25 pass；
+- analysis decision：`cpsi_v1_exact_performance_fail_return_step4_5`。

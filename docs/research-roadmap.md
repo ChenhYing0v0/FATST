@@ -5,14 +5,26 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | ISCF-v1-CPSI Step8 seed2021 training active；formal test 0/25 |
-| `active_question` | 25/25 new runs能否在commit 5d2330e frozen protocol下完成且无pathology？ |
-| `active_candidates` | ISCF-v1-CPSI formal-screen candidate；ISCF-v0/A6_FULL frozen references |
+| `current_step` | ISCF-v1-CPSI Step9/10 complete material fail；rollback Step4/5 |
+| `active_question` | 哪类non-absorbable scope operator能保留D1.1 relation evidence而避免CPSI product failure？ |
+| `active_candidates` | none；ISCF-v0 frozen strong carrier；LINEAR optimization evidence only |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step6_design_20260721/step6_control_design_and_test_policy.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | Step7A + Step7B pass；seed2021 remote/one complete test authorized；confirmation false |
-| `rollback_point` | remote pathology repairs Step7；mild validation diagnostics do not reject；official test decides exact v1 |
+| `method_implementation` | exact CPSI-v1 closed；new implementation/remote/test false pending new Step4-6 |
+| `rollback_point` | Step4/5 operator hypothesis and function-class redesign；no seed/rank/loss/router rescue |
+
+## ISCF-v1-CPSI Step9/10 Decision
+
+25 new runs与single formal test完整。CPSI vs ISCF-v0 test MSE/MAE=`-2.2128%/-1.6987%`，1/5 datasets，
+4/20 MSE cells；vs A6_FULL=`-0.7775%/-1.0606%`。validation同向negative，四horizon全部负，internal health
+25/25正常，因此触发material effectiveness fail而非mild/inconclusive或numeric failure。
+
+CPSI优于SELF/COMMON，但落后LINEAR/POST。LINEAR vs ISCF仅`+0.0217%/+0.0472%`，属于tie且function class
+可吸收；POST vs ISCF MSE/MAE=`-0.4882%/-0.6362%`，也不promote。
+
+Decision=`cpsi_v1_exact_performance_fail_return_step4_5`。active method清空，ISCF-v0继续作为carrier；下一步先做
+source-informed Step4/5 redesign，不授权新implementation、training、test、confirmation、router或second loss。
 
 ## ISCF-v1-CPSI Step7B Prelaunch Decision
 

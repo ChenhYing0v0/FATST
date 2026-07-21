@@ -1,0 +1,9 @@
+{
+  "confirmation_seeds_authorized": false,
+  "controls_role": "intermediate_diagnostics_not_validation_eliminators",
+  "decision": "cpsi_v1_exact_performance_fail_return_step4_5",
+  "effectiveness_supported": false,
+  "internal_health_pass": true,
+  "matched_attribution_supported": false,
+  "material_test_negative": true
+}

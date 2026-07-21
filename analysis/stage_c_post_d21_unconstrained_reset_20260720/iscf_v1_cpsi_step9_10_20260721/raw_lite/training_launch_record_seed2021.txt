@@ -1,0 +1,14 @@
+cpsi_start=2026-07-21T17:09:43+08:00
+commit=5d2330e0f9f3ec6c57d580ed545ea4a1a4e63ea4
+output_root=/home/yingch/exp_outputs/r-2026-fatst/stage_c_iscf_v1_cpsi_v1
+config_hash=bb7bfe58ef9d11eb239c6d3f4f027581cd8574faba716052a402068ed80554f9
+profile_hash=80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a
+gpu_ids=0 1 2
+new_training_runs=25
+reused_reference_runs=10
+effective_runs=35
+formal_test_execution_mode=0
+test_informed=true
+0, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0
+1, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0
+2, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0
