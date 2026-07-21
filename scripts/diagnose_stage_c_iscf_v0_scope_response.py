@@ -48,6 +48,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--datasets", nargs="*")
     parser.add_argument("--seeds", nargs="*", type=int)
     parser.add_argument("--hidden-rows", type=int)
+    parser.add_argument("--hidden-row-offset", type=int)
     parser.add_argument("--directions", type=int)
     parser.add_argument("--relative-epsilon", type=float)
     parser.add_argument("--null-repetitions", type=int)
@@ -182,10 +183,12 @@ def collect_hidden_rows(
     model: torch.nn.Module,
     official_args: Any,
     rows: int,
+    row_offset: int,
     device: torch.device,
 ) -> torch.Tensor:
     collected = []
     count = 0
+    seen = 0
     loader = sequential_loader(official_args, "val")
     with torch.no_grad():
         for batch_x, _batch_y, _batch_x_mark, _batch_y_mark in loader:
@@ -195,8 +198,12 @@ def collect_hidden_rows(
                 -1,
                 memory.shape[-2] * memory.shape[-1],
             )
-            take = min(rows - count, hidden.shape[0])
-            collected.append(hidden[:take].detach())
+            start = max(0, row_offset - seen)
+            seen += hidden.shape[0]
+            if start >= hidden.shape[0]:
+                continue
+            take = min(rows - count, hidden.shape[0] - start)
+            collected.append(hidden[start : start + take].detach())
             count += take
             if count >= rows:
                 break
@@ -237,6 +244,7 @@ def run_directory(
         model,
         official_args,
         int(probe["hidden_rows"]),
+        int(probe.get("hidden_row_offset", 0)),
         device,
     )
     direction_values = rng.choice(
@@ -413,6 +421,7 @@ def main() -> None:
     protocol = json.loads(args.protocol.read_text(encoding="utf-8"))
     overrides = {
         "hidden_rows": args.hidden_rows,
+        "hidden_row_offset": args.hidden_row_offset,
         "rademacher_directions": args.directions,
         "relative_epsilon": args.relative_epsilon,
         "direction_null_repetitions": args.null_repetitions,
@@ -420,8 +429,9 @@ def main() -> None:
     }
     for key, value in overrides.items():
         if value is not None:
-            if isinstance(value, (int, float)) and value <= 0:
-                raise ValueError(f"{key} override must be positive")
+            minimum = 0 if key == "hidden_row_offset" else 1
+            if isinstance(value, (int, float)) and value < minimum:
+                raise ValueError(f"{key} override must be at least {minimum}")
             protocol["probe"][key] = value
     carrier = json.loads(args.carrier_config.read_text(encoding="utf-8"))
     output_dir = args.output_dir or Path(protocol["output"]["local_root"])

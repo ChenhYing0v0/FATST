@@ -35,5 +35,6 @@ relation-aware module会在end-to-end训练中提升性能。
 会证伪当前问题的证据包括：同步response不超过direction null、learned checkpoint不超过matched random-init readout、
 或pairwise topology跨seed不稳定。数值不有限、epsilon敏感或response退化则属于diagnostic design fault，不能拒绝方向。
 
-CLI允许覆盖`hidden_rows`、`directions`、`relative_epsilon`、`null_repetitions`和`random_controls`，只用于明确标记的
-post-hoc diagnostic-validity checks。`summary.json`保存`effective_probe`，避免robustness结果被误写成冻结primary gate。
+CLI允许覆盖`hidden_rows`、`hidden_row_offset`、`directions`、`relative_epsilon`、`null_repetitions`和
+`random_controls`。`hidden_row_offset`支持confirmatory protocol使用disjoint sequential validation rows；
+`summary.json`保存`effective_probe`，避免robustness或confirmation结果被误写成primary gate。

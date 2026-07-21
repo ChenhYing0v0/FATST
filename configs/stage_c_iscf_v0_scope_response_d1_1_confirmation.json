@@ -1,0 +1,64 @@
+{
+  "stage": "StageC-UVHF",
+  "diagnostic_id": "ISCF-SRA-D1.1",
+  "diagnostic_name": "Independent-Scope Response Alignment Confirmation",
+  "status": "authorized_validation_confirmation",
+  "current_step": "ISCF-v0 Step4 confirmatory existence gate",
+  "carrier_config": "configs/stage_c_iscf_v0_carrier.json",
+  "parent_protocol": "configs/stage_c_iscf_v0_scope_response_d1.json",
+  "trigger": "primary D1 topology failed at 16 directions while the declared 64-direction estimator-validity check recovered 5/5 stable datasets",
+  "user_authorization": {
+    "authorization_date": "2026-07-21",
+    "scope": "continue ISCF Step4 research",
+    "new_model_implementation": false,
+    "checkpoint_mutation": false,
+    "training": false,
+    "formal_test_access": false,
+    "validation_only_frozen_diagnostic": true
+  },
+  "matrix": {
+    "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"],
+    "seeds": [2021, 2022, 2023],
+    "expected_runs": 15,
+    "scopes": [1, 48, 144, 360, 720]
+  },
+  "probe": {
+    "split": "val",
+    "target_values_used": false,
+    "hidden_rows": 32,
+    "hidden_row_offset": 64,
+    "rademacher_directions": 64,
+    "relative_epsilon": 0.001,
+    "direction_null_repetitions": 128,
+    "random_init_controls": 8,
+    "response_chunk_rows": 256,
+    "seed": 20260722
+  },
+  "statistics": {
+    "response": "central finite-difference directional response of each scope arm with respect to the shared readout hidden state",
+    "normalization": "center and unit-RMS normalize each scope response before relation statistics",
+    "synchronized_common_energy": "energy of the mean normalized response across five scopes",
+    "private_response_energy": "one minus synchronized common energy",
+    "direction_null": "independently permute direction identities for each scope while retaining each scope marginal response bank",
+    "random_init_control": "reset an architecture-identical readout and evaluate it on the same trained hidden rows and directions",
+    "topology": "ten pairwise normalized-response distances with cross-seed Spearman stability"
+  },
+  "gates": {
+    "synchronized_above_direction_null_run_count_min": 12,
+    "learned_above_random_init_run_count_min": 12,
+    "private_response_energy_median_min": 0.05,
+    "pairwise_response_distance_median_min": 0.05,
+    "topology_seed_rho_min": 0.5,
+    "topology_dataset_count_min": 4
+  },
+  "decision_map": {
+    "all_gates_pass": "scope_response_relation_confirmed_for_step5_theory",
+    "direction_pass_random_init_fail": "architecture_or_initialization_control_explains",
+    "relation_pass_topology_fail": "scope_response_relation_not_confirmed_seed_unstable",
+    "otherwise": "scope_response_relation_not_confirmed"
+  },
+  "output": {
+    "remote_root": "/home/yingch/exp_outputs/r-2026-fatst/iscf_v0_scope_response_d1_1_20260721",
+    "local_root": "analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_step4_scope_relation_20260721/d1_1_confirmation"
+  }
+}

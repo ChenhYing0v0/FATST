@@ -139,3 +139,12 @@ topology是否受Monte Carlo variance影响：
 - 若明显恢复，则D1 topology estimator标记`design_fault_suspected`，需要新的pre-registered validation diagnostic，不能
   post-hoc promotion；
 - common/private、random-init或method gate不从该sensitivity重新选择。
+
+若64-direction sensitivity恢复至少4/5 topology stability，则必须在查看更多validation结果前冻结`ISCF-SRA-D1.1`：
+
+- 使用validation hidden rows offset 64、count 32，与D1 primary rows不重叠；
+- 使用新的diagnostic seed `20260722`和64 directions；
+- 128次direction null、8个matched random-init controls；
+- 复用原四项gate；全过只授权Step5 theory，不授权implementation/training/test。
+
+机器protocol：`configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`。
