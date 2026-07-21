@@ -5,16 +5,36 @@
 | Field | Content |
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
-| `working_title` | TBD after ISCF Step5 operator design；former SIFF title retired |
+| `working_title` | TBD；`ISCF-v1-CPSI` is a working research ID, not final title |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF-v0 Step4 response-relation existence/narrative gate complete；advance Step5 theory/design |
+| `current_11_step` | ISCF Step5 theory conditional pass；advance Step6 concrete control/design audit |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | ISCF-v0 frozen strong carrier；single pre-synthesis architecture problem conditional pass；active_method=none |
+| `paper_core_status` | ISCF-v0 frozen strong carrier；CPSI working candidate only；active_method=none |
+
+[ISCF Step5 Theory Gate, 2026-07-21] 代码与数学审计确认：对独立affine scope modes做任何fixed linear mixing，
+均可精确吸收到新的`mode_weight/mode_bias`，所以Cross-Stitch式`5×5` matrix、linear common/private sharing与
+fixed graph diffusion不形成新function class。plain peer-mean MLP也因“额外affine projection + generic depth”归因不净而
+未进入working method。
+
+Step5保留工作候选`ISCF-v1-CPSI`：在`[B,C,S,D,K]` modes进入`_scope_forecast`前，计算scope mean
+$\mu$与zero-sum deviation $\delta_s$，再以
+$W_o[\operatorname{GELU}(W_c\mu)\odot\operatorname{GELU}(W_p\delta_s)]$生成native mode interaction。
+该path在scope/metadata共同置换时equivariant；`W_o=0`精确包含ISCF-v0；无bias product保证common或private任一
+缺失时interaction为零。它不改变Bayes information set，只允许解释为finite-capacity inductive bias。
+
+最新primary-source audit将claim进一步收紧：Deep Sets/Set Transformer已覆盖generic set interaction，Cross-Stitch覆盖
+linear shared/private activation mixing，MoLE覆盖forecast expert output mixture，DMSC v5已直接覆盖multi-scale gated
+coordination与adaptive routing，TimeExpert也把expert interaction放在output之前。故允许的贡献只能是
+`future-output coupling scopes -> controlled common/private response evidence -> linear reparameterization boundary ->
+pre-synthesis multiplicative interaction -> matched attribution`完整链，不能claim multi-scale coordination或expert mixing。
+Decision=`step5_theory_pass_step6_control_design_next`；Step6必须解决exact-parameter SELF/LINEAR/COMMON与诚实的
+POST-SYNTH placement controls。implementation、remote、formal test、router与second loss仍为false。
+详见`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_step5_common_private_interaction_20260721/step5_theory_and_narrative_gate.md`。
 
 [ISCF-v0 Step4 Response Relation, 2026-07-21] test residual common被确认含shared-target confound，故不再作为
 existence gate。新的label-free `ISCF-SRA-D1/D1.1`在frozen validation histories上测量五个scope对共同hidden

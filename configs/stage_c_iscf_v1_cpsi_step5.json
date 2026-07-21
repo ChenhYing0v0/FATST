@@ -1,0 +1,70 @@
+{
+  "stage_id": "StageC-UVHF",
+  "candidate_id": "ISCF-v1-CPSI",
+  "candidate_name_status": "working_research_id_not_final_paper_name",
+  "parent": "ISCF-v0",
+  "freeze_date": "2026-07-21",
+  "current_step": "step5_theory_complete_step6_control_design_next",
+  "problem": "pre_synthesis_common_private_scope_response_interaction",
+  "input_shape": "[B,C,S,D,K]",
+  "output_shape": "[B,C,S,D,K]",
+  "scope_count": 5,
+  "coordinate_dim": 4,
+  "theory_probe_bottleneck_rank": 32,
+  "operator": {
+    "flattened_shape": "[B,C,S,L] where L=D*K",
+    "common": "mu=mean_s(X_s)",
+    "private": "delta_s=X_s-mu",
+    "common_state": "c=GELU(W_c*mu)",
+    "private_state": "p_s=GELU(W_p*delta_s)",
+    "interaction": "g_s=c elementwise_times p_s",
+    "message": "m_s=W_o*g_s",
+    "updated_mode": "X'_s=X_s+m_s",
+    "bias": false,
+    "shared_across_scopes": true,
+    "uses_requested_horizon": false,
+    "uses_scale_order": false,
+    "uses_target_or_oracle": false
+  },
+  "morphism": {
+    "parent_containment": "exact",
+    "condition": "W_o=0",
+    "initial_function": "ISCF-v0",
+    "gradient_requirement": "W_o nonzero on first backward; W_c and W_p open after W_o update"
+  },
+  "theory": {
+    "linear_scope_mixing": "exactly_absorbable_into_independent_affine_mode_maps",
+    "nonlinear_product": "not_absorbable_by_single_affine_reparameterization",
+    "bayes_information_set_changed": false,
+    "allowed_gain_interpretation": "finite_capacity_inductive_bias_only"
+  },
+  "parameter_formula": "3*D*K*r",
+  "profiles": {
+    "ETTh1": {"mode_rank": 109, "flattened_dim": 436, "added_parameters_r32": 41856},
+    "ETTh2": {"mode_rank": 116, "flattened_dim": 464, "added_parameters_r32": 44544},
+    "ETTm1": {"mode_rank": 116, "flattened_dim": 464, "added_parameters_r32": 44544},
+    "ETTm2": {"mode_rank": 106, "flattened_dim": 424, "added_parameters_r32": 40704},
+    "Weather": {"mode_rank": 116, "flattened_dim": 464, "added_parameters_r32": 44544}
+  },
+  "mandatory_step6_controls": [
+    "ISCF-v0",
+    "CPSI-SELF-exact-parameter",
+    "CPSI-LINEAR-exact-parameter",
+    "CPSI-COMMON-parameter-matching-pending",
+    "POST-SYNTH-INTERACTION-matching-pending",
+    "SIFF-v2-ordered-historical",
+    "Q1-common-historical"
+  ],
+  "decision": "step5_theory_pass_step6_control_design_next",
+  "narrative_gate": "conditional_pass_to_step6_as_task_coupled_common_private_interaction",
+  "effectiveness_gate": "not_applicable",
+  "authorization": {
+    "active_method": "none",
+    "method_implementation": false,
+    "remote_training": false,
+    "formal_test": false,
+    "router": false,
+    "second_loss": false
+  },
+  "rollback": "if_step6_cannot_match_common_or_post_synthesis_controls_return_to_step4_or_keep_iscf_v0_carrier"
+}

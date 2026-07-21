@@ -5,14 +5,36 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | ISCF-v0 Step4 complete；advance Step5 theory/design |
-| `active_question` | 如何以task-specific、non-ordered pre-synthesis operator表达已确认的scope response dependence，并超越generic set mixing？ |
-| `active_candidates` | no paper method；`ISCF-v0` frozen carrier；scope-set response coupling is Step5 working concept only |
+| `current_step` | ISCF Step5 theory conditional pass；advance Step6 concrete control/design audit |
+| `active_question` | CPSI能否以matched SELF/LINEAR/COMMON/POST-SYNTH controls证明common–private pre-synthesis interaction而非generic capacity？ |
+| `active_candidates` | no active paper method；`ISCF-v0` frozen carrier；`ISCF-v1-CPSI` working candidate proposed only |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_step4_scope_relation_20260721/step4_result_and_step5_handoff.md` |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_step5_common_private_interaction_20260721/step5_theory_and_narrative_gate.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | active_method=none；Step5 theory/design only；implementation/remote/test false |
-| `rollback_point` | Step5 narrative/design；generic set mixing、low-rank matrix and ordered restoration blocked |
+| `method_implementation` | active_method=none；Step6 design audit only；implementation/remote/test false |
+| `rollback_point` | Step6 control/placement design；unmatched or generic interaction returns Step4/ISCF-v0 carrier |
+
+## ISCF Step5 Common–Private Interaction Decision
+
+Step5首先证明：若$M_s=W_sh+b_s$，任意fixed linear scope mixing
+$\widetilde M_s=\sum_jA_{sj}M_j$均等价于新的独立affine map。因此Cross-Stitch matrix、linear peer mean、
+linear common/private decomposition和fixed graph diffusion不扩展ISCF-v0 mode function class，只可作为optimization
+controls。plain peer MLP也被降为generic control，因为其收益可能来自另一组affine projection与额外depth。
+
+working candidate `ISCF-v1-CPSI`只在`[B,C,S,D,K]` pre-synthesis modes上计算
+$\mu=\operatorname{mean}_sX_s$、$\delta_s=X_s-\mu$，并用
+$W_o[\operatorname{GELU}(W_c\mu)\odot\operatorname{GELU}(W_p\delta_s)]$生成mode interaction。shared无bias
+maps使operator permutation-equivariant，common/private任一路缺失时message为零；`W_o=0`精确包含ISCF-v0。
+以global theory rank 32估算只增加`0.5983%–2.2399%` active parameters，但rank仍需Step6冻结。
+
+Bayes boundary不变：candidate不增加information，只可能提供finite-capacity inductive bias。DMSC v5、Deep Sets、Set
+Transformer、Cross-Stitch、MoLE与TimeExpert使generic “multi-scale/expert interaction” claim不可用；论文边界必须绑定
+future-output coupling scopes、Step4 controlled relation evidence、linear impossibility与matched attribution。
+
+Decision=`step5_theory_pass_step6_control_design_next`，narrative=
+`conditional_pass_to_step6_as_task_coupled_common_private_interaction`。Step6必须冻结exact-parameter SELF/LINEAR/COMMON
+和诚实POST-SYNTH placement controls；若placement/capacity matching无法成立，则实现前关闭或降低claim。当前
+active_method=none，不实现、不训练、不访问formal test，不新增router/loss。
 
 ## ISCF Step4 Response-Relation Decision
 
