@@ -7,14 +7,29 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；paperization identity暂为`ISCF-v0`，not final title |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF-v0 SAC Step8 training active；formal test false |
+| `current_11_step` | ISCF-v0 SAC Step8 validation-artifact audit complete；formal test pending authorization |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | active method none；ISCF-v0 conditional candidate；SAC 25-run training authorized；formal test/modern baselines false |
+| `paper_core_status` | active method none；ISCF-v0 conditional candidate；SAC training 25/25；formal test/modern baselines false |
+
+[ISCF-v0 SAC Step8 Validation Audit, 2026-07-21] frozen new training已`25/25`完成，remote checkpoints与
+validation artifacts均`25/25`，formal-test artifacts为`0/25`。联合35个hashed historical references后，validation
+matrix为60/60 runs、240/240 standard-horizon rows；protocol audit 60/60与internal health 15/15通过，无
+Traceback、OOM、NaN或Inf。
+
+validation-only observation中，ISCF over Q1-WIDE MSE/MAE为`+1.0704%/+0.7538%`，4/5 datasets、4/4
+horizons、3/3 seeds MSE正向；canonical over RANDOM-PARTITION为`-0.1823%/-0.3075%`，仅2/5 datasets、
+1/4 horizons、1/3 seeds MSE正向。后者是必须保留的negative lead，但validation不允许通过或拒绝机制，尤其项目已有
+validation→test reversal先例。
+
+Decision=`formal_test_ready_pending_user_authorization`。这只是artifact/protocol readiness，不是paper-core或
+attribution pass。formal test仍false；获得独立授权后才可更新config并运行一次冻结25-run `FORMAL_TEST_ONLY=1`。
+详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step8_remote_20260721/validation_artifact_audit_and_test_handoff.md`。
 
 [ISCF-v0 SAC Step8 Authorization, 2026-07-21] 用户明确授权继续SAC remote training。授权范围严格限定为
 Step7B冻结的25 new runs；formal test仍false，25/25 training完成后必须停在validation artifacts并等待独立授权。

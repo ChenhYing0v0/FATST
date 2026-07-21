@@ -85,3 +85,14 @@ analyzer对每个`(arm,dataset,seed)`显式选择root和source alias：
 代码实现了两个最小反事实：Q1移除独立maps但保留五scope；RANDOM保留独立maps与全部parameters但破坏temporal grouping。它没有实现requested-H adaptation、额外information access、router或second loss。
 
 仍然只是proxy的部分：Q1无法exact match parameter count，RANDOM的optimization difficulty可能不同；因此结果只在当前training protocol与function family内归因。Q1或RANDOM任一primary gate失败都足以证伪对应paper claim；protocol pathology只能要求修复exact experiment，不能方向级拒绝。
+
+## 7. Step8 validation-only extension
+
+training-only阶段不存在`test_audit_*` artifacts，因此analyzer新增`--validation-only`。该模式仍解析完整60-run
+three-source matrix并执行effective-config、initialization、parameter和partition audits，但只写validation metrics、
+comparison summaries、internal health与`validation_readiness.json`；它不会调用`decide()`，也不会产生official-test
+`decision.json`。
+
+A6_FULL不经过PCSD，故其SAC role使用`partition=control`。checker现在只对这个non-PCSD control跳过
+`pcsd_partition`比较；所有ISCF canonical/random arms仍要求effective partition与frozen config精确一致。该修正只移除
+无语义字段造成的false failure，不改变model、metrics、gates或正式test审计。

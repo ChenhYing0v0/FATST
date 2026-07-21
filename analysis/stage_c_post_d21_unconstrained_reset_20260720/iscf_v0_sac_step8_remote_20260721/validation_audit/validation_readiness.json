@@ -1,0 +1,9 @@
+{
+  "decision": "formal_test_ready_pending_user_authorization",
+  "effective_validation_cells": 240,
+  "expected_validation_cells": 240,
+  "formal_test_access_authorized": false,
+  "internal_health_pass": true,
+  "paper_core_promoted": false,
+  "validation_is_not_effectiveness_decision": true
+}

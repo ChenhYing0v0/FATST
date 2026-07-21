@@ -1,0 +1,16 @@
+dataset,seed,canonical_random_encoder_init_match,canonical_random_readout_init_match,canonical_random_partition_hash_differs,canonical_random_parameter_match,q1_active_parameter_gap_percent,q1_gap_matches_preregistered
+Weather,2021,True,True,True,True,0.4582303678786463,True
+Weather,2022,True,True,True,True,0.4582303678786463,True
+Weather,2023,True,True,True,True,0.4582303678786463,True
+ETTm1,2021,True,True,True,True,0.4646379821436204,True
+ETTm1,2022,True,True,True,True,0.4646379821436204,True
+ETTm1,2023,True,True,True,True,0.4646379821436204,True
+ETTh1,2021,True,True,True,True,-0.15641300263738353,True
+ETTh1,2022,True,True,True,True,-0.15641300263738353,True
+ETTh1,2023,True,True,True,True,-0.15641300263738353,True
+ETTm2,2021,True,True,True,True,0.10847228834344737,True
+ETTm2,2022,True,True,True,True,0.10847228834344737,True
+ETTm2,2023,True,True,True,True,0.10847228834344737,True
+ETTh2,2021,True,True,True,True,0.4582303678786463,True
+ETTh2,2022,True,True,True,True,0.4582303678786463,True
+ETTh2,2023,True,True,True,True,0.4582303678786463,True

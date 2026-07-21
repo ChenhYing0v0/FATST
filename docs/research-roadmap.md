@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | ISCF-v0 SAC Step8 training active；formal test not authorized |
+| `current_step` | ISCF-v0 SAC Step8 validation audit complete；formal test not authorized |
 | `active_question` | future-output coupling scope-specific maps与contiguous/nested partitions是否分别超越near-matched shared width与exact random grouping？ |
 | `active_candidates` | ISCF-v0 conditional paperization candidate；not promoted；exact CPSI closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `configs/stage_c_iscf_v0_scope_attribution_confirmation.json` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | ISCF code unchanged；25-run remote training true；formal test/modern baselines false |
+| `method_implementation` | ISCF code unchanged；25-run training complete；formal test/modern baselines false |
 | `rollback_point` | SAC attribution；Q1-WIDE或RANDOM任一fail则ISCF carrier-only，no rescue |
 
 ## ISCF-v0 Post-CPSI Step4/5 Decision
@@ -61,6 +61,20 @@ remote现已fast-forward到commit `78cbcf4`；三卡preflight空闲，两项reso
 training于`18:58:40+08:00`在GPU0/1/2启动，supervisor PID=`2383292`，首批三个Weather jobs active，
 training/test=`0/25,0/25`。Decision=`step8_training_active_formal_test_not_authorized`；训练期间冻结repo/config/gates，
 完成后等待test授权。
+
+## ISCF-v0 SAC Step8 Validation Artifact Audit
+
+training于`20:24:32+08:00`完成，new training/checkpoints/validation=`25/25`，formal test=`0/25`。联合35个
+historical references后，60/60 run audits、240/240 validation rows和15/15 internal-health pairs完整；无numeric或
+protocol pathology。analyzer新增`--validation-only`，不会调用official-test decision；同时修复A6不使用PCSD却被
+无意义partition字段误判的问题，ISCF canonical/random checks未放宽。
+
+validation observation：ISCF over Q1-WIDE MSE/MAE=`+1.0704%/+0.7538%`；canonical over RANDOM为
+`-0.1823%/-0.3075%`。前者是independent maps的positive lead，后者是contiguous/nested partition的negative lead；
+两者都不能替代test gate。
+
+Decision=`formal_test_ready_pending_user_authorization`。下一步只能在独立授权后开放一次冻结formal test；在此之前
+active method仍none，不进入modern baselines，不按validation结果做rank/partition/seed/loss/router调整。
 
 ## ISCF-v1-CPSI Step9/10 Decision
 

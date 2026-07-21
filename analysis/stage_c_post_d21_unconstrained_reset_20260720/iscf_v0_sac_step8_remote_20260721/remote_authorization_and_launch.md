@@ -62,3 +62,15 @@ seed2022；均进入epoch 1。初始GPU used memory约`1473/2746/1474 MiB`，uti
 
 Decision=`step8_training_active_formal_test_not_authorized`。训练期间不pull、不改config/gates，不进行短间隔轮询；
 25/25完成后先审计validation artifacts并等待formal-test授权。
+
+## Completion and validation handoff
+
+25-run training于`2026-07-21T20:24:32+08:00`完整结束；status=`training 25/25, test 0/25`。25个checkpoint、
+25份validation metrics与所需config/init/diagnostic artifacts齐全，log scanner无Traceback、OOM、NaN或Inf命中。
+联合35个historical references的validation audit为60/60 runs、240/240 rows，internal health 15/15通过。
+
+validation observation为ISCF over Q1-WIDE MSE/MAE `+1.0704%/+0.7538%`，canonical over RANDOM-PARTITION
+`-0.1823%/-0.3075%`。后者是明确negative lead，但validation不得通过或拒绝机制。
+
+Decision=`formal_test_ready_pending_user_authorization`；formal test仍未授权、test access仍为0。详见
+`validation_artifact_audit_and_test_handoff.md`。

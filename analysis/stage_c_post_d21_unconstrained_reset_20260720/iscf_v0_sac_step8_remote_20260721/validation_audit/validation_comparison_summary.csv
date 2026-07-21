@@ -1,0 +1,7 @@
+comparison,metric,candidate,reference,macro_gain_percent,cell_wins,dataset_wins,horizon_wins,positive_seed_macros
+independent_over_q1_wide,mse,iscf_v0,iscf_q1_wide,1.0703655273936001,46,4,4,3
+independent_over_q1_wide,mae,iscf_v0,iscf_q1_wide,0.7538129066679248,53,5,4,3
+canonical_over_random_partition,mse,iscf_v0,iscf_random_partition,-0.18229268454218203,23,2,1,1
+canonical_over_random_partition,mae,iscf_v0,iscf_random_partition,-0.3074751139085154,16,0,0,0
+iscf_over_a6_full_context,mse,iscf_v0,a6_full,2.4180721375822274,51,5,4,3
+iscf_over_a6_full_context,mae,iscf_v0,a6_full,1.427707036266786,51,5,4,3

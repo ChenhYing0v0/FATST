@@ -23,6 +23,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--seed2021-root", type=Path)
     parser.add_argument("--fcc-root", type=Path)
     parser.add_argument("--output-dir", type=Path)
+    parser.add_argument("--validation-only", action="store_true")
     parser.add_argument("--synthetic-smoke", action="store_true")
     return parser.parse_args()
 
@@ -101,17 +102,23 @@ def load_run(
     roots: tuple[Path, Path, Path],
     config: dict[str, Any],
     reference_hashes: dict[tuple[str, str, int], str],
+    validation_only: bool = False,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
     root, source_arm, source = source_for(arm["id"], seed, *roots)
     directory = run_dir(root, source_arm, dataset, seed)
     required = {
         "validation": directory / "metrics_by_target_horizon.csv",
-        "test": directory / "test_audit_metrics_by_target_horizon.csv",
-        "invariants": directory / "test_audit_invariants.json",
         "effective": directory / "effective_config.json",
         "initialization": directory / "initialization_contract.json",
         "diagnostics": directory / "model_diagnostics.json",
     }
+    if not validation_only:
+        required.update(
+            {
+                "test": directory / "test_audit_metrics_by_target_horizon.csv",
+                "invariants": directory / "test_audit_invariants.json",
+            }
+        )
     missing = [name for name, path in required.items() if not path.is_file()]
     if missing:
         return [], [], {
@@ -124,7 +131,11 @@ def load_run(
             "run_dir": str(directory),
         }
 
-    invariants = json.loads(required["invariants"].read_text(encoding="utf-8"))
+    invariants = (
+        {}
+        if validation_only
+        else json.loads(required["invariants"].read_text(encoding="utf-8"))
+    )
     effective = json.loads(required["effective"].read_text(encoding="utf-8"))["adapter"]
     initialization = json.loads(
         required["initialization"].read_text(encoding="utf-8")
@@ -139,12 +150,23 @@ def load_run(
         == config["training"]["validation_horizons"]
         and effective["checkpoint_policy"] == "best-val"
         and effective["final_evaluation_split"] == "val"
-        and effective.get("pcsd_partition", "control") == arm["partition"]
-        and invariants.get("pass") is True
-        and invariants.get("evaluation_split") == "test"
-        and invariants.get("uses_test_split") is True
-        and invariants.get("test_access_authorized") is True
-        and (expected_hash is None or invariants.get("checkpoint_sha256") == expected_hash)
+        and (
+            arm["partition"] == "control"
+            or effective.get("pcsd_partition") == arm["partition"]
+        )
+        and (
+            validation_only
+            or (
+                invariants.get("pass") is True
+                and invariants.get("evaluation_split") == "test"
+                and invariants.get("uses_test_split") is True
+                and invariants.get("test_access_authorized") is True
+                and (
+                    expected_hash is None
+                    or invariants.get("checkpoint_sha256") == expected_hash
+                )
+            )
+        )
     )
 
     def metrics_from(path: Path, split: str) -> list[dict[str, Any]]:
@@ -170,7 +192,7 @@ def load_run(
         return rows
 
     return (
-        metrics_from(required["test"], "test"),
+        [] if validation_only else metrics_from(required["test"], "test"),
         metrics_from(required["validation"], "validation"),
         {
             "dataset": dataset,
@@ -442,32 +464,72 @@ def main() -> None:
                     concrete_roots,
                     config,
                     reference_hashes,
+                    validation_only=args.validation_only,
                 )
                 test_metrics.extend(test)
                 validation_metrics.extend(validation)
                 audits.append(audit)
-    if len(test_metrics) != config["matrix"]["effective_official_test_cells"]:
-        raise RuntimeError("SAC formal matrix is incomplete")
     if any(row["status"] != "ok" for row in audits):
         raise RuntimeError("one or more SAC run audits failed")
-    cells, summaries = comparison_rows(test_metrics, config)
     validation_cells, validation_summaries = comparison_rows(
         validation_metrics, config
     )
     health = internal_health_rows(audits, config)
-    decision = decide(summaries, health, config)
     output_dir = args.output_dir
     output_dir.mkdir(parents=True, exist_ok=True)
-    write_csv(output_dir / "test_metrics.csv", test_metrics)
     write_csv(output_dir / "validation_metrics.csv", validation_metrics)
     write_csv(output_dir / "run_audit.csv", audits)
-    write_csv(output_dir / "comparison_cells.csv", cells)
-    write_csv(output_dir / "comparison_summary.csv", summaries)
     write_csv(output_dir / "validation_comparison_cells.csv", validation_cells)
     write_csv(
         output_dir / "validation_comparison_summary.csv", validation_summaries
     )
     write_csv(output_dir / "internal_health.csv", health)
+    if args.validation_only:
+        expected_validation_cells = (
+            config["matrix"]["effective_runs"]
+            * len(config["matrix"]["horizons"])
+        )
+        if len(validation_metrics) != expected_validation_cells:
+            raise RuntimeError("SAC validation matrix is incomplete")
+        health_pass = bool(
+            health
+            and all(
+                row["canonical_random_encoder_init_match"]
+                and row["canonical_random_readout_init_match"]
+                and row["canonical_random_partition_hash_differs"]
+                and row["canonical_random_parameter_match"]
+                and row["q1_gap_matches_preregistered"]
+                for row in health
+            )
+        )
+        readiness = {
+            "decision": (
+                "formal_test_ready_pending_user_authorization"
+                if health_pass
+                else "validation_artifact_or_protocol_repair_required"
+            ),
+            "effective_validation_cells": len(validation_metrics),
+            "expected_validation_cells": expected_validation_cells,
+            "internal_health_pass": health_pass,
+            "formal_test_access_authorized": config["authorization"][
+                "formal_test_access_authorized"
+            ],
+            "paper_core_promoted": False,
+            "validation_is_not_effectiveness_decision": True,
+        }
+        (output_dir / "validation_readiness.json").write_text(
+            json.dumps(readiness, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        print(f"iscf_v0_sac_validation={readiness['decision']}")
+        return
+    if len(test_metrics) != config["matrix"]["effective_official_test_cells"]:
+        raise RuntimeError("SAC formal matrix is incomplete")
+    cells, summaries = comparison_rows(test_metrics, config)
+    decision = decide(summaries, health, config)
+    write_csv(output_dir / "test_metrics.csv", test_metrics)
+    write_csv(output_dir / "comparison_cells.csv", cells)
+    write_csv(output_dir / "comparison_summary.csv", summaries)
     (output_dir / "decision.json").write_text(
         json.dumps(decision, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
