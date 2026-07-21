@@ -1,0 +1,8 @@
+{
+  "gate_id": "SC1-SIFF-v3-TSAF-v1-Step7A-local",
+  "case_count": 26,
+  "passed_count": 26,
+  "all_passed": true,
+  "remote_training": false,
+  "official_test": false
+}

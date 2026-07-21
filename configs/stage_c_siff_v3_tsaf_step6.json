@@ -1,0 +1,97 @@
+{
+  "stage": "StageC-UVHF",
+  "candidate_id": "SC1-SIFF-v3-TSAF",
+  "candidate_version": "SC1-SIFF-v3-TSAF-v1-preimplementation",
+  "parent_candidate": "SC1-SIFF-v2-EQ-ATTR-v1",
+  "date": "2026-07-21",
+  "status": "step7a_local_implementation_pass",
+  "test_informed": true,
+  "purpose": "replace unsupported sample-conditioned SIFF routing with a future-coordinate by ordered-log-scale allocation field",
+  "paper_core": {
+    "method": "Scale-Indexed Forecast Field with Target-Scale Allocation Field",
+    "requested_horizon_input": false,
+    "full_domain_length": 720,
+    "output_behavior": "generate_full_domain_then_crop",
+    "second_loss_contribution": false,
+    "generic_moe_claim": false
+  },
+  "parent_contract": {
+    "manifest": "configs/stage_c_siff_equal_attribution_v1_candidate_freeze.json",
+    "immutable": true,
+    "readout_mode": "siff-coupling-field",
+    "objective_mode": "equal_skill",
+    "scales": [1, 48, 144, 360, 720],
+    "scale_components": 2,
+    "mode_rank": 256
+  },
+  "target_scale_allocation": {
+    "target_feature": "existing_full_domain_dct_coordinate_field",
+    "scale_feature": ["normalized_log_scale", "squared_normalized_log_scale"],
+    "scorer": "shared_additive_mlp",
+    "normalization": "softmax_over_scales",
+    "history_input": false,
+    "requested_horizon_input": false,
+    "future_label_input": false,
+    "broadcast_shape": "[B,C,T,S]",
+    "initialization": "uniform_allocation"
+  },
+  "training": {
+    "from_scratch": true,
+    "joint_encoder_decoder": true,
+    "objective_mode": "equal_skill",
+    "new_auxiliary_loss": false,
+    "pred_len": 720,
+    "validation_horizons": [96, 192, 336, 720],
+    "checkpoint_score": "mean_validation_mse_h96_h192_h336_h720",
+    "test_selects_checkpoint_or_config": false
+  },
+  "required_controls": [
+    "a6_full",
+    "a6_measure",
+    "siff_v2_direct_parent",
+    "pcsd_equal",
+    "siff_categorical_target_only",
+    "tsaf_permuted_scale",
+    "tsaf_no_target_global",
+    "siff_independent_target_only"
+  ],
+  "paper_facing_datasets": ["Weather", "ETTm1", "ETTm2", "ETTh1", "ETTh2"],
+  "paper_facing_horizons": [96, 192, 336, 720],
+  "phase_a_gates": {
+    "mse_macro_gain_over_a6_measure_min_percent": 0.3,
+    "mse_macro_gain_over_siff_v2_parent_min_percent": 0.3,
+    "dataset_wins_min": 3,
+    "horizon_wins_min": 3,
+    "cell_wins_min": 11,
+    "mae_macro_gain_min_percent": 0.0,
+    "control_dataset_wins_min": 3,
+    "shared_over_independent_macro_gain_min_percent_for_strict_superiority": 0.3
+  },
+  "internal_health": [
+    "all_finite",
+    "arm_prediction_diversity",
+    "nonconstant_target_scale_surface",
+    "scale_order_sensitivity",
+    "allocation_entropy",
+    "scale_component_contribution",
+    "request_invariance"
+  ],
+  "closed_rescue_routes": [
+    "ccsf_contrast_policy",
+    "region_competence_teacher",
+    "mixture_covariance_teacher",
+    "temperature_or_hard_routing",
+    "d17_d21_context_interaction",
+    "seed_width_rank_readout_sweep"
+  ],
+  "authorization": {
+    "paperization_direction": true,
+    "step4_6_design": true,
+    "local_model_implementation": true,
+    "remote_training": false,
+    "official_test": false,
+    "confirmation_seeds": false,
+    "sc_mnb_execution": false
+  },
+  "decision": "tsaf_step7a_local_pass_step7b_prelaunch_next"
+}

@@ -637,6 +637,19 @@ def initialization_contract(model: nn.Module) -> dict[str, Any]:
                     ),
                 }
             )
+        if hasattr(readout, "allocation_scale_features"):
+            payload.update(
+                {
+                    "tsaf_allocation_scale_features": (
+                        readout.allocation_scale_features.detach()
+                        .cpu()
+                        .tolist()
+                    ),
+                    "tsaf_allocation_scale_hash": _tensor_hash(
+                        [readout.allocation_scale_features]
+                    ),
+                }
+            )
         if hasattr(readout, "correction_mode"):
             payload.update(
                 {
@@ -1156,6 +1169,13 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
             )
         if readout.policy_mode == "direct":
             active_prefixes += ("pcsd_readout.history_projection.",)
+        if readout.policy_mode.startswith("target-scale-"):
+            active_prefixes += (
+                "pcsd_readout.target_allocation_projection.",
+                "pcsd_readout.scale_allocation_projection.",
+                "pcsd_readout.target_scale_allocation_bias",
+                "pcsd_readout.target_scale_allocation_output.",
+            )
         active_parameters = sum(
             parameter.numel()
             for name, parameter in model.named_parameters()
@@ -1208,6 +1228,15 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
                     "siff_scale_basis_hash": _tensor_hash(
                         [readout.scale_basis]
                     ),
+                }
+            )
+        if hasattr(readout, "allocation_scale_features"):
+            payload.update(
+                {
+                    "tsaf_allocation_scale_hash": _tensor_hash(
+                        [readout.allocation_scale_features]
+                    ),
+                    "tsaf_allocation_parameters": readout.policy_parameters,
                 }
             )
         if hasattr(readout, "correction_mode"):
@@ -2370,7 +2399,15 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--pcsd-policy-hidden-dim", type=int, default=64)
     parser.add_argument(
         "--pcsd-policy-mode",
-        choices=["direct", "equal", "static-target", "fixed"],
+        choices=[
+            "direct",
+            "equal",
+            "static-target",
+            "fixed",
+            "target-scale-field",
+            "target-scale-field-permuted",
+            "target-scale-global",
+        ],
         default="direct",
     )
     parser.add_argument(
@@ -2722,11 +2759,20 @@ def parse_args() -> argparse.Namespace:
             raise ValueError(
                 "scope-credit objectives require a PCSD/SIFF coupling readout"
             )
+        supported_credit_policies = {
+            "direct",
+            "static-target",
+            "target-scale-field",
+            "target-scale-field-permuted",
+            "target-scale-global",
+        }
         if (
             args.readout_mode in TimeAlign.COUPLING_READOUTS
-            and args.pcsd_policy_mode != "direct"
+            and args.pcsd_policy_mode not in supported_credit_policies
         ):
-            raise ValueError("PCC/MCCA Phase A requires pcsd_policy_mode=direct")
+            raise ValueError(
+                "scope-credit training requires a learned supported policy"
+            )
         if args.mode != "unified" or args.pred_len != 720:
             raise ValueError("PCC Phase A requires unified full-T=720 training")
         if args.pred_loss_mode != "full":

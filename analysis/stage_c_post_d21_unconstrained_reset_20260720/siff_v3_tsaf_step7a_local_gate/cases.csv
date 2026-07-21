@@ -1,0 +1,27 @@
+category,case,passed,value,threshold
+shape,forecast,True,"(2, 96, 3)","(2, 96, 3)"
+shape,arms,True,"(2, 3, 5, 720)","(2, 3, 5, 720)"
+shape,weights,True,"(2, 3, 720, 5)","(2, 3, 720, 5)"
+numeric,simplex,True,0.0,<=1e-7
+initialization,uniform,True,0.0,0.0
+invariance,allocation_ignores_history,True,0.0,0.0
+invariance,sample_channel_broadcast,True,0.0,0.0
+structure,no_history_policy_parameters,True,[],[]
+invariance,full_domain_crop,True,0.0,0.0
+parameters,exact_count,True,13425,13425
+parameters,lower_than_direct,True,13425,<13656
+semantics,target_nonconstant,True,0.08402988314628601,>1e-4
+semantics,permuted_scale_changes_allocation,True,0.36022019386291504,>1e-4
+control,global_removes_target_variation,True,0.0,0.0
+gradient,mode_weight,True,1.6814062595367432,>0 finite
+gradient,target_allocation_projection.weight,True,0.052970536053180695,>0 finite
+gradient,scale_allocation_projection.weight,True,0.12318151444196701,>0 finite
+gradient,target_scale_allocation_output.weight,True,0.07616826891899109,>0 finite
+gradient,history_via_arms,True,0.34592410922050476,>0 finite
+health,allocation_target_variance,True,0.0004430347471497953,>0
+guard,pcsd_rejects_tsaf_semantics,True,True,True
+production,timealign_output_shape,True,"(1, 720, 2)","(1, 720, 2)"
+production,timealign_request_invariance,True,0.0,0.0
+production,timealign_policy_mode,True,target-scale-field,target-scale-field
+production,policy_parameter_accounting,True,65,>0 and equals TSAF allocation parameters
+production,allocation_hash_recorded,True,29428260a248a5fdc98011c34686a33a18cbcb59a029b3b49920c55566028af7,recorded

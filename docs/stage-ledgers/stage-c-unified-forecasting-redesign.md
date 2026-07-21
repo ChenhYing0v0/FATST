@@ -6,41 +6,41 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | A6/MEASURE相对modern native varied-horizon、target-query与selective-patch baselines是否仍具carrier viability？ |
+| `active_question` | target-coordinate × ordered-scale allocation能否让SIFF稳定超过frozen parent与A6_MEASURE？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | none；A6/dense controls；D24/FCMI closed；SIFF-v2 frozen |
+| `active_candidates` | provisional `SC1-SIFF-v3-TSAF-v1`；SIFF-v2 immutable parent |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
 | `stage_exit` | 新problem先通过existence/narrative gate，再决定一项或两项可归因contributions |
-| `stage_rollback` | SC-MNB Step1-3 baseline viability；D25 architecture blocked；CTD paused |
+| `stage_rollback` | TSAF Step4/6；SC-MNB supporting only；CTD paused |
 
 ## Decision Cursor
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SC-MNB Step1-3 modern native-baseline reproduction protocol |
-| `current_candidate` | none |
-| `latest_decision` | `scientifically_coherent_problem_boundary_but_method_narrative_incomplete` |
-| `next_required_action` | resolve SC-MNB test-hygiene、metric-equivalence与source-config blockers；no execution |
+| `current_11_step` | SC1-SIFF-v3-TSAF Step7A local implementation complete |
+| `current_candidate` | provisional `SC1-SIFF-v3-TSAF-v1` |
+| `latest_decision` | `tsaf_step7a_local_pass_step7b_prelaunch_next` |
+| `next_required_action` | TSAF Step7B CLI/matrix/artifact/resource prelaunch；no remote/test |
 | `method_training_authorized` | false；new diagnostic/training/test all false |
-| `rollback_point` | Step1-3 baseline viability |
+| `rollback_point` | TSAF Step4/6；immutable SIFF-v2 parent |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Post-D24 consolidation complete；SC-MNB Step1-3 |
-| `problem` | fixed-past unified carrier是否在modern native comparison下仍值得承载新architecture？ |
+| `current_step` | TSAF Step7A local implementation complete |
+| `problem` | unified decoder如何组织future-coordinate-specific coupling scale且不假设requested H或sample-wise competence提供信息？ |
 | `existence_evidence` | D18 frontier negative；D22 target access positive；D23 capacity explains；D24 coarse deformation negative |
-| `idea` | 先冻结claim-specific native baselines与公平角色，不预设新module |
-| `theory_check` | pure-request Bayes invariance；finite-model evidence必须由matched controls解释 |
-| `design` | official commits and 65-run/80-cell roles frozen；protocol repairs pending；execution false |
-| `narrative_gate` | problem boundary pass；method narrative incomplete；baseline viability blocking |
+| `idea` | 保留SIFF scale-indexed arms，以target-scale allocation field替代history-conditioned generic router |
+| `theory_check` | allocation依赖future coordinate与ordered scale，不依赖requested H；history dependence留在arms |
+| `design` | immutable SIFF-v2 parent；TSAF + controls frozen；production-local 26/26 pass |
+| `narrative_gate` | conditional pass；contribution-level novelty provisional |
 | `effectiveness_gate` | not applicable；no active method |
-| `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/sc_mnb_step13_source_and_protocol_audit.md` |
-| `decision` | `source_set_frozen_protocol_repairs_required_before_prelaunch` |
+| `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_reactivation_and_tsaf_step46_audit.md` |
+| `decision` | `tsaf_step7a_local_pass_step7b_prelaunch_next` |
 
 ## Frozen Carrier Contract
 
@@ -69,6 +69,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC-D23-FCMI` | `closed_capacity_control_explains` | generic main与coordinate interaction能否可识别分解并原生fallback | conditional pass | FCMI vs A6 -21.7343%；capacity/order fail；internal pass | no seeds/rescue；return Step2/3 |
 | `SC-D24-CTB` | `diagnostic_only_closed_exact_negative` | strong fixed trajectory synthesis是否留下ordered-history可识别coarse deformation | not method gate | v1.1 ordered loses all primary controls；test=0 | no rescue；return Step2/4 consolidation |
 | `SC-MNB` | `source_audit_complete_protocol_blocked` | A6/MEASURE是否仍具modern native carrier viability | problem boundary coherent；method narrative incomplete | source set frozen；65-run/80-cell execution false | repair test hygiene/metric equivalence/config semantics |
+| `SC1-SIFF-v3-TSAF-v1` | `step7a_local_implementation_pass` | target-scale allocation能否修复SIFF learned fusion而不依赖sample-wise competence | conditional pass；single method contribution | 26/26 local；no performance result；remote/test false | Step7B prelaunch |
 | `SC1-PMFO-RCT-v1` | `failed_as_core_candidate` | fixed mixed-radix conservative future tree | narrative/local pass | Step7B三dataset均不优于A6；no numeric pathology | archived as evidence；rollback Step 4 |
 | `SC1-FPMO-M0` | `control_only` | shared-latent exact A6 morph验证function preservation/restriction | not required | exact equality required | mandatory Step6 morphism control |
 | `SC1-FPMO-DA` | `control_only` | direct atom full-affine head隔离capacity/orthogonal coordinate effect | not required | matched function-class control | mandatory Step6 dense-equivalence control |
@@ -675,3 +676,11 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
     CATS/TimePerceiver per-epoch test access、CATS ETTm2-H96 typo、SRSNet file-level license trace/
     metric equivalence与ElasTST
     `limit_train_batches=10`均为launch blockers；source fault不得解释为model failure。
+98. 2026-07-21用户明确恢复SIFF-first paperization。`SC1-SIFF-v2-EQ-ATTR-v1`为immutable parent，历史
+    effectiveness/attribution failure不变；SC-MNB降为supporting inventory，baseline execution false。
+99. provisional `SC1-SIFF-v3-TSAF-v1`删除unsupported history-conditioned allocation freedom，以future-coordinate ×
+    ordered-log-scale field融合history-conditioned SIFF arms。equal-skill仍是单一training contract，不设第二loss。
+100. TSAF Step4-6 narrative/design conditional pass；Step7A production-local 26/26通过。allocation不读取history/
+     requested H，arms仍读取history；参数少于direct parent policy，target/scale/control gradients均通过。
+101. 下一步仅Step7B prelaunch。CCSF、D17-D21、region/covariance/temperature、seed/width/rank/readout sweep均
+     不得恢复；remote/test/confirmation false。

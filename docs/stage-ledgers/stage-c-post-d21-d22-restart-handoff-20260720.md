@@ -20,9 +20,12 @@
 11. `analysis/stage_c_post_d21_unconstrained_reset_20260720/d24_ctb_result_and_rollback.md`；
 12. `analysis/stage_c_post_d21_unconstrained_reset_20260720/post_d24_paper_story_and_modern_baseline_gap_audit.md`；
 13. `analysis/stage_c_post_d21_unconstrained_reset_20260720/sc_mnb_step13_source_and_protocol_audit.md`；
-14. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
-15. `docs/paper-mainline.md`；
-16. `docs/research-roadmap.md`。
+14. `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_reactivation_and_tsaf_step46_audit.md`；
+15. `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step7a_implementation_audit.md`；
+16. `docs/code-explanation/stage-c-siff-v3-tsaf-step7a.md`；
+17. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
+18. `docs/paper-mainline.md`；
+19. `docs/research-roadmap.md`。
 
 若上述文件与更旧的聊天、archive或历史段落冲突，以本文件和三份主线文档顶部的最新cursor为准。
 
@@ -32,16 +35,16 @@
 | --- | --- |
 | `project` | R_2026_FATST |
 | `stage` | StageC-UVHF |
-| `handoff_date` | 2026-07-20 |
-| `source_parent_commit` | `7213fce` |
-| `current_step` | SC-MNB Step1-3 modern native-baseline reproduction protocol |
-| `active_problem` | A6/MEASURE相对modern native baselines是否仍具carrier viability？ |
-| `active_method` | none；FCMI-v1 closed；A6/dense controls |
+| `handoff_date` | 2026-07-21 |
+| `source_parent_commit` | `7bfcc62` |
+| `current_step` | SC1-SIFF-v3-TSAF Step7A local implementation complete |
+| `active_problem` | target-coordinate × ordered-scale allocation能否修复SIFF-v2 fusion并超过parent/A6_MEASURE？ |
+| `active_method` | provisional `SC1-SIFF-v3-TSAF-v1`；SIFF-v2 immutable parent |
 | `method_training_authorized` | false |
 | `remote_training_authorized` | false；new diagnostic/training/test all false |
-| `next_action` | resolve SC-MNB test-hygiene、metric-equivalence与source-config blockers |
-| `conditional_next` | protocol repairs和prelaunch通过并获授权后，才允许native baseline execution |
-| `rollback` | no D25 architecture；不自动pivot task；baseline execution false |
+| `next_action` | TSAF Step7B CLI/matrix/artifact/resource prelaunch |
+| `conditional_next` | Step7B通过并另行授权后才允许remote/test |
+| `rollback` | TSAF exact design回Step4/6；SIFF-v2不变；SC-MNB execution false |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
 
@@ -84,7 +87,8 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
 | --- | --- | --- |
 | `A6-LBF-natural-baseline` | strong carrier / mandatory control / possible component | 不足以standalone承载高水平论文；新设计无需强制兼容 |
 | `A6_MEASURE` | strong training control | harmonic horizon measure受ElasTST直接prior覆盖，不能单独claim |
-| `SIFF-v2-EQ-ATTR-v1` | frozen historical performance-near candidate | internal 7/7，但未超过A6_MEASURE且independent control阻塞归因；不继续调参 |
+| `SIFF-v2-EQ-ATTR-v1` | immutable performance-near parent | internal 7/7，但未超过A6_MEASURE且independent control阻塞归因；不修改exact v2 |
+| `SIFF-v3-TSAF-v1` | provisional narrative-ready successor | target-scale field替代unsupported sample-conditioned router；尚无result |
 | `D14 crossing/oracle` | historical clue | oracle不等于past-identifiable benefit；D21已证明interaction split-unstable |
 | `D17-D21` | closed evidence | 不做representation/readout/seed rescue |
 | `CTD` | paused by user | 新会话不得自动恢复 |
@@ -122,6 +126,12 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
 20. 四个official commits与65-run/80-cell roles已冻结；CATS/TimePerceiver per-epoch test access、CATS
     ETTm2-H96 typo、SRSNet file-level license trace/metric equivalence与ElasTST 10-batch semantics阻塞
     prelaunch。
+21. 用户2026-07-21明确选择SIFF-first论文落地；恢复SIFF program但不改写v2历史failure，SC-MNB降为supporting
+    inventory且execution false。
+22. TSAF Step4-6冻结：保留SIFF arms，以future-coordinate × ordered-log-scale field产生sample-shared
+    allocation；不输入requested H/history hidden，不增加第二loss。
+23. TSAF narrative gate conditional pass；下一步只允许Step7A local implementation，remote/test/confirmation false。
+24. TSAF Step7A production-local 26/26通过；next=Step7B prelaunch，remote/test/confirmation仍false。
 
 ## 5. D22-HFA 的执行顺序
 
@@ -208,17 +218,19 @@ decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。
 
 ## 7. 当前执行定义
 
-1. 读取D23 Step9/10、D24 design与D24 result；
-2. 关闭FCMI、phase/time-warp与D24 exact coarse deformation，不做rescue/router；
-3. paper-story consolidation已完成；当前只做SC-MNB source/native reproduction protocol；
-4. official test、training、diagnostic与paper method均false；
-5. SC-MNB carrier viability gate前不得启动D25；
-6. 不恢复H embedding/router、D17-D21 rescue、CTD或Contribution 2预设。
+1. 读取SIFF-v2 freeze/Step9、CCSF closure、Post-D24 consolidation与TSAF Step4-6；
+2. 保持SIFF-v2 immutable，不改写其A6_MEASURE/independent failures；
+3. `SC1-SIFF-v3-TSAF-v1` Step7A已26/26；当前只做Step7B prelaunch；
+4. official test、remote training与confirmation均false；
+5. SC-MNB保留为supporting source/control inventory，不执行65-run matrix；
+6. 不恢复CCSF、D17-D21、H embedding、region/covariance/temperature或Contribution 2预设。
 
 ## 8. 禁止无损重启时发生的漂移
 
 - 不把A6重新写成已经成立的论文主体；
 - 不把SIFF内部健康度写成paper-core pass；
+- 不把SIFF-v2历史failure改写为pass，也不直接修改其immutable identity；
+- 不把TSAF称为已有效；当前只有conditional narrative/design pass；
 - 不恢复EVS、CCSF、PCC、PCSD、JAPO、D19或D20的参数/seed rescue；
 - 不因为放宽约束就直接实现explicit H embedding；
 - 不把ordered patch memory升格为论文主线；
@@ -245,13 +257,16 @@ decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。
 10. analysis/stage_c_post_d21_unconstrained_reset_20260720/d24_ctb_result_and_rollback.md
 11. analysis/stage_c_post_d21_unconstrained_reset_20260720/post_d24_paper_story_and_modern_baseline_gap_audit.md
 12. analysis/stage_c_post_d21_unconstrained_reset_20260720/sc_mnb_step13_source_and_protocol_audit.md
-13. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
-14. docs/paper-mainline.md
-15. docs/research-roadmap.md
+13. analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_reactivation_and_tsaf_step46_audit.md
+14. analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step7a_implementation_audit.md
+15. docs/code-explanation/stage-c-siff-v3-tsaf-step7a.md
+16. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
+17. docs/paper-mainline.md
+18. docs/research-roadmap.md
 
 当前权威状态是：D22-C v1.1 problem gate仍为`target_coordinate_information_access_supported`；SC-D23-FCMI 40-run/160-cell Step9/10已完成，decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。FCMI相对A6 test MSE为`-21.7343%`、0/20；DENSE相对STANDARD_DUAL为`+15.4825%`、19/20且相对A6仅`-0.3284%`。exact projectivity、requested-H禁用、full-T prefix crop、A6 interface compatibility以及预设decoder+loss双贡献均不再是硬约束；但在fixed past、pointwise MSE且H不携带额外信息时，同一future coordinate的Bayes conditional mean不依赖requested horizon，因此不得直接实现H embedding/router。
 
-A6-LBF仅是strong carrier/control/possible component，不足以standalone承载论文；SIFF-v2是冻结历史候选；D17-D21均已关闭，不做seed、readout、representation或参数rescue；CTD保持paused。FCMI-v1与D24 exact diagnostic均已关闭；当前没有active method，new diagnostic、training、official test与paper method均未授权。
+A6-LBF仅是strong carrier/control/possible component，不足以standalone承载论文；`SC1-SIFF-v2-EQ-ATTR-v1`是immutable performance-near parent，其相对A6_FULL `+1.6436%`、相对A6_MEASURE `-0.2366%`、相对independent `+0.2580%`与internal 7/7均必须完整保留。D17-D21、CCSF与D24 exact routes均关闭；CTD paused。
 
 已确认D22-C ordered相对generic为test MSE `+2.5228%`、MAE `+1.6484%`、15/20 cells、4/5 datasets、4/4 horizons；其余四controls均20/20正向。Weather相对generic 4/4负向，必须保留generic fallback并禁止universal claim。
 
@@ -261,7 +276,7 @@ Step9/10中decomposition、generic与target controls通过，但order和capacity
 
 SC-D24-CTB-v1.1已完成：10/10、840 metrics、720 comparisons，official test access为0。ordered history相对marginal约`-8.6%`、相对sorted约`-9%`、相对target-shuffled约`-14%`，所有primary horizons均0/4正向。exact coarse deformation probe关闭，不做feature/bin/lambda/nonlinear/seed rescue。
 
-Post-D24 consolidation已完成：`Bayes task boundary -> finite frontier negative -> target access positive -> capacity-control explanation`形成scientifically coherent problem boundary，但没有形成完整method-paper narrative。SC-MNB Step1-3已固定四个official commits及65-run/80-cell roles；CATS/TimePerceiver per-epoch test access、CATS ETTm2-H96 typo、SRSNet file-level license trace/metric equivalence与ElasTST `limit_train_batches=10`仍阻塞prelaunch。local patch、remote training、official test、D25与第二loss/router均未授权。
+用户2026-07-21明确选择SIFF-first paperization。provisional `SC1-SIFF-v3-TSAF-v1`保留SIFF scale-indexed history-conditioned arms，以future-coordinate × ordered-log-scale field产生sample-shared allocation，删除unsupported history-conditioned routing freedom；不输入requested H，不增加第二loss。Step4-6 narrative/design conditional pass，Step7A production-local 26/26通过；下一步只做Step7B prelaunch。SC-MNB降为supporting inventory；remote training、official test、confirmation与65-run baseline execution均未授权。
 
 完成后同步更新analysis report、docs/paper-mainline.md、docs/research-roadmap.md和Stage C ledger，执行最小诚实验证，并按AGENTS.md提交、推送。请从专业时序预测研究员角度进行审计，不要为了凑两个contributions而预先设计第二个loss/router。
 ```

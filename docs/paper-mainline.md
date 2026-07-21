@@ -5,16 +5,16 @@
 | Field | Content |
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
-| `working_title` | TBD — Unified Multi-Horizon Forecasting（projectivity不再是强制主线） |
+| `working_title` | Scale-Indexed Forecast Fields for Unified Multi-Horizon Time-Series Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC-MNB Step1-3 modern native-baseline reproduction protocol |
+| `current_11_step` | SC1-SIFF-v3-TSAF Step7A local implementation complete |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | no active method；problem boundary coherent but method narrative incomplete |
+| `paper_core_status` | SIFF-v2 immutable parent；TSAF provisional narrative-ready candidate |
 
 [Constraint Reset, 2026-07-20] 后续不再把exact projectivity、requested horizon禁用、A6 interface compatibility或
 full-$T$ prefix crop当作新方法的先验硬约束。它们可以成为合理设计或matched controls，但必须由problem、理论与
@@ -143,6 +143,21 @@ ElasTST `limit_train_batches=10`待确认。decision=
 `source_set_frozen_protocol_repairs_required_before_prelaunch`；当前local patch、remote training和official test
 仍false。详见
 `analysis/stage_c_post_d21_unconstrained_reset_20260720/sc_mnb_step13_source_and_protocol_audit.md`。
+
+[SIFF Paperization Reset, 2026-07-21] 用户明确选择`SC1-SIFF-v2-EQ-ATTR-v1`作为当前论文落地的最接近路径。
+该版本继续immutable，历史Step9仍是`performance_partial_pass_attribution_blocked`：相对A6_FULL
+`+1.6436%`、相对A6_MEASURE `-0.2366%`、相对independent `+0.2580%`。恢复的是SIFF research program，
+不是把失败改写为pass或授权seed/width/rank/objective rescue。SC-MNB降为supporting prior/control inventory，
+65-run baseline execution继续false。
+
+新的provisional successor为`SC1-SIFF-v3-TSAF-v1`。它保留scale-indexed full-domain arm generator，以
+future-coordinate × ordered-log-scale `Target-Scale Allocation Field`替代缺乏稳定证据的history-conditioned
+generic router。allocation不读取requested H、history hidden或future labels；history dependence保留在每个SIFF
+arm内。equal-skill继续作为单一training contract，不包装为第二项loss contribution。Step4-6 narrative/design gate
+为conditional pass。Step7A production-local现26/26通过：allocation对history/sample/channel严格不变，
+target/scale语义、full-domain crop、参数公式、五条gradient与真实TimeAlign constructor均通过；当前只允许
+Step7B prelaunch，remote training、official test与confirmation仍false。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_reactivation_and_tsaf_step46_audit.md`。
 
 [Scope Decision, 2026-07-20] 用户明确要求当前项目暂不转出`deterministic-MSE fixed-past architecture search`。
 因此D22-C有效失败只关闭exact v1并回joint Step2/3，不再自动停止整个search；但不得用seed、width、readout或

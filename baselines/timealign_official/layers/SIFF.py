@@ -13,6 +13,13 @@ from layers.PCSD import PCSDCouplingFieldReadout, pcsd_parameter_count
 SIFF_SCALE_BASIS_MODES = frozenset(
     {"ordered", "constant", "permuted", "independent"}
 )
+TSAF_POLICY_MODES = frozenset(
+    {
+        "target-scale-field",
+        "target-scale-field-permuted",
+        "target-scale-global",
+    }
+)
 
 
 def siff_parameter_count(
@@ -38,6 +45,40 @@ def siff_parameter_count(
     one_field = coordinate_dim * readout_dim * mode_rank
     one_field += coordinate_dim * mode_rank
     return base + (int(scale_components) - 1) * one_field
+
+
+def tsaf_parameter_count(
+    readout_dim: int,
+    series_length: int = 720,
+    scale_count: int = 5,
+    coordinate_dim: int = 4,
+    mode_rank: int = 256,
+    scale_components: int = 2,
+    policy_history_dim: int = 32,
+    policy_hidden_dim: int = 64,
+) -> int:
+    """Return the SIFF readout count after replacing its direct policy."""
+    direct = siff_parameter_count(
+        readout_dim=readout_dim,
+        series_length=series_length,
+        scale_count=scale_count,
+        coordinate_dim=coordinate_dim,
+        mode_rank=mode_rank,
+        scale_components=scale_components,
+        policy_history_dim=policy_history_dim,
+        policy_hidden_dim=policy_hidden_dim,
+    )
+    direct_policy = readout_dim * policy_history_dim + policy_history_dim
+    direct_policy += (
+        (policy_history_dim + coordinate_dim) * policy_hidden_dim
+        + policy_hidden_dim
+    )
+    direct_policy += policy_hidden_dim * scale_count + scale_count
+    target_scale_policy = coordinate_dim * policy_hidden_dim
+    target_scale_policy += 2 * policy_hidden_dim
+    target_scale_policy += policy_hidden_dim
+    target_scale_policy += policy_hidden_dim + 1
+    return direct - direct_policy + target_scale_policy
 
 
 class SIFFCouplingFieldReadout(PCSDCouplingFieldReadout):
@@ -124,6 +165,39 @@ class SIFFCouplingFieldReadout(PCSDCouplingFieldReadout):
             ),
         )
         self._reset_scale_field_parameters()
+        if self.policy_mode in TSAF_POLICY_MODES:
+            del self.history_projection
+            del self.policy_hidden
+            del self.policy_output
+            self.target_allocation_projection = nn.Linear(
+                self.coordinate_dim,
+                self.policy_hidden_dim,
+                bias=False,
+            )
+            self.scale_allocation_projection = nn.Linear(
+                2,
+                self.policy_hidden_dim,
+                bias=False,
+            )
+            self.target_scale_allocation_bias = nn.Parameter(
+                torch.zeros(self.policy_hidden_dim)
+            )
+            self.target_scale_allocation_output = nn.Linear(
+                self.policy_hidden_dim,
+                1,
+            )
+            nn.init.zeros_(self.target_scale_allocation_output.weight)
+            nn.init.zeros_(self.target_scale_allocation_output.bias)
+            self.register_buffer(
+                "allocation_scale_features",
+                self._build_allocation_scale_features(
+                    self.scales,
+                    self.series_length,
+                    permuted=(
+                        self.policy_mode == "target-scale-field-permuted"
+                    ),
+                ),
+            )
 
     @staticmethod
     def _build_scale_basis(
@@ -153,6 +227,52 @@ class SIFFCouplingFieldReadout(PCSDCouplingFieldReadout):
         bound = self.readout_dim**-0.5
         nn.init.uniform_(self.mode_weight, -bound, bound)
         nn.init.uniform_(self.mode_bias, -bound, bound)
+
+    @staticmethod
+    def _build_allocation_scale_features(
+        scales: Sequence[int],
+        series_length: int,
+        *,
+        permuted: bool,
+    ) -> torch.Tensor:
+        """Return ordered log-scale and centered quadratic features ``[S,2]``."""
+        coordinate = torch.log(
+            torch.tensor(scales, dtype=torch.float64)
+        ) / torch.log(torch.tensor(float(series_length), dtype=torch.float64))
+        coordinate = coordinate - coordinate.mean()
+        coordinate = coordinate / coordinate.square().mean().sqrt()
+        if permuted:
+            coordinate = torch.flip(coordinate, dims=(0,))
+        quadratic = coordinate.square()
+        quadratic = quadratic - quadratic.mean()
+        quadratic = quadratic / quadratic.square().mean().sqrt()
+        return torch.stack((coordinate, quadratic), dim=-1).to(torch.float32)
+
+    def _learned_policy_logits(self, hidden: torch.Tensor) -> torch.Tensor:
+        """Return direct-policy or target-scale allocation logits."""
+        if self.policy_mode not in TSAF_POLICY_MODES:
+            return super()._learned_policy_logits(hidden)
+        target_features = self.coordinate_field.to(dtype=hidden.dtype)
+        target_state = self.target_allocation_projection(target_features)
+        if self.policy_mode == "target-scale-global":
+            target_state = torch.zeros_like(target_state)
+        scale_features = self.allocation_scale_features.to(dtype=hidden.dtype)
+        scale_state = self.scale_allocation_projection(scale_features)
+        joint_state = target_state.unsqueeze(1) + scale_state.unsqueeze(0)
+        joint_state = joint_state + self.target_scale_allocation_bias.view(
+            1,
+            1,
+            -1,
+        )
+        logits = self.target_scale_allocation_output(
+            torch.nn.functional.gelu(joint_state)
+        ).squeeze(-1)
+        return logits.view(
+            1,
+            1,
+            self.series_length,
+            len(self.scales),
+        ).expand(hidden.shape[0], hidden.shape[1], -1, -1)
 
     def component_history_modes(self, hidden: torch.Tensor) -> torch.Tensor:
         """Map ``[B,C,R]`` to component modes ``[B,C,Q,D,K]``."""

@@ -141,7 +141,15 @@ class PCSDCouplingFieldReadout(nn.Module):
     scope arms, so the requested horizon cannot affect decoder computation.
     """
 
-    POLICY_MODES = {"direct", "equal", "static-target", "fixed"}
+    POLICY_MODES = {
+        "direct",
+        "equal",
+        "static-target",
+        "fixed",
+        "target-scale-field",
+        "target-scale-field-permuted",
+        "target-scale-global",
+    }
     PARTITIONS = {"canonical", "random"}
 
     def __init__(
@@ -383,6 +391,10 @@ class PCSDCouplingFieldReadout(nn.Module):
         return torch.stack(arms, dim=2)
 
     def _learned_policy_logits(self, hidden: torch.Tensor) -> torch.Tensor:
+        if self.policy_mode.startswith("target-scale-"):
+            raise RuntimeError(
+                "target-scale allocation policies require SIFF semantics"
+            )
         history_state = self.history_projection(hidden)
         if self.policy_mode == "static-target":
             history_state = torch.zeros_like(history_state)
@@ -511,7 +523,15 @@ class PCSDCouplingFieldReadout(nn.Module):
 
     @property
     def policy_parameters(self) -> int:
-        prefixes = ("history_projection.", "policy_hidden.", "policy_output.")
+        prefixes = (
+            "history_projection.",
+            "policy_hidden.",
+            "policy_output.",
+            "target_allocation_projection.",
+            "scale_allocation_projection.",
+            "target_scale_allocation_bias",
+            "target_scale_allocation_output.",
+        )
         return sum(
             parameter.numel()
             for name, parameter in self.named_parameters()

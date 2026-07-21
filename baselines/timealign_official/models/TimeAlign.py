@@ -472,6 +472,14 @@ class Model(nn.Module):
                 "learned-basis/stage-native/basis-conditioned/STBO/PMFO "
                 "PLGO/JAPO/grouped-MLP/PCSD readout modes"
             )
+        policy_mode = str(getattr(configs, "pcsd_policy_mode", "direct"))
+        if (
+            policy_mode.startswith("target-scale-")
+            and self.readout_mode not in SIFF_READOUTS
+        ):
+            raise ValueError(
+                "target-scale allocation policies require a SIFF readout"
+            )
         if (
             self.readout_mode
             in PMFO_READOUTS

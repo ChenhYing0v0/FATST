@@ -5,14 +5,14 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC-MNB Step1-3 modern native-baseline reproduction protocol |
-| `active_question` | A6/MEASURE在modern native varied-horizon、target-query与selective-patch baselines下是否仍具carrier viability？ |
-| `active_candidates` | none；A6/dense controls；D24/FCMI closed；SIFF-v2 frozen history |
+| `current_step` | SC1-SIFF-v3-TSAF Step7A local implementation complete |
+| `active_question` | target-coordinate × ordered-scale allocation能否让SIFF稳定超过frozen parent与A6_MEASURE？ |
+| `active_candidates` | provisional `SC1-SIFF-v3-TSAF-v1`；SIFF-v2 immutable parent |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/sc_mnb_step13_source_and_protocol_audit.md` |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_reactivation_and_tsaf_step46_audit.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | no active method；SC-MNB execution/remote/test false |
-| `rollback_point` | Step1-3 baseline viability；no D25 architecture |
+| `method_implementation` | TSAF production-local 26/26 pass；remote/test false |
+| `rollback_point` | TSAF Step4/6；SIFF-v2 remains immutable |
 
 ## Post-D21 Unconstrained Reset
 
@@ -126,6 +126,20 @@ SC-MNB Step1-3 source audit现完成。official commits固定为ElasTST
 CATS ETTm2-H96 typo、SRSNet file-level license trace/metric equivalence与ElasTST 10-batch semantics均是
 launch blockers。
 planned matrix为65 external runs/80 cells，但local protocol patch、remote training与official test继续false。
+
+2026-07-21用户将paper strategy重置为SIFF-first：`SC1-SIFF-v2-EQ-ATTR-v1`保留为immutable performance-near
+parent，其历史failure不变；SC-MNB不再是active performance gate，只作为source/control inventory。新candidate
+`SC1-SIFF-v3-TSAF-v1`以Target-Scale Allocation Field替换history-conditioned generic router：future-coordinate
+与ordered log-scale共同产生sample-shared allocation，SIFF arms本身仍依赖history。该设计不输入requested H，
+不增加第二loss，也不恢复CCSF、D17-D21或parameter rescue。
+
+Step4-6 narrative/design gate现为conditional pass。最新primary-source audit将claim收紧到完整链
+`request invariance -> target-specific scale demand -> shared scale-indexed output-coupling field -> target-scale
+allocation`，不claim首次multi-scale、future query、MoE、learned basis或decoder-side forecasting。Step7A现已
+production-local 26/26通过，覆盖history/request invariance、scale semantics、参数公式、gradient与TimeAlign
+constructor。下一步只允许Step7B prelaunch；remote training、official test、confirmation和SC-MNB execution均
+false。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_reactivation_and_tsaf_step46_audit.md`。
 
 用户2026-07-20决定暂不承担task pivot成本。该scope决定把上一版“D22-C有效失败即停止整个
 deterministic-MSE search”改为：关闭exact D22-C v1并回joint Step2/3，在同一task边界寻找不同的falsifiable
