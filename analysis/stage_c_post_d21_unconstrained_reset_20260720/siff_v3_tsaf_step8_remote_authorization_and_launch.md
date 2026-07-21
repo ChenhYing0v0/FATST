@@ -69,5 +69,10 @@ smoke只使用training/validation batch，`evaluation_split=none`，不构成per
 - initial status：training 0/25 complete，formal test 0/25；
 - formal-test mode没有启动。
 
+output-root supervisor PID=`1713424`，只等待training runner PID=`1705029`退出。它随后先检查
+`training=25/25`：若不完整则exit 4且不访问test；若完整则执行`git pull --ff-only`、记录formal-test commit，启动
+`FORMAL_TEST_ONLY=1`。test 25/25后才运行冻结analyzer；不完整则exit 5且不分析。supervisor日志为
+`phase_a_supervisor.log`，脚本与日志均位于repo-external output root。
+
 训练期间不得remote pull或修改config/gates。只有training 25/25且artifact completeness通过，才允许单独启动
 `FORMAL_TEST_ONLY=1`。
