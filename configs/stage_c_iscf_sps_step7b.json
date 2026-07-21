@@ -1,0 +1,229 @@
+{
+  "stage": "StageC-UVHF",
+  "candidate_id": "SC-ISCF-SPS-v0",
+  "candidate_version": "SC-ISCF-SPS-v0-step7b",
+  "parent_candidate": "ISCF-v0",
+  "date": "2026-07-21",
+  "status": "step7b_prelaunch_remote_not_authorized",
+  "role": "validation_first_method_screen",
+  "test_informed": true,
+  "purpose": "test whether scope-native output projection improves the utilization and specialization of the frozen ISCF multi-scope architecture",
+  "contracts": {
+    "step4_7a_report": "analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_sps_step46_20260721/step4_6_design_and_step7a_audit.md",
+    "runner_path": "scripts/remote/run_stage_c_iscf_sps_step7b.sh",
+    "checker_path": "scripts/check_stage_c_iscf_sps_step7b.py",
+    "evaluator_path": "scripts/evaluate_stage_c_pcsd_cf_checkpoint.py",
+    "analyzer_path": "scripts/analyze_stage_c_iscf_sps.py"
+  },
+  "profiles": {
+    "path": "configs/stage_c_five_dataset_natural_profiles.json",
+    "sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a"
+  },
+  "datasets": ["Weather", "ETTm1", "ETTh1", "ETTh2", "ETTm2"],
+  "seeds": [2021],
+  "confirmation_seeds": [2022, 2023],
+  "scales": [1, 48, 144, 360, 720],
+  "coupling_scales": [1, 48, 144, 360, 720],
+  "arms": [
+    {
+      "id": "sps_scope_canonical",
+      "role": "candidate",
+      "readout_mode": "iscf-scope-projected-synthesis",
+      "projection_mode": "scope",
+      "partition": "canonical",
+      "rank_rule": "independent_dataset_matched"
+    },
+    {
+      "id": "sps_identity_canonical",
+      "role": "exact_parent_code_path_control",
+      "readout_mode": "iscf-scope-projected-synthesis",
+      "projection_mode": "identity",
+      "partition": "canonical",
+      "rank_rule": "independent_dataset_matched"
+    },
+    {
+      "id": "sps_global_canonical",
+      "role": "generic_smoothing_control",
+      "readout_mode": "iscf-scope-projected-synthesis",
+      "projection_mode": "global",
+      "partition": "canonical",
+      "rank_rule": "independent_dataset_matched"
+    },
+    {
+      "id": "sps_scope_random",
+      "role": "scope_binding_attribution_control",
+      "readout_mode": "iscf-scope-projected-synthesis",
+      "projection_mode": "scope",
+      "partition": "random",
+      "rank_rule": "independent_dataset_matched"
+    }
+  ],
+  "matched_ranks": {
+    "ETTh1": {"independent_dataset_matched": 109},
+    "ETTh2": {"independent_dataset_matched": 116},
+    "ETTm1": {"independent_dataset_matched": 116},
+    "ETTm2": {"independent_dataset_matched": 106},
+    "Weather": {"independent_dataset_matched": 116}
+  },
+  "matrix": {
+    "expected_runs": 20,
+    "arms": 4,
+    "datasets": 5,
+    "seeds": 1,
+    "horizons": [96, 192, 336, 720],
+    "metrics": ["mse", "mae"],
+    "validation_cells": 80,
+    "full_matrix_required": true,
+    "partial_reporting_allowed": false
+  },
+  "training": {
+    "from_scratch": true,
+    "joint_encoder_decoder": true,
+    "target_horizons": [720],
+    "validation_horizons": [96, 192, 336, 720],
+    "checkpoint_score": "mean_validation_mse_h96_h192_h336_h720",
+    "checkpoint_policy": "best-val",
+    "pred_loss_mode": "full",
+    "objective_mode": "equal_skill",
+    "new_auxiliary_loss": false,
+    "new_router": false,
+    "requested_h_input": false,
+    "training_final_evaluation_split": "val",
+    "optimizer": "AdamW",
+    "learning_rate": 0.0001,
+    "batch_size": 32,
+    "max_epochs": 20,
+    "early_stopping_patience": 5,
+    "initialization": "from_scratch_paired_by_dataset_and_seed",
+    "test_labels_select_checkpoint_or_config": false
+  },
+  "training_contracts": [
+    {
+      "target_horizons": [720],
+      "validation_horizons": [96, 192, 336, 720],
+      "pred_loss_mode": "full",
+      "pcc_objective_mode": "equal_skill",
+      "training_final_evaluation_split": "val"
+    }
+  ],
+  "diagnostic_protocol": {
+    "probe_rows": 256,
+    "future_bins": [
+      {"name": "H1_48", "start": 0, "end": 48},
+      {"name": "H49_96", "start": 48, "end": 96},
+      {"name": "H97_144", "start": 96, "end": 144},
+      {"name": "H145_192", "start": 144, "end": 192},
+      {"name": "H193_288", "start": 192, "end": 288},
+      {"name": "H289_336", "start": 288, "end": 336},
+      {"name": "H337_512", "start": 336, "end": 512},
+      {"name": "H513_720", "start": 512, "end": 720}
+    ],
+    "statistics": {
+      "arm_pairwise_normalized_rms": "mean pairwise RMS of projected arm differences divided by target RMS",
+      "oracle_headroom_percent": "100 * (1 - per-row best-arm MSE / fused MSE), averaged over probe rows",
+      "policy_normalized_entropy": "target-averaged entropy of the five direct-policy weights divided by log(5)",
+      "projection_retained_rms_ratio": "projected-arm RMS divided by raw-arm RMS in normalized forecast space",
+      "scope_winner_count": "number of distinct arms attaining minimum arm MSE across dataset-by-future-bin cells"
+    }
+  },
+  "comparisons": [
+    {"id": "effectiveness_vs_identity", "candidate": "sps_scope_canonical", "reference": "sps_identity_canonical", "layer": "validation_effectiveness"},
+    {"id": "scope_specificity_vs_global", "candidate": "sps_scope_canonical", "reference": "sps_global_canonical", "layer": "matched_mechanism_attribution"},
+    {"id": "canonical_binding_vs_random", "candidate": "sps_scope_canonical", "reference": "sps_scope_random", "layer": "matched_scope_binding_attribution"}
+  ],
+  "validation_gates": {
+    "primary_comparison": "effectiveness_vs_identity",
+    "macro_mse_gain_percent_min": 0.3,
+    "dataset_wins_min": 3,
+    "horizon_wins_min": 3,
+    "macro_mae_gain_percent_min": -0.3,
+    "scope_specificity_vs_global_macro_mse_positive": true,
+    "random_partition_is_attribution_only": true,
+    "negative_cells_reported": true
+  },
+  "internal_health": {
+    "all_finite": true,
+    "candidate_removed_to_raw_rms_min": 0.01,
+    "candidate_pairwise_normalized_rms_min": 0.0001,
+    "candidate_oracle_headroom_percent_min": 0.1,
+    "candidate_policy_normalized_entropy_min": 0.1,
+    "candidate_scope_winner_count_min": 2,
+    "candidate_pairwise_distance_vs_identity_ratio_min": 0.8,
+    "candidate_oracle_headroom_vs_identity_tolerance_percent": 0.5,
+    "diagnostics_cannot_override_effectiveness": true
+  },
+  "projection_contract": {
+    "mode_rank_source": "matched_ranks[dataset].independent_dataset_matched",
+    "scope_rank_rule": "min(scope, max(1, round(mode_rank * scope / 720)))",
+    "global_rank_rule": "min(720, mode_rank)",
+    "identity_rank_rule": "scope",
+    "expected_by_mode_rank": {
+      "106": {
+        "scope_ranks": [1, 7, 21, 53, 106],
+        "scope_degrees": [720, 105, 105, 106, 106],
+        "global_ranks": [106, 106, 106, 106, 106],
+        "global_degrees": [106, 106, 106, 106, 106]
+      },
+      "109": {
+        "scope_ranks": [1, 7, 22, 54, 109],
+        "scope_degrees": [720, 105, 110, 108, 109],
+        "global_ranks": [109, 109, 109, 109, 109],
+        "global_degrees": [109, 109, 109, 109, 109]
+      },
+      "116": {
+        "scope_ranks": [1, 8, 23, 58, 116],
+        "scope_degrees": [720, 120, 115, 116, 116],
+        "global_ranks": [116, 116, 116, 116, 116],
+        "global_degrees": [116, 116, 116, 116, 116]
+      }
+    },
+    "identity_ranks": [1, 48, 144, 360, 720],
+    "identity_degrees": [720, 720, 720, 720, 720]
+  },
+  "artifact_schema": {
+    "required": ["checkpoint.pt", "training_log.csv", "metrics_by_target_horizon.csv", "effective_config.json", "initialization_contract.json", "model_diagnostics.json", "pcsd_validation_diagnostics.npz", "trained_invariants.json"]
+  },
+  "launch_order": [
+    ["Weather", "sps_scope_canonical"],
+    ["Weather", "sps_identity_canonical"],
+    ["Weather", "sps_global_canonical"],
+    ["Weather", "sps_scope_random"],
+    ["ETTm1", "sps_scope_canonical"],
+    ["ETTm1", "sps_identity_canonical"],
+    ["ETTm1", "sps_global_canonical"],
+    ["ETTm1", "sps_scope_random"],
+    ["ETTh1", "sps_scope_canonical"],
+    ["ETTh1", "sps_identity_canonical"],
+    ["ETTh1", "sps_global_canonical"],
+    ["ETTh1", "sps_scope_random"],
+    ["ETTh2", "sps_scope_canonical"],
+    ["ETTh2", "sps_identity_canonical"],
+    ["ETTh2", "sps_global_canonical"],
+    ["ETTh2", "sps_scope_random"],
+    ["ETTm2", "sps_scope_canonical"],
+    ["ETTm2", "sps_identity_canonical"],
+    ["ETTm2", "sps_global_canonical"],
+    ["ETTm2", "sps_scope_random"]
+  ],
+  "failure_attribution": {
+    "candidate_positive_global_tie": "performance_partial_pass_scope_specificity_unresolved",
+    "candidate_positive_random_tie_or_loss": "performance_partial_pass_scope_binding_unresolved; do not reject the ISCF architecture",
+    "candidate_validation_negative_without_pathology": "exact_SPS_v0_not_supported; rollback Step4 while retaining ISCF as the architecture prior",
+    "numeric_or_gradient_pathology": "optimization_or_numeric_pathology; repair Step7 without direction rejection",
+    "diversity_or_oracle_collapse": "intervention_point_wrong_or_readout_design_wrong; rollback Step4/5"
+  },
+  "split_roles": {
+    "train": "from-scratch matched optimization",
+    "validation": "checkpoint selection, Step7B effectiveness screen, and internal mechanism diagnostics",
+    "test": "disabled; no file access or evaluator invocation is authorized"
+  },
+  "authorization": {
+    "step7b_design_and_local_prelaunch_authorized": true,
+    "remote_training_authorized": false,
+    "formal_test_access_authorized": false,
+    "confirmation_seeds_authorized": false,
+    "modern_baselines_authorized": false,
+    "per_dataset_horizon_or_cell_tuning_allowed": false
+  },
+  "decision": "freeze Step7B and wait for explicit remote-training authorization after local prelaunch pass"
+}

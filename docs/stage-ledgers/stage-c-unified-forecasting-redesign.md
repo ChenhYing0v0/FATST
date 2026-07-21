@@ -20,27 +20,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | ISCF-SPS Step7A local contract pass；Step7B design freeze |
+| `current_11_step` | ISCF-SPS Step7B validation prelaunch pass；remote authorization pending |
 | `current_candidate` | `SC-ISCF-SPS-v0`；ISCF-v0 exact parent/control |
-| `latest_decision` | `conditional_pass_as_scope_utilization_architecture_step7a_complete` |
-| `next_required_action` | freeze validation-first candidate/identity/global/random matrix and specialization diagnostics |
-| `method_training_authorized` | false；local implementation only；formal test/modern baselines false |
+| `latest_decision` | `step7b_prelaunch_pass_wait_remote_authorization` |
+| `next_required_action` | explicit authorization后remote GPU/resource preflight并启动20-run validation matrix |
+| `method_training_authorized` | false；local prelaunch only；formal test/modern baselines false |
 | `rollback_point` | local fault -> Step5/6；candidate<=global or validation material negative -> Step4 |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | ISCF-SPS Step7A local implementation/audit complete |
+| `current_step` | ISCF-SPS Step7B validation prelaunch complete |
 | `problem` | shared unrestricted target synthesis使不同scope arms仍可学成generalist，scope extent未持续约束forward/gradient |
 | `existence_evidence` | independent>Q1；oracle headroom 8.58%；fusion 9/15；360/720 winners 86.67%；canonical<=random |
 | `idea` | scope-native orthogonal local-DCT projector同时过滤arm forecast与该independent map收到的error gradient |
 | `theory_check` | $P_s^2=P_s=P_s^\top$；no new information/H/loss/router；NHITS/N-BEATS closest-prior boundary recorded |
 | `design` | parent/identity/global/random/scope paths；0 new trainable params；validation-first before any formal test |
 | `narrative_gate` | conditional pass at complete problem->scope projection->gradient specialization->matched controls chain |
-| `effectiveness_gate` | pending；local shape/numeric/gradient/production contracts pass only |
-| `artifacts` | `iscf_sps_step46_20260721/step4_6_design_and_step7a_audit.md` + config/code explanation/checker |
-| `decision` | Step7A pass；active candidate SPS-v0；remote/test false；freeze Step7B design next |
+| `effectiveness_gate` | pending；Step7B仅冻结validation gate，尚无E2E metrics |
+| `artifacts` | Step4–7A report + `iscf_sps_step7b_prelaunch_20260721/` + config/code explanation/checker |
+| `decision` | Step7B prelaunch 19/19 pass；20-run validation matrix frozen；await remote authorization；test false |
 
 ## Frozen Carrier Contract
 
@@ -65,7 +65,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
 | `A6-LBF-natural-baseline` | `control_only` | validation-frozen natural profiles可作为稳定共同起点 | not required | 72/72 test；3 seeds；dense horizons | `frozen_test_reference_ready`；只作固定reference |
-| `SC-ISCF-SPS-v0` | `step7a_local_pass` | scope-native synthesis/gradient subspaces能否让independent arms学习不同resolution features并更有效组合 | conditional pass；NHITS/N-BEATS primitives prior-covered | local invariants/gradients/production pass；E2E pending | freeze validation matrix；remote/test require later authorization |
+| `SC-ISCF-SPS-v0` | `step7b_prelaunch_pass` | scope-native synthesis/gradient subspaces能否让independent arms学习不同resolution features并更有效组合 | conditional pass；NHITS/N-BEATS primitives prior-covered | 19/19 local checks；20-run E2E validation pending | explicit remote authorization required；formal test remains false |
 | `ISCF-v0` | `carrier_only_sac_temporal_scope_fail` | independent future-output coupling scopes是否超越near-matched shared-width与exact random grouping | exact narrative fail；generic independent branch claim prohibited | Q1 +0.8496% pass；RANDOM -0.1990% fail；vs A6 +1.3584% | no rescue；rollback Step2/4 portfolio consolidation |
 | `ISCF-v1-CPSI` | `closed_material_effectiveness_fail` | common scope state应在native synthesis前非线性调制private deviation | design valid；exact mechanism falsified | vs ISCF -2.2128% MSE；vs A6 -0.7775%；health pass；LINEAR tie | no seeds/rescue；return Step4/5 |
 | `SC-D22-HFA` | `completed_target_access_supported` | target-coordinate-specific access是否超越matched generic与shuffles | problem evidence pass；not method effectiveness | ordered vs generic +2.5228%；15/20；4/5；all five controls pass | handoff D23 Step4 |

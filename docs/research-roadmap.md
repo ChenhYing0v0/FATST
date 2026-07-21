@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | ISCF-SPS Step7A local contract pass；freeze Step7B validation design |
+| `current_step` | ISCF-SPS Step7B validation prelaunch pass；await remote-training authorization |
 | `active_question` | 如何让ISCF scope extent原生约束arm forecast与gradient，从而形成functional specialization |
 | `active_candidates` | `SC-ISCF-SPS-v0`；ISCF-v0 parent/carrier；exact SAC/CPSI closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `configs/stage_c_iscf_sps_v0.json` |
+| `active_protocol` | `configs/stage_c_iscf_sps_step7b.json` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | SPS production/local integration complete；remote training/test/modern baselines false |
+| `method_implementation` | SPS production/diagnostic/runner integration complete；remote training/test/modern baselines false |
 | `rollback_point` | local fault -> Step5/6；validation negative/global explains -> Step4；no loss/router/per-dataset rescue |
 
 ## ISCF-SPS Step4–7A Decision
@@ -35,6 +35,21 @@ Step7A全部通过：paired parent/identity/candidate/global/random parameter ha
 `8.34e-7`；prefix gap`0`；orthonormal/idempotence errors `3.22e-15/1.53e-16`；five gradients非零；production
 model/CLI通过。Decision=`conditional_pass_as_scope_utilization_architecture_step7a_complete`。下一步冻结candidate/
 identity/global/random的validation-first Step7B matrix；remote training与formal test均false。
+
+## ISCF-SPS Step7B Prelaunch Decision
+
+20-run matrix完整覆盖四个new-training arms和五个frozen natural profiles。scope candidate相对identity是primary validation
+effectiveness；global projection判断收益是否只是generic smoothing；random partition只判断canonical scope binding归因，不允许
+方向级拒绝ISCF。每个run除H96/192/336/720 MSE/MAE外，还需保存raw/projected/removed arms、direct policy、arm diversity、
+oracle headroom、future-bin winners与projection retention。
+
+local gate `19/19`通过。首轮prelaunch发现配置错误地把projector的$K$写成256；production实际按设计使用dataset-matched
+mode rank 106/109/116。仅修正显式rank/degrees contracts，未改forward。runner normal launch在authorization=false时exit 3，
+test split也在dry-run前硬拒绝。
+
+Decision=`step7b_prelaunch_pass_wait_remote_authorization`。下一步只有在明确授权后才commit-pinned remote pull、执行
+`nvidia-smi`、dual resource smoke并启动20-run validation matrix。validation结果返回前不设计formal test；test、confirmation
+seeds与modern baselines仍false。
 
 ## ISCF-v0 SAC Step9/10 Decision
 

@@ -49,13 +49,15 @@
 40. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_sps_step46_20260721/step4_6_design_and_step7a_audit.md`；
 41. `docs/code-explanation/iscf-sps-v0.md`；
 42. `configs/stage_c_iscf_sps_v0.json`；
-43. `docs/code-explanation/stage-c-iscf-v0-sac-step7b.md`；
-44. `configs/stage_c_iscf_v0_scope_attribution_confirmation.json`；
-45. `configs/stage_c_iscf_v0_carrier.json`；
-46. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
-47. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
-48. `docs/paper-mainline.md`；
-49. `docs/research-roadmap.md`。
+43. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_sps_step7b_prelaunch_20260721/prelaunch_report.md`；
+44. `configs/stage_c_iscf_sps_step7b.json`；
+45. `docs/code-explanation/stage-c-iscf-v0-sac-step7b.md`；
+46. `configs/stage_c_iscf_v0_scope_attribution_confirmation.json`；
+47. `configs/stage_c_iscf_v0_carrier.json`；
+48. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
+49. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
+50. `docs/paper-mainline.md`；
+51. `docs/research-roadmap.md`。
 
 若上述文件与更旧的聊天、archive或历史段落冲突，以本文件和三份主线文档顶部的最新cursor为准。
 
@@ -66,14 +68,14 @@
 | `project` | R_2026_FATST |
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-21 |
-| `source_parent_commit` | `d9208e0`（SAC Step9/10 closure） |
-| `current_step` | ISCF-SPS Step7A local contract pass；freeze Step7B validation design |
+| `source_parent_commit` | `fb4057d`（ISCF-SPS Step7A implementation） |
+| `current_step` | ISCF-SPS Step7B validation prelaunch pass；await remote-training authorization |
 | `active_problem` | scope extent如何原生约束arm forecast/gradient并形成有用functional specialization |
 | `active_method` | local candidate=`SC-ISCF-SPS-v0`；ISCF-v0 exact parent/control |
 | `method_training_authorized` | false；local implementation only |
 | `remote_training_authorized` | false；new formal test/modern baselines false |
-| `next_action` | freeze candidate/identity/global/random validation matrix and specialization diagnostics |
-| `conditional_next` | Step7B prelaunch pass后仍需用户授权remote training；validation pass后另议formal test |
+| `next_action` | explicit authorization后remote preflight/resource smoke/20-run validation training |
+| `conditional_next` | 20/20 validation artifacts完成后先做Step9 validation audit；formal test另议 |
 | `rollback` | local fault Step5/6；candidate<=global或validation negative Step4；no loss/router/per-dataset rescue |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
@@ -92,6 +94,10 @@ Step7A local contract已通过：identity-parent gap `8.34e-7`、prefix gap `0`�
 `3.22e-15`、five scope gradients nonzero、canonical/random/global outputs可辨、production model/CLI通过。该结果不含
 training/validation/test evidence。下一步只允许冻结Step7B validation-first matrix；不得直接remote launch或访问formal
 test。
+
+Step7B现已冻结scope/identity/global/random × five datasets × seed2021的20-run validation matrix。evaluator保存
+raw/projected/removed arms、direct policy、diversity/oracle/bin metrics；local gate `19/19`通过。runner在authorization=false
+时exit 3并硬拒绝test split。当前仍不得remote launch；获得明确remote-training授权后才执行GPU preflight与resource smoke。
 
 ## 2. 本轮正式转向
 

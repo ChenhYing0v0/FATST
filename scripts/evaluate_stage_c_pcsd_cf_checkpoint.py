@@ -416,6 +416,24 @@ def cpsi_tensors(
     return payload
 
 
+def sps_tensors(
+    model: TimeAlign.Model,
+    batch_x: torch.Tensor,
+) -> dict[str, torch.Tensor] | None:
+    """Return normalized raw/projected/removed SPS arm diagnostics."""
+    readout = getattr(model, "pcsd_readout", None)
+    if readout is None or not hasattr(readout, "projection_diagnostics"):
+        return None
+    memory = model.encode_history(batch_x)
+    hidden = memory.flatten(start_dim=-2)
+    tensors = readout.projection_diagnostics(hidden)
+    return {
+        name: value
+        for name, value in tensors.items()
+        if name in {"raw_arms", "projected_arms", "removed_arms"}
+    }
+
+
 def diagnostic_bins(design: dict[str, Any]) -> list[dict[str, Any]]:
     if "diagnostic_protocol" in design:
         return design["diagnostic_protocol"]["future_bins"]
@@ -516,6 +534,7 @@ def evaluate(args: argparse.Namespace) -> None:
     probe_targets: list[np.ndarray] = []
     scale_component_contribution: list[np.ndarray] = []
     probe_policy: list[np.ndarray] = []
+    probe_direct_policy: list[np.ndarray] = []
     probe_base_policy: list[np.ndarray] = []
     probe_base_logits: list[np.ndarray] = []
     probe_correction_logits: list[np.ndarray] = []
@@ -537,6 +556,9 @@ def evaluate(args: argparse.Namespace) -> None:
     probe_cpsi: dict[str, list[np.ndarray]] = {
         name: []
         for name in ("common", "private", "left", "right", "latent", "message")
+    }
+    probe_sps: dict[str, list[np.ndarray]] = {
+        name: [] for name in ("raw_arms", "projected_arms", "removed_arms")
     }
     probe_count = 0
     all_finite = True
@@ -675,6 +697,12 @@ def evaluate(args: argparse.Namespace) -> None:
                                 weights.shape[-1],
                                 policy_tensors["contrast_descriptor"].shape[-1],
                             )[:count]
+                            .cpu()
+                            .numpy()
+                        )
+                    else:
+                        probe_direct_policy.append(
+                            weights.reshape(-1, 720, weights.shape[-1])[:count]
                             .cpu()
                             .numpy()
                         )
@@ -824,6 +852,20 @@ def evaluate(args: argparse.Namespace) -> None:
                         bool(torch.isfinite(value).all())
                         for value in cpsi_health.values()
                     )
+                sps_health = sps_tensors(model, batch_x)
+                if sps_health is not None:
+                    count = probe_batch_count
+                    for name, value in sps_health.items():
+                        probe_sps[name].append(
+                            value.permute(0, 1, 2, 3)
+                            .reshape(-1, value.shape[2], value.shape[3])[:count]
+                            .cpu()
+                            .numpy()
+                        )
+                    all_finite = all_finite and all(
+                        bool(torch.isfinite(value).all())
+                        for value in sps_health.values()
+                    )
             all_finite = all_finite and bool(
                 torch.isfinite(fused).all() and torch.isfinite(target).all()
             )
@@ -893,6 +935,10 @@ def evaluate(args: argparse.Namespace) -> None:
                     ).astype(np.float32),
                 }
             )
+        if probe_direct_policy:
+            payload["probe_direct_policy"] = np.concatenate(
+                probe_direct_policy
+            ).astype(np.float32)
     if probe_if_amplitude:
         payload.update(
             {
@@ -957,6 +1003,11 @@ def evaluate(args: argparse.Namespace) -> None:
     if probe_cpsi["common"]:
         for name, values in probe_cpsi.items():
             payload[f"probe_cpsi_{name}_rms"] = np.concatenate(values).astype(
+                np.float32
+            )
+    if probe_sps["raw_arms"]:
+        for name, values in probe_sps.items():
+            payload[f"probe_sps_{name}"] = np.concatenate(values).astype(
                 np.float32
             )
     artifact_prefix = (
@@ -1044,6 +1095,18 @@ def evaluate(args: argparse.Namespace) -> None:
             == adapter["pcsd_policy_mode"]
             and diagnostics.get("pcsd_partition") == adapter["pcsd_partition"]
         )
+        if hasattr(model.pcsd_readout, "projection_diagnostics"):
+            readout_contract_pass = bool(
+                readout_contract_pass
+                and diagnostics.get("sps_projection_mode")
+                == adapter.get("sps_projection_mode")
+                and diagnostics.get("sps_projection_ranks")
+                and all(
+                    f"probe_sps_{name}" in payload
+                    for name in ("raw_arms", "projected_arms", "removed_arms")
+                )
+                and "probe_direct_policy" in payload
+            )
     elif hasattr(model, "pcsd_m0_readout"):
         readout_contract_pass = bool(
             initialization.get("pcsd_m0_initialization_hash")
@@ -1191,6 +1254,7 @@ def evaluate(args: argparse.Namespace) -> None:
             "probe_history_summary" in payload
         ),
         "cpsi_diagnostics_present": "probe_cpsi_message_rms" in payload,
+        "sps_diagnostics_present": "probe_sps_raw_arms" in payload,
         "all_finite": all_finite,
         "protocol_pass": protocol_pass,
         "readout_contract_pass": readout_contract_pass,

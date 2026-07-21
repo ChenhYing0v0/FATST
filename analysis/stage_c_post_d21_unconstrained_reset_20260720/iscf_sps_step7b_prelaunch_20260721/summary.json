@@ -1,0 +1,11 @@
+{
+  "candidate": "SC-ISCF-SPS-v0-step7b",
+  "checks": 19,
+  "decision": "step7b_prelaunch_pass_wait_remote_authorization",
+  "failed": 0,
+  "formal_test_authorized": false,
+  "jobs": 20,
+  "pass": true,
+  "passed": 19,
+  "remote_training_authorized": false
+}

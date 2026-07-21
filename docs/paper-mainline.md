@@ -7,14 +7,26 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture=`ISCF-SPS` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF-SPS Step7A local contract pass；freeze Step7B validation design |
+| `current_11_step` | ISCF-SPS Step7B validation prelaunch pass；await remote-training authorization |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | active candidate=`SC-ISCF-SPS-v0`；local implementation only；remote/test/modern baselines false |
+| `paper_core_status` | active candidate=`SC-ISCF-SPS-v0`；20-run validation matrix frozen；remote/test/modern baselines false |
+
+[ISCF-SPS Step7B Prelaunch, 2026-07-21] validation-first matrix已冻结为scope/identity/global/random四arms ×
+ETTh1/ETTh2/ETTm1/ETTm2/Weather × seed2021，共20个from-scratch matched runs、80个standard-horizon validation cells。
+所有arms共享natural profiles、dataset-matched rank、direct policy、equal-skill objective与four-horizon checkpoint selector。
+
+evaluator现显式保存raw/projected/removed arm tensors、direct policy、arm predictions、oracle与bin metrics；analyzer预注册
+effectiveness、global smoothing attribution、random binding attribution和specialization health。random只是attribution control，
+不得单独方向级拒绝ISCF。local prelaunch `19/19`通过，runner在未授权时exit 3且硬拒绝test split。
+
+Decision=`step7b_prelaunch_pass_wait_remote_authorization`。目前没有新training/validation/test evidence；remote training、
+formal test、confirmation seeds和modern baselines仍false。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_sps_step7b_prelaunch_20260721/prelaunch_report.md`。
 
 [ISCF-SPS Step4–7A, 2026-07-21] 用户将ISCF multi-scope architecture固定为本项目的design prior，并要求从
 arm specialization/utilization继续研究。SAC negative完整保留，但角色从stop decision改为design diagnosis：ISCF超过

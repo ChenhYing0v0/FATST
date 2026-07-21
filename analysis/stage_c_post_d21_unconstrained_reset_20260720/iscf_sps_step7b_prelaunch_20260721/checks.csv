@@ -1,0 +1,20 @@
+category,case,value,threshold,pass
+contract,profile_hash,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a,True
+contract,matrix_20,20,20,True
+contract,unique_launch_20,20,20,True
+governance,remote_disabled,False,False,True
+governance,test_disabled,False,False,True
+governance,no_new_loss_router_h,"loss=false,router=false,H=false",all false,True
+governance,random_attribution_only,True,True,True
+model,sps_scope_canonical,"ranks=[1, 7, 22, 54, 109],degrees=[720, 105, 110, 108, 109]","ranks=[1, 7, 22, 54, 109],degrees=[720, 105, 110, 108, 109]",True
+model,sps_identity_canonical,"ranks=[1, 48, 144, 360, 720],degrees=[720, 720, 720, 720, 720]","ranks=[1, 48, 144, 360, 720],degrees=[720, 720, 720, 720, 720]",True
+model,sps_global_canonical,"ranks=[109, 109, 109, 109, 109],degrees=[109, 109, 109, 109, 109]","ranks=[109, 109, 109, 109, 109],degrees=[109, 109, 109, 109, 109]",True
+model,sps_scope_random,"ranks=[1, 7, 22, 54, 109],degrees=[720, 105, 110, 108, 109]","ranks=[1, 7, 22, 54, 109],degrees=[720, 105, 110, 108, 109]",True
+model,paired_trainable_initialization,1,1,True
+execution,runner_syntax,0,0,True
+execution,runner_dry_run_20,sps_dry_run=pass jobs=20 config_hash=71ad6353a95f4246925299900b7d9bdd854127754e20d3778e4a642c77729e24 profile_hash=80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a remote_authorized=false test_authorized=false split=val,returncode=0 and jobs=20,True
+execution,unauthorized_remote_blocked,returncode=3:SPS Step7B remote launch is not authorized by configs/stage_c_iscf_sps_step7b.json,returncode=3,True
+execution,test_split_blocked,returncode=3:SPS Step7B is validation-only; requested split=test,returncode=3,True
+execution,analyzer_smoke,iscf_sps_analyzer_synthetic_smoke=pass,returncode=0,True
+execution,remote_gpu_audit_present,nvidia-smi,present,True
+execution,log_scanner_fallback,rg+grep,rg+grep,True
