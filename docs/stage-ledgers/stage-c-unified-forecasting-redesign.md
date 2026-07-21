@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | immutable SIFF-v2能否在three-seed FCC中同时超过A6_MEASURE与independent control？ |
+| `active_question` | immutable SIFF-v2 method package能否在three-seed FCC中超过A6_FULL，且ordered field能否超过independent control？ |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
 | `active_candidates` | `SC1-SIFF-v2-FCC-v1` conditional paperization candidate；no successor method |
@@ -20,27 +20,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SIFF-v2 final paper-claim Step4-6 complete；FCC matrix frozen，waiting authorization |
+| `current_11_step` | SIFF-v2 FCC Step7B prelaunch 25/25 pass；Step8 remote/test authorized，remote preflight pending |
 | `current_candidate` | immutable SIFF-v2；evaluation tag `SC1-SIFF-v2-FCC-v1` |
-| `latest_decision` | `freeze_siff_v2_single_contribution_fcc_design_wait_authorization` |
-| `next_required_action` | authorize or decline frozen 30-run FCC；no baseline execution before FCC |
-| `method_training_authorized` | false for FCC；historical seed2021 complete only |
+| `latest_decision` | `step7b_prelaunch_pass_proceed_commit_remote_preflight` |
+| `next_required_action` | commit/push；remote fast-forward pull；GPU preflight；two resource smokes；launch frozen 30-run training |
+| `method_training_authorized` | true for frozen FCC；single formal test true only after 30/30 training；no method change |
 | `rollback_point` | FCC fail -> paper portfolio decision；no SIFF method rescue |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | SIFF-v2 final paper-claim Step4-6 complete；FCC authorization boundary |
+| `current_step` | SIFF-v2 FCC Step7B prelaunch complete；Step8 execution boundary |
 | `problem` | future-output coupling scope能否作为ordered coordinate构成一个single-model varied-horizon operator field？ |
-| `existence_evidence` | vs constant/permuted/Q1-wide/PCSD positive；internal 7/7；vs A6_MEASURE/independent blocked |
+| `existence_evidence` | vs A6_FULL/constant/permuted/Q1-wide/PCSD positive；internal 7/7；independent attribution blocked；A6_MEASURE historical negative retained but non-gating |
 | `idea` | immutable Q2 ordered SIFF；single architecture contribution；no TSAF/loss/router |
 | `theory_check` | shared history-conditioned components over log-scale；nested synthesis；requested H only final crop |
-| `design` | FCC: SIFF/A6_MEASURE/independent × five datasets × seeds2022/2023；reuse seed2021，three-seed gates |
+| `design` | FCC: SIFF/A6_FULL/independent × five datasets × seeds2022/2023；reuse seed2021；45 effective runs/180 test cells |
 | `narrative_gate` | `conditional_pass_as_single_architecture_contribution` |
-| `effectiveness_gate` | blocked pending FCC；remote/test unauthorized |
-| `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_final_paper_claim_and_confirmation_design.md` |
-| `decision` | `freeze_siff_v2_single_contribution_fcc_design_wait_authorization` |
+| `effectiveness_gate` | blocked pending FCC；remote authorized；single formal test only after 30/30 training |
+| `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/prelaunch_report.md` |
+| `decision` | `step7b_prelaunch_pass_proceed_commit_remote_preflight` |
 
 ## Frozen Carrier Contract
 
@@ -105,7 +105,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC2-PCC-v1-TI` | `rejected_effectiveness_test_fair` | nested-prefix capability能否经harmonic incidence输运为target-coordinate credit | exact claim fail；generic/prior explains most gain | fair test vs prior PCSD +0.0806% fail；on SIFF vs equal -0.2663% | exact v1 closed；return Step2/4 |
 | `SC1-SIFF-v1` | `partial_pass_attribution_blocked` | coupling scale能否作为internal coordinate生成可辨识且连续共享的history modes | complete-chain conditional pass | EQUAL vs PCSD +0.5906% pass；vs A6 +1.6436%；prior/PCC/independent specificity fail | return Step6；EQUAL-context controls before seeds |
 | `SC1-SIFF-v2-EQ-ATTR-v1` | `frozen_performance_near_candidate_attribution_blocked` | EQUAL-trained ordered scale field能否同时超过A6/PCSD与matched EQUAL-context specificity controls | conditional；完整claim未成立 | main 2/3；controls 3/4；internal 7/7 | immutable parent；Step4 source-informed redesign，不补v1 seeds |
-| `SC1-SIFF-v2-FCC-v1` | `narrative_ready_waiting_confirmation_authorization` | immutable SIFF能否以future-output coupling scale coordinate构成single architecture contribution | conditional pass；claim/prohibitions frozen | pending three-seed SIFF vs A6_MEASURE and independent gates | 30 new runs frozen；remote/test false；fail stops paper-core rescue |
+| `SC1-SIFF-v2-FCC-v1` | `step7b_prelaunch_pass_remote_test_authorized` | immutable SIFF能否以future-output coupling scale coordinate构成single architecture contribution | conditional pass；claim/prohibitions frozen | pending three-seed SIFF vs A6_FULL package and independent attribution gates | 25/25 prelaunch；30 new + 15 historical；remote true；test after 30/30 |
 | `SC1-SIFF-v2-CCSF-v1-tau25` | `failed_effectiveness_and_attribution_closed` | target-free scope contrast能否让policy识别relative competence；relative teacher只作co-designed弱监督 | prelaunch narrative conditional；post-result complete claim fail | 50/50、200/200；vs A6 -0.8567%；vs v1 -0.6159%；architecture/objective/ordered specificity fail | no confirmation；exact contrast-policy route closed；return Step2/4 |
 | `SC1-CCSF-D2` | `diagnostic_only_closed` | region aggregation能否把contrast competence转成更强mixture utility | not a method gate | expected-arm signal 4 widths/5 datasets稳定；相对pointwise mixture margin不足，2/3 gates | region retained as analysis scale only；do not train |
 | `SC1-CCSF-D3` | `diagnostic_only_closed` | residual covariance/cancellation是否解释best-arm teacher与fusion不一致 | not a method gate | simplex vs best-arm仅约+1.34%–1.38%；0 widths过dataset gate | covariance-aware redesign unsupported；return Step2 |
@@ -246,6 +246,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SIFF-v3 TSAF Step9/10 | 25 new E2E runs + 45 effective-run/180-cell four-layer audit | vs A6_MEASURE `-1.2854%`；vs parent `-1.0422%`；four attribution gates fail；health pass | exact TSAF-v1 closed；no confirmation/rescue；return Step2/4 | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step9_10_result_and_rollback.md` |
 | SIFF post-TSAF 2x2 Step2 audit | four existing E2E arms + field/policy interaction + same-rank/split sensitivity + latest primary sources | same-rank test interaction MSE/MAE `-0.3097%/-0.1175%`；full positive rank-confounded | weak lead not supported for Step4；SIFF-v2 narrow claim consolidation next | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_post_tsaf_independent_factorial_audit.md` |
 | SIFF-v2 final claim Step4-6 | tensor/theory/prior/evidence audit + single-contribution boundary + three-seed FCC design | narrative conditional pass；main and independent gaps remain blockers；30 new runs frozen | FCC waiting authorization；method unchanged；modern baselines remain blocked | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_final_paper_claim_and_confirmation_design.md` |
+| SIFF-v2 FCC Step7B prelaunch | A6_FULL comparator freeze + 30-job runner + 15-reference audit + three-seed analyzer | 25/25 checks；30/30 jobs；15/15 references complete/unique/init-paired；A6_MEASURE absent | remote/test authorized；commit-pinned preflight/resource smoke next | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/prelaunch_report.md` |
 
 ## Pending Tasks
 
@@ -318,7 +319,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC1-SIFF-v3-TSAF Step7B | `completed_prelaunch_then_executed` | frozen 45-run/180-cell matrix executed once；no gate modification |
 | SC1-SIFF-v3-TSAF Step8-10 | `completed_fail_rollback_step2_4` | 25/25 new training/test；45/45 effective audit；effectiveness/attribution fail；health pass；no confirmation |
 | SC-SIFF-POST-TSAF-2x2 | `completed_weak_lead_not_supported` | existing artifacts only；do not promote independent control；next is SIFF-v2 claim consolidation |
-| SC1-SIFF-v2-FCC-v1 | `narrative_ready_waiting_authorization` | frozen 30-run/three-seed confirmation；no method change；remote/test false |
+| SC1-SIFF-v2-FCC-v1 | `step7b_prelaunch_pass_remote_test_authorized` | commit/push；remote pull/GPU preflight；two resource smokes；launch 30-run training；test only after 30/30 |
 
 ## Paper Mainline Sync Log
 
@@ -441,6 +442,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-21 | SIFF-v3 TSAF Step9/10 | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | complete official-test effectiveness + four-layer attribution | TSAF-v1 closed；vs A6/parent negative；all attribution gates fail；return Step2/4 |
 | 2026-07-21 | SIFF post-TSAF 2x2 audit | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | existing-artifact field × policy interaction + rank/split/prior audit | weak lead not supported；no successor/seed rescue；SIFF claim consolidation |
 | 2026-07-21 | SIFF-v2 final paper-claim Step4-6 | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | single contribution/prohibited claims + immutable three-seed FCC design | conditional narrative pass；30-run FCC frozen；remote/test false |
+| 2026-07-21 | SIFF-v2 FCC A6_FULL Step7B prelaunch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | user-selected comparator + exact matrix/gates/tooling/authorization freeze | 25/25 pass；30 new + 15 historical；remote/test authorized；preflight next |
 
 ## Continuation Rules
 
@@ -738,7 +740,14 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 116. SIFF-v2 final claim gate现`conditional_pass_as_single_architecture_contribution`：唯一method claim是ordered
      coupling-scale coordinate上的shared history-conditioned full-domain operator field；不claim首次multi-scale/MoE/query，
      也不把equal-skill或evaluation包装为第二method contribution。
-117. FCC冻结`SIFF_EQUAL/A6_MEASURE/SIFF_INDEPENDENT_EQUAL × 5 datasets × seeds2022/2023`共30 new runs，复用
-     seed2021形成three-seed evidence。两项primary comparison均沿用`+0.3%`与dataset/horizon/seed stability gates。
-118. Decision=`freeze_siff_v2_single_contribution_fcc_design_wait_authorization`。FCC remote/test尚未授权；失败后
-     停止SIFF paper-core rescue，通过后才进入modern native baselines与formal ablations。
+117. 原FCC设计曾冻结`A6_MEASURE` comparator；用户于2026-07-21明确将其替换为`A6_FULL`。该旧设计只作
+     chronological history，不得用于当前launch。
+118. 当前FCC冻结`SIFF_EQUAL/A6_FULL/SIFF_INDEPENDENT_EQUAL × 5 datasets × seeds2022/2023`共30 new runs，
+     复用seed2021形成45 effective runs/180 test cells。A6_MEASURE不进入FCC metrics、matrix或machine gate，
+     但历史negative evidence继续保留。
+119. `SIFF vs A6_FULL`是architecture与objective共同变化的method-package comparison；ordered-field attribution
+     只由same-objective、capacity-matched independent control承担。两项均沿用`+0.3%`与dataset/horizon/seed gates。
+120. Step7B prelaunch为25/25 pass：30/30 jobs与15/15 historical references完整，checkpoint unique且逐dataset
+     initialization paired，runner/analyzer smokes通过。
+121. Decision=`step7b_prelaunch_pass_proceed_commit_remote_preflight`。remote training已授权；single formal test只在
+     30/30 training后执行。FCC失败则停止SIFF paper-core rescue，通过后才进入modern native baselines与formal ablations。

@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SIFF-v2 final paper-claim Step4-6 complete；FCC matrix frozen，waiting authorization |
-| `active_question` | three-seed SIFF-v2能否同时超过A6_MEASURE与independent control？ |
+| `current_step` | SIFF-v2 FCC Step7B prelaunch 25/25 pass；Step8 remote/test authorized，remote preflight pending |
+| `active_question` | three-seed SIFF-v2 method package能否超过A6_FULL，且ordered field能否超过independent control？ |
 | `active_candidates` | `SC1-SIFF-v2-FCC-v1` conditional paperization candidate；no successor method |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_final_paper_claim_and_confirmation_design.md` |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/prelaunch_report.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | SIFF-v2 unchanged；FCC is evaluation-only；remote/test false |
+| `method_implementation` | SIFF-v2 unchanged；FCC evaluation tooling ready；remote/test authorized but not started |
 | `rollback_point` | FCC fail -> paper portfolio decision；no SIFF method rescue |
 
 ## Post-D21 Unconstrained Reset
@@ -189,13 +189,18 @@ extent作为ordered log-scale coordinate，以共享history-conditioned componen
 operators并target-wise融合”。不claim首次multi-scale、MoE、future query或requested-H conditioning；equal-skill
 只作共同训练contract，不包装为第二loss contribution。
 
-该narrative pass不覆盖effectiveness blockers。FCC固定三个arms：`SIFF_EQUAL`、`A6_MEASURE`与
-`SIFF_INDEPENDENT_EQUAL`，在五datasets补seeds2022/2023共30 new runs，复用seed2021形成45 effective runs/
-180 test cells。两项SIFF comparisons都沿用MSE `+0.3%`、MAE为正、3/5 datasets、3/4 horizons与至少2/3
-seed macro为正的gates。只有同时通过才进入modern baselines；任一失败即停止SIFF paper-core rescue，不回rank、
-loss、router或readout tuning。Decision=`freeze_siff_v2_single_contribution_fcc_design_wait_authorization`；当前
-remote training与official test均未授权。详见
-`analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_final_paper_claim_and_confirmation_design.md`。
+该narrative pass不覆盖effectiveness blockers。用户于2026-07-21指定FCC以`A6_FULL`替代`A6_MEASURE`，现固定
+`SIFF_EQUAL/A6_FULL/SIFF_INDEPENDENT_EQUAL`三臂，在五datasets补seeds2022/2023共30 new runs，复用
+seed2021形成45 effective runs/180 test cells。`SIFF vs A6_FULL`是architecture与objective共同改变的
+method-package comparison；ordered-field attribution只来自same-objective independent control。历史
+`A6_MEASURE` negative保留，但不进入FCC metrics或gate。
+
+两项SIFF comparisons都沿用MSE `+0.3%`、MAE为正、3/5 datasets、3/4 horizons与至少2/3 seed macro为正的
+gates。只有同时通过才进入modern baselines；任一失败即停止SIFF paper-core rescue，不回rank、loss、router或
+readout tuning。local prelaunch现25/25通过，30/30 jobs与15/15 historical references均通过审计；remote
+training及30/30 training后的single formal test已获授权但尚未启动。Decision=
+`step7b_prelaunch_pass_proceed_commit_remote_preflight`。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/prelaunch_report.md`。
 
 用户2026-07-20决定暂不承担task pivot成本。该scope决定把上一版“D22-C有效失败即停止整个
 deterministic-MSE search”改为：关闭exact D22-C v1并回joint Step2/3，在同一task边界寻找不同的falsifiable

@@ -1,0 +1,199 @@
+{
+  "stage": "StageC-UVHF",
+  "candidate_id": "SC1-SIFF-v2-FCC",
+  "candidate_version": "SC1-SIFF-v2-FCC-v1",
+  "status": "authorized_prelaunch",
+  "current_step": "Step7B FCC remote and single formal-test audit authorized",
+  "purpose": "confirm the immutable SIFF-v2 method package against A6_FULL and attribute the ordered field against a matched independent-field control",
+  "test_informed": true,
+  "comparator_change": {
+    "requested_by_user": true,
+    "authorization_date": "2026-07-21",
+    "removed_from_fcc": "a6_measure",
+    "replacement": "a6_full",
+    "claim_boundary": "SIFF_EQUAL versus A6_FULL is a method-package comparison because architecture and training objective both differ; ordered-field attribution is carried only by SIFF_INDEPENDENT_EQUAL",
+    "historical_a6_measure_negative_evidence_retained": true
+  },
+  "datasets": ["Weather", "ETTm1", "ETTh1", "ETTm2", "ETTh2"],
+  "seeds": [2022, 2023],
+  "historical_seed": 2021,
+  "coupling_scales": [1, 48, 144, 360, 720],
+  "profiles": {
+    "path": "configs/stage_c_five_dataset_natural_profiles.json",
+    "sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a"
+  },
+  "arms": [
+    {
+      "id": "siff_equal",
+      "role": "immutable_candidate",
+      "readout_mode": "siff-coupling-field",
+      "policy_mode": "direct",
+      "objective_mode": "equal_skill",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "a6_full",
+      "role": "user_selected_method_package_baseline",
+      "readout_mode": "learned-basis-forecast-operator",
+      "policy_mode": "direct",
+      "objective_mode": "off",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "siff_independent_equal",
+      "role": "matched_independent_field_attribution_control",
+      "readout_mode": "siff-independent-scope-control",
+      "policy_mode": "direct",
+      "objective_mode": "equal_skill",
+      "rank_rule": "independent_dataset_matched"
+    }
+  ],
+  "matched_ranks": {
+    "ETTh1": {"independent_dataset_matched": 109},
+    "ETTh2": {"independent_dataset_matched": 116},
+    "ETTm1": {"independent_dataset_matched": 116},
+    "ETTm2": {"independent_dataset_matched": 106},
+    "Weather": {"independent_dataset_matched": 116}
+  },
+  "launch_order": [
+    [2022, "Weather", "siff_equal"],
+    [2022, "Weather", "a6_full"],
+    [2022, "Weather", "siff_independent_equal"],
+    [2023, "Weather", "siff_equal"],
+    [2023, "Weather", "a6_full"],
+    [2023, "Weather", "siff_independent_equal"],
+    [2022, "ETTm1", "siff_equal"],
+    [2022, "ETTm1", "a6_full"],
+    [2022, "ETTm1", "siff_independent_equal"],
+    [2023, "ETTm1", "siff_equal"],
+    [2023, "ETTm1", "a6_full"],
+    [2023, "ETTm1", "siff_independent_equal"],
+    [2022, "ETTh1", "siff_equal"],
+    [2022, "ETTh1", "a6_full"],
+    [2022, "ETTh1", "siff_independent_equal"],
+    [2023, "ETTh1", "siff_equal"],
+    [2023, "ETTh1", "a6_full"],
+    [2023, "ETTh1", "siff_independent_equal"],
+    [2022, "ETTm2", "siff_equal"],
+    [2022, "ETTm2", "a6_full"],
+    [2022, "ETTm2", "siff_independent_equal"],
+    [2023, "ETTm2", "siff_equal"],
+    [2023, "ETTm2", "a6_full"],
+    [2023, "ETTm2", "siff_independent_equal"],
+    [2022, "ETTh2", "siff_equal"],
+    [2022, "ETTh2", "a6_full"],
+    [2022, "ETTh2", "siff_independent_equal"],
+    [2023, "ETTh2", "siff_equal"],
+    [2023, "ETTh2", "a6_full"],
+    [2023, "ETTh2", "siff_independent_equal"]
+  ],
+  "training": {
+    "from_scratch": true,
+    "joint_encoder_decoder": true,
+    "target_horizons": [720],
+    "validation_horizons": [96, 192, 336, 720],
+    "validation_checkpoint_score": "mean_mse_h96_h192_h336_h720",
+    "checkpoint_policy": "best-val",
+    "epochs": 20,
+    "patience": 5,
+    "batch_size": 32,
+    "learning_rate": 0.0001,
+    "evaluation_prefix_mode": "full-crop",
+    "pred_loss_mode": "full",
+    "training_final_evaluation_split": "val",
+    "test_labels_select_checkpoint": false
+  },
+  "matrix": {
+    "expected_runs": 30,
+    "historical_reused_runs": 15,
+    "effective_runs": 45,
+    "expected_test_cells_new": 120,
+    "effective_test_cells": 180,
+    "horizons": [96, 192, 336, 720],
+    "metrics": ["mse", "mae"],
+    "full_matrix_required": true,
+    "partial_reporting_allowed": false
+  },
+  "comparisons": [
+    {
+      "id": "siff_over_a6_full",
+      "candidate": "siff_equal",
+      "reference": "a6_full",
+      "role": "method_package_effectiveness"
+    },
+    {
+      "id": "ordered_over_independent_equal",
+      "candidate": "siff_equal",
+      "reference": "siff_independent_equal",
+      "role": "ordered_field_attribution"
+    }
+  ],
+  "effectiveness_gates": {
+    "primary_metric": "test_standard_horizon_mse",
+    "secondary_metric": "test_standard_horizon_mae",
+    "comparison_ids": [
+      "siff_over_a6_full",
+      "ordered_over_independent_equal"
+    ],
+    "mse_macro_gain_percent_min": 0.3,
+    "mae_macro_gain_percent_min_exclusive": 0.0,
+    "mse_dataset_wins_min": 3,
+    "mse_horizon_wins_min": 3,
+    "mse_seed_wins_min": 2,
+    "all_comparisons_must_pass": true
+  },
+  "internal_mechanism_health": {
+    "finite_values_required": true,
+    "prefix_projectivity_gap_max": 0.00002,
+    "oracle_positive_datasets_min": 4,
+    "mean_pairwise_probe_nrmse_min": 0.05,
+    "macro_policy_entropy_min": 0.2,
+    "macro_policy_entropy_max": 0.95,
+    "nonconstant_scale_component_rms_ratio_min": 0.01,
+    "diagnostics_cannot_override_effectiveness": true
+  },
+  "diagnostic_protocol": {
+    "future_bins": [
+      {"name": "h1_48", "start": 0, "end": 48},
+      {"name": "h49_96", "start": 48, "end": 96},
+      {"name": "h97_144", "start": 96, "end": 144},
+      {"name": "h145_192", "start": 144, "end": 192},
+      {"name": "h193_288", "start": 192, "end": 288},
+      {"name": "h289_336", "start": 288, "end": 336},
+      {"name": "h337_512", "start": 336, "end": 512},
+      {"name": "h513_720", "start": 512, "end": 720}
+    ]
+  },
+  "historical_reference": {
+    "seed": 2021,
+    "remote_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_equal_attribution_v2",
+    "local_run_audit": "analysis/stage_c_siff_equal_attribution_step9_20260718/primary/run_audit.csv",
+    "protocol_profile": "stage_c_siff_equal_attribution_v2",
+    "required_arms": ["siff_equal", "a6_full", "siff_independent_equal"]
+  },
+  "authorization": {
+    "user_authorized": true,
+    "authorization_date": "2026-07-21",
+    "authorization_scope": "run the frozen FCC with A6_FULL replacing A6_MEASURE",
+    "remote_training_authorized": true,
+    "formal_test_access_authorized": true,
+    "test_role": "primary-mechanism-effectiveness-and-paper-benchmark",
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+    "checkpoint_retraining_allowed": true,
+    "checkpoint_mutation_during_test_allowed": false,
+    "formal_test_access_count_for_version": 1,
+    "per_dataset_horizon_or_cell_tuning_allowed": false,
+    "confirmation_seeds": [2022, 2023],
+    "reused_control_protocol_profiles": ["stage_c_siff_equal_attribution_v2"]
+  },
+  "decision_map": {
+    "both_comparisons_and_health_pass": "passed_core_candidate_pending_modern_baselines",
+    "a6_full_pass_independent_fail": "performance_pass_attribution_blocked_stop_fcc_promotion",
+    "a6_full_fail": "siff_v2_final_claim_not_confirmed_stop_paper_core_rescue",
+    "internal_health_fail": "design_fault_suspected_no_promotion"
+  },
+  "output": {
+    "remote_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_v2_fcc_v1",
+    "local_analysis_root": "analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1"
+  }
+}

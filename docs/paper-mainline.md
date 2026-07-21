@@ -7,14 +7,14 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Scale-Indexed Forecast Fields for Unified Multi-Horizon Time-Series Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SIFF-v2 final paper-claim Step4-6 complete；FCC matrix frozen，waiting authorization |
+| `current_11_step` | SIFF-v2 FCC Step7B prelaunch 25/25 pass；Step8 remote/test authorized，remote preflight pending |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | SIFF-v2 conditional single-contribution candidate；FCC effectiveness pending；no successor method |
+| `paper_core_status` | SIFF-v2 conditional single-contribution candidate；A6_FULL-scope FCC effectiveness pending；no successor method |
 
 [Constraint Reset, 2026-07-20] 后续不再把exact projectivity、requested horizon禁用、A6 interface compatibility或
 full-$T$ prefix crop当作新方法的先验硬约束。它们可以成为合理设计或matched controls，但必须由problem、理论与
@@ -214,13 +214,18 @@ future-output coupling extent作为ordered log-scale coordinate，以共享histo
 full-domain forecast operators并target-wise融合。论文不claim首次multi-scale、MoE、future query或H conditioning；
 direct policy不作为novel router，`equal_skill`只作共同训练contract，不包装为第二method contribution。
 
-这不是paper-core effectiveness pass。A6_MEASURE与independent仍是两个hard blockers。FCC现冻结
-`SIFF_EQUAL/A6_MEASURE/SIFF_INDEPENDENT_EQUAL × 5 datasets × seeds2022/2023`共30 new runs，复用seed2021
-形成three-seed evidence。两项primary comparisons均须通过MSE `+0.3%`、MAE为正、3/5 datasets、3/4 horizons
-与至少2/3 seed macro为正；任一失败即停止SIFF paper-core rescue，不回rank/loss/router/readout tuning。只有FCC
-通过才进入modern native baselines与formal ablations。Decision=
-`freeze_siff_v2_single_contribution_fcc_design_wait_authorization`；当前remote training与official test均false。
-详见`analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_final_paper_claim_and_confirmation_design.md`。
+这不是paper-core effectiveness pass。用户于2026-07-21指定FCC以`A6_FULL`替代`A6_MEASURE`，因此现冻结
+`SIFF_EQUAL/A6_FULL/SIFF_INDEPENDENT_EQUAL × 5 datasets × seeds2022/2023`共30 new runs，复用seed2021
+形成three-seed evidence。`SIFF_EQUAL vs A6_FULL`只回答完整method package effectiveness，因为architecture与
+objective同时变化；ordered-field attribution只由same-objective independent control承担。`A6_MEASURE`完全退出
+FCC matrix、metrics与machine gate，但其历史negative evidence保留在limitations中。
+
+两项primary comparisons均须通过MSE `+0.3%`、MAE为正、3/5 datasets、3/4 horizons与至少2/3 seed macro
+为正；任一失败即停止SIFF paper-core rescue，不回rank/loss/router/readout tuning。local prelaunch现25/25通过，
+30/30 jobs与15/15 historical references完整、unique且initialization paired。用户已授权冻结matrix的remote
+training，并授权30/30 training完整后执行一次formal test；下一步为commit-pinned remote pull、GPU preflight与
+两项resource smoke。Decision=`step7b_prelaunch_pass_proceed_commit_remote_preflight`。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/prelaunch_report.md`。
 
 [Scope Decision, 2026-07-20] 用户明确要求当前项目暂不转出`deterministic-MSE fixed-past architecture search`。
 因此D22-C有效失败只关闭exact v1并回joint Step2/3，不再自动停止整个search；但不得用seed、width、readout或

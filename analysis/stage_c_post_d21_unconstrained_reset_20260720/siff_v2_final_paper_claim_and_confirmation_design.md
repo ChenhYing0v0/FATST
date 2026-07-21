@@ -5,17 +5,17 @@
 | Field | Record |
 | --- | --- |
 | `audit_date` | `2026-07-21` |
-| `current_step` | SIFF-first Step 4-6 final paper-claim/design gate complete |
+| `current_step` | SIFF-first Step 4-6 complete；A6_FULL-scope FCC Step7B prelaunch 25/25 pass；Step8 preflight pending |
 | `candidate_version` | immutable `SC1-SIFF-v2-EQ-ATTR-v1`；evaluation tag `SC1-SIFF-v2-FCC-v1` |
 | `problem` | one full-domain varied-horizon decoder如何把future-output coupling scope作为结构坐标，而不是把requested H、input scale或任意expert identity混为一谈？ |
-| `existence_evidence` | ordered超过constant/permuted/Q1-wide与PCSD_EQUAL；internal 7/7；但不超过A6_MEASURE gate或independent gate |
+| `existence_evidence` | SIFF超过A6_FULL、constant/permuted/Q1-wide与PCSD_EQUAL；internal 7/7；但未通过independent gate；A6_MEASURE历史negative保留但退出FCC |
 | `idea` | 保留原样Q2 ordered Scale-Indexed Forecast Field；不使用TSAF、不增加loss/router、不改rank/readout |
 | `theory_check` | Q2 field在ordered log-scale上共享history-conditioned operator components；requested H不进入forecast graph；direct policy只作既有fusion，不claim novelty |
-| `design` | 只冻结final claim confirmation，不实现新method；3 arms × 5 datasets × 2 new seeds，复用seed2021形成three-seed evidence |
+| `design` | final claim confirmation不实现新method；SIFF/A6_FULL/independent × 5 datasets × 2 new seeds，复用seed2021形成three-seed evidence |
 | `narrative_gate` | `conditional_pass_as_single_architecture_contribution` |
-| `effectiveness_gate` | blocked pending FCC；existing seed2021为main 2/3、specificity 3/4 |
-| `artifacts` | SIFF Step9 four-layer audit、post-TSAF factorial audit、latest primary-source audit |
-| `decision` | `freeze_siff_v2_single_contribution_fcc_design_wait_authorization` |
+| `effectiveness_gate` | blocked pending FCC；A6_FULL承担method-package performance，independent承担ordered-field attribution |
+| `artifacts` | SIFF Step9 four-layer audit、post-TSAF factorial audit、latest primary-source audit、FCC config/runner/analyzer/prelaunch report |
+| `decision` | `fcc_a6_full_scope_authorized_prelaunch_pass_remote_not_started` |
 
 ## 2. Decision
 
@@ -29,9 +29,14 @@ paper core。可辩护贡献不是“首次multi-scale/MoE/future query”，也
 因此在contribution-level具有provisional novelty。现有constant/permuted/Q1-wide controls支持scale variation、正确
 order binding与multi-scale field的作用，PCSD_EQUAL comparison支持SIFF construction相对parent field的增量。
 
-[Strong Evidence] 但两个缺口仍是paper-core blockers：SIFF-v2相对`A6_MEASURE`为MSE `-0.2366%`，相对
-`SIFF_INDEPENDENT_EQUAL`虽为`+0.2580%`却低于预注册`+0.3%`且validation/test反转。不能通过改写claim、选择
-cells或把weak target-only arm升格来消除这些缺口。
+[Decision] 用户于`2026-07-21`指定FCC不以`A6_MEASURE`为对比，而改用`A6_FULL`。因此FCC的性能问题变为
+“完整SIFF method package是否稳定超过A6_FULL”；由于两者同时改变architecture与training objective，该比较不能
+单独归因于SIFF architecture。ordered-field attribution只由同objective、parameter-matched的
+`SIFF_INDEPENDENT_EQUAL`承担。
+
+[Strong Evidence] `A6_MEASURE`相对SIFF-v2的历史MSE `+0.2366%`不会从研究记录或论文limitations中删除，但它不再
+进入FCC matrix、gate或machine decision。当前唯一仍直接阻塞ordered-field claim的是SIFF相对independent仅
+`+0.2580%`、低于`+0.3%`且validation/test反转。
 
 [Decision] 因此本节点通过的是**narrative/design gate**，不是effectiveness gate。下一步只允许原样SIFF-v2的
 Final Claim Confirmation（FCC）；FCC前后均禁止修改method identity。若FCC失败，停止把SIFF-v2作为paper core，
@@ -130,8 +135,9 @@ future-output coupling extent as an ordered coordinate
 | internal health | 7/7；oracle `+6.3937%`；pairwise NRMSE `0.1587`；component ratio `0.1475` | policy-skill alignment weak；dataset dependence | explanatory only |
 | post-TSAF evidence | target-only main effect near zero；no numeric pathology | same-rank interaction negative；TSAF effectiveness fail | no successor support |
 
-[Self-critique] 这一叙事最强的反驳是：如果A6_MEASURE更准、independent field近似同样好，那么ordered field可能只是
-一种优雅但非必要的parameterization。FCC必须直接面对这一反驳，不能用internal plots或novel terminology替代。
+[Self-critique] 这一设计降低了FCC的performance comparator强度：seed2021中SIFF已经超过A6_FULL，而A6_MEASURE
+更强。即使FCC通过A6_FULL，也只能支持完整method package相对source carrier的three-seed稳定性；ordered-field
+必要性仍必须通过independent control，且历史A6_MEASURE negative必须在论文中诚实报告。
 
 ## 7. FCC frozen design
 
@@ -139,7 +145,7 @@ future-output coupling extent as an ordered coordinate
 
 `SC1-SIFF-v2-FCC-v1`不是新candidate architecture，而是immutable SIFF-v2的final claim confirmation。它只回答：
 
-1. SIFF是否在three-seed evidence上超过最强simple carrier `A6_MEASURE`；
+1. SIFF完整method package是否在three-seed evidence上超过用户指定的`A6_FULL`；
 2. ordered field是否在three-seed evidence上超过matched `SIFF_INDEPENDENT_EQUAL`。
 
 ### 7.2 Matrix
@@ -147,7 +153,7 @@ future-output coupling extent as an ordered coordinate
 | Arm | Role | New seeds | Datasets | New runs |
 | --- | --- | --- | --- | ---: |
 | `siff_equal` | immutable candidate | 2022, 2023 | ETTh1, ETTh2, ETTm1, ETTm2, Weather | 10 |
-| `a6_measure` | strongest simple effectiveness control | 2022, 2023 | same five | 10 |
+| `a6_full` | user-selected method-package baseline | 2022, 2023 | same five | 10 |
 | `siff_independent_equal` | strongest function-class attribution control | 2022, 2023 | same five | 10 |
 
 复用同protocol的seed2021 15 runs，形成45 effective runs。每run输出validation与official-test
@@ -166,7 +172,7 @@ dataset/seed的Encoder initialization需paired，independent arm按现有paramet
 
 对three-seed pooled dataset-horizon macro，延续原预注册margin，不因seed2021 near miss降低门槛：
 
-1. `SIFF > A6_MEASURE`：MSE gain至少`+0.3%`，MAE严格为正，dataset wins至少3/5、horizon wins至少3/4；
+1. `SIFF > A6_FULL`：MSE gain至少`+0.3%`，MAE严格为正，dataset wins至少3/5、horizon wins至少3/4；
 2. `SIFF > INDEPENDENT_EQUAL`：同一组gates；
 3. seed stability：两项comparison的MSE至少2/3 seed macro为正；
 4. no reversal masking：报告每个seed/dataset/horizon cell，不以pooled macro隐藏单seed大负值；
@@ -179,14 +185,14 @@ dataset/seed的Encoder initialization需paired，independent arm按现有paramet
 
 - narrative gate：conditional pass；
 - code/model implementation：无变化，不需要Step7A；
-- remote training：**未授权**；
-- official test：**未授权**；
-- confirmation seeds：只在用户明确授权本冻结30-run matrix后执行；
+- remote training：用户已授权，尚未启动；
+- official test：用户已授权，但只允许在30/30 training完整后执行一次；
+- local prelaunch：25/25 checks、30/30 jobs、15/15 historical references通过；
 - 若FCC通过，下一步才是modern native baselines与完整formal ablations；
 - 若FCC失败，回paper portfolio decision，而不是回SIFF rank/loss/router tuning。
 
 最终decision：
 
 ```text
-freeze_siff_v2_single_contribution_fcc_design_wait_authorization
+fcc_a6_full_scope_authorized_prelaunch_pass_remote_not_started
 ```
