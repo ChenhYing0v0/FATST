@@ -36,6 +36,11 @@ claim。synthetic smoke构造CPSI严格优于其他arms的矩阵，验证240 com
 NPZ同时包含numeric diagnostics与string `bin_names` metadata。finite audit只对numeric dtype执行`np.isfinite`，
 string metadata仍保留但不进入numeric health；synthetic smoke包含mixed-dtype regression，防止再次误判。
 
+`arm_reference_context.csv`对每个new arm分别在validation/test上比较ISCF-v0与A6_FULL。每行的
+`macro_gain_percent`是20个dataset-horizon cells的$100(1-candidate/reference)$算术平均；`cell_wins`统计正值cell，
+`dataset_wins`先在dataset内平均四个horizons再统计正值，`max_dataset_degradation_percent`取最差dataset均值的负部。
+这些context rows不改变预注册CPSI gate，只用于解释controls是否揭示替代路径或validation-to-test reversal。
+
 ## 4. Code-theory consistency
 
 理论要求是“test-first effectiveness + diagnostic-only controls”，代码通过全量manifest与test前25/25 completeness

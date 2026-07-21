@@ -62,6 +62,40 @@ def run_dir(root: Path, arm: str, dataset: str, seed: int) -> Path:
     return root / arm / dataset / "h720_full" / f"seed{seed}"
 
 
+def load_validation_metrics(
+    arm: dict[str, Any],
+    dataset: str,
+    seed: int,
+    new_root: Path,
+    reference_root: Path,
+    config: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Load the checkpoint-selection split without changing formal gates."""
+    root = reference_root if arm["source"] == "reused_reference" else new_root
+    directory = run_dir(
+        root,
+        arm.get("source_arm", arm["id"]),
+        dataset,
+        seed,
+    )
+    lookup = {
+        int(row["target_horizon"]): row
+        for row in read_csv(directory / "metrics_by_target_horizon.csv")
+    }
+    return [
+        {
+            "dataset": dataset,
+            "arm": arm["id"],
+            "horizon": horizon,
+            "mse": float(lookup[horizon]["mse"]),
+            "mae": float(lookup[horizon]["mae"]),
+            "seed": seed,
+            "source": arm["source"],
+        }
+        for horizon in config["matrix"]["horizons"]
+    ]
+
+
 def load_run(
     arm: dict[str, Any],
     dataset: str,
@@ -226,6 +260,56 @@ def comparison_rows(
     return cells, summaries
 
 
+def arm_reference_context(
+    split_metrics: dict[str, list[dict[str, Any]]],
+    config: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Summarize every new arm against ISCF-v0 and A6_FULL by split."""
+    rows = []
+    for split, metrics in split_metrics.items():
+        lookup = {
+            (row["dataset"], row["arm"], row["horizon"]): row
+            for row in metrics
+        }
+        for arm in config["effective_arms"]:
+            if arm["source"] != "new_training":
+                continue
+            for reference in ("iscf_v0", "a6_full"):
+                for metric in config["matrix"]["metrics"]:
+                    gains = []
+                    by_dataset: dict[str, list[float]] = {}
+                    for dataset in config["datasets"]:
+                        for horizon in config["matrix"]["horizons"]:
+                            candidate = lookup[(dataset, arm["id"], horizon)]
+                            control = lookup[(dataset, reference, horizon)]
+                            gain = 100.0 * (
+                                1.0
+                                - float(candidate[metric])
+                                / float(control[metric])
+                            )
+                            gains.append(gain)
+                            by_dataset.setdefault(dataset, []).append(gain)
+                    rows.append(
+                        {
+                            "split": split,
+                            "arm": arm["id"],
+                            "reference": reference,
+                            "metric": metric,
+                            "macro_gain_percent": mean(gains),
+                            "cell_wins": sum(value > 0.0 for value in gains),
+                            "dataset_wins": sum(
+                                mean(values) > 0.0
+                                for values in by_dataset.values()
+                            ),
+                            "max_dataset_degradation_percent": max(
+                                max(0.0, -mean(values))
+                                for values in by_dataset.values()
+                            ),
+                        }
+                    )
+    return rows
+
+
 def decide(
     summaries: list[dict[str, Any]],
     health_rows: list[dict[str, Any]],
@@ -317,6 +401,10 @@ def synthetic_smoke(config: dict[str, Any]) -> None:
                     }
                 )
     cells, summaries = comparison_rows(metrics, config)
+    context = arm_reference_context(
+        {"validation": metrics, "test": metrics},
+        config,
+    )
     health = [
         {
             "all_finite": True,
@@ -326,7 +414,11 @@ def synthetic_smoke(config: dict[str, Any]) -> None:
         }
     ]
     result = decide(summaries, health, config)
-    if len(cells) != 240 or not result["effectiveness_supported"]:
+    if (
+        len(cells) != 240
+        or len(context) != 40
+        or not result["effectiveness_supported"]
+    ):
         raise RuntimeError("CPSI analyzer synthetic smoke failed")
     print("cpsi_analyzer_synthetic_smoke=pass")
 
@@ -339,7 +431,7 @@ def main() -> None:
         return
     if args.new_root is None or args.reference_root is None or args.output_dir is None:
         raise ValueError("new-root, reference-root, and output-dir are required")
-    metrics, audits, health_rows = [], [], []
+    metrics, validation_metrics, audits, health_rows = [], [], [], []
     for arm in config["effective_arms"]:
         for dataset in config["datasets"]:
             run_metrics, audit, health = load_run(
@@ -351,6 +443,16 @@ def main() -> None:
                 config,
             )
             metrics.extend(run_metrics)
+            validation_metrics.extend(
+                load_validation_metrics(
+                    arm,
+                    dataset,
+                    args.seed,
+                    args.new_root,
+                    args.reference_root,
+                    config,
+                )
+            )
             audits.append(audit)
             if health is not None:
                 health_rows.append(health)
@@ -359,6 +461,10 @@ def main() -> None:
     if any(row["status"] != "ok" for row in audits):
         raise RuntimeError("one or more run audits failed")
     cells, summaries = comparison_rows(metrics, config)
+    context_rows = arm_reference_context(
+        {"validation": validation_metrics, "test": metrics},
+        config,
+    )
     decision = decide(summaries, health_rows, config)
     args.output_dir.mkdir(parents=True, exist_ok=True)
     write_csv(args.output_dir / "metrics.csv", metrics)
@@ -366,6 +472,7 @@ def main() -> None:
     write_csv(args.output_dir / "comparison_cells.csv", cells)
     write_csv(args.output_dir / "comparison_summary.csv", summaries)
     write_csv(args.output_dir / "internal_health.csv", health_rows)
+    write_csv(args.output_dir / "arm_reference_context.csv", context_rows)
     (args.output_dir / "decision.json").write_text(
         json.dumps(decision, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
