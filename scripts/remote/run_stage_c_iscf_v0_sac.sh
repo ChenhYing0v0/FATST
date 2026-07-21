@@ -133,6 +133,15 @@ if [[ "${FORMAL_TEST_ONLY}" == "1" ]]; then
     echo "SAC formal test requires complete training: ${trained}/${#LINES[@]}" >&2
     exit 4
   fi
+  "${PYTHON_BIN}" -c '
+import json, sys
+design = json.load(open(sys.argv[1]))
+bins = design.get("diagnostic_protocol", {}).get("future_bins", [])
+actual = [(item["start"], item["end"]) for item in bins]
+expected = [(0, 48), (48, 96), (96, 144), (144, 192),
+            (192, 288), (288, 336), (336, 512), (512, 720)]
+assert actual == expected, (actual, expected)
+' "${CONFIG}"
 fi
 
 run_training_command() {

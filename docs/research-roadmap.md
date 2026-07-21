@@ -81,6 +81,10 @@ active method仍none，不进入modern baselines，不按validation结果做rank
 per-cell tuning。Decision=`step9_formal_test_authorized`。下一步commit-pinned remote launch；official-test结果返回前
 active method仍none。
 
+首次formal launch在test loader创建前因missing `diagnostic_protocol.future_bins`停止，test access artifacts仍0/25、
+checkpoint未变。归因为exact protocol preflight gap。当前rollback到Step7B runtime repair：补入固定8-bin contract、
+runner静态断言，并先做validation-split real-checkpoint smoke；不回到method design或training。
+
 ## ISCF-v1-CPSI Step9/10 Decision
 
 25 new runs与single formal test完整。CPSI vs ISCF-v0 test MSE/MAE=`-2.2128%/-1.6987%`，1/5 datasets，

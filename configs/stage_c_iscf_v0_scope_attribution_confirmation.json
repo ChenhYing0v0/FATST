@@ -215,6 +215,19 @@
     "diagnostics_cannot_override_primary_gates": true,
     "existing_scope_response_evidence": "analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_step4_scope_relation_20260721/d1_1_confirmation/summary.json"
   },
+  "diagnostic_protocol": {
+    "probe_rows": 256,
+    "future_bins": [
+      {"name": "H1_48", "start": 0, "end": 48},
+      {"name": "H49_96", "start": 48, "end": 96},
+      {"name": "H97_144", "start": 96, "end": 144},
+      {"name": "H145_192", "start": 144, "end": 192},
+      {"name": "H193_288", "start": 192, "end": 288},
+      {"name": "H289_336", "start": 288, "end": 336},
+      {"name": "H337_512", "start": 336, "end": 512},
+      {"name": "H513_720", "start": 512, "end": 720}
+    ]
+  },
   "failure_attribution": {
     "q1_wide_fails": "capacity_or_shared_width_explains; ISCF remains carrier only",
     "random_partition_fails": "temporal_scope_structure_not_supported; generic independent branches explain",

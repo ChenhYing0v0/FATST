@@ -96,3 +96,12 @@ comparison summaries、internal health与`validation_readiness.json`；它不会
 A6_FULL不经过PCSD，故其SAC role使用`partition=control`。checker现在只对这个non-PCSD control跳过
 `pcsd_partition`比较；所有ISCF canonical/random arms仍要求effective partition与frozen config精确一致。该修正只移除
 无语义字段造成的false failure，不改变model、metrics、gates或正式test审计。
+
+## 8. Formal-test runtime repair
+
+首次formal-test launch在test loader创建前触发`KeyError: step7b_protocol`。通用evaluator要求design提供
+`diagnostic_protocol.future_bins`或旧式`step7b_protocol.future_bins`；SAC config此前遗漏该diagnostic-only字段。
+
+repair加入与FCC/CPSI相同的8个连续bins，完整覆盖`[0,720)`。runner在`FORMAL_TEST_ONLY=1`入口先比较
+`(start,end)`序列与冻结contract；字段缺失、重叠或边界漂移都会在GPU evaluation前失败。bins只决定internal
+diagnostic aggregation，不参与forecast、checkpoint selection或primary MSE/MAE gate。

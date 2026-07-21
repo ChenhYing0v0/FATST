@@ -23,6 +23,11 @@ objective、checkpoint rule、metrics与gates不变，禁止重训与checkpoint 
 Decision=`step9_formal_test_authorized`。下一步commit/push、remote fast-forward、checkpoint/hash与GPU preflight后，
 只运行`FORMAL_TEST_ONLY=1`；完成后联合35个historical references执行60-run/240-cell Step9/10 analyzer。
 
+首次launch在任何test loader创建前因SAC config缺失evaluator所需的`diagnostic_protocol.future_bins`而停止；
+training/test仍为`25/25,0/25`，checkpoint未变。该事件标记为`exact_protocol_preflight_gap`。repair仅补入8个
+diagnostic bins并增加runner静态边界断言；不改变candidate、forecast、metrics或gates。validation-split真实checkpoint
+smoke通过前不得重新launch。
+
 [ISCF-v0 SAC Step8 Validation Audit, 2026-07-21] frozen new training已`25/25`完成，remote checkpoints与
 validation artifacts均`25/25`，formal-test artifacts为`0/25`。联合35个hashed historical references后，validation
 matrix为60/60 runs、240/240 standard-horizon rows；protocol audit 60/60与internal health 15/15通过，无

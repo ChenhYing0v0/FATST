@@ -20,10 +20,10 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | ISCF-v0 SAC Step9 formal test authorized；launch pending |
+| `current_11_step` | ISCF-v0 SAC Step9 authorized；exact runtime repair prelaunch |
 | `current_candidate` | ISCF-v0 conditional paperization candidate；scope attribution pending |
-| `latest_decision` | `step9_formal_test_authorized` |
-| `next_required_action` | commit/push；remote preflight；one frozen 25-run `FORMAL_TEST_ONLY=1` audit |
+| `latest_decision` | `exact_protocol_preflight_gap_repair_only` |
+| `next_required_action` | add fixed diagnostic bins；val checkpoint smoke；rehash；relaunch unchanged formal test |
 | `method_training_authorized` | training complete；single frozen formal test true；retraining false |
 | `rollback_point` | Q1-WIDE或RANDOM primary gate fail -> carrier-only；no rank/seed/partition/loss/router rescue |
 
@@ -258,6 +258,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | ISCF-v0 SAC Step8 launch | commit-pinned pull + 3-GPU preflight + dual resource smoke + background runner | `78cbcf4`；smokes finite/no-OOM；PID2383292；first Weather jobs active | training active；formal test 0/25 and unauthorized | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step8_remote_20260721/remote_authorization_and_launch.md` |
 | ISCF-v0 SAC Step8 validation audit | 25 new checkpoints + 35 historical references；validation-only protocol/health audit | training 25/25；60/60 runs；240/240 rows；health 15/15；Q1 +1.0704%、RANDOM -0.1823% MSE | `formal_test_ready_pending_user_authorization`；not an effectiveness decision | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step8_remote_20260721/validation_artifact_audit_and_test_handoff.md` |
 | ISCF-v0 SAC Step9 authorization | independent user authorization for one frozen official-test matrix | 25 checkpoints fixed；retraining/mutation/tuning false；access count 1 | `step9_formal_test_authorized`；commit-pinned launch next | `configs/stage_c_iscf_v0_scope_attribution_confirmation.json` |
+| ISCF-v0 SAC Step9 runtime repair | first three jobs stopped before test loader due missing diagnostic bins | test 0/25；checkpoint unchanged；not model/result failure | add 8-bin contract + runner assertion + val smoke；then unchanged relaunch | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step8_remote_20260721/remote_authorization_and_launch.md` |
 | SIFF-v2 FCC Step8 launch | commit-pinned pull + 3-GPU preflight + dual resource smoke + background driver | `87bea35`；smokes finite/no-OOM；first three Weather jobs active；test 0/30 | training active；30/30 before one formal test | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/remote_launch_record.md` |
 | SIFF-v2 FCC Step9/10 | 30 new E2E runs + one formal test + 45-run/180-cell three-seed audit | vs A6_FULL MSE/MAE +1.2497%/+0.7549%；vs independent -0.1272%/-0.1733%；health 6/6 | performance pass but attribution fail；stop promotion；portfolio decision | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1/step9_10_result_and_portfolio_decision.md` |
 

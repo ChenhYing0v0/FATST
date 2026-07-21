@@ -63,12 +63,12 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-21 |
 | `source_parent_commit` | `78cbcf4`（SAC training authorization） |
-| `current_step` | ISCF-v0 SAC Step9 formal test authorized；launch pending |
+| `current_step` | ISCF-v0 SAC Step9 authorized；exact runtime repair prelaunch |
 | `active_problem` | scope-specific maps与contiguous/nested output partitions是否超越near-matched shared-width和exact random grouping？ |
 | `active_method` | none；ISCF-v0 conditional paperization candidate，not promoted |
 | `method_training_authorized` | true for frozen 25-run SAC matrix；candidate code unchanged |
 | `remote_training_authorized` | training complete；single formal test true；retraining false |
-| `next_action` | commit/push；remote hash/GPU preflight；one frozen 25-run formal test |
+| `next_action` | diagnostic-bin repair；val real-checkpoint smoke；rehash；unchanged formal-test relaunch |
 | `conditional_next` | Q1-WIDE + RANDOM primary gates both pass -> modern baselines/generalization |
 | `rollback` | either primary fail -> ISCF carrier-only；no rank/seed/partition/loss/router rescue |
 
@@ -247,6 +247,8 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
 72. Decision=`formal_test_ready_pending_user_authorization`；active method仍none，formal test access仍false。
 73. 用户于`2026-07-21`独立回复“授权SAC formal test”；config status=`authorized_prelaunch`、formal test true，
     只开放现有25 checkpoints的一次完整test，禁止retraining/mutation/tuning。
+74. 首次formal launch因missing diagnostic bins在test loader前停止；test=0/25、checkpoint unchanged。exact repair只补
+    8-bin contract与runner assertion，val smoke后按原matrix重启。
 
 ## 5. D22-HFA 的执行顺序
 
@@ -389,7 +391,7 @@ ISCF-v0相对A6_FULL的existing three-seed test-informed MSE/MAE=`+1.3584%/+0.91
 
 Decision=`conditional_pass_as_output_coupling_scope_architecture_pending_sac`。下一步Scope Attribution Confirmation只检验：1) ISCF是否超过active-param gap不超过`0.4646%`的Q1-WIDE shared map；2) canonical contiguous/nested partitions是否超过same-parameter/initialization RANDOM-PARTITION。新增10个Q1-WIDE与15个RANDOM trainings；candidate code、direct policy、equal-skill objective与ranks不变。
 
-SAC Step7B local prelaunch为18/18；training现已25/25完成，formal test为0/25。联合35 historical references的validation audit为60/60 runs、240/240 rows、internal health 15/15。validation中ISCF over Q1-WIDE MSE/MAE=`+1.0704%/+0.7538%`，canonical over RANDOM=`-0.1823%/-0.3075%`；后者是negative lead，但validation不得拒绝机制。用户现已独立授权一次冻结25-run formal test，Decision=`step9_formal_test_authorized`。下一步commit/push并做remote hash/GPU preflight后运行`FORMAL_TEST_ONLY=1`。两项official-test primary gates都通过才进入modern baselines；任一失败则ISCF降为strong carrier/control，不做rank、seed、partition、loss或router rescue。
+SAC Step7B local prelaunch为18/18；training现已25/25完成，formal test为0/25。联合35 historical references的validation audit为60/60 runs、240/240 rows、internal health 15/15。validation中ISCF over Q1-WIDE MSE/MAE=`+1.0704%/+0.7538%`，canonical over RANDOM=`-0.1823%/-0.3075%`；后者是negative lead，但validation不得拒绝机制。用户现已独立授权一次冻结25-run formal test。首次launch因missing diagnostic bins在test loader前停止，test仍0/25且checkpoint unchanged；当前只做8-bin exact protocol repair、runner assertion与validation-split smoke，之后按原matrix重启。两项official-test primary gates都通过才进入modern baselines；任一失败则ISCF降为strong carrier/control，不做rank、seed、partition、loss或router rescue。
 
 完成后同步更新analysis report、docs/paper-mainline.md、docs/research-roadmap.md和Stage C ledger，执行最小诚实验证，并按AGENTS.md提交、推送。请从专业时序预测研究员角度进行审计，不要为了凑两个contributions而预先设计第二个loss/router。
 ```

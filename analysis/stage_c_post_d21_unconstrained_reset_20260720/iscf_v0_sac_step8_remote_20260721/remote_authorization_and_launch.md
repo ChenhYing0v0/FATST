@@ -80,3 +80,13 @@ official-test audit；不开放重训、checkpoint mutation或任何per-dataset/
 
 Decision=`step9_formal_test_authorized`。formal-test launch前必须提交并push authorization config，remote
 fast-forward后复核25/25 training、0/25 test与pretest hashes。
+
+## First formal-test launch and exact runtime repair
+
+commit `7d4f0e2`于`21:00:23+08:00`启动formal test。首批三个Weather jobs均在创建test loader前调用
+`diagnostic_bins(design)`，因SAC config缺失`diagnostic_protocol.future_bins`而触发`KeyError`。状态保持
+training/test=`25/25,0/25`，GPU已释放；没有test metric、test invariant或checkpoint mutation。
+
+failure attribution=`exact_protocol_preflight_gap`，不是model/numeric/result failure。repair只补入FCC/CPSI已使用的8个
+连续future bins，并在runner formal-test入口加入`[0,720)`边界断言。重启前必须用真实checkpoint在validation split
+执行repo-external evaluator smoke，再复核25个hash与test=0/25。
