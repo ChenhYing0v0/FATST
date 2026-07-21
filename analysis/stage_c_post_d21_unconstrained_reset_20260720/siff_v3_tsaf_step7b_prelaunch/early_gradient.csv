@@ -1,0 +1,6 @@
+arm,policy_mode,loss_step2,mode_gradient_step1,policy_output_gradient_step1,policy_input_gradient_step2,all_gradients_finite,pass
+tsaf,target-scale-field,2.00195574760437,5.434897422790527,3.1993587971290096,0.03083324467812355,True,True
+siff_categorical_target_only,static-target,2.0705783367156982,5.434897422790527,0.801500518179932,0.0019496654152361438,True,True
+tsaf_permuted_scale,target-scale-field-permuted,2.0302541255950928,5.434897422790527,2.349006089906626,0.020732965046224808,True,True
+tsaf_no_target_global,target-scale-global,1.9976227283477783,5.434897422790527,3.3046292929437717,0.030797087895157494,True,True
+siff_independent_target_only,static-target,1.269417643547058,1.9117069244384766,0.134139939934667,6.88295723848567e-05,True,True

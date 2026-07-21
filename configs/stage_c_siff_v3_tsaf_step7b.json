@@ -1,0 +1,306 @@
+{
+  "stage": "StageC-UVHF",
+  "candidate_id": "SC1-SIFF-v3-TSAF",
+  "candidate_version": "SC1-SIFF-v3-TSAF-v1",
+  "parent_candidate": "SC1-SIFF-v2-EQ-ATTR-v1",
+  "date": "2026-07-21",
+  "status": "step7b_prelaunch_frozen_waiting_remote_authorization",
+  "role": "paper_core_candidate_formal_screen",
+  "test_informed": true,
+  "purpose": "test whether a future-coordinate by ordered-log-scale allocation field improves the SIFF carrier without sample-conditioned routing",
+  "contracts": {
+    "step46_path": "analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_reactivation_and_tsaf_step46_audit.md",
+    "step7a_config_path": "configs/stage_c_siff_v3_tsaf_step6.json",
+    "step7a_gate_path": "analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step7a_local_gate/summary.json",
+    "parent_freeze_path": "configs/stage_c_siff_equal_attribution_v1_candidate_freeze.json",
+    "runner_path": "scripts/remote/run_stage_c_siff_v3_tsaf_v1.sh",
+    "checker_path": "scripts/check_stage_c_siff_v3_tsaf_step7b.py",
+    "evaluator_path": "scripts/evaluate_stage_c_pcsd_cf_checkpoint.py",
+    "analyzer_path": "scripts/analyze_stage_c_siff_v3_tsaf_v1.py"
+  },
+  "profiles": {
+    "path": "configs/stage_c_five_dataset_natural_profiles.json",
+    "sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a"
+  },
+  "datasets": ["Weather", "ETTm1", "ETTh1", "ETTh2", "ETTm2"],
+  "seeds": [2021],
+  "confirmation_seeds": [2022, 2023],
+  "scales": [1, 48, 144, 360, 720],
+  "effective_arms": [
+    {
+      "id": "a6_full",
+      "role": "carrier_control",
+      "source": "reused_reference",
+      "source_arm": "a6_full",
+      "readout_mode": "learned-basis-forecast-operator",
+      "policy_mode": "direct",
+      "objective_mode": "off",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "a6_measure",
+      "role": "strong_objective_control",
+      "source": "reused_reference",
+      "source_arm": "a6_measure",
+      "readout_mode": "learned-basis-forecast-operator",
+      "policy_mode": "direct",
+      "objective_mode": "measure_only",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "siff_v2_direct_parent",
+      "role": "immutable_parent",
+      "source": "reused_reference",
+      "source_arm": "siff_equal",
+      "readout_mode": "siff-coupling-field",
+      "policy_mode": "direct",
+      "objective_mode": "equal_skill",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "pcsd_equal",
+      "role": "no_scale_coordinate_control",
+      "source": "reused_reference",
+      "source_arm": "pcsd_equal",
+      "readout_mode": "pcsd-coupling-field",
+      "policy_mode": "direct",
+      "objective_mode": "equal_skill",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "siff_categorical_target_only",
+      "role": "target_only_no_ordered_scale_geometry_control",
+      "source": "new_training",
+      "readout_mode": "siff-coupling-field",
+      "policy_mode": "static-target",
+      "objective_mode": "equal_skill",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "tsaf",
+      "role": "candidate",
+      "source": "new_training",
+      "readout_mode": "siff-coupling-field",
+      "policy_mode": "target-scale-field",
+      "objective_mode": "equal_skill",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "tsaf_permuted_scale",
+      "role": "ordered_scale_semantics_control",
+      "source": "new_training",
+      "readout_mode": "siff-coupling-field",
+      "policy_mode": "target-scale-field-permuted",
+      "objective_mode": "equal_skill",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "tsaf_no_target_global",
+      "role": "future_coordinate_variation_control",
+      "source": "new_training",
+      "readout_mode": "siff-coupling-field",
+      "policy_mode": "target-scale-global",
+      "objective_mode": "equal_skill",
+      "rank_rule": "fixed_256"
+    },
+    {
+      "id": "siff_independent_target_only",
+      "role": "shared_field_control",
+      "source": "new_training",
+      "readout_mode": "siff-independent-scope-control",
+      "policy_mode": "static-target",
+      "objective_mode": "equal_skill",
+      "rank_rule": "independent_dataset_matched"
+    }
+  ],
+  "matched_ranks": {
+    "ETTh1": {"independent_dataset_matched": 109},
+    "ETTh2": {"independent_dataset_matched": 115},
+    "ETTm1": {"independent_dataset_matched": 115},
+    "ETTm2": {"independent_dataset_matched": 106},
+    "Weather": {"independent_dataset_matched": 115}
+  },
+  "reference_contract": {
+    "source_config_path": "configs/stage_c_siff_equal_attribution_v2.json",
+    "source_config_sha256": "f0600be7c5b79445a1055463e0a41486a52f16daa20068c610d56457bd03836a",
+    "source_run_audit_path": "analysis/stage_c_siff_equal_attribution_step9_20260718/primary/run_audit.csv",
+    "source_run_audit_sha256": "64d89c07ee5151b6dcdd50d6eee60fad15f5df03fdbf6a68fb4847772f08e366",
+    "local_artifact_root": "analysis/stage_c_siff_equal_attribution_step9_20260718/raw",
+    "remote_artifact_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_equal_attribution_v2",
+    "checkpoint_selector": "best-validation-mean-mse-h96-h192-h336-h720",
+    "profile_sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a",
+    "required_reference_runs": 20,
+    "checkpoint_sha256": {
+      "a6_full": {
+        "ETTh1": "608023e3564640e7c0fc00c29edadc19c614fbe3a46683537ee7eff1089fa967",
+        "ETTh2": "b6178da4e329647e88bb5b340650926a4d86506eb06f5ff02831dae7cf27eacf",
+        "ETTm1": "cbb57f5c5f32ba2889f6ef9c0aaf165103b319fc64c288df843ac1bb4a0fcef3",
+        "ETTm2": "80667ea06869d886243687a83935e14d2d22f1400de2b61464e7f56449470668",
+        "Weather": "14b572a18f8ecc12dab40fc0f7c16e10953df982155b71eec6bfa77788f1073d"
+      },
+      "a6_measure": {
+        "ETTh1": "5cfa4eb8bd58d0c524afe747aa58665e18e9ef0490ff082d5355d9ba059c6e69",
+        "ETTh2": "501587f8cc26578b791273bdd5d0058b35b53edd2fa83f94421f071964192005",
+        "ETTm1": "2492d7c6f840fa69117201b957f7dc6b37bcaea0df44ad26f479b1e2495dae03",
+        "ETTm2": "5d89a48bad84e9c61e8c6e2acd10848f25e62a4b65241db769bffdfc596f9a05",
+        "Weather": "d55d81b75735056a9016f6f3217127bca9c0c71cdcb5ac18045b1736c7846489"
+      },
+      "pcsd_equal": {
+        "ETTh1": "612a103acf11c66c0e39ca2758aa781b3bd60741b8cfe68e2f32ddb3e8b7a2dd",
+        "ETTh2": "33ec152bc2efe57b27528e9fc3e628399bdc9cda3228d4301918240a2184e527",
+        "ETTm1": "6f60c305aefa59eb820909945d0018ec10ac27151d5edd3bd760770f8325dbe9",
+        "ETTm2": "67bd263334a2dcb36db9efee87471019b7a0e56e21bf63f3689be754ebf11ee4",
+        "Weather": "bc468525f361870cfbb7db20c6b8288672ba108700f047350249496bb5e08d9d"
+      },
+      "siff_v2_direct_parent": {
+        "ETTh1": "a19fac474a50ec3272ce57fc445d6287560c378117758dfdd4bcf9061155097e",
+        "ETTh2": "93120f3f30fb8b025b7057034ae1a6f7bcf74f647b754844dd19669d18823b8c",
+        "ETTm1": "bd0a231b743fba13f8308ebad6f55b5240417f05a51d3dc1dd6125606b48f92c",
+        "ETTm2": "030049c885d28ef9f9e7bfd472a01c63980468a856084bf3dc0b55aedbe23e12",
+        "Weather": "71054994db3e367ae33cdc41e768d8c3347d374e0b7c923ad84e220497d91dcd"
+      }
+    }
+  },
+  "matrix": {
+    "effective_arms": 9,
+    "effective_runs": 45,
+    "new_training_arms": 5,
+    "new_training_runs": 25,
+    "reused_reference_arms": 4,
+    "reused_reference_runs": 20,
+    "horizons": [96, 192, 336, 720],
+    "metrics": ["mse", "mae"],
+    "new_validation_cells": 100,
+    "new_official_test_cells": 100,
+    "effective_official_test_cells": 180,
+    "full_matrix_required": true,
+    "partial_reporting_allowed": false
+  },
+  "training": {
+    "from_scratch": true,
+    "joint_encoder_decoder": true,
+    "target_horizons": [720],
+    "validation_horizons": [96, 192, 336, 720],
+    "checkpoint_score": "mean_validation_mse_h96_h192_h336_h720",
+    "checkpoint_policy": "best-val",
+    "pred_loss_mode": "full",
+    "objective_mode": "equal_skill",
+    "new_auxiliary_loss": false,
+    "training_final_evaluation_split": "val",
+    "optimizer": "AdamW",
+    "learning_rate": 0.0001,
+    "batch_size": 32,
+    "max_epochs": 20,
+    "early_stopping_patience": 5,
+    "initialization": "from_scratch_paired_by_dataset_and_seed",
+    "test_labels_select_checkpoint_or_config": false
+  },
+  "comparisons": [
+    {"id": "effectiveness_vs_a6_measure", "candidate": "tsaf", "reference": "a6_measure", "layer": "paper_facing_effectiveness"},
+    {"id": "effectiveness_vs_parent", "candidate": "tsaf", "reference": "siff_v2_direct_parent", "layer": "paper_facing_effectiveness"},
+    {"id": "context_vs_a6_full", "candidate": "tsaf", "reference": "a6_full", "layer": "source_family_context"},
+    {"id": "context_vs_pcsd_equal", "candidate": "tsaf", "reference": "pcsd_equal", "layer": "source_family_context"},
+    {"id": "ordered_field_vs_categorical", "candidate": "tsaf", "reference": "siff_categorical_target_only", "layer": "matched_mechanism_attribution"},
+    {"id": "ordered_scale_vs_permuted", "candidate": "tsaf", "reference": "tsaf_permuted_scale", "layer": "matched_mechanism_attribution"},
+    {"id": "target_coordinate_vs_global", "candidate": "tsaf", "reference": "tsaf_no_target_global", "layer": "matched_mechanism_attribution"},
+    {"id": "shared_field_vs_independent", "candidate": "tsaf", "reference": "siff_independent_target_only", "layer": "matched_mechanism_attribution"}
+  ],
+  "gates": {
+    "primary_effectiveness": {
+      "comparison_ids": ["effectiveness_vs_a6_measure", "effectiveness_vs_parent"],
+      "mse_macro_gain_percent_min": 0.3,
+      "mse_dataset_wins_min": 3,
+      "mse_horizon_wins_min": 3,
+      "mse_cell_wins_min": 11,
+      "mae_macro_gain_percent_min": 0.0
+    },
+    "matched_controls": {
+      "comparison_ids": ["ordered_field_vs_categorical", "ordered_scale_vs_permuted", "target_coordinate_vs_global"],
+      "mse_macro_gain_percent_min": 0.0,
+      "mse_dataset_wins_min": 3
+    },
+    "shared_field": {
+      "comparison_id": "shared_field_vs_independent",
+      "mse_macro_gain_percent_min": 0.0,
+      "strict_superiority_macro_gain_percent_min": 0.3
+    }
+  },
+  "internal_health": {
+    "all_finite": true,
+    "arm_prediction_diversity_min": 1e-08,
+    "target_scale_surface_std_min": 1e-08,
+    "ordered_permuted_allocation_nrmse_min": 1e-08,
+    "allocation_normalized_entropy_min": 0.05,
+    "allocation_normalized_entropy_max": 0.99,
+    "scale_component_contribution_rms_min": 1e-08,
+    "request_invariance_max_abs_max": 0.00002,
+    "diagnostics_cannot_override_effectiveness": true
+  },
+  "artifact_schema": {
+    "training_required": [
+      "checkpoint.pt",
+      "training_log.csv",
+      "metrics_by_target_horizon.csv",
+      "effective_config.json",
+      "initialization_contract.json",
+      "model_diagnostics.json"
+    ],
+    "formal_test_required": [
+      "test_audit_metrics_by_target_horizon.csv",
+      "test_audit_invariants.json",
+      "pcsd_test_audit_diagnostics.npz"
+    ],
+    "checkpoint_nonmutation_required": true
+  },
+  "capacity_control": {
+    "matching_quantity": "active_forward_parameters",
+    "independent_rank_selection": "nearest integer rank derived from TSAF active parameter count only",
+    "candidate_independent_relative_gap_max": 0.004,
+    "old_direct_parent_matched_ranks_reused": false
+  },
+  "launch_order": [
+    ["Weather", "tsaf"],
+    ["Weather", "siff_categorical_target_only"],
+    ["Weather", "tsaf_permuted_scale"],
+    ["Weather", "tsaf_no_target_global"],
+    ["Weather", "siff_independent_target_only"],
+    ["ETTm1", "tsaf"],
+    ["ETTm1", "siff_categorical_target_only"],
+    ["ETTm1", "tsaf_permuted_scale"],
+    ["ETTm1", "tsaf_no_target_global"],
+    ["ETTm1", "siff_independent_target_only"],
+    ["ETTh1", "tsaf"],
+    ["ETTh1", "siff_categorical_target_only"],
+    ["ETTh1", "tsaf_permuted_scale"],
+    ["ETTh1", "tsaf_no_target_global"],
+    ["ETTh1", "siff_independent_target_only"],
+    ["ETTh2", "tsaf"],
+    ["ETTh2", "siff_categorical_target_only"],
+    ["ETTh2", "tsaf_permuted_scale"],
+    ["ETTh2", "tsaf_no_target_global"],
+    ["ETTh2", "siff_independent_target_only"],
+    ["ETTm2", "tsaf"],
+    ["ETTm2", "siff_categorical_target_only"],
+    ["ETTm2", "tsaf_permuted_scale"],
+    ["ETTm2", "tsaf_no_target_global"],
+    ["ETTm2", "siff_independent_target_only"]
+  ],
+  "failure_attribution": {
+    "candidate_and_categorical_below_parent": "history_free_allocation_hypothesis_false; rollback Step2/4",
+    "categorical_positive_tsaf_negative": "scale_field_allocation_design_wrong; close exact TSAF-v1 only",
+    "candidate_beats_parent_not_a6_measure": "performance_partial_pass; SIFF ablation only",
+    "permuted_or_global_explains": "capacity_or_coordinate_control_explains; rollback Step4/6",
+    "numeric_or_gradient_pathology": "optimization_or_numeric_pathology; repair Step7 without direction rejection"
+  },
+  "authorization": {
+    "user_authorization_basis": "2026-07-21 user instruction: 继续推进TSAF Step7B的工作",
+    "step7b_design_and_prelaunch_authorized": true,
+    "remote_training_authorized": false,
+    "formal_test_access_authorized": false,
+    "confirmation_seeds_authorized": false,
+    "test_role_if_later_authorized": "primary-mechanism-effectiveness-and-paper-benchmark",
+    "formal_test_access_count_for_version": 0,
+    "per_dataset_horizon_or_cell_tuning_allowed": false
+  },
+  "decision": "step7b_prelaunch_freeze_only_remote_and_test_held"
+}

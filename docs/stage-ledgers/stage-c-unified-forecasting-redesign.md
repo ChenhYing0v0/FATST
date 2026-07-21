@@ -20,10 +20,10 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | SC1-SIFF-v3-TSAF Step7A local implementation complete |
+| `current_11_step` | SC1-SIFF-v3-TSAF Step7B prelaunch complete；waiting remote/test authorization |
 | `current_candidate` | provisional `SC1-SIFF-v3-TSAF-v1` |
-| `latest_decision` | `tsaf_step7a_local_pass_step7b_prelaunch_next` |
-| `next_required_action` | TSAF Step7B CLI/matrix/artifact/resource prelaunch；no remote/test |
+| `latest_decision` | `step7b_prelaunch_pass_waiting_remote_and_test_authorization` |
+| `next_required_action` | independent authorization；then commit-pinned remote pull + resource smoke；no launch yet |
 | `method_training_authorized` | false；new diagnostic/training/test all false |
 | `rollback_point` | TSAF Step4/6；immutable SIFF-v2 parent |
 
@@ -31,16 +31,16 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | TSAF Step7A local implementation complete |
+| `current_step` | TSAF Step7B prelaunch complete；no training result |
 | `problem` | unified decoder如何组织future-coordinate-specific coupling scale且不假设requested H或sample-wise competence提供信息？ |
 | `existence_evidence` | D18 frontier negative；D22 target access positive；D23 capacity explains；D24 coarse deformation negative |
 | `idea` | 保留SIFF scale-indexed arms，以target-scale allocation field替代history-conditioned generic router |
 | `theory_check` | allocation依赖future coordinate与ordered scale，不依赖requested H；history dependence留在arms |
-| `design` | immutable SIFF-v2 parent；TSAF + controls frozen；production-local 26/26 pass |
+| `design` | 9 effective arms；20 reused references + 25 new E2E runs；Step7A 26/26、Step7B 15/15 |
 | `narrative_gate` | conditional pass；contribution-level novelty provisional |
-| `effectiveness_gate` | not applicable；no active method |
-| `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_reactivation_and_tsaf_step46_audit.md` |
-| `decision` | `tsaf_step7a_local_pass_step7b_prelaunch_next` |
+| `effectiveness_gate` | pending official test；45 runs/180 cells frozen；remote/test false |
+| `artifacts` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step7b_prelaunch_report.md` |
+| `decision` | `step7b_prelaunch_pass_waiting_remote_and_test_authorization` |
 
 ## Frozen Carrier Contract
 
@@ -69,7 +69,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `SC-D23-FCMI` | `closed_capacity_control_explains` | generic main与coordinate interaction能否可识别分解并原生fallback | conditional pass | FCMI vs A6 -21.7343%；capacity/order fail；internal pass | no seeds/rescue；return Step2/3 |
 | `SC-D24-CTB` | `diagnostic_only_closed_exact_negative` | strong fixed trajectory synthesis是否留下ordered-history可识别coarse deformation | not method gate | v1.1 ordered loses all primary controls；test=0 | no rescue；return Step2/4 consolidation |
 | `SC-MNB` | `source_audit_complete_protocol_blocked` | A6/MEASURE是否仍具modern native carrier viability | problem boundary coherent；method narrative incomplete | source set frozen；65-run/80-cell execution false | repair test hygiene/metric equivalence/config semantics |
-| `SC1-SIFF-v3-TSAF-v1` | `step7a_local_implementation_pass` | target-scale allocation能否修复SIFF learned fusion而不依赖sample-wise competence | conditional pass；single method contribution | 26/26 local；no performance result；remote/test false | Step7B prelaunch |
+| `SC1-SIFF-v3-TSAF-v1` | `step7b_prelaunch_pass_waiting_authorization` | target-scale allocation能否修复SIFF learned fusion而不依赖sample-wise competence | conditional pass；single method contribution | 15/15 cases、10/10 categories；45-run/180-cell freeze；no performance result | independent remote/test authorization |
 | `SC1-PMFO-RCT-v1` | `failed_as_core_candidate` | fixed mixed-radix conservative future tree | narrative/local pass | Step7B三dataset均不优于A6；no numeric pathology | archived as evidence；rollback Step 4 |
 | `SC1-FPMO-M0` | `control_only` | shared-latent exact A6 morph验证function preservation/restriction | not required | exact equality required | mandatory Step6 morphism control |
 | `SC1-FPMO-DA` | `control_only` | direct atom full-affine head隔离capacity/orthogonal coordinate effect | not required | matched function-class control | mandatory Step6 dense-equivalence control |
@@ -237,6 +237,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | D23-FCMI Step9/10 | 40 runs + 160 val/test cells + matched controls + internal health + conditional complementarity | FCMI vs A6 -21.7343%；DENSE vs STD +15.4825%；internal 5/5；FCMI/A6-DENSE allocation split-unstable | FCMI-v1 closed；capacity explains；direct successor blocked；return Step2/3 | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d23_step8_remote/d23_step9_10_result_and_rollback.md` |
 | D24-CTB Step2/3 prelaunch | A6/DENSE frozen validation inference + chronological transfer + ordered/marginal/sorted/shuffled controls | v1 10/10但ridge unnormalized design fault；v1.1 normalized grid frozen | diagnostic only；remote training/test false | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d24_ctb_step23_design_audit.md` |
 | D24-CTB v1.1 result | 10 frozen runs + 840 metrics + 720 comparisons + zero test access | ordered vs marginal -8.60%；vs sorted about -9%；vs shuffled about -14%；0/4 horizons | exact probe closed；broader direction unsupported/unresolved；Step2/4 consolidation | `analysis/stage_c_post_d21_unconstrained_reset_20260720/d24_ctb_result_and_rollback.md` |
+| SIFF-v3 TSAF Step4-7A | primary-source/narrative audit + production allocation path | Step4-6 conditional pass；Step7A 26/26；history-free allocation、history-dependent arms | Step7B prelaunch only；remote/test false | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_reactivation_and_tsaf_step46_audit.md` |
+| SIFF-v3 TSAF Step7B prelaunch | 9 effective arms；20 references + 25 new runs；capacity/init/gradient/runner/analyzer gates | 15/15 cases、10/10 categories；20/20 remote reference hashes；max capacity gap 0.3619%；3 GPUs idle | prelaunch pass；waiting independent remote/test authorization；no performance result | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step7b_prelaunch_report.md` |
 
 ## Pending Tasks
 
@@ -306,6 +308,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | SC-D22-HFA D22-C | `completed_problem_supported` | full artifacts；ordered > all controls；Weather generic negative retained |
 | SC-D23-FCMI | `completed_fail_return_step2_3` | 40/40；FCMI vs A6 -21.7343%；capacity/order fail；no rescue |
 | SC-D24-CTB | `completed_exact_negative` | v1/v1.1 artifacts保留；no feature/bin/lambda/nonlinear rescue |
+| SC1-SIFF-v3-TSAF Step7B | `completed_prelaunch_waiting_authorization` | independent authorization后才可remote pull/resource smoke；training/test仍false |
 
 ## Paper Mainline Sync Log
 
@@ -421,6 +424,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | 2026-07-20 | D23-FCMI Step9/10 | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | full effectiveness + capacity/order attribution + Step4 source rollback | exact v1 closed；dense/function class explains；direct successor blocked；return Step2/3 |
 | 2026-07-20 | D24-CTB Step2/3 prelaunch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | phase closure + raw-history conditional coarse-deformation protocol | local synthetic pass；frozen validation inference only；training/test false |
 | 2026-07-20 | D24-CTB v1/v1.1 result | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | v1 design fault correction + v1.1 full validation attribution | exact negative；test=0；no rescue；return Step2/4 consolidation |
+| 2026-07-21 | SIFF-v3 TSAF Step4-7A | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | SIFF-first reset + single-contribution allocation design + production path | Step4-6 conditional pass；Step7A 26/26；remote/test false |
+| 2026-07-21 | SIFF-v3 TSAF Step7B prelaunch | Current Position、Candidate Queue、11-Step Record、Experiment Ledger | 45-run effective matrix + reference reuse + capacity/init/gradient/tooling freeze | 15/15、10/10；remote/test/confirmation false；waiting authorization |
 
 ## Continuation Rules
 
@@ -682,5 +687,11 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
     ordered-log-scale field融合history-conditioned SIFF arms。equal-skill仍是单一training contract，不设第二loss。
 100. TSAF Step4-6 narrative/design conditional pass；Step7A production-local 26/26通过。allocation不读取history/
      requested H，arms仍读取history；参数少于direct parent policy，target/scale/control gradients均通过。
-101. 下一步仅Step7B prelaunch。CCSF、D17-D21、region/covariance/temperature、seed/width/rank/readout sweep均
-     不得恢复；remote/test/confirmation false。
+101. TSAF Step7B现15/15 cases、10/10 categories通过；formal matrix为45 effective runs/180 cells，其中20个
+     historical end-to-end references经remote SHA256 20/20复核后复用，25个new runs必须joint from-scratch。
+102. historical direct-policy independent不得替代target-only independent。新matched ranks为ETTh1/ETTh2/ETTm1/
+     ETTm2/Weather=`109/115/115/106/115`，TSAF-active-parameter gap最大0.3619%。
+103. 当前runner只生成validation artifacts且normal launch exit 3；remote resource smoke、training、official test与
+     confirmation均false。GPU idle与synthetic analyzer不是performance evidence。
+104. 下一步必须先取得独立remote/test authorization，再commit-pinned pull与两arm resource smoke。CCSF、D17-D21、
+     region/covariance/temperature、seed/width/rank/readout sweep均不得恢复。

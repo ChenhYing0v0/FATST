@@ -7,14 +7,14 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | Scale-Indexed Forecast Fields for Unified Multi-Horizon Time-Series Forecasting |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | SC1-SIFF-v3-TSAF Step7A local implementation complete |
+| `current_11_step` | SC1-SIFF-v3-TSAF Step7B prelaunch complete；waiting remote/test authorization |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | SIFF-v2 immutable parent；TSAF provisional narrative-ready candidate |
+| `paper_core_status` | SIFF-v2 immutable parent；TSAF Step7B-ready provisional candidate；no performance result |
 
 [Constraint Reset, 2026-07-20] 后续不再把exact projectivity、requested horizon禁用、A6 interface compatibility或
 full-$T$ prefix crop当作新方法的先验硬约束。它们可以成为合理设计或matched controls，但必须由problem、理论与
@@ -155,9 +155,17 @@ future-coordinate × ordered-log-scale `Target-Scale Allocation Field`替代缺�
 generic router。allocation不读取requested H、history hidden或future labels；history dependence保留在每个SIFF
 arm内。equal-skill继续作为单一training contract，不包装为第二项loss contribution。Step4-6 narrative/design gate
 为conditional pass。Step7A production-local现26/26通过：allocation对history/sample/channel严格不变，
-target/scale语义、full-domain crop、参数公式、五条gradient与真实TimeAlign constructor均通过；当前只允许
-Step7B prelaunch，remote training、official test与confirmation仍false。详见
-`analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_reactivation_and_tsaf_step46_audit.md`。
+target/scale语义、full-domain crop、参数公式、五条gradient与真实TimeAlign constructor均通过。
+
+[TSAF Step7B] prelaunch现15/15 cases、10/10 categories通过。formal matrix固定为9 effective arms × 5 datasets =
+45 runs/180 official-test cells；其中A6_FULL、A6_MEASURE、PCSD_EQUAL与immutable parent共20个历史end-to-end
+references经remote checkpoint SHA256 20/20复核后复用，5个new arms共25 runs必须from-scratch joint training。
+旧history-conditioned independent reference没有复用；新的independent target-only ranks重新按TSAF active parameters
+匹配为ETTh1/ETTh2/ETTm1/ETTm2/Weather=`109/115/115/106/115`，最大relative gap 0.3619%。25/25 CLI、
+5/5 two-step policy gradients、逐dataset encoder/TSAF initialization pairing、runner refusal与four-layer analyzer
+synthetic smoke均通过。validation只选checkpoint；runner不执行test。当前仍为
+`remote training=false / official test=false / confirmation=false`，因此该节点不是performance pass。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step7b_prelaunch_report.md`。
 
 [Scope Decision, 2026-07-20] 用户明确要求当前项目暂不转出`deterministic-MSE fixed-past architecture search`。
 因此D22-C有效失败只关闭exact v1并回joint Step2/3，不再自动停止整个search；但不得用seed、width、readout或

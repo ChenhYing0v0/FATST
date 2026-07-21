@@ -23,9 +23,11 @@
 14. `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_reactivation_and_tsaf_step46_audit.md`；
 15. `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step7a_implementation_audit.md`；
 16. `docs/code-explanation/stage-c-siff-v3-tsaf-step7a.md`；
-17. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
-18. `docs/paper-mainline.md`；
-19. `docs/research-roadmap.md`。
+17. `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step7b_prelaunch_report.md`；
+18. `docs/code-explanation/stage-c-siff-v3-tsaf-step7b.md`；
+19. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
+20. `docs/paper-mainline.md`；
+21. `docs/research-roadmap.md`。
 
 若上述文件与更旧的聊天、archive或历史段落冲突，以本文件和三份主线文档顶部的最新cursor为准。
 
@@ -36,14 +38,14 @@
 | `project` | R_2026_FATST |
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-21 |
-| `source_parent_commit` | `7bfcc62` |
-| `current_step` | SC1-SIFF-v3-TSAF Step7A local implementation complete |
+| `source_parent_commit` | `d647874`（Step7B开始前parent） |
+| `current_step` | SC1-SIFF-v3-TSAF Step7B prelaunch complete；waiting remote/test authorization |
 | `active_problem` | target-coordinate × ordered-scale allocation能否修复SIFF-v2 fusion并超过parent/A6_MEASURE？ |
 | `active_method` | provisional `SC1-SIFF-v3-TSAF-v1`；SIFF-v2 immutable parent |
 | `method_training_authorized` | false |
 | `remote_training_authorized` | false；new diagnostic/training/test all false |
-| `next_action` | TSAF Step7B CLI/matrix/artifact/resource prelaunch |
-| `conditional_next` | Step7B通过并另行授权后才允许remote/test |
+| `next_action` | 等待独立remote/test授权；不得自行launch |
+| `conditional_next` | 授权后先commit-pinned remote pull、GPU recheck与两arm resource smoke |
 | `rollback` | TSAF exact design回Step4/6；SIFF-v2不变；SC-MNB execution false |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
@@ -130,8 +132,14 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
     inventory且execution false。
 22. TSAF Step4-6冻结：保留SIFF arms，以future-coordinate × ordered-log-scale field产生sample-shared
     allocation；不输入requested H/history hidden，不增加第二loss。
-23. TSAF narrative gate conditional pass；下一步只允许Step7A local implementation，remote/test/confirmation false。
-24. TSAF Step7A production-local 26/26通过；next=Step7B prelaunch，remote/test/confirmation仍false。
+23. TSAF narrative gate conditional pass；Step7A production-local 26/26通过。
+24. TSAF Step7B prelaunch为15/15 cases、10/10 categories；formal matrix固定45 effective runs/180 cells，
+    其中20个historical references复用、25个new arms × datasets必须joint from-scratch。
+25. 20/20 remote reference checkpoint hashes与frozen audit一致；旧direct independent不得复用为target-only control。
+26. target-only independent matched ranks为ETTh1/ETTh2/ETTm1/ETTm2/Weather=`109/115/115/106/115`，最大
+    active-parameter gap 0.3619%。
+27. 只读remote preflight显示3 GPUs idle，但未pull、未resource-batch smoke、未训练、未test；当前runner normal
+    launch exit 3，remote/test/confirmation仍false。
 
 ## 5. D22-HFA 的执行顺序
 

@@ -5,13 +5,13 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SC1-SIFF-v3-TSAF Step7A local implementation complete |
+| `current_step` | SC1-SIFF-v3-TSAF Step7B prelaunch complete；waiting remote/test authorization |
 | `active_question` | target-coordinate × ordered-scale allocation能否让SIFF稳定超过frozen parent与A6_MEASURE？ |
 | `active_candidates` | provisional `SC1-SIFF-v3-TSAF-v1`；SIFF-v2 immutable parent |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_reactivation_and_tsaf_step46_audit.md` |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step7b_prelaunch_report.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | TSAF production-local 26/26 pass；remote/test false |
+| `method_implementation` | TSAF Step7A 26/26；Step7B 15/15、10/10；remote/test false |
 | `rollback_point` | TSAF Step4/6；SIFF-v2 remains immutable |
 
 ## Post-D21 Unconstrained Reset
@@ -137,9 +137,13 @@ Step4-6 narrative/design gate现为conditional pass。最新primary-source audit
 `request invariance -> target-specific scale demand -> shared scale-indexed output-coupling field -> target-scale
 allocation`，不claim首次multi-scale、future query、MoE、learned basis或decoder-side forecasting。Step7A现已
 production-local 26/26通过，覆盖history/request invariance、scale semantics、参数公式、gradient与TimeAlign
-constructor。下一步只允许Step7B prelaunch；remote training、official test、confirmation和SC-MNB execution均
-false。详见
-`analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_reactivation_and_tsaf_step46_audit.md`。
+constructor。Step7B现冻结9 effective arms/45 runs/180 test cells，其中4个historical arms共20 runs经checkpoint
+hash复核后复用，5个new arms共25 runs必须from-scratch joint training。旧direct-policy independent没有复用；
+target-only independent ranks重新按TSAF active parameters匹配，最大gap 0.3619%。prelaunch为15/15 cases、10/10
+categories，25/25 CLI、5/5 two-step gradients、paired initialization、runner refusal与analyzer synthetic smoke均
+通过。只读remote preflight显示3 GPUs idle、20/20 reference hashes一致；但未pull、未resource-batch smoke、未训练、
+未test。下一步等待独立remote/test authorization；confirmation和SC-MNB execution均false。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v3_tsaf_step7b_prelaunch_report.md`。
 
 用户2026-07-20决定暂不承担task pivot成本。该scope决定把上一版“D22-C有效失败即停止整个
 deterministic-MSE search”改为：关闭exact D22-C v1并回joint Step2/3，在同一task边界寻找不同的falsifiable
