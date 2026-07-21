@@ -361,6 +361,68 @@ def build_summary(
     }
 
 
+def build_dataset_summaries(
+    rows: list[dict[str, Any]],
+    topology_rows: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    topology = {row["dataset"]: row for row in topology_rows}
+    summaries: list[dict[str, Any]] = []
+    for dataset in DATASETS:
+        selected = [row for row in rows if row["dataset"] == dataset]
+        summaries.append(
+            {
+                "dataset": dataset,
+                "runs": len(selected),
+                "median_centered_scope_ev2": median(
+                    selected, "centered_scope_ev2"
+                ),
+                "low_dimensional_above_null_count": sum(
+                    bool(row["low_dimensional_above_null"])
+                    for row in selected
+                ),
+                "median_residual_common_energy_ratio": median(
+                    selected, "residual_common_energy_ratio"
+                ),
+                "median_residual_private_energy_ratio": median(
+                    selected, "residual_private_energy_ratio"
+                ),
+                "median_pairwise_prediction_nrmse": median(
+                    selected, "mean_pairwise_prediction_nrmse"
+                ),
+                "median_pairwise_residual_correlation": median(
+                    selected, "mean_pairwise_residual_correlation"
+                ),
+                "median_fused_gain_over_best_fixed_percent": median(
+                    selected, "fused_gain_over_best_fixed_arm_percent"
+                ),
+                "fused_positive_run_count": sum(
+                    float(row["fused_gain_over_best_fixed_arm_percent"]) > 0.0
+                    for row in selected
+                ),
+                "median_oracle_headroom_percent": median(
+                    selected, "oracle_headroom_over_fused_percent"
+                ),
+                "median_unique_best_scopes": median(
+                    selected, "unique_best_scopes_across_bins"
+                ),
+                "median_policy_entropy": median(
+                    selected, "policy_normalized_entropy"
+                ),
+                "median_scale_distance_spearman": median(
+                    selected, "scale_distance_spearman"
+                ),
+                "positive_scale_order_run_count": sum(
+                    float(row["scale_distance_spearman"]) > 0.0
+                    for row in selected
+                ),
+                "median_seed_topology_spearman": topology[dataset][
+                    "median_seed_topology_spearman"
+                ],
+            }
+        )
+    return summaries
+
+
 def synthetic_smoke() -> None:
     rng = np.random.default_rng(20260721)
     rows = 32
@@ -415,6 +477,22 @@ def synthetic_smoke() -> None:
     )
     if summary["method_effectiveness_established"] is not False:
         raise RuntimeError("diagnostic-only boundary was not preserved")
+    dataset_summaries = build_dataset_summaries(
+        [
+            {**metrics, "dataset": dataset}
+            for dataset in DATASETS
+            for _ in SEEDS
+        ],
+        [
+            {
+                "dataset": dataset,
+                "median_seed_topology_spearman": 0.9,
+            }
+            for dataset in DATASETS
+        ],
+    )
+    if len(dataset_summaries) != len(DATASETS):
+        raise RuntimeError("synthetic dataset aggregation failed")
     print("iscf_v0_function_audit_synthetic_smoke=pass")
 
 
@@ -485,11 +563,13 @@ def main() -> None:
         topology_rows,
         config["function_audit"]["gates"],
     )
+    dataset_summaries = build_dataset_summaries(rows, topology_rows)
     args.output_dir.mkdir(parents=True, exist_ok=True)
     write_csv(args.output_dir / "run_function_metrics.csv", rows)
     write_csv(args.output_dir / "pairwise_scope_metrics.csv", pair_rows)
     write_csv(args.output_dir / "bin_scope_specialization.csv", bin_rows)
     write_csv(args.output_dir / "seed_topology_stability.csv", topology_rows)
+    write_csv(args.output_dir / "dataset_function_summary.csv", dataset_summaries)
     (args.output_dir / "summary.json").write_text(
         json.dumps(summary, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
