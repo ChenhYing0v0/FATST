@@ -5,7 +5,7 @@
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | ISCF-SPS Step8 frozen 20-run remote validation authorized；preflight/launch in progress |
+| `current_step` | ISCF-SPS Step8 20-run remote validation active |
 | `active_question` | 如何让ISCF scope extent原生约束arm forecast与gradient，从而形成functional specialization |
 | `active_candidates` | `SC-ISCF-SPS-v0`；ISCF-v0 parent/carrier；exact SAC/CPSI closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
@@ -58,6 +58,10 @@ seeds与modern baselines仍false。
 Weather scope/identity resource smoke、正式matrix。20/20完成后先分析validation，不自动执行test。
 
 Decision=`step8_remote_validation_authorized_formal_test_disabled`。
+
+remote commit=`48afd12`，three-GPU preflight与two-arm resource smoke已通过。20-run training于
+`2026-07-22T00:17:31+08:00`启动，runner PID=`2787170`，初始`validation=0/20`，首批三个Weather jobs均进入
+epoch 1。Decision=`step8_training_active_formal_test_disabled`；完成后先做validation audit，不自动访问test。
 
 ## ISCF-v0 SAC Step9/10 Decision
 

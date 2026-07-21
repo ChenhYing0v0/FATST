@@ -29,4 +29,28 @@
 
 ## Launch record
 
-待remote preflight和正式启动后填写commit、config hash、GPU状态、smoke结果、launch time与supervisor PID。
+| Field | Actual record |
+| --- | --- |
+| `remote_repo` | `/home/yingch/projects/FATST` |
+| `remote_commit` | `48afd1255370e1b12f5151a4d2184dc0b142b20a` |
+| `config_sha256` | `5a84de593eb120b31ba9da3e68212f3407b8fa519a765c1fcb960a48d53c5255` |
+| `profile_sha256` | `80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a` |
+| `output_root` | `/home/yingch/exp_outputs/r-2026-fatst/stage_c_iscf_sps_v0_step7b` |
+| `environment` | conda `moe` |
+| `GPU` | 0,1,2；NVIDIA GeForce RTX 3090 |
+| `preflight` | each 18 MiB used、0% utilization、no compute process |
+| `resource_smoke` | Weather scope-canonical + identity-canonical；finite/no-OOM |
+| `launch_time` | `2026-07-22T00:17:31+08:00` |
+| `supervisor_pid` | outer `2787168`；runner `2787170` |
+| `formal_test_access` | false |
+
+remote从`6bbc3fc` fast-forward到`48afd12`。原有三份历史generated CSV修改被保留，与本次pull不冲突。resource smoke
+两个arms均生成checkpoint、training log、effective config、initialization contract和model diagnostics；日志扫描没有
+Traceback、OOM、NaN或Inf。
+
+正式launch使用`GPU_IDS="0 1 2" bash scripts/remote/run_stage_c_iscf_sps_step7b.sh`。初始状态为`validation=0/20`；
+首批jobs为Weather的scope/identity/global arms，均进入epoch 1。初始GPU memory约`1485/1474/1486 MiB`，utilization约
+`63/64/60%`。预计完整matrix约需1.5–2小时，实际取决于Weather early stopping和每run validation diagnostics。
+
+Decision=`step8_training_active_formal_test_disabled`。运行期间不pull、不改config/gates；完成后同步validation artifacts并
+执行Step9 audit，不自动访问test。

@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture=`ISCF-SPS` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF-SPS Step8 frozen 20-run remote validation authorized；preflight/launch in progress |
+| `current_11_step` | ISCF-SPS Step8 20-run remote validation active |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -22,6 +22,13 @@ baselines不包含在内。下一动作是commit-pinned remote pull、GPU prefli
 
 Decision=`step8_remote_validation_authorized_formal_test_disabled`。详见
 `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_sps_step8_remote_20260722/remote_authorization_and_launch.md`。
+
+[ISCF-SPS Step8 Launch, 2026-07-22] remote已fast-forward到`48afd12`；GPU0/1/2 preflight均为18 MiB、0%
+utilization且无compute process。Weather scope/identity resource smokes finite且无OOM。20-run matrix于
+`00:17:31+08:00`启动，runner PID=`2787170`；首批Weather scope/identity/global jobs进入epoch 1，初始
+`validation=0/20`。formal test仍false。
+
+Decision=`step8_training_active_formal_test_disabled`。training期间冻结repo/config/gates，完成后先做validation audit。
 
 [ISCF-SPS Step7B Prelaunch, 2026-07-21] validation-first matrix已冻结为scope/identity/global/random四arms ×
 ETTh1/ETTh2/ETTm1/ETTm2/Weather × seed2021，共20个from-scratch matched runs、80个standard-horizon validation cells。

@@ -70,12 +70,12 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-21 |
 | `source_parent_commit` | `fb4057d`（ISCF-SPS Step7A implementation） |
-| `current_step` | ISCF-SPS Step8 frozen remote validation authorized；preflight/launch in progress |
+| `current_step` | ISCF-SPS Step8 20-run remote validation active |
 | `active_problem` | scope extent如何原生约束arm forecast/gradient并形成有用functional specialization |
 | `active_method` | local candidate=`SC-ISCF-SPS-v0`；ISCF-v0 exact parent/control |
 | `method_training_authorized` | true for frozen 20-run validation matrix |
 | `remote_training_authorized` | true for frozen training；formal test/modern baselines false |
-| `next_action` | commit-pinned remote pull、GPU/resource preflight、launch 20-run validation training |
+| `next_action` | wait for 20/20 validation artifacts；sync and run Step9 validation audit |
 | `conditional_next` | 20/20 validation artifacts完成后先做Step9 validation audit；formal test另议 |
 | `rollback` | local fault Step5/6；candidate<=global或validation negative Step4；no loss/router/per-dataset rescue |
 
@@ -98,7 +98,10 @@ test。
 
 Step7B现已冻结scope/identity/global/random × five datasets × seed2021的20-run validation matrix。evaluator保存
 raw/projected/removed arms、direct policy、diversity/oracle/bin metrics；local gate `19/19`通过。runner在authorization=false
-时exit 3并硬拒绝test split。当前仍不得remote launch；获得明确remote-training授权后才执行GPU preflight与resource smoke。
+时exit 3并硬拒绝test split。在2026-07-22授权前不得remote launch；该边界随后已由下述explicit authorization更新。
+
+用户已于`2026-07-22`授权remote validation。commit `48afd12`完成fast-forward，three-GPU preflight和Weather
+scope/identity smoke通过；20-run matrix于`00:17:31+08:00`启动，runner PID=`2787170`，初始`0/20`。formal test仍false。
 
 ## 2. 本轮正式转向
 
