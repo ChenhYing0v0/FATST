@@ -1,0 +1,38 @@
+{
+  "candidate_version": "ISCF-BSCA-v1-confirmation-seeds2022-2023-v1",
+  "test_access_date": "2026-07-22",
+  "test_informed": true,
+  "matrix_complete": true,
+  "macro_test_mse_gain_percent": 0.35409064886709535,
+  "macro_test_mae_gain_percent": 0.3072553343664918,
+  "test_cell_wins": 41,
+  "seed_mse_means": {
+    "2021": 0.31044900268794984,
+    "2022": 0.5735045576989763,
+    "2023": 0.17831838621435978
+  },
+  "dataset_mse_means": {
+    "ETTh1": 0.7884515920075276,
+    "ETTh2": 0.0354522967271093,
+    "ETTm1": 1.1814431457728694,
+    "ETTm2": -0.6505974698104446,
+    "Weather": 0.41570367963841465
+  },
+  "horizon_mse_means": {
+    "192": 0.17163775428113912,
+    "336": 0.24161833051753992,
+    "720": 0.3840308491278034,
+    "96": 0.6190756615418986
+  },
+  "seed_mse_wins": 3,
+  "dataset_mse_wins": 4,
+  "horizon_mse_wins": 4,
+  "artifact_protocol_nonmutation_pass": true,
+  "internal_health_pass": true,
+  "candidate_policy_normalized_entropy": 0.9974257562094664,
+  "candidate_to_equal_pairwise_arm_l1_ratio": 0.979845940773261,
+  "candidate_oracle_headroom_percent": 32.58936573315556,
+  "direction_robustness_pass": true,
+  "paper_core_promotion_pass": true,
+  "decision": "passed_core_candidate_ready_for_paper_consolidation"
+}

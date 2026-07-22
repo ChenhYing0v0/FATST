@@ -1,5 +1,17 @@
 # Research Roadmap
 
+## ISCF-BSCA-v1 Three-seed Step9/10 Pass (2026-07-22)
+
+10/10 confirmation trainings与single frozen formal test完整，合并seed2021后为60 test cells。BSCA相对same-seed EQUAL
+MSE/MAE=`+0.3541%/+0.3073%`，41/60 MSE cells、3/3 seeds、4/5 datasets、4/4 horizons positive；ETTm2
+mean=`-0.6506%`，满足冻结`>=-1%`边界但保留为limitation。15/15 initialization pairing、checkpoint nonmutation、
+artifact protocol和internal health全部通过。
+
+Decision=`passed_core_candidate_ready_for_paper_consolidation`。BSCA冻结为ISCF-native training contribution；不再调
+lambda、按dataset/horizon rescue或叠加新router/loss。Post-hoc cluster bootstrap 95% interval跨0，故论文只claim
+small directionally robust gain。下一步先完成ISCF architecture与BSCA objective的完整贡献链、claim boundary与ablation
+设计，再进入modern baselines/main table；当前没有新training/test授权。
+
 ## ISCF-BSCA-v1 Three-seed Confirmation Prelaunch (2026-07-22)
 
 用户授权按handoff继续seeds2022/2023 confirmation。10个new BSCA runs与FCC已有10个same-seed EQUAL controls构成

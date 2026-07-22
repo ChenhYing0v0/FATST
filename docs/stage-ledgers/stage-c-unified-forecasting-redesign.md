@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | balanced train-time scope-gradient access能否提升ISCF official-test性能并形成第二项贡献 |
+| `active_question` | 如何把ISCF architecture与已通过的BSCA balanced co-adaptation整合为完整paper contribution chain |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
-| `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | `ISCF-BSCA-v1` single-seed partial pass；seeds2022/2023 confirmation training active |
+| `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
+| `active_candidates` | `ISCF-BSCA-v1` three-seed paper-core pass；paper consolidation pending |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
@@ -20,27 +20,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | BSCA confirmation Step8 training |
+| `current_11_step` | BSCA confirmation Step10 complete；paper consolidation |
 | `current_candidate` | `ISCF-BSCA-v1` |
-| `latest_decision` | `confirmation_step8_training_active_formal_test_guarded` |
-| `next_required_action` | low-frequency progress audit -> 10/10 -> single formal test -> three-seed analyzer |
-| `method_training_authorized` | seeds2022/2023 10 trainings + one frozen confirmation formal test true |
-| `rollback_point` | exact v1 negative/no pathology -> Step4；pathology -> Step7 repair |
+| `latest_decision` | `passed_core_candidate_ready_for_paper_consolidation` |
+| `next_required_action` | consolidate ISCF+BSCA problem/mechanism/claims/limitations -> freeze baseline and ablation plan |
+| `method_training_authorized` | false；confirmation authorization consumed，new training/test requires new freeze |
+| `rollback_point` | overall paper narrative gap -> Step4 contribution-boundary consolidation；do not tune exact BSCA-v1 |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | BSCA confirmation Step8 training |
+| `current_step` | BSCA confirmation Step10 complete；paper consolidation next |
 | `problem` | direct policy同时控制prediction mixture与fused-loss gradient allocation，可能形成harmful co-adaptation |
 | `existence_evidence` | new EQUAL exact historical；ARMERR/SHUFFLED +0.6577/+0.6557%；D0 post-hoc negative |
 | `idea` | EQUAL + matched schedule/weight uniform policy KL，train-only balanced scope co-adaptation |
 | `theory_check` | target/history/H-free；只直接校准policy，借fused loss改变joint arms；inference unchanged |
 | `design` | seeds2022/2023 × five datasets BSCA；reuse same-seed EQUAL；10/10后single confirmation test |
-| `narrative_gate` | conditional pass；generic primitive不新，ISCF-specific contribution chain待test支持 |
-| `effectiveness_gate` | pass：+0.3104/+0.4902%；15/20；3/5 datasets；3/4 horizons；health pass |
-| `artifacts` | full Step4–7A + 5 trainings + 5 formal tests + four-layer Step9/10 report |
-| `decision` | `confirmation_step8_training_active_formal_test_guarded` |
+| `narrative_gate` | narrowed pass；ISCF-specific contribution chain成立，generic KL/load-balancing novelty明确排除 |
+| `effectiveness_gate` | three-seed pass：+0.3541/+0.3073%；41/60；3/3 seeds；4/5 datasets；4/4 horizons；health pass |
+| `artifacts` | 15 candidate + 15 matched EQUAL runs；60 test cells；three-seed four-layer Step9/10 report |
+| `decision` | `passed_core_candidate_ready_for_paper_consolidation` |
 
 ## Frozen Carrier Contract
 
@@ -64,7 +64,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
-| `ISCF-BSCA-v1` | `confirmation_training_active` | broad train-time anchor能否稳定scope-gradient access并提升ISCF | chain supported at single seed；three-seed robustness pending | seed2021 +0.3104/+0.4902%；10-run confirmation training active | 10/10 -> one formal test -> three-seed audit |
+| `ISCF-BSCA-v1` | `passed_core_candidate_ready_for_paper_consolidation` | broad train-time anchor能否稳定scope-gradient access并提升ISCF | ISCF-specific chain pass；generic KL novelty not claimed | three-seed +0.3541/+0.3073%；3/3 seeds、4/5 datasets、4/4 horizons | freeze exact v1；consolidate paper claims/limitations before baselines |
 | `SC-ISCF-UPA-D2` | `superseded_by_bsca_v1` | information-free uniform train-time anchor能否复现ARMERR/SHUFFLED gain | user chose outcome-first method route | not executed as separate diagnostic | retain design history only |
 | `SC-ISCF-PSA-D1` | `control_complete_h2_supported` | contemporaneous no-route EQUAL能否解释new ARMERR/SHUFFLED公共gain | not a method；只隔离H2/H3 | exact EQUAL tie；controls +0.6577/+0.6557%；H2 pass | feeds UPA-D2 only |
 | `SC-ISCF-PSA-D0` | `diagnostic_only_closed_h1_not_supported` | EQUAL frozen policy向uniform收缩是否存在stable held-out frontier | diagnostic only；generic shrinkage不是paper claim | L1/MSE -0.2431%/-0.1218%；1/5 datasets；2/15 runs | no alpha/temperature rescue；retain joint-training unresolved |
@@ -281,12 +281,13 @@ Historical and control queue:
 | ISCF-RSCC Step9 | 20 effective runs + 80 validation cells + controls/internal health | vs EQUAL +0.5189%；vs ARMERR/SHUFFLED -0.1414%/-0.1394%；alignment 0.1539 < 0.2052 | control attribution fail；exact route closed；return Step2/4 | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/rscc_step9_result_and_rollback.md` |
 | ISCF-BSCA-v1 confirmation Step7B | frozen two-seed runner/analyzer/checker + 10 reused EQUAL references | 10-job dry-run、reference 10/10、test guard与local checker pass | remote resource smoke next；objective/gates frozen | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_bsca_v1_confirmation_prelaunch_20260722/confirmation_design_and_prelaunch.md` |
 | ISCF-BSCA-v1 confirmation Step8 launch | commit-pinned pull + GPU audit + Weather smoke + three-worker launch | `72e3356`；GPU0/1/2；first Weather/ETTm1 jobs in epoch1；test 0/10 | training active；10/10 before one formal test | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_bsca_v1_confirmation_prelaunch_20260722/remote_launch_record.md` |
+| ISCF-BSCA-v1 confirmation Step9/10 | 10 new candidate + 10 reused EQUAL；three-seed 60-cell audit | MSE/MAE +0.3541/+0.3073%；3/3 seeds、4/5 datasets、4/4 horizons；all health/nonmutation pass | paper-core pass；paper consolidation next；new training/test false | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_bsca_v1_confirmation_step9_10_20260722/step9_10_three_seed_result_and_paper_handoff.md` |
 
 ## Pending Tasks
 
 | Task | Status | Next Action |
 | --- | --- | --- |
-| ISCF-BSCA-v1 three-seed confirmation | `training_active` | low-frequency progress only；10/10后single formal test与three-seed audit |
+| ISCF-BSCA-v1 three-seed confirmation | `completed_paper_core_pass` | freeze exact v1；paper consolidation before new baselines/training |
 | ISCF-RSCC-v1 validation matrix | `completed_control_attribution_fail` | exact route closed；retain artifacts/control clue；return Step2/4 |
 | Freeze natural carrier | `completed` | 不再调 profile |
 | ISCF-v0 SAC formal test | `completed_attribution_fail` | no rerun/rescue；use complete negative result in portfolio decision |

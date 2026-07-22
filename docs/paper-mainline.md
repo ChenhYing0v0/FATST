@@ -7,14 +7,29 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF-BSCA-v1 Step9/10 complete；single-seed performance partial pass |
+| `current_11_step` | ISCF-BSCA-v1 three-seed Step10 complete；paper consolidation next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
-| `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
+| `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | active candidate=`ISCF-BSCA-v1`；`performance_partial_pass_pending_confirmation_seed` |
+| `paper_core_status` | `ISCF-BSCA-v1`=`passed_core_candidate_ready_for_paper_consolidation` |
+
+[ISCF-BSCA-v1 Three-seed Step9/10, 2026-07-22] 10/10 confirmation trainings、single frozen 10-run formal test及
+合并seed2021后的60/60 official-test cells完整；15/15 candidate checkpoints与same-seed EQUAL initialization exact paired，
+checkpoint SHA nonmutation与all protocol invariants通过。
+
+BSCA vs EQUAL test MSE/MAE=`+0.3541%/+0.3073%`，41/60 MSE-positive cells、3/3 seeds、4/5 datasets、
+4/4 horizons。Dataset mean MSE：ETTm1 `+1.1814%`、ETTh1 `+0.7885%`、Weather `+0.4157%`、ETTh2
+`+0.0355%`、ETTm2 `-0.6506%`；全部冻结direction/promotion gates通过。Internal health为entropy `0.9974`、
+candidate/EQUAL pairwise-arm-L1 ratio `0.9798`、oracle headroom `32.59%`，支持balanced access且arms未collapse。
+
+Decision=`passed_core_candidate_ready_for_paper_consolidation`。Claim限定为ISCF-specific balanced co-adaptation；不claim
+generic load-balancing novelty、conditional specialization或universal gain。Post-hoc cluster bootstrap区间跨0，且ETTm2
+仍negative，因此effect应表述为small but directionally robust。下一步先整合ISCF+BSCA贡献链与limitations，再冻结modern
+baselines；不再做lambda/dataset/horizon rescue。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_bsca_v1_confirmation_step9_10_20260722/step9_10_three_seed_result_and_paper_handoff.md`。
 
 [ISCF-BSCA-v1 Confirmation Prelaunch, 2026-07-22] 用户回复“继续按计划推进实验”，授权上一handoff中冻结的
 seeds2022/2023 confirmation。Matrix为10个new BSCA trainings、10个reused same-seed EQUAL controls；合并seed2021后
