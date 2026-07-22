@@ -1,0 +1,38 @@
+category,case,value,threshold,pass
+contract,profile_hash,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a,True
+contract,new_matrix_20_effective_25,20/25,20/25,True
+contract,four_new_one_frozen_reference,"new=4,reference=1",4/1,True
+contract,unique_launch_20,20,20,True
+governance,remote_authorized_validation_only,"remote=True,test=False","remote=true,test=false",True
+governance,no_loss_router_requested_h,"loss=false,router=false,H=false",all false,True
+model,Weather:frsc_scope_a055,"shape=[2, 720, 3],min_eig=0.44999999999999996","finite,matched projection,full rank",True
+model,Weather:frsc_global_a055,"shape=[2, 720, 3],min_eig=0.44999999999999996","finite,matched projection,full rank",True
+model,Weather:frsc_global_a045,"shape=[2, 720, 3],min_eig=0.55","finite,matched projection,full rank",True
+model,Weather:frsc_random_a055,"shape=[2, 720, 3],min_eig=0.44999999999999996","finite,matched projection,full rank",True
+model,Weather:alpha0_parent_identity,0.0,1e-06,True
+model,ETTm1:frsc_scope_a055,"shape=[2, 720, 3],min_eig=0.44999999999999996","finite,matched projection,full rank",True
+model,ETTm1:frsc_global_a055,"shape=[2, 720, 3],min_eig=0.44999999999999996","finite,matched projection,full rank",True
+model,ETTm1:frsc_global_a045,"shape=[2, 720, 3],min_eig=0.55","finite,matched projection,full rank",True
+model,ETTm1:frsc_random_a055,"shape=[2, 720, 3],min_eig=0.44999999999999996","finite,matched projection,full rank",True
+model,ETTm1:alpha0_parent_identity,0.0,1e-06,True
+model,ETTh1:frsc_scope_a055,"shape=[2, 720, 3],min_eig=0.44999999999999996","finite,matched projection,full rank",True
+model,ETTh1:frsc_global_a055,"shape=[2, 720, 3],min_eig=0.44999999999999996","finite,matched projection,full rank",True
+model,ETTh1:frsc_global_a045,"shape=[2, 720, 3],min_eig=0.55","finite,matched projection,full rank",True
+model,ETTh1:frsc_random_a055,"shape=[2, 720, 3],min_eig=0.44999999999999996","finite,matched projection,full rank",True
+model,ETTh1:alpha0_parent_identity,0.0,1e-06,True
+model,ETTh2:frsc_scope_a055,"shape=[2, 720, 3],min_eig=0.44999999999999996","finite,matched projection,full rank",True
+model,ETTh2:frsc_global_a055,"shape=[2, 720, 3],min_eig=0.44999999999999996","finite,matched projection,full rank",True
+model,ETTh2:frsc_global_a045,"shape=[2, 720, 3],min_eig=0.55","finite,matched projection,full rank",True
+model,ETTh2:frsc_random_a055,"shape=[2, 720, 3],min_eig=0.44999999999999996","finite,matched projection,full rank",True
+model,ETTh2:alpha0_parent_identity,0.0,1e-06,True
+model,ETTm2:frsc_scope_a055,"shape=[2, 720, 3],min_eig=0.44999999999999996","finite,matched projection,full rank",True
+model,ETTm2:frsc_global_a055,"shape=[2, 720, 3],min_eig=0.44999999999999996","finite,matched projection,full rank",True
+model,ETTm2:frsc_global_a045,"shape=[2, 720, 3],min_eig=0.55","finite,matched projection,full rank",True
+model,ETTm2:frsc_random_a055,"shape=[2, 720, 3],min_eig=0.44999999999999996","finite,matched projection,full rank",True
+model,ETTm2:alpha0_parent_identity,0.0,1e-06,True
+model,paired_new_arm_initialization,3,one hash per dataset rank,True
+execution,runner_syntax,0,0,True
+execution,runner_dry_run_20,sps_dry_run=pass jobs=20 config_hash=32d508ab62e5013cbb48d2cd68ae1c99288bcd991acc21585cbbb6d35164aa24 profile_hash=80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a remote_authorized=true test_authorized=false split=val,"jobs=20,remote_authorized=true",True
+execution,test_split_blocked,3:SPS Step7B is validation-only; requested split=test,returncode=3,True
+execution,analyzer_synthetic_smoke,iscf_sps_analyzer_synthetic_smoke=pass,returncode=0,True
+execution,gpu_audit_and_failure_scan,nvidia-smi+scanner,present,True

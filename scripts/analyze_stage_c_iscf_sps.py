@@ -49,8 +49,14 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         writer.writerows(rows)
 
 
-def run_dir(root: Path, arm: str, dataset: str, seed: int) -> Path:
-    return root / arm / dataset / "h720_full" / f"seed{seed}"
+def run_dir(
+    root: Path,
+    arm: dict[str, Any],
+    dataset: str,
+    seed: int,
+) -> Path:
+    base = Path(arm.get("artifact_root", root))
+    return base / arm["id"] / dataset / "h720_full" / f"seed{seed}"
 
 
 def finite_numeric_arrays(arrays: Any) -> bool:
@@ -82,7 +88,7 @@ def load_run(
     seed: int,
     config: dict[str, Any],
 ) -> tuple[list[dict[str, Any]], dict[str, Any], dict[str, Any] | None, list[dict[str, Any]]]:
-    directory = run_dir(root, arm["id"], dataset, seed)
+    directory = run_dir(root, arm, dataset, seed)
     required = {
         name: directory / name for name in config["artifact_schema"]["required"]
     }
@@ -101,6 +107,29 @@ def load_run(
     invariants = json.loads(required["trained_invariants.json"].read_text())
     adapter = effective["adapter"]
     expected_rank = config["matched_ranks"][dataset][arm["rank_rule"]]
+    conditioning_strength = arm.get("conditioning_strength")
+    frsc_contract_pass = bool(
+        conditioning_strength is None
+        or (
+            math.isclose(
+                float(adapter.get("frsc_conditioning_strength", math.nan)),
+                float(conditioning_strength),
+                abs_tol=1e-12,
+            )
+            and math.isclose(
+                float(
+                    diagnostics.get(
+                        "frsc_minimum_operator_eigenvalue",
+                        math.nan,
+                    )
+                ),
+                1.0 - float(conditioning_strength),
+                abs_tol=1e-12,
+            )
+            and diagnostics.get("frsc_full_rank") is True
+            and invariants.get("frsc_full_rank") is True
+        )
+    )
     protocol_pass = bool(
         adapter["dataset"] == dataset
         and adapter["seed"] == seed
@@ -115,6 +144,7 @@ def load_run(
         and invariants.get("evaluation_split") == "val"
         and invariants.get("uses_test_split") is False
         and invariants.get("sps_diagnostics_present") is True
+        and frsc_contract_pass
     )
 
     lookup = {
@@ -203,6 +233,7 @@ def load_run(
         "removed_to_raw_rms": removed_ratio,
         "projection_ranks_match": diagnostics.get("sps_projection_ranks") == expected_ranks,
         "projected_degrees_match": diagnostics.get("sps_projected_degrees") == expected_degrees,
+        "frsc_contract_pass": frsc_contract_pass,
     }
     retention = [
         {
@@ -305,7 +336,9 @@ def aggregate_health(rows: list[dict[str, Any]], arm: str) -> dict[str, Any]:
         "scope_winner_count": len(winner_indices),
         "removed_to_raw_rms": mean(row["removed_to_raw_rms"] for row in selected),
         "projection_contract_pass": all(
-            row["projection_ranks_match"] and row["projected_degrees_match"]
+            row["projection_ranks_match"]
+            and row["projected_degrees_match"]
+            and row["frsc_contract_pass"]
             for row in selected
         ),
     }
@@ -321,15 +354,30 @@ def decide(
     health_gate = config["internal_health"]
     primary_mse = summary[(gates["primary_comparison"], "mse")]
     primary_mae = summary[(gates["primary_comparison"], "mae")]
-    global_mse = summary[("scope_specificity_vs_global", "mse")]
+    global_mse = summary[
+        (gates.get("best_global_comparison", "scope_specificity_vs_global"), "mse")
+    ]
+    same_alpha_global_mse = summary.get(
+        (gates.get("same_alpha_global_comparison", "scope_specificity_vs_global"), "mse")
+    )
     random_mse = summary[("canonical_binding_vs_random", "mse")]
-    candidate = aggregate["sps_scope_canonical"]
-    identity = aggregate["sps_identity_canonical"]
+    decision_arms = config.get(
+        "decision_arms",
+        {
+            "candidate": "sps_scope_canonical",
+            "identity": "sps_identity_canonical",
+        },
+    )
+    candidate = aggregate[decision_arms["candidate"]]
+    identity = aggregate[decision_arms["identity"]]
     performance_pass = bool(
         primary_mse["macro_gain_percent"] >= gates["macro_mse_gain_percent_min"]
         and primary_mse["dataset_wins"] >= gates["dataset_wins_min"]
         and primary_mse["horizon_wins"] >= gates["horizon_wins_min"]
         and primary_mae["macro_gain_percent"] >= gates["macro_mae_gain_percent_min"]
+        and primary_mse["cell_wins"] >= gates.get("cell_wins_min", 0)
+        and primary_mse["max_dataset_degradation_percent"]
+        <= gates.get("max_dataset_degradation_percent", math.inf)
     )
     health_pass = bool(
         candidate["all_finite"]
@@ -351,16 +399,35 @@ def decide(
         >= identity["oracle_headroom_percent"]
         - health_gate["candidate_oracle_headroom_vs_identity_tolerance_percent"]
     )
-    global_attribution_pass = global_mse["macro_gain_percent"] > 0.0
-    random_binding_supported = random_mse["macro_gain_percent"] > 0.0
+    global_attribution_pass = bool(
+        global_mse["macro_gain_percent"]
+        >= gates.get("best_global_macro_mse_gain_percent_min", 0.0)
+        and global_mse["dataset_wins"]
+        >= gates.get("best_global_dataset_wins_min", 0)
+        and (
+            same_alpha_global_mse is None
+            or same_alpha_global_mse["macro_gain_percent"]
+            > gates.get("same_alpha_global_macro_mse_gain_percent_min", 0.0)
+        )
+    )
+    random_binding_supported = bool(
+        random_mse["macro_gain_percent"]
+        >= gates.get("random_macro_mse_gain_percent_min", 0.0)
+    )
     if performance_pass and health_pass and global_attribution_pass:
-        decision = "validation_supported_pending_formal_test_design"
+        decision = config.get(
+            "supported_decision",
+            "validation_supported_pending_formal_test_design",
+        )
         if not random_binding_supported:
             decision = "performance_partial_pass_scope_binding_unresolved"
     elif performance_pass:
         decision = "performance_partial_pass_specialization_or_attribution_unresolved"
     else:
-        decision = "exact_SPS_v0_validation_not_supported_rollback_step4"
+        decision = config.get(
+            "not_supported_decision",
+            "exact_SPS_v0_validation_not_supported_rollback_step4",
+        )
     return {
         "decision": decision,
         "performance_pass": performance_pass,
@@ -381,8 +448,10 @@ def synthetic_smoke(config: dict[str, Any]) -> None:
                     "comparison": comparison["id"],
                     "metric": metric,
                     "macro_gain_percent": 1.0,
+                    "cell_wins": 20,
                     "dataset_wins": 5,
                     "horizon_wins": 4,
+                    "max_dataset_degradation_percent": 0.0,
                 }
             )
     base = {
@@ -399,7 +468,11 @@ def synthetic_smoke(config: dict[str, Any]) -> None:
         arm["id"]: {**base, "arm": arm["id"]} for arm in config["arms"]
     }
     result = decide(summaries, aggregate, config)
-    if result["decision"] != "validation_supported_pending_formal_test_design":
+    expected = config.get(
+        "supported_decision",
+        "validation_supported_pending_formal_test_design",
+    )
+    if result["decision"] != expected:
         raise RuntimeError(result)
     print("iscf_sps_analyzer_synthetic_smoke=pass")
 
@@ -464,7 +537,7 @@ def main() -> None:
         encoding="utf-8",
     )
     print(
-        f"iscf_sps_validation_analysis={decision['decision']} "
+        f"iscf_scope_conditioning_validation_analysis={decision['decision']} "
         f"runs={len(audits)} test_accessed=false"
     )
 

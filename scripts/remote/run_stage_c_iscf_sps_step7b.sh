@@ -15,7 +15,8 @@ EVALUATION_SPLIT="${EVALUATION_SPLIT:-val}"
 EPOCHS="${EPOCHS:-20}"
 PATIENCE="${PATIENCE:-5}"
 BATCH_SIZE="${BATCH_SIZE:-32}"
-PROTOCOL_PROFILE="stage_c_iscf_sps_v0_step7b"
+PROTOCOL_PROFILE="${PROTOCOL_PROFILE:-stage_c_iscf_sps_v0_step7b}"
+RUN_LABEL="${RUN_LABEL:-SPS}"
 STANDARD_HORIZONS="96,192,336,720"
 export PYTHONHASHSEED="${SEED}"
 read -r -a GPU_IDS <<< "${GPU_IDS_STR}"
@@ -58,6 +59,7 @@ for dataset,arm_id in config["launch_order"]:
         dataset,arm_id,arm["readout_mode"],arm["projection_mode"],
         arm["partition"],rank,profile["profile"],profile["patch_num"],
         profile["d_model"],profile["d_ff"],
+        arm.get("conditioning_strength", 1.0),
     ))))
 ' "${CONFIG}"
 )
@@ -109,10 +111,10 @@ fi
 
 run_training_command() {
   local line="$1" gpu="$2" output_dir="$3" run_log="$4" smoke="$5"
-  local dataset arm readout projection partition rank profile patch_num d_model d_ff
+  local dataset arm readout projection partition rank profile patch_num d_model d_ff conditioning_strength
   local run_args=()
   IFS=$'\t' read -r dataset arm readout projection partition rank profile \
-    patch_num d_model d_ff <<< "${line}"
+    patch_num d_model d_ff conditioning_strength <<< "${line}"
   if [[ "${smoke}" == "1" ]]; then
     run_args=(--max-train-batches 2 --max-eval-batches 2 --epochs 1 \
       --patience 1 --final-evaluation-split none)
@@ -130,7 +132,7 @@ run_training_command() {
       --evaluation-prefix-mode full-crop --e-layers 2 \
       --batch-size "${BATCH_SIZE}" --gradient-accumulation-steps 1 \
       --enable-early-stopping --early-stopping-min-delta 0 --seed "${SEED}" \
-      --num-workers 0 --run-name "SPS_${arm}" \
+      --num-workers 0 --run-name "${RUN_LABEL}_${arm}" \
       --output-dir "${output_dir}" --device cuda \
       --checkpoint-policy best-val --no-evaluate-dual-checkpoints \
       --protocol-class method_screening --protocol-profile "${PROTOCOL_PROFILE}" \
@@ -144,6 +146,7 @@ run_training_command() {
       --pcsd-partition "${partition}" --pcsd-partition-seed 15101 \
       --pcsd-group-chunk-size 64 --pcsd-target-chunk-size 128 \
       --sps-projection-mode "${projection}" \
+      --frsc-conditioning-strength "${conditioning_strength}" \
       --pcc-objective-mode equal_skill --pred-loss-mode full \
       --no-save-predictions "${run_args[@]}" >"${run_log}" 2>&1
 }

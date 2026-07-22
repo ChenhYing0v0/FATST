@@ -1,0 +1,12 @@
+{
+  "candidate": "SC-ISCF-FRSC-v0-step7b",
+  "checks": 37,
+  "decision": "step8_remote_validation_authorized",
+  "effective_runs": 25,
+  "failed": 0,
+  "formal_test_authorized": false,
+  "new_jobs": 20,
+  "pass": true,
+  "passed": 37,
+  "remote_training_authorized": true
+}

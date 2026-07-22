@@ -20,18 +20,18 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | FRSC-v0 Step7A implementation pass；Step7B prelaunch pending |
+| `current_11_step` | FRSC-v0 Step7B prelaunch pass；Step8 remote validation authorized |
 | `current_candidate` | `SC-ISCF-FRSC-v0` implementation-ready；effectiveness pending |
-| `latest_decision` | `FRSC_step7a_contract_pass_remote_false` |
-| `next_required_action` | freeze/audit 20-run validation prelaunch；then request independent remote authorization |
-| `method_training_authorized` | false；new remote training/formal test/modern baselines false |
+| `latest_decision` | `FRSC_step7b_prelaunch_pass_remote_validation_authorized` |
+| `next_required_action` | commit/push；remote fast-forward、GPU/process audit、resource smoke；launch 20-run validation |
+| `method_training_authorized` | 20-run seed2021 validation only；formal test/confirmation/modern baselines false |
 | `rollback_point` | local fault -> Step5/6；candidate<=identity/global -> Step4 |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | exact SPS Step9 closed；FRSC Step7A complete |
+| `current_step` | exact SPS Step9 closed；FRSC Step7B prelaunch complete；Step8 authorized |
 | `problem` | hard projection删除shared full-rank forecast；需要保留capacity且仍让各scope接收不同structured gradient |
 | `existence_evidence` | SPS scope<identity -2.3123%但scope>global +0.9041%；FRSC frozen canonical +0.7997%、random -8.9750%、global +0.8677% |
 | `idea` | $Q_s=P_s+(1-\alpha)(I-P_s)$ full-rank scope conditioning；candidate alpha=.55 |
@@ -39,8 +39,8 @@
 | `design` | scope-a055 / global-a055 / global-a045 / random-a055 × five datasets；identity frozen reference |
 | `narrative_gate` | conditional pass only for complete future-output-scope full-rank conditioning chain |
 | `effectiveness_gate` | frozen diagnostic partial positive only；E2E validation pending；test false |
-| `artifacts` | SPS Step9 + BSC-D0 + FRSC-D1/D1.1 + Step4–7A report/config/checker/code explanation |
-| `decision` | Step7A pass；implementation-ready effectiveness-pending；Step7B prelaunch next；remote/test false |
+| `artifacts` | SPS Step9 + BSC-D0 + FRSC-D1/D1.1 + Step4–7B report/config/checker/code explanation |
+| `decision` | Step7B prelaunch 37/37 pass；Step8 remote validation authorized；formal test false |
 
 ## Frozen Carrier Contract
 
@@ -65,7 +65,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
 | `A6-LBF-natural-baseline` | `control_only` | validation-frozen natural profiles可作为稳定共同起点 | not required | 72/72 test；3 seeds；dense horizons | `frozen_test_reference_ready`；只作固定reference |
-| `SC-ISCF-FRSC-v0` | `implementation_ready_effectiveness_pending` | full-rank scope-conditioned synthesis/gradient能否保留carrier capacity并诱导useful specialization | conditional pass；generic spectral filtering prior-covered；must beat best-tuned global | Step7A pass；frozen canonical +0.7997%；global +0.8677%；random -8.9750%；not effectiveness | Step7B prelaunch；remote/test false |
+| `SC-ISCF-FRSC-v0` | `remote_validation_authorized_effectiveness_pending` | full-rank scope-conditioned synthesis/gradient能否保留carrier capacity并诱导useful specialization | conditional pass；generic spectral filtering prior-covered；must beat best-tuned global | Step7A pass；Step7B 37/37；frozen canonical +0.7997%；global +0.8677%；random -8.9750%；not effectiveness | launch frozen 20-run validation；formal test false |
 | `SC-ISCF-SPS-v0` | `closed_validation_hard_capacity_loss` | hard scope subspaces能否诱导specialization | narrative coherent but exact readout failed | vs identity -2.3123%；vs global +0.9041%；no pathology | no rescue；rollback Step4；feeds FRSC |
 | `ISCF-v0` | `carrier_only_sac_temporal_scope_fail` | independent future-output coupling scopes是否超越near-matched shared-width与exact random grouping | exact narrative fail；generic independent branch claim prohibited | Q1 +0.8496% pass；RANDOM -0.1990% fail；vs A6 +1.3584% | no rescue；rollback Step2/4 portfolio consolidation |
 | `ISCF-v1-CPSI` | `closed_material_effectiveness_fail` | common scope state应在native synthesis前非线性调制private deviation | design valid；exact mechanism falsified | vs ISCF -2.2128% MSE；vs A6 -0.7775%；health pass；LINEAR tie | no seeds/rescue；return Step4/5 |

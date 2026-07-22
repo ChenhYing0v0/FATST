@@ -7,19 +7,29 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture=`ISCF-FRSC` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | FRSC-v0 Step7A pass；Step7B prelaunch pending |
+| `current_11_step` | FRSC-v0 Step7B prelaunch pass；Step8 remote validation authorized |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | implementation-ready candidate=`SC-ISCF-FRSC-v0`；effectiveness pending；new training/formal test/modern baselines false |
+| `paper_core_status` | training-ready candidate=`SC-ISCF-FRSC-v0`；effectiveness pending；20-run validation authorized；formal test/modern baselines false |
+
+[FRSC Step7B Prelaunch, 2026-07-22] 4个new arms × five datasets × seed2021的20-run validation matrix已冻结；
+复用5个历史identity checkpoints后，完整analysis surface为25 runs/100 standard-horizon rows。candidate必须同时超过
+identity、same-alpha global、best-tuned global和random-binding controls。local gate `37/37`通过，包含full-rank、paired
+initialization、runner/test boundary和analyzer contracts。用户已授权推进remote training；下一动作是commit-pinned remote
+pull、GPU/process audit、Weather candidate/random resource smoke和正式launch。formal test、confirmation seeds、modern
+baselines、new loss/router/requested-H保持false。
+
+Decision=`frsc_step8_remote_validation_authorized_formal_test_disabled`。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_frsc_step7b_prelaunch_20260722/prelaunch_report.md`。
 
 [FRSC Step7A, 2026-07-22] 新readout=`iscf-full-rank-scope-conditioning`已本地实现。alpha=0与ISCF parent exact
 gap为0；candidate/identity/global/random parameter hash一致；alpha .55 minimum eigenvalue=.45；five scope gradients全部
 finite/nonzero；production model/CLI/full-prefix contracts通过。Step7A只建立code-theory consistency，不含method effectiveness。
-下一步为20-run validation prelaunch；remote training与formal test仍未授权。
+下一步已由Step7B prelaunch与用户remote authorization更新。
 
 [SPS Step9 and FRSC Step4–6, 2026-07-22] SPS 20/20 validation matrix完整且无numeric pathology，但scope-canonical相对
 identity MSE/MAE=`-2.3123%/-1.0937%`；其相对global `+0.9041%/+0.8461%`说明local geometry有条件价值，exact

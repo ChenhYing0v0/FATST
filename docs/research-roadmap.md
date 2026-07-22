@@ -15,14 +15,24 @@ Step4–6。candidate=`SC-ISCF-FRSC-v0`，narrative conditional pass；下一步
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | FRSC-v0 Step7A pass；Step7B prelaunch pending |
+| `current_step` | FRSC-v0 Step7B prelaunch pass；Step8 remote validation authorized |
 | `active_question` | full-rank scope conditioning能否在保留carrier capacity时超过identity与strong global controls |
 | `active_candidates` | `SC-ISCF-FRSC-v0` narrative-ready；ISCF-v0 parent/carrier；exact SPS/BSC/SAC/CPSI closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_frsc_step46_20260722/step4_6_design_and_remote_gate.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | FRSC production/local contracts pass；Step7B prelaunch next；remote/formal test/modern baselines false |
+| `method_implementation` | FRSC production/local/Step7B contracts pass；20-run remote validation authorized；formal test/modern baselines false |
 | `rollback_point` | local fault -> Step5/6；candidate<=identity/global -> Step4；no loss/router/per-dataset rescue |
+
+## ISCF-FRSC Step7B Prelaunch Decision
+
+matrix冻结为`frsc_scope_a055/frsc_global_a055/frsc_global_a045/frsc_random_a055` × five datasets × seed2021，
+共20个new runs；5个历史`SPS identity` checkpoints只作frozen reference，形成25-run effective audit。primary performance、
+best-global、same-alpha global、random binding和internal health五层角色分离，validation不能替代formal test。
+
+local prelaunch `37/37`通过。用户于`2026-07-22`明确授权推进remote training。Decision=
+`frsc_step8_remote_validation_authorized_formal_test_disabled`；下一步commit/push、remote fast-forward、GPU/process preflight、
+two-arm resource smoke并启动20-run validation。test、confirmation seeds和modern baselines仍false。
 
 ## ISCF-SPS Step4–7A Decision
 

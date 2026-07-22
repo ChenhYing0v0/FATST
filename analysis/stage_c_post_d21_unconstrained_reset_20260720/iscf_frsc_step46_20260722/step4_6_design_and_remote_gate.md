@@ -13,7 +13,7 @@
 | `narrative_gate` | `conditional_pass_as_full_rank_future_output_scope_conditioning`；generic spectral filtering claim prohibited |
 | `effectiveness_gate` | frozen diagnostic不计method effectiveness；E2E validation必须超过identity、random和best-tuned global |
 | `artifacts` | SPS Step9 audit、BSC-D0、FRSC-D1/D1.1、latest primary-source audit |
-| `decision` | candidate=`SC-ISCF-FRSC-v0` narrative-ready；active method仍为none；implementation/remote training/test均未授权 |
+| `decision` | candidate=`SC-ISCF-FRSC-v0` training-ready/effectiveness-pending；Step7B/remote validation现已授权；formal test未授权 |
 | `rollback` | local fault -> Step5/6；candidate<=identity -> Step4；candidate<=global -> generic conditioning only；random fail -> binding attribution fail |
 
 ## 2. Evidence that changes the design
@@ -140,7 +140,17 @@ production/local contracts全部通过：
 - production model输出`[1,720,2]`与prefix`[1,96,2]`，prefix gap=`0`；
 - production CLI固定readout、scope projection、alpha .55、rank109、four validation horizons与val-only split。
 
-Step7A decision=`iscf_frsc_step7a_contract_pass`。该结果不含training/validation/test evidence。下一步只授权local Step7B
-prelaunch implementation；remote training与formal test仍false。
+Step7A decision=`iscf_frsc_step7a_contract_pass`。该结果不含training/validation/test evidence。
 
-Decision=`FRSC_v0_step7a_pass_prelaunch_next_remote_false`。
+## 8. Step7B prelaunch与remote authorization
+
+用户于`2026-07-22`明确要求继续完成FRSC Step7B并推进remote training。执行协议冻结为4个new arms × 5 datasets ×
+seed2021，共20个new validation trainings；复用5个历史identity checkpoints后，analysis surface为25 runs/100个
+standard-horizon rows。candidate同时接受identity、same-alpha global、best-tuned global和random-binding controls。
+
+local prelaunch `37/37`通过：profile/config/matrix、20个unique jobs、all-arm shape/finite/full-rank、dataset-rank projection
+contracts、alpha0 parent identity、paired initialization、runner dry-run、test refusal、analyzer synthetic smoke与GPU/log scanner
+均通过。正式remote training已授权；formal test、confirmation seeds、modern baselines、new loss/router/requested-H仍false。
+
+Decision=`FRSC_v0_step7b_prelaunch_pass_step8_remote_validation_authorized`。remote launch前仍必须commit/push、remote
+fast-forward、GPU/process audit与two-arm resource smoke。

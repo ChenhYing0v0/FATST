@@ -1107,6 +1107,29 @@ def evaluate(args: argparse.Namespace) -> None:
                 )
                 and "probe_direct_policy" in payload
             )
+            if hasattr(model.pcsd_readout, "conditioning_strength"):
+                strength = float(adapter.get("frsc_conditioning_strength", math.nan))
+                minimum_eigenvalue = float(
+                    diagnostics.get(
+                        "frsc_minimum_operator_eigenvalue",
+                        math.nan,
+                    )
+                )
+                readout_contract_pass = bool(
+                    readout_contract_pass
+                    and math.isclose(
+                        float(model.pcsd_readout.conditioning_strength),
+                        strength,
+                        abs_tol=1e-12,
+                    )
+                    and math.isclose(
+                        minimum_eigenvalue,
+                        1.0 - strength,
+                        abs_tol=1e-12,
+                    )
+                    and minimum_eigenvalue > 0.0
+                    and diagnostics.get("frsc_full_rank") is True
+                )
     elif hasattr(model, "pcsd_m0_readout"):
         readout_contract_pass = bool(
             initialization.get("pcsd_m0_initialization_hash")
@@ -1255,6 +1278,13 @@ def evaluate(args: argparse.Namespace) -> None:
         ),
         "cpsi_diagnostics_present": "probe_cpsi_message_rms" in payload,
         "sps_diagnostics_present": "probe_sps_raw_arms" in payload,
+        "frsc_conditioning_strength": diagnostics.get(
+            "frsc_conditioning_strength"
+        ),
+        "frsc_minimum_operator_eigenvalue": diagnostics.get(
+            "frsc_minimum_operator_eigenvalue"
+        ),
+        "frsc_full_rank": diagnostics.get("frsc_full_rank"),
         "all_finite": all_finite,
         "protocol_pass": protocol_pass,
         "readout_contract_pass": readout_contract_pass,
