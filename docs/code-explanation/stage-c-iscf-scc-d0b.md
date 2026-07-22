@@ -13,7 +13,9 @@ training loop，也不访问test。ridge只属于function-level information-acce
 target-free features为`features [R,720,18]`：五个coordinate-normalized arm deviations、五个policy weights、
 `log_arm_dispersion`、`fused_forecast`、policy entropy、normalized position与两组sine/cosine position basis。
 
-前60% probe rows拟合固定ridge，后40% rows评价。预测值clip到nonnegative simplex，再与held-out arms重组为forecast。
+约前60% probe rows拟合固定ridge，后40% rows评价；边界向下对齐dataset channel count，保证同一multivariate
+source-sample的channel rows不跨probe sides。当前15 runs均为147/109 rows。预测值clip到nonnegative simplex，再与
+held-out arms重组为forecast。
 
 ## 3. Controls and outputs
 

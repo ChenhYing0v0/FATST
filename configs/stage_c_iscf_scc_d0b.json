@@ -8,6 +8,13 @@
   "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"],
   "seeds": [2021, 2022, 2023],
   "coupling_scales": [1, 48, 144, 360, 720],
+  "channel_counts": {
+    "ETTh1": 7,
+    "ETTh2": 7,
+    "ETTm1": 7,
+    "ETTm2": 7,
+    "Weather": 21
+  },
   "validation_replay_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_iscf_scc_d0_validation_replay",
   "output_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_iscf_scc_d0b_information_access",
   "probe": {

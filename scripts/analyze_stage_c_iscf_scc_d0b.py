@@ -196,7 +196,11 @@ def analyze_payload(
     ).transpose(0, 2, 1)
     features = build_features(arms, policy, fused, epsilon)
 
-    train_rows = int(np.floor(arms.shape[0] * probe["train_row_fraction"]))
+    channel_count = int(config["channel_counts"][dataset])
+    nominal_train_rows = int(
+        np.floor(arms.shape[0] * probe["train_row_fraction"])
+    )
+    train_rows = nominal_train_rows // channel_count * channel_count
     if train_rows <= 0 or train_rows >= arms.shape[0]:
         raise ValueError("train_row_fraction yields an empty split")
     train_features = features[:train_rows].reshape(-1, features.shape[-1])
@@ -294,6 +298,7 @@ def analyze_payload(
     return {
         "dataset": dataset,
         "seed": seed,
+        "channel_count": channel_count,
         "train_probe_rows": train_rows,
         "evaluation_probe_rows": arms.shape[0] - train_rows,
         "feature_dimension": features.shape[-1],
@@ -426,7 +431,7 @@ def summarize(
 
 def synthetic_payload(config: dict[str, Any]) -> dict[str, np.ndarray]:
     rng = np.random.default_rng(20260722)
-    rows = 24
+    rows = 64
     time = 72
     scopes = len(config["coupling_scales"])
     targets = rng.normal(size=(rows, time))

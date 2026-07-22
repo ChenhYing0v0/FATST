@@ -48,7 +48,8 @@ dispersion、fused value、policy entropy，以及固定future-position basis。
 
 ## 4. Split, probe and controls
 
-每run按probe-row顺序做60/40 blocked split；不随机拆coordinate，减少同一source-row泄漏。固定ridge
+每run按probe-row顺序做约60/40 blocked split，并向下对齐完整multivariate source-sample group：ETT每组7 rows，
+Weather每组21 rows，因此15 runs均使用147/109 rows。不得切开同一输入窗口的channel group。固定ridge
 `alpha=.01`，输出clip到nonnegative simplex。primary metrics为held-out credit Spearman/top-1、预测credit重组后的L1
 gain，以及相对standalone-credit probe的gain。
 
@@ -79,3 +80,12 @@ method_implementation_authorized = false
 formal_test_authorized = false
 next_action = local_smoke_commit_push_and_remote_offline_d0b
 ```
+
+## 7. Predecision implementation correction
+
+首次offline execution使用nominal `153/103` row边界，随后predecision audit发现153不能被ETT的7 channels或Weather的
+21 channels整除，会把同一multivariate input window的channel rows拆到probe两侧。该结果虽通过machine gate，但标记为
+`diagnostic_protocol_fault_predecision`，不得用于推进。
+
+修正版不改变features、ridge、controls、thresholds或decision map，只把split向下对齐到147/109，并重新执行全15-run
+matrix。只有修正版结果可成为D0B decision evidence。
