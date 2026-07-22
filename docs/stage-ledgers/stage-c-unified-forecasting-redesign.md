@@ -6,41 +6,41 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | no-binding objective controls解释gain后，ISCF下一可识别problem是什么 |
+| `active_question` | no-binding controls的公共gain是否来自finite-data下的direct-policy over-flexibility |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | active method=none；ISCF-v0 fixed base/carrier；SCC/RSCC closed |
+| `active_candidates` | active method=none；PSA-D0 diagnostic-only；ISCF-v0 fixed base/carrier；SCC/RSCC closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
 | `stage_exit` | 新problem先通过existence/narrative gate，再决定一项或两项可归因contributions |
-| `stage_rollback` | exact coalition route closed；return Step2/4；CTD paused |
+| `stage_rollback` | PSA-D0只检验frozen H1；negative回Step2并保留joint-training unresolved；CTD paused |
 
 ## Decision Cursor
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | RSCC-v1 Step9 attribution fail；rollback Step2/4 |
-| `current_candidate` | none；ISCF-v0 fixed base/carrier |
-| `latest_decision` | `rscc_v1_control_attribution_fail_close_exact_route` |
-| `next_required_action` | Step2/4 source-informed problem/narrative audit；new gate before implementation |
+| `current_11_step` | Post-RSCC Step2/4 audit complete；PSA-D0 diagnostic |
+| `current_candidate` | no method；`SC-ISCF-PSA-D0` diagnostic-only |
+| `latest_decision` | `policy_shrinkage_problem_unresolved_proceed_d0_diagnostic_only` |
+| `next_required_action` | run existing-validation PSA-D0；analyze full 15-run LODO matrix |
 | `method_training_authorized` | false；formal test/confirmation/modern baselines false |
-| `rollback_point` | Step2/4；no SCC/RSCC seed/lambda/epsilon/fallback/router rescue |
+| `rollback_point` | D0 negative仅拒绝frozen H1；no SCC/RSCC or alpha-grid rescue |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | RSCC-v1 Step9 complete；return Step2/4 |
-| `problem` | exact coalition binding是否在保留arm reliability后贡献可归因forecast gain |
-| `existence_evidence` | D0B information-access pass；EQUAL headroom +18.08%；不等同useful training mechanism |
-| `idea` | EQUAL reliability + detached exact coalition KL |
-| `theory_check` | implementation/gradient/usage healthy；no requested-H/inference change |
-| `design` | RSCC / RSCC-SHUFFLED / EQUAL-ARMERR × five datasets × seed2021；EQUAL reference |
-| `narrative_gate` | pre-result conditional；post-result exact claim blocked by no-binding controls |
-| `effectiveness_gate` | vs EQUAL +0.5189% pass；vs ARMERR -0.1414%、SHUFFLED -0.1394% fail；test false |
-| `artifacts` | 20-run/80-cell Step9 outputs + result report + analyzer |
-| `decision` | `capacity_control_explains`；close exact SCC/RSCC；retain ISCF fixed base；rollback Step2/4 |
+| `current_step` | Step2/4 problem audit；D0 diagnostic-only ready |
+| `problem` | learned direct policy是否具有超过finite validation evidence支持的conditional flexibility |
+| `existence_evidence` | ARMERR/SHUFFLED均约+0.656%且functionally near-equivalent；policy entropy均near 1 |
+| `idea` | frozen convex shrinkage隔离inference policy frontier，不增加信息或requested-H |
+| `theory_check` | Bayes predictor不变；只测试finite-sample/function-class effect；historical EQUAL confound显式保留 |
+| `design` | 15 EQUAL replays；fixed grids；147/109 split；LODO；uniform/marginal/temperature controls |
+| `narrative_gate` | diagnostic-only pass；generic shrinkage/balancing paper novelty fail |
+| `effectiveness_gate` | not applicable；validation diagnostic，official test=false |
+| `artifacts` | Step2/4 report + PSA-D0 config/analyzer/code explanation |
+| `decision` | `policy_shrinkage_problem_unresolved_proceed_d0_diagnostic_only` |
 
 ## Frozen Carrier Contract
 
@@ -64,6 +64,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
+| `SC-ISCF-PSA-D0` | `diagnostic_only_frozen_ready` | EQUAL frozen policy向uniform收缩是否存在stable held-out frontier | diagnostic pass；generic shrinkage不是paper claim | pending 15-run LODO validation；test=false | execute existing artifacts only；then Step2/4 decision |
 | `SC-ISCF-RSCC-v1` | `closed_control_attribution_fail` | 保留EQUAL reliability时，exact coalition policy credit能否兑现已有arm complementarity | pre-result conditional；post-result binding claim fail | vs EQUAL +0.5189% pass；vs ARMERR/SHUFFLED -0.1414%/-0.1394%；alignment fail | no formal test/rescue；rollback Step2/4 |
 | `SC-ISCF-SCC-v0` | `closed_intervention_point_wrong` | fused-only + coalition KL能否改善scope coordination | narrative coherent；exact training intervention failed | vs EQUAL -3.1750%；headroom +18.08% -> -14.93% | no seed/lambda rescue；evidence feeds RSCC only |
 
@@ -843,3 +844,9 @@ Historical and control queue:
 146. RSCC Step9为20/20 effective runs、80/80 validation cells。vs EQUAL MSE/MAE `+0.5189%/+0.3972%`
      primary pass，但vs ARMERR/SHUFFLED为`-0.1414%/-0.1394%`，policy-credit Spearman亦由`0.2052`降至
      `0.1539`。Decision=`rscc_v1_control_attribution_fail_close_exact_route`；no formal test/rescue；回Step2/4。
+147. function-level audit确认ARMERR/SHUFFLED fused relative L1仅`0.00138--0.00462`、policy mean L1仅
+     `0.00254--0.00830`，且两者policy entropy约`0.986--0.998`；公共效果更符合near-uniform shrinkage clue。
+148. EQUAL为historical reference，未contemporaneously retrain；因此H1 inference shrinkage、H2 training
+     co-adaptation与H3 run drift仍混杂，不得把ARMERR直接升级为carrier/method。
+149. `SC-ISCF-PSA-D0`冻结为existing validation artifact diagnostic：15 replays、fixed grids、147/109 split、LODO
+     selection，uniform/marginal/temperature controls；training/test/method=false。negative不得拒绝joint-training方向。

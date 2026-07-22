@@ -7,14 +7,26 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | RSCC-v1 Step9 attribution fail；rollback Step2/4 |
+| `current_11_step` | Post-RSCC Step2/4 audit complete；PSA-D0 frozen diagnostic |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | active method=none；ISCF fixed base；RSCC/SCC exact route closed |
+| `paper_core_status` | active method=none；ISCF fixed base；PSA-D0 diagnostic-only；RSCC/SCC exact route closed |
+
+[ISCF Post-RSCC Step2/4 / PSA-D0, 2026-07-22] function-level audit确认ARMERR与SHUFFLED不仅validation
+MSE彼此只差`0.0020%`，其seed2021 fused relative L1仅`0.00138--0.00462`、policy mean L1仅
+`0.00254--0.00830`，且最终policy entropy均约`0.986--0.998`。二者共同实现near-uniform policy，却不共享正确
+scope-credit binding；这是finite policy flexibility的problem clue，而非新mechanism结论。
+
+关键confound是EQUAL为historical reference，并未在本轮contemporaneously retrain。现冻结`SC-ISCF-PSA-D0`：复用
+15个EQUAL validation replays，以LODO选择global convex-shrinkage alpha，在source-sample-aligned 147/109 split上
+区分`inference_weight_overfit`、joint-training co-adaptation与run drift。该probe不训练、不访问test；generic entropy、
+temperature、uniform KL与forecast-combination shrinkage已有强prior，不能直接作为Contribution 2。Decision=
+`policy_shrinkage_problem_unresolved_proceed_d0_diagnostic_only`。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_rscc_step24_20260722/step2_4_policy_shrinkage_problem_audit.md`。
 
 [ISCF-RSCC Step9 Result, 2026-07-22] 15/15 new、20/20 effective runs与80/80 validation cells完整，
 protocol/init/invariants/non-test audit全部通过。RSCC vs EQUAL MSE/MAE=`+0.5189%/+0.3972%`，15/20 cells、

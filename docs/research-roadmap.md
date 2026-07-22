@@ -1,5 +1,17 @@
 # Research Roadmap
 
+## ISCF Post-RSCC Step2/4 and PSA-D0 (2026-07-22)
+
+ARMERR与SHUFFLED共同超过EQUAL约`+0.656%` validation MSE且彼此只差`0.0020%`；seed2021 probes进一步显示
+两者fused relative L1=`0.00138--0.00462`、policy mean L1=`0.00254--0.00830`，均收敛到entropy约
+`0.986--0.998`的near-uniform policy。正确coalition binding没有解释公共收益；exact route保持closed。
+
+由于EQUAL是historical而非contemporaneous retrain，当前必须区分post-hoc policy overfit、joint-training
+co-adaptation与run drift。Decision=`policy_shrinkage_problem_unresolved_proceed_d0_diagnostic_only`：冻结
+`SC-ISCF-PSA-D0`，只复用15个existing validation replays，以fixed grid、147/109 source-aligned split和LODO
+global-alpha selection审计frozen policy frontier。uniform endpoint、scope-marginal prior与temperature为controls。
+forecast training、official test与method implementation均false；negative不得拒绝joint-training方向。
+
 ## ISCF-RSCC Step9 Decision (2026-07-22)
 
 20/20 effective runs、80/80 validation cells与所有protocol/init/non-test checks通过。RSCC相对EQUAL

@@ -1,0 +1,55 @@
+{
+  "stage": "StageC-UVHF",
+  "diagnostic_id": "SC-ISCF-PSA-D0",
+  "status": "frozen_validation_policy_shrinkage_attribution",
+  "date": "2026-07-22",
+  "role": "diagnostic_only_validation_frozen_probe",
+  "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"],
+  "seeds": [2021, 2022, 2023],
+  "coupling_scales": [1, 48, 144, 360, 720],
+  "channel_counts": {
+    "ETTh1": 7,
+    "ETTh2": 7,
+    "ETTm1": 7,
+    "ETTm2": 7,
+    "Weather": 21
+  },
+  "validation_replay_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_iscf_scc_d0_validation_replay",
+  "output_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_iscf_psa_d0",
+  "split": {
+    "fit_row_fraction": 0.6,
+    "expected_fit_rows": 147,
+    "expected_evaluation_rows": 109
+  },
+  "families": {
+    "convex_uniform": {
+      "values": [0.0, 0.05, 0.1, 0.2, 0.3, 0.5, 0.75, 1.0]
+    },
+    "convex_scope_marginal": {
+      "values": [0.0, 0.05, 0.1, 0.2, 0.3, 0.5, 0.75, 1.0]
+    },
+    "temperature": {
+      "values": [1.0, 1.1, 1.25, 1.5, 2.0, 3.0, 5.0, 1000000.0]
+    }
+  },
+  "position_bins": [[0, 96], [96, 192], [192, 336], [336, 720]],
+  "gates": {
+    "positive_dataset_count_min": 4,
+    "positive_run_count_min": 12,
+    "positive_selected_fold_count_min": 4
+  },
+  "authorization": {
+    "user_authorization": "continue research after RSCC Step9 rollback",
+    "existing_validation_artifact_analysis_authorized": true,
+    "forecast_model_training_authorized": false,
+    "checkpoint_mutation_allowed": false,
+    "formal_test_access_authorized": false,
+    "method_implementation_authorized": false
+  },
+  "decision_map": {
+    "supported": "finite_policy_shrinkage_problem_supported_return_step4",
+    "uniform_endpoint": "uniform_fusion_endpoint_supported_not_conditional_shrinkage",
+    "unresolved": "finite_policy_shrinkage_problem_unresolved",
+    "not_supported": "frozen_inference_shrinkage_not_supported"
+  }
+}

@@ -81,14 +81,14 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-22 |
 | `source_parent_commit` | `020eea3`（RSCC Step7A + frozen Step7B execution commit） |
-| `current_step` | RSCC-v1 Step9 attribution fail；rollback Step2/4 |
-| `active_problem` | no-binding matched controls解释validation gain；exact coalition credit未兑现mechanism attribution |
-| `active_method` | none；ISCF-v0 fixed base/carrier；SCC-v0与RSCC-v1 closed |
+| `current_step` | Post-RSCC Step2/4 audit complete；PSA-D0 diagnostic-only |
+| `active_problem` | no-binding controls的公共gain是否来自finite-data direct-policy over-flexibility |
+| `active_method` | none；PSA-D0 diagnostic-only；ISCF-v0 fixed base/carrier；SCC-v0与RSCC-v1 closed |
 | `method_training_authorized` | false |
 | `remote_training_authorized` | false；formal test/modern baselines false |
-| `next_action` | Step2/4 source-informed problem/narrative audit；no implementation yet |
-| `conditional_next` | only a new complete problem -> mechanism -> control gate may authorize Step7 |
-| `rollback` | close exact coalition route；no seed/lambda/epsilon/fallback/router rescue |
+| `next_action` | execute PSA-D0 on existing validation replays；full 15-run LODO decision |
+| `conditional_next` | D0 positive只返回Step4；仍需new narrative/design gate才可method implementation |
+| `rollback` | D0 negative仅拒绝frozen H1；joint-training remains unresolved；no alpha-grid rescue |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
 
@@ -341,6 +341,14 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
     不做seed/lambda rescue。唯一允许RSCC-v1保留EQUAL reliability并附加coalition KL；Step7A true，remote/test false。
 101. RSCC Step7A实现EQUAL+coalition与EQUAL+shuffled modes；skill loss与EQUAL逐值相等，existing PCC 36/36与
      15-job dry-run通过。Decision=`rscc_step7a_pass_resource_smoke_authorized`；正式15 runs conditional，test false。
+102. RSCC Step9 control attribution fail后，function-level audit确认ARMERR/SHUFFLED learned functions近似，且都把
+     policy推到near-uniform；exact coalition route保持closed。
+103. latest primary-source audit确认generic forecast-combination shrinkage、stacking weight complexity、TS MoE balancing、
+     diversity-aware weights与forecastability routing均已有直接prior；不得把entropy/uniform/temperature loss直接包装为创新。
+104. EQUAL为historical而非contemporaneous retrain，H1 inference policy overfit、H2 training co-adaptation与H3 run drift
+     仍混杂。`SC-ISCF-PSA-D0`只检验H1，frozen negative不得作direction rejection。
+105. PSA-D0冻结15 existing replays、fixed grids、147/109 source-aligned split、LODO global selection和three control
+     families。existing artifact analysis=true；new training、test、checkpoint mutation与method implementation=false。
 
 ## 5. D22-HFA 的执行顺序
 
