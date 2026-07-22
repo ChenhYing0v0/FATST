@@ -1,0 +1,26 @@
+{
+  "canonical_control_margin_percent": -0.13025920599624374,
+  "cells": 480,
+  "datasets": 5,
+  "decision": "exact_frozen_FRSC_diagnostic_not_positive_return_step4",
+  "diagnostic_id": "SC-ISCF-FRSC-D1",
+  "diagnostic_lead": false,
+  "direction_level_rejection_allowed": false,
+  "evidence_limits": {
+    "can_establish_method_effectiveness": false,
+    "can_support_direction_level_rejection": false,
+    "checkpoint_is_frozen_and_identity_coadapted": true,
+    "positive_result_only_authorizes_end_to_end_step4_6_design": true,
+    "validation_grid_is_used_for_diagnostic_selection": true
+  },
+  "method_effectiveness": false,
+  "probe_rows_per_dataset": 256,
+  "selected_alpha": 0.35,
+  "selected_cell_wins": 19,
+  "selected_dataset_wins": 5,
+  "selected_horizon_wins": 4,
+  "selected_macro_mae_gain_percent": 0.39357737411635174,
+  "selected_macro_mse_gain_percent": 0.6915092075365847,
+  "selected_outside_eigenvalue": 0.65,
+  "test_accessed": false
+}

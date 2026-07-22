@@ -1,0 +1,59 @@
+{
+  "diagnostic_id": "SC-ISCF-FRSC-D1.1",
+  "date": "2026-07-22",
+  "status": "post_D1_exploratory_curve_audit",
+  "role": "frozen_validation_risk_curve_and_control_strength_audit",
+  "parent_candidate": "ISCF-v0",
+  "source_arm": "sps_identity_canonical",
+  "problem": "D1 canonical conditioning was broadly positive but the same-alpha global control made a systematically larger output perturbation and achieved a 0.1303-point larger macro MSE gain",
+  "hypothesis": "the apparent global-control advantage may be caused by unequal intervention magnitude rather than a better risk-versus-change envelope",
+  "operator": "Q_s(alpha)=P_s+(1-alpha)(I-P_s)=I-alpha(I-P_s)",
+  "scope_strengths": [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95],
+  "scales": [1, 48, 144, 360, 720],
+  "mode_ranks": {
+    "ETTh1": 109,
+    "ETTh2": 116,
+    "ETTm1": 116,
+    "ETTm2": 106,
+    "Weather": 116
+  },
+  "datasets": ["Weather", "ETTm1", "ETTh1", "ETTh2", "ETTm2"],
+  "horizons": [96, 192, 336, 720],
+  "probe_rows": 256,
+  "projection_controls": [
+    {"id": "frsc_scope_canonical", "projection": "scope", "partition": "canonical"},
+    {"id": "frsc_global_canonical", "projection": "global", "partition": "canonical"},
+    {"id": "frsc_scope_random", "projection": "scope", "partition": "random"}
+  ],
+  "statistics": {
+    "gain_percent": "100 * (1 - transformed metric / parent metric)",
+    "change_normalized_rms": "RMS of transformed minus parent forecast divided by target RMS",
+    "risk_curve": "macro gain across the frozen alpha grid; alpha remains global across datasets and horizons",
+    "outside_eigenvalue": "1-alpha; every audited operator remains full-rank"
+  },
+  "diagnostic_lead": {
+    "macro_mse_gain_percent_min": 0.1,
+    "macro_mae_gain_percent_min": 0.0,
+    "dataset_wins_min": 3,
+    "horizon_wins_min": 3,
+    "cell_wins_min": 12,
+    "canonical_control_margin_percent_min": 0.05,
+    "barycenter_reconstruction_max_abs_max": 0.00002,
+    "all_finite": true
+  },
+  "selection_rule": "exploratory post-D1 curve; report every alpha and each control envelope; no dataset/horizon-specific selection",
+  "evidence_limits": {
+    "post_D1_validation_informed": true,
+    "checkpoint_is_frozen_and_identity_coadapted": true,
+    "can_support_direction_level_rejection": false,
+    "can_establish_method_effectiveness": false,
+    "can_authorize_method_by_itself": false
+  },
+  "authorization": {
+    "read_existing_validation_artifacts": true,
+    "new_training": false,
+    "formal_test": false,
+    "remote_checkpoint_mutation": false
+  },
+  "decision_rule": "if canonical has no competitive full-rank risk envelope, close exact FRSC; if competitive, return Step4-6 and design a newly frozen E2E candidate with matched controls"
+}
