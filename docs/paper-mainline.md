@@ -7,14 +7,25 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | RSCC-v1 Step8 validation training active |
+| `current_11_step` | RSCC-v1 Step9 attribution fail；rollback Step2/4 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | RSCC-v1 15-run validation active；formal test/modern baselines false |
+| `paper_core_status` | active method=none；ISCF fixed base；RSCC/SCC exact route closed |
+
+[ISCF-RSCC Step9 Result, 2026-07-22] 15/15 new、20/20 effective runs与80/80 validation cells完整，
+protocol/init/invariants/non-test audit全部通过。RSCC vs EQUAL MSE/MAE=`+0.5189%/+0.3972%`，15/20 cells、
+5/5 datasets、4/4 horizons，validation primary gate通过；但RSCC分别输给EQUAL-ARMERR与SHUFFLED
+`-0.1414%/-0.1394%` MSE，均只3/20 cells、1/5 datasets、1/4 horizons。
+
+ARMERR与SHUFFLED彼此MSE仅差`+0.0020%`，且都比EQUAL约`+0.656%`；RSCC policy-credit Spearman
+`0.1539`也低于EQUAL `0.2052`。headroom保持`+18.2940%`且gradient/usage健康，故不是numeric或reliability
+failure，而是no-binding matched controls解释收益。Decision=`rscc_v1_control_attribution_fail_close_exact_route`，
+failure=`capacity_control_explains`。不开formal test，不做seed/lambda/router rescue；ISCF fixed base保留，回Step2/4。
+详见`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/rscc_step9_result_and_rollback.md`。
 
 [ISCF-RSCC Step8 Launch, 2026-07-22] Weather RSCC/SHUFFLED resource smoke通过：两臂共享initialization
 hash，`skill_loss=0.7632371485`逐值相等，route loss非零，five scope gradients均finite/nonzero，且无

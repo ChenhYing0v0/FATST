@@ -1,5 +1,16 @@
 # Research Roadmap
 
+## ISCF-RSCC Step9 Decision (2026-07-22)
+
+20/20 effective runs、80/80 validation cells与所有protocol/init/non-test checks通过。RSCC相对EQUAL
+MSE/MAE=`+0.5189%/+0.3972%`，5/5 datasets与4/4 horizons通过primary validation gate；但相对
+EQUAL-ARMERR/SHUFFLED分别为`-0.1414%/-0.1394%` MSE，两个matched controls都失败。
+
+ARMERR和SHUFFLED相对EQUAL均约`+0.656%`且彼此只差`0.0020%` MSE。RSCC headroom保持正、gradients/usage
+健康，但policy-credit Spearman从EQUAL `0.2052`降到`0.1539`。Decision=
+`rscc_v1_control_attribution_fail_close_exact_route`；failure=`capacity_control_explains`。关闭exact SCC/RSCC，
+不做formal test/seeds/lambda/router rescue；ISCF fixed base保留，回Step2/4重新做problem/narrative gate。
+
 ## ISCF-RSCC Step8 Remote Running (2026-07-22)
 
 Weather RSCC/SHUFFLED resource smoke通过：相同initialization hash、相同EQUAL skill loss、nonzero route loss、five
@@ -97,14 +108,14 @@ Step4–6。candidate=`SC-ISCF-FRSC-v0`，narrative conditional pass；下一步
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | RSCC-v1 Step8；15-run validation training active |
-| `active_question` | preserving equal-skill reliability后，coalition KL能否超过EQUAL/ARMERR/SHUFFLED |
-| `active_candidates` | RSCC-v1 Step8 validation candidate；SCC-v0 closed；ISCF-v0 fixed base |
+| `current_step` | RSCC-v1 Step9 attribution fail；rollback Step2/4 |
+| `active_question` | no-binding objective controls解释gain后，ISCF下一可识别problem是什么 |
+| `active_candidates` | active method=none；ISCF-v0 fixed base；SCC/RSCC closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/rscc_step8_remote_launch.md` |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/rscc_step9_result_and_rollback.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | RSCC Step7A passed；remote validation active；test/modern baselines false |
-| `rollback_point` | RSCC any primary/control gate fail -> close exact coalition route and return Step2/4 |
+| `method_implementation` | none authorized；formal test/remote/modern baselines false |
+| `rollback_point` | Step2/4；new problem/narrative/design gate before any implementation |
 
 ## ISCF-FRSC Step9 Validation Decision
 
