@@ -824,3 +824,5 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
      coalition headroom却从`+18.08%`反转为`-14.93%`。failure=`intervention_point_wrong`，关闭v0。
 143. Step5–6只允许RSCC-v1 exact hybrid：保留EQUAL reliability，加coalition KL；matched EQUAL-ARMERR与SHUFFLED，
      15 new runs。Step7A authorized，remote/test false；若失败关闭coalition route，不再rescue。
+144. RSCC Step7A通过：hybrid skill loss与EQUAL逐值相等，shuffled保持skill/credit marginals；PCC regression 36/36，
+     runner dry-run=15。只授权Weather resource smoke，通过后才可launch；formal test=false。

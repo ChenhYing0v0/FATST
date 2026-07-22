@@ -81,13 +81,13 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-22 |
 | `source_parent_commit` | `9069e87`（FRSC Step7B frozen execution commit） |
-| `current_step` | SCC-v0 Step9 failed；RSCC-v1 Step7A pending |
+| `current_step` | RSCC-v1 Step7A passed；resource smoke pending |
 | `active_problem` | ISCF已有arm complementarity，但equal-skill与existing policy未把coalition utility稳定转化为fused gain |
-| `active_method` | SC-ISCF-RSCC-v1 narrative-ready preimplementation；SCC-v0 closed；ISCF-v0 fixed base |
+| `active_method` | SC-ISCF-RSCC-v1 Step7B candidate；SCC-v0 closed；ISCF-v0 fixed base |
 | `method_training_authorized` | false |
-| `remote_training_authorized` | false；formal test/modern baselines false |
-| `next_action` | implement RSCC exact hybrid modes、contract tests与15-run config |
-| `conditional_next` | only after Step7A/resource smoke may RSCC validation launch |
+| `remote_training_authorized` | resource smoke true；15-run conditional；formal test/modern baselines false |
+| `next_action` | commit/push、remote fast-forward、Weather RSCC/SHUFFLED smoke |
+| `conditional_next` | only if smoke passes may 15-run RSCC validation launch |
 | `rollback` | any RSCC effectiveness/control failure -> close coalition route；no seed/lambda rescue |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
@@ -339,6 +339,8 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
     FUSED/ARMERR/SHUFFLED。numeric/gradient健康，但median coalition headroom从`+18.0775%`变`-14.9326%`。
 100. Decision=`scc_v0_failed_return_step5_reliability_preserving_design`，failure=`intervention_point_wrong`。v0关闭，
     不做seed/lambda rescue。唯一允许RSCC-v1保留EQUAL reliability并附加coalition KL；Step7A true，remote/test false。
+101. RSCC Step7A实现EQUAL+coalition与EQUAL+shuffled modes；skill loss与EQUAL逐值相等，existing PCC 36/36与
+     15-job dry-run通过。Decision=`rscc_step7a_pass_resource_smoke_authorized`；正式15 runs conditional，test false。
 
 ## 5. D22-HFA 的执行顺序
 

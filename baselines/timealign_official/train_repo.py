@@ -1880,7 +1880,10 @@ def train(
     optimizer = optim.AdamW(model.parameters(), lr=official_args.learning_rate)
     criterion = nn.L1Loss()
     coalition_shuffle_generator = None
-    if args.pcc_objective_mode == "scope_coalition_credit_shuffled":
+    if args.pcc_objective_mode in {
+        "scope_coalition_credit_shuffled",
+        "equal_scope_coalition_credit_shuffled",
+    }:
         coalition_shuffle_generator = torch.Generator(
             device=official_args.device.type
         )

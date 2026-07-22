@@ -152,10 +152,62 @@ def check_shuffled_control() -> None:
         raise AssertionError("dedicated SCC shuffle consumed global RNG")
 
 
+def check_reliability_preserving_hybrid() -> None:
+    fused, arms, policy, target, _logits = build_inputs()
+    equal = projective_coupling_credit_loss(
+        fused,
+        arms,
+        policy,
+        target,
+        mode="equal_skill",
+        progress=1.0,
+    )
+    hybrid = projective_coupling_credit_loss(
+        fused,
+        arms,
+        policy,
+        target,
+        mode="equal_scope_coalition_credit",
+        progress=1.0,
+    )
+    if not torch.allclose(hybrid.skill_loss, equal.skill_loss, atol=1e-7):
+        raise AssertionError("RSCC did not preserve equal-skill reliability")
+    if float(hybrid.skill_loss) <= 0.0 or float(hybrid.route_loss) <= 0.0:
+        raise AssertionError("RSCC requires active reliability and route terms")
+    expected_total = (
+        hybrid.fused_loss
+        + hybrid.weighted_skill_loss
+        + hybrid.weighted_route_loss
+    )
+    if not torch.allclose(hybrid.total_loss, expected_total, atol=1e-7):
+        raise AssertionError("RSCC total loss decomposition is inconsistent")
+
+    generator = torch.Generator(device="cpu")
+    generator.manual_seed(2021 + SCC_SHUFFLE_SEED_OFFSET)
+    shuffled = projective_coupling_credit_loss(
+        fused,
+        arms,
+        policy,
+        target,
+        mode="equal_scope_coalition_credit_shuffled",
+        progress=1.0,
+        coalition_shuffle_generator=generator,
+    )
+    if not torch.allclose(shuffled.skill_loss, equal.skill_loss, atol=1e-7):
+        raise AssertionError("RSCC shuffled control changed reliability loss")
+    if not torch.allclose(
+        shuffled.route_credit.sort(dim=-1).values,
+        hybrid.route_credit.sort(dim=-1).values,
+        atol=1e-7,
+    ):
+        raise AssertionError("RSCC shuffled control changed credit marginals")
+
+
 def main() -> None:
     check_exact_credit_and_gradients()
     check_uniform_fallback()
     check_shuffled_control()
+    check_reliability_preserving_hybrid()
     print("iscf_scc_step7a=pass")
 
 

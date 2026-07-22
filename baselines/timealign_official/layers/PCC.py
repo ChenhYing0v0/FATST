@@ -25,6 +25,8 @@ PCC_OBJECTIVE_MODES = frozenset(
         "pcc_transport_full",
         "scope_coalition_credit",
         "scope_coalition_credit_shuffled",
+        "equal_scope_coalition_credit",
+        "equal_scope_coalition_credit_shuffled",
     }
 )
 
@@ -303,7 +305,10 @@ def projective_coupling_credit_loss(
         target,
     )
     shuffled_coalition_credit = coalition_credit
-    if mode == "scope_coalition_credit_shuffled":
+    if mode in {
+        "scope_coalition_credit_shuffled",
+        "equal_scope_coalition_credit_shuffled",
+    }:
         if coalition_shuffle_generator is None:
             raise ValueError(
                 "shuffled coalition credit requires a dedicated generator"
@@ -331,6 +336,8 @@ def projective_coupling_credit_loss(
         "pointwise_pcc_v0": "pointwise",
         "transport_skill_only": "transport",
         "pcc_transport_full": "transport",
+        "equal_scope_coalition_credit": "equal",
+        "equal_scope_coalition_credit_shuffled": "equal",
     }.get(mode, "none")
     route_kind = {
         "pointwise_route_only": "pointwise",
@@ -340,6 +347,8 @@ def projective_coupling_credit_loss(
         "pcc_transport_full": "transport",
         "scope_coalition_credit": "coalition",
         "scope_coalition_credit_shuffled": "coalition_shuffled",
+        "equal_scope_coalition_credit": "coalition",
+        "equal_scope_coalition_credit_shuffled": "coalition_shuffled",
     }.get(mode, "none")
 
     skill_credit = {

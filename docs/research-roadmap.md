@@ -1,5 +1,10 @@
 # Research Roadmap
 
+## ISCF-RSCC Step7A (2026-07-22)
+
+RSCC exact hybrid实现并通过contract tests：reliability loss逐值等于EQUAL，coalition/shuffled只改变route calibration；
+15-job dry-run与existing PCC 36/36 regression通过。下一步Weather RSCC/SHUFFLED resource smoke；通过后才启动15 runs。
+
 ## ISCF-SCC Step9 Failure and RSCC Rollback (2026-07-22)
 
 SCC-v0 validation相对EQUAL为`-3.1750%/-1.7742%` MSE/MAE，且未超过FUSED/ARMERR/SHUFFLED。all numeric和
@@ -83,13 +88,13 @@ Step4–6。candidate=`SC-ISCF-FRSC-v0`，narrative conditional pass；下一步
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | SCC-v0 Step9 failed；RSCC-v1 Step5–6 passed to Step7A |
+| `current_step` | RSCC-v1 Step7A passed；resource smoke pending |
 | `active_question` | preserving equal-skill reliability后，coalition KL能否超过EQUAL/ARMERR/SHUFFLED |
-| `active_candidates` | RSCC-v1 narrative-ready preimplementation；SCC-v0 closed；ISCF-v0 fixed base |
+| `active_candidates` | RSCC-v1 Step7B candidate；SCC-v0 closed；ISCF-v0 fixed base |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/step2_6_innovation_portfolio_and_scc_gate.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | RSCC Step7A true；remote/test/modern baselines false |
+| `method_implementation` | RSCC Step7A passed；remote conditional on smoke；test/modern baselines false |
 | `rollback_point` | RSCC any primary/control gate fail -> close exact coalition route and return Step2/4 |
 
 ## ISCF-FRSC Step9 Validation Decision

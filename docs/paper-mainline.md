@@ -14,7 +14,11 @@
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | RSCC-v1 narrative-ready preimplementation；SCC-v0 closed；remote/formal test false |
+| `paper_core_status` | RSCC-v1 Step7B candidate；remote conditional on smoke；formal test false |
+
+[ISCF-RSCC Step7A, 2026-07-22] reliability-preserving coalition/shuffled modes实现完成；RSCC skill loss与EQUAL
+逐值相等，coalition credit/route boundary沿用v0。15-job config与runner、RSCC checker、existing PCC 36/36 regression通过。
+Decision=`rscc_step7a_pass_resource_smoke_authorized`；只先允许Weather smoke，正式15 runs conditional，test=false。
 
 [ISCF-SCC Step9 / RSCC Rollback, 2026-07-22] 25/25 runs与100/100 validation cells完整。SCC-v0 vs EQUAL
 MSE/MAE=`-3.1750%/-1.7742%`，并分别以MSE `-0.0150%/-0.1663%/-0.0428%`输给FUSED/ARMERR/

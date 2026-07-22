@@ -49,3 +49,12 @@ fallback、shuffle marginal preservation/reproducibility与global-RNG isolation�
 
 training loop在backward后、optimizer step前记录independent `mode_weight/mode_bias`的五个per-scope gradient norms。
 该日志只观测existing arm gradient path，不改变loss或optimizer；用于验证至少三个scope在E2E training中持续获得非零更新。
+
+## 6. RSCC-v1 reliability-preserving modes
+
+SCC-v0 Step9证明删除equal-skill会破坏arm reliability，因此新增`equal_scope_coalition_credit`与对应shuffled mode。
+它们只改变objective composition：`skill_kind=equal`保持与parent完全相同的uniform individual arm L1，
+`route_kind=coalition`复用同一detached SCC credit和`.1` route schedule。model/inference仍不变。
+
+Step7A checker新增两项等价检查：RSCC `skill_loss`必须逐值等于EQUAL parent；SHUFFLED必须同时保持该skill loss与
+coalition credit marginals。由此确保下一轮只测试“reliability-preserved coalition binding”，不重新改变architecture。
