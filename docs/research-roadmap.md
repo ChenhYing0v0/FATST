@@ -1,5 +1,19 @@
 # Research Roadmap
 
+## ISCF-BSCA-v1 Step4–7A and Frozen Test Gate (2026-07-22)
+
+用户明确停止将 broad-anchor sufficiency 作为独立诊断门槛，授权直接形成 outcome-first method candidate。UPA-D2由
+`ISCF-BSCA-v1`取代：ISCF-v0 architecture/inference unchanged；EQUAL objective上增加target/H-free uniform policy KL，
+以25% ramp到0.1约束train-time scope-gradient allocation。
+
+Primary-source audit确认generic load balancing/entropy regularization已有强prior且可能损害specialization。因此narrative
+只在ISCF-specific完整链上conditional pass，EQUAL为same-architecture no-anchor attribution control。Step7A objective、
+five-run runner、5/5-before-test hard guard、analyzer与code explanation已实现；local tensor/gradient contract待prelaunch
+record汇总。Formal matrix冻结为5 datasets × H96/H192/H336/H720 × MSE/MAE，confirmation seeds=false。
+
+Decision=`bsca_step4_6_conditional_pass_step7a_prelaunch`。下一步完成最小验证、commit/push、remote GPU/process preflight
+和one-job Weather resource smoke；通过后启动5 runs，5/5完整后才允许一次formal test。
+
 ## ISCF PSA-D1 Result and UPA-D2 Gate (2026-07-22)
 
 D1最终20/20 runs、80/80 validation cells与5/5 SHA-nonmutation diagnostics完整。New EQUAL逐checkpoint、metrics、

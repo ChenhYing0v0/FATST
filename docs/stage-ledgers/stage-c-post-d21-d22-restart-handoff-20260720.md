@@ -375,6 +375,12 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
      `joint_training_route_regularization_supported_as_carrier_clue`；只作carrier clue，test=false。
 118. 下一唯一diagnostic UPA-D2使用information-free uniform-target KL匹配control schedule/weight，区分broad anchor与
      target variation。Design true；implementation/remote/test false。
+119. 用户随后明确降低“broad anchor是否足以解释收益”类独立诊断优先级，并授权`ISCF-BSCA-v1` Step4–7A、
+     five-run seed2021 training及5/5完成后的一次frozen formal test；UPA-D2被该method candidate取代。
+120. BSCA保持ISCF-v0 architecture/inference/EQUAL skill loss，只加入target/H-free uniform policy KL；25% ramp到0.1。
+     Generic balancing不是novelty claim，完整贡献链为policy-mediated scope-gradient allocation与balanced co-adaptation。
+121. Formal gate冻结为vs EQUAL test MSE >=+0.3%、MAE >0、3/5 datasets、3/4 horizons、20/20 cells与health/nonmutation
+     pass。confirmation seeds、per-cell tuning和lambda search保持false。
 
 ## 5. D22-HFA 的执行顺序
 

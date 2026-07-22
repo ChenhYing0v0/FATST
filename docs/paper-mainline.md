@@ -7,14 +7,28 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | PSA-D1 complete；H2 carrier clue supported；D2 design frozen |
+| `current_11_step` | ISCF-BSCA-v1 Step4–6 complete；Step7A implemented/prelaunch audit |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | active method=none；ISCF fixed base；D1 control clue only；D2 not authorized |
+| `paper_core_status` | active candidate=`ISCF-BSCA-v1`；ISCF fixed base；conditional narrative pass |
+
+[ISCF-BSCA-v1 Step4–7A, 2026-07-22] 用户将低成本诊断优先级改为 outcome-first paper route，并明确授权
+Step4–7A、five-run seed2021 training 与 5/5 完成后的一次 frozen formal test。UPA-D2 diagnostic 被
+`ISCF-BSCA-v1 (Balanced Scope Co-Adaptation)`取代，不再单独执行。
+
+BSCA 保留 ISCF-v0 exact architecture、EQUAL arm-skill loss 与 inference graph，只加入 train-only、target/H-free
+`KL(uniform || policy)`；weight 在前25% progress从0 ramp至0.1。Narrative novelty限定为
+`dense temporal-scope outputs -> policy-mediated fused-gradient allocation -> balanced co-adaptation`完整链，不声称
+generic load balancing 首创。Matched no-mechanism control固定为ISCF-EQUAL。
+
+Frozen formal gate：相对EQUAL test macro MSE `>=+0.3%`、MAE `>0`、至少3/5 datasets与3/4 horizons MSE positive，
+20/20 cells完整且checkpoint/non-numeric/internal health通过。confirmation seeds仍未授权。Decision=
+`bsca_step4_6_conditional_pass_step7a_prelaunch`。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_bsca_v1_step46_20260722/step4_6_narrative_design_and_test_gate.md`。
 
 [ISCF PSA-D1 Result, 2026-07-22] 5/5 new、20/20 effective runs与80/80 validation cells完整，5/5 diagnostic
 replays通过checkpoint SHA nonmutation，official test access=0。Contemporaneous EQUAL与historical EQUAL的checkpoint、

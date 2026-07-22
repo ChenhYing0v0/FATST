@@ -27,6 +27,7 @@ PCC_OBJECTIVE_MODES = frozenset(
         "scope_coalition_credit_shuffled",
         "equal_scope_coalition_credit",
         "equal_scope_coalition_credit_shuffled",
+        "equal_uniform_scope_anchor",
     }
 )
 
@@ -338,6 +339,7 @@ def projective_coupling_credit_loss(
         "pcc_transport_full": "transport",
         "equal_scope_coalition_credit": "equal",
         "equal_scope_coalition_credit_shuffled": "equal",
+        "equal_uniform_scope_anchor": "equal",
     }.get(mode, "none")
     route_kind = {
         "pointwise_route_only": "pointwise",
@@ -349,6 +351,7 @@ def projective_coupling_credit_loss(
         "scope_coalition_credit_shuffled": "coalition_shuffled",
         "equal_scope_coalition_credit": "coalition",
         "equal_scope_coalition_credit_shuffled": "coalition_shuffled",
+        "equal_uniform_scope_anchor": "uniform",
     }.get(mode, "none")
 
     skill_credit = {
@@ -367,6 +370,7 @@ def projective_coupling_credit_loss(
         "transport": transported_capability,
         "coalition": coalition_credit,
         "coalition_shuffled": shuffled_coalition_credit,
+        "uniform": uniform_credit,
         "none": inactive_route_credit,
     }[route_kind]
 
