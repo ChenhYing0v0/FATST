@@ -1,0 +1,59 @@
+{
+  "diagnostic_id": "SC-ISCF-BSC-D0",
+  "date": "2026-07-22",
+  "status": "diagnostic_prelaunch",
+  "role": "frozen_validation_function_screen_not_method_effectiveness",
+  "parent_candidate": "ISCF-v0",
+  "source_candidate": "SC-ISCF-SPS-v0-step7b",
+  "source_arm": "sps_identity_canonical",
+  "problem": "hard projection made scope roles active but discarded the full-rank component shared by all arms",
+  "hypothesis": "projecting only arm-specific deviations around the learned full-rank policy barycenter can retain common forecast capacity while exposing scope-native differences",
+  "formula": {
+    "barycenter": "b(t)=sum_s w_s(t) a_s(t)",
+    "affine_arm": "a_tilde_s=b+P_s(a_s-b)",
+    "composition": "y_tilde(t)=sum_s w_s(t) a_tilde_s(t)"
+  },
+  "scales": [1, 48, 144, 360, 720],
+  "mode_ranks": {
+    "ETTh1": 109,
+    "ETTh2": 116,
+    "ETTm1": 116,
+    "ETTm2": 106,
+    "Weather": 116
+  },
+  "datasets": ["Weather", "ETTm1", "ETTh1", "ETTh2", "ETTm2"],
+  "horizons": [96, 192, 336, 720],
+  "probe_rows": 256,
+  "projection_controls": [
+    {"id": "bsc_scope_canonical", "projection": "scope", "partition": "canonical"},
+    {"id": "bsc_global_canonical", "projection": "global", "partition": "canonical"},
+    {"id": "bsc_scope_random", "projection": "scope", "partition": "random"}
+  ],
+  "statistics": {
+    "gain_percent": "100 * (1 - transformed metric / parent barycenter metric)",
+    "barycenter_reconstruction_max_abs": "max absolute gap between saved fused forecast and recomposition of saved arms with saved direct-policy weights",
+    "composition_change_normalized_rms": "RMS of transformed minus parent forecast divided by target RMS",
+    "affine_arm_pairwise_normalized_rms": "mean pairwise RMS distance between affine arms divided by target RMS"
+  },
+  "diagnostic_lead": {
+    "macro_mse_gain_percent_min": 0.3,
+    "dataset_wins_min": 3,
+    "horizon_wins_min": 3,
+    "barycenter_reconstruction_max_abs_max": 0.00002,
+    "all_finite": true
+  },
+  "evidence_limits": {
+    "checkpoint_is_frozen_and_identity_coadapted": true,
+    "probe_is_sequential_validation_subset": true,
+    "can_support_direction_level_rejection": false,
+    "can_establish_method_effectiveness": false,
+    "positive_result_only_authorizes_end_to_end_design_gate": true
+  },
+  "authorization": {
+    "read_existing_validation_artifacts": true,
+    "new_training": false,
+    "formal_test": false,
+    "remote_checkpoint_mutation": false
+  },
+  "decision_rule": "positive lead -> complete BSC Step4-6 E2E design; otherwise reject only exact frozen affine readout and return Step4"
+}

@@ -1,0 +1,21 @@
+{
+  "candidate_version": "SC-ISCF-SPS-v0-step7b",
+  "decision": "exact_SPS_v0_validation_not_supported_rollback_step4",
+  "failure_attribution": {
+    "candidate_positive_global_tie": "performance_partial_pass_scope_specificity_unresolved",
+    "candidate_positive_random_tie_or_loss": "performance_partial_pass_scope_binding_unresolved; do not reject the ISCF architecture",
+    "candidate_validation_negative_without_pathology": "exact_SPS_v0_not_supported; rollback Step4 while retaining ISCF as the architecture prior",
+    "diversity_or_oracle_collapse": "intervention_point_wrong_or_readout_design_wrong; rollback Step4/5",
+    "numeric_or_gradient_pathology": "optimization_or_numeric_pathology; repair Step7 without direction rejection"
+  },
+  "formal_test_authorized": false,
+  "global_attribution_pass": true,
+  "internal_health_pass": true,
+  "matrix_complete": true,
+  "performance_pass": false,
+  "random_binding_supported": false,
+  "random_partition_role": "attribution_only_not_direction_rejection",
+  "runs": 20,
+  "test_accessed": false,
+  "validation_cells": 80
+}

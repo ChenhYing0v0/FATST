@@ -1,0 +1,11 @@
+sps_start=2026-07-22T00:17:31+08:00
+commit=48afd1255370e1b12f5151a4d2184dc0b142b20a
+output_root=/home/yingch/exp_outputs/r-2026-fatst/stage_c_iscf_sps_v0_step7b
+config_hash=5a84de593eb120b31ba9da3e68212f3407b8fa519a765c1fcb960a48d53c5255
+profile_hash=80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a
+gpu_ids=0 1 2
+validation_runs=20
+formal_test_access=false
+0, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0
+1, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0
+2, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0
