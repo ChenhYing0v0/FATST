@@ -1,0 +1,28 @@
+{
+  "armerr_vs_new_equal_mse_gain_percent": 0.6577358483944795,
+  "candidate_version": "SC-ISCF-PSA-D1-control-v0.1-protocol-repair",
+  "checks": {
+    "coadaptation_control_gain": true,
+    "coadaptation_dataset_horizon": true,
+    "coadaptation_new_equal_stable": true,
+    "equal_training_health": true,
+    "new_equal_function_matches_historical": true,
+    "protocol_complete_no_test": true,
+    "run_drift_controls_explained": false,
+    "run_drift_dataset_horizon": false,
+    "run_drift_new_equal_gain": false,
+    "run_drift_recovery_ratio": false
+  },
+  "common_control_vs_historical_mse_gain_percent": 0.6567422792376945,
+  "confirmation_seeds_authorized": false,
+  "decision": "joint_training_route_regularization_supported_as_carrier_clue",
+  "diagnostic_id": "SC-ISCF-PSA-D1",
+  "failure_attribution": "none_control_clue_only",
+  "formal_test_access_authorized": false,
+  "method_promotion_authorized": false,
+  "new_equal_recovery_ratio": 0.0,
+  "new_equal_vs_historical_mse_gain_percent": 0.0,
+  "runs": 20,
+  "shuffled_vs_new_equal_mse_gain_percent": 0.6557487100809095,
+  "validation_cells": 80
+}

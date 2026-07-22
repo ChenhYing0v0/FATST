@@ -1,5 +1,15 @@
 # Research Roadmap
 
+## ISCF PSA-D1 Result and UPA-D2 Gate (2026-07-22)
+
+D1最终20/20 runs、80/80 validation cells与5/5 SHA-nonmutation diagnostics完整。New EQUAL逐checkpoint、metrics、
+fused/arms/policy完全复现historical EQUAL，MSE/MAE gain=0，排除run drift。ARMERR/SHUFFLED相对new EQUAL仍为
+`+0.6577%/+0.6557%` MSE，均17/20、5/5 datasets、4/4 horizons。
+
+Decision=`joint_training_route_regularization_supported_as_carrier_clue`。结合D0 post-hoc negative，收益定位到
+train-time arm-policy co-adaptation；但generic balancing与target semantics未归因，不升method/test。下一最小diagnostic
+UPA-D2冻结information-free uniform-target KL，与controls共享weight/schedule；implementation/remote/test未授权。
+
 ## ISCF PSA-D1 v0.1 Diagnostic Repair (2026-07-22)
 
 ETTh1已完成training与standard validation metrics，但diagnostic evaluator因缺少future-bin config在probe前失败。该结果

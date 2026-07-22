@@ -1,0 +1,6 @@
+dataset,epochs,minimum_scope_gradient_norm,all_scope_gradients_nonzero,maximum_route_weight,maximum_weighted_route_loss,all_finite
+Weather,16,0.05852549304909977,True,0.0,0.0,True
+ETTm1,9,0.049353279682185544,True,0.0,0.0,True
+ETTh1,8,0.07249900411847418,True,0.0,0.0,True
+ETTh2,9,0.06380896416979026,True,0.0,0.0,True
+ETTm2,6,0.13422427257760267,True,0.0,0.0,True

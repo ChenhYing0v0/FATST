@@ -2,7 +2,7 @@
 
 ## 1. Decision
 
-Decision=`diagnostic_protocol_fault_predecision_repair_frozen_training_continues`。
+Decision=`diagnostic_protocol_repair_complete_result_valid`。
 
 ETTh1 training与four-horizon validation metrics正常完成，但post-training validation diagnostic evaluator因D1 config缺少
 `diagnostic_protocol.future_bins`触发`KeyError: 'step7b_protocol'`。该错误发生在checkpoint/metrics生成之后、probe forward
@@ -66,3 +66,9 @@ Remote execution顺序冻结为：
 7. 最后运行一次full analyzer。
 
 在第7步前不读取partial metrics作attribution，不修改任何gate。
+
+## 6. Completion
+
+Repair commit `29c8c84`已pull。ETTh2/ETTm2按原matrix完成training与diagnostics；dedicated runner随后补齐
+Weather/ETTm1/ETTh1。5/5 diagnostic checkpoints通过SHA nonmutation，full analyzer有效完成。Serialization-only fix
+`a3022e9`不改变statistics。该protocol fault已关闭，不影响D1 result validity。

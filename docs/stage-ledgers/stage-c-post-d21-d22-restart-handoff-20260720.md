@@ -80,15 +80,15 @@
 | `project` | R_2026_FATST |
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-22 |
-| `source_parent_commit` | `f5275a4`（PSA-D1 Step7A + frozen five-run control） |
-| `current_step` | PSA-D1 Step8 five-run validation active |
-| `active_problem` | ARMERR/SHUFFLED公共gain来自training co-adaptation还是contemporaneous run drift |
-| `active_method` | none；D1 control-only validation running；ISCF-v0 fixed base；closed routes unchanged |
+| `source_parent_commit` | `a3022e9`（PSA-D1 v0.1 analyzer complete） |
+| `current_step` | PSA-D1 complete；return Step4 UPA-D2 diagnostic gate |
+| `active_problem` | information-free uniform train-time anchor是否足以解释control co-adaptation gain |
+| `active_method` | none；UPA-D2 design-only；ISCF-v0 fixed base；closed routes unchanged |
 | `method_training_authorized` | false |
-| `remote_training_authorized` | D1 five validation runs true conditional on preflight；formal test=false |
-| `next_action` | wait training end；pull v0.1；replay 5 validation diagnostics；then analyzer |
-| `conditional_next` | D1若支持H2，仍须Step4 novel mechanism gate；若支持H3则关闭common-gain clue |
-| `rollback` | H1 frozen shrinkage closed；joint-training unresolved；no alpha/temperature rescue |
+| `remote_training_authorized` | false；UPA-D2 implementation/training/test未授权 |
+| `next_action` | request authorization for UPA-D2 Step7A + five validation runs |
+| `conditional_next` | D2 positive只确认uniform-anchor problem；仍须new Step4 narrative gate |
+| `rollback` | H1/H3 closed；H2 carrier clue supported；generic balancing不可直接升method |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
 
@@ -369,6 +369,12 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
      没有H2/H3 result或test access。
 115. v0.1只增加evaluator contracts与checkpoint-nonmutation validation replay；不改training/checkpoints/gates。等待
      all training process结束后才pull repair并补5 diagnostics。
+116. D1最终20/20 effective runs、80/80 cells与5/5 diagnostics完整；new/historical EQUAL checkpoints、metrics、
+     fused/arms/policy逐值相同，run drift排除。
+117. ARMERR/SHUFFLED vs new EQUAL MSE=`+0.6577%/+0.6557%`，5/5 datasets、4/4 horizons。Decision=
+     `joint_training_route_regularization_supported_as_carrier_clue`；只作carrier clue，test=false。
+118. 下一唯一diagnostic UPA-D2使用information-free uniform-target KL匹配control schedule/weight，区分broad anchor与
+     target variation。Design true；implementation/remote/test false。
 
 ## 5. D22-HFA 的执行顺序
 

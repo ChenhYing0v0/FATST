@@ -7,14 +7,27 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | PSA-D1 Step8 five-run validation active |
+| `current_11_step` | PSA-D1 complete；H2 carrier clue supported；D2 design frozen |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | active method=none；ISCF fixed base；D1 control-only validation authorized |
+| `paper_core_status` | active method=none；ISCF fixed base；D1 control clue only；D2 not authorized |
+
+[ISCF PSA-D1 Result, 2026-07-22] 5/5 new、20/20 effective runs与80/80 validation cells完整，5/5 diagnostic
+replays通过checkpoint SHA nonmutation，official test access=0。Contemporaneous EQUAL与historical EQUAL的checkpoint、
+metrics、fused、arms、policy在5/5 datasets逐值完全相同；MSE/MAE=`0/0`，H3 run drift关闭。
+
+ARMERR/SHUFFLED相对new EQUAL MSE/MAE分别=`+0.6577%/+0.4476%`与`+0.6557%/+0.4544%`，
+均17/20 cells、5/5 datasets、4/4 horizons positive。Decision=
+`joint_training_route_regularization_supported_as_carrier_clue`：结合D0 negative，公共收益属于training-time arm-policy
+co-adaptation，而非post-hoc smoothing；但target semantics与generic balancing novelty仍未建立。
+
+下一唯一diagnostic=`SC-ISCF-UPA-D2`：information-free uniform policy anchor，检验broad train-time anchor是否足以复现
+controls。Design已冻结，implementation/remote/test false。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_rscc_step24_20260722/psa_d1_result_and_step4_rollback.md`。
 
 [ISCF PSA-D1 v0.1 Protocol Repair, 2026-07-22] ETTh1 training/validation metrics完成后，diagnostic evaluator因config
 缺少`diagnostic_protocol.future_bins`在probe forward前报`KeyError`。Decision=

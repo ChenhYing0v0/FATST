@@ -75,3 +75,9 @@ ETTh1 training与standard validation metrics完成后，post-training evaluator�
 `diagnostic_protocol.future_bins`在probe forward前报`KeyError`。Training checkpoint保持有效；该事件没有产生partial
 attribution或test access。v0.1 evaluator-only repair已冻结；其余training结束前不remote pull，之后统一补做5个
 checkpoint-nonmutation validation diagnostics。
+
+## 7. Completion addendum
+
+Initial workers只完成Weather/ETTm1/ETTh1 training后退出；v0.1 pull后按原matrix补跑ETTh2/ETTm2，未重跑前三项。
+最终training=5/5、diagnostics=5/5、effective runs=20/20、validation cells=80/80。Full analyzer decision=
+`joint_training_route_regularization_supported_as_carrier_clue`；official test access仍为0。

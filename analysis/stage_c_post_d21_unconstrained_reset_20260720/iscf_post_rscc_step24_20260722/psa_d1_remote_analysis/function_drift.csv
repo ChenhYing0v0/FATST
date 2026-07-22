@@ -1,0 +1,6 @@
+dataset,fused_relative_l1,policy_mean_l1,arms_relative_l1
+Weather,0.0,0.0,0.0
+ETTm1,0.0,0.0,0.0
+ETTh1,0.0,0.0,0.0
+ETTh2,0.0,0.0,0.0
+ETTm2,0.0,0.0,0.0

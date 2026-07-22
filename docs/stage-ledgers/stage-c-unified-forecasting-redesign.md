@@ -6,41 +6,41 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | ARMERR/SHUFFLED公共gain来自training co-adaptation还是contemporaneous run drift |
+| `active_question` | information-free uniform train-time anchor是否足以解释route-control co-adaptation gain |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | active method=none；D1 control-only five-run validation active；ISCF-v0 fixed base |
+| `active_candidates` | active method=none；D1 carrier clue complete；UPA-D2 diagnostic design frozen |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
 | `stage_exit` | 新problem先通过existence/narrative gate，再决定一项或两项可归因contributions |
-| `stage_rollback` | frozen shrinkage closed；D1只区分H2/H3；new paper method仍需Step4 gate；CTD paused |
+| `stage_rollback` | D1 supports H2 only；D2 must isolate uniform anchor；paper method仍需Step4 gate |
 
 ## Decision Cursor
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | PSA-D1 Step8 validation running |
-| `current_candidate` | no method；D1 contemporaneous EQUAL control-only |
-| `latest_decision` | `psa_d1_five_run_validation_training_active_formal_test_disabled` |
-| `next_required_action` | wait training end；pull v0.1；replay 5 validation diagnostics；then analyzer |
-| `method_training_authorized` | D1 five validation runs true conditional；formal test/confirmation false |
-| `rollback_point` | reject post-hoc H1；retain H2/H3 unresolved；no alpha/temperature rescue |
+| `current_11_step` | D1 Step9 complete；return Step4 UPA-D2 diagnostic gate |
+| `current_candidate` | no method；UPA-D2 diagnostic design only |
+| `latest_decision` | `joint_training_route_regularization_supported_as_carrier_clue` |
+| `next_required_action` | obtain authorization for UPA-D2 Step7A + five validation runs |
+| `method_training_authorized` | false；D2 implementation/remote/test/confirmation false |
+| `rollback_point` | run drift and post-hoc smoothing closed；isolate information-free train-time anchor |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | D1 Step8 five-run validation active |
-| `problem` | 公共control gain是否需要joint-training route regularization，还是new-run drift |
-| `existence_evidence` | post-hoc convex/marginal/temperature全macro negative；new controls仍约+0.656% vs historical EQUAL |
-| `idea` | contemporaneous no-route EQUAL retrain作为最小control，不是method |
-| `theory_check` | same code/config/init/selector可隔离historical-reference confound；仍只validation |
-| `design` | frozen five datasets × seed2021 EQUAL；compare historical EQUAL and existing ARMERR/SHUFFLED |
-| `narrative_gate` | control-only；paper method gate not applicable |
-| `effectiveness_gate` | D1 attribution pending；initial 0/5，official test=false |
-| `artifacts` | D1 implementation + prelaunch + Step8 launch record + remote output root |
-| `decision` | `psa_d1_five_run_validation_training_active_formal_test_disabled` |
+| `current_step` | D1 complete；Step4 UPA-D2 design frozen |
+| `problem` | broad route constraint的收益是否只需information-free uniform train-time anchor |
+| `existence_evidence` | new EQUAL exact historical；ARMERR/SHUFFLED +0.6577/+0.6557%；D0 post-hoc negative |
+| `idea` | EQUAL + matched schedule/weight uniform-target policy KL，diagnostic-only |
+| `theory_check` | target/history/H-free；只直接校准policy，借fused loss改变joint arms；inference unchanged |
+| `design` | proposed 5 datasets × seed2021 UPA；EQUAL/ARMERR/SHUFFLED references |
+| `narrative_gate` | diagnostic only；generic balancing novelty fail |
+| `effectiveness_gate` | D1 H2 pass as carrier clue；D2 pending；test=false |
+| `artifacts` | D1 full analysis/result + UPA-D2 frozen design |
+| `decision` | `upa_d2_diagnostic_design_frozen_implementation_training_not_authorized` |
 
 ## Frozen Carrier Contract
 
@@ -64,7 +64,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
-| `SC-ISCF-PSA-D1` | `control_validation_running` | contemporaneous no-route EQUAL能否解释new ARMERR/SHUFFLED公共gain | not a method；只隔离H2/H3 | 0/5 initial；test=false | wait 5/5；full analyzer only |
+| `SC-ISCF-UPA-D2` | `diagnostic_design_frozen_not_authorized` | information-free uniform train-time anchor能否复现ARMERR/SHUFFLED gain | generic balancing not novel；problem diagnostic only | pending 5 validation runs；test=false | request Step7A/training authorization |
+| `SC-ISCF-PSA-D1` | `control_complete_h2_supported` | contemporaneous no-route EQUAL能否解释new ARMERR/SHUFFLED公共gain | not a method；只隔离H2/H3 | exact EQUAL tie；controls +0.6577/+0.6557%；H2 pass | feeds UPA-D2 only |
 | `SC-ISCF-PSA-D0` | `diagnostic_only_closed_h1_not_supported` | EQUAL frozen policy向uniform收缩是否存在stable held-out frontier | diagnostic only；generic shrinkage不是paper claim | L1/MSE -0.2431%/-0.1218%；1/5 datasets；2/15 runs | no alpha/temperature rescue；retain joint-training unresolved |
 | `SC-ISCF-RSCC-v1` | `closed_control_attribution_fail` | 保留EQUAL reliability时，exact coalition policy credit能否兑现已有arm complementarity | pre-result conditional；post-result binding claim fail | vs EQUAL +0.5189% pass；vs ARMERR/SHUFFLED -0.1414%/-0.1394%；alignment fail | no formal test/rescue；rollback Step2/4 |
 | `SC-ISCF-SCC-v0` | `closed_intervention_point_wrong` | fused-only + coalition KL能否改善scope coordination | narrative coherent；exact training intervention failed | vs EQUAL -3.1750%；headroom +18.08% -> -14.93% | no seed/lambda rescue；evidence feeds RSCC only |
@@ -871,3 +872,9 @@ Historical and control queue:
      `diagnostic_protocol_fault_predecision`，不产生H2/H3 decision。
 159. v0.1只补evaluator contracts与SHA-nonmutation validation replay runner；training/checkpoints/gates不变。其余training
      结束前不remote pull；之后补5 diagnostics再full analyzer。
+160. 最终D1 5/5 new、20/20 effective runs、80/80 cells、5/5 diagnostics完整。New/historical EQUAL checkpoint与
+     function逐值相同，H3 run drift关闭。
+161. ARMERR/SHUFFLED vs new EQUAL MSE=`+0.6577%/+0.6557%`，均17/20、5/5 datasets、4/4 horizons。
+     Decision=`joint_training_route_regularization_supported_as_carrier_clue`，test=false。
+162. UPA-D2冻结为唯一next diagnostic：EQUAL + information-free uniform policy KL，weight/schedule匹配controls。
+     Generic balancing不具novelty；implementation/remote/test未授权。

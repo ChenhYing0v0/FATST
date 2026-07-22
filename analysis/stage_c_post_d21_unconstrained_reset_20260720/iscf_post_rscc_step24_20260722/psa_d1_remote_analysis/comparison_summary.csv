@@ -1,0 +1,6 @@
+comparison,candidate,reference,macro_mse_gain_percent,macro_mae_gain_percent,cell_wins,dataset_wins,horizon_wins
+new_equal_vs_historical,iscf_equal_contemporaneous,iscf_equal_historical,0.0,0.0,0,0,0
+armerr_vs_new_equal,iscf_equal_armerr,iscf_equal_contemporaneous,0.6577358483944795,0.44764977809695183,17,5,4
+shuffled_vs_new_equal,iscf_rscc_shuffled,iscf_equal_contemporaneous,0.6557487100809095,0.4543943560221919,17,5,4
+armerr_vs_historical,iscf_equal_armerr,iscf_equal_historical,0.6577358483944795,0.44764977809695183,17,5,4
+shuffled_vs_historical,iscf_rscc_shuffled,iscf_equal_historical,0.6557487100809095,0.4543943560221919,17,5,4
