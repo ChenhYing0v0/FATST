@@ -16,6 +16,17 @@
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
 | `paper_core_status` | active method=none；ISCF-v0 fixed architecture base/carrier；SCC diagnostic-gated proposal；implementation/training/test false |
 
+[ISCF-SCC D0 Prelaunch, 2026-07-22] historical 15-run NPZ audit确认已有arms/fused/targets与bin-level policy usage，
+但缺少closed-form leave-one-scope-out所需的exact `probe_direct_policy [256,720,5]`。policy反演欠定，禁止用
+least-squares或bin averages替代。按预注册fallback，现冻结same 15 checkpoints的validation-only replay；只做forward并
+保存exact policy，source checkpoint执行SHA256 nonmutation。
+
+D0 analyzer与runner已完成local preflight：`py_compile`、synthetic analyzer/evaluator smokes、JSON parse、`bash -n`和
+diff checks通过。GPU0/1/2 preflight均18 MiB、0% utilization。Decision=
+`d0_validation_replay_prelaunch_pass_remote_forward_authorized`；remote replay需先commit/push/fast-forward，
+new training、formal test、method implementation仍false。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/d0_prelaunch_and_validation_replay.md`。
+
 [ISCF Post-FRSC Step2–6 Portfolio, 2026-07-22] 用户扩大研究范围：ISCF core保持固定，但允许围绕它探索
 loss、training和architecture coupling，以补充连贯创新并提升official-test性能。已有证据把首要缺口定位为
 coalition credit assignment，而不是缺少arm diversity：ISCF vs A6_FULL MSE/MAE=`+1.3584%/+0.9144%`，

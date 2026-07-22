@@ -798,3 +798,9 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 132. Decision=`scc_problem_diagnostic_proposed_active_method_none`。只允许复用existing artifacts完成D0；credit必须
      nondegenerate、cross-seed stable、不同于standalone arm error并失败于shuffled control，才返回Step5/6。当前
      implementation、remote training、formal test、modern baselines均false。
+133. historical 15-run NPZ缺少exact per-coordinate direct policy，只有bin-level usage；arms/fused无法唯一反演five
+     policy weights，故不允许approximate reconstruction。
+134. 按预注册fallback冻结same checkpoints的15-run validation-only replay；runner只做forward与checkpoint
+     nonmutation，输出exact `probe_direct_policy [256,720,5]`，training/test均false。
+135. D0 config/analyzer/runner及code explanation完成，local smokes通过；three-GPU preflight均18 MiB、0%。
+     Decision=`d0_validation_replay_prelaunch_pass_remote_forward_authorized`；commit/push后remote fast-forward执行。

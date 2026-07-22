@@ -1,5 +1,16 @@
 # Research Roadmap
 
+## ISCF-SCC D0 Validation Replay Prelaunch (2026-07-22)
+
+15个historical ISCF NPZ缺少exact per-coordinate direct policy，只有bin-level usage；因此无法从one fused equation唯一恢复
+five policy weights。按Step2–6预注册fallback，冻结same checkpoints的15-run validation-only replay，补齐
+`probe_direct_policy [256,720,5]`。runner只调用frozen checkpoint evaluator，输出到repo-external root，并检查checkpoint
+SHA256 nonmutation；training/test入口均false。
+
+local preflight通过，three-GPU state均18 MiB、0% utilization。Decision=
+`d0_validation_replay_prelaunch_pass_remote_forward_authorized`。下一步commit/push、remote fast-forward并执行15个
+validation forwards；随后运行D0 analyzer。active method仍none。
+
 ## ISCF Post-FRSC Step2–6 Innovation Portfolio (2026-07-22)
 
 用户将研究范围扩大为：固定ISCF architecture base，但允许探索与其原生耦合的loss、training和architecture extension；目标是
@@ -33,13 +44,13 @@ Step4–6。candidate=`SC-ISCF-FRSC-v0`，narrative conditional pass；下一步
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | ISCF post-FRSC Step2–6 innovation portfolio；SCC D0 pending |
+| `current_step` | ISCF-SCC D0 validation replay prelaunch passed；remote forward pending |
 | `active_question` | coalition-aware scope credit是否stable、可学习且不同于standalone arm error，从而值得E2E SCC candidate |
 | `active_candidates` | active method=none；ISCF-v0 fixed architecture base/carrier；SCC proposed diagnostic-gated；exact FRSC/SPS/BSC/SAC/CPSI closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/step2_6_innovation_portfolio_and_scc_gate.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | false；D0 existing-artifact diagnostic only；remote/test/modern baselines false |
+| `method_implementation` | false；D0 frozen validation replay only；training/test/modern baselines false |
 | `rollback_point` | D0 no signal -> Step2；arm-error explains -> Step4；signal but policy-only fails -> Step5 |
 
 ## ISCF-FRSC Step9 Validation Decision

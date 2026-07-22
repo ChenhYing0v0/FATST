@@ -81,12 +81,12 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-22 |
 | `source_parent_commit` | `9069e87`（FRSC Step7B frozen execution commit） |
-| `current_step` | ISCF post-FRSC Step2–6 innovation portfolio；SCC D0 pending |
+| `current_step` | ISCF-SCC D0 validation replay prelaunch passed；remote forward pending |
 | `active_problem` | ISCF已有arm complementarity，但equal-skill与existing policy未把coalition utility稳定转化为fused gain |
 | `active_method` | none；ISCF-v0 fixed architecture base/carrier；SCC proposed diagnostic-gated；exact FRSC-v0 closed |
 | `method_training_authorized` | false |
 | `remote_training_authorized` | false；formal test/modern baselines false |
-| `next_action` | D0 existing-artifact coalition-credit diagnostic |
+| `next_action` | commit/push、remote fast-forward、15-run frozen validation replay、D0 analysis |
 | `conditional_next` | only if D0 supports nondegenerate credit may SCC complete Step5/6 and request implementation |
 | `rollback` | D0 no signal -> Step2；arm-error explains -> Step4；policy intervention wrong -> Step5 |
 
@@ -313,6 +313,12 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
     inference不变；当前只`conditional_pass_to_d0_only`，active method仍none。
 88. 下一步复用15个existing ISCF probes做D0，必须超过uniform/standalone-error/shuffled controls并确认credit
     cross-seed stability；D0前不实现、不remote train、不访问new formal test。
+89. historical NPZ key audit发现只有bin-level policy usage，缺少exact `probe_direct_policy [256,720,5]`；one fused
+    equation不能唯一反演five weights，故禁止approximate substitution。
+90. 预注册fallback现冻结same 15 checkpoints的validation-only replay；runner只做forward，source checkpoint前后
+    SHA256必须一致，new training/test均false。
+91. D0 config/analyzer/runner通过local smokes；GPU0/1/2均18 MiB、0% utilization。Decision=
+    `d0_validation_replay_prelaunch_pass_remote_forward_authorized`；下一步先commit/push，再remote fast-forward执行。
 
 ## 5. D22-HFA 的执行顺序
 
