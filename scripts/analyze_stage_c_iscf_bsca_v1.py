@@ -111,8 +111,36 @@ def main() -> None:
     test = [row for row in cells if row["split"] == "test"]
     macro_mse = float(np.mean([row["mse_gain_percent"] for row in test]))
     macro_mae = float(np.mean([row["mae_gain_percent"] for row in test]))
-    dataset_wins = sum(np.mean([row["mse_gain_percent"] for row in test if row["dataset"] == dataset]) > 0 for dataset in DATASETS)
-    horizon_wins = sum(np.mean([row["mse_gain_percent"] for row in test if row["horizon"] == horizon]) > 0 for horizon in HORIZONS)
+    dataset_wins = int(
+        sum(
+            bool(
+                np.mean(
+                    [
+                        row["mse_gain_percent"]
+                        for row in test
+                        if row["dataset"] == dataset
+                    ]
+                )
+                > 0
+            )
+            for dataset in DATASETS
+        )
+    )
+    horizon_wins = int(
+        sum(
+            bool(
+                np.mean(
+                    [
+                        row["mse_gain_percent"]
+                        for row in test
+                        if row["horizon"] == horizon
+                    ]
+                )
+                > 0
+            )
+            for horizon in HORIZONS
+        )
+    )
     gates = config["gates"]
     artifacts_pass = all(
         row["missing_count"] == 0
@@ -132,11 +160,11 @@ def main() -> None:
         "matrix_complete": len(test) == 20 and len(audit) == 5,
         "macro_test_mse_gain_percent": macro_mse,
         "macro_test_mae_gain_percent": macro_mae,
-        "test_cell_wins": sum(row["mse_gain_percent"] > 0 for row in test),
-        "dataset_mse_wins": dataset_wins,
-        "horizon_mse_wins": horizon_wins,
+        "test_cell_wins": int(sum(row["mse_gain_percent"] > 0 for row in test)),
+        "dataset_mse_wins": int(dataset_wins),
+        "horizon_mse_wins": int(horizon_wins),
         "artifact_and_nonmutation_pass": artifacts_pass,
-        "performance_gate_pass": performance_pass,
+        "performance_gate_pass": bool(performance_pass),
         "decision": "performance_partial_pass_pending_confirmation_seed" if performance_pass and artifacts_pass else "exact_bsca_v1_not_supported_or_invalid",
     }
     write_rows(args.output_dir / "run_audit.csv", audit)
