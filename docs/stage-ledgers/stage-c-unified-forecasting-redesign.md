@@ -804,3 +804,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
      nonmutation，输出exact `probe_direct_policy [256,720,5]`，training/test均false。
 135. D0 config/analyzer/runner及code explanation完成，local smokes通过；three-GPU preflight均18 MiB、0%。
      Decision=`d0_validation_replay_prelaunch_pass_remote_forward_authorized`；commit/push后remote fast-forward执行。
+136. D0完成15-run frozen validation replay：oracle headroom/nondegeneracy/shuffle specificity通过，但fixed-label
+     cross-seed topology仅2/5 datasets稳定。Decision=`coalition_credit_unresolved_requires_validation_diagnostic_redesign`；
+     该结果不允许进入Step7，也不作ISCF architecture方向级拒绝。
+137. 按rollback冻结D0B：只用arms/policy/position的60/40 blocked-row ridge probe，比较coalition、standalone与16个
+     horizon-marginal shuffle controls。existing validation artifacts only；forecast training、implementation、test false。

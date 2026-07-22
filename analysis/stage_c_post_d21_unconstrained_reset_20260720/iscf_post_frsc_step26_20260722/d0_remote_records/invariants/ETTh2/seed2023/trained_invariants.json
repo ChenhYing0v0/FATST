@@ -1,0 +1,87 @@
+{
+  "all_finite": true,
+  "arm_diagnostics_present": true,
+  "candidate_id": "SC-ISCF-SCC-v0-proposed",
+  "checkpoint_retrained": false,
+  "checkpoint_sha256": "2570c77be1f2bffd07ec01c0168854b1f1eddc0b0401183489662f1266203e72",
+  "compact_history_diagnostics_present": false,
+  "cpsi_diagnostics_present": false,
+  "dataset": "ETTh2",
+  "diagnostic_id": "SC-ISCF-SCC-D0",
+  "evaluation_rows": 15127,
+  "evaluation_split": "val",
+  "fixed_scale": 720,
+  "frsc_conditioning_strength": null,
+  "frsc_full_rank": null,
+  "frsc_minimum_operator_eigenvalue": null,
+  "full_prefix_max_abs": 0.0,
+  "implicit_frequency_diagnostics_present": false,
+  "partition": "canonical",
+  "pass": true,
+  "policy_mode": "direct",
+  "prefix_rows": [
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 1,
+      "shape": [
+        1,
+        1,
+        7
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 48,
+      "shape": [
+        1,
+        48,
+        7
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 96,
+      "shape": [
+        1,
+        96,
+        7
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 192,
+      "shape": [
+        1,
+        192,
+        7
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 336,
+      "shape": [
+        1,
+        336,
+        7
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 720,
+      "shape": [
+        1,
+        720,
+        7
+      ]
+    }
+  ],
+  "probe_rows": 256,
+  "protocol_pass": true,
+  "readout_contract_pass": true,
+  "readout_mode": "siff-independent-scope-control",
+  "scale_component_diagnostics_present": false,
+  "sps_diagnostics_present": false,
+  "test_access_authorized": true,
+  "test_access_date": null,
+  "uses_test_split": false
+}

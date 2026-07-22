@@ -1,0 +1,51 @@
+{
+  "stage": "StageC-UVHF",
+  "diagnostic_id": "SC-ISCF-SCC-D0B",
+  "candidate_version": "SC-ISCF-SCC-v0-proposed",
+  "status": "frozen_validation_information_access_diagnostic",
+  "date": "2026-07-22",
+  "role": "diagnostic_only_validation_frozen_probe",
+  "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"],
+  "seeds": [2021, 2022, 2023],
+  "coupling_scales": [1, 48, 144, 360, 720],
+  "validation_replay_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_iscf_scc_d0_validation_replay",
+  "output_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_iscf_scc_d0b_information_access",
+  "probe": {
+    "train_row_fraction": 0.6,
+    "ridge_alpha": 0.01,
+    "epsilon": 1e-6,
+    "shuffle_repetitions": 16,
+    "shuffle_seed": 20260722,
+    "feature_contract": [
+      "coordinate_normalized_arm_deviation_5",
+      "direct_policy_5",
+      "log_arm_dispersion",
+      "fused_forecast",
+      "policy_entropy",
+      "normalized_future_position",
+      "future_position_sine_cosine_frequencies_1_2"
+    ]
+  },
+  "gates": {
+    "prediction_binding_run_count_min": 12,
+    "predicted_gain_median_min_percent": 0.1,
+    "predicted_positive_gain_run_count_min": 12,
+    "coalition_over_standalone_gain_median_min_percent": 0.1,
+    "coalition_over_standalone_run_count_min": 9,
+    "all_seed_positive_dataset_count_min": 4
+  },
+  "authorization": {
+    "user_authorization": "continue the frozen SCC diagnostic plan",
+    "frozen_probe_fit_authorized": true,
+    "forecast_model_training_authorized": false,
+    "checkpoint_mutation_allowed": false,
+    "formal_test_access_authorized": false,
+    "method_implementation_authorized": false
+  },
+  "decision_map": {
+    "all_gates_pass": "coalition_credit_information_access_supported_return_step5_6",
+    "binding_or_gain_fail": "coalition_credit_not_inference_accessible_return_step2",
+    "standalone_explains": "standalone_credit_sufficient_return_step4",
+    "incomplete_or_unstable": "coalition_credit_information_access_unresolved"
+  }
+}

@@ -1,0 +1,11 @@
+iscf_scc_d0_start=2026-07-22T12:21:41+08:00
+commit=e60cfa2776909fd169749f40915fdd2e950706a1
+config=configs/stage_c_iscf_scc_d0.json
+output_root=/home/yingch/exp_outputs/r-2026-fatst/stage_c_iscf_scc_d0_validation_replay
+jobs=15
+evaluation_split=val
+new_training=false
+formal_test_access=false
+0, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 1
+1, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0
+2, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0

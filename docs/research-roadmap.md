@@ -1,5 +1,15 @@
 # Research Roadmap
 
+## ISCF-SCC D0 Result and D0B (2026-07-22)
+
+D0完成15-run frozen validation replay。median target-visible coalition headroom=`17.9766%`，15/15 nondegenerate且
+15/15超过scope-label shuffle；但fixed-label topology只在ETTh1/ETTh2跨seed稳定，machine decision=`unresolved`。
+按预注册rollback不进入Step7，也不把当前frozen diagnostic用于方向级拒绝。
+
+D0B冻结60/40 blocked-row low-capacity ridge probe，输入只含inference-available arms/policy/position，比较coalition、
+standalone与16个horizon-marginal shuffles。下一步commit/push后在existing validation NPZ上offline执行；无forecast
+training/test access。active method仍none。
+
 ## ISCF-SCC D0 Validation Replay Prelaunch (2026-07-22)
 
 15个historical ISCF NPZ缺少exact per-coordinate direct policy，只有bin-level usage；因此无法从one fused equation唯一恢复
@@ -44,14 +54,14 @@ Step4–6。candidate=`SC-ISCF-FRSC-v0`，narrative conditional pass；下一步
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | ISCF-SCC D0 validation replay prelaunch passed；remote forward pending |
-| `active_question` | coalition-aware scope credit是否stable、可学习且不同于standalone arm error，从而值得E2E SCC candidate |
+| `current_step` | ISCF-SCC D0 unresolved；D0B information-access diagnostic frozen |
+| `active_question` | dynamic coalition credit是否存在超过shuffle与standalone control的target-free held-out predictability |
 | `active_candidates` | active method=none；ISCF-v0 fixed architecture base/carrier；SCC proposed diagnostic-gated；exact FRSC/SPS/BSC/SAC/CPSI closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/step2_6_innovation_portfolio_and_scc_gate.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | false；D0 frozen validation replay only；training/test/modern baselines false |
-| `rollback_point` | D0 no signal -> Step2；arm-error explains -> Step4；signal but policy-only fails -> Step5 |
+| `method_implementation` | false；D0B frozen offline probe only；forecast training/test/modern baselines false |
+| `rollback_point` | D0B no information access -> Step2；standalone explains -> Step4；pass -> return Step5/6 |
 
 ## ISCF-FRSC Step9 Validation Decision
 

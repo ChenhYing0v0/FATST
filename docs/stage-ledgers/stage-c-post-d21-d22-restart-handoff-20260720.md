@@ -81,14 +81,14 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-22 |
 | `source_parent_commit` | `9069e87`（FRSC Step7B frozen execution commit） |
-| `current_step` | ISCF-SCC D0 validation replay prelaunch passed；remote forward pending |
+| `current_step` | ISCF-SCC D0 unresolved；D0B information-access diagnostic frozen |
 | `active_problem` | ISCF已有arm complementarity，但equal-skill与existing policy未把coalition utility稳定转化为fused gain |
 | `active_method` | none；ISCF-v0 fixed architecture base/carrier；SCC proposed diagnostic-gated；exact FRSC-v0 closed |
 | `method_training_authorized` | false |
 | `remote_training_authorized` | false；formal test/modern baselines false |
-| `next_action` | commit/push、remote fast-forward、15-run frozen validation replay、D0 analysis |
-| `conditional_next` | only if D0 supports nondegenerate credit may SCC complete Step5/6 and request implementation |
-| `rollback` | D0 no signal -> Step2；arm-error explains -> Step4；policy intervention wrong -> Step5 |
+| `next_action` | commit/push、remote fast-forward、existing validation NPZ offline D0B analysis |
+| `conditional_next` | only if D0B exceeds shuffle/standalone and seed-consistency gates may SCC return Step5/6 |
+| `rollback` | D0B no information access -> Step2；standalone explains -> Step4；pass -> Step5/6 |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
 
@@ -319,6 +319,11 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
     SHA256必须一致，new training/test均false。
 91. D0 config/analyzer/runner通过local smokes；GPU0/1/2均18 MiB、0% utilization。Decision=
     `d0_validation_replay_prelaunch_pass_remote_forward_authorized`；下一步先commit/push，再remote fast-forward执行。
+92. D0 15/15 validation replay完成；median coalition oracle headroom=`17.9766%`，nondegeneracy与shuffle specificity
+    均15/15通过，但fixed-label seed topology仅2/5 datasets稳定。Decision=
+    `coalition_credit_unresolved_requires_validation_diagnostic_redesign`；不得进入Step7。
+93. D0B冻结target-free information-access probe：60/40 blocked rows、fixed ridge、16 horizon-marginal shuffles与
+    standalone-credit matched probe。只读取existing validation NPZ；forecast training/method implementation/test均false。
 
 ## 5. D22-HFA 的执行顺序
 

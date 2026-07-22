@@ -1,0 +1,26 @@
+{
+  "candidate_version": "SC-ISCF-SCC-v0-proposed",
+  "checks": {
+    "distinct_from_standalone": true,
+    "fusion_reconstruction": true,
+    "headroom": true,
+    "matrix_complete": true,
+    "nondegeneracy": true,
+    "seed_stability": false,
+    "shuffle_specificity": true
+  },
+  "decision": "coalition_credit_unresolved_requires_validation_diagnostic_redesign",
+  "diagnostic_id": "SC-ISCF-SCC-D0",
+  "formal_test_authorized": false,
+  "fusion_reconstruction_max_abs": 6.452556804426024e-07,
+  "median_counterfactual_oracle_headroom_l1_percent": 17.976560372300167,
+  "median_standalone_best_match_fraction": 0.6178493923611111,
+  "median_standalone_credit_spearman": 0.9,
+  "method_implementation_authorized": false,
+  "positive_contributor_gate_run_count": 15,
+  "remote_training_authorized": false,
+  "runs": 15,
+  "shuffle_specific_run_count": 15,
+  "source_role": "diagnostic_only_test_informed_problem_audit",
+  "stable_dataset_count": 2
+}

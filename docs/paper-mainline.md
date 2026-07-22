@@ -16,6 +16,16 @@
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
 | `paper_core_status` | active method=none；ISCF-v0 fixed architecture base/carrier；SCC diagnostic-gated proposal；implementation/training/test false |
 
+[ISCF-SCC D0 Result / D0B, 2026-07-22] 15-run frozen validation replay完成。D0的headroom、nondegeneracy、
+standalone-distinction OR gate与shuffle specificity通过，但fixed-label cross-seed topology仅2/5 datasets稳定，因此
+decision=`coalition_credit_unresolved_requires_validation_diagnostic_redesign`，不得进入Step7。该失败不等于
+`hypothesis_false`：dynamic coordinate credit未必要求independent seeds的固定scope label同构。
+
+D0B现已冻结为held-out information-access diagnostic：只用arms/policy/position拟合低容量ridge，验证credit是否存在
+target-free可预测分量，并与horizon-marginal shuffle及standalone-credit probe匹配比较。active method仍none；forecast
+training、method implementation和formal test均false。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/d0_result_and_d0b_information_access_plan.md`。
+
 [ISCF-SCC D0 Prelaunch, 2026-07-22] historical 15-run NPZ audit确认已有arms/fused/targets与bin-level policy usage，
 但缺少closed-form leave-one-scope-out所需的exact `probe_direct_policy [256,720,5]`。policy反演欠定，禁止用
 least-squares或bin averages替代。按预注册fallback，现冻结same 15 checkpoints的validation-only replay；只做forward并
