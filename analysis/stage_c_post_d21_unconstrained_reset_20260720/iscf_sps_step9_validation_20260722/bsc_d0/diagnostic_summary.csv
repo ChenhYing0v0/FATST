@@ -1,0 +1,7 @@
+arm,metric,macro_gain_percent,cell_wins,dataset_wins,horizon_wins
+bsc_scope_canonical,mse,-0.27092857730449005,0,0,0
+bsc_scope_canonical,mae,-0.17289208044295235,0,0,0
+bsc_global_canonical,mse,-0.0002606055121151529,8,2,0
+bsc_global_canonical,mae,-4.7464544321029756e-05,10,2,1
+bsc_scope_random,mse,-0.2124236867022461,5,1,0
+bsc_scope_random,mae,-0.08330747611526801,7,1,0

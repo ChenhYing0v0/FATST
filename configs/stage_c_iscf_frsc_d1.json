@@ -1,0 +1,59 @@
+{
+  "diagnostic_id": "SC-ISCF-FRSC-D1",
+  "date": "2026-07-22",
+  "status": "diagnostic_prelaunch",
+  "role": "frozen_validation_full_rank_scope_screen_not_method_effectiveness",
+  "parent_candidate": "ISCF-v0",
+  "source_arm": "sps_identity_canonical",
+  "problem": "hard SPS removed most out-of-scope forecast energy while BSC disrupted the identity policy barycenter cancellation",
+  "hypothesis": "a full-rank scope-conditioned operator can preserve carrier capacity while inducing scope-specific forward and gradient conditioning",
+  "operator": "Q_s(alpha)=P_s+(1-alpha)(I-P_s)=I-alpha(I-P_s)",
+  "scope_strengths": [0.05, 0.1, 0.2, 0.35],
+  "scales": [1, 48, 144, 360, 720],
+  "mode_ranks": {
+    "ETTh1": 109,
+    "ETTh2": 116,
+    "ETTm1": 116,
+    "ETTm2": 106,
+    "Weather": 116
+  },
+  "datasets": ["Weather", "ETTm1", "ETTh1", "ETTh2", "ETTm2"],
+  "horizons": [96, 192, 336, 720],
+  "probe_rows": 256,
+  "projection_controls": [
+    {"id": "frsc_scope_canonical", "projection": "scope", "partition": "canonical"},
+    {"id": "frsc_global_canonical", "projection": "global", "partition": "canonical"},
+    {"id": "frsc_scope_random", "projection": "scope", "partition": "random"}
+  ],
+  "statistics": {
+    "gain_percent": "100 * (1 - transformed metric / parent metric)",
+    "change_normalized_rms": "RMS of transformed minus parent forecast divided by target RMS",
+    "outside_eigenvalue": "1-alpha; strictly positive for every frozen diagnostic strength",
+    "canonical_control_margin_percent": "canonical MSE gain minus the larger of global and random MSE gains at the selected alpha"
+  },
+  "diagnostic_lead": {
+    "macro_mse_gain_percent_min": 0.1,
+    "macro_mae_gain_percent_min": 0.0,
+    "dataset_wins_min": 3,
+    "horizon_wins_min": 3,
+    "cell_wins_min": 12,
+    "canonical_control_margin_percent_min": 0.05,
+    "barycenter_reconstruction_max_abs_max": 0.00002,
+    "all_finite": true
+  },
+  "selection_rule": "select one global alpha by canonical macro validation MSE over the frozen four-value grid; compare controls at that exact alpha",
+  "evidence_limits": {
+    "checkpoint_is_frozen_and_identity_coadapted": true,
+    "validation_grid_is_used_for_diagnostic_selection": true,
+    "can_support_direction_level_rejection": false,
+    "can_establish_method_effectiveness": false,
+    "positive_result_only_authorizes_end_to_end_step4_6_design": true
+  },
+  "authorization": {
+    "read_existing_validation_artifacts": true,
+    "new_training": false,
+    "formal_test": false,
+    "remote_checkpoint_mutation": false
+  },
+  "decision_rule": "positive attributed lead -> complete FRSC Step4-6 E2E design; otherwise reject only the exact frozen full-rank conditioning screen"
+}
