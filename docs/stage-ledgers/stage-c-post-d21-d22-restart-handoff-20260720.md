@@ -8,7 +8,7 @@
 新会话必须按以下顺序读取：
 
 在本 handoff 后，先读最新
-`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/step2_6_innovation_portfolio_and_scc_gate.md`，
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/rscc_step8_remote_launch.md`，
 再按下列历史证据顺序继续。
 
 1. `AGENTS.md`；
@@ -80,14 +80,14 @@
 | `project` | R_2026_FATST |
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-22 |
-| `source_parent_commit` | `9069e87`（FRSC Step7B frozen execution commit） |
-| `current_step` | RSCC-v1 Step7A passed；resource smoke pending |
+| `source_parent_commit` | `020eea3`（RSCC Step7A + frozen Step7B execution commit） |
+| `current_step` | RSCC-v1 Step8；15-run validation training active |
 | `active_problem` | ISCF已有arm complementarity，但equal-skill与existing policy未把coalition utility稳定转化为fused gain |
-| `active_method` | SC-ISCF-RSCC-v1 Step7B candidate；SCC-v0 closed；ISCF-v0 fixed base |
-| `method_training_authorized` | false |
-| `remote_training_authorized` | resource smoke true；15-run conditional；formal test/modern baselines false |
-| `next_action` | commit/push、remote fast-forward、Weather RSCC/SHUFFLED smoke |
-| `conditional_next` | only if smoke passes may 15-run RSCC validation launch |
+| `active_method` | SC-ISCF-RSCC-v1 Step8 validation candidate；SCC-v0 closed；ISCF-v0 fixed base |
+| `method_training_authorized` | RSCC seed2021 validation-only active |
+| `remote_training_authorized` | 15-run validation true and running；formal test/modern baselines false |
+| `next_action` | wait 15/15 complete；then full-matrix Step9 only |
+| `conditional_next` | validation pass only -> request separate formal-test authorization；fail -> close coalition route |
 | `rollback` | any RSCC effectiveness/control failure -> close coalition route；no seed/lambda rescue |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
@@ -463,21 +463,21 @@ decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。
 
 首先严格阅读并遵守仓库 AGENTS.md，然后按顺序阅读：
 1. docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md
-2. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/step2_6_innovation_portfolio_and_scc_gate.md
-3. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_frsc_step9_validation_20260722/step9_validation_result_and_rollback.md
-4. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_function_audit_20260721/result_and_step4_handoff.md
-5. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step9_10_20260721/step9_10_result_and_rollback.md
+2. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/rscc_step8_remote_launch.md
+3. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/scc_step9_result_and_rscc_step5_6_design.md
+4. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/step2_6_innovation_portfolio_and_scc_gate.md
+5. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_frsc_step9_validation_20260722/step9_validation_result_and_rollback.md
 6. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
 7. docs/paper-mainline.md
 8. docs/research-roadmap.md
 
-当前权威状态是：用户已扩大ISCF research scope。ISCF-v0 core保持fixed architecture base/carrier，但允许探索与其原生耦合的loss、training和architecture extension。旧SAC/CPSI/SPS/FRSC negatives完整保留为diagnosis/control，不再形成“禁止objective exploration”的边界。
+当前权威状态是：ISCF-v0保持fixed architecture base/carrier。SCC-v0已在完整20-run validation上失败：相对EQUAL MSE=`-3.1750%`，且coalition headroom从`+18.08%`反转为`-14.93%`；failure=`intervention_point_wrong`，不做seed/lambda rescue。
 
 已有证据显示ISCF vs A6_FULL test MSE/MAE=`+1.3584%/+0.9144%`，oracle headroom median=`8.5813%`，但fusion只在9/15 runs超过best fixed arm；代码确认`equal_skill`实际为fused loss + uniform individual arm target loss，没有coalition-specific role signal。
 
-primary working route=`SC-ISCF-SCC-v0 — Scope Coalition Credit`：利用dense fusion闭式leave-one-scope-out risk构造train-only coalition credit，校准existing direct policy，并用fused-only取代uniform individual supervision。counterfactual routing/expert loss本身已有直接prior，claim只能位于完整ISCF-specific chain。
+current candidate=`SC-ISCF-RSCC-v1`：保留EQUAL fused + uniform individual-arm reliability loss，只附加detached exact leave-one-scope-out coalition policy KL。matched controls为EQUAL、EQUAL-ARMERR和RSCC-SHUFFLED；claim只能位于完整ISCF-specific reliability-preserving coalition calibration chain。
 
-Decision=`scc_problem_diagnostic_proposed_active_method_none`。下一步只复用15个existing ISCF artifacts完成D0，审计credit是否nondegenerate、cross-seed stable、不同于standalone arm error并不能被shuffled control解释。D0前不实现method、不启动remote training、不访问new formal test或modern baselines。
+Decision=`rscc_step8_validation_training_active_formal_test_disabled`。resource smoke已通过，commit `020eea3`的15-run seed2021 validation matrix已在GPU0/1/2运行。下一步等待15/15完整后一次性Step9；不读取partial favorable cells，不修改config/gates。formal test、confirmation seeds与modern baselines均false；validation失败则关闭exact coalition route，不再rescue。
 
 完成后同步更新analysis report、docs/paper-mainline.md、docs/research-roadmap.md和Stage C ledger，执行最小诚实验证，并按AGENTS.md提交、推送。请从专业时序预测研究员角度进行审计，不要为了凑两个contributions而预先设计第二个loss/router。
 ```

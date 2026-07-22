@@ -1,0 +1,15 @@
+Weather	iscf_rscc	siff-independent-scope-control	identity	canonical	116	r2b_p12_d64_ff128_medium	12	64	128	1.0	equal_scope_coalition_credit
+Weather	iscf_rscc_shuffled	siff-independent-scope-control	identity	canonical	116	r2b_p12_d64_ff128_medium	12	64	128	1.0	equal_scope_coalition_credit_shuffled
+Weather	iscf_equal_armerr	siff-independent-scope-control	identity	canonical	116	r2b_p12_d64_ff128_medium	12	64	128	1.0	pointwise_prior_composed
+ETTm1	iscf_rscc	siff-independent-scope-control	identity	canonical	116	r2b_p24_d32_ff64_narrow	24	32	64	1.0	equal_scope_coalition_credit
+ETTm1	iscf_rscc_shuffled	siff-independent-scope-control	identity	canonical	116	r2b_p24_d32_ff64_narrow	24	32	64	1.0	equal_scope_coalition_credit_shuffled
+ETTm1	iscf_equal_armerr	siff-independent-scope-control	identity	canonical	116	r2b_p24_d32_ff64_narrow	24	32	64	1.0	pointwise_prior_composed
+ETTh1	iscf_rscc	siff-independent-scope-control	identity	canonical	109	r2b_p24_d64_ff128_medium	24	64	128	1.0	equal_scope_coalition_credit
+ETTh1	iscf_rscc_shuffled	siff-independent-scope-control	identity	canonical	109	r2b_p24_d64_ff128_medium	24	64	128	1.0	equal_scope_coalition_credit_shuffled
+ETTh1	iscf_equal_armerr	siff-independent-scope-control	identity	canonical	109	r2b_p24_d64_ff128_medium	24	64	128	1.0	pointwise_prior_composed
+ETTh2	iscf_rscc	siff-independent-scope-control	identity	canonical	116	r2b_p12_d64_ff128_medium	12	64	128	1.0	equal_scope_coalition_credit
+ETTh2	iscf_rscc_shuffled	siff-independent-scope-control	identity	canonical	116	r2b_p12_d64_ff128_medium	12	64	128	1.0	equal_scope_coalition_credit_shuffled
+ETTh2	iscf_equal_armerr	siff-independent-scope-control	identity	canonical	116	r2b_p12_d64_ff128_medium	12	64	128	1.0	pointwise_prior_composed
+ETTm2	iscf_rscc	siff-independent-scope-control	identity	canonical	106	r2b_p48_d64_ff128_medium	48	64	128	1.0	equal_scope_coalition_credit
+ETTm2	iscf_rscc_shuffled	siff-independent-scope-control	identity	canonical	106	r2b_p48_d64_ff128_medium	48	64	128	1.0	equal_scope_coalition_credit_shuffled
+ETTm2	iscf_equal_armerr	siff-independent-scope-control	identity	canonical	106	r2b_p48_d64_ff128_medium	48	64	128	1.0	pointwise_prior_composed

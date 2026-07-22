@@ -7,14 +7,24 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF post-FRSC Step2–6 innovation portfolio；SCC D0 pending |
+| `current_11_step` | RSCC-v1 Step8 validation training active |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | RSCC-v1 Step7B candidate；remote conditional on smoke；formal test false |
+| `paper_core_status` | RSCC-v1 15-run validation active；formal test/modern baselines false |
+
+[ISCF-RSCC Step8 Launch, 2026-07-22] Weather RSCC/SHUFFLED resource smoke通过：两臂共享initialization
+hash，`skill_loss=0.7632371485`逐值相等，route loss非零，five scope gradients均finite/nonzero，且无
+Traceback/OOM/NaN/Inf。commit=`020eea3`已remote fast-forward；GPU0/1/2 preflight均18 MiB、0%。
+
+冻结的15-run validation matrix于`14:12:34+08:00`启动，首批Weather RSCC/SHUFFLED/EQUAL-ARMERR分别位于
+GPU0/1/2；output=`/home/yingch/exp_outputs/r-2026-fatst/stage_c_iscf_rscc_v1_step7b`，runner PID=
+`3836251`。Decision=`rscc_step8_validation_training_active_formal_test_disabled`；只在15/15完整后统一Step9，
+不得读取partial favorable cells。formal test、confirmation seeds与modern baselines仍false。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/rscc_step8_remote_launch.md`。
 
 [ISCF-RSCC Step7A, 2026-07-22] reliability-preserving coalition/shuffled modes实现完成；RSCC skill loss与EQUAL
 逐值相等，coalition credit/route boundary沿用v0。15-job config与runner、RSCC checker、existing PCC 36/36 regression通过。

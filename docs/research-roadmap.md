@@ -1,5 +1,14 @@
 # Research Roadmap
 
+## ISCF-RSCC Step8 Remote Running (2026-07-22)
+
+Weather RSCC/SHUFFLED resource smoke通过：相同initialization hash、相同EQUAL skill loss、nonzero route loss、five
+scope gradients finite/nonzero，无OOM或numeric pathology。commit `020eea3`的15-run validation matrix已于
+`14:12:34+08:00`在GPU0/1/2启动，首批三个Weather arms active；formal test=false。
+
+Decision=`rscc_step8_validation_training_active_formal_test_disabled`。等待15/15与60/60 cells完整后一次性Step9；
+不读取partial favorable cells，不修改config/gates，不做seed/lambda/router rescue。
+
 ## ISCF-RSCC Step7A (2026-07-22)
 
 RSCC exact hybrid实现并通过contract tests：reliability loss逐值等于EQUAL，coalition/shuffled只改变route calibration；
@@ -88,13 +97,13 @@ Step4–6。candidate=`SC-ISCF-FRSC-v0`，narrative conditional pass；下一步
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | RSCC-v1 Step7A passed；resource smoke pending |
+| `current_step` | RSCC-v1 Step8；15-run validation training active |
 | `active_question` | preserving equal-skill reliability后，coalition KL能否超过EQUAL/ARMERR/SHUFFLED |
-| `active_candidates` | RSCC-v1 Step7B candidate；SCC-v0 closed；ISCF-v0 fixed base |
+| `active_candidates` | RSCC-v1 Step8 validation candidate；SCC-v0 closed；ISCF-v0 fixed base |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/step2_6_innovation_portfolio_and_scc_gate.md` |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/rscc_step8_remote_launch.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | RSCC Step7A passed；remote conditional on smoke；test/modern baselines false |
+| `method_implementation` | RSCC Step7A passed；remote validation active；test/modern baselines false |
 | `rollback_point` | RSCC any primary/control gate fail -> close exact coalition route and return Step2/4 |
 
 ## ISCF-FRSC Step9 Validation Decision

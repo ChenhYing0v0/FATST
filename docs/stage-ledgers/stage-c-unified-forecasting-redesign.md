@@ -6,41 +6,41 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | fixed ISCF architecture下，何种scope utilization mechanism能把conditional topology effect转成carrier gain |
+| `active_question` | preserving EQUAL reliability后，exact coalition credit能否转成matched fused gain |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | active method=none；ISCF-v0 fixed architecture prior/carrier；exact FRSC/SPS/BSC/SAC/CPSI closed |
+| `active_candidates` | RSCC-v1 validation candidate active；SCC-v0 closed；ISCF-v0 fixed architecture prior/carrier |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
 | `stage_exit` | 新problem先通过existence/narrative gate，再决定一项或两项可归因contributions |
-| `stage_rollback` | FRSC local fault -> Step5/6；validation/global attribution fail -> Step4；CTD paused |
+| `stage_rollback` | RSCC primary/control fail -> close coalition route and return Step2/4；CTD paused |
 
 ## Decision Cursor
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | FRSC-v0 Step9 validation continuation fail；rollback Step4 |
-| `current_candidate` | none；ISCF-v0 architecture prior/carrier retained |
-| `latest_decision` | `FRSC_v0_validation_continuation_not_supported_rollback_step4` |
-| `next_required_action` | Step4 source-informed scope-utilization redesign；new narrative/design gate before implementation |
-| `method_training_authorized` | false；formal test/confirmation/modern baselines false |
-| `rollback_point` | Step4；no seed/alpha/per-dataset/loss/router rescue of exact FRSC-v0 |
+| `current_11_step` | RSCC-v1 Step8 validation training active |
+| `current_candidate` | SC-ISCF-RSCC-v1；ISCF-v0 fixed base |
+| `latest_decision` | `rscc_step8_validation_training_active_formal_test_disabled` |
+| `next_required_action` | wait 15/15 complete；then full-matrix Step9 without partial selection |
+| `method_training_authorized` | RSCC seed2021 validation-only active；formal test/confirmation/modern baselines false |
+| `rollback_point` | any RSCC primary/control fail -> close exact coalition route；no seed/lambda/router rescue |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | exact SPS/FRSC closed at validation development gates；return Step4 |
-| `problem` | hard projection删除shared full-rank forecast；需要保留capacity且仍让各scope接收不同structured gradient |
-| `existence_evidence` | SPS scope<identity -2.3123%但scope>global +0.9041%；FRSC frozen canonical +0.7997%、random -8.9750%、global +0.8677% |
-| `idea` | $Q_s=P_s+(1-\alpha)(I-P_s)$ full-rank scope conditioning；candidate alpha=.55 |
-| `theory_check` | eigenvalues 1/.45；invertible、no zero gradients；no new information/H/loss/router；generic spectral prior boundary recorded |
-| `design` | scope-a055 / global-a055 / global-a045 / random-a055 × five datasets；identity frozen reference |
-| `narrative_gate` | conditional pass only for complete future-output-scope full-rank conditioning chain |
-| `effectiveness_gate` | FRSC vs identity -1.2745% MSE；vs best global +0.0703%；vs random +0.1781%；continuation fail；test false |
-| `artifacts` | SPS Step9 + BSC-D0 + FRSC-D1/D1.1 + Step4–9 reports/config/checker/analyzer outputs |
-| `decision` | exact FRSC-v0 development stop；retain conditional same-alpha topology evidence and ISCF architecture prior；rollback Step4 |
+| `current_step` | RSCC-v1 Step8；15-run validation training active |
+| `problem` | SCC-v0删除equal-skill后arm reliability/headroom崩溃；需要分离reliability与coalition policy calibration |
+| `existence_evidence` | EQUAL median coalition headroom +18.0775%；D0B target-free credit 15/15 positive and 14/15 shuffle binding |
+| `idea` | 保留EQUAL fused + uniform arm L1，只附加detached exact leave-one-scope-out coalition KL |
+| `theory_check` | RSCC skill term与EQUAL逐值相等；credit只policy gradient；inference graph/requested-H unchanged |
+| `design` | RSCC / RSCC-SHUFFLED / EQUAL-ARMERR × five datasets × seed2021；reuse EQUAL references |
+| `narrative_gate` | conditional pass for reliability-preserving coalition calibration chain |
+| `effectiveness_gate` | pending full validation；vs EQUAL >=+0.3% MSE and matched control gates frozen；formal test false |
+| `artifacts` | SCC Step9 report；RSCC Step5–8 design/code/config/smoke/launch records |
+| `decision` | resource smoke pass；validation matrix running；partial results prohibited |
 
 ## Frozen Carrier Contract
 
@@ -61,6 +61,13 @@ Governance：dataset之间允许不同自然偏好；params差异不参与选择
 profile；test、candidate identity与per-mechanism tuning不得改变profile。
 
 ## Candidate Queue
+
+| ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
+| --- | --- | --- | --- | --- | --- |
+| `SC-ISCF-RSCC-v1` | `step8_validation_running` | 保留EQUAL reliability时，exact coalition policy credit能否兑现已有arm complementarity | conditional pass；task-specific reliability + coalition calibration chain | pending 15-run validation；formal test false | wait full matrix；pass需新test authorization；fail closes exact coalition route |
+| `SC-ISCF-SCC-v0` | `closed_intervention_point_wrong` | fused-only + coalition KL能否改善scope coordination | narrative coherent；exact training intervention failed | vs EQUAL -3.1750%；headroom +18.08% -> -14.93% | no seed/lambda rescue；evidence feeds RSCC only |
+
+Historical and control queue:
 
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
@@ -265,11 +272,14 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | ISCF-SPS Step4–7A | source audit + synthesis bottleneck audit + scope/global/identity/random implementation | identity gap 8.34e-7；projector errors <=3.22e-15；five gradients nonzero；production pass | conditional architecture pass；remote/test false；freeze Step7B validation design | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_sps_step46_20260721/step4_6_design_and_step7a_audit.md` |
 | SIFF-v2 FCC Step8 launch | commit-pinned pull + 3-GPU preflight + dual resource smoke + background driver | `87bea35`；smokes finite/no-OOM；first three Weather jobs active；test 0/30 | training active；30/30 before one formal test | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1_prelaunch/remote_launch_record.md` |
 | SIFF-v2 FCC Step9/10 | 30 new E2E runs + one formal test + 45-run/180-cell three-seed audit | vs A6_FULL MSE/MAE +1.2497%/+0.7549%；vs independent -0.1272%/-0.1733%；health 6/6 | performance pass but attribution fail；stop promotion；portfolio decision | `analysis/stage_c_post_d21_unconstrained_reset_20260720/siff_v2_fcc_v1/step9_10_result_and_portfolio_decision.md` |
+| ISCF-SCC Step9 / RSCC Step5–7 | 20-run SCC result + reliability failure attribution + exact hybrid implementation | SCC vs EQUAL -3.1750%；EQUAL headroom +18.08% vs SCC -14.93%；RSCC skill identity/regression pass | SCC closed；RSCC resource smoke next；test false | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/scc_step9_result_and_rscc_step5_6_design.md` |
+| ISCF-RSCC Step8 launch | same-init Weather RSCC/SHUFFLED smoke + 15-run three-arm validation matrix | skill loss exact match；route/nonzero gradients finite；commit `020eea3`；first Weather jobs active | validation running；full-matrix Step9 only；formal test false | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/rscc_step8_remote_launch.md` |
 
 ## Pending Tasks
 
 | Task | Status | Next Action |
 | --- | --- | --- |
+| ISCF-RSCC-v1 validation matrix | `running_15_runs` | wait 15/15；then one complete Step9 audit；no partial selection/test |
 | Freeze natural carrier | `completed` | 不再调 profile |
 | ISCF-v0 SAC formal test | `completed_attribution_fail` | no rerun/rescue；use complete negative result in portfolio decision |
 | ISCF-SPS Step7A local implementation | `completed_pass` | freeze validation-first Step7B matrix；do not launch remote yet |
@@ -826,3 +836,6 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
      15 new runs。Step7A authorized，remote/test false；若失败关闭coalition route，不再rescue。
 144. RSCC Step7A通过：hybrid skill loss与EQUAL逐值相等，shuffled保持skill/credit marginals；PCC regression 36/36，
      runner dry-run=15。只授权Weather resource smoke，通过后才可launch；formal test=false。
+145. Weather RSCC/SHUFFLED resource smoke共享initialization hash，skill loss逐值相等，route loss与five scope
+     gradients均finite/nonzero。commit `020eea3`的15-run matrix于`2026-07-22T14:12:34+08:00`在GPU0/1/2启动；
+     output=`stage_c_iscf_rscc_v1_step7b`，formal test=false。15/15前禁止partial selection或修改gates。
