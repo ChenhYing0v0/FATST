@@ -16,6 +16,14 @@
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
 | `paper_core_status` | active candidate=`ISCF-BSCA-v1`；`performance_partial_pass_pending_confirmation_seed` |
 
+[ISCF-BSCA-v1 Confirmation Prelaunch, 2026-07-22] 用户回复“继续按计划推进实验”，授权上一handoff中冻结的
+seeds2022/2023 confirmation。Matrix为10个new BSCA trainings、10个reused same-seed EQUAL controls；合并seed2021后
+形成three-seed 60-cell official-test surface。Objective、lambda=0.1、25% ramp、profiles、ranks、selector与gates均不调。
+
+Direction gate：macro MSE/MAE >0、2/3 seeds、3/5 datasets、3/4 horizons。Paper-core gate额外要求macro MSE
+>=+0.3%、minimum dataset >-2%、ETTm2 >=-1%与full health/nonmutation。Local 10-job dry-run、reference 10/10、
+test authorization与10/10-before-test guard通过。Decision=`confirmation_step7b_prelaunch_pass_remote_resource_smoke_next`。
+
 [ISCF-BSCA-v1 Step9/10, 2026-07-22] 5/5 trainings、5/5 frozen formal tests、20/20 standard-horizon cells
 完整；candidate与EQUAL五个datasets的all initialization hashes exact paired，test checkpoint SHA before/after不变。
 BSCA vs EQUAL test MSE/MAE=`+0.3104%/+0.4902%`，15/20 cells、3/5 datasets、3/4 horizons，全部冻结

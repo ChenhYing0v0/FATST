@@ -1,5 +1,15 @@
 # Research Roadmap
 
+## ISCF-BSCA-v1 Three-seed Confirmation Prelaunch (2026-07-22)
+
+用户授权按handoff继续seeds2022/2023 confirmation。10个new BSCA runs与FCC已有10个same-seed EQUAL controls构成
+20-run confirmation matrix；与seed2021合并后审计60 test cells。无lambda/dataset/horizon tuning，无新loss/router。
+
+冻结两级gate：direction robustness要求macro MSE/MAE positive、2/3 seeds、3/5 datasets、3/4 horizons；paper-core
+promotion进一步要求macro MSE >=+0.3%、minimum dataset >-2%、ETTm2 >=-1%与health/nonmutation pass。
+Local contract、10-job dry-run、10/10 formal guard和reference completeness均通过。下一步commit-pinned remote pull、
+GPU/process audit与Weather smoke，通过后启动10 trainings；10/10前formal test硬禁用。
+
 ## ISCF-BSCA-v1 Step9/10 Result (2026-07-22)
 
 Five trainings与single frozen formal test均5/5完整；candidate/EQUAL initialization hashes逐dataset全配对，checkpoint

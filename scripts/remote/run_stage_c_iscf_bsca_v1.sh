@@ -15,6 +15,7 @@ FORMAL_TEST_ONLY="${FORMAL_TEST_ONLY:-0}"
 EPOCHS="${EPOCHS:-20}"
 PATIENCE="${PATIENCE:-5}"
 BATCH_SIZE="${BATCH_SIZE:-32}"
+PROTOCOL_PROFILE="${PROTOCOL_PROFILE:-stage_c_iscf_bsca_v1}"
 STANDARD_HORIZONS="96,192,336,720"
 export PYTHONHASHSEED="${SEED}"
 read -r -a GPU_IDS <<< "${GPU_IDS_STR}"
@@ -130,7 +131,7 @@ run_training_command() {
       --early-stopping-min-delta 0 --seed "${SEED}" --num-workers 0 \
       --run-name "ISCF_BSCA_${arm}" --output-dir "${output_dir}" --device cuda \
       --checkpoint-policy best-val --no-evaluate-dual-checkpoints \
-      --protocol-class method_screening --protocol-profile stage_c_iscf_bsca_v1 \
+      --protocol-class method_screening --protocol-profile "${PROTOCOL_PROFILE}" \
       --profile-hash "${PROFILE_HASH}" --legacy-patch-num "${patch_num}" \
       --legacy-d-model "${d_model}" --legacy-d-ff "${d_ff}" --legacy-dropout 0.1 \
       --legacy-layer-norm 1 --learning-rate 0.0001 --readout-mode "${readout}" --basis-rank 256 \

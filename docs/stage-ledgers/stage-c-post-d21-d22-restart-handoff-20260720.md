@@ -389,6 +389,12 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
      oracle headroom `32.56% vs 33.01%`。支持balanced co-adaptation，不支持strong conditional specialization。
 125. ETTm2 test mean `-1.7375%`且H192/H336/H720 material negative。Decision=
      `performance_partial_pass_pending_confirmation_seed`；confirmation seeds2022/2023仍未授权，禁止test-informed tuning。
+126. 用户随后回复“继续按计划推进实验”，授权seeds2022/2023 confirmation的10个BSCA trainings与10/10完成后的
+     single frozen formal-test matrix；FCC的10个same-seed EQUAL artifacts全部复用。
+127. Confirmation不改objective/lambda/profile/rank/selector。Three-seed direction gate冻结为macro MSE/MAE positive、
+     2/3 seeds、3/5 datasets、3/4 horizons；paper-core gate额外要求MSE >=+0.3%、minimum dataset >-2%、ETTm2 >=-1%。
+128. Local config/runner/analyzer/checker、10-job dry-run、10/10-before-test guard与reference completeness通过。
+     Decision=`confirmation_step7b_prelaunch_pass_remote_resource_smoke_next`。
 
 ## 5. D22-HFA 的执行顺序
 

@@ -1,0 +1,185 @@
+{
+  "stage": "StageC-UVHF",
+  "candidate_id": "ISCF-BSCA-v1",
+  "candidate_version": "ISCF-BSCA-v1-confirmation-seeds2022-2023-v1",
+  "parent_result": "ISCF-BSCA-v1-seed2021-frozen",
+  "date": "2026-07-22",
+  "status": "authorized_prelaunch",
+  "role": "paper_core_candidate_three_seed_confirmation",
+  "test_informed": true,
+  "purpose": "confirm whether the frozen BSCA objective remains positive across seeds without tuning after the seed2021 official-test result",
+  "profiles": {
+    "path": "configs/stage_c_five_dataset_natural_profiles.json",
+    "sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a"
+  },
+  "datasets": ["Weather", "ETTm1", "ETTh1", "ETTh2", "ETTm2"],
+  "seeds": [2022, 2023],
+  "all_effective_seeds": [2021, 2022, 2023],
+  "scales": [1, 48, 144, 360, 720],
+  "coupling_scales": [1, 48, 144, 360, 720],
+  "matched_ranks": {
+    "ETTh1": {"independent_dataset_matched": 109},
+    "ETTh2": {"independent_dataset_matched": 116},
+    "ETTm1": {"independent_dataset_matched": 116},
+    "ETTm2": {"independent_dataset_matched": 106},
+    "Weather": {"independent_dataset_matched": 116}
+  },
+  "arms": [
+    {
+      "id": "iscf_bsca_v1",
+      "role": "new_confirmation_candidate",
+      "source": "new_training",
+      "readout_mode": "siff-independent-scope-control",
+      "policy_mode": "direct",
+      "objective_mode": "equal_uniform_scope_anchor",
+      "partition": "canonical",
+      "partition_seed": 15101,
+      "rank_rule": "independent_dataset_matched"
+    },
+    {
+      "id": "iscf_equal",
+      "role": "reused_seed_matched_no_anchor_control",
+      "source": "reused_reference",
+      "source_arm": "siff_independent_equal",
+      "readout_mode": "siff-independent-scope-control",
+      "policy_mode": "direct",
+      "objective_mode": "equal_skill",
+      "partition": "canonical",
+      "partition_seed": 15101,
+      "rank_rule": "independent_dataset_matched"
+    }
+  ],
+  "reference_contract": {
+    "seed2021_candidate_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_iscf_bsca_v1",
+    "seed2021_equal_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_equal_attribution_v2/siff_independent_equal",
+    "confirmation_candidate_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_iscf_bsca_v1_confirmation",
+    "confirmation_equal_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_v2_fcc_v1/siff_independent_equal",
+    "checkpoint_selector": "best-validation-mean-mse-h96-h192-h336-h720",
+    "all_reused_equal_test_artifacts_complete": true
+  },
+  "matrix": {
+    "expected_runs": 20,
+    "new_training_runs": 10,
+    "reused_reference_runs": 10,
+    "new_formal_test_runs": 10,
+    "three_seed_effective_runs": 30,
+    "horizons": [96, 192, 336, 720],
+    "metrics": ["mse", "mae"],
+    "new_test_cells": 40,
+    "three_seed_test_cells": 60,
+    "full_matrix_required": true,
+    "partial_reporting_allowed": false
+  },
+  "training": {
+    "from_scratch": true,
+    "joint_encoder_decoder": true,
+    "target_horizons": [720],
+    "validation_horizons": [96, 192, 336, 720],
+    "checkpoint_score": "mean_validation_mse_h96_h192_h336_h720",
+    "checkpoint_policy": "best-val",
+    "pred_loss_mode": "full",
+    "objective_mode": "equal_uniform_scope_anchor",
+    "equal_skill_weight": 1.0,
+    "uniform_anchor_final_weight": 0.1,
+    "uniform_anchor_ramp_fraction": 0.25,
+    "new_parameters": 0,
+    "inference_graph_changed": false,
+    "requested_h_input": false,
+    "optimizer": "AdamW",
+    "learning_rate": 0.0001,
+    "batch_size": 32,
+    "max_epochs": 20,
+    "early_stopping_patience": 5,
+    "test_labels_select_checkpoint_or_config": false,
+    "post_seed2021_tuning": false
+  },
+  "training_contracts": [
+    {
+      "target_horizons": [720],
+      "validation_horizons": [96, 192, 336, 720],
+      "pred_loss_mode": "full",
+      "pcc_objective_mode": "equal_uniform_scope_anchor",
+      "training_final_evaluation_split": "val"
+    },
+    {
+      "target_horizons": [720],
+      "validation_horizons": [96, 192, 336, 720],
+      "pred_loss_mode": "full",
+      "pcc_objective_mode": "equal_skill",
+      "training_final_evaluation_split": "val"
+    }
+  ],
+  "diagnostic_protocol": {
+    "probe_rows": 256,
+    "future_bins": [
+      {"name": "H1_48", "start": 0, "end": 48},
+      {"name": "H49_96", "start": 48, "end": 96},
+      {"name": "H97_144", "start": 96, "end": 144},
+      {"name": "H145_192", "start": 144, "end": 192},
+      {"name": "H193_288", "start": 192, "end": 288},
+      {"name": "H289_336", "start": 288, "end": 336},
+      {"name": "H337_512", "start": 336, "end": 512},
+      {"name": "H513_720", "start": 512, "end": 720}
+    ]
+  },
+  "launch_order": [
+    ["Weather", "iscf_bsca_v1"],
+    ["ETTm1", "iscf_bsca_v1"],
+    ["ETTh1", "iscf_bsca_v1"],
+    ["ETTh2", "iscf_bsca_v1"],
+    ["ETTm2", "iscf_bsca_v1"]
+  ],
+  "confirmation_gates": {
+    "direction_robustness": {
+      "three_seed_macro_mse_gain_percent_min_exclusive": 0.0,
+      "three_seed_macro_mae_gain_percent_min_exclusive": 0.0,
+      "seed_mse_wins_min": 2,
+      "dataset_mse_wins_min": 3,
+      "horizon_mse_wins_min": 3
+    },
+    "paper_core_promotion": {
+      "three_seed_macro_mse_gain_percent_min": 0.3,
+      "three_seed_macro_mae_gain_percent_min_exclusive": 0.0,
+      "seed_mse_wins_min": 2,
+      "dataset_mse_wins_min": 3,
+      "horizon_mse_wins_min": 3,
+      "minimum_dataset_mean_mse_gain_percent_exclusive": -2.0,
+      "ettm2_mean_mse_gain_percent_min": -1.0
+    },
+    "all_60_cells_reported": true,
+    "numeric_health_required": true,
+    "checkpoint_nonmutation_required": true
+  },
+  "internal_health": {
+    "all_finite": true,
+    "candidate_policy_normalized_entropy_min": 0.95,
+    "candidate_to_equal_pairwise_arm_l1_ratio_min": 0.5,
+    "candidate_oracle_headroom_percent_min": 10.0,
+    "diagnostics_cannot_override_effectiveness": true
+  },
+  "authorization": {
+    "user_authorization": "2026-07-22 user instruction to continue the planned BSCA seeds2022/2023 confirmation experiments",
+    "user_authorized": true,
+    "authorization_date": "2026-07-22",
+    "remote_training_authorized": true,
+    "formal_test_access_authorized": true,
+    "formal_test_access_count_for_version": 1,
+    "confirmation_seeds_authorized": true,
+    "checkpoint_retraining_allowed": true,
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+    "checkpoint_mutation_during_test_allowed": false,
+    "per_dataset_horizon_or_cell_tuning_allowed": false,
+    "test_role": "primary-mechanism-effectiveness-and-paper-benchmark",
+    "reused_control_protocol_profiles": [
+      "stage_c_siff_equal_attribution_v2",
+      "stage_c_siff_v2_fcc_v1"
+    ]
+  },
+  "failure_attribution": {
+    "paper_core_promotion_pass": "passed_core_candidate_ready_for_paper_consolidation",
+    "direction_only_pass": "three_seed_direction_supported_effect_size_or_heterogeneity_blocks_core_promotion",
+    "direction_fail_without_pathology": "optimization_variance_or_dataset_heterogeneity_explains; rollback Step4 claim boundary",
+    "numeric_or_gradient_pathology": "optimization_or_numeric_pathology; repair protocol or Step7 only"
+  },
+  "decision": "confirmation_training_and_single_frozen_formal_test_authorized"
+}
