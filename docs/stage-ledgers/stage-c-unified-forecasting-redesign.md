@@ -818,3 +818,5 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 140. Step7A实现并验证exact coalition/shuffled objective、dedicated RNG与per-scope gradient logging；existing PCC
      regression 36/36通过，runner dry-run=20 jobs。Decision=`step7a_pass_step7b_remote_validation_authorized`；先
      resource smoke，formal test仍false。
+141. resource smoke通过后，commit=`91e466a`的20-run SCC matched validation已在GPU0/1/2启动；repo-external
+     root=`stage_c_iscf_scc_v0_step7b`。只允许full-matrix Step9 decision，formal test仍false。

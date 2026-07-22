@@ -14,7 +14,12 @@
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | SCC-v0 Step7B validation candidate；ISCF-v0 fixed base；remote conditional on smoke；formal test false |
+| `paper_core_status` | SCC-v0 Step8 validation running；ISCF-v0 fixed base；formal test false |
+
+[ISCF-SCC Step8 Launch, 2026-07-22] Weather SCC/SHUFFLED resource smoke通过，five scope gradients均nonzero；
+source commit=`91e466a`。GPU0/1/2 preflight均18 MiB、0%，20-run seed2021 matched validation matrix已启动，output=
+`/home/yingch/exp_outputs/r-2026-fatst/stage_c_iscf_scc_v0_step7b`。current=`running`；partial result不得选择，
+formal test=false。详见`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/scc_step8_remote_launch.md`。
 
 [ISCF-SCC Step7A, 2026-07-22] exact coalition/shuffled objective、dedicated RNG、per-scope gradient logging、20-run
 validation config与runner完成。target-visible credit path完整detach，route KL只校准policy；model forward/inference未变。

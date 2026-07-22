@@ -81,13 +81,13 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-22 |
 | `source_parent_commit` | `9069e87`（FRSC Step7B frozen execution commit） |
-| `current_step` | ISCF-SCC Step7A passed；Step7B resource smoke pending |
+| `current_step` | ISCF-SCC Step8 20-run validation running |
 | `active_problem` | ISCF已有arm complementarity，但equal-skill与existing policy未把coalition utility稳定转化为fused gain |
 | `active_method` | SC-ISCF-SCC-v0 Step7B validation candidate；ISCF-v0 fixed base；exact FRSC-v0 closed |
 | `method_training_authorized` | false |
-| `remote_training_authorized` | resource smoke true；20-run conditional on smoke；formal test/modern baselines false |
-| `next_action` | commit/push、remote fast-forward、Weather SCC/SHUFFLED resource smoke |
-| `conditional_next` | only if resource smoke passes may 20-run matched validation start |
+| `remote_training_authorized` | 20-run validation running；formal test/modern baselines false |
+| `next_action` | wait for complete 20-run artifacts；then full Step9 analysis |
+| `conditional_next` | only full matrix may decide continuation；no partial selection |
 | `rollback` | FUSED/ARMERR/SHUFFLED explains -> Step4；healthy weak -> Step5；pathology -> exact design |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
@@ -333,6 +333,8 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
     inference unchanged。SCC checker、existing PCC 36/36 regression和20-job dry-run通过。
 97. Decision=`step7a_pass_step7b_remote_validation_authorized`；先Weather SCC/SHUFFLED resource smoke，通过后才启动
     20-run validation。formal test/modern baselines保持false。
+98. Weather SCC/SHUFFLED resource smoke通过，five scope gradients全部nonzero。commit=`91e466a`，GPU0/1/2均18 MiB、
+    0% preflight后启动20-run matrix；首次status=0/20，前三个Weather jobs已进入epoch 1。formal test=false。
 
 ## 5. D22-HFA 的执行顺序
 

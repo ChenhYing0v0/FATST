@@ -1,5 +1,10 @@
 # Research Roadmap
 
+## ISCF-SCC Step8 Remote Running (2026-07-22)
+
+resource smoke通过，20-run matched validation已从commit `91e466a`在GPU0/1/2启动；首次状态为0/20 complete，前三个
+Weather jobs处于epoch 1。下一步等待全matrix完成后统一Step9分析，不读取partial favorable cells；formal test仍false。
+
 ## ISCF-SCC Step7A and Step7B Gate (2026-07-22)
 
 exact SCC/shuffled objective已实现；credit full detach、uniform fallback、dedicated shuffle RNG与five-scope gradient logging均通过
@@ -69,13 +74,13 @@ Step4–6。candidate=`SC-ISCF-FRSC-v0`，narrative conditional pass；下一步
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | ISCF-SCC Step7A passed；Step7B resource smoke pending |
+| `current_step` | ISCF-SCC Step8 20-run validation running |
 | `active_question` | exact SCC-v0能否在matched E2E validation中超过EQUAL/FUSED/ARMERR/SHUFFLED |
 | `active_candidates` | SCC-v0 Step7B validation candidate；ISCF-v0 fixed base；exact FRSC/SPS/BSC/SAC/CPSI closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/step2_6_innovation_portfolio_and_scc_gate.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | Step7A passed；remote validation conditional on resource smoke；test/modern baselines false |
+| `method_implementation` | Step7A passed；remote validation running；test/modern baselines false |
 | `rollback_point` | FUSED/ARMERR/SHUFFLED explains -> Step4；healthy-but-weak -> Step5；numeric pathology -> exact design |
 
 ## ISCF-FRSC Step9 Validation Decision
