@@ -53,14 +53,19 @@ run_dir_for_line() {
   echo "${OUTPUT_ROOT}/${arm}/${dataset}/h720_full/seed${SEED}"
 }
 
-is_complete() {
+is_training_core_complete() {
   local d; d="$(run_dir_for_line "$1")"
   [[ -s "${d}/checkpoint.pt" && -s "${d}/training_log.csv" \
     && -s "${d}/metrics_by_target_horizon.csv" \
     && -s "${d}/effective_config.json" \
     && -s "${d}/initialization_contract.json" \
-    && -s "${d}/model_diagnostics.json" \
-    && -s "${d}/pcsd_validation_diagnostics.npz" \
+    && -s "${d}/model_diagnostics.json" ]]
+}
+
+is_complete() {
+  local d; d="$(run_dir_for_line "$1")"
+  is_training_core_complete "$1" \
+    && [[ -s "${d}/pcsd_validation_diagnostics.npz" \
     && -s "${d}/trained_invariants.json" ]]
 }
 
@@ -177,12 +182,19 @@ run_one() {
     echo "test_done=$(date -Is) job=$((index + 1))/${#LINES[@]} dataset=${dataset} gpu=${gpu}"
   else
     if is_complete "${line}"; then echo "skip_existing ${arm} ${dataset}"; return; fi
-    mkdir -p "${d}"; echo "train_start=$(date -Is) job=$((index + 1))/${#LINES[@]} dataset=${dataset} gpu=${gpu}"
-    run_training_command "${line}" "${gpu}" "${d}" "${log}" 0
+    mkdir -p "${d}"
+    if is_training_core_complete "${line}"; then
+      echo "validation_replay_start=$(date -Is) job=$((index + 1))/${#LINES[@]} dataset=${dataset} gpu=${gpu}"
+    else
+      echo "train_start=$(date -Is) job=$((index + 1))/${#LINES[@]} dataset=${dataset} gpu=${gpu}"
+      run_training_command "${line}" "${gpu}" "${d}" "${log}" 0
+    fi
+    before="$(sha256_file "${d}/checkpoint.pt")"
     CUDA_VISIBLE_DEVICES="${gpu}" "${CONDA_BIN}" run --no-capture-output -n "${CONDA_ENV}" \
       python scripts/evaluate_stage_c_pcsd_cf_checkpoint.py --run-dir "${d}" \
         --design "${CONFIG}" --test-audit-config "${CONFIG}" --evaluation-split val \
         --probe-rows 256 --device cuda >>"${log}" 2>&1
+    after="$(sha256_file "${d}/checkpoint.pt")"; [[ "${before}" == "${after}" ]]
     echo "train_done=$(date -Is) job=$((index + 1))/${#LINES[@]} dataset=${dataset} gpu=${gpu}"
   fi
 }

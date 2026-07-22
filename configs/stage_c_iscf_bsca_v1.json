@@ -2,6 +2,7 @@
   "stage": "StageC-UVHF",
   "candidate_id": "ISCF-BSCA-v1",
   "candidate_version": "ISCF-BSCA-v1-seed2021-frozen",
+  "protocol_revision": "v0.1 adds evaluator coupling_scales and checkpoint-preserving validation replay; model objective, training arguments, checkpoints, formal-test matrix, and gates unchanged",
   "parent_candidate": "ISCF-v0",
   "date": "2026-07-22",
   "status": "step4_7a_and_single_formal_test_authorized",
@@ -14,6 +15,7 @@
   "datasets": ["Weather", "ETTm1", "ETTh1", "ETTh2", "ETTm2"],
   "seeds": [2021],
   "scales": [1, 48, 144, 360, 720],
+  "coupling_scales": [1, 48, 144, 360, 720],
   "matched_ranks": {
     "ETTh1": {"independent_dataset_matched": 109},
     "ETTh2": {"independent_dataset_matched": 116},
