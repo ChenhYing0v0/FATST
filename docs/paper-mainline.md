@@ -5,16 +5,33 @@
 | Field | Content |
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
-| `working_title` | TBD；provisional architecture=`ISCF-FRSC` |
+| `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | FRSC-v0 Step9 validation continuation fail；rollback Step4 |
+| `current_11_step` | ISCF post-FRSC Step2–6 innovation portfolio；SCC D0 pending |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | active method=none；ISCF-v0 fixed architecture prior/carrier；exact FRSC-v0 development closed；formal test/modern baselines false |
+| `paper_core_status` | active method=none；ISCF-v0 fixed architecture base/carrier；SCC diagnostic-gated proposal；implementation/training/test false |
+
+[ISCF Post-FRSC Step2–6 Portfolio, 2026-07-22] 用户扩大研究范围：ISCF core保持固定，但允许围绕它探索
+loss、training和architecture coupling，以补充连贯创新并提升official-test性能。已有证据把首要缺口定位为
+coalition credit assignment，而不是缺少arm diversity：ISCF vs A6_FULL MSE/MAE=`+1.3584%/+0.9144%`，
+oracle headroom median=`8.5813%`，但fusion只在9/15 runs超过best fixed arm；代码同时确认`equal_skill`以
+uniform individual L1 target loss把所有arms拉向同一conditional-median target。
+
+primary working route=`SC-ISCF-SCC-v0 — Scope Coalition Credit`。它保留ISCF inference architecture，用dense
+fusion的closed-form leave-one-scope-out risk构造train-only coalition credit，校准既有direct policy，并以fused-only
+替代uniform individual arm supervision。TIGER、Shapley-MoE、Expert Loss Integration、AME-TS、MoHETS与最新
+specialization objectives已覆盖counterfactual routing/expert loss/structural prior/diversity primitives，故novelty只能位于
+`future-output coupling scopes -> exact coalition risk -> matched E2E coordination -> unified-horizon gain`完整链。
+
+Decision=`scc_problem_diagnostic_proposed_active_method_none`。narrative gate只
+`conditional_pass_to_d0_only`；下一步复用15个existing ISCF artifacts审计coalition credit是否stable、nondegenerate且
+不同于standalone arm error。D0前不实现、不remote train、不访问new formal test。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/step2_6_innovation_portfolio_and_scc_gate.md`。
 
 [FRSC Step9 Validation Result, 2026-07-22] 20/20 new runs、25/25 effective audits、100/100 validation rows完整，
 20/20 invariants通过且无numeric pathology/test access。scope-a055相对identity MSE/MAE=`-1.2745%/-0.4184%`，

@@ -1,5 +1,23 @@
 # Research Roadmap
 
+## ISCF Post-FRSC Step2–6 Innovation Portfolio (2026-07-22)
+
+用户将研究范围扩大为：固定ISCF architecture base，但允许探索与其原生耦合的loss、training和architecture extension；目标是
+形成连贯paper story、补充创新边界并提升official-test性能。现有15-run function evidence显示arms已有稳定function diversity与
+median `8.5813%` oracle headroom，但fusion仅9/15超过best fixed arm。代码审计确认`equal_skill`实际为
+`fused loss + uniform individual arm target loss`，没有提供coalition-specific role signal。
+
+候选portfolio把`SC-ISCF-SCC-v0 — Scope Coalition Credit`列为primary diagnostic-gated route；fused-only/skill annealing
+只作objective control，CPSI successor deferred，SPS/FRSC exact routes保持closed。SCC利用ISCF dense fusion闭式计算
+leave-one-scope-out risk，train-only校准existing direct policy；inference architecture、requested-H input与latency不变。
+最新primary-source audit确认generic expert loss、orthogonality/diversity、structural anchor、frequency experts、Shapley和
+counterfactual routing均已有直接prior，所以claim只允许位于完整ISCF-specific chain。
+
+Decision=`scc_problem_diagnostic_proposed_active_method_none`；narrative gate=`conditional_pass_to_d0_only`。下一步只复用
+existing 15 checkpoints/probes完成D0 coalition-credit problem audit；implementation、remote training、formal test和modern
+baselines均false。详细记录：
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/step2_6_innovation_portfolio_and_scc_gate.md`。
+
 ## ISCF-FRSC Step4–6 Decision (2026-07-22)
 
 exact SPS-v0完成20/20 validation但相对identity MSE `-2.3123%`，failure attribution为hard capacity restriction；不否定
@@ -15,14 +33,14 @@ Step4–6。candidate=`SC-ISCF-FRSC-v0`，narrative conditional pass；下一步
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | FRSC-v0 Step9 validation continuation fail；rollback Step4 |
-| `active_question` | full-rank scope conditioning能否在保留carrier capacity时超过identity与strong global controls |
-| `active_candidates` | active method=none；ISCF-v0 fixed architecture prior/carrier；exact FRSC/SPS/BSC/SAC/CPSI closed |
+| `current_step` | ISCF post-FRSC Step2–6 innovation portfolio；SCC D0 pending |
+| `active_question` | coalition-aware scope credit是否stable、可学习且不同于standalone arm error，从而值得E2E SCC candidate |
+| `active_candidates` | active method=none；ISCF-v0 fixed architecture base/carrier；SCC proposed diagnostic-gated；exact FRSC/SPS/BSC/SAC/CPSI closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_frsc_step46_20260722/step4_6_design_and_remote_gate.md` |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/step2_6_innovation_portfolio_and_scc_gate.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | FRSC exact candidate stopped at validation continuation gate；formal test/modern baselines false |
-| `rollback_point` | local fault -> Step5/6；candidate<=identity/global -> Step4；no loss/router/per-dataset rescue |
+| `method_implementation` | false；D0 existing-artifact diagnostic only；remote/test/modern baselines false |
+| `rollback_point` | D0 no signal -> Step2；arm-error explains -> Step4；signal but policy-only fails -> Step5 |
 
 ## ISCF-FRSC Step9 Validation Decision
 

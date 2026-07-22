@@ -786,3 +786,15 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 127. Decision=`performance_pass_attribution_blocked_stop_fcc_promotion`，failure=`capacity_control_explains`。
      SIFF-v2不晋升、不rescue、不进入modern baselines/formal ablations；当前`active_method=none`，回paper portfolio
      decision或new Step2/4。
+128. 用户于2026-07-22扩大ISCF研究范围：固定ISCF architecture base，但允许探索与其原生耦合的loss、training与
+     architecture extension，以形成连贯paper story并提升official-test性能。
+129. evidence/code audit确认：ISCF arm已有median `8.5813%` oracle headroom，但fusion仅9/15超过best fixed；
+     `equal_skill`实际以uniform individual L1 target loss把所有arm推向同一conditional-median target，coalition
+     role signal缺失。
+130. primary-source audit排除把generic expert loss、orthogonality/diversity、structural anchor、frequency expert、
+     Shapley或counterfactual routing primitive直接claim为创新。
+131. working route=`SC-ISCF-SCC-v0 — Scope Coalition Credit`：利用dense fusion闭式leave-one-scope-out risk，
+     train-only校准existing direct policy并以fused-only替代uniform individual supervision；inference graph不变。
+132. Decision=`scc_problem_diagnostic_proposed_active_method_none`。只允许复用existing artifacts完成D0；credit必须
+     nondegenerate、cross-seed stable、不同于standalone arm error并失败于shuffled control，才返回Step5/6。当前
+     implementation、remote training、formal test、modern baselines均false。

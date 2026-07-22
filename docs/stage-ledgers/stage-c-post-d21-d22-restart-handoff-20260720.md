@@ -7,6 +7,10 @@
 
 新会话必须按以下顺序读取：
 
+在本 handoff 后，先读最新
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/step2_6_innovation_portfolio_and_scc_gate.md`，
+再按下列历史证据顺序继续。
+
 1. `AGENTS.md`；
 2. 本 handoff；
 3. `analysis/stage_c_post_d21_unconstrained_reset_20260720/step2_problem_and_a6_viability_audit.md`；
@@ -77,14 +81,14 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-22 |
 | `source_parent_commit` | `9069e87`（FRSC Step7B frozen execution commit） |
-| `current_step` | FRSC-v0 Step9 validation continuation fail；rollback Step4 |
-| `active_problem` | 在不删除forecast capacity时，让scope extent原生condition arm forecast/gradient并形成有用specialization |
-| `active_method` | none；ISCF-v0 fixed architecture prior/carrier retained；exact FRSC-v0 closed |
+| `current_step` | ISCF post-FRSC Step2–6 innovation portfolio；SCC D0 pending |
+| `active_problem` | ISCF已有arm complementarity，但equal-skill与existing policy未把coalition utility稳定转化为fused gain |
+| `active_method` | none；ISCF-v0 fixed architecture base/carrier；SCC proposed diagnostic-gated；exact FRSC-v0 closed |
 | `method_training_authorized` | false |
 | `remote_training_authorized` | false；formal test/modern baselines false |
-| `next_action` | Step4 source-informed scope-utilization redesign and narrative/design gate |
-| `conditional_next` | only after a new candidate passes Step4–6 may implementation/training be proposed |
-| `rollback` | Step4；no seed/alpha/per-dataset/loss/router rescue of exact FRSC-v0 |
+| `next_action` | D0 existing-artifact coalition-credit diagnostic |
+| `conditional_next` | only if D0 supports nondegenerate credit may SCC complete Step5/6 and request implementation |
+| `rollback` | D0 no signal -> Step2；arm-error explains -> Step4；policy intervention wrong -> Step5 |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
 
@@ -299,6 +303,16 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
     `+0.1781%`且MAE负向。Decision=`frsc_v0_validation_continuation_not_supported_rollback_step4`。
 83. exact FRSC-v0关闭且不进formal test；ISCF-v0按用户要求保留为fixed architecture prior/carrier，active method none，
     下一步Step4 source-informed scope-utilization redesign。
+84. 用户于2026-07-22扩大范围：ISCF core固定，但允许基于ISCF探索loss、training与architecture extension；旧SAC/
+    CPSI/SPS/FRSC negatives保留为diagnosis/control，不再形成“禁止探索objective”的局部边界。
+85. existing evidence将缺口定位为coalition credit：ISCF vs A6_FULL `+1.3584%` MSE，oracle headroom median
+    `8.5813%`，fusion仅9/15超过best fixed；`equal_skill`是fused + uniform individual target loss。
+86. latest source audit确认expert-specific loss、orthogonality/diversity、structural prior、frequency experts、Shapley与
+    counterfactual routing均有直接prior；generic loss/router不具独立novelty。
+87. working route=`SC-ISCF-SCC-v0`，用ISCF dense fusion的closed-form leave-one-scope-out risk校准existing policy，
+    inference不变；当前只`conditional_pass_to_d0_only`，active method仍none。
+88. 下一步复用15个existing ISCF probes做D0，必须超过uniform/standalone-error/shuffled controls并确认credit
+    cross-seed stability；D0前不实现、不remote train、不访问new formal test。
 
 ## 5. D22-HFA 的执行顺序
 
@@ -421,19 +435,21 @@ decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。
 
 首先严格阅读并遵守仓库 AGENTS.md，然后按顺序阅读：
 1. docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md
-2. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_frsc_step9_validation_20260722/step9_validation_result_and_rollback.md
-3. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_frsc_step46_20260722/step4_6_design_and_remote_gate.md
-4. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_sps_step9_validation_20260722/step9_result_and_bsc_step4_handoff.md
+2. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/step2_6_innovation_portfolio_and_scc_gate.md
+3. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_frsc_step9_validation_20260722/step9_validation_result_and_rollback.md
+4. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_function_audit_20260721/result_and_step4_handoff.md
 5. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step9_10_20260721/step9_10_result_and_rollback.md
 6. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
 7. docs/paper-mainline.md
 8. docs/research-roadmap.md
 
-当前权威状态是：FRSC-v0 20/20 new validation runs、25/25 effective audits与100/100 rows完整；没有numeric pathology或test access。candidate相对identity MSE/MAE=`-1.2745%/-0.4184%`，primary continuation gate失败。
+当前权威状态是：用户已扩大ISCF research scope。ISCF-v0 core保持fixed architecture base/carrier，但允许探索与其原生耦合的loss、training和architecture extension。旧SAC/CPSI/SPS/FRSC negatives完整保留为diagnosis/control，不再形成“禁止objective exploration”的边界。
 
-scope-a055相对same-alpha global-a055 MSE=`+0.7215%`、19/20、5/5、4/4，说明scope topology有conditional effect；但相对best-global-a045仅`+0.0703%`，低于`+0.1%` gate。canonical相对random仅`+0.1781%`且MAE `-0.0330%`，不能建立canonical binding claim。
+已有证据显示ISCF vs A6_FULL test MSE/MAE=`+1.3584%/+0.9144%`，oracle headroom median=`8.5813%`，但fusion只在9/15 runs超过best fixed arm；代码确认`equal_skill`实际为fused loss + uniform individual arm target loss，没有coalition-specific role signal。
 
-Decision=`frsc_v0_validation_continuation_not_supported_rollback_step4`。这是development stop，不是formal-test direction rejection。exact FRSC-v0关闭，不进入formal test，不做seed/alpha/per-dataset/loss/router rescue。ISCF-v0按用户要求继续固定为architecture prior/carrier；active method none，下一步Step4 source-informed scope-utilization redesign，新候选必须重新通过narrative/design gate。
+primary working route=`SC-ISCF-SCC-v0 — Scope Coalition Credit`：利用dense fusion闭式leave-one-scope-out risk构造train-only coalition credit，校准existing direct policy，并用fused-only取代uniform individual supervision。counterfactual routing/expert loss本身已有直接prior，claim只能位于完整ISCF-specific chain。
+
+Decision=`scc_problem_diagnostic_proposed_active_method_none`。下一步只复用15个existing ISCF artifacts完成D0，审计credit是否nondegenerate、cross-seed stable、不同于standalone arm error并不能被shuffled control解释。D0前不实现method、不启动remote training、不访问new formal test或modern baselines。
 
 完成后同步更新analysis report、docs/paper-mainline.md、docs/research-roadmap.md和Stage C ledger，执行最小诚实验证，并按AGENTS.md提交、推送。请从专业时序预测研究员角度进行审计，不要为了凑两个contributions而预先设计第二个loss/router。
 ```
