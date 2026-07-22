@@ -141,7 +141,12 @@ if [[ "${RESOURCE_SMOKE}" == "1" ]]; then
   nvidia-smi --query-gpu=index,name,memory.total,memory.used,memory.free,utilization.gpu --format=csv,noheader,nounits
   run_training_command "${line}" "${gpu}" "${d}" "${d}/smoke.log" 1
   test -s "${d}/training_log.csv"; test -s "${d}/effective_config.json"
-  ! rg -ni 'Traceback|CUDA out of memory|(^|[^[:alnum:]_])(nan|inf)([^[:alnum:]_]|$)' "${d}/smoke.log"
+  failure_pattern='Traceback|CUDA out of memory|(^|[^[:alnum:]_])(nan|inf)([^[:alnum:]_]|$)'
+  if command -v rg >/dev/null 2>&1; then
+    ! rg -ni "${failure_pattern}" "${d}/smoke.log"
+  else
+    ! grep -Ein "${failure_pattern}" "${d}/smoke.log"
+  fi
   echo "bsca_resource_smoke_done=$(date -Is) output=${d}"
   exit 0
 fi
