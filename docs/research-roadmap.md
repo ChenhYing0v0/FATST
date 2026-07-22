@@ -15,14 +15,25 @@ Step4–6。candidate=`SC-ISCF-FRSC-v0`，narrative conditional pass；下一步
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | FRSC-v0 Step8 remote validation training active |
+| `current_step` | FRSC-v0 Step9 validation continuation fail；rollback Step4 |
 | `active_question` | full-rank scope conditioning能否在保留carrier capacity时超过identity与strong global controls |
-| `active_candidates` | `SC-ISCF-FRSC-v0` narrative-ready；ISCF-v0 parent/carrier；exact SPS/BSC/SAC/CPSI closed |
+| `active_candidates` | active method=none；ISCF-v0 fixed architecture prior/carrier；exact FRSC/SPS/BSC/SAC/CPSI closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_frsc_step46_20260722/step4_6_design_and_remote_gate.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | FRSC production/local/Step7B contracts pass；20-run remote validation running；formal test/modern baselines false |
+| `method_implementation` | FRSC exact candidate stopped at validation continuation gate；formal test/modern baselines false |
 | `rollback_point` | local fault -> Step5/6；candidate<=identity/global -> Step4；no loss/router/per-dataset rescue |
+
+## ISCF-FRSC Step9 Validation Decision
+
+20/20 new runs与25/25 effective audits完整，无numeric pathology或test access。candidate vs identity MSE/MAE=
+`-1.2745%/-0.4184%`，primary guards全部失败；same-alpha scope vs global为`+0.7215%`，但best-global-a045把优势压至
+`+0.0703%`，canonical vs random仅`+0.1781%`且MAE负向。internal activity健康，但oracle-headroom preservation
+guard失败。
+
+Decision=`frsc_v0_validation_continuation_not_supported_rollback_step4`。这是development stop，不是formal-test direction
+rejection。exact FRSC-v0关闭，ISCF architecture prior保留；不做seed/alpha/per-cell/loss/router rescue。下一步回到Step4提出
+新的scope utilization mechanism，并重新通过narrative/design gate。
 
 ## ISCF-FRSC Step7B Prelaunch Decision
 

@@ -48,3 +48,9 @@ resource smoke覆盖Weather `frsc_scope_a055`与`frsc_random_a055`。两者均�
 Decision=`frsc_step8_training_active_formal_test_disabled`。运行期间冻结repo/config/gates，不做短间隔轮询。20/20完成后
 先同步artifacts并执行validation effectiveness、matched attribution、internal health与failure attribution audit；不得自动访问
 formal test。
+
+## Completion update
+
+runner于`2026-07-22T11:30:46+08:00`正常结束，20/20 validation artifacts完整，总时长约49分26秒。日志异常扫描为空，
+20/20 trained invariants通过。冻结analyzer decision=`frsc_v0_validation_not_supported_rollback_step4`；详细归因见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_frsc_step9_validation_20260722/step9_validation_result_and_rollback.md`。

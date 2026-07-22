@@ -4,7 +4,7 @@
 
 | Field | Record |
 | --- | --- |
-| `current_step` | exact SPS-v0 Step9 closed；FRSC-v0 Step8 remote validation training active |
+| `current_step` | exact SPS/FRSC-v0 validation continuation gates closed；rollback Step4 |
 | `problem` | hard scope projection诱导了role change，但删除shared full-rank forecast capacity；identity arms仍缺少可持续的scope-specific gradient conditioning |
 | `existence_evidence` | SPS scope>global `+0.9041%`但scope<identity `-2.3123%`；FRSC frozen canonical `+0.7997%` MSE、5/5 datasets、4/4 horizons；random `-8.9750%` at alpha .55；global optimum `+0.8677%` |
 | `idea` | 用full-rank SPD operator保留全部forecast directions，同时按native scope衰减out-of-scope component |
@@ -13,7 +13,7 @@
 | `narrative_gate` | `conditional_pass_as_full_rank_future_output_scope_conditioning`；generic spectral filtering claim prohibited |
 | `effectiveness_gate` | frozen diagnostic不计method effectiveness；E2E validation必须超过identity、random和best-tuned global |
 | `artifacts` | SPS Step9 audit、BSC-D0、FRSC-D1/D1.1、latest primary-source audit |
-| `decision` | candidate=`SC-ISCF-FRSC-v0` training-ready/effectiveness-pending；Step7B/remote validation现已授权；formal test未授权 |
+| `decision` | historical Step4–6 conditional pass；post-run exact FRSC-v0 continuation fail；formal test not run；ISCF prior retained |
 | `rollback` | local fault -> Step5/6；candidate<=identity -> Step4；candidate<=global -> generic conditioning only；random fail -> binding attribution fail |
 
 ## 2. Evidence that changes the design
@@ -158,3 +158,8 @@ fast-forward、GPU/process audit与two-arm resource smoke。
 上述launch boundary现已满足：remote commit=`9069e87`，three-GPU preflight与Weather candidate/random resource smoke
 通过；20-run validation matrix于`2026-07-22T10:41:20+08:00`启动。Decision=
 `FRSC_v0_step8_training_active_formal_test_disabled`。
+
+Post-run update：20/20 new runs、25/25 effective audits完整。candidate vs identity MSE=`-1.2745%`；vs
+best-global-a045=`+0.0703%`；vs random=`+0.1781%`，均未满足promotion gates。Decision=
+`FRSC_v0_validation_continuation_not_supported_rollback_step4`。该结果更新本文件顶部cursor，但不改写历史Step4–7A
+design rationale。

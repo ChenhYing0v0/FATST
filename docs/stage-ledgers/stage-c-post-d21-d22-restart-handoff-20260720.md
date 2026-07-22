@@ -58,13 +58,14 @@
 49. `docs/code-explanation/iscf-frsc-step7b.md`；
 50. `configs/stage_c_iscf_frsc_step7b.json`；
 51. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_frsc_step8_remote_20260722/remote_authorization_and_launch.md`；
-52. `docs/code-explanation/stage-c-iscf-v0-sac-step7b.md`；
-53. `configs/stage_c_iscf_v0_scope_attribution_confirmation.json`；
-54. `configs/stage_c_iscf_v0_carrier.json`；
-55. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
-56. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
-57. `docs/paper-mainline.md`；
-58. `docs/research-roadmap.md`。
+52. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_frsc_step9_validation_20260722/step9_validation_result_and_rollback.md`；
+53. `docs/code-explanation/stage-c-iscf-v0-sac-step7b.md`；
+54. `configs/stage_c_iscf_v0_scope_attribution_confirmation.json`；
+55. `configs/stage_c_iscf_v0_carrier.json`；
+56. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
+57. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
+58. `docs/paper-mainline.md`；
+59. `docs/research-roadmap.md`。
 
 若上述文件与更旧的聊天、archive或历史段落冲突，以本文件和三份主线文档顶部的最新cursor为准。
 
@@ -76,14 +77,14 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-22 |
 | `source_parent_commit` | `9069e87`（FRSC Step7B frozen execution commit） |
-| `current_step` | FRSC-v0 Step8 remote validation training active |
+| `current_step` | FRSC-v0 Step9 validation continuation fail；rollback Step4 |
 | `active_problem` | 在不删除forecast capacity时，让scope extent原生condition arm forecast/gradient并形成有用specialization |
-| `active_method` | implementation-ready candidate=`SC-ISCF-FRSC-v0`；effectiveness pending；ISCF-v0 parent/control |
-| `method_training_authorized` | 20-run seed2021 validation only |
-| `remote_training_authorized` | true for frozen validation matrix；formal test/modern baselines false |
-| `next_action` | await 20/20 without short polling；sync artifacts and run validation audit |
-| `conditional_next` | validation完成后先做artifact/effectiveness/attribution audit；不得自动test |
-| `rollback` | local fault Step5/6；candidate<=identity/global Step4；no loss/router/per-dataset rescue |
+| `active_method` | none；ISCF-v0 fixed architecture prior/carrier retained；exact FRSC-v0 closed |
+| `method_training_authorized` | false |
+| `remote_training_authorized` | false；formal test/modern baselines false |
+| `next_action` | Step4 source-informed scope-utilization redesign and narrative/design gate |
+| `conditional_next` | only after a new candidate passes Step4–6 may implementation/training be proposed |
+| `rollback` | Step4；no seed/alpha/per-dataset/loss/router rescue of exact FRSC-v0 |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
 
@@ -147,7 +148,7 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
 | `A6_MEASURE` | strong training control | harmonic horizon measure受ElasTST直接prior覆盖，不能单独claim |
 | `SIFF-v2-EQ-ATTR-v1` | immutable performance-near parent | internal 7/7，但未超过A6_MEASURE且independent control阻塞归因；不修改exact v2 |
 | `SIFF-v3-TSAF-v1` | closed exact candidate | effectiveness/attribution fail，internal health pass；不补confirmation/rescue |
-| `ISCF-v0` | frozen strong research carrier；Step4 problem pass | D1.1 relation confirmed；paper method pending；不继承ordered SIFF claim |
+| `ISCF-v0` | fixed architecture prior / strong carrier | SAC exact canonical claim fail；FRSC exact continuation fail；仍按用户要求保留architecture，不直接promote paper method |
 | `D14 crossing/oracle` | historical clue | oracle不等于past-identifiable benefit；D21已证明interaction split-unstable |
 | `D17-D21` | closed evidence | 不做representation/readout/seed rescue |
 | `CTD` | paused by user | 新会话不得自动恢复 |
@@ -287,6 +288,17 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
     `-0.1990%/-0.4347%`，仅1/5 datasets、0/4 horizons、1/3 seeds。
 77. Decision=`temporal_scope_structure_not_supported_generic_independent_branches_explain`；ISCF降为carrier-only，
     modern baselines false，rollback Step2/4。
+78. SPS-v0 hard projection相对identity validation MSE=`-2.3123%`，但scope相对global=`+0.9041%`；hard capacity
+    restriction关闭并触发full-rank FRSC设计。
+79. FRSC frozen D1.1 scope-a055相对identity=`+0.7997%`、5/5 datasets、4/4 horizons；best global=`+0.8677%`，
+    因而只支持conditional Step4–6 gate。
+80. FRSC Step7A与Step7B prelaunch通过；20-run validation matrix于commit `9069e87`启动，formal test始终false。
+81. 20/20 new runs、25/25 effective audits、100/100 validation rows完整，无numeric pathology；candidate vs identity
+    MSE/MAE=`-1.2745%/-0.4184%`，0/4 horizon wins。
+82. same-alpha scope vs global MSE=`+0.7215%`，但vs best-global-a045仅`+0.0703%`；canonical vs random仅
+    `+0.1781%`且MAE负向。Decision=`frsc_v0_validation_continuation_not_supported_rollback_step4`。
+83. exact FRSC-v0关闭且不进formal test；ISCF-v0按用户要求保留为fixed architecture prior/carrier，active method none，
+    下一步Step4 source-informed scope-utilization redesign。
 
 ## 5. D22-HFA 的执行顺序
 
@@ -373,17 +385,14 @@ decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。
 
 ## 7. 当前执行定义
 
-1. 读取CPSI Step9/10 rollback与ISCF-v0 post-CPSI Step4/5 scope-independence gate；
-2. exact CPSI-v1/SELF/COMMON关闭，LINEAR只作optimization evidence，POST不promote；
-3. ISCF-v0 candidate code、direct policy、equal-skill objective、ranks与profiles保持historically frozen；
-4. ISCF现为strong carrier/control，active paper-core method为none；
-5. SAC设计只新增Q1-WIDE seeds2022/2023和RANDOM-PARTITION三seed，共25个control trainings；
-6. SAC Step7B local prelaunch已18/18通过；25 new jobs、35 historical references与60-run analyzer均冻结；
-7. commit `78cbcf4`已remote pull，GPU0/1/2与dual resource smoke通过；25-run training已完成；
-8. validation artifact audit为60/60 runs、240/240 rows、health 15/15；
-9. formal test已25/25完成：Q1 pass、RANDOM fail，exact temporal-scope narrative关闭；
-10. 不运行modern baselines，不做ISCF rank/seed/partition/loss/router rescue；
-11. SC-MNB保留为supporting source/control inventory；不恢复CCSF、D17-D21、H embedding、router、second loss或Contribution 2预设。
+1. 首读FRSC Step9 validation result与本handoff顶部cursor；
+2. exact FRSC-v0在validation continuation gate关闭，不进入formal test；
+3. ISCF-v0 code、direct policy、equal-skill objective、ranks与profiles保持fixed architecture prior；
+4. same-alpha scope topology positive保留为conditional clue，best-global/random/identity failures必须同时保留；
+5. active paper-core method为none，rollback Step4 source-informed scope-utilization redesign；
+6. 新candidate必须重新完成problem/narrative/design gate，不得把FRSC结果用作per-dataset/alpha tuning；
+7. 不运行modern baselines，不做FRSC seed/alpha/loss/router/requested-H rescue；
+8. SC-MNB保留为supporting source/control inventory；不恢复CCSF、D17-D21或Contribution 2预设。
 
 ## 8. 禁止无损重启时发生的漂移
 
@@ -412,26 +421,19 @@ decision=`fcmi_v1_failed_capacity_control_explains_return_step2_3`。
 
 首先严格阅读并遵守仓库 AGENTS.md，然后按顺序阅读：
 1. docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md
-2. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v1_cpsi_step9_10_20260721/step9_10_result_and_rollback.md
-3. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_post_cpsi_step45_20260721/step4_5_scope_independence_narrative_gate.md
-4. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step8_remote_20260721/validation_artifact_audit_and_test_handoff.md
+2. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_frsc_step9_validation_20260722/step9_validation_result_and_rollback.md
+3. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_frsc_step46_20260722/step4_6_design_and_remote_gate.md
+4. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_sps_step9_validation_20260722/step9_result_and_bsc_step4_handoff.md
 5. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_sac_step9_10_20260721/step9_10_result_and_rollback.md
-6. configs/stage_c_iscf_v0_scope_attribution_confirmation.json
-7. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_function_audit_20260721/result_and_step4_handoff.md
-8. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_v0_step4_scope_relation_20260721/step4_result_and_step5_handoff.md
-9. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
-10. docs/paper-mainline.md
-11. docs/research-roadmap.md
+6. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
+7. docs/paper-mainline.md
+8. docs/research-roadmap.md
 
-当前权威状态是：CPSI-v1已完成25/25 training与formal test，relative ISCF MSE/MAE=`-2.2128%/-1.6987%`，exact product material fail并关闭；LINEAR relative ISCF仅`+0.0217%/+0.0472%` tie，不promote。不得做CPSI seed/rank/loss/router rescue。
+当前权威状态是：FRSC-v0 20/20 new validation runs、25/25 effective audits与100/100 rows完整；没有numeric pathology或test access。candidate相对identity MSE/MAE=`-1.2745%/-0.4184%`，primary continuation gate失败。
 
-ISCF-v0相对A6_FULL的existing three-seed test-informed MSE/MAE=`+1.3584%/+0.9144%`，5/5 datasets、4/4 horizons、3/3 seeds正向；D1.1 15/15超过direction/random-init controls。该证据允许把ISCF本身重审为paper architecture，但它最初是matched control，不能post-hoc直接promote。
+scope-a055相对same-alpha global-a055 MSE=`+0.7215%`、19/20、5/5、4/4，说明scope topology有conditional effect；但相对best-global-a045仅`+0.0703%`，低于`+0.1%` gate。canonical相对random仅`+0.1781%`且MAE `-0.0330%`，不能建立canonical binding claim。
 
-最新primary-source audit确认TimeMixer、FreqMoE、MAFS、HMformer与M2FMoE已覆盖multi-scale predictors、independent experts、forecasting sub-task agents、multi-branch complementarity和adaptive fusion。因此ISCF只能claim完整`future-output coupling partition -> independent history-to-mode maps -> shared full-T synthesis -> target-wise fusion`链，不能claim generic multi-scale/MoE。
-
-SAC已按冻结设计检验两项归因：1) ISCF是否超过active-param gap不超过`0.4646%`的Q1-WIDE shared map；2) canonical contiguous/nested partitions是否超过same-parameter/initialization RANDOM-PARTITION。新增10个Q1-WIDE与15个RANDOM trainings；candidate code、direct policy、equal-skill objective与ranks未改变。
-
-SAC formal test已完整结束：25/25 new tests、60/60 effective audits、240/240 standard rows、25/25 checkpoint nonmutation与15/15 health通过。ISCF over Q1-WIDE MSE/MAE=`+0.8496%/+0.5996%`，primary gate通过；canonical over RANDOM=`-0.1990%/-0.4347%`，仅1/5 datasets、0/4 horizons、1/3 seeds，primary gate失败。Decision=`temporal_scope_structure_not_supported_generic_independent_branches_explain`。ISCF-v0保留为strong carrier/control但不再是conditional paperization candidate；active method none，modern baselines false，rollback Step2/4，不做rank、seed、partition、loss、router或requested-H rescue。
+Decision=`frsc_v0_validation_continuation_not_supported_rollback_step4`。这是development stop，不是formal-test direction rejection。exact FRSC-v0关闭，不进入formal test，不做seed/alpha/per-dataset/loss/router rescue。ISCF-v0按用户要求继续固定为architecture prior/carrier；active method none，下一步Step4 source-informed scope-utilization redesign，新候选必须重新通过narrative/design gate。
 
 完成后同步更新analysis report、docs/paper-mainline.md、docs/research-roadmap.md和Stage C ledger，执行最小诚实验证，并按AGENTS.md提交、推送。请从专业时序预测研究员角度进行审计，不要为了凑两个contributions而预先设计第二个loss/router。
 ```

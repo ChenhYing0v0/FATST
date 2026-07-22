@@ -7,14 +7,24 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture=`ISCF-FRSC` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | FRSC-v0 Step8 remote validation training active |
+| `current_11_step` | FRSC-v0 Step9 validation continuation fail；rollback Step4 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | training-active candidate=`SC-ISCF-FRSC-v0`；effectiveness pending；20-run validation running；formal test/modern baselines false |
+| `paper_core_status` | active method=none；ISCF-v0 fixed architecture prior/carrier；exact FRSC-v0 development closed；formal test/modern baselines false |
+
+[FRSC Step9 Validation Result, 2026-07-22] 20/20 new runs、25/25 effective audits、100/100 validation rows完整，
+20/20 invariants通过且无numeric pathology/test access。scope-a055相对identity MSE/MAE=`-1.2745%/-0.4184%`，
+7/20与10/20 cells，2/5 datasets、0/4 horizons，primary continuation gate失败。candidate相对same-alpha global为
+`+0.7215%` MSE、19/20、5/5、4/4，说明scope topology有条件作用；但相对best-global-a045仅`+0.0703%`，
+低于`+0.1%` gate，且相对random仅`+0.1781%` MSE、MAE `-0.0330%`。
+
+Decision=`frsc_v0_validation_continuation_not_supported_rollback_step4`。不开formal test，不做seed/alpha/loss/router rescue；
+关闭exact FRSC-v0但保留ISCF architecture prior。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_frsc_step9_validation_20260722/step9_validation_result_and_rollback.md`。
 
 [FRSC Step8 Launch, 2026-07-22] remote已fast-forward到`9069e87`；GPU0/1/2 preflight均18 MiB、0% utilization、
 无compute process。Weather candidate/random resource smokes确认alpha=.55、minimum eigenvalue=.45、full-rank且无

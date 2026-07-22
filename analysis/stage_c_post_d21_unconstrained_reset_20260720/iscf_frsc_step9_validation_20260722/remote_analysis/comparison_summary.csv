@@ -1,0 +1,9 @@
+comparison,layer,metric,macro_gain_percent,cell_wins,dataset_wins,horizon_wins,max_dataset_degradation_percent
+effectiveness_vs_identity,validation_effectiveness,mse,-1.2745425097284486,7,2,0,4.649315826419903
+effectiveness_vs_identity,validation_effectiveness,mae,-0.41844891057581435,10,2,0,1.7054674747876086
+scope_specificity_vs_global,matched_mechanism_attribution,mse,0.07033696981598503,14,4,4,0.04253748616360742
+scope_specificity_vs_global,matched_mechanism_attribution,mae,0.05990355420283311,14,3,4,0.018289660311018863
+same_alpha_scope_vs_global,matched_mechanism_attribution,mse,0.7215114855084082,19,5,4,0.0
+same_alpha_scope_vs_global,matched_mechanism_attribution,mae,0.395305043982343,19,5,4,0.0
+canonical_binding_vs_random,matched_scope_binding_attribution,mse,0.17811419716495636,11,4,2,0.3911443688043803
+canonical_binding_vs_random,matched_scope_binding_attribution,mae,-0.03301110308822797,11,2,1,0.5329206515074847
