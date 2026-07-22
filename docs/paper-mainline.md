@@ -14,7 +14,22 @@
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | active method=none；ISCF-v0 fixed architecture base/carrier；SCC diagnostic-gated proposal；implementation/training/test false |
+| `paper_core_status` | SCC-v0 Step7B validation candidate；ISCF-v0 fixed base；remote conditional on smoke；formal test false |
+
+[ISCF-SCC Step7A, 2026-07-22] exact coalition/shuffled objective、dedicated RNG、per-scope gradient logging、20-run
+validation config与runner完成。target-visible credit path完整detach，route KL只校准policy；model forward/inference未变。
+SCC checker、existing PCC 36/36 regression、20-job dry-run与syntax/compile checks通过。Decision=
+`step7a_pass_step7b_remote_validation_authorized`；先resource smoke再启动20 runs，formal test仍false。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/step7a_scc_implementation_and_remote_gate.md`。
+
+[ISCF-SCC D0B / Step5–6, 2026-07-22] corrected 147/109 source-sample-aligned held-out probe完整通过：median
+target-free L1 gain=`1.3727%`，15/15 positive，14/15超过shuffle三指标p95，vs standalone median=`+0.5143`
+percentage point且13/15 positive。Decision=`coalition_credit_information_access_supported_return_step5_6`。
+
+SCC-v0现冻结为ISCF-native train-only coalition policy calibration；inference graph不变。narrative gate=
+`pass_to_step7a_matched_validation_only`，只授权exact loss和contract tests；20-run validation training须在Step7A及launch
+record通过后授权，formal test仍false。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/d0b_result_and_step5_6_scc_design.md`。
 
 [ISCF-SCC D0 Result / D0B, 2026-07-22] 15-run frozen validation replay完成。D0的headroom、nondegeneracy、
 standalone-distinction OR gate与shuffle specificity通过，但fixed-label cross-seed topology仅2/5 datasets稳定，因此

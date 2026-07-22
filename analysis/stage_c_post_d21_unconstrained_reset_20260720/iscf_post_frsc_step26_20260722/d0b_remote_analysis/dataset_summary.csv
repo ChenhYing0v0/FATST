@@ -1,0 +1,6 @@
+dataset,runs,median_coalition_predicted_gain_l1_percent,median_coalition_over_standalone_gain_percent,binding_pass_runs,all_seeds_positive_gain
+ETTh1,3,0.6894297388762016,0.28432914640209583,3,True
+ETTh2,3,10.360320682165247,0.5283129508033895,3,True
+ETTm1,3,0.17232768181132396,0.1673539454311257,3,True
+ETTm2,3,1.6818946070079166,1.30972922076108,2,True
+Weather,3,1.372656303995634,0.7641072211609035,3,True

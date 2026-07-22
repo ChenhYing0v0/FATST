@@ -1,0 +1,22 @@
+{
+  "all_seed_positive_dataset_count": 5,
+  "candidate_version": "SC-ISCF-SCC-v0-proposed",
+  "checks": {
+    "beyond_standalone": true,
+    "matrix_complete": true,
+    "prediction_binding": true,
+    "realized_gain": true,
+    "seed_consistency": true
+  },
+  "coalition_over_standalone_run_count": 13,
+  "decision": "coalition_credit_information_access_supported_return_step5_6",
+  "diagnostic_id": "SC-ISCF-SCC-D0B",
+  "forecast_model_training_authorized": false,
+  "formal_test_authorized": false,
+  "median_coalition_over_standalone_gain_percent": 0.514327637262646,
+  "median_coalition_predicted_gain_l1_percent": 1.372656303995634,
+  "method_implementation_authorized": false,
+  "positive_gain_run_count": 15,
+  "prediction_binding_run_count": 14,
+  "runs": 15
+}

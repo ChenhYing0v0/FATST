@@ -60,6 +60,7 @@ for dataset,arm_id in config["launch_order"]:
         arm["partition"],rank,profile["profile"],profile["patch_num"],
         profile["d_model"],profile["d_ff"],
         arm.get("conditioning_strength", 1.0),
+        arm.get("objective_mode", "equal_skill"),
     ))))
 ' "${CONFIG}"
 )
@@ -111,10 +112,10 @@ fi
 
 run_training_command() {
   local line="$1" gpu="$2" output_dir="$3" run_log="$4" smoke="$5"
-  local dataset arm readout projection partition rank profile patch_num d_model d_ff conditioning_strength
+  local dataset arm readout projection partition rank profile patch_num d_model d_ff conditioning_strength objective_mode
   local run_args=()
   IFS=$'\t' read -r dataset arm readout projection partition rank profile \
-    patch_num d_model d_ff conditioning_strength <<< "${line}"
+    patch_num d_model d_ff conditioning_strength objective_mode <<< "${line}"
   if [[ "${smoke}" == "1" ]]; then
     run_args=(--max-train-batches 2 --max-eval-batches 2 --epochs 1 \
       --patience 1 --final-evaluation-split none)
@@ -147,7 +148,7 @@ run_training_command() {
       --pcsd-group-chunk-size 64 --pcsd-target-chunk-size 128 \
       --sps-projection-mode "${projection}" \
       --frsc-conditioning-strength "${conditioning_strength}" \
-      --pcc-objective-mode equal_skill --pred-loss-mode full \
+      --pcc-objective-mode "${objective_mode}" --pred-loss-mode full \
       --no-save-predictions "${run_args[@]}" >"${run_log}" 2>&1
 }
 

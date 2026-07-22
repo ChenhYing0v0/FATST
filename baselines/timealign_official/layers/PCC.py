@@ -23,6 +23,8 @@ PCC_OBJECTIVE_MODES = frozenset(
         "transport_skill_only",
         "transport_route_only",
         "pcc_transport_full",
+        "scope_coalition_credit",
+        "scope_coalition_credit_shuffled",
     }
 )
 
@@ -32,6 +34,8 @@ PCC_FINAL_SKILL_FLOOR = 0.2
 PCC_RAMP_FRACTION = 0.25
 PCC_SKILL_WEIGHT = 1.0
 PCC_FINAL_ROUTE_WEIGHT = 0.1
+SCC_REMOVAL_EPSILON = 1e-6
+SCC_SHUFFLE_SEED_OFFSET = 20260722
 
 
 @dataclass(frozen=True)
@@ -183,6 +187,54 @@ def _weighted_route_kl(
     return (normalized * measure.view(1, 1, -1)).sum(dim=-1).mean()
 
 
+def scope_coalition_credit(
+    fused_forecast: Tensor,
+    arm_forecasts: Tensor,
+    policy: Tensor,
+    target: Tensor,
+    *,
+    removal_epsilon: float = SCC_REMOVAL_EPSILON,
+) -> tuple[Tensor, Tensor]:
+    """Return stopped positive leave-one-scope-out credit and signed gain."""
+    if removal_epsilon <= 0.0:
+        raise ValueError("removal_epsilon must be positive")
+    fused_bct = fused_forecast.detach().permute(0, 2, 1).unsqueeze(-1)
+    target_bct = target.detach().permute(0, 2, 1).unsqueeze(-1)
+    stopped_policy = policy.detach()
+    stopped_arms = arm_forecasts.detach()
+    denominator = (1.0 - stopped_policy).clamp_min(removal_epsilon)
+    leave_one_out = (
+        fused_bct - stopped_policy * stopped_arms
+    ) / denominator
+    full_error = (fused_bct - target_bct).abs()
+    signed_gain = (leave_one_out - target_bct).abs() - full_error
+    positive = signed_gain.clamp_min(0.0)
+    positive_sum = positive.sum(dim=-1, keepdim=True)
+    uniform = torch.full_like(positive, 1.0 / positive.shape[-1])
+    credit = torch.where(
+        positive_sum > 0.0,
+        positive / positive_sum.clamp_min(removal_epsilon),
+        uniform,
+    )
+    return credit, signed_gain
+
+
+def shuffle_scope_credit(
+    credit: Tensor,
+    *,
+    generator: torch.Generator,
+) -> Tensor:
+    """Independently permute scope binding without consuming global RNG."""
+    random_keys = torch.rand(
+        credit.shape,
+        device=credit.device,
+        dtype=credit.dtype,
+        generator=generator,
+    )
+    permutation = random_keys.argsort(dim=-1)
+    return torch.gather(credit, dim=-1, index=permutation)
+
+
 def projective_coupling_credit_loss(
     fused_forecast: Tensor,
     arm_forecasts: Tensor,
@@ -192,6 +244,7 @@ def projective_coupling_credit_loss(
     mode: str,
     progress: float,
     stop_gradient: bool = True,
+    coalition_shuffle_generator: torch.Generator | None = None,
 ) -> PCCObjectiveResult:
     """Compute one frozen PCC-v1-TI or matched-control objective.
 
@@ -200,7 +253,7 @@ def projective_coupling_credit_loss(
         arm_forecasts: Raw-scale scope predictions ``[B,C,T,S]``.
         policy: Scope probabilities ``[B,C,T,S]``.
         target: Raw-scale future values ``[B,T,C]``.
-        mode: One of the nine frozen Phase-A objective modes.
+        mode: One frozen PCC control or SCC objective mode.
         progress: Optimizer progress in ``[0,1]``.
         stop_gradient: Keep ``True`` for every authorized Phase-A arm.  The
             alternative exists only for the local conditional-path audit.
@@ -243,6 +296,22 @@ def projective_coupling_credit_loss(
         stop_gradient=stop_gradient,
     )
     transported_capability = transport_prefix_credit(prefix_capability)
+    coalition_credit, coalition_signed_gain = scope_coalition_credit(
+        fused_forecast,
+        arm_forecasts,
+        policy,
+        target,
+    )
+    shuffled_coalition_credit = coalition_credit
+    if mode == "scope_coalition_credit_shuffled":
+        if coalition_shuffle_generator is None:
+            raise ValueError(
+                "shuffled coalition credit requires a dedicated generator"
+            )
+        shuffled_coalition_credit = shuffle_scope_credit(
+            coalition_credit,
+            generator=coalition_shuffle_generator,
+        )
     schedule = pcc_schedule(progress)
 
     uniform_credit = policy.new_full(policy.shape, 1.0 / scopes)
@@ -269,6 +338,8 @@ def projective_coupling_credit_loss(
         "pointwise_pcc_v0": "pointwise",
         "transport_route_only": "transport",
         "pcc_transport_full": "transport",
+        "scope_coalition_credit": "coalition",
+        "scope_coalition_credit_shuffled": "coalition_shuffled",
     }.get(mode, "none")
 
     skill_credit = {
@@ -285,6 +356,8 @@ def projective_coupling_credit_loss(
     route_credit = {
         "pointwise": pointwise_capability,
         "transport": transported_capability,
+        "coalition": coalition_credit,
+        "coalition_shuffled": shuffled_coalition_credit,
         "none": inactive_route_credit,
     }[route_kind]
 
@@ -353,6 +426,12 @@ def projective_coupling_credit_loss(
         ).sum(dim=-1).mean().detach(),
         "pcc_credit_min": route_credit.min().detach(),
         "pcc_credit_max": route_credit.max().detach(),
+        "pcc_coalition_positive_count": (
+            coalition_signed_gain > 0.0
+        ).to(dtype=policy.dtype).sum(dim=-1).mean().detach(),
+        "pcc_coalition_all_nonpositive_fraction": (
+            coalition_signed_gain <= 0.0
+        ).all(dim=-1).to(dtype=policy.dtype).mean().detach(),
     }
     for scope_index, value in enumerate(arm_measure_l1):
         diagnostics[f"pcc_arm_s{scope_index}_measure_l1"] = value.detach()

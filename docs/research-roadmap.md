@@ -1,5 +1,20 @@
 # Research Roadmap
 
+## ISCF-SCC Step7A and Step7B Gate (2026-07-22)
+
+exact SCC/shuffled objective已实现；credit full detach、uniform fallback、dedicated shuffle RNG与five-scope gradient logging均通过
+contract tests。20-run validation config与dry-run通过。Decision=`step7a_pass_step7b_remote_validation_authorized`；下一步
+Weather SCC/SHUFFLED resource smoke，通过后启动20 runs。test仍false。
+
+## ISCF-SCC D0B Pass and Step5–6 (2026-07-22)
+
+修正为147/109 source-sample-aligned split后，D0B仍通过全部gate：median predicted L1 gain=`1.3727%`，15/15
+positive，14/15 shuffle-binding，vs standalone median=`+0.5143` point、13/15 positive，5/5 datasets三seed全正。
+
+SCC-v0 narrative gate现`pass_to_step7a_matched_validation_only`。exact objective为harmonic fused L1 + ramp-to-.1的
+coalition KL，credit stop-gradient、all-negative uniform fallback、不保留individual arm loss；inference graph不变。下一步只
+授权Step7A实现和contract tests；remote validation/formal test仍false。
+
 ## ISCF-SCC D0 Result and D0B (2026-07-22)
 
 D0完成15-run frozen validation replay。median target-visible coalition headroom=`17.9766%`，15/15 nondegenerate且
@@ -54,14 +69,14 @@ Step4–6。candidate=`SC-ISCF-FRSC-v0`，narrative conditional pass；下一步
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | ISCF-SCC D0 unresolved；D0B information-access diagnostic frozen |
-| `active_question` | dynamic coalition credit是否存在超过shuffle与standalone control的target-free held-out predictability |
-| `active_candidates` | active method=none；ISCF-v0 fixed architecture base/carrier；SCC proposed diagnostic-gated；exact FRSC/SPS/BSC/SAC/CPSI closed |
+| `current_step` | ISCF-SCC Step7A passed；Step7B resource smoke pending |
+| `active_question` | exact SCC-v0能否在matched E2E validation中超过EQUAL/FUSED/ARMERR/SHUFFLED |
+| `active_candidates` | SCC-v0 Step7B validation candidate；ISCF-v0 fixed base；exact FRSC/SPS/BSC/SAC/CPSI closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/step2_6_innovation_portfolio_and_scc_gate.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | false；D0B frozen offline probe only；forecast training/test/modern baselines false |
-| `rollback_point` | D0B no information access -> Step2；standalone explains -> Step4；pass -> return Step5/6 |
+| `method_implementation` | Step7A passed；remote validation conditional on resource smoke；test/modern baselines false |
+| `rollback_point` | FUSED/ARMERR/SHUFFLED explains -> Step4；healthy-but-weak -> Step5；numeric pathology -> exact design |
 
 ## ISCF-FRSC Step9 Validation Decision
 

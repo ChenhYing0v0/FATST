@@ -31,6 +31,8 @@ from layers.PCC import (  # noqa: E402
     PCC_SKILL_WEIGHT,
     PCC_STANDARDIZATION_EPSILON,
     PCC_TEMPERATURE,
+    SCC_REMOVAL_EPSILON,
+    SCC_SHUFFLE_SEED_OFFSET,
     prefix_measure,
     projective_coupling_credit_loss,
 )
@@ -1877,6 +1879,14 @@ def train(
     )
     optimizer = optim.AdamW(model.parameters(), lr=official_args.learning_rate)
     criterion = nn.L1Loss()
+    coalition_shuffle_generator = None
+    if args.pcc_objective_mode == "scope_coalition_credit_shuffled":
+        coalition_shuffle_generator = torch.Generator(
+            device=official_args.device.type
+        )
+        coalition_shuffle_generator.manual_seed(
+            args.seed + SCC_SHUFFLE_SEED_OFFSET
+        )
     training_rows: list[dict[str, Any]] = []
     best_val = float("inf")
     best_state: dict[str, torch.Tensor] | None = None
@@ -1988,6 +1998,9 @@ def train(
                         target_y,
                         mode=args.pcc_objective_mode,
                         progress=progress,
+                        coalition_shuffle_generator=(
+                            coalition_shuffle_generator
+                        ),
                     )
                 pred_loss = pcc_result.total_loss
                 pred_components = {"full": criterion(outputs, target_y)}
@@ -2047,6 +2060,26 @@ def train(
 
             loss = pred_loss + official_args.w_recon * recon_loss + official_args.w_align * alignment_loss
             (loss / args.gradient_accumulation_steps).backward()
+            if pcc_result is not None and hasattr(model, "pcsd_readout"):
+                readout = model.pcsd_readout
+                mode_weight = getattr(readout, "mode_weight", None)
+                mode_bias = getattr(readout, "mode_bias", None)
+                mode_weight_grad = getattr(mode_weight, "grad", None)
+                mode_bias_grad = getattr(mode_bias, "grad", None)
+                if (
+                    getattr(readout, "scale_basis_mode", None) == "independent"
+                    and mode_weight_grad is not None
+                    and mode_bias_grad is not None
+                ):
+                    for scope_index in range(mode_weight_grad.shape[0]):
+                        gradient_norm = torch.sqrt(
+                            mode_weight_grad[scope_index].square().sum()
+                            + mode_bias_grad[scope_index].square().sum()
+                        )
+                        name = f"pcc_scope_s{scope_index}_mode_grad_norm"
+                        pcc_diagnostic_values.setdefault(name, []).append(
+                            float(gradient_norm.detach().cpu())
+                        )
             should_step = (
                 (batch_idx + 1) % args.gradient_accumulation_steps == 0
                 or batch_idx + 1 == effective_train_steps
@@ -2245,6 +2278,10 @@ def run(args: argparse.Namespace) -> None:
                 "lambda_skill": PCC_SKILL_WEIGHT,
                 "final_lambda_route": PCC_FINAL_ROUTE_WEIGHT,
                 "capability_stop_gradient": True,
+                "scc_removal_epsilon": SCC_REMOVAL_EPSILON,
+                "scc_all_nonpositive_fallback": "uniform",
+                "scc_shuffle_seed_offset": SCC_SHUFFLE_SEED_OFFSET,
+                "scc_policy_only_credit_gradient": True,
                 "requested_horizon_feature": False,
                 "inference_graph_changed": False,
                 "mcca_modes": sorted(MCCA_OBJECTIVE_MODES),

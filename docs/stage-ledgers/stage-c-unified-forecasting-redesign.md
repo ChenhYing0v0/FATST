@@ -809,3 +809,12 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
      该结果不允许进入Step7，也不作ISCF architecture方向级拒绝。
 137. 按rollback冻结D0B：只用arms/policy/position的60/40 blocked-row ridge probe，比较coalition、standalone与16个
      horizon-marginal shuffle controls。existing validation artifacts only；forecast training、implementation、test false。
+138. 153/103初版split切开multivariate channel group，predecision invalid；修正为147/109后D0B仍完整通过：15/15
+     predicted gain positive、14/15 shuffle binding、vs standalone 13/15 positive。Decision=
+     `coalition_credit_information_access_supported_return_step5_6`。
+139. SCC-v0 Step5–6冻结：harmonic fused L1 + train-only exact coalition KL，route weight前25% ramp至`.1`，credit
+     stop-gradient、uniform fallback、inference unchanged。五臂EQUAL/FUSED/ARMERR/SCC/SHUFFLED attribution冻结；
+     narrative gate通过到Step7A，remote training/formal test仍false。
+140. Step7A实现并验证exact coalition/shuffled objective、dedicated RNG与per-scope gradient logging；existing PCC
+     regression 36/36通过，runner dry-run=20 jobs。Decision=`step7a_pass_step7b_remote_validation_authorized`；先
+     resource smoke，formal test仍false。

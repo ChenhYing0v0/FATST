@@ -32,3 +32,20 @@ credit vector，保留horizon marginal和scope joint distribution，只破坏fea
 - proxy：linear ridge低估nonlinear learnability，256 rows也不是完整validation distribution；
 - falsification boundary：negative只拒绝当前feature/intervention的直接policy calibration，不否定ISCF architecture或所有
   cooperative training designs。
+
+## 5. SCC-v0 Step7A training objective
+
+`layers/PCC.py`新增`scope_coalition_credit`与`scope_coalition_credit_shuffled`两种objective mode。输入沿用
+`fused [B,T,C]`、`arms/policy [B,C,T,5]`和`target [B,T,C]`，closed-form removal输出
+`route_credit [B,C,T,5]`。signed gain与normalized positive credit均stop-gradient；因此route KL只更新existing policy，
+arms仍只通过fused harmonic L1更新。
+
+all-nonpositive coordinate回退uniform。SHUFFLED mode用独立`torch.Generator`逐coordinate置换scope axis，保持credit
+values/simplex不变且不消费data/model global RNG。`train_repo.py`只负责创建seeded generator并记录effective contract；
+model forward与inference文件未修改。
+
+`scripts/check_stage_c_iscf_scc_step7a.py`检查exact formula、无individual arm loss、route-gradient boundary、uniform
+fallback、shuffle marginal preservation/reproducibility与global-RNG isolation。
+
+training loop在backward后、optimizer step前记录independent `mode_weight/mode_bias`的五个per-scope gradient norms。
+该日志只观测existing arm gradient path，不改变loss或optimizer；用于验证至少三个scope在E2E training中持续获得非零更新。

@@ -81,14 +81,14 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-22 |
 | `source_parent_commit` | `9069e87`（FRSC Step7B frozen execution commit） |
-| `current_step` | ISCF-SCC D0 unresolved；D0B information-access diagnostic frozen |
+| `current_step` | ISCF-SCC Step7A passed；Step7B resource smoke pending |
 | `active_problem` | ISCF已有arm complementarity，但equal-skill与existing policy未把coalition utility稳定转化为fused gain |
-| `active_method` | none；ISCF-v0 fixed architecture base/carrier；SCC proposed diagnostic-gated；exact FRSC-v0 closed |
+| `active_method` | SC-ISCF-SCC-v0 Step7B validation candidate；ISCF-v0 fixed base；exact FRSC-v0 closed |
 | `method_training_authorized` | false |
-| `remote_training_authorized` | false；formal test/modern baselines false |
-| `next_action` | commit/push、remote fast-forward、existing validation NPZ offline D0B analysis |
-| `conditional_next` | only if D0B exceeds shuffle/standalone and seed-consistency gates may SCC return Step5/6 |
-| `rollback` | D0B no information access -> Step2；standalone explains -> Step4；pass -> Step5/6 |
+| `remote_training_authorized` | resource smoke true；20-run conditional on smoke；formal test/modern baselines false |
+| `next_action` | commit/push、remote fast-forward、Weather SCC/SHUFFLED resource smoke |
+| `conditional_next` | only if resource smoke passes may 20-run matched validation start |
+| `rollback` | FUSED/ARMERR/SHUFFLED explains -> Step4；healthy weak -> Step5；pathology -> exact design |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
 
@@ -324,6 +324,15 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
     `coalition_credit_unresolved_requires_validation_diagnostic_redesign`；不得进入Step7。
 93. D0B冻结target-free information-access probe：60/40 blocked rows、fixed ridge、16 horizon-marginal shuffles与
     standalone-credit matched probe。只读取existing validation NPZ；forecast training/method implementation/test均false。
+94. nominal 153/103 split因切开multivariate channel group被标记`diagnostic_protocol_fault_predecision`；修正为147/109
+    后重跑15 cells，所有gate仍通过：median gain=`1.3727%`，15/15 positive，14/15 shuffle binding，vs standalone
+    median=`+0.5143` point且13/15 positive。
+95. Decision=`coalition_credit_information_access_supported_return_step5_6`。SCC-v0 exact objective与五臂matched
+    attribution已冻结，narrative gate=`pass_to_step7a_matched_validation_only`；Step7A true，remote/test false。
+96. Step7A实现exact SCC/shuffled modes、dedicated RNG与five-scope gradient logging；target-visible credit full detach，
+    inference unchanged。SCC checker、existing PCC 36/36 regression和20-job dry-run通过。
+97. Decision=`step7a_pass_step7b_remote_validation_authorized`；先Weather SCC/SHUFFLED resource smoke，通过后才启动
+    20-run validation。formal test/modern baselines保持false。
 
 ## 5. D22-HFA 的执行顺序
 
