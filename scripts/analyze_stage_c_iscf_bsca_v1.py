@@ -64,7 +64,7 @@ def selected_metrics(directory: Path, split: str) -> dict[int, dict[str, str]]:
 
 def internal_metrics(directory: Path) -> dict[str, float | bool]:
     diagnostics = np.load(directory / "pcsd_test_audit_diagnostics.npz")
-    policy = diagnostics["probe_direct_policy"].astype(np.float64)
+    policy = diagnostics["policy_row_bin_usage"].astype(np.float64)
     arms = diagnostics["probe_arms"].astype(np.float64)
     target = diagnostics["probe_targets"].astype(np.float64)
     fused = diagnostics["probe_fused"].astype(np.float64)
