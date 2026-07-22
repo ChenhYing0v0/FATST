@@ -1,5 +1,14 @@
 # Research Roadmap
 
+## ISCF PSA-D1 Step8 Remote Running (2026-07-22)
+
+commit `f5275a4`、three-GPU idle preflight与Weather resource smoke通过。Smoke route weight/loss=0、five scope gradients
+nonzero、initialization hash与three references一致。five-run validation已于`16:00:40+08:00`启动，初始0/5，
+Weather/ETTm1/ETTh1 epoch 1 active，ETTh2/ETTm2 queued。
+
+Decision=`psa_d1_five_run_validation_training_active_formal_test_disabled`。5/5后统一运行冻结H2/H3 analyzer；不读取
+partial结果，不remote pull或改gates。formal test/confirmation/method promotion false。
+
 ## ISCF PSA-D1 Step7A and Prelaunch (2026-07-22)
 
 用户明确授权PSA-D1 Step7A + five-run validation training。D1只新增contemporaneous `equal_skill` control，不改ISCF

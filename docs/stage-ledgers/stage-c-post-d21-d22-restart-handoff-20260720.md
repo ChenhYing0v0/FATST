@@ -80,13 +80,13 @@
 | `project` | R_2026_FATST |
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-22 |
-| `source_parent_commit` | `829a1e2`（Post-RSCC audit + frozen PSA-D0 protocol） |
-| `current_step` | PSA-D1 Step7A pass；remote preflight pending |
+| `source_parent_commit` | `f5275a4`（PSA-D1 Step7A + frozen five-run control） |
+| `current_step` | PSA-D1 Step8 five-run validation active |
 | `active_problem` | ARMERR/SHUFFLED公共gain来自training co-adaptation还是contemporaneous run drift |
-| `active_method` | none；D1 control-only validation authorized；ISCF-v0 fixed base；closed routes unchanged |
+| `active_method` | none；D1 control-only validation running；ISCF-v0 fixed base；closed routes unchanged |
 | `method_training_authorized` | false |
 | `remote_training_authorized` | D1 five validation runs true conditional on preflight；formal test=false |
-| `next_action` | commit/push；remote fast-forward、GPU preflight、Weather smoke；then five-run launch |
+| `next_action` | wait 5/5；run frozen analyzer once；no partial selection/test |
 | `conditional_next` | D1若支持H2，仍须Step4 novel mechanism gate；若支持H3则关闭common-gain clue |
 | `rollback` | H1 frozen shrinkage closed；joint-training unresolved；no alpha/temperature rescue |
 
@@ -361,6 +361,10 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
      contracts、5-job dry-run、run-drift/co-adaptation synthetic decisions均通过。
 111. Decision=`psa_d1_step7a_pass_proceed_commit_remote_preflight`。remote launch仍须commit-pinned pull、GPU preflight与
      Weather smoke；formal test、confirmation seeds、method promotion false。
+112. commit=`f5275a4`已pull；GPU0/1/2 idle preflight与Weather smoke通过，route=0、5/5 gradients nonzero、init hash
+     匹配historical/ARMERR/SHUFFLED。
+113. five-run validation于`16:00:40+08:00`启动，PID=`3975446`，initial 0/5；Weather/ETTm1/ETTh1 epoch 1 active。
+     5/5前不得partial selection，formal test仍false。
 
 ## 5. D22-HFA 的执行顺序
 

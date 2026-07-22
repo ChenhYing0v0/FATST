@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | PSA-D1 Step7A pass；remote preflight pending |
+| `current_11_step` | PSA-D1 Step8 five-run validation active |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -15,6 +15,15 @@
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
 | `paper_core_status` | active method=none；ISCF fixed base；D1 control-only validation authorized |
+
+[ISCF PSA-D1 Step8 Launch, 2026-07-22] commit=`f5275a4`完成remote fast-forward；GPU0/1/2 preflight均18 MiB、
+0%，无compute process。Weather smoke确认EQUAL route weight/loss=0、five scope gradients nonzero，且initialization
+hash与historical EQUAL/ARMERR/SHUFFLED完全相同。
+
+5-run validation matrix于`16:00:40+08:00`启动，PID=`3975446`；Weather/ETTm1/ETTh1分别在GPU0/1/2进入epoch 1，
+ETTh2/ETTm2 queued。Decision=`psa_d1_five_run_validation_training_active_formal_test_disabled`；5/5前不读取partial
+metrics，formal test=false。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_rscc_step24_20260722/psa_d1_step8_remote_launch.md`。
 
 [ISCF PSA-D1 Step7A, 2026-07-22] 用户明确授权Step7A与five-run validation training。one-arm config、existing-runner
 wrapper、source/objective checker与20-run/80-cell H2/H3 analyzer已实现。Local contracts确认training/evaluator相对RSCC
