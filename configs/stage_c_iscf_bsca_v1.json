@@ -5,7 +5,7 @@
   "protocol_revision": "v0.1 adds evaluator coupling_scales and checkpoint-preserving validation replay; model objective, training arguments, checkpoints, formal-test matrix, and gates unchanged",
   "parent_candidate": "ISCF-v0",
   "date": "2026-07-22",
-  "status": "step4_7a_and_single_formal_test_authorized",
+  "status": "authorized_prelaunch",
   "role": "paper_core_candidate_formal_screen",
   "test_informed": true,
   "profiles": {
@@ -54,6 +54,7 @@
     "official_test_artifacts_reused": true
   },
   "matrix": {
+    "expected_runs": 10,
     "new_training_runs": 5,
     "new_formal_test_runs": 5,
     "effective_runs": 10,
@@ -133,11 +134,14 @@
   },
   "authorization": {
     "user_authorization": "2026-07-22 explicit ISCF-BSCA-v1 Step4-7A implementation, five-run training, and one frozen formal test",
+    "user_authorized": true,
+    "authorization_date": "2026-07-22",
     "remote_training_authorized": true,
     "formal_test_access_authorized": true,
     "formal_test_access_count_for_version": 1,
     "confirmation_seeds_authorized": false,
     "checkpoint_retraining_allowed": true,
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
     "checkpoint_mutation_during_test_allowed": false,
     "per_dataset_horizon_or_cell_tuning_allowed": false,
     "test_role": "primary-mechanism-effectiveness-and-paper-benchmark"

@@ -73,7 +73,9 @@ is_test_complete() {
   local d; d="$(run_dir_for_line "$1")"
   [[ -s "${d}/test_audit_metrics_by_target_horizon.csv" \
     && -s "${d}/test_audit_invariants.json" \
-    && -s "${d}/pcsd_test_audit_diagnostics.npz" ]]
+    && -s "${d}/pcsd_test_audit_diagnostics.npz" ]] \
+    && python3 -c 'import json,sys; assert json.load(open(sys.argv[1]))["pass"] is True' \
+      "${d}/test_audit_invariants.json"
 }
 
 status_counts() {

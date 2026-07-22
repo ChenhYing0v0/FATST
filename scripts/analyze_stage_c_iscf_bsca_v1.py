@@ -93,7 +93,7 @@ def main() -> None:
             "test_split": invariant.get("evaluation_split"),
             "uses_test_split": invariant.get("uses_test_split"),
             "test_invariant_pass": invariant.get("pass"),
-            "checkpoint_retrained_during_test": invariant.get("checkpoint_retrained"),
+            "checkpoint_retrained_for_candidate": invariant.get("checkpoint_retrained"),
         })
         for split in ("val", "test"):
             c_metrics = selected_metrics(candidate, split)
@@ -114,7 +114,12 @@ def main() -> None:
     dataset_wins = sum(np.mean([row["mse_gain_percent"] for row in test if row["dataset"] == dataset]) > 0 for dataset in DATASETS)
     horizon_wins = sum(np.mean([row["mse_gain_percent"] for row in test if row["horizon"] == horizon]) > 0 for horizon in HORIZONS)
     gates = config["gates"]
-    artifacts_pass = all(row["missing_count"] == 0 and row["test_invariant_pass"] and not row["checkpoint_retrained_during_test"] for row in audit)
+    artifacts_pass = all(
+        row["missing_count"] == 0
+        and row["test_invariant_pass"]
+        and row["checkpoint_retrained_for_candidate"]
+        for row in audit
+    )
     performance_pass = (
         macro_mse >= gates["macro_mse_gain_percent_min"]
         and macro_mae > gates["macro_mae_gain_percent_min_exclusive"]

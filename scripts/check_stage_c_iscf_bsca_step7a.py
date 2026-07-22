@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "baselines" / "timealign_official"))
 
 from layers.PCC import projective_coupling_credit_loss  # noqa: E402
+from evaluate_stage_c_pcsd_cf_checkpoint import test_audit_authorized  # noqa: E402
 
 
 def main() -> None:
@@ -55,6 +56,7 @@ def main() -> None:
     assert config["matrix"]["new_training_runs"] == 5
     assert config["matrix"]["new_formal_test_runs"] == 5
     assert config["authorization"]["formal_test_access_count_for_version"] == 1
+    assert test_audit_authorized(config)
     assert not config["authorization"]["confirmation_seeds_authorized"]
     dry = subprocess.run(
         ["bash", "scripts/remote/run_stage_c_iscf_bsca_v1.sh"],
