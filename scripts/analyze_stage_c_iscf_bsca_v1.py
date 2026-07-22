@@ -123,11 +123,32 @@ def main() -> None:
         missing = [name for name in required_candidate if not (candidate / name).is_file()]
         invariant = json.loads((candidate / "test_audit_invariants.json").read_text(encoding="utf-8"))
         effective = json.loads((candidate / "effective_config.json").read_text(encoding="utf-8"))
+        candidate_initialization = json.loads(
+            (candidate / "initialization_contract.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        reference_initialization = json.loads(
+            (reference / "initialization_contract.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        initialization_hashes = [
+            key for key in candidate_initialization if "hash" in key
+        ]
         audit.append({
             "dataset": dataset,
             "missing_count": len(missing),
             "checkpoint_sha256": sha256(candidate / "checkpoint.pt"),
             "objective": effective["adapter"]["pcc_objective_mode"],
+            "initialization_paired_all_hashes": bool(
+                initialization_hashes
+                and all(
+                    candidate_initialization.get(key)
+                    == reference_initialization.get(key)
+                    for key in initialization_hashes
+                )
+            ),
             "test_split": invariant.get("evaluation_split"),
             "uses_test_split": invariant.get("uses_test_split"),
             "test_invariant_pass": invariant.get("pass"),
@@ -193,6 +214,7 @@ def main() -> None:
     gates = config["gates"]
     artifacts_pass = all(
         row["missing_count"] == 0
+        and row["initialization_paired_all_hashes"]
         and row["test_invariant_pass"]
         and row["checkpoint_retrained_for_candidate"]
         for row in audit
