@@ -9,7 +9,7 @@
 | `active_question` | ARMERR/SHUFFLED公共gain来自training co-adaptation还是contemporaneous run drift |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | active method=none；PSA-D0 closed H1；D1 control-only pending；ISCF-v0 fixed base |
+| `active_candidates` | active method=none；D1 control-only Step7A pass；ISCF-v0 fixed base |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
@@ -20,27 +20,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | PSA-D0 complete；H1 closed；return Step2 attribution |
-| `current_candidate` | no method；D1 contemporaneous EQUAL is control-only proposal |
-| `latest_decision` | `frozen_inference_shrinkage_not_supported` |
-| `next_required_action` | obtain authorization for D1 Step7A + five-run validation；no launch yet |
-| `method_training_authorized` | false；formal test/confirmation/modern baselines false |
+| `current_11_step` | PSA-D1 Step7A pass；Step8 preflight pending |
+| `current_candidate` | no method；D1 contemporaneous EQUAL control-only |
+| `latest_decision` | `psa_d1_step7a_pass_proceed_commit_remote_preflight` |
+| `next_required_action` | commit/push；remote GPU preflight + Weather smoke；then five runs |
+| `method_training_authorized` | D1 five validation runs true conditional；formal test/confirmation false |
 | `rollback_point` | reject post-hoc H1；retain H2/H3 unresolved；no alpha/temperature rescue |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | D0 complete；Step2 H2/H3 attribution unresolved |
+| `current_step` | D1 Step7A complete；Step8 conditional launch |
 | `problem` | 公共control gain是否需要joint-training route regularization，还是new-run drift |
 | `existence_evidence` | post-hoc convex/marginal/temperature全macro negative；new controls仍约+0.656% vs historical EQUAL |
 | `idea` | contemporaneous no-route EQUAL retrain作为最小control，不是method |
 | `theory_check` | same code/config/init/selector可隔离historical-reference confound；仍只validation |
-| `design` | proposed five datasets × seed2021 EQUAL；compare historical EQUAL and existing ARMERR/SHUFFLED |
+| `design` | frozen five datasets × seed2021 EQUAL；compare historical EQUAL and existing ARMERR/SHUFFLED |
 | `narrative_gate` | control-only；paper method gate not applicable |
-| `effectiveness_gate` | D0 H1 fail；D1 pending；official test=false |
-| `artifacts` | PSA-D0 15-run outputs + result report + frozen D1 control design |
-| `decision` | `frozen_inference_shrinkage_not_supported_return_step2_h2_h3` |
+| `effectiveness_gate` | D1 attribution pending 5/5 validation；official test=false |
+| `artifacts` | D1 config/checker/runner/analyzer/code explanation/prelaunch report |
+| `decision` | `psa_d1_step7a_pass_proceed_commit_remote_preflight` |
 
 ## Frozen Carrier Contract
 
@@ -64,7 +64,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
-| `SC-ISCF-PSA-D1` | `control_design_frozen_not_authorized` | contemporaneous no-route EQUAL能否解释new ARMERR/SHUFFLED公共gain | not a method；只隔离H2/H3 | pending five validation runs；test=false | request Step7A/remote authorization |
+| `SC-ISCF-PSA-D1` | `control_step7a_pass_preflight_pending` | contemporaneous no-route EQUAL能否解释new ARMERR/SHUFFLED公共gain | not a method；只隔离H2/H3 | five validation runs authorized conditional；test=false | commit/pull/GPU/Weather smoke；then launch |
 | `SC-ISCF-PSA-D0` | `diagnostic_only_closed_h1_not_supported` | EQUAL frozen policy向uniform收缩是否存在stable held-out frontier | diagnostic only；generic shrinkage不是paper claim | L1/MSE -0.2431%/-0.1218%；1/5 datasets；2/15 runs | no alpha/temperature rescue；retain joint-training unresolved |
 | `SC-ISCF-RSCC-v1` | `closed_control_attribution_fail` | 保留EQUAL reliability时，exact coalition policy credit能否兑现已有arm complementarity | pre-result conditional；post-result binding claim fail | vs EQUAL +0.5189% pass；vs ARMERR/SHUFFLED -0.1414%/-0.1394%；alignment fail | no formal test/rescue；rollback Step2/4 |
 | `SC-ISCF-SCC-v0` | `closed_intervention_point_wrong` | fused-only + coalition KL能否改善scope coordination | narrative coherent；exact training intervention failed | vs EQUAL -3.1750%；headroom +18.08% -> -14.93% | no seed/lambda rescue；evidence feeds RSCC only |
@@ -859,3 +859,7 @@ Historical and control queue:
      co-adaptation与H3 run drift。当前proposed/not authorized；active method none，test=false。
 153. D1 protocol已冻结：new EQUAL recovery ratio与dataset/horizon gates区分`run_drift_explains`、
      `joint_training_route_regularization_supported_as_carrier_clue`或`unresolved`。config/runner/remote/test均false。
+154. 用户明确授权D1 Step7A + five-run validation training。config/checker/runner/analyzer已实现；EQUAL route=0、five
+     scope gradients可达、5-job dry-run与two synthetic decision branches通过。
+155. Decision=`psa_d1_step7a_pass_proceed_commit_remote_preflight`。full launch conditional on commit-pinned pull、GPU
+     preflight与Weather smoke；formal test、confirmation、method promotion false。

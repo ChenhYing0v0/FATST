@@ -7,14 +7,23 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | PSA-D0 negative；H1 closed；H2/H3 attribution unresolved |
+| `current_11_step` | PSA-D1 Step7A pass；remote preflight pending |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | active method=none；ISCF fixed base；post-hoc shrinkage closed；H2/H3 control pending |
+| `paper_core_status` | active method=none；ISCF fixed base；D1 control-only validation authorized |
+
+[ISCF PSA-D1 Step7A, 2026-07-22] 用户明确授权Step7A与five-run validation training。one-arm config、existing-runner
+wrapper、source/objective checker与20-run/80-cell H2/H3 analyzer已实现。Local contracts确认training/evaluator相对RSCC
+launch commit无semantic diff，EQUAL route loss/weight严格为0，five scope gradients可达；dry-run=5 jobs，analyzer的
+run-drift/co-adaptation synthetic branches均通过。
+
+Decision=`psa_d1_step7a_pass_proceed_commit_remote_preflight`。下一步commit/push后做remote GPU preflight与Weather
+resource smoke；通过后才启动5 runs。formal test、confirmation seeds与method promotion保持false。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_rscc_step24_20260722/psa_d1_step7a_prelaunch.md`。
 
 [ISCF PSA-D0 Result, 2026-07-22] 15/15 existing EQUAL validation replays的LODO frozen-policy diagnostic完整。
 Convex-uniform shrinkage macro L1/MSE=`-0.2431%/-0.1218%`，仅1/5 datasets、2/15 runs joint-positive；

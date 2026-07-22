@@ -81,12 +81,12 @@
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-22 |
 | `source_parent_commit` | `829a1e2`（Post-RSCC audit + frozen PSA-D0 protocol） |
-| `current_step` | PSA-D0 complete；H1 closed；H2/H3 Step2 attribution unresolved |
+| `current_step` | PSA-D1 Step7A pass；remote preflight pending |
 | `active_problem` | ARMERR/SHUFFLED公共gain来自training co-adaptation还是contemporaneous run drift |
-| `active_method` | none；D1 control-only proposed；ISCF-v0 fixed base；post-hoc shrinkage/SCC/RSCC closed |
+| `active_method` | none；D1 control-only validation authorized；ISCF-v0 fixed base；closed routes unchanged |
 | `method_training_authorized` | false |
-| `remote_training_authorized` | false；formal test/modern baselines false |
-| `next_action` | obtain authorization for frozen D1 Step7A + five-run validation；no launch yet |
+| `remote_training_authorized` | D1 five validation runs true conditional on preflight；formal test=false |
+| `next_action` | commit/push；remote fast-forward、GPU preflight、Weather smoke；then five-run launch |
 | `conditional_next` | D1若支持H2，仍须Step4 novel mechanism gate；若支持H3则关闭common-gain clue |
 | `rollback` | H1 frozen shrinkage closed；joint-training unresolved；no alpha/temperature rescue |
 
@@ -357,6 +357,10 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
      该D1 design已冻结但launch未获remote authorization；active method none，formal test=false。
 109. D1 control design现已冻结，包含recovery ratio、dataset/horizon gates与no-test boundary；implementation、resource
      smoke、five-run training和method promotion全部false，等待明确授权。
+110. 用户明确授权D1 Step7A + five-run validation。config/checker/runner/analyzer与code explanation已完成；local
+     contracts、5-job dry-run、run-drift/co-adaptation synthetic decisions均通过。
+111. Decision=`psa_d1_step7a_pass_proceed_commit_remote_preflight`。remote launch仍须commit-pinned pull、GPU preflight与
+     Weather smoke；formal test、confirmation seeds、method promotion false。
 
 ## 5. D22-HFA 的执行顺序
 

@@ -11,6 +11,7 @@ SEED="${SEED:-2021}"
 DRY_RUN="${DRY_RUN:-0}"
 STATUS_ONLY="${STATUS_ONLY:-0}"
 RESOURCE_SMOKE="${RESOURCE_SMOKE:-0}"
+RESOURCE_SMOKE_JOBS="${RESOURCE_SMOKE_JOBS:-2}"
 EVALUATION_SPLIT="${EVALUATION_SPLIT:-val}"
 EPOCHS="${EPOCHS:-20}"
 PATIENCE="${PATIENCE:-5}"
@@ -162,11 +163,13 @@ run_validation_diagnostics() {
 }
 
 if [[ "${RESOURCE_SMOKE}" == "1" ]]; then
+  test "${RESOURCE_SMOKE_JOBS}" -ge 1
+  test "${RESOURCE_SMOKE_JOBS}" -le "${#LINES[@]}"
   smoke_root="${OUTPUT_ROOT}/_resource_smoke"
   mkdir -p "${smoke_root}"
   nvidia-smi --query-gpu=index,name,memory.total,memory.used,memory.free,utilization.gpu \
     --format=csv,noheader,nounits
-  for index in 0 1; do
+  for ((index=0; index<RESOURCE_SMOKE_JOBS; index++)); do
     line="${LINES[${index}]}"
     gpu="${GPU_IDS[$((index % ${#GPU_IDS[@]}))]}"
     dataset="$(cut -f1 <<< "${line}")"

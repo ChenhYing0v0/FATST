@@ -1,0 +1,124 @@
+{
+  "stage": "StageC-UVHF",
+  "diagnostic_id": "SC-ISCF-PSA-D1",
+  "candidate_version": "SC-ISCF-PSA-D1-control-v0",
+  "date": "2026-07-22",
+  "status": "step7a_and_five_run_validation_authorized",
+  "role": "control_only_contemporaneous_equal_attribution",
+  "test_informed": true,
+  "purpose": "distinguish joint-training route co-adaptation from contemporaneous retraining drift without changing ISCF architecture or objective",
+  "profiles": {
+    "path": "configs/stage_c_five_dataset_natural_profiles.json",
+    "sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a"
+  },
+  "datasets": ["Weather", "ETTm1", "ETTh1", "ETTh2", "ETTm2"],
+  "seeds": [2021],
+  "scales": [1, 48, 144, 360, 720],
+  "coupling_scales": [1, 48, 144, 360, 720],
+  "arms": [
+    {
+      "id": "iscf_equal_contemporaneous",
+      "role": "new_no_route_control",
+      "readout_mode": "siff-independent-scope-control",
+      "projection_mode": "identity",
+      "partition": "canonical",
+      "rank_rule": "independent_dataset_matched",
+      "objective_mode": "equal_skill",
+      "train": true
+    }
+  ],
+  "references": {
+    "historical_equal": {
+      "id": "iscf_equal_historical",
+      "objective_mode": "equal_skill",
+      "root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_siff_equal_attribution_v2/siff_independent_equal",
+      "probe_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_iscf_scc_d0_validation_replay"
+    },
+    "equal_armerr": {
+      "id": "iscf_equal_armerr",
+      "objective_mode": "pointwise_prior_composed",
+      "root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_iscf_rscc_v1_step7b/iscf_equal_armerr"
+    },
+    "rscc_shuffled": {
+      "id": "iscf_rscc_shuffled",
+      "objective_mode": "equal_scope_coalition_credit_shuffled",
+      "root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_iscf_rscc_v1_step7b/iscf_rscc_shuffled"
+    }
+  },
+  "matched_ranks": {
+    "ETTh1": {"independent_dataset_matched": 109},
+    "ETTh2": {"independent_dataset_matched": 116},
+    "ETTm1": {"independent_dataset_matched": 116},
+    "ETTm2": {"independent_dataset_matched": 106},
+    "Weather": {"independent_dataset_matched": 116}
+  },
+  "matrix": {
+    "expected_new_runs": 5,
+    "effective_runs": 20,
+    "new_validation_cells": 20,
+    "effective_validation_cells": 80,
+    "horizons": [96, 192, 336, 720],
+    "metrics": ["mse", "mae"],
+    "full_matrix_required": true,
+    "partial_reporting_allowed": false
+  },
+  "training": {
+    "from_scratch": true,
+    "joint_encoder_decoder": true,
+    "target_horizons": [720],
+    "validation_horizons": [96, 192, 336, 720],
+    "checkpoint_score": "mean_validation_mse_h96_h192_h336_h720",
+    "checkpoint_policy": "best-val",
+    "pred_loss_mode": "full",
+    "new_auxiliary_loss": false,
+    "new_router": false,
+    "requested_h_input": false,
+    "training_final_evaluation_split": "val",
+    "optimizer": "AdamW",
+    "learning_rate": 0.0001,
+    "batch_size": 32,
+    "max_epochs": 20,
+    "early_stopping_patience": 5,
+    "initialization": "from_scratch_paired_by_dataset_and_seed",
+    "test_labels_select_checkpoint_or_config": false
+  },
+  "launch_order": [
+    ["Weather", "iscf_equal_contemporaneous"],
+    ["ETTm1", "iscf_equal_contemporaneous"],
+    ["ETTh1", "iscf_equal_contemporaneous"],
+    ["ETTh2", "iscf_equal_contemporaneous"],
+    ["ETTm2", "iscf_equal_contemporaneous"]
+  ],
+  "comparisons": [
+    {"id": "new_equal_vs_historical", "candidate": "iscf_equal_contemporaneous", "reference": "iscf_equal_historical"},
+    {"id": "armerr_vs_new_equal", "candidate": "iscf_equal_armerr", "reference": "iscf_equal_contemporaneous"},
+    {"id": "shuffled_vs_new_equal", "candidate": "iscf_rscc_shuffled", "reference": "iscf_equal_contemporaneous"},
+    {"id": "armerr_vs_historical", "candidate": "iscf_equal_armerr", "reference": "iscf_equal_historical"},
+    {"id": "shuffled_vs_historical", "candidate": "iscf_rscc_shuffled", "reference": "iscf_equal_historical"}
+  ],
+  "decision_gates": {
+    "run_drift_new_equal_gain_min_percent": 0.3,
+    "run_drift_recovery_ratio_min": 0.75,
+    "dataset_wins_min": 3,
+    "horizon_wins_min": 3,
+    "control_residual_gain_max_percent": 0.1,
+    "coadaptation_new_equal_abs_gain_max_percent": 0.1,
+    "coadaptation_control_gain_min_percent": 0.3,
+    "function_fused_relative_l1_max": 0.01,
+    "function_policy_mean_l1_max": 0.02
+  },
+  "artifact_schema": {
+    "required_new": ["checkpoint.pt", "training_log.csv", "metrics_by_target_horizon.csv", "effective_config.json", "initialization_contract.json", "model_diagnostics.json", "pcsd_validation_diagnostics.npz", "trained_invariants.json"]
+  },
+  "output_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_iscf_psa_d1",
+  "authorization": {
+    "user_authorization": "explicitly authorize PSA-D1 Step7A plus five-run validation training",
+    "step7a_implementation_authorized": true,
+    "remote_resource_smoke_authorized": true,
+    "remote_training_authorized": true,
+    "formal_test_access_authorized": false,
+    "confirmation_seeds_authorized": false,
+    "method_promotion_authorized": false,
+    "checkpoint_retraining_allowed": true
+  }
+}

@@ -1,5 +1,14 @@
 # Research Roadmap
 
+## ISCF PSA-D1 Step7A and Prelaunch (2026-07-22)
+
+用户明确授权PSA-D1 Step7A + five-run validation training。D1只新增contemporaneous `equal_skill` control，不改ISCF
+architecture/loss。config/checker/runner/analyzer与code explanation已完成；source semantic diff=none、route loss/weight=0、
+five-scope random-tensor gradients nonzero、dry-run=5 jobs，H2/H3 synthetic decision branches通过。
+
+Decision=`psa_d1_step7a_pass_proceed_commit_remote_preflight`。下一步commit-pinned remote pull、GPU preflight与
+Weather resource smoke，通过后启动five validation runs。formal test、confirmation seeds、method promotion false。
+
 ## ISCF PSA-D0 Result and Rollback (2026-07-22)
 
 15-run LODO frozen diagnostic完整。Convex-uniform macro L1/MSE=`-0.2431%/-0.1218%`，1/5 datasets、2/15

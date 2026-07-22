@@ -2,12 +2,13 @@
 
 ## 1. Decision and role
 
-Decision=`psa_d1_control_design_frozen_remote_training_not_authorized`。
+Decision=`psa_d1_step7a_pass_proceed_commit_remote_preflight`。
 
 `SC-ISCF-PSA-D1`不是method candidate，也不测试新loss/router。它只补齐RSCC-v1 attribution matrix中缺失的
 contemporaneous no-route EQUAL，使ARMERR/SHUFFLED公共gain可以在`training co-adaptation`与`run drift`之间归因。
 
-当前只冻结protocol；不实现runner、不启动remote training、不访问official test。active method仍none。
+用户已明确授权Step7A与five-run validation training；implementation已通过local contracts。remote launch仍须先通过
+commit-pinned pull、GPU preflight与Weather resource smoke。不访问official test，active method仍none。
 
 ## 2. Problem and hypotheses
 
@@ -73,7 +74,8 @@ Matched ranks沿用RSCC matrix：ETTh1/ETTh2/ETTm1/ETTm2/Weather=`109/116/116/10
 6. local dry-run=5 jobs；Weather resource smoke finite且无OOM；
 7. remote pull、GPU preflight与output root写入launch record。
 
-当前第5项为false，所以D1不得launch。
+第1--6项已通过local部分；第6项的Weather resource smoke与第7项remote records仍pending。smoke通过前不得launch full
+matrix。
 
 ## 6. Frozen decision rules
 
@@ -133,10 +135,10 @@ Step4结合primary sources寻找ISCF-native且能由matched controls识别的机
 | Action | Authorized |
 | --- | --- |
 | D1 protocol/design documentation | true |
-| config/runner implementation | false |
-| remote resource smoke | false |
-| five-run validation training | false |
+| config/runner implementation | true；Step7A complete |
+| remote resource smoke | true；pending preflight |
+| five-run validation training | true；conditional on smoke |
 | official test | false |
 | method promotion | false |
 
-下一步需要用户明确授权D1 control implementation与five-run validation training，之后才进入Step7A/prelaunch。
+下一步先commit/push、remote fast-forward、GPU preflight与Weather smoke；全部通过后启动five runs。
