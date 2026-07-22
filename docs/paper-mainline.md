@@ -24,6 +24,11 @@ Direction gate：macro MSE/MAE >0、2/3 seeds、3/5 datasets、3/4 horizons。Pa
 >=+0.3%、minimum dataset >-2%、ETTm2 >=-1%与full health/nonmutation。Local 10-job dry-run、reference 10/10、
 test authorization与10/10-before-test guard通过。Decision=`confirmation_step7b_prelaunch_pass_remote_resource_smoke_next`。
 
+[ISCF-BSCA-v1 Confirmation Launch, 2026-07-22] commit `72e3356`已remote fast-forward；GPU0/1/2启动前均仅
+`18 MiB`占用，Weather resource smoke通过。10-run training于19:39:57启动，seed2022使用GPU0/1、seed2023使用GPU2，
+首批两个Weather与一个ETTm1 job进入epoch1。Formal test当前`0/10`并由training completeness guard阻断。Decision=
+`confirmation_step8_training_active_formal_test_guarded`。
+
 [ISCF-BSCA-v1 Step9/10, 2026-07-22] 5/5 trainings、5/5 frozen formal tests、20/20 standard-horizon cells
 完整；candidate与EQUAL五个datasets的all initialization hashes exact paired，test checkpoint SHA before/after不变。
 BSCA vs EQUAL test MSE/MAE=`+0.3104%/+0.4902%`，15/20 cells、3/5 datasets、3/4 horizons，全部冻结

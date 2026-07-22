@@ -9,7 +9,7 @@
 | `active_question` | balanced train-time scope-gradient access能否提升ISCF official-test性能并形成第二项贡献 |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | `ISCF-BSCA-v1` single-seed partial pass；seeds2022/2023 confirmation authorized/prelaunch |
+| `active_candidates` | `ISCF-BSCA-v1` single-seed partial pass；seeds2022/2023 confirmation training active |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
@@ -20,10 +20,10 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | BSCA confirmation Step7B prelaunch |
+| `current_11_step` | BSCA confirmation Step8 training |
 | `current_candidate` | `ISCF-BSCA-v1` |
-| `latest_decision` | `confirmation_step7b_prelaunch_pass_remote_resource_smoke_next` |
-| `next_required_action` | commit/push -> remote GPU/process audit -> Weather smoke -> 10 trainings |
+| `latest_decision` | `confirmation_step8_training_active_formal_test_guarded` |
+| `next_required_action` | low-frequency progress audit -> 10/10 -> single formal test -> three-seed analyzer |
 | `method_training_authorized` | seeds2022/2023 10 trainings + one frozen confirmation formal test true |
 | `rollback_point` | exact v1 negative/no pathology -> Step4；pathology -> Step7 repair |
 
@@ -31,7 +31,7 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | BSCA confirmation Step7B prelaunch |
+| `current_step` | BSCA confirmation Step8 training |
 | `problem` | direct policy同时控制prediction mixture与fused-loss gradient allocation，可能形成harmful co-adaptation |
 | `existence_evidence` | new EQUAL exact historical；ARMERR/SHUFFLED +0.6577/+0.6557%；D0 post-hoc negative |
 | `idea` | EQUAL + matched schedule/weight uniform policy KL，train-only balanced scope co-adaptation |
@@ -40,7 +40,7 @@
 | `narrative_gate` | conditional pass；generic primitive不新，ISCF-specific contribution chain待test支持 |
 | `effectiveness_gate` | pass：+0.3104/+0.4902%；15/20；3/5 datasets；3/4 horizons；health pass |
 | `artifacts` | full Step4–7A + 5 trainings + 5 formal tests + four-layer Step9/10 report |
-| `decision` | `confirmation_step7b_prelaunch_pass_remote_resource_smoke_next` |
+| `decision` | `confirmation_step8_training_active_formal_test_guarded` |
 
 ## Frozen Carrier Contract
 
@@ -64,7 +64,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
-| `ISCF-BSCA-v1` | `confirmation_authorized_prelaunch` | broad train-time anchor能否稳定scope-gradient access并提升ISCF | chain supported at single seed；three-seed robustness pending | seed2021 +0.3104/+0.4902%；confirmation 10 trainings/test authorized | commit/remote smoke/train/test |
+| `ISCF-BSCA-v1` | `confirmation_training_active` | broad train-time anchor能否稳定scope-gradient access并提升ISCF | chain supported at single seed；three-seed robustness pending | seed2021 +0.3104/+0.4902%；10-run confirmation training active | 10/10 -> one formal test -> three-seed audit |
 | `SC-ISCF-UPA-D2` | `superseded_by_bsca_v1` | information-free uniform train-time anchor能否复现ARMERR/SHUFFLED gain | user chose outcome-first method route | not executed as separate diagnostic | retain design history only |
 | `SC-ISCF-PSA-D1` | `control_complete_h2_supported` | contemporaneous no-route EQUAL能否解释new ARMERR/SHUFFLED公共gain | not a method；只隔离H2/H3 | exact EQUAL tie；controls +0.6577/+0.6557%；H2 pass | feeds UPA-D2 only |
 | `SC-ISCF-PSA-D0` | `diagnostic_only_closed_h1_not_supported` | EQUAL frozen policy向uniform收缩是否存在stable held-out frontier | diagnostic only；generic shrinkage不是paper claim | L1/MSE -0.2431%/-0.1218%；1/5 datasets；2/15 runs | no alpha/temperature rescue；retain joint-training unresolved |
@@ -279,11 +279,14 @@ Historical and control queue:
 | ISCF-SCC Step9 / RSCC Step5–7 | 20-run SCC result + reliability failure attribution + exact hybrid implementation | SCC vs EQUAL -3.1750%；EQUAL headroom +18.08% vs SCC -14.93%；RSCC skill identity/regression pass | SCC closed；RSCC resource smoke next；test false | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/scc_step9_result_and_rscc_step5_6_design.md` |
 | ISCF-RSCC Step8 launch | same-init Weather RSCC/SHUFFLED smoke + 15-run three-arm validation matrix | skill loss exact match；route/nonzero gradients finite；commit `020eea3`；first Weather jobs active | validation running；full-matrix Step9 only；formal test false | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/rscc_step8_remote_launch.md` |
 | ISCF-RSCC Step9 | 20 effective runs + 80 validation cells + controls/internal health | vs EQUAL +0.5189%；vs ARMERR/SHUFFLED -0.1414%/-0.1394%；alignment 0.1539 < 0.2052 | control attribution fail；exact route closed；return Step2/4 | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/rscc_step9_result_and_rollback.md` |
+| ISCF-BSCA-v1 confirmation Step7B | frozen two-seed runner/analyzer/checker + 10 reused EQUAL references | 10-job dry-run、reference 10/10、test guard与local checker pass | remote resource smoke next；objective/gates frozen | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_bsca_v1_confirmation_prelaunch_20260722/confirmation_design_and_prelaunch.md` |
+| ISCF-BSCA-v1 confirmation Step8 launch | commit-pinned pull + GPU audit + Weather smoke + three-worker launch | `72e3356`；GPU0/1/2；first Weather/ETTm1 jobs in epoch1；test 0/10 | training active；10/10 before one formal test | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_bsca_v1_confirmation_prelaunch_20260722/remote_launch_record.md` |
 
 ## Pending Tasks
 
 | Task | Status | Next Action |
 | --- | --- | --- |
+| ISCF-BSCA-v1 three-seed confirmation | `training_active` | low-frequency progress only；10/10后single formal test与three-seed audit |
 | ISCF-RSCC-v1 validation matrix | `completed_control_attribution_fail` | exact route closed；retain artifacts/control clue；return Step2/4 |
 | Freeze natural carrier | `completed` | 不再调 profile |
 | ISCF-v0 SAC formal test | `completed_attribution_fail` | no rerun/rescue；use complete negative result in portfolio decision |

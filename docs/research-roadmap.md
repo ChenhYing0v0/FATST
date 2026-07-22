@@ -7,6 +7,11 @@
 
 冻结两级gate：direction robustness要求macro MSE/MAE positive、2/3 seeds、3/5 datasets、3/4 horizons；paper-core
 promotion进一步要求macro MSE >=+0.3%、minimum dataset >-2%、ETTm2 >=-1%与health/nonmutation pass。
+
+[Step 8 Launch] commit `72e3356`、three-GPU preflight与Weather resource smoke通过。10-run training于
+2026-07-22 19:39:57 +08:00启动：seed2022=`GPU0/1`、seed2023=`GPU2`，首批三个jobs进入epoch1；formal test
+保持`0/10`，仅在10/10 training artifacts完整后执行一次。Decision=
+`confirmation_step8_training_active_formal_test_guarded`。
 Local contract、10-job dry-run、10/10 formal guard和reference completeness均通过。下一步commit-pinned remote pull、
 GPU/process audit与Weather smoke，通过后启动10 trainings；10/10前formal test硬禁用。
 

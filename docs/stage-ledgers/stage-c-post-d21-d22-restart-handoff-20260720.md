@@ -395,6 +395,9 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
      2/3 seeds、3/5 datasets、3/4 horizons；paper-core gate额外要求MSE >=+0.3%、minimum dataset >-2%、ETTm2 >=-1%。
 128. Local config/runner/analyzer/checker、10-job dry-run、10/10-before-test guard与reference completeness通过。
      Decision=`confirmation_step7b_prelaunch_pass_remote_resource_smoke_next`。
+129. commit `72e3356`已remote fast-forward；GPU0/1/2 preflight均`18 MiB`、Weather resource smoke通过。10-run
+     confirmation于`2026-07-22T19:39:57+08:00`启动，首批Weather2022、ETTm1-2022、Weather2023进入epoch1。
+     Decision=`confirmation_step8_training_active_formal_test_guarded`；formal test `0/10`，10/10前禁止执行。
 
 ## 5. D22-HFA 的执行顺序
 
