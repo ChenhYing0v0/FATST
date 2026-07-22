@@ -52,6 +52,12 @@ def read_csv(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(handle))
 
 
+def json_default(value: object) -> object:
+    if isinstance(value, np.generic):
+        return value.item()
+    raise TypeError(f"unsupported JSON value: {type(value).__name__}")
+
+
 def arm_ids(config: dict[str, Any]) -> tuple[tuple[str, ...], tuple[str, ...]]:
     all_arms = tuple(str(arm["id"]) for arm in config["arms"])
     new_arms = tuple(
@@ -639,7 +645,13 @@ def main() -> None:
     write_csv(args.output_dir / "internal_health.csv", internal_rows)
     write_csv(args.output_dir / "training_health.csv", training_rows)
     (args.output_dir / "decision.json").write_text(
-        json.dumps(decision, indent=2, sort_keys=True) + "\n",
+        json.dumps(
+            decision,
+            indent=2,
+            sort_keys=True,
+            default=json_default,
+        )
+        + "\n",
         encoding="utf-8",
     )
     print(
