@@ -7,14 +7,26 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Post-RSCC Step2/4 audit complete；PSA-D0 frozen diagnostic |
+| `current_11_step` | PSA-D0 negative；H1 closed；H2/H3 attribution unresolved |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | active method=none；ISCF fixed base；PSA-D0 diagnostic-only；RSCC/SCC exact route closed |
+| `paper_core_status` | active method=none；ISCF fixed base；post-hoc shrinkage closed；H2/H3 control pending |
+
+[ISCF PSA-D0 Result, 2026-07-22] 15/15 existing EQUAL validation replays的LODO frozen-policy diagnostic完整。
+Convex-uniform shrinkage macro L1/MSE=`-0.2431%/-0.1218%`，仅1/5 datasets、2/15 runs joint-positive；
+selected alpha为`[.3,0,.2,.5,.75]`，4/5 nonzero却在ETTh1/ETTm2/Weather held-out反转。scope-marginal与
+temperature controls同样macro negative。
+
+Decision=`frozen_inference_shrinkage_not_supported`：关闭post-hoc uniform/temperature rescue，H1
+`inference_weight_overfit`不受支持。failure=`frozen_probe_negative_joint_training_unresolved`；该结果不能拒绝
+joint-training co-adaptation。下一识别节点`SC-ISCF-PSA-D1`已冻结为five-dataset seed2021 contemporaneous EQUAL
+control，用于区分H2 co-adaptation与H3 run drift；implementation/remote training/test尚未授权。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_rscc_step24_20260722/psa_d0_result_and_rollback.md`
+与`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_rscc_step24_20260722/psa_d1_contemporaneous_equal_control_design.md`。
 
 [ISCF Post-RSCC Step2/4 / PSA-D0, 2026-07-22] function-level audit确认ARMERR与SHUFFLED不仅validation
 MSE彼此只差`0.0020%`，其seed2021 fused relative L1仅`0.00138--0.00462`、policy mean L1仅

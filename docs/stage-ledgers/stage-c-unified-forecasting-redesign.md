@@ -6,41 +6,41 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | no-binding controls的公共gain是否来自finite-data下的direct-policy over-flexibility |
+| `active_question` | ARMERR/SHUFFLED公共gain来自training co-adaptation还是contemporaneous run drift |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | active method=none；PSA-D0 diagnostic-only；ISCF-v0 fixed base/carrier；SCC/RSCC closed |
+| `active_candidates` | active method=none；PSA-D0 closed H1；D1 control-only pending；ISCF-v0 fixed base |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
 | `stage_exit` | 新problem先通过existence/narrative gate，再决定一项或两项可归因contributions |
-| `stage_rollback` | PSA-D0只检验frozen H1；negative回Step2并保留joint-training unresolved；CTD paused |
+| `stage_rollback` | frozen shrinkage closed；D1只区分H2/H3；new paper method仍需Step4 gate；CTD paused |
 
 ## Decision Cursor
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Post-RSCC Step2/4 audit complete；PSA-D0 diagnostic |
-| `current_candidate` | no method；`SC-ISCF-PSA-D0` diagnostic-only |
-| `latest_decision` | `policy_shrinkage_problem_unresolved_proceed_d0_diagnostic_only` |
-| `next_required_action` | run existing-validation PSA-D0；analyze full 15-run LODO matrix |
+| `current_11_step` | PSA-D0 complete；H1 closed；return Step2 attribution |
+| `current_candidate` | no method；D1 contemporaneous EQUAL is control-only proposal |
+| `latest_decision` | `frozen_inference_shrinkage_not_supported` |
+| `next_required_action` | obtain authorization for D1 Step7A + five-run validation；no launch yet |
 | `method_training_authorized` | false；formal test/confirmation/modern baselines false |
-| `rollback_point` | D0 negative仅拒绝frozen H1；no SCC/RSCC or alpha-grid rescue |
+| `rollback_point` | reject post-hoc H1；retain H2/H3 unresolved；no alpha/temperature rescue |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Step2/4 problem audit；D0 diagnostic-only ready |
-| `problem` | learned direct policy是否具有超过finite validation evidence支持的conditional flexibility |
-| `existence_evidence` | ARMERR/SHUFFLED均约+0.656%且functionally near-equivalent；policy entropy均near 1 |
-| `idea` | frozen convex shrinkage隔离inference policy frontier，不增加信息或requested-H |
-| `theory_check` | Bayes predictor不变；只测试finite-sample/function-class effect；historical EQUAL confound显式保留 |
-| `design` | 15 EQUAL replays；fixed grids；147/109 split；LODO；uniform/marginal/temperature controls |
-| `narrative_gate` | diagnostic-only pass；generic shrinkage/balancing paper novelty fail |
-| `effectiveness_gate` | not applicable；validation diagnostic，official test=false |
-| `artifacts` | Step2/4 report + PSA-D0 config/analyzer/code explanation |
-| `decision` | `policy_shrinkage_problem_unresolved_proceed_d0_diagnostic_only` |
+| `current_step` | D0 complete；Step2 H2/H3 attribution unresolved |
+| `problem` | 公共control gain是否需要joint-training route regularization，还是new-run drift |
+| `existence_evidence` | post-hoc convex/marginal/temperature全macro negative；new controls仍约+0.656% vs historical EQUAL |
+| `idea` | contemporaneous no-route EQUAL retrain作为最小control，不是method |
+| `theory_check` | same code/config/init/selector可隔离historical-reference confound；仍只validation |
+| `design` | proposed five datasets × seed2021 EQUAL；compare historical EQUAL and existing ARMERR/SHUFFLED |
+| `narrative_gate` | control-only；paper method gate not applicable |
+| `effectiveness_gate` | D0 H1 fail；D1 pending；official test=false |
+| `artifacts` | PSA-D0 15-run outputs + result report + frozen D1 control design |
+| `decision` | `frozen_inference_shrinkage_not_supported_return_step2_h2_h3` |
 
 ## Frozen Carrier Contract
 
@@ -64,7 +64,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
-| `SC-ISCF-PSA-D0` | `diagnostic_only_frozen_ready` | EQUAL frozen policy向uniform收缩是否存在stable held-out frontier | diagnostic pass；generic shrinkage不是paper claim | pending 15-run LODO validation；test=false | execute existing artifacts only；then Step2/4 decision |
+| `SC-ISCF-PSA-D1` | `control_design_frozen_not_authorized` | contemporaneous no-route EQUAL能否解释new ARMERR/SHUFFLED公共gain | not a method；只隔离H2/H3 | pending five validation runs；test=false | request Step7A/remote authorization |
+| `SC-ISCF-PSA-D0` | `diagnostic_only_closed_h1_not_supported` | EQUAL frozen policy向uniform收缩是否存在stable held-out frontier | diagnostic only；generic shrinkage不是paper claim | L1/MSE -0.2431%/-0.1218%；1/5 datasets；2/15 runs | no alpha/temperature rescue；retain joint-training unresolved |
 | `SC-ISCF-RSCC-v1` | `closed_control_attribution_fail` | 保留EQUAL reliability时，exact coalition policy credit能否兑现已有arm complementarity | pre-result conditional；post-result binding claim fail | vs EQUAL +0.5189% pass；vs ARMERR/SHUFFLED -0.1414%/-0.1394%；alignment fail | no formal test/rescue；rollback Step2/4 |
 | `SC-ISCF-SCC-v0` | `closed_intervention_point_wrong` | fused-only + coalition KL能否改善scope coordination | narrative coherent；exact training intervention failed | vs EQUAL -3.1750%；headroom +18.08% -> -14.93% | no seed/lambda rescue；evidence feeds RSCC only |
 
@@ -850,3 +851,11 @@ Historical and control queue:
      co-adaptation与H3 run drift仍混杂，不得把ARMERR直接升级为carrier/method。
 149. `SC-ISCF-PSA-D0`冻结为existing validation artifact diagnostic：15 replays、fixed grids、147/109 split、LODO
      selection，uniform/marginal/temperature controls；training/test/method=false。negative不得拒绝joint-training方向。
+150. PSA-D0 primary convex-uniform macro L1/MSE=`-0.2431%/-0.1218%`，1/5 datasets、2/15 runs joint-positive；
+     scope-marginal与temperature也macro negative。Decision=`frozen_inference_shrinkage_not_supported`。
+151. 4/5 folds在source-fit选择nonzero alpha却多在held-out反转，故禁止alpha/dataset/position rescue。H1 closed；
+     failure=`frozen_probe_negative_joint_training_unresolved`。
+152. 下一最小control=`SC-ISCF-PSA-D1`：contemporaneous seed2021 EQUAL × five datasets，validation-only，区分H2
+     co-adaptation与H3 run drift。当前proposed/not authorized；active method none，test=false。
+153. D1 protocol已冻结：new EQUAL recovery ratio与dataset/horizon gates区分`run_drift_explains`、
+     `joint_training_route_regularization_supported_as_carrier_clue`或`unresolved`。config/runner/remote/test均false。

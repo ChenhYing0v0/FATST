@@ -80,15 +80,15 @@
 | `project` | R_2026_FATST |
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-22 |
-| `source_parent_commit` | `020eea3`（RSCC Step7A + frozen Step7B execution commit） |
-| `current_step` | Post-RSCC Step2/4 audit complete；PSA-D0 diagnostic-only |
-| `active_problem` | no-binding controls的公共gain是否来自finite-data direct-policy over-flexibility |
-| `active_method` | none；PSA-D0 diagnostic-only；ISCF-v0 fixed base/carrier；SCC-v0与RSCC-v1 closed |
+| `source_parent_commit` | `829a1e2`（Post-RSCC audit + frozen PSA-D0 protocol） |
+| `current_step` | PSA-D0 complete；H1 closed；H2/H3 Step2 attribution unresolved |
+| `active_problem` | ARMERR/SHUFFLED公共gain来自training co-adaptation还是contemporaneous run drift |
+| `active_method` | none；D1 control-only proposed；ISCF-v0 fixed base；post-hoc shrinkage/SCC/RSCC closed |
 | `method_training_authorized` | false |
 | `remote_training_authorized` | false；formal test/modern baselines false |
-| `next_action` | execute PSA-D0 on existing validation replays；full 15-run LODO decision |
-| `conditional_next` | D0 positive只返回Step4；仍需new narrative/design gate才可method implementation |
-| `rollback` | D0 negative仅拒绝frozen H1；joint-training remains unresolved；no alpha-grid rescue |
+| `next_action` | obtain authorization for frozen D1 Step7A + five-run validation；no launch yet |
+| `conditional_next` | D1若支持H2，仍须Step4 novel mechanism gate；若支持H3则关闭common-gain clue |
+| `rollback` | H1 frozen shrinkage closed；joint-training unresolved；no alpha/temperature rescue |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
 
@@ -349,6 +349,14 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
      仍混杂。`SC-ISCF-PSA-D0`只检验H1，frozen negative不得作direction rejection。
 105. PSA-D0冻结15 existing replays、fixed grids、147/109 source-aligned split、LODO global selection和three control
      families。existing artifact analysis=true；new training、test、checkpoint mutation与method implementation=false。
+106. PSA-D0 15/15完整：convex-uniform L1/MSE=`-0.2431%/-0.1218%`，1/5 datasets、2/15 runs；marginal与
+     temperature controls也macro negative。Decision=`frozen_inference_shrinkage_not_supported`。
+107. source-fit nonzero alpha在held-out datasets反转，禁止alpha/dataset/position rescue。该结果只关闭H1 post-hoc
+     shrinkage；frozen fairness要求H2 joint-training仍保持unresolved。
+108. 下一最小attribution control是five-dataset seed2021 contemporaneous EQUAL retrain，用于区分H2与H3 run drift。
+     该D1 design已冻结但launch未获remote authorization；active method none，formal test=false。
+109. D1 control design现已冻结，包含recovery ratio、dataset/horizon gates与no-test boundary；implementation、resource
+     smoke、five-run training和method promotion全部false，等待明确授权。
 
 ## 5. D22-HFA 的执行顺序
 

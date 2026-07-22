@@ -1,5 +1,17 @@
 # Research Roadmap
 
+## ISCF PSA-D0 Result and Rollback (2026-07-22)
+
+15-run LODO frozen diagnostic完整。Convex-uniform macro L1/MSE=`-0.2431%/-0.1218%`，1/5 datasets、2/15
+runs joint-positive；4/5 folds虽选择nonzero alpha，但ETTh1/ETTm2/Weather held-out反转。scope-marginal与temperature
+controls也分别为`-0.2570%/-0.1477%`、`-0.2615%/-0.2378%`。
+
+Decision=`frozen_inference_shrinkage_not_supported`。H1 post-hoc policy overfit关闭，不做alpha/dataset/position
+rescue；generic entropy/temperature route不升candidate。failure=`frozen_probe_negative_joint_training_unresolved`，
+不能拒绝训练期co-adaptation。下一最小attribution control `SC-ISCF-PSA-D1`已冻结为five-dataset seed2021
+contemporaneous EQUAL retrain，以区分H2 co-adaptation与H3 run drift；implementation、remote training与formal test
+尚未授权，active method=none。
+
 ## ISCF Post-RSCC Step2/4 and PSA-D0 (2026-07-22)
 
 ARMERR与SHUFFLED共同超过EQUAL约`+0.656%` validation MSE且彼此只差`0.0020%`；seed2021 probes进一步显示

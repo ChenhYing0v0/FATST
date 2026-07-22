@@ -1,0 +1,29 @@
+{
+  "baseline_entropy_gain_l1_spearman": 0.16428571428571426,
+  "checks": {
+    "dataset_stability": false,
+    "macro_joint_positive": false,
+    "matrix_complete": true,
+    "nonzero_selection": true,
+    "run_stability": false
+  },
+  "decision": "frozen_inference_shrinkage_not_supported",
+  "diagnostic_id": "SC-ISCF-PSA-D0",
+  "failure_attribution": "frozen_probe_negative_or_unstable_joint_training_unresolved",
+  "forecast_model_training_authorized": false,
+  "formal_test_access_authorized": false,
+  "macro_gain_l1_percent": -0.2430891427895491,
+  "macro_gain_mse_percent": -0.12182783027760176,
+  "method_implementation_authorized": false,
+  "positive_dataset_count": 1,
+  "positive_run_count": 2,
+  "positive_selected_fold_count": 4,
+  "runs": 15,
+  "selected_alphas": [
+    0.3,
+    0.0,
+    0.2,
+    0.5,
+    0.75
+  ]
+}
