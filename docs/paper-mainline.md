@@ -7,14 +7,28 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF-BSCA-v1 Step4–6 complete；Step7A implemented/prelaunch audit |
+| `current_11_step` | ISCF-BSCA-v1 Step9/10 complete；single-seed performance partial pass |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | active candidate=`ISCF-BSCA-v1`；ISCF fixed base；conditional narrative pass |
+| `paper_core_status` | active candidate=`ISCF-BSCA-v1`；`performance_partial_pass_pending_confirmation_seed` |
+
+[ISCF-BSCA-v1 Step9/10, 2026-07-22] 5/5 trainings、5/5 frozen formal tests、20/20 standard-horizon cells
+完整；candidate与EQUAL五个datasets的all initialization hashes exact paired，test checkpoint SHA before/after不变。
+BSCA vs EQUAL test MSE/MAE=`+0.3104%/+0.4902%`，15/20 cells、3/5 datasets、3/4 horizons，全部冻结
+performance gates刚好通过。Validation为`+0.6490%/+0.4492%`。
+
+内部机制与设计一致：policy entropy `0.9983 vs 0.7913`、marginal max usage `0.2042 vs 0.2528`；arms未
+collapse，但pairwise L1从0.1219降至0.1165，oracle headroom `32.56% vs 33.01%`。因此支持的是balanced
+scope co-adaptation/gradient access，不是更强conditional specialization。Weather/ETTm1/ETTh1 positive；ETTh2 tie，
+ETTm2 test `-1.7375%`且存在validation/test reversal，必须完整报告。
+
+Decision=`performance_partial_pass_pending_confirmation_seed`。当前只完成seed2021，不能升级passed core或声称robustness；
+confirmation seeds 2022/2023 尚未授权。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_bsca_v1_step9_10_20260722/step9_10_result_and_confirmation_handoff.md`。
 
 [ISCF-BSCA-v1 Step4–7A, 2026-07-22] 用户将低成本诊断优先级改为 outcome-first paper route，并明确授权
 Step4–7A、five-run seed2021 training 与 5/5 完成后的一次 frozen formal test。UPA-D2 diagnostic 被

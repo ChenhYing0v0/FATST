@@ -381,6 +381,14 @@ conditional mean不依赖requested horizon。故“允许输入H”不等于“H
      Generic balancing不是novelty claim，完整贡献链为policy-mediated scope-gradient allocation与balanced co-adaptation。
 121. Formal gate冻结为vs EQUAL test MSE >=+0.3%、MAE >0、3/5 datasets、3/4 horizons、20/20 cells与health/nonmutation
      pass。confirmation seeds、per-cell tuning和lambda search保持false。
+122. BSCA seed2021 five trainings与five formal tests全部完成；candidate/EQUAL initialization hashes全配对，test
+     checkpoint SHA nonmutation，20/20 cells与internal health完整。
+123. Official test MSE/MAE=`+0.3104%/+0.4902%`，15/20 cells、3/5 datasets、3/4 horizons，刚好通过冻结gate；
+     validation=`+0.6490%/+0.4492%`。
+124. Policy entropy `0.9983 vs 0.7913`、usage max `0.2042 vs 0.2528`，pairwise arm L1 `0.1165 vs 0.1219`，
+     oracle headroom `32.56% vs 33.01%`。支持balanced co-adaptation，不支持strong conditional specialization。
+125. ETTm2 test mean `-1.7375%`且H192/H336/H720 material negative。Decision=
+     `performance_partial_pass_pending_confirmation_seed`；confirmation seeds2022/2023仍未授权，禁止test-informed tuning。
 
 ## 5. D22-HFA 的执行顺序
 

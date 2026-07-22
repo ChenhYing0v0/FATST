@@ -1,0 +1,12 @@
+bsca_start=2026-07-22T17:33:06+08:00
+commit=e9e827993c040758eaa46bf3a340f0553972d9d7
+output_root=/home/yingch/exp_outputs/r-2026-fatst/stage_c_iscf_bsca_v1
+config_hash=2826946b54e5fbf3cee376b5c571cb8cdaec3cdc41624d3b3657daf6b3aebdea
+profile_hash=80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a
+gpu_ids=0 1 2
+jobs=5
+formal_test_execution_mode=1
+test_informed=true
+0, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0
+1, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0
+2, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0

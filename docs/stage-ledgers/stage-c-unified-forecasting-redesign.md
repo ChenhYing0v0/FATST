@@ -9,7 +9,7 @@
 | `active_question` | balanced train-time scope-gradient access能否提升ISCF official-test性能并形成第二项贡献 |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-run end-to-end `A6-LBF-natural-baseline`；frozen A6只作reference/diagnostic |
-| `active_candidates` | `ISCF-BSCA-v1` conditional active；D1为causal evidence；UPA-D2 superseded |
+| `active_candidates` | `ISCF-BSCA-v1` single-seed performance partial pass；confirmation pending authorization |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
@@ -20,27 +20,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | BSCA Step4–6 complete；Step7A implemented/prelaunch |
+| `current_11_step` | BSCA Step9/10 complete；confirmation gate pending |
 | `current_candidate` | `ISCF-BSCA-v1` |
-| `latest_decision` | `bsca_step4_6_conditional_pass_step7a_prelaunch` |
-| `next_required_action` | local verification -> commit/push -> GPU/process audit -> Weather smoke -> 5 runs |
-| `method_training_authorized` | seed2021 five runs + one frozen formal test true；confirmation false |
+| `latest_decision` | `performance_partial_pass_pending_confirmation_seed` |
+| `next_required_action` | freeze/authorize seeds2022/2023 confirmation or stop at partial pass |
+| `method_training_authorized` | seed2021 task complete；confirmation false |
 | `rollback_point` | exact v1 negative/no pathology -> Step4；pathology -> Step7 repair |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | BSCA Step7A/prelaunch |
+| `current_step` | BSCA Step10 partial pass；confirmation not authorized |
 | `problem` | direct policy同时控制prediction mixture与fused-loss gradient allocation，可能形成harmful co-adaptation |
 | `existence_evidence` | new EQUAL exact historical；ARMERR/SHUFFLED +0.6577/+0.6557%；D0 post-hoc negative |
 | `idea` | EQUAL + matched schedule/weight uniform policy KL，train-only balanced scope co-adaptation |
 | `theory_check` | target/history/H-free；只直接校准policy，借fused loss改变joint arms；inference unchanged |
 | `design` | 5 datasets × seed2021 BSCA；ISCF-EQUAL matched control；5/5后single formal test |
 | `narrative_gate` | conditional pass；generic primitive不新，ISCF-specific contribution chain待test支持 |
-| `effectiveness_gate` | test MSE >=+0.3%、MAE >0、3/5 datasets、3/4 horizons、20/20 complete |
-| `artifacts` | Step4–6 report + frozen config + objective/checker/runner/analyzer/code explanation |
-| `decision` | `bsca_step4_6_conditional_pass_step7a_prelaunch` |
+| `effectiveness_gate` | pass：+0.3104/+0.4902%；15/20；3/5 datasets；3/4 horizons；health pass |
+| `artifacts` | full Step4–7A + 5 trainings + 5 formal tests + four-layer Step9/10 report |
+| `decision` | `performance_partial_pass_pending_confirmation_seed` |
 
 ## Frozen Carrier Contract
 
@@ -64,7 +64,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
-| `ISCF-BSCA-v1` | `conditional_active_step7a_prelaunch` | broad train-time anchor能否稳定scope-gradient access并提升ISCF | full-chain conditional pass；generic balancing不声称novel | one frozen 20-cell official test authorized after 5/5 training | verify/commit/remote smoke/train/test |
+| `ISCF-BSCA-v1` | `performance_partial_pass_pending_confirmation_seed` | broad train-time anchor能否稳定scope-gradient access并提升ISCF | chain supported at single seed；generic balancing不声称novel | test +0.3104/+0.4902%；15/20；3/5 datasets；3/4 horizons | request/freeze seeds2022/2023 confirmation |
 | `SC-ISCF-UPA-D2` | `superseded_by_bsca_v1` | information-free uniform train-time anchor能否复现ARMERR/SHUFFLED gain | user chose outcome-first method route | not executed as separate diagnostic | retain design history only |
 | `SC-ISCF-PSA-D1` | `control_complete_h2_supported` | contemporaneous no-route EQUAL能否解释new ARMERR/SHUFFLED公共gain | not a method；只隔离H2/H3 | exact EQUAL tie；controls +0.6577/+0.6557%；H2 pass | feeds UPA-D2 only |
 | `SC-ISCF-PSA-D0` | `diagnostic_only_closed_h1_not_supported` | EQUAL frozen policy向uniform收缩是否存在stable held-out frontier | diagnostic only；generic shrinkage不是paper claim | L1/MSE -0.2431%/-0.1218%；1/5 datasets；2/15 runs | no alpha/temperature rescue；retain joint-training unresolved |

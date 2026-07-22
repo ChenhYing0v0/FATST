@@ -1,0 +1,22 @@
+{
+  "candidate_version": "ISCF-BSCA-v1-seed2021-frozen",
+  "test_informed": true,
+  "matrix_complete": true,
+  "macro_test_mse_gain_percent": 0.31044900268794984,
+  "macro_test_mae_gain_percent": 0.4901542494122781,
+  "test_cell_wins": 15,
+  "dataset_mse_wins": 3,
+  "horizon_mse_wins": 3,
+  "artifact_and_nonmutation_pass": true,
+  "internal_health_pass": true,
+  "candidate_policy_normalized_entropy": 0.9983375655026766,
+  "reference_policy_normalized_entropy": 0.7913095345376383,
+  "candidate_policy_usage_max": 0.20416812354779884,
+  "reference_policy_usage_max": 0.2528052743384254,
+  "candidate_pairwise_arm_l1": 0.11654322118897306,
+  "reference_pairwise_arm_l1": 0.12187858219892352,
+  "candidate_oracle_headroom_percent": 32.555723224523625,
+  "reference_oracle_headroom_percent": 33.01436644463014,
+  "performance_gate_pass": true,
+  "decision": "performance_partial_pass_pending_confirmation_seed"
+}

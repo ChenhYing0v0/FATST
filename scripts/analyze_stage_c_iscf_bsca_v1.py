@@ -43,7 +43,11 @@ def read_rows(path: Path) -> list[dict[str, str]]:
 
 def write_rows(path: Path, rows: list[dict[str, Any]]) -> None:
     with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=list(rows[0]),
+            lineterminator="\n",
+        )
         writer.writeheader()
         writer.writerows(rows)
 
@@ -136,10 +140,14 @@ def main() -> None:
         initialization_hashes = [
             key for key in candidate_initialization if "hash" in key
         ]
+        checkpoint_hash = sha256(candidate / "checkpoint.pt")
         audit.append({
             "dataset": dataset,
             "missing_count": len(missing),
-            "checkpoint_sha256": sha256(candidate / "checkpoint.pt"),
+            "checkpoint_sha256": checkpoint_hash,
+            "checkpoint_hash_matches_test_invariant": (
+                checkpoint_hash == invariant.get("checkpoint_sha256")
+            ),
             "objective": effective["adapter"]["pcc_objective_mode"],
             "initialization_paired_all_hashes": bool(
                 initialization_hashes
@@ -215,6 +223,7 @@ def main() -> None:
     artifacts_pass = all(
         row["missing_count"] == 0
         and row["initialization_paired_all_hashes"]
+        and row["checkpoint_hash_matches_test_invariant"]
         and row["test_invariant_pass"]
         and row["checkpoint_retrained_for_candidate"]
         for row in audit

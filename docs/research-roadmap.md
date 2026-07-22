@@ -1,5 +1,19 @@
 # Research Roadmap
 
+## ISCF-BSCA-v1 Step9/10 Result (2026-07-22)
+
+Five trainings与single frozen formal test均5/5完整；candidate/EQUAL initialization hashes逐dataset全配对，checkpoint
+nonmutation与protocol invariants通过。Official test MSE/MAE=`+0.3104%/+0.4902%`，15/20 cells、3/5 datasets、
+3/4 horizons，刚好通过预注册gate；validation=`+0.6490%/+0.4492%`。
+
+Mechanism health显示policy被稳定推向broad access：entropy `0.9983 vs 0.7913`、usage max `0.2042 vs 0.2528`；
+pairwise arm L1仅小幅下降，oracle headroom仍32.56%。该结果支持balanced co-adaptation，不支持conditional-routing
+specialization claim。ETTm2 test mean `-1.7375%`且H192/H336/H720 material negative，因此结论保持single-seed partial。
+
+Decision=`performance_partial_pass_pending_confirmation_seed`。下一步只可在新授权与新冻结matrix后运行BSCA seeds
+2022/2023，并复用对应EQUAL references；不允许lambda/dataset/horizon tuning。若跨seed positive再升paper core；否则
+回Step4收窄claim，不否定fixed ISCF architecture。
+
 ## ISCF-BSCA-v1 Step4–7A and Frozen Test Gate (2026-07-22)
 
 用户明确停止将 broad-anchor sufficiency 作为独立诊断门槛，授权直接形成 outcome-first method candidate。UPA-D2由
