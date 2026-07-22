@@ -62,6 +62,43 @@ def selected_metrics(directory: Path, split: str) -> dict[int, dict[str, str]]:
     return selected
 
 
+def internal_metrics(directory: Path) -> dict[str, float | bool]:
+    diagnostics = np.load(directory / "pcsd_test_audit_diagnostics.npz")
+    policy = diagnostics["probe_direct_policy"].astype(np.float64)
+    arms = diagnostics["probe_arms"].astype(np.float64)
+    target = diagnostics["probe_targets"].astype(np.float64)
+    fused = diagnostics["probe_fused"].astype(np.float64)
+    usage = policy.mean(axis=(0, 1))
+    normalized_entropy = -np.sum(
+        policy * np.log(np.clip(policy, 1e-12, None)), axis=-1
+    ).mean() / np.log(policy.shape[-1])
+    pairwise_l1 = np.mean(
+        [
+            np.mean(np.abs(arms[:, left] - arms[:, right]))
+            for left in range(arms.shape[1])
+            for right in range(left + 1, arms.shape[1])
+        ]
+    )
+    arm_error = np.square(arms - target[:, None, :])
+    fused_mse = float(np.mean(np.square(fused - target)))
+    oracle_mse = float(np.mean(np.min(arm_error, axis=1)))
+    return {
+        "all_finite": bool(
+            np.isfinite(policy).all()
+            and np.isfinite(arms).all()
+            and np.isfinite(target).all()
+            and np.isfinite(fused).all()
+        ),
+        "policy_normalized_entropy": float(normalized_entropy),
+        "policy_usage_max": float(usage.max()),
+        "policy_usage_min": float(usage.min()),
+        "pairwise_arm_l1": float(pairwise_l1),
+        "oracle_headroom_percent": float(
+            100.0 * (fused_mse - oracle_mse) / fused_mse
+        ),
+    }
+
+
 def gain(reference: float, candidate: float) -> float:
     return 100.0 * (reference - candidate) / reference
 
@@ -72,6 +109,7 @@ def main() -> None:
     args.output_dir.mkdir(parents=True, exist_ok=True)
     audit: list[dict[str, Any]] = []
     cells: list[dict[str, Any]] = []
+    health: list[dict[str, Any]] = []
     for dataset in DATASETS:
         candidate = run_dir(args.candidate_root, dataset, True)
         reference = run_dir(args.reference_root, dataset, False)
@@ -95,6 +133,17 @@ def main() -> None:
             "test_invariant_pass": invariant.get("pass"),
             "checkpoint_retrained_for_candidate": invariant.get("checkpoint_retrained"),
         })
+        for arm, directory in (
+            ("iscf_bsca_v1", candidate),
+            ("iscf_equal", reference),
+        ):
+            health.append(
+                {
+                    "arm": arm,
+                    "dataset": dataset,
+                    **internal_metrics(directory),
+                }
+            )
         for split in ("val", "test"):
             c_metrics = selected_metrics(candidate, split)
             r_metrics = selected_metrics(reference, split)
@@ -154,6 +203,13 @@ def main() -> None:
         and dataset_wins >= gates["dataset_mse_wins_min"]
         and horizon_wins >= gates["horizon_mse_wins_min"]
     )
+    candidate_health = [
+        row for row in health if row["arm"] == "iscf_bsca_v1"
+    ]
+    reference_health = [
+        row for row in health if row["arm"] == "iscf_equal"
+    ]
+    internal_health_pass = all(row["all_finite"] for row in health)
     summary = {
         "candidate_version": config["candidate_version"],
         "test_informed": True,
@@ -164,11 +220,45 @@ def main() -> None:
         "dataset_mse_wins": int(dataset_wins),
         "horizon_mse_wins": int(horizon_wins),
         "artifact_and_nonmutation_pass": artifacts_pass,
+        "internal_health_pass": internal_health_pass,
+        "candidate_policy_normalized_entropy": float(
+            np.mean(
+                [row["policy_normalized_entropy"] for row in candidate_health]
+            )
+        ),
+        "reference_policy_normalized_entropy": float(
+            np.mean(
+                [row["policy_normalized_entropy"] for row in reference_health]
+            )
+        ),
+        "candidate_policy_usage_max": float(
+            np.mean([row["policy_usage_max"] for row in candidate_health])
+        ),
+        "reference_policy_usage_max": float(
+            np.mean([row["policy_usage_max"] for row in reference_health])
+        ),
+        "candidate_pairwise_arm_l1": float(
+            np.mean([row["pairwise_arm_l1"] for row in candidate_health])
+        ),
+        "reference_pairwise_arm_l1": float(
+            np.mean([row["pairwise_arm_l1"] for row in reference_health])
+        ),
+        "candidate_oracle_headroom_percent": float(
+            np.mean([row["oracle_headroom_percent"] for row in candidate_health])
+        ),
+        "reference_oracle_headroom_percent": float(
+            np.mean([row["oracle_headroom_percent"] for row in reference_health])
+        ),
         "performance_gate_pass": bool(performance_pass),
-        "decision": "performance_partial_pass_pending_confirmation_seed" if performance_pass and artifacts_pass else "exact_bsca_v1_not_supported_or_invalid",
+        "decision": (
+            "performance_partial_pass_pending_confirmation_seed"
+            if performance_pass and artifacts_pass and internal_health_pass
+            else "exact_bsca_v1_not_supported_or_invalid"
+        ),
     }
     write_rows(args.output_dir / "run_audit.csv", audit)
     write_rows(args.output_dir / "comparison_cells.csv", cells)
+    write_rows(args.output_dir / "internal_health.csv", health)
     (args.output_dir / "summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(summary, indent=2))
 

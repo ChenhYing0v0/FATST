@@ -75,7 +75,7 @@ is_test_complete() {
     && -s "${d}/test_audit_invariants.json" \
     && -s "${d}/pcsd_test_audit_diagnostics.npz" ]] \
     && python3 -c 'import json,sys; assert json.load(open(sys.argv[1]))["pass"] is True' \
-      "${d}/test_audit_invariants.json"
+      "${d}/test_audit_invariants.json" 2>/dev/null
 }
 
 status_counts() {
