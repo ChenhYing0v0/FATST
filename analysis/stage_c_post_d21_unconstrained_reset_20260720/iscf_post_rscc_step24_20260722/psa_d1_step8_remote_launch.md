@@ -68,3 +68,10 @@ Initial scheduling：
 - 5/5与20/20 new cells完整后才运行冻结analyzer；
 - formal test、confirmation seeds与method promotion保持false；
 - 若单run出现numeric/config/artifact failure，只作protocol repair，不产生research decision。
+
+## 6. Evaluator protocol fault addendum
+
+ETTh1 training与standard validation metrics完成后，post-training evaluator因config缺少
+`diagnostic_protocol.future_bins`在probe forward前报`KeyError`。Training checkpoint保持有效；该事件没有产生partial
+attribution或test access。v0.1 evaluator-only repair已冻结；其余training结束前不remote pull，之后统一补做5个
+checkpoint-nonmutation validation diagnostics。

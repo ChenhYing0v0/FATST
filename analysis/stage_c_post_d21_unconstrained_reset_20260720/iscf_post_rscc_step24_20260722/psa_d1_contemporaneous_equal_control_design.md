@@ -2,7 +2,7 @@
 
 ## 1. Decision and role
 
-Decision=`psa_d1_five_run_validation_training_active_formal_test_disabled`。
+Decision=`psa_d1_v01_diagnostic_protocol_repair_frozen_training_continues`。
 
 `SC-ISCF-PSA-D1`不是method candidate，也不测试新loss/router。它只补齐RSCC-v1 attribution matrix中缺失的
 contemporaneous no-route EQUAL，使ARMERR/SHUFFLED公共gain可以在`training co-adaptation`与`run drift`之间归因。
@@ -142,4 +142,5 @@ Step4结合primary sources寻找ISCF-native且能由matched controls识别的机
 | official test | false |
 | method promotion | false |
 
-five runs当前active；5/5完整后运行冻结analyzer，不得读取partial结果修改gates。
+five runs training继续。v0 evaluator缺少future-bin config，已冻结v0.1 evaluator-only repair；training结束后补做5个
+SHA-nonmutation validation diagnostics，再运行冻结analyzer。不得读取partial结果修改gates。

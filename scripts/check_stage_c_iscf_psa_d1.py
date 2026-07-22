@@ -62,11 +62,26 @@ def check_config(config: dict[str, Any]) -> None:
         raise AssertionError("D1 must launch exactly five runs")
     if config["matrix"]["expected_new_runs"] != 5:
         raise AssertionError("D1 matrix size changed")
+    if config["training_contracts"] != [
+        {
+            "target_horizons": [720],
+            "validation_horizons": [96, 192, 336, 720],
+            "pred_loss_mode": "full",
+            "pcc_objective_mode": "equal_skill",
+            "training_final_evaluation_split": "val",
+        }
+    ]:
+        raise AssertionError("D1 evaluator training contract changed")
+    bins = config["diagnostic_protocol"]["future_bins"]
+    if len(bins) != 8 or bins[0]["start"] != 0 or bins[-1]["end"] != 720:
+        raise AssertionError("D1 diagnostic future bins are incomplete")
     authorization = config["authorization"]
     if not authorization["step7a_implementation_authorized"]:
         raise AssertionError("D1 Step7A is not authorized")
     if not authorization["remote_training_authorized"]:
         raise AssertionError("D1 five-run training is not authorized")
+    if not authorization["validation_diagnostic_replay_authorized"]:
+        raise AssertionError("D1 validation diagnostic replay is not authorized")
     if authorization["formal_test_access_authorized"]:
         raise AssertionError("D1 must not authorize formal test")
     if authorization["confirmation_seeds_authorized"]:

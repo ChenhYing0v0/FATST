@@ -7,6 +7,8 @@ PSA-D1新增的不是model module，而是一个control-only execution/analysis 
 - `configs/stage_c_iscf_psa_d1.json`：冻结one-arm five-run matrix、references与H2/H3 gates；
 - `scripts/check_stage_c_iscf_psa_d1.py`：检查source、authorization和EQUAL objective；
 - `scripts/remote/run_stage_c_iscf_psa_d1.sh`：给existing validation runner注入D1 config/output/profile；
+- `scripts/remote/run_stage_c_iscf_psa_d1_diagnostics.sh`：v0.1 evaluator-only validation replay与checkpoint
+  nonmutation；
 - `scripts/analyze_stage_c_iscf_psa_d1.py`：联合new EQUAL与three read-only references做machine attribution。
 
 ISCF forward、five scope arms、direct policy、loss实现和checkpoint selector均未修改。
@@ -127,3 +129,12 @@ $$
 限制：single seed validation只能做attribution clue，不能建立paper effectiveness；即使H2通过，也只说明某类training
 regularization值得回Step4研究，不说明ARMERR或SHUFFLED具备scope semantics或novelty。任何结果均不自动授权test、
 confirmation seeds或method promotion。
+
+## 8. v0.1 evaluator-only repair
+
+首次ETTh1 training完成后，evaluator在读取future bins时发现D1 config缺少`diagnostic_protocol`，于任何probe output前
+抛出`KeyError`。v0.1只增加existing evaluator需要的training contract和eight future bins；training surface与decision
+gates不变。
+
+Dedicated diagnostic runner只对已训练run调用validation evaluator。输入checkpoint的参数shape与forward tensors不变；
+runner在每次forward前后计算SHA256，只有hash完全相等才接受artifact。该repair不允许重训或test access。

@@ -23,7 +23,7 @@
 | `current_11_step` | PSA-D1 Step8 validation running |
 | `current_candidate` | no method；D1 contemporaneous EQUAL control-only |
 | `latest_decision` | `psa_d1_five_run_validation_training_active_formal_test_disabled` |
-| `next_required_action` | wait for 5/5；run frozen analyzer once；no partial selection |
+| `next_required_action` | wait training end；pull v0.1；replay 5 validation diagnostics；then analyzer |
 | `method_training_authorized` | D1 five validation runs true conditional；formal test/confirmation false |
 | `rollback_point` | reject post-hoc H1；retain H2/H3 unresolved；no alpha/temperature rescue |
 
@@ -867,3 +867,7 @@ Historical and control queue:
      initialization hash匹配three references。
 157. five runs于`2026-07-22T16:00:40+08:00`启动，PID=`3975446`，initial 0/5。Decision=
      `psa_d1_five_run_validation_training_active_formal_test_disabled`；5/5前no partial selection/test。
+158. ETTh1 training/standard metrics完成后，evaluator因missing `diagnostic_protocol.future_bins`在probe前失败；标记
+     `diagnostic_protocol_fault_predecision`，不产生H2/H3 decision。
+159. v0.1只补evaluator contracts与SHA-nonmutation validation replay runner；training/checkpoints/gates不变。其余training
+     结束前不remote pull；之后补5 diagnostics再full analyzer。

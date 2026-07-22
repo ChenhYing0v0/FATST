@@ -16,6 +16,14 @@
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
 | `paper_core_status` | active method=none；ISCF fixed base；D1 control-only validation authorized |
 
+[ISCF PSA-D1 v0.1 Protocol Repair, 2026-07-22] ETTh1 training/validation metrics完成后，diagnostic evaluator因config
+缺少`diagnostic_protocol.future_bins`在probe forward前报`KeyError`。Decision=
+`diagnostic_protocol_fault_predecision_repair_frozen_training_continues`；没有H2/H3 result或test access。
+
+v0.1只补evaluator training contract、eight future bins与validation-replay authorization；training matrix/arguments/
+checkpoints/gates不变。其余training继续，结束前不remote pull；之后只对5 checkpoints做SHA-nonmutation validation
+replay。详见`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_rscc_step24_20260722/psa_d1_v01_diagnostic_protocol_repair.md`。
+
 [ISCF PSA-D1 Step8 Launch, 2026-07-22] commit=`f5275a4`完成remote fast-forward；GPU0/1/2 preflight均18 MiB、
 0%，无compute process。Weather smoke确认EQUAL route weight/loss=0、five scope gradients nonzero，且initialization
 hash与historical EQUAL/ARMERR/SHUFFLED完全相同。

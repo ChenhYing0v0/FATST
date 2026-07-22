@@ -1,5 +1,14 @@
 # Research Roadmap
 
+## ISCF PSA-D1 v0.1 Diagnostic Repair (2026-07-22)
+
+ETTh1已完成training与standard validation metrics，但diagnostic evaluator因缺少future-bin config在probe前失败。该结果
+标记`diagnostic_protocol_fault_predecision`，没有research decision/test access。v0.1只增加evaluator contracts与dedicated
+SHA-nonmutation validation replay runner；training matrix、checkpoints和gates不变。
+
+当前其余training继续，结束前不remote pull。5/5 checkpoints后pull repair commit、GPU preflight、补做5 diagnostics，再
+一次性运行full analyzer。
+
 ## ISCF PSA-D1 Step8 Remote Running (2026-07-22)
 
 commit `f5275a4`、three-GPU idle preflight与Weather resource smoke通过。Smoke route weight/loss=0、five scope gradients

@@ -1,7 +1,8 @@
 {
   "stage": "StageC-UVHF",
   "diagnostic_id": "SC-ISCF-PSA-D1",
-  "candidate_version": "SC-ISCF-PSA-D1-control-v0",
+  "candidate_version": "SC-ISCF-PSA-D1-control-v0.1-protocol-repair",
+  "protocol_revision": "add evaluator-only training_contracts and diagnostic future bins after predecision KeyError; training matrix, arguments, gates, and checkpoints unchanged",
   "date": "2026-07-22",
   "status": "step7a_and_five_run_validation_authorized",
   "role": "control_only_contemporaneous_equal_attribution",
@@ -82,6 +83,28 @@
     "initialization": "from_scratch_paired_by_dataset_and_seed",
     "test_labels_select_checkpoint_or_config": false
   },
+  "training_contracts": [
+    {
+      "target_horizons": [720],
+      "validation_horizons": [96, 192, 336, 720],
+      "pred_loss_mode": "full",
+      "pcc_objective_mode": "equal_skill",
+      "training_final_evaluation_split": "val"
+    }
+  ],
+  "diagnostic_protocol": {
+    "probe_rows": 256,
+    "future_bins": [
+      {"name": "H1_48", "start": 0, "end": 48},
+      {"name": "H49_96", "start": 48, "end": 96},
+      {"name": "H97_144", "start": 96, "end": 144},
+      {"name": "H145_192", "start": 144, "end": 192},
+      {"name": "H193_288", "start": 192, "end": 288},
+      {"name": "H289_336", "start": 288, "end": 336},
+      {"name": "H337_512", "start": 336, "end": 512},
+      {"name": "H513_720", "start": 512, "end": 720}
+    ]
+  },
   "launch_order": [
     ["Weather", "iscf_equal_contemporaneous"],
     ["ETTm1", "iscf_equal_contemporaneous"],
@@ -116,6 +139,7 @@
     "step7a_implementation_authorized": true,
     "remote_resource_smoke_authorized": true,
     "remote_training_authorized": true,
+    "validation_diagnostic_replay_authorized": true,
     "formal_test_access_authorized": false,
     "confirmation_seeds_authorized": false,
     "method_promotion_authorized": false,
