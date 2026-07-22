@@ -1,18 +1,28 @@
 # Research Roadmap
 
+## ISCF-FRSC Step4–6 Decision (2026-07-22)
+
+exact SPS-v0完成20/20 validation但相对identity MSE `-2.3123%`，failure attribution为hard capacity restriction；不否定
+ISCF。BSC frozen affine readout无positive cell。FRSC以$Q_s=P_s+(1-\alpha)(I-P_s)$保留full rank并对scope外方向做
+nonzero gradient conditioning。D1.1 frozen canonical在alpha .55达到MSE `+0.7997%`、5/5 datasets、4/4 horizons，random
+为`-8.9750%`；best global为`+0.8677%`，所以scope attribution仍未成立，但risk envelope足够competitive以进入新候选
+Step4–6。candidate=`SC-ISCF-FRSC-v0`，narrative conditional pass；下一步Step7A。新remote training、formal test、loss/router
+和requested-H conditioning均为false。详细记录：
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_frsc_step46_20260722/step4_6_design_and_remote_gate.md`。
+
 ## Current Cursor
 
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | ISCF-SPS Step8 20-run remote validation active |
-| `active_question` | 如何让ISCF scope extent原生约束arm forecast与gradient，从而形成functional specialization |
-| `active_candidates` | `SC-ISCF-SPS-v0`；ISCF-v0 parent/carrier；exact SAC/CPSI closed |
+| `current_step` | FRSC-v0 Step7A pass；Step7B prelaunch pending |
+| `active_question` | full-rank scope conditioning能否在保留carrier capacity时超过identity与strong global controls |
+| `active_candidates` | `SC-ISCF-FRSC-v0` narrative-ready；ISCF-v0 parent/carrier；exact SPS/BSC/SAC/CPSI closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `configs/stage_c_iscf_sps_step7b.json` |
+| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_frsc_step46_20260722/step4_6_design_and_remote_gate.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | SPS 20-run remote validation authorized；formal test/modern baselines false |
-| `rollback_point` | local fault -> Step5/6；validation negative/global explains -> Step4；no loss/router/per-dataset rescue |
+| `method_implementation` | FRSC production/local contracts pass；Step7B prelaunch next；remote/formal test/modern baselines false |
+| `rollback_point` | local fault -> Step5/6；candidate<=identity/global -> Step4；no loss/router/per-dataset rescue |
 
 ## ISCF-SPS Step4–7A Decision
 

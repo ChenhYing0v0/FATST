@@ -1,0 +1,37 @@
+{
+  "candidate_version": "SC-ISCF-FRSC-v0",
+  "status": "step7a_local_implementation",
+  "parent": "ISCF-v0",
+  "readout_mode": "iscf-full-rank-scope-conditioning",
+  "candidate": {
+    "projection_mode": "scope",
+    "conditioning_strength": 0.55,
+    "minimum_operator_eigenvalue": 0.45,
+    "new_trainable_parameters": 0,
+    "new_router": false,
+    "second_loss": false,
+    "requested_h_input": false
+  },
+  "controls": [
+    {"id": "frsc_scope_a055", "projection_mode": "scope", "conditioning_strength": 0.55},
+    {"id": "frsc_global_a055", "projection_mode": "global", "conditioning_strength": 0.55},
+    {"id": "frsc_global_a045", "projection_mode": "global", "conditioning_strength": 0.45},
+    {"id": "frsc_random_a055", "projection_mode": "scope", "conditioning_strength": 0.55, "partition": "random"},
+    {"id": "identity_reference", "projection_mode": "scope", "conditioning_strength": 0.0}
+  ],
+  "step7a_gates": {
+    "alpha_zero_exact_parent": true,
+    "paired_parameter_initialization": true,
+    "minimum_eigenvalue_positive": true,
+    "candidate_control_outputs_distinct": true,
+    "all_scope_gradients_finite_nonzero": true,
+    "production_model_shape_prefix_finite": true,
+    "production_cli_contract": true
+  },
+  "authorization": {
+    "local_implementation": true,
+    "remote_training": false,
+    "formal_test": false,
+    "modern_baselines": false
+  }
+}

@@ -5,16 +5,28 @@
 | Field | Content |
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
-| `working_title` | TBD；provisional architecture=`ISCF-SPS` |
+| `working_title` | TBD；provisional architecture=`ISCF-FRSC` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF-SPS Step8 20-run remote validation active |
+| `current_11_step` | FRSC-v0 Step7A pass；Step7B prelaunch pending |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | active candidate=`SC-ISCF-SPS-v0`；20-run validation training authorized；formal test/modern baselines false |
+| `paper_core_status` | implementation-ready candidate=`SC-ISCF-FRSC-v0`；effectiveness pending；new training/formal test/modern baselines false |
+
+[FRSC Step7A, 2026-07-22] 新readout=`iscf-full-rank-scope-conditioning`已本地实现。alpha=0与ISCF parent exact
+gap为0；candidate/identity/global/random parameter hash一致；alpha .55 minimum eigenvalue=.45；five scope gradients全部
+finite/nonzero；production model/CLI/full-prefix contracts通过。Step7A只建立code-theory consistency，不含method effectiveness。
+下一步为20-run validation prelaunch；remote training与formal test仍未授权。
+
+[SPS Step9 and FRSC Step4–6, 2026-07-22] SPS 20/20 validation matrix完整且无numeric pathology，但scope-canonical相对
+identity MSE/MAE=`-2.3123%/-1.0937%`；其相对global `+0.9041%/+0.8461%`说明local geometry有条件价值，exact
+failure归因于hard capacity restriction。BSC frozen readout 20/20 MSE cells负向，关闭exact diagnostic。FRSC把hard projector改为
+invertible $Q_s=P_s+(1-\alpha)(I-P_s)$；frozen D1.1 canonical在alpha .55为`+0.7997%` MSE、5/5 datasets、
+4/4 horizons，random为`-8.9750%`，但best global为`+0.8677%`。因此FRSC仅通过conditional narrative/design gate，
+E2E必须超过identity、random与best-tuned global；Step7A、remote training与formal test均尚未授权。
 
 [ISCF-SPS Step8 Remote Authorization, 2026-07-22] 用户明确授权并启动冻结20-run validation matrix。授权只覆盖
 scope/identity/global/random × five datasets × seed2021的from-scratch training；formal test、confirmation seeds和modern

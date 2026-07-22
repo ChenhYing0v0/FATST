@@ -1,0 +1,32 @@
+{
+  "decision": "iscf_frsc_step7a_contract_pass",
+  "conditioning_strength": 0.55,
+  "minimum_operator_eigenvalue": 0.44999999999999996,
+  "parameter_count": 38069,
+  "paired_parameter_hash": "7c3bc6db0ac5643d80dfc4070b68d5bcc0134fb8b65798d54e58a7892c97d50f",
+  "identity_parent_max_abs_gap": 0.0,
+  "prefix_max_abs_gap": 0.0,
+  "control_max_abs_gaps": {
+    "global_best": 0.6175071001052856,
+    "global_same": 0.8312191367149353,
+    "parent": 1.193286418914795,
+    "random": 0.9158916473388672
+  },
+  "scope_gradient_norms": [
+    0.16608735918998718,
+    0.07301925122737885,
+    0.06870043277740479,
+    0.050829727202653885,
+    0.04084600880742073
+  ],
+  "production_model_full_shape": [1, 720, 2],
+  "production_model_prefix_gap": 0.0,
+  "production_cli": {
+    "readout_mode": "iscf-full-rank-scope-conditioning",
+    "projection_mode": "scope",
+    "conditioning_strength": 0.55,
+    "mode_rank": 109,
+    "validation_horizons": [96, 192, 336, 720],
+    "final_split": "val"
+  }
+}

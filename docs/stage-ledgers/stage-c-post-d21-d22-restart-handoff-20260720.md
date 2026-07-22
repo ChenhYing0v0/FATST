@@ -52,13 +52,15 @@
 43. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_sps_step7b_prelaunch_20260721/prelaunch_report.md`；
 44. `configs/stage_c_iscf_sps_step7b.json`；
 45. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_sps_step8_remote_20260722/remote_authorization_and_launch.md`；
-46. `docs/code-explanation/stage-c-iscf-v0-sac-step7b.md`；
-47. `configs/stage_c_iscf_v0_scope_attribution_confirmation.json`；
-48. `configs/stage_c_iscf_v0_carrier.json`；
-49. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
-50. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
-51. `docs/paper-mainline.md`；
-52. `docs/research-roadmap.md`。
+46. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_sps_step9_validation_20260722/step9_result_and_bsc_step4_handoff.md`；
+47. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_frsc_step46_20260722/step4_6_design_and_remote_gate.md`；
+48. `docs/code-explanation/stage-c-iscf-v0-sac-step7b.md`；
+49. `configs/stage_c_iscf_v0_scope_attribution_confirmation.json`；
+50. `configs/stage_c_iscf_v0_carrier.json`；
+51. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
+52. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
+53. `docs/paper-mainline.md`；
+54. `docs/research-roadmap.md`。
 
 若上述文件与更旧的聊天、archive或历史段落冲突，以本文件和三份主线文档顶部的最新cursor为准。
 
@@ -68,16 +70,16 @@
 | --- | --- |
 | `project` | R_2026_FATST |
 | `stage` | StageC-UVHF |
-| `handoff_date` | 2026-07-21 |
-| `source_parent_commit` | `fb4057d`（ISCF-SPS Step7A implementation） |
-| `current_step` | ISCF-SPS Step8 20-run remote validation active |
-| `active_problem` | scope extent如何原生约束arm forecast/gradient并形成有用functional specialization |
-| `active_method` | local candidate=`SC-ISCF-SPS-v0`；ISCF-v0 exact parent/control |
-| `method_training_authorized` | true for frozen 20-run validation matrix |
-| `remote_training_authorized` | true for frozen training；formal test/modern baselines false |
-| `next_action` | wait for 20/20 validation artifacts；sync and run Step9 validation audit |
-| `conditional_next` | 20/20 validation artifacts完成后先做Step9 validation audit；formal test另议 |
-| `rollback` | local fault Step5/6；candidate<=global或validation negative Step4；no loss/router/per-dataset rescue |
+| `handoff_date` | 2026-07-22 |
+| `source_parent_commit` | `e5edeb1`（SPS results + FRSC frozen diagnostics） |
+| `current_step` | FRSC-v0 Step7A pass；Step7B prelaunch pending |
+| `active_problem` | 在不删除forecast capacity时，让scope extent原生condition arm forecast/gradient并形成有用specialization |
+| `active_method` | implementation-ready candidate=`SC-ISCF-FRSC-v0`；effectiveness pending；ISCF-v0 parent/control |
+| `method_training_authorized` | false |
+| `remote_training_authorized` | false；formal test/modern baselines false |
+| `next_action` | freeze and locally audit FRSC 20-run validation prelaunch |
+| `conditional_next` | prelaunch全过后请求独立remote authorization；不得自动launch/test |
+| `rollback` | local fault Step5/6；candidate<=identity/global Step4；no loss/router/per-dataset rescue |
 
 当前工作树存在两个与本次handoff无关的untracked目录，必须原样保留，不得在新会话中清理、归档或提交：
 

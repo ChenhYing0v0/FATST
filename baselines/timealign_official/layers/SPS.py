@@ -175,3 +175,37 @@ class ScopeProjectedSynthesisReadout(SIFFCouplingFieldReadout):
             "removed_arms": removed,
             "removed_rms": removed.square().mean(dim=(0, 1, 3)).sqrt(),
         }
+
+
+class FullRankScopeConditioningReadout(ScopeProjectedSynthesisReadout):
+    """Condition ISCF arms without deleting any forecast direction.
+
+    For an orthogonal projector ``P`` and strength ``alpha``, the applied
+    operator is ``P + (1 - alpha) * (I - P)``.  Its minimum eigenvalue is
+    ``1 - alpha``, which is strictly positive for production FRSC arms.
+    """
+
+    def __init__(
+        self,
+        *args: object,
+        conditioning_strength: float = 0.55,
+        **kwargs: object,
+    ) -> None:
+        strength = float(conditioning_strength)
+        if not 0.0 <= strength < 1.0:
+            raise ValueError("FRSC conditioning strength must lie in [0, 1)")
+        super().__init__(*args, **kwargs)
+        self.conditioning_strength = strength
+
+    @property
+    def minimum_operator_eigenvalue(self) -> float:
+        """Return the exact minimum eigenvalue of the FRSC operator."""
+        return 1.0 - self.conditioning_strength
+
+    def _project_scope_arm(
+        self,
+        arm: torch.Tensor,
+        scale_index: int,
+    ) -> torch.Tensor:
+        hard_projected = super()._project_scope_arm(arm, scale_index)
+        return arm + self.conditioning_strength * (hard_projected - arm)

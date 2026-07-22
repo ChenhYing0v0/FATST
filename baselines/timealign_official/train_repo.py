@@ -90,6 +90,7 @@ PREFIX_READOUT_MODES = {
     "siff-q1-wide-control",
     "siff-independent-scope-control",
     "iscf-scope-projected-synthesis",
+    "iscf-full-rank-scope-conditioning",
     *TimeAlign.CPSI_READOUTS,
     "siff-dense-nonlinear-matched",
     "ccsf-coupling-field",
@@ -131,6 +132,7 @@ STAGE_C_ACTIVE_READOUTS = {
     "siff-q1-wide-control",
     "siff-independent-scope-control",
     "iscf-scope-projected-synthesis",
+    "iscf-full-rank-scope-conditioning",
     *TimeAlign.CPSI_READOUTS,
     "siff-dense-nonlinear-matched",
     "ccsf-coupling-field",
@@ -442,6 +444,7 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         pcsd_group_chunk_size=args.pcsd_group_chunk_size,
         pcsd_target_chunk_size=args.pcsd_target_chunk_size,
         sps_projection_mode=args.sps_projection_mode,
+        frsc_conditioning_strength=args.frsc_conditioning_strength,
         ccsf_correction_hidden_dim=args.ccsf_correction_hidden_dim,
         if_hidden_width=args.if_hidden_width,
         if_direct_hidden_width=args.if_direct_hidden_width,
@@ -652,6 +655,15 @@ def initialization_contract(model: nn.Module) -> dict[str, Any]:
                             readout.projection_basis(index)
                             for index in range(len(readout.scales))
                         ]
+                    ),
+                }
+            )
+        if hasattr(readout, "conditioning_strength"):
+            payload.update(
+                {
+                    "frsc_conditioning_strength": readout.conditioning_strength,
+                    "frsc_minimum_operator_eigenvalue": (
+                        readout.minimum_operator_eigenvalue
                     ),
                 }
             )
@@ -1301,6 +1313,18 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
                             strict=True,
                         )
                     ],
+                }
+            )
+        if hasattr(readout, "conditioning_strength"):
+            payload.update(
+                {
+                    "frsc_conditioning_strength": readout.conditioning_strength,
+                    "frsc_minimum_operator_eigenvalue": (
+                        readout.minimum_operator_eigenvalue
+                    ),
+                    "frsc_full_rank": (
+                        readout.minimum_operator_eigenvalue > 0.0
+                    ),
                 }
             )
         if hasattr(readout, "interaction_mode"):
@@ -2526,6 +2550,11 @@ def parse_args() -> argparse.Namespace:
         choices=["scope", "global", "identity"],
         default="scope",
     )
+    parser.add_argument(
+        "--frsc-conditioning-strength",
+        type=float,
+        default=0.55,
+    )
     parser.add_argument("--ccsf-correction-hidden-dim", type=int, default=64)
     parser.add_argument("--if-hidden-width", type=int, default=2048)
     parser.add_argument("--if-direct-hidden-width", type=int, default=4143)
@@ -2757,6 +2786,7 @@ def parse_args() -> argparse.Namespace:
         "siff-q1-wide-control",
         "siff-independent-scope-control",
         "iscf-scope-projected-synthesis",
+        "iscf-full-rank-scope-conditioning",
         "ccsf-independent-scope-control",
         *TimeAlign.CPSI_READOUTS,
     }:
@@ -2774,10 +2804,19 @@ def parse_args() -> argparse.Namespace:
         if args.pcsd_policy_mode != "direct":
             raise ValueError("ISCF-v1-CPSI requires pcsd_policy_mode=direct")
     if (
-        args.readout_mode == "iscf-scope-projected-synthesis"
+        args.readout_mode
+        in {
+            "iscf-scope-projected-synthesis",
+            "iscf-full-rank-scope-conditioning",
+        }
         and args.pcsd_policy_mode != "direct"
     ):
-        raise ValueError("ISCF-SPS v0 requires pcsd_policy_mode=direct")
+        raise ValueError("ISCF-SPS/FRSC requires pcsd_policy_mode=direct")
+    if (
+        args.readout_mode == "iscf-full-rank-scope-conditioning"
+        and not 0.0 <= args.frsc_conditioning_strength < 1.0
+    ):
+        raise ValueError("ISCF-FRSC conditioning strength must lie in [0, 1)")
     if args.pcsd_group_chunk_size <= 0 or args.pcsd_target_chunk_size <= 0:
         raise ValueError("PCSD chunk sizes must be positive")
     if args.ccsf_correction_hidden_dim != 64:
