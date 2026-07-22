@@ -48,6 +48,12 @@ def file_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def json_default(value: object) -> object:
+    if isinstance(value, np.generic):
+        return value.item()
+    raise TypeError(f"unsupported JSON value: {type(value).__name__}")
+
+
 def arm_specs(
     config: dict[str, Any],
     new_root: Path,
@@ -562,6 +568,8 @@ def synthetic_smoke(config: dict[str, Any]) -> None:
         "joint_training_route_regularization_supported_as_carrier_clue"
     ):
         raise RuntimeError("synthetic PSA-D1 co-adaptation decision failed")
+    json.dumps(drift_decision, default=json_default)
+    json.dumps(coadaptation_decision, default=json_default)
     print(
         "iscf_psa_d1_synthetic_smoke=pass comparisons=5 cells=100 "
         "decisions=drift,coadaptation"
@@ -598,7 +606,13 @@ def main() -> None:
     write_csv(args.output_dir / "function_drift.csv", functions)
     write_csv(args.output_dir / "training_health.csv", training)
     (args.output_dir / "decision.json").write_text(
-        json.dumps(decision, indent=2, sort_keys=True) + "\n",
+        json.dumps(
+            decision,
+            indent=2,
+            sort_keys=True,
+            default=json_default,
+        )
+        + "\n",
         encoding="utf-8",
     )
     print(
