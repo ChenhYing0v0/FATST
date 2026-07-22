@@ -820,3 +820,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
      resource smoke，formal test仍false。
 141. resource smoke通过后，commit=`91e466a`的20-run SCC matched validation已在GPU0/1/2启动；repo-external
      root=`stage_c_iscf_scc_v0_step7b`。只允许full-matrix Step9 decision，formal test仍false。
+142. SCC-v0 Step9完整但失败：vs EQUAL `-3.1750%` MSE，且不超过FUSED/ARMERR/SHUFFLED；finite与gradients健康，
+     coalition headroom却从`+18.08%`反转为`-14.93%`。failure=`intervention_point_wrong`，关闭v0。
+143. Step5–6只允许RSCC-v1 exact hybrid：保留EQUAL reliability，加coalition KL；matched EQUAL-ARMERR与SHUFFLED，
+     15 new runs。Step7A authorized，remote/test false；若失败关闭coalition route，不再rescue。

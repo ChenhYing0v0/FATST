@@ -1,0 +1,5 @@
+comparison,candidate,reference,macro_mse_gain_percent,macro_mae_gain_percent,cell_wins,dataset_wins,horizon_wins
+effectiveness_vs_equal,iscf_scc,iscf_equal,-3.1750408130104777,-1.7741836019339332,2,0,0
+objective_vs_fused,iscf_scc,iscf_fused,-0.015017996491625274,-0.03225039762193849,8,3,2
+credit_vs_armerr,iscf_scc,iscf_armerr,-0.16627258632077258,-0.3387727755367065,2,0,1
+binding_vs_shuffled,iscf_scc,iscf_scc_shuffled,-0.042806850454025214,-0.15454101707823464,8,2,2

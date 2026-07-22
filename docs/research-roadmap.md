@@ -1,5 +1,14 @@
 # Research Roadmap
 
+## ISCF-SCC Step9 Failure and RSCC Rollback (2026-07-22)
+
+SCC-v0 validation相对EQUAL为`-3.1750%/-1.7742%` MSE/MAE，且未超过FUSED/ARMERR/SHUFFLED。all numeric和
+gradient health通过，但coalition headroom由`+18.08%`反转为`-14.93%`。failure=`intervention_point_wrong`：删除
+equal-skill破坏arm reliability。v0关闭，不做seed/lambda rescue。
+
+Step5冻结唯一successor RSCC-v1：EQUAL reliability + exact coalition KL；15 new-run matrix匹配EQUAL-ARMERR与
+RSCC-SHUFFLED。当前只授权Step7A实现，remote/test false。
+
 ## ISCF-SCC Step8 Remote Running (2026-07-22)
 
 resource smoke通过，20-run matched validation已从commit `91e466a`在GPU0/1/2启动；首次状态为0/20 complete，前三个
@@ -74,14 +83,14 @@ Step4–6。candidate=`SC-ISCF-FRSC-v0`，narrative conditional pass；下一步
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | ISCF-SCC Step8 20-run validation running |
-| `active_question` | exact SCC-v0能否在matched E2E validation中超过EQUAL/FUSED/ARMERR/SHUFFLED |
-| `active_candidates` | SCC-v0 Step7B validation candidate；ISCF-v0 fixed base；exact FRSC/SPS/BSC/SAC/CPSI closed |
+| `current_step` | SCC-v0 Step9 failed；RSCC-v1 Step5–6 passed to Step7A |
+| `active_question` | preserving equal-skill reliability后，coalition KL能否超过EQUAL/ARMERR/SHUFFLED |
+| `active_candidates` | RSCC-v1 narrative-ready preimplementation；SCC-v0 closed；ISCF-v0 fixed base |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/step2_6_innovation_portfolio_and_scc_gate.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | Step7A passed；remote validation running；test/modern baselines false |
-| `rollback_point` | FUSED/ARMERR/SHUFFLED explains -> Step4；healthy-but-weak -> Step5；numeric pathology -> exact design |
+| `method_implementation` | RSCC Step7A true；remote/test/modern baselines false |
+| `rollback_point` | RSCC any primary/control gate fail -> close exact coalition route and return Step2/4 |
 
 ## ISCF-FRSC Step9 Validation Decision
 

@@ -14,7 +14,16 @@
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | SCC-v0 Step8 validation running；ISCF-v0 fixed base；formal test false |
+| `paper_core_status` | RSCC-v1 narrative-ready preimplementation；SCC-v0 closed；remote/formal test false |
+
+[ISCF-SCC Step9 / RSCC Rollback, 2026-07-22] 25/25 runs与100/100 validation cells完整。SCC-v0 vs EQUAL
+MSE/MAE=`-3.1750%/-1.7742%`，并分别以MSE `-0.0150%/-0.1663%/-0.0428%`输给FUSED/ARMERR/
+SHUFFLED。numeric/gradient健康，但median coalition headroom从EQUAL的`+18.0775%`反转为SCC的`-14.9326%`。
+Decision=`intervention_point_wrong`：关闭v0，禁止seed/lambda rescue。
+
+唯一允许successor=`SC-ISCF-RSCC-v1`：保留EQUAL reliability loss，只附加exact coalition policy KL，并冻结
+EQUAL/ARMERR/SHUFFLED controls。narrative gate仅通过到Step7A；remote/test false。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/scc_step9_result_and_rscc_step5_6_design.md`。
 
 [ISCF-SCC Step8 Launch, 2026-07-22] Weather SCC/SHUFFLED resource smoke通过，five scope gradients均nonzero；
 source commit=`91e466a`。GPU0/1/2 preflight均18 MiB、0%，20-run seed2021 matched validation matrix已启动，output=

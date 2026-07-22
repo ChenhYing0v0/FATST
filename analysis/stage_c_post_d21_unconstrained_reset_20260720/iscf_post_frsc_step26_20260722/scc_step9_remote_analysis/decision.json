@@ -1,0 +1,26 @@
+{
+  "candidate_version": "SC-ISCF-SCC-v0-step7b",
+  "checks": {
+    "artifact_matrix_complete": true,
+    "effectiveness_vs_equal": false,
+    "matched_controls": false,
+    "numeric_and_gradient_health": true,
+    "protocol_and_initialization": true,
+    "validation_matrix_complete": true
+  },
+  "decision": "scc_v0_failed_return_step5_reliability_preserving_design",
+  "equal_median_coalition_oracle_headroom_l1_percent": 18.077464502694628,
+  "failure_attribution": "intervention_point_wrong",
+  "formal_test_authorized": false,
+  "matched_control_macro_mse_gains_percent": {
+    "binding_vs_shuffled": -0.042806850454025214,
+    "credit_vs_armerr": -0.16627258632077258,
+    "objective_vs_fused": -0.015017996491625274
+  },
+  "primary_macro_mae_gain_percent": -1.7741836019339332,
+  "primary_macro_mse_gain_percent": -3.1750408130104777,
+  "runs": 25,
+  "scc_median_coalition_oracle_headroom_l1_percent": -14.932644339549238,
+  "seed_confirmation_authorized": false,
+  "validation_cells": 100
+}
