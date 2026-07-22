@@ -7,14 +7,22 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture=`ISCF-FRSC` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | FRSC-v0 Step7B prelaunch pass；Step8 remote validation authorized |
+| `current_11_step` | FRSC-v0 Step8 remote validation training active |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-run end-to-end A6；frozen A6仅作reference/conditional diagnostic |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `paper_core_status` | training-ready candidate=`SC-ISCF-FRSC-v0`；effectiveness pending；20-run validation authorized；formal test/modern baselines false |
+| `paper_core_status` | training-active candidate=`SC-ISCF-FRSC-v0`；effectiveness pending；20-run validation running；formal test/modern baselines false |
+
+[FRSC Step8 Launch, 2026-07-22] remote已fast-forward到`9069e87`；GPU0/1/2 preflight均18 MiB、0% utilization、
+无compute process。Weather candidate/random resource smokes确认alpha=.55、minimum eigenvalue=.45、full-rank且无
+Traceback/OOM/NaN/Inf。20-run validation matrix于`10:41:20+08:00`启动，runner PID=`3559159`；初始
+`validation=0/20`，三个Weather jobs均进入epoch 1。预计约1.5–2小时。formal test仍false。
+
+Decision=`frsc_step8_training_active_formal_test_disabled`。详见
+`analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_frsc_step8_remote_20260722/remote_authorization_and_launch.md`。
 
 [FRSC Step7B Prelaunch, 2026-07-22] 4个new arms × five datasets × seed2021的20-run validation matrix已冻结；
 复用5个历史identity checkpoints后，完整analysis surface为25 runs/100 standard-horizon rows。candidate必须同时超过

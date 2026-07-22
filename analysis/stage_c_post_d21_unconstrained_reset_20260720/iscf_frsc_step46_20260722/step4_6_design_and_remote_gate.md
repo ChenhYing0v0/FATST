@@ -4,7 +4,7 @@
 
 | Field | Record |
 | --- | --- |
-| `current_step` | exact SPS-v0 Step9 closed；FRSC-v0 Step4–6 complete；Step7A implementation pending |
+| `current_step` | exact SPS-v0 Step9 closed；FRSC-v0 Step8 remote validation training active |
 | `problem` | hard scope projection诱导了role change，但删除shared full-rank forecast capacity；identity arms仍缺少可持续的scope-specific gradient conditioning |
 | `existence_evidence` | SPS scope>global `+0.9041%`但scope<identity `-2.3123%`；FRSC frozen canonical `+0.7997%` MSE、5/5 datasets、4/4 horizons；random `-8.9750%` at alpha .55；global optimum `+0.8677%` |
 | `idea` | 用full-rank SPD operator保留全部forecast directions，同时按native scope衰减out-of-scope component |
@@ -154,3 +154,7 @@ contracts、alpha0 parent identity、paired initialization、runner dry-run、te
 
 Decision=`FRSC_v0_step7b_prelaunch_pass_step8_remote_validation_authorized`。remote launch前仍必须commit/push、remote
 fast-forward、GPU/process audit与two-arm resource smoke。
+
+上述launch boundary现已满足：remote commit=`9069e87`，three-GPU preflight与Weather candidate/random resource smoke
+通过；20-run validation matrix于`2026-07-22T10:41:20+08:00`启动。Decision=
+`FRSC_v0_step8_training_active_formal_test_disabled`。

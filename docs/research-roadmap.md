@@ -15,13 +15,13 @@ Step4–6。candidate=`SC-ISCF-FRSC-v0`，narrative conditional pass；下一步
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | FRSC-v0 Step7B prelaunch pass；Step8 remote validation authorized |
+| `current_step` | FRSC-v0 Step8 remote validation training active |
 | `active_question` | full-rank scope conditioning能否在保留carrier capacity时超过identity与strong global controls |
 | `active_candidates` | `SC-ISCF-FRSC-v0` narrative-ready；ISCF-v0 parent/carrier；exact SPS/BSC/SAC/CPSI closed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_frsc_step46_20260722/step4_6_design_and_remote_gate.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | FRSC production/local/Step7B contracts pass；20-run remote validation authorized；formal test/modern baselines false |
+| `method_implementation` | FRSC production/local/Step7B contracts pass；20-run remote validation running；formal test/modern baselines false |
 | `rollback_point` | local fault -> Step5/6；candidate<=identity/global -> Step4；no loss/router/per-dataset rescue |
 
 ## ISCF-FRSC Step7B Prelaunch Decision
@@ -33,6 +33,10 @@ best-global、same-alpha global、random binding和internal health五层角色�
 local prelaunch `37/37`通过。用户于`2026-07-22`明确授权推进remote training。Decision=
 `frsc_step8_remote_validation_authorized_formal_test_disabled`；下一步commit/push、remote fast-forward、GPU/process preflight、
 two-arm resource smoke并启动20-run validation。test、confirmation seeds和modern baselines仍false。
+
+remote commit=`9069e87`，GPU/process preflight与Weather candidate/random resource smoke通过。正式matrix于
+`2026-07-22T10:41:20+08:00`启动，runner PID=`3559159`，初始`0/20`且三个Weather jobs进入epoch 1。Decision=
+`frsc_step8_training_active_formal_test_disabled`；完成后先做validation audit，不自动访问test。
 
 ## ISCF-SPS Step4–7A Decision
 

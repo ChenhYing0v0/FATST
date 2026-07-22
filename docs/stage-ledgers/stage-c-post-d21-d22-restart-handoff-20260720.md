@@ -57,13 +57,14 @@
 48. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_frsc_step7b_prelaunch_20260722/prelaunch_report.md`；
 49. `docs/code-explanation/iscf-frsc-step7b.md`；
 50. `configs/stage_c_iscf_frsc_step7b.json`；
-51. `docs/code-explanation/stage-c-iscf-v0-sac-step7b.md`；
-52. `configs/stage_c_iscf_v0_scope_attribution_confirmation.json`；
-53. `configs/stage_c_iscf_v0_carrier.json`；
-54. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
-55. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
-56. `docs/paper-mainline.md`；
-57. `docs/research-roadmap.md`。
+51. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_frsc_step8_remote_20260722/remote_authorization_and_launch.md`；
+52. `docs/code-explanation/stage-c-iscf-v0-sac-step7b.md`；
+53. `configs/stage_c_iscf_v0_scope_attribution_confirmation.json`；
+54. `configs/stage_c_iscf_v0_carrier.json`；
+55. `configs/stage_c_iscf_v0_scope_response_d1_1_confirmation.json`；
+56. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`；
+57. `docs/paper-mainline.md`；
+58. `docs/research-roadmap.md`。
 
 若上述文件与更旧的聊天、archive或历史段落冲突，以本文件和三份主线文档顶部的最新cursor为准。
 
@@ -74,13 +75,13 @@
 | `project` | R_2026_FATST |
 | `stage` | StageC-UVHF |
 | `handoff_date` | 2026-07-22 |
-| `source_parent_commit` | `e5edeb1`（SPS results + FRSC frozen diagnostics） |
-| `current_step` | FRSC-v0 Step7B prelaunch pass；Step8 remote validation authorized |
+| `source_parent_commit` | `9069e87`（FRSC Step7B frozen execution commit） |
+| `current_step` | FRSC-v0 Step8 remote validation training active |
 | `active_problem` | 在不删除forecast capacity时，让scope extent原生condition arm forecast/gradient并形成有用specialization |
 | `active_method` | implementation-ready candidate=`SC-ISCF-FRSC-v0`；effectiveness pending；ISCF-v0 parent/control |
 | `method_training_authorized` | 20-run seed2021 validation only |
 | `remote_training_authorized` | true for frozen validation matrix；formal test/modern baselines false |
-| `next_action` | commit/push、remote fast-forward、GPU/process audit、resource smoke、launch FRSC matrix |
+| `next_action` | await 20/20 without short polling；sync artifacts and run validation audit |
 | `conditional_next` | validation完成后先做artifact/effectiveness/attribution audit；不得自动test |
 | `rollback` | local fault Step5/6；candidate<=identity/global Step4；no loss/router/per-dataset rescue |
 
