@@ -370,9 +370,49 @@ horizon无关、step-indexed field 的nested outputs。
 > information sharing throughout the future domain, forcing a compromise
 > between step-level flexibility and broad-range structural sharing.
 
-本段禁止预设 strict negative gradient conflict，也不预设某个 horizon 与某个
-scope 的一一对应关系。“不同future regions可能受益于不同sharing scales”是
-待第三章matched evidence支持的可检验命题，不写成普适规律。
+对应中文：
+
+> 尽管horizon无关的prediction field为不同horizons提供了一致的预测接口，但它
+> 本身并不能使unified forecasting天然变得容易。未来轨迹在结构上并非均一：
+> 细粒度变化、中等范围趋势和宽范围轨迹模式，在不同样本、变量和未来区间中的
+> 相对重要性可能不同。因此，在相邻future steps之间共享predictive structure
+> 的合适程度，也可能随其在预测域中的位置而变化。我们将这一挑战称为
+> **future-region predictive-structure heterogeneity（未来区间预测结构
+> 异质性）**。采用单一固定cross-step sharing pattern的naive unified
+> decoder，必须在整个未来域施加相同程度的信息共享，因而不得不在
+> step-level flexibility与broad-range structural sharing之间作统一折中。
+
+讨论过程中的细节：
+
+1. **本段的叙事作用。** Paragraph 3只建立horizon无关接口与CHPC；Paragraph
+   4进一步指出prediction interface一致并不等于unified forecasting已经解决，
+   从system contract自然转入decoder modeling problem，为Paragraph 5引出ISCF。
+2. **问题、证据与方法必须分层。** 问题层术语是
+   `future-region predictive-structure heterogeneity`；其可检验表现是
+   `region-dependent sharing-scale preference`；`future-step coupling scope`
+   只属于ISCF的方法层。不能用模型中的scope反过来定义问题。
+3. **future region不是forecast horizon。** future region
+   $\mathcal B_b\subseteq\{1,\ldots,T\}$ 是预测域内部一组连续future steps；
+   forecast horizon $H$ 是一次预测请求覆盖的总长度。不同future regions的
+   sharing demand可能不同，不表示同一future step会因requested horizon变化而
+   改变预测目标。
+4. **scope是关系而不是单点属性。** 单个future step本身没有coupling
+   granularity或scope；scope描述多个future steps在target-specific synthesis
+   之前共享predictive state的范围。因此正文不写“different future steps have
+   different coupling granularities”。
+5. **经验命题而非普适规律。** “不同future regions可能受益于不同sharing
+   scales”必须由第三章capacity-matched predictors的region-wise risk
+   crossing、best-scale变化与相对best fixed scale的headroom支持。数据侧
+   multi-scale energy只能作描述性辅助。
+6. **理论与claim边界。** 在fixed history、pointwise MSE且requested horizon
+   不提供额外信息时，同一future step的Bayes conditional mean不依赖$H$。本文
+   讨论的是finite-capacity decoder的sharing topology与inductive-bias
+   mismatch，不是horizon-conditioned target变化；本段也不预设strict negative
+   gradient conflict、short/long horizon与local/global scope的一一对应关系。
+7. **弃用术语。** 不使用`future-generation scope heterogeneity`或
+   `future-step coupling heterogeneity`作为问题名称，因为两者预先嵌入了方法
+   设计；不使用`future-step dependency heterogeneity`，以免被误解为联合概率
+   分布中的temporal dependence。
 
 ### 4.5 Paragraph 5：ISCF-BSCA
 
