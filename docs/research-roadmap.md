@@ -1,18 +1,23 @@
 # Research Roadmap
 
-## ISCF-BSCA Paper Architecture and Introduction P1--P3 (2026-07-24)
+## ISCF-BSCA Paper Architecture and Introduction P1--P3 v0.2 (2026-07-24)
 
 全文结构已落地到`docs/iscf-bsca-paper-architecture.md`。正文固定为六章：
 Introduction、Related Work、Problem Formulation and Empirical Motivation、
 ISCF-BSCA Method、Experiments、Conclusion；不设置独立Discussion。问题存在性证据在Method前使用已有baseline或
 simple matched diagnostics建立，Experiments只评估最终模型、matched attribution、问题缓解、效率与transferability。
 
-Introduction第1--3段完成首轮术语共识：$H$=`forecast horizon`，$\tau$=`forecast step`，
-$(\tau,c)$=`forecast target`；问题层使用`forecast-output coupling granularity`，具体结构使用
-`forecast-step coupling scope`。宏观模型称`unified multi-horizon forecaster`，不用`single-checkpoint`。
-固定forecast origin下的nested-prefix equality命名为`cross-horizon prefix consistency (CHPC)`。
+Introduction第1--3段完成第二轮术语共识：$H$=`forecast horizon`，$\tau$=`future time step`，
+$(\tau,c)$=`forecast target`；问题层使用`future-step coupling granularity`，具体结构使用
+`future-step coupling scope`。宏观模型称`unified multi-horizon forecaster`，不用`single-checkpoint`。
+中文使用“horizon无关”，英文架构使用`horizon-agnostic`，性质使用`horizon-invariant`。
 
-Decision=`paper_architecture_v01_landed_intro_p1_p3_consensus`。CHPC只作system contract，不单独claim算法创新；
+任务定义改为horizon无关、future-step-indexed field $g_\theta(\mathbf X,\tau,c)$；任意$H$-step forecast直接由
+$\tau=1,\ldots,H$的predictions组成。CHPC来自同一future step不随requested horizon改变，而不是Introduction中的
+max-$T$-then-crop叙事；ISCF以step-specific synthesis coefficients实现该接口，同时保留scope-level latent
+sharing。不同horizons是nested outputs，不称为independent generation。
+
+Decision=`paper_architecture_v02_intro_p1_p3_consensus`。CHPC只作system contract，不单独claim算法创新；
 不声称所有已有模型缺少CHPC、unified必然更弱、strict gradient conflict、canonical grouping必要或universal
 conditional specialization。Introduction第4--6段与后续章节仍为provisional，下一步按用户顺序继续逐段讨论。
 本次不改变frozen ISCF-BSCA-v1，不授权new training/test。

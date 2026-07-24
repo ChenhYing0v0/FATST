@@ -17,17 +17,28 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_core_status` | `ISCF-BSCA-v1`=`passed_core_candidate_ready_for_paper_consolidation` |
 
+[Introduction P1--P3 v0.2 Consensus, 2026-07-24] 根据逐段讨论，论文架构文档升级为v0.2。Introduction prose使用
+`future time step`，问题层术语改为`future-step coupling granularity`，具体结构称`future-step coupling scope`。
+中文叙事使用“horizon无关”，英文架构使用`horizon-agnostic`，同一future-step prediction不随requested horizon
+改变的性质称`horizon-invariant`；不再使用可能被误解为统计独立的`horizon-independent`。
+
+统一任务改写为horizon无关、future-step-indexed prediction field
+$g_\theta(\mathbf X,\tau,c)$。一个$H$-step forecast直接由$\tau=1,\ldots,H$的predictions组成；CHPC来自同一
+future step的prediction function不依赖requested horizon。ISCF以step-specific synthesis coefficients实现该接口，
+同时保留scope-level latent sharing。Introduction不再把模型定义为“先生成max-$T$再crop”，
+也不声称“independently generate different horizons”；允许的宏观表述为
+`directly instantiate arbitrary horizons`。该修改只更新论文表述，不改变ISCF-BSCA代码、frozen results或
+training/test authorization。
+
 [Paper Architecture and Terminology Consolidation, 2026-07-24] 已创建
 `docs/iscf-bsca-paper-architecture.md`，作为全文结构、术语、claim boundary 与实验布局的权威讨论稿。正文冻结为
 Introduction、Related Work、Problem Formulation and Empirical Motivation、Method、Experiments、Conclusion六章，
 不设置独立Discussion；problem-existence evidence在Method前使用已有baseline或simple matched diagnostics建立，
 Experiments只回答最终模型的效果、归因、问题缓解与transferability。
 
-Introduction第1--3段完成首轮共识：使用`forecast horizon`表示请求长度、`forecast step`表示输出中的未来位置、
-`forecast target $(\tau,c)$`表示标量目标；问题层概念为`forecast-output coupling granularity`，具体结构设置为
-`forecast-step coupling scope`。宏观任务名称使用`unified multi-horizon forecaster`，不使用
-`single-checkpoint forecaster`。固定forecast origin与相同history下，短horizon预测等于长horizon对应prefix的性质
-正式命名为`cross-horizon prefix consistency (CHPC)`。
+Introduction第1--3段的v0.1术语与full-trajectory prefix formulation已由上方v0.2共识取代。保留的结论是：
+宏观任务名称使用`unified multi-horizon forecaster`，不用`single-checkpoint forecaster`；固定forecast origin
+与相同history下的nested-output property正式命名为`cross-horizon prefix consistency (CHPC)`。
 
 CHPC冻结为task/system contract而非独立算法创新；禁止声称所有已有模型都缺少CHPC、unified forecasting必然弱于
 horizon-specific forecasting、普遍negative-gradient conflict、canonical contiguous grouping必要或policy已形成

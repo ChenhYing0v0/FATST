@@ -9,7 +9,7 @@
 | `active_question` | 如何按逐段共识把ISCF architecture、BSCA与unified multi-horizon problem整合为完整paper contribution chain |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
-| `active_candidates` | `ISCF-BSCA-v1` three-seed paper-core pass；paper architecture v0.1 landed |
+| `active_candidates` | `ISCF-BSCA-v1` three-seed paper-core pass；paper architecture v0.2 landed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
@@ -31,7 +31,7 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | BSCA confirmation Step10 complete；paper architecture v0.1 landed |
+| `current_step` | BSCA confirmation Step10 complete；paper architecture v0.2 Introduction P1--P3 consensus |
 | `problem` | direct policy同时控制prediction mixture与fused-loss gradient allocation，可能形成harmful co-adaptation |
 | `existence_evidence` | new EQUAL exact historical；ARMERR/SHUFFLED +0.6577/+0.6557%；D0 post-hoc negative |
 | `idea` | EQUAL + matched schedule/weight uniform policy KL，train-only balanced scope co-adaptation |
@@ -287,7 +287,7 @@ Historical and control queue:
 
 | Task | Status | Next Action |
 | --- | --- | --- |
-| ISCF-BSCA paper architecture | `v0_1_intro_p1_p3_consensus` | continue Introduction P4--P6；later sections remain provisional |
+| ISCF-BSCA paper architecture | `v0_2_intro_p1_p3_consensus` | continue Introduction P4--P6；later sections remain provisional |
 | ISCF-BSCA-v1 three-seed confirmation | `completed_paper_core_pass` | freeze exact v1；paper consolidation before new baselines/training |
 | ISCF-RSCC-v1 validation matrix | `completed_control_attribution_fail` | exact route closed；retain artifacts/control clue；return Step2/4 |
 | Freeze natural carrier | `completed` | 不再调 profile |
@@ -365,6 +365,7 @@ Historical and control queue:
 
 | Date | Trigger | Paper Section | Change Type | Decision |
 | --- | --- | --- | --- | --- |
+| 2026-07-24 | 用户修订future-step与horizon无关generation表述 | Introduction P1--P3、core terminology | formulation + terminology refinement | v0.2；horizon-agnostic step-indexed field；不使用max-T-crop宏观叙事或independent-horizon claim；new training/test false |
 | 2026-07-24 | 用户要求全文结构文档级落地并应用术语修订 | Current Position、Introduction、全文结构与实验布局 | paper architecture + terminology boundary | v0.1落地；P1--P3首轮共识；P4--P6及后续章节provisional；new training/test false |
 | 2026-07-13 | Step4-6 narrative/theory gate完成 | Current Position、Contribution Slots、Contribution Boundary、Main Experiment Logic | contribution boundary + experiment order | PMFO收紧为RCT；PIR收紧为MIPR；Step7 local implementation next |
 | 2026-07-13 | Step7A local gate通过 | Current Position、Contribution 1、Main Experiment Logic | implementation evidence + screening scope | 三数据集Step7B固定；effectiveness仍pending |

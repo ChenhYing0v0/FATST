@@ -5,11 +5,11 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.1` |
+| `version` | `v0.2` |
 | `last_updated` | `2026-07-24` |
 | `paper_candidate` | `ISCF-BSCA-v1` |
-| `current_review_cursor` | Introduction 前半部分（第1--3段）已完成首轮修订 |
-| `frozen_consensus` | 论文六章结构；Introduction 第1--3段的任务定义与术语体系 |
+| `current_review_cursor` | Introduction 前半部分（第1--3段）完成第二轮共识 |
+| `frozen_consensus` | 论文六章结构；Introduction 第1--3段的 horizon无关、future-step-indexed formulation 与术语体系 |
 | `provisional_content` | Introduction 第4--6段、Related Work、Problem/Motivation、Method、Experiments、Conclusion |
 | `not_authorized_by_this_document` | 新模型实现、remote training、formal test、按结果调参 |
 
@@ -19,7 +19,7 @@
 
 ## 1. 核心术语
 
-### 1.1 Forecast horizon、forecast step 与 forecast target
+### 1.1 Forecast horizon、future time step 与 forecast target
 
 给定长度为 $L$ 的历史观测
 
@@ -34,23 +34,23 @@ $$
 | Term | Symbol | Definition |
 | --- | --- | --- |
 | `forecast horizon` | $H$ | 一次请求覆盖的最大未来长度，例如 $96,192,336,720$ |
-| `forecast step` | $\tau$ | 输出序列内第 $\tau$ 个未来时间位置，$1\leq\tau\leq H$ |
+| `future time step` | $\tau$ | 第 $\tau$ 个未来时间位置，$1\leq\tau\leq H$；正文可简称 `future step` |
 | `lead time` | $\tau$ 或物理时间间隔 | forecast origin 到目标时刻的距离；需要强调真实时间距离时使用 |
-| `forecast target` | $(\tau,c)$ | 第 $\tau$ 个 forecast step、第 $c$ 个变量对应的标量预测目标 |
-| `forecast-step coordinate embedding` | $\phi(\tau)$ | decoder 内部表示 forecast-step position 的固定或学习描述符 |
+| `forecast target` | $(\tau,c)$ | 第 $\tau$ 个 future time step、第 $c$ 个变量对应的标量预测目标 |
+| `future-step embedding` | $\phi(\tau)$ | decoder 内部表示 future-step position 的固定或学习描述符 |
 
 `future coordinate` 不再作为 Introduction 和问题定义中的主术语。只有在讨论
 数学坐标系或代码中的 `coordinate_field` 时，才允许使用
-`forecast-step coordinate` 或 `forecast-step coordinate embedding`。
+`future-step coordinate` 或 `future-step embedding`。
 
-### 1.2 Forecast-output coupling granularity
+### 1.2 Future-step coupling granularity
 
-本文把 decoder 在生成多个 forecast steps 时采用的 latent-state sharing
+本文把 decoder 在生成多个 future time steps 时采用的 latent-state sharing
 粒度称为：
 
-> **forecast-output coupling granularity**
+> **future-step coupling granularity**
 
-它描述的是多个 forecast steps 在 target-specific synthesis 之前，以多细或
+它描述的是多个 future time steps 在 target-specific synthesis 之前，以多细或
 多粗的范围共享预测状态。该概念属于 output-side decoder structure，不等同于：
 
 - requested forecast horizon；
@@ -59,16 +59,16 @@ $$
 - frequency band；
 - forecast targets 之间真实的 probabilistic dependence。
 
-### 1.3 Forecast-step coupling scope
+### 1.3 Future-step coupling scope
 
 一个具体的共享范围称为：
 
-> **forecast-step coupling scope**
+> **future-step coupling scope**
 
 对 scope size $s$，其结构语义为：
 
-> $s$ 个 forecast steps 在 target-specific synthesis 之前共享一个由历史
-> representation 与该组 forecast-step descriptor 构造的 latent generation
+> $s$ 个 future time steps 在 target-specific synthesis 之前共享一个由历史
+> representation 与该组 future-step descriptor 构造的 latent generation
 > state。
 
 ISCF 当前使用：
@@ -82,60 +82,82 @@ sharing。首次定义后，正文可简称 `coupling scope` 或 `scope`。
 
 问题层面统一使用：
 
-> **forecast-output coupling heterogeneity**
+> **future-step coupling heterogeneity**
 
 其含义是：适合的 output-coupling granularity 可能随 sample、variable 与
-forecast step 变化。本文不预设“short horizon 必然偏好 local scope”或
+future time step 变化。本文不预设“short horizon 必然偏好 local scope”或
 “long horizon 必然偏好 global scope”。
 
-### 1.4 Cross-horizon prefix consistency
+### 1.4 Horizon无关、future-step-indexed generation
+
+本文把统一预测函数写成：
+
+$$
+g_\theta:
+(\mathbf X,\tau,c)
+\mapsto
+\hat y_{\tau,c}.
+$$
+
+这里 $g_\theta$ 是 `horizon-agnostic`：同一个 future time step 的预测函数不把
+requested horizon $H$ 作为语义输入。一个 $H$-step forecast 直接定义为：
+
+$$
+\hat{\mathbf Y}^{(H)}
+=
+\left[
+g_\theta(\mathbf X,\tau,c)
+\right]_{\tau=1,\ldots,H;\ c=1,\ldots,C}.
+$$
+
+中文叙事统一使用“horizon无关”；英文架构表述使用 `horizon-agnostic`；
+同一 future step 的预测不随 requested horizon 改变这一性质使用
+`horizon-invariant`。不使用可能被误解为统计独立的 `horizon-independent`。
+
+当前 ISCF 以step-specific synthesis coefficients实现该接口：每个 future
+time step $\tau$具有自己的identity synthesis row、nonlinear synthesis row与
+temporal bias，并由target-wise policy融合多个scope fields。这里的
+`step-specific`不表示future steps相互独立；它们仍可通过不同coupling scopes
+共享latent generation state。
+
+### 1.5 Cross-horizon prefix consistency
 
 本文将统一模型需要满足的 nested-output contract 称为：
 
 > **cross-horizon prefix consistency (CHPC)**
 
 固定 forecast origin 和完全相同的历史输入 $\mathbf X$。若
-$H_1<H_2$，模型 $G_\theta$ 满足
+$H_1<H_2$，由上述 step-indexed function 定义的模型满足
 
 $$
-G_\theta(\mathbf X,H_1)
+\Pi_{H_1}\hat{\mathbf Y}^{(H_2)}
 =
-\Pi_{H_1}G_\theta(\mathbf X,H_2),
-$$
-
-则称其满足 CHPC，其中 $\Pi_H$ 表示截取前 $H$ 个 forecast steps 的 prefix
-operator。
-
-ISCF-BSCA 使用
-
-$$
-G_\theta(\mathbf X,H)
+\left[
+g_\theta(\mathbf X,\tau,c)
+\right]_{\tau=1,\ldots,H_1;\ c=1,\ldots,C}
 =
-\Pi_HF_\theta(\mathbf X),
+\hat{\mathbf Y}^{(H_1)},
 $$
 
-其中 $F_\theta$ 一次生成最大长度 $T$ 的完整预测，因此
-
-$$
-\Pi_{H_1}G_\theta(\mathbf X,H_2)
-=
-\Pi_{H_1}\Pi_{H_2}F_\theta(\mathbf X)
-=
-G_\theta(\mathbf X,H_1).
-$$
+则称其满足 CHPC，其中 $\Pi_H$ 表示保留前 $H$ 个 future time steps 的
+prefix operator。CHPC 来自每个 future-step prediction 的 horizon-invariant
+定义，不在 Introduction 中表述为“先完整生成 max-$T$ 再 crop”。
 
 CHPC 是 task/system contract，不单独作为算法创新。本文的核心问题是：如何在
 满足 CHPC、使用一个 unified model 的同时，避免 fixed-granularity decoder
-在多个 forecast steps 上形成表达折中。
+在多个 future time steps 上形成表达折中。
 
-### 1.5 明确弃用或限制的表述
+### 1.6 明确弃用或限制的表述
 
 | Avoid | Replacement / Boundary |
 | --- | --- |
 | `single-checkpoint multi-horizon forecaster` | Introduction 使用 `unified multi-horizon forecaster` |
 | `same-origin cross-horizon prefix consistency` | 正式术语使用 CHPC；`fixed forecast origin` 写入定义 |
-| `future-generation scope heterogeneity` | 使用 `forecast-output coupling heterogeneity` |
-| `future coordinate` | prose 使用 `forecast step`；标量目标使用 `forecast target` |
+| `future-generation scope heterogeneity` | 使用 `future-step coupling heterogeneity` |
+| `forecast step` / `future coordinate` | Introduction prose 使用 `future time step`；标量目标使用 `forecast target` |
+| `horizon-independent` | 中文使用“horizon无关”；英文架构使用 `horizon-agnostic`，性质使用 `horizon-invariant` |
+| “先生成max-$T$再crop”作为宏观定义 | 使用 horizon无关、future-step-indexed function 直接定义任意 $H$-step forecast |
+| “independently generate different horizons” | 使用 `directly instantiate arbitrary horizons`；不同 horizons 是nested而非相互独立 |
 | `temporal coherence` 表示 CHPC | 禁止；该术语已广泛用于 temporal-hierarchy reconciliation |
 | `forecast stability` 表示 CHPC | 禁止；通常指不同 forecast origins/creation dates 之间的 revision |
 | `strict multi-horizon gradient conflict` | 当前证据不支持；只允许写 heterogeneous demands 或 shared-decoder compromise |
@@ -147,18 +169,19 @@ CHPC 是 task/system contract，不单独作为算法创新。本文的核心问
 
 > 真实应用需要一个模型同时服务多个 nested forecast horizons。标准
 > horizon-specific protocol 为每个 $H$ 独立训练模型，不能保证重叠 forecast
-> steps 的预测一致，也带来重复训练与部署成本。简单地把最大 horizon 的预测
-> crop 成多个 prefixes 可以获得 CHPC，却要求同一个 fixed-granularity decoder
-> 同时承担不同 samples、variables 与 forecast steps 的异质输出生成需求。
+> horizons 中相同 future time steps 的预测一致，也带来重复训练与部署成本。horizon无关、
+> future-step-indexed generation 可以直接实例化任意 horizon，并保证重叠
+> future time steps 的预测一致；但同一个 fixed-granularity decoder 仍需承担
+> 不同 samples、variables 与 future time steps 的异质输出生成需求。
 > ISCF 通过多个 independent scope-coupled fields 表示不同
-> forecast-output coupling granularities，并对每个 forecast target 融合这些
+> future-step coupling granularities，并对每个 forecast target 融合这些
 > fields；BSCA 在不改变 inference graph 的前提下稳定其 joint training。
 
 该主线包含四层：
 
 1. `system need`：一个 unified model 服务多个 nested horizons；
 2. `system contract`：CHPC；
-3. `modeling problem`：forecast-output coupling heterogeneity；
+3. `modeling problem`：future-step coupling heterogeneity；
 4. `solution`：ISCF architecture + BSCA training。
 
 ## 3. 全文结构
@@ -178,12 +201,12 @@ Abstract
    3.1 Horizon-Specific and Unified Multi-Horizon Forecasting
    3.2 Cross-Horizon Disagreement of Horizon-Specific Models
    3.3 Performance Compromise in Naive Unified Forecasting
-   3.4 Heterogeneous Forecast-Output Coupling Granularities
+   3.4 Heterogeneous Future-Step Coupling Granularities
    3.5 Design Requirements
 
 4. ISCF-BSCA: Prefix-Consistent Unified Multi-Horizon Forecasting
    4.1 Architecture Overview
-   4.2 Full-Horizon Generation and CHPC
+   4.2 Horizon-Agnostic Future-Step Generation and CHPC
    4.3 History Encoding
    4.4 Independent Scope-Coupled Fields
    4.5 Forecast-Target-Wise Scope Fusion
@@ -216,7 +239,7 @@ cells、secondary controls 与敏感性结果放在 Appendices。
 
 ### 4.1 Paragraph 1：multi-horizon need 与现行 horizon-specific protocol
 
-**状态：首轮共识。**
+**状态：第二轮共识。**
 
 写作目标：
 
@@ -240,11 +263,11 @@ $H\in\mathcal H$，而不仅是一个模型一次输出多个 future steps。
 
 ### 4.2 Paragraph 2：horizon-specific systems 的三个不足
 
-**状态：首轮共识。**
+**状态：第二轮共识。**
 
 本段只建立三项系统问题：
 
-1. 相同历史、相同 forecast step 可能因请求的 horizon 不同而产生不同预测；
+1. 相同历史、相同 future time step 可能因请求的 horizon 不同而产生不同预测；
 2. 多套独立训练、存储与部署成本；
 3. 不能自然解释为一个完整未来轨迹的 nested views。
 
@@ -259,7 +282,7 @@ $$
 建议正文逻辑：
 
 > For the same observed history, independently trained horizon-specific
-> models may produce different predictions for the same forecast step. In
+> models may produce different predictions for the same future time step. In
 > particular, the first $H_1$ steps predicted by an $H_2$-step model are not
 > guaranteed to agree with the output of a separately trained $H_1$-step
 > model, even when $H_1<H_2$. Such horizon-dependent disagreement prevents
@@ -271,21 +294,26 @@ $$
 
 ### 4.3 Paragraph 3：unified forecaster 与 CHPC
 
-**状态：首轮共识。**
+**状态：第二轮共识。**
 
 建议正文逻辑：
 
-> We therefore study a unified multi-horizon forecaster that generates one
-> full-length forecast trajectory and derives shorter-horizon predictions
-> through prefix extraction. We formalize the required consistency property
-> as cross-horizon prefix consistency: at a fixed forecast origin and for the
-> same observed history, the prediction for any shorter horizon must equal
-> the corresponding prefix of every longer-horizon prediction. This
-> formulation enables one unified model to serve multiple horizons while
-> preserving a consistent interpretation of overlapping forecast steps.
+> We therefore formulate unified multi-horizon forecasting through a
+> horizon-agnostic prediction function indexed by future time step. Given an
+> observed history, the model directly defines a prediction for each future
+> step, and an $H$-step forecast is instantiated by evaluating the
+> corresponding sequence of future steps. Since the prediction at each step
+> is determined by the observed history and its future-step index, rather
+> than by the requested horizon, predictions at overlapping future steps
+> remain identical across horizons. We refer to this property as
+> cross-horizon prefix consistency. Our architecture realizes this
+> step-indexed interface through step-specific synthesis coefficients,
+> allowing arbitrary horizons to be instantiated without horizon-specific
+> prediction heads.
 
 CHPC 在 Introduction 中作为 forecasting-system desideratum，而不是单独包装为
-method novelty。
+method novelty。该 formulation 不把不同 horizons 称为相互独立；它们是同一个
+horizon无关、step-indexed field 的nested outputs。
 
 ### 4.4 Paragraph 4：naive unification 与 coupling heterogeneity
 
@@ -293,12 +321,12 @@ method novelty。
 
 当前建议：
 
-> CHPC can be obtained by generating a maximum-length forecast and truncating
-> it for shorter requests, but this construction does not by itself ensure
-> accurate unified forecasting. A single fixed-granularity decoder must use
-> one output-generation structure for all samples, variables, and forecast
+> Horizon-agnostic, future-step-indexed generation establishes a consistent
+> interface across horizons, but it does not by itself ensure accurate
+> unified forecasting. A single fixed-granularity decoder must use one
+> output-generation structure for all samples, variables, and future time
 > steps. This forces the decoder to balance fine-grained flexibility against
-> broader latent sharing, although the appropriate forecast-output coupling
+> broader latent sharing, although the appropriate future-step coupling
 > granularity may vary across forecast targets.
 
 本段禁止预设 strict negative gradient conflict，也不预设某个 horizon 与某个
@@ -311,11 +339,11 @@ scope 的一一对应关系。
 当前建议依次介绍：
 
 1. ISCF 建立多个 independent scope-coupled fields；
-2. 每个 field 对应一种 forecast-step coupling scope，并预测完整 $T$；
+2. 每个 field 对应一种 future-step coupling scope，并定义各 future steps 的预测；
 3. forecast-target-wise fusion 对每个 $(\tau,c)$ 组合 fields；
 4. BSCA 在训练期促进 fields 与 fusion policy 的 balanced co-adaptation；
 5. inference graph 不因 BSCA 增加参数或路径；
-6. full-$T$ generation 使 CHPC by construction。
+6. horizon无关、future-step-indexed definition 使 CHPC by construction。
 
 不声称 canonical contiguous partition 已被证明优于 random partition；不声称
 policy 学得 universal conditional specialization。
@@ -330,7 +358,7 @@ policy 学得 universal conditional specialization。
    CHPC，系统分析 horizon-specific systems 的跨 horizon disagreement、系统
    冗余，以及 naive unified decoder 的输出粒度折中。
 2. **Architecture.** 提出 ISCF，用多个 independent scope-coupled fields 与
-   forecast-target-wise fusion 表示 heterogeneous forecast-output coupling
+   forecast-target-wise fusion 表示 heterogeneous future-step coupling
    granularities。
 3. **Training and evidence.** 提出 ISCF-specific BSCA，在 inference graph
    不变的情况下改善 balanced co-adaptation，并通过 horizon-specific、
@@ -363,7 +391,7 @@ KL、entropy regularization 或 load balancing 首创。
 区分：
 
 1. 一个 model family 支持不同输出长度；
-2. 一个 forward 同时输出多个 forecast steps；
+2. 一个 forward 同时输出多个 future time steps；
 3. 同一模型服务多个 requested horizons；
 4. 不同 requested horizons 满足 CHPC。
 
@@ -383,7 +411,7 @@ forecast-origin stability 与本文 CHPC 不同。
 
 核心 comparison question：
 
-> decoder 如何在多个 forecast steps 之间分配 latent sharing，而不是 encoder
+> decoder 如何在多个 future time steps 之间分配 latent sharing，而不是 encoder
 > 如何处理历史输入。
 
 ### 5.4 Multi-Scale Temporal Modeling
@@ -395,7 +423,7 @@ forecast-origin stability 与本文 CHPC 不同。
 - ISCF 的 scope 是 output-side latent-state sharing extent。
 
 不把 primitive overlap 自动写成 novelty rejection；claim 落在
-`unified nested-horizon problem -> CHPC contract -> heterogeneous output
+`unified nested-horizon problem -> CHPC contract -> heterogeneous future-step
 coupling -> independent fields and fusion -> balanced co-adaptation` 完整链上。
 
 ## 6. Problem Formulation and Empirical Motivation
@@ -418,16 +446,15 @@ $$
 Unified formulation：
 
 $$
-\hat{\mathbf Y}^{(T)}
-=
-F_\theta(\mathbf X),
-\qquad
 \hat{\mathbf Y}^{(H)}
 =
-\Pi_HF_\theta(\mathbf X).
+\left[
+g_\theta(\mathbf X,\tau,c)
+\right]_{\tau=1,\ldots,H;\ c=1,\ldots,C},
 $$
 
-随后定义 CHPC，并说明 $H$ 是 forecast horizon、$\tau$ 是 forecast step、
+其中 $g_\theta$ 是horizon无关、future-step-indexed prediction function。
+随后定义 CHPC，并说明 $H$ 是 forecast horizon、$\tau$ 是 future time step、
 $(\tau,c)$ 是 forecast target。
 
 ### 6.2 Evidence I：Cross-Horizon Disagreement
@@ -461,7 +488,7 @@ $$
 计划展示：
 
 - horizon-pair NCHPD heatmap；
-- same-history overlapping forecast-step overlay；
+- same-history overlapping future-step overlay；
 - disagreement versus forecast error；
 - model count、training cost、storage 与 deployment cost。
 
@@ -470,7 +497,8 @@ $$
 
 ### 6.3 Evidence II：Naive Unified Forecasting
 
-把同一 baseline 改成一次输出 $T=720$，再以 $\Pi_H$ 评估多个 horizons。定义：
+把同一 baseline 改成horizon无关、future-step-indexed unified variant，再在
+多个 requested horizons 上评估。定义：
 
 $$
 \operatorname{UP}_H
@@ -488,7 +516,7 @@ $$
 存在 performance compromise；若部分或全部 baseline 不出现正 penalty，则必须
 收窄结论，不能宣称 unified forecasting 天然更难。
 
-### 6.4 Evidence III：Heterogeneous Forecast-Output Coupling Granularities
+### 6.4 Evidence III：Heterogeneous Future-Step Coupling Granularities
 
 在相同 simple/frozen baseline representation 上连接 capacity-matched
 diagnostic heads：
@@ -497,7 +525,7 @@ diagnostic heads：
 - block-level sharing；
 - global sharing。
 
-对 scope setting $s$ 与 forecast-step bin $b$ 定义：
+对 scope setting $s$ 与 future-step bin $b$ 定义：
 
 $$
 E_{s,b}
@@ -505,20 +533,20 @@ E_{s,b}
 \operatorname{MSE}
 \left(
 \text{diagnostic head with sharing scope }s,
-\text{forecast-step bin }b
+\text{future-step bin }b
 \right).
 $$
 
 展示：
 
-- coupling-granularity × forecast-step-bin heatmap；
+- coupling-granularity × future-step-bin heatmap；
 - best-granularity map；
 - scope crossover curves；
 - data-side local fluctuation、block trend 与 scale-dependent
   predictability 作为描述性辅助。
 
 方向级证据要求多个 scope heads 的 relative performance 随 sample、variable
-或 forecast-step region 稳定交叉。单纯 gradient magnitude difference、单调
+或 future-step region 稳定交叉。单纯 gradient magnitude difference、单调
 lead-time difficulty 或 data-side energy 不能单独建立该问题。
 
 ### 6.5 Design Requirements
@@ -526,8 +554,8 @@ lead-time difficulty 或 data-side energy 不能单独建立该问题。
 由前三项证据导出：
 
 1. 一个 unified model 服务全部 horizons；
-2. 所有 horizon outputs 是同一个 full forecast 的 prefixes；
-3. decoder 支持多种 forecast-output coupling granularities；
+2. 每个 future-step prediction 对 requested horizon 保持invariant，因而满足CHPC；
+3. decoder 支持多种 future-step coupling granularities；
 4. 不同 forecast targets 可组合不同 coupling scopes；
 5. 多个 scope paths 需要稳定 joint training。
 
@@ -537,17 +565,19 @@ lead-time difficulty 或 data-side energy 不能单独建立该问题。
 
 先给出完整 tensor flow，再解释直觉。
 
-### 7.2 Full-Horizon Generation and CHPC
+### 7.2 Horizon-Agnostic Future-Step Generation and CHPC
 
-模型生成：
+对每个 future time step 与变量，模型定义：
 
 $$
-\hat{\mathbf Y}
-\in
-\mathbb R^{B\times T\times C},
+\hat y_{b,\tau,c}
+=
+g_\theta(\mathbf X_b,\tau,c),
 $$
 
-requested horizon 不进入模型，评估输出仅通过 $\Pi_H$ 获得。
+其中 requested horizon 不进入 $g_\theta$ 的预测语义。一个 $H$-step forecast
+直接由 $\tau=1,\ldots,H$ 的step-indexed predictions组成；这些 future steps
+可以批量并行计算，但架构定义不依赖预先固定的 requested horizon。
 
 ### 7.3 History Encoding
 
@@ -562,7 +592,8 @@ $$
 ### 7.4 Independent Scope-Coupled Fields
 
 对每个 $s\in\mathcal S$，使用独立的 history-to-mode map 生成
-scope-specific modes。每个 field 输出完整预测：
+scope-specific modes。每个 field 为全部可查询 future steps 定义
+scope-specific predictions：
 
 $$
 \hat{\mathbf Y}_s
@@ -570,7 +601,7 @@ $$
 \mathbb R^{B\times C\times T}.
 $$
 
-scope size 只规定 forecast-step latent sharing extent，不是 requested horizon。
+scope size 只规定 future-step latent sharing extent，不是 requested horizon。
 
 ### 7.5 Forecast-Target-Wise Scope Fusion
 
@@ -654,8 +685,9 @@ models 竞争，但不单独承担 architecture attribution。
 
 ### 8.3 Main Results II：Unified Multi-Horizon Benchmark
 
-把相同 baselines 改成一次预测 $T$ 并通过 prefix extraction 评估。使用一致的
-checkpoint selector 与尽可能 matched 的 supervision protocol。
+把相同 baselines 改成 horizon无关、future-step-indexed unified variants，
+并在相同 requested horizons 上评估。使用一致的 checkpoint selector 与尽可能
+matched 的 supervision protocol。
 
 | Unified Model | # Trained Models | H96 | H192 | H336 | H720 | Avg. | Gap to Native Specific |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -703,10 +735,10 @@ canonical versus random partition 当前无稳定正向归因，不把 canonical
 
 1. naive unified、ISCF-EQUAL 与 ISCF-BSCA 的 unified penalty；
 2. horizon-specific systems 的 NCHPD 与 ISCF-BSCA 的 exact-zero CHPD；
-3. forecast-step × coupling-scope utilization maps；
+3. future-step × coupling-scope utilization maps；
 4. per-scope forecast error、fused error、prediction diversity 与 oracle
    headroom；
-5. 不同 forecast-step bins 上的 improvement。
+5. 不同 future-step bins 上的 improvement。
 
 该节回答“前文问题被缓解多少”，不负责首次证明问题存在。
 
@@ -731,7 +763,7 @@ canonical versus random partition 当前无稳定正向归因，不把 canonical
 
 - 同一历史的 horizon-specific overlapping forecasts；
 - unified full trajectory 与多个 prefixes；
-- coupling-scope weights 随 forecast step 的变化；
+- coupling-scope weights 随 future time step 的变化；
 - difficult samples 上 field forecasts 与 fused forecast。
 
 ## 9. Conclusion
@@ -740,7 +772,7 @@ canonical versus random partition 当前无稳定正向归因，不把 canonical
 
 1. horizon-specific predictors 不构成带 CHPC 保证的 unified forecasting
    system；
-2. ISCF-BSCA 以 multiple forecast-step coupling scopes、target-wise fusion 与
+2. ISCF-BSCA 以 multiple future-step coupling scopes、target-wise fusion 与
    balanced co-adaptation 构建统一模型；
 3. 总结 performance、efficiency、mechanism evidence 与 limitations。
 
@@ -757,8 +789,8 @@ canonical versus random partition 当前无稳定正向归因，不把 canonical
 ### 10.1 允许的 claims
 
 - 标准 horizon-specific multi-model protocol 不保证 CHPC；
-- ISCF-BSCA 通过 full-$T$ generation 与 prefix extraction 满足 exact CHPC；
-- multiple fields 表示不同 forecast-output coupling granularities；
+- ISCF-BSCA 通过 horizon无关、future-step-indexed prediction field 满足 exact CHPC；
+- multiple fields 表示不同 future-step coupling granularities；
 - independent fields 相对 near-matched shared-width field 有稳定收益；
 - BSCA 相对 same-architecture ISCF-EQUAL 有 small but three-seed directionally
   robust gain；
@@ -782,7 +814,7 @@ Search date：`2026-07-23` 至 `2026-07-24`。
 Topic scope：
 
 - multi-step/direct/recursive/MIMO terminology；
-- forecast step、lead time 与 horizon；
+- future time step、forecast step、lead time 与 horizon；
 - multi-output block strategies；
 - forecast stability across creation dates；
 - temporal forecast coherence/reconciliation；
@@ -798,7 +830,7 @@ Primary sources：
    RecMO/DirMO/DirRecMO 与 block-size parameterization：
    <https://link.springer.com/article/10.1007/s10618-025-01135-1>
 3. Kan et al., *Multivariate Quantile Function Forecaster*，multi-horizon
-   sequence models 与 dependency across forecast steps：
+   sequence models 与 dependency across future time steps：
    <https://proceedings.mlr.press/v151/kan22a.html>
 4. Nguyen et al., *ClimateLearn*，direct、continuous 与 iterative forecasting
    的 lead-time terminology：
@@ -819,9 +851,9 @@ Primary sources：
 
 Coverage boundary：
 
-- 本轮术语检索支持使用 `forecast step`、`lead time`、multi-output dependency
-  与 block-size language；
-- `forecast-output coupling granularity` 与 CHPC 是为本文问题链给出的明确术语，
+- 本轮术语检索确认`forecast step`、`lead time`等文献用法；Introduction为可读性
+  使用`future time step`，Method允许在引用既有工作时保留原术语；
+- `future-step coupling granularity` 与 CHPC 是为本文问题链给出的明确术语，
   不是宣称既有文献从未使用相近概念；
 - 投稿前仍需针对最终 title、method naming 与 2026 最新 decoder work 再做一次
   freshness search。
@@ -831,6 +863,7 @@ Coverage boundary：
 | Date | Section | Consensus | Remaining Question |
 | --- | --- | --- | --- |
 | 2026-07-24 | Full paper structure | 六章正文、无独立 Discussion、problem evidence 前置 | 各章篇幅与图表编号待定 |
-| 2026-07-24 | Introduction P1--P3 | `forecast step`、unified forecaster、CHPC 及其 claim boundary | 英文最终措辞在全文写作阶段润色 |
-| 2026-07-24 | Central scope terminology | problem=`forecast-output coupling granularity`；instance=`forecast-step coupling scope` | Method title 与 ISCF acronym expansion 后续单独审议 |
+| 2026-07-24 | Introduction P1--P3 v0.1 | `forecast step`、full-trajectory prefix formulation | 由v0.2取代 |
+| 2026-07-24 | Introduction P1--P3 v0.2 | `future time step`、horizon无关、future-step-indexed generation、CHPC | 英文最终措辞在全文写作阶段润色 |
+| 2026-07-24 | Central scope terminology | problem=`future-step coupling granularity`；instance=`future-step coupling scope` | Method title 与 ISCF acronym expansion 后续单独审议 |
 | 2026-07-24 | Introduction P4--P6 | 保留 provisional narrative | 下一轮逐段讨论 |
