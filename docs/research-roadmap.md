@@ -1,6 +1,6 @@
 # Research Roadmap
 
-## ISCF-BSCA Paper Architecture and Introduction P1--P4 v0.3 (2026-07-24)
+## ISCF-BSCA Paper Architecture and Introduction P1--P4 v0.4 (2026-07-24)
 
 全文结构已落地到`docs/iscf-bsca-paper-architecture.md`。正文固定为六章：
 Introduction、Related Work、Problem Formulation and Empirical Motivation、
@@ -16,17 +16,23 @@ $\tau=1,\ldots,H$的predictions组成。CHPC来自同一future step不随request
 max-$T$-then-crop叙事；ISCF以step-specific synthesis coefficients实现该接口，同时保留scope-level latent
 sharing。不同horizons是nested outputs，不称为independent generation。
 
-Introduction第4段冻结三层术语：问题=`future-region predictive-structure heterogeneity`，可检验表现=
-`region-dependent sharing-scale preference`，方法=`future-step coupling scope`。future region是预测域内部连续
-future steps的集合，不是requested horizon；单个future step本身没有coupling scope。naive unified decoder的问题是
-把单一fixed cross-step sharing pattern施加到整个future domain，因而在step-level flexibility与broad-range
-structural sharing之间形成统一折中。
+Introduction第4段冻结三层术语：问题=`future-region sharing-demand heterogeneity`，可检验表现=
+`region-dependent sharing-scale preference`，方法=`future-step coupling scope`。sharing demand表示finite-capacity
+decoder中一个history-conditioned generation state适宜被多宽范围的future steps共同复用。broad sharing可能降低
+estimation variance但增加local-detail bias；fine-grained generation可能提高local flexibility但增加参数估计与优化
+难度。不同future regions的multi-scale component importance只有通过这一bias--variance mechanism和matched evidence，
+才能推出sharing-demand heterogeneity。
+
+现有decoder不作global/independent二分：iTransformer与PatchTST是shared representation加step-specific rows；
+DLinear是step-specific linear rows但仍共享输入分解和joint training；N-HiTS是预定义multi-scale trajectory
+synthesis。future region仍定义为预测域内部连续future steps的集合，不是requested horizon；单个future step本身
+没有coupling scope。
 
 Problem Formulation的Evidence III使用simple baseline上的capacity-matched、end-to-end diagnostic predictors建立
 region-wise risk crossing、best-scale变化与best-fixed-scale headroom；frozen probe和data-side multi-scale energy只作
 secondary/descriptive evidence。若claim temporal contiguity，必须加入ordered versus random matched control。
 
-Decision=`paper_architecture_v03_intro_p1_p4_consensus`。CHPC只作system contract，不单独claim算法创新；
+Decision=`paper_architecture_v04_intro_p1_p4_consensus`。CHPC只作system contract，不单独claim算法创新；
 不声称所有已有模型缺少CHPC、unified必然更弱、strict gradient conflict、canonical grouping必要或universal
 conditional specialization。Introduction第5--6段与后续章节仍为provisional，下一步按用户顺序继续逐段讨论。
 本次不改变frozen ISCF-BSCA-v1，不授权new training/test。

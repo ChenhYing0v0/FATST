@@ -5,11 +5,11 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.3` |
+| `version` | `v0.4` |
 | `last_updated` | `2026-07-24` |
 | `paper_candidate` | `ISCF-BSCA-v1` |
-| `current_review_cursor` | Introduction 第4段完成问题层与方法层术语拆分 |
-| `frozen_consensus` | 论文六章结构；Introduction 第1--4段的任务定义、CHPC 与 future-region problem formulation |
+| `current_review_cursor` | Introduction 第4段完成sharing-demand逻辑与baseline taxonomy修订 |
+| `frozen_consensus` | 论文六章结构；Introduction 第1--4段的任务定义、CHPC 与 future-region sharing-demand formulation |
 | `provisional_content` | Introduction 第5--6段、Related Work、Problem/Motivation 的具体实验、Method、Experiments、Conclusion |
 | `not_authorized_by_this_document` | 新模型实现、remote training、formal test、按结果调参 |
 
@@ -43,21 +43,44 @@ $$
 数学坐标系或代码中的 `coordinate_field` 时，才允许使用
 `future-step coordinate` 或 `future-step embedding`。
 
-### 1.2 Future-region predictive-structure heterogeneity
+### 1.2 Future-region sharing-demand heterogeneity
 
 问题层面的正式术语为：
 
-> **future-region predictive-structure heterogeneity**
+> **future-region sharing-demand heterogeneity**
 
-中文称“未来区间预测结构异质性”。其中 future region
+中文称“未来区间共享需求异质性”。其中 future region
 $\mathcal B_b\subseteq\{1,\ldots,T\}$ 是预测域内部一组连续的 future time
-steps，不是 requested forecast horizon。该问题表示：细粒度变化、中等范围
-趋势与宽范围轨迹形态的相对重要性，可能随 sample、variable 与 future region
-改变，因此整个 future domain 并非结构均一。
+steps，不是 requested forecast horizon。
 
-该术语描述 data/task 与 finite-capacity predictor 之间的建模困难，不预先指定
-ISCF、scope arm、grouping 或 fusion。它也不表示 requested horizon 改变了同一
-future step 的 Bayes conditional mean。
+这里的sharing demand指：在finite-capacity decoder中，一个由历史构造的
+`history-conditioned generation state`适宜被多宽范围的future steps共同复用。
+它不是future targets之间真实的probabilistic dependence，也不是某个future
+step自身的属性。
+
+问题的机制假设是：broad sharing通常提供更强的结构约束并降低估计variance，
+但可能增加局部变化的approximation bias；fine-grained或step-specific
+generation提供更强的局部自由度，但可能增加参数估计与优化难度。因此，对
+future region $\mathcal B_b$ 和sharing extent $s$，可将有限容量风险概念化为：
+
+$$
+R_b(s)
+=
+\operatorname{Bias}_b^2(s)
++
+\operatorname{Variance}_b(s)
++
+\operatorname{Noise}_b.
+$$
+
+如果细粒度变化与平滑、宽范围轨迹成分的相对重要性随sample、variable与future
+region改变，则不同regions的bias--variance optimum可能不同。这只是需要matched
+evidence验证的建模假设，不是由“时间序列具有multi-scale structure”自动推出的
+定理。
+
+该术语描述task与finite-capacity output-side sharing pattern之间的mismatch，
+不预先指定ISCF、scope arm、grouping或fusion。它也不表示requested horizon
+改变了同一future step的Bayes conditional mean。
 
 ### 1.3 Region-dependent sharing-scale preference
 
@@ -115,7 +138,7 @@ sharing。该概念属于 output-side decoder structure，不等同于 requested
 forecast horizon、input receptive field、input temporal resolution、frequency
 band 或 forecast targets 之间真实的 probabilistic dependence。
 
-因此，`future-region predictive-structure heterogeneity` 是问题，
+因此，`future-region sharing-demand heterogeneity` 是问题，
 `region-dependent sharing-scale preference` 是可检验表现，
 `future-step coupling scope` 才是 ISCF 对该问题的架构响应。单个 future step
 本身没有 coupling scope；scope 描述的是一组 future steps 之间的共享关系。
@@ -185,7 +208,8 @@ cross-step sharing pattern 在整个 future domain 上形成表达折中。
 | --- | --- |
 | `single-checkpoint multi-horizon forecaster` | Introduction 使用 `unified multi-horizon forecaster` |
 | `same-origin cross-horizon prefix consistency` | 正式术语使用 CHPC；`fixed forecast origin` 写入定义 |
-| `future-generation scope heterogeneity` / `future-step coupling heterogeneity` | 问题使用 `future-region predictive-structure heterogeneity`；方法使用 `future-step coupling scope` |
+| `future-region predictive-structure heterogeneity` | 过于宽泛，无法直接推出sharing extent；问题使用 `future-region sharing-demand heterogeneity` |
+| `future-generation scope heterogeneity` / `future-step coupling heterogeneity` | 问题使用 `future-region sharing-demand heterogeneity`；方法使用 `future-step coupling scope` |
 | “某个future step具有某种coupling granularity” | scope是多个future steps之间的共享关系；用 `region-dependent sharing-scale preference` 描述经验现象 |
 | `future-step dependency heterogeneity` | 禁止；容易被误解为联合概率分布中的temporal dependence |
 | `forecast step` / `future coordinate` | Introduction prose 使用 `future time step`；标量目标使用 `forecast target` |
@@ -205,19 +229,20 @@ cross-step sharing pattern 在整个 future domain 上形成表达折中。
 > horizon-specific protocol 为每个 $H$ 独立训练模型，不能保证重叠 forecast
 > horizons 中相同 future time steps 的预测一致，也带来重复训练与部署成本。horizon无关、
 > future-step-indexed generation 可以直接实例化任意 horizon，并保证重叠
-> future time steps 的预测一致；但 future trajectory 在不同 samples、
-> variables 与 future regions 上可能呈现不同的 predictive structures。
-> 使用单一固定共享模式的 decoder 必须在 step-level flexibility 与
-> broad-range structural sharing 之间作统一折中。ISCF 通过多个 independent
-> scope-coupled fields 提供不同 future-step coupling scopes，并对每个
-> forecast target 融合这些 fields；BSCA 在不改变 inference graph 的前提下
-> 稳定其 joint training。
+> future time steps 的预测一致；但许多direct multi-output forecasters从
+> broad shared representation或单一固定output-generation pattern生成所有
+> future steps。细粒度变化可能需要更强step-specific flexibility，平滑、宽范围
+> 轨迹成分则可能受益于跨步复用共同generation state。单一共享范围未必能适合
+> 所有samples、variables与future regions。ISCF通过多个independent
+> scope-coupled fields提供不同future-step coupling scopes，并对每个forecast
+> target融合这些fields；BSCA在不改变inference graph的前提下稳定其joint
+> training。
 
 该主线包含四层：
 
 1. `system need`：一个 unified model 服务多个 nested horizons；
 2. `system contract`：CHPC；
-3. `modeling problem`：future-region predictive-structure heterogeneity；
+3. `modeling problem`：future-region sharing-demand heterogeneity；
 4. `solution`：ISCF architecture + BSCA training。
 
 ## 3. 全文结构
@@ -237,7 +262,7 @@ Abstract
    3.1 Horizon-Specific and Unified Multi-Horizon Forecasting
    3.2 Cross-Horizon Disagreement of Horizon-Specific Models
    3.3 Performance Compromise in Naive Unified Forecasting
-   3.4 Future-Region Predictive-Structure Heterogeneity
+   3.4 Future-Region Sharing-Demand Heterogeneity
    3.5 Design Requirements
 
 4. ISCF-BSCA: Prefix-Consistent Unified Multi-Horizon Forecasting
@@ -351,36 +376,38 @@ CHPC 在 Introduction 中作为 forecasting-system desideratum，而不是单独
 method novelty。该 formulation 不把不同 horizons 称为相互独立；它们是同一个
 horizon无关、step-indexed field 的nested outputs。
 
-### 4.4 Paragraph 4：naive unification 与 future-region heterogeneity
+### 4.4 Paragraph 4：naive unification 与 future-region sharing demand
 
-**状态：共识冻结。**
+**状态：v0.4共识冻结。**
 
 建议正文：
 
 > Although a horizon-agnostic prediction field provides a consistent
 > interface across horizons, it does not make unified forecasting inherently
-> easy. The future trajectory is not structurally uniform: fine-grained
-> variations, intermediate trends, and broad trajectory patterns may have
-> different relative importance across samples, variables, and future
-> regions. Consequently, the amount of predictive structure that should be
-> shared across neighboring future steps may also vary over the forecast
-> domain. We refer to this challenge as **future-region
-> predictive-structure heterogeneity**. A naive unified decoder with a
-> single fixed cross-step sharing pattern must impose the same degree of
-> information sharing throughout the future domain, forcing a compromise
-> between step-level flexibility and broad-range structural sharing.
+> easy. Many direct multi-output forecasters generate all
+> future steps either from a broadly shared latent representation or through
+> one fixed output-generation pattern. Such a fixed pattern imposes the same
+> extent of cross-step sharing throughout the forecast domain. However,
+> fine-scale variations may require greater step-specific flexibility,
+> whereas smoother and broader trajectory components may benefit from
+> reusing a common history-conditioned generation state across multiple
+> steps. Because their relative importance can vary across samples,
+> variables, and future regions, no single sharing extent is guaranteed to
+> be uniformly suitable. We refer to this challenge as **future-region
+> sharing-demand heterogeneity**.
 
 对应中文：
 
 > 尽管horizon无关的prediction field为不同horizons提供了一致的预测接口，但它
-> 本身并不能使unified forecasting天然变得容易。未来轨迹在结构上并非均一：
-> 细粒度变化、中等范围趋势和宽范围轨迹模式，在不同样本、变量和未来区间中的
-> 相对重要性可能不同。因此，在相邻future steps之间共享predictive structure
-> 的合适程度，也可能随其在预测域中的位置而变化。我们将这一挑战称为
-> **future-region predictive-structure heterogeneity（未来区间预测结构
-> 异质性）**。采用单一固定cross-step sharing pattern的naive unified
-> decoder，必须在整个未来域施加相同程度的信息共享，因而不得不在
-> step-level flexibility与broad-range structural sharing之间作统一折中。
+> 本身并不能使unified forecasting天然变得容易。许多direct multi-output
+> forecasters从一个宽范围共享的latent representation生成全部future
+> steps，或者在整个预测域采用一种固定的output-generation pattern。这种设计
+> 对所有future regions施加了相同的cross-step sharing extent。然而，细粒度
+> 变化可能需要更强的step-specific flexibility，而平滑、宽范围的轨迹成分则
+> 可能受益于在多个future steps之间复用共同的history-conditioned generation
+> state。由于这些成分的相对重要性可能随sample、variable与future region
+> 变化，单一sharing extent未必能在整个预测域内始终适用。我们将这一挑战称为
+> **future-region sharing-demand heterogeneity（未来区间共享需求异质性）**。
 
 讨论过程中的细节：
 
@@ -388,7 +415,7 @@ horizon无关、step-indexed field 的nested outputs。
    4进一步指出prediction interface一致并不等于unified forecasting已经解决，
    从system contract自然转入decoder modeling problem，为Paragraph 5引出ISCF。
 2. **问题、证据与方法必须分层。** 问题层术语是
-   `future-region predictive-structure heterogeneity`；其可检验表现是
+   `future-region sharing-demand heterogeneity`；其可检验表现是
    `region-dependent sharing-scale preference`；`future-step coupling scope`
    只属于ISCF的方法层。不能用模型中的scope反过来定义问题。
 3. **future region不是forecast horizon。** future region
@@ -400,19 +427,43 @@ horizon无关、step-indexed field 的nested outputs。
    granularity或scope；scope描述多个future steps在target-specific synthesis
    之前共享predictive state的范围。因此正文不写“different future steps have
    different coupling granularities”。
-5. **经验命题而非普适规律。** “不同future regions可能受益于不同sharing
+5. **从multi-scale intuition到sharing demand需要中间机制。** broad sharing
+   可能以更强结构约束降低estimation variance，但增加local-detail bias；
+   fine-grained generation可能提高局部flexibility，但增加参数估计与优化难度。
+   因此，只有在不同future regions的bias--variance optimum确实不同时，才能
+   推出region-dependent sharing demand。时间序列包含multi-scale成分本身并不
+   足以完成该推导。
+6. **现有decoder不是“global versus independent”的简单二分。**
+
+   - iTransformer使用同一个variate-level representation经
+     `Linear(d_model, pred_len)`生成全部future steps，属于global shared state
+     加step-specific projection rows；
+   - PatchTST将全部history-patch representations展平后经
+     `Linear(d_model * patch_num, target_window)`输出，属于broad shared
+     representation加step-specific rows；
+   - DLinear使用`Linear(seq_len, pred_len)`，每个future step具有独立linear
+     row，但共享输入分解与joint training，不等于独立nonlinear generation
+     state；
+   - N-HiTS使用hierarchical interpolation和multi-scale additive synthesis，
+     已包含预定义多尺度trajectory sharing，但不是本文所研究的
+     region-dependent adaptive sharing。
+
+7. **经验命题而非普适规律。** “不同future regions可能受益于不同sharing
    scales”必须由第三章capacity-matched predictors的region-wise risk
    crossing、best-scale变化与相对best fixed scale的headroom支持。数据侧
    multi-scale energy只能作描述性辅助。
-6. **理论与claim边界。** 在fixed history、pointwise MSE且requested horizon
+8. **理论与claim边界。** 在fixed history、pointwise MSE且requested horizon
    不提供额外信息时，同一future step的Bayes conditional mean不依赖$H$。本文
    讨论的是finite-capacity decoder的sharing topology与inductive-bias
    mismatch，不是horizon-conditioned target变化；本段也不预设strict negative
    gradient conflict、short/long horizon与local/global scope的一一对应关系。
-7. **弃用术语。** 不使用`future-generation scope heterogeneity`或
-   `future-step coupling heterogeneity`作为问题名称，因为两者预先嵌入了方法
-   设计；不使用`future-step dependency heterogeneity`，以免被误解为联合概率
-   分布中的temporal dependence。
+9. **弃用术语。** `predictive structure`缺少可计算边界，不能从其尺度差异直接
+   推出sharing extent差异，因此不再用
+   `future-region predictive-structure heterogeneity`命名问题。不使用
+   `future-generation scope heterogeneity`或`future-step coupling
+   heterogeneity`作为问题名称，因为两者预先嵌入方法设计；也不使用
+   `future-step dependency heterogeneity`，以免被误解为联合概率分布中的
+   temporal dependence。
 
 ### 4.5 Paragraph 5：ISCF-BSCA
 
@@ -438,7 +489,7 @@ policy 学得 universal conditional specialization。
 
 1. **Problem and formulation.** 定义 nested-horizon unified forecasting 与
    CHPC，系统分析 horizon-specific systems 的跨 horizon disagreement、系统
-   冗余，以及 future-region predictive-structure heterogeneity 对 naive
+   冗余，以及 future-region sharing-demand heterogeneity 对 naive
    unified decoder 造成的固定共享模式折中。
 2. **Architecture.** 提出 ISCF，用多个 independent scope-coupled fields 与
    forecast-target-wise fusion 响应 heterogeneous future-region sharing
@@ -507,7 +558,7 @@ forecast-origin stability 与本文 CHPC 不同。
 
 不把 primitive overlap 自动写成 novelty rejection；claim 落在
 `unified nested-horizon problem -> CHPC contract -> future-region
-predictive-structure heterogeneity -> multiple coupling scopes and fusion ->
+sharing-demand heterogeneity -> multiple coupling scopes and fusion ->
 balanced co-adaptation` 完整链上。
 
 ## 6. Problem Formulation and Empirical Motivation
@@ -600,7 +651,7 @@ $$
 存在 performance compromise；若部分或全部 baseline 不出现正 penalty，则必须
 收窄结论，不能宣称 unified forecasting 天然更难。
 
-### 6.4 Evidence III：Future-Region Predictive-Structure Heterogeneity
+### 6.4 Evidence III：Future-Region Sharing-Demand Heterogeneity
 
 这一节在提出 ISCF 之前建立问题证据，不使用 ISCF、scope arm、BSCA 或
 target-wise fusion 等方法术语。主要证据来自相同 simple baseline 上
@@ -648,7 +699,7 @@ $$
 - ordered versus random grouping control。
 
 data-side local fluctuation、block trend、frequency/scale energy与可预测性分析只作
-描述性辅助，不能单独建立predictive-structure heterogeneity。单纯gradient
+描述性辅助，不能单独建立sharing-demand heterogeneity。单纯gradient
 magnitude difference、单调lead-time difficulty或oracle label routing也不能
 单独证明可学习的region-dependent sharing-scale preference。
 
@@ -895,7 +946,7 @@ canonical versus random partition 当前无稳定正向归因，不把 canonical
 - 标准 horizon-specific multi-model protocol 不保证 CHPC；
 - ISCF-BSCA 通过 horizon无关、future-step-indexed prediction field 满足 exact CHPC；
 - matched evidence支持future regions存在region-dependent sharing-scale
-  preference时，可表述为future-region predictive-structure heterogeneity；
+  preference时，可表述为future-region sharing-demand heterogeneity；
 - multiple fields提供不同future-step coupling scopes，作为对该问题的架构响应；
 - independent fields 相对 near-matched shared-width field 有稳定收益；
 - BSCA 相对 same-architecture ISCF-EQUAL 有 small but three-seed directionally
@@ -966,14 +1017,29 @@ Primary sources：
     Time Series Forecasting*，future steps之间的common feature sharing与
     step-specific information：
     <https://www.sciencedirect.com/science/article/pii/S0020025524010405>
+11. Zeng et al., official DLinear implementation，`Linear(seq_len,
+    pred_len)`中的step-specific output rows：
+    <https://github.com/cure-lab/LTSF-Linear/blob/main/models/DLinear.py>
+12. Nie et al., official PatchTST implementation，flattened
+    history-patch representation与`Linear(nf, target_window)`forecast head：
+    <https://github.com/yuqinie98/PatchTST/blob/main/PatchTST_supervised/layers/PatchTST_backbone.py>
+13. Liu et al., official iTransformer implementation，shared
+    variate-level representation与`Linear(d_model, pred_len)`projection：
+    <https://github.com/thuml/Time-Series-Library/blob/main/models/iTransformer.py>
 
 Coverage boundary：
 
 - 本轮术语检索确认`forecast step`、`lead time`等文献用法；Introduction为可读性
   使用`future time step`，Method允许在引用既有工作时保留原术语；
-- `future-region predictive-structure heterogeneity`是本文的问题层术语；
+- `future-region sharing-demand heterogeneity`是本文的问题层术语；
   `region-dependent sharing-scale preference`是其matched empirical
   manifestation；`future-step coupling scope`是方法层术语；
+- `predictive structure`边界过宽，multi-scale component importance不能直接推出
+  cross-step sharing extent；当前问题定义显式加入finite-capacity
+  bias--variance mechanism与matched risk-crossing requirement；
+- DLinear、PatchTST与iTransformer不能简单标成“independent versus global”：
+  需要分别区分step-specific rows、shared history representation与shared
+  variate-level state；
 - probabilistic literature中的`dependency across future time steps`不等同于
   deterministic decoder中的predictive-state sharing，因此不使用
   `future-step dependency heterogeneity`命名本文问题；
@@ -991,5 +1057,6 @@ Coverage boundary：
 | 2026-07-24 | Introduction P1--P3 v0.1 | `forecast step`、full-trajectory prefix formulation | 由v0.2取代 |
 | 2026-07-24 | Introduction P1--P3 v0.2 | `future time step`、horizon无关、future-step-indexed generation、CHPC | 英文最终措辞在全文写作阶段润色 |
 | 2026-07-24 | Central scope terminology v0.2 | problem=`future-step coupling granularity`；instance=`future-step coupling scope` | 由v0.3的问题—证据—方法三层术语取代 |
-| 2026-07-24 | Introduction P4 v0.3 | problem=`future-region predictive-structure heterogeneity`；evidence=`region-dependent sharing-scale preference`；method=`future-step coupling scope` | 第三章具体baseline、regions与matched controls待实验计划冻结 |
+| 2026-07-24 | Introduction P4 v0.3 | problem=`future-region predictive-structure heterogeneity`；缺少从multi-scale importance到sharing extent的逻辑桥 | 由v0.4取代 |
+| 2026-07-24 | Introduction P4 v0.4 | problem=`future-region sharing-demand heterogeneity`；加入generation-state sharing的bias--variance mechanism与baseline decoder taxonomy | 第三章具体baseline、regions与matched controls待实验计划冻结 |
 | 2026-07-24 | Introduction P5--P6 | 保留 provisional narrative | 下一轮逐段讨论 |
