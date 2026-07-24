@@ -7,14 +7,32 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF-BSCA-v1 three-seed Step10 complete；paper consolidation next |
+| `current_11_step` | ISCF-BSCA-v1 Step10 complete；paper architecture consolidation in progress |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
+| `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_core_status` | `ISCF-BSCA-v1`=`passed_core_candidate_ready_for_paper_consolidation` |
+
+[Paper Architecture and Terminology Consolidation, 2026-07-24] 已创建
+`docs/iscf-bsca-paper-architecture.md`，作为全文结构、术语、claim boundary 与实验布局的权威讨论稿。正文冻结为
+Introduction、Related Work、Problem Formulation and Empirical Motivation、Method、Experiments、Conclusion六章，
+不设置独立Discussion；problem-existence evidence在Method前使用已有baseline或simple matched diagnostics建立，
+Experiments只回答最终模型的效果、归因、问题缓解与transferability。
+
+Introduction第1--3段完成首轮共识：使用`forecast horizon`表示请求长度、`forecast step`表示输出中的未来位置、
+`forecast target $(\tau,c)$`表示标量目标；问题层概念为`forecast-output coupling granularity`，具体结构设置为
+`forecast-step coupling scope`。宏观任务名称使用`unified multi-horizon forecaster`，不使用
+`single-checkpoint forecaster`。固定forecast origin与相同history下，短horizon预测等于长horizon对应prefix的性质
+正式命名为`cross-horizon prefix consistency (CHPC)`。
+
+CHPC冻结为task/system contract而非独立算法创新；禁止声称所有已有模型都缺少CHPC、unified forecasting必然弱于
+horizon-specific forecasting、普遍negative-gradient conflict、canonical contiguous grouping必要或policy已形成
+universal conditional specialization。Introduction第4--6段及后续章节仍为provisional content，按章节继续讨论；
+本次文档同步不授权new training/test。
 
 [ISCF-BSCA-v1 Three-seed Step9/10, 2026-07-22] 10/10 confirmation trainings、single frozen 10-run formal test及
 合并seed2021后的60/60 official-test cells完整；15/15 candidate checkpoints与same-seed EQUAL initialization exact paired，

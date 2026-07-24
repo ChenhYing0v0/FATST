@@ -1,5 +1,22 @@
 # Research Roadmap
 
+## ISCF-BSCA Paper Architecture and Introduction P1--P3 (2026-07-24)
+
+全文结构已落地到`docs/iscf-bsca-paper-architecture.md`。正文固定为六章：
+Introduction、Related Work、Problem Formulation and Empirical Motivation、
+ISCF-BSCA Method、Experiments、Conclusion；不设置独立Discussion。问题存在性证据在Method前使用已有baseline或
+simple matched diagnostics建立，Experiments只评估最终模型、matched attribution、问题缓解、效率与transferability。
+
+Introduction第1--3段完成首轮术语共识：$H$=`forecast horizon`，$\tau$=`forecast step`，
+$(\tau,c)$=`forecast target`；问题层使用`forecast-output coupling granularity`，具体结构使用
+`forecast-step coupling scope`。宏观模型称`unified multi-horizon forecaster`，不用`single-checkpoint`。
+固定forecast origin下的nested-prefix equality命名为`cross-horizon prefix consistency (CHPC)`。
+
+Decision=`paper_architecture_v01_landed_intro_p1_p3_consensus`。CHPC只作system contract，不单独claim算法创新；
+不声称所有已有模型缺少CHPC、unified必然更弱、strict gradient conflict、canonical grouping必要或universal
+conditional specialization。Introduction第4--6段与后续章节仍为provisional，下一步按用户顺序继续逐段讨论。
+本次不改变frozen ISCF-BSCA-v1，不授权new training/test。
+
 ## ISCF-BSCA-v1 Three-seed Step9/10 Pass (2026-07-22)
 
 10/10 confirmation trainings与single frozen formal test完整，合并seed2021后为60 test cells。BSCA相对same-seed EQUAL

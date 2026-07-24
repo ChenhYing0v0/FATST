@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | 如何把ISCF architecture与已通过的BSCA balanced co-adaptation整合为完整paper contribution chain |
+| `active_question` | 如何按逐段共识把ISCF architecture、BSCA与unified multi-horizon problem整合为完整paper contribution chain |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
-| `active_candidates` | `ISCF-BSCA-v1` three-seed paper-core pass；paper consolidation pending |
+| `active_candidates` | `ISCF-BSCA-v1` three-seed paper-core pass；paper architecture v0.1 landed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
@@ -20,10 +20,10 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | BSCA confirmation Step10 complete；paper consolidation |
+| `current_11_step` | BSCA confirmation Step10 complete；paper architecture consolidation |
 | `current_candidate` | `ISCF-BSCA-v1` |
 | `latest_decision` | `passed_core_candidate_ready_for_paper_consolidation` |
-| `next_required_action` | consolidate ISCF+BSCA problem/mechanism/claims/limitations -> freeze baseline and ablation plan |
+| `next_required_action` | continue section-by-section consensus from Introduction P4--P6；then freeze baseline/ablation plan |
 | `method_training_authorized` | false；confirmation authorization consumed，new training/test requires new freeze |
 | `rollback_point` | overall paper narrative gap -> Step4 contribution-boundary consolidation；do not tune exact BSCA-v1 |
 
@@ -31,7 +31,7 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | BSCA confirmation Step10 complete；paper consolidation next |
+| `current_step` | BSCA confirmation Step10 complete；paper architecture v0.1 landed |
 | `problem` | direct policy同时控制prediction mixture与fused-loss gradient allocation，可能形成harmful co-adaptation |
 | `existence_evidence` | new EQUAL exact historical；ARMERR/SHUFFLED +0.6577/+0.6557%；D0 post-hoc negative |
 | `idea` | EQUAL + matched schedule/weight uniform policy KL，train-only balanced scope co-adaptation |
@@ -287,6 +287,7 @@ Historical and control queue:
 
 | Task | Status | Next Action |
 | --- | --- | --- |
+| ISCF-BSCA paper architecture | `v0_1_intro_p1_p3_consensus` | continue Introduction P4--P6；later sections remain provisional |
 | ISCF-BSCA-v1 three-seed confirmation | `completed_paper_core_pass` | freeze exact v1；paper consolidation before new baselines/training |
 | ISCF-RSCC-v1 validation matrix | `completed_control_attribution_fail` | exact route closed；retain artifacts/control clue；return Step2/4 |
 | Freeze natural carrier | `completed` | 不再调 profile |
@@ -364,6 +365,7 @@ Historical and control queue:
 
 | Date | Trigger | Paper Section | Change Type | Decision |
 | --- | --- | --- | --- | --- |
+| 2026-07-24 | 用户要求全文结构文档级落地并应用术语修订 | Current Position、Introduction、全文结构与实验布局 | paper architecture + terminology boundary | v0.1落地；P1--P3首轮共识；P4--P6及后续章节provisional；new training/test false |
 | 2026-07-13 | Step4-6 narrative/theory gate完成 | Current Position、Contribution Slots、Contribution Boundary、Main Experiment Logic | contribution boundary + experiment order | PMFO收紧为RCT；PIR收紧为MIPR；Step7 local implementation next |
 | 2026-07-13 | Step7A local gate通过 | Current Position、Contribution 1、Main Experiment Logic | implementation evidence + screening scope | 三数据集Step7B固定；effectiveness仍pending |
 | 2026-07-13 | Step7B effectiveness失败 | Current Position、Contribution 1/2、Boundary、Experiment Logic | candidate closure + rollback | v1关闭；conservation保留；MIPR held；回Step 4 |
