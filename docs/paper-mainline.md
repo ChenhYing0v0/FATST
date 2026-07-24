@@ -17,8 +17,26 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_core_status` | `ISCF-BSCA-v1`=`passed_core_candidate_ready_for_paper_consolidation` |
 
+[Introduction P4 v0.3 Consensus, 2026-07-24] Introduction第四段完成问题层、可检验表现与方法层的拆分。正式问题术语为
+`future-region predictive-structure heterogeneity`（未来区间预测结构异质性）：细粒度变化、中等范围趋势与宽范围
+轨迹形态的相对重要性可能随sample、variable与future region改变。`future region`是预测域内部连续future steps的集合，
+不是requested forecast horizon。
+
+问题的matched empirical manifestation称为`region-dependent sharing-scale preference`：capacity-matched predictors
+在不同future regions上的risk curves稳定交叉，或region-wise best sharing scale稳定不同。方法层才使用
+`future-step coupling scope`，表示多个future steps之间的latent-state sharing extent；单个future step本身没有
+coupling scope。`future-generation scope heterogeneity`、`future-step coupling heterogeneity`与
+`future-step dependency heterogeneity`不再作为问题名称。
+
+Problem Formulation and Empirical Motivation的Evidence III同步改为`Future-Region Predictive-Structure Heterogeneity`。
+primary evidence使用simple baseline上的matched end-to-end diagnostic predictors；frozen representation只作secondary
+diagnostic。支持条件包括region-wise risk crossing、best-scale变化、相对best fixed scale的headroom，以及在claim
+temporal contiguity时ordered versus random matched control。数据侧multi-scale energy只作描述性证据。本次只更新
+paper formulation，不改变ISCF-BSCA代码、frozen results或training/test authorization。
+
 [Introduction P1--P3 v0.2 Consensus, 2026-07-24] 根据逐段讨论，论文架构文档升级为v0.2。Introduction prose使用
-`future time step`，问题层术语改为`future-step coupling granularity`，具体结构称`future-step coupling scope`。
+`future time step`；当时暂定的`future-step coupling granularity`问题表述已由上方v0.3三层术语取代，
+`future-step coupling scope`仅保留为方法层术语。
 中文叙事使用“horizon无关”，英文架构使用`horizon-agnostic`，同一future-step prediction不随requested horizon
 改变的性质称`horizon-invariant`；不再使用可能被误解为统计独立的`horizon-independent`。
 
@@ -42,7 +60,8 @@ Introduction第1--3段的v0.1术语与full-trajectory prefix formulation已由�
 
 CHPC冻结为task/system contract而非独立算法创新；禁止声称所有已有模型都缺少CHPC、unified forecasting必然弱于
 horizon-specific forecasting、普遍negative-gradient conflict、canonical contiguous grouping必要或policy已形成
-universal conditional specialization。Introduction第4--6段及后续章节仍为provisional content，按章节继续讨论；
+universal conditional specialization。Introduction第4段已由上方v0.3共识冻结，第5--6段及后续章节仍为
+provisional content，按章节继续讨论；
 本次文档同步不授权new training/test。
 
 [ISCF-BSCA-v1 Three-seed Step9/10, 2026-07-22] 10/10 confirmation trainings、single frozen 10-run formal test及
