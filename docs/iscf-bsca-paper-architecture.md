@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.6` |
+| `version` | `v0.7` |
 | `last_updated` | `2026-07-28` |
 | `paper_candidate` | `ISCF-BSCA-v1` |
-| `current_review_cursor` | Introduction 第5段按scope-indexed forecast field框架重写并暂时冻结；第6段待同步重写 |
+| `current_review_cursor` | Introduction P1--P6已整合为initial manuscript draft；blind review要求优先修复novelty positioning、problem evidence、field-vs-mixture边界与术语密度 |
 | `frozen_consensus` | 论文六章结构；Introduction 第1--5段；ISCF=`Independent Scope-Conditioned Forecasting`及scope-indexed forecast field框架 |
-| `provisional_content` | Introduction 第6段；Related Work、Problem/Motivation 的具体实验、Method、Experiments、Conclusion |
+| `provisional_content` | Introduction 第6段与整合初稿；Related Work、Problem/Motivation 的具体实验、Method、Experiments、Conclusion |
 | `not_authorized_by_this_document` | 新模型实现、remote training、formal test、按结果调参 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
@@ -625,33 +625,27 @@ horizon无关、step-indexed field 的nested outputs。
 
 ### 4.6 Paragraph 6：contributions
 
-**状态：v0.5正文已由v0.6框架定义取代；下一轮重写。**
+**状态：v0.7 provisional initial-draft正文；待结合blind-review问题与main-table
+evidence逐段确认。**
 
-下列v0.5正文仅保留讨论轨迹，不再作为当前建议正文。P6仍按
-`problem/formulation -> architecture -> training/evidence`三层组织，但其中
-architecture contribution必须改用`scope-indexed forecast field`、
-`target-conditioned scope allocation`与`scope-axis contraction`；不得继续使用
-multiple fields、coupled fields或fusion policy叙事。
-
-v0.5历史正文：
+建议正文：
 
 > Our contributions are threefold. First, we formulate prefix-consistent
 > unified multi-horizon forecasting as a forecasting-system problem and
 > formalize future-region sharing-demand heterogeneity as a testable
-> finite-capacity challenge: different samples, variables, and future regions
-> may favor different extents of cross-step state sharing. We operationalize
-> this hypothesis through capacity-matched region-wise diagnostics, separating
-> evidence for the task problem from the scope-based mechanism used to address
-> it. Second, we develop ISCF, an output-side forecasting architecture that
-> combines independent history-to-mode mappings, multiple future-step coupling
-> scopes, step-specific synthesis, and forecast-target-wise fusion within a
-> horizon-agnostic prediction function. This design responds to heterogeneous
-> sharing demands while retaining cross-horizon prefix consistency without
-> horizon-specific prediction heads. Third, we introduce BSCA, an ISCF-specific
-> train-only objective for stabilizing the co-adaptation of scope-coupled
-> fields and their fusion policy without changing the inference graph. We
+> finite-capacity challenge, separating evidence for the task problem from the
+> scope-based mechanism used to address it. Second, we develop ISCF, an
+> output-side forecasting architecture that organizes independent history
+> projections, multiple latent-state sharing extents, shared
+> future-step-specific synthesis, and target-conditioned scope allocation as a
+> single scope-indexed forecast field. The resulting decoder adapts its
+> output-side sharing pattern at each forecast target while retaining
+> cross-horizon prefix consistency without horizon-specific prediction heads.
+> Third, we introduce BSCA, an ISCF-specific, train-only objective for
+> stabilizing the co-adaptation of scope-conditioned slices and their
+> allocation without changing the inference graph. We
 > evaluate the complete framework against horizon-specific systems, matched
-> unified forecasters, and architecture/objective controls, covering
+> unified forecasters, and architecture and objective controls in terms of
 > predictive accuracy, system efficiency, cross-horizon consistency, mechanism
 > attribution, and decoder transferability.
 
@@ -660,17 +654,16 @@ v0.5历史正文：
 > 本文的贡献主要包括三个方面。第一，我们将具有prefix consistency的unified
 > multi-horizon forecasting形式化为一个forecasting-system problem，并将
 > future-region sharing-demand heterogeneity形式化为一个可检验的有限容量
-> 挑战：不同sample、variable与future region可能偏好不同程度的cross-step
-> state sharing。我们通过capacity-matched的region-wise diagnostics对该假设
-> 进行操作化检验，从而将task problem的存在性证据与用于解决该问题的
-> scope-based mechanism区分开来。第二，我们提出ISCF，一个output-side
-> forecasting architecture；它在同一个horizon无关prediction function中结合
-> independent history-to-mode mappings、multiple future-step coupling scopes、
-> step-specific synthesis与forecast-target-wise fusion。该设计在响应异质性
-> sharing demand的同时，无需horizon-specific prediction heads即可保持
-> cross-horizon prefix consistency。第三，我们提出BSCA，一个ISCF-specific、
-> train-only objective，用于稳定scope-coupled fields及其fusion policy的
-> co-adaptation，并且不改变inference graph。我们将通过horizon-specific
+> 挑战，并将task problem的存在性证据与用于解决该问题的scope-based mechanism
+> 区分开来。第二，我们提出ISCF，一个output-side forecasting architecture；
+> 它将independent history projections、multiple latent-state sharing extents、
+> shared future-step-specific synthesis与target-conditioned scope allocation
+> 组织为一个统一的scope-indexed forecast field。该decoder能够在每个forecast
+> target处调整其output-side sharing pattern，并且无需horizon-specific
+> prediction heads即可保持cross-horizon prefix consistency。第三，我们提出
+> BSCA，一个ISCF-specific、train-only objective，用于稳定scope-conditioned
+> slices及其allocation的co-adaptation，并且不改变inference graph。我们将通过
+> horizon-specific
 > systems、matched unified forecasters以及architecture/objective controls
 > 对完整framework进行评估，覆盖predictive accuracy、system efficiency、
 > cross-horizon consistency、mechanism attribution与decoder transferability。
@@ -691,9 +684,10 @@ v0.5历史正文：
    `demonstrate`或继续保留条件性表述。
 4. **架构创新按完整链条主张。** ISCF的claim不是“首个multi-scale decoder”
    或“首个multi-predictor fusion”，而是
-   `heterogeneous output-side sharing demand -> independent
-   history-to-mode maps across coupling scopes -> step-specific synthesis ->
-   forecast-target-wise fusion in a horizon-agnostic field`。TimeMixer、
+   `heterogeneous output-side sharing demand -> independent history
+   projections across latent-state sharing scopes -> scope-indexed forecast
+   field -> target-conditioned scope allocation -> weighted contraction in a
+   horizon-agnostic function`。TimeMixer、
    N-HiTS、FreqMoE与Moirai-MoE压缩了generic primitive-level novelty，但不
    自动覆盖该完整problem--mechanism链。
 5. **BSCA不claim generic balancing novelty。** Contribution 3明确写成
@@ -713,6 +707,13 @@ v0.5历史正文：
 8. **transferability是empirical scope，不是预先成立的贡献。** 在decoder迁移
    实验完成前，正文只写`evaluate ... decoder transferability`；若迁移结果不
    稳定，应将其降为analysis或limitation，而不是保留正向claim。
+9. **blind-review边界。** 当前Introduction-only独立评审给出
+   `major_revision / weak_reject_at_current_intro`。主要问题是ElasTST已直接覆盖
+   varied-horizon output invariance，SRP/SRP++已提出step-invariant
+   representation bottleneck与step-specific adaptation；field形式易被理解为
+   multi-head/MoE repackaging；P4缺少problem-existence量化钩子；P5术语过载；
+   P6没有headline results。因此v0.7 P6只用于形成完整initial draft，不自动
+   升级为冻结共识。
 
 BSCA 的 novelty 位于 ISCF-specific contribution chain，不 claim generic
 KL、entropy regularization 或 load balancing 首创。

@@ -1,5 +1,28 @@
 # Research Roadmap
 
+## ISCF-BSCA Introduction Initial Draft and Blind Review (2026-07-28)
+
+Introduction P1--P5共识正文与v0.7 provisional P6已整合为clean manuscript
+draft：`docs/paper-drafts/iscf-bsca-introduction-initial-draft.md`。独立blind
+review只读取该六段正文，并用公开primary sources复核novelty；没有使用内部实验
+历史或候选演化。
+
+当前judgement=`major_revision / weak_reject_at_current_intro`，score=`4/10`。
+主要原因不是主线不可读，而是贡献边界仍不足以抵抗最接近prior art：ElasTST已
+研究varied-horizon output invariance，SRP/SRP++已提出step-invariant
+representation bottleneck与step-specific adaptation，TimeMixer/N-HiTS覆盖
+multi-scale future synthesis，MoLE覆盖adaptive expert weighting，Implicit
+Forecaster覆盖output-side local/global motivation。ISCF仍需证明其scope-indexed
+parameterization不是generic multi-head/MoE的重命名；P4需要neutral matched
+problem evidence；BSCA只能claim ISCF-specific co-adaptation，不能claim generic
+balancing novelty。
+
+Decision=`intro_initial_draft_landed_major_revision_required`。下一rollback不是
+method Step4或修改fixed model，而是paper consolidation：先做prior-art
+positioning与problem-evidence/attribution design，再压缩P5术语并在main tables
+完成后补headline results。P1--P5暂保留已冻结状态；P6、draft与review建议均为
+provisional。new implementation、remote training、formal test=false。
+
 ## ISCF Framework and Introduction P5 v0.6 Consensus (2026-07-28)
 
 ISCF暂时冻结为`Independent Scope-Conditioned Forecasting`，核心不再是multiple

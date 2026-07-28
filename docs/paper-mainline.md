@@ -17,6 +17,28 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_core_status` | `ISCF-BSCA-v1`=`passed_core_candidate_ready_for_paper_consolidation` |
 
+[ISCF-BSCA Introduction Initial Draft and Blind Review, 2026-07-28] 已将
+Introduction P1--P5共识正文与按v0.6 framework改写的provisional P6整合为独立
+manuscript draft：`docs/paper-drafts/iscf-bsca-introduction-initial-draft.md`。
+该draft不包含内部候选演化或讨论痕迹；citation与headline results明确保持
+pending，不提前制造未完成的main-table claim。
+
+以首次接触论文、只读取六段正文的top-journal reviewer视角完成独立评审：
+`analysis/iscf_bsca_introduction_blind_review_20260728.md`。Decision=
+`major_revision / weak_reject_at_current_intro`，score=`4/10`。主要阻塞为：
+ElasTST已直接覆盖varied-horizon output invariance，故CHPC只能作为system
+contract；SRP/SRP++已提出step-invariant representation bottleneck与step-specific
+adaptation；scope-indexed field仍可能被理解为multi-head/MoE repackaging；
+future-region sharing-demand heterogeneity缺少Introduction-level量化证据；
+BSCA primitive novelty有限；P5术语密度过高且P6缺headline results。
+
+下一步不是修改fixed ISCF-BSCA-v1或追加loss/router，而是优先完成四项paper
+consolidation：加入ElasTST、SRP/SRP++、TimeMixer、N-HiTS、MoLE与Implicit
+Forecaster的准确positioning；形成neutral capacity-matched problem-existence
+evidence；冻结field-vs-generic-mixture的matched attribution设计；待main tables
+完整后回填结果句。P1--P5共识暂不因一次blind review自动失效，P6与整合draft保持
+provisional；new implementation、remote training与formal test仍未授权。
+
 [ISCF Framework and Introduction P5 v0.6 Consensus, 2026-07-28] 用户暂时冻结新的
 framework definition并要求据此重写P5。ISCF正式解释为`Independent
 Scope-Conditioned Forecasting`；整体decoder不再表述为多个fields/predictors加

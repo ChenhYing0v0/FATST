@@ -9,7 +9,7 @@
 | `active_question` | 如何按逐段共识把ISCF architecture、BSCA与unified multi-horizon problem整合为完整paper contribution chain |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
-| `active_candidates` | `ISCF-BSCA-v1` three-seed paper-core pass；paper architecture v0.6 P5 framework consensus landed |
+| `active_candidates` | `ISCF-BSCA-v1` three-seed paper-core pass；Introduction initial draft landed；blind-review major revision pending |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
@@ -23,7 +23,7 @@
 | `current_11_step` | BSCA confirmation Step10 complete；paper architecture consolidation |
 | `current_candidate` | `ISCF-BSCA-v1` |
 | `latest_decision` | `passed_core_candidate_ready_for_paper_consolidation` |
-| `next_required_action` | rewrite and confirm Introduction P6 under v0.6 scope-indexed forecast field framework |
+| `next_required_action` | address blind-review blockers: prior-art positioning, neutral problem evidence, field-vs-mixture attribution, terminology compression, then reconfirm P6 |
 | `method_training_authorized` | false；confirmation authorization consumed，new training/test requires new freeze |
 | `rollback_point` | overall paper narrative gap -> Step4 contribution-boundary consolidation；do not tune exact BSCA-v1 |
 
@@ -31,7 +31,7 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | BSCA confirmation Step10 complete；paper architecture v0.6 Introduction P5 consensus |
+| `current_step` | BSCA confirmation Step10 complete；paper architecture v0.7 Introduction initial draft + blind review |
 | `problem` | direct policy同时控制prediction mixture与fused-loss gradient allocation，可能形成harmful co-adaptation |
 | `existence_evidence` | new EQUAL exact historical；ARMERR/SHUFFLED +0.6577/+0.6557%；D0 post-hoc negative |
 | `idea` | EQUAL + matched schedule/weight uniform policy KL，train-only balanced scope co-adaptation |
@@ -287,7 +287,7 @@ Historical and control queue:
 
 | Task | Status | Next Action |
 | --- | --- | --- |
-| ISCF-BSCA paper architecture | `v0_6_intro_p5_framework_consensus` | P1--P5 frozen；rewrite P6 with scope-indexed field/allocation terminology |
+| ISCF-BSCA paper architecture | `v0_7_initial_draft_major_revision` | P1--P5 frozen；P6 provisional；resolve review blockers before paragraph consensus |
 | ISCF-BSCA-v1 three-seed confirmation | `completed_paper_core_pass` | freeze exact v1；paper consolidation before new baselines/training |
 | ISCF-RSCC-v1 validation matrix | `completed_control_attribution_fail` | exact route closed；retain artifacts/control clue；return Step2/4 |
 | Freeze natural carrier | `completed` | 不再调 profile |
@@ -365,6 +365,7 @@ Historical and control queue:
 
 | Date | Trigger | Paper Section | Change Type | Decision |
 | --- | --- | --- | --- | --- |
+| 2026-07-28 | 用户要求整合Introduction初稿并以首次接触论文的top-journal reviewer视角独立评审 | Introduction P1--P6、novelty boundary、paper consolidation cursor | clean manuscript draft + blind review | draft v0.1 landed；review=`major_revision/weak_reject` 4/10；ElasTST与SRP/SRP++ overlap、field-vs-mixture、problem evidence、terminology与headline results为主要阻塞；new training/test false |
 | 2026-07-28 | 用户暂时冻结scope-indexed forecast field框架并要求重写P5 | Core terminology、Introduction P5、Method outline、claim boundary | framework reframing + paragraph rewrite | v0.6 consensus；ISCF=`Independent Scope-Conditioned Forecasting`；single field + target-conditioned allocation + scope-axis contraction；P6 v0.5 superseded；new training/test false |
 | 2026-07-28 | 用户要求基于前四段形成Introduction P5--P6 | Introduction P5--P6、primary-source boundary、contribution chain | method overview + contribution draft | v0.5 discussion draft；ISCF chain与BSCA gradient-allocation边界落地；不提前claim未完成main-table results；new training/test false |
 | 2026-07-24 | 用户质疑predictive structure定义与sharing推导并确认修订 | Introduction P4、Problem/Motivation Evidence III、source boundary | terminology + mechanism bridge + baseline taxonomy | v0.4；problem=`future-region sharing-demand heterogeneity`；加入finite-capacity bias--variance bridge及DLinear/PatchTST/iTransformer/N-HiTS边界；new training/test false |
