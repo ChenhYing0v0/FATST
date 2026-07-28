@@ -1,5 +1,30 @@
 # Research Roadmap
 
+## ISCF-BSCA Introduction P5--P6 v0.5 Draft (2026-07-28)
+
+论文架构文档已形成Introduction方法概览与contributions讨论稿，状态为
+`pending_user_confirmation`，不覆盖P1--P4冻结共识。
+
+P5把Paragraph 4的problem层术语映射到method层：每个scope-coupled forecast
+field都覆盖future domain，但具有独立history-to-mode map，并按一种
+future-step coupling scope复用history-conditioned generation state；
+step-specific synthesis保留target flexibility，forecast-target-wise fusion在
+sample、variable与future-step层面组合fields。BSCA只作为ISCF-specific
+train-only co-adaptation机制，作用边界是policy-mediated gradient allocation与
+premature concentration，不claim forced specialization或generic balancing novelty。
+模型继续采用horizon无关、future-step-indexed interface，不使用max-$T$-then-crop
+的Introduction叙事。
+
+P6暂定三项贡献：一是prefix-consistent unified multi-horizon formulation与可检验的
+future-region sharing-demand hypothesis；二是ISCF完整output-side architecture
+chain；三是BSCA及完整matched evidence。CHPC不单列method novelty，generic
+multi-scale/multi-predictor/MoE原语不作为ISCF novelty。最终performance句须等待
+horizon-specific、matched unified与modern baseline主表完整后再冻结。
+
+Decision=`intro_p5_p6_v05_discussion_draft`。下一步先由用户逐段确认P5、P6，
+再进入Related Work或Problem/Motivation具体实验冻结；本次没有new implementation、
+remote training或formal test授权。
+
 ## ISCF-BSCA Paper Architecture and Introduction P1--P4 v0.4 (2026-07-24)
 
 全文结构已落地到`docs/iscf-bsca-paper-architecture.md`。正文固定为六章：

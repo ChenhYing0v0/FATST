@@ -17,6 +17,25 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_core_status` | `ISCF-BSCA-v1`=`passed_core_candidate_ready_for_paper_consolidation` |
 
+[Introduction P5--P6 v0.5 Draft, 2026-07-28] 已基于P1--P4冻结逻辑形成方法概览与
+contributions讨论稿。P5从`future-region sharing-demand heterogeneity`自然引出ISCF：
+多个scope-coupled forecast fields分别使用独立history-to-mode maps与不同
+future-step coupling scopes，并保留step-specific synthesis；forecast-target-wise
+fusion在同一个horizon无关prediction function中组合各field。BSCA只表述为
+ISCF-specific、train-only balanced co-adaptation objective：direct policy同时承担
+prediction mixture与fused-loss gradient allocation，BSCA维持broad learning
+access并缓解premature policy concentration，不增加inference parameter/path。
+
+P6暂按`problem/formulation -> architecture -> training/evidence`组织三项贡献。
+CHPC仍是forecasting-system contract，不单列算法创新；ISCF novelty限定在完整
+output-side sharing-demand response chain，不claim generic multi-scale、
+multi-predictor或MoE首创；BSCA不claim generic load-balancing novelty。当前只写
+evaluation dimensions，不提前声称统一模型胜过多个horizon-specific models或达到
+state of the art。TimeMixer、N-HiTS、FreqMoE、Moirai-MoE及MoE specialization
+primary sources已用于刷新边界；Zotero connector不可用，新增来源的library presence
+尚未核验。状态=`discussion_draft_pending_user_confirmation`；不改变任何代码、
+frozen result或training/test authorization。
+
 [Introduction P4 v0.4 Consensus, 2026-07-24] 第四段的问题术语收紧为
 `future-region sharing-demand heterogeneity`（未来区间共享需求异质性）。sharing demand表示finite-capacity
 decoder中，一个history-conditioned generation state适宜被多宽范围的future steps共同复用。细粒度generation提供

@@ -9,7 +9,7 @@
 | `active_question` | 如何按逐段共识把ISCF architecture、BSCA与unified multi-horizon problem整合为完整paper contribution chain |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
-| `active_candidates` | `ISCF-BSCA-v1` three-seed paper-core pass；paper architecture v0.4 landed |
+| `active_candidates` | `ISCF-BSCA-v1` three-seed paper-core pass；paper architecture v0.5 P5--P6 draft landed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
@@ -23,7 +23,7 @@
 | `current_11_step` | BSCA confirmation Step10 complete；paper architecture consolidation |
 | `current_candidate` | `ISCF-BSCA-v1` |
 | `latest_decision` | `passed_core_candidate_ready_for_paper_consolidation` |
-| `next_required_action` | continue section-by-section consensus from Introduction P5--P6；then freeze baseline/ablation plan |
+| `next_required_action` | obtain section-by-section consensus on Introduction P5--P6；then continue Related Work / Problem-Motivation design |
 | `method_training_authorized` | false；confirmation authorization consumed，new training/test requires new freeze |
 | `rollback_point` | overall paper narrative gap -> Step4 contribution-boundary consolidation；do not tune exact BSCA-v1 |
 
@@ -31,7 +31,7 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | BSCA confirmation Step10 complete；paper architecture v0.4 Introduction P1--P4 consensus |
+| `current_step` | BSCA confirmation Step10 complete；paper architecture v0.5 Introduction P5--P6 discussion draft |
 | `problem` | direct policy同时控制prediction mixture与fused-loss gradient allocation，可能形成harmful co-adaptation |
 | `existence_evidence` | new EQUAL exact historical；ARMERR/SHUFFLED +0.6577/+0.6557%；D0 post-hoc negative |
 | `idea` | EQUAL + matched schedule/weight uniform policy KL，train-only balanced scope co-adaptation |
@@ -287,7 +287,7 @@ Historical and control queue:
 
 | Task | Status | Next Action |
 | --- | --- | --- |
-| ISCF-BSCA paper architecture | `v0_4_intro_p1_p4_consensus` | continue Introduction P5--P6；freeze Evidence III experiment details later |
+| ISCF-BSCA paper architecture | `v0_5_intro_p5_p6_draft` | user confirmation pending；P1--P4 remain frozen；freeze Evidence III experiment details later |
 | ISCF-BSCA-v1 three-seed confirmation | `completed_paper_core_pass` | freeze exact v1；paper consolidation before new baselines/training |
 | ISCF-RSCC-v1 validation matrix | `completed_control_attribution_fail` | exact route closed；retain artifacts/control clue；return Step2/4 |
 | Freeze natural carrier | `completed` | 不再调 profile |
@@ -365,6 +365,7 @@ Historical and control queue:
 
 | Date | Trigger | Paper Section | Change Type | Decision |
 | --- | --- | --- | --- | --- |
+| 2026-07-28 | 用户要求基于前四段形成Introduction P5--P6 | Introduction P5--P6、primary-source boundary、contribution chain | method overview + contribution draft | v0.5 discussion draft；ISCF chain与BSCA gradient-allocation边界落地；不提前claim未完成main-table results；new training/test false |
 | 2026-07-24 | 用户质疑predictive structure定义与sharing推导并确认修订 | Introduction P4、Problem/Motivation Evidence III、source boundary | terminology + mechanism bridge + baseline taxonomy | v0.4；problem=`future-region sharing-demand heterogeneity`；加入finite-capacity bias--variance bridge及DLinear/PatchTST/iTransformer/N-HiTS边界；new training/test false |
 | 2026-07-24 | 用户要求区分问题与coupling-scope方法并文档化 | Introduction P4、Problem/Motivation Evidence III、core terminology | problem/evidence/method boundary | v0.3；problem=`future-region predictive-structure heterogeneity`；evidence=`region-dependent sharing-scale preference`；method=`future-step coupling scope`；new training/test false |
 | 2026-07-24 | 用户修订future-step与horizon无关generation表述 | Introduction P1--P3、core terminology | formulation + terminology refinement | v0.2；horizon-agnostic step-indexed field；不使用max-T-crop宏观叙事或independent-horizon claim；new training/test false |
