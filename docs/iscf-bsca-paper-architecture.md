@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.5` |
+| `version` | `v0.6` |
 | `last_updated` | `2026-07-28` |
 | `paper_candidate` | `ISCF-BSCA-v1` |
-| `current_review_cursor` | Introduction 第5--6段讨论稿已形成，等待逐段确认 |
-| `frozen_consensus` | 论文六章结构；Introduction 第1--4段的任务定义、CHPC 与 future-region sharing-demand formulation |
-| `provisional_content` | Introduction 第5--6段v0.5讨论稿；Related Work、Problem/Motivation 的具体实验、Method、Experiments、Conclusion |
+| `current_review_cursor` | Introduction 第5段按scope-indexed forecast field框架重写并暂时冻结；第6段待同步重写 |
+| `frozen_consensus` | 论文六章结构；Introduction 第1--5段；ISCF=`Independent Scope-Conditioned Forecasting`及scope-indexed forecast field框架 |
+| `provisional_content` | Introduction 第6段；Related Work、Problem/Motivation 的具体实验、Method、Experiments、Conclusion |
 | `not_authorized_by_this_document` | 新模型实现、remote training、formal test、按结果调参 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
@@ -54,7 +54,7 @@ $\mathcal B_b\subseteq\{1,\ldots,T\}$ 是预测域内部一组连续的 future t
 steps，不是 requested forecast horizon。
 
 这里的sharing demand指：在finite-capacity decoder中，一个由历史构造的
-`history-conditioned generation state`适宜被多宽范围的future steps共同复用。
+`history-conditioned latent state`适宜被多宽范围的future steps共同复用。
 它不是future targets之间真实的probabilistic dependence，也不是某个future
 step自身的属性。
 
@@ -110,38 +110,80 @@ $s_b^\star=\arg\min_sR_{b,s}$ 稳定不同，则支持 region-dependent
 sharing-scale preference。这里的“preference”仅表示 matched empirical risk
 更低，不是数据区间对某种架构的内在或绝对偏好。
 
-### 1.4 Future-step coupling granularity and scope
+### 1.4 Scope-indexed forecast field与latent-state sharing scope
 
-方法层面把 decoder 在生成多个 future time steps 时采用的 latent-state sharing
-粒度称为：
+ISCF正式解释为：
 
-> **future-step coupling granularity**
+> **Independent Scope-Conditioned Forecasting**
 
-一个具体的共享范围称为：
+它不是多个完整predictors的ensemble，而是在future-step与sharing-scope的乘积域
+上定义一个统一的：
 
-> **future-step coupling scope**
+> **scope-indexed forecast field**
 
-对 scope size $s$，其结构语义为：
+$$
+\mathcal F_\theta:
+(\mathbf X,\tau,c,s)
+\mapsto
+\hat y_{\tau,c}^{(s)}.
+$$
 
-> $s$ 个 future time steps 在 target-specific synthesis 之前共享一个由历史
-> representation 与该组 future-step descriptor 构造的 latent generation
-> state。
+对固定$s$，$\mathcal F_\theta(\cdot,\cdot,\cdot,s)$称为该field的一个
+`scope-conditioned slice`，而不是独立forecasting model。各slices共享encoder、
+future-step descriptors、future-step-specific synthesis vectors与训练目标，只在
+scope-specific history projection及其latent-state sharing pattern上区分。
 
-ISCF 当前使用：
+方法层面把decoder在多个future time steps之间复用latent state的范围称为：
+
+> **cross-step latent-state sharing extent**
+
+一个具体结构称为：
+
+> **future-step latent-state sharing scope**
+
+对scope size $s$，其结构语义为：
+
+> 同一scope region内的$s$个future time steps在各自的step-specific synthesis
+> 之前，共享一个由history representation与该region的future-step descriptor
+> 共同构造的`history-conditioned, region-indexed latent state`，简称
+> `scope-region latent state`。
+
+ISCF当前使用：
 
 $$
 \mathcal S=\{1,48,144,360,720\}.
 $$
 
-其中 $s=1$ 提供最细粒度的 latent-state sharing，$s=720$ 提供 full-domain
-sharing。该概念属于 output-side decoder structure，不等同于 requested
+其中$s=1$提供最细粒度的latent-state sharing，$s=720$提供full-domain
+sharing。该概念属于output-side decoder structure，不等同于requested
 forecast horizon、input receptive field、input temporal resolution、frequency
 band 或 forecast targets 之间真实的 probabilistic dependence。
 
-因此，`future-region sharing-demand heterogeneity` 是问题，
-`region-dependent sharing-scale preference` 是可检验表现，
-`future-step coupling scope` 才是 ISCF 对该问题的架构响应。单个 future step
-本身没有 coupling scope；scope 描述的是一组 future steps 之间的共享关系。
+target-conditioned scope allocation定义为：
+
+$$
+\pi_\theta(s\mid\mathbf X,\tau,c),
+\qquad
+\sum_{s\in\mathcal S}
+\pi_\theta(s\mid\mathbf X,\tau,c)=1.
+$$
+
+最终prediction通过沿scope轴进行weighted contraction得到：
+
+$$
+g_\theta(\mathbf X,\tau,c)
+=
+\sum_{s\in\mathcal S}
+\pi_\theta(s\mid\mathbf X,\tau,c)
+\mathcal F_\theta(\mathbf X,\tau,c,s).
+$$
+
+因此，`future-region sharing-demand heterogeneity`是问题，
+`region-dependent sharing-scale preference`是可检验表现，
+`future-step latent-state sharing scope`是ISCF的结构响应，
+`target-conditioned scope allocation`负责在每个forecast target处整合不同
+scope-conditioned slices。单个future step本身没有sharing scope；scope描述一组
+future steps之间的latent-state sharing关系。
 
 ### 1.5 Horizon无关、future-step-indexed generation
 
@@ -169,11 +211,13 @@ $$
 同一 future step 的预测不随 requested horizon 改变这一性质使用
 `horizon-invariant`。不使用可能被误解为统计独立的 `horizon-independent`。
 
-当前 ISCF 以step-specific synthesis coefficients实现该接口：每个 future
-time step $\tau$具有自己的identity synthesis row、nonlinear synthesis row与
-temporal bias，并由target-wise policy融合多个scope fields。这里的
-`step-specific`不表示future steps相互独立；它们仍可通过不同coupling scopes
-共享latent generation state。
+当前ISCF以future-step-specific synthesis vectors实现该接口：每个future
+time step $\tau$具有自己的identity synthesis vector、nonlinear synthesis
+vector与temporal bias。它们把对应scope-region latent state映射为
+$\mathcal F_\theta(\mathbf X,\tau,c,s)$，再由target-conditioned scope
+allocation沿scope轴进行weighted contraction。这里的`step-specific`不表示
+future steps相互独立；它们仍可在synthesis之前通过不同sharing scopes共享
+latent state。
 
 ### 1.6 Cross-horizon prefix consistency
 
@@ -209,8 +253,12 @@ cross-step sharing pattern 在整个 future domain 上形成表达折中。
 | `single-checkpoint multi-horizon forecaster` | Introduction 使用 `unified multi-horizon forecaster` |
 | `same-origin cross-horizon prefix consistency` | 正式术语使用 CHPC；`fixed forecast origin` 写入定义 |
 | `future-region predictive-structure heterogeneity` | 过于宽泛，无法直接推出sharing extent；问题使用 `future-region sharing-demand heterogeneity` |
-| `future-generation scope heterogeneity` / `future-step coupling heterogeneity` | 问题使用 `future-region sharing-demand heterogeneity`；方法使用 `future-step coupling scope` |
-| “某个future step具有某种coupling granularity” | scope是多个future steps之间的共享关系；用 `region-dependent sharing-scale preference` 描述经验现象 |
+| `Independent Scope-Coupled Fields` / multiple scope fields | ISCF=`Independent Scope-Conditioned Forecasting`；整体对象为单一`scope-indexed forecast field`，固定$s$只是一个slice |
+| `future-generation scope heterogeneity` / `future-step coupling heterogeneity` | 问题使用 `future-region sharing-demand heterogeneity`；方法使用 `future-step latent-state sharing scope` |
+| `future-step coupling granularity` / “某个future step具有某种coupling granularity” | 使用`latent-state sharing granularity/extent`；scope是多个future steps之间的共享关系 |
+| `forecast-target-wise fusion policy` | 使用`target-conditioned scope allocation`；最终运算称`weighted contraction along the scope axis` |
+| `history-conditioned generation state` | 问题层使用`history-conditioned latent state`；方法层使用`history-conditioned, region-indexed latent state`或`scope-region latent state` |
+| `step-specific synthesis coefficients` | 使用`future-step-specific synthesis vectors`；代码对象是两个$K$维vector及bias，不是标量mixing coefficients |
 | `future-step dependency heterogeneity` | 禁止；容易被误解为联合概率分布中的temporal dependence |
 | `forecast step` / `future coordinate` | Introduction prose 使用 `future time step`；标量目标使用 `forecast target` |
 | `horizon-independent` | 中文使用“horizon无关”；英文架构使用 `horizon-agnostic`，性质使用 `horizon-invariant` |
@@ -232,11 +280,14 @@ cross-step sharing pattern 在整个 future domain 上形成表达折中。
 > future time steps 的预测一致；但许多direct multi-output forecasters从
 > broad shared representation或单一固定output-generation pattern生成所有
 > future steps。细粒度变化可能需要更强step-specific flexibility，平滑、宽范围
-> 轨迹成分则可能受益于跨步复用共同generation state。单一共享范围未必能适合
+> 轨迹成分则可能受益于跨步复用共同latent state。单一共享范围未必能适合
 > 所有samples、variables与future regions。ISCF通过多个independent
-> scope-coupled fields提供不同future-step coupling scopes，并对每个forecast
-> target融合这些fields；BSCA在不改变inference graph的前提下稳定其joint
-> training。
+> scope-specific history projections构造具有不同cross-step latent-state
+> sharing extents的scope-region states，并与共享的future-step-specific
+> synthesis vectors共同形成一个scope-indexed forecast field；
+> target-conditioned scope allocation在每个forecast target处沿scope轴整合该
+> field；BSCA在不改变inference graph的前提下稳定scope slices与allocation的
+> joint training。
 
 该主线包含四层：
 
@@ -269,8 +320,8 @@ Abstract
    4.1 Architecture Overview
    4.2 Horizon-Agnostic Future-Step Generation and CHPC
    4.3 History Encoding
-   4.4 Independent Scope-Coupled Fields
-   4.5 Forecast-Target-Wise Scope Fusion
+   4.4 Scope-Indexed Forecast Field
+   4.5 Target-Conditioned Scope Allocation
    4.6 Balanced Scope Co-Adaptation
    4.7 Complexity and Structural Properties
 
@@ -368,7 +419,7 @@ $$
 > than by the requested horizon, predictions at overlapping future steps
 > remain identical across horizons. We refer to this property as
 > cross-horizon prefix consistency. Our architecture realizes this
-> step-indexed interface through step-specific synthesis coefficients,
+> step-indexed interface through future-step-specific synthesis vectors,
 > allowing arbitrary horizons to be instantiated without horizon-specific
 > prediction heads.
 
@@ -378,7 +429,7 @@ horizon无关、step-indexed field 的nested outputs。
 
 ### 4.4 Paragraph 4：naive unification 与 future-region sharing demand
 
-**状态：v0.4共识冻结。**
+**状态：v0.4逻辑冻结；v0.6术语同步。**
 
 建议正文：
 
@@ -390,7 +441,7 @@ horizon无关、step-indexed field 的nested outputs。
 > extent of cross-step sharing throughout the forecast domain. However,
 > fine-scale variations may require greater step-specific flexibility,
 > whereas smoother and broader trajectory components may benefit from
-> reusing a common history-conditioned generation state across multiple
+> reusing a common history-conditioned latent state across multiple
 > steps. Because their relative importance can vary across samples,
 > variables, and future regions, no single sharing extent is guaranteed to
 > be uniformly suitable. We refer to this challenge as **future-region
@@ -404,7 +455,7 @@ horizon无关、step-indexed field 的nested outputs。
 > steps，或者在整个预测域采用一种固定的output-generation pattern。这种设计
 > 对所有future regions施加了相同的cross-step sharing extent。然而，细粒度
 > 变化可能需要更强的step-specific flexibility，而平滑、宽范围的轨迹成分则
-> 可能受益于在多个future steps之间复用共同的history-conditioned generation
+> 可能受益于在多个future steps之间复用共同的history-conditioned latent
 > state。由于这些成分的相对重要性可能随sample、variable与future region
 > 变化，单一sharing extent未必能在整个预测域内始终适用。我们将这一挑战称为
 > **future-region sharing-demand heterogeneity（未来区间共享需求异质性）**。
@@ -416,17 +467,17 @@ horizon无关、step-indexed field 的nested outputs。
    从system contract自然转入decoder modeling problem，为Paragraph 5引出ISCF。
 2. **问题、证据与方法必须分层。** 问题层术语是
    `future-region sharing-demand heterogeneity`；其可检验表现是
-   `region-dependent sharing-scale preference`；`future-step coupling scope`
-   只属于ISCF的方法层。不能用模型中的scope反过来定义问题。
+   `region-dependent sharing-scale preference`；`future-step latent-state
+   sharing scope`只属于ISCF的方法层。不能用模型中的scope反过来定义问题。
 3. **future region不是forecast horizon。** future region
    $\mathcal B_b\subseteq\{1,\ldots,T\}$ 是预测域内部一组连续future steps；
    forecast horizon $H$ 是一次预测请求覆盖的总长度。不同future regions的
    sharing demand可能不同，不表示同一future step会因requested horizon变化而
    改变预测目标。
-4. **scope是关系而不是单点属性。** 单个future step本身没有coupling
-   granularity或scope；scope描述多个future steps在target-specific synthesis
-   之前共享predictive state的范围。因此正文不写“different future steps have
-   different coupling granularities”。
+4. **scope是关系而不是单点属性。** 单个future step本身没有sharing scope；
+   scope描述多个future steps在target-specific synthesis之前共享latent state
+   的范围。因此正文不写“different future steps have different coupling
+   granularities”。
 5. **从multi-scale intuition到sharing demand需要中间机制。** broad sharing
    可能以更强结构约束降低estimation variance，但增加local-detail bias；
    fine-grained generation可能提高局部flexibility，但增加参数估计与优化难度。
@@ -467,101 +518,122 @@ horizon无关、step-indexed field 的nested outputs。
 
 ### 4.5 Paragraph 5：ISCF-BSCA
 
-**状态：v0.5讨论稿，待用户确认。**
+**状态：v0.6暂时冻结。**
 
 建议正文：
 
 > To address these heterogeneous sharing demands, we propose ISCF-BSCA, a
-> unified multi-horizon forecaster built on Independent Scope-Coupled Fields
-> (ISCF). ISCF constructs multiple scope-coupled forecast fields. Each field
-> defines predictions across the future domain, but has its own
-> history-to-mode mapping and reuses a history-conditioned generation state
-> according to a distinct cross-step sharing extent; step-specific synthesis
-> coefficients
-> retain the flexibility to produce individual forecast targets. A
-> forecast-target-wise fusion policy then combines the field predictions for
-> each sample, variable, and future time step, allowing multiple sharing
-> extents to contribute within one horizon-agnostic prediction function.
-> Because this policy also determines how the fused forecasting loss allocates
-> gradients to the fields, we further introduce Balanced Scope Co-Adaptation
-> (BSCA), a train-only objective that maintains broad learning access across
-> fields and mitigates premature policy concentration during joint
-> optimization. BSCA adds neither inference parameters nor an additional
-> inference path. Together with the future-step-indexed interface, the
-> resulting architecture directly instantiates arbitrary forecast horizons
-> while retaining cross-horizon prefix consistency.
+> scope-adaptive decoder for unified multi-horizon forecasting. Rather than
+> treating different scopes as independent predictors, Independent
+> Scope-Conditioned Forecasting (ISCF) defines a single scope-indexed forecast
+> field over future time steps and latent-state sharing scopes. For each
+> scope, an independent history projection provides scope-specific latent
+> modes, from which history-conditioned, region-indexed latent states are
+> constructed under a different cross-step sharing extent.
+> Shared future-step-specific synthesis vectors then map these states to a
+> scope-conditioned slice of the forecast field. At each forecast target, a
+> target-conditioned scope allocation assigns normalized weights across the
+> slices, and a weighted contraction along the scope axis produces the final
+> prediction. This formulation allows multiple latent-state sharing extents to
+> contribute within one horizon-agnostic, future-step-indexed prediction
+> function. Because the same allocation also determines how the forecasting
+> loss distributes gradients across scope slices, we further introduce
+> Balanced Scope Co-Adaptation (BSCA), a train-only objective that maintains
+> broad learning access across the field and mitigates premature allocation
+> concentration during joint optimization. BSCA changes neither the inference
+> parameters nor the inference path. The resulting forecaster directly
+> instantiates arbitrary forecast horizons while retaining cross-horizon
+> prefix consistency.
 
 对应中文：
 
-> 为响应上述异质性共享需求，我们提出ISCF-BSCA：一个以Independent
-> Scope-Coupled Fields（ISCF）为核心的unified multi-horizon forecaster。
-> ISCF构造多个scope-coupled forecast fields。每个field都在预测域上为各个
-> future time steps定义prediction，但拥有独立的history-to-mode mapping，并
-> 按照一种不同的cross-step sharing extent复用history-conditioned generation
-> state；与此同时，
-> step-specific synthesis coefficients保留了生成单个forecast target所需的
-> 灵活性。随后，forecast-target-wise fusion policy针对每个sample、variable
-> 和future time step组合各field的prediction，使多种sharing extents能够在
-> 同一个horizon无关prediction function中共同发挥作用。由于该policy还决定
-> fused forecasting loss如何向各fields分配gradient，我们进一步提出Balanced
-> Scope Co-Adaptation（BSCA）：一种仅在训练期使用的objective，用于维持各
-> fields获得广泛学习信号的机会，并缓解joint optimization中过早的policy
-> concentration。BSCA既不增加inference parameters，也不引入额外的inference
-> path。结合future-step-indexed interface，该架构可以直接实例化任意forecast
-> horizon，同时保持cross-horizon prefix consistency。
+> 为响应上述异质性共享需求，我们提出ISCF-BSCA，一个面向unified
+> multi-horizon forecasting的scope-adaptive decoder。不同于把不同scopes视为
+> 相互独立的predictors，Independent Scope-Conditioned Forecasting（ISCF）在
+> future time step与latent-state sharing scope构成的二维域上定义一个统一的
+> scope-indexed forecast field。对于每个scope，一条独立的history projection
+> 先产生scope-specific latent modes，再在不同cross-step sharing extent下构造
+> history-conditioned、region-indexed latent states。共享的
+> future-step-specific synthesis vectors随后将这些states
+> 映射为forecast field的一个scope-conditioned slice。在每个forecast target
+> 处，target-conditioned scope allocation为各slices分配normalized weights，
+> 并通过沿scope轴的weighted contraction得到最终prediction。由此，多种
+> latent-state sharing extents能够在同一个horizon无关、future-step-indexed
+> prediction function中共同发挥作用。由于同一个allocation还决定forecasting
+> loss如何向各scope slices分配gradient，我们进一步提出Balanced Scope
+> Co-Adaptation（BSCA）：一种仅在训练期使用的objective，用于维持整个field中
+> 各scope slices获得广泛学习信号的机会，并缓解joint optimization中过早的
+> allocation concentration。BSCA既不改变inference parameters，也不改变
+> inference path。最终forecaster能够直接实例化任意forecast horizons，同时
+> 保持cross-horizon prefix consistency。
 
 讨论过程中的细节：
 
 1. **与Paragraph 4的因果衔接。** Paragraph 4的问题是不同future regions的
-   sharing demand可能不同；Paragraph 5才引入`future-step coupling scope`作为
-   架构响应。正文使用“address these heterogeneous sharing demands”，不将
-   coupling scope反写成问题定义。
-2. **field覆盖整个预测域。** 每个scope-coupled field都为各future time steps
-   提供prediction；“scope”描述field内部的generation state在多宽的future-step
-   span内被复用，不表示一个field只预测某个forecast horizon或某个固定future
-   region。
+   sharing demand可能不同；Paragraph 5才引入`future-step latent-state sharing
+   scope`作为架构响应。正文使用“address these heterogeneous sharing
+   demands”，不将scope反写成问题定义。
+2. **从multiple fields改为single field。** 全部scope-conditioned outputs共同
+   构成$\mathcal F_\theta(\mathbf X,\tau,c,s)$；固定$s$只是该field沿scope轴的
+   一个slice。该定义比“多个field预测后再融合”更贴合共享encoder、coordinate
+   representation与synthesis vectors的真实计算图，也避免落入generic
+   multi-predictor ensemble叙事。
 3. **independent的精确定义。** independent只指各scope拥有独立的
-   history-to-mode affine maps；它们仍共享encoder、future-step representation、
-   step-specific synthesis与final fusion policy。它不表示不同horizons独立，也
-   不表示多个完全独立模型。
-4. **step-specific flexibility没有被scope sharing抹去。** scope-level state
-   sharing发生在target-specific synthesis之前；每个future time step仍通过独立
-   synthesis coefficients形成forecast target。因此ISCF不是把一个group中的
-   future steps强制预测为相同值。
-5. **tensor-level压缩表述。** Method中再展开
-   `scope_modes:[B,C,S,D,K] -> arm_forecasts:[B,C,T,S]`，
-   `policy:[B,C,T,S]`与`fused_forecast:[B,T,C]`。Introduction只保留
-   history-to-mode mapping、sharing extent、step-specific synthesis与
-   target-wise fusion四个必要概念。
-6. **fusion的允许解释。** forecast-target-wise fusion使不同sharing extents
-   能够按sample、variable与future time step产生不同贡献；在没有更强mechanism
-   evidence前，不写成“policy为每个target选择最优scope”，也不声称已经形成
-   universal conditional specialization。
-7. **BSCA的机制边界。** direct policy同时参与prediction mixture与fused-loss
-   gradient allocation。BSCA通过uniform arm-skill supervision和ramped
-   `KL(uniform || policy)`维持broad learning access，目标是缓解early
-   concentration与scope-gradient starvation。uniform policy只是这一机制的
-   proxy，不保证fields自动学习互不重叠的features。
-8. **BSCA的贡献边界。** BSCA的论文价值来自
-   `scope-coupled fields -> policy-mediated gradient allocation ->
-   train-only balanced co-adaptation`这一ISCF-specific链条，不来自generic
-   KL、load balancing或expert training。已有MoE研究也表明过强均匀路由可能
-   抑制specialization，因此正文使用`maintains broad learning access`与
-   `mitigates premature concentration`，不使用“forces balanced experts”。
-9. **CHPC表述延续Paragraph 3。** 模型以horizon无关、future-step-indexed
-   prediction function直接实例化任意horizon；Introduction不写成先生成max-$T$
-   再crop，也不声称independently generate horizons。CHPC仍是system property，
-   不是Paragraph 5新增的算法模块。
-10. **不进入正文的负边界。** canonical contiguous partition相对random
-    partition的必要性未获支持；multiple scales、multiple predictors和MoE原语
-    也已有充分prior art。这些限制保留在Related Work、ablation解释和claim
-    boundary中，不塞入Introduction方法概览。
+   history-to-mode affine maps，在Introduction中概括为`independent history
+   projections`。它们仍共享encoder、future-step representation、
+   future-step-specific synthesis vectors与scope allocation；不表示不同
+   horizons独立，也不表示多个完全独立models。
+4. **scope-region latent state的精确定义。** state同时依赖history
+   representation、scope-specific history projection与对应region的pooled
+   future-step descriptor，因此完整名称为`history-conditioned,
+   region-indexed latent state`。定义后简称`scope-region latent state`。
+5. **step-specific flexibility没有被state sharing抹去。** latent-state
+   sharing发生在synthesis之前；每个future time step仍通过自己的identity
+   synthesis vector、nonlinear synthesis vector与bias形成prediction。因此
+   ISCF不是把同一region中的future steps强制预测为相同值。
+6. **allocation不是外接generic router。** allocation
+   $\pi_\theta(s\mid\mathbf X,\tau,c)$与forecast field共享history和future-step
+   coordinates，并在每个forecast target处沿scope轴完成normalized weighted
+   contraction。正文不再使用`forecast-target-wise fusion policy`，但也不声称
+   allocation为每个target找到了“最优scope”或形成universal specialization。
+7. **tensor-level对应。** Method中展开
+   `scope_modes:[B,C,S,D,K] -> scope_field:[B,C,T,S]`，
+   `allocation:[B,C,T,S]`与`forecast:[B,T,C]`。其中`scope_field`和
+   `allocation`分别对应现有代码的`arm_forecasts`与`policy`；这里只改变paper
+   abstraction，不修改implementation。
+8. **BSCA的机制边界。** target-conditioned allocation同时决定prediction
+   combination与forecasting-loss gradient allocation。BSCA通过uniform
+   slice-skill supervision和ramped `KL(uniform || allocation)`维持broad
+   learning access，目标是缓解early concentration与scope-gradient starvation；
+   uniform allocation只是proxy，不保证slices自动学习互不重叠的features。
+9. **BSCA的贡献边界。** BSCA的论文价值来自
+   `scope-indexed forecast field -> allocation-mediated gradient
+   distribution -> train-only balanced co-adaptation`这一ISCF-specific链条，
+   不来自generic KL、load balancing或expert training。
+10. **CHPC表述延续Paragraph 3。** 模型以horizon无关、future-step-indexed
+    prediction function直接实例化任意horizon；Introduction不写成先生成max-$T$
+    再crop，也不声称independently generate horizons。CHPC仍是system property，
+    不是Paragraph 5新增的算法模块。
+11. **主图表示。** 横轴为future time step，纵轴为latent-state sharing scope；
+    每个slice内部用不同宽度的共享state blocks展示sharing extent；allocation以
+    同形heatmap覆盖scope--target平面；沿scope轴收缩后得到统一forecast
+    trajectory。该图呈现一个结构化decoder，而不是五模型ensemble。
+12. **claim边界。** canonical contiguous partition相对random partition的必要性
+    未获支持，因此不使用`hierarchical/nested future lattice`命名框架，也不把
+    temporal contiguity写成收益来源。multiple scales、multiple predictors与
+    MoE原语已有prior art；novelty只能落在完整scope-indexed output-field链条。
 
 ### 4.6 Paragraph 6：contributions
 
-**状态：v0.5讨论稿，待用户确认。**
+**状态：v0.5正文已由v0.6框架定义取代；下一轮重写。**
 
-建议正文：
+下列v0.5正文仅保留讨论轨迹，不再作为当前建议正文。P6仍按
+`problem/formulation -> architecture -> training/evidence`三层组织，但其中
+architecture contribution必须改用`scope-indexed forecast field`、
+`target-conditioned scope allocation`与`scope-axis contraction`；不得继续使用
+multiple fields、coupled fields或fusion policy叙事。
+
+v0.5历史正文：
 
 > Our contributions are threefold. First, we formulate prefix-consistent
 > unified multi-horizon forecasting as a forecasting-system problem and
@@ -702,7 +774,8 @@ forecast-origin stability 与本文 CHPC 不同。
 
 不把 primitive overlap 自动写成 novelty rejection；claim 落在
 `unified nested-horizon problem -> CHPC contract -> future-region
-sharing-demand heterogeneity -> multiple coupling scopes and fusion ->
+sharing-demand heterogeneity -> scope-indexed forecast field and
+target-conditioned scope allocation ->
 balanced co-adaptation` 完整链上。
 
 ## 6. Problem Formulation and Empirical Motivation
@@ -797,8 +870,8 @@ $$
 
 ### 6.4 Evidence III：Future-Region Sharing-Demand Heterogeneity
 
-这一节在提出 ISCF 之前建立问题证据，不使用 ISCF、scope arm、BSCA 或
-target-wise fusion 等方法术语。主要证据来自相同 simple baseline 上
+这一节在提出ISCF之前建立问题证据，不使用ISCF、scope slice、BSCA或
+target-conditioned scope allocation等方法术语。主要证据来自相同simple baseline上
 end-to-end训练的 capacity-matched diagnostic predictors：
 
 - fine-grained cross-step sharing；
@@ -854,9 +927,9 @@ magnitude difference、单调lead-time difficulty或oracle label routing也不�
 1. 一个 unified model 服务全部 horizons；
 2. 每个 future-step prediction 对 requested horizon 保持invariant，因而满足CHPC；
 3. decoder 不应把单一固定cross-step sharing pattern强加给整个future domain；
-4. 架构应提供多种future-step coupling scopes，使不同forecast targets可组合
-   不同sharing extents；
-5. 多个 scope paths 需要稳定 joint training。
+4. 架构应在一个统一forecast field中提供多种future-step latent-state sharing
+   scopes，并允许每个forecast target整合不同sharing extents；
+5. scope-conditioned slices与scope allocation需要稳定joint training。
 
 ## 7. Method
 
@@ -888,38 +961,39 @@ $$
 \mathbf R:[B,C,PD].
 $$
 
-### 7.4 Independent Scope-Coupled Fields
+### 7.4 Scope-Indexed Forecast Field
 
-对每个 $s\in\mathcal S$，使用独立的 history-to-mode map 生成
-scope-specific modes。每个 field 为全部可查询 future steps 定义
-scope-specific predictions：
-
-$$
-\hat{\mathbf Y}_s
-\in
-\mathbb R^{B\times C\times T}.
-$$
-
-scope size 只规定 future-step latent sharing extent，不是 requested horizon。
-
-### 7.5 Forecast-Target-Wise Scope Fusion
-
-policy weights：
+对每个$s\in\mathcal S$，独立history projection产生scope-specific modes；
+region descriptors据此构造scope-region latent states，共享的
+future-step-specific synthesis vectors形成：
 
 $$
-\mathbf P
+\mathcal F_\theta(\mathbf X)
 \in
 \mathbb R^{B\times C\times T\times S}.
 $$
 
-最终预测：
+固定$s$只是该field的一个scope-conditioned slice。scope size只规定
+future-step latent-state sharing extent，不是requested horizon。
+
+### 7.5 Target-Conditioned Scope Allocation
+
+allocation：
+
+$$
+\boldsymbol\Pi
+\in
+\mathbb R^{B\times C\times T\times S}.
+$$
+
+最终prediction通过沿scope轴weighted contraction得到：
 
 $$
 \hat y_{b,c,\tau}
 =
 \sum_{s=1}^{S}
-p_{b,c,\tau,s}
-\hat y_{b,c,\tau,s}.
+\pi_{b,c,\tau,s}
+\mathcal F_{b,c,\tau,s}.
 $$
 
 ### 7.6 Balanced Scope Co-Adaptation
@@ -927,13 +1001,13 @@ $$
 $$
 \mathcal L
 =
-\mathcal L_{\mathrm{fused}}
+\mathcal L_{\mathrm{forecast}}
 +
 \mathcal L_{\mathrm{equal\text{-}skill}}
 +
 \lambda(u)
 \frac{
-D_{\mathrm{KL}}(q\Vert p)
+D_{\mathrm{KL}}(q\Vert \pi)
 }{
 \log S
 }.
@@ -941,8 +1015,8 @@ $$
 
 解释边界：
 
-- equal-skill 为各 scope fields 提供直接 predictive supervision；
-- uniform anchor 避免 policy 过早关闭部分 scope 的 fused-gradient access；
+- equal-skill 为各 scope-conditioned slices 提供直接 predictive supervision；
+- uniform anchor 避免 allocation 过早关闭部分 scope 的 gradient access；
 - ramp 允许 prediction paths 先建立基本能力；
 - BSCA 不增加 inference 参数或路径；
 - 当前证据支持 balanced co-adaptation，不支持更强的 universal conditional
@@ -1062,8 +1136,8 @@ canonical versus random partition 当前无稳定正向归因，不把 canonical
 
 - 同一历史的 horizon-specific overlapping forecasts；
 - unified full trajectory 与多个 prefixes；
-- coupling-scope weights 随 future time step 的变化；
-- difficult samples 上 field forecasts 与 fused forecast。
+- scope-allocation weights 随 future time step 的变化；
+- difficult samples 上 scope-conditioned slices 与scope-integrated forecast。
 
 ## 9. Conclusion
 
@@ -1071,8 +1145,8 @@ canonical versus random partition 当前无稳定正向归因，不把 canonical
 
 1. horizon-specific predictors 不构成带 CHPC 保证的 unified forecasting
    system；
-2. ISCF-BSCA 以 multiple future-step coupling scopes、target-wise fusion 与
-   balanced co-adaptation 构建统一模型；
+2. ISCF-BSCA以scope-indexed forecast field、target-conditioned scope
+   allocation与balanced co-adaptation构建统一模型；
 3. 总结 performance、efficiency、mechanism evidence 与 limitations。
 
 当前 limitations 至少包括：
@@ -1091,8 +1165,10 @@ canonical versus random partition 当前无稳定正向归因，不把 canonical
 - ISCF-BSCA 通过 horizon无关、future-step-indexed prediction field 满足 exact CHPC；
 - matched evidence支持future regions存在region-dependent sharing-scale
   preference时，可表述为future-region sharing-demand heterogeneity；
-- multiple fields提供不同future-step coupling scopes，作为对该问题的架构响应；
-- independent fields 相对 near-matched shared-width field 有稳定收益；
+- 一个scope-indexed forecast field提供多种future-step latent-state sharing
+  scopes，作为对该问题的架构响应；
+- independent scope-specific history projections相对near-matched shared-width
+  projection有稳定收益；
 - BSCA 相对 same-architecture ISCF-EQUAL 有 small but three-seed directionally
   robust gain；
 - BSCA 不改变 inference graph。
@@ -1189,6 +1265,14 @@ Primary sources：
     auxiliary load balancing可能造成expert overlap与过度均匀routing，支持
     BSCA只claim broad learning access而不claim forced specialization：
     <https://proceedings.neurips.cc/paper_files/paper/2025/hash/4598de7d243d528e38eb0c5d8155fb52-Abstract-Conference.html>
+18. Ni et al., *Mixture-of-Linear-Experts for Long-term Time Series
+    Forecasting*，多个完整linear-centric experts与router output mixing已覆盖
+    generic multiple-predictor fusion叙事：
+    <https://proceedings.mlr.press/v238/ni24a.html>
+19. Shi et al., *Time-MoE: Billion-Scale Time Series Foundation Models with
+    Mixture of Experts*，multi-resolution forecasting heads与dynamic
+    scheduling已覆盖generic flexible-horizon multi-head叙事：
+    <https://openreview.net/forum?id=e1wDDFmlVu>
 
 Coverage boundary：
 
@@ -1196,7 +1280,7 @@ Coverage boundary：
   使用`future time step`，Method允许在引用既有工作时保留原术语；
 - `future-region sharing-demand heterogeneity`是本文的问题层术语；
   `region-dependent sharing-scale preference`是其matched empirical
-  manifestation；`future-step coupling scope`是方法层术语；
+  manifestation；`future-step latent-state sharing scope`是方法层术语；
 - `predictive structure`边界过宽，multi-scale component importance不能直接推出
   cross-step sharing extent；当前问题定义显式加入finite-capacity
   bias--variance mechanism与matched risk-crossing requirement；
@@ -1212,11 +1296,16 @@ Coverage boundary：
 - TimeMixer、N-HiTS、FreqMoE与Moirai-MoE已显著压缩multi-scale、
   multi-predictor与MoE原语的novelty空间；ISCF只能在完整的output-side
   sharing-demand response chain上主张architecture contribution；
+- MoLE与Time-MoE进一步说明multiple complete predictors、router output
+  mixing与multi-resolution heads均不能作为ISCF的核心抽象；v0.6因此使用一个
+  `scope-indexed forecast field`及其scope-conditioned slices描述共享计算图；
+- `forecast field`本身只是对离散$(\tau,s)$乘积域上tensor function的paper
+  abstraction，不claim neural-field primitive或“field”术语首创；
 - generic load balancing既非BSCA的新原语，也不天然产生specialization；BSCA
   只能作为ISCF中policy-mediated gradient allocation的train-only
   co-adaptation机制陈述；
 - 2026-07-28 Zotero connector返回`connection refused`，因此新增sources
-  14--17均记为external primary-source discovery，是否已存在于用户Zotero
+  14--19均记为external primary-source discovery，是否已存在于用户Zotero
   `FSA` subset尚未核验；这是一项coverage gap，不影响本轮primary-source
   边界判断；
 - 投稿前仍需针对最终 title、method naming 与 2026 最新 decoder work 再做一次
@@ -1235,3 +1324,4 @@ Coverage boundary：
 | 2026-07-24 | Introduction P5--P6 | 保留 provisional narrative | 由v0.5讨论稿取代 |
 | 2026-07-28 | Introduction P5 v0.5 | ISCF完整方法概览；BSCA gradient-allocation机制；CHPC延续 | 待用户逐段确认英文强度与术语 |
 | 2026-07-28 | Introduction P6 v0.5 | problem--architecture--training/evidence三项贡献；不提前写未完成主表结果 | 待用户确认贡献切分与最终结果句策略 |
+| 2026-07-28 | ISCF framework + Introduction P5 v0.6 | ISCF=`Independent Scope-Conditioned Forecasting`；单一`scope-indexed forecast field`；`target-conditioned scope allocation`；P5重写 | 暂时冻结；P6下一轮按新框架重写 |

@@ -17,6 +17,30 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_core_status` | `ISCF-BSCA-v1`=`passed_core_candidate_ready_for_paper_consolidation` |
 
+[ISCF Framework and Introduction P5 v0.6 Consensus, 2026-07-28] 用户暂时冻结新的
+framework definition并要求据此重写P5。ISCF正式解释为`Independent
+Scope-Conditioned Forecasting`；整体decoder不再表述为多个fields/predictors加
+fusion，而是在future-step × latent-state-sharing-scope乘积域上定义单一
+`scope-indexed forecast field`
+$\mathcal F_\theta(\mathbf X,\tau,c,s)$。固定$s$只是一个
+`scope-conditioned slice`。各slices共享encoder、future-step representation与
+future-step-specific synthesis vectors，只在scope-specific history projection
+及latent-state sharing pattern上区分。
+
+原policy改写为`target-conditioned scope allocation`
+$\pi_\theta(s\mid\mathbf X,\tau,c)$；最终prediction是沿scope轴的normalized
+weighted contraction。方法层术语同步为`cross-step latent-state sharing extent`、
+`future-step latent-state sharing scope`、`history-conditioned,
+region-indexed latent state`（简称`scope-region latent state`）与
+`future-step-specific synthesis vectors`。BSCA相应表述为稳定scope slices与
+allocation的train-only co-adaptation，不改变inference graph。
+
+Introduction P5已按该链重写并暂时冻结；P6 v0.5因仍使用multiple fields/coupled
+fields/fusion policy而失效，下一轮按v0.6 framework重写。canonical contiguous
+grouping不作为framework命名或收益来源，故不使用hierarchical/nested future
+lattice。此次仅重构paper abstraction，不修改代码、frozen results或
+training/test authorization。
+
 [Introduction P5--P6 v0.5 Draft, 2026-07-28] 已基于P1--P4冻结逻辑形成方法概览与
 contributions讨论稿。P5从`future-region sharing-demand heterogeneity`自然引出ISCF：
 多个scope-coupled forecast fields分别使用独立history-to-mode maps与不同

@@ -1,5 +1,26 @@
 # Research Roadmap
 
+## ISCF Framework and Introduction P5 v0.6 Consensus (2026-07-28)
+
+ISCF暂时冻结为`Independent Scope-Conditioned Forecasting`，核心不再是multiple
+fields加fusion，而是单一`scope-indexed forecast field`
+$\mathcal F_\theta(\mathbf X,\tau,c,s)$。固定scope $s$对应该field的一个
+`scope-conditioned slice`；各slices共享encoder、future-step representation与
+future-step-specific synthesis vectors，只有scope-specific history projection
+与latent-state sharing pattern独立。
+
+scope的正式结构语义改为`future-step latent-state sharing scope`，其尺度称
+`cross-step latent-state sharing extent`。中间state完整称
+`history-conditioned, region-indexed latent state`，简称`scope-region latent
+state`。原policy改为`target-conditioned scope allocation`
+$\pi_\theta(s\mid\mathbf X,\tau,c)$，输出通过沿scope轴weighted contraction获得。
+BSCA稳定scope slices与allocation之间的joint training，不claim generic
+load-balancing novelty。
+
+Introduction P5已按新框架重写并暂时冻结。P6 v0.5被新定义取代，下一步只重写
+P6，不重新打开P1--P5。Decision=`intro_p5_v06_framework_consensus`；本轮不修改
+implementation，不授权remote training或formal test。
+
 ## ISCF-BSCA Introduction P5--P6 v0.5 Draft (2026-07-28)
 
 论文架构文档已形成Introduction方法概览与contributions讨论稿，状态为
