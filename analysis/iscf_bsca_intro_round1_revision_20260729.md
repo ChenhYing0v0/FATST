@@ -6,9 +6,9 @@
 | --- | --- |
 | `date` | `2026-07-29` |
 | `source_draft` | `docs/paper-drafts/iscf-bsca-introduction-initial-draft.md` v0.1 |
-| `revised_draft` | 同文件 v0.2-round1 |
+| `revised_draft` | 同文件 v0.2-round1-evidence-design |
 | `revision_role` | 根据作者对blind review的逐项回复形成初步正文，不视为最终冻结 |
-| `current_gate` | Introduction positioning与方法概述可继续讨论；problem-existence result pending |
+| `current_gate` | Introduction positioning与方法概述可继续讨论；两项problem-evidence design已冻结，results pending |
 | `new_training_authorized` | false |
 | `formal_test_authorized` | false |
 
@@ -94,6 +94,17 @@ Introduction不扩展成prior-art comparison，也不展开与本文native decod
   transferability。
 
 ## 4. 必须补齐的problem-existence evidence
+
+本节原始草案已由独立、可预注册的两项实验设计取代，权威细节见：
+
+`analysis/iscf_bsca_intro_problem_evidence_design_20260729.md`。
+
+两项证据不再混合：
+
+1. P2后使用native horizon-specific DLinear/PatchTST/iTransformer checkpoints
+   的same-origin overlapping predictions，报告CHPD/NCHPD；
+2. P4后使用neutral、single-scale、capacity-matched、end-to-end decoder family
+   检验region-wise risk crossover与validation-selected out-of-sample headroom。
 
 ### 4.1 研究问题
 
@@ -181,36 +192,29 @@ problem hypothesis。
 
 ## 5. 面向Introduction的可视化设计
 
-### 5.1 推荐主图：三联叙事图
+### 5.1 Figure 1：Horizon-specific prefix disagreement
 
-建议将Introduction Figure 1设计为从问题到方法的横向三联图：
+Figure 1放在P2与P3之间，只服务CHPC动机：
 
-1. **Panel A — Fragmented horizon-specific forecasts**
-   - 同一history下叠加$H=96,192,336,720$的overlapping forecasts；
-   - 用局部放大框显示同一future step的预测不一致；
-   - 辅以小型CHPC-disagreement heatmap。
-2. **Panel B — Sharing-risk landscape**
-   - 横轴为future step或future region；
-   - 纵轴为sharing extent；
-   - 颜色为相对best-fixed decoder的normalized MSE；
-   - 叠加一条`best-scale ridge`，直观看出最优sharing extent随future region变化；
-   - 用阴影或bootstrap interval标记跨seed稳定性。
-3. **Panel C — ISCF-BSCA response**
-   - 用不同宽度的region-shared latent states展示multiple sharing scopes；
-   - target-conditioned allocation用简化heatmap表示；
-   - 输出一条CHPC unified forecast；
-   - BSCA以train-only箭头进入，不画成额外inference module。
+1. Panel A：pre-registered median-disagreement same-history overlay；
+2. Panel B：DLinear、PatchTST、iTransformer的horizon-pair NCHPD heatmaps。
 
-该图能够同时服务P2、P4与P5，是比单独method architecture图更有叙事力的
-Introduction figure。
+它只证明horizon-specific systems可能产生material overlapping disagreement，
+不证明accuracy更差。
 
-### 5.2 辅助图
+### 5.2 Figure 2：Future-region sharing-risk landscape
 
-1. `Risk-crossover curves`：不同sharing extents随future step变化的normalized
-   MSE曲线；
-2. `Dataset × future-region best-scale map`：展示外部有效性；
-3. `Best-fixed vs region-oracle headroom bars`：显示问题是否有material规模；
-4. `Sample/variable small multiples`：避免平均结果掩盖heterogeneity。
+Figure 2放在P4之后，只展示neutral matched diagnostic：
+
+1. Panel A：sharing-scale × 12 equal future regions相对
+   validation-selected fixed scale的test relative-risk heatmap
+   与validation-selected best-scale ridge；
+2. Panel B：预注册$s=1,32,720$的risk-crossover curves；
+3. Panel C：validation-selected region schedule相对validation-selected fixed
+   scale的official-test headroom。
+
+不在该图中提前画ISCF或BSCA，以免方法输出反向证明自己的问题动机。最终method
+architecture另设Figure 3。
 
 ### 5.3 关于多边形/radar图
 
@@ -223,8 +227,8 @@ problem-existence evidence：
 - 视觉面积容易夸大很小的metric差异。
 
 如果使用，应同时保留原始table或bar chart，并在结果冻结前预先定义normalization。
-Introduction的primary evidence仍建议使用`sharing-risk landscape`，它与核心问题
-一一对应，叙事性更强。
+Introduction的primary evidence仍使用NCHPD heatmap与sharing-risk landscape。
+它们分别与P2、P4一一对应。
 
 ## 6. 当前决定与下一步
 
@@ -232,8 +236,9 @@ Decision=`intro_v02_round1_positioning_pass_problem_evidence_pending`。
 
 下一步按顺序讨论：
 
-1. 确认P3把CHPC定义为basic property的表述；
-2. 冻结P4 problem-existence diagnostic与Introduction Figure 1；
+1. 在新授权后完成两项experiment的Step7A implementation/invariant gate；
+2. 冻结native baseline source commits、180-checkpoint reuse manifest与neutral
+   75-run manifest；
 3. 再讨论P5中ISCF/BSCA的创新性表达是否足够简洁；
 4. main experiments完成后决定P6是否只写qualitative advantage，或加入一条
    compact quantitative headline。

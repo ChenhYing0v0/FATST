@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | 如何按逐段共识把ISCF architecture、BSCA与unified multi-horizon problem整合为完整paper contribution chain |
+| `active_question` | 两项Introduction problem evidence能否分别建立material prefix disagreement与future-region sharing-demand heterogeneity |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
-| `active_candidates` | `ISCF-BSCA-v1` three-seed paper-core pass；Introduction v0.2 round1 positioning pass；problem evidence pending |
+| `active_candidates` | `ISCF-BSCA-v1` three-seed paper-core pass；Introduction evidence v1 design frozen，results pending |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
@@ -20,27 +20,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | BSCA confirmation Step10 complete；paper architecture consolidation |
-| `current_candidate` | `ISCF-BSCA-v1` |
-| `latest_decision` | `passed_core_candidate_ready_for_paper_consolidation` |
-| `next_required_action` | confirm P3 CHPC wording, then freeze P4 neutral problem-existence diagnostic and Introduction Figure 1 |
+| `current_11_step` | BSCA confirmation Step10 complete；Introduction evidence Step6 design frozen |
+| `current_candidate` | problem-evidence pair=`INTRO-CHPD-v1` + `SC-UVHF-FRSD-D1`；paper method remains frozen `ISCF-BSCA-v1` |
+| `latest_decision` | `intro_problem_evidence_v1_design_frozen_pending_step7a_authorization` |
+| `next_required_action` | obtain authorization for Introduction evidence Step7A local implementation/invariant gate |
 | `method_training_authorized` | false；confirmation authorization consumed，new training/test requires new freeze |
-| `rollback_point` | overall paper narrative gap -> Step4 contribution-boundary consolidation；do not tune exact BSCA-v1 |
+| `rollback_point` | CHPD weak -> retain formal CHPC argument only；FRSD negative -> revise P4/P5 problem-to-method narrative；do not tune exact BSCA-v1 |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | BSCA confirmation Step10 complete；paper architecture v0.8 Introduction round1 author response |
-| `problem` | direct policy同时控制prediction mixture与fused-loss gradient allocation，可能形成harmful co-adaptation |
-| `existence_evidence` | new EQUAL exact historical；ARMERR/SHUFFLED +0.6577/+0.6557%；D0 post-hoc negative |
-| `idea` | EQUAL + matched schedule/weight uniform policy KL，train-only balanced scope co-adaptation |
-| `theory_check` | target/history/H-free；只直接校准policy，借fused loss改变joint arms；inference unchanged |
-| `design` | seeds2022/2023 × five datasets BSCA；reuse same-seed EQUAL；10/10后single confirmation test |
-| `narrative_gate` | narrowed pass；ISCF-specific contribution chain成立，generic KL/load-balancing novelty明确排除 |
-| `effectiveness_gate` | three-seed pass：+0.3541/+0.3073%；41/60；3/3 seeds；4/5 datasets；4/4 horizons；health pass |
-| `artifacts` | 15 candidate + 15 matched EQUAL runs；60 test cells；three-seed four-layer Step9/10 report |
-| `decision` | `passed_core_candidate_ready_for_paper_consolidation` |
+| `current_step` | Introduction evidence Step6 design frozen；Step7A pending authorization |
+| `problem` | P2的material prefix disagreement与P4的future-region sharing-demand heterogeneity尚缺独立问题证据 |
+| `existence_evidence` | current prose/theory only；D18/A6/ISCF artifacts不得作为primary evidence |
+| `idea` | native horizon-specific NCHPD + neutral capacity-matched single-scale sharing-risk diagnostic |
+| `theory_check` | CHPC evidence不涉及accuracy superiority；sharing diagnostic保持fixed-past、pointwise MSE、H-free，只检验finite-capacity risk |
+| `design` | Experiment 1复用180 main-baseline checkpoints；Experiment 2为75 end-to-end runs、12 regions、validation-selected test CFH |
+| `narrative_gate` | pass to diagnostic design；problem/method distinction、ElasTST/N-HiTS prior boundary与non-circular carrier已明确 |
+| `effectiveness_gate` | pending；validation不能pass/reject，formal test需另行授权 |
+| `artifacts` | `analysis/iscf_bsca_intro_problem_evidence_design_20260729.md`；paper architecture v0.9 |
+| `decision` | `intro_problem_evidence_v1_design_frozen_pending_step7a_authorization` |
 
 ## Frozen Carrier Contract
 
@@ -64,6 +64,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
+| `INTRO-CHPD-v1` | `design_frozen_pending_step7a` | prevailing horizon-specific systems是否产生material overlapping disagreement | diagnostic narrative pass；不claim accuracy disadvantage或all-method violation | pending；NCHPD/RDA official prediction audit未执行 | implement exporter/evaluator after authorization；reuse main-baseline checkpoints |
+| `SC-UVHF-FRSD-D1` | `design_frozen_pending_step7a` | matched fixed sharing extent的risk optimum是否随future region稳定变化 | problem evidence only；neutral single-scale carrier，no ISCF/BSCA circularity | pending；75-run matrix/test未授权 | implement local tensor/invariant gate after authorization |
 | `ISCF-BSCA-v1` | `passed_core_candidate_ready_for_paper_consolidation` | broad train-time anchor能否稳定scope-gradient access并提升ISCF | ISCF-specific chain pass；generic KL novelty not claimed | three-seed +0.3541/+0.3073%；3/3 seeds、4/5 datasets、4/4 horizons | freeze exact v1；consolidate paper claims/limitations before baselines |
 | `SC-ISCF-UPA-D2` | `superseded_by_bsca_v1` | information-free uniform train-time anchor能否复现ARMERR/SHUFFLED gain | user chose outcome-first method route | not executed as separate diagnostic | retain design history only |
 | `SC-ISCF-PSA-D1` | `control_complete_h2_supported` | contemporaneous no-route EQUAL能否解释new ARMERR/SHUFFLED公共gain | not a method；只隔离H2/H3 | exact EQUAL tie；controls +0.6577/+0.6557%；H2 pass | feeds UPA-D2 only |

@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Clean manuscript-facing draft of the Introduction |
-| `version` | `v0.2-round1` |
+| `version` | `v0.2-round1-evidence-design` |
 | `date` | `2026-07-29` |
 | `paragraphs_1_6` | Provisional revision responding to the first author review-response decisions |
 | `citation_status` | Provisional citation keys inserted; bibliography integration remains pending |
 | `result_status` | Headline empirical results remain to be inserted after the main comparison tables are complete |
-| `problem_evidence_status` | Motivation-result sentence remains pending the neutral matched diagnostic |
+| `problem_evidence_status` | Two evidence protocols are frozen; implementation and results remain pending |
 
 The status table above is editorial metadata and is not part of the manuscript
 body submitted for review.
@@ -42,6 +42,11 @@ forming nested views of one future trajectory. Maintaining multiple independent
 models also increases the total training, storage, deployment, and maintenance
 burden required to serve a set of forecast horizons.
 
+<!-- Introduction Figure 1 will be inserted here after the frozen
+horizon-specific prefix-disagreement protocol is executed. The planned figure
+contains a pre-registered median-disagreement forecast overlay and
+horizon-pair NCHPD heatmaps. -->
+
 We therefore study varied-horizon forecasting through a horizon-agnostic
 prediction function indexed by future time step. Given an observed history, an
 $H$-step forecast is instantiated by evaluating this function at the first $H$
@@ -68,6 +73,11 @@ pointwise-MSE Bayes target. We refer to the resulting hypothesis as
 <!-- P4 evidence sentence pending: insert the preregistered neutral,
 capacity-matched result for region-wise sharing-risk crossover and the
 headroom over the best fixed sharing extent. -->
+
+<!-- Introduction Figure 2 will be inserted here after the frozen neutral
+single-scale decoder protocol is executed. The planned figure contains a
+sharing-risk landscape, risk-crossover curves, and validation-selected
+out-of-sample region-schedule headroom. -->
 
 To model these heterogeneous sharing demands, we propose ISCF-BSCA, an
 output-side decoder for varied-horizon forecasting. Independent

@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.8` |
+| `version` | `v0.9` |
 | `last_updated` | `2026-07-29` |
 | `paper_candidate` | `ISCF-BSCA-v1` |
-| `current_review_cursor` | Introduction v0.2-round1已按author response初步修订；下一步冻结P4 problem-existence evidence与Figure 1 |
+| `current_review_cursor` | Introduction两项problem-evidence design已冻结；下一步为Step7A implementation/invariant gate，需新授权 |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
-| `provisional_content` | Introduction P1--P6 v0.2正文；problem-existence result；Related Work、Method、Experiments、Conclusion |
+| `provisional_content` | Introduction P1--P6 v0.2正文；两项problem-evidence results；Related Work、Method、Experiments、Conclusion |
 | `not_authorized_by_this_document` | 新模型实现、remote training、formal test、按结果调参 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
@@ -351,10 +351,12 @@ cells、secondary controls 与敏感性结果放在 Appendices。
 
 当前clean manuscript正文以
 `docs/paper-drafts/iscf-bsca-introduction-initial-draft.md`
-的`v0.2-round1`为准。本轮逐项回复与problem-existence evidence/visualization
+的`v0.2-round1-evidence-design`为准。本轮逐项回复与problem-existence
+evidence/visualization
 计划记录在
-`analysis/iscf_bsca_intro_round1_revision_20260729.md`。下列段落已同步为
-v0.8初步建议，但在用户逐段确认前仍属于provisional revision。
+`analysis/iscf_bsca_intro_round1_revision_20260729.md`。下列段落正文仍为
+v0.8 round1 prose，evidence placement与protocol已在v0.9更新；在结果返回前仍
+属于provisional revision。
 
 ### 4.1 Paragraph 1：multi-horizon need 与现行 horizon-specific protocol
 
@@ -803,8 +805,12 @@ $(\tau,c)$ 是 forecast target。
 
 ### 6.2 Evidence I：Cross-Horizon Disagreement
 
-对 DLinear、PatchTST、iTransformer 等已有 baseline 分别训练
-$H=96,192,336,720$ 的模型。定义 Cross-Horizon Prefix Disagreement：
+对 DLinear、PatchTST、iTransformer 的native horizon-specific implementations
+分别训练$H=96,192,336,720$ 的模型。正式证据复用Main Results中的相同
+checkpoints，不为motivation figure重复训练。五datasets、四horizons、三seeds
+共180个main-baseline checkpoints，所有horizon pairs使用相同forecast origins。
+
+定义 Cross-Horizon Prefix Disagreement：
 
 $$
 \operatorname{CHPD}(H_i,H_j)
@@ -821,23 +827,39 @@ $$
 H_i<H_j.
 $$
 
-归一化版本：
+归一化版本按每个channel的train-split standard deviation计算：
 
 $$
 \operatorname{NCHPD}
 =
-\frac{\operatorname{CHPD}}{\operatorname{Std}(Y)}.
+\mathbb E_{o,c}
+\left[
+\frac{
+\frac1{H_i}\sum_{\tau=1}^{H_i}
+\left|
+\hat y_{\tau,c}^{(H_i)}
+-
+\hat y_{\tau,c}^{(H_j)}
+\right|
+}{
+\sigma^{\mathrm{train}}_c+\epsilon
+}
+\right].
 $$
 
-计划展示：
+Introduction Figure 1放在P2与P3之间，展示：
 
-- horizon-pair NCHPD heatmap；
-- same-history overlapping future-step overlay；
-- disagreement versus forecast error；
-- model count、training cost、storage 与 deployment cost。
+- pre-registered `Weather / PatchTST / seed2021` median-disagreement
+  same-history overlay；
+- 三个baseline families的$4\times4$ upper-triangular NCHPD heatmaps。
+
+正式analysis另报告per-origin distributions、squared disagreement与relative
+disagreement amplitude。self-replay与同一unified-checkpoint replay必须得到
+exact zero；origin timestamp、scaler roundtrip与prefix shape必须通过。
 
 该证据只证明“不提供 CHPC 保证”和系统冗余，不证明 horizon-specific accuracy
-更差。
+更差，也不claim ElasTST等已有varied-horizon methods缺少invariance。D18/A6
+artifacts只可用于evaluator smoke，不进入正式图表。
 
 ### 6.3 Evidence II：Naive Unified Forecasting
 
@@ -864,16 +886,57 @@ $$
 
 这一节在提出ISCF之前建立问题证据，不使用ISCF、scope slice、BSCA或
 target-conditioned scope allocation等方法术语。主要证据来自相同simple baseline上
-end-to-end训练的 capacity-matched diagnostic predictors：
-
-- fine-grained cross-step sharing；
-- local/block-level sharing；
-- broad/global sharing。
+end-to-end训练的capacity-matched **single-scale** diagnostic predictors。每次
+training只含一个sharing extent，不含multiple scopes、fusion或allocation。
 
 若使用 frozen representation，只能作为 secondary diagnostic，不能承担
 problem-direction rejection。primary comparison应采用相同encoder class、数据、
 objective、optimization、checkpoint rule与comparable initialization进行matched
 end-to-end training。
+
+Primary neutral tensor path为：
+
+$$
+\mathbf X:[B,L,C]
+\rightarrow
+\mathbf R:[B,C,D],
+$$
+
+$$
+\mathbf U_{b,c,\tau}
+=
+G_\omega([\mathbf R_{b,c},\boldsymbol\phi_\tau])
+\in\mathbb R^{D_z},
+$$
+
+$$
+\mathbf Z^{(s)}_{b,c,g}
+=
+\operatorname{LayerNorm}
+\left(
+\frac1{|\mathcal G_{s,g}|}
+\sum_{\tau\in\mathcal G_{s,g}}
+\mathbf U_{b,c,\tau}
+\right),
+$$
+
+$$
+\hat y^{(s)}_{b,c,\tau}
+=
+\langle\mathbf a_\tau,
+\mathbf Z^{(s)}_{b,c,g_s(\tau)}\rangle+b_\tau.
+$$
+
+$E_\psi,G_\omega,\phi_\tau,\mathbf a_\tau,b_\tau$在所有$s$下shape和parameter
+count相同；所有$s$都计算完整$\mathbf U$，只改变parameter-free pooling与
+latent-state sharing topology。每个future step始终保留自己的synthesis vector。
+
+Diagnostic sharing grid冻结为
+$S_{\mathrm{diag}}=\{1,8,32,128,720\}$，有意不复制最终ISCF的中间scope set。
+Primary regions为12个等长60-step bins，不沿用requested horizons或method
+boundaries。Primary objective为uniform full-domain pointwise MSE，避免
+multi-prefix exposure把early-step reweighting混入sharing-demand证据。五
+datasets、五scales、三seeds共75个end-to-end runs。
 
 令 future region $\mathcal B_b$ 为预测域内的连续 future-step集合。对sharing
 scale setting $s$ 定义：
@@ -891,26 +954,62 @@ D_s(\mathbf X)_{\tau,c}-Y_{\tau,c}
 \right].
 $$
 
+除region risks与crossover外，primary headroom必须由validation-selected
+region schedule在official test上计算：
+
+$$
+s_{\mathrm{fixed}}^{\mathrm{val}}
+=
+\arg\min_s\sum_bw_bR_{b,s}^{\mathrm{val}},
+\qquad
+s_b^{\mathrm{val}}
+=
+\arg\min_sR_{b,s}^{\mathrm{val}},
+$$
+
+$$
+\operatorname{CFH}
+=
+\frac{
+R_{\mathrm{fixed}}^{\mathrm{test}}
+-
+R_{\mathrm{region\ schedule}}^{\mathrm{test}}
+}{
+R_{\mathrm{fixed}}^{\mathrm{test}}
+}.
+$$
+
+这只是由多个single-scale models拼接的diagnostic upper bound，不是可部署
+method，也不证明history-conditioned allocation可识别。
+
 该问题得到支持需要同时观察：
 
 1. matched risk curves在不同future regions稳定交叉；
-2. $s_b^\star=\arg\min_sR_{b,s}$ 随region稳定变化，而不是单一scale全域支配；
-3. region-wise best scale相对best single fixed scale留下稳定headroom；
-4. 若主张连续future regions有意义，ordered contiguous grouping必须与
-   parameter-matched random grouping区分。
+2. validation-selected schedule在至少3/5 datasets使用不少于两个scales；
+3. official-test macro CFH为正，至少3/5 datasets与2/3 seeds为正；
+4. all matched/numeric controls通过。
 
 主要展示：
 
-- sharing-scale × future-region risk heatmap；
-- region-wise best-sharing-scale map；
-- sharing-scale crossover curves；
-- region-specific oracle相对best fixed scale的headroom；
-- ordered versus random grouping control。
+- sharing-scale × future-region test risk heatmap，颜色相对
+  validation-selected fixed scale；
+- validation-selected best-scale ridge；
+- $s=1,32,720$的sharing-scale crossover curves；
+- validation-selected region schedule相对validation-selected fixed scale的
+  official-test CFH。
+
+Introduction Figure 2紧跟P4，不提前画ISCF或BSCA。若要进一步claim temporal
+contiguity specificity，primary support后必须追加group-size-matched random
+grouping；该control不是basic sharing-demand existence gate。
 
 data-side local fluctuation、block trend、frequency/scale energy与可预测性分析只作
 描述性辅助，不能单独建立sharing-demand heterogeneity。单纯gradient
 magnitude difference、单调lead-time difficulty或oracle label routing也不能
 单独证明可学习的region-dependent sharing-scale preference。
+
+正式设计、统计量、controls、failure attribution与Figure captions见
+`analysis/iscf_bsca_intro_problem_evidence_design_20260729.md`。
+该新证据矩阵按项目治理属于`test_informed`，不得描述为untouched holdout。
 
 ### 6.5 Design Requirements
 
@@ -1318,3 +1417,4 @@ Coverage boundary：
 | 2026-07-28 | Introduction P6 v0.5 | problem--architecture--training/evidence三项贡献；不提前写未完成主表结果 | 待用户确认贡献切分与最终结果句策略 |
 | 2026-07-28 | ISCF framework + Introduction P5 v0.6 | ISCF=`Independent Scope-Conditioned Forecasting`；单一`scope-indexed forecast field`；`target-conditioned scope allocation`；P5重写 | 暂时冻结；P6下一轮按新框架重写 |
 | 2026-07-29 | Introduction v0.2 round1 author response | varied-horizon仍欠充分系统发展；CHPC=basic property；P4 evidence pending；P5术语压缩；qualitative advantage only | 先确认P3，再冻结P4 diagnostic与Figure 1 |
+| 2026-07-29 | Introduction problem-evidence v1 | 两项独立实验：native baseline NCHPD；neutral single-scale sharing-risk/CFH；Figure 1置于P2后，Figure 2置于P4后 | Step7A implementation与后续training/test均需新授权 |

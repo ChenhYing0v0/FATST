@@ -1,6 +1,36 @@
 # Research Roadmap
 
-## Introduction Round 1 Author Response (2026-07-29)
+## Introduction Problem-Evidence Design v1 (2026-07-29)
+
+Introduction证明实验已从旧的单一三联图拆成两项独立、可失败的protocol：
+
+1. P2后为horizon-specific prefix disagreement。正式baseline family固定为
+   DLinear、PatchTST、iTransformer，复用后续Main Results的五datasets ×
+   四horizons × 三seeds=`180` native checkpoints；统计六个horizon pairs的
+   train-scale normalized NCHPD。Figure 1包含pre-registered
+   median-disagreement overlay与family heatmaps。它不证明accuracy更差，也不
+   泛化到ElasTST等已有varied-horizon invariant methods。
+2. P4后为future-region sharing-demand heterogeneity。Primary使用neutral
+   raw-history single-scale decoder；所有scales共享exact parameterization与
+   compute-heavy path，只改变parameter-free pooling/sharing extent。
+   `S_diag={1,8,32,128,720}`与12个60-step regions均独立于最终ISCF boundaries；
+   uniform full-domain MSE排除multi-prefix exposure confound。完整矩阵为
+   75 end-to-end runs。
+
+第二项的primary statistic不是same-test oracle，而是validation-selected region
+schedule相对validation-selected fixed scale的official-test CFH。支持要求macro
+CFH正向、3/5 datasets、2/3 seeds、稳定risk crossover与全部matched/numeric
+controls同时通过。random grouping只在进一步claim temporal contiguity
+specificity时追加，不作为basic existence gate。frozen replacement/A6 sensitivity
+不得用于方向级拒绝。
+
+Introduction Figure 1置于P2--P3之间；Figure 2紧跟P4且不提前展示ISCF/BSCA；
+method architecture顺延为后续图。Decision=
+`intro_problem_evidence_v1_design_frozen_pending_step7a_authorization`。当前
+implementation、remote training与formal test均未授权；未来formal evidence
+必须标记为`test_informed`，不作untouched holdout claim。
+
+## Introduction Round 1 Author Response (2026-07-29; visualization superseded)
 
 `docs/paper-drafts/iscf-bsca-introduction-initial-draft.md`已更新为
 `v0.2-round1`。当前叙事冻结方向为：
@@ -18,11 +48,12 @@ problem-existence evidence仍pending。修订记录
 `analysis/iscf_bsca_intro_round1_revision_20260729.md`冻结了neutral
 capacity-matched end-to-end diagnostic family、region-wise risk crossover、
 best-fixed versus region-oracle headroom、split角色与failure attribution。
-Introduction Figure 1建议采用三联叙事图：
-`horizon disagreement -> sharing-risk landscape -> ISCF-BSCA response`。
+当时建议的Introduction三联图
+`horizon disagreement -> sharing-risk landscape -> ISCF-BSCA response`
+已由上方evidence-v1的两个独立figures取代。
 
 Decision=`intro_v02_round1_positioning_pass_problem_evidence_pending`。
-下一步先确认P3 CHPC正文，再冻结P4 diagnostic与Figure 1；之后讨论P5创新表达。
+当时的下一步cursor已完成并由上方Step7A authorization gate取代。
 新implementation、remote training与formal test均未授权。
 
 ## ISCF-BSCA Introduction Initial Draft and Blind Review (2026-07-28)

@@ -17,7 +17,35 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_core_status` | `ISCF-BSCA-v1`=`passed_core_candidate_ready_for_paper_consolidation` |
 
-[Introduction Round 1 Author Response, 2026-07-29] 已按用户对blind review的取舍形成
+[Introduction Problem-Evidence Design, 2026-07-29] 已将Introduction的两项
+证明实验冻结为两条独立证据链，详细protocol为
+`analysis/iscf_bsca_intro_problem_evidence_design_20260729.md`。
+
+Experiment 1放在P2与P3之间，使用DLinear、PatchTST、iTransformer的native
+horizon-specific main-result checkpoints，比较同一forecast origin上六个overlap
+horizon pairs。Primary metric为按train-split channel scale归一化的NCHPD；Figure
+1由pre-registered median-disagreement overlay与三个family heatmaps组成。正式
+执行复用后续主实验180个checkpoints，不为motivation figure重复训练。D18/A6仅可
+做evaluator smoke。本证据只支持“horizon-specific多模型系统不提供CHPC且可产生
+material overlapping disagreement”，不支持accuracy更差或所有已有方法都不一致。
+
+Experiment 2放在P4之后，使用neutral raw-history、single-scale、capacity-matched
+end-to-end decoder family；每个run只改变parameter-free latent-state pooling
+extent，不含ISCF scopes、allocation、fusion或BSCA。Diagnostic grid固定为
+`{1,8,32,128,720}`，primary regions为12个60-step bins，primary objective为
+uniform full-domain MSE；five scales × five datasets × three seeds=`75 runs`。
+Primary evidence是risk crossover与validation-selected region schedule在official
+test上相对validation-selected fixed scale的CFH，不使用same-test oracle完成结论。
+Figure 2仅画sharing-risk landscape、crossover与out-of-sample CFH，不提前画
+method。
+
+Decision=`intro_problem_evidence_v1_design_frozen_pending_step7a_authorization`。
+两项protocol均显式标记为`test_informed`，不得声称untouched holdout。
+本轮未实现model/evaluator，未启动remote training，未访问formal test。下一步只在
+新授权后进入Step7A local implementation/invariant gate。
+
+[Introduction Round 1 Author Response, 2026-07-29; visualization plan superseded
+by the evidence-v1 entry above] 已按用户对blind review的取舍形成
 `v0.2-round1` clean draft与修订记录。P1现在明确：大多数long-term forecasting
 研究仍为horizon-specific；ElasTST及少量foundation models已探索varied/flexible
 horizons，但相较horizon-specific literature，该任务仍缺少充分、系统的发展；
@@ -33,11 +61,11 @@ allocation -> BSCA train-only co-adaptation`，详细parameterization、gradient
 推导与mechanism controls分别留给Method、Problem Formulation和Experiments。
 P6暂只陈述qualitative advantages，不填未完成的headline numbers。
 
-Problem-existence evidence与Introduction Figure 1计划已冻结为待讨论草案：
+当时的Problem-existence evidence与Introduction Figure 1为待讨论草案：
 primary使用neutral matched end-to-end decoder family，统计region-wise
 risk crossover、best fixed versus region-oracle headroom与跨seed/dataset
 stability；主图采用`horizon disagreement -> sharing-risk landscape -> ISCF-BSCA
-response`三联结构。Decision=
+response`三联结构；该图形安排已由上方两项独立Figure protocol取代。Decision=
 `intro_v02_round1_positioning_pass_problem_evidence_pending`。本轮未修改model、
 loss或training code，new remote training/formal test=false。
 
