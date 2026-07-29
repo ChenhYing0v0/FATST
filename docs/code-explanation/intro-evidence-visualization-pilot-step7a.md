@@ -80,6 +80,12 @@ disagreement等价于inverse-transform后再除以train standard deviation。
 - `pair_metrics.csv`；
 - `summary.json`。
 
+远程pilot结果返回后的视觉审计发现，85% quantile案例的raw forecast curves真实但
+彼此接近。因此overlay下半panel不再重复绘制四条绝对预测，而是固定以H720 forecast
+为零参考，绘制H96/H192/H336/H720在共同96-step prefix上的prediction difference。
+该修改不改变origin、channel、metric或quantile，只改变同一证据的显示坐标，避免
+继续搜索更极端样本。
+
 ## 3. Neutral single-sharing-extent model
 
 ### 3.1 Forward tensor flow
@@ -218,6 +224,11 @@ region_risk [5,12]
 
 第三个panel明确写入`Exploratory; not out-of-sample`。只有未来正式matrix才能把它
 替换为validation-selected schedule的test CFH。
+
+若`visualization_signal=false`，第二个panel使用中性的
+`Step-wise sharing-risk differences`标题，并显式标注frozen margin下没有
+material crossover；第一个panel的逐region最小值轨迹称为`Descriptive argmin`。
+这避免把幅度很小的argmin切换包装成已支持的heterogeneity结论。
 
 输出：
 

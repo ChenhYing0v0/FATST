@@ -238,12 +238,10 @@ def plot_overlay(
     main_axis.legend(ncol=3, fontsize=9, frameon=False)
     main_axis.grid(alpha=0.18)
 
-    inset_axis.plot(
-        np.arange(1, 97),
-        target[:96],
-        color="#000000",
-        linewidth=1.6,
-        label="Ground truth",
+    reference_prediction = inverse_scale(
+        artifacts[720]["pred"][origin_index, :96, channel_index],
+        mean[channel_index],
+        std[channel_index],
     )
     for horizon in HORIZONS:
         prediction = inverse_scale(
@@ -253,14 +251,18 @@ def plot_overlay(
         )
         inset_axis.plot(
             np.arange(1, 97),
-            prediction,
+            prediction - reference_prediction,
             color=COLORS[horizon],
             linewidth=1.35,
             label=f"H={horizon}",
         )
-    inset_axis.set_title("Zoomed overlapping prefix: future steps 1–96")
+    inset_axis.axhline(0.0, color="#555555", linewidth=0.9)
+    inset_axis.set_title(
+        "Overlapping-prefix disagreement relative to the H=720 forecast"
+    )
     inset_axis.set_xlabel("Future time step")
-    inset_axis.set_ylabel("Value")
+    inset_axis.set_ylabel("Prediction difference")
+    inset_axis.legend(ncol=4, fontsize=8, frameon=False)
     inset_axis.grid(alpha=0.18)
 
     args.output_dir.mkdir(parents=True, exist_ok=True)

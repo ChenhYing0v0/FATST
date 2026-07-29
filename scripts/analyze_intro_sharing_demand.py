@@ -255,7 +255,7 @@ def plot_figure(
         linewidth=1.7,
         marker="o",
         markersize=3.2,
-        label="Validation best scale",
+        label="Descriptive argmin",
     )
     heatmap_axis.legend(loc="upper right", fontsize=8, frameon=True)
     colorbar = figure.colorbar(image, ax=heatmap_axis, shrink=0.82)
@@ -282,9 +282,19 @@ def plot_figure(
         curve_axis.axvline(boundary, color="#BBBBBB", linewidth=0.35)
     curve_axis.set_xlabel("Future time step")
     curve_axis.set_ylabel("MSE change vs best fixed scale (%)")
-    curve_axis.set_title("(b) Sharing-risk crossover")
+    curve_axis.set_title("(b) Step-wise sharing-risk differences")
     curve_axis.legend(frameon=False)
     curve_axis.grid(alpha=0.15)
+    if not summary["visualization_signal"]:
+        curve_axis.text(
+            0.02,
+            0.97,
+            "No material crossover under the frozen margin",
+            transform=curve_axis.transAxes,
+            va="top",
+            color="#555555",
+            fontsize=9,
+        )
 
     fixed_risk = float(summary["fixed_validation_mse"])
     gains = (fixed_risk - np.mean(region_matrix, axis=1)) / fixed_risk
