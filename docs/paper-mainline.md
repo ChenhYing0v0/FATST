@@ -17,6 +17,21 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_core_status` | `ISCF-BSCA-v1`=`passed_core_candidate_ready_for_paper_consolidation` |
 
+[Introduction Problem-Evidence Figures Selected, 2026-07-29] 两项具有说服力的
+validation-only illustrative figures已固定：
+
+1. Weather/DLinear prefix disagreement：同一85% quantile example保留full
+   context，并以H720-relative difference显式展示overlapping-prefix disagreement；
+2. ETTm1 neutral sharing demand：best fixed=s128，region 1偏好s1，多数后续regions
+   偏好s128；`s1_vs_s720`与`s8_vs_s720`达到0.5% frozen margin crossover。
+
+ETTm1 figure现在包含sharing-risk landscape、step-wise crossover与region-wise
+scale contrast，`crossover_visualization_candidate=true`。两图不使用ISCF/BSCA，
+因此可以分别插在P2与P4之后。Decision=
+`two_introduction_problem_evidence_figures_selected`；停止ETTh2搜索，不修改或
+否定fixed ISCF-BSCA architecture。报告：
+`analysis/iscf_bsca_intro_evidence_visualization_pilot_20260729/selected_figure_report.md`。
+
 [Introduction Visualization Candidate Search Extension, 2026-07-29] 用户明确要求
 本轮以获得具有说服力的illustrative visualization为目标，不将figure screening
 用于否定fixed ISCF-BSCA architecture或论文逻辑。Prefix-disagreement已形成

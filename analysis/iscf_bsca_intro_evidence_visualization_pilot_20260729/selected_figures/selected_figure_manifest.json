@@ -1,0 +1,38 @@
+{
+  "protocol": "SC-UVHF-INTRO-EVIDENCE-VIZ-v1",
+  "date": "2026-07-29",
+  "split": "validation",
+  "test_accessed": false,
+  "selection_role": "illustrative_problem_evidence",
+  "prefix_disagreement": {
+    "dataset": "Weather",
+    "model": "DLinear",
+    "seed": 2021,
+    "horizons": [96, 192, 336, 720],
+    "origin_quantile": 0.85,
+    "channel_quantile": 0.85,
+    "maximum_or_top_1_percent": false,
+    "display": "full context plus H720-relative overlapping-prefix differences"
+  },
+  "sharing_demand": {
+    "dataset": "ETTm1",
+    "model": "NeutralSharingExtentForecaster",
+    "seed": 2021,
+    "sharing_extents": [1, 8, 32, 128, 720],
+    "parameter_count_per_variant": 111312,
+    "best_fixed_scale": 128,
+    "margin_qualified_crossing_pairs": [
+      "s1_vs_s720",
+      "s8_vs_s720"
+    ],
+    "crossover_visualization_candidate": true,
+    "regions": 12,
+    "region_length": 60
+  },
+  "claim_boundary": {
+    "formal_prevalence": false,
+    "cross_seed_stability": false,
+    "method_effectiveness": false,
+    "architecture_rejection_role": false
+  }
+}

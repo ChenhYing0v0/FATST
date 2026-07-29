@@ -5,10 +5,10 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.10` |
+| `version` | `v0.11` |
 | `last_updated` | `2026-07-29` |
 | `paper_candidate` | `ISCF-BSCA-v1` |
-| `current_review_cursor` | illustrative visualization dataset selection active；ETTm1 sharing-only five-scale screen running |
+| `current_review_cursor` | two Introduction problem-evidence figures selected；caption and section integration next |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
 | `provisional_content` | Introduction P1--P6 v0.2正文；两项problem-evidence results；Related Work、Method、Experiments、Conclusion |
 | `not_authorized_by_this_document` | 新模型实现、remote training、formal test、按结果调参 |
@@ -460,8 +460,12 @@ horizon无关、step-indexed field 的nested outputs。
 > than a change in the pointwise-MSE Bayes target. We refer to the resulting
 > hypothesis as **future-region sharing-demand heterogeneity**.
 >
-> `Editorial placeholder: insert the neutral capacity-matched risk crossover
-> and headroom over the best fixed sharing extent after the evidence gate.`
+>
+> Consistent with this hypothesis, a capacity-matched neutral decoder family
+> exhibits region-dependent risk ordering on ETTm1: fine sharing is favored in
+> the earliest future region, whereas the broader $s=128$ setting dominates
+> most subsequent regions, with two scale pairs showing margin-qualified risk
+> crossovers.
 
 对应中文：
 
@@ -866,6 +870,10 @@ horizons，只用validation；overlay选择aggregate disagreement约85% quantile
 origin/channel，不取maximum。该结果只作illustrative case，不能替代三families、
 五datasets、三seeds的正式prevalence evidence。
 
+Selected result：Weather/DLinear的full-context overlay与H720-relative
+prediction-difference panel固定为Figure 1 candidate，配套六个horizon pairs的
+NCHPD heatmap。selection保持85% quantile disclosure，不使用maximum/top-1%。
+
 ### 6.3 Evidence II：Naive Unified Forecasting
 
 把同一 baseline 改成horizon无关、future-step-indexed unified variant，再在
@@ -1020,6 +1028,12 @@ Visualization-first amendment：先执行Weather/seed2021的五个neutral
 single-scale runs，只用validation。初始Figure 2允许展示same-validation
 descriptive region oracle，但必须明确标注`not out-of-sample`；正式CFH与
 problem-existence gate继续deferred。
+
+Selected result：ETTm1/seed2021作为Figure 2 candidate。best fixed=s128，region 1
+的descriptive best为s1，多数中长regions由s128占优；
+`s1_vs_s720`与`s8_vs_s720`达到0.5% frozen bidirectional crossing margin。
+最终三panel改为sharing-risk landscape、qualified step-wise crossover与
+region-wise scale contrast；不使用ISCF/BSCA，不承担method effectiveness claim。
 
 ### 6.5 Design Requirements
 
@@ -1430,3 +1444,4 @@ Coverage boundary：
 | 2026-07-29 | Introduction problem-evidence v1 | 两项独立实验：native baseline NCHPD；neutral single-scale sharing-risk/CFH；Figure 1置于P2后，Figure 2置于P4后 | Step7A implementation与后续training/test均需新授权 |
 | 2026-07-29 | Introduction evidence visualization pilot | Weather/seed2021共9 runs；85% disagreement quantile；validation only；formal matrices deferred | Step7B pass；remote initial pilot authorized |
 | 2026-07-29 | Visualization candidate search extension | figure screening不作architecture rejection；prefix difference view retained；ETTm1 neutral 5-run screen | thresholds frozen；ETTh2/formal test未授权 |
+| 2026-07-29 | Two problem-evidence figures selected | Weather prefix-difference/NCHPD；ETTm1 sharing-risk crossover/region contrast | integrate captions and Problem Formulation definitions |

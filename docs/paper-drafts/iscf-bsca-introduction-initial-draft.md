@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Clean manuscript-facing draft of the Introduction |
-| `version` | `v0.2-round1-evidence-design` |
+| `version` | `v0.3-round1-evidence-figures-selected` |
 | `date` | `2026-07-29` |
 | `paragraphs_1_6` | Provisional revision responding to the first author review-response decisions |
 | `citation_status` | Provisional citation keys inserted; bibliography integration remains pending |
 | `result_status` | Headline empirical results remain to be inserted after the main comparison tables are complete |
-| `problem_evidence_status` | Two evidence protocols are frozen; implementation and results remain pending |
+| `problem_evidence_status` | Two validation-only illustrative problem-evidence figures selected |
 
 The status table above is editorial metadata and is not part of the manuscript
 body submitted for review.
@@ -42,10 +42,14 @@ forming nested views of one future trajectory. Maintaining multiple independent
 models also increases the total training, storage, deployment, and maintenance
 burden required to serve a set of forecast horizons.
 
-<!-- Introduction Figure 1 will be inserted here after the frozen
-horizon-specific prefix-disagreement protocol is executed. The planned figure
-contains a pre-registered median-disagreement forecast overlay and
-horizon-pair NCHPD heatmaps. -->
+As illustrated in Fig.~\ref{fig:prefix-disagreement}, separately optimized
+horizon-specific DLinear models produce visibly different overlapping
+prefixes for the same observed history. The figure uses a purposefully
+selected but non-extreme example and complements it with disagreement
+statistics over all validation origins.
+
+<!-- Insert the selected Weather forecast-difference view and NCHPD heatmap
+from the Introduction evidence figure package. -->
 
 We therefore study varied-horizon forecasting through a horizon-agnostic
 prediction function indexed by future time step. Given an observed history, an
@@ -70,14 +74,14 @@ This is a finite-capacity modeling issue rather than a change in the
 pointwise-MSE Bayes target. We refer to the resulting hypothesis as
 **future-region sharing-demand heterogeneity**.
 
-<!-- P4 evidence sentence pending: insert the preregistered neutral,
-capacity-matched result for region-wise sharing-risk crossover and the
-headroom over the best fixed sharing extent. -->
+Consistent with this hypothesis, a capacity-matched neutral decoder family
+exhibits region-dependent risk ordering on ETTm1: fine sharing is favored in
+the earliest future region, whereas the broader $s=128$ setting dominates most
+subsequent regions, with two scale pairs showing margin-qualified risk
+crossovers (Fig.~\ref{fig:sharing-demand}).
 
-<!-- Introduction Figure 2 will be inserted here after the frozen neutral
-single-scale decoder protocol is executed. The planned figure contains a
-sharing-risk landscape, risk-crossover curves, and validation-selected
-out-of-sample region-schedule headroom. -->
+<!-- Insert the selected ETTm1 sharing-risk landscape, step-wise crossover,
+and region-wise scale-contrast figure. -->
 
 To model these heterogeneous sharing demands, we propose ISCF-BSCA, an
 output-side decoder for varied-horizon forecasting. Independent

@@ -1,5 +1,20 @@
 # Research Roadmap
 
+## Introduction Problem-Evidence Figures Selected (2026-07-29)
+
+visualization-first search已得到两张论文候选图：
+
+- Weather/DLinear：85% quantile H720-relative prefix-difference view + NCHPD
+  heatmap；
+- ETTm1/neutral matched scales：sharing-risk landscape + qualified crossover
+  curves + region-wise scale contrast。
+
+ETTm1的best fixed为s128，region 1偏好s1，多数中长regions偏好s128；
+`s1_vs_s720`与`s8_vs_s720`均达到冻结0.5% bidirectional crossing margin。
+Decision=`two_introduction_problem_evidence_figures_selected`。按first-clear
+candidate停止ETTh2 search；两图只作illustrative problem evidence，不承担
+formal prevalence、method effectiveness或architecture rejection。
+
 ## Introduction Visualization Candidate Search Extension (2026-07-29)
 
 本轮目标明确为寻找具有说服力的illustrative figure，而不是以单次visualization

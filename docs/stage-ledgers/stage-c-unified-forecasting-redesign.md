@@ -9,7 +9,7 @@
 | `active_question` | 两项Introduction problem evidence能否分别建立material prefix disagreement与future-region sharing-demand heterogeneity |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
-| `active_candidates` | `ISCF-BSCA-v1` frozen paper core；Introduction visualization dataset selection active |
+| `active_candidates` | `ISCF-BSCA-v1` frozen paper core；two Introduction problem-evidence figures selected |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
@@ -20,10 +20,10 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Introduction evidence visualization search Step8；ETTm1 sharing-only screen running |
+| `current_11_step` | Introduction evidence visualization Step9 complete；paper integration next |
 | `current_candidate` | problem-evidence pair=`INTRO-CHPD-v1` + `SC-UVHF-FRSD-D1`；paper method remains frozen `ISCF-BSCA-v1` |
-| `latest_decision` | `ettm1_sharing_visualization_screen_running` |
-| `next_required_action` | 等待5/5完成；同步validation figure/summary并选择具有说服力的candidate |
+| `latest_decision` | `two_introduction_problem_evidence_figures_selected` |
+| `next_required_action` | 将selected captions/figures整合进Introduction与Problem Formulation；停止dataset search |
 | `method_training_authorized` | visualization pilot only；ETTm1 sharing-only 5 runs authorized；ETTh2/full/formal test false |
 | `rollback_point` | CHPD weak -> retain formal CHPC argument only；FRSD negative -> revise P4/P5 problem-to-method narrative；do not tune exact BSCA-v1 |
 
@@ -31,16 +31,16 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | visualization dataset selection；ETTm1 sharing-only Step8 running |
+| `current_step` | visualization selection Step9 complete；two figure candidates frozen |
 | `problem` | P2的material prefix disagreement与P4的future-region sharing-demand heterogeneity尚缺独立问题证据 |
-| `existence_evidence` | prefix figure candidate available；sharing-demand persuasive visualization仍在dataset search |
+| `existence_evidence` | Weather prefix difference candidate + ETTm1 qualified sharing-risk crossover candidate |
 | `idea` | native horizon-specific NCHPD + neutral capacity-matched single-scale sharing-risk diagnostic |
 | `theory_check` | CHPC evidence不涉及accuracy superiority；sharing diagnostic保持fixed-past、pointwise MSE、H-free，只检验finite-capacity risk |
-| `design` | ETTm1/seed2021 neutral five-scale validation screen；all frozen statistics unchanged；formal designs deferred |
+| `design` | selected figures use non-method DLinear and neutral matched scales；validation-only illustrative role |
 | `narrative_gate` | pass to diagnostic design；problem/method distinction、ElasTST/N-HiTS prior boundary与non-circular carrier已明确 |
 | `effectiveness_gate` | visualization selection only；不得否定fixed architecture或替代formal evidence |
-| `artifacts` | mode-aware runner、ETTm1 launch record、remote output root |
-| `decision` | `ettm1_sharing_visualization_screen_running` |
+| `artifacts` | selected SVG/PNG/CSV package、manifest、selected figure report |
+| `decision` | `two_introduction_problem_evidence_figures_selected` |
 
 ## Frozen Carrier Contract
 
@@ -65,7 +65,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
 | `INTRO-CHPD-v1` | `figure_candidate_available` | independently trained horizon models能否给出清晰overlap disagreement | illustrative only；85% quantile disclosed，not prevalence | H720-relative difference view available | retain candidate；no extra run now |
-| `SC-UVHF-FRSD-D1` | `visualization_dataset_search_running` | matched fixed sharing extent的risk optimum是否随future region变化 | neutral single-scale carrier；figure selection不作architecture gate | ETTm1 s1/s8/s32 active at first check | wait for 5/5 and select figure |
+| `SC-UVHF-FRSD-D1` | `figure_candidate_selected` | matched fixed sharing extent的risk optimum是否随future region变化 | neutral single-scale carrier；figure selection不作architecture gate | ETTm1 two qualified crossing pairs；region1 s1，most later s128 | integrate Figure 2；stop ETTh2 search |
 | `ISCF-BSCA-v1` | `passed_core_candidate_ready_for_paper_consolidation` | broad train-time anchor能否稳定scope-gradient access并提升ISCF | ISCF-specific chain pass；generic KL novelty not claimed | three-seed +0.3541/+0.3073%；3/3 seeds、4/5 datasets、4/4 horizons | freeze exact v1；consolidate paper claims/limitations before baselines |
 | `SC-ISCF-UPA-D2` | `superseded_by_bsca_v1` | information-free uniform train-time anchor能否复现ARMERR/SHUFFLED gain | user chose outcome-first method route | not executed as separate diagnostic | retain design history only |
 | `SC-ISCF-PSA-D1` | `control_complete_h2_supported` | contemporaneous no-route EQUAL能否解释new ARMERR/SHUFFLED公共gain | not a method；只隔离H2/H3 | exact EQUAL tie；controls +0.6577/+0.6557%；H2 pass | feeds UPA-D2 only |
