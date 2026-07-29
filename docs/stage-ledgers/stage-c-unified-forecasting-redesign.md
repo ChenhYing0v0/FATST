@@ -9,7 +9,7 @@
 | `active_question` | 两项Introduction problem evidence能否分别建立material prefix disagreement与future-region sharing-demand heterogeneity |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
-| `active_candidates` | `ISCF-BSCA-v1` frozen paper core；Introduction 9-run visualization pilot Step7B pass |
+| `active_candidates` | `ISCF-BSCA-v1` frozen paper core；Introduction Weather 9-run validation visualization pilot running |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
@@ -20,10 +20,10 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Introduction evidence visualization pilot Step7B prelaunch pass |
+| `current_11_step` | Introduction evidence visualization pilot Step8 remote training |
 | `current_candidate` | problem-evidence pair=`INTRO-CHPD-v1` + `SC-UVHF-FRSD-D1`；paper method remains frozen `ISCF-BSCA-v1` |
-| `latest_decision` | `intro_evidence_visualization_step7b_pass_remote_launch_next` |
-| `next_required_action` | commit/push，remote GPU preflight与initial Weather 9-run validation launch |
+| `latest_decision` | `initial_weather_9run_validation_pilot_running` |
+| `next_required_action` | 等待remote完成；同步9/9 validation artifacts并执行冻结analyzers |
 | `method_training_authorized` | visualization pilot only；initial 9 runs authorized，fallback/full/formal test false |
 | `rollback_point` | CHPD weak -> retain formal CHPC argument only；FRSD negative -> revise P4/P5 problem-to-method narrative；do not tune exact BSCA-v1 |
 
@@ -31,16 +31,16 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | visualization pilot Step7A implementation + Step7B prelaunch complete |
+| `current_step` | visualization pilot Step8 remote training；initial Weather 9-run matrix running |
 | `problem` | P2的material prefix disagreement与P4的future-region sharing-demand heterogeneity尚缺独立问题证据 |
-| `existence_evidence` | implementation contracts only；visual results pending；D18/A6/ISCF artifacts仍不得作为primary evidence |
+| `existence_evidence` | implementation contracts与remote launch health通过；visual results pending；D18/A6/ISCF artifacts仍不得作为primary evidence |
 | `idea` | native horizon-specific NCHPD + neutral capacity-matched single-scale sharing-risk diagnostic |
 | `theory_check` | CHPC evidence不涉及accuracy superiority；sharing diagnostic保持fixed-past、pointwise MSE、H-free，只检验finite-capacity risk |
 | `design` | initial Weather/seed2021 9-run validation pilot；85% quantile illustration；formal 180/75 designs deferred |
 | `narrative_gate` | pass to diagnostic design；problem/method distinction、ElasTST/N-HiTS prior boundary与non-circular carrier已明确 |
 | `effectiveness_gate` | exploratory visualization only；validation不能formal pass/reject |
-| `artifacts` | pilot config、neutral model、two analyzers、remote runner、Step7A report/code explanation |
-| `decision` | `intro_evidence_visualization_step7b_pass_remote_launch_next` |
+| `artifacts` | pilot config、neutral model、two analyzers、remote runner、Step7A report/code explanation、remote launch record |
+| `decision` | `initial_weather_9run_validation_pilot_running` |
 
 ## Frozen Carrier Contract
 
@@ -64,8 +64,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
-| `INTRO-CHPD-v1` | `visualization_pilot_step7b_pass` | independently trained horizon models能否给出清晰overlap disagreement | illustrative only；85% quantile disclosed，not prevalence | local analyzer/export contract pass；Weather 4 runs pending | remote validation launch authorized |
-| `SC-UVHF-FRSD-D1` | `visualization_pilot_step7b_pass` | matched fixed sharing extent的risk optimum是否随future region变化 | neutral single-scale carrier；same-val oracle descriptive only | 111312 params all scales；shape/gradient/analyzer pass；5 runs pending | remote validation launch authorized |
+| `INTRO-CHPD-v1` | `visualization_pilot_remote_running` | independently trained horizon models能否给出清晰overlap disagreement | illustrative only；85% quantile disclosed，not prevalence | local analyzer/export contract pass；Weather 4-run queue launched | wait for 4/4 validation artifacts |
+| `SC-UVHF-FRSD-D1` | `visualization_pilot_remote_running` | matched fixed sharing extent的risk optimum是否随future region变化 | neutral single-scale carrier；same-val oracle descriptive only | 111312 params all scales；s1/s8/s32 active at first health check | wait for 5/5 validation artifacts |
 | `ISCF-BSCA-v1` | `passed_core_candidate_ready_for_paper_consolidation` | broad train-time anchor能否稳定scope-gradient access并提升ISCF | ISCF-specific chain pass；generic KL novelty not claimed | three-seed +0.3541/+0.3073%；3/3 seeds、4/5 datasets、4/4 horizons | freeze exact v1；consolidate paper claims/limitations before baselines |
 | `SC-ISCF-UPA-D2` | `superseded_by_bsca_v1` | information-free uniform train-time anchor能否复现ARMERR/SHUFFLED gain | user chose outcome-first method route | not executed as separate diagnostic | retain design history only |
 | `SC-ISCF-PSA-D1` | `control_complete_h2_supported` | contemporaneous no-route EQUAL能否解释new ARMERR/SHUFFLED公共gain | not a method；只隔离H2/H3 | exact EQUAL tie；controls +0.6577/+0.6557%；H2 pass | feeds UPA-D2 only |

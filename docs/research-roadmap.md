@@ -1,5 +1,19 @@
 # Research Roadmap
 
+## Introduction Evidence Visualization Pilot Remote Running (2026-07-29)
+
+commit `9cc2d24e2359310dea2c6fc1764303a2da5d2c65`已推送并在
+`529_Lab-3090`启动Weather/seed2021的9-run validation-only pilot。GPU preflight
+显示GPU 0/1/2均为RTX 3090、各18 MiB used；CUDA resource smoke通过。启动后一次
+有界检查确认neutral `s=1/8/32`已在三张GPU上运行，显存占用约0.9--1.0 GiB，
+utilization为100%/71%/84%，未见即时错误。
+
+Decision=`initial_weather_9run_validation_pilot_running`。当前cursor是等待远程完成，
+之后同步9/9 validation artifacts与自动figure analysis；不高频polling，不访问
+formal test，不自动启动fallback。若Weather可视化清晰则停止；若不清晰则先汇报，
+再请求`ETTm1` fallback授权。详细启动证据见
+`analysis/iscf_bsca_intro_evidence_visualization_pilot_20260729/remote_launch_record.md`。
+
 ## Introduction Evidence Visualization Pilot Step7A/7B (2026-07-29)
 
 用户将两项Introduction evidence的近期目标收窄为visualization-first：
@@ -17,7 +31,8 @@ gradient pass；block sharing与endpoint difference contracts通过。两套figu
 analyzers、DLinear `--skip-test` artifact path、9-job remote runner与config均已
 完成，synthetic/local/dry-run gates通过。
 
-Decision=`intro_evidence_visualization_step7b_pass_remote_launch_next`。当前授权
+Decision=`intro_evidence_visualization_step7b_pass_remote_launch_next`（已由上方
+remote-running cursor取代）。当前授权
 只覆盖initial 9 runs与validation analysis；formal design仍保留但deferred，
 fallback/full matrix/formal test=false。
 

@@ -17,6 +17,19 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_core_status` | `ISCF-BSCA-v1`=`passed_core_candidate_ready_for_paper_consolidation` |
 
+[Introduction Evidence Visualization Pilot Remote Launch, 2026-07-29] Initial
+Weather/seed2021 9-run validation-only matrix已从commit
+`9cc2d24e2359310dea2c6fc1764303a2da5d2c65`启动至`529_Lab-3090`。启动前GPU
+0/1/2均为RTX 3090且仅占用18 MiB；CUDA resource smoke通过。启动后有界检查显示
+neutral `s=1/8/32`已分别占用约0.9--1.0 GiB显存，GPU utilization为
+100%/71%/84%，未见即时import、CUDA或OOM错误。当前completed=`0/9`仅表示尚无
+完整run结束。Decision=`initial_weather_9run_validation_pilot_running`。
+
+本轮仍为validation-only illustrative pilot，`test_accessed=false`；
+fallback/full matrix/formal test均未授权。训练完成后才分析85% quantile prefix
+overlay与matched sharing-risk landscape，不从中途状态形成paper claim。启动记录：
+`analysis/iscf_bsca_intro_evidence_visualization_pilot_20260729/remote_launch_record.md`。
+
 [Introduction Evidence Visualization Pilot Step7A/7B, 2026-07-29] 用户要求先
 减少runs，并允许选择较明显但非极端的prefix-disagreement案例。正式180 baseline
 checkpoints与75 neutral runs延后；当前只授权Weather/seed2021的9-run
@@ -32,7 +45,8 @@ nonzero gradient，within-block gap=0，同权重s1-vs-s720 output gap=0.080029�
 两套analyzer、DLinear validation-only exporter、remote 9-job runner与config已
 完成；synthetic figure pipeline、one-epoch DLinear Weather smoke与remote
 dry-run全部通过。所有pilot artifacts显式`test_accessed=false`。Decision=
-`intro_evidence_visualization_step7b_pass_remote_launch_next`。用户授权覆盖initial
+`intro_evidence_visualization_step7b_pass_remote_launch_next`（已由上方remote
+launch状态取代）。用户授权覆盖initial
 9 runs，不覆盖fallback dataset、formal test或full matrix。
 
 [Introduction Problem-Evidence Design, 2026-07-29] 已将Introduction的两项
