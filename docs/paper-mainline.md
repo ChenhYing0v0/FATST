@@ -17,6 +17,30 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_core_status` | `ISCF-BSCA-v1`=`passed_core_candidate_ready_for_paper_consolidation` |
 
+[Introduction Round 1 Author Response, 2026-07-29] 已按用户对blind review的取舍形成
+`v0.2-round1` clean draft与修订记录。P1现在明确：大多数long-term forecasting
+研究仍为horizon-specific；ElasTST及少量foundation models已探索varied/flexible
+horizons，但相较horizon-specific literature，该任务仍缺少充分、系统的发展；
+本文将task definition、problem analysis与targeted output-side decoder design
+组织为完整研究链。Introduction不展开prior-art comparison table，也不讨论与本文
+native decoder主线无关的结构路线。
+
+CHPC正式降为varied-horizon forecasting的basic property，不作algorithmic
+novelty。P4加入finite-capacity bias--variance与pointwise-MSE Bayes boundary，
+并保留neutral capacity-matched motivation result占位。P5压缩为
+`multiple sharing scopes -> step-specific synthesis -> target-conditioned soft
+allocation -> BSCA train-only co-adaptation`，详细parameterization、gradient
+推导与mechanism controls分别留给Method、Problem Formulation和Experiments。
+P6暂只陈述qualitative advantages，不填未完成的headline numbers。
+
+Problem-existence evidence与Introduction Figure 1计划已冻结为待讨论草案：
+primary使用neutral matched end-to-end decoder family，统计region-wise
+risk crossover、best fixed versus region-oracle headroom与跨seed/dataset
+stability；主图采用`horizon disagreement -> sharing-risk landscape -> ISCF-BSCA
+response`三联结构。Decision=
+`intro_v02_round1_positioning_pass_problem_evidence_pending`。本轮未修改model、
+loss或training code，new remote training/formal test=false。
+
 [ISCF-BSCA Introduction Initial Draft and Blind Review, 2026-07-28] 已将
 Introduction P1--P5共识正文与按v0.6 framework改写的provisional P6整合为独立
 manuscript draft：`docs/paper-drafts/iscf-bsca-introduction-initial-draft.md`。

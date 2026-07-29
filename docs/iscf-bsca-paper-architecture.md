@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.7` |
-| `last_updated` | `2026-07-28` |
+| `version` | `v0.8` |
+| `last_updated` | `2026-07-29` |
 | `paper_candidate` | `ISCF-BSCA-v1` |
-| `current_review_cursor` | Introduction P1--P6已整合为initial manuscript draft；blind review要求优先修复novelty positioning、problem evidence、field-vs-mixture边界与术语密度 |
-| `frozen_consensus` | 论文六章结构；Introduction 第1--5段；ISCF=`Independent Scope-Conditioned Forecasting`及scope-indexed forecast field框架 |
-| `provisional_content` | Introduction 第6段与整合初稿；Related Work、Problem/Motivation 的具体实验、Method、Experiments、Conclusion |
+| `current_review_cursor` | Introduction v0.2-round1已按author response初步修订；下一步冻结P4 problem-existence evidence与Figure 1 |
+| `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
+| `provisional_content` | Introduction P1--P6 v0.2正文；problem-existence result；Related Work、Method、Experiments、Conclusion |
 | `not_authorized_by_this_document` | 新模型实现、remote training、formal test、按结果调参 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
@@ -349,9 +349,16 @@ cells、secondary controls 与敏感性结果放在 Appendices。
 
 ## 4. Introduction
 
+当前clean manuscript正文以
+`docs/paper-drafts/iscf-bsca-introduction-initial-draft.md`
+的`v0.2-round1`为准。本轮逐项回复与problem-existence evidence/visualization
+计划记录在
+`analysis/iscf_bsca_intro_round1_revision_20260729.md`。下列段落已同步为
+v0.8初步建议，但在用户逐段确认前仍属于provisional revision。
+
 ### 4.1 Paragraph 1：multi-horizon need 与现行 horizon-specific protocol
 
-**状态：第二轮共识。**
+**状态：v0.8 round1初步修订；varied-horizon literature定位待逐段确认。**
 
 写作目标：
 
@@ -362,20 +369,26 @@ cells、secondary controls 与敏感性结果放在 Appendices。
 
 建议正文逻辑：
 
-> Multi-horizon forecasting is essential in applications that require
-> predictions over several planning ranges, from short-term control to
-> long-term scheduling. However, the standard long-term forecasting protocol
-> typically trains a separate model for each forecast horizon $H$, such as
-> 96, 192, 336, and 720 steps. Although each model is individually optimized
-> for its designated horizon, the resulting collection of horizon-specific
-> predictors does not constitute a unified multi-horizon forecasting system.
+> Multi-horizon forecasts support decisions over multiple planning ranges,
+> from short-term control to long-term scheduling. Yet most long-term
+> time-series forecasting models and benchmark protocols remain
+> horizon-specific: a separate model is trained for each forecast horizon
+> $H$, such as 96, 192, 336, and 720 steps. Recent work, including ElasTST and
+> time-series foundation models such as TimesFM and Time-MoE, has begun to
+> support varied or flexible forecasting horizons. Nevertheless, such efforts
+> remain sparse relative to the extensive horizon-specific literature, and
+> varied-horizon forecasting is still insufficiently developed as a unified
+> problem with an explicit task definition, systematic problem analysis, and
+> targeted decoder design. In this work, we formulate these requirements
+> explicitly and investigate how a unified forecaster should organize
+> output-side representations across different parts of the future domain.
 
 这里的 `multi-horizon` 特指：同一个 forecasting system 服务多个请求长度
 $H\in\mathcal H$，而不仅是一个模型一次输出多个 future steps。
 
 ### 4.2 Paragraph 2：horizon-specific systems 的三个不足
 
-**状态：第二轮共识。**
+**状态：v0.8 round1初步修订；原逻辑保留，cost claim已收紧。**
 
 本段只建立三项系统问题：
 
@@ -393,35 +406,33 @@ $$
 
 建议正文逻辑：
 
-> For the same observed history, independently trained horizon-specific
-> models may produce different predictions for the same future time step. In
-> particular, the first $H_1$ steps predicted by an $H_2$-step model are not
-> guaranteed to agree with the output of a separately trained $H_1$-step
-> model, even when $H_1<H_2$. Such horizon-dependent disagreement prevents
-> the forecasts from being interpreted as nested views of one future
-> trajectory. Moreover, maintaining separate models for different horizons
-> multiplies training, storage, and deployment costs.
+> The prevailing horizon-specific protocol also leaves an important
+> system-level gap. For a fixed forecast origin and identical observed
+> history, independently trained models may produce different values for the
+> same future time step. In particular, the first $H_1$ predictions of an
+> $H_2$-step model are not guaranteed to agree with those of a separately
+> trained $H_1$-step model when $H_1<H_2$. Such horizon-dependent
+> disagreement prevents the forecasts from forming nested views of one future
+> trajectory. Maintaining multiple independent models also increases the
+> total training, storage, deployment, and maintenance burden required to
+> serve a set of forecast horizons.
 
 本段不声称 horizon-specific models 的 accuracy 必然更差。
 
 ### 4.3 Paragraph 3：unified forecaster 与 CHPC
 
-**状态：第二轮共识。**
+**状态：v0.8 round1初步修订；CHPC冻结为basic property。**
 
 建议正文逻辑：
 
-> We therefore formulate unified multi-horizon forecasting through a
-> horizon-agnostic prediction function indexed by future time step. Given an
-> observed history, the model directly defines a prediction for each future
-> step, and an $H$-step forecast is instantiated by evaluating the
-> corresponding sequence of future steps. Since the prediction at each step
-> is determined by the observed history and its future-step index, rather
-> than by the requested horizon, predictions at overlapping future steps
-> remain identical across horizons. We refer to this property as
-> cross-horizon prefix consistency. Our architecture realizes this
-> step-indexed interface through future-step-specific synthesis vectors,
-> allowing arbitrary horizons to be instantiated without horizon-specific
-> prediction heads.
+> We therefore study varied-horizon forecasting through a horizon-agnostic
+> prediction function indexed by future time step. Given an observed history,
+> an $H$-step forecast is instantiated by evaluating this function at the
+> first $H$ future steps within the supported forecast domain. Because the
+> prediction for an overlapping future step depends on the history and its
+> step index, rather than on the requested horizon, it remains unchanged
+> across horizon requests. We call this basic property of a varied-horizon
+> forecasting system **cross-horizon prefix consistency (CHPC)**.
 
 CHPC 在 Introduction 中作为 forecasting-system desideratum，而不是单独包装为
 method novelty。该 formulation 不把不同 horizons 称为相互独立；它们是同一个
@@ -429,36 +440,40 @@ horizon无关、step-indexed field 的nested outputs。
 
 ### 4.4 Paragraph 4：naive unification 与 future-region sharing demand
 
-**状态：v0.4逻辑冻结；v0.6术语同步。**
+**状态：v0.8 round1初步修订；problem hypothesis保留，motivation result pending。**
 
 建议正文：
 
-> Although a horizon-agnostic prediction field provides a consistent
-> interface across horizons, it does not make unified forecasting inherently
-> easy. Many direct multi-output forecasters generate all
-> future steps either from a broadly shared latent representation or through
-> one fixed output-generation pattern. Such a fixed pattern imposes the same
-> extent of cross-step sharing throughout the forecast domain. However,
-> fine-scale variations may require greater step-specific flexibility,
-> whereas smoother and broader trajectory components may benefit from
-> reusing a common history-conditioned latent state across multiple
-> steps. Because their relative importance can vary across samples,
-> variables, and future regions, no single sharing extent is guaranteed to
-> be uniformly suitable. We refer to this challenge as **future-region
-> sharing-demand heterogeneity**.
+> CHPC provides a consistent forecasting interface, but it does not determine
+> how a finite-capacity decoder should represent the future. Most
+> architectural advances have focused on history encoding or input-side
+> temporal representations, while direct multi-output decoders commonly apply
+> one fixed output-generation pattern across the forecast domain. Broadly
+> sharing a history-conditioned latent state across many future steps can
+> regularize smooth and persistent trajectory components, whereas finer
+> sharing can provide the step-specific flexibility needed for local
+> variations. Their relative value may change across samples, variables, and
+> future regions, so the bias--variance trade-off induced by a fixed sharing
+> extent need not be uniform. This is a finite-capacity modeling issue rather
+> than a change in the pointwise-MSE Bayes target. We refer to the resulting
+> hypothesis as **future-region sharing-demand heterogeneity**.
+>
+> `Editorial placeholder: insert the neutral capacity-matched risk crossover
+> and headroom over the best fixed sharing extent after the evidence gate.`
 
 对应中文：
 
-> 尽管horizon无关的prediction field为不同horizons提供了一致的预测接口，但它
-> 本身并不能使unified forecasting天然变得容易。许多direct multi-output
-> forecasters从一个宽范围共享的latent representation生成全部future
-> steps，或者在整个预测域采用一种固定的output-generation pattern。这种设计
-> 对所有future regions施加了相同的cross-step sharing extent。然而，细粒度
-> 变化可能需要更强的step-specific flexibility，而平滑、宽范围的轨迹成分则
-> 可能受益于在多个future steps之间复用共同的history-conditioned latent
-> state。由于这些成分的相对重要性可能随sample、variable与future region
-> 变化，单一sharing extent未必能在整个预测域内始终适用。我们将这一挑战称为
-> **future-region sharing-demand heterogeneity（未来区间共享需求异质性）**。
+> CHPC提供了一致的forecasting interface，但它并不决定finite-capacity decoder
+> 应当如何表示未来。多数架构进展侧重history encoding或input-side temporal
+> representation，而direct multi-output decoder通常在整个forecast domain采用
+> 一种固定output-generation pattern。在较多future steps之间广泛复用一个
+> history-conditioned latent state，可能有利于平滑、持续的trajectory
+> components；更细的sharing则可能为local variations提供所需的step-specific
+> flexibility。二者的相对价值可能随sample、variable与future region变化，因此
+> 固定sharing extent所引入的bias--variance trade-off未必在整个预测域上均一。
+> 这是finite-capacity modeling问题，而不是pointwise-MSE Bayes target发生变化。
+> 我们将这一假设称为**future-region sharing-demand heterogeneity（未来区间
+> 共享需求异质性）**。
 
 讨论过程中的细节：
 
@@ -518,54 +533,41 @@ horizon无关、step-indexed field 的nested outputs。
 
 ### 4.5 Paragraph 5：ISCF-BSCA
 
-**状态：v0.6暂时冻结。**
+**状态：v0.8 round1初步修订；Introduction只保留核心创新链。**
 
 建议正文：
 
-> To address these heterogeneous sharing demands, we propose ISCF-BSCA, a
-> scope-adaptive decoder for unified multi-horizon forecasting. Rather than
-> treating different scopes as independent predictors, Independent
-> Scope-Conditioned Forecasting (ISCF) defines a single scope-indexed forecast
-> field over future time steps and latent-state sharing scopes. For each
-> scope, an independent history projection provides scope-specific latent
-> modes, from which history-conditioned, region-indexed latent states are
-> constructed under a different cross-step sharing extent.
-> Shared future-step-specific synthesis vectors then map these states to a
-> scope-conditioned slice of the forecast field. At each forecast target, a
-> target-conditioned scope allocation assigns normalized weights across the
-> slices, and a weighted contraction along the scope axis produces the final
-> prediction. This formulation allows multiple latent-state sharing extents to
-> contribute within one horizon-agnostic, future-step-indexed prediction
-> function. Because the same allocation also determines how the forecasting
-> loss distributes gradients across scope slices, we further introduce
-> Balanced Scope Co-Adaptation (BSCA), a train-only objective that maintains
-> broad learning access across the field and mitigates premature allocation
-> concentration during joint optimization. BSCA changes neither the inference
-> parameters nor the inference path. The resulting forecaster directly
-> instantiates arbitrary forecast horizons while retaining cross-horizon
-> prefix consistency.
+> To model these heterogeneous sharing demands, we propose ISCF-BSCA, an
+> output-side decoder for varied-horizon forecasting. Independent
+> Scope-Conditioned Forecasting (ISCF) organizes multiple latent-state sharing
+> scopes within a single scope-indexed forecast field. Each scope specifies
+> how broadly a history-conditioned latent state is reused across future steps
+> before step-specific synthesis, and a target-conditioned allocation softly
+> aggregates the resulting predictions for each sample, variable, and future
+> step. ISCF therefore adapts the decoder's cross-step sharing pattern while
+> preserving a single horizon-agnostic prediction function. Because the same
+> allocation also governs how forecasting gradients reach the different
+> scopes, we further introduce Balanced Scope Co-Adaptation (BSCA), a
+> train-only objective designed to provide direct prediction signals to all
+> scopes and reduce premature allocation concentration during joint learning.
+> BSCA adds neither inference parameters nor an additional inference path, and
+> the complete decoder retains CHPC for every supported horizon.
 
 对应中文：
 
-> 为响应上述异质性共享需求，我们提出ISCF-BSCA，一个面向unified
-> multi-horizon forecasting的scope-adaptive decoder。不同于把不同scopes视为
-> 相互独立的predictors，Independent Scope-Conditioned Forecasting（ISCF）在
-> future time step与latent-state sharing scope构成的二维域上定义一个统一的
-> scope-indexed forecast field。对于每个scope，一条独立的history projection
-> 先产生scope-specific latent modes，再在不同cross-step sharing extent下构造
-> history-conditioned、region-indexed latent states。共享的
-> future-step-specific synthesis vectors随后将这些states
-> 映射为forecast field的一个scope-conditioned slice。在每个forecast target
-> 处，target-conditioned scope allocation为各slices分配normalized weights，
-> 并通过沿scope轴的weighted contraction得到最终prediction。由此，多种
-> latent-state sharing extents能够在同一个horizon无关、future-step-indexed
-> prediction function中共同发挥作用。由于同一个allocation还决定forecasting
-> loss如何向各scope slices分配gradient，我们进一步提出Balanced Scope
-> Co-Adaptation（BSCA）：一种仅在训练期使用的objective，用于维持整个field中
-> 各scope slices获得广泛学习信号的机会，并缓解joint optimization中过早的
-> allocation concentration。BSCA既不改变inference parameters，也不改变
-> inference path。最终forecaster能够直接实例化任意forecast horizons，同时
-> 保持cross-horizon prefix consistency。
+> 为建模上述异质性共享需求，我们提出ISCF-BSCA，一个面向varied-horizon
+> forecasting的output-side decoder。Independent Scope-Conditioned
+> Forecasting（ISCF）在单一scope-indexed forecast field中组织多种latent-state
+> sharing scopes。每个scope规定history-conditioned latent state在
+> step-specific synthesis之前被多宽范围的future steps共同复用；
+> target-conditioned allocation随后针对每个sample、variable与future step对
+> 这些scopes的预测进行soft aggregation。因此，ISCF能够在保持单一horizon无关
+> prediction function的同时，调整decoder的cross-step sharing pattern。由于同一
+> allocation还决定forecasting gradients如何到达不同scopes，我们进一步提出
+> Balanced Scope Co-Adaptation（BSCA）：一种train-only objective，旨在为全部
+> scopes提供直接prediction signals，并减少joint learning中过早的allocation
+> concentration。BSCA既不增加inference parameters，也不增加额外inference
+> path；完整decoder对所有supported horizons保持CHPC。
 
 讨论过程中的细节：
 
@@ -625,48 +627,38 @@ horizon无关、step-indexed field 的nested outputs。
 
 ### 4.6 Paragraph 6：contributions
 
-**状态：v0.7 provisional initial-draft正文；待结合blind-review问题与main-table
-evidence逐段确认。**
+**状态：v0.8 round1 provisional；problem evidence与performance advantage
+pending。**
 
 建议正文：
 
-> Our contributions are threefold. First, we formulate prefix-consistent
-> unified multi-horizon forecasting as a forecasting-system problem and
-> formalize future-region sharing-demand heterogeneity as a testable
-> finite-capacity challenge, separating evidence for the task problem from the
-> scope-based mechanism used to address it. Second, we develop ISCF, an
-> output-side forecasting architecture that organizes independent history
-> projections, multiple latent-state sharing extents, shared
-> future-step-specific synthesis, and target-conditioned scope allocation as a
-> single scope-indexed forecast field. The resulting decoder adapts its
-> output-side sharing pattern at each forecast target while retaining
-> cross-horizon prefix consistency without horizon-specific prediction heads.
-> Third, we introduce BSCA, an ISCF-specific, train-only objective for
-> stabilizing the co-adaptation of scope-conditioned slices and their
-> allocation without changing the inference graph. We
-> evaluate the complete framework against horizon-specific systems, matched
-> unified forecasters, and architecture and objective controls in terms of
-> predictive accuracy, system efficiency, cross-horizon consistency, mechanism
-> attribution, and decoder transferability.
+> Our contributions are threefold. First, we formulate varied-horizon
+> forecasting as a unified forecasting-system problem in which CHPC is a basic
+> requirement, and we identify future-region sharing-demand heterogeneity as a
+> testable output-side, finite-capacity challenge. Second, we introduce ISCF,
+> a decoder that combines multiple cross-step latent-state sharing extents,
+> step-specific synthesis, and target-conditioned soft allocation within one
+> horizon-agnostic forecast function. Third, we develop BSCA to stabilize the
+> joint learning of these sharing scopes without increasing inference-time
+> complexity. We evaluate the complete framework against horizon-specific
+> systems, matched unified forecasters, and architecture and objective
+> controls, examining its advantages in unified deployment, predictive
+> accuracy, cross-horizon consistency, output-side adaptation, and
+> transferability.
 
 对应中文：
 
-> 本文的贡献主要包括三个方面。第一，我们将具有prefix consistency的unified
-> multi-horizon forecasting形式化为一个forecasting-system problem，并将
-> future-region sharing-demand heterogeneity形式化为一个可检验的有限容量
-> 挑战，并将task problem的存在性证据与用于解决该问题的scope-based mechanism
-> 区分开来。第二，我们提出ISCF，一个output-side forecasting architecture；
-> 它将independent history projections、multiple latent-state sharing extents、
-> shared future-step-specific synthesis与target-conditioned scope allocation
-> 组织为一个统一的scope-indexed forecast field。该decoder能够在每个forecast
-> target处调整其output-side sharing pattern，并且无需horizon-specific
-> prediction heads即可保持cross-horizon prefix consistency。第三，我们提出
-> BSCA，一个ISCF-specific、train-only objective，用于稳定scope-conditioned
-> slices及其allocation的co-adaptation，并且不改变inference graph。我们将通过
-> horizon-specific
-> systems、matched unified forecasters以及architecture/objective controls
-> 对完整framework进行评估，覆盖predictive accuracy、system efficiency、
-> cross-horizon consistency、mechanism attribution与decoder transferability。
+> 本文的贡献主要包括三个方面。第一，我们将varied-horizon forecasting形式化为
+> 一个以CHPC为基本要求的unified forecasting-system problem，并将
+> future-region sharing-demand heterogeneity识别为一个可检验的output-side、
+> finite-capacity challenge。第二，我们提出ISCF，在单一horizon无关forecast
+> function中结合multiple cross-step latent-state sharing extents、
+> step-specific synthesis与target-conditioned soft allocation。第三，我们提出
+> BSCA，在不增加inference-time complexity的前提下稳定这些sharing scopes的
+> joint learning。我们将完整framework与horizon-specific systems、matched
+> unified forecasters及architecture/objective controls比较，评估其在unified
+> deployment、predictive accuracy、cross-horizon consistency、output-side
+> adaptation与transferability方面的优势。
 
 讨论过程中的细节：
 
@@ -707,13 +699,12 @@ evidence逐段确认。**
 8. **transferability是empirical scope，不是预先成立的贡献。** 在decoder迁移
    实验完成前，正文只写`evaluate ... decoder transferability`；若迁移结果不
    稳定，应将其降为analysis或limitation，而不是保留正向claim。
-9. **blind-review边界。** 当前Introduction-only独立评审给出
-   `major_revision / weak_reject_at_current_intro`。主要问题是ElasTST已直接覆盖
-   varied-horizon output invariance，SRP/SRP++已提出step-invariant
-   representation bottleneck与step-specific adaptation；field形式易被理解为
-   multi-head/MoE repackaging；P4缺少problem-existence量化钩子；P5术语过载；
-   P6没有headline results。因此v0.7 P6只用于形成完整initial draft，不自动
-   升级为冻结共识。
+9. **round1 author response边界。** Introduction只轻量承认少量
+   varied-horizon先例，不加入conceptual comparison table，也不展开与本文native
+   decoder主线无关的结构路线。当前优先事项是P4 problem-existence evidence、
+   ISCF/BSCA创新链的简洁表达与术语压缩；详细prior-art、parameterization、机制
+   推导和controls分别进入Related Work、Method、Problem Formulation与
+   Experiments。
 
 BSCA 的 novelty 位于 ISCF-specific contribution chain，不 claim generic
 KL、entropy regularization 或 load balancing 首创。
@@ -1326,3 +1317,4 @@ Coverage boundary：
 | 2026-07-28 | Introduction P5 v0.5 | ISCF完整方法概览；BSCA gradient-allocation机制；CHPC延续 | 待用户逐段确认英文强度与术语 |
 | 2026-07-28 | Introduction P6 v0.5 | problem--architecture--training/evidence三项贡献；不提前写未完成主表结果 | 待用户确认贡献切分与最终结果句策略 |
 | 2026-07-28 | ISCF framework + Introduction P5 v0.6 | ISCF=`Independent Scope-Conditioned Forecasting`；单一`scope-indexed forecast field`；`target-conditioned scope allocation`；P5重写 | 暂时冻结；P6下一轮按新框架重写 |
+| 2026-07-29 | Introduction v0.2 round1 author response | varied-horizon仍欠充分系统发展；CHPC=basic property；P4 evidence pending；P5术语压缩；qualitative advantage only | 先确认P3，再冻结P4 diagnostic与Figure 1 |

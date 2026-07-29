@@ -1,5 +1,30 @@
 # Research Roadmap
 
+## Introduction Round 1 Author Response (2026-07-29)
+
+`docs/paper-drafts/iscf-bsca-introduction-initial-draft.md`已更新为
+`v0.2-round1`。当前叙事冻结方向为：
+
+1. 大多数long-term forecasting工作仍采用horizon-specific protocol；
+2. ElasTST及少量foundation models已经探索varied/flexible horizons，但该方向
+   相对horizon-specific literature仍缺少充分、系统的发展；
+3. 本文的独特研究链是明确task definition、分析future-domain内部的output-side
+   sharing problem，并形成ISCF decoder与BSCA training response；
+4. CHPC是varied-horizon forecasting的basic property，不是算法创新；
+5. Introduction不展开comparison table或与native decoder主线无关的结构路线。
+
+P4已加入finite-capacity bias--variance与pointwise-MSE Bayes boundary，但
+problem-existence evidence仍pending。修订记录
+`analysis/iscf_bsca_intro_round1_revision_20260729.md`冻结了neutral
+capacity-matched end-to-end diagnostic family、region-wise risk crossover、
+best-fixed versus region-oracle headroom、split角色与failure attribution。
+Introduction Figure 1建议采用三联叙事图：
+`horizon disagreement -> sharing-risk landscape -> ISCF-BSCA response`。
+
+Decision=`intro_v02_round1_positioning_pass_problem_evidence_pending`。
+下一步先确认P3 CHPC正文，再冻结P4 diagnostic与Figure 1；之后讨论P5创新表达。
+新implementation、remote training与formal test均未授权。
+
 ## ISCF-BSCA Introduction Initial Draft and Blind Review (2026-07-28)
 
 Introduction P1--P5共识正文与v0.7 provisional P6已整合为clean manuscript
