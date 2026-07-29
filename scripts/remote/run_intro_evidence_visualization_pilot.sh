@@ -12,26 +12,38 @@ SEED="${SEED:-2021}"
 DRY_RUN="${DRY_RUN:-0}"
 RESOURCE_SMOKE="${RESOURCE_SMOKE:-0}"
 STATUS_ONLY="${STATUS_ONLY:-0}"
+RUN_MODE="${RUN_MODE:-all}"
 read -r -a GPU_IDS <<< "${GPU_IDS_STR}"
 
 if [[ "${#GPU_IDS[@]}" -lt 3 ]]; then
   echo "visualization pilot requires three GPU ids" >&2
   exit 2
 fi
+if [[ "${RUN_MODE}" != "all" \
+  && "${RUN_MODE}" != "sharing-only" \
+  && "${RUN_MODE}" != "prefix-only" ]]; then
+  echo "RUN_MODE must be all, sharing-only, or prefix-only" >&2
+  exit 2
+fi
 test -s "${CONFIG}"
 
-python3 - "${CONFIG}" "${DATASET}" <<'PY'
+python3 - "${CONFIG}" "${DATASET}" "${RUN_MODE}" <<'PY'
 import json
 import sys
 
 config = json.load(open(sys.argv[1], encoding="utf-8"))
 dataset = sys.argv[2]
+run_mode = sys.argv[3]
 allowed = [config["scope_reduction"]["initial_dataset"], *config["scope_reduction"]["fallback_order"]]
 assert dataset in allowed, (dataset, allowed)
 assert config["authorization"]["remote_training_initial_9_runs"] is True
 assert config["authorization"]["formal_test"] is False
 assert config["prefix_disagreement"]["test_accessed"] is False
 assert config["sharing_demand"]["test_accessed"] is False
+if dataset != config["scope_reduction"]["initial_dataset"]:
+    assert config["authorization"]["fallback_dataset_runs"] is True
+    assert dataset == config["authorization"]["authorized_fallback_dataset"]
+    assert run_mode == config["authorization"]["authorized_fallback_mode"]
 PY
 
 neutral_dir() {
@@ -67,7 +79,7 @@ count_complete() {
 
 if [[ "${STATUS_ONLY}" == "1" ]]; then
   read -r neutral dlinear <<< "$(count_complete)"
-  echo "intro_viz_status=$(date -Is) dataset=${DATASET} neutral=${neutral}/5 dlinear=${dlinear}/4"
+  echo "intro_viz_status=$(date -Is) dataset=${DATASET} mode=${RUN_MODE} neutral=${neutral}/5 dlinear=${dlinear}/4"
   find "${OUTPUT_ROOT}/_logs" -type f -name '*.log' -print0 2>/dev/null \
     | xargs -0 -r tail -n 1
   exit 0
@@ -85,7 +97,7 @@ if [[ "${DRY_RUN}" == "1" ]]; then
     python scripts/analyze_intro_prefix_disagreement.py --help >/dev/null
   "${CONDA_BIN}" run --no-capture-output -n "${CONDA_ENV}" \
     python scripts/analyze_intro_sharing_demand.py --help >/dev/null
-  echo "intro_evidence_visualization_dry_run=pass jobs=9 dataset=${DATASET}"
+  echo "intro_evidence_visualization_dry_run=pass mode=${RUN_MODE} dataset=${DATASET}"
   exit 0
 fi
 
@@ -103,6 +115,7 @@ fi
   echo "intro_evidence_visualization_start=$(date -Is)"
   echo "commit=$(git rev-parse HEAD)"
   echo "dataset=${DATASET}"
+  echo "run_mode=${RUN_MODE}"
   echo "seed=${SEED}"
   echo "dataset_root=${DATASET_ROOT}"
   echo "output_root=${OUTPUT_ROOT}"
@@ -110,8 +123,14 @@ fi
   echo "role=exploratory_visualization_only"
   echo "validation_role=checkpoint_selection_and_explanatory_visualization"
   echo "test_accessed=false"
-  echo "new_runs=9"
-  echo "fallback_authorized=false"
+  if [[ "${RUN_MODE}" == "sharing-only" ]]; then
+    echo "new_runs=5"
+  elif [[ "${RUN_MODE}" == "prefix-only" ]]; then
+    echo "new_runs=4"
+  else
+    echo "new_runs=9"
+  fi
+  echo "fallback_authorized=$([[ "${DATASET}" == "ETTm1" ]] && echo true || echo false)"
   echo "gpu_ids=${GPU_IDS[*]}"
   nvidia-smi --query-gpu=index,name,memory.total,memory.used,memory.free,utilization.gpu \
     --format=csv,noheader,nounits
@@ -180,9 +199,28 @@ worker2() {
   run_dlinear 720 "${GPU_IDS[2]}"
 }
 
-worker0 & pid0="$!"
-worker1 & pid1="$!"
-worker2 & pid2="$!"
+if [[ "${RUN_MODE}" == "sharing-only" ]]; then
+  run_neutral 1 "${GPU_IDS[0]}" & pid0="$!"
+  (
+    run_neutral 8 "${GPU_IDS[1]}"
+    run_neutral 128 "${GPU_IDS[1]}"
+  ) & pid1="$!"
+  (
+    run_neutral 32 "${GPU_IDS[2]}"
+    run_neutral 720 "${GPU_IDS[2]}"
+  ) & pid2="$!"
+elif [[ "${RUN_MODE}" == "prefix-only" ]]; then
+  run_dlinear 96 "${GPU_IDS[0]}" & pid0="$!"
+  (
+    run_dlinear 192 "${GPU_IDS[1]}"
+    run_dlinear 336 "${GPU_IDS[1]}"
+  ) & pid1="$!"
+  run_dlinear 720 "${GPU_IDS[2]}" & pid2="$!"
+else
+  worker0 & pid0="$!"
+  worker1 & pid1="$!"
+  worker2 & pid2="$!"
+fi
 status=0
 if ! wait "${pid0}"; then status=1; fi
 if ! wait "${pid1}"; then status=1; fi
@@ -193,21 +231,29 @@ if [[ "${status}" != "0" ]]; then
 fi
 
 read -r neutral dlinear <<< "$(count_complete)"
-if [[ "${neutral}" -ne 5 || "${dlinear}" -ne 4 ]]; then
-  echo "incomplete visualization matrix neutral=${neutral}/5 dlinear=${dlinear}/4" >&2
+if [[ "${RUN_MODE}" != "prefix-only" && "${neutral}" -ne 5 ]]; then
+  echo "incomplete sharing matrix neutral=${neutral}/5" >&2
+  exit 4
+fi
+if [[ "${RUN_MODE}" != "sharing-only" && "${dlinear}" -ne 4 ]]; then
+  echo "incomplete prefix matrix dlinear=${dlinear}/4" >&2
   exit 4
 fi
 
-"${CONDA_BIN}" run --no-capture-output -n "${CONDA_ENV}" \
-  python scripts/analyze_intro_prefix_disagreement.py \
-  --input-root "${OUTPUT_ROOT}/dlinear" \
-  --output-dir "${OUTPUT_ROOT}/_analysis/${DATASET}/prefix" \
-  --dataset "${DATASET}" --seed "${SEED}" --sample-quantile 0.85
+if [[ "${RUN_MODE}" != "sharing-only" ]]; then
+  "${CONDA_BIN}" run --no-capture-output -n "${CONDA_ENV}" \
+    python scripts/analyze_intro_prefix_disagreement.py \
+    --input-root "${OUTPUT_ROOT}/dlinear" \
+    --output-dir "${OUTPUT_ROOT}/_analysis/${DATASET}/prefix" \
+    --dataset "${DATASET}" --seed "${SEED}" --sample-quantile 0.85
+fi
 
-"${CONDA_BIN}" run --no-capture-output -n "${CONDA_ENV}" \
-  python scripts/analyze_intro_sharing_demand.py \
-  --input-root "${OUTPUT_ROOT}/neutral" \
-  --output-dir "${OUTPUT_ROOT}/_analysis/${DATASET}/sharing" \
-  --dataset "${DATASET}" --seed "${SEED}"
+if [[ "${RUN_MODE}" != "prefix-only" ]]; then
+  "${CONDA_BIN}" run --no-capture-output -n "${CONDA_ENV}" \
+    python scripts/analyze_intro_sharing_demand.py \
+    --input-root "${OUTPUT_ROOT}/neutral" \
+    --output-dir "${OUTPUT_ROOT}/_analysis/${DATASET}/sharing" \
+    --dataset "${DATASET}" --seed "${SEED}"
+fi
 
-echo "intro_evidence_visualization_done=$(date -Is) dataset=${DATASET} neutral=5/5 dlinear=4/4"
+echo "intro_evidence_visualization_done=$(date -Is) dataset=${DATASET} mode=${RUN_MODE} neutral=${neutral}/5 dlinear=${dlinear}/4"

@@ -2,7 +2,7 @@
   "protocol": "SC-UVHF-INTRO-EVIDENCE-VIZ-v1",
   "date": "2026-07-29",
   "role": "exploratory_visualization_only",
-  "user_authorization": "请按你的实验计划继续推进实验工作",
+  "user_authorization": "尝试找到具有说服力的样本/数据集，目标是得到具有说服力的可视化结果",
   "scope_reduction": {
     "initial_dataset": "Weather",
     "fallback_order": ["ETTm1", "ETTh2"],
@@ -66,7 +66,10 @@
   "authorization": {
     "local_implementation": true,
     "remote_training_initial_9_runs": true,
-    "fallback_dataset_runs": false,
+    "fallback_dataset_runs": true,
+    "authorized_fallback_dataset": "ETTm1",
+    "authorized_fallback_mode": "sharing-only",
+    "fallback_etth2": false,
     "formal_test": false,
     "full_matrix": false
   }

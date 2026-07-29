@@ -1,5 +1,16 @@
 # Research Roadmap
 
+## Introduction Visualization Candidate Search Extension (2026-07-29)
+
+本轮目标明确为寻找具有说服力的illustrative figure，而不是以单次visualization
+screen否定ISCF-BSCA architecture或论文problem logic。Prefix family已保留
+H720-relative difference view候选。
+
+下一步只执行ETTm1/seed2021的neutral five-scale sharing-only validation screen：
+scales、training protocol、12×60 regions与frozen thresholds均不变；不重复
+DLinear，不访问test。ETTh2/full matrix/formal test=false。Decision=
+`continue_visualization_search_without_architecture_rejection`。
+
 ## Introduction Evidence Visualization Pilot Remote Running (2026-07-29)
 
 commit `9cc2d24e2359310dea2c6fc1764303a2da5d2c65`已推送并在

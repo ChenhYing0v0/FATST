@@ -253,8 +253,14 @@ total                              9 runs
 - `DRY_RUN=1`：五个scale的CPU synthetic gradient/shape smoke；
 - `RESOURCE_SMOKE=1`：一个CUDA synthetic smoke；
 - `STATUS_ONLY=1`：报告neutral与DLinear完成数；
+- `RUN_MODE=all|sharing-only|prefix-only`：只执行需要的evidence family；
 - restart-safe skip existing；
-- 完成9/9后自动生成两组visualizations。
+- 完成对应family后自动生成相应visualization。
+
+后续visualization dataset search使用
+`DATASET=ETTm1 RUN_MODE=sharing-only`，只新增五个neutral scales，不重复已经能够
+形成figure candidate的DLinear prefix runs。config同时约束ETTm1为当前唯一授权
+fallback；ETTh2仍不可由runner自动启动。
 
 默认output root：
 

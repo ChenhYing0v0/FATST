@@ -164,3 +164,21 @@ Synthetic artifacts验证：
 - official test；
 - full 180/75 matrices；
 - method modification或new loss/router。
+
+## 9. Visualization-search extension
+
+用户后续明确授权以“找到具有说服力的样本/数据集”为目标继续筛选。当前扩展严格
+限制为：
+
+- dataset=`ETTm1`；
+- family=`sharing-only`；
+- scales=`1,8,32,128,720`；
+- seed=`2021`；
+- validation only；
+- 其余architecture、objective、optimizer、12×60 regions、0.5% crossover margin
+  与0.5% headroom threshold保持不变；
+- 不重复DLinear；
+- ETTh2仍未授权。
+
+该扩展是figure-candidate search，不是ISCF-BSCA architecture effectiveness gate，
+不得据某一个入选dataset否定或确认完整论文架构。

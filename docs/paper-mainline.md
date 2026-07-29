@@ -17,6 +17,16 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_core_status` | `ISCF-BSCA-v1`=`passed_core_candidate_ready_for_paper_consolidation` |
 
+[Introduction Visualization Candidate Search Extension, 2026-07-29] 用户明确要求
+本轮以获得具有说服力的illustrative visualization为目标，不将figure screening
+用于否定fixed ISCF-BSCA architecture或论文逻辑。Prefix-disagreement已形成
+H720-relative difference view候选，保持85% quantile selection disclosure。
+
+Sharing-demand下一screen固定为ETTm1/seed2021的五个neutral single-scale runs，
+`RUN_MODE=sharing-only`；不重复DLinear，不改变0.5% crossover/headroom thresholds，
+不访问test。ETTh2/full matrix/formal test仍未授权。Decision=
+`continue_visualization_search_without_architecture_rejection`。
+
 [Introduction Evidence Visualization Pilot Remote Launch, 2026-07-29] Initial
 Weather/seed2021 9-run validation-only matrix已从commit
 `9cc2d24e2359310dea2c6fc1764303a2da5d2c65`启动至`529_Lab-3090`。启动前GPU

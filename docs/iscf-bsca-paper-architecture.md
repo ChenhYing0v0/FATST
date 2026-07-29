@@ -8,7 +8,7 @@
 | `version` | `v0.10` |
 | `last_updated` | `2026-07-29` |
 | `paper_candidate` | `ISCF-BSCA-v1` |
-| `current_review_cursor` | 两项evidence的Weather/seed2021 9-run visualization pilot已通过Step7B；remote validation launch next |
+| `current_review_cursor` | illustrative visualization dataset selection active；ETTm1 sharing-only five-scale screen next |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
 | `provisional_content` | Introduction P1--P6 v0.2正文；两项problem-evidence results；Related Work、Method、Experiments、Conclusion |
 | `not_authorized_by_this_document` | 新模型实现、remote training、formal test、按结果调参 |
@@ -1429,3 +1429,4 @@ Coverage boundary：
 | 2026-07-29 | Introduction v0.2 round1 author response | varied-horizon仍欠充分系统发展；CHPC=basic property；P4 evidence pending；P5术语压缩；qualitative advantage only | 先确认P3，再冻结P4 diagnostic与Figure 1 |
 | 2026-07-29 | Introduction problem-evidence v1 | 两项独立实验：native baseline NCHPD；neutral single-scale sharing-risk/CFH；Figure 1置于P2后，Figure 2置于P4后 | Step7A implementation与后续training/test均需新授权 |
 | 2026-07-29 | Introduction evidence visualization pilot | Weather/seed2021共9 runs；85% disagreement quantile；validation only；formal matrices deferred | Step7B pass；remote initial pilot authorized |
+| 2026-07-29 | Visualization candidate search extension | figure screening不作architecture rejection；prefix difference view retained；ETTm1 neutral 5-run screen | thresholds frozen；ETTh2/formal test未授权 |
