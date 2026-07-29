@@ -1,0 +1,73 @@
+{
+  "protocol": "SC-UVHF-INTRO-EVIDENCE-VIZ-v1",
+  "date": "2026-07-29",
+  "role": "exploratory_visualization_only",
+  "user_authorization": "请按你的实验计划继续推进实验工作",
+  "scope_reduction": {
+    "initial_dataset": "Weather",
+    "fallback_order": ["ETTm1", "ETTh2"],
+    "seed": 2021,
+    "stop_after_first_clear_visualization": true,
+    "formal_matrix_deferred": true
+  },
+  "prefix_disagreement": {
+    "baseline": "DLinear-local-source-audited-visualization-carrier",
+    "horizons": [96, 192, 336, 720],
+    "seq_len": 96,
+    "epochs": 50,
+    "patience": 8,
+    "learning_rate": 0.0001,
+    "sample_quantile": 0.85,
+    "split": "validation",
+    "test_accessed": false,
+    "run_count_per_dataset": 4
+  },
+  "sharing_demand": {
+    "carrier": "NeutralSharingExtentForecaster",
+    "sharing_extents": [1, 8, 32, 128, 720],
+    "seq_len": 96,
+    "pred_len": 720,
+    "history_dim": 64,
+    "step_dim": 32,
+    "hidden_dim": 128,
+    "state_dim": 64,
+    "epochs": 20,
+    "patience": 4,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "batch_size": 16,
+    "regions": 12,
+    "region_length": 60,
+    "split": "validation",
+    "test_accessed": false,
+    "run_count_per_dataset": 5
+  },
+  "visualization_selection": {
+    "allow_non_random_example_selection": true,
+    "origin_quantile": 0.85,
+    "channel_quantile": 0.85,
+    "maximum_or_top_1_percent_forbidden": true,
+    "selection_must_be_disclosed": true
+  },
+  "claim_boundary": {
+    "allowed": [
+      "illustrative existence example",
+      "exploratory region-wise risk crossover",
+      "visualization candidate selection"
+    ],
+    "forbidden": [
+      "cross-dataset prevalence",
+      "cross-seed stability",
+      "formal problem-existence pass",
+      "out-of-sample adaptive headroom",
+      "untouched test claim"
+    ]
+  },
+  "authorization": {
+    "local_implementation": true,
+    "remote_training_initial_9_runs": true,
+    "fallback_dataset_runs": false,
+    "formal_test": false,
+    "full_matrix": false
+  }
+}

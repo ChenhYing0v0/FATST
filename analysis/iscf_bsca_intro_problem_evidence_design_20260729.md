@@ -11,9 +11,9 @@
 | `paper_candidate` | frozen `ISCF-BSCA-v1`；本设计不修改最终方法 |
 | `experiment_1` | horizon-specific baseline prefix disagreement |
 | `experiment_2` | future-region sharing-demand heterogeneity |
-| `new_training_authorized` | false |
+| `new_training_authorized` | initial 9-run exploratory visualization pilot only |
 | `formal_test_authorized` | false |
-| `decision_status` | `design_frozen_pending_implementation_authorization` |
+| `decision_status` | `formal_design_deferred_visualization_pilot_step7b_pass` |
 
 本设计将两项证据拆成两条独立链：
 
@@ -710,7 +710,8 @@ diagnostic不能回答命题。只允许回Step 5/6修复diagnostic，不能直�
 - test不得用于修改scope grid、region bins、figure sample或objective；
 - 若remote run预计耗时，只需启动并记录，不持续短间隔值守。
 
-本文件不构成implementation、remote training或formal-test授权。
+原formal design本身不构成implementation、remote training或formal-test授权；
+下方Section 8记录用户随后单独授权的缩减pilot。
 
 ## 6. 与论文段落的对应
 
@@ -754,3 +755,27 @@ repositories为主：
 
 当前Zotero coverage未在本轮核验，因此上述来源记为external
 primary-source audit；正式Related Work整理时仍需补library-presence记录。
+
+## 8. Visualization-first pilot amendment（2026-07-29）
+
+用户要求先降低run数量，并允许为Figure 1选择差异较明显但非极端的案例。正式
+180-checkpoint/75-run designs不删除，但延后到需要generalization evidence时再
+执行。
+
+当前授权pilot：
+
+1. DLinear × Weather × H96/H192/H336/H720 × seed2021，共4 runs；
+2. neutral single-scale × Weather ×
+   $\{1,8,32,128,720\}$ × seed2021，共5 runs；
+3. 只使用validation，不访问test；
+4. prefix origin与channel均选择aggregate disagreement的85% quantile nearest
+   item，不取maximum/top-1%；
+5. Weather得到清晰visualization后立即停止；fallback
+   `ETTm1 -> ETTh2`只记录、不授权；
+6. same-validation region oracle只作descriptive panel，不能写成out-of-sample
+   CFH。
+
+该pilot的角色是`exploratory_visualization_only`。它可以提供Introduction中的
+illustrative existence case，但不能替代正式problem-existence、prevalence、
+cross-seed stability或out-of-sample headroom evidence。详细实现与prelaunch见
+`analysis/iscf_bsca_intro_evidence_visualization_pilot_20260729/step7a_implementation_and_prelaunch.md`。

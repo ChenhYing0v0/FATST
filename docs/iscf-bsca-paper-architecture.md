@@ -5,10 +5,10 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.9` |
+| `version` | `v0.10` |
 | `last_updated` | `2026-07-29` |
 | `paper_candidate` | `ISCF-BSCA-v1` |
-| `current_review_cursor` | Introduction两项problem-evidence design已冻结；下一步为Step7A implementation/invariant gate，需新授权 |
+| `current_review_cursor` | 两项evidence的Weather/seed2021 9-run visualization pilot已通过Step7B；remote validation launch next |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
 | `provisional_content` | Introduction P1--P6 v0.2正文；两项problem-evidence results；Related Work、Method、Experiments、Conclusion |
 | `not_authorized_by_this_document` | 新模型实现、remote training、formal test、按结果调参 |
@@ -861,6 +861,11 @@ exact zero；origin timestamp、scaler roundtrip与prefix shape必须通过。
 更差，也不claim ElasTST等已有varied-horizon methods缺少invariance。D18/A6
 artifacts只可用于evaluator smoke，不进入正式图表。
 
+Visualization-first amendment：先执行DLinear × Weather × seed2021的四个
+horizons，只用validation；overlay选择aggregate disagreement约85% quantile的
+origin/channel，不取maximum。该结果只作illustrative case，不能替代三families、
+五datasets、三seeds的正式prevalence evidence。
+
 ### 6.3 Evidence II：Naive Unified Forecasting
 
 把同一 baseline 改成horizon无关、future-step-indexed unified variant，再在
@@ -1010,6 +1015,11 @@ magnitude difference、单调lead-time difficulty或oracle label routing也不�
 正式设计、统计量、controls、failure attribution与Figure captions见
 `analysis/iscf_bsca_intro_problem_evidence_design_20260729.md`。
 该新证据矩阵按项目治理属于`test_informed`，不得描述为untouched holdout。
+
+Visualization-first amendment：先执行Weather/seed2021的五个neutral
+single-scale runs，只用validation。初始Figure 2允许展示same-validation
+descriptive region oracle，但必须明确标注`not out-of-sample`；正式CFH与
+problem-existence gate继续deferred。
 
 ### 6.5 Design Requirements
 
@@ -1418,3 +1428,4 @@ Coverage boundary：
 | 2026-07-28 | ISCF framework + Introduction P5 v0.6 | ISCF=`Independent Scope-Conditioned Forecasting`；单一`scope-indexed forecast field`；`target-conditioned scope allocation`；P5重写 | 暂时冻结；P6下一轮按新框架重写 |
 | 2026-07-29 | Introduction v0.2 round1 author response | varied-horizon仍欠充分系统发展；CHPC=basic property；P4 evidence pending；P5术语压缩；qualitative advantage only | 先确认P3，再冻结P4 diagnostic与Figure 1 |
 | 2026-07-29 | Introduction problem-evidence v1 | 两项独立实验：native baseline NCHPD；neutral single-scale sharing-risk/CFH；Figure 1置于P2后，Figure 2置于P4后 | Step7A implementation与后续training/test均需新授权 |
+| 2026-07-29 | Introduction evidence visualization pilot | Weather/seed2021共9 runs；85% disagreement quantile；validation only；formal matrices deferred | Step7B pass；remote initial pilot authorized |

@@ -1,5 +1,26 @@
 # Research Roadmap
 
+## Introduction Evidence Visualization Pilot Step7A/7B (2026-07-29)
+
+用户将两项Introduction evidence的近期目标收窄为visualization-first：
+
+- initial dataset=`Weather`，seed=`2021`；
+- prefix：DLinear H96/H192/H336/H720=`4 runs`；
+- sharing：neutral s1/s8/s32/s128/s720=`5 runs`；
+- total=`9 validation-only runs`；
+- prefix example选择85% disagreement quantile，不取maximum/top-1%；
+- Weather清晰即停止；fallback ETTm1/ETTh2未授权。
+
+Neutral Step7A实现保持五scales exact matched parameters=`111312`，输出
+`[B,720,C]`、candidate/pooled states=`[B,C,720,64]`，14/14 parameter groups
+gradient pass；block sharing与endpoint difference contracts通过。两套figure
+analyzers、DLinear `--skip-test` artifact path、9-job remote runner与config均已
+完成，synthetic/local/dry-run gates通过。
+
+Decision=`intro_evidence_visualization_step7b_pass_remote_launch_next`。当前授权
+只覆盖initial 9 runs与validation analysis；formal design仍保留但deferred，
+fallback/full matrix/formal test=false。
+
 ## Introduction Problem-Evidence Design v1 (2026-07-29)
 
 Introduction证明实验已从旧的单一三联图拆成两项独立、可失败的protocol：

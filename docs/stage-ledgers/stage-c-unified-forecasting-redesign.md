@@ -9,7 +9,7 @@
 | `active_question` | 两项Introduction problem evidence能否分别建立material prefix disagreement与future-region sharing-demand heterogeneity |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
-| `active_candidates` | `ISCF-BSCA-v1` three-seed paper-core pass；Introduction evidence v1 design frozen，results pending |
+| `active_candidates` | `ISCF-BSCA-v1` frozen paper core；Introduction 9-run visualization pilot Step7B pass |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
@@ -20,27 +20,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | BSCA confirmation Step10 complete；Introduction evidence Step6 design frozen |
+| `current_11_step` | Introduction evidence visualization pilot Step7B prelaunch pass |
 | `current_candidate` | problem-evidence pair=`INTRO-CHPD-v1` + `SC-UVHF-FRSD-D1`；paper method remains frozen `ISCF-BSCA-v1` |
-| `latest_decision` | `intro_problem_evidence_v1_design_frozen_pending_step7a_authorization` |
-| `next_required_action` | obtain authorization for Introduction evidence Step7A local implementation/invariant gate |
-| `method_training_authorized` | false；confirmation authorization consumed，new training/test requires new freeze |
+| `latest_decision` | `intro_evidence_visualization_step7b_pass_remote_launch_next` |
+| `next_required_action` | commit/push，remote GPU preflight与initial Weather 9-run validation launch |
+| `method_training_authorized` | visualization pilot only；initial 9 runs authorized，fallback/full/formal test false |
 | `rollback_point` | CHPD weak -> retain formal CHPC argument only；FRSD negative -> revise P4/P5 problem-to-method narrative；do not tune exact BSCA-v1 |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Introduction evidence Step6 design frozen；Step7A pending authorization |
+| `current_step` | visualization pilot Step7A implementation + Step7B prelaunch complete |
 | `problem` | P2的material prefix disagreement与P4的future-region sharing-demand heterogeneity尚缺独立问题证据 |
-| `existence_evidence` | current prose/theory only；D18/A6/ISCF artifacts不得作为primary evidence |
+| `existence_evidence` | implementation contracts only；visual results pending；D18/A6/ISCF artifacts仍不得作为primary evidence |
 | `idea` | native horizon-specific NCHPD + neutral capacity-matched single-scale sharing-risk diagnostic |
 | `theory_check` | CHPC evidence不涉及accuracy superiority；sharing diagnostic保持fixed-past、pointwise MSE、H-free，只检验finite-capacity risk |
-| `design` | Experiment 1复用180 main-baseline checkpoints；Experiment 2为75 end-to-end runs、12 regions、validation-selected test CFH |
+| `design` | initial Weather/seed2021 9-run validation pilot；85% quantile illustration；formal 180/75 designs deferred |
 | `narrative_gate` | pass to diagnostic design；problem/method distinction、ElasTST/N-HiTS prior boundary与non-circular carrier已明确 |
-| `effectiveness_gate` | pending；validation不能pass/reject，formal test需另行授权 |
-| `artifacts` | `analysis/iscf_bsca_intro_problem_evidence_design_20260729.md`；paper architecture v0.9 |
-| `decision` | `intro_problem_evidence_v1_design_frozen_pending_step7a_authorization` |
+| `effectiveness_gate` | exploratory visualization only；validation不能formal pass/reject |
+| `artifacts` | pilot config、neutral model、two analyzers、remote runner、Step7A report/code explanation |
+| `decision` | `intro_evidence_visualization_step7b_pass_remote_launch_next` |
 
 ## Frozen Carrier Contract
 
@@ -64,8 +64,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
-| `INTRO-CHPD-v1` | `design_frozen_pending_step7a` | prevailing horizon-specific systems是否产生material overlapping disagreement | diagnostic narrative pass；不claim accuracy disadvantage或all-method violation | pending；NCHPD/RDA official prediction audit未执行 | implement exporter/evaluator after authorization；reuse main-baseline checkpoints |
-| `SC-UVHF-FRSD-D1` | `design_frozen_pending_step7a` | matched fixed sharing extent的risk optimum是否随future region稳定变化 | problem evidence only；neutral single-scale carrier，no ISCF/BSCA circularity | pending；75-run matrix/test未授权 | implement local tensor/invariant gate after authorization |
+| `INTRO-CHPD-v1` | `visualization_pilot_step7b_pass` | independently trained horizon models能否给出清晰overlap disagreement | illustrative only；85% quantile disclosed，not prevalence | local analyzer/export contract pass；Weather 4 runs pending | remote validation launch authorized |
+| `SC-UVHF-FRSD-D1` | `visualization_pilot_step7b_pass` | matched fixed sharing extent的risk optimum是否随future region变化 | neutral single-scale carrier；same-val oracle descriptive only | 111312 params all scales；shape/gradient/analyzer pass；5 runs pending | remote validation launch authorized |
 | `ISCF-BSCA-v1` | `passed_core_candidate_ready_for_paper_consolidation` | broad train-time anchor能否稳定scope-gradient access并提升ISCF | ISCF-specific chain pass；generic KL novelty not claimed | three-seed +0.3541/+0.3073%；3/3 seeds、4/5 datasets、4/4 horizons | freeze exact v1；consolidate paper claims/limitations before baselines |
 | `SC-ISCF-UPA-D2` | `superseded_by_bsca_v1` | information-free uniform train-time anchor能否复现ARMERR/SHUFFLED gain | user chose outcome-first method route | not executed as separate diagnostic | retain design history only |
 | `SC-ISCF-PSA-D1` | `control_complete_h2_supported` | contemporaneous no-route EQUAL能否解释new ARMERR/SHUFFLED公共gain | not a method；只隔离H2/H3 | exact EQUAL tie；controls +0.6577/+0.6557%；H2 pass | feeds UPA-D2 only |

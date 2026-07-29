@@ -17,6 +17,24 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_core_status` | `ISCF-BSCA-v1`=`passed_core_candidate_ready_for_paper_consolidation` |
 
+[Introduction Evidence Visualization Pilot Step7A/7B, 2026-07-29] 用户要求先
+减少runs，并允许选择较明显但非极端的prefix-disagreement案例。正式180 baseline
+checkpoints与75 neutral runs延后；当前只授权Weather/seed2021的9-run
+validation-only pilot：DLinear四horizons + neutral五sharing extents。
+
+Prefix overlay的origin和channel固定选aggregate disagreement 85% quantile nearest
+item，禁止maximum/top-1%，并公开实际percentile。Neutral family参数量在五scales
+完全相同（111,312），统一tensor path为
+`X[B,96,C] -> R[B,C,64] -> U[B,C,720,64] -> pooled Z -> Y[B,720,C]`；
+sharing extent只改变parameter-free pooling。14/14 parameter groups均有finite
+nonzero gradient，within-block gap=0，同权重s1-vs-s720 output gap=0.080029。
+
+两套analyzer、DLinear validation-only exporter、remote 9-job runner与config已
+完成；synthetic figure pipeline、one-epoch DLinear Weather smoke与remote
+dry-run全部通过。所有pilot artifacts显式`test_accessed=false`。Decision=
+`intro_evidence_visualization_step7b_pass_remote_launch_next`。用户授权覆盖initial
+9 runs，不覆盖fallback dataset、formal test或full matrix。
+
 [Introduction Problem-Evidence Design, 2026-07-29] 已将Introduction的两项
 证明实验冻结为两条独立证据链，详细protocol为
 `analysis/iscf_bsca_intro_problem_evidence_design_20260729.md`。
