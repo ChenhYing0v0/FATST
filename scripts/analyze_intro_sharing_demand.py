@@ -18,6 +18,13 @@ import matplotlib.pyplot as plt
 
 SCALES = (1, 8, 32, 128, 720)
 REGION_LENGTH = 60
+SCALE_COLORS = {
+    1: "#D55E00",
+    8: "#E69F00",
+    32: "#0072B2",
+    128: "#CC79A7",
+    720: "#009E73",
+}
 
 
 def parse_args() -> argparse.Namespace:
@@ -202,6 +209,10 @@ def compute_statistics(
         ],
         "crossing_pairs": crossing_pairs,
         "crossing_pair_count": len(crossing_pairs),
+        "crossover_visualization_candidate": bool(
+            len(set(best_indices.tolist())) >= 2
+            and bool(crossing_pairs)
+        ),
         "visualization_signal": bool(
             len(set(best_indices.tolist())) >= 2
             and bool(crossing_pairs)
@@ -216,6 +227,16 @@ def compute_statistics(
         region_rows,
         summary,
     )
+
+
+def select_display_scales(summary: dict[str, Any]) -> list[int]:
+    fixed_scale = int(summary["fixed_scale"])
+    if summary["crossing_pairs"]:
+        left, right = summary["crossing_pairs"][0].split("_vs_")
+        candidates = [int(left.removeprefix("s")), fixed_scale, int(right.removeprefix("s"))]
+    else:
+        candidates = [1, fixed_scale, 720]
+    return list(dict.fromkeys(candidates))
 
 
 def plot_figure(
@@ -261,11 +282,12 @@ def plot_figure(
     colorbar = figure.colorbar(image, ax=heatmap_axis, shrink=0.82)
     colorbar.set_label("MSE change vs best fixed scale (%)")
 
-    fixed_index = SCALES.index(int(summary["fixed_scale"]))
+    fixed_scale = int(summary["fixed_scale"])
+    fixed_index = SCALES.index(fixed_scale)
     fixed_step = step_matrix[fixed_index]
     future_steps = np.arange(1, step_matrix.shape[1] + 1)
-    curve_colors = {1: "#D55E00", 32: "#0072B2", 720: "#009E73"}
-    for scale in (1, 32, 720):
+    display_scales = select_display_scales(summary)
+    for scale in display_scales:
         scale_index = SCALES.index(scale)
         relative_curve = (
             step_matrix[scale_index] - fixed_step
@@ -273,7 +295,7 @@ def plot_figure(
         curve_axis.plot(
             future_steps,
             moving_average(relative_curve) * 100.0,
-            color=curve_colors[scale],
+            color=SCALE_COLORS[scale],
             linewidth=1.4,
             label=f"s={scale}",
         )
@@ -285,37 +307,63 @@ def plot_figure(
     curve_axis.set_title("(b) Step-wise sharing-risk differences")
     curve_axis.legend(frameon=False)
     curve_axis.grid(alpha=0.15)
-    if not summary["visualization_signal"]:
+    if summary["crossover_visualization_candidate"]:
+        pair = summary["crossing_pairs"][0].replace("_vs_", " vs ")
         curve_axis.text(
             0.02,
             0.97,
-            "No material crossover under the frozen margin",
+            f"Margin-qualified crossover: {pair}; best fixed: s{fixed_scale}",
+            transform=curve_axis.transAxes,
+            va="top",
+            color="#555555",
+            fontsize=9,
+        )
+    else:
+        curve_axis.text(
+            0.02,
+            0.97,
+            "No margin-qualified region-wise crossover",
             transform=curve_axis.transAxes,
             va="top",
             color="#555555",
             fontsize=9,
         )
 
-    fixed_risk = float(summary["fixed_validation_mse"])
-    gains = (fixed_risk - np.mean(region_matrix, axis=1)) / fixed_risk
-    labels = [f"s={scale}" for scale in SCALES] + ["Region\noracle"]
-    values = [*list(gains * 100.0), summary["region_oracle_headroom"] * 100.0]
-    colors = ["#9ECAE1"] * len(SCALES) + ["#F28E2B"]
-    bar_axis.bar(np.arange(len(labels)), values, color=colors)
+    fixed_region = region_matrix[fixed_index]
+    contrast_scales = [
+        scale for scale in display_scales if scale != fixed_scale
+    ]
+    region_x = np.arange(1, region_matrix.shape[1] + 1)
+    width = 0.72 / max(len(contrast_scales), 1)
+    for index, scale in enumerate(contrast_scales):
+        scale_index = SCALES.index(scale)
+        contrast = (
+            region_matrix[scale_index] - fixed_region
+        ) / np.maximum(fixed_region, 1e-12)
+        offset = (index - (len(contrast_scales) - 1) / 2.0) * width
+        bar_axis.bar(
+            region_x + offset,
+            contrast * 100.0,
+            width=width,
+            color=SCALE_COLORS[scale],
+            label=f"s={scale}",
+        )
     bar_axis.axhline(0.0, color="#555555", linewidth=0.9)
-    bar_axis.set_xticks(np.arange(len(labels)), labels=labels, rotation=30)
-    bar_axis.set_ylabel("Gain vs best fixed scale (%)")
-    bar_axis.set_title("(c) Validation descriptive headroom")
+    bar_axis.set_xticks(region_x)
+    bar_axis.set_xlabel("60-step future region")
+    bar_axis.set_ylabel(f"MSE change vs best fixed s={fixed_scale} (%)")
+    bar_axis.set_title("(c) Region-wise scale contrast")
     bar_axis.text(
         0.02,
         0.98,
-        "Exploratory; not out-of-sample",
+        "Negative values favor the displayed scale",
         transform=bar_axis.transAxes,
         ha="left",
         va="top",
         fontsize=8,
         color="#555555",
     )
+    bar_axis.legend(frameon=False, fontsize=8)
     bar_axis.grid(axis="y", alpha=0.15)
 
     args.output_dir.mkdir(parents=True, exist_ok=True)

@@ -219,16 +219,21 @@ region_risk [5,12]
 以全域validation MSE最低的single scale为`best fixed`，画：
 
 1. sharing extent × future region relative-risk heatmap；
-2. $s=1,32,720$相对best fixed的31-step smoothed risk curves；
-3. 五个fixed scales与same-validation region oracle的descriptive headroom。
+2. 第一组达到frozen margin的crossing pair与best-fixed scale的31-step smoothed
+   risk curves；
+3. 同一组display scales相对best-fixed scale的12-region risk contrast。
 
-第三个panel明确写入`Exploratory; not out-of-sample`。只有未来正式matrix才能把它
-替换为validation-selected schedule的test CFH。
+display scales由统计量自动确定，而不是手工按dataset选择：有margin-qualified
+crossing时使用`first crossing pair + best fixed`；否则使用
+`s1 + best fixed + s720`。第三panel直接展示问题层面的region-wise sign与magnitude，
+不再用全域region-oracle headroom替代crossover证据；oracle数值仍保留在
+`summary.json`中。
 
-若`visualization_signal=false`，第二个panel使用中性的
-`Step-wise sharing-risk differences`标题，并显式标注frozen margin下没有
-material crossover；第一个panel的逐region最小值轨迹称为`Descriptive argmin`。
-这避免把幅度很小的argmin切换包装成已支持的heterogeneity结论。
+`crossover_visualization_candidate`只要求至少两个descriptive region winners且
+存在margin-qualified crossing pair，用于区分“问题存在性图是否可读”；
+`visualization_signal`继续保留更严格的oracle-headroom条件，两者不能混用。
+第二panel会公开displayed crossing pair与best-fixed scale；若没有qualified pair，
+则明确标注。第一个panel的逐region最小值轨迹称为`Descriptive argmin`。
 
 输出：
 
