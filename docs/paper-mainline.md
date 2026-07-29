@@ -27,6 +27,12 @@ Sharing-demand下一screen固定为ETTm1/seed2021的五个neutral single-scale r
 不访问test。ETTh2/full matrix/formal test仍未授权。Decision=
 `continue_visualization_search_without_architecture_rejection`。
 
+ETTm1 sharing-only五尺度screen已从commit
+`465931fd2fb7ac41929dc00fad6e857fbd4b27e3`启动。GPU 0/1/2 preflight与CUDA
+resource smoke通过，首批s1/s8/s32健康运行，test=false。Current decision=
+`ettm1_sharing_visualization_screen_running`。启动记录：
+`analysis/iscf_bsca_intro_evidence_visualization_pilot_20260729/ettm1_sharing_only_remote_launch.md`。
+
 [Introduction Evidence Visualization Pilot Remote Launch, 2026-07-29] Initial
 Weather/seed2021 9-run validation-only matrix已从commit
 `9cc2d24e2359310dea2c6fc1764303a2da5d2c65`启动至`529_Lab-3090`。启动前GPU

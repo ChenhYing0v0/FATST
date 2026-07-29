@@ -8,7 +8,7 @@
 | `version` | `v0.10` |
 | `last_updated` | `2026-07-29` |
 | `paper_candidate` | `ISCF-BSCA-v1` |
-| `current_review_cursor` | illustrative visualization dataset selection active；ETTm1 sharing-only five-scale screen next |
+| `current_review_cursor` | illustrative visualization dataset selection active；ETTm1 sharing-only five-scale screen running |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
 | `provisional_content` | Introduction P1--P6 v0.2正文；两项problem-evidence results；Related Work、Method、Experiments、Conclusion |
 | `not_authorized_by_this_document` | 新模型实现、remote training、formal test、按结果调参 |

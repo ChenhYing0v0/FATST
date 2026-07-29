@@ -11,6 +11,11 @@ scales、training protocol、12×60 regions与frozen thresholds均不变；不�
 DLinear，不访问test。ETTh2/full matrix/formal test=false。Decision=
 `continue_visualization_search_without_architecture_rejection`。
 
+ETTm1 five-scale screen已在commit `465931f`上启动。GPU preflight与resource smoke
+通过，s1/s8/s32首批jobs健康；current decision=
+`ettm1_sharing_visualization_screen_running`。完成后只评估figure候选，不据此
+修改或否定fixed ISCF-BSCA architecture。
+
 ## Introduction Evidence Visualization Pilot Remote Running (2026-07-29)
 
 commit `9cc2d24e2359310dea2c6fc1764303a2da5d2c65`已推送并在
