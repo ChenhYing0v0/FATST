@@ -39,6 +39,13 @@ candidate/LayerNorm gradients和loop reference在double precision下最大差
 `full_search_step7a_pass_remote_launch_next`。设计：
 `analysis/iscf_bsca_intro_evidence_full_search_20260730/design_and_figure_contract.md`。
 
+Remote retry已从commit `0808c80`启动。五dataset construction、remote dry-run与
+三GPU preflight通过；retry前完整artifacts=`13/25 neutral + 6/20 DLinear`，
+remaining=`26`。初始active jobs为ETTm2-s1、ETTh1-s1与ETTm2-H720，显存均低于
+0.6 GiB，无即时错误。Current decision=
+`full_search_retry1_running_wait_for_user_completion_notice`。记录：
+`analysis/iscf_bsca_intro_evidence_full_search_20260730/remote_launch_record.md`。
+
 [Previous Visualization Candidates, 2026-07-29; provisional and superseded by
 full search] Weather prefix与ETTm1 sharing图保留为已完成validation artifacts，
 但不再视为Introduction最终选图；它们仅作为full-search ranking的两个已有候选，

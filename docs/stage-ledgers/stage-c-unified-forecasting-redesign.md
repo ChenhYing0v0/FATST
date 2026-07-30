@@ -20,10 +20,10 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Introduction evidence full-search Step7A complete；remote Step8 next |
+| `current_11_step` | Introduction evidence full-search Step8 retry1 running |
 | `current_candidate` | problem-evidence pair=`INTRO-CHPD-v1` + `SC-UVHF-FRSD-D1`；paper method remains frozen `ISCF-BSCA-v1` |
-| `latest_decision` | `full_search_step7a_pass_remote_launch_next` |
-| `next_required_action` | 提交推送后补齐31个validation runs，跨五datasets统一排序并视觉审计 |
+| `latest_decision` | `full_search_retry1_running_wait_for_user_completion_notice` |
+| `next_required_action` | 等待26个remaining validation runs完成，再同步45/45 ranking与视觉审计 |
 | `method_training_authorized` | validation-only full figure search authorized；31 new runs；formal test false |
 | `rollback_point` | CHPD weak -> retain formal CHPC argument only；FRSD negative -> revise P4/P5 problem-to-method narrative；do not tune exact BSCA-v1 |
 
@@ -31,7 +31,7 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | full visualization search Step7A local implementation complete |
+| `current_step` | full visualization search Step8 retry1 remote running |
 | `problem` | P2的material prefix disagreement与P4的future-region sharing-demand heterogeneity尚缺独立问题证据 |
 | `existence_evidence` | existing Weather prefix与Weather/ETTm1 sharing artifacts只是provisional candidates；full five-dataset comparison pending |
 | `idea` | disclosed maximum joint prefix selection + sample-level supported multi-scope winner selection |
@@ -39,8 +39,8 @@
 | `design` | 45-run artifact target，复用14、补31；DLinear与neutral matched scales；global three-GPU queue；validation-only |
 | `narrative_gate` | pass to diagnostic design；problem/method distinction、ElasTST/N-HiTS prior boundary与non-circular carrier已明确 |
 | `effectiveness_gate` | visualization selection only；不得否定fixed architecture或替代formal evidence |
-| `artifacts` | full-search design、maximum/sample analyzers、cross-dataset ranker、dynamic runner；remote results pending |
-| `decision` | `full_search_step7a_pass_remote_launch_next` |
+| `artifacts` | full-search design、analyzers/ranker/runner、remote launch record；retry1 results pending |
+| `decision` | `full_search_retry1_running_wait_for_user_completion_notice` |
 
 ## Frozen Carrier Contract
 

@@ -22,6 +22,12 @@ first ordering，消除固定GPU 0上的$s=1$ critical path。Local checker、Py
 compile、JSON parse、bash syntax与full runner dry-run均通过。Decision=
 `full_search_step7a_pass_remote_launch_next`。
 
+首次launch暴露ETTh1/ETTm2未注册的prelaunch coverage fault；driver已及时停止，
+该故障未进入训练结果。registry与checker修复后，commit `0808c80`的retry通过
+五dataset construction、remote dry-run和三GPU preflight。retry前已完成
+neutral=`13/25`、DLinear=`6/20`，remaining=`26`；首批三jobs健康且显存均低于
+0.6 GiB。Decision=`full_search_retry1_running_wait_for_user_completion_notice`。
+
 ## Previous Introduction Figure Candidates (2026-07-29; provisional)
 
 visualization-first search已得到两张论文候选图：
