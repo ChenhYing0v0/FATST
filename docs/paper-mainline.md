@@ -48,6 +48,15 @@ User review（2026-07-30）：两张Introduction problem-evidence figures当前�
 canonical provenance。该视觉通过不改变其validation-only illustrative claim
 boundary。
 
+Introduction draft integration（2026-07-30）：两张approved figures及其formal
+captions已写入
+`docs/paper-drafts/iscf-bsca-introduction-initial-draft.md` v0.5。Figure 1正文
+同时报告selected shared-prefix raw differences与all-validation NCHPD range，
+并披露maximum aggregate validation selection；Figure 2正文报告five-scale
+region winners、bidirectional crossovers与8.1% descriptive headroom，并明确
+该数值不是learned allocation的out-of-sample gain。Introduction的问题证据链
+已完成；仅headline method-performance result sentence仍等待formal main tables。
+
 [Introduction Evidence Full Visualization Search Step7A, 2026-07-30] 用户要求
 不再使用85% quantile的保守案例，并授权补齐五datasets后统一选择最清晰的
 validation example。当前冻结
