@@ -1,0 +1,35 @@
+{
+  "directory_role": "approved manuscript-facing figure assets",
+  "review_status": "approved_for_manuscript_draft",
+  "review_date": "2026-07-30",
+  "source_commit": "7e195fd",
+  "test_accessed": false,
+  "figures": [
+    {
+      "id": "figure_intro_prefix_disagreement",
+      "manuscript_section": "Introduction",
+      "role": "baseline prefix disagreement evidence",
+      "formats": [
+        "svg",
+        "pdf",
+        "png",
+        "tiff"
+      ],
+      "source_directory": "analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures",
+      "claim_boundary": "validation-only illustrative evidence"
+    },
+    {
+      "id": "figure_intro_sharing_heterogeneity",
+      "manuscript_section": "Introduction",
+      "role": "future-region sharing-demand heterogeneity evidence",
+      "formats": [
+        "svg",
+        "pdf",
+        "png",
+        "tiff"
+      ],
+      "source_directory": "analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures",
+      "claim_boundary": "validation-only illustrative evidence"
+    }
+  ]
+}

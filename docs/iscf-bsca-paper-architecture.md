@@ -5,10 +5,10 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.16` |
+| `version` | `v0.17` |
 | `last_updated` | `2026-07-30` |
 | `paper_candidate` | `ISCF-BSCA-v1` |
-| `current_review_cursor` | Prefix Figure 1 two-panel layout and thin-line visibility refinement complete；caption integration next |
+| `current_review_cursor` | Introduction Figures 1--2 approved for manuscript draft and centralized under `paper-figures/`；caption integration next |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
 | `provisional_content` | Introduction P1--P6 v0.2正文；两项problem-evidence results；Related Work、Method、Experiments、Conclusion |
 | `not_authorized_by_this_document` | 新模型实现、remote training、formal test、按结果调参 |
@@ -1473,3 +1473,4 @@ Coverage boundary：
 | 2026-07-30 | Nature figure refinement | exact 183 mm；muted semantic palettes；compact prefix triangle；region-best excess-risk sharing heatmap | captions disclose maximum validation selection；formal prevalence/CFH仍deferred |
 | 2026-07-30 | Prefix two-panel refinement | merge trajectory+difference；solid colors + staggered shapes + separation strokes；mean-difference inset | preserve raw statistics；caption更新为a/b两panel |
 | 2026-07-30 | Prefix trajectory density refinement | forecast lines 0.82--0.95 pt；marker stride 18；subtle 0.38-pt under-stroke | reduce visual ink without changing data or evidence structure |
+| 2026-07-30 | Introduction figures accepted for draft | Prefix disagreement + sharing-demand heterogeneity；SVG/PDF/PNG/TIFF centralized in `paper-figures/` | current manuscript-ready copies；validation-only claim boundary unchanged |

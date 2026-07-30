@@ -42,6 +42,12 @@ static parser不能计算width变量，PDF media box实测183 mm。Decision=
 dataset/sample search；不新增method、loss或router。报告：
 `analysis/iscf_bsca_intro_evidence_full_search_20260730/result_selection_and_figure_report.md`。
 
+User review（2026-07-30）：两张Introduction problem-evidence figures当前均
+`approved_for_manuscript_draft`。论文侧稳定副本统一存放于`paper-figures/`，
+包含SVG/PDF/PNG/TIFF；analysis目录继续作为source data、生成记录和QA的
+canonical provenance。该视觉通过不改变其validation-only illustrative claim
+boundary。
+
 [Introduction Evidence Full Visualization Search Step7A, 2026-07-30] 用户要求
 不再使用85% quantile的保守案例，并授权补齐五datasets后统一选择最清晰的
 validation example。当前冻结
