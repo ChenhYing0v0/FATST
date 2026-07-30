@@ -72,7 +72,11 @@ def check_vectorized_pooling_equivalence() -> dict[str, float | bool]:
         reference = reference_pooled_states(model, candidate_reference)
         maximum_output_gap = max(
             maximum_output_gap,
-            float(torch.max(torch.abs(vectorized - reference))),
+            float(
+                torch.max(
+                    torch.abs(vectorized - reference)
+                ).detach()
+            ),
         )
         vector_gradients = torch.autograd.grad(
             (vectorized * upstream).sum(),
@@ -97,7 +101,7 @@ def check_vectorized_pooling_equivalence() -> dict[str, float | bool]:
                     torch.abs(
                         vector_gradients[0] - reference_gradients[0]
                     )
-                )
+                ).detach()
             ),
         )
         maximum_weight_gradient_gap = max(
@@ -107,7 +111,7 @@ def check_vectorized_pooling_equivalence() -> dict[str, float | bool]:
                     torch.abs(
                         vector_gradients[1] - reference_gradients[1]
                     )
-                )
+                ).detach()
             ),
         )
         maximum_bias_gradient_gap = max(
@@ -117,7 +121,7 @@ def check_vectorized_pooling_equivalence() -> dict[str, float | bool]:
                     torch.abs(
                         vector_gradients[2] - reference_gradients[2]
                     )
-                )
+                ).detach()
             ),
         )
     tolerance = 1e-10
@@ -173,9 +177,15 @@ def check_model_contract() -> dict[str, float | int | bool]:
             block = pooled[:, :, start:end]
             maximum_within_block_gap = max(
                 maximum_within_block_gap,
-                float(torch.max(torch.abs(block - block[:, :, :1]))),
+                float(
+                    torch.max(
+                        torch.abs(block - block[:, :, :1])
+                    ).detach()
+                ),
             )
-    endpoint_gap = float(torch.max(torch.abs(outputs[1] - outputs[720])))
+    endpoint_gap = float(
+        torch.max(torch.abs(outputs[1] - outputs[720])).detach()
+    )
     if maximum_within_block_gap > 1e-6:
         raise RuntimeError(
             f"pooled-state sharing contract failed: {maximum_within_block_gap}"
