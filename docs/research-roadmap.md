@@ -1,5 +1,24 @@
 # Research Roadmap
 
+## Introduction Evidence Full Search Result (2026-07-30)
+
+五dataset validation matrix=`25/25 neutral + 20/20 DLinear`，test=false。最终
+Figure 1选择ETTh2 maximum-disagreement origin805/channel0：shared-96 raw
+differences相对H720为2.16--2.51，ETTh2 macro NCHPD五dataset最高。Figure 2选择
+ETTm2 maximum-heterogeneity origin4177：五scales各赢2--3个regions，10/10 pairs
+qualified crossing，mean winner margin=10.266%，descriptive headroom=8.112%。
+
+两图已改为：
+
+- prefix overlap trajectories + H720-relative differences + all-validation
+  NCHPD heatmap；
+- scope-region risk heatmap + winner-colored realized-gain bars。
+
+SVG/PDF/PNG/TIFF与source data package已生成；Nature QA=13 pass/1 warn/0 fail。
+Decision=`two_intro_figures_pass_illustrative_gate_etth2_prefix_ettm2_sharing`。
+停止dataset/sample search；下一步转向caption、Problem Formulation与后续paper
+experiment consolidation。
+
 ## Introduction Evidence Full Visualization Search Step7A (2026-07-30)
 
 用户授权补齐五datasets并从所有validation results中选择最清晰的prefix
@@ -26,7 +45,7 @@ compile、JSON parse、bash syntax与full runner dry-run均通过。Decision=
 该故障未进入训练结果。registry与checker修复后，commit `0808c80`的retry通过
 五dataset construction、remote dry-run和三GPU preflight。retry前已完成
 neutral=`13/25`、DLinear=`6/20`，remaining=`26`；首批三jobs健康且显存均低于
-0.6 GiB。Decision=`full_search_retry1_running_wait_for_user_completion_notice`。
+0.6 GiB。retry最终正常完成，current decision由上方result entry取代。
 
 ## Previous Introduction Figure Candidates (2026-07-29; provisional)
 

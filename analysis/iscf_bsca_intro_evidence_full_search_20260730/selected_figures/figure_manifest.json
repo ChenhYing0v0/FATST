@@ -1,0 +1,61 @@
+{
+  "split": "validation",
+  "test_accessed": false,
+  "prefix": {
+    "dataset": "ETTh2",
+    "seed": 2021,
+    "origin_index": 805,
+    "channel_index": 0,
+    "selection_mode": "maximum",
+    "selected_joint_score": 0.1438700407743454,
+    "searched_origin_channel_cells": 15127,
+    "source_data": {
+      "forecast": "analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures/source_data/prefix_etth2/selected_forecast_data.csv",
+      "pair_metrics": "analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures/source_data/prefix_etth2/pair_metrics.csv",
+      "summary": "analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures/source_data/prefix_etth2/summary.json"
+    },
+    "outputs": {
+      "svg": "analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures/figure_intro_prefix_disagreement.svg",
+      "pdf": "analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures/figure_intro_prefix_disagreement.pdf",
+      "png": "analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures/figure_intro_prefix_disagreement.png",
+      "tiff": "analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures/figure_intro_prefix_disagreement.tiff"
+    }
+  },
+  "sharing": {
+    "dataset": "ETTm2",
+    "seed": 2021,
+    "selected": {
+      "origin_index": 4177,
+      "supported_winner_count": 5,
+      "distinct_winner_count": 5,
+      "winner_entropy": 0.9873179343530823,
+      "qualified_crossing_pair_count": 10,
+      "mean_winner_margin": 0.10266020322507295,
+      "sample_oracle_headroom": 0.08112478897187843,
+      "best_fixed_scale": 720,
+      "best_fixed_validation_mse": 0.24318716711002508,
+      "region_oracle_validation_mse": 0.22345865949755536,
+      "s1_winner_regions": 2,
+      "s8_winner_regions": 2,
+      "s32_winner_regions": 2,
+      "s128_winner_regions": 3,
+      "s720_winner_regions": 3
+    },
+    "source_data": {
+      "region_risk": "analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures/source_data/sharing_ettm2/selected_region_risk.csv",
+      "summary": "analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures/source_data/sharing_ettm2/summary.json"
+    },
+    "outputs": {
+      "svg": "analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures/figure_intro_sharing_heterogeneity.svg",
+      "pdf": "analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures/figure_intro_sharing_heterogeneity.pdf",
+      "png": "analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures/figure_intro_sharing_heterogeneity.png",
+      "tiff": "analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures/figure_intro_sharing_heterogeneity.tiff"
+    }
+  },
+  "claim_boundary": [
+    "illustrative validation example",
+    "not prevalence evidence",
+    "not method effectiveness evidence",
+    "not an untouched test claim"
+  ]
+}

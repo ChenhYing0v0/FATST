@@ -1,0 +1,48 @@
+{
+  "dataset": "ETTm2",
+  "seed": 2021,
+  "split": "validation",
+  "test_accessed": false,
+  "parameter_count": 111312,
+  "origin_count": 10801,
+  "channel_count": 7,
+  "maximum_target_alignment_gap": 0.0,
+  "maximum_history_alignment_gap": 0.0,
+  "maximum_origin_alignment_gap": 0.0,
+  "selection_policy": {
+    "unit": "one origin aggregated over all channels",
+    "region_length": 60,
+    "crossing_margin": 0.005,
+    "lexicographic_order": [
+      "supported_winner_count",
+      "distinct_winner_count",
+      "winner_entropy",
+      "qualified_crossing_pair_count",
+      "mean_winner_margin",
+      "sample_oracle_headroom"
+    ],
+    "disclosure": "maximum heterogeneity candidate"
+  },
+  "selected": {
+    "origin_index": 4177,
+    "supported_winner_count": 5,
+    "distinct_winner_count": 5,
+    "winner_entropy": 0.9873179343530823,
+    "qualified_crossing_pair_count": 10,
+    "mean_winner_margin": 0.10266020322507295,
+    "sample_oracle_headroom": 0.08112478897187843,
+    "best_fixed_scale": 720,
+    "best_fixed_validation_mse": 0.24318716711002508,
+    "region_oracle_validation_mse": 0.22345865949755536,
+    "s1_winner_regions": 2,
+    "s8_winner_regions": 2,
+    "s32_winner_regions": 2,
+    "s128_winner_regions": 3,
+    "s720_winner_regions": 3
+  },
+  "figures": {
+    "svg": "/home/yingch/exp_outputs/r-2026-fatst/intro_evidence_visualization_pilot_v1/_analysis_full/ETTm2/sharing_sample/sharing_sample_candidate.svg",
+    "png": "/home/yingch/exp_outputs/r-2026-fatst/intro_evidence_visualization_pilot_v1/_analysis_full/ETTm2/sharing_sample/sharing_sample_candidate.png"
+  },
+  "claim_role": "exploratory_visualization_only"
+}

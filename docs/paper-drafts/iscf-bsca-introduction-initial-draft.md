@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Clean manuscript-facing draft of the Introduction |
-| `version` | `v0.3-round1-evidence-figures-selected` |
-| `date` | `2026-07-29` |
+| `version` | `v0.4-round1-full-search-evidence-selected` |
+| `date` | `2026-07-30` |
 | `paragraphs_1_6` | Provisional revision responding to the first author review-response decisions |
 | `citation_status` | Provisional citation keys inserted; bibliography integration remains pending |
 | `result_status` | Headline empirical results remain to be inserted after the main comparison tables are complete |
-| `problem_evidence_status` | Two validation-only illustrative problem-evidence figures selected |
+| `problem_evidence_status` | ETTh2 prefix and ETTm2 sharing validation figures selected after five-dataset search |
 
 The status table above is editorial metadata and is not part of the manuscript
 body submitted for review.
@@ -44,12 +44,14 @@ burden required to serve a set of forecast horizons.
 
 As illustrated in Fig.~\ref{fig:prefix-disagreement}, separately optimized
 horizon-specific DLinear models produce visibly different overlapping
-prefixes for the same observed history. The figure uses a purposefully
-selected but non-extreme example and complements it with disagreement
-statistics over all validation origins.
+prefixes for the same observed history. In the selected ETTh2 validation
+example, the 96-, 192-, and 336-step models differ from the 720-step model by
+mean absolute values of 2.16--2.51 over their shared first 96 future steps.
+This purposefully selected maximum-disagreement example is complemented by
+pairwise disagreement statistics over all validation origins and variables.
 
-<!-- Insert the selected Weather forecast-difference view and NCHPD heatmap
-from the Introduction evidence figure package. -->
+<!-- Insert figure_intro_prefix_disagreement from
+analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures/. -->
 
 We therefore study varied-horizon forecasting through a horizon-agnostic
 prediction function indexed by future time step. Given an observed history, an
@@ -75,13 +77,15 @@ pointwise-MSE Bayes target. We refer to the resulting hypothesis as
 **future-region sharing-demand heterogeneity**.
 
 Consistent with this hypothesis, a capacity-matched neutral decoder family
-exhibits region-dependent risk ordering on ETTm1: fine sharing is favored in
-the earliest future region, whereas the broader $s=128$ setting dominates most
-subsequent regions, with two scale pairs showing margin-qualified risk
-crossovers (Fig.~\ref{fig:sharing-demand}).
+exhibits strongly region-dependent risk ordering on ETTm2. In the selected
+validation example, all five matched sharing extents become the best choice for
+two or three of the twelve 60-step future regions, and all ten extent pairs
+show margin-qualified bidirectional risk crossovers. The descriptive
+region-wise minimum reduces average MSE by 8.1\% relative to the best fixed
+extent $s=720$ (Fig.~\ref{fig:sharing-demand}).
 
-<!-- Insert the selected ETTm1 sharing-risk landscape, step-wise crossover,
-and region-wise scale-contrast figure. -->
+<!-- Insert figure_intro_sharing_heterogeneity from
+analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures/. -->
 
 To model these heterogeneous sharing demands, we propose ISCF-BSCA, an
 output-side decoder for varied-horizon forecasting. Independent

@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF-BSCA-v1 Step10 complete；Introduction evidence full-search Step7A complete |
+| `current_11_step` | ISCF-BSCA-v1 Step10 complete；Introduction evidence full-search Step9/10 complete |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -16,6 +16,25 @@
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_core_status` | `ISCF-BSCA-v1`=`passed_core_candidate_ready_for_paper_consolidation`；不受visualization screen否定 |
+
+[Introduction Evidence Full Search Result, 2026-07-30] 45/45 validation artifacts
+与五dataset ranking完整，`test_accessed=false`。最终选择：
+
+1. Prefix Figure 1=`ETTh2 / DLinear / origin805 / channel0`。selected
+   H96/H192/H336相对H720的shared-96 mean absolute raw differences为
+   `2.51/2.16/2.40`；全validation NCHPD中H96/H192/H336相对H720为
+   `0.0406/0.0365/0.0366`。ETTh2 maximum-cell score排名第二，但macro NCHPD
+   五dataset最高、macro RDA第二且overlay更清晰，故visual audit优于Weather。
+2. Sharing Figure 2=`ETTm2 / origin4177`。五scales分别赢得
+   `2/2/2/3/3`个60-step regions；10/10 scale pairs均有qualified crossing；
+   mean winner margin=`10.266%`，descriptive oracle headroom=`8.112%`。
+
+两图已重构为紧凑问题证据并导出SVG/PDF/PNG/TIFF；Nature source QA=
+`13 PASS / 1 WARN / 0 FAIL`。唯一WARN为static width parser，实际按183 mm
+double-column设计。Decision=
+`two_intro_figures_pass_illustrative_gate_etth2_prefix_ettm2_sharing`。停止
+dataset/sample search；不新增method、loss或router。报告：
+`analysis/iscf_bsca_intro_evidence_full_search_20260730/result_selection_and_figure_report.md`。
 
 [Introduction Evidence Full Visualization Search Step7A, 2026-07-30] 用户要求
 不再使用85% quantile的保守案例，并授权补齐五datasets后统一选择最清晰的
@@ -39,11 +58,9 @@ candidate/LayerNorm gradients和loop reference在double precision下最大差
 `full_search_step7a_pass_remote_launch_next`。设计：
 `analysis/iscf_bsca_intro_evidence_full_search_20260730/design_and_figure_contract.md`。
 
-Remote retry已从commit `0808c80`启动。五dataset construction、remote dry-run与
-三GPU preflight通过；retry前完整artifacts=`13/25 neutral + 6/20 DLinear`，
-remaining=`26`。初始active jobs为ETTm2-s1、ETTh1-s1与ETTm2-H720，显存均低于
-0.6 GiB，无即时错误。Current decision=
-`full_search_retry1_running_wait_for_user_completion_notice`。记录：
+Remote retry从commit `0808c80`启动并于约9分10秒内完成remaining matrix；
+最终artifact=`25/25 neutral + 20/20 DLinear`，dynamic queue没有形成GPU 0长尾。
+记录：
 `analysis/iscf_bsca_intro_evidence_full_search_20260730/remote_launch_record.md`。
 
 [Previous Visualization Candidates, 2026-07-29; provisional and superseded by

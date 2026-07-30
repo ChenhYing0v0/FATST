@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | 五dataset validation search能否找到清晰的maximum prefix disagreement与multi-scope sample-level sharing heterogeneity案例 |
+| `active_question` | selected Introduction figures如何进入Problem Formulation与后续formal evidence边界 |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
-| `active_candidates` | `ISCF-BSCA-v1` frozen paper core；Introduction evidence full-search active |
+| `active_candidates` | `ISCF-BSCA-v1` frozen paper core；ETTh2 prefix + ETTm2 sharing illustrative evidence selected |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
@@ -20,10 +20,10 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Introduction evidence full-search Step8 retry1 running |
+| `current_11_step` | Introduction evidence full-search Step9/10 complete；paper integration active |
 | `current_candidate` | problem-evidence pair=`INTRO-CHPD-v1` + `SC-UVHF-FRSD-D1`；paper method remains frozen `ISCF-BSCA-v1` |
-| `latest_decision` | `full_search_retry1_running_wait_for_user_completion_notice` |
-| `next_required_action` | 等待26个remaining validation runs完成，再同步45/45 ranking与视觉审计 |
+| `latest_decision` | `two_intro_figures_pass_illustrative_gate_etth2_prefix_ettm2_sharing` |
+| `next_required_action` | 冻结captions与Problem Formulation definitions；随后进入paper-facing experiment consolidation |
 | `method_training_authorized` | validation-only full figure search authorized；31 new runs；formal test false |
 | `rollback_point` | CHPD weak -> retain formal CHPC argument only；FRSD negative -> revise P4/P5 problem-to-method narrative；do not tune exact BSCA-v1 |
 
@@ -31,16 +31,16 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | full visualization search Step8 retry1 remote running |
+| `current_step` | full visualization search Step9/10 complete |
 | `problem` | P2的material prefix disagreement与P4的future-region sharing-demand heterogeneity尚缺独立问题证据 |
-| `existence_evidence` | existing Weather prefix与Weather/ETTm1 sharing artifacts只是provisional candidates；full five-dataset comparison pending |
+| `existence_evidence` | ETTh2 maximum prefix example + all-validation NCHPD；ETTm2 all-five-scope region winners + 8.112% descriptive headroom |
 | `idea` | disclosed maximum joint prefix selection + sample-level supported multi-scope winner selection |
 | `theory_check` | CHPC evidence不涉及accuracy superiority；sharing diagnostic保持fixed-past、pointwise MSE、H-free，只检验finite-capacity risk |
 | `design` | 45-run artifact target，复用14、补31；DLinear与neutral matched scales；global three-GPU queue；validation-only |
 | `narrative_gate` | pass to diagnostic design；problem/method distinction、ElasTST/N-HiTS prior boundary与non-circular carrier已明确 |
 | `effectiveness_gate` | visualization selection only；不得否定fixed architecture或替代formal evidence |
-| `artifacts` | full-search design、analyzers/ranker/runner、remote launch record；retry1 results pending |
-| `decision` | `full_search_retry1_running_wait_for_user_completion_notice` |
+| `artifacts` | full-search ranking、source CSV、SVG/PDF/PNG/TIFF、manifest、QA与result report |
+| `decision` | `two_intro_figures_pass_illustrative_gate_etth2_prefix_ettm2_sharing`；stop search |
 
 ## Frozen Carrier Contract
 
@@ -64,8 +64,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
-| `INTRO-CHPD-v1` | `full_search_step7a_pass` | independently trained horizon models能否给出清晰overlap disagreement | maximum origin-channel selection disclosed，not prevalence | five-dataset ranking pending | run 16 missing prefix jobs |
-| `SC-UVHF-FRSD-D1` | `full_search_step7a_pass` | matched fixed sharing extent的risk optimum是否随future region变化 | sample-level supported-winner selector；figure selection不作architecture gate | five-dataset ranking pending | run 15 missing sharing jobs |
+| `INTRO-CHPD-v1` | `illustrative_figure_selected` | independently trained horizon models能否给出清晰overlap disagreement | ETTh2 maximum example disclosed；all-validation heatmap；not prevalence | shared-96 raw mean differences 2.16--2.51；macro NCHPD highest | integrate caption；formal family/seed prevalence deferred |
+| `SC-UVHF-FRSD-D1` | `illustrative_figure_selected` | matched fixed sharing extent的risk optimum是否随future region变化 | ETTm2 maximum sample disclosed；same-validation descriptive role | five scopes win 2--3 regions；10/10 crossings；8.112% headroom | integrate caption；formal CFH deferred |
 | `ISCF-BSCA-v1` | `passed_core_candidate_ready_for_paper_consolidation` | broad train-time anchor能否稳定scope-gradient access并提升ISCF | ISCF-specific chain pass；generic KL novelty not claimed | three-seed +0.3541/+0.3073%；3/3 seeds、4/5 datasets、4/4 horizons | freeze exact v1；consolidate paper claims/limitations before baselines |
 | `SC-ISCF-UPA-D2` | `superseded_by_bsca_v1` | information-free uniform train-time anchor能否复现ARMERR/SHUFFLED gain | user chose outcome-first method route | not executed as separate diagnostic | retain design history only |
 | `SC-ISCF-PSA-D1` | `control_complete_h2_supported` | contemporaneous no-route EQUAL能否解释new ARMERR/SHUFFLED公共gain | not a method；只隔离H2/H3 | exact EQUAL tie；controls +0.6577/+0.6557%；H2 pass | feeds UPA-D2 only |

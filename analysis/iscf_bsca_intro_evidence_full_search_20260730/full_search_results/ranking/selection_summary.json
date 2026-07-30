@@ -1,0 +1,26 @@
+{
+  "split": "validation",
+  "test_accessed": false,
+  "datasets": [
+    "ETTh1",
+    "ETTh2",
+    "ETTm1",
+    "ETTm2",
+    "Weather"
+  ],
+  "prefix_ranking_policy": "descending selected_joint_score",
+  "sharing_ranking_policy": {
+    "type": "lexicographic descending",
+    "keys": [
+      "supported_winner_count",
+      "distinct_winner_count",
+      "winner_entropy",
+      "qualified_crossing_pair_count",
+      "mean_winner_margin",
+      "sample_oracle_headroom"
+    ]
+  },
+  "selected_prefix_dataset": "Weather",
+  "selected_sharing_dataset": "ETTm2",
+  "claim_role": "exploratory_visualization_only"
+}

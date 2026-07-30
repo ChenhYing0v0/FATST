@@ -1,0 +1,29 @@
+{
+  "dataset": "ETTh2",
+  "seed": 2021,
+  "split": "validation",
+  "test_accessed": false,
+  "aligned_origin_count": 2161,
+  "maximum_history_alignment_gap": 0.0,
+  "maximum_target_alignment_gap": 0.0,
+  "selection_mode": "maximum",
+  "sample_quantile": 0.85,
+  "selected_origin_index": 805,
+  "selected_origin_score": 0.0672224760055542,
+  "selected_origin_percentile": 1.0,
+  "selected_channel_index": 0,
+  "selected_channel_score": 0.0305058304220438,
+  "selected_channel_percentile": 0.5714285714285714,
+  "searched_origin_channel_cells": 15127,
+  "selected_joint_score": 0.1438700407743454,
+  "selected_joint_percentile": 1.0,
+  "macro_nchpd_l1": 0.026680593844503164,
+  "macro_rda": 0.07173942836622398,
+  "figures": {
+    "overlay_svg": "/home/yingch/exp_outputs/r-2026-fatst/intro_evidence_visualization_pilot_v1/_analysis_full/ETTh2/prefix/prefix_disagreement_overlay.svg",
+    "overlay_png": "/home/yingch/exp_outputs/r-2026-fatst/intro_evidence_visualization_pilot_v1/_analysis_full/ETTh2/prefix/prefix_disagreement_overlay.png",
+    "heatmap_svg": "/home/yingch/exp_outputs/r-2026-fatst/intro_evidence_visualization_pilot_v1/_analysis_full/ETTh2/prefix/prefix_disagreement_heatmap.svg",
+    "heatmap_png": "/home/yingch/exp_outputs/r-2026-fatst/intro_evidence_visualization_pilot_v1/_analysis_full/ETTh2/prefix/prefix_disagreement_heatmap.png"
+  },
+  "claim_role": "exploratory_visualization_only"
+}
