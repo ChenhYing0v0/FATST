@@ -1,0 +1,24 @@
+{
+  "figure_id": "figure_intro_conceptual_problem",
+  "status": "draft_pending_visual_review",
+  "backend": "Python/matplotlib",
+  "final_width_mm": 183.0,
+  "data_role": "constructed conceptual illustration",
+  "empirical_data_used": false,
+  "panels": {
+    "a": "constructed horizon-specific predictions disagree at the same future step",
+    "b": "constructed fine, intermediate, and broad sharing-risk curves have different region-wise minima"
+  },
+  "claim_boundary": [
+    "illustrates definitions only",
+    "does not establish empirical existence",
+    "does not report model effectiveness",
+    "real-data evidence is deferred to Section 3"
+  ],
+  "outputs": {
+    "svg": "analysis/iscf_bsca_intro_concept_figure_20260730/figure_intro_conceptual_problem.svg",
+    "pdf": "analysis/iscf_bsca_intro_concept_figure_20260730/figure_intro_conceptual_problem.pdf",
+    "png": "analysis/iscf_bsca_intro_concept_figure_20260730/figure_intro_conceptual_problem.png",
+    "tiff": "analysis/iscf_bsca_intro_concept_figure_20260730/figure_intro_conceptual_problem.tiff"
+  }
+}

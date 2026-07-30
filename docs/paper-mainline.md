@@ -17,45 +17,63 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_core_status` | `ISCF-BSCA-v1`=`passed_core_candidate_ready_for_paper_consolidation`；不受visualization screen否定 |
 
-[Introduction Evidence Full Search Result, 2026-07-30] 45/45 validation artifacts
+[Introduction Compact Figure Layout, 2026-07-30] Introduction v0.6不再承载
+详细problem-existence experiment。Figure 1改为一张完全由constructed curves
+生成的two-panel concept illustration：panel a说明同一future step的
+horizon-specific disagreement，panel b说明不同future regions的preferred
+sharing extent可能变化。图内与caption均声明`not empirical data`；正文只简述
+本文在Section 3给出formal definitions与controlled real-data evidence。
+
+原两张approved real-data figures移至Section 3，暂按Figure 2（ETTh2 prefix
+disagreement）与Figure 3（ETTm2 sharing-demand heterogeneity）使用。它们仍
+保留validation-only evidence boundary与`paper-figures/`稳定副本。新的
+concept Figure 1当前位于
+`analysis/iscf_bsca_intro_concept_figure_20260730/`，状态为
+`draft_pending_visual_review`；用户通过前不复制进`paper-figures/`。Decision=
+`intro_compact_concept_figure_draft_section3_evidence_relocation`。
+
+[Section 3 Problem Evidence Full Search Result, 2026-07-30] 45/45 validation artifacts
 与五dataset ranking完整，`test_accessed=false`。最终选择：
 
-1. Prefix Figure 1=`ETTh2 / DLinear / origin805 / channel0`。selected
+1. Prefix Figure 2=`ETTh2 / DLinear / origin805 / channel0`。selected
    H96/H192/H336相对H720的shared-96 mean absolute raw differences为
    `2.51/2.16/2.40`；全validation NCHPD中H96/H192/H336相对H720为
    `0.0406/0.0365/0.0366`。ETTh2 maximum-cell score排名第二，但macro NCHPD
    五dataset最高、macro RDA第二且overlay更清晰，故visual audit优于Weather。
-2. Sharing Figure 2=`ETTm2 / origin4177`。五scales分别赢得
+2. Sharing Figure 3=`ETTm2 / origin4177`。五scales分别赢得
    `2/2/2/3/3`个60-step regions；10/10 scale pairs均有qualified crossing；
    mean winner margin=`10.266%`，descriptive oracle headroom=`8.112%`。
 
 两图已按`nature-figure`重构为exact 183 mm asymmetric quantitative
-composites并导出SVG/PDF/PNG/TIFF：Prefix Figure 1采用顶底对齐的two-panel
+composites并导出SVG/PDF/PNG/TIFF：Prefix Figure 2采用顶底对齐的two-panel
 layout；左侧将trajectory与mean-difference信息整合为单一hero panel，使用thin
 solid colors、sparse staggered marker shapes和subtle white separation strokes
 区分horizons，
-右侧为紧凑3×3 triangular NCHPD。Sharing Figure 2使用region-best excess-risk heatmap，
+右侧为紧凑3×3 triangular NCHPD。Sharing Figure 3使用region-best excess-risk heatmap，
 消除旧版fixed-s720 encoding导致的s720全白行，同时在gain bars中保留s720
 fixed reference。Nature source QA=`13 PASS / 1 WARN / 0 FAIL`；唯一WARN为
-static parser不能计算width变量，PDF media box实测183 mm。Decision=
-`two_intro_figures_pass_illustrative_gate_etth2_prefix_ettm2_sharing`。停止
-dataset/sample search；不新增method、loss或router。报告：
+static parser不能计算width变量，PDF media box实测183 mm。Historical selection
+decision=`two_intro_figures_pass_illustrative_gate_etth2_prefix_ettm2_sharing`；
+其Introduction placement已由上方布局取代。停止dataset/sample search；不新增
+method、loss或router。报告：
 `analysis/iscf_bsca_intro_evidence_full_search_20260730/result_selection_and_figure_report.md`。
 
-User review（2026-07-30）：两张Introduction problem-evidence figures当前均
+User review（2026-07-30）：两张Section 3 problem-evidence figures当前均
 `approved_for_manuscript_draft`。论文侧稳定副本统一存放于`paper-figures/`，
 包含SVG/PDF/PNG/TIFF；analysis目录继续作为source data、生成记录和QA的
 canonical provenance。该视觉通过不改变其validation-only illustrative claim
 boundary。
 
-Introduction draft integration（2026-07-30）：两张approved figures及其formal
+Superseded Introduction v0.5 integration（2026-07-30）：两张approved figures及其formal
 captions已写入
 `docs/paper-drafts/iscf-bsca-introduction-initial-draft.md` v0.5。Figure 1正文
 同时报告selected shared-prefix raw differences与all-validation NCHPD range，
 并披露maximum aggregate validation selection；Figure 2正文报告five-scale
 region winners、bidirectional crossovers与8.1% descriptive headroom，并明确
 该数值不是learned allocation的out-of-sample gain。Introduction的问题证据链
-已完成；仅headline method-performance result sentence仍等待formal main tables。
+曾直接写入Introduction；该placement已由上方v0.6 compact layout取代。其统计与
+captions继续在Section 3使用；headline method-performance result sentence仍等待
+formal main tables。
 
 [Introduction Evidence Full Visualization Search Step7A, 2026-07-30] 用户要求
 不再使用85% quantile的保守案例，并授权补齐五datasets后统一选择最清晰的

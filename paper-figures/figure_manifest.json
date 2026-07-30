@@ -7,7 +7,8 @@
   "figures": [
     {
       "id": "figure_intro_prefix_disagreement",
-      "manuscript_section": "Introduction",
+      "manuscript_section": "Problem Formulation and Empirical Motivation (Section 3)",
+      "planned_figure_number": 2,
       "role": "baseline prefix disagreement evidence",
       "formats": [
         "svg",
@@ -16,11 +17,12 @@
         "tiff"
       ],
       "source_directory": "analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures",
-      "claim_boundary": "validation-only illustrative evidence"
+      "claim_boundary": "validation-only empirical illustration"
     },
     {
       "id": "figure_intro_sharing_heterogeneity",
-      "manuscript_section": "Introduction",
+      "manuscript_section": "Problem Formulation and Empirical Motivation (Section 3)",
+      "planned_figure_number": 3,
       "role": "future-region sharing-demand heterogeneity evidence",
       "formats": [
         "svg",
@@ -29,7 +31,7 @@
         "tiff"
       ],
       "source_directory": "analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures",
-      "claim_boundary": "validation-only illustrative evidence"
+      "claim_boundary": "validation-only empirical illustration"
     }
   ]
 }

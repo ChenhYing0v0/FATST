@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.18` |
+| `version` | `v0.19` |
 | `last_updated` | `2026-07-30` |
 | `paper_candidate` | `ISCF-BSCA-v1` |
-| `current_review_cursor` | Introduction v0.5 integrates approved Figures 1--2 and completes problem-evidence prose；headline main-result sentence remains pending formal tables |
+| `current_review_cursor` | Introduction v0.6 uses one constructed two-panel concept figure；approved real-data figures relocate to Section 3；concept figure pending visual review |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
-| `provisional_content` | Introduction P1--P6 v0.2正文；两项problem-evidence results；Related Work、Method、Experiments、Conclusion |
+| `provisional_content` | Introduction P1--P6 v0.6正文 + constructed Figure 1 draft；Section 3 Figures 2--3 evidence；Related Work、Method、Experiments、Conclusion |
 | `not_authorized_by_this_document` | 新模型实现、remote training、formal test、按结果调参 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
@@ -351,12 +351,11 @@ cells、secondary controls 与敏感性结果放在 Appendices。
 
 当前clean manuscript正文以
 `docs/paper-drafts/iscf-bsca-introduction-initial-draft.md`
-的`v0.2-round1-evidence-design`为准。本轮逐项回复与problem-existence
-evidence/visualization
-计划记录在
-`analysis/iscf_bsca_intro_round1_revision_20260729.md`。下列段落正文仍为
-v0.8 round1 prose，evidence placement与protocol已在v0.9更新；在结果返回前仍
-属于provisional revision。
+的`v0.6-conceptual-figure-layout`为准。Introduction只保留一张由constructed
+curves组成的双面板Figure 1，用于直观说明prefix disagreement与
+future-region sharing-demand heterogeneity；不在Introduction展开dataset、
+statistics、controls或sample-selection。两张approved real-data figures及其完整
+proof protocol移至Section 3，暂按Figures 2--3组织。
 
 ### 4.1 Paragraph 1：multi-horizon need 与现行 horizon-specific protocol
 
@@ -390,7 +389,8 @@ $H\in\mathcal H$，而不仅是一个模型一次输出多个 future steps。
 
 ### 4.2 Paragraph 2：horizon-specific systems 的三个不足
 
-**状态：v0.8 round1初步修订；原逻辑保留，cost claim已收紧。**
+**状态：v0.9 compact；原逻辑保留，Figure 1a只作conceptual illustration，
+formal definition与real-data evidence移至Section 3。**
 
 本段只建立三项系统问题：
 
@@ -417,7 +417,8 @@ $$
 > disagreement prevents the forecasts from forming nested views of one future
 > trajectory. Maintaining multiple independent models also increases the
 > total training, storage, deployment, and maintenance burden required to
-> serve a set of forecast horizons.
+> serve a set of forecast horizons. Figure 1a illustrates this inconsistency
+> schematically; Section 3 gives its formal definition and real-data evidence.
 
 本段不声称 horizon-specific models 的 accuracy 必然更差。
 
@@ -442,7 +443,8 @@ horizon无关、step-indexed field 的nested outputs。
 
 ### 4.4 Paragraph 4：naive unification 与 future-region sharing demand
 
-**状态：v0.8 round1初步修订；problem hypothesis保留，motivation result pending。**
+**状态：v0.9 compact；problem hypothesis保留，Figure 1b只作constructed
+illustration，详细matched evidence移至Section 3。**
 
 建议正文：
 
@@ -458,14 +460,9 @@ horizon无关、step-indexed field 的nested outputs。
 > future regions, so the bias--variance trade-off induced by a fixed sharing
 > extent need not be uniform. This is a finite-capacity modeling issue rather
 > than a change in the pointwise-MSE Bayes target. We refer to the resulting
-> hypothesis as **future-region sharing-demand heterogeneity**.
->
->
-> Consistent with this hypothesis, a capacity-matched neutral decoder family
-> exhibits region-dependent risk ordering on ETTm1: fine sharing is favored in
-> the earliest future region, whereas the broader $s=128$ setting dominates
-> most subsequent regions, with two scale pairs showing margin-qualified risk
-> crossovers.
+> hypothesis as **future-region sharing-demand heterogeneity**. Figure 1b
+> illustrates the hypothesis using constructed risk curves. We formalize both
+> problems and provide controlled real-data evidence in Section 3.
 
 对应中文：
 
@@ -536,6 +533,25 @@ horizon无关、step-indexed field 的nested outputs。
    heterogeneity`作为问题名称，因为两者预先嵌入方法设计；也不使用
    `future-step dependency heterogeneity`，以免被误解为联合概率分布中的
    temporal dependence。
+
+#### Introduction Figure 1：constructed concept illustration
+
+Figure 1采用一张双面板schematic-led composite：
+
+- panel a使用三条constructed horizon-specific trajectories，分别终止于
+  $H_1,H_2,H_3$，并在共同future step $\tau^\star$处标出不同预测值；
+- panel b使用fine/intermediate/broad三条constructed risk curves，通过
+  early/middle/late regions的最低曲线变化直观解释sharing-demand
+  heterogeneity；
+- 两panel使用彼此独立的restrained color families，不建立跨panel颜色映射，
+  避免暗示forecast horizon与sharing extent存在一一对应关系；
+- 图底与caption必须写明`constructed curves; not empirical data`；
+- Figure 1不报告dataset、metric、sample、NCHPD、MSE或headroom。Section 3
+  Figures 2--3才承担正式problem evidence。
+
+当前draft artifact：
+`analysis/iscf_bsca_intro_concept_figure_20260730/`；状态为
+`draft_pending_visual_review`，在用户确认前不进入`paper-figures/`稳定资产目录。
 
 ### 4.5 Paragraph 5：ISCF-BSCA
 
@@ -851,7 +867,7 @@ $$
 \right].
 $$
 
-Introduction Figure 1放在P2与P3之间，展示：
+Section 3 Figure 2在formal definition之后展示：
 
 - ETTh2/DLinear maximum-disagreement same-history example；
 - 单一trajectory hero panel中的history、ground truth、四个horizon predictions与
@@ -874,14 +890,15 @@ score排序。该选择必须在caption中标记为`maximum aggregate validation
 disagreement`。mean-over-overlap防止单个future-step spike主导选择，但该图仍是
 intentional strong example，不是representative case或prevalence evidence。
 
-Final selected result：Figure 1使用ETTh2/DLinear origin=805、channel=0。
+Final selected result：Section 3 Figure 2使用ETTh2/DLinear
+origin=805、channel=0。
 ETTh2的maximum joint score排名第二，但macro NCHPD为五dataset最高，macro RDA
 排名第二，且shared-96 raw differences最清晰；因此visual audit选择ETTh2而非
 maximum-cell ranking第一但overlay语义较弱的Weather。H96/H192/H336相对H720的
 96-step mean absolute raw differences为2.51/2.16/2.40。正式三families、
 五datasets、三seeds的prevalence evidence仍不由本次visualization search替代。
 最终visual refinement将原来的trajectory与raw-difference上下两图合并为一个
-hero panel，Figure 1整体成为顶底对齐的two-panel layout。四个horizon不再依赖
+hero panel，Section 3 Figure 2整体成为顶底对齐的two-panel layout。四个horizon不再依赖
 dash pattern区分，而使用thin solid colors、sparse staggered marker shapes与
 subtle white separation strokes；H720置于较低z-order，避免遮挡较短horizon
 curves。预测主线缩至0.82--0.95 pt、marker间隔放宽至18 steps，避免四条高度
@@ -1024,7 +1041,8 @@ method，也不证明history-conditioned allocation可识别。
 - validation-selected region schedule相对validation-selected fixed scale的
   official-test CFH。
 
-Introduction Figure 2紧跟P4，不提前画ISCF或BSCA。若要进一步claim temporal
+Section 3 Figure 3紧跟sharing-demand definition与matched diagnostic
+protocol，不提前画ISCF或BSCA。若要进一步claim temporal
 contiguity specificity，primary support后必须追加group-size-matched random
 grouping；该control不是basic sharing-demand existence gate。
 
@@ -1049,7 +1067,7 @@ seed2021上的validation artifacts。对每个origin构造all-channel
 6. descriptive sample oracle headroom。
 
 该顺序优先寻找由多个regions支持的分散scope winners，避免单region噪声胜者。
-Final selected result：Figure 2使用ETTm2 origin=4177。五个scales分别赢得
+Final selected result：Section 3 Figure 3使用ETTm2 origin=4177。五个scales分别赢得
 `2/2/2/3/3`个regions，全部10个scale pairs达到qualified bidirectional
 crossing，mean winner margin=10.266%，descriptive region-oracle headroom=
 8.112%。最终图使用region-best excess-risk heatmap与winner-colored
@@ -1475,3 +1493,4 @@ Coverage boundary：
 | 2026-07-30 | Prefix trajectory density refinement | forecast lines 0.82--0.95 pt；marker stride 18；subtle 0.38-pt under-stroke | reduce visual ink without changing data or evidence structure |
 | 2026-07-30 | Introduction figures accepted for draft | Prefix disagreement + sharing-demand heterogeneity；SVG/PDF/PNG/TIFF centralized in `paper-figures/` | current manuscript-ready copies；validation-only claim boundary unchanged |
 | 2026-07-30 | Introduction v0.5 evidence integration | Figures 1--2 embedded；aggregate statistics、selection disclosure与formal captions写入draft | problem-evidence prose complete；headline method results pending main tables |
+| 2026-07-30 | Introduction v0.6 compact figure layout | one constructed Figure 1；real-data figures relocate to Section 3 Figures 2--3 | conceptual figure pending visual review；detailed proof removed from Introduction |

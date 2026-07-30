@@ -39,7 +39,7 @@ Weather按maximum joint cell score排名第一，但其selected channel的ground
 2. macro NCHPD为五dataset最高；
 3. macro RDA排名第二，且selected raw-value differences清晰。
 
-因此最终illustrative Figure 1选择ETTh2，而不是机械使用maximum-cell ranking
+因此最终real-data Figure 2选择ETTh2，而不是机械使用maximum-cell ranking
 第一的Weather。该选择属于预先声明的跨dataset visual audit；不是formal metric
 gate，也不隐藏Weather的排名。
 
@@ -125,7 +125,7 @@ effectiveness仍由ISCF-BSCA matched test evidence承担。
 
 ## 4. Final figure design
 
-### Figure 1: Prefix disagreement
+### Section 3 Figure 2: Prefix disagreement
 
 1. panel a将48-step history、ground truth和四条96-step horizon-specific
    predictions整合为单一hero panel，并用浅灰背景区分history；
@@ -140,7 +140,7 @@ effectiveness仍由ISCF-BSCA matched test evidence承担。
 对齐，并避免虚线在重叠区域中难以追踪。selected example与dataset-level average
 evidence仍由左右panels明确分开；selection disclosure保留在caption。
 
-### Figure 2: Sharing-demand heterogeneity
+### Section 3 Figure 3: Sharing-demand heterogeneity
 
 1. panel a展示五个sharing extents相对每个region最低risk的excess MSE；
 2. 每个region winner的excess MSE为0并用空心方框标出，不再用高噪声折线连接；
@@ -153,9 +153,9 @@ evidence仍由左右panels明确分开；selection disclosure保留在caption。
 使s720仅在其真正获胜的regions 10--12为0；panel b继续保留fixed s720 comparison。
 这使“winner identity发生变化”和“变化具有多大风险收益”在同一图中可直接读取。
 
-### Proposed manuscript captions
+### Proposed Section 3 manuscript captions
 
-**Figure 1 | Independently optimized horizon-specific forecasts can disagree
+**Figure 2 | Independently optimized horizon-specific forecasts can disagree
 on the same future steps.** **a**, Predictions from four DLinear models trained
 separately for horizons 96, 192, 336, and 720 on the same ETTh2 history. The
 panel shows the final 48 observed steps and the first 96 future steps shared by
@@ -168,7 +168,7 @@ prefix disagreement (NCHPD) averaged over all ETTh2 validation origins
 ($n=2,161$) and variables. The selected example is illustrative and is not a
 prevalence estimate. Source data are provided with the figure package.
 
-**Figure 2 | Preferred cross-step sharing extent varies across future
+**Figure 3 | Preferred cross-step sharing extent varies across future
 regions.** **a**, Percentage MSE excess of five capacity-matched neutral
 decoders above the lowest-risk sharing extent within each 60-step future region
 of one ETTm2 validation example. Outlined squares mark the region-wise best

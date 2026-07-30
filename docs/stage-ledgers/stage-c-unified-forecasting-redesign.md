@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | selected Introduction figures如何进入Problem Formulation与后续formal evidence边界 |
+| `active_question` | constructed Introduction Figure 1的视觉审阅，以及approved real-data Figures 2--3如何进入Problem Formulation |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
-| `active_candidates` | `ISCF-BSCA-v1` frozen paper core；ETTh2 prefix + ETTm2 sharing illustrative evidence selected |
+| `active_candidates` | `ISCF-BSCA-v1` frozen paper core；constructed concept Figure 1 draft；ETTh2 prefix + ETTm2 sharing evidence approved for Section 3 |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
@@ -20,10 +20,10 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Introduction evidence full-search Step9/10 complete；paper integration active |
-| `current_candidate` | problem-evidence pair=`INTRO-CHPD-v1` + `SC-UVHF-FRSD-D1`；paper method remains frozen `ISCF-BSCA-v1` |
-| `latest_decision` | `two_intro_figures_pass_illustrative_gate_etth2_prefix_ettm2_sharing` |
-| `next_required_action` | 冻结captions与Problem Formulation definitions；随后进入paper-facing experiment consolidation |
+| `current_11_step` | real-data problem evidence Step9/10 complete；compact paper integration active |
+| `current_candidate` | concept Figure 1=`draft_pending_visual_review`；Section 3 evidence pair=`INTRO-CHPD-v1` + `SC-UVHF-FRSD-D1`；paper method remains frozen `ISCF-BSCA-v1` |
+| `latest_decision` | `intro_compact_concept_figure_draft_section3_evidence_relocation` |
+| `next_required_action` | 用户审阅concept Figure 1；随后冻结Section 3 definitions与Figures 2--3 captions |
 | `method_training_authorized` | validation-only full figure search authorized；31 new runs；formal test false |
 | `rollback_point` | CHPD weak -> retain formal CHPC argument only；FRSD negative -> revise P4/P5 problem-to-method narrative；do not tune exact BSCA-v1 |
 
@@ -39,8 +39,8 @@
 | `design` | 45-run artifact target，复用14、补31；DLinear与neutral matched scales；global three-GPU queue；validation-only |
 | `narrative_gate` | pass to diagnostic design；problem/method distinction、ElasTST/N-HiTS prior boundary与non-circular carrier已明确 |
 | `effectiveness_gate` | visualization selection only；不得否定fixed architecture或替代formal evidence |
-| `artifacts` | full-search ranking、source CSV、exact-183-mm SVG/PDF/PNG/TIFF、manifest、QA与result report；prefix采用two-panel integrated trajectory encoding；sharing采用region-best excess-risk encoding |
-| `decision` | `two_intro_figures_pass_illustrative_gate_etth2_prefix_ettm2_sharing`；stop search |
+| `artifacts` | constructed concept Figure 1 draft + full-search ranking、source CSV、Section 3 Figures 2--3 exact-183-mm SVG/PDF/PNG/TIFF、manifest、QA与result report |
+| `decision` | evidence selection remains passed；paper placement改为constructed Introduction Figure 1 + Section 3 real-data Figures 2--3；stop search |
 
 ## Frozen Carrier Contract
 

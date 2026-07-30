@@ -8,8 +8,8 @@
 
 | Figure | Manuscript role | Status | Evidence boundary |
 | --- | --- | --- | --- |
-| `figure_intro_prefix_disagreement` | Introduction：baseline prefix disagreement | `approved_for_manuscript_draft` | validation-only illustrative evidence |
-| `figure_intro_sharing_heterogeneity` | Introduction：future-region sharing-demand heterogeneity | `approved_for_manuscript_draft` | validation-only illustrative evidence |
+| `figure_intro_prefix_disagreement` | Section 3：baseline prefix disagreement | `approved_for_manuscript_draft` | validation-only empirical illustration |
+| `figure_intro_sharing_heterogeneity` | Section 3：future-region sharing-demand heterogeneity | `approved_for_manuscript_draft` | validation-only empirical illustration |
 
 每张图提供以下格式：
 
@@ -25,3 +25,7 @@ caption contract或视觉编码发生变化，应先在原绘图脚本中完成�
 后同步覆盖本目录。当前canonical生成脚本为
 `scripts/plot_intro_problem_evidence_final.py`，完整来源与边界记录见
 `analysis/iscf_bsca_intro_evidence_full_search_20260730/`。
+
+Placement amendment（2026-07-30）：这两张真实数据图由Introduction移至Section
+3，暂按Figures 2--3使用。Introduction Figure 1改为独立的constructed concept
+illustration；该新图在通过视觉审阅前不进入本目录。

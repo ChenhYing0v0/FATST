@@ -1,10 +1,24 @@
 # Research Roadmap
 
-## Introduction Evidence Full Search Result (2026-07-30)
+## Introduction Compact Figure and Section 3 Evidence Placement (2026-07-30)
+
+Introduction采用一张双面板constructed concept figure：
+
+- panel a：三条horizon-specific curves在同一future step给出不同值；
+- panel b：fine/intermediate/broad sharing的constructed risk curves在
+  early/middle/late regions分别最低。
+
+该图只说明概念，明确标注`not empirical data`，不展示dataset、metric、sample
+或headroom。正文只声明Section 3将给出formal definitions与controlled real-data
+evidence。原两张approved figures移至Section 3，暂按Figure 2（prefix
+disagreement）与Figure 3（sharing-demand heterogeneity）组织。Concept Figure
+1状态=`draft_pending_visual_review`；通过前不进入`paper-figures/`。
+
+## Section 3 Problem Evidence Full Search Result (2026-07-30)
 
 五dataset validation matrix=`25/25 neutral + 20/20 DLinear`，test=false。最终
-Figure 1选择ETTh2 maximum-disagreement origin805/channel0：shared-96 raw
-differences相对H720为2.16--2.51，ETTh2 macro NCHPD五dataset最高。Figure 2选择
+Figure 2选择ETTh2 maximum-disagreement origin805/channel0：shared-96 raw
+differences相对H720为2.16--2.51，ETTh2 macro NCHPD五dataset最高。Figure 3选择
 ETTm2 maximum-heterogeneity origin4177：五scales各赢2--3个regions，10/10 pairs
 qualified crossing，mean winner margin=10.266%，descriptive headroom=8.112%。
 
@@ -15,15 +29,16 @@ qualified crossing，mean winner margin=10.266%，descriptive headroom=8.112%。
 - region-best excess-risk heatmap + winner-colored realized-gain bars。
 
 两图使用exact 183 mm output、muted semantic palettes与无figure-footer排版。
-Prefix Figure 1为左右顶底对齐的two-panel layout；trajectory panel以thin solid
+Prefix Figure 2为左右顶底对齐的two-panel layout；trajectory panel以thin solid
 colors、sparse staggered marker shapes、subtle white strokes与lower-layer H720 reference
 替代难辨认的dash-only encoding。
 sharing heatmap不再以fixed s720逐列归一化，因而消除了s720自身相减造成的全白行；
 fixed-s720 comparison仍由gain panel承担。SVG/PDF/PNG/TIFF与source data package
 已生成；Nature QA=13 pass/1 warn/0 fail。
-Decision=`two_intro_figures_pass_illustrative_gate_etth2_prefix_ettm2_sharing`。
-停止dataset/sample search；下一步转向caption、Problem Formulation与后续paper
-experiment consolidation。
+Historical selection decision=
+`two_intro_figures_pass_illustrative_gate_etth2_prefix_ettm2_sharing`；其
+Introduction placement已由上方布局取代。停止dataset/sample search；下一步转向
+Section 3 definitions、captions与后续paper experiment consolidation。
 
 ## Introduction Evidence Full Visualization Search Step7A (2026-07-30)
 
@@ -120,7 +135,7 @@ remote-running cursor取代）。当前授权
 只覆盖initial 9 runs与validation analysis；formal design仍保留但deferred，
 fallback/full matrix/formal test=false。
 
-## Introduction Problem-Evidence Design v1 (2026-07-29)
+## Introduction Problem-Evidence Design v1 (2026-07-29; placement superseded)
 
 Introduction证明实验已从旧的单一三联图拆成两项独立、可失败的protocol：
 
@@ -149,6 +164,9 @@ method architecture顺延为后续图。Decision=
 `intro_problem_evidence_v1_design_frozen_pending_step7a_authorization`。当前
 implementation、remote training与formal test均未授权；未来formal evidence
 必须标记为`test_informed`，不作untouched holdout claim。
+
+Placement amendment：上述真实数据figures已由当前Introduction移至Section 3；
+当前Introduction Figure 1采用上方constructed two-panel concept layout。
 
 ## Introduction Round 1 Author Response (2026-07-29; visualization superseded)
 
