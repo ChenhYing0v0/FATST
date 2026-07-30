@@ -1,5 +1,19 @@
 # Research Roadmap
 
+## Introduction v0.9 Author Refinement (2026-07-30)
+
+- Figure 1a reference移至P2，功能限定为horizon-specific prefix disagreement；
+- P3只承担horizon无关mapping与CHPC formalization；
+- Figure 1 caption删除重复的conceptual/evidence句；
+- P5用single-scope decoder显式对照ISCF；
+- P6采用更强的预期性能、ablation与portability结论，但三类claim必须由后续完整
+  tables兑现。
+
+新增planned Method Figure 4，不在Introduction中插入第二张图。Figure 4将对比
+single-scope forecasting与ISCF-BSCA，并展示scope-indexed field、
+target-conditioned allocation和BSCA train-only path。当前P5不加入空figure
+reference。Clean v0.9 draft与highlighted review copy均已建立。
+
 ## Introduction P2--P6 Structural Polish (2026-07-30)
 
 Introduction v0.8已完成段落级优化：

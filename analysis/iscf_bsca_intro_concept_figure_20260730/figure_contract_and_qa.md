@@ -31,8 +31,9 @@ decoder在不同future regions的合适cross-step sharing extent也可能不同�
 statistics、controls与real-data evidence全部放在Section 3。
 
 **Reviewer risk.** 最大风险是constructed curves被误读成experiment result。图底
-显式写明`Conceptual illustration with constructed curves; not empirical data`，
-caption再次声明两panel均不使用empirical measurements。
+显式写明`Conceptual illustration with constructed curves; not empirical data`。
+Introduction v0.9按author decision精简caption，不再重复该说明；claim boundary
+继续由图内footer、manifest与Section 3 evidence placement共同约束。
 
 ## Construction
 

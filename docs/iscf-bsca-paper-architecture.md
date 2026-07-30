@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.21` |
+| `version` | `v0.22` |
 | `last_updated` | `2026-07-30` |
 | `paper_candidate` | `ISCF-BSCA-v1` |
-| `current_review_cursor` | Introduction v0.8 structurally polished through P2--P6；Figure 1 approved；real-data Figures 2--3 assigned to Section 3 |
+| `current_review_cursor` | Introduction v0.9 author refinements applied；highlighted review copy available；Method Figure 4 planned |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
-| `provisional_content` | Introduction P1--P6 v0.8正文 + approved constructed Figure 1；Section 3 Figures 2--3 evidence；Related Work、Method、Experiments、Conclusion |
+| `provisional_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 Figures 2--3；planned Method Figure 4；remaining sections |
 | `not_authorized_by_this_document` | 新模型实现、remote training、formal test、按结果调参 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
@@ -351,7 +351,7 @@ cells、secondary controls 与敏感性结果放在 Appendices。
 
 当前clean manuscript正文以
 `docs/paper-drafts/iscf-bsca-introduction-initial-draft.md`
-的`v0.8-structural-polish`为准。Introduction只保留一张由constructed
+的`v0.9-author-refinement`为准。Introduction只保留一张由constructed
 curves组成的双面板Figure 1，用于直观说明prefix disagreement与
 future-region sharing-demand heterogeneity；不在Introduction展开dataset、
 statistics、controls或sample-selection。两张approved real-data figures及其完整
@@ -389,8 +389,8 @@ $H\in\mathcal H$，而不仅是一个模型一次输出多个 future steps。
 
 ### 4.2 Paragraph 2：horizon-specific systems 的系统割裂
 
-**状态：v1.0 polished compact；删除重复的prefix展开，Figure 1a移至Paragraph
-3承担CHPC动机说明。**
+**状态：v1.1 author-refined；Figure 1a用于说明horizon-specific systems的
+prefix disagreement，并置于本段。**
 
 本段只建立三项系统问题：
 
@@ -409,50 +409,50 @@ $$
 建议正文：
 
 > The horizon-specific protocol fragments forecasting into independent
-> systems. Given the same history and forecast origin, models trained for
-> different horizons can assign different values to the same future time
-> step. Their outputs therefore need not form coherent, nested views of one
-> future trajectory. Serving multiple horizons also requires separate
-> training, storage, deployment and maintenance.
+> systems. As illustrated in Figure 1a, models trained for different horizons
+> can assign different values to the same future time step, despite identical
+> history and forecast origin. Their outputs therefore need not form coherent,
+> nested views of one future trajectory. Serving multiple horizons also
+> requires separate training, storage, deployment and maintenance.
 
 对应中文：
 
-> Horizon-specific协议将预测拆分为多个独立系统。在相同history与forecast
-> origin下，针对不同horizon训练的模型可能对同一future time step给出不同值。
-> 因而，这些输出未必能构成同一future trajectory的一组连贯nested views。
-> 同时，服务多个horizons还需要分别训练、存储、部署和维护模型。
+> Horizon-specific协议将预测拆分为多个独立系统。如Figure 1a所示，即使
+> history与forecast origin相同，针对不同horizon训练的模型仍可能对同一future
+> time step给出不同值。因而，这些输出未必能构成同一future trajectory的一组
+> 连贯nested views。同时，服务多个horizons还需要分别训练、存储、部署和维护
+> 模型。
 
 讨论过程中的细节：
 
 1. 本段从七句压缩为四句，只保留system fragmentation、overlap disagreement与
    deployment redundancy。
-2. $H_1/H_2$的精确定义和Figure 1a说明移至Paragraph 3，避免连续两段重复描述
-   prefix disagreement。
+2. Figure 1a只承担horizon-specific prefix disagreement的概念说明，因此保留在
+   problem paragraph，不再用于解释“why CHPC is needed”。
 3. 本段不声称horizon-specific models的accuracy必然更差。
 
 ### 4.3 Paragraph 3：unified forecaster 与 CHPC
 
-**状态：v1.0 polished；采用future-step-indexed mapping正式定义，并由Figure
-1a引出CHPC。**
+**状态：v1.1 author-refined；采用future-step-indexed mapping正式定义CHPC，
+不再承担Figure 1a的问题证据叙事。**
 
 建议正文逻辑：
 
 > We therefore formulate varied-horizon forecasting as learning a single
 > horizon-agnostic mapping from observed history and future-step index to
 > prediction. Under this formulation, a future-step prediction depends on the
-> history and its step index, but not on the requested horizon.
-> Figure 1a highlights why this requirement is needed: for any $H_1<H_2$,
-> predictions over steps $1{:}H_1$ should remain identical under both
-> requests. We call this basic requirement **cross-horizon prefix consistency
-> (CHPC)**.
+> history and its step index, but not on the requested horizon. For any
+> $H_1<H_2$, predictions over steps $1{:}H_1$ therefore remain identical under
+> both requests. We call this basic requirement **cross-horizon prefix
+> consistency (CHPC)**.
 
 对应中文：
 
 > 因此，我们将varied-horizon forecasting形式化为学习一个从observed history与
 > future-step index到prediction的统一horizon无关映射。在这一形式化下，某个
 > future step的预测由history及其step index决定，而不由requested horizon决定。
-> Figure 1a说明了这一要求的必要性：对于任意$H_1<H_2$，两种请求在
-> $1{:}H_1$范围内的预测应保持一致。我们将这一基本要求称为
+> 对于任意$H_1<H_2$，两种请求在$1{:}H_1$范围内的预测因此保持一致。我们将
+> 这一基本要求称为
 > **cross-horizon prefix consistency（CHPC）**。
 
 讨论过程中的细节：
@@ -461,8 +461,8 @@ $$
    算法创新。
 2. 正文不采用“先生成max-$T$再crop”的实现叙事，只定义horizon无关、
    future-step-indexed prediction mapping。
-3. Figure 1a不只展示现有系统的不一致，也直接服务于$H_1/H_2$重叠区间应保持
-   invariant这一要求。
+3. Figure 1a引用已移回Paragraph 2；本段只负责formalization与CHPC naming，
+   避免把problem illustration误写为requirement rationale。
 
 ### 4.4 Paragraph 4：naive unification 与 future-region sharing demand
 
@@ -565,7 +565,7 @@ Figure 1采用一张双面板schematic-led composite：
   heterogeneity；
 - 两panel使用彼此独立的restrained color families，不建立跨panel颜色映射，
   避免暗示forecast horizon与sharing extent存在一一对应关系；
-- 图底与caption必须写明`constructed curves; not empirical data`；
+- 图底保留`constructed curves; not empirical data`；caption不再重复该说明；
 - Figure 1不报告dataset、metric、sample、NCHPD、MSE或headroom。Section 3
   Figures 2--3才承担正式problem evidence。
 
@@ -574,8 +574,7 @@ Figure 1采用一张双面板schematic-led composite：
 > **Figure 1 | Two challenges in varied-horizon forecasting.** **a**,
 > Horizon-specific predictors may disagree at the same future time step
 > $\tau^\star$ despite identical observed history. **b**, The sharing extent
-> associated with the lowest risk can vary across future regions. Both panels
-> are conceptual rather than empirical; Section 3 provides detailed evidence.
+> associated with the lowest risk can vary across future regions.
 
 Canonical source artifact位于
 `analysis/iscf_bsca_intro_concept_figure_20260730/`；状态为
@@ -585,8 +584,8 @@ empirical evidence。
 
 ### 4.5 Paragraph 5：ISCF-BSCA
 
-**状态：v1.0 polished；按`heterogeneous demand -> multiple sharing extents ->
-scope-indexed field -> target-conditioned integration`重建因果桥。**
+**状态：v1.1 author-refined；显式加入single-scope decoder对照，Method Figure
+4承担完整架构可视化。**
 
 建议正文：
 
@@ -596,8 +595,8 @@ scope-indexed field -> target-conditioned integration`重建因果桥。**
 > extent through an independent history projection within a single
 > scope-indexed forecast field. Each scope determines how broadly a
 > history-conditioned latent state is reused before step-specific synthesis.
-> Rather than imposing one scope on the entire forecast domain, ISCF
-> integrates scope-conditioned forecasts through a
+> A single-scope decoder applies one sharing extent throughout the forecast
+> domain. ISCF instead integrates scope-conditioned forecasts through a
 > target-conditioned allocation for each sample, variable and future step.
 > The resulting forecast can adapt its sharing composition across future
 > regions while retaining a single horizon-agnostic prediction function. To
@@ -612,10 +611,10 @@ scope-indexed field -> target-conditioned integration`重建因果桥。**
 > 的output-side decoder。Independent Scope-Conditioned Forecasting（ISCF）通过
 > 独立history projection，在单一scope-indexed forecast field中表示每种sharing
 > extent。每个scope决定history-conditioned latent state在step-specific
-> synthesis之前被复用的范围。ISCF不对整个forecast domain强制使用同一个
-> scope，而是通过target-conditioned allocation，为每个sample、variable与
-> future step整合
-> scope-conditioned forecasts。由此，forecast能够跨future regions调整sharing
+> synthesis之前被复用的范围。Single-scope decoder在整个forecast domain使用
+> 一种sharing extent；ISCF则通过target-conditioned allocation，为每个sample、
+> variable与future step整合scope-conditioned forecasts。由此，forecast能够跨
+> future regions调整sharing
 > composition，同时保持单一horizon无关prediction function。为支持joint
 > learning，Balanced Scope Co-Adaptation（BSCA）向全部scopes提供直接prediction
 > signals，并抑制过早的allocation concentration。BSCA仅在训练阶段生效，不增加
@@ -677,10 +676,35 @@ scope-indexed field -> target-conditioned integration`重建因果桥。**
     temporal contiguity写成收益来源。multiple scales、multiple predictors与
     MoE原语已有prior art；novelty只能落在完整scope-indexed output-field链条。
 
+#### Planned Method Figure 4：single-scope forecasting versus ISCF-BSCA
+
+需要该方法总览图，但不作为Introduction中的第二张嵌入图。推荐放在Method
+开篇，沿用当前编号规划：Figure 1为Introduction concept；Figures 2--3为Section
+3 real-data evidence；Figure 4为method overview。这样既直观说明创新，又避免
+Introduction再次膨胀。
+
+Figure 4建议包含：
+
+1. **Panel a: single-scope forecasting。** 一个history representation、一个固定
+   sharing extent、一个forecast field slice，全部future regions沿用同一种
+   sharing topology。
+2. **Panel b: ISCF。** Independent history projections产生多个sharing scopes，
+   形成`scope_field:[B,C,T,S]`；不同block宽度表示sharing extent，不把它们画成
+   多个独立models。
+3. **Panel c: target-conditioned integration。**
+   `allocation:[B,C,T,S]`覆盖scope--future-step平面，沿scope轴收缩得到
+   `forecast:[B,T,C]`，突出region-dependent composition。
+4. **Panel d或train-only overlay: BSCA。** 用虚线training path表示direct
+   scope supervision与allocation balancing；明确inference时移除，避免被误读为
+   额外推理module。
+
+在Figure 4完成并冻结编号前，P5不加入未解析的forward reference。图完成后可在
+P5的single-scope对照句后加入简短`(Fig. 4)`，不再重复解释tensor细节。
+
 ### 4.6 Paragraph 6：contributions
 
-**状态：v1.0 polished provisional；贡献表述压缩，结果句在main/transfer tables
-完成前保持evaluation wording。**
+**状态：v1.1 author-refined provisional；结果句增强为预期paper-facing
+conclusion，提交前必须由main/ablation/transfer tables逐项兑现。**
 
 建议正文：
 
@@ -690,10 +714,11 @@ scope-indexed field -> target-conditioned integration`重建因果桥。**
 > challenge. Second, we introduce ISCF, which integrates forecasts generated
 > under multiple sharing scopes through target-conditioned allocation. Third,
 > we develop BSCA to support balanced scope learning without increasing
-> inference-time complexity. Across datasets from multiple application
-> domains, we compare our unified model with horizon-specific forecasters.
-> Component-wise ablations and backbone transfer studies further evaluate
-> mechanism effectiveness and decoder portability.
+> inference-time complexity. Experiments across datasets from multiple
+> application domains show that a single unified model outperforms separately
+> trained horizon-specific forecasters. Component-wise ablations confirm the
+> effectiveness of each component, while backbone transfer studies demonstrate
+> decoder portability.
 
 对应中文：
 
@@ -702,9 +727,9 @@ scope-indexed field -> target-conditioned integration`重建因果桥。**
 > heterogeneity识别为output-side challenge。第二，我们提出ISCF，通过
 > target-conditioned allocation整合multiple sharing scopes生成的预测。第三，
 > 我们提出BSCA，在不增加inference-time complexity的前提下支持balanced scope
-> learning。我们在多个应用领域的数据集上，将unified model与horizon-specific
-> forecasters进行比较，并通过component-wise ablations和backbone transfer
-> studies进一步评估机制有效性与decoder portability。
+> learning。多个应用领域数据集上的实验表明，单一unified model优于分别训练的
+> horizon-specific forecasters。Component-wise ablations确认各组件的有效性，
+> backbone transfer studies则证明decoder portability。
 
 讨论过程中的细节：
 
@@ -732,11 +757,11 @@ scope-indexed field -> target-conditioned integration`重建因果桥。**
    `ISCF-specific train-only objective`。现有三seed证据只支持相对ISCF-EQUAL
    的small but directionally robust gain，不支持universal gain、强
    specialization或所有datasets/horizons一致改善。
-6. **结果句暂不超前。** 用户希望最终只保留三个直观结论：跨领域数据集上相对
-   horizon-specific models的性能优势、核心组件的ablation支持、以及decoder
-   portability。当前horizon-specific main table与backbone transfer table尚未
-   完整，因此draft使用`compare/evaluate`而非`outperform/demonstrate`。表格完成
-   后仅在证据支持时升级为正向结果句，不使用无统计检验支撑的`significant`。
+6. **结果句作为待兑现的paper-facing claim。** 按用户决定，v0.9提前采用
+   `outperforms/confirm/demonstrate`强化性能、消融与迁移结论。该句不是当前
+   evidence ledger的既成事实：horizon-specific main table与backbone transfer
+   table尚待补齐。提交前若任一结论未被完整test matrix支持，必须降级对应动词；
+   未完成统计检验前仍不使用`statistically significant`。
 7. **证据结构必须与贡献一一对应。** Contribution 1由baseline/simple matched
    diagnostics与CHPC disagreement支撑；Contribution 2由matched architecture
    controls、full test MSE/MAE和scope behavior支撑；Contribution 3由same-
@@ -1521,3 +1546,4 @@ Coverage boundary：
 | 2026-07-30 | Introduction v0.6 compact figure layout | one constructed Figure 1；real-data figures relocate to Section 3 Figures 2--3 | visual-review item resolved by v0.7；detailed proof removed from Introduction |
 | 2026-07-30 | Introduction v0.7 figure approval and reflow | constructed Figure 1 approved and copied to `paper-figures/`；P1--P6 and caption use one physical line per natural paragraph | freeze Section 3 definitions and Figures 2--3 captions |
 | 2026-07-30 | Introduction v0.8 structural polish | P2 concise；P3 CHPC + Figure 1a；P4 uniform output mechanism to sharing demand；P5 demand-to-scope bridge；P6 evidence-bounded evaluation sentence | main/transfer results decide final positive result wording |
+| 2026-07-30 | Introduction v0.9 author refinement | Figure 1a moved to P2；caption shortened；single-scope contrast added；P6 strengthened；highlighted review copy created | Method Figure 4 planned；positive result sentence remains table-contingent |

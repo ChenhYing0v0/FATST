@@ -17,6 +17,22 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_core_status` | `ISCF-BSCA-v1`=`passed_core_candidate_ready_for_paper_consolidation`；不受visualization screen否定 |
 
+[Introduction v0.9 Author Refinement, 2026-07-30] Figure 1a引用移至P2，只说明
+horizon-specific systems在相同history/origin下可能出现overlap disagreement；
+P3独立定义horizon无关mapping与CHPC。Figure 1 caption按用户决定删除重复的
+conceptual/evidence说明，但图内footer与project claim boundary保持不变。
+
+P5加入显式single-scope decoder对照。新增planned Method Figure 4：
+single-scope forecasting -> multiple independent history projections/scopes ->
+scope--future-step allocation -> BSCA train-only path。该图放在Method开篇，不作为
+Introduction第二张嵌入图；完成前P5不写空forward reference。
+
+P6升级为预期paper-facing positive claim：单一unified model优于分别训练的
+horizon-specific forecasters，ablation确认组件有效，backbone transfer证明
+portability。该句明确为待main/ablation/transfer tables兑现的provisional claim，
+不等同于当前evidence ledger已完成。Clean draft与highlighted review copy均已
+落地。Decision=`intro_v0_9_author_refinement_pass_method_figure4_planned`。
+
 [Introduction P2--P6 Structural Polish, 2026-07-30] Introduction v0.8完成
 `nature-polishing`结构修订：P2压缩为system fragmentation、overlap disagreement
 与deployment redundancy；P3改用horizon无关的future-step-indexed mapping定义
@@ -35,8 +51,8 @@ horizon-specific main table与backbone transfer table尚未完整，当前使用
 详细problem-existence experiment。Figure 1改为一张完全由constructed curves
 生成的two-panel concept illustration：panel a说明同一future step的
 horizon-specific disagreement，panel b说明不同future regions的preferred
-sharing extent可能变化。图内与caption均声明`not empirical data`；正文只简述
-本文在Section 3给出formal definitions与controlled real-data evidence。
+sharing extent可能变化。图内声明`not empirical data`；v0.9按author decision
+精简caption并删除重复说明。正文只简述本文在Section 3进一步讨论该问题。
 
 原两张approved real-data figures移至Section 3，暂按Figure 2（ETTh2 prefix
 disagreement）与Figure 3（ETTm2 sharing-demand heterogeneity）使用。它们仍
