@@ -16,6 +16,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from baselines.dlinear.dataset import DATASETS
 from baselines.intro_evidence_neutral.model import (
     NeutralSharingExtentForecaster,
 )
@@ -23,10 +24,28 @@ from baselines.intro_evidence_neutral.model import (
 
 HORIZONS = (96, 192, 336, 720)
 SCALES = (1, 8, 32, 128, 720)
+FULL_SEARCH_DATASETS = ("ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather")
 
 
 def parameter_count(model: torch.nn.Module) -> int:
     return sum(parameter.numel() for parameter in model.parameters())
+
+
+def check_dataset_registry() -> dict[str, list[str] | bool]:
+    missing = sorted(set(FULL_SEARCH_DATASETS) - set(DATASETS))
+    if missing:
+        raise RuntimeError(f"full-search datasets missing from registry: {missing}")
+    invalid_channels = {
+        dataset: DATASETS[dataset].channels
+        for dataset in FULL_SEARCH_DATASETS
+        if DATASETS[dataset].channels <= 0
+    }
+    if invalid_channels:
+        raise RuntimeError(f"invalid dataset channel counts: {invalid_channels}")
+    return {
+        "registered_datasets": list(FULL_SEARCH_DATASETS),
+        "pass": True,
+    }
 
 
 def reference_pooled_states(
@@ -449,6 +468,7 @@ def run_analyzers(root: Path) -> dict[str, bool]:
 
 
 def main() -> None:
+    dataset_registry = check_dataset_registry()
     pooling_equivalence = check_vectorized_pooling_equivalence()
     model_contract = check_model_contract()
     with tempfile.TemporaryDirectory(prefix="fatst_intro_viz_") as directory:
@@ -456,6 +476,7 @@ def main() -> None:
     print(
         json.dumps(
             {
+                "dataset_registry": dataset_registry,
                 "pooling_equivalence": pooling_equivalence,
                 "model_contract": model_contract,
                 "analyzer_contract": analyzer_contract,

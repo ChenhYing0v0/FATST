@@ -18,8 +18,10 @@ class DatasetSpec:
 
 
 DATASETS: dict[str, DatasetSpec] = {
+    "ETTh1": DatasetSpec("ETTh1", "ETT-small/ETTh1.csv", 7, "ett_hour"),
     "ETTh2": DatasetSpec("ETTh2", "ETT-small/ETTh2.csv", 7, "ett_hour"),
     "ETTm1": DatasetSpec("ETTm1", "ETT-small/ETTm1.csv", 7, "ett_minute"),
+    "ETTm2": DatasetSpec("ETTm2", "ETT-small/ETTm2.csv", 7, "ett_minute"),
     "Weather": DatasetSpec("Weather", "weather/weather.csv", 21, "ratio"),
 }
 

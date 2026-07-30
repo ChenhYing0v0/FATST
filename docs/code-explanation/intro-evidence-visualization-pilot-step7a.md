@@ -319,6 +319,12 @@ long-horizon与较慢datasets排在前面，但不固定到某张GPU；任意GPU
 
 `/home/yingch/exp_outputs/r-2026-fatst/intro_evidence_visualization_pilot_v1`
 
+五dataset full-search要求共享的`baselines/dlinear/dataset.py` registry同时包含
+ETTh1、ETTh2、ETTm1、ETTm2与Weather。ETTh1/ETTh2使用`ett_hour` borders，
+ETTm1/ETTm2使用`ett_minute` borders；四个ETT datasets均为7 channels。local
+contract现在先验证五个dataset names都已注册，避免runner只通过generic
+`--help`却在具体job启动后才发现CLI choice缺失。
+
 ## 7. Code-theory consistency
 
 ### Intended theory

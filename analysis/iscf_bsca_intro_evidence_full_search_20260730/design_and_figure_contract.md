@@ -204,3 +204,29 @@ Decision=`full_five_dataset_visualization_search_design_frozen`。
 | `effectiveness_gate` | not applicable；本轮不是method effectiveness或formal problem gate |
 | `artifacts` | config、maximum/sample analyzers、ranker、dynamic runner、local equivalence checker；remote artifacts pending |
 | `decision` | `full_search_step7a_pass_remote_launch_next` |
+
+## 8. First-launch implementation fault and repair
+
+首次remote launch在commit `7813932`上通过GPU preflight与generic dry-run，但
+ETTh1/ETTm2 jobs在argument parsing阶段退出。根因是两个trainers共享的
+`baselines/dlinear/dataset.py` registry历史上只列出ETTh2、ETTm1与Weather；
+原dry-run只检查`--help`和synthetic paths，没有枚举full-search dataset names。
+
+Failure attribution：
+
+- `hypothesis_false`：否；
+- `intervention_point_wrong`：否；
+- `readout_or_head_design_wrong`：否；
+- `optimization_or_numeric_pathology`：否；
+- exact cause=`prelaunch_dataset_registry_coverage_fault`。
+
+driver已在发现首批失败后立即停止，三张GPU恢复18 MiB idle；已完成artifacts保留，
+失败jobs没有进入训练或产生结果。修复为：
+
+1. registry加入ETTh1与ETTm2，沿用对应hour/minute标准split；
+2. local checker显式要求五个full-search datasets全部注册；
+3. 重新执行dataset construction、full checker、remote dry-run与GPU preflight后
+   才允许restart-safe relaunch。
+
+该故障只影响exact runner readiness，不产生visualization result，也不能用于
+problem、method或architecture判断。
