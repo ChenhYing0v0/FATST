@@ -5,10 +5,10 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.13` |
+| `version` | `v0.14` |
 | `last_updated` | `2026-07-30` |
 | `paper_candidate` | `ISCF-BSCA-v1` |
-| `current_review_cursor` | ETTh2 prefix + ETTm2 sharing figures selected and rendered；Introduction integration complete |
+| `current_review_cursor` | ETTh2 prefix + ETTm2 sharing figures publication styling complete；caption integration next |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
 | `provisional_content` | Introduction P1--P6 v0.2正文；两项problem-evidence results；Related Work、Method、Experiments、Conclusion |
 | `not_authorized_by_this_document` | 新模型实现、remote training、formal test、按结果调参 |
@@ -1044,8 +1044,10 @@ seed2021上的validation artifacts。对每个origin构造all-channel
 Final selected result：Figure 2使用ETTm2 origin=4177。五个scales分别赢得
 `2/2/2/3/3`个regions，全部10个scale pairs达到qualified bidirectional
 crossing，mean winner margin=10.266%，descriptive region-oracle headroom=
-8.112%。最终图使用risk heatmap与winner-colored region-gain bars，不再展示
-高噪声step-wise curves。图中明确标记maximum-heterogeneity validation role；
+8.112%。最终图使用region-best excess-risk heatmap与winner-colored
+region-gain bars，不再展示高噪声step-wise curves。旧版fixed-s720 heatmap中
+s720整行恒为0并显示为白色；新版编码消除该视觉歧义，同时在bar panel保留
+fixed-s720 reference。maximum-heterogeneity validation role在caption中明确；
 正式CFH继续deferred。图不使用ISCF/BSCA，不承担method effectiveness claim。
 
 ### 6.5 Design Requirements
@@ -1460,3 +1462,4 @@ Coverage boundary：
 | 2026-07-29 | Two problem-evidence figures selected | Weather prefix-difference/NCHPD；ETTm1 sharing-risk crossover/region contrast | integrate captions and Problem Formulation definitions |
 | 2026-07-30 | Five-dataset full visualization search | maximum joint prefix selection；sample-level supported multi-scope selection；31 missing runs；global dynamic GPU queue | remote results与最终视觉样式待审计 |
 | 2026-07-30 | Full-search figure selection | ETTh2 prefix + ETTm2 sharing；SVG/PDF/PNG/TIFF；Nature QA 13 pass/1 warn/0 fail | integrate captions；formal prevalence/CFH仍deferred |
+| 2026-07-30 | Nature figure refinement | exact 183 mm；muted semantic palettes；compact prefix triangle；region-best excess-risk sharing heatmap | captions disclose maximum validation selection；formal prevalence/CFH仍deferred |

@@ -29,9 +29,12 @@
    `2/2/2/3/3`个60-step regions；10/10 scale pairs均有qualified crossing；
    mean winner margin=`10.266%`，descriptive oracle headroom=`8.112%`。
 
-两图已重构为紧凑问题证据并导出SVG/PDF/PNG/TIFF；Nature source QA=
-`13 PASS / 1 WARN / 0 FAIL`。唯一WARN为static width parser，实际按183 mm
-double-column设计。Decision=
+两图已按`nature-figure`重构为exact 183 mm asymmetric quantitative
+composites并导出SVG/PDF/PNG/TIFF：prefix panel使用muted horizon palette与
+紧凑3×3 triangular NCHPD；sharing panel使用region-best excess-risk heatmap，
+消除旧版fixed-s720 encoding导致的s720全白行，同时在gain bars中保留s720
+fixed reference。Nature source QA=`13 PASS / 1 WARN / 0 FAIL`；唯一WARN为
+static parser不能计算width变量，PDF media box实测183 mm。Decision=
 `two_intro_figures_pass_illustrative_gate_etth2_prefix_ettm2_sharing`。停止
 dataset/sample search；不新增method、loss或router。报告：
 `analysis/iscf_bsca_intro_evidence_full_search_20260730/result_selection_and_figure_report.md`。

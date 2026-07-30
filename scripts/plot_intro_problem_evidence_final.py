@@ -15,16 +15,17 @@ import numpy as np
 matplotlib.use("Agg")
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.patches import Patch
 
 
 HORIZONS = (96, 192, 336, 720)
 SCALES = (1, 8, 32, 128, 720)
 HORIZON_COLORS = {
-    96: "#D55E00",
-    192: "#E69F00",
-    336: "#0072B2",
-    720: "#009E73",
+    96: "#B85C38",
+    192: "#C9952D",
+    336: "#4C78A8",
+    720: "#2A7F62",
 }
 HORIZON_STYLES = {
     96: "-",
@@ -33,28 +34,44 @@ HORIZON_STYLES = {
     720: ":",
 }
 SCALE_COLORS = {
-    1: "#D55E00",
-    8: "#E69F00",
-    32: "#0072B2",
-    128: "#CC79A7",
-    720: "#009E73",
+    1: "#425A8B",
+    8: "#607CAD",
+    32: "#86A6C8",
+    128: "#A784B8",
+    720: "#C36B85",
 }
 DOUBLE_COLUMN_WIDTH = 183.0 / 25.4
+PREFIX_CMAP = LinearSegmentedColormap.from_list(
+    "prefix_disagreement",
+    ("#F4F5FA", "#C7D2E8", "#7995C2", "#2D4573"),
+)
+SHARING_CMAP = LinearSegmentedColormap.from_list(
+    "sharing_excess_risk",
+    ("#F7F7F7", "#F3D8CF", "#D98B78", "#8E3B46"),
+)
 
 
 def configure_matplotlib() -> None:
     mpl.rcParams.update(
         {
             "font.family": "sans-serif",
-            "font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans"],
-            "font.size": 7.0,
-            "axes.titlesize": 7.5,
-            "axes.labelsize": 7.0,
-            "xtick.labelsize": 6.2,
-            "ytick.labelsize": 6.2,
-            "legend.fontsize": 6.2,
-            "axes.linewidth": 0.7,
-            "lines.linewidth": 1.15,
+            "font.sans-serif": [
+                "Arial",
+                "Helvetica",
+                "DejaVu Sans",
+                "sans-serif",
+            ],
+            "font.size": 7.2,
+            "axes.titlesize": 8.0,
+            "axes.labelsize": 7.2,
+            "xtick.labelsize": 6.6,
+            "ytick.labelsize": 6.6,
+            "legend.fontsize": 6.4,
+            "axes.linewidth": 0.75,
+            "lines.linewidth": 1.2,
+            "axes.spines.right": False,
+            "axes.spines.top": False,
+            "legend.frameon": False,
             "svg.fonttype": "none",
             "pdf.fonttype": 42,
             "savefig.transparent": False,
@@ -84,7 +101,6 @@ def read_prefix_source(path: Path) -> list[dict[str, str]]:
 
 def read_pair_matrix(path: Path) -> np.ndarray:
     matrix = np.full((len(HORIZONS), len(HORIZONS)), np.nan)
-    np.fill_diagonal(matrix, 0.0)
     horizon_to_index = {
         horizon: index for index, horizon in enumerate(HORIZONS)
     }
@@ -113,10 +129,10 @@ def read_region_risk(path: Path) -> np.ndarray:
 def panel_label(axis: plt.Axes, label: str) -> None:
     axis.text(
         -0.12,
-        1.05,
+        1.04,
         label,
         transform=axis.transAxes,
-        fontsize=8.0,
+        fontsize=8.4,
         fontweight="bold",
         va="bottom",
         ha="left",
@@ -135,13 +151,12 @@ def export_figure(
         "png": output_dir / f"{stem}.png",
         "tiff": output_dir / f"{stem}.tiff",
     }
-    figure.savefig(paths["svg"], bbox_inches="tight")
-    figure.savefig(paths["pdf"], bbox_inches="tight")
-    figure.savefig(paths["png"], dpi=300, bbox_inches="tight")
+    figure.savefig(paths["svg"])
+    figure.savefig(paths["pdf"])
+    figure.savefig(paths["png"], dpi=300)
     figure.savefig(
         paths["tiff"],
         dpi=600,
-        bbox_inches="tight",
         pil_kwargs={"compression": "tiff_lzw"},
     )
     return {key: str(value) for key, value in paths.items()}
@@ -150,7 +165,6 @@ def export_figure(
 def plot_prefix_figure(
     source_path: Path,
     pair_path: Path,
-    summary: dict[str, Any],
     output_dir: Path,
 ) -> dict[str, str]:
     rows = read_prefix_source(source_path)
@@ -183,14 +197,14 @@ def plot_prefix_figure(
     pair_matrix = read_pair_matrix(pair_path)
 
     figure = plt.figure(
-        figsize=(DOUBLE_COLUMN_WIDTH, 4.05),
+        figsize=(DOUBLE_COLUMN_WIDTH, 4.12),
         constrained_layout=True,
     )
     grid = figure.add_gridspec(
         2,
         2,
         width_ratios=(2.15, 1.0),
-        height_ratios=(1.0, 0.86),
+        height_ratios=(1.0, 0.82),
     )
     trajectory_axis = figure.add_subplot(grid[0, 0])
     difference_axis = figure.add_subplot(grid[1, 0])
@@ -199,15 +213,21 @@ def plot_prefix_figure(
     trajectory_axis.plot(
         history_x,
         history_y,
-        color="#6B6B6B",
-        linewidth=1.0,
+        color="#858585",
+        linewidth=1.05,
         label="History",
+    )
+    trajectory_axis.axvspan(
+        history_x[0],
+        0,
+        color="#F1F1F1",
+        zorder=-2,
     )
     trajectory_axis.plot(
         future_x,
         target,
-        color="#222222",
-        linewidth=1.45,
+        color="#202020",
+        linewidth=1.4,
         label="Ground truth",
     )
     for horizon in HORIZONS:
@@ -216,7 +236,8 @@ def plot_prefix_figure(
             predictions[horizon],
             color=HORIZON_COLORS[horizon],
             linestyle=HORIZON_STYLES[horizon],
-            label=f"H={horizon}",
+            linewidth=1.4 if horizon == 720 else 1.15,
+            label=f"$H={horizon}$",
         )
     trajectory_axis.axvline(
         0,
@@ -225,18 +246,19 @@ def plot_prefix_figure(
         linewidth=0.75,
     )
     trajectory_axis.set_xlim(history_x[0], 96)
-    trajectory_axis.set_xlabel("Relative future step")
-    trajectory_axis.set_ylabel("Observed / predicted value")
+    trajectory_axis.set_xlabel("Time step relative to forecast origin")
+    trajectory_axis.set_ylabel("Value")
     trajectory_axis.set_title(
-        "Same history, different requested horizons",
+        "Overlapping horizon-specific forecasts",
         loc="left",
+        pad=6,
     )
-    trajectory_axis.grid(alpha=0.16, linewidth=0.45)
     trajectory_axis.legend(
         ncol=3,
-        frameon=False,
         loc="upper right",
-        handlelength=2.5,
+        handlelength=2.3,
+        columnspacing=0.9,
+        borderaxespad=0.25,
     )
     panel_label(trajectory_axis, "a")
 
@@ -249,7 +271,7 @@ def plot_prefix_figure(
             difference,
             color=HORIZON_COLORS[horizon],
             linestyle=HORIZON_STYLES[horizon],
-            label=f"H={horizon}  (mean |Δ|={mean_absolute:.2f})",
+            label=f"$H={horizon}$: {mean_absolute:.2f}",
         )
     difference_axis.axhline(
         0.0,
@@ -259,38 +281,69 @@ def plot_prefix_figure(
     )
     difference_axis.set_xlim(1, 96)
     difference_axis.set_xlabel("Overlapping future step")
-    difference_axis.set_ylabel("Prediction − H=720")
+    difference_axis.set_ylabel(r"Prediction difference from $H=720$")
     difference_axis.set_title(
-        "Disagreement on the shared 96-step prefix",
+        "Differences on the shared 96-step prefix",
         loc="left",
+        pad=6,
     )
-    difference_axis.grid(alpha=0.16, linewidth=0.45)
     difference_axis.legend(
-        frameon=False,
         loc="lower right",
-        handlelength=2.5,
+        title=r"Mean $|\Delta|$",
+        title_fontsize=6.4,
+        handlelength=2.3,
+        borderaxespad=0.25,
     )
     panel_label(difference_axis, "b")
 
-    masked = np.ma.masked_invalid(pair_matrix)
+    pair_display = pair_matrix[:-1, 1:]
+    masked = np.ma.masked_invalid(pair_display)
+    PREFIX_CMAP.set_bad("#FFFFFF")
     image = heatmap_axis.imshow(
         masked,
-        cmap="YlOrRd",
+        cmap=PREFIX_CMAP,
         vmin=0.0,
+        vmax=float(np.nanmax(pair_display)),
         aspect="equal",
     )
-    heatmap_axis.set_xticks(range(len(HORIZONS)), labels=HORIZONS)
-    heatmap_axis.set_yticks(range(len(HORIZONS)), labels=HORIZONS)
+    heatmap_axis.set_xticks(
+        range(len(HORIZONS) - 1),
+        labels=HORIZONS[1:],
+    )
+    heatmap_axis.set_yticks(
+        range(len(HORIZONS) - 1),
+        labels=HORIZONS[:-1],
+    )
     heatmap_axis.set_xlabel("Longer requested horizon")
     heatmap_axis.set_ylabel("Shorter requested horizon")
     heatmap_axis.set_title(
-        "Validation-set prefix disagreement",
+        "Cross-horizon disagreement",
         loc="left",
+        pad=6,
     )
-    for row in range(len(HORIZONS)):
-        for column in range(len(HORIZONS)):
-            value = pair_matrix[row, column]
+    heatmap_axis.set_xticks(
+        np.arange(-0.5, len(HORIZONS) - 1, 1),
+        minor=True,
+    )
+    heatmap_axis.set_yticks(
+        np.arange(-0.5, len(HORIZONS) - 1, 1),
+        minor=True,
+    )
+    heatmap_axis.grid(
+        which="minor",
+        color="white",
+        linewidth=1.0,
+    )
+    heatmap_axis.tick_params(which="minor", bottom=False, left=False)
+    for row in range(len(HORIZONS) - 1):
+        for column in range(len(HORIZONS) - 1):
+            value = pair_display[row, column]
             if np.isfinite(value):
+                text_color = (
+                    "white"
+                    if value > 0.63 * float(np.nanmax(pair_display))
+                    else "#202020"
+                )
                 heatmap_axis.text(
                     column,
                     row,
@@ -298,26 +351,16 @@ def plot_prefix_figure(
                     ha="center",
                     va="center",
                     fontsize=6.2,
+                    color=text_color,
                 )
     colorbar = figure.colorbar(
         image,
         ax=heatmap_axis,
-        shrink=0.62,
+        shrink=0.67,
         pad=0.04,
     )
-    colorbar.set_label("NCHPD")
+    colorbar.set_label("Mean NCHPD")
     panel_label(heatmap_axis, "c")
-
-    figure.text(
-        0.01,
-        -0.015,
-        "Illustrative validation example selected by maximum aggregate "
-        f"disagreement over {summary['searched_origin_channel_cells']:,} "
-        "origin–channel candidates; heatmap uses all validation origins.",
-        fontsize=5.6,
-        color="#555555",
-        ha="left",
-    )
     paths = export_figure(
         figure,
         output_dir,
@@ -337,39 +380,55 @@ def plot_sharing_figure(
     fixed_scale = int(selected["best_fixed_scale"])
     fixed_index = SCALES.index(fixed_scale)
     fixed_risk = risk[fixed_index]
-    relative_to_fixed = (
-        risk - fixed_risk[None, :]
-    ) / np.maximum(fixed_risk[None, :], 1e-12)
     winners = np.argmin(risk, axis=0)
     winner_risk = np.min(risk, axis=0)
+    excess_over_region_best = (
+        risk - winner_risk[None, :]
+    ) / np.maximum(winner_risk[None, :], 1e-12)
     realized_gain = (
         fixed_risk - winner_risk
     ) / np.maximum(fixed_risk, 1e-12)
 
     figure = plt.figure(
-        figsize=(DOUBLE_COLUMN_WIDTH, 3.25),
+        figsize=(DOUBLE_COLUMN_WIDTH, 3.08),
         constrained_layout=True,
     )
-    grid = figure.add_gridspec(1, 2, width_ratios=(1.45, 1.0))
+    grid = figure.add_gridspec(
+        1,
+        2,
+        width_ratios=(1.52, 1.0),
+        wspace=0.12,
+    )
     heatmap_axis = figure.add_subplot(grid[0, 0])
     gain_axis = figure.add_subplot(grid[0, 1])
 
-    magnitude = max(float(np.max(np.abs(relative_to_fixed))), 0.01)
     image = heatmap_axis.imshow(
-        relative_to_fixed * 100.0,
-        cmap="RdBu_r",
-        vmin=-100.0 * magnitude,
-        vmax=100.0 * magnitude,
+        excess_over_region_best * 100.0,
+        cmap=SHARING_CMAP,
+        vmin=0.0,
+        vmax=float(np.max(excess_over_region_best * 100.0)),
         aspect="auto",
     )
     heatmap_axis.set_xticks(range(12), labels=range(1, 13))
     heatmap_axis.set_yticks(range(len(SCALES)), labels=SCALES)
     heatmap_axis.set_xlabel("60-step future region")
-    heatmap_axis.set_ylabel("Cross-step sharing extent")
+    heatmap_axis.set_ylabel(r"Cross-step sharing extent $s$")
     heatmap_axis.set_title(
-        f"Region-wise risk relative to fixed s={fixed_scale}",
+        "Excess risk above each region's best extent",
         loc="left",
+        pad=6,
     )
+    heatmap_axis.set_xticks(np.arange(-0.5, 12, 1), minor=True)
+    heatmap_axis.set_yticks(
+        np.arange(-0.5, len(SCALES), 1),
+        minor=True,
+    )
+    heatmap_axis.grid(
+        which="minor",
+        color="white",
+        linewidth=0.8,
+    )
+    heatmap_axis.tick_params(which="minor", bottom=False, left=False)
     heatmap_axis.scatter(
         np.arange(12),
         winners,
@@ -378,40 +437,58 @@ def plot_sharing_figure(
         facecolors="none",
         edgecolors="#111111",
         linewidths=0.9,
-        label="Region winner",
+        label="Region best",
     )
     heatmap_axis.legend(
-        loc="upper left",
-        frameon=True,
-        framealpha=0.88,
-        borderpad=0.3,
+        loc="lower right",
+        bbox_to_anchor=(1.0, 1.005),
+        borderpad=0.2,
+        handletextpad=0.35,
     )
     colorbar = figure.colorbar(
         image,
         ax=heatmap_axis,
-        shrink=0.78,
+        shrink=0.82,
         pad=0.03,
+        fraction=0.045,
     )
-    colorbar.set_label("ΔMSE (%)")
+    colorbar.set_label("Excess MSE (%)")
     panel_label(heatmap_axis, "a")
 
     region_x = np.arange(1, 13)
     winner_scales = [SCALES[int(index)] for index in winners]
-    gain_axis.bar(
+    bars = gain_axis.bar(
         region_x,
         realized_gain * 100.0,
         color=[SCALE_COLORS[scale] for scale in winner_scales],
         width=0.78,
+        edgecolor="white",
+        linewidth=0.45,
     )
-    gain_axis.axhline(0.0, color="#555555", linewidth=0.7)
+    gain_axis.axhline(0.0, color="#555555", linewidth=0.75)
+    mean_gain = 100.0 * float(selected["sample_oracle_headroom"])
+    gain_axis.axhline(
+        mean_gain,
+        color="#666666",
+        linestyle="--",
+        linewidth=0.8,
+        zorder=0,
+    )
     gain_axis.set_xticks(region_x)
     gain_axis.set_xlabel("60-step future region")
     gain_axis.set_ylabel(f"Gain vs fixed s={fixed_scale} (%)")
     gain_axis.set_title(
-        "Different regions favor different sharing extents",
+        "Region-wise gain over the best fixed extent",
         loc="left",
+        pad=6,
     )
-    gain_axis.grid(axis="y", alpha=0.16, linewidth=0.45)
+    gain_axis.grid(
+        axis="y",
+        color="#D9D9D9",
+        alpha=0.35,
+        linewidth=0.45,
+        zorder=-2,
+    )
     gain_axis.scatter(
         region_x,
         np.full_like(region_x, 0.55, dtype=np.float64),
@@ -428,51 +505,52 @@ def plot_sharing_figure(
     ]
     gain_axis.set_ylim(
         0.0,
-        max(1.0, float(np.max(realized_gain * 100.0)) * 1.18),
+        max(1.0, float(np.max(realized_gain * 100.0)) * 1.2),
     )
     gain_axis.legend(
         handles=legend_handles,
-        title="Region winner",
+        title="Winning extent",
         ncol=5,
         frameon=False,
         loc="upper center",
-        bbox_to_anchor=(0.5, 1.0),
+        bbox_to_anchor=(0.5, 0.99),
         columnspacing=0.45,
         handlelength=0.9,
         handletextpad=0.3,
         fontsize=5.4,
         title_fontsize=5.6,
     )
+    for bar, value in zip(bars, realized_gain * 100.0):
+        if value >= 1.0:
+            gain_axis.text(
+                bar.get_x() + bar.get_width() / 2.0,
+                value + 0.55,
+                f"{value:.1f}",
+                ha="center",
+                va="bottom",
+                fontsize=5.5,
+                color="#3F3F3F",
+            )
     gain_axis.text(
         0.98,
-        0.82,
-        "All 5 extents win 2–3 regions\n"
-        f"Region-oracle headroom: "
-        f"{100.0 * selected['sample_oracle_headroom']:.1f}%",
+        0.80,
+        "All five extents win 2–3 regions",
         transform=gain_axis.transAxes,
+        va="top",
+        ha="right",
+        fontsize=6.1,
+        color="#4A4A4A",
+    )
+    gain_axis.text(
+        12.35,
+        mean_gain + 0.45,
+        f"Mean = {mean_gain:.1f}%",
         va="bottom",
         ha="right",
-        fontsize=6.2,
-        color="#333333",
-        bbox={
-            "facecolor": "white",
-            "edgecolor": "#BBBBBB",
-            "boxstyle": "round,pad=0.25",
-            "alpha": 0.9,
-        },
+        fontsize=5.6,
+        color="#5A5A5A",
     )
     panel_label(gain_axis, "b")
-
-    figure.text(
-        0.01,
-        -0.015,
-        "Maximum-heterogeneity validation example; each region aggregates "
-        "60 future steps and all channels. Squares, markers, and bar colors "
-        "identify the descriptive region winner.",
-        fontsize=5.6,
-        color="#555555",
-        ha="left",
-    )
     paths = export_figure(
         figure,
         output_dir,
@@ -493,7 +571,6 @@ def main() -> None:
     prefix_paths = plot_prefix_figure(
         args.prefix_source,
         args.prefix_pairs,
-        prefix_summary,
         args.output_dir,
     )
     sharing_paths = plot_sharing_figure(
@@ -504,6 +581,11 @@ def main() -> None:
     manifest = {
         "split": "validation",
         "test_accessed": False,
+        "figure_contract": {
+            "archetype": "asymmetric quantitative composite",
+            "final_width_mm": 183.0,
+            "backend": "Python/matplotlib",
+        },
         "prefix": {
             "dataset": prefix_summary["dataset"],
             "seed": prefix_summary["seed"],
@@ -525,6 +607,13 @@ def main() -> None:
             "dataset": sharing_summary["dataset"],
             "seed": sharing_summary["seed"],
             "selected": sharing_summary["selected"],
+            "heatmap_encoding": (
+                "percent MSE excess over the best sharing extent "
+                "within each future region"
+            ),
+            "bar_reference": (
+                "percent MSE gain over the sample-best fixed extent s=720"
+            ),
             "source_data": {
                 "region_risk": str(args.sharing_region_risk),
                 "summary": str(args.sharing_summary),

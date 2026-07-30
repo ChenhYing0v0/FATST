@@ -44,20 +44,23 @@ channels的standardized mean absolute difference。panel c将六个pair values�
 ```
 
 每行`mse`为selected origin上对应scale、60-step region及all channels的mean
-squared error。script构造：
+squared error。为避免把fixed reference误读为missing data，panel a使用每个
+region自身的最低risk作为视觉参考：
 
 $$
-\Delta R_{s,b}
+E_{s,b}
 =
-\frac{R_{s,b}-R_{s^\mathrm{fixed},b}}
-{R_{s^\mathrm{fixed},b}},
+\frac{R_{s,b}-\min_{s'}R_{s',b}}
+{\min_{s'}R_{s',b}}\times100\%.
 $$
 
-其中$s^\mathrm{fixed}=720$是该sample全域MSE最低的single fixed scale。panel a
-绘制$100\Delta R_{s,b}$，outlined square标记
-$\arg\min_sR_{s,b}$。
+panel a绘制$E_{s,b}$，outlined square标记$\arg\min_sR_{s,b}$。因此每列只有
+region winner为0；$s=720$只在regions 10--12保持0，而不是像旧版
+fixed-reference encoding那样整行恒为0。旧版白色$s=720$行来自
+$(R_{720,b}-R_{720,b})/R_{720,b}=0$，并非missing values。
 
-panel b的bar height为：
+panel b仍保留sample-best fixed extent $s^\mathrm{fixed}=720$作为业务上更直接的
+统一decoder reference，其bar height为：
 
 $$
 G_b
@@ -70,7 +73,8 @@ R_{s^\mathrm{fixed},b}
 $$
 
 bar与baseline marker颜色来自region winner。winner恰为fixed s720时$G_b=0$，
-仍用绿色square显示winner identity，避免零高度bar使region 10--12不可见。
+仍用对应的rose square显示winner identity，避免零高度bar使region 10--12
+不可见。虚线表示12个regions的mean gain，即descriptive headroom 8.1%。
 
 ## 4. Export and QA
 
@@ -79,7 +83,7 @@ bar与baseline marker颜色来自region winner。winner恰为fixed s720时$G_b=0
 - Python/matplotlib backend；
 - sans-serif publication fonts；
 - editable SVG text与PDF Type 42 fonts；
-- 183 mm double-column design width；
+- exact 183 mm double-column output width，不依赖tight-bbox再缩放；
 - PNG 300 dpi；
 - LZW TIFF 600 dpi；
 - source-data/selection/claim boundary写入`figure_manifest.json`。

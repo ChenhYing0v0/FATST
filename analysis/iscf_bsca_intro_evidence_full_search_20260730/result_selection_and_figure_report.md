@@ -127,21 +127,28 @@ effectiveness仍由ISCF-BSCA matched test evidence承担。
 
 ### Figure 1: Prefix disagreement
 
-1. panel a只展示48-step history与真正共同的96-step future prefix；
-2. panel b显示H96/H192/H336相对H720的raw-value difference及mean absolute
-   difference；
-3. panel c显示全validation origins/channels的six-pair NCHPD heatmap。
+1. panel a以muted horizon palette展示48-step history与真正共同的96-step
+   future prefix，并用浅灰背景区分history；
+2. panel b复用相同颜色和line style，显示H96/H192/H336相对H720的raw-value
+   difference及mean absolute difference；
+3. panel c使用紧凑3×3 upper-triangular sequential-blue heatmap显示全
+   validation origins/channels的six-pair NCHPD。
 
 这避免用完整720-step轨迹稀释重叠区域，同时把selected example和dataset-level
-average evidence明确分开。
+average evidence明确分开。selection disclosure移入caption，避免figure footer
+与数据竞争视觉注意力。
 
 ### Figure 2: Sharing-demand heterogeneity
 
-1. panel a展示五个sharing extents相对sample-best fixed s720的12-region风险面；
-2. 每个region winner用空心方框标出，不再用高噪声折线连接；
+1. panel a展示五个sharing extents相对每个region最低risk的excess MSE；
+2. 每个region winner的excess MSE为0并用空心方框标出，不再用高噪声折线连接；
 3. panel b以winner-colored bars展示每个region相对fixed s720实际实现的risk
-   reduction；零高度regions仍以绿色marker标出s720 winner。
+   reduction；虚线为12-region mean=8.1%，零高度regions仍以rose marker标出
+   s720 winner。
 
+旧版heatmap使用fixed s720作为逐列reference，因此s720行数学上恒为0并映射成
+全白，容易被误读为missing data。新版把panel a改为region-best excess risk，
+使s720仅在其真正获胜的regions 10--12为0；panel b继续保留fixed s720 comparison。
 这使“winner identity发生变化”和“变化具有多大风险收益”在同一图中可直接读取。
 
 ### Proposed manuscript captions
@@ -154,19 +161,21 @@ all four requested horizons. **b**, Prediction differences relative to the
 720-step model on this common prefix. The displayed validation origin-channel
 pair maximizes mean absolute disagreement aggregated over all six horizon
 pairs among 15,127 candidates. **c**, Normalized cross-horizon prefix
-disagreement (NCHPD) averaged over all ETTh2 validation origins and variables.
-The selected example is illustrative and is not a prevalence estimate.
+disagreement (NCHPD) averaged over all ETTh2 validation origins
+($n=2,161$) and variables. The selected example is illustrative and is not a
+prevalence estimate. Source data are provided with the figure package.
 
 **Figure 2 | Preferred cross-step sharing extent varies across future
-regions.** **a**, Region-wise MSE of five capacity-matched neutral decoders on
-one ETTm2 validation example, expressed relative to the best fixed decoder
-($s=720$). Each column aggregates 60 future steps and all variables; outlined
-squares mark the lowest-risk sharing extent. **b**, MSE reduction of each
-region winner relative to the fixed $s=720$ decoder, with colors denoting the
-winning extent. All five extents win two or three regions, and the descriptive
-region-wise minimum yields 8.1% lower average MSE than the best fixed extent.
-The example is selected on validation labels and does not represent
-out-of-sample routing performance.
+regions.** **a**, Percentage MSE excess of five capacity-matched neutral
+decoders above the lowest-risk sharing extent within each 60-step future region
+of one ETTm2 validation example. Outlined squares mark the region-wise best
+extent. **b**, MSE reduction of each region winner relative to the best fixed
+extent ($s=720$), with colors denoting the winning extent and the dashed line
+showing the 12-region mean. All five extents win two or three regions, and the
+descriptive region-wise minimum yields 8.1% lower average MSE than the best
+fixed extent. The example is selected on validation labels and does not
+represent out-of-sample routing performance. Source data are provided with the
+figure package.
 
 ## 5. QA
 
@@ -176,13 +185,12 @@ out-of-sample routing performance.
 | backend | Python/matplotlib only |
 | editable SVG/PDF text | pass；SVG包含61/75个text nodes |
 | PNG | 300 dpi export |
-| TIFF | 600 dpi；4388×2570与4388×2083 |
-| PDF | one page each；约185.8 mm wide before manuscript scaling |
-| visual inspection | labels、legends、winner markers、colorbars与footer可读 |
+| TIFF | 600 dpi；4322×2472与4322×1848 |
+| PDF | one page each；exact 183 mm width |
+| visual inspection | labels、legends、winner markers、colorbars与panel hierarchy可读 |
 
 唯一WARN为static validator无法从`DOUBLE_COLUMN_WIDTH=183/25.4`变量解析final
-width。实际PDF约185.8 mm，插入manuscript时统一缩放至183 mm；该1.5%缩放后最小
-文字仍高于5 pt。
+width。PDF media box实测518.74 pt=183 mm；不再使用tight-bbox扩大输出。
 
 ## 6. Decision and failure attribution
 

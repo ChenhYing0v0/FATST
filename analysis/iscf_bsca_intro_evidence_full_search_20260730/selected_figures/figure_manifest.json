@@ -1,6 +1,11 @@
 {
   "split": "validation",
   "test_accessed": false,
+  "figure_contract": {
+    "archetype": "asymmetric quantitative composite",
+    "final_width_mm": 183.0,
+    "backend": "Python/matplotlib"
+  },
   "prefix": {
     "dataset": "ETTh2",
     "seed": 2021,
@@ -41,6 +46,8 @@
       "s128_winner_regions": 3,
       "s720_winner_regions": 3
     },
+    "heatmap_encoding": "percent MSE excess over the best sharing extent within each future region",
+    "bar_reference": "percent MSE gain over the sample-best fixed extent s=720",
     "source_data": {
       "region_risk": "analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures/source_data/sharing_ettm2/selected_region_risk.csv",
       "summary": "analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures/source_data/sharing_ettm2/summary.json"
