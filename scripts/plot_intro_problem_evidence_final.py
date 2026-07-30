@@ -14,8 +14,10 @@ import numpy as np
 
 matplotlib.use("Agg")
 import matplotlib as mpl
+import matplotlib.patheffects as path_effects
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
+from matplotlib.offsetbox import AnchoredOffsetbox, HPacker, TextArea, VPacker
 from matplotlib.patches import Patch
 
 
@@ -27,11 +29,17 @@ HORIZON_COLORS = {
     336: "#4C78A8",
     720: "#2A7F62",
 }
-HORIZON_STYLES = {
-    96: "-",
-    192: "--",
-    336: "-.",
-    720: ":",
+HORIZON_MARKERS = {
+    96: "o",
+    192: "s",
+    336: "^",
+    720: "D",
+}
+HORIZON_MARKER_OFFSETS = {
+    96: 2,
+    192: 5,
+    336: 8,
+    720: 11,
 }
 SCALE_COLORS = {
     1: "#425A8B",
@@ -197,24 +205,24 @@ def plot_prefix_figure(
     pair_matrix = read_pair_matrix(pair_path)
 
     figure = plt.figure(
-        figsize=(DOUBLE_COLUMN_WIDTH, 4.12),
+        figsize=(DOUBLE_COLUMN_WIDTH, 3.08),
         constrained_layout=True,
     )
     grid = figure.add_gridspec(
+        1,
         2,
-        2,
-        width_ratios=(2.15, 1.0),
-        height_ratios=(1.0, 0.82),
+        width_ratios=(1.72, 1.0),
+        wspace=0.10,
     )
     trajectory_axis = figure.add_subplot(grid[0, 0])
-    difference_axis = figure.add_subplot(grid[1, 0])
-    heatmap_axis = figure.add_subplot(grid[:, 1])
+    heatmap_axis = figure.add_subplot(grid[0, 1])
 
     trajectory_axis.plot(
         history_x,
         history_y,
-        color="#858585",
+        color="#999999",
         linewidth=1.05,
+        zorder=1,
         label="History",
     )
     trajectory_axis.axvspan(
@@ -226,18 +234,51 @@ def plot_prefix_figure(
     trajectory_axis.plot(
         future_x,
         target,
-        color="#202020",
-        linewidth=1.4,
+        color="#444444",
+        linewidth=1.15,
+        alpha=0.9,
+        zorder=2,
         label="Ground truth",
     )
+    mean_absolute_differences: dict[int, float] = {}
+    reference = predictions[720]
     for horizon in HORIZONS:
-        trajectory_axis.plot(
+        mean_absolute_differences[horizon] = float(
+            np.mean(np.abs(predictions[horizon] - reference))
+        )
+        line_width = 1.65 if horizon == 720 else 1.45
+        line_zorder = {
+            96: 6,
+            192: 5,
+            336: 4,
+            720: 3,
+        }[horizon]
+        line, = trajectory_axis.plot(
             future_x,
             predictions[horizon],
             color=HORIZON_COLORS[horizon],
-            linestyle=HORIZON_STYLES[horizon],
-            linewidth=1.4 if horizon == 720 else 1.15,
+            linestyle="-",
+            linewidth=line_width,
+            marker=HORIZON_MARKERS[horizon],
+            markevery=(HORIZON_MARKER_OFFSETS[horizon], 12),
+            markersize=3.0 if horizon == 720 else 2.7,
+            markerfacecolor=HORIZON_COLORS[horizon],
+            markeredgecolor="white",
+            markeredgewidth=0.35,
+            zorder=line_zorder,
             label=f"$H={horizon}$",
+        )
+        line.set_path_effects(
+            [
+                path_effects.Stroke(
+                    linewidth=line_width + (
+                        0.55 if horizon == 720 else 1.0
+                    ),
+                    foreground="white",
+                    alpha=0.88,
+                ),
+                path_effects.Normal(),
+            ]
         )
     trajectory_axis.axvline(
         0,
@@ -249,7 +290,7 @@ def plot_prefix_figure(
     trajectory_axis.set_xlabel("Time step relative to forecast origin")
     trajectory_axis.set_ylabel("Value")
     trajectory_axis.set_title(
-        "Overlapping horizon-specific forecasts",
+        "Same future steps, different horizon-specific forecasts",
         loc="left",
         pad=6,
     )
@@ -259,42 +300,53 @@ def plot_prefix_figure(
         handlelength=2.3,
         columnspacing=0.9,
         borderaxespad=0.25,
+        numpoints=1,
     )
-    panel_label(trajectory_axis, "a")
-
-    reference = predictions[720]
-    for horizon in HORIZONS[:-1]:
-        difference = predictions[horizon] - reference
-        mean_absolute = float(np.mean(np.abs(difference)))
-        difference_axis.plot(
-            future_x,
-            difference,
-            color=HORIZON_COLORS[horizon],
-            linestyle=HORIZON_STYLES[horizon],
-            label=f"$H={horizon}$: {mean_absolute:.2f}",
+    delta_header = TextArea(
+        r"Mean $|\Delta|$ from $H=720$",
+        textprops={
+            "fontsize": 5.8,
+            "color": "#4A4A4A",
+        },
+    )
+    delta_items = [
+        TextArea(
+            f"$H={horizon}$: {mean_absolute_differences[horizon]:.2f}",
+            textprops={
+                "fontsize": 6.0,
+                "color": HORIZON_COLORS[horizon],
+                "fontweight": "bold",
+            },
         )
-    difference_axis.axhline(
-        0.0,
-        color="#555555",
-        linestyle="--",
-        linewidth=0.75,
+        for horizon in HORIZONS[:-1]
+    ]
+    delta_row = HPacker(
+        children=delta_items,
+        align="center",
+        pad=0,
+        sep=7,
     )
-    difference_axis.set_xlim(1, 96)
-    difference_axis.set_xlabel("Overlapping future step")
-    difference_axis.set_ylabel(r"Prediction difference from $H=720$")
-    difference_axis.set_title(
-        "Differences on the shared 96-step prefix",
-        loc="left",
-        pad=6,
+    delta_box = VPacker(
+        children=[delta_header, delta_row],
+        align="left",
+        pad=0,
+        sep=2,
     )
-    difference_axis.legend(
+    delta_annotation = AnchoredOffsetbox(
         loc="lower right",
-        title=r"Mean $|\Delta|$",
-        title_fontsize=6.4,
-        handlelength=2.3,
-        borderaxespad=0.25,
+        child=delta_box,
+        frameon=True,
+        bbox_to_anchor=(0.99, 0.02),
+        bbox_transform=trajectory_axis.transAxes,
+        borderpad=0.0,
+        pad=0.2,
     )
-    panel_label(difference_axis, "b")
+    delta_annotation.patch.set_facecolor("white")
+    delta_annotation.patch.set_edgecolor("#D6D6D6")
+    delta_annotation.patch.set_linewidth(0.55)
+    delta_annotation.patch.set_alpha(0.94)
+    trajectory_axis.add_artist(delta_annotation)
+    panel_label(trajectory_axis, "a")
 
     pair_display = pair_matrix[:-1, 1:]
     masked = np.ma.masked_invalid(pair_display)
@@ -360,7 +412,7 @@ def plot_prefix_figure(
         pad=0.04,
     )
     colorbar.set_label("Mean NCHPD")
-    panel_label(heatmap_axis, "c")
+    panel_label(heatmap_axis, "b")
     paths = export_figure(
         figure,
         output_dir,
@@ -595,6 +647,17 @@ def main() -> None:
             "selected_joint_score": prefix_summary["selected_joint_score"],
             "searched_origin_channel_cells": (
                 prefix_summary["searched_origin_channel_cells"]
+            ),
+            "layout": (
+                "two-panel trajectory hero plus validation NCHPD heatmap"
+            ),
+            "trajectory_encoding": (
+                "solid horizon colors with staggered markers and white "
+                "separation strokes; H=720 is the lower-layer reference"
+            ),
+            "delta_summary": (
+                "mean absolute prediction difference from H=720 over "
+                "the shared 96 future steps"
             ),
             "source_data": {
                 "forecast": str(args.prefix_source),

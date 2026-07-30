@@ -8,13 +8,14 @@
 | Seed | 2021 | 2021 |
 | Example selection | maximum six-pair origin-channel disagreement | lexicographic maximum sample heterogeneity |
 | Archetype | asymmetric quantitative composite | asymmetric quantitative composite |
-| Hero evidence | overlapping trajectories + raw difference | region-wise excess-risk landscape |
+| Panel structure | two aligned panels | two aligned panels |
+| Hero evidence | integrated overlapping trajectories + mean-difference inset | region-wise excess-risk landscape |
 | Supporting evidence | all-validation NCHPD | gain versus best fixed extent |
-| Palette | muted horizon colors + sequential blue heatmap | ordered indigo-to-rose extent family + sequential excess-risk heatmap |
+| Palette/marks | muted solid horizon lines + staggered shapes + white strokes | ordered indigo-to-rose extent family + sequential excess-risk heatmap |
 | Source data | `source_data/prefix_etth2/` | `source_data/sharing_ettm2/` |
 | SVG/PDF text | editable | editable |
-| PNG | 2161×1236, 300 dpi | 2161×924, 300 dpi |
-| TIFF | 4322×2472, 600 dpi, LZW | 4322×1848, 600 dpi, LZW |
+| PNG | 2161×924, 300 dpi | 2161×924, 300 dpi |
+| TIFF | 4322×1848, 600 dpi, LZW | 4322×1848, 600 dpi, LZW |
 | Final width | exact 183 mm | exact 183 mm |
 | Test accessed | false | false |
 
@@ -34,6 +35,17 @@ parsing passed and retained editable `<text>` elements. `pdftotext` is
 unavailable in the local environment, so PDF text extractability was not
 independently checked；the same matplotlib editable-text settings and visible
 PDF rendering remain in force。
+
+Prefix trajectory encoding：
+
+- all four horizon predictions use solid lines rather than fragile dash-only
+  identification；
+- color、marker shape和staggered marker position provide redundant identity；
+- white separation strokes preserve line boundaries where predictions overlap；
+- $H=720$ is drawn as a lower-layer reference，so it cannot erase the shorter
+  horizon curves；
+- the removed raw-difference subplot is represented by the source-computed mean
+  $|\Delta|$ inset，without changing the underlying statistic。
 
 Sharing heatmap encoding：
 

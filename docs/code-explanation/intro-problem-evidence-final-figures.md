@@ -28,12 +28,18 @@ ETTm2 selected region-risk CSV + summary
 | `difference_hH_vs_h720` | prediction H minus prediction H720 | same-step disagreement |
 
 Final Figure 1只展示last-48 history与first-96 future，因为96是四个requested
-horizons的共同overlap。panel b重新从source predictions计算raw-value
-difference与mean absolute difference，不使用图像像素或手工抄写。
+horizons的共同overlap。panel a把history、ground truth和四条horizon-specific
+predictions整合在同一个hero axis中。四条prediction都使用solid line，并同时用
+固定颜色、不同marker、错位marker positions和white separation stroke编码；
+$H=720$作为较粗但较低z-order的reference，避免遮挡其余horizons。panel内的
+mean $|\Delta|$摘要直接从source predictions相对$H=720$重新计算，不使用图像
+像素或手工抄写。
 
 `pair_metrics.csv`的`nchpd_l1`来自所有validation origins、future overlap steps与
-channels的standardized mean absolute difference。panel c将六个pair values映射到
-4×4 upper-triangular matrix；blank lower triangle表示未重复展示对称comparison。
+channels的standardized mean absolute difference。panel b将六个pair values映射到
+紧凑3×3 upper-triangular matrix；blank lower triangle表示未重复展示对称
+comparison。最终Figure 1只有两个顶底对齐的panels，不再使用上下堆叠的独立
+raw-difference subplot。
 
 ## 3. Figure 2 source tensors and quantities
 
@@ -89,7 +95,7 @@ bar与baseline marker颜色来自region winner。winner恰为fixed s720时$G_b=0
 - source-data/selection/claim boundary写入`figure_manifest.json`。
 
 Nature static source audit为13 PASS、1 WARN、0 FAIL。WARN只因validator不能从变量
-表达式静态解析183 mm width；rendered PDF约185.8 mm，排版时缩放至183 mm。
+表达式静态解析183 mm width；PDF media box实测518.74 pt=183 mm。
 
 ## 5. Code-theory consistency
 
@@ -100,10 +106,11 @@ Intended claim：
 
 Code realization：
 
-- Figure 1把selected example与all-validation heatmap分离；
+- Figure 1把single selected example与all-validation heatmap分离，并在一个
+  trajectory panel中保留raw curves与mean-difference summary；
 - Figure 2只展示matched neutral decoder risk，不出现ISCF/BSCA；
-- maximum selection与same-validation descriptive oracle均在figure footer、
-  manifest和caption中公开。
+- maximum selection与same-validation descriptive oracle均在manifest和caption
+  中公开。
 
 仍然只是proxy：
 

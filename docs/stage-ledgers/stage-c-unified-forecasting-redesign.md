@@ -39,7 +39,7 @@
 | `design` | 45-run artifact target，复用14、补31；DLinear与neutral matched scales；global three-GPU queue；validation-only |
 | `narrative_gate` | pass to diagnostic design；problem/method distinction、ElasTST/N-HiTS prior boundary与non-circular carrier已明确 |
 | `effectiveness_gate` | visualization selection only；不得否定fixed architecture或替代formal evidence |
-| `artifacts` | full-search ranking、source CSV、exact-183-mm SVG/PDF/PNG/TIFF、manifest、QA与result report；sharing采用region-best excess-risk encoding |
+| `artifacts` | full-search ranking、source CSV、exact-183-mm SVG/PDF/PNG/TIFF、manifest、QA与result report；prefix采用two-panel integrated trajectory encoding；sharing采用region-best excess-risk encoding |
 | `decision` | `two_intro_figures_pass_illustrative_gate_etth2_prefix_ettm2_sharing`；stop search |
 
 ## Frozen Carrier Contract

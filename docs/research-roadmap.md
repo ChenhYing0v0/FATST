@@ -10,11 +10,14 @@ qualified crossing，mean winner margin=10.266%，descriptive headroom=8.112%。
 
 两图已改为：
 
-- prefix overlap trajectories + H720-relative differences + all-validation
-  compact triangular NCHPD heatmap；
+- integrated prefix trajectories + in-panel H720-relative mean differences +
+  all-validation compact triangular NCHPD heatmap；
 - region-best excess-risk heatmap + winner-colored realized-gain bars。
 
 两图使用exact 183 mm output、muted semantic palettes与无figure-footer排版。
+Prefix Figure 1为左右顶底对齐的two-panel layout；trajectory panel以solid
+colors、staggered marker shapes、white strokes与lower-layer H720 reference
+替代难辨认的dash-only encoding。
 sharing heatmap不再以fixed s720逐列归一化，因而消除了s720自身相减造成的全白行；
 fixed-s720 comparison仍由gain panel承担。SVG/PDF/PNG/TIFF与source data package
 已生成；Nature QA=13 pass/1 warn/0 fail。

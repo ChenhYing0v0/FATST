@@ -30,8 +30,10 @@
    mean winner margin=`10.266%`，descriptive oracle headroom=`8.112%`。
 
 两图已按`nature-figure`重构为exact 183 mm asymmetric quantitative
-composites并导出SVG/PDF/PNG/TIFF：prefix panel使用muted horizon palette与
-紧凑3×3 triangular NCHPD；sharing panel使用region-best excess-risk heatmap，
+composites并导出SVG/PDF/PNG/TIFF：Prefix Figure 1采用顶底对齐的two-panel
+layout；左侧将trajectory与mean-difference信息整合为单一hero panel，使用solid
+colors、staggered marker shapes和white separation strokes区分horizons，
+右侧为紧凑3×3 triangular NCHPD。Sharing Figure 2使用region-best excess-risk heatmap，
 消除旧版fixed-s720 encoding导致的s720全白行，同时在gain bars中保留s720
 fixed reference。Nature source QA=`13 PASS / 1 WARN / 0 FAIL`；唯一WARN为
 static parser不能计算width变量，PDF media box实测183 mm。Decision=

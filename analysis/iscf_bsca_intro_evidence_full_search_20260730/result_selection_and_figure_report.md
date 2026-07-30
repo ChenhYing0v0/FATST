@@ -127,16 +127,17 @@ effectiveness仍由ISCF-BSCA matched test evidence承担。
 
 ### Figure 1: Prefix disagreement
 
-1. panel a以muted horizon palette展示48-step history与真正共同的96-step
-   future prefix，并用浅灰背景区分history；
-2. panel b复用相同颜色和line style，显示H96/H192/H336相对H720的raw-value
-   difference及mean absolute difference；
-3. panel c使用紧凑3×3 upper-triangular sequential-blue heatmap显示全
+1. panel a将48-step history、ground truth和四条96-step horizon-specific
+   predictions整合为单一hero panel，并用浅灰背景区分history；
+2. 四条prediction统一使用solid lines，同时以muted colors、staggered markers、
+   marker shapes和white separation strokes作冗余编码；H720置于较低绘制层；
+3. panel a右下角保留H96/H192/H336相对H720的mean absolute difference摘要；
+4. panel b使用紧凑3×3 upper-triangular sequential-blue heatmap显示全
    validation origins/channels的six-pair NCHPD。
 
-这避免用完整720-step轨迹稀释重叠区域，同时把selected example和dataset-level
-average evidence明确分开。selection disclosure移入caption，避免figure footer
-与数据竞争视觉注意力。
+这把原来左侧上下堆叠的两个axes合并成一个trajectory panel，使左右panels顶底
+对齐，并避免虚线在重叠区域中难以追踪。selected example与dataset-level average
+evidence仍由左右panels明确分开；selection disclosure保留在caption。
 
 ### Figure 2: Sharing-demand heterogeneity
 
@@ -157,11 +158,12 @@ average evidence明确分开。selection disclosure移入caption，避免figure 
 on the same future steps.** **a**, Predictions from four DLinear models trained
 separately for horizons 96, 192, 336, and 720 on the same ETTh2 history. The
 panel shows the final 48 observed steps and the first 96 future steps shared by
-all four requested horizons. **b**, Prediction differences relative to the
-720-step model on this common prefix. The displayed validation origin-channel
-pair maximizes mean absolute disagreement aggregated over all six horizon
-pairs among 15,127 candidates. **c**, Normalized cross-horizon prefix
-disagreement (NCHPD) averaged over all ETTh2 validation origins
+all four requested horizons. Colors and staggered marker shapes identify the
+four predictions; the inset reports their mean absolute differences from the
+720-step forecast on the common prefix. The displayed validation
+origin-channel pair maximizes mean absolute disagreement aggregated over all
+six horizon pairs among 15,127 candidates. **b**, Normalized cross-horizon
+prefix disagreement (NCHPD) averaged over all ETTh2 validation origins
 ($n=2,161$) and variables. The selected example is illustrative and is not a
 prevalence estimate. Source data are provided with the figure package.
 
@@ -183,9 +185,9 @@ figure package.
 | --- | --- |
 | Nature source preflight | 13 PASS / 1 WARN / 0 FAIL |
 | backend | Python/matplotlib only |
-| editable SVG/PDF text | pass；SVG包含61/75个text nodes |
+| editable SVG/PDF text | pass |
 | PNG | 300 dpi export |
-| TIFF | 600 dpi；4322×2472与4322×1848 |
+| TIFF | 600 dpi；两图均为4322×1848 |
 | PDF | one page each；exact 183 mm width |
 | visual inspection | labels、legends、winner markers、colorbars与panel hierarchy可读 |
 

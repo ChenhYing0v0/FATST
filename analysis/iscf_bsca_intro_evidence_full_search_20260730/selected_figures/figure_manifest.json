@@ -14,6 +14,9 @@
     "selection_mode": "maximum",
     "selected_joint_score": 0.1438700407743454,
     "searched_origin_channel_cells": 15127,
+    "layout": "two-panel trajectory hero plus validation NCHPD heatmap",
+    "trajectory_encoding": "solid horizon colors with staggered markers and white separation strokes; H=720 is the lower-layer reference",
+    "delta_summary": "mean absolute prediction difference from H=720 over the shared 96 future steps",
     "source_data": {
       "forecast": "analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures/source_data/prefix_etth2/selected_forecast_data.csv",
       "pair_metrics": "analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures/source_data/prefix_etth2/pair_metrics.csv",
