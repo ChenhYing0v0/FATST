@@ -11,7 +11,7 @@
 | Panel structure | two aligned panels | two aligned panels |
 | Hero evidence | integrated overlapping trajectories + mean-difference inset | region-wise excess-risk landscape |
 | Supporting evidence | all-validation NCHPD | gain versus best fixed extent |
-| Palette/marks | muted solid horizon lines + staggered shapes + white strokes | ordered indigo-to-rose extent family + sequential excess-risk heatmap |
+| Palette/marks | thin muted solid lines + sparse staggered shapes + subtle white strokes | ordered indigo-to-rose extent family + sequential excess-risk heatmap |
 | Source data | `source_data/prefix_etth2/` | `source_data/sharing_ettm2/` |
 | SVG/PDF text | editable | editable |
 | PNG | 2161×924, 300 dpi | 2161×924, 300 dpi |
@@ -40,8 +40,9 @@ Prefix trajectory encoding：
 
 - all four horizon predictions use solid lines rather than fragile dash-only
   identification；
-- color、marker shape和staggered marker position provide redundant identity；
-- white separation strokes preserve line boundaries where predictions overlap；
+- color、marker shape和sparse staggered marker position provide redundant identity；
+- thin lines与subtle white separation strokes preserve boundaries without
+  visually merging the four predictions；
 - $H=720$ is drawn as a lower-layer reference，so it cannot erase the shorter
   horizon curves；
 - the removed raw-difference subplot is represented by the source-computed mean

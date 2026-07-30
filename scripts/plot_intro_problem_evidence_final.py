@@ -37,9 +37,9 @@ HORIZON_MARKERS = {
 }
 HORIZON_MARKER_OFFSETS = {
     96: 2,
-    192: 5,
-    336: 8,
-    720: 11,
+    192: 6,
+    336: 10,
+    720: 14,
 }
 SCALE_COLORS = {
     1: "#425A8B",
@@ -246,7 +246,7 @@ def plot_prefix_figure(
         mean_absolute_differences[horizon] = float(
             np.mean(np.abs(predictions[horizon] - reference))
         )
-        line_width = 1.65 if horizon == 720 else 1.45
+        line_width = 0.95 if horizon == 720 else 0.82
         line_zorder = {
             96: 6,
             192: 5,
@@ -260,22 +260,20 @@ def plot_prefix_figure(
             linestyle="-",
             linewidth=line_width,
             marker=HORIZON_MARKERS[horizon],
-            markevery=(HORIZON_MARKER_OFFSETS[horizon], 12),
-            markersize=3.0 if horizon == 720 else 2.7,
+            markevery=(HORIZON_MARKER_OFFSETS[horizon], 18),
+            markersize=2.25 if horizon == 720 else 2.0,
             markerfacecolor=HORIZON_COLORS[horizon],
             markeredgecolor="white",
-            markeredgewidth=0.35,
+            markeredgewidth=0.25,
             zorder=line_zorder,
             label=f"$H={horizon}$",
         )
         line.set_path_effects(
             [
                 path_effects.Stroke(
-                    linewidth=line_width + (
-                        0.55 if horizon == 720 else 1.0
-                    ),
+                    linewidth=line_width + 0.38,
                     foreground="white",
-                    alpha=0.88,
+                    alpha=0.72,
                 ),
                 path_effects.Normal(),
             ]
@@ -652,8 +650,9 @@ def main() -> None:
                 "two-panel trajectory hero plus validation NCHPD heatmap"
             ),
             "trajectory_encoding": (
-                "solid horizon colors with staggered markers and white "
-                "separation strokes; H=720 is the lower-layer reference"
+                "thin solid horizon colors with sparse staggered markers "
+                "and subtle white separation strokes; H=720 is the "
+                "lower-layer reference"
             ),
             "delta_summary": (
                 "mean absolute prediction difference from H=720 over "

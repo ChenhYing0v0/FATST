@@ -129,8 +129,9 @@ effectiveness仍由ISCF-BSCA matched test evidence承担。
 
 1. panel a将48-step history、ground truth和四条96-step horizon-specific
    predictions整合为单一hero panel，并用浅灰背景区分history；
-2. 四条prediction统一使用solid lines，同时以muted colors、staggered markers、
-   marker shapes和white separation strokes作冗余编码；H720置于较低绘制层；
+2. 四条prediction统一使用thin solid lines，同时以muted colors、sparse
+   staggered markers、marker shapes和subtle white separation strokes作冗余
+   编码；H720置于较低绘制层；
 3. panel a右下角保留H96/H192/H336相对H720的mean absolute difference摘要；
 4. panel b使用紧凑3×3 upper-triangular sequential-blue heatmap显示全
    validation origins/channels的six-pair NCHPD。
@@ -158,9 +159,9 @@ evidence仍由左右panels明确分开；selection disclosure保留在caption。
 on the same future steps.** **a**, Predictions from four DLinear models trained
 separately for horizons 96, 192, 336, and 720 on the same ETTh2 history. The
 panel shows the final 48 observed steps and the first 96 future steps shared by
-all four requested horizons. Colors and staggered marker shapes identify the
-four predictions; the inset reports their mean absolute differences from the
-720-step forecast on the common prefix. The displayed validation
+all four requested horizons. Colors and sparse, staggered marker shapes
+identify the four predictions; the inset reports their mean absolute
+differences from the 720-step forecast on the common prefix. The displayed validation
 origin-channel pair maximizes mean absolute disagreement aggregated over all
 six horizon pairs among 15,127 candidates. **b**, Normalized cross-horizon
 prefix disagreement (NCHPD) averaged over all ETTh2 validation origins

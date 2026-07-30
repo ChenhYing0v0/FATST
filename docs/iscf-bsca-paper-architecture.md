@@ -5,10 +5,10 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.15` |
+| `version` | `v0.16` |
 | `last_updated` | `2026-07-30` |
 | `paper_candidate` | `ISCF-BSCA-v1` |
-| `current_review_cursor` | Prefix Figure 1 two-panel layout and horizon-line visibility refinement complete；caption integration next |
+| `current_review_cursor` | Prefix Figure 1 two-panel layout and thin-line visibility refinement complete；caption integration next |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
 | `provisional_content` | Introduction P1--P6 v0.2正文；两项problem-evidence results；Related Work、Method、Experiments、Conclusion |
 | `not_authorized_by_this_document` | 新模型实现、remote training、formal test、按结果调参 |
@@ -882,8 +882,10 @@ maximum-cell ranking第一但overlay语义较弱的Weather。H96/H192/H336相对
 五datasets、三seeds的prevalence evidence仍不由本次visualization search替代。
 最终visual refinement将原来的trajectory与raw-difference上下两图合并为一个
 hero panel，Figure 1整体成为顶底对齐的two-panel layout。四个horizon不再依赖
-dash pattern区分，而使用solid colors、staggered marker shapes与white
-separation strokes；H720置于较低z-order，避免遮挡较短horizon curves。
+dash pattern区分，而使用thin solid colors、sparse staggered marker shapes与
+subtle white separation strokes；H720置于较低z-order，避免遮挡较短horizon
+curves。预测主线缩至0.82--0.95 pt、marker间隔放宽至18 steps，避免四条高度
+重合的predictions形成过粗色带。
 
 ### 6.3 Evidence II：Naive Unified Forecasting
 
@@ -1470,3 +1472,4 @@ Coverage boundary：
 | 2026-07-30 | Full-search figure selection | ETTh2 prefix + ETTm2 sharing；SVG/PDF/PNG/TIFF；Nature QA 13 pass/1 warn/0 fail | integrate captions；formal prevalence/CFH仍deferred |
 | 2026-07-30 | Nature figure refinement | exact 183 mm；muted semantic palettes；compact prefix triangle；region-best excess-risk sharing heatmap | captions disclose maximum validation selection；formal prevalence/CFH仍deferred |
 | 2026-07-30 | Prefix two-panel refinement | merge trajectory+difference；solid colors + staggered shapes + separation strokes；mean-difference inset | preserve raw statistics；caption更新为a/b两panel |
+| 2026-07-30 | Prefix trajectory density refinement | forecast lines 0.82--0.95 pt；marker stride 18；subtle 0.38-pt under-stroke | reduce visual ink without changing data or evidence structure |

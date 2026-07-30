@@ -15,8 +15,8 @@ qualified crossing，mean winner margin=10.266%，descriptive headroom=8.112%。
 - region-best excess-risk heatmap + winner-colored realized-gain bars。
 
 两图使用exact 183 mm output、muted semantic palettes与无figure-footer排版。
-Prefix Figure 1为左右顶底对齐的two-panel layout；trajectory panel以solid
-colors、staggered marker shapes、white strokes与lower-layer H720 reference
+Prefix Figure 1为左右顶底对齐的two-panel layout；trajectory panel以thin solid
+colors、sparse staggered marker shapes、subtle white strokes与lower-layer H720 reference
 替代难辨认的dash-only encoding。
 sharing heatmap不再以fixed s720逐列归一化，因而消除了s720自身相减造成的全白行；
 fixed-s720 comparison仍由gain panel承担。SVG/PDF/PNG/TIFF与source data package

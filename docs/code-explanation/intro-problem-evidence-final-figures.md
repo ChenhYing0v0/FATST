@@ -29,9 +29,11 @@ ETTm2 selected region-risk CSV + summary
 
 Final Figure 1只展示last-48 history与first-96 future，因为96是四个requested
 horizons的共同overlap。panel a把history、ground truth和四条horizon-specific
-predictions整合在同一个hero axis中。四条prediction都使用solid line，并同时用
-固定颜色、不同marker、错位marker positions和white separation stroke编码；
-$H=720$作为较粗但较低z-order的reference，避免遮挡其余horizons。panel内的
+predictions整合在同一个hero axis中。四条prediction都使用thin solid line，并
+同时用固定颜色、不同marker、稀疏错位marker positions和subtle white separation
+stroke编码；$H=720$作为略粗但较低z-order的reference，避免遮挡其余horizons。
+预测主线宽度为0.82 pt，$H=720$为0.95 pt；marker间隔从12放宽至18个future
+steps，white under-stroke仅增加0.38 pt，以降低重叠区的视觉墨量。panel内的
 mean $|\Delta|$摘要直接从source predictions相对$H=720$重新计算，不使用图像
 像素或手工抄写。
 
