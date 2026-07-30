@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | approved real-data Figures 2--3如何进入Problem Formulation并冻结Section 3 definitions与captions |
+| `active_question` | 将approved real-data Figures 2--3写入Problem Formulation并冻结Section 3 definitions与captions |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `active_candidates` | `ISCF-BSCA-v1` frozen paper core；constructed concept Figure 1 approved；ETTh2 prefix + ETTm2 sharing evidence approved for Section 3 |
@@ -20,9 +20,9 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | real-data problem evidence Step9/10 complete；compact paper integration active |
+| `current_11_step` | real-data problem evidence Step9/10 complete；Introduction v0.8 polished；Section 3 integration active |
 | `current_candidate` | concept Figure 1=`approved_for_manuscript_draft`；Section 3 evidence pair=`INTRO-CHPD-v1` + `SC-UVHF-FRSD-D1`；paper method remains frozen `ISCF-BSCA-v1` |
-| `latest_decision` | `intro_concept_figure_approved_and_draft_reflowed` |
+| `latest_decision` | `intro_v0_8_structural_polish_pass_claims_evidence_bounded` |
 | `next_required_action` | 冻结Section 3 definitions与Figures 2--3 captions |
 | `method_training_authorized` | validation-only full figure search authorized；31 new runs；formal test false |
 | `rollback_point` | CHPD weak -> retain formal CHPC argument only；FRSD negative -> revise P4/P5 problem-to-method narrative；do not tune exact BSCA-v1 |

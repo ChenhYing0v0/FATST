@@ -17,6 +17,20 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_core_status` | `ISCF-BSCA-v1`=`passed_core_candidate_ready_for_paper_consolidation`；不受visualization screen否定 |
 
+[Introduction P2--P6 Structural Polish, 2026-07-30] Introduction v0.8完成
+`nature-polishing`结构修订：P2压缩为system fragmentation、overlap disagreement
+与deployment redundancy；P3改用horizon无关的future-step-indexed mapping定义
+CHPC，并由Figure 1a说明重叠区间invariance；P4删除`multi-output decoder`与
+Bayes-target旁支，以`uniform output mechanism -> latent-state sharing extent ->
+region-dependent balance`建立问题链；P5按`heterogeneous demand -> multiple
+sharing extents -> independent history projections -> scope-indexed field ->
+target-conditioned integration`衔接ISCF；Figure 1 caption同步精简。
+
+P6只保留problem、ISCF与BSCA三项贡献及三类直观evaluation。由于
+horizon-specific main table与backbone transfer table尚未完整，当前使用
+`compare/evaluate`，不提前写`outperform/demonstrate/significant`。Decision=
+`intro_v0_8_structural_polish_pass_claims_evidence_bounded`。
+
 [Introduction Compact Figure Layout, 2026-07-30] Introduction v0.7不再承载
 详细problem-existence experiment。Figure 1改为一张完全由constructed curves
 生成的two-panel concept illustration：panel a说明同一future step的

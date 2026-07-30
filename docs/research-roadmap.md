@@ -1,5 +1,22 @@
 # Research Roadmap
 
+## Introduction P2--P6 Structural Polish (2026-07-30)
+
+Introduction v0.8已完成段落级优化：
+
+- P2压缩horizon-specific system fragmentation与维护冗余；
+- P3以horizon无关future-step-indexed mapping定义CHPC，并由Figure 1a说明
+  overlap invariance；
+- P4用uniform output mechanism自然引出latent-state sharing extent和
+  future-region sharing-demand heterogeneity；
+- P5先提出整合different sharing extents，再以independent history projections、
+  scope-indexed field和target-conditioned allocation说明ISCF；
+- P6压缩为problem、architecture、training三项贡献，并将实验归纳为
+  horizon-specific comparison、component ablation与backbone transfer。
+
+Main/transfer tables未完成前不写未经验证的`significant advantage`或portability
+结论。下一步仍是冻结Section 3 definitions与Figures 2--3 captions。
+
 ## Introduction Compact Figure and Section 3 Evidence Placement (2026-07-30)
 
 Introduction采用一张双面板constructed concept figure：
