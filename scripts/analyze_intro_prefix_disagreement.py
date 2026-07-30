@@ -192,6 +192,73 @@ def inverse_scale(
     return values * std + mean
 
 
+def selected_forecast_rows(
+    artifacts: dict[int, dict[str, np.ndarray]],
+    origin_index: int,
+    channel_index: int,
+) -> list[dict[str, Any]]:
+    reference = artifacts[720]
+    mean = reference["train_mean"].reshape(-1)
+    std = reference["train_std"].reshape(-1)
+    history = inverse_scale(
+        reference["history"][origin_index, :, channel_index],
+        mean[channel_index],
+        std[channel_index],
+    )
+    target = inverse_scale(
+        reference["true"][origin_index, :, channel_index],
+        mean[channel_index],
+        std[channel_index],
+    )
+    predictions = {
+        horizon: inverse_scale(
+            artifacts[horizon]["pred"][
+                origin_index,
+                :,
+                channel_index,
+            ],
+            mean[channel_index],
+            std[channel_index],
+        )
+        for horizon in HORIZONS
+    }
+    rows: list[dict[str, Any]] = []
+    for index, value in enumerate(history):
+        rows.append(
+            {
+                "relative_step": index - len(history),
+                "phase": "history",
+                "history": float(value),
+                "ground_truth": "",
+                **{f"prediction_h{horizon}": "" for horizon in HORIZONS},
+                **{
+                    f"difference_h{horizon}_vs_h720": ""
+                    for horizon in HORIZONS
+                },
+            }
+        )
+    reference_prediction = predictions[720]
+    for step in range(720):
+        row: dict[str, Any] = {
+            "relative_step": step + 1,
+            "phase": "future",
+            "history": "",
+            "ground_truth": float(target[step]),
+        }
+        for horizon in HORIZONS:
+            if step < horizon:
+                value = float(predictions[horizon][step])
+                row[f"prediction_h{horizon}"] = value
+                row[f"difference_h{horizon}_vs_h720"] = (
+                    value - float(reference_prediction[step])
+                )
+            else:
+                row[f"prediction_h{horizon}"] = ""
+                row[f"difference_h{horizon}_vs_h720"] = ""
+        rows.append(row)
+    return rows
+
+
 def plot_overlay(
     args: argparse.Namespace,
     artifacts: dict[int, dict[str, np.ndarray]],
@@ -379,6 +446,14 @@ def main() -> None:
             for origin in range(cell_score.shape[0])
             for channel in range(cell_score.shape[1])
         ],
+    )
+    write_csv(
+        args.output_dir / "selected_forecast_data.csv",
+        selected_forecast_rows(
+            artifacts,
+            selected_origin,
+            selected_channel,
+        ),
     )
     overlay_svg, overlay_png = plot_overlay(
         args,

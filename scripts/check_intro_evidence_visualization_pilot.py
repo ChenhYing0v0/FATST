@@ -367,6 +367,7 @@ def run_analyzers(root: Path) -> dict[str, bool]:
         prefix_output / "summary.json",
         prefix_output / "pair_metrics.csv",
         prefix_output / "origin_channel_candidates.csv",
+        prefix_output / "selected_forecast_data.csv",
         prefix_output / "prefix_disagreement_overlay.svg",
         prefix_output / "prefix_disagreement_heatmap.svg",
         sharing_output / "summary.json",

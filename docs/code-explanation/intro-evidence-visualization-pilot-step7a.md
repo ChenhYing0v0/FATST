@@ -85,6 +85,8 @@ estimate。score先在每个overlap内对future steps取均值，避免由一个
 - `prefix_disagreement_overlay.svg/png`；
 - `prefix_disagreement_heatmap.svg/png`；
 - `pair_metrics.csv`；
+- `selected_forecast_data.csv`：selected origin-channel的完整history、ground truth、
+  四个horizon predictions及相对H720 differences，供最终figure source-data追踪；
 - `summary.json`。
 
 overlay下半panel固定以H720 forecast为零参考，绘制H96/H192/H336/H720在共同
