@@ -5,10 +5,10 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.11` |
-| `last_updated` | `2026-07-29` |
+| `version` | `v0.12` |
+| `last_updated` | `2026-07-30` |
 | `paper_candidate` | `ISCF-BSCA-v1` |
-| `current_review_cursor` | two Introduction problem-evidence figures selected；caption and section integration next |
+| `current_review_cursor` | five-dataset maximum-candidate visualization search Step7A complete；remote results next |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
 | `provisional_content` | Introduction P1--P6 v0.2正文；两项problem-evidence results；Related Work、Method、Experiments、Conclusion |
 | `not_authorized_by_this_document` | 新模型实现、remote training、formal test、按结果调参 |
@@ -865,14 +865,16 @@ exact zero；origin timestamp、scaler roundtrip与prefix shape必须通过。
 更差，也不claim ElasTST等已有varied-horizon methods缺少invariance。D18/A6
 artifacts只可用于evaluator smoke，不进入正式图表。
 
-Visualization-first amendment：先执行DLinear × Weather × seed2021的四个
-horizons，只用validation；overlay选择aggregate disagreement约85% quantile的
-origin/channel，不取maximum。该结果只作illustrative case，不能替代三families、
-五datasets、三seeds的正式prevalence evidence。
+Full-search amendment：补齐DLinear × five datasets × seed2021的四个horizons，
+只使用validation。在每个dataset的全部`origin × channel`联合单元上，按六个
+horizon pairs的mean-over-overlap disagreement选择maximum；跨dataset再按同一
+score排序。该选择必须在caption中标记为`maximum aggregate validation
+disagreement`。mean-over-overlap防止单个future-step spike主导选择，但该图仍是
+intentional strong example，不是representative case或prevalence evidence。
 
-Selected result：Weather/DLinear的full-context overlay与H720-relative
-prediction-difference panel固定为Figure 1 candidate，配套六个horizon pairs的
-NCHPD heatmap。selection保持85% quantile disclosure，不使用maximum/top-1%。
+Weather/DLinear旧图保留为provisional candidate，最终Figure 1由五dataset ranking
+与视觉审计共同确定。正式三families、五datasets、三seeds的prevalence evidence
+仍不由本次visualization search替代。
 
 ### 6.3 Evidence II：Naive Unified Forecasting
 
@@ -1024,16 +1026,22 @@ magnitude difference、单调lead-time difficulty或oracle label routing也不�
 `analysis/iscf_bsca_intro_problem_evidence_design_20260729.md`。
 该新证据矩阵按项目治理属于`test_informed`，不得描述为untouched holdout。
 
-Visualization-first amendment：先执行Weather/seed2021的五个neutral
-single-scale runs，只用validation。初始Figure 2允许展示same-validation
-descriptive region oracle，但必须明确标注`not out-of-sample`；正式CFH与
-problem-existence gate继续deferred。
+Full-search amendment：补齐neutral single-scale family在five datasets、
+seed2021上的validation artifacts。对每个origin构造all-channel
+`5 scales × 12 60-step regions`风险面，并按以下lexicographic order选择：
 
-Selected result：ETTm1/seed2021作为Figure 2 candidate。best fixed=s128，region 1
-的descriptive best为s1，多数中长regions由s128占优；
-`s1_vs_s720`与`s8_vs_s720`达到0.5% frozen bidirectional crossing margin。
-最终三panel改为sharing-risk landscape、qualified step-wise crossover与
-region-wise scale contrast；不使用ISCF/BSCA，不承担method effectiveness claim。
+1. 赢得至少两个regions的scale数量；
+2. distinct region winners数量；
+3. winner histogram entropy；
+4. 达到0.5% bidirectional margin的crossing pair数量；
+5. mean best-versus-second-best region margin；
+6. descriptive sample oracle headroom。
+
+该顺序优先寻找由多个regions支持的分散scope winners，避免单region噪声胜者。
+ETTm1旧图只保留为provisional candidate；最终Figure 2由五dataset ranking与视觉
+审计确定。图中明确标记`maximum heterogeneity validation candidate`与
+same-validation descriptive role；正式CFH与problem-existence gate继续deferred。
+图不使用ISCF/BSCA，不承担method effectiveness claim。
 
 ### 6.5 Design Requirements
 
@@ -1445,3 +1453,4 @@ Coverage boundary：
 | 2026-07-29 | Introduction evidence visualization pilot | Weather/seed2021共9 runs；85% disagreement quantile；validation only；formal matrices deferred | Step7B pass；remote initial pilot authorized |
 | 2026-07-29 | Visualization candidate search extension | figure screening不作architecture rejection；prefix difference view retained；ETTm1 neutral 5-run screen | thresholds frozen；ETTh2/formal test未授权 |
 | 2026-07-29 | Two problem-evidence figures selected | Weather prefix-difference/NCHPD；ETTm1 sharing-risk crossover/region contrast | integrate captions and Problem Formulation definitions |
+| 2026-07-30 | Five-dataset full visualization search | maximum joint prefix selection；sample-level supported multi-scope selection；31 missing runs；global dynamic GPU queue | remote results与最终视觉样式待审计 |

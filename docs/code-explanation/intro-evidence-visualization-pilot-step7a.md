@@ -4,15 +4,16 @@
 
 | Field | Content |
 | --- | --- |
-| `date` | `2026-07-29` |
-| `protocol` | `SC-UVHF-INTRO-EVIDENCE-VIZ-v1` |
+| `date` | `2026-07-30` |
+| `protocol` | `SC-UVHF-INTRO-EVIDENCE-FULL-SEARCH-v1` |
 | `role` | exploratory visualization only |
-| `initial_matrix` | Weather × seed2021 × (4 DLinear horizons + 5 neutral sharing extents) |
+| `matrix` | 5 datasets × seed2021 × (4 DLinear horizons + 5 neutral sharing extents) |
 | `test_accessed` | false |
 | `formal_problem_gate` | false |
 
-本次实现只为Introduction寻找清晰但不过度极端的illustrative examples。它不修改
-ISCF-BSCA，不构成新的paper method，也不替代正式跨dataset/seed evidence。
+本次实现只为Introduction寻找清晰的illustrative examples。它不修改ISCF-BSCA，
+不构成新的paper method，也不替代正式跨dataset/seed evidence。当前允许选择
+validation search space中的最强样本，但必须公开selection rule与search space。
 
 ## 2. Prefix-disagreement artifact path
 
@@ -66,12 +67,18 @@ abs(pred_Hi - pred_Hj[:, :Hi])
 由于dataset output已经按train scaler标准化，标准化空间的mean absolute
 disagreement等价于inverse-transform后再除以train standard deviation。
 
-案例选择不是最大值：
+当前full search对每个`origin × channel`联合单元计算六个horizon pairs的
+mean-over-overlap disagreement，再选择全局最大联合单元。联合选择避免“分别选
+origin与channel后，组合单元本身并不强”的问题。`origin_channel_candidates.csv`
+保存所有候选及其aggregate score；`summary.json`公开：
 
-1. 对每个origin汇总六个horizon pairs的mean disagreement；
-2. 选择最接近85% quantile的origin；
-3. 对channel使用相同85% quantile规则；
-4. 在`sample_selection`相关summary fields中公开真实percentile。
+- `selection_mode=maximum`；
+- 搜索的origin-channel单元数；
+- selected joint score与percentile；
+- 独立的origin/channel marginal percentile。
+
+该选择是明确的maximum validation example，不是representative sample或prevalence
+estimate。score先在每个overlap内对future steps取均值，避免由一个孤立spike决定。
 
 输出包括：
 
@@ -80,11 +87,9 @@ disagreement等价于inverse-transform后再除以train standard deviation。
 - `pair_metrics.csv`；
 - `summary.json`。
 
-远程pilot结果返回后的视觉审计发现，85% quantile案例的raw forecast curves真实但
-彼此接近。因此overlay下半panel不再重复绘制四条绝对预测，而是固定以H720 forecast
-为零参考，绘制H96/H192/H336/H720在共同96-step prefix上的prediction difference。
-该修改不改变origin、channel、metric或quantile，只改变同一证据的显示坐标，避免
-继续搜索更极端样本。
+overlay下半panel固定以H720 forecast为零参考，绘制H96/H192/H336/H720在共同
+96-step prefix上的prediction difference；这只改变显示坐标，不改变selection
+statistic。
 
 ## 3. Neutral single-sharing-extent model
 
@@ -130,16 +135,20 @@ U                          [B,C,T,64]
 这与对`[R,phi_tau]`施加一个joint affine layer再接GELU等价，但显著减少concat
 memory。
 
-对唯一sharing extent $s$：
+对唯一sharing extent $s$，完整blocks被一次性reshape：
 
 ```text
-U[:,:,start:end,:]
-  -> mean over future-step axis
-  -> LayerNorm
-Z_g [B,C,64]
-  -> broadcast to every step in the same block
-Z   [B,C,T,64]
+U_prefix [B,C,G*s,64]
+  -> reshape [B,C,G,s,64]
+  -> mean(s) + LayerNorm
+Z_g [B,C,G,64]
+  -> expand(s) + reshape
+Z_prefix [B,C,G*s,64]
 ```
+
+若$T$不能被$s$整除，只对最后一个tail单独执行一次mean、LayerNorm与broadcast。
+因此$s=1$从720次Python pooling/LayerNorm调用降为一次batched call；所有scale
+最多两次调用。
 
 最后每个future step仍有独立synthesis vector：
 
@@ -172,6 +181,18 @@ pooling。
 五个variants的14组parameters均得到finite nonzero gradients。将同一state dict
 加载到$s=1$和$s=720$后，maximum prediction gap为`0.08002925`，说明intervention
 没有退化为functionally identical label。
+
+向量化实现与原loop reference在五个scales上的local double-precision contract：
+
+| Quantity | Maximum gap |
+| --- | ---: |
+| pooled output | `0.0` |
+| candidate-state gradient | `0.0` |
+| LayerNorm weight gradient | `1.85e-13` |
+| LayerNorm bias gradient | `2.27e-13` |
+
+这证明改动只消除operator-launch/Python-loop overhead，没有改变被审计的函数与
+反向传播语义。
 
 ## 4. Neutral training and artifacts
 
@@ -242,30 +263,57 @@ crossing时使用`first crossing pair + best fixed`；否则使用
 - `region_risk.csv`；
 - `summary.json`。
 
-## 6. Runner
+### 5.1 Sample-level heterogeneity selector
 
-`scripts/remote/run_intro_evidence_visualization_pilot.sh`默认：
+新增`scripts/analyze_intro_sharing_sample_candidates.py`。它不在所有origins上先
+平均，而是保留sample axis：
 
 ```text
-Weather, seed2021
-DLinear: H96/H192/H336/H720       4 runs
-Neutral: s1/s8/s32/s128/s720      5 runs
-total                              9 runs
+error^2 [N,720,C]
+  -> mean over C
+sample_step_risk [N,5,720]
+  -> reshape and mean over each 60-step region
+sample_region_risk [N,5,12]
 ```
 
-三张GPU按neutral workload优先分配。runner支持：
+对每个origin定义：
 
-- `DRY_RUN=1`：五个scale的CPU synthetic gradient/shape smoke；
-- `RESOURCE_SMOKE=1`：一个CUDA synthetic smoke；
-- `STATUS_ONLY=1`：报告neutral与DLinear完成数；
-- `RUN_MODE=all|sharing-only|prefix-only`：只执行需要的evidence family；
+- `supported_winner_count`：赢得至少两个region的scale数量；
+- `distinct_winner_count`：至少赢得一个region的scale数量；
+- `winner_entropy`：12-region winner histogram的$\log 5$归一化entropy；
+- `qualified_crossing_pair_count`：双向relative ordering均超过0.5%的scale pair数；
+- `mean_winner_margin`：每个region第一名相对第二名的normalized gap均值；
+- `sample_oracle_headroom`：best fixed scale相对region oracle的descriptive gap。
+
+选择按以上顺序lexicographic maximization，最后才以origin index作deterministic
+tie-break。先使用`supported_winner_count`，避免单个region的偶然胜者主导选择。
+每个region已同时聚合60个future steps和所有channels。
+
+输出包括全部sample候选、selected sample的region/step risk、三panel候选图与
+`summary.json`。图和summary都标注`maximum heterogeneity candidate`。
+
+## 6. Runner
+
+原pilot runner保留用于单dataset复现。当前full search使用
+`scripts/remote/run_intro_evidence_full_search.sh`：
+
+```text
+datasets: ETTh1, ETTh2, ETTm1, ETTm2, Weather
+complete target: 25 neutral + 20 DLinear runs
+reused complete artifacts: 14
+new runs: 31
+```
+
+31个missing jobs进入一个global three-GPU queue。预计更慢的$s=1$、
+long-horizon与较慢datasets排在前面，但不固定到某张GPU；任意GPU完成后立刻领取
+下一个job。因此GPU 0不再天然成为critical path。runner支持：
+
+- `DRY_RUN=1`：运行完整local contract并检查所有analyzer CLI；
+- `STATUS_ONLY=1`：报告全五dataset完成数；
 - restart-safe skip existing；
-- 完成对应family后自动生成相应visualization。
-
-后续visualization dataset search使用
-`DATASET=ETTm1 RUN_MODE=sharing-only`，只新增五个neutral scales，不重复已经能够
-形成figure candidate的DLinear prefix runs。config同时约束ETTm1为当前唯一授权
-fallback；ETTh2仍不可由runner自动启动。
+- 任一job失败时保留其他已完成artifacts并阻止analysis promotion；
+- 完成45-run artifact contract后，为每个dataset运行aggregate与sample-level
+  analyzers，再生成跨dataset ranking。
 
 默认output root：
 
@@ -299,8 +347,8 @@ models可能对相同future steps给出不同predictions。
 - parameter count或candidate path随scale变化；
 - scale endpoints functionally indistinguishable；
 -某一scale出现numeric/optimization pathology；
-- best scale不随region变化且无risk crossover；
-- prefix disagreement只存在于极端top-1%样本，85% quantile不可见。
+- selected candidate只由单step spike或单region噪声支持；
+- maximum candidate仍不能形成可读的prefix difference或multi-scope ridge。
 
 以上情况只能阻断当前visualization或exact diagnostic，不能自动否定fixed
 ISCF-BSCA architecture。

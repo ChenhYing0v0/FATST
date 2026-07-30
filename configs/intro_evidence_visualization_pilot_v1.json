@@ -10,6 +10,29 @@
     "stop_after_first_clear_visualization": true,
     "formal_matrix_deferred": true
   },
+  "full_search": {
+    "protocol": "SC-UVHF-INTRO-EVIDENCE-FULL-SEARCH-v1",
+    "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather"],
+    "seed": 2021,
+    "existing_runs_reused": 14,
+    "new_runs": 31,
+    "prefix_selection": "maximum_joint_origin_channel",
+    "sharing_selection": {
+      "unit": "one validation origin aggregated over all channels",
+      "region_length": 60,
+      "crossing_margin": 0.005,
+      "order": [
+        "supported_winner_count",
+        "distinct_winner_count",
+        "winner_entropy",
+        "qualified_crossing_pair_count",
+        "mean_winner_margin",
+        "sample_oracle_headroom"
+      ]
+    },
+    "scheduler": "global_dynamic_three_gpu",
+    "test_accessed": false
+  },
   "prefix_disagreement": {
     "baseline": "DLinear-local-source-audited-visualization-carrier",
     "horizons": [96, 192, 336, 720],
@@ -46,8 +69,9 @@
     "allow_non_random_example_selection": true,
     "origin_quantile": 0.85,
     "channel_quantile": 0.85,
-    "maximum_or_top_1_percent_forbidden": true,
-    "selection_must_be_disclosed": true
+    "maximum_or_top_1_percent_forbidden": false,
+    "selection_must_be_disclosed": true,
+    "maximum_selection_authorized_for_full_search": true
   },
   "claim_boundary": {
     "allowed": [
@@ -70,6 +94,8 @@
     "authorized_fallback_dataset": "ETTm1",
     "authorized_fallback_mode": "sharing-only",
     "fallback_etth2": false,
+    "remaining_dataset_full_search": true,
+    "full_search_user_authorization": "先把剩下的几个数据集的实验先一起跑了，再在所有的结果中找到适合展示的",
     "formal_test": false,
     "full_matrix": false
   }

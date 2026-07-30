@@ -77,13 +77,33 @@ class NeutralSharingExtentForecaster(nn.Module):
                 f"expected pred_len={self.pred_len}, got {candidate_states.shape[2]}"
             )
 
-        pooled = torch.empty_like(candidate_states)
-        for start in range(0, self.pred_len, self.sharing_extent):
-            end = min(start + self.sharing_extent, self.pred_len)
-            state = candidate_states[:, :, start:end, :].mean(dim=2)
-            state = self.pooled_state_norm(state)
-            pooled[:, :, start:end, :] = state.unsqueeze(2)
-        return pooled
+        block_count = self.pred_len // self.sharing_extent
+        full_length = block_count * self.sharing_extent
+        pooled_parts = []
+        if full_length:
+            batch, channels, _, state_dim = candidate_states.shape
+            complete_blocks = candidate_states[:, :, :full_length, :].reshape(
+                batch,
+                channels,
+                block_count,
+                self.sharing_extent,
+                state_dim,
+            )
+            block_states = self.pooled_state_norm(
+                complete_blocks.mean(dim=3)
+            )
+            pooled_parts.append(
+                block_states.unsqueeze(3)
+                .expand(-1, -1, -1, self.sharing_extent, -1)
+                .reshape(batch, channels, full_length, state_dim)
+            )
+        if full_length < self.pred_len:
+            tail = candidate_states[:, :, full_length:, :]
+            tail_state = self.pooled_state_norm(tail.mean(dim=2))
+            pooled_parts.append(
+                tail_state.unsqueeze(2).expand(-1, -1, tail.shape[2], -1)
+            )
+        return torch.cat(pooled_parts, dim=2)
 
     def forward_with_states(
         self,

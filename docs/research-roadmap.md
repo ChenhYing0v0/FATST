@@ -1,6 +1,28 @@
 # Research Roadmap
 
-## Introduction Problem-Evidence Figures Selected (2026-07-29)
+## Introduction Evidence Full Visualization Search Step7A (2026-07-30)
+
+用户授权补齐五datasets并从所有validation results中选择最清晰的prefix
+disagreement与sharing-demand heterogeneity案例。Protocol=
+`SC-UVHF-INTRO-EVIDENCE-FULL-SEARCH-v1`：
+
+- prefix：每个dataset搜索所有`origin × channel`单元，以六个horizon pairs的
+  mean-over-overlap disagreement选择maximum；
+- sharing：每个origin按60-step regions、all-channel MSE形成`5 × 12`风险面；
+  lexicographic selection依次最大化`supported_winner_count`、
+  `distinct_winner_count`、winner entropy、qualified crossing pairs、
+  winner margin与sample oracle headroom；
+- 所有图显式披露maximum validation selection，只作illustrative existence；
+  formal test与architecture effectiveness gate均为false。
+
+新增31 runs补齐五dataset矩阵，已有14 runs复用。neutral pooling已vectorize为每个
+scale最多两次batched pooling/LayerNorm；相对旧loop的forward与gradients五scale
+等价，最大gap=`2.27e-13`。remote scheduler使用global three-GPU queue与longest
+first ordering，消除固定GPU 0上的$s=1$ critical path。Local checker、Python
+compile、JSON parse、bash syntax与full runner dry-run均通过。Decision=
+`full_search_step7a_pass_remote_launch_next`。
+
+## Previous Introduction Figure Candidates (2026-07-29; provisional)
 
 visualization-first search已得到两张论文候选图：
 
@@ -11,9 +33,9 @@ visualization-first search已得到两张论文候选图：
 
 ETTm1的best fixed为s128，region 1偏好s1，多数中长regions偏好s128；
 `s1_vs_s720`与`s8_vs_s720`均达到冻结0.5% bidirectional crossing margin。
-Decision=`two_introduction_problem_evidence_figures_selected`。按first-clear
-candidate停止ETTh2 search；两图只作illustrative problem evidence，不承担
-formal prevalence、method effectiveness或architecture rejection。
+它们作为已有artifacts进入上方五dataset full search，不再预先固定为最终选图。
+两图只作illustrative problem evidence，不承担formal prevalence、method
+effectiveness或architecture rejection。
 
 ## Introduction Visualization Candidate Search Extension (2026-07-29)
 

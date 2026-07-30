@@ -29,6 +29,120 @@ def parameter_count(model: torch.nn.Module) -> int:
     return sum(parameter.numel() for parameter in model.parameters())
 
 
+def reference_pooled_states(
+    model: NeutralSharingExtentForecaster,
+    candidate_states: torch.Tensor,
+) -> torch.Tensor:
+    pooled_parts = []
+    for start in range(0, model.pred_len, model.sharing_extent):
+        end = min(start + model.sharing_extent, model.pred_len)
+        state = candidate_states[:, :, start:end, :].mean(dim=2)
+        state = model.pooled_state_norm(state)
+        pooled_parts.append(
+            state.unsqueeze(2).expand(-1, -1, end - start, -1)
+        )
+    return torch.cat(pooled_parts, dim=2)
+
+
+def check_vectorized_pooling_equivalence() -> dict[str, float | bool]:
+    torch.manual_seed(2021)
+    maximum_output_gap = 0.0
+    maximum_candidate_gradient_gap = 0.0
+    maximum_weight_gradient_gap = 0.0
+    maximum_bias_gradient_gap = 0.0
+    for scale in SCALES:
+        model = NeutralSharingExtentForecaster(
+            seq_len=96,
+            pred_len=720,
+            sharing_extent=scale,
+        ).double()
+        candidate_vector = torch.randn(
+            2,
+            3,
+            720,
+            model.state_dim,
+            dtype=torch.float64,
+            requires_grad=True,
+        )
+        candidate_reference = (
+            candidate_vector.detach().clone().requires_grad_(True)
+        )
+        upstream = torch.randn_like(candidate_vector)
+        vectorized = model.pooled_states(candidate_vector)
+        reference = reference_pooled_states(model, candidate_reference)
+        maximum_output_gap = max(
+            maximum_output_gap,
+            float(torch.max(torch.abs(vectorized - reference))),
+        )
+        vector_gradients = torch.autograd.grad(
+            (vectorized * upstream).sum(),
+            (
+                candidate_vector,
+                model.pooled_state_norm.weight,
+                model.pooled_state_norm.bias,
+            ),
+        )
+        reference_gradients = torch.autograd.grad(
+            (reference * upstream).sum(),
+            (
+                candidate_reference,
+                model.pooled_state_norm.weight,
+                model.pooled_state_norm.bias,
+            ),
+        )
+        maximum_candidate_gradient_gap = max(
+            maximum_candidate_gradient_gap,
+            float(
+                torch.max(
+                    torch.abs(
+                        vector_gradients[0] - reference_gradients[0]
+                    )
+                )
+            ),
+        )
+        maximum_weight_gradient_gap = max(
+            maximum_weight_gradient_gap,
+            float(
+                torch.max(
+                    torch.abs(
+                        vector_gradients[1] - reference_gradients[1]
+                    )
+                )
+            ),
+        )
+        maximum_bias_gradient_gap = max(
+            maximum_bias_gradient_gap,
+            float(
+                torch.max(
+                    torch.abs(
+                        vector_gradients[2] - reference_gradients[2]
+                    )
+                )
+            ),
+        )
+    tolerance = 1e-10
+    if max(
+        maximum_output_gap,
+        maximum_candidate_gradient_gap,
+        maximum_weight_gradient_gap,
+        maximum_bias_gradient_gap,
+    ) > tolerance:
+        raise RuntimeError(
+            "vectorized pooling is not equivalent to reference: "
+            f"output={maximum_output_gap}, "
+            f"candidate_grad={maximum_candidate_gradient_gap}, "
+            f"weight_grad={maximum_weight_gradient_gap}, "
+            f"bias_grad={maximum_bias_gradient_gap}"
+        )
+    return {
+        "maximum_output_gap": maximum_output_gap,
+        "maximum_candidate_gradient_gap": maximum_candidate_gradient_gap,
+        "maximum_weight_gradient_gap": maximum_weight_gradient_gap,
+        "maximum_bias_gradient_gap": maximum_bias_gradient_gap,
+        "pass": True,
+    }
+
+
 def check_model_contract() -> dict[str, float | int | bool]:
     torch.manual_seed(2021)
     models = {
@@ -161,6 +275,7 @@ def run_analyzers(root: Path) -> dict[str, bool]:
     sharing_root = root / "sharing_artifacts"
     prefix_output = root / "prefix_output"
     sharing_output = root / "sharing_output"
+    sharing_sample_output = root / "sharing_sample_output"
     write_prefix_artifacts(prefix_root)
     write_sharing_artifacts(sharing_root)
 
@@ -178,6 +293,8 @@ def run_analyzers(root: Path) -> dict[str, bool]:
             "2021",
             "--sample-quantile",
             "0.85",
+            "--selection-mode",
+            "maximum",
         ],
         check=True,
         stdout=subprocess.DEVNULL,
@@ -198,15 +315,40 @@ def run_analyzers(root: Path) -> dict[str, bool]:
         check=True,
         stdout=subprocess.DEVNULL,
     )
+    subprocess.run(
+        [
+            sys.executable,
+            str(
+                REPO_ROOT
+                / "scripts/analyze_intro_sharing_sample_candidates.py"
+            ),
+            "--input-root",
+            str(sharing_root),
+            "--output-dir",
+            str(sharing_sample_output),
+            "--dataset",
+            "Weather",
+            "--seed",
+            "2021",
+        ],
+        check=True,
+        stdout=subprocess.DEVNULL,
+    )
     required = [
         prefix_output / "summary.json",
         prefix_output / "pair_metrics.csv",
+        prefix_output / "origin_channel_candidates.csv",
         prefix_output / "prefix_disagreement_overlay.svg",
         prefix_output / "prefix_disagreement_heatmap.svg",
         sharing_output / "summary.json",
         sharing_output / "step_risk.csv",
         sharing_output / "region_risk.csv",
         sharing_output / "sharing_demand_visualization.svg",
+        sharing_sample_output / "summary.json",
+        sharing_sample_output / "sample_candidates.csv",
+        sharing_sample_output / "selected_region_risk.csv",
+        sharing_sample_output / "selected_step_risk.csv",
+        sharing_sample_output / "sharing_sample_candidate.svg",
     ]
     missing = [str(path) for path in required if not path.is_file()]
     if missing:
@@ -217,24 +359,94 @@ def run_analyzers(root: Path) -> dict[str, bool]:
     sharing_summary = json.loads(
         (sharing_output / "summary.json").read_text(encoding="utf-8")
     )
-    if prefix_summary["test_accessed"] or sharing_summary["test_accessed"]:
+    sharing_sample_summary = json.loads(
+        (sharing_sample_output / "summary.json").read_text(encoding="utf-8")
+    )
+    if (
+        prefix_summary["test_accessed"]
+        or sharing_summary["test_accessed"]
+        or sharing_sample_summary["test_accessed"]
+    ):
         raise RuntimeError("synthetic analyzers unexpectedly accessed test")
+    if prefix_summary["selection_mode"] != "maximum":
+        raise RuntimeError("maximum prefix candidate selection was not used")
     if not sharing_summary["visualization_signal"]:
         raise RuntimeError("synthetic sharing signal was not detected")
+    if (
+        sharing_sample_summary["selected"]["distinct_winner_count"]
+        < 2
+    ):
+        raise RuntimeError("sample-level sharing diversity was not detected")
+
+    ranking_analysis = root / "ranking_analysis"
+    ranking_output = root / "ranking_output"
+    for index, dataset in enumerate(
+        ("ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather")
+    ):
+        prefix_dir = ranking_analysis / dataset / "prefix"
+        sharing_dir = ranking_analysis / dataset / "sharing_sample"
+        prefix_dir.mkdir(parents=True)
+        sharing_dir.mkdir(parents=True)
+        ranked_prefix = dict(prefix_summary)
+        ranked_prefix["dataset"] = dataset
+        ranked_prefix["selected_joint_score"] = (
+            prefix_summary["selected_joint_score"] + index * 0.01
+        )
+        (prefix_dir / "summary.json").write_text(
+            json.dumps(ranked_prefix),
+            encoding="utf-8",
+        )
+        ranked_sharing = json.loads(json.dumps(sharing_sample_summary))
+        ranked_sharing["dataset"] = dataset
+        ranked_sharing["selected"]["winner_entropy"] = min(
+            1.0,
+            sharing_sample_summary["selected"]["winner_entropy"]
+            + index * 0.01,
+        )
+        (sharing_dir / "summary.json").write_text(
+            json.dumps(ranked_sharing),
+            encoding="utf-8",
+        )
+    subprocess.run(
+        [
+            sys.executable,
+            str(
+                REPO_ROOT
+                / "scripts/rank_intro_visualization_candidates.py"
+            ),
+            "--analysis-root",
+            str(ranking_analysis),
+            "--output-dir",
+            str(ranking_output),
+        ],
+        check=True,
+        stdout=subprocess.DEVNULL,
+    )
+    ranking_required = [
+        ranking_output / "prefix_candidate_ranking.csv",
+        ranking_output / "sharing_candidate_ranking.csv",
+        ranking_output / "selection_summary.json",
+    ]
+    if not all(path.is_file() for path in ranking_required):
+        raise RuntimeError("cross-dataset ranking outputs are incomplete")
     return {
         "prefix_outputs_complete": True,
         "sharing_outputs_complete": True,
+        "sharing_sample_outputs_complete": True,
+        "cross_dataset_ranking_complete": True,
         "test_accessed": False,
     }
 
 
 def main() -> None:
+    pooling_equivalence = check_vectorized_pooling_equivalence()
     model_contract = check_model_contract()
     with tempfile.TemporaryDirectory(prefix="fatst_intro_viz_") as directory:
         analyzer_contract = run_analyzers(Path(directory))
     print(
         json.dumps(
             {
+                "pooling_equivalence": pooling_equivalence,
                 "model_contract": model_contract,
                 "analyzer_contract": analyzer_contract,
                 "pass": True,

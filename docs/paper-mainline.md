@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF-BSCA-v1 Step10 complete；paper architecture consolidation in progress |
+| `current_11_step` | ISCF-BSCA-v1 Step10 complete；Introduction evidence full-search Step7A complete |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -15,22 +15,34 @@
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
-| `paper_core_status` | `ISCF-BSCA-v1`=`passed_core_candidate_ready_for_paper_consolidation` |
+| `paper_core_status` | `ISCF-BSCA-v1`=`passed_core_candidate_ready_for_paper_consolidation`；不受visualization screen否定 |
 
-[Introduction Problem-Evidence Figures Selected, 2026-07-29] 两项具有说服力的
-validation-only illustrative figures已固定：
+[Introduction Evidence Full Visualization Search Step7A, 2026-07-30] 用户要求
+不再使用85% quantile的保守案例，并授权补齐五datasets后统一选择最清晰的
+validation example。当前冻结
+`SC-UVHF-INTRO-EVIDENCE-FULL-SEARCH-v1`：
 
-1. Weather/DLinear prefix disagreement：同一85% quantile example保留full
-   context，并以H720-relative difference显式展示overlapping-prefix disagreement；
-2. ETTm1 neutral sharing demand：best fixed=s128，region 1偏好s1，多数后续regions
-   偏好s128；`s1_vs_s720`与`s8_vs_s720`达到0.5% frozen margin crossover。
+- prefix在每个dataset的全部`origin × channel`单元上，以六个horizon pairs的
+  mean-over-overlap disagreement取maximum；跨dataset按同一score排序；
+- sharing在每个validation origin上构造`5 scopes × 12 regions`风险面，优先选择
+  至少赢得两个regions的scope种类更多、winner entropy更高的样本，再比较qualified
+  crossing、winner margin与descriptive headroom；
+- selection必须标记为`maximum validation candidate`，只证明illustrative
+  existence，不承担prevalence、method effectiveness或architecture rejection。
 
-ETTm1 figure现在包含sharing-risk landscape、step-wise crossover与region-wise
-scale contrast，`crossover_visualization_candidate=true`。两图不使用ISCF/BSCA，
-因此可以分别插在P2与P4之后。Decision=
-`two_introduction_problem_evidence_figures_selected`；停止ETTh2搜索，不修改或
-否定fixed ISCF-BSCA architecture。报告：
-`analysis/iscf_bsca_intro_evidence_visualization_pilot_20260729/selected_figure_report.md`。
+新增矩阵为31 runs：四个missing prefix datasets × 4 horizons，加三个missing
+sharing datasets × 5 scopes；已有14 runs restart-safe复用。neutral pooling已从
+逐block Python loop改为batched reshape/mean/LayerNorm，五scales的output与
+candidate/LayerNorm gradients和loop reference在double precision下最大差
+`2.27e-13`。remote runner改为global dynamic three-GPU queue，长jobs先入队，任意
+空闲GPU领取下一个job，不再把$s=1$固定给GPU 0。Decision=
+`full_search_step7a_pass_remote_launch_next`。设计：
+`analysis/iscf_bsca_intro_evidence_full_search_20260730/design_and_figure_contract.md`。
+
+[Previous Visualization Candidates, 2026-07-29; provisional and superseded by
+full search] Weather prefix与ETTm1 sharing图保留为已完成validation artifacts，
+但不再视为Introduction最终选图；它们仅作为full-search ranking的两个已有候选，
+不修改或否定fixed ISCF-BSCA architecture。
 
 [Introduction Visualization Candidate Search Extension, 2026-07-29] 用户明确要求
 本轮以获得具有说服力的illustrative visualization为目标，不将figure screening

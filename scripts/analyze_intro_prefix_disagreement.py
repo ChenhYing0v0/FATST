@@ -33,6 +33,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--dataset", default="Weather")
     parser.add_argument("--seed", type=int, default=2021)
     parser.add_argument("--sample-quantile", type=float, default=0.85)
+    parser.add_argument(
+        "--selection-mode",
+        choices=("quantile", "maximum"),
+        default="quantile",
+    )
     return parser.parse_args()
 
 
@@ -119,11 +124,18 @@ def pair_statistics(
     artifacts: dict[int, dict[str, np.ndarray]],
     origin_count: int,
     dataset: str,
-) -> tuple[list[dict[str, Any]], np.ndarray, np.ndarray, np.ndarray]:
+) -> tuple[
+    list[dict[str, Any]],
+    np.ndarray,
+    np.ndarray,
+    np.ndarray,
+    np.ndarray,
+]:
     matrix = np.full((len(HORIZONS), len(HORIZONS)), np.nan, dtype=np.float64)
     np.fill_diagonal(matrix, 0.0)
     origin_scores: list[np.ndarray] = []
     channel_scores: list[np.ndarray] = []
+    cell_scores: list[np.ndarray] = []
     rows: list[dict[str, Any]] = []
     for left_index, short_horizon in enumerate(HORIZONS):
         short_prediction = artifacts[short_horizon]["pred"][:origin_count]
@@ -146,6 +158,7 @@ def pair_statistics(
             matrix[left_index, right_index] = nchpd
             origin_scores.append(np.mean(absolute, axis=(1, 2)))
             channel_scores.append(np.mean(absolute, axis=(0, 1)))
+            cell_scores.append(np.mean(absolute, axis=1))
             rows.append(
                 {
                     "dataset": dataset,
@@ -162,6 +175,7 @@ def pair_statistics(
         matrix,
         np.stack(origin_scores, axis=1),
         np.stack(channel_scores, axis=1),
+        np.stack(cell_scores, axis=2),
     )
 
 
@@ -315,21 +329,57 @@ def main() -> None:
         raise ValueError("sample_quantile must be in [0.5, 1.0)")
     artifacts = load_predictions(args)
     origin_count, history_gap, target_gap = validate_alignment(artifacts)
-    rows, matrix, origin_pair_scores, channel_pair_scores = pair_statistics(
+    (
+        rows,
+        matrix,
+        origin_pair_scores,
+        channel_pair_scores,
+        cell_pair_scores,
+    ) = pair_statistics(
         artifacts,
         origin_count,
         args.dataset,
     )
     origin_score = origin_pair_scores.mean(axis=1)
-    selected_origin = nearest_quantile_index(origin_score, args.sample_quantile)
     channel_score = channel_pair_scores.mean(axis=1)
-    selected_channel = nearest_quantile_index(
-        channel_score,
-        args.sample_quantile,
-    )
+    cell_score = cell_pair_scores.mean(axis=2)
+    if args.selection_mode == "maximum":
+        selected_origin, selected_channel = np.unravel_index(
+            int(np.argmax(cell_score)),
+            cell_score.shape,
+        )
+        selected_origin = int(selected_origin)
+        selected_channel = int(selected_channel)
+    else:
+        selected_origin = nearest_quantile_index(
+            origin_score,
+            args.sample_quantile,
+        )
+        selected_channel = nearest_quantile_index(
+            channel_score,
+            args.sample_quantile,
+        )
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
     write_csv(args.output_dir / "pair_metrics.csv", rows)
+    write_csv(
+        args.output_dir / "origin_channel_candidates.csv",
+        [
+            {
+                "dataset": args.dataset,
+                "origin_index": origin,
+                "channel_index": channel,
+                "aggregate_pair_disagreement": float(
+                    cell_score[origin, channel]
+                ),
+                "selected": bool(
+                    origin == selected_origin and channel == selected_channel
+                ),
+            }
+            for origin in range(cell_score.shape[0])
+            for channel in range(cell_score.shape[1])
+        ],
+    )
     overlay_svg, overlay_png = plot_overlay(
         args,
         artifacts,
@@ -345,6 +395,7 @@ def main() -> None:
         "aligned_origin_count": origin_count,
         "maximum_history_alignment_gap": history_gap,
         "maximum_target_alignment_gap": target_gap,
+        "selection_mode": args.selection_mode,
         "sample_quantile": args.sample_quantile,
         "selected_origin_index": selected_origin,
         "selected_origin_score": float(origin_score[selected_origin]),
@@ -355,6 +406,16 @@ def main() -> None:
         "selected_channel_score": float(channel_score[selected_channel]),
         "selected_channel_percentile": float(
             np.mean(channel_score <= channel_score[selected_channel])
+        ),
+        "searched_origin_channel_cells": int(cell_score.size),
+        "selected_joint_score": float(
+            cell_score[selected_origin, selected_channel]
+        ),
+        "selected_joint_percentile": float(
+            np.mean(
+                cell_score
+                <= cell_score[selected_origin, selected_channel]
+            )
         ),
         "macro_nchpd_l1": float(np.mean([row["nchpd_l1"] for row in rows])),
         "macro_rda": float(
