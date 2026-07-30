@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.19` |
+| `version` | `v0.20` |
 | `last_updated` | `2026-07-30` |
 | `paper_candidate` | `ISCF-BSCA-v1` |
-| `current_review_cursor` | Introduction v0.6 uses one constructed two-panel concept figure；approved real-data figures relocate to Section 3；concept figure pending visual review |
+| `current_review_cursor` | Introduction v0.7 reflowed；constructed two-panel Figure 1 approved；real-data Figures 2--3 assigned to Section 3 |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
-| `provisional_content` | Introduction P1--P6 v0.6正文 + constructed Figure 1 draft；Section 3 Figures 2--3 evidence；Related Work、Method、Experiments、Conclusion |
+| `provisional_content` | Introduction P1--P6 v0.7正文 + approved constructed Figure 1；Section 3 Figures 2--3 evidence；Related Work、Method、Experiments、Conclusion |
 | `not_authorized_by_this_document` | 新模型实现、remote training、formal test、按结果调参 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
@@ -351,7 +351,7 @@ cells、secondary controls 与敏感性结果放在 Appendices。
 
 当前clean manuscript正文以
 `docs/paper-drafts/iscf-bsca-introduction-initial-draft.md`
-的`v0.6-conceptual-figure-layout`为准。Introduction只保留一张由constructed
+的`v0.7-approved-figure-reflow`为准。Introduction只保留一张由constructed
 curves组成的双面板Figure 1，用于直观说明prefix disagreement与
 future-region sharing-demand heterogeneity；不在Introduction展开dataset、
 statistics、controls或sample-selection。两张approved real-data figures及其完整
@@ -549,9 +549,11 @@ Figure 1采用一张双面板schematic-led composite：
 - Figure 1不报告dataset、metric、sample、NCHPD、MSE或headroom。Section 3
   Figures 2--3才承担正式problem evidence。
 
-当前draft artifact：
+Canonical source artifact位于
 `analysis/iscf_bsca_intro_concept_figure_20260730/`；状态为
-`draft_pending_visual_review`，在用户确认前不进入`paper-figures/`稳定资产目录。
+`approved_for_manuscript_draft`，SVG/PDF/PNG/TIFF稳定副本位于
+`paper-figures/`。该图仍仅作constructed conceptual illustration，不承担
+empirical evidence。
 
 ### 4.5 Paragraph 5：ISCF-BSCA
 
@@ -1493,4 +1495,5 @@ Coverage boundary：
 | 2026-07-30 | Prefix trajectory density refinement | forecast lines 0.82--0.95 pt；marker stride 18；subtle 0.38-pt under-stroke | reduce visual ink without changing data or evidence structure |
 | 2026-07-30 | Introduction figures accepted for draft | Prefix disagreement + sharing-demand heterogeneity；SVG/PDF/PNG/TIFF centralized in `paper-figures/` | current manuscript-ready copies；validation-only claim boundary unchanged |
 | 2026-07-30 | Introduction v0.5 evidence integration | Figures 1--2 embedded；aggregate statistics、selection disclosure与formal captions写入draft | problem-evidence prose complete；headline method results pending main tables |
-| 2026-07-30 | Introduction v0.6 compact figure layout | one constructed Figure 1；real-data figures relocate to Section 3 Figures 2--3 | conceptual figure pending visual review；detailed proof removed from Introduction |
+| 2026-07-30 | Introduction v0.6 compact figure layout | one constructed Figure 1；real-data figures relocate to Section 3 Figures 2--3 | visual-review item resolved by v0.7；detailed proof removed from Introduction |
+| 2026-07-30 | Introduction v0.7 figure approval and reflow | constructed Figure 1 approved and copied to `paper-figures/`；P1--P6 and caption use one physical line per natural paragraph | freeze Section 3 definitions and Figures 2--3 captions |

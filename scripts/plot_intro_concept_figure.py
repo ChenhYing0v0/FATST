@@ -464,7 +464,9 @@ def main() -> None:
 
     manifest = {
         "figure_id": "figure_intro_conceptual_problem",
-        "status": "draft_pending_visual_review",
+        "status": "approved_for_manuscript_draft",
+        "approval_date": "2026-07-30",
+        "paper_asset_directory": "paper-figures",
         "backend": "Python/matplotlib",
         "final_width_mm": 183.0,
         "data_role": "constructed conceptual illustration",

@@ -12,7 +12,8 @@ Introduction采用一张双面板constructed concept figure：
 或headroom。正文只声明Section 3将给出formal definitions与controlled real-data
 evidence。原两张approved figures移至Section 3，暂按Figure 2（prefix
 disagreement）与Figure 3（sharing-demand heterogeneity）组织。Concept Figure
-1状态=`draft_pending_visual_review`；通过前不进入`paper-figures/`。
+1状态=`approved_for_manuscript_draft`，四种投稿格式已进入`paper-figures/`；
+Introduction v0.7已修复段内硬换行。
 
 ## Section 3 Problem Evidence Full Search Result (2026-07-30)
 

@@ -5,7 +5,7 @@
 | Field | Content |
 | --- | --- |
 | `figure_id` | `figure_intro_conceptual_problem` |
-| `status` | `draft_pending_visual_review` |
+| `status` | `approved_for_manuscript_draft` |
 | `manuscript_role` | Introduction概念说明，不承担empirical evidence |
 | `backend` | Python/matplotlib only |
 | `data_role` | deterministic constructed curves |
@@ -53,7 +53,7 @@ sampling或label selection。两个panel使用彼此独立的restrained color fa
 - SVG/PDF：editable text；
 - PNG：300 dpi；
 - TIFF：600 dpi，LZW；
-- final visual status：pending user review；
+- final visual status：approved for manuscript draft；
 - source data file：not applicable，because the figure is a declared schematic。
 
 ## QA result
@@ -70,5 +70,7 @@ sampling或label selection。两个panel使用彼此独立的restrained color fa
 | random/sampling path | none |
 | final-size visual inspection | pass for draft delivery |
 
-Figure 1仍标记为`draft_pending_visual_review`。只有用户确认视觉版本后，才会复制
-到`paper-figures/`并改为`approved_for_manuscript_draft`。
+Figure 1已于2026-07-30通过用户视觉审阅，状态更新为
+`approved_for_manuscript_draft`，四种投稿格式的稳定副本已同步至
+`paper-figures/`。其claim boundary保持不变：该图仅作constructed conceptual
+illustration，不承担empirical evidence。

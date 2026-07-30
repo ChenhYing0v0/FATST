@@ -2,9 +2,23 @@
   "directory_role": "approved manuscript-facing figure assets",
   "review_status": "approved_for_manuscript_draft",
   "review_date": "2026-07-30",
-  "source_commit": "7e195fd",
+  "source_commit": "bc76080",
   "test_accessed": false,
   "figures": [
+    {
+      "id": "figure_intro_conceptual_problem",
+      "manuscript_section": "Introduction",
+      "planned_figure_number": 1,
+      "role": "conceptual illustration of prefix disagreement and future-region sharing-demand heterogeneity",
+      "formats": [
+        "svg",
+        "pdf",
+        "png",
+        "tiff"
+      ],
+      "source_directory": "analysis/iscf_bsca_intro_concept_figure_20260730",
+      "claim_boundary": "constructed illustration; not empirical evidence"
+    },
     {
       "id": "figure_intro_prefix_disagreement",
       "manuscript_section": "Problem Formulation and Empirical Motivation (Section 3)",

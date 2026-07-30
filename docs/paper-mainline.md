@@ -17,7 +17,7 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_core_status` | `ISCF-BSCA-v1`=`passed_core_candidate_ready_for_paper_consolidation`；不受visualization screen否定 |
 
-[Introduction Compact Figure Layout, 2026-07-30] Introduction v0.6不再承载
+[Introduction Compact Figure Layout, 2026-07-30] Introduction v0.7不再承载
 详细problem-existence experiment。Figure 1改为一张完全由constructed curves
 生成的two-panel concept illustration：panel a说明同一future step的
 horizon-specific disagreement，panel b说明不同future regions的preferred
@@ -27,10 +27,10 @@ sharing extent可能变化。图内与caption均声明`not empirical data`；正
 原两张approved real-data figures移至Section 3，暂按Figure 2（ETTh2 prefix
 disagreement）与Figure 3（ETTm2 sharing-demand heterogeneity）使用。它们仍
 保留validation-only evidence boundary与`paper-figures/`稳定副本。新的
-concept Figure 1当前位于
-`analysis/iscf_bsca_intro_concept_figure_20260730/`，状态为
-`draft_pending_visual_review`；用户通过前不复制进`paper-figures/`。Decision=
-`intro_compact_concept_figure_draft_section3_evidence_relocation`。
+concept Figure 1已通过用户视觉审阅，状态为
+`approved_for_manuscript_draft`，其SVG/PDF/PNG/TIFF稳定副本已进入
+`paper-figures/`；Introduction draft同时完成段内硬换行修复。Decision=
+`intro_concept_figure_approved_and_draft_reflowed`。
 
 [Section 3 Problem Evidence Full Search Result, 2026-07-30] 45/45 validation artifacts
 与五dataset ranking完整，`test_accessed=false`。最终选择：

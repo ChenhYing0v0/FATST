@@ -10,6 +10,9 @@
 - Section 3图才报告baseline predictions、NCHPD与matched sharing-risk evidence。
 
 脚本不读取dataset、model checkpoint或experiment artifact。
+该图已通过用户视觉审阅；canonical source保留在
+`analysis/iscf_bsca_intro_concept_figure_20260730/`，manuscript-facing
+SVG/PDF/PNG/TIFF稳定副本位于`paper-figures/`。
 
 ## 2. Constructed prefix-disagreement panel
 

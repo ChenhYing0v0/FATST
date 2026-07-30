@@ -1,20 +1,20 @@
-# Introduction Problem-Evidence Final Figures 代码说明
+# Section 3 Problem-Evidence Final Figures 代码说明
 
 ## 1. 作用与边界
 
 `scripts/plot_intro_problem_evidence_final.py`只读取冻结的validation source data，
-生成两张Introduction问题证据图。它不训练模型、不访问test、不重新选择sample，
+生成两张Section 3问题证据图。它不训练模型、不访问test、不重新选择sample，
 也不修改任何forecast values。
 
 ```text
 ETTh2 prefix source CSV + summary + pair metrics
-  -> Figure 1 SVG/PDF/PNG/TIFF
+  -> Figure 2 SVG/PDF/PNG/TIFF
 
 ETTm2 selected region-risk CSV + summary
-  -> Figure 2 SVG/PDF/PNG/TIFF
+  -> Figure 3 SVG/PDF/PNG/TIFF
 ```
 
-## 2. Figure 1 source tensors and quantities
+## 2. Figure 2 source tensors and quantities
 
 `selected_forecast_data.csv`每行对应一个relative step：
 
@@ -27,7 +27,7 @@ ETTm2 selected region-risk CSV + summary
 | `prediction_hH` | inverse-scaled DLinear prediction | horizon H model output |
 | `difference_hH_vs_h720` | prediction H minus prediction H720 | same-step disagreement |
 
-Final Figure 1只展示last-48 history与first-96 future，因为96是四个requested
+Final Figure 2只展示last-48 history与first-96 future，因为96是四个requested
 horizons的共同overlap。panel a把history、ground truth和四条horizon-specific
 predictions整合在同一个hero axis中。四条prediction都使用thin solid line，并
 同时用固定颜色、不同marker、稀疏错位marker positions和subtle white separation
@@ -40,10 +40,10 @@ mean $|\Delta|$摘要直接从source predictions相对$H=720$重新计算，不�
 `pair_metrics.csv`的`nchpd_l1`来自所有validation origins、future overlap steps与
 channels的standardized mean absolute difference。panel b将六个pair values映射到
 紧凑3×3 upper-triangular matrix；blank lower triangle表示未重复展示对称
-comparison。最终Figure 1只有两个顶底对齐的panels，不再使用上下堆叠的独立
+comparison。最终Figure 2只有两个顶底对齐的panels，不再使用上下堆叠的独立
 raw-difference subplot。
 
-## 3. Figure 2 source tensors and quantities
+## 3. Figure 3 source tensors and quantities
 
 `selected_region_risk.csv`有60行：
 
@@ -108,9 +108,9 @@ Intended claim：
 
 Code realization：
 
-- Figure 1把single selected example与all-validation heatmap分离，并在一个
+- Figure 2把single selected example与all-validation heatmap分离，并在一个
   trajectory panel中保留raw curves与mean-difference summary；
-- Figure 2只展示matched neutral decoder risk，不出现ISCF/BSCA；
+- Figure 3只展示matched neutral decoder risk，不出现ISCF/BSCA；
 - maximum selection与same-validation descriptive oracle均在manifest和caption
   中公开。
 
