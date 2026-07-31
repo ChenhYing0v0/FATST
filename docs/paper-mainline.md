@@ -7,19 +7,28 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | ISCF-BSCA-v1 Step10 complete；Introduction evidence full-search Step9/10 complete |
+| `current_11_step` | paper consolidation；writing=Section 3 integration；experiments=E0 artifact/matrix audit |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
+| `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_core_status` | `ISCF-BSCA-v1`=`passed_core_candidate_ready_for_paper_consolidation`；不受visualization screen否定 |
 
+[Paper-Experiments Parallel Handoff, 2026-07-31] 新增独立experiment-workstream
+restart handoff，与paper-writing handoff共享冻结candidate和claim boundary。当前
+experiment cursor=E0 existing-artifact inventory and claim-to-table audit；目标是在
+任何remote launch前冻结minimal sufficient的Main I、Main II、core ablation、
+decoder transfer与efficiency矩阵。当前只授权audit/design/local prelaunch；
+local protocol patch、remote training和formal test仍为false。Decision=
+`paper_experiment_consolidation_handoff_active_prelaunch_only`。
+
 [Paper-Writing Restart Freeze, 2026-07-31] 用户确认Introduction
 `v0.9-author-refinement`可作为暂时固定的可用版本，status=
-`temporarily_frozen_usable`。新的唯一current restart entry为
+`temporarily_frozen_usable`。新的paper-writing current restart entry为
 `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md`；
 旧D22 handoff降为historical research lineage。Active workstream切换为Section 3
 manuscript integration；new method search、implementation、remote training和

@@ -5,11 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.23` |
+| `version` | `v0.24` |
 | `last_updated` | `2026-07-31` |
 | `paper_candidate` | `ISCF-BSCA-v1` |
-| `current_review_cursor` | Introduction v0.9 temporarily frozen usable；Section 3 manuscript integration next；Method Figure 4 planned |
+| `current_review_cursor` | writing=Section 3 manuscript integration；experiments=E0 artifact/matrix audit；Method Figure 4 planned |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
+| `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
 | `provisional_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 Figures 2--3；planned Method Figure 4；remaining sections |
 | `not_authorized_by_this_document` | 新模型实现、remote training、formal test、按结果调参 |
@@ -1549,3 +1550,4 @@ Coverage boundary：
 | 2026-07-30 | Introduction v0.8 structural polish | P2 concise；P3 CHPC + Figure 1a；P4 uniform output mechanism to sharing demand；P5 demand-to-scope bridge；P6 evidence-bounded evaluation sentence | main/transfer results decide final positive result wording |
 | 2026-07-30 | Introduction v0.9 author refinement | Figure 1a moved to P2；caption shortened；single-scope contrast added；P6 strengthened；highlighted review copy created | Method Figure 4 planned；positive result sentence remains table-contingent |
 | 2026-07-31 | Introduction v0.9 temporary freeze and paper-writing handoff | clean draft frozen usable；new authoritative reading order and startup prompt created | Section 3 integration is next；old D22 handoff becomes historical |
+| 2026-07-31 | Paper-experiments parallel handoff | experiment-specific reading order、claim-to-table audit、baseline roles、prelaunch deliverables与copy-ready prompt冻结 | E0 artifact inventory active；remote training/formal test仍未授权 |

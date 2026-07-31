@@ -4,6 +4,8 @@
 >
 > 本文件仅保留为D22 research lineage。当前paper-writing新会话必须先读
 > `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md`，
+> 当前paper-experiments新会话必须先读
+> `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md`；
 > 不得把本文件中的旧active method、authorization或next action恢复为当前状态。
 
 ## 0. 使用方式

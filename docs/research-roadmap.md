@@ -1,9 +1,23 @@
 # Research Roadmap
 
+## Paper-Experiments Parallel Handoff (2026-07-31)
+
+新增experiment-workstream current entry：
+`docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md`。
+它与paper-writing handoff并行，前者负责paper-facing artifact inventory、baseline
+consolidation、main/ablation/transfer/efficiency matrix与prelaunch gate，后者继续
+Section 3 manuscript integration。
+
+Experiment cursor=`E0 existing-artifact inventory and claim-to-table audit`。
+当前仅授权read-only audit、design和local prelaunch文档准备；local protocol patch、
+remote training与formal test未授权。必须先区分horizon-specific standard、
+matched unified、native varied-horizon和modern native fixed-H四种baseline角色，
+再冻结minimal sufficient matrix，不自动启动旧SC-MNB的65-run草案。
+
 ## Paper-Writing Restart Freeze (2026-07-31)
 
-Introduction `v0.9-author-refinement`已由用户确认并暂时冻结为可用版本。新的唯一
-current restart entry为
+Introduction `v0.9-author-refinement`已由用户确认并暂时冻结为可用版本。
+Paper-writing current entry为
 `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md`；
 旧D22 handoff仅作historical research lineage。
 

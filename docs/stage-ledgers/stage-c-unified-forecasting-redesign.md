@@ -6,13 +6,14 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | 将Figures 2--3写入Problem Formulation；随后设计Method Figure 4并完成main/ablation/transfer claim tables |
+| `active_question` | 写作流将Figures 2--3写入Problem Formulation；实验流并行冻结main/ablation/transfer/efficiency matrix与prelaunch gate |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `active_candidates` | `ISCF-BSCA-v1` frozen paper core；constructed concept Figure 1 approved；ETTh2 prefix + ETTm2 sharing evidence approved for Section 3 |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
+| `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `stage_exit` | 新problem先通过existence/narrative gate，再决定一项或两项可归因contributions |
 | `stage_rollback` | exact BSCA-v1 negative且无pathology则回Step4；不否定fixed ISCF architecture |
 
@@ -20,11 +21,11 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper consolidation；Introduction v0.9 frozen usable；Section 3 integration active |
+| `current_11_step` | paper consolidation；writing=Section 3 integration；experiments=E0 artifact/matrix audit |
 | `current_candidate` | concept Figure 1=`approved_for_manuscript_draft`；Section 3 evidence pair=`INTRO-CHPD-v1` + `SC-UVHF-FRSD-D1`；paper method remains frozen `ISCF-BSCA-v1` |
-| `latest_decision` | `intro_v0_9_frozen_paper_writing_handoff_active` |
-| `next_required_action` | 冻结Section 3 definitions与Figures 2--3 captions；其后设计Method Figure 4 |
-| `method_training_authorized` | validation-only full figure search authorized；31 new runs；formal test false |
+| `latest_decision` | `paper_writing_and_experiment_prelaunch_handoffs_active` |
+| `next_required_action` | 写作冻结Section 3；实验建立claim-to-table artifact manifest并冻结minimal sufficient prelaunch matrix |
+| `method_training_authorized` | historical visualization runs complete；new local protocol patch=false；remote training=false；formal test=false |
 | `rollback_point` | CHPD weak -> retain formal CHPC argument only；FRSD negative -> revise P4/P5 problem-to-method narrative；do not tune exact BSCA-v1 |
 
 ## 11-Step Record

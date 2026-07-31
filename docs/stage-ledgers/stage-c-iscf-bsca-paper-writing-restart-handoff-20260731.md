@@ -2,10 +2,11 @@
 
 ## 0. Authority and use
 
-本文件是2026-07-31之后新对话继续ISCF-BSCA论文工作的唯一当前首读入口。
+本文件是2026-07-31之后新对话继续ISCF-BSCA论文写作工作的current首读入口。
 它取代
 `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md`
-作为`restart_handoff`，但不删除或改写后者的历史研究记录。
+作为paper-writing handoff，但不删除或改写后者的历史研究记录。并行实验工作使用
+`docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md`。
 
 如果本文件与旧聊天、旧handoff、archive或主线文档的历史段落冲突，以本文件及
 三份主线文档顶部的最新cursor为准。
@@ -264,7 +265,8 @@ Section 3冻结后：
 
 1. 使用`nature-figure`设计并生成Method Figure 4；
 2. 按真实forward tensor flow起草Method；
-3. 再冻结main results、with/without ablations与decoder transfer experiments。
+3. 与并行paper-experiments workstream对齐main results、with/without ablations与
+   decoder transfer的已冻结protocol和返回结果。
 
 ## 7. Authorization and safety boundaries
 
