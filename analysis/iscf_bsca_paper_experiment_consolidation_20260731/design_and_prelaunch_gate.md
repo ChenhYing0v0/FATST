@@ -7,8 +7,8 @@
 | `protocol_id` | `ISCF-BSCA-PAPER-EXP-v2` |
 | `date` | `2026-07-31` |
 | `candidate` | ablation anchor=`ISCF-BSCA-v1`；main candidate=`ISCF-BSCA-MAIN-v1` |
-| `current_step` | ISCF-BSCA-MAIN-v1 H0/H1 implementation and launch gate |
-| `decision` | `H1_tooling_implemented_local_gate_pass_pending_commit_push_remote_preflight` |
+| `current_step` | ISCF-BSCA-MAIN-v1 H1 16-job train/validation matrix running |
+| `decision` | `H0_and_smoke_pass_H1_16_jobs_running_test_zero` |
 | `architecture_search` | false |
 | `test_tuned_hpo_project_principle` | authorized and frozen；HPO execution authorized |
 | `local_protocol_patch_authorized` | true for ISCF-BSCA-MAIN-v1 HPO tooling |
@@ -147,6 +147,11 @@ ECL、Solar、Exchange在进入H2前必须各完成：
 - `scripts/remote/run_iscf_bsca_main_v1_hpo.sh`；
 - `scripts/analyze_iscf_bsca_main_v1_hpo.py`；
 - `scripts/check_iscf_bsca_main_v1_hpo.py`。
+
+H0及launch gate随后已执行：新三dataset audit pass、6/6 canary pass、16/16
+resource smoke pass。Full H1于commit `7361d9e`启动，remote orchestrator
+PID=`545400`，test jobs=0。Execution record：
+`analysis/iscf_bsca_main_v1_hpo_20260731/h0_h1_authorization_and_launch.md`。
 
 ### A4. Main Results I — SOTA-Oriented Horizon-Specific Table
 

@@ -7,7 +7,7 @@ Canonical report为
 machine-readable contract为
 `configs/iscf_bsca_paper_experiment_protocol.json`。
 
-Current cursor=`ISCF-BSCA-MAIN-v1 H0/H1 tooling implemented, pending versioned remote preflight`：
+Current cursor=`ISCF-BSCA-MAIN-v1 H1 train/validation running`：
 
 - exact `ISCF-BSCA-v1`与当前超参数只作原5数据集ablation anchor；不得直接进入
   Main I/II；
@@ -55,6 +55,12 @@ matched/ablation/transfer失败按four-layer failure attribution回Step 4--6。
 H1现冻结16 jobs，先执行6-job new-dataset canary。下一动作是完成focused
 commit/push、remote dataset/GPU/storage preflight并启动H0/H1；不得跳过H1直接
 访问test或执行Tier B3/C。
+
+上述launch gate已完成：H0 audit pass、6/6 new-dataset canary pass、16/16
+resource smoke pass。Full H1已在commit `7361d9e`、GPUs 0/1/2上启动，
+orchestrator PID=`545400`，output root=
+`/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_main_v1_hpo/h1`。当前仍为
+train/validation only，test jobs=0；下一gate为16/16 artifacts后冻结H2。
 
 ## Paper-Experiments Parallel Handoff (2026-07-31)
 

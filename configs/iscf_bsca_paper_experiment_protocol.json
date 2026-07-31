@@ -22,11 +22,11 @@
         "efficiency",
         "fresh_mechanism_diagnostics"
       ],
-      "status": "H1_tooling_implemented_local_gate_pass_pending_remote_preflight"
+      "status": "H1_16_job_train_validation_running"
     }
   },
   "authorization": {
-    "current_decision": "ISCF_BSCA_MAIN_v1_H0_H1_authorized_tooling_implemented_pending_commit_push_remote_preflight",
+    "current_decision": "H0_and_smoke_pass_H1_16_jobs_running_test_zero",
     "existing_artifact_audit": true,
     "matrix_design": true,
     "test_tuned_hpo_project_principle": {
