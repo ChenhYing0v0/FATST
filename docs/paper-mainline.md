@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.2 pending author review；experiments=H1 audit complete、H2 24-profile matrix frozen/prelaunch |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.2 pending author review；experiments=H2 24-job train/validation running |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -121,6 +121,12 @@ MSE选checkpoint，H2 24/24完成前不访问test。Canonical report=
 `analysis/iscf_bsca_main_v1_hpo_20260731/h1_result_and_h2_freeze.md`；
 config=`configs/iscf_bsca_main_v1_hpo_h2.json`。Decision=
 `H1_complete_current_competitive_H2_frozen_prelaunch_test_zero`。
+
+[ISCF-BSCA-MAIN-v1 H2 Launch, 2026-07-31] H2 local/remote contract、
+9/9 new-dataset canary与24/24 full resource smoke全部通过。Commit=
+`b94d47b`；GPUs 0/1/2 launch前均为18 MiB且无compute process。24-job
+train/validation于19:02:12启动，PID=`905874`，test jobs=0。Canonical record=
+`analysis/iscf_bsca_main_v1_hpo_20260731/h2_prelaunch_and_launch.md`。
 
 [ISCF-BSCA-MAIN-v1 H1 Launch, 2026-07-31] H0新dataset audit通过：
 ECL=`26304×321`、Solar=`52560×137`、Exchange=`7588×8`，hash、split、

@@ -76,7 +76,7 @@ Canonical report为
 machine-readable contract为
 `configs/iscf_bsca_paper_experiment_protocol.json`。
 
-Current cursor=`ISCF-BSCA-MAIN-v1 H1 complete；H2 frozen/prelaunch`：
+Current cursor=`ISCF-BSCA-MAIN-v1 H2 24-job train/validation running`：
 
 - exact `ISCF-BSCA-v1`与当前超参数只作原5数据集ablation anchor；不得直接进入
   Main I/II；
@@ -136,6 +136,11 @@ train/validation only，test jobs=0。H2现已冻结为24 additional jobs
 `configs/iscf_bsca_main_v1_hpo_h2.json`。下一gate为local contract、focused
 commit/push、remote commit/GPU preflight和H2 resource canary；H2 24/24完成前
 不得访问test。
+
+H2 prelaunch现已通过local/remote contract、9/9 new-dataset canary与24/24 full
+resource smoke。Commit=`b94d47b`；24-job train/validation已于19:02:12在GPUs
+0/1/2启动，PID=`905874`，test jobs=0。预计5--7小时，下一gate为24/24 artifact
+audit，不在训练过程中访问test。
 
 ## Paper-Experiments Parallel Handoff (2026-07-31)
 

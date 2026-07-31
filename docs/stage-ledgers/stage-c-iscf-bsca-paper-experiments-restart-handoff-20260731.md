@@ -44,7 +44,7 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment consolidation and prelaunch |
-| `active_experiment_step` | H1 16/16 complete；H2 24 additional profiles frozen/prelaunch |
+| `active_experiment_step` | H1 16/16 complete；H2 24-job train/validation running |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
@@ -52,7 +52,7 @@ paper candidate与claim boundary，但互不替代。
 | `remote_training_authorized` | true for frozen H0/H1 and bounded H2 |
 | `test_tuned_hpo_authorized` | true after complete frozen H2 training matrix |
 | `formal_test_authorized` | false |
-| `next_action` | H2 local gate、commit/push、remote GPU/resource preflight、24-job train/validation |
+| `next_action` | monitor H2 to 24/24；audit artifacts/hashes/numeric health |
 | `conditional_next` | H2 24/24 complete后，对H1+H2全部40 trials执行four-H official-test ranking |
 
 本handoff授权的是实验盘点、设计、source/protocol audit与prelaunch文档准备，不是
