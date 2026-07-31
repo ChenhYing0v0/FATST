@@ -5,15 +5,15 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.30` |
+| `version` | `v0.31` |
 | `last_updated` | `2026-07-31` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 3 v0.1 initial draft pending author review；experiments=ISCF-BSCA-MAIN-v1 H1 train/validation running；Method Figure 4 planned |
+| `current_review_cursor` | writing=Section 3 v0.2 narrative refinement pending author review；experiments=ISCF-BSCA-MAIN-v1 H1 train/validation running；Method Figure 4 planned |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
-| `provisional_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.1正文 + approved Figures 2--3；planned Method Figure 4；remaining sections |
+| `provisional_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.2正文 + approved Figures 2--3；planned Method Figure 4；remaining sections |
 | `authorization_source` | experiment HPO authorization由`configs/iscf_bsca_main_v1_hpo.json`记录；本architecture文档不扩张其Tier B3/C边界 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
@@ -851,15 +851,22 @@ balanced co-adaptation` 完整链上。
 
 ## 6. Problem Formulation and Empirical Motivation
 
-Section 3 v0.1 manuscript-facing initial draft已落地：
+Section 3 v0.2 manuscript-facing narrative refinement已落地：
 `docs/paper-drafts/iscf-bsca-problem-formulation-initial-draft.md`。当前状态为
-`pending_author_review`；Introduction v0.9未改动。
+`author_feedback_round1_integrated_pending_review`；Introduction v0.9未改动。
 
 3.1--3.4不出现ISCF、BSCA、arm或production method名称，问题证据只使用已有
 baseline或简单capacity-matched diagnostic heads。3.5先从问题与证据导出通用
 design requirements，只在最后一个transition paragraph引出ISCF-BSCA。Figures
 2--3继续严格标记为validation-only illustrative evidence，不承担method
 effectiveness、population prevalence或learned allocation claim。
+
+Section 3不再以公式直接开场，而以两个reader questions建立叙事：
+`不同horizon requests应保证什么 -> unified decoder应如何组织future domain`。
+全章narrative spine固定为：
+`coherent task -> observed disagreement -> accuracy boundary ->
+sharing-demand heterogeneity -> design requirements`。公式只承担formalization或
+matched measurement，不再替代topic sentence与argument transition。
 
 ### 6.1 Horizon-Specific and Unified Multi-Horizon Forecasting
 
@@ -886,6 +893,13 @@ $$
 其中 $g_\theta$ 是horizon无关、future-step-indexed prediction function。
 随后定义 CHPC，并说明 $H$ 是 forecast horizon、$\tau$ 是 future time step、
 $(\tau,c)$ 是 forecast target。
+
+Manuscript v0.2先用自然语言定义`future-step-indexed prediction function`，再给
+$g_\theta$。CHPC不再引入额外projection operator $\Pi_{H_i}$，而直接写为
+$\widehat y_{o+\tau,c}^{(H_i)}
+=\widehat y_{o+\tau,c}^{(H_j)}$ for every shared target，并紧接自然语言解释。
+3.1结论限定为“不同horizon requests是同一future trajectory的nested views”；
+accuracy boundary移至3.3，不在definition段落突然插入。
 
 ### 6.2 Evidence I：Cross-Horizon Disagreement
 
@@ -993,7 +1007,7 @@ $$
 `A6_MEASURE`的aggregate MSE差异仅0.1659%，只覆盖7/15 cells与2/5 datasets；
 `A6_MEASURE`相对`A6_FULL`的measure-training差异反而达到1.7980%且覆盖15/15
 cells。该confound大于并更稳定于horizon-specific/unified contrast。因此Section
-3 v0.1只定义$\operatorname{UP}_H$与matched comparison要求，并明确：
+3 v0.2只定义$\operatorname{UP}_H$与matched comparison要求，并明确：
 
 - 不把naive unified performance compromise写成已证事实；
 - unified motivation只由one-model service与CHPC contract承担；
@@ -1151,11 +1165,12 @@ s720整行恒为0并显示为白色；新版编码消除该视觉歧义，同时
 fixed-s720 reference。maximum-heterogeneity validation role在caption中明确；
 正式CFH继续deferred。图不使用ISCF/BSCA，不承担method effectiveness claim。
 
-Section 3 v0.1进一步把sample-level matched statistic写为
-$R_{o,b,s}$，把region-best excess risk写为$E_{o,b,s}$，并保留
-validation-selected fixed/schedule与official-test CFH作为未来formal control。
+Section 3 v0.2保留sample-level matched statistic $R_{o,b,s}$与
+validation-selected fixed/schedule及official-test CFH作为未来formal control。
 Figure 3本身不建立CFH；其同一validation-label winner与8.112% headroom只作
-descriptive oracle。
+descriptive oracle。完整neutral tensor path继续保存在本architecture与canonical
+evidence design中；manuscript正文改为自然语言说明matched components，只保留
+支撑观点所必需的region-risk与CFH公式。
 
 ### 6.5 Design Requirements
 
@@ -1172,6 +1187,12 @@ Manuscript-facing表达在此处保持method-neutral：one model、CHPC、multip
 sharing extents、sample/variable/future-step粒度的integration与stable joint
 learning。只有3.5末段将这些requirements映射到ISCF与BSCA，且明确Figures 2--3
 不构成component effectiveness evidence。
+
+v0.2进一步区分requirement来源：one model与CHPC来自task definition；Figure 3
+直接支持within-sample future-region variation，因此只导出multiple extents与
+future-step-varying integration；更细的sample/variable conditioning属于method
+hypothesis，必须由后续ablation验证。stable joint learning同样只作为method必须
+解决的optimization condition，不声称由Figures 2--3直接建立。
 
 ## 7. Method
 

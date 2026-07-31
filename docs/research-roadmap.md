@@ -1,5 +1,41 @@
 # Research Roadmap
 
+## Section 3 Narrative Refinement v0.2 (2026-07-31)
+
+用户对v0.1的核心反馈不是公式错误，而是公式替代了叙事：reader从Related Work进入
+Section 3后，尚未理解本节要回答什么、为什么回答以及证据如何导向method。v0.2已
+按`what -> why -> formalization -> evidence -> implication -> boundary`重构全文，
+文件仍为
+`docs/paper-drafts/iscf-bsca-problem-formulation-initial-draft.md`，review=
+`author_feedback_round1_integrated_pending_review`。
+
+本轮revision decisions：
+
+1. Section opening先提出两个问题：cross-horizon requests应保证何种coherence，
+   unified decoder应如何组织future-domain sharing；
+2. 3.1先给same-target semantic argument，再形式化input/output；删除
+   $\Pi_{H_i}$ projection notation，直接写shared targets上的element-wise
+   equality；
+3. `future-step-indexed prediction function`在首次公式前解释，并明确是本文
+   varied-horizon formulation天然满足CHPC；
+4. accuracy disclaimer从3.1移至3.3，由`coherence != accuracy`自然引出
+   $\operatorname{UP}_H$与D18 negative evidence boundary；
+5. 3.2形成`question -> metric -> control -> Figure 2 -> implication`，3.4形成
+   `decoder question -> sharing trade-off -> matched diagnostic -> Figure 3 ->
+   out-of-sample boundary`；
+6. manuscript移除neutral diagnostic的完整tensor derivation，只保留matched
+   construction prose、$R_{o,b,s}$与formal CFH；详细contract继续由architecture
+   与canonical evidence design承载；
+7. 3.5分别标记task-derived、evidence-derived与method-level optimization
+   requirements；Figure 3只直接支持future-region variation，sample/variable
+   conditioning与BSCA trainability均留给后续ablation。
+
+Introduction v0.9与所有evidence values未改。Figures 2--3仍是validation-only
+illustrative evidence，CFH仍未formal established，P6 main/ablation/transfer
+claims仍为provisional。Decision=
+`section3_v0_2_narrative_refinement_pending_author_review`；本轮不扩张任何
+implementation、remote training或formal test授权。
+
 ## Section 3 Initial Draft and Evidence Boundary Freeze (2026-07-31)
 
 Section 3 manuscript-facing初稿已落地：

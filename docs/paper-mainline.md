@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.1 pending author review；experiments=ISCF-BSCA-MAIN-v1 H1 train/validation running |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.2 narrative refinement pending author review；experiments=ISCF-BSCA-MAIN-v1 H1 train/validation running |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,6 +18,29 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1`待test-tuned HPO后进入Main I/II |
+
+[Section 3 Narrative Refinement v0.2, 2026-07-31] 用户指出v0.1虽形式化完整，
+但全节由公式与定义驱动，缺少`what/why/evidence/implication`叙事。v0.2新增chapter
+overview，以两个reader questions组织全节：不同horizon requests应保证什么，以及
+unified decoder应如何组织future domain。Narrative spine现冻结为
+`coherent task -> observed disagreement -> accuracy boundary ->
+sharing-demand heterogeneity -> design requirements`。
+
+3.1先陈述same-target semantic coherence，再定义task；删除只表示prefix crop的
+$\Pi_{H_i}$，改用shared targets上的element-wise equality并立即解释。
+`future-step-indexed prediction function`在公式前由自然语言首次定义，结论改为
+different horizons是one trajectory的nested views；原先突兀的accuracy disclaimer
+移至3.3。3.2按question -> CHPD/NCHPD -> controls -> Figure 2 -> implication组织。
+3.3显式区分coherence与accuracy并继续冻结unified-penalty negative boundary。
+3.4删除manuscript中的full neutral tensor derivation，保留matched-family prose、
+$R_{o,b,s}$、Figure 3与formal CFH；完整tensor contract仍在architecture/evidence
+design。3.5区分task-derived、evidence-derived与method optimization requirements，
+并明确Figure 3直接支持future-region variation，不单独建立sample/variable
+conditioning的必要性。
+
+Introduction v0.9、Figures 2--3数值、D18 evidence boundary与P6 provisional claims
+均未改变；本writing refinement不修改并行experiment cursor或授权。Decision=
+`section3_v0_2_narrative_refinement_pending_author_review`。
 
 [Section 3 Initial Draft, 2026-07-31] Manuscript-facing初稿
 `docs/paper-drafts/iscf-bsca-problem-formulation-initial-draft.md`已完成3.1--3.5，
