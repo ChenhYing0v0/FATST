@@ -6,9 +6,10 @@ path. FATST also maintains explicitly named local A6 encoder/readout paths in
 
 ## Source Boundary
 
-- `layers/`, `data_provider/`, `exp/`, `utils/`, `run.py`, and `scripts/` are
-  copied from the official TimeAlign repository, apart from the compatibility
-  changes listed below.
+- `layers/`, `data_provider/`, `exp/`, `utils/`, `run.py`, and the upstream
+  scripts are copied from the official TimeAlign repository, apart from the
+  compatibility changes listed below. `scripts/Exchange.sh` is the explicitly
+  documented FATST local addition.
 - `models/TimeAlign.py` preserves the official baseline path and contains the
   explicitly named local A6 encoder/readout candidates.
 - `train_repo.py` is the repo adapter for dataset roots, unified/fixed batch
@@ -17,6 +18,13 @@ path. FATST also maintains explicitly named local A6 encoder/readout paths in
   StageC validation suite. The `ETTh1` preset follows the vendored upstream
   `scripts/ETTh1.sh`; active mechanism-control runs may still override its
   patch and width through the preregistered dataset-profile calibration.
+- `scripts/Exchange.sh` is a FATST local source adapter because upstream
+  TimeAlign does not provide an Exchange script. It uses the standard custom
+  loader contract (`exchange_rate.csv`, eight channels, daily frequency),
+  evaluates `96/192/336/720`, and bootstraps the encoder/alignment settings
+  from `ETTh1.sh`. The settings are not claimed to be tuned for Exchange.
+  `run.py` fixes the active model seed to `2021`; the script also passes
+  `--seed 2021` for augmentation/config traceability.
 - The only compatibility changes inside official files are:
   - `sktime` import is optional because ETT/Weather loaders do not use it.
   - `DataFrame.drop(['date'], 1)` is changed to

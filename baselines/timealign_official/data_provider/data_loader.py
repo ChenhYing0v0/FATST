@@ -371,7 +371,7 @@ class Dataset_Solar(Dataset):
         seq_x = self.data_x[s_begin:s_end]
         seq_y = self.data_y[r_begin:r_end]
         seq_x_mark = torch.zeros((seq_x.shape[0], 1))
-        seq_y_mark = torch.zeros((seq_x.shape[0], 1))
+        seq_y_mark = torch.zeros((seq_y.shape[0], 1))
 
         return seq_x, seq_y, seq_x_mark, seq_y_mark
 

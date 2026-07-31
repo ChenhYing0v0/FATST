@@ -1,5 +1,61 @@
 # Research Roadmap
 
+## ISCF-BSCA Paper-Facing Experiment Prelaunch Freeze v2 (2026-07-31)
+
+Canonical report为
+`analysis/iscf_bsca_paper_experiment_consolidation_20260731/design_and_prelaunch_gate.md`，
+machine-readable contract为
+`configs/iscf_bsca_paper_experiment_protocol.json`。
+
+Current cursor=`ISCF-BSCA-MAIN-v1 H0/H1 tooling implemented, pending versioned remote preflight`：
+
+- exact `ISCF-BSCA-v1`与当前超参数只作原5数据集ablation anchor；不得直接进入
+  Main I/II；
+- `ISCF-BSCA-MAIN-v1`保持相同frozen architecture family，但必须在8 datasets
+  上完成test-tuned HPO；每trial由validation选择checkpoint，每dataset由
+  four-H mean official-test MSE选择一个profile服务四个H；
+- Main I/II datasets=`ETTh1, ETTh2, ETTm1, ETTm2, Weather, ECL, Solar,
+  Exchange`；ablation和transfer保留原5 datasets；
+- HPO分H0 data/protocol parity、H1 anchor/resource smoke、H2 bounded coarse
+  search、optional H3 top-2 stability、H4 selected-config freeze、H5 final
+  training；当前primary seed=2021，additional seeds只在时间允许时按完整block
+  扩展；TimeAlign encoder仅作source-audited search prior；
+- Main I包含AMD、TimeMixer、DLinear、SimpleTM、iTransformer、PatchTST、
+  TimePerceiver、SRSNet与TimeAlign；published-transcribed和official-native
+  reproduction分层标记；
+- published primary source为TimeAlign ICLR 2026 Table 6：覆盖TimeAlign、
+  TimeMixer、DLinear、iTransformer、PatchTST的7个目标datasets，缺Exchange；
+  AMD、SimpleTM、TimePerceiver、SRSNet及全部Exchange缺口走official
+  reproduction；PDT只作secondary cross-check；TimeAlign Exchange seed2021
+  script已按ETTh1 bootstrap本地实现但未运行；
+- Main II保留DLinear/PatchTST matched unified、A6_FULL repo-native reference
+  与ElasTST native varied-horizon context；
+- seed2021 primary matrix不含HPO runs时为233 checkpoint slots、488 seed-horizon
+  cells；15 primary-seed metric-evidence records可复用、218 new；另有30 existing
+  extra-seed evidence保留；Main I包含140 published cells + 148 single-seed
+  official-reproduction cells；
+- historical H720-only selector、frozen replacement与external-native-as-matched
+  均继续排除。
+
+下一rollback不是自动重启architecture search。若new-dataset protocol不一致回H0；
+HPO不稳定回H1/H2并收窄已冻结search budget；冻结budget内test-tuned最优profile
+未达到SOTA则完整报告并收窄claim，或另立candidate并重新冻结search contract；
+matched/ablation/transfer失败按four-layer failure attribution回Step 4--6。
+
+当前授权严格分层：
+
+1. scoped TimeAlign Exchange local script=`completed_unlaunched`；
+2. ISCF-BSCA-MAIN-v1 Tier A local protocol/source patch=`true`；
+3. Tier B1 remote new-dataset/resource smoke=`true`；
+4. Tier B2 bounded test-tuned HPO（含完整H2后的official-test profile ranking）
+   =`true`；
+5. Tier B3 selected-profile confirmation=`false`；
+6. Tier C complete test-tuned reporting audit=`false`。
+
+H1现冻结16 jobs，先执行6-job new-dataset canary。下一动作是完成focused
+commit/push、remote dataset/GPU/storage preflight并启动H0/H1；不得跳过H1直接
+访问test或执行Tier B3/C。
+
 ## Paper-Experiments Parallel Handoff (2026-07-31)
 
 新增experiment-workstream current entry：

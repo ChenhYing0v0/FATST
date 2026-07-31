@@ -352,26 +352,41 @@ actually ran.
   horizon set is allowed only when the task or dataset requires it and the
   deviation is frozen before the run. The machine-readable project default is
   `configs/paper_facing_evaluation_protocol.json`.
-- Routine method development must use the validation split with the same
-  paper-facing horizon set only for checkpoint selection, ordinary
-  hyperparameter choice, implementation debugging, and explanatory
-  diagnostics. A validation result must not pass or reject a forecasting
-  mechanism. Formal mechanism screening, main results, and formal ablations
-  must use the official test split and the complete preregistered matrix.
+- Routine method development must use the validation split for checkpoint
+  selection, early stopping, implementation debugging, and explanatory
+  diagnostics. Paper-facing main-model and baseline hyperparameters may be
+  selected by official-test performance under the test-tuned protocol below.
+  A validation result must not pass or reject a forecasting mechanism. Formal
+  mechanism screening, main results, and formal ablations must use the
+  official test split and the complete preregistered matrix.
 - Dense horizon curves, dense-prefix AUC, horizon bins, per-epoch trajectories,
   gradients, and routing statistics are diagnostic or unified-horizon evidence
   by default. They must not silently replace the standard-horizon development
   gate. If a dense metric is intended as a primary method or checkpoint metric,
   that role must be justified by the paper claim and preregistered before
   results are observed.
-- Validation remains the only split used for early stopping, checkpoint
-  selection, ordinary hyperparameter choice, and low-cost implementation
-  iteration. Test labels must never select an epoch or checkpoint. For new
-  unified-horizon candidates, the default checkpoint score is the mean
+- Validation remains the only split used for early stopping, epoch/checkpoint
+  selection, and low-cost implementation iteration. Test labels must never
+  select an epoch, checkpoint, or seed. For each hyperparameter trial of a
+  unified-horizon candidate, the default checkpoint score is the mean
   validation MSE over `{96, 192, 336, 720}`; any normalization or alternative
   score must be frozen in advance and shared by matched arms. Historical arms
   selected by `H720` alone must be retrained under this four-horizon selector
   before they enter a matched paper-facing comparison.
+- As an explicit project principle, paper-facing main-model and reproduced
+  baseline hyperparameters are test-tuned when the corresponding time-series
+  benchmark protocol uses official-test results for model selection. For
+  `ISCF-BSCA-MAIN-v1`, rank the preregistered hyperparameter trials separately
+  for each dataset by mean official-test MSE over
+  `{96, 192, 336, 720}`. Freeze one dataset-level profile shared by all four
+  horizons; do not choose a separate profile for each horizon or table cell.
+  MAE must be reported for every cell but is not the default tuning objective
+  unless an alternative joint objective is frozen before access.
+- Test-tuned search must freeze the search space, budget, dataset set, horizon
+  set, primary seed, checkpoint rule, and aggregation rule before launch. It
+  must retain every tried configuration and its complete MSE/MAE scorecard,
+  including negative trials. It may not select a favorable subset of datasets,
+  horizons, seeds, or metrics for reporting.
 - The official test split is the project's standard mechanism-effectiveness
   and paper-facing benchmark surface. Before every formal mechanism evaluation,
   freeze and record the candidate version, architecture, objective, dataset
@@ -381,24 +396,32 @@ actually ran.
   based on an untouched holdout.
 - A test audit must evaluate the full preregistered dataset/horizon/control
   matrix and report negative results; it may not select only favorable
-  datasets, horizons, arms, or seeds. Dataset-specific or horizon-specific
-  tuning from test results is forbidden.
-- Any method redesign made after observing test results creates a new candidate
-  version and must record the previous test exposure as `test_informed`. The
-  new version must pass a new narrative/design gate before implementation; do
-  not silently treat the official test split as untouched evidence.
+  datasets, horizons, arms, or seeds. Dataset-specific test tuning is allowed
+  only at the frozen four-horizon aggregate level described above;
+  horizon-specific, seed-specific, metric-specific, or cell-specific tuning
+  remains forbidden.
+- Architecture, objective, or mechanism redesign after observing test results
+  creates a new candidate version and must record the previous test exposure as
+  `test_informed`. Moving within a preregistered hyperparameter search space
+  does not create a new architecture candidate, but every trial remains
+  `test_tuned`. Any redesign outside that space must pass a new narrative/design
+  gate before implementation; do not silently treat the official test split as
+  untouched evidence.
 - Test performance is primary for effectiveness, but mechanism claims still
   require validation/train diagnostics and matched controls. A positive test
   result without attribution cannot establish the proposed mechanism; a
   validation/test reversal must be reported and audited rather than hidden.
 - The final model and all paper-facing ablations use the same standard test
-  scorecard. Any redesign after a test result creates a new `test_informed`
-  candidate and requires a newly frozen full matrix. Test feedback may motivate
-  a new hypothesis, but it must not trigger per-dataset, per-horizon, or
-  per-cell tuning.
+  scorecard. Test-tuned main results must be disclosed as such and must not be
+  described as an untouched-holdout, unbiased-generalization, or strictly
+  confirmatory estimate. Test feedback may choose a dataset-level profile
+  inside the frozen search contract, but it must not trigger per-horizon,
+  per-seed, or per-cell tuning.
 - Every test audit must record `test_access_date`, `user_authorization`,
   `candidate_version`, `checkpoint_hash`, `checkpoint_retrained`,
-  `test_role`, `matrix_complete`, and the resulting Step 9-10 decision.
+  `test_role`, `test_tuned`, `hyperparameter_trial_id`,
+  `hyperparameter_selection_rule`, `matrix_complete`, and the resulting
+  Step 9-10 decision.
 
 ### Four-Layer Mechanism Evaluation Rule
 

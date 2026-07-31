@@ -278,7 +278,8 @@ Section 3冻结后：
 - 新method或loss实现；
 - 远程训练；
 - official-test访问；
-- 根据旧test结果做dataset/horizon/cell tuning；
+- 未经实验流Tier B2授权执行test-tuned HPO；
+- 根据test结果做per-horizon、per-seed、per-metric或per-cell tuning；
 - 恢复closed candidates；
 - 为兑现P6而选择性报告favorable results。
 

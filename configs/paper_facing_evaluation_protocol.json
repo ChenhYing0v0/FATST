@@ -1,7 +1,7 @@
 {
   "protocol": "FATST-paper-facing-evaluation",
-  "version": "1.2",
-  "effective_date": "2026-07-18",
+  "version": "1.3",
+  "effective_date": "2026-07-31",
   "standard_long_term_forecasting": {
     "horizons": [96, 192, 336, 720],
     "primary_metric": "mse",
@@ -13,12 +13,31 @@
       "cell_wins",
       "dataset_wins"
     ],
-    "default_validation_checkpoint_score": "mean_mse_h96_h192_h336_h720"
+    "default_validation_checkpoint_score": "mean_mse_h96_h192_h336_h720",
+    "default_test_tuned_hyperparameter_score": "mean_official_test_mse_h96_h192_h336_h720_per_dataset"
   },
   "split_roles": {
     "train": "parameter_optimization_and_train_only_diagnostics",
-    "validation": "checkpoint_selection_hyperparameter_choice_debugging_and_explanatory_diagnostics_only",
-    "test": "formal_mechanism_effectiveness_main_result_and_formal_ablation"
+    "validation": "early_stopping_checkpoint_selection_debugging_and_explanatory_diagnostics_only",
+    "test": "paper_facing_hyperparameter_selection_formal_mechanism_effectiveness_main_result_and_formal_ablation"
+  },
+  "test_tuned_hyperparameter_policy": {
+    "project_principle": true,
+    "authorized_by_user": true,
+    "effective_date": "2026-07-31",
+    "applies_to": [
+      "paper_facing_main_model",
+      "officially_reproduced_baselines"
+    ],
+    "trial_checkpoint_selected_by_validation_only": true,
+    "profile_selection_granularity": "one_profile_per_dataset_shared_across_all_standard_horizons",
+    "profile_selector": "minimum_mean_official_test_mse_over_h96_h192_h336_h720",
+    "mae_reporting_required": true,
+    "per_horizon_profile_forbidden": true,
+    "epoch_checkpoint_and_seed_selection_by_test_forbidden": true,
+    "complete_trial_ledger_required": true,
+    "negative_trial_reporting_required": true,
+    "disclosure": "test_tuned_and_test_informed_not_untouched_holdout"
   },
   "dense_evaluation": {
     "default_role": "diagnostic_and_unified_horizon_supporting_evidence",
@@ -32,10 +51,11 @@
     "primary_use_requires_preregistration": true
   },
   "test_audit": {
-    "benchmark_role": "test_primary_test_informed_candidate_decision_surface",
+    "benchmark_role": "test_tuned_test_informed_hyperparameter_and_candidate_decision_surface",
     "formal_mechanism_evaluation_requires_test": true,
     "validation_cannot_pass_or_reject_mechanism": true,
-    "per_dataset_horizon_or_cell_tuning_forbidden": true,
+    "per_dataset_aggregate_tuning_allowed": true,
+    "per_horizon_seed_metric_or_cell_tuning_forbidden": true,
     "freeze_before_access": [
       "candidate_version",
       "source_commit",
@@ -44,13 +64,17 @@
       "dataset_profiles",
       "seeds",
       "checkpoint_rule",
+      "hyperparameter_search_space",
+      "hyperparameter_budget",
+      "hyperparameter_aggregation_rule",
       "checkpoint_hashes",
       "main_and_ablation_matrix",
       "metrics",
       "gates",
       "rollback_consequences"
     ],
-    "post_test_redesign_creates_test_informed_candidate": true,
+    "within_frozen_hpo_space_does_not_create_new_architecture_candidate": true,
+    "post_test_architecture_objective_or_mechanism_redesign_creates_test_informed_candidate": true,
     "untouched_holdout_claim_forbidden": true,
     "risk_controls": [
       "complete_frozen_matrix",

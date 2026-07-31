@@ -5,15 +5,16 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.24` |
+| `version` | `v0.29` |
 | `last_updated` | `2026-07-31` |
-| `paper_candidate` | `ISCF-BSCA-v1` |
-| `current_review_cursor` | writing=Section 3 manuscript integration；experiments=E0 artifact/matrix audit；Method Figure 4 planned |
+| `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
+| `current_review_cursor` | writing=Section 3 manuscript integration；experiments=ISCF-BSCA-MAIN-v1 H1 tooling local gate pass/pending remote preflight；Method Figure 4 planned |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
+| `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
 | `provisional_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 Figures 2--3；planned Method Figure 4；remaining sections |
-| `not_authorized_by_this_document` | 新模型实现、remote training、formal test、按结果调参 |
+| `authorization_source` | experiment HPO authorization由`configs/iscf_bsca_main_v1_hpo.json`记录；本architecture文档不扩张其Tier B3/C边界 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
@@ -759,17 +760,21 @@ conclusion，提交前必须由main/ablation/transfer tables逐项兑现。**
    `ISCF-specific train-only objective`。现有三seed证据只支持相对ISCF-EQUAL
    的small but directionally robust gain，不支持universal gain、强
    specialization或所有datasets/horizons一致改善。
-6. **结果句作为待兑现的paper-facing claim。** 按用户决定，v0.9提前采用
-   `outperforms/confirm/demonstrate`强化性能、消融与迁移结论。该句不是当前
-   evidence ledger的既成事实：horizon-specific main table与backbone transfer
-   table尚待补齐。提交前若任一结论未被完整test matrix支持，必须降级对应动词；
-   未完成统计检验前仍不使用`statistically significant`。
+6. **结果句作为待兑现的paper-facing claim。** v0.9暂时保留作者强化句，不在
+   本轮改写Introduction clean draft；但prelaunch protocol已冻结最终claim边界：
+   DLinear/PatchTST primary rows通过时只能写`outperforms the evaluated
+   standard-protocol horizon-specific baselines`，不能使用无定语的
+   `outperforms horizon-specific forecasters`。TimePerceiver/SRSNet只作各自
+   native single-seed point-estimate context。若任一结论未被完整test matrix
+   支持，必须降级对应动词；未完成统计检验前仍不使用
+   `statistically significant`。
 7. **证据结构必须与贡献一一对应。** Contribution 1由baseline/simple matched
-   diagnostics与CHPC disagreement支撑；Contribution 2由matched architecture
-   controls、full test MSE/MAE和scope behavior支撑；Contribution 3由same-
-   architecture objective control、three-seed official-test与internal health
-   支撑。efficiency与transferability属于完整framework evidence，不能替代
-   mechanism attribution。
+   diagnostics与CHPC disagreement支撑；Contribution 2由exact core ablations、
+   same-backbone transfer controls、full test MSE/MAE和scope behavior支撑；
+   DLinear/PatchTST unified rows只是matched unified system benchmark，不是
+   exact architecture attribution。Contribution 3由same-architecture objective
+   control、three-seed official-test与internal health支撑。efficiency与
+   transferability属于完整framework evidence，不能替代mechanism attribution。
 8. **transferability是empirical scope，不是预先成立的贡献。** 在decoder迁移
    实验完成前，正文只写`evaluate ... decoder transferability`；若迁移结果不
    稳定，应将其降为analysis或limitation，而不是保留正向claim。
@@ -1244,29 +1249,51 @@ $$
 
 ### 8.1 Experimental Setup
 
-报告 datasets、$\mathcal H=\{96,192,336,720\}$、seeds、validation-only
-checkpoint selection、official-test MSE/MAE、parameter/training budgets，以及
-horizon-specific 与 unified 两种 protocol。
+Main I/II使用8 datasets：ETTh1、ETTh2、ETTm1、ETTm2、Weather、ECL、Solar、
+Exchange；core ablation与decoder transfer使用原5 datasets。统一报告
+$\mathcal H=\{96,192,336,720\}$、seeds、validation-only checkpoint
+selection、test-tuned hyperparameter selection、official-test MSE/MAE、
+parameter/training budgets，以及
+horizon-specific与unified两种protocol。
+
+Main I/II中的论文方法必须是`ISCF-BSCA-MAIN-v1`：在frozen architecture
+family内对8 datasets分别执行test-tuned HPO，每dataset选择一个profile
+共同服务四个H。Exact `ISCF-BSCA-v1`及其现有超参数只用于ablation，不进入主表。
+每个trial先由four-H mean validation MSE选择checkpoint，再由four-H mean
+official-test MSE选择dataset-level profile；test不得选择epoch、checkpoint、
+seed或per-H profile。全部trial结果必须保留并披露为`test_tuned/test_informed`。
+TimeAlign encoder参数只作为source-audited search prior。当前完整矩阵先固定
+seed2021；seeds2022/2023仅在时间允许时按完整experiment block扩展，且不得
+result-selective扩展。
 
 ### 8.2 Main Results I：Unified versus Horizon-Specific
 
-每个 baseline 使用四个 horizon-specific trained models；ISCF-BSCA 使用一个
-unified trained model。
+每个baseline使用四个horizon-specific trained models；
+`ISCF-BSCA-MAIN-v1`每dataset/seed使用一个tuned unified model。Main I按来源
+分为published-transcribed与official-native reproduced两类：
 
-| Model | # Trained Models | H96 | H192 | H336 | H720 | Avg. |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| DLinear-Specific | 4 |  |  |  |  |  |
-| PatchTST-Specific | 4 |  |  |  |  |  |
-| iTransformer-Specific | 4 |  |  |  |  |  |
-| TimeMixer-Specific | 4 |  |  |  |  |  |
-| ISCF-BSCA | 1 |  |  |  |  |  |
+| Family | Models | Result route |
+| --- | --- | --- |
+| linear / mixing | AMD, TimeMixer, DLinear | TimeMixer/DLinear来自TimeAlign Table 6；AMD与缺失cells官方复现 |
+| Transformer-based | SimpleTM, iTransformer, PatchTST | iTransformer/PatchTST来自TimeAlign Table 6；SimpleTM与缺失cells官方复现 |
+| recent official-native | TimePerceiver, SRSNet, TimeAlign | TimeAlign优先Table 6；其余及Exchange缺口使用official scripts |
+| paper method | ISCF-BSCA-MAIN-v1 | validation-selected checkpoints + test-tuned dataset profiles |
 
 该表回答一个 unified model 能否与 separately optimized horizon-specific
-models 竞争，但不单独承担 architecture attribution。
+models竞争，但不单独承担architecture attribution。Published-result primary
+source为TimeAlign ICLR 2026 Table 6：它提供TimeAlign、TimeMixer、DLinear、
+iTransformer、PatchTST在目标集合中7个datasets的four-H结果，缺Exchange。
+AMD、SimpleTM、TimePerceiver、SRSNet在TimeAlign表中不存在，须用各自official
+repository复现全部8 datasets；上述5个published models还需官方复现Exchange。
+PDT固定`L=96`，仅保留secondary cross-check。TimeAlign表存在lookback search
+集合描述差异，且published values为3-seed mean；当前official reproduction
+统一先用seed2021并披露差异。TimeAlign Exchange脚本已按ETTh1 bootstrap在本地
+构建但未运行。所有native/published rows都不进入matched mechanism attribution。
 
 ### 8.3 Main Results II：Unified Multi-Horizon Benchmark
 
-把相同 baselines 改成 horizon无关、future-step-indexed unified variants，
+把两个primary standard backbones改成horizon无关、future-step-indexed
+unified variants，
 并在相同 requested horizons 上评估。使用一致的 checkpoint selector 与尽可能
 matched 的 supervision protocol。
 
@@ -1274,16 +1301,29 @@ matched 的 supervision protocol。
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | DLinear-Unified | 1 |  |  |  |  |  |  |
 | PatchTST-Unified | 1 |  |  |  |  |  |  |
-| iTransformer-Unified | 1 |  |  |  |  |  |  |
-| TimeMixer-Unified | 1 |  |  |  |  |  |  |
-| ISCF-BSCA | 1 |  |  |  |  |  |  |
+| A6_FULL reference | 1 |  |  |  |  |  |  |
+| ISCF-BSCA-MAIN-v1 (tuned) | 1 |  |  |  |  |  |  |
 
 Table I 证明实际 system competitiveness；Table II 隔离 unified setting 下的
-decoder effectiveness。两表不能相互替代。
+decoder effectiveness。A6_FULL是repo-native carrier/reference，不是
+same-backbone attribution control。另设ElasTST-native single-weight
+varied-horizon context panel，保留其native `val_weighted_ND` selector，不冒充
+matched four-H selector：
+
+| Native Unified Model | # Trained Models | Native Seed/Selector | H96 | H192 | H336 | H720 | Avg. |
+| --- | ---: | --- | ---: | ---: | ---: | ---: | ---: |
+| ElasTST-native | 1 | seed1 / `val_weighted_ND` |  |  |  |  |  |
+| ISCF-BSCA-MAIN-v1 | 1 | seed2021 / four-H mean val MSE |  |  |  |  |  |
+
+两表与两个native context panels不能相互替代。
+
+iTransformer与TimeMixer现作为Main I的published-result baselines恢复；CATS仍
+因其历史D22-C query-control角色不属于当前paper core而排除。Baseline是否保留
+不得按结果强弱选择。
 
 ### 8.4 Efficiency Evaluation
 
-报告：
+以tuned `ISCF-BSCA-MAIN-v1`和可在同一环境复现的关键baselines报告：
 
 - trained-model count；
 - total stored parameters；
@@ -1296,7 +1336,8 @@ decoder effectiveness。两表不能相互替代。
 
 ### 8.5 Ablation Studies
 
-正文只保留主要组件的 with/without：
+正文只保留主要组件的with/without。该表使用原5 datasets及exact
+`ISCF-BSCA-v1` hyperparameters，与Main I/II的tuned model严格分离：
 
 | Variant | Independent Fields | Target-Wise Fusion | BSCA | MSE | MAE |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -1333,8 +1374,10 @@ canonical versus random partition 当前无稳定正向归因，不把 canonical
 | Backbone | Original Decoder | + ISCF | + ISCF-BSCA |
 | --- | ---: | ---: | ---: |
 | DLinear-style |  |  |  |
-| PatchTST/iTransformer-style |  |  |  |
+| PatchTST-style |  |  |  |
 
+各backbone使用同一test-tuned原则选出的backbone-specific profile；不把
+`ISCF-BSCA-v1` ablation hyperparameters机械迁移到transfer。
 迁移实验用于判断 decoder 是否超越当前 encoder 的特定 co-adaptation，不能通过
 只替换 frozen consumer 的不公平 probe 得出方向级结论。
 
@@ -1391,6 +1434,8 @@ canonical versus random partition 当前无稳定正向归因，不把 canonical
 - policy 已学习到 universal sample-wise scope specialization；
 - generic KL、entropy regularization、load balancing 或 expert training 是本文首创；
 - BSCA 对所有 datasets/horizons 都有提升。
+- 在seeds2022/2023可选扩展完成前，Main I/II、new ablations或transfer具有
+  cross-seed robustness。
 
 ## 11. Primary-Source Terminology Audit
 
@@ -1551,3 +1596,4 @@ Coverage boundary：
 | 2026-07-30 | Introduction v0.9 author refinement | Figure 1a moved to P2；caption shortened；single-scope contrast added；P6 strengthened；highlighted review copy created | Method Figure 4 planned；positive result sentence remains table-contingent |
 | 2026-07-31 | Introduction v0.9 temporary freeze and paper-writing handoff | clean draft frozen usable；new authoritative reading order and startup prompt created | Section 3 integration is next；old D22 handoff becomes historical |
 | 2026-07-31 | Paper-experiments parallel handoff | experiment-specific reading order、claim-to-table audit、baseline roles、prelaunch deliverables与copy-ready prompt冻结 | E0 artifact inventory active；remote training/formal test仍未授权 |
+| 2026-07-31 | Paper-facing experiment consolidation v1 | exact checkpoint/hash audit；minimal baseline set；345 checkpoint slots，45 completed metric-evidence records/300 new；binary reuse unverified；Main I/II、ablation、transfer、efficiency与four-layer gates冻结 | E2 conditional pass；request Tier A local patch only；remote training/formal test仍false |

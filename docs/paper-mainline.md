@@ -7,16 +7,61 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 3 integration；experiments=E0 artifact/matrix audit |
+| `current_11_step` | paper consolidation；writing=Section 3 integration；experiments=ISCF-BSCA-MAIN-v1 H0/H1 tooling local gate |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
-| `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
+| `future_validation_suite` | Main I/II=ETTh1/ETTh2/ETTm1/ETTm2/Weather/ECL/Solar/Exchange；ablation=original five datasets |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
-| `paper_core_status` | `ISCF-BSCA-v1`=`passed_core_candidate_ready_for_paper_consolidation`；不受visualization screen否定 |
+| `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
+| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1`待test-tuned HPO后进入Main I/II |
+
+[Paper-Facing Experiment Consolidation v2, 2026-07-31] Main-table candidate与
+ablation anchor已拆分：exact `ISCF-BSCA-v1`及其当前超参数只用于原5数据集
+core ablation；Main I、Main II、transfer reference、efficiency和fresh
+mechanism diagnostics必须使用经test-tuned HPO的
+`ISCF-BSCA-MAIN-v1`：每个trial由validation选择
+checkpoint，dataset-level hyperparameter profile由four-H mean official-test
+MSE选择。Architecture family保持冻结，不重启architecture search。
+
+Main I/II scorecard扩展为8 datasets：
+ETTh1、ETTh2、ETTm1、ETTm2、Weather、ECL、Solar、Exchange。HPO按H0 data
+parity、H1 anchor/resource smoke、H2 bounded coarse search、H3 top-2
+optional stability、H4 per-dataset profile freeze、H5 selected-config final
+training推进。当前primary matrix只运行seed2021；seeds2022/2023仅在时间允许时
+按完整block扩展。每dataset只允许一个profile服务四个horizons；validation
+selector负责trial内checkpoint，official-test four-H mean MSE负责trial间
+profile selection。禁止per-H、per-seed、per-metric或per-cell选择；所有trials
+和negative results完整保留，结果标记`test_tuned/test_informed`且不声称
+untouched holdout。TimeAlign encoder setting仅作source-audited search prior。
+
+Main I baseline更新为AMD、TimeMixer、DLinear、SimpleTM、iTransformer、
+PatchTST，以及TimePerceiver、SRSNet、TimeAlign。Published-result primary
+source改为TimeAlign ICLR 2026 Table 6：其中TimeAlign、TimeMixer、DLinear、
+iTransformer、PatchTST覆盖目标集合中的7个datasets，缺Exchange。AMD、
+SimpleTM、TimePerceiver、SRSNet不在该表中，使用各自official repository复现
+全部8 datasets；五个published models补跑Exchange。PDT因固定lookback=96降为
+secondary cross-check。TimeAlign Exchange脚本已按ETTh1 bootstrap完成本地实现，
+固定seed2021但尚未运行。Main II保留
+DLinear/PatchTST matched unified、A6_FULL repo-native reference与
+ElasTST native varied-horizon context。
+
+不含HPO exploratory runs的seed2021 primary matrix为233 checkpoint slots、
+488个standard-horizon seed-cells；15个primary-seed metric-evidence records
+可复用，218个new slots待授权。另有30个已完成seeds2022/2023 evidence records
+保留但不计入primary matrix。Main I由140个TimeAlign-paper cells和148个
+single-seed official-reproduction cells组成。TimeAlign published values为
+3-seed mean，该差异必须披露；HPO预算在H0/H1 resource smoke后、Tier B2前冻结。
+Tier A local protocol/source patch、Tier B1 smoke、Tier B2 test-tuned HPO
+现已由用户授权；Tier B3 selected-profile confirmation和Tier C complete
+reporting audit仍为false。H1冻结8 datasets × 2 anchors=16 jobs，新dataset
+canary=6 jobs；当前tooling local contract pass，尚待commit/push与remote
+data/GPU preflight。Decision=
+`H1_tooling_implemented_local_gate_pass_pending_commit_push_remote_preflight`。Canonical
+report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/design_and_prelaunch_gate.md`。
 
 [Paper-Experiments Parallel Handoff, 2026-07-31] 新增独立experiment-workstream
 restart handoff，与paper-writing handoff共享冻结candidate和claim boundary。当前
@@ -1107,10 +1152,12 @@ representation rescue重开D22-C，也不得恢复D17-D21或预设第二loss/rou
 `Constraint Reset`与restart handoff。旧文中“requested-H关闭”“full-T必须保留”等决定只关闭当时exact candidate，
 不再是新问题的全局硬约束。
 
-[Evaluation Rule] official test split现固定为所有正式机制评估、paper-core effectiveness与Step9-10决策的
-primary gate；validation只负责checkpoint selection、普通超参数选择、debug与解释性diagnostic，不能判定机制
-pass/fail。默认checkpoint score为validation H96/H192/H336/H720 MSE平均。test已成为
-`test_informed benchmark decision surface`，不再声称untouched；禁止按dataset/horizon/cell反向调参。
+[Evaluation Rule] official test split现固定为paper-facing hyperparameter selection、所有正式机制评估、
+paper-core effectiveness与Step9-10决策的primary surface；validation只负责每个trial的checkpoint selection、
+early stopping、debug与解释性diagnostic，不能判定机制pass/fail。默认checkpoint score为validation
+H96/H192/H336/H720 MSE平均；默认main-profile selector为每dataset的official-test four-H mean MSE。
+结果统一标记`test_tuned/test_informed`，不声称untouched；允许dataset-level aggregate HPO，禁止按
+horizon、seed、metric或cell选择配置或选择性报告。
 
 [Historical Fair Audit] 70/70公平重评估中，`SIFF_EQUAL`相对A6为`+1.6436%` MSE、`+0.9084%` MAE，
 17/20 MSE cells、4/5 datasets、4/4 horizons，当时是已测试arms中的最佳performance carrier。`SIFF+PCC`虽相对A6

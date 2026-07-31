@@ -1,0 +1,1750 @@
+{
+  "schema_version": 1,
+  "protocol_id": "ISCF-BSCA-PAPER-EXP-v2",
+  "created_at": "2026-07-31",
+  "candidate": {
+    "architecture_family": "ISCF-BSCA",
+    "architecture_frozen": true,
+    "architecture_search_authorized": false,
+    "ablation_anchor": {
+      "id": "ISCF-BSCA-v1",
+      "hyperparameter_role": "exact_confirmation_config",
+      "paper_role": "five_dataset_core_ablation_only",
+      "status": "passed_core_candidate_ready_for_ablation_reuse"
+    },
+    "main_candidate": {
+      "id": "ISCF-BSCA-MAIN-v1",
+      "hyperparameter_role": "official_test_tuned_one_profile_per_dataset_shared_across_four_horizons",
+      "paper_roles": [
+        "main_i",
+        "main_ii",
+        "transfer_reference",
+        "efficiency",
+        "fresh_mechanism_diagnostics"
+      ],
+      "status": "H1_tooling_implemented_local_gate_pass_pending_remote_preflight"
+    }
+  },
+  "authorization": {
+    "current_decision": "ISCF_BSCA_MAIN_v1_H0_H1_authorized_tooling_implemented_pending_commit_push_remote_preflight",
+    "existing_artifact_audit": true,
+    "matrix_design": true,
+    "test_tuned_hpo_project_principle": {
+      "authorized_by_user": true,
+      "effective_date": "2026-07-31",
+      "scope": "paper_facing_main_model_and_officially_reproduced_baselines",
+      "execution_authorized": true
+    },
+    "local_protocol_patch": true,
+    "remote_training": true,
+    "official_test_hpo_execution": true,
+    "formal_test": false,
+    "current_user_authorization": {
+      "date": "2026-07-31",
+      "instruction": "start_the_planned_ISCF_BSCA_MAIN_v1_hyperparameter_tuning",
+      "Tier_A": true,
+      "Tier_B1_H0_H1": true,
+      "Tier_B2_bounded_HPO_and_test_profile_ranking": true,
+      "Tier_B3_selected_profile_confirmation": false,
+      "Tier_C_final_reporting_audit": false
+    },
+    "scoped_local_patch_authorizations": {
+      "timealign_exchange_script": {
+        "authorized_by_user": true,
+        "status": "implemented_local_static_verification_pass_unlaunched",
+        "remote_execution": false,
+        "scope": "ETTh1_derived_TimeAlign_Exchange_four_horizon_seed2021_script_only"
+      }
+    },
+    "tier_order": [
+      "A_local_protocol_and_source_patch",
+      "B1_remote_new_dataset_and_resource_smoke",
+      "B2_remote_test_tuned_hpo",
+      "B3_remote_selected_profile_confirmation",
+      "C_complete_test_tuned_reporting_audit"
+    ]
+  },
+  "evaluation_contract": {
+    "datasets": [
+      "ETTh1",
+      "ETTh2",
+      "ETTm1",
+      "ETTm2",
+      "Weather",
+      "ECL",
+      "Solar",
+      "Exchange"
+    ],
+    "ablation_datasets": [
+      "ETTh1",
+      "ETTh2",
+      "ETTm1",
+      "ETTm2",
+      "Weather"
+    ],
+    "horizons": [
+      96,
+      192,
+      336,
+      720
+    ],
+    "metrics": [
+      "MSE",
+      "MAE"
+    ],
+    "primary_phase_seed": 2021,
+    "optional_three_seed_extension": [
+      2021,
+      2022,
+      2023
+    ],
+    "local_unified_checkpoint_selector": "mean_validation_mse_over_h96_h192_h336_h720",
+    "local_fixed_h_checkpoint_selector": "minimum_validation_mse_for_the_same_horizon",
+    "validation_only_checkpoint_selection": true,
+    "main_hyperparameter_selector": "minimum_official_test_mean_mse_over_h96_h192_h336_h720_per_dataset",
+    "test_tuned_hyperparameter_selection": true,
+    "official_test_role": "test_tuned_test_informed_hyperparameter_selection_and_paper_reporting",
+    "test_may_select": [
+      "one_dataset_level_profile_shared_across_four_horizons",
+      "input_length",
+      "dataset_specific_hyperparameters_within_frozen_search_space"
+    ],
+    "test_must_not_select": [
+      "epoch",
+      "checkpoint",
+      "seed",
+      "per_horizon_profile",
+      "favorable_dataset_subset",
+      "favorable_horizon_subset",
+      "favorable_metric_subset",
+      "reporting_cell"
+    ],
+    "test_tuning_disclosure": "all_main_results_are_test_tuned_and_test_informed_not_untouched_holdout_estimates",
+    "all_hyperparameter_trials_retained": true,
+    "historical_h720_only_checkpoint_policy": "retrain_required_for_matched_table",
+    "all_negative_cells_reported": true,
+    "aggregation": {
+      "local_display_cell": "phase_1_reports_seed_2021; optional_complete_three_seed_extension_reports_arithmetic_mean_and_seed_std",
+      "local_paired_gain": "relative_gain_per_matched_seed_dataset_horizon_then_equal_weight_macro_mean",
+      "main_dataset_horizon_weighting": "equal_weight_over_32_cells",
+      "ablation_dataset_horizon_weighting": "equal_weight_over_20_cells",
+      "external_native": "single_native_seed_point_estimate_not_pooled_with_local_seeds",
+      "best_seed_reporting": false
+    }
+  },
+  "artifact_reuse_boundary": {
+    "artifact_binary_local": false,
+    "artifact_metrics_local": true,
+    "checkpoint_hash_recorded": true,
+    "remote_checkpoint_existence_currently_verified": false,
+    "reuse_scope": "existing_audited_metrics_and_completed_test_cells"
+  },
+  "existing_checkpoint_manifest": {
+    "dataset_order": [
+      "ETTh1",
+      "ETTh2",
+      "ETTm1",
+      "ETTm2",
+      "Weather"
+    ],
+    "selector": "mean_validation_mse_over_h96_h192_h336_h720",
+    "records": [
+      {
+        "arm": "ISCF-BSCA-v1",
+        "seed": 2021,
+        "dataset": "ETTh1",
+        "checkpoint_sha256": "ebcd73b95f2bfb7c9b5e5dc16920aafbb63964668f7b4670f1327ab7276368ff",
+        "test_access_date": "2026-07-22",
+        "test_role": "paper_core_confirmation",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-BSCA-v1",
+        "seed": 2021,
+        "dataset": "ETTh2",
+        "checkpoint_sha256": "dff40f86680125244fa0ed1a3eb28d9afa00f23f60304277d97b9d6f60db8d0f",
+        "test_access_date": "2026-07-22",
+        "test_role": "paper_core_confirmation",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-BSCA-v1",
+        "seed": 2021,
+        "dataset": "ETTm1",
+        "checkpoint_sha256": "9b99248d53cbbe66796a1fa66cd7bb6d8f03ffc7ad54ff5420f143f5812b3a26",
+        "test_access_date": "2026-07-22",
+        "test_role": "paper_core_confirmation",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-BSCA-v1",
+        "seed": 2021,
+        "dataset": "ETTm2",
+        "checkpoint_sha256": "4eba8291d320e23bf26988c7aa0ebbe864e64fde38ddde14c11696801cbba354",
+        "test_access_date": "2026-07-22",
+        "test_role": "paper_core_confirmation",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-BSCA-v1",
+        "seed": 2021,
+        "dataset": "Weather",
+        "checkpoint_sha256": "fb700182522d778b97cb1f082e309986022a507c61c25106be47e6cbc4df7ed6",
+        "test_access_date": "2026-07-22",
+        "test_role": "paper_core_confirmation",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-BSCA-v1",
+        "seed": 2022,
+        "dataset": "ETTh1",
+        "checkpoint_sha256": "0109bf17f57b7fb32c3138adeb138d6e07ae9a19b40f42b6ff2ce6459c0a525e",
+        "test_access_date": "2026-07-22",
+        "test_role": "paper_core_confirmation",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-BSCA-v1",
+        "seed": 2022,
+        "dataset": "ETTh2",
+        "checkpoint_sha256": "a2d86658dc8eae83b440eb65b1a0592a473434c2d84df946a942c31271cc7d4b",
+        "test_access_date": "2026-07-22",
+        "test_role": "paper_core_confirmation",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-BSCA-v1",
+        "seed": 2022,
+        "dataset": "ETTm1",
+        "checkpoint_sha256": "88857e9b7ef24558768a8af6de293725cdfafe2c3c69b43fe1f4adf4eb0d5cf8",
+        "test_access_date": "2026-07-22",
+        "test_role": "paper_core_confirmation",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-BSCA-v1",
+        "seed": 2022,
+        "dataset": "ETTm2",
+        "checkpoint_sha256": "4343366de5772dc0951ee846290f10db74cd5bdca6461132a01de9198ac55185",
+        "test_access_date": "2026-07-22",
+        "test_role": "paper_core_confirmation",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-BSCA-v1",
+        "seed": 2022,
+        "dataset": "Weather",
+        "checkpoint_sha256": "da0fe15f8a93347855ca9d5d3db1df766d61837550e3327a056381477cebfc86",
+        "test_access_date": "2026-07-22",
+        "test_role": "paper_core_confirmation",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-BSCA-v1",
+        "seed": 2023,
+        "dataset": "ETTh1",
+        "checkpoint_sha256": "56643bd0b13c24debcdf02cb929e69189a3eb838d9e7282051fe6506ccda6c33",
+        "test_access_date": "2026-07-22",
+        "test_role": "paper_core_confirmation",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-BSCA-v1",
+        "seed": 2023,
+        "dataset": "ETTh2",
+        "checkpoint_sha256": "a9fce0075202af82f220c471a4054567f079f900644669acbb01633de758d6be",
+        "test_access_date": "2026-07-22",
+        "test_role": "paper_core_confirmation",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-BSCA-v1",
+        "seed": 2023,
+        "dataset": "ETTm1",
+        "checkpoint_sha256": "30d707dde08e51c1c001fc4aa19700f11747a93e439b04c1da2363e0ad545fc1",
+        "test_access_date": "2026-07-22",
+        "test_role": "paper_core_confirmation",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-BSCA-v1",
+        "seed": 2023,
+        "dataset": "ETTm2",
+        "checkpoint_sha256": "7ef538be4e1d61f9a8a81d7fdfcd79c514095203e4f51ea077f6fcfa502eca31",
+        "test_access_date": "2026-07-22",
+        "test_role": "paper_core_confirmation",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-BSCA-v1",
+        "seed": 2023,
+        "dataset": "Weather",
+        "checkpoint_sha256": "11b02e861afc0e0584f5d961fc40183ce83ae642aa3690eabfb4a6159e9c7b4b",
+        "test_access_date": "2026-07-22",
+        "test_role": "paper_core_confirmation",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-EQUAL",
+        "seed": 2021,
+        "dataset": "ETTh1",
+        "checkpoint_sha256": "6cc42d65b2ae48a1f5f55e3c79df96820641664f4b4668a7298d2f6108e53643",
+        "test_access_date": "2026-07-18",
+        "test_role": "matched_objective_control",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-EQUAL",
+        "seed": 2021,
+        "dataset": "ETTh2",
+        "checkpoint_sha256": "a4c7d5d4818c08e316cc26a8025c39b072bb4ead53119aed021da616cd7ddd31",
+        "test_access_date": "2026-07-18",
+        "test_role": "matched_objective_control",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-EQUAL",
+        "seed": 2021,
+        "dataset": "ETTm1",
+        "checkpoint_sha256": "6bd4d86c41c901be55708e0d09ae64bd8be8a428a5c53fa3b5d7ba4955a629b1",
+        "test_access_date": "2026-07-18",
+        "test_role": "matched_objective_control",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-EQUAL",
+        "seed": 2021,
+        "dataset": "ETTm2",
+        "checkpoint_sha256": "f63d649b96d6eda29e137b91990e1370c8716fc131c712d740aae7902195b40a",
+        "test_access_date": "2026-07-18",
+        "test_role": "matched_objective_control",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-EQUAL",
+        "seed": 2021,
+        "dataset": "Weather",
+        "checkpoint_sha256": "d94e4c2cc8769b45c50d44c567132c91414979b752eaf17244f38c446a713d64",
+        "test_access_date": "2026-07-18",
+        "test_role": "matched_objective_control",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-EQUAL",
+        "seed": 2022,
+        "dataset": "ETTh1",
+        "checkpoint_sha256": "0fa2fafc9b9cdcb7c119083ae7dff5126d5d4f079d43df3c49273291c1d68915",
+        "test_access_date": "2026-07-21",
+        "test_role": "matched_objective_control",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-EQUAL",
+        "seed": 2022,
+        "dataset": "ETTh2",
+        "checkpoint_sha256": "8cbf406ab53ad7c0e9861a044fb5bae5cef6f067eb6bb76b7f6f6f829d17ced7",
+        "test_access_date": "2026-07-21",
+        "test_role": "matched_objective_control",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-EQUAL",
+        "seed": 2022,
+        "dataset": "ETTm1",
+        "checkpoint_sha256": "3f789a30b5c41d12621c4c7b07b0f06413ef0489b8becc99c077fabfc500878d",
+        "test_access_date": "2026-07-21",
+        "test_role": "matched_objective_control",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-EQUAL",
+        "seed": 2022,
+        "dataset": "ETTm2",
+        "checkpoint_sha256": "b0129c64d08ed7b4dd58ff654013ee6abd9a796376e1abae44b93a24a093167c",
+        "test_access_date": "2026-07-21",
+        "test_role": "matched_objective_control",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-EQUAL",
+        "seed": 2022,
+        "dataset": "Weather",
+        "checkpoint_sha256": "1b8c3afd87fe2558e00846098547ae04b2505675be33e630e9023a0f36bca5ec",
+        "test_access_date": "2026-07-21",
+        "test_role": "matched_objective_control",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-EQUAL",
+        "seed": 2023,
+        "dataset": "ETTh1",
+        "checkpoint_sha256": "e5b4fcbeb038e2fe205e5709cbc2119f15f2aadb268e35a3dd14e19e332eaef1",
+        "test_access_date": "2026-07-21",
+        "test_role": "matched_objective_control",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-EQUAL",
+        "seed": 2023,
+        "dataset": "ETTh2",
+        "checkpoint_sha256": "2570c77be1f2bffd07ec01c0168854b1f1eddc0b0401183489662f1266203e72",
+        "test_access_date": "2026-07-21",
+        "test_role": "matched_objective_control",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-EQUAL",
+        "seed": 2023,
+        "dataset": "ETTm1",
+        "checkpoint_sha256": "0b3f474ff0dff021e400445c4d0023b263aa00a5e0fcf7f19473984f68d92cf6",
+        "test_access_date": "2026-07-21",
+        "test_role": "matched_objective_control",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-EQUAL",
+        "seed": 2023,
+        "dataset": "ETTm2",
+        "checkpoint_sha256": "8225ec46c60db6d19afc91a754f9b489c641c80f6916651ea4cb35bd115c8373",
+        "test_access_date": "2026-07-21",
+        "test_role": "matched_objective_control",
+        "status": "reusable"
+      },
+      {
+        "arm": "ISCF-EQUAL",
+        "seed": 2023,
+        "dataset": "Weather",
+        "checkpoint_sha256": "f6db9fb750ced7265606e68d3420e46413776a94e5581eea0a1e34b6c9e0b862",
+        "test_access_date": "2026-07-21",
+        "test_role": "matched_objective_control",
+        "status": "reusable"
+      },
+      {
+        "arm": "A6_FULL",
+        "seed": 2021,
+        "dataset": "ETTh1",
+        "checkpoint_sha256": "608023e3564640e7c0fc00c29edadc19c614fbe3a46683537ee7eff1089fa967",
+        "test_access_date": "2026-07-18",
+        "test_role": "repo_native_unified_reference",
+        "status": "reusable"
+      },
+      {
+        "arm": "A6_FULL",
+        "seed": 2021,
+        "dataset": "ETTh2",
+        "checkpoint_sha256": "b6178da4e329647e88bb5b340650926a4d86506eb06f5ff02831dae7cf27eacf",
+        "test_access_date": "2026-07-18",
+        "test_role": "repo_native_unified_reference",
+        "status": "reusable"
+      },
+      {
+        "arm": "A6_FULL",
+        "seed": 2021,
+        "dataset": "ETTm1",
+        "checkpoint_sha256": "cbb57f5c5f32ba2889f6ef9c0aaf165103b319fc64c288df843ac1bb4a0fcef3",
+        "test_access_date": "2026-07-18",
+        "test_role": "repo_native_unified_reference",
+        "status": "reusable"
+      },
+      {
+        "arm": "A6_FULL",
+        "seed": 2021,
+        "dataset": "ETTm2",
+        "checkpoint_sha256": "80667ea06869d886243687a83935e14d2d22f1400de2b61464e7f56449470668",
+        "test_access_date": "2026-07-18",
+        "test_role": "repo_native_unified_reference",
+        "status": "reusable"
+      },
+      {
+        "arm": "A6_FULL",
+        "seed": 2021,
+        "dataset": "Weather",
+        "checkpoint_sha256": "14b572a18f8ecc12dab40fc0f7c16e10953df982155b71eec6bfa77788f1073d",
+        "test_access_date": "2026-07-18",
+        "test_role": "repo_native_unified_reference",
+        "status": "reusable"
+      },
+      {
+        "arm": "A6_FULL",
+        "seed": 2022,
+        "dataset": "ETTh1",
+        "checkpoint_sha256": "69a92934f3a1ce3a13c4ec8210547de8f0ac4fd89d2f64f876e11b2049478ea0",
+        "test_access_date": "2026-07-21",
+        "test_role": "repo_native_unified_reference",
+        "status": "reusable"
+      },
+      {
+        "arm": "A6_FULL",
+        "seed": 2022,
+        "dataset": "ETTh2",
+        "checkpoint_sha256": "8f3c230c6eb25d51efbd13345985623ad0eca94f22a4074d6dc574892b610e36",
+        "test_access_date": "2026-07-21",
+        "test_role": "repo_native_unified_reference",
+        "status": "reusable"
+      },
+      {
+        "arm": "A6_FULL",
+        "seed": 2022,
+        "dataset": "ETTm1",
+        "checkpoint_sha256": "8e3377b949fdd3e886ab3705ba85761bb39d2adaf89f3f86fbc9ad5a74e8f174",
+        "test_access_date": "2026-07-21",
+        "test_role": "repo_native_unified_reference",
+        "status": "reusable"
+      },
+      {
+        "arm": "A6_FULL",
+        "seed": 2022,
+        "dataset": "ETTm2",
+        "checkpoint_sha256": "ed78f3e812f77e95ea0843b70ab187f46af89d10cd777f0847991dfa434b185a",
+        "test_access_date": "2026-07-21",
+        "test_role": "repo_native_unified_reference",
+        "status": "reusable"
+      },
+      {
+        "arm": "A6_FULL",
+        "seed": 2022,
+        "dataset": "Weather",
+        "checkpoint_sha256": "4d6a1068167a90ae79bd2fd5fcd8e5799a96e7fac20e39ef1015ec5e9dffc36c",
+        "test_access_date": "2026-07-21",
+        "test_role": "repo_native_unified_reference",
+        "status": "reusable"
+      },
+      {
+        "arm": "A6_FULL",
+        "seed": 2023,
+        "dataset": "ETTh1",
+        "checkpoint_sha256": "5972554fa0a50778e0e151731c75db9f4a78b7485d7927117aa822d403a21239",
+        "test_access_date": "2026-07-21",
+        "test_role": "repo_native_unified_reference",
+        "status": "reusable"
+      },
+      {
+        "arm": "A6_FULL",
+        "seed": 2023,
+        "dataset": "ETTh2",
+        "checkpoint_sha256": "463f952607407c76945973a7590ad7296bdda38837be04f2d74f863105673d3d",
+        "test_access_date": "2026-07-21",
+        "test_role": "repo_native_unified_reference",
+        "status": "reusable"
+      },
+      {
+        "arm": "A6_FULL",
+        "seed": 2023,
+        "dataset": "ETTm1",
+        "checkpoint_sha256": "57017c1d08c18d3933d5c756b775d6b5dffa7f5bb20becf24ae5a44bf81a6a91",
+        "test_access_date": "2026-07-21",
+        "test_role": "repo_native_unified_reference",
+        "status": "reusable"
+      },
+      {
+        "arm": "A6_FULL",
+        "seed": 2023,
+        "dataset": "ETTm2",
+        "checkpoint_sha256": "c096ceaebc0eaa6d6e229028fbb9faf52dd39309cfc2be659d8bca5ec966a57e",
+        "test_access_date": "2026-07-21",
+        "test_role": "repo_native_unified_reference",
+        "status": "reusable"
+      },
+      {
+        "arm": "A6_FULL",
+        "seed": 2023,
+        "dataset": "Weather",
+        "checkpoint_sha256": "a4db097e48f0923c3a5ff303b27ecd5c0d0d6e771c1cea9991d1f5e7b1b0d493",
+        "test_access_date": "2026-07-21",
+        "test_role": "repo_native_unified_reference",
+        "status": "reusable"
+      }
+    ],
+    "secondary_records": [
+      {
+        "arm": "A6_MEASURE",
+        "seed": 2021,
+        "dataset": "ETTh1",
+        "checkpoint_sha256": "5cfa4eb8bd58d0c524afe747aa58665e18e9ef0490ff082d5355d9ba059c6e69",
+        "test_access_date": "2026-07-18",
+        "test_role": "historical_measure_training_reference",
+        "status": "excluded_with_reason",
+        "reason": "seed2021_only_and_not_claim_critical_to_primary_matrix"
+      },
+      {
+        "arm": "A6_MEASURE",
+        "seed": 2021,
+        "dataset": "ETTh2",
+        "checkpoint_sha256": "501587f8cc26578b791273bdd5d0058b35b53edd2fa83f94421f071964192005",
+        "test_access_date": "2026-07-18",
+        "test_role": "historical_measure_training_reference",
+        "status": "excluded_with_reason",
+        "reason": "seed2021_only_and_not_claim_critical_to_primary_matrix"
+      },
+      {
+        "arm": "A6_MEASURE",
+        "seed": 2021,
+        "dataset": "ETTm1",
+        "checkpoint_sha256": "2492d7c6f840fa69117201b957f7dc6b37bcaea0df44ad26f479b1e2495dae03",
+        "test_access_date": "2026-07-18",
+        "test_role": "historical_measure_training_reference",
+        "status": "excluded_with_reason",
+        "reason": "seed2021_only_and_not_claim_critical_to_primary_matrix"
+      },
+      {
+        "arm": "A6_MEASURE",
+        "seed": 2021,
+        "dataset": "ETTm2",
+        "checkpoint_sha256": "5d89a48bad84e9c61e8c6e2acd10848f25e62a4b65241db769bffdfc596f9a05",
+        "test_access_date": "2026-07-18",
+        "test_role": "historical_measure_training_reference",
+        "status": "excluded_with_reason",
+        "reason": "seed2021_only_and_not_claim_critical_to_primary_matrix"
+      },
+      {
+        "arm": "A6_MEASURE",
+        "seed": 2021,
+        "dataset": "Weather",
+        "checkpoint_sha256": "d55d81b75735056a9016f6f3217127bca9c0c71cdcb5ac18045b1736c7846489",
+        "test_access_date": "2026-07-18",
+        "test_role": "historical_measure_training_reference",
+        "status": "excluded_with_reason",
+        "reason": "seed2021_only_and_not_claim_critical_to_primary_matrix"
+      }
+    ]
+  },
+  "legacy_v1_baseline_registry_superseded": [
+    {
+      "id": "DLinear-Specific",
+      "role": "horizon_specific_standard",
+      "retained": true,
+      "models_per_dataset": 4,
+      "seeds": [
+        2021,
+        2022,
+        2023
+      ],
+      "selector": "minimum_validation_mse_for_the_same_horizon",
+      "status": "source_patch_required"
+    },
+    {
+      "id": "PatchTST-Specific",
+      "role": "horizon_specific_standard",
+      "retained": true,
+      "models_per_dataset": 4,
+      "seeds": [
+        2021,
+        2022,
+        2023
+      ],
+      "selector": "minimum_validation_mse_for_the_same_horizon",
+      "status": "missing"
+    },
+    {
+      "id": "DLinear-Unified",
+      "role": "matched_unified_adaptation",
+      "retained": true,
+      "models_per_dataset": 1,
+      "seeds": [
+        2021,
+        2022,
+        2023
+      ],
+      "selector": "mean_validation_mse_over_h96_h192_h336_h720",
+      "status": "missing",
+      "attribution_boundary": "matched_unified_system_benchmark_not_exact_architecture_attribution"
+    },
+    {
+      "id": "PatchTST-Unified",
+      "role": "matched_unified_adaptation",
+      "retained": true,
+      "models_per_dataset": 1,
+      "seeds": [
+        2021,
+        2022,
+        2023
+      ],
+      "selector": "mean_validation_mse_over_h96_h192_h336_h720",
+      "status": "missing",
+      "attribution_boundary": "matched_unified_system_benchmark_not_exact_architecture_attribution"
+    },
+    {
+      "id": "ElasTST-native",
+      "role": "native_single_weight_varied_horizon",
+      "retained": true,
+      "source_commit": "d49f7e41c2db7ac3208816225885b6e3f61c0fb3",
+      "models_per_dataset": 1,
+      "seeds": [
+        1
+      ],
+      "selector": "native_val_weighted_ND",
+      "status": "source_patch_required",
+      "attribution_boundary": "native_context_only"
+    },
+    {
+      "id": "TimePerceiver-native",
+      "role": "modern_native_fixed_h_accuracy",
+      "retained": true,
+      "source_commit": "7e30cc07b51c709f408409fd60a34c81ae8990be",
+      "models_per_dataset": 4,
+      "seeds": [
+        2025
+      ],
+      "selector": "native_per_h_validation",
+      "status": "source_patch_required",
+      "attribution_boundary": "native_context_only"
+    },
+    {
+      "id": "SRSNet-native",
+      "role": "modern_native_fixed_h_accuracy",
+      "retained": true,
+      "source_commit": "6ee35d498f48eefecf84530b362b137de38e6592",
+      "models_per_dataset": 4,
+      "seeds": [
+        2021
+      ],
+      "selector": "native_per_h_validation",
+      "status": "source_patch_required",
+      "attribution_boundary": "native_context_only",
+      "prediction_export_strategy": "external_wrapper_preferred_otherwise_minimal_hashed_native_tree_instrumentation_with_unchanged_training_graph_optimizer_scheduler_and_selector"
+    },
+    {
+      "id": "iTransformer",
+      "retained": false,
+      "status": "excluded_with_reason",
+      "reason": "PatchTST_already_supplies_the_claim_critical_transformer_standard_and_transfer_role"
+    },
+    {
+      "id": "TimeMixer",
+      "retained": false,
+      "status": "excluded_with_reason",
+      "reason": "not_required_to_isolate_output_side_sharing_and_would_duplicate_main_roles"
+    },
+    {
+      "id": "CATS",
+      "retained": false,
+      "source_commit": "58854fc759d608ce400f378be83f4513960e505d",
+      "status": "excluded_with_reason",
+      "reason": "historical_D22_C_query_control_role_is_not_the_frozen_ISCF_BSCA_paper_claim"
+    }
+  ],
+  "legacy_v1_table_cell_manifest_superseded": {
+    "encoding": "Each block expands to one explicit table cell for every Cartesian-product member of arms, datasets, horizons and seeds. Status is uniform within a block; no member may be omitted.",
+    "allowed_statuses": [
+      "reusable",
+      "retrain_required",
+      "source_patch_required",
+      "missing",
+      "excluded_with_reason"
+    ],
+    "blocks": [
+      {
+        "table": "main_i_primary",
+        "arms": [
+          "ISCF-BSCA-v1"
+        ],
+        "datasets": "all",
+        "horizons": "all",
+        "seeds": [
+          2021,
+          2022,
+          2023
+        ],
+        "training_runs": 15,
+        "cells": 60,
+        "status": "reusable"
+      },
+      {
+        "table": "main_i_primary",
+        "arms": [
+          "DLinear-Specific"
+        ],
+        "datasets": "all",
+        "horizons": "all",
+        "seeds": [
+          2021,
+          2022,
+          2023
+        ],
+        "training_runs": 60,
+        "cells": 60,
+        "status": "source_patch_required",
+        "post_patch_status": "retrain_required"
+      },
+      {
+        "table": "main_i_primary",
+        "arms": [
+          "PatchTST-Specific"
+        ],
+        "datasets": "all",
+        "horizons": "all",
+        "seeds": [
+          2021,
+          2022,
+          2023
+        ],
+        "training_runs": 60,
+        "cells": 60,
+        "status": "missing",
+        "post_tier_a_status": "retrain_required"
+      },
+      {
+        "table": "main_i_modern_native_context",
+        "arms": [
+          "TimePerceiver-native",
+          "SRSNet-native"
+        ],
+        "datasets": "all",
+        "horizons": "all",
+        "seeds": "native_by_arm",
+        "training_runs": 40,
+        "cells": 40,
+        "status": "source_patch_required"
+      },
+      {
+        "table": "main_ii_matched_unified_system_benchmark",
+        "arms": [
+          "ISCF-BSCA-v1",
+          "A6_FULL"
+        ],
+        "datasets": "all",
+        "horizons": "all",
+        "seeds": [
+          2021,
+          2022,
+          2023
+        ],
+        "training_runs": 30,
+        "cells": 120,
+        "status": "reusable",
+        "note": "A6_FULL_is_a_repo_native_reference_not_same_backbone_attribution"
+      },
+      {
+        "table": "main_ii_matched_unified_system_benchmark",
+        "arms": [
+          "DLinear-Unified",
+          "PatchTST-Unified"
+        ],
+        "datasets": "all",
+        "horizons": "all",
+        "seeds": [
+          2021,
+          2022,
+          2023
+        ],
+        "training_runs": 30,
+        "cells": 120,
+        "status": "missing",
+        "post_tier_a_status": "retrain_required"
+      },
+      {
+        "table": "main_ii_native_varied_horizon_context",
+        "arms": [
+          "ElasTST-native"
+        ],
+        "datasets": "all",
+        "horizons": "all",
+        "seeds": [
+          1
+        ],
+        "training_runs": 5,
+        "cells": 20,
+        "status": "source_patch_required"
+      },
+      {
+        "table": "core_ablation",
+        "arms": [
+          "Full_ISCF_BSCA",
+          "without_BSCA_ISCF_EQUAL"
+        ],
+        "datasets": "all",
+        "horizons": "all",
+        "seeds": [
+          2021,
+          2022,
+          2023
+        ],
+        "training_runs": 30,
+        "cells": 120,
+        "status": "reusable"
+      },
+      {
+        "table": "core_ablation",
+        "arms": [
+          "without_independent_scope_conditioned_forecasting",
+          "without_target_conditioned_scope_allocation",
+          "without_multiple_sharing_scopes"
+        ],
+        "datasets": "all",
+        "horizons": "all",
+        "seeds": [
+          2021,
+          2022,
+          2023
+        ],
+        "training_runs": 45,
+        "cells": 180,
+        "status": "missing",
+        "post_tier_a_status": "retrain_required"
+      },
+      {
+        "table": "decoder_transfer_original",
+        "arms": [
+          "DLinear-Unified",
+          "PatchTST-Unified"
+        ],
+        "datasets": "all",
+        "horizons": "all",
+        "seeds": [
+          2021,
+          2022,
+          2023
+        ],
+        "training_runs": 30,
+        "cells": 120,
+        "status": "missing",
+        "post_tier_a_status": "retrain_required",
+        "shared_with": "main_ii_matched_unified_system_benchmark"
+      },
+      {
+        "table": "decoder_transfer_incremental",
+        "arms": [
+          "DLinear_plus_ISCF",
+          "DLinear_plus_ISCF_BSCA",
+          "PatchTST_plus_ISCF",
+          "PatchTST_plus_ISCF_BSCA"
+        ],
+        "datasets": "all",
+        "horizons": "all",
+        "seeds": [
+          2021,
+          2022,
+          2023
+        ],
+        "training_runs": 60,
+        "cells": 240,
+        "status": "missing",
+        "post_tier_a_status": "retrain_required"
+      },
+      {
+        "table": "efficiency",
+        "arms": [
+          "DLinear-Specific-system",
+          "PatchTST-Specific-system",
+          "TimePerceiver-native-system",
+          "SRSNet-native-system",
+          "DLinear-Unified",
+          "PatchTST-Unified",
+          "ISCF-BSCA-v1",
+          "A6_FULL",
+          "ElasTST-native"
+        ],
+        "datasets": "all",
+        "horizons": "all_supported_horizons_as_one_system_service_unit",
+        "seeds": "seed2021_or_native",
+        "training_runs": 0,
+        "cells": 45,
+        "status": "missing",
+        "missing_reason": "profile_after_training_and_checkpoint_hash_freeze",
+        "profile_fields": [
+          "trainable_parameters",
+          "stored_parameters_for_all_horizons",
+          "training_gpu_hours",
+          "single_request_latency",
+          "all_horizon_service_latency",
+          "peak_inference_memory",
+          "checkpoint_count",
+          "chpc_contract",
+          "bsca_train_only_inference_equivalence"
+        ]
+      },
+      {
+        "table": "mechanism_diagnostics",
+        "arms": [
+          "ISCF-BSCA-v1_internal_health"
+        ],
+        "datasets": "all",
+        "horizons": "aggregate_over_saved_standard_horizon_predictions",
+        "seeds": [
+          2021,
+          2022,
+          2023
+        ],
+        "training_runs": 0,
+        "cells": 15,
+        "status": "reusable"
+      }
+    ],
+    "exclusions": [
+      {
+        "artifact": "historical_H720_only_selector_checkpoints",
+        "status": "retrain_required",
+        "reason": "selector_mismatch"
+      },
+      {
+        "artifact": "intro_DLinear_validation_visualization_runs",
+        "status": "excluded_with_reason",
+        "reason": "exploratory_validation_only_contract_not_formal_main_table"
+      },
+      {
+        "artifact": "historical_SIFF_PCS_D_Q1_random_permuted_controls",
+        "status": "excluded_with_reason",
+        "reason": "not_exact_paper_core_ablation_identity"
+      },
+      {
+        "artifact": "frozen_replacement_warm_start_cross_swap",
+        "status": "excluded_with_reason",
+        "reason": "coadaptation_conditional_probe_not_end_to_end_effectiveness"
+      }
+    ]
+  },
+  "legacy_v1_deduplicated_matrix_superseded": {
+    "unique_training_checkpoint_slots": 345,
+    "reusable_completed_metric_evidence_checkpoints": 45,
+    "checkpoint_binary_reuse_status": "unverified_until_remote_existence_and_hash_audit",
+    "new_training_checkpoints_after_authorization": 300,
+    "unique_standard_horizon_seed_cells": 900,
+    "reported_metric_scalars": 1800,
+    "primary_mse_scalars": 900,
+    "secondary_mae_scalars": 900,
+    "seed_aggregated_table_cells": 340
+  },
+  "legacy_v1_resource_plan_superseded": {
+    "gpu_model": "NVIDIA_GeForce_RTX_3090",
+    "gpu_count": 3,
+    "new_training_gpu_hours_range": [
+      225,
+      675
+    ],
+    "central_gpu_hours_estimate": 360,
+    "wall_days_range_at_70_to_80_percent_utilization": [
+      4,
+      13
+    ],
+    "central_wall_days_estimate": "6_to_7",
+    "storage_gb_range": [
+      40,
+      220
+    ],
+    "minimum_reserved_storage_gb": 250,
+    "efficiency_profile_gpu_hours_range": [
+      3,
+      8
+    ],
+    "estimate_must_be_recalibrated_after_resource_smoke": true,
+    "dataset_priority": [
+      "Weather",
+      "ETTm1",
+      "ETTh1_or_ETTm2",
+      "ETTh2"
+    ],
+    "scheduler": "global_dynamic_longest_processing_time_queue",
+    "waves": [
+      "core_exact_ablations",
+      "matched_unified_and_transfer",
+      "horizon_specific_main_i",
+      "ElasTST_then_TimePerceiver_then_SRSNet",
+      "efficiency_and_mechanism_replay",
+      "separately_authorized_test_only_audit"
+    ]
+  },
+  "legacy_v1_gates_superseded": {
+    "completeness": {
+      "all_preregistered_cells_required": true,
+      "mse_and_mae_required": true,
+      "negative_cells_required": true,
+      "numeric_health_required": true,
+      "checkpoint_nonmutation_required": true
+    },
+    "local_three_seed_direction": {
+      "macro_mse_gain_percent_min": 0.3,
+      "macro_mae_gain_percent_min_exclusive": 0.0,
+      "dataset_mse_wins_min": 3,
+      "horizon_mse_wins_min": 3,
+      "seed_mse_wins_min": 2,
+      "minimum_dataset_mean_mse_gain_percent_exclusive": -2.0,
+      "ettm2_mean_mse_gain_percent_min": -1.0
+    },
+    "claim_rules": {
+      "main_i_outperforms_evaluated_standard_protocol_baselines": "pass_against_both_DLinear_Specific_and_PatchTST_Specific",
+      "main_i_unqualified_horizon_specific_superiority": "prohibited",
+      "main_i_modern_native_context": "separate_single_seed_point_estimates",
+      "main_ii_paper_facing": "pass_against_DLinear_Unified_PatchTST_Unified_and_A6_FULL",
+      "main_ii_system_benchmark": "DLinear_Unified_and_PatchTST_Unified_match_unified_protocol_not_backbone",
+      "exact_architecture_attribution": "decided_by_exact_core_ablations_and_same_backbone_transfer_controls",
+      "each_component_effective": "pass_against_all_four_exact_without_controls",
+      "decoder_portability": "both_backbones_pass_plus_ISCF_over_original_and_plus_ISCF_BSCA_over_plus_ISCF",
+      "external_native": "accuracy_context_only_not_matched_attribution"
+    }
+  },
+  "main_candidate_hpo": {
+    "candidate_id": "ISCF-BSCA-MAIN-v1",
+    "priority": "highest_current_experiment_priority",
+    "architecture_search": false,
+    "checkpoint_selection_split": "validation_only",
+    "checkpoint_selector": "mean_validation_mse_over_h96_h192_h336_h720",
+    "hyperparameter_selection_split": "official_test",
+    "hyperparameter_selector": "minimum_mean_official_test_mse_over_h96_h192_h336_h720_per_dataset",
+    "profile_granularity": "one_profile_per_dataset_shared_by_all_four_horizons",
+    "per_horizon_hyperparameter_selection": false,
+    "test_guided_retuning": true,
+    "all_trial_results_logged": true,
+    "search_dimensions": [
+      "seq_len_or_lookback",
+      "encoder_patch_settings",
+      "d_model",
+      "d_ff",
+      "dropout",
+      "learning_rate",
+      "weight_decay",
+      "batch_size_or_gradient_accumulation",
+      "scheduler",
+      "existing_architecture_loss_coefficients"
+    ],
+    "source_prior": {
+      "model": "TimeAlign",
+      "role": "source_audited_encoder_search_prior_only",
+      "official_repository": "https://github.com/TROUBADOUR000/TimeAlign",
+      "copy_upstream_source": false,
+      "test_result_selection": "allowed_only_as_search_prior_or_published_baseline_context_not_as_local_trial_substitute",
+      "required_record": [
+        "source_commit",
+        "upstream_dataset_profile",
+        "local_tensor_contract_mapping",
+        "adopted_settings",
+        "rejected_differences"
+      ]
+    },
+    "stages": [
+      {
+        "id": "H0",
+        "name": "new_dataset_data_and_protocol_parity",
+        "datasets": [
+          "ECL",
+          "Solar",
+          "Exchange"
+        ],
+        "requirements": [
+          "dataset_identity_and_split_audit",
+          "channel_frequency_missing_value_and_scaler_audit",
+          "four_horizon_metric_export_audit",
+          "at_least_one_comparable_reference_per_dataset"
+        ],
+        "remote_authorized": false,
+        "test_access": false
+      },
+      {
+        "id": "H1",
+        "name": "anchor_and_resource_smoke",
+        "datasets": "all",
+        "candidates": [
+          "current_profile_anchor",
+          "source_audited_TimeAlign_inspired_encoder_anchors"
+        ],
+        "goal": "finite_comparable_nonpathological_validation_result_and_resource_calibration",
+        "remote_authorized": false,
+        "test_access": false
+      },
+      {
+        "id": "H2",
+        "name": "bounded_coarse_test_tuned_search",
+        "datasets": "all",
+        "seeds": [
+          2021
+        ],
+        "budget": "freeze_after_H0_H1_resource_smoke_before_Tier_B2_authorization",
+        "checkpoint_rule": "validation_mean_mse_over_four_horizons_within_each_trial",
+        "profile_ranking_rule": "official_test_mean_mse_over_four_horizons_per_dataset",
+        "remote_authorized": false,
+        "test_access": "requires_separate_Tier_B2_official_test_authorization"
+      },
+      {
+        "id": "H3",
+        "name": "optional_top_two_seed_stability_confirmation",
+        "datasets": "all",
+        "seeds": [
+          2022,
+          2023
+        ],
+        "status": "optional_if_time_allows_after_complete_single_seed_matrix",
+        "selection_effect": "diagnostic_stability_only_no_seed_or_result_selective_hyperparameter_reselection",
+        "remote_authorized": false,
+        "test_access": false
+      },
+      {
+        "id": "H4",
+        "name": "selected_config_freeze",
+        "requirements": [
+          "one_profile_per_dataset",
+          "effective_config_hash",
+          "source_commit",
+          "validation_checkpoint_selector_record",
+          "official_test_hyperparameter_selector_record",
+          "complete_trial_ledger",
+          "no_missing_dataset",
+          "no_per_horizon_profile"
+        ]
+      },
+      {
+        "id": "H5",
+        "name": "selected_config_final_training",
+        "primary_seed": 2021,
+        "training_checkpoints": 8,
+        "optional_additional_seed_checkpoints": 16,
+        "remote_authorized": false,
+        "formal_test_authorized": false
+      }
+    ],
+    "success_wording_policy": "SOTA_is_an_empirical_outcome_of_the_disclosed_test_tuned_protocol_not_an_untouched_holdout_claim"
+  },
+  "baseline_registry": [
+    {
+      "id": "AMD",
+      "family": "linear_or_mixing",
+      "publication": "AAAI_2025",
+      "official_repository": "https://github.com/TROUBADOUR000/AMD",
+      "main_i_role": "horizon_specific_published_or_official_reproduced",
+      "status": "source_audit_required"
+    },
+    {
+      "id": "TimeMixer",
+      "family": "linear_or_mixing",
+      "publication": "ICLR_2024",
+      "main_i_role": "horizon_specific_published_or_official_reproduced",
+      "status": "source_audit_required"
+    },
+    {
+      "id": "DLinear",
+      "family": "linear_or_mixing",
+      "publication": "AAAI_2023",
+      "main_i_role": "horizon_specific_published_or_official_reproduced",
+      "status": "source_audit_required"
+    },
+    {
+      "id": "SimpleTM",
+      "family": "transformer_based",
+      "publication": "ICLR_2025",
+      "official_repository": "https://github.com/vsingh-group/SimpleTM",
+      "main_i_role": "horizon_specific_published_or_official_reproduced",
+      "status": "source_audit_required"
+    },
+    {
+      "id": "iTransformer",
+      "family": "transformer_based",
+      "publication": "ICLR_2024",
+      "main_i_role": "horizon_specific_published_or_official_reproduced",
+      "status": "source_audit_required"
+    },
+    {
+      "id": "PatchTST",
+      "family": "transformer_based",
+      "publication": "ICLR_2023",
+      "main_i_role": "horizon_specific_published_or_official_reproduced",
+      "status": "source_audit_required"
+    },
+    {
+      "id": "TimePerceiver-native",
+      "family": "recent_official_native",
+      "publication": "NeurIPS_2025",
+      "official_repository": "https://github.com/efficient-learning-lab/TimePerceiver",
+      "main_i_role": "modern_native_fixed_h_accuracy",
+      "models_per_dataset": 4,
+      "status": "source_patch_required",
+      "attribution_boundary": "native_context_only"
+    },
+    {
+      "id": "SRSNet-native",
+      "family": "recent_official_native",
+      "publication": "NeurIPS_2025_Spotlight",
+      "official_repository": "https://github.com/decisionintelligence/SRSNet",
+      "main_i_role": "modern_native_fixed_h_accuracy",
+      "models_per_dataset": 4,
+      "status": "source_patch_required",
+      "attribution_boundary": "native_context_only"
+    },
+    {
+      "id": "TimeAlign-native",
+      "family": "recent_official_native",
+      "publication": "ICLR_2026",
+      "official_repository": "https://github.com/TROUBADOUR000/TimeAlign",
+      "main_i_role": "published_primary_with_official_exchange_fill",
+      "models_per_dataset": 4,
+      "status": "partially_reusable",
+      "published_datasets": [
+        "ETTh1",
+        "ETTh2",
+        "ETTm1",
+        "ETTm2",
+        "Weather",
+        "ECL",
+        "Solar"
+      ],
+      "official_reproduction_datasets": [
+        "Exchange"
+      ],
+      "attribution_boundary": "native_context_only"
+    },
+    {
+      "id": "DLinear-Unified",
+      "role": "matched_unified_adaptation",
+      "models_per_dataset": 1,
+      "selector": "mean_validation_mse_over_h96_h192_h336_h720",
+      "status": "source_patch_required",
+      "attribution_boundary": "matched_unified_system_benchmark_not_exact_architecture_attribution"
+    },
+    {
+      "id": "PatchTST-Unified",
+      "role": "matched_unified_adaptation",
+      "models_per_dataset": 1,
+      "selector": "mean_validation_mse_over_h96_h192_h336_h720",
+      "status": "source_patch_required",
+      "attribution_boundary": "matched_unified_system_benchmark_not_exact_architecture_attribution"
+    },
+    {
+      "id": "A6_FULL",
+      "role": "repo_native_unified_reference",
+      "status": "partially_reusable",
+      "reusable_datasets": [
+        "ETTh1",
+        "ETTh2",
+        "ETTm1",
+        "ETTm2",
+        "Weather"
+      ],
+      "retrain_required_datasets": [
+        "ECL",
+        "Solar",
+        "Exchange"
+      ]
+    },
+    {
+      "id": "ElasTST-native",
+      "role": "native_single_weight_varied_horizon",
+      "selector": "native_val_weighted_ND",
+      "status": "source_patch_required",
+      "attribution_boundary": "native_context_only"
+    }
+  ],
+  "published_result_source_audit": {
+    "primary_source": {
+      "paper": "TimeAlign_ICLR_2026",
+      "title": "Bridging_Past_and_Future_Distribution_Aware_Alignment_for_Time_Series_Forecasting",
+      "openreview": "https://openreview.net/forum?id=pQzQfslqlD",
+      "arxiv": "https://arxiv.org/abs/2509.14181",
+      "official_repository": "https://github.com/TROUBADOUR000/TimeAlign",
+      "local_source_tree": "baselines/timealign_official",
+      "local_exchange_script": "baselines/timealign_official/scripts/Exchange.sh",
+      "local_exchange_script_status": "implemented_unlaunched_seed2021_ETTh1_bootstrap",
+      "table": "Table_6_full_four_horizon_results"
+    },
+    "secondary_crosscheck_only": {
+      "source": "/Users/river/Documents/4.Archive/R_2026_PDT/PDT_final.pdf",
+      "reason_not_primary": "fixed_lookback_96_and_missing_Solar"
+    },
+    "published_candidate_rows": [
+      "TimeAlign",
+      "TimeMixer",
+      "DLinear",
+      "iTransformer",
+      "PatchTST"
+    ],
+    "source_datasets": [
+      "ETTm1",
+      "ETTm2",
+      "ETTh1",
+      "ETTh2",
+      "Weather",
+      "ECL",
+      "Traffic",
+      "Solar"
+    ],
+    "desired_datasets_covered": [
+      "ETTh1",
+      "ETTh2",
+      "ETTm1",
+      "ETTm2",
+      "ECL",
+      "Weather",
+      "Solar"
+    ],
+    "desired_dataset_missing": [
+      "Exchange"
+    ],
+    "selected_models_absent_from_source": [
+      "AMD",
+      "SimpleTM",
+      "TimePerceiver",
+      "SRSNet"
+    ],
+    "published_display_cells": 140,
+    "official_reproduction_cells": 148,
+    "complete_main_i_baseline_display_cells": 288,
+    "published_seed_aggregation": "mean_over_three_random_seed_runs",
+    "official_reproduction_seed_multiplicity": "single_seed_2021_for_current_phase",
+    "optional_seed_extension": "add_2022_and_2023_only_if_time_allows_and_complete_each_preregistered_block",
+    "lookback_contract": {
+      "table_1_caption": [
+        336,
+        512,
+        720
+      ],
+      "implementation_paragraph": [
+        96,
+        192,
+        336,
+        512,
+        720
+      ],
+      "status": "source_audit_required_due_internal_description_difference"
+    },
+    "status": "source_audit_required",
+    "reuse_conditions": [
+      "dataset_identity_match",
+      "split_match_or_visible_disclosure",
+      "metric_and_horizon_match",
+      "evaluation_protocol_match_or_visible_disclosure",
+      "independent_transcription_verification"
+    ],
+    "prohibited_roles": [
+      "matched_mechanism_attribution",
+      "local_seed_variance",
+      "local_measured_latency"
+    ],
+    "official_reproduction_plan": {
+      "full_eight_dataset_models": [
+        "AMD",
+        "SimpleTM",
+        "TimePerceiver",
+        "SRSNet"
+      ],
+      "exchange_only_models": [
+        "TimeAlign",
+        "TimeMixer",
+        "DLinear",
+        "iTransformer",
+        "PatchTST"
+      ]
+    }
+  },
+  "table_cell_manifest": {
+    "allowed_statuses": [
+      "reusable",
+      "partially_reusable",
+      "retrain_required",
+      "retrain_required_after_hpo",
+      "source_audit_required",
+      "source_patch_required",
+      "missing",
+      "excluded_with_reason"
+    ],
+    "blocks": [
+      {
+        "table": "main_i",
+        "arms": [
+          "ISCF-BSCA-MAIN-v1"
+        ],
+        "datasets": "all",
+        "horizons": "all",
+        "seeds": [
+          2021
+        ],
+        "training_checkpoints": 8,
+        "seed_horizon_cells": 32,
+        "status": "retrain_required_after_hpo"
+      },
+      {
+        "table": "main_i_published_context",
+        "arms": [
+          "TimeAlign",
+          "TimeMixer",
+          "DLinear",
+          "iTransformer",
+          "PatchTST"
+        ],
+        "datasets": [
+          "ETTh1",
+          "ETTh2",
+          "ETTm1",
+          "ETTm2",
+          "Weather",
+          "ECL",
+          "Solar"
+        ],
+        "horizons": "all",
+        "training_checkpoints": 0,
+        "display_cells": 140,
+        "status": "source_audit_required"
+      },
+      {
+        "table": "main_i_official_reproduction_fill",
+        "arms": [
+          "AMD",
+          "SimpleTM",
+          "TimePerceiver-native",
+          "SRSNet-native"
+        ],
+        "datasets": "all",
+        "horizons": "all",
+        "seeds": [
+          2021
+        ],
+        "training_checkpoints": 128,
+        "seed_horizon_cells": 128,
+        "status": "source_patch_required"
+      },
+      {
+        "table": "main_i_exchange_official_reproduction_fill",
+        "arms": [
+          "TimeAlign-native",
+          "TimeMixer",
+          "DLinear",
+          "iTransformer",
+          "PatchTST"
+        ],
+        "datasets": [
+          "Exchange"
+        ],
+        "horizons": "all",
+        "seeds": [
+          2021
+        ],
+        "training_checkpoints": 20,
+        "seed_horizon_cells": 20,
+        "status": "source_patch_required"
+      },
+      {
+        "table": "main_ii_matched_unified",
+        "arms": [
+          "DLinear-Unified",
+          "PatchTST-Unified"
+        ],
+        "datasets": "all",
+        "horizons": "all",
+        "seeds": [
+          2021
+        ],
+        "training_checkpoints": 16,
+        "seed_horizon_cells": 64,
+        "status": "source_patch_required"
+      },
+      {
+        "table": "main_ii_repo_native_reference",
+        "arms": [
+          "A6_FULL"
+        ],
+        "datasets": "all",
+        "horizons": "all",
+        "seeds": [
+          2021
+        ],
+        "training_checkpoints": 8,
+        "reusable_primary_seed_checkpoints": 5,
+        "existing_optional_extra_seed_checkpoints": 10,
+        "new_checkpoints": 3,
+        "seed_horizon_cells": 32,
+        "status": "partially_reusable"
+      },
+      {
+        "table": "main_ii_native_varied_horizon_context",
+        "arms": [
+          "ElasTST-native"
+        ],
+        "datasets": "all",
+        "horizons": "all",
+        "seeds": [
+          1
+        ],
+        "training_checkpoints": 8,
+        "seed_horizon_cells": 32,
+        "status": "source_patch_required"
+      },
+      {
+        "table": "core_ablation",
+        "arms": [
+          "Full_ISCF_BSCA_v1",
+          "without_BSCA_ISCF_EQUAL"
+        ],
+        "datasets": "ablation_datasets",
+        "horizons": "all",
+        "seeds": [
+          2021
+        ],
+        "training_checkpoints": 10,
+        "existing_optional_extra_seed_checkpoints": 20,
+        "seed_horizon_cells": 40,
+        "status": "reusable"
+      },
+      {
+        "table": "core_ablation",
+        "arms": [
+          "without_independent_scope_conditioned_forecasting",
+          "without_target_conditioned_scope_allocation",
+          "without_multiple_sharing_scopes"
+        ],
+        "datasets": "ablation_datasets",
+        "horizons": "all",
+        "seeds": [
+          2021
+        ],
+        "training_checkpoints": 15,
+        "seed_horizon_cells": 60,
+        "status": "source_patch_required"
+      },
+      {
+        "table": "decoder_transfer_original",
+        "arms": [
+          "DLinear-Unified",
+          "PatchTST-Unified"
+        ],
+        "datasets": "ablation_datasets",
+        "horizons": "all",
+        "seeds": [
+          2021
+        ],
+        "training_checkpoints": 10,
+        "seed_horizon_cells": 40,
+        "status": "source_patch_required",
+        "shared_with": "main_ii_matched_unified_subset"
+      },
+      {
+        "table": "decoder_transfer_incremental",
+        "arms": [
+          "DLinear_plus_ISCF",
+          "DLinear_plus_ISCF_BSCA",
+          "PatchTST_plus_ISCF",
+          "PatchTST_plus_ISCF_BSCA"
+        ],
+        "datasets": "ablation_datasets",
+        "horizons": "all",
+        "seeds": [
+          2021
+        ],
+        "training_checkpoints": 20,
+        "seed_horizon_cells": 80,
+        "status": "source_patch_required",
+        "training_contract": "end_to_end_joint_training_with_validation_tuned_backbone_specific_profiles"
+      },
+      {
+        "table": "efficiency_and_mechanism_diagnostics",
+        "primary_arm": "ISCF-BSCA-MAIN-v1",
+        "training_checkpoints": 0,
+        "status": "missing",
+        "dependency": "selected_main_checkpoints_and_prediction_exports"
+      }
+    ],
+    "exclusions": [
+      {
+        "artifact": "historical_H720_only_selector_checkpoints",
+        "status": "retrain_required",
+        "reason": "selector_mismatch"
+      },
+      {
+        "artifact": "frozen_replacement_warm_start_cross_swap",
+        "status": "excluded_with_reason",
+        "reason": "coadaptation_conditional_probe_not_end_to_end_effectiveness"
+      },
+      {
+        "artifact": "external_native_result_used_as_matched_attribution",
+        "status": "excluded_with_reason",
+        "reason": "protocol_role_mismatch"
+      }
+    ]
+  },
+  "deduplicated_matrix": {
+    "scope": "phase_1_single_seed_final_training_only_excluding_hpo_exploratory_runs",
+    "unique_training_checkpoint_slots": 233,
+    "reusable_primary_seed_metric_evidence_checkpoints": 15,
+    "existing_optional_extra_seed_metric_evidence_checkpoints": 30,
+    "new_training_checkpoints_after_authorization": 218,
+    "unique_standard_horizon_seed_cells": 488,
+    "published_result_display_cells": 140,
+    "official_reproduction_main_i_cells": 148,
+    "complete_main_i_baseline_display_cells": 288,
+    "optional_three_seed_extension": "not_counted_execute_only_if_time_allows_complete_preregistered_blocks_no_result_selective_extension",
+    "hpo_run_count": "pending_H0_H1_resource_smoke_and_pre_Tier_B2_budget_freeze",
+    "checkpoint_binary_reuse_status": "unverified_until_remote_existence_and_hash_audit"
+  },
+  "resource_plan": {
+    "gpu_model": "NVIDIA_GeForce_RTX_3090",
+    "gpu_count": 3,
+    "gpu_hour_estimate": "must_be_recalibrated_after_H1_smoke_before_Tier_B2",
+    "hpo_budget_must_be_frozen_before_launch": true,
+    "scheduler": "global_dynamic_longest_processing_time_queue",
+    "provisional_dataset_priority": [
+      "Weather",
+      "ECL",
+      "Solar",
+      "ETTm1",
+      "ETTh1",
+      "ETTm2",
+      "Exchange",
+      "ETTh2"
+    ],
+    "waves": [
+      "B1_new_dataset_and_resource_smoke",
+      "B2_bounded_test_tuned_hpo",
+      "B3_selected_profile_confirmation",
+      "matched_unified_ablation_transfer_and_native_baselines",
+      "efficiency_and_mechanism_replay",
+      "C_complete_test_tuned_reporting_audit"
+    ]
+  },
+  "gates": {
+    "seed_policy": {
+      "phase_1_seed": 2021,
+      "phase_1_complete_matrix_required": true,
+      "optional_extension_seeds": [
+        2022,
+        2023
+      ],
+      "optional_extension_condition": "time_allows_after_complete_phase_1",
+      "optional_extension_unit": "complete_preregistered_experiment_block",
+      "result_selective_seed_extension": false,
+      "hyperparameter_reselection_after_optional_seeds": false,
+      "claim_boundary": "single_seed_main_results_have_limited_cross_seed_robustness_until_optional_extension_is_complete"
+    },
+    "hpo": {
+      "all_eight_datasets_have_one_selected_profile": true,
+      "checkpoint_selection_uses_four_horizon_validation_mse_only": true,
+      "hyperparameter_selection_uses_four_horizon_official_test_mse": true,
+      "per_horizon_profile_forbidden": true,
+      "test_access_requires_explicit_Tier_B2_authorization": true,
+      "complete_trial_ledger_required": true,
+      "numeric_and_resource_health_required": true
+    },
+    "completeness": {
+      "all_preregistered_cells_required": true,
+      "mse_and_mae_required": true,
+      "negative_cells_required": true,
+      "checkpoint_nonmutation_required": true
+    },
+    "claim_rules": {
+      "sota_wording": "decide_after_complete_test_tuned_search_and_protocol_comparability_audit_with_test_tuned_disclosure",
+      "test_guided_retuning": "required_for_main_candidate_within_frozen_dataset_level_search_contract",
+      "untouched_holdout_wording": "prohibited",
+      "main_i": "tuned_ISCF_BSCA_MAIN_v1_against_all_retained_eight_dataset_baselines",
+      "main_ii": "tuned_ISCF_BSCA_MAIN_v1_against_matched_unified_and_separately_labeled_native_context",
+      "exact_architecture_attribution": "five_dataset_exact_ablations_and_end_to_end_two_backbone_transfer",
+      "external_native": "native_protocol_accuracy_context_only_not_matched_attribution",
+      "published_transcribed": "main_i_context_only_with_visible_protocol_disclosure"
+    }
+  },
+  "failure_attribution": {
+    "required_layers": [
+      "paper_facing_effectiveness",
+      "matched_mechanism_attribution",
+      "internal_mechanism_health",
+      "failure_attribution"
+    ],
+    "allowed_causes": [
+      "hypothesis_false",
+      "intervention_point_wrong",
+      "readout_or_head_design_wrong",
+      "optimization_or_numeric_pathology",
+      "capacity_control_explains",
+      "comparison_unresolved"
+    ],
+    "rollback": {
+      "main_or_ablation_negative": "return_to_paper_claim_boundary_and_step_4_to_6_without_automatic_architecture_search",
+      "transfer_negative": "reject_only_the_exact_backbone_adaptation",
+      "numeric_or_hash_failure": "return_to_step_7_and_rerun_the_complete_affected_block",
+      "external_protocol_mismatch": "comparison_unresolved",
+      "validation_test_reversal": "report_all_results_and_do_not_reselect_checkpoint"
+    }
+  }
+}

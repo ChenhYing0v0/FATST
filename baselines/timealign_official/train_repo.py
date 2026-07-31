@@ -237,6 +237,30 @@ OFFICIAL_PRESETS: dict[str, dict[int, OfficialPreset]] = {
         336: OfficialPreset("custom", "weather.csv", "weather", "h", 21, 21, 21, 128, 256, 0.0001, 0.1, 0.1, 48, 0.5, 0.0, 0),
         720: OfficialPreset("custom", "weather.csv", "weather", "h", 21, 21, 21, 128, 128, 0.0001, 0.5, 0.1, 48, 0.5, 0.0, 0),
     },
+    "ECL": {
+        horizon: OfficialPreset(
+            "custom", "electricity.csv", "electricity", "h",
+            321, 321, 321, 512, 2048, 0.0005, 0.5, 0.3, 1,
+            0.5, 0.0, 0,
+        )
+        for horizon in HORIZONS
+    },
+    "Solar": {
+        horizon: OfficialPreset(
+            "Solar", "solar_AL.txt", "solar", "h",
+            137, 137, 137, 256, 256, 0.0005, 0.3, 0.2, 1,
+            0.0, 0.0, 1,
+        )
+        for horizon in HORIZONS
+    },
+    "Exchange": {
+        horizon: OfficialPreset(
+            "custom", "exchange_rate.csv", "exchange_rate", "d",
+            8, 8, 8, 32, 32, 0.0005, 0.1, 0.1, 24,
+            0.5, 0.0, 1,
+        )
+        for horizon in HORIZONS
+    },
 }
 
 
@@ -349,6 +373,7 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
             if getattr(args, "learning_rate", None) is None
             else args.learning_rate
         ),
+        weight_decay=getattr(args, "weight_decay", 0.01),
         des="Exp",
         loss="MSE",
         lradj="cosine",
@@ -1877,7 +1902,11 @@ def train(
         args.output_dir / "initialization_contract.json",
         initialization_contract(model),
     )
-    optimizer = optim.AdamW(model.parameters(), lr=official_args.learning_rate)
+    optimizer = optim.AdamW(
+        model.parameters(),
+        lr=official_args.learning_rate,
+        weight_decay=official_args.weight_decay,
+    )
     criterion = nn.L1Loss()
     coalition_shuffle_generator = None
     if args.pcc_objective_mode in {
@@ -2468,6 +2497,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--legacy-dropout", type=float, default=None)
     parser.add_argument("--legacy-layer-norm", type=int, choices=[0, 1], default=None)
     parser.add_argument("--learning-rate", type=float, default=None)
+    parser.add_argument("--weight-decay", type=float, default=0.01)
     parser.add_argument("--w-recon", type=float, default=1.0)
     parser.add_argument("--w-align", type=float, default=None)
     parser.add_argument("--batch-size", type=int, default=32)
@@ -2511,6 +2541,11 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--protocol-profile", default="")
     parser.add_argument("--profile-hash", default="")
+    parser.add_argument("--hpo-trial-id", default="")
+    parser.add_argument("--hpo-profile-id", default="")
+    parser.add_argument("--hpo-profile-hash", default="")
+    parser.add_argument("--hpo-config-hash", default="")
+    parser.add_argument("--hpo-search-space-hash", default="")
     parser.add_argument("--checkpoint-policy", choices=["official-last", "best-val"], default="official-last")
     parser.add_argument(
         "--evaluate-dual-checkpoints",
@@ -2789,6 +2824,8 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("legacy dropout must be in [0, 1)")
     if args.learning_rate is not None and args.learning_rate <= 0.0:
         raise ValueError("learning rate must be positive")
+    if args.weight_decay < 0.0:
+        raise ValueError("weight decay must be non-negative")
     if args.w_align is not None and args.w_align < 0.0:
         raise ValueError("w_align must be non-negative")
     if args.basis_rank <= 0:

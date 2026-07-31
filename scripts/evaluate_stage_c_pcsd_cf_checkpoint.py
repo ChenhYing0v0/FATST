@@ -160,19 +160,36 @@ def test_audit_authorized(audit: dict[str, Any]) -> bool:
     accepted_test_roles = {
         "primary-mechanism-effectiveness-and-paper-benchmark",
         "primary-problem-existence-diagnostic",
+        "test-tuned-hyperparameter-selection-and-paper-benchmark",
     }
+    test_role = authorization.get("test_role")
+    if test_role == "test-tuned-hyperparameter-selection-and-paper-benchmark":
+        tuning_boundary_ok = bool(
+            authorization.get(
+                "per_dataset_aggregate_hyperparameter_tuning_allowed"
+            )
+            is True
+            and authorization.get(
+                "per_horizon_seed_metric_or_cell_tuning_allowed"
+            )
+            is False
+        )
+    else:
+        tuning_boundary_ok = bool(
+            authorization.get("per_dataset_horizon_or_cell_tuning_allowed")
+            is False
+        )
     return bool(
         audit.get("status") == "authorized_prelaunch"
         and expected_runs == expected_matrix_size(audit)
         and authorization.get("user_authorized") is True
         and authorization.get("authorization_date")
-        and authorization.get("test_role") in accepted_test_roles
+        and test_role in accepted_test_roles
         and authorization.get("checkpoint_selection")
         == expected_checkpoint_selection
         and authorization.get("checkpoint_retraining_allowed") is True
         and authorization.get("checkpoint_mutation_during_test_allowed") is False
-        and authorization.get("per_dataset_horizon_or_cell_tuning_allowed")
-        is False
+        and tuning_boundary_ok
         and authorization.get("formal_test_access_count_for_version") == 1
     )
 

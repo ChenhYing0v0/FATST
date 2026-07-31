@@ -44,15 +44,16 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment consolidation and prelaunch |
-| `active_experiment_step` | E0 existing-artifact inventory and claim-to-table audit |
+| `active_experiment_step` | ISCF-BSCA-MAIN-v1 H0/H1 launch gate |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
-| `local_protocol_patch_authorized` | false |
-| `remote_training_authorized` | false |
+| `local_protocol_patch_authorized` | true for ISCF-BSCA-MAIN-v1 HPO tooling |
+| `remote_training_authorized` | true for frozen H0/H1 and bounded H2 |
+| `test_tuned_hpo_authorized` | true after complete frozen H2 training matrix |
 | `formal_test_authorized` | false |
-| `next_action` | freeze a minimal sufficient main/ablation/transfer/efficiency matrix and identify reusable versus retrain-required artifacts |
-| `conditional_next` | after prelaunch gate and explicit authorization, implement protocol repairs, commit/push, inspect GPUs and launch the frozen remote matrix |
+| `next_action` | focused commit/push；remote H0 data audit、GPU/storage preflight、6-job new-dataset canary |
+| `conditional_next` | 6/6 canary pass后运行16-job H1，基于实测资源冻结H2 additional profiles |
 
 本handoff授权的是实验盘点、设计、source/protocol audit与prelaunch文档准备，不是
 立即远程训练。不得为了兑现Introduction P6而跳过controls、补选有利数据集，或把
@@ -88,15 +89,19 @@ portability，因此不得把已完成的BSCA confirmation重命名为完整main
 
 除非在观察新结果前完成书面变更并获得授权，正式矩阵遵循：
 
-- datasets：`ETTh1`, `ETTh2`, `ETTm1`, `ETTm2`, `Weather`；
+- Main I/II datasets：`ETTh1`, `ETTh2`, `ETTm1`, `ETTm2`, `Weather`,
+  `ECL`, `Solar`, `Exchange`；core ablation/transfer仍为原5 datasets；
 - horizons：`{96, 192, 336, 720}`；
 - primary metric：MSE；
 - secondary metric：MAE；
-- validation只用于checkpoint selection、ordinary hyperparameter choice和
+- validation只用于每个trial的early stopping、checkpoint selection和
   implementation debugging；
-- unified candidate默认selector为四个standard horizons的mean validation MSE；
-- official test是formal effectiveness surface，并明确标记`test_informed`；
-- 禁止按dataset、horizon或cell使用test结果调参；
+- unified candidate的trial内checkpoint selector为四个standard horizons的
+  mean validation MSE；
+- official test用于按dataset的four-H mean MSE选择一个shared hyperparameter
+  profile，并作为formal effectiveness surface；
+- 结果明确标记`test_tuned/test_informed`；禁止按horizon、seed、metric或cell
+  选择配置及选择性报告；
 - historical H720-only selector checkpoint若进入matched comparison，必须重训；
 - 每次formal test前冻结candidate version、source/config、profiles、seeds、
   checkpoint rule、完整matrix、gates与rollback consequences。
@@ -292,7 +297,8 @@ protocol或实现matched unified/transfer controls，必须先记录source-infor
 - 修改external baseline protocol；
 - 启动remote training；
 - 访问新的official-test labels；
-- 根据现有test结果做per-dataset/per-horizon tuning。
+- 在未冻结search space/budget/selector且未获得Tier B2授权时执行test-tuned HPO；
+- 根据test结果做per-horizon、per-seed、per-metric或per-cell tuning。
 
 只有prelaunch gate通过并获得用户明确授权后，才能：
 
@@ -303,7 +309,8 @@ protocol或实现matched unified/transfer controls，必须先记录source-infor
 5. 选择有安全余量的GPU并采用workload-aware scheduling；
 6. 冻结并记录command、environment与repo-external output path；
 7. 启动remote validation/training；
-8. 在另行授权formal test后访问official test。
+8. 在另行授权Tier B2 test-tuned HPO后访问official test作dataset-profile ranking；
+9. 在另行授权Tier C后完成完整test-tuned reporting audit。
 
 ## 9. Reporting and failure attribution
 
