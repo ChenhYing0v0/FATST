@@ -247,7 +247,7 @@ OFFICIAL_PRESETS: dict[str, dict[int, OfficialPreset]] = {
     },
     "Solar": {
         horizon: OfficialPreset(
-            "Solar", "solar_AL.txt", "solar", "h",
+            "Solar", "solar_AL.txt", "Solar", "h",
             137, 137, 137, 256, 256, 0.0005, 0.3, 0.2, 1,
             0.0, 0.0, 1,
         )

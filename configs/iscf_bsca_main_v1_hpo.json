@@ -111,7 +111,7 @@
     },
     "Solar": {
       "data": "Solar",
-      "relative_root": "solar",
+      "relative_root": "Solar",
       "data_path": "solar_AL.txt",
       "channels": 137,
       "frequency": "source_declared_10min_no_timestamp",
