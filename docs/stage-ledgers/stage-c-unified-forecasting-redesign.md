@@ -12,7 +12,7 @@
 | `active_candidates` | `ISCF-BSCA-v1` frozen paper core；constructed concept Figure 1 approved；ETTh2 prefix + ETTm2 sharing evidence approved for Section 3 |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather；five profiles frozen |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
-| `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
+| `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `stage_exit` | 新problem先通过existence/narrative gate，再决定一项或两项可归因contributions |
 | `stage_rollback` | exact BSCA-v1 negative且无pathology则回Step4；不否定fixed ISCF architecture |
 
@@ -20,9 +20,9 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | real-data problem evidence Step9/10 complete；Introduction v0.9 refined；Section 3 integration active |
+| `current_11_step` | paper consolidation；Introduction v0.9 frozen usable；Section 3 integration active |
 | `current_candidate` | concept Figure 1=`approved_for_manuscript_draft`；Section 3 evidence pair=`INTRO-CHPD-v1` + `SC-UVHF-FRSD-D1`；paper method remains frozen `ISCF-BSCA-v1` |
-| `latest_decision` | `intro_v0_9_author_refinement_pass_method_figure4_planned` |
+| `latest_decision` | `intro_v0_9_frozen_paper_writing_handoff_active` |
 | `next_required_action` | 冻结Section 3 definitions与Figures 2--3 captions；其后设计Method Figure 4 |
 | `method_training_authorized` | validation-only full figure search authorized；31 new runs；formal test false |
 | `rollback_point` | CHPD weak -> retain formal CHPC argument only；FRSD negative -> revise P4/P5 problem-to-method narrative；do not tune exact BSCA-v1 |

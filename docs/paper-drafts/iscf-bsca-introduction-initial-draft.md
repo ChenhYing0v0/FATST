@@ -6,6 +6,8 @@
 | --- | --- |
 | `document_role` | Clean manuscript-facing draft of the Introduction |
 | `version` | `v0.9-author-refinement` |
+| `freeze_status` | `temporarily_frozen_usable` |
+| `freeze_date` | `2026-07-31` |
 | `highlighted_review` | `docs/paper-drafts/iscf-bsca-introduction-v0.9-highlighted-review.md` |
 | `date` | `2026-07-30` |
 | `paragraphs_1_6` | Compact manuscript-facing core narrative with one conceptual figure |

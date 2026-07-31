@@ -13,9 +13,17 @@
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | ETTh1/ETTh2/ETTm1/ETTm2/Weather；five natural profiles frozen |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
-| `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
+| `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_core_status` | `ISCF-BSCA-v1`=`passed_core_candidate_ready_for_paper_consolidation`；不受visualization screen否定 |
+
+[Paper-Writing Restart Freeze, 2026-07-31] 用户确认Introduction
+`v0.9-author-refinement`可作为暂时固定的可用版本，status=
+`temporarily_frozen_usable`。新的唯一current restart entry为
+`docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md`；
+旧D22 handoff降为historical research lineage。Active workstream切换为Section 3
+manuscript integration；new method search、implementation、remote training和
+formal test均未授权。Decision=`intro_v0_9_frozen_paper_writing_handoff_active`。
 
 [Introduction v0.9 Author Refinement, 2026-07-30] Figure 1a引用移至P2，只说明
 horizon-specific systems在相同history/origin下可能出现overlap disagreement；

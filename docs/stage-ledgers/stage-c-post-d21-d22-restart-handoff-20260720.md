@@ -1,9 +1,16 @@
 # Stage C Post-D21 / D22 Restart Handoff
 
+> **Superseded current-entry notice（2026-07-31）**
+>
+> 本文件仅保留为D22 research lineage。当前paper-writing新会话必须先读
+> `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md`，
+> 不得把本文件中的旧active method、authorization或next action恢复为当前状态。
+
 ## 0. 使用方式
 
-本文件是新会话的唯一首读入口。它只保存当前有效状态、约束、证据边界和下一动作；详细历史仍由
-`paper-mainline`、`research-roadmap`、Stage C ledger与`analysis/`承担。
+本文件曾是D22阶段新会话的首读入口，现仅用于追溯当时的状态、约束、证据边界和
+下一动作；详细历史仍由`paper-mainline`、`research-roadmap`、Stage C ledger与
+`analysis/`承担。
 
 新会话必须按以下顺序读取：
 

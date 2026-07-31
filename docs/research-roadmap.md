@@ -1,5 +1,17 @@
 # Research Roadmap
 
+## Paper-Writing Restart Freeze (2026-07-31)
+
+Introduction `v0.9-author-refinement`已由用户确认并暂时冻结为可用版本。新的唯一
+current restart entry为
+`docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md`；
+旧D22 handoff仅作historical research lineage。
+
+Active workstream=`Section 3 manuscript integration`。下一步依次完成task/CHPC
+formulation、Figure 2 prefix-disagreement evidence、naive-unified evidence audit、
+Figure 3 sharing-demand evidence与design requirements。Section 3冻结后再设计
+Method Figure 4。当前不授权new method、remote training或formal test。
+
 ## Introduction v0.9 Author Refinement (2026-07-30)
 
 - Figure 1a reference移至P2，功能限定为horizon-specific prefix disagreement；
@@ -556,14 +568,14 @@ Step4–6。candidate=`SC-ISCF-FRSC-v0`，narrative conditional pass；下一步
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | RSCC-v1 Step9 attribution fail；rollback Step2/4 |
-| `active_question` | no-binding objective controls解释gain后，ISCF下一可识别problem是什么 |
-| `active_candidates` | active method=none；ISCF-v0 fixed base；SCC/RSCC closed |
+| `current_step` | paper consolidation；Introduction frozen；Section 3 integration |
+| `active_question` | 如何把CHPC与sharing-demand两项问题证据组织成严谨的Problem Formulation and Empirical Motivation |
+| `active_candidates` | exact `ISCF-BSCA-v1` frozen paper core；Figures 1--3 approved；Method Figure 4 planned |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
-| `active_protocol` | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_post_frsc_step26_20260722/rscc_step9_result_and_rollback.md` |
-| `restart_handoff` | `docs/stage-ledgers/stage-c-post-d21-d22-restart-handoff-20260720.md` |
-| `method_implementation` | none authorized；formal test/remote/modern baselines false |
-| `rollback_point` | Step2/4；new problem/narrative/design gate before any implementation |
+| `active_protocol` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
+| `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
+| `method_implementation` | none authorized；remote training/formal test false |
+| `rollback_point` | Section 3 evidence不足则收窄claim；不得通过重启closed method search修补叙事 |
 
 ## ISCF-FRSC Step9 Validation Decision
 
