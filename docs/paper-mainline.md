@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.2 narrative refinement pending author review；experiments=ISCF-BSCA-MAIN-v1 H1 train/validation running |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.2 pending author review；experiments=H1 audit complete、H2 24-profile matrix frozen/prelaunch |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -106,6 +106,21 @@ canary=6 jobs；当前tooling local contract pass，尚待commit/push与remote
 data/GPU preflight。Decision=
 `H1_tooling_implemented_local_gate_pass_pending_commit_push_remote_preflight`。Canonical
 report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/design_and_prelaunch_gate.md`。
+
+[ISCF-BSCA-MAIN-v1 H1 Audit and H2 Freeze, 2026-07-31] H1已16/16完成，
+artifact/selector/numeric-health pass，test jobs=0。五个旧dataset的conservative
+checkpoints与既有seed2021 confirmation SHA256完全一致；复用其official-test结果
+与TimeAlign published four-H averages定位，五dataset macro MSE仅落后约0.24%，
+ETTh2更强，但ETTm2仍落后约5.88%，因此当前结论为
+`overall_competitive_not_yet_SOTA`。ECL、Solar、Exchange尚无test判断。
+
+H2已冻结8 datasets × 3 additional profiles=24 jobs，连同H1共40 trials。
+搜索仅覆盖同一architecture内的lookback、patch、capacity、dropout、learning
+rate与training budget；不改变ISCF-BSCA mechanism。每trial仍由four-H validation
+MSE选checkpoint，H2 24/24完成前不访问test。Canonical report=
+`analysis/iscf_bsca_main_v1_hpo_20260731/h1_result_and_h2_freeze.md`；
+config=`configs/iscf_bsca_main_v1_hpo_h2.json`。Decision=
+`H1_complete_current_competitive_H2_frozen_prelaunch_test_zero`。
 
 [ISCF-BSCA-MAIN-v1 H1 Launch, 2026-07-31] H0新dataset audit通过：
 ECL=`26304×321`、Solar=`52560×137`、Exchange=`7588×8`，hash、split、

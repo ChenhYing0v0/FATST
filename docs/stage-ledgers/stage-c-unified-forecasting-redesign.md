@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | 写作流审阅Section 3 v0.2 narrative-refined draft；实验流继续ISCF-BSCA-MAIN-v1 H1 train/validation |
+| `active_question` | 写作流审阅Section 3 v0.2；实验流推进ISCF-BSCA-MAIN-v1 H2 frozen matrix |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9 frozen；Section 3 v0.2 pending author review |
@@ -21,11 +21,11 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.2 narrative refinement pending author review；experiments=ISCF-BSCA-MAIN-v1 H1 train/validation running |
-| `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；main-table candidate=`ISCF-BSCA-MAIN-v1` H1 active |
-| `latest_decision` | `H0_and_smoke_pass_H1_16_jobs_running_test_zero` |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.2 pending author review；experiments=H1 complete、H2 frozen/prelaunch |
+| `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；main-table candidate=`ISCF-BSCA-MAIN-v1` H2 active |
+| `latest_decision` | `H1_16_complete_current_competitive_H2_24_frozen_test_zero` |
 | `writing_latest_decision` | `section3_v0_2_narrative_refinement_pending_author_review` |
-| `next_required_action` | monitor 16/16 H1；audit artifacts/resources；freeze H2 additional profiles |
+| `next_required_action` | H2 local gate、commit/push、remote GPU/resource preflight并启动24 jobs |
 | `method_training_authorized` | HPO Tier A/B1/bounded B2=true；B3/C=false |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
@@ -33,16 +33,16 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | ISCF-BSCA-MAIN-v1 H1 16-job train/validation matrix running |
+| `current_step` | H1 Step9 audit complete；H2 Step6--8 frozen design/prelaunch |
 | `problem` | Introduction的horizon-specific superiority、component effectiveness与decoder portability claims尚缺完整paper-facing evidence |
-| `existence_evidence` | 45组formal completed metric-evidence records：ISCF-BSCA、ISCF-EQUAL、A6_FULL各15；remote binary reuse unverified；BSCA only small three-seed gain；其他claims未兑现 |
+| `existence_evidence` | H1 16/16 artifact complete；五旧dataset macro约比TimeAlign published高0.24%，ETTh2强、ETTm2差约5.88%；新三dataset仍缺test |
 | `idea` | tuned main candidate + eight-dataset SOTA table + matched unified benchmark + exact five-dataset ablation/end-to-end transfer |
 | `theory_check` | architecture与HPO身份分离；validation选trial checkpoint；official-test four-H aggregate选dataset profile；published/native/matched角色分开；H720-only与frozen replacement排除 |
-| `design` | H0--H5 test-tuned HPO；seed2021 primary matrix=233 checkpoint slots、15 reusable/218 new、488 seed-horizon cells；30 existing extra-seed evidence保留；Main I=140 TimeAlign-paper + 148 official runs |
+| `design` | H1 16 anchors + H2 24 frozen local-neighbor profiles=40 total；seed2021；H2 complete后才做per-dataset four-H test ranking |
 | `narrative_gate` | architecture family冻结；SOTA wording由完整test-tuned result决定并披露test-informed边界 |
 | `effectiveness_gate` | pending complete MSE/MAE official-test matrix；validation只选checkpoint；four-layer decision mandatory |
-| `artifacts` | consolidation + `configs/iscf_bsca_main_v1_hpo.json` + `analysis/iscf_bsca_main_v1_hpo_20260731/h0_h1_authorization_and_launch.md` |
-| `decision` | H0 pass；6/6 canary pass；16/16 resource smoke pass；H1 running；test 0 |
+| `artifacts` | H1 audit=`analysis/iscf_bsca_main_v1_hpo_20260731/h1_result_and_h2_freeze.md`；H2 config=`configs/iscf_bsca_main_v1_hpo_h2.json` |
+| `decision` | H1 complete、current competitive not SOTA；H2 24 profiles frozen；test 0 |
 
 ## Exact Ablation Anchor Contract
 
@@ -72,7 +72,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `INTRO-CHPD-v1` | `integrated_in_section3_v0_2_pending_review` | independently trained horizon models能否给出清晰overlap disagreement | ETTh2 maximum example disclosed；all-validation heatmap；not prevalence | shared-96 raw mean differences 2.16--2.51；macro NCHPD highest | author review；formal family/seed prevalence deferred |
 | `SC-UVHF-FRSD-D1` | `integrated_in_section3_v0_2_pending_review` | matched fixed sharing extent的risk optimum是否随future region变化 | ETTm2 maximum sample disclosed；same-validation descriptive role | five scopes win 2--3 regions；10/10 crossings；8.112% headroom | author review；formal CFH deferred |
 | `ISCF-BSCA-v1` | `exact_ablation_anchor_frozen` | broad train-time anchor能否稳定scope-gradient access并提升ISCF | ISCF-specific chain pass；generic KL novelty not claimed | three-seed +0.3541/+0.3073%；3/3 seeds、4/5 datasets、4/4 horizons | reuse only for five-dataset Full/w/o BSCA ablation；do not place directly in Main I/II |
-| `ISCF-BSCA-MAIN-v1` | `H1_16_job_train_validation_running` | frozen architecture在8 datasets上经test-tuned HPO后能否达到SOTA-competitive并支持main claims | validation选checkpoint；test four-H aggregate选dataset profile；TimeAlign prior；seed2021 first | H0+smokes pass；commit7361d9e；PID545400；test=0 | complete H1 then freeze H2 profiles |
+| `ISCF-BSCA-MAIN-v1` | `H2_24_job_matrix_frozen_prelaunch` | frozen architecture在8 datasets上经test-tuned HPO后能否达到SOTA-competitive并支持main claims | validation选checkpoint；test four-H aggregate选dataset profile；TimeAlign prior；seed2021 first | H1 16/16；5-dataset current macro vs TimeAlign约+0.24%；ETTm2 gap约+5.88%；test new access=0 | local gate、commit/push、GPU preflight、launch H2 |
 | `ISCF-BSCA-PAPER-EXP-v2` | `scoped_exchange_patch_complete_waiting_remaining_tier_a` | 完整main/ablation/transfer/efficiency evidence能否兑现provisional claims | TimeAlign Table 6 primary + official fill；single-seed complete matrix；optional seed blocks non-selective | 15 primary-seed reusable；218 final new + HPO pending；30 extra-seed evidence retained | Exchange script unlaunched；B1/B2/B3/C false |
 | `SC-ISCF-UPA-D2` | `superseded_by_bsca_v1` | information-free uniform train-time anchor能否复现ARMERR/SHUFFLED gain | user chose outcome-first method route | not executed as separate diagnostic | retain design history only |
 | `SC-ISCF-PSA-D1` | `control_complete_h2_supported` | contemporaneous no-route EQUAL能否解释new ARMERR/SHUFFLED公共gain | not a method；只隔离H2/H3 | exact EQUAL tie；controls +0.6577/+0.6557%；H2 pass | feeds UPA-D2 only |

@@ -1,0 +1,341 @@
+{
+  "protocol_id": "ISCF-BSCA-MAIN-v1-HPO-H2",
+  "candidate_id": "ISCF-BSCA-MAIN-v1",
+  "candidate_version": "ISCF-BSCA-MAIN-v1-h2-20260731",
+  "date": "2026-07-31",
+  "status": "frozen_authorized_prelaunch",
+  "role": "test_tuned_paper_main_hyperparameter_search",
+  "test_tuned": true,
+  "architecture_family": "ISCF-BSCA",
+  "architecture_search": false,
+  "base_config": "configs/iscf_bsca_main_v1_hpo.json",
+  "base_config_sha256": "819a9870d87a6f0bd9c9293b12ffbe2d8dc96b62c69f61fc981fca40844a71b0",
+  "architecture_invariants": {
+    "encoder_mode": "timealign-token-mlp",
+    "readout_mode": "siff-independent-scope-control",
+    "policy_mode": "direct",
+    "objective_mode": "equal_uniform_scope_anchor",
+    "partition": "canonical",
+    "partition_seed": 15101,
+    "scales": [1, 48, 144, 360, 720],
+    "skill_weight": 1.0,
+    "uniform_anchor_final_weight": 0.1,
+    "uniform_anchor_ramp_fraction": 0.25,
+    "inference_graph_changed": false,
+    "requested_h_input": false
+  },
+  "datasets": [
+    "ETTh1",
+    "ETTh2",
+    "ETTm1",
+    "ETTm2",
+    "Weather",
+    "ECL",
+    "Solar",
+    "Exchange"
+  ],
+  "seeds": [2021],
+  "selection_contract": {
+    "trial_checkpoint_split": "validation",
+    "trial_checkpoint_score": "mean_mse_h96_h192_h336_h720",
+    "hyperparameter_selection_split": "official_test",
+    "hyperparameter_score": "mean_mse_h96_h192_h336_h720_per_dataset",
+    "profile_granularity": "one_profile_per_dataset_shared_across_four_horizons",
+    "primary_metric": "mse",
+    "secondary_metric": "mae_report_only",
+    "per_horizon_profile_selection": false,
+    "best_seed_selection": false,
+    "partial_matrix_selection": false,
+    "all_trials_retained": true
+  },
+  "matrix": {
+    "phase": "H2",
+    "seed": 2021,
+    "expected_runs": 24,
+    "expected_training_runs": 24,
+    "expected_total_trials_including_H1": 40,
+    "expected_test_runs_before_H2_completion": 0,
+    "horizons": [96, 192, 336, 720],
+    "metrics": ["mse", "mae"],
+    "full_matrix_required": true,
+    "partial_reporting_allowed": false
+  },
+  "training": {
+    "from_scratch": true,
+    "joint_encoder_decoder": true,
+    "target_horizons": [720],
+    "validation_horizons": [96, 192, 336, 720],
+    "evaluation_prefix_mode": "full-crop",
+    "checkpoint_policy": "best-val",
+    "pred_loss_mode": "full",
+    "max_epochs": 30,
+    "early_stopping_patience": 7,
+    "early_stopping_min_delta": 0.0,
+    "scheduler": "cosine",
+    "primary_seed": 2021,
+    "official_test_during_training": false,
+    "selected_checkpoint_reused_without_seed2021_retraining": true
+  },
+  "hpo_budget": {
+    "H1_trials_per_dataset": 2,
+    "H2_additional_trials_per_dataset": 3,
+    "H2_total_trials_including_H1": 40,
+    "H2_search_space_frozen": true,
+    "primary_seed_only": true,
+    "optional_additional_seeds_not_authorized": true
+  },
+  "search_space": {
+    "seq_len": [336, 720],
+    "patch_num": [1, 12, 24, 48],
+    "d_model": [32, 64, 128, 256, 512],
+    "d_ff": [32, 128, 256, 512, 1024, 2048],
+    "dropout": [0.1, 0.3, 0.5, 0.9],
+    "learning_rate": [0.00005, 0.0001, 0.0005],
+    "weight_decay": [0.01],
+    "max_epochs": [30],
+    "early_stopping_patience": [7],
+    "note": "Only the 24 explicitly listed profiles are authorized; this value set is descriptive, not a Cartesian product."
+  },
+  "authorization": {
+    "user_authorization": "2026-07-31 explicit request to continue ISCF-BSCA-MAIN-v1 hyperparameter tuning after H1 completion",
+    "user_authorized": true,
+    "authorization_date": "2026-07-31",
+    "remote_H2_training_authorized": true,
+    "official_test_HPO_execution_authorized_after_complete_H2": true,
+    "selected_profile_confirmation_authorized": false,
+    "final_paper_reporting_audit_authorized": false,
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+    "checkpoint_mutation_during_test_allowed": false,
+    "per_dataset_aggregate_hyperparameter_tuning_allowed": true,
+    "per_horizon_seed_metric_or_cell_tuning_allowed": false,
+    "test_role": "test-tuned-hyperparameter-selection-and-paper-benchmark"
+  },
+  "jobs": [
+    {
+      "trial_id": "ETTh1__h2_lr5e4",
+      "dataset": "ETTh1",
+      "profile_id": "h2_lr5e4",
+      "base_trial_id": "ETTh1__h1_current",
+      "source_prior": "H1_conservative_winner_learning_rate_neighbor",
+      "overrides": {"learning_rate": 0.0005}
+    },
+    {
+      "trial_id": "ETTh1__h2_capacity128",
+      "dataset": "ETTh1",
+      "profile_id": "h2_capacity128",
+      "base_trial_id": "ETTh1__h1_current",
+      "source_prior": "H1_conservative_winner_capacity_neighbor",
+      "overrides": {"d_model": 128, "d_ff": 256}
+    },
+    {
+      "trial_id": "ETTh1__h2_lookback336",
+      "dataset": "ETTh1",
+      "profile_id": "h2_lookback336",
+      "base_trial_id": "ETTh1__h1_current",
+      "source_prior": "TimeAlign_paper_lookback_search_neighbor",
+      "overrides": {"seq_len": 336}
+    },
+    {
+      "trial_id": "ETTh2__h2_lr5e4",
+      "dataset": "ETTh2",
+      "profile_id": "h2_lr5e4",
+      "base_trial_id": "ETTh2__h1_current",
+      "source_prior": "H1_conservative_winner_learning_rate_neighbor",
+      "overrides": {"learning_rate": 0.0005}
+    },
+    {
+      "trial_id": "ETTh2__h2_patch48",
+      "dataset": "ETTh2",
+      "profile_id": "h2_patch48",
+      "base_trial_id": "ETTh2__h1_current",
+      "source_prior": "TimeAlign_ETTh2_patch_prior_with_H1_winner_capacity",
+      "overrides": {"patch_num": 48}
+    },
+    {
+      "trial_id": "ETTh2__h2_lookback336",
+      "dataset": "ETTh2",
+      "profile_id": "h2_lookback336",
+      "base_trial_id": "ETTh2__h1_current",
+      "source_prior": "TimeAlign_paper_lookback_search_neighbor",
+      "overrides": {"seq_len": 336}
+    },
+    {
+      "trial_id": "ETTm1__h2_table5_capacity",
+      "dataset": "ETTm1",
+      "profile_id": "h2_table5_capacity",
+      "base_trial_id": "ETTm1__h1_timealign",
+      "source_prior": "TimeAlign_ICLR2026_Table5_capacity",
+      "overrides": {"d_model": 128, "d_ff": 256}
+    },
+    {
+      "trial_id": "ETTm1__h2_dropout5",
+      "dataset": "ETTm1",
+      "profile_id": "h2_dropout5",
+      "base_trial_id": "ETTm1__h1_timealign",
+      "source_prior": "H1_timealign_winner_regularization_neighbor",
+      "overrides": {"dropout": 0.5}
+    },
+    {
+      "trial_id": "ETTm1__h2_lookback336",
+      "dataset": "ETTm1",
+      "profile_id": "h2_lookback336",
+      "base_trial_id": "ETTm1__h1_timealign",
+      "source_prior": "TimeAlign_paper_lookback_search_neighbor",
+      "overrides": {"seq_len": 336}
+    },
+    {
+      "trial_id": "ETTm2__h2_dropout5",
+      "dataset": "ETTm2",
+      "profile_id": "h2_dropout5",
+      "base_trial_id": "ETTm2__h1_timealign",
+      "source_prior": "H1_near_tie_regularization_neighbor",
+      "overrides": {"dropout": 0.5}
+    },
+    {
+      "trial_id": "ETTm2__h2_hybrid",
+      "dataset": "ETTm2",
+      "profile_id": "h2_hybrid",
+      "base_trial_id": "ETTm2__h1_current",
+      "source_prior": "H1_anchor_hybrid_capacity_and_patch",
+      "overrides": {
+        "patch_num": 12,
+        "d_model": 128,
+        "d_ff": 128,
+        "dropout": 0.3,
+        "batch_size": 16,
+        "gradient_accumulation_steps": 2
+      }
+    },
+    {
+      "trial_id": "ETTm2__h2_lookback336",
+      "dataset": "ETTm2",
+      "profile_id": "h2_lookback336",
+      "base_trial_id": "ETTm2__h1_current",
+      "source_prior": "TimeAlign_paper_lookback_search_neighbor",
+      "overrides": {"seq_len": 336}
+    },
+    {
+      "trial_id": "Weather__h2_table5_ff",
+      "dataset": "Weather",
+      "profile_id": "h2_table5_ff",
+      "base_trial_id": "Weather__h1_timealign",
+      "source_prior": "TimeAlign_ICLR2026_Table5_feedforward_capacity",
+      "overrides": {"d_ff": 256}
+    },
+    {
+      "trial_id": "Weather__h2_capacity128",
+      "dataset": "Weather",
+      "profile_id": "h2_capacity128",
+      "base_trial_id": "Weather__h1_current",
+      "source_prior": "H1_conservative_winner_capacity_neighbor",
+      "overrides": {"d_model": 128, "d_ff": 256}
+    },
+    {
+      "trial_id": "Weather__h2_lookback336",
+      "dataset": "Weather",
+      "profile_id": "h2_lookback336",
+      "base_trial_id": "Weather__h1_current",
+      "source_prior": "TimeAlign_paper_lookback_search_neighbor",
+      "overrides": {"seq_len": 336}
+    },
+    {
+      "trial_id": "ECL__h2_dropout3",
+      "dataset": "ECL",
+      "profile_id": "h2_dropout3",
+      "base_trial_id": "ECL__h1_timealign",
+      "source_prior": "H1_timealign_winner_regularization_neighbor",
+      "overrides": {"dropout": 0.3}
+    },
+    {
+      "trial_id": "ECL__h2_intermediate_capacity",
+      "dataset": "ECL",
+      "profile_id": "h2_intermediate_capacity",
+      "base_trial_id": "ECL__h1_timealign",
+      "source_prior": "H1_anchor_capacity_interpolation",
+      "overrides": {"d_model": 256, "d_ff": 1024, "dropout": 0.3}
+    },
+    {
+      "trial_id": "ECL__h2_lookback336",
+      "dataset": "ECL",
+      "profile_id": "h2_lookback336",
+      "base_trial_id": "ECL__h1_timealign",
+      "source_prior": "TimeAlign_paper_lookback_search_neighbor",
+      "overrides": {"seq_len": 336}
+    },
+    {
+      "trial_id": "Solar__h2_dropout1",
+      "dataset": "Solar",
+      "profile_id": "h2_dropout1",
+      "base_trial_id": "Solar__h1_timealign",
+      "source_prior": "H1_timealign_winner_regularization_neighbor",
+      "overrides": {"dropout": 0.1}
+    },
+    {
+      "trial_id": "Solar__h2_ff512",
+      "dataset": "Solar",
+      "profile_id": "h2_ff512",
+      "base_trial_id": "Solar__h1_timealign",
+      "source_prior": "H1_timealign_winner_capacity_neighbor",
+      "overrides": {"d_ff": 512}
+    },
+    {
+      "trial_id": "Solar__h2_lookback336",
+      "dataset": "Solar",
+      "profile_id": "h2_lookback336",
+      "base_trial_id": "Solar__h1_timealign",
+      "source_prior": "TimeAlign_paper_lookback_search_neighbor",
+      "overrides": {"seq_len": 336}
+    },
+    {
+      "trial_id": "Exchange__h2_lr5e5",
+      "dataset": "Exchange",
+      "profile_id": "h2_lr5e5",
+      "base_trial_id": "Exchange__h1_conservative",
+      "source_prior": "H1_epoch1_winner_lower_learning_rate",
+      "overrides": {"learning_rate": 0.00005}
+    },
+    {
+      "trial_id": "Exchange__h2_dropout3",
+      "dataset": "Exchange",
+      "profile_id": "h2_dropout3",
+      "base_trial_id": "Exchange__h1_conservative",
+      "source_prior": "H1_epoch1_winner_regularization_neighbor",
+      "overrides": {"dropout": 0.3}
+    },
+    {
+      "trial_id": "Exchange__h2_lookback336",
+      "dataset": "Exchange",
+      "profile_id": "h2_lookback336",
+      "base_trial_id": "Exchange__h1_conservative",
+      "source_prior": "TimeAlign_paper_lookback_search_neighbor",
+      "overrides": {"seq_len": 336}
+    }
+  ],
+  "provisional_lpt_order": [
+    "ECL__h2_dropout3",
+    "ECL__h2_lookback336",
+    "ECL__h2_intermediate_capacity",
+    "Solar__h2_ff512",
+    "Solar__h2_dropout1",
+    "Solar__h2_lookback336",
+    "Weather__h2_table5_ff",
+    "Weather__h2_capacity128",
+    "Weather__h2_lookback336",
+    "ETTm1__h2_dropout5",
+    "ETTm1__h2_table5_capacity",
+    "ETTm1__h2_lookback336",
+    "ETTm2__h2_hybrid",
+    "ETTm2__h2_dropout5",
+    "ETTm2__h2_lookback336",
+    "ETTh1__h2_capacity128",
+    "ETTh1__h2_lr5e4",
+    "ETTh1__h2_lookback336",
+    "ETTh2__h2_patch48",
+    "ETTh2__h2_lr5e4",
+    "ETTh2__h2_lookback336",
+    "Exchange__h2_lr5e5",
+    "Exchange__h2_dropout3",
+    "Exchange__h2_lookback336"
+  ],
+  "decision": "H2_profiles_frozen_from_complete_H1_without_new_official_test_access"
+}

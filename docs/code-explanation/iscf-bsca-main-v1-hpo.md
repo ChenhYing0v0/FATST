@@ -4,8 +4,8 @@
 
 本工具链服务paper-facing `ISCF-BSCA-MAIN-v1`超参数调优，不修改冻结的
 ISCF-BSCA architecture forward path，也不替换exact `ISCF-BSCA-v1` ablation
-anchor。当前实现先落地H0 dataset audit和H1 two-anchor matrix；H2最多扩展到
-每dataset五个total trials，具体additional profiles需在H1资源结果返回后冻结。
+anchor。H0 dataset audit和H1 two-anchor matrix已经完成；H2已冻结为每dataset
+三个additional profiles，因此每dataset共有五个total trials。
 
 核心选择顺序固定为：
 
@@ -42,7 +42,7 @@ contract决定。`Dataset_Solar.__getitem__`同时修正`seq_y_mark`长度，使
 
 该audit不构造test loader，也不计算test metrics。
 
-## 3. H1 Tensor and Training Flow
+## 3. H1/H2 Tensor and Training Flow
 
 每个job从历史窗口
 
@@ -70,6 +70,11 @@ H1包含8 datasets × 2 source-audited anchors：
 所有job固定seed2021、BSCA objective、five scopes、canonical partition和
 joint end-to-end training。差异只来自config中显式记录的hyperparameters。
 
+H2的24个jobs以H1 job作为`base_trial_id`，再通过显式`overrides`冻结局部邻域。
+Runner在启动时materialize完整job；profile hash基于materialized job，而不是仅对
+override计算。H2允许的变化只有lookback、patch count、encoder capacity、dropout、
+learning rate和固定的30-epoch/patience-7预算。Architecture invariants保持不变。
+
 ## 4. Provenance and Optimizer
 
 `train_repo.py`新增以下provenance arguments，它们进入
@@ -87,16 +92,19 @@ joint end-to-end training。差异只来自config中显式记录的hyperparamete
 
 ## 5. Runner and Artifacts
 
-`scripts/remote/run_iscf_bsca_main_v1_hpo.sh`支持：
+`scripts/remote/run_iscf_bsca_main_v1_hpo.sh`同时支持H1和H2 config：
 
-- `MODE=dry-run`：输出16-job frozen manifest和hash；
+- `MODE=dry-run`：输出phase-specific frozen manifest和hash；
 - `MODE=data-audit`：执行新三dataset H0 audit；
 - `MODE=resource-smoke`：执行two-batch construction/resource canary；
-- `MODE=train`：执行full-budget H1 train/validation；
+- `MODE=train`：执行phase-specific full-budget train/validation；
 - `MODE=status`：统计完整job。
 
-`CANARY_ONLY=1`将矩阵限制为ECL/Solar/Exchange × 2 anchors，共6 jobs。Runner
-采用global shared queue，空闲GPU领取剩余最长job，不按dataset或arm静态配对。
+H2通过`scripts/remote/run_iscf_bsca_main_v1_hpo_h2.sh`固定config和repo-external
+output root。`CANARY_ONLY=1`在H1为6 jobs，在H2为9 jobs。Runner采用global
+shared queue，空闲GPU领取剩余最长job，不按dataset或arm静态配对。每个H2 job的
+`max_epochs`和`early_stopping_patience`来自materialized config，不再由runner
+硬编码。
 
 每个trial目录至少包含：
 
@@ -109,7 +117,8 @@ joint end-to-end training。差异只来自config中显式记录的hyperparamete
 
 ## 6. Analysis and Selection
 
-`scripts/analyze_iscf_bsca_main_v1_hpo.py`只接受完整standard horizons，输出：
+`scripts/analyze_iscf_bsca_main_v1_hpo.py`能解析H1完整jobs或H2
+`base_trial_id + overrides` profiles，只接受完整standard horizons，输出：
 
 - `trial_ledger.jsonl`；
 - `trial_scorecard.csv`；
@@ -140,6 +149,6 @@ hyperparameters来实现这一边界。
 - 新dataset的frequency/source identity必须由remote H0 file audit确认；
 - test-tuned结果不构成untouched-holdout generalization estimate。
 
-若H0 identity不一致、H1出现OOM/NaN/Inf、validation checkpoint provenance不
-完整，或trial hash不一致，则H1 gate失败并回到local protocol/resource repair；
-不得直接进入H2或official-test ranking。
+若H2出现OOM/NaN/Inf、validation checkpoint provenance不完整、base-config hash
+不一致，或trial hash不一致，则H2 gate失败并回到local protocol/resource repair。
+H2 24/24完成之前不得进入official-test ranking。

@@ -1,0 +1,17 @@
+dataset,trial_id,profile_id,validation_mean_mse_4h,test_mean_mse_4h,test_mean_mae_4h,trainable_parameters,complete
+ETTh1,ETTh1__h1_current,h1_conservative_anchor,1.1219832591209855,,,4702249,True
+ETTh1,ETTh1__h1_timealign,h1_timealign_source_prior,1.1434824927994567,,,2420425,True
+ETTh2,ETTh2__h1_current,h1_conservative_anchor,0.4006675397979081,,,2570133,True
+ETTh2,ETTh2__h1_timealign,h1_timealign_source_prior,0.4088260361131111,,,4896981,True
+ETTm1,ETTm1__h1_current,h1_conservative_anchor,0.6145748098257057,,,2542325,True
+ETTm1,ETTm1__h1_timealign,h1_timealign_source_prior,0.6006724132247092,,,1408725,True
+ETTm2,ETTm2__h1_current,h1_conservative_anchor,0.18353604641458895,,,9016141,True
+ETTm2,ETTm2__h1_timealign,h1_timealign_source_prior,0.18404936095563848,,,4644685,True
+Weather,Weather__h1_current,h1_conservative_anchor,0.4842246044312589,,,2570133,True
+Weather,Weather__h1_timealign,h1_timealign_source_prior,0.48978661656340894,,,19115989,True
+ECL,ECL__h1_conservative,h1_conservative_anchor,0.15024525676216444,,,839621,True
+ECL,ECL__h1_timealign,h1_timealign_source_prior,0.1329943805526007,,,5706565,True
+Solar,Solar__h1_conservative,h1_conservative_anchor,0.1397540541401314,,,839621,True
+Solar,Solar__h1_timealign,h1_timealign_source_prior,0.13365402614070926,,,1487685,True
+Exchange,Exchange__h1_conservative,h1_conservative_anchor,0.8242080897649026,,,5313669,True
+Exchange,Exchange__h1_timealign,h1_timealign_source_prior,0.9296547133324942,,,2740005,True

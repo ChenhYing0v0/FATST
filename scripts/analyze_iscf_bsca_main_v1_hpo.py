@@ -95,14 +95,49 @@ def finite_metrics(metrics: dict[int, tuple[float, float]]) -> bool:
     )
 
 
+def materialize_jobs(
+    config: dict[str, Any],
+    config_path: Path,
+) -> list[dict[str, Any]]:
+    if not config.get("base_config"):
+        return [dict(job) for job in config["jobs"]]
+    base_path = Path(config["base_config"])
+    if not base_path.is_absolute():
+        base_path = ROOT / base_path
+    base_config = json.loads(base_path.read_text(encoding="utf-8"))
+    base_jobs = {job["trial_id"]: job for job in base_config["jobs"]}
+    materialized = []
+    for specification in config["jobs"]:
+        base_trial_id = specification.get("base_trial_id")
+        if base_trial_id is None:
+            materialized.append(dict(specification))
+            continue
+        if base_trial_id not in base_jobs:
+            raise ValueError(
+                f"unknown base trial {base_trial_id} in {config_path}"
+            )
+        job = dict(base_jobs[base_trial_id])
+        job.update(specification.get("overrides", {}))
+        job.update(
+            {
+                key: value
+                for key, value in specification.items()
+                if key not in {"base_trial_id", "overrides"}
+            }
+        )
+        materialized.append(job)
+    return materialized
+
+
 def main() -> None:
     args = parse_args()
     config = json.loads(args.config.read_text(encoding="utf-8"))
+    jobs = materialize_jobs(config, args.config)
     args.analysis_dir.mkdir(parents=True, exist_ok=True)
     ledger_rows = []
     scorecard = []
     aggregate_rows = []
-    for job in config["jobs"]:
+    for job in jobs:
         directory = run_dir(args.output_root, job)
         checkpoint = directory / "checkpoint.pt"
         validation_path = directory / "metrics_by_target_horizon.csv"
@@ -221,15 +256,15 @@ def main() -> None:
     )
     completeness = {
         "protocol_id": config["protocol_id"],
-        "expected_trials": len(config["jobs"]),
+        "expected_trials": len(jobs),
         "training_complete_trials": training_complete_count,
         "test_complete_trials": test_complete_count,
         "require_test": args.require_test,
         "complete": (
-            training_complete_count == len(config["jobs"])
+            training_complete_count == len(jobs)
             and (
                 not args.require_test
-                or test_complete_count == len(config["jobs"])
+                or test_complete_count == len(jobs)
             )
         ),
     }

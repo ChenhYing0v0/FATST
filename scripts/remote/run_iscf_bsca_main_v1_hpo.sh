@@ -2,7 +2,13 @@
 set -euo pipefail
 
 CONFIG="${CONFIG:-configs/iscf_bsca_main_v1_hpo.json}"
-OUTPUT_ROOT="${OUTPUT_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_main_v1_hpo/h1}"
+PHASE="$(
+  python3 -c \
+    'import json,sys; print(json.load(open(sys.argv[1]))["matrix"]["phase"])' \
+    "${CONFIG}"
+)"
+PHASE_LOWER="$(printf '%s' "${PHASE}" | tr '[:upper:]' '[:lower:]')"
+OUTPUT_ROOT="${OUTPUT_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_main_v1_hpo/${PHASE_LOWER}}"
 DATASET_ROOT="${DATASET_ROOT:-/home/yingch/dataset}"
 CONDA_ENV="${CONDA_ENV:-moe}"
 CONDA_BIN="${CONDA_BIN:-/home/anaconda3/bin/conda}"
@@ -43,15 +49,27 @@ payload = {
     "hpo_budget": config["hpo_budget"],
     "selection_contract": config["selection_contract"],
     "architecture_invariants": config["architecture_invariants"],
+    "base_config": config.get("base_config"),
+    "base_config_sha256": config.get("base_config_sha256"),
 }
 encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
 print(hashlib.sha256(encoded).hexdigest())
 PY
 )"
 REMOTE_AUTHORIZED="$(
-  python3 -c \
-    'import json,sys; print(str(json.load(open(sys.argv[1]))["authorization"]["remote_H0_H1_authorized"]).lower())' \
-    "${CONFIG}"
+  python3 - "${CONFIG}" "${PHASE}" <<'PY'
+import json
+import sys
+
+config = json.load(open(sys.argv[1]))
+phase = sys.argv[2]
+key = (
+    "remote_H2_training_authorized"
+    if phase == "H2"
+    else "remote_H0_H1_authorized"
+)
+print(str(config["authorization"][key]).lower())
+PY
 )"
 
 JOBS_TMP="$(mktemp)"
@@ -59,13 +77,38 @@ trap 'rm -f "${JOBS_TMP}"' EXIT
 python3 - "${CONFIG}" "${CANARY_ONLY}" >"${JOBS_TMP}" <<'PY'
 import hashlib
 import json
+from pathlib import Path
 import sys
 
-config = json.load(open(sys.argv[1]))
+config_path = Path(sys.argv[1])
+config = json.load(config_path.open())
 canary_only = sys.argv[2] == "1"
-jobs = {job["trial_id"]: job for job in config["jobs"]}
+base_jobs = {}
+if config.get("base_config"):
+    base_path = Path(config["base_config"])
+    if not base_path.is_absolute():
+        base_path = Path.cwd() / base_path
+    base_config = json.load(base_path.open())
+    base_jobs = {job["trial_id"]: job for job in base_config["jobs"]}
+
+resolved_jobs = {}
+for specification in config["jobs"]:
+    if specification.get("base_trial_id"):
+        job = dict(base_jobs[specification["base_trial_id"]])
+        job.update(specification.get("overrides", {}))
+        job.update(
+            {
+                key: value
+                for key, value in specification.items()
+                if key not in {"base_trial_id", "overrides"}
+            }
+        )
+    else:
+        job = dict(specification)
+    resolved_jobs[job["trial_id"]] = job
+
 for trial_id in config["provisional_lpt_order"]:
-    job = jobs[trial_id]
+    job = resolved_jobs[trial_id]
     if canary_only and job["dataset"] not in {"ECL", "Solar", "Exchange"}:
         continue
     profile_hash = hashlib.sha256(
@@ -87,6 +130,11 @@ for trial_id in config["provisional_lpt_order"]:
         job["gradient_accumulation_steps"],
         job["mode_rank"],
         job.get("layer_norm", 1),
+        job.get("max_epochs", config["training"]["max_epochs"]),
+        job.get(
+            "early_stopping_patience",
+            config["training"]["early_stopping_patience"],
+        ),
         profile_hash,
     ]
     print("\t".join(map(str, fields)))
@@ -96,10 +144,23 @@ while IFS= read -r line; do
   LINES+=("${line}")
 done <"${JOBS_TMP}"
 
-EXPECTED_JOBS=16
-if [[ "${CANARY_ONLY}" == "1" ]]; then
-  EXPECTED_JOBS=6
-fi
+EXPECTED_JOBS="$(
+  python3 - "${CONFIG}" "${CANARY_ONLY}" <<'PY'
+import json
+import sys
+
+config = json.load(open(sys.argv[1]))
+canary_only = sys.argv[2] == "1"
+print(
+    sum(
+        1
+        for job in config["jobs"]
+        if not canary_only
+        or job["dataset"] in {"ECL", "Solar", "Exchange"}
+    )
+)
+PY
+)"
 [[ "${#LINES[@]}" -eq "${EXPECTED_JOBS}" ]]
 
 run_dir_for_line() {
@@ -121,7 +182,7 @@ is_complete() {
 
 if [[ "${MODE}" == "dry-run" ]]; then
   printf '%s\n' "${LINES[@]}"
-  echo "iscf_bsca_main_h1_dry_run=pass jobs=${#LINES[@]} test_jobs=0 config_hash=${CONFIG_HASH} search_space_hash=${SEARCH_SPACE_HASH} remote_authorized=${REMOTE_AUTHORIZED} canary_only=${CANARY_ONLY}"
+  echo "iscf_bsca_main_${PHASE_LOWER}_dry_run=pass jobs=${#LINES[@]} test_jobs=0 config_hash=${CONFIG_HASH} search_space_hash=${SEARCH_SPACE_HASH} remote_authorized=${REMOTE_AUTHORIZED} canary_only=${CANARY_ONLY}"
   exit 0
 fi
 
@@ -132,14 +193,14 @@ if [[ "${MODE}" == "status" ]]; then
       complete=$((complete + 1))
     fi
   done
-  echo "iscf_bsca_main_h1_status=$(date -Is) complete=${complete}/${#LINES[@]} test=0/${#LINES[@]}"
+  echo "iscf_bsca_main_${PHASE_LOWER}_status=$(date -Is) complete=${complete}/${#LINES[@]} test=0/${#LINES[@]}"
   find "${OUTPUT_ROOT}/_logs" -name '*.log' -type f -print0 2>/dev/null \
     | xargs -0 -r tail -n 1
   exit 0
 fi
 
 [[ "${REMOTE_AUTHORIZED}" == "true" ]] || {
-  echo "H0/H1 remote execution is not authorized" >&2
+  echo "${PHASE} remote execution is not authorized" >&2
   exit 3
 }
 
@@ -160,12 +221,12 @@ run_training_command() {
   local line="$1" gpu="$2" output_dir="$3" log="$4" smoke="$5"
   local trial_id dataset profile_id source_prior seq_len patch_num d_model d_ff
   local dropout learning_rate weight_decay batch_size accumulation mode_rank
-  local layer_norm profile_hash
+  local layer_norm max_epochs patience profile_hash
   local budget_args=()
   IFS=$'\t' read -r \
     trial_id dataset profile_id source_prior seq_len patch_num d_model d_ff \
     dropout learning_rate weight_decay batch_size accumulation mode_rank \
-    layer_norm profile_hash <<< "${line}"
+    layer_norm max_epochs patience profile_hash <<< "${line}"
   if [[ "${smoke}" == "1" ]]; then
     budget_args=(
       --max-train-batches 2
@@ -174,7 +235,7 @@ run_training_command() {
       --patience 1
     )
   else
-    budget_args=(--epochs 20 --patience 5)
+    budget_args=(--epochs "${max_epochs}" --patience "${patience}")
   fi
   CUDA_VISIBLE_DEVICES="${gpu}" "${CONDA_BIN}" run --no-capture-output \
     -n "${CONDA_ENV}" \
@@ -204,7 +265,7 @@ run_training_command() {
       --no-official-test-mode \
       --final-evaluation-split val \
       --protocol-class method_screening \
-      --protocol-profile ISCF-BSCA-MAIN-v1-HPO-H1 \
+      --protocol-profile "ISCF-BSCA-MAIN-v1-HPO-${PHASE}" \
       --profile-hash "${profile_hash}" \
       --hpo-trial-id "${trial_id}" \
       --hpo-profile-id "${profile_id}" \
@@ -332,4 +393,4 @@ for pid in "${pids[@]}"; do
   fi
 done
 [[ "${status}" == "0" ]]
-echo "iscf_bsca_main_h1_${MODE}_done=$(date -Is) jobs=${#LINES[@]} test_jobs=0"
+echo "iscf_bsca_main_${PHASE_LOWER}_${MODE}_done=$(date -Is) jobs=${#LINES[@]} test_jobs=0"

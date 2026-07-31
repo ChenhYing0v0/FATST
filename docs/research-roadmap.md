@@ -76,7 +76,7 @@ Canonical report为
 machine-readable contract为
 `configs/iscf_bsca_paper_experiment_protocol.json`。
 
-Current cursor=`ISCF-BSCA-MAIN-v1 H1 train/validation running`：
+Current cursor=`ISCF-BSCA-MAIN-v1 H1 complete；H2 frozen/prelaunch`：
 
 - exact `ISCF-BSCA-v1`与当前超参数只作原5数据集ablation anchor；不得直接进入
   Main I/II；
@@ -121,15 +121,21 @@ matched/ablation/transfer失败按four-layer failure attribution回Step 4--6。
 5. Tier B3 selected-profile confirmation=`false`；
 6. Tier C complete test-tuned reporting audit=`false`。
 
-H1现冻结16 jobs，先执行6-job new-dataset canary。下一动作是完成focused
-commit/push、remote dataset/GPU/storage preflight并启动H0/H1；不得跳过H1直接
-访问test或执行Tier B3/C。
+H1 16 jobs已全部完成，artifact、checkpoint selector和numeric health通过，
+test jobs=0。五个旧dataset的H1 conservative checkpoints与既有seed2021
+confirmation checkpoint hashes完全一致；复用既有test evidence表明五dataset
+macro与TimeAlign published MSE仅差约+0.24%，但ETTm2仍有约+5.88%缺口，当前只
+判定为`competitive_not_SOTA`。
 
 上述launch gate已完成：H0 audit pass、6/6 new-dataset canary pass、16/16
 resource smoke pass。Full H1已在commit `7361d9e`、GPUs 0/1/2上启动，
 orchestrator PID=`545400`，output root=
 `/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_main_v1_hpo/h1`。当前仍为
-train/validation only，test jobs=0；下一gate为16/16 artifacts后冻结H2。
+train/validation only，test jobs=0。H2现已冻结为24 additional jobs
+（每dataset三个，H1+H2共40），config=
+`configs/iscf_bsca_main_v1_hpo_h2.json`。下一gate为local contract、focused
+commit/push、remote commit/GPU preflight和H2 resource canary；H2 24/24完成前
+不得访问test。
 
 ## Paper-Experiments Parallel Handoff (2026-07-31)
 
