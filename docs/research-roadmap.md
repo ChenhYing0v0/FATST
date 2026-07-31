@@ -1,5 +1,38 @@
 # Research Roadmap
 
+## Section 3 Initial Draft and Evidence Boundary Freeze (2026-07-31)
+
+Section 3 manuscript-facing初稿已落地：
+`docs/paper-drafts/iscf-bsca-problem-formulation-initial-draft.md`，
+version=`v0.1-initial-draft`，review=`pending_author_review`。Introduction
+`v0.9-author-refinement`保持不变。
+
+本轮完成的写作决策为：
+
+1. 3.1以$\mathbf X_o\in\mathbb R^{L\times C}$、supported horizon set
+   $\mathcal H$和horizon-agnostic $g_\theta(\mathbf X_o,\tau,c)$定义task；
+   CHPC是相同history/origin/preprocessing下的prefix projection identity；
+2. 3.2定义origin-level CHPD与train-split scale-normalized NCHPD，Figure 2只证明
+   audited DLinear horizon-specific systems不保证CHPC；
+3. 3.3定义$\operatorname{UP}_H$但冻结negative evidence boundary：D18的
+   horizon-specific/unified contrast小且受更大的measure-training差异混杂，
+   因而不宣称naive unified forecasting存在稳定penalty；
+4. 3.4以capacity-matched single-extent neutral family定义
+   $R_{o,b,s}$、$E_{o,b,s}$与future formal CFH。Figure 3的winner sequence、
+   crossings和8.112% headroom只作validation-selected descriptive oracle；
+5. 3.5从one model、CHPC、multiple extents、target-level integration与stable
+   joint learning导出design requirements，最后才引出ISCF-BSCA。
+
+Problem、evidence、method与claim boundary继续分离：Figures 2--3均为
+validation-only illustrative evidence；CFH尚未formal测量；Introduction P6的
+unified superiority、component effectiveness与decoder portability继续等待完整
+main/ablation/transfer tables。Method Figure 4仍为planned only。
+
+Writing decision=
+`section3_v0_1_complete_pending_author_review_evidence_bounded`。本轮没有执行或
+授权new implementation、remote training与formal test；并行
+ISCF-BSCA-MAIN-v1 H1 experiment cursor保持原记录。
+
 ## ISCF-BSCA Paper-Facing Experiment Prelaunch Freeze v2 (2026-07-31)
 
 Canonical report为

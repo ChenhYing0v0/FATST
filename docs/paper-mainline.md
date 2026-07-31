@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 3 integration；experiments=ISCF-BSCA-MAIN-v1 H1 train/validation running |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.1 pending author review；experiments=ISCF-BSCA-MAIN-v1 H1 train/validation running |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,6 +18,27 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1`待test-tuned HPO后进入Main I/II |
+
+[Section 3 Initial Draft, 2026-07-31] Manuscript-facing初稿
+`docs/paper-drafts/iscf-bsca-problem-formulation-initial-draft.md`已完成3.1--3.5，
+status=`v0.1-initial-draft/pending_author_review`。3.1区分forecast horizon $H$与
+future time step $\tau$，并把CHPC写为相同history/origin下的prefix projection
+identity。3.2定义origin-level CHPD与train-scale-normalized NCHPD，整合approved
+Figure 2；claim仅为independently optimized horizon-specific DLinear不保证
+CHPC，不延伸为accuracy或cross-family prevalence。
+
+3.3完成naive unified evidence audit。D18中specialists相对`A6_MEASURE`只有
+0.1659% aggregate MSE差异、7/15 cells与2/5 datasets，而measure-training
+contrast达到1.7980%且15/15 cells一致；因此不把unified performance compromise
+写成已证事实，只保留$\operatorname{UP}_H$定义与future matched-scorecard
+requirement。3.4定义matched $R_{o,b,s}$、region-best excess risk与formal CFH，
+整合approved Figure 3；其winner sequence、10/10 crossings与8.112% headroom均
+明确为same-validation-label descriptive oracle，不是out-of-sample allocation或
+method evidence。3.5先导出method-neutral requirements，末段才引出ISCF-BSCA。
+Introduction v0.9未改动；P6三项positive claims继续等待完整
+main/ablation/transfer tables。本writing update没有新增implementation、remote
+training或formal test授权，也不修改并行experiment cursor。Decision=
+`section3_v0_1_complete_pending_author_review_evidence_bounded`。
 
 [Paper-Facing Experiment Consolidation v2, 2026-07-31] Main-table candidate与
 ablation anchor已拆分：exact `ISCF-BSCA-v1`及其当前超参数只用于原5数据集

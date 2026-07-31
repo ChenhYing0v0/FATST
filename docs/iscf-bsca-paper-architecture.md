@@ -5,15 +5,15 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.29` |
+| `version` | `v0.30` |
 | `last_updated` | `2026-07-31` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 3 manuscript integration；experiments=ISCF-BSCA-MAIN-v1 H1 tooling local gate pass/pending remote preflight；Method Figure 4 planned |
+| `current_review_cursor` | writing=Section 3 v0.1 initial draft pending author review；experiments=ISCF-BSCA-MAIN-v1 H1 train/validation running；Method Figure 4 planned |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
-| `provisional_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 Figures 2--3；planned Method Figure 4；remaining sections |
+| `provisional_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.1正文 + approved Figures 2--3；planned Method Figure 4；remaining sections |
 | `authorization_source` | experiment HPO authorization由`configs/iscf_bsca_main_v1_hpo.json`记录；本architecture文档不扩张其Tier B3/C边界 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
@@ -851,8 +851,15 @@ balanced co-adaptation` 完整链上。
 
 ## 6. Problem Formulation and Empirical Motivation
 
-本章不出现 ISCF、BSCA、arm 或 production method 名称。问题证据使用已有
-baselines 或简单 capacity-matched diagnostic heads。
+Section 3 v0.1 manuscript-facing initial draft已落地：
+`docs/paper-drafts/iscf-bsca-problem-formulation-initial-draft.md`。当前状态为
+`pending_author_review`；Introduction v0.9未改动。
+
+3.1--3.4不出现ISCF、BSCA、arm或production method名称，问题证据只使用已有
+baseline或简单capacity-matched diagnostic heads。3.5先从问题与证据导出通用
+design requirements，只在最后一个transition paragraph引出ISCF-BSCA。Figures
+2--3继续严格标记为validation-only illustrative evidence，不承担method
+effectiveness、population prevalence或learned allocation claim。
 
 ### 6.1 Horizon-Specific and Unified Multi-Horizon Forecasting
 
@@ -961,7 +968,7 @@ subtle white separation strokes；H720置于较低z-order，避免遮挡较短ho
 curves。预测主线缩至0.82--0.95 pt、marker间隔放宽至18 steps，避免四条高度
 重合的predictions形成过粗色带。
 
-### 6.3 Evidence II：Naive Unified Forecasting
+### 6.3 Evidence Boundary：Naive Unified Forecasting
 
 把同一 baseline 改成horizon无关、future-step-indexed unified variant，再在
 多个 requested horizons 上评估。定义：
@@ -981,6 +988,17 @@ $$
 若 $\operatorname{UP}_H>0$，说明该 baseline 的 naive unified adaptation
 存在 performance compromise；若部分或全部 baseline 不出现正 penalty，则必须
 收窄结论，不能宣称 unified forecasting 天然更难。
+
+现有D18 audit不足以支持稳定正penalty：horizon specialists相对
+`A6_MEASURE`的aggregate MSE差异仅0.1659%，只覆盖7/15 cells与2/5 datasets；
+`A6_MEASURE`相对`A6_FULL`的measure-training差异反而达到1.7980%且覆盖15/15
+cells。该confound大于并更稳定于horizon-specific/unified contrast。因此Section
+3 v0.1只定义$\operatorname{UP}_H$与matched comparison要求，并明确：
+
+- 不把naive unified performance compromise写成已证事实；
+- unified motivation只由one-model service与CHPC contract承担；
+- relative accuracy留给后续完整matched paper-facing scorecards；
+- Introduction P6的unified superiority仍是provisional claim。
 
 ### 6.4 Evidence III：Future-Region Sharing-Demand Heterogeneity
 
@@ -1133,6 +1151,12 @@ s720整行恒为0并显示为白色；新版编码消除该视觉歧义，同时
 fixed-s720 reference。maximum-heterogeneity validation role在caption中明确；
 正式CFH继续deferred。图不使用ISCF/BSCA，不承担method effectiveness claim。
 
+Section 3 v0.1进一步把sample-level matched statistic写为
+$R_{o,b,s}$，把region-best excess risk写为$E_{o,b,s}$，并保留
+validation-selected fixed/schedule与official-test CFH作为未来formal control。
+Figure 3本身不建立CFH；其同一validation-label winner与8.112% headroom只作
+descriptive oracle。
+
 ### 6.5 Design Requirements
 
 由前三项证据导出：
@@ -1143,6 +1167,11 @@ fixed-s720 reference。maximum-heterogeneity validation role在caption中明确�
 4. 架构应在一个统一forecast field中提供多种future-step latent-state sharing
    scopes，并允许每个forecast target整合不同sharing extents；
 5. scope-conditioned slices与scope allocation需要稳定joint training。
+
+Manuscript-facing表达在此处保持method-neutral：one model、CHPC、multiple
+sharing extents、sample/variable/future-step粒度的integration与stable joint
+learning。只有3.5末段将这些requirements映射到ISCF与BSCA，且明确Figures 2--3
+不构成component effectiveness evidence。
 
 ## 7. Method
 
