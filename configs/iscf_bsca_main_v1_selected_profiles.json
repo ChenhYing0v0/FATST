@@ -12,6 +12,24 @@
   "checkpoint_selector": "validation_mean_mse_h96_h192_h336_h720",
   "profile_selector": "official_test_mean_mse_h96_h192_h336_h720_per_dataset",
   "per_horizon_profile_selection": false,
+  "selected_scorecard": {
+    "path": "analysis/iscf_bsca_main_v1_hpo_20260731/selected_main_scorecard.csv",
+    "sha256": "a419f840b45d316c9c7a72979211a52e4d50583a915f9871b0c3b50f5c10f427",
+    "rows": 32
+  },
+  "selected_profile_manifest": {
+    "path": "analysis/iscf_bsca_main_v1_hpo_20260731/selected_profile_manifest.csv",
+    "sha256": "badddc5f563f49da94e256c0eb11895c8071e7c5642409f54eecaa38da4f650c",
+    "rows": 8
+  },
+  "source_artifacts": {
+    "combined_checkpoint_manifest.csv": "ba12d47b1313dc435d6e9aa7f432c6ffb87a0753d980afa1bb7315f123fec879",
+    "h3a_checkpoint_manifest.csv": "0753d880fce934961e3989c979417865b74394ae4641162fcc95830d7ca1407b",
+    "h3b_checkpoint_manifest.csv": "8d63967e00cef3c69fbbfd22ea414e04d261008ade8e2a64a934fc00dc450f23",
+    "test_audit_result/all_trial_scorecard.csv": "c50f5dc7f97278cc463cb87c980ce34d8ef33a246bc27913731575dd83533f16",
+    "h3a_test_result/all_trial_scorecard.csv": "21121e54eb8b1da5cf69764506c9a49349765b68a6e07edd7eeaf0baded016a1",
+    "h3b_test_result/all_trial_scorecard.csv": "fb9b5b91b424a31a229dc0f36e249b3fd140038341511d166f20fb4987e381ff"
+  },
   "profiles": {
     "ETTh1": {
       "trial_id": "ETTh1__h1_timealign",

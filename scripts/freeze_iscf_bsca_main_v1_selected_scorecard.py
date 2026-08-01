@@ -24,6 +24,7 @@ def parse_args() -> argparse.Namespace:
         default=ROOT / "configs" / "iscf_bsca_main_v1_selected_profiles.json",
     )
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--manifest-output", type=Path)
     return parser.parse_args()
 
 
@@ -53,16 +54,83 @@ def main() -> None:
         row["trial_id"]: row["checkpoint_sha256_before_test"]
         for row in manifests
     }
+    manifest_by_trial = {row["trial_id"]: row for row in manifests}
+    training_ledgers = []
+    for relative in (
+        "h1_artifact_audit/trial_ledger.jsonl",
+        "h2_artifact_audit/trial_ledger.jsonl",
+        "h3a_artifact_audit/trial_ledger.jsonl",
+        "h3b_artifact_audit/trial_ledger.jsonl",
+    ):
+        training_ledgers.extend(
+            json.loads(line)
+            for line in (BASE / relative).read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        )
+    training_by_trial = {row["trial_id"]: row for row in training_ledgers}
+    test_ledgers = []
+    for relative in (
+        "test_audit_result/test_audit_ledger.jsonl",
+        "h3a_test_result/test_audit_ledger.jsonl",
+        "h3b_test_result/test_audit_ledger.jsonl",
+    ):
+        test_ledgers.extend(
+            json.loads(line)
+            for line in (BASE / relative).read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        )
+    test_by_trial = {row["trial_id"]: row for row in test_ledgers}
     metric_by_key = {
         (row["trial_id"], int(row["horizon"])): row
         for row in scorecards
     }
     output: list[dict[str, Any]] = []
+    provenance_output: list[dict[str, Any]] = []
     for dataset, profile in config["profiles"].items():
         trial_id = profile["trial_id"]
         if checkpoint_by_trial.get(trial_id) != profile["checkpoint_sha256"]:
             raise ValueError(f"checkpoint hash mismatch: {trial_id}")
         rows = []
+        manifest = manifest_by_trial[trial_id]
+        training = training_by_trial[trial_id]
+        test = test_by_trial[trial_id]
+        provenance_output.append(
+            {
+                "dataset": dataset,
+                "trial_id": trial_id,
+                "profile_id": manifest["profile_id"],
+                "phase": profile["phase"],
+                "seed": config["seed"],
+                "best_epoch": manifest["best_epoch"],
+                "validation_mean_mse_4h": manifest[
+                    "validation_mean_mse_4h"
+                ],
+                "trainable_parameters": manifest["trainable_parameters"],
+                "checkpoint_sha256_before_test": manifest[
+                    "checkpoint_sha256_before_test"
+                ],
+                "checkpoint_sha256_after_test": test[
+                    "checkpoint_sha256_after_test"
+                ],
+                "checkpoint_hash_immutable": test[
+                    "checkpoint_hash_immutable"
+                ],
+                "training_artifact_dir": manifest["artifact_dir"],
+                "test_artifact_dir": test["artifact_dir"],
+                "source_manifest": (
+                    "combined_checkpoint_manifest.csv"
+                    if profile["phase"] in {"H1", "H2"}
+                    else f"{profile['phase'].lower()}_checkpoint_manifest.csv"
+                ),
+                "source_training_protocol_id": training["protocol_id"],
+                "source_test_protocol_id": test["protocol_id"],
+                "source_candidate_version": test["candidate_version"],
+                "test_access_date": test["test_access_date"],
+                "matrix_complete": test["matrix_complete"],
+                "test_mean_mse_4h": profile["test_mean_mse_4h"],
+                "test_mean_mae_4h": profile["test_mean_mae_4h"],
+            }
+        )
         for horizon in HORIZONS:
             source = metric_by_key.get((trial_id, horizon))
             if source is None or source["dataset"] != dataset:
@@ -111,12 +179,25 @@ def main() -> None:
         )
         writer.writeheader()
         writer.writerows(output)
+    if args.manifest_output is not None:
+        args.manifest_output.parent.mkdir(parents=True, exist_ok=True)
+        with args.manifest_output.open(
+            "w", encoding="utf-8", newline=""
+        ) as handle:
+            writer = csv.DictWriter(
+                handle,
+                fieldnames=list(provenance_output[0]),
+                lineterminator="\n",
+            )
+            writer.writeheader()
+            writer.writerows(provenance_output)
     print(
         json.dumps(
             {
                 "datasets": len(config["profiles"]),
                 "horizons": list(HORIZONS),
                 "cells": len(output),
+                "selected_profiles": len(provenance_output),
                 "checkpoint_hashes": len(checkpoint_by_trial),
                 "overall_pass": True,
             },

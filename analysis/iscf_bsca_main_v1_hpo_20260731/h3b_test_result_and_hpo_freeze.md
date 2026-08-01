@@ -30,6 +30,8 @@ MSE selector与MAE排序不同：`lr2e4` MAE最低，但项目预冻结primary s
 
 最终single-seed main profiles冻结于`configs/iscf_bsca_main_v1_selected_profiles.json`。ECL使用`ECL__h3a_budget45`，Solar使用`Solar__h3b_lr3e4_rank64`；其余六datasets沿用H1/H2完整ranking winner。所有profiles均为test-tuned，ECL/Solar还是test-informed，不得描述为untouched holdout。
 
+Canonical 32-cell结果表为`selected_main_scorecard.csv`（SHA256 `a419f840b45d316c9c7a72979211a52e4d50583a915f9871b0c3b50f5c10f427`）；逐dataset selected-checkpoint provenance为`selected_profile_manifest.csv`（SHA256 `badddc5f563f49da94e256c0eb11895c8071e7c5642409f54eecaa38da4f650c`）。后者逐项记录seed、best epoch、validation selector值、checkpoint test前后SHA256、参数量、training/test artifact目录、protocol、test access date与complete-matrix状态。二者及其上游manifest/scorecard hashes均固定在selected-profile config中。
+
 ## Gates and next step
 
 `paper_facing_effectiveness=performance_partial_pass_pending_complete_baseline_tables`。ECL与Solar当前target均通过，八dataset profile HPO完成，但SOTA paper claim还需Main I完整baselines及Main II matched unified controls。
