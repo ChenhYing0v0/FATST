@@ -1,0 +1,8 @@
+{
+  "protocol_id": "ISCF-BSCA-MAIN-v1-HPO-SOLAR-H3B",
+  "expected_trials": 4,
+  "training_complete_trials": 4,
+  "test_complete_trials": 0,
+  "require_test": false,
+  "complete": true
+}

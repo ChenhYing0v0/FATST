@@ -1,0 +1,5 @@
+dataset,trial_id,profile_id,validation_mean_mse_4h,test_mean_mse_4h,test_mean_mae_4h,trainable_parameters,complete
+Solar,Solar__h3b_lr2e4,h3b_lr2e4,0.13272681445777712,,,1487685,True
+Solar,Solar__h3b_lr4e4,h3b_lr4e4,0.1317536226031763,,,1487685,True
+Solar,Solar__h3b_lr3e4_dropout4,h3b_lr3e4_dropout4,0.13223211860797224,,,1487685,True
+Solar,Solar__h3b_lr3e4_rank64,h3b_lr3e4_rank64,0.13382428071807168,,,1066565,True
