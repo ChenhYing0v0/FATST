@@ -53,7 +53,7 @@ config = json.load(open(sys.argv[1]))
 authorization = config["authorization"]
 authorized = (
     config["status"] == "authorized_prelaunch"
-    and config["matrix"]["expected_runs"] == 40
+    and config["matrix"]["expected_runs"] > 0
     and authorization["user_authorized"] is True
     and authorization["formal_test_access_count_for_version"] == 1
     and authorization["test_role"]
@@ -72,18 +72,25 @@ CANDIDATE_VERSION="$(
     'import json,sys; print(json.load(open(sys.argv[1]))["candidate_version"])' \
     "${CONFIG}"
 )"
+EXPECTED_RUNS="$(
+  python3 -c \
+    'import json,sys; print(json.load(open(sys.argv[1]))["matrix"]["expected_runs"])' \
+    "${CONFIG}"
+)"
+EXPECTED_CELLS="$((EXPECTED_RUNS * 4))"
 
 JOBS_TMP="$(mktemp)"
 trap 'rm -f "${JOBS_TMP}"' EXIT
-python3 - "${MANIFEST}" "${TEST_ROOT}" >"${JOBS_TMP}" <<'PY'
+python3 - "${MANIFEST}" "${TEST_ROOT}" "${EXPECTED_RUNS}" >"${JOBS_TMP}" <<'PY'
 import csv
 from pathlib import Path
 import sys
 
 rows = list(csv.DictReader(open(sys.argv[1], encoding="utf-8")))
 test_root = Path(sys.argv[2]).resolve()
-if len(rows) != 40:
-    raise SystemExit(f"expected 40 manifest rows, found {len(rows)}")
+expected_runs = int(sys.argv[3])
+if len(rows) != expected_runs:
+    raise SystemExit(f"expected {expected_runs} manifest rows, found {len(rows)}")
 for row in rows:
     test_dir = Path(row["test_artifact_dir"]).resolve()
     if test_root not in test_dir.parents:
@@ -107,7 +114,7 @@ LINES=()
 while IFS= read -r line; do
   LINES+=("${line}")
 done <"${JOBS_TMP}"
-[[ "${#LINES[@]}" -eq 40 ]]
+[[ "${#LINES[@]}" -eq "${EXPECTED_RUNS}" ]]
 
 target_artifact_count() {
   local count=0 line phase dataset trial profile seed expected_sha run_dir test_dir
@@ -266,8 +273,8 @@ remote_code_gate() {
     scripts/remote/run_iscf_bsca_main_v1_hpo_test_audit.sh \
     scripts/analyze_iscf_bsca_main_v1_hpo_test_audit.py \
     scripts/check_iscf_bsca_main_v1_hpo_test_audit.py \
-    configs/iscf_bsca_main_v1_hpo_test_audit.json \
-    analysis/iscf_bsca_main_v1_hpo_20260731/combined_checkpoint_manifest.csv
+    "${CONFIG}" \
+    "${MANIFEST}"
 }
 
 gpu_preflight() {
@@ -291,7 +298,7 @@ PY
 
 if [[ "${MODE}" == "dry-run" ]]; then
   printf '%s\n' "${LINES[@]}"
-  echo "iscf_bsca_main_test_audit_dry_run=pass jobs=40 test_cells=160 authorized=${AUTHORIZED} manifest_hash=${MANIFEST_HASH}"
+  echo "iscf_bsca_main_test_audit_dry_run=pass jobs=${EXPECTED_RUNS} test_cells=${EXPECTED_CELLS} authorized=${AUTHORIZED} manifest_hash=${MANIFEST_HASH}"
   exit 0
 fi
 
@@ -302,7 +309,7 @@ if [[ "${MODE}" == "status" ]]; then
       complete=$((complete + 1))
     fi
   done
-  echo "iscf_bsca_main_test_audit_status=$(date -Is) complete=${complete}/40 cells=$((complete * 4))/160"
+  echo "iscf_bsca_main_test_audit_status=$(date -Is) complete=${complete}/${EXPECTED_RUNS} cells=$((complete * 4))/${EXPECTED_CELLS}"
   find "${TEST_ROOT}/_logs" -name '*.log' -type f -print0 2>/dev/null \
     | xargs -0 -r tail -n 1
   exit 0
@@ -318,14 +325,14 @@ for line in "${LINES[@]}"; do
   training_artifact_pass "${line}"
   training_complete=$((training_complete + 1))
 done
-[[ "${training_complete}" -eq 40 ]]
+[[ "${training_complete}" -eq "${EXPECTED_RUNS}" ]]
 
 existing_targets="$(target_artifact_count)"
 existing_temporary="$(temporary_artifact_count)"
 if [[ "${MODE}" == "preflight" ]]; then
   remote_code_gate
   gpu_preflight
-  echo "iscf_bsca_main_test_audit_preflight=pass training=40/40 test_target_files=${existing_targets} temporary_files=${existing_temporary} manifest_hash=${MANIFEST_HASH} commit=${EXPECTED_COMMIT}"
+  echo "iscf_bsca_main_test_audit_preflight=pass training=${EXPECTED_RUNS}/${EXPECTED_RUNS} test_target_files=${existing_targets} temporary_files=${existing_temporary} manifest_hash=${MANIFEST_HASH} commit=${EXPECTED_COMMIT}"
   exit 0
 fi
 
@@ -353,8 +360,8 @@ fi
   echo "manifest_hash=${MANIFEST_HASH}"
   echo "test_root=${TEST_ROOT}"
   echo "gpu_ids=${GPU_IDS[*]}"
-  echo "jobs=40"
-  echo "test_cells=160"
+  echo "jobs=${EXPECTED_RUNS}"
+  echo "test_cells=${EXPECTED_CELLS}"
   echo "allow_resume=${ALLOW_RESUME}"
   echo "expected_commit=${EXPECTED_COMMIT}"
   nvidia-smi \
@@ -376,7 +383,7 @@ next_job() {
     [[ ! -e "${ABORT_SENTINEL}" ]] || exit 1
     local index
     index="$(<"${QUEUE_STATE}")"
-    if [[ "${index}" -ge 40 ]]; then
+    if [[ "${index}" -ge "${EXPECTED_RUNS}" ]]; then
       exit 1
     fi
     echo $((index + 1)) >"${QUEUE_STATE}"
@@ -391,7 +398,7 @@ run_one() {
     test_dir <<< "${line}"
   log="${TEST_ROOT}/_logs/test_${trial}.log"
   if [[ "${ALLOW_RESUME}" == "1" ]] && test_artifact_pass "${line}"; then
-    echo "skip_existing job=$((index + 1))/40 trial=${trial}"
+    echo "skip_existing job=$((index + 1))/${EXPECTED_RUNS} trial=${trial}"
     return
   fi
   if [[ -e "${test_dir}" ]]; then
@@ -406,7 +413,7 @@ run_one() {
     return 1
   fi
   [[ "$(sha256_file "${run_dir}/checkpoint.pt")" == "${expected_sha}" ]]
-  echo "run_start=$(date -Is) job=$((index + 1))/40 dataset=${dataset} trial=${trial} gpu=${gpu}"
+  echo "run_start=$(date -Is) job=$((index + 1))/${EXPECTED_RUNS} dataset=${dataset} trial=${trial} gpu=${gpu}"
   if ! CUDA_VISIBLE_DEVICES="${gpu}" "${CONDA_BIN}" run \
     --no-capture-output -n "${CONDA_ENV}" \
     python scripts/evaluate_stage_c_pcsd_cf_checkpoint.py \
@@ -434,7 +441,7 @@ run_one() {
   mkdir -p "$(dirname "${test_dir}")"
   mv "${temp_dir}" "${test_dir}"
   test_artifact_pass "${line}"
-  echo "run_done=$(date -Is) job=$((index + 1))/40 dataset=${dataset} trial=${trial} gpu=${gpu}" | tee -a "${log}"
+  echo "run_done=$(date -Is) job=$((index + 1))/${EXPECTED_RUNS} dataset=${dataset} trial=${trial} gpu=${gpu}" | tee -a "${log}"
 }
 
 worker() {
@@ -462,5 +469,5 @@ for line in "${LINES[@]}"; do
   test_artifact_pass "${line}"
   complete=$((complete + 1))
 done
-[[ "${complete}" -eq 40 ]]
-echo "iscf_bsca_main_test_audit_done=$(date -Is) jobs=40 test_cells=160"
+[[ "${complete}" -eq "${EXPECTED_RUNS}" ]]
+echo "iscf_bsca_main_test_audit_done=$(date -Is) jobs=${EXPECTED_RUNS} test_cells=${EXPECTED_CELLS}"

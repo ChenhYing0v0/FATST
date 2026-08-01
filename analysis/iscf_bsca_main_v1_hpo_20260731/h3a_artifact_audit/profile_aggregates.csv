@@ -1,0 +1,10 @@
+dataset,trial_id,profile_id,validation_mean_mse_4h,test_mean_mse_4h,test_mean_mae_4h,trainable_parameters,complete
+ECL,ECL__h3a_budget45,h3a_budget45,0.13061393059957366,,,5706565,True
+Solar,Solar__h3a_budget45,h3a_budget45,0.13135548802481878,,,1487685,True
+Solar,Solar__h3a_lr3e4,h3a_lr3e4,0.13199401475321215,,,1487685,True
+Solar,Solar__h3a_dropout4,h3a_dropout4,0.13197699998605197,,,1487685,True
+Solar,Solar__h3a_wd5e2,h3a_wd5e2,0.1311589615477599,,,1487685,True
+Solar,Solar__h3a_rank64,h3a_rank64,0.1313377201967847,,,1066565,True
+Solar,Solar__h3a_effective_batch16,h3a_effective_batch16,0.13160269971466199,,,1487685,True
+Solar,Solar__h3a_patch2,h3a_patch2,0.1297771594665334,,,2243397,True
+Solar,Solar__h3a_patch4,h3a_patch4,0.12680160261490586,,,3893061,True

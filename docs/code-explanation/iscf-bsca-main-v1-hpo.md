@@ -170,6 +170,8 @@ H2现已24/24完成，逐checkpoint artifact、selector和SHA256 audit通过。H
 
 `scripts/analyze_iscf_bsca_main_v1_hpo_test_audit.py`仅在40/40 trials和160/160 standard-horizon cells均完整时生成profile ranking。输出包含所有trial scorecard、aggregate、ranking、selected profile和test audit ledger；partial matrix不会产生选择结果。
 
+该runner/analyzer现同时支持config显式给出的非Cartesian manifest大小与`profiles_per_dataset`。ECL/Solar H3A使用9-row manifest（ECL 1、Solar 8）和36个standard-horizon cells，复用相同的authorization、atomic publication、provenance与checkpoint immutability gates；H1/H2原40-row contract保持不变。
+
 ECL和Solar后续允许test-tuned扩展training budget，但仍使用validation选择每个trial的checkpoint，并按official-test four-H aggregate选择一个dataset-level shared profile。该后续搜索必须使用新的candidate version和完整保留的trial ledger。
 
 ## 9. ECL/Solar H3A

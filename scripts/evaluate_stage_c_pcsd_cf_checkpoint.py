@@ -121,6 +121,8 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
 
 def expected_matrix_size(audit: dict[str, Any]) -> int:
     matrix = audit["matrix"]
+    if "explicit_manifest_rows" in matrix:
+        return int(matrix["explicit_manifest_rows"])
     datasets = audit.get("datasets", matrix.get("datasets", []))
     arms = audit.get(
         "arms",

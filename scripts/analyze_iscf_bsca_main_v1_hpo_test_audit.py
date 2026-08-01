@@ -82,10 +82,17 @@ def main() -> None:
         raise SystemExit(
             f"expected {expected_runs} manifest rows, found {len(manifest)}"
         )
+    profiles_per_dataset = config["matrix"].get(
+        "profiles_per_dataset",
+        {dataset: 5 for dataset in config["datasets"]},
+    )
     if Counter(row["dataset"] for row in manifest) != Counter(
-        {dataset: 5 for dataset in config["datasets"]}
+        profiles_per_dataset
     ):
-        raise SystemExit("manifest is not an 8-dataset by 5-profile matrix")
+        raise SystemExit(
+            f"manifest profile counts differ from contract: "
+            f"{profiles_per_dataset}"
+        )
 
     errors: list[str] = []
     ledger_rows: list[dict[str, Any]] = []
@@ -293,8 +300,10 @@ def main() -> None:
                 str(row["profile_id"]),
             ),
         )
-        if len(ranked) != 5:
-            raise SystemExit(f"{dataset} does not have five complete profiles")
+        if len(ranked) != int(profiles_per_dataset[dataset]):
+            raise SystemExit(
+                f"{dataset} does not have its complete profile block"
+            )
         for rank, row in enumerate(ranked, start=1):
             ranking_rows.append({**row, "selection_rank": rank})
         winner = ranked[0]
