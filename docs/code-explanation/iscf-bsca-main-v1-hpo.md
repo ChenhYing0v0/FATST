@@ -151,4 +151,23 @@ hyperparameters来实现这一边界。
 
 若H2出现OOM/NaN/Inf、validation checkpoint provenance不完整、base-config hash
 不一致，或trial hash不一致，则H2 gate失败并回到local protocol/resource repair。
-H2 24/24完成之前不得进入official-test ranking。
+H2现已24/24完成，逐checkpoint artifact、selector和SHA256 audit通过。H1与H2合并为40-row frozen manifest后才进入official-test ranking。
+
+## 8. Complete Test-Audit Path
+
+`scripts/build_iscf_bsca_main_v1_hpo_test_manifest.py`把H1的16个和H2的24个validation-selected checkpoints冻结为一个manifest。每一行记录phase、dataset、trial/profile、best epoch、validation four-H mean MSE、parameter count、test前checkpoint SHA256、只读training artifact目录和独立test artifact目录。
+
+`scripts/evaluate_stage_c_pcsd_cf_checkpoint.py`在test模式下先读取并验证authorization，再创建artifact目录、加载model或构造test loader。未授权config必须在任何test artifact写入和loader access之前fail closed。
+
+`scripts/remote/run_iscf_bsca_main_v1_hpo_test_audit.sh`提供：
+
+- `MODE=dry-run`：只验证config/manifest hash并输出40 jobs；
+- `MODE=preflight`：验证40个training artifacts、validation四-H完整性、provenance和checkpoint hash，不构造test loader；
+- `MODE=test`：在三GPU global queue上读取40个checkpoint，输出独立test artifacts，并核对test前后hash；
+- `MODE=status`：只统计具有720-row metrics、pass invariant和diagnostic NPZ的完整jobs。
+
+任一checkpoint mutation、evaluator failure或artifact invariant failure都会写入`ABORT` sentinel，阻止worker领取新job。初次启动要求core test artifacts为0；恢复必须显式设置`ALLOW_RESUME=1`。
+
+`scripts/analyze_iscf_bsca_main_v1_hpo_test_audit.py`仅在40/40 trials和160/160 standard-horizon cells均完整时生成profile ranking。输出包含所有trial scorecard、aggregate、ranking、selected profile和test audit ledger；partial matrix不会产生选择结果。
+
+ECL和Solar后续允许test-tuned扩展training budget，但仍使用validation选择每个trial的checkpoint，并按official-test four-H aggregate选择一个dataset-level shared profile。该后续搜索必须使用新的candidate version和完整保留的trial ledger。

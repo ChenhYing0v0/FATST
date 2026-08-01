@@ -514,10 +514,6 @@ def evaluate(args: argparse.Namespace) -> None:
         raise ValueError("run-dir is required outside synthetic smoke")
     if args.probe_rows <= 0:
         raise ValueError("probe_rows must be positive")
-    artifact_dir = args.artifact_dir or args.run_dir
-    artifact_dir.mkdir(parents=True, exist_ok=True)
-    device = torch.device(args.device)
-    design = json.loads(args.design.read_text(encoding="utf-8"))
     protocol_config = None
     if args.test_audit_config.is_file():
         protocol_config = json.loads(
@@ -528,6 +524,14 @@ def evaluate(args: argparse.Namespace) -> None:
         test_audit = protocol_config
         if test_audit is None:
             raise FileNotFoundError(args.test_audit_config)
+        if not test_audit_authorized(test_audit):
+            raise PermissionError(
+                "test audit authorization failed before test loader access"
+            )
+    artifact_dir = args.artifact_dir or args.run_dir
+    artifact_dir.mkdir(parents=True, exist_ok=True)
+    device = torch.device(args.device)
+    design = json.loads(args.design.read_text(encoding="utf-8"))
     bins = diagnostic_bins(design)
     model, config, official_args = load_model(args.run_dir, device)
     loader = sequential_loader(official_args, args.evaluation_split)
@@ -1050,6 +1054,9 @@ def evaluate(args: argparse.Namespace) -> None:
                     "evaluation_split": "test",
                     "checkpoint_policy": adapter["checkpoint_policy"],
                     "candidate_version": test_audit["candidate_version"],
+                    "hyperparameter_trial_id": adapter.get("hpo_trial_id"),
+                    "hyperparameter_profile_id": adapter.get("hpo_profile_id"),
+                    "seed": adapter["seed"],
                 }
             )
         write_csv(
@@ -1269,6 +1276,14 @@ def evaluate(args: argparse.Namespace) -> None:
             "candidate_id",
             design.get("candidate_version", "PCSD-CF"),
         ),
+        "candidate_version": (
+            test_audit["candidate_version"]
+            if test_audit is not None
+            else design.get("candidate_version")
+        ),
+        "hyperparameter_trial_id": adapter.get("hpo_trial_id"),
+        "hyperparameter_profile_id": adapter.get("hpo_profile_id"),
+        "seed": adapter["seed"],
         "diagnostic_id": design.get(
             "diagnostic_id",
             design.get("audit_id", "PCSD-CF-checkpoint-audit"),

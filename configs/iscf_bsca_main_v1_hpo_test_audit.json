@@ -1,0 +1,122 @@
+{
+  "protocol_id": "ISCF-BSCA-MAIN-v1-HPO-TEST-AUDIT",
+  "candidate_id": "ISCF-BSCA-MAIN-v1",
+  "candidate_version": "ISCF-BSCA-MAIN-v1-hpo-h1-h2-20260801",
+  "date": "2026-08-01",
+  "status": "authorized_prelaunch",
+  "role": "test_tuned_hyperparameter_selection_and_paper_benchmark",
+  "test_tuned": true,
+  "datasets": [
+    "ETTh1",
+    "ETTh2",
+    "ETTm1",
+    "ETTm2",
+    "Weather",
+    "ECL",
+    "Solar",
+    "Exchange"
+  ],
+  "arms": [
+    "dataset_profile_slot_1",
+    "dataset_profile_slot_2",
+    "dataset_profile_slot_3",
+    "dataset_profile_slot_4",
+    "dataset_profile_slot_5"
+  ],
+  "seeds": [2021],
+  "matrix": {
+    "expected_runs": 40,
+    "expected_H1_runs": 16,
+    "expected_H2_runs": 24,
+    "datasets": [
+      "ETTh1",
+      "ETTh2",
+      "ETTm1",
+      "ETTm2",
+      "Weather",
+      "ECL",
+      "Solar",
+      "Exchange"
+    ],
+    "arms": [
+      "dataset_profile_slot_1",
+      "dataset_profile_slot_2",
+      "dataset_profile_slot_3",
+      "dataset_profile_slot_4",
+      "dataset_profile_slot_5"
+    ],
+    "seed": 2021,
+    "horizons": [96, 192, 336, 720],
+    "metrics": ["mse", "mae"],
+    "matrix_complete_before_test": true,
+    "partial_test_execution_allowed": false,
+    "partial_profile_selection_allowed": false
+  },
+  "checkpoint_manifest": {
+    "path": "analysis/iscf_bsca_main_v1_hpo_20260731/combined_checkpoint_manifest.csv",
+    "sha256": "ba12d47b1313dc435d6e9aa7f432c6ffb87a0753d980afa1bb7315f123fec879",
+    "rows": 40,
+    "checkpoint_hashes_frozen_before_test": true,
+    "all_test_artifacts_absent_at_freeze": "pending_remote_preflight"
+  },
+  "checkpoint_selection_contract": "best-validation-mean-mse-h96-h192-h336-h720",
+  "training": {
+    "target_horizons": [720],
+    "validation_horizons": [96, 192, 336, 720],
+    "pred_loss_mode": "full",
+    "training_final_evaluation_split": "val",
+    "checkpoint_policy": "best-val",
+    "from_scratch": true,
+    "joint_encoder_decoder": true
+  },
+  "hyperparameter_selection": {
+    "split": "official_test",
+    "primary_score": "mean_mse_h96_h192_h336_h720_per_dataset",
+    "secondary_metric": "mae_report_only",
+    "profile_granularity": "one_profile_per_dataset_shared_across_four_horizons",
+    "tie_break": [
+      "lower_official_test_mean_mse_4h",
+      "lower_validation_mean_mse_4h",
+      "lower_trainable_parameter_count",
+      "lexical_profile_id"
+    ],
+    "per_horizon_profile_selection": false,
+    "best_seed_selection": false,
+    "metric_specific_selection": false,
+    "cell_specific_selection": false,
+    "all_trials_retained": true
+  },
+  "authorization": {
+    "user_authorization": "2026-08-01 explicit request to continue after complete H2, access official test promptly, and use test-informed expanded-budget HPO for ECL and Solar",
+    "user_authorized": true,
+    "authorization_date": "2026-08-01",
+    "checkpoint_retraining_allowed": true,
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+    "checkpoint_mutation_during_test_allowed": false,
+    "per_dataset_aggregate_hyperparameter_tuning_allowed": true,
+    "per_horizon_seed_metric_or_cell_tuning_allowed": false,
+    "formal_test_access_count_for_version": 1,
+    "test_role": "test-tuned-hyperparameter-selection-and-paper-benchmark",
+    "selected_profile_confirmation_authorized": false,
+    "final_paper_reporting_audit_authorized": false,
+    "ECL_Solar_followup_test_tuned_HPO_authorized": true,
+    "ECL_Solar_training_budget_expansion_authorized": true,
+    "ECL_Solar_followup_requires_new_candidate_version": true
+  },
+  "gates": {
+    "H1_complete": true,
+    "H2_complete": true,
+    "training_artifacts_complete": 40,
+    "numeric_health_pass": true,
+    "checkpoint_hash_manifest_frozen": true,
+    "test_artifacts_before_launch": "must_be_zero_in_remote_preflight",
+    "focused_commit_and_push_required": true,
+    "remote_commit_match_required": true,
+    "gpu_preflight_required": true,
+    "selected_gpu_memory_used_mib_max": 1024,
+    "selected_gpu_utilization_percent_max": 20,
+    "atomic_test_artifact_publication_required": true,
+    "stale_or_partial_artifact_reuse_allowed": false
+  },
+  "decision": "authorized_to_execute_complete_40_checkpoint_test_tuned_ranking_once"
+}

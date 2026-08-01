@@ -44,16 +44,16 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment consolidation and prelaunch |
-| `active_experiment_step` | H1 16/16 complete；H2 24-job train/validation running |
+| `active_experiment_step` | H1 16/16 + H2 24/24 complete；40-checkpoint official-test prelaunch |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
 | `local_protocol_patch_authorized` | true for ISCF-BSCA-MAIN-v1 HPO tooling |
-| `remote_training_authorized` | true for frozen H0/H1 and bounded H2 |
-| `test_tuned_hpo_authorized` | true after complete frozen H2 training matrix |
-| `formal_test_authorized` | false |
-| `next_action` | monitor H2 to 24/24；audit artifacts/hashes/numeric health |
-| `conditional_next` | H2 24/24 complete后，对H1+H2全部40 trials执行four-H official-test ranking |
+| `remote_training_authorized` | true；H0/H1/H2 complete，ECL/Solar follow-up HPO与expanded budget authorized |
+| `test_tuned_hpo_authorized` | true；40-checkpoint ranking + ECL/Solar dataset-level four-H aggregate tuning |
+| `formal_test_authorized` | true for test-tuned HPO；selected-profile confirmation/final reporting仍false |
+| `next_action` | commit/push；remote code/GPU/zero-artifact preflight；执行40/40 official-test ranking |
+| `conditional_next` | 依据ECL/Solar完整four-H test结果冻结test-informed H3，减少validation比较但保留validation checkpoint selector |
 
 本handoff授权的是实验盘点、设计、source/protocol audit与prelaunch文档准备，不是
 立即远程训练。不得为了兑现Introduction P6而跳过controls、补选有利数据集，或把

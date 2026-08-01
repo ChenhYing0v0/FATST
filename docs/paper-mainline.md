@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.2 pending author review；experiments=H2 24-job train/validation running |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.2 pending author review；experiments=H2 24/24 audited、40-checkpoint official-test prelaunch |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,6 +18,8 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1`待test-tuned HPO后进入Main I/II |
+
+[ISCF-BSCA-MAIN-v1 H2 Complete and Test Prelaunch, 2026-08-01] H2已24/24完成，artifact、four-H validation selector、numeric health与checkpoint SHA256全部通过；H1+H2形成40个frozen checkpoints。8/8 datasets的H2 validation winner均优于对应H1 winner，改善从ETTm1的0.140%到Exchange的13.683%，但这些不是test或SOTA结论。Combined manifest固定为8 datasets × 5 profiles，official-test scorecard为40 × 4 horizons=160 cells；只有40/40完整且checkpoint test前后hash一致时才生成dataset-level shared-profile ranking。用户进一步授权ECL/Solar test-informed定向HPO及training-budget扩展；首轮40-checkpoint test后可建立新candidate version，减少validation比较但仍由validation选择trial checkpoint，并用four-H test mean MSE调参，禁止per-H/per-cell选择。Canonical report=`analysis/iscf_bsca_main_v1_hpo_20260731/h2_result_and_test_prelaunch.md`。Decision=`H2_complete_40_checkpoint_test_audit_prelaunch_ECL_Solar_followup_authorized`。
 
 [Section 3 Narrative Refinement v0.2, 2026-07-31] 用户指出v0.1虽形式化完整，
 但全节由公式与定义驱动，缺少`what/why/evidence/implication`叙事。v0.2新增chapter

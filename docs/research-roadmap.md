@@ -76,7 +76,7 @@ Canonical report为
 machine-readable contract为
 `configs/iscf_bsca_paper_experiment_protocol.json`。
 
-Current cursor=`ISCF-BSCA-MAIN-v1 H2 24-job train/validation running`：
+Current cursor=`ISCF-BSCA-MAIN-v1 H2 24/24 audited；40-checkpoint official-test prelaunch`：
 
 - exact `ISCF-BSCA-v1`与当前超参数只作原5数据集ablation anchor；不得直接进入
   Main I/II；
@@ -137,10 +137,18 @@ train/validation only，test jobs=0。H2现已冻结为24 additional jobs
 commit/push、remote commit/GPU preflight和H2 resource canary；H2 24/24完成前
 不得访问test。
 
-H2 prelaunch现已通过local/remote contract、9/9 new-dataset canary与24/24 full
-resource smoke。Commit=`b94d47b`；24-job train/validation已于19:02:12在GPUs
-0/1/2启动，PID=`905874`，test jobs=0。预计5--7小时，下一gate为24/24 artifact
-audit，不在训练过程中访问test。
+H2 prelaunch已通过local/remote contract、9/9 new-dataset canary与24/24 full
+resource smoke；随后24/24 full train/validation完成。Artifact、selector、numeric
+health与checkpoint hash audit均通过，H1+H2共40 checkpoints，test仍为0。下一gate
+为fail-closed 40-checkpoint official-test execution；任何partial/mixed artifact、
+checkpoint mutation或160-cell不完整均阻断ranking。
+
+用户于2026-08-01授权ECL和Solar的所有dataset-level test-tuned普通超参数调整，
+包括扩展epochs/patience。首轮40-checkpoint test结果返回后，可以建立独立
+test-informed H3 version，直接依据完整four-H test aggregate冻结下一批profiles；
+validation只承担early stopping/checkpoint selection，不进行耗时的profile ranking。
+仍禁止per-horizon、per-cell、per-seed或选择性报告。Canonical H2/prelaunch record=
+`analysis/iscf_bsca_main_v1_hpo_20260731/h2_result_and_test_prelaunch.md`。
 
 ## Paper-Experiments Parallel Handoff (2026-07-31)
 
