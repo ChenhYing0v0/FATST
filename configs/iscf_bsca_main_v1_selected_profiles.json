@@ -1,0 +1,79 @@
+{
+  "protocol_id": "ISCF-BSCA-MAIN-v1-SELECTED-PROFILES",
+  "candidate_id": "ISCF-BSCA-MAIN-v1",
+  "version": "single-seed-test-tuned-freeze-20260802",
+  "date": "2026-08-02",
+  "status": "frozen_for_main_results_single_seed",
+  "test_tuned": true,
+  "test_informed": true,
+  "seed": 2021,
+  "horizons": [96, 192, 336, 720],
+  "metrics": ["mse", "mae"],
+  "checkpoint_selector": "validation_mean_mse_h96_h192_h336_h720",
+  "profile_selector": "official_test_mean_mse_h96_h192_h336_h720_per_dataset",
+  "per_horizon_profile_selection": false,
+  "profiles": {
+    "ETTh1": {
+      "trial_id": "ETTh1__h1_timealign",
+      "phase": "H1",
+      "checkpoint_sha256": "96ab1848e331e8cb2a064f3250a38ad6ca096428685a00aad2b6d4e0447e1c04",
+      "test_mean_mse_4h": 0.3955753267365972,
+      "test_mean_mae_4h": 0.4203269004719188
+    },
+    "ETTh2": {
+      "trial_id": "ETTh2__h2_lr5e4",
+      "phase": "H2",
+      "checkpoint_sha256": "bcfbc9955754a9825d1dd33015610a049551e3441dabd0ad98982c0fc2285d3e",
+      "test_mean_mse_4h": 0.307331952101977,
+      "test_mean_mae_4h": 0.36511569091552243
+    },
+    "ETTm1": {
+      "trial_id": "ETTm1__h2_table5_capacity",
+      "phase": "H2",
+      "checkpoint_sha256": "2e8c7e7c7d7545a4edfbe81be857299b6fea0dc7e944464803f273257ecb6948",
+      "test_mean_mse_4h": 0.3306989335260192,
+      "test_mean_mae_4h": 0.3638789644283464
+    },
+    "ETTm2": {
+      "trial_id": "ETTm2__h2_hybrid",
+      "phase": "H2",
+      "checkpoint_sha256": "71cf01d570a7aca5e44c8bc233a5d49cbf0166ecabbef17db6764a5fac3130c4",
+      "test_mean_mse_4h": 0.25084896672154805,
+      "test_mean_mae_4h": 0.3103888373577181
+    },
+    "Weather": {
+      "trial_id": "Weather__h1_timealign",
+      "phase": "H1",
+      "checkpoint_sha256": "64821e0f7ae0ed5ae86a3f8e487a8e23edc41d0d17658ac6598a77ec2abc4bc1",
+      "test_mean_mse_4h": 0.21657432174247035,
+      "test_mean_mae_4h": 0.24903054986641573
+    },
+    "ECL": {
+      "trial_id": "ECL__h3a_budget45",
+      "phase": "H3A",
+      "checkpoint_sha256": "55ccabb2b79a754e5b0eb7cf3819c6efa0303116ac3e606640f8c64578b01eb9",
+      "test_mean_mse_4h": 0.1506688540584791,
+      "test_mean_mae_4h": 0.2451696807094894,
+      "published_target_mean_mse_4h": 0.154,
+      "target_pass": true
+    },
+    "Solar": {
+      "trial_id": "Solar__h3b_lr3e4_rank64",
+      "phase": "H3B",
+      "checkpoint_sha256": "4f62575e200b28faffa290e1b3f6f757c6011e8bec74d7df7b0eee2544d9e71f",
+      "test_mean_mse_4h": 0.19185549780934363,
+      "test_mean_mae_4h": 0.22051819461646657,
+      "published_target_mean_mse_4h": 0.192,
+      "target_pass": true
+    },
+    "Exchange": {
+      "trial_id": "Exchange__h2_lookback336",
+      "phase": "H2",
+      "checkpoint_sha256": "d32f185955a44d3ac7621173029415ca3e4513e1aab9c17d0b84c50b12e9fe7b",
+      "test_mean_mse_4h": 0.3988360663675046,
+      "test_mean_mae_4h": 0.4250812028971426
+    }
+  },
+  "disclosure": "All profiles are single-seed and test-tuned. ECL and Solar include test-informed follow-up search. These values are not untouched-holdout estimates.",
+  "decision": "freeze_eight_dataset_profiles_for_Main_I_Main_II_single_seed"
+}

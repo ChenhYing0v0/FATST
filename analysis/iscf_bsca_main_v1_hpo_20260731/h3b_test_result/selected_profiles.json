@@ -1,0 +1,13 @@
+{
+  "Solar": {
+    "trial_id": "Solar__h3b_lr3e4_rank64",
+    "profile_id": "h3b_lr3e4_rank64",
+    "phase": "H3B",
+    "seed": 2021,
+    "test_mean_mse_4h": 0.19185549780934363,
+    "test_mean_mae_4h": 0.22051819461646657,
+    "validation_mean_mse_4h": 0.13382428071807168,
+    "checkpoint_reused_without_test_time_mutation": true,
+    "test_tuned": true
+  }
+}

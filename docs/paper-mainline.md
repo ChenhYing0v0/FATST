@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.2 pending author review；experiments=ECL HPO frozen、Solar H3B 4/4 complete、direct-test prelaunch |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.2 pending author review；experiments=ISCF-BSCA-MAIN-v1 single-seed HPO complete、Main I/II baseline completion next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -30,6 +30,8 @@
 [Solar H3B Launch, 2026-08-01] Commit=`4ac5650`；4/4 resource smoke通过；GPUs 0/1/2 launch前均18 MiB、0%。Four-profile full train/validation于20:33:48启动，PID=`2827267`，test=0。Initial active jobs为lr3e4×rank64、lr3e4×dropout4和lr2e4；lr4e4进入global queue。Canonical launch=`analysis/iscf_bsca_main_v1_hpo_20260731/h3b_launch.md`。Decision=`Solar_H3B_4_job_training_active_test_zero`。
 
 [Solar H3B Training Complete, 2026-08-02] H3B已4/4完成，artifact、numeric health、selector与checkpoint SHA256通过，test=0/4。4-row manifest冻结后不做validation ranking，直接执行16-cell official-test。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h3b_training_result_and_test_prelaunch.md`。Decision=`Solar_H3B_4_of_4_training_complete_direct_test_prelaunch`。
+
+[Solar H3B Test and HPO Freeze, 2026-08-02] H3B 4/4 checkpoints、16/16 cells及provenance/invariant/hash gates通过。Solar `lr3e4_rank64` four-H mean MSE=`0.191855`，相对H3A改善0.768%，相对原H1/H2 winner改善2.193%，并以0.075%窄margin低于TimeAlign 0.192 target；H720仍弱，不作per-H选择。ECL/Solar均target pass，当前same-architecture HPO停止；八dataset selected profiles冻结于`configs/iscf_bsca_main_v1_selected_profiles.json`。Canonical report=`analysis/iscf_bsca_main_v1_hpo_20260731/h3b_test_result_and_hpo_freeze.md`。Decision=`ISCF_BSCA_MAIN_v1_single_seed_HPO_complete_ECL_Solar_targets_pass_profiles_frozen`。
 
 [ISCF-BSCA-MAIN-v1 H2 Complete and Test Prelaunch, 2026-08-01] H2已24/24完成，artifact、four-H validation selector、numeric health与checkpoint SHA256全部通过；H1+H2形成40个frozen checkpoints。8/8 datasets的H2 validation winner均优于对应H1 winner，改善从ETTm1的0.140%到Exchange的13.683%，但这些不是test或SOTA结论。Combined manifest固定为8 datasets × 5 profiles，official-test scorecard为40 × 4 horizons=160 cells；只有40/40完整且checkpoint test前后hash一致时才生成dataset-level shared-profile ranking。用户进一步授权ECL/Solar test-informed定向HPO及training-budget扩展；首轮40-checkpoint test后可建立新candidate version，减少validation比较但仍由validation选择trial checkpoint，并用four-H test mean MSE调参，禁止per-H/per-cell选择。Canonical report=`analysis/iscf_bsca_main_v1_hpo_20260731/h2_result_and_test_prelaunch.md`。Decision=`H2_complete_40_checkpoint_test_audit_prelaunch_ECL_Solar_followup_authorized`。
 

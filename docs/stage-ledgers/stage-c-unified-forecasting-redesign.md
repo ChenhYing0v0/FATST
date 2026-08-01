@@ -23,9 +23,9 @@
 | --- | --- |
 | `current_11_step` | paper consolidation；writing=Section 3 v0.2 pending author review；experiments=H3A Step8 remote training active |
 | `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；active HPO=`ISCF-BSCA-MAIN-v1-ecl-solar-h3a-test-informed-20260801` |
-| `latest_decision` | `Solar_H3B_4_of_4_training_complete_direct_test_prelaunch` |
+| `latest_decision` | `ISCF_BSCA_MAIN_v1_single_seed_HPO_complete_ECL_Solar_targets_pass_profiles_frozen` |
 | `writing_latest_decision` | `section3_v0_2_narrative_refinement_pending_author_review` |
-| `next_required_action` | commit/push；remote commit/GPU/zero-artifact preflight；execute H3B direct test |
+| `next_required_action` | freeze final selected scorecard；advance Main I baseline completion and Main II matched unified benchmark |
 | `method_training_authorized` | HPO Tier A/B1/bounded B2=true；B3/C=false |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 

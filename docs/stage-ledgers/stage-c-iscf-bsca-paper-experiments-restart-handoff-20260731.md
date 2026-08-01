@@ -44,7 +44,7 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment consolidation and prelaunch |
-| `active_experiment_step` | H3A test complete；ECL frozen；Solar H3B 4/4 complete、direct-test prelaunch |
+| `active_experiment_step` | ISCF-BSCA-MAIN-v1 eight-dataset single-seed HPO complete；Main I/II baseline completion next |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
@@ -52,7 +52,7 @@ paper candidate与claim boundary，但互不替代。
 | `remote_training_authorized` | true；H0/H1/H2 complete，ECL/Solar follow-up HPO与expanded budget authorized |
 | `test_tuned_hpo_authorized` | true；40-checkpoint ranking + ECL/Solar dataset-level four-H aggregate tuning |
 | `formal_test_authorized` | true for test-tuned HPO；selected-profile confirmation/final reporting仍false |
-| `next_action` | commit/push；remote commit/GPU/zero-artifact preflight；execute H3B 4-checkpoint direct test |
+| `next_action` | freeze final scorecard；audit Main I missing official baselines and Main II matched unified launch blocks |
 | `conditional_next` | H3B target pass则freeze；未pass则冻结全search最低profile并记录bounded HPO miss |
 
 本handoff授权的是实验盘点、设计、source/protocol audit与prelaunch文档准备，不是
