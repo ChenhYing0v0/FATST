@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.2 pending author review；experiments=ECL/Solar H3A 9/9 training complete、direct-test prelaunch |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.2 pending author review；experiments=ECL HPO frozen、Solar terminal H3B prelaunch |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -24,6 +24,8 @@
 [ECL/Solar H3A Launch, 2026-08-01] Commit=`72e1f8f`；9/9 two-batch resource smoke通过；GPUs 0/1/2 launch前均18 MiB、0% utilization。9-job expanded-budget train/validation于09:28:45启动，orchestrator PID=`1996557`，output root=`/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_main_v1_hpo/ecl_solar_h3a`，test=0。Initial active jobs为ECL budget45、Solar budget45与Solar lr3e4；conservative ETA=12--18小时。Canonical launch record=`analysis/iscf_bsca_main_v1_hpo_20260731/h3a_launch.md`。Decision=`H3A_9_job_training_active_test_zero`。
 
 [ECL/Solar H3A Training Complete, 2026-08-01] Remote H3A已9/9完成，artifact、numeric health与best-validation checkpoint provenance通过，test仍为0/9。9-row checkpoint manifest已冻结；不做validation profile ranking，直接执行36-cell complete official-test audit。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h3a_training_result_and_test_prelaunch.md`。Decision=`H3A_9_of_9_training_complete_direct_test_authorized_prelaunch`。
+
+[ECL/Solar H3A Test Result, 2026-08-01] H3A 9/9 checkpoints、36/36 cells与all provenance/invariant/hash gates通过。ECL budget45 mean MSE=`0.150669`，相对原winner改善0.345%，相对TimeAlign 0.154低2.16%，ECL HPO停止。Solar `lr3e4` mean MSE=`0.193341`，相对0.196157改善1.436%，但仍比0.192高0.698%。Terminal H3B冻结四profiles：lr2e4、lr4e4、lr3e4×dropout4、lr3e4×rank64；training后直接完整test。Canonical report=`analysis/iscf_bsca_main_v1_hpo_20260731/h3a_test_result_and_h3b_prelaunch.md`。Decision=`ECL_H3A_target_pass_Solar_H3A_material_gain_H3B_terminal_prelaunch`。
 
 [ISCF-BSCA-MAIN-v1 H2 Complete and Test Prelaunch, 2026-08-01] H2已24/24完成，artifact、four-H validation selector、numeric health与checkpoint SHA256全部通过；H1+H2形成40个frozen checkpoints。8/8 datasets的H2 validation winner均优于对应H1 winner，改善从ETTm1的0.140%到Exchange的13.683%，但这些不是test或SOTA结论。Combined manifest固定为8 datasets × 5 profiles，official-test scorecard为40 × 4 horizons=160 cells；只有40/40完整且checkpoint test前后hash一致时才生成dataset-level shared-profile ranking。用户进一步授权ECL/Solar test-informed定向HPO及training-budget扩展；首轮40-checkpoint test后可建立新candidate version，减少validation比较但仍由validation选择trial checkpoint，并用four-H test mean MSE调参，禁止per-H/per-cell选择。Canonical report=`analysis/iscf_bsca_main_v1_hpo_20260731/h2_result_and_test_prelaunch.md`。Decision=`H2_complete_40_checkpoint_test_audit_prelaunch_ECL_Solar_followup_authorized`。
 

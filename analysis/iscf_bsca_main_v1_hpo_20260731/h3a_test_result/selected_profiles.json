@@ -1,0 +1,24 @@
+{
+  "ECL": {
+    "trial_id": "ECL__h3a_budget45",
+    "profile_id": "h3a_budget45",
+    "phase": "H3A",
+    "seed": 2021,
+    "test_mean_mse_4h": 0.1506688540584791,
+    "test_mean_mae_4h": 0.2451696807094894,
+    "validation_mean_mse_4h": 0.13061393059957366,
+    "checkpoint_reused_without_test_time_mutation": true,
+    "test_tuned": true
+  },
+  "Solar": {
+    "trial_id": "Solar__h3a_lr3e4",
+    "profile_id": "h3a_lr3e4",
+    "phase": "H3A",
+    "seed": 2021,
+    "test_mean_mse_4h": 0.19334096245908317,
+    "test_mean_mae_4h": 0.21914262484076244,
+    "validation_mean_mse_4h": 0.13199401475321215,
+    "checkpoint_reused_without_test_time_mutation": true,
+    "test_tuned": true
+  }
+}

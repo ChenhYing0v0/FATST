@@ -1,0 +1,156 @@
+{
+  "protocol_id": "ISCF-BSCA-MAIN-v1-HPO-SOLAR-H3B",
+  "candidate_id": "ISCF-BSCA-MAIN-v1",
+  "candidate_version": "ISCF-BSCA-MAIN-v1-solar-h3b-test-informed-20260801",
+  "date": "2026-08-01",
+  "status": "frozen_authorized_prelaunch",
+  "role": "terminal_test_informed_dataset_level_hyperparameter_search",
+  "test_tuned": true,
+  "test_informed": true,
+  "architecture_family": "ISCF-BSCA",
+  "architecture_search": false,
+  "base_config": "configs/iscf_bsca_main_v1_hpo.json",
+  "base_config_sha256": "819a9870d87a6f0bd9c9293b12ffbe2d8dc96b62c69f61fc981fca40844a71b0",
+  "architecture_invariants": {
+    "encoder_mode": "timealign-token-mlp",
+    "readout_mode": "siff-independent-scope-control",
+    "policy_mode": "direct",
+    "objective_mode": "equal_uniform_scope_anchor",
+    "partition": "canonical",
+    "partition_seed": 15101,
+    "scales": [1, 48, 144, 360, 720],
+    "inference_graph_changed": false,
+    "requested_h_input": false
+  },
+  "datasets": ["Solar"],
+  "seeds": [2021],
+  "selection_contract": {
+    "trial_checkpoint_split": "validation",
+    "trial_checkpoint_score": "mean_mse_h96_h192_h336_h720",
+    "hyperparameter_selection_split": "official_test",
+    "hyperparameter_score": "mean_mse_h96_h192_h336_h720_per_dataset",
+    "profile_granularity": "one_profile_shared_across_four_horizons",
+    "primary_metric": "mse",
+    "secondary_metric": "mae_report_only",
+    "validation_profile_ranking_required_before_test": false,
+    "per_horizon_profile_selection": false,
+    "best_seed_selection": false,
+    "partial_matrix_selection": false,
+    "all_trials_retained": true
+  },
+  "matrix": {
+    "phase": "H3B",
+    "seed": 2021,
+    "expected_runs": 4,
+    "expected_training_runs": 4,
+    "expected_test_runs_during_training": 0,
+    "horizons": [96, 192, 336, 720],
+    "metrics": ["mse", "mae"],
+    "full_matrix_required": true,
+    "partial_reporting_allowed": false
+  },
+  "training": {
+    "from_scratch": true,
+    "joint_encoder_decoder": true,
+    "target_horizons": [720],
+    "validation_horizons": [96, 192, 336, 720],
+    "evaluation_prefix_mode": "full-crop",
+    "checkpoint_policy": "best-val",
+    "pred_loss_mode": "full",
+    "max_epochs": 45,
+    "early_stopping_patience": 10,
+    "early_stopping_min_delta": 0.0,
+    "scheduler": "cosine",
+    "primary_seed": 2021,
+    "official_test_during_training": false
+  },
+  "hpo_budget": {
+    "Solar_additional_trials": 4,
+    "H3B_total_trials": 4,
+    "H3B_search_space_frozen": true,
+    "terminal_bounded_batch": true,
+    "primary_seed_only": true,
+    "validation_comparison_before_test": "artifact_completeness_and_checkpoint_selection_only",
+    "optional_additional_seeds_not_authorized": true
+  },
+  "search_space": {
+    "seq_len": [720],
+    "patch_num": [1],
+    "d_model": [256],
+    "d_ff": [256],
+    "dropout": [0.3, 0.4],
+    "learning_rate": [0.0002, 0.0003, 0.0004],
+    "weight_decay": [0.01],
+    "batch_size": [16],
+    "gradient_accumulation_steps": [2],
+    "mode_rank": [64, 128],
+    "max_epochs": [45],
+    "early_stopping_patience": [10],
+    "note": "Four frozen profiles only: two learning-rate neighbors and two interactions with the H3A test winner."
+  },
+  "test_exposure_context": {
+    "source_candidate_version": "ISCF-BSCA-MAIN-v1-ecl-solar-h3a-test-informed-20260801",
+    "Solar_H1_H2_best_test_mean_mse_4h": 0.19615704430486564,
+    "Solar_H3A_best_trial": "Solar__h3a_lr3e4",
+    "Solar_H3A_best_test_mean_mse_4h": 0.19334096245908317,
+    "Solar_TimeAlign_published_mean_mse_4h": 0.192,
+    "remaining_relative_gap": 0.006984179474391579,
+    "H3A_response": "learning_rate_3e-4 was the only material aggregate improvement; rank64 and dropout0.4 are the two least harmful orthogonal regularization neighbors",
+    "disclosure": "H3B was designed after observing complete H3A official-test results and is test-informed."
+  },
+  "authorization": {
+    "user_authorization": "2026-08-01 explicit authorization for all ECL/Solar hyperparameter adjustments, expanded budgets, direct official-test access, and continued test-informed tuning",
+    "user_authorized": true,
+    "authorization_date": "2026-08-01",
+    "remote_H3B_training_authorized": true,
+    "official_test_H3B_execution_authorized_after_complete_training": true,
+    "selected_profile_confirmation_authorized": false,
+    "final_paper_reporting_audit_authorized": false,
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+    "checkpoint_mutation_during_test_allowed": false,
+    "per_dataset_aggregate_hyperparameter_tuning_allowed": true,
+    "per_horizon_seed_metric_or_cell_tuning_allowed": false,
+    "test_role": "test-tuned-hyperparameter-selection-and-paper-benchmark"
+  },
+  "jobs": [
+    {
+      "trial_id": "Solar__h3b_lr2e4",
+      "dataset": "Solar",
+      "profile_id": "h3b_lr2e4",
+      "base_trial_id": "Solar__h1_timealign",
+      "source_prior": "H3A_lr3e4_lower_neighbor",
+      "overrides": {"learning_rate": 0.0002, "max_epochs": 45, "early_stopping_patience": 10}
+    },
+    {
+      "trial_id": "Solar__h3b_lr4e4",
+      "dataset": "Solar",
+      "profile_id": "h3b_lr4e4",
+      "base_trial_id": "Solar__h1_timealign",
+      "source_prior": "H3A_lr3e4_upper_neighbor",
+      "overrides": {"learning_rate": 0.0004, "max_epochs": 45, "early_stopping_patience": 10}
+    },
+    {
+      "trial_id": "Solar__h3b_lr3e4_dropout4",
+      "dataset": "Solar",
+      "profile_id": "h3b_lr3e4_dropout4",
+      "base_trial_id": "Solar__h1_timealign",
+      "source_prior": "H3A_lr_winner_x_dropout_neighbor",
+      "overrides": {"learning_rate": 0.0003, "dropout": 0.4, "max_epochs": 45, "early_stopping_patience": 10}
+    },
+    {
+      "trial_id": "Solar__h3b_lr3e4_rank64",
+      "dataset": "Solar",
+      "profile_id": "h3b_lr3e4_rank64",
+      "base_trial_id": "Solar__h1_timealign",
+      "source_prior": "H3A_lr_winner_x_rank_neighbor",
+      "overrides": {"learning_rate": 0.0003, "mode_rank": 64, "max_epochs": 45, "early_stopping_patience": 10}
+    }
+  ],
+  "provisional_lpt_order": [
+    "Solar__h3b_lr3e4_rank64",
+    "Solar__h3b_lr3e4_dropout4",
+    "Solar__h3b_lr2e4",
+    "Solar__h3b_lr4e4"
+  ],
+  "decision": "authorized_terminal_test_informed_H3B_train_validation_then_direct_complete_test"
+}

@@ -76,7 +76,7 @@ Canonical report为
 machine-readable contract为
 `configs/iscf_bsca_paper_experiment_protocol.json`。
 
-Current cursor=`ISCF-BSCA-MAIN-v1 ECL/Solar H3A 9/9 training complete；direct-test prelaunch`：
+Current cursor=`ISCF-BSCA-MAIN-v1 ECL HPO frozen；Solar terminal H3B prelaunch`：
 
 - exact `ISCF-BSCA-v1`与当前超参数只作原5数据集ablation anchor；不得直接进入
   Main I/II；

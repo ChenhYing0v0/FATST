@@ -1,0 +1,11 @@
+{
+  "protocol_id": "ISCF-BSCA-MAIN-v1-HPO-ECL-SOLAR-H3A-TEST-AUDIT",
+  "candidate_version": "ISCF-BSCA-MAIN-v1-ecl-solar-h3a-test-informed-20260801",
+  "manifest_sha256": "0753d880fce934961e3989c979417865b74394ae4641162fcc95830d7ca1407b",
+  "expected_trials": 9,
+  "complete_trials": 9,
+  "expected_standard_horizon_cells": 36,
+  "complete_standard_horizon_cells": 36,
+  "errors": [],
+  "complete": true
+}
