@@ -22,11 +22,11 @@
         "efficiency",
         "fresh_mechanism_diagnostics"
       ],
-      "status": "H1_16_job_train_validation_running"
+      "status": "frozen_main_results_single_seed_8_dataset_profiles_reusable"
     }
   },
   "authorization": {
-    "current_decision": "H0_and_smoke_pass_H1_16_jobs_running_test_zero",
+    "current_decision": "HPO_complete_Main_I_published_140_rows_reusable_next_baseline_execution_not_authorized",
     "existing_artifact_audit": true,
     "matrix_design": true,
     "test_tuned_hpo_project_principle": {
@@ -55,6 +55,14 @@
         "remote_execution": false,
         "scope": "ETTh1_derived_TimeAlign_Exchange_four_horizon_seed2021_script_only"
       }
+    },
+    "post_hpo_baseline_execution": {
+      "published_result_transcription": true,
+      "main_i_remote_training": false,
+      "main_i_formal_test": false,
+      "main_ii_local_source_protocol_patch": false,
+      "main_ii_remote_training": false,
+      "main_ii_formal_test": false
     },
     "tier_order": [
       "A_local_protocol_and_source_patch",
@@ -1445,7 +1453,9 @@
         ],
         "training_checkpoints": 8,
         "seed_horizon_cells": 32,
-        "status": "retrain_required_after_hpo"
+        "status": "reusable",
+        "selected_scorecard": "analysis/iscf_bsca_main_v1_hpo_20260731/selected_main_scorecard.csv",
+        "selected_profile_manifest": "analysis/iscf_bsca_main_v1_hpo_20260731/selected_profile_manifest.csv"
       },
       {
         "table": "main_i_published_context",
@@ -1468,7 +1478,10 @@
         "horizons": "all",
         "training_checkpoints": 0,
         "display_cells": 140,
-        "status": "source_audit_required"
+        "status": "reusable",
+        "source_audit_status": "passed_with_disclosed_internal_average_and_lookback_description_inconsistencies",
+        "artifact": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/timealign_table6_main_i_published.csv",
+        "artifact_sha256": "c9286468a4ca5977bac40f18635d387eafda0fd14794cabaac9b6f659ae82d8c"
       },
       {
         "table": "main_i_official_reproduction_fill",
@@ -1648,16 +1661,16 @@
   "deduplicated_matrix": {
     "scope": "phase_1_single_seed_final_training_only_excluding_hpo_exploratory_runs",
     "unique_training_checkpoint_slots": 233,
-    "reusable_primary_seed_metric_evidence_checkpoints": 15,
+    "reusable_primary_seed_metric_evidence_checkpoints": 23,
     "existing_optional_extra_seed_metric_evidence_checkpoints": 30,
-    "new_training_checkpoints_after_authorization": 218,
+    "new_training_checkpoints_after_authorization": 210,
     "unique_standard_horizon_seed_cells": 488,
     "published_result_display_cells": 140,
     "official_reproduction_main_i_cells": 148,
     "complete_main_i_baseline_display_cells": 288,
     "optional_three_seed_extension": "not_counted_execute_only_if_time_allows_complete_preregistered_blocks_no_result_selective_extension",
-    "hpo_run_count": "pending_H0_H1_resource_smoke_and_pre_Tier_B2_budget_freeze",
-    "checkpoint_binary_reuse_status": "unverified_until_remote_existence_and_hash_audit"
+    "hpo_run_count": 53,
+    "checkpoint_binary_reuse_status": "selected_main_verified_by_remote_pre_post_test_hash_manifests_other_reuse_pending"
   },
   "resource_plan": {
     "gpu_model": "NVIDIA_GeForce_RTX_3090",

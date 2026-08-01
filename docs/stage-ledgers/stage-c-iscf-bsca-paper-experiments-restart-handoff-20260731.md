@@ -51,9 +51,9 @@ paper candidate与claim boundary，但互不替代。
 | `local_protocol_patch_authorized` | true for ISCF-BSCA-MAIN-v1 HPO tooling |
 | `remote_training_authorized` | true；H0/H1/H2 complete，ECL/Solar follow-up HPO与expanded budget authorized |
 | `test_tuned_hpo_authorized` | true；40-checkpoint ranking + ECL/Solar dataset-level four-H aggregate tuning |
-| `formal_test_authorized` | true for test-tuned HPO；selected-profile confirmation/final reporting仍false |
-| `next_action` | freeze final scorecard；audit Main I missing official baselines and Main II matched unified launch blocks |
-| `conditional_next` | H3B target pass则freeze；未pass则冻结全search最低profile并记录bounded HPO miss |
+| `formal_test_authorized` | HPO formal test complete；Main I/II baseline formal test仍false |
+| `next_action` | 140-row published block已冻结；request Main I baseline and Main II source/protocol/remote/test tiers |
+| `conditional_next` | authorized后先TimeAlign-Exchange 4 jobs或Main II Tier A；不得复跑selected ISCF checkpoints |
 
 本handoff授权的是实验盘点、设计、source/protocol audit与prelaunch文档准备，不是
 立即远程训练。不得为了兑现Introduction P6而跳过controls、补选有利数据集，或把

@@ -76,7 +76,7 @@ Canonical report为
 machine-readable contract为
 `configs/iscf_bsca_paper_experiment_protocol.json`。
 
-Current cursor=`ISCF-BSCA-MAIN-v1 single-seed HPO complete；Main I/II baseline completion next`：
+Current cursor=`ISCF-BSCA-MAIN-v1 single-seed HPO and Main I 140-row published block complete；baseline execution authorization next`：
 
 - exact `ISCF-BSCA-v1`与当前超参数只作原5数据集ablation anchor；不得直接进入
   Main I/II；
@@ -100,11 +100,13 @@ Current cursor=`ISCF-BSCA-MAIN-v1 single-seed HPO complete；Main I/II baseline 
 - Main II保留DLinear/PatchTST matched unified、A6_FULL repo-native reference
   与ElasTST native varied-horizon context；
 - seed2021 primary matrix不含HPO runs时为233 checkpoint slots、488 seed-horizon
-  cells；15 primary-seed metric-evidence records可复用、218 new；另有30 existing
+  cells；23 primary-seed metric-evidence records可复用、210 new；另有30 existing
   extra-seed evidence保留；Main I包含140 published cells + 148 single-seed
   official-reproduction cells；
 - historical H720-only selector、frozen replacement与external-native-as-matched
   均继续排除。
+
+2026-08-02 post-HPO audit已将8个selected checkpoints/32 cells固定为Main I/II可复用，不再final retrain；TimeAlign Table 6的5 models × 7 datasets × 4 H=140 published rows完成双路径核验。共同7 datasets上ISCF相对TimeAlign aggregate MSE为`+2.199%`，但MAE为`-0.066%`，且只15/28 MSE cells、4/7 dataset means更优；因此当前定性为`competitive aggregate MSE / complete SOTA pending`。源表的5组Avg inconsistency与三种lookback描述必须披露。Main I下一最小remote block为TimeAlign-Exchange 4 jobs；Main II当前0 jobs可直接launch，须先完成DLinear/PatchTST Tier A source/protocol patch。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/post_hpo_main_i_published_audit_and_next_gate.md`。
 
 下一rollback不是自动重启architecture search。若new-dataset protocol不一致回H0；
 HPO不稳定回H1/H2并收窄已冻结search budget；冻结budget内test-tuned最优profile

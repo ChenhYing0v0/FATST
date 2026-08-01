@@ -8,7 +8,7 @@
 | `version` | `v0.31` |
 | `last_updated` | `2026-07-31` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 3 v0.2 narrative refinement pending author review；experiments=ISCF-BSCA-MAIN-v1 H1 train/validation running；Method Figure 4 planned |
+| `current_review_cursor` | writing=Section 3 v0.2 narrative refinement pending author review；experiments=ISCF-BSCA-MAIN-v1 HPO frozen、Main I published block audited；Method Figure 4 planned |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
@@ -1316,6 +1316,8 @@ TimeAlign encoder参数只作为source-audited search prior。当前完整矩阵
 seed2021；seeds2022/2023仅在时间允许时按完整experiment block扩展，且不得
 result-selective扩展。
 
+截至2026-08-02，53个HPO trials已完成，8个dataset-level selected profiles与32个official-test cells冻结并可直接进入Main I/II，不做final retrain。共同7 datasets上相对TimeAlign published逐horizon cells的aggregate MSE为`+2.199%`，MAE为`-0.066%`；因此当前只支持aggregate-MSE competitive，完整SOTA wording继续等待remaining baselines。
+
 ### 8.2 Main Results I：Unified versus Horizon-Specific
 
 每个baseline使用四个horizon-specific trained models；
@@ -1339,6 +1341,8 @@ PDT固定`L=96`，仅保留secondary cross-check。TimeAlign表存在lookback se
 集合描述差异，且published values为3-seed mean；当前official reproduction
 统一先用seed2021并披露差异。TimeAlign Exchange脚本已按ETTh1 bootstrap在本地
 构建但未运行。所有native/published rows都不进入matched mechanism attribution。
+
+Table 6的140个目标published rows已完成PDF-coordinate transcription与渲染核验。源PDF存在5组逐horizon均值与reported Avg不一致，并分别在Table 1 caption、main-text implementation与Appendix E.1给出三种lookback grid；主表必须使用逐horizon原值并披露这些source-native protocol差异。
 
 ### 8.3 Main Results II：Unified Multi-Horizon Benchmark
 

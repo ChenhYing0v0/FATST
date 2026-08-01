@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | 写作流审阅Section 3 v0.2；实验流推进ECL/Solar test-informed H3A，重点关闭Solar 2.17% gap |
+| `active_question` | 写作流审阅Section 3 v0.2；实验流完成Main I baseline与Main II matched unified evidence |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9 frozen；Section 3 v0.2 pending author review |
@@ -21,11 +21,11 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.2 pending author review；experiments=H3A Step8 remote training active |
-| `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；active HPO=`ISCF-BSCA-MAIN-v1-ecl-solar-h3a-test-informed-20260801` |
-| `latest_decision` | `ISCF_BSCA_MAIN_v1_single_seed_HPO_complete_ECL_Solar_targets_pass_profiles_frozen` |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.2 pending author review；experiments=HPO complete、Main I published block audited |
+| `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；`ISCF-BSCA-MAIN-v1` 8 selected profiles reusable |
+| `latest_decision` | `HPO_frozen_Main_I_published_140_rows_complete_competitive_not_full_SOTA_request_staged_baseline_authorization` |
 | `writing_latest_decision` | `section3_v0_2_narrative_refinement_pending_author_review` |
-| `next_required_action` | freeze final selected scorecard；advance Main I baseline completion and Main II matched unified benchmark |
+| `next_required_action` | request staged Main I baseline execution and Main II Tier A source/protocol patch authorizations |
 | `method_training_authorized` | HPO Tier A/B1/bounded B2=true；B3/C=false |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
@@ -33,16 +33,16 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | H1/H2 Step9 test ranking complete；H3A Step8 remote training active |
+| `current_step` | HPO Step9--10 complete；Main I 140-row published-context audit complete |
 | `problem` | Introduction的horizon-specific superiority、component effectiveness与decoder portability claims尚缺完整paper-facing evidence |
-| `existence_evidence` | H1 16/16 artifact complete；五旧dataset macro约比TimeAlign published高0.24%，ETTh2强、ETTm2差约5.88%；新三dataset仍缺test |
+| `existence_evidence` | 53 HPO trials完整；8 selected checkpoints/32 cells frozen；7-dataset ISCF vs TimeAlign MSE +2.199%，MAE -0.066%；published 140/140 rows audited |
 | `idea` | tuned main candidate + eight-dataset SOTA table + matched unified benchmark + exact five-dataset ablation/end-to-end transfer |
 | `theory_check` | architecture与HPO身份分离；validation选trial checkpoint；official-test four-H aggregate选dataset profile；published/native/matched角色分开；H720-only与frozen replacement排除 |
-| `design` | H1 16 anchors + H2 24 frozen local-neighbor profiles=40 total；seed2021；H2 complete后才做per-dataset four-H test ranking |
+| `design` | H1/H2/H3A/H3B=53 complete trials；seed2021；one selected profile per dataset shared across four H；published/native/matched roles separated |
 | `narrative_gate` | architecture family冻结；SOTA wording由完整test-tuned result决定并披露test-informed边界 |
-| `effectiveness_gate` | pending complete MSE/MAE official-test matrix；validation只选checkpoint；four-layer decision mandatory |
-| `artifacts` | H1 audit=`analysis/iscf_bsca_main_v1_hpo_20260731/h1_result_and_h2_freeze.md`；H2/test prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h2_result_and_test_prelaunch.md` |
-| `decision` | H1/H2 test 40/40 complete；ECL target pass；Solar gap2.17%；execute frozen H3A |
+| `effectiveness_gate` | `performance_partial_pass_competitive_aggregate_mse_pending_complete_baselines`；four-layer decision mandatory |
+| `artifacts` | selected scorecard=`analysis/iscf_bsca_main_v1_hpo_20260731/selected_main_scorecard.csv`；post-HPO audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/post_hpo_main_i_published_audit_and_next_gate.md` |
+| `decision` | HPO frozen；Main I published 140 rows reusable-with-disclosure；no baseline remote launch before staged authorization |
 
 ## Exact Ablation Anchor Contract
 
@@ -72,8 +72,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `INTRO-CHPD-v1` | `integrated_in_section3_v0_2_pending_review` | independently trained horizon models能否给出清晰overlap disagreement | ETTh2 maximum example disclosed；all-validation heatmap；not prevalence | shared-96 raw mean differences 2.16--2.51；macro NCHPD highest | author review；formal family/seed prevalence deferred |
 | `SC-UVHF-FRSD-D1` | `integrated_in_section3_v0_2_pending_review` | matched fixed sharing extent的risk optimum是否随future region变化 | ETTm2 maximum sample disclosed；same-validation descriptive role | five scopes win 2--3 regions；10/10 crossings；8.112% headroom | author review；formal CFH deferred |
 | `ISCF-BSCA-v1` | `exact_ablation_anchor_frozen` | broad train-time anchor能否稳定scope-gradient access并提升ISCF | ISCF-specific chain pass；generic KL novelty not claimed | three-seed +0.3541/+0.3073%；3/3 seeds、4/5 datasets、4/4 horizons | reuse only for five-dataset Full/w/o BSCA ablation；do not place directly in Main I/II |
-| `ISCF-BSCA-MAIN-v1` | `H3A_9_job_training_active` | frozen architecture在8 datasets上经test-tuned HPO后能否达到SOTA-competitive并支持main claims | validation选checkpoint；test four-H aggregate选dataset profile；ECL/Solar test-informed expanded budget；seed2021 first | 40/40 test；ECL target pass；Solar gap2.17%；H3A PID1996557、test0 | monitor 9/9 then direct complete test |
-| `ISCF-BSCA-PAPER-EXP-v2` | `scoped_exchange_patch_complete_waiting_remaining_tier_a` | 完整main/ablation/transfer/efficiency evidence能否兑现provisional claims | TimeAlign Table 6 primary + official fill；single-seed complete matrix；optional seed blocks non-selective | 15 primary-seed reusable；218 final new + HPO pending；30 extra-seed evidence retained | Exchange script unlaunched；B1/B2/B3/C false |
+| `ISCF-BSCA-MAIN-v1` | `single_seed_profiles_frozen_main_results_reusable` | frozen architecture在8 datasets上经test-tuned HPO后能否达到SOTA-competitive并支持main claims | validation选checkpoint；test four-H aggregate选dataset profile；ECL/Solar test-informed expanded budget；seed2021 first | 53 trials；8 selected checkpoints/32 cells；vs TimeAlign 7-dataset MSE +2.199%、MAE -0.066% | complete remaining baselines；do not retrain selected profiles |
+| `ISCF-BSCA-PAPER-EXP-v2` | `post_hpo_published_block_complete_waiting_baseline_tiers` | 完整main/ablation/transfer/efficiency evidence能否兑现provisional claims | TimeAlign Table 6 primary + official fill；single-seed complete matrix；optional seed blocks non-selective | 23 primary-seed reusable；210 final new；140 published rows audited；30 extra-seed evidence retained | request Main I baseline execution and Main II Tier A；remote/test false |
 | `SC-ISCF-UPA-D2` | `superseded_by_bsca_v1` | information-free uniform train-time anchor能否复现ARMERR/SHUFFLED gain | user chose outcome-first method route | not executed as separate diagnostic | retain design history only |
 | `SC-ISCF-PSA-D1` | `control_complete_h2_supported` | contemporaneous no-route EQUAL能否解释new ARMERR/SHUFFLED公共gain | not a method；只隔离H2/H3 | exact EQUAL tie；controls +0.6577/+0.6557%；H2 pass | feeds UPA-D2 only |
 | `SC-ISCF-PSA-D0` | `diagnostic_only_closed_h1_not_supported` | EQUAL frozen policy向uniform收缩是否存在stable held-out frontier | diagnostic only；generic shrinkage不是paper claim | L1/MSE -0.2431%/-0.1218%；1/5 datasets；2/15 runs | no alpha/temperature rescue；retain joint-training unresolved |
@@ -292,6 +292,7 @@ Historical and control queue:
 | ISCF-BSCA-v1 confirmation Step8 launch | commit-pinned pull + GPU audit + Weather smoke + three-worker launch | `72e3356`；GPU0/1/2；first Weather/ETTm1 jobs in epoch1；test 0/10 | training active；10/10 before one formal test | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_bsca_v1_confirmation_prelaunch_20260722/remote_launch_record.md` |
 | ISCF-BSCA-v1 confirmation Step9/10 | 10 new candidate + 10 reused EQUAL；three-seed 60-cell audit | MSE/MAE +0.3541/+0.3073%；3/3 seeds、4/5 datasets、4/4 horizons；all health/nonmutation pass | paper-core pass；paper consolidation next；new training/test false | `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_bsca_v1_confirmation_step9_10_20260722/step9_10_three_seed_result_and_paper_handoff.md` |
 | Paper experiment v2 single-seed correction | seed2021 primary matrix + optional non-selective seed extension + TimeAlign Exchange source adapter | 233 primary slots；15 reusable/218 new；488 cells；Exchange four-H script local/static only | scoped local patch complete；remote/test false；remaining Tier A required | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/design_and_prelaunch_gate.md` |
+| ISCF-BSCA post-HPO Main I published audit | 8 selected checkpoints + TimeAlign Table 6 transcription + competitiveness comparison | 53 HPO trials；32 ISCF cells；140/140 published rows；vs TimeAlign MSE +2.199%、MAE -0.066%；5 source Avg anomalies | aggregate-MSE competitive；full SOTA pending；baseline remote/test false | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/post_hpo_main_i_published_audit_and_next_gate.md` |
 
 ## Pending Tasks
 

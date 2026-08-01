@@ -7,21 +7,18 @@
 | `protocol_id` | `ISCF-BSCA-PAPER-EXP-v2` |
 | `date` | `2026-07-31` |
 | `candidate` | ablation anchor=`ISCF-BSCA-v1`；main candidate=`ISCF-BSCA-MAIN-v1` |
-| `current_step` | ISCF-BSCA-MAIN-v1 H1 16-job train/validation matrix running |
-| `decision` | `H0_and_smoke_pass_H1_16_jobs_running_test_zero` |
+| `current_step` | ISCF-BSCA-MAIN-v1 HPO complete；Main I 140-row published block audited |
+| `decision` | `HPO_frozen_Main_I_published_140_rows_complete_competitive_not_full_SOTA_request_staged_baseline_authorization` |
 | `architecture_search` | false |
 | `test_tuned_hpo_project_principle` | authorized and frozen；HPO execution authorized |
 | `local_protocol_patch_authorized` | true for ISCF-BSCA-MAIN-v1 HPO tooling |
 | `scoped_timealign_exchange_patch` | authorized and implemented locally；unlaunched |
 | `remote_training_authorized` | true for frozen H0/H1 and bounded H2 HPO |
 | `official_test_hpo_authorized` | true after complete frozen H2 training matrix |
-| `formal_test_authorized` | false |
+| `formal_test_authorized` | HPO complete；Main I/II baseline formal test=false |
 | `machine_readable_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 
-本轮已在原consolidation基础上启动最高优先级
-`ISCF-BSCA-MAIN-v1` HPO implementation：新增8-dataset H1 config、dataset
-audit、runner、analyzer与contract checker，并为ECL/Solar/Exchange补齐本地
-adapter preset。当前尚未SSH到远端、尚未启动训练，也没有访问新的official test。
+截至2026-08-02，`ISCF-BSCA-MAIN-v1` H1/H2/H3A/H3B共53个trials与全部formal tests已完成；8 selected checkpoints/32 cells冻结且不再重训。Main I的TimeAlign Table 6目标published block也已形成140/140 rows。当前未启动任何baseline或Main II remote job；其source/protocol patch、training与formal test需重新分级授权。
 
 ## A. Current Authoritative v2 Plan
 
@@ -36,7 +33,7 @@ artifact/hash审计证据，但其中5-dataset main-table范围、未调优
 | Identity | Architecture | Hyperparameters | Paper role | Existing result role |
 | --- | --- | --- | --- | --- |
 | `ISCF-BSCA-v1` | exact frozen | exact confirmation config | 5-dataset core ablation anchor only | Full与`w/o BSCA`已有three-seed evidence可复用 |
-| `ISCF-BSCA-MAIN-v1` | same frozen architecture family；no architecture search | official-test tuned, one profile per dataset and shared across four H | Main I、Main II、transfer reference、efficiency、fresh mechanism diagnostics | currently missing；must be trained after authorization |
+| `ISCF-BSCA-MAIN-v1` | same frozen architecture family；no architecture search | official-test tuned, one profile per dataset and shared across four H | Main I、Main II、transfer reference、efficiency、fresh mechanism diagnostics | 8 selected checkpoints/32 cells frozen and reusable；do not retrain |
 
 因此，现有confirmation不能再作为Main I或Main II中的最终ISCF-BSCA行；它只
 证明exact ablation anchor上BSCA相对`ISCF-EQUAL`的小幅方向稳定收益。
@@ -164,7 +161,7 @@ official-native reproduction与本地matched runs混成一种证据。
 | linear / mixing | AMD, TimeMixer, DLinear | TimeMixer/DLinear优先转录TimeAlign Table 6；AMD与缺失dataset cells转official reproduction | `source_audit_required` |
 | Transformer-based | SimpleTM, iTransformer, PatchTST | iTransformer/PatchTST优先转录TimeAlign Table 6；SimpleTM与缺失dataset cells转official reproduction | `source_audit_required` |
 | recent official-native | TimePerceiver, SRSNet, TimeAlign | TimeAlign优先使用其ICLR 2026 Table 6并复现缺失Exchange；其余使用official fixed-H scripts | `source_patch_required` |
-| paper method | ISCF-BSCA-MAIN-v1 | one tuned unified checkpoint per dataset/seed outputs all four H | `retrain_required_after_hpo` |
+| paper method | ISCF-BSCA-MAIN-v1 | one tuned unified checkpoint per dataset/seed outputs all four H | `reusable`；8/8 selected profiles frozen |
 
 官方metadata校正：
 
@@ -228,7 +225,7 @@ Main II也使用8个数据集和tuned `ISCF-BSCA-MAIN-v1`：
 
 | Role | Arms | Training contract | Status |
 | --- | --- | --- | --- |
-| paper method | ISCF-BSCA-MAIN-v1 | 8 datasets × seed2021；one checkpoint per dataset | `retrain_required_after_hpo` |
+| paper method | ISCF-BSCA-MAIN-v1 | 8 datasets × seed2021；one checkpoint per dataset | `reusable`；8 checkpoints/32 cells frozen |
 | matched unified adaptation | DLinear-Unified, PatchTST-Unified | same data/objective/four-H selector/seeds；one checkpoint per dataset | `source_patch_required` |
 | repo-native unified reference | A6_FULL | same four-H selector；existing 5 datasets reusable，3 new datasets retrain | `partially_reusable` |
 | native varied-horizon context | ElasTST-native | native selector/protocol，separately labelled | `source_patch_required` |
@@ -275,14 +272,14 @@ end-to-end transfer完成。
 
 | Block | Unique checkpoint slots | Existing reusable metric evidence | New after authorization | Seed-level four-H cells |
 | --- | ---: | ---: | ---: | ---: |
-| tuned ISCF-BSCA-MAIN-v1 | 8 | 0 | 8 | 32 |
+| tuned ISCF-BSCA-MAIN-v1 | 8 | 8 | 0 | 32 |
 | Main I official reproduction补齐 | 148 | 0 | 148 | 148 |
 | DLinear/PatchTST unified | 16 | 0 | 16 | 64 |
 | A6_FULL | 8 | 5 | 3 | 32 |
 | ElasTST-native | 8 | 0 | 8 | 32 |
 | 5-dataset exact ablation：5 arms | 25 | 10 | 15 | 100 |
 | transfer incremental +ISCF/+ISCF-BSCA | 20 | 0 | 20 | 80 |
-| **Phase-1 total** | **233** | **15** | **218** | **488** |
+| **Phase-1 total** | **233** | **23** | **210** | **488** |
 
 说明：
 
