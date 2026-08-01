@@ -63,7 +63,8 @@ import sys
 
 config = json.load(open(sys.argv[1]))
 phase = sys.argv[2]
-key = (
+phase_key = f"remote_{phase}_training_authorized"
+key = phase_key if phase_key in config["authorization"] else (
     "remote_H2_training_authorized"
     if phase == "H2"
     else "remote_H0_H1_authorized"

@@ -171,3 +171,11 @@ H2现已24/24完成，逐checkpoint artifact、selector和SHA256 audit通过。H
 `scripts/analyze_iscf_bsca_main_v1_hpo_test_audit.py`仅在40/40 trials和160/160 standard-horizon cells均完整时生成profile ranking。输出包含所有trial scorecard、aggregate、ranking、selected profile和test audit ledger；partial matrix不会产生选择结果。
 
 ECL和Solar后续允许test-tuned扩展training budget，但仍使用validation选择每个trial的checkpoint，并按official-test four-H aggregate选择一个dataset-level shared profile。该后续搜索必须使用新的candidate version和完整保留的trial ledger。
+
+## 9. ECL/Solar H3A
+
+`configs/iscf_bsca_main_v1_hpo_ecl_solar_h3a.json`是在H1/H2完整official-test scorecard后建立的test-informed candidate version。ECL当前aggregate已优于TimeAlign published target，只运行一个exact test-best profile的45-epoch extension。Solar当前test-best仍有2.17%差距，八个one-factor profiles分别检查expanded budget、learning rate、dropout、weight decay、decoder rank、effective batch和patch granularity。
+
+`scripts/remote/run_iscf_bsca_main_v1_hpo.sh`现在优先读取`remote_<PHASE>_training_authorized`，因此H3A仍复用同一个global queue、artifact contract与training path。`scripts/remote/run_iscf_bsca_main_v1_hpo_ecl_solar_h3a.sh`只固定H3A config和repo-external output root，不改变runner逻辑。
+
+H3A training期间仍为`official_test_mode=false`、`final_evaluation_split=val`。9/9 checkpoints完成后不做耗时validation profile ranking，只检查selector/artifact/hash完整性，随后为H3A另行冻结test manifest并直接执行完整four-H official-test audit。

@@ -1,0 +1,206 @@
+{
+  "protocol_id": "ISCF-BSCA-MAIN-v1-HPO-ECL-SOLAR-H3A",
+  "candidate_id": "ISCF-BSCA-MAIN-v1",
+  "candidate_version": "ISCF-BSCA-MAIN-v1-ecl-solar-h3a-test-informed-20260801",
+  "date": "2026-08-01",
+  "status": "frozen_authorized_prelaunch",
+  "role": "test_informed_dataset_level_hyperparameter_search",
+  "test_tuned": true,
+  "test_informed": true,
+  "architecture_family": "ISCF-BSCA",
+  "architecture_search": false,
+  "base_config": "configs/iscf_bsca_main_v1_hpo.json",
+  "base_config_sha256": "819a9870d87a6f0bd9c9293b12ffbe2d8dc96b62c69f61fc981fca40844a71b0",
+  "architecture_invariants": {
+    "encoder_mode": "timealign-token-mlp",
+    "readout_mode": "siff-independent-scope-control",
+    "policy_mode": "direct",
+    "objective_mode": "equal_uniform_scope_anchor",
+    "partition": "canonical",
+    "partition_seed": 15101,
+    "scales": [1, 48, 144, 360, 720],
+    "inference_graph_changed": false,
+    "requested_h_input": false
+  },
+  "datasets": ["ECL", "Solar"],
+  "seeds": [2021],
+  "selection_contract": {
+    "trial_checkpoint_split": "validation",
+    "trial_checkpoint_score": "mean_mse_h96_h192_h336_h720",
+    "hyperparameter_selection_split": "official_test",
+    "hyperparameter_score": "mean_mse_h96_h192_h336_h720_per_dataset",
+    "profile_granularity": "one_profile_per_dataset_shared_across_four_horizons",
+    "primary_metric": "mse",
+    "secondary_metric": "mae_report_only",
+    "validation_profile_ranking_required_before_test": false,
+    "per_horizon_profile_selection": false,
+    "best_seed_selection": false,
+    "partial_matrix_selection": false,
+    "all_trials_retained": true
+  },
+  "matrix": {
+    "phase": "H3A",
+    "seed": 2021,
+    "expected_runs": 9,
+    "expected_training_runs": 9,
+    "expected_test_runs_during_training": 0,
+    "horizons": [96, 192, 336, 720],
+    "metrics": ["mse", "mae"],
+    "full_matrix_required": true,
+    "partial_reporting_allowed": false
+  },
+  "training": {
+    "from_scratch": true,
+    "joint_encoder_decoder": true,
+    "target_horizons": [720],
+    "validation_horizons": [96, 192, 336, 720],
+    "evaluation_prefix_mode": "full-crop",
+    "checkpoint_policy": "best-val",
+    "pred_loss_mode": "full",
+    "max_epochs": 45,
+    "early_stopping_patience": 10,
+    "early_stopping_min_delta": 0.0,
+    "scheduler": "cosine",
+    "primary_seed": 2021,
+    "official_test_during_training": false
+  },
+  "hpo_budget": {
+    "ECL_additional_trials": 1,
+    "Solar_additional_trials": 8,
+    "H3A_total_trials": 9,
+    "H3A_search_space_frozen": true,
+    "primary_seed_only": true,
+    "validation_comparison_before_test": "artifact_completeness_and_checkpoint_selection_only",
+    "optional_additional_seeds_not_authorized": true
+  },
+  "search_space": {
+    "seq_len": [720],
+    "patch_num": [1, 2, 4],
+    "d_model": [256, 512],
+    "d_ff": [256, 2048],
+    "dropout": [0.3, 0.4, 0.5],
+    "learning_rate": [0.0003, 0.0005],
+    "weight_decay": [0.01, 0.05],
+    "batch_size": [4, 8, 16],
+    "gradient_accumulation_steps": [2, 8],
+    "mode_rank": [64, 128],
+    "max_epochs": [45],
+    "early_stopping_patience": [10],
+    "note": "Only the nine listed orthogonal profiles are authorized; this is not a Cartesian product."
+  },
+  "test_exposure_context": {
+    "source_candidate_version": "ISCF-BSCA-MAIN-v1-hpo-h1-h2-20260801",
+    "ECL_observed_best_trial": "ECL__h1_timealign",
+    "ECL_observed_best_test_mean_mse_4h": 0.15119075315822594,
+    "ECL_TimeAlign_published_mean_mse_4h": 0.154,
+    "Solar_observed_best_trial": "Solar__h1_timealign",
+    "Solar_observed_best_test_mean_mse_4h": 0.19615704430486564,
+    "Solar_TimeAlign_published_mean_mse_4h": 0.192,
+    "closed_Solar_directions": [
+      "dropout_0.1",
+      "d_ff_512",
+      "seq_len_336"
+    ],
+    "disclosure": "H3A was designed after observing H1/H2 official-test results and is test-informed."
+  },
+  "authorization": {
+    "user_authorization": "2026-08-01 explicit authorization for all forms of ECL and Solar hyperparameter adjustment, including expanded training budget and direct test-informed tuning",
+    "user_authorized": true,
+    "authorization_date": "2026-08-01",
+    "remote_H3A_training_authorized": true,
+    "official_test_H3A_execution_authorized_after_complete_training": true,
+    "selected_profile_confirmation_authorized": false,
+    "final_paper_reporting_audit_authorized": false,
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+    "checkpoint_mutation_during_test_allowed": false,
+    "per_dataset_aggregate_hyperparameter_tuning_allowed": true,
+    "per_horizon_seed_metric_or_cell_tuning_allowed": false,
+    "test_role": "test-tuned-hyperparameter-selection-and-paper-benchmark"
+  },
+  "jobs": [
+    {
+      "trial_id": "ECL__h3a_budget45",
+      "dataset": "ECL",
+      "profile_id": "h3a_budget45",
+      "base_trial_id": "ECL__h1_timealign",
+      "source_prior": "test_best_H1_exact_profile_budget_extension",
+      "overrides": {"max_epochs": 45, "early_stopping_patience": 10}
+    },
+    {
+      "trial_id": "Solar__h3a_budget45",
+      "dataset": "Solar",
+      "profile_id": "h3a_budget45",
+      "base_trial_id": "Solar__h1_timealign",
+      "source_prior": "test_best_H1_exact_profile_budget_extension",
+      "overrides": {"max_epochs": 45, "early_stopping_patience": 10}
+    },
+    {
+      "trial_id": "Solar__h3a_lr3e4",
+      "dataset": "Solar",
+      "profile_id": "h3a_lr3e4",
+      "base_trial_id": "Solar__h1_timealign",
+      "source_prior": "test_best_optimizer_neighbor",
+      "overrides": {"learning_rate": 0.0003, "max_epochs": 45, "early_stopping_patience": 10}
+    },
+    {
+      "trial_id": "Solar__h3a_dropout4",
+      "dataset": "Solar",
+      "profile_id": "h3a_dropout4",
+      "base_trial_id": "Solar__h1_timealign",
+      "source_prior": "test_informed_stronger_regularization_neighbor",
+      "overrides": {"dropout": 0.4, "max_epochs": 45, "early_stopping_patience": 10}
+    },
+    {
+      "trial_id": "Solar__h3a_wd5e2",
+      "dataset": "Solar",
+      "profile_id": "h3a_wd5e2",
+      "base_trial_id": "Solar__h1_timealign",
+      "source_prior": "test_informed_weight_decay_regularization_neighbor",
+      "overrides": {"weight_decay": 0.05, "max_epochs": 45, "early_stopping_patience": 10}
+    },
+    {
+      "trial_id": "Solar__h3a_rank64",
+      "dataset": "Solar",
+      "profile_id": "h3a_rank64",
+      "base_trial_id": "Solar__h1_timealign",
+      "source_prior": "test_informed_decoder_capacity_regularization_neighbor",
+      "overrides": {"mode_rank": 64, "max_epochs": 45, "early_stopping_patience": 10}
+    },
+    {
+      "trial_id": "Solar__h3a_effective_batch16",
+      "dataset": "Solar",
+      "profile_id": "h3a_effective_batch16",
+      "base_trial_id": "Solar__h1_timealign",
+      "source_prior": "test_informed_gradient_noise_neighbor",
+      "overrides": {"batch_size": 8, "gradient_accumulation_steps": 2, "max_epochs": 45, "early_stopping_patience": 10}
+    },
+    {
+      "trial_id": "Solar__h3a_patch2",
+      "dataset": "Solar",
+      "profile_id": "h3a_patch2",
+      "base_trial_id": "Solar__h1_timealign",
+      "source_prior": "test_informed_encoder_granularity_neighbor",
+      "overrides": {"patch_num": 2, "max_epochs": 45, "early_stopping_patience": 10}
+    },
+    {
+      "trial_id": "Solar__h3a_patch4",
+      "dataset": "Solar",
+      "profile_id": "h3a_patch4",
+      "base_trial_id": "Solar__h1_timealign",
+      "source_prior": "test_informed_encoder_granularity_neighbor",
+      "overrides": {"patch_num": 4, "max_epochs": 45, "early_stopping_patience": 10}
+    }
+  ],
+  "provisional_lpt_order": [
+    "ECL__h3a_budget45",
+    "Solar__h3a_budget45",
+    "Solar__h3a_lr3e4",
+    "Solar__h3a_dropout4",
+    "Solar__h3a_wd5e2",
+    "Solar__h3a_rank64",
+    "Solar__h3a_effective_batch16",
+    "Solar__h3a_patch2",
+    "Solar__h3a_patch4"
+  ],
+  "decision": "authorized_test_informed_H3A_train_validation_then_direct_complete_test"
+}

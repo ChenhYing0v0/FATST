@@ -1,0 +1,90 @@
+{
+  "ETTh1": {
+    "trial_id": "ETTh1__h1_timealign",
+    "profile_id": "h1_timealign_source_prior",
+    "phase": "H1",
+    "seed": 2021,
+    "test_mean_mse_4h": 0.3955753267365972,
+    "test_mean_mae_4h": 0.4203269004719188,
+    "validation_mean_mse_4h": 1.1434824927994567,
+    "checkpoint_reused_without_test_time_mutation": true,
+    "test_tuned": true
+  },
+  "ETTh2": {
+    "trial_id": "ETTh2__h2_lr5e4",
+    "profile_id": "h2_lr5e4",
+    "phase": "H2",
+    "seed": 2021,
+    "test_mean_mse_4h": 0.307331952101977,
+    "test_mean_mae_4h": 0.36511569091552243,
+    "validation_mean_mse_4h": 0.4197374176019655,
+    "checkpoint_reused_without_test_time_mutation": true,
+    "test_tuned": true
+  },
+  "ETTm1": {
+    "trial_id": "ETTm1__h2_table5_capacity",
+    "profile_id": "h2_table5_capacity",
+    "phase": "H2",
+    "seed": 2021,
+    "test_mean_mse_4h": 0.3306989335260192,
+    "test_mean_mae_4h": 0.3638789644283464,
+    "validation_mean_mse_4h": 0.6012380249348805,
+    "checkpoint_reused_without_test_time_mutation": true,
+    "test_tuned": true
+  },
+  "ETTm2": {
+    "trial_id": "ETTm2__h2_hybrid",
+    "profile_id": "h2_hybrid",
+    "phase": "H2",
+    "seed": 2021,
+    "test_mean_mse_4h": 0.25084896672154805,
+    "test_mean_mae_4h": 0.3103888373577181,
+    "validation_mean_mse_4h": 0.18275839605184813,
+    "checkpoint_reused_without_test_time_mutation": true,
+    "test_tuned": true
+  },
+  "Weather": {
+    "trial_id": "Weather__h1_timealign",
+    "profile_id": "h1_timealign_source_prior",
+    "phase": "H1",
+    "seed": 2021,
+    "test_mean_mse_4h": 0.21657432174247035,
+    "test_mean_mae_4h": 0.24903054986641573,
+    "validation_mean_mse_4h": 0.48978661656340894,
+    "checkpoint_reused_without_test_time_mutation": true,
+    "test_tuned": true
+  },
+  "ECL": {
+    "trial_id": "ECL__h1_timealign",
+    "profile_id": "h1_timealign_source_prior",
+    "phase": "H1",
+    "seed": 2021,
+    "test_mean_mse_4h": 0.15119075315822594,
+    "test_mean_mae_4h": 0.24550925931300457,
+    "validation_mean_mse_4h": 0.1329943805526007,
+    "checkpoint_reused_without_test_time_mutation": true,
+    "test_tuned": true
+  },
+  "Solar": {
+    "trial_id": "Solar__h1_timealign",
+    "profile_id": "h1_timealign_source_prior",
+    "phase": "H1",
+    "seed": 2021,
+    "test_mean_mse_4h": 0.19615704430486564,
+    "test_mean_mae_4h": 0.218267024144374,
+    "validation_mean_mse_4h": 0.13365402614070926,
+    "checkpoint_reused_without_test_time_mutation": true,
+    "test_tuned": true
+  },
+  "Exchange": {
+    "trial_id": "Exchange__h2_lookback336",
+    "profile_id": "h2_lookback336",
+    "phase": "H2",
+    "seed": 2021,
+    "test_mean_mse_4h": 0.3988360663675046,
+    "test_mean_mae_4h": 0.4250812028971426,
+    "validation_mean_mse_4h": 0.7142016496495108,
+    "checkpoint_reused_without_test_time_mutation": true,
+    "test_tuned": true
+  }
+}

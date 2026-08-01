@@ -1,0 +1,11 @@
+{
+  "protocol_id": "ISCF-BSCA-MAIN-v1-HPO-TEST-AUDIT",
+  "candidate_version": "ISCF-BSCA-MAIN-v1-hpo-h1-h2-20260801",
+  "manifest_sha256": "ba12d47b1313dc435d6e9aa7f432c6ffb87a0753d980afa1bb7315f123fec879",
+  "expected_trials": 40,
+  "complete_trials": 40,
+  "expected_standard_horizon_cells": 160,
+  "complete_standard_horizon_cells": 160,
+  "errors": [],
+  "complete": true
+}
