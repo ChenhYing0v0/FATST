@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.2 pending author review；experiments=H1/H2 test 40/40 complete、ECL/Solar H3A prelaunch |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.2 pending author review；experiments=ECL/Solar H3A 9-job remote training active |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -20,6 +20,8 @@
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1`待test-tuned HPO后进入Main I/II |
 
 [ISCF-BSCA-MAIN-v1 H1/H2 Test Result and H3A, 2026-08-01] 40/40 checkpoints、160/160 standard-horizon cells与checkpoint immutability audit全部通过。Dataset-level winners为ETTh1 H1-TimeAlign、ETTh2 H2-lr5e4、ETTm1 H2-Table5-capacity、ETTm2 H2-hybrid、Weather H1-TimeAlign、ECL H1-TimeAlign、Solar H1-TimeAlign、Exchange H2-lookback336。ECL four-H mean MSE=`0.151191`，优于TimeAlign published coherent target `0.154`约1.82%；Solar=`0.196157`，仍比target `0.192`高2.17%。Solar H2的dropout0.1、FF512和lookback336均发生test退化并关闭。Test-informed H3A冻结为ECL 1个exact-winner budget extension + Solar 8个orthogonal profiles，全部45 epochs/patience10；training完整后直接做完整test，不用validation做profile ranking。Canonical report=`analysis/iscf_bsca_main_v1_hpo_20260731/h1_h2_test_result_and_h3a_prelaunch.md`。Decision=`ECL_target_pass_Solar_H3A_authorized_prelaunch`。
+
+[ECL/Solar H3A Launch, 2026-08-01] Commit=`72e1f8f`；9/9 two-batch resource smoke通过；GPUs 0/1/2 launch前均18 MiB、0% utilization。9-job expanded-budget train/validation于09:28:45启动，orchestrator PID=`1996557`，output root=`/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_main_v1_hpo/ecl_solar_h3a`，test=0。Initial active jobs为ECL budget45、Solar budget45与Solar lr3e4；conservative ETA=12--18小时。Canonical launch record=`analysis/iscf_bsca_main_v1_hpo_20260731/h3a_launch.md`。Decision=`H3A_9_job_training_active_test_zero`。
 
 [ISCF-BSCA-MAIN-v1 H2 Complete and Test Prelaunch, 2026-08-01] H2已24/24完成，artifact、four-H validation selector、numeric health与checkpoint SHA256全部通过；H1+H2形成40个frozen checkpoints。8/8 datasets的H2 validation winner均优于对应H1 winner，改善从ETTm1的0.140%到Exchange的13.683%，但这些不是test或SOTA结论。Combined manifest固定为8 datasets × 5 profiles，official-test scorecard为40 × 4 horizons=160 cells；只有40/40完整且checkpoint test前后hash一致时才生成dataset-level shared-profile ranking。用户进一步授权ECL/Solar test-informed定向HPO及training-budget扩展；首轮40-checkpoint test后可建立新candidate version，减少validation比较但仍由validation选择trial checkpoint，并用four-H test mean MSE调参，禁止per-H/per-cell选择。Canonical report=`analysis/iscf_bsca_main_v1_hpo_20260731/h2_result_and_test_prelaunch.md`。Decision=`H2_complete_40_checkpoint_test_audit_prelaunch_ECL_Solar_followup_authorized`。
 

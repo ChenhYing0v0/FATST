@@ -21,11 +21,11 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.2 pending author review；experiments=H1/H2 test complete、H3A Step6--8 prelaunch |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.2 pending author review；experiments=H3A Step8 remote training active |
 | `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；active HPO=`ISCF-BSCA-MAIN-v1-ecl-solar-h3a-test-informed-20260801` |
-| `latest_decision` | `H1_H2_test_complete_ECL_target_pass_Solar_H3A_authorized_prelaunch` |
+| `latest_decision` | `H3A_9_job_training_active_test_zero` |
 | `writing_latest_decision` | `section3_v0_2_narrative_refinement_pending_author_review` |
-| `next_required_action` | H3A commit/push；remote GPU/resource smoke；launch 9 train/validation jobs；complete后直接test |
+| `next_required_action` | monitor H3A to 9/9；artifact/hash audit；freeze manifest；direct complete test |
 | `method_training_authorized` | HPO Tier A/B1/bounded B2=true；B3/C=false |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
@@ -33,7 +33,7 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | H1/H2 Step9 test ranking complete；H3A Step6--8 prelaunch |
+| `current_step` | H1/H2 Step9 test ranking complete；H3A Step8 remote training active |
 | `problem` | Introduction的horizon-specific superiority、component effectiveness与decoder portability claims尚缺完整paper-facing evidence |
 | `existence_evidence` | H1 16/16 artifact complete；五旧dataset macro约比TimeAlign published高0.24%，ETTh2强、ETTm2差约5.88%；新三dataset仍缺test |
 | `idea` | tuned main candidate + eight-dataset SOTA table + matched unified benchmark + exact five-dataset ablation/end-to-end transfer |
@@ -72,7 +72,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `INTRO-CHPD-v1` | `integrated_in_section3_v0_2_pending_review` | independently trained horizon models能否给出清晰overlap disagreement | ETTh2 maximum example disclosed；all-validation heatmap；not prevalence | shared-96 raw mean differences 2.16--2.51；macro NCHPD highest | author review；formal family/seed prevalence deferred |
 | `SC-UVHF-FRSD-D1` | `integrated_in_section3_v0_2_pending_review` | matched fixed sharing extent的risk optimum是否随future region变化 | ETTm2 maximum sample disclosed；same-validation descriptive role | five scopes win 2--3 regions；10/10 crossings；8.112% headroom | author review；formal CFH deferred |
 | `ISCF-BSCA-v1` | `exact_ablation_anchor_frozen` | broad train-time anchor能否稳定scope-gradient access并提升ISCF | ISCF-specific chain pass；generic KL novelty not claimed | three-seed +0.3541/+0.3073%；3/3 seeds、4/5 datasets、4/4 horizons | reuse only for five-dataset Full/w/o BSCA ablation；do not place directly in Main I/II |
-| `ISCF-BSCA-MAIN-v1` | `H1_H2_test_complete_H3A_prelaunch` | frozen architecture在8 datasets上经test-tuned HPO后能否达到SOTA-competitive并支持main claims | validation选checkpoint；test four-H aggregate选dataset profile；ECL/Solar test-informed expanded budget；seed2021 first | 40/40 test；ECL 0.151191 target pass；Solar 0.196157 gap2.17% | launch 1 ECL + 8 Solar H3A；then direct complete test |
+| `ISCF-BSCA-MAIN-v1` | `H3A_9_job_training_active` | frozen architecture在8 datasets上经test-tuned HPO后能否达到SOTA-competitive并支持main claims | validation选checkpoint；test four-H aggregate选dataset profile；ECL/Solar test-informed expanded budget；seed2021 first | 40/40 test；ECL target pass；Solar gap2.17%；H3A PID1996557、test0 | monitor 9/9 then direct complete test |
 | `ISCF-BSCA-PAPER-EXP-v2` | `scoped_exchange_patch_complete_waiting_remaining_tier_a` | 完整main/ablation/transfer/efficiency evidence能否兑现provisional claims | TimeAlign Table 6 primary + official fill；single-seed complete matrix；optional seed blocks non-selective | 15 primary-seed reusable；218 final new + HPO pending；30 extra-seed evidence retained | Exchange script unlaunched；B1/B2/B3/C false |
 | `SC-ISCF-UPA-D2` | `superseded_by_bsca_v1` | information-free uniform train-time anchor能否复现ARMERR/SHUFFLED gain | user chose outcome-first method route | not executed as separate diagnostic | retain design history only |
 | `SC-ISCF-PSA-D1` | `control_complete_h2_supported` | contemporaneous no-route EQUAL能否解释new ARMERR/SHUFFLED公共gain | not a method；只隔离H2/H3 | exact EQUAL tie；controls +0.6577/+0.6557%；H2 pass | feeds UPA-D2 only |

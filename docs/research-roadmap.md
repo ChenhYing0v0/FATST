@@ -76,7 +76,7 @@ Canonical report为
 machine-readable contract为
 `configs/iscf_bsca_paper_experiment_protocol.json`。
 
-Current cursor=`ISCF-BSCA-MAIN-v1 H1/H2 test 40/40 complete；ECL/Solar H3A prelaunch`：
+Current cursor=`ISCF-BSCA-MAIN-v1 ECL/Solar H3A 9-job remote training active`：
 
 - exact `ISCF-BSCA-v1`与当前超参数只作原5数据集ablation anchor；不得直接进入
   Main I/II；
@@ -157,6 +157,12 @@ provenance、invariants和checkpoint immutability全部pass。ECL selected mean 
 one-factor profiles，45 epochs/patience10。Canonical result/prelaunch=
 `analysis/iscf_bsca_main_v1_hpo_20260731/h1_h2_test_result_and_h3a_prelaunch.md`；
 config=`configs/iscf_bsca_main_v1_hpo_ecl_solar_h3a.json`。
+
+H3A commit=`72e1f8f`，9/9 resource smoke通过；full train/validation于09:28:45在
+GPUs 0/1/2启动，PID=`1996557`，test=0。初始3/9 active且无OOM/NaN/Inf；预计
+12--18小时。Completion后只做artifact、selector、numeric-health和hash audit，
+不做validation profile ranking，直接冻结H3A test manifest并执行完整test。Launch
+record=`analysis/iscf_bsca_main_v1_hpo_20260731/h3a_launch.md`。
 
 ## Paper-Experiments Parallel Handoff (2026-07-31)
 

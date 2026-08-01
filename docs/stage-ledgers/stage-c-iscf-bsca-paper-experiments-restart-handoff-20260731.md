@@ -44,7 +44,7 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment consolidation and prelaunch |
-| `active_experiment_step` | H1/H2 official-test 40/40 complete；ECL target pass；Solar H3A prelaunch |
+| `active_experiment_step` | H1/H2 official-test 40/40 complete；ECL target pass；Solar H3A 9-job remote training active |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
@@ -52,7 +52,7 @@ paper candidate与claim boundary，但互不替代。
 | `remote_training_authorized` | true；H0/H1/H2 complete，ECL/Solar follow-up HPO与expanded budget authorized |
 | `test_tuned_hpo_authorized` | true；40-checkpoint ranking + ECL/Solar dataset-level four-H aggregate tuning |
 | `formal_test_authorized` | true for test-tuned HPO；selected-profile confirmation/final reporting仍false |
-| `next_action` | commit/push H3A；remote GPU/resource smoke；启动1 ECL + 8 Solar expanded-budget training |
+| `next_action` | monitor H3A PID1996557 to 9/9；artifact/hash audit；freeze 9-checkpoint test manifest |
 | `conditional_next` | H3A 9/9 checkpoint完整后不做validation profile ranking，直接执行完整four-H official-test；Solar未达0.192再决定最多4-profile H3B |
 
 本handoff授权的是实验盘点、设计、source/protocol audit与prelaunch文档准备，不是
