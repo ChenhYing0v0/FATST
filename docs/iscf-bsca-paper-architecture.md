@@ -5,16 +5,16 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.31` |
-| `last_updated` | `2026-07-31` |
+| `version` | `v0.32` |
+| `last_updated` | `2026-08-02` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 3 v0.2 narrative refinement pending author review；experiments=ISCF-BSCA-MAIN-v1 HPO frozen、Main I published block audited；Method Figure 4 planned |
+| `current_review_cursor` | writing=Section 3 v0.2 narrative refinement pending author review；experiments=H4J joint-objective HPO frozen prelaunch；Method Figure 4 planned |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
 | `provisional_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.2正文 + approved Figures 2--3；planned Method Figure 4；remaining sections |
-| `authorization_source` | experiment HPO authorization由`configs/iscf_bsca_main_v1_hpo.json`记录；本architecture文档不扩张其Tier B3/C边界 |
+| `authorization_source` | current H4J authorization由`configs/iscf_bsca_main_v1_hpo_joint_h4j.json`记录；本architecture文档不扩张baseline或final reporting边界 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
@@ -1309,14 +1309,15 @@ horizon-specific与unified两种protocol。
 Main I/II中的论文方法必须是`ISCF-BSCA-MAIN-v1`：在frozen architecture
 family内对8 datasets分别执行test-tuned HPO，每dataset选择一个profile
 共同服务四个H。Exact `ISCF-BSCA-v1`及其现有超参数只用于ablation，不进入主表。
-每个trial先由four-H mean validation MSE选择checkpoint，再由four-H mean
-official-test MSE选择dataset-level profile；test不得选择epoch、checkpoint、
-seed或per-H profile。全部trial结果必须保留并披露为`test_tuned/test_informed`。
+每个trial先由four-H mean validation MSE选择checkpoint。H4J起，dataset-level
+profile由equal-weight joint MSE/MAE relative mean的1% guard后最大化MSE+MAE
+leading cells选择；test不得选择epoch、checkpoint、seed、metric-specific或per-H
+profile。全部trial结果必须保留并披露为`test_tuned/test_informed`。
 TimeAlign encoder参数只作为source-audited search prior。当前完整矩阵先固定
 seed2021；seeds2022/2023仅在时间允许时按完整experiment block扩展，且不得
 result-selective扩展。
 
-截至2026-08-02，53个HPO trials已完成，8个dataset-level selected profiles与32个official-test cells冻结并可直接进入Main I/II，不做final retrain。共同7 datasets上相对TimeAlign published逐horizon cells的aggregate MSE为`+2.199%`，MAE为`-0.066%`；因此当前只支持aggregate-MSE competitive，完整SOTA wording继续等待remaining baselines。
+截至2026-08-02，53个HPO trials已完成；原MSE-only selected profiles相对frozen published targets为MSE 14/28、MAE 9/28、combined 23/56，existing reselection上限25/56。H4J因此冻结40个new profiles继续调优，success gate为MSE>=20/28、MAE>=20/28、combined>=40/56。原8个checkpoints仍可作H4J前基线，terminal Main I/II row等待H4J complete test与joint selector；在此之前只支持aggregate-MSE competitive，不能写完整SOTA wording。
 
 ### 8.2 Main Results I：Unified versus Horizon-Specific
 

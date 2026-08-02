@@ -99,15 +99,35 @@ def materialize_jobs(
     config: dict[str, Any],
     config_path: Path,
 ) -> list[dict[str, Any]]:
-    if not config.get("base_config"):
+    base_profiles = config.get("base_profiles", {})
+    if not config.get("base_config") and not base_profiles:
         return [dict(job) for job in config["jobs"]]
-    base_path = Path(config["base_config"])
-    if not base_path.is_absolute():
-        base_path = ROOT / base_path
-    base_config = json.loads(base_path.read_text(encoding="utf-8"))
-    base_jobs = {job["trial_id"]: job for job in base_config["jobs"]}
+    base_jobs = {}
+    if config.get("base_config"):
+        base_path = Path(config["base_config"])
+        if not base_path.is_absolute():
+            base_path = ROOT / base_path
+        base_config = json.loads(base_path.read_text(encoding="utf-8"))
+        base_jobs = {job["trial_id"]: job for job in base_config["jobs"]}
     materialized = []
     for specification in config["jobs"]:
+        base_profile_id = specification.get("base_profile_id")
+        if base_profile_id is not None:
+            if base_profile_id not in base_profiles:
+                raise ValueError(
+                    f"unknown base profile {base_profile_id} in {config_path}"
+                )
+            job = dict(base_profiles[base_profile_id])
+            job.update(specification.get("overrides", {}))
+            job.update(
+                {
+                    key: value
+                    for key, value in specification.items()
+                    if key not in {"base_profile_id", "overrides"}
+                }
+            )
+            materialized.append(job)
+            continue
         base_trial_id = specification.get("base_trial_id")
         if base_trial_id is None:
             materialized.append(dict(specification))

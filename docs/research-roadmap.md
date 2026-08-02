@@ -1,5 +1,13 @@
 # Research Roadmap
 
+## ISCF-BSCA-MAIN-v1 H4J Joint-Objective Reset (2026-08-02)
+
+Current cursor=`Step 6 contract frozen / Step 7 local tooling pass / Step 8 remote preflight pending`。H1/H2/H3A/H3B的53个test-tuned trials仍完整保留，但原MSE-only selected row相对frozen published per-cell targets只有MSE 14/28、MAE 9/28、combined 23/56；existing trials的dataset-level reselection upper bound为25/56，无法满足用户更正后的目标。
+
+H4J不改变ISCF-BSCA architecture、objective、scales或inference graph。设计为40个seed2021 end-to-end jobs，其中ETTm2/Weather/Solar占28个。Trial checkpoint仍由four-H validation mean MSE选择；40/40 artifacts与checkpoint manifest完整后直接执行complete official test。Dataset selector固定为equal-weight joint MSE/MAE relative mean的1% guard后最大化leading cells；禁止per-H、per-metric、per-seed和per-cell profile selection。Success gate=MSE `>=20/28`、MAE `>=20/28`、combined `>=40/56`；Exchange因暂无同协议published target不进入56-cell denominator，但继续按joint within-search regret选一个shared profile。
+
+Narrative gate=`pass_as_hyperparameter_optimization_not_new_method`；effectiveness gate=`pending_complete_H4J_test`。若未达目标，保留全部negative trials并另行冻结H4K；任何architecture redesign必须创建test-informed新candidate并回Step 4--6。Canonical report=`analysis/iscf_bsca_main_v1_hpo_20260731/joint_objective_reset_and_h4j_prelaunch.md`，machine contract=`configs/iscf_bsca_main_v1_hpo_joint_h4j.json`。Decision=`H4J_frozen_local_gate_pass_remote_resource_smoke_then_training_authorized`。
+
 ## Section 3 Narrative Refinement v0.2 (2026-07-31)
 
 用户对v0.1的核心反馈不是公式错误，而是公式替代了叙事：reader从Related Work进入

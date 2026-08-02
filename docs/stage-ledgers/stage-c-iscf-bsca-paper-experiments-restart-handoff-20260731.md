@@ -44,16 +44,16 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment consolidation and prelaunch |
-| `active_experiment_step` | ISCF-BSCA-MAIN-v1 eight-dataset single-seed HPO complete；Main I/II baseline completion next |
+| `active_experiment_step` | H4J joint MSE/MAE + lead-cell HPO frozen；remote resource smoke/training next |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
 | `local_protocol_patch_authorized` | true for ISCF-BSCA-MAIN-v1 HPO tooling |
-| `remote_training_authorized` | true；H0/H1/H2 complete，ECL/Solar follow-up HPO与expanded budget authorized |
-| `test_tuned_hpo_authorized` | true；40-checkpoint ranking + ECL/Solar dataset-level four-H aggregate tuning |
-| `formal_test_authorized` | HPO formal test complete；Main I/II baseline formal test仍false |
-| `next_action` | 140-row published block已冻结；request Main I baseline and Main II source/protocol/remote/test tiers |
-| `conditional_next` | authorized后先TimeAlign-Exchange 4 jobs或Main II Tier A；不得复跑selected ISCF checkpoints |
+| `remote_training_authorized` | true；H4J 40-job frozen matrix |
+| `test_tuned_hpo_authorized` | true；H4J 40/40 training后direct complete official test与dataset-level joint selection |
+| `formal_test_authorized` | H4J HPO formal test authorized after manifest freeze；Main I/II baseline formal test仍false |
+| `next_action` | commit/push；remote GPU/resource smoke；启动H4J 40-job train/validation |
+| `conditional_next` | 40/40 artifacts后立即冻结manifest并完整test；未达40/56不得自动扩展H4K |
 
 本handoff授权的是实验盘点、设计、source/protocol audit与prelaunch文档准备，不是
 立即远程训练。不得为了兑现Introduction P6而跳过controls、补选有利数据集，或把
@@ -98,8 +98,9 @@ portability，因此不得把已完成的BSCA confirmation重命名为完整main
   implementation debugging；
 - unified candidate的trial内checkpoint selector为四个standard horizons的
   mean validation MSE；
-- official test用于按dataset的four-H mean MSE选择一个shared hyperparameter
-  profile，并作为formal effectiveness surface；
+- official test用于按dataset的joint four-H MSE/MAE relative mean 1% guard与
+  leading-cell count选择一个shared hyperparameter profile，并作为formal
+  effectiveness surface；
 - 结果明确标记`test_tuned/test_informed`；禁止按horizon、seed、metric或cell
   选择配置及选择性报告；
 - historical H720-only selector checkpoint若进入matched comparison，必须重训；

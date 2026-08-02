@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.2 pending author review；experiments=ISCF-BSCA-MAIN-v1 single-seed HPO complete、Main I/II baseline completion next |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.2 pending author review；experiments=H4J joint-objective HPO frozen prelaunch |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -17,7 +17,9 @@
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
-| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` 8-dataset single-seed profiles frozen for Main I/II |
+| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` terminal dataset profiles pending H4J joint selection |
+
+[ISCF-BSCA-MAIN-v1 Joint-Objective Reset, 2026-08-02] 用户将HPO目标从dataset-level four-H mean MSE-only更正为dataset-level joint MSE/MAE mean + balanced leading-cell coverage。当前selected row相对frozen published per-cell targets为MSE `14/28`、MAE `9/28`、combined `23/56`；53个existing trials即使每dataset重选一个shared profile，最多也只有`25/56`，因此不能靠重排达到目标。H4J冻结40个new seed2021 profiles，其中ETTm2/Weather/Solar占28个；每trial仍由four-H validation mean MSE选择checkpoint，40/40 training与manifest freeze后直接complete official test。Profile selector固定为dataset joint MSE/MAE relative mean的1% guard后最大化leading cells；总gate为MSE `>=20/28`、MAE `>=20/28`、combined `>=40/56`。Exchange继续调优但因缺published comparator不进入56-cell denominator。Architecture、objective、scales与inference graph均不变；未授权automatic H4K或baseline execution。Canonical report=`analysis/iscf_bsca_main_v1_hpo_20260731/joint_objective_reset_and_h4j_prelaunch.md`。Decision=`H4J_frozen_local_gate_pass_remote_resource_smoke_then_training_authorized`。
 
 [Main I Published Block Audit, 2026-08-02] TimeAlign ICLR 2026 Table 6中的TimeAlign、TimeMixer、DLinear、iTransformer、PatchTST × 7目标datasets × 4 horizons已形成140/140 MSE/MAE rows并通过PDF page 22坐标抽取、高分辨率目视与Table 1/6 Avg交叉检查。源文存在5组逐horizon均值/Avg不一致及3种lookback-grid描述，逐cell原值保留并标为published context。共同7 datasets上，ISCF-BSCA相对TimeAlign aggregate MSE `+2.199%`、15/28 cells、4/7 dataset means、3/4 horizon means，但MAE `-0.066%`；相对逐cell最强selected published MSE comparator为`+2.017%`，14/28 cells。结论为aggregate-MSE competitive，不是完整per-cell SOTA；AMD、SimpleTM、TimePerceiver、SRSNet与全部Exchange缺口仍待official reproduction。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/post_hpo_main_i_published_audit_and_next_gate.md`。Decision=`HPO_frozen_Main_I_published_140_rows_complete_competitive_not_full_SOTA_request_staged_baseline_authorization`。
 

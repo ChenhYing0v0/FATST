@@ -22,11 +22,11 @@
         "efficiency",
         "fresh_mechanism_diagnostics"
       ],
-      "status": "frozen_main_results_single_seed_8_dataset_profiles_reusable"
+      "status": "H4J_joint_objective_hpo_authorized_terminal_profiles_pending"
     }
   },
   "authorization": {
-    "current_decision": "HPO_complete_Main_I_published_140_rows_reusable_next_baseline_execution_not_authorized",
+    "current_decision": "H4J_joint_objective_frozen_remote_resource_smoke_and_training_authorized",
     "existing_artifact_audit": true,
     "matrix_design": true,
     "test_tuned_hpo_project_principle": {
@@ -38,10 +38,11 @@
     "local_protocol_patch": true,
     "remote_training": true,
     "official_test_hpo_execution": true,
+    "H4J_formal_test_after_complete_training_manifest": true,
     "formal_test": false,
     "current_user_authorization": {
-      "date": "2026-07-31",
-      "instruction": "start_the_planned_ISCF_BSCA_MAIN_v1_hyperparameter_tuning",
+      "date": "2026-08-02",
+      "instruction": "optimize_dataset_level_joint_mse_mae_means_and_reach_at_least_40_of_56_balanced_leading_cells",
       "Tier_A": true,
       "Tier_B1_H0_H1": true,
       "Tier_B2_bounded_HPO_and_test_profile_ranking": true,
@@ -109,7 +110,14 @@
     "local_unified_checkpoint_selector": "mean_validation_mse_over_h96_h192_h336_h720",
     "local_fixed_h_checkpoint_selector": "minimum_validation_mse_for_the_same_horizon",
     "validation_only_checkpoint_selection": true,
-    "main_hyperparameter_selector": "minimum_official_test_mean_mse_over_h96_h192_h336_h720_per_dataset",
+    "main_hyperparameter_selector": "within_1_percent_of_best_dataset_joint_mse_mae_relative_mean_then_maximize_balanced_leading_cells",
+    "main_hyperparameter_success_gate": {
+      "mse_lead_cells": "at_least_20_of_28",
+      "mae_lead_cells": "at_least_20_of_28",
+      "combined_lead_cells": "at_least_40_of_56",
+      "published_target_datasets": 7,
+      "exchange_in_denominator": false
+    },
     "test_tuned_hyperparameter_selection": true,
     "official_test_role": "test_tuned_test_informed_hyperparameter_selection_and_paper_reporting",
     "test_may_select": [

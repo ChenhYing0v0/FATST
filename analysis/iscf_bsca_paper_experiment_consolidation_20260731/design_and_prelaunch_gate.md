@@ -5,20 +5,20 @@
 | Field | Content |
 | --- | --- |
 | `protocol_id` | `ISCF-BSCA-PAPER-EXP-v2` |
-| `date` | `2026-07-31` |
+| `date` | `2026-08-02` |
 | `candidate` | ablation anchor=`ISCF-BSCA-v1`；main candidate=`ISCF-BSCA-MAIN-v1` |
-| `current_step` | ISCF-BSCA-MAIN-v1 HPO complete；Main I 140-row published block audited |
-| `decision` | `HPO_frozen_Main_I_published_140_rows_complete_competitive_not_full_SOTA_request_staged_baseline_authorization` |
+| `current_step` | H4J joint MSE/MAE + lead-cell HPO frozen；remote resource smoke/training next |
+| `decision` | `H4J_frozen_local_gate_pass_remote_resource_smoke_then_training_authorized` |
 | `architecture_search` | false |
 | `test_tuned_hpo_project_principle` | authorized and frozen；HPO execution authorized |
 | `local_protocol_patch_authorized` | true for ISCF-BSCA-MAIN-v1 HPO tooling |
 | `scoped_timealign_exchange_patch` | authorized and implemented locally；unlaunched |
-| `remote_training_authorized` | true for frozen H0/H1 and bounded H2 HPO |
-| `official_test_hpo_authorized` | true after complete frozen H2 training matrix |
-| `formal_test_authorized` | HPO complete；Main I/II baseline formal test=false |
+| `remote_training_authorized` | true for frozen H4J 40-job HPO matrix |
+| `official_test_hpo_authorized` | true after complete frozen H4J training matrix and manifest freeze |
+| `formal_test_authorized` | H4J complete official-test audit authorized；Main I/II baseline formal test=false |
 | `machine_readable_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 
-截至2026-08-02，`ISCF-BSCA-MAIN-v1` H1/H2/H3A/H3B共53个trials与全部formal tests已完成；8 selected checkpoints/32 cells冻结且不再重训。Main I的TimeAlign Table 6目标published block也已形成140/140 rows。当前未启动任何baseline或Main II remote job；其source/protocol patch、training与formal test需重新分级授权。
+截至2026-08-02，`ISCF-BSCA-MAIN-v1` H1/H2/H3A/H3B共53个trials与全部formal tests已完成；原MSE-only selector下的8 checkpoints/32 cells仍可复用为H4J前基线，但不再视为terminal main row。Main I的TimeAlign Table 6目标published block已形成140/140 rows。当前selected row相对逐cell最优published target为MSE 14/28、MAE 9/28；现有trials即使重选最多25/56。用户已将目标改为dataset-level joint MSE/MAE mean与leading-cell coverage，并授权冻结H4J 40-job matrix继续调优。Main I/II baseline source/protocol patch、training与formal test仍是独立授权边界。
 
 ## A. Current Authoritative v2 Plan
 
@@ -33,7 +33,7 @@ artifact/hash审计证据，但其中5-dataset main-table范围、未调优
 | Identity | Architecture | Hyperparameters | Paper role | Existing result role |
 | --- | --- | --- | --- | --- |
 | `ISCF-BSCA-v1` | exact frozen | exact confirmation config | 5-dataset core ablation anchor only | Full与`w/o BSCA`已有three-seed evidence可复用 |
-| `ISCF-BSCA-MAIN-v1` | same frozen architecture family；no architecture search | official-test tuned, one profile per dataset and shared across four H | Main I、Main II、transfer reference、efficiency、fresh mechanism diagnostics | 8 selected checkpoints/32 cells frozen and reusable；do not retrain |
+| `ISCF-BSCA-MAIN-v1` | same frozen architecture family；no architecture search | official-test tuned, one profile per dataset and shared across four H | Main I、Main II、transfer reference、efficiency、fresh mechanism diagnostics | 53 existing trials retained；H4J adds 40 frozen profiles；terminal row pending complete joint selection |
 
 因此，现有confirmation不能再作为Main I或Main II中的最终ISCF-BSCA行；它只
 证明exact ablation anchor上BSCA相对`ISCF-EQUAL`的小幅方向稳定收益。
@@ -62,8 +62,9 @@ ETTh1, ETTh2, ETTm1, ETTm2, Weather, ECL, Solar, Exchange
 - validation only用于每个trial的early stopping与checkpoint selection；
 - official test用于在冻结search space内按dataset选择hyperparameter profile，
   以及最终paper-facing effectiveness/reporting；
-- 每个dataset的profile selector为四个H的mean official-test MSE；MAE完整报告但
-  默认不参与selector；
+- 每个dataset的profile selector改为equal-weight joint MSE/MAE relative mean；
+  先保留距dataset最佳joint mean不超过1%的profiles，再最大化MSE+MAE leading
+  cells；最终仍只选择一个profile服务四个H；
 - 所有尝试过的config及完整MSE/MAE必须保留，结果明确标记
   `test_tuned/test_informed`，不得声称untouched holdout；
 - 不选择性报告有利dataset、horizon、seed或baseline。
@@ -93,8 +94,8 @@ trial。每个被采纳的上游设置必须记录source commit、原始dataset/
 本仓库tensor contract的理由及被拒绝的差异。
 
 每个HPO trial先由four-H mean validation MSE选择checkpoint，再在official test
-上导出四个H的MSE/MAE。每dataset按four-H mean test MSE排序trial并冻结唯一
-profile；test不得选择epoch、checkpoint或seed。
+上导出四个H的MSE/MAE。H4J起按`joint mean 1% guard -> leading-cell count ->
+balanced tie-break`冻结唯一dataset profile；test不得选择epoch、checkpoint或seed。
 
 #### A3.2 Staged tuning procedure
 
@@ -103,6 +104,7 @@ profile；test不得选择epoch、checkpoint或seed。
 | H0 data/protocol parity | ECL、Solar、Exchange loader、split、channels、scaler、metric与一条comparable baseline | exact metadata audit + local smoke | false |
 | H1 anchor establishment | 8 datasets；current profile + source-audited TimeAlign-inspired encoder anchors | finite train/val smoke；new datasets先得到可比较、非病态结果 | false |
 | H2 bounded coarse test-tuned search | 8 datasets，seed2021；预先冻结有限search space与budget | validation选择每trial checkpoint；four-H mean official-test MSE选择dataset profile；MAE/numeric health完整记录 | requires separate Tier B2 authorization |
+| H4J joint-objective reset | 40 new profiles；28分配给ETTm2/Weather/Solar；architecture/objective不变 | joint MSE/MAE mean 1% guard后最大化lead cells；MSE>=20/28、MAE>=20/28、combined>=40/56 | authorized；complete training后direct complete test |
 | H3 optional stability confirmation | 每dataset的top-2 profiles，seeds2022/2023 | only if time allows after complete seed2021 matrix；只评估稳定性，不重选profile | false |
 | H4 config freeze | 每dataset选唯一profile；冻结effective config、commit、seed、validation checkpoint selector、test HPO selector与hash contract | complete trial ledger；no missing dataset；no horizon-specific selection | test results already disclosed as tuning evidence |
 | H5 selected-profile confirmation/reporting | selected profiles × 8 datasets × seed2021 | checkpoint selected from validation only；additional seeds optional | requires Tier B3/C authorization |

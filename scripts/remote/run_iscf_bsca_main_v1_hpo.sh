@@ -46,6 +46,7 @@ import sys
 config = json.load(open(sys.argv[1]))
 payload = {
     "jobs": config["jobs"],
+    "base_profiles": config.get("base_profiles", {}),
     "hpo_budget": config["hpo_budget"],
     "selection_contract": config["selection_contract"],
     "architecture_invariants": config["architecture_invariants"],
@@ -85,6 +86,7 @@ config_path = Path(sys.argv[1])
 config = json.load(config_path.open())
 canary_only = sys.argv[2] == "1"
 base_jobs = {}
+base_profiles = config.get("base_profiles", {})
 if config.get("base_config"):
     base_path = Path(config["base_config"])
     if not base_path.is_absolute():
@@ -94,7 +96,17 @@ if config.get("base_config"):
 
 resolved_jobs = {}
 for specification in config["jobs"]:
-    if specification.get("base_trial_id"):
+    if specification.get("base_profile_id"):
+        job = dict(base_profiles[specification["base_profile_id"]])
+        job.update(specification.get("overrides", {}))
+        job.update(
+            {
+                key: value
+                for key, value in specification.items()
+                if key not in {"base_profile_id", "overrides"}
+            }
+        )
+    elif specification.get("base_trial_id"):
         job = dict(base_jobs[specification["base_trial_id"]])
         job.update(specification.get("overrides", {}))
         job.update(

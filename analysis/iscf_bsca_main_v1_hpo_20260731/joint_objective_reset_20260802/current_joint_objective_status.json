@@ -1,0 +1,76 @@
+{
+  "existing_trial_count": 53,
+  "dataset_count": 8,
+  "published_comparator_dataset_count": 7,
+  "lead_cell_denominator": 56,
+  "current_selected": {
+    "mse_lead_cells": 14,
+    "mae_lead_cells": 9,
+    "total_lead_cells": 23
+  },
+  "existing_reselection_upper_bound": {
+    "unrestricted_total_lead_cells": 25,
+    "joint_mean_guard_total_lead_cells": 25
+  },
+  "joint_mean_guard_pct": 1.0,
+  "exchange_lead_cell_role": "excluded_until_comparable_targets_exist",
+  "dataset_summary": {
+    "ECL": {
+      "current_selected_trial": "ECL__h3a_budget45",
+      "current_lead_cells": 4,
+      "unrestricted_max_trial": "ECL__h2_intermediate_capacity",
+      "unrestricted_max_lead_cells": 5,
+      "joint_mean_guard_max_trial": "ECL__h2_intermediate_capacity",
+      "joint_mean_guard_max_lead_cells": 5
+    },
+    "ETTh1": {
+      "current_selected_trial": "ETTh1__h1_timealign",
+      "current_lead_cells": 5,
+      "unrestricted_max_trial": "ETTh1__h1_timealign",
+      "unrestricted_max_lead_cells": 5,
+      "joint_mean_guard_max_trial": "ETTh1__h1_timealign",
+      "joint_mean_guard_max_lead_cells": 5
+    },
+    "ETTh2": {
+      "current_selected_trial": "ETTh2__h2_lr5e4",
+      "current_lead_cells": 6,
+      "unrestricted_max_trial": "ETTh2__h2_lr5e4",
+      "unrestricted_max_lead_cells": 6,
+      "joint_mean_guard_max_trial": "ETTh2__h2_lr5e4",
+      "joint_mean_guard_max_lead_cells": 6
+    },
+    "ETTm1": {
+      "current_selected_trial": "ETTm1__h2_table5_capacity",
+      "current_lead_cells": 6,
+      "unrestricted_max_trial": "ETTm1__h2_table5_capacity",
+      "unrestricted_max_lead_cells": 6,
+      "joint_mean_guard_max_trial": "ETTm1__h2_table5_capacity",
+      "joint_mean_guard_max_lead_cells": 6
+    },
+    "ETTm2": {
+      "current_selected_trial": "ETTm2__h2_hybrid",
+      "current_lead_cells": 0,
+      "unrestricted_max_trial": "ETTm2__h2_hybrid",
+      "unrestricted_max_lead_cells": 0,
+      "joint_mean_guard_max_trial": "ETTm2__h2_hybrid",
+      "joint_mean_guard_max_lead_cells": 0
+    },
+    "Solar": {
+      "current_selected_trial": "Solar__h3b_lr3e4_rank64",
+      "current_lead_cells": 1,
+      "unrestricted_max_trial": "Solar__h3b_lr3e4_rank64",
+      "unrestricted_max_lead_cells": 1,
+      "joint_mean_guard_max_trial": "Solar__h3b_lr3e4_rank64",
+      "joint_mean_guard_max_lead_cells": 1
+    },
+    "Weather": {
+      "current_selected_trial": "Weather__h1_timealign",
+      "current_lead_cells": 1,
+      "unrestricted_max_trial": "Weather__h2_table5_ff",
+      "unrestricted_max_lead_cells": 2,
+      "joint_mean_guard_max_trial": "Weather__h2_table5_ff",
+      "joint_mean_guard_max_lead_cells": 2
+    }
+  },
+  "decision": "new_training_required"
+}
