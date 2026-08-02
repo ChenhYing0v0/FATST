@@ -96,3 +96,9 @@ Four-layer status：
 - `failure_attribution=existing_weak_cells_are_profile_optimization_gap_not_architecture_rejection`。
 
 Decision=`H4J_frozen_local_gate_pass_remote_resource_smoke_then_training_authorized`。
+
+## 6. Resource-smoke fail-closed repair
+
+首次remote resource smoke于2026-08-02 12:00启动。37个profiles完成；`ETTm2__h4j_seq512`、`ETTh2__h4j_seq512`和`Exchange__h4j_seq512`在trainer参数检查阶段失败，统一报错为`legacy patch_num must divide seq_len`。没有checkpoint进入正式training，test仍为0。
+
+Failure attribution=`source_protocol_compatibility_fault`，不是OOM、numeric pathology或模型方向失败。三项job保留`seq_len=512`，同时把`patch_num`改为可整除的16，并将profile id标为`seq512_patch16`；job count、dataset count、search role与architecture family不变。Static checker新增所有resolved jobs必须满足`seq_len % patch_num == 0`，避免同类错误再次到remote才暴露。旧resource-smoke artifacts仅属于failed preflight，不进入training/test manifest；修复后使用新的output root重跑完整40-job smoke，全部通过前仍禁止training。

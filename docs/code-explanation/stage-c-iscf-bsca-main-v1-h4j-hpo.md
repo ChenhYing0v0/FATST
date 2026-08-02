@@ -39,9 +39,10 @@ Exchange没有published target，lead-cell列保持空；其joint score改由wit
 2. 40个trial IDs唯一且与LPT queue完全相同；
 3. dataset counts严格为2/2/2/9/9/4/10/2；
 4. ETTm2/Weather/Solar合计28 jobs；
-5. 禁止per-horizon/per-metric selection；
-6. success gates固定为MSE>=20/28、MAE>=20/28、combined>=40/56；
-7. generic runner dry-run materializes 40 jobs且test jobs=0。
+5. 每个resolved job满足`seq_len % patch_num == 0`的encoder protocol invariant；
+6. 禁止per-horizon/per-metric selection；
+7. success gates固定为MSE>=20/28、MAE>=20/28、combined>=40/56；
+8. generic runner dry-run materializes 40 jobs且test jobs=0。
 
 `scripts/build_iscf_bsca_main_v1_h4j_test_manifest.py`只能在40-row training ledger完整后生成manifest；任一artifact/numeric-health失败、checkpoint hash缺失、dataset count不符或trial ID重复都会阻止manifest freeze。正式test runner随后还必须验证checkpoint pre/post hash不变。
 

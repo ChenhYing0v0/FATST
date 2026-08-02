@@ -81,6 +81,7 @@ def main() -> None:
         )
         assert REQUIRED_FIELDS <= set(job)
         assert job["dataset"] == specification["dataset"]
+        assert job["seq_len"] % job["patch_num"] == 0
         assert job.get("max_epochs", config["training"]["max_epochs"]) in {45, 60}
         assert job.get(
             "early_stopping_patience",

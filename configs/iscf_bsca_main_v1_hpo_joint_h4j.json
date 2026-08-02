@@ -141,7 +141,7 @@
   },
   "search_space": {
     "seq_len": [192, 336, 512, 720],
-    "patch_num": [1, 4, 12, 24, 48],
+    "patch_num": [1, 4, 12, 16, 24, 48],
     "d_model": [32, 64, 128, 256, 512],
     "d_ff": [32, 128, 256, 1024, 2048],
     "dropout": [0.1, 0.2, 0.3, 0.4, 0.5, 0.8, 0.9],
@@ -190,7 +190,7 @@
     {"trial_id": "ETTm2__h4j_dropout2", "dataset": "ETTm2", "profile_id": "h4j_dropout2", "base_profile_id": "ETTm2_hybrid", "source_prior": "ETTm2_regularization_neighbor", "overrides": {"dropout": 0.2}},
     {"trial_id": "ETTm2__h4j_rank64", "dataset": "ETTm2", "profile_id": "h4j_rank64", "base_profile_id": "ETTm2_hybrid", "source_prior": "ETTm2_decoder_rank_neighbor", "overrides": {"mode_rank": 64}},
     {"trial_id": "ETTm2__h4j_rank128", "dataset": "ETTm2", "profile_id": "h4j_rank128", "base_profile_id": "ETTm2_hybrid", "source_prior": "ETTm2_decoder_rank_neighbor", "overrides": {"mode_rank": 128}},
-    {"trial_id": "ETTm2__h4j_seq512", "dataset": "ETTm2", "profile_id": "h4j_seq512", "base_profile_id": "ETTm2_hybrid", "source_prior": "ETTm2_lookback_neighbor", "overrides": {"seq_len": 512}},
+    {"trial_id": "ETTm2__h4j_seq512", "dataset": "ETTm2", "profile_id": "h4j_seq512_patch16", "base_profile_id": "ETTm2_hybrid", "source_prior": "ETTm2_lookback_with_divisible_patch_compatibility_neighbor", "overrides": {"seq_len": 512, "patch_num": 16}},
     {"trial_id": "ETTm2__h4j_effective_batch16", "dataset": "ETTm2", "profile_id": "h4j_effective_batch16", "base_profile_id": "ETTm2_hybrid", "source_prior": "ETTm2_gradient_noise_neighbor", "overrides": {"batch_size": 8, "gradient_accumulation_steps": 2}},
 
     {"trial_id": "Weather__h4j_current_budget45", "dataset": "Weather", "profile_id": "h4j_current_budget45", "base_profile_id": "Weather_current", "source_prior": "Weather_joint_winner_budget_extension", "overrides": {"max_epochs": 45, "early_stopping_patience": 10}},
@@ -222,11 +222,11 @@
     {"trial_id": "ETTh1__h4j_lr3e4", "dataset": "ETTh1", "profile_id": "h4j_lr3e4", "base_profile_id": "ETTh1_selected", "source_prior": "ETTh1_joint_winner_optimizer_neighbor", "overrides": {"learning_rate": 0.0003}},
     {"trial_id": "ETTh1__h4j_dropout2", "dataset": "ETTh1", "profile_id": "h4j_dropout2", "base_profile_id": "ETTh1_selected", "source_prior": "ETTh1_long_horizon_regularization_neighbor", "overrides": {"dropout": 0.2}},
     {"trial_id": "ETTh2__h4j_lr3e4", "dataset": "ETTh2", "profile_id": "h4j_lr3e4", "base_profile_id": "ETTh2_selected", "source_prior": "ETTh2_joint_winner_optimizer_neighbor", "overrides": {"learning_rate": 0.0003}},
-    {"trial_id": "ETTh2__h4j_seq512", "dataset": "ETTh2", "profile_id": "h4j_seq512", "base_profile_id": "ETTh2_selected", "source_prior": "ETTh2_long_horizon_lookback_neighbor", "overrides": {"seq_len": 512}},
+    {"trial_id": "ETTh2__h4j_seq512", "dataset": "ETTh2", "profile_id": "h4j_seq512_patch16", "base_profile_id": "ETTh2_selected", "source_prior": "ETTh2_lookback_with_divisible_patch_compatibility_neighbor", "overrides": {"seq_len": 512, "patch_num": 16}},
     {"trial_id": "ETTm1__h4j_budget45", "dataset": "ETTm1", "profile_id": "h4j_budget45", "base_profile_id": "ETTm1_selected", "source_prior": "ETTm1_joint_winner_budget_extension", "overrides": {"max_epochs": 45, "early_stopping_patience": 10}},
     {"trial_id": "ETTm1__h4j_dropout8", "dataset": "ETTm1", "profile_id": "h4j_dropout8", "base_profile_id": "ETTm1_selected", "source_prior": "ETTm1_regularization_neighbor", "overrides": {"dropout": 0.8}},
     {"trial_id": "Exchange__h4j_seq192", "dataset": "Exchange", "profile_id": "h4j_seq192", "base_profile_id": "Exchange_selected", "source_prior": "Exchange_lookback_neighbor", "overrides": {"seq_len": 192}},
-    {"trial_id": "Exchange__h4j_seq512", "dataset": "Exchange", "profile_id": "h4j_seq512", "base_profile_id": "Exchange_selected", "source_prior": "Exchange_lookback_neighbor", "overrides": {"seq_len": 512}}
+    {"trial_id": "Exchange__h4j_seq512", "dataset": "Exchange", "profile_id": "h4j_seq512_patch16", "base_profile_id": "Exchange_selected", "source_prior": "Exchange_lookback_with_divisible_patch_compatibility_neighbor", "overrides": {"seq_len": 512, "patch_num": 16}}
   ],
   "provisional_lpt_order": [
     "ECL__h4j_exact_budget60",
