@@ -7,8 +7,8 @@
 | `protocol_id` | `ISCF-BSCA-PAPER-EXP-v2` |
 | `date` | `2026-08-02` |
 | `candidate` | ablation anchor=`ISCF-BSCA-v1`；main candidate=`ISCF-BSCA-MAIN-v1` |
-| `current_step` | H4J joint MSE/MAE + lead-cell HPO frozen；remote resource smoke/training next |
-| `decision` | `H4J_frozen_local_gate_pass_remote_resource_smoke_then_training_authorized` |
+| `current_step` | H4J 40/40 resource smoke pass；full train/validation active；test=0 |
+| `decision` | `H4J_40_job_training_active_test_zero` |
 | `architecture_search` | false |
 | `test_tuned_hpo_project_principle` | authorized and frozen；HPO execution authorized |
 | `local_protocol_patch_authorized` | true for ISCF-BSCA-MAIN-v1 HPO tooling |
