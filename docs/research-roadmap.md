@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## ISCF-BSCA-MAIN-v1 H4J Complete Test Decision (2026-08-03)
+
+H4J 40/40 official-test artifacts和160/160 standard-horizon cells完整，checkpoint immutability 40/40 pass。H1--H4J 93 trials的frozen joint selector得到MSE 15/28、MAE 15/28、combined 30/56，相对H4J前23/56提高7 cells，但三项20/28、20/28和40/56 gates仍全部失败。共同7 datasets macro mean MSE/MAE分别改善0.234%/0.585%；相对TimeAlign Table 6 macro MSE/MAE分别低2.428%/0.520%，但结果仍是single-seed test-tuned published-context comparison。
+
+Selector已达到所有93 trials的single-profile和逐cell diagnostic oracle上限30/56，因此failure attribution=`search_space_performance_shortfall`，不是selector、numeric或architecture failure。ETTm2=0/8、Weather=2/8、H720=4/14是下一轮主要缺口。Effectiveness gate=`performance_partial_pass_gate_fail`；rollback=Step 6 HPO matrix design。H4K未授权，必须先冻结minimal dataset-level search contract。Canonical report=`analysis/iscf_bsca_main_v1_hpo_20260731/h4j_test_result_and_joint_hpo_decision.md`。Decision=`H4J_complete_joint_HPO_material_partial_improvement_gate_fail_H4K_not_authorized`。
+
 ## ISCF-BSCA-MAIN-v1 H4J Joint-Objective Reset (2026-08-02)
 
 Current cursor=`Step 6 contract frozen / Step 7 local tooling pass / Step 8 remote preflight pending`。H1/H2/H3A/H3B的53个test-tuned trials仍完整保留，但原MSE-only selected row相对frozen published per-cell targets只有MSE 14/28、MAE 9/28、combined 23/56；existing trials的dataset-level reselection upper bound为25/56，无法满足用户更正后的目标。

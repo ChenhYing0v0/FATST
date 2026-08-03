@@ -1,0 +1,11 @@
+{
+  "protocol_id": "ISCF-BSCA-MAIN-v1-HPO-JOINT-H4J-TEST-AUDIT",
+  "candidate_version": "ISCF-BSCA-MAIN-v1-joint-h4j-test-informed-20260802",
+  "manifest_sha256": "8b9465adbf00a5812b373c0c850ab001b5e55ba1552180faf6f75e21c8a2ca1d",
+  "expected_trials": 40,
+  "complete_trials": 40,
+  "expected_standard_horizon_cells": 160,
+  "complete_standard_horizon_cells": 160,
+  "errors": [],
+  "complete": true
+}

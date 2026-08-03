@@ -44,16 +44,16 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment consolidation and prelaunch |
-| `active_experiment_step` | H4J 40/40 training audit pass；manifest frozen；direct official-test prelaunch |
+| `active_experiment_step` | H4J 40/40 test complete；93-trial joint selection=15/28 MSE + 15/28 MAE=30/56；gate fail |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
 | `local_protocol_patch_authorized` | true for ISCF-BSCA-MAIN-v1 HPO tooling |
-| `remote_training_authorized` | true；H4J 40-job frozen matrix |
-| `test_tuned_hpo_authorized` | true；H4J 40/40 training后direct complete official test与dataset-level joint selection |
-| `formal_test_authorized` | H4J HPO formal test authorized after manifest freeze；Main I/II baseline formal test仍false |
-| `next_action` | commit/push H4J test contract；remote preflight；direct complete 40-checkpoint official test |
-| `conditional_next` | 40/40 artifacts后立即冻结manifest并完整test；未达40/56不得自动扩展H4K |
+| `remote_training_authorized` | H4J completed；new H4K training=false |
+| `test_tuned_hpo_authorized` | H4J completed；further HPO/test=false until a new frozen contract is authorized |
+| `formal_test_authorized` | H4J HPO formal test completed；Main I/II baseline formal test仍false |
+| `next_action` | author review H4J gate failure；如继续则先冻结minimal H4K，优先ETTm2/Weather与H720 gaps |
+| `conditional_next` | H4K automatic extension=false；不得在未授权时启动新training/test |
 
 本handoff授权的是实验盘点、设计、source/protocol audit与prelaunch文档准备，不是
 立即远程训练。不得为了兑现Introduction P6而跳过controls、补选有利数据集，或把

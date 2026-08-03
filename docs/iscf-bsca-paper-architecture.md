@@ -5,10 +5,10 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.32` |
-| `last_updated` | `2026-08-02` |
+| `version` | `v0.33` |
+| `last_updated` | `2026-08-03` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 3 v0.2 narrative refinement pending author review；experiments=H4J 40/40 training complete、direct test prelaunch；Method Figure 4 planned |
+| `current_review_cursor` | writing=Section 3 v0.2 narrative refinement pending author review；experiments=H4J complete、joint selection 30/56 gate fail；Method Figure 4 planned |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
@@ -1317,7 +1317,7 @@ TimeAlign encoder参数只作为source-audited search prior。当前完整矩阵
 seed2021；seeds2022/2023仅在时间允许时按完整experiment block扩展，且不得
 result-selective扩展。
 
-截至2026-08-02，53个HPO trials已完成；原MSE-only selected profiles相对frozen published targets为MSE 14/28、MAE 9/28、combined 23/56，existing reselection上限25/56。H4J因此冻结40个new profiles继续调优，success gate为MSE>=20/28、MAE>=20/28、combined>=40/56。原8个checkpoints仍可作H4J前基线，terminal Main I/II row等待H4J complete test与joint selector；在此之前只支持aggregate-MSE competitive，不能写完整SOTA wording。
+截至2026-08-03，H1--H4J共93个HPO trials已完成。Joint selector相对frozen published targets达到MSE 15/28、MAE 15/28、combined 30/56，未通过MSE>=20/28、MAE>=20/28、combined>=40/56。共同7 datasets的macro mean MSE/MAE相对H4J前改善0.234%/0.585%，相对TimeAlign Table 6分别低2.428%/0.520%，但single-seed test-tuned与published native protocol边界仍在。合法selector已经达到93 trials的逐cell diagnostic oracle 30/56，故当前结论是strong aggregate competitor和HPO partial pass，不是完整per-cell SOTA；terminal Main I/II row继续等待新的authorized H4K或claim收窄决策。
 
 ### 8.2 Main Results I：Unified versus Horizon-Specific
 

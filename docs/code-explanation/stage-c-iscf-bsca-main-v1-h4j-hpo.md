@@ -33,6 +33,8 @@ Exchange没有published target，lead-cell列保持空；其joint score改由wit
 
 完整H1--H4J输入下，selector在1% guard内依次按`total leads`、`min(MSE leads, MAE leads)`、joint score、validation mean MSE、参数量和lexical profile ID排序；Exchange直接最小化within-search equal-weight MSE/MAE regret。输出新增`joint_selected_profiles.csv`与`joint_selected_cells.csv`，并分别检查MSE 20/28、MAE 20/28和combined 40/56三项gate。
 
+Analyzer还计算`diagnostic_per_cell_oracle`：对每个dataset-horizon-metric在全部retained trials中取最小test值，只用于判断search-space headroom。该oracle不是合法profile selector，不进入paper table；当合法dataset-level profile已经达到同一lead count时，可排除tie-break或1% guard造成的coverage损失。
+
 ## 4. Prelaunch checker and manifest builder
 
 `scripts/check_iscf_bsca_main_v1_hpo_joint_h4j.py`执行fail-closed static checks：

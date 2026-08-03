@@ -1,0 +1,115 @@
+{
+  "existing_trial_count": 93,
+  "dataset_count": 8,
+  "published_comparator_dataset_count": 7,
+  "lead_cell_denominator": 56,
+  "current_selected": {
+    "mse_lead_cells": 14,
+    "mae_lead_cells": 9,
+    "total_lead_cells": 23
+  },
+  "existing_reselection_upper_bound": {
+    "unrestricted_total_lead_cells": 30,
+    "joint_mean_guard_total_lead_cells": 30
+  },
+  "joint_selected": {
+    "mse_lead_cells": 15,
+    "mse_lead_denominator": 28,
+    "mae_lead_cells": 15,
+    "mae_lead_denominator": 28,
+    "total_lead_cells": 30,
+    "total_lead_denominator": 56
+  },
+  "diagnostic_per_cell_oracle": {
+    "mse_lead_cells": 15,
+    "mae_lead_cells": 15,
+    "total_lead_cells": 30,
+    "role": "search_space_headroom_only_not_legal_profile_selection"
+  },
+  "success_gates": {
+    "mse_at_least_20_of_28": false,
+    "mae_at_least_20_of_28": false,
+    "combined_at_least_40_of_56": false,
+    "overall_pass": false
+  },
+  "joint_mean_guard_pct": 1.0,
+  "exchange_lead_cell_role": "excluded_until_comparable_targets_exist",
+  "dataset_summary": {
+    "ECL": {
+      "current_selected_trial": "ECL__h3a_budget45",
+      "current_lead_cells": 4,
+      "unrestricted_max_trial": "ECL__h2_intermediate_capacity",
+      "unrestricted_max_lead_cells": 5,
+      "joint_mean_guard_max_trial": "ECL__h2_intermediate_capacity",
+      "joint_mean_guard_max_lead_cells": 5,
+      "diagnostic_per_cell_oracle_mse_leads": 3,
+      "diagnostic_per_cell_oracle_mae_leads": 2
+    },
+    "ETTh1": {
+      "current_selected_trial": "ETTh1__h1_timealign",
+      "current_lead_cells": 5,
+      "unrestricted_max_trial": "ETTh1__h4j_lr3e4",
+      "unrestricted_max_lead_cells": 5,
+      "joint_mean_guard_max_trial": "ETTh1__h4j_lr3e4",
+      "joint_mean_guard_max_lead_cells": 5,
+      "diagnostic_per_cell_oracle_mse_leads": 3,
+      "diagnostic_per_cell_oracle_mae_leads": 2
+    },
+    "ETTh2": {
+      "current_selected_trial": "ETTh2__h2_lr5e4",
+      "current_lead_cells": 6,
+      "unrestricted_max_trial": "ETTh2__h2_lr5e4",
+      "unrestricted_max_lead_cells": 6,
+      "joint_mean_guard_max_trial": "ETTh2__h2_lr5e4",
+      "joint_mean_guard_max_lead_cells": 6,
+      "diagnostic_per_cell_oracle_mse_leads": 3,
+      "diagnostic_per_cell_oracle_mae_leads": 3
+    },
+    "ETTm1": {
+      "current_selected_trial": "ETTm1__h2_table5_capacity",
+      "current_lead_cells": 6,
+      "unrestricted_max_trial": "ETTm1__h2_table5_capacity",
+      "unrestricted_max_lead_cells": 6,
+      "joint_mean_guard_max_trial": "ETTm1__h2_table5_capacity",
+      "joint_mean_guard_max_lead_cells": 6,
+      "diagnostic_per_cell_oracle_mse_leads": 3,
+      "diagnostic_per_cell_oracle_mae_leads": 3
+    },
+    "ETTm2": {
+      "current_selected_trial": "ETTm2__h2_hybrid",
+      "current_lead_cells": 0,
+      "unrestricted_max_trial": "ETTm2__h4j_rank64",
+      "unrestricted_max_lead_cells": 0,
+      "joint_mean_guard_max_trial": "ETTm2__h4j_rank64",
+      "joint_mean_guard_max_lead_cells": 0,
+      "diagnostic_per_cell_oracle_mse_leads": 0,
+      "diagnostic_per_cell_oracle_mae_leads": 0
+    },
+    "Solar": {
+      "current_selected_trial": "Solar__h3b_lr3e4_rank64",
+      "current_lead_cells": 1,
+      "unrestricted_max_trial": "Solar__h4j_patch4_lr3e4",
+      "unrestricted_max_lead_cells": 6,
+      "joint_mean_guard_max_trial": "Solar__h4j_patch4_lr3e4",
+      "joint_mean_guard_max_lead_cells": 6,
+      "diagnostic_per_cell_oracle_mse_leads": 2,
+      "diagnostic_per_cell_oracle_mae_leads": 4
+    },
+    "Weather": {
+      "current_selected_trial": "Weather__h1_timealign",
+      "current_lead_cells": 1,
+      "unrestricted_max_trial": "Weather__h4j_timealign_dropout3",
+      "unrestricted_max_lead_cells": 2,
+      "joint_mean_guard_max_trial": "Weather__h4j_timealign_dropout3",
+      "joint_mean_guard_max_lead_cells": 2,
+      "diagnostic_per_cell_oracle_mse_leads": 1,
+      "diagnostic_per_cell_oracle_mae_leads": 1
+    },
+    "Exchange": {
+      "current_selected_trial": "Exchange__h2_lookback336",
+      "selector": "within_search_equal_weight_mse_mae_regret",
+      "joint_selected_trial": "Exchange__h2_lookback336"
+    }
+  },
+  "decision": "joint_hpo_success_gate_fail_H4K_requires_separate_authorization"
+}

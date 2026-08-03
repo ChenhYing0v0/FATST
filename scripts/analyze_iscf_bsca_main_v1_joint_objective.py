@@ -219,6 +219,8 @@ def main() -> None:
     guard_max = 0
     guard_mse = 0
     guard_mae = 0
+    oracle_mse = 0
+    oracle_mae = 0
     dataset_summary = {}
     joint_selected: list[dict[str, Any]] = []
     for dataset in common_datasets:
@@ -255,6 +257,32 @@ def main() -> None:
         guard_mse += int(guard_row["lead_mse_cells"])
         guard_mae += int(guard_row["lead_mae_cells"])
         joint_selected.append(dict(guard_row))
+        dataset_cells = [
+            cell
+            for (cell_dataset, _), trial_cells in cells.items()
+            if cell_dataset == dataset
+            for cell in trial_cells
+        ]
+        dataset_oracle_mse = sum(
+            min(
+                float(cell["test_mse"])
+                for cell in dataset_cells
+                if int(cell["horizon"]) == horizon
+            )
+            <= targets[(dataset, horizon, "mse")]
+            for horizon in HORIZONS
+        )
+        dataset_oracle_mae = sum(
+            min(
+                float(cell["test_mae"])
+                for cell in dataset_cells
+                if int(cell["horizon"]) == horizon
+            )
+            <= targets[(dataset, horizon, "mae")]
+            for horizon in HORIZONS
+        )
+        oracle_mse += dataset_oracle_mse
+        oracle_mae += dataset_oracle_mae
         dataset_summary[dataset] = {
             "current_selected_trial": selected_trial,
             "current_lead_cells": int(current["lead_total_cells"]),
@@ -264,6 +292,8 @@ def main() -> None:
             "joint_mean_guard_max_lead_cells": int(
                 guard_row["lead_total_cells"]
             ),
+            "diagnostic_per_cell_oracle_mse_leads": dataset_oracle_mse,
+            "diagnostic_per_cell_oracle_mae_leads": dataset_oracle_mae,
         }
 
     non_target_datasets = sorted(set(by_dataset) - set(common_datasets))
@@ -325,6 +355,12 @@ def main() -> None:
             "mae_lead_denominator": len(common_datasets) * len(HORIZONS),
             "total_lead_cells": guard_mse + guard_mae,
             "total_lead_denominator": len(common_datasets) * len(HORIZONS) * 2,
+        },
+        "diagnostic_per_cell_oracle": {
+            "mse_lead_cells": oracle_mse,
+            "mae_lead_cells": oracle_mae,
+            "total_lead_cells": oracle_mse + oracle_mae,
+            "role": "search_space_headroom_only_not_legal_profile_selection",
         },
         "success_gates": {
             "mse_at_least_20_of_28": mse_gate_pass,

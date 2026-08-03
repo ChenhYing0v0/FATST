@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.2 pending author review；experiments=H4J joint-objective HPO frozen prelaunch |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.2 pending author review；experiments=H4J complete、joint HPO partial pass/gate fail |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -17,7 +17,9 @@
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
-| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` terminal dataset profiles pending H4J joint selection |
+| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H4J暂定profiles达到30/56、未达到terminal 40/56 gate |
+
+[H4J Complete Test and Joint-HPO Decision, 2026-08-03] Retry-2完成40/40 checkpoints与160/160 cells，40/40 checkpoint hashes immutable、无test error；H1--H4J共93 trials完成dataset-level joint selection。相对H4J前profiles，MSE leads由14/28升至15/28，MAE由9/28升至15/28，combined由23/56升至30/56；共同7 datasets macro mean MSE/MAE分别改善0.234%/0.585%。Solar由1/8升至6/8，但ETTm2仍0/8，Weather仅2/8，H720全局只有4/14。合法selector、unrestricted single-profile upper bound和逐cell diagnostic oracle均为30/56，故缺口来自现有search space没有生成足够强的trials，而非selector约束。相对TimeAlign Table 6，当前profiles macro MSE低2.428%、MAE低0.520%，MSE/MAE均为16/28 cells领先，但single-seed test-tuned与published three-run native protocol差异阻止无条件SOTA表述。Canonical report=`analysis/iscf_bsca_main_v1_hpo_20260731/h4j_test_result_and_joint_hpo_decision.md`。Decision=`H4J_complete_joint_HPO_material_partial_improvement_gate_fail_H4K_not_authorized`。
 
 [ISCF-BSCA-MAIN-v1 Joint-Objective Reset, 2026-08-02] 用户将HPO目标从dataset-level four-H mean MSE-only更正为dataset-level joint MSE/MAE mean + balanced leading-cell coverage。当前selected row相对frozen published per-cell targets为MSE `14/28`、MAE `9/28`、combined `23/56`；53个existing trials即使每dataset重选一个shared profile，最多也只有`25/56`，因此不能靠重排达到目标。H4J冻结40个new seed2021 profiles，其中ETTm2/Weather/Solar占28个；每trial仍由four-H validation mean MSE选择checkpoint，40/40 training与manifest freeze后直接complete official test。Profile selector固定为dataset joint MSE/MAE relative mean的1% guard后最大化leading cells；总gate为MSE `>=20/28`、MAE `>=20/28`、combined `>=40/56`。Exchange继续调优但因缺published comparator不进入56-cell denominator。Architecture、objective、scales与inference graph均不变；未授权automatic H4K或baseline execution。Canonical report=`analysis/iscf_bsca_main_v1_hpo_20260731/joint_objective_reset_and_h4j_prelaunch.md`。Decision=`H4J_frozen_local_gate_pass_remote_resource_smoke_then_training_authorized`。
 
