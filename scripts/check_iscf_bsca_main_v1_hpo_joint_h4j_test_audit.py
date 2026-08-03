@@ -55,6 +55,8 @@ def main() -> None:
     assert authorization["per_horizon_seed_metric_or_cell_tuning_allowed"] is False
     assert authorization["automatic_H4K_extension_authorized"] is False
     assert authorization["failed_preloader_attempts"] == 1
+    assert authorization["failed_attempts_before_atomic_publication"] == 2
+    assert authorization["disk_quota_failures_after_test_loader_access"] == 1
     selection = config["hyperparameter_selection"]
     assert selection["defer_profile_selection_to_joint_analyzer"] is True
     assert selection["per_horizon_profile_selection"] is False

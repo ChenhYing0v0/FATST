@@ -10,7 +10,7 @@
 | `datasets` | ETTh1 2、ETTh2 2、ETTm1 2、ETTm2 9、Weather 9、ECL 4、Solar 10、Exchange 2 |
 | `numeric_health` | 40/40 pass |
 | `checkpoint_hashes` | 40 unique SHA256 values frozen |
-| `manifest` | `h4j_checkpoint_manifest.csv`；40 rows；retry SHA256 `b8818ee2ac1b93110df552a39084dd93605db57efef482205b1fc00dd1636db3` |
+| `manifest` | `h4j_checkpoint_manifest.csv`；40 rows；retry-2 SHA256 `8b9465adbf00a5812b373c0c850ab001b5e55ba1552180faf6f75e21c8a2ca1d` |
 | `profile_ranking_before_test` | none |
 | `official_test` | complete 40-checkpoint × four-H audit authorized |
 | `decision` | `H4J_40_of_40_training_complete_direct_test_prelaunch` |
@@ -64,3 +64,7 @@ Decision=`H4J_40_of_40_training_complete_direct_test_prelaunch`。
 First formal-test launch used manifest SHA256 `5b91d50040dc7bab6d822ed6f03fb4a878b643277d8fc473cc184bf5d094d00b` and failed on the first three ECL jobs before test loader access. The evaluator incorrectly required `checkpoint_retraining_allowed=true` for generic test authorization and then inferred `checkpoint_retrained=true` from that permission, even though the evaluator never retrains checkpoints. Published artifacts remained0/40；the failed root `test_audit` is retained with logs and ABORT sentinel。
 
 The repair separates policy from fact：`checkpoint_retraining_allowed` only has to be an explicitly declared boolean，while `checkpoint_retrained` is read from `checkpoint_retrained_before_test`。H4J freezes both values asfalse。Retry uses a newroot `test_audit_r1` and a regenerated manifest SHA256 `b8818ee2ac1b93110df552a39084dd93605db57efef482205b1fc00dd1636db3`；no failed-attempt file is reused。This is a`test_authorization_wiring_fault_before_loader_access`，not formal-test result or model failure。
+
+The `test_audit_r1` retry passed preflight and entered three ECL evaluators, but all three encountered user quota `Errno 122: Disk quota exceeded` before atomic publication. It produced 0/40 reusable test artifacts and an ABORT sentinel; the logs remain, while 1.2 GiB incomplete `_tmp` diagnostics were removed after explicit cleanup authorization. Five closed historical remote raw-output roots and the H4J resource-smoke directory were also removed, reducing the `yingch` quota from 220 GiB to 179 GiB. No H4J training checkpoint or completed formal-test artifact was deleted.
+
+Retry-2 uses the clean root `test_audit_r2` and manifest SHA256 `8b9465adbf00a5812b373c0c850ab001b5e55ba1552180faf6f75e21c8a2ca1d`. Both failed roots remain non-reusable evidence; the disk-quota attempt is an infrastructure failure after test-loader access and therefore retains the candidate's `test_informed` disclosure.

@@ -31,6 +31,8 @@ Resolved job继续映射到trainer CLI的`seq_len`、`patch_num`、`d_model`、`
 
 Exchange没有published target，lead-cell列保持空；其joint score改由within-search per-metric minima归一化。该analyzer不会读取remote checkpoint二进制，也不会生成训练或test结果。
 
+完整H1--H4J输入下，selector在1% guard内依次按`total leads`、`min(MSE leads, MAE leads)`、joint score、validation mean MSE、参数量和lexical profile ID排序；Exchange直接最小化within-search equal-weight MSE/MAE regret。输出新增`joint_selected_profiles.csv`与`joint_selected_cells.csv`，并分别检查MSE 20/28、MAE 20/28和combined 40/56三项gate。
+
 ## 4. Prelaunch checker and manifest builder
 
 `scripts/check_iscf_bsca_main_v1_hpo_joint_h4j.py`执行fail-closed static checks：
@@ -49,6 +51,8 @@ Exchange没有published target，lead-cell列保持空；其joint score改由wit
 H4J test config设置`defer_profile_selection_to_joint_analyzer=true`。因此generic test analyzer只写completeness、ledger、all-trial scorecard与aggregates，不生成legacy MSE-only winner；final selector必须合并H1--H4J全部retained trials后执行。
 
 Formal-test authorization不再把`checkpoint_retraining_allowed=true`作为通行条件。该字段现在只需显式声明boolean policy；invariant中的`checkpoint_retrained`由独立事实字段`checkpoint_retrained_before_test`产生。H4J二者均为false，符合“复用frozen validation-selected checkpoint、test不重训”的实际路径。
+
+Formal-test runner采用atomic publication：evaluator先写`TEST_ROOT/_tmp/<trial>.worker-<gpu>`，通过完整性和checkpoint hash检查后才移动到正式trial目录。因disk quota失败而留下的partial NPZ不能进入scorecard；清理后必须换用新的`test_audit_r2` root和重新冻结的manifest，不能用`ALLOW_RESUME=1`绕过失败边界。
 
 ## 5. Code-theory consistency
 

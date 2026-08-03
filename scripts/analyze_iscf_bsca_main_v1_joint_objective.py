@@ -27,6 +27,16 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--published-scorecard", type=Path, required=True)
     parser.add_argument("--selected-profiles", type=Path, required=True)
+    parser.add_argument(
+        "--profile-metadata",
+        action="append",
+        type=Path,
+        default=[],
+        help=(
+            "Per-trial validation/parameter aggregates used by the frozen "
+            "tie-break; repeat for every HPO phase."
+        ),
+    )
     parser.add_argument("--analysis-dir", type=Path, required=True)
     parser.add_argument("--mean-guard-pct", type=float, default=1.0)
     return parser.parse_args()
@@ -74,6 +84,13 @@ def main() -> None:
     selected = json.loads(args.selected_profiles.read_text(encoding="utf-8"))[
         "profiles"
     ]
+    metadata: dict[tuple[str, str], dict[str, str]] = {}
+    for metadata_path in args.profile_metadata:
+        for row in read_csv(metadata_path):
+            key = (row["dataset"], row["trial_id"])
+            if key in metadata:
+                raise ValueError(f"duplicate profile metadata for {key}")
+            metadata[key] = row
 
     cells: dict[tuple[str, str], list[dict[str, str]]] = defaultdict(list)
     phases: dict[tuple[str, str], str] = {}
@@ -136,6 +153,12 @@ def main() -> None:
                     if balanced_relative_score is not None
                     else ""
                 ),
+                "validation_mean_mse_4h": metadata.get(
+                    (dataset, trial_id), {}
+                ).get("validation_mean_mse_4h", ""),
+                "trainable_parameters": metadata.get(
+                    (dataset, trial_id), {}
+                ).get("trainable_parameters", ""),
             }
         )
 
@@ -194,7 +217,10 @@ def main() -> None:
     current_mae = 0
     unrestricted_max = 0
     guard_max = 0
+    guard_mse = 0
+    guard_mae = 0
     dataset_summary = {}
+    joint_selected: list[dict[str, Any]] = []
     for dataset in common_datasets:
         rows = by_dataset[dataset]
         selected_trial = selected[dataset]["trial_id"]
@@ -214,12 +240,21 @@ def main() -> None:
             eligible,
             key=lambda row: (
                 -int(row["lead_total_cells"]),
-                float(row["balanced_relative_score"]),
-                row["trial_id"],
+                -min(
+                    int(row["lead_mse_cells"]),
+                    int(row["lead_mae_cells"]),
+                ),
+                float(row["dataset_joint_mean_score"]),
+                float(row["validation_mean_mse_4h"] or "inf"),
+                int(row["trainable_parameters"] or 2**63 - 1),
+                row["profile_id"],
             ),
         )
         unrestricted_max += int(max_row["lead_total_cells"])
         guard_max += int(guard_row["lead_total_cells"])
+        guard_mse += int(guard_row["lead_mse_cells"])
+        guard_mae += int(guard_row["lead_mae_cells"])
+        joint_selected.append(dict(guard_row))
         dataset_summary[dataset] = {
             "current_selected_trial": selected_trial,
             "current_lead_cells": int(current["lead_total_cells"]),
@@ -231,9 +266,44 @@ def main() -> None:
             ),
         }
 
+    non_target_datasets = sorted(set(by_dataset) - set(common_datasets))
+    for dataset in non_target_datasets:
+        rows = by_dataset[dataset]
+        exchange_row = min(
+            rows,
+            key=lambda row: (
+                float(row["dataset_joint_mean_score"]),
+                float(row["validation_mean_mse_4h"] or "inf"),
+                int(row["trainable_parameters"] or 2**63 - 1),
+                row["profile_id"],
+            ),
+        )
+        joint_selected.append(dict(exchange_row))
+        dataset_summary[dataset] = {
+            "current_selected_trial": selected[dataset]["trial_id"],
+            "selector": "within_search_equal_weight_mse_mae_regret",
+            "joint_selected_trial": exchange_row["trial_id"],
+        }
+
+    selected_trial_ids = {
+        (row["dataset"], row["trial_id"]) for row in joint_selected
+    }
+    selected_cells = [
+        dict(row)
+        for key, rows in sorted(cells.items())
+        if key in selected_trial_ids
+        for row in sorted(rows, key=lambda item: int(item["horizon"]))
+    ]
+    mse_gate_pass = guard_mse >= 20
+    mae_gate_pass = guard_mae >= 20
+    combined_gate_pass = guard_mse + guard_mae >= 40
+    overall_gate_pass = mse_gate_pass and mae_gate_pass and combined_gate_pass
+
     args.analysis_dir.mkdir(parents=True, exist_ok=True)
     write_csv(args.analysis_dir / "all_existing_trial_joint_scorecard.csv", aggregates)
     write_csv(args.analysis_dir / "dataset_frontier.csv", frontier_rows)
+    write_csv(args.analysis_dir / "joint_selected_profiles.csv", joint_selected)
+    write_csv(args.analysis_dir / "joint_selected_cells.csv", selected_cells)
     status = {
         "existing_trial_count": len(aggregates),
         "dataset_count": len(by_dataset),
@@ -248,10 +318,28 @@ def main() -> None:
             "unrestricted_total_lead_cells": unrestricted_max,
             "joint_mean_guard_total_lead_cells": guard_max,
         },
+        "joint_selected": {
+            "mse_lead_cells": guard_mse,
+            "mse_lead_denominator": len(common_datasets) * len(HORIZONS),
+            "mae_lead_cells": guard_mae,
+            "mae_lead_denominator": len(common_datasets) * len(HORIZONS),
+            "total_lead_cells": guard_mse + guard_mae,
+            "total_lead_denominator": len(common_datasets) * len(HORIZONS) * 2,
+        },
+        "success_gates": {
+            "mse_at_least_20_of_28": mse_gate_pass,
+            "mae_at_least_20_of_28": mae_gate_pass,
+            "combined_at_least_40_of_56": combined_gate_pass,
+            "overall_pass": overall_gate_pass,
+        },
         "joint_mean_guard_pct": args.mean_guard_pct,
         "exchange_lead_cell_role": "excluded_until_comparable_targets_exist",
         "dataset_summary": dataset_summary,
-        "decision": "new_training_required",
+        "decision": (
+            "joint_hpo_success_gate_pass"
+            if overall_gate_pass
+            else "joint_hpo_success_gate_fail_H4K_requires_separate_authorization"
+        ),
     }
     (args.analysis_dir / "current_joint_objective_status.json").write_text(
         json.dumps(status, indent=2) + "\n",
