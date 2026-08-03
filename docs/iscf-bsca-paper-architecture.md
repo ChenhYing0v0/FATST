@@ -5,10 +5,10 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.33` |
+| `version` | `v0.34` |
 | `last_updated` | `2026-08-03` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 3 v0.2 narrative refinement pending author review；experiments=H4J complete、joint selection 30/56 gate fail；Method Figure 4 planned |
+| `current_review_cursor` | writing=Section 3 v0.2 narrative refinement pending author review；experiments=H4K targeted 24-job training prelaunch；Method Figure 4 planned |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |

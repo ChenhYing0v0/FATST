@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## ISCF-BSCA-MAIN-v1 H4K Targeted HPO (2026-08-03)
+
+Current cursor=`Step 6 targeted matrix frozen / Step 7 local tooling pending / Step 8 remote training authorized`。H4K保持frozen ISCF-BSCA architecture与objective，冻结24个seed2021 jobs：ETTm2 8、Weather 6、ETTh1/ETTh2/ETTm1/ECL/Solar各2。Primary gap block围绕ETTm2 rank64 winner与Weather short-horizon per-cell winners；supplementary block只补H720相关邻域。每个trial仍由four-H validation mean MSE选择checkpoint，training阶段test=0。
+
+Narrative gate=`pass_as_targeted_hyperparameter_optimization_not_new_method`。Remote resource smoke和training已获用户授权；formal test尚未授权，必须等待24/24 artifacts与checkpoint manifest。Global effectiveness gate仍为MSE>=20/28、MAE>=20/28、combined>=40/56，禁止per-horizon profile selection。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4k_targeted_matrix_and_prelaunch.md`。Decision=`H4K_24_job_targeted_matrix_frozen_remote_training_authorized_test_pending_manifest_gate`。
+
 ## ISCF-BSCA-MAIN-v1 H4J Complete Test Decision (2026-08-03)
 
 H4J 40/40 official-test artifacts和160/160 standard-horizon cells完整，checkpoint immutability 40/40 pass。H1--H4J 93 trials的frozen joint selector得到MSE 15/28、MAE 15/28、combined 30/56，相对H4J前23/56提高7 cells，但三项20/28、20/28和40/56 gates仍全部失败。共同7 datasets macro mean MSE/MAE分别改善0.234%/0.585%；相对TimeAlign Table 6 macro MSE/MAE分别低2.428%/0.520%，但结果仍是single-seed test-tuned published-context comparison。
