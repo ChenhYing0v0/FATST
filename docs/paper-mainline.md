@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.2 pending author review；experiments=H4J complete、joint HPO partial pass/gate fail |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.2 pending author review；experiments=H4K 24-job train/validation active、test=0 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -17,7 +17,9 @@
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
-| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H4J暂定profiles达到30/56、未达到terminal 40/56 gate |
+| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H4J暂定profiles达到30/56，H4K targeted HPO正在训练 |
+
+[H4K Training Launch, 2026-08-03] Freeze commit=`dc52471d585906f1f2251fdb682557f8e5686931`；24/24 resource-smoke jobs完成且无OOM/NaN/Inf/contract failure，smoke始终test=0。正式24-job train/validation于16:44:09在GPU0/1/2 detached启动，PID=`2412083`，首批为Weather、ETTm2、Weather；首轮检查三项均已进入epoch 2，formal complete=0/24、test=0/24。Output root=`/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_main_v1_hpo/h4k`。Formal test继续等待24/24 checkpoint manifest及用户分级授权。Canonical launch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4k_launch.md`。Decision=`H4K_24_job_train_validation_active_test_zero`。
 
 [H4K Targeted HPO Prelaunch, 2026-08-03] 用户授权按当前ranking弱项冻结matrix并开始训练。H4K=24个seed2021 profiles：ETTm2 8、Weather 6、ETTh1/ETTh2/ETTm1/ECL/Solar各2；前14项围绕ETTm2 0/8与Weather 2/8，后10项只补H720及相邻弱cell。所有profiles仍从scratch end-to-end训练，一个dataset-level profile共同服务四个horizons，four-H validation mean MSE选择checkpoint，training test=0。Global gates保持20/28 MSE、20/28 MAE、40/56 combined；formal test等待24/24 manifest后另行授权。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4k_targeted_matrix_and_prelaunch.md`。Decision=`H4K_24_job_targeted_matrix_frozen_remote_training_authorized_test_pending_manifest_gate`。
 

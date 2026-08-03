@@ -43,8 +43,8 @@ paper candidate与claim boundary，但互不替代。
 | `handoff_date` | `2026-07-31` |
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
-| `active_workstream` | paper-facing experiment consolidation and prelaunch |
-| `active_experiment_step` | H4K targeted 24-job matrix frozen；local gate/remote resource smoke then training |
+| `active_workstream` | paper-facing experiment execution |
+| `active_experiment_step` | H4K targeted 24-job train/validation active on GPU0/1/2；test=0 |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
@@ -52,12 +52,11 @@ paper candidate与claim boundary，但互不替代。
 | `remote_training_authorized` | true；H4K 24-job frozen matrix |
 | `test_tuned_hpo_authorized` | H4K training=true；formal test=false pending complete manifest |
 | `formal_test_authorized` | H4J completed；H4K=false；Main I/II baseline=false |
-| `next_action` | H4K local gate；commit/push；remote quota/GPU/resource smoke；24-job train/validation |
+| `next_action` | 等待H4K 24/24 train/validation；审计artifacts与checkpoint hashes并freeze manifest |
 | `conditional_next` | 24/24后freeze checkpoint manifest并请求formal-test authorization；automatic H4L=false |
 
-本handoff授权的是实验盘点、设计、source/protocol audit与prelaunch文档准备，不是
-立即远程训练。不得为了兑现Introduction P6而跳过controls、补选有利数据集，或把
-historical test结果当成untouched holdout。
+H4K train/validation已按用户授权启动，但formal test仍未授权。不得为了兑现Introduction
+P6而跳过controls、补选有利数据集，或把historical test结果当成untouched holdout。
 
 ## 2. Paper claims to be discharged
 
