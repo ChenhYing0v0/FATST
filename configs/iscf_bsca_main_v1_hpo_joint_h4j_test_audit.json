@@ -50,7 +50,7 @@
   },
   "checkpoint_manifest": {
     "path": "analysis/iscf_bsca_main_v1_hpo_20260731/h4j_checkpoint_manifest.csv",
-    "sha256": "5b91d50040dc7bab6d822ed6f03fb4a878b643277d8fc473cc184bf5d094d00b",
+    "sha256": "b8818ee2ac1b93110df552a39084dd93605db57efef482205b1fc00dd1636db3",
     "rows": 40,
     "checkpoint_hashes_frozen_before_test": true,
     "all_test_artifacts_absent_at_freeze": "pending_remote_preflight"
@@ -85,11 +85,13 @@
     "user_authorized": true,
     "authorization_date": "2026-08-02",
     "checkpoint_retraining_allowed": false,
+    "checkpoint_retrained_before_test": false,
     "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
     "checkpoint_mutation_during_test_allowed": false,
     "per_dataset_aggregate_hyperparameter_tuning_allowed": true,
     "per_horizon_seed_metric_or_cell_tuning_allowed": false,
     "formal_test_access_count_for_version": 1,
+    "failed_preloader_attempts": 1,
     "test_role": "test-tuned-hyperparameter-selection-and-paper-benchmark",
     "automatic_H4K_extension_authorized": false,
     "selected_profile_confirmation_authorized": true,

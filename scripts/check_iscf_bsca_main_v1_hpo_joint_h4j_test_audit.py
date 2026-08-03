@@ -49,10 +49,12 @@ def main() -> None:
     authorization = config["authorization"]
     assert authorization["user_authorized"] is True
     assert authorization["checkpoint_retraining_allowed"] is False
+    assert authorization["checkpoint_retrained_before_test"] is False
     assert authorization["checkpoint_mutation_during_test_allowed"] is False
     assert authorization["per_dataset_aggregate_hyperparameter_tuning_allowed"] is True
     assert authorization["per_horizon_seed_metric_or_cell_tuning_allowed"] is False
     assert authorization["automatic_H4K_extension_authorized"] is False
+    assert authorization["failed_preloader_attempts"] == 1
     selection = config["hyperparameter_selection"]
     assert selection["defer_profile_selection_to_joint_analyzer"] is True
     assert selection["per_horizon_profile_selection"] is False

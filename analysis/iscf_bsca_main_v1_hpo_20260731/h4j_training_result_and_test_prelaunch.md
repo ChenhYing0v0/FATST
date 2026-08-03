@@ -10,7 +10,7 @@
 | `datasets` | ETTh1 2、ETTh2 2、ETTm1 2、ETTm2 9、Weather 9、ECL 4、Solar 10、Exchange 2 |
 | `numeric_health` | 40/40 pass |
 | `checkpoint_hashes` | 40 unique SHA256 values frozen |
-| `manifest` | `h4j_checkpoint_manifest.csv`；40 rows；SHA256 `5b91d50040dc7bab6d822ed6f03fb4a878b643277d8fc473cc184bf5d094d00b` |
+| `manifest` | `h4j_checkpoint_manifest.csv`；40 rows；retry SHA256 `b8818ee2ac1b93110df552a39084dd93605db57efef482205b1fc00dd1636db3` |
 | `profile_ranking_before_test` | none |
 | `official_test` | complete 40-checkpoint × four-H audit authorized |
 | `decision` | `H4J_40_of_40_training_complete_direct_test_prelaunch` |
@@ -58,3 +58,9 @@ Four-layer status：
 - `failure_attribution=no_training_pathology`。
 
 Decision=`H4J_40_of_40_training_complete_direct_test_prelaunch`。
+
+## 4. Formal-test preloader repair
+
+First formal-test launch used manifest SHA256 `5b91d50040dc7bab6d822ed6f03fb4a878b643277d8fc473cc184bf5d094d00b` and failed on the first three ECL jobs before test loader access. The evaluator incorrectly required `checkpoint_retraining_allowed=true` for generic test authorization and then inferred `checkpoint_retrained=true` from that permission, even though the evaluator never retrains checkpoints. Published artifacts remained0/40；the failed root `test_audit` is retained with logs and ABORT sentinel。
+
+The repair separates policy from fact：`checkpoint_retraining_allowed` only has to be an explicitly declared boolean，while `checkpoint_retrained` is read from `checkpoint_retrained_before_test`。H4J freezes both values asfalse。Retry uses a newroot `test_audit_r1` and a regenerated manifest SHA256 `b8818ee2ac1b93110df552a39084dd93605db57efef482205b1fc00dd1636db3`；no failed-attempt file is reused。This is a`test_authorization_wiring_fault_before_loader_access`，not formal-test result or model failure。

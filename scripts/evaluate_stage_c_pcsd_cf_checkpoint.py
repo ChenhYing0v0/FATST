@@ -181,6 +181,10 @@ def test_audit_authorized(audit: dict[str, Any]) -> bool:
             authorization.get("per_dataset_horizon_or_cell_tuning_allowed")
             is False
         )
+    retraining_policy_declared = isinstance(
+        authorization.get("checkpoint_retraining_allowed"),
+        bool,
+    )
     return bool(
         audit.get("status") == "authorized_prelaunch"
         and expected_runs == expected_matrix_size(audit)
@@ -189,7 +193,7 @@ def test_audit_authorized(audit: dict[str, Any]) -> bool:
         and test_role in accepted_test_roles
         and authorization.get("checkpoint_selection")
         == expected_checkpoint_selection
-        and authorization.get("checkpoint_retraining_allowed") is True
+        and retraining_policy_declared
         and authorization.get("checkpoint_mutation_during_test_allowed") is False
         and tuning_boundary_ok
         and authorization.get("formal_test_access_count_for_version") == 1
@@ -1333,8 +1337,11 @@ def evaluate(args: argparse.Namespace) -> None:
         "checkpoint_retrained": bool(
             test_audit is not None
             and test_audit["authorization"].get(
-                "checkpoint_retraining_allowed",
-                False,
+                "checkpoint_retrained_before_test",
+                test_audit["authorization"].get(
+                    "checkpoint_retraining_allowed",
+                    False,
+                ),
             )
             and adapter.get("protocol_profile")
             not in test_audit["authorization"].get(

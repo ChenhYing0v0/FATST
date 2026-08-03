@@ -48,6 +48,8 @@ Exchange没有published target，lead-cell列保持空；其joint score改由wit
 
 H4J test config设置`defer_profile_selection_to_joint_analyzer=true`。因此generic test analyzer只写completeness、ledger、all-trial scorecard与aggregates，不生成legacy MSE-only winner；final selector必须合并H1--H4J全部retained trials后执行。
 
+Formal-test authorization不再把`checkpoint_retraining_allowed=true`作为通行条件。该字段现在只需显式声明boolean policy；invariant中的`checkpoint_retrained`由独立事实字段`checkpoint_retrained_before_test`产生。H4J二者均为false，符合“复用frozen validation-selected checkpoint、test不重训”的实际路径。
+
 ## 5. Code-theory consistency
 
 Intended contract是“同一dataset只选一个profile服务四个horizons，并联合优化MSE/MAE平均质量与leading-cell coverage”。代码通过dataset-level job、four-H validation checkpoint selector、complete test manifest和禁止metric/H-specific selection落实该合同。
