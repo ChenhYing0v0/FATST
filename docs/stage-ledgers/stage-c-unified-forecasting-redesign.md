@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | 写作流审阅Section 3 v0.2；实验流完成Main I baseline与Main II matched unified evidence |
+| `active_question` | 写作流审阅Section 3 v0.3 concise polish；实验流完成Main I baseline与Main II matched unified evidence |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
-| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9 frozen；Section 3 v0.2 pending author review |
+| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9 frozen；Section 3 v0.3 pending author review |
 | `future_validation_suite` | Main I/II=ETTh1, ETTh2, ETTm1, ETTm2, Weather, ECL, Solar, Exchange；ablation=original five |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
@@ -21,10 +21,10 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.2 pending author review；experiments=HPO complete、Main I published block audited |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.3 concise polish pending author review；experiments=HPO complete、Main I published block audited |
 | `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；`ISCF-BSCA-MAIN-v1` 8 selected profiles reusable |
 | `latest_decision` | `HPO_frozen_Main_I_published_140_rows_complete_competitive_not_full_SOTA_request_staged_baseline_authorization` |
-| `writing_latest_decision` | `section3_v0_2_narrative_refinement_pending_author_review` |
+| `writing_latest_decision` | `section3_v0_3_concise_polish_pending_author_review` |
 | `next_required_action` | request staged Main I baseline execution and Main II Tier A source/protocol patch authorizations |
 | `method_training_authorized` | HPO Tier A/B1/bounded B2=true；B3/C=false |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
@@ -69,8 +69,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
-| `INTRO-CHPD-v1` | `integrated_in_section3_v0_2_pending_review` | independently trained horizon models能否给出清晰overlap disagreement | ETTh2 maximum example disclosed；all-validation heatmap；not prevalence | shared-96 raw mean differences 2.16--2.51；macro NCHPD highest | author review；formal family/seed prevalence deferred |
-| `SC-UVHF-FRSD-D1` | `integrated_in_section3_v0_2_pending_review` | matched fixed sharing extent的risk optimum是否随future region变化 | ETTm2 maximum sample disclosed；same-validation descriptive role | five scopes win 2--3 regions；10/10 crossings；8.112% headroom | author review；formal CFH deferred |
+| `INTRO-CHPD-v1` | `integrated_in_section3_v0_3_pending_review` | independently trained horizon models能否给出清晰overlap disagreement | ETTh2 maximum example disclosed；all-validation heatmap；not prevalence | shared-96 raw mean differences 2.16--2.51；macro NCHPD highest | author review；formal family/seed prevalence deferred |
+| `SC-UVHF-FRSD-D1` | `integrated_in_section3_v0_3_pending_review` | matched fixed sharing extent的risk optimum是否随future region变化 | ETTm2 maximum sample disclosed；same-validation descriptive role | five scopes win 2--3 regions；10/10 crossings；8.112% headroom | author review；formal CFH deferred |
 | `ISCF-BSCA-v1` | `exact_ablation_anchor_frozen` | broad train-time anchor能否稳定scope-gradient access并提升ISCF | ISCF-specific chain pass；generic KL novelty not claimed | three-seed +0.3541/+0.3073%；3/3 seeds、4/5 datasets、4/4 horizons | reuse only for five-dataset Full/w/o BSCA ablation；do not place directly in Main I/II |
 | `ISCF-BSCA-MAIN-v1` | `single_seed_profiles_frozen_main_results_reusable` | frozen architecture在8 datasets上经test-tuned HPO后能否达到SOTA-competitive并支持main claims | validation选checkpoint；test four-H aggregate选dataset profile；ECL/Solar test-informed expanded budget；seed2021 first | 53 trials；8 selected checkpoints/32 cells；vs TimeAlign 7-dataset MSE +2.199%、MAE -0.066% | complete remaining baselines；do not retrain selected profiles |
 | `ISCF-BSCA-PAPER-EXP-v2` | `post_hpo_published_block_complete_waiting_baseline_tiers` | 完整main/ablation/transfer/efficiency evidence能否兑现provisional claims | TimeAlign Table 6 primary + official fill；single-seed complete matrix；optional seed blocks non-selective | 23 primary-seed reusable；210 final new；140 published rows audited；30 extra-seed evidence retained | request Main I baseline execution and Main II Tier A；remote/test false |
@@ -298,7 +298,7 @@ Historical and control queue:
 
 | Task | Status | Next Action |
 | --- | --- | --- |
-| ISCF-BSCA paper architecture | `v0_31_section3_v0_2_synced` | author review Section 3 narrative；Main I/II claims depend on tuned eight-dataset tables |
+| ISCF-BSCA paper architecture | `v0_36_section3_v0_3_synced` | author review Section 3 concise polish；Main I/II claims depend on tuned eight-dataset tables |
 | ISCF-BSCA paper experiment protocol | `v2_single_seed_scoped_exchange_patch_complete` | request remaining 8-dataset/HPO/official-baseline local patches only；B1/B2/B3/C false |
 | ISCF-BSCA-v1 three-seed confirmation | `completed_exact_ablation_anchor` | reuse existing Full/Equal ablation evidence；do not use untuned row as Main I/II method |
 | ISCF-RSCC-v1 validation matrix | `completed_control_attribution_fail` | exact route closed；retain artifacts/control clue；return Step2/4 |

@@ -5,15 +5,15 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.35` |
+| `version` | `v0.36` |
 | `last_updated` | `2026-08-03` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 3 v0.2 narrative refinement pending author review；experiments=H4K targeted 24-job train/validation active、test=0；Method Figure 4 planned |
+| `current_review_cursor` | writing=Section 3 v0.3 concise polish pending author review；experiments=H4K targeted 24-job train/validation active、test=0；Method Figure 4 planned |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
-| `provisional_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.2正文 + approved Figures 2--3；planned Method Figure 4；remaining sections |
+| `provisional_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.3正文 + approved Figures 2--3；planned Method Figure 4；remaining sections |
 | `authorization_source` | current H4K training authorization由`configs/iscf_bsca_main_v1_hpo_targeted_h4k.json`记录；formal test仍未授权；本architecture文档不扩张baseline或final reporting边界 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
@@ -851,9 +851,9 @@ balanced co-adaptation` 完整链上。
 
 ## 6. Problem Formulation and Empirical Motivation
 
-Section 3 v0.2 manuscript-facing narrative refinement已落地：
+Section 3 v0.3 concise polish已落地：
 `docs/paper-drafts/iscf-bsca-problem-formulation-initial-draft.md`。当前状态为
-`author_feedback_round1_integrated_pending_review`；Introduction v0.9未改动。
+`author_feedback_round2_integrated_pending_review`；Introduction v0.9未改动。
 
 3.1--3.4不出现ISCF、BSCA、arm或production method名称，问题证据只使用已有
 baseline或简单capacity-matched diagnostic heads。3.5先从问题与证据导出通用
@@ -1165,7 +1165,7 @@ s720整行恒为0并显示为白色；新版编码消除该视觉歧义，同时
 fixed-s720 reference。maximum-heterogeneity validation role在caption中明确；
 正式CFH继续deferred。图不使用ISCF/BSCA，不承担method effectiveness claim。
 
-Section 3 v0.2保留sample-level matched statistic $R_{o,b,s}$与
+Section 3 v0.3保留sample-level matched statistic $R_{o,b,s}$与
 validation-selected fixed/schedule及official-test CFH作为未来formal control。
 Figure 3本身不建立CFH；其同一validation-label winner与8.112% headroom只作
 descriptive oracle。完整neutral tensor path继续保存在本architecture与canonical
@@ -1652,3 +1652,4 @@ Coverage boundary：
 | 2026-07-31 | Introduction v0.9 temporary freeze and paper-writing handoff | clean draft frozen usable；new authoritative reading order and startup prompt created | Section 3 integration is next；old D22 handoff becomes historical |
 | 2026-07-31 | Paper-experiments parallel handoff | experiment-specific reading order、claim-to-table audit、baseline roles、prelaunch deliverables与copy-ready prompt冻结 | E0 artifact inventory active；remote training/formal test仍未授权 |
 | 2026-07-31 | Paper-facing experiment consolidation v1 | exact checkpoint/hash audit；minimal baseline set；345 checkpoint slots，45 completed metric-evidence records/300 new；binary reuse unverified；Main I/II、ablation、transfer、efficiency与four-layer gates冻结 | E2 conditional pass；request Tier A local patch only；remote training/formal test仍false |
+| 2026-08-03 | Section 3 v0.3 concise polish | manuscript body由2,308词压缩至1,576词；合并重复释义与claim boundary；精简Figures 2--3 captions和future CFH protocol；保留CHPC/CHPD/NCHPD/$\operatorname{UP}_H$/$R_{o,b,s}$/CFH、matched controls与validation-only边界 | author review；Introduction与并行experiment cursor不变 |

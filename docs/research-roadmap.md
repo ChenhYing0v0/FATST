@@ -1,5 +1,19 @@
 # Research Roadmap
 
+## Section 3 Concise Polish v0.3 (2026-08-03)
+
+用户确认v0.2叙事链方向正确，但全文仍偏冗长。v0.3使用`nature-polishing`按
+`algorithmic / methods+results / en / generic`路由精简
+`docs/paper-drafts/iscf-bsca-problem-formulation-initial-draft.md`。Manuscript body
+由2,308词降至1,576词，重点合并same-target与nested-trajectory重复解释、压缩
+Figures 2--3 captions，并将future CFH protocol收敛到必要statistic和controls。
+
+CHPC、CHPD/NCHPD、$\operatorname{UP}_H$、$R_{o,b,s}$和CFH均保留；Figure 2
+仍只支持audited DLinear family缺少CHPC guarantee，Figure 3仍只支持
+finite-capacity future-region heterogeneity。3.3没有把naive unified penalty写成
+既成事实，3.5之前不引入ISCF-BSCA。Introduction v0.9、实验结果、远程状态与
+授权边界未改。Decision=`section3_v0_3_concise_polish_pending_author_review`。
+
 ## ISCF-BSCA-MAIN-v1 H4K Targeted HPO (2026-08-03)
 
 Current cursor=`Step 6 targeted matrix frozen / Step 7 local and resource gates pass / Step 8 train-validation active`。H4K保持frozen ISCF-BSCA architecture与objective，冻结24个seed2021 jobs：ETTm2 8、Weather 6、ETTh1/ETTh2/ETTm1/ECL/Solar各2。Primary gap block围绕ETTm2 rank64 winner与Weather short-horizon per-cell winners；supplementary block只补H720相关邻域。每个trial仍由four-H validation mean MSE选择checkpoint，training阶段test=0。

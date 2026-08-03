@@ -5,9 +5,9 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Clean manuscript-facing initial draft of Section 3 |
-| `version` | `v0.2-narrative-refinement` |
-| `date` | `2026-07-31` |
-| `review_status` | `author_feedback_round1_integrated_pending_review` |
+| `version` | `v0.3-concise-polish` |
+| `date` | `2026-08-03` |
+| `review_status` | `author_feedback_round2_integrated_pending_review` |
 | `introduction_dependency` | Introduction `v0.9-author-refinement` remains unchanged |
 | `figure_2_status` | Approved validation-only illustrative evidence; integrated below |
 | `figure_3_status` | Approved validation-only illustrative evidence; integrated below |
@@ -34,13 +34,13 @@ The status table and the editorial audit after Section 3 are not part of the man
 
 ## 3. Problem Formulation and Empirical Motivation
 
-Related work shows that forecasting models are increasingly expected to serve multiple prediction ranges, yet it leaves two questions unresolved. First, what should a varied-horizon forecaster guarantee when different requests cover the same future steps? Second, once those requests are unified, how should the decoder organize predictive information across a future domain whose local structure may change with lead time? Without clear answers, a unified model is only a shared implementation, not a well-defined forecasting system.
+Varied-horizon forecasting raises two coupled questions. What should a forecaster guarantee when different requests contain the same future targets? How should a unified decoder organize predictive information when sharing needs may change across the future domain? Without clear answers, unification remains an implementation choice rather than a well-defined forecasting system.
 
-This section addresses these questions in sequence. We first formulate varied-horizon forecasting as producing nested views of one future trajectory and define the consistency that this view requires. We then use independently trained horizon-specific models to show why conventional practice does not provide that consistency, while separating this systems issue from predictive accuracy. Finally, we examine how a finite-capacity decoder should share history-conditioned states across future regions. The resulting task and evidence boundaries lead to the design requirements stated in Section 3.5.
+This section formalizes varied-horizon forecasting as nested views of one future trajectory. It then measures whether independently trained horizon-specific models satisfy this view and separates consistency from accuracy. Finally, a controlled decoder diagnostic examines sharing demand across future regions and motivates the design requirements in Section 3.5.
 
 ### 3.1 Varied-horizon forecasting and cross-horizon prefix consistency
 
-The first requirement of varied-horizon forecasting is semantic coherence across requests. If two requests begin from the same history and both include future step $\tau$, they refer to the same forecast target; changing only the requested endpoint should not change what the system predicts at that shared step. We formalize the task around this observation.
+Varied-horizon forecasting should be coherent across request endpoints. Given the same history, a future target shared by two requests has one semantic identity. Changing only the endpoint should therefore change the returned range, not the prediction at that target.
 
 At forecast origin $o$, let
 
@@ -56,28 +56,9 @@ $$
 \in\mathbb R^{H\times C}.
 $$
 
-Here, $\mathbf X_o$ is a length-$L$ multivariate history, $C$ is the number of variables, and $\mathbf Y_o^{(H)}$ contains the next $H$ targets. We consider a supported horizon set $\mathcal H=\{H_1,\ldots,H_M\}$ and let $T=\max\mathcal H$. The forecast horizon $H$ specifies how far a request extends, whereas the future time step $\tau$ identifies one position within that request. Thus, target $(\tau,c)$ is shared by every request with $H\geq\tau$.
+Here, $\mathbf X_o$ is a length-$L$ multivariate history, and $\mathbf Y_o^{(H)}$ contains the next $H$ targets for $C$ variables. Let $\mathcal H=\{H_1,\ldots,H_M\}$ denote the supported horizons and $T=\max\mathcal H$. Horizon $H$ sets the request endpoint, whereas $\tau$ identifies a future position. Target $(\tau,c)$ is therefore shared by every request with $H\geq\tau$.
 
-Conventional long-term forecasting treats each requested horizon as a separate learning problem:
-
-$$
-\widehat{\mathbf Y}_o^{(H)}
-=
-f_{\theta_H}(\mathbf X_o),
-\qquad
-H\in\mathcal H.
-$$
-
-Because both parameters and optimization are horizon-specific, the resulting models have no shared rule for their overlapping outputs. Varied-horizon forecasting instead seeks one model whose prediction for a target is defined independently of the requested endpoint. We express this idea through a **future-step-indexed prediction function**: one function is queried by the history, future time step and variable,
-
-$$
-g_\theta:
-(\mathbf X_o,\tau,c)
-\mapsto
-\widehat y_{o+\tau,c},
-$$
-
-and a request of length $H$ simply collects its first $H$ future-step predictions:
+Conventional long-term forecasting commonly learns a separate predictor $f_{\theta_H}$ for each $H$. Independent parameters and optimization provide no rule linking their overlapping outputs. We instead define a **future-step-indexed prediction function** $g_\theta(\mathbf X_o,\tau,c)$. A request of length $H$ collects
 
 $$
 \widehat{\mathbf Y}_o^{(H)}
@@ -87,7 +68,7 @@ g_\theta(\mathbf X_o,\tau,c)
 \right]_{\tau=1,\ldots,H;\ c=1,\ldots,C}.
 $$
 
-This formulation turns different horizon requests into nested views of the same predicted trajectory. We call the required nesting relation **cross-horizon prefix consistency (CHPC)**. For identical history, forecast origin and preprocessing, CHPC requires
+Different requests are thus nested views of one predicted trajectory. We call this relation **cross-horizon prefix consistency (CHPC)**. For identical history, origin and preprocessing, CHPC requires
 
 $$
 \widehat y_{o+\tau,c}^{(H_i)}
@@ -99,13 +80,13 @@ $$
 1\leq c\leq C.
 $$
 
-In other words, the shorter and longer requests must return the same value for every target they share. Our formulation of varied-horizon forecasting naturally satisfies CHPC because both requests evaluate the same function $g_\theta(\mathbf X_o,\tau,c)$ over their shared steps. Varied-horizon forecasting is therefore not merely parameter sharing across output lengths; it defines those outputs as coherent parts of one future trajectory.
+The formulation satisfies CHPC by construction because every shared target evaluates the same function. Varied-horizon forecasting therefore requires more than parameter sharing across output lengths. It defines all requested outputs as coherent parts of one trajectory.
 
 ### 3.2 Horizon-specific prefix disagreement
 
-The task definition raises an empirical question: do independently trained horizon-specific systems already behave as coherent views of one trajectory, even though they are not required to do so? We answer this by measuring how their predictions differ on exactly the same history and future targets.
+CHPC is guaranteed by the formulation, but independently trained predictors could still agree empirically. We test this possibility by comparing their outputs on identical histories and overlapping targets.
 
-For the same forecast origin $o$, let $\widehat{\mathbf Y}_{o}^{(H_i)}\in\mathbb R^{H_i\times C}$ and $\widehat{\mathbf Y}_{o}^{(H_j)}\in\mathbb R^{H_j\times C}$ be predictions from two models trained separately for $H_i<H_j$. Their **cross-horizon prefix disagreement (CHPD)** is
+At origin $o$, let $\widehat{\mathbf Y}_{o}^{(H_i)}\in\mathbb R^{H_i\times C}$ and $\widehat{\mathbf Y}_{o}^{(H_j)}\in\mathbb R^{H_j\times C}$ denote forecasts at horizons $H_i$ and $H_j$, where $H_i<H_j$. The two models are trained independently. Their **cross-horizon prefix disagreement (CHPD)** is
 
 $$
 \operatorname{CHPD}_o(H_i,H_j)
@@ -120,7 +101,7 @@ $$
 \right|.
 $$
 
-CHPD reports the mean absolute difference in the original data scale. Because variables can have substantially different magnitudes, we also define normalized CHPD (NCHPD):
+CHPD measures mean absolute disagreement in the original scale. To compare variables with different magnitudes, we define normalized CHPD (NCHPD):
 
 $$
 \operatorname{NCHPD}(H_i,H_j)
@@ -137,26 +118,26 @@ $$
 \right|
 }{
 \sigma_c^{\mathrm{train}}+\epsilon
-},
+}.
 $$
 
-where $\mathcal O$ is the set of aligned evaluation origins, $\sigma_c^{\mathrm{train}}$ is the standard deviation of variable $c$ estimated from the training split, and $\epsilon>0$ prevents division by zero. The comparison holds the numerical history, origin, scaler and overlapping target indices fixed. As alignment controls, comparing one horizon-specific checkpoint with itself and comparing two horizon requests from one unified checkpoint both yield exactly zero, ruling out alignment or serialization artifacts.
+Here, $\mathcal O$ contains aligned evaluation origins, $\sigma_c^{\mathrm{train}}$ is the train-split standard deviation of variable $c$, and $\epsilon>0$ prevents division by zero. We hold the history, origin, scaler and overlapping indices fixed. Self-comparison and two requests from one unified checkpoint both yield zero, excluding alignment and serialization artifacts.
 
-Figure 2 shows that the absence of a consistency constraint is visible in practice. In the DLinear experiment on ETTh2, the displayed origin-variable pair maximizes disagreement aggregated over all six horizon pairs among 15,127 validation candidates. Within the first 96 future steps, the forecasts requested at horizons 96, 192 and 336 differ from the 720-step forecast by mean absolute raw-scale values of 2.51, 2.16 and 2.40, respectively. Across 2,161 aligned validation origins and all variables, NCHPD remains non-zero for every pair, ranging from 0.0148 to 0.0406. The selected trajectory is intentionally a strong example rather than a prevalence estimate; the aggregate heatmap establishes dataset-level average disagreement only for the audited DLinear family.
+Figure 2 shows measurable disagreement in the audited DLinear family on ETTh2. Among 15,127 validation origin-variable candidates, the displayed pair maximizes aggregate disagreement across six horizon pairs. Over the first 96 steps, the $H\in\{96,192,336\}$ forecasts differ from $H=720$ by 2.51, 2.16 and 2.40 in mean absolute raw scale. Across 2,161 aligned origins and all variables, every horizon pair has non-zero NCHPD, ranging from 0.0148 to 0.0406. The selected trajectory is a strong illustration, whereas the heatmap reports dataset-level averages only for this model family.
 
 <a id="fig:prefix-disagreement"></a>
 
 ![Validation-only illustration of horizon-specific prefix disagreement.](../../analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures/figure_intro_prefix_disagreement.png)
 
-**Figure 2 | Independently optimized horizon-specific forecasts can disagree on the same future steps.** **a**, Predictions from four DLinear models trained separately for horizons 96, 192, 336 and 720 on the same ETTh2 history. The panel shows the final 48 observed steps and the first 96 future steps shared by all four requested horizons. Colors and sparse, staggered marker shapes identify the four predictions; the inset reports their mean absolute differences from the 720-step forecast on the common prefix. The displayed validation origin-variable pair maximizes mean absolute disagreement aggregated over all six horizon pairs among 15,127 candidates. **b**, Normalized cross-horizon prefix disagreement (NCHPD) averaged over all ETTh2 validation origins ($n=2{,}161$) and variables. The selected example is illustrative and is not a prevalence estimate.
+**Figure 2 | Independently optimized horizon-specific forecasts can disagree on shared future steps.** **a**, Predictions from DLinear models trained separately for horizons 96, 192, 336 and 720 on the same ETTh2 history. The panel shows 48 observed steps and the first 96 shared future steps. The inset reports mean absolute differences from the 720-step forecast. The displayed validation pair maximizes disagreement across all six horizon pairs among 15,127 candidates. **b**, NCHPD averaged over all ETTh2 validation origins ($n=2{,}161$) and variables. The selected example is illustrative, not a prevalence estimate.
 
-The result turns the coherence requirement from an abstract preference into an observable systems issue: separately optimized horizon models can assign different values to a target that is identical in time and variable identity. The evidence is deliberately narrower than a performance comparison. It shows that independent horizon-specific optimization does not provide CHPC; it does not yet tell us whether either forecast is more accurate, nor does it characterize varied-horizon methods that enforce invariance by design.
+Thus, separately optimized models can assign different values to the same target. For the audited family, independent optimization did not enforce CHPC. This evidence concerns consistency, not comparative accuracy or methods that guarantee invariance by design.
 
 ### 3.3 Evidence boundary for naive unified forecasting
 
-Coherence and predictive accuracy are distinct questions. Figure 2 motivates why a varied-horizon system should define overlapping outputs consistently, but it does not imply that unification improves forecast error. It is equally possible that a poorly designed unified model trades horizon-specific specialization for consistency.
+CHPC concerns consistency, not accuracy. Figure 2 does not show that unification improves forecast error. A poorly designed unified model could instead lose useful horizon-specific specialization.
 
-Testing that possibility requires a matched comparison between a horizon-specific predictor and its unified counterpart, with encoder class, effective capacity, training data, objective, optimization, checkpoint selection and evaluation origins held fixed. For horizon $H$, define the relative unified penalty
+Testing this possibility requires matched horizon-specific and unified predictors. Encoder class, effective capacity, data, objective, optimization, checkpoint selection and evaluation origins must remain fixed. For horizon $H$, define the relative unified penalty
 
 $$
 \operatorname{UP}_H
@@ -170,17 +151,17 @@ $$
 }.
 $$
 
-A positive $\operatorname{UP}_H$ means that the evaluated unified adaptation has higher MSE under this protocol. Establishing a general compromise would require this effect to remain positive and stable across matched dataset-horizon comparisons.
+A positive $\operatorname{UP}_H$ indicates higher MSE for the evaluated unified predictor. A general compromise would require a stable positive effect across matched datasets and horizons.
 
-The available evidence does not meet that standard. The closest diagnostic comparison is small and heterogeneous across dataset-horizon cells, while a separate training-protocol contrast produces a larger and more consistent effect. The observed difference therefore cannot be attributed to horizon unification. We consequently do not use a presumed accuracy penalty to motivate our method. At this stage, the case for varied-horizon forecasting is the need for a single deployable, coherent system; whether the proposed realization also improves accuracy remains a question for the complete matched scorecards in the experimental section.
+Current evidence does not meet this standard. The closest diagnostic produced only a 0.1659% aggregate gap, with specialists ahead in 7/15 cells and 2/5 datasets. A training-protocol contrast produced a larger 1.7980% gap across all 15 cells, revealing a systematic confound. We therefore do not use a presumed unified-forecasting penalty as method motivation. Accuracy claims await the complete matched scorecards in the experimental section.
 
 ### 3.4 Future-region sharing-demand heterogeneity
 
-CHPC resolves how different requests should relate, but not how one unified decoder should construct the trajectory itself. A decoder must decide how broadly to reuse history-conditioned predictive states across future steps. Using one fixed reuse pattern throughout the future domain is a strong assumption: it treats early, middle and late regions as if they required the same balance between shared structure and step-specific flexibility.
+CHPC constrains relations among requests, but not how a unified decoder constructs the trajectory. The decoder must determine how broadly to reuse history-conditioned states across future steps. One fixed reuse pattern assumes that all future regions require the same balance between shared structure and local flexibility.
 
-We call the number of future steps that reuse one history-conditioned latent state the **sharing extent** $s$. A **future region** $\mathcal B_b\subseteq\{1,\ldots,T\}$ is a contiguous part of the maximum future domain, rather than a requested forecast horizon. Broad sharing can regularize a long trajectory through a common state, but may smooth local changes; fine sharing offers greater local freedom, but weaker cross-step regularization. We hypothesize that the preferred balance varies across samples, variables and future regions, a problem we term **future-region sharing-demand heterogeneity**.
+The **sharing extent** $s$ is the number of future steps that reuse one latent state. A **future region** $\mathcal B_b\subseteq\{1,\ldots,T\}$ is a contiguous subset of the maximum future domain, not a requested horizon. Broad sharing offers stronger cross-step regularization but may smooth local changes. Fine sharing offers more local freedom but less regularization. We call variation in the preferred extent across regions **future-region sharing-demand heterogeneity**.
 
-To test whether this trade-off is observable without presupposing our method, we construct capacity-matched single-extent diagnostic predictors. Every predictor uses the same encoder, future-step generator, descriptors, step-specific synthesis, parameter count, data, objective and optimization; only parameter-free contiguous pooling changes how many future steps share a latent state. Each model contains exactly one sharing extent, so the diagnostic does not include multi-extent fusion, target-conditioned allocation or an auxiliary balancing objective.
+We probe this trade-off using capacity-matched single-extent predictors. They share the encoder, future-step generator, descriptors, step-specific synthesis, parameter count, data, objective and optimization. Only parameter-free contiguous pooling changes the sharing extent. The diagnostic excludes multi-extent fusion, target-conditioned allocation and auxiliary balancing.
 
 For aligned origin $o$, we measure the risk of extent $s$ within region $\mathcal B_b$ as
 
@@ -194,35 +175,22 @@ R_{o,b,s}
 \widehat y_{o+\tau,c}^{(s)}
 -
 y_{o+\tau,c}
-\right)^2,
+\right)^2.
 $$
 
-where lower $R_{o,b,s}$ indicates that extent $s$ better matches the finite-capacity demand of that region under the controlled family. Preference is region-dependent when the matched risk curves cross and $s_{o,b}^{\star}=\arg\min_sR_{o,b,s}$ changes with $b$. Figure 3 reports the percentage excess of each extent above the minimum risk in each region.
+Lower $R_{o,b,s}$ indicates a better extent for that region within the controlled family. Region dependence appears when risk curves cross and $s_{o,b}^{\star}=\arg\min_sR_{o,b,s}$ changes with $b$. Figure 3 reports each extent's percentage excess above the regional minimum.
 
-For the selected validation example, the diagnostic reveals a markedly non-uniform risk landscape. Figure 3 uses five 111,312-parameter predictors with $s\in\{1,8,32,128,720\}$, trained end-to-end with the same uniform full-domain MSE objective and evaluated over 12 contiguous 60-step regions. For the selected ETTm2 validation origin, the region winners are $[128,128,128,8,8,1,32,1,32,720,720,720]$: all five extents win two or three regions, all ten extent pairs exhibit bidirectional crossings beyond the predefined 0.5% margin, and the mean best-versus-second-best region margin is 10.266%. Relative to the best fixed extent for this sample ($s=720$), using the label-selected region minimum yields a descriptive 8.112% average headroom.
+Figure 3 evaluates five 111,312-parameter predictors with $s\in\{1,8,32,128,720\}$ over 12 contiguous 60-step regions. For the selected ETTm2 validation origin, the winners are $[128,128,128,8,8,1,32,1,32,720,720,720]$. Every extent wins two or three regions, and all ten extent pairs cross bidirectionally beyond the predefined 0.5% margin. The mean best-versus-second-best margin is 10.266%. Against the best fixed extent ($s=720$), the label-selected regional minimum has a descriptive 8.112% average headroom.
 
 <a id="fig:sharing-heterogeneity"></a>
 
 ![Validation-only illustration of future-region sharing-demand heterogeneity.](../../analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures/figure_intro_sharing_heterogeneity.png)
 
-**Figure 3 | Preferred cross-step sharing extent varies across future regions.** **a**, Percentage MSE excess of five capacity-matched neutral decoders above the lowest-risk sharing extent within each 60-step future region of one ETTm2 validation example. Outlined squares mark the region-wise best extent. **b**, MSE reduction of each region winner relative to the best fixed extent ($s=720$), with colors denoting the winning extent and the dashed line showing the 12-region mean. All five extents win two or three regions, and the descriptive region-wise minimum yields 8.1% lower average MSE than the best fixed extent. The example was selected using validation labels and does not represent out-of-sample allocation performance.
+**Figure 3 | Preferred cross-step sharing extent varies across future regions.** **a**, Percentage MSE excess of five capacity-matched neutral decoders above the regional minimum for one ETTm2 validation example. Outlined squares mark the best extent in each 60-step region. **b**, MSE reduction of each regional winner relative to the best fixed extent ($s=720$); the dashed line gives the 12-region mean. Every extent wins two or three regions, and the regional minimum reduces average MSE by 8.1%. Validation labels selected the example and winners, so this is not out-of-sample allocation performance.
 
-The value of this example lies in the change of winner identity, not in the oracle number itself. Within one controlled prediction problem, no single extent minimizes risk across all future regions. This supports the existence of finite-capacity sharing-demand heterogeneity and challenges the assumption that one fixed output-side sharing pattern is uniformly appropriate. Nevertheless, the same validation labels select the example, its region winners and the descriptive 8.112% headroom. Figure 3 is therefore illustrative problem evidence, not out-of-sample allocation performance or a result of the proposed method.
+The evidential signal is the changing winner, not the oracle magnitude. No single extent minimizes risk across all regions in this controlled example. Figure 3 therefore supports finite-capacity regional heterogeneity, but not learned allocation, population prevalence or effectiveness of the proposed method.
 
-A population-level claim requires a stricter cross-fitted comparison. The fixed extent and the region-wise schedule must both be selected using validation risk,
-
-$$
-s_{\mathrm{fixed}}^{\mathrm{val}}
-=
-\arg\min_s
-\sum_b w_bR_{b,s}^{\mathrm{val}},
-\qquad
-s_b^{\mathrm{val}}
-=
-\arg\min_sR_{b,s}^{\mathrm{val}}.
-$$
-
-and are then frozen for one official-test evaluation through **cross-fitted headroom (CFH)**:
+A population-level test must select both the fixed extent and regional schedule on validation data, then freeze them for official-test evaluation. We define **cross-fitted headroom (CFH)** as
 
 $$
 \operatorname{CFH}
@@ -236,17 +204,15 @@ R_{\mathrm{fixed}}^{\mathrm{test}}
 }.
 $$
 
-Such a schedule would splice predictions from independently trained single-extent models and would therefore remain a diagnostic upper bound, not a deployable forecaster, and Figure 3 does not establish CFH. Any formal claim must additionally retain matched initialization and checkpoint selection, verify target and scaler alignment, report all datasets, seeds and negative crossings, and use forecast origin as the paired unit. Because neighboring origins share targets, uncertainty intervals require a moving-block bootstrap with a frozen block length of 720 origins. A group-size-matched random grouping control is further required before attributing an effect specifically to temporal contiguity.
+The schedule splices independently trained predictors, so CFH remains a diagnostic upper bound rather than a deployable forecast. Figure 3 does not establish CFH. Formal evaluation also requires matched initialization and checkpoint selection, verified target and scaler alignment, complete datasets and seeds, and forecast-origin pairing. Overlapping targets require a moving-block bootstrap with a frozen 720-origin block length. A group-size-matched random grouping control is needed to attribute any effect to temporal contiguity.
 
 ### 3.5 Design requirements
 
-The analysis above narrows the design target without prescribing a particular architecture. The task formulation yields two system-level requirements. One parameterized predictor should serve every supported horizon, and changing the requested endpoint should only change how much of its trajectory is returned. Together, these requirements make CHPC an architectural property rather than an agreement that must be recovered after training.
+The analysis yields three design requirements. First, one parameterized predictor should serve every supported horizon, and the endpoint should determine only how much of one trajectory is returned. This makes CHPC an architectural property.
 
-The sharing diagnostic adds an output-side requirement. A unified decoder should not impose one fixed sharing extent on the entire future domain; it should make multiple extents available and allow their integration to change across future steps within a sample, while retaining step-specific synthesis. The subsequent method can condition this integration more generally on sample and variable identity, but the value of that additional granularity must be tested by ablation rather than inferred from Figure 3. This remains an adaptive finite-capacity design requirement, not a claim that future targets have an intrinsic or horizon-dependent probabilistic coupling.
+Second, the decoder should expose multiple sharing extents, integrate them across future steps and retain step-specific synthesis. Conditioning that integration on samples and variables remains a method hypothesis requiring ablation. Figure 3 supports regional variation only, not intrinsic probabilistic coupling among future targets.
 
-Finally, exposing several predictive paths creates an optimization concern: the paths must learn jointly before the integration mechanism concentrates on a subset of them. This requirement is not established by Figures 2 or 3; it is a design condition that the subsequent method must satisfy and that component ablations must test.
-
-These requirements motivate **Independent Scope-Conditioned Forecasting (ISCF)**, which constructs a unified forecast field over multiple output-side sharing extents, together with **Balanced Scope Co-Adaptation (BSCA)**, a training-only mechanism for supporting their joint learning. Section 4 develops this design; no method-effectiveness claim follows from the illustrative evidence in Figures 2 and 3.
+Third, the predictive paths must co-adapt before integration concentrates on a subset. This is an optimization requirement, not evidence from Figures 2 or 3. These requirements motivate **Independent Scope-Conditioned Forecasting (ISCF)** and its training-only **Balanced Scope Co-Adaptation (BSCA)** mechanism. Section 4 presents the design; method effectiveness remains to be established experimentally.
 
 ## Editorial evidence and claim audit
 
@@ -258,7 +224,3 @@ These requirements motivate **Independent Scope-Conditioned Forecasting (ISCF)**
 | Figure 3 | Validation-selected, capacity-matched, single-sample illustration | Fixed sharing demand can vary across future regions in a finite-capacity diagnostic family | Oracle headroom is learnable, out-of-sample or attributable to ISCF-BSCA |
 | CFH | Defined but not measured formally | States the future matched control needed for a population-level headroom claim | Figure 3 establishes formal test headroom |
 | ISCF-BSCA | Introduced only after requirements | The problem analysis motivates the design requirements | Figures 2--3 establish component effectiveness, unified superiority or decoder portability |
-
-The closest existing audit for the naive-unified question compares horizon-specific specialists with `A6_MEASURE`: the aggregate MSE difference is only 0.1659%, with specialists ahead in 7/15 dataset-horizon cells and 2/5 datasets. By contrast, changing the measure-training condition from `A6_MEASURE` to `A6_FULL` produces a 1.7980% aggregate difference across 15/15 cells. Because the first contrast is small and the second is a larger, systematic confound, the audit does not support a manuscript claim that naive unification causes a stable performance penalty.
-
-The Introduction P6 statements that one unified model outperforms horizon-specific models, that the components are effective, and that the decoder transfers across backbones remain provisional paper-facing claims. They require the complete main, ablation and transfer tables and are not used as evidence in this section.
