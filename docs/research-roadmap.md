@@ -1,5 +1,21 @@
 # Research Roadmap
 
+## Section 3 Field-Style Alignment v0.4 (2026-08-03)
+
+用户指出v0.3的rhetorical questions、Nature式短句与显式system-contract判断仍与
+Introduction不一致。本轮检索并核对iTransformer、TimeMixer、TimeXer和
+TimeMixer++的官方conference papers，将其Methods / model section的共同写法作为
+领域风格标尺。Canonical audit=
+`analysis/iscf_bsca_section3_style_calibration_20260803/style_audit.md`。
+
+Section opening现只保留一个承上启下段，删除原P2 meta roadmap。3.1直接由
+same-history / shared-target setting进入notation；3.2与3.4使用
+`As shown in Figure ...`连接matched statistic与observation；3.3改为中性标题
+`Accuracy under naive unified forecasting`；3.5以连续requirements paragraph引出
+ISCF-BSCA。CHPC、CHPD/NCHPD、$\operatorname{UP}_H$、$R_{o,b,s}$、CFH、所有
+evidence values与validation-only boundaries保持不变。Decision=
+`section3_v0_4_field_style_alignment_pending_author_review`。
+
 ## Section 3 Concise Polish v0.3 (2026-08-03)
 
 用户确认v0.2叙事链方向正确，但全文仍偏冗长。v0.3使用`nature-polishing`按
