@@ -284,6 +284,12 @@ def main() -> None:
         print(json.dumps(completeness, indent=2))
         raise SystemExit("profile ranking blocked by incomplete test matrix")
 
+    if config["hyperparameter_selection"].get(
+        "defer_profile_selection_to_joint_analyzer", False
+    ):
+        print(json.dumps(completeness, indent=2))
+        return
+
     by_dataset: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in aggregate_rows:
         by_dataset[row["dataset"]].append(row)

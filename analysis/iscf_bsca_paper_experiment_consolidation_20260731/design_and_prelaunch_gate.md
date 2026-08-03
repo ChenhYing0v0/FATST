@@ -7,8 +7,8 @@
 | `protocol_id` | `ISCF-BSCA-PAPER-EXP-v2` |
 | `date` | `2026-08-02` |
 | `candidate` | ablation anchor=`ISCF-BSCA-v1`；main candidate=`ISCF-BSCA-MAIN-v1` |
-| `current_step` | H4J 40/40 resource smoke pass；full train/validation active；test=0 |
-| `decision` | `H4J_40_job_training_active_test_zero` |
+| `current_step` | H4J 40/40 training audit pass；manifest frozen；direct official-test prelaunch |
+| `decision` | `H4J_40_of_40_training_complete_direct_test_prelaunch` |
 | `architecture_search` | false |
 | `test_tuned_hpo_project_principle` | authorized and frozen；HPO execution authorized |
 | `local_protocol_patch_authorized` | true for ISCF-BSCA-MAIN-v1 HPO tooling |

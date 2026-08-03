@@ -44,7 +44,9 @@ Exchange没有published target，lead-cell列保持空；其joint score改由wit
 7. success gates固定为MSE>=20/28、MAE>=20/28、combined>=40/56；
 8. generic runner dry-run materializes 40 jobs且test jobs=0。
 
-`scripts/build_iscf_bsca_main_v1_h4j_test_manifest.py`只能在40-row training ledger完整后生成manifest；任一artifact/numeric-health失败、checkpoint hash缺失、dataset count不符或trial ID重复都会阻止manifest freeze。正式test runner随后还必须验证checkpoint pre/post hash不变。
+`scripts/build_iscf_bsca_main_v1_h4j_test_manifest.py`先把ledger path解析为absolute path，再记录repo-relative provenance；它只能在40-row training ledger完整后生成manifest。任一artifact/numeric-health失败、checkpoint hash缺失、dataset count不符或trial ID重复都会阻止manifest freeze。正式test runner随后还必须验证checkpoint pre/post hash不变。
+
+H4J test config设置`defer_profile_selection_to_joint_analyzer=true`。因此generic test analyzer只写completeness、ledger、all-trial scorecard与aggregates，不生成legacy MSE-only winner；final selector必须合并H1--H4J全部retained trials后执行。
 
 ## 5. Code-theory consistency
 

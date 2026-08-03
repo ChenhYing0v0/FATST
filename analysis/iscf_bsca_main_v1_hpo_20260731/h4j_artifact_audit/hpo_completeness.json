@@ -1,0 +1,8 @@
+{
+  "protocol_id": "ISCF-BSCA-MAIN-v1-HPO-JOINT-H4J",
+  "expected_trials": 40,
+  "training_complete_trials": 40,
+  "test_complete_trials": 0,
+  "require_test": false,
+  "complete": true
+}

@@ -65,7 +65,8 @@ def read_jsonl(path: Path) -> list[dict[str, Any]]:
 
 def main() -> None:
     args = parse_args()
-    ledger = read_jsonl(args.ledger)
+    ledger_path = args.ledger.resolve()
+    ledger = read_jsonl(ledger_path)
     if len(ledger) != 40:
         raise ValueError(f"expected forty H4J rows, found {len(ledger)}")
     if Counter(entry["dataset"] for entry in ledger) != Counter(
@@ -101,7 +102,7 @@ def main() -> None:
                     / entry["trial_id"]
                     / "seed2021"
                 ),
-                "source_ledger": str(args.ledger.relative_to(ROOT)),
+                "source_ledger": str(ledger_path.relative_to(ROOT)),
             }
         )
     if len({row["trial_id"] for row in rows}) != 40:

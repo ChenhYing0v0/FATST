@@ -44,7 +44,7 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment consolidation and prelaunch |
-| `active_experiment_step` | H4J 40/40 resource smoke pass；full train/validation active；test=0 |
+| `active_experiment_step` | H4J 40/40 training audit pass；manifest frozen；direct official-test prelaunch |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
@@ -52,7 +52,7 @@ paper candidate与claim boundary，但互不替代。
 | `remote_training_authorized` | true；H4J 40-job frozen matrix |
 | `test_tuned_hpo_authorized` | true；H4J 40/40 training后direct complete official test与dataset-level joint selection |
 | `formal_test_authorized` | H4J HPO formal test authorized after manifest freeze；Main I/II baseline formal test仍false |
-| `next_action` | monitor H4J to 40/40 artifacts；freeze manifest；direct complete official test |
+| `next_action` | commit/push H4J test contract；remote preflight；direct complete 40-checkpoint official test |
 | `conditional_next` | 40/40 artifacts后立即冻结manifest并完整test；未达40/56不得自动扩展H4K |
 
 本handoff授权的是实验盘点、设计、source/protocol audit与prelaunch文档准备，不是
