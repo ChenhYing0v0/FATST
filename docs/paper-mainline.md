@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.4 field-style alignment pending author review；experiments=H4L Step 6--8 wide HPO prelaunch/remote training authorized、formal test=false |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.4 field-style alignment pending author review；experiments=H4L Step 8 train/validation active、test=0/48 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,6 +18,8 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H4K evidence为30/56，H4L继续dataset-level HPO |
+
+[H4L Training Launch, 2026-08-04] Freeze commit=`c4c1e6b`；48/48 two-batch resource-smoke profiles完成，48/48 metric artifacts存在且failure-pattern hits=0，smoke test=0。Full 48-job ETTm2/Weather train/validation于10:09:00在GPU0/1/2 detached启动，shell/runner PID=`3714210/3714214`；首批三项均进入epoch1 iteration1600--1700，observed memory约0.7--1.6 GiB。Output root=`/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_main_v1_hpo/h4l`，formal test继续等待48/48 checkpoint manifest与新授权。Canonical launch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4l_launch.md`。Decision=`H4L_48_job_train_validation_active_test_zero`。
 
 [H4L Wide HPO Prelaunch, 2026-08-04] 用户授权为ETTm2、Weather扩大search range并启动远程训练。H4L冻结48个seed2021 profiles，各dataset 24个；相对117个历史profiles为48/48 effective-parameter nonduplicates。Search覆盖`seq_len/patch_num/d_model/d_ff/dropout/lr/weight_decay/mode_rank/layer_norm`边界，其中四项显式保留TimeAlign official ETTm2/Weather encoder tuples，再与ISCF-BSCA rank或optimizer regularization组合；不复制TimeAlign head/loss。每trial最多60 epochs、patience12，four-H validation mean MSE选checkpoint，一个dataset-level profile共享四H。Local patch、完整resource smoke和train/validation已授权；formal test、H4M、baseline、3-seed仍false。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4l_wide_matrix_and_prelaunch.md`。Decision=`H4L_48_job_wide_matrix_frozen_remote_training_authorized_formal_test_false`。
 

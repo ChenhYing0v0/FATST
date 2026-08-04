@@ -2,9 +2,9 @@
 
 ## ISCF-BSCA-MAIN-v1 H4L Wide HPO (2026-08-04)
 
-Current cursor=`Step 6 wide search contract frozen / Step 7 local tooling pass / Step 8 remote resource smoke and training authorized / formal test pending separate gate`。H4K证明原117-trial search space的dataset-level与逐cell oracle上限均为30/56，因此H4L只针对ETTm2 0/8和Weather 2/8扩大范围，不复跑H4K，也不改变architecture、objective、scales或inference graph。
+Current cursor=`Step 8 remote train/validation active / formal test pending separate gate`。H4K证明原117-trial search space的dataset-level与逐cell oracle上限均为30/56，因此H4L只针对ETTm2 0/8和Weather 2/8扩大范围，不复跑H4K，也不改变architecture、objective、scales或inference graph。
 
-H4L为48个seed2021 profiles，ETTm2/Weather各24；对117个历史profiles做effective fingerprint audit后零重复。矩阵覆盖context/patch、capacity、decoder rank、learning rate、weight decay和layer norm边界，并从TimeAlign official scripts提取四组encoder parameter couplings作source prior，再与ISCF-BSCA decoder/optimizer组合。Trial budget扩展为60 epochs/patience12，checkpoint仍由four-H validation mean MSE选择；训练阶段test=0，一个dataset-level profile共同服务四H。Narrative gate=`pass_as_wide_hyperparameter_optimization_not_new_method`；effectiveness gate等待complete formal test，但该test尚未授权。Canonical report=`analysis/iscf_bsca_main_v1_hpo_20260731/h4l_wide_matrix_and_prelaunch.md`，machine contract=`configs/iscf_bsca_main_v1_hpo_wide_h4l.json`。Decision=`H4L_48_job_wide_matrix_frozen_remote_training_authorized_formal_test_false`。
+H4L为48个seed2021 profiles，ETTm2/Weather各24；对117个历史profiles做effective fingerprint audit后零重复。矩阵覆盖context/patch、capacity、decoder rank、learning rate、weight decay和layer norm边界，并从TimeAlign official scripts提取四组encoder parameter couplings作source prior，再与ISCF-BSCA decoder/optimizer组合。Trial budget扩展为60 epochs/patience12，checkpoint仍由four-H validation mean MSE选择；训练阶段test=0，一个dataset-level profile共同服务四H。48/48 resource smoke通过后，正式训练已在3×3090启动，首批三项进入epoch1且numeric health正常。Narrative gate=`pass_as_wide_hyperparameter_optimization_not_new_method`；effectiveness gate等待complete formal test，但该test尚未授权。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4l_wide_matrix_and_prelaunch.md`，launch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4l_launch.md`。Decision=`H4L_48_job_train_validation_active_test_zero`。
 
 ## Section 3 Field-Style Alignment v0.4 (2026-08-03)
 

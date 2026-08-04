@@ -44,7 +44,7 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | H4L 48-job wide HPO frozen；Step 8 remote resource smoke/train authorized；formal test=false |
+| `active_experiment_step` | H4L 48-job train/validation active on GPU0/1/2；test=0/48 |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
@@ -52,7 +52,7 @@ paper candidate与claim boundary，但互不替代。
 | `remote_training_authorized` | true；H4L ETTm2/Weather 48-job frozen matrix |
 | `test_tuned_hpo_authorized` | H4L train/validation only；official test=false |
 | `formal_test_authorized` | H4J/H4K completed；H4L/Main I/II baseline=false |
-| `next_action` | focused commit/push；remote exact-commit/GPU/quota preflight；48/48 resource smoke后启动train/validation |
+| `next_action` | 等待并审计48/48 checkpoints；冻结manifest后汇报并请求formal-test授权 |
 | `conditional_next` | 48/48 checkpoints与manifest完整后汇报并请求H4L formal-test授权；禁止partial test或automatic H4M |
 
 H4K train/validation与formal test均已完成，但terminal effectiveness gate失败。H4L只扩大ETTm2/Weather
