@@ -144,6 +144,17 @@ def main() -> None:
     assert "jobs=8" in result and "test_jobs=8" in result
     assert "seed=2021" in result and "remote_authorized=true" in result
 
+    runner = (
+        ROOT
+        / "scripts"
+        / "remote"
+        / "run_timealign_official_ettm2_weather_reproduction.sh"
+    ).read_text(encoding="utf-8")
+    assert "--legacy-" not in runner
+    assert "--learning-rate" not in runner and "--w-align" not in runner
+    assert "--readout-mode official" in runner
+    assert "--checkpoint-policy official-last" in runner
+
     print(
         json.dumps(
             {
@@ -154,6 +165,7 @@ def main() -> None:
                 "license_status": source["license_status"],
                 "historical_reference_artifact_complete": False,
                 "remote_dataset_hashes_frozen": 2,
+                "official_presets_loaded_without_legacy_overrides": True,
                 "overall_pass": True,
             },
             indent=2,

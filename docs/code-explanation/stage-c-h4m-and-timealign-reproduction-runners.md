@@ -14,7 +14,7 @@
 
 ## 2. TimeAlign reproduction
 
-`scripts/remote/run_timealign_official_ettm2_weather_reproduction.sh`从JSON按workload order生成8行job queue。每行字段依次为`run_id,dataset,H,seed,d_model,d_ff,dropout,lr,w_align,patch_num,LN,profile_hash`。每个worker把这些字段显式传入`train_repo.py`：tensor path仍是官方fixed-H `timealign-token-mlp` encoder与`official` readout；FATST adapter只改变test访问时机和artifact记录。
+`scripts/remote/run_timealign_official_ettm2_weather_reproduction.sh`从JSON按workload order生成8行job queue。每行字段依次为`run_id,dataset,H,seed,d_model,d_ff,dropout,lr,w_align,patch_num,LN,profile_hash`。这些参数用于checker逐项核对official preset；runner不传Stage C专用`legacy-*` overrides，而由`train_repo.py`按dataset与H直接加载已审计的official preset。tensor path仍是官方fixed-H `timealign-token-mlp` encoder与`official` readout；FATST adapter只改变test访问时机和artifact记录。
 
 `resource-smoke`执行1 epoch、各2个train/eval batches且`final_evaluation_split=none`，不访问test。`run`执行10 epochs、无early stopping，保存last checkpoint后只加载一次test，并产出一个目标H的MSE/MAE、segment metrics和test predictions。
 
