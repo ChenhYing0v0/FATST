@@ -61,6 +61,19 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         writer.writerows(rows)
 
 
+def selected_profiles(path: Path) -> dict[str, dict[str, Any]]:
+    if path.suffix.lower() == ".csv":
+        rows = read_csv(path)
+        profiles = {
+            row["dataset"]: {"trial_id": row["trial_id"]} for row in rows
+        }
+        if len(profiles) != len(rows):
+            raise ValueError(f"duplicate selected dataset in {path}")
+        return profiles
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    return payload["profiles"]
+
+
 def published_targets(
     rows: list[dict[str, str]],
 ) -> dict[tuple[str, int, str], float]:
@@ -81,9 +94,7 @@ def main() -> None:
     args = parse_args()
     guard_ratio = 1.0 + args.mean_guard_pct / 100.0
     targets = published_targets(read_csv(args.published_scorecard))
-    selected = json.loads(args.selected_profiles.read_text(encoding="utf-8"))[
-        "profiles"
-    ]
+    selected = selected_profiles(args.selected_profiles)
     metadata: dict[tuple[str, str], dict[str, str]] = {}
     for metadata_path in args.profile_metadata:
         for row in read_csv(metadata_path):
@@ -374,7 +385,7 @@ def main() -> None:
         "decision": (
             "joint_hpo_success_gate_pass"
             if overall_gate_pass
-            else "joint_hpo_success_gate_fail_H4K_requires_separate_authorization"
+            else "joint_hpo_success_gate_fail_further_extension_requires_separate_authorization"
         ),
     }
     (args.analysis_dir / "current_joint_objective_status.json").write_text(

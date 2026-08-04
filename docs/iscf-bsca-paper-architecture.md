@@ -5,10 +5,10 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.39` |
+| `version` | `v0.40` |
 | `last_updated` | `2026-08-04` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 3 v0.4 field-style alignment pending author review；experiments=H4K complete formal test authorized、remote preflight pending；Method Figure 4 planned |
+| `current_review_cursor` | writing=Section 3 v0.4 field-style alignment pending author review；experiments=H4K formal test complete、30/56 gate fail、H4L not authorized；Method Figure 4 planned |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
@@ -1317,7 +1317,7 @@ TimeAlign encoder参数只作为source-audited search prior。当前完整矩阵
 seed2021；seeds2022/2023仅在时间允许时按完整experiment block扩展，且不得
 result-selective扩展。
 
-截至2026-08-04，H1--H4J共93个HPO trials已完成official test。Joint selector相对frozen published targets达到MSE 15/28、MAE 15/28、combined 30/56，未通过MSE>=20/28、MAE>=20/28、combined>=40/56。H4K新增24个targeted profiles，train/validation与checkpoint manifest已24/24通过，但formal test仍待独立授权。因此当前结论仍是strong aggregate competitor和HPO partial pass，不是完整per-cell SOTA；terminal Main I/II row继续等待H4K完整test与117-trial joint selector。
+截至2026-08-04，H1--H4K共117个HPO trials已完成official test。H4K只使seven-dataset macro MSE/MAE改善0.0199%/0.0286%，joint selector相对frozen published targets仍为MSE 15/28、MAE 15/28、combined 30/56，未通过20/28、20/28、40/56 gates。合法selector与逐cell diagnostic oracle同为30/56，故当前结论仍是strong aggregate competitor和HPO partial pass，不是完整per-cell SOTA；H4K回Step 6，H4L未授权。
 
 ### 8.2 Main Results I：Unified versus Horizon-Specific
 

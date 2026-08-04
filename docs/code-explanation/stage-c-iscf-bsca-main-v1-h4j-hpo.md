@@ -21,7 +21,7 @@ Resolved job继续映射到trainer CLI的`seq_len`、`patch_num`、`d_model`、`
 
 ## 3. Existing-evidence analyzer
 
-`scripts/analyze_iscf_bsca_main_v1_joint_objective.py`读取H1/H2/H3A/H3B逐cell scorecards和frozen published targets。对每个`dataset × trial`验证四个standard horizons完整，再计算：
+`scripts/analyze_iscf_bsca_main_v1_joint_objective.py`读取各HPO phase逐cell scorecards和frozen published targets；`--selected-profiles`既可接收原有JSON freeze，也可接收上一轮joint-selected CSV，从而在后续HPO轮次中正确报告相对当前selector的增量。对每个`dataset × trial`验证四个standard horizons完整，再计算：
 
 - `test_mean_mse_4h`、`test_mean_mae_4h`；
 - MSE、MAE及combined leading-cell counts；

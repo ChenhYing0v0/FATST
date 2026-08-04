@@ -44,18 +44,18 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | H4K complete formal test authorized；remote preflight pending |
+| `active_experiment_step` | H4K formal test complete；30/56 gate fail；rollback Step 6 HPO design |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
 | `local_protocol_patch_authorized` | true for ISCF-BSCA-MAIN-v1 HPO tooling |
 | `remote_training_authorized` | true；H4K 24-job frozen matrix |
-| `test_tuned_hpo_authorized` | H4K training=true；formal test=true for frozen 24-checkpoint matrix |
-| `formal_test_authorized` | H4J completed；H4K=true；Main I/II baseline=false |
-| `next_action` | focused commit/push；remote exact-commit/checkpoint/quota/GPU/zero-artifact preflight；execute96-cell complete test |
-| `conditional_next` | 24/24 test后合并既有93 trials并执行frozen joint selector；automatic H4L=false |
+| `test_tuned_hpo_authorized` | H4K training/test completed；automatic H4L=false |
+| `formal_test_authorized` | H4J/H4K completed；Main I/II baseline=false |
+| `next_action` | 冻结H4K negative/partial result；决定是否授权H4L targeted search contract或收窄terminal gate |
+| `conditional_next` | 若继续HPO，先冻结新search space与budget再请求training/test授权；禁止复跑H4K或per-H selection |
 
-H4K train/validation与manifest gate已完成，且完整formal test已获授权。不得为了兑现Introduction
+H4K train/validation与formal test均已完成，但terminal effectiveness gate失败。不得为了兑现Introduction
 P6而跳过controls、补选有利数据集，或把historical test结果当成untouched holdout。
 
 ## 2. Paper claims to be discharged

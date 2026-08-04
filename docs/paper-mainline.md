@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.4 field-style alignment pending author review；experiments=H4K complete formal test authorized、remote preflight pending |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.4 field-style alignment pending author review；experiments=H4K formal test complete、30/56 gate fail、return Step 6 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -17,7 +17,9 @@
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
-| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H4J暂定profiles达到30/56，H4K performance pending complete official test |
+| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H4K profiles仍为30/56、strong aggregate competitor但未达terminal gate |
+
+[H4K Complete Test and Joint-HPO Decision, 2026-08-04] 24/24 checkpoints与96/96 cells完整，24/24 checkpoint immutability/invariants通过，无ABORT。117-trial joint selector只替换ETTm2与Weather profiles，seven-dataset macro MSE/MAE微幅改善0.0199%/0.0286%，但MSE/MAE/combined leads仍为15/28、15/28、30/56；合法selector、unrestricted single-profile与逐cell oracle均为30/56。ETTm2仍0/8、Weather仍2/8、H720仍4/14，故三项global gates与三个local gates均失败。Failure attribution=`search_space_performance_shortfall`，不是selector或numeric failure；rollback=Step 6，automatic H4L=false。Canonical report=`analysis/iscf_bsca_main_v1_hpo_20260731/h4k_test_result_and_joint_hpo_decision.md`。Decision=`H4K_complete_continuous_improvement_no_new_leads_gate_fail_return_step6`。
 
 [H4K Formal-Test Authorization, 2026-08-04] 用户显式授权完整H4K formal test。Scope固定为24 checkpoints × H96/H192/H336/H720=96 standard cells、MSE/MAE、seed2021；checkpoint retraining/mutation、partial execution、per-H/per-metric/per-cell selection均禁止。H4L、新训练、baseline与3-seed不在本授权内。下一步为focused commit/push与remote exact-commit/checkpoint/quota/GPU/zero-artifact preflight，通过后执行一次complete audit。Decision=`H4K_complete_formal_test_authorized_prelaunch`。
 
