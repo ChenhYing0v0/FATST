@@ -4,6 +4,8 @@
 
 H4L没有修改model code。`configs/iscf_bsca_main_v1_hpo_wide_h4l.json`冻结48个ETTm2/Weather profiles；`scripts/check_iscf_bsca_main_v1_hpo_wide_h4l.py`验证matrix、source与历史noncollision；`scripts/remote/run_iscf_bsca_main_v1_hpo_wide_h4l.sh`仅向通用HPO runner固定config和repo-external output root。
 
+训练完成后，`scripts/check_iscf_bsca_main_v1_h4l_training_artifacts.py`逐trial复核checkpoint、validation metrics、effective config、environment、initialization contract、diagnostics、日志与冻结hash；`scripts/build_iscf_bsca_main_v1_h4l_test_manifest.py`只在48/48 ledger均为`validation_complete`时生成formal-test前manifest。二者都不读取official-test labels。
+
 ## 2. Config materialization
 
 每个job先复制dataset anchor，再应用`overrides`，最后加入`trial_id/profile_id/source_prior`。通用runner将resolved profile转换为：
@@ -19,5 +21,7 @@ Checker对本地official ETTm2/Weather scripts与`train_repo.py`记录SHA256，�
 ## 4. Safety checks
 
 Checker验证：48个IDs与profiles唯一；ETTm2/Weather各24；与H1--H4K 117个effective profiles零重复；patch count整除context；effective batch恒为32；wide coverage达到冻结边界；architecture与selection invariants不变；dry-run显示`jobs=48, test_jobs=0, remote_authorized=true`。Formal test authorization必须保持false。
+
+Post-training checker进一步要求config/search-space hash、trial/profile ID、seed、four-H validation selector、`official_test_mode=false`、`final_evaluation_split=val`、所有effective HPO fields与冻结job逐项一致；48个checkpoint SHA256必须唯一并与synced ledger一致，train logs不得出现Traceback、RuntimeError、OOM、NaN或Inf，`test_audit`目录必须不存在。
 
 Code-theory consistency：H4L实现的是frozen architecture内更宽的finite HPO search，而不是新的mechanism。若性能提升，只能归因于dataset-level hyperparameter selection，不能扩张ISCF/BSCA mechanism claim；若失败，也只说明该search contract未找到更优profile，不否定architecture方向。
