@@ -6,6 +6,12 @@ Current cursor=`Step 8 remote train/validation active / formal test pending sepa
 
 H4L为48个seed2021 profiles，ETTm2/Weather各24；对117个历史profiles做effective fingerprint audit后零重复。矩阵覆盖context/patch、capacity、decoder rank、learning rate、weight decay和layer norm边界，并从TimeAlign official scripts提取四组encoder parameter couplings作source prior，再与ISCF-BSCA decoder/optimizer组合。Trial budget扩展为60 epochs/patience12，checkpoint仍由four-H validation mean MSE选择；训练阶段test=0，一个dataset-level profile共同服务四H。48/48 resource smoke通过后，正式训练已在3×3090启动，首批三项进入epoch1且numeric health正常。Narrative gate=`pass_as_wide_hyperparameter_optimization_not_new_method`；effectiveness gate等待complete formal test，但该test尚未授权。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4l_wide_matrix_and_prelaunch.md`，launch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4l_launch.md`。Decision=`H4L_48_job_train_validation_active_test_zero`。
 
+## Section 3 Author Structure Refinement v0.5 (2026-08-04)
+
+Current cursor=`paper writing / Section 3 author review`。3.1现按shared-target语义先定义CHPC，再说明independently optimized horizon-specific predictors不受该约束，最后以single future-step-indexed function给出结构上满足CHPC的varied-horizon formulation。3.2使用`prefix inconsistency`描述违反CHPC的现象，同时保留CHPD/NCHPD作为可测量的prediction disagreement；Figure 2a负责selected trajectory，Figure 2b负责2,161 origins × all variables的aggregate evidence，其中H96/H192/H336与H720的NCHPD为0.0406/0.0365/0.0366，高于shorter-horizon pairs的0.0148--0.0166。
+
+原3.3 naive-unified accuracy与原3.5 Design Requirements已删除，future-region sharing renumber为3.3。该节从CHPC过渡到decoder information organization，matched predictors只保留“除sharing extent外完全一致”的正文表述；Figure 3a解释region-wise excess risk与winner diversity，Figure 3b单独解释相对best fixed $s=720$的8.112% descriptive oracle headroom。为避免claim promotion，Figure 2 caption保留aggregate-CHPD selection disclosure，Figure 3正文保留一句validation-label oracle定性。新增sharing-extent schematic未进入本版，因为Figure 3a已经直接显示extent×region关系，额外图会与planned Method Figure 4重复。Introduction v0.9、existing figure assets、method identity与experiment authorization均未改变。Decision=`section3_v0_5_author_structure_refinement_pending_review`。
+
 ## Section 3 Field-Style Alignment v0.4 (2026-08-03)
 
 用户指出v0.3的rhetorical questions、Nature式短句与显式system-contract判断仍与

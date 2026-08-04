@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.4 field-style alignment pending author review；experiments=H4L Step 8 train/validation active、test=0/48 |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.5 author structure refinement pending author review；experiments=H4L Step 8 train/validation active、test=0/48 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,6 +18,8 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H4K evidence为30/56，H4L继续dataset-level HPO |
+
+[Section 3 Author Structure Refinement v0.5, 2026-08-04] 3.1按`shared target -> CHPC definition -> horizon-specific limitation -> unified future-step-indexed function`重排，使CHPC先于模型对比出现。3.2标题改为`Horizon-specific prefix inconsistency`，用inconsistency表示违反CHPC的现象、CHPD/NCHPD表示量化disagreement；删除sanity-check与冗余selection数字，正文分开解释Figure 2a selected trajectory和Figure 2b all-validation matrix，并明确long--short horizon pairs具有更高NCHPD。原3.3 naive-unified accuracy与原3.5 Design Requirements从manuscript删除；future-region sharing renumber为3.3，matched-family表述压缩，Figure 3按panel a heterogeneity与panel b 8.112% descriptive oracle headroom分开叙述。Figure 2 caption仍披露trajectory由aggregate CHPD选择，Figure 3仍标明label-selected oracle，避免把validation diagnostics提升为prevalence、learned allocation或method effectiveness。未新增示意图：Figure 3a已承担extent×region解释，Method Figure 4仍为planned only。Introduction v0.9、Figures 2--3图像与并行experiment cursor未改。Decision=`section3_v0_5_author_structure_refinement_pending_review`。
 
 [H4L Training Launch, 2026-08-04] Freeze commit=`c4c1e6b`；48/48 two-batch resource-smoke profiles完成，48/48 metric artifacts存在且failure-pattern hits=0，smoke test=0。Full 48-job ETTm2/Weather train/validation于10:09:00在GPU0/1/2 detached启动，shell/runner PID=`3714210/3714214`；首批三项均进入epoch1 iteration1600--1700，observed memory约0.7--1.6 GiB。Output root=`/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_main_v1_hpo/h4l`，formal test继续等待48/48 checkpoint manifest与新授权。Canonical launch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4l_launch.md`。Decision=`H4L_48_job_train_validation_active_test_zero`。
 

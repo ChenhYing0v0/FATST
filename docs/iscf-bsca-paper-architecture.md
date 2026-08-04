@@ -313,11 +313,9 @@ Abstract
    2.4 Multi-Scale Temporal Modeling
 
 3. Problem Formulation and Empirical Motivation
-   3.1 Horizon-Specific and Unified Multi-Horizon Forecasting
-   3.2 Cross-Horizon Disagreement of Horizon-Specific Models
-   3.3 Performance Compromise in Naive Unified Forecasting
-   3.4 Future-Region Sharing-Demand Heterogeneity
-   3.5 Design Requirements
+   3.1 Varied-Horizon Forecasting and Cross-Horizon Prefix Consistency
+   3.2 Horizon-Specific Prefix Inconsistency
+   3.3 Future-Region Sharing-Demand Heterogeneity
 
 4. ISCF-BSCA: Prefix-Consistent Unified Multi-Horizon Forecasting
    4.1 Architecture Overview
@@ -851,26 +849,40 @@ balanced co-adaptation` 完整链上。
 
 ## 6. Problem Formulation and Empirical Motivation
 
-Section 3 v0.4 field-style alignment已落地：
+Section 3 v0.5 author structure refinement已落地：
 `docs/paper-drafts/iscf-bsca-problem-formulation-initial-draft.md`。当前状态为
-`author_feedback_round3_integrated_pending_review`；Introduction v0.9未改动。
+`author_feedback_round4_integrated_pending_review`；Introduction v0.9未改动。
 
-3.1--3.4不出现ISCF、BSCA、arm或production method名称，问题证据只使用已有
-baseline或简单capacity-matched diagnostic heads。3.5先从问题与证据导出通用
-design requirements，只在最后一个transition paragraph引出ISCF-BSCA。Figures
-2--3继续严格标记为validation-only illustrative evidence，不承担method
-effectiveness、population prevalence或learned allocation claim。
+3.1--3.3不出现ISCF、BSCA、arm或production method名称，问题证据只使用已有
+baseline或简单capacity-matched diagnostic heads。原3.3 naive-unified accuracy
+audit与原3.5 design requirements已从manuscript Section 3删除：relative accuracy
+留给Experiments，method identity从Section 4开始。Figures 2--3继续只作
+validation-based problem evidence，不承担method effectiveness或learned
+allocation claim。
 
-Section 3不再以公式直接开场，而以两个reader questions建立叙事：
-`不同horizon requests应保证什么 -> unified decoder应如何组织future domain`。
-全章narrative spine固定为：
-`coherent task -> observed disagreement -> accuracy boundary ->
-sharing-demand heterogeneity -> design requirements`。公式只承担formalization或
-matched measurement，不再替代topic sentence与argument transition。
+Section 3以一个承上启下段进入两个相连问题：不同horizon requests应满足什么
+一致性，以及unified decoder应如何组织future domain。全章narrative spine更新为
+`CHPC task contract -> observed horizon-specific inconsistency ->
+future-region sharing-demand heterogeneity -> decoder motivation`。3.1先定义CHPC，
+再对比horizon-specific predictors，最后给出结构上满足CHPC的future-step-indexed
+function。3.2使用`inconsistency`指违反CHPC的现象，保留CHPD/NCHPD作为量化
+disagreement的统计量。公式只承担formalization或matched measurement，不替代
+topic sentence与argument transition。
 
-### 6.1 Horizon-Specific and Unified Multi-Horizon Forecasting
+### 6.1 Manuscript 3.1：Varied-Horizon Forecasting and CHPC
 
-Horizon-specific formulation：
+Section 3 v0.5先从same-history / shared-target语义定义CHPC：
+
+$$
+\widehat y_{o+\tau,c}^{(H_i)}
+=
+\widehat y_{o+\tau,c}^{(H_j)},
+\qquad H_i<H_j,\quad 1\leq\tau\leq H_i.
+$$
+
+随后以conventional horizon-specific formulation说明该一致性不受独立参数与优化
+保证：
+
 
 $$
 \hat{\mathbf Y}^{(H)}
@@ -880,7 +892,7 @@ f_{\theta_H}(\mathbf X),
 H\in\mathcal H.
 $$
 
-Unified formulation：
+最后给出结构上满足CHPC的unified formulation：
 
 $$
 \hat{\mathbf Y}^{(H)}
@@ -890,18 +902,15 @@ g_\theta(\mathbf X,\tau,c)
 \right]_{\tau=1,\ldots,H;\ c=1,\ldots,C},
 $$
 
-其中 $g_\theta$ 是horizon无关、future-step-indexed prediction function。
-随后定义 CHPC，并说明 $H$ 是 forecast horizon、$\tau$ 是 future time step、
-$(\tau,c)$ 是 forecast target。
+其中 $g_\theta$ 是horizon无关、future-step-indexed prediction function，$H$ 是
+forecast horizon，$\tau$ 是future time step，$(\tau,c)$ 是forecast target。CHPC
+不引入额外projection operator $\Pi_{H_i}$；3.1结论限定为不同horizon requests是
+同一future trajectory的nested views。accuracy comparison不在Section 3展开。
 
-Manuscript v0.2先用自然语言定义`future-step-indexed prediction function`，再给
-$g_\theta$。CHPC不再引入额外projection operator $\Pi_{H_i}$，而直接写为
-$\widehat y_{o+\tau,c}^{(H_i)}
-=\widehat y_{o+\tau,c}^{(H_j)}$ for every shared target，并紧接自然语言解释。
-3.1结论限定为“不同horizon requests是同一future trajectory的nested views”；
-accuracy boundary移至3.3，不在definition段落突然插入。
+### 6.2 Manuscript 3.2：Horizon-Specific Prefix Inconsistency
 
-### 6.2 Evidence I：Cross-Horizon Disagreement
+`inconsistency`表示horizon-specific predictions违反CHPC的现象；CHPD与NCHPD
+继续作为量化该现象的prediction-disagreement statistics。
 
 对 DLinear、PatchTST、iTransformer 的native horizon-specific implementations
 分别训练$H=96,192,336,720$ 的模型。正式证据复用Main Results中的相同
@@ -982,7 +991,10 @@ subtle white separation strokes；H720置于较低z-order，避免遮挡较短ho
 curves。预测主线缩至0.82--0.95 pt、marker间隔放宽至18 steps，避免四条高度
 重合的predictions形成过粗色带。
 
-### 6.3 Evidence Boundary：Naive Unified Forecasting
+### 6.3 Deferred Evidence Boundary：Naive Unified Forecasting
+
+本段证据审计从Section 3 v0.5 manuscript删除，保留在architecture record中供
+Experiments设计与后续claim audit使用；不得据此恢复Section 3中的accuracy claim。
 
 把同一 baseline 改成horizon无关、future-step-indexed unified variant，再在
 多个 requested horizons 上评估。定义：
@@ -1014,7 +1026,7 @@ cells。该confound大于并更稳定于horizon-specific/unified contrast。因�
 - relative accuracy留给后续完整matched paper-facing scorecards；
 - Introduction P6的unified superiority仍是provisional claim。
 
-### 6.4 Evidence III：Future-Region Sharing-Demand Heterogeneity
+### 6.4 Manuscript 3.3：Future-Region Sharing-Demand Heterogeneity
 
 这一节在提出ISCF之前建立问题证据，不使用ISCF、scope slice、BSCA或
 target-conditioned scope allocation等方法术语。主要证据来自相同simple baseline上
@@ -1165,14 +1177,17 @@ s720整行恒为0并显示为白色；新版编码消除该视觉歧义，同时
 fixed-s720 reference。maximum-heterogeneity validation role在caption中明确；
 正式CFH继续deferred。图不使用ISCF/BSCA，不承担method effectiveness claim。
 
-Section 3 v0.4保留sample-level matched statistic $R_{o,b,s}$与
-validation-selected fixed/schedule及official-test CFH作为未来formal control。
-Figure 3本身不建立CFH；其同一validation-label winner与8.112% headroom只作
-descriptive oracle。完整neutral tensor path继续保存在本architecture与canonical
-evidence design中；manuscript正文改为自然语言说明matched components，只保留
-支撑观点所必需的region-risk与CFH公式。
+Section 3 v0.5只保留sample-level matched statistic $R_{o,b,s}$。validation-selected
+fixed/schedule与official-test CFH继续作为architecture record中的future formal
+control，不进入当前manuscript。Figure 3的同一validation-label winner与8.112%
+headroom只作descriptive oracle。完整neutral tensor path与formal control继续保存在
+本architecture与canonical evidence design中。
 
-### 6.5 Design Requirements
+### 6.5 Method Requirements Record（不作为Section 3 subsection）
+
+Section 3 v0.5不再单设Design Requirements，也不在Section 3正文引出ISCF-BSCA。
+以下内容保留为Section 4 architecture rationale与后续ablation claim map，不是当前
+manuscript subsection。
 
 由前三项证据导出：
 
@@ -1183,10 +1198,8 @@ evidence design中；manuscript正文改为自然语言说明matched components�
    scopes，并允许每个forecast target整合不同sharing extents；
 5. scope-conditioned slices与scope allocation需要稳定joint training。
 
-Manuscript-facing表达在此处保持method-neutral：one model、CHPC、multiple
-sharing extents、sample/variable/future-step粒度的integration与stable joint
-learning。只有3.5末段将这些requirements映射到ISCF与BSCA，且明确Figures 2--3
-不构成component effectiveness evidence。
+这些requirements在Section 4 architecture overview中映射到ISCF与BSCA，不再经由
+Section 3.5引出；Figures 2--3仍不构成component effectiveness evidence。
 
 v0.2进一步区分requirement来源：one model与CHPC来自task definition；Figure 3
 直接支持within-sample future-region variation，因此只导出multiple extents与
@@ -1656,3 +1669,4 @@ Coverage boundary：
 | 2026-07-31 | Paper-facing experiment consolidation v1 | exact checkpoint/hash audit；minimal baseline set；345 checkpoint slots，45 completed metric-evidence records/300 new；binary reuse unverified；Main I/II、ablation、transfer、efficiency与four-layer gates冻结 | E2 conditional pass；request Tier A local patch only；remote training/formal test仍false |
 | 2026-08-03 | Section 3 v0.3 concise polish | manuscript body由2,308词压缩至1,576词；合并重复释义与claim boundary；精简Figures 2--3 captions和future CFH protocol；保留CHPC/CHPD/NCHPD/$\operatorname{UP}_H$/$R_{o,b,s}$/CFH、matched controls与validation-only边界 | author review；Introduction与并行experiment cursor不变 |
 | 2026-08-03 | Section 3 v0.4 field-style alignment | 参照iTransformer、TimeMixer、TimeXer与TimeMixer++官方论文校准时序预测顶会语体；P1改为单一承接段，删除meta roadmap P2；3.1--3.5改为连续setting-to-evidence叙事 | author review；definitions、numbers、claim boundaries、Introduction与experiment cursor不变 |
+| 2026-08-04 | Section 3 v0.5 author structure refinement | 3.1改为shared-target→CHPC→horizon-specific contrast→unified function；3.2区分inconsistency现象与CHPD/NCHPD统计并重写Figure 2叙事；删除naive-unified accuracy与Design Requirements subsections；future-region sharing renumber为3.3并按panel a/b重写 | author review；Figure 2 selection与Figure 3 oracle boundary压缩保留；Introduction、figures与experiment cursor不变 |
