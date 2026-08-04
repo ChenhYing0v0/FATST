@@ -24,4 +24,6 @@ Checker验证：48个IDs与profiles唯一；ETTm2/Weather各24；与H1--H4K 117�
 
 Post-training checker进一步要求config/search-space hash、trial/profile ID、seed、four-H validation selector、`official_test_mode=false`、`final_evaluation_split=val`、所有effective HPO fields与冻结job逐项一致；48个checkpoint SHA256必须唯一并与synced ledger一致，train logs不得出现Traceback、RuntimeError、OOM、NaN或Inf，`test_audit`目录必须不存在。
 
+`training_log.csv`记录epoch内聚合的`val_mean_mse`，而最终`metrics_by_target_horizon.csv`由best checkpoint重新评估后聚合；两条数值路径允许`1e-7`绝对误差。H4L观察到的最大差异为`7.72e-8`，该容差只吸收floating-point/batch aggregation误差，不允许best-epoch或checkpoint identity改变。Ledger值直接从最终four-H metrics计算，仍要求`1e-12`一致。
+
 Code-theory consistency：H4L实现的是frozen architecture内更宽的finite HPO search，而不是新的mechanism。若性能提升，只能归因于dataset-level hyperparameter selection，不能扩张ISCF/BSCA mechanism claim；若失败，也只说明该search contract未找到更优profile，不否定architecture方向。

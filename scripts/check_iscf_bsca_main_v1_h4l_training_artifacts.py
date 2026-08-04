@@ -165,7 +165,7 @@ def main() -> None:
             mean_mse,
             float(best["val_mean_mse"]),
             rel_tol=0.0,
-            abs_tol=1e-12,
+            abs_tol=1e-7,
         )
 
         row = ledger_by_trial[trial_id]
