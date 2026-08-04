@@ -26,4 +26,6 @@ Post-training checker进一步要求config/search-space hash、trial/profile ID�
 
 `training_log.csv`记录epoch内聚合的`val_mean_mse`，而最终`metrics_by_target_horizon.csv`由best checkpoint重新评估后聚合；两条数值路径允许`1e-7`绝对误差。H4L观察到的最大差异为`7.72e-8`，该容差只吸收floating-point/batch aggregation误差，不允许best-epoch或checkpoint identity改变。Ledger值直接从最终four-H metrics计算，仍要求`1e-12`一致。
 
+用户于2026-08-04授权H4L完整formal test后，`configs/iscf_bsca_main_v1_hpo_wide_h4l_test_audit.json`冻结48 checkpoints、192个standard-horizon rows、MSE/MAE、一次完整访问及dataset-level shared-profile selection边界。`scripts/check_iscf_bsca_main_v1_hpo_wide_h4l_test_audit.py`核对manifest hash、phase/dataset/seed、authorization与禁止per-horizon/per-metric selection的约束；`scripts/remote/run_iscf_bsca_main_v1_hpo_wide_h4l_test_audit.sh`只为通用atomic test runner固定H4L config、manifest和repo-external test root。Runner在test loader构造前复核remote commit、GPU占用、48个checkpoint hashes与零target/temp artifacts；每个trial完成后再次核对checkpoint hash，再将完整临时目录atomic publish到`test_audit`。
+
 Code-theory consistency：H4L实现的是frozen architecture内更宽的finite HPO search，而不是新的mechanism。若性能提升，只能归因于dataset-level hyperparameter selection，不能扩张ISCF/BSCA mechanism claim；若失败，也只说明该search contract未找到更优profile，不否定architecture方向。

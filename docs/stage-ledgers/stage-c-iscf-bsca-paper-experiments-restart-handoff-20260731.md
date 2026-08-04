@@ -44,21 +44,21 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | H4L 48/48 training/artifact audit complete；manifest frozen；formal test requested |
+| `active_experiment_step` | H4L 48/48 training/artifact audit complete；manifest frozen；complete formal test authorized prelaunch |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
 | `local_protocol_patch_authorized` | true for ISCF-BSCA-MAIN-v1 HPO tooling |
 | `remote_training_authorized` | H4L complete；no new training authorized |
-| `test_tuned_hpo_authorized` | H4L train/validation complete；official test=false pending user authorization |
-| `formal_test_authorized` | H4J/H4K completed；H4L/Main I/II baseline=false |
-| `next_action` | 请求H4L完整formal test授权；未获授权前不创建test artifacts |
-| `conditional_next` | 若授权，冻结test-audit config/checker并执行48 checkpoints × four-H complete matrix；禁止partial test或automatic H4M |
+| `test_tuned_hpo_authorized` | H4L complete 48-checkpoint official-test audit authorized once |
+| `formal_test_authorized` | H4J/H4K completed；H4L complete matrix=true；Main I/II baseline=false |
+| `next_action` | focused commit/push，remote exact-commit/checkpoint/quota/GPU/zero-artifact preflight后执行H4L 48 checkpoints × four-H complete matrix |
+| `conditional_next` | test完成后保留全部negative trials并运行joint selector；禁止partial test、automatic H4M或selected-profile confirmation |
 
 H4K train/validation与formal test均已完成，但terminal effectiveness gate失败。H4L只扩大ETTm2/Weather
 dataset-level HPO范围：48个profiles与117个历史profiles零重复，其中四项借鉴TimeAlign official encoder
 parameter coupling，但不复制其head/loss。H4L 48/48 training artifacts与unique checkpoint hashes已通过audit，
-manifest已冻结，test仍为0/48；formal test等待用户显式授权。
+manifest已冻结，test仍为0/48。用户于2026-08-04显式授权一次完整formal test；scope固定为48 checkpoints × four-H=192 rows并同时报告MSE/MAE，不重训或修改checkpoint，不作validation预筛、partial test或per-H/per-metric/per-cell选择。
 不得为了兑现Introduction P6而跳过controls、补选有利数据集，或把historical test结果当成untouched holdout。
 
 ## 2. Paper claims to be discharged
