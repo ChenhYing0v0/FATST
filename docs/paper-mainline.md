@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.7 temporarily frozen usable；next=Section 4 Method pending author direction；experiments=H4L Step 8 train/validation active、test=0/48 |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.7 temporarily frozen usable；next=Section 4 Method pending author direction；experiments=H4L Step 9 artifact audit complete、formal test authorization requested |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -17,7 +17,9 @@
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
-| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H4K evidence为30/56，H4L继续dataset-level HPO |
+| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H4K evidence为30/56，H4L 48 checkpoints待formal test |
+
+[H4L Training Complete and Formal-Test Gate, 2026-08-04] H4L 48/48 train/validation jobs与artifacts完整，numeric health、effective-config provenance、frozen config/search-space hashes和48个unique checkpoint SHA256均通过；best epoch范围1--47，test=0/48。ETTm2 `patch1`刷新H1--H4K validation frontier 1.622%，Weather `patch4`未刷新历史frontier（-0.625%），故不作validation profile selection。48-row manifest SHA256=`c7ce6b6915dbe0323282140c0ed28ecad590b5ea256e8545a7f0fb3217c25584`；请求另行授权48 checkpoints × four-H=192-row complete formal test。Canonical report=`analysis/iscf_bsca_main_v1_hpo_20260731/h4l_training_result_and_formal_test_gate.md`。Decision=`H4L_training_complete_manifest_frozen_formal_test_authorization_requested`。
 
 [Section 3 Temporary Freeze v0.7, 2026-08-04] 用户确认当前Section 3版本基本满意并暂时固定为论文可用版本。Canonical clean source=`docs/paper-drafts/iscf-bsca-problem-formulation-initial-draft.md`，status=`temporarily_frozen_usable`；freeze scope覆盖正文、术语、公式、Figures 2--3 integration与captions。后续默认不再改写，只有Section 4或paper-facing evidence产生明确矛盾且用户显式批准时才解冻。Introduction v0.9继续冻结；并行experiment cursor与授权不变。Decision=`section3_v0_7_temporarily_frozen_usable_next_section4_pending_author_direction`。
 

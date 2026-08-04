@@ -5,10 +5,10 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.44` |
+| `version` | `v0.45` |
 | `last_updated` | `2026-08-04` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 3 v0.7 temporarily frozen usable；next=Section 4 Method pending author direction；experiments=H4L 48-job ETTm2/Weather train/validation active、test=0；Method Figure 4 planned |
+| `current_review_cursor` | writing=Section 3 v0.7 temporarily frozen usable；next=Section 4 Method pending author direction；experiments=H4L 48/48 training audited、manifest frozen、formal-test authorization requested；Method Figure 4 planned |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
@@ -1337,7 +1337,7 @@ result-selective扩展。
 
 截至2026-08-04，H1--H4K共117个HPO trials已完成official test。H4K只使seven-dataset macro MSE/MAE改善0.0199%/0.0286%，joint selector相对frozen published targets仍为MSE 15/28、MAE 15/28、combined 30/56，未通过20/28、20/28、40/56 gates。合法selector与逐cell diagnostic oracle同为30/56，故当前结论仍是strong aggregate competitor和HPO partial pass，不是完整per-cell SOTA。
 
-H4L现已冻结为ETTm2/Weather各24个wide space-filling profiles，覆盖此前基本未搜索的weight decay、ETTm2 `d_ff`、Weather `mode_rank`以及更宽的context/patch/capacity边界。四个profiles保留TimeAlign official encoder parameter coupling，再与ISCF-BSCA rank或optimizer regularization组合；TimeAlign head与alignment loss不进入本方法。H4L最多60 epochs/patience12，训练阶段test=0；complete checkpoint manifest之前不得执行formal test。
+H4L冻结为ETTm2/Weather各24个wide space-filling profiles，覆盖此前基本未搜索的weight decay、ETTm2 `d_ff`、Weather `mode_rank`以及更宽的context/patch/capacity边界。四个profiles保留TimeAlign official encoder parameter coupling，再与ISCF-BSCA rank或optimizer regularization组合；TimeAlign head与alignment loss不进入本方法。48/48 train/validation artifacts、numeric health、effective-config provenance与unique checkpoint hashes已通过audit，48-row manifest SHA256=`c7ce6b6915dbe0323282140c0ed28ecad590b5ea256e8545a7f0fb3217c25584`。ETTm2 validation frontier刷新1.622%，Weather未刷新历史validation frontier；这不是正式performance selection。H4L formal test仍需显式授权。
 
 ### 8.2 Main Results I：Unified versus Horizon-Specific
 
