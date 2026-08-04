@@ -1,0 +1,139 @@
+{
+  "protocol_id": "TIMEALIGN-OFFICIAL-ETTM2-WEATHER-REPRODUCTION-20260804",
+  "date": "2026-08-04",
+  "status": "frozen_authorized_prelaunch",
+  "role": "native_external_fixed_h_published_baseline_reproduction",
+  "baseline": "TimeAlign",
+  "paper": "Bridging Past and Future: Distribution-Aware Alignment for Time Series Forecasting",
+  "venue": "ICLR 2026",
+  "source_contract": {
+    "official_repository": "https://github.com/decisionintelligence/TimeAlign",
+    "upstream_main_commit_audited_20260804": "ab2dff5bde250f82e29d8755f87a494921857d71",
+    "execution_label": "official_source_model_and_config_plus_FATST_test_hygiene_and_artifact_adapter",
+    "raw_official_run_py_used": false,
+    "raw_runner_rejection_reason": "raw official training reads test loss every epoch and does not expose auditable independent model seeds",
+    "adapter_path": "baselines/timealign_official/train_repo.py",
+    "adapter_sha256": "5fe834ef0a73f4855951cfe2a63f36a3ba4a5c9eabda98cea04caf7934b04307",
+    "ettm2_script_path": "baselines/timealign_official/scripts/ETTm2.sh",
+    "ettm2_script_sha256": "47bf52b005f4ea0d5f39858a4b6d54d6d8d4ab8205fed3b1137aace08cdc6d49",
+    "weather_script_path": "baselines/timealign_official/scripts/Weather.sh",
+    "weather_script_sha256": "552123e67396a3f3ea7057a8ac1cd8c5599876c2c5f992111c33eea3d1499021",
+    "executed_model_path": "baselines/timealign_official/models/TimeAlign.py",
+    "executed_model_sha256": "99481a08dc4956014dd2448a11f6c5e593fdcdfd3024a0549b7f590ee69f152d",
+    "data_loader_path": "baselines/timealign_official/data_provider/data_loader.py",
+    "data_loader_sha256": "4f82c23fc4f6ff1623c828e51cdc39ba2d26073a1cfb714c03442fb4e6c431c6",
+    "metric_path": "baselines/timealign_official/utils/metrics.py",
+    "metric_sha256": "bceceb21569f42d23cfe96b17f4e84475abeccc1261532a5704414f3e52519c8",
+    "official_computation_path": {
+      "mode": "fixed",
+      "encoder_mode": "timealign-token-mlp",
+      "readout_mode": "official",
+      "pred_loss_mode": "full"
+    },
+    "license_status": "license_unresolved",
+    "license_note": "No top-level LICENSE and GitHub API license=null on 2026-08-04; research-only local execution, no redistribution-cleared claim"
+  },
+  "datasets": {
+    "ETTm2": {
+      "relative_path": "ETT-small/ETTm2.csv",
+      "remote_sha256": "db973ca252c6410a30d0469b13d696cf919648d0f3fd588c60f03fdbdbadd1fd"
+    },
+    "Weather": {
+      "relative_path": "weather/weather.csv",
+      "remote_sha256": "34ee981d07313e51da2a50bb600072c8ae4a69cb4b0651f4cb93a069d7a2ba63"
+    }
+  },
+  "matrix": {
+    "datasets": ["ETTm2", "Weather"],
+    "horizons": [96, 192, 336, 720],
+    "seeds": [2021],
+    "metrics": ["mse", "mae"],
+    "expected_runs": 8,
+    "expected_test_rows": 8,
+    "fixed_h_independent_models": true,
+    "full_matrix_required": true,
+    "partial_reporting_allowed": false
+  },
+  "training_contract": {
+    "seq_len": 720,
+    "label_len": 48,
+    "batch_size": 32,
+    "gradient_accumulation_steps": 1,
+    "epochs": 10,
+    "early_stopping": false,
+    "checkpoint_policy": "official-last",
+    "optimizer": "AdamW",
+    "weight_decay": 0.01,
+    "scheduler": "cosine",
+    "prediction_loss": "L1",
+    "reconstruction_loss": "L1",
+    "alignment_loss": "L1_distribution_alignment",
+    "test_access": "once_after_training",
+    "test_during_epoch": false,
+    "official_test_mode": true,
+    "predictions_retained": true,
+    "num_workers": 0
+  },
+  "runtime_contract": {
+    "remote_conda_env": "moe",
+    "remote_python_observed": "3.12.13",
+    "upstream_requirements_python": "3.10.18",
+    "runtime_deviation_status": "disclosed_nonblocking_due_to_historical_close_reproduction",
+    "remote_dataset_root": "/home/yingch/dataset",
+    "remote_output_root": "/home/yingch/exp_outputs/r-2026-fatst/timealign_official_reproduction/ettm2_weather_20260804"
+  },
+  "historical_reference": {
+    "role": "sanity_reference_only_not_artifact_complete",
+    "path": "analysis/phase5_timealign_official_gate_20260626/phase5_timealign_official_fixed_metrics.csv",
+    "sha256": "cddd73015cb5458170fb6e00e45059e3cc28dbe28b8dcd970726d4766b32df05",
+    "reason_not_reusable": "remote raw directories checkpoints effective configs and logs were deleted",
+    "ETTm2_four_h_mean_local": {"mse": 0.24300847575068474, "mae": 0.3025855161249638},
+    "Weather_four_h_mean_local": {"mse": 0.21552317216992378, "mae": 0.24430196732282638}
+  },
+  "authorization": {
+    "user_authorization": "2026-08-04 explicit instruction to reproduce TimeAlign on ETTm2 and Weather from the official code repository after remote cleanup",
+    "local_protocol_patch_authorized": true,
+    "remote_resource_smoke_authorized": true,
+    "remote_training_authorized": true,
+    "official_test_execution_authorized": true,
+    "additional_seeds_authorized": false,
+    "additional_datasets_authorized": false
+  },
+  "artifact_gate": {
+    "required_per_run": [
+      "checkpoint.pt",
+      "effective_config.json",
+      "environment.json",
+      "training_log.csv",
+      "metrics_by_target_horizon.csv",
+      "metrics_by_segment.csv",
+      "model_diagnostics.json",
+      "predictions_test.npz",
+      "run.log"
+    ],
+    "checkpoint_sha256_required": true,
+    "dataset_sha256_required": true,
+    "source_sha256_required": true,
+    "negative_or_divergent_cells_retained": true
+  },
+  "jobs": [
+    {"run_id":"TimeAlign__ETTm2__H96__seed2021","dataset":"ETTm2","horizon":96,"seed":2021,"d_model":128,"d_ff":128,"dropout":0.3,"learning_rate":0.0001,"w_align":1.0,"patch_num":12,"layer_norm":1},
+    {"run_id":"TimeAlign__ETTm2__H192__seed2021","dataset":"ETTm2","horizon":192,"seed":2021,"d_model":128,"d_ff":128,"dropout":0.3,"learning_rate":0.0001,"w_align":1.0,"patch_num":12,"layer_norm":1},
+    {"run_id":"TimeAlign__ETTm2__H336__seed2021","dataset":"ETTm2","horizon":336,"seed":2021,"d_model":128,"d_ff":128,"dropout":0.9,"learning_rate":0.0001,"w_align":1.0,"patch_num":12,"layer_norm":1},
+    {"run_id":"TimeAlign__ETTm2__H720__seed2021","dataset":"ETTm2","horizon":720,"seed":2021,"d_model":128,"d_ff":128,"dropout":0.9,"learning_rate":0.0001,"w_align":1.0,"patch_num":12,"layer_norm":1},
+    {"run_id":"TimeAlign__Weather__H96__seed2021","dataset":"Weather","horizon":96,"seed":2021,"d_model":128,"d_ff":256,"dropout":0.1,"learning_rate":0.0001,"w_align":0.1,"patch_num":48,"layer_norm":0},
+    {"run_id":"TimeAlign__Weather__H192__seed2021","dataset":"Weather","horizon":192,"seed":2021,"d_model":128,"d_ff":256,"dropout":0.1,"learning_rate":0.0001,"w_align":0.1,"patch_num":48,"layer_norm":0},
+    {"run_id":"TimeAlign__Weather__H336__seed2021","dataset":"Weather","horizon":336,"seed":2021,"d_model":128,"d_ff":256,"dropout":0.1,"learning_rate":0.0001,"w_align":0.1,"patch_num":48,"layer_norm":0},
+    {"run_id":"TimeAlign__Weather__H720__seed2021","dataset":"Weather","horizon":720,"seed":2021,"d_model":128,"d_ff":128,"dropout":0.5,"learning_rate":0.0001,"w_align":0.1,"patch_num":48,"layer_norm":0}
+  ],
+  "workload_order": [
+    "TimeAlign__Weather__H720__seed2021",
+    "TimeAlign__Weather__H336__seed2021",
+    "TimeAlign__ETTm2__H720__seed2021",
+    "TimeAlign__Weather__H192__seed2021",
+    "TimeAlign__ETTm2__H336__seed2021",
+    "TimeAlign__Weather__H96__seed2021",
+    "TimeAlign__ETTm2__H192__seed2021",
+    "TimeAlign__ETTm2__H96__seed2021"
+  ]
+}

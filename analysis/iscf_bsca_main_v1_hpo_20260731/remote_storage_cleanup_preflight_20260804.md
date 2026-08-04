@@ -21,3 +21,17 @@
 - remote worktree及其三份unrelated dirty CSV。
 
 预计释放约36.5GiB。删除项不可直接恢复，但可由对应smoke/formal evaluation重新生成；正式MSE/MAE与checkpoint provenance保持可复核。
+
+## Execution result
+
+- cleanup commit=`487f95395168e4d6c8971239113a2683ec722236`；
+- removed resource-smoke directories=`7`；
+- removed non-selected diagnostics=`157`；
+- retained selected diagnostics=`8`；
+- retained formal-test metrics/invariants=`165/165`；
+- exact estimated bytes removed=`39,196,338,568`（约36.51GiB）；
+- quota after cleanup=`165G / 200G soft / 220G hard`；
+- `r-2026-fatst` after cleanup约56G；
+- remote unrelated dirty CSVs remained unchanged。
+
+Decision=`remote_cleanup_complete_storage_gate_pass_for_new_experiment_prelaunch`。

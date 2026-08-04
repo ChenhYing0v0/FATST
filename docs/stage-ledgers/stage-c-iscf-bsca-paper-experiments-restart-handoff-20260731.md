@@ -44,22 +44,24 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | H4L 48/48 formal test complete；joint effectiveness gate failed at 31/56；Step 6 strategy decision |
+| `active_experiment_step` | H4M 24-job high-impact matrix + TimeAlign 8-job official reproduction frozen；remote cleanup complete；Step 7 local gate / Step 8 launch |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
-| `local_protocol_patch_authorized` | true for ISCF-BSCA-MAIN-v1 HPO tooling |
-| `remote_training_authorized` | H4L complete；no new training authorized |
-| `test_tuned_hpo_authorized` | H4L complete；165-trial joint selector audited |
-| `formal_test_authorized` | H4J/H4K/H4L completed；H4M/Main I/II baseline=false |
-| `next_action` | 汇报H4L 31/56结果并在Step 6选择stop-HPO进入完整baseline矩阵，或另行冻结有依据的新strategy |
-| `conditional_next` | 禁止automatic H4M、selected-profile confirmation、new training、formal test或3-seed |
+| `local_protocol_patch_authorized` | true for H4M and TimeAlign ETTm2/Weather reproduction tooling |
+| `remote_training_authorized` | H4M 24 train/validation jobs + TimeAlign 8 fixed-H reproduction jobs |
+| `test_tuned_hpo_authorized` | H4M complete test after 24/24 checkpoint manifest；one dataset-level profile shared by four H |
+| `formal_test_authorized` | H4M after manifest=true；TimeAlign 8-job post-training test=true；Main II/other baselines/3-seed=false |
+| `next_action` | local checker -> commit/push -> remote exact-commit/data/source/GPU/quota preflight -> two resource smokes -> parallel launch |
+| `conditional_next` | 禁止automatic H4N、additional TimeAlign datasets/seeds、selected-profile confirmation或3-seed |
 
 H4K train/validation与formal test均已完成，但terminal effectiveness gate失败。H4L只扩大ETTm2/Weather
 dataset-level HPO范围：48个profiles与117个历史profiles零重复，其中四项借鉴TimeAlign official encoder
 parameter coupling，但不复制其head/loss。H4L 48/48 training artifacts与unique checkpoint hashes已通过audit，
 manifest冻结后执行的一次完整formal test已48/48、192/192完成，checkpoint hashes全部immutable。165-trial joint selector只把ETTm2从0/8提高到1/8，Weather保持2/8；global MSE/MAE/combined=`15/28,16/28,31/56`，未通过`20/28,20/28,40/56` gates。Failure attribution=`search_space_performance_shortfall`，rollback=Step 6 strategy decision。
 不得为了兑现Introduction P6而跳过controls、补选有利数据集，或把historical test结果当成untouched holdout。
+
+2026-08-04用户进一步授权：先清理remote result root，再同时推进ETTm2/Weather高影响参数HPO和TimeAlign official reproduction。清理已删除7个resource-smoke目录与157个nonselected diagnostic NPZ，保留全部165个metrics/invariants/checkpoints/manifests/logs和8个selected NPZ；精确释放约36.51 GiB，quota由201G降至165G。H4M冻结24个历史effective-profile nonduplicates，主轴为ETTm2 `patch_num × learning_rate`和Weather `seq_len × patch_num / learning_rate / mode_rank`；TimeAlign冻结8个seed2021 fixed-H jobs并标记为`official-source model/config + FATST test-hygiene/artifact adapter`。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4m_parameter_impact_and_parallel_timealign_prelaunch_20260804.md`。
 
 ## 2. Paper claims to be discharged
 

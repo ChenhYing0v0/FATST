@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## H4M High-Impact HPO + TimeAlign Reproduction (2026-08-04)
+
+Current cursor=`Step 7 local protocol gate / Step 8 remote smoke and launch`。基于H4L同阶段可比profiles，ETTm2影响最大的是`patch_num`、LR、context与rank，Weather影响最大的是`seq_len × patch_num`、LR、patch与rank；width、dropout与weight decay不再盲目扩张。H4M冻结24个与历史165 profiles均不重复的seed2021 jobs，architecture/objective/inference graph不变，一个dataset-level profile仍共享四H；ETTm2 budget=60/12，Weather因H4L best epoch达到47而统一扩展到90/18。24/24 manifest后complete four-H test已授权，automatic H4N=false。
+
+并行baseline线冻结TimeAlign official ETTm2/Weather × four H × seed2021的8个fixed-H systems。执行使用官方model/config与FATST test-hygiene/artifact adapter，避免raw official runner每epoch读取test；checkpoint=official-last、10 epochs、无early stopping、训练后一次test。历史derived reproduction虽与论文非常接近，但缺raw/checkpoints，不能直接进入artifact-complete table。Remote cleanup已释放36.51 GiB。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4m_parameter_impact_and_parallel_timealign_prelaunch_20260804.md`。Decision=`cleanup_complete_H4M_and_TimeAlign_matrices_frozen_local_gate_then_parallel_remote_launch`。
+
 ## ISCF-BSCA-MAIN-v1 H4L Wide HPO (2026-08-04)
 
 Current cursor=`Step 10 effectiveness gate fail / rollback Step 6 strategy decision`。H4K证明原117-trial search space的dataset-level与逐cell oracle上限均为30/56，因此H4L只针对ETTm2 0/8和Weather 2/8扩大范围，不复跑H4K，也不改变architecture、objective、scales或inference graph。
