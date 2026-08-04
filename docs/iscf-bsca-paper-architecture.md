@@ -8,7 +8,7 @@
 | `version` | `v0.48` |
 | `last_updated` | `2026-08-04` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 3 v0.7 temporarily frozen usable；next=Section 4 Method pending author direction；experiments=H4M 24-job + TimeAlign 8-job reproduction frozen/prelaunch；Method Figure 4 planned |
+| `current_review_cursor` | writing=Section 3 v0.7 temporarily frozen usable；next=Section 4 Method pending author direction；experiments=H4M 24-job + TimeAlign 8-job reproduction remote active；Method Figure 4 planned |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |

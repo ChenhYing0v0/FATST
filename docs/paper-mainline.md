@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.7 temporarily frozen usable；experiments=H4M + TimeAlign reproduction Step 7 local gate / Step 8 launch |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.7 temporarily frozen usable；experiments=H4M + TimeAlign reproduction Step 8 remote execution active |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,6 +18,8 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H4L evidence=15/28 MSE、16/28 MAE、31/56 combined，strong aggregate competitor但未达per-cell target |
+
+[H4M and TimeAlign Parallel Launch, 2026-08-04] Exact experiment commit=`24eaac1`；H4M 24/24与TimeAlign 8/8 resource smokes最终通过且test均为0。Full runs于21:34:39启动：H4M在GPU0--1运行24-job train/validation dynamic queue（PID393804），TimeAlign在GPU2运行8-job official fixed-H serial queue并于每个checkpoint完成后一次test（PID393805）。初始三项均进入epoch1，observed memory约1.6--1.7 GiB。TimeAlign smoke期间两个pre-training adapter guards已修复，未产生formal results。Canonical launch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4m_and_timealign_parallel_launch_20260804.md`。Decision=`H4M_24_and_TimeAlign_8_remote_active`。
 
 [H4M and TimeAlign Parallel Prelaunch, 2026-08-04] 用户授权清理remote result folder后，同时继续ETTm2/Weather HPO并从official repository复现TimeAlign。清理精确释放约36.51 GiB，quota由201G降至165G，保留全部165个formal HPO checkpoints/metrics/invariants/manifests/logs与8个selected diagnostic NPZ。H4M冻结24个seed2021 effective-profile nonduplicates：ETTm2围绕`patch × low-LR`并补rank/context，Weather围绕constant patch-length context、low LR、rank与patch interaction，Weather统一90 epochs/patience18；每trial仍由four-H validation mean MSE选checkpoint，training test=0，24/24 manifest后完整test已授权。TimeAlign冻结ETTm2/Weather × four H的8个seed2021 official-last systems，训练后一次test；历史2026-06-26 derived CSV只作sanity reference，因raw/checkpoints已删而不复用。执行标签=`official-source model/config + FATST test-hygiene/artifact adapter`，license=`unresolved`。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4m_parameter_impact_and_parallel_timealign_prelaunch_20260804.md`。Decision=`H4M_24_and_TimeAlign_8_frozen_cleanup_complete_remote_smoke_then_parallel_launch_authorized`。
 
