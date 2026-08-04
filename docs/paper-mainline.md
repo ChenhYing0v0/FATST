@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.4 field-style alignment pending author review；experiments=H4K formal test complete、30/56 gate fail、return Step 6 |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.4 field-style alignment pending author review；experiments=H4L Step 6--8 wide HPO prelaunch/remote training authorized、formal test=false |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -17,7 +17,9 @@
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
-| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H4K profiles仍为30/56、strong aggregate competitor但未达terminal gate |
+| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H4K evidence为30/56，H4L继续dataset-level HPO |
+
+[H4L Wide HPO Prelaunch, 2026-08-04] 用户授权为ETTm2、Weather扩大search range并启动远程训练。H4L冻结48个seed2021 profiles，各dataset 24个；相对117个历史profiles为48/48 effective-parameter nonduplicates。Search覆盖`seq_len/patch_num/d_model/d_ff/dropout/lr/weight_decay/mode_rank/layer_norm`边界，其中四项显式保留TimeAlign official ETTm2/Weather encoder tuples，再与ISCF-BSCA rank或optimizer regularization组合；不复制TimeAlign head/loss。每trial最多60 epochs、patience12，four-H validation mean MSE选checkpoint，一个dataset-level profile共享四H。Local patch、完整resource smoke和train/validation已授权；formal test、H4M、baseline、3-seed仍false。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4l_wide_matrix_and_prelaunch.md`。Decision=`H4L_48_job_wide_matrix_frozen_remote_training_authorized_formal_test_false`。
 
 [H4K Complete Test and Joint-HPO Decision, 2026-08-04] 24/24 checkpoints与96/96 cells完整，24/24 checkpoint immutability/invariants通过，无ABORT。117-trial joint selector只替换ETTm2与Weather profiles，seven-dataset macro MSE/MAE微幅改善0.0199%/0.0286%，但MSE/MAE/combined leads仍为15/28、15/28、30/56；合法selector、unrestricted single-profile与逐cell oracle均为30/56。ETTm2仍0/8、Weather仍2/8、H720仍4/14，故三项global gates与三个local gates均失败。Failure attribution=`search_space_performance_shortfall`，不是selector或numeric failure；rollback=Step 6，automatic H4L=false。Canonical report=`analysis/iscf_bsca_main_v1_hpo_20260731/h4k_test_result_and_joint_hpo_decision.md`。Decision=`H4K_complete_continuous_improvement_no_new_leads_gate_fail_return_step6`。
 
