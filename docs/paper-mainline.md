@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.4 field-style alignment pending author review；experiments=H4K 24-job train/validation active、test=0 |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.4 field-style alignment pending author review；experiments=H4K 24/24 training complete、manifest frozen、formal test pending authorization |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -17,7 +17,9 @@
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
-| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H4J暂定profiles达到30/56，H4K targeted HPO正在训练 |
+| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H4J暂定profiles达到30/56，H4K performance pending complete official test |
+
+[H4K Training Complete and Formal-Test Gate, 2026-08-04] 24/24 train/validation jobs于01:33完成，numeric/artifact/config provenance均24/24 pass，24个checkpoint SHA256唯一，test=0。H4K validation-best相对当前paper-row profile在6/7 datasets更低，ETTm2/Weather分别改善0.663%/0.642%，但相对全部历史validation frontier为0/7刷新，因此不提前作performance判断。24-row manifest SHA256=`61446262b9ed645fb1e2ebd233a0dd88c7d1743ff80fa8ed0fc2a5a52e2747ab`；fail-closed test dry-run固定24 checkpoints × four-H=96 cells并保持`authorized=false`。Canonical report=`analysis/iscf_bsca_main_v1_hpo_20260731/h4k_training_result_and_formal_test_gate.md`。Decision=`H4K_training_complete_manifest_gate_pass_waiting_formal_test_authorization`。
 
 [H4K Training Launch, 2026-08-03] Freeze commit=`dc52471d585906f1f2251fdb682557f8e5686931`；24/24 resource-smoke jobs完成且无OOM/NaN/Inf/contract failure，smoke始终test=0。正式24-job train/validation于16:44:09在GPU0/1/2 detached启动，PID=`2412083`，首批为Weather、ETTm2、Weather；首轮检查三项均已进入epoch 2，formal complete=0/24、test=0/24。Output root=`/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_main_v1_hpo/h4k`。Formal test继续等待24/24 checkpoint manifest及用户分级授权。Canonical launch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4k_launch.md`。Decision=`H4K_24_job_train_validation_active_test_zero`。
 

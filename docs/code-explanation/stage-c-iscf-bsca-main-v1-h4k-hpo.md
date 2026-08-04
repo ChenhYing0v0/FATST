@@ -25,8 +25,14 @@ history [B, 720, C]
 
 Trainer用four-H mean validation MSE进行trial内early stopping和checkpoint selection，`official_test_mode=false`，最终split为validation。Resource smoke只运行2个train batches、2个validation batches和1 epoch，不产生可用于performance结论的结果。
 
-## 4. Code-theory consistency
+## 4. Artifact audit and manifest freeze
+
+训练完成后，generic analyzer在remote output root直接读取24个trial directories，检查`checkpoint.pt`、`training_log.csv`、four-H validation metrics、effective config、initialization contract与model diagnostics。Local只同步生成的ledger/scorecards，不复制约1.2 GiB checkpoints。
+
+`scripts/build_iscf_bsca_main_v1_h4k_test_manifest.py`从24-row audited ledger生成manifest，并硬检查dataset counts、validation-only status、numeric/artifact pass以及trial/checkpoint hash唯一性。Formal-test config当前保持`waiting_user_authorization`和`user_authorized=false`；checker只允许dry-run得到`authorized=false`，因此准备manifest不会隐式开放test split。
+
+## 5. Code-theory consistency
 
 Intended contract是“围绕已观测弱点搜索普通hyperparameters，同时保持一个dataset-level shared profile服务四个horizons”。代码通过frozen architecture flags、完整four-H checkpoint selector、禁止per-H/per-metric selection和test=0 training runner落实该合同。
 
-ETTm2、Weather和H720只是search-prior标签，不改变loss权重或profile granularity；因此H4K不能通过针对单cell的训练目标或结果拼接兑现gate。Formal effectiveness仍需24/24 checkpoints后另行冻结manifest并完成完整official-test audit。
+ETTm2、Weather和H720只是search-prior标签，不改变loss权重或profile granularity；因此H4K不能通过针对单cell的训练目标或结果拼接兑现gate。当前24/24 manifest gate已通过，但formal effectiveness仍需明确授权后执行完整24-checkpoint × four-H official-test audit。

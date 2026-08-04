@@ -5,16 +5,16 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.37` |
-| `last_updated` | `2026-08-03` |
+| `version` | `v0.38` |
+| `last_updated` | `2026-08-04` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 3 v0.4 field-style alignment pending author review；experiments=H4K targeted 24-job train/validation active、test=0；Method Figure 4 planned |
+| `current_review_cursor` | writing=Section 3 v0.4 field-style alignment pending author review；experiments=H4K 24/24 training complete、formal test pending authorization；Method Figure 4 planned |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
 | `provisional_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.4正文 + approved Figures 2--3；planned Method Figure 4；remaining sections |
-| `authorization_source` | current H4K training authorization由`configs/iscf_bsca_main_v1_hpo_targeted_h4k.json`记录；formal test仍未授权；本architecture文档不扩张baseline或final reporting边界 |
+| `authorization_source` | H4K training authorization由`configs/iscf_bsca_main_v1_hpo_targeted_h4k.json`记录；pending test contract=`configs/iscf_bsca_main_v1_hpo_targeted_h4k_test_audit.json`且`user_authorized=false`；本architecture文档不扩张baseline或final reporting边界 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
@@ -1317,7 +1317,7 @@ TimeAlign encoder参数只作为source-audited search prior。当前完整矩阵
 seed2021；seeds2022/2023仅在时间允许时按完整experiment block扩展，且不得
 result-selective扩展。
 
-截至2026-08-03，H1--H4J共93个HPO trials已完成。Joint selector相对frozen published targets达到MSE 15/28、MAE 15/28、combined 30/56，未通过MSE>=20/28、MAE>=20/28、combined>=40/56。共同7 datasets的macro mean MSE/MAE相对H4J前改善0.234%/0.585%，相对TimeAlign Table 6分别低2.428%/0.520%，但single-seed test-tuned与published native protocol边界仍在。合法selector已经达到93 trials的逐cell diagnostic oracle 30/56，故当前结论是strong aggregate competitor和HPO partial pass，不是完整per-cell SOTA。新的H4K已冻结24个targeted profiles并进入train/validation，terminal Main I/II row继续等待H4K完整test与joint selector；formal test仍待manifest gate后的独立授权。
+截至2026-08-04，H1--H4J共93个HPO trials已完成official test。Joint selector相对frozen published targets达到MSE 15/28、MAE 15/28、combined 30/56，未通过MSE>=20/28、MAE>=20/28、combined>=40/56。H4K新增24个targeted profiles，train/validation与checkpoint manifest已24/24通过，但formal test仍待独立授权。因此当前结论仍是strong aggregate competitor和HPO partial pass，不是完整per-cell SOTA；terminal Main I/II row继续等待H4K完整test与117-trial joint selector。
 
 ### 8.2 Main Results I：Unified versus Horizon-Specific
 
