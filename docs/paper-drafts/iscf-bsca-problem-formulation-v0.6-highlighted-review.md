@@ -1,36 +1,30 @@
-# ISCF-BSCA Section 3: Problem Formulation and Empirical Motivation
+# ISCF-BSCA Section 3 v0.6: Highlighted Review
 
-## Draft status
+## Review status
 
 | Field | Content |
 | --- | --- |
-| `document_role` | Clean manuscript-facing initial draft of Section 3 |
-| `version` | `v0.6-terminology-and-flow-refinement` |
-| `date` | `2026-08-04` |
-| `review_status` | `author_feedback_round5_integrated_pending_review` |
-| `introduction_dependency` | Introduction `v0.9-author-refinement` remains unchanged |
-| `figure_2_status` | Approved validation-only illustrative evidence; integrated below |
-| `figure_3_status` | Approved validation-only illustrative evidence; integrated below |
-| `method_figure_4_status` | Planned only; not generated or referenced as completed |
-| `result_boundary` | No main-table, ablation or transfer claim is treated as established |
-| `narrative_spine` | CHPC task contract → observed horizon-specific inconsistency → future-region sharing-demand heterogeneity → decoder motivation |
+| `document_role` | Review-only comparison for Section 3 v0.6 |
+| `comparison_baseline` | Section 3 `v0.5-author-structure-refinement` |
+| `canonical_clean_draft` | `docs/paper-drafts/iscf-bsca-problem-formulation-initial-draft.md` |
+| `highlight_rule` | Yellow highlight denotes added or replacement text; strikethrough denotes removed text |
+| `review_scope` | Three author-requested local refinements in Sections 3.1--3.3 and the synchronized Figure 3a title |
+| `manuscript_status` | This file is not the clean manuscript source |
 
-The status table and the editorial audit after Section 3 are not part of the manuscript body submitted for review.
+## Change summary
 
-## Terminology ledger
+| Location | Highlighted change |
+| --- | --- |
+| 3.1 | Replaces the context-dependent `now` with an explicit varied-horizon-forecaster subject |
+| 3.2 | Connects the trajectory-level and aggregate evidence before stating the conclusion |
+| 3.3 | Replaces the broad term `risk` with the directly computed region-wise MSE |
+| Figure 3a | Replaces `Excess risk` with `Excess MSE`; data and layout are unchanged |
+
+## Terminology refinement
 
 | Term | Symbol | Meaning in this section |
 | --- | --- | --- |
-| Forecast horizon | $H$ | The requested maximum number of future steps |
-| Future time step | $\tau$ | A position within the forecast domain, $1\leq\tau\leq H$ |
-| Forecast target | $(\tau,c)$ | Future step $\tau$ of variable $c$ |
-| Cross-horizon prefix consistency | CHPC | Invariance of shared-prefix predictions to the requested horizon |
-| Cross-horizon prefix inconsistency | — | Violation of CHPC by horizon-specific predictions on shared future targets |
-| Cross-horizon prefix disagreement | CHPD | Raw-scale disagreement between overlapping horizon-specific forecasts |
-| Normalized CHPD | NCHPD | CHPD normalized by train-split variable scale |
-| Future region | $\mathcal B_b$ | A contiguous subset of future steps, not a requested horizon |
-| Sharing extent | $s$ | The number of future steps that reuse one history-conditioned latent state |
-| Region-wise MSE | $\operatorname{MSE}_{o,b,s}$ | Mean squared prediction error of extent $s$ over all targets in region $\mathcal B_b$ at origin $o$ |
+| <mark>Region-wise MSE</mark> | <mark>$\operatorname{MSE}_{o,b,s}$</mark> | <mark>Mean squared prediction error of extent $s$ over all targets in region $\mathcal B_b$ at origin $o$</mark> |
 
 ## 3. Problem Formulation and Empirical Motivation
 
@@ -80,7 +74,7 @@ g_\theta(\mathbf X_o,\tau,c)
 \right]_{\tau=1,\ldots,H;\ c=1,\ldots,C}.
 $$
 
-For a varied-horizon forecaster, all horizon requests query the same function at a shared target, so CHPC holds by construction. Changing the requested horizon alters only the returned prefix length, and each request becomes a nested view of one predicted trajectory.
+<del>All horizon requests now query the same function at a shared target, so CHPC holds by construction.</del> <mark>For a varied-horizon forecaster, all horizon requests query the same function at a shared target, so CHPC holds by construction.</mark> Changing the requested horizon alters only the returned prefix length, and each request becomes a nested view of one predicted trajectory.
 
 ### 3.2 Horizon-specific prefix inconsistency
 
@@ -125,7 +119,7 @@ Here, $\mathcal O$ denotes the aligned evaluation origins, $\sigma_c^{\mathrm{tr
 
 To visualize this inconsistency, we compare multi-horizon forecasts from DLinear models independently optimized on ETTh2. Figure 2a shows that their predictions diverge over the same 96 future steps: relative to the $H=720$ forecast, the forecasts for $H\in\{96,192,336\}$ differ by 2.51, 2.16 and 2.40 in mean absolute raw scale, respectively.
 
-We further evaluate all 2,161 aligned ETTh2 validation origins and variables, with the resulting NCHPD matrix shown in Figure 2b. NCHPD is non-zero for every horizon pair and is more pronounced between the longest and shorter requested horizons: the $H=96$, $H=192$ and $H=336$ comparisons with $H=720$ yield 0.0406, 0.0365 and 0.0366, whereas pairs among the three shorter horizons range from 0.0148 to 0.0166. Taken together, the trajectory-level and aggregate results show that the independently optimized DLinear models evaluated here do not yield nested prefixes of a single prediction trajectory.
+We further evaluate all 2,161 aligned ETTh2 validation origins and variables, with the resulting NCHPD matrix shown in Figure 2b. NCHPD is non-zero for every horizon pair and is more pronounced between the longest and shorter requested horizons: the $H=96$, $H=192$ and $H=336$ comparisons with $H=720$ yield 0.0406, 0.0365 and 0.0366, whereas pairs among the three shorter horizons range from 0.0148 to 0.0166. <del>The independently optimized DLinear models evaluated here therefore do not form a single prefix-consistent prediction trajectory.</del> <mark>Taken together, the trajectory-level and aggregate results show that the independently optimized DLinear models evaluated here do not yield nested prefixes of a single prediction trajectory.</mark>
 
 <a id="fig:prefix-disagreement"></a>
 
@@ -141,7 +135,9 @@ We use the **sharing extent** $s$ to denote the number of future steps that reus
 
 To isolate this factor, we construct capacity-matched single-extent predictors that differ only in sharing extent; all other architecture, training and evaluation settings remain identical.
 
-For aligned origin $o$, we compute the **region-wise mean squared error (MSE)** of extent $s$ within region $\mathcal B_b$ as
+<del>For aligned origin $o$, we measure the risk of extent $s$ within region $\mathcal B_b$ as</del>
+
+<mark>For aligned origin $o$, we compute the **region-wise mean squared error (MSE)** of extent $s$ within region $\mathcal B_b$ as</mark>
 
 $$
 \operatorname{MSE}_{o,b,s}
@@ -156,9 +152,15 @@ y_{o+\tau,c}
 \right)^2.
 $$
 
-Lower $\operatorname{MSE}_{o,b,s}$ indicates that extent $s$ better matches region $\mathcal B_b$ within the controlled family. A region-dependent preference appears when $s_{o,b}^{\star}=\arg\min_s\operatorname{MSE}_{o,b,s}$ changes with $b$.
+<del>Previous notation: $R_{o,b,s}$.</del>
 
-We evaluate the five predictors with $s\in\{1,8,32,128,720\}$ across 12 contiguous 60-step future regions on ETTm2. Figure 3a reports the percentage MSE excess of each extent above the minimum-MSE extent within each region, with outlined squares marking the region-wise winners. The preferred extents vary across the future domain: each of the five extents wins two or three regions, all ten extent pairs exhibit bidirectional crossings beyond the predefined 0.5% margin, and the mean best-versus-second-best margin reaches 10.266%. No fixed extent achieves the lowest MSE throughout this controlled example, supporting heterogeneous sharing demand across future regions.
+<del>Lower $R_{o,b,s}$ indicates that extent $s$ better matches region $\mathcal B_b$ within the controlled family. A region-dependent preference appears when $s_{o,b}^{\star}=\arg\min_sR_{o,b,s}$ changes with $b$.</del>
+
+<mark>Lower $\operatorname{MSE}_{o,b,s}$ indicates that extent $s$ better matches region $\mathcal B_b$ within the controlled family. A region-dependent preference appears when $s_{o,b}^{\star}=\arg\min_s\operatorname{MSE}_{o,b,s}$ changes with $b$.</mark>
+
+<del>We evaluate the five predictors with $s\in\{1,8,32,128,720\}$ across 12 contiguous 60-step future regions on ETTm2. Figure 3a reports the percentage MSE excess of each extent above the lowest-risk extent within each region, with outlined squares marking the region-wise winners. The preferred extents vary across the future domain: each of the five extents wins two or three regions, all ten extent pairs exhibit bidirectional crossings beyond the predefined 0.5% margin, and the mean best-versus-second-best margin reaches 10.266%. No fixed extent minimizes risk throughout this controlled example, supporting heterogeneous sharing demand across future regions.</del>
+
+<mark>We evaluate the five predictors with $s\in\{1,8,32,128,720\}$ across 12 contiguous 60-step future regions on ETTm2. Figure 3a reports the percentage MSE excess of each extent above the minimum-MSE extent within each region, with outlined squares marking the region-wise winners. The preferred extents vary across the future domain: each of the five extents wins two or three regions, all ten extent pairs exhibit bidirectional crossings beyond the predefined 0.5% margin, and the mean best-versus-second-best margin reaches 10.266%. No fixed extent achieves the lowest MSE throughout this controlled example, supporting heterogeneous sharing demand across future regions.</mark>
 
 <a id="fig:sharing-heterogeneity"></a>
 
@@ -166,7 +168,11 @@ We evaluate the five predictors with $s\in\{1,8,32,128,720\}$ across 12 contiguo
 
 **Figure 3 | Preferred sharing extent varies across future regions.** **a**, Percentage MSE excess of five capacity-matched single-extent predictors above the regional minimum for one selected ETTm2 validation example; outlined squares mark the best extent in each 60-step region. **b**, MSE reduction obtained by selecting the regional winner instead of the best fixed extent ($s=720$); the dashed line denotes the 12-region mean.
 
-Figure 3b quantifies the performance upper bound associated with these region-wise preferences. Relative to the best fixed extent ($s=720$), selecting the minimum-MSE extent separately for each region reduces average MSE by 8.112%. Because the regional winners are selected using validation labels across separately trained predictors, this value represents descriptive oracle headroom rather than the realized gain of a learned decoder. Within this controlled example, its magnitude nevertheless shows that one fixed extent can leave meaningful region-specific headroom, motivating a decoder that can adapt sharing across the future domain.
+<mark>Figure 3a internal title: </mark><del>Excess risk above each region's best extent</del><mark> → Excess MSE above each region's best extent.</mark>
+
+<del>Figure 3b quantifies the performance upper bound associated with these region-wise preferences. Relative to the best fixed extent ($s=720$), selecting the lowest-risk extent separately for each region reduces average MSE by 8.112%. Because the regional winners are selected using validation labels across separately trained predictors, this value represents descriptive oracle headroom rather than the realized gain of a learned decoder. Within this controlled example, its magnitude nevertheless shows that one fixed extent can leave meaningful region-specific headroom, motivating a decoder that can adapt sharing across the future domain.</del>
+
+<mark>Figure 3b quantifies the performance upper bound associated with these region-wise preferences. Relative to the best fixed extent ($s=720$), selecting the minimum-MSE extent separately for each region reduces average MSE by 8.112%. Because the regional winners are selected using validation labels across separately trained predictors, this value represents descriptive oracle headroom rather than the realized gain of a learned decoder. Within this controlled example, its magnitude nevertheless shows that one fixed extent can leave meaningful region-specific headroom, motivating a decoder that can adapt sharing across the future domain.</mark>
 
 ## Editorial evidence and claim audit
 

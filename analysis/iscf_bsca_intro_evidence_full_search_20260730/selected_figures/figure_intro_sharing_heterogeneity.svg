@@ -455,7 +455,7 @@ L 265.964791 194.967104
     <text style="font-weight: 700; font-size: 8.4px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start" x="3.757229" y="9.02354" transform="rotate(-0 3.757229 9.02354)">a</text>
    </g>
    <g id="text_21">
-    <text style="font-size: 8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start" x="31.850896" y="11.769146" transform="rotate(-0 31.850896 11.769146)">Excess risk above each region's best extent</text>
+    <text style="font-size: 8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start" x="31.850896" y="11.769146" transform="rotate(-0 31.850896 11.769146)">Excess MSE above each region's best extent</text>
    </g>
    <g id="legend_1">
     <g id="PathCollection_2">
