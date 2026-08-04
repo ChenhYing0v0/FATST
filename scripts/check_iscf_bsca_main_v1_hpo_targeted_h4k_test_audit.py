@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check the frozen H4K formal-test contract without authorizing access."""
+"""Check the authorized frozen H4K formal-test contract."""
 
 from __future__ import annotations
 
@@ -40,7 +40,7 @@ def main() -> None:
         rows = list(csv.DictReader(handle))
     expected = config["matrix"]["profiles_per_dataset"]
 
-    assert config["status"] == "waiting_user_authorization"
+    assert config["status"] == "authorized_prelaunch"
     assert config["test_tuned"] is True and config["test_informed"] is True
     assert config["matrix"]["expected_runs"] == 24
     assert config["matrix"]["expected_standard_horizon_cells"] == 96
@@ -54,8 +54,9 @@ def main() -> None:
     assert all(len(row["checkpoint_sha256_before_test"]) == 64 for row in rows)
 
     authorization = config["authorization"]
-    assert authorization["user_authorized"] is False
-    assert authorization["formal_test_access_count_for_version"] == 0
+    assert authorization["user_authorized"] is True
+    assert authorization["authorization_date"] == "2026-08-04"
+    assert authorization["formal_test_access_count_for_version"] == 1
     assert authorization["checkpoint_retraining_allowed"] is False
     assert authorization["checkpoint_retrained_before_test"] is False
     assert authorization["checkpoint_mutation_during_test_allowed"] is False
@@ -83,7 +84,7 @@ def main() -> None:
     assert "iscf_bsca_main_test_audit_dry_run=pass" in result
     assert "jobs=24" in result
     assert "test_cells=96" in result
-    assert "authorized=false" in result
+    assert "authorized=true" in result
     print(
         json.dumps(
             {
@@ -92,7 +93,7 @@ def main() -> None:
                 "standard_horizon_test_cells": 96,
                 "profiles_per_dataset": expected,
                 "manifest_sha256": sha256(MANIFEST),
-                "formal_test_authorized": False,
+                "formal_test_authorized": True,
                 "overall_pass": True,
             },
             indent=2,

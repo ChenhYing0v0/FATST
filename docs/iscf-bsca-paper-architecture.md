@@ -5,16 +5,16 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.38` |
+| `version` | `v0.39` |
 | `last_updated` | `2026-08-04` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 3 v0.4 field-style alignment pending author review；experiments=H4K 24/24 training complete、formal test pending authorization；Method Figure 4 planned |
+| `current_review_cursor` | writing=Section 3 v0.4 field-style alignment pending author review；experiments=H4K complete formal test authorized、remote preflight pending；Method Figure 4 planned |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
 | `provisional_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.4正文 + approved Figures 2--3；planned Method Figure 4；remaining sections |
-| `authorization_source` | H4K training authorization由`configs/iscf_bsca_main_v1_hpo_targeted_h4k.json`记录；pending test contract=`configs/iscf_bsca_main_v1_hpo_targeted_h4k_test_audit.json`且`user_authorized=false`；本architecture文档不扩张baseline或final reporting边界 |
+| `authorization_source` | H4K training authorization由`configs/iscf_bsca_main_v1_hpo_targeted_h4k.json`记录；formal test authorization由`configs/iscf_bsca_main_v1_hpo_targeted_h4k_test_audit.json`记录；本architecture文档不扩张baseline或final reporting边界 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；

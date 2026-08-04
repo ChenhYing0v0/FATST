@@ -11,8 +11,8 @@
 | `numeric_health` | 24/24 pass |
 | `checkpoint_hashes` | 24 present and unique SHA256 values frozen |
 | `manifest` | `h4k_checkpoint_manifest.csv`；24 rows；SHA256 `61446262b9ed645fb1e2ebd233a0dd88c7d1743ff80fa8ed0fc2a5a52e2747ab` |
-| `official_test` | not authorized；0 target or temporary artifacts |
-| `decision` | `H4K_training_complete_manifest_gate_pass_waiting_formal_test_authorization` |
+| `official_test` | authorized 2026-08-04；prelaunch pending；0 target or temporary artifacts |
+| `decision` | `H4K_complete_formal_test_authorized_prelaunch` |
 
 ## 2. Training and artifact audit
 
@@ -48,9 +48,9 @@ ECL `exact_budget60` profiles沿用冻结的60-epoch budget，因此best epoch 4
 
 ## 4. Frozen manifest and pending test contract
 
-`scripts/build_iscf_bsca_main_v1_h4k_test_manifest.py`从remote-audited ledger冻结24-row manifest。每行记录dataset、trial/profile、seed、best epoch、validation mean、parameter count、checkpoint SHA256、training artifact path和未来atomic test path。Local test contract已完成fail-closed dry-run：24 jobs、96 standard-horizon cells、`authorized=false`。
+`scripts/build_iscf_bsca_main_v1_h4k_test_manifest.py`从remote-audited ledger冻结24-row manifest。每行记录dataset、trial/profile、seed、best epoch、validation mean、parameter count、checkpoint SHA256、training artifact path和未来atomic test path。用户于2026-08-04授权完整H4K formal test；local contract固定24 jobs、96 standard-horizon cells并通过`authorized=true` dry-run。
 
-若用户授权，formal test的唯一允许scope为24 checkpoints × `{96,192,336,720}`，每cell同时报告MSE/MAE。必须在launch前再次验证remote commit、24个checkpoint hashes、test target/tmp file count=0、GPU occupancy和quota；禁止partial execution、per-H/per-metric/per-cell selection、checkpoint retraining或mutation。完成24/24后，H4K必须与既有93 trials合并执行冻结的dataset-level joint selector，并保留全部negative trials。
+Formal test的唯一允许scope为24 checkpoints × `{96,192,336,720}`，每cell同时报告MSE/MAE。Launch前必须再次验证remote commit、24个checkpoint hashes、test target/tmp file count=0、GPU occupancy和quota；禁止partial execution、per-H/per-metric/per-cell selection、checkpoint retraining或mutation。完成24/24后，H4K必须与既有93 trials合并执行冻结的dataset-level joint selector，并保留全部negative trials。
 
 ## 5. Four-layer status and next gate
 
@@ -59,4 +59,4 @@ ECL `exact_budget60` profiles沿用冻结的60-epoch budget，因此best epoch 4
 - `internal_mechanism_health=24_of_24_training_numeric_and_artifact_pass`；
 - `failure_attribution=no_training_pathology_performance_unknown_before_test`。
 
-Decision=`H4K_training_complete_manifest_gate_pass_waiting_formal_test_authorization`。Automatic H4L仍为false。
+Decision=`H4K_complete_formal_test_authorized_prelaunch`。Automatic H4L仍为false。

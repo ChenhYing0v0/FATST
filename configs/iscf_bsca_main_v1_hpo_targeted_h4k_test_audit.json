@@ -3,7 +3,7 @@
   "candidate_id": "ISCF-BSCA-MAIN-v1",
   "candidate_version": "ISCF-BSCA-MAIN-v1-targeted-h4k-test-informed-20260803",
   "date": "2026-08-04",
-  "status": "waiting_user_authorization",
+  "status": "authorized_prelaunch",
   "role": "test_tuned_joint_hyperparameter_selection_and_paper_benchmark",
   "test_tuned": true,
   "test_informed": true,
@@ -78,16 +78,16 @@
     "all_trials_retained": true
   },
   "authorization": {
-    "user_authorization": "pending explicit authorization after H4K 24/24 checkpoint-manifest gate",
-    "user_authorized": false,
-    "authorization_date": null,
+    "user_authorization": "2026-08-04 explicit authorization for the complete H4K formal test",
+    "user_authorized": true,
+    "authorization_date": "2026-08-04",
     "checkpoint_retraining_allowed": false,
     "checkpoint_retrained_before_test": false,
     "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
     "checkpoint_mutation_during_test_allowed": false,
     "per_dataset_aggregate_hyperparameter_tuning_allowed": true,
     "per_horizon_seed_metric_or_cell_tuning_allowed": false,
-    "formal_test_access_count_for_version": 0,
+    "formal_test_access_count_for_version": 1,
     "failed_preloader_attempts": 0,
     "failed_attempts_before_atomic_publication": 0,
     "disk_quota_failures_after_test_loader_access": 0,
@@ -110,5 +110,5 @@
     "atomic_test_artifact_publication_required": true,
     "stale_or_partial_artifact_reuse_allowed": false
   },
-  "decision": "H4K_manifest_gate_pass_waiting_explicit_formal_test_authorization"
+  "decision": "authorized_to_execute_complete_24_checkpoint_H4K_test_audit_once"
 }

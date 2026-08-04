@@ -29,7 +29,7 @@ Trainer用four-H mean validation MSE进行trial内early stopping和checkpoint se
 
 训练完成后，generic analyzer在remote output root直接读取24个trial directories，检查`checkpoint.pt`、`training_log.csv`、four-H validation metrics、effective config、initialization contract与model diagnostics。Local只同步生成的ledger/scorecards，不复制约1.2 GiB checkpoints。
 
-`scripts/build_iscf_bsca_main_v1_h4k_test_manifest.py`从24-row audited ledger生成manifest，并硬检查dataset counts、validation-only status、numeric/artifact pass以及trial/checkpoint hash唯一性。Formal-test config当前保持`waiting_user_authorization`和`user_authorized=false`；checker只允许dry-run得到`authorized=false`，因此准备manifest不会隐式开放test split。
+`scripts/build_iscf_bsca_main_v1_h4k_test_manifest.py`从24-row audited ledger生成manifest，并硬检查dataset counts、validation-only status、numeric/artifact pass以及trial/checkpoint hash唯一性。用户于2026-08-04授权完整H4K formal test后，config固定`authorized_prelaunch`、`user_authorized=true`和单次test access；checker要求dry-run得到`authorized=true`。该授权不扩张到H4L、新训练、baseline或3-seed。
 
 ## 5. Code-theory consistency
 

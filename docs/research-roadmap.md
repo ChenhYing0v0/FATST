@@ -32,9 +32,9 @@ finite-capacity future-region heterogeneity。3.3没有把naive unified penalty�
 
 ## ISCF-BSCA-MAIN-v1 H4K Targeted HPO (2026-08-03)
 
-Current cursor=`Step 9 train-validation artifact audit complete / checkpoint manifest frozen / formal test waiting explicit authorization`。H4K保持frozen ISCF-BSCA architecture与objective，24个seed2021 jobs已全部完成：ETTm2 8、Weather 6、ETTh1/ETTh2/ETTm1/ECL/Solar各2。每个trial仍由four-H validation mean MSE选择checkpoint，training阶段test=0。
+Current cursor=`Step 9 train-validation artifact audit complete / checkpoint manifest frozen / formal test authorized / remote preflight pending`。H4K保持frozen ISCF-BSCA architecture与objective，24个seed2021 jobs已全部完成：ETTm2 8、Weather 6、ETTh1/ETTh2/ETTm1/ECL/Solar各2。每个trial仍由four-H validation mean MSE选择checkpoint，training阶段test=0。
 
-Narrative gate=`pass_as_targeted_hyperparameter_optimization_not_new_method`。24/24 training、numeric health、effective-config provenance与checkpoint hashes通过，manifest SHA256=`61446262b9ed645fb1e2ebd233a0dd88c7d1743ff80fa8ed0fc2a5a52e2747ab`。Validation context对ETTm2/Weather给出0.663%/0.642%改善信号，但不能替代test；formal test仍未授权。Global effectiveness gate保持MSE>=20/28、MAE>=20/28、combined>=40/56，禁止per-horizon profile selection。Canonical result=`analysis/iscf_bsca_main_v1_hpo_20260731/h4k_training_result_and_formal_test_gate.md`。Decision=`H4K_training_complete_manifest_gate_pass_waiting_formal_test_authorization`。
+Narrative gate=`pass_as_targeted_hyperparameter_optimization_not_new_method`。24/24 training、numeric health、effective-config provenance与checkpoint hashes通过，manifest SHA256=`61446262b9ed645fb1e2ebd233a0dd88c7d1743ff80fa8ed0fc2a5a52e2747ab`。用户已授权一次完整96-cell formal test；H4L、新训练、baseline与3-seed仍未授权。Global effectiveness gate保持MSE>=20/28、MAE>=20/28、combined>=40/56，禁止per-horizon profile selection。Canonical result=`analysis/iscf_bsca_main_v1_hpo_20260731/h4k_training_result_and_formal_test_gate.md`。Decision=`H4K_complete_formal_test_authorized_prelaunch`。
 
 ## ISCF-BSCA-MAIN-v1 H4J Complete Test Decision (2026-08-03)
 
