@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.7 temporarily frozen usable；next=Section 4 Method pending author direction；experiments=H4L complete formal test authorized prelaunch |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.7 temporarily frozen usable；next=Section 4 Method pending author direction；experiments=H4L Step 10 gate fail at 31/56、rollback Step 6 strategy decision |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -17,7 +17,9 @@
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
-| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H4K evidence为30/56，H4L 48-checkpoint formal test authorized |
+| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H4L evidence=15/28 MSE、16/28 MAE、31/56 combined，strong aggregate competitor但未达per-cell target |
+
+[H4L Complete Test and Joint-HPO Decision, 2026-08-04] 48/48 checkpoints与192/192 standard-horizon rows完整，checkpoint immutability 48/48，无ABORT。合并H1--H4L共165 trials后，joint selector把ETTm2切换到`h4l_wd1e3`，新增H720 MAE一个lead；Weather保留H4K profile。Global MSE/MAE/combined从15/28、15/28、30/56变为15/28、16/28、31/56，H720=5/14；legal selector、unrestricted profile与per-cell diagnostic oracle上限均31/56，三项global gates仍失败。Failure attribution=`search_space_performance_shortfall`，rollback=Step 6；H4M/new training/confirmation/3-seed未授权。Canonical report=`analysis/iscf_bsca_main_v1_hpo_20260731/h4l_test_result_and_joint_hpo_decision.md`。Decision=`H4L_complete_one_new_MAE_lead_gate_fail_return_step6`。
 
 [H4L Complete Formal-Test Authorization, 2026-08-04] 用户显式授权H4L一次完整formal test。Scope固定为48个frozen seed2021 checkpoints × H96/H192/H336/H720=192 rows并同时报告MSE/MAE；禁止checkpoint retraining/mutation、validation profile filtering、partial execution以及per-H/per-seed/per-metric/per-cell selection。H4M、selected-profile confirmation、baseline和3-seed不在本授权内。Machine contract=`configs/iscf_bsca_main_v1_hpo_wide_h4l_test_audit.json`。Decision=`H4L_complete_48_checkpoint_formal_test_authorized_prelaunch`。
 

@@ -2,9 +2,9 @@
 
 ## ISCF-BSCA-MAIN-v1 H4L Wide HPO (2026-08-04)
 
-Current cursor=`Step 9 complete formal test authorized prelaunch`。H4K证明原117-trial search space的dataset-level与逐cell oracle上限均为30/56，因此H4L只针对ETTm2 0/8和Weather 2/8扩大范围，不复跑H4K，也不改变architecture、objective、scales或inference graph。
+Current cursor=`Step 10 effectiveness gate fail / rollback Step 6 strategy decision`。H4K证明原117-trial search space的dataset-level与逐cell oracle上限均为30/56，因此H4L只针对ETTm2 0/8和Weather 2/8扩大范围，不复跑H4K，也不改变architecture、objective、scales或inference graph。
 
-H4L的48个seed2021 profiles已全部完成，ETTm2/Weather各24；checkpoint、four-H validation、config、environment、initialization与diagnostics artifacts均48/48完整。Unique checkpoint hashes=48，test=0，manifest SHA256=`c7ce6b6915dbe0323282140c0ed28ecad590b5ea256e8545a7f0fb3217c25584`。ETTm2 validation-best刷新历史frontier 1.622%，Weather未刷新；validation只作健康解释，不作profile selection。用户已授权48 checkpoints × four-H=192 rows的一次complete formal test，同时报告MSE/MAE；checkpoint mutation/retraining、validation filtering、partial test与per-H/per-metric/per-cell selection均禁止。Narrative gate=`pass_as_wide_hyperparameter_optimization_not_new_method`；internal health=`48_of_48_pass`；effectiveness gate等待complete formal test。Canonical result=`analysis/iscf_bsca_main_v1_hpo_20260731/h4l_training_result_and_formal_test_gate.md`。Decision=`H4L_complete_48_checkpoint_formal_test_authorized_prelaunch`。
+H4L 48/48 checkpoints与192/192 formal-test rows完整，checkpoint immutability通过。165-trial joint selector将ETTm2切换为`h4l_wd1e3`，新增H720 MAE一个lead；Weather仍用H4K selector。Global MSE/MAE/combined=`15/28,16/28,31/56`，H720=`5/14`；legal selector、unrestricted profile和per-cell diagnostic oracle上限均31/56，故`20/28,20/28,40/56` gates失败。Narrative gate=`pass_as_wide_hyperparameter_optimization_not_new_method`；internal health=`48_of_48_pass`；effectiveness=`performance_partial_pass_gate_fail`；failure attribution=`search_space_performance_shortfall`。Canonical result=`analysis/iscf_bsca_main_v1_hpo_20260731/h4l_test_result_and_joint_hpo_decision.md`。Decision=`H4L_complete_one_new_MAE_lead_gate_fail_return_step6_no_automatic_H4M`。
 
 ## Section 3 v0.7 Temporarily Frozen Usable (2026-08-04)
 
