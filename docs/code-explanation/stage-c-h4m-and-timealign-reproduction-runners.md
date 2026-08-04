@@ -18,6 +18,8 @@
 
 `resource-smoke`执行1 epoch、各2个train/eval batches且`final_evaluation_split=none`，不访问test。`run`执行10 epochs、无early stopping，保存last checkpoint后只加载一次test，并产出一个目标H的MSE/MAE、segment metrics和test predictions。
 
+adapter当前会对未激活的historical grouped-MLP参数执行全局argument validation；runner因此传入可整除四个目标H的`grouped_mlp_scale=48`。该值不进入`readout_mode=official`的tensor path，只避免irrelevant default 144在H336上触发pre-training guard。
+
 启动前runner逐一验证六个executed source files与两个remote dataset SHA256。完整run需存在checkpoint、effective config、environment、training log、target-horizon metrics、segment metrics、diagnostics、test predictions和run log；缺一项都不能被`status`计为complete。
 
 `scripts/check_timealign_official_ettm2_weather_reproduction.py`验证8个官方preset、source hashes、single-seed full matrix、historical sanity-reference hash、official-last/no-early-stop/test-once边界和dry-run。它不把历史derived CSV升级为artifact-complete复现，也不把`license_unresolved`改写为可再分发许可。

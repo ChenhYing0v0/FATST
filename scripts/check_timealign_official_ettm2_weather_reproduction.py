@@ -154,6 +154,7 @@ def main() -> None:
     assert "--learning-rate" not in runner and "--w-align" not in runner
     assert "--readout-mode official" in runner
     assert "--checkpoint-policy official-last" in runner
+    assert "--grouped-mlp-scale 48" in runner
 
     print(
         json.dumps(

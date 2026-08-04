@@ -229,6 +229,7 @@ run_one() {
       --encoder-mode timealign-token-mlp \
       --readout-mode official \
       --pred-loss-mode full \
+      --grouped-mlp-scale 48 \
       --weight-decay 0.01 \
       --w-recon 1.0 \
       --batch-size 32 \
