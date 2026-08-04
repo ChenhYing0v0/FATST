@@ -464,7 +464,7 @@ def plot_sharing_figure(
     heatmap_axis.set_xlabel("60-step future region")
     heatmap_axis.set_ylabel(r"Cross-step sharing extent $s$")
     heatmap_axis.set_title(
-        "Excess MSE above each region's best extent",
+        "Excess prediction risk over regional best",
         loc="left",
         pad=6,
     )
@@ -502,7 +502,7 @@ def plot_sharing_figure(
         pad=0.03,
         fraction=0.045,
     )
-    colorbar.set_label("Excess MSE (%)")
+    colorbar.set_label("Excess risk (%)")
     panel_label(heatmap_axis, "a")
 
     region_x = np.arange(1, 13)

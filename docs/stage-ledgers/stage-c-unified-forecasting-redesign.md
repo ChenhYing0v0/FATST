@@ -69,8 +69,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 
 | ID | Status | Hypothesis | Narrative Gate | Effectiveness Gate | Next Action |
 | --- | --- | --- | --- | --- | --- |
-| `INTRO-CHPD-v1` | `integrated_in_section3_v0_6_pending_review` | independently trained horizon models能否给出清晰overlap inconsistency | selected ETTh2 trajectory + all-validation heatmap；aggregate-CHPD selection retained in caption | shared-96 raw mean differences 2.16--2.51；long--short NCHPD 0.0365--0.0406 | author review；formal family/seed prevalence deferred |
-| `SC-UVHF-FRSD-D1` | `integrated_in_section3_v0_6_pending_review` | matched fixed sharing extent的region-wise MSE optimum是否随future region变化 | selected ETTm2 validation example；label-selected oracle role retained | five scopes win 2--3 regions；10/10 crossings；8.112% descriptive headroom | author review；formal CFH remains architecture-level deferred control |
+| `INTRO-CHPD-v1` | `integrated_in_section3_v0_7_pending_review` | independently trained horizon models能否给出清晰overlap inconsistency | selected ETTh2 trajectory + all-validation heatmap；aggregate-CHPD selection retained in caption | shared-96 raw mean differences 2.16--2.51；long--short NCHPD 0.0365--0.0406 | author review；formal family/seed prevalence deferred |
+| `SC-UVHF-FRSD-D1` | `integrated_in_section3_v0_7_pending_review` | matched fixed sharing extent的future-region prediction-risk optimum是否随future region变化 | selected ETTm2 validation example；label-selected oracle role retained | five scopes win 2--3 regions；10/10 crossings；8.112% descriptive headroom | author review；formal CFH remains architecture-level deferred control |
 | `ISCF-BSCA-v1` | `exact_ablation_anchor_frozen` | broad train-time anchor能否稳定scope-gradient access并提升ISCF | ISCF-specific chain pass；generic KL novelty not claimed | three-seed +0.3541/+0.3073%；3/3 seeds、4/5 datasets、4/4 horizons | reuse only for five-dataset Full/w/o BSCA ablation；do not place directly in Main I/II |
 | `ISCF-BSCA-MAIN-v1` | `single_seed_profiles_frozen_main_results_reusable` | frozen architecture在8 datasets上经test-tuned HPO后能否达到SOTA-competitive并支持main claims | validation选checkpoint；test four-H aggregate选dataset profile；ECL/Solar test-informed expanded budget；seed2021 first | 53 trials；8 selected checkpoints/32 cells；vs TimeAlign 7-dataset MSE +2.199%、MAE -0.066% | complete remaining baselines；do not retrain selected profiles |
 | `ISCF-BSCA-PAPER-EXP-v2` | `post_hpo_published_block_complete_waiting_baseline_tiers` | 完整main/ablation/transfer/efficiency evidence能否兑现provisional claims | TimeAlign Table 6 primary + official fill；single-seed complete matrix；optional seed blocks non-selective | 23 primary-seed reusable；210 final new；140 published rows audited；30 extra-seed evidence retained | request Main I baseline execution and Main II Tier A；remote/test false |
@@ -298,7 +298,7 @@ Historical and control queue:
 
 | Task | Status | Next Action |
 | --- | --- | --- |
-| ISCF-BSCA paper architecture | `v0_42_section3_v0_6_synced` | author review Section 3 terminology and flow refinement；Main I/II claims depend on tuned eight-dataset tables |
+| ISCF-BSCA paper architecture | `v0_43_section3_v0_7_synced` | author review Section 3 author risk-definition refinement；Main I/II claims depend on tuned eight-dataset tables |
 | ISCF-BSCA paper experiment protocol | `v2_single_seed_scoped_exchange_patch_complete` | request remaining 8-dataset/HPO/official-baseline local patches only；B1/B2/B3/C false |
 | ISCF-BSCA-v1 three-seed confirmation | `completed_exact_ablation_anchor` | reuse existing Full/Equal ablation evidence；do not use untuned row as Main I/II method |
 | ISCF-RSCC-v1 validation matrix | `completed_control_attribution_fail` | exact route closed；retain artifacts/control clue；return Step2/4 |
@@ -377,6 +377,7 @@ Historical and control queue:
 
 | Date | Trigger | Paper Section | Change Type | Decision |
 | --- | --- | --- | --- | --- |
+| 2026-08-04 | 用户否决Section 3 v0.6的3.2句式与region-wise MSE命名，同时接受3.1修改 | Section 3.1--3.3、Figure 3a terminology、architecture/governance sync | selective rollback + risk definition + claim-boundary rewrite | v0.7 pending author review；3.1保留；3.2连接DLinear observation与formulation limitation；3.3定义future-region prediction risk；数据、数值、Introduction与experiment cursor不变 |
 | 2026-08-04 | 用户复审Section 3 v0.5并询问3.1主语、3.2结论衔接及3.3 `risk`术语 | Section 3.1--3.3、Figure 3a label、architecture/governance sync | terminology precision + local flow refinement | v0.6 pending author review；3.1主语明确；3.2汇合trajectory/aggregate evidence；经验量统一为region-wise MSE；数据、数值、claim boundary、Introduction与experiment cursor不变 |
 | 2026-08-04 | 用户逐小节复审Section 3 v0.4并要求重排3.1、重写Figures 2--3叙事、删除3.3/3.5 | Section 3.1--3.3、Figures 2--3 captions、architecture/governance sync | author structure refinement + evidence compression | v0.5 pending author review；CHPC先于model contrast；inconsistency与CHPD统计分离；naive-unified accuracy和Design Requirements移出Section 3；Figure 2 selection与Figure 3 oracle boundary压缩保留；Introduction/figures/experiment cursor不变 |
 | 2026-07-31 | 用户指出Section 3公式驱动、缺少what/why与观点链，并质疑projection notation及accuracy disclaimer位置 | Section 3 overview与3.1--3.5 narrative flow | argument-first rewrite + notation simplification + reverse outline | v0.2 pending author review；删除$\Pi_{H_i}$并改为shared-target equality；future-step-indexed先定义；accuracy boundary移至3.3；neutral tensor derivation移出manuscript；evidence/authorization不变 |

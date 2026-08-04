@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.6 terminology and flow refinement pending author review；experiments=H4L Step 8 train/validation active、test=0/48 |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.7 author risk-definition refinement pending author review；experiments=H4L Step 8 train/validation active、test=0/48 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,6 +18,8 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H4K evidence为30/56，H4L继续dataset-level HPO |
+
+[Section 3 Author Risk-Definition Refinement v0.7, 2026-08-04] 按用户复审撤销v0.6的`region-wise MSE`专有命名，但保留已认可的3.1 varied-horizon-forecaster主语。3.2以“evaluated DLinear models fail to form a prefix-consistent trajectory”报告受限观察，再将其连接到horizon-specific formulation的structural limitation：独立模型不受shared-target agreement约束；不使用缺少跨model-family prevalence证据的`widely existing theoretical loophole`。3.3正式定义`future-region prediction risk` $R_{o,b,s}$为给定origin/region/extent后聚合的empirical squared-error loss，并明确其不是population expectation；Figure 3a同步改为`Excess prediction risk`。数据、统计值、figure布局、validation-only role与claim boundary不变。Decision=`section3_v0_7_author_risk_definition_refinement_pending_review`。
 
 [Section 3 Terminology and Flow Refinement v0.6, 2026-08-04] 3.1将CHPC construction的主语明确为varied-horizon forecaster，避免悬空的`now`。3.2用`Taken together`连接Figure 2a trajectory-level与Figure 2b aggregate evidence，再收束到“不构成single nested prediction trajectory”的结论。3.3将selected validation origin/region上直接计算的经验平方误差由宽泛的`risk`统一为`region-wise MSE`，记作$\operatorname{MSE}_{o,b,s}$；Figure 3a标题同步改为`Excess MSE`。该修改不改变数据、统计值、figure布局、validation-only evidence role或claim boundary；Introduction与并行experiment cursor未改。Decision=`section3_v0_6_terminology_and_flow_refinement_pending_review`。
 

@@ -6,6 +6,12 @@ Current cursor=`Step 8 remote train/validation active / formal test pending sepa
 
 H4L为48个seed2021 profiles，ETTm2/Weather各24；对117个历史profiles做effective fingerprint audit后零重复。矩阵覆盖context/patch、capacity、decoder rank、learning rate、weight decay和layer norm边界，并从TimeAlign official scripts提取四组encoder parameter couplings作source prior，再与ISCF-BSCA decoder/optimizer组合。Trial budget扩展为60 epochs/patience12，checkpoint仍由four-H validation mean MSE选择；训练阶段test=0，一个dataset-level profile共同服务四H。48/48 resource smoke通过后，正式训练已在3×3090启动，首批三项进入epoch1且numeric health正常。Narrative gate=`pass_as_wide_hyperparameter_optimization_not_new_method`；effectiveness gate等待complete formal test，但该test尚未授权。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4l_wide_matrix_and_prelaunch.md`，launch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4l_launch.md`。Decision=`H4L_48_job_train_validation_active_test_zero`。
 
+## Section 3 Author Risk-Definition Refinement v0.7 (2026-08-04)
+
+Current cursor=`paper writing / Section 3 author review`。以v0.5为语义基线保留用户认可的3.1 varied-horizon-forecaster主语，不执行整commit回滚。3.2删除v0.6的`Taken together`句式，改为`evaluated DLinear observation -> horizon-specific structural limitation`：证据只直接覆盖当前DLinear family，而“independently optimized models are not constrained to agree on shared future targets”来自formulation本身。由此保留用户要求的理论观点，但不写成缺少广泛model-family审计支撑的`widely existing theoretical loophole`。
+
+3.3撤销`region-wise MSE`专有命名。当前manuscript正式定义future-region prediction risk $R_{o,b,s}$为给定forecast origin、future region和sharing extent后，在该region全部future steps与variables上聚合的empirical squared-error loss；MSE只说明计算形式，risk承载extent--region匹配关系，并明确区别于population expectation。Figure 3a同步改为`Excess prediction risk`。数据、数值、layout、validation-only evidence role、oracle boundary、Introduction v0.9与parallel experiment authorization均不变。Decision=`section3_v0_7_author_risk_definition_refinement_pending_review`。
+
 ## Section 3 Terminology and Flow Refinement v0.6 (2026-08-04)
 
 Current cursor=`paper writing / Section 3 author review`。3.1将CHPC construction的主语明确为varied-horizon forecaster，删除语义悬空的`now`。3.2以`Taken together`显式汇合Figure 2a的trajectory-level evidence与Figure 2b的aggregate evidence，再得出independently optimized DLinear models不形成single nested prediction trajectory的受限结论。

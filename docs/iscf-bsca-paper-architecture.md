@@ -5,15 +5,15 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.42` |
+| `version` | `v0.43` |
 | `last_updated` | `2026-08-04` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 3 v0.6 terminology and flow refinement pending author review；experiments=H4L 48-job ETTm2/Weather train/validation active、test=0；Method Figure 4 planned |
+| `current_review_cursor` | writing=Section 3 v0.7 author risk-definition refinement pending author review；experiments=H4L 48-job ETTm2/Weather train/validation active、test=0；Method Figure 4 planned |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
-| `provisional_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.6正文 + approved Figures 2--3；planned Method Figure 4；remaining sections |
+| `provisional_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.7正文 + approved Figures 2--3；planned Method Figure 4；remaining sections |
 | `authorization_source` | H4L local patch/resource smoke/train authorization由`configs/iscf_bsca_main_v1_hpo_wide_h4l.json`记录；H4L formal test=false；本architecture文档不扩张baseline或final reporting边界 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
@@ -849,9 +849,9 @@ balanced co-adaptation` 完整链上。
 
 ## 6. Problem Formulation and Empirical Motivation
 
-Section 3 v0.6 terminology and flow refinement已落地：
+Section 3 v0.7 author risk-definition refinement已落地：
 `docs/paper-drafts/iscf-bsca-problem-formulation-initial-draft.md`。当前状态为
-`author_feedback_round5_integrated_pending_review`；Introduction v0.9未改动。
+`author_feedback_round6_integrated_pending_review`；Introduction v0.9未改动。
 
 3.1--3.3不出现ISCF、BSCA、arm或production method名称，问题证据只使用已有
 baseline或简单capacity-matched diagnostic heads。原3.3 naive-unified accuracy
@@ -871,7 +871,7 @@ topic sentence与argument transition。
 
 ### 6.1 Manuscript 3.1：Varied-Horizon Forecasting and CHPC
 
-Section 3 v0.6先从same-history / shared-target语义定义CHPC：
+Section 3 v0.7先从same-history / shared-target语义定义CHPC：
 
 $$
 \widehat y_{o+\tau,c}^{(H_i)}
@@ -1171,23 +1171,23 @@ seed2021上的validation artifacts。对每个origin构造all-channel
 Final selected result：Section 3 Figure 3使用ETTm2 origin=4177。五个scales分别赢得
 `2/2/2/3/3`个regions，全部10个scale pairs达到qualified bidirectional
 crossing，mean winner margin=10.266%，descriptive region-oracle headroom=
-8.112%。最终图使用region-best excess-MSE heatmap与winner-colored
+8.112%。最终图使用region-best excess-prediction-risk heatmap与winner-colored
 region-gain bars，不再展示高噪声step-wise curves。旧版fixed-s720 heatmap中
 s720整行恒为0并显示为白色；新版编码消除该视觉歧义，同时在bar panel保留
 fixed-s720 reference。maximum-heterogeneity validation role在caption中明确；
 正式CFH继续deferred。图不使用ISCF/BSCA，不承担method effectiveness claim。
 
-Section 3 v0.6只保留sample-level region-wise statistic
-$\operatorname{MSE}_{o,b,s}$。validation-selected fixed/schedule与official-test CFH
-继续作为architecture record中的future formal control，不进入当前manuscript。
-architecture-level expected-risk与CFH记号仅在确实涉及expectation或future formal
-control时保留，不作为Section 3经验统计量。Figure 3的同一validation-label winner与
-8.112% headroom只作descriptive oracle。完整neutral tensor path与formal control继续
-保存在本architecture与canonical evidence design中。
+Section 3 v0.7将sample-level statistic $R_{o,b,s}$定义为future-region prediction
+risk：给定origin、future region与sharing extent后，对该region全部targets聚合的
+empirical squared-error loss。该quantity不是对data distribution取expectation的
+population risk。validation-selected fixed/schedule与official-test CFH继续作为
+architecture record中的future formal control，不进入当前manuscript。Figure 3的同一
+validation-label winner与8.112% headroom只作descriptive oracle。完整neutral tensor
+path与formal control继续保存在本architecture与canonical evidence design中。
 
 ### 6.5 Method Requirements Record（不作为Section 3 subsection）
 
-Section 3 v0.6不再单设Design Requirements，也不在Section 3正文引出ISCF-BSCA。
+Section 3 v0.7不再单设Design Requirements，也不在Section 3正文引出ISCF-BSCA。
 以下内容保留为Section 4 architecture rationale与后续ablation claim map，不是当前
 manuscript subsection。
 
@@ -1673,3 +1673,4 @@ Coverage boundary：
 | 2026-08-03 | Section 3 v0.4 field-style alignment | 参照iTransformer、TimeMixer、TimeXer与TimeMixer++官方论文校准时序预测顶会语体；P1改为单一承接段，删除meta roadmap P2；3.1--3.5改为连续setting-to-evidence叙事 | author review；definitions、numbers、claim boundaries、Introduction与experiment cursor不变 |
 | 2026-08-04 | Section 3 v0.5 author structure refinement | 3.1改为shared-target→CHPC→horizon-specific contrast→unified function；3.2区分inconsistency现象与CHPD/NCHPD统计并重写Figure 2叙事；删除naive-unified accuracy与Design Requirements subsections；future-region sharing renumber为3.3并按panel a/b重写 | author review；Figure 2 selection与Figure 3 oracle boundary压缩保留；Introduction、figures与experiment cursor不变 |
 | 2026-08-04 | Section 3 v0.6 terminology and flow refinement | 3.1明确主语为varied-horizon forecaster；3.2以trajectory-level与aggregate evidence合并收束；3.3将经验量$R_{o,b,s}$统一为region-wise $\operatorname{MSE}_{o,b,s}$，Figure 3a同步改为excess MSE | author review；统计值、figure布局、claim boundary、Introduction与experiment cursor不变 |
+| 2026-08-04 | Section 3 v0.7 author risk-definition refinement | 保留3.1 varied-horizon subject；3.2改为DLinear observation→horizon-specific structural limitation；3.3撤销region-wise MSE命名并正式定义future-region prediction risk $R_{o,b,s}$ | author review；Figure 3a同步为excess prediction risk；数据、统计值、claim boundary、Introduction与experiment cursor不变 |

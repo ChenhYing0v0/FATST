@@ -10,7 +10,7 @@
 ETTh2 prefix source CSV + summary + pair metrics
   -> Figure 2 SVG/PDF/PNG/TIFF
 
-ETTm2 selected region-MSE CSV + summary
+ETTm2 selected region-risk CSV + summary
   -> Figure 3 SVG/PDF/PNG/TIFF
 ```
 
@@ -45,30 +45,29 @@ raw-difference subplot。
 
 ## 3. Figure 3 source tensors and quantities
 
-`selected_region_risk.csv`有60行；文件名沿用冻结artifact contract，其中`mse`
-column才是manuscript与figure使用的正式统计量：
+`selected_region_risk.csv`有60行：
 
 ```text
 5 sharing extents × 12 future regions
 ```
 
 每行`mse`为selected origin上对应scale、60-step region及all channels的mean
-squared error。为避免把fixed reference误读为missing data，panel a使用每个
-region自身的最低MSE作为视觉参考：
+squared error。manuscript将其定义为future-region prediction risk：即给定origin、
+region与sharing extent后的empirical squared-error loss，而不是对data distribution
+取expectation的population risk。为避免把fixed reference误读为missing data，panel a
+使用每个region自身的最低risk作为视觉参考：
 
 $$
 E_{s,b}
 =
-\frac{\operatorname{MSE}_{s,b}-\min_{s'}\operatorname{MSE}_{s',b}}
-{\min_{s'}\operatorname{MSE}_{s',b}}\times100\%.
+\frac{R_{s,b}-\min_{s'}R_{s',b}}
+{\min_{s'}R_{s',b}}\times100\%.
 $$
 
-panel a绘制$E_{s,b}$，outlined square标记
-$\arg\min_s\operatorname{MSE}_{s,b}$。因此每列只有
+panel a绘制$E_{s,b}$，outlined square标记$\arg\min_sR_{s,b}$。因此每列只有
 region winner为0；$s=720$只在regions 10--12保持0，而不是像旧版
 fixed-reference encoding那样整行恒为0。旧版白色$s=720$行来自
-$(\operatorname{MSE}_{720,b}-\operatorname{MSE}_{720,b})/
-\operatorname{MSE}_{720,b}=0$，并非missing values。
+$(R_{720,b}-R_{720,b})/R_{720,b}=0$，并非missing values。
 
 panel b仍保留sample-best fixed extent $s^\mathrm{fixed}=720$作为业务上更直接的
 统一decoder reference，其bar height为：
@@ -77,10 +76,9 @@ $$
 G_b
 =
 \frac{
-\operatorname{MSE}_{s^\mathrm{fixed},b}
--\min_s\operatorname{MSE}_{s,b}
+R_{s^\mathrm{fixed},b}-\min_sR_{s,b}
 }{
-\operatorname{MSE}_{s^\mathrm{fixed},b}
+R_{s^\mathrm{fixed},b}
 }\times100\%.
 $$
 
@@ -108,13 +106,13 @@ Nature static source audit为13 PASS、1 WARN、0 FAIL。WARN只因validator不�
 Intended claim：
 
 1. independently optimized horizons可在相同future steps上分歧；
-2. matched fixed sharing extents的region-wise MSE ordering可发生明显变化。
+2. matched fixed sharing extents的future-region prediction-risk ordering可发生明显变化。
 
 Code realization：
 
 - Figure 2把single selected example与all-validation heatmap分离，并在一个
   trajectory panel中保留raw curves与mean-difference summary；
-- Figure 3只展示matched neutral decoder region-wise MSE，不出现ISCF/BSCA；
+- Figure 3只展示matched neutral decoder future-region prediction risk，不出现ISCF/BSCA；
 - maximum selection与same-validation descriptive oracle均在manifest和caption
   中公开。
 
