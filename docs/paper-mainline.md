@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.7 author risk-definition refinement pending author review；experiments=H4L Step 8 train/validation active、test=0/48 |
+| `current_11_step` | paper consolidation；writing=Section 3 v0.7 temporarily frozen usable；next=Section 4 Method pending author direction；experiments=H4L Step 8 train/validation active、test=0/48 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,6 +18,8 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H4K evidence为30/56，H4L继续dataset-level HPO |
+
+[Section 3 Temporary Freeze v0.7, 2026-08-04] 用户确认当前Section 3版本基本满意并暂时固定为论文可用版本。Canonical clean source=`docs/paper-drafts/iscf-bsca-problem-formulation-initial-draft.md`，status=`temporarily_frozen_usable`；freeze scope覆盖正文、术语、公式、Figures 2--3 integration与captions。后续默认不再改写，只有Section 4或paper-facing evidence产生明确矛盾且用户显式批准时才解冻。Introduction v0.9继续冻结；并行experiment cursor与授权不变。Decision=`section3_v0_7_temporarily_frozen_usable_next_section4_pending_author_direction`。
 
 [Section 3 Author Risk-Definition Refinement v0.7, 2026-08-04] 按用户复审撤销v0.6的`region-wise MSE`专有命名，但保留已认可的3.1 varied-horizon-forecaster主语。3.2以“evaluated DLinear models fail to form a prefix-consistent trajectory”报告受限观察，再将其连接到horizon-specific formulation的structural limitation：独立模型不受shared-target agreement约束；不使用缺少跨model-family prevalence证据的`widely existing theoretical loophole`。3.3正式定义`future-region prediction risk` $R_{o,b,s}$为给定origin/region/extent后聚合的empirical squared-error loss，并明确其不是population expectation；Figure 3a同步改为`Excess prediction risk`。数据、统计值、figure布局、validation-only role与claim boundary不变。Decision=`section3_v0_7_author_risk_definition_refinement_pending_review`。
 

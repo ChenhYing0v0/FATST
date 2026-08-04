@@ -10,6 +10,7 @@
 | `highlight_rule` | Yellow highlight denotes added or replacement text; strikethrough denotes removed text |
 | `review_scope` | Selective rollback of v0.6 terminology, revised Section 3.2 conclusion and synchronized Figure 3a wording |
 | `manuscript_status` | This file is not the clean manuscript source |
+| `review_outcome` | Accepted by the author and temporarily frozen as a usable Section 3 |
 
 ## Change summary
 

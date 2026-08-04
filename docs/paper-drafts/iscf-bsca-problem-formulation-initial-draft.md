@@ -7,7 +7,9 @@
 | `document_role` | Clean manuscript-facing initial draft of Section 3 |
 | `version` | `v0.7-author-risk-definition-refinement` |
 | `date` | `2026-08-04` |
-| `review_status` | `author_feedback_round6_integrated_pending_review` |
+| `review_status` | `temporarily_frozen_usable` |
+| `freeze_scope` | Section 3 body, terminology, equations, Figures 2--3 integration and captions |
+| `unfreeze_condition` | A concrete contradiction from later sections or evidence, followed by explicit author approval |
 | `introduction_dependency` | Introduction `v0.9-author-refinement` remains unchanged |
 | `figure_2_status` | Approved validation-only illustrative evidence; integrated below |
 | `figure_3_status` | Approved validation-only illustrative evidence; integrated below |

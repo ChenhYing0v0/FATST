@@ -16,15 +16,16 @@
 1. `AGENTS.md`；
 2. 本handoff；
 3. `docs/paper-drafts/iscf-bsca-introduction-initial-draft.md`；
-4. `docs/iscf-bsca-paper-architecture.md`；
-5. `analysis/iscf_bsca_intro_evidence_full_search_20260730/result_selection_and_figure_report.md`；
-6. `analysis/iscf_bsca_intro_evidence_full_search_20260730/design_and_figure_contract.md`；
-7. `analysis/iscf_bsca_intro_concept_figure_20260730/figure_contract_and_qa.md`；
-8. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_bsca_v1_confirmation_step9_10_20260722/step9_10_three_seed_result_and_paper_handoff.md`；
-9. `docs/code-explanation/stage-c-iscf-bsca-v1.md`；
-10. `docs/paper-mainline.md`；
-11. `docs/research-roadmap.md`；
-12. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`。
+4. `docs/paper-drafts/iscf-bsca-problem-formulation-initial-draft.md`；
+5. `docs/iscf-bsca-paper-architecture.md`；
+6. `analysis/iscf_bsca_intro_evidence_full_search_20260730/result_selection_and_figure_report.md`；
+7. `analysis/iscf_bsca_intro_evidence_full_search_20260730/design_and_figure_contract.md`；
+8. `analysis/iscf_bsca_intro_concept_figure_20260730/figure_contract_and_qa.md`；
+9. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_bsca_v1_confirmation_step9_10_20260722/step9_10_three_seed_result_and_paper_handoff.md`；
+10. `docs/code-explanation/stage-c-iscf-bsca-v1.md`；
+11. `docs/paper-mainline.md`；
+12. `docs/research-roadmap.md`；
+13. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`。
 
 只有在下一任务确实需要追溯早期实验时，才按上述文件中的artifact links继续读取
 历史analysis。不要从旧D22或旧SIFF路线重新开始研究。
@@ -36,18 +37,21 @@
 | `project` | `R_2026_FATST` |
 | `stage` | `StageC-UVHF paper consolidation` |
 | `handoff_date` | `2026-07-31` |
+| `last_updated` | `2026-08-04` |
 | `source_commit_before_handoff` | `8e3eb99` |
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | manuscript writing and paper-facing evidence consolidation |
-| `active_section` | Section 3: Problem Formulation and Empirical Motivation |
+| `active_section` | Section 3 v0.7 temporarily frozen；Section 4 Method pending author direction |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
+| `section3_status` | `v0.7-author-risk-definition-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
-| `method_implementation_authorized` | false |
-| `remote_training_authorized` | false |
-| `formal_test_authorized` | false |
-| `next_action` | draft and freeze Section 3 definitions, statistics, controls, Figures 2--3 captions and claim boundaries |
-| `conditional_next` | after Section 3, design Method Figure 4 and draft Method in computation-flow order |
+| `new_method_implementation_from_writing_thread` | false |
+| `new_remote_training_from_writing_thread` | false |
+| `new_formal_test_from_writing_thread` | false |
+| `parallel_experiment_authority` | use experiment handoff and current mainline；this writing handoff does not expand or revoke it |
+| `next_action` | await author direction；when requested, design Method Figure 4 and draft Section 4 in computation-flow order |
+| `conditional_next` | align Method and later result claims with the parallel paper-experiments workstream |
 
 当前目标是把已冻结模型与已有证据组织成连贯论文，不是继续architecture search。
 不要因为旧ledger包含大量closed candidates而恢复D17--D24、TSAF、CPSI、SAC、
@@ -216,52 +220,20 @@ horizon-specific superiority或decoder portability。后两项仍需正式实验
 
 ## 6. Next work sequence
 
-### Immediate: Section 3
+### Completed: Section 3
 
-下一对话应先完成
-`3. Problem Formulation and Empirical Motivation`，不修改模型。
-
-建议按以下顺序推进：
-
-1. `3.1 Horizon-Specific and Unified Multi-Horizon Forecasting`
-   - 定义history、future target、requested horizon与supported horizon set；
-   - 分别定义horizon-specific predictors和horizon无关step-indexed predictor；
-   - 正式定义CHPC；
-   - 区分forecast horizon $H$与future time step $\tau$。
-2. `3.2 Cross-Horizon Disagreement of Horizon-Specific Models`
-   - 定义CHPD/NCHPD及其source tensors；
-   - 说明baseline、validation role、maximum-example selection与controls；
-   - 嵌入Figure 2和完整caption；
-   - 结论只到“不保证CHPC + system redundancy”，不声称accuracy更差。
-3. `3.3 Performance Compromise in Naive Unified Forecasting`
-   - 先审计已有证据是否足以保留本节；
-   - D18未支持specialists普遍胜过unified carrier，因此不得把unified penalty写成
-     已证事实；
-   - 若证据不足，保留为待实验设计或缩短，不为叙事强行造结论。
-4. `3.4 Future-Region Sharing-Demand Heterogeneity`
-   - 定义future regions、sharing extent、matched region risk；
-   - 明确neutral/raw-history diagnostic与capacity matching；
-   - 嵌入Figure 3和完整caption；
-   - 区分descriptive oracle headroom与learned policy gain。
-5. `3.5 Design Requirements`
-   - 从前三节归纳unified system、CHPC、multiple sharing extents、
-     target-conditioned integration与stable joint learning；
-   - 本节末尾才能过渡到ISCF-BSCA。
-
-建议新建clean manuscript file：
+Section 3 v0.7已由用户确认并暂时冻结为论文可用版本。Canonical source：
 
 `docs/paper-drafts/iscf-bsca-problem-formulation-initial-draft.md`
 
-完成后同步：
+冻结范围包括正文、CHPC/CHPD/NCHPD与future-region prediction risk定义、
+Figures 2--3 integration及captions。原naive-unified accuracy与Design Requirements
+subsections不进入当前manuscript。后续默认不再修改Section 3；只有Section 4或
+paper-facing evidence产生明确矛盾且用户显式批准时才解冻。
 
-- `docs/iscf-bsca-paper-architecture.md`；
-- `docs/paper-mainline.md`；
-- `docs/research-roadmap.md`；
-- `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`。
+### Current next: Section 4 pending author direction
 
-### Conditional next
-
-Section 3冻结后：
+用户下一步明确授权后：
 
 1. 使用`nature-figure`设计并生成Method Figure 4；
 2. 按真实forward tensor flow起草Method；
@@ -283,9 +255,8 @@ Section 3冻结后：
 - 恢复closed candidates；
 - 为兑现P6而选择性报告favorable results。
 
-如果Section 3写作暴露必须补充的实验，先完成problem/narrative/design gate并在
-文档中冻结完整matrix、controls、test role和failure attribution，再请求用户
-授权。
+如果Section 4或后续结果写作暴露必须修改Section 3或补充实验，先说明明确矛盾，
+并分别请求Section 3解冻或实验授权；不得以writing handoff自动扩张scope。
 
 ## 8. Working-tree preservation
 
@@ -302,34 +273,31 @@ Section 3冻结后：
 首先严格阅读并遵守仓库 AGENTS.md，然后按顺序完整阅读：
 1. docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md
 2. docs/paper-drafts/iscf-bsca-introduction-initial-draft.md
-3. docs/iscf-bsca-paper-architecture.md
-4. analysis/iscf_bsca_intro_evidence_full_search_20260730/result_selection_and_figure_report.md
-5. analysis/iscf_bsca_intro_evidence_full_search_20260730/design_and_figure_contract.md
-6. analysis/iscf_bsca_intro_concept_figure_20260730/figure_contract_and_qa.md
-7. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_bsca_v1_confirmation_step9_10_20260722/step9_10_three_seed_result_and_paper_handoff.md
-8. docs/code-explanation/stage-c-iscf-bsca-v1.md
-9. docs/paper-mainline.md
-10. docs/research-roadmap.md
-11. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
+3. docs/paper-drafts/iscf-bsca-problem-formulation-initial-draft.md
+4. docs/iscf-bsca-paper-architecture.md
+5. analysis/iscf_bsca_intro_evidence_full_search_20260730/result_selection_and_figure_report.md
+6. analysis/iscf_bsca_intro_evidence_full_search_20260730/design_and_figure_contract.md
+7. analysis/iscf_bsca_intro_concept_figure_20260730/figure_contract_and_qa.md
+8. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_bsca_v1_confirmation_step9_10_20260722/step9_10_three_seed_result_and_paper_handoff.md
+9. docs/code-explanation/stage-c-iscf-bsca-v1.md
+10. docs/paper-mainline.md
+11. docs/research-roadmap.md
+12. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
 
 当前权威状态：
 - exact ISCF-BSCA-v1 已冻结为 paper-core candidate；
 - Introduction v0.9-author-refinement 已由用户确认，可作为暂时固定的可用版本；
+- Section 3 v0.7-author-risk-definition-refinement 已由用户确认，可作为暂时固定的可用版本；
 - Figure 1 已批准且只作 constructed conceptual illustration；
 - Figures 2--3 已批准用于 Section 3，均为 validation-only illustrative evidence；
 - Method Figure 4 仅完成设计规划，尚未生成；
-- 当前没有 active method search，新implementation、remote training和formal test均未授权。
+- 当前没有 active method search；本writing thread不新增implementation、remote training或formal test授权，并行实验状态以experiment handoff和current mainline为准。
 
-请不要重新讨论或改写 Introduction，除非后续章节产生明确矛盾并先向我说明。当前第一任务是推进 Section 3: Problem Formulation and Empirical Motivation：
-1. 完成3.1 task formulation与CHPC正式定义；
-2. 完成3.2 horizon-specific prefix disagreement，定义CHPD/NCHPD并整合Figure 2；
-3. 审计3.3 naive unified forecasting是否有足够证据，证据不足时不得强写成已证事实；
-4. 完成3.4 future-region sharing-demand heterogeneity，定义matched statistics/controls并整合Figure 3；
-5. 完成3.5 design requirements，之后才引出ISCF-BSCA。
+请不要重新讨论或改写Introduction与Section 3，除非后续章节产生明确矛盾并先向我说明、获得解冻同意。下一写作任务等待用户明确指定；若进入Section 4，则先冻结Method Figure 4 contract，再按真实forward tensor flow起草Method，并保持training-only BSCA与inference-time ISCF路径边界。
 
 请使用专业时序预测研究员和高水平期刊作者的标准，严格区分problem、evidence、method和claim boundary。P6中“统一模型优于horizon-specific模型、组件有效、decoder可迁移”是待后续main/ablation/transfer tables兑现的provisional paper-facing claim，不得当作当前已完成证据。
 
-建议新建 docs/paper-drafts/iscf-bsca-problem-formulation-initial-draft.md，并同步更新paper architecture、paper-mainline、research-roadmap与Stage C ledger。完成最小诚实验证后，按AGENTS.md提交并推送。
+完成任何后续章节后，同步更新paper architecture、paper-mainline、research-roadmap与Stage C ledger。完成最小诚实验证后，按AGENTS.md提交并推送。
 
 请保留并忽略以下untracked目录，不要删除或提交：
 - SRP-7C55/
