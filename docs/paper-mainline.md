@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 4 v0.1 architecture-and-objective complete pending author review；Section 3 v0.7 remains frozen；experiments=H4M formal test and TimeAlign reproduction complete，Step 10 gate fail / rollback Step 6 |
+| `current_11_step` | paper consolidation；writing=Section 4 v0.1 architecture-and-objective complete pending author review；Section 3 v0.7 remains frozen；experiments=H4N Weather-only 40-profile HPO prelaunch |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,6 +18,8 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H4M evidence=17/28 MSE、16/28 MAE、33/56 combined，strong aggregate competitor但未达per-cell target |
+
+[H4N Weather-only Wide HPO Prelaunch, 2026-08-05] 用户要求重点扩大Weather调参范围并尽量达到该dataset最优性能。对H1--H4M 189 trials/56 Weather profiles的审计确认`L640/p20/lr5e-5`为MSE frontier（0.214752），`L512/p16/lr2e-5`为MAE/joint frontier（0.246084）；剩余缺口集中于H96--H336 MAE。H4N冻结40个历史零重复profiles：context×LR 16、LR wide boundary 8、patch geometry 8、rank 5、capacity 3；one dataset-level profile共享four H，primary selection先最小化four-H MSE/MAE relative mean，只有0.1% near-tie才按lead cells排序。Weather统一120 epochs/patience24，training test=0；40/40 manifest后完整formal test已授权。H4O/extra seeds/architecture redesign=false。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4n_weather_wide_matrix_and_prelaunch_20260805.md`。Decision=`H4N_Weather_40_profile_matrix_frozen_remote_launch_after_local_gate`。
 
 [Main I TimeAlign Table-6-Style Draft, 2026-08-05] 已生成7 shared datasets × 13 models × four H的宽比较草表，覆盖ISCF-BSCA、mixed-source TimeAlign与Table 6其余11个published baselines；standard matrix=364 rows，加入重新计算Avg后long table=455 rows。TimeAlign仅ETTm2/Weather使用本地official-native seed2021 reproduction，其余5 datasets仍使用published three-run means；其他baseline均为unmatched published context。排名按published precision统一在三位小数displayed values上计算，完整13-model表中ISCF为29/56 best、16/56 second（允许并列）；原33/56只属于frozen five-model comparator subset，不得混用。Traffic/Exchange因不共享当前证据面而排除。Canonical artifact=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_timealign_table6_style_20260805/table_note_and_audit.md`。Decision=`main_i_wide_table_draft_generated_no_new_experiment_authorization`。
 

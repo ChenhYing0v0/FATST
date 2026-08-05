@@ -8,14 +8,14 @@
 | `version` | `v0.50` |
 | `last_updated` | `2026-08-05` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 4 v0.1 architecture-and-objective complete pending author review；Section 3 v0.7 remains temporarily frozen；experiments=H4M formal test + 189-trial joint audit complete，33/56 gate fail and rollback Step 6；TimeAlign 8-job reproduction audited；Method Figure 4 initial draft generated |
+| `current_review_cursor` | writing=Section 4 v0.1 architecture-and-objective complete pending author review；Section 3 v0.7 remains temporarily frozen；experiments=H4N Weather-only 40-profile HPO prelaunch；Method Figure 4 initial draft generated |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.7正文 + approved Figures 2--3 |
 | `provisional_content` | Section 4 v0.1 + Method Figure 4 initial draft；remaining sections |
-| `authorization_source` | H4M与TimeAlign ETTm2/Weather reproduction由2026-08-04用户指令授权，H4M complete formal test由2026-08-05用户指令授权；本architecture文档不扩展到H4N、other baselines、selected-profile confirmation或3-seed |
+| `authorization_source` | H4M与TimeAlign ETTm2/Weather reproduction由2026-08-04用户指令授权，H4M complete formal test及H4N Weather-only HPO由2026-08-05用户指令授权；本architecture文档不扩展到H4O、other baselines、selected-profile confirmation或3-seed |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
@@ -1335,7 +1335,9 @@ H4L冻结为ETTm2/Weather各24个wide space-filling profiles，覆盖此前基�
 
 H4M随后以24个新profiles扩大历史实验显示为高影响的interaction：ETTm2搜索`patch × low LR`并补rank/context，Weather搜索context/patch、low LR与rank组合；全部仍是one dataset profile shared by four H。24/24 frozen checkpoints、96/96 standard-horizon rows、numeric health、provenance和checkpoint immutability均通过。189-trial joint selector将ETTm2切换为`h4m_p6_lr5e5`，仍为0/4 MSE和1/4 MAE leads；Weather切换为`h4m_seq640_p20`并由2/8提高到4/8。Global MSE/MAE/combined=`17/28,16/28,33/56`，legal selector、unrestricted single-profile upper bound与per-cell diagnostic oracle均为33/56，故H4M仍是`performance_partial_pass_gate_fail`并回到Step 6 strategy decision。
 
-并行TimeAlign ETTm2/Weather的8个official fixed-H reproduction jobs已完成artifact audit。ETTm2/Weather复现mean MSE/MAE分别为0.242889/0.302523和0.215800/0.244725，与paper three-run mean差异均低于0.26%；角色仅为native external baseline，不作matched mechanism attribution。H4N、selected-profile confirmation、其他baseline和3-seed仍未授权。
+并行TimeAlign ETTm2/Weather的8个official fixed-H reproduction jobs已完成artifact audit。ETTm2/Weather复现mean MSE/MAE分别为0.242889/0.302523和0.215800/0.244725，与paper three-run mean差异均低于0.26%；角色仅为native external baseline，不作matched mechanism attribution。H4O、selected-profile confirmation、其他baseline和3-seed仍未授权。
+
+H4M后用户单独授权H4N继续扩大Weather HPO。H4N不改变architecture/objective/scales/inference graph，冻结40个seed2021 profiles并与189个历史profiles零重复：围绕`L512/p16/lr2e-5` MAE/joint frontier与`L640/p20/lr5e-5` MSE frontier，覆盖context×LR、LR外边界、patch geometry、mode rank及少量encoder capacity。选择规则以Weather four-H MSE/MAE relative mean最小为primary，只有0.1% near-tie才优先lead cells；one profile仍共享four H。统一预算120 epochs/patience24，training test=0，40/40 manifest后完整test已授权。该dataset-specific tuning只影响Main I performance profile，不扩张method claim；H4O、extra seeds及architecture/objective redesign未授权。
 
 ### 8.2 Main Results I：Unified versus Horizon-Specific
 

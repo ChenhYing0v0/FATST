@@ -44,16 +44,16 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | H4M 24/24 formal test and 189-trial joint audit complete；TimeAlign 8/8 reproduction audited；effectiveness gate fail / rollback Step 6 |
+| `active_experiment_step` | H4N Weather-only 40-profile wide/high-impact matrix frozen；local prelaunch and remote smoke next |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
-| `local_protocol_patch_authorized` | true for H4M and TimeAlign ETTm2/Weather reproduction tooling |
-| `remote_training_authorized` | completed scope only: H4M 24 train/validation jobs + TimeAlign 8 fixed-H reproduction jobs；new training=false |
-| `test_tuned_hpo_authorized` | completed scope only: H4M one complete 24-checkpoint audit；new H4N/confirmation=false |
-| `formal_test_authorized` | completed scope only: H4M 96 cells + TimeAlign 8 native cells；Main II/other baselines/selected-profile confirmation/3-seed=false |
-| `next_action` | report H4M 33/56 gate failure and choose Step 6 branch：stop same-architecture HPO for Main I/II completion，or separately freeze and authorize a non-duplicative H4N contract |
-| `conditional_next` | 禁止automatic H4N、additional TimeAlign datasets/seeds、selected-profile confirmation或3-seed |
+| `local_protocol_patch_authorized` | true for H4N Weather-only config/checker/runner/artifact gate |
+| `remote_training_authorized` | H4N 40 Weather seed2021 train/validation jobs after full resource smoke |
+| `test_tuned_hpo_authorized` | H4N one complete 40-checkpoint audit after immutable manifest |
+| `formal_test_authorized` | H4N 160 standard cells after 40/40 training artifact gate；Main II/other baselines/selected-profile confirmation/3-seed=false |
+| `next_action` | focused commit/push，remote pull/preflight，40/40 resource smoke，然后启动three-GPU dynamic training queue |
+| `conditional_next` | 40/40 checkpoint manifest后直接完整formal test；禁止partial selection、automatic H4O、additional seeds或architecture/objective redesign |
 
 H4K train/validation与formal test均已完成，但terminal effectiveness gate失败。H4L只扩大ETTm2/Weather
 dataset-level HPO范围：48个profiles与117个历史profiles零重复，其中四项借鉴TimeAlign official encoder
@@ -64,6 +64,8 @@ manifest冻结后执行的一次完整formal test已48/48、192/192完成，chec
 2026-08-04用户进一步授权：先清理remote result root，再同时推进ETTm2/Weather高影响参数HPO和TimeAlign official reproduction。清理已删除7个resource-smoke目录与157个nonselected diagnostic NPZ，保留全部165个metrics/invariants/checkpoints/manifests/logs和8个selected NPZ；精确释放约36.51 GiB，quota由201G降至165G。H4M冻结24个历史effective-profile nonduplicates，主轴为ETTm2 `patch_num × learning_rate`和Weather `seq_len × patch_num / learning_rate / mode_rank`；TimeAlign冻结8个seed2021 fixed-H jobs并标记为`official-source model/config + FATST test-hygiene/artifact adapter`。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4m_parameter_impact_and_parallel_timealign_prelaunch_20260804.md`。
 
 2026-08-05 H4M formal test已24/24 checkpoints、96/96 standard cells完整结束，checkpoint hashes全部immutable。H1--H4M累计189 trials的冻结selector得到MSE/MAE/combined=`17/28,16/28,33/56`：ETTm2保持1/8，Weather提高到4/8；legal selector、unrestricted single-profile upper bound与per-cell diagnostic oracle均为33/56，因此40/56目标在当前search pool内不可达。TimeAlign ETTm2/Weather 8/8 official-native reproduction也通过artifact audit，数值与paper three-run mean非常接近，但仅作native external role。Failure attribution=`search_space_performance_shortfall`，rollback=Step 6；automatic H4N=false。Canonical result=`analysis/iscf_bsca_main_v1_hpo_20260731/h4m_test_result_and_joint_hpo_decision_20260805.md`。
+
+2026-08-05用户随后显式要求重点优化Weather并扩大超参数范围。H4N冻结40个Weather-only seed2021 profiles，按16个context×LR interpolation、8个LR wide boundary、8个patch geometry、5个rank与3个capacity profiles组成；与H1--H4M 189个历史effective profiles零重复。主目标改为Weather four-H MSE/MAE normalized relative mean最小，只有0.1% near-tie才使用lead cells，保持one profile shared by four H。训练统一120 epochs/patience24，training test=0；40/40 immutable manifest后一次完整160-cell formal test已授权。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4n_weather_wide_matrix_and_prelaunch_20260805.md`。H4O/extra seeds/architecture redesign=false。
 
 ## 2. Paper claims to be discharged
 
