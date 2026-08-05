@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 4 v0.1 architecture-and-objective complete pending author review；Section 3 v0.7 remains frozen；experiments=H4M + TimeAlign reproduction Step 8 remote execution active |
+| `current_11_step` | paper consolidation；writing=Section 4 v0.1 architecture-and-objective complete pending author review；Section 3 v0.7 remains frozen；experiments=H4M formal test and TimeAlign reproduction complete，Step 10 gate fail / rollback Step 6 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -17,7 +17,11 @@
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
-| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H4L evidence=15/28 MSE、16/28 MAE、31/56 combined，strong aggregate competitor但未达per-cell target |
+| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H4M evidence=17/28 MSE、16/28 MAE、33/56 combined，strong aggregate competitor但未达per-cell target |
+
+[H4M Complete Formal Test and Joint-HPO Decision, 2026-08-05] 24/24 checkpoints、96/96 standard-horizon rows、MSE/MAE与checkpoint immutability全部通过，无retrain、mutation、partial artifact或ABORT。合并H1--H4M共189 trials后，joint selector把ETTm2切换为`h4m_p6_lr5e5`但仍只有H720 MAE一个lead；Weather切换为`h4m_seq640_p20`并由2/8提高到4/8。Global MSE/MAE/combined从15/28、16/28、31/56提高到17/28、16/28、33/56；legal selector、unrestricted single-profile upper bound与per-cell oracle均为33/56，三项20/28、20/28、40/56 gates仍失败。Seven-dataset macro MSE/MAE相对H4L改善0.0906%/0.0694%，相对TimeAlign published macro低2.5387%/0.6225%，但仍是single-seed test-tuned context comparison。Failure attribution=`search_space_performance_shortfall`，rollback=Step 6，automatic H4N=false。Canonical report=`analysis/iscf_bsca_main_v1_hpo_20260731/h4m_test_result_and_joint_hpo_decision_20260805.md`。Decision=`H4M_complete_Weather_gain_global_33_of_56_gate_fail_return_step6_no_automatic_H4N`。
+
+[TimeAlign ETTm2/Weather Official-Native Reproduction, 2026-08-05] 8/8 fixed-H jobs、8 unique checkpoint hashes和全部metrics/predictions/provenance artifacts通过审计。执行采用official model/config、official-last checkpoint、10 epochs、无early stopping，并通过FATST adapter把test访问限制为训练结束后一次。ETTm2 reproduced mean MSE/MAE=`0.242889/0.302523`，相对paper three-run mean差`+0.0573%/+0.1733%`；Weather=`0.215800/0.244725`，差`+0.2557%/+0.0921%`。结果可作artifact-complete single-seed native external baseline，不能冒充matched attribution；license仍`unresolved`。Canonical report=`analysis/iscf_bsca_main_v1_hpo_20260731/timealign_official_reproduction_20260804/timealign_reproduction_result_20260805.md`。Decision=`artifact_complete_close_single_seed_official_native_reproduction`。
 
 [Section 4 Method Initial Draft v0.1, 2026-08-05] Canonical draft=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`，status=`initial_draft_for_author_review`。按frozen forward构建六段Method chain：architecture overview、history representation/future-step coordinates、scope-indexed forecast field、target-conditioned scope allocation、BSCA、structural properties/complexity。Figure 4已生成183×112 mm SVG/PDF/PNG/TIFF initial bundle并集成正文，Panel b突出single field而非multiple models，Panel d明确train-only BSCA。Objective公式与代码一致：dense-prefix raw-scale L1、uniform direct slice skill、前25% progress ramp到0.1的normalized `KL(uniform || allocation)`；CHPC作为construction property证明。Introduction/Section 3未改，未新增method implementation、remote training或formal test。Decision=`section4_v0_1_and_method_figure4_initial_draft_pending_author_review`。
 

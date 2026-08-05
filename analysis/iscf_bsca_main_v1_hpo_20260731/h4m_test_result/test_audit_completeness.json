@@ -1,0 +1,11 @@
+{
+  "protocol_id": "ISCF-BSCA-MAIN-v1-HPO-TARGETED-H4M-TEST-AUDIT",
+  "candidate_version": "ISCF-BSCA-MAIN-v1-targeted-h4m-test-informed-20260804",
+  "manifest_sha256": "bd78782e70a911e8c5b118c67a4441cf512d7012b94fdda8a19cf14507e8adb3",
+  "expected_trials": 24,
+  "complete_trials": 24,
+  "expected_standard_horizon_cells": 96,
+  "complete_standard_horizon_cells": 96,
+  "errors": [],
+  "complete": true
+}

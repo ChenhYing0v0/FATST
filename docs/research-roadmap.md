@@ -6,6 +6,12 @@ Current writing cursor=`Section 4 architecture-and-objective complete / author r
 
 Method Figure 4 initial draft已生成，contract与QA=`analysis/iscf_bsca_method_figure_20260805/figure_contract_and_qa.md`，stable assets=`paper-figures/figure_iscf_bsca_method_overview.*`。Figure是non-empirical architecture schematic：panel a对比single-scope，panel b为ISCF hero path，panel c解释allocation与nested prefixes，panel d隔离train-only BSCA。当前下一步为author逐小节与视觉复审，不修改Introduction/Section 3，不扩张method implementation、remote training或formal test授权。Decision=`section4_v0_1_and_method_figure4_initial_draft_pending_author_review`。
 
+## H4M Complete Test + TimeAlign Reproduction (2026-08-05)
+
+Current experiment cursor=`Step 10 effectiveness gate fail / rollback Step 6 strategy decision`。H4M 24/24 frozen checkpoints与96/96 standard-horizon formal-test rows完整，checkpoint immutability、numeric health、provenance与atomic publication全部通过。189-trial joint selector选择ETTm2 `h4m_p6_lr5e5`与Weather `h4m_seq640_p20`；ETTm2仍只有H720 MAE一个lead，Weather由2/8提升到4/8。Global MSE/MAE/combined=`17/28,16/28,33/56`，相对H4L增加2个MSE leads，但`20/28,20/28,40/56` gates仍失败；legal selector、unrestricted single-profile upper bound和per-cell diagnostic oracle同为33/56。Failure attribution=`search_space_performance_shortfall`，不是architecture rejection或numeric pathology。Canonical result=`analysis/iscf_bsca_main_v1_hpo_20260731/h4m_test_result_and_joint_hpo_decision_20260805.md`。
+
+TimeAlign ETTm2/Weather 8/8 official-native fixed-H jobs也已完成artifact audit。ETTm2 reproduced mean MSE/MAE=`0.242889/0.302523`，Weather=`0.215800/0.244725`，相对paper three-run means的四项偏差均小于0.26%。其角色固定为single-seed native external baseline，不进入matched mechanism attribution；license仍`unresolved`。H4N、selected-profile confirmation、additional baseline training与3-seed未自动授权。Decision=`H4M_gate_fail_TimeAlign_native_reproduction_complete_return_step6_no_automatic_extension`。
+
 ## H4M High-Impact HPO + TimeAlign Reproduction (2026-08-04)
 
 Current cursor=`Step 8 remote execution active`。基于H4L同阶段可比profiles，ETTm2影响最大的是`patch_num`、LR、context与rank，Weather影响最大的是`seq_len × patch_num`、LR、patch与rank；width、dropout与weight decay不再盲目扩张。H4M冻结24个与历史165 profiles均不重复的seed2021 jobs，architecture/objective/inference graph不变，一个dataset-level profile仍共享四H；ETTm2 budget=60/12，Weather因H4L best epoch达到47而统一扩展到90/18。24/24 manifest后complete four-H test已授权，automatic H4N=false。
