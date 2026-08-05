@@ -1,0 +1,28 @@
+{
+  "status": "local_design_draft_for_author_review",
+  "backend": "Python/matplotlib",
+  "method_change": false,
+  "main_figure_replacement": false,
+  "empirical_data_used": false,
+  "history_role": "deterministic schematic signals",
+  "coordinate_role": "analytic DCT curves and exact region means",
+  "region_count": 5,
+  "selected_region": 2,
+  "color_semantics": {
+    "negative": "#8196C5",
+    "zero": "#F7F7F3",
+    "positive": "#D89B78"
+  },
+  "combined_outputs": {
+    "svg": "analysis/iscf_bsca_framed_coordinate_regions_20260805/figure_iscf_unified_framed_fields_v1.svg",
+    "pdf": "analysis/iscf_bsca_framed_coordinate_regions_20260805/figure_iscf_unified_framed_fields_v1.pdf",
+    "png": "analysis/iscf_bsca_framed_coordinate_regions_20260805/figure_iscf_unified_framed_fields_v1.png",
+    "tiff": "analysis/iscf_bsca_framed_coordinate_regions_20260805/figure_iscf_unified_framed_fields_v1.tiff"
+  },
+  "coordinate_outputs": {
+    "svg": "analysis/iscf_bsca_framed_coordinate_regions_20260805/figure_iscf_framed_coordinate_region_v1.svg",
+    "pdf": "analysis/iscf_bsca_framed_coordinate_regions_20260805/figure_iscf_framed_coordinate_region_v1.pdf",
+    "png": "analysis/iscf_bsca_framed_coordinate_regions_20260805/figure_iscf_framed_coordinate_region_v1.png",
+    "tiff": "analysis/iscf_bsca_framed_coordinate_regions_20260805/figure_iscf_framed_coordinate_region_v1.tiff"
+  }
+}
