@@ -1,0 +1,40 @@
+{
+  "figure_id": "figure_iscf_architecture_concept_v2",
+  "status": "concept_draft_for_information_hierarchy_review",
+  "backend": "Python/matplotlib",
+  "final_width_mm": 183.0,
+  "final_height_mm": 116.0,
+  "data_role": "architecture schematic",
+  "empirical_data_used": false,
+  "manuscript_replacement": false,
+  "named_module_boxes": [
+    "Encoder",
+    "Allocation MLP"
+  ],
+  "visual_objects": [
+    "history curves",
+    "history-state vector",
+    "four-channel future-coordinate curves",
+    "scope matrices",
+    "segmented region descriptors",
+    "region-representation vectors",
+    "step-specific synthesis tensor",
+    "scope-wise forecast curves",
+    "target-wise condition tensor",
+    "scope-probability field and vector",
+    "weighted contraction",
+    "final trajectory"
+  ],
+  "claim_boundary": [
+    "explains ISCF architecture only",
+    "omits single-scope comparison and BSCA",
+    "uses schematic probabilities rather than learned values",
+    "does not establish effectiveness or specialization"
+  ],
+  "outputs": {
+    "svg": "analysis/iscf_bsca_method_figure_redesign_20260805/figure_iscf_architecture_concept_v2.svg",
+    "pdf": "analysis/iscf_bsca_method_figure_redesign_20260805/figure_iscf_architecture_concept_v2.pdf",
+    "png": "analysis/iscf_bsca_method_figure_redesign_20260805/figure_iscf_architecture_concept_v2.png",
+    "tiff": "analysis/iscf_bsca_method_figure_redesign_20260805/figure_iscf_architecture_concept_v2.tiff"
+  }
+}
