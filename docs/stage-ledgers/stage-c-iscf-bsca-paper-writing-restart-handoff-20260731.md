@@ -17,15 +17,17 @@
 2. 本handoff；
 3. `docs/paper-drafts/iscf-bsca-introduction-initial-draft.md`；
 4. `docs/paper-drafts/iscf-bsca-problem-formulation-initial-draft.md`；
-5. `docs/iscf-bsca-paper-architecture.md`；
-6. `analysis/iscf_bsca_intro_evidence_full_search_20260730/result_selection_and_figure_report.md`；
-7. `analysis/iscf_bsca_intro_evidence_full_search_20260730/design_and_figure_contract.md`；
-8. `analysis/iscf_bsca_intro_concept_figure_20260730/figure_contract_and_qa.md`；
-9. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_bsca_v1_confirmation_step9_10_20260722/step9_10_three_seed_result_and_paper_handoff.md`；
-10. `docs/code-explanation/stage-c-iscf-bsca-v1.md`；
-11. `docs/paper-mainline.md`；
-12. `docs/research-roadmap.md`；
-13. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`。
+5. `docs/paper-drafts/iscf-bsca-method-initial-draft.md`；
+6. `docs/iscf-bsca-paper-architecture.md`；
+7. `analysis/iscf_bsca_intro_evidence_full_search_20260730/result_selection_and_figure_report.md`；
+8. `analysis/iscf_bsca_intro_evidence_full_search_20260730/design_and_figure_contract.md`；
+9. `analysis/iscf_bsca_intro_concept_figure_20260730/figure_contract_and_qa.md`；
+10. `analysis/iscf_bsca_method_figure_20260805/figure_contract_and_qa.md`；
+11. `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_bsca_v1_confirmation_step9_10_20260722/step9_10_three_seed_result_and_paper_handoff.md`；
+12. `docs/code-explanation/stage-c-iscf-bsca-v1.md`；
+13. `docs/paper-mainline.md`；
+14. `docs/research-roadmap.md`；
+15. `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md`。
 
 只有在下一任务确实需要追溯早期实验时，才按上述文件中的artifact links继续读取
 历史analysis。不要从旧D22或旧SIFF路线重新开始研究。
@@ -37,12 +39,12 @@
 | `project` | `R_2026_FATST` |
 | `stage` | `StageC-UVHF paper consolidation` |
 | `handoff_date` | `2026-07-31` |
-| `last_updated` | `2026-08-04` |
+| `last_updated` | `2026-08-05` |
 | `source_commit_before_handoff` | `8e3eb99` |
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | manuscript writing and paper-facing evidence consolidation |
-| `active_section` | Section 3 v0.7 temporarily frozen；Section 4 Method pending author direction |
+| `active_section` | Section 4 v0.1 architecture-and-objective complete pending author review；Section 3 v0.7 remains temporarily frozen |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `section3_status` | `v0.7-author-risk-definition-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
@@ -50,7 +52,7 @@
 | `new_remote_training_from_writing_thread` | false |
 | `new_formal_test_from_writing_thread` | false |
 | `parallel_experiment_authority` | use experiment handoff and current mainline；this writing handoff does not expand or revoke it |
-| `next_action` | await author direction；when requested, design Method Figure 4 and draft Section 4 in computation-flow order |
+| `next_action` | author review of Section 4 v0.1 and Method Figure 4；revise subsection logic, equations and visual hierarchy without changing the frozen method |
 | `conditional_next` | align Method and later result claims with the parallel paper-experiments workstream |
 
 当前目标是把已冻结模型与已有证据组织成连贯论文，不是继续architecture search。
@@ -163,10 +165,18 @@ P6当前写为：
 - required disclosure：five-scale winners、10/10 qualified crossings、
   `8.112%` descriptive headroom不是learned out-of-sample gain。
 
-### Planned Figure 4: Method overview
+### Figure 4: Method overview initial draft
 
-Figure 4尚未创建。它应放在Method开篇，而不是作为Introduction第二张图。冻结的
-visual contract为：
+Figure 4已按冻结visual contract生成initial draft，放在Method开篇而不是
+Introduction。Canonical source与QA：
+
+`analysis/iscf_bsca_method_figure_20260805/figure_contract_and_qa.md`
+
+Stable manuscript assets：
+
+`paper-figures/figure_iscf_bsca_method_overview.{svg,pdf,png,tiff}`
+
+当前panels为：
 
 1. single-scope forecasting；
 2. independent history projections and multiple sharing scopes；
@@ -174,7 +184,9 @@ visual contract为：
 4. weighted contraction得到`forecast:[B,T,C]`；
 5. BSCA以train-only虚线路径表示，inference graph不增加module。
 
-在Figure 4生成并冻结编号前，Introduction P5不加入空forward reference。
+Figure 4当前状态=`initial_draft_for_author_review`。它只解释architecture，不报告
+learned allocation或method effectiveness；Introduction P5仍不加入未经author
+确认的forward reference。
 
 ## 5. Method and evidence status
 
@@ -231,14 +243,19 @@ Figures 2--3 integration及captions。原naive-unified accuracy与Design Require
 subsections不进入当前manuscript。后续默认不再修改Section 3；只有Section 4或
 paper-facing evidence产生明确矛盾且用户显式批准时才解冻。
 
-### Current next: Section 4 pending author direction
+### Current next: Section 4 author review
 
-用户下一步明确授权后：
+Section 4 v0.1已完成：
 
-1. 使用`nature-figure`设计并生成Method Figure 4；
-2. 按真实forward tensor flow起草Method；
-3. 与并行paper-experiments workstream对齐main results、with/without ablations与
-   decoder transfer的已冻结protocol和返回结果。
+1. canonical draft=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`；
+2. subsection chain=`overview → history/coordinate → scope field → allocation → BSCA → properties/complexity`；
+3. Figure 4与caption已集成；
+4. field/allocation shapes、scope-region state、step-specific synthesis、dense-prefix
+   BSCA objective、CHPC proof与complexity公式已按frozen code audit完成。
+
+下一步是author逐小节复审和主图视觉调整。与main results、with/without ablations及
+decoder transfer相关的effectiveness wording继续等待并行paper-experiments artifacts，
+不得在Method中预先宣告成立。
 
 ## 7. Authorization and safety boundaries
 
@@ -274,15 +291,17 @@ paper-facing evidence产生明确矛盾且用户显式批准时才解冻。
 1. docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md
 2. docs/paper-drafts/iscf-bsca-introduction-initial-draft.md
 3. docs/paper-drafts/iscf-bsca-problem-formulation-initial-draft.md
-4. docs/iscf-bsca-paper-architecture.md
-5. analysis/iscf_bsca_intro_evidence_full_search_20260730/result_selection_and_figure_report.md
-6. analysis/iscf_bsca_intro_evidence_full_search_20260730/design_and_figure_contract.md
-7. analysis/iscf_bsca_intro_concept_figure_20260730/figure_contract_and_qa.md
-8. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_bsca_v1_confirmation_step9_10_20260722/step9_10_three_seed_result_and_paper_handoff.md
-9. docs/code-explanation/stage-c-iscf-bsca-v1.md
-10. docs/paper-mainline.md
-11. docs/research-roadmap.md
-12. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
+4. docs/paper-drafts/iscf-bsca-method-initial-draft.md
+5. docs/iscf-bsca-paper-architecture.md
+6. analysis/iscf_bsca_intro_evidence_full_search_20260730/result_selection_and_figure_report.md
+7. analysis/iscf_bsca_intro_evidence_full_search_20260730/design_and_figure_contract.md
+8. analysis/iscf_bsca_intro_concept_figure_20260730/figure_contract_and_qa.md
+9. analysis/iscf_bsca_method_figure_20260805/figure_contract_and_qa.md
+10. analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_bsca_v1_confirmation_step9_10_20260722/step9_10_three_seed_result_and_paper_handoff.md
+11. docs/code-explanation/stage-c-iscf-bsca-v1.md
+12. docs/paper-mainline.md
+13. docs/research-roadmap.md
+14. docs/stage-ledgers/stage-c-unified-forecasting-redesign.md
 
 当前权威状态：
 - exact ISCF-BSCA-v1 已冻结为 paper-core candidate；
@@ -290,10 +309,11 @@ paper-facing evidence产生明确矛盾且用户显式批准时才解冻。
 - Section 3 v0.7-author-risk-definition-refinement 已由用户确认，可作为暂时固定的可用版本；
 - Figure 1 已批准且只作 constructed conceptual illustration；
 - Figures 2--3 已批准用于 Section 3，均为 validation-only illustrative evidence；
-- Method Figure 4 仅完成设计规划，尚未生成；
+- Section 4 v0.1 architecture-and-objective complete，当前等待用户逐小节复审；
+- Method Figure 4 initial draft 已生成并集成到Section 4，当前等待视觉复审；
 - 当前没有 active method search；本writing thread不新增implementation、remote training或formal test授权，并行实验状态以experiment handoff和current mainline为准。
 
-请不要重新讨论或改写Introduction与Section 3，除非后续章节产生明确矛盾并先向我说明、获得解冻同意。下一写作任务等待用户明确指定；若进入Section 4，则先冻结Method Figure 4 contract，再按真实forward tensor flow起草Method，并保持training-only BSCA与inference-time ISCF路径边界。
+请不要重新讨论或改写Introduction与Section 3，除非后续章节产生明确矛盾并先向我说明、获得解冻同意。当前写作任务是复审和完善Section 4 v0.1与Method Figure 4；保持training-only BSCA与inference-time ISCF路径边界，不因文字或视觉调整修改frozen method。
 
 请使用专业时序预测研究员和高水平期刊作者的标准，严格区分problem、evidence、method和claim boundary。P6中“统一模型优于horizon-specific模型、组件有效、decoder可迁移”是待后续main/ablation/transfer tables兑现的provisional paper-facing claim，不得当作当前已完成证据。
 

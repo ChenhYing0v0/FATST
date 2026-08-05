@@ -1,0 +1,35 @@
+{
+  "figure_id": "figure_iscf_bsca_method_overview",
+  "figure_number": 4,
+  "status": "initial_draft_for_author_review",
+  "backend": "Python/matplotlib",
+  "final_width_mm": 183.0,
+  "final_height_mm": 112.0,
+  "data_role": "architecture schematic",
+  "empirical_data_used": false,
+  "test_accessed": false,
+  "panels": {
+    "a": "single-scope forecasting with one fixed sharing extent",
+    "b": "ISCF scope-indexed forecast field construction",
+    "c": "target-conditioned scope allocation and nested prefixes",
+    "d": "BSCA training-only objective and unchanged inference path"
+  },
+  "claim_boundary": [
+    "explains the frozen architecture only",
+    "does not report learned allocation behavior",
+    "does not establish component effectiveness",
+    "does not establish transferability or main-table superiority"
+  ],
+  "outputs": {
+    "svg": "analysis/iscf_bsca_method_figure_20260805/figure_iscf_bsca_method_overview.svg",
+    "pdf": "analysis/iscf_bsca_method_figure_20260805/figure_iscf_bsca_method_overview.pdf",
+    "png": "analysis/iscf_bsca_method_figure_20260805/figure_iscf_bsca_method_overview.png",
+    "tiff": "analysis/iscf_bsca_method_figure_20260805/figure_iscf_bsca_method_overview.tiff"
+  },
+  "manuscript_outputs": {
+    "svg": "paper-figures/figure_iscf_bsca_method_overview.svg",
+    "pdf": "paper-figures/figure_iscf_bsca_method_overview.pdf",
+    "png": "paper-figures/figure_iscf_bsca_method_overview.png",
+    "tiff": "paper-figures/figure_iscf_bsca_method_overview.tiff"
+  }
+}

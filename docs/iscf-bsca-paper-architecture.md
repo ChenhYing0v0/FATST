@@ -5,16 +5,16 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.48` |
-| `last_updated` | `2026-08-04` |
+| `version` | `v0.49` |
+| `last_updated` | `2026-08-05` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 3 v0.7 temporarily frozen usable；next=Section 4 Method pending author direction；experiments=H4M 24-job + TimeAlign 8-job reproduction remote active；Method Figure 4 planned |
+| `current_review_cursor` | writing=Section 4 v0.1 architecture-and-objective complete pending author review；Section 3 v0.7 remains temporarily frozen；experiments=H4M 24-job + TimeAlign 8-job reproduction remote active；Method Figure 4 initial draft generated |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.7正文 + approved Figures 2--3 |
-| `provisional_content` | planned Method Figure 4；Section 4 and remaining sections |
+| `provisional_content` | Section 4 v0.1 + Method Figure 4 initial draft；remaining sections |
 | `authorization_source` | H4M与TimeAlign ETTm2/Weather reproduction由2026-08-04用户指令和各自machine configs授权；本architecture文档不扩展到H4N、other baselines、confirmation或3-seed |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
@@ -679,14 +679,13 @@ empirical evidence。
     temporal contiguity写成收益来源。multiple scales、multiple predictors与
     MoE原语已有prior art；novelty只能落在完整scope-indexed output-field链条。
 
-#### Planned Method Figure 4：single-scope forecasting versus ISCF-BSCA
+#### Method Figure 4 initial draft：single-scope forecasting versus ISCF-BSCA
 
-需要该方法总览图，但不作为Introduction中的第二张嵌入图。推荐放在Method
-开篇，沿用当前编号规划：Figure 1为Introduction concept；Figures 2--3为Section
-3 real-data evidence；Figure 4为method overview。这样既直观说明创新，又避免
-Introduction再次膨胀。
+该方法总览图已生成initial draft并放在Method开篇，不作为Introduction中的第二张
+嵌入图。编号保持：Figure 1为Introduction concept；Figures 2--3为Section 3
+real-data evidence；Figure 4为method overview。
 
-Figure 4建议包含：
+Figure 4当前包含：
 
 1. **Panel a: single-scope forecasting。** 一个history representation、一个固定
    sharing extent、一个forecast field slice，全部future regions沿用同一种
@@ -701,8 +700,10 @@ Figure 4建议包含：
    scope supervision与allocation balancing；明确inference时移除，避免被误读为
    额外推理module。
 
-在Figure 4完成并冻结编号前，P5不加入未解析的forward reference。图完成后可在
-P5的single-scope对照句后加入简短`(Fig. 4)`，不再重复解释tensor细节。
+Figure source、manifest与QA位于`analysis/iscf_bsca_method_figure_20260805/`，
+stable manuscript assets位于`paper-figures/figure_iscf_bsca_method_overview.*`。
+在author确认Figure 4 visual hierarchy前，Introduction P5不加入forward reference；
+确认后可在single-scope对照句后加入简短`(Fig. 4)`，不重复tensor细节。
 
 ### 4.6 Paragraph 6：contributions
 
@@ -1214,35 +1215,31 @@ hypothesis，必须由后续ablation验证。stable joint learning同样只作�
 
 ## 7. Method
 
+Canonical manuscript draft：
+
+`docs/paper-drafts/iscf-bsca-method-initial-draft.md`
+
+当前状态=`v0.1-architecture-and-objective-complete`，等待author review。Figure 4已按冻结contract生成initial draft，source与QA位于`analysis/iscf_bsca_method_figure_20260805/`，stable manuscript assets位于`paper-figures/figure_iscf_bsca_method_overview.*`。该图只解释architecture，不承担effectiveness evidence。
+
 ### 7.1 Architecture Overview
 
-先给出完整 tensor flow，再解释直觉。
+先以Figure 4给出完整tensor flow：shared history representation → independent scope-specific projections → scope-region states → shared step-specific synthesis → `scope_field:[B,C,T,S]` → target-conditioned allocation → weighted contraction → `forecast:[B,T,C]`。BSCA以独立train-only虚线路径呈现。
 
-### 7.2 Horizon-Agnostic Future-Step Generation and CHPC
+### 7.2 History Representation and Future-Step Coordinates
 
-对每个 future time step 与变量，模型定义：
-
-$$
-\hat y_{b,\tau,c}
-=
-g_\theta(\mathbf X_b,\tau,c),
-$$
-
-其中 requested horizon 不进入 $g_\theta$ 的预测语义。一个 $H$-step forecast
-直接由 $\tau=1,\ldots,H$ 的step-indexed predictions组成；这些 future steps
-可以批量并行计算，但架构定义不依赖预先固定的 requested horizon。
-
-### 7.3 History Encoding
+History encoder接口与fixed DCT-style future-step coordinate定义为：
 
 $$
 \mathbf X:[B,L,C]
 \rightarrow
-\mathbf Z:[B,C,P,D]
+\mathbf Z:[B,C,P,D_e]
 \rightarrow
-\mathbf R:[B,C,PD].
+\mathbf R:[B,C,PD_e],
 $$
 
-### 7.4 Scope-Indexed Forecast Field
+其中future-step coordinate只编码target identity，不使用future observation或requested horizon。
+
+### 7.3 Scope-Indexed Forecast Field
 
 对每个$s\in\mathcal S$，独立history projection产生scope-specific modes；
 region descriptors据此构造scope-region latent states，共享的
@@ -1257,7 +1254,7 @@ $$
 固定$s$只是该field的一个scope-conditioned slice。scope size只规定
 future-step latent-state sharing extent，不是requested horizon。
 
-### 7.5 Target-Conditioned Scope Allocation
+### 7.4 Target-Conditioned Scope Allocation
 
 allocation：
 
@@ -1277,21 +1274,16 @@ $$
 \mathcal F_{b,c,\tau,s}.
 $$
 
-### 7.6 Balanced Scope Co-Adaptation
+### 7.5 Balanced Scope Co-Adaptation
 
 $$
-\mathcal L
+\mathcal L_{\mathrm{BSCA}}
 =
-\mathcal L_{\mathrm{forecast}}
+\mathcal L_{\mathrm{fuse}}
 +
-\mathcal L_{\mathrm{equal\text{-}skill}}
+\lambda_{\mathrm{skill}}\mathcal L_{\mathrm{skill}}
 +
-\lambda(u)
-\frac{
-D_{\mathrm{KL}}(q\Vert \pi)
-}{
-\log S
-}.
+\lambda_{\mathrm{anchor}}(u)\mathcal L_{\mathrm{anchor}}.
 $$
 
 解释边界：
@@ -1303,7 +1295,7 @@ $$
 - 当前证据支持 balanced co-adaptation，不支持更强的 universal conditional
   specialization claim。
 
-### 7.7 Complexity and Structural Properties
+### 7.6 Structural Properties and Complexity
 
 报告：
 
@@ -1312,6 +1304,8 @@ $$
 - one-model versus multi-model system cost；
 - CHPC；
 - BSCA train-only property。
+
+CHPC proof在本节作为construction property给出：field与allocation只依赖$\mathbf X_b$、$\tau$与$c$，不依赖requested horizon；$H$只确定返回的indexed prefix。Method同时给出exact decoder parameter formula、scope-region state与synthesis complexity以及`O(BCTS)`field/allocation materialization memory；实际latency与accuracy留给Section 5。
 
 ## 8. Experiments
 
@@ -1678,3 +1672,4 @@ Coverage boundary：
 | 2026-08-04 | Section 3 v0.6 terminology and flow refinement | 3.1明确主语为varied-horizon forecaster；3.2以trajectory-level与aggregate evidence合并收束；3.3将经验量$R_{o,b,s}$统一为region-wise $\operatorname{MSE}_{o,b,s}$，Figure 3a同步改为excess MSE | author review；统计值、figure布局、claim boundary、Introduction与experiment cursor不变 |
 | 2026-08-04 | Section 3 v0.7 author risk-definition refinement | 保留3.1 varied-horizon subject；3.2改为DLinear observation→horizon-specific structural limitation；3.3撤销region-wise MSE命名并正式定义future-region prediction risk $R_{o,b,s}$ | author review；Figure 3a同步为excess prediction risk；数据、统计值、claim boundary、Introduction与experiment cursor不变 |
 | 2026-08-04 | Section 3 v0.7 temporary freeze | 用户确认当前版本基本满意并暂时固定为论文可用Section 3 | body、terminology、equations、Figures 2--3 integration与captions冻结；后续明确矛盾 + author approval才解冻；writing cursor转向Section 4 pending direction |
+| 2026-08-05 | Section 4 v0.1 and Method Figure 4 | 六段Method computation flow、exact tensor/coordinate/scope/allocation/BSCA/complexity公式与四panel Figure 4 initial bundle完成 | author review；Introduction/Section 3与frozen implementation不变；main/ablation/transfer claims仍由Section 5 tables决定 |

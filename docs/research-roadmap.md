@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## Section 4 Method Initial Draft v0.1 (2026-08-05)
+
+Current writing cursor=`Section 4 architecture-and-objective complete / author review pending`。Canonical draft=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`。Method按真实computation flow划分为architecture overview、history representation/future-step coordinates、scope-indexed forecast field、target-conditioned scope allocation、BSCA和structural properties/complexity。Scope-region state、shared step-specific synthesis、allocation MLP、weighted contraction、CHPC proof、dense-prefix BSCA objective及decoder parameter/complexity公式均已与frozen implementation核对。
+
+Method Figure 4 initial draft已生成，contract与QA=`analysis/iscf_bsca_method_figure_20260805/figure_contract_and_qa.md`，stable assets=`paper-figures/figure_iscf_bsca_method_overview.*`。Figure是non-empirical architecture schematic：panel a对比single-scope，panel b为ISCF hero path，panel c解释allocation与nested prefixes，panel d隔离train-only BSCA。当前下一步为author逐小节与视觉复审，不修改Introduction/Section 3，不扩张method implementation、remote training或formal test授权。Decision=`section4_v0_1_and_method_figure4_initial_draft_pending_author_review`。
+
 ## H4M High-Impact HPO + TimeAlign Reproduction (2026-08-04)
 
 Current cursor=`Step 8 remote execution active`。基于H4L同阶段可比profiles，ETTm2影响最大的是`patch_num`、LR、context与rank，Weather影响最大的是`seq_len × patch_num`、LR、patch与rank；width、dropout与weight decay不再盲目扩张。H4M冻结24个与历史165 profiles均不重复的seed2021 jobs，architecture/objective/inference graph不变，一个dataset-level profile仍共享四H；ETTm2 budget=60/12，Weather因H4L best epoch达到47而统一扩展到90/18。24/24 manifest后complete four-H test已授权，automatic H4N=false。
@@ -832,14 +838,14 @@ Step4–6。candidate=`SC-ISCF-FRSC-v0`，narrative conditional pass；下一步
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | paper consolidation；Introduction frozen；Section 3 integration |
-| `active_question` | 如何把CHPC与sharing-demand两项问题证据组织成严谨的Problem Formulation and Empirical Motivation |
-| `active_candidates` | exact `ISCF-BSCA-v1` frozen paper core；Figures 1--3 approved；Method Figure 4 planned |
+| `current_step` | paper consolidation；Introduction与Section 3 frozen；Section 4 v0.1 author review |
+| `active_question` | 如何进一步优化Method的subsection logic、公式解释与Figure 4 visual hierarchy，同时保持frozen implementation和claim boundary |
+| `active_candidates` | exact `ISCF-BSCA-v1` frozen ablation anchor；Figures 1--3 approved；Section 4 v0.1与Method Figure 4 initial draft pending author review |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
-| `method_implementation` | none authorized；remote training/formal test false |
-| `rollback_point` | Section 3 evidence不足则收窄claim；不得通过重启closed method search修补叙事 |
+| `method_implementation` | writing thread无新implementation、remote training或formal test授权；并行实验按experiment handoff执行 |
+| `rollback_point` | Method出现实现矛盾则回到frozen code contract修正文图；不得通过重启closed method search修补叙事 |
 
 ## ISCF-FRSC Step9 Validation Decision
 

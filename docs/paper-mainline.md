@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 3 v0.7 temporarily frozen usable；experiments=H4M + TimeAlign reproduction Step 8 remote execution active |
+| `current_11_step` | paper consolidation；writing=Section 4 v0.1 architecture-and-objective complete pending author review；Section 3 v0.7 remains frozen；experiments=H4M + TimeAlign reproduction Step 8 remote execution active |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,6 +18,8 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H4L evidence=15/28 MSE、16/28 MAE、31/56 combined，strong aggregate competitor但未达per-cell target |
+
+[Section 4 Method Initial Draft v0.1, 2026-08-05] Canonical draft=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`，status=`initial_draft_for_author_review`。按frozen forward构建六段Method chain：architecture overview、history representation/future-step coordinates、scope-indexed forecast field、target-conditioned scope allocation、BSCA、structural properties/complexity。Figure 4已生成183×112 mm SVG/PDF/PNG/TIFF initial bundle并集成正文，Panel b突出single field而非multiple models，Panel d明确train-only BSCA。Objective公式与代码一致：dense-prefix raw-scale L1、uniform direct slice skill、前25% progress ramp到0.1的normalized `KL(uniform || allocation)`；CHPC作为construction property证明。Introduction/Section 3未改，未新增method implementation、remote training或formal test。Decision=`section4_v0_1_and_method_figure4_initial_draft_pending_author_review`。
 
 [H4M and TimeAlign Parallel Launch, 2026-08-04] Exact experiment commit=`24eaac1`；H4M 24/24与TimeAlign 8/8 resource smokes最终通过且test均为0。Full runs于21:34:39启动：H4M在GPU0--1运行24-job train/validation dynamic queue（PID393804），TimeAlign在GPU2运行8-job official fixed-H serial queue并于每个checkpoint完成后一次test（PID393805）。初始三项均进入epoch1，observed memory约1.6--1.7 GiB。TimeAlign smoke期间两个pre-training adapter guards已修复，未产生formal results。Canonical launch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4m_and_timealign_parallel_launch_20260804.md`。Decision=`H4M_24_and_TimeAlign_8_remote_active`。
 
