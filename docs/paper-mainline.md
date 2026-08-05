@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 4 v0.1 architecture-and-objective complete pending author review；Section 3 v0.7 remains frozen；experiments=H4N Weather-only 40-profile HPO prelaunch |
+| `current_11_step` | paper consolidation；writing=Section 4 v0.1 architecture-and-objective complete pending author review；Section 3 v0.7 remains frozen；experiments=H4N Weather-only 40-profile train/validation active |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,6 +18,8 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H4M evidence=17/28 MSE、16/28 MAE、33/56 combined，strong aggregate competitor但未达per-cell target |
+
+[H4N Weather-only Remote Launch, 2026-08-05] Exact commit=`ba17fc9`；remote checker与40/40 one-epoch/two-batch smoke通过，产出40 checkpoints/metrics/logs，test=0且无failure pattern。Full train/validation queue于10:47:16在GPU0--2启动，PID=`1397808`，前三个jobs均进入epoch2；显存约1.6--1.7 GiB/GPU，预计15--26 wall-hours。40/40 immutable manifest gate前不访问official test。Canonical launch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4n_weather_remote_launch_20260805.md`。Decision=`H4N_40_Weather_jobs_active_test_zero`。
 
 [H4N Weather-only Wide HPO Prelaunch, 2026-08-05] 用户要求重点扩大Weather调参范围并尽量达到该dataset最优性能。对H1--H4M 189 trials/56 Weather profiles的审计确认`L640/p20/lr5e-5`为MSE frontier（0.214752），`L512/p16/lr2e-5`为MAE/joint frontier（0.246084）；剩余缺口集中于H96--H336 MAE。H4N冻结40个历史零重复profiles：context×LR 16、LR wide boundary 8、patch geometry 8、rank 5、capacity 3；one dataset-level profile共享four H，primary selection先最小化four-H MSE/MAE relative mean，只有0.1% near-tie才按lead cells排序。Weather统一120 epochs/patience24，training test=0；40/40 manifest后完整formal test已授权。H4O/extra seeds/architecture redesign=false。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4n_weather_wide_matrix_and_prelaunch_20260805.md`。Decision=`H4N_Weather_40_profile_matrix_frozen_remote_launch_after_local_gate`。
 

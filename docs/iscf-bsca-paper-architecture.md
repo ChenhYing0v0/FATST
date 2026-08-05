@@ -8,7 +8,7 @@
 | `version` | `v0.50` |
 | `last_updated` | `2026-08-05` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 4 v0.1 architecture-and-objective complete pending author review；Section 3 v0.7 remains temporarily frozen；experiments=H4N Weather-only 40-profile HPO prelaunch；Method Figure 4 initial draft generated |
+| `current_review_cursor` | writing=Section 4 v0.1 architecture-and-objective complete pending author review；Section 3 v0.7 remains temporarily frozen；experiments=H4N Weather-only 40-profile train/validation active；Method Figure 4 initial draft generated |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
@@ -1338,6 +1338,8 @@ H4M随后以24个新profiles扩大历史实验显示为高影响的interaction�
 并行TimeAlign ETTm2/Weather的8个official fixed-H reproduction jobs已完成artifact audit。ETTm2/Weather复现mean MSE/MAE分别为0.242889/0.302523和0.215800/0.244725，与paper three-run mean差异均低于0.26%；角色仅为native external baseline，不作matched mechanism attribution。H4O、selected-profile confirmation、其他baseline和3-seed仍未授权。
 
 H4M后用户单独授权H4N继续扩大Weather HPO。H4N不改变architecture/objective/scales/inference graph，冻结40个seed2021 profiles并与189个历史profiles零重复：围绕`L512/p16/lr2e-5` MAE/joint frontier与`L640/p20/lr5e-5` MSE frontier，覆盖context×LR、LR外边界、patch geometry、mode rank及少量encoder capacity。选择规则以Weather four-H MSE/MAE relative mean最小为primary，只有0.1% near-tie才优先lead cells；one profile仍共享four H。统一预算120 epochs/patience24，training test=0，40/40 manifest后完整test已授权。该dataset-specific tuning只影响Main I performance profile，不扩张method claim；H4O、extra seeds及architecture/objective redesign未授权。
+
+H4N exact commit=`ba17fc9`的40/40 resource smoke已通过，test=0且无numeric/runtime failure。Full Weather train/validation queue已于2026-08-05 10:47:16在GPU0--2启动；40/40 immutable checkpoint manifest通过前不访问official test。
 
 ### 8.2 Main Results I：Unified versus Horizon-Specific
 

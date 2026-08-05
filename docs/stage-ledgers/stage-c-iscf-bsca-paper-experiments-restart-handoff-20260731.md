@@ -44,7 +44,7 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | H4N Weather-only 40-profile wide/high-impact matrix frozen；local prelaunch and remote smoke next |
+| `active_experiment_step` | H4N Weather-only 40-profile train/validation active on GPU0--2；test=0/40 |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
@@ -52,7 +52,7 @@ paper candidate与claim boundary，但互不替代。
 | `remote_training_authorized` | H4N 40 Weather seed2021 train/validation jobs after full resource smoke |
 | `test_tuned_hpo_authorized` | H4N one complete 40-checkpoint audit after immutable manifest |
 | `formal_test_authorized` | H4N 160 standard cells after 40/40 training artifact gate；Main II/other baselines/selected-profile confirmation/3-seed=false |
-| `next_action` | focused commit/push，remote pull/preflight，40/40 resource smoke，然后启动three-GPU dynamic training queue |
+| `next_action` | long-interval status check；report complete jobs、active epochs与updated ETA；40/40后执行artifact/hash manifest gate |
 | `conditional_next` | 40/40 checkpoint manifest后直接完整formal test；禁止partial selection、automatic H4O、additional seeds或architecture/objective redesign |
 
 H4K train/validation与formal test均已完成，但terminal effectiveness gate失败。H4L只扩大ETTm2/Weather
@@ -66,6 +66,8 @@ manifest冻结后执行的一次完整formal test已48/48、192/192完成，chec
 2026-08-05 H4M formal test已24/24 checkpoints、96/96 standard cells完整结束，checkpoint hashes全部immutable。H1--H4M累计189 trials的冻结selector得到MSE/MAE/combined=`17/28,16/28,33/56`：ETTm2保持1/8，Weather提高到4/8；legal selector、unrestricted single-profile upper bound与per-cell diagnostic oracle均为33/56，因此40/56目标在当前search pool内不可达。TimeAlign ETTm2/Weather 8/8 official-native reproduction也通过artifact audit，数值与paper three-run mean非常接近，但仅作native external role。Failure attribution=`search_space_performance_shortfall`，rollback=Step 6；automatic H4N=false。Canonical result=`analysis/iscf_bsca_main_v1_hpo_20260731/h4m_test_result_and_joint_hpo_decision_20260805.md`。
 
 2026-08-05用户随后显式要求重点优化Weather并扩大超参数范围。H4N冻结40个Weather-only seed2021 profiles，按16个context×LR interpolation、8个LR wide boundary、8个patch geometry、5个rank与3个capacity profiles组成；与H1--H4M 189个历史effective profiles零重复。主目标改为Weather four-H MSE/MAE normalized relative mean最小，只有0.1% near-tie才使用lead cells，保持one profile shared by four H。训练统一120 epochs/patience24，training test=0；40/40 immutable manifest后一次完整160-cell formal test已授权。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4n_weather_wide_matrix_and_prelaunch_20260805.md`。H4O/extra seeds/architecture redesign=false。
+
+H4N exact commit=`ba17fc9`已在remote通过40/40 resource smoke：40 checkpoints、40 metrics、40 logs，test=0且无OOM/NaN/Inf/Traceback。Full three-GPU queue于2026-08-05 10:47:16启动，PID=`1397808`；前三个jobs均进入epoch2，observed memory约1.6--1.7 GiB/GPU。预计15--26 wall-hours。Canonical launch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4n_weather_remote_launch_20260805.md`。
 
 ## 2. Paper claims to be discharged
 
