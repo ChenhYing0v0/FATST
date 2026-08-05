@@ -1363,6 +1363,8 @@ PDT固定`L=96`，仅保留secondary cross-check。TimeAlign表存在lookback se
 
 Table 6的140个目标published rows已完成PDF-coordinate transcription与渲染核验。源PDF存在5组逐horizon均值与reported Avg不一致，并分别在Table 1 caption、main-text implementation与Appendix E.1给出三种lookback grid；主表必须使用逐horizon原值并披露这些source-native protocol差异。
 
+截至2026-08-05，Main I另生成一张TimeAlign Table-6-style宽比较草表：保留7个共同datasets，加入ISCF-BSCA并展示Table 6全部12个baselines，共13 models × four H。TimeAlign的ETTm2/Weather替换为本地official-native seed2021 reproduction，其余5 datasets仍使用published means；其他11个baselines保持published context。所有Avg均由逐H原值重新计算，best/second按三位小数displayed values判定。完整13-model scope下ISCF-BSCA为29/56 best、16/56 second（允许并列），不能与五模型frozen comparator scope的33/56混写。Traffic/Exchange不共享当前ISCF/Table-6证据面，故当前草表不包含二者；该排版工件不改变Step 6 rollback或实验授权状态。
+
 ### 8.3 Main Results II：Unified Multi-Horizon Benchmark
 
 把两个primary standard backbones改成horizon无关、future-step-indexed

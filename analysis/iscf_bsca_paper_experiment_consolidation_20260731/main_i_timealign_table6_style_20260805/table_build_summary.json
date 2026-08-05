@@ -1,0 +1,50 @@
+{
+  "table_id": "ISCF-BSCA-MAIN-I-TIMEALIGN-TABLE6-STYLE-20260805",
+  "models": [
+    "ISCF-BSCA",
+    "TimeAlign",
+    "CMoS",
+    "TimeBase",
+    "TVNet",
+    "iTransformer",
+    "TimeMixer",
+    "Leddam",
+    "ModernTCN",
+    "PatchTST",
+    "Crossformer",
+    "TimesNet",
+    "DLinear"
+  ],
+  "datasets": [
+    "ETTm1",
+    "ETTm2",
+    "ETTh1",
+    "ETTh2",
+    "Weather",
+    "ECL",
+    "Solar"
+  ],
+  "horizons": [
+    96,
+    192,
+    336,
+    720
+  ],
+  "display_precision": 3,
+  "ranking_rule": "best_and_second_distinct_displayed_values_after_three_decimal_rounding",
+  "average_rule": "arithmetic_mean_of_four_horizon_rows",
+  "row_count_without_averages": 364,
+  "row_count_with_averages": 455,
+  "iscf_best_cells_full_13_model_table": 29,
+  "iscf_second_cells_full_13_model_table": 16,
+  "frozen_33_of_56_scope": "ISCF-BSCA versus the five-model published comparator subset; not recomputed from all 13 displayed models",
+  "timealign_reproduced_cells": 8,
+  "timealign_published_cells": 20,
+  "source_hashes": {
+    "timealign_pdf": "0a0d7deba16c5b3025902f897dddc70fd1f6efaeb3737c4a751d3b2440670b08",
+    "iscf_scorecard": "b7478154f17669a57c6a226ef72b01c138a87e4b635052f8d689263d4802ffa7",
+    "timealign_reproduced": "197b0486438f70527e113c1be14cf6b748fbbb68f4dc4a4716bc335ac5f7f109",
+    "audited_published_selected": "c9286468a4ca5977bac40f18635d387eafda0fd14794cabaac9b6f659ae82d8c"
+  },
+  "claim_boundary": "ISCF-BSCA is single-seed and test-tuned; TimeAlign is mixed local reproduction/published by dataset; other baselines are unmatched published context"
+}
