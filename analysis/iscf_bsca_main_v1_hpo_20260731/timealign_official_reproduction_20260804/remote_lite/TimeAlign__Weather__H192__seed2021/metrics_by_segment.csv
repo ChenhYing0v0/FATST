@@ -1,0 +1,3 @@
+target_horizon,segment_start,segment_end,mse,mae,mode,run_name,dataset,pred_len,checkpoint_policy,evaluation_split,official_test_mode,protocol_class,protocol_profile,profile_hash
+192,0,96,0.14197733998298645,0.1796962171792984,fixed,TimeAlign__Weather__H192__seed2021,Weather,192,official-last,test,1,native_external,TIMEALIGN-OFFICIAL-ETTM2-WEATHER-REPRODUCTION-20260804,c96937de0586b4a162165339e2279fc3f4012f7fee5a35ac7212fb92934a4f7a
+192,96,192,0.2227492481470108,0.26114386320114136,fixed,TimeAlign__Weather__H192__seed2021,Weather,192,official-last,test,1,native_external,TIMEALIGN-OFFICIAL-ETTM2-WEATHER-REPRODUCTION-20260804,c96937de0586b4a162165339e2279fc3f4012f7fee5a35ac7212fb92934a4f7a

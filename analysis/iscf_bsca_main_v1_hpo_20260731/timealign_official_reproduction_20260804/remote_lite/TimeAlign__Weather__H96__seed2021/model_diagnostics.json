@@ -1,0 +1,9 @@
+{
+  "d_model": 128,
+  "encoder_mode": "timealign-token-mlp",
+  "frozen_parameter_tensors": 0,
+  "patch_num": 48,
+  "readout_mode": "official",
+  "total_parameters": 1478976,
+  "trainable_parameters": 1478976
+}

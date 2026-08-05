@@ -1,0 +1,30 @@
+{
+  "protocol_id": "TIMEALIGN-OFFICIAL-ETTM2-WEATHER-REPRODUCTION-20260804",
+  "execution_label": "official_source_model_and_config_plus_FATST_test_hygiene_and_artifact_adapter",
+  "license_status": "license_unresolved",
+  "runs_complete": 8,
+  "test_rows_complete": 8,
+  "unique_checkpoint_hashes": 8,
+  "dataset_summary": {
+    "ETTm2": {
+      "mse": 0.24288898940116818,
+      "mae": 0.3025232161875696,
+      "published_mse": 0.24275000000000002,
+      "published_mae": 0.30200000000000005,
+      "mean_mse_vs_published_pct": 0.05725618997658444,
+      "mean_mae_vs_published_pct": 0.17325039323494718
+    },
+    "Weather": {
+      "mse": 0.21580037181944742,
+      "mae": 0.24472528145563538,
+      "published_mse": 0.21525,
+      "published_mae": 0.2445,
+      "mean_mse_vs_published_pct": 0.25568957930193204,
+      "mean_mae_vs_published_pct": 0.09213965465659779
+    }
+  },
+  "max_abs_cell_mse_vs_historical_pct": 0.19506220299478905,
+  "max_abs_cell_mae_vs_historical_pct": 0.2976515980136041,
+  "artifact_complete": true,
+  "decision": "artifact_complete_close_single_seed_official_native_reproduction"
+}

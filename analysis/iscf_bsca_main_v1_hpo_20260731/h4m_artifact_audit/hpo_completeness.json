@@ -1,0 +1,8 @@
+{
+  "protocol_id": "ISCF-BSCA-MAIN-v1-HPO-TARGETED-H4M",
+  "expected_trials": 24,
+  "training_complete_trials": 24,
+  "test_complete_trials": 0,
+  "require_test": false,
+  "complete": true
+}

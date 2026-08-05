@@ -44,7 +44,7 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | H4M 24-job train/validation + TimeAlign 8-job official reproduction active on remote GPUs0--2 |
+| `active_experiment_step` | H4M 24/24 training complete and manifest frozen；TimeAlign 8/8 reproduction audited；H4M 96-cell formal-test prelaunch |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
@@ -52,7 +52,7 @@ paper candidate与claim boundary，但互不替代。
 | `remote_training_authorized` | H4M 24 train/validation jobs + TimeAlign 8 fixed-H reproduction jobs |
 | `test_tuned_hpo_authorized` | H4M complete test after 24/24 checkpoint manifest；one dataset-level profile shared by four H |
 | `formal_test_authorized` | H4M after manifest=true；TimeAlign 8-job post-training test=true；Main II/other baselines/3-seed=false |
-| `next_action` | wait for returned artifacts；audit TimeAlign 8/8 results and H4M 24/24 checkpoint manifest before H4M formal test |
+| `next_action` | focused commit/push -> remote exact-commit/GPU/quota/zero-artifact preflight -> one complete H4M formal test -> 189-trial joint analysis |
 | `conditional_next` | 禁止automatic H4N、additional TimeAlign datasets/seeds、selected-profile confirmation或3-seed |
 
 H4K train/validation与formal test均已完成，但terminal effectiveness gate失败。H4L只扩大ETTm2/Weather

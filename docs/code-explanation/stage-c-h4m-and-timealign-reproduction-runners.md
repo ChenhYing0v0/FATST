@@ -27,3 +27,11 @@ adapter当前会对未激活的historical grouped-MLP参数执行全局argument 
 ## 3. Code-theory consistency
 
 H4M仍是同一ISCF-BSCA architecture的dataset-level HPO，不改变理论对象。TimeAlign的目标是native external baseline复现而非matched mechanism attribution；即使数值接近论文，也只能支持对应source protocol角色。若adapter与raw official runner结果不同，应先归因test hygiene、runtime或local source deviation，不能把差异解释为ISCF-BSCA机制收益。
+
+## 4. Returned-artifact与formal-test tooling
+
+`scripts/check_iscf_bsca_main_v1_h4m_training_artifacts.py`在remote output root逐checkpoint验证24个training artifacts、effective config、four-H validation selector、numeric health、log failure patterns与checkpoint SHA256；它明确要求test artifact在freeze时不存在。`scripts/build_iscf_bsca_main_v1_h4m_test_manifest.py`只从通过审计的ledger生成24-row immutable manifest，固定remote artifact/test paths和pre-test hashes。
+
+`scripts/remote/run_iscf_bsca_main_v1_hpo_targeted_h4m_test_audit.sh`复用generic atomic evaluator。`scripts/check_iscf_bsca_main_v1_hpo_targeted_h4m_test_audit.py`验证24 checkpoints、96 standard cells、一次formal-test authorization、dataset-level shared-profile selector和禁止per-H/per-metric/per-cell rescue的边界。
+
+`scripts/analyze_timealign_official_ettm2_weather_reproduction.py`从8个remote-lite metadata directories和remote checkpoint-hash list构造artifact manifest，逐项核对official preset、10-epoch official-last contract、test-only final evaluation、MSE/MAE与failure patterns，并同时输出相对paper Table 6和historical local rerun的逐cell偏差。每个CSV列均直接来自对应`metrics_by_target_horizon.csv`或其明确reference：`*_vs_published_pct=100(reproduced/published-1)`，`*_vs_historical_pct`同理。

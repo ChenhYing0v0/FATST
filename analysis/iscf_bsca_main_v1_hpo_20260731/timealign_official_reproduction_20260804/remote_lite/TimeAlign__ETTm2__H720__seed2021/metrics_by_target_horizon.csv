@@ -1,0 +1,2 @@
+target_horizon,mse,mae,num_samples,num_channels,eval_prefix_steps,mode,run_name,dataset,pred_len,checkpoint_policy,evaluation_split,official_test_mode,protocol_class,protocol_profile,profile_hash
+720,0.3429375028444661,0.37138505656686094,10801,7,720,fixed,TimeAlign__ETTm2__H720__seed2021,ETTm2,720,official-last,test,1,native_external,TIMEALIGN-OFFICIAL-ETTM2-WEATHER-REPRODUCTION-20260804,aaf54e3dabe63ca17c2348d9b3c6982be28858a0eb9930f72084665c43b51066
