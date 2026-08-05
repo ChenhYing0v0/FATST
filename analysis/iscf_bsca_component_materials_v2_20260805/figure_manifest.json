@@ -5,6 +5,7 @@
   "main_figure_replacement": false,
   "empirical_data_used": false,
   "history_role": "deterministic high-occupancy schematic signals",
+  "standalone_curve_style": "frameless with twofold line-width increase",
   "exact_coordinate_role": "frozen D_q=4 coordinate definition",
   "design_coordinate_role": "frequency-separated schematic with 0.75, 2, and 5 cycles; not the implemented basis",
   "coordinate_component_role": "author-review visual design using schematic curves",
@@ -42,6 +43,16 @@
       "svg": "analysis/iscf_bsca_component_materials_v2_20260805/coordinate_curves_exact_transparent.svg",
       "png": "analysis/iscf_bsca_component_materials_v2_20260805/coordinate_curves_exact_transparent.png"
     },
+    "coordinate_exact_monochrome_white": {
+      "svg": "analysis/iscf_bsca_component_materials_v2_20260805/coordinate_curves_exact_monochrome_white.svg",
+      "pdf": "analysis/iscf_bsca_component_materials_v2_20260805/coordinate_curves_exact_monochrome_white.pdf",
+      "png": "analysis/iscf_bsca_component_materials_v2_20260805/coordinate_curves_exact_monochrome_white.png",
+      "tiff": "analysis/iscf_bsca_component_materials_v2_20260805/coordinate_curves_exact_monochrome_white.tiff"
+    },
+    "coordinate_exact_monochrome_transparent": {
+      "svg": "analysis/iscf_bsca_component_materials_v2_20260805/coordinate_curves_exact_monochrome_transparent.svg",
+      "png": "analysis/iscf_bsca_component_materials_v2_20260805/coordinate_curves_exact_monochrome_transparent.png"
+    },
     "coordinate_design_white": {
       "svg": "analysis/iscf_bsca_component_materials_v2_20260805/coordinate_curves_frequency_separated_design_white.svg",
       "pdf": "analysis/iscf_bsca_component_materials_v2_20260805/coordinate_curves_frequency_separated_design_white.pdf",
@@ -51,6 +62,16 @@
     "coordinate_design_transparent": {
       "svg": "analysis/iscf_bsca_component_materials_v2_20260805/coordinate_curves_frequency_separated_design_transparent.svg",
       "png": "analysis/iscf_bsca_component_materials_v2_20260805/coordinate_curves_frequency_separated_design_transparent.png"
+    },
+    "coordinate_design_monochrome_white": {
+      "svg": "analysis/iscf_bsca_component_materials_v2_20260805/coordinate_curves_frequency_separated_design_monochrome_white.svg",
+      "pdf": "analysis/iscf_bsca_component_materials_v2_20260805/coordinate_curves_frequency_separated_design_monochrome_white.pdf",
+      "png": "analysis/iscf_bsca_component_materials_v2_20260805/coordinate_curves_frequency_separated_design_monochrome_white.png",
+      "tiff": "analysis/iscf_bsca_component_materials_v2_20260805/coordinate_curves_frequency_separated_design_monochrome_white.tiff"
+    },
+    "coordinate_design_monochrome_transparent": {
+      "svg": "analysis/iscf_bsca_component_materials_v2_20260805/coordinate_curves_frequency_separated_design_monochrome_transparent.svg",
+      "png": "analysis/iscf_bsca_component_materials_v2_20260805/coordinate_curves_frequency_separated_design_monochrome_transparent.png"
     },
     "coordinate_component_white": {
       "svg": "analysis/iscf_bsca_component_materials_v2_20260805/coordinate_region_component_v2_design_white.svg",

@@ -11,10 +11,11 @@
 
 ## Deliverables
 
-1. A three-channel history glyph on white and transparent backgrounds. The curves use a larger within-row amplitude than the previous prototype so that the frame is visually occupied without touching the row boundaries.
+1. A frameless three-channel history glyph on white and transparent backgrounds. The curves use a larger within-row amplitude than the previous prototype and a twofold line-width increase.
 2. Two four-channel future-coordinate curve sets:
    - `exact`: the frozen $D_q=4$ coordinate definition in Section 4.2;
    - `design`: a frequency-separated schematic used only to test the visual language of the architecture figure.
+   - Each set is exported in both row-colored and monochrome variants, without outer frames or row separators and with a twofold line-width increase.
 3. A revised coordinate-region component with 15 narrow regions, one base hue per coordinate row, opacity encoding of region values, and a compact four-square region descriptor.
 
 ## Coordinate fidelity boundary
@@ -36,6 +37,7 @@ The frequency-separated design curves use one constant channel followed by 0.75,
 - Curve overlay: a darker tone of the corresponding row hue.
 - Regions: 15 equal-width cells, matching the valid $s=48$ partition count when $T=720$.
 - Selected descriptor: four compact squares placed immediately to the right of the field; each square inherits the hue and opacity of its source row.
+- Standalone curves: frameless; history width increases from 1.85 pt to 3.70 pt and coordinate width from 1.55 pt to 3.10 pt. This change does not apply to the coordinate-region component.
 - No rainbow map, no red--green contrast, and no empirical or learned quantity is implied.
 
 ## Intended reading path

@@ -6,7 +6,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-08-05T18:53:09.436887</dc:date>
+    <dc:date>2026-08-05T18:53:09.508989</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -25,44 +25,43 @@
 L 348.48 190.08
 L 348.48 0
 L 0 0
-L 0 190.08
 z
-" style="fill: none"/>
+" style="fill: #ffffff"/>
   </g>
   <g id="axes_1">
    <g id="text_1">
     <!-- $d_0$ -->
-    <g style="fill: #353a6c" transform="translate(23.755729 41.413306)">
+    <g style="fill: #4f535b" transform="translate(23.755729 41.413306)">
      <text>
-      <tspan x="0" y="-0.4375" style="font-style: oblique; font-size: 6px; font-family: 'DejaVu Sans'; fill: #353a6c">d</tspan>
-      <tspan x="3.808594" y="0.546875" style="font-size: 4.2px; font-family: 'DejaVu Sans'; fill: #353a6c">0</tspan>
+      <tspan x="0" y="-0.4375" style="font-style: oblique; font-size: 6px; font-family: 'DejaVu Sans'; fill: #4f535b">d</tspan>
+      <tspan x="3.808594" y="0.546875" style="font-size: 4.2px; font-family: 'DejaVu Sans'; fill: #4f535b">0</tspan>
      </text>
     </g>
    </g>
    <g id="text_2">
     <!-- $d_1$ -->
-    <g style="fill: #3e648e" transform="translate(23.755729 78.219435)">
+    <g style="fill: #4f535b" transform="translate(23.755729 78.219435)">
      <text>
-      <tspan x="0" y="-0.4375" style="font-style: oblique; font-size: 6px; font-family: 'DejaVu Sans'; fill: #3e648e">d</tspan>
-      <tspan x="3.808594" y="0.546875" style="font-size: 4.2px; font-family: 'DejaVu Sans'; fill: #3e648e">1</tspan>
+      <tspan x="0" y="-0.4375" style="font-style: oblique; font-size: 6px; font-family: 'DejaVu Sans'; fill: #4f535b">d</tspan>
+      <tspan x="3.808594" y="0.546875" style="font-size: 4.2px; font-family: 'DejaVu Sans'; fill: #4f535b">1</tspan>
      </text>
     </g>
    </g>
    <g id="text_3">
     <!-- $d_2$ -->
-    <g style="fill: #246d70" transform="translate(23.755729 115.055565)">
+    <g style="fill: #4f535b" transform="translate(23.755729 115.055565)">
      <text>
-      <tspan x="0" y="-0.4375" style="font-style: oblique; font-size: 6px; font-family: 'DejaVu Sans'; fill: #246d70">d</tspan>
-      <tspan x="3.808594" y="0.546875" style="font-size: 4.2px; font-family: 'DejaVu Sans'; fill: #246d70">2</tspan>
+      <tspan x="0" y="-0.4375" style="font-style: oblique; font-size: 6px; font-family: 'DejaVu Sans'; fill: #4f535b">d</tspan>
+      <tspan x="3.808594" y="0.546875" style="font-size: 4.2px; font-family: 'DejaVu Sans'; fill: #4f535b">2</tspan>
      </text>
     </g>
    </g>
    <g id="text_4">
     <!-- $d_3$ -->
-    <g style="fill: #8b5e32" transform="translate(23.755729 151.921694)">
+    <g style="fill: #4f535b" transform="translate(23.755729 151.921694)">
      <text>
-      <tspan x="0" y="-0.4375" style="font-style: oblique; font-size: 6px; font-family: 'DejaVu Sans'; fill: #8b5e32">d</tspan>
-      <tspan x="3.808594" y="0.546875" style="font-size: 4.2px; font-family: 'DejaVu Sans'; fill: #8b5e32">3</tspan>
+      <tspan x="0" y="-0.4375" style="font-style: oblique; font-size: 6px; font-family: 'DejaVu Sans'; fill: #4f535b">d</tspan>
+      <tspan x="3.808594" y="0.546875" style="font-size: 4.2px; font-family: 'DejaVu Sans'; fill: #4f535b">3</tspan>
      </text>
     </g>
    </g>
@@ -70,7 +69,7 @@ z
     <path d="M 38.909288 39.785806
 L 320.895458 39.785806
 L 320.895458 39.785806
-" clip-path="url(#pb521392153)" style="fill: none; stroke: #353a6c; stroke-width: 3.1; stroke-linecap: round"/>
+" clip-path="url(#p27ce946768)" style="fill: none; stroke: #4f535b; stroke-width: 3.1; stroke-linecap: round"/>
    </g>
    <g id="line2d_2">
     <path d="M 38.909288 62.624206
@@ -101,7 +100,7 @@ L 295.795159 77.844892
 L 313.051614 74.629825
 L 320.895458 73.13526
 L 320.895458 73.13526
-" clip-path="url(#pb521392153)" style="fill: none; stroke: #3e648e; stroke-width: 3.1; stroke-linecap: round"/>
+" clip-path="url(#p27ce946768)" style="fill: none; stroke: #4f535b; stroke-width: 3.1; stroke-linecap: round"/>
    </g>
    <g id="line2d_3">
     <path d="M 38.909288 99.61438
@@ -178,7 +177,7 @@ L 316.189152 99.50259
 L 318.934497 99.473399
 L 320.895458 99.580288
 L 320.895458 99.580288
-" clip-path="url(#pb521392153)" style="fill: none; stroke: #246d70; stroke-width: 3.1; stroke-linecap: round"/>
+" clip-path="url(#p27ce946768)" style="fill: none; stroke: #4f535b; stroke-width: 3.1; stroke-linecap: round"/>
    </g>
    <g id="line2d_4">
     <path d="M 38.909288 136.639326
@@ -333,12 +332,12 @@ L 318.934497 136.307558
 L 320.111073 136.354184
 L 320.895458 136.517995
 L 320.895458 136.517995
-" clip-path="url(#pb521392153)" style="fill: none; stroke: #8b5e32; stroke-width: 3.1; stroke-linecap: round"/>
+" clip-path="url(#p27ce946768)" style="fill: none; stroke: #4f535b; stroke-width: 3.1; stroke-linecap: round"/>
    </g>
   </g>
  </g>
  <defs>
-  <clipPath id="pb521392153">
+  <clipPath id="p27ce946768">
    <rect x="7.2" y="7.2" width="334.08" height="175.68"/>
   </clipPath>
  </defs>

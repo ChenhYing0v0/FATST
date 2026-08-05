@@ -170,7 +170,7 @@ def add_frame(
 
 
 def build_history_figure(*, transparent: bool) -> Figure:
-    """Build the standalone three-channel history material."""
+    """Build a frameless standalone three-channel history material."""
     configure_style()
     facecolor = "none" if transparent else COLORS["white"]
     figure = plt.figure(
@@ -194,12 +194,11 @@ def build_history_figure(*, transparent: bool) -> Figure:
             mapped_x,
             curve_y,
             color=COLORS["history"],
-            linewidth=1.85,
+            linewidth=3.70,
             solid_capstyle="round",
             solid_joinstyle="round",
             zorder=5,
         )
-    add_frame(axis, x0=x0, x1=x1, y0=y0, y1=y1, rows=3)
     return figure
 
 
@@ -207,8 +206,9 @@ def build_coordinate_curves_figure(
     field: np.ndarray,
     *,
     transparent: bool,
+    monochrome: bool,
 ) -> Figure:
-    """Build a standalone four-channel coordinate-curve material."""
+    """Build a frameless standalone four-channel coordinate-curve material."""
     configure_style()
     facecolor = "none" if transparent else COLORS["white"]
     figure = plt.figure(
@@ -229,11 +229,12 @@ def build_coordinate_curves_figure(
         center = y1 - (row + 0.5) * row_height
         curve_geometry = np.zeros_like(curve) if row == 0 else curve
         curve_y = center + 0.38 * row_height * curve_geometry
+        curve_color = COLORS["history"] if monochrome else ROW_DARK[row]
         axis.plot(
             mapped_x,
             curve_y,
-            color=ROW_DARK[row],
-            linewidth=1.55,
+            color=curve_color,
+            linewidth=3.10,
             solid_capstyle="round",
             zorder=5,
         )
@@ -244,9 +245,8 @@ def build_coordinate_curves_figure(
             ha="right",
             va="center",
             fontsize=6.0,
-            color=ROW_DARK[row],
+            color=curve_color,
         )
-    add_frame(axis, x0=x0, x1=x1, y0=y0, y1=y1, rows=4)
     return figure
 
 
@@ -486,21 +486,9 @@ def build_contact_sheet(
                 np.linspace(0.0, 1.0, curve.size),
                 center + scale * curve_geometry,
                 color=color,
-                linewidth=1.5,
+                linewidth=3.0,
                 solid_capstyle="round",
             )
-            if row < curves.shape[0] - 1:
-                axis.axhline(center - 0.5, color=COLORS["hairline"], linewidth=0.45)
-        axis.add_patch(
-            Rectangle(
-                (0.0, 0.0),
-                1.0,
-                float(curves.shape[0]),
-                fill=False,
-                edgecolor=COLORS["frame"],
-                linewidth=0.75,
-            )
-        )
     return figure
 
 
@@ -628,24 +616,76 @@ def main() -> None:
             "history_curves_transparent",
         ),
         "coordinate_exact_white": save_white_bundle(
-            build_coordinate_curves_figure(exact, transparent=False),
+            build_coordinate_curves_figure(
+                exact,
+                transparent=False,
+                monochrome=False,
+            ),
             args.output_dir,
             "coordinate_curves_exact_white",
         ),
         "coordinate_exact_transparent": save_transparent_bundle(
-            build_coordinate_curves_figure(exact, transparent=True),
+            build_coordinate_curves_figure(
+                exact,
+                transparent=True,
+                monochrome=False,
+            ),
             args.output_dir,
             "coordinate_curves_exact_transparent",
         ),
+        "coordinate_exact_monochrome_white": save_white_bundle(
+            build_coordinate_curves_figure(
+                exact,
+                transparent=False,
+                monochrome=True,
+            ),
+            args.output_dir,
+            "coordinate_curves_exact_monochrome_white",
+        ),
+        "coordinate_exact_monochrome_transparent": save_transparent_bundle(
+            build_coordinate_curves_figure(
+                exact,
+                transparent=True,
+                monochrome=True,
+            ),
+            args.output_dir,
+            "coordinate_curves_exact_monochrome_transparent",
+        ),
         "coordinate_design_white": save_white_bundle(
-            build_coordinate_curves_figure(design, transparent=False),
+            build_coordinate_curves_figure(
+                design,
+                transparent=False,
+                monochrome=False,
+            ),
             args.output_dir,
             "coordinate_curves_frequency_separated_design_white",
         ),
         "coordinate_design_transparent": save_transparent_bundle(
-            build_coordinate_curves_figure(design, transparent=True),
+            build_coordinate_curves_figure(
+                design,
+                transparent=True,
+                monochrome=False,
+            ),
             args.output_dir,
             "coordinate_curves_frequency_separated_design_transparent",
+        ),
+        "coordinate_design_monochrome_white": save_white_bundle(
+            build_coordinate_curves_figure(
+                design,
+                transparent=False,
+                monochrome=True,
+            ),
+            args.output_dir,
+            "coordinate_curves_frequency_separated_design_monochrome_white",
+        ),
+        "coordinate_design_monochrome_transparent": save_transparent_bundle(
+            build_coordinate_curves_figure(
+                design,
+                transparent=True,
+                monochrome=True,
+            ),
+            args.output_dir,
+            "coordinate_curves_frequency_separated_design_monochrome_transparent",
         ),
         "coordinate_component_white": save_white_bundle(
             build_coordinate_component(transparent=False),
@@ -678,6 +718,7 @@ def main() -> None:
         "main_figure_replacement": False,
         "empirical_data_used": False,
         "history_role": "deterministic high-occupancy schematic signals",
+        "standalone_curve_style": "frameless with twofold line-width increase",
         "exact_coordinate_role": "frozen D_q=4 coordinate definition",
         "design_coordinate_role": (
             "frequency-separated schematic with 0.75, 2, and 5 cycles; "
