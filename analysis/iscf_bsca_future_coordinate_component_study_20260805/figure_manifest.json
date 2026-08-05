@@ -1,0 +1,27 @@
+{
+  "figure_id": "figure_iscf_future_coordinate_component_concepts_v1",
+  "status": "local_design_study_for_author_review",
+  "backend": "Python/matplotlib",
+  "final_width_mm": 183.0,
+  "final_height_mm": 78.0,
+  "empirical_data_used": false,
+  "analytic_basis": "centered and scaled DCT cosine channels",
+  "candidates": [
+    "sampled_harmonic_ribbon_recommended",
+    "spectral_fan",
+    "coordinate_capsule"
+  ],
+  "main_figure_replacement": false,
+  "outputs": {
+    "svg": "analysis/iscf_bsca_future_coordinate_component_study_20260805/figure_iscf_future_coordinate_component_concepts_v1.svg",
+    "pdf": "analysis/iscf_bsca_future_coordinate_component_study_20260805/figure_iscf_future_coordinate_component_concepts_v1.pdf",
+    "png": "analysis/iscf_bsca_future_coordinate_component_study_20260805/figure_iscf_future_coordinate_component_concepts_v1.png",
+    "tiff": "analysis/iscf_bsca_future_coordinate_component_study_20260805/figure_iscf_future_coordinate_component_concepts_v1.tiff"
+  },
+  "recommended_outputs": {
+    "svg": "analysis/iscf_bsca_future_coordinate_component_study_20260805/figure_iscf_future_coordinate_component_recommended_v1.svg",
+    "pdf": "analysis/iscf_bsca_future_coordinate_component_study_20260805/figure_iscf_future_coordinate_component_recommended_v1.pdf",
+    "png": "analysis/iscf_bsca_future_coordinate_component_study_20260805/figure_iscf_future_coordinate_component_recommended_v1.png",
+    "tiff": "analysis/iscf_bsca_future_coordinate_component_study_20260805/figure_iscf_future_coordinate_component_recommended_v1.tiff"
+  }
+}
