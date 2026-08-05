@@ -1,0 +1,33 @@
+{
+  "figure_id": "figure_iscf_architecture_vector_v4",
+  "status": "vector_draft_for_author_review",
+  "backend": "Python/matplotlib",
+  "final_width_mm": 183.0,
+  "final_height_mm": 112.0,
+  "data_role": "architecture schematic",
+  "empirical_data_used": false,
+  "manuscript_replacement": false,
+  "representative_scope_rows": [
+    "s_0",
+    "s_1",
+    "s_2"
+  ],
+  "coordinate_visualization": "DCT basis atlas plus highlighted target coordinate vector",
+  "named_module_boxes": [
+    "Encoder",
+    "Allocation MLP"
+  ],
+  "claim_boundary": [
+    "explains ISCF inference architecture only",
+    "omits single-scope comparison and BSCA",
+    "scope rows are representative rather than exact implementation count",
+    "uses schematic tensors, probabilities and trajectories",
+    "does not establish effectiveness or specialization"
+  ],
+  "outputs": {
+    "svg": "analysis/iscf_bsca_method_figure_vector_redesign_20260805/figure_iscf_architecture_vector_v4.svg",
+    "pdf": "analysis/iscf_bsca_method_figure_vector_redesign_20260805/figure_iscf_architecture_vector_v4.pdf",
+    "png": "analysis/iscf_bsca_method_figure_vector_redesign_20260805/figure_iscf_architecture_vector_v4.png",
+    "tiff": "analysis/iscf_bsca_method_figure_vector_redesign_20260805/figure_iscf_architecture_vector_v4.tiff"
+  }
+}
