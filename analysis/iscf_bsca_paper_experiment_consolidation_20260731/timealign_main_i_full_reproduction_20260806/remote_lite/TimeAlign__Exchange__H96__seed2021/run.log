@@ -1,0 +1,35 @@
+run_start dataset=Exchange mode=fixed pred_len=96 target_horizons=[96] encoder_mode=timealign-token-mlp readout_mode=official pcc_objective_mode=off output_dir=/home/yingch/exp_outputs/r-2026-fatst/timealign_official_reproduction/main_i_8dataset_20260806/runs/TimeAlign__Exchange__H96__seed2021
+train 4496
+val 665
+	iters: 100, epoch: 1 | loss: 0.3573634
+Epoch: 1, Steps: 141 | Train Loss: 0.4117016 Vali Loss: 0.1649226
+Updating learning rate to 0.0004877641290737884
+	iters: 100, epoch: 2 | loss: 0.3058211
+Epoch: 2, Steps: 141 | Train Loss: 0.3047632 Vali Loss: 0.1576930
+Updating learning rate to 0.0004522542485937369
+	iters: 100, epoch: 3 | loss: 0.2655637
+Epoch: 3, Steps: 141 | Train Loss: 0.2834982 Vali Loss: 0.1500771
+Updating learning rate to 0.0003969463130731183
+	iters: 100, epoch: 4 | loss: 0.2591806
+Epoch: 4, Steps: 141 | Train Loss: 0.2739227 Vali Loss: 0.1463858
+Updating learning rate to 0.00032725424859373687
+	iters: 100, epoch: 5 | loss: 0.2466499
+Epoch: 5, Steps: 141 | Train Loss: 0.2666093 Vali Loss: 0.1487162
+Updating learning rate to 0.00025
+	iters: 100, epoch: 6 | loss: 0.2675991
+Epoch: 6, Steps: 141 | Train Loss: 0.2617360 Vali Loss: 0.1487749
+Updating learning rate to 0.00017274575140626317
+	iters: 100, epoch: 7 | loss: 0.2353236
+Epoch: 7, Steps: 141 | Train Loss: 0.2589514 Vali Loss: 0.1507593
+Updating learning rate to 0.00010305368692688174
+	iters: 100, epoch: 8 | loss: 0.2605978
+Epoch: 8, Steps: 141 | Train Loss: 0.2567612 Vali Loss: 0.1499995
+Updating learning rate to 4.7745751406263163e-05
+	iters: 100, epoch: 9 | loss: 0.2454399
+Epoch: 9, Steps: 141 | Train Loss: 0.2552791 Vali Loss: 0.1500725
+Updating learning rate to 1.2235870926211617e-05
+	iters: 100, epoch: 10 | loss: 0.2583134
+Epoch: 10, Steps: 141 | Train Loss: 0.2546419 Vali Loss: 0.1521131
+Updating learning rate to 0.0
+test 1422
+run_done output_dir=/home/yingch/exp_outputs/r-2026-fatst/timealign_official_reproduction/main_i_8dataset_20260806/runs/TimeAlign__Exchange__H96__seed2021 evaluation_split=test

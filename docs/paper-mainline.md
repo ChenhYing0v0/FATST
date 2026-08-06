@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 4 v0.1 pending author review；experiments=HPO terminally frozen，TimeAlign Main I eight-dataset reproduction prelaunch |
+| `current_11_step` | paper consolidation；writing=Section 4 v0.1 pending author review；experiments=HPO terminally frozen，TimeAlign Main I 32/32 local reproduction and shared-surface table complete |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,6 +18,8 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` eight dataset profiles and 32 cells terminally frozen after H4N；strong aggregate competitor但未达per-cell target |
+
+[Main I Local TimeAlign Result Table, 2026-08-06] TimeAlign 8 datasets × four H × seed2021 已32/32完成：ETTm2/Weather 8个同contract runs复用，其余24个由official source本轮训练；32个checkpoint hashes唯一，artifact/provenance与numeric-health audit通过。7个official-preset datasets上的TimeAlign four-H mean MSE/MAE依次为ETTh1 `0.417990/0.429396`、ETTh2 `0.346665/0.386517`、ETTm1 `0.339704/0.366959`、ETTm2 `0.242889/0.302523`、Weather `0.215800/0.244725`、ECL `0.154704/0.243853`、Solar `0.195970/0.216647`；Exchange source-informed bootstrap=`0.512558/0.459692`。7-dataset dense表已把TimeAlign 28/28 cells替换为本地值；ISCF-BSCA相对本地TimeAlign在MSE/MAE为`20/28,17/28` cells领先，macro低`3.994%/1.491%`。完整13-model displayed table中ISCF-BSCA为`27/56` best、`19/56` second。Exchange另列ISCF/TimeAlign companion；其他baseline的Exchange及AMD/SimpleTM/TimePerceiver/SRSNet仍缺证据，故不能声称最初规划的8-dataset/9-baseline矩阵已闭合。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_final_local_timealign_20260806/main_i_result_and_source_audit.md`。Decision=`TimeAlign_32_of_32_local_complete_shared_surface_Main_I_table_finalized_remaining_baselines_pending_authorization`。
 
 [Terminal HPO Freeze and TimeAlign Main I Prelaunch, 2026-08-06] 用户要求停止HPO并固定当前最优结果。最终8个dataset-level profiles、32个standard-horizon cells与8个immutable checkpoint hashes已物化；Weather采用H4N full-table selector，其余7个profiles不变，H4O关闭。并行冻结TimeAlign 8 datasets × four H × seed2021=32 fixed-H runs：ETTm2/Weather 8个同contract artifacts复用，新增24个；7 datasets用official presets，Exchange明确为ETTh1-derived source-informed bootstrap。New runs为避免220 GiB hard quota不保存prediction arrays，但保留checkpoint、完整MSE/MAE/provenance/logs。Canonical prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/timealign_main_i_full_reproduction_20260806/design_and_prelaunch_gate.md`。Decision=`HPO_terminal_freeze_TimeAlign_24_new_plus_8_reuse_prelaunch`。
 

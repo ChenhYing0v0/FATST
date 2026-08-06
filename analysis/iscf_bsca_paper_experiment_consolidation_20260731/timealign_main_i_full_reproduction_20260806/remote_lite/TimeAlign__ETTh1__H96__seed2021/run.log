@@ -1,0 +1,9 @@
+run_start dataset=ETTh1 mode=fixed pred_len=96 target_horizons=[96] encoder_mode=timealign-token-mlp readout_mode=official pcc_objective_mode=off output_dir=/home/yingch/exp_outputs/r-2026-fatst/timealign_official_reproduction/main_i_8dataset_20260806/runs/TimeAlign__ETTh1__H96__seed2021
+train 7825
+val 2785
+	iters: 100, epoch: 1 | loss: 0.6225939
+	iters: 200, epoch: 1 | loss: 0.5859582
+Epoch: 1, Steps: 245 | Train Loss: 0.6637899 Vali Loss: 0.7709601
+Updating learning rate to 0.0
+test 2785
+run_done output_dir=/home/yingch/exp_outputs/r-2026-fatst/timealign_official_reproduction/main_i_8dataset_20260806/runs/TimeAlign__ETTh1__H96__seed2021 evaluation_split=test

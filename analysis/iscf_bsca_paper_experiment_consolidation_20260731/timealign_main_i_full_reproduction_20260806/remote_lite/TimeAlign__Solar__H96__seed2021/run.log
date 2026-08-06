@@ -1,0 +1,135 @@
+run_start dataset=Solar mode=fixed pred_len=96 target_horizons=[96] encoder_mode=timealign-token-mlp readout_mode=official pcc_objective_mode=off output_dir=/home/yingch/exp_outputs/r-2026-fatst/timealign_official_reproduction/main_i_8dataset_20260806/runs/TimeAlign__Solar__H96__seed2021
+train 35977
+val 5161
+	iters: 100, epoch: 1 | loss: 0.5886320
+	iters: 200, epoch: 1 | loss: 0.5480796
+	iters: 300, epoch: 1 | loss: 0.4512578
+	iters: 400, epoch: 1 | loss: 0.4155473
+	iters: 500, epoch: 1 | loss: 0.4446158
+	iters: 600, epoch: 1 | loss: 0.4264346
+	iters: 700, epoch: 1 | loss: 0.4710663
+	iters: 800, epoch: 1 | loss: 0.4694064
+	iters: 900, epoch: 1 | loss: 0.4383895
+	iters: 1000, epoch: 1 | loss: 0.4455364
+	iters: 1100, epoch: 1 | loss: 0.4293065
+Epoch: 1, Steps: 1125 | Train Loss: 0.4740601 Vali Loss: 0.1579048
+Updating learning rate to 0.0004877641290737884
+	iters: 100, epoch: 2 | loss: 0.3951572
+	iters: 200, epoch: 2 | loss: 0.3855235
+	iters: 300, epoch: 2 | loss: 0.4007295
+	iters: 400, epoch: 2 | loss: 0.4294021
+	iters: 500, epoch: 2 | loss: 0.4048920
+	iters: 600, epoch: 2 | loss: 0.4199539
+	iters: 700, epoch: 2 | loss: 0.4168328
+	iters: 800, epoch: 2 | loss: 0.4234422
+	iters: 900, epoch: 2 | loss: 0.4003820
+	iters: 1000, epoch: 2 | loss: 0.3859088
+	iters: 1100, epoch: 2 | loss: 0.4342424
+Epoch: 2, Steps: 1125 | Train Loss: 0.4074572 Vali Loss: 0.1577322
+Updating learning rate to 0.0004522542485937369
+	iters: 100, epoch: 3 | loss: 0.3972631
+	iters: 200, epoch: 3 | loss: 0.4123478
+	iters: 300, epoch: 3 | loss: 0.3942428
+	iters: 400, epoch: 3 | loss: 0.4384111
+	iters: 500, epoch: 3 | loss: 0.4311333
+	iters: 600, epoch: 3 | loss: 0.4169020
+	iters: 700, epoch: 3 | loss: 0.3995224
+	iters: 800, epoch: 3 | loss: 0.4150307
+	iters: 900, epoch: 3 | loss: 0.4128200
+	iters: 1000, epoch: 3 | loss: 0.3936703
+	iters: 1100, epoch: 3 | loss: 0.4091893
+Epoch: 3, Steps: 1125 | Train Loss: 0.3947211 Vali Loss: 0.1595563
+Updating learning rate to 0.0003969463130731183
+	iters: 100, epoch: 4 | loss: 0.4055403
+	iters: 200, epoch: 4 | loss: 0.3567488
+	iters: 300, epoch: 4 | loss: 0.3838066
+	iters: 400, epoch: 4 | loss: 0.3948598
+	iters: 500, epoch: 4 | loss: 0.4111449
+	iters: 600, epoch: 4 | loss: 0.3729516
+	iters: 700, epoch: 4 | loss: 0.4107030
+	iters: 800, epoch: 4 | loss: 0.3179154
+	iters: 900, epoch: 4 | loss: 0.4047689
+	iters: 1000, epoch: 4 | loss: 0.4057031
+	iters: 1100, epoch: 4 | loss: 0.3880051
+Epoch: 4, Steps: 1125 | Train Loss: 0.3869386 Vali Loss: 0.1608010
+Updating learning rate to 0.00032725424859373687
+	iters: 100, epoch: 5 | loss: 0.4279555
+	iters: 200, epoch: 5 | loss: 0.4464396
+	iters: 300, epoch: 5 | loss: 0.3382452
+	iters: 400, epoch: 5 | loss: 0.3580150
+	iters: 500, epoch: 5 | loss: 0.3609504
+	iters: 600, epoch: 5 | loss: 0.4021600
+	iters: 700, epoch: 5 | loss: 0.4086563
+	iters: 800, epoch: 5 | loss: 0.3850297
+	iters: 900, epoch: 5 | loss: 0.3634863
+	iters: 1000, epoch: 5 | loss: 0.4263399
+	iters: 1100, epoch: 5 | loss: 0.3768816
+Epoch: 5, Steps: 1125 | Train Loss: 0.3801647 Vali Loss: 0.1575363
+Updating learning rate to 0.00025
+	iters: 100, epoch: 6 | loss: 0.4014257
+	iters: 200, epoch: 6 | loss: 0.3697594
+	iters: 300, epoch: 6 | loss: 0.3243375
+	iters: 400, epoch: 6 | loss: 0.3399988
+	iters: 500, epoch: 6 | loss: 0.3666974
+	iters: 600, epoch: 6 | loss: 0.3552693
+	iters: 700, epoch: 6 | loss: 0.3893458
+	iters: 800, epoch: 6 | loss: 0.3504044
+	iters: 900, epoch: 6 | loss: 0.3834988
+	iters: 1000, epoch: 6 | loss: 0.3750579
+	iters: 1100, epoch: 6 | loss: 0.3518478
+Epoch: 6, Steps: 1125 | Train Loss: 0.3745179 Vali Loss: 0.1537006
+Updating learning rate to 0.00017274575140626317
+	iters: 100, epoch: 7 | loss: 0.3674429
+	iters: 200, epoch: 7 | loss: 0.3789192
+	iters: 300, epoch: 7 | loss: 0.4102614
+	iters: 400, epoch: 7 | loss: 0.3569352
+	iters: 500, epoch: 7 | loss: 0.3557758
+	iters: 600, epoch: 7 | loss: 0.3440617
+	iters: 700, epoch: 7 | loss: 0.3790838
+	iters: 800, epoch: 7 | loss: 0.3737180
+	iters: 900, epoch: 7 | loss: 0.3748994
+	iters: 1000, epoch: 7 | loss: 0.3541346
+	iters: 1100, epoch: 7 | loss: 0.3782310
+Epoch: 7, Steps: 1125 | Train Loss: 0.3692526 Vali Loss: 0.1541479
+Updating learning rate to 0.00010305368692688174
+	iters: 100, epoch: 8 | loss: 0.3866723
+	iters: 200, epoch: 8 | loss: 0.4046393
+	iters: 300, epoch: 8 | loss: 0.3539100
+	iters: 400, epoch: 8 | loss: 0.3543323
+	iters: 500, epoch: 8 | loss: 0.3579575
+	iters: 600, epoch: 8 | loss: 0.3800961
+	iters: 700, epoch: 8 | loss: 0.3643029
+	iters: 800, epoch: 8 | loss: 0.3582001
+	iters: 900, epoch: 8 | loss: 0.3437964
+	iters: 1000, epoch: 8 | loss: 0.3329849
+	iters: 1100, epoch: 8 | loss: 0.4031975
+Epoch: 8, Steps: 1125 | Train Loss: 0.3649326 Vali Loss: 0.1564256
+Updating learning rate to 4.7745751406263163e-05
+	iters: 100, epoch: 9 | loss: 0.3319737
+	iters: 200, epoch: 9 | loss: 0.3741868
+	iters: 300, epoch: 9 | loss: 0.3565825
+	iters: 400, epoch: 9 | loss: 0.3697242
+	iters: 500, epoch: 9 | loss: 0.3303224
+	iters: 600, epoch: 9 | loss: 0.4039247
+	iters: 700, epoch: 9 | loss: 0.3598877
+	iters: 800, epoch: 9 | loss: 0.3600203
+	iters: 900, epoch: 9 | loss: 0.3519202
+	iters: 1000, epoch: 9 | loss: 0.3404679
+	iters: 1100, epoch: 9 | loss: 0.3606542
+Epoch: 9, Steps: 1125 | Train Loss: 0.3623401 Vali Loss: 0.1591797
+Updating learning rate to 1.2235870926211617e-05
+	iters: 100, epoch: 10 | loss: 0.3237591
+	iters: 200, epoch: 10 | loss: 0.3544000
+	iters: 300, epoch: 10 | loss: 0.3448685
+	iters: 400, epoch: 10 | loss: 0.3345342
+	iters: 500, epoch: 10 | loss: 0.3413162
+	iters: 600, epoch: 10 | loss: 0.3245224
+	iters: 700, epoch: 10 | loss: 0.3269247
+	iters: 800, epoch: 10 | loss: 0.3406537
+	iters: 900, epoch: 10 | loss: 0.3664702
+	iters: 1000, epoch: 10 | loss: 0.3575040
+	iters: 1100, epoch: 10 | loss: 0.3532325
+Epoch: 10, Steps: 1125 | Train Loss: 0.3608443 Vali Loss: 0.1565288
+Updating learning rate to 0.0
+test 10417
+run_done output_dir=/home/yingch/exp_outputs/r-2026-fatst/timealign_official_reproduction/main_i_8dataset_20260806/runs/TimeAlign__Solar__H96__seed2021 evaluation_split=test

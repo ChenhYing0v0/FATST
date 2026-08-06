@@ -1,0 +1,3 @@
+target_horizon,segment_start,segment_end,mse,mae,mode,run_name,dataset,pred_len,checkpoint_policy,evaluation_split,official_test_mode,protocol_class,protocol_profile,profile_hash
+192,0,96,0.2838636040687561,0.33430546522140503,fixed,TimeAlign__ETTm1__H192__seed2021,ETTm1,192,official-last,test,1,native_external,TIMEALIGN-OFFICIAL-MAIN-I-8DATASET-REPRODUCTION-20260806,59422dd4ce5b262bb1d2f4a944dc73ce16257b69bbbd92097138ed9e2f53feec
+192,96,192,0.36115214228630066,0.37883123755455017,fixed,TimeAlign__ETTm1__H192__seed2021,ETTm1,192,official-last,test,1,native_external,TIMEALIGN-OFFICIAL-MAIN-I-8DATASET-REPRODUCTION-20260806,59422dd4ce5b262bb1d2f4a944dc73ce16257b69bbbd92097138ed9e2f53feec

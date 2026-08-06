@@ -1,0 +1,2 @@
+target_horizon,mse,mae,num_samples,num_channels,eval_prefix_steps,mode,run_name,dataset,pred_len,checkpoint_policy,evaluation_split,official_test_mode,protocol_class,protocol_profile,profile_hash
+96,0.18178433862825236,0.20470493147149682,10417,137,96,fixed,TimeAlign__Solar__H96__seed2021,Solar,96,official-last,test,1,native_external,TIMEALIGN-OFFICIAL-MAIN-I-8DATASET-REPRODUCTION-20260806,2c218201cd0b4c451bd2ab05ba5879e7f5c516551cd81ec92d9ebeb5625b38d4

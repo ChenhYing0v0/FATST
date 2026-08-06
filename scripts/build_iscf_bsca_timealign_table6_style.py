@@ -92,17 +92,17 @@ def parse_args() -> argparse.Namespace:
         default=ROOT
         / "analysis"
         / "iscf_bsca_main_v1_hpo_20260731"
-        / "joint_objective_h4m_result_20260805"
-        / "joint_selected_cells.csv",
+        / "final_hpo_freeze_20260806"
+        / "selected_main_scorecard_final.csv",
     )
     parser.add_argument(
         "--timealign-reproduced",
         type=Path,
         default=ROOT
         / "analysis"
-        / "iscf_bsca_main_v1_hpo_20260731"
-        / "timealign_official_reproduction_20260804"
-        / "reproduced_metrics_and_comparison.csv",
+        / "iscf_bsca_paper_experiment_consolidation_20260731"
+        / "timealign_main_i_full_reproduction_20260806"
+        / "timealign_main_i_local_metrics.csv",
     )
     parser.add_argument(
         "--audited-published-selected",
@@ -212,11 +212,46 @@ def load_iscf_rows(path: Path) -> list[dict[str, Any]]:
                 "horizon": int(row["horizon"]),
                 "mse": float(row["test_mse"]),
                 "mae": float(row["test_mae"]),
-                "value_origin": "h1_h4m_joint_selected_single_seed_test_tuned",
+                "value_origin": "terminal_h4n_selected_single_seed_test_tuned",
                 "system_role": "one_unified_model_per_dataset",
             }
         )
     return rows
+
+
+def load_exchange_companion(
+    iscf_path: Path, timealign_path: Path
+) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for row in read_csv(iscf_path):
+        if row["dataset"] == "Exchange":
+            rows.append(
+                {
+                    "model": "ISCF-BSCA",
+                    "dataset": "Exchange",
+                    "horizon": int(row["horizon"]),
+                    "mse": float(row["test_mse"]),
+                    "mae": float(row["test_mae"]),
+                    "value_origin": "terminal_h4n_selected_single_seed_test_tuned",
+                    "system_role": "one_unified_model_per_dataset",
+                }
+            )
+    for row in read_csv(timealign_path):
+        if row["dataset"] == "Exchange":
+            rows.append(
+                {
+                    "model": "TimeAlign",
+                    "dataset": "Exchange",
+                    "horizon": int(row["horizon"]),
+                    "mse": float(row["mse"]),
+                    "mae": float(row["mae"]),
+                    "value_origin": row["value_origin"],
+                    "system_role": "horizon_specific_source_informed_bootstrap",
+                }
+            )
+    if len(rows) != 8:
+        raise ValueError(f"expected 8 Exchange companion rows, found {len(rows)}")
+    return add_averages_and_styles(rows)
 
 
 def validate_against_audited_selected(
@@ -263,8 +298,8 @@ def override_reproduced_timealign(
         row["value_origin"] = "official_native_reproduced_single_seed"
         row["system_role"] = "horizon_specific_official_native"
         replaced += 1
-    if replaced != 8:
-        raise ValueError(f"expected 8 reproduced TimeAlign overrides, got {replaced}")
+    if replaced != 28:
+        raise ValueError(f"expected 28 reproduced TimeAlign overrides, got {replaced}")
 
 
 def validate_matrix(rows: list[dict[str, Any]]) -> None:
@@ -398,7 +433,7 @@ def build_pdf(path: Path, rows: list[dict[str, Any]]) -> None:
         Paragraph("H", header_style),
     ]
     for model in DISPLAY_MODELS:
-        suffix = "*" if model == "TimeAlign" else ""
+        suffix = ""
         model_header.extend(
             [
                 Paragraph(
@@ -494,12 +529,13 @@ def build_pdf(path: Path, rows: list[dict[str, Any]]) -> None:
         "recomputed as the arithmetic mean of the four horizon rows. Red bold and "
         "blue underlined values denote the best and second-best displayed results "
         "after three-decimal rounding. ISCF-BSCA uses one unified, single-seed, "
-        "test-tuned model per dataset. TimeAlign* uses the artifact-complete local "
-        "seed-2021 reproduction on ETTm2 and Weather and the published Table-6 "
-        "values on the other five datasets. All remaining baselines are transcribed "
+        "test-tuned model per dataset. TimeAlign uses the artifact-complete local "
+        "seed-2021 reproduction on all seven shared datasets. All remaining "
+        "baselines are transcribed "
         "from TimeAlign Table 6 and are unmatched published context. Traffic and "
-        "Exchange are excluded because they do not share the current comparison "
-        "surface.",
+        "Exchange are excluded from this dense panel because they do not share the "
+        "current comparison surface; Exchange is reported in a two-system companion "
+        "block.",
         note_style,
     )
     document.build([title, Spacer(1, 2 * mm), table, Spacer(1, 2 * mm), note])
@@ -532,7 +568,7 @@ def build_latex(path: Path, rows: list[dict[str, Any]]) -> None:
     ]
     headers = ["Dataset", "H"]
     for model in DISPLAY_MODELS:
-        suffix = "$^{*}$" if model == "TimeAlign" else ""
+        suffix = ""
         headers.append(
             f"\\multicolumn{{2}}{{c}}{{{model}{suffix} ({MODEL_YEARS[model]})}}"
         )
@@ -565,11 +601,41 @@ def build_latex(path: Path, rows: list[dict[str, Any]]) -> None:
             "All entries report MSE/MAE, and Avg. is recomputed over the four displayed "
             "horizons. Best and second-best displayed values are bold and underlined. "
             "ISCF-BSCA uses one unified single-seed test-tuned model per dataset. "
-            "TimeAlign$^{*}$ uses our official-native reproduction on ETTm2 and Weather "
-            "and published Table-6 values elsewhere; all other baselines are published "
+            "TimeAlign uses our official-native single-seed reproduction on all seven "
+            "shared datasets; all other baselines are published "
             "context rather than matched local reproductions.}",
             "\\label{tab:main_timealign_table6_style}",
             "\\end{table*}",
+            "",
+        ]
+    )
+    path.write_text("\n".join(lines), encoding="utf-8")
+
+
+def build_exchange_latex(path: Path, rows: list[dict[str, Any]]) -> None:
+    lookup = {
+        (row["model"], str(row["horizon"])): row
+        for row in rows
+    }
+    lines = [
+        "% Companion block; TimeAlign Exchange uses a source-informed bootstrap.",
+        "\\begin{tabular}{c|cc|cc}",
+        "\\toprule",
+        "H & \\multicolumn{2}{c|}{ISCF-BSCA} & \\multicolumn{2}{c}{TimeAlign$^{\\dagger}$} \\\\",
+        " & MSE & MAE & MSE & MAE \\\\",
+        "\\midrule",
+    ]
+    for horizon in (*HORIZONS, "Avg."):
+        values = [str(horizon)]
+        for model in ("ISCF-BSCA", "TimeAlign"):
+            row = lookup[(model, str(horizon))]
+            values.extend([latex_value(row, "mse"), latex_value(row, "mae")])
+        lines.append(" & ".join(values) + " \\\\")
+    lines.extend(
+        [
+            "\\bottomrule",
+            "\\end{tabular}",
+            "% $^{\\dagger}$ ETTh1-derived source-informed preset; no official TimeAlign Exchange script exists.",
             "",
         ]
     )
@@ -580,7 +646,7 @@ def write_summary(path: Path, rows: list[dict[str, Any]], args: argparse.Namespa
     iscf_rows = [row for row in rows if row["model"] == "ISCF-BSCA"]
     standard_rows = [row for row in iscf_rows if row["horizon"] != "Avg."]
     summary = {
-        "table_id": "ISCF-BSCA-MAIN-I-TIMEALIGN-TABLE6-STYLE-20260805",
+        "table_id": "ISCF-BSCA-MAIN-I-TIMEALIGN-LOCAL-20260806",
         "models": list(DISPLAY_MODELS),
         "datasets": list(DISPLAY_DATASETS),
         "horizons": list(HORIZONS),
@@ -605,8 +671,10 @@ def write_summary(path: Path, rows: list[dict[str, Any]], args: argparse.Namespa
             "ISCF-BSCA versus the five-model published comparator subset; "
             "not recomputed from all 13 displayed models"
         ),
-        "timealign_reproduced_cells": 8,
-        "timealign_published_cells": 20,
+        "timealign_reproduced_cells_in_dense_table": 28,
+        "timealign_reproduced_cells_exchange_companion": 4,
+        "timealign_reproduced_cells_total": 32,
+        "timealign_published_cells": 0,
         "source_hashes": {
             "timealign_pdf": file_sha256(args.timealign_pdf),
             "iscf_scorecard": file_sha256(args.iscf_scorecard),
@@ -616,8 +684,8 @@ def write_summary(path: Path, rows: list[dict[str, Any]], args: argparse.Namespa
             ),
         },
         "claim_boundary": (
-            "ISCF-BSCA is single-seed and test-tuned; TimeAlign is mixed local "
-            "reproduction/published by dataset; other baselines are unmatched "
+            "ISCF-BSCA is single-seed and test-tuned; TimeAlign is local single-seed "
+            "reproduction on every shared dataset; other baselines are unmatched "
             "published context"
         ),
     }
@@ -635,9 +703,20 @@ def main() -> None:
     rows.extend(load_iscf_rows(args.iscf_scorecard))
     validate_matrix(rows)
     styled_rows = add_averages_and_styles(rows)
+    exchange_rows = load_exchange_companion(
+        args.iscf_scorecard, args.timealign_reproduced
+    )
 
     write_long_csv(args.analysis_dir / "table_data_long.csv", styled_rows)
+    write_long_csv(
+        args.analysis_dir / "table_exchange_companion_long.csv",
+        exchange_rows,
+    )
     build_latex(args.analysis_dir / "table_iscf_bsca_vs_timealign_table6.tex", styled_rows)
+    build_exchange_latex(
+        args.analysis_dir / "table_exchange_iscf_vs_timealign.tex",
+        exchange_rows,
+    )
     build_pdf(args.output_pdf, styled_rows)
     write_summary(args.analysis_dir / "table_build_summary.json", styled_rows, args)
     print(
@@ -647,6 +726,7 @@ def main() -> None:
                 "rows_with_averages": len(styled_rows),
                 "models": len(DISPLAY_MODELS),
                 "datasets": len(DISPLAY_DATASETS),
+                "exchange_companion_rows_with_average": len(exchange_rows),
                 "output_pdf": str(args.output_pdf),
             },
             indent=2,

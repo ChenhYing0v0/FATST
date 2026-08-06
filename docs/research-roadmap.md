@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## TimeAlign Main I Local Reproduction Complete (2026-08-06)
+
+Current experiment cursor=`Step 9 artifact audit complete -> Step 10 baseline consolidation partial pass`。HPO terminal freeze保持不变，H4O关闭。TimeAlign已完成8 datasets × four H × seed2021的32/32 fixed-H runs，32个checkpoint hashes唯一且artifact/provenance/numeric-health gates通过；其中7 datasets使用official presets，Exchange明确为ETTh1-derived source-informed bootstrap。7-dataset Main I dense table已用本地TimeAlign替换28/28 cells；ISCF-BSCA相对本地TimeAlign在MSE/MAE为20/28、17/28 cells领先，macro低3.994%/1.491%，完整13-model displayed table为27/56 best、19/56 second。Exchange仅形成ISCF/TimeAlign companion；其他baseline Exchange以及AMD/SimpleTM/TimePerceiver/SRSNet仍缺证据，需另行冻结和授权。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_final_local_timealign_20260806/main_i_result_and_source_audit.md`。Decision=`TimeAlign_local_reproduction_complete_Main_I_shared_surface_table_finalized_remaining_baseline_gap_open`。
+
 ## H4N Complete Formal Test and Weather Decision (2026-08-06)
 
 Current experiment cursor=`Step 6 baseline consolidation`。用户于2026-08-06停止HPO；H4N selector后的8个dataset-level profiles、32 cells与checkpoint provenance已terminal freeze，H4O关闭。TimeAlign Main I本地复现冻结为8 datasets × four H × seed2021：8个ETTm2/Weather runs按相同contract复用，新增24个official fixed-H runs；Exchange单独标记为ETTh1-derived source-informed bootstrap。Resource smoke通过后启动完整queue，32/32前不替换paper table。Canonical freeze=`analysis/iscf_bsca_main_v1_hpo_20260731/final_hpo_freeze_20260806/hpo_terminal_freeze.md`；prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/timealign_main_i_full_reproduction_20260806/design_and_prelaunch_gate.md`。Decision=`terminal_HPO_freeze_then_TimeAlign_Main_I_reproduction`。

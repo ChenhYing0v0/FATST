@@ -1,0 +1,125 @@
+run_start dataset=ECL mode=fixed pred_len=336 target_horizons=[336] encoder_mode=timealign-token-mlp readout_mode=official pcc_objective_mode=off output_dir=/home/yingch/exp_outputs/r-2026-fatst/timealign_official_reproduction/main_i_8dataset_20260806/runs/TimeAlign__ECL__H336__seed2021
+train 17357
+val 2297
+	iters: 100, epoch: 1 | loss: 0.5810748
+	iters: 200, epoch: 1 | loss: 0.5103068
+	iters: 300, epoch: 1 | loss: 0.5264299
+	iters: 400, epoch: 1 | loss: 0.4817321
+	iters: 500, epoch: 1 | loss: 0.4622538
+	iters: 600, epoch: 1 | loss: 0.4444602
+	iters: 700, epoch: 1 | loss: 0.4513518
+	iters: 800, epoch: 1 | loss: 0.4208269
+	iters: 900, epoch: 1 | loss: 0.4238101
+	iters: 1000, epoch: 1 | loss: 0.4236624
+Epoch: 1, Steps: 1085 | Train Loss: 0.4903340 Vali Loss: 0.1436088
+Updating learning rate to 0.0004877641290737884
+	iters: 100, epoch: 2 | loss: 0.4220636
+	iters: 200, epoch: 2 | loss: 0.4404207
+	iters: 300, epoch: 2 | loss: 0.4207052
+	iters: 400, epoch: 2 | loss: 0.4147039
+	iters: 500, epoch: 2 | loss: 0.4036103
+	iters: 600, epoch: 2 | loss: 0.4054703
+	iters: 700, epoch: 2 | loss: 0.3906759
+	iters: 800, epoch: 2 | loss: 0.4055722
+	iters: 900, epoch: 2 | loss: 0.3924654
+	iters: 1000, epoch: 2 | loss: 0.3977934
+Epoch: 2, Steps: 1085 | Train Loss: 0.4083204 Vali Loss: 0.1405185
+Updating learning rate to 0.0004522542485937369
+	iters: 100, epoch: 3 | loss: 0.3937217
+	iters: 200, epoch: 3 | loss: 0.3788168
+	iters: 300, epoch: 3 | loss: 0.3823067
+	iters: 400, epoch: 3 | loss: 0.3727278
+	iters: 500, epoch: 3 | loss: 0.3967358
+	iters: 600, epoch: 3 | loss: 0.3903364
+	iters: 700, epoch: 3 | loss: 0.3755109
+	iters: 800, epoch: 3 | loss: 0.3743156
+	iters: 900, epoch: 3 | loss: 0.3615067
+	iters: 1000, epoch: 3 | loss: 0.3683962
+Epoch: 3, Steps: 1085 | Train Loss: 0.3870810 Vali Loss: 0.1391898
+Updating learning rate to 0.0003969463130731183
+	iters: 100, epoch: 4 | loss: 0.3868710
+	iters: 200, epoch: 4 | loss: 0.3569611
+	iters: 300, epoch: 4 | loss: 0.3665309
+	iters: 400, epoch: 4 | loss: 0.3689814
+	iters: 500, epoch: 4 | loss: 0.3774942
+	iters: 600, epoch: 4 | loss: 0.3841197
+	iters: 700, epoch: 4 | loss: 0.3571316
+	iters: 800, epoch: 4 | loss: 0.3795353
+	iters: 900, epoch: 4 | loss: 0.3855688
+	iters: 1000, epoch: 4 | loss: 0.3655640
+Epoch: 4, Steps: 1085 | Train Loss: 0.3776134 Vali Loss: 0.1393784
+Updating learning rate to 0.00032725424859373687
+	iters: 100, epoch: 5 | loss: 0.3473885
+	iters: 200, epoch: 5 | loss: 0.3682442
+	iters: 300, epoch: 5 | loss: 0.3747167
+	iters: 400, epoch: 5 | loss: 0.3522409
+	iters: 500, epoch: 5 | loss: 0.3647876
+	iters: 600, epoch: 5 | loss: 0.3656511
+	iters: 700, epoch: 5 | loss: 0.3610533
+	iters: 800, epoch: 5 | loss: 0.3505679
+	iters: 900, epoch: 5 | loss: 0.3744389
+	iters: 1000, epoch: 5 | loss: 0.3683922
+Epoch: 5, Steps: 1085 | Train Loss: 0.3713458 Vali Loss: 0.1382538
+Updating learning rate to 0.00025
+	iters: 100, epoch: 6 | loss: 0.3538968
+	iters: 200, epoch: 6 | loss: 0.3555658
+	iters: 300, epoch: 6 | loss: 0.3614214
+	iters: 400, epoch: 6 | loss: 0.3716277
+	iters: 500, epoch: 6 | loss: 0.3477500
+	iters: 600, epoch: 6 | loss: 0.3802060
+	iters: 700, epoch: 6 | loss: 0.3592044
+	iters: 800, epoch: 6 | loss: 0.3670273
+	iters: 900, epoch: 6 | loss: 0.3553773
+	iters: 1000, epoch: 6 | loss: 0.3640815
+Epoch: 6, Steps: 1085 | Train Loss: 0.3664154 Vali Loss: 0.1364347
+Updating learning rate to 0.00017274575140626317
+	iters: 100, epoch: 7 | loss: 0.3437113
+	iters: 200, epoch: 7 | loss: 0.3593982
+	iters: 300, epoch: 7 | loss: 0.3612034
+	iters: 400, epoch: 7 | loss: 0.3392368
+	iters: 500, epoch: 7 | loss: 0.3669148
+	iters: 600, epoch: 7 | loss: 0.3341580
+	iters: 700, epoch: 7 | loss: 0.3417375
+	iters: 800, epoch: 7 | loss: 0.3309492
+	iters: 900, epoch: 7 | loss: 0.3490249
+	iters: 1000, epoch: 7 | loss: 0.3900948
+Epoch: 7, Steps: 1085 | Train Loss: 0.3621968 Vali Loss: 0.1370051
+Updating learning rate to 0.00010305368692688174
+	iters: 100, epoch: 8 | loss: 0.3607537
+	iters: 200, epoch: 8 | loss: 0.3551555
+	iters: 300, epoch: 8 | loss: 0.3551971
+	iters: 400, epoch: 8 | loss: 0.3622874
+	iters: 500, epoch: 8 | loss: 0.3624422
+	iters: 600, epoch: 8 | loss: 0.3706646
+	iters: 700, epoch: 8 | loss: 0.3461753
+	iters: 800, epoch: 8 | loss: 0.3618256
+	iters: 900, epoch: 8 | loss: 0.3499770
+	iters: 1000, epoch: 8 | loss: 0.3472054
+Epoch: 8, Steps: 1085 | Train Loss: 0.3587103 Vali Loss: 0.1356622
+Updating learning rate to 4.7745751406263163e-05
+	iters: 100, epoch: 9 | loss: 0.3534696
+	iters: 200, epoch: 9 | loss: 0.3515999
+	iters: 300, epoch: 9 | loss: 0.3561123
+	iters: 400, epoch: 9 | loss: 0.3343478
+	iters: 500, epoch: 9 | loss: 0.3494114
+	iters: 600, epoch: 9 | loss: 0.3592262
+	iters: 700, epoch: 9 | loss: 0.3465887
+	iters: 800, epoch: 9 | loss: 0.3396801
+	iters: 900, epoch: 9 | loss: 0.3738231
+	iters: 1000, epoch: 9 | loss: 0.3677261
+Epoch: 9, Steps: 1085 | Train Loss: 0.3563902 Vali Loss: 0.1357558
+Updating learning rate to 1.2235870926211617e-05
+	iters: 100, epoch: 10 | loss: 0.3635937
+	iters: 200, epoch: 10 | loss: 0.3691565
+	iters: 300, epoch: 10 | loss: 0.3743383
+	iters: 400, epoch: 10 | loss: 0.3740501
+	iters: 500, epoch: 10 | loss: 0.3518424
+	iters: 600, epoch: 10 | loss: 0.3632453
+	iters: 700, epoch: 10 | loss: 0.3460249
+	iters: 800, epoch: 10 | loss: 0.3322107
+	iters: 900, epoch: 10 | loss: 0.3424810
+	iters: 1000, epoch: 10 | loss: 0.3433076
+Epoch: 10, Steps: 1085 | Train Loss: 0.3553746 Vali Loss: 0.1358612
+Updating learning rate to 0.0
+test 4925
+run_done output_dir=/home/yingch/exp_outputs/r-2026-fatst/timealign_official_reproduction/main_i_8dataset_20260806/runs/TimeAlign__ECL__H336__seed2021 evaluation_split=test

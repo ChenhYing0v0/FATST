@@ -8,14 +8,14 @@
 | `version` | `v0.51` |
 | `last_updated` | `2026-08-06` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 4 v0.1 pending author review；experiments=HPO terminally frozen，TimeAlign Main I eight-dataset reproduction prelaunch |
+| `current_review_cursor` | writing=Section 4 v0.1 pending author review；experiments=HPO terminally frozen，TimeAlign Main I 32/32 local reproduction and shared-surface table complete |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.7正文 + approved Figures 2--3 |
 | `provisional_content` | Section 4 v0.1 + Method Figure 4 initial draft；remaining sections |
-| `authorization_source` | 2026-08-06用户指令停止HPO、冻结当前最优profiles并复跑TimeAlign全部Main I datasets；H4O关闭，other baselines、selected-profile confirmation与3-seed未扩展授权 |
+| `authorization_source` | 2026-08-06用户指令停止HPO、冻结当前最优profiles并复跑TimeAlign全部Main I datasets；该scope已完成，H4O关闭，other baselines、selected-profile confirmation与3-seed未扩展授权 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
@@ -1355,7 +1355,7 @@ H4N formal test现已40/40、160/160完成。Full-table selector选择`L608/p19/
 | --- | --- | --- |
 | linear / mixing | AMD, TimeMixer, DLinear | TimeMixer/DLinear来自TimeAlign Table 6；AMD与缺失cells官方复现 |
 | Transformer-based | SimpleTM, iTransformer, PatchTST | iTransformer/PatchTST来自TimeAlign Table 6；SimpleTM与缺失cells官方复现 |
-| recent official-native | TimePerceiver, SRSNet, TimeAlign | TimeAlign优先Table 6；其余及Exchange缺口使用official scripts |
+| recent official-native | TimePerceiver, SRSNet, TimeAlign | TimeAlign使用本地复跑；其余及Exchange缺口使用official scripts |
 | paper method | ISCF-BSCA-MAIN-v1 | validation-selected checkpoints + test-tuned dataset profiles |
 
 该表回答一个 unified model 能否与 separately optimized horizon-specific
@@ -1365,13 +1365,14 @@ iTransformer、PatchTST在目标集合中7个datasets的four-H结果，缺Exchan
 AMD、SimpleTM、TimePerceiver、SRSNet在TimeAlign表中不存在，须用各自official
 repository复现全部8 datasets；上述5个published models还需官方复现Exchange。
 PDT固定`L=96`，仅保留secondary cross-check。TimeAlign表存在lookback search
-集合描述差异，且published values为3-seed mean；当前official reproduction
-统一先用seed2021并披露差异。TimeAlign Exchange脚本已按ETTh1 bootstrap在本地
-构建但未运行。所有native/published rows都不进入matched mechanism attribution。
+集合描述差异，且published values为3-seed mean；本地official reproduction
+统一使用seed2021并披露差异。TimeAlign Exchange已按ETTh1-derived bootstrap
+复跑，但因没有official Exchange preset，必须标记为source-informed而非official。
+所有native/published rows都不进入matched mechanism attribution。
 
 Table 6的140个目标published rows已完成PDF-coordinate transcription与渲染核验。源PDF存在5组逐horizon均值与reported Avg不一致，并分别在Table 1 caption、main-text implementation与Appendix E.1给出三种lookback grid；主表必须使用逐horizon原值并披露这些source-native protocol差异。
 
-截至2026-08-05，Main I另生成一张TimeAlign Table-6-style宽比较草表：保留7个共同datasets，加入ISCF-BSCA并展示Table 6全部12个baselines，共13 models × four H。TimeAlign的ETTm2/Weather替换为本地official-native seed2021 reproduction，其余5 datasets仍使用published means；其他11个baselines保持published context。所有Avg均由逐H原值重新计算，best/second按三位小数displayed values判定。完整13-model scope下ISCF-BSCA为29/56 best、16/56 second（允许并列），不能与五模型frozen comparator scope的33/56混写。Traffic/Exchange不共享当前ISCF/Table-6证据面，故当前草表不包含二者；该排版工件不改变Step 6 rollback或实验授权状态。
+截至2026-08-06，TimeAlign 8 datasets × four H × seed2021已32/32完成并通过artifact/hash audit。Main I TimeAlign Table-6-style宽表保留7个共同datasets，加入ISCF-BSCA并展示Table 6全部12个baselines，共13 models × four H；TimeAlign 28/28 shared cells全部替换为本地复跑值，其他11个baselines保持published context。所有Avg均由逐H原值重新计算，best/second按三位小数displayed values判定。完整13-model scope下ISCF-BSCA为27/56 best、19/56 second（允许并列），不能与五模型frozen comparator scope的33/56混写。Exchange另列ISCF-BSCA/TimeAlign companion；由于其他baseline的Exchange与AMD/SimpleTM/TimePerceiver/SRSNet全矩阵仍缺证据，当前完成的是shared-surface numeric table，不得声称最初规划的8-dataset/9-baseline矩阵已全部闭合。
 
 ### 8.3 Main Results II：Unified Multi-Horizon Benchmark
 

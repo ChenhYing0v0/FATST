@@ -1,0 +1,3 @@
+target_horizon,segment_start,segment_end,mse,mae,mode,run_name,dataset,pred_len,checkpoint_policy,evaluation_split,official_test_mode,protocol_class,protocol_profile,profile_hash
+192,0,96,0.17739200592041016,0.2053174078464508,fixed,TimeAlign__Solar__H192__seed2021,Solar,192,official-last,test,1,native_external,TIMEALIGN-OFFICIAL-MAIN-I-8DATASET-REPRODUCTION-20260806,78911cb2eeee3dcfe0cbf1d6887e2fcc1e889c476147374eb03f9903e57827c8
+192,96,192,0.2184455543756485,0.2286522090435028,fixed,TimeAlign__Solar__H192__seed2021,Solar,192,official-last,test,1,native_external,TIMEALIGN-OFFICIAL-MAIN-I-8DATASET-REPRODUCTION-20260806,78911cb2eeee3dcfe0cbf1d6887e2fcc1e889c476147374eb03f9903e57827c8

@@ -47,3 +47,13 @@ H4M formal test结束后，generic `scripts/analyze_iscf_bsca_main_v1_hpo_test_a
 `scripts/check_timealign_official_main_i_reproduction.py`验证12个executed source hashes、8个dataset hashes、32-run cross product、8 reusable/24 new边界、Exchange非官方preset标签、test-once contract与runner dry-run。Exchange的参数来自本地source-audited ETTh1 bootstrap，不能写成TimeAlign官方Exchange result。
 
 `scripts/freeze_iscf_bsca_main_v1_final_profiles.py`独立扫描各HPO阶段的checkpoint manifests、training ledgers与test ledgers，逐dataset核对checkpoint test前后hash、four-H cells和profile means，再生成8-profile provenance manifest与32-cell terminal scorecard。该脚本只物化已冻结selector，不重新选择profile。
+
+`scripts/analyze_timealign_official_main_i_reproduction.py`合并24个new remote-lite
+directories与8个reused ETTm2/Weather directories，并以remote生成的32-checkpoint
+SHA256清单作为binary immutability证据。它逐job核对dataset/H/seed、source hash、
+dataset hash、official-last budget、test-once role、metrics shape和failure patterns；
+对reuse runs还要求先前artifact manifest完全通过。输出字段中
+`mse_vs_published_pct=100(local_mse/published_mse-1)`，MAE同理；Exchange没有
+published reference，因此对应字段留空且`preset_role`固定为
+`source_informed_etth1_bootstrap_not_official`。任何missing cell、重复hash、source
+drift或numeric failure都会中止，不能生成可供table builder读取的32-row scorecard。

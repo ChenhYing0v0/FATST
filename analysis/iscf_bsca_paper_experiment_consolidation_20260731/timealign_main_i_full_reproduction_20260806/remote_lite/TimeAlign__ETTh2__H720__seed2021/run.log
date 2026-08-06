@@ -1,0 +1,45 @@
+run_start dataset=ETTh2 mode=fixed pred_len=720 target_horizons=[720] encoder_mode=timealign-token-mlp readout_mode=official pcc_objective_mode=off output_dir=/home/yingch/exp_outputs/r-2026-fatst/timealign_official_reproduction/main_i_8dataset_20260806/runs/TimeAlign__ETTh2__H720__seed2021
+train 7201
+val 2161
+	iters: 100, epoch: 1 | loss: 0.8321540
+	iters: 200, epoch: 1 | loss: 0.6674963
+Epoch: 1, Steps: 226 | Train Loss: 0.8534803 Vali Loss: 0.6279721
+Updating learning rate to 0.0004877641290737884
+	iters: 100, epoch: 2 | loss: 0.7076620
+	iters: 200, epoch: 2 | loss: 0.7660122
+Epoch: 2, Steps: 226 | Train Loss: 0.7320232 Vali Loss: 0.7113001
+Updating learning rate to 0.0004522542485937369
+	iters: 100, epoch: 3 | loss: 0.7197133
+	iters: 200, epoch: 3 | loss: 0.7057879
+Epoch: 3, Steps: 226 | Train Loss: 0.6876825 Vali Loss: 0.7440514
+Updating learning rate to 0.0003969463130731183
+	iters: 100, epoch: 4 | loss: 0.5886320
+	iters: 200, epoch: 4 | loss: 0.5641800
+Epoch: 4, Steps: 226 | Train Loss: 0.6552659 Vali Loss: 0.7346388
+Updating learning rate to 0.00032725424859373687
+	iters: 100, epoch: 5 | loss: 0.7212847
+	iters: 200, epoch: 5 | loss: 0.5536364
+Epoch: 5, Steps: 226 | Train Loss: 0.6268432 Vali Loss: 0.7697169
+Updating learning rate to 0.00025
+	iters: 100, epoch: 6 | loss: 0.7051908
+	iters: 200, epoch: 6 | loss: 0.5649104
+Epoch: 6, Steps: 226 | Train Loss: 0.6067057 Vali Loss: 0.7774657
+Updating learning rate to 0.00017274575140626317
+	iters: 100, epoch: 7 | loss: 0.5959861
+	iters: 200, epoch: 7 | loss: 0.5954287
+Epoch: 7, Steps: 226 | Train Loss: 0.5895474 Vali Loss: 0.7811803
+Updating learning rate to 0.00010305368692688174
+	iters: 100, epoch: 8 | loss: 0.5534294
+	iters: 200, epoch: 8 | loss: 0.6109067
+Epoch: 8, Steps: 226 | Train Loss: 0.5786819 Vali Loss: 0.7894744
+Updating learning rate to 4.7745751406263163e-05
+	iters: 100, epoch: 9 | loss: 0.5750840
+	iters: 200, epoch: 9 | loss: 0.5516565
+Epoch: 9, Steps: 226 | Train Loss: 0.5710254 Vali Loss: 0.7741477
+Updating learning rate to 1.2235870926211617e-05
+	iters: 100, epoch: 10 | loss: 0.5274648
+	iters: 200, epoch: 10 | loss: 0.4483015
+Epoch: 10, Steps: 226 | Train Loss: 0.5702044 Vali Loss: 0.7810579
+Updating learning rate to 0.0
+test 2161
+run_done output_dir=/home/yingch/exp_outputs/r-2026-fatst/timealign_official_reproduction/main_i_8dataset_20260806/runs/TimeAlign__ETTh2__H720__seed2021 evaluation_split=test

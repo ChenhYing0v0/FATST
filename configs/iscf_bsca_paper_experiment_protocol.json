@@ -22,11 +22,11 @@
         "efficiency",
         "fresh_mechanism_diagnostics"
       ],
-      "status": "H4J_joint_objective_hpo_authorized_terminal_profiles_pending"
+      "status": "terminal_H4N_profiles_frozen_HPO_stopped"
     }
   },
   "authorization": {
-    "current_decision": "H4J_joint_objective_frozen_remote_resource_smoke_and_training_authorized",
+    "current_decision": "HPO_terminally_frozen_TimeAlign_Main_I_32_of_32_local_reproduction_complete",
     "existing_artifact_audit": true,
     "matrix_design": true,
     "test_tuned_hpo_project_principle": {
@@ -37,23 +37,23 @@
     },
     "local_protocol_patch": true,
     "remote_training": true,
-    "official_test_hpo_execution": true,
+    "official_test_hpo_execution": false,
     "H4J_formal_test_after_complete_training_manifest": true,
     "formal_test": false,
     "current_user_authorization": {
-      "date": "2026-08-02",
-      "instruction": "optimize_dataset_level_joint_mse_mae_means_and_reach_at_least_40_of_56_balanced_leading_cells",
+      "date": "2026-08-06",
+      "instruction": "stop_HPO_freeze_current_best_and_replace_TimeAlign_table_rows_with_complete_local_reproduction",
       "Tier_A": true,
       "Tier_B1_H0_H1": true,
-      "Tier_B2_bounded_HPO_and_test_profile_ranking": true,
+      "Tier_B2_bounded_HPO_and_test_profile_ranking": false,
       "Tier_B3_selected_profile_confirmation": false,
-      "Tier_C_final_reporting_audit": false
+      "Tier_C_final_reporting_audit": true
     },
     "scoped_local_patch_authorizations": {
       "timealign_exchange_script": {
         "authorized_by_user": true,
-        "status": "implemented_local_static_verification_pass_unlaunched",
-        "remote_execution": false,
+        "status": "completed_source_informed_ETTh1_bootstrap_not_official",
+        "remote_execution": true,
         "scope": "ETTh1_derived_TimeAlign_Exchange_four_horizon_seed2021_script_only"
       }
     },
@@ -61,6 +61,18 @@
       "published_result_transcription": true,
       "main_i_remote_training": false,
       "main_i_formal_test": false,
+      "timealign_main_i_completed": {
+        "protocol_id": "TIMEALIGN-OFFICIAL-MAIN-I-8DATASET-REPRODUCTION-20260806",
+        "matrix": "8_datasets_x_4_horizons_x_seed2021",
+        "complete_runs": 32,
+        "new_runs": 24,
+        "reused_runs": 8,
+        "unique_checkpoint_hashes": 32,
+        "shared_table_cells_replaced": 28,
+        "exchange_role": "source_informed_etth1_bootstrap_not_official",
+        "artifact_complete": true,
+        "formal_test_scope_consumed": true
+      },
       "main_ii_local_source_protocol_patch": false,
       "main_ii_remote_training": false,
       "main_ii_formal_test": false
@@ -1090,7 +1102,8 @@
   },
   "main_candidate_hpo": {
     "candidate_id": "ISCF-BSCA-MAIN-v1",
-    "priority": "highest_current_experiment_priority",
+    "priority": "terminally_frozen_not_active",
+    "status": "stopped_by_user_after_H4N_current_best_profiles_fixed",
     "architecture_search": false,
     "checkpoint_selection_split": "validation_only",
     "checkpoint_selector": "mean_validation_mse_over_h96_h192_h336_h720",
@@ -1098,7 +1111,7 @@
     "hyperparameter_selector": "minimum_mean_official_test_mse_over_h96_h192_h336_h720_per_dataset",
     "profile_granularity": "one_profile_per_dataset_shared_by_all_four_horizons",
     "per_horizon_hyperparameter_selection": false,
-    "test_guided_retuning": true,
+    "test_guided_retuning": false,
     "all_trial_results_logged": true,
     "search_dimensions": [
       "seq_len_or_lookback",

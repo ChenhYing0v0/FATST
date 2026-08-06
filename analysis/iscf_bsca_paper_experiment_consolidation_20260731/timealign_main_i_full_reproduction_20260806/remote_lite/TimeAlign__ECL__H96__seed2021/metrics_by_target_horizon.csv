@@ -1,0 +1,2 @@
+target_horizon,mse,mae,num_samples,num_channels,eval_prefix_steps,mode,run_name,dataset,pred_len,checkpoint_policy,evaluation_split,official_test_mode,protocol_class,protocol_profile,profile_hash
+96,0.12579857546370476,0.21577556912476817,5165,321,96,fixed,TimeAlign__ECL__H96__seed2021,ECL,96,official-last,test,1,native_external,TIMEALIGN-OFFICIAL-MAIN-I-8DATASET-REPRODUCTION-20260806,8b47eed193979fc592da6eded1e120695dd93ed611b78454e97e21853a09379c

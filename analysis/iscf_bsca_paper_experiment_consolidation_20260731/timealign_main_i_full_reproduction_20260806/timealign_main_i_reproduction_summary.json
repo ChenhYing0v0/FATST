@@ -1,0 +1,63 @@
+{
+  "protocol_id": "TIMEALIGN-OFFICIAL-MAIN-I-8DATASET-REPRODUCTION-20260806",
+  "runs_complete": 32,
+  "test_rows_complete": 32,
+  "unique_checkpoint_hashes": 32,
+  "reusable_runs": 8,
+  "new_runs": 24,
+  "dataset_summary": {
+    "ETTh1": {
+      "mse": 0.4179901400828616,
+      "mae": 0.42939616111975665,
+      "published_comparison_available": true,
+      "preset_role": "official"
+    },
+    "ETTh2": {
+      "mse": 0.34666480478832484,
+      "mae": 0.38651686651680234,
+      "published_comparison_available": true,
+      "preset_role": "official"
+    },
+    "ETTm1": {
+      "mse": 0.3397042190729981,
+      "mae": 0.3669593134861706,
+      "published_comparison_available": true,
+      "preset_role": "official"
+    },
+    "ETTm2": {
+      "mse": 0.24288898940116818,
+      "mae": 0.3025232161875696,
+      "published_comparison_available": true,
+      "preset_role": "official"
+    },
+    "Weather": {
+      "mse": 0.21580037181944742,
+      "mae": 0.24472528145563538,
+      "published_comparison_available": true,
+      "preset_role": "official"
+    },
+    "ECL": {
+      "mse": 0.15470427214560684,
+      "mae": 0.24385345674467288,
+      "published_comparison_available": true,
+      "preset_role": "official"
+    },
+    "Solar": {
+      "mse": 0.19596958329472858,
+      "mae": 0.21664659654812163,
+      "published_comparison_available": true,
+      "preset_role": "official"
+    },
+    "Exchange": {
+      "mse": 0.5125577760593654,
+      "mae": 0.4596924925620283,
+      "published_comparison_available": false,
+      "preset_role": "source_informed_etth1_bootstrap_not_official"
+    }
+  },
+  "metrics_sha256": "6fccaeddec410ff2eda2c2533afacb1ce28459261eae6566dd6eb3f5b390d9f8",
+  "artifact_manifest_sha256": "f09e4634e5dee543291225d2fe3fbcedc0aac75805a7e925ffb40a769519c461",
+  "artifact_complete": true,
+  "matrix_complete": true,
+  "decision": "TimeAlign_Main_I_32_of_32_local_reproduction_complete"
+}

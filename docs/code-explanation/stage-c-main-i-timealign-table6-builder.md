@@ -15,15 +15,18 @@ official-native reproduction scorecard，以及已经人工核验的 published s
 2. `validate_against_audited_selected()` 将抽取结果中的 TimeAlign、TimeMixer、
    DLinear、iTransformer、PatchTST 共 140 rows 与已有审计 CSV 精确比较。任一 key
    缺失或 metric 不同都会中止。
-3. `load_iscf_rows()` 读取 H1--H4M joint-selected standard-horizon rows，并固定其
+3. `load_iscf_rows()` 读取 terminal H4N freeze 的 standard-horizon rows，并固定其
    `system_role=unified_single_model_per_dataset`。
-4. `override_reproduced_timealign()` 只替换 ETTm2/Weather × four horizons 的
-   TimeAlign MSE/MAE，共 8 rows；其余 TimeAlign rows 保持 published origin。
+4. `override_reproduced_timealign()` 要求并替换 7 个 shared datasets × four
+   horizons 的 TimeAlign MSE/MAE，共 28 rows；TimeAlign published rows只保留为
+   source cross-check，不再进入dense table数值。
 5. `validate_matrix()` 要求标准矩阵恰为
    $13\text{ models}\times7\text{ datasets}\times4\text{ horizons}=364$ 个唯一 keys。
 6. `add_averages_and_styles()` 对每个 model-dataset block 重新计算 four-H arithmetic
    mean；随后按三位小数 displayed values 求不同数值中的 best 与 second-best。
-7. `write_long_csv()`、`build_latex()` 和 `build_pdf()` 从同一个 merged row list
+7. `load_exchange_companion()`另外读取ISCF-BSCA与TimeAlign的Exchange four-H
+   rows，生成明确标注source-informed bootstrap的companion CSV/LaTeX block。
+8. `write_long_csv()`、`build_latex()` 和 `build_pdf()` 从同一个 merged row list
    分别生成 machine-readable CSV、LaTeX 与单页 PDF，避免三种载体发生数值漂移。
 
 ## 3. `table_data_long.csv` 字段定义
@@ -50,12 +53,12 @@ official-native reproduction scorecard，以及已经人工核验的 published s
 - 每个 dataset 跨五行显示，并用 horizontal rule 分隔；
 - ISCF-BSCA 与 TimeAlign 两列分别使用浅橙和浅灰背景，便于读者定位；
 - `best` 渲染为红色粗体，`second` 渲染为蓝色下划线；
-- TimeAlign 表头带星号，脚注解释 ETTm2/Weather 为本地复现、其余为 published；
+- TimeAlign 表头与脚注说明全部7个shared datasets均为本地seed2021复现；
 - PDF 使用单页宽幅画布，LaTeX 使用 `table* + resizebox`，二者共享同一排序和数值。
 
 ## 5. 可证伪条件
 
 以下任一情况都应使 builder 失败或阻止表格进入论文：source PDF hash 变化、已审计
-140-row subset 不再精确一致、TimeAlign reproduction 不是恰好 8 rows、标准矩阵不是
+140-row subset 不再精确一致、TimeAlign reproduction 不覆盖全部32个Main I cells、标准矩阵不是
 364 个唯一 keys、任一 model-dataset block 缺少 four-H rows。视觉 QA 还需确认 PDF
 无截断、重叠或不可读脚注；代码验证不能替代这一项。

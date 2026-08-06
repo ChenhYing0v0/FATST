@@ -1,0 +1,35 @@
+run_start dataset=Exchange mode=fixed pred_len=720 target_horizons=[720] encoder_mode=timealign-token-mlp readout_mode=official pcc_objective_mode=off output_dir=/home/yingch/exp_outputs/r-2026-fatst/timealign_official_reproduction/main_i_8dataset_20260806/runs/TimeAlign__Exchange__H720__seed2021
+train 3872
+val 41
+	iters: 100, epoch: 1 | loss: 0.7417313
+Epoch: 1, Steps: 121 | Train Loss: 0.8621849 Vali Loss: 1.8265418
+Updating learning rate to 0.0004877641290737884
+	iters: 100, epoch: 2 | loss: 0.6894767
+Epoch: 2, Steps: 121 | Train Loss: 0.7165378 Vali Loss: 2.2250471
+Updating learning rate to 0.0004522542485937369
+	iters: 100, epoch: 3 | loss: 0.6908504
+Epoch: 3, Steps: 121 | Train Loss: 0.6812806 Vali Loss: 1.8093392
+Updating learning rate to 0.0003969463130731183
+	iters: 100, epoch: 4 | loss: 0.6739835
+Epoch: 4, Steps: 121 | Train Loss: 0.6595965 Vali Loss: 1.7113383
+Updating learning rate to 0.00032725424859373687
+	iters: 100, epoch: 5 | loss: 0.6054939
+Epoch: 5, Steps: 121 | Train Loss: 0.6475123 Vali Loss: 1.6365529
+Updating learning rate to 0.00025
+	iters: 100, epoch: 6 | loss: 0.6742571
+Epoch: 6, Steps: 121 | Train Loss: 0.6381278 Vali Loss: 1.6148998
+Updating learning rate to 0.00017274575140626317
+	iters: 100, epoch: 7 | loss: 0.6447690
+Epoch: 7, Steps: 121 | Train Loss: 0.6311062 Vali Loss: 1.5515010
+Updating learning rate to 0.00010305368692688174
+	iters: 100, epoch: 8 | loss: 0.6249348
+Epoch: 8, Steps: 121 | Train Loss: 0.6268098 Vali Loss: 1.4995187
+Updating learning rate to 4.7745751406263163e-05
+	iters: 100, epoch: 9 | loss: 0.5514137
+Epoch: 9, Steps: 121 | Train Loss: 0.6235578 Vali Loss: 1.5274619
+Updating learning rate to 1.2235870926211617e-05
+	iters: 100, epoch: 10 | loss: 0.6370745
+Epoch: 10, Steps: 121 | Train Loss: 0.6225337 Vali Loss: 1.5228508
+Updating learning rate to 0.0
+test 798
+run_done output_dir=/home/yingch/exp_outputs/r-2026-fatst/timealign_official_reproduction/main_i_8dataset_20260806/runs/TimeAlign__Exchange__H720__seed2021 evaluation_split=test
