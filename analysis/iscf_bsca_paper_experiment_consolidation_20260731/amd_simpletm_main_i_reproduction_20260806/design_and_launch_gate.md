@@ -109,3 +109,15 @@ Main I cell value定义：AMD 使用单次 native run；SimpleTM 使用同一 of
 `prelaunch=conditional_pass`：用户授权、source、matrix、adapter 与 rollback 边界已冻结；在完成本地最小验证、commit/push、remote pull、GPU复核和 14/14 resource smoke 前，不启动 formal queue。
 
 Remote GitHub HTTPS checkout在训练前连续两次超时。允许的source-transport fallback为：把本地已经exact commit/hash audit、且保留`.git` metadata的两个official checkout同步到repo-external `_upstream`目录；remote runner重新验证commit、clean status与全部source hashes。该fallback只改变source transport，不改变executed source或experiment contract。
+
+## 9. Resource gate 与 formal launch record
+
+- experiment code commit：`014b06813d1fcee71e97d22963872ce8aa3d8cc0`；
+- final resource smoke完成时间：`2026-08-06T22:13:19+08:00`；
+- 14/14 dataset units、14/14 checkpoints、formal test rows=0；无OOM/NaN/Traceback/file-descriptor failure；
+- smoke root当前总占用约632 MiB；checkpoint-size projection=2.235 GiB，2× safety projection=4.470 GiB，显著低于35 GiB frozen budget；launch前quota约178/220 GiB；
+- formal queue启动时间：`2026-08-06T22:14:19+08:00`；background PID=`4100426`；
+- first wave：GPU0=`SimpleTM:ECL`、GPU1=`SimpleTM:Solar`、GPU2=`SimpleTM:Weather`；
+- initial health：driver存活、failure tokens=0；GPU0 ECL约8.99 GiB，GPU1/2仍有充分余量。
+
+`launch_decision=pass_remote_active_no_babysitting`。按用户要求，启动确认后停止驻守；下一次只在用户通知remote完成后执行110/110 artifact/hash audit、聚合56/56 cells并原子重建Main I。

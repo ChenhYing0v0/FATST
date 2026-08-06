@@ -21,11 +21,11 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper consolidation；writing=Section 4 v0.1 pending author review；experiments=AMD/SimpleTM Step8 resource gate |
+| `current_11_step` | paper consolidation；writing=Section 4 v0.1 pending author review；experiments=AMD/SimpleTM Step8 remote active |
 | `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；`ISCF-BSCA-MAIN-v1` 8 selected profiles reusable |
-| `latest_decision` | `AMD_SimpleTM_56_cell_prelaunch_conditional_pass` |
+| `latest_decision` | `AMD_SimpleTM_remote_active_no_babysitting` |
 | `writing_latest_decision` | `section4_v0_1_and_method_figure4_initial_draft_pending_author_review` |
-| `next_required_action` | 14-job no-test resource smoke -> storage gate -> background formal queue |
+| `next_required_action` | wait user completion notice -> 110/110 audit -> atomic Main I rebuild |
 | `method_training_authorized` | AMD/SimpleTM seven-dataset scope=true；ISCF HPO/Main II/other baselines=false |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
@@ -33,7 +33,7 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | HPO frozen；AMD/SimpleTM Step6--7 complete，Step8 resource gate pending |
+| `current_step` | HPO frozen；AMD/SimpleTM 14/14 resource gate pass，Step8 formal remote active |
 | `problem` | Introduction的horizon-specific superiority、component effectiveness与decoder portability claims尚缺完整paper-facing evidence |
 | `existence_evidence` | AMD/SimpleTM均有7-dataset official scripts；exact commits/source hashes和56-cell/110-checkpoint contract已冻结 |
 | `idea` | tuned main candidate + eight-dataset SOTA table + matched unified benchmark + exact five-dataset ablation/end-to-end transfer |
@@ -42,7 +42,7 @@
 | `narrative_gate` | architecture family冻结；SOTA wording由完整test-tuned result决定并披露test-informed边界 |
 | `effectiveness_gate` | pending 110/110 raw rows and 56/56 aggregated cells；partial rows禁止进入Main I |
 | `artifacts` | prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/amd_simpletm_main_i_reproduction_20260806/design_and_launch_gate.md` |
-| `decision` | source/protocol conditional pass；resource/storage gate后启动，不扩张其他baseline |
+| `decision` | formal PID=4100426 active；no babysitting；110/110前不替换published cells或扩张其他baseline |
 
 ## Exact Ablation Anchor Contract
 

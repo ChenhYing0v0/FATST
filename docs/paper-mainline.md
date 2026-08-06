@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 4 v0.1 pending author review；experiments=AMD/SimpleTM 56-cell official reproduction prelaunch |
+| `current_11_step` | paper consolidation；writing=Section 4 v0.1 pending author review；experiments=AMD/SimpleTM 56-cell formal queue active |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -20,6 +20,8 @@
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` eight dataset profiles and 32 cells terminally frozen after H4N；strong aggregate competitor但未达per-cell target |
 
 [AMD / SimpleTM Main I Official Reproduction Prelaunch, 2026-08-06] 用户已授权七个dense datasets × four H的两列本地复现。AMD固定official commit `000d377...`、released scripts、`L512/seed2024`与28次单run；SimpleTM固定commit `3c77d82...`、released scripts、`L96/fix_seed2025/native itr`与82次repetitions。SimpleTM epoch-level test access由runtime adapter移除，checkpoint仍只由validation early stopping选择，训练结束后每个checkpoint只test一次；upstream无license，故不vendoring。总计56 paper cells/110 checkpoints，先完成14个H720 no-test smoke与35 GiB storage gate，再后台启动；110/110完整审计前保留现有published AMD/SimpleTM values。Canonical prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/amd_simpletm_main_i_reproduction_20260806/design_and_launch_gate.md`。Decision=`AMD_SimpleTM_prelaunch_frozen_remote_authorized_pending_resource_gate`。
+
+[AMD / SimpleTM Main I Formal Launch, 2026-08-06] 14/14 H720 resource smokes、14 checkpoints与test=0 gate通过；checkpoint storage 2× projection=4.470 GiB，低于35 GiB budget。Remote GitHub TLS失败后只改变source transport：本地exact audited `.git` checkouts同步到repo-external remote root，并重新验证commit/clean/source hashes。Formal queue在experiment commit `014b068`上于22:14:19启动，PID=`4100426`；first wave为SimpleTM ECL/Solar/Weather，initial failure tokens=0。按用户要求不驻守；110/110 checkpoints/metrics与56/56 cells审计前不替换published AMD/SimpleTM。Decision=`AMD_SimpleTM_remote_active_no_babysitting`。
 
 [QDF Solar Result and Main I 14-Model Table, 2026-08-06] QDF Table 6的六dataset 24 rows与本地Solar source-informed 4 rows已形成28/28完整surface。Solar H96/192/336/720 MSE=`0.190262/0.218261/0.334881/0.380994`，MAE=`0.224629/0.249375/0.333303/0.358703`，mean=`0.281099/0.291503`；明显弱于本地TimeAlign与ISCF-BSCA Solar，完整保留不筛选。首次test因`num_workers=10`触发remote file-descriptor limit；四个validation-selected checkpoints未重训，commit `2c147bf`以`num_workers=0`完成evaluation-only retry，原失败日志、checkpoint hashes和mtime provenance均保留。Main I现为14 models × 7 datasets × four H，顺序为ISCF-BSCA、TimeAlign、QDF、其余Table-6 baselines；ISCF仍为27/56 best、19/56 second。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/qdf_main_i_20260806/result_and_table_audit.md`。Decision=`QDF_Solar_4_of_4_complete_Main_I_14_model_table_finalized_with_mixed_source_disclosure`。
 
