@@ -1,0 +1,53 @@
+{
+  "asset_id": "iscf_scope_matrix_assets_v2",
+  "status": "extracted_component_assets",
+  "backend": "Python/matplotlib",
+  "source_figure": "figure_iscf_architecture_concept_v2",
+  "reuse_level": "exact visual-logic reuse",
+  "empirical_data_used": false,
+  "learned_values_shown": false,
+  "scope_labels": [
+    "s=1",
+    "s=48",
+    "s=144",
+    "s=360",
+    "s=720"
+  ],
+  "matrix_shape": [
+    4,
+    6
+  ],
+  "primary_format": "transparent PNG at 600 dpi",
+  "outputs": {
+    "s=1": {
+      "png": "analysis/iscf_scope_matrix_assets_v2_20260806/scope_matrix_s1.png",
+      "svg": "analysis/iscf_scope_matrix_assets_v2_20260806/scope_matrix_s1.svg",
+      "pdf": "analysis/iscf_scope_matrix_assets_v2_20260806/scope_matrix_s1.pdf",
+      "tiff": "analysis/iscf_scope_matrix_assets_v2_20260806/scope_matrix_s1.tiff"
+    },
+    "s=48": {
+      "png": "analysis/iscf_scope_matrix_assets_v2_20260806/scope_matrix_s48.png",
+      "svg": "analysis/iscf_scope_matrix_assets_v2_20260806/scope_matrix_s48.svg",
+      "pdf": "analysis/iscf_scope_matrix_assets_v2_20260806/scope_matrix_s48.pdf",
+      "tiff": "analysis/iscf_scope_matrix_assets_v2_20260806/scope_matrix_s48.tiff"
+    },
+    "s=144": {
+      "png": "analysis/iscf_scope_matrix_assets_v2_20260806/scope_matrix_s144.png",
+      "svg": "analysis/iscf_scope_matrix_assets_v2_20260806/scope_matrix_s144.svg",
+      "pdf": "analysis/iscf_scope_matrix_assets_v2_20260806/scope_matrix_s144.pdf",
+      "tiff": "analysis/iscf_scope_matrix_assets_v2_20260806/scope_matrix_s144.tiff"
+    },
+    "s=360": {
+      "png": "analysis/iscf_scope_matrix_assets_v2_20260806/scope_matrix_s360.png",
+      "svg": "analysis/iscf_scope_matrix_assets_v2_20260806/scope_matrix_s360.svg",
+      "pdf": "analysis/iscf_scope_matrix_assets_v2_20260806/scope_matrix_s360.pdf",
+      "tiff": "analysis/iscf_scope_matrix_assets_v2_20260806/scope_matrix_s360.tiff"
+    },
+    "s=720": {
+      "png": "analysis/iscf_scope_matrix_assets_v2_20260806/scope_matrix_s720.png",
+      "svg": "analysis/iscf_scope_matrix_assets_v2_20260806/scope_matrix_s720.svg",
+      "pdf": "analysis/iscf_scope_matrix_assets_v2_20260806/scope_matrix_s720.pdf",
+      "tiff": "analysis/iscf_scope_matrix_assets_v2_20260806/scope_matrix_s720.tiff"
+    }
+  }
+}
