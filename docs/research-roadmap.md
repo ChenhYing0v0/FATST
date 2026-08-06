@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## QDF Main I L336 Full Reproduction Prelaunch (2026-08-06)
+
+Current experiment cursor=`Step 6 exact protocol freeze -> Step 8 authorized`。用户授权QDF official-code在`L=336`下对8 datasets × four H × seed2023进行32个fixed-H systems的完整训练与formal test。六个released datasets只改变lookback并保留逐Hprofiles；Solar=ECL-derived、Exchange=ETTh1-derived且分别披露为source-informed。先执行8个H720 bounded resource smokes且test=0，再后台启动三GPU workload-aware queue；不驻守。32/32 artifact audit前保留当前L96 mixed-source表，禁止partial replacement。Canonical prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/qdf_main_i_l336_20260806/design_and_launch_gate.md`。Decision=`QDF_L336_full_matrix_prelaunch_pass_remote_launch_authorized`。
+
 ## QDF Solar Complete and Main I Consolidated (2026-08-06)
 
 Current experiment cursor=`Step 9 artifact audit complete -> Step 10 baseline consolidation complete for QDF scope`。QDF六dataset 24个published rows与Solar 4个本地source-informed rows均完整。Solar four-H mean MSE/MAE=`0.281099/0.291503`，主要弱项为H336/H720；结果完整进入表中。首次test的`Too many open files`通过`num_workers=0` evaluation-only retry修复，四个validation-selected checkpoints均未重训。Main I已生成14-model、7-dataset完整共享面，QDF位于TimeAlign右侧；ISCF full-table best/second仍为27/56、19/56。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/qdf_main_i_20260806/result_and_table_audit.md`。Decision=`QDF_Solar_complete_Main_I_QDF_scope_closed`。

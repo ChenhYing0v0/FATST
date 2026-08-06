@@ -8,14 +8,14 @@
 | `version` | `v0.53` |
 | `last_updated` | `2026-08-06` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 4 v0.1 pending author review；experiments=HPO terminally frozen，QDF Solar 4/4 complete，Main I 14-model table finalized |
+| `current_review_cursor` | writing=Section 4 v0.1 pending author review；experiments=HPO terminally frozen，QDF Main I `L=336` 8-dataset/32-cell reproduction prelaunch authorized |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.7正文 + approved Figures 2--3 |
 | `provisional_content` | Section 4 v0.1 + Method Figure 4 initial draft；remaining sections |
-| `authorization_source` | 2026-08-06用户在HPO terminal freeze后单独授权QDF official-source Solar four-H训练与formal test；该scope已完成，不重开ISCF HPO、selected-profile confirmation或3-seed |
+| `authorization_source` | 2026-08-06用户在QDF Solar L96 scope完成后，进一步授权QDF official-code `L=336` 8 datasets × four-H训练与formal test；不重开ISCF HPO、selected-profile confirmation或3-seed |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
@@ -1372,7 +1372,7 @@ PDT固定`L=96`，仅保留secondary cross-check。TimeAlign表存在lookback se
 
 Table 6的140个目标published rows已完成PDF-coordinate transcription与渲染核验。源PDF存在5组逐horizon均值与reported Avg不一致，并分别在Table 1 caption、main-text implementation与Appendix E.1给出三种lookback grid；主表必须使用逐horizon原值并披露这些source-native protocol差异。
 
-截至2026-08-06，TimeAlign 8 datasets × four H × seed2021已32/32完成并通过artifact/hash audit；QDF新增六dataset published 24 rows与Solar official-code source-informed 4 rows。Main I宽表保留7个共同datasets，共14 models × four H，模型顺序为ISCF-BSCA、TimeAlign、QDF及TimeAlign Table 6其余11个baselines。QDF Solar four-H mean MSE/MAE=`0.281099/0.291503`，弱于本地TimeAlign和ISCF-BSCA，完整保留不筛选。所有Avg均由逐H原值重新计算，best/second按三位小数displayed values判定；完整14-model scope下ISCF-BSCA仍为27/56 best、19/56 second（允许并列），不能与五模型frozen comparator scope的33/56混写。Exchange另列ISCF-BSCA/TimeAlign companion；由于其他baseline的Exchange与AMD/SimpleTM/TimePerceiver/SRSNet全矩阵仍缺证据，当前完成的是7-dataset shared-surface numeric table，不得声称最初规划的8-dataset/9-baseline矩阵已全部闭合。
+截至2026-08-06，TimeAlign 8 datasets × four H × seed2021已32/32完成并通过artifact/hash audit；当前QDF表仍由六dataset published 24 rows与Solar official-code source-informed L96 4 rows组成。用户已授权新的QDF `L=336` 8 datasets × four H × seed2023完整本地复现：六dataset保留released逐Hprofiles，仅改lookback；Solar使用ECL-derived profile，Exchange使用ETTh1-derived profile并分别披露。32/32 artifact audit前不得替换或混入当前表；通过后，7-dataset dense QDF block全部改为本地L336值，Exchange companion扩为ISCF-BSCA/TimeAlign/QDF三系统。当前14-model表中的ISCF-BSCA 27/56 best、19/56 second仍只描述L96 mixed-source版本，不能预先沿用到L336重建表。
 
 ### 8.3 Main Results II：Unified Multi-Horizon Benchmark
 

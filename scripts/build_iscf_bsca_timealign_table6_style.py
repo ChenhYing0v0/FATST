@@ -131,6 +131,12 @@ def parse_args() -> argparse.Namespace:
         / "qdf_main_i_20260806"
         / "qdf_solar_local_metrics.csv",
     )
+    parser.add_argument(
+        "--qdf-reproduced-all",
+        type=Path,
+        default=None,
+        help="Complete local QDF eight-dataset reproduction; replaces published/Solar inputs.",
+    )
     parser.add_argument("--analysis-dir", type=Path, required=True)
     parser.add_argument("--output-pdf", type=Path, required=True)
     return parser.parse_args()
@@ -278,8 +284,38 @@ def load_qdf_rows(published_path: Path, solar_path: Path) -> list[dict[str, Any]
     return rows
 
 
+def load_qdf_reproduced_rows(path: Path) -> list[dict[str, Any]]:
+    rows = []
+    for row in read_csv(path):
+        if row["dataset"] not in DISPLAY_DATASETS:
+            continue
+        rows.append(
+            {
+                "model": "QDF",
+                "dataset": row["dataset"],
+                "horizon": int(row["horizon"]),
+                "mse": float(row["mse"]),
+                "mae": float(row["mae"]),
+                "value_origin": row["value_origin"],
+                "system_role": row["system_role"],
+            }
+        )
+    keys = {(row["dataset"], row["horizon"]) for row in rows}
+    expected = {
+        (dataset, horizon)
+        for dataset in DISPLAY_DATASETS
+        for horizon in HORIZONS
+    }
+    if len(rows) != 28 or keys != expected:
+        raise ValueError(
+            f"expected complete 28-cell reproduced QDF dense matrix, "
+            f"found rows={len(rows)}, missing={sorted(expected - keys)}"
+        )
+    return rows
+
+
 def load_exchange_companion(
-    iscf_path: Path, timealign_path: Path
+    iscf_path: Path, timealign_path: Path, qdf_path: Path | None = None
 ) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for row in read_csv(iscf_path):
@@ -308,8 +344,25 @@ def load_exchange_companion(
                     "system_role": "horizon_specific_source_informed_bootstrap",
                 }
             )
-    if len(rows) != 8:
-        raise ValueError(f"expected 8 Exchange companion rows, found {len(rows)}")
+    if qdf_path is not None:
+        for row in read_csv(qdf_path):
+            if row["dataset"] == "Exchange":
+                rows.append(
+                    {
+                        "model": "QDF",
+                        "dataset": "Exchange",
+                        "horizon": int(row["horizon"]),
+                        "mse": float(row["mse"]),
+                        "mae": float(row["mae"]),
+                        "value_origin": row["value_origin"],
+                        "system_role": row["system_role"],
+                    }
+                )
+    expected_rows = 12 if qdf_path is not None else 8
+    if len(rows) != expected_rows:
+        raise ValueError(
+            f"expected {expected_rows} Exchange companion rows, found {len(rows)}"
+        )
     return add_averages_and_styles(rows)
 
 
@@ -584,20 +637,37 @@ def build_pdf(path: Path, rows: list[dict[str, Any]]) -> None:
         "Table X | Long-term forecasting results under the TimeAlign Table-6 layout. ",
         title_style,
     )
+    qdf_full_reproduction = any(
+        row["model"] == "QDF"
+        and row["value_origin"] == "official_code_local_single_seed_l336"
+        for row in rows
+    )
+    qdf_note = (
+        "QDF uses our official-code, single-seed L=336 reproduction on all "
+        "seven shared datasets; Solar uses an ECL-derived preset. "
+        if qdf_full_reproduction
+        else "QDF uses published three-run means for six datasets and our "
+        "official-code, ECL-preset-derived single-seed Solar reproduction. "
+    )
+    exchange_note = (
+        "Exchange is reported in a three-system companion block."
+        if qdf_full_reproduction
+        else "Exchange is reported in a two-system companion block."
+    )
     note = Paragraph(
         "All entries report MSE/MAE for H in {96, 192, 336, 720}; Avg. is "
         "recomputed as the arithmetic mean of the four horizon rows. Red bold and "
         "blue underlined values denote the best and second-best displayed results "
         "after three-decimal rounding. ISCF-BSCA uses one unified, single-seed, "
         "test-tuned model per dataset. TimeAlign uses the artifact-complete local "
-        "seed-2021 reproduction on all seven shared datasets. QDF uses published "
-        "three-run means for six datasets and our official-code, ECL-preset-derived "
-        "single-seed Solar reproduction. All remaining "
+        "seed-2021 reproduction on all seven shared datasets. "
+        + qdf_note
+        + "All remaining "
         "baselines are transcribed "
         "from TimeAlign Table 6 and are unmatched published context. Traffic and "
         "Exchange are excluded from this dense panel because they do not share the "
-        "current comparison surface; Exchange is reported in a two-system companion "
-        "block.",
+        "current comparison surface; "
+        + exchange_note,
         note_style,
     )
     document.build([title, Spacer(1, 2 * mm), table, Spacer(1, 2 * mm), note])
@@ -654,6 +724,18 @@ def build_latex(path: Path, rows: list[dict[str, Any]]) -> None:
                 lines.append("\\cmidrule(lr){2-" + str(2 + 2 * len(DISPLAY_MODELS)) + "}")
         if dataset_index < len(DISPLAY_DATASETS) - 1:
             lines.append("\\midrule")
+    qdf_full_reproduction = any(
+        row["model"] == "QDF"
+        and row["value_origin"] == "official_code_local_single_seed_l336"
+        for row in rows
+    )
+    qdf_caption = (
+        "QDF uses our official-code single-seed L=336 reproduction on all seven "
+        "shared datasets; Solar uses a source-informed ECL-derived preset; "
+        if qdf_full_reproduction
+        else "QDF uses published values on six datasets and a source-informed "
+        "official-code Solar reproduction; "
+    )
     lines.extend(
         [
             "\\bottomrule",
@@ -664,8 +746,9 @@ def build_latex(path: Path, rows: list[dict[str, Any]]) -> None:
             "horizons. Best and second-best displayed values are bold and underlined. "
             "ISCF-BSCA uses one unified single-seed test-tuned model per dataset. "
             "TimeAlign uses our official-native single-seed reproduction on all seven "
-            "shared datasets. QDF uses published values on six datasets and a "
-            "source-informed official-code Solar reproduction; all other baselines "
+            "shared datasets. "
+            + qdf_caption
+            + "all other baselines "
             "are published "
             "context rather than matched local reproductions.}",
             "\\label{tab:main_iscf_bsca_qdf}",
@@ -681,17 +764,24 @@ def build_exchange_latex(path: Path, rows: list[dict[str, Any]]) -> None:
         (row["model"], str(row["horizon"])): row
         for row in rows
     }
+    models = ("ISCF-BSCA", "TimeAlign", "QDF") if any(
+        row["model"] == "QDF" for row in rows
+    ) else ("ISCF-BSCA", "TimeAlign")
+    model_headers = []
+    for model in models:
+        suffix = "$^{\\dagger}$" if model in {"TimeAlign", "QDF"} else ""
+        model_headers.append(f"\\multicolumn{{2}}{{c}}{{{model}{suffix}}}")
     lines = [
-        "% Companion block; TimeAlign Exchange uses a source-informed bootstrap.",
-        "\\begin{tabular}{c|cc|cc}",
+        "% Companion block; TimeAlign and QDF Exchange use source-informed presets.",
+        "\\begin{tabular}{c" + "|cc" * len(models) + "}",
         "\\toprule",
-        "H & \\multicolumn{2}{c|}{ISCF-BSCA} & \\multicolumn{2}{c}{TimeAlign$^{\\dagger}$} \\\\",
-        " & MSE & MAE & MSE & MAE \\\\",
+        "H & " + " & ".join(model_headers) + " \\\\",
+        " & " + " & ".join("MSE & MAE" for _ in models) + " \\\\",
         "\\midrule",
     ]
     for horizon in (*HORIZONS, "Avg."):
         values = [str(horizon)]
-        for model in ("ISCF-BSCA", "TimeAlign"):
+        for model in models:
             row = lookup[(model, str(horizon))]
             values.extend([latex_value(row, "mse"), latex_value(row, "mae")])
         lines.append(" & ".join(values) + " \\\\")
@@ -699,7 +789,7 @@ def build_exchange_latex(path: Path, rows: list[dict[str, Any]]) -> None:
         [
             "\\bottomrule",
             "\\end{tabular}",
-            "% $^{\\dagger}$ ETTh1-derived source-informed preset; no official TimeAlign Exchange script exists.",
+            "% $^{\\dagger}$ ETTh1-derived source-informed preset; neither release provides an official Exchange script.",
             "",
         ]
     )
@@ -709,6 +799,15 @@ def build_exchange_latex(path: Path, rows: list[dict[str, Any]]) -> None:
 def write_summary(path: Path, rows: list[dict[str, Any]], args: argparse.Namespace) -> None:
     iscf_rows = [row for row in rows if row["model"] == "ISCF-BSCA"]
     standard_rows = [row for row in iscf_rows if row["horizon"] != "Avg."]
+    qdf_full_reproduction = args.qdf_reproduced_all is not None
+    qdf_hashes = (
+        {"qdf_reproduced_all": file_sha256(args.qdf_reproduced_all)}
+        if qdf_full_reproduction
+        else {
+            "qdf_published": file_sha256(args.qdf_published),
+            "qdf_solar_reproduced": file_sha256(args.qdf_solar_reproduced),
+        }
+    )
     summary = {
         "table_id": "ISCF-BSCA-MAIN-I-QDF-LOCAL-20260806",
         "models": list(DISPLAY_MODELS),
@@ -739,8 +838,9 @@ def write_summary(path: Path, rows: list[dict[str, Any]], args: argparse.Namespa
         "timealign_reproduced_cells_exchange_companion": 4,
         "timealign_reproduced_cells_total": 32,
         "timealign_published_cells": 0,
-        "qdf_published_cells": 24,
-        "qdf_source_informed_solar_cells": 4,
+        "qdf_reproduced_cells_in_dense_table": 28 if qdf_full_reproduction else 4,
+        "qdf_reproduced_cells_exchange_companion": 4 if qdf_full_reproduction else 0,
+        "qdf_published_cells": 0 if qdf_full_reproduction else 24,
         "source_hashes": {
             "timealign_pdf": file_sha256(args.timealign_pdf),
             "iscf_scorecard": file_sha256(args.iscf_scorecard),
@@ -748,13 +848,13 @@ def write_summary(path: Path, rows: list[dict[str, Any]], args: argparse.Namespa
             "audited_published_selected": file_sha256(
                 args.audited_published_selected
             ),
-            "qdf_published": file_sha256(args.qdf_published),
-            "qdf_solar_reproduced": file_sha256(args.qdf_solar_reproduced),
+            **qdf_hashes,
         },
         "claim_boundary": (
             "ISCF-BSCA is single-seed and test-tuned; TimeAlign is local single-seed "
-            "reproduction on every shared dataset; QDF mixes disclosed published "
-            "and source-informed Solar values; other baselines are unmatched "
+            "reproduction on every shared dataset; QDF is a local single-seed "
+            + ("L=336 reproduction with disclosed Solar/Exchange source-informed presets; " if qdf_full_reproduction else "mixture of published and source-informed Solar values; ")
+            + "other baselines are unmatched "
             "published context"
         ),
     }
@@ -769,12 +869,15 @@ def main() -> None:
     rows = extract_timealign_table6(args.timealign_pdf)
     validate_against_audited_selected(rows, args.audited_published_selected)
     override_reproduced_timealign(rows, args.timealign_reproduced)
-    rows.extend(load_qdf_rows(args.qdf_published, args.qdf_solar_reproduced))
+    if args.qdf_reproduced_all is None:
+        rows.extend(load_qdf_rows(args.qdf_published, args.qdf_solar_reproduced))
+    else:
+        rows.extend(load_qdf_reproduced_rows(args.qdf_reproduced_all))
     rows.extend(load_iscf_rows(args.iscf_scorecard))
     validate_matrix(rows)
     styled_rows = add_averages_and_styles(rows)
     exchange_rows = load_exchange_companion(
-        args.iscf_scorecard, args.timealign_reproduced
+        args.iscf_scorecard, args.timealign_reproduced, args.qdf_reproduced_all
     )
 
     write_long_csv(args.analysis_dir / "table_data_long.csv", styled_rows)

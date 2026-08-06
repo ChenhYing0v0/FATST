@@ -44,15 +44,15 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | HPO terminal freeze complete；TimeAlign Main I 32/32 local reproduction and shared-surface table complete |
+| `active_experiment_step` | HPO terminal freeze complete；QDF Main I L336 8-dataset/32-cell reproduction prelaunch authorized |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
 | `local_protocol_patch_authorized` | true for terminal HPO freeze and TimeAlign 8-dataset reproduction tooling |
-| `remote_training_authorized` | false；authorized TimeAlign 24-job scope complete |
+| `remote_training_authorized` | true only for QDF L336 8×4 seed2023 reproduction；other scopes=false |
 | `test_tuned_hpo_authorized` | false；HPO stopped by user and H4O closed |
-| `formal_test_authorized` | false；authorized TimeAlign 24 tests complete；Main II/other baselines/selected-profile confirmation/3-seed=false |
-| `next_action` | hold HPO；review finalized Main I shared-surface table；freeze any remaining baseline/Exchange matrix before requesting new authorization |
+| `formal_test_authorized` | true only for QDF L336 32 post-training tests；Main II/other baselines/selected-profile confirmation/3-seed=false |
+| `next_action` | commit/push exact QDF L336 protocol；remote 8-dataset H720 smoke后后台启动32-cell queue；不驻守，等待用户通知完成 |
 | `conditional_next` | other baseline training or any HPO restart requires separate authorization；禁止partial table replacement |
 
 H4K train/validation与formal test均已完成，但terminal effectiveness gate失败。H4L只扩大ETTm2/Weather
@@ -74,6 +74,8 @@ H4N exact commit=`ba17fc9`已在remote通过40/40 resource smoke：40 checkpoint
 H4N formal test于2026-08-06 14:22:25完成：40/40 checkpoints、160/160 rows与hash immutability全部通过。Full-table selector选择`Weather__h4n_seq608_p19_lr2e5`，mean MSE/MAE=`0.214887/0.245821`，相对H4M current为+0.063%/-0.608%；full-table leads仍4/8，四项gates全fail。Frozen prelaunch historical score复用了legacy 5-baseline normalization；same-target conservative recomputation得到0.205% improvement并判fail。Legacy selector frontier仍33/56，wide-table displayed count仍29/56。Failure=`search_space_performance_shortfall + prelaunch_historical_score_target_mismatch`，rollback=Step 6，automatic H4O=false。Canonical report=`analysis/iscf_bsca_main_v1_hpo_20260731/h4n_test_result_and_weather_decision_20260806.md`。
 
 2026-08-06 TimeAlign Main I reproduction已32/32完成：24个new fixed-H runs与8个reused ETTm2/Weather runs组成完整8-dataset matrix；32个checkpoint hashes唯一，artifact/provenance/numeric-health audit全部通过。7个shared datasets的TimeAlign 28/28 cells已由本地seed2021结果替换，ISCF-BSCA相对本地TimeAlign为MSE 20/28、MAE 17/28 cells领先，macro MSE/MAE低3.994%/1.491%；完整13-model displayed table中ISCF-BSCA为27/56 best、19/56 second。Exchange只形成ISCF/TimeAlign companion，因为TimeAlign无official Exchange script且Table 6无其他baseline Exchange evidence。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_final_local_timealign_20260806/main_i_result_and_source_audit.md`。HPO保持停止，other baseline training未授权。
+
+2026-08-06用户进一步授权QDF在`seq_len=336`下完整本地复跑8 datasets × four H × seed2023。Exact rule为六个official scripts只改lookback、其余逐Hprofiles不变；Solar采用ECL-derived profile，Exchange采用ETTh1-derived profile且均标记source-informed。Formal matrix=32 fixed-H systems，先通过8个H720/test=0 resource smokes，再后台启动并停止驻守；32/32 artifact audit前当前L96 QDF table不变，禁止partial mix。Canonical prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/qdf_main_i_l336_20260806/design_and_launch_gate.md`。
 
 ## 2. Paper claims to be discharged
 

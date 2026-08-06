@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "protocol_id": "QDF-OFFICIAL-MAIN-I-L336-REPRODUCTION-20260806",
+  "created_at": "2026-08-06",
+  "candidate": {
+    "paper": "Quadratic Direct Forecast for Training Multi-Step Time-Series Forecast Models",
+    "model": "QDF",
+    "backbone": "TQNet",
+    "source_repository": "https://github.com/Master-PLC/QDF",
+    "source_commit": "eb0693a962928e229417fd80b401c37b0dac6a67",
+    "license": "MIT",
+    "local_source_root": "baselines/qdf_official"
+  },
+  "authorization": {
+    "authorized_by_user": true,
+    "authorization_date": "2026-08-06",
+    "remote_training_authorized": true,
+    "formal_test_authorized": true,
+    "scope": "QDF seq_len=336 single-seed reproduction on all eight Main I datasets",
+    "iscf_bsca_hpo_must_remain_stopped": true
+  },
+  "evaluation_contract": {
+    "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather", "ECL", "Solar", "Exchange"],
+    "horizons": [96, 192, 336, 720],
+    "metrics": ["MSE", "MAE"],
+    "seed": 2023,
+    "seq_len": 336,
+    "label_len": 48,
+    "one_fixed_horizon_model_per_cell": true,
+    "checkpoint_selector": "upstream_validation_loss_early_stopping",
+    "test_tuned": false,
+    "test_access_once_after_training": true,
+    "matrix_complete_required": true,
+    "expected_jobs": 32,
+    "replacement_gate": "replace every QDF value in Main I only after 32/32 artifact audit passes"
+  },
+  "dataset_contracts": {
+    "ETTh1": {"data": "ETTh1", "relative_path": "ETT-small/ETTh1.csv", "sha256": "f18de3ad269cef59bb07b5438d79bb3042d3be49bdeecf01c1cd6d29695ee066", "channels": 7, "cycle": 24, "dropout": 0.5, "profile_source": "scripts/ETTh1.sh", "role": "official_released_profile"},
+    "ETTh2": {"data": "ETTh2", "relative_path": "ETT-small/ETTh2.csv", "sha256": "a3dc2c597b9218c7ce1cd55eb77b283fd459a1d09d753063f944967dd6b9218b", "channels": 7, "cycle": 24, "dropout": 0.5, "profile_source": "scripts/ETTh2.sh", "role": "official_released_profile"},
+    "ETTm1": {"data": "ETTm1", "relative_path": "ETT-small/ETTm1.csv", "sha256": "6ce1759b1a18e3328421d5d75fadcb316c449fcd7cec32820c8dafda71986c9e", "channels": 7, "cycle": 96, "dropout": 0.5, "profile_source": "scripts/ETTm1.sh", "role": "official_released_profile"},
+    "ETTm2": {"data": "ETTm2", "relative_path": "ETT-small/ETTm2.csv", "sha256": "db973ca252c6410a30d0469b13d696cf919648d0f3fd588c60f03fdbdbadd1fd", "channels": 7, "cycle": 96, "dropout": 0.5, "profile_source": "scripts/ETTm2.sh", "role": "official_released_profile"},
+    "Weather": {"data": "custom", "relative_path": "weather/weather.csv", "sha256": "34ee981d07313e51da2a50bb600072c8ae4a69cb4b0651f4cb93a069d7a2ba63", "channels": 21, "cycle": 144, "dropout": 0.5, "profile_source": "scripts/Weather.sh", "role": "official_released_profile"},
+    "ECL": {"data": "custom", "relative_path": "electricity/electricity.csv", "sha256": "7e45845d54c5219bad0ae6bc1b5316cf8ff9cead5d33fa998a5a51c2e4a497ad", "channels": 321, "cycle": 168, "dropout": 0.0, "profile_source": "scripts/ECL.sh", "role": "official_released_profile"},
+    "Solar": {"data": "Solar", "relative_path": "Solar/solar_AL.txt", "sha256": "230327ef72d2abb387939d4a35d6fd34f1066071bc7c40ce7ecf5531a0122ac2", "channels": 137, "cycle": 144, "dropout": 0.0, "profile_source": "scripts/ECL.sh", "role": "source_informed_ecl_profile", "adaptation": "ECL optimization profile with Solar loader, 137 channels and 10-minute daily cycle"},
+    "Exchange": {"data": "custom", "relative_path": "exchange_rate/exchange_rate.csv", "sha256": "48b4d9d3d508f5104162e85b9a6042e3557fde11aa9f2944eba8c0d0efc89842", "channels": 8, "cycle": 1, "dropout": 0.5, "profile_source": "scripts/ETTh1.sh", "role": "source_informed_etth1_profile", "adaptation": "ETTh1 optimization profile with Exchange loader, 8 channels and conservative non-seasonal cycle=1"}
+  },
+  "profiles": {
+    "ETTh1": {"96": [0.005, 0.005, 0.2, 300, 3, 3, 32], "192": [0.005, 0.005, 0.02, 300, 1, 3, 32], "336": [0.002, 0.002, 0.01, 300, 3, 4, 32], "720": [0.005, 0.005, 0.01, 300, 5, 2, 32]},
+    "ETTh2": {"96": [0.0005, 0.0005, 0.2, 300, 1, 2, 32], "192": [0.0005, 0.0005, 0.01, 300, 4, 1, 32], "336": [0.0005, 0.0005, 0.2, 300, 1, 2, 32], "720": [0.0005, 0.0005, 0.2, 300, 2, 4, 32]},
+    "ETTm1": {"96": [0.001, 0.001, 0.1, 500, 2, 1, 32], "192": [0.001, 0.001, 0.01, 500, 2, 3, 32], "336": [0.001, 0.001, 0.2, 500, 4, 1, 32], "720": [0.001, 0.001, 0.2, 500, 2, 5, 32]},
+    "ETTm2": {"96": [0.0002, 0.0002, 0.2, 500, 1, 5, 32], "192": [0.0002, 0.0002, 0.2, 500, 1, 2, 32], "336": [0.0002, 0.0002, 0.1, 500, 3, 4, 32], "720": [0.0002, 0.0002, 0.2, 500, 5, 5, 32]},
+    "Weather": {"96": [0.002, 0.002, 0.1, 700, 5, 4, 32], "192": [0.002, 0.002, 0.02, 700, 3, 1, 32], "336": [0.002, 0.002, 0.05, 700, 4, 5, 32], "720": [0.002, 0.002, 0.2, 700, 3, 4, 32]},
+    "ECL": {"96": [0.005, 0.005, 0.1, 300, 3, 2, 16], "192": [0.005, 0.005, 0.1, 300, 3, 1, 16], "336": [0.005, 0.005, 0.02, 300, 3, 2, 16], "720": [0.01, 0.01, 0.05, 300, 1, 1, 16]},
+    "Solar": {"96": [0.005, 0.005, 0.1, 300, 3, 2, 16], "192": [0.005, 0.005, 0.1, 300, 3, 1, 16], "336": [0.005, 0.005, 0.02, 300, 3, 2, 16], "720": [0.01, 0.01, 0.05, 300, 1, 1, 16]},
+    "Exchange": {"96": [0.005, 0.005, 0.2, 300, 3, 3, 32], "192": [0.005, 0.005, 0.02, 300, 1, 3, 32], "336": [0.002, 0.002, 0.01, 300, 3, 4, 32], "720": [0.005, 0.005, 0.01, 300, 5, 2, 32]}
+  },
+  "profile_field_order": ["learning_rate", "inner_lr", "meta_lr", "warmup_steps", "num_tasks", "meta_inner_steps", "batch_size"],
+  "common_training": {"train_epochs": 30, "patience": 5, "test_batch_size": 1, "num_workers": 0, "rec_lambda": 1.0, "auxi_lambda": 0.0, "reg_lambda": 0.0, "auxi_batch_size": 64, "lradj": "type1", "max_norm": 5.0, "auxi_loss": "MSE", "model_type": "linear", "use_revin": 1, "first_order": 1},
+  "resource_smoke": {"datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather", "ECL", "Solar", "Exchange"], "horizon": 720, "train_epochs": 1, "patience": 1, "warmup_steps": 1, "max_train_batches": 2, "max_eval_batches": 2, "final_evaluation_split": "none", "purpose": "data path, tensor, memory and execution health only"},
+  "remote_execution": {
+    "host": "529_Lab-3090", "repo_root": "/home/yingch/projects/FATST", "conda_env": "moe", "data_root": "/home/yingch/dataset", "output_root": "/home/yingch/exp_outputs/r-2026-fatst/qdf_main_i_seq336_20260806", "gpu_ids": [0, 1, 2],
+    "formal_schedule": {"gpu0": ["ECL:720", "ECL:336", "ECL:192", "ECL:96", "ETTh1:720", "ETTh1:336", "ETTh1:192", "ETTh1:96"], "gpu1": ["Solar:720", "Solar:336", "Solar:192", "Solar:96", "Exchange:720", "Exchange:336", "Exchange:192", "Exchange:96", "ETTh2:720", "ETTh2:336", "ETTh2:192", "ETTh2:96"], "gpu2": ["Weather:720", "Weather:336", "Weather:192", "Weather:96", "ETTm1:720", "ETTm1:336", "ETTm1:192", "ETTm1:96", "ETTm2:720", "ETTm2:336", "ETTm2:192", "ETTm2:96"]}
+  },
+  "source_hashes": {"scripts/ETTh1.sh": "c7d7b760d41a01ad50bfb32c5a7491d2c702bf14c32867da3faf3aaebb943c1d", "scripts/ETTh2.sh": "7e150bf77b383c6e4ec6c85ed13e1237ae344f4380eb6f79e60d8475ae1c8c96", "scripts/ETTm1.sh": "001fd7c17645e15500f0ec5368d4c7dcd355cdf4e84b18943b30dd398e6376ad", "scripts/ETTm2.sh": "3335c044cbb01a77b3c4e5be30cffd487af6a0163768f9ec924e6822017d8b90", "scripts/Weather.sh": "b06c0b5b2c09355aab9b7bc7dd5bf645585dd338e525049cecf1c8c65a0c9116", "scripts/ECL.sh": "e387b5656696d2b880fc76f1e2fb89f51a11ec0b0bd7d3903ff164796d534207", "scripts/MainI_L336.sh": "66b4ace9cd9c5411c5e9cbe278c92e22057826339bd3d524f4fbe83fff998ef5", "run.py": "3cd56d3b40f6f1813291146cde8a954213013440a93bde57aed6f35b8716ee4a", "exp/exp_long_term_forecasting_meta_ml3.py": "3523c0f4d9191065a0616e4b7c062c6d6c43ae7dfc884259f14ea93c604b3fa0"},
+  "gates": {"prelaunch": "JSON, source hashes, exact 32-row dry-run and syntax/compile checks pass", "resource": "8/8 H720 smoke jobs exit zero without OOM/NaN and create no test metrics", "formal": "32/32 checkpoints, learned losses, configs and MSE/MAE test rows pass hash/provenance audit", "rollback": "keep the current L96 QDF table unchanged; do not mix partial L336 rows"}
+}

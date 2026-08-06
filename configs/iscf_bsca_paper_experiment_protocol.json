@@ -1734,6 +1734,20 @@
       "C_complete_test_tuned_reporting_audit"
     ]
   },
+  "qdf_main_i_l336_reproduction": {
+    "protocol": "configs/qdf_main_i_seq336_reproduction.json",
+    "status": "prelaunch_pass_remote_resource_smoke_then_formal_authorized",
+    "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather", "ECL", "Solar", "Exchange"],
+    "horizons": [96, 192, 336, 720],
+    "seed": 2023,
+    "seq_len": 336,
+    "expected_fixed_horizon_systems": 32,
+    "profile_rule": "six released profiles with lookback-only change; Solar ECL-derived and Exchange ETTh1-derived source-informed adaptations",
+    "replacement_gate": "32_of_32_artifact_audit_before_atomic_Main_I_QDF_replacement",
+    "remote_training_authorized": true,
+    "formal_test_authorized": true,
+    "other_experiment_authorization": false
+  },
   "gates": {
     "seed_policy": {
       "phase_1_seed": 2021,
