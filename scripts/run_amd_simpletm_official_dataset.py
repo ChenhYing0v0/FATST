@@ -460,12 +460,17 @@ def main() -> None:
     else:
         rows, patch_hashes = run_simpletm(config, args, source, log_path)
 
+    log_text = log_path.read_text(encoding="utf-8")
+    health_text = re.sub(
+        r"Validation loss decreased \(inf --> [0-9eE+\-.]+\)",
+        "Validation loss initialized",
+        log_text,
+    )
     failure_pattern = re.compile(
         r"Traceback|CUDA out of memory|too many open files|(^|[^A-Za-z])(nan|inf)([^A-Za-z]|$)",
         re.IGNORECASE | re.MULTILINE,
     )
-    log_text = log_path.read_text(encoding="utf-8")
-    match = failure_pattern.search(log_text)
+    match = failure_pattern.search(health_text)
     if match:
         raise RuntimeError(f"numeric/runtime failure token found: {match.group(0)}")
 

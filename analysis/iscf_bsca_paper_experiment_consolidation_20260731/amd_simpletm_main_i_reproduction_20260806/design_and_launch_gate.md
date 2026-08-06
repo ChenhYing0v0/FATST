@@ -34,6 +34,8 @@ SimpleTM upstream training loop每个 epoch 计算 test loss。为遵守项目�
 
 首次resource smoke在训练step前暴露NumPy 2 compatibility failure：upstream `np.Inf`在remote NumPy 2.4中已移除。Compatibility adapter只执行单次、hash-frozen的`np.Inf -> np.inf`别名替换，不改变数值、objective或selector。失败的ECL/Solar/Weather smoke logs必须保留为protocol provenance。
 
+Compatibility修复后的三个jobs均完成checkpoint且test=0，但初版health checker把upstream正常消息`Validation loss decreased (inf --> value)`误判为numeric Inf。Checker只对白名单化这一条initialization message；其余独立NaN/Inf、OOM、Traceback与file-descriptor检测保留。对应三份false-positive logs也保留，不复用其checkpoint进入最终14-job smoke manifest。
+
 ## 3. Frozen matrix
 
 | Baseline | Datasets | Horizons | Native repeats | Checkpoints | Table cells |
