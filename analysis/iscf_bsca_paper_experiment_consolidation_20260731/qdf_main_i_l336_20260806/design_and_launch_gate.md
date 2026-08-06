@@ -53,4 +53,16 @@ Resource smoke 只运行八个 dataset 的 H720，每个至多两个 train/valid
 
 ## 7. Prelaunch decision
 
-`PASS_PENDING_REMOTE_RESOURCE_SMOKE`。用户已授权该精确 32-cell block 的 local protocol patch、remote training 与 formal test。允许 commit/push 后 remote pull，完成 8/8 bounded smoke 后后台启动 formal queue；启动后不驻守。
+`PASS_AND_LAUNCHED`。用户已授权该精确 32-cell block 的 local protocol patch、remote training 与 formal test。8/8 bounded smoke 已通过，formal queue 已后台启动；启动后不驻守。
+
+## 8. Remote launch provenance
+
+- exact experiment commit：`6eb8605d4edbd754c918a622f3c4e2d24aa6590b`
+- remote host/repo：`529_Lab-3090:/home/yingch/projects/FATST`
+- environment：conda `moe`，GPU 0--2=`NVIDIA GeForce RTX 3090`
+- output：`/home/yingch/exp_outputs/r-2026-fatst/qdf_main_i_seq336_20260806`
+- prelaunch resource：GPU 0--2 均为 18 MiB/0%；quota=`176/200 GiB soft, 220 GiB hard`
+- resource smoke：2026-08-06 19:30:54--19:31:28 +08:00；8/8 checkpoint、8/8 `A.pth`、0 test metrics、0 failure markers
+- formal launch：2026-08-06 19:31:57 +08:00；PID=`3885616`
+- initial active jobs：GPU0 ECL-H720、GPU1 Solar-H720、GPU2 Weather-H720；三个 `run.py` processes 均存活并进入 data/meta-training path
+- user-requested monitoring policy：不驻守；等待用户通知完成后再同步、audit 和重建表格

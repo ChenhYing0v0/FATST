@@ -44,7 +44,7 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | HPO terminal freeze complete；QDF Main I L336 8-dataset/32-cell reproduction prelaunch authorized |
+| `active_experiment_step` | HPO terminal freeze complete；QDF Main I L336 8-dataset/32-cell remote queue active，不驻守 |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
@@ -52,7 +52,7 @@ paper candidate与claim boundary，但互不替代。
 | `remote_training_authorized` | true only for QDF L336 8×4 seed2023 reproduction；other scopes=false |
 | `test_tuned_hpo_authorized` | false；HPO stopped by user and H4O closed |
 | `formal_test_authorized` | true only for QDF L336 32 post-training tests；Main II/other baselines/selected-profile confirmation/3-seed=false |
-| `next_action` | commit/push exact QDF L336 protocol；remote 8-dataset H720 smoke后后台启动32-cell queue；不驻守，等待用户通知完成 |
+| `next_action` | 等待用户通知QDF L336 queue完成；随后同步32-cell artifacts、hash/provenance audit并原子重建Main I |
 | `conditional_next` | other baseline training or any HPO restart requires separate authorization；禁止partial table replacement |
 
 H4K train/validation与formal test均已完成，但terminal effectiveness gate失败。H4L只扩大ETTm2/Weather
