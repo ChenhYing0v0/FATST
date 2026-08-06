@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## H4N Training Complete and Formal-Test Gate (2026-08-06)
+
+Current experiment cursor=`Step 8 complete -> Step 9 complete formal-test prelaunch`。Weather 40/40 full train/validation artifacts、numeric health、effective-config provenance与training test=0通过；40个checkpoint hashes唯一，best epoch范围3--101。Immutable manifest SHA256=`a0f152f9172acc193fe512001123b71aeae6d6d3ab1028c915074f24d54c1ed4`。Formal-test scope固定为40 checkpoints × four H=160 rows、MSE/MAE，只有完整matrix通过后才与H1--H4M组成229-trial pool并按Weather 0.1% near-tie joint selector选一个shared profile。禁止partial/per-H/per-metric/per-cell/seed selection与checkpoint mutation。Canonical gate=`analysis/iscf_bsca_main_v1_hpo_20260731/h4n_training_result_and_formal_test_gate_20260806.md`。Decision=`H4N_training_complete_40_checkpoint_manifest_frozen_formal_test_authorized`。
+
 ## Section 4 Method Initial Draft v0.1 (2026-08-05)
 
 Current writing cursor=`Section 4 architecture-and-objective complete / author review pending`。Canonical draft=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`。Method按真实computation flow划分为architecture overview、history representation/future-step coordinates、scope-indexed forecast field、target-conditioned scope allocation、BSCA和structural properties/complexity。Scope-region state、shared step-specific synthesis、allocation MLP、weighted contraction、CHPC proof、dense-prefix BSCA objective及decoder parameter/complexity公式均已与frozen implementation核对。

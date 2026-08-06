@@ -3,7 +3,7 @@
 ## 1. 功能模块
 
 本轮不修改 model forward 或 loss。新增逻辑只包含 frozen HPO contract、prelaunch
-checker、remote wrapper 和 post-training artifact checker：
+checker、remote wrapper、post-training artifact checker 与 formal-test gate：
 
 - `configs/iscf_bsca_main_v1_hpo_weather_h4n.json`：定义40个Weather profiles、
   dataset-level selector、训练预算、source hashes、test boundary 与 gates；
@@ -12,7 +12,13 @@ checker、remote wrapper 和 post-training artifact checker：
 - `scripts/remote/run_iscf_bsca_main_v1_hpo_weather_h4n.sh`：只为generic HPO runner
   固定H4N config和repo-external output root；
 - `scripts/check_iscf_bsca_main_v1_h4n_training_artifacts.py`：40个训练完成后逐checkpoint
-  核对hash、validation metrics、effective config、numeric health、logs和test absence。
+  核对hash、validation metrics、effective config、numeric health、logs和test absence；
+- `scripts/build_iscf_bsca_main_v1_h4n_test_manifest.py`：从完整ledger冻结40个full-run
+  checkpoint paths、hashes、selector metadata与future test targets；
+- `configs/iscf_bsca_main_v1_hpo_weather_h4n_test_audit.json`：固定160-row formal-test
+  scope、用户授权、dataset-level selector、gates与rollback boundary；
+- `scripts/remote/run_iscf_bsca_main_v1_hpo_weather_h4n_test_audit.sh`与对应checker：复用
+  generic atomic evaluator，并检查manifest hash、dry-run job count与selection prohibitions。
 
 ## 2. Profile materialization
 
@@ -62,3 +68,12 @@ four-H validation selector和test-disabled training path。
 
 [Falsification] 若dry-run不再显示`test_jobs=0`、任一effective profile重复、target hash
 变化、40/40 manifest不完整或checkpoint hash在test前后变化，则本轮结果不可进入主表。
+
+## 6. Formal-test artifact flow
+
+Manifest仅从`h4n_artifact_audit/trial_ledger.jsonl`中的40个`validation_complete` rows
+生成，不扫描`_resource_smoke`，因此不会把smoke checkpoints计入正式矩阵。Generic evaluator
+对每个checkpoint先写`test_audit/_tmp/<trial>.worker-<gpu>`，验证720-row dense metrics、
+test split provenance、candidate/trial/profile/seed identity、diagnostic NPZ与checkpoint hash后，
+才原子移动至最终trial目录。40个published directories全部通过后，才允许生成160-row
+standard-horizon scorecard并进入229-trial joint selector。
