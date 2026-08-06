@@ -8,11 +8,11 @@
   "method_change": false,
   "recommended_names": {
     "input": "Scope-region states",
-    "operation": "Shared step-specific synthesis",
+    "operation": "Region-to-Step Forecast Generator",
     "output": "Scope-conditioned forecasts",
     "stacked_output": "Scope-indexed forecast field"
   },
-  "visual_claim": "one region state is reused within each region while shared step-specific parameters produce distinct future-step values",
+  "visual_claim": "the shared generator maps each region state to distinct future-step forecasts with parameters shared across scopes",
   "outputs": {
     "svg": "analysis/iscf_region_synthesis_design_20260806/figure_iscf_region_synthesis_design_v1.svg",
     "pdf": "analysis/iscf_region_synthesis_design_20260806/figure_iscf_region_synthesis_design_v1.pdf",

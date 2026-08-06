@@ -1,0 +1,53 @@
+{
+  "asset_set": "iscf_forecast_curve_assets_v1",
+  "status": "local_design_assets_for_author_review",
+  "backend": "Python/matplotlib",
+  "empirical_data_used": false,
+  "method_change": false,
+  "palette": {
+    "scope_0": "#8AB9CA",
+    "scope_1": "#68A3B8",
+    "scope_2": "#4685A0",
+    "fused": "#2D7068",
+    "white": "#FFFFFF"
+  },
+  "curve_width_pt": 3.2,
+  "curve_role": {
+    "scope_forecast_s0": "fine-scale scope-conditioned forecast",
+    "scope_forecast_s1": "mid-scale scope-conditioned forecast",
+    "scope_forecast_s2": "broad-scale scope-conditioned forecast",
+    "final_fused_forecast": "target-wise convex mixture of the three schematic forecasts"
+  },
+  "claim_boundary": "deterministic schematic curves only; weights and values are not learned predictions or empirical allocation evidence",
+  "source_values": "analysis/iscf_forecast_curve_assets_20260806/schematic_curve_values.csv",
+  "outputs": {
+    "scope_forecast_s0": {
+      "transparent_png": "analysis/iscf_forecast_curve_assets_20260806/scope_forecast_s0_transparent.png",
+      "transparent_svg": "analysis/iscf_forecast_curve_assets_20260806/scope_forecast_s0_transparent.svg",
+      "white_png": "analysis/iscf_forecast_curve_assets_20260806/scope_forecast_s0_white.png",
+      "white_pdf": "analysis/iscf_forecast_curve_assets_20260806/scope_forecast_s0_white.pdf",
+      "white_tiff": "analysis/iscf_forecast_curve_assets_20260806/scope_forecast_s0_white.tiff"
+    },
+    "scope_forecast_s1": {
+      "transparent_png": "analysis/iscf_forecast_curve_assets_20260806/scope_forecast_s1_transparent.png",
+      "transparent_svg": "analysis/iscf_forecast_curve_assets_20260806/scope_forecast_s1_transparent.svg",
+      "white_png": "analysis/iscf_forecast_curve_assets_20260806/scope_forecast_s1_white.png",
+      "white_pdf": "analysis/iscf_forecast_curve_assets_20260806/scope_forecast_s1_white.pdf",
+      "white_tiff": "analysis/iscf_forecast_curve_assets_20260806/scope_forecast_s1_white.tiff"
+    },
+    "scope_forecast_s2": {
+      "transparent_png": "analysis/iscf_forecast_curve_assets_20260806/scope_forecast_s2_transparent.png",
+      "transparent_svg": "analysis/iscf_forecast_curve_assets_20260806/scope_forecast_s2_transparent.svg",
+      "white_png": "analysis/iscf_forecast_curve_assets_20260806/scope_forecast_s2_white.png",
+      "white_pdf": "analysis/iscf_forecast_curve_assets_20260806/scope_forecast_s2_white.pdf",
+      "white_tiff": "analysis/iscf_forecast_curve_assets_20260806/scope_forecast_s2_white.tiff"
+    },
+    "final_fused_forecast": {
+      "transparent_png": "analysis/iscf_forecast_curve_assets_20260806/final_fused_forecast_transparent.png",
+      "transparent_svg": "analysis/iscf_forecast_curve_assets_20260806/final_fused_forecast_transparent.svg",
+      "white_png": "analysis/iscf_forecast_curve_assets_20260806/final_fused_forecast_white.png",
+      "white_pdf": "analysis/iscf_forecast_curve_assets_20260806/final_fused_forecast_white.pdf",
+      "white_tiff": "analysis/iscf_forecast_curve_assets_20260806/final_fused_forecast_white.tiff"
+    }
+  }
+}

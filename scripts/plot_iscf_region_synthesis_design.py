@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Render a local design study for ISCF region-to-forecast synthesis.
+"""Render a local design study for ISCF region-to-step forecast generation.
 
 The figure is a schematic continuation component for author review. It shows
-the exact information hierarchy of shared step-specific synthesis, but no
+the exact information hierarchy of shared region-to-step generation, but no
 empirical or learned values.
 """
 
@@ -139,8 +139,8 @@ def draw_region_representation(
     )
 
 
-def draw_shared_synthesis(axis: Axes, row_centers: tuple[float, ...]) -> None:
-    """Draw one shared module with aligned row-wise input/output ports."""
+def draw_forecast_generator(axis: Axes, row_centers: tuple[float, ...]) -> None:
+    """Draw one shared generator with aligned row-wise input/output ports."""
     x0, y0, width, height = 68.0, 11.0, 16.0, 49.0
     axis.add_patch(
         FancyBboxPatch(
@@ -157,7 +157,7 @@ def draw_shared_synthesis(axis: Axes, row_centers: tuple[float, ...]) -> None:
     axis.text(
         x0 + width / 2,
         y0 + height / 2,
-        "Step-specific\nsynthesis",
+        "Region-to-Step\nForecast Generator",
         ha="center",
         va="center",
         rotation=90,
@@ -316,7 +316,7 @@ def build_figure() -> Figure:
     axis.text(
         76.0,
         67.0,
-        "Shared Step-specific Synthesis",
+        "Region-to-Step Forecast Generation",
         ha="center",
         va="center",
         fontsize=8.0,
@@ -372,7 +372,7 @@ def build_figure() -> Figure:
             light_color=light_color,
         )
 
-    draw_shared_synthesis(axis, row_centers)
+    draw_forecast_generator(axis, row_centers)
 
     highlight_x0 = 96.0 + 78.0 / region_counts[1]
     highlight_width = 78.0 / region_counts[1]
@@ -465,13 +465,13 @@ def main() -> None:
         "method_change": False,
         "recommended_names": {
             "input": "Scope-region states",
-            "operation": "Shared step-specific synthesis",
+            "operation": "Region-to-Step Forecast Generator",
             "output": "Scope-conditioned forecasts",
             "stacked_output": "Scope-indexed forecast field",
         },
         "visual_claim": (
-            "one region state is reused within each region while shared "
-            "step-specific parameters produce distinct future-step values"
+            "the shared generator maps each region state to distinct "
+            "future-step forecasts with parameters shared across scopes"
         ),
         "outputs": outputs,
     }

@@ -1,4 +1,4 @@
-# ISCF region-to-forecast synthesis design
+# ISCF region-to-step forecast generation design
 
 ## Status
 
@@ -11,13 +11,13 @@
 
 ## Naming decision
 
-`Scope Projection` is not reused after the region representations because it already denotes the upstream history-to-scope-matrix operation. The recommended input name is **Scope-region states**, matching $\mathbf z_g^{(s)}$ and avoiding ambiguity with the earlier history state. The recommended operation name is **Shared step-specific synthesis**, matching the manuscript parameters $\mathbf a_\tau$, $\mathbf n_\tau$ and $\beta_\tau$. The recommended row output is **Scope-conditioned forecasts**, because every row is a slice of the shared forecast field rather than an independently trained forecasting model. Stacking all rows produces the **Scope-indexed forecast field**.
+`Scope Projection` is not reused after the region representations because it already denotes the upstream history-to-scope-matrix operation. The recommended input name is **Scope-region states**, matching $\mathbf z_g^{(s)}$ and avoiding ambiguity with the earlier history state. The recommended operation name is **Region-to-Step Forecast Generator**: it states the transformation purpose directly—mapping a region-shared state to step-level forecasts—while the parameter-sharing property remains a secondary annotation. The recommended row output is **Scope-conditioned forecasts**, because every row is a slice of the shared forecast field rather than an independently trained forecasting model. Stacking all rows produces the **Scope-indexed forecast field**.
 
 ## Visual contract
 
 The continuation reads as:
 
-`region-indexed latent states -> one shared step-specific synthesis module -> region-aware scope-conditioned forecast ribbons`.
+`region-indexed latent states -> one shared Region-to-Step Forecast Generator -> region-aware scope-conditioned forecast ribbons`.
 
 - Three rows preserve the current $s_0,s_1,s_2$ presentation.
 - One vertically shared module makes parameter sharing across scopes explicit.
