@@ -1,0 +1,22 @@
+{
+  "figure_id": "figure_iscf_region_synthesis_design_v1",
+  "status": "local_design_draft_for_author_review",
+  "backend": "Python/matplotlib",
+  "source_role": "continuation design for the current author draft",
+  "reuse_level": "style-only inheritance",
+  "empirical_data_used": false,
+  "method_change": false,
+  "recommended_names": {
+    "input": "Scope-region states",
+    "operation": "Shared step-specific synthesis",
+    "output": "Scope-conditioned forecasts",
+    "stacked_output": "Scope-indexed forecast field"
+  },
+  "visual_claim": "one region state is reused within each region while shared step-specific parameters produce distinct future-step values",
+  "outputs": {
+    "svg": "analysis/iscf_region_synthesis_design_20260806/figure_iscf_region_synthesis_design_v1.svg",
+    "pdf": "analysis/iscf_region_synthesis_design_20260806/figure_iscf_region_synthesis_design_v1.pdf",
+    "png": "analysis/iscf_region_synthesis_design_20260806/figure_iscf_region_synthesis_design_v1.png",
+    "tiff": "analysis/iscf_region_synthesis_design_20260806/figure_iscf_region_synthesis_design_v1.tiff"
+  }
+}
