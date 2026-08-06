@@ -32,6 +32,8 @@
 
 SimpleTM upstream training loop每个 epoch 计算 test loss。为遵守项目的 validation-only epoch/checkpoint selection 边界，本轮 runtime adapter 只移除该 epoch-level test pass；保留官方超参数、训练 objective、validation early stopping 与最终 evaluation。每个 validation-selected checkpoint 在训练结束后只执行一次 formal test。另将 `num_workers` 固定为 0，避免远程 file-descriptor failure；该变更不参与模型选择。
 
+首次resource smoke在训练step前暴露NumPy 2 compatibility failure：upstream `np.Inf`在remote NumPy 2.4中已移除。Compatibility adapter只执行单次、hash-frozen的`np.Inf -> np.inf`别名替换，不改变数值、objective或selector。失败的ECL/Solar/Weather smoke logs必须保留为protocol provenance。
+
 ## 3. Frozen matrix
 
 | Baseline | Datasets | Horizons | Native repeats | Checkpoints | Table cells |

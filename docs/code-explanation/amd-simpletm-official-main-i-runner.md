@@ -41,6 +41,7 @@ Runner读取 official shell script，先合并 shell line continuation，再解�
 1. 从 `train()` 删除 epoch-level test loader/evaluation，checkpoint仍只由 validation early stopping选择；
 2. formal mode在每个 selected checkpoint后执行一次 `test()`；resource-smoke通过环境 gate跳过 test；
 3. CLI末尾追加 `--num_workers 0`，避免 remote file-descriptor failure，不改变数据样本、objective或selector。
+4. 将upstream `utils/tools.py`中的`np.Inf`替换为NumPy 2等价别名`np.inf`；该compatibility patch发生在early-stopping初值，不改变训练语义。
 
 对应张量主路径为：
 

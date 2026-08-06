@@ -86,7 +86,8 @@
       "runtime_safety_adapter": "num_workers_0",
       "expected_runtime_patch_hashes": {
         "patched_exp_sha256": "af47e12be343ccfc807bee579e95e4ce2901db32643093b67721806b3de15584",
-        "patched_run_sha256": "2fc3f28f37176bbb3b3da6b877f84fb7564245717d4170e834b2c21c9f861503"
+        "patched_run_sha256": "2fc3f28f37176bbb3b3da6b877f84fb7564245717d4170e834b2c21c9f861503",
+        "patched_tools_sha256": "9d94d49725c03c9167341bbaa3a10f87511766335ea6bd431333263db805a781"
       },
       "expected_training_repetitions": 82,
       "expected_metric_rows": 82,
@@ -104,6 +105,7 @@
         "experiments/exp_long_term_forecasting.py": "92de6b128d916cc026dea8919efc2e9bb63b8fcb65a229cbe0a31f3d67fa80f0",
         "model/SimpleTM.py": "210ff3ff49d2bbf737b3f9cc27611d564b163474a0c999d991115ca9572334af",
         "data_provider/data_loader.py": "a4dc63e1255b9908467dda43a641627e4b9c1a6e747b89a4121864b56dfdf02f",
+        "utils/tools.py": "f8ef46f15e71130373dd3fb40917f171104f5f04629b9c0de6453d155bfa11bb",
         "scripts/multivariate_forecasting/ETT/SimpleTM_h1.sh": "9205d5bff6f5b44e6f0f3a09696331ba11e5ca1479d51ead96a94b345c39c65d",
         "scripts/multivariate_forecasting/ETT/SimpleTM_h2.sh": "82e218871eacca9eb01b8046cc9b8d17d6d56ad999228bd458ec807cf28d391a",
         "scripts/multivariate_forecasting/ETT/SimpleTM_m1.sh": "37054c63beefa993d6f8a04c26b46a7434e4427b8ed295b6fed09ed2ba4e8f71",

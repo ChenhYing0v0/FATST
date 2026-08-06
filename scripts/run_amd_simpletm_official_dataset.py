@@ -51,6 +51,7 @@ def replace_once(text: str, old: str, new: str, label: str) -> str:
 def patch_simpletm(source: Path) -> dict[str, str]:
     exp_path = source / "experiments/exp_long_term_forecasting.py"
     run_path = source / "run.py"
+    tools_path = source / "utils/tools.py"
 
     exp_text = exp_path.read_text(encoding="utf-8")
     exp_text = replace_once(
@@ -110,9 +111,19 @@ def patch_simpletm(source: Path) -> dict[str, str]:
         "SimpleTM add smoke-only final-test gate",
     )
     run_path.write_text(run_text, encoding="utf-8")
+
+    tools_text = tools_path.read_text(encoding="utf-8")
+    tools_text = replace_once(
+        tools_text,
+        "self.val_loss_min = np.Inf",
+        "self.val_loss_min = np.inf",
+        "SimpleTM NumPy 2 compatibility",
+    )
+    tools_path.write_text(tools_text, encoding="utf-8")
     return {
         "patched_exp_sha256": sha256_file(exp_path),
         "patched_run_sha256": sha256_file(run_path),
+        "patched_tools_sha256": sha256_file(tools_path),
     }
 
 
