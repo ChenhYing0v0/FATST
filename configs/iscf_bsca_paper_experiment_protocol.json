@@ -1736,7 +1736,7 @@
   },
   "qdf_main_i_l336_reproduction": {
     "protocol": "configs/qdf_main_i_seq336_reproduction.json",
-    "status": "remote_active_no_babysitting_wait_for_user_completion_notice",
+    "status": "complete_32_of_32_artifact_audit_pass_Main_I_QDF_replaced",
     "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather", "ECL", "Solar", "Exchange"],
     "horizons": [96, 192, 336, 720],
     "seed": 2023,

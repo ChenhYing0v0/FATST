@@ -1,0 +1,84 @@
+Args in experiment:
+[1mBasic Config[0m
+  Task Name:          long_term_forecast_meta_ml3Is Training:        1                   
+  Model ID:           Weather_336_720     Model:              TQNet               
+
+[1mData Loader[0m
+  Data:               custom              Root Path:          /home/yingch/dataset/weather/
+  Data Path:          weather.csv         Features:           M                   
+  Target:             OT                  Freq:               h                   
+
+[1mSave[0m
+  Checkpoints:        /home/yingch/exp_outputs/r-2026-fatst/qdf_main_i_seq336_20260806/_resource_smoke/QDF__Weather__H720__seed2023/checkpoints/
+  Results:            /home/yingch/exp_outputs/r-2026-fatst/qdf_main_i_seq336_20260806/_resource_smoke/QDF__Weather__H720__seed2023/results/
+  Test Results:       /home/yingch/exp_outputs/r-2026-fatst/qdf_main_i_seq336_20260806/_resource_smoke/QDF__Weather__H720__seed2023/test_results/
+  Log Path:           /home/yingch/exp_outputs/r-2026-fatst/qdf_main_i_seq336_20260806/_resource_smoke/QDF__Weather__H720__seed2023/result_long_term_forecast.txt
+  Output Predictions and GroundTruth:0                   
+  Output Visualizations:0                   
+
+[1mModel Parameters[0m
+  Top k:              5                   Num Kernels:        6                   
+  Enc In:             21                  Dec In:             21                  
+  C Out:              21                  d model:            512                 
+  n heads:            8                   e layers:           2                   
+  d layers:           1                   d FF:               2048                
+  Moving Avg:         25                  Factor:             3                   
+  Distil:             1                   Dropout:            0.5                 
+  Embed:              timeF               Activation:         gelu                
+  Output Attention:   0                   
+
+[1mRun Parameters[0m
+  Threads:            1                   
+  Num Workers:        0                   Itr:                1                   
+  Train Epochs:       1                   Batch Size:         32                  
+  Patience:           1                   Learning Rate:      0.002               
+  Des:                TQNet               Loss:               MSE                 
+  Lradj:              type1               Use Amp:            0                   
+
+[1mFreDF Setting[0m
+  Alpha:              0.0                 1 - Alpha:          1.0                 
+  Auxi Loss:          MSE                 Auxi Mode:          fft                 
+  Auxi Type:          complex             Module First:       1                   
+  Degree of Polynominal:2                   
+
+[1mGPU[0m
+  Use GPU:            1                   GPU:                0                   
+  Use Multi GPU:      0                   Devices:            0,1,2,3             
+
+[1mDe-stationary Projector Params[0m
+  P Hidden Dims:      128, 128            P Hidden Layers:    2                   
+
+Use GPU: cuda:0
+>>>>>>>start training : long_term_forecast_meta_ml3_Weather_336_720_TQNet_custom_ftM_sl336_ll48_pl720_dm512_nh8_el2_dl1_df2048_fc3_ebtimeF_dtTrue_ax0.0_rl1.0_axlMSE_mf1_TQNet_0>>>>>>>>>>>>>>>>>>>>>>>>>>
+Head lines of raw dataframe:
+                  date  p (mbar)  ...  Tlog (degC)     OT
+0  2020-01-01 00:10:00   1008.89  ...        11.45  428.1
+1  2020-01-01 00:20:00   1008.76  ...        11.51  428.0
+2  2020-01-01 00:30:00   1008.66  ...        11.60  427.6
+3  2020-01-01 00:40:00   1008.64  ...        11.70  430.0
+4  2020-01-01 00:50:00   1008.61  ...        11.81  432.2
+
+[5 rows x 22 columns]
+train 35831
+val 4551
+
+>>>>>>>Meta Training Phase
+
+Initial learning rates: 0.2
+Statistics of learned covariance matrix: [92m(mean: 0.0015, std: 0.0373, min: -0.0002, max: 1.0039)[0m
+
+>>>>>>>Meta Training Phase completed
+
+
+>>>>>>>Meta Test Phase
+
+Initial learning rates: 0.002
+Epoch: 1 cost time: 0.08572578430175781
+Validation cost time: 0.014174222946166992
+Epoch: 1 | Train Loss Cov: 0.8179923, MSE: 0.8419912 | Valid Loss Cov: 0.7437366, MSE: 0.7706883
+Validation loss decreased [92m(inf --> 0.770688)[0m. Saving model ...
+Updating learning rate from 0.002 to 0.001
+
+>>>>>>>Meta Test Phase completed
+
+>>>>>>>final evaluation skipped by adapter<<<<<<<<<<<<<<<<<<<<<<<<

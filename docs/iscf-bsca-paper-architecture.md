@@ -8,7 +8,7 @@
 | `version` | `v0.53` |
 | `last_updated` | `2026-08-06` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 4 v0.1 pending author review；experiments=HPO terminally frozen，QDF Main I `L=336` 32-cell remote queue active，不驻守 |
+| `current_review_cursor` | writing=Section 4 v0.1 pending author review；experiments=HPO terminally frozen，QDF Main I `L=336` 32/32 complete并已重建table |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
@@ -1372,7 +1372,7 @@ PDT固定`L=96`，仅保留secondary cross-check。TimeAlign表存在lookback se
 
 Table 6的140个目标published rows已完成PDF-coordinate transcription与渲染核验。源PDF存在5组逐horizon均值与reported Avg不一致，并分别在Table 1 caption、main-text implementation与Appendix E.1给出三种lookback grid；主表必须使用逐horizon原值并披露这些source-native protocol差异。
 
-截至2026-08-06，TimeAlign 8 datasets × four H × seed2021已32/32完成并通过artifact/hash audit；当前QDF表仍由六dataset published 24 rows与Solar official-code source-informed L96 4 rows组成。用户已授权新的QDF `L=336` 8 datasets × four H × seed2023完整本地复现：六dataset保留released逐Hprofiles，仅改lookback；Solar使用ECL-derived profile，Exchange使用ETTh1-derived profile并分别披露。32/32 artifact audit前不得替换或混入当前表；通过后，7-dataset dense QDF block全部改为本地L336值，Exchange companion扩为ISCF-BSCA/TimeAlign/QDF三系统。当前14-model表中的ISCF-BSCA 27/56 best、19/56 second仍只描述L96 mixed-source版本，不能预先沿用到L336重建表。
+截至2026-08-06，TimeAlign 8 datasets × four H × seed2021与QDF `L=336` 8 datasets × four H × seed2023均已32/32完成并通过artifact/hash audit。QDF六个released datasets仅改变lookback并保留逐Hprofiles；Solar使用ECL-derived profile，Exchange使用ETTh1-derived profile。Main I的七数据集dense QDF block已原子替换为28/28本地L336 cells，Exchange companion扩为ISCF-BSCA/TimeAlign/QDF三系统。QDF在七数据集macro MSE/MAE为`0.287511/0.331426`，相对ISCF-BSCA高`9.541%/7.508%`，仅在ETTm2-H192 MSE领先ISCF；完整14-model表中ISCF-BSCA仍为27/56 best、19/56 second。上一版mixed-source L96 QDF仅作历史记录，不再进入当前Main I。
 
 ### 8.3 Main Results II：Unified Multi-Horizon Benchmark
 

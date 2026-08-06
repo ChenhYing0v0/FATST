@@ -1,0 +1,75 @@
+Args in experiment:
+[1mBasic Config[0m
+  Task Name:          long_term_forecast_meta_ml3Is Training:        1                   
+  Model ID:           Solar_336_720       Model:              TQNet               
+
+[1mData Loader[0m
+  Data:               Solar               Root Path:          /home/yingch/dataset/Solar/
+  Data Path:          solar_AL.txt        Features:           M                   
+  Target:             OT                  Freq:               h                   
+
+[1mSave[0m
+  Checkpoints:        /home/yingch/exp_outputs/r-2026-fatst/qdf_main_i_seq336_20260806/_resource_smoke/QDF__Solar__H720__seed2023/checkpoints/
+  Results:            /home/yingch/exp_outputs/r-2026-fatst/qdf_main_i_seq336_20260806/_resource_smoke/QDF__Solar__H720__seed2023/results/
+  Test Results:       /home/yingch/exp_outputs/r-2026-fatst/qdf_main_i_seq336_20260806/_resource_smoke/QDF__Solar__H720__seed2023/test_results/
+  Log Path:           /home/yingch/exp_outputs/r-2026-fatst/qdf_main_i_seq336_20260806/_resource_smoke/QDF__Solar__H720__seed2023/result_long_term_forecast.txt
+  Output Predictions and GroundTruth:0                   
+  Output Visualizations:0                   
+
+[1mModel Parameters[0m
+  Top k:              5                   Num Kernels:        6                   
+  Enc In:             137                 Dec In:             137                 
+  C Out:              137                 d model:            512                 
+  n heads:            8                   e layers:           2                   
+  d layers:           1                   d FF:               2048                
+  Moving Avg:         25                  Factor:             3                   
+  Distil:             1                   Dropout:            0.0                 
+  Embed:              timeF               Activation:         gelu                
+  Output Attention:   0                   
+
+[1mRun Parameters[0m
+  Threads:            1                   
+  Num Workers:        0                   Itr:                1                   
+  Train Epochs:       1                   Batch Size:         16                  
+  Patience:           1                   Learning Rate:      0.01                
+  Des:                TQNet               Loss:               MSE                 
+  Lradj:              type1               Use Amp:            0                   
+
+[1mFreDF Setting[0m
+  Alpha:              0.0                 1 - Alpha:          1.0                 
+  Auxi Loss:          MSE                 Auxi Mode:          fft                 
+  Auxi Type:          complex             Module First:       1                   
+  Degree of Polynominal:2                   
+
+[1mGPU[0m
+  Use GPU:            1                   GPU:                0                   
+  Use Multi GPU:      0                   Devices:            0,1,2,3             
+
+[1mDe-stationary Projector Params[0m
+  P Hidden Dims:      128, 128            P Hidden Layers:    2                   
+
+Use GPU: cuda:0
+>>>>>>>start training : long_term_forecast_meta_ml3_Solar_336_720_TQNet_Solar_ftM_sl336_ll48_pl720_dm512_nh8_el2_dl1_df2048_fc3_ebtimeF_dtTrue_ax0.0_rl1.0_axlMSE_mf1_TQNet_0>>>>>>>>>>>>>>>>>>>>>>>>>>
+train 35737
+val 4537
+
+>>>>>>>Meta Training Phase
+
+Initial learning rates: 0.05
+Statistics of learned covariance matrix: [92m(mean: 0.0014, std: 0.0373, min: -0.0003, max: 1.0007)[0m
+
+>>>>>>>Meta Training Phase completed
+
+
+>>>>>>>Meta Test Phase
+
+Initial learning rates: 0.01
+Epoch: 1 cost time: 0.10677289962768555
+Validation cost time: 0.031203508377075195
+Epoch: 1 | Train Loss Cov: 1.4859959, MSE: 1.5194470 | Valid Loss Cov: 706.9857178, MSE: 731.1074219
+Validation loss decreased [92m(inf --> 731.107422)[0m. Saving model ...
+Updating learning rate from 0.01 to 0.005
+
+>>>>>>>Meta Test Phase completed
+
+>>>>>>>final evaluation skipped by adapter<<<<<<<<<<<<<<<<<<<<<<<<

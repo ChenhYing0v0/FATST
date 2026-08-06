@@ -1,0 +1,16 @@
+model,dataset,horizon,mse,mae,mse_display,mae_display,mse_style,mae_style,value_origin,system_role
+ISCF-BSCA,Exchange,96,0.09836130629220965,0.21621975316643105,0.098,0.216,normal,second,terminal_h4n_selected_single_seed_test_tuned,one_unified_model_per_dataset
+ISCF-BSCA,Exchange,192,0.20626730824320605,0.31759870435976684,0.206,0.318,normal,normal,terminal_h4n_selected_single_seed_test_tuned,one_unified_model_per_dataset
+ISCF-BSCA,Exchange,336,0.3804623336287274,0.44352822689009147,0.380,0.444,second,best,terminal_h4n_selected_single_seed_test_tuned,one_unified_model_per_dataset
+ISCF-BSCA,Exchange,720,0.9102533173058753,0.722978127172281,0.910,0.723,best,best,terminal_h4n_selected_single_seed_test_tuned,one_unified_model_per_dataset
+TimeAlign,Exchange,96,0.08672629112940437,0.20830252432885268,0.087,0.208,best,best,local_timealign_source_informed_exchange_seed2021,horizon_specific_source_informed_bootstrap
+TimeAlign,Exchange,192,0.19165170405176468,0.3100064204384883,0.192,0.310,best,best,local_timealign_source_informed_exchange_seed2021,horizon_specific_source_informed_bootstrap
+TimeAlign,Exchange,336,0.44181435928303037,0.47334690731284873,0.442,0.473,normal,normal,local_timealign_source_informed_exchange_seed2021,horizon_specific_source_informed_bootstrap
+TimeAlign,Exchange,720,1.3300387497732622,0.8471141181679236,1.330,0.847,normal,normal,local_timealign_source_informed_exchange_seed2021,horizon_specific_source_informed_bootstrap
+QDF,Exchange,96,0.09490663558244705,0.21775612235069275,0.095,0.218,second,normal,official_code_local_single_seed_l336,horizon_specific_official_native
+QDF,Exchange,192,0.1992684304714203,0.31746938824653625,0.199,0.317,second,second,official_code_local_single_seed_l336,horizon_specific_official_native
+QDF,Exchange,336,0.37671607732772827,0.44817039370536804,0.377,0.448,best,second,official_code_local_single_seed_l336,horizon_specific_official_native
+QDF,Exchange,720,0.929064929485321,0.7270509004592896,0.929,0.727,second,second,official_code_local_single_seed_l336,horizon_specific_official_native
+ISCF-BSCA,Exchange,Avg.,0.3988360663675046,0.4250812028971426,0.399,0.425,best,best,arithmetic_mean_of_four_horizon_rows,one_unified_model_per_dataset
+TimeAlign,Exchange,Avg.,0.5125577760593654,0.4596924925620283,0.513,0.460,normal,normal,arithmetic_mean_of_four_horizon_rows,horizon_specific_source_informed_bootstrap
+QDF,Exchange,Avg.,0.39998901821672916,0.42761170119047165,0.400,0.428,second,second,arithmetic_mean_of_four_horizon_rows,horizon_specific_official_native

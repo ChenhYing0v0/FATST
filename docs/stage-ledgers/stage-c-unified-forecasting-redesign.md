@@ -21,28 +21,28 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper consolidation；writing=Section 4 v0.1 pending author review；experiments=QDF Solar Step9--10 complete |
+| `current_11_step` | paper consolidation；writing=Section 4 v0.1 pending author review；experiments=QDF L336 8-dataset Step9--10 complete |
 | `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；`ISCF-BSCA-MAIN-v1` 8 selected profiles reusable |
-| `latest_decision` | `QDF_Solar_4_of_4_complete_Main_I_14_model_table_finalized_with_mixed_source_disclosure` |
+| `latest_decision` | `QDF_L336_32_of_32_complete_Main_I_rebuilt_scope_closed` |
 | `writing_latest_decision` | `section4_v0_1_and_method_figure4_initial_draft_pending_author_review` |
-| `next_required_action` | author review Main I QDF mixed-source disclosure；remaining AMD/SimpleTM/TimePerceiver/SRSNet/Exchange scopes separately gated |
-| `method_training_authorized` | ISCF HPO=false；QDF Solar scope consumed；other baseline scopes unchanged |
+| `next_required_action` | author review rebuilt Main I；remaining AMD/SimpleTM/TimePerceiver/SRSNet scopes separately gated |
+| `method_training_authorized` | ISCF HPO=false；QDF L336 scope consumed；other baseline scopes unchanged |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | HPO frozen；QDF Solar Step9 artifact audit与Step10 table consolidation complete |
+| `current_step` | HPO frozen；QDF L336 32/32 Step9 artifact audit与Step10 table consolidation complete |
 | `problem` | Introduction的horizon-specific superiority、component effectiveness与decoder portability claims尚缺完整paper-facing evidence |
-| `existence_evidence` | QDF published 24 rows + Solar local 4 rows complete；Solar mean MSE/MAE=0.281099/0.291503；4 checkpoints/loss/configs/metrics audited |
+| `existence_evidence` | QDF L336本地32 rows complete；160 required artifacts、32 unique checkpoint hashes与exact configs audited；dense macro MSE/MAE=0.287511/0.331426 |
 | `idea` | tuned main candidate + eight-dataset SOTA table + matched unified benchmark + exact five-dataset ablation/end-to-end transfer |
 | `theory_check` | architecture与HPO身份分离；validation选trial checkpoint；official-test four-H aggregate选dataset profile；published/native/matched角色分开；H720-only与frozen replacement排除 |
-| `design` | QDF六dataset published rows + Solar official-source TQNet/QDF、ECL-derived profiles、seed2023、四个fixed-H systems；训练后一次test |
+| `design` | QDF official-source TQNet/QDF、L336、seed2023、8 datasets × four fixed-H systems；Solar=ECL-derived，Exchange=ETTh1-derived；训练后一次test |
 | `narrative_gate` | architecture family冻结；SOTA wording由完整test-tuned result决定并披露test-informed边界 |
-| `effectiveness_gate` | QDF Solar 4/4 complete；结果弱于TimeAlign/ISCF且完整报告；native baseline only |
-| `artifacts` | QDF result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/qdf_main_i_20260806/result_and_table_audit.md`；table=`output/pdf/iscf_bsca_main_i_qdf_20260806.pdf` |
-| `decision` | QDF scope closed；Main I 14-model shared-surface table finalized；remaining baseline gaps不自动扩张 |
+| `effectiveness_gate` | QDF L336 32/32 complete；dense macro较ISCF高9.541%/7.508%，仅领先1/56 cells；native baseline only |
+| `artifacts` | QDF result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/qdf_main_i_l336_20260806/result_and_table_audit.md`；table=`output/pdf/iscf_bsca_main_i_qdf_l336_20260806.pdf` |
+| `decision` | QDF L336 scope closed；Main I 14-model dense table + 3-system Exchange companion finalized；remaining baseline gaps不自动扩张 |
 
 ## Exact Ablation Anchor Contract
 

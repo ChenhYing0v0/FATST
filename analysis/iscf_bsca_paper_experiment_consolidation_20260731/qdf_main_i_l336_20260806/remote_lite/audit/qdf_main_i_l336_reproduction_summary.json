@@ -1,0 +1,27 @@
+{
+  "protocol_id": "QDF-OFFICIAL-MAIN-I-L336-REPRODUCTION-20260806",
+  "matrix_complete": true,
+  "test_rows": 32,
+  "artifact_rows": 160,
+  "datasets": [
+    "ETTh1",
+    "ETTh2",
+    "ETTm1",
+    "ETTm2",
+    "Weather",
+    "ECL",
+    "Solar",
+    "Exchange"
+  ],
+  "horizons": [
+    96,
+    192,
+    336,
+    720
+  ],
+  "seq_len": 336,
+  "seed": 2023,
+  "mean_mse": 0.3015706173609942,
+  "mean_mae": 0.3434491781517863,
+  "claim_boundary": "six released profiles plus disclosed ECL-derived Solar and ETTh1-derived Exchange profiles; all values are local single-seed reproductions"
+}

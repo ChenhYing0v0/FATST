@@ -1,0 +1,14 @@
+2026-08-06T19:30:51+08:00
+6eb8605d4edbd754c918a622f3c4e2d24aa6590b
+3.12.13
+2.9.0+cu128
+12.8
+NVIDIA GeForce RTX 3090
+ETTh1	f18de3ad269cef59bb07b5438d79bb3042d3be49bdeecf01c1cd6d29695ee066	/home/yingch/dataset/ETT-small/ETTh1.csv
+ETTh2	a3dc2c597b9218c7ce1cd55eb77b283fd459a1d09d753063f944967dd6b9218b	/home/yingch/dataset/ETT-small/ETTh2.csv
+ETTm1	6ce1759b1a18e3328421d5d75fadcb316c449fcd7cec32820c8dafda71986c9e	/home/yingch/dataset/ETT-small/ETTm1.csv
+ETTm2	db973ca252c6410a30d0469b13d696cf919648d0f3fd588c60f03fdbdbadd1fd	/home/yingch/dataset/ETT-small/ETTm2.csv
+Weather	34ee981d07313e51da2a50bb600072c8ae4a69cb4b0651f4cb93a069d7a2ba63	/home/yingch/dataset/weather/weather.csv
+ECL	7e45845d54c5219bad0ae6bc1b5316cf8ff9cead5d33fa998a5a51c2e4a497ad	/home/yingch/dataset/electricity/electricity.csv
+Solar	230327ef72d2abb387939d4a35d6fd34f1066071bc7c40ce7ecf5531a0122ac2	/home/yingch/dataset/Solar/solar_AL.txt
+Exchange	48b4d9d3d508f5104162e85b9a6042e3557fde11aa9f2944eba8c0d0efc89842	/home/yingch/dataset/exchange_rate/exchange_rate.csv

@@ -497,7 +497,11 @@ def format_pdf_value(row: dict[str, Any], metric: str, style: ParagraphStyle) ->
     return Paragraph(value, style)
 
 
-def build_pdf(path: Path, rows: list[dict[str, Any]]) -> None:
+def build_pdf(
+    path: Path,
+    rows: list[dict[str, Any]],
+    exchange_rows: list[dict[str, Any]],
+) -> None:
     styles = getSampleStyleSheet()
     title_style = ParagraphStyle(
         "TableTitle",
@@ -579,7 +583,7 @@ def build_pdf(path: Path, rows: list[dict[str, Any]]) -> None:
         dataset_spans.append((start, end))
         avg_row_indices.append(end)
 
-    page_size = (390 * mm, 180 * mm)
+    page_size = (390 * mm, 210 * mm)
     document = SimpleDocTemplate(
         str(path),
         pagesize=page_size,
@@ -634,7 +638,7 @@ def build_pdf(path: Path, rows: list[dict[str, Any]]) -> None:
     table.setStyle(TableStyle(commands))
 
     title = Paragraph(
-        "Table X | Long-term forecasting results under the TimeAlign Table-6 layout. ",
+        "Table X. Long-term forecasting results under the TimeAlign Table-6 layout.",
         title_style,
     )
     qdf_full_reproduction = any(
@@ -670,7 +674,92 @@ def build_pdf(path: Path, rows: list[dict[str, Any]]) -> None:
         + exchange_note,
         note_style,
     )
-    document.build([title, Spacer(1, 2 * mm), table, Spacer(1, 2 * mm), note])
+    exchange_models = ("ISCF-BSCA", "TimeAlign", "QDF") if any(
+        row["model"] == "QDF" for row in exchange_rows
+    ) else ("ISCF-BSCA", "TimeAlign")
+    exchange_lookup = {
+        (row["model"], str(row["horizon"])): row for row in exchange_rows
+    }
+    exchange_data: list[list[Any]] = [
+        [Paragraph("H", header_style)]
+        + [
+            Paragraph(
+                f"<b>{model}</b>{'<super>*</super>' if model in {'TimeAlign', 'QDF'} else ''}",
+                header_style,
+            )
+            for model in exchange_models
+            for _ in (0, 1)
+        ],
+        [""]
+        + [
+            Paragraph(metric, header_style)
+            for _ in exchange_models
+            for metric in ("MSE", "MAE")
+        ],
+    ]
+    for horizon in (*HORIZONS, "Avg."):
+        current: list[Any] = [str(horizon)]
+        for model in exchange_models:
+            row = exchange_lookup[(model, str(horizon))]
+            current.extend(
+                [
+                    format_pdf_value(row, "mse", value_style),
+                    format_pdf_value(row, "mae", value_style),
+                ]
+            )
+        exchange_data.append(current)
+    exchange_table = Table(
+        exchange_data,
+        colWidths=[10 * mm] + [13 * mm] * (2 * len(exchange_models)),
+        hAlign="LEFT",
+    )
+    exchange_commands: list[tuple[Any, ...]] = [
+        ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+        ("FONTNAME", (0, 0), (-1, -1), "Helvetica"),
+        ("FONTSIZE", (0, 0), (-1, -1), 5.5),
+        ("TOPPADDING", (0, 0), (-1, -1), 1.2),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 1.2),
+        ("LINEABOVE", (0, 0), (-1, 0), 0.8, colors.black),
+        ("LINEBELOW", (0, 1), (-1, 1), 0.6, colors.black),
+        ("LINEABOVE", (0, -1), (-1, -1), 0.35, colors.grey),
+        ("LINEBELOW", (0, -1), (-1, -1), 0.8, colors.black),
+    ]
+    exchange_backgrounds = ("#fff7ed", "#f8fafc", "#f0fdf4")
+    for model_index, color in enumerate(exchange_backgrounds[: len(exchange_models)]):
+        start_column = 1 + 2 * model_index
+        exchange_commands.extend(
+            [
+                ("SPAN", (start_column, 0), (start_column + 1, 0)),
+                ("LINEBEFORE", (start_column, 0), (start_column, -1), 0.25, colors.grey),
+                ("BACKGROUND", (start_column, 0), (start_column + 1, -1), colors.HexColor(color)),
+            ]
+        )
+    exchange_table.setStyle(TableStyle(exchange_commands))
+    exchange_title = Paragraph(
+        "<b>Exchange companion | Locally reproduced systems.</b>", note_style
+    )
+    exchange_disclosure = Paragraph(
+        "* TimeAlign and QDF use disclosed ETTh1-derived source-informed presets "
+        "because neither official release provides an Exchange script. These rows "
+        "are native accuracy context, not matched mechanism attribution.",
+        note_style,
+    )
+    document.build(
+        [
+            title,
+            Spacer(1, 2 * mm),
+            table,
+            Spacer(1, 2 * mm),
+            note,
+            Spacer(1, 2 * mm),
+            exchange_title,
+            Spacer(1, 1 * mm),
+            exchange_table,
+            Spacer(1, 1 * mm),
+            exchange_disclosure,
+        ]
+    )
 
 
 def latex_value(row: dict[str, Any], metric: str) -> str:
@@ -809,7 +898,11 @@ def write_summary(path: Path, rows: list[dict[str, Any]], args: argparse.Namespa
         }
     )
     summary = {
-        "table_id": "ISCF-BSCA-MAIN-I-QDF-LOCAL-20260806",
+        "table_id": (
+            "ISCF-BSCA-MAIN-I-QDF-L336-LOCAL-20260806"
+            if qdf_full_reproduction
+            else "ISCF-BSCA-MAIN-I-QDF-LOCAL-20260806"
+        ),
         "models": list(DISPLAY_MODELS),
         "datasets": list(DISPLAY_DATASETS),
         "horizons": list(HORIZONS),
@@ -887,10 +980,10 @@ def main() -> None:
     )
     build_latex(args.analysis_dir / "table_iscf_bsca_main_i_qdf.tex", styled_rows)
     build_exchange_latex(
-        args.analysis_dir / "table_exchange_iscf_vs_timealign.tex",
+        args.analysis_dir / "table_exchange_companion.tex",
         exchange_rows,
     )
-    build_pdf(args.output_pdf, styled_rows)
+    build_pdf(args.output_pdf, styled_rows, exchange_rows)
     write_summary(args.analysis_dir / "table_build_summary.json", styled_rows, args)
     print(
         json.dumps(

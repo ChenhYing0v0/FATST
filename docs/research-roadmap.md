@@ -2,7 +2,7 @@
 
 ## QDF Main I L336 Full Reproduction Prelaunch (2026-08-06)
 
-Current experiment cursor=`Step 8 remote active`。用户授权QDF official-code在`L=336`下对8 datasets × four H × seed2023进行32个fixed-H systems的完整训练与formal test。六个released datasets只改变lookback并保留逐Hprofiles；Solar=ECL-derived、Exchange=ETTh1-derived且分别披露为source-informed。Commit=`6eb8605`；8个H720 bounded smokes全部通过且test=0，三GPU formal queue于19:31:57启动（PID3885616），不驻守。32/32 artifact audit前保留当前L96 mixed-source表，禁止partial replacement。Canonical launch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/qdf_main_i_l336_20260806/design_and_launch_gate.md`。Decision=`QDF_L336_full_matrix_remote_active_wait_user_notice`。
+Current experiment cursor=`Step 9 artifact audit complete -> Step 10 QDF baseline consolidation complete`。QDF official-code在L336下的8 datasets × four H × seed2023已32/32完成；160 required artifacts、32 unique checkpoint hashes、32 exact configs与numeric/log gates全部通过。七个dense datasets macro MSE/MAE=`0.287511/0.331426`，比ISCF-BSCA高`9.541%/7.508%`，QDF仅领先ISCF 1/56 cells。Main I已原子替换全部QDF dense cells并加入Exchange companion；ISCF完整14-model best/second保持27/56、19/56。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/qdf_main_i_l336_20260806/result_and_table_audit.md`。Decision=`QDF_L336_complete_Main_I_rebuilt_scope_closed`。
 
 ## QDF Solar Complete and Main I Consolidated (2026-08-06)
 

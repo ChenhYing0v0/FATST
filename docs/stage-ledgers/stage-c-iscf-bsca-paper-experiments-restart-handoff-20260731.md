@@ -44,15 +44,15 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | HPO terminal freeze complete；QDF Main I L336 8-dataset/32-cell remote queue active，不驻守 |
+| `active_experiment_step` | HPO terminal freeze complete；QDF Main I L336 32/32 complete并已进入重建后的Main I |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
 | `local_protocol_patch_authorized` | true for terminal HPO freeze and TimeAlign 8-dataset reproduction tooling |
-| `remote_training_authorized` | true only for QDF L336 8×4 seed2023 reproduction；other scopes=false |
+| `remote_training_authorized` | false；authorized QDF L336 32-job scope complete |
 | `test_tuned_hpo_authorized` | false；HPO stopped by user and H4O closed |
-| `formal_test_authorized` | true only for QDF L336 32 post-training tests；Main II/other baselines/selected-profile confirmation/3-seed=false |
-| `next_action` | 等待用户通知QDF L336 queue完成；随后同步32-cell artifacts、hash/provenance audit并原子重建Main I |
+| `formal_test_authorized` | false；authorized QDF L336 32 tests complete；Main II/other baselines/selected-profile confirmation/3-seed=false |
+| `next_action` | review rebuilt Main I；remaining AMD/SimpleTM/TimePerceiver/SRSNet evidence需独立freeze与授权 |
 | `conditional_next` | other baseline training or any HPO restart requires separate authorization；禁止partial table replacement |
 
 H4K train/validation与formal test均已完成，但terminal effectiveness gate失败。H4L只扩大ETTm2/Weather
@@ -76,6 +76,8 @@ H4N formal test于2026-08-06 14:22:25完成：40/40 checkpoints、160/160 rows�
 2026-08-06 TimeAlign Main I reproduction已32/32完成：24个new fixed-H runs与8个reused ETTm2/Weather runs组成完整8-dataset matrix；32个checkpoint hashes唯一，artifact/provenance/numeric-health audit全部通过。7个shared datasets的TimeAlign 28/28 cells已由本地seed2021结果替换，ISCF-BSCA相对本地TimeAlign为MSE 20/28、MAE 17/28 cells领先，macro MSE/MAE低3.994%/1.491%；完整13-model displayed table中ISCF-BSCA为27/56 best、19/56 second。Exchange只形成ISCF/TimeAlign companion，因为TimeAlign无official Exchange script且Table 6无其他baseline Exchange evidence。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_final_local_timealign_20260806/main_i_result_and_source_audit.md`。HPO保持停止，other baseline training未授权。
 
 2026-08-06用户进一步授权QDF在`seq_len=336`下完整本地复跑8 datasets × four H × seed2023。Exact rule为六个official scripts只改lookback、其余逐Hprofiles不变；Solar采用ECL-derived profile，Exchange采用ETTh1-derived profile且均标记source-informed。Formal matrix=32 fixed-H systems，先通过8个H720/test=0 resource smokes，再后台启动并停止驻守；32/32 artifact audit前当前L96 QDF table不变，禁止partial mix。Canonical prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/qdf_main_i_l336_20260806/design_and_launch_gate.md`。
+
+2026-08-06 QDF L336 formal queue已32/32完成：32 checkpoints、32 learned losses、32 metrics/configs/logs组成160-row manifest，checkpoint/loss hashes均32 unique，逐字段config与numeric/log gates通过。七个dense datasets的QDF macro MSE/MAE=`0.287511/0.331426`，相对ISCF-BSCA高`9.541%/7.508%`且仅领先1/56 cells。Main I现使用28个本地L336 dense cells，并在Exchange companion加入4个QDF cells；ISCF完整14-model best/second保持27/56、19/56。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/qdf_main_i_l336_20260806/result_and_table_audit.md`。QDF scope关闭，remote/formal authorization复位false。
 
 ## 2. Paper claims to be discharged
 

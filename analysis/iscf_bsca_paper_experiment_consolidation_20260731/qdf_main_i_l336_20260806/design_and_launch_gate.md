@@ -53,7 +53,7 @@ Resource smoke 只运行八个 dataset 的 H720，每个至多两个 train/valid
 
 ## 7. Prelaunch decision
 
-`PASS_AND_LAUNCHED`。用户已授权该精确 32-cell block 的 local protocol patch、remote training 与 formal test。8/8 bounded smoke 已通过，formal queue 已后台启动；启动后不驻守。
+`PASS_AND_COMPLETE`。用户已授权的精确32-cell block已在8/8 bounded smoke后完整执行；32/32 artifact/config/numeric gates通过，Main I replacement完成。正式结果见同目录`result_and_table_audit.md`。
 
 ## 8. Remote launch provenance
 
@@ -66,3 +66,11 @@ Resource smoke 只运行八个 dataset 的 H720，每个至多两个 train/valid
 - formal launch：2026-08-06 19:31:57 +08:00；PID=`3885616`
 - initial active jobs：GPU0 ECL-H720、GPU1 Solar-H720、GPU2 Weather-H720；三个 `run.py` processes 均存活并进入 data/meta-training path
 - user-requested monitoring policy：不驻守；等待用户通知完成后再同步、audit 和重建表格
+
+## 9. Completion
+
+- formal completion：2026-08-06 20:42:52 +08:00
+- required artifacts：160/160；checkpoint/A/metrics/config/stdout均32/32
+- checkpoint hashes：32 unique；learned-loss hashes：32 unique
+- result：`QDF_L336_32_of_32_COMPLETE_MAIN_I_REPLACEMENT_PASS`
+- canonical result：`analysis/iscf_bsca_paper_experiment_consolidation_20260731/qdf_main_i_l336_20260806/result_and_table_audit.md`
