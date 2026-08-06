@@ -1244,7 +1244,11 @@
       "publication": "AAAI_2025",
       "official_repository": "https://github.com/TROUBADOUR000/AMD",
       "main_i_role": "horizon_specific_published_or_official_reproduced",
-      "status": "source_audit_required"
+      "status": "official_reproduction_authorized_prelaunch",
+      "frozen_source_commit": "000d377a1ed8946aa817ff357cdf1de64b99abb9",
+      "local_reproduction_protocol": "configs/amd_simpletm_official_main_i_reproduction.json",
+      "local_reproduction_scope": "seven_dense_datasets_x_four_horizons_official_L512_seed2024",
+      "formal_test_authorized": true
     },
     {
       "id": "TimeMixer",
@@ -1266,7 +1270,13 @@
       "publication": "ICLR_2025",
       "official_repository": "https://github.com/vsingh-group/SimpleTM",
       "main_i_role": "horizon_specific_published_or_official_reproduced",
-      "status": "source_audit_required"
+      "status": "official_reproduction_authorized_prelaunch",
+      "frozen_source_commit": "3c77d820837b726afb03c943235ea95bc924243d",
+      "license_status": "not_provided_by_upstream_repository_no_vendoring",
+      "local_reproduction_protocol": "configs/amd_simpletm_official_main_i_reproduction.json",
+      "local_reproduction_scope": "seven_dense_datasets_x_four_horizons_official_L96_native_itr",
+      "test_access_adapter": "remove_epoch_level_test_evaluation_final_test_once_per_selected_checkpoint",
+      "formal_test_authorized": true
     },
     {
       "id": "iTransformer",

@@ -8,14 +8,14 @@
 | `version` | `v0.53` |
 | `last_updated` | `2026-08-06` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 4 v0.1 pending author review；experiments=HPO terminally frozen，QDF Main I `L=336` 32/32 complete并已重建table |
+| `current_review_cursor` | writing=Section 4 v0.1 pending author review；experiments=AMD/SimpleTM 56-cell official reproduction prelaunch |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.7正文 + approved Figures 2--3 |
 | `provisional_content` | Section 4 v0.1 + Method Figure 4 initial draft；remaining sections |
-| `authorization_source` | 2026-08-06用户在QDF Solar L96 scope完成后，进一步授权QDF official-code `L=336` 8 datasets × four-H训练与formal test；不重开ISCF HPO、selected-profile confirmation或3-seed |
+| `authorization_source` | 2026-08-06用户授权AMD与SimpleTM official-source 7 dense datasets × four-H复现；ISCF HPO、Main II与其他baseline未授权 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；

@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | 写作流审阅Section 4 v0.1与Method Figure 4；实验流在QDF scope闭合后继续剩余Main I/Main II gaps |
+| `active_question` | 写作流审阅Section 4 v0.1；实验流执行AMD/SimpleTM official Main I evidence |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9与Section 3 v0.7 frozen；Section 4 v0.1 pending author review |
@@ -21,28 +21,28 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper consolidation；writing=Section 4 v0.1 pending author review；experiments=QDF L336 8-dataset Step9--10 complete |
+| `current_11_step` | paper consolidation；writing=Section 4 v0.1 pending author review；experiments=AMD/SimpleTM Step8 resource gate |
 | `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；`ISCF-BSCA-MAIN-v1` 8 selected profiles reusable |
-| `latest_decision` | `QDF_L336_32_of_32_complete_Main_I_rebuilt_scope_closed` |
+| `latest_decision` | `AMD_SimpleTM_56_cell_prelaunch_conditional_pass` |
 | `writing_latest_decision` | `section4_v0_1_and_method_figure4_initial_draft_pending_author_review` |
-| `next_required_action` | author review rebuilt Main I；remaining AMD/SimpleTM/TimePerceiver/SRSNet scopes separately gated |
-| `method_training_authorized` | ISCF HPO=false；QDF L336 scope consumed；other baseline scopes unchanged |
+| `next_required_action` | 14-job no-test resource smoke -> storage gate -> background formal queue |
+| `method_training_authorized` | AMD/SimpleTM seven-dataset scope=true；ISCF HPO/Main II/other baselines=false |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | HPO frozen；QDF L336 32/32 Step9 artifact audit与Step10 table consolidation complete |
+| `current_step` | HPO frozen；AMD/SimpleTM Step6--7 complete，Step8 resource gate pending |
 | `problem` | Introduction的horizon-specific superiority、component effectiveness与decoder portability claims尚缺完整paper-facing evidence |
-| `existence_evidence` | QDF L336本地32 rows complete；160 required artifacts、32 unique checkpoint hashes与exact configs audited；dense macro MSE/MAE=0.287511/0.331426 |
+| `existence_evidence` | AMD/SimpleTM均有7-dataset official scripts；exact commits/source hashes和56-cell/110-checkpoint contract已冻结 |
 | `idea` | tuned main candidate + eight-dataset SOTA table + matched unified benchmark + exact five-dataset ablation/end-to-end transfer |
 | `theory_check` | architecture与HPO身份分离；validation选trial checkpoint；official-test four-H aggregate选dataset profile；published/native/matched角色分开；H720-only与frozen replacement排除 |
-| `design` | QDF official-source TQNet/QDF、L336、seed2023、8 datasets × four fixed-H systems；Solar=ECL-derived，Exchange=ETTh1-derived；训练后一次test |
+| `design` | AMD L512/seed2024/28 runs；SimpleTM L96/fix_seed2025/native itr/82 runs；epoch test access removed；14 no-test smokes后formal |
 | `narrative_gate` | architecture family冻结；SOTA wording由完整test-tuned result决定并披露test-informed边界 |
-| `effectiveness_gate` | QDF L336 32/32 complete；dense macro较ISCF高9.541%/7.508%，仅领先1/56 cells；native baseline only |
-| `artifacts` | QDF result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/qdf_main_i_l336_20260806/result_and_table_audit.md`；table=`output/pdf/iscf_bsca_main_i_qdf_l336_20260806.pdf` |
-| `decision` | QDF L336 scope closed；Main I 14-model dense table + 3-system Exchange companion finalized；remaining baseline gaps不自动扩张 |
+| `effectiveness_gate` | pending 110/110 raw rows and 56/56 aggregated cells；partial rows禁止进入Main I |
+| `artifacts` | prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/amd_simpletm_main_i_reproduction_20260806/design_and_launch_gate.md` |
+| `decision` | source/protocol conditional pass；resource/storage gate后启动，不扩张其他baseline |
 
 ## Exact Ablation Anchor Contract
 

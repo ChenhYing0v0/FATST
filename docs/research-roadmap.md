@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## AMD / SimpleTM Main I Official Reproduction Prelaunch (2026-08-06)
+
+Current experiment cursor=`Step 6 source/protocol freeze -> Step 7 adapter complete -> Step 8 resource gate`。用户授权AMD与SimpleTM在7 dense datasets × four H上的official-source reproduction，共56 table cells。AMD按released `L512/seed2024` scripts训练28 checkpoints；SimpleTM按released `L96/fix_seed2025/native itr` scripts训练82 checkpoints。SimpleTM只做test-hygiene与`num_workers=0` adapter，不改变objective、profiles或validation selector；其upstream无license，因此不vendoring。先执行14个H720 one-epoch/no-test smokes并检查35 GiB storage budget；通过后后台启动formal queue，不驻守。110/110 artifacts前禁止partial table replacement。Canonical prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/amd_simpletm_main_i_reproduction_20260806/design_and_launch_gate.md`。Decision=`AMD_SimpleTM_56_cell_prelaunch_conditional_pass`。
+
 ## QDF Main I L336 Full Reproduction Prelaunch (2026-08-06)
 
 Current experiment cursor=`Step 9 artifact audit complete -> Step 10 QDF baseline consolidation complete`。QDF official-code在L336下的8 datasets × four H × seed2023已32/32完成；160 required artifacts、32 unique checkpoint hashes、32 exact configs与numeric/log gates全部通过。七个dense datasets macro MSE/MAE=`0.287511/0.331426`，比ISCF-BSCA高`9.541%/7.508%`，QDF仅领先ISCF 1/56 cells。Main I已原子替换全部QDF dense cells并加入Exchange companion；ISCF完整14-model best/second保持27/56、19/56。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/qdf_main_i_l336_20260806/result_and_table_audit.md`。Decision=`QDF_L336_complete_Main_I_rebuilt_scope_closed`。

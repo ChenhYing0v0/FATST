@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "protocol_id": "AMD-SIMPLETM-OFFICIAL-MAIN-I-7DATASET-REPRODUCTION-20260806",
+  "created_at": "2026-08-06",
+  "authorization": {
+    "authorized_by_user": true,
+    "authorization_date": "2026-08-06",
+    "remote_training_authorized": true,
+    "formal_test_authorized": true,
+    "scope": "official-source AMD and SimpleTM reproduction on the seven dense Main I datasets",
+    "other_baselines_authorized": false,
+    "iscf_bsca_hpo_must_remain_stopped": true
+  },
+  "evaluation_contract": {
+    "datasets": [
+      "ETTh1",
+      "ETTh2",
+      "ETTm1",
+      "ETTm2",
+      "Weather",
+      "ECL",
+      "Solar"
+    ],
+    "horizons": [96, 192, 336, 720],
+    "metrics": ["MSE", "MAE"],
+    "baseline_count": 2,
+    "expected_table_cells": 56,
+    "expected_training_repetitions": 110,
+    "one_fixed_horizon_model_per_repeat": true,
+    "matrix_complete_required": true,
+    "partial_table_replacement_forbidden": true,
+    "role": "native_horizon_specific_accuracy_context_not_matched_mechanism_attribution",
+    "test_informed": true,
+    "test_tuned_locally": false
+  },
+  "baselines": {
+    "AMD": {
+      "paper": "Adaptive Multi-Scale Decomposition Framework for Time Series Forecasting",
+      "publication": "AAAI 2025",
+      "source_repository": "https://github.com/TROUBADOUR000/AMD",
+      "source_commit": "000d377a1ed8946aa817ff357cdf1de64b99abb9",
+      "source_commit_date": "2025-03-19T11:34:21+08:00",
+      "license_status": "MIT",
+      "source_distribution_policy": "exact_upstream_checkout_allowed",
+      "official_seq_len": 512,
+      "official_seed_contract": "seed_2024_one_run_per_horizon",
+      "official_checkpoint_selector": "official_last_epoch_due_to_upstream_last_epoch_overwrite",
+      "formal_test_boundary": "one_test_after_official_last_checkpoint",
+      "expected_training_repetitions": 28,
+      "expected_metric_rows": 28,
+      "source_hashes": {
+        "LICENSE": "b0dd13cac7796d87fd9fef46e8aeceaf47239a44d631ac51755fa1dea52bec7b",
+        "main.py": "0f97ddb77bb1f071d7566ee2741658ec5f3010ecc4223a1e3d5b0e848f70d517",
+        "models/tsAMD.py": "2158162acc897bb173aa6a954f8c431290492958dfcd58c860fe08720d72bfad",
+        "utils/dataloader.py": "32da838e24c92c49ecc92311f95a3836cfc94faf2662f76b8e90ce4a0ef228b9",
+        "scripts/ETTh1.sh": "e3c9c691e426d95caaa0fe1ca18c13d5a35cb156b98cceaae191c0243496908c",
+        "scripts/ETTh2.sh": "5f7be1a9265736e0ba41a0baaed22bbc42c1e8f19bdccb862ee9c9e2a5c782d4",
+        "scripts/ETTm1.sh": "3f48f61c22f53fd37e4a33f6976dd7297f4ae12438be926cbb5745fa38cf41fd",
+        "scripts/ETTm2.sh": "9a6ba12b460ffbd906c375b2c9f126e59b0e7bde7946a53b7f9b72b2af694cc4",
+        "scripts/Weather.sh": "6ebb9508cef5a28bc419813f385a306efa1f4d5f5719d41c17fd5a653c79d7cf",
+        "scripts/ECL.sh": "06ef1aa8c89a0e2e9b9d62758cf8bde46bce9c3f7076783baaeaa7205b80368a",
+        "scripts/Solar_AL.sh": "7df8b041a162ea6bd74920bcb88452999066dcb883ad7dd927eaded87c9dee02"
+      },
+      "dataset_scripts": {
+        "ETTh1": {"path": "scripts/ETTh1.sh", "sha256": "e3c9c691e426d95caaa0fe1ca18c13d5a35cb156b98cceaae191c0243496908c", "checkpoint_name": "ETTh1"},
+        "ETTh2": {"path": "scripts/ETTh2.sh", "sha256": "5f7be1a9265736e0ba41a0baaed22bbc42c1e8f19bdccb862ee9c9e2a5c782d4", "checkpoint_name": "ETTh2"},
+        "ETTm1": {"path": "scripts/ETTm1.sh", "sha256": "3f48f61c22f53fd37e4a33f6976dd7297f4ae12438be926cbb5745fa38cf41fd", "checkpoint_name": "ETTm1"},
+        "ETTm2": {"path": "scripts/ETTm2.sh", "sha256": "9a6ba12b460ffbd906c375b2c9f126e59b0e7bde7946a53b7f9b72b2af694cc4", "checkpoint_name": "ETTm2"},
+        "Weather": {"path": "scripts/Weather.sh", "sha256": "6ebb9508cef5a28bc419813f385a306efa1f4d5f5719d41c17fd5a653c79d7cf", "checkpoint_name": "weather"},
+        "ECL": {"path": "scripts/ECL.sh", "sha256": "06ef1aa8c89a0e2e9b9d62758cf8bde46bce9c3f7076783baaeaa7205b80368a", "checkpoint_name": "electricity"},
+        "Solar": {"path": "scripts/Solar_AL.sh", "sha256": "7df8b041a162ea6bd74920bcb88452999066dcb883ad7dd927eaded87c9dee02", "checkpoint_name": "solar_AL"}
+      }
+    },
+    "SimpleTM": {
+      "paper": "SimpleTM: A Simple Baseline for Multivariate Time Series Forecasting",
+      "publication": "ICLR 2025",
+      "source_repository": "https://github.com/vsingh-group/SimpleTM",
+      "source_commit": "3c77d820837b726afb03c943235ea95bc924243d",
+      "source_commit_date": "2025-05-28T16:05:20-05:00",
+      "license_status": "not_provided_by_upstream_repository",
+      "source_distribution_policy": "do_not_vendor_research_execution_from_exact_remote_checkout_only",
+      "official_seq_len": 96,
+      "official_seed_contract": "fix_seed_2025_with_native_itr_repetitions",
+      "official_checkpoint_selector": "validation_early_stopping_patience_3",
+      "formal_test_boundary": "runtime_adapter_removes_epoch_test_access_then_one_test_per_selected_checkpoint",
+      "runtime_safety_adapter": "num_workers_0",
+      "expected_runtime_patch_hashes": {
+        "patched_exp_sha256": "af47e12be343ccfc807bee579e95e4ce2901db32643093b67721806b3de15584",
+        "patched_run_sha256": "2fc3f28f37176bbb3b3da6b877f84fb7564245717d4170e834b2c21c9f861503"
+      },
+      "expected_training_repetitions": 82,
+      "expected_metric_rows": 82,
+      "native_repeats_by_dataset_horizon": {
+        "ETTh1": {"96": 3, "192": 3, "336": 3, "720": 3},
+        "ETTh2": {"96": 3, "192": 3, "336": 3, "720": 3},
+        "ETTm1": {"96": 3, "192": 3, "336": 3, "720": 3},
+        "ETTm2": {"96": 3, "192": 3, "336": 3, "720": 3},
+        "Weather": {"96": 3, "192": 3, "336": 3, "720": 3},
+        "ECL": {"96": 3, "192": 3, "336": 3, "720": 3},
+        "Solar": {"96": 3, "192": 2, "336": 2, "720": 3}
+      },
+      "source_hashes": {
+        "run.py": "b056e7a24edd1f8971e7616e5e82b8c4c1d0117859ccd4c70dcd9b02bca4b23a",
+        "experiments/exp_long_term_forecasting.py": "92de6b128d916cc026dea8919efc2e9bb63b8fcb65a229cbe0a31f3d67fa80f0",
+        "model/SimpleTM.py": "210ff3ff49d2bbf737b3f9cc27611d564b163474a0c999d991115ca9572334af",
+        "data_provider/data_loader.py": "a4dc63e1255b9908467dda43a641627e4b9c1a6e747b89a4121864b56dfdf02f",
+        "scripts/multivariate_forecasting/ETT/SimpleTM_h1.sh": "9205d5bff6f5b44e6f0f3a09696331ba11e5ca1479d51ead96a94b345c39c65d",
+        "scripts/multivariate_forecasting/ETT/SimpleTM_h2.sh": "82e218871eacca9eb01b8046cc9b8d17d6d56ad999228bd458ec807cf28d391a",
+        "scripts/multivariate_forecasting/ETT/SimpleTM_m1.sh": "37054c63beefa993d6f8a04c26b46a7434e4427b8ed295b6fed09ed2ba4e8f71",
+        "scripts/multivariate_forecasting/ETT/SimpleTM_m2.sh": "98d1a6e5536f164228e254c041e9a8f737c430e50e3051836fe589f0760d874f",
+        "scripts/multivariate_forecasting/Weather/SimpleTM.sh": "65a6ce36ace2b99705c7f2865cff6f78f7c7abbb4123b46e756aa6da49a1a73e",
+        "scripts/multivariate_forecasting/ECL/SimpleTM.sh": "209d4b3286272d1f50947c8f51b68151d029cc8d8692310660cd69b053ca43f0",
+        "scripts/multivariate_forecasting/SolarEnergy/SimpleTM.sh": "03ecbeb254dff715cd43be6cb20c987d5d1b147d1b7bbbe40c1b2e369bf53958"
+      },
+      "dataset_scripts": {
+        "ETTh1": {"path": "scripts/multivariate_forecasting/ETT/SimpleTM_h1.sh", "sha256": "9205d5bff6f5b44e6f0f3a09696331ba11e5ca1479d51ead96a94b345c39c65d"},
+        "ETTh2": {"path": "scripts/multivariate_forecasting/ETT/SimpleTM_h2.sh", "sha256": "82e218871eacca9eb01b8046cc9b8d17d6d56ad999228bd458ec807cf28d391a"},
+        "ETTm1": {"path": "scripts/multivariate_forecasting/ETT/SimpleTM_m1.sh", "sha256": "37054c63beefa993d6f8a04c26b46a7434e4427b8ed295b6fed09ed2ba4e8f71"},
+        "ETTm2": {"path": "scripts/multivariate_forecasting/ETT/SimpleTM_m2.sh", "sha256": "98d1a6e5536f164228e254c041e9a8f737c430e50e3051836fe589f0760d874f"},
+        "Weather": {"path": "scripts/multivariate_forecasting/Weather/SimpleTM.sh", "sha256": "65a6ce36ace2b99705c7f2865cff6f78f7c7abbb4123b46e756aa6da49a1a73e"},
+        "ECL": {"path": "scripts/multivariate_forecasting/ECL/SimpleTM.sh", "sha256": "209d4b3286272d1f50947c8f51b68151d029cc8d8692310660cd69b053ca43f0"},
+        "Solar": {"path": "scripts/multivariate_forecasting/SolarEnergy/SimpleTM.sh", "sha256": "03ecbeb254dff715cd43be6cb20c987d5d1b147d1b7bbbe40c1b2e369bf53958"}
+      }
+    }
+  },
+  "datasets": {
+    "ETTh1": {"relative_path": "ETT-small/ETTh1.csv", "sha256": "f18de3ad269cef59bb07b5438d79bb3042d3be49bdeecf01c1cd6d29695ee066", "channels": 7},
+    "ETTh2": {"relative_path": "ETT-small/ETTh2.csv", "sha256": "a3dc2c597b9218c7ce1cd55eb77b283fd459a1d09d753063f944967dd6b9218b", "channels": 7},
+    "ETTm1": {"relative_path": "ETT-small/ETTm1.csv", "sha256": "6ce1759b1a18e3328421d5d75fadcb316c449fcd7cec32820c8dafda71986c9e", "channels": 7},
+    "ETTm2": {"relative_path": "ETT-small/ETTm2.csv", "sha256": "db973ca252c6410a30d0469b13d696cf919648d0f3fd588c60f03fdbdbadd1fd", "channels": 7},
+    "Weather": {"relative_path": "weather/weather.csv", "sha256": "34ee981d07313e51da2a50bb600072c8ae4a69cb4b0651f4cb93a069d7a2ba63", "channels": 21},
+    "ECL": {"relative_path": "electricity/electricity.csv", "sha256": "7e45845d54c5219bad0ae6bc1b5316cf8ff9cead5d33fa998a5a51c2e4a497ad", "channels": 321},
+    "Solar": {"relative_path": "Solar/solar_AL.txt", "sha256": "230327ef72d2abb387939d4a35d6fd34f1066071bc7c40ce7ecf5531a0122ac2", "channels": 137}
+  },
+  "resource_smoke": {
+    "jobs": 14,
+    "horizon": 720,
+    "AMD": {"train_epochs": 1, "repeats": 1, "formal_test_access": false},
+    "SimpleTM": {"train_epochs": 1, "repeats": 1, "num_workers": 0, "formal_test_access": false},
+    "gate": "14_of_14_checkpoints_complete_no_test_metrics_no_OOM_no_NaN_and_projected_storage_within_quota"
+  },
+  "remote_execution": {
+    "host": "529_Lab-3090",
+    "repo_root": "/home/yingch/projects/FATST",
+    "conda_env": "moe",
+    "data_root": "/home/yingch/dataset",
+    "output_root": "/home/yingch/exp_outputs/r-2026-fatst/amd_simpletm_main_i_7dataset_20260806",
+    "gpu_ids": [0, 1, 2],
+    "workload_order": [
+      "SimpleTM:ECL",
+      "SimpleTM:Solar",
+      "SimpleTM:Weather",
+      "AMD:ECL",
+      "AMD:Solar",
+      "AMD:Weather",
+      "SimpleTM:ETTm1",
+      "SimpleTM:ETTm2",
+      "SimpleTM:ETTh1",
+      "SimpleTM:ETTh2",
+      "AMD:ETTm1",
+      "AMD:ETTm2",
+      "AMD:ETTh1",
+      "AMD:ETTh2"
+    ],
+    "storage_budget_gib": 35,
+    "hard_quota_gib": 220,
+    "launch_policy": "resource_smoke_then_background_formal_queue_no_babysitting"
+  },
+  "gates": {
+    "prelaunch": "source commits and hashes, exact 14-unit dry-run, 56-cell contract, JSON and syntax checks pass",
+    "resource": "14/14 H720 one-epoch checkpoint smokes with zero formal-test rows and projected total storage at most 35 GiB",
+    "formal": "28 AMD plus 82 SimpleTM checkpoint/metric rows, exact 56 table cells, complete negative-result retention and hash provenance",
+    "rollback": "retain the current Main I AMD/SimpleTM published values; do not replace either baseline from a partial local matrix"
+  }
+}
