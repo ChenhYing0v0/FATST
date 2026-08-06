@@ -8,7 +8,7 @@
 | `version` | `v0.50` |
 | `last_updated` | `2026-08-05` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 4 v0.1 architecture-and-objective complete pending author review；Section 3 v0.7 remains temporarily frozen；experiments=H4N 40/40 training complete and formal-test manifest frozen；Method Figure 4 initial draft generated |
+| `current_review_cursor` | writing=Section 4 v0.1 architecture-and-objective complete pending author review；Section 3 v0.7 remains temporarily frozen；experiments=H4N formal test complete and gate fail，rollback Step 6；Method Figure 4 initial draft generated |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
@@ -1342,6 +1342,8 @@ H4M后用户单独授权H4N继续扩大Weather HPO。H4N不改变architecture/ob
 H4N exact commit=`ba17fc9`的40/40 resource smoke已通过，test=0且无numeric/runtime failure。Full Weather train/validation queue已于2026-08-05 10:47:16在GPU0--2启动；40/40 immutable checkpoint manifest通过前不访问official test。
 
 2026-08-06 H4N 40/40 full train/validation artifacts与unique checkpoint hashes通过audit，training test保持0/40；40-row manifest SHA256=`a0f152f9172acc193fe512001123b71aeae6d6d3ab1028c915074f24d54c1ed4`。Formal test固定为完整160 standard-horizon rows且已获授权；该test只更新Weather dataset-level main-model profile，不改变architecture、method claim或ablation anchor。
+
+H4N formal test现已40/40、160/160完成。Full-table selector选择`L608/p19/lr2e-5`，mean MSE/MAE=`0.214887/0.245821`，相对H4M current Weather profile为+0.063%/-0.608%，但full-table exact leads仍4/8且全部success gates失败。该结果不改变architecture freeze或method narrative，只把Weather main-profile evidence更新为partial MAE improvement；legacy 5-baseline 33/56 frontier与wide-table displayed 29/56均未提高。
 
 ### 8.2 Main Results I：Unified versus Horizon-Specific
 

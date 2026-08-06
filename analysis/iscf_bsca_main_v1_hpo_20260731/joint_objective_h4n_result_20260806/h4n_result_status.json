@@ -1,0 +1,272 @@
+{
+  "formal_test": {
+    "trials": 40,
+    "standard_horizon_cells": 160,
+    "checkpoint_immutability_pass": true,
+    "matrix_complete": true
+  },
+  "search_pool": {
+    "total_trials": 229,
+    "weather_trials": 96,
+    "new_h4n_trials": 40,
+    "near_tie_eligible_profiles": 2
+  },
+  "selected_weather_profile": {
+    "dataset": "Weather",
+    "phase": "H4N",
+    "trial_id": "Weather__h4n_seq608_p19_lr2e5",
+    "profile_id": "h4n_seq608_p19_lr2e5",
+    "test_mean_mse_4h": 0.2148870747075069,
+    "test_mean_mae_4h": 0.24582054985665638,
+    "mean_mse_target_ratio": 0.9972817479106667,
+    "mean_mae_target_ratio": 1.0066307253381528,
+    "primary_joint_score": 1.0019562366244097,
+    "mse_lead_cells": 3,
+    "mae_lead_cells": 1,
+    "combined_lead_cells": 4,
+    "validation_mean_mse_4h": "0.4925387981988948",
+    "trainable_parameters": "3944597",
+    "near_tie_eligible": true,
+    "selected": true
+  },
+  "selected_weather_cells": [
+    {
+      "horizon": 96,
+      "mse": 0.1410607618772622,
+      "mae": 0.18159428257633217
+    },
+    {
+      "horizon": 192,
+      "mse": 0.18213667199495437,
+      "mae": 0.22313626947867732
+    },
+    {
+      "horizon": 336,
+      "mse": 0.23218611821442647,
+      "mae": 0.26377962898612267
+    },
+    {
+      "horizon": 720,
+      "mse": 0.30416474674338456,
+      "mae": 0.3147720183854933
+    }
+  ],
+  "primary_full_table_target": {
+    "non_iscf_baseline_models": [
+      "CMoS",
+      "Crossformer",
+      "DLinear",
+      "Leddam",
+      "ModernTCN",
+      "PatchTST",
+      "TVNet",
+      "TimeAlign",
+      "TimeBase",
+      "TimeMixer",
+      "TimesNet",
+      "iTransformer"
+    ],
+    "historical_best_trial_recomputed": "Weather__h4m_seq512_p16_lr2e5",
+    "historical_best_score_recomputed": 1.0040116169741053,
+    "stored_historical_score_from_legacy_five_model_target": 1.0056094888154297,
+    "stored_comparator_is_target_inconsistent": true,
+    "protocol_consistent_relative_improvement": 0.002047167896214397,
+    "literal_stored_scalar_relative_improvement": 0.003632873627041233,
+    "gate_status": {
+      "protocol_consistent_primary_improvement_at_least_0.3pct": false,
+      "mean_mse_at_most_target": false,
+      "mean_mae_at_most_target": false,
+      "combined_leads_at_least_6_of_8": false
+    },
+    "overall_gate_pass": false
+  },
+  "comparison_roles": {
+    "legacy_five_model_exact_target": {
+      "models": [
+        "DLinear",
+        "PatchTST",
+        "TimeAlign",
+        "TimeMixer",
+        "iTransformer"
+      ],
+      "h4n_primary_profile_on_legacy_target": true,
+      "exact": {
+        "mse": 15,
+        "mae": 16,
+        "combined": 31
+      },
+      "displayed_three_decimal": {
+        "mse": 18,
+        "mae": 16,
+        "combined": 34
+      },
+      "by_dataset": {
+        "ECL": {
+          "mse_exact": 3,
+          "mae_exact": 2,
+          "mse_displayed": 3,
+          "mae_displayed": 2
+        },
+        "ETTh1": {
+          "mse_exact": 3,
+          "mae_exact": 2,
+          "mse_displayed": 3,
+          "mae_displayed": 2
+        },
+        "ETTh2": {
+          "mse_exact": 3,
+          "mae_exact": 3,
+          "mse_displayed": 3,
+          "mae_displayed": 3
+        },
+        "ETTm1": {
+          "mse_exact": 3,
+          "mae_exact": 3,
+          "mse_displayed": 4,
+          "mae_displayed": 3
+        },
+        "ETTm2": {
+          "mse_exact": 0,
+          "mae_exact": 1,
+          "mse_displayed": 0,
+          "mae_displayed": 1
+        },
+        "Solar": {
+          "mse_exact": 2,
+          "mae_exact": 4,
+          "mse_displayed": 2,
+          "mae_displayed": 4
+        },
+        "Weather": {
+          "mse_exact": 1,
+          "mae_exact": 1,
+          "mse_displayed": 3,
+          "mae_displayed": 1
+        }
+      }
+    },
+    "legacy_five_model_one_percent_selector_counterfactual": {
+      "selected_weather_profile": {
+        "trial_id": "Weather__h4m_seq640_p20",
+        "profile_id": "h4m_seq640_p20",
+        "score": 1.0065325471792885,
+        "mse_leads": 3,
+        "mae_leads": 1,
+        "validation_mean_mse_4h": 0.491397054869652,
+        "trainable_parameters": 4141205
+      },
+      "interpretation": "continuity audit only; H4N froze the full-table 0.1pct selector as primary",
+      "exact": {
+        "mse": 17,
+        "mae": 16,
+        "combined": 33
+      },
+      "displayed_three_decimal": {
+        "mse": 18,
+        "mae": 16,
+        "combined": 34
+      },
+      "by_dataset": {
+        "ECL": {
+          "mse_exact": 3,
+          "mae_exact": 2,
+          "mse_displayed": 3,
+          "mae_displayed": 2
+        },
+        "ETTh1": {
+          "mse_exact": 3,
+          "mae_exact": 2,
+          "mse_displayed": 3,
+          "mae_displayed": 2
+        },
+        "ETTh2": {
+          "mse_exact": 3,
+          "mae_exact": 3,
+          "mse_displayed": 3,
+          "mae_displayed": 3
+        },
+        "ETTm1": {
+          "mse_exact": 3,
+          "mae_exact": 3,
+          "mse_displayed": 4,
+          "mae_displayed": 3
+        },
+        "ETTm2": {
+          "mse_exact": 0,
+          "mae_exact": 1,
+          "mse_displayed": 0,
+          "mae_displayed": 1
+        },
+        "Solar": {
+          "mse_exact": 2,
+          "mae_exact": 4,
+          "mse_displayed": 2,
+          "mae_displayed": 4
+        },
+        "Weather": {
+          "mse_exact": 3,
+          "mae_exact": 1,
+          "mse_displayed": 3,
+          "mae_displayed": 1
+        }
+      }
+    },
+    "full_twelve_baseline_target": {
+      "exact": {
+        "mse": 14,
+        "mae": 14,
+        "combined": 28
+      },
+      "displayed_three_decimal": {
+        "mse": 15,
+        "mae": 14,
+        "combined": 29
+      },
+      "by_dataset": {
+        "ECL": {
+          "mse_exact": 3,
+          "mae_exact": 2,
+          "mse_displayed": 3,
+          "mae_displayed": 2
+        },
+        "ETTh1": {
+          "mse_exact": 1,
+          "mae_exact": 1,
+          "mse_displayed": 1,
+          "mae_displayed": 1
+        },
+        "ETTh2": {
+          "mse_exact": 2,
+          "mae_exact": 3,
+          "mse_displayed": 2,
+          "mae_displayed": 3
+        },
+        "ETTm1": {
+          "mse_exact": 3,
+          "mae_exact": 3,
+          "mse_displayed": 4,
+          "mae_displayed": 3
+        },
+        "ETTm2": {
+          "mse_exact": 0,
+          "mae_exact": 0,
+          "mse_displayed": 0,
+          "mae_displayed": 0
+        },
+        "Solar": {
+          "mse_exact": 2,
+          "mae_exact": 4,
+          "mse_displayed": 2,
+          "mae_displayed": 4
+        },
+        "Weather": {
+          "mse_exact": 3,
+          "mae_exact": 1,
+          "mse_displayed": 3,
+          "mae_displayed": 1
+        }
+      }
+    }
+  },
+  "decision": "H4N_complete_partial_improvement_gate_fail_no_automatic_H4O"
+}

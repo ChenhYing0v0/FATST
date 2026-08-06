@@ -77,3 +77,13 @@ Manifest仅从`h4n_artifact_audit/trial_ledger.jsonl`中的40个`validation_comp
 test split provenance、candidate/trial/profile/seed identity、diagnostic NPZ与checkpoint hash后，
 才原子移动至最终trial目录。40个published directories全部通过后，才允许生成160-row
 standard-horizon scorecard并进入229-trial joint selector。
+
+## 7. Post-test selector audit
+
+`scripts/analyze_iscf_bsca_main_v1_h4n_result.py`固定读取H1--H4N 229 trials、96个
+Weather profiles、H4M selected non-Weather cells、full 12-baseline target与legacy
+5-baseline target。它先按full-table逐H target计算mean MSE/MAE ratios和primary joint
+score，再应用0.1% near-tie及冻结tie-break。输出同时分开：H4N primary full-table result、
+legacy selector continuity audit和three-decimal displayed table role，避免把不同baseline
+surfaces下的lead counts混为同一gate。Analyzer还会重算historical full-target reference，
+显式检测prelaunch config复用legacy score所造成的target mismatch。

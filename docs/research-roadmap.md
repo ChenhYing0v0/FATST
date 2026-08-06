@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## H4N Complete Formal Test and Weather Decision (2026-08-06)
+
+Current experiment cursor=`Step 10 effectiveness gate fail -> rollback Step 6`。H4N 40/40 frozen checkpoints、160/160 standard-horizon rows、checkpoint immutability与atomic artifacts全部通过。Full 12-baseline 0.1% selector选择`Weather__h4n_seq608_p19_lr2e5`，four-H mean MSE/MAE=`0.214887/0.245821`；相对H4M current profile为+0.063%/-0.608%，exact leads仍`3 MSE + 1 MAE=4/8`。Protocol-consistent joint improvement=0.205%、MSE gate、MAE gate和6/8 gate全部失败。Prelaunch stored historical score来自legacy target，不能与full target直接相除；conservative same-target audit已固定。Legacy 5-baseline selector仍为H4M Weather profile与33/56，wide full-table displayed count仍29/56。Failure=`search_space_performance_shortfall + prelaunch_historical_score_target_mismatch`；H4O/extra seeds/redesign未授权。Canonical result=`analysis/iscf_bsca_main_v1_hpo_20260731/h4n_test_result_and_weather_decision_20260806.md`。Decision=`H4N_complete_partial_improvement_gate_fail_no_automatic_H4O`。
+
 ## H4N Training Complete and Formal-Test Gate (2026-08-06)
 
 Current experiment cursor=`Step 8 complete -> Step 9 complete formal-test prelaunch`。Weather 40/40 full train/validation artifacts、numeric health、effective-config provenance与training test=0通过；40个checkpoint hashes唯一，best epoch范围3--101。Immutable manifest SHA256=`a0f152f9172acc193fe512001123b71aeae6d6d3ab1028c915074f24d54c1ed4`。Formal-test scope固定为40 checkpoints × four H=160 rows、MSE/MAE，只有完整matrix通过后才与H1--H4M组成229-trial pool并按Weather 0.1% near-tie joint selector选一个shared profile。禁止partial/per-H/per-metric/per-cell/seed selection与checkpoint mutation。Canonical gate=`analysis/iscf_bsca_main_v1_hpo_20260731/h4n_training_result_and_formal_test_gate_20260806.md`。Decision=`H4N_training_complete_40_checkpoint_manifest_frozen_formal_test_authorized`。

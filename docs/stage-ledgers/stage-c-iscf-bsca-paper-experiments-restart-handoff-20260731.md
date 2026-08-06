@@ -44,7 +44,7 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | H4N Weather-only 40/40 training artifacts audited；immutable manifest frozen；formal-test prelaunch |
+| `active_experiment_step` | H4N 40/40 formal test complete；Weather partial MAE improvement but effectiveness gate fail；rollback Step 6 |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
@@ -52,8 +52,8 @@ paper candidate与claim boundary，但互不替代。
 | `remote_training_authorized` | H4N 40 Weather seed2021 train/validation jobs after full resource smoke |
 | `test_tuned_hpo_authorized` | H4N one complete 40-checkpoint audit after immutable manifest |
 | `formal_test_authorized` | H4N 160 standard cells after 40/40 training artifact gate；Main II/other baselines/selected-profile confirmation/3-seed=false |
-| `next_action` | focused commit/push；remote exact-commit、checkpoint hash、zero-artifact、quota与GPU preflight；随后完整160-row formal test |
-| `conditional_next` | 40/40 formal-test artifacts后执行229-trial joint selector与complete negative-result audit；禁止partial selection、automatic H4O、additional seeds或architecture/objective redesign |
+| `next_action` | report H4N result；freeze Main I final baseline role/table and Main II matched matrix；do not auto-extend Weather-only HPO |
+| `conditional_next` | H4O/additional seeds/redesign require separate prelaunch with target-consistent reference；禁止partial、per-H、per-metric或per-cell selection |
 
 H4K train/validation与formal test均已完成，但terminal effectiveness gate失败。H4L只扩大ETTm2/Weather
 dataset-level HPO范围：48个profiles与117个历史profiles零重复，其中四项借鉴TimeAlign official encoder
@@ -70,6 +70,8 @@ manifest冻结后执行的一次完整formal test已48/48、192/192完成，chec
 H4N exact commit=`ba17fc9`已在remote通过40/40 resource smoke：40 checkpoints、40 metrics、40 logs，test=0且无OOM/NaN/Inf/Traceback。Full three-GPU queue于2026-08-05 10:47:16启动，PID=`1397808`；前三个jobs均进入epoch2，observed memory约1.6--1.7 GiB/GPU。预计15--26 wall-hours。Canonical launch=`analysis/iscf_bsca_main_v1_hpo_20260731/h4n_weather_remote_launch_20260805.md`。
 
 2026-08-06 H4N 40/40 full train/validation artifacts已通过audit：40个checkpoint SHA256唯一、best epoch范围3--101、training test=0/40。Immutable manifest SHA256=`a0f152f9172acc193fe512001123b71aeae6d6d3ab1028c915074f24d54c1ed4`；formal-test config冻结40 checkpoints × four H=160 rows。Canonical gate=`analysis/iscf_bsca_main_v1_hpo_20260731/h4n_training_result_and_formal_test_gate_20260806.md`。Decision=`H4N_training_complete_40_checkpoint_manifest_frozen_formal_test_authorized`。
+
+H4N formal test于2026-08-06 14:22:25完成：40/40 checkpoints、160/160 rows与hash immutability全部通过。Full-table selector选择`Weather__h4n_seq608_p19_lr2e5`，mean MSE/MAE=`0.214887/0.245821`，相对H4M current为+0.063%/-0.608%；full-table leads仍4/8，四项gates全fail。Frozen prelaunch historical score复用了legacy 5-baseline normalization；same-target conservative recomputation得到0.205% improvement并判fail。Legacy selector frontier仍33/56，wide-table displayed count仍29/56。Failure=`search_space_performance_shortfall + prelaunch_historical_score_target_mismatch`，rollback=Step 6，automatic H4O=false。Canonical report=`analysis/iscf_bsca_main_v1_hpo_20260731/h4n_test_result_and_weather_decision_20260806.md`。
 
 ## 2. Paper claims to be discharged
 

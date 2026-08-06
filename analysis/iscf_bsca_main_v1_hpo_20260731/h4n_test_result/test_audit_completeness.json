@@ -1,0 +1,11 @@
+{
+  "protocol_id": "ISCF-BSCA-MAIN-v1-HPO-WEATHER-H4N-TEST-AUDIT",
+  "candidate_version": "ISCF-BSCA-MAIN-v1-weather-h4n-test-informed-20260805",
+  "manifest_sha256": "a0f152f9172acc193fe512001123b71aeae6d6d3ab1028c915074f24d54c1ed4",
+  "expected_trials": 40,
+  "complete_trials": 40,
+  "expected_standard_horizon_cells": 160,
+  "complete_standard_horizon_cells": 160,
+  "errors": [],
+  "complete": true
+}
