@@ -103,3 +103,5 @@ Main I cell value定义：AMD 使用单次 native run；SimpleTM 使用同一 of
 ## 8. Prelaunch decision
 
 `prelaunch=conditional_pass`：用户授权、source、matrix、adapter 与 rollback 边界已冻结；在完成本地最小验证、commit/push、remote pull、GPU复核和 14/14 resource smoke 前，不启动 formal queue。
+
+Remote GitHub HTTPS checkout在训练前连续两次超时。允许的source-transport fallback为：把本地已经exact commit/hash audit、且保留`.git` metadata的两个official checkout同步到repo-external `_upstream`目录；remote runner重新验证commit、clean status与全部source hashes。该fallback只改变source transport，不改变executed source或experiment contract。

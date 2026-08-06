@@ -112,7 +112,9 @@ PY
   if [[ ! -d "${destination}/.git" ]]; then
     git clone --filter=blob:none "${url}" "${destination}"
   fi
-  git -C "${destination}" fetch --quiet origin "${commit}"
+  if ! git -C "${destination}" cat-file -e "${commit}^{commit}" 2>/dev/null; then
+    git -C "${destination}" fetch --quiet origin "${commit}"
+  fi
   git -C "${destination}" checkout --quiet --detach "${commit}"
   actual="$(git -C "${destination}" rev-parse HEAD)"
   [[ "${actual}" == "${commit}" ]]
