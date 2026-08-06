@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 4 v0.1 architecture-and-objective complete pending author review；Section 3 v0.7 remains frozen；experiments=H4N formal test complete，effectiveness gate fail，rollback Step 6 |
+| `current_11_step` | paper consolidation；writing=Section 4 v0.1 pending author review；experiments=HPO terminally frozen，TimeAlign Main I eight-dataset reproduction prelaunch |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -17,7 +17,9 @@
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
-| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H4N Weather primary profile improves MAE but remains4/8 full-table leads；legacy 5-baseline frontier stays33/56；strong aggregate competitor但未达per-cell target |
+| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` eight dataset profiles and 32 cells terminally frozen after H4N；strong aggregate competitor但未达per-cell target |
+
+[Terminal HPO Freeze and TimeAlign Main I Prelaunch, 2026-08-06] 用户要求停止HPO并固定当前最优结果。最终8个dataset-level profiles、32个standard-horizon cells与8个immutable checkpoint hashes已物化；Weather采用H4N full-table selector，其余7个profiles不变，H4O关闭。并行冻结TimeAlign 8 datasets × four H × seed2021=32 fixed-H runs：ETTm2/Weather 8个同contract artifacts复用，新增24个；7 datasets用official presets，Exchange明确为ETTh1-derived source-informed bootstrap。New runs为避免220 GiB hard quota不保存prediction arrays，但保留checkpoint、完整MSE/MAE/provenance/logs。Canonical prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/timealign_main_i_full_reproduction_20260806/design_and_prelaunch_gate.md`。Decision=`HPO_terminal_freeze_TimeAlign_24_new_plus_8_reuse_prelaunch`。
 
 [H4N Complete Formal Test and Weather Decision, 2026-08-06] 40/40 checkpoints、160/160 standard rows、MSE/MAE与checkpoint immutability全部通过，无ABORT。Full 12-baseline 0.1% selector选择`Weather__h4n_seq608_p19_lr2e5`：H96/192/336/720 MSE=`0.141061/0.182137/0.232186/0.304165`，MAE=`0.181594/0.223136/0.263780/0.314772`；mean MSE/MAE=`0.214887/0.245821`。相对H4M current profile，MSE +0.063%、MAE -0.608%，full-table leads仍4/8；四项预注册gates均失败。Prelaunch historical joint-score标量来自旧5-baseline target，与新12-baseline target不一致；按同target保守重算improvement仅0.205%，不得用旧标量的0.363%宣称pass。Legacy 5-baseline selector仍保留H4M Weather profile与33/56 frontier；full-table displayed count仍29/56。Failure=`search_space_performance_shortfall + prelaunch_historical_score_target_mismatch`，rollback=Step 6，automatic H4O=false。Canonical report=`analysis/iscf_bsca_main_v1_hpo_20260731/h4n_test_result_and_weather_decision_20260806.md`。Decision=`H4N_complete_partial_improvement_gate_fail_no_automatic_H4O`。
 

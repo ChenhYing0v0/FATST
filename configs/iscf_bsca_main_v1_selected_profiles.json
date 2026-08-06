@@ -1,9 +1,9 @@
 {
   "protocol_id": "ISCF-BSCA-MAIN-v1-SELECTED-PROFILES",
   "candidate_id": "ISCF-BSCA-MAIN-v1",
-  "version": "single-seed-test-tuned-joint-freeze-20260805",
-  "date": "2026-08-05",
-  "status": "frozen_after_h4m_joint_selector_gate_fail",
+  "version": "single-seed-test-tuned-terminal-h4n-freeze-20260806",
+  "date": "2026-08-06",
+  "status": "terminal_frozen_after_user_stopped_hpo",
   "test_tuned": true,
   "test_informed": true,
   "seed": 2021,
@@ -24,22 +24,22 @@
   "per_metric_profile_selection": false,
   "best_seed_selection": false,
   "selected_scorecard": {
-    "path": "analysis/iscf_bsca_main_v1_hpo_20260731/joint_objective_h4m_result_20260805/joint_selected_cells.csv",
-    "sha256": "b7478154f17669a57c6a226ef72b01c138a87e4b635052f8d689263d4802ffa7",
+    "path": "analysis/iscf_bsca_main_v1_hpo_20260731/final_hpo_freeze_20260806/selected_main_scorecard_final.csv",
+    "sha256": "aeb32304936e365b7fbf4072334a6a87930bef9825b4c8e91af82938c7b65bc7",
     "rows": 32
   },
   "selected_profile_manifest": {
-    "path": "analysis/iscf_bsca_main_v1_hpo_20260731/joint_objective_h4m_result_20260805/joint_selected_profiles.csv",
-    "sha256": "f356640c224570c822282df809974da496706a0458feb00767c5a4f063c5dd1c",
+    "path": "analysis/iscf_bsca_main_v1_hpo_20260731/final_hpo_freeze_20260806/selected_profile_manifest_final.csv",
+    "sha256": "4bb3270d468229108bf8f8318af4c7b67c17123a490a73c5bbada2efd35bf290",
     "rows": 8
   },
   "joint_objective_status": {
-    "path": "analysis/iscf_bsca_main_v1_hpo_20260731/joint_objective_h4m_result_20260805/current_joint_objective_status.json",
-    "sha256": "9e467ba1fba769cc2b84541ef45e7f7e1c6c7240a2e8d42e1b7a5d69cb222541",
-    "trial_count": 189,
-    "mse_lead_cells": 17,
-    "mae_lead_cells": 16,
-    "combined_lead_cells": 33,
+    "path": "analysis/iscf_bsca_main_v1_hpo_20260731/joint_objective_h4n_result_20260806/h4n_result_status.json",
+    "sha256": "921e2f7302a4a7e4d37496e2bb7b6414a3287e8b83ce6d8c1c6544677e5b191b",
+    "trial_count": 229,
+    "mse_lead_cells": 14,
+    "mae_lead_cells": 14,
+    "combined_lead_cells": 28,
     "combined_lead_denominator": 56,
     "success_gate_pass": false
   },
@@ -53,6 +53,9 @@
     "h4m_test_result/all_trial_scorecard.csv": "192646960e753fef5d528c6aee02ac68cca691d6eaa0216f13fe2c92de46a353",
     "h4m_checkpoint_manifest.csv": "bd78782e70a911e8c5b118c67a4441cf512d7012b94fdda8a19cf14507e8adb3",
     "h4m_test_result/test_audit_ledger.jsonl": "9039a34663bd42b4edb65ca4a3064a7c4fcd4bffcc4636eb4760dda2276e99f5"
+    ,"h4n_test_result/all_trial_scorecard.csv": "3b438f8019a7ca1b6185fddfdbad51f3a23d3b55c6ddd01ec91e11a6fcba368c"
+    ,"h4n_checkpoint_manifest.csv": "a0f152f9172acc193fe512001123b71aeae6d6d3ab1028c915074f24d54c1ed4"
+    ,"h4n_test_result/test_audit_ledger.jsonl": "945f6b04f58f62e5b829d534bf7e708985804d8565437ea4f49297685b16f84c"
   },
   "profiles": {
     "ETTh1": {
@@ -92,11 +95,11 @@
       "lead_mae_cells": 1
     },
     "Weather": {
-      "trial_id": "Weather__h4m_seq640_p20",
-      "phase": "H4M",
-      "checkpoint_sha256": "c39fd21b2e9b9597f9f6b57eeb08d8940f426773241eaef0f6452c15fe1d0c21",
-      "test_mean_mse_4h": 0.21475225773704548,
-      "test_mean_mae_4h": 0.24732382147925186,
+      "trial_id": "Weather__h4n_seq608_p19_lr2e5",
+      "phase": "H4N",
+      "checkpoint_sha256": "6c6619f047204a5b0c63b02c30562f0e765ad6855d8468e0f0151bc2e5c25ca8",
+      "test_mean_mse_4h": 0.2148870747075069,
+      "test_mean_mae_4h": 0.24582054985665638,
       "lead_mse_cells": 3,
       "lead_mae_cells": 1
     },
@@ -127,6 +130,6 @@
       "published_target_role": "excluded_until_comparable_targets_exist"
     }
   },
-  "disclosure": "All profiles are single-seed and test-tuned. The selector was applied jointly over all 189 retained H1-H4M trials. These values are test-informed and are not untouched-holdout estimates.",
-  "decision": "freeze_h4m_joint_selected_profiles_gate_fail_no_automatic_h4n"
+  "disclosure": "All profiles are single-seed and test-tuned. The terminal selector includes all 229 retained H1-H4N trials. These values are test-informed and are not untouched-holdout estimates. HPO was stopped by explicit user instruction on 2026-08-06.",
+  "decision": "terminal_h4n_selected_profiles_frozen_stop_hpo_no_h4o"
 }

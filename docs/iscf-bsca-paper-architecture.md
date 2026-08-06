@@ -5,17 +5,17 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.50` |
-| `last_updated` | `2026-08-05` |
+| `version` | `v0.51` |
+| `last_updated` | `2026-08-06` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 4 v0.1 architecture-and-objective complete pending author review；Section 3 v0.7 remains temporarily frozen；experiments=H4N formal test complete and gate fail，rollback Step 6；Method Figure 4 initial draft generated |
+| `current_review_cursor` | writing=Section 4 v0.1 pending author review；experiments=HPO terminally frozen，TimeAlign Main I eight-dataset reproduction prelaunch |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.7正文 + approved Figures 2--3 |
 | `provisional_content` | Section 4 v0.1 + Method Figure 4 initial draft；remaining sections |
-| `authorization_source` | H4M与TimeAlign ETTm2/Weather reproduction由2026-08-04用户指令授权，H4M complete formal test及H4N Weather-only HPO由2026-08-05用户指令授权；本architecture文档不扩展到H4O、other baselines、selected-profile confirmation或3-seed |
+| `authorization_source` | 2026-08-06用户指令停止HPO、冻结当前最优profiles并复跑TimeAlign全部Main I datasets；H4O关闭，other baselines、selected-profile confirmation与3-seed未扩展授权 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；

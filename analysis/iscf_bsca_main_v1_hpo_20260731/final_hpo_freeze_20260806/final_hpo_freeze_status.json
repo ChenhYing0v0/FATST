@@ -1,0 +1,16 @@
+{
+  "protocol_id": "ISCF-BSCA-MAIN-v1-SELECTED-PROFILES",
+  "candidate_id": "ISCF-BSCA-MAIN-v1",
+  "hpo_status": "stopped_and_frozen_by_user",
+  "freeze_date": "2026-08-06",
+  "datasets": 8,
+  "standard_horizon_cells": 32,
+  "seed": 2021,
+  "checkpoint_hashes_unique": 8,
+  "checkpoint_immutability_pass": true,
+  "matrix_complete": true,
+  "no_further_hpo_authorized": true,
+  "scorecard_sha256": "aeb32304936e365b7fbf4072334a6a87930bef9825b4c8e91af82938c7b65bc7",
+  "profile_manifest_sha256": "4bb3270d468229108bf8f8318af4c7b67c17123a490a73c5bbada2efd35bf290",
+  "decision": "terminal_h4n_selected_profiles_frozen_stop_hpo"
+}

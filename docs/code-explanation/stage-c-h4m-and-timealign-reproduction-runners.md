@@ -37,3 +37,13 @@ H4M仍是同一ISCF-BSCA architecture的dataset-level HPO，不改变理论对�
 `scripts/analyze_timealign_official_ettm2_weather_reproduction.py`从8个remote-lite metadata directories和remote checkpoint-hash list构造artifact manifest，逐项核对official preset、10-epoch official-last contract、test-only final evaluation、MSE/MAE与failure patterns，并同时输出相对paper Table 6和historical local rerun的逐cell偏差。每个CSV列均直接来自对应`metrics_by_target_horizon.csv`或其明确reference：`*_vs_published_pct=100(reproduced/published-1)`，`*_vs_historical_pct`同理。
 
 H4M formal test结束后，generic `scripts/analyze_iscf_bsca_main_v1_hpo_test_audit.py`重新计算checkpoint SHA256，要求每个test目录同时存在720行dense metrics、invariants与diagnostic NPZ，并从中抽取H96/H192/H336/H720形成`all_trial_scorecard.csv`。`scripts/analyze_iscf_bsca_main_v1_joint_objective.py`再把H1--H4M全部189个trials合并，先计算dataset-level joint MSE/MAE relative mean及1% guard，再按leading-cell、balanced metric coverage、joint score、validation score、parameter count和profile ID依次tie-break。`configs/iscf_bsca_main_v1_selected_profiles.json`只镜像该189-trial合法selector结果，不允许per-H、per-metric、per-seed或per-cell重选。
+
+## 5. Eight-dataset Main I extension
+
+`scripts/remote/run_timealign_official_main_i_reproduction.sh`把8 datasets × four H展开为32个fixed-H jobs。ETTm2/Weather的8个run IDs解析到旧artifact root并在hash/required-artifact检查通过后复用；其余24个解析到新root。每个new job的`profile_hash`由run ID、dataset、H、seed、epochs、batch size与official preset字段的canonical JSON计算。runner不传`learning_rate`、`w_align`或`legacy-*` overrides，实际tensor path继续由`train_repo.py::OFFICIAL_PRESETS`构建。
+
+官方脚本的budget差异被显式保留：ETTh1 H96为1 epoch，ECL batch size为16；其他new jobs为10 epochs与batch size 32。新runs使用`--no-save-predictions`控制remote quota，但checkpoint、effective config、environment、training log、target/segment metrics、diagnostics与run log仍是complete gate。该retention差异只影响post-hoc prediction-level diagnostics，不影响Main I MSE/MAE。
+
+`scripts/check_timealign_official_main_i_reproduction.py`验证12个executed source hashes、8个dataset hashes、32-run cross product、8 reusable/24 new边界、Exchange非官方preset标签、test-once contract与runner dry-run。Exchange的参数来自本地source-audited ETTh1 bootstrap，不能写成TimeAlign官方Exchange result。
+
+`scripts/freeze_iscf_bsca_main_v1_final_profiles.py`独立扫描各HPO阶段的checkpoint manifests、training ledgers与test ledgers，逐dataset核对checkpoint test前后hash、four-H cells和profile means，再生成8-profile provenance manifest与32-cell terminal scorecard。该脚本只物化已冻结selector，不重新选择profile。

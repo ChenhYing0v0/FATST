@@ -44,16 +44,16 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | H4N 40/40 formal test complete；Weather partial MAE improvement but effectiveness gate fail；rollback Step 6 |
+| `active_experiment_step` | HPO terminal freeze complete；TimeAlign Main I eight-dataset reproduction prelaunch |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
-| `local_protocol_patch_authorized` | true for H4N Weather-only config/checker/runner/artifact gate |
-| `remote_training_authorized` | H4N 40 Weather seed2021 train/validation jobs after full resource smoke |
-| `test_tuned_hpo_authorized` | H4N one complete 40-checkpoint audit after immutable manifest |
-| `formal_test_authorized` | H4N 160 standard cells after 40/40 training artifact gate；Main II/other baselines/selected-profile confirmation/3-seed=false |
-| `next_action` | report H4N result；freeze Main I final baseline role/table and Main II matched matrix；do not auto-extend Weather-only HPO |
-| `conditional_next` | H4O/additional seeds/redesign require separate prelaunch with target-consistent reference；禁止partial、per-H、per-metric或per-cell selection |
+| `local_protocol_patch_authorized` | true for terminal HPO freeze and TimeAlign 8-dataset reproduction tooling |
+| `remote_training_authorized` | TimeAlign 24 missing fixed-H jobs after complete resource smoke |
+| `test_tuned_hpo_authorized` | false；HPO stopped by user and H4O closed |
+| `formal_test_authorized` | TimeAlign test once after each of 24 new fixed-H trainings；Main II/other baselines/selected-profile confirmation/3-seed=false |
+| `next_action` | run TimeAlign resource smoke and 24-job queue；audit 32/32 combined matrix；replace all TimeAlign paper-table rows with local results |
+| `conditional_next` | other baseline training or any HPO restart requires separate authorization；禁止partial table replacement |
 
 H4K train/validation与formal test均已完成，但terminal effectiveness gate失败。H4L只扩大ETTm2/Weather
 dataset-level HPO范围：48个profiles与117个历史profiles零重复，其中四项借鉴TimeAlign official encoder
