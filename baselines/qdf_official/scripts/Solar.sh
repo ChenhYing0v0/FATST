@@ -37,6 +37,7 @@ run_one() {
 
   local run_root="${OUTPUT_ROOT}/runs/QDF__Solar__H${horizon}__seed${SEED}"
   local train_epochs=30 patience=5 max_train_batches=0 max_eval_batches=0 final_split=test
+  local is_training=1
   if [[ "${MODE}" == "resource-smoke" ]]; then
     run_root="${OUTPUT_ROOT}/_resource_smoke/QDF__Solar__H${horizon}__seed${SEED}"
     train_epochs=1
@@ -59,13 +60,22 @@ run_one() {
     echo "skip_complete run_root=${run_root}"
     return 0
   fi
+  if [[ "${MODE}" == "run" ]] \
+    && [[ "$(find "${run_root}/checkpoints" -name checkpoint.pth -type f -size +0c 2>/dev/null | wc -l)" == 1 ]] \
+    && [[ "$(find "${run_root}/checkpoints" -name A.pth -type f -size +0c 2>/dev/null | wc -l)" == 1 ]]; then
+    is_training=0
+    if [[ -s "${run_root}/stdout.log" && ! -e "${run_root}/training_stdout_before_test_retry.log" ]]; then
+      mv "${run_root}/stdout.log" "${run_root}/training_stdout_before_test_retry.log"
+    fi
+    echo "evaluation_only_retry horizon=${horizon} checkpoint_retrained=false"
+  fi
 
   echo "run_start=$(date --iso-8601=seconds) horizon=${horizon} gpu=${gpu_id} mode=${MODE} run_root=${run_root}"
   (
     cd "${QDF_ROOT}"
     CUDA_VISIBLE_DEVICES="${gpu_id}" "${PYTHON_BIN}" -u run.py \
       --task_name long_term_forecast_meta_ml3 \
-      --is_training 1 \
+      --is_training "${is_training}" \
       --root_path "${DATA_ROOT}/Solar/" \
       --data_path solar_AL.txt \
       --model_id "Solar_96_${horizon}" \
@@ -87,6 +97,7 @@ run_one() {
       --patience "${patience}" \
       --batch_size "${batch_size}" \
       --test_batch_size 1 \
+      --num_workers 0 \
       --itr 1 \
       --rec_lambda 1.0 \
       --auxi_lambda 0.0 \

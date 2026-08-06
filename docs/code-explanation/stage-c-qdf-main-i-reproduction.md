@@ -20,6 +20,7 @@ Solar 输入由 `Dataset_Solar` 构造：
 - `exp_long_term_forecasting_meta_ml3.py`：支持 train/eval batch cap；对 state dict 显式使用 `weights_only=True`，对官方序列化的 learned loss module 使用 `weights_only=False`，适配 PyTorch 2.6+。
 - `utils/tools.py`：把 NumPy 2.x 已删除的 `np.Inf` 改为 `np.inf`。
 - `scripts/Solar.sh`：从 ECL 的逐-H profile 派生 Solar 四任务，并按 H720 / H336+H96 / H192 做 workload-aware 三 GPU 调度。
+- Solar runner 固定 `num_workers=0`，并在完整 checkpoint 已存在但 test 因基础设施失败时执行 evaluation-only retry；原训练日志改名保留，checkpoint 不重训。
 
 这些 patch 不改变 QDF/TQNet forward、loss 公式或正式训练预算；batch cap 仅在 resource smoke 启用。
 

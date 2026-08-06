@@ -26,6 +26,7 @@ QDF Table 6 报告 ETTm1、ETTm2、ETTh1、ETTh2、ECL、Weather 的 `L=96`、`H
 - 保留每个 horizon 的 `learning_rate / inner_lr / meta_lr / warmup_steps / num_tasks / meta_inner_steps / batch_size`；
 - 保留 `seed=2023`、30 epochs、patience 5、TQNet、QDF loss、RevIN、loss weights 与 gradient clipping；
 - 只做必要的 Solar 语义替换：`enc_in=dec_in=c_out=137`，`data=Solar`，daily `cycle=144`（10-minute sampling）。
+- 远程 file-descriptor safety 固定 `num_workers=0`；该设置只改变 host-side loading，并不改变模型、split、batch order、loss 或 checkpoint selector。
 
 需要披露的 source discrepancy：论文 Appendix C 表述 early stopping patience 3 且不 drop last，而 release 的 ECL script/runner 实际为 patience 5，且 train loader `drop_last=True`。本复现以可执行 released code 为准，不对这一差异进行静默修正。
 

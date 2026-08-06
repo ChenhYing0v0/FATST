@@ -75,6 +75,7 @@
     "train_epochs": 30,
     "patience": 5,
     "test_batch_size": 1,
+    "num_workers": 0,
     "rec_lambda": 1.0,
     "auxi_lambda": 0.0,
     "reg_lambda": 0.0,
@@ -125,7 +126,7 @@
       "run.py": "3cd56d3b40f6f1813291146cde8a954213013440a93bde57aed6f35b8716ee4a",
       "exp/exp_long_term_forecasting_meta_ml3.py": "3523c0f4d9191065a0616e4b7c062c6d6c43ae7dfc884259f14ea93c604b3fa0",
       "utils/tools.py": "ce3432bb4904ebc5f799aded9dfc8a315fb99ef3cf467d7f74839c71a8e8ef7a",
-      "scripts/Solar.sh": "57999c38440190408b40c14990560744af0df11ba8e973a043e0e130fc5268c8"
+      "scripts/Solar.sh": "8caeb85d3c23fc2b59c58f2d580b6f6322147efe965cb6e7f233f2314f1ca4d9"
     }
   },
   "gates": {

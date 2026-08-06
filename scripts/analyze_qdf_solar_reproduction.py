@@ -108,6 +108,19 @@ def main() -> None:
                     "bytes": path.stat().st_size,
                 }
             )
+        retry_log = run_root / "training_stdout_before_test_retry.log"
+        if retry_log.is_file() and retry_log.stat().st_size > 0:
+            artifact_rows.append(
+                {
+                    "dataset": "Solar",
+                    "horizon": horizon,
+                    "seed": 2023,
+                    "artifact_role": "training_stdout_before_test_retry",
+                    "path": str(retry_log),
+                    "sha256": sha256(retry_log),
+                    "bytes": retry_log.stat().st_size,
+                }
+            )
 
     metric_fields = list(metrics_rows[0])
     with (args.output_dir / "qdf_solar_local_metrics.csv").open(
