@@ -142,6 +142,25 @@ def patch_amd_smoke(source: Path, script_rel: str) -> dict[str, str]:
         ),
         "AMD add smoke-only final-test gate",
     )
+    main_text = replace_once(
+        main_text,
+        (
+            "    train_data = data_loader.get_train()\n"
+            "    val_data = data_loader.get_val()\n"
+            "    test_data = data_loader.get_test()\n"
+        ),
+        (
+            "    train_data = data_loader.get_train()\n"
+            "    val_data = data_loader.get_val()\n"
+            "    test_data = data_loader.get_test()\n\n"
+            "    max_batches = int(os.environ.get(\"FATST_MAX_BATCHES\", \"0\"))\n"
+            "    if max_batches:\n"
+            "        from itertools import islice\n"
+            "        train_data = list(islice(train_data, max_batches))\n"
+            "        val_data = list(islice(val_data, max_batches))\n"
+        ),
+        "AMD add smoke-only bounded batch gate",
+    )
     main_path.write_text(main_text, encoding="utf-8")
 
     script_path = source / script_rel
@@ -360,6 +379,7 @@ def run_amd(
     env["CUDA_VISIBLE_DEVICES"] = str(args.gpu)
     env["PYTHONHASHSEED"] = "2024"
     env["FATST_SKIP_FINAL_TEST"] = "1" if args.mode == "resource-smoke" else "0"
+    env["FATST_MAX_BATCHES"] = "2" if args.mode == "resource-smoke" else "0"
     output = run_command(["bash", script_rel], source, env, log_path)
     if args.mode == "resource-smoke":
         if "test MSE:" in output:

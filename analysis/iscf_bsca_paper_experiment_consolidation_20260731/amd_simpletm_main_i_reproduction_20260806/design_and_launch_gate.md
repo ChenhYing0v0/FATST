@@ -76,7 +76,7 @@ Main I cell value定义：AMD 使用单次 native run；SimpleTM 使用同一 of
 - 当前 user quota 为 177 GiB used / 200 GiB soft / 220 GiB hard，最大剩余约 43 GiB；
 - 本轮 storage budget 冻结为 35 GiB；resource smoke 后按 checkpoint size 外推，若预计超过预算则不启动 formal queue；
 - 先并行运行 SimpleTM ECL/Solar/Weather，后续由 dynamic queue 填充，避免 fast GPU 等待固定配对；
-- resource smoke 为 14 个 `baseline × dataset` H720 jobs，每个只训练 1 epoch/1 repeat，不访问 test，并必须生成一个 checkpoint。
+- resource smoke 为 14 个 `baseline × dataset` H720 jobs，每个只训练 1 epoch/1 repeat，不访问 test，并必须生成一个 checkpoint；AMD因ECL单个完整epoch约需9--10分钟，smoke进一步固定为2个train与2个validation batches，formal budget不变。
 
 ## 7. Gates 与 rollback
 

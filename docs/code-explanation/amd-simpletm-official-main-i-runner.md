@@ -30,7 +30,7 @@ Shell runner支持 `dry-run / resource-smoke / run / status` 四种模式。
 
 AMD upstream在每个 epoch计算 validation MSE，但最后一个 epoch无条件写入 `best.pt`；因此 artifact 记录为 `official-last`。训练结束后，runner从 stdout解析四个 horizon 的 test MSE/MAE，并将 `checkpoints/{name,name2,name3,name4}/best.pt` 依次映射到 H96/H192/H336/H720。
 
-resource-smoke 的副本只把 horizon缩为720、epoch缩为1，并在 final test前返回。该 patch只用于执行健康检查，不产生 paper-facing metric。
+resource-smoke 的副本只把 horizon缩为720、epoch缩为1、train/validation各限制为2 batches，并在 final test前返回。该 patch只用于执行健康检查，不产生 paper-facing metric；formal mode不设置batch限制。
 
 ## 4. SimpleTM execution path
 

@@ -137,7 +137,7 @@
   "resource_smoke": {
     "jobs": 14,
     "horizon": 720,
-    "AMD": {"train_epochs": 1, "repeats": 1, "formal_test_access": false},
+    "AMD": {"train_epochs": 1, "max_train_batches": 2, "max_validation_batches": 2, "repeats": 1, "formal_test_access": false},
     "SimpleTM": {"train_epochs": 1, "repeats": 1, "num_workers": 0, "formal_test_access": false},
     "gate": "14_of_14_checkpoints_complete_no_test_metrics_no_OOM_no_NaN_and_projected_storage_within_quota"
   },
