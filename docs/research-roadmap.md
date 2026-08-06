@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## QDF Main I Solar Reproduction Prelaunch (2026-08-06)
+
+Current experiment cursor=`Step 6 source/protocol freeze complete -> Step 8 authorized`。QDF官方仓库commit `eb0693a...`已vendored，六个共同datasets的24个Table-6 published rows已审计。缺失Solar的本地复现冻结为official `Dataset_Solar`与TQNet/QDF、ECL-derived逐Hprofiles、`L=96`、H96/192/336/720、seed2023；Solar-only替换为137 channels和cycle144。用户已授权remote training与训练后一次完整formal test；先要求4/4 bounded resource smokes且test=0。HPO继续terminal freeze。Canonical prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/qdf_main_i_20260806/design_and_prelaunch_gate.md`。Decision=`QDF_Solar_prelaunch_pass_remote_resource_smoke_then_four_H_formal`。
+
 ## TimeAlign Main I Local Reproduction Complete (2026-08-06)
 
 Current experiment cursor=`Step 9 artifact audit complete -> Step 10 baseline consolidation partial pass`。HPO terminal freeze保持不变，H4O关闭。TimeAlign已完成8 datasets × four H × seed2021的32/32 fixed-H runs，32个checkpoint hashes唯一且artifact/provenance/numeric-health gates通过；其中7 datasets使用official presets，Exchange明确为ETTh1-derived source-informed bootstrap。7-dataset Main I dense table已用本地TimeAlign替换28/28 cells；ISCF-BSCA相对本地TimeAlign在MSE/MAE为20/28、17/28 cells领先，macro低3.994%/1.491%，完整13-model displayed table为27/56 best、19/56 second。Exchange仅形成ISCF/TimeAlign companion；其他baseline Exchange以及AMD/SimpleTM/TimePerceiver/SRSNet仍缺证据，需另行冻结和授权。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_final_local_timealign_20260806/main_i_result_and_source_audit.md`。Decision=`TimeAlign_local_reproduction_complete_Main_I_shared_surface_table_finalized_remaining_baseline_gap_open`。

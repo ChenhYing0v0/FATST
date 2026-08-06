@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "protocol_id": "QDF-OFFICIAL-SOLAR-REPRODUCTION-20260806",
+  "created_at": "2026-08-06",
+  "candidate": {
+    "paper": "Quadratic Direct Forecast for Training Multi-Step Time-Series Forecast Models",
+    "model": "QDF",
+    "backbone": "TQNet",
+    "source_repository": "https://github.com/Master-PLC/QDF",
+    "source_commit": "eb0693a962928e229417fd80b401c37b0dac6a67",
+    "license": "MIT",
+    "local_source_root": "baselines/qdf_official"
+  },
+  "authorization": {
+    "authorized_by_user": true,
+    "authorization_date": "2026-08-06",
+    "remote_training_authorized": true,
+    "formal_test_authorized": true,
+    "scope": "QDF Solar seed-2023 four-horizon source-informed reproduction for Main I",
+    "iscf_bsca_hpo_must_remain_stopped": true
+  },
+  "evaluation_contract": {
+    "dataset": "Solar",
+    "data_file": "Solar/solar_AL.txt",
+    "remote_data_root": "/home/yingch/dataset",
+    "data_sha256": "230327ef72d2abb387939d4a35d6fd34f1066071bc7c40ce7ecf5531a0122ac2",
+    "rows": 52560,
+    "channels": 137,
+    "sampling_interval_minutes": 10,
+    "seq_len": 96,
+    "label_len": 48,
+    "horizons": [96, 192, 336, 720],
+    "metrics": ["MSE", "MAE"],
+    "seed": 2023,
+    "one_fixed_horizon_model_per_cell": true,
+    "checkpoint_selector": "upstream_validation_loss_early_stopping",
+    "test_role": "official_native_source_informed_solar_reproduction",
+    "test_tuned": false,
+    "test_access_once_after_training": true,
+    "matrix_complete_required": true
+  },
+  "solar_adaptation": {
+    "source_script": "baselines/qdf_official/scripts/ECL.sh",
+    "reason": "QDF release has no Solar script; ECL is the closest released high-dimensional electricity preset",
+    "retained_from_ecl": [
+      "learning_rate",
+      "inner_lr",
+      "meta_lr",
+      "warmup_steps",
+      "num_tasks",
+      "meta_inner_steps",
+      "batch_size",
+      "train_epochs",
+      "patience",
+      "loss_weights",
+      "optimizer_schedule"
+    ],
+    "solar_specific_changes": {
+      "data_id": "Solar",
+      "data_class": "Dataset_Solar",
+      "enc_in": 137,
+      "dec_in": 137,
+      "c_out": 137,
+      "cycle": 144
+    },
+    "cycle_rationale": "Solar is sampled every 10 minutes, so one daily cycle is 24*6=144 steps"
+  },
+  "profiles": {
+    "96": {"learning_rate": 0.005, "inner_lr": 0.005, "meta_lr": 0.1, "warmup_steps": 300, "num_tasks": 3, "meta_inner_steps": 2, "batch_size": 16},
+    "192": {"learning_rate": 0.005, "inner_lr": 0.005, "meta_lr": 0.1, "warmup_steps": 300, "num_tasks": 3, "meta_inner_steps": 1, "batch_size": 16},
+    "336": {"learning_rate": 0.005, "inner_lr": 0.005, "meta_lr": 0.02, "warmup_steps": 300, "num_tasks": 3, "meta_inner_steps": 2, "batch_size": 16},
+    "720": {"learning_rate": 0.01, "inner_lr": 0.01, "meta_lr": 0.05, "warmup_steps": 300, "num_tasks": 1, "meta_inner_steps": 1, "batch_size": 16}
+  },
+  "common_training": {
+    "train_epochs": 30,
+    "patience": 5,
+    "test_batch_size": 1,
+    "rec_lambda": 1.0,
+    "auxi_lambda": 0.0,
+    "reg_lambda": 0.0,
+    "max_norm": 5.0,
+    "model_type": "linear",
+    "use_revin": 1,
+    "dropout": 0.0,
+    "first_order": 1
+  },
+  "resource_smoke": {
+    "required_before_formal": true,
+    "train_epochs": 1,
+    "patience": 1,
+    "warmup_steps": 1,
+    "max_train_batches": 2,
+    "max_eval_batches": 2,
+    "final_evaluation_split": "none",
+    "purpose": "execution and memory health only; not paper evidence"
+  },
+  "remote_execution": {
+    "host": "529_Lab-3090",
+    "repo_root": "/home/yingch/projects/FATST",
+    "conda_env": "moe",
+    "output_root": "/home/yingch/exp_outputs/r-2026-fatst/qdf_solar_reproduction_20260806",
+    "gpu_ids": [0, 1, 2],
+    "schedule": {
+      "gpu0": [720],
+      "gpu1": [336, 96],
+      "gpu2": [192]
+    }
+  },
+  "source_hashes": {
+    "upstream": {
+      "README.md": "ebb7f9bc3373eddaccf8c8f000914229d323672f422c707041904b84b68e9ce5",
+      "LICENSE": "3892254202fc16573828d34ec901ab765d8eb73a03d174b131a49771adcd8d64",
+      "run.py": "fe43362808a6e64b4e11960858721e62b396c53163e110b40aba7ee27f8b6da2",
+      "data_provider/data_factory.py": "70d0fe99fff52cf193d890625fd65c16092e6f39af1049b06b6f6bfce010c162",
+      "data_provider/data_loader.py": "cdb400e4067ac32cfb7b726fb9b2a00a995abea0a5bf62b8e31e46dbe404687e",
+      "exp/exp_basic.py": "546498be03d87c49e5574c17dc43da3399a074692f63879180ece6872bf48010",
+      "exp/exp_long_term_forecasting_meta_ml3.py": "92351ef578153a59e5c49c382edbf731122825f0755d069ef74f9eb30ad744a1",
+      "models/__init__.py": "4a962f2b1b006e55a1c9f047b4e2873328b321dddf7392b32be5f365c585d04e",
+      "models/TQNet.py": "76e41853b50141bd9a7e0fdf08752da0932d59d995b5c12b8022a223b1e6c4ce",
+      "utils/tools.py": "2966674915d771c1ee4820bfce18c5ce2025a193540cb799b9b4fc782597c692",
+      "utils/metrics_torch.py": "47f6d384b12e7bb4e345c802a8b6d524cd705bc89e9a31a47ac5d4ff1aa42113",
+      "scripts/ECL.sh": "e387b5656696d2b880fc76f1e2fb89f51a11ec0b0bd7d3903ff164796d534207"
+    },
+    "executed_local": {
+      "run.py": "3cd56d3b40f6f1813291146cde8a954213013440a93bde57aed6f35b8716ee4a",
+      "exp/exp_long_term_forecasting_meta_ml3.py": "3523c0f4d9191065a0616e4b7c062c6d6c43ae7dfc884259f14ea93c604b3fa0",
+      "utils/tools.py": "ce3432bb4904ebc5f799aded9dfc8a315fb99ef3cf467d7f74839c71a8e8ef7a",
+      "scripts/Solar.sh": "57999c38440190408b40c14990560744af0df11ba8e973a043e0e130fc5268c8"
+    }
+  },
+  "gates": {
+    "prelaunch": "source hashes, data identity, exact four-row dry-run, syntax and import smoke all pass",
+    "resource": "four smoke jobs exit zero without OOM/NaN and do not access test",
+    "formal": "four unique checkpoints and four complete MSE/MAE test rows with hashes and logs",
+    "rollback": "stop QDF Solar only; keep published QDF rows and do not impute Solar"
+  }
+}

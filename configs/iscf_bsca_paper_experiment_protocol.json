@@ -73,6 +73,16 @@
         "artifact_complete": true,
         "formal_test_scope_consumed": true
       },
+      "qdf_main_i_solar_authorized": {
+        "protocol_id": "QDF-OFFICIAL-SOLAR-REPRODUCTION-20260806",
+        "published_matrix": "6_datasets_x_4_horizons_published_three_run_mean",
+        "new_remote_matrix": "Solar_x_4_horizons_x_seed2023",
+        "source_commit": "eb0693a962928e229417fd80b401c37b0dac6a67",
+        "solar_profile_role": "ECL_derived_source_informed_not_published",
+        "remote_training": true,
+        "formal_test": true,
+        "status": "prelaunch_gate_pass_pending_resource_smoke"
+      },
       "main_ii_local_source_protocol_patch": false,
       "main_ii_remote_training": false,
       "main_ii_formal_test": false

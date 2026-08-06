@@ -1,0 +1,25 @@
+source,source_url,source_pdf_sha256,source_page,source_table,model,dataset,horizon,mse,mae,value_origin
+QDF,https://openreview.net/pdf?id=vpO8n9AqEG,c09840e85cc6ad55e15a54dc84b252002862361b541e895ecc0ce32fe5e67d97,18,Table 6,QDF,ETTm1,96,0.307,0.349,published_three_run_mean
+QDF,https://openreview.net/pdf?id=vpO8n9AqEG,c09840e85cc6ad55e15a54dc84b252002862361b541e895ecc0ce32fe5e67d97,18,Table 6,QDF,ETTm1,192,0.352,0.376,published_three_run_mean
+QDF,https://openreview.net/pdf?id=vpO8n9AqEG,c09840e85cc6ad55e15a54dc84b252002862361b541e895ecc0ce32fe5e67d97,18,Table 6,QDF,ETTm1,336,0.383,0.398,published_three_run_mean
+QDF,https://openreview.net/pdf?id=vpO8n9AqEG,c09840e85cc6ad55e15a54dc84b252002862361b541e895ecc0ce32fe5e67d97,18,Table 6,QDF,ETTm1,720,0.441,0.434,published_three_run_mean
+QDF,https://openreview.net/pdf?id=vpO8n9AqEG,c09840e85cc6ad55e15a54dc84b252002862361b541e895ecc0ce32fe5e67d97,18,Table 6,QDF,ETTm2,96,0.170,0.253,published_three_run_mean
+QDF,https://openreview.net/pdf?id=vpO8n9AqEG,c09840e85cc6ad55e15a54dc84b252002862361b541e895ecc0ce32fe5e67d97,18,Table 6,QDF,ETTm2,192,0.234,0.294,published_three_run_mean
+QDF,https://openreview.net/pdf?id=vpO8n9AqEG,c09840e85cc6ad55e15a54dc84b252002862361b541e895ecc0ce32fe5e67d97,18,Table 6,QDF,ETTm2,336,0.290,0.331,published_three_run_mean
+QDF,https://openreview.net/pdf?id=vpO8n9AqEG,c09840e85cc6ad55e15a54dc84b252002862361b541e895ecc0ce32fe5e67d97,18,Table 6,QDF,ETTm2,720,0.387,0.389,published_three_run_mean
+QDF,https://openreview.net/pdf?id=vpO8n9AqEG,c09840e85cc6ad55e15a54dc84b252002862361b541e895ecc0ce32fe5e67d97,18,Table 6,QDF,ETTh1,96,0.365,0.389,published_three_run_mean
+QDF,https://openreview.net/pdf?id=vpO8n9AqEG,c09840e85cc6ad55e15a54dc84b252002862361b541e895ecc0ce32fe5e67d97,18,Table 6,QDF,ETTh1,192,0.427,0.421,published_three_run_mean
+QDF,https://openreview.net/pdf?id=vpO8n9AqEG,c09840e85cc6ad55e15a54dc84b252002862361b541e895ecc0ce32fe5e67d97,18,Table 6,QDF,ETTh1,336,0.466,0.449,published_three_run_mean
+QDF,https://openreview.net/pdf?id=vpO8n9AqEG,c09840e85cc6ad55e15a54dc84b252002862361b541e895ecc0ce32fe5e67d97,18,Table 6,QDF,ETTh1,720,0.466,0.467,published_three_run_mean
+QDF,https://openreview.net/pdf?id=vpO8n9AqEG,c09840e85cc6ad55e15a54dc84b252002862361b541e895ecc0ce32fe5e67d97,18,Table 6,QDF,ETTh2,96,0.286,0.338,published_three_run_mean
+QDF,https://openreview.net/pdf?id=vpO8n9AqEG,c09840e85cc6ad55e15a54dc84b252002862361b541e895ecc0ce32fe5e67d97,18,Table 6,QDF,ETTh2,192,0.361,0.388,published_three_run_mean
+QDF,https://openreview.net/pdf?id=vpO8n9AqEG,c09840e85cc6ad55e15a54dc84b252002862361b541e895ecc0ce32fe5e67d97,18,Table 6,QDF,ETTh2,336,0.408,0.422,published_three_run_mean
+QDF,https://openreview.net/pdf?id=vpO8n9AqEG,c09840e85cc6ad55e15a54dc84b252002862361b541e895ecc0ce32fe5e67d97,18,Table 6,QDF,ETTh2,720,0.419,0.439,published_three_run_mean
+QDF,https://openreview.net/pdf?id=vpO8n9AqEG,c09840e85cc6ad55e15a54dc84b252002862361b541e895ecc0ce32fe5e67d97,18,Table 6,QDF,ECL,96,0.135,0.229,published_three_run_mean
+QDF,https://openreview.net/pdf?id=vpO8n9AqEG,c09840e85cc6ad55e15a54dc84b252002862361b541e895ecc0ce32fe5e67d97,18,Table 6,QDF,ECL,192,0.153,0.245,published_three_run_mean
+QDF,https://openreview.net/pdf?id=vpO8n9AqEG,c09840e85cc6ad55e15a54dc84b252002862361b541e895ecc0ce32fe5e67d97,18,Table 6,QDF,ECL,336,0.169,0.262,published_three_run_mean
+QDF,https://openreview.net/pdf?id=vpO8n9AqEG,c09840e85cc6ad55e15a54dc84b252002862361b541e895ecc0ce32fe5e67d97,18,Table 6,QDF,ECL,720,0.202,0.290,published_three_run_mean
+QDF,https://openreview.net/pdf?id=vpO8n9AqEG,c09840e85cc6ad55e15a54dc84b252002862361b541e895ecc0ce32fe5e67d97,18,Table 6,QDF,Weather,96,0.158,0.201,published_three_run_mean
+QDF,https://openreview.net/pdf?id=vpO8n9AqEG,c09840e85cc6ad55e15a54dc84b252002862361b541e895ecc0ce32fe5e67d97,18,Table 6,QDF,Weather,192,0.207,0.245,published_three_run_mean
+QDF,https://openreview.net/pdf?id=vpO8n9AqEG,c09840e85cc6ad55e15a54dc84b252002862361b541e895ecc0ce32fe5e67d97,18,Table 6,QDF,Weather,336,0.263,0.286,published_three_run_mean
+QDF,https://openreview.net/pdf?id=vpO8n9AqEG,c09840e85cc6ad55e15a54dc84b252002862361b541e895ecc0ce32fe5e67d97,18,Table 6,QDF,Weather,720,0.342,0.339,published_three_run_mean

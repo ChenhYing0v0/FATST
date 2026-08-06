@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | 写作流审阅Section 4 v0.1与Method Figure 4；实验流继续H4M与TimeAlign reproduction |
+| `active_question` | 写作流审阅Section 4 v0.1与Method Figure 4；实验流完成QDF Solar四H native reproduction并并入Main I |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9与Section 3 v0.7 frozen；Section 4 v0.1 pending author review |
@@ -21,28 +21,28 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper consolidation；writing=Section 4 v0.1 architecture-and-objective complete pending author review；experiments=H4M + TimeAlign reproduction remote active |
+| `current_11_step` | paper consolidation；writing=Section 4 v0.1 pending author review；experiments=QDF Solar Step8 remote execution authorized |
 | `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；`ISCF-BSCA-MAIN-v1` 8 selected profiles reusable |
-| `latest_decision` | `HPO_frozen_Main_I_published_140_rows_complete_competitive_not_full_SOTA_request_staged_baseline_authorization` |
+| `latest_decision` | `QDF_published_24_rows_audited_Solar_four_H_prelaunch_pass_remote_authorized` |
 | `writing_latest_decision` | `section4_v0_1_and_method_figure4_initial_draft_pending_author_review` |
-| `next_required_action` | request staged Main I baseline execution and Main II Tier A source/protocol patch authorizations |
-| `method_training_authorized` | HPO Tier A/B1/bounded B2=true；B3/C=false |
+| `next_required_action` | commit/push，remote pull，QDF 4/4 resource smoke，再执行授权的Solar formal matrix |
+| `method_training_authorized` | ISCF HPO=false；QDF Solar local patch/remote training/formal test=true；other baseline scopes unchanged |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | HPO Step9--10 complete；Main I 140-row published-context audit complete |
+| `current_step` | HPO Step9--10 frozen；QDF Main I source audit/Step6 complete，Solar Step8 authorized |
 | `problem` | Introduction的horizon-specific superiority、component effectiveness与decoder portability claims尚缺完整paper-facing evidence |
-| `existence_evidence` | 53 HPO trials完整；8 selected checkpoints/32 cells frozen；7-dataset ISCF vs TimeAlign MSE +2.199%，MAE -0.066%；published 140/140 rows audited |
+| `existence_evidence` | QDF Table 6提供6 datasets × four H的24 rows；official release已有Dataset_Solar但无Solar script；ECL为最近released high-dimensional electricity preset |
 | `idea` | tuned main candidate + eight-dataset SOTA table + matched unified benchmark + exact five-dataset ablation/end-to-end transfer |
 | `theory_check` | architecture与HPO身份分离；validation选trial checkpoint；official-test four-H aggregate选dataset profile；published/native/matched角色分开；H720-only与frozen replacement排除 |
-| `design` | H1/H2/H3A/H3B=53 complete trials；seed2021；one selected profile per dataset shared across four H；published/native/matched roles separated |
+| `design` | QDF六dataset published rows + Solar official-source TQNet/QDF、ECL-derived profiles、seed2023、四个fixed-H systems；训练后一次test |
 | `narrative_gate` | architecture family冻结；SOTA wording由完整test-tuned result决定并披露test-informed边界 |
-| `effectiveness_gate` | `performance_partial_pass_competitive_aggregate_mse_pending_complete_baselines`；four-layer decision mandatory |
-| `artifacts` | selected scorecard=`analysis/iscf_bsca_main_v1_hpo_20260731/selected_main_scorecard.csv`；post-HPO audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/post_hpo_main_i_published_audit_and_next_gate.md` |
-| `decision` | HPO frozen；Main I published 140 rows reusable-with-disclosure；no baseline remote launch before staged authorization |
+| `effectiveness_gate` | Solar必须4/4 checkpoint/config/MSE/MAE完整；QDF只作native baseline effectiveness，不作matched attribution |
+| `artifacts` | QDF contract=`configs/qdf_solar_reproduction.json`；prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/qdf_main_i_20260806/design_and_prelaunch_gate.md` |
+| `decision` | QDF prelaunch pass；Solar精确scope remote/formal已授权；ISCF HPO与其他baseline scope不扩张 |
 
 ## Exact Ablation Anchor Contract
 
