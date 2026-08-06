@@ -1,0 +1,14 @@
+% Companion block; TimeAlign Exchange uses a source-informed bootstrap.
+\begin{tabular}{c|cc|cc}
+\toprule
+H & \multicolumn{2}{c|}{ISCF-BSCA} & \multicolumn{2}{c}{TimeAlign$^{\dagger}$} \\
+ & MSE & MAE & MSE & MAE \\
+\midrule
+96 & \textcolor{blue}{\underline{0.098}} & \textcolor{blue}{\underline{0.216}} & \textcolor{red}{\textbf{0.087}} & \textcolor{red}{\textbf{0.208}} \\
+192 & \textcolor{blue}{\underline{0.206}} & \textcolor{blue}{\underline{0.318}} & \textcolor{red}{\textbf{0.192}} & \textcolor{red}{\textbf{0.310}} \\
+336 & \textcolor{red}{\textbf{0.380}} & \textcolor{red}{\textbf{0.444}} & \textcolor{blue}{\underline{0.442}} & \textcolor{blue}{\underline{0.473}} \\
+720 & \textcolor{red}{\textbf{0.910}} & \textcolor{red}{\textbf{0.723}} & \textcolor{blue}{\underline{1.330}} & \textcolor{blue}{\underline{0.847}} \\
+Avg. & \textcolor{red}{\textbf{0.399}} & \textcolor{red}{\textbf{0.425}} & \textcolor{blue}{\underline{0.513}} & \textcolor{blue}{\underline{0.460}} \\
+\bottomrule
+\end{tabular}
+% $^{\dagger}$ ETTh1-derived source-informed preset; no official TimeAlign Exchange script exists.

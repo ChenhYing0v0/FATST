@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 4 v0.1 pending author review；experiments=HPO terminally frozen，QDF Solar remote reproduction authorized after prelaunch pass |
+| `current_11_step` | paper consolidation；writing=Section 4 v0.1 pending author review；experiments=QDF Solar 4/4 complete，Main I 14-model table finalized |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,6 +18,8 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` eight dataset profiles and 32 cells terminally frozen after H4N；strong aggregate competitor但未达per-cell target |
+
+[QDF Solar Result and Main I 14-Model Table, 2026-08-06] QDF Table 6的六dataset 24 rows与本地Solar source-informed 4 rows已形成28/28完整surface。Solar H96/192/336/720 MSE=`0.190262/0.218261/0.334881/0.380994`，MAE=`0.224629/0.249375/0.333303/0.358703`，mean=`0.281099/0.291503`；明显弱于本地TimeAlign与ISCF-BSCA Solar，完整保留不筛选。首次test因`num_workers=10`触发remote file-descriptor limit；四个validation-selected checkpoints未重训，commit `2c147bf`以`num_workers=0`完成evaluation-only retry，原失败日志、checkpoint hashes和mtime provenance均保留。Main I现为14 models × 7 datasets × four H，顺序为ISCF-BSCA、TimeAlign、QDF、其余Table-6 baselines；ISCF仍为27/56 best、19/56 second。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/qdf_main_i_20260806/result_and_table_audit.md`。Decision=`QDF_Solar_4_of_4_complete_Main_I_14_model_table_finalized_with_mixed_source_disclosure`。
 
 [QDF Main I Solar Prelaunch, 2026-08-06] QDF official source固定为commit `eb0693a...`（MIT）。QDF Table 6的ETTm1/ETTm2/ETTh1/ETTh2/ECL/Weather 24个published MSE/MAE rows已逐项转录；论文未报告Solar。新增Solar contract固定为official `Dataset_Solar` + TQNet/QDF、`L=96`、four H、seed2023，并按released ECL逐Hprofiles派生，仅替换137 channels与10-minute daily cycle=144。该Solar结果必须标记`official_native_source_informed_solar_single_seed`，不能写成published value或matched attribution。用户已授权remote training/formal test；resource smoke通过后执行4/4完整matrix，ISCF HPO保持关闭。Canonical prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/qdf_main_i_20260806/design_and_prelaunch_gate.md`。Decision=`QDF_published_24_rows_audited_Solar_four_H_prelaunch_pass_remote_authorized`。
 

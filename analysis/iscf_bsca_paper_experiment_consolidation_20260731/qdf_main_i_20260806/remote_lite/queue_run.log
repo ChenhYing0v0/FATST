@@ -1,0 +1,13 @@
+evaluation_only_retry horizon=192 checkpoint_retrained=false
+evaluation_only_retry horizon=720 checkpoint_retrained=false
+evaluation_only_retry horizon=336 checkpoint_retrained=false
+run_start=2026-08-06T18:22:33+08:00 horizon=720 gpu=0 mode=run run_root=/home/yingch/exp_outputs/r-2026-fatst/qdf_solar_reproduction_20260806/runs/QDF__Solar__H720__seed2023
+run_start=2026-08-06T18:22:33+08:00 horizon=192 gpu=2 mode=run run_root=/home/yingch/exp_outputs/r-2026-fatst/qdf_solar_reproduction_20260806/runs/QDF__Solar__H192__seed2023
+run_start=2026-08-06T18:22:33+08:00 horizon=336 gpu=1 mode=run run_root=/home/yingch/exp_outputs/r-2026-fatst/qdf_solar_reproduction_20260806/runs/QDF__Solar__H336__seed2023
+run_done=2026-08-06T18:23:29+08:00 horizon=192 gpu=2 mode=run run_root=/home/yingch/exp_outputs/r-2026-fatst/qdf_solar_reproduction_20260806/runs/QDF__Solar__H192__seed2023
+run_done=2026-08-06T18:23:46+08:00 horizon=336 gpu=1 mode=run run_root=/home/yingch/exp_outputs/r-2026-fatst/qdf_solar_reproduction_20260806/runs/QDF__Solar__H336__seed2023
+evaluation_only_retry horizon=96 checkpoint_retrained=false
+run_start=2026-08-06T18:23:46+08:00 horizon=96 gpu=1 mode=run run_root=/home/yingch/exp_outputs/r-2026-fatst/qdf_solar_reproduction_20260806/runs/QDF__Solar__H96__seed2023
+run_done=2026-08-06T18:24:27+08:00 horizon=720 gpu=0 mode=run run_root=/home/yingch/exp_outputs/r-2026-fatst/qdf_solar_reproduction_20260806/runs/QDF__Solar__H720__seed2023
+run_done=2026-08-06T18:24:34+08:00 horizon=96 gpu=1 mode=run run_root=/home/yingch/exp_outputs/r-2026-fatst/qdf_solar_reproduction_20260806/runs/QDF__Solar__H96__seed2023
+qdf_solar_run_done=2026-08-06T18:24:34+08:00 jobs=4 seed=2023

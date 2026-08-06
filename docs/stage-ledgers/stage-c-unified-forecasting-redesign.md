@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | 写作流审阅Section 4 v0.1与Method Figure 4；实验流完成QDF Solar四H native reproduction并并入Main I |
+| `active_question` | 写作流审阅Section 4 v0.1与Method Figure 4；实验流在QDF scope闭合后继续剩余Main I/Main II gaps |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9与Section 3 v0.7 frozen；Section 4 v0.1 pending author review |
@@ -21,28 +21,28 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper consolidation；writing=Section 4 v0.1 pending author review；experiments=QDF Solar Step8 remote execution authorized |
+| `current_11_step` | paper consolidation；writing=Section 4 v0.1 pending author review；experiments=QDF Solar Step9--10 complete |
 | `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；`ISCF-BSCA-MAIN-v1` 8 selected profiles reusable |
-| `latest_decision` | `QDF_published_24_rows_audited_Solar_four_H_prelaunch_pass_remote_authorized` |
+| `latest_decision` | `QDF_Solar_4_of_4_complete_Main_I_14_model_table_finalized_with_mixed_source_disclosure` |
 | `writing_latest_decision` | `section4_v0_1_and_method_figure4_initial_draft_pending_author_review` |
-| `next_required_action` | commit/push，remote pull，QDF 4/4 resource smoke，再执行授权的Solar formal matrix |
-| `method_training_authorized` | ISCF HPO=false；QDF Solar local patch/remote training/formal test=true；other baseline scopes unchanged |
+| `next_required_action` | author review Main I QDF mixed-source disclosure；remaining AMD/SimpleTM/TimePerceiver/SRSNet/Exchange scopes separately gated |
+| `method_training_authorized` | ISCF HPO=false；QDF Solar scope consumed；other baseline scopes unchanged |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | HPO Step9--10 frozen；QDF Main I source audit/Step6 complete，Solar Step8 authorized |
+| `current_step` | HPO frozen；QDF Solar Step9 artifact audit与Step10 table consolidation complete |
 | `problem` | Introduction的horizon-specific superiority、component effectiveness与decoder portability claims尚缺完整paper-facing evidence |
-| `existence_evidence` | QDF Table 6提供6 datasets × four H的24 rows；official release已有Dataset_Solar但无Solar script；ECL为最近released high-dimensional electricity preset |
+| `existence_evidence` | QDF published 24 rows + Solar local 4 rows complete；Solar mean MSE/MAE=0.281099/0.291503；4 checkpoints/loss/configs/metrics audited |
 | `idea` | tuned main candidate + eight-dataset SOTA table + matched unified benchmark + exact five-dataset ablation/end-to-end transfer |
 | `theory_check` | architecture与HPO身份分离；validation选trial checkpoint；official-test four-H aggregate选dataset profile；published/native/matched角色分开；H720-only与frozen replacement排除 |
 | `design` | QDF六dataset published rows + Solar official-source TQNet/QDF、ECL-derived profiles、seed2023、四个fixed-H systems；训练后一次test |
 | `narrative_gate` | architecture family冻结；SOTA wording由完整test-tuned result决定并披露test-informed边界 |
-| `effectiveness_gate` | Solar必须4/4 checkpoint/config/MSE/MAE完整；QDF只作native baseline effectiveness，不作matched attribution |
-| `artifacts` | QDF contract=`configs/qdf_solar_reproduction.json`；prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/qdf_main_i_20260806/design_and_prelaunch_gate.md` |
-| `decision` | QDF prelaunch pass；Solar精确scope remote/formal已授权；ISCF HPO与其他baseline scope不扩张 |
+| `effectiveness_gate` | QDF Solar 4/4 complete；结果弱于TimeAlign/ISCF且完整报告；native baseline only |
+| `artifacts` | QDF result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/qdf_main_i_20260806/result_and_table_audit.md`；table=`output/pdf/iscf_bsca_main_i_qdf_20260806.pdf` |
+| `decision` | QDF scope closed；Main I 14-model shared-surface table finalized；remaining baseline gaps不自动扩张 |
 
 ## Exact Ablation Anchor Contract
 

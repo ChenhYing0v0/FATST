@@ -40,10 +40,11 @@ SOURCE_MODELS = (
     "TimesNet",
     "DLinear",
 )
-DISPLAY_MODELS = ("ISCF-BSCA",) + SOURCE_MODELS
+DISPLAY_MODELS = ("ISCF-BSCA", "TimeAlign", "QDF") + SOURCE_MODELS[1:]
 MODEL_YEARS = {
     "ISCF-BSCA": "Ours",
     "TimeAlign": "2026",
+    "QDF": "2026",
     "CMoS": "2025",
     "TimeBase": "2025",
     "TVNet": "2025",
@@ -111,6 +112,24 @@ def parse_args() -> argparse.Namespace:
         / "analysis"
         / "iscf_bsca_paper_experiment_consolidation_20260731"
         / "timealign_table6_main_i_published.csv",
+    )
+    parser.add_argument(
+        "--qdf-published",
+        type=Path,
+        default=ROOT
+        / "analysis"
+        / "iscf_bsca_paper_experiment_consolidation_20260731"
+        / "qdf_main_i_20260806"
+        / "qdf_table6_published.csv",
+    )
+    parser.add_argument(
+        "--qdf-solar-reproduced",
+        type=Path,
+        default=ROOT
+        / "analysis"
+        / "iscf_bsca_paper_experiment_consolidation_20260731"
+        / "qdf_main_i_20260806"
+        / "qdf_solar_local_metrics.csv",
     )
     parser.add_argument("--analysis-dir", type=Path, required=True)
     parser.add_argument("--output-pdf", type=Path, required=True)
@@ -215,6 +234,46 @@ def load_iscf_rows(path: Path) -> list[dict[str, Any]]:
                 "value_origin": "terminal_h4n_selected_single_seed_test_tuned",
                 "system_role": "one_unified_model_per_dataset",
             }
+        )
+    return rows
+
+
+def load_qdf_rows(published_path: Path, solar_path: Path) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for row in read_csv(published_path):
+        rows.append(
+            {
+                "model": "QDF",
+                "dataset": row["dataset"],
+                "horizon": int(row["horizon"]),
+                "mse": float(row["mse"]),
+                "mae": float(row["mae"]),
+                "value_origin": "qdf_table6_published_three_run_mean",
+                "system_role": "horizon_specific_published_context",
+            }
+        )
+    for row in read_csv(solar_path):
+        rows.append(
+            {
+                "model": "QDF",
+                "dataset": "Solar",
+                "horizon": int(row["horizon"]),
+                "mse": float(row["mse"]),
+                "mae": float(row["mae"]),
+                "value_origin": row["value_origin"],
+                "system_role": row["system_role"],
+            }
+        )
+    keys = {(row["dataset"], row["horizon"]) for row in rows}
+    expected = {
+        (dataset, horizon)
+        for dataset in DISPLAY_DATASETS
+        for horizon in HORIZONS
+    }
+    if len(rows) != 28 or keys != expected:
+        raise ValueError(
+            f"expected complete 28-cell QDF matrix, found rows={len(rows)}, "
+            f"missing={sorted(expected - keys)}, extra={sorted(keys - expected)}"
         )
     return rows
 
@@ -496,6 +555,7 @@ def build_pdf(path: Path, rows: list[dict[str, Any]]) -> None:
         ("LINEBELOW", (0, -1), (-1, -1), 0.9, colors.black),
         ("BACKGROUND", (2, 0), (3, -1), colors.HexColor("#fff7ed")),
         ("BACKGROUND", (4, 0), (5, -1), colors.HexColor("#f8fafc")),
+        ("BACKGROUND", (6, 0), (7, -1), colors.HexColor("#f0fdf4")),
     ]
     for model_index in range(len(DISPLAY_MODELS)):
         start_column = 2 + 2 * model_index
@@ -530,7 +590,9 @@ def build_pdf(path: Path, rows: list[dict[str, Any]]) -> None:
         "blue underlined values denote the best and second-best displayed results "
         "after three-decimal rounding. ISCF-BSCA uses one unified, single-seed, "
         "test-tuned model per dataset. TimeAlign uses the artifact-complete local "
-        "seed-2021 reproduction on all seven shared datasets. All remaining "
+        "seed-2021 reproduction on all seven shared datasets. QDF uses published "
+        "three-run means for six datasets and our official-code, ECL-preset-derived "
+        "single-seed Solar reproduction. All remaining "
         "baselines are transcribed "
         "from TimeAlign Table 6 and are unmatched published context. Traffic and "
         "Exchange are excluded from this dense panel because they do not share the "
@@ -602,9 +664,11 @@ def build_latex(path: Path, rows: list[dict[str, Any]]) -> None:
             "horizons. Best and second-best displayed values are bold and underlined. "
             "ISCF-BSCA uses one unified single-seed test-tuned model per dataset. "
             "TimeAlign uses our official-native single-seed reproduction on all seven "
-            "shared datasets; all other baselines are published "
+            "shared datasets. QDF uses published values on six datasets and a "
+            "source-informed official-code Solar reproduction; all other baselines "
+            "are published "
             "context rather than matched local reproductions.}",
-            "\\label{tab:main_timealign_table6_style}",
+            "\\label{tab:main_iscf_bsca_qdf}",
             "\\end{table*}",
             "",
         ]
@@ -646,7 +710,7 @@ def write_summary(path: Path, rows: list[dict[str, Any]], args: argparse.Namespa
     iscf_rows = [row for row in rows if row["model"] == "ISCF-BSCA"]
     standard_rows = [row for row in iscf_rows if row["horizon"] != "Avg."]
     summary = {
-        "table_id": "ISCF-BSCA-MAIN-I-TIMEALIGN-LOCAL-20260806",
+        "table_id": "ISCF-BSCA-MAIN-I-QDF-LOCAL-20260806",
         "models": list(DISPLAY_MODELS),
         "datasets": list(DISPLAY_DATASETS),
         "horizons": list(HORIZONS),
@@ -657,24 +721,26 @@ def write_summary(path: Path, rows: list[dict[str, Any]], args: argparse.Namespa
         * len(DISPLAY_DATASETS)
         * len(HORIZONS),
         "row_count_with_averages": len(rows),
-        "iscf_best_cells_full_13_model_table": sum(
+        "iscf_best_cells_full_14_model_table": sum(
             row[f"{metric}_style"] == "best"
             for row in standard_rows
             for metric in METRICS
         ),
-        "iscf_second_cells_full_13_model_table": sum(
+        "iscf_second_cells_full_14_model_table": sum(
             row[f"{metric}_style"] == "second"
             for row in standard_rows
             for metric in METRICS
         ),
         "frozen_33_of_56_scope": (
             "ISCF-BSCA versus the five-model published comparator subset; "
-            "not recomputed from all 13 displayed models"
+            "not recomputed from all 14 displayed models"
         ),
         "timealign_reproduced_cells_in_dense_table": 28,
         "timealign_reproduced_cells_exchange_companion": 4,
         "timealign_reproduced_cells_total": 32,
         "timealign_published_cells": 0,
+        "qdf_published_cells": 24,
+        "qdf_source_informed_solar_cells": 4,
         "source_hashes": {
             "timealign_pdf": file_sha256(args.timealign_pdf),
             "iscf_scorecard": file_sha256(args.iscf_scorecard),
@@ -682,10 +748,13 @@ def write_summary(path: Path, rows: list[dict[str, Any]], args: argparse.Namespa
             "audited_published_selected": file_sha256(
                 args.audited_published_selected
             ),
+            "qdf_published": file_sha256(args.qdf_published),
+            "qdf_solar_reproduced": file_sha256(args.qdf_solar_reproduced),
         },
         "claim_boundary": (
             "ISCF-BSCA is single-seed and test-tuned; TimeAlign is local single-seed "
-            "reproduction on every shared dataset; other baselines are unmatched "
+            "reproduction on every shared dataset; QDF mixes disclosed published "
+            "and source-informed Solar values; other baselines are unmatched "
             "published context"
         ),
     }
@@ -700,6 +769,7 @@ def main() -> None:
     rows = extract_timealign_table6(args.timealign_pdf)
     validate_against_audited_selected(rows, args.audited_published_selected)
     override_reproduced_timealign(rows, args.timealign_reproduced)
+    rows.extend(load_qdf_rows(args.qdf_published, args.qdf_solar_reproduced))
     rows.extend(load_iscf_rows(args.iscf_scorecard))
     validate_matrix(rows)
     styled_rows = add_averages_and_styles(rows)
@@ -712,7 +782,7 @@ def main() -> None:
         args.analysis_dir / "table_exchange_companion_long.csv",
         exchange_rows,
     )
-    build_latex(args.analysis_dir / "table_iscf_bsca_vs_timealign_table6.tex", styled_rows)
+    build_latex(args.analysis_dir / "table_iscf_bsca_main_i_qdf.tex", styled_rows)
     build_exchange_latex(
         args.analysis_dir / "table_exchange_iscf_vs_timealign.tex",
         exchange_rows,

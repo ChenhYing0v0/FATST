@@ -1,0 +1,57 @@
+{
+  "table_id": "ISCF-BSCA-MAIN-I-QDF-LOCAL-20260806",
+  "models": [
+    "ISCF-BSCA",
+    "TimeAlign",
+    "QDF",
+    "CMoS",
+    "TimeBase",
+    "TVNet",
+    "iTransformer",
+    "TimeMixer",
+    "Leddam",
+    "ModernTCN",
+    "PatchTST",
+    "Crossformer",
+    "TimesNet",
+    "DLinear"
+  ],
+  "datasets": [
+    "ETTm1",
+    "ETTm2",
+    "ETTh1",
+    "ETTh2",
+    "Weather",
+    "ECL",
+    "Solar"
+  ],
+  "horizons": [
+    96,
+    192,
+    336,
+    720
+  ],
+  "display_precision": 3,
+  "ranking_rule": "best_and_second_distinct_displayed_values_after_three_decimal_rounding",
+  "average_rule": "arithmetic_mean_of_four_horizon_rows",
+  "row_count_without_averages": 392,
+  "row_count_with_averages": 490,
+  "iscf_best_cells_full_14_model_table": 27,
+  "iscf_second_cells_full_14_model_table": 19,
+  "frozen_33_of_56_scope": "ISCF-BSCA versus the five-model published comparator subset; not recomputed from all 14 displayed models",
+  "timealign_reproduced_cells_in_dense_table": 28,
+  "timealign_reproduced_cells_exchange_companion": 4,
+  "timealign_reproduced_cells_total": 32,
+  "timealign_published_cells": 0,
+  "qdf_published_cells": 24,
+  "qdf_source_informed_solar_cells": 4,
+  "source_hashes": {
+    "timealign_pdf": "0a0d7deba16c5b3025902f897dddc70fd1f6efaeb3737c4a751d3b2440670b08",
+    "iscf_scorecard": "aeb32304936e365b7fbf4072334a6a87930bef9825b4c8e91af82938c7b65bc7",
+    "timealign_reproduced": "6fccaeddec410ff2eda2c2533afacb1ce28459261eae6566dd6eb3f5b390d9f8",
+    "audited_published_selected": "c9286468a4ca5977bac40f18635d387eafda0fd14794cabaac9b6f659ae82d8c",
+    "qdf_published": "e70cae379b088cbb1a49c882da28b731cc693627a3709267e76f330132053050",
+    "qdf_solar_reproduced": "6eb1eae225bb655620ffb0f3d4c865c78fc6f0901450bde7f7e25efc90c0eaa3"
+  },
+  "claim_boundary": "ISCF-BSCA is single-seed and test-tuned; TimeAlign is local single-seed reproduction on every shared dataset; QDF mixes disclosed published and source-informed Solar values; other baselines are unmatched published context"
+}

@@ -1,0 +1,7 @@
+2026-08-06T18:22:29+08:00
+2c147bf1e77af0ec98285fc8036df5123b6571cc
+3.12.13
+2.9.0+cu128
+12.8
+NVIDIA GeForce RTX 3090
+230327ef72d2abb387939d4a35d6fd34f1066071bc7c40ce7ecf5531a0122ac2  /home/yingch/dataset/Solar/solar_AL.txt

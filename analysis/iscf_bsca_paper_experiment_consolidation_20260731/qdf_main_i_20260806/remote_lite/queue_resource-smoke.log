@@ -1,0 +1,9 @@
+run_start=2026-08-06T17:50:49+08:00 horizon=336 gpu=1 mode=resource-smoke run_root=/home/yingch/exp_outputs/r-2026-fatst/qdf_solar_reproduction_20260806/_resource_smoke/QDF__Solar__H336__seed2023
+run_start=2026-08-06T17:50:49+08:00 horizon=720 gpu=0 mode=resource-smoke run_root=/home/yingch/exp_outputs/r-2026-fatst/qdf_solar_reproduction_20260806/_resource_smoke/QDF__Solar__H720__seed2023
+run_start=2026-08-06T17:50:49+08:00 horizon=192 gpu=2 mode=resource-smoke run_root=/home/yingch/exp_outputs/r-2026-fatst/qdf_solar_reproduction_20260806/_resource_smoke/QDF__Solar__H192__seed2023
+run_done=2026-08-06T17:51:15+08:00 horizon=336 gpu=1 mode=resource-smoke run_root=/home/yingch/exp_outputs/r-2026-fatst/qdf_solar_reproduction_20260806/_resource_smoke/QDF__Solar__H336__seed2023
+run_start=2026-08-06T17:51:15+08:00 horizon=96 gpu=1 mode=resource-smoke run_root=/home/yingch/exp_outputs/r-2026-fatst/qdf_solar_reproduction_20260806/_resource_smoke/QDF__Solar__H96__seed2023
+run_done=2026-08-06T17:51:15+08:00 horizon=192 gpu=2 mode=resource-smoke run_root=/home/yingch/exp_outputs/r-2026-fatst/qdf_solar_reproduction_20260806/_resource_smoke/QDF__Solar__H192__seed2023
+run_done=2026-08-06T17:51:15+08:00 horizon=720 gpu=0 mode=resource-smoke run_root=/home/yingch/exp_outputs/r-2026-fatst/qdf_solar_reproduction_20260806/_resource_smoke/QDF__Solar__H720__seed2023
+run_done=2026-08-06T17:51:39+08:00 horizon=96 gpu=1 mode=resource-smoke run_root=/home/yingch/exp_outputs/r-2026-fatst/qdf_solar_reproduction_20260806/_resource_smoke/QDF__Solar__H96__seed2023
+qdf_solar_resource-smoke_done=2026-08-06T17:51:39+08:00 jobs=4 seed=2023

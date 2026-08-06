@@ -1,0 +1,10 @@
+{
+  "protocol_id": "QDF-OFFICIAL-SOLAR-REPRODUCTION-20260806",
+  "matrix_complete": true,
+  "test_rows": 4,
+  "artifact_rows": 24,
+  "mean_mse": 0.28109944239258766,
+  "mean_mae": 0.29150257632136345,
+  "test_role": "official_native_source_informed_solar_reproduction",
+  "claim_boundary": "Solar uses an ECL-derived released-code preset; it is not a published QDF value"
+}
