@@ -5,16 +5,16 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.54` |
+| `version` | `v0.55` |
 | `last_updated` | `2026-08-07` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 4 v0.2 main-figure-aligned pending author review；experiments=AMD/SimpleTM 56-cell formal queue active |
+| `current_review_cursor` | writing=Section 4 v0.3 author refinement through 4.3 pending continued author review；experiments=AMD/SimpleTM 56-cell formal queue active |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
-| `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
+| `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.7正文 + approved Figures 2--3；Method Figure 4 visual design |
-| `provisional_content` | Section 4 v0.2 main-figure-aligned text；Method Figure 4 stable vector-asset synchronization；remaining sections |
+| `provisional_content` | Section 4 v0.3 author-refined text through 4.3；Method Figure 4 stable vector-asset synchronization；remaining sections |
 | `authorization_source` | 2026-08-06用户授权AMD与SimpleTM official-source 7 dense datasets × four-H复现；ISCF HPO、Main II与其他baseline未授权 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
@@ -322,7 +322,7 @@ Abstract
 4. ISCF-BSCA: Prefix-Consistent Unified Multi-Horizon Forecasting
    4.1 Architecture Overview
    4.2 History State and Future Coordinate
-   4.3 Scope Matrices, Scope-region States and Scope-conditioned Forecasts
+   4.3 Generation of Scope-conditioned Forecasts
    4.4 Condition Vector, Scope Probabilities and Varied-Horizon Forecasting
    4.5 Balanced Scope Co-Adaptation
    4.6 Structural Properties and Complexity
@@ -1224,7 +1224,7 @@ Canonical manuscript draft：
 
 `docs/paper-drafts/iscf-bsca-method-initial-draft.md`
 
-当前状态=`v0.2-main-figure-aligned`，等待author review。Figure 4 visual design已由author暂时固定，Section 4的module names、variables、subsection chain与caption已同步；stable vector-asset bundle仍待author source。该图只解释architecture，不承担effectiveness evidence。
+当前状态=`v0.3-author-refinement-4.1-4.3`，等待continued author review。Figure 4 visual design已由author暂时固定；Section 4开头至4.3已按author反馈强化decoder-side定位、patch-token Encoder interface、Future Coordinate动机、per-scope independent Scope Projection和region-local Scope-conditioned Forecast generation。Prefix-bounded region execution作为architecture-supported property表述，reference implementation仍materialize full field后slice。Stable vector-asset bundle仍待author source；该图只解释architecture，不承担effectiveness evidence。
 
 ### 7.1 Architecture Overview
 
@@ -1244,7 +1244,7 @@ $$
 
 其中future-step coordinate只编码target identity，不使用future observation或requested horizon。
 
-### 7.3 Scope Matrices, Scope-region States and Scope-conditioned Forecasts
+### 7.3 Generation of Scope-conditioned Forecasts
 
 对每个$s\in\mathcal S$，独立`Scope Projection`从`History State`产生
 `Scope Matrix`；`Future Coordinate`在scope region内平均得到`Region Descriptor`；
@@ -1696,3 +1696,4 @@ Coverage boundary：
 | 2026-08-04 | Section 3 v0.7 temporary freeze | 用户确认当前版本基本满意并暂时固定为论文可用Section 3 | body、terminology、equations、Figures 2--3 integration与captions冻结；后续明确矛盾 + author approval才解冻；writing cursor转向Section 4 pending direction |
 | 2026-08-05 | Section 4 v0.1 and Method Figure 4 | 六段Method computation flow、exact tensor/coordinate/scope/allocation/BSCA/complexity公式与四panel Figure 4 initial bundle完成 | author review；Introduction/Section 3与frozen implementation不变；main/ablation/transfer claims仍由Section 5 tables决定 |
 | 2026-08-07 | Section 4 v0.2 main-figure alignment | Figure 4 visual design暂时固定为单一ISCF inference schematic；正文、subsection names、terminology ledger、caption与editorial audit按History State、Scope Matrix、Region Descriptor、Scope-region State、Region-to-Step Forecast Generator、Scope-conditioned Forecast、Condition Vector、Allocation MLP、Scope Probabilities和Varied-Horizon Forecasting同步 | author text review；stable SVG/PDF/TIFF source待同步；Introduction/Section 3、implementation与claim boundary不变 |
+| 2026-08-07 | Section 4 v0.3 author refinement through 4.3 | 按author逐项反馈重写Section开头、4.1--4.3；强化decoder-side framing、Encoder interface、Future Coordinate rationale、per-scope information pool与region-local generation chain | continued author review；prefix-bounded execution仅作为architecture-supported property，reference implementation full-field materialization边界写入editorial audit；Introduction/Section 3、implementation与experiment authorization不变 |

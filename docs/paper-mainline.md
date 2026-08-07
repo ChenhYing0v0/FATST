@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 4 v0.2 main-figure-aligned pending author review；experiments=AMD/SimpleTM repaired formal queue active |
+| `current_11_step` | paper consolidation；writing=Section 4 v0.3 author refinement through 4.3 pending continued author review；experiments=AMD/SimpleTM repaired formal queue active |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,6 +18,8 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` eight dataset profiles and 32 cells terminally frozen after H4N；strong aggregate competitor但未达per-cell target |
+
+[Section 4 Author Refinement v0.3, 2026-08-07] Canonical draft=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`已按author对Section开头、4.1--4.3的逐项反馈更新为`v0.3-author-refinement-4.1-4.3`。Method framing改为decoder-side architecture plus joint optimization；ISCF明确通过`[B,C,R]`接口适配满足该接口的patch-token Encoders。Future Coordinate新增`why -> role -> construction`解释；Scope-conditioned Forecast generation改写为`per-scope independent Scope Projection -> dedicated Scope Matrix -> Region Descriptor -> region-local Scope-region State -> shared Region-to-Step Forecast Generator -> scope-indexed forecast field`。Architecture允许对first-$H$相交regions执行prefix-bounded computation，但exact reference implementation仍先materialize full $T$ field再slice；该边界已写入editorial audit，未宣称实测latency gain。Introduction v0.9、Section 3 v0.7、4.4以后正文、implementation、experiments与claim boundary均未扩张。Decision=`section4_v0_3_author_feedback_integrated_through_4_3_pending_continued_review`。
 
 [Section 4 Main-Figure Alignment v0.2, 2026-08-07] 用户将Figure 4 visual design暂时固定为单一ISCF inference schematic。Canonical draft=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`已更新为`v0.2-main-figure-aligned`：术语与计算链统一为`History State/Future Coordinate -> Scope Matrix/Region Descriptor -> Scope-region State -> Region-to-Step Forecast Generator -> Scope-conditioned Forecast`和`Condition Vector -> Allocation MLP -> Scope Probabilities -> weighted contraction -> Varied-Horizon Forecasting`。Figure 4 caption不再描述旧single-scope/ISCF/BSCA四panel图；BSCA保留在4.5作为train-only objective，不进入inference主图。Formal text继续使用$S$ scopes并在caption声明图中三条scope仅为representative；$\overline{\boldsymbol\phi}_g^{(s)}$只用于Region Descriptor，allocation仍使用未池化$\boldsymbol\phi_\tau$。当前只收到author review raster，stable SVG/PDF/TIFF source同步仍pending，旧`paper-figures/figure_iscf_bsca_method_overview.*`不标记为author-fixed final。Introduction v0.9与Section 3 v0.7未改，implementation/experiment/claim boundary均不变。Decision=`section4_v0_2_main_figure_aligned_pending_author_text_review_and_vector_asset_sync`。
 

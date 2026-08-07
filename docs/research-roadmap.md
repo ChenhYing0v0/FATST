@@ -890,14 +890,25 @@ Step4–6。candidate=`SC-ISCF-FRSC-v0`，narrative conditional pass；下一步
 | `artifacts` | manuscript=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`；paper architecture、mainline与Stage C ledger已同步；author-fixed stable SVG/PDF/TIFF source pending |
 | `decision` | `section4_v0_2_main_figure_aligned_pending_author_text_review_and_vector_asset_sync` |
 
+## Section 4 v0.3 Author Refinement Through 4.3 (2026-08-07)
+
+| Field | Content |
+| --- | --- |
+| `current_step` | paper consolidation；continued Section 4 author review |
+| `design` | 按author反馈重写Section开头、4.1--4.3：decoder-side framing；patch-token Encoder tensor interface；Future Coordinate的动机、作用与DCT construction；per-scope independent Scope Projection和region-local Scope-conditioned Forecast generation |
+| `theory_check` | Scope Projection stage内部为per-scope independent projections；region computation可按prefix边界裁剪，但exact frozen reference implementation仍materialize full $T$ field后slice；CHPC来自shared-target computation不依赖requested horizon |
+| `claim_boundary` | Encoder compatibility限于满足$[B,C,R]$接口的patch-token backbone；不宣称backbone transfer effectiveness或prefix-bounded latency gain；4.4以后正文和Section 5 provisional claims未改 |
+| `artifacts` | manuscript=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`；paper architecture、mainline与Stage C ledger同步；stable Figure 4 vector source pending |
+| `decision` | `section4_v0_3_author_feedback_integrated_through_4_3_pending_continued_review` |
+
 ## Current Cursor
 
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | paper consolidation；Introduction与Section 3 frozen；Section 4 v0.2 main-figure-aligned author review |
-| `active_question` | Section 4 v0.2的subsection logic、公式解释与author-fixed Figure 4 terminology是否可暂时冻结；Figure 4 stable vector source仍待同步 |
-| `active_candidates` | exact `ISCF-BSCA-v1` frozen ablation anchor；Figures 1--3 approved；Section 4 v0.2 pending author text review；Method Figure 4 visual design temporarily fixed |
+| `current_step` | paper consolidation；Introduction与Section 3 frozen；Section 4 v0.3 refined through 4.3 pending continued author review |
+| `active_question` | Section 4 v0.3中4.1--4.3的narrative、Future Coordinate rationale与region-local generation是否可接受；4.4以后待逐节review；Figure 4 stable vector source仍待同步 |
+| `active_candidates` | exact `ISCF-BSCA-v1` frozen ablation anchor；Figures 1--3 approved；Section 4 v0.3 pending continued author review；Method Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
