@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 4 v0.1 pending author review；experiments=AMD/SimpleTM repaired formal queue active |
+| `current_11_step` | paper consolidation；writing=Section 4 v0.2 main-figure-aligned pending author review；experiments=AMD/SimpleTM repaired formal queue active |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,6 +18,8 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` eight dataset profiles and 32 cells terminally frozen after H4N；strong aggregate competitor但未达per-cell target |
+
+[Section 4 Main-Figure Alignment v0.2, 2026-08-07] 用户将Figure 4 visual design暂时固定为单一ISCF inference schematic。Canonical draft=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`已更新为`v0.2-main-figure-aligned`：术语与计算链统一为`History State/Future Coordinate -> Scope Matrix/Region Descriptor -> Scope-region State -> Region-to-Step Forecast Generator -> Scope-conditioned Forecast`和`Condition Vector -> Allocation MLP -> Scope Probabilities -> weighted contraction -> Varied-Horizon Forecasting`。Figure 4 caption不再描述旧single-scope/ISCF/BSCA四panel图；BSCA保留在4.5作为train-only objective，不进入inference主图。Formal text继续使用$S$ scopes并在caption声明图中三条scope仅为representative；$\overline{\boldsymbol\phi}_g^{(s)}$只用于Region Descriptor，allocation仍使用未池化$\boldsymbol\phi_\tau$。当前只收到author review raster，stable SVG/PDF/TIFF source同步仍pending，旧`paper-figures/figure_iscf_bsca_method_overview.*`不标记为author-fixed final。Introduction v0.9与Section 3 v0.7未改，implementation/experiment/claim boundary均不变。Decision=`section4_v0_2_main_figure_aligned_pending_author_text_review_and_vector_asset_sync`。
 
 [AMD / SimpleTM Main I Official Reproduction Prelaunch, 2026-08-06] 用户已授权七个dense datasets × four H的两列本地复现。AMD固定official commit `000d377...`、released scripts、`L512/seed2024`与28次单run；SimpleTM固定commit `3c77d82...`、released scripts、`L96/fix_seed2025/native itr`与82次repetitions。SimpleTM epoch-level test access由runtime adapter移除，checkpoint仍只由validation early stopping选择，训练结束后每个checkpoint只test一次；upstream无license，故不vendoring。总计56 paper cells/110 checkpoints，先完成14个H720 no-test smoke与35 GiB storage gate，再后台启动；110/110完整审计前保留现有published AMD/SimpleTM values。Canonical prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/amd_simpletm_main_i_reproduction_20260806/design_and_launch_gate.md`。Decision=`AMD_SimpleTM_prelaunch_frozen_remote_authorized_pending_resource_gate`。
 

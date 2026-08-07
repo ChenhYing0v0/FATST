@@ -5,16 +5,16 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.53` |
-| `last_updated` | `2026-08-06` |
+| `version` | `v0.54` |
+| `last_updated` | `2026-08-07` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 4 v0.1 pending author review；experiments=AMD/SimpleTM 56-cell formal queue active |
+| `current_review_cursor` | writing=Section 4 v0.2 main-figure-aligned pending author review；experiments=AMD/SimpleTM 56-cell formal queue active |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF output-side scope framework；BSCA train-only contribution boundary |
-| `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.7正文 + approved Figures 2--3 |
-| `provisional_content` | Section 4 v0.1 + Method Figure 4 initial draft；remaining sections |
+| `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.7正文 + approved Figures 2--3；Method Figure 4 visual design |
+| `provisional_content` | Section 4 v0.2 main-figure-aligned text；Method Figure 4 stable vector-asset synchronization；remaining sections |
 | `authorization_source` | 2026-08-06用户授权AMD与SimpleTM official-source 7 dense datasets × four-H复现；ISCF HPO、Main II与其他baseline未授权 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
@@ -321,12 +321,11 @@ Abstract
 
 4. ISCF-BSCA: Prefix-Consistent Unified Multi-Horizon Forecasting
    4.1 Architecture Overview
-   4.2 Horizon-Agnostic Future-Step Generation and CHPC
-   4.3 History Encoding
-   4.4 Scope-Indexed Forecast Field
-   4.5 Target-Conditioned Scope Allocation
-   4.6 Balanced Scope Co-Adaptation
-   4.7 Complexity and Structural Properties
+   4.2 History State and Future Coordinate
+   4.3 Scope Matrices, Scope-region States and Scope-conditioned Forecasts
+   4.4 Condition Vector, Scope Probabilities and Varied-Horizon Forecasting
+   4.5 Balanced Scope Co-Adaptation
+   4.6 Structural Properties and Complexity
 
 5. Experiments
    5.1 Experimental Setup
@@ -679,31 +678,37 @@ empirical evidence。
     temporal contiguity写成收益来源。multiple scales、multiple predictors与
     MoE原语已有prior art；novelty只能落在完整scope-indexed output-field链条。
 
-#### Method Figure 4 initial draft：single-scope forecasting versus ISCF-BSCA
+#### Method Figure 4 author-fixed visual design：ISCF inference architecture
 
-该方法总览图已生成initial draft并放在Method开篇，不作为Introduction中的第二张
-嵌入图。编号保持：Figure 1为Introduction concept；Figures 2--3为Section 3
-real-data evidence；Figure 4为method overview。
+该方法总览图的visual design已由author暂时固定并放在Method开篇，不作为
+Introduction中的第二张嵌入图。编号保持：Figure 1为Introduction concept；
+Figures 2--3为Section 3 real-data evidence；Figure 4为method overview。当前只收到
+review raster，stable SVG/PDF/TIFF bundle仍待author source同步，因此不以旧vector
+bundle冒充author-fixed最终资产。
 
 Figure 4当前包含：
 
-1. **Panel a: single-scope forecasting。** 一个history representation、一个固定
-   sharing extent、一个forecast field slice，全部future regions沿用同一种
-   sharing topology。
-2. **Panel b: ISCF。** Independent history projections产生多个sharing scopes，
-   形成`scope_field:[B,C,T,S]`；不同block宽度表示sharing extent，不把它们画成
-   多个独立models。
-3. **Panel c: target-conditioned integration。**
-   `allocation:[B,C,T,S]`覆盖scope--future-step平面，沿scope轴收缩得到
-   `forecast:[B,T,C]`，突出region-dependent composition。
-4. **Panel d或train-only overlay: BSCA。** 用虚线training path表示direct
-   scope supervision与allocation balancing；明确inference时移除，避免被误读为
-   额外推理module。
+1. **History path。** `History Series -> Patchify -> Encoder -> History State`，
+   并由`Scope Projection`为每个sharing scope生成`Scope Matrix`。
+2. **Scope-conditioned forecasting path。** `Future Coordinate`经region-wise pooling
+   形成`Region Descriptor`；其与`Scope Matrix`收缩得到`Scope-region State`；共享的
+   `Region-to-Step Forecast Generator`生成各`Scope-conditioned Forecast`。图中只画
+   三个representative scopes，正式tensor仍为`scope_field:[B,C,T,S]`。
+3. **Scope-probability path。** projected `History State`与未池化的target coordinate
+   $\boldsymbol\phi_\tau$组成`Condition Vector`；`Allocation MLP`产生
+   `Scope Probabilities:[B,C,T,S]`。Region Descriptor使用
+   $\overline{\boldsymbol\phi}_g^{(s)}$，allocation使用$\boldsymbol\phi_\tau$，两条
+   coordinate semantics不得混写。
+4. **Varied-horizon output。** Scope-conditioned Forecasts按Scope Probabilities沿
+   scope轴weighted contraction，得到一个`forecast:[B,T,C]` trajectory；不同
+   requested horizons只返回该trajectory的nested prefixes。
+5. **BSCA boundary。** Figure 4只显示ISCF inference graph；BSCA在Section 4.5用
+   objective与gradient relation单独解释，不画成额外inference module。
 
-Figure source、manifest与QA位于`analysis/iscf_bsca_method_figure_20260805/`，
-stable manuscript assets位于`paper-figures/figure_iscf_bsca_method_overview.*`。
-在author确认Figure 4 visual hierarchy前，Introduction P5不加入forward reference；
-确认后可在single-scope对照句后加入简短`(Fig. 4)`，不重复tensor细节。
+旧Figure source、manifest与QA位于`analysis/iscf_bsca_method_figure_20260805/`，
+旧stable manuscript assets位于`paper-figures/figure_iscf_bsca_method_overview.*`；
+在author-fixed SVG/PDF/TIFF source到位前，这些旧资产不标记为当前Figure 4 final。
+Introduction P5暂不因本轮术语同步而改写。
 
 ### 4.6 Paragraph 6：contributions
 
@@ -1219,13 +1224,13 @@ Canonical manuscript draft：
 
 `docs/paper-drafts/iscf-bsca-method-initial-draft.md`
 
-当前状态=`v0.1-architecture-and-objective-complete`，等待author review。Figure 4已按冻结contract生成initial draft，source与QA位于`analysis/iscf_bsca_method_figure_20260805/`，stable manuscript assets位于`paper-figures/figure_iscf_bsca_method_overview.*`。该图只解释architecture，不承担effectiveness evidence。
+当前状态=`v0.2-main-figure-aligned`，等待author review。Figure 4 visual design已由author暂时固定，Section 4的module names、variables、subsection chain与caption已同步；stable vector-asset bundle仍待author source。该图只解释architecture，不承担effectiveness evidence。
 
 ### 7.1 Architecture Overview
 
-先以Figure 4给出完整tensor flow：shared history representation → independent scope-specific projections → scope-region states → shared step-specific synthesis → `scope_field:[B,C,T,S]` → target-conditioned allocation → weighted contraction → `forecast:[B,T,C]`。BSCA以独立train-only虚线路径呈现。
+先以Figure 4给出完整tensor flow：`History Series -> Patchify -> Encoder -> History State`；`Scope Projection -> Scope Matrix`与`Future Coordinate -> Region Descriptor`共同形成`Scope-region State`；共享`Region-to-Step Forecast Generator`产生`Scope-conditioned Forecasts:[B,C,T,S]`。并行的`Condition Vector -> Allocation MLP`产生`Scope Probabilities:[B,C,T,S]`，沿scope轴weighted contraction后形成`Varied-Horizon Forecasting` trajectory。BSCA不进入Figure 4 inference graph。
 
-### 7.2 History Representation and Future-Step Coordinates
+### 7.2 History State and Future Coordinate
 
 History encoder接口与fixed DCT-style future-step coordinate定义为：
 
@@ -1239,11 +1244,12 @@ $$
 
 其中future-step coordinate只编码target identity，不使用future observation或requested horizon。
 
-### 7.3 Scope-Indexed Forecast Field
+### 7.3 Scope Matrices, Scope-region States and Scope-conditioned Forecasts
 
-对每个$s\in\mathcal S$，独立history projection产生scope-specific modes；
-region descriptors据此构造scope-region latent states，共享的
-future-step-specific synthesis vectors形成：
+对每个$s\in\mathcal S$，独立`Scope Projection`从`History State`产生
+`Scope Matrix`；`Future Coordinate`在scope region内平均得到`Region Descriptor`；
+二者收缩形成`Scope-region State`。共享的`Region-to-Step Forecast Generator`将
+state映射为`Scope-conditioned Forecast`，全部scopes共同形成：
 
 $$
 \mathcal F_\theta(\mathbf X)
@@ -1254,9 +1260,10 @@ $$
 固定$s$只是该field的一个scope-conditioned slice。scope size只规定
 future-step latent-state sharing extent，不是requested horizon。
 
-### 7.4 Target-Conditioned Scope Allocation
+### 7.4 Condition Vector, Scope Probabilities and Varied-Horizon Forecasting
 
-allocation：
+`Condition Vector`为$[\mathbf u_{b,c};\boldsymbol\phi_\tau]$；`Allocation MLP`
+产生`Scope Probabilities`：
 
 $$
 \boldsymbol\Pi
@@ -1267,7 +1274,7 @@ $$
 最终prediction通过沿scope轴weighted contraction得到：
 
 $$
-\hat y_{b,c,\tau}
+\hat y_{b,\tau,c}
 =
 \sum_{s=1}^{S}
 \pi_{b,c,\tau,s}
@@ -1688,3 +1695,4 @@ Coverage boundary：
 | 2026-08-04 | Section 3 v0.7 author risk-definition refinement | 保留3.1 varied-horizon subject；3.2改为DLinear observation→horizon-specific structural limitation；3.3撤销region-wise MSE命名并正式定义future-region prediction risk $R_{o,b,s}$ | author review；Figure 3a同步为excess prediction risk；数据、统计值、claim boundary、Introduction与experiment cursor不变 |
 | 2026-08-04 | Section 3 v0.7 temporary freeze | 用户确认当前版本基本满意并暂时固定为论文可用Section 3 | body、terminology、equations、Figures 2--3 integration与captions冻结；后续明确矛盾 + author approval才解冻；writing cursor转向Section 4 pending direction |
 | 2026-08-05 | Section 4 v0.1 and Method Figure 4 | 六段Method computation flow、exact tensor/coordinate/scope/allocation/BSCA/complexity公式与四panel Figure 4 initial bundle完成 | author review；Introduction/Section 3与frozen implementation不变；main/ablation/transfer claims仍由Section 5 tables决定 |
+| 2026-08-07 | Section 4 v0.2 main-figure alignment | Figure 4 visual design暂时固定为单一ISCF inference schematic；正文、subsection names、terminology ledger、caption与editorial audit按History State、Scope Matrix、Region Descriptor、Scope-region State、Region-to-Step Forecast Generator、Scope-conditioned Forecast、Condition Vector、Allocation MLP、Scope Probabilities和Varied-Horizon Forecasting同步 | author text review；stable SVG/PDF/TIFF source待同步；Introduction/Section 3、implementation与claim boundary不变 |

@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | 写作流审阅Section 4 v0.1；实验流等待AMD/SimpleTM repaired formal queue完成 |
+| `active_question` | 写作流审阅Section 4 v0.2 main-figure alignment并等待Figure 4 stable vector source；实验流等待AMD/SimpleTM repaired formal queue完成 |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
-| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9与Section 3 v0.7 frozen；Section 4 v0.1 pending author review |
+| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9与Section 3 v0.7 frozen；Section 4 v0.2 pending author text review；Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | Main I/II=ETTh1, ETTh2, ETTm1, ETTm2, Weather, ECL, Solar, Exchange；ablation=original five |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
@@ -21,10 +21,10 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper consolidation；writing=Section 4 v0.1 pending author review；experiments=AMD/SimpleTM Step8 repaired remote active |
+| `current_11_step` | paper consolidation；writing=Section 4 v0.2 main-figure-aligned pending author review；experiments=AMD/SimpleTM Step8 repaired remote active |
 | `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；`ISCF-BSCA-MAIN-v1` 8 selected profiles reusable |
 | `latest_decision` | `AMD_SimpleTM_repaired_remote_active_no_babysitting` |
-| `writing_latest_decision` | `section4_v0_1_and_method_figure4_initial_draft_pending_author_review` |
+| `writing_latest_decision` | `section4_v0_2_main_figure_aligned_pending_author_text_review_and_vector_asset_sync` |
 | `next_required_action` | wait new-root completion -> 110/110 audit -> atomic Main I replacement |
 | `method_training_authorized` | AMD/SimpleTM seven-dataset scope=true；ISCF HPO/Main II/other baselines=false |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
@@ -377,6 +377,7 @@ Historical and control queue:
 
 | Date | Trigger | Paper Section | Change Type | Decision |
 | --- | --- | --- | --- | --- |
+| 2026-08-07 | 用户将Method主图visual design暂时固定并要求Section 4与主图统一 | Section 4 Method、Figure 4 caption、architecture/governance sync | main-figure terminology + computation-flow alignment | v0.2 pending author text review；两条ISCF inference paths与15个figure terms同步；BSCA继续train-only且不进入主图；stable vector source pending；Introduction/Section 3、implementation、experiment与claim boundary不变 |
 | 2026-08-05 | 用户要求推进核心Section 4初稿、主架构图、公式与完整章节 | Section 4 Method、Figure 4、architecture/governance sync | computation-flow draft + architecture schematic + claim audit | v0.1 pending author review；六段Method chain与exact objective/CHPC/complexity完成；Figure 4四格式initial bundle生成；Introduction/Section 3不变；new implementation/training/test false |
 | 2026-08-04 | 用户确认Section 3 v0.7基本满意并要求暂时固定为论文可用版本 | Section 3 status、architecture/governance sync | temporary manuscript freeze | body/terminology/equations/Figures 2--3 integration/captions frozen；明确矛盾 + author approval才解冻；next=Section 4 pending direction；experiment cursor不变 |
 | 2026-08-04 | 用户否决Section 3 v0.6的3.2句式与region-wise MSE命名，同时接受3.1修改 | Section 3.1--3.3、Figure 3a terminology、architecture/governance sync | selective rollback + risk definition + claim-boundary rewrite | v0.7 pending author review；3.1保留；3.2连接DLinear observation与formulation limitation；3.3定义future-region prediction risk；数据、数值、Introduction与experiment cursor不变 |

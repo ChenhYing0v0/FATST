@@ -879,14 +879,25 @@ Step4–6。candidate=`SC-ISCF-FRSC-v0`，narrative conditional pass；下一步
 和requested-H conditioning均为false。详细记录：
 `analysis/stage_c_post_d21_unconstrained_reset_20260720/iscf_frsc_step46_20260722/step4_6_design_and_remote_gate.md`。
 
+## Section 4 v0.2 Main-Figure Alignment (2026-08-07)
+
+| Field | Content |
+| --- | --- |
+| `current_step` | paper consolidation；Section 4 author review |
+| `design` | 按author-fixed Figure 4将Method正文统一为两条ISCF inference paths：Scope-conditioned Forecast generation与Scope Probability allocation，随后沿scope轴weighted contraction形成Varied-Horizon Forecasting trajectory |
+| `theory_check` | exact frozen forward不变；Region Descriptor使用$\overline{\boldsymbol\phi}_g^{(s)}$，Condition Vector使用未池化$\boldsymbol\phi_\tau$；Figure仅画三个representative scopes而formal tensor保留$S$ scopes |
+| `claim_boundary` | Figure 4只解释architecture；BSCA仍为train-only objective；不由该图推断accuracy、specialization、ablation effectiveness或transferability |
+| `artifacts` | manuscript=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`；paper architecture、mainline与Stage C ledger已同步；author-fixed stable SVG/PDF/TIFF source pending |
+| `decision` | `section4_v0_2_main_figure_aligned_pending_author_text_review_and_vector_asset_sync` |
+
 ## Current Cursor
 
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | paper consolidation；Introduction与Section 3 frozen；Section 4 v0.1 author review |
-| `active_question` | 如何进一步优化Method的subsection logic、公式解释与Figure 4 visual hierarchy，同时保持frozen implementation和claim boundary |
-| `active_candidates` | exact `ISCF-BSCA-v1` frozen ablation anchor；Figures 1--3 approved；Section 4 v0.1与Method Figure 4 initial draft pending author review |
+| `current_step` | paper consolidation；Introduction与Section 3 frozen；Section 4 v0.2 main-figure-aligned author review |
+| `active_question` | Section 4 v0.2的subsection logic、公式解释与author-fixed Figure 4 terminology是否可暂时冻结；Figure 4 stable vector source仍待同步 |
+| `active_candidates` | exact `ISCF-BSCA-v1` frozen ablation anchor；Figures 1--3 approved；Section 4 v0.2 pending author text review；Method Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
