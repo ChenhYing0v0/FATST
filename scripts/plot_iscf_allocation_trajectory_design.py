@@ -425,16 +425,6 @@ def draw_varied_horizon_output(
             zorder=2,
         )
     )
-    axis.text(
-        x0 + width - 2.0,
-        y0 + panel_height - 2.2,
-        "one trajectory  ·  nested prefixes",
-        ha="right",
-        va="top",
-        fontsize=5.1,
-        color=COLORS["muted"],
-        zorder=6,
-    )
     curve_y = trajectory_center + 0.20 * panel_height * fused
     curve_x = inner_x0 + inner_width * t
     axis.plot(

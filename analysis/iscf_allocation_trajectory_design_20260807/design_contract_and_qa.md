@@ -54,3 +54,4 @@ The displayed scope probabilities are schematic and are not learned routing stat
 - [x] No unrelated working-tree files are modified or staged.
 - [x] V2 uses a violet probability tensor distinct from the blue scope matrices and removes the redundant `Target-wise` title text.
 - [x] V2 places the trajectory, endpoint guides and all four nested-prefix bars within one framed output panel.
+- [x] The redundant upper-right `one trajectory · nested prefixes` annotation is removed; the trajectory and prefix bars carry the relation directly.
