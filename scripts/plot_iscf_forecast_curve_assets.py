@@ -26,9 +26,9 @@ HEIGHT_MM = 24.0
 LINE_WIDTH = 3.2
 
 COLORS = {
-    "scope_0": "#8AB9CA",
-    "scope_1": "#68A3B8",
-    "scope_2": "#4685A0",
+    "scope_0": "#1F2328",
+    "scope_1": "#1F2328",
+    "scope_2": "#1F2328",
     "fused": "#2D7068",
     "white": "#FFFFFF",
 }

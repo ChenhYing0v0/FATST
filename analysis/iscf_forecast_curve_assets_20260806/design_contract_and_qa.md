@@ -10,15 +10,15 @@
 
 ## Visual contract
 
-The set contains three scope-conditioned forecasts and one final fused forecast. All four assets use the same dimensions, vertical scale, line weight and cool palette as the current ISCF main-figure draft. The three scope curves combine shared trajectory structure with distinct fine-, mid- and broad-scale variations. The final curve is computed as a smooth target-dependent convex mixture of the three scope curves, matching the intended allocation semantics without depicting learned values.
+The set contains three scope-conditioned forecasts and one final fused forecast. All four assets use the same dimensions, vertical scale and line weight as the current ISCF main-figure draft. The three scope curves use one deep neutral ink so they remain legible beneath translucent scope or region overlays, while their shapes retain distinct fine-, mid- and broad-scale variations. The final curve remains dark teal to preserve the visual hierarchy of the fused output. It is computed as a smooth target-dependent convex mixture of the three scope curves, matching the intended allocation semantics without depicting learned values.
 
 Primary assets use a transparent background and contain no frame, axes, labels or legend. White-background PNG/PDF/TIFF variants are provided for direct review and manuscript assembly.
 
 ## Palette
 
-- $s_0$: `#8AB9CA`
-- $s_1$: `#68A3B8`
-- $s_2$: `#4685A0`
+- $s_0$: `#1F2328`
+- $s_1$: `#1F2328`
+- $s_2$: `#1F2328`
 - final fused forecast: `#2D7068`
 
 ## Claim boundary
