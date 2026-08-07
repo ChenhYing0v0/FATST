@@ -1,0 +1,59 @@
+{
+  "asset_set": "iscf_varied_horizon_registered_layers_v1",
+  "status": "author_composition_assets",
+  "backend": "Python/matplotlib",
+  "canvas_mm": [
+    112.0,
+    54.0
+  ],
+  "registered_coordinates": true,
+  "empirical_data_used": false,
+  "included_layers": [
+    "trajectory curve",
+    "rounded background",
+    "H1 prefix bar",
+    "H2 prefix bar",
+    "H3 prefix bar"
+  ],
+  "omitted_by_request": [
+    "title",
+    "horizon labels",
+    "endpoint markers",
+    "endpoint guides",
+    "H4 full-length bar"
+  ],
+  "curve_source": "analysis/iscf_allocation_trajectory_design_20260807/schematic_probability_and_trajectory.csv",
+  "overlay_preview": "analysis/iscf_varied_horizon_component_assets_20260807/component_overlay_preview.png",
+  "outputs": {
+    "trajectory_curve": {
+      "svg": "analysis/iscf_varied_horizon_component_assets_20260807/trajectory_curve_only.svg",
+      "pdf": "analysis/iscf_varied_horizon_component_assets_20260807/trajectory_curve_only.pdf",
+      "png": "analysis/iscf_varied_horizon_component_assets_20260807/trajectory_curve_only.png",
+      "tiff": "analysis/iscf_varied_horizon_component_assets_20260807/trajectory_curve_only.tiff"
+    },
+    "rounded_background": {
+      "svg": "analysis/iscf_varied_horizon_component_assets_20260807/trajectory_background_only.svg",
+      "pdf": "analysis/iscf_varied_horizon_component_assets_20260807/trajectory_background_only.pdf",
+      "png": "analysis/iscf_varied_horizon_component_assets_20260807/trajectory_background_only.png",
+      "tiff": "analysis/iscf_varied_horizon_component_assets_20260807/trajectory_background_only.tiff"
+    },
+    "prefix_bar_h1": {
+      "svg": "analysis/iscf_varied_horizon_component_assets_20260807/prefix_bar_h1_only.svg",
+      "pdf": "analysis/iscf_varied_horizon_component_assets_20260807/prefix_bar_h1_only.pdf",
+      "png": "analysis/iscf_varied_horizon_component_assets_20260807/prefix_bar_h1_only.png",
+      "tiff": "analysis/iscf_varied_horizon_component_assets_20260807/prefix_bar_h1_only.tiff"
+    },
+    "prefix_bar_h2": {
+      "svg": "analysis/iscf_varied_horizon_component_assets_20260807/prefix_bar_h2_only.svg",
+      "pdf": "analysis/iscf_varied_horizon_component_assets_20260807/prefix_bar_h2_only.pdf",
+      "png": "analysis/iscf_varied_horizon_component_assets_20260807/prefix_bar_h2_only.png",
+      "tiff": "analysis/iscf_varied_horizon_component_assets_20260807/prefix_bar_h2_only.tiff"
+    },
+    "prefix_bar_h3": {
+      "svg": "analysis/iscf_varied_horizon_component_assets_20260807/prefix_bar_h3_only.svg",
+      "pdf": "analysis/iscf_varied_horizon_component_assets_20260807/prefix_bar_h3_only.pdf",
+      "png": "analysis/iscf_varied_horizon_component_assets_20260807/prefix_bar_h3_only.png",
+      "tiff": "analysis/iscf_varied_horizon_component_assets_20260807/prefix_bar_h3_only.tiff"
+    }
+  }
+}
