@@ -8,6 +8,8 @@ Final resource gate=`14/14 checkpoints, test=0, 2× storage projection=4.470 GiB
 
 2026-08-07 completion审计发现首次queue只到3/14：SimpleTM upstream `setting`未实际包含native repeat index，导致每个H的`itr` checkpoint覆盖，collector在首个H96后以`expected 3 checkpoints, found 1`终止。Failure归因为`artifact_collection_defect`，三个partial units排除；不是性能或optimization结论。Recovery只追加`_{ii}`恢复artifact identity，保持official hyperparameters、RNG推进、validation selector与test边界。Current cursor=`Step 7 artifact adapter repair -> Step 8 bounded re-gate`；新root完成SimpleTM no-test smokes后重启110-repetition full matrix，仍禁止partial table replacement。Decision=`AMD_SimpleTM_recovery_gate_required`。
 
+Recovery commit=`b09c6e8`已通过14/14 combined smoke gate：14 unique hashes、test=0、failure tokens=0；新SimpleTM patch hash与7份completion一致。Repaired formal queue于10:27:10在new root后台启动，PID=`825838`，旧partial artifacts excluded。Current cursor=`Step 8 repaired remote active / no babysitting`；next=`new-root 110/110 artifact audit -> atomic Main I replacement`。Decision=`AMD_SimpleTM_repaired_queue_active`。
+
 ## QDF Main I L336 Full Reproduction Prelaunch (2026-08-06)
 
 Current experiment cursor=`Step 9 artifact audit complete -> Step 10 QDF baseline consolidation complete`。QDF official-code在L336下的8 datasets × four H × seed2023已32/32完成；160 required artifacts、32 unique checkpoint hashes、32 exact configs与numeric/log gates全部通过。七个dense datasets macro MSE/MAE=`0.287511/0.331426`，比ISCF-BSCA高`9.541%/7.508%`，QDF仅领先ISCF 1/56 cells。Main I已原子替换全部QDF dense cells并加入Exchange companion；ISCF完整14-model best/second保持27/56、19/56。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/qdf_main_i_l336_20260806/result_and_table_audit.md`。Decision=`QDF_L336_complete_Main_I_rebuilt_scope_closed`。

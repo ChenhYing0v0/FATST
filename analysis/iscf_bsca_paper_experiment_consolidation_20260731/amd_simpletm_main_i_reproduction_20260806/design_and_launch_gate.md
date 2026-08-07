@@ -133,3 +133,15 @@ Recovery adapter只在已格式化`setting`后追加`_{ii}`，使每个native re
 Recovery必须使用新output root，先重新验证exact commits/source hashes与7个SimpleTM H720 no-test resource smokes；AMD代码未改变，其已通过的7个AMD no-test smokes允许按hash/provenance复制到新root。GPU与storage gate再次通过后才重启完整14-unit formal queue。最终gate仍为AMD 28/28 + SimpleTM 82/82 raw rows、110 unique checkpoint hashes与56/56 cells；禁止复用首次失败queue中的partial metrics。
 
 `recovery_decision=artifact_defect_confirmed_patch_locally_verified_remote_relaunch_pending`。
+
+## 11. Recovery resource gate 与formal relaunch record
+
+- recovery code commit=`b09c6e8ac20348a8caa98d176d6c8c99b3046802`；
+- new root=`/home/yingch/exp_outputs/r-2026-fatst/amd_simpletm_main_i_7dataset_20260807_recovery`；旧root及三个partial units保持原样；
+- SimpleTM recovery smoke运行于`2026-08-07T10:24:48+08:00`至`10:25:55+08:00`，7/7完成；AMD 7个同contract no-test smokes按原hash/provenance复用；
+- combined gate=`14/14 units, 14 unique checkpoint hashes, test access=0, failure tokens=0`；SimpleTM七份completion均记录patched run hash `8b9a027...`；
+- gate后root size=`631,512,126 bytes`，quota=`178G/220G`，GPU0/1/2 launch前均仅18 MiB；
+- repaired formal queue启动时间=`2026-08-07T10:27:10+08:00`，PID=`825838`，first wave为SimpleTM ECL/Solar/Weather；
+- launch config SHA256=`4e3b6c686b96f6f1be17beba30c7c5182c21a15f922456e99c3ec1b33527c815`，adapter SHA256=`d327b99916aa07186758297e32e15edfa1224987787e528487f3b8933bbe9b0f`；initial failure tokens=0。
+
+`recovery_launch_decision=pass_remote_active_no_babysitting`。下一次用户通知完成后，必须只审计new root的14/14 units、AMD 28/28、SimpleTM 82/82、110 unique checkpoint hashes与56/56 aggregated cells；旧root任何metric均不得混入。
