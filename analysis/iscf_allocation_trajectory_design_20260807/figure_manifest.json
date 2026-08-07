@@ -1,0 +1,51 @@
+{
+  "figure_id": "iscf_allocation_trajectory_design_v1",
+  "status": "local_design_draft_for_author_review",
+  "backend": "Python/matplotlib",
+  "reuse_level": "style-only inheritance from the current author draft",
+  "empirical_data_used": false,
+  "method_change": false,
+  "visual_claim": "target-wise scope probabilities contract scope-conditioned forecasts into one trajectory whose prefixes answer varied-horizon requests",
+  "claim_boundary": "all probabilities and trajectories are deterministic schematic glyphs rather than learned or empirical values",
+  "palette": {
+    "ink": "#25282D",
+    "muted": "#6D747C",
+    "guide": "#D7DDE1",
+    "allocation": "#7773A8",
+    "allocation_light": "#EFEDF7",
+    "scope_0": "#8AB9CA",
+    "scope_1": "#68A3B8",
+    "scope_2": "#4685A0",
+    "scope_0_light": "#E8F2F5",
+    "scope_1_light": "#DCECEF",
+    "scope_2_light": "#D2E4E9",
+    "coordinate": "#C96C2B",
+    "forecast": "#2D7068",
+    "forecast_light": "#DCEDE9",
+    "white": "#FFFFFF"
+  },
+  "source_values": "analysis/iscf_allocation_trajectory_design_20260807/schematic_probability_and_trajectory.csv",
+  "outputs": {
+    "extension": {
+      "svg": "analysis/iscf_allocation_trajectory_design_20260807/figure_iscf_allocation_trajectory_extension_v1.svg",
+      "pdf": "analysis/iscf_allocation_trajectory_design_20260807/figure_iscf_allocation_trajectory_extension_v1.pdf",
+      "png": "analysis/iscf_allocation_trajectory_design_20260807/figure_iscf_allocation_trajectory_extension_v1.png",
+      "tiff": "analysis/iscf_allocation_trajectory_design_20260807/figure_iscf_allocation_trajectory_extension_v1.tiff"
+    },
+    "scope_probability": {
+      "svg": "analysis/iscf_allocation_trajectory_design_20260807/asset_scope_probability_field_v1.svg",
+      "pdf": "analysis/iscf_allocation_trajectory_design_20260807/asset_scope_probability_field_v1.pdf",
+      "png": "analysis/iscf_allocation_trajectory_design_20260807/asset_scope_probability_field_v1.png",
+      "tiff": "analysis/iscf_allocation_trajectory_design_20260807/asset_scope_probability_field_v1.tiff"
+    },
+    "varied_horizon_output": {
+      "svg": "analysis/iscf_allocation_trajectory_design_20260807/asset_varied_horizon_trajectory_v1.svg",
+      "pdf": "analysis/iscf_allocation_trajectory_design_20260807/asset_varied_horizon_trajectory_v1.pdf",
+      "png": "analysis/iscf_allocation_trajectory_design_20260807/asset_varied_horizon_trajectory_v1.png",
+      "tiff": "analysis/iscf_allocation_trajectory_design_20260807/asset_varied_horizon_trajectory_v1.tiff"
+    },
+    "integrated_mockup": {
+      "png": "analysis/iscf_allocation_trajectory_design_20260807/figure_iscf_full_layout_mockup_v1.png"
+    }
+  }
+}
