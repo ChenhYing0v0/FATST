@@ -12,7 +12,7 @@
 
 ## Evidence hierarchy
 
-1. **Scope-probability field:** three scope-colored rows extend over the future axis; color intensity encodes target-wise probability. One highlighted future step exposes its normalized probability vector.
+1. **Scope-probability field:** three violet probability rows extend over a compact future-step axis, while scope-colored row labels preserve correspondence with $s_0,s_1,s_2$. Color intensity encodes probability, and one highlighted future step exposes its normalized probability vector.
 2. **Target-wise weighted fusion:** the three forecast slices and the probability vector converge at a compact scope-axis contraction operator.
 3. **One prediction trajectory:** fusion produces one trajectory defined over the maximum future domain.
 4. **Varied-horizon forecasting:** four start-aligned cropped views terminate at different request endpoints, making the nested-prefix relation explicit.
@@ -24,6 +24,13 @@
 - Future-step selection and request endpoints use the existing orange accent.
 - The final trajectory uses dark teal with a restrained pale-teal support fill.
 - Scope indices are written as $s_0,s_1,s_2$; horizon endpoints are written as $H_1,H_2,H_3,H_4$ so the two concepts cannot be visually conflated.
+
+## V2 revision
+
+- The long blue probability field is replaced by a compact violet tensor. Violet denotes the allocation path, while the blue scope family is retained only in the $s_0,s_1,s_2$ row labels and the forecast slices.
+- The component title is shortened from **Target-wise Scope Probability** to **Scope Probability**. Step dependence remains explicit through the future-step cue $\tau$, the tensor shape $T\times3$ and the selected vector $\boldsymbol\pi_{b,c,\tau}$.
+- The trajectory and horizon-prefix views are merged into one **Varied-horizon Prediction** panel. Four start-aligned prefix bars and their endpoint guides sit inside the trajectory frame instead of forming a second external section.
+- The full schematic probability sequence is aggregated into ten equal-coverage display columns rather than sampled or truncated. This is a visual compression only; every displayed column remains normalized across scopes.
 
 ## Claim boundary
 
@@ -45,3 +52,5 @@ The displayed scope probabilities are schematic and are not learned routing stat
 - [x] SVG text remains editable and vector paths remain present in all three SVG outputs.
 - [x] Integrated and standalone renders are visually inspected at final size; endpoint labels are not clipped.
 - [x] No unrelated working-tree files are modified or staged.
+- [x] V2 uses a violet probability tensor distinct from the blue scope matrices and removes the redundant `Target-wise` title text.
+- [x] V2 places the trajectory, endpoint guides and all four nested-prefix bars within one framed output panel.

@@ -181,7 +181,7 @@ def draw_forecast_slice(
 
 def probability_bins(
     weights: np.ndarray,
-    columns: int = 18,
+    columns: int = 10,
 ) -> np.ndarray:
     """Average the full schematic probability field into display columns."""
     indices = np.array_split(np.arange(weights.shape[1]), columns)
@@ -196,7 +196,7 @@ def draw_probability_field(
     width: float,
     height: float,
     weights: np.ndarray,
-    selected_column: int = 11,
+    selected_column: int = 6,
     title: bool = True,
     expose_vector: bool = True,
 ) -> tuple[float, float]:
@@ -220,7 +220,7 @@ def draw_probability_field(
                     ),
                     cell_width,
                     cell_height,
-                    facecolor=blend_with_white(SCOPE_COLORS[row], strength),
+                    facecolor=blend_with_white(COLORS["allocation"], strength),
                     edgecolor=COLORS["white"],
                     linewidth=0.55,
                     zorder=3,
@@ -264,7 +264,7 @@ def draw_probability_field(
         axis.text(
             x0 + width / 2,
             y0 + height + 3.4,
-            "Target-wise Scope Probability",
+            "Scope Probability",
             ha="center",
             va="bottom",
             fontsize=7.3,
@@ -274,7 +274,7 @@ def draw_probability_field(
         axis.text(
             x0 + width / 2,
             y0 - 2.8,
-            r"$\boldsymbol{\Pi}_{b,c}\in\mathbb{R}^{T\times3}$",
+            r"future step $\tau$  ·  $\boldsymbol{\Pi}_{b,c}\in\mathbb{R}^{T\times3}$",
             ha="center",
             va="top",
             fontsize=5.6,
@@ -396,13 +396,16 @@ def draw_varied_horizon_output(
     fused: np.ndarray,
     title: bool = True,
 ) -> None:
-    """Draw one full trajectory and four exact nested-prefix views."""
-    trajectory_center = y0 + 30.0
+    """Draw one trajectory and four nested-prefix bars in one panel."""
+    panel_height = trajectory_height
+    inner_x0 = x0 + 2.0
+    inner_width = width - 4.0
+    trajectory_center = y0 + 0.64 * panel_height
     if title:
         axis.text(
             x0 + width / 2,
-            trajectory_center + trajectory_height / 2 + 3.2,
-            "One Prediction Trajectory",
+            y0 + panel_height + 3.2,
+            "Varied-horizon Prediction",
             ha="center",
             va="bottom",
             fontsize=7.3,
@@ -411,9 +414,9 @@ def draw_varied_horizon_output(
         )
     axis.add_patch(
         FancyBboxPatch(
-            (x0, trajectory_center - trajectory_height / 2),
+            (x0, y0),
             width,
-            trajectory_height,
+            panel_height,
             boxstyle="round,pad=0,rounding_size=1.2",
             facecolor=COLORS["forecast_light"],
             edgecolor=COLORS["forecast"],
@@ -422,8 +425,18 @@ def draw_varied_horizon_output(
             zorder=2,
         )
     )
-    curve_y = trajectory_center + 0.39 * trajectory_height * fused
-    curve_x = x0 + width * t
+    axis.text(
+        x0 + width - 2.0,
+        y0 + panel_height - 2.2,
+        "one trajectory  ·  nested prefixes",
+        ha="right",
+        va="top",
+        fontsize=5.1,
+        color=COLORS["muted"],
+        zorder=6,
+    )
+    curve_y = trajectory_center + 0.20 * panel_height * fused
+    curve_x = inner_x0 + inner_width * t
     axis.plot(
         curve_x,
         curve_y,
@@ -434,47 +447,31 @@ def draw_varied_horizon_output(
 
     endpoints = (0.24, 0.46, 0.69, 1.0)
     labels = (r"$H_1$", r"$H_2$", r"$H_3$", r"$H_4=T$")
-    rows_y = (y0 + 13.8, y0 + 9.9, y0 + 6.0, y0 + 2.1)
-    axis.text(
-        x0,
-        y0 + 17.8,
-        "Varied-horizon Forecasts",
-        ha="left",
-        va="bottom",
-        fontsize=6.5,
-        fontweight="bold",
-        color=COLORS["forecast"],
-    )
-    axis.text(
-        x0 + width,
-        y0 + 17.8,
-        "nested prefixes of the same trajectory",
-        ha="right",
-        va="bottom",
-        fontsize=5.1,
-        color=COLORS["muted"],
-    )
+    rows_y = tuple(y0 + 2.8 + row * 2.15 for row in range(4))
 
     for fraction, label, row_y in zip(endpoints, labels, rows_y):
-        active = t <= fraction + 1e-12
-        prefix_t = t[active]
-        prefix = fused[active]
-        prefix_x = x0 + width * prefix_t
-        axis.plot(
-            prefix_x,
-            row_y + 1.35 * prefix,
-            color=COLORS["forecast"],
-            linewidth=1.35,
-            zorder=5,
+        endpoint_x = inner_x0 + inner_width * fraction
+        axis.add_patch(
+            FancyBboxPatch(
+                (inner_x0, row_y - 0.52),
+                endpoint_x - inner_x0,
+                1.04,
+                boxstyle="round,pad=0,rounding_size=0.5",
+                facecolor=COLORS["forecast"],
+                edgecolor="none",
+                alpha=0.20 + 0.07 * labels.index(label),
+                zorder=3,
+            )
         )
-        endpoint_x = x0 + width * fraction
         endpoint_index = int(np.argmin(np.abs(t - fraction)))
-        endpoint_y = trajectory_center + 0.39 * trajectory_height * fused[endpoint_index]
+        endpoint_y = trajectory_center + 0.20 * panel_height * fused[endpoint_index]
         axis.plot(
             [endpoint_x, endpoint_x],
-            [row_y - 1.8, row_y + 1.8],
+            [row_y - 0.9, endpoint_y - 1.0],
             color=COLORS["coordinate"],
-            linewidth=1.0,
+            linewidth=0.75,
+            linestyle=(0, (2.0, 2.0)),
+            alpha=0.65,
             zorder=6,
         )
         axis.scatter(
@@ -488,7 +485,7 @@ def draw_varied_horizon_output(
         )
         is_last = fraction >= 0.99
         label_x = endpoint_x - 1.3 if is_last else endpoint_x + 1.3
-        label_y = row_y + 1.8 if is_last else row_y
+        label_y = row_y + 0.7 if is_last else row_y
         label_alignment = "right" if fraction >= 0.99 else "left"
         axis.text(
             label_x,
@@ -543,13 +540,13 @@ def build_extension_figure(curves: dict[str, np.ndarray]) -> Figure:
     )
     probability_out = draw_probability_field(
         axis,
-        x0=8.0,
-        y0=8.0,
-        width=58.0,
-        height=17.0,
+        x0=10.0,
+        y0=10.0,
+        width=36.0,
+        height=14.0,
         weights=weights,
     )
-    fusion_center = (91.0, 46.0)
+    fusion_center = (82.0, 46.0)
     for row, y in enumerate(row_centers):
         arrow(
             axis,
@@ -571,17 +568,17 @@ def build_extension_figure(curves: dict[str, np.ndarray]) -> Figure:
     arrow(
         axis,
         (fusion_center[0] + 5.0, fusion_center[1]),
-        (104.0, fusion_center[1]),
+        (95.0, fusion_center[1]),
         color=COLORS["forecast"],
         linewidth=1.2,
         dashed=False,
     )
     draw_varied_horizon_output(
         axis,
-        x0=105.0,
-        y0=5.0,
-        width=73.0,
-        trajectory_height=16.0,
+        x0=96.0,
+        y0=12.0,
+        width=82.0,
+        trajectory_height=44.0,
         t=curves["t"],
         fused=curves["fused"],
     )
@@ -600,20 +597,20 @@ def build_extension_figure(curves: dict[str, np.ndarray]) -> Figure:
 def build_probability_asset(curves: dict[str, np.ndarray]) -> Figure:
     """Build one transparent-ready standalone probability component."""
     configure_style()
-    figure = plt.figure(figsize=(104.0 / 25.4, 39.0 / 25.4), facecolor="none")
+    figure = plt.figure(figsize=(78.0 / 25.4, 34.0 / 25.4), facecolor="none")
     axis = figure.add_axes([0.0, 0.0, 1.0, 1.0])
-    axis.set_xlim(0.0, 104.0)
-    axis.set_ylim(0.0, 39.0)
+    axis.set_xlim(0.0, 78.0)
+    axis.set_ylim(0.0, 34.0)
     axis.set_axis_off()
     weights = np.vstack(
         (curves["weight_0"], curves["weight_1"], curves["weight_2"])
     )
     draw_probability_field(
         axis,
-        x0=10.0,
-        y0=9.0,
-        width=70.0,
-        height=19.0,
+        x0=8.0,
+        y0=8.0,
+        width=42.0,
+        height=14.0,
         weights=weights,
     )
     return figure
@@ -622,17 +619,17 @@ def build_probability_asset(curves: dict[str, np.ndarray]) -> Figure:
 def build_trajectory_asset(curves: dict[str, np.ndarray]) -> Figure:
     """Build one transparent-ready varied-horizon output component."""
     configure_style()
-    figure = plt.figure(figsize=(112.0 / 25.4, 64.0 / 25.4), facecolor="none")
+    figure = plt.figure(figsize=(112.0 / 25.4, 54.0 / 25.4), facecolor="none")
     axis = figure.add_axes([0.0, 0.0, 1.0, 1.0])
     axis.set_xlim(0.0, 112.0)
-    axis.set_ylim(0.0, 64.0)
+    axis.set_ylim(0.0, 54.0)
     axis.set_axis_off()
     draw_varied_horizon_output(
         axis,
         x0=6.0,
-        y0=5.0,
+        y0=6.0,
         width=100.0,
-        trajectory_height=18.0,
+        trajectory_height=38.0,
         t=curves["t"],
         fused=curves["fused"],
     )
@@ -665,12 +662,12 @@ def build_integrated_mockup(
     probability_out = draw_probability_field(
         axis,
         x0=108.0,
-        y0=7.5,
-        width=58.0,
-        height=17.0,
+        y0=8.0,
+        width=36.0,
+        height=14.0,
         weights=weights,
     )
-    fusion_center = (207.0, 49.0)
+    fusion_center = (200.0, 49.0)
     forecast_rows = (74.1, 61.7, 49.2)
     for row, y in enumerate(forecast_rows):
         arrow(
@@ -693,17 +690,17 @@ def build_integrated_mockup(
     arrow(
         axis,
         (fusion_center[0] + 5.0, fusion_center[1]),
-        (218.0, fusion_center[1]),
+        (208.0, fusion_center[1]),
         color=COLORS["forecast"],
         linewidth=1.2,
         dashed=False,
     )
     draw_varied_horizon_output(
         axis,
-        x0=220.0,
-        y0=5.0,
-        width=62.0,
-        trajectory_height=15.0,
+        x0=209.0,
+        y0=18.0,
+        width=73.0,
+        trajectory_height=40.0,
         t=curves["t"],
         fused=curves["fused"],
     )
@@ -805,24 +802,24 @@ def main() -> None:
         "extension": save_bundle(
             build_extension_figure(curves),
             args.output_dir,
-            "figure_iscf_allocation_trajectory_extension_v1",
+            "figure_iscf_allocation_trajectory_extension_v2",
         ),
         "scope_probability": save_bundle(
             build_probability_asset(curves),
             args.output_dir,
-            "asset_scope_probability_field_v1",
+            "asset_scope_probability_field_v2",
             transparent=True,
         ),
         "varied_horizon_output": save_bundle(
             build_trajectory_asset(curves),
             args.output_dir,
-            "asset_varied_horizon_trajectory_v1",
+            "asset_varied_horizon_trajectory_v2",
             transparent=True,
         ),
     }
     if args.base_image is not None:
         mockup = build_integrated_mockup(args.base_image, curves)
-        preview = args.output_dir / "figure_iscf_full_layout_mockup_v1.png"
+        preview = args.output_dir / "figure_iscf_full_layout_mockup_v2.png"
         mockup.savefig(preview, dpi=300, facecolor=COLORS["white"])
         plt.close(mockup)
         outputs["integrated_mockup"] = {"png": str(preview)}
@@ -830,7 +827,7 @@ def main() -> None:
     source_csv = args.output_dir / "schematic_probability_and_trajectory.csv"
     write_source_csv(source_csv, curves)
     manifest = {
-        "figure_id": "iscf_allocation_trajectory_design_v1",
+        "figure_id": "iscf_allocation_trajectory_design_v2",
         "status": "local_design_draft_for_author_review",
         "backend": "Python/matplotlib",
         "reuse_level": "style-only inheritance from the current author draft",

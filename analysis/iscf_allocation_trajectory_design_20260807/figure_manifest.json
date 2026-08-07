@@ -1,5 +1,5 @@
 {
-  "figure_id": "iscf_allocation_trajectory_design_v1",
+  "figure_id": "iscf_allocation_trajectory_design_v2",
   "status": "local_design_draft_for_author_review",
   "backend": "Python/matplotlib",
   "reuse_level": "style-only inheritance from the current author draft",
@@ -27,25 +27,25 @@
   "source_values": "analysis/iscf_allocation_trajectory_design_20260807/schematic_probability_and_trajectory.csv",
   "outputs": {
     "extension": {
-      "svg": "analysis/iscf_allocation_trajectory_design_20260807/figure_iscf_allocation_trajectory_extension_v1.svg",
-      "pdf": "analysis/iscf_allocation_trajectory_design_20260807/figure_iscf_allocation_trajectory_extension_v1.pdf",
-      "png": "analysis/iscf_allocation_trajectory_design_20260807/figure_iscf_allocation_trajectory_extension_v1.png",
-      "tiff": "analysis/iscf_allocation_trajectory_design_20260807/figure_iscf_allocation_trajectory_extension_v1.tiff"
+      "svg": "analysis/iscf_allocation_trajectory_design_20260807/figure_iscf_allocation_trajectory_extension_v2.svg",
+      "pdf": "analysis/iscf_allocation_trajectory_design_20260807/figure_iscf_allocation_trajectory_extension_v2.pdf",
+      "png": "analysis/iscf_allocation_trajectory_design_20260807/figure_iscf_allocation_trajectory_extension_v2.png",
+      "tiff": "analysis/iscf_allocation_trajectory_design_20260807/figure_iscf_allocation_trajectory_extension_v2.tiff"
     },
     "scope_probability": {
-      "svg": "analysis/iscf_allocation_trajectory_design_20260807/asset_scope_probability_field_v1.svg",
-      "pdf": "analysis/iscf_allocation_trajectory_design_20260807/asset_scope_probability_field_v1.pdf",
-      "png": "analysis/iscf_allocation_trajectory_design_20260807/asset_scope_probability_field_v1.png",
-      "tiff": "analysis/iscf_allocation_trajectory_design_20260807/asset_scope_probability_field_v1.tiff"
+      "svg": "analysis/iscf_allocation_trajectory_design_20260807/asset_scope_probability_field_v2.svg",
+      "pdf": "analysis/iscf_allocation_trajectory_design_20260807/asset_scope_probability_field_v2.pdf",
+      "png": "analysis/iscf_allocation_trajectory_design_20260807/asset_scope_probability_field_v2.png",
+      "tiff": "analysis/iscf_allocation_trajectory_design_20260807/asset_scope_probability_field_v2.tiff"
     },
     "varied_horizon_output": {
-      "svg": "analysis/iscf_allocation_trajectory_design_20260807/asset_varied_horizon_trajectory_v1.svg",
-      "pdf": "analysis/iscf_allocation_trajectory_design_20260807/asset_varied_horizon_trajectory_v1.pdf",
-      "png": "analysis/iscf_allocation_trajectory_design_20260807/asset_varied_horizon_trajectory_v1.png",
-      "tiff": "analysis/iscf_allocation_trajectory_design_20260807/asset_varied_horizon_trajectory_v1.tiff"
+      "svg": "analysis/iscf_allocation_trajectory_design_20260807/asset_varied_horizon_trajectory_v2.svg",
+      "pdf": "analysis/iscf_allocation_trajectory_design_20260807/asset_varied_horizon_trajectory_v2.pdf",
+      "png": "analysis/iscf_allocation_trajectory_design_20260807/asset_varied_horizon_trajectory_v2.png",
+      "tiff": "analysis/iscf_allocation_trajectory_design_20260807/asset_varied_horizon_trajectory_v2.tiff"
     },
     "integrated_mockup": {
-      "png": "analysis/iscf_allocation_trajectory_design_20260807/figure_iscf_full_layout_mockup_v1.png"
+      "png": "analysis/iscf_allocation_trajectory_design_20260807/figure_iscf_full_layout_mockup_v2.png"
     }
   }
 }
