@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | 写作流审阅Section 4 v0.1；实验流执行AMD/SimpleTM official Main I evidence |
+| `active_question` | 写作流审阅Section 4 v0.1；实验流修复AMD/SimpleTM artifact collection并relaunch |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9与Section 3 v0.7 frozen；Section 4 v0.1 pending author review |
@@ -21,11 +21,11 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper consolidation；writing=Section 4 v0.1 pending author review；experiments=AMD/SimpleTM Step8 remote active |
+| `current_11_step` | paper consolidation；writing=Section 4 v0.1 pending author review；experiments=AMD/SimpleTM Step7 recovery gate |
 | `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；`ISCF-BSCA-MAIN-v1` 8 selected profiles reusable |
-| `latest_decision` | `AMD_SimpleTM_remote_active_no_babysitting` |
+| `latest_decision` | `AMD_SimpleTM_first_queue_artifact_invalid_recovery_required` |
 | `writing_latest_decision` | `section4_v0_1_and_method_figure4_initial_draft_pending_author_review` |
-| `next_required_action` | wait user completion notice -> 110/110 audit -> atomic Main I rebuild |
+| `next_required_action` | verify repeat-identity patch -> remote re-gate -> relaunch complete queue |
 | `method_training_authorized` | AMD/SimpleTM seven-dataset scope=true；ISCF HPO/Main II/other baselines=false |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
@@ -33,16 +33,16 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | HPO frozen；AMD/SimpleTM 14/14 resource gate pass，Step8 formal remote active |
+| `current_step` | HPO frozen；AMD/SimpleTM first formal queue invalid at 3/14，Step7 artifact recovery |
 | `problem` | Introduction的horizon-specific superiority、component effectiveness与decoder portability claims尚缺完整paper-facing evidence |
 | `existence_evidence` | AMD/SimpleTM均有7-dataset official scripts；exact commits/source hashes和56-cell/110-checkpoint contract已冻结 |
 | `idea` | tuned main candidate + eight-dataset SOTA table + matched unified benchmark + exact five-dataset ablation/end-to-end transfer |
 | `theory_check` | architecture与HPO身份分离；validation选trial checkpoint；official-test four-H aggregate选dataset profile；published/native/matched角色分开；H720-only与frozen replacement排除 |
 | `design` | AMD L512/seed2024/28 runs；SimpleTM L96/fix_seed2025/native itr/82 runs；epoch test access removed；14 no-test smokes后formal |
 | `narrative_gate` | architecture family冻结；SOTA wording由完整test-tuned result决定并披露test-informed边界 |
-| `effectiveness_gate` | pending 110/110 raw rows and 56/56 aggregated cells；partial rows禁止进入Main I |
+| `effectiveness_gate` | pending repaired 110/110 raw rows and 56/56 aggregated cells；old/partial rows禁止进入Main I |
 | `artifacts` | prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/amd_simpletm_main_i_reproduction_20260806/design_and_launch_gate.md` |
-| `decision` | formal PID=4100426 active；no babysitting；110/110前不替换published cells或扩张其他baseline |
+| `decision` | PID=4100426 stopped after upstream setting collision；artifact_collection_defect；re-gate before relaunch |
 
 ## Exact Ablation Anchor Contract
 

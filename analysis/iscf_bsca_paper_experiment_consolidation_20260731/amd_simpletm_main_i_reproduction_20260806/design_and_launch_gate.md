@@ -121,3 +121,15 @@ Remote GitHub HTTPS checkout在训练前连续两次超时。允许的source-tra
 - initial health：driver存活、failure tokens=0；GPU0 ECL约8.99 GiB，GPU1/2仍有充分余量。
 
 `launch_decision=pass_remote_active_no_babysitting`。按用户要求，启动确认后停止驻守；下一次只在用户通知remote完成后执行110/110 artifact/hash audit、聚合56/56 cells并原子重建Main I。
+
+## 10. 首次formal queue失败审计与recovery gate（2026-08-07）
+
+用户通知完成后，remote只存在首批SimpleTM ECL/Solar/Weather三个incomplete units，`runs/`下没有`complete.json`或`metrics.csv`。三份log均显示每个H96 command产生了完整native `itr` test metrics，但artifact collector报`expected 3 checkpoints, found 1`并使dynamic queue停止于3/14。
+
+根因是upstream `run.py`的training `setting` format string只有17个占位符，却传入18个参数；最后的repeat index `ii`被Python `str.format`静默忽略，因此native repetitions共享同一checkpoint路径并覆盖。该问题属于`artifact_collection_defect`，不是SimpleTM效果、optimization或numeric failure。被覆盖的早期checkpoint无法从现有目录恢复，三个partial units及原`formal_driver.log`永久排除于paper table，但保留作failure provenance。
+
+Recovery adapter只在已格式化`setting`后追加`_{ii}`，使每个native repetition具有独立目录。它不改变official command、hyperparameters、seed初始化与跨`itr` RNG推进、objective、validation early stopping或formal test调用。新patched `run.py` SHA256=`8b9a027247de6626146f52be3306a3d0502ca607b6595bfcc39e66a6a2baab11`；其余source与runtime patch hashes不变。
+
+Recovery必须使用新output root，先重新验证exact commits/source hashes与7个SimpleTM H720 no-test resource smokes；AMD代码未改变，其已通过的7个AMD no-test smokes允许按hash/provenance复制到新root。GPU与storage gate再次通过后才重启完整14-unit formal queue。最终gate仍为AMD 28/28 + SimpleTM 82/82 raw rows、110 unique checkpoint hashes与56/56 cells；禁止复用首次失败queue中的partial metrics。
+
+`recovery_decision=artifact_defect_confirmed_patch_locally_verified_remote_relaunch_pending`。

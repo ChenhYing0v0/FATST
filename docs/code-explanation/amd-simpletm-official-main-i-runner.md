@@ -36,18 +36,19 @@ resource-smoke 的副本只把 horizon缩为720、epoch缩为1、train/validatio
 
 Runner读取 official shell script，先合并 shell line continuation，再解析四条 `python -u run.py` command。所有 released hyperparameters与 native `itr` 次数保留。
 
-运行时只做两类 protocol adapter：
+运行时只做 protocol 与 artifact adapters：
 
 1. 从 `train()` 删除 epoch-level test loader/evaluation，checkpoint仍只由 validation early stopping选择；
 2. formal mode在每个 selected checkpoint后执行一次 `test()`；resource-smoke通过环境 gate跳过 test；
 3. CLI末尾追加 `--num_workers 0`，避免 remote file-descriptor failure，不改变数据样本、objective或selector。
 4. 将upstream `utils/tools.py`中的`np.Inf`替换为NumPy 2等价别名`np.inf`；该compatibility patch发生在early-stopping初值，不改变训练语义。
+5. upstream training `setting` 的format string遗漏最后一个`ii`占位符，使同一command的native `itr` checkpoints覆盖到同一路径；runner在已格式化的`setting`末尾追加`_{ii}`，只恢复repeat artifact identity，不改变seed推进、训练、validation selection或test数值。
 
 对应张量主路径为：
 
 `batch_x [B,L,C] -> wavelet/GeomAttention encoder -> output [B,H,C] -> MSE + l1_weight * attention_regularizer`。
 
-每条 command的 `result_long_term_forecast.txt` 增量段必须产生与 `itr` 相同数量的 MSE/MAE rows；checkpoint目录的末尾 repeat index与 row一一对应。
+每条 command的 `result_long_term_forecast.txt` 增量段必须产生与 `itr` 相同数量的 MSE/MAE rows；修复后checkpoint目录末尾的repeat index与 row一一对应。若只有metrics而checkpoint被覆盖，整个dataset unit必须失败，不能用其partial results构表。
 
 ## 5. Artifact 与统计定义
 

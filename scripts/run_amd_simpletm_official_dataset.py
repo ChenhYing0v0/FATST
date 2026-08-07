@@ -110,6 +110,21 @@ def patch_simpletm(source: Path) -> dict[str, str]:
         ),
         "SimpleTM add smoke-only final-test gate",
     )
+    run_text = replace_once(
+        run_text,
+        (
+            "                args.use_norm,\n"
+            "                ii)\n\n"
+            "            exp = Exp(args)  # set experiments\n"
+        ),
+        (
+            "                args.use_norm,\n"
+            "                ii)\n"
+            "            setting = f\"{setting}_{ii}\"\n\n"
+            "            exp = Exp(args)  # set experiments\n"
+        ),
+        "SimpleTM preserve each native itr checkpoint",
+    )
     run_path.write_text(run_text, encoding="utf-8")
 
     tools_text = tools_path.read_text(encoding="utf-8")

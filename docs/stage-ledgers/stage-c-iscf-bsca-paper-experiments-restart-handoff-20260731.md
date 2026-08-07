@@ -44,7 +44,7 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | AMD/SimpleTM Main I formal queue active；56 cells / 110 native repetitions |
+| `active_experiment_step` | AMD/SimpleTM Main I artifact-recovery gate；first queue invalid at 3/14 |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
@@ -52,7 +52,7 @@ paper candidate与claim boundary，但互不替代。
 | `remote_training_authorized` | true only for AMD/SimpleTM seven-dataset official reproduction after resource gate |
 | `test_tuned_hpo_authorized` | false；HPO stopped by user and H4O closed |
 | `formal_test_authorized` | true only for AMD 28 + SimpleTM 82 selected/official-last checkpoints；Main II/other baselines/HPO=false |
-| `next_action` | no babysitting；wait for user completion notice -> 110/110 artifact/hash audit -> atomic Main I rebuild |
+| `next_action` | repair SimpleTM repeat checkpoint identity -> bounded remote re-gate -> relaunch 110 repetitions |
 | `conditional_next` | AMD/SimpleTM 110/110 audit后原子替换两列；partial replacement禁止；其他baseline仍需授权 |
 
 H4K train/validation与formal test均已完成，但terminal effectiveness gate失败。H4L只扩大ETTm2/Weather
@@ -82,6 +82,8 @@ H4N formal test于2026-08-06 14:22:25完成：40/40 checkpoints、160/160 rows�
 2026-08-06用户授权 AMD 与 SimpleTM 的 Main I official-source reproduction。Matrix固定为7 dense datasets × four H × two baselines=56 table cells；AMD official scripts为`L512/seed2024/1 repeat`共28 checkpoints，SimpleTM为`L96/fix_seed2025/native itr`共82 checkpoints。SimpleTM upstream每epoch读取test，本轮adapter只移除该pass，保留validation early stopping并在每个selected checkpoint后一次formal test；`num_workers=0`只作runtime safety。AMD commit=`000d377...`且MIT；SimpleTM commit=`3c77d82...`但无upstream license，故不vendoring，只在repo-external exact checkout研究执行。先通过14个H720 one-epoch/test=0 smokes与35 GiB storage gate，再后台启动formal queue；110/110前不得替换published cells。Canonical prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/amd_simpletm_main_i_reproduction_20260806/design_and_launch_gate.md`。
 
 AMD/SimpleTM final resource gate于22:13:19通过：14/14 units、14 checkpoints、formal test=0；checkpoint 2× safety projection=4.470 GiB <35 GiB。Remote GitHub HTTPS两次超时后采用exact audited checkout rsync fallback，remote commit/clean/source hashes重新核验。Formal queue于22:14:19后台启动，PID=`4100426`，experiment commit=`014b068`；first wave为SimpleTM ECL/Solar/Weather，initial failure tokens=0。按用户要求不驻守，完成通知前禁止partial results读取或table replacement。
+
+2026-08-07完成审计确认上述queue未完成：只创建3个SimpleTM incomplete units且在H96后终止。Upstream `setting` format遗漏repeat index `ii`，native `itr`的metrics虽产生但selected checkpoints覆盖；collector以`expected 3 checkpoints, found 1`拒绝，行为正确。Failure=`artifact_collection_defect`，不是method/optimization failure。Recovery adapter只追加checkpoint目录的repeat identity，保持official training与test协议不变；旧partial units保留但excluded。新root需重做7个SimpleTM no-test smokes并通过resource gate后重启全部110 repetitions；110/110前禁止替换CMoS/TimeBase。
 
 ## 2. Paper claims to be discharged
 
