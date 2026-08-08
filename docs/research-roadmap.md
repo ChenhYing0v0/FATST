@@ -913,14 +913,25 @@ Step4–6。candidate=`SC-ISCF-FRSC-v0`，narrative conditional pass；下一步
 | `artifacts` | manuscript=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`；paper architecture、mainline与Stage C ledger同步；stable Figure 4 vector source pending |
 | `decision` | `section4_v0_3_author_feedback_integrated_through_4_3_pending_continued_review` |
 
+## Section 4 v0.4 Path and Allocation Refinement (2026-08-08)
+
+| Field | Content |
+| --- | --- |
+| `current_step` | paper consolidation；Section 4 author review through 4.6 |
+| `design` | 固定`Scope Forecasting Path`与`Target-Adaptive Allocation Path`；精简Figure 4 caption；将4.3重构为single unified forecast field；将4.4重构为history-and-coordinate-conditioned target-wise sharing-granularity allocation；同步4.5--4.6 |
+| `theory_check` | Shared Encoder与Region-to-Step Forecast Generator避免$S$ complete forecasters的重复encoder/generator；per-scope Scope Projection保持granularity-specific state；CHPC来自两条path均不以requested horizon参数化shared target |
+| `claim_boundary` | Prefix-bounded execution是architecture-supported property，exact reference implementation仍full-field materialization后slice；不宣称realized latency gain、oracle allocation、semantic specialization或method effectiveness |
+| `artifacts` | clean manuscript=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`；highlighted review=`docs/paper-drafts/iscf-bsca-method-v0.4-highlighted-review.md`；paper architecture/mainline/ledger同步 |
+| `decision` | `section4_v0_4_path_and_allocation_refinement_pending_author_review` |
+
 ## Current Cursor
 
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | paper consolidation；Introduction与Section 3 frozen；Section 4 v0.3 refined through 4.3 pending continued author review |
-| `active_question` | Section 4 v0.3中4.1--4.3的narrative、Future Coordinate rationale与region-local generation是否可接受；4.4以后待逐节review；Figure 4 stable vector source仍待同步 |
-| `active_candidates` | exact `ISCF-BSCA-v1` frozen ablation anchor；Figures 1--3 approved；Section 4 v0.3 pending continued author review；Method Figure 4 visual design temporarily fixed |
+| `current_step` | paper consolidation；Introduction与Section 3 frozen；Section 4 v0.4 refined through 4.6 pending author review |
+| `active_question` | 两条named paths、4.3 unified-field framing、4.4 target-adaptive allocation narrative及4.5--4.6联动是否可接受；Figure 4 stable vector source仍待同步 |
+| `active_candidates` | exact `ISCF-BSCA-v1` frozen ablation anchor；Figures 1--3 approved；Section 4 v0.4 pending author review；Method Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |

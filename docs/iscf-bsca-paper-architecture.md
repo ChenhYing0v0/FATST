@@ -5,16 +5,16 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.55` |
+| `version` | `v0.56` |
 | `last_updated` | `2026-08-08` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 4 v0.3 author refinement through 4.3 pending continued author review；experiments=Main I hash frozen，Main II H720-prefix design complete pending staged authorization |
+| `current_review_cursor` | writing=Section 4 v0.4 path/allocation refinement through 4.6 pending author review；experiments=Main I hash frozen，Main II H720-prefix design complete pending staged authorization |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.7正文 + approved Figures 2--3；Method Figure 4 visual design |
-| `provisional_content` | Section 4 v0.3 author-refined text through 4.3；Method Figure 4 stable vector-asset synchronization；remaining sections |
+| `provisional_content` | Section 4 v0.4 path-and-allocation-refined text through 4.6；Method Figure 4 stable vector-asset synchronization；remaining sections |
 | `authorization_source` | 2026-08-08用户授权Main I freeze与Main II design；Main II local patch、remote training与formal prefix test未授权 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
@@ -323,7 +323,7 @@ Abstract
    4.1 Architecture Overview
    4.2 History State and Future Coordinate
    4.3 Generation of Scope-conditioned Forecasts
-   4.4 Condition Vector, Scope Probabilities and Varied-Horizon Forecasting
+   4.4 Target-Adaptive Scope Allocation
    4.5 Balanced Scope Co-Adaptation
    4.6 Structural Properties and Complexity
 
@@ -1224,11 +1224,11 @@ Canonical manuscript draft：
 
 `docs/paper-drafts/iscf-bsca-method-initial-draft.md`
 
-当前状态=`v0.3-author-refinement-4.1-4.3`，等待continued author review。Figure 4 visual design已由author暂时固定；Section 4开头至4.3已按author反馈强化decoder-side定位、patch-token Encoder interface、Future Coordinate动机、per-scope independent Scope Projection和region-local Scope-conditioned Forecast generation。Prefix-bounded region execution作为architecture-supported property表述，reference implementation仍materialize full field后slice。Stable vector-asset bundle仍待author source；该图只解释architecture，不承担effectiveness evidence。
+当前状态=`v0.4-path-and-allocation-refinement`，等待author review。两条decoder computation paths固定命名为`Scope Forecasting Path`与`Target-Adaptive Allocation Path`。4.3明确ISCF构建一个parameter-sharing unified forecast field，而非整合多个独立forecasters；4.4按`history dynamics + future position -> target-wise sharing-granularity allocation -> weighted field readout -> prefix-bounded output`重构。4.5--4.6的optimization、CHPC与complexity回指已同步。Reference implementation仍materialize full field后slice；prefix-bounded execution只作为architecture-supported property，未宣称实测latency gain。Stable vector-asset bundle仍待author source。
 
 ### 7.1 Architecture Overview
 
-先以Figure 4给出完整tensor flow：`History Series -> Patchify -> Encoder -> History State`；`Scope Projection -> Scope Matrix`与`Future Coordinate -> Region Descriptor`共同形成`Scope-region State`；共享`Region-to-Step Forecast Generator`产生`Scope-conditioned Forecasts:[B,C,T,S]`。并行的`Condition Vector -> Allocation MLP`产生`Scope Probabilities:[B,C,T,S]`，沿scope轴weighted contraction后形成`Varied-Horizon Forecasting` trajectory。BSCA不进入Figure 4 inference graph。
+先以Figure 4引出两条协同路径。`Scope Forecasting Path`沿`History State/Future Coordinate -> Scope Matrix/Region Descriptor -> Scope-region State -> Scope-conditioned Forecasts:[B,C,T,S]`构建forecast field。`Target-Adaptive Allocation Path`沿`History State/Future Coordinate -> Condition Vector -> Allocation MLP -> Scope Probabilities:[B,C,T,S]`评估每个target的sharing-granularity preference。沿scope轴weighted contraction后形成`Varied-Horizon Forecasting` trajectory；BSCA不进入Figure 4 forward path。
 
 ### 7.2 History State and Future Coordinate
 
@@ -1257,13 +1257,16 @@ $$
 \mathbb R^{B\times C\times T\times S}.
 $$
 
-固定$s$只是该field的一个scope-conditioned slice。scope size只规定
-future-step latent-state sharing extent，不是requested horizon。
+ISCF不是多个独立forecasters的ensemble。Scope-specific history projections保留
+granularity-specific信息，而shared Encoder与Region-to-Step Forecast Generator使
+representation learning和forecast synthesis跨scope耦合，并避免重复完整encoder与generator。
 
-### 7.4 Condition Vector, Scope Probabilities and Varied-Horizon Forecasting
+### 7.4 Target-Adaptive Scope Allocation
 
-`Condition Vector`为$[\mathbf u_{b,c};\boldsymbol\phi_\tau]$；`Allocation MLP`
-产生`Scope Probabilities`：
+该路径以compact history summary表示sample-variable dynamics，以未池化
+$\boldsymbol\phi_\tau$表示future target position。`Condition Vector`为
+$[\mathbf u_{b,c};\boldsymbol\phi_\tau]$，`Allocation MLP`据此产生
+target-wise `Scope Probabilities`：
 
 $$
 \boldsymbol\Pi
@@ -1271,7 +1274,8 @@ $$
 \mathbb R^{B\times C\times T\times S}.
 $$
 
-最终prediction通过沿scope轴weighted contraction得到：
+每个probability vector表示target对不同sharing granularities的allocation；最终
+prediction通过读取统一scope-indexed field并沿scope轴weighted contraction得到：
 
 $$
 \hat y_{b,\tau,c}
@@ -1280,6 +1284,10 @@ $$
 \pi_{b,c,\tau,s}
 \mathcal F_{b,c,\tau,s}.
 $$
+
+请求$H$时只需激活与$1{:}H$相交的Scope-region States和$\tau\leq H$的
+allocation entries。该property不改变shared targets的计算，因此保持CHPC；现有
+reference implementation的full-field materialization边界保留在editorial audit。
 
 ### 7.5 Balanced Scope Co-Adaptation
 
@@ -1705,3 +1713,4 @@ Coverage boundary：
 | 2026-08-05 | Section 4 v0.1 and Method Figure 4 | 六段Method computation flow、exact tensor/coordinate/scope/allocation/BSCA/complexity公式与四panel Figure 4 initial bundle完成 | author review；Introduction/Section 3与frozen implementation不变；main/ablation/transfer claims仍由Section 5 tables决定 |
 | 2026-08-07 | Section 4 v0.2 main-figure alignment | Figure 4 visual design暂时固定为单一ISCF inference schematic；正文、subsection names、terminology ledger、caption与editorial audit按History State、Scope Matrix、Region Descriptor、Scope-region State、Region-to-Step Forecast Generator、Scope-conditioned Forecast、Condition Vector、Allocation MLP、Scope Probabilities和Varied-Horizon Forecasting同步 | author text review；stable SVG/PDF/TIFF source待同步；Introduction/Section 3、implementation与claim boundary不变 |
 | 2026-08-07 | Section 4 v0.3 author refinement through 4.3 | 按author逐项反馈重写Section开头、4.1--4.3；强化decoder-side framing、Encoder interface、Future Coordinate rationale、per-scope information pool与region-local generation chain | continued author review；prefix-bounded execution仅作为architecture-supported property，reference implementation full-field materialization边界写入editorial audit；Introduction/Section 3、implementation与experiment authorization不变 |
+| 2026-08-08 | Section 4 v0.4 path and allocation refinement | 固定`Scope Forecasting Path`与`Target-Adaptive Allocation Path`；精简Figure 4 caption；4.3强化unified field与parameter sharing；4.4重构target-adaptive granularity allocation；4.5--4.6同步optimization/CHPC/complexity | author review；新增v0.4 highlighted review；prefix-bounded execution仍只作architecture property，current full-field implementation与performance/efficiency claim boundaries不变 |

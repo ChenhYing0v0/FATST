@@ -5,9 +5,9 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Clean manuscript-facing initial draft of Section 4 |
-| `version` | `v0.3-author-refinement-4.1-4.3` |
-| `date` | `2026-08-07` |
-| `review_status` | `author_feedback_integrated_through_section_4.3` |
+| `version` | `v0.4-path-and-allocation-refinement` |
+| `date` | `2026-08-08` |
+| `review_status` | `author_feedback_integrated_through_section_4.6` |
 | `upstream_dependency` | Introduction v0.9 and Section 3 v0.7 remain frozen and unchanged |
 | `method_contract` | Exact frozen ISCF-BSCA-v1 architecture and objective |
 | `figure_4_status` | Visual design temporarily fixed by the author; stable vector-asset synchronization remains pending |
@@ -37,9 +37,11 @@ The status table, terminology ledger and editorial audit are working metadata an
 | Region-to-Step Forecast Generator | $\mathbf a_\tau,\mathbf n_\tau,\beta_\tau$ | Shared step-specific parameters that map a Scope-region State to future-step predictions |
 | Scope-conditioned Forecast | $\mathcal F^{(s)}$ | Forecast slice generated under one sharing scope; not an independent forecasting model |
 | Scope-indexed forecast field | $\mathcal F_\theta(\mathbf X)$ | Collection of Scope-conditioned Forecasts indexed by variable, future step and sharing scope |
+| Scope Forecasting Path | -- | Region-wise construction of the scope-indexed forecast field |
 | Condition Vector | $[\mathbf u_{b,c};\boldsymbol\phi_\tau]$ | Concatenation of a projected History State and the target Future Coordinate |
 | Allocation MLP | $\mathbf W_p,\mathbf W_o$ | Network that maps the Condition Vector to scope logits |
 | Scope Probabilities | $\boldsymbol\Pi=[\pi_{b,c,\tau,s}]$ | Normalized scope weights produced by the Allocation MLP |
+| Target-Adaptive Allocation Path | -- | Target-wise assignment of scope-conditioned information using the History State and Future Coordinate |
 | Weighted contraction | $\sum_s\pi_s\mathcal F_s$ | Integration of scope-conditioned forecasts along the scope axis |
 | Varied-Horizon Forecasting | $\widehat{\mathbf Y}^{(H)}$ | Return of the first $H$ steps from one maximum-length prediction trajectory |
 | Balanced Scope Co-Adaptation | BSCA | Training-only objective for direct slice supervision and broad allocation access |
@@ -50,9 +52,9 @@ Section 3 established two requirements for varied-horizon forecasting. Predictio
 
 ### 4.1 Architecture overview
 
-Figure 4 summarizes the forward computation path of ISCF. The architecture consumes a variable-wise History State rather than relying on a particular Encoder. Any Encoder that models temporal patch tokens and returns the required tensor interface can therefore serve as its backbone. This interface covers the patch-based Encoder family commonly used in time-series forecasting. Given a History Series $\mathbf X\in\mathbb R^{B\times L\times C}$, Patchify and the Encoder produce $\mathbf R\in\mathbb R^{B\times C\times R}$. Scope Projection then maps this state to a dedicated Scope Matrix for each sharing scope. In parallel, the Future Coordinate is averaged within each scope region to form a Region Descriptor. Their contraction produces a Scope-region State, and the shared Region-to-Step Forecast Generator converts this state into step-wise predictions. Each future region is generated separately, and concatenating its predictions forms one Scope-conditioned Forecast. Collecting the forecasts over $S$ parallel scope lines yields the scope-indexed forecast field $\mathcal F_\theta(\mathbf X)\in\mathbb R^{B\times C\times T\times S}$.
+Figure 4 summarizes the forward computation of ISCF, which organizes its decoder into a **Scope Forecasting Path** and a **Target-Adaptive Allocation Path**. The architecture consumes a variable-wise History State rather than relying on a particular Encoder. Any Encoder that models temporal patch tokens and returns the required tensor interface can therefore serve as its backbone. This interface covers the patch-based Encoder family commonly used in time-series forecasting. Given a History Series $\mathbf X\in\mathbb R^{B\times L\times C}$, Patchify and the Encoder produce $\mathbf R\in\mathbb R^{B\times C\times R}$. The Scope Forecasting Path constructs region-wise predictions under each sharing scope and assembles them into $\mathcal F_\theta(\mathbf X)\in\mathbb R^{B\times C\times T\times S}$. The Target-Adaptive Allocation Path then determines how each future target draws on these sharing granularities.
 
-The lower path determines how these forecasts are integrated at each target. A projected History State and the Future Coordinate $\boldsymbol\phi_\tau$ form the Condition Vector $[\mathbf u_{b,c};\boldsymbol\phi_\tau]$. The Allocation MLP maps this vector to the Scope Probabilities $\boldsymbol\Pi\in\mathbb R^{B\times C\times T\times S}$. Weighted contraction of the Scope-conditioned Forecasts with these probabilities produces one trajectory $\widehat{\mathbf Y}\in\mathbb R^{B\times T\times C}$. For an $H$-step request, the region-local construction permits the forward computation to be restricted to regions and targets that intersect the first $H$ steps. The requested horizon changes only the evaluated prefix; it neither changes the architecture nor the computation assigned to a shared future target. ISCF therefore produces variable-length outputs while satisfying CHPC by construction.
+The Target-Adaptive Allocation Path combines a projected History State with the Future Coordinate $\boldsymbol\phi_\tau$ and produces Scope Probabilities $\boldsymbol\Pi\in\mathbb R^{B\times C\times T\times S}$. Weighted contraction with the scope-indexed forecast field yields one trajectory $\widehat{\mathbf Y}\in\mathbb R^{B\times T\times C}$. For an $H$-step request, the region-local construction permits computation to be restricted to regions and targets intersecting the first $H$ steps. The requested horizon changes only the evaluated prefix, not the computation assigned to a shared future target. ISCF therefore produces variable-length outputs while satisfying CHPC by construction.
 
 The Scope-conditioned Forecasts and Scope Probabilities are optimized jointly. Early probability concentration can weaken the forecasting gradients received by low-probability scopes. BSCA addresses this coupling through direct predictive supervision for every Scope-conditioned Forecast and a ramped uniform anchor on the Scope Probabilities. These terms are used only during training and are therefore described separately from the forward computation path in Figure 4.
 
@@ -60,7 +62,7 @@ The Scope-conditioned Forecasts and Scope Probabilities are optimized jointly. E
 
 ![Overview of the ISCF-BSCA architecture.](../../paper-figures/figure_iscf_bsca_method_overview.png)
 
-**Figure 4 | ISCF integrates Scope-conditioned Forecasts into one trajectory for Varied-Horizon Forecasting.** The History Series is patchified and encoded into a shared History State. For each sharing scope, Scope Projection produces a Scope Matrix, while region-wise averaging of the Future Coordinate produces Region Descriptors. Their contraction forms Scope-region States, and the shared Region-to-Step Forecast Generator converts these states into Scope-conditioned Forecasts. In the parallel allocation path, the Condition Vector combines a projected History State with the target Future Coordinate, and the Allocation MLP produces target-specific Scope Probabilities. Weighted contraction along the scope axis yields one prediction trajectory, whose nested prefixes answer different horizon requests. Three representative scopes are displayed for visual clarity; the formulation uses $S$ scopes. The probability map and trajectories are schematic rather than empirical results.
+**Figure 4 | ISCF constructs one trajectory for Varied-Horizon Forecasting.** The Scope Forecasting Path generates region-wise predictions under multiple sharing scopes. The Target-Adaptive Allocation Path assigns scope-conditioned information to each future target. Weighted contraction yields one trajectory whose nested prefixes answer different horizon requests. Three representative scopes are shown for clarity; the probability map and trajectories are schematic.
 
 ### 4.2 History state and future coordinate
 
@@ -79,9 +81,9 @@ $$
 R=PD_e.
 $$
 
-Collecting $\mathbf r_{b,c}$ over samples and variables gives the History State $\mathbf R=[\mathbf r_{b,c}]\in\mathbb R^{B\times C\times R}$. The preserved variable axis provides one history representation for each sample-variable pair, which is used by both Scope Projection and the allocation path. ISCF requires only this tensor interface and does not otherwise constrain the internal design of the patch-token Encoder.
+Collecting $\mathbf r_{b,c}$ over samples and variables gives the History State $\mathbf R=[\mathbf r_{b,c}]\in\mathbb R^{B\times C\times R}$. The preserved variable axis provides one history representation for each sample-variable pair, which is used by both decoder paths. ISCF requires only this tensor interface and does not otherwise constrain the internal design of the patch-token Encoder.
 
-The History State summarizes the observed series, but a unified decoder must also identify where each prediction lies in the future domain. Using the requested horizon for this purpose would assign different conditioning contexts to the same target under different requests. ISCF instead introduces a **Future Coordinate** for every future step. This fixed coordinate supplies a horizon-independent target identity, provides a common positional basis from which regions of different scopes can be described, and allows the allocation path to vary its scope preference across future steps.
+The History State summarizes the observed series, but a unified decoder must also identify where each prediction lies in the future domain. Using the requested horizon for this purpose would assign different conditioning contexts to the same target under different requests. ISCF instead introduces a **Future Coordinate** for every future step. This fixed coordinate supplies a horizon-independent target identity and a common positional basis for regions at different scopes. It also allows the Target-Adaptive Allocation Path to vary its scope preference across future steps.
 
 Formally, the Future Coordinate is the field $\boldsymbol\Phi=[\boldsymbol\phi_1,\ldots,\boldsymbol\phi_T]^\top\in\mathbb R^{T\times D_q}$. We construct it from low-order discrete cosine functions, which provide smooth coordinate channels at progressively finer temporal frequencies. For $d=0,\ldots,D_q-1$, we first define
 
@@ -113,7 +115,7 @@ The constant channel preserves a global reference, while the centered nonconstan
 
 ### 4.3 Generation of scope-conditioned forecasts
 
-The upper path of Figure 4 contains $S$ parallel forecasting lines, one for each sharing scope in $\mathcal S=\{s_1,\ldots,s_S\}$. A single Scope Projection stage contains an independently parameterized projection for every scope, so each line receives a dedicated Scope Matrix as its history-conditioned information pool. The matrix form is important because it retains a Future-Coordinate axis and a latent-mode axis. Region Descriptors can therefore query the same scope-specific history information at different future locations, without assigning a separate prediction head to every region.
+The Scope Forecasting Path contains $S$ parallel scope lines, one for each sharing scope in $\mathcal S=\{s_1,\ldots,s_S\}$. A single Scope Projection stage contains an independently parameterized projection for every scope, so each line receives a dedicated Scope Matrix as its history-conditioned information pool. The matrix form is important because it retains a Future-Coordinate axis and a latent-mode axis. Region Descriptors can therefore query the same scope-specific history information at different future locations, without assigning a separate prediction head to every region.
 
 For a scope $s$, the future domain is divided into contiguous regions
 
@@ -162,7 +164,7 @@ $$
 
 Once the Scope Matrix is available, each Scope-region State depends only on the descriptor of its own region. Regions can therefore be evaluated separately and in parallel, although they draw on the same scope-specific history information. All future steps in $\mathcal G_g^{(s)}$ reuse $\mathbf z_{b,c,g}^{(s)}$. A finer scope constructs more region states and limits reuse to shorter intervals, whereas a broader scope shares each state over a longer interval. Scope thus defines a cross-step reuse pattern rather than a requested prediction horizon.
 
-The Region-to-Step Forecast Generator converts each shared Scope-region State into step-wise predictions, so region-wise reuse does not force identical outputs within that region. Let $g_s(\tau)$ denote the region containing step $\tau$. The generator is shared across scopes and regions, and uses step-specific vectors $\mathbf a_\tau,\mathbf n_\tau\in\mathbb R^K$ and bias $\beta_\tau$ to define
+The Region-to-Step Forecast Generator converts each shared Scope-region State into step-wise predictions. Let $g_s(\tau)$ denote the region containing step $\tau$. The generator is shared across scopes and regions, and uses step-specific vectors $\mathbf a_\tau,\mathbf n_\tau\in\mathbb R^K$ and bias $\beta_\tau$ to define
 
 $$
 \mathcal F_{b,c,\tau,s}
@@ -182,11 +184,11 @@ $$
 \beta_\tau.
 $$
 
-Concatenating the separately generated regions gives the Scope-conditioned Forecast $\mathcal F^{(s)}$ for scope $s$. Collecting these forecasts over samples, variables, future steps and scopes produces the scope-indexed forecast field $\mathcal F_\theta(\mathbf X)\in\mathbb R^{B\times C\times T\times S}$. Scope Projection is independently parameterized across scopes, whereas Patchify, the Encoder, Future Coordinate and Region-to-Step Forecast Generator are shared. Each $\mathcal F^{(s)}$ is therefore one scope-conditioned slice of a jointly constructed field, not a separately trained forecasting model.
+Concatenating the separately generated regions gives the Scope-conditioned Forecast $\mathcal F^{(s)}$ for scope $s$. Collecting these forecasts produces the scope-indexed field $\mathcal F_\theta(\mathbf X)\in\mathbb R^{B\times C\times T\times S}$. ISCF does not integrate $S$ independently trained forecasters. It constructs one unified forecasting framework with scope-specific history projections and shared representation and synthesis modules. The shared Encoder and Region-to-Step Forecast Generator couple representation learning and forecast synthesis across scopes, while dedicated Scope Matrices preserve granularity-specific information. Compared with deploying $S$ complete forecasters, ISCF evaluates the Encoder once and avoids duplicating the forecast generator, reducing redundant encoder computation and parameter storage.
 
-### 4.4 Condition vector, scope probabilities and varied-horizon forecasting
+### 4.4 Target-adaptive scope allocation
 
-The lower path of Figure 4 allows the contribution of each Scope-conditioned Forecast to vary across samples, variables and future steps. It begins by projecting the History State into a compact history summary
+Different future targets may require information organized at different sharing granularities. Estimating this preference requires both the dynamics encoded in the observed history and the target position in the future domain. The Target-Adaptive Allocation Path represents these two signals using a compact history summary and the Future Coordinate. It first projects the History State as
 
 $$
 \mathbf u_{b,c}
@@ -197,7 +199,7 @@ $$
 \in\mathbb R^{D_h}.
 $$
 
-The Condition Vector concatenates this summary with the Future Coordinate of target step $\tau$. The Allocation MLP then computes
+The compact summary $\mathbf u_{b,c}$ retains the sample-variable context used for allocation. For future step $\tau$, the Condition Vector concatenates this summary with $\boldsymbol\phi_\tau$. The Allocation MLP maps the resulting vector to scope logits
 
 $$
 \boldsymbol\ell_{b,c,\tau}
@@ -225,7 +227,7 @@ $$
 }.
 $$
 
-Collecting $\pi_{b,c,\tau,s}$ gives the Scope Probabilities $\boldsymbol\Pi\in\mathbb R^{B\times C\times T\times S}$, with $\sum_{s=1}^{S}\pi_{b,c,\tau,s}=1$ for every target. The probabilities are conditioned on the sample, variable and future-step identity; they do not observe the future target value. The final normalized prediction is obtained through weighted contraction along the scope axis:
+Softmax converts these logits into the Scope Probability $\pi_{b,c,\tau,s}$ assigned to scope $s$. Collecting all probabilities gives $\boldsymbol\Pi\in\mathbb R^{B\times C\times T\times S}$, with $\sum_{s=1}^{S}\pi_{b,c,\tau,s}=1$. Each probability vector parameterizes how strongly a future target draws on information organized at different sharing granularities. The final normalized prediction reads from the unified scope-indexed forecast field through weighted contraction:
 
 $$
 \widehat y_{b,\tau,c}
@@ -235,7 +237,9 @@ $$
 \mathcal F_{b,c,\tau,s}.
 $$
 
-The resulting normalized trajectory is transformed back to the original data scale. The Varied-Horizon Forecasting output for a request with horizon $H$ is the corresponding prefix
+This contraction is not an average over separately trained model outputs. The Scope Forecasting Path and Target-Adaptive Allocation Path are jointly learned within one decoder, allowing each target to receive a history-conditioned mixture of sharing granularities.
+
+For an $H$-step request, ISCF needs only the Scope-region States whose regions intersect $1{:}H$ and the allocation entries for $\tau\leq H$. The resulting normalized prefix is transformed back to the original data scale and returned as
 
 $$
 \widehat{\mathbf Y}_b^{(H)}
@@ -245,11 +249,11 @@ $$
 \right]_{\tau=1,\ldots,H;\ c=1,\ldots,C}.
 $$
 
-The Scope Probabilities allow the sharing composition to vary over forecast targets, while every horizon request remains a nested view of the same trajectory. The architecture alone does not imply that the Allocation MLP recovers an oracle scope or forms universal specialization. Those questions require the component and internal-behavior analyses reported later.
+Changing $H$ restricts the active region and target computations but does not alter any prediction shared with a longer request. Every request is therefore a nested view of the same trajectory. The learned probabilities represent target-adaptive information allocation rather than an oracle scope selector. Later ablations and internal-behavior analyses evaluate whether this allocation yields useful scope differentiation.
 
 ### 4.5 Balanced Scope Co-Adaptation
 
-The Scope Probabilities have two coupled roles during training. They combine the Scope-conditioned Forecasts and scale the fused-loss gradient received by each scope. For a fixed target, the contraction implies
+The Target-Adaptive Allocation Path couples forecast integration with the optimization of individual scope lines. Scope Probabilities combine the Scope-conditioned Forecasts and scale the fused-loss gradient received by each scope. For a fixed target, the contraction implies
 
 $$
 \frac{
@@ -355,13 +359,13 @@ $$
 \right).
 $$
 
-The direct skill term trains every Scope-conditioned Forecast even when its current probability is small. The anchor acts directly on Allocation-MLP logits and broadens probability-mediated access during early joint learning. Uniform Scope Probabilities are only an optimization proxy: they neither force equal inference-time usage nor guarantee semantically distinct scopes. Both BSCA terms are removed at inference, so the trained model retains Scope Projection, the Region-to-Step Forecast Generator, the Allocation MLP and weighted contraction defined by ISCF.
+The direct skill term trains every Scope-conditioned Forecast even when its current probability is small. The anchor acts directly on Allocation MLP logits and broadens probability-mediated access during early joint learning. Uniform Scope Probabilities are only an optimization proxy. They neither force equal inference-time usage nor guarantee semantically distinct scopes. Both BSCA terms are removed at inference, leaving the Scope Forecasting Path, Target-Adaptive Allocation Path and weighted contraction unchanged.
 
 ### 4.6 Structural properties and complexity
 
-ISCF satisfies CHPC by construction. For a fixed target, the Scope-conditioned Forecast $\mathcal F_{b,c,\tau,s}$ and Scope Probability $\pi_{b,c,\tau,s}$ depend on the History State and target identity $(\tau,c)$. Neither depends on the requested horizon. Hence $\widehat y_{b,\tau,c}$ is identical under any requests $H_i,H_j\geq\tau$. Returning the indexed prefix $1{:}H$ changes only the exposed endpoint and yields the CHPC relation defined in Section 3.
+ISCF satisfies CHPC by construction. For a fixed target, the Scope Forecasting Path produces $\mathcal F_{b,c,\tau,s}$ from the History State and future-step identity. The Target-Adaptive Allocation Path produces $\pi_{b,c,\tau,s}$ from the same history and target coordinate. Neither quantity depends on the requested horizon. Hence $\widehat y_{b,\tau,c}$ is identical under any requests $H_i,H_j\geq\tau$. Returning the indexed prefix $1{:}H$ yields the CHPC relation defined in Section 3.
 
-The same construction separates sharing scope from horizon. Scope $s$ controls how many future steps reuse a latent state before step-specific synthesis. Requested horizon $H$ controls which already defined future-step predictions are returned. Changing one does not redefine the other.
+The same construction separates sharing scope from requested horizon. Scope $s$ controls how many future steps reuse a latent state before step-specific synthesis. Horizon $H$ selects the target positions and intersecting regions evaluated for one request. Changing $H$ does not redefine the computations assigned to any shared target.
 
 For completeness, let $D_q$ be the coordinate dimension, $K$ the mode rank, $D_h$ the allocation history dimension and $D_a$ the allocation hidden dimension. Excluding the encoder, the frozen independent-scope decoder contains
 
@@ -394,7 +398,7 @@ $$
 
 trainable parameters. The first line corresponds to Scope Projection, Scope Matrices and the Region-to-Step Forecast Generator; the second corresponds to the History-State projection and Allocation MLP used to produce Scope Probabilities. The Future Coordinate, contiguous region indices and Region-Descriptor averaging are parameter free. BSCA adds no trainable parameter.
 
-Computing Scope-region States costs $\mathcal O\!\left(BC D_q K\sum_{s\in\mathcal S}T/s\right)$, while the Region-to-Step Forecast Generator costs $\mathcal O(BCSTK)$. The Allocation MLP is evaluated once per sample-variable History State and future target. Materializing the Scope-conditioned Forecasts and Scope Probabilities requires $\mathcal O(BCTS)$ working memory, and the implementation supports region and target chunking to reduce peak intermediates without changing the function. Only one encoder-decoder checkpoint is stored and served for all supported horizons; empirical latency, memory and forecasting accuracy are evaluated separately in Section 5.
+The full-domain costs below correspond to materializing all $T$ future steps. Computing Scope-region States costs $\mathcal O\!\left(BC D_q K\sum_{s\in\mathcal S}T/s\right)$, while the Region-to-Step Forecast Generator costs $\mathcal O(BCSTK)$. The Allocation MLP is evaluated once per sample-variable History State and future target. Materializing the Scope-conditioned Forecasts and Scope Probabilities requires $\mathcal O(BCTS)$ working memory. Region and target chunking reduces peak intermediate memory without changing the function. Prefix-bounded execution restricts the target-dependent operations to $\tau\leq H$ and the Scope-region States intersecting that prefix. Only one encoder-decoder checkpoint is stored and served for all supported horizons. Empirical latency, memory and forecasting accuracy are evaluated separately in Section 5.
 
 ## Editorial implementation and claim audit
 
@@ -404,8 +408,8 @@ Computing Scope-region States costs $\mathcal O\!\left(BC D_q K\sum_{s\in\mathca
 | Scope Projection and Scope Matrix | Independent SIFF scale basis with one component per scope | Each scope has an independent Scope Projection | Each Scope-conditioned Forecast is an independent forecasting model |
 | Region Descriptor and Scope-region State | Contiguous group indices and pooled Future Coordinates | Scope controls state-reuse extent | Canonical partition is universally optimal |
 | Region-to-Step Forecast Generator | Shared step-specific linear and nonlinear synthesis parameters | One shared state can produce distinct step-specific predictions | The generator is universally transferable |
-| Scope-conditioned Forecasts | `arm_forecasts`, paper-facing shape `[B,C,T,S]` | One field contains multiple scope-conditioned slices | Learned specialization or oracle scope recovery |
-| Condition Vector, Allocation MLP and Scope Probabilities | Direct History-State-plus-target-coordinate policy, `[B,C,T,S]` | Probabilities vary by sample, variable and future step | Allocation is label-conditioned or necessarily region optimal |
+| Scope Forecasting Path | One Encoder evaluation, independent scope projections and shared synthesis produce `arm_forecasts:[B,C,T,S]` | One unified field couples shared representation and synthesis across scope lines | Lower compute than every unified alternative or learned scope specialization |
+| Target-Adaptive Allocation Path | Direct History-State-plus-target-coordinate policy produces `[B,C,T,S]` | Each target receives a learned allocation over sharing granularities | Oracle scope recovery or necessarily region-optimal allocation |
 | Weighted contraction and prefix output | Scope-axis weighted sum yields `[B,T,C]`; the reference implementation materializes the full field before prefix slicing | One horizon-agnostic trajectory, CHPC and architecture-level support for prefix-bounded region evaluation | Realized latency gains from prefix-bounded execution or lower error than horizon-specific systems |
 | BSCA | Uniform slice-skill loss plus ramped normalized `KL(uniform || allocation)` | Training-only balanced access; no inference path or parameter | Generic KL novelty, universal gain or semantic expert specialization |
 | Section 5 interface | Pending main, ablation, transfer and efficiency tables | Structural and reproducibility statements only | Main-table superiority, component effectiveness and decoder portability |
