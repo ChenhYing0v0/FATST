@@ -24,7 +24,7 @@
 | source/training adapter | `7c11f7ae1503c9a916d4d458e254e86fcce2ac43e404138bae5c8cbfe8ac242f` |
 | prefix evaluator | `a64da68cd55e5ce218c896c5b224c7ed1263e2140ee5079b99779ee53125631e` |
 | prelaunch checker | `10b9844f3c89cdebc55e1332df8c6b4c41e09ec27c3580a591ea8f50b4e65fe3` |
-| remote launcher | `6c9c2150619d5109d8a0104bfbaec5fbc44f04864f4bd198d7e61148a04d6868` |
+| remote launcher | `b3e24129d45bcefc42eff61e1ee016bfbfe0b2771a12d4f6f91b4cc18042a7b3` |
 
 上述 hashes 是本地 gate 时点值；commit 后 remote launch record 必须再次记录实际 checkout commit及文件 hashes。任何差异都回到 Tier A source/patch audit，不启动 affected jobs。
 

@@ -90,7 +90,8 @@ ensure_checkout PatchTST
 ensure_checkout DLinear
 
 ensure_workspace() {
-  local baseline="$1" workspace="${OUTPUT_ROOT}/_workspaces/${baseline}"
+  local baseline="$1"
+  local workspace="${OUTPUT_ROOT}/_workspaces/${baseline}"
   if [[ -s "${workspace}/fatst_runtime_patch_manifest.json" ]]; then return; fi
   [[ ! -e "${workspace}" ]] || { echo "incomplete workspace exists: ${workspace}" >&2; exit 3; }
   args=(
