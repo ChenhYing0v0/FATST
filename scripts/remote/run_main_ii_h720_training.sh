@@ -9,7 +9,7 @@ CONDA_BIN="${CONDA_BIN:-/home/anaconda3/bin/conda}"
 CONDA_ENV="${CONDA_ENV:-moe}"
 DATA_ROOT="${DATA_ROOT:-/home/yingch/dataset}"
 OUTPUT_ROOT="${OUTPUT_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/main_ii_h720_prefix_20260808}"
-WORKSPACE_ROOT="${WORKSPACE_ROOT:-${OUTPUT_ROOT}/_workspaces_v2}"
+WORKSPACE_ROOT="${WORKSPACE_ROOT:-${OUTPUT_ROOT}/_workspaces_v3}"
 GPU_IDS_STR="${GPU_IDS:-0 1 2}"
 MODE="${1:-dry-run}"
 

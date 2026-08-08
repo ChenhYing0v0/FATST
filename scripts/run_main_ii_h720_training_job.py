@@ -154,6 +154,12 @@ def patch_entrypoint(path: Path) -> None:
     text = path.read_text(encoding="utf-8")
     text = replace_once(
         text,
+        "            print('>>>>>>>testing : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(setting))\n",
+        "            print('FATST Main II: formal test deferred until checkpoint freeze')\n",
+        "automatic final test log marker",
+    )
+    text = replace_once(
+        text,
         "            exp.test(setting)\n",
         "            # FATST Main II: formal test is a separate hash-audited phase.\n",
         "automatic final test",

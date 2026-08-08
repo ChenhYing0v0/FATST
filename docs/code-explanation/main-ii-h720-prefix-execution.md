@@ -18,6 +18,7 @@ The runtime adapter deliberately changes only protocol hygiene and compatibility
 - removes construction and evaluation of the official test loader inside `train()`;
 - preserves the native validation loss used by `EarlyStopping`;
 - disables the automatic test call after training;
+- replaces the upstream `testing` log marker with an explicit deferred-test marker so log audits do not confuse a disabled call with actual test access;
 - makes formal `is_training=0` evaluation load from `args.checkpoints`;
 - enables `true.npy` export where upstream commented it out;
 - adds environment-bounded train/validation loops only for resource smoke;
