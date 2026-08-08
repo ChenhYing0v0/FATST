@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | 写作流继续审阅Section 4 v0.3 author refinement（4.1--4.3已更新）并等待Figure 4 stable vector source；实验流等待AMD/SimpleTM repaired formal queue完成 |
+| `active_question` | 写作流继续审阅Section 4 v0.3 author refinement（4.1--4.3已更新）并等待Figure 4 stable vector source；实验流Main I AMD/SimpleTM替换已完成，等待下一项明确授权 |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9与Section 3 v0.7 frozen；Section 4 v0.3 refined through 4.3 pending continued author review；Figure 4 visual design temporarily fixed |
@@ -21,27 +21,27 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper consolidation；writing=Section 4 v0.3 author refinement through 4.3 pending continued author review；experiments=AMD/SimpleTM Step8 repaired remote active |
+| `current_11_step` | paper consolidation；writing=Section 4 v0.3 author refinement through 4.3 pending continued author review；experiments=AMD/SimpleTM Step9--10 audit and Main I consolidation complete |
 | `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；`ISCF-BSCA-MAIN-v1` 8 selected profiles reusable |
-| `latest_decision` | `AMD_SimpleTM_repaired_remote_active_no_babysitting` |
+| `latest_decision` | `AMD_SimpleTM_complete_Main_I_atomic_replacement_pass_scope_closed` |
 | `writing_latest_decision` | `section4_v0_3_author_feedback_integrated_through_4_3_pending_continued_review` |
-| `next_required_action` | wait new-root completion -> 110/110 audit -> atomic Main I replacement |
-| `method_training_authorized` | AMD/SimpleTM seven-dataset scope=true；ISCF HPO/Main II/other baselines=false |
+| `next_required_action` | preserve current Main I；request separate authorization before Main II or remaining baseline execution |
+| `method_training_authorized` | false；AMD/SimpleTM scope consumed and closed；ISCF HPO/Main II/other baselines=false |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | HPO frozen；AMD/SimpleTM recovery gate 14/14 pass，Step8 repaired formal active |
+| `current_step` | HPO frozen；AMD/SimpleTM 110/110 artifact audit pass，Main I atomic replacement complete |
 | `problem` | Introduction的horizon-specific superiority、component effectiveness与decoder portability claims尚缺完整paper-facing evidence |
 | `existence_evidence` | AMD/SimpleTM均有7-dataset official scripts；exact commits/source hashes和56-cell/110-checkpoint contract已冻结 |
 | `idea` | tuned main candidate + eight-dataset SOTA table + matched unified benchmark + exact five-dataset ablation/end-to-end transfer |
 | `theory_check` | architecture与HPO身份分离；validation选trial checkpoint；official-test four-H aggregate选dataset profile；published/native/matched角色分开；H720-only与frozen replacement排除 |
 | `design` | AMD L512/seed2024/28 runs；SimpleTM L96/fix_seed2025/native itr/82 runs；epoch test access removed；14 no-test smokes后formal |
 | `narrative_gate` | architecture family冻结；SOTA wording由完整test-tuned result决定并披露test-informed边界 |
-| `effectiveness_gate` | pending repaired 110/110 raw rows and 56/56 aggregated cells；old/partial rows禁止进入Main I |
-| `artifacts` | prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/amd_simpletm_main_i_reproduction_20260806/design_and_launch_gate.md` |
+| `effectiveness_gate` | pass for native accuracy context：14/14 units，110/110 unique checkpoint rows，56/56 cells；not matched attribution |
+| `artifacts` | result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_final_amd_simpletm_20260808/result_and_table_audit.md` |
 | `decision` | PID=825838 active on commit b09c6e8/new root；old partial excluded；110/110 before table replacement |
 
 ## Exact Ablation Anchor Contract

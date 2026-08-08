@@ -2,11 +2,14 @@
   "schema_version": 1,
   "protocol_id": "AMD-SIMPLETM-OFFICIAL-MAIN-I-7DATASET-REPRODUCTION-20260806",
   "created_at": "2026-08-06",
+  "result_status": "complete_14_units_110_unique_checkpoints_56_cells_Main_I_replaced",
+  "completed_at": "2026-08-07T22:16:28+08:00",
   "authorization": {
     "authorized_by_user": true,
     "authorization_date": "2026-08-06",
     "remote_training_authorized": true,
     "formal_test_authorized": true,
+    "authorization_scope_consumed": true,
     "scope": "official-source AMD and SimpleTM reproduction on the seven dense Main I datasets",
     "other_baselines_authorized": false,
     "iscf_bsca_hpo_must_remain_stopped": true
@@ -148,6 +151,7 @@
     "conda_env": "moe",
     "data_root": "/home/yingch/dataset",
     "output_root": "/home/yingch/exp_outputs/r-2026-fatst/amd_simpletm_main_i_7dataset_20260806",
+    "formal_result_root": "/home/yingch/exp_outputs/r-2026-fatst/amd_simpletm_main_i_7dataset_20260807_recovery",
     "gpu_ids": [0, 1, 2],
     "workload_order": [
       "SimpleTM:ECL",
@@ -173,6 +177,6 @@
     "prelaunch": "source commits and hashes, exact 14-unit dry-run, 56-cell contract, JSON and syntax checks pass",
     "resource": "14/14 H720 one-epoch checkpoint smokes with zero formal-test rows and projected total storage at most 35 GiB",
     "formal": "28 AMD plus 82 SimpleTM checkpoint/metric rows, exact 56 table cells, complete negative-result retention and hash provenance",
-    "rollback": "retain the current Main I AMD/SimpleTM published values; do not replace either baseline from a partial local matrix"
+    "rollback": "if the completed audit is invalidated, atomically restore the pre-replacement Main I table; never retain a partial AMD/SimpleTM matrix"
   }
 }

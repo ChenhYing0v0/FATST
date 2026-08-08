@@ -6,16 +6,16 @@
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
 | `version` | `v0.55` |
-| `last_updated` | `2026-08-07` |
+| `last_updated` | `2026-08-08` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 4 v0.3 author refinement through 4.3 pending continued author review；experiments=AMD/SimpleTM 56-cell formal queue active |
+| `current_review_cursor` | writing=Section 4 v0.3 author refinement through 4.3 pending continued author review；experiments=Main I AMD/SimpleTM local replacement complete |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.7正文 + approved Figures 2--3；Method Figure 4 visual design |
 | `provisional_content` | Section 4 v0.3 author-refined text through 4.3；Method Figure 4 stable vector-asset synchronization；remaining sections |
-| `authorization_source` | 2026-08-06用户授权AMD与SimpleTM official-source 7 dense datasets × four-H复现；ISCF HPO、Main II与其他baseline未授权 |
+| `authorization_source` | 2026-08-06用户授权的AMD与SimpleTM official-source复现已完成并关闭；ISCF HPO、Main II与其他baseline未授权 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
@@ -1380,6 +1380,8 @@ PDT固定`L=96`，仅保留secondary cross-check。TimeAlign表存在lookback se
 Table 6的140个目标published rows已完成PDF-coordinate transcription与渲染核验。源PDF存在5组逐horizon均值与reported Avg不一致，并分别在Table 1 caption、main-text implementation与Appendix E.1给出三种lookback grid；主表必须使用逐horizon原值并披露这些source-native protocol差异。
 
 截至2026-08-06，TimeAlign 8 datasets × four H × seed2021与QDF `L=336` 8 datasets × four H × seed2023均已32/32完成并通过artifact/hash audit。QDF六个released datasets仅改变lookback并保留逐Hprofiles；Solar使用ECL-derived profile，Exchange使用ETTh1-derived profile。Main I的七数据集dense QDF block已原子替换为28/28本地L336 cells，Exchange companion扩为ISCF-BSCA/TimeAlign/QDF三系统。QDF在七数据集macro MSE/MAE为`0.287511/0.331426`，相对ISCF-BSCA高`9.541%/7.508%`，仅在ETTm2-H192 MSE领先ISCF；完整14-model表中ISCF-BSCA仍为27/56 best、19/56 second。上一版mixed-source L96 QDF仅作历史记录，不再进入当前Main I。
+
+截至2026-08-08，AMD与SimpleTM的七数据集official-native复现已完成：14/14 units、AMD 28/28 + SimpleTM 82/82 raw rows、110 unique checkpoint hashes与56/56 table cells通过审计，旧失败root的partial rows永久excluded。Main I已从表头和数值层原子移除CMoS/TimeBase并加入AMD/SimpleTM。AMD macro MSE/MAE=`0.282132/0.328147`，SimpleTM=`0.292099/0.332380`；更新后的完整14-model表中ISCF-BSCA为29/56 best、19/56 second。AMD与SimpleTM只作为source-native fixed-H accuracy context，不进入matched mechanism attribution。
 
 ### 8.3 Main Results II：Unified Multi-Horizon Benchmark
 

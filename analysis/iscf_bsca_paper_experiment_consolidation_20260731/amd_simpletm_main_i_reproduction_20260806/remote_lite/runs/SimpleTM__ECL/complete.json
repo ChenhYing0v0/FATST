@@ -1,0 +1,22 @@
+{
+  "baseline": "SimpleTM",
+  "checkpoint_count": 12,
+  "complete": true,
+  "dataset": "ECL",
+  "formal_metric_rows": 12,
+  "gpu": 1,
+  "mode": "run",
+  "official_script": "scripts/multivariate_forecasting/ECL/SimpleTM.sh",
+  "official_script_sha256": "209d4b3286272d1f50947c8f51b68151d029cc8d8692310660cd69b053ca43f0",
+  "runtime_patch_hashes": {
+    "patched_exp_sha256": "af47e12be343ccfc807bee579e95e4ce2901db32643093b67721806b3de15584",
+    "patched_run_sha256": "8b9a027247de6626146f52be3306a3d0502ca607b6595bfcc39e66a6a2baab11",
+    "patched_tools_sha256": "9d94d49725c03c9167341bbaa3a10f87511766335ea6bd431333263db805a781"
+  },
+  "schema_version": 1,
+  "source_commit": "3c77d820837b726afb03c943235ea95bc924243d",
+  "source_license": "not_provided_by_upstream_repository",
+  "source_repository": "https://github.com/vsingh-group/SimpleTM",
+  "test_access_boundary": "once_per_validation_selected_or_official_last_checkpoint",
+  "test_access_count": 12
+}

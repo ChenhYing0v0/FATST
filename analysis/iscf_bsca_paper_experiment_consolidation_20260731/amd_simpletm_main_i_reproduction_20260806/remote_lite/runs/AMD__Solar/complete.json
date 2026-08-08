@@ -1,0 +1,18 @@
+{
+  "baseline": "AMD",
+  "checkpoint_count": 4,
+  "complete": true,
+  "dataset": "Solar",
+  "formal_metric_rows": 4,
+  "gpu": 0,
+  "mode": "run",
+  "official_script": "scripts/Solar_AL.sh",
+  "official_script_sha256": "7df8b041a162ea6bd74920bcb88452999066dcb883ad7dd927eaded87c9dee02",
+  "runtime_patch_hashes": {},
+  "schema_version": 1,
+  "source_commit": "000d377a1ed8946aa817ff357cdf1de64b99abb9",
+  "source_license": "MIT",
+  "source_repository": "https://github.com/TROUBADOUR000/AMD",
+  "test_access_boundary": "once_per_validation_selected_or_official_last_checkpoint",
+  "test_access_count": 4
+}

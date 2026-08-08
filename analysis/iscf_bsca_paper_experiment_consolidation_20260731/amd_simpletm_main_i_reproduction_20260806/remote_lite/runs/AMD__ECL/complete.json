@@ -1,0 +1,18 @@
+{
+  "baseline": "AMD",
+  "checkpoint_count": 4,
+  "complete": true,
+  "dataset": "ECL",
+  "formal_metric_rows": 4,
+  "gpu": 2,
+  "mode": "run",
+  "official_script": "scripts/ECL.sh",
+  "official_script_sha256": "06ef1aa8c89a0e2e9b9d62758cf8bde46bce9c3f7076783baaeaa7205b80368a",
+  "runtime_patch_hashes": {},
+  "schema_version": 1,
+  "source_commit": "000d377a1ed8946aa817ff357cdf1de64b99abb9",
+  "source_license": "MIT",
+  "source_repository": "https://github.com/TROUBADOUR000/AMD",
+  "test_access_boundary": "once_per_validation_selected_or_official_last_checkpoint",
+  "test_access_count": 4
+}

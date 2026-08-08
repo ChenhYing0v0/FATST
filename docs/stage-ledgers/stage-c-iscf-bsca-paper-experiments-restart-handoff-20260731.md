@@ -44,16 +44,16 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | AMD/SimpleTM repaired Main I formal queue active；56 cells / 110 repetitions |
+| `active_experiment_step` | Main I AMD/SimpleTM artifact audit与atomic replacement complete |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
-| `local_protocol_patch_authorized` | true for AMD/SimpleTM source-faithful runner and SimpleTM test-hygiene adapter |
-| `remote_training_authorized` | true only for AMD/SimpleTM seven-dataset official reproduction after resource gate |
+| `local_protocol_patch_authorized` | false；AMD/SimpleTM recovery adapter scope consumed |
+| `remote_training_authorized` | false；AMD/SimpleTM seven-dataset scope complete and closed |
 | `test_tuned_hpo_authorized` | false；HPO stopped by user and H4O closed |
-| `formal_test_authorized` | true only for AMD 28 + SimpleTM 82 selected/official-last checkpoints；Main II/other baselines/HPO=false |
-| `next_action` | no babysitting；wait for new-root completion -> 110/110 audit -> atomic Main I rebuild |
-| `conditional_next` | AMD/SimpleTM 110/110 audit后原子替换两列；partial replacement禁止；其他baseline仍需授权 |
+| `formal_test_authorized` | false；AMD 28 + SimpleTM 82 scope consumed；Main II/other baselines/HPO=false |
+| `next_action` | preserve audited Main I；等待用户对Main II或remaining baseline的分级授权 |
+| `conditional_next` | 任何新baseline仍需独立source/protocol gate；不得改写AMD/SimpleTM native role为matched attribution |
 
 H4K train/validation与formal test均已完成，但terminal effectiveness gate失败。H4L只扩大ETTm2/Weather
 dataset-level HPO范围：48个profiles与117个历史profiles零重复，其中四项借鉴TimeAlign official encoder
@@ -86,6 +86,8 @@ AMD/SimpleTM final resource gate于22:13:19通过：14/14 units、14 checkpoints
 2026-08-07完成审计确认上述queue未完成：只创建3个SimpleTM incomplete units且在H96后终止。Upstream `setting` format遗漏repeat index `ii`，native `itr`的metrics虽产生但selected checkpoints覆盖；collector以`expected 3 checkpoints, found 1`拒绝，行为正确。Failure=`artifact_collection_defect`，不是method/optimization failure。Recovery adapter只追加checkpoint目录的repeat identity，保持official training与test协议不变；旧partial units保留但excluded。新root需重做7个SimpleTM no-test smokes并通过resource gate后重启全部110 repetitions；110/110前禁止替换CMoS/TimeBase。
 
 Recovery commit=`b09c6e8`在new root完成7个新SimpleTM no-test smokes，并与7个同contract AMD smokes形成14/14 units、14 unique hashes、test=0、failure tokens=0的combined gate。Repaired formal queue于2026-08-07 10:27:10启动，PID=`825838`，first wave=SimpleTM ECL/Solar/Weather；old-root partial rows永久excluded。按用户既定要求不驻守，new-root 110/110前不修改Main I。
+
+2026-08-08 recovery root已14/14 units完整结束。Hash-aware analyzer确认AMD 28/28、SimpleTM 82/82 raw metrics、110/110 unique checkpoint hashes与56/56 aggregated cells；旧root三份partial units未混入。Main I已原子移除CMoS/TimeBase并加入AMD/SimpleTM，保持14 models × 7 datasets × four H；ISCF-BSCA更新为29/56 best、19/56 second。AMD/SimpleTM仅作official-native fixed-H accuracy context。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_final_amd_simpletm_20260808/result_and_table_audit.md`。该授权scope已关闭。
 
 ## 2. Paper claims to be discharged
 

@@ -40,13 +40,20 @@ SOURCE_MODELS = (
     "TimesNet",
     "DLinear",
 )
-DISPLAY_MODELS = ("ISCF-BSCA", "TimeAlign", "QDF") + SOURCE_MODELS[1:]
+EXCLUDED_SOURCE_MODELS = {"CMoS", "TimeBase"}
+DISPLAY_MODELS = (
+    "ISCF-BSCA",
+    "TimeAlign",
+    "QDF",
+    "AMD",
+    "SimpleTM",
+) + SOURCE_MODELS[3:]
 MODEL_YEARS = {
     "ISCF-BSCA": "Ours",
     "TimeAlign": "2026",
     "QDF": "2026",
-    "CMoS": "2025",
-    "TimeBase": "2025",
+    "AMD": "2025",
+    "SimpleTM": "2025",
     "TVNet": "2025",
     "iTransformer": "2024b",
     "TimeMixer": "2024",
@@ -137,6 +144,17 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="Complete local QDF eight-dataset reproduction; replaces published/Solar inputs.",
     )
+    parser.add_argument(
+        "--amd-simpletm-reproduced",
+        type=Path,
+        default=ROOT
+        / "analysis"
+        / "iscf_bsca_paper_experiment_consolidation_20260731"
+        / "amd_simpletm_main_i_reproduction_20260806"
+        / "remote_lite"
+        / "audit"
+        / "cell_metrics.csv",
+    )
     parser.add_argument("--analysis-dir", type=Path, required=True)
     parser.add_argument("--output-pdf", type=Path, required=True)
     return parser.parse_args()
@@ -211,6 +229,8 @@ def extract_timealign_table6(pdf_path: Path) -> list[dict[str, Any]]:
             if word["x0"] > 128
         ]
         for model_index, model in enumerate(SOURCE_MODELS):
+            if model in EXCLUDED_SOURCE_MODELS:
+                continue
             output.append(
                 {
                     "model": model,
@@ -310,6 +330,52 @@ def load_qdf_reproduced_rows(path: Path) -> list[dict[str, Any]]:
         raise ValueError(
             f"expected complete 28-cell reproduced QDF dense matrix, "
             f"found rows={len(rows)}, missing={sorted(expected - keys)}"
+        )
+    return rows
+
+
+def load_amd_simpletm_rows(path: Path) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    expected_repeats = {"AMD": 1, "SimpleTM": None}
+    for source in read_csv(path):
+        model = source["baseline"]
+        if model not in expected_repeats:
+            raise ValueError(f"unexpected AMD/SimpleTM baseline: {model}")
+        repeat_count = int(source["repeat_count"])
+        if model == "AMD" and repeat_count != expected_repeats[model]:
+            raise ValueError(
+                f"AMD {source['dataset']} H{source['horizon']}: "
+                f"expected one repetition, found {repeat_count}"
+            )
+        if model == "SimpleTM" and repeat_count not in {2, 3}:
+            raise ValueError(
+                f"SimpleTM {source['dataset']} H{source['horizon']}: "
+                f"expected two or three native repetitions, found {repeat_count}"
+            )
+        rows.append(
+            {
+                "model": model,
+                "dataset": source["dataset"],
+                "horizon": int(source["horizon"]),
+                "mse": float(source["mse"]),
+                "mae": float(source["mae"]),
+                "value_origin": "official_code_local_native_reproduction",
+                "system_role": "horizon_specific_official_native",
+            }
+        )
+    expected = {
+        (model, dataset, horizon)
+        for model in expected_repeats
+        for dataset in DISPLAY_DATASETS
+        for horizon in HORIZONS
+    }
+    keys = {
+        (row["model"], row["dataset"], int(row["horizon"])) for row in rows
+    }
+    if len(rows) != 56 or keys != expected:
+        raise ValueError(
+            f"expected complete 56-cell AMD/SimpleTM matrix, found rows={len(rows)}, "
+            f"missing={sorted(expected - keys)}, extra={sorted(keys - expected)}"
         )
     return rows
 
@@ -666,8 +732,9 @@ def build_pdf(
         "test-tuned model per dataset. TimeAlign uses the artifact-complete local "
         "seed-2021 reproduction on all seven shared datasets. "
         + qdf_note
-        + "All remaining "
-        "baselines are transcribed "
+        + "AMD uses one official-code local run per cell (L=512, seed 2024); "
+        "SimpleTM uses the arithmetic mean of its official native repetitions "
+        "(L=96, fix_seed 2025). All remaining baselines are transcribed "
         "from TimeAlign Table 6 and are unmatched published context. Traffic and "
         "Exchange are excluded from this dense panel because they do not share the "
         "current comparison surface; "
@@ -837,10 +904,11 @@ def build_latex(path: Path, rows: list[dict[str, Any]]) -> None:
             "TimeAlign uses our official-native single-seed reproduction on all seven "
             "shared datasets. "
             + qdf_caption
-            + "all other baselines "
-            "are published "
+            + "AMD uses one official-code local run per cell (L=512, seed 2024), "
+            "SimpleTM uses the mean of its official native repetitions (L=96, "
+            "fix_seed 2025), and all other baselines are published "
             "context rather than matched local reproductions.}",
-            "\\label{tab:main_iscf_bsca_qdf}",
+            "\\label{tab:main_iscf_bsca}",
             "\\end{table*}",
             "",
         ]
@@ -898,11 +966,7 @@ def write_summary(path: Path, rows: list[dict[str, Any]], args: argparse.Namespa
         }
     )
     summary = {
-        "table_id": (
-            "ISCF-BSCA-MAIN-I-QDF-L336-LOCAL-20260806"
-            if qdf_full_reproduction
-            else "ISCF-BSCA-MAIN-I-QDF-LOCAL-20260806"
-        ),
+        "table_id": "ISCF-BSCA-MAIN-I-AMD-SIMPLETM-LOCAL-20260808",
         "models": list(DISPLAY_MODELS),
         "datasets": list(DISPLAY_DATASETS),
         "horizons": list(HORIZONS),
@@ -934,6 +998,9 @@ def write_summary(path: Path, rows: list[dict[str, Any]], args: argparse.Namespa
         "qdf_reproduced_cells_in_dense_table": 28 if qdf_full_reproduction else 4,
         "qdf_reproduced_cells_exchange_companion": 4 if qdf_full_reproduction else 0,
         "qdf_published_cells": 0 if qdf_full_reproduction else 24,
+        "amd_reproduced_cells_in_dense_table": 28,
+        "simpletm_reproduced_cells_in_dense_table": 28,
+        "replaced_models": ["CMoS", "TimeBase"],
         "source_hashes": {
             "timealign_pdf": file_sha256(args.timealign_pdf),
             "iscf_scorecard": file_sha256(args.iscf_scorecard),
@@ -942,11 +1009,15 @@ def write_summary(path: Path, rows: list[dict[str, Any]], args: argparse.Namespa
                 args.audited_published_selected
             ),
             **qdf_hashes,
+            "amd_simpletm_reproduced": file_sha256(
+                args.amd_simpletm_reproduced
+            ),
         },
         "claim_boundary": (
             "ISCF-BSCA is single-seed and test-tuned; TimeAlign is local single-seed "
             "reproduction on every shared dataset; QDF is a local single-seed "
             + ("L=336 reproduction with disclosed Solar/Exchange source-informed presets; " if qdf_full_reproduction else "mixture of published and source-informed Solar values; ")
+            + "AMD and SimpleTM are local official-native fixed-H reproductions; "
             + "other baselines are unmatched "
             "published context"
         ),
@@ -966,6 +1037,7 @@ def main() -> None:
         rows.extend(load_qdf_rows(args.qdf_published, args.qdf_solar_reproduced))
     else:
         rows.extend(load_qdf_reproduced_rows(args.qdf_reproduced_all))
+    rows.extend(load_amd_simpletm_rows(args.amd_simpletm_reproduced))
     rows.extend(load_iscf_rows(args.iscf_scorecard))
     validate_matrix(rows)
     styled_rows = add_averages_and_styles(rows)

@@ -1,0 +1,24 @@
+launch_time=2026-08-07T10:27:10+08:00
+mode=run
+repo_commit=b09c6e8ac20348a8caa98d176d6c8c99b3046802
+config_sha256=4e3b6c686b96f6f1be17beba30c7c5182c21a15f922456e99c3ec1b33527c815
+adapter_sha256=d327b99916aa07186758297e32e15edfa1224987787e528487f3b8933bbe9b0f
+output_root=/home/yingch/exp_outputs/r-2026-fatst/amd_simpletm_main_i_7dataset_20260807_recovery
+data_root=/home/yingch/dataset
+gpu_ids=0 1 2
+units=14
+formal_cells=56
+formal_training_repetitions=110
+Disk quotas for user yingch (uid 1017): 
+   文件系统   space  配额  规限宽限期文件节点  配额  规限宽限期
+      /dev/sdb3    178G    200G    220G            635k       0       0        
+0, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0
+1, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0
+2, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0
+3.12.13
+2.9.0+cu128
+12.8
+2.4.4
+2.2.2
+1.8.0
+

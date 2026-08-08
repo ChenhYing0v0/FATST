@@ -1,0 +1,20 @@
+{
+  "AMD_metric_rows": 28,
+  "SimpleTM_metric_rows": 82,
+  "macro": {
+    "AMD": {
+      "mae": 0.32814741507172585,
+      "mse": 0.2821321003139019
+    },
+    "SimpleTM": {
+      "mae": 0.332379678885142,
+      "mse": 0.29209935753828004
+    }
+  },
+  "matrix_complete": true,
+  "protocol_id": "AMD-SIMPLETM-OFFICIAL-MAIN-I-7DATASET-REPRODUCTION-20260806",
+  "raw_metric_rows": 110,
+  "schema_version": 1,
+  "table_cells": 56,
+  "unique_checkpoint_hashes": 110
+}

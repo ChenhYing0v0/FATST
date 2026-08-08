@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## AMD / SimpleTM Main I Complete and Table Replacement (2026-08-08)
+
+Current experiment cursor=`Step 9 artifact audit complete -> Step 10 Main I consolidation pass`。Recovery root已14/14 units、AMD 28/28 + SimpleTM 82/82 raw rows、110 unique checkpoint hashes与56/56 cells完整通过；旧root partial rows永久excluded。Main I已原子用AMD/SimpleTM替换CMoS/TimeBase，保持14 models × 7 datasets × four H；ISCF-BSCA更新为29/56 best、19/56 second。AMD/SimpleTM仅承担official-native horizon-specific accuracy context。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_final_amd_simpletm_20260808/result_and_table_audit.md`。Decision=`AMD_SimpleTM_complete_Main_I_atomic_replacement_pass_scope_closed`。
+
 ## AMD / SimpleTM Main I Official Reproduction Prelaunch (2026-08-06)
 
 Current experiment cursor=`Step 6 source/protocol freeze -> Step 7 adapter complete -> Step 8 resource gate`。用户授权AMD与SimpleTM在7 dense datasets × four H上的official-source reproduction，共56 table cells。AMD按released `L512/seed2024` scripts训练28 checkpoints；SimpleTM按released `L96/fix_seed2025/native itr` scripts训练82 checkpoints。SimpleTM只做test-hygiene与`num_workers=0` adapter，不改变objective、profiles或validation selector；其upstream无license，因此不vendoring。先执行14个H720 one-epoch/no-test smokes并检查35 GiB storage budget；通过后后台启动formal queue，不驻守。110/110 artifacts前禁止partial table replacement。Canonical prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/amd_simpletm_main_i_reproduction_20260806/design_and_launch_gate.md`。Decision=`AMD_SimpleTM_56_cell_prelaunch_conditional_pass`。

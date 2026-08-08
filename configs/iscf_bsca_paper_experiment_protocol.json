@@ -89,6 +89,20 @@
         "solar_mean_mae": 0.29150257632136345,
         "status": "artifact_complete_source_informed_solar_reproduction"
       },
+      "amd_simpletm_main_i_completed": {
+        "protocol_id": "AMD-SIMPLETM-OFFICIAL-MAIN-I-7DATASET-REPRODUCTION-20260806",
+        "matrix": "7_dense_datasets_x_4_horizons_x_2_baselines",
+        "formal_units": 14,
+        "AMD_metric_rows": 28,
+        "SimpleTM_metric_rows": 82,
+        "unique_checkpoint_hashes": 110,
+        "aggregated_table_cells": 56,
+        "old_partial_root_role": "excluded_artifact_collection_failure",
+        "artifact_complete": true,
+        "formal_test_scope_consumed": true,
+        "main_i_replacement": "CMoS_and_TimeBase_replaced_by_AMD_and_SimpleTM",
+        "result_artifact": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_final_amd_simpletm_20260808/result_and_table_audit.md"
+      },
       "main_ii_local_source_protocol_patch": false,
       "main_ii_remote_training": false,
       "main_ii_formal_test": false
@@ -1244,11 +1258,11 @@
       "publication": "AAAI_2025",
       "official_repository": "https://github.com/TROUBADOUR000/AMD",
       "main_i_role": "horizon_specific_published_or_official_reproduced",
-      "status": "official_reproduction_repaired_remote_active",
+      "status": "official_reproduction_complete_28_cells_Main_I_replaced",
       "frozen_source_commit": "000d377a1ed8946aa817ff357cdf1de64b99abb9",
       "local_reproduction_protocol": "configs/amd_simpletm_official_main_i_reproduction.json",
       "local_reproduction_scope": "seven_dense_datasets_x_four_horizons_official_L512_seed2024",
-      "formal_test_authorized": true
+      "formal_test_authorized": false
     },
     {
       "id": "TimeMixer",
@@ -1270,14 +1284,14 @@
       "publication": "ICLR_2025",
       "official_repository": "https://github.com/vsingh-group/SimpleTM",
       "main_i_role": "horizon_specific_published_or_official_reproduced",
-      "status": "official_reproduction_repaired_remote_active",
+      "status": "official_reproduction_complete_28_cells_Main_I_replaced",
       "frozen_source_commit": "3c77d820837b726afb03c943235ea95bc924243d",
       "license_status": "not_provided_by_upstream_repository_no_vendoring",
       "local_reproduction_protocol": "configs/amd_simpletm_official_main_i_reproduction.json",
       "local_reproduction_scope": "seven_dense_datasets_x_four_horizons_official_L96_native_itr",
       "test_access_adapter": "remove_epoch_level_test_evaluation_final_test_once_per_selected_checkpoint",
       "artifact_identity_adapter": "append_native_itr_index_to_upstream_setting",
-      "formal_test_authorized": true
+      "formal_test_authorized": false
     },
     {
       "id": "iTransformer",
@@ -1535,17 +1549,33 @@
         "table": "main_i_official_reproduction_fill",
         "arms": [
           "AMD",
-          "SimpleTM",
+          "SimpleTM"
+        ],
+        "datasets": [
+          "ETTh1",
+          "ETTh2",
+          "ETTm1",
+          "ETTm2",
+          "Weather",
+          "ECL",
+          "Solar"
+        ],
+        "horizons": [96, 192, 336, 720],
+        "training_checkpoints": 110,
+        "display_cells": 56,
+        "status": "reusable",
+        "artifact": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/amd_simpletm_main_i_reproduction_20260806/remote_lite/audit/cell_metrics.csv"
+      },
+      {
+        "table": "main_i_remaining_official_reproduction_fill",
+        "arms": [
           "TimePerceiver-native",
           "SRSNet-native"
         ],
         "datasets": "all",
         "horizons": "all",
-        "seeds": [
-          2021
-        ],
-        "training_checkpoints": 128,
-        "seed_horizon_cells": 128,
+        "training_checkpoints": 64,
+        "seed_horizon_cells": 64,
         "status": "source_patch_required"
       },
       {
