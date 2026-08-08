@@ -924,14 +924,26 @@ Step4–6。candidate=`SC-ISCF-FRSC-v0`，narrative conditional pass；下一步
 | `artifacts` | clean manuscript=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`；highlighted review=`docs/paper-drafts/iscf-bsca-method-v0.4-highlighted-review.md`；paper architecture/mainline/ledger同步 |
 | `decision` | `section4_v0_4_path_and_allocation_refinement_pending_author_review` |
 
+## Section 4 v0.5 BSCA Objective Refinement (2026-08-08)
+
+| Field | Content |
+| --- | --- |
+| `current_step` | paper consolidation；Section 4 author review focused on 4.3 and 4.5 |
+| `problem` | 4.3 unified-field summary冗长；4.5未先说明multi-scope joint optimization中的probability-scaled gradient imbalance，loss chain缺少清晰设计逻辑 |
+| `design` | 精简4.3；将4.5重构为`gradient imbalance -> Uniform-Prefix Forecasting Loss -> Scope-Wise Forecasting Loss -> Allocation-Balance Regularizer`，统一paper-facing symbols |
+| `theory_check` | fused gradient对scope $s$按$\pi_{b,c,\tau,s}$缩放；uniform-prefix objective与dense incidence weights严格等价；direct scope loss绕开allocation缩放；normalized uniform-reference KL只抑制early concentration |
+| `claim_boundary` | 不把uniform KL表述为充分训练保证；不宣称equal inference usage、semantic specialization或effectiveness；forward graph、implementation与实验状态不变 |
+| `artifacts` | clean manuscript=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`；paper architecture/mainline/ledger同步；v0.4 highlighted review保留为上一轮历史对照 |
+| `decision` | `section4_v0_5_bsca_objective_refinement_pending_author_review` |
+
 ## Current Cursor
 
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | paper consolidation；Introduction与Section 3 frozen；Section 4 v0.4 refined through 4.6 pending author review |
-| `active_question` | 两条named paths、4.3 unified-field framing、4.4 target-adaptive allocation narrative及4.5--4.6联动是否可接受；Figure 4 stable vector source仍待同步 |
-| `active_candidates` | exact `ISCF-BSCA-v1` frozen ablation anchor；Figures 1--3 approved；Section 4 v0.4 pending author review；Method Figure 4 visual design temporarily fixed |
+| `current_step` | paper consolidation；Introduction与Section 3 frozen；Section 4 v0.5 BSCA objective refinement pending author review |
+| `active_question` | 4.3 compact unified-field summary与4.5三项BSCA objectives的problem-to-solution叙事是否可接受；Figure 4 stable vector source仍待同步 |
+| `active_candidates` | exact `ISCF-BSCA-v1` frozen ablation anchor；Figures 1--3 approved；Section 4 v0.5 pending author review；Method Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
