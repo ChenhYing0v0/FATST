@@ -10,6 +10,7 @@ The path has four modules:
 2. `scripts/run_main_ii_h720_training_job.py` verifies an exact upstream checkout, copies a repo-external execution workspace, applies narrow runtime patches, extracts the released H720 command, and runs one smoke/training/test unit.
 3. `scripts/evaluate_main_ii_h720_prefix_arrays.py` memory-maps one upstream H720 prediction/target pair,按 origin chunks 转换为 canonical `[origin,time,channel]`，并从同一 tensor 的 exact views 重算 H96/H192/H336/H720 MSE/MAE。
 4. `scripts/check_main_ii_h720_prelaunch.py` and `scripts/remote/run_main_ii_h720_training.sh` enforce the 21-training/70-evaluation matrix and the local → smoke → training → test ordering.
+5. `scripts/collect_main_ii_existing_iscf_prefix.py` verifies and reuses the seven completed ISCF H1--H720 full-crop formal audits without new test access; `scripts/evaluate_main_ii_timealign_checkpoint.py` streams one frozen official TimeAlign H720 checkpoint directly from its native test loader without retaining full arrays.
 
 ## 2. Runtime source patch
 
@@ -41,6 +42,10 @@ Each unit writes:
 - formal test upstream 临时写入 `pred.npy`、`true.npy`；prefix evaluator 成功保留 four-row metrics、canonical tensor hashes 与 shape 后，仅精确删除这两个临时 arrays，以满足 remote 220 GiB hard limit。
 
 Checkpoint SHA256 is computed before and after formal test; mutation is a hard failure.
+
+ISCF reuse collector 还要求：selected manifest 恰好覆盖 seven dense datasets、actual checkpoint hash 等于 before/after-test hashes、dense CSV 完整覆盖 H1--H720、invariant JSON 的 H96/H192/H336/H720 `full_prefix_max_abs=0`，且 four-H mean 精确重建冻结 manifest。由于该既有 audit 未保留 arrays，新 Main II 记录保存 dense metric CSV、diagnostic NPZ、invariant JSON 与 checkpoint 的 hashes，而不伪造 tensor hash。
+
+TimeAlign streaming evaluator 从冻结 `effective_config.json` 重建 exact official model/data loader，加载同一 H720 `checkpoint.pt`，逐 test batch 做一次 H720 forward 并同步累加 four prefixes。其 H720 MSE/MAE 必须在绝对误差 $10^{-8}$ 内复现 Main I 的 exact anchor；checkpoint pre/post hashes 必须相同。
 
 ## 4. Prefix metric semantics
 
