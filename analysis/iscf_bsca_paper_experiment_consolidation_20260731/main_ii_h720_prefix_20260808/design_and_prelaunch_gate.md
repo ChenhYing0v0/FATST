@@ -4,7 +4,7 @@
 
 用户已将 Main I 暂时冻结，并把 Main II 改为 **H720-trained one-model-all-horizons system benchmark**：每个 external baseline 在每个 dataset 只使用一个按官方 H720 script 训练的模型；H96、H192 与 H336 由同一 H720 prediction tensor 裁剪前 $H$ steps 获得。该设计直接测试 fixed-H systems 在不为每个 horizon 单独训练模型时的多 horizon 服务能力。
 
-本轮已完成 Main I freeze、官方 source audit、逐 dataset checkpoint/source manifest 与 machine-readable protocol。远程训练、local protocol patch 和 formal prefix test 尚未获得分级授权，因此没有启动任何 remote job，也没有访问新的 test 结果。
+本轮已完成 Main I freeze、官方 source audit、逐 dataset checkpoint/source manifest 与 machine-readable protocol。2026-08-08 用户已显式授权 Tier A local protocol/source patch、Tier B remote H720 training 与 Tier C formal prefix test。执行仍严格串行受 gate 约束：Tier A local gate 通过后才能做 no-test remote smoke；21/21 formal checkpoints 与 pre-test hash manifest 冻结后，才能访问 Tier C official test。
 
 ## 2. Main I freeze
 
@@ -130,9 +130,9 @@ Pre-smoke 粗估 21 个新训练 jobs 需要 60--180 GPU-hours；该区间只用
 - Main I freeze：完成；
 - existing-artifact/source audit：完成；
 - Main II matrix design：完成；
-- local protocol patch：**未授权**；
-- remote H720 training：**未授权**；
-- formal prefix test：**未授权**；
+- local protocol patch：**已授权，执行中**；
+- remote H720 training：**已授权，须先通过 Tier A local gate 与 no-test smoke gate**；
+- formal prefix test：**已授权，须等待 21/21 checkpoint manifest 与 pre-test hashes 冻结**；
 - Exchange extension / optional common-origin sensitivity / 3-seed：**未授权**。
 
-下一步应先请求 Tier A local patch 授权；Tier A 通过后，再分别请求 Tier B remote training 与 Tier C formal prefix test。不得把本次 design authorization 扩张为 remote 或 test authorization。
+当前执行顺序固定为：Tier A implementation/local dry-run → Tier B no-test resource smoke → Tier B formal training → freeze checkpoint manifest → Tier C formal prefix test → complete audit/table build。不得把 Tier A/B/C 授权扩张到 Exchange、common-origin sensitivity、optional 3-seed 或 Main I mutation。

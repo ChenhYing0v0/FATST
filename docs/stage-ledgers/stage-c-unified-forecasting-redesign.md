@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | 写作流继续审阅Section 4 v0.3 author refinement（4.1--4.3已更新）并等待Figure 4 stable vector source；实验流Main I已hash冻结，Main II H720-prefix设计完成，等待Tier A/B/C分级授权 |
+| `active_question` | 写作流继续审阅Section 4 v0.3 author refinement（4.1--4.3已更新）并等待Figure 4 stable vector source；实验流Main I已hash冻结，Main II H720-prefix Tier A/B/C已授权，Step 7 local implementation执行中 |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9与Section 3 v0.7 frozen；Section 4 v0.3 refined through 4.3 pending continued author review；Figure 4 visual design temporarily fixed |
@@ -21,19 +21,19 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper consolidation；writing=Section 4 v0.3 author refinement through 4.3 pending continued author review；experiments=Main I freeze complete，Main II Step 6 source/protocol design complete |
+| `current_11_step` | paper consolidation；writing=Section 4 v0.3 author refinement through 4.3 pending continued author review；experiments=Main I freeze complete，Main II Step 7 local implementation active |
 | `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；`ISCF-BSCA-MAIN-v1` 8 selected profiles reusable |
-| `latest_decision` | `Main_I_hash_frozen_Main_II_H720_prefix_design_complete_waiting_staged_authorization` |
+| `latest_decision` | `Main_II_Tier_A_B_C_authorized_Step7_local_implementation_active` |
 | `writing_latest_decision` | `section4_v0_3_author_feedback_integrated_through_4_3_pending_continued_review` |
-| `next_required_action` | request Tier A Main II evaluator/Solar source patch authorization；Tier B remote H720 training与Tier C formal prefix test仍分开 |
-| `method_training_authorized` | false；Main I frozen；Main II local patch/remote training/formal test=false |
+| `next_required_action` | complete Tier A source/patch/evaluator local gate；then no-test smoke -> formal H720 training -> freeze hashes -> formal prefix test |
+| `method_training_authorized` | true；Main I frozen；Main II local patch/remote training/formal prefix test=true，仍受各阶段gate约束 |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | HPO frozen；Main I hash freeze complete；Main II H720-prefix source/protocol design complete，Step 7 patch pending authorization |
+| `current_step` | HPO frozen；Main I hash freeze complete；Main II H720-prefix Step 7 local implementation active |
 | `problem` | Introduction的horizon-specific superiority、component effectiveness与decoder portability claims尚缺完整paper-facing evidence |
 | `existence_evidence` | TimeAlign/QDF/AMD/SimpleTM已有49个可复用H720 checkpoint objects；iTransformer 7/7 official scripts；PatchTST/DLinear各6/7 official且Solar缺loader/preset |
 | `idea` | frozen Main I + H720-trained one-model-all-horizons Main II + exact five-dataset ablation/end-to-end transfer |
@@ -42,7 +42,7 @@
 | `narrative_gate` | architecture family冻结；SOTA wording由完整test-tuned result决定并披露test-informed边界 |
 | `effectiveness_gate` | pre-result；formal gate=21/21 new checkpoints + 70/70 evaluations + 224/224 cells + H720 continuity；not matched attribution |
 | `artifacts` | protocol=`configs/iscf_bsca_main_ii_h720_prefix_protocol.json`；prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/design_and_prelaunch_gate.md` |
-| `decision` | Main I frozen；Tier A/B/C未授权；no remote launch or new formal test |
+| `decision` | Main I frozen；Tier A/B/C已授权；必须依次通过local patch、no-test smoke、checkpoint freeze与formal prefix test gates |
 
 ## Exact Ablation Anchor Contract
 

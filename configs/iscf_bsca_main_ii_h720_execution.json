@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "protocol": "configs/iscf_bsca_main_ii_h720_prefix_protocol.json",
+  "authorization": "Tier_A_B_C_explicit_2026-08-08",
+  "status": "local_implementation_active",
+  "remote": {
+    "host": "529_Lab-3090",
+    "repo_root": "/home/yingch/projects/FATST",
+    "conda_env": "moe",
+    "data_root": "/home/yingch/dataset",
+    "output_root": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_h720_prefix_20260808",
+    "gpu_ids": [0, 1, 2],
+    "storage_budget_gib": 40
+  },
+  "datasets": {
+    "ETTh1": {"relative_path": "ETT-small/ETTh1.csv", "sha256": "f18de3ad269cef59bb07b5438d79bb3042d3be49bdeecf01c1cd6d29695ee066"},
+    "ETTh2": {"relative_path": "ETT-small/ETTh2.csv", "sha256": "a3dc2c597b9218c7ce1cd55eb77b283fd459a1d09d753063f944967dd6b9218b"},
+    "ETTm1": {"relative_path": "ETT-small/ETTm1.csv", "sha256": "6ce1759b1a18e3328421d5d75fadcb316c449fcd7cec32820c8dafda71986c9e"},
+    "ETTm2": {"relative_path": "ETT-small/ETTm2.csv", "sha256": "db973ca252c6410a30d0469b13d696cf919648d0f3fd588c60f03fdbdbadd1fd"},
+    "Weather": {"relative_path": "weather/weather.csv", "sha256": "34ee981d07313e51da2a50bb600072c8ae4a69cb4b0651f4cb93a069d7a2ba63"},
+    "ECL": {"relative_path": "electricity/electricity.csv", "sha256": "7e45845d54c5219bad0ae6bc1b5316cf8ff9cead5d33fa998a5a51c2e4a497ad"},
+    "Solar": {"relative_path": "Solar/solar_AL.txt", "sha256": "230327ef72d2abb387939d4a35d6fd34f1066071bc7c40ce7ecf5531a0122ac2"}
+  },
+  "training_baselines": {
+    "iTransformer": {
+      "repository": "https://github.com/thuml/iTransformer",
+      "commit": "c2426e68ca13f74aaec08045c5c724d8ad328124",
+      "source_subdir": ".",
+      "entrypoint": "run.py",
+      "runner_kind": "itransformer",
+      "scripts": {
+        "ETTh1": "scripts/multivariate_forecasting/ETT/iTransformer_ETTh1.sh",
+        "ETTh2": "scripts/multivariate_forecasting/ETT/iTransformer_ETTh2.sh",
+        "ETTm1": "scripts/multivariate_forecasting/ETT/iTransformer_ETTm1.sh",
+        "ETTm2": "scripts/multivariate_forecasting/ETT/iTransformer_ETTm2.sh",
+        "Weather": "scripts/multivariate_forecasting/Weather/iTransformer.sh",
+        "ECL": "scripts/multivariate_forecasting/ECL/iTransformer.sh",
+        "Solar": "scripts/multivariate_forecasting/SolarEnergy/iTransformer.sh"
+      },
+      "script_sha256": {
+        "ETTh1": "81f8409cff60b754b45ed2e76133c7e3b6e585a50c8361f04fa3daf3b6997cc0",
+        "ETTh2": "6d26d84d36a737e9f39b383c9a59a77c2c7b807f300f7f1334026089b032e7e4",
+        "ETTm1": "780c7b173021d2dc9706c079002cb39663b87ea866c06a8bceb99b2809eca6d6",
+        "ETTm2": "1604b09672c627dc769cad3416cde5aba828c15604a19fe1efa8a04a212fd800",
+        "Weather": "7cbdad479bb1a000b5c5bab82635a4bb5b700fd3e1efe922b265309b9331d054",
+        "ECL": "44c695c21a4ac03d440e09ddcd6e39cb7cb0c09095df085f423281461a983014",
+        "Solar": "9aaaa3fc1424aa496b7f883bf0c8e2691af8d6db8ed3607c05eeeeaafd93c564"
+      },
+      "key_source_sha256": {
+        "run.py": "650873cfd6fee1f0415d4e8fd69943ad736fd1bab6495b640aa27b1a769f59f9",
+        "experiments/exp_long_term_forecasting.py": "53fe88ddeb4bb0c438928a560dbd7870c7c7c9f74ae9dd8075f971efc51e4103",
+        "data_provider/data_loader.py": "8e68d2d9ed29f74a7645a96cebe6aee20d53722f4ca993a8f1e6d4b5a997193c",
+        "data_provider/data_factory.py": "767842dd13738391e0b850dc4b6d869350946fe8f0382ccf04bf472889c8b6e5",
+        "utils/tools.py": "0beca0c862392b5d58d19912daf287e1da9df16b4d5c30f1fcd681ac77befed2"
+      }
+    },
+    "PatchTST": {
+      "repository": "https://github.com/yuqinie98/PatchTST",
+      "commit": "204c21efe0b39603ad6e2ca640ef5896646ab1a9",
+      "source_subdir": "PatchTST_supervised",
+      "entrypoint": "run_longExp.py",
+      "runner_kind": "patchtst",
+      "scripts": {
+        "ETTh1": "scripts/PatchTST/etth1.sh",
+        "ETTh2": "scripts/PatchTST/etth2.sh",
+        "ETTm1": "scripts/PatchTST/ettm1.sh",
+        "ETTm2": "scripts/PatchTST/ettm2.sh",
+        "Weather": "scripts/PatchTST/weather.sh",
+        "ECL": "scripts/PatchTST/electricity.sh",
+        "Solar": "scripts/PatchTST/electricity.sh"
+      },
+      "script_sha256": {
+        "ETTh1": "556c87cd7dd795094ff6cb73465e84c90686017e1535e0ba23ed43683b9b0897",
+        "ETTh2": "fbe25de2a3478cc7b3b1f6f3e97b77b7949ff18bd2de3f723d8296269b17364d",
+        "ETTm1": "6b4fd17c3da9471f29556b92f7c788e667a108548ebb0919d24ecea4b3d36aa5",
+        "ETTm2": "9118c71d9faa01fb4cb1751a0d06d6cfd8426958a55874e67847f70540efaa15",
+        "Weather": "3f9e2d58fa3f3cb725f7d10b98e99fa1226c07899c2d4a20f7c9eae98a7f386b",
+        "ECL": "e20aefa2c3ebda862dab6eb9f970b2f139c8b30b8d294fd3f8ed355816808920",
+        "Solar": "e20aefa2c3ebda862dab6eb9f970b2f139c8b30b8d294fd3f8ed355816808920"
+      },
+      "key_source_sha256": {
+        "run_longExp.py": "44345cb6c6a5e7a6ff95b8e95c988aef3386d9fff7ddd23cb5fee5d3a151bdfc",
+        "exp/exp_main.py": "de76924d0dc15c50a9b199a094f1362bdc4975566d3bb2a854ed2298185086cc",
+        "data_provider/data_loader.py": "1d49e2207ae1fa5ae7c1ddbe4be0f38e9b2a73ebc851a16e02681f26f843905e",
+        "data_provider/data_factory.py": "98f83b72488ff2cb5364fca2267bc0ab786e5c7aeed5f9f4e625b11cd9bd4c45",
+        "utils/tools.py": "80c2f839674069a140d022fad1ede524dda4bfab79d9e6ad87c21bcf8f1d5390"
+      }
+    },
+    "DLinear": {
+      "repository": "https://github.com/cure-lab/LTSF-Linear",
+      "commit": "0c113668a3b88c4c4ee586b8c5ec3e539c4de5a6",
+      "source_subdir": ".",
+      "entrypoint": "run_longExp.py",
+      "runner_kind": "dlinear",
+      "scripts": {
+        "ETTh1": "scripts/EXP-LongForecasting/Linear/etth1.sh",
+        "ETTh2": "scripts/EXP-LongForecasting/Linear/etth2.sh",
+        "ETTm1": "scripts/EXP-LongForecasting/Linear/ettm1.sh",
+        "ETTm2": "scripts/EXP-LongForecasting/Linear/ettm2.sh",
+        "Weather": "scripts/EXP-LongForecasting/Linear/weather.sh",
+        "ECL": "scripts/EXP-LongForecasting/Linear/electricity.sh",
+        "Solar": "scripts/EXP-LongForecasting/Linear/electricity.sh"
+      },
+      "script_sha256": {
+        "ETTh1": "cdd402ec2f78dc525485d278b3360bb705995b2d72d7ae2da8e77c3fc6094ff5",
+        "ETTh2": "43948e3d159d377dd89ac5171dbca7dc9c0396f053f41c489ad40d8e9f21b886",
+        "ETTm1": "d6e6f50124a7c381d06bac431b83cee076c630fda77ea853c0092017042f3af1",
+        "ETTm2": "ac6de10a5e313f5a962633821625d0d40d5eabd6b33c4e368ecb386dce1bd0bb",
+        "Weather": "b67d06322415e368e970c18919aaec78952e50687c3c1373912151cedda82016",
+        "ECL": "26ba11e76db043dbed35ced79b642253c7c6750572918828a124662da45551da",
+        "Solar": "26ba11e76db043dbed35ced79b642253c7c6750572918828a124662da45551da"
+      },
+      "key_source_sha256": {
+        "run_longExp.py": "7519b8f95f06768da5f2faae5c10ae23855015df764298e79c7d85cd1396ab2b",
+        "exp/exp_main.py": "3236633a9fcca104c9dfa20910207ec2170b3a35ec54b08d28cbfa63aaec03f2",
+        "data_provider/data_loader.py": "5ad8b4c7ef1c0b4ffa4446d0070a1d23d1f0bf2918dde3b5ae57f5fc91be6523",
+        "data_provider/data_factory.py": "911f9aab3adfae99f13dcdff162804d8d42de806a0b31aeacfd0aaf2cbf36e94",
+        "utils/tools.py": "6c10c4b94cd39f84de0974625deeb9687b71f5b435c41aaa107b36435d412b9b"
+      }
+    }
+  },
+  "runtime_contract": {
+    "training_test_access": "disabled_in_runtime_patch",
+    "checkpoint_selection": "native_validation_early_stopping",
+    "num_workers": 0,
+    "smoke_train_epochs": 1,
+    "smoke_max_train_batches": 2,
+    "smoke_max_eval_batches": 2,
+    "formal_training_horizon": 720,
+    "formal_test_once_after_checkpoint_freeze": true,
+    "solar_patch": "copy exact Dataset_Solar semantics from audited iTransformer source and use ECL H720 optimization profile"
+  },
+  "workload_order": [
+    "iTransformer:ECL",
+    "PatchTST:ECL",
+    "iTransformer:Weather",
+    "PatchTST:Weather",
+    "iTransformer:Solar",
+    "PatchTST:Solar",
+    "iTransformer:ETTm1",
+    "PatchTST:ETTm1",
+    "iTransformer:ETTm2",
+    "PatchTST:ETTm2",
+    "iTransformer:ETTh1",
+    "PatchTST:ETTh1",
+    "iTransformer:ETTh2",
+    "PatchTST:ETTh2",
+    "DLinear:ECL",
+    "DLinear:Weather",
+    "DLinear:Solar",
+    "DLinear:ETTm1",
+    "DLinear:ETTm2",
+    "DLinear:ETTh1",
+    "DLinear:ETTh2"
+  ]
+}

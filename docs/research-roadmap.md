@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## Main II H720-Prefix Tier A/B/C Execution Authorization (2026-08-08)
+
+用户已显式授权Tier A local protocol/Solar source patch、Tier B remote H720 training与Tier C formal prefix test。Current cursor=`Step 7 local implementation active`。执行仍按冻结gate串行：source/patch hash与21-training/70-evaluation dry-run通过后做21个no-test resource smokes；21/21 formal checkpoints与pre-test hashes冻结后才执行70 checkpoint formal prefix evaluations。Exchange、common-origin sensitivity、optional 3-seed与Main I mutation均不在本次授权范围。Decision=`Main_II_Tier_A_B_C_authorized_Step7_local_implementation_active`。
+
 ## Main I Freeze and Main II H720-Prefix Prelaunch (2026-08-08)
 
 Current experiment cursor=`Step 6 source/protocol design complete -> Step 7 local patch pending authorization`。Main I已由`main_i_freeze_manifest.json`锁定14 models × 7 dense datasets × four H及全部输入/输出hash，后续Main II不得回写。Main II v1固定八个systems（ISCF-BSCA + TimeAlign/QDF/AMD/SimpleTM/iTransformer/PatchTST/DLinear）、七个dense datasets、H720 single-model training与H96/H192/H336 exact prefix cropping。49个local checkpoint objects可复用；iTransformer/PatchTST/DLinear需要21个新H720 jobs，其中PatchTST/DLinear Solar为source-patch-required。Formal surface=70 checkpoint evaluations、280 raw horizon rows、224 aggregate cells与448 MSE/MAE scalars。Local H720 anchors必须精确复现Main I；published iTransformer/PatchTST/DLinear只做single-seed deviation audit。Exchange因Main I H720 anchors不完整而deferred；表格角色为source-native one-model system benchmark，不是matched mechanism attribution。Canonical prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/design_and_prelaunch_gate.md`。Tier A/B/C均未授权。Decision=`Main_I_hash_frozen_Main_II_H720_prefix_design_complete_waiting_staged_authorization`。

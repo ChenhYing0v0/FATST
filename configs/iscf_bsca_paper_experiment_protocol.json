@@ -1808,7 +1808,7 @@
     "protocol": "configs/iscf_bsca_main_ii_h720_prefix_protocol.json",
     "prelaunch": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/design_and_prelaunch_gate.md",
     "manifest": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/checkpoint_and_source_manifest.csv",
-    "status": "design_frozen_prelaunch_remote_and_formal_test_not_authorized",
+    "status": "tier_A_B_C_authorized_local_implementation_active",
     "role": "source_native_h720_trained_one_model_all_horizons_system_benchmark_not_matched_mechanism_attribution",
     "systems": ["ISCF-BSCA-MAIN-v1", "TimeAlign", "QDF", "AMD", "SimpleTM", "iTransformer", "PatchTST", "DLinear"],
     "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather", "ECL", "Solar"],
@@ -1821,9 +1821,11 @@
     "formal_prefix_checkpoint_jobs": 70,
     "raw_horizon_rows": 280,
     "aggregate_cells": 224,
-    "local_protocol_patch_authorized": false,
-    "remote_training_authorized": false,
-    "formal_prefix_test_authorized": false
+    "authorization_date": "2026-08-08",
+    "user_authorization": "explicit_Tier_A_Tier_B_Tier_C_authorization",
+    "local_protocol_patch_authorized": true,
+    "remote_training_authorized": true,
+    "formal_prefix_test_authorized": true
   },
   "gates": {
     "seed_policy": {
