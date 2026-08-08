@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "protocol_id": "ISCF-BSCA-MAIN-II-H720-PREFIX-v1",
+  "created_at": "2026-08-08",
+  "status": "design_frozen_prelaunch_remote_and_formal_test_not_authorized",
+  "paper_role": "source_native_h720_trained_one_model_all_horizons_system_benchmark",
+  "claim_boundary": {
+    "supported": "compare forecasting accuracy when every external baseline uses one fixed H720-trained model per dataset and serves H96/H192/H336 by prefix cropping",
+    "not_supported": "matched mechanism attribution across heterogeneous official repositories, optimizers, lookbacks, selectors, test loaders, seeds, and parameter budgets",
+    "matched_attribution_route": "five-dataset end-to-end ablations and decoder-transfer controls remain separate"
+  },
+  "main_i_dependency": {
+    "freeze_manifest": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_final_amd_simpletm_20260808/main_i_freeze_manifest.json",
+    "must_not_mutate_main_i": true,
+    "primary_shared_dense_datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather", "ECL", "Solar"],
+    "exchange_status": "deferred_extension_not_in_primary_Main_II_v1",
+    "exchange_reason": "the frozen Main I has no complete H720 anchor for AMD, SimpleTM, iTransformer, PatchTST, or DLinear on Exchange"
+  },
+  "systems": [
+    "ISCF-BSCA-MAIN-v1",
+    "TimeAlign",
+    "QDF",
+    "AMD",
+    "SimpleTM",
+    "iTransformer",
+    "PatchTST",
+    "DLinear"
+  ],
+  "external_baselines": ["TimeAlign", "QDF", "AMD", "SimpleTM", "iTransformer", "PatchTST", "DLinear"],
+  "matrix": {
+    "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather", "ECL", "Solar"],
+    "training_horizon": 720,
+    "evaluation_horizons": [96, 192, 336, 720],
+    "metrics": ["MSE", "MAE"],
+    "external_baseline_aggregate_cells": 196,
+    "all_system_aggregate_cells": 224,
+    "reported_metric_scalars": 448,
+    "new_h720_training_checkpoints": 21,
+    "reused_h720_checkpoint_objects": 49,
+    "raw_checkpoint_prefix_evaluations": 70,
+    "raw_horizon_rows": 280,
+    "complete_matrix_required": true,
+    "partial_reporting_allowed": false
+  },
+  "prediction_contract": {
+    "external_training": "one official-source fixed-H model with pred_len=720 per dataset and native repetition",
+    "iscf_bsca_training": "reuse the frozen dataset-level unified ISCF-BSCA-MAIN-v1 checkpoint; no retraining",
+    "test_loader": "each system uses its frozen native H720 official-test loader for the primary continuity table",
+    "same_origin_within_system": true,
+    "canonical_tensor_layout": "convert each repository output to [origin,time,channel] with a source-audited model-specific permutation before any metric or crop",
+    "prefix_rule": "for H in [96,192,336,720], compare canonical prediction[:,0:H,:] with canonical target[:,0:H,:] from the same H720 test batches",
+    "prefix_identity_gate": "the H96/H192/H336 outputs must be exact prefixes of the saved H720 prediction tensor for every sample and channel",
+    "metric_rule": "recompute global elementwise mean squared error and mean absolute error from saved prediction and target arrays; also retain each repository native H720 metric for continuity audit",
+    "chpc_consequence": "all four requests are nested views of one saved H720 trajectory for each checkpoint",
+    "cross_system_origin_caveat": "official test loaders differ in drop_last and batch semantics; the primary table is source-native system context, not a strictly matched-origin mechanism experiment",
+    "optional_common_origin_sensitivity": "after primary completion, a separately labeled intersection-origin sensitivity analysis may be run only with explicit formal-test authorization; it must not replace the native-continuity H720 audit"
+  },
+  "h720_continuity_gate": {
+    "exact_local_anchor_systems": ["ISCF-BSCA-MAIN-v1", "TimeAlign", "QDF", "AMD", "SimpleTM"],
+    "exact_rule": "same checkpoint, data preprocessing, native H720 loader, repetition aggregation, and metric implementation must reproduce the frozen Main I H720 value within numeric tolerance",
+    "numeric_tolerance_absolute": 1e-8,
+    "published_reference_systems": ["iTransformer", "PatchTST", "DLinear"],
+    "published_rule": "Main I values are published three-run means; the new official single-seed H720 result receives a signed deviation audit and is not required to equal or replace the frozen published value",
+    "simpletm_aggregation": "evaluate all three frozen native H720 repetition checkpoints and average them; choosing one favorable repetition is forbidden"
+  },
+  "source_contracts": {
+    "TimeAlign": {
+      "repository": "https://github.com/decisionintelligence/TimeAlign",
+      "commit": "ab2dff5bde250f82e29d8755f87a494921857d71",
+      "status": "reusable_7_of_7_h720_checkpoints",
+      "seed": 2021,
+      "seq_len": 720,
+      "checkpoint_selector": "official_last",
+      "formal_prefix_test": "required"
+    },
+    "QDF": {
+      "repository": "official QDF repository frozen by configs/qdf_main_i_seq336_reproduction.json",
+      "commit": "eb0693a962928e229417fd80b401c37b0dac6a67",
+      "status": "reusable_7_of_7_h720_checkpoints",
+      "seed": 2023,
+      "seq_len": 336,
+      "checkpoint_selector": "validation_early_stopping",
+      "formal_prefix_test": "required"
+    },
+    "AMD": {
+      "repository": "https://github.com/TROUBADOUR000/AMD",
+      "commit": "000d377a1ed8946aa817ff357cdf1de64b99abb9",
+      "status": "reusable_7_of_7_h720_checkpoints",
+      "seed": 2024,
+      "seq_len": 512,
+      "checkpoint_selector": "official_last",
+      "formal_prefix_test": "required"
+    },
+    "SimpleTM": {
+      "repository": "https://github.com/vsingh-group/SimpleTM",
+      "commit": "3c77d820837b726afb03c943235ea95bc924243d",
+      "status": "reusable_21_h720_repeat_checkpoints_over_7_datasets",
+      "seed": 2025,
+      "seq_len": 96,
+      "checkpoint_selector": "validation_early_stopping",
+      "repeat_rule": "three native repetitions per H720 dataset cell",
+      "formal_prefix_test": "required"
+    },
+    "iTransformer": {
+      "repository": "https://github.com/thuml/iTransformer",
+      "audited_head_commit_20260808": "c2426e68ca13f74aaec08045c5c724d8ad328124",
+      "license": "MIT",
+      "status": "retrain_required_7_of_7",
+      "seed": 2021,
+      "seq_len": 96,
+      "h720_profile_rule": "use the pred_len=720 command from each released multivariate_forecasting script unchanged",
+      "official_dataset_coverage": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather", "ECL", "Solar"],
+      "checkpoint_selector": "validation_early_stopping"
+    },
+    "PatchTST": {
+      "repository": "https://github.com/yuqinie98/PatchTST",
+      "audited_head_commit_20260808": "204c21efe0b39603ad6e2ca640ef5896646ab1a9",
+      "license": "Apache-2.0",
+      "status": "retrain_required_6_official_plus_1_source_patch_required",
+      "seed": 2021,
+      "seq_len": 336,
+      "official_dataset_coverage": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather", "ECL"],
+      "solar_status": "source_patch_required_no_official_PatchTST_Solar_script_or_loader",
+      "solar_profile_rule": "derive optimization profile from released ECL H720 command and use the official iTransformer-style Solar loader semantics; label source_informed_not_official",
+      "checkpoint_selector": "validation_early_stopping"
+    },
+    "DLinear": {
+      "repository": "https://github.com/cure-lab/LTSF-Linear",
+      "audited_head_commit_20260808": "0c113668a3b88c4c4ee586b8c5ec3e539c4de5a6",
+      "license": "Apache-2.0",
+      "status": "retrain_required_6_official_plus_1_source_patch_required",
+      "seed": 2021,
+      "seq_len": 336,
+      "official_dataset_coverage": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather", "ECL"],
+      "solar_status": "source_patch_required_no_official_DLinear_Solar_script_or_loader",
+      "solar_profile_rule": "derive optimization profile from released ECL H720 command and use the official iTransformer-style Solar loader semantics; label source_informed_not_official",
+      "checkpoint_selector": "validation_early_stopping"
+    }
+  },
+  "seed_and_repeat_policy": {
+    "phase": "single_seed_first",
+    "do_not_reseed_reused_checkpoints": true,
+    "do_not_select_seed_by_test": true,
+    "optional_three_seed_extension": "only after the complete primary matrix and only if time allows; execute whole preregistered blocks without result-selective extension"
+  },
+  "authorization": {
+    "existing_checkpoint_and_source_audit": true,
+    "matrix_design": true,
+    "main_i_freeze": true,
+    "local_protocol_patch": false,
+    "remote_training": false,
+    "formal_prefix_test": false,
+    "common_origin_sensitivity": false,
+    "exchange_extension": false
+  },
+  "prelaunch_gates": [
+    "freeze exact source commit and source hashes for all three new repositories",
+    "freeze the complete 56-row checkpoint/source manifest",
+    "implement and unit-test prediction/target export plus exact prefix metrics without accessing test during training",
+    "freeze PatchTST and DLinear Solar source-informed patches and their non-official labels",
+    "dry-run exactly 21 new H720 training jobs and 70 checkpoint prefix evaluations",
+    "run seven no-test resource smokes per newly trained baseline before the formal queue",
+    "check GPU occupancy and retain storage safety margin under the 220 GiB remote hard limit",
+    "commit and push the exact experiment code before remote execution"
+  ],
+  "formal_result_gates": {
+    "new_training": "21_of_21 checkpoints, configs, logs, unique hashes, numeric health, and zero training-time test access",
+    "prefix_test": "70_of_70 checkpoint evaluations and 280_of_280 raw horizon rows",
+    "aggregate_table": "224_of_224 system-dataset-horizon cells with both MSE and MAE",
+    "continuity": "all exact local H720 anchors pass and all published-reference deviations are disclosed",
+    "negative_results": "retain every preregistered dataset, horizon, metric, and repetition",
+    "checkpoint_immutability": "pre-test and post-test hashes identical"
+  },
+  "resource_and_scheduling": {
+    "gpu_model": "NVIDIA GeForce RTX 3090",
+    "gpu_count": 3,
+    "new_training_jobs": 21,
+    "formal_test_checkpoint_jobs": 70,
+    "gpu_hour_estimate_before_smoke": [60, 180],
+    "storage_budget_gib": 40,
+    "scheduler": "dataset-major longest-processing-time queue",
+    "first_wave": ["iTransformer:ECL", "PatchTST:ECL", "iTransformer:Weather"],
+    "slow_dataset_priority": ["ECL", "Weather", "Solar", "ETTm1"],
+    "recalibration_required_after_resource_smoke": true
+  },
+  "rollback": {
+    "source_or_script_mismatch": "return to source audit; do not launch the affected baseline",
+    "solar_patch_failure": "mark only the affected Solar cell block unresolved and block the entire Main II table from paper use",
+    "h720_exact_anchor_failure": "stop publication, audit checkpoint, loader, preprocessing, metric, and repetition aggregation; do not overwrite Main I",
+    "numeric_or_artifact_failure": "rerun the complete affected baseline block from its frozen checkpoint or training contract",
+    "performance_negative": "report the complete matrix; do not delete the baseline or retune by horizon, metric, cell, or seed",
+    "protocol_heterogeneity": "retain source-native system wording and do not promote to matched mechanism attribution"
+  }
+}

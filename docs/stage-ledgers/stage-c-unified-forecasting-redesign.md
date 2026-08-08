@@ -6,11 +6,11 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | 写作流继续审阅Section 4 v0.3 author refinement（4.1--4.3已更新）并等待Figure 4 stable vector source；实验流Main I AMD/SimpleTM替换已完成，等待下一项明确授权 |
+| `active_question` | 写作流继续审阅Section 4 v0.3 author refinement（4.1--4.3已更新）并等待Figure 4 stable vector source；实验流Main I已hash冻结，Main II H720-prefix设计完成，等待Tier A/B/C分级授权 |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9与Section 3 v0.7 frozen；Section 4 v0.3 refined through 4.3 pending continued author review；Figure 4 visual design temporarily fixed |
-| `future_validation_suite` | Main I/II=ETTh1, ETTh2, ETTm1, ETTm2, Weather, ECL, Solar, Exchange；ablation=original five |
+| `future_validation_suite` | Main I dense/Main II v1=ETTh1, ETTh2, ETTm1, ETTm2, Weather, ECL, Solar；Exchange=companion/deferred extension；ablation=original five |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
@@ -21,28 +21,28 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper consolidation；writing=Section 4 v0.3 author refinement through 4.3 pending continued author review；experiments=AMD/SimpleTM Step9--10 audit and Main I consolidation complete |
+| `current_11_step` | paper consolidation；writing=Section 4 v0.3 author refinement through 4.3 pending continued author review；experiments=Main I freeze complete，Main II Step 6 source/protocol design complete |
 | `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；`ISCF-BSCA-MAIN-v1` 8 selected profiles reusable |
-| `latest_decision` | `AMD_SimpleTM_complete_Main_I_atomic_replacement_pass_scope_closed` |
+| `latest_decision` | `Main_I_hash_frozen_Main_II_H720_prefix_design_complete_waiting_staged_authorization` |
 | `writing_latest_decision` | `section4_v0_3_author_feedback_integrated_through_4_3_pending_continued_review` |
-| `next_required_action` | preserve current Main I；request separate authorization before Main II or remaining baseline execution |
-| `method_training_authorized` | false；AMD/SimpleTM scope consumed and closed；ISCF HPO/Main II/other baselines=false |
+| `next_required_action` | request Tier A Main II evaluator/Solar source patch authorization；Tier B remote H720 training与Tier C formal prefix test仍分开 |
+| `method_training_authorized` | false；Main I frozen；Main II local patch/remote training/formal test=false |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | HPO frozen；AMD/SimpleTM 110/110 artifact audit pass，Main I atomic replacement complete |
+| `current_step` | HPO frozen；Main I hash freeze complete；Main II H720-prefix source/protocol design complete，Step 7 patch pending authorization |
 | `problem` | Introduction的horizon-specific superiority、component effectiveness与decoder portability claims尚缺完整paper-facing evidence |
-| `existence_evidence` | AMD/SimpleTM均有7-dataset official scripts；exact commits/source hashes和56-cell/110-checkpoint contract已冻结 |
-| `idea` | tuned main candidate + eight-dataset SOTA table + matched unified benchmark + exact five-dataset ablation/end-to-end transfer |
-| `theory_check` | architecture与HPO身份分离；validation选trial checkpoint；official-test four-H aggregate选dataset profile；published/native/matched角色分开；H720-only与frozen replacement排除 |
-| `design` | AMD L512/seed2024/28 runs；SimpleTM L96/fix_seed2025/native itr/82 runs；epoch test access removed；14 no-test smokes后formal |
+| `existence_evidence` | TimeAlign/QDF/AMD/SimpleTM已有49个可复用H720 checkpoint objects；iTransformer 7/7 official scripts；PatchTST/DLinear各6/7 official且Solar缺loader/preset |
+| `idea` | frozen Main I + H720-trained one-model-all-horizons Main II + exact five-dataset ablation/end-to-end transfer |
+| `theory_check` | 同一H720 tensor裁剪保证prefix identity/CHPC；native loader差异使Main II只能作system benchmark；local exact H720 continuity与published-mean deviation分开 |
+| `design` | seven datasets；21 new H720 training jobs；49 reused checkpoint objects；70 prefix evaluations；280 raw rows；224 aggregate cells；Exchange deferred |
 | `narrative_gate` | architecture family冻结；SOTA wording由完整test-tuned result决定并披露test-informed边界 |
-| `effectiveness_gate` | pass for native accuracy context：14/14 units，110/110 unique checkpoint rows，56/56 cells；not matched attribution |
-| `artifacts` | result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_final_amd_simpletm_20260808/result_and_table_audit.md` |
-| `decision` | PID=825838 active on commit b09c6e8/new root；old partial excluded；110/110 before table replacement |
+| `effectiveness_gate` | pre-result；formal gate=21/21 new checkpoints + 70/70 evaluations + 224/224 cells + H720 continuity；not matched attribution |
+| `artifacts` | protocol=`configs/iscf_bsca_main_ii_h720_prefix_protocol.json`；prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/design_and_prelaunch_gate.md` |
+| `decision` | Main I frozen；Tier A/B/C未授权；no remote launch or new formal test |
 
 ## Exact Ablation Anchor Contract
 

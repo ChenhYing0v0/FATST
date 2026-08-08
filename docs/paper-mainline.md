@@ -7,17 +7,19 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 4 v0.3 author refinement through 4.3 pending continued author review；experiments=Main I AMD/SimpleTM replacement complete，remaining baseline gaps pending authorization |
+| `current_11_step` | paper consolidation；writing=Section 4 v0.3 author refinement through 4.3 pending continued author review；experiments=Main I frozen，Main II H720-prefix source/protocol design complete，Tier A/B/C execution pending authorization |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
-| `future_validation_suite` | Main I/II=ETTh1/ETTh2/ETTm1/ETTm2/Weather/ECL/Solar/Exchange；ablation=original five datasets |
+| `future_validation_suite` | Main I dense/Main II v1=ETTh1/ETTh2/ETTm1/ETTm2/Weather/ECL/Solar；Exchange=companion/deferred extension；ablation=original five datasets |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` eight dataset profiles and 32 cells terminally frozen after H4N；strong aggregate competitor但未达per-cell target |
+
+[Main I Freeze and Main II H720-Prefix Prelaunch, 2026-08-08] 用户要求暂时固定Main I，并把Main II重定义为one-model-all-horizons system benchmark。Main I现以hash manifest冻结14 models × 7 dense datasets × four H的392 rows及29/56 best、19/56 second ranking；Main II对TimeAlign、QDF、AMD、SimpleTM、iTransformer、PatchTST、DLinear和ISCF-BSCA逐dataset只使用一个H720 model，以同一H720 test tensor裁剪H96/H192/H336。现有49个checkpoint objects可复用，iTransformer/PatchTST/DLinear需新训练21个H720 checkpoints；PatchTST/DLinear没有official Solar script/loader，Solar固定为source-patch-required。ISCF/TimeAlign/QDF/AMD/SimpleTM的H720须精确复现Main I，iTransformer/PatchTST/DLinear因Main I为published three-run mean只做single-seed deviation audit。Primary v1限当前七个dense datasets；Exchange在Main I完整H720 anchors闭合前deferred。该表是source-native system comparison，不作matched mechanism attribution。Canonical protocol=`configs/iscf_bsca_main_ii_h720_prefix_protocol.json`；prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/design_and_prelaunch_gate.md`。Tier A local patch、Tier B remote training与Tier C formal prefix test均未授权。Decision=`Main_I_hash_frozen_Main_II_H720_prefix_design_complete_waiting_staged_authorization`。
 
 [Section 4 Author Refinement v0.3, 2026-08-07] Canonical draft=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`已按author对Section开头、4.1--4.3的逐项反馈更新为`v0.3-author-refinement-4.1-4.3`。Method framing改为decoder-side architecture plus joint optimization；ISCF明确通过`[B,C,R]`接口适配满足该接口的patch-token Encoders。Future Coordinate新增`why -> role -> construction`解释；Scope-conditioned Forecast generation改写为`per-scope independent Scope Projection -> dedicated Scope Matrix -> Region Descriptor -> region-local Scope-region State -> shared Region-to-Step Forecast Generator -> scope-indexed forecast field`。Architecture允许对first-$H$相交regions执行prefix-bounded computation，但exact reference implementation仍先materialize full $T$ field再slice；该边界已写入editorial audit，未宣称实测latency gain。Introduction v0.9、Section 3 v0.7、4.4以后正文、implementation、experiments与claim boundary均未扩张。Decision=`section4_v0_3_author_feedback_integrated_through_4_3_pending_continued_review`。
 
@@ -210,9 +212,9 @@ iTransformer、PatchTST覆盖目标集合中的7个datasets，缺Exchange。AMD�
 SimpleTM、TimePerceiver、SRSNet不在该表中，使用各自official repository复现
 全部8 datasets；五个published models补跑Exchange。PDT因固定lookback=96降为
 secondary cross-check。TimeAlign Exchange脚本已按ETTh1 bootstrap完成本地实现，
-固定seed2021但尚未运行。Main II保留
-DLinear/PatchTST matched unified、A6_FULL repo-native reference与
-ElasTST native varied-horizon context。
+固定seed2021但尚未运行。该段原计划中的DLinear/PatchTST matched unified、
+A6_FULL与ElasTST Main II组合已于2026-08-08被H720-prefix v1协议取代，仅作
+historical planning record。
 
 不含HPO exploratory runs的seed2021 primary matrix为233 checkpoint slots、
 488个standard-horizon seed-cells；15个primary-seed metric-evidence records

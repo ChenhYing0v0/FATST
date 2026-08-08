@@ -44,16 +44,18 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | Main I AMD/SimpleTM artifact audit与atomic replacement complete |
+| `active_experiment_step` | Main I hash freeze complete；Main II H720-prefix source/protocol design complete；Tier A/B/C pending |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
-| `local_protocol_patch_authorized` | false；AMD/SimpleTM recovery adapter scope consumed |
-| `remote_training_authorized` | false；AMD/SimpleTM seven-dataset scope complete and closed |
+| `local_protocol_patch_authorized` | false；Main II evaluator与PatchTST/DLinear Solar patch尚未授权 |
+| `remote_training_authorized` | false；Main II 21个new H720 jobs尚未授权 |
 | `test_tuned_hpo_authorized` | false；HPO stopped by user and H4O closed |
-| `formal_test_authorized` | false；AMD 28 + SimpleTM 82 scope consumed；Main II/other baselines/HPO=false |
-| `next_action` | preserve audited Main I；等待用户对Main II或remaining baseline的分级授权 |
+| `formal_test_authorized` | false；Main II 70-checkpoint prefix test尚未授权 |
+| `next_action` | preserve hash-frozen Main I；请求Main II Tier A local patch、Tier B remote training、Tier C formal prefix test分级授权 |
 | `conditional_next` | 任何新baseline仍需独立source/protocol gate；不得改写AMD/SimpleTM native role为matched attribution |
+
+2026-08-08用户要求暂时冻结Main I，并把Main II改为H720-trained one-model-all-horizons benchmark。Main I冻结manifest记录14 models × 7 dense datasets × four H、392 rows、29/56 best、19/56 second及全部关键hash。Main II v1包含ISCF-BSCA、TimeAlign、QDF、AMD、SimpleTM、iTransformer、PatchTST、DLinear；每个external baseline逐dataset训练/复用一个H720 model，并从同一H720 test tensor裁剪H96/H192/H336。49个checkpoint objects可复用，21个iTransformer/PatchTST/DLinear H720 jobs需新训练；PatchTST/DLinear Solar无official script/loader，固定为source-patch-required。Exchange因Main I H720 anchors不完整而deferred。Canonical protocol=`configs/iscf_bsca_main_ii_h720_prefix_protocol.json`；prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/design_and_prelaunch_gate.md`。当前只完成design/source audit，Tier A/B/C仍为false。
 
 H4K train/validation与formal test均已完成，但terminal effectiveness gate失败。H4L只扩大ETTm2/Weather
 dataset-level HPO范围：48个profiles与117个历史profiles零重复，其中四项借鉴TimeAlign official encoder

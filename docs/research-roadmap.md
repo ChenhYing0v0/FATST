@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## Main I Freeze and Main II H720-Prefix Prelaunch (2026-08-08)
+
+Current experiment cursor=`Step 6 source/protocol design complete -> Step 7 local patch pending authorization`。Main I已由`main_i_freeze_manifest.json`锁定14 models × 7 dense datasets × four H及全部输入/输出hash，后续Main II不得回写。Main II v1固定八个systems（ISCF-BSCA + TimeAlign/QDF/AMD/SimpleTM/iTransformer/PatchTST/DLinear）、七个dense datasets、H720 single-model training与H96/H192/H336 exact prefix cropping。49个local checkpoint objects可复用；iTransformer/PatchTST/DLinear需要21个新H720 jobs，其中PatchTST/DLinear Solar为source-patch-required。Formal surface=70 checkpoint evaluations、280 raw horizon rows、224 aggregate cells与448 MSE/MAE scalars。Local H720 anchors必须精确复现Main I；published iTransformer/PatchTST/DLinear只做single-seed deviation audit。Exchange因Main I H720 anchors不完整而deferred；表格角色为source-native one-model system benchmark，不是matched mechanism attribution。Canonical prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/design_and_prelaunch_gate.md`。Tier A/B/C均未授权。Decision=`Main_I_hash_frozen_Main_II_H720_prefix_design_complete_waiting_staged_authorization`。
+
 ## AMD / SimpleTM Main I Complete and Table Replacement (2026-08-08)
 
 Current experiment cursor=`Step 9 artifact audit complete -> Step 10 Main I consolidation pass`。Recovery root已14/14 units、AMD 28/28 + SimpleTM 82/82 raw rows、110 unique checkpoint hashes与56/56 cells完整通过；旧root partial rows永久excluded。Main I已原子用AMD/SimpleTM替换CMoS/TimeBase，保持14 models × 7 datasets × four H；ISCF-BSCA更新为29/56 best、19/56 second。AMD/SimpleTM仅承担official-native horizon-specific accuracy context。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_final_amd_simpletm_20260808/result_and_table_audit.md`。Decision=`AMD_SimpleTM_complete_Main_I_atomic_replacement_pass_scope_closed`。
@@ -237,8 +241,8 @@ Current cursor=`ISCF-BSCA-MAIN-v1 single-seed HPO and Main I 140-row published b
   AMD、SimpleTM、TimePerceiver、SRSNet及全部Exchange缺口走official
   reproduction；PDT只作secondary cross-check；TimeAlign Exchange seed2021
   script已按ETTh1 bootstrap本地实现但未运行；
-- Main II保留DLinear/PatchTST matched unified、A6_FULL repo-native reference
-  与ElasTST native varied-horizon context；
+- 原Main II的DLinear/PatchTST matched unified、A6_FULL与ElasTST组合已由
+  2026-08-08 H720-prefix v1取代，仅作historical planning record；
 - seed2021 primary matrix不含HPO runs时为233 checkpoint slots、488 seed-horizon
   cells；23 primary-seed metric-evidence records可复用、210 new；另有30 existing
   extra-seed evidence保留；Main I包含140 published cells + 148 single-seed
@@ -246,7 +250,7 @@ Current cursor=`ISCF-BSCA-MAIN-v1 single-seed HPO and Main I 140-row published b
 - historical H720-only selector、frozen replacement与external-native-as-matched
   均继续排除。
 
-2026-08-02 post-HPO audit已将8个selected checkpoints/32 cells固定为Main I/II可复用，不再final retrain；TimeAlign Table 6的5 models × 7 datasets × 4 H=140 published rows完成双路径核验。共同7 datasets上ISCF相对TimeAlign aggregate MSE为`+2.199%`，但MAE为`-0.066%`，且只15/28 MSE cells、4/7 dataset means更优；因此当前定性为`competitive aggregate MSE / complete SOTA pending`。源表的5组Avg inconsistency与三种lookback描述必须披露。Main I下一最小remote block为TimeAlign-Exchange 4 jobs；Main II当前0 jobs可直接launch，须先完成DLinear/PatchTST Tier A source/protocol patch。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/post_hpo_main_i_published_audit_and_next_gate.md`。
+2026-08-02 post-HPO audit已将8个selected checkpoints/32 cells固定为Main I/II可复用，不再final retrain；TimeAlign Table 6的5 models × 7 datasets × 4 H=140 published rows完成双路径核验。共同7 datasets上ISCF相对TimeAlign aggregate MSE为`+2.199%`，但MAE为`-0.066%`，且只15/28 MSE cells、4/7 dataset means更优；因此当前定性为`competitive aggregate MSE / complete SOTA pending`。源表的5组Avg inconsistency与三种lookback描述必须披露。该段“Main II 0 jobs”的旧估算已被2026-08-08 H720-prefix v1的21 new H720 jobs取代。Canonical historical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/post_hpo_main_i_published_audit_and_next_gate.md`。
 
 下一rollback不是自动重启architecture search。若new-dataset protocol不一致回H0；
 HPO不稳定回H1/H2并收窄已冻结search budget；冻结budget内test-tuned最优profile

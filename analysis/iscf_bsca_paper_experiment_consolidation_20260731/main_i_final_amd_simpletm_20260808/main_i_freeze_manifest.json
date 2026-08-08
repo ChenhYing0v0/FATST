@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "freeze_id": "ISCF-BSCA-MAIN-I-FREEZE-20260808",
+  "frozen_at": "2026-08-08",
+  "status": "frozen_pending_explicit_user_unfreeze",
+  "dense_table": {
+    "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather", "ECL", "Solar"],
+    "horizons": [96, 192, 336, 720],
+    "metrics": ["MSE", "MAE"],
+    "models": 14,
+    "standard_rows": 392,
+    "rows_with_four_horizon_average": 490,
+    "iscf_bsca_best_cells": 29,
+    "iscf_bsca_second_cells": 19,
+    "ranking_denominator": 56,
+    "ranking_rule": "rank all displayed values after common three-decimal rounding; ties allowed"
+  },
+  "exchange_companion": {
+    "status": "frozen_companion_not_dense_main_table",
+    "models": ["ISCF-BSCA", "TimeAlign", "QDF"],
+    "reason": "the remaining Main I baselines do not yet have a complete audited Exchange surface"
+  },
+  "immutable_files": [
+    {
+      "path": "output/pdf/iscf_bsca_main_i_amd_simpletm_20260808.pdf",
+      "sha256": "fa52e7d2165bd9c615302405a19f71dfefc2c7de73561dff8f17328e6bbee004"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_final_amd_simpletm_20260808/table_data_long.csv",
+      "sha256": "63e92ebeebe7eccb14418382baf87a4c90e9619c65db0f3b332eddb2c7d770e0"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_final_amd_simpletm_20260808/table_exchange_companion_long.csv",
+      "sha256": "7606b4ae28b7885b75079138e20fb403a72ee768efbb35b037dfea51616a2a7f"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_final_amd_simpletm_20260808/table_build_summary.json",
+      "sha256": "9e698d4dab6d3f347eb0f6de0235e573b1c6099f5b423805fd7016eb7300f18c"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_final_amd_simpletm_20260808/result_and_table_audit.md",
+      "sha256": "2fc1180f21271ad3bbc489a3820f71b84a9161dc06185f675cf21991fc1f0665"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_final_amd_simpletm_20260808/table_iscf_bsca_main_i_qdf.tex",
+      "sha256": "acc08b362ec38570384f705dd46e591e5c4744805120cf35cf9ceed39490fbe2"
+    }
+  ],
+  "input_evidence": [
+    {
+      "role": "ISCF-BSCA selected scorecard",
+      "path": "analysis/iscf_bsca_main_v1_hpo_20260731/final_hpo_freeze_20260806/selected_main_scorecard_final.csv",
+      "sha256": "aeb32304936e365b7fbf4072334a6a87930bef9825b4c8e91af82938c7b65bc7"
+    },
+    {
+      "role": "TimeAlign local official-source metrics",
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/timealign_main_i_full_reproduction_20260806/timealign_main_i_local_metrics.csv",
+      "sha256": "6fccaeddec410ff2eda2c2533afacb1ce28459261eae6566dd6eb3f5b390d9f8"
+    },
+    {
+      "role": "QDF L336 local official-source metrics",
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/qdf_main_i_l336_20260806/remote_lite/audit/qdf_main_i_l336_local_metrics.csv",
+      "sha256": "2bb6bde2cbef54952bd381af017ac938c688875aae938eeb04c9717fab026cdc"
+    },
+    {
+      "role": "AMD and SimpleTM local official-source cell metrics",
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/amd_simpletm_main_i_reproduction_20260806/remote_lite/audit/cell_metrics.csv",
+      "sha256": "44460b89696a2909123ccca8ba9327b74de058b08e6eebd8f369266e37211c3b"
+    }
+  ],
+  "main_ii_continuity_boundary": {
+    "exact_local_h720_anchors": ["ISCF-BSCA", "TimeAlign", "QDF", "AMD", "SimpleTM"],
+    "published_mean_h720_references": ["iTransformer", "PatchTST", "DLinear"],
+    "rule": "Main II may audit but must not mutate Main I; local H720 anchors require exact metric continuity under their native test contract, while new single-seed reproductions are compared with rather than forced to equal published three-run means"
+  },
+  "mutation_policy": "any numerical, model-order, source-role, dataset, horizon, ranking, or caption change requires explicit user unfreeze and atomic regeneration of all immutable files"
+}

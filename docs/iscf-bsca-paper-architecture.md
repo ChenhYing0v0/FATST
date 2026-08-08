@@ -8,14 +8,14 @@
 | `version` | `v0.55` |
 | `last_updated` | `2026-08-08` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 4 v0.3 author refinement through 4.3 pending continued author review；experiments=Main I AMD/SimpleTM local replacement complete |
+| `current_review_cursor` | writing=Section 4 v0.3 author refinement through 4.3 pending continued author review；experiments=Main I hash frozen，Main II H720-prefix design complete pending staged authorization |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.7正文 + approved Figures 2--3；Method Figure 4 visual design |
 | `provisional_content` | Section 4 v0.3 author-refined text through 4.3；Method Figure 4 stable vector-asset synchronization；remaining sections |
-| `authorization_source` | 2026-08-06用户授权的AMD与SimpleTM official-source复现已完成并关闭；ISCF HPO、Main II与其他baseline未授权 |
+| `authorization_source` | 2026-08-08用户授权Main I freeze与Main II design；Main II local patch、remote training与formal prefix test未授权 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
@@ -777,7 +777,7 @@ conclusion，提交前必须由main/ablation/transfer tables逐项兑现。**
 7. **证据结构必须与贡献一一对应。** Contribution 1由baseline/simple matched
    diagnostics与CHPC disagreement支撑；Contribution 2由exact core ablations、
    same-backbone transfer controls、full test MSE/MAE和scope behavior支撑；
-   DLinear/PatchTST unified rows只是matched unified system benchmark，不是
+   Main II H720-prefix rows只是source-native one-model system benchmark，不是
    exact architecture attribution。Contribution 3由same-architecture objective
    control、three-seed official-test与internal health支撑。efficiency与
    transferability属于完整framework evidence，不能替代mechanism attribution。
@@ -1383,36 +1383,42 @@ Table 6的140个目标published rows已完成PDF-coordinate transcription与渲�
 
 截至2026-08-08，AMD与SimpleTM的七数据集official-native复现已完成：14/14 units、AMD 28/28 + SimpleTM 82/82 raw rows、110 unique checkpoint hashes与56/56 table cells通过审计，旧失败root的partial rows永久excluded。Main I已从表头和数值层原子移除CMoS/TimeBase并加入AMD/SimpleTM。AMD macro MSE/MAE=`0.282132/0.328147`，SimpleTM=`0.292099/0.332380`；更新后的完整14-model表中ISCF-BSCA为29/56 best、19/56 second。AMD与SimpleTM只作为source-native fixed-H accuracy context，不进入matched mechanism attribution。
 
-### 8.3 Main Results II：Unified Multi-Horizon Benchmark
+### 8.3 Main Results II：H720-trained One-Model-All-Horizons Benchmark
 
-把两个primary standard backbones改成horizon无关、future-step-indexed
-unified variants，
-并在相同 requested horizons 上评估。使用一致的 checkpoint selector 与尽可能
-matched 的 supervision protocol。
+Main II在2026-08-08按用户要求重新冻结为H720-prefix system benchmark。对每个
+external baseline和dataset，只使用一个由官方H720 training script得到的
+fixed-H model；H96、H192和H336均由同一次H720 forecast裁剪前$H$ steps获得。
+因此每个checkpoint的四个请求共享完全相同的H720 test origins，并形成一条nested
+prediction trajectory。
 
-| Unified Model | # Trained Models | H96 | H192 | H336 | H720 | Avg. | Gap to Native Specific |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| DLinear-Unified | 1 |  |  |  |  |  |  |
-| PatchTST-Unified | 1 |  |  |  |  |  |  |
-| A6_FULL reference | 1 |  |  |  |  |  |  |
-| ISCF-BSCA-MAIN-v1 (tuned) | 1 |  |  |  |  |  |  |
+| Model | # Models per Dataset | H96 Prefix | H192 Prefix | H336 Prefix | H720 | Avg. | H720 Main-I Audit |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| TimeAlign | 1 |  |  |  |  |  | local exact |
+| QDF | 1 |  |  |  |  |  | local exact |
+| AMD | 1 |  |  |  |  |  | local exact |
+| SimpleTM | 1 per native repeat |  |  |  |  |  | local exact after repeat mean |
+| iTransformer | 1 |  |  |  |  |  | deviation from published mean |
+| PatchTST | 1 |  |  |  |  |  | deviation from published mean |
+| DLinear | 1 |  |  |  |  |  | deviation from published mean |
+| ISCF-BSCA-MAIN-v1 (tuned) | 1 |  |  |  |  |  | local exact |
 
-Table I 证明实际 system competitiveness；Table II 隔离 unified setting 下的
-decoder effectiveness。A6_FULL是repo-native carrier/reference，不是
-same-backbone attribution control。另设ElasTST-native single-weight
-varied-horizon context panel，保留其native `val_weighted_ND` selector，不冒充
-matched four-H selector：
+主表使用当前Main I共同完整的七个dense datasets：ETTh1、ETTh2、ETTm1、
+ETTm2、Weather、ECL、Solar。Exchange只保留为deferred extension，因为冻结Main I
+尚无AMD、SimpleTM、iTransformer、PatchTST、DLinear的完整Exchange H720 anchors；
+不得为了得到eight-dataset表而把未审计结果混入。
 
-| Native Unified Model | # Trained Models | Native Seed/Selector | H96 | H192 | H336 | H720 | Avg. |
-| --- | ---: | --- | ---: | ---: | ---: | ---: | ---: |
-| ElasTST-native | 1 | seed1 / `val_weighted_ND` |  |  |  |  |  |
-| ISCF-BSCA-MAIN-v1 | 1 | seed2021 / four-H mean val MSE |  |  |  |  |  |
+Local H720 checkpoints已存在于ISCF-BSCA、TimeAlign、QDF、AMD和SimpleTM，
+其Main II H720必须在相同native test contract下精确复现Main I；SimpleTM评估并
+平均全部三个native repetitions。iTransformer、PatchTST和DLinear的Main I值是
+published three-run means，而Main II首阶段是official-source single-seed复现，因此
+只做signed deviation audit，不能强制等于published mean，也不能回写已冻结Main I。
 
-两表与两个native context panels不能相互替代。
-
-iTransformer与TimeMixer现作为Main I的published-result baselines恢复；CATS仍
-因其历史D22-C query-control角色不属于当前paper core而排除。Baseline是否保留
-不得按结果强弱选择。
+该表回答one-model-all-horizons system competitiveness，但不作matched mechanism
+attribution：各repository的lookback、objective、optimizer、selector、seed、参数量与
+test-loader `drop_last`并不完全一致。正式decoder attribution仍由five-dataset
+end-to-end core ablation和two-backbone transfer承担。Machine contract=
+`configs/iscf_bsca_main_ii_h720_prefix_protocol.json`，prelaunch=
+`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/design_and_prelaunch_gate.md`。
 
 ### 8.4 Efficiency Evaluation
 

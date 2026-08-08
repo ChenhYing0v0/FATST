@@ -26,7 +26,7 @@
     }
   },
   "authorization": {
-    "current_decision": "HPO_terminally_frozen_TimeAlign_Main_I_32_of_32_local_reproduction_complete",
+    "current_decision": "Main_I_hash_frozen_Main_II_H720_prefix_design_complete_waiting_staged_authorization",
     "existing_artifact_audit": true,
     "matrix_design": true,
     "test_tuned_hpo_project_principle": {
@@ -35,19 +35,20 @@
       "scope": "paper_facing_main_model_and_officially_reproduced_baselines",
       "execution_authorized": true
     },
-    "local_protocol_patch": true,
-    "remote_training": true,
+    "local_protocol_patch": false,
+    "remote_training": false,
     "official_test_hpo_execution": false,
     "H4J_formal_test_after_complete_training_manifest": true,
     "formal_test": false,
     "current_user_authorization": {
-      "date": "2026-08-06",
-      "instruction": "stop_HPO_freeze_current_best_and_replace_TimeAlign_table_rows_with_complete_local_reproduction",
+      "date": "2026-08-08",
+      "instruction": "temporarily_freeze_Main_I_and_design_Main_II_as_H720_trained_one_model_all_horizons_prefix_benchmark",
       "Tier_A": true,
-      "Tier_B1_H0_H1": true,
+      "Tier_B1_H0_H1": false,
       "Tier_B2_bounded_HPO_and_test_profile_ranking": false,
       "Tier_B3_selected_profile_confirmation": false,
-      "Tier_C_final_reporting_audit": true
+      "Tier_C_final_reporting_audit": false,
+      "scope_note": "Tier_A here authorizes source and matrix design only; local runtime patch, remote training, and formal prefix test require separate authorization"
     },
     "scoped_local_patch_authorizations": {
       "timealign_exchange_script": {
@@ -696,7 +697,7 @@
     {
       "id": "DLinear-Unified",
       "role": "matched_unified_adaptation",
-      "retained": true,
+      "retained": false,
       "models_per_dataset": 1,
       "seeds": [
         2021,
@@ -704,13 +705,13 @@
         2023
       ],
       "selector": "mean_validation_mse_over_h96_h192_h336_h720",
-      "status": "missing",
+      "status": "superseded_by_Main_II_H720_prefix_v1",
       "attribution_boundary": "matched_unified_system_benchmark_not_exact_architecture_attribution"
     },
     {
       "id": "PatchTST-Unified",
       "role": "matched_unified_adaptation",
-      "retained": true,
+      "retained": false,
       "models_per_dataset": 1,
       "seeds": [
         2021,
@@ -718,7 +719,7 @@
         2023
       ],
       "selector": "mean_validation_mse_over_h96_h192_h336_h720",
-      "status": "missing",
+      "status": "superseded_by_Main_II_H720_prefix_v1",
       "attribution_boundary": "matched_unified_system_benchmark_not_exact_architecture_attribution"
     },
     {
@@ -869,7 +870,7 @@
         ],
         "training_runs": 30,
         "cells": 120,
-        "status": "reusable",
+        "status": "legacy_superseded_by_Main_II_H720_prefix_v1",
         "note": "A6_FULL_is_a_repo_native_reference_not_same_backbone_attribution"
       },
       {
@@ -887,7 +888,7 @@
         ],
         "training_runs": 30,
         "cells": 120,
-        "status": "missing",
+        "status": "legacy_superseded_by_Main_II_H720_prefix_v1",
         "post_tier_a_status": "retrain_required"
       },
       {
@@ -1122,8 +1123,8 @@
       "main_i_outperforms_evaluated_standard_protocol_baselines": "pass_against_both_DLinear_Specific_and_PatchTST_Specific",
       "main_i_unqualified_horizon_specific_superiority": "prohibited",
       "main_i_modern_native_context": "separate_single_seed_point_estimates",
-      "main_ii_paper_facing": "pass_against_DLinear_Unified_PatchTST_Unified_and_A6_FULL",
-      "main_ii_system_benchmark": "DLinear_Unified_and_PatchTST_Unified_match_unified_protocol_not_backbone",
+      "main_ii_paper_facing": "complete_224_cell_H720_prefix_v1_system_benchmark_with_H720_continuity_audit",
+      "main_ii_system_benchmark": "source_native_H720_trained_one_model_all_horizons_not_matched_mechanism_attribution",
       "exact_architecture_attribution": "decided_by_exact_core_ablations_and_same_backbone_transfer_controls",
       "each_component_effective": "pass_against_all_four_exact_without_controls",
       "decoder_portability": "both_backbones_pass_plus_ISCF_over_original_and_plus_ISCF_BSCA_over_plus_ISCF",
@@ -1352,17 +1353,19 @@
     {
       "id": "DLinear-Unified",
       "role": "matched_unified_adaptation",
+      "retained": false,
       "models_per_dataset": 1,
       "selector": "mean_validation_mse_over_h96_h192_h336_h720",
-      "status": "source_patch_required",
+      "status": "superseded_by_Main_II_H720_prefix_v1",
       "attribution_boundary": "matched_unified_system_benchmark_not_exact_architecture_attribution"
     },
     {
       "id": "PatchTST-Unified",
       "role": "matched_unified_adaptation",
+      "retained": false,
       "models_per_dataset": 1,
       "selector": "mean_validation_mse_over_h96_h192_h336_h720",
-      "status": "source_patch_required",
+      "status": "superseded_by_Main_II_H720_prefix_v1",
       "attribution_boundary": "matched_unified_system_benchmark_not_exact_architecture_attribution"
     },
     {
@@ -1611,7 +1614,7 @@
         ],
         "training_checkpoints": 16,
         "seed_horizon_cells": 64,
-        "status": "source_patch_required"
+        "status": "legacy_superseded_by_Main_II_H720_prefix_v1"
       },
       {
         "table": "main_ii_repo_native_reference",
@@ -1789,6 +1792,39 @@
     "formal_test_authorized": true,
     "other_experiment_authorization": false
   },
+  "main_i_freeze_20260808": {
+    "freeze_id": "ISCF-BSCA-MAIN-I-FREEZE-20260808",
+    "status": "frozen_pending_explicit_user_unfreeze",
+    "manifest": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_final_amd_simpletm_20260808/main_i_freeze_manifest.json",
+    "dense_datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather", "ECL", "Solar"],
+    "horizons": [96, 192, 336, 720],
+    "models": 14,
+    "standard_rows": 392,
+    "iscf_bsca_best_of_56": 29,
+    "iscf_bsca_second_of_56": 19,
+    "main_ii_must_not_mutate_main_i": true
+  },
+  "main_ii_h720_prefix_v1": {
+    "protocol": "configs/iscf_bsca_main_ii_h720_prefix_protocol.json",
+    "prelaunch": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/design_and_prelaunch_gate.md",
+    "manifest": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/checkpoint_and_source_manifest.csv",
+    "status": "design_frozen_prelaunch_remote_and_formal_test_not_authorized",
+    "role": "source_native_h720_trained_one_model_all_horizons_system_benchmark_not_matched_mechanism_attribution",
+    "systems": ["ISCF-BSCA-MAIN-v1", "TimeAlign", "QDF", "AMD", "SimpleTM", "iTransformer", "PatchTST", "DLinear"],
+    "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather", "ECL", "Solar"],
+    "exchange": "deferred_until_complete_Main_I_H720_anchors_exist",
+    "training_horizon": 720,
+    "evaluation_horizons": [96, 192, 336, 720],
+    "prefix_rule": "crop prediction and target from the same native H720 official-test batches",
+    "reused_checkpoint_objects": 49,
+    "new_h720_training_jobs": 21,
+    "formal_prefix_checkpoint_jobs": 70,
+    "raw_horizon_rows": 280,
+    "aggregate_cells": 224,
+    "local_protocol_patch_authorized": false,
+    "remote_training_authorized": false,
+    "formal_prefix_test_authorized": false
+  },
   "gates": {
     "seed_policy": {
       "phase_1_seed": 2021,
@@ -1823,7 +1859,7 @@
       "test_guided_retuning": "required_for_main_candidate_within_frozen_dataset_level_search_contract",
       "untouched_holdout_wording": "prohibited",
       "main_i": "tuned_ISCF_BSCA_MAIN_v1_against_all_retained_eight_dataset_baselines",
-      "main_ii": "tuned_ISCF_BSCA_MAIN_v1_against_matched_unified_and_separately_labeled_native_context",
+      "main_ii": "tuned_ISCF_BSCA_MAIN_v1_against_seven_H720_trained_prefix_cropped_external_systems_on_the_complete_seven_dataset_surface",
       "exact_architecture_attribution": "five_dataset_exact_ablations_and_end_to_end_two_backbone_transfer",
       "external_native": "native_protocol_accuracy_context_only_not_matched_attribution",
       "published_transcribed": "main_i_context_only_with_visible_protocol_disclosure"
