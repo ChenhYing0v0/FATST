@@ -12,6 +12,7 @@ The path has four modules:
 4. `scripts/check_main_ii_h720_prelaunch.py` and `scripts/remote/run_main_ii_h720_training.sh` enforce the 21-training/70-evaluation matrix and the local → smoke → training → test ordering.
 5. `scripts/collect_main_ii_existing_iscf_prefix.py` verifies and reuses the seven completed ISCF H1--H720 full-crop formal audits without new test access; `scripts/evaluate_main_ii_timealign_checkpoint.py` streams one frozen official TimeAlign H720 checkpoint directly from its native test loader without retaining full arrays.
 6. `scripts/evaluate_main_ii_qdf_checkpoint.py` 从 frozen QDF `config.yaml` 重建 ML3 experiment 并逐 batch 评估；`scripts/evaluate_main_ii_amd_simpletm_checkpoint.py` 从 Main I `metrics.csv`、official command 与 exact checkpoint 重建 AMD/SimpleTM test path，并支持 SimpleTM 三个 native repeats。
+7. `scripts/check_main_ii_reused_artifacts.py` 将 56-row master manifest 解析为 42 个 non-ISCF reused jobs，并在 test 前逐 checkpoint 重算 hash；`scripts/remote/run_main_ii_reused_formal_tests.sh` 只在 21/21 新训练完成后，按单 GPU 顺序执行这些 tests，避免和 Tier B 抢占显存。
 
 ## 2. Runtime source patch
 
