@@ -11,6 +11,7 @@ The path has four modules:
 3. `scripts/evaluate_main_ii_h720_prefix_arrays.py` memory-maps one upstream H720 prediction/target pair,按 origin chunks 转换为 canonical `[origin,time,channel]`，并从同一 tensor 的 exact views 重算 H96/H192/H336/H720 MSE/MAE。
 4. `scripts/check_main_ii_h720_prelaunch.py` and `scripts/remote/run_main_ii_h720_training.sh` enforce the 21-training/70-evaluation matrix and the local → smoke → training → test ordering.
 5. `scripts/collect_main_ii_existing_iscf_prefix.py` verifies and reuses the seven completed ISCF H1--H720 full-crop formal audits without new test access; `scripts/evaluate_main_ii_timealign_checkpoint.py` streams one frozen official TimeAlign H720 checkpoint directly from its native test loader without retaining full arrays.
+6. `scripts/evaluate_main_ii_qdf_checkpoint.py` 从 frozen QDF `config.yaml` 重建 ML3 experiment 并逐 batch 评估；`scripts/evaluate_main_ii_amd_simpletm_checkpoint.py` 从 Main I `metrics.csv`、official command 与 exact checkpoint 重建 AMD/SimpleTM test path，并支持 SimpleTM 三个 native repeats。
 
 ## 2. Runtime source patch
 
@@ -52,6 +53,8 @@ TimeAlign streaming evaluator 从冻结 `effective_config.json` 重建 exact off
 For canonical tensors `prediction,target ∈ R^{N×720×C}`, horizon `H` uses `[:, :H, :]` from the same H720 forward tensor。Evaluator 以 memory-map 加载 arrays，逐 origin chunk 使用 float64 sums/counts 计算 global elementwise MSE/MAE，避免将 ECL 等完整张量复制到 host memory。每个 horizon 的 hash 初始化时包含 canonical shape 与 dtype，随后按 origin 顺序吸收 contiguous prefix bytes，因此保留的 hash 仍唯一标识完整 canonical prefix。每行同时记录 origin/channel counts 与 prediction/target hashes。这建立了 within-checkpoint prefix identity，但不会消除各 official repositories native test-loader 的 cross-system 差异。
 
 `--remove-input-arrays-after-success` 只接受 basename 为 `pred.npy`/`true.npy` 的两个 `.npy` paths；必须先成功写入 `prefix_metrics.json` 才会 unlink，并随后将精确 removed paths 与 retention state 回写 JSON。Checkpoints、logs、effective configs 和 metric/hash audit 不删除。
+
+AMD upstream 的 Main I metric 并非 global elementwise mean，而是对 test batches 的 MSE/MAE 做未按 batch size 加权的平均。为保证 Main II H720 与冻结 Main I H720 anchor 的连续性，AMD four-prefix primary columns 保留这一 official aggregation；同一 streaming pass 额外记录 `global_elementwise_mse/mae`，使该 source-native exception 可审计。其他 evaluators 的 primary columns 使用 global elementwise float64 accumulation。
 
 ## 5. Falsification and rollback
 

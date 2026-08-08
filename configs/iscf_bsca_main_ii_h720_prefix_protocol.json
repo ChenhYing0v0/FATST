@@ -52,7 +52,7 @@
     "canonical_tensor_layout": "convert each repository output batch to [origin,time,channel] with a source-audited model-specific permutation before any metric or crop",
     "prefix_rule": "for H in [96,192,336,720], compare canonical prediction[:,0:H,:] with canonical target[:,0:H,:] from the same H720 test batches",
     "prefix_identity_gate": "the H96/H192/H336 outputs must be exact in-memory slices of the same H720 forward tensor for every batch, sample, and channel",
-    "metric_rule": "recompute global elementwise mean squared error and mean absolute error with float64 accumulators over streamed H720 prediction/target batches; also retain each repository native H720 metric for continuity audit",
+    "metric_rule": "recompute global elementwise mean squared error and mean absolute error with float64 accumulators over streamed H720 prediction/target batches; AMD is the preregistered source-native exception because its official Main I code reports an unweighted mean of per-batch MSE/MAE, so its primary four-prefix values preserve that exact official aggregation while also retaining global-elementwise audit columns",
     "tensor_audit_rule": "for 63 newly executed evaluations, retain canonical shape, origin count, channel count, and deterministic SHA256 for every prediction/target prefix; the 7 prior completed ISCF evaluations instead retain hashes of their dense 720-row metric CSV, diagnostic NPZ, invariant JSON, and immutable checkpoint because their full arrays were not retained by the already completed audit",
     "array_retention_rule": "under the remote 220 GiB hard limit, process one checkpoint at a time and remove only its exact pred.npy/true.npy inputs after prefix_metrics.json and hashes are durably written; checkpoints, configs, logs, metrics, hashes, and continuity evidence remain persistent",
     "chpc_consequence": "all four requests are nested views of one H720 trajectory produced once for each checkpoint",
@@ -93,6 +93,7 @@
       "seed": 2024,
       "seq_len": 512,
       "checkpoint_selector": "official_last",
+      "metric_semantics": "official_unweighted_mean_of_per_batch_MSE_MAE_primary_plus_global_elementwise_audit",
       "formal_prefix_test": "required"
     },
     "SimpleTM": {
