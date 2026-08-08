@@ -25,6 +25,8 @@ The runtime adapter deliberately changes only protocol hygiene and compatibility
 
 PatchTST and DLinear Solar additionally copy the exact audited `Dataset_Solar` semantics from iTransformer and register `data='Solar'`. Their optimization command is the released ECL H720 profile with `data_path`, `enc_in=137` and `model_id` adapted as preregistered. These two cells remain labeled `source_informed_not_official`.
 
+DLinear's native `data_factory` passes an additional `train_only` keyword to every dataset class. The DLinear Solar runtime class therefore accepts and ignores extra keyword arguments; this is a constructor-compatibility patch and does not alter data values, splits, scaling or optimization.
+
 ## 3. Command extraction and artifacts
 
 Official shell scripts are executed with a temporary no-op `python` capture shim. All commands are captured after native shell-variable expansion, and exactly one command with `--pred_len 720` must exist. The adapter then changes only dataset absolute path, `num_workers=0`, isolated checkpoint root, execution phase and preregistered Solar fields.

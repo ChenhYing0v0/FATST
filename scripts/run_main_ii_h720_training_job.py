@@ -170,11 +170,22 @@ def solar_class_from_itransformer(itransformer_root: Path) -> str:
     return source[start:end]
 
 
-def patch_solar_loader(workspace: Path, itransformer_root: Path) -> list[str]:
+def patch_solar_loader(
+    workspace: Path, itransformer_root: Path, kind: str
+) -> list[str]:
     loader_path = workspace / "data_provider" / "data_loader.py"
     factory_path = workspace / "data_provider" / "data_factory.py"
     loader = loader_path.read_text(encoding="utf-8")
     solar_class = solar_class_from_itransformer(itransformer_root)
+    changes = ["iTransformer_Dataset_Solar_copy", "Solar_data_factory_registration"]
+    if kind == "dlinear":
+        solar_class = replace_once(
+            solar_class,
+            "                 target='OT', scale=True, timeenc=0, freq='h'):\n",
+            "                 target='OT', scale=True, timeenc=0, freq='h', **kwargs):\n",
+            "DLinear Solar train_only compatibility",
+        )
+        changes.append("DLinear_Solar_accepts_unused_train_only")
     loader = replace_once(
         loader,
         "class Dataset_Pred(Dataset):",
@@ -197,7 +208,7 @@ def patch_solar_loader(workspace: Path, itransformer_root: Path) -> list[str]:
         "Solar data dictionary",
     )
     factory_path.write_text(factory, encoding="utf-8")
-    return ["iTransformer_Dataset_Solar_copy", "Solar_data_factory_registration"]
+    return changes
 
 
 def prepare_workspace(args: argparse.Namespace, config: dict[str, Any]) -> None:
@@ -230,7 +241,7 @@ def prepare_workspace(args: argparse.Namespace, config: dict[str, Any]) -> None:
         if args.itransformer_source_root is None:
             raise ValueError("--itransformer-source-root is required for Solar patch")
         changes.extend(
-            patch_solar_loader(args.workspace, args.itransformer_source_root)
+            patch_solar_loader(args.workspace, args.itransformer_source_root, kind)
         )
     patched_hashes = {
         relative: sha256_file(args.workspace / relative)

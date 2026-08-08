@@ -9,6 +9,7 @@ CONDA_BIN="${CONDA_BIN:-/home/anaconda3/bin/conda}"
 CONDA_ENV="${CONDA_ENV:-moe}"
 DATA_ROOT="${DATA_ROOT:-/home/yingch/dataset}"
 OUTPUT_ROOT="${OUTPUT_ROOT:-/home/yingch/exp_outputs/r-2026-fatst/main_ii_h720_prefix_20260808}"
+WORKSPACE_ROOT="${WORKSPACE_ROOT:-${OUTPUT_ROOT}/_workspaces_v2}"
 GPU_IDS_STR="${GPU_IDS:-0 1 2}"
 MODE="${1:-dry-run}"
 
@@ -60,7 +61,7 @@ if [[ "${MODE}" == "status" ]]; then
   exit 0
 fi
 
-mkdir -p "${OUTPUT_ROOT}/_upstream" "${OUTPUT_ROOT}/_workspaces"
+mkdir -p "${OUTPUT_ROOT}/_upstream" "${WORKSPACE_ROOT}"
 
 ensure_checkout() {
   local baseline="$1" destination repository commit actual
@@ -91,7 +92,7 @@ ensure_checkout DLinear
 
 ensure_workspace() {
   local baseline="$1"
-  local workspace="${OUTPUT_ROOT}/_workspaces/${baseline}"
+  local workspace="${WORKSPACE_ROOT}/${baseline}"
   if [[ -s "${workspace}/fatst_runtime_patch_manifest.json" ]]; then return; fi
   [[ ! -e "${workspace}" ]] || { echo "incomplete workspace exists: ${workspace}" >&2; exit 3; }
   args=(
@@ -114,9 +115,9 @@ if [[ "${MODE}" == "dry-run" ]]; then
     python "${REPO_ROOT}/scripts/check_main_ii_h720_prelaunch.py" \
       --config "${CONFIG}" --protocol "${PROTOCOL}" \
       --checkpoint-manifest "${CHECKPOINT_MANIFEST}" \
-      --itransformer-workspace "${OUTPUT_ROOT}/_workspaces/iTransformer" \
-      --patchtst-workspace "${OUTPUT_ROOT}/_workspaces/PatchTST" \
-      --dlinear-workspace "${OUTPUT_ROOT}/_workspaces/DLinear" \
+      --itransformer-workspace "${WORKSPACE_ROOT}/iTransformer" \
+      --patchtst-workspace "${WORKSPACE_ROOT}/PatchTST" \
+      --dlinear-workspace "${WORKSPACE_ROOT}/DLinear" \
       --data-root "${DATA_ROOT}" \
       --output "${OUTPUT_ROOT}/remote_prelaunch_gate.json"
   exit 0
@@ -166,7 +167,7 @@ if [[ "${MODE}" == "formal-test-new" ]]; then
     CUDA_VISIBLE_DEVICES="${gpu}" "${CONDA_BIN}" run --no-capture-output -n "${CONDA_ENV}" \
       python "${REPO_ROOT}/scripts/run_main_ii_h720_training_job.py" \
         --config "${CONFIG}" --action run --baseline "${baseline}" \
-        --workspace "${OUTPUT_ROOT}/_workspaces/${baseline}" \
+        --workspace "${WORKSPACE_ROOT}/${baseline}" \
         --dataset "${dataset}" --data-root "${DATA_ROOT}" \
         --output-dir "${output}" --checkpoint-dir "${training}" --mode formal-test
     checkpoint_sha="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["checkpoint_sha256"])' "${output}/artifact_manifest.json")"
@@ -213,7 +214,7 @@ run_one() {
   CUDA_VISIBLE_DEVICES="${gpu}" "${CONDA_BIN}" run --no-capture-output -n "${CONDA_ENV}" \
     python "${REPO_ROOT}/scripts/run_main_ii_h720_training_job.py" \
       --config "${CONFIG}" --action run --baseline "${baseline}" \
-      --workspace "${OUTPUT_ROOT}/_workspaces/${baseline}" \
+      --workspace "${WORKSPACE_ROOT}/${baseline}" \
       --dataset "${dataset}" --data-root "${DATA_ROOT}" \
       --output-dir "${output}" --mode "${RUN_MODE}"
   is_complete "${MODE_ROOT}" "${baseline}" "${dataset}"
