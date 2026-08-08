@@ -8,7 +8,7 @@ The path has four modules:
 
 1. `configs/iscf_bsca_main_ii_h720_execution.json` freezes source commits, key source/script hashes, seven dataset hashes, the 21-job order, resource limits and Solar adaptation role.
 2. `scripts/run_main_ii_h720_training_job.py` verifies an exact upstream checkout, copies a repo-external execution workspace, applies narrow runtime patches, extracts the released H720 command, and runs one smoke/training/test unit.
-3. `scripts/evaluate_main_ii_h720_prefix_arrays.py` converts one upstream H720 prediction/target pair to canonical `[origin,time,channel]` and recomputes H96/H192/H336/H720 MSE/MAE from exact views of the same tensor.
+3. `scripts/evaluate_main_ii_h720_prefix_arrays.py` memory-maps one upstream H720 prediction/target pair,按 origin chunks 转换为 canonical `[origin,time,channel]`，并从同一 tensor 的 exact views 重算 H96/H192/H336/H720 MSE/MAE。
 4. `scripts/check_main_ii_h720_prelaunch.py` and `scripts/remote/run_main_ii_h720_training.sh` enforce the 21-training/70-evaluation matrix and the local → smoke → training → test ordering.
 
 ## 2. Runtime source patch
@@ -38,13 +38,15 @@ Each unit writes:
 - `run.log`: stdout/stderr;
 - `artifact_manifest.json`: checkpoint and log SHA256;
 - `DONE`: completion token;
-- formal test additionally writes `pred.npy`, `true.npy` and four-row prefix metrics.
+- formal test upstream 临时写入 `pred.npy`、`true.npy`；prefix evaluator 成功保留 four-row metrics、canonical tensor hashes 与 shape 后，仅精确删除这两个临时 arrays，以满足 remote 220 GiB hard limit。
 
 Checkpoint SHA256 is computed before and after formal test; mutation is a hard failure.
 
 ## 4. Prefix metric semantics
 
-For canonical tensors `prediction,target ∈ R^{N×720×C}`, horizon `H` uses `[:, :H, :]` from the same saved arrays. MSE and MAE are global elementwise means computed in float64. Each row records origin/channel counts plus hashes of both prefix tensors. This establishes exact within-checkpoint prefix identity by construction; it does not remove cross-system differences in native official-test loaders.
+For canonical tensors `prediction,target ∈ R^{N×720×C}`, horizon `H` uses `[:, :H, :]` from the same H720 forward tensor。Evaluator 以 memory-map 加载 arrays，逐 origin chunk 使用 float64 sums/counts 计算 global elementwise MSE/MAE，避免将 ECL 等完整张量复制到 host memory。每个 horizon 的 hash 初始化时包含 canonical shape 与 dtype，随后按 origin 顺序吸收 contiguous prefix bytes，因此保留的 hash 仍唯一标识完整 canonical prefix。每行同时记录 origin/channel counts 与 prediction/target hashes。这建立了 within-checkpoint prefix identity，但不会消除各 official repositories native test-loader 的 cross-system 差异。
+
+`--remove-input-arrays-after-success` 只接受 basename 为 `pred.npy`/`true.npy` 的两个 `.npy` paths；必须先成功写入 `prefix_metrics.json` 才会 unlink，并随后将精确 removed paths 与 retention state 回写 JSON。Checkpoints、logs、effective configs 和 metric/hash audit 不删除。
 
 ## 5. Falsification and rollback
 

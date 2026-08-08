@@ -89,11 +89,15 @@ iTransformer、PatchTST、DLinear 的 source commits 是 2026-08-08 对官方仓
 - reused checkpoint objects：ISCF 7 + TimeAlign 7 + QDF 7 + AMD 7 + SimpleTM 21 = 49；
 - formal prefix evaluations：70 checkpoints × four H = 280 raw rows。
 
+70 个 checkpoint evaluations 中，7 个 ISCF checkpoints 已有同一 H720 trajectory 的完整 dense-prefix formal audit，可在 checkpoint 与 test-artifact hashes 不变时复用；其余 63 个 checkpoint evaluations 新执行。禁止仅为了复制已有数值而重复访问 ISCF test。
+
 当前 single-seed-first 原则保持不变。Optional 3-seed 只允许在完整 primary matrix 后、时间允许时按完整 experiment block 非选择性扩展，不允许根据 phase-1 结果决定只补有利模型、dataset 或 cells。
 
 ## 8. Resource、调度与 storage
 
-Pre-smoke 粗估 21 个新训练 jobs 需要 60--180 GPU-hours；该区间只用于容量规划，必须由 bounded resource smoke 重校准。Main II 新输出 storage budget 冻结为 40 GiB，且必须在 remote `/home/yingch` 220 GiB hard limit 下保留安全余量。
+Pre-smoke 粗估 21 个新训练 jobs 需要 60--180 GPU-hours；该区间只用于容量规划，必须由 bounded resource smoke 重校准。Tier B 启动时 remote `/home/yingch` 已占用约 181 GiB，因此 Main II 后续新增 storage budget 冻结为不超过剩余约 39 GiB，并始终受 220 GiB hard limit 约束。
+
+Tier C 采用逐 checkpoint 的 storage-safe streaming/ephemeral-array audit。每个 H720 forward batch 在内存中转换为 NTC，并从同一 tensor 切取 H96/H192/H336/H720；MSE/MAE 使用 float64 global accumulators，且为每个 prediction/target prefix 永久保留 shape、origin count、channel count 与 deterministic SHA256。若 upstream 只能先写 `pred.npy`/`true.npy`，仅在 `prefix_metrics.json` 与 hashes 成功落盘后删除这两个精确临时输入；checkpoints、effective configs、logs、metrics、hashes 与 H720 continuity evidence永久保留。该策略只改变 artifact retention，不改变预测、裁剪、样本或指标定义。
 
 三张 3090 使用 dataset-major longest-processing-time queue。首波计划为 iTransformer-ECL、PatchTST-ECL、iTransformer-Weather；随后优先 Solar、ETTm1，再填充 ETT datasets。每个新 baseline 先完成 7 个 H720 no-test smokes，训练 smoke 不产生 official-test evidence。正式训练期间只做 validation checkpoint selection，test 只在 21/21 checkpoint manifest 冻结后按单独授权执行。
 

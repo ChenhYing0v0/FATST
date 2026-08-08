@@ -175,7 +175,8 @@ if [[ "${MODE}" == "formal-test-new" ]]; then
       python "${REPO_ROOT}/scripts/evaluate_main_ii_h720_prefix_arrays.py" \
         --prediction "${output}/pred.npy" --target "${output}/true.npy" --layout NTC \
         --system "${baseline}" --dataset "${dataset}" --repeat 0 \
-        --checkpoint-sha256 "${checkpoint_sha}" --output-dir "${output}/prefix"
+        --checkpoint-sha256 "${checkpoint_sha}" --output-dir "${output}/prefix" \
+        --remove-input-arrays-after-success
   done
   echo "main_ii_formal_test_new_done=$(date -Is) units=21 raw_rows=84"
   exit 0
