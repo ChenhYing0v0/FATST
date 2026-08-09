@@ -62,7 +62,8 @@
   "h720_continuity_gate": {
     "exact_local_anchor_systems": ["ISCF-BSCA-MAIN-v1", "TimeAlign", "QDF", "AMD", "SimpleTM"],
     "exact_rule": "same checkpoint, data preprocessing, native H720 loader, repetition aggregation, and metric implementation must reproduce the frozen Main I H720 value within numeric tolerance",
-    "numeric_tolerance_absolute": 1e-8,
+    "numeric_tolerance_absolute_floor": 1e-8,
+    "numeric_tolerance_rule": "for each MSE/MAE scalar use max(1e-8, one float32 ULP at the frozen Main I anchor); this separates harmless reduction-order roundoff from checkpoint, loader, preprocessing, or metric-contract drift",
     "published_reference_systems": ["iTransformer", "PatchTST", "DLinear"],
     "published_rule": "Main I values are published three-run means; the new official single-seed H720 result receives a signed deviation audit and is not required to equal or replace the frozen published value",
     "simpletm_aggregation": "evaluate all three frozen native H720 repetition checkpoints and average them; choosing one favorable repetition is forbidden"

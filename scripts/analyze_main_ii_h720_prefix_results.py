@@ -10,6 +10,8 @@ import json
 from collections import defaultdict
 from pathlib import Path
 
+import numpy as np
+
 
 SYSTEMS = (
     "ISCF-BSCA-MAIN-v1",
@@ -44,6 +46,11 @@ def sha256(path: Path) -> str:
 def read_csv(path: Path) -> list[dict[str, str]]:
     with path.open(encoding="utf-8", newline="") as handle:
         return list(csv.DictReader(handle))
+
+
+def numeric_tolerance(reference: float, absolute_floor: float) -> float:
+    """Allow the frozen floor or one float32 ULP, whichever is larger."""
+    return max(absolute_floor, abs(float(np.spacing(np.float32(reference)))))
 
 
 def write_csv(path: Path, rows: list[dict[str, object]]) -> None:
@@ -179,9 +186,15 @@ def main() -> None:
         mse_delta = float(row["mse"]) - float(anchor["mse"])
         mae_delta = float(row["mae"]) - float(anchor["mae"])
         exact_required = system in EXACT_ANCHORS
+        mse_tolerance = numeric_tolerance(
+            float(anchor["mse"]), args.exact_tolerance
+        )
+        mae_tolerance = numeric_tolerance(
+            float(anchor["mae"]), args.exact_tolerance
+        )
         passed = (
-            abs(mse_delta) <= args.exact_tolerance
-            and abs(mae_delta) <= args.exact_tolerance
+            abs(mse_delta) <= mse_tolerance
+            and abs(mae_delta) <= mae_tolerance
             if exact_required
             else True
         )
@@ -194,6 +207,9 @@ def main() -> None:
             "main_ii_mae": row["mae"],
             "main_i_h720_mae": float(anchor["mae"]),
             "mae_delta": mae_delta,
+            "mse_tolerance": mse_tolerance,
+            "mae_tolerance": mae_tolerance,
+            "numeric_tolerance_rule": "max(1e-8, one_float32_ULP_of_anchor)",
             "exact_required": exact_required,
             "pass": passed,
             "reference_role": (

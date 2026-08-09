@@ -22,6 +22,11 @@ import torch
 HORIZONS = (96, 192, 336, 720)
 
 
+def numeric_tolerance(reference: float, absolute_floor: float) -> float:
+    """Allow the frozen floor or one float32 ULP, whichever is larger."""
+    return max(absolute_floor, abs(float(np.spacing(np.float32(reference)))))
+
+
 def sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
@@ -414,9 +419,13 @@ def main() -> None:
         raise RuntimeError("checkpoint mutated during formal test")
     mse_delta = float(rows[-1]["mse"]) - float(record["mse"])
     mae_delta = float(rows[-1]["mae"]) - float(record["mae"])
-    if abs(mse_delta) > args.tolerance or abs(mae_delta) > args.tolerance:
+    mse_tolerance = numeric_tolerance(float(record["mse"]), args.tolerance)
+    mae_tolerance = numeric_tolerance(float(record["mae"]), args.tolerance)
+    if abs(mse_delta) > mse_tolerance or abs(mae_delta) > mae_tolerance:
         raise RuntimeError(
-            f"H720 anchor mismatch: mse_delta={mse_delta}, mae_delta={mae_delta}"
+            "H720 anchor mismatch: "
+            f"mse_delta={mse_delta}, mse_tolerance={mse_tolerance}, "
+            f"mae_delta={mae_delta}, mae_tolerance={mae_tolerance}"
         )
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -435,6 +444,9 @@ def main() -> None:
         "h720_anchor_mae": float(record["mae"]),
         "h720_mse_delta": mse_delta,
         "h720_mae_delta": mae_delta,
+        "h720_mse_tolerance": mse_tolerance,
+        "h720_mae_tolerance": mae_tolerance,
+        "numeric_tolerance_rule": "max(1e-8, one_float32_ULP_of_anchor)",
         "array_retention": "streamed_not_saved",
         "run_dir": str(args.run_dir),
         "metrics_csv_sha256": sha256(args.run_dir / "metrics.csv"),

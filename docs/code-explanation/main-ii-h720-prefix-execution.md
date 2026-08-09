@@ -13,7 +13,7 @@ The path has four modules:
 5. `scripts/collect_main_ii_existing_iscf_prefix.py` verifies and reuses the seven completed ISCF H1--H720 full-crop formal audits without new test access; `scripts/evaluate_main_ii_timealign_checkpoint.py` streams one frozen official TimeAlign H720 checkpoint directly from its native test loader without retaining full arrays.
 6. `scripts/evaluate_main_ii_qdf_checkpoint.py` 从 frozen QDF `config.yaml` 重建 ML3 experiment 并逐 batch 评估；`scripts/evaluate_main_ii_amd_simpletm_checkpoint.py` 从 Main I `metrics.csv`、official command 与 exact checkpoint 重建 AMD/SimpleTM test path，并支持 SimpleTM 三个 native repeats。
 7. `scripts/check_main_ii_reused_artifacts.py` 将 56-row master manifest 解析为 42 个 non-ISCF reused jobs，并在 test 前逐 checkpoint 重算 hash；`scripts/remote/run_main_ii_reused_formal_tests.sh` 只在 21/21 新训练完成后，按单 GPU 顺序执行这些 tests，避免和 Tier B 抢占显存。
-8. `scripts/analyze_main_ii_h720_prefix_results.py` 合并 7 个既有 ISCF evaluations、42 个 reused-baseline tests 与 21 个 newly trained tests，硬检查 70 checkpoints/280 raw rows/224 aggregate cells，并将 35 个 local H720 anchors 与 frozen Main I 做 $10^{-8}$ continuity audit；iTransformer/PatchTST/DLinear 的 21 个 H720 values 仅记录相对 published three-run means 的 signed deviations。
+8. `scripts/analyze_main_ii_h720_prefix_results.py` 合并 7 个既有 ISCF evaluations、42 个 reused-baseline tests 与 21 个 newly trained tests，硬检查 70 checkpoints/280 raw rows/224 aggregate cells，并将 35 个 local H720 anchors 与 frozen Main I 做 `max(1e-8, one float32 ULP at anchor)` continuity audit；iTransformer/PatchTST/DLinear 的 21 个 H720 values 仅记录相对 published three-run means 的 signed deviations。
 9. `scripts/remote/run_main_ii_tier_c_chain.sh` 绑定 exact detached-worktree commit，等待 Tier B supervisor 退出并验证 21/21 `DONE` 后，单 GPU 顺序执行 new/reused Tier C tests 与 aggregate audit。任何非零退出都会中止后续阶段，因此不会在 incomplete/failed evidence 上生成 Main II table。
 
 ## 2. Runtime source patch
@@ -49,7 +49,7 @@ Checkpoint SHA256 is computed before and after formal test; mutation is a hard f
 
 ISCF reuse collector 还要求：selected manifest 恰好覆盖 seven dense datasets、actual checkpoint hash 等于 before/after-test hashes、dense CSV 完整覆盖 H1--H720、invariant JSON 的 H96/H192/H336/H720 `full_prefix_max_abs=0`，且 four-H mean 精确重建冻结 manifest。由于该既有 audit 未保留 arrays，新 Main II 记录保存 dense metric CSV、diagnostic NPZ、invariant JSON 与 checkpoint 的 hashes，而不伪造 tensor hash。
 
-TimeAlign streaming evaluator 从冻结 `effective_config.json` 重建 exact official model/data loader，加载同一 H720 `checkpoint.pt`，逐 test batch 做一次 H720 forward 并同步累加 four prefixes。其 H720 MSE/MAE 必须在绝对误差 $10^{-8}$ 内复现 Main I 的 exact anchor；checkpoint pre/post hashes 必须相同。
+TimeAlign streaming evaluator 从冻结 `effective_config.json` 重建 exact official model/data loader，加载同一 H720 `checkpoint.pt`，逐 test batch 做一次 H720 forward 并同步累加 four prefixes。其 H720 MSE/MAE 必须在 `max(1e-8, one float32 ULP at anchor)` 内复现 Main I 的 exact anchor；checkpoint pre/post hashes 必须相同。
 
 ## 4. Prefix metric semantics
 
@@ -58,6 +58,8 @@ For canonical tensors `prediction,target ∈ R^{N×720×C}`, horizon `H` uses `[
 `--remove-input-arrays-after-success` 只接受 basename 为 `pred.npy`/`true.npy` 的两个 `.npy` paths；必须先成功写入 `prefix_metrics.json` 才会 unlink，并随后将精确 removed paths 与 retention state 回写 JSON。Checkpoints、logs、effective configs 和 metric/hash audit 不删除。
 
 2026-08-09 首次 Tier C chain 在 14/21 new tests 后暴露 artifact collection defect：runner 虽删除 unit-output arrays，却保留 workspace arrays，并在 DLinear-ECL 再复制约 8.4 GB 时触发 220 GiB quota。该失败发生在完整 inference arrays 已写入之后，不属于 model/numeric failure。修复仅移除 duplication：manifest 指向 workspace 唯一副本，evaluator 成功后原位删除；prediction、loader、checkpoint 与 metric contract 均不变。
+
+同日 reused evaluator 的第一个 TimeAlign ETTh1 checkpoint 暴露 numeric gate defect：streaming float64 reduction 相对冻结 Main I native vectorized reduction 的 MSE 差 $1.278\times10^{-8}$，约为该 float32 anchor 的 $0.43$ ULP，MAE 差 $4.28\times10^{-10}$；checkpoint 与 loader 均未变化。修复把固定 $10^{-8}$ 门限改为 `max(1e-8, one float32 ULP at anchor)`，并逐 scalar 持久化实际 tolerance 与 delta。该修复不改变 prediction、primary metric、checkpoint、search、模型选择或三位小数论文值，只避免把合法的 float32 reduction-order roundoff 误判为 protocol drift。
 
 AMD upstream 的 Main I metric 并非 global elementwise mean，而是对 test batches 的 MSE/MAE 做未按 batch size 加权的平均。为保证 Main II H720 与冻结 Main I H720 anchor 的连续性，AMD four-prefix primary columns 保留这一 official aggregation；同一 streaming pass 额外记录 `global_elementwise_mse/mae`，使该 source-native exception 可审计。其他 evaluators 的 primary columns 使用 global elementwise float64 accumulation。
 

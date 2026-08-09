@@ -44,6 +44,11 @@ def initialize_digest(shape: tuple[int, ...], dtype: np.dtype) -> object:
     return digest
 
 
+def numeric_tolerance(reference: float, absolute_floor: float) -> float:
+    """Allow the frozen floor or one float32 ULP, whichever is larger."""
+    return max(absolute_floor, abs(float(np.spacing(np.float32(reference)))))
+
+
 def read_anchor(path: Path) -> tuple[float, float]:
     """Read the exact frozen Main I H720 MSE/MAE anchor."""
     with path.open(encoding="utf-8", newline="") as handle:
@@ -181,9 +186,13 @@ def main() -> None:
     h720 = rows[-1]
     mse_delta = float(h720["mse"]) - anchor_mse
     mae_delta = float(h720["mae"]) - anchor_mae
-    if abs(mse_delta) > args.tolerance or abs(mae_delta) > args.tolerance:
+    mse_tolerance = numeric_tolerance(anchor_mse, args.tolerance)
+    mae_tolerance = numeric_tolerance(anchor_mae, args.tolerance)
+    if abs(mse_delta) > mse_tolerance or abs(mae_delta) > mae_tolerance:
         raise RuntimeError(
-            f"H720 anchor mismatch: mse_delta={mse_delta}, mae_delta={mae_delta}"
+            "H720 anchor mismatch: "
+            f"mse_delta={mse_delta}, mse_tolerance={mse_tolerance}, "
+            f"mae_delta={mae_delta}, mae_tolerance={mae_tolerance}"
         )
     checkpoint_after = sha256(args.checkpoint)
     if checkpoint_before != checkpoint_after:
@@ -213,6 +222,9 @@ def main() -> None:
         "h720_anchor_mae": anchor_mae,
         "h720_mse_delta": mse_delta,
         "h720_mae_delta": mae_delta,
+        "h720_mse_tolerance": mse_tolerance,
+        "h720_mae_tolerance": mae_tolerance,
+        "numeric_tolerance_rule": "max(1e-8, one_float32_ULP_of_anchor)",
         "array_retention": "streamed_not_saved",
         "rows": rows,
     }
