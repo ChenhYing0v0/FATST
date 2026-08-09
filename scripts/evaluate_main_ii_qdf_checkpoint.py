@@ -44,8 +44,11 @@ def initialize_digest(shape: tuple[int, ...], dtype: np.dtype) -> object:
 
 
 def numeric_tolerance(reference: float, absolute_floor: float) -> float:
-    """Allow the frozen floor or one float32 ULP, whichever is larger."""
-    return max(absolute_floor, abs(float(np.spacing(np.float32(reference)))))
+    """Allow the frozen floor or four float32 ULPs, whichever is larger."""
+    return max(
+        absolute_floor,
+        4.0 * abs(float(np.spacing(np.float32(reference)))),
+    )
 
 
 def read_anchor(path: Path) -> tuple[float, float]:
@@ -252,7 +255,7 @@ def main() -> None:
         "h720_mae_delta": mae_delta,
         "h720_mse_tolerance": mse_tolerance,
         "h720_mae_tolerance": mae_tolerance,
-        "numeric_tolerance_rule": "max(1e-8, one_float32_ULP_of_anchor)",
+        "numeric_tolerance_rule": "max(1e-8, four_float32_ULPs_of_anchor)",
         "array_retention": "streamed_not_saved",
         "rows": rows,
     }

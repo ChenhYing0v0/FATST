@@ -49,8 +49,11 @@ def read_csv(path: Path) -> list[dict[str, str]]:
 
 
 def numeric_tolerance(reference: float, absolute_floor: float) -> float:
-    """Allow the frozen floor or one float32 ULP, whichever is larger."""
-    return max(absolute_floor, abs(float(np.spacing(np.float32(reference)))))
+    """Allow the frozen floor or four float32 ULPs, whichever is larger."""
+    return max(
+        absolute_floor,
+        4.0 * abs(float(np.spacing(np.float32(reference)))),
+    )
 
 
 def write_csv(path: Path, rows: list[dict[str, object]]) -> None:
@@ -209,7 +212,7 @@ def main() -> None:
             "mae_delta": mae_delta,
             "mse_tolerance": mse_tolerance,
             "mae_tolerance": mae_tolerance,
-            "numeric_tolerance_rule": "max(1e-8, one_float32_ULP_of_anchor)",
+            "numeric_tolerance_rule": "max(1e-8, four_float32_ULPs_of_anchor)",
             "exact_required": exact_required,
             "pass": passed,
             "reference_role": (

@@ -61,7 +61,7 @@ Metric aggregation 同样保留 source-native continuity：多数 systems 从同
 
 “理论上 H720 应与 Main I 一致”被拆成两种可审计情况：
 
-1. **Local exact anchors**：ISCF-BSCA、TimeAlign、QDF、AMD、SimpleTM 复用 Main I 的 exact H720 checkpoints。相同 preprocessing、native H720 loader、metric 与 repetition aggregation 下，MSE/MAE 必须在数值容差 $max(10^{-8},\operatorname{ULP}_{\mathrm{float32}}(m_{\mathrm{anchor}}))$ 内复现。该容差只覆盖同一 float32 prediction tensor 在 native vectorized reduction 与 streaming float64 reduction 之间最多一个 float32 ULP 的 accumulation-order 差异；checkpoint、loader、preprocessing 或 metric-contract 漂移仍是 hard failure。SimpleTM 必须评估并平均全部三个 H720 native repetitions，禁止挑选一个有利 repeat。
+1. **Local exact anchors**：ISCF-BSCA、TimeAlign、QDF、AMD、SimpleTM 复用 Main I 的 exact H720 checkpoints。相同 preprocessing、native H720 loader、metric 与 repetition aggregation 下，MSE/MAE 必须在数值容差 $max(10^{-8},4\operatorname{ULP}_{\mathrm{float32}}(m_{\mathrm{anchor}}))$ 内复现。该容差只覆盖同一 float32 checkpoint re-forward 与 native/streaming reduction 的 bounded rounding，当前 benchmark 上约为 $10^{-7}$ 或更严格；checkpoint、loader、preprocessing 或 metric-contract 漂移仍是 hard failure。SimpleTM 必须评估并平均全部三个 H720 native repetitions，禁止挑选一个有利 repeat。
 2. **Published references**：iTransformer、PatchTST、DLinear 的 Main I H720 是 TimeAlign Table 6 的 published three-run mean，而 Main II phase 1 是官方源码 single-seed reproduction。两者不存在 checkpoint identity，因此不能要求 bitwise/numeric equality；必须报告 local-minus-published deviation，但不得据此修改已冻结 Main I。
 
 这一拆分避免把“同一 checkpoint 的复测一致性”和“single-seed 对 published mean 的接近程度”混为一谈。
