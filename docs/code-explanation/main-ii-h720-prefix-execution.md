@@ -61,7 +61,7 @@ For canonical tensors `prediction,target ∈ R^{N×720×C}`, horizon `H` uses `[
 
 同日 reused evaluator 的第一个 TimeAlign ETTh1 checkpoint 暴露 numeric gate defect：streaming float64 reduction 相对冻结 Main I native vectorized reduction 的 MSE 差 $1.278\times10^{-8}$，约为该 float32 anchor 的 $0.43$ ULP，MAE 差 $4.28\times10^{-10}$；checkpoint 与 loader 均未变化。修复把固定 $10^{-8}$ 门限改为 `max(1e-8, one float32 ULP at anchor)`，并逐 scalar 持久化实际 tolerance 与 delta。该修复不改变 prediction、primary metric、checkpoint、search、模型选择或三位小数论文值，只避免把合法的 float32 reduction-order roundoff 误判为 protocol drift。
 
-AMD upstream 的 Main I metric 并非 global elementwise mean，而是对 test batches 的 MSE/MAE 做未按 batch size 加权的平均。为保证 Main II H720 与冻结 Main I H720 anchor 的连续性，AMD four-prefix primary columns 保留这一 official aggregation；同一 streaming pass 额外记录 `global_elementwise_mse/mae`，使该 source-native exception 可审计。其他 evaluators 的 primary columns 使用 global elementwise float64 accumulation。
+AMD upstream 的 Main I metric 并非 global elementwise mean，而是在 GPU float32 tensor 上计算每个 batch 的 MSE/MAE，并用 `running=(running*i+batch)/(i+1)` 递归更新未按 batch size 加权的平均。为保证 Main II H720 与冻结 Main I H720 anchor 的连续性，AMD four-prefix primary columns 精确复刻这一 torch 运算与更新次序；同一 streaming pass 额外记录 `global_elementwise_mse/mae`，使该 source-native exception 可审计。其他 evaluators 的 primary columns 使用 global elementwise float64 accumulation。最初用 NumPy float64 batch mean 再求和会在 ETTh1 H720 产生约 $1.19\times10^{-7}$ 的假 continuity mismatch；该 evaluator defect 已由 exact torch path 修复，不通过继续放宽门限掩盖。
 
 ## 5. Falsification and rollback
 

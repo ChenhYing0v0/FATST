@@ -101,6 +101,7 @@ def finalize_rows(
     origins: int,
     channels: int,
     accumulators: dict[int, dict[str, Any]],
+    native_overrides: dict[int, tuple[float, float]] | None = None,
 ) -> list[dict[str, object]]:
     rows: list[dict[str, object]] = []
     for horizon in HORIZONS:
@@ -109,8 +110,11 @@ def finalize_rows(
         global_mse = float(accumulator["squared_error_sum"]) / count
         global_mae = float(accumulator["absolute_error_sum"]) / count
         native_count = int(accumulator["native_batch_count"])
-        native_mse = float(accumulator["native_batch_mse_sum"]) / native_count
-        native_mae = float(accumulator["native_batch_mae_sum"]) / native_count
+        if native_overrides is None:
+            native_mse = float(accumulator["native_batch_mse_sum"]) / native_count
+            native_mae = float(accumulator["native_batch_mae_sum"]) / native_count
+        else:
+            native_mse, native_mae = native_overrides[horizon]
         use_native_batch_mean = baseline == "AMD"
         rows.append(
             {
@@ -236,9 +240,30 @@ def evaluate_amd(
             expected_origins, channels, np.dtype(np.float32)
         )
         observed_origins = 0
+        native_running = {
+            horizon: {
+                "mse": torch.zeros(1, device="cuda"),
+                "mae": torch.zeros(1, device="cuda"),
+            }
+            for horizon in HORIZONS
+        }
         with torch.no_grad():
-            for batch_x, batch_y in test_loader:
+            for batch_index, (batch_x, batch_y) in enumerate(test_loader):
+                batch_y_cuda = batch_y.cuda()
                 prediction, _moe_loss = model(batch_x.cuda())
+                for horizon in HORIZONS:
+                    difference = (
+                        prediction[:, :horizon, :] - batch_y_cuda[:, :horizon, :]
+                    )
+                    batch_mse = torch.mean(difference**2)
+                    batch_mae = torch.mean(torch.abs(difference))
+                    running = native_running[horizon]
+                    running["mse"] = (
+                        running["mse"] * batch_index + batch_mse.detach()
+                    ) / (batch_index + 1)
+                    running["mae"] = (
+                        running["mae"] * batch_index + batch_mae.detach()
+                    ) / (batch_index + 1)
                 pred_np = np.ascontiguousarray(
                     prediction.detach().cpu().numpy(), dtype=np.float32
                 )
@@ -251,8 +276,22 @@ def evaluate_amd(
         sys.path.remove(str(source))
     if observed_origins != expected_origins:
         raise RuntimeError("AMD origin-count mismatch")
+    native_overrides = {
+        horizon: (
+            float(native_running[horizon]["mse"].item()),
+            float(native_running[horizon]["mae"].item()),
+        )
+        for horizon in HORIZONS
+    }
     rows = finalize_rows(
-        "AMD", dataset, 0, checkpoint_before, observed_origins, channels, accumulators
+        "AMD",
+        dataset,
+        0,
+        checkpoint_before,
+        observed_origins,
+        channels,
+        accumulators,
+        native_overrides=native_overrides,
     )
     checkpoint_after = sha256(checkpoint)
     return rows, {
