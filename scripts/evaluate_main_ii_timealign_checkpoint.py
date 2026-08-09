@@ -114,6 +114,8 @@ def main() -> None:
         }
 
     observed_origins = 0
+    native_predictions: list[np.ndarray] = []
+    native_targets: list[np.ndarray] = []
     f_dim = -1 if official_args.features == "MS" else 0
     with torch.no_grad():
         for batch_x, batch_y, _batch_x_mark, _batch_y_mark in loader:
@@ -139,6 +141,8 @@ def main() -> None:
                 )
             if not np.isfinite(prediction).all() or not np.isfinite(target).all():
                 raise RuntimeError("non-finite TimeAlign formal-test tensor")
+            native_predictions.append(prediction)
+            native_targets.append(target)
             observed_origins += int(prediction.shape[0])
             for horizon in HORIZONS:
                 pred_prefix = np.ascontiguousarray(prediction[:, :horizon, :])
@@ -159,6 +163,24 @@ def main() -> None:
             f"origin count mismatch: observed={observed_origins}, expected={expected_origins}"
         )
 
+    native_prediction = np.concatenate(native_predictions, axis=0)
+    del native_predictions
+    native_target = np.concatenate(native_targets, axis=0)
+    del native_targets
+    native_rows = train_repo.metric_rows(
+        native_prediction,
+        native_target,
+        list(HORIZONS),
+    )
+    native_metrics = {
+        int(row["target_horizon"]): {
+            "mse": float(row["mse"]),
+            "mae": float(row["mae"]),
+        }
+        for row in native_rows
+    }
+    del native_prediction, native_target, native_rows
+
     rows: list[dict[str, object]] = []
     for horizon in HORIZONS:
         accumulator = accumulators[horizon]
@@ -169,8 +191,15 @@ def main() -> None:
                 "dataset": args.dataset,
                 "repeat": args.repeat,
                 "horizon": horizon,
-                "mse": float(accumulator["squared_error_sum"]) / element_count,
-                "mae": float(accumulator["absolute_error_sum"]) / element_count,
+                "mse": native_metrics[horizon]["mse"],
+                "mae": native_metrics[horizon]["mae"],
+                "global_elementwise_float64_mse": (
+                    float(accumulator["squared_error_sum"]) / element_count
+                ),
+                "global_elementwise_float64_mae": (
+                    float(accumulator["absolute_error_sum"]) / element_count
+                ),
+                "metric_semantics": "official_numpy_step_mean_float32_cumsum_float64",
                 "origin_count": observed_origins,
                 "channel_count": channels,
                 "checkpoint_sha256": checkpoint_before,

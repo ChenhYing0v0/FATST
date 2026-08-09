@@ -49,7 +49,7 @@ Checkpoint SHA256 is computed before and after formal test; mutation is a hard f
 
 ISCF reuse collector 还要求：selected manifest 恰好覆盖 seven dense datasets、actual checkpoint hash 等于 before/after-test hashes、dense CSV 完整覆盖 H1--H720、invariant JSON 的 H96/H192/H336/H720 `full_prefix_max_abs=0`，且 four-H mean 精确重建冻结 manifest。由于该既有 audit 未保留 arrays，新 Main II 记录保存 dense metric CSV、diagnostic NPZ、invariant JSON 与 checkpoint 的 hashes，而不伪造 tensor hash。
 
-TimeAlign streaming evaluator 从冻结 `effective_config.json` 重建 exact official model/data loader，加载同一 H720 `checkpoint.pt`，逐 test batch 做一次 H720 forward 并同步累加 four prefixes。其 H720 MSE/MAE 必须在 `max(1e-8, four float32 ULPs at anchor)` 内复现 Main I 的 exact anchor；checkpoint pre/post hashes 必须相同。
+TimeAlign evaluator 从冻结 `effective_config.json` 重建 exact official model/data loader，加载同一 H720 `checkpoint.pt`，逐 test batch 做一次 H720 forward 并同步 hash four prefixes。Primary metric 在内存中拼接 float32 arrays 后调用 official `train_repo.metric_rows()`，即 per-step float32 mean 再做 float64 cumulative mean；streaming float64 global means 作为 audit columns。其 H720 MSE/MAE 必须在 `max(1e-8, four float32 ULPs at anchor)` 内复现 Main I 的 exact anchor；checkpoint pre/post hashes 必须相同。
 
 ## 4. Prefix metric semantics
 
@@ -60,6 +60,8 @@ For canonical tensors `prediction,target ∈ R^{N×720×C}`, horizon `H` uses `[
 2026-08-09 首次 Tier C chain 在 14/21 new tests 后暴露 artifact collection defect：runner 虽删除 unit-output arrays，却保留 workspace arrays，并在 DLinear-ECL 再复制约 8.4 GB 时触发 220 GiB quota。该失败发生在完整 inference arrays 已写入之后，不属于 model/numeric failure。修复仅移除 duplication：manifest 指向 workspace 唯一副本，evaluator 成功后原位删除；prediction、loader、checkpoint 与 metric contract 均不变。
 
 同日 reused evaluator 的第一个 TimeAlign ETTh1 checkpoint 暴露 numeric gate defect：streaming float64 reduction 相对冻结 Main I native vectorized reduction 的 MSE 差 $1.278\times10^{-8}$，约为该 float32 anchor 的 $0.43$ ULP，MAE 差 $4.28\times10^{-10}$；QDF ETTh2 在恢复 official seed 与 metric path 后仍有稳定的 two-ULP MAE re-forward drift。checkpoint 与 loader 均未变化，因此修复把固定 $10^{-8}$ 门限改为 `max(1e-8, four float32 ULPs at anchor)`，并逐 scalar 持久化实际 tolerance 与 delta。该修复不改变 prediction、primary metric、checkpoint、search、模型选择或三位小数论文值，只避免把 bounded float32/CUDA roundoff 误判为 protocol drift。
+
+TimeAlign Solar 进一步显示，约 $1.34$ million elements/step 的官方 float32 vectorized reduction 与 streaming float64 reduction 可产生 $2.25\times10^{-6}$ MSE 差异，已不能归入 re-forward ULP。Evaluator 因而改为直接调用 frozen Main I 的 official `metric_rows()` 生成 primary columns，float64 streaming 值只作 audit；这修复 source metric semantics，不改变任何 prediction tensor 或模型选择。
 
 AMD upstream 的 Main I metric 并非 global elementwise mean，而是在 GPU float32 tensor 上计算每个 batch 的 MSE/MAE，并用 `running=(running*i+batch)/(i+1)` 递归更新未按 batch size 加权的平均。为保证 Main II H720 与冻结 Main I H720 anchor 的连续性，AMD four-prefix primary columns 精确复刻这一 torch 运算与更新次序；同一 streaming pass 额外记录 `global_elementwise_mse/mae`，使该 source-native exception 可审计。除下述 QDF source-native exception 外，其余 evaluators 的 primary columns 使用 global elementwise float64 accumulation。最初用 NumPy float64 batch mean 再求和会在 ETTh1 H720 产生约 $1.19\times10^{-7}$ 的假 continuity mismatch；该 evaluator defect 已由 exact torch path 修复，不通过继续放宽门限掩盖。
 
