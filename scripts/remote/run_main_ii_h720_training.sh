@@ -171,9 +171,11 @@ if [[ "${MODE}" == "formal-test-new" ]]; then
         --dataset "${dataset}" --data-root "${DATA_ROOT}" \
         --output-dir "${output}" --checkpoint-dir "${training}" --mode formal-test
     checkpoint_sha="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["checkpoint_sha256"])' "${output}/artifact_manifest.json")"
+    prediction_path="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["prediction_path"])' "${output}/artifact_manifest.json")"
+    target_path="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["target_path"])' "${output}/artifact_manifest.json")"
     "${CONDA_BIN}" run --no-capture-output -n "${CONDA_ENV}" \
       python "${REPO_ROOT}/scripts/evaluate_main_ii_h720_prefix_arrays.py" \
-        --prediction "${output}/pred.npy" --target "${output}/true.npy" --layout NTC \
+        --prediction "${prediction_path}" --target "${target_path}" --layout NTC \
         --system "${baseline}" --dataset "${dataset}" --repeat 0 \
         --checkpoint-sha256 "${checkpoint_sha}" --output-dir "${output}/prefix" \
         --remove-input-arrays-after-success

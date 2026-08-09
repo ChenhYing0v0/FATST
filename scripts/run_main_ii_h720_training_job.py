@@ -413,17 +413,25 @@ def run_job(args: argparse.Namespace, config: dict[str, Any]) -> None:
         if not result_dirs:
             raise RuntimeError("formal test did not create a results directory")
         result_dir = result_dirs[-1]
-        for name in ("pred.npy", "true.npy"):
-            source = result_dir / name
+        prediction_path = result_dir / "pred.npy"
+        target_path = result_dir / "true.npy"
+        for source in (prediction_path, target_path):
             if not source.is_file():
                 raise FileNotFoundError(source)
-            shutil.copy2(source, args.output_dir / name)
     artifact = {
         **record,
         "checkpoint": str(checkpoint),
         "checkpoint_sha256": checkpoint_hash,
         "log_sha256": sha256_file(log_path),
     }
+    if args.mode == "formal-test":
+        artifact.update(
+            {
+                "prediction_path": str(prediction_path),
+                "target_path": str(target_path),
+                "array_retention": "workspace_ephemeral_until_prefix_audit",
+            }
+        )
     (args.output_dir / "artifact_manifest.json").write_text(
         json.dumps(artifact, indent=2, sort_keys=True), encoding="utf-8"
     )

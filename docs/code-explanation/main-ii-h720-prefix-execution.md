@@ -43,7 +43,7 @@ Each unit writes:
 - `run.log`: stdout/stderr;
 - `artifact_manifest.json`: checkpoint and log SHA256;
 - `DONE`: completion token;
-- formal test upstream 临时写入 `pred.npy`、`true.npy`；prefix evaluator 成功保留 four-row metrics、canonical tensor hashes 与 shape 后，仅精确删除这两个临时 arrays，以满足 remote 220 GiB hard limit。
+- formal test upstream 在 repo-external workspace 临时写入 `pred.npy`、`true.npy`；artifact manifest 记录其绝对路径，prefix evaluator 直接消费该唯一副本。成功保留 four-row metrics、canonical tensor hashes 与 shape 后，仅精确删除这两个临时 arrays，以满足 remote 220 GiB hard limit。禁止先复制一份到 unit output 再评估。
 
 Checkpoint SHA256 is computed before and after formal test; mutation is a hard failure.
 
@@ -56,6 +56,8 @@ TimeAlign streaming evaluator 从冻结 `effective_config.json` 重建 exact off
 For canonical tensors `prediction,target ∈ R^{N×720×C}`, horizon `H` uses `[:, :H, :]` from the same H720 forward tensor。Evaluator 以 memory-map 加载 arrays，逐 origin chunk 使用 float64 sums/counts 计算 global elementwise MSE/MAE，避免将 ECL 等完整张量复制到 host memory。每个 horizon 的 hash 初始化时包含 canonical shape 与 dtype，随后按 origin 顺序吸收 contiguous prefix bytes，因此保留的 hash 仍唯一标识完整 canonical prefix。每行同时记录 origin/channel counts 与 prediction/target hashes。这建立了 within-checkpoint prefix identity，但不会消除各 official repositories native test-loader 的 cross-system 差异。
 
 `--remove-input-arrays-after-success` 只接受 basename 为 `pred.npy`/`true.npy` 的两个 `.npy` paths；必须先成功写入 `prefix_metrics.json` 才会 unlink，并随后将精确 removed paths 与 retention state 回写 JSON。Checkpoints、logs、effective configs 和 metric/hash audit 不删除。
+
+2026-08-09 首次 Tier C chain 在 14/21 new tests 后暴露 artifact collection defect：runner 虽删除 unit-output arrays，却保留 workspace arrays，并在 DLinear-ECL 再复制约 8.4 GB 时触发 220 GiB quota。该失败发生在完整 inference arrays 已写入之后，不属于 model/numeric failure。修复仅移除 duplication：manifest 指向 workspace 唯一副本，evaluator 成功后原位删除；prediction、loader、checkpoint 与 metric contract 均不变。
 
 AMD upstream 的 Main I metric 并非 global elementwise mean，而是对 test batches 的 MSE/MAE 做未按 batch size 加权的平均。为保证 Main II H720 与冻结 Main I H720 anchor 的连续性，AMD four-prefix primary columns 保留这一 official aggregation；同一 streaming pass 额外记录 `global_elementwise_mse/mae`，使该 source-native exception 可审计。其他 evaluators 的 primary columns 使用 global elementwise float64 accumulation。
 
