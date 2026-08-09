@@ -7,6 +7,7 @@ import argparse
 import csv
 import hashlib
 import json
+import random
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -76,6 +77,12 @@ def main() -> None:
     args.gpu = 0
     args.use_multi_gpu = False
     args.num_workers = 0
+
+    fix_seed = int(args.fix_seed)
+    random.seed(fix_seed)
+    np.random.seed(fix_seed)
+    torch.manual_seed(fix_seed)
+    torch.cuda.manual_seed(fix_seed)
 
     checkpoint_before = sha256(cli.checkpoint)
     if checkpoint_before != cli.expected_checkpoint_sha256:

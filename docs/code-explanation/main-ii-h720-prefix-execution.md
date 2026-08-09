@@ -63,7 +63,7 @@ For canonical tensors `prediction,target ∈ R^{N×720×C}`, horizon `H` uses `[
 
 AMD upstream 的 Main I metric 并非 global elementwise mean，而是在 GPU float32 tensor 上计算每个 batch 的 MSE/MAE，并用 `running=(running*i+batch)/(i+1)` 递归更新未按 batch size 加权的平均。为保证 Main II H720 与冻结 Main I H720 anchor 的连续性，AMD four-prefix primary columns 精确复刻这一 torch 运算与更新次序；同一 streaming pass 额外记录 `global_elementwise_mse/mae`，使该 source-native exception 可审计。其他 evaluators 的 primary columns 使用 global elementwise float64 accumulation。最初用 NumPy float64 batch mean 再求和会在 ETTh1 H720 产生约 $1.19\times10^{-7}$ 的假 continuity mismatch；该 evaluator defect 已由 exact torch path 修复，不通过继续放宽门限掩盖。
 
-QDF upstream 把所有 CPU float32 batches `torch.cat` 后调用 `torch.mean`。Main II evaluator 因而在内存中保留同一次 H720 forward 的 CPU tensors，按 four prefixes 精确复刻该 native path，并把 streaming float64 global means 作为额外 audit columns。ETTh2 首次 streaming-only 实现的 MAE 相对 anchor 差 $4.27\times10^{-8}$；该 source-semantic defect 通过 exact official reduction 修复，而非扩大通用数值容差。
+QDF upstream 在 experiment construction 前同步设置 Python、NumPy、torch CPU/CUDA 的 `fix_seed`，随后把所有 CPU float32 batches `torch.cat` 后调用 `torch.mean`。Main II evaluator 因而先复刻相同 seed initialization，再在内存中保留同一次 H720 forward 的 CPU tensors，按 four prefixes 精确复刻该 native metric path，并把 streaming float64 global means 作为额外 audit columns。ETTh2 首次 streaming-only 实现的 MAE 相对 anchor 差 $4.27\times10^{-8}$；该 source-semantic defect 通过 exact official initialization/reduction 修复，而非扩大通用数值容差。
 
 ## 5. Falsification and rollback
 
