@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | 写作流审阅Section 4 v0.5 BSCA objective refinement并等待Figure 4 stable vector source；实验流Main I已hash冻结，Main II H720-prefix formal table已完成并对齐Main I展示，table registry已建立；下一步为ablation/transfer独立prelaunch gate |
+| `active_question` | 写作流审阅Section 4 v0.6 BSCA training refinement并等待Figure 4 stable vector source；实验流Main I已hash冻结，Main II H720-prefix formal table已完成并对齐Main I展示，table registry已建立；下一步为ablation/transfer独立prelaunch gate |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
-| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9与Section 3 v0.7 frozen；Section 4 v0.5 BSCA objective refinement pending author review；Figure 4 visual design temporarily fixed |
+| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9与Section 3 v0.7 frozen；Section 4 v0.6 BSCA training refinement pending author review；Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | Main I dense/Main II v1=ETTh1, ETTh2, ETTm1, ETTm2, Weather, ECL, Solar；Exchange=companion/deferred extension；ablation=original five |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
@@ -22,10 +22,10 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper consolidation；writing=Section 4 v0.5 BSCA objective refinement pending author review；experiments=Main I freeze complete，Main II Step 9 audit / Step 10 system benchmark pass |
+| `current_11_step` | paper consolidation；writing=Section 4 v0.6 BSCA training refinement pending author review；experiments=Main I freeze complete，Main II Step 9 audit / Step 10 system benchmark pass |
 | `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；`ISCF-BSCA-MAIN-v1` 8 selected profiles reusable |
 | `latest_decision` | `paper_table_registry_consolidated_Main_II_presentation_aligned_no_metric_change` |
-| `writing_latest_decision` | `section4_v0_5_bsca_objective_refinement_pending_author_review` |
+| `writing_latest_decision` | `section4_v0_6_bsca_training_refinement_pending_author_review` |
 | `next_required_action` | freeze exact five-dataset end-to-end ablation and two-backbone transfer prelaunch gates；Main II不再训练或formal test |
 | `method_training_authorized` | completed-scope only；Main II Tier A/B/C authorization已消费并闭合；新的ablation/transfer remote training或formal test尚未授权 |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
@@ -299,7 +299,7 @@ Historical and control queue:
 
 | Task | Status | Next Action |
 | --- | --- | --- |
-| ISCF-BSCA paper architecture | `v0_56_section4_v0_4_path_and_allocation_refinement` | author review Section 4 through 4.6；Figure 4 vector source pending；Main I/II claims remain governed by paper-facing tables |
+| ISCF-BSCA paper architecture | `v0_60_section4_v0_6_bsca_training_refinement` | author review Section 4 through 4.5；complexity moved to Section 5.4 analysis；Figure 4 vector source pending |
 | ISCF-BSCA paper experiment protocol | `v2_single_seed_scoped_exchange_patch_complete` | request remaining 8-dataset/HPO/official-baseline local patches only；B1/B2/B3/C false |
 | ISCF-BSCA-v1 three-seed confirmation | `completed_exact_ablation_anchor` | reuse existing Full/Equal ablation evidence；do not use untuned row as Main I/II method |
 | ISCF-RSCC-v1 validation matrix | `completed_control_attribution_fail` | exact route closed；retain artifacts/control clue；return Step2/4 |
@@ -378,6 +378,7 @@ Historical and control queue:
 
 | Date | Trigger | Paper Section | Change Type | Decision |
 | --- | --- | --- | --- | --- |
+| 2026-08-10 | 用户要求明确BSCA的dual training roles、重写balance作用并删除4.6 | Section 4.1、4.5、architecture/governance sync | training-objective narrative polish + method-scope reduction | v0.6 pending author review；uniform-prefix处理varied-horizon；scope-wise/balance稳定multi-scope learning；complexity转入Section 5.4；implementation与experiment cursor不变 |
 | 2026-08-08 | 用户要求精简4.3并以multi-scope joint optimization问题重构BSCA loss chain | Section 4.3、4.5、architecture/governance sync | academic compression + objective renaming + optimization narrative refinement | v0.5 pending author review；固定`Uniform-Prefix Forecasting Loss`、`Scope-Wise Forecasting Loss`与`Allocation-Balance Regularizer`；uniform KL只作early anti-collapse proxy，不保证equal usage、sufficient training或specialization；implementation与experiment cursor不变 |
 | 2026-08-07 | 用户将Method主图visual design暂时固定并要求Section 4与主图统一 | Section 4 Method、Figure 4 caption、architecture/governance sync | main-figure terminology + computation-flow alignment | v0.2 pending author text review；两条ISCF inference paths与15个figure terms同步；BSCA继续train-only且不进入主图；stable vector source pending；Introduction/Section 3、implementation、experiment与claim boundary不变 |
 | 2026-08-07 | 用户对Section开头与4.1--4.3提出逐项修改意见 | Section 4 Method、architecture/governance sync | author-guided narrative refinement + implementation-boundary audit | v0.3 pending continued review；decoder-side framing、patch-token Encoder interface、Future Coordinate rationale、per-scope information pool和region-local generation chain已更新；prefix-bounded execution未写成已实现latency evidence；Introduction/Section 3、implementation与experiment authorization不变 |

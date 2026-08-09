@@ -5,15 +5,15 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Clean manuscript-facing initial draft of Section 4 |
-| `version` | `v0.5-bsca-objective-refinement` |
-| `date` | `2026-08-08` |
-| `review_status` | `author_feedback_integrated_for_sections_4.3_and_4.5` |
+| `version` | `v0.6-bsca-training-refinement` |
+| `date` | `2026-08-10` |
+| `review_status` | `author_feedback_integrated_for_section_4.5_and_method_scope` |
 | `upstream_dependency` | Introduction v0.9 and Section 3 v0.7 remain frozen and unchanged |
 | `method_contract` | Exact frozen ISCF-BSCA-v1 architecture and objective |
 | `figure_4_status` | Visual design temporarily fixed by the author; stable vector-asset synchronization remains pending |
 | `implementation_change` | None |
 | `experiment_change` | None |
-| `claim_boundary` | Structural properties are stated as construction facts; performance, ablation and transfer claims remain pending their paper-facing tables |
+| `claim_boundary` | Architectural properties remain construction facts; complexity is deferred to the later efficiency analysis, while ablation and transfer claims remain table-contingent |
 | `narrative_spine` | History State and Future Coordinate → Scope-conditioned Forecasts and Scope Probabilities → weighted contraction → Varied-Horizon Forecasting → balanced co-adaptation |
 
 The status table, terminology ledger and editorial audit are working metadata and are not part of the manuscript body submitted for review.
@@ -46,8 +46,8 @@ The status table, terminology ledger and editorial audit are working metadata an
 | Varied-Horizon Forecasting | $\widehat{\mathbf Y}^{(H)}$ | Return of the first $H$ steps from one maximum-length prediction trajectory |
 | Uniform-Prefix Forecasting Loss | $\mathcal L_{\mathrm{prefix}}$ | Fused forecasting loss that weights every prefix horizon equally |
 | Scope-Wise Forecasting Loss | $\mathcal L_{\mathrm{scope}}$ | Direct prediction loss applied uniformly to every Scope-conditioned Forecast |
-| Allocation-Balance Regularizer | $\mathcal L_{\mathrm{balance}}$ | Ramped regularizer that discourages premature concentration of Scope Probabilities |
-| Balanced Scope Co-Adaptation | BSCA | Joint training objective combining prefix forecasting, direct scope supervision and allocation balancing |
+| Allocation-Balance Regularizer | $\mathcal L_{\mathrm{balance}}$ | Ramped regularizer that penalizes strongly non-uniform Scope Probabilities during training |
+| Balanced Scope Co-Adaptation | BSCA | Joint training objective combining uniform-prefix forecasting, direct scope supervision and allocation balancing |
 
 ## 4. ISCF-BSCA
 
@@ -59,7 +59,7 @@ Figure 4 summarizes the forward computation of ISCF, which organizes its decoder
 
 The Target-Adaptive Allocation Path combines a projected History State with the Future Coordinate $\boldsymbol\phi_\tau$ and produces Scope Probabilities $\boldsymbol\Pi\in\mathbb R^{B\times C\times T\times S}$. Weighted contraction with the scope-indexed forecast field yields one trajectory $\widehat{\mathbf Y}\in\mathbb R^{B\times T\times C}$. For an $H$-step request, the region-local construction permits computation to be restricted to regions and targets intersecting the first $H$ steps. The requested horizon changes only the evaluated prefix, not the computation assigned to a shared future target. ISCF therefore produces variable-length outputs while satisfying CHPC by construction.
 
-The Scope-conditioned Forecasts and Scope Probabilities are optimized jointly. Early probability concentration can weaken the forecasting gradients received by low-probability scopes. BSCA combines the varied-horizon Uniform-Prefix Forecasting Loss with a direct Scope-Wise Forecasting Loss and a ramped Allocation-Balance Regularizer. These objectives are used only during training and are therefore described separately from the forward computation path in Figure 4.
+The Scope-conditioned Forecasts and Scope Probabilities are optimized jointly. BSCA separates two training roles: the Uniform-Prefix Forecasting Loss optimizes varied-horizon prediction, while the Scope-Wise Forecasting Loss and Allocation-Balance Regularizer stabilize multi-scope learning. These objectives are described separately from the forward computation in Figure 4.
 
 <a id="fig:iscf-bsca-method"></a>
 
@@ -256,7 +256,9 @@ Changing $H$ restricts the active region and target computations but does not al
 
 ### 4.5 Balanced Scope Co-Adaptation
 
-Jointly training multiple scope lines creates a gradient-allocation problem. Without BSCA, each scope receives the fused forecasting gradient only through its current Scope Probability. Denoting this objective by $\mathcal L_{\mathrm{prefix}}$, weighted contraction for a fixed target gives
+Training ISCF introduces two coupled requirements. The fused trajectory requires uniform supervision across supported prefix lengths, while all scope lines must develop reliable forecasts as allocation is learned. BSCA therefore combines the **Uniform-Prefix Forecasting Loss** for varied-horizon prediction with two terms that stabilize multi-scope learning: the **Scope-Wise Forecasting Loss** and **Allocation-Balance Regularizer**.
+
+The second objective is nontrivial because weighted contraction makes the fused-loss gradient probability-dependent. Without auxiliary supervision, the gradient received by scope $s$ is scaled by its current Scope Probability. Denoting the fused objective by $\mathcal L_{\mathrm{prefix}}$, weighted contraction for a fixed target gives
 
 $$
 \frac{
@@ -273,9 +275,9 @@ $$
 }.
 $$
 
-If Scope Probabilities concentrate early, low-probability scopes receive weak gradients before their forecasting paths mature. The allocator must then compare unevenly trained scope lines, which can reinforce its initial preference. BSCA interrupts this feedback loop with three coordinated objectives.
+Early probability concentration can therefore suppress learning in low-probability scope lines before their forecasts mature. The allocator then compares unevenly developed predictions, potentially reinforcing its initial preference. The two scope-oriented terms stabilize this process through direct supervision and allocation regularization.
 
-Varied-horizon training should optimize all supported prediction lengths without privileging one endpoint. We therefore define the **Uniform-Prefix Forecasting Loss** by averaging raw-scale MAE equally over all prefixes $h=1,\ldots,T$. Before loss evaluation, inverse normalization maps the fused and Scope-conditioned Forecasts to the original data scale. Let $y_{b,\tau,c}$ denote the corresponding raw-scale target. The fused objective is
+Varied-horizon training should optimize every supported prediction length without privileging one endpoint. We therefore average raw-scale MAE equally over all prefixes $h=1,\ldots,T$ to define the Uniform-Prefix Forecasting Loss. Before loss evaluation, inverse normalization maps the fused and Scope-conditioned Forecasts to the original data scale. Let $y_{b,\tau,c}$ denote the corresponding raw-scale target. The fused objective is
 
 $$
 \mathcal L_{\mathrm{prefix}}
@@ -318,7 +320,7 @@ $$
 \right|.
 $$
 
-The Uniform-Prefix Forecasting Loss supervises only the fused trajectory, so its gradient to scope $s$ remains scaled by $\pi_{b,c,\tau,s}$. We therefore add a **Scope-Wise Forecasting Loss** that applies the same prefix measure directly to every Scope-conditioned Forecast:
+The Uniform-Prefix Forecasting Loss supervises only the fused trajectory, leaving each scope dependent on its current allocation probability. We therefore apply the same prefix measure directly to every Scope-conditioned Forecast through the Scope-Wise Forecasting Loss:
 
 $$
 \mathcal L_{\mathrm{scope}}
@@ -334,7 +336,7 @@ $$
 \right|.
 $$
 
-This term gives every scope a direct prediction-loss pathway that does not depend on its current allocation probability. Direct scope supervision alone, however, does not prevent early probability concentration in the fused pathway. We therefore introduce an **Allocation-Balance Regularizer** using the target-free reference $q_s=1/S$:
+This term gives every scope a direct prediction gradient independent of its current Scope Probability. Direct supervision alone, however, does not regulate how the fused predictor distributes probability-mediated gradients. We therefore introduce the Allocation-Balance Regularizer using the uniform reference $q_s=1/S$:
 
 $$
 \mathcal L_{\mathrm{balance}}
@@ -378,46 +380,7 @@ $$
 \right).
 $$
 
-The ramp allows the forecasting paths to develop before the balance pressure reaches full strength. The Allocation-Balance Regularizer then discourages premature scope starvation through the Allocation MLP logits. Its uniform reference is only an optimization proxy. It neither enforces equal inference-time usage nor guarantees semantically distinct scopes. These objectives introduce no inference-time parameter or operation, leaving the ISCF forward computation unchanged.
-
-### 4.6 Structural properties and complexity
-
-ISCF satisfies CHPC by construction. For a fixed target, the Scope Forecasting Path produces $\mathcal F_{b,c,\tau,s}$ from the History State and future-step identity. The Target-Adaptive Allocation Path produces $\pi_{b,c,\tau,s}$ from the same history and target coordinate. Neither quantity depends on the requested horizon. Hence $\widehat y_{b,\tau,c}$ is identical under any requests $H_i,H_j\geq\tau$. Returning the indexed prefix $1{:}H$ yields the CHPC relation defined in Section 3.
-
-The same construction separates sharing scope from requested horizon. Scope $s$ controls how many future steps reuse a latent state before step-specific synthesis. Horizon $H$ selects the target positions and intersecting regions evaluated for one request. Changing $H$ does not redefine the computations assigned to any shared target.
-
-For completeness, let $D_q$ be the coordinate dimension, $K$ the mode rank, $D_h$ the allocation history dimension and $D_a$ the allocation hidden dimension. Excluding the encoder, the frozen independent-scope decoder contains
-
-$$
-\begin{aligned}
-N_{\mathrm{ISCF}}
-={}&
-S D_q R K
-+
-S D_q K
-+
-2TK
-+
-T
-\\
-&+
-R D_h
-+
-D_h
-+
-(D_h+D_q)D_a
-+
-D_a
-+
-D_aS
-+
-S
-\end{aligned}
-$$
-
-trainable parameters. The first line corresponds to Scope Projection, Scope Matrices and the Region-to-Step Forecast Generator; the second corresponds to the History-State projection and Allocation MLP used to produce Scope Probabilities. The Future Coordinate, contiguous region indices and Region-Descriptor averaging are parameter free. BSCA adds no trainable parameter.
-
-The full-domain costs below correspond to materializing all $T$ future steps. Computing Scope-region States costs $\mathcal O\!\left(BC D_q K\sum_{s\in\mathcal S}T/s\right)$, while the Region-to-Step Forecast Generator costs $\mathcal O(BCSTK)$. The Allocation MLP is evaluated once per sample-variable History State and future target. Materializing the Scope-conditioned Forecasts and Scope Probabilities requires $\mathcal O(BCTS)$ working memory. Region and target chunking reduces peak intermediate memory without changing the function. Prefix-bounded execution restricts the target-dependent operations to $\tau\leq H$ and the Scope-region States intersecting that prefix. Only one encoder-decoder checkpoint is stored and served for all supported horizons. Empirical latency, memory and forecasting accuracy are evaluated separately in Section 5.
+The regularizer penalizes strongly non-uniform Scope Probabilities, discouraging a small subset of scopes from dominating early optimization. Its ramp introduces this pressure gradually as the forecasting paths develop. This pressure promotes broader allocation and a more even distribution of probability-mediated gradients across scope lines. Together with direct scope supervision, it supports more balanced multi-scope optimization.
 
 ## Editorial implementation and claim audit
 
@@ -430,5 +393,5 @@ The full-domain costs below correspond to materializing all $T$ future steps. Co
 | Scope Forecasting Path | One Encoder evaluation, independent scope projections and shared synthesis produce `arm_forecasts:[B,C,T,S]` | One unified field couples shared representation and synthesis across scope lines | Lower compute than every unified alternative or learned scope specialization |
 | Target-Adaptive Allocation Path | Direct History-State-plus-target-coordinate policy produces `[B,C,T,S]` | Each target receives a learned allocation over sharing granularities | Oracle scope recovery or necessarily region-optimal allocation |
 | Weighted contraction and prefix output | Scope-axis weighted sum yields `[B,T,C]`; the reference implementation materializes the full field before prefix slicing | One horizon-agnostic trajectory, CHPC and architecture-level support for prefix-bounded region evaluation | Realized latency gains from prefix-bounded execution or lower error than horizon-specific systems |
-| BSCA | Uniform-Prefix Forecasting Loss plus direct Scope-Wise Forecasting Loss and ramped normalized `KL(uniform || allocation)` | Direct scope supervision and broader early allocation access; no inference path or parameter | Guaranteed equal training, generic KL novelty, universal gain or semantic specialization |
-| Section 5 interface | Pending main, ablation, transfer and efficiency tables | Structural and reproducibility statements only | Main-table superiority, component effectiveness and decoder portability |
+| BSCA | Uniform-Prefix Forecasting Loss plus direct Scope-Wise Forecasting Loss and ramped normalized `KL(uniform || allocation)` | Direct scope supervision and more balanced probability-mediated optimization | Guaranteed equal training, generic KL novelty, universal gain or semantic specialization |
+| Section 5 interface | Main, ablation, transfer and efficiency analyses | Complexity and empirical effects are evaluated outside Section 4 | Component attribution and decoder portability remain table-contingent |

@@ -56,7 +56,7 @@ Current experiment cursor=`Step 8 complete -> Step 9 complete formal-test prelau
 
 ## Section 4 Method Initial Draft v0.1 (2026-08-05)
 
-Current writing cursor=`Section 4 architecture-and-objective complete / author review pending`。Canonical draft=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`。Method按真实computation flow划分为architecture overview、history representation/future-step coordinates、scope-indexed forecast field、target-conditioned scope allocation、BSCA和structural properties/complexity。Scope-region state、shared step-specific synthesis、allocation MLP、weighted contraction、CHPC proof、dense-prefix BSCA objective及decoder parameter/complexity公式均已与frozen implementation核对。
+Current writing cursor=`Section 4 v0.6 BSCA training refinement / author review pending`。Canonical draft=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`。Method按真实computation flow划分为architecture overview、history representation/future-step coordinates、scope-indexed forecast field、target-conditioned scope allocation和BSCA。4.5区分varied-horizon prefix objective与multi-scope stabilization；CHPC construction由4.4闭合，parameter/FLOPs/latency/memory转入Section 5.4 efficiency/analysis。
 
 Method Figure 4 initial draft已生成，contract与QA=`analysis/iscf_bsca_method_figure_20260805/figure_contract_and_qa.md`，stable assets=`paper-figures/figure_iscf_bsca_method_overview.*`。Figure是non-empirical architecture schematic：panel a对比single-scope，panel b为ISCF hero path，panel c解释allocation与nested prefixes，panel d隔离train-only BSCA。当前下一步为author逐小节与视觉复审，不修改Introduction/Section 3，不扩张method implementation、remote training或formal test授权。Decision=`section4_v0_1_and_method_figure4_initial_draft_pending_author_review`。
 
@@ -944,14 +944,26 @@ Step4–6。candidate=`SC-ISCF-FRSC-v0`，narrative conditional pass；下一步
 | `artifacts` | clean manuscript=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`；paper architecture/mainline/ledger同步；v0.4 highlighted review保留为上一轮历史对照 |
 | `decision` | `section4_v0_5_bsca_objective_refinement_pending_author_review` |
 
+## Section 4 v0.6 BSCA Training Refinement (2026-08-10)
+
+| Field | Content |
+| --- | --- |
+| `current_step` | paper consolidation；Section 4 author review focused on 4.5 and subsection scope |
+| `problem` | 4.5未在开头区分varied-horizon objective与multi-scope stabilization；balance作用被旁支boundary稀释；standalone complexity subsection不符合当前篇章安排 |
+| `design` | 以`two training roles -> probability-scaled gradient problem -> uniform-prefix objective -> direct scope supervision -> allocation balancing`重构4.5；删除4.6 |
+| `theory_check` | normalized $D_{\mathrm{KL}}(\mathbf q\Vert\boldsymbol\pi)$惩罚strongly non-uniform probabilities，使fused-loss gradient allocation更均衡；不构成equal/sufficient training保证 |
+| `claim_boundary` | CHPC construction由4.4现有shared-target invariance说明承接；parameter/FLOPs/latency/memory转入Section 5.4 efficiency/analysis；implementation与experiment evidence不变 |
+| `artifacts` | manuscript=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`；paper architecture/mainline/ledger同步 |
+| `decision` | `section4_v0_6_bsca_training_refinement_pending_author_review` |
+
 ## Current Cursor
 
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | paper consolidation；Introduction与Section 3 frozen；Section 4 v0.5 BSCA objective refinement pending author review |
-| `active_question` | 4.3 compact unified-field summary与4.5三项BSCA objectives的problem-to-solution叙事是否可接受；Figure 4 stable vector source仍待同步 |
-| `active_candidates` | exact `ISCF-BSCA-v1` frozen ablation anchor；Figures 1--3 approved；Section 4 v0.5 pending author review；Method Figure 4 visual design temporarily fixed |
+| `current_step` | paper consolidation；Introduction与Section 3 frozen；Section 4 v0.6 BSCA training refinement pending author review |
+| `active_question` | 4.5的dual-role BSCA narrative与balance作用表述是否可接受；Figure 4 stable vector source仍待同步 |
+| `active_candidates` | exact `ISCF-BSCA-v1` frozen ablation anchor；Figures 1--3 approved；Section 4 v0.6 pending author review；Method Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
