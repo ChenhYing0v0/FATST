@@ -104,6 +104,8 @@ def main() -> None:
         }
 
     observed_origins = 0
+    native_predictions: list[torch.Tensor] = []
+    native_targets: list[torch.Tensor] = []
     with torch.no_grad():
         for batch_x, batch_y, batch_x_mark, batch_y_mark, batch_cycle in test_loader:
             outputs, batch_y, _ = experiment.forward_step(
@@ -135,6 +137,8 @@ def main() -> None:
                 )
             if not np.isfinite(prediction).all() or not np.isfinite(target).all():
                 raise RuntimeError("non-finite QDF formal-test tensor")
+            native_predictions.append(torch.from_numpy(prediction))
+            native_targets.append(torch.from_numpy(target))
             observed_origins += int(prediction.shape[0])
             for horizon in HORIZONS:
                 pred_prefix = np.ascontiguousarray(prediction[:, :horizon, :])
@@ -155,6 +159,19 @@ def main() -> None:
             f"QDF origin mismatch: {observed_origins} vs {expected_origins}"
         )
 
+    native_prediction = torch.cat(native_predictions, dim=0)
+    native_target = torch.cat(native_targets, dim=0)
+    native_metrics = {}
+    for horizon in HORIZONS:
+        difference = (
+            native_prediction[:, :horizon, :] - native_target[:, :horizon, :]
+        )
+        native_metrics[horizon] = {
+            "mse": float(torch.mean(difference**2).item()),
+            "mae": float(torch.mean(torch.abs(difference)).item()),
+        }
+    del native_prediction, native_target, native_predictions, native_targets
+
     rows: list[dict[str, object]] = []
     for horizon in HORIZONS:
         accumulator = accumulators[horizon]
@@ -165,8 +182,15 @@ def main() -> None:
                 "dataset": cli.dataset,
                 "repeat": 0,
                 "horizon": horizon,
-                "mse": float(accumulator["squared_error_sum"]) / count,
-                "mae": float(accumulator["absolute_error_sum"]) / count,
+                "mse": native_metrics[horizon]["mse"],
+                "mae": native_metrics[horizon]["mae"],
+                "global_elementwise_float64_mse": (
+                    float(accumulator["squared_error_sum"]) / count
+                ),
+                "global_elementwise_float64_mae": (
+                    float(accumulator["absolute_error_sum"]) / count
+                ),
+                "metric_semantics": "official_torch_float32_global_mean",
                 "origin_count": observed_origins,
                 "channel_count": channels,
                 "checkpoint_sha256": checkpoint_before,

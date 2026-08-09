@@ -55,6 +55,8 @@ $$
 
 Primary table 保留每个 repository 的 native H720 loader，以便 H720 continuity audit。由于 PatchTST/SimpleTM 等 upstream 的 `drop_last` 与 AMD/DLinear 不同，这一表必须标记 `source-native system benchmark`。若之后需要严格相同 origins 的 sensitivity analysis，只能作为单独、预注册的 secondary block；它不能替换 Main I H720 continuity check。
 
+Metric aggregation 同样保留 source-native continuity：多数 systems 从同一 H720 tensor 做 float64 global-elementwise accumulation；AMD 精确保留官方 GPU-float32 recursive unweighted batch mean，QDF 精确保留官方 concatenated CPU-torch-float32 global mean，并为这两个 exceptions 同时保存 float64 global-elementwise audit columns。该差异必须随表披露，不能用于 matched mechanism attribution。
+
 ## 5. H720 与 Main I 的连续性
 
 “理论上 H720 应与 Main I 一致”被拆成两种可审计情况：
