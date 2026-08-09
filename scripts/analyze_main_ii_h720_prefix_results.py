@@ -177,6 +177,7 @@ def main() -> None:
     main_i = {
         (row["model"], row["dataset"], int(row["horizon"])): row
         for row in read_csv(args.main_i_table)
+        if row["horizon"] in {str(horizon) for horizon in HORIZONS}
     }
     continuity_rows: list[dict[str, object]] = []
     exact_failures = []
