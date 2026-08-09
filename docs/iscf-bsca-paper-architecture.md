@@ -5,17 +5,17 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.57` |
-| `last_updated` | `2026-08-08` |
+| `version` | `v0.58` |
+| `last_updated` | `2026-08-09` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 4 v0.5 BSCA objective refinement pending author review；experiments=Main I hash frozen，Main II H720-prefix design complete pending staged authorization |
+| `current_review_cursor` | writing=Section 4 v0.5 BSCA objective refinement pending author review；experiments=Main I hash frozen，Main II H720-prefix 224-cell formal table complete |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.7正文 + approved Figures 2--3；Method Figure 4 visual design |
 | `provisional_content` | Section 4 v0.5 with refined scope-field summary and BSCA objective narrative；Method Figure 4 stable vector-asset synchronization；remaining sections |
-| `authorization_source` | 2026-08-08用户授权Main I freeze与Main II design；Main II local patch、remote training与formal prefix test未授权 |
+| `authorization_source` | 2026-08-08用户授权Main I freeze与Main II design及Tier A/B/C；2026-08-09 Main II formal matrix完成 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
@@ -1427,6 +1427,10 @@ test-loader `drop_last`并不完全一致。正式decoder attribution仍由five-
 end-to-end core ablation和two-backbone transfer承担。Machine contract=
 `configs/iscf_bsca_main_ii_h720_prefix_protocol.json`，prelaunch=
 `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/design_and_prelaunch_gate.md`。
+
+截至2026-08-09，Main II formal matrix已完整闭合：70个checkpoint evaluations、280个raw prefix rows、224个aggregate cells和448个MSE/MAE scalars全部通过，35个local H720 exact anchors无失败。ISCF-BSCA在28个dataset–horizon cells上的macro MSE/MAE为`0.262469/0.308281`，两项均在八个systems中排名第一；按共同三位小数显示口径为24/56 best、27/56 second，即51/56 metric cells位于前二。分dataset弱项仍完整保留：ETTh1 MAE与Solar MSE为rank 3，ETTh2/ECL双指标为rank 2。
+
+该结果只把Main II推进为`paper_facing_effectiveness=pass`的one-model-for-all-horizons system benchmark。它不改变mechanism claim boundary：external source contracts并不matched，故BSCA/ISCF attribution与decoder portability仍必须由five-dataset end-to-end ablation、internal diagnostics和two-backbone transfer兑现。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/result_and_table_audit.md`，LaTeX table=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/table/table_iscf_bsca_main_ii.tex`。
 
 ### 8.4 Efficiency Evaluation
 

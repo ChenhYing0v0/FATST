@@ -104,9 +104,9 @@
         "main_i_replacement": "CMoS_and_TimeBase_replaced_by_AMD_and_SimpleTM",
         "result_artifact": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_final_amd_simpletm_20260808/result_and_table_audit.md"
       },
-      "main_ii_local_source_protocol_patch": false,
-      "main_ii_remote_training": false,
-      "main_ii_formal_test": false
+      "main_ii_local_source_protocol_patch": true,
+      "main_ii_remote_training": true,
+      "main_ii_formal_test": true
     },
     "tier_order": [
       "A_local_protocol_and_source_patch",
@@ -1808,7 +1808,7 @@
     "protocol": "configs/iscf_bsca_main_ii_h720_prefix_protocol.json",
     "prelaunch": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/design_and_prelaunch_gate.md",
     "manifest": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/checkpoint_and_source_manifest.csv",
-    "status": "tier_A_B_C_authorized_local_implementation_active",
+    "status": "formal_matrix_complete_system_benchmark_pass",
     "role": "source_native_h720_trained_one_model_all_horizons_system_benchmark_not_matched_mechanism_attribution",
     "systems": ["ISCF-BSCA-MAIN-v1", "TimeAlign", "QDF", "AMD", "SimpleTM", "iTransformer", "PatchTST", "DLinear"],
     "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather", "ECL", "Solar"],
@@ -1825,7 +1825,20 @@
     "user_authorization": "explicit_Tier_A_Tier_B_Tier_C_authorization",
     "local_protocol_patch_authorized": true,
     "remote_training_authorized": true,
-    "formal_prefix_test_authorized": true
+    "formal_prefix_test_authorized": true,
+    "result_artifact": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/result_and_table_audit.md",
+    "table_artifact": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/table/table_iscf_bsca_main_ii.tex",
+    "formal_result_gate": "pass",
+    "observed_checkpoint_evaluations": 70,
+    "observed_raw_horizon_rows": 280,
+    "observed_aggregate_cells": 224,
+    "observed_metric_scalars": 448,
+    "exact_h720_anchors_passed": 35,
+    "iscf_macro_mse": 0.26246853886785876,
+    "iscf_macro_mae": 0.30828128213381784,
+    "iscf_best_metric_cells": 24,
+    "iscf_second_metric_cells": 27,
+    "decision": "Main_II_H720_prefix_system_benchmark_complete_pass_not_matched_mechanism_attribution"
   },
   "gates": {
     "seed_policy": {

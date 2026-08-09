@@ -1,0 +1,97 @@
+{
+  "canonical_layout": "NTC",
+  "checkpoint_sha256": "bf2e161c7790e81acc32a45618c33306953da07d95ffe78730ca1b145aa1554a",
+  "chunk_origins": 8,
+  "dataset": "Solar",
+  "input_array_retention": "removed_after_successful_metric_hash_audit",
+  "metric_accumulation": "origin_chunked_float64_global_elementwise",
+  "prediction_h720_sha256": "e203b5215a18bdcb32a268c31603230f14cb5d027b3941be061449423b19cc76",
+  "prediction_shape": [
+    9793,
+    720,
+    137
+  ],
+  "removed_input_arrays": [
+    "/home/yingch/exp_outputs/r-2026-fatst/main_ii_h720_prefix_20260808/formal_test_new/iTransformer__Solar/pred.npy",
+    "/home/yingch/exp_outputs/r-2026-fatst/main_ii_h720_prefix_20260808/formal_test_new/iTransformer__Solar/true.npy"
+  ],
+  "repeat": 0,
+  "rows": [
+    {
+      "channel_count": 137,
+      "checkpoint_sha256": "bf2e161c7790e81acc32a45618c33306953da07d95ffe78730ca1b145aa1554a",
+      "dataset": "Solar",
+      "horizon": 96,
+      "mae": 0.23705627651387967,
+      "matrix_complete": false,
+      "mse": 0.19499723530908214,
+      "origin_count": 9793,
+      "prediction_prefix_sha256": "69152d101df66378af6c041cfa53a4fc4fb22e522d7f99040954ddb85d2c05a2",
+      "prefix_identity": true,
+      "repeat": 0,
+      "system": "iTransformer",
+      "target_prefix_sha256": "8050da4fc844008251815fe0ba92329279c72166b369ef948a123f67e102eaf4",
+      "test_role": "formal_H720_native_loader_exact_prefix",
+      "test_tuned": false
+    },
+    {
+      "channel_count": 137,
+      "checkpoint_sha256": "bf2e161c7790e81acc32a45618c33306953da07d95ffe78730ca1b145aa1554a",
+      "dataset": "Solar",
+      "horizon": 192,
+      "mae": 0.258823539678416,
+      "matrix_complete": false,
+      "mse": 0.2272170478730431,
+      "origin_count": 9793,
+      "prediction_prefix_sha256": "576628837aea853d231cca7aae015694eba194b1953890337a06d578dc275a19",
+      "prefix_identity": true,
+      "repeat": 0,
+      "system": "iTransformer",
+      "target_prefix_sha256": "48d99961077d75ef3355db95239139c18b9807a2e888373ba66030fcf1730fc2",
+      "test_role": "formal_H720_native_loader_exact_prefix",
+      "test_tuned": false
+    },
+    {
+      "channel_count": 137,
+      "checkpoint_sha256": "bf2e161c7790e81acc32a45618c33306953da07d95ffe78730ca1b145aa1554a",
+      "dataset": "Solar",
+      "horizon": 336,
+      "mae": 0.2710950143189284,
+      "matrix_complete": false,
+      "mse": 0.24299105019085981,
+      "origin_count": 9793,
+      "prediction_prefix_sha256": "c49d9221112532d7dd432eca79d1d2c72d9ab18425493ff7fdd282593a63450e",
+      "prefix_identity": true,
+      "repeat": 0,
+      "system": "iTransformer",
+      "target_prefix_sha256": "5b83600f3c27873d73b95321d49a34f9cfedf0591b7215dc939f3775ecb82c29",
+      "test_role": "formal_H720_native_loader_exact_prefix",
+      "test_tuned": false
+    },
+    {
+      "channel_count": 137,
+      "checkpoint_sha256": "bf2e161c7790e81acc32a45618c33306953da07d95ffe78730ca1b145aa1554a",
+      "dataset": "Solar",
+      "horizon": 720,
+      "mae": 0.27560493668066155,
+      "matrix_complete": false,
+      "mse": 0.2496772504471715,
+      "origin_count": 9793,
+      "prediction_prefix_sha256": "e203b5215a18bdcb32a268c31603230f14cb5d027b3941be061449423b19cc76",
+      "prefix_identity": true,
+      "repeat": 0,
+      "system": "iTransformer",
+      "target_prefix_sha256": "e78af3146affcfe440ad488848ea1d82259ca4fb28452433a7a4605b9eacb5b2",
+      "test_role": "formal_H720_native_loader_exact_prefix",
+      "test_tuned": false
+    }
+  ],
+  "source_layout": "NTC",
+  "system": "iTransformer",
+  "target_h720_sha256": "e78af3146affcfe440ad488848ea1d82259ca4fb28452433a7a4605b9eacb5b2",
+  "target_shape": [
+    9793,
+    720,
+    137
+  ]
+}

@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 4 v0.5 BSCA objective refinement pending author review；experiments=Main I frozen，Main II H720-prefix Tier A/B/C authorized，Step 7 local implementation active |
+| `current_11_step` | paper consolidation；writing=Section 4 v0.5 BSCA objective refinement pending author review；experiments=Main I frozen，Main II H720-prefix Step 9 audit / Step 10 system benchmark pass |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -17,7 +17,9 @@
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
-| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` eight dataset profiles and 32 cells terminally frozen after H4N；strong aggregate competitor但未达per-cell target |
+| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` profiles frozen；Main II system effectiveness pass，matched ablation/transfer仍pending |
+
+[Main II H720-Prefix Formal Table Complete, 2026-08-09] Tier B 21/21 new H720 checkpoints与Tier C完整formal surface已闭合：70 checkpoint evaluations、280 raw rows、224 aggregate cells、448 MSE/MAE scalars，35/35 local H720 exact anchors全部通过。ISCF-BSCA的28-cell macro MSE/MAE=`0.262469/0.308281`，均为八systems rank 1；三位小数口径为24/56 best、27/56 second，51/56 metric cells处于top-2。ISCF相对TimeAlign macro MSE/MAE低`1.303%/0.715%`，但ETTh1 MAE、ETTh2、ECL与Solar MSE等负向cells完整保留。该表通过one-model-all-horizons paper-facing effectiveness gate，但因native source contracts不matched，不作BSCA/decoder attribution；ablation、internal health与two-backbone transfer仍pending。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/result_and_table_audit.md`。Decision=`Main_II_H720_prefix_system_benchmark_complete_pass_not_matched_mechanism_attribution`。
 
 [Main II H720-Prefix Tier A/B/C Authorization, 2026-08-08] 用户已显式授权Tier A local protocol/Solar source patch、Tier B remote H720 training与Tier C formal prefix test。执行顺序仍由prelaunch gate约束：先完成source hashes、21-job/70-evaluation dry-run和prefix metric unit tests，再做21个no-test resource smokes与21个formal H720 trainings；只有21/21 checkpoint manifest和pre-test hashes冻结后才访问formal test。Exchange、common-origin sensitivity、optional 3-seed与Main I mutation仍未授权。Decision=`Main_II_Tier_A_B_C_authorized_Step7_local_implementation_active`。
 

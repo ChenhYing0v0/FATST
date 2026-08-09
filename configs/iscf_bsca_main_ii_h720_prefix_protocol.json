@@ -2,7 +2,7 @@
   "schema_version": 1,
   "protocol_id": "ISCF-BSCA-MAIN-II-H720-PREFIX-v1",
   "created_at": "2026-08-08",
-  "status": "tier_A_B_C_authorized_local_implementation_active",
+  "status": "formal_matrix_complete_system_benchmark_pass",
   "paper_role": "source_native_h720_trained_one_model_all_horizons_system_benchmark",
   "claim_boundary": {
     "supported": "compare forecasting accuracy when every external baseline uses one fixed H720-trained model per dataset and serves H96/H192/H336 by prefix cropping",
@@ -160,6 +160,25 @@
     "formal_prefix_test": true,
     "common_origin_sensitivity": false,
     "exchange_extension": false
+  },
+  "formal_result": {
+    "completed_at": "2026-08-09",
+    "result_artifact": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/result_and_table_audit.md",
+    "table_artifact": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/table/table_iscf_bsca_main_ii.tex",
+    "gate": "pass",
+    "checkpoint_evaluations": 70,
+    "raw_prefix_rows": 280,
+    "aggregate_cells": 224,
+    "metric_scalars": 448,
+    "exact_h720_anchors_passed": 35,
+    "exact_h720_anchor_failures": 0,
+    "iscf_macro_mse": 0.26246853886785876,
+    "iscf_macro_mae": 0.30828128213381784,
+    "iscf_macro_mse_rank": 1,
+    "iscf_macro_mae_rank": 1,
+    "iscf_best_metric_cells_after_three_decimal_rounding": 24,
+    "iscf_second_metric_cells_after_three_decimal_rounding": 27,
+    "decision": "Main_II_H720_prefix_system_benchmark_complete_pass_not_matched_mechanism_attribution"
   },
   "prelaunch_gates": [
     "freeze exact source commit and source hashes for all three new repositories",

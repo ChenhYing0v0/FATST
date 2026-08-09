@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## Main II H720-Prefix Formal Table Complete (2026-08-09)
+
+Current experiment cursor=`Step 9 complete artifact audit -> Step 10 system benchmark pass`。Tier B 21/21 new H720 checkpoints与Tier C 70/70 checkpoint evaluations已完成，形成280/280 raw prefix rows、224/224 aggregate cells和448 MSE/MAE scalars；35/35 local H720 anchors均通过frozen ULP continuity gate。ISCF-BSCA macro MSE/MAE=`0.262469/0.308281`，两项均rank 1；共同三位小数口径为24/56 best、27/56 second。Main II因此通过paper-facing system effectiveness gate，但external protocols不matched，不能承担BSCA/decoder mechanism attribution；下一实验主线回到exact five-dataset end-to-end ablation、internal diagnostics与two-backbone transfer的独立prelaunch gate。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/result_and_table_audit.md`。Decision=`Main_II_H720_prefix_system_benchmark_complete_pass_not_matched_mechanism_attribution`。
+
 ## Main II H720-Prefix Tier A/B/C Execution Authorization (2026-08-08)
 
 用户已显式授权Tier A local protocol/Solar source patch、Tier B remote H720 training与Tier C formal prefix test。Current cursor=`Step 7 local implementation active`。执行仍按冻结gate串行：source/patch hash与21-training/70-evaluation dry-run通过后做21个no-test resource smokes；21/21 formal checkpoints与pre-test hashes冻结后才执行70 checkpoint formal prefix evaluations。Exchange、common-origin sensitivity、optional 3-seed与Main I mutation均不在本次授权范围。Decision=`Main_II_Tier_A_B_C_authorized_Step7_local_implementation_active`。

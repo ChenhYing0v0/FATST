@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | 写作流审阅Section 4 v0.5 BSCA objective refinement并等待Figure 4 stable vector source；实验流Main I已hash冻结，Main II H720-prefix Tier A/B/C已授权，Step 7 local implementation执行中 |
+| `active_question` | 写作流审阅Section 4 v0.5 BSCA objective refinement并等待Figure 4 stable vector source；实验流Main I已hash冻结，Main II H720-prefix formal table已完成，下一步为ablation/transfer独立prelaunch gate |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9与Section 3 v0.7 frozen；Section 4 v0.5 BSCA objective refinement pending author review；Figure 4 visual design temporarily fixed |
@@ -21,28 +21,28 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper consolidation；writing=Section 4 v0.5 BSCA objective refinement pending author review；experiments=Main I freeze complete，Main II Step 7 local implementation active |
+| `current_11_step` | paper consolidation；writing=Section 4 v0.5 BSCA objective refinement pending author review；experiments=Main I freeze complete，Main II Step 9 audit / Step 10 system benchmark pass |
 | `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；`ISCF-BSCA-MAIN-v1` 8 selected profiles reusable |
-| `latest_decision` | `Main_II_Tier_A_B_C_authorized_Step7_local_implementation_active` |
+| `latest_decision` | `Main_II_H720_prefix_system_benchmark_complete_pass_not_matched_mechanism_attribution` |
 | `writing_latest_decision` | `section4_v0_5_bsca_objective_refinement_pending_author_review` |
-| `next_required_action` | complete Tier A source/patch/evaluator local gate；then no-test smoke -> formal H720 training -> freeze hashes -> formal prefix test |
-| `method_training_authorized` | true；Main I frozen；Main II local patch/remote training/formal prefix test=true，仍受各阶段gate约束 |
+| `next_required_action` | freeze exact five-dataset end-to-end ablation and two-backbone transfer prelaunch gates；Main II不再训练或formal test |
+| `method_training_authorized` | completed-scope only；Main II Tier A/B/C authorization已消费并闭合；新的ablation/transfer remote training或formal test尚未授权 |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | HPO frozen；Main I hash freeze complete；Main II H720-prefix Step 7 local implementation active |
+| `current_step` | HPO frozen；Main I hash freeze complete；Main II H720-prefix Step 9 audit complete / Step 10 system benchmark pass |
 | `problem` | Introduction的horizon-specific superiority、component effectiveness与decoder portability claims尚缺完整paper-facing evidence |
-| `existence_evidence` | TimeAlign/QDF/AMD/SimpleTM已有49个可复用H720 checkpoint objects；iTransformer 7/7 official scripts；PatchTST/DLinear各6/7 official且Solar缺loader/preset |
+| `existence_evidence` | 49个reused checkpoint objects与21个new H720 checkpoints已完成70 evaluations；35 exact H720 anchors pass；224 cells完整 |
 | `idea` | frozen Main I + H720-trained one-model-all-horizons Main II + exact five-dataset ablation/end-to-end transfer |
 | `theory_check` | 同一H720 tensor裁剪保证prefix identity/CHPC；native loader差异使Main II只能作system benchmark；local exact H720 continuity与published-mean deviation分开 |
 | `design` | seven datasets；21 new H720 training jobs；49 reused checkpoint objects；70 prefix evaluations；280 raw rows；224 aggregate cells；Exchange deferred |
 | `narrative_gate` | architecture family冻结；SOTA wording由完整test-tuned result决定并披露test-informed边界 |
-| `effectiveness_gate` | pre-result；formal gate=21/21 new checkpoints + 70/70 evaluations + 224/224 cells + H720 continuity；not matched attribution |
-| `artifacts` | protocol=`configs/iscf_bsca_main_ii_h720_prefix_protocol.json`；prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/design_and_prelaunch_gate.md` |
-| `decision` | Main I frozen；Tier A/B/C已授权；必须依次通过local patch、no-test smoke、checkpoint freeze与formal prefix test gates |
+| `effectiveness_gate` | pass as system benchmark；ISCF macro MSE/MAE rank 1，24/56 best + 27/56 second；not matched attribution |
+| `artifacts` | protocol=`configs/iscf_bsca_main_ii_h720_prefix_protocol.json`；result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/result_and_table_audit.md`；table=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/table/table_iscf_bsca_main_ii.tex` |
+| `decision` | Main II system benchmark complete pass；停止该block，回到ablation/transfer各自Step 6 prelaunch gate |
 
 ## Exact Ablation Anchor Contract
 
@@ -72,8 +72,8 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `INTRO-CHPD-v1` | `integrated_in_section3_v0_7_temporarily_frozen_usable` | independently trained horizon models能否给出清晰overlap inconsistency | selected ETTh2 trajectory + all-validation heatmap；aggregate-CHPD selection retained in caption | shared-96 raw mean differences 2.16--2.51；long--short NCHPD 0.0365--0.0406 | retain frozen wording；formal family/seed prevalence deferred |
 | `SC-UVHF-FRSD-D1` | `integrated_in_section3_v0_7_temporarily_frozen_usable` | matched fixed sharing extent的future-region prediction-risk optimum是否随future region变化 | selected ETTm2 validation example；label-selected oracle role retained | five scopes win 2--3 regions；10/10 crossings；8.112% descriptive headroom | retain frozen wording；formal CFH remains architecture-level deferred control |
 | `ISCF-BSCA-v1` | `exact_ablation_anchor_frozen` | broad train-time anchor能否稳定scope-gradient access并提升ISCF | ISCF-specific chain pass；generic KL novelty not claimed | three-seed +0.3541/+0.3073%；3/3 seeds、4/5 datasets、4/4 horizons | reuse only for five-dataset Full/w/o BSCA ablation；do not place directly in Main I/II |
-| `ISCF-BSCA-MAIN-v1` | `single_seed_profiles_frozen_main_results_reusable` | frozen architecture在8 datasets上经test-tuned HPO后能否达到SOTA-competitive并支持main claims | validation选checkpoint；test four-H aggregate选dataset profile；ECL/Solar test-informed expanded budget；seed2021 first | 53 trials；8 selected checkpoints/32 cells；vs TimeAlign 7-dataset MSE +2.199%、MAE -0.066% | complete remaining baselines；do not retrain selected profiles |
-| `ISCF-BSCA-PAPER-EXP-v2` | `post_hpo_published_block_complete_waiting_baseline_tiers` | 完整main/ablation/transfer/efficiency evidence能否兑现provisional claims | TimeAlign Table 6 primary + official fill；single-seed complete matrix；optional seed blocks non-selective | 23 primary-seed reusable；210 final new；140 published rows audited；30 extra-seed evidence retained | request Main I baseline execution and Main II Tier A；remote/test false |
+| `ISCF-BSCA-MAIN-v1` | `profiles_frozen_main_i_and_main_ii_reusable` | frozen architecture在8 datasets上经test-tuned HPO后能否达到SOTA-competitive并支持main claims | validation选checkpoint；test four-H aggregate选dataset profile；ECL/Solar test-informed expanded budget；seed2021 first | Main I profiles frozen；Main II macro MSE/MAE rank 1，51/56 top-2 metric cells | do not retrain；use exact ablation/transfer for attribution and portability |
+| `ISCF-BSCA-PAPER-EXP-v2` | `main_i_frozen_main_ii_system_effectiveness_pass_ablation_transfer_pending` | 完整main/ablation/transfer/efficiency evidence能否兑现provisional claims | Main I frozen；Main II single-seed source-native H720-prefix complete；optional seed blocks non-selective | Main II 70 evaluations/224 cells；ISCF macro MSE/MAE rank 1；matched attribution missing | freeze exact ablation/transfer prelaunch；do not promote Main II to mechanism proof |
 | `SC-ISCF-UPA-D2` | `superseded_by_bsca_v1` | information-free uniform train-time anchor能否复现ARMERR/SHUFFLED gain | user chose outcome-first method route | not executed as separate diagnostic | retain design history only |
 | `SC-ISCF-PSA-D1` | `control_complete_h2_supported` | contemporaneous no-route EQUAL能否解释new ARMERR/SHUFFLED公共gain | not a method；只隔离H2/H3 | exact EQUAL tie；controls +0.6577/+0.6557%；H2 pass | feeds UPA-D2 only |
 | `SC-ISCF-PSA-D0` | `diagnostic_only_closed_h1_not_supported` | EQUAL frozen policy向uniform收缩是否存在stable held-out frontier | diagnostic only；generic shrinkage不是paper claim | L1/MSE -0.2431%/-0.1218%；1/5 datasets；2/15 runs | no alpha/temperature rescue；retain joint-training unresolved |

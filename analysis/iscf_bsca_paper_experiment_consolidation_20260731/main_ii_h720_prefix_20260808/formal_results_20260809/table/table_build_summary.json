@@ -1,0 +1,74 @@
+{
+  "aggregate_cells": 224,
+  "claim_boundary": "source-native H720 one-model-all-horizons system benchmark; not matched mechanism attribution",
+  "datasets": [
+    "ETTh1",
+    "ETTh2",
+    "ETTm1",
+    "ETTm2",
+    "Weather",
+    "ECL",
+    "Solar"
+  ],
+  "display_precision": 3,
+  "horizons": [
+    96,
+    192,
+    336,
+    720
+  ],
+  "iscf_best_cells": 24,
+  "iscf_second_cells": 27,
+  "macro_over_28_dataset_horizon_cells": {
+    "AMD": {
+      "mae": 0.32457354611584116,
+      "mse": 0.2735806966998747
+    },
+    "DLinear": {
+      "mae": 0.3579089987764951,
+      "mse": 0.3055585619675657
+    },
+    "ISCF-BSCA-MAIN-v1": {
+      "mae": 0.30828128213381784,
+      "mse": 0.26246853886785876
+    },
+    "PatchTST": {
+      "mae": 0.3215061043865943,
+      "mse": 0.268637258499737
+    },
+    "QDF": {
+      "mae": 0.3363812728270542,
+      "mse": 0.28381460683964177
+    },
+    "SimpleTM": {
+      "mae": 0.33137690060382574,
+      "mse": 0.287747444096675
+    },
+    "TimeAlign": {
+      "mae": 0.31050063121064114,
+      "mse": 0.26593466066130217
+    },
+    "iTransformer": {
+      "mae": 0.3428960295643518,
+      "mse": 0.30782522168942617
+    }
+  },
+  "metric_scalars": 448,
+  "ranking_rule": "best_and_second_distinct_displayed_values_after_three_decimal_rounding",
+  "rows_with_dataset_averages": 280,
+  "source_hashes": {
+    "aggregate_cells": "3268b5f749c434c419a4b3480b29e69bb3fe16614099521ebb6b5ff7493484c5",
+    "result_audit": "ce765c995cdced40c1d9635d301075417d42319f36a7a75841386f7f06a5373b"
+  },
+  "systems": [
+    "ISCF-BSCA-MAIN-v1",
+    "TimeAlign",
+    "QDF",
+    "AMD",
+    "SimpleTM",
+    "iTransformer",
+    "PatchTST",
+    "DLinear"
+  ],
+  "table_id": "ISCF-BSCA-MAIN-II-H720-PREFIX-20260809"
+}

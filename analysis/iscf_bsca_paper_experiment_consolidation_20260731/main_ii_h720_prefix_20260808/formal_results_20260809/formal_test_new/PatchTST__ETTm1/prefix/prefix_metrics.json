@@ -1,0 +1,97 @@
+{
+  "canonical_layout": "NTC",
+  "checkpoint_sha256": "33d5d5caac7f6eaff065a2785bff04e1fcd7e543de7b575c97bc7da01be3cc83",
+  "chunk_origins": 8,
+  "dataset": "ETTm1",
+  "input_array_retention": "removed_after_successful_metric_hash_audit",
+  "metric_accumulation": "origin_chunked_float64_global_elementwise",
+  "prediction_h720_sha256": "ccfd7999ca2f0fe514d29fe38a9a2a74a8b049c979053171bb8420b1ed3ee9bf",
+  "prediction_shape": [
+    10752,
+    720,
+    7
+  ],
+  "removed_input_arrays": [
+    "/home/yingch/exp_outputs/r-2026-fatst/main_ii_h720_prefix_20260808/formal_test_new/PatchTST__ETTm1/pred.npy",
+    "/home/yingch/exp_outputs/r-2026-fatst/main_ii_h720_prefix_20260808/formal_test_new/PatchTST__ETTm1/true.npy"
+  ],
+  "repeat": 0,
+  "rows": [
+    {
+      "channel_count": 7,
+      "checkpoint_sha256": "33d5d5caac7f6eaff065a2785bff04e1fcd7e543de7b575c97bc7da01be3cc83",
+      "dataset": "ETTm1",
+      "horizon": 96,
+      "mae": 0.34971601406296854,
+      "matrix_complete": false,
+      "mse": 0.29157384662634006,
+      "origin_count": 10752,
+      "prediction_prefix_sha256": "1d29d0281048ce0a6ed919b9acbff8f508d967dbe73b5eff2e1e7ada8617163b",
+      "prefix_identity": true,
+      "repeat": 0,
+      "system": "PatchTST",
+      "target_prefix_sha256": "f294d16a8e4521e08297aa5376f3553ffe02e62231027a68199d5b2989a5c516",
+      "test_role": "formal_H720_native_loader_exact_prefix",
+      "test_tuned": false
+    },
+    {
+      "channel_count": 7,
+      "checkpoint_sha256": "33d5d5caac7f6eaff065a2785bff04e1fcd7e543de7b575c97bc7da01be3cc83",
+      "dataset": "ETTm1",
+      "horizon": 192,
+      "mae": 0.3715054986681988,
+      "matrix_complete": false,
+      "mse": 0.3283263239729507,
+      "origin_count": 10752,
+      "prediction_prefix_sha256": "cb3a7e6ac883a1186d3d79548930aecb98e40a3f8db69ffaf54a3a27bec4937e",
+      "prefix_identity": true,
+      "repeat": 0,
+      "system": "PatchTST",
+      "target_prefix_sha256": "b1f71d18147a5d5912b1ae328aad8152b0ff83cbae1125caf8126ccc2bc84a64",
+      "test_role": "formal_H720_native_loader_exact_prefix",
+      "test_tuned": false
+    },
+    {
+      "channel_count": 7,
+      "checkpoint_sha256": "33d5d5caac7f6eaff065a2785bff04e1fcd7e543de7b575c97bc7da01be3cc83",
+      "dataset": "ETTm1",
+      "horizon": 336,
+      "mae": 0.39210538831478625,
+      "matrix_complete": false,
+      "mse": 0.3646037421492941,
+      "origin_count": 10752,
+      "prediction_prefix_sha256": "e6567b66786c9a280736cad4f77b9f95ee3ca204ce9c444e5ba405eceb39818e",
+      "prefix_identity": true,
+      "repeat": 0,
+      "system": "PatchTST",
+      "target_prefix_sha256": "150955c58a36b2de646fc0d46f7a8db52ce24e18aa713c8238ff2916018e85bc",
+      "test_role": "formal_H720_native_loader_exact_prefix",
+      "test_tuned": false
+    },
+    {
+      "channel_count": 7,
+      "checkpoint_sha256": "33d5d5caac7f6eaff065a2785bff04e1fcd7e543de7b575c97bc7da01be3cc83",
+      "dataset": "ETTm1",
+      "horizon": 720,
+      "mae": 0.42110117902138766,
+      "matrix_complete": false,
+      "mse": 0.4152368112856822,
+      "origin_count": 10752,
+      "prediction_prefix_sha256": "ccfd7999ca2f0fe514d29fe38a9a2a74a8b049c979053171bb8420b1ed3ee9bf",
+      "prefix_identity": true,
+      "repeat": 0,
+      "system": "PatchTST",
+      "target_prefix_sha256": "736162d88e82db580a1ac6ed336319667d137f4e5bb8a01712492f2beb881233",
+      "test_role": "formal_H720_native_loader_exact_prefix",
+      "test_tuned": false
+    }
+  ],
+  "source_layout": "NTC",
+  "system": "PatchTST",
+  "target_h720_sha256": "736162d88e82db580a1ac6ed336319667d137f4e5bb8a01712492f2beb881233",
+  "target_shape": [
+    10752,
+    720,
+    7
+  ]
+}

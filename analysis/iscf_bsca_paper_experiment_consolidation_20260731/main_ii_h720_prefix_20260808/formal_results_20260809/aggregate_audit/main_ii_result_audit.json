@@ -1,0 +1,334 @@
+{
+  "aggregate_cells": 224,
+  "checkpoint_evaluations": 70,
+  "exact_h720_anchor_failures": 0,
+  "exact_h720_anchors": 35,
+  "gate": "pass",
+  "input_files": [
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/ISCF-BSCA-MAIN-v1/prefix_metrics.csv",
+      "rows": 28,
+      "sha256": "90afda4be442adbf2a38b3dd0993b002336fd065fe9e7db458a6a9784c23cfda"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/AMD__ECL__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "6f1a5edd37cdf6f1df2ea9bea623e177c4ce49e19384ef44377be47ad34f8c6d"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/AMD__ETTh1__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "2124014d782d18be95390f2f8869e91e74c2189217925a2d90bc74705c0a4c4c"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/AMD__ETTh2__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "fa04e30a3ccfbb8f8bc9eea6cc47454cbb8c50b303c11e94683024558944fe23"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/AMD__ETTm1__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "4717c956bceb9502b709ca4c4367304425c8e9884b697e78edb52fdf5f77e133"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/AMD__ETTm2__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "94fdb0e8799343acfa0c3cd5e4602eb28945c4a86cdc586018cda1289b6405d6"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/AMD__Solar__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "39973f9170da64f12d4e3af7ce38330e686b281a0c04df6ca5f723451fb399b4"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/AMD__Weather__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "6d8ffc31ba29840c34b2cc24a5c144bea9a01aeb6329877e64d2543558fe93d9"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/QDF__ECL__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "df4c8faa56a75156eb7f8e7ad79b2c5a17c4cddd45279ca55ebf015073a318a1"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/QDF__ETTh1__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "84a9857ad89029aa8352039eb66d4f48013814d9efdb36a337470a1fe23cbeeb"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/QDF__ETTh2__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "cf944c8510b727ef73516cc68c5d592ee1eb35a6ef9a1a84f934ca799a6fcc90"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/QDF__ETTm1__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "54084220982b77580584a73f873b90a178c5840bb7a139eec1eb4e19ff48ce21"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/QDF__ETTm2__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "fe0a76afe8b1740582b570cb71956cf44188d5579a7346f5b5fe133920a85b6b"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/QDF__Solar__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "0ccfc63348f944d30b0c65f99b720b3c3f34d39af36483e6de435f822eb7cfd6"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/QDF__Weather__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "548d73879e6e89f931d3d567335f1bea6472e6196a796b94ae372e4d33a41869"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/SimpleTM__ECL__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "73a1dbc43b125929e5481c13b229d19aac0ec9271e31626f4931b20213750924"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/SimpleTM__ECL__r1/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "4e7af73c75cab3b44b597d3adb25d4e43b76536aa27fd68f49688914c87cec27"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/SimpleTM__ECL__r2/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "7d97940f13d8a44efb169e2e4a471d44a5a40bb66c4cbef2b6d1366ada9c67b5"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/SimpleTM__ETTh1__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "3a4f5cb7025d26dbe6274497b334a42a0a67369c3a41bb73b3937b29b67e1816"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/SimpleTM__ETTh1__r1/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "a9ada87fa4d39121a1f613d495a349f5f768ac7e9394b8565db99bd3cf76a9a5"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/SimpleTM__ETTh1__r2/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "a312732ccd4ebe56a183162e03c90d8ba215dc42ee56d814b4f30401c2ce0809"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/SimpleTM__ETTh2__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "e2d8484f41585e47e16d4d834a88b7f0bfdab16af1e562f475c1ab92b39baf2d"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/SimpleTM__ETTh2__r1/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "dc7c4ed267cc9405bb8991ad82cd526c2aa0cae712b3371595b0cc7d79754f33"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/SimpleTM__ETTh2__r2/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "341708c135571b6f5e8badf4b6f8a6359272bf2b0606cb6930c80886ecea6c0a"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/SimpleTM__ETTm1__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "ca6800593d3c4e861d13644c0bcaa31a6b44af7c4f72a04b8b259dbf92263ce2"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/SimpleTM__ETTm1__r1/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "4c4d89db5deb886515eb162c66a1716680e81a90c4fc61bc3ab6566aa7354152"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/SimpleTM__ETTm1__r2/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "9c159708e0416e12c690d86563408fca19ba32cea7a4c9597e37b3ab7d7fbb21"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/SimpleTM__ETTm2__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "c66cda59f24308fc014a3d9bf87ea545e06c94a22655a6af041d5aa27038a184"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/SimpleTM__ETTm2__r1/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "db2b8b45088d6fe9411a32369da518416b15940e040f6f87126d2a0bff9a185f"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/SimpleTM__ETTm2__r2/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "fc9d57b8b12b5ef3c821cd73b7b69f9afe70fc7efb139de0d6f2792f2b9d229b"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/SimpleTM__Solar__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "3dce4220442fa413c34f7a03adcd78404b1c51b84cd6818b29064810659d682d"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/SimpleTM__Solar__r1/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "cb2e867407f837a7d7dcc295ee3e17c5fa70b1c7bce8f043591f0a19733f42eb"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/SimpleTM__Solar__r2/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "27d90f2885453cda7d04af09e5cacd0960d1efc17e680c48a94e5a15430033f7"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/SimpleTM__Weather__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "cbc477b5b3732a685b8c37b5bfb08b485c64ec21758985b75f965b3345ce3cf8"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/SimpleTM__Weather__r1/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "9577a27cd8eb5dd75c7494b926bb96c33b2e9bf11c7d268a651412cabf992846"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/SimpleTM__Weather__r2/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "36951812ed231c0b019a8a96174056f9b2a9557e95d9dbf358ae77400821be19"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/TimeAlign__ECL__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "a5679a76d0f01073c76d57648592f849867453626ffaa408c9c5154f12b2b2f2"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/TimeAlign__ETTh1__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "ba758446b2cf6d7fe23c269c06d92cbb73472eb9d253ae0270737fe7aa87f091"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/TimeAlign__ETTh2__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "190ecdcfdb8a422231ae336a7ddf0eb6864a2217ac6edead7fdbbbbf92810ac0"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/TimeAlign__ETTm1__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "2e50004a0c8c4c3883d63858196606ebf2b33b7be3a38d8f280c2597708979a5"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/TimeAlign__ETTm2__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "89df453f0db0e13e9bb4d0eedf80edb3f463b813b27269bfa4d198267d2f336c"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/TimeAlign__Solar__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "76f4efa96933dc85eba8e62a9cce1eb2fd07fb1b4947e043f5aa8815bedeb7eb"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_reused/TimeAlign__Weather__r0/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "14806f64933167d70f070fc9087bff51f6342a25790a2ddb0ddb614849cd4c6e"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_new/DLinear__ECL/prefix/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "50e049a2c5806495c7ff375f94b38f0d24ebf96289c77a05a064089ea1b82713"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_new/DLinear__ETTh1/prefix/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "90a1b72c35862119048890feede568dd3e23fc21ce255eb70f79db53ed86d8eb"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_new/DLinear__ETTh2/prefix/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "f14e2ef4059444763a17eee9c1de78b79234661ed495615f9cad7492c6c8d48b"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_new/DLinear__ETTm1/prefix/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "a422aa992109b37fe740660febe9576f187f78a491bfbbfdfc0bc8b043bb771d"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_new/DLinear__ETTm2/prefix/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "e2cbd222520695b2bf48cebe71c4585c54deda2fdb4e237f4d90e39ee2adcef3"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_new/DLinear__Solar/prefix/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "cc5969903ddf001bed8b8ed0b1f07fcd0127f5ff5e48998bdc2c8d969bc69b6e"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_new/DLinear__Weather/prefix/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "99dd01edd257f79f6ebad02275eedc4fe97485d154131ed84c913b10f98ebe1b"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_new/PatchTST__ECL/prefix/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "6e135d9b42c1836359d971990a3f6e3d3bf7754dcd8b1d6eb63d918883403147"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_new/PatchTST__ETTh1/prefix/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "f86434dbb385688c1535be91b4f9c365b818aedb9628dc6941cd28d060422214"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_new/PatchTST__ETTh2/prefix/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "9e48acd4033c9269c40bc31f396c6128625b7617f8f29107000624a9534eeafd"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_new/PatchTST__ETTm1/prefix/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "555c029bc6e0d4445bae0d2d32475c25cd71c749b8e7eb02a0d4281ff809cbe9"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_new/PatchTST__ETTm2/prefix/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "9c051045c438395a88eb32bf9cf0f02ead792c9489804851d2366cd783af788a"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_new/PatchTST__Solar/prefix/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "db9dc87f764b28f40a35280748473308aaf3a4e7366ed18c7486f033279f9929"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_new/PatchTST__Weather/prefix/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "0899552cd3f95cf08bd8d5e202aefb5a367318cbca2a6b043447740b50340f7a"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_new/iTransformer__ECL/prefix/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "2231085b8d58b8d4d379ffcdbd6a59fc346f6cf7b097d9c5270a16f6be8f4aa3"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_new/iTransformer__ETTh1/prefix/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "b3d594bd333d1e82d2fc48eee853cf171387d4847e71a15dde4954d103d5a3b6"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_new/iTransformer__ETTh2/prefix/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "b736d9330500f7403ebe7dd45a57197c0109f85bdd385241dc62debfb2bf24a1"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_new/iTransformer__ETTm1/prefix/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "9421b8df5d60a9d4eb4a9bde05638422b03b6466bec4de98bb4d41042c88861e"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_new/iTransformer__ETTm2/prefix/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "b06b689343f3104edb3b3cd5c9f3f7dd53ae7581afe71283e563d461f24c2365"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_new/iTransformer__Solar/prefix/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "e32954277da7818a32310786796b0e78a6516a54ce7deaef47b5ad170b8e00d5"
+    },
+    {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/formal_test_new/iTransformer__Weather/prefix/prefix_metrics.csv",
+      "rows": 4,
+      "sha256": "8ae1548562d076dc4fdc7bf8f136f455a6a779f1078673c5e2857f7dca55df27"
+    }
+  ],
+  "matrix_complete": true,
+  "metric_scalars": 448,
+  "negative_results_retained": true,
+  "published_reference_deviations": 21,
+  "raw_prefix_rows": 280
+}

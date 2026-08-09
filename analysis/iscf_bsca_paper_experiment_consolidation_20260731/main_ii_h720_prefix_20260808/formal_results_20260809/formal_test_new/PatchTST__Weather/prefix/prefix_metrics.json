@@ -1,0 +1,97 @@
+{
+  "canonical_layout": "NTC",
+  "checkpoint_sha256": "6551cdbb7a98d2be0587cae76952f3b30e54861e615ffbb3043e6c4f60ca846c",
+  "chunk_origins": 8,
+  "dataset": "Weather",
+  "input_array_retention": "removed_after_successful_metric_hash_audit",
+  "metric_accumulation": "origin_chunked_float64_global_elementwise",
+  "prediction_h720_sha256": "0860aa8ec9bf0703ad1838d5f240e8f5f6aaeb1abea659b5a1de0cf068c0eae1",
+  "prediction_shape": [
+    9728,
+    720,
+    21
+  ],
+  "removed_input_arrays": [
+    "/home/yingch/exp_outputs/r-2026-fatst/main_ii_h720_prefix_20260808/formal_test_new/PatchTST__Weather/pred.npy",
+    "/home/yingch/exp_outputs/r-2026-fatst/main_ii_h720_prefix_20260808/formal_test_new/PatchTST__Weather/true.npy"
+  ],
+  "repeat": 0,
+  "rows": [
+    {
+      "channel_count": 21,
+      "checkpoint_sha256": "6551cdbb7a98d2be0587cae76952f3b30e54861e615ffbb3043e6c4f60ca846c",
+      "dataset": "Weather",
+      "horizon": 96,
+      "mae": 0.2040024911631135,
+      "matrix_complete": false,
+      "mse": 0.15038846458216593,
+      "origin_count": 9728,
+      "prediction_prefix_sha256": "ea711c1d96e8307799e8329308b7c6ac4bee1c19240739a30b7b5ba0cbf7774a",
+      "prefix_identity": true,
+      "repeat": 0,
+      "system": "PatchTST",
+      "target_prefix_sha256": "45a1be848af59735d1c917c29091c591176e39ea7483556cbc28ee5470072cfa",
+      "test_role": "formal_H720_native_loader_exact_prefix",
+      "test_tuned": false
+    },
+    {
+      "channel_count": 21,
+      "checkpoint_sha256": "6551cdbb7a98d2be0587cae76952f3b30e54861e615ffbb3043e6c4f60ca846c",
+      "dataset": "Weather",
+      "horizon": 192,
+      "mae": 0.2434781792988902,
+      "matrix_complete": false,
+      "mse": 0.19083842242277718,
+      "origin_count": 9728,
+      "prediction_prefix_sha256": "533a14f7ec73ae8c68f13df20f0a673da6eaf18c2c03d5d17196a88ede9c4f7b",
+      "prefix_identity": true,
+      "repeat": 0,
+      "system": "PatchTST",
+      "target_prefix_sha256": "481aa46897c98fbc17e41160644f019b3ef9738f4ea36dc2da0ce1f64707647e",
+      "test_role": "formal_H720_native_loader_exact_prefix",
+      "test_tuned": false
+    },
+    {
+      "channel_count": 21,
+      "checkpoint_sha256": "6551cdbb7a98d2be0587cae76952f3b30e54861e615ffbb3043e6c4f60ca846c",
+      "dataset": "Weather",
+      "horizon": 336,
+      "mae": 0.28232886236987215,
+      "matrix_complete": false,
+      "mse": 0.24014064394364565,
+      "origin_count": 9728,
+      "prediction_prefix_sha256": "026de9c53f901c636ce44a868510978dcdba9b44ebf730107e40cd1a2676180c",
+      "prefix_identity": true,
+      "repeat": 0,
+      "system": "PatchTST",
+      "target_prefix_sha256": "327af9f0237b61efaf0bab097560605042932a100881faf446a2bb8226d9c5a9",
+      "test_role": "formal_H720_native_loader_exact_prefix",
+      "test_tuned": false
+    },
+    {
+      "channel_count": 21,
+      "checkpoint_sha256": "6551cdbb7a98d2be0587cae76952f3b30e54861e615ffbb3043e6c4f60ca846c",
+      "dataset": "Weather",
+      "horizon": 720,
+      "mae": 0.335489913230442,
+      "matrix_complete": false,
+      "mse": 0.3194580104923887,
+      "origin_count": 9728,
+      "prediction_prefix_sha256": "0860aa8ec9bf0703ad1838d5f240e8f5f6aaeb1abea659b5a1de0cf068c0eae1",
+      "prefix_identity": true,
+      "repeat": 0,
+      "system": "PatchTST",
+      "target_prefix_sha256": "4d15badd46a87f9b984fef54d044537eda60670f10a9aa5dfa6d8e78419cf1ef",
+      "test_role": "formal_H720_native_loader_exact_prefix",
+      "test_tuned": false
+    }
+  ],
+  "source_layout": "NTC",
+  "system": "PatchTST",
+  "target_h720_sha256": "4d15badd46a87f9b984fef54d044537eda60670f10a9aa5dfa6d8e78419cf1ef",
+  "target_shape": [
+    9728,
+    720,
+    21
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "canonical_layout": "NTC",
+  "checkpoint_sha256": "a25d567686dd8daa9ad2ed12b43d8ca1362a665977b32c4fe0a1fea224000911",
+  "chunk_origins": 8,
+  "dataset": "Weather",
+  "input_array_retention": "removed_after_successful_metric_hash_audit",
+  "metric_accumulation": "origin_chunked_float64_global_elementwise",
+  "prediction_h720_sha256": "2fdd0265d8d9bcb85cefaf5e5389f088a055272d916b30a3b6e8fec5aab75fa9",
+  "prediction_shape": [
+    9820,
+    720,
+    21
+  ],
+  "removed_input_arrays": [
+    "/home/yingch/exp_outputs/r-2026-fatst/main_ii_h720_prefix_20260808/_workspaces_v3/DLinear/results/weather_336_720_DLinear_custom_ftM_sl336_ll48_pl720_dm512_nh8_el2_dl1_df2048_fc1_ebtimeF_dtTrue_Exp_0/pred.npy",
+    "/home/yingch/exp_outputs/r-2026-fatst/main_ii_h720_prefix_20260808/_workspaces_v3/DLinear/results/weather_336_720_DLinear_custom_ftM_sl336_ll48_pl720_dm512_nh8_el2_dl1_df2048_fc1_ebtimeF_dtTrue_Exp_0/true.npy"
+  ],
+  "repeat": 0,
+  "rows": [
+    {
+      "channel_count": 21,
+      "checkpoint_sha256": "a25d567686dd8daa9ad2ed12b43d8ca1362a665977b32c4fe0a1fea224000911",
+      "dataset": "Weather",
+      "horizon": 96,
+      "mae": 0.23960681822249852,
+      "matrix_complete": false,
+      "mse": 0.17314683205109632,
+      "origin_count": 9820,
+      "prediction_prefix_sha256": "f2fb240858c40cf57bf23ddfa5b15343df54add806f7015b9c5bfbe7abc94fde",
+      "prefix_identity": true,
+      "repeat": 0,
+      "system": "DLinear",
+      "target_prefix_sha256": "8f23ecf3087af1be98793b498abb765e9ee258880fb84ad3b0c91cbace668758",
+      "test_role": "formal_H720_native_loader_exact_prefix",
+      "test_tuned": false
+    },
+    {
+      "channel_count": 21,
+      "checkpoint_sha256": "a25d567686dd8daa9ad2ed12b43d8ca1362a665977b32c4fe0a1fea224000911",
+      "dataset": "Weather",
+      "horizon": 192,
+      "mae": 0.2778199710329993,
+      "matrix_complete": false,
+      "mse": 0.21300200721060364,
+      "origin_count": 9820,
+      "prediction_prefix_sha256": "a034147a1e9db5633690c5f0154ca40b24f724bca81353a8d1b597c38ef89b0a",
+      "prefix_identity": true,
+      "repeat": 0,
+      "system": "DLinear",
+      "target_prefix_sha256": "6e1174b3ebc396fbf33022548df163ac59589e515313675d2f8b7e55eba57dbd",
+      "test_role": "formal_H720_native_loader_exact_prefix",
+      "test_tuned": false
+    },
+    {
+      "channel_count": 21,
+      "checkpoint_sha256": "a25d567686dd8daa9ad2ed12b43d8ca1362a665977b32c4fe0a1fea224000911",
+      "dataset": "Weather",
+      "horizon": 336,
+      "mae": 0.3169185839742675,
+      "matrix_complete": false,
+      "mse": 0.2596226274041605,
+      "origin_count": 9820,
+      "prediction_prefix_sha256": "cd80ebd0cf9caa6607b366e8ae4a043793fefe51b72feada60f32e3946b3ac48",
+      "prefix_identity": true,
+      "repeat": 0,
+      "system": "DLinear",
+      "target_prefix_sha256": "1178ded3ebd444f6d68cb2ebb90f12bc0f2a2a09d974a50c9a9429115d050b52",
+      "test_role": "formal_H720_native_loader_exact_prefix",
+      "test_tuned": false
+    },
+    {
+      "channel_count": 21,
+      "checkpoint_sha256": "a25d567686dd8daa9ad2ed12b43d8ca1362a665977b32c4fe0a1fea224000911",
+      "dataset": "Weather",
+      "horizon": 720,
+      "mae": 0.36948836082227016,
+      "matrix_complete": false,
+      "mse": 0.3282086409788405,
+      "origin_count": 9820,
+      "prediction_prefix_sha256": "2fdd0265d8d9bcb85cefaf5e5389f088a055272d916b30a3b6e8fec5aab75fa9",
+      "prefix_identity": true,
+      "repeat": 0,
+      "system": "DLinear",
+      "target_prefix_sha256": "bbc080ed09902e06772202dd6f092c1b7e108b656151bc2d6d366cdde2063472",
+      "test_role": "formal_H720_native_loader_exact_prefix",
+      "test_tuned": false
+    }
+  ],
+  "source_layout": "NTC",
+  "system": "DLinear",
+  "target_h720_sha256": "bbc080ed09902e06772202dd6f092c1b7e108b656151bc2d6d366cdde2063472",
+  "target_shape": [
+    9820,
+    720,
+    21
+  ]
+}
