@@ -1,11 +1,12 @@
 {
   "aggregate_cells": 224,
+  "best_style": "red_bold",
   "claim_boundary": "source-native H720 one-model-all-horizons system benchmark; not matched mechanism attribution",
   "datasets": [
-    "ETTh1",
-    "ETTh2",
     "ETTm1",
     "ETTm2",
+    "ETTh1",
+    "ETTh2",
     "Weather",
     "ECL",
     "Solar"
@@ -25,11 +26,11 @@
       "mse": 0.2735806966998747
     },
     "DLinear": {
-      "mae": 0.3579089987764951,
+      "mae": 0.35790899877649524,
       "mse": 0.3055585619675657
     },
     "ISCF-BSCA-MAIN-v1": {
-      "mae": 0.30828128213381784,
+      "mae": 0.30828128213381795,
       "mse": 0.26246853886785876
     },
     "PatchTST": {
@@ -37,12 +38,12 @@
       "mse": 0.268637258499737
     },
     "QDF": {
-      "mae": 0.3363812728270542,
+      "mae": 0.33638127282705416,
       "mse": 0.28381460683964177
     },
     "SimpleTM": {
-      "mae": 0.33137690060382574,
-      "mse": 0.287747444096675
+      "mae": 0.3313769006038257,
+      "mse": 0.2877474440966751
     },
     "TimeAlign": {
       "mae": 0.31050063121064114,
@@ -50,12 +51,14 @@
     },
     "iTransformer": {
       "mae": 0.3428960295643518,
-      "mse": 0.30782522168942617
+      "mse": 0.3078252216894261
     }
   },
   "metric_scalars": 448,
+  "presentation_template": "Main_I_TimeAlign_Table_6_style",
   "ranking_rule": "best_and_second_distinct_displayed_values_after_three_decimal_rounding",
   "rows_with_dataset_averages": 280,
+  "second_style": "blue_underline",
   "source_hashes": {
     "aggregate_cells": "3268b5f749c434c419a4b3480b29e69bb3fe16614099521ebb6b5ff7493484c5",
     "result_audit": "ce765c995cdced40c1d9635d301075417d42319f36a7a75841386f7f06a5373b"

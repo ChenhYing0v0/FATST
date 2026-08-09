@@ -70,3 +70,23 @@ QDF upstream 在 experiment construction 前同步设置 Python、NumPy、torch 
 ## 5. Falsification and rollback
 
 The execution path fails closed if a source/script/dataset hash differs, an official script yields zero or multiple H720 commands, training still references `flag='test'`, a checkpoint is missing or mutated, tensors are non-finite/non-H720, or any matrix count is incomplete. A Solar adapter failure blocks the complete table but does not justify deleting Solar or reporting a favorable subset.
+
+## 6. Paper-table presentation layer
+
+`scripts/build_iscf_bsca_main_ii_table.py`只消费已通过gate的224-cell aggregate CSV，
+不会访问checkpoint、prediction tensor或official test。它先按
+`system × dataset × horizon`验证完整identity，再计算每个dataset的four-horizon
+arithmetic mean。Ranking在共同三位小数上进行：distinct displayed minimum为best，
+第二个distinct value为second，ties保留。
+
+2026-08-09 presentation alignment把Main II与Main I统一为：
+
+- dataset order=`ETTm1, ETTm2, ETTh1, ETTh2, Weather, ECL, Solar`；
+- best=`red + bold`，second=`blue + underline`；
+- `iTransformer (2024b)`、`tabcolsep=1.2pt`；
+- required packages=`booktabs, multirow, graphicx, xcolor`。
+
+这次变更只重排已存在的dataset blocks并改变LaTeX style wrappers。224个aggregate
+cells、全部MSE/MAE、Avg.计算、24/56 best、27/56 second及claim boundary均未变化。
+生成摘要显式记录`presentation_template=Main_I_TimeAlign_Table_6_style`，便于后续
+检测视觉契约漂移。

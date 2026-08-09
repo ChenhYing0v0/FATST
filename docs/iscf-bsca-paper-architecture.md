@@ -5,17 +5,18 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.58` |
+| `version` | `v0.59` |
 | `last_updated` | `2026-08-09` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 4 v0.5 BSCA objective refinement pending author review；experiments=Main I hash frozen，Main II H720-prefix 224-cell formal table complete |
+| `current_review_cursor` | writing=Section 4 v0.5 BSCA objective refinement pending author review；experiments=Main I hash frozen，Main II H720-prefix 224-cell formal table complete并与Main I展示对齐，paper table registry已建立 |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
+| `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.7正文 + approved Figures 2--3；Method Figure 4 visual design |
 | `provisional_content` | Section 4 v0.5 with refined scope-field summary and BSCA objective narrative；Method Figure 4 stable vector-asset synchronization；remaining sections |
-| `authorization_source` | 2026-08-08用户授权Main I freeze与Main II design及Tier A/B/C；2026-08-09 Main II formal matrix完成 |
+| `authorization_source` | 2026-08-08用户授权Main I freeze与Main II design及Tier A/B/C；2026-08-09 Main II formal matrix完成并授权统一呈现/表格汇总；未新增实验授权 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
@@ -1326,8 +1327,10 @@ CHPC proof在本节作为construction property给出：field与allocation只依�
 
 ### 8.1 Experimental Setup
 
-Main I/II使用8 datasets：ETTh1、ETTh2、ETTm1、ETTm2、Weather、ECL、Solar、
-Exchange；core ablation与decoder transfer使用原5 datasets。统一报告
+Main-result evidence universe覆盖8 datasets：ETTh1、ETTh2、ETTm1、ETTm2、
+Weather、ECL、Solar、Exchange；当前Main I/II dense tables使用共同完整的前7个
+datasets，Exchange分别作为limited companion/deferred extension。core ablation与
+decoder transfer使用原5 datasets。统一报告
 $\mathcal H=\{96,192,336,720\}$、seeds、validation-only checkpoint
 selection、test-tuned hyperparameter selection、official-test MSE/MAE、
 parameter/training budgets，以及
@@ -1368,18 +1371,18 @@ H4N formal test现已40/40、160/160完成。Full-table selector选择`L608/p19/
 
 | Family | Models | Result route |
 | --- | --- | --- |
-| linear / mixing | AMD, TimeMixer, DLinear | TimeMixer/DLinear来自TimeAlign Table 6；AMD与缺失cells官方复现 |
-| Transformer-based | SimpleTM, iTransformer, PatchTST | iTransformer/PatchTST来自TimeAlign Table 6；SimpleTM与缺失cells官方复现 |
-| recent official-native | TimePerceiver, SRSNet, TimeAlign, QDF | TimeAlign使用本地复跑；QDF六dataset用Table 6、Solar用official-code source-informed复跑；其余及Exchange缺口使用official scripts |
+| local official/native reproduction | TimeAlign, QDF, AMD, SimpleTM | 七个dense datasets均使用本地复跑；QDF Solar使用ECL-derived source-informed preset；SimpleTM报告native repetitions mean |
+| published fixed-H context | TVNet, iTransformer, TimeMixer, Leddam, ModernTCN, PatchTST, Crossformer, TimesNet, DLinear | 从TimeAlign Table 6逐cell转录并审计；不冒充matched local reproduction |
 | paper method | ISCF-BSCA-MAIN-v1 | validation-selected checkpoints + test-tuned dataset profiles |
 
 该表回答一个 unified model 能否与 separately optimized horizon-specific
 models竞争，但不单独承担architecture attribution。Published-result primary
-source为TimeAlign ICLR 2026 Table 6：它提供TimeAlign、TimeMixer、DLinear、
-iTransformer、PatchTST在目标集合中7个datasets的four-H结果，缺Exchange。
-AMD、SimpleTM、TimePerceiver、SRSNet在TimeAlign表中不存在，须用各自official
-repository复现全部8 datasets；上述5个published models还需官方复现Exchange。
-PDT固定`L=96`，仅保留secondary cross-check。TimeAlign表存在lookback search
+source为TimeAlign ICLR 2026 Table 6：当前表保留其9个published-context systems，
+同时将TimeAlign自身一列替换为本地official-native复跑；该source缺Exchange。
+AMD与SimpleTM在TimeAlign表中不存在，已用各自official repository复现当前7个
+dense datasets。Exchange当前只保留ISCF-BSCA、TimeAlign与QDF companion；不得
+把缺少其余11 systems的partial surface表述为完整8-dataset Main I。PDT固定`L=96`，
+仅保留secondary cross-check。TimeAlign表存在lookback search
 集合描述差异，且published values为3-seed mean；本地official reproduction
 统一使用seed2021并披露差异。TimeAlign Exchange已按ETTh1-derived bootstrap
 复跑，但因没有official Exchange preset，必须标记为source-informed而非official。
@@ -1431,6 +1434,14 @@ end-to-end core ablation和two-backbone transfer承担。Machine contract=
 截至2026-08-09，Main II formal matrix已完整闭合：70个checkpoint evaluations、280个raw prefix rows、224个aggregate cells和448个MSE/MAE scalars全部通过，35个local H720 exact anchors无失败。ISCF-BSCA在28个dataset–horizon cells上的macro MSE/MAE为`0.262469/0.308281`，两项均在八个systems中排名第一；按共同三位小数显示口径为24/56 best、27/56 second，即51/56 metric cells位于前二。分dataset弱项仍完整保留：ETTh1 MAE与Solar MSE为rank 3，ETTh2/ECL双指标为rank 2。
 
 该结果只把Main II推进为`paper_facing_effectiveness=pass`的one-model-for-all-horizons system benchmark。它不改变mechanism claim boundary：external source contracts并不matched，故BSCA/ISCF attribution与decoder portability仍必须由five-dataset end-to-end ablation、internal diagnostics和two-backbone transfer兑现。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/result_and_table_audit.md`，LaTeX table=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/table/table_iscf_bsca_main_ii.tex`。
+
+Main II现与Main I使用同一展示契约：dataset顺序为ETTm1、ETTm2、ETTh1、
+ETTh2、Weather、ECL、Solar；每dataset依次显示H96/H192/H336/H720与Avg.；
+三位小数后best为red bold、second为blue underline；LaTeX间距与required packages
+保持一致。两表只统一形式，不统一system集合或evidence role。当前全部paper-facing
+experiment tables的状态、artifact与claim boundary统一登记于
+`docs/iscf-bsca-paper-table-registry.md`；该整理不授权新的local patch、remote
+training或formal test。
 
 ### 8.4 Efficiency Evaluation
 

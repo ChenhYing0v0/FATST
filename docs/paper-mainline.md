@@ -17,7 +17,10 @@
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
+| `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` profiles frozen；Main II system effectiveness pass，matched ablation/transfer仍pending |
+
+[Paper Table Registry and Main-II Presentation Alignment, 2026-08-09] Main II已按冻结Main I的TimeAlign Table-6 presentation contract重建：dataset顺序统一为ETTm1/ETTm2/ETTh1/ETTh2/Weather/ECL/Solar，best/second统一为red-bold/blue-underline，`iTransformer (2024b)`、`tabcolsep=1.2pt`与`xcolor`依赖同步。结果值、224-cell完整性与24/56 best、27/56 second统计未改变。新增human-readable与machine-readable table registry，明确当前正文表为Main I、Main II、Efficiency、Core Ablation、Decoder Transfer，Appendix为Ablation Sensitivity，Exchange仅作limited companion；diagnostics/case studies继续作为figures/analysis blocks。该整理不产生任何新的实验授权。Decision=`paper_table_registry_consolidated_Main_II_presentation_aligned_no_metric_change`。
 
 [Main II H720-Prefix Formal Table Complete, 2026-08-09] Tier B 21/21 new H720 checkpoints与Tier C完整formal surface已闭合：70 checkpoint evaluations、280 raw rows、224 aggregate cells、448 MSE/MAE scalars，35/35 local H720 exact anchors全部通过。ISCF-BSCA的28-cell macro MSE/MAE=`0.262469/0.308281`，均为八systems rank 1；三位小数口径为24/56 best、27/56 second，51/56 metric cells处于top-2。ISCF相对TimeAlign macro MSE/MAE低`1.303%/0.715%`，但ETTh1 MAE、ETTh2、ECL与Solar MSE等负向cells完整保留。该表通过one-model-all-horizons paper-facing effectiveness gate，但因native source contracts不matched，不作BSCA/decoder attribution；ablation、internal health与two-backbone transfer仍pending。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/result_and_table_audit.md`。Decision=`Main_II_H720_prefix_system_benchmark_complete_pass_not_matched_mechanism_attribution`。
 

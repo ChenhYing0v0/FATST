@@ -28,11 +28,11 @@ YEARS = {
     "QDF": "2026",
     "AMD": "2025",
     "SimpleTM": "2025",
-    "iTransformer": "2024",
+    "iTransformer": "2024b",
     "PatchTST": "2023",
     "DLinear": "2023",
 }
-DATASETS = ("ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather", "ECL", "Solar")
+DATASETS = ("ETTm1", "ETTm2", "ETTh1", "ETTh2", "Weather", "ECL", "Solar")
 HORIZONS = (96, 192, 336, 720)
 METRICS = ("mse", "mae")
 
@@ -83,9 +83,9 @@ def latex_value(row: dict[str, object], metric: str) -> str:
     value = str(row[f"{metric}_display"])
     style = row[f"{metric}_style"]
     if style == "best":
-        return f"\\textbf{{{value}}}"
+        return f"\\textcolor{{red}}{{\\textbf{{{value}}}}}"
     if style == "second":
-        return f"\\underline{{{value}}}"
+        return f"\\textcolor{{blue}}{{\\underline{{{value}}}}}"
     return value
 
 
@@ -95,11 +95,11 @@ def build_latex(path: Path, rows: list[dict[str, object]]) -> None:
         for row in rows
     }
     lines = [
-        "% Required packages: booktabs, multirow, graphicx",
+        "% Required packages: booktabs, multirow, graphicx, xcolor",
         "\\begin{table*}[t]",
         "\\centering",
         "\\scriptsize",
-        "\\setlength{\\tabcolsep}{1.4pt}",
+        "\\setlength{\\tabcolsep}{1.2pt}",
         "\\resizebox{\\textwidth}{!}{%",
         "\\begin{tabular}{cc" + "|cc" * len(SYSTEMS) + "}",
         "\\toprule",
@@ -245,6 +245,9 @@ def main() -> None:
         "metric_scalars": 448,
         "display_precision": 3,
         "ranking_rule": "best_and_second_distinct_displayed_values_after_three_decimal_rounding",
+        "presentation_template": "Main_I_TimeAlign_Table_6_style",
+        "best_style": "red_bold",
+        "second_style": "blue_underline",
         "iscf_best_cells": sum(
             row[f"{metric}_style"] == "best"
             for row in iscf_standard

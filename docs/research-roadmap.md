@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## Paper Table Registry and Main-II Presentation Alignment (2026-08-09)
+
+Current cursor=`paper consolidation; no new experiment authorization`。Main II已在不改变任何metric、ranking或evidence role的前提下对齐Main I展示：统一dataset order、H/Avg. row structure、三位小数ranking、red-bold best、blue-underline second、year label与LaTeX spacing/package contract。当前paper-facing experiment table总账已冻结为两个complete main results、一个limited Exchange companion、三个待闭合正文表（Efficiency/Core Ablation/Decoder Transfer）与一个Appendix sensitivity表；mechanism diagnostics和case studies仍为figures/analysis blocks。Canonical index=`docs/iscf-bsca-paper-table-registry.md`，machine contract=`configs/iscf_bsca_paper_table_registry.json`。下一实验动作仍是Core Ablation与Decoder Transfer各自Step 6 prelaunch gate。Decision=`paper_table_registry_consolidated_Main_II_presentation_aligned_no_metric_change`。
+
 ## Main II H720-Prefix Formal Table Complete (2026-08-09)
 
 Current experiment cursor=`Step 9 complete artifact audit -> Step 10 system benchmark pass`。Tier B 21/21 new H720 checkpoints与Tier C 70/70 checkpoint evaluations已完成，形成280/280 raw prefix rows、224/224 aggregate cells和448 MSE/MAE scalars；35/35 local H720 anchors均通过frozen ULP continuity gate。ISCF-BSCA macro MSE/MAE=`0.262469/0.308281`，两项均rank 1；共同三位小数口径为24/56 best、27/56 second。Main II因此通过paper-facing system effectiveness gate，但external protocols不matched，不能承担BSCA/decoder mechanism attribution；下一实验主线回到exact five-dataset end-to-end ablation、internal diagnostics与two-backbone transfer的独立prelaunch gate。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/result_and_table_audit.md`。Decision=`Main_II_H720_prefix_system_benchmark_complete_pass_not_matched_mechanism_attribution`。

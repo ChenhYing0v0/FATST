@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | 写作流审阅Section 4 v0.5 BSCA objective refinement并等待Figure 4 stable vector source；实验流Main I已hash冻结，Main II H720-prefix formal table已完成，下一步为ablation/transfer独立prelaunch gate |
+| `active_question` | 写作流审阅Section 4 v0.5 BSCA objective refinement并等待Figure 4 stable vector source；实验流Main I已hash冻结，Main II H720-prefix formal table已完成并对齐Main I展示，table registry已建立；下一步为ablation/transfer独立prelaunch gate |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9与Section 3 v0.7 frozen；Section 4 v0.5 BSCA objective refinement pending author review；Figure 4 visual design temporarily fixed |
@@ -14,6 +14,7 @@
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
+| `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `stage_exit` | 新problem先通过existence/narrative gate，再决定一项或两项可归因contributions |
 | `stage_rollback` | exact BSCA-v1 negative且无pathology则回Step4；不否定fixed ISCF architecture |
 
@@ -23,7 +24,7 @@
 | --- | --- |
 | `current_11_step` | paper consolidation；writing=Section 4 v0.5 BSCA objective refinement pending author review；experiments=Main I freeze complete，Main II Step 9 audit / Step 10 system benchmark pass |
 | `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；`ISCF-BSCA-MAIN-v1` 8 selected profiles reusable |
-| `latest_decision` | `Main_II_H720_prefix_system_benchmark_complete_pass_not_matched_mechanism_attribution` |
+| `latest_decision` | `paper_table_registry_consolidated_Main_II_presentation_aligned_no_metric_change` |
 | `writing_latest_decision` | `section4_v0_5_bsca_objective_refinement_pending_author_review` |
 | `next_required_action` | freeze exact five-dataset end-to-end ablation and two-backbone transfer prelaunch gates；Main II不再训练或formal test |
 | `method_training_authorized` | completed-scope only；Main II Tier A/B/C authorization已消费并闭合；新的ablation/transfer remote training或formal test尚未授权 |
@@ -41,8 +42,8 @@
 | `design` | seven datasets；21 new H720 training jobs；49 reused checkpoint objects；70 prefix evaluations；280 raw rows；224 aggregate cells；Exchange deferred |
 | `narrative_gate` | architecture family冻结；SOTA wording由完整test-tuned result决定并披露test-informed边界 |
 | `effectiveness_gate` | pass as system benchmark；ISCF macro MSE/MAE rank 1，24/56 best + 27/56 second；not matched attribution |
-| `artifacts` | protocol=`configs/iscf_bsca_main_ii_h720_prefix_protocol.json`；result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/result_and_table_audit.md`；table=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/table/table_iscf_bsca_main_ii.tex` |
-| `decision` | Main II system benchmark complete pass；停止该block，回到ablation/transfer各自Step 6 prelaunch gate |
+| `artifacts` | protocol=`configs/iscf_bsca_main_ii_h720_prefix_protocol.json`；result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/result_and_table_audit.md`；table=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/table/table_iscf_bsca_main_ii.tex`；table registry=`docs/iscf-bsca-paper-table-registry.md` |
+| `decision` | Main II system benchmark complete pass且展示已与Main I对齐；停止该block，回到ablation/transfer各自Step 6 prelaunch gate |
 
 ## Exact Ablation Anchor Contract
 

@@ -25,8 +25,24 @@
       "status": "terminal_H4N_profiles_frozen_HPO_stopped"
     }
   },
+  "paper_table_registry": {
+    "registry": "configs/iscf_bsca_paper_table_registry.json",
+    "human_readable_index": "docs/iscf-bsca-paper-table-registry.md",
+    "main_i_status": "complete_hash_frozen",
+    "main_ii_status": "complete_presentation_aligned",
+    "main_result_presentation_contract": "shared_TimeAlign_Table_6_style",
+    "pending_main_text_tables": [
+      "efficiency",
+      "core_ablation",
+      "decoder_transfer"
+    ],
+    "pending_appendix_tables": [
+      "ablation_sensitivity"
+    ],
+    "new_experiment_authorization_created": false
+  },
   "authorization": {
-    "current_decision": "Main_I_hash_frozen_Main_II_H720_prefix_design_complete_waiting_staged_authorization",
+    "current_decision": "Main_I_frozen_Main_II_complete_and_presentation_aligned_paper_table_registry_consolidated",
     "existing_artifact_audit": true,
     "matrix_design": true,
     "test_tuned_hpo_project_principle": {
