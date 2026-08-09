@@ -63,6 +63,8 @@
     "aggregate_cells": "3268b5f749c434c419a4b3480b29e69bb3fe16614099521ebb6b5ff7493484c5",
     "result_audit": "ce765c995cdced40c1d9635d301075417d42319f36a7a75841386f7f06a5373b"
   },
+  "standalone_latex": "table_iscf_bsca_main_ii_standalone.tex",
+  "standalone_page": "A3_landscape_review_copy",
   "systems": [
     "ISCF-BSCA-MAIN-v1",
     "TimeAlign",

@@ -90,3 +90,9 @@ arithmetic mean。Ranking在共同三位小数上进行：distinct displayed min
 cells、全部MSE/MAE、Avg.计算、24/56 best、27/56 second及claim boundary均未变化。
 生成摘要显式记录`presentation_template=Main_I_TimeAlign_Table_6_style`，便于后续
 检测视觉契约漂移。
+
+2026-08-10起，Builder同时生成`table_iscf_bsca_main_ii_standalone.tex`。该文件包含完整
+`documentclass`、font、geometry与table packages，可由`latexmk -pdf`或
+`pdflatex`直接编译。Standalone review copy使用A3 landscape提升18-column表格的
+屏幕可读性；正式论文仍消费原`table_iscf_bsca_main_ii.tex` fragment，并保持
+manuscript自身的portrait/two-column版式。

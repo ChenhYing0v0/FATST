@@ -138,7 +138,28 @@ def build_latex(path: Path, rows: list[dict[str, object]]) -> None:
             "",
         ]
     )
-    path.write_text("\n".join(lines), encoding="utf-8")
+    table_text = "\n".join(lines)
+    path.write_text(table_text, encoding="utf-8")
+    standalone_lines = [
+        "% Auto-generated review copy; edit the table builder, not this file.",
+        "\\documentclass[10pt]{article}",
+        "\\usepackage[T1]{fontenc}",
+        "\\usepackage[a3paper,landscape,margin=10mm]{geometry}",
+        "\\usepackage{booktabs}",
+        "\\usepackage{multirow}",
+        "\\usepackage{graphicx}",
+        "\\usepackage{xcolor}",
+        "\\pagestyle{empty}",
+        "\\renewcommand{\\arraystretch}{0.82}",
+        "\\setlength{\\abovecaptionskip}{5pt}",
+        "\\begin{document}",
+        table_text,
+        "\\end{document}",
+        "",
+    ]
+    path.with_name("table_iscf_bsca_main_ii_standalone.tex").write_text(
+        "\n".join(standalone_lines), encoding="utf-8"
+    )
 
 
 def main() -> None:
@@ -246,6 +267,8 @@ def main() -> None:
         "display_precision": 3,
         "ranking_rule": "best_and_second_distinct_displayed_values_after_three_decimal_rounding",
         "presentation_template": "Main_I_TimeAlign_Table_6_style",
+        "standalone_latex": "table_iscf_bsca_main_ii_standalone.tex",
+        "standalone_page": "A3_landscape_review_copy",
         "best_style": "red_bold",
         "second_style": "blue_underline",
         "iscf_best_cells": sum(

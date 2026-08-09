@@ -64,6 +64,9 @@ H720 model 所形成的 four-horizon prefix forecasts。
 - ISCF-BSCA macro MSE/MAE：0.262469 / 0.308281，均为八 systems rank 1；
 - 三位小数显示口径：24/56 best、27/56 second，共51/56 metric cells 位于 top-2；
 - Main II 现已与 Main I 对齐 dataset order、year label、best/second emphasis、column spacing 与 required packages；
+- 可直接编译的完整source为`table_iscf_bsca_main_ii_standalone.tex`，A3 landscape
+  review PDF为`output/pdf/iscf_bsca_main_ii_standalone.pdf`；正式manuscript仍使用
+  原始table fragment；
 - external source contracts 不 matched，因此该表不能兑现 component effectiveness 或 decoder portability claims。
 
 ## 5. 尚未完成表格的最小闭合顺序

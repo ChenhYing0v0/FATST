@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "registry_id": "ISCF-BSCA-PAPER-TABLES-20260809",
-  "updated_at": "2026-08-09",
+  "updated_at": "2026-08-10",
   "scope": "paper_facing_experiment_tables",
   "presentation_contract": {
     "main_result_template": "TimeAlign_Table_6_style",
@@ -54,11 +54,14 @@
       "iscf_best_metric_cells": 24,
       "iscf_second_metric_cells": 27,
       "artifact": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/table/table_iscf_bsca_main_ii.tex",
+      "standalone_latex": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/table/table_iscf_bsca_main_ii_standalone.tex",
+      "compiled_review_pdf": "output/pdf/iscf_bsca_main_ii_standalone.pdf",
       "data": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/table/table_data_long.csv",
       "result_audit": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/result_and_table_audit.md",
       "artifact_sha256": "c08afd790be7ca049ed90573486e48e92ed702958f2839de53909a838267c33c",
+      "standalone_latex_sha256": "c8bc8a7bdc4626221afee52144cb708ef6f8a4591dd04d41d5dce26c9ab68bf9",
       "data_sha256": "cd0fee546f88b1b95b09a4eb97184b3559bf42293afe4b8e06a3f84cfe526741",
-      "summary_sha256": "9b4f3a8120f2a040a1e5cba736cee4d9967450832bb487690544a916369781bd",
+      "summary_sha256": "4a599f7a51676638d92580a66afd995e55c81a4f876e093a9793ef306425f664",
       "claim_boundary": "source_native_one_model_all_horizons_system_benchmark_not_matched_mechanism_attribution"
     },
     {

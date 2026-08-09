@@ -1,0 +1,79 @@
+% Auto-generated review copy; edit the table builder, not this file.
+\documentclass[10pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[a3paper,landscape,margin=10mm]{geometry}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\pagestyle{empty}
+\renewcommand{\arraystretch}{0.82}
+\setlength{\abovecaptionskip}{5pt}
+\begin{document}
+% Required packages: booktabs, multirow, graphicx, xcolor
+\begin{table*}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{1.2pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{cc|cc|cc|cc|cc|cc|cc|cc|cc}
+\toprule
+Dataset & H & \multicolumn{2}{c}{ISCF-BSCA (Ours)} & \multicolumn{2}{c}{TimeAlign (2026)} & \multicolumn{2}{c}{QDF (2026)} & \multicolumn{2}{c}{AMD (2025)} & \multicolumn{2}{c}{SimpleTM (2025)} & \multicolumn{2}{c}{iTransformer (2024b)} & \multicolumn{2}{c}{PatchTST (2023)} & \multicolumn{2}{c}{DLinear (2023)} \\
+ &  & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE \\
+\midrule
+\multirow{5}{*}{ETTm1} & 96 & \textcolor{red}{\textbf{0.266}} & \textcolor{red}{\textbf{0.327}} & \textcolor{blue}{\underline{0.282}} & \textcolor{blue}{\underline{0.337}} & 0.283 & 0.348 & 0.290 & 0.349 & 0.317 & 0.367 & 0.340 & 0.382 & 0.292 & 0.350 & 0.295 & 0.347 \\
+ & 192 & \textcolor{red}{\textbf{0.305}} & \textcolor{red}{\textbf{0.351}} & \textcolor{blue}{\underline{0.314}} & \textcolor{blue}{\underline{0.356}} & 0.323 & 0.371 & 0.326 & 0.368 & 0.350 & 0.383 & 0.374 & 0.398 & 0.328 & 0.372 & 0.329 & 0.366 \\
+ & 336 & \textcolor{red}{\textbf{0.344}} & \textcolor{red}{\textbf{0.373}} & \textcolor{blue}{\underline{0.350}} & \textcolor{blue}{\underline{0.376}} & 0.362 & 0.392 & 0.363 & 0.387 & 0.389 & 0.405 & 0.416 & 0.422 & 0.365 & 0.392 & 0.367 & 0.387 \\
+ & 720 & \textcolor{blue}{\underline{0.407}} & \textcolor{blue}{\underline{0.406}} & \textcolor{red}{\textbf{0.406}} & \textcolor{red}{\textbf{0.405}} & 0.423 & 0.424 & 0.423 & 0.417 & 0.454 & 0.438 & 0.487 & 0.456 & 0.415 & 0.421 & 0.427 & 0.423 \\
+\cmidrule(lr){2-18}
+ & Avg. & \textcolor{red}{\textbf{0.331}} & \textcolor{red}{\textbf{0.364}} & \textcolor{blue}{\underline{0.338}} & \textcolor{blue}{\underline{0.368}} & 0.348 & 0.384 & 0.351 & 0.381 & 0.378 & 0.398 & 0.404 & 0.415 & 0.350 & 0.384 & 0.355 & 0.381 \\
+\midrule
+\multirow{5}{*}{ETTm2} & 96 & \textcolor{red}{\textbf{0.161}} & \textcolor{red}{\textbf{0.246}} & \textcolor{blue}{\underline{0.167}} & \textcolor{blue}{\underline{0.253}} & 0.169 & 0.257 & 0.178 & 0.265 & 0.186 & 0.271 & 0.195 & 0.279 & 0.170 & 0.260 & 0.192 & 0.291 \\
+ & 192 & \textcolor{red}{\textbf{0.218}} & \textcolor{red}{\textbf{0.285}} & \textcolor{blue}{\underline{0.219}} & \textcolor{blue}{\underline{0.287}} & 0.228 & 0.297 & 0.231 & 0.300 & 0.249 & 0.309 & 0.260 & 0.318 & 0.225 & 0.296 & 0.261 & 0.341 \\
+ & 336 & \textcolor{blue}{\underline{0.272}} & \textcolor{red}{\textbf{0.320}} & \textcolor{red}{\textbf{0.269}} & \textcolor{red}{\textbf{0.320}} & 0.281 & 0.332 & 0.279 & 0.332 & 0.308 & 0.346 & 0.324 & 0.358 & 0.277 & \textcolor{blue}{\underline{0.330}} & 0.324 & 0.383 \\
+ & 720 & \textcolor{blue}{\underline{0.344}} & \textcolor{blue}{\underline{0.372}} & \textcolor{red}{\textbf{0.343}} & \textcolor{red}{\textbf{0.371}} & 0.364 & 0.385 & 0.355 & 0.381 & 0.401 & 0.399 & 0.416 & 0.409 & 0.365 & 0.383 & 0.403 & 0.428 \\
+\cmidrule(lr){2-18}
+ & Avg. & \textcolor{red}{\textbf{0.249}} & \textcolor{red}{\textbf{0.306}} & \textcolor{blue}{\underline{0.250}} & \textcolor{blue}{\underline{0.308}} & 0.261 & 0.318 & 0.261 & 0.320 & 0.286 & 0.331 & 0.299 & 0.341 & 0.259 & 0.317 & 0.295 & 0.361 \\
+\midrule
+\multirow{5}{*}{ETTh1} & 96 & \textcolor{blue}{\underline{0.352}} & 0.391 & 0.354 & \textcolor{blue}{\underline{0.387}} & 0.378 & 0.406 & \textcolor{red}{\textbf{0.350}} & \textcolor{red}{\textbf{0.386}} & 0.382 & 0.402 & 0.399 & 0.415 & 0.373 & 0.402 & 0.396 & 0.425 \\
+ & 192 & \textcolor{blue}{\underline{0.378}} & 0.406 & 0.382 & \textcolor{blue}{\underline{0.404}} & 0.410 & 0.426 & \textcolor{red}{\textbf{0.375}} & \textcolor{red}{\textbf{0.402}} & 0.415 & 0.418 & 0.435 & 0.435 & 0.388 & 0.411 & 0.436 & 0.453 \\
+ & 336 & \textcolor{blue}{\underline{0.394}} & 0.420 & 0.403 & \textcolor{blue}{\underline{0.418}} & 0.431 & 0.445 & \textcolor{red}{\textbf{0.393}} & \textcolor{red}{\textbf{0.416}} & 0.438 & 0.433 & 0.459 & 0.452 & 0.404 & 0.426 & 0.455 & 0.470 \\
+ & 720 & \textcolor{red}{\textbf{0.450}} & 0.467 & 0.459 & \textcolor{red}{\textbf{0.461}} & 0.499 & 0.493 & \textcolor{blue}{\underline{0.452}} & \textcolor{red}{\textbf{0.461}} & 0.470 & \textcolor{blue}{\underline{0.465}} & 0.509 & 0.494 & 0.455 & 0.469 & 0.538 & 0.538 \\
+\cmidrule(lr){2-18}
+ & Avg. & \textcolor{blue}{\underline{0.394}} & 0.421 & 0.399 & \textcolor{blue}{\underline{0.418}} & 0.429 & 0.442 & \textcolor{red}{\textbf{0.392}} & \textcolor{red}{\textbf{0.416}} & 0.426 & 0.429 & 0.451 & 0.449 & 0.405 & 0.427 & 0.456 & 0.472 \\
+\midrule
+\multirow{5}{*}{ETTh2} & 96 & \textcolor{blue}{\underline{0.241}} & \textcolor{blue}{\underline{0.314}} & 0.253 & 0.321 & \textcolor{blue}{\underline{0.241}} & 0.317 & 0.249 & 0.326 & \textcolor{blue}{\underline{0.241}} & 0.315 & 0.264 & 0.330 & \textcolor{red}{\textbf{0.221}} & \textcolor{red}{\textbf{0.303}} & 0.287 & 0.359 \\
+ & 192 & \textcolor{blue}{\underline{0.282}} & \textcolor{blue}{\underline{0.345}} & 0.295 & 0.353 & 0.287 & 0.352 & 0.293 & 0.361 & 0.299 & 0.351 & 0.319 & 0.365 & \textcolor{red}{\textbf{0.267}} & \textcolor{red}{\textbf{0.337}} & 0.314 & 0.378 \\
+ & 336 & \textcolor{blue}{\underline{0.312}} & \textcolor{blue}{\underline{0.371}} & 0.324 & 0.378 & 0.316 & 0.378 & 0.336 & 0.395 & 0.347 & 0.387 & 0.361 & 0.398 & \textcolor{red}{\textbf{0.304}} & \textcolor{red}{\textbf{0.367}} & 0.335 & 0.398 \\
+ & 720 & \textcolor{blue}{\underline{0.394}} & \textcolor{blue}{\underline{0.430}} & 0.406 & 0.436 & 0.407 & 0.440 & 0.442 & 0.467 & 0.414 & 0.436 & 0.430 & 0.446 & \textcolor{red}{\textbf{0.378}} & \textcolor{red}{\textbf{0.421}} & 0.584 & 0.543 \\
+\cmidrule(lr){2-18}
+ & Avg. & \textcolor{blue}{\underline{0.307}} & \textcolor{blue}{\underline{0.365}} & 0.319 & 0.372 & 0.313 & 0.372 & 0.330 & 0.387 & 0.325 & 0.372 & 0.344 & 0.385 & \textcolor{red}{\textbf{0.292}} & \textcolor{red}{\textbf{0.357}} & 0.380 & 0.420 \\
+\midrule
+\multirow{5}{*}{Weather} & 96 & \textcolor{red}{\textbf{0.141}} & \textcolor{red}{\textbf{0.182}} & \textcolor{blue}{\underline{0.143}} & \textcolor{blue}{\underline{0.184}} & 0.185 & 0.244 & 0.149 & 0.205 & 0.171 & 0.221 & 0.177 & 0.222 & 0.150 & 0.204 & 0.173 & 0.240 \\
+ & 192 & \textcolor{red}{\textbf{0.182}} & \textcolor{red}{\textbf{0.223}} & \textcolor{blue}{\underline{0.185}} & \textcolor{blue}{\underline{0.226}} & 0.223 & 0.275 & 0.193 & 0.246 & 0.212 & 0.257 & 0.223 & 0.261 & 0.191 & 0.243 & 0.213 & 0.278 \\
+ & 336 & \textcolor{red}{\textbf{0.232}} & \textcolor{red}{\textbf{0.264}} & \textcolor{blue}{\underline{0.235}} & \textcolor{blue}{\underline{0.267}} & 0.270 & 0.306 & 0.244 & 0.283 & 0.262 & 0.293 & 0.277 & 0.299 & 0.240 & 0.282 & 0.260 & 0.317 \\
+ & 720 & \textcolor{red}{\textbf{0.304}} & \textcolor{red}{\textbf{0.315}} & \textcolor{blue}{\underline{0.307}} & \textcolor{blue}{\underline{0.318}} & 0.341 & 0.351 & 0.315 & 0.332 & 0.346 & 0.344 & 0.359 & 0.351 & 0.319 & 0.335 & 0.328 & 0.369 \\
+\cmidrule(lr){2-18}
+ & Avg. & \textcolor{red}{\textbf{0.215}} & \textcolor{red}{\textbf{0.246}} & \textcolor{blue}{\underline{0.218}} & \textcolor{blue}{\underline{0.249}} & 0.255 & 0.294 & 0.225 & 0.267 & 0.248 & 0.279 & 0.259 & 0.283 & 0.225 & 0.266 & 0.243 & 0.301 \\
+\midrule
+\multirow{5}{*}{ECL} & 96 & \textcolor{blue}{\underline{0.117}} & \textcolor{blue}{\underline{0.215}} & \textcolor{red}{\textbf{0.115}} & \textcolor{red}{\textbf{0.213}} & 0.144 & 0.252 & 0.121 & 0.224 & 0.138 & 0.242 & 0.140 & 0.240 & 0.121 & 0.222 & 0.128 & 0.232 \\
+ & 192 & \textcolor{blue}{\underline{0.137}} & \textcolor{blue}{\underline{0.233}} & \textcolor{red}{\textbf{0.134}} & \textcolor{red}{\textbf{0.230}} & 0.159 & 0.265 & 0.140 & 0.240 & 0.152 & 0.253 & 0.155 & 0.254 & 0.139 & 0.239 & 0.144 & 0.247 \\
+ & 336 & \textcolor{blue}{\underline{0.156}} & \textcolor{blue}{\underline{0.251}} & \textcolor{red}{\textbf{0.152}} & \textcolor{red}{\textbf{0.247}} & 0.179 & 0.282 & 0.159 & 0.258 & 0.168 & 0.268 & 0.174 & 0.272 & 0.159 & 0.257 & 0.163 & 0.265 \\
+ & 720 & \textcolor{blue}{\underline{0.197}} & \textcolor{blue}{\underline{0.284}} & \textcolor{red}{\textbf{0.190}} & \textcolor{red}{\textbf{0.278}} & 0.223 & 0.314 & 0.200 & 0.292 & 0.201 & 0.293 & 0.211 & 0.301 & 0.201 & 0.291 & 0.204 & 0.301 \\
+\cmidrule(lr){2-18}
+ & Avg. & \textcolor{blue}{\underline{0.152}} & \textcolor{blue}{\underline{0.246}} & \textcolor{red}{\textbf{0.148}} & \textcolor{red}{\textbf{0.242}} & 0.176 & 0.278 & 0.155 & 0.254 & 0.165 & 0.264 & 0.170 & 0.267 & 0.155 & 0.252 & 0.160 & 0.261 \\
+\midrule
+\multirow{5}{*}{Solar} & 96 & \textcolor{blue}{\underline{0.172}} & \textcolor{red}{\textbf{0.197}} & 0.173 & \textcolor{blue}{\underline{0.207}} & 0.183 & 0.253 & 0.182 & 0.236 & \textcolor{red}{\textbf{0.171}} & 0.234 & 0.195 & 0.237 & 0.180 & 0.234 & 0.217 & 0.287 \\
+ & 192 & \textcolor{blue}{\underline{0.187}} & \textcolor{red}{\textbf{0.209}} & 0.188 & \textcolor{blue}{\underline{0.215}} & 0.202 & 0.265 & 0.198 & 0.246 & \textcolor{red}{\textbf{0.186}} & 0.245 & 0.227 & 0.259 & 0.190 & 0.245 & 0.244 & 0.305 \\
+ & 336 & \textcolor{blue}{\underline{0.197}} & \textcolor{red}{\textbf{0.216}} & \textcolor{blue}{\underline{0.197}} & \textcolor{blue}{\underline{0.221}} & 0.213 & 0.271 & 0.209 & 0.253 & \textcolor{red}{\textbf{0.189}} & 0.249 & 0.243 & 0.271 & 0.199 & 0.252 & 0.265 & 0.321 \\
+ & 720 & 0.207 & \textcolor{red}{\textbf{0.221}} & \textcolor{blue}{\underline{0.201}} & \textcolor{blue}{\underline{0.223}} & 0.223 & 0.278 & 0.215 & 0.257 & \textcolor{red}{\textbf{0.200}} & 0.254 & 0.250 & 0.276 & 0.206 & 0.257 & 0.271 & 0.327 \\
+\cmidrule(lr){2-18}
+ & Avg. & \textcolor{blue}{\underline{0.190}} & \textcolor{red}{\textbf{0.211}} & \textcolor{blue}{\underline{0.190}} & \textcolor{blue}{\underline{0.216}} & 0.205 & 0.267 & 0.201 & 0.248 & \textcolor{red}{\textbf{0.186}} & 0.245 & 0.229 & 0.261 & 0.194 & 0.247 & 0.249 & 0.310 \\
+\bottomrule
+\end{tabular}%
+}
+\caption{One-model-for-all-horizons comparison. Each system trains or reuses one fixed $H=720$ model per dataset; $H\in\{96,192,336\}$ is evaluated by taking the exact prediction prefix from the same 720-step trajectory. All entries are locally evaluated MSE/MAE, and Avg. is the arithmetic mean over the four displayed horizons. Best and second-best values after common three-decimal rounding are bold and underlined. ISCF-BSCA uses its frozen dataset-level test-tuned profile; SimpleTM averages its three native repetitions. External repositories retain their official source-native lookbacks, optimizers, checkpoint selectors, and test-loader semantics, so this table is a system-level unified-horizon benchmark rather than matched mechanism attribution.}
+\label{tab:main_ii_h720_prefix}
+\end{table*}
+
+\end{document}
