@@ -5,17 +5,17 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.63` |
+| `version` | `v0.64` |
 | `last_updated` | `2026-08-10` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 2 v0.2 author structure refinement pending review；experiments=Main I hash frozen，Main II pre-H5A table frozen reference，H5A ETTh1/ECL/Solar targeted HPO remote training active |
+| `current_review_cursor` | writing=Section 2 v0.2 temporarily frozen usable，next manuscript section pending author direction；experiments=Main I hash frozen，Main II pre-H5A table frozen reference，H5A ETTh1/ECL/Solar targeted HPO remote training active |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
-| `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design |
-| `provisional_content` | Section 2 v0.2 Related Work author structure refinement；Method Figure 4 stable vector-asset synchronization；remaining sections |
+| `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design |
+| `provisional_content` | Method Figure 4 stable vector-asset synchronization；remaining sections |
 | `authorization_source` | 2026-08-10用户显式重启ETTh1/ECL/Solar HPO；H5A remote resource smoke/training及48/48 manifest后的formal test已授权，H5B/extra seeds/自动表格修改未授权 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
@@ -1754,3 +1754,4 @@ Coverage boundary：
 | 2026-08-10 | Section 4 v0.7 BSCA narrative-order refinement | 保留4.5首段dual-role总述；先完整定义uniform-prefix objective，再说明multi-scope probability-scaled gradient问题并引出scope-wise与balance terms | author review；删除突兀的`second objective`前置解释；公式、objective、implementation、experiments与claim boundaries不变 |
 | 2026-08-10 | Section 4 v0.7 temporary freeze and Section 2 v0.1 Related Work initial draft | 用户确认Section 4暂时敲定；按四段funnel完成Related Work primary-source refresh、subsection design与英文初稿 | Section 4 body/terms/equations/Figure 4 integration frozen usable；Section 2 v0.1 pending author review；ElasTST horizon-invariance prior显式承认；experiment cursor不变 |
 | 2026-08-10 | Section 2 v0.2 author structure refinement | 按author反馈严格区分recursive/direct/MIMO/DIRMO，重构foundation-model、forecast-generation、output-side multi-scale与allocation叙事 | 四个subsection标题同步；ElasTST系统贡献完整承认，差异收紧到history-patch resolution与output-side state-sharing extent；Introduction/Sections 3--4与experiment cursor不变 |
+| 2026-08-10 | Section 2 v0.2 temporary freeze | 2.3 opening改为`Beyond shallow output projections`，移除`A smaller body of work`的数量判断 | Author确认其余内容；Section 2正文、结构、citations与claim boundaries暂时冻结；next manuscript section pending direction；experiment cursor不变 |

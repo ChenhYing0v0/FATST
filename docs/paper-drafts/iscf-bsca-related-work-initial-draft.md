@@ -7,7 +7,7 @@
 | `document_role` | Clean manuscript-facing initial draft of Section 2 |
 | `version` | `v0.2-author-structure-refinement` |
 | `date` | `2026-08-10` |
-| `review_status` | `author_feedback_integrated_pending_review` |
+| `review_status` | `temporarily_frozen_usable` |
 | `upstream_dependency` | Introduction v0.9, Section 3 v0.7 and Section 4 v0.7 remain temporarily frozen and unchanged |
 | `literature_search` | Primary-source search refreshed on 2026-08-10 |
 | `source_audit` | `analysis/iscf_bsca_related_work_research_20260810/literature_design_and_source_audit.md` |
@@ -43,7 +43,7 @@ Advances in time-series foundation models have encouraged models that operate ac
 
 Most recent forecasting architectures concentrate on extracting and representing information from the observed history. Their output stages often remain shallow fixed-window projections. DLinear directly maps temporal inputs to future steps, while PatchTST and iTransformer project patch-level or variate-level representations through linear prediction heads \citep{zeng2023dlinear,nie2023patchtst,liu2024itransformer}. Consequently, the forecasting phase is commonly treated as a readout of an increasingly sophisticated history Encoder rather than a separate modeling problem.
 
-A smaller body of work explicitly structures forecast generation. TFFS combines common and step-specific future features, N-HiTS synthesizes hierarchically interpolated components, and Implicit Forecaster composes predicted waves into a global trajectory \citep{zhang2024tffs,challu2023nhits,li2025implicit}. These methods establish forecast generation as a first-class design problem rather than a passive readout. However, their cross-step sharing structure is predefined by the decoder topology. ISCF instead makes state-sharing extent explicit and constructs region-local forecasts under multiple scopes before step-specific synthesis.
+Beyond shallow output projections, several studies have introduced structured mechanisms for forecast generation. TFFS combines common and step-specific future features, N-HiTS synthesizes hierarchically interpolated components, and Implicit Forecaster composes predicted waves into a global trajectory \citep{zhang2024tffs,challu2023nhits,li2025implicit}. These methods establish forecast generation as a first-class design problem rather than a passive readout. However, their cross-step sharing structure is predefined by the decoder topology. ISCF instead makes state-sharing extent explicit and constructs region-local forecasts under multiple scopes before step-specific synthesis.
 
 ### 2.4 Multi-scale forecasting and adaptive allocation
 

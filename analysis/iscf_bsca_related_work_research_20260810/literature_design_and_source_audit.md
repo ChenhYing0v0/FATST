@@ -106,4 +106,4 @@
 
 ## 6. 决策
 
-`Decision=related_work_v0_2_author_structure_refinement_pending_review`。2.1已严格区分recursive/direct/MIMO/DIRMO；2.2保留ElasTST的真实贡献并将差异收紧到output-side sharing demand；2.3重构为Encoder dominance与structured forecast generation；2.4区分history-side scales、output-side scopes与generic expert routing。当前不需要新implementation、remote training、formal test或额外figure。
+`Decision=related_work_v0_2_temporarily_frozen_usable`。Author已确认Section 2整体内容；2.3 opening以`Beyond shallow output projections`承接前段并移除对prior-work数量的主观判断。正文、subsection structure、citations与claim boundaries暂时冻结，只有后续章节或证据产生明确矛盾且author批准时才解冻。当前不需要新implementation、remote training、formal test或额外figure。
