@@ -22,14 +22,14 @@
         "efficiency",
         "fresh_mechanism_diagnostics"
       ],
-      "status": "terminal_H4N_profiles_frozen_HPO_stopped"
+      "status": "H5A_targeted_HPO_active_for_ETTh1_ECL_Solar"
     }
   },
   "paper_table_registry": {
     "registry": "configs/iscf_bsca_paper_table_registry.json",
     "human_readable_index": "docs/iscf-bsca-paper-table-registry.md",
     "main_i_status": "complete_hash_frozen",
-    "main_ii_status": "complete_presentation_aligned",
+    "main_ii_status": "complete_presentation_aligned_pre_H5A_frozen_reference",
     "main_result_presentation_contract": "shared_TimeAlign_Table_6_style",
     "pending_main_text_tables": [
       "efficiency",
@@ -39,10 +39,10 @@
     "pending_appendix_tables": [
       "ablation_sensitivity"
     ],
-    "new_experiment_authorization_created": false
+    "new_experiment_authorization_created": true
   },
   "authorization": {
-    "current_decision": "Main_I_frozen_Main_II_complete_and_presentation_aligned_paper_table_registry_consolidated",
+    "current_decision": "H5A_ETTh1_ECL_Solar_targeted_HPO_frozen_and_authorized",
     "existing_artifact_audit": true,
     "matrix_design": true,
     "test_tuned_hpo_project_principle": {
@@ -51,20 +51,21 @@
       "scope": "paper_facing_main_model_and_officially_reproduced_baselines",
       "execution_authorized": true
     },
-    "local_protocol_patch": false,
-    "remote_training": false,
-    "official_test_hpo_execution": false,
+    "local_protocol_patch": true,
+    "remote_training": true,
+    "official_test_hpo_execution": true,
     "H4J_formal_test_after_complete_training_manifest": true,
-    "formal_test": false,
+    "formal_test": true,
+    "formal_test_gate": "H5A_only_after_complete_48_checkpoint_immutable_manifest",
     "current_user_authorization": {
-      "date": "2026-08-08",
-      "instruction": "temporarily_freeze_Main_I_and_design_Main_II_as_H720_trained_one_model_all_horizons_prefix_benchmark",
+      "date": "2026-08-10",
+      "instruction": "restart_HPO_only_for_ETTh1_ECL_Solar_to_increase_Main_II_best_setting_cells",
       "Tier_A": true,
-      "Tier_B1_H0_H1": false,
-      "Tier_B2_bounded_HPO_and_test_profile_ranking": false,
+      "Tier_B1_H0_H1": true,
+      "Tier_B2_bounded_HPO_and_test_profile_ranking": true,
       "Tier_B3_selected_profile_confirmation": false,
-      "Tier_C_final_reporting_audit": false,
-      "scope_note": "Tier_A here authorizes source and matrix design only; local runtime patch, remote training, and formal prefix test require separate authorization"
+      "Tier_C_final_reporting_audit": true,
+      "scope_note": "H5A authorizes 48 resource smokes and training jobs plus complete formal test only after a 48-checkpoint immutable manifest; H5B extra seeds and automatic table mutation remain unauthorized"
     },
     "scoped_local_patch_authorizations": {
       "timealign_exchange_script": {

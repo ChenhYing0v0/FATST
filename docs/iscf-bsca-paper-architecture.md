@@ -8,7 +8,7 @@
 | `version` | `v0.60` |
 | `last_updated` | `2026-08-10` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 4 v0.6 BSCA training refinement pending author review；experiments=Main I hash frozen，Main II H720-prefix 224-cell formal table complete并与Main I展示对齐，paper table registry已建立 |
+| `current_review_cursor` | writing=Section 4 v0.6 BSCA training refinement pending author review；experiments=Main I hash frozen，Main II pre-H5A table frozen reference，H5A ETTh1/ECL/Solar targeted HPO prelaunch |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
@@ -16,7 +16,7 @@
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.7正文 + approved Figures 2--3；Method Figure 4 visual design |
 | `provisional_content` | Section 4 v0.6 with refined BSCA training narrative and no standalone complexity subsection；Method Figure 4 stable vector-asset synchronization；remaining sections |
-| `authorization_source` | 2026-08-08用户授权Main I freeze与Main II design及Tier A/B/C；2026-08-09 Main II formal matrix完成并授权统一呈现/表格汇总；未新增实验授权 |
+| `authorization_source` | 2026-08-10用户显式重启ETTh1/ECL/Solar HPO；H5A remote resource smoke/training及48/48 manifest后的formal test已授权，H5B/extra seeds/自动表格修改未授权 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
@@ -1358,6 +1358,16 @@ H4N exact commit=`ba17fc9`的40/40 resource smoke已通过，test=0且无numeric
 2026-08-06 H4N 40/40 full train/validation artifacts与unique checkpoint hashes通过audit，training test保持0/40；40-row manifest SHA256=`a0f152f9172acc193fe512001123b71aeae6d6d3ab1028c915074f24d54c1ed4`。Formal test固定为完整160 standard-horizon rows且已获授权；该test只更新Weather dataset-level main-model profile，不改变architecture、method claim或ablation anchor。
 
 H4N formal test现已40/40、160/160完成。Full-table selector选择`L608/p19/lr2e-5`，mean MSE/MAE=`0.214887/0.245821`，相对H4M current Weather profile为+0.063%/-0.608%，但full-table exact leads仍4/8且全部success gates失败。该结果不改变architecture freeze或method narrative，只把Weather main-profile evidence更新为partial MAE improvement；legacy 5-baseline 33/56 frontier与wide-table displayed 29/56均未提高。
+
+2026-08-10用户重启HPO，但严格限定为Main II弱项`ETTh1/ECL/Solar`。H5A冻结
+48个seed2021 profiles（每dataset 16），重点扩大历史高影响或欠搜索参数：ETTh1的
+LR/context/patch/capacity，ECL的patch granularity与large-capacity optimizer边界，Solar的
+patch×LR×rank interaction。Selector直接对冻结Main II七个external systems按共同三位小数
+统计best cells，但要求four-H mean MSE和MAE均不比当前profile退化超过0.5%；每dataset仍
+只能选择一个profile服务four H。当前三个datasets为`1/8,0/8,4/8` best，最低目标为
+`2/8,1/8,5/8`，即全局Main II由24/56提高到至少27/56。Remote training与48/48
+immutable manifest后的完整formal test已授权；H5B、extra seeds、architecture change及自动
+修改Main I/Main II均未授权。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5a_main_ii_weak_dataset_search_20260810/design_and_prelaunch_gate.md`。
 
 ### 8.2 Main Results I：Unified versus Horizon-Specific
 

@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## H5A Main-II Weak-Dataset HPO Prelaunch (2026-08-10)
+
+Current experiment cursor=`Step 6 targeted search frozen -> Step 8 remote resource gate`。用户重启HPO但只授权ETTh1/ECL/Solar；H5A固定48个seed2021 profiles，每dataset 16个，扩大历史高影响或欠搜索的LR、patch/context、capacity、rank与regularization interactions。Architecture/objective/scales/H720-prefix graph保持冻结，每trial由four-H validation mean MSE选checkpoint，一个dataset-level profile服务全部four H。Main II selector按three-decimal best cells排序，并用MSE与MAE各自0.5% aggregate guard阻止以平均性能明显退化换rounded tie。当前三个dataset合计5个best，最低目标8个；global若其他profile不变则由24/56到至少27/56。Remote smoke/training和48/48 manifest后的完整formal test已授权；H5B、extra seeds、architecture redesign与自动表格修改均未授权。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5a_main_ii_weak_dataset_search_20260810/design_and_prelaunch_gate.md`。Decision=`H5A_targeted_HPO_prelaunch_pass_remote_gate_next`。
+
 ## Paper Table Registry and Main-II Presentation Alignment (2026-08-09)
 
 Current cursor=`paper consolidation; no new experiment authorization`。Main II已在不改变任何metric、ranking或evidence role的前提下对齐Main I展示：统一dataset order、H/Avg. row structure、三位小数ranking、red-bold best、blue-underline second、year label与LaTeX spacing/package contract。当前paper-facing experiment table总账已冻结为两个complete main results、一个limited Exchange companion、三个待闭合正文表（Efficiency/Core Ablation/Decoder Transfer）与一个Appendix sensitivity表；mechanism diagnostics和case studies仍为figures/analysis blocks。Canonical index=`docs/iscf-bsca-paper-table-registry.md`，machine contract=`configs/iscf_bsca_paper_table_registry.json`。下一实验动作仍是Core Ablation与Decoder Transfer各自Step 6 prelaunch gate。Decision=`paper_table_registry_consolidated_Main_II_presentation_aligned_no_metric_change`。
