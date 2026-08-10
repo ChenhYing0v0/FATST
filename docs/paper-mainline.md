@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 4 v0.7 BSCA narrative-order refinement pending author review；experiments=H5A Main II weak-dataset HPO Step 8 remote training active |
+| `current_11_step` | paper consolidation；writing=Section 2 v0.1 Related Work initial draft pending author review；experiments=H5A Main II weak-dataset HPO Step 8 remote training active |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -19,6 +19,8 @@
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H5A profiles under targeted HPO；pre-H5A Main II remains frozen reference，matched ablation/transfer仍pending |
+
+[Section 4 Temporary Freeze and Related Work v0.1, 2026-08-10] 用户确认`docs/paper-drafts/iscf-bsca-method-initial-draft.md`可暂时作为论文可用Section 4。Freeze scope覆盖Section 4正文、术语、公式与Figure 4 integration/caption；后续只有明确矛盾且用户批准才解冻。新的writing cursor转向Section 2：`docs/paper-drafts/iscf-bsca-related-work-initial-draft.md`按`horizon-specific protocols -> unified/flexible horizons -> decoder-side future construction -> multi-scale/conditional mixtures`形成四个subsections与英文v0.1初稿；primary-source map和claim audit位于`analysis/iscf_bsca_related_work_research_20260810/literature_design_and_source_audit.md`。ElasTST的horizon-invariance prior已显式承认，CHPC不作first-principle novelty claim；main/ablation/transfer结论仍由Section 5 tables兑现。并行H5A experiment cursor与授权不变。Decision=`section4_v0_7_temporarily_frozen_related_work_v0_1_pending_author_review`。
 
 [H5A Main-II Weak-Dataset HPO Prelaunch, 2026-08-10] 用户显式重启HPO并限定为ETTh1/ECL/Solar，目标是提高Main II best-setting数量。冻结48个seed2021 from-scratch profiles（16/16/16），保持architecture/objective/scales/H720-prefix graph不变；four-H validation mean MSE选checkpoint，完整official test按dataset-level shared profile排名。当前三dataset best counts=`1/8,0/8,4/8`，最低目标=`2/8,1/8,5/8`；同时要求mean MSE和mean MAE都在current profile的0.5%退化guard内，Solar四个MAE best不得减少。Remote resource smoke/training以及48/48 immutable manifest后的完整formal test已授权；H5B、extra seeds和自动Main I/Main II mutation未授权。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5a_main_ii_weak_dataset_search_20260810/design_and_prelaunch_gate.md`。Decision=`H5A_48_profile_targeted_HPO_frozen_remote_authorized`。
 

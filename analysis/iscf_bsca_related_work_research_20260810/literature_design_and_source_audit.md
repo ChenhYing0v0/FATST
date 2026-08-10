@@ -1,0 +1,102 @@
+# ISCF-BSCA Related Work 文献设计与来源审计
+
+## 1. 审计范围
+
+| Field | Content |
+| --- | --- |
+| `search_date` | `2026-08-10` |
+| `task` | 为Section 2设计subsections、核验代表性已有工作并形成manuscript-facing初稿 |
+| `source_policy` | 优先PMLR、NeurIPS Proceedings、OpenReview、AAAI Proceedings与publisher official page；项目既有笔记只作线索 |
+| `zotero_status` | 本轮未核验用户Zotero `FSA` subset中是否已有各条目，因此不对馆藏覆盖率作结论 |
+| `writing_boundary` | Introduction v0.9、Section 3 v0.7与Section 4 v0.7正文不改；Related Work不提前使用method effectiveness claims |
+| `experiment_change` | None |
+
+本轮采用由远及近的四段结构：先说明multi-step forecasting长期由horizon-specific strategy组织，再进入unified/flexible-horizon work；随后把讨论焦点从Encoder转向forecast decoder，最后审计multi-scale与MoE primitive overlap。该结构使Section 2既承接Introduction中的system gap，又能把读者自然送入Section 3的`CHPC → future-region sharing-demand heterogeneity`问题链。
+
+## 2. 推荐subsections
+
+| Subsection | 应回答的问题 | 进入Section 3前的落点 |
+| --- | --- | --- |
+| 2.1 Multi-step forecasting under horizon-specific protocols | 既有multi-step strategies如何组织多个future steps与forecast horizons？ | horizon-specific optimization不约束不同requested horizons的shared targets一致 |
+| 2.2 Unified and flexible-horizon forecasting | 哪些工作已经支持one-model multi-horizon、flexible length或horizon invariance？ | CHPC-like invariance已有直接prior；本文转向decoder-side sharing问题 |
+| 2.3 Forecast decoders and output-side temporal modeling | 既有decoder如何从history representation生成future trajectory？ | shared/step-specific/structured synthesis已有充分基础，但sharing topology通常固定 |
+| 2.4 Multi-scale forecasting and conditional mixtures | multi-scale和MoE工作已覆盖哪些primitive？ | ISCF的scope是output-side latent-state sharing extent；BSCA不是generic balancing novelty |
+
+## 3. Subsection-wise prior-work map
+
+### 3.1 Multi-step forecasting under horizon-specific protocols
+
+| Work | Venue | 已有工作内容 | 与本文的边界 | Primary source |
+| --- | --- | --- | --- | --- |
+| Ben Taieb and Hyndman, *Boosting Multi-Step Autoregressive Forecasts* | ICML 2014 | 系统对比recursive与direct strategies，并以bias--estimation-variance trade-off解释二者差异 | 解决strategy selection与error behavior，不讨论多个requested horizons的shared-prefix contract | <https://proceedings.mlr.press/v32/taieb14.html> |
+| Green et al., *Stratify* | DMKD 2025 | 用block size统一RecMO、DirMO与DirRecMO等single/multiple-output strategies | 统一的是multi-step strategy space，不是同一forecast origin下不同request endpoints的一致性 | <https://link.springer.com/article/10.1007/s10618-025-01135-1> |
+| Zeng et al., DLinear | AAAI 2023 | 以temporal linear mapping直接生成固定prediction window；标准LTSF protocol报告96/192/336/720 | 可作为horizon-specific benchmark family与CHPD evidence carrier，不应描述为架构上绝对无法支持别的长度 | <https://ojs.aaai.org/index.php/AAAI/article/view/26317> |
+| Nie et al., PatchTST | ICLR 2023 | patch-token Encoder结合target-window projection；标准实验按prediction length配置输出head | history representation强，但standard protocol仍是fixed-horizon optimization | <https://openreview.net/forum?id=Jbdc0vTOcol> |
+| Liu et al., iTransformer | ICLR 2024 | 以variate tokens建模cross-variable correlation，再投影到固定future window | shared variate representation不等同于跨future steps可变sharing extent | <https://openreview.net/forum?id=JePfAI8fah> |
+
+### 3.2 Unified and flexible-horizon forecasting
+
+| Work | Venue | 已有工作内容 | 与本文的边界 | Primary source |
+| --- | --- | --- | --- | --- |
+| Das et al., TimesFM | ICML 2024 | decoder-only foundation model跨datasets、granularities与forecasting horizons进行zero-shot forecasting | 主要目标是universal pretraining与cross-domain generalization，不等同于fixed-origin CHPC audit | <https://proceedings.mlr.press/v235/das24c.html> |
+| Liu et al., Timer | ICML 2024 | GPT-style decoder进行next-token/segment generation，以统一generative forecasting tasks | autoregressive generation天然允许长度变化，但不能据此宣称其已系统评估CHPC | <https://openreview.net/forum?id=bYRYb7DMNo> |
+| Gao et al., UniTS | NeurIPS 2024 | 通过task tokenization统一forecasting、imputation、classification等任务与不同task specifications | task unification范围更广，但不是面向future-region decoder sharing的工作 | <https://proceedings.neurips.cc/paper_files/paper/2024/hash/fe248e22b241ae5a9adf11493c8c12bc-Abstract-Conference.html> |
+| Zhang et al., ElasTST | NeurIPS 2024 | structured masks保证shared future outputs对inference horizon不变；另含horizon reweighting、tunable RoPE与multi-scale patches | 是最接近的varied-horizon prior，已占据horizon-invariance property；本文不能claim CHPC思想首创 | <https://papers.nips.cc/paper_files/paper/2024/hash/d7aa002885ccbe68cf6880da583761b2-Abstract-Conference.html> |
+| Shi et al., Time-MoE | ICLR 2025 | decoder-only autoregressive time-series foundation model支持flexible horizons，并以sparse MoE扩大capacity | flexible generation与generic expert specialization不是future-region sharing-demand的直接解法 | <https://openreview.net/forum?id=e1wDDFmlVu> |
+
+### 3.3 Forecast decoders and output-side temporal modeling
+
+| Work | Venue | 已有工作内容 | 与本文的边界 | Primary source |
+| --- | --- | --- | --- | --- |
+| DLinear / PatchTST / iTransformer output heads | AAAI 2023 / ICLR 2023 / ICLR 2024 | 分别使用temporal linear rows、flattened patch readout与shared variate-state projection生成future window | 说明shared history state与step-specific outputs可以并存，但其cross-step sharing topology是固定的 | official papers above; implementation pointers recorded in `docs/iscf-bsca-paper-architecture.md` |
+| Zhang et al., TFFS | Information Sciences 2024 | 将common future features与step-specific information结合用于multistep forecasting | 已覆盖common-versus-specific fusion，不能把这一抽象作为ISCF novelty | <https://www.sciencedirect.com/science/article/pii/S0020025524010405> |
+| Challu et al., N-HiTS | AAAI 2023 | 通过multi-rate sampling与hierarchical interpolation逐层合成不同frequency/scale的forecast components | 是structured multi-scale synthesis prior；ISCF不以basis/interpolation首创 | <https://ojs.aaai.org/index.php/AAAI/article/view/25854> |
+| Li et al., Implicit Forecaster | NeurIPS 2025 | 预测frequency、amplitude与phase所表示的constituent waves，再组成global forecast pattern | 已明确把创新焦点放在forecasting phase；ISCF差异在region-local multi-scope state sharing | <https://proceedings.neurips.cc/paper_files/paper/2025/hash/0e82ef0c89df6a6eff8734ea7e27c42f-Abstract-Conference.html> |
+
+### 3.4 Multi-scale forecasting and conditional mixtures
+
+| Work | Venue | 已有工作内容 | 与本文的边界 | Primary source |
+| --- | --- | --- | --- | --- |
+| Chen et al., Pathformer | ICLR 2024 | 不同patch scales表示temporal resolutions，并通过adaptive pathways选择input-side multi-scale processing | adaptive scale selection已有prior；其scale主要作用于history modeling | <https://openreview.net/forum?id=lJkOCMP2aW> |
+| Wang et al., TimeMixer | ICLR 2024 | Past-Decomposable-Mixing与Future-Multipredictor-Mixing联合多尺度历史与scale-specific predictors | 已覆盖generic multiscale predictor fusion；不等同于同一future target的latent sharing extent | <https://openreview.net/forum?id=7oLshfEIC2> |
+| Ni et al., MoLE | AISTATS 2024 | 训练多个complete linear-centric experts，由router按sample混合outputs | multiple complete predictors与router output mixing已有明确prior；ISCF不应被写成简单model ensemble | <https://proceedings.mlr.press/v238/ni24a.html> |
+| Liu, FreqMoE | AISTATS 2025 | frequency decomposition、frequency-band experts与dynamic gating | frequency-side expert specialization不等于future-region sharing scopes | <https://proceedings.mlr.press/v258/liu25i.html> |
+| Liu et al., Moirai-MoE | ICML 2025 | 在time-series foundation model中以sparse MoE实现automatic token-level specialization | generic sparse expert specialization已有prior；不能claim conditional computation primitive | <https://proceedings.mlr.press/v267/liu25an.html> |
+| Shi et al., Time-MoE | ICLR 2025 | sparse MoE与autoregressive decoding结合，面向大规模universal forecasting | 进一步压缩generic MoE与flexible-horizon叙事空间 | <https://openreview.net/forum?id=e1wDDFmlVu> |
+
+## 4. 关键claim boundaries
+
+1. **CHPC的定位。** ElasTST已经以structured masks实现horizon-invariant future outputs。本文可以将该系统属性形式化为CHPC并据此组织problem/evidence，但不应claim首次提出horizon invariance或首次实现prefix-consistent varied-horizon forecasting。
+2. **horizon-specific protocol的定位。** DLinear、PatchTST与iTransformer的standard LTSF experiments使用固定prediction length并按horizon优化；这支持对protocol的批评，但不支持“这些architecture原则上不能变长”的绝对结论。
+3. **decoder novelty的定位。** N-HiTS、TFFS与Implicit Forecaster已说明forecasting phase、shared/step-specific information和structured synthesis的重要性。ISCF的差异应具体落在`scope-indexed forecast field → region-local Scope-region State → step-specific synthesis → target-adaptive scope allocation`。
+4. **multi-scale与MoE的定位。** Pathformer、TimeMixer、MoLE、FreqMoE、Time-MoE和Moirai-MoE已经覆盖adaptive scales、multi-predictor fusion、frequency experts、sparse routing与token specialization。本文不得以generic multi-scale、MoE、router或load balancing为component novelty。
+5. **evidence边界。** Related Work只建立问题与机制位置。统一模型优于horizon-specific models、ISCF/BSCA组件有效、decoder可迁移等结论继续由Section 5的main、ablation与transfer tables兑现。
+
+## 5. Citation-key ledger
+
+| Provisional key | Work |
+| --- | --- |
+| `taieb2014boosting` | Boosting Multi-Step Autoregressive Forecasts |
+| `green2025stratify` | Stratify |
+| `zeng2023dlinear` | DLinear |
+| `nie2023patchtst` | PatchTST |
+| `liu2024itransformer` | iTransformer |
+| `das2024timesfm` | TimesFM |
+| `liu2024timer` | Timer |
+| `gao2024units` | UniTS |
+| `zhang2024elastst` | ElasTST |
+| `shi2025timemoe` | Time-MoE |
+| `zhang2024tffs` | TFFS |
+| `challu2023nhits` | N-HiTS |
+| `li2025implicit` | Implicit Forecaster |
+| `chen2024pathformer` | Pathformer |
+| `wang2024timemixer` | TimeMixer |
+| `ni2024mole` | MoLE |
+| `liu2025freqmoe` | FreqMoE |
+| `liu2025moiraimoe` | Moirai-MoE |
+
+这些keys当前用于draft可读性；最终组装LaTeX bibliography时必须与项目BibTeX库逐项对齐，避免作者年相同或key collision。
+
+## 6. 决策
+
+`Decision=related_work_v0_1_primary_source_supported_pending_author_review`。四个subsections均有清晰的进入点、已有工作覆盖与novelty boundary；可进入作者逐小节审阅。当前不需要新implementation、remote training、formal test或额外figure。

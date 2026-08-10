@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## Section 4 v0.7 Temporary Freeze and Related Work v0.1 (2026-08-10)
+
+Current writing cursor=`Section 2 v0.1 Related Work initial draft / author review pending`。用户确认Section 4 v0.7可暂时作为论文可用版本；canonical source=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`，freeze scope覆盖正文、术语、公式与Figure 4 integration/caption。后续只有later evidence或manuscript产生明确矛盾且用户显式批准时才解冻。
+
+Section 2的四段结构冻结为`multi-step forecasting under horizon-specific protocols -> unified and flexible-horizon forecasting -> forecast decoders and output-side temporal modeling -> multi-scale forecasting and conditional mixtures`。Canonical draft=`docs/paper-drafts/iscf-bsca-related-work-initial-draft.md`；primary-source audit=`analysis/iscf_bsca_related_work_research_20260810/literature_design_and_source_audit.md`。ElasTST已占据structured-mask horizon invariance，故CHPC只作为formal system contract；ISCF-BSCA的paper boundary收紧到future-region sharing demand、scope-indexed output-side construction与ISCF-specific co-adaptation。Main/ablation/transfer claims仍为table-contingent；并行experiment cursor与authorization不变。Decision=`section4_v0_7_temporarily_frozen_related_work_v0_1_pending_author_review`。
+
 ## H5A Main-II Weak-Dataset HPO Prelaunch (2026-08-10)
 
 Current experiment cursor=`Step 6 targeted search frozen -> Step 8 remote resource gate`。用户重启HPO但只授权ETTh1/ECL/Solar；H5A固定48个seed2021 profiles，每dataset 16个，扩大历史高影响或欠搜索的LR、patch/context、capacity、rank与regularization interactions。Architecture/objective/scales/H720-prefix graph保持冻结，每trial由four-H validation mean MSE选checkpoint，一个dataset-level profile服务全部four H。Main II selector按three-decimal best cells排序，并用MSE与MAE各自0.5% aggregate guard阻止以平均性能明显退化换rounded tie。当前三个dataset合计5个best，最低目标8个；global若其他profile不变则由24/56到至少27/56。Remote smoke/training和48/48 manifest后的完整formal test已授权；H5B、extra seeds、architecture redesign与自动表格修改均未授权。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5a_main_ii_weak_dataset_search_20260810/design_and_prelaunch_gate.md`。Decision=`H5A_targeted_HPO_prelaunch_pass_remote_gate_next`。
@@ -65,7 +71,7 @@ Current experiment cursor=`Step 8 complete -> Step 9 complete formal-test prelau
 
 ## Section 4 Method Initial Draft v0.1 (2026-08-05)
 
-Current writing cursor=`Section 4 v0.7 BSCA narrative-order refinement / author review pending`。Canonical draft=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`。Method按真实computation flow划分为architecture overview、history representation/future-step coordinates、scope-indexed forecast field、target-conditioned scope allocation和BSCA。4.5先完成varied-horizon prefix objective，再转入multi-scope stabilization；CHPC construction由4.4闭合，parameter/FLOPs/latency/memory转入Section 5.4 efficiency/analysis。
+Current writing cursor=`Section 4 v0.7 temporarily frozen usable / Section 2 Related Work author review pending`。Canonical draft=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`。Method按真实computation flow划分为architecture overview、history representation/future-step coordinates、scope-indexed forecast field、target-conditioned scope allocation和BSCA。4.5先完成varied-horizon prefix objective，再转入multi-scope stabilization；CHPC construction由4.4闭合，parameter/FLOPs/latency/memory转入Section 5.4 efficiency/analysis。
 
 Method Figure 4 initial draft已生成，contract与QA=`analysis/iscf_bsca_method_figure_20260805/figure_contract_and_qa.md`，stable assets=`paper-figures/figure_iscf_bsca_method_overview.*`。Figure是non-empirical architecture schematic：panel a对比single-scope，panel b为ISCF hero path，panel c解释allocation与nested prefixes，panel d隔离train-only BSCA。当前下一步为author逐小节与视觉复审，不修改Introduction/Section 3，不扩张method implementation、remote training或formal test授权。Decision=`section4_v0_1_and_method_figure4_initial_draft_pending_author_review`。
 
@@ -982,9 +988,9 @@ Step4–6。candidate=`SC-ISCF-FRSC-v0`，narrative conditional pass；下一步
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | paper consolidation；Introduction与Section 3 frozen；Section 4 v0.7 BSCA narrative-order refinement pending author review |
-| `active_question` | 4.5的prefix-first objective chain与multi-scope transition是否可接受；Figure 4 stable vector source仍待同步 |
-| `active_candidates` | exact `ISCF-BSCA-v1` frozen ablation anchor；Figures 1--3 approved；Section 4 v0.7 pending author review；Method Figure 4 visual design temporarily fixed |
+| `current_step` | paper consolidation；Introduction、Section 3与Section 4 v0.7 frozen；Section 2 v0.1 Related Work pending author review |
+| `active_question` | Related Work四段结构、prior-work coverage与ISCF-BSCA novelty boundary是否满足author要求；Figure 4 stable vector source仍待同步 |
+| `active_candidates` | exact `ISCF-BSCA-v1` frozen ablation anchor；Figures 1--3 approved；Section 4 v0.7 temporarily frozen usable；Section 2 v0.1 pending author review；Method Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |

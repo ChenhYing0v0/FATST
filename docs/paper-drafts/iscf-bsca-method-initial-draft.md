@@ -7,7 +7,10 @@
 | `document_role` | Clean manuscript-facing initial draft of Section 4 |
 | `version` | `v0.7-bsca-narrative-order-refinement` |
 | `date` | `2026-08-10` |
-| `review_status` | `author_feedback_integrated_for_section_4.5_narrative_order` |
+| `review_status` | `temporarily_frozen_usable` |
+| `freeze_date` | `2026-08-10` |
+| `freeze_scope` | Section 4 body, terminology, equations and Figure 4 integration/caption |
+| `unfreeze_condition` | A clear contradiction with later manuscript evidence plus explicit author approval |
 | `upstream_dependency` | Introduction v0.9 and Section 3 v0.7 remain frozen and unchanged |
 | `method_contract` | Exact frozen ISCF-BSCA-v1 architecture and objective |
 | `figure_4_status` | Visual design temporarily fixed by the author; stable vector-asset synchronization remains pending |
