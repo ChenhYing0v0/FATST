@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## Related Work v0.2 Author Structure Refinement (2026-08-10)
+
+Current writing cursor=`Section 2 v0.2 author structure refinement / review pending`。Canonical draft=`docs/paper-drafts/iscf-bsca-related-work-initial-draft.md`。本轮按author反馈重构四段逻辑：2.1严格定义recursive、classical direct、MIMO与DIRMO，并将主流LTSF协议限定为MIMO-like fixed-window prediction；2.2从time-series foundation models进入unified/varied horizons，承认ElasTST已系统处理varied-horizon robustness，并以history-patch resolution对output-side state-sharing extent建立可辩护边界；2.3形成`history Encoder emphasis -> shallow output head -> structured forecast generation`；2.4区分history-side multi-scale representation、output-side sharing scopes与generic expert routing。
+
+四个subsection标题同步改为`Fixed-horizon multi-step forecasting`、`Unified and varied-horizon forecasting`、`Forecast generation and output-side modeling`与`Multi-scale forecasting and adaptive allocation`。Introduction v0.9、Section 3 v0.7、Section 4 v0.7及其冻结状态不变；main/ablation/transfer claims仍由Section 5 tables兑现；并行experiment cursor与authorization不变。Decision=`related_work_v0_2_author_structure_refinement_pending_review`。
+
 ## Section 4 v0.7 Temporary Freeze and Related Work v0.1 (2026-08-10)
 
 Current writing cursor=`Section 2 v0.1 Related Work initial draft / author review pending`。用户确认Section 4 v0.7可暂时作为论文可用版本；canonical source=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`，freeze scope覆盖正文、术语、公式与Figure 4 integration/caption。后续只有later evidence或manuscript产生明确矛盾且用户显式批准时才解冻。
@@ -988,9 +994,9 @@ Step4–6。candidate=`SC-ISCF-FRSC-v0`，narrative conditional pass；下一步
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | paper consolidation；Introduction、Section 3与Section 4 v0.7 frozen；Section 2 v0.1 Related Work pending author review |
-| `active_question` | Related Work四段结构、prior-work coverage与ISCF-BSCA novelty boundary是否满足author要求；Figure 4 stable vector source仍待同步 |
-| `active_candidates` | exact `ISCF-BSCA-v1` frozen ablation anchor；Figures 1--3 approved；Section 4 v0.7 temporarily frozen usable；Section 2 v0.1 pending author review；Method Figure 4 visual design temporarily fixed |
+| `current_step` | paper consolidation；Introduction、Section 3与Section 4 v0.7 frozen；Section 2 v0.2 author structure refinement pending review |
+| `active_question` | Section 2 v0.2的strategy taxonomy、ElasTST comparison、output-side generation boundary与prose是否满足author要求；Figure 4 stable vector source仍待同步 |
+| `active_candidates` | exact `ISCF-BSCA-v1` frozen ablation anchor；Figures 1--3 approved；Section 4 v0.7 temporarily frozen usable；Section 2 v0.2 pending review；Method Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |

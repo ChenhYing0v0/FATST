@@ -46,7 +46,7 @@
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | manuscript writing and paper-facing evidence consolidation |
-| `active_section` | Section 2 v0.1 Related Work initial draft pending author review；Introduction v0.9、Section 3 v0.7与Section 4 v0.7 temporarily frozen |
+| `active_section` | Section 2 v0.2 author structure refinement pending review；Introduction v0.9、Section 3 v0.7与Section 4 v0.7 temporarily frozen |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `section3_status` | `v0.7-author-risk-definition-refinement`=`temporarily_frozen_usable` |
 | `section4_status` | `v0.7-bsca-narrative-order-refinement`=`temporarily_frozen_usable` |
@@ -55,7 +55,7 @@
 | `new_remote_training_from_writing_thread` | false |
 | `new_formal_test_from_writing_thread` | false |
 | `parallel_experiment_authority` | use experiment handoff and current mainline；this writing handoff does not expand or revoke it |
-| `next_action` | author review of Section 2 v0.1 subsection structure、prior-work coverage、claim boundary与prose |
+| `next_action` | author review of Section 2 v0.2 strategy taxonomy、ElasTST comparison、output-side boundary与prose |
 | `conditional_next` | align Method and later result claims with the parallel paper-experiments workstream |
 
 当前目标是把已冻结模型与已有证据组织成连贯论文，不是继续architecture search。
@@ -261,12 +261,13 @@ wording继续等待并行paper-experiments artifacts，不得在Method中预先�
 
 ### Current next: Section 2 author review
 
-Section 2 v0.1已完成：
+Section 2 v0.2已完成：
 
 1. canonical draft=`docs/paper-drafts/iscf-bsca-related-work-initial-draft.md`；
 2. source audit=`analysis/iscf_bsca_related_work_research_20260810/literature_design_and_source_audit.md`；
-3. subsection chain=`horizon-specific protocols → unified/flexible horizons → decoder-side modeling → multi-scale/conditional mixtures`；
-4. ElasTST的horizon-invariance prior以及multi-scale/MoE primitive overlap均已显式进入claim boundary。
+3. subsection chain=`fixed-horizon strategies → unified/varied horizons → forecast generation → multi-scale allocation`；
+4. recursive、classical direct、MIMO与DIRMO已严格区分，主流LTSF协议限定为MIMO-like fixed-window prediction；
+5. ElasTST对varied-horizon robustness的系统贡献已完整承认，比较边界收紧为history-patch resolution对output-side state-sharing extent；multi-scale/MoE primitive overlap继续显式进入claim boundary。
 
 下一步是author逐小节审阅subsection结构、文献覆盖、比较逻辑与英文表达。Section 2
 必须承接Introduction并进入Section 3，但不得重复CHPC公式、Figures 2--3 evidence或
@@ -326,13 +327,13 @@ Section 4 computation details。
 - Introduction v0.9-author-refinement 已由用户确认，可作为暂时固定的可用版本；
 - Section 3 v0.7-author-risk-definition-refinement 已由用户确认，可作为暂时固定的可用版本；
 - Section 4 v0.7-bsca-narrative-order-refinement 已由用户确认，可作为暂时固定的可用版本；
-- Section 2 v0.1 Related Work initial draft已完成，当前等待用户逐小节复审；
+- Section 2 v0.2 author structure refinement已完成，当前等待用户逐小节复审；
 - Figure 1 已批准且只作 constructed conceptual illustration；
 - Figures 2--3 已批准用于 Section 3，均为 validation-only illustrative evidence；
 - Method Figure 4 visual design暂时固定并已集成到Section 4；stable vector source仍待同步；
 - 当前没有 active method search；本writing thread不新增implementation、remote training或formal test授权，并行实验状态以experiment handoff和current mainline为准。
 
-请不要重新讨论或改写Introduction、Section 3与Section 4，除非后续章节产生明确矛盾并先向我说明、获得解冻同意。当前写作任务是复审和完善Section 2 v0.1 Related Work；保持CHPC、ElasTST、decoder-side、multi-scale与MoE prior-art boundaries，不因文字调整修改frozen method。
+请不要重新讨论或改写Introduction、Section 3与Section 4，除非后续章节产生明确矛盾并先向我说明、获得解冻同意。当前写作任务是复审和完善Section 2 v0.2 Related Work；保持fixed-horizon strategy taxonomy、CHPC、ElasTST、output-side generation、multi-scale与MoE prior-art boundaries，不因文字调整修改frozen method。
 
 请使用专业时序预测研究员和高水平期刊作者的标准，严格区分problem、evidence、method和claim boundary。P6中“统一模型优于horizon-specific模型、组件有效、decoder可迁移”是待后续main/ablation/transfer tables兑现的provisional paper-facing claim，不得当作当前已完成证据。
 

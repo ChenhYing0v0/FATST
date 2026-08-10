@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 2 v0.1 Related Work initial draft pending author review；experiments=H5A Main II weak-dataset HPO Step 8 remote training active |
+| `current_11_step` | paper consolidation；writing=Section 2 v0.2 author structure refinement pending review；experiments=H5A Main II weak-dataset HPO Step 8 remote training active |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -19,6 +19,8 @@
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H5A profiles under targeted HPO；pre-H5A Main II remains frozen reference，matched ablation/transfer仍pending |
+
+[Related Work Author Structure Refinement v0.2, 2026-08-10] Canonical draft=`docs/paper-drafts/iscf-bsca-related-work-initial-draft.md`已按author反馈重构。2.1严格区分recursive、classical direct、MIMO与DIRMO，并将主流LTSF协议表述为MIMO-like fixed-window prediction；2.2从time-series foundation models进入unified/varied horizons，完整承认ElasTST对varied-horizon robustness的系统设计，并将比较边界收紧到history-patch resolution与output-side state-sharing extent；2.3按`history Encoder emphasis -> shallow readout -> structured forecast generation`组织；2.4区分history-side scales、output-side scopes与generic expert routing。四个subsection标题同步改为`Fixed-horizon multi-step forecasting`、`Unified and varied-horizon forecasting`、`Forecast generation and output-side modeling`与`Multi-scale forecasting and adaptive allocation`。Introduction v0.9、Section 3 v0.7、Section 4 v0.7及并行H5A experiment cursor均未改变。Decision=`related_work_v0_2_author_structure_refinement_pending_review`。
 
 [Section 4 Temporary Freeze and Related Work v0.1, 2026-08-10] 用户确认`docs/paper-drafts/iscf-bsca-method-initial-draft.md`可暂时作为论文可用Section 4。Freeze scope覆盖Section 4正文、术语、公式与Figure 4 integration/caption；后续只有明确矛盾且用户批准才解冻。新的writing cursor转向Section 2：`docs/paper-drafts/iscf-bsca-related-work-initial-draft.md`按`horizon-specific protocols -> unified/flexible horizons -> decoder-side future construction -> multi-scale/conditional mixtures`形成四个subsections与英文v0.1初稿；primary-source map和claim audit位于`analysis/iscf_bsca_related_work_research_20260810/literature_design_and_source_audit.md`。ElasTST的horizon-invariance prior已显式承认，CHPC不作first-principle novelty claim；main/ablation/transfer结论仍由Section 5 tables兑现。并行H5A experiment cursor与授权不变。Decision=`section4_v0_7_temporarily_frozen_related_work_v0_1_pending_author_review`。
 

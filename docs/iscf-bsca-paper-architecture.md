@@ -5,17 +5,17 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.62` |
+| `version` | `v0.63` |
 | `last_updated` | `2026-08-10` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 2 v0.1 Related Work initial draft pending author review；experiments=Main I hash frozen，Main II pre-H5A table frozen reference，H5A ETTh1/ECL/Solar targeted HPO remote training active |
+| `current_review_cursor` | writing=Section 2 v0.2 author structure refinement pending review；experiments=Main I hash frozen，Main II pre-H5A table frozen reference，H5A ETTh1/ECL/Solar targeted HPO remote training active |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design |
-| `provisional_content` | Section 2 v0.1 Related Work initial draft；Method Figure 4 stable vector-asset synchronization；remaining sections |
+| `provisional_content` | Section 2 v0.2 Related Work author structure refinement；Method Figure 4 stable vector-asset synchronization；remaining sections |
 | `authorization_source` | 2026-08-10用户显式重启ETTh1/ECL/Solar HPO；H5A remote resource smoke/training及48/48 manifest后的formal test已授权，H5B/extra seeds/自动表格修改未授权 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
@@ -310,10 +310,10 @@ Abstract
 1. Introduction
 
 2. Related Work
-   2.1 Multi-Step Forecasting under Horizon-Specific Protocols
-   2.2 Unified and Flexible-Horizon Forecasting
-   2.3 Forecast Decoders and Output-Side Temporal Modeling
-   2.4 Multi-Scale Forecasting and Conditional Mixtures
+   2.1 Fixed-Horizon Multi-Step Forecasting
+   2.2 Unified and Varied-Horizon Forecasting
+   2.3 Forecast Generation and Output-Side Modeling
+   2.4 Multi-Scale Forecasting and Adaptive Allocation
 
 3. Problem Formulation and Empirical Motivation
    3.1 Varied-Horizon Forecasting and Cross-Horizon Prefix Consistency
@@ -796,30 +796,29 @@ KL、entropy regularization 或 load balancing 首创。
 
 ## 5. Related Work
 
-当前initial draft=`docs/paper-drafts/iscf-bsca-related-work-initial-draft.md`，
+当前v0.2 draft=`docs/paper-drafts/iscf-bsca-related-work-initial-draft.md`，
 primary-source audit=`analysis/iscf_bsca_related_work_research_20260810/literature_design_and_source_audit.md`。
-Section 2采用`horizon-specific protocol -> unified/flexible horizons -> decoder-side
-future construction -> multi-scale/conditional mixtures`的收束顺序，最终进入Section 3的
+Section 2采用`fixed-horizon strategies -> unified/varied horizons -> forecast-generation
+design -> multi-scale/adaptive allocation`的收束顺序，最终进入Section 3的
 CHPC与future-region sharing-demand heterogeneity。
 
-### 5.1 Multi-Step Forecasting under Horizon-Specific Protocols
+### 5.1 Fixed-Horizon Multi-Step Forecasting
 
 覆盖：
 
-- recursive；
-- direct；
-- direct-recursive hybrid；
-- MIMO / multi-output；
-- DIRMO / block multi-output；
+- recursive：一个one-step model递归生成；
+- classical direct：每个future step一个single-output model；
+- MIMO：一个multi-output model一次生成完整future vector；
+- DIRMO / block multi-output：多个models分别生成future blocks；
 - benchmark 中按 horizon 分别训练的 protocol。
 
 落点：
 
-> 既有研究主要讨论 error accumulation、bias--variance trade-off 与 future-step
-> dependencies；本文进一步关注多个 requested horizons 是否来自同一个
-> CHPC forecasting system。
+> 既有策略在一个预设horizon内组织multi-step outputs；本文进一步提出
+> varied-horizon output strategy，由单一模型服务不同request endpoints，并返回
+> 同一prediction trajectory的prefix-consistent views。
 
-### 5.2 Unified and Flexible-Horizon Forecasting
+### 5.2 Unified and Varied-Horizon Forecasting
 
 区分：
 
@@ -832,9 +831,10 @@ CHPC与future-region sharing-demand heterogeneity。
 已研究跨horizon generalization；Timer与Time-MoE的autoregressive generation支持
 flexible output length。ElasTST更直接地以structured masks保证shared future outputs
 对inference horizon不变，因此CHPC只作为本文的formal system contract，不能claim
-horizon-invariance principle首创。本文的差异转向decoder-side sharing extent。
+horizon-invariance principle首创。ElasTST的multi-scale mechanism调整history-patch
+resolution；本文的差异转向output-side、future-region-dependent state-sharing extent。
 
-### 5.3 Forecast Decoders and Output-Side Temporal Modeling
+### 5.3 Forecast Generation and Output-Side Modeling
 
 围绕 history representation 到 forecast sequence 的映射讨论：
 
@@ -849,7 +849,7 @@ horizon-invariance principle首创。本文的差异转向decoder-side sharing e
 > decoder 如何在多个 future time steps 之间分配 latent sharing，而不是 encoder
 > 如何处理历史输入。
 
-### 5.4 Multi-Scale Forecasting and Conditional Mixtures
+### 5.4 Multi-Scale Forecasting and Adaptive Allocation
 
 明确区分：
 
@@ -1753,3 +1753,4 @@ Coverage boundary：
 | 2026-08-10 | Section 4 v0.6 BSCA training refinement | 4.5显式区分varied-horizon objective与multi-scope stabilization；重写balance作用为penalizing non-uniform allocation并平衡probability-mediated gradients；删除4.6 | author review；CHPC construction保留在4.4；complexity转入Section 5.4 efficiency/analysis；不新增mechanism或effectiveness claim |
 | 2026-08-10 | Section 4 v0.7 BSCA narrative-order refinement | 保留4.5首段dual-role总述；先完整定义uniform-prefix objective，再说明multi-scope probability-scaled gradient问题并引出scope-wise与balance terms | author review；删除突兀的`second objective`前置解释；公式、objective、implementation、experiments与claim boundaries不变 |
 | 2026-08-10 | Section 4 v0.7 temporary freeze and Section 2 v0.1 Related Work initial draft | 用户确认Section 4暂时敲定；按四段funnel完成Related Work primary-source refresh、subsection design与英文初稿 | Section 4 body/terms/equations/Figure 4 integration frozen usable；Section 2 v0.1 pending author review；ElasTST horizon-invariance prior显式承认；experiment cursor不变 |
+| 2026-08-10 | Section 2 v0.2 author structure refinement | 按author反馈严格区分recursive/direct/MIMO/DIRMO，重构foundation-model、forecast-generation、output-side multi-scale与allocation叙事 | 四个subsection标题同步；ElasTST系统贡献完整承认，差异收紧到history-patch resolution与output-side state-sharing extent；Introduction/Sections 3--4与experiment cursor不变 |
