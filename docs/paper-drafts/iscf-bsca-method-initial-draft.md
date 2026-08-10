@@ -5,9 +5,9 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Clean manuscript-facing initial draft of Section 4 |
-| `version` | `v0.6-bsca-training-refinement` |
+| `version` | `v0.7-bsca-narrative-order-refinement` |
 | `date` | `2026-08-10` |
-| `review_status` | `author_feedback_integrated_for_section_4.5_and_method_scope` |
+| `review_status` | `author_feedback_integrated_for_section_4.5_narrative_order` |
 | `upstream_dependency` | Introduction v0.9 and Section 3 v0.7 remain frozen and unchanged |
 | `method_contract` | Exact frozen ISCF-BSCA-v1 architecture and objective |
 | `figure_4_status` | Visual design temporarily fixed by the author; stable vector-asset synchronization remains pending |
@@ -258,25 +258,6 @@ Changing $H$ restricts the active region and target computations but does not al
 
 Training ISCF introduces two coupled requirements. The fused trajectory requires uniform supervision across supported prefix lengths, while all scope lines must develop reliable forecasts as allocation is learned. BSCA therefore combines the **Uniform-Prefix Forecasting Loss** for varied-horizon prediction with two terms that stabilize multi-scope learning: the **Scope-Wise Forecasting Loss** and **Allocation-Balance Regularizer**.
 
-The second objective is nontrivial because weighted contraction makes the fused-loss gradient probability-dependent. Without auxiliary supervision, the gradient received by scope $s$ is scaled by its current Scope Probability. Denoting the fused objective by $\mathcal L_{\mathrm{prefix}}$, weighted contraction for a fixed target gives
-
-$$
-\frac{
-\partial\mathcal L_{\mathrm{prefix}}
-}{
-\partial\mathcal F_{b,c,\tau,s}
-}
-=
-\pi_{b,c,\tau,s}
-\frac{
-\partial\mathcal L_{\mathrm{prefix}}
-}{
-\partial\widehat y_{b,\tau,c}
-}.
-$$
-
-Early probability concentration can therefore suppress learning in low-probability scope lines before their forecasts mature. The allocator then compares unevenly developed predictions, potentially reinforcing its initial preference. The two scope-oriented terms stabilize this process through direct supervision and allocation regularization.
-
 Varied-horizon training should optimize every supported prediction length without privileging one endpoint. We therefore average raw-scale MAE equally over all prefixes $h=1,\ldots,T$ to define the Uniform-Prefix Forecasting Loss. Before loss evaluation, inverse normalization maps the fused and Scope-conditioned Forecasts to the original data scale. Let $y_{b,\tau,c}$ denote the corresponding raw-scale target. The fused objective is
 
 $$
@@ -320,7 +301,24 @@ $$
 \right|.
 $$
 
-The Uniform-Prefix Forecasting Loss supervises only the fused trajectory, leaving each scope dependent on its current allocation probability. We therefore apply the same prefix measure directly to every Scope-conditioned Forecast through the Scope-Wise Forecasting Loss:
+The Uniform-Prefix Forecasting Loss establishes the varied-horizon objective, but it does not resolve the joint optimization of multiple scope lines. Weighted contraction makes the fused-loss gradient received by each scope depend on its current Scope Probability. For a fixed target, this relation gives
+
+$$
+\frac{
+\partial\mathcal L_{\mathrm{prefix}}
+}{
+\partial\mathcal F_{b,c,\tau,s}
+}
+=
+\pi_{b,c,\tau,s}
+\frac{
+\partial\mathcal L_{\mathrm{prefix}}
+}{
+\partial\widehat y_{b,\tau,c}
+}.
+$$
+
+Consequently, early probability concentration can suppress learning in low-probability scope lines before their forecasts mature. The allocator then compares unevenly developed predictions, which can reinforce its initial preference. We first address this imbalance with the Scope-Wise Forecasting Loss, which applies the same prefix measure directly to every Scope-conditioned Forecast:
 
 $$
 \mathcal L_{\mathrm{scope}}

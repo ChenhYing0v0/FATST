@@ -5,17 +5,17 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.60` |
+| `version` | `v0.61` |
 | `last_updated` | `2026-08-10` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 4 v0.6 BSCA training refinement pending author review；experiments=Main I hash frozen，Main II pre-H5A table frozen reference，H5A ETTh1/ECL/Solar targeted HPO remote training active |
+| `current_review_cursor` | writing=Section 4 v0.7 BSCA narrative-order refinement pending author review；experiments=Main I hash frozen，Main II pre-H5A table frozen reference，H5A ETTh1/ECL/Solar targeted HPO remote training active |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 3 v0.7正文 + approved Figures 2--3；Method Figure 4 visual design |
-| `provisional_content` | Section 4 v0.6 with refined BSCA training narrative and no standalone complexity subsection；Method Figure 4 stable vector-asset synchronization；remaining sections |
+| `provisional_content` | Section 4 v0.7 with prefix-first BSCA training narrative and no standalone complexity subsection；Method Figure 4 stable vector-asset synchronization；remaining sections |
 | `authorization_source` | 2026-08-10用户显式重启ETTh1/ECL/Solar HPO；H5A remote resource smoke/training及48/48 manifest后的formal test已授权，H5B/extra seeds/自动表格修改未授权 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
@@ -1224,7 +1224,7 @@ Canonical manuscript draft：
 
 `docs/paper-drafts/iscf-bsca-method-initial-draft.md`
 
-当前状态=`v0.6-bsca-training-refinement`，等待author review。4.5显式区分两类training objectives：`Uniform-Prefix Forecasting Loss`负责varied-horizon prediction，`Scope-Wise Forecasting Loss`与`Allocation-Balance Regularizer`负责稳定multi-scope optimization。Standalone 4.6已移出Method；CHPC construction由4.4闭合，parameter/FLOPs/latency/memory进入Section 5 efficiency analysis。Reference implementation与实验状态不变，Stable vector-asset bundle仍待author source。
+当前状态=`v0.7-bsca-narrative-order-refinement`，等待author review。4.5保留dual-role总述，并将正文重排为`Uniform-Prefix Forecasting Loss -> probability-scaled multi-scope gradient problem -> Scope-Wise Forecasting Loss -> Allocation-Balance Regularizer`。Standalone 4.6继续留在Method之外；CHPC construction由4.4闭合，parameter/FLOPs/latency/memory进入Section 5 efficiency analysis。Reference implementation与实验状态不变，Stable vector-asset bundle仍待author source。
 
 ### 7.1 Architecture Overview
 
@@ -1292,12 +1292,12 @@ reference implementation的full-field materialization边界保留在editorial au
 ### 7.5 Balanced Scope Co-Adaptation
 
 BSCA同时处理两个训练要求：统一trajectory需要覆盖全部prefix endpoints，而多个scope
-lines需要在allocation学习过程中保持可训练。前者由`Uniform-Prefix Forecasting Loss`
-处理；后者由`Scope-Wise Forecasting Loss`与`Allocation-Balance Regularizer`共同处理。
-Fused-loss gradient按当前Scope Probability缩放，因此early concentration会削弱
-low-probability scopes的forecasting gradient。Direct scope supervision提供
-allocation-independent gradient path，uniform-reference KL则惩罚过度不均匀的
-Scope Probabilities，使probability-mediated gradients在训练早期更均衡地分配。
+lines需要在allocation学习过程中保持可训练。叙事顺序固定为：先由
+`Uniform-Prefix Forecasting Loss`定义varied-horizon主目标，再说明weighted contraction
+导致的probability-scaled gradient问题，最后依次引出`Scope-Wise Forecasting Loss`与
+`Allocation-Balance Regularizer`。Direct scope supervision提供allocation-independent
+gradient path，uniform-reference KL则惩罚过度不均匀的Scope Probabilities，使
+probability-mediated gradients在训练早期更均衡地分配。
 
 $$
 \mathcal L_{\mathrm{BSCA}}
@@ -1741,3 +1741,4 @@ Coverage boundary：
 | 2026-08-08 | Section 4 v0.4 path and allocation refinement | 固定`Scope Forecasting Path`与`Target-Adaptive Allocation Path`；精简Figure 4 caption；4.3强化unified field与parameter sharing；4.4重构target-adaptive granularity allocation；4.5--4.6同步optimization/CHPC/complexity | author review；新增v0.4 highlighted review；prefix-bounded execution仍只作architecture property，current full-field implementation与performance/efficiency claim boundaries不变 |
 | 2026-08-08 | Section 4 v0.5 BSCA objective refinement | 精简4.3 unified-field总结；4.5按multi-scope gradient imbalance问题重构；统一`Uniform-Prefix Forecasting Loss`、`Scope-Wise Forecasting Loss`与`Allocation-Balance Regularizer`命名和符号 | author review；三项均为training objectives；uniform KL仅拓宽early gradient access，不保证equal usage、sufficient training或specialization；implementation与实验状态不变 |
 | 2026-08-10 | Section 4 v0.6 BSCA training refinement | 4.5显式区分varied-horizon objective与multi-scope stabilization；重写balance作用为penalizing non-uniform allocation并平衡probability-mediated gradients；删除4.6 | author review；CHPC construction保留在4.4；complexity转入Section 5.4 efficiency/analysis；不新增mechanism或effectiveness claim |
+| 2026-08-10 | Section 4 v0.7 BSCA narrative-order refinement | 保留4.5首段dual-role总述；先完整定义uniform-prefix objective，再说明multi-scope probability-scaled gradient问题并引出scope-wise与balance terms | author review；删除突兀的`second objective`前置解释；公式、objective、implementation、experiments与claim boundaries不变 |

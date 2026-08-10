@@ -65,7 +65,7 @@ Current experiment cursor=`Step 8 complete -> Step 9 complete formal-test prelau
 
 ## Section 4 Method Initial Draft v0.1 (2026-08-05)
 
-Current writing cursor=`Section 4 v0.6 BSCA training refinement / author review pending`。Canonical draft=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`。Method按真实computation flow划分为architecture overview、history representation/future-step coordinates、scope-indexed forecast field、target-conditioned scope allocation和BSCA。4.5区分varied-horizon prefix objective与multi-scope stabilization；CHPC construction由4.4闭合，parameter/FLOPs/latency/memory转入Section 5.4 efficiency/analysis。
+Current writing cursor=`Section 4 v0.7 BSCA narrative-order refinement / author review pending`。Canonical draft=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`。Method按真实computation flow划分为architecture overview、history representation/future-step coordinates、scope-indexed forecast field、target-conditioned scope allocation和BSCA。4.5先完成varied-horizon prefix objective，再转入multi-scope stabilization；CHPC construction由4.4闭合，parameter/FLOPs/latency/memory转入Section 5.4 efficiency/analysis。
 
 Method Figure 4 initial draft已生成，contract与QA=`analysis/iscf_bsca_method_figure_20260805/figure_contract_and_qa.md`，stable assets=`paper-figures/figure_iscf_bsca_method_overview.*`。Figure是non-empirical architecture schematic：panel a对比single-scope，panel b为ISCF hero path，panel c解释allocation与nested prefixes，panel d隔离train-only BSCA。当前下一步为author逐小节与视觉复审，不修改Introduction/Section 3，不扩张method implementation、remote training或formal test授权。Decision=`section4_v0_1_and_method_figure4_initial_draft_pending_author_review`。
 
@@ -965,14 +965,26 @@ Step4–6。candidate=`SC-ISCF-FRSC-v0`，narrative conditional pass；下一步
 | `artifacts` | manuscript=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`；paper architecture/mainline/ledger同步 |
 | `decision` | `section4_v0_6_bsca_training_refinement_pending_author_review` |
 
+## Section 4 v0.7 BSCA Narrative-Order Refinement (2026-08-10)
+
+| Field | Content |
+| --- | --- |
+| `current_step` | paper consolidation；Section 4 author review focused on 4.5 paragraph order |
+| `problem` | v0.6在定义Uniform-Prefix objective之前先解释`second objective`，造成varied-horizon主目标与multi-scope optimization问题之间的叙事跳跃 |
+| `design` | 保留4.5首段；将后文重排为`Uniform-Prefix objective -> probability-scaled gradient problem -> Scope-Wise direct supervision -> Allocation-Balance regularization -> complete objective` |
+| `theory_check` | 仅调整论述顺序；dense-prefix公式、gradient relation、scope-wise loss、normalized KL及ramp schedule均保持不变 |
+| `claim_boundary` | 不新增机制或效果claim；uniform KL仍不构成equal/sufficient training、equal inference usage或semantic specialization保证 |
+| `artifacts` | manuscript=`docs/paper-drafts/iscf-bsca-method-initial-draft.md`；paper architecture/mainline/ledger同步 |
+| `decision` | `section4_v0_7_bsca_narrative_order_refinement_pending_author_review` |
+
 ## Current Cursor
 
 | Field | Content |
 | --- | --- |
 | `stage` | `StageC-UVHF` |
-| `current_step` | paper consolidation；Introduction与Section 3 frozen；Section 4 v0.6 BSCA training refinement pending author review |
-| `active_question` | 4.5的dual-role BSCA narrative与balance作用表述是否可接受；Figure 4 stable vector source仍待同步 |
-| `active_candidates` | exact `ISCF-BSCA-v1` frozen ablation anchor；Figures 1--3 approved；Section 4 v0.6 pending author review；Method Figure 4 visual design temporarily fixed |
+| `current_step` | paper consolidation；Introduction与Section 3 frozen；Section 4 v0.7 BSCA narrative-order refinement pending author review |
+| `active_question` | 4.5的prefix-first objective chain与multi-scope transition是否可接受；Figure 4 stable vector source仍待同步 |
+| `active_candidates` | exact `ISCF-BSCA-v1` frozen ablation anchor；Figures 1--3 approved；Section 4 v0.7 pending author review；Method Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | ETTh1, ETTh2, ETTm1, ETTm2, Weather |
 | `active_protocol` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
