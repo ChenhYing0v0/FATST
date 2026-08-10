@@ -8,7 +8,7 @@
 | `version` | `v0.60` |
 | `last_updated` | `2026-08-10` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 4 v0.6 BSCA training refinement pending author review；experiments=Main I hash frozen，Main II pre-H5A table frozen reference，H5A ETTh1/ECL/Solar targeted HPO prelaunch |
+| `current_review_cursor` | writing=Section 4 v0.6 BSCA training refinement pending author review；experiments=Main I hash frozen，Main II pre-H5A table frozen reference，H5A ETTh1/ECL/Solar targeted HPO remote training active |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
@@ -1368,6 +1368,10 @@ patch×LR×rank interaction。Selector直接对冻结Main II七个external syste
 `2/8,1/8,5/8`，即全局Main II由24/56提高到至少27/56。Remote training与48/48
 immutable manifest后的完整formal test已授权；H5B、extra seeds、architecture change及自动
 修改Main I/Main II均未授权。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5a_main_ii_weak_dataset_search_20260810/design_and_prelaunch_gate.md`。
+
+H5A commit=`7544f76d`的48/48 resource smoke已通过，test=0、48 unique checkpoint
+hashes且无OOM/numeric failure；full three-GPU train/validation queue已于2026-08-10
+15:13:32启动，PID=`2375625`。48/48 immutable manifest完成前不得访问formal test。
 
 ### 8.2 Main Results I：Unified versus Horizon-Specific
 
