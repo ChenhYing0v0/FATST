@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Section 2 v0.2 temporarily frozen usable，next manuscript section pending author direction；experiments=H5A Main II weak-dataset HPO Step 8 remote training active |
+| `current_11_step` | paper consolidation；writing=Sections 5--7 v0.1 structural design pending author discussion；experiments=H5A Main II weak-dataset HPO Step 8 remote training active |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -19,6 +19,8 @@
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H5A profiles under targeted HPO；pre-H5A Main II remains frozen reference，matched ablation/transfer仍pending |
+
+[Sections 5--7 Structural Design v0.1, 2026-08-11] 基于temporarily frozen Sections 1--4、current table registry与claim boundaries新增`docs/paper-drafts/iscf-bsca-sections-5-7-initial-design.md`。推荐evidence ladder=`setup -> horizon-specific comparison -> one-model-all-horizons -> efficiency -> matched ablation -> consistency/allocation behavior -> transfer -> failure-aware cases`；同时提出独立`Discussion`，用于分离results observation、task/system interpretation与limitations。该Discussion与case-study main-text routing尚未获author确认，不替换既有六章权威结构。Design只定义subsection jobs、artifact roles与claim-evidence boundaries，不填result prose、不预判H5A、不新增implementation/training/test authorization。Decision=`sections_5_7_v0_1_structural_design_pending_author_discussion`。
 
 [Related Work v0.2 Temporary Freeze, 2026-08-10] Author确认Section 2其余内容无需继续调整。2.3 opening由`A smaller body of work explicitly structures forecast generation`改为`Beyond shallow output projections, several studies have introduced structured mechanisms for forecast generation`，以直接承接前段并移除对prior-work数量的主观判断。Canonical draft=`docs/paper-drafts/iscf-bsca-related-work-initial-draft.md`，status=`temporarily_frozen_usable`；freeze scope覆盖正文、subsection structure、citations与claim boundaries。后续只有later manuscript/evidence产生明确矛盾且author批准时才解冻。Introduction v0.9、Section 3 v0.7、Section 4 v0.7及H5A experiment cursor均不变。Decision=`related_work_v0_2_temporarily_frozen_usable`。
 

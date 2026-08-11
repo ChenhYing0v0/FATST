@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## Sections 5--7 Structural Design v0.1 (2026-08-11)
+
+Current writing cursor=`Sections 5--7 structural design / author discussion pending`。新增provisional design=`docs/paper-drafts/iscf-bsca-sections-5-7-initial-design.md`，以frozen Sections 1--4、paper table registry和现有claim boundaries为输入，只设计后续subsections、evidence order、table/figure placement、Discussion与Appendix routing，不填result prose。
+
+Recommended experiment ladder=`evaluation contract -> Main-I horizon-specific comparison -> Main-II one-model-all-horizons -> efficiency/system cost -> matched component/objective ablation -> consistency/allocation behavior -> backbone transfer -> failure-aware qualitative evidence`。建议在Experiments与Conclusion之间增加standalone Discussion，以分离observation、interpretation与limitations；由于既有六章结构仍是frozen consensus，该提议、case-study main-text routing以及5.6 split/merge均等待author确认。H5A experiment cursor和authorization不变，不得在structure draft中预判其结果。Decision=`sections_5_7_v0_1_structural_design_pending_author_discussion`。
+
 ## Related Work v0.2 Temporary Freeze (2026-08-10)
 
 Current writing cursor=`Section 2 v0.2 temporarily frozen usable / next manuscript section pending author direction`。Author确认当前Related Work其余内容无需继续调整；2.3 opening改为`Beyond shallow output projections, several studies have introduced structured mechanisms for forecast generation`，以承接上一段的shallow fixed-window projections并避免对prior-work数量作主观判断。Freeze scope覆盖Section 2正文、subsection structure、citations与claim boundaries；后续只有later manuscript/evidence产生明确矛盾且author批准时才解冻。Introduction v0.9、Section 3 v0.7、Section 4 v0.7及并行experiment cursor/authorization均不变。Decision=`related_work_v0_2_temporarily_frozen_usable`。

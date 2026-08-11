@@ -5,17 +5,17 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.64` |
+| `version` | `v0.65` |
 | `last_updated` | `2026-08-10` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Section 2 v0.2 temporarily frozen usable，next manuscript section pending author direction；experiments=Main I hash frozen，Main II pre-H5A table frozen reference，H5A ETTh1/ECL/Solar targeted HPO remote training active |
+| `current_review_cursor` | writing=Sections 5--7 v0.1 structural design pending author discussion；experiments=Main I hash frozen，Main II pre-H5A table frozen reference，H5A ETTh1/ECL/Solar targeted HPO remote training active |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design |
-| `provisional_content` | Method Figure 4 stable vector-asset synchronization；remaining sections |
+| `provisional_content` | Sections 5--7 structural design v0.1；standalone Discussion proposal；Method Figure 4 stable vector-asset synchronization；remaining manuscript prose |
 | `authorization_source` | 2026-08-10用户显式重启ETTh1/ECL/Solar HPO；H5A remote resource smoke/training及48/48 manifest后的formal test已授权，H5B/extra seeds/自动表格修改未授权 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
@@ -348,6 +348,15 @@ Appendices
 
 不设置独立 `Discussion`。必要 limitations 放在 Conclusion 末段，完整 negative
 cells、secondary controls 与敏感性结果放在 Appendices。
+
+### 3.1 Provisional Sections 5--7 redesign for author discussion
+
+2026-08-11新增独立结构讨论稿：
+`docs/paper-drafts/iscf-bsca-sections-5-7-initial-design.md`。该稿建议将后续正文暂按
+`Experiments -> Discussion -> Conclusion`组织，并重命名实验subsections以直接对应
+system effectiveness、one-model capability、cost、matched attribution、internal behavior、
+transfer与failure-aware qualitative evidence。由于上方六章结构属于既有共识，独立
+Discussion当前只作proposal；未经author确认不得替换权威全文结构。
 
 ## 4. Introduction
 
@@ -1755,3 +1764,4 @@ Coverage boundary：
 | 2026-08-10 | Section 4 v0.7 temporary freeze and Section 2 v0.1 Related Work initial draft | 用户确认Section 4暂时敲定；按四段funnel完成Related Work primary-source refresh、subsection design与英文初稿 | Section 4 body/terms/equations/Figure 4 integration frozen usable；Section 2 v0.1 pending author review；ElasTST horizon-invariance prior显式承认；experiment cursor不变 |
 | 2026-08-10 | Section 2 v0.2 author structure refinement | 按author反馈严格区分recursive/direct/MIMO/DIRMO，重构foundation-model、forecast-generation、output-side multi-scale与allocation叙事 | 四个subsection标题同步；ElasTST系统贡献完整承认，差异收紧到history-patch resolution与output-side state-sharing extent；Introduction/Sections 3--4与experiment cursor不变 |
 | 2026-08-10 | Section 2 v0.2 temporary freeze | 2.3 opening改为`Beyond shallow output projections`，移除`A smaller body of work`的数量判断 | Author确认其余内容；Section 2正文、结构、citations与claim boundaries暂时冻结；next manuscript section pending direction；experiment cursor不变 |
+| 2026-08-11 | Sections 5--7 structural design v0.1 | 基于frozen Sections 1--4、table registry与claim boundaries设计Experiments、Discussion、Conclusion及Appendix evidence ladder | 新增独立设计稿；standalone Discussion、case-study routing与5.6 split/merge均pending author discussion；不填result prose、不改实验授权 |
