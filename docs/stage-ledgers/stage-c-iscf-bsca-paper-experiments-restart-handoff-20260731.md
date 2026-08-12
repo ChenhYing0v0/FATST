@@ -44,7 +44,7 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | Main I frozen；pre-H5A Main II frozen reference；H5A Step 9 formal-test preflight |
+| `active_experiment_step` | Main I frozen；pre-H5A Main II frozen reference；H5A Step 9 formal test active |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
@@ -52,7 +52,7 @@ paper candidate与claim boundary，但互不替代。
 | `remote_training_authorized` | true；限H5A 48 resource smokes与48 train/validation jobs |
 | `test_tuned_hpo_authorized` | true；限ETTh1/ECL/Solar dataset-level shared-profile H5A |
 | `formal_test_authorized` | conditional true；仅在H5A 48/48 immutable checkpoint manifest后执行完整test |
-| `next_action` | H5A exact-commit formal-test preflight -> once-only complete 48-checkpoint test；不得partial selection或自动修改Main II |
+| `next_action` | 等待H5A formal test 48/48 -> hash/artifact audit -> frozen selector；不得partial selection或自动修改Main II |
 | `conditional_next` | 任何新baseline仍需独立source/protocol gate；不得改写AMD/SimpleTM native role为matched attribution |
 
 2026-08-08用户要求暂时冻结Main I，并把Main II改为H720-trained one-model-all-horizons benchmark。Main I冻结manifest记录14 models × 7 dense datasets × four H、392 rows、29/56 best、19/56 second及全部关键hash。Main II v1包含ISCF-BSCA、TimeAlign、QDF、AMD、SimpleTM、iTransformer、PatchTST、DLinear；每个external baseline逐dataset训练/复用一个H720 model，并从同一H720 test tensor裁剪H96/H192/H336。49个checkpoint objects可复用，21个iTransformer/PatchTST/DLinear H720 jobs需新训练；PatchTST/DLinear Solar无official script/loader，固定为source-patch-required。Exchange因Main I H720 anchors不完整而deferred。Canonical protocol=`configs/iscf_bsca_main_ii_h720_prefix_protocol.json`；prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/design_and_prelaunch_gate.md`。当前只完成design/source audit，Tier A/B/C仍为false。
@@ -74,6 +74,11 @@ Artifact/provenance/four-H validation selector/numeric-health audit通过，48�
 全部唯一。Immutable manifest SHA256=`ee5940c8f66aceab5710f17a4bc8ce2efb9ae3c44fa9cec1459fcd9589fe6643`；
 用户于2026-08-13授权继续完整formal test。Canonical gate=
 `analysis/iscf_bsca_main_v1_hpo_20260731/h5a_main_ii_weak_dataset_search_20260810/training_result_and_formal_test_gate.md`。Decision=`H5A_training_complete_manifest_frozen_formal_test_authorized`。
+
+Exact commit=`cb496f31`通过formal-test preflight；once-only 48-checkpoint/192-standard-row
+queue于2026-08-13 00:34:37启动，PID=`4169962`。Atomic publication和ABORT gate启用，
+48/48前不得selector或partial table mutation。Canonical launch=
+`analysis/iscf_bsca_main_v1_hpo_20260731/h5a_main_ii_weak_dataset_search_20260810/formal_test_launch.md`。Decision=`H5A_formal_test_active`。
 
 H4K train/validation与formal test均已完成，但terminal effectiveness gate失败。H4L只扩大ETTm2/Weather
 dataset-level HPO范围：48个profiles与117个历史profiles零重复，其中四项借鉴TimeAlign official encoder

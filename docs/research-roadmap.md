@@ -9,6 +9,11 @@ audit通过。48个checkpoint hashes唯一，immutable manifest SHA256=
 完整192-standard-row formal test；H5B、extra seeds、confirmation与自动Main II mutation
 仍未授权。Canonical gate=`analysis/iscf_bsca_main_v1_hpo_20260731/h5a_main_ii_weak_dataset_search_20260810/training_result_and_formal_test_gate.md`。
 
+Formal-test exact-commit/manifest/zero-artifact/GPU preflight已通过；完整48-checkpoint queue于
+2026-08-13 00:34:37启动，PID=`4169962`。Current cursor=`Step 9 formal test active`；
+48/48前不执行selector或table mutation。Canonical launch=
+`analysis/iscf_bsca_main_v1_hpo_20260731/h5a_main_ii_weak_dataset_search_20260810/formal_test_launch.md`。
+
 ## Sections 5--7 Structural Design v0.2 Temporary Freeze (2026-08-12)
 
 Current writing cursor=`Sections 5--7 v0.2 author-fixed structure / temporarily frozen usable`。正文结构固定为`Experiments -> Discussion -> Conclusion`，不再单设qualitative/failure-case subsection；qualitative evidence并入Section 5.6 Figure 5。Core-Ablation仅包含Full、w/o BSCA、w/o Target-Adaptive Allocation、Shared Scope Projection与Fixed Scope ($s=144$)，不设置Allocation-Balance Regularizer单独对照，也不为Fixed Scope执行best-scope search。

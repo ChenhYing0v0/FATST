@@ -22,7 +22,7 @@
         "efficiency",
         "fresh_mechanism_diagnostics"
       ],
-      "status": "H5A_training_complete_manifest_frozen_formal_test_preflight"
+      "status": "H5A_formal_test_active_complete_matrix_required"
     }
   },
   "paper_table_registry": {
@@ -42,7 +42,7 @@
     "new_experiment_authorization_created": true
   },
   "authorization": {
-    "current_decision": "H5A_48_checkpoint_manifest_frozen_formal_test_authorized",
+    "current_decision": "H5A_once_only_complete_formal_test_active",
     "existing_artifact_audit": true,
     "matrix_design": true,
     "test_tuned_hpo_project_principle": {
