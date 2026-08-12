@@ -1,19 +1,19 @@
-# ISCF-BSCA Sections 5--7: Initial Structural Design
+# ISCF-BSCA Sections 5--7: Frozen Structural Design
 
 ## Design status
 
 | Field | Content |
 | --- | --- |
-| `document_role` | Provisional structural design for the manuscript sections after Method |
-| `version` | `v0.1-initial-structure` |
-| `date` | `2026-08-11` |
-| `review_status` | `pending_author_discussion` |
+| `document_role` | Temporarily frozen structural design for the manuscript sections after Method |
+| `version` | `v0.2-author-fixed-structure` |
+| `date` | `2026-08-12` |
+| `review_status` | `temporarily_frozen_usable` |
 | `upstream_dependency` | Introduction v0.9, Related Work v0.2, Section 3 v0.7 and Section 4 v0.7 remain temporarily frozen and unchanged |
 | `scope` | Subsection functions, evidence order, table/figure placement, claim boundaries and appendix routing only |
 | `manuscript_prose` | Not drafted |
 | `experiment_change` | None; this document does not authorize implementation, remote training or formal test |
-| `evidence_snapshot` | Main-I and Main-II complete; Efficiency, Core-Ablation and Decoder-Transfer remain pending under the current table registry |
-| `structure_decision` | A standalone Discussion is recommended for author review but is not yet frozen |
+| `evidence_snapshot` | Main-I and Main-II complete; Efficiency, Core-Ablation, mechanism analysis and Decoder-Transfer remain pending under the current table registry |
+| `structure_decision` | Sections 5--7 use `Experiments -> Discussion -> Conclusion`; qualitative evidence is integrated into Section 5.6 rather than assigned a standalone subsection |
 
 This document designs the argumentative architecture of the remaining manuscript. It does not fill result values, write result paragraphs or promote pending experiments to completed evidence.
 
@@ -34,19 +34,23 @@ The primary reader is a time-series forecasting reviewer who will ask, in order:
 | Comparison with horizon-specific forecasters | Main-I system-level comparison between one unified model and separately optimized fixed-$H$ models | matched architecture attribution |
 | One-model-all-horizons evaluation | Main-II comparison in which each system uses one H720-trained model and prefix forecasts | generic multi-horizon benchmark without protocol definition |
 | Efficiency and system cost | model count, storage, training cost, latency, memory and CHPC capability | efficiency claim before the profiler contract is complete |
-| Component and training-objective ablations | matched end-to-end controls for ISCF components and BSCA | interpreting native baselines as ablations |
+| Component and training-objective ablations | Full, w/o BSCA, w/o Target-Adaptive Allocation, Shared Scope Projection and Fixed Scope ($s=144$) under matched end-to-end training | balance-only controls or interpreting native baselines as ablations |
 | Forecast consistency | CHPC/CHPD behavior across shared future targets | forecast accuracy |
-| Scope-allocation behavior | Scope Probabilities, scope-wise forecasts and regional behavior | oracle selection or universal specialization |
+| Scope-allocation behavior | Scope Probabilities, aggregate scope utilization and regional preference behavior | realized allocation value, oracle selection or universal specialization |
 | Backbone transferability | end-to-end decoder evaluation on preregistered backbone families | frozen-consumer replacement as effectiveness evidence |
 | Test-informed evaluation | disclosed project protocol for paper-facing model/profile comparison | untouched-holdout or strictly confirmatory evaluation |
 
-The current ablation registry contains labels inherited from earlier experiment design that do not fully match the frozen Method terminology. Before Table 4 is drafted, the control identities should remain unchanged while their manuscript-facing names are reconciled:
+The author-fixed Core-Ablation contract contains exactly five variants:
 
-| Current registry label | Manuscript-consistent candidate | Status |
+| Variant | Frozen intervention | Attribution role |
 | --- | --- | --- |
-| w/o Independent Fields | w/o Scope-Specific Projections | wording proposal only; verify exact control implementation |
-| w/o Target-Wise Fusion | w/o Target-Adaptive Allocation | wording proposal only; preserve the frozen fusion control |
-| w/o Multiple Coupling Scopes | Single-Scope Forecasting | wording proposal only; verify whether the control removes both scope multiplicity and allocation |
+| Full ISCF-BSCA | complete frozen architecture and objective | reference |
+| w/o BSCA | retain the architecture and Uniform-Prefix Forecasting Loss; remove both Scope-Wise Forecasting Loss and Allocation-Balance Regularizer | joint contribution of the BSCA optimization terms |
+| w/o Target-Adaptive Allocation | replace learned target-wise Scope Probabilities with a non-adaptive matched fusion rule; exact rule must be frozen before launch | utility of target-adaptive scope allocation |
+| Shared Scope Projection | use one shared projection in place of scope-specific projections while preserving the remaining graph | utility of scope-specific history information pools |
+| Fixed Scope ($s=144$) | use the preregistered middle scope only, without validation search over scope sizes | utility of multi-scope generation and allocation relative to a budget-aware fixed control |
+
+No standalone ablation is allocated to the Allocation-Balance Regularizer. The Fixed Scope value $s=144$ is a pragmatic preregistered middle value, not a validation-selected best scope and not evidence that $s=144$ is optimal.
 
 ## 2. Recommended manuscript structure
 
@@ -59,8 +63,6 @@ The current ablation registry contains labels inherited from earlier experiment 
    5.5 Component and training-objective ablations
    5.6 Forecast consistency and scope-allocation behavior
    5.7 Backbone transferability
-   5.8 Qualitative analysis and failure cases
-
 6. Discussion
    6.1 From horizon-specific predictions to a unified forecasting system
    6.2 Output-side sharing as a forecasting design dimension
@@ -75,11 +77,11 @@ Appendices
    D. Reproducibility, selection protocol and artifact provenance
 ```
 
-The principal structural change relative to the earlier six-section outline is the proposed standalone Discussion. This change is recommended but remains subject to author approval.
+The standalone Discussion and the integrated Section 5.6 qualitative analysis are temporarily frozen as the working manuscript structure.
 
 ## 3. Section 5: Experiments
 
-Section 5 should follow an evidence ladder rather than the implementation order: `evaluation contract -> system effectiveness -> one-model capability -> cost -> matched attribution -> internal behavior -> transfer -> failure-aware examples`.
+Section 5 should follow an evidence ladder rather than the implementation order: `evaluation contract -> system effectiveness -> one-model capability -> cost -> matched attribution -> consistency and allocation behavior -> transfer`.
 
 ### 3.1 Subsection contracts
 
@@ -89,10 +91,9 @@ Section 5 should follow an evidence ladder rather than the implementation order:
 | 5.2 Comparison with horizon-specific forecasters | Can one unified ISCF-BSCA model compete with separately optimized fixed-horizon systems? | explain one-versus-four-model protocol; introduce Main-I; report aggregate pattern, dataset/horizon exceptions and source-role caveat | Table 1 / `Main-I` | System-level accuracy competitiveness under the audited mixed-source comparison | Complete and hash-frozen |
 | 5.3 One-model-all-horizons evaluation | Is ISCF-BSCA competitive when every system must serve all horizons from one trained model? | define H720-prefix protocol; explain how it differs from Main-I; introduce Main-II; report dominant pattern and negative cells; retain unmatched-protocol caveat | Table 2 / `Main-II` | One-model-all-horizons system effectiveness, not decoder or BSCA attribution | Complete; H5A remains a separate active selection block and cannot be presumed successful |
 | 5.4 Efficiency and system cost | What practical cost changes when one model replaces a horizon-specific family? | trained-model count; stored parameters; training GPU-hours; single-request and all-horizon latency; peak memory; CHPC capability; profiler protocol | Table 3 / `Efficiency` | Cost and deployment trade-offs only after matched measurement | Measurement and baseline subset pending |
-| 5.5 Component and training-objective ablations | Which architectural and optimization components contribute within the frozen design family? | Full; w/o BSCA; scope-projection control; allocation control; single-scope control; matched budgets and end-to-end training | Table 4 / `Core-Ablation` | Component utility within the tested design; stronger mechanism claims require internal diagnostics | Partially reusable; prelaunch and missing cells pending |
-| 5.6 Forecast consistency and scope-allocation behavior | Does the trained system behave in the manner motivated by Section 3? | CHPC/CHPD verification; Scope Probability maps; scope-wise and fused errors; prediction diversity; regional behavior; allocation/gradient balance; oracle headroom as diagnostic only | Figure 5 / mechanism-analysis bundle | Behavior consistent with prefix consistency and heterogeneous sharing; no universal specialization or oracle-allocation claim | Figure/statistic contract not yet frozen |
+| 5.5 Component and training-objective ablations | Which architectural and optimization components contribute within the frozen design family? | Full; w/o BSCA; w/o Target-Adaptive Allocation; Shared Scope Projection; Fixed Scope ($s=144$); matched budgets and end-to-end training | Table 4 / `Core-Ablation` | Component utility within the tested design; stronger mechanism claims require internal diagnostics | Control identities author-fixed; exact implementation and prelaunch audit pending |
+| 5.6 Forecast consistency and scope-allocation behavior | Does the trained system behave in the manner motivated by Section 3? | exact CHPC/CHPD verification; Scope Probability map; aggregate scope utilization across future regions; scope-wise regional preference/error analysis; one performance-selected qualitative trajectory with nested prefixes | Figure 5 / mechanism-analysis bundle | Behavior consistent with prefix consistency and heterogeneous sharing; the selected trajectory is illustrative rather than representative | Figure/statistic contract partially frozen; realized allocation value excluded |
 | 5.7 Backbone transferability | Does the decoder remain useful beyond its current Encoder realization? | DLinear-style and PatchTST-style backbones; Original Decoder, +ISCF and +ISCF-BSCA; backbone-specific matched profiles; end-to-end training | Table 5 / `Decoder-Transfer` | Decoder portability only if both matched transfer blocks support it | Source patch, retraining and formal evaluation pending |
-| 5.8 Qualitative analysis and failure cases | What does the system produce on representative and difficult trajectories? | one full trajectory with nested prefixes; Scope Probability evolution; scope-conditioned forecasts; at least one failure or negative case; selection rule in caption | Figure 6 or Appendix figure | Illustration of observed behavior, not prevalence or mechanism proof | Not frozen; default routing to Appendix unless it carries unique explanatory value |
 
 ### 3.2 Why Main-I and Main-II must remain separate
 
@@ -106,14 +107,14 @@ Each result subsection should use the same internal order: `question -> comparis
 
 ### 4.1 Why a standalone Discussion is recommended
 
-The paper makes both a system contribution and a forecasting-design argument. A standalone Discussion can interpret CHPC, output-side sharing and varied-horizon system design without mixing these claims into result reporting. It also provides a visible place for source-protocol differences, test-informed evaluation and negative cases that would otherwise overload the Conclusion.
+The paper makes both a system contribution and a forecasting-design argument. The standalone Discussion interprets CHPC, output-side sharing and varied-horizon system design without mixing these claims into result reporting. It also provides a visible place for source-protocol differences, test-informed evaluation and negative cells that would otherwise overload the Conclusion.
 
 ### 4.2 Subsection contracts
 
 | Subsection | Main job | Evidence it may interpret | Boundary |
 | --- | --- | --- | --- |
 | 6.1 From horizon-specific predictions to a unified forecasting system | Explain what changes when forecasts at different endpoints are treated as nested views of one trajectory | CHPC construction, Main-I, Main-II and system-cost evidence | Do not infer accuracy from CHPC or claim all prior flexible-horizon models violate it |
-| 6.2 Output-side sharing as a forecasting design dimension | Connect future-region sharing-demand heterogeneity to scope-indexed forecast generation and allocation | Figure 3 motivation, Core-Ablation, mechanism diagnostics and transfer results | Do not promote active allocation, diversity or oracle headroom to causal specialization |
+| 6.2 Output-side sharing as a forecasting design dimension | Connect future-region sharing-demand heterogeneity to scope-indexed forecast generation and allocation | Figure 3 motivation, Core-Ablation, allocation diagnostics and transfer results | Do not promote active probabilities or regional variation to causal specialization |
 | 6.3 Limitations and future scope | State where the evaluated claims stop and which extensions are scientifically meaningful | negative cells, unmatched baseline roles, seed coverage, profiler results and pending/negative controls | Limitations must be artifact-specific rather than generic future-work language |
 
 ### 4.3 Limitation inventory to audit before prose drafting
@@ -147,11 +148,10 @@ The Conclusion must not introduce new metrics, citations, mechanisms or future c
 | Table 2 | Main-II | one-model-all-horizons system comparison | complete/presentation-aligned; active H5A cannot be anticipated |
 | Table 3 | Efficiency | deployment and computation trade-offs | pending |
 | Table 4 | Core-Ablation | component and objective attribution | pending |
-| Figure 5 | Forecast consistency and scope-allocation behavior | connect Section 3 problems to trained-system behavior | pending design/evidence freeze |
+| Figure 5 | Forecast consistency, allocation behavior and an illustrative improved trajectory | connect Section 3 problems to trained-system behavior and show the resulting forecast concretely | partially frozen; realized allocation value excluded and exact statistic contract pending |
 | Table 5 | Decoder-Transfer | end-to-end portability across backbone families | pending |
-| Figure 6 | Qualitative behavior and failure cases | reader-facing explanation of nested trajectories and allocation | optional main-text item; Appendix by default |
 
-The main text is already table-heavy. Figure 6 should remain supplementary unless it provides a failure mode or mechanism distinction that cannot be communicated by Figure 5.
+The qualitative example is integrated into Figure 5 rather than assigned a separate figure or subsection. It should be selected from one of the clearest per-origin improvements of Full ISCF-BSCA over a frozen matched control, with the comparator, split and selection rule disclosed in the caption. This performance-selected example is intentionally illustrative and must not be described as representative or used to estimate prevalence. A dedicated failure-case panel is not required; negative aggregate cells remain reported in Sections 5.2--5.3 and interpreted in Section 6.3.
 
 ## 7. Appendix routing
 
@@ -159,7 +159,7 @@ The main text is already table-heavy. Figure 6 should remain supplementary unles
 | --- | --- | --- |
 | A. Detailed experimental settings and source-role disclosures | reproduce the evaluated protocols and make native/published/matched roles explicit | dataset statistics, splits, look-back windows, baseline sources, hardware, profiler contract |
 | B. Full dataset-horizon results and additional comparisons | preserve complete cells without overloading the main argument | full-precision Main-I/Main-II results, Exchange companion, per-dataset breakdowns, negative cells |
-| C. Additional ablations, sensitivity and mechanism diagnostics | retain secondary controls and robustness evidence | random partition, scope count, loss weights, extended allocation/gradient plots, extra case studies |
+| C. Additional ablations, sensitivity and mechanism diagnostics | retain secondary controls and robustness evidence | random partition, scope count, loss weights, extended allocation/gradient plots, optional extra case studies |
 | D. Reproducibility, selection protocol and artifact provenance | disclose the test-informed workflow and artifact identity | full HPO trial records, checkpoint hashes, selector definitions, seed/environment details |
 
 ## 8. Claim-evidence map
@@ -170,7 +170,7 @@ The main text is already table-heavy. Figure 6 should remain supplementary unles
 | One model can serve all evaluated horizons competitively | Main-II | supported at system level | report negative cells and unmatched external contracts |
 | ISCF-BSCA reduces practical multi-horizon system cost | Efficiency | needs evidence | no positive efficiency wording before measurement |
 | ISCF components and BSCA are effective | Core-Ablation | needs complete matched evidence | Introduction P6 remains provisional until closure |
-| Allocation adapts useful sharing information across future steps | Core-Ablation + Figure 5 diagnostics | needs matched attribution and frozen diagnostics | active probabilities alone are insufficient |
+| Allocation adapts useful sharing information across future steps | Core-Ablation + Figure 5 diagnostics | needs matched attribution and frozen diagnostics | active probabilities or a selected qualitative example alone are insufficient; realized allocation value is outside the current plan |
 | The decoder transfers across forecasting backbones | Decoder-Transfer | needs evidence | no portability verb before both end-to-end blocks close |
 | CHPC holds for shared targets | architecture + implementation verification | construction fact under the stated graph | keep separate from forecasting accuracy |
 
@@ -179,15 +179,19 @@ The main text is already table-heavy. Figure 6 should remain supplementary unles
 1. freeze the final Section 5.1 evaluation contract and evidence-role vocabulary;
 2. draft 5.2 and 5.3 from the already complete Main-I/Main-II artifacts without anticipating H5A;
 3. wait for Efficiency, Core-Ablation and Decoder-Transfer before drafting 5.4, 5.5 and 5.7;
-4. freeze a compact Figure 5 evidence contract before writing 5.6;
-5. decide whether Figure 6 remains in the main text before drafting 5.8;
-6. write Discussion only after all positive and negative evidence is known;
-7. write Conclusion and then revisit the provisional result sentence in Introduction P6.
+4. freeze the remaining Figure 5 statistic, comparator and example-selection details before writing 5.6;
+5. write Discussion only after all positive and negative evidence is known;
+6. write Conclusion and then revisit the provisional result sentence in Introduction P6.
 
-## 10. Author decisions requested before prose drafting
+## 10. Temporarily frozen author decisions
 
-1. Whether to adopt the recommended standalone Section 6 Discussion or retain the earlier six-section paper with limitations inside Conclusion.
-2. Whether qualitative case studies deserve a main-text subsection/figure or should default to Appendix C.
-3. Whether Section 5.6 should remain one integrated consistency-and-allocation analysis or be split into two subsections after its evidence contract is frozen.
+1. Retain a standalone Section 6 Discussion.
+2. Keep Section 5.6 as one integrated consistency-and-allocation analysis and incorporate one deliberately clear improved example into Figure 5.
+3. Omit a standalone failure-case subsection and figure.
+4. Restrict Core-Ablation to the five author-fixed variants above; do not add a balance-only control.
+5. Fix the single-scope control to $s=144$ without a best-scope search.
+6. Exclude realized allocation value from the current mechanism-analysis contract.
 
-`Decision=sections_5_7_v0_1_structural_design_pending_author_discussion`.
+These decisions freeze the writing and experiment-design reference only. They do not authorize implementation, remote training or formal test.
+
+`Decision=sections_5_7_v0_2_author_fixed_structure_temporarily_frozen_usable`.

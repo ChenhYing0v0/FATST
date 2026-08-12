@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Sections 5--7 v0.1 structural design pending author discussion；experiments=H5A Main II weak-dataset HPO Step 8 remote training active |
+| `current_11_step` | paper consolidation；writing=Sections 5--7 v0.2 author-fixed structure temporarily frozen；experiments=H5A Main II weak-dataset HPO Step 8 remote training active |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -19,6 +19,8 @@
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H5A profiles under targeted HPO；pre-H5A Main II remains frozen reference，matched ablation/transfer仍pending |
+
+[Sections 5--7 Structural Design v0.2 Temporary Freeze, 2026-08-12] Author确认后续正文采用`Experiments -> Discussion -> Conclusion`七章结构，并暂时固定`docs/paper-drafts/iscf-bsca-sections-5-7-initial-design.md`。Core-Ablation严格限定为Full、w/o BSCA、w/o Target-Adaptive Allocation、Shared Scope Projection与Fixed Scope ($s=144$)，不设置Allocation-Balance Regularizer单独对照；其中w/o BSCA仅保留Uniform-Prefix Forecasting Loss，因此旧ISCF-EQUAL不再自动视为该control，当前可直接复用量由40 cells收紧为Full的20 cells。Section 5.6保留exact CHPC/CHPD、Scope Probability、aggregate utilization与scope-wise regional preference/error，移除高成本realized allocation value；qualitative trajectory并入Figure 5，可从Full相对frozen matched control提升最清晰的样本之一选择，但必须披露selection并仅作illustrative evidence。独立failure-case subsection/figure删除，negative cells继续在Main I/II和Discussion中报告。本次只冻结writing/experiment-design reference，不授权implementation、remote training或formal test。Decision=`sections_5_7_v0_2_author_fixed_structure_temporarily_frozen_usable`。
 
 [Sections 5--7 Structural Design v0.1, 2026-08-11] 基于temporarily frozen Sections 1--4、current table registry与claim boundaries新增`docs/paper-drafts/iscf-bsca-sections-5-7-initial-design.md`。推荐evidence ladder=`setup -> horizon-specific comparison -> one-model-all-horizons -> efficiency -> matched ablation -> consistency/allocation behavior -> transfer -> failure-aware cases`；同时提出独立`Discussion`，用于分离results observation、task/system interpretation与limitations。该Discussion与case-study main-text routing尚未获author确认，不替换既有六章权威结构。Design只定义subsection jobs、artifact roles与claim-evidence boundaries，不填result prose、不预判H5A、不新增implementation/training/test authorization。Decision=`sections_5_7_v0_1_structural_design_pending_author_discussion`。
 

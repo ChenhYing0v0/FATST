@@ -5,17 +5,17 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.65` |
-| `last_updated` | `2026-08-10` |
+| `version` | `v0.66` |
+| `last_updated` | `2026-08-12` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Sections 5--7 v0.1 structural design pending author discussion；experiments=Main I hash frozen，Main II pre-H5A table frozen reference，H5A ETTh1/ECL/Solar targeted HPO remote training active |
+| `current_review_cursor` | writing=Sections 5--7 v0.2 author-fixed structure temporarily frozen；experiments=Main I hash frozen，Main II pre-H5A table frozen reference，H5A ETTh1/ECL/Solar targeted HPO remote training active |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `frozen_consensus` | 论文六章结构；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
-| `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design |
-| `provisional_content` | Sections 5--7 structural design v0.1；standalone Discussion proposal；Method Figure 4 stable vector-asset synchronization；remaining manuscript prose |
+| `frozen_consensus` | 论文七章结构并保留standalone Discussion；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
+| `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.2 structural design |
+| `provisional_content` | Method Figure 4 stable vector-asset synchronization；remaining manuscript prose and pending experiment evidence |
 | `authorization_source` | 2026-08-10用户显式重启ETTh1/ECL/Solar HPO；H5A remote resource smoke/training及48/48 manifest后的formal test已授权，H5B/extra seeds/自动表格修改未授权 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
@@ -329,15 +329,19 @@ Abstract
 
 5. Experiments
    5.1 Experimental Setup
-   5.2 One Unified Model versus Horizon-Specific Models
-   5.3 Unified Multi-Horizon Benchmark
-   5.4 Efficiency Evaluation
-   5.5 Ablation Studies
-   5.6 Alleviating the Unified Forecasting Problem
-   5.7 Decoder Transferability
-   5.8 Case Studies
+   5.2 Comparison with Horizon-Specific Forecasters
+   5.3 One-Model-All-Horizons Evaluation
+   5.4 Efficiency and System Cost
+   5.5 Component and Training-Objective Ablations
+   5.6 Forecast Consistency and Scope-Allocation Behavior
+   5.7 Backbone Transferability
 
-6. Conclusion
+6. Discussion
+   6.1 From Horizon-Specific Predictions to a Unified Forecasting System
+   6.2 Output-Side Sharing as a Forecasting Design Dimension
+   6.3 Limitations and Future Scope
+
+7. Conclusion
 
 Appendices
    A. Full Dataset-Horizon Results
@@ -346,17 +350,11 @@ Appendices
    D. Reproducibility Details
 ```
 
-不设置独立 `Discussion`。必要 limitations 放在 Conclusion 末段，完整 negative
-cells、secondary controls 与敏感性结果放在 Appendices。
+standalone `Discussion`用于分离result observation、task/system interpretation与limitations。完整negative cells、secondary controls与敏感性结果放在Appendices。
 
-### 3.1 Provisional Sections 5--7 redesign for author discussion
+### 3.1 Sections 5--7 author-fixed structural design
 
-2026-08-11新增独立结构讨论稿：
-`docs/paper-drafts/iscf-bsca-sections-5-7-initial-design.md`。该稿建议将后续正文暂按
-`Experiments -> Discussion -> Conclusion`组织，并重命名实验subsections以直接对应
-system effectiveness、one-model capability、cost、matched attribution、internal behavior、
-transfer与failure-aware qualitative evidence。由于上方六章结构属于既有共识，独立
-Discussion当前只作proposal；未经author确认不得替换权威全文结构。
+`docs/paper-drafts/iscf-bsca-sections-5-7-initial-design.md`的v0.2结构已由author确认并暂时固定。后续正文按`Experiments -> Discussion -> Conclusion`组织；Experiments依次承担system effectiveness、one-model capability、cost、matched attribution、consistency/allocation behavior与transfer。Qualitative example并入5.6，不另设case-study/failure-case subsection。
 
 ## 4. Introduction
 
@@ -1487,35 +1485,30 @@ training或formal test。
 
 ### 8.5 Ablation Studies
 
-正文只保留主要组件的with/without。该表使用原5 datasets及exact
-`ISCF-BSCA-v1` hyperparameters，与Main I/II的tuned model严格分离：
+正文固定为五个matched end-to-end variants，并使用原5 datasets及exact `ISCF-BSCA-v1` hyperparameters，与Main I/II的tuned model严格分离：
 
-| Variant | Independent Fields | Target-Wise Fusion | BSCA | MSE | MAE |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Full ISCF-BSCA | yes | yes | yes |  |  |
-| w/o BSCA | yes | yes | no |  |  |
-| w/o Independent Fields | no | yes | yes |  |  |
-| w/o Target-Wise Fusion | yes | no | yes |  |  |
-| w/o Multiple Coupling Scopes | no | no | no |  |  |
+| Variant | Frozen intervention | MSE | MAE |
+| --- | --- | ---: | ---: |
+| Full ISCF-BSCA | complete architecture and objective |  |  |
+| w/o BSCA | retain Uniform-Prefix Forecasting Loss；remove Scope-Wise Forecasting Loss and Allocation-Balance Regularizer |  |  |
+| w/o Target-Adaptive Allocation | replace learned Scope Probabilities with a matched non-adaptive fusion rule |  |  |
+| Shared Scope Projection | replace scope-specific projections with one shared projection |  |  |
+| Fixed Scope ($s=144$) | use only the preregistered middle scope；do not search for a best fixed scope |  |  |
 
-random partition、scope count 与 $\lambda$ sensitivity 放 Appendix。由于
-canonical versus random partition 当前无稳定正向归因，不把 canonical grouping
-包装为核心 positive ablation。
+不为Allocation-Balance Regularizer设置单独对照。Fixed Scope的$s=144$是budget-aware preregistered control，不是validation-selected optimum。random partition、scope count与$\lambda$ sensitivity仅在后续确有必要且获得独立授权时进入Appendix；当前不把它们纳入核心闭合矩阵。
 
-### 8.6 Alleviating the Unified Forecasting Problem
+### 8.6 Forecast Consistency and Scope-Allocation Behavior
 
 展示：
 
-1. naive unified、ISCF-EQUAL 与 ISCF-BSCA 的 unified penalty；
-2. horizon-specific systems 的 NCHPD 与 ISCF-BSCA 的 exact-zero CHPD；
-3. future-step × coupling-scope utilization maps；
-4. per-scope forecast error、fused error、prediction diversity 与 oracle
-   headroom；
-5. 不同 future-step bins 上的 improvement。
+1. ISCF-BSCA在shared targets上的exact CHPC/CHPD verification；
+2. future-step或future-region × scope的Scope Probability map；
+3. 各future regions/step bins上的aggregate scope utilization与scope-wise preference/error pattern；
+4. 一条Full ISCF-BSCA相对frozen matched control提升最清晰的performance-selected trajectory，同时显示完整预测轨迹、nested horizon prefixes与对应Scope Probabilities。
 
-该节回答“前文问题被缓解多少”，不负责首次证明问题存在。
+Realized allocation value当前不纳入该节，以控制额外实验成本。Qualitative trajectory允许从提升最明显的样本中选择，但caption必须披露comparator、split与selection rule，并明确其是illustrative而非representative evidence。该节不设置failure-case panel；aggregate negative cells在5.2--5.3完整报告，并在Discussion中解释。
 
-### 8.7 Decoder Transferability
+### 8.7 Backbone Transferability
 
 选择结构不同的两个 backbones：
 
@@ -1532,34 +1525,31 @@ canonical versus random partition 当前无稳定正向归因，不把 canonical
 迁移实验用于判断 decoder 是否超越当前 encoder 的特定 co-adaptation，不能通过
 只替换 frozen consumer 的不公平 probe 得出方向级结论。
 
-### 8.8 Case Studies
+## 9. Discussion
 
-可视化：
+### 9.1 From Horizon-Specific Predictions to a Unified Forecasting System
 
-- 同一历史的 horizon-specific overlapping forecasts；
-- unified full trajectory 与多个 prefixes；
-- scope-allocation weights 随 future time step 的变化；
-- difficult samples 上 scope-conditioned slices 与scope-integrated forecast。
+解释将不同request endpoints视为同一预测轨迹的nested views后，forecasting system的定义、CHPC要求、accuracy与system cost之间的关系。该讨论只解释Main I、Main II、CHPC与efficiency evidence能够支持的系统层结论，不从CHPC推导accuracy，也不把所有flexible-horizon models概括为不一致。
 
-## 9. Conclusion
+### 9.2 Output-Side Sharing as a Forecasting Design Dimension
 
-保持三段：
+将Section 3的future-region sharing-demand heterogeneity与scope-indexed forecast generation、target-adaptive allocation、core ablation、allocation analysis和decoder transfer连接起来。Scope Probabilities或region-wise variation本身不等价于causal specialization；正向机制表述必须等待matched ablation与aggregate behavior共同支持。
+
+### 9.3 Limitations and Future Scope
+
+集中说明external baseline protocol heterogeneity、test-informed selection、seed coverage、deterministic point forecasting边界、prefix-bounded execution的implementation/evidence差距，以及最终结果中的negative dataset/horizon cells。这里只保留final artifacts实际支持的limitations，不使用泛化的future-work套话。
+
+## 10. Conclusion
+
+保持两段：
 
 1. horizon-specific predictors 不构成带 CHPC 保证的 unified forecasting
-   system；
-2. ISCF-BSCA以scope-indexed forecast field、target-conditioned scope
-   allocation与balanced co-adaptation构建统一模型；
-3. 总结 performance、efficiency、mechanism evidence 与 limitations。
+   system，并概括ISCF-BSCA的scope-indexed forecast field、target-adaptive scope allocation与balanced co-adaptation；
+2. 只总结最终已由artifacts支持的performance、efficiency、mechanism与transfer结论，以最窄的material boundary收束。
 
-当前 limitations 至少包括：
+Conclusion不重复展开limitations；完整解释保留在Section 6.3。
 
-- BSCA 相对 EQUAL 的增益 small but directionally robust，不是 universal gain；
-- ETTm2 存在负向 dataset effect；
-- canonical contiguous grouping 的必要性未被 matched random control 支持；
-- 当前结论限定于 deterministic point forecasting；
-- official test 已按治理规则明确标记为 test-informed。
-
-## 10. Claim Boundary
+## 11. Claim Boundary
 
 ### 10.1 允许的 claims
 
@@ -1588,7 +1578,7 @@ canonical versus random partition 当前无稳定正向归因，不把 canonical
 - 在seeds2022/2023可选扩展完成前，Main I/II、new ablations或transfer具有
   cross-seed robustness。
 
-## 11. Primary-Source Terminology Audit
+## 12. Primary-Source Terminology Audit
 
 Search date：`2026-07-23` 至 `2026-07-24`；P5--P6 novelty-boundary refresh：
 `2026-07-28`；Section 2 primary-source refresh：`2026-08-10`。
@@ -1715,7 +1705,7 @@ Coverage boundary：
 - 投稿前仍需针对最终 title、method naming 与 2026 最新 decoder work 再做一次
   freshness search。
 
-## 12. 逐段讨论记录
+## 13. 逐段讨论记录
 
 | Date | Section | Consensus | Remaining Question |
 | --- | --- | --- | --- |
@@ -1765,3 +1755,4 @@ Coverage boundary：
 | 2026-08-10 | Section 2 v0.2 author structure refinement | 按author反馈严格区分recursive/direct/MIMO/DIRMO，重构foundation-model、forecast-generation、output-side multi-scale与allocation叙事 | 四个subsection标题同步；ElasTST系统贡献完整承认，差异收紧到history-patch resolution与output-side state-sharing extent；Introduction/Sections 3--4与experiment cursor不变 |
 | 2026-08-10 | Section 2 v0.2 temporary freeze | 2.3 opening改为`Beyond shallow output projections`，移除`A smaller body of work`的数量判断 | Author确认其余内容；Section 2正文、结构、citations与claim boundaries暂时冻结；next manuscript section pending direction；experiment cursor不变 |
 | 2026-08-11 | Sections 5--7 structural design v0.1 | 基于frozen Sections 1--4、table registry与claim boundaries设计Experiments、Discussion、Conclusion及Appendix evidence ladder | 新增独立设计稿；standalone Discussion、case-study routing与5.6 split/merge均pending author discussion；不填result prose、不改实验授权 |
+| 2026-08-12 | Sections 5--7 structural design v0.2 temporary freeze | Author确认七章结构与standalone Discussion；Core-Ablation固定为Full、w/o BSCA、w/o Target-Adaptive Allocation、Shared Scope Projection与Fixed Scope $s=144$；qualitative并入5.6 | 不设balance-only或failure-case；realized allocation value移出当前计划；performance-selected example必须披露selection；不新增实验授权 |

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "registry_id": "ISCF-BSCA-PAPER-TABLES-20260809",
-  "updated_at": "2026-08-10",
+  "updated_at": "2026-08-12",
   "scope": "paper_facing_experiment_tables",
   "presentation_contract": {
     "main_result_template": "TimeAlign_Table_6_style",
@@ -98,22 +98,25 @@
       "id": "core_ablation",
       "manuscript_role": "main_text_mechanism_attribution",
       "title": "Core with/without ablations",
-      "status": "partially_reusable_prelaunch_pending",
+      "status": "author_fixed_controls_prelaunch_pending",
       "candidate": "ISCF-BSCA-v1",
       "datasets": ["ETTm1", "ETTm2", "ETTh1", "ETTh2", "Weather"],
       "horizons": [96, 192, 336, 720],
       "primary_seed": 2021,
       "variants": [
         "Full_ISCF_BSCA",
-        "without_BSCA_ISCF_EQUAL",
-        "without_independent_scope_conditioned_forecasting",
-        "without_target_conditioned_scope_allocation",
-        "without_multiple_sharing_scopes"
+        "without_BSCA_prefix_loss_only",
+        "without_target_adaptive_allocation",
+        "shared_scope_projection",
+        "fixed_scope_s144"
       ],
-      "reusable_primary_seed_cells": 40,
-      "source_patch_and_retrain_required_primary_seed_cells": 60,
+      "fixed_scope": 144,
+      "fixed_scope_selection": "preregistered_middle_value_without_best_scope_search",
+      "standalone_balance_regularizer_control": false,
+      "reusable_primary_seed_cells": 20,
+      "source_patch_and_retrain_required_primary_seed_cells": 80,
       "training_contract": "matched_end_to_end_joint_training",
-      "claim_boundary": "existing_three_seed_BSCA_confirmation_only_supports_the_small_BSCA_over_EQUAL_direction_and_does_not_complete_this_table"
+      "claim_boundary": "the_existing_ISCF_EQUAL_arm_is_not_the_refrozen_without_BSCA_control_because_the_latter_removes_both_scope_wise_and_balance_terms"
     },
     {
       "id": "decoder_transfer",
@@ -134,7 +137,7 @@
       "id": "ablation_sensitivity",
       "manuscript_role": "appendix",
       "title": "Scope and objective sensitivity",
-      "status": "planned_grid_not_yet_frozen",
+      "status": "deferred_outside_current_core_closure",
       "topics": ["random_partition", "scope_count", "balance_weight_lambda"],
       "claim_boundary": "canonical_grouping_is_not_a_positive_core_claim_without_a_stable_matched_random_control"
     }
@@ -144,17 +147,13 @@
       "id": "unified_problem_and_mechanism_diagnostics",
       "current_presentation": "figures_and_analysis_blocks_not_yet_frozen_as_a_table",
       "contents": [
-        "unified_penalty",
-        "NCHPD_and_exact_zero_CHPD",
+        "exact_CHPC_and_CHPD_verification",
         "future_step_by_scope_utilization",
-        "per_scope_and_fused_error",
-        "prediction_diversity_and_oracle_headroom",
-        "future_step_bin_improvement"
-      ]
-    },
-    {
-      "id": "case_studies",
-      "current_presentation": "figures_not_tables"
+        "scope_wise_regional_preference_and_error",
+        "performance_selected_qualitative_trajectory_with_nested_prefixes"
+      ],
+      "excluded_current_diagnostic": "realized_allocation_value",
+      "qualitative_selection_boundary": "performance_selected_illustration_with_comparator_split_and_selection_rule_disclosed_not_representative"
     }
   ],
   "excluded_from_paper_table_inventory": [

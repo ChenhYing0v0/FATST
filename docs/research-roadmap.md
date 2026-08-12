@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## Sections 5--7 Structural Design v0.2 Temporary Freeze (2026-08-12)
+
+Current writing cursor=`Sections 5--7 v0.2 author-fixed structure / temporarily frozen usable`。正文结构固定为`Experiments -> Discussion -> Conclusion`，不再单设qualitative/failure-case subsection；qualitative evidence并入Section 5.6 Figure 5。Core-Ablation仅包含Full、w/o BSCA、w/o Target-Adaptive Allocation、Shared Scope Projection与Fixed Scope ($s=144$)，不设置Allocation-Balance Regularizer单独对照，也不为Fixed Scope执行best-scope search。
+
+新冻结的`w/o BSCA`只保留Uniform-Prefix Forecasting Loss，并同时移除Scope-Wise Forecasting Loss与Allocation-Balance Regularizer，因此历史ISCF-EQUAL只保留为旧BSCA diagnostic，不能直接作为该control；table registry中的直接可复用cells相应由40收紧为Full的20。Allocation analysis保留exact CHPC/CHPD、Scope Probability、aggregate scope utilization与scope-wise regional preference/error，暂不纳入realized allocation value。Qualitative trajectory从Full相对frozen matched control提升最清晰的样本之一选择，必须披露comparator、split和selection rule，并限定为illustrative而非representative evidence。该结构冻结不授权implementation、remote training或formal test。Decision=`sections_5_7_v0_2_author_fixed_structure_temporarily_frozen_usable`。
+
 ## Sections 5--7 Structural Design v0.1 (2026-08-11)
 
 Current writing cursor=`Sections 5--7 structural design / author discussion pending`。新增provisional design=`docs/paper-drafts/iscf-bsca-sections-5-7-initial-design.md`，以frozen Sections 1--4、paper table registry和现有claim boundaries为输入，只设计后续subsections、evidence order、table/figure placement、Discussion与Appendix routing，不填result prose。

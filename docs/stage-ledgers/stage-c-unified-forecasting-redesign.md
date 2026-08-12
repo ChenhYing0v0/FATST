@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | 写作流审阅Sections 5--7 v0.1 structural design，重点决定standalone Discussion、case-study routing与5.6 analysis scope；实验流Main I已hash冻结，Main II H720-prefix formal table已完成并对齐Main I展示，table registry已建立；下一步为ablation/transfer独立prelaunch gate |
+| `active_question` | 写作流Sections 5--7 v0.2 structural design已暂时固定；实验流Main I已hash冻结，Main II H720-prefix formal table已完成并对齐Main I展示；下一步按独立授权冻结Core-Ablation exact implementations、Figure 5 statistic contract与transfer prelaunch gate |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
-| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7与Section 4 v0.7 temporarily frozen usable；Figure 4 visual design temporarily fixed |
+| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7与Sections 5--7 v0.2 structure temporarily frozen usable；Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | Main I dense/Main II v1=ETTh1, ETTh2, ETTm1, ETTm2, Weather, ECL, Solar；Exchange=companion/deferred extension；ablation=original five |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
@@ -22,7 +22,7 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper consolidation；writing=Sections 5--7 v0.1 structural design pending author discussion；experiments=Main I freeze complete，Main II Step 9 audit / Step 10 system benchmark pass |
+| `current_11_step` | paper consolidation；writing=Sections 5--7 v0.2 structural design temporarily frozen usable；experiments=Main I freeze complete，Main II Step 9 audit / Step 10 system benchmark pass |
 | `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；`ISCF-BSCA-MAIN-v1` 8 selected profiles reusable |
 | `latest_decision` | `paper_table_registry_consolidated_Main_II_presentation_aligned_no_metric_change` |
 | `writing_latest_decision` | `sections_5_7_v0_1_structural_design_pending_author_discussion` |
@@ -299,9 +299,9 @@ Historical and control queue:
 
 | Task | Status | Next Action |
 | --- | --- | --- |
-| ISCF-BSCA paper architecture | `v0_65_sections_5_7_structural_design` | author discussion of standalone Discussion、case-study routing and analysis scope；Figure 4 vector source pending |
+| ISCF-BSCA paper architecture | `v0_66_sections_5_7_structure_temporarily_frozen` | later draft Section 5 only after corresponding evidence blocks close；Figure 4 vector source pending |
 | ISCF-BSCA paper experiment protocol | `v2_single_seed_scoped_exchange_patch_complete` | request remaining 8-dataset/HPO/official-baseline local patches only；B1/B2/B3/C false |
-| ISCF-BSCA-v1 three-seed confirmation | `completed_exact_ablation_anchor` | reuse existing Full/Equal ablation evidence；do not use untuned row as Main I/II method |
+| ISCF-BSCA-v1 three-seed confirmation | `completed_exact_ablation_anchor` | reuse Full evidence；retain Equal as historical BSCA diagnostic only，不将其冒充新冻结的prefix-only w/o BSCA control |
 | ISCF-RSCC-v1 validation matrix | `completed_control_attribution_fail` | exact route closed；retain artifacts/control clue；return Step2/4 |
 | Freeze natural carrier | `completed` | 不再调 profile |
 | ISCF-v0 SAC formal test | `completed_attribution_fail` | no rerun/rescue；use complete negative result in portfolio decision |
@@ -378,6 +378,7 @@ Historical and control queue:
 
 | Date | Trigger | Paper Section | Change Type | Decision |
 | --- | --- | --- | --- | --- |
+| 2026-08-12 | Author确认Section 5--7总体结构并收紧ablation、allocation analysis与qualitative scope | Sections 5--7 v0.2、table registry、architecture/governance sync | author-fixed experiment-writing contract + evidence-boundary freeze | Core-Ablation仅五variants；Fixed Scope=$s=144$；realized allocation value删除；performance-selected qualitative并入Figure 5且必须披露selection；standalone Discussion确认；无implementation/training/test授权 |
 | 2026-08-11 | Author要求基于已完成Sections 1--4设计后续章节但暂不填具体内容 | Sections 5--7 provisional architecture、table/figure routing、claim-evidence map | evidence-ladder design + Discussion proposal + Appendix routing | v0.1 pending author discussion；不替换既有六章共识、不填结果正文、不改变H5A或其他实验授权 |
 | 2026-08-10 | Author要求替换2.3 opening并确认其余Related Work内容可暂时固定 | Section 2.3 sentence、draft status、architecture/governance sync | sentence-level academic polish + temporary manuscript freeze | `Beyond shallow output projections`替代`A smaller body of work`；Section 2 v0.2 temporarily frozen usable；Sections 1/3/4与experiment cursor不变 |
 | 2026-08-10 | 用户逐节审阅Related Work v0.1并要求重构策略分类与比较逻辑 | Section 2 v0.2 draft、source audit、architecture/governance sync | recursive/direct/MIMO/DIRMO primary-source taxonomy + ElasTST official-paper boundary + output-side literature funnel | v0.2 author structure refinement complete pending review；Introduction/Sections 3--4与experiment cursor不变 |
