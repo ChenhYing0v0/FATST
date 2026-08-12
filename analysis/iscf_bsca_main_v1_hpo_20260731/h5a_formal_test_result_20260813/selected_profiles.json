@@ -1,0 +1,35 @@
+{
+  "ETTh1": {
+    "trial_id": "ETTh1__h5a_lr3p5e4",
+    "profile_id": "h5a_lr3p5e4",
+    "phase": "H5A",
+    "seed": 2021,
+    "test_mean_mse_4h": 0.3928027431176853,
+    "test_mean_mae_4h": 0.41970706241346706,
+    "validation_mean_mse_4h": 1.1346538086562226,
+    "checkpoint_reused_without_test_time_mutation": true,
+    "test_tuned": true
+  },
+  "ECL": {
+    "trial_id": "ECL__h5a_ff1024",
+    "profile_id": "h5a_ff1024",
+    "phase": "H5A",
+    "seed": 2021,
+    "test_mean_mse_4h": 0.14997844757529377,
+    "test_mean_mae_4h": 0.24469305426437088,
+    "validation_mean_mse_4h": 0.1308045395320126,
+    "checkpoint_reused_without_test_time_mutation": true,
+    "test_tuned": true
+  },
+  "Solar": {
+    "trial_id": "Solar__h5a_seq512_p4_lr2p5e4",
+    "profile_id": "h5a_seq512_p4_lr2p5e4",
+    "phase": "H5A",
+    "seed": 2021,
+    "test_mean_mse_4h": 0.18830006112259937,
+    "test_mean_mae_4h": 0.20889478485796764,
+    "validation_mean_mse_4h": 0.12853897678259749,
+    "checkpoint_reused_without_test_time_mutation": true,
+    "test_tuned": true
+  }
+}

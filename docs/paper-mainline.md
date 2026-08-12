@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Sections 5--7 v0.2 author-fixed structure temporarily frozen；experiments=H5A Step 8 complete -> Step 9 formal-test preflight |
+| `current_11_step` | paper consolidation；writing=Sections 5--7 v0.2 author-fixed structure temporarily frozen；experiments=H5A Step 9 complete -> Step 10 success-gate pass，table mutation pending authorization |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,7 +18,9 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H5A profiles under targeted HPO；pre-H5A Main II remains frozen reference，matched ablation/transfer仍pending |
+| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H5A ETTh1/ECL/Solar replacement profiles selected；pre-H5A Main II remains frozen reference until table-update authorization，matched ablation/transfer仍pending |
+
+[H5A Formal-Test Result and Main II Selection, 2026-08-13] Once-only formal test于01:00:46完成queue级全局复核：48/48 checkpoints、192/192 standard-horizon rows、48 immutable hashes、720-row dense artifacts与provenance全部通过，`ABORT`未出现。Frozen Main II selector从historical+H5A pool选择ETTh1=`h5a_lr3p5e4`、ECL=`h5a_seq336_p1`、Solar=`h5a_seq512_p4_lr2p5e4`；mean MSE/MAE分别为`0.392803/0.419707`、`0.151848/0.244527`、`0.188300/0.208895`，三者均通过0.5% guard。Best cells由`1/8,0/8,4/8`提高到`2/8,1/8,6/8`，目标三dataset总计`9/24`，若其他datasets不变则Main II由`24/56`提高到`28/56`，全部冻结gates通过。负边界仍为ETTh1无MAE best、ECL仅H96 MAE best且mean MSE +0.147%、Solar H336/H720 MSE非best。Canonical result=`analysis/iscf_bsca_main_v1_hpo_20260731/h5a_main_ii_weak_dataset_search_20260810/formal_test_result_and_main_ii_selection.md`。H5B、extra seeds、confirmation及Main I/Main II自动mutation未授权。Decision=`H5A_success_gate_pass_selection_frozen_table_mutation_not_authorized`。
 
 [H5A Training Complete and Formal-Test Gate, 2026-08-13] H5A于2026-08-12 20:24:03完成48/48 train/validation jobs，ECL/Solar/ETTh1各16个，training test=0且failure token=0。逐trial artifact/provenance/selector/numeric-health audit通过；four-H export与epoch aggregate最大float reduction差为`1.5339e-7`，best epoch不变，按冻结`2e-7` tolerance判定为sub-ULP serialization而非selector drift。48个checkpoint hashes全部唯一，immutable manifest SHA256=`ee5940c8f66aceab5710f17a4bc8ce2efb9ae3c44fa9cec1459fcd9589fe6643`。用户已授权一次完整48 checkpoints × four H=`192` standard-row formal test；H5B、extra seeds、confirmation与自动表格修改仍未授权。Canonical gate=`analysis/iscf_bsca_main_v1_hpo_20260731/h5a_main_ii_weak_dataset_search_20260810/training_result_and_formal_test_gate.md`。Decision=`H5A_training_complete_manifest_frozen_formal_test_authorized`。
 

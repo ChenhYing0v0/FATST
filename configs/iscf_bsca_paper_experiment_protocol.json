@@ -22,14 +22,14 @@
         "efficiency",
         "fresh_mechanism_diagnostics"
       ],
-      "status": "H5A_formal_test_active_complete_matrix_required"
+      "status": "H5A_success_gate_pass_selection_frozen_table_mutation_pending_authorization"
     }
   },
   "paper_table_registry": {
     "registry": "configs/iscf_bsca_paper_table_registry.json",
     "human_readable_index": "docs/iscf-bsca-paper-table-registry.md",
     "main_i_status": "complete_hash_frozen",
-    "main_ii_status": "complete_presentation_aligned_pre_H5A_frozen_reference",
+    "main_ii_status": "pre_H5A_frozen_reference_H5A_replacement_profiles_selected_table_mutation_pending_authorization",
     "main_result_presentation_contract": "shared_TimeAlign_Table_6_style",
     "pending_main_text_tables": [
       "efficiency",
@@ -42,7 +42,7 @@
     "new_experiment_authorization_created": true
   },
   "authorization": {
-    "current_decision": "H5A_once_only_complete_formal_test_active",
+    "current_decision": "H5A_complete_48_of_48_success_gate_pass_table_mutation_not_authorized",
     "existing_artifact_audit": true,
     "matrix_design": true,
     "test_tuned_hpo_project_principle": {
@@ -56,7 +56,7 @@
     "official_test_hpo_execution": true,
     "H4J_formal_test_after_complete_training_manifest": true,
     "formal_test": true,
-    "formal_test_gate": "H5A_only_after_complete_48_checkpoint_immutable_manifest",
+    "formal_test_gate": "H5A_complete_48_checkpoints_192_rows_hash_immutable",
     "current_user_authorization": {
       "date": "2026-08-13",
       "instruction": "continue_H5A_formal_test_after_remote_training_completion",
@@ -65,7 +65,7 @@
       "Tier_B2_bounded_HPO_and_test_profile_ranking": true,
       "Tier_B3_selected_profile_confirmation": false,
       "Tier_C_final_reporting_audit": true,
-      "scope_note": "H5A authorizes 48 resource smokes and training jobs plus complete formal test only after a 48-checkpoint immutable manifest; H5B extra seeds and automatic table mutation remain unauthorized"
+      "scope_note": "H5A training and once-only complete formal test are complete; selected ETTh1 ECL Solar profiles pass the frozen Main II gates, while H5B extra seeds confirmation and automatic table mutation remain unauthorized"
     },
     "scoped_local_patch_authorizations": {
       "timealign_exchange_script": {

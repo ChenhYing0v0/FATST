@@ -1,5 +1,21 @@
 # Research Roadmap
 
+## H5A Formal-Test Result and Step 9--10 Decision (2026-08-13)
+
+Current experiment cursor=`Step 9 complete -> Step 10 targeted performance pass`。H5A once-only
+formal test及queue级全局复核已完成：48/48 checkpoints、192/192 standard-horizon rows、
+48 immutable hashes，errors=`0`。Frozen selector选择ETTh1 `h5a_lr3p5e4`、ECL
+`h5a_seq336_p1`与Solar `h5a_seq512_p4_lr2p5e4`，best cells分别由`1/0/4`
+提高到`2/1/6`；目标三dataset总计9，projected global Main II=`28/56`。Mean MSE和MAE
+guard、三个dataset最低best-cell目标、Solar四个MAE best及global最低27全部通过。
+
+该结果是single-seed、test-tuned dataset-level performance pass，不提供mechanism attribution
+或untouched-holdout结论；ETTh1 MAE、ECL除H96 MAE外的cells及Solar H336/H720 MSE
+继续作为负结果保留。Canonical result=
+`analysis/iscf_bsca_main_v1_hpo_20260731/h5a_main_ii_weak_dataset_search_20260810/formal_test_result_and_main_ii_selection.md`。
+Decision=`H5A_success_gate_pass_selection_frozen_table_mutation_not_authorized`；next=
+等待是否授权用三个完整four-H profiles更新Main II，H5B/extra seeds/confirmation均不自动启动。
+
 ## H5A Training Complete and Formal-Test Gate (2026-08-13)
 
 Current experiment cursor=`Step 8 complete -> Step 9 formal-test preflight`。H5A已完成

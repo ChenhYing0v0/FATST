@@ -181,3 +181,38 @@ ECL和Solar后续允许test-tuned扩展training budget，但仍使用validation�
 `scripts/remote/run_iscf_bsca_main_v1_hpo.sh`现在优先读取`remote_<PHASE>_training_authorized`，因此H3A仍复用同一个global queue、artifact contract与training path。`scripts/remote/run_iscf_bsca_main_v1_hpo_ecl_solar_h3a.sh`只固定H3A config和repo-external output root，不改变runner逻辑。
 
 H3A training期间仍为`official_test_mode=false`、`final_evaluation_split=val`。9/9 checkpoints完成后不做耗时validation profile ranking，只检查selector/artifact/hash完整性，随后为H3A另行冻结test manifest并直接执行完整four-H official-test audit。
+
+## 10. Main II H5A Result Selector
+
+`scripts/analyze_iscf_bsca_main_v1_h5a_result.py`只在generic formal-test analyzer已经确认
+H5A `48/48` checkpoints与`192/192` standard-horizon rows完整后运行。输入仍是每个
+dataset/profile在H96、H192、H336、H720上的MSE/MAE；dense H1--720 diagnostics不进入
+profile selection。
+
+Analyzer将H1--H4M的189个历史profiles与H5A的48个新profiles合并，但只对
+ETTh1、ECL、Solar执行重选。每个profile的8个metric cells先按统一three-decimal
+`ROUND_HALF_UP`与冻结Main II七个external systems比较。Dataset级候选必须同时满足：
+
+$$
+\overline{\mathrm{MSE}}_{p}\leq1.005\,
+\overline{\mathrm{MSE}}_{\mathrm{current}},\qquad
+\overline{\mathrm{MAE}}_{p}\leq1.005\,
+\overline{\mathrm{MAE}}_{\mathrm{current}}.
+$$
+
+Eligible profiles依次按best-cell数量、top-2-cell数量、相对external best的mean
+normalized regret、four-H mean MSE/MAE、validation selector、parameter count和
+profile ID排序。如果第一名没有严格增加该dataset的best-cell数量，则显式保留当前
+profile。该逻辑确保一个dataset最终只有一个profile服务四个horizons，不允许per-H、
+per-metric、per-seed或per-cell rescue。
+
+输出包括完整`all_profile_main_ii_ranking.csv`、三dataset共12行的
+`selected_profile_scorecard.csv`和`h5a_selection_result.json`。JSON单独报告
+ETTh1/ECL/Solar best-cell gates、Solar MAE coverage、target/global projected counts与
+mean guard。Analyzer不会修改Main I或Main II table；表格替换仍需单独授权。
+
+Code-theory边界是：H5A只测试冻结ISCF-BSCA architecture内的dataset-level
+hyperparameter choice能否改善Main II best-cell coverage。即使gate通过，也只能支持
+test-tuned benchmark性能，不建立untouched-holdout或mechanism-attribution结论；若完整
+matrix、checkpoint provenance或target artifact hash不一致，分析会fail closed而不产生
+selector结果。

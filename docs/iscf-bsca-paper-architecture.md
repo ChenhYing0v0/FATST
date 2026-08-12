@@ -5,10 +5,10 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.66` |
-| `last_updated` | `2026-08-12` |
+| `version` | `v0.67` |
+| `last_updated` | `2026-08-13` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Sections 5--7 v0.2 author-fixed structure temporarily frozen；experiments=Main I hash frozen，Main II pre-H5A table frozen reference，H5A formal test active |
+| `current_review_cursor` | writing=Sections 5--7 v0.2 author-fixed structure temporarily frozen；experiments=Main I hash frozen，H5A Step 9--10 success-gate pass，Main II replacement pending authorization |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
@@ -16,7 +16,7 @@
 | `frozen_consensus` | 论文七章结构并保留standalone Discussion；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.2 structural design |
 | `provisional_content` | Method Figure 4 stable vector-asset synchronization；remaining manuscript prose and pending experiment evidence |
-| `authorization_source` | 2026-08-10用户显式重启ETTh1/ECL/Solar HPO；H5A remote resource smoke/training及48/48 manifest后的formal test已授权，H5B/extra seeds/自动表格修改未授权 |
+| `authorization_source` | 2026-08-10用户显式重启ETTh1/ECL/Solar HPO；H5A training/formal test已完成且selector pass，H5B/extra seeds/confirmation/自动表格修改未授权 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
@@ -1389,6 +1389,15 @@ immutable manifest后的完整formal test已授权；H5B、extra seeds、archite
 H5A commit=`7544f76d`的48/48 resource smoke已通过，test=0、48 unique checkpoint
 hashes且无OOM/numeric failure；full three-GPU train/validation queue已于2026-08-10
 15:13:32启动，PID=`2375625`。48/48 immutable manifest完成前不得访问formal test。
+
+H5A full train/validation与once-only formal test现已完成。48/48 checkpoints、192/192
+standard rows、checkpoint immutability、dense artifact/provenance与numeric health全部通过。
+Frozen Main II selector选择ETTh1=`h5a_lr3p5e4`、ECL=`h5a_seq336_p1`、Solar=
+`h5a_seq512_p4_lr2p5e4`；best cells从`1/8,0/8,4/8`提高到`2/8,1/8,6/8`，
+target total=`9/24`，projected global=`28/56`。三profile同时通过four-H mean MSE/MAE
+0.5% guard，Solar保持4/4 MAE best，全部H5A gates通过。该结论仅为test-tuned
+performance evidence，不改变architecture或method-attribution边界；Main II table仍等待
+显式mutation授权，H5B/extra seeds/confirmation未启动。
 
 ### 8.2 Main Results I：Unified versus Horizon-Specific
 
