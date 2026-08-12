@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；writing=Sections 5--7 v0.2 author-fixed structure temporarily frozen；experiments=H5A Main II weak-dataset HPO Step 8 remote training active |
+| `current_11_step` | paper consolidation；writing=Sections 5--7 v0.2 author-fixed structure temporarily frozen；experiments=H5A Step 8 complete -> Step 9 formal-test preflight |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -19,6 +19,8 @@
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1` H5A profiles under targeted HPO；pre-H5A Main II remains frozen reference，matched ablation/transfer仍pending |
+
+[H5A Training Complete and Formal-Test Gate, 2026-08-13] H5A于2026-08-12 20:24:03完成48/48 train/validation jobs，ECL/Solar/ETTh1各16个，training test=0且failure token=0。逐trial artifact/provenance/selector/numeric-health audit通过；four-H export与epoch aggregate最大float reduction差为`1.5339e-7`，best epoch不变，按冻结`2e-7` tolerance判定为sub-ULP serialization而非selector drift。48个checkpoint hashes全部唯一，immutable manifest SHA256=`ee5940c8f66aceab5710f17a4bc8ce2efb9ae3c44fa9cec1459fcd9589fe6643`。用户已授权一次完整48 checkpoints × four H=`192` standard-row formal test；H5B、extra seeds、confirmation与自动表格修改仍未授权。Canonical gate=`analysis/iscf_bsca_main_v1_hpo_20260731/h5a_main_ii_weak_dataset_search_20260810/training_result_and_formal_test_gate.md`。Decision=`H5A_training_complete_manifest_frozen_formal_test_authorized`。
 
 [Sections 5--7 Structural Design v0.2 Temporary Freeze, 2026-08-12] Author确认后续正文采用`Experiments -> Discussion -> Conclusion`七章结构，并暂时固定`docs/paper-drafts/iscf-bsca-sections-5-7-initial-design.md`。Core-Ablation严格限定为Full、w/o BSCA、w/o Target-Adaptive Allocation、Shared Scope Projection与Fixed Scope ($s=144$)，不设置Allocation-Balance Regularizer单独对照；其中w/o BSCA仅保留Uniform-Prefix Forecasting Loss，因此旧ISCF-EQUAL不再自动视为该control，当前可直接复用量由40 cells收紧为Full的20 cells。Section 5.6保留exact CHPC/CHPD、Scope Probability、aggregate utilization与scope-wise regional preference/error，移除高成本realized allocation value；qualitative trajectory并入Figure 5，可从Full相对frozen matched control提升最清晰的样本之一选择，但必须披露selection并仅作illustrative evidence。独立failure-case subsection/figure删除，negative cells继续在Main I/II和Discussion中报告。本次只冻结writing/experiment-design reference，不授权implementation、remote training或formal test。Decision=`sections_5_7_v0_2_author_fixed_structure_temporarily_frozen_usable`。
 

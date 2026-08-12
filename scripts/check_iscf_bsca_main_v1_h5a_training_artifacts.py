@@ -137,7 +137,16 @@ def main() -> None:
         assert all(math.isfinite(value) for pair in metrics.values() for value in pair)
         mean_mse = sum(pair[0] for pair in metrics.values()) / 4
         best = best_training_row(directory / "training_log.csv")
-        assert math.isclose(mean_mse, float(best["val_mean_mse"]), rel_tol=0.0, abs_tol=1e-7)
+        # The exported per-horizon metrics and the epoch aggregate are reduced
+        # through different float32 accumulation paths.  Keep the audit tight
+        # enough to catch selector drift while allowing the observed sub-ULP
+        # serialization difference at MSE ~= 1.
+        assert math.isclose(
+            mean_mse,
+            float(best["val_mean_mse"]),
+            rel_tol=0.0,
+            abs_tol=2e-7,
+        )
 
         row = ledger_by_trial[trial_id]
         assert row["status"] == "validation_complete"

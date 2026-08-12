@@ -22,7 +22,7 @@
         "efficiency",
         "fresh_mechanism_diagnostics"
       ],
-      "status": "H5A_targeted_HPO_active_for_ETTh1_ECL_Solar"
+      "status": "H5A_training_complete_manifest_frozen_formal_test_preflight"
     }
   },
   "paper_table_registry": {
@@ -42,7 +42,7 @@
     "new_experiment_authorization_created": true
   },
   "authorization": {
-    "current_decision": "H5A_ETTh1_ECL_Solar_targeted_HPO_frozen_and_authorized",
+    "current_decision": "H5A_48_checkpoint_manifest_frozen_formal_test_authorized",
     "existing_artifact_audit": true,
     "matrix_design": true,
     "test_tuned_hpo_project_principle": {
@@ -58,8 +58,8 @@
     "formal_test": true,
     "formal_test_gate": "H5A_only_after_complete_48_checkpoint_immutable_manifest",
     "current_user_authorization": {
-      "date": "2026-08-10",
-      "instruction": "restart_HPO_only_for_ETTh1_ECL_Solar_to_increase_Main_II_best_setting_cells",
+      "date": "2026-08-13",
+      "instruction": "continue_H5A_formal_test_after_remote_training_completion",
       "Tier_A": true,
       "Tier_B1_H0_H1": true,
       "Tier_B2_bounded_HPO_and_test_profile_ranking": true,
