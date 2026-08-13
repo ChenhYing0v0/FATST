@@ -157,6 +157,10 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--analysis-dir", type=Path, required=True)
     parser.add_argument("--output-pdf", type=Path, required=True)
+    parser.add_argument(
+        "--table-id",
+        default="ISCF-BSCA-MAIN-I-AMD-SIMPLETM-LOCAL-20260808",
+    )
     return parser.parse_args()
 
 
@@ -906,14 +910,36 @@ def build_latex(path: Path, rows: list[dict[str, Any]]) -> None:
             + qdf_caption
             + "AMD uses one official-code local run per cell (L=512, seed 2024), "
             "SimpleTM uses the mean of its official native repetitions (L=96, "
-            "fix_seed 2025), and all other baselines are published "
+            "fix\\_seed 2025), and all other baselines are published "
             "context rather than matched local reproductions.}",
             "\\label{tab:main_iscf_bsca}",
             "\\end{table*}",
             "",
         ]
     )
-    path.write_text("\n".join(lines), encoding="utf-8")
+    table_text = "\n".join(lines)
+    path.write_text(table_text, encoding="utf-8")
+    standalone_lines = [
+        "% Auto-generated review copy; edit the table builder, not this file.",
+        "\\documentclass[10pt]{article}",
+        "\\usepackage[T1]{fontenc}",
+        "\\usepackage[a3paper,landscape,margin=10mm]{geometry}",
+        "\\usepackage{booktabs}",
+        "\\usepackage{multirow}",
+        "\\usepackage{graphicx}",
+        "\\usepackage{xcolor}",
+        "\\pagestyle{empty}",
+        "\\renewcommand{\\arraystretch}{0.82}",
+        "\\setlength{\\abovecaptionskip}{5pt}",
+        "\\makeatletter\\setlength{\\@fptop}{0pt}\\makeatother",
+        "\\begin{document}",
+        table_text,
+        "\\end{document}",
+        "",
+    ]
+    path.with_name("table_iscf_bsca_main_i_standalone.tex").write_text(
+        "\n".join(standalone_lines), encoding="utf-8"
+    )
 
 
 def build_exchange_latex(path: Path, rows: list[dict[str, Any]]) -> None:
@@ -966,7 +992,7 @@ def write_summary(path: Path, rows: list[dict[str, Any]], args: argparse.Namespa
         }
     )
     summary = {
-        "table_id": "ISCF-BSCA-MAIN-I-AMD-SIMPLETM-LOCAL-20260808",
+        "table_id": args.table_id,
         "models": list(DISPLAY_MODELS),
         "datasets": list(DISPLAY_DATASETS),
         "horizons": list(HORIZONS),

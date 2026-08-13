@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## H5A Table Sync and H5B ETTh1 Expanded HPO (2026-08-13)
+
+Current experiment cursor=`Step 6 frozen -> Step 8 remote resource gate`。H5A三个selected dataset-level profiles已获授权原子替换Main I/Main II中的12个ISCF cells；Main I更新为`31/56` best、`17/56` second，Main II更新为`28/56` best、`25/56` second。旧表仍作为历史快照保留，新表、standalone LaTeX、compiled PDF与source hashes均已重新冻结。
+
+H5B仅针对ETTh1，冻结36个seed2021 from-scratch profiles。历史证据将主要搜索预算指向learning rate和context/patch，其次为dropout/weight decay interactions与mode rank；已明确负向的capacity扩张和LayerNorm关闭不再大规模重复。一个dataset-level profile必须服务四个horizons；validation-only选择checkpoint，complete official test用于test-tuned profile selection；mean MSE/MAE各有0.3% guard。Minimum success为Main II ETTh1从`2/8`提高到`3/8` best cells，stretch=`4/8`。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5b_etth1_expanded_search_20260813/design_and_prelaunch_gate.md`。Decision=`H5B_frozen_authorized_remote_resource_gate_next`。
+
 ## H5A Formal-Test Result and Step 9--10 Decision (2026-08-13)
 
 Current experiment cursor=`Step 9 complete -> Step 10 targeted performance pass`。H5A once-only

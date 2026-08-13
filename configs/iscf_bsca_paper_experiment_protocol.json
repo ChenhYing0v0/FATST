@@ -22,14 +22,14 @@
         "efficiency",
         "fresh_mechanism_diagnostics"
       ],
-      "status": "H5A_success_gate_pass_selection_frozen_table_mutation_pending_authorization"
+      "status": "H5A_profiles_synced_Main_I_Main_II_H5B_ETTh1_HPO_active"
     }
   },
   "paper_table_registry": {
     "registry": "configs/iscf_bsca_paper_table_registry.json",
     "human_readable_index": "docs/iscf-bsca-paper-table-registry.md",
-    "main_i_status": "complete_hash_frozen",
-    "main_ii_status": "pre_H5A_frozen_reference_H5A_replacement_profiles_selected_table_mutation_pending_authorization",
+    "main_i_status": "complete_hash_frozen_H5A_synced_31_of_56_best",
+    "main_ii_status": "complete_hash_frozen_H5A_synced_28_of_56_best",
     "main_result_presentation_contract": "shared_TimeAlign_Table_6_style",
     "pending_main_text_tables": [
       "efficiency",
@@ -42,7 +42,7 @@
     "new_experiment_authorization_created": true
   },
   "authorization": {
-    "current_decision": "H5A_complete_48_of_48_success_gate_pass_table_mutation_not_authorized",
+    "current_decision": "H5A_tables_synced_H5B_ETTh1_36_profile_remote_training_authorized",
     "existing_artifact_audit": true,
     "matrix_design": true,
     "test_tuned_hpo_project_principle": {
@@ -56,16 +56,16 @@
     "official_test_hpo_execution": true,
     "H4J_formal_test_after_complete_training_manifest": true,
     "formal_test": true,
-    "formal_test_gate": "H5A_complete_48_checkpoints_192_rows_hash_immutable",
+    "formal_test_gate": "H5B_requires_36_complete_checkpoints_and_144_rows_hash_immutable",
     "current_user_authorization": {
       "date": "2026-08-13",
-      "instruction": "continue_H5A_formal_test_after_remote_training_completion",
+      "instruction": "sync_H5A_results_into_Main_I_and_Main_II_then_expand_ETTh1_HPO_on_three_GPUs",
       "Tier_A": true,
       "Tier_B1_H0_H1": true,
       "Tier_B2_bounded_HPO_and_test_profile_ranking": true,
       "Tier_B3_selected_profile_confirmation": false,
       "Tier_C_final_reporting_audit": true,
-      "scope_note": "H5A training and once-only complete formal test are complete; selected ETTh1 ECL Solar profiles pass the frozen Main II gates, while H5B extra seeds confirmation and automatic table mutation remain unauthorized"
+      "scope_note": "H5A tables are synchronized and frozen; H5B authorizes 36 ETTh1 seed2021 training jobs on three GPUs and a complete-manifest-gated formal test, while extra seeds architecture redesign and automatic post-H5B table mutation remain unauthorized"
     },
     "scoped_local_patch_authorizations": {
       "timealign_exchange_script": {

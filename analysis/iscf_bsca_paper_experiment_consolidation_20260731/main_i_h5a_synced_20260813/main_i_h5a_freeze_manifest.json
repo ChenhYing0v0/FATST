@@ -1,0 +1,16 @@
+{
+  "table_id": "ISCF-BSCA-MAIN-I-H5A-SYNCED-20260813",
+  "status": "complete_hash_frozen",
+  "updated_cells": 12,
+  "updated_datasets": ["ETTh1", "ECL", "Solar"],
+  "iscf_best_metric_cells": 31,
+  "iscf_second_metric_cells": 17,
+  "artifact_hashes": {
+    "table_fragment": "28806604dc955dc99c281b10a671268fd9e362a07c7055a906da94f59d9d19b1",
+    "standalone_latex": "e33d0e47f8964a9f04737d74360464676b37307edc70f77af6aa9d71cbe9723f",
+    "table_data": "324696b87c2bbe71bf4e26bdb3f4535084d578391555fb7efa3d7f3634b71fe1",
+    "build_summary": "90d933d498e0e137f9b0bb85021446822a4a213dbf14c4f8b6b4bf9e129a7446",
+    "compiled_pdf": "44554305a6c1e6f0ef2f22dd7e8a90ca91bbb4d784a4581fb00be61f811da5b5"
+  },
+  "claim_boundary": "Only frozen H5A ISCF-BSCA dataset-level profiles changed; all baseline evidence and roles are unchanged."
+}

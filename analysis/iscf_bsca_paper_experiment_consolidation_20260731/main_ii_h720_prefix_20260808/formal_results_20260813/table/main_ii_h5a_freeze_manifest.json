@@ -1,0 +1,16 @@
+{
+  "table_id": "ISCF-BSCA-MAIN-II-H5A-SYNCED-20260813",
+  "status": "complete_hash_frozen",
+  "updated_cells": 12,
+  "updated_datasets": ["ETTh1", "ECL", "Solar"],
+  "iscf_best_metric_cells": 28,
+  "iscf_second_metric_cells": 25,
+  "artifact_hashes": {
+    "table_fragment": "d60df465c6b5e202573c0bee956e7ffef1beac0d32bb2b8d08a54595bb8db76c",
+    "standalone_latex": "6dc3bcce40f5a543210bc3b983fe241c5199be5619b4eeecb4f5821fdd799dec",
+    "table_data": "2759eb8441589647d97a3bd2182601851042bcd65cf5fb801bdb06a9dceecbd5",
+    "build_summary": "ca3a3502e1a8230699c128ac0126b45a2e4b1d0a871b4ef06806799f499fe32f",
+    "compiled_pdf": "614b4aa40676dd4f1ec92e2a569073b70753613c530f7a4accf3c0134e97a09d"
+  },
+  "claim_boundary": "Source-native one-model-all-horizons system benchmark; not matched mechanism attribution."
+}

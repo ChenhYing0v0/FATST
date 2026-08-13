@@ -44,16 +44,18 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | Main I frozen；H5A Step 9--10 success-gate pass；pre-H5A Main II frozen reference等待replacement authorization |
+| `active_experiment_step` | Main I/Main II H5A synced and hash frozen；H5B ETTh1 Step 6 frozen -> Step 8 remote resource gate |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
-| `local_protocol_patch_authorized` | true；限H5A config/runner/audit chain |
-| `remote_training_authorized` | consumed；H5A 48 resource smokes与48 train/validation jobs已完成 |
-| `test_tuned_hpo_authorized` | consumed；ETTh1/ECL/Solar dataset-level shared-profile H5A已完成selection |
-| `formal_test_authorized` | consumed；H5A 48/48 checkpoints与192/192 rows完整结束 |
-| `next_action` | 等待用户是否授权用ETTh1/ECL/Solar三个完整four-H profiles更新Main II；不得自动启动H5B/extra seeds/confirmation |
+| `local_protocol_patch_authorized` | true；限H5B ETTh1 config/runner/checker与table sync chain |
+| `remote_training_authorized` | true；限H5B 36 profiles、三GPU resource smoke及train/validation |
+| `test_tuned_hpo_authorized` | true；限36/36 manifest后的ETTh1 dataset-level shared-profile selection |
+| `formal_test_authorized` | conditional true；36/36 immutable manifest后一次完整144-row formal test，禁止partial execution |
+| `next_action` | exact commit push -> remote disk/GPU audit -> 36/36 resource smoke -> three-GPU full training；manifest前test=0 |
 | `conditional_next` | 任何新baseline仍需独立source/protocol gate；不得改写AMD/SimpleTM native role为matched attribution |
+
+2026-08-13用户授权H5A table mutation并继续ETTh1-only HPO。H5A selected profiles已替换Main I/Main II中ETTh1/ECL/Solar的12个ISCF cells；Main I=`31/56` best、`17/56` second，Main II=`28/56` best、`25/56` second，standalone LaTeX/PDF与hash均重新冻结。H5B审计25个ETTh1 profiles后固定36个expanded-range trials：重点为LR fine grid、`L576--960` context/patch、regularization interactions与rank，统一120 epochs/patience24；capacity仅保留一个moderate probe，LayerNorm保持开启。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5b_etth1_expanded_search_20260813/design_and_prelaunch_gate.md`。Decision=`H5B_frozen_authorized_remote_resource_gate_next`。
 
 2026-08-08用户要求暂时冻结Main I，并把Main II改为H720-trained one-model-all-horizons benchmark。Main I冻结manifest记录14 models × 7 dense datasets × four H、392 rows、29/56 best、19/56 second及全部关键hash。Main II v1包含ISCF-BSCA、TimeAlign、QDF、AMD、SimpleTM、iTransformer、PatchTST、DLinear；每个external baseline逐dataset训练/复用一个H720 model，并从同一H720 test tensor裁剪H96/H192/H336。49个checkpoint objects可复用，21个iTransformer/PatchTST/DLinear H720 jobs需新训练；PatchTST/DLinear Solar无official script/loader，固定为source-patch-required。Exchange因Main I H720 anchors不完整而deferred。Canonical protocol=`configs/iscf_bsca_main_ii_h720_prefix_protocol.json`；prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/design_and_prelaunch_gate.md`。当前只完成design/source audit，Tier A/B/C仍为false。
 

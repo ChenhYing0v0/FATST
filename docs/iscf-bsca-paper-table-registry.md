@@ -10,6 +10,7 @@ source transcription audit、checkpoint manifest 和 smoke 统计不作为论文
 状态含义：
 
 - `complete_hash_frozen`：结果、来源角色与输出 hash 已冻结；未经用户显式解冻不得改写；
+- `complete_hash_frozen_h5a_synced`：H5A选择的完整dataset-level profiles已获授权替换，结果与输出hash重新冻结；
 - `complete_presentation_aligned`：完整结果已通过审计，并已按 Main I 视觉契约生成；
 - `complete_limited_surface`：结果完整，但只覆盖明确列出的部分 systems；
 - `author_fixed_controls_prelaunch_pending`：author已固定control identities，但implementation、预算与formal matrix仍待独立prelaunch；
@@ -41,9 +42,9 @@ H720 model 所形成的 four-horizon prefix forecasts。
 
 | ID | 论文位置 | 状态 | 当前规模 | Canonical artifact | 能支持的结论 |
 | --- | --- | --- | --- | --- | --- |
-| `Main-I` | 正文主结果 | `complete_hash_frozen` | 14 systems × 7 datasets × 4 H；392 system–dataset–H rows | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_final_amd_simpletm_20260808/table_iscf_bsca_main_i_qdf.tex` | ISCF-BSCA 与 separately optimized horizon-specific systems 的 system-level accuracy competitiveness；不作 matched mechanism attribution |
-| `Main-II` | 正文主结果 | `complete_presentation_aligned` | 8 systems × 7 datasets × 4 H；224 cells，70 checkpoint evaluations | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/table/table_iscf_bsca_main_ii.tex` | one-model-for-all-horizons system competitiveness；不作 BSCA/decoder attribution |
-| `Main-I-Exchange` | Supplementary companion | `complete_limited_surface` | ISCF-BSCA / TimeAlign / QDF × Exchange × 4 H | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_final_amd_simpletm_20260808/table_exchange_companion.tex` | Exchange 的部分系统背景；不能表述为完整 Main I extension |
+| `Main-I` | 正文主结果 | `complete_hash_frozen_h5a_synced` | 14 systems × 7 datasets × 4 H；392 system–dataset–H rows | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_h5a_synced_20260813/table_iscf_bsca_main_i_qdf.tex` | ISCF-BSCA 与 separately optimized horizon-specific systems 的 system-level accuracy competitiveness；不作 matched mechanism attribution |
+| `Main-II` | 正文主结果 | `complete_hash_frozen_h5a_synced` | 8 systems × 7 datasets × 4 H；224 cells，70 checkpoint evaluations | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260813/table/table_iscf_bsca_main_ii.tex` | one-model-for-all-horizons system competitiveness；不作 BSCA/decoder attribution |
+| `Main-I-Exchange` | Supplementary companion | `complete_limited_surface` | ISCF-BSCA / TimeAlign / QDF × Exchange × 4 H | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_h5a_synced_20260813/table_exchange_companion.tex` | Exchange 的部分系统背景；不能表述为完整 Main I extension |
 | `Efficiency` | 正文 supporting result | `measurement_pending_baseline_subset_not_yet_frozen` | 指标已定，baseline subset 与 profiler contract 待冻结 | 尚无正式表 | trained-model/storage/training/inference/CHPC trade-off；测量完成前不作 efficiency claim |
 | `Core-Ablation` | 正文 mechanism attribution | `author_fixed_controls_prelaunch_pending` | 5 variants × 5 datasets × 4 H；seed2021共有100 cells；按新control identity暂仅Full的20 cells可直接复用，80 cells需source patch/retrain | 尚无正式表 | Full、w/o BSCA、w/o Target-Adaptive Allocation、Shared Scope Projection与Fixed Scope ($s=144$)的matched attribution |
 | `Decoder-Transfer` | 正文 transfer evidence | `source_patch_and_retrain_required_prelaunch_pending` | 2 backbones × 3 decoder columns × 5 datasets × 4 H；120 cells | 尚无正式表 | decoder 是否可在 DLinear-style 与 PatchTST-style backbones 上 end-to-end transfer |
@@ -53,19 +54,19 @@ H720 model 所形成的 four-horizon prefix forecasts。
 
 ### Main I
 
-- ISCF-BSCA：29/56 best、19/56 second；
+- ISCF-BSCA：31/56 best、17/56 second；相对pre-H5A表由29/56 best提高2个；
 - TimeAlign、QDF、AMD、SimpleTM 为本地 official-source/native reproduction；
 - 其余 columns 为 published context，来源与 protocol 差异必须保留在 caption/Methods；
-- Main I 已由 `main_i_freeze_manifest.json` hash 冻结，Main II 或后续实验不得回写。
+- H5A同步版由 `main_i_h5a_freeze_manifest.json` hash冻结；standalone LaTeX与A3 review PDF分别为`table_iscf_bsca_main_i_standalone.tex`和`output/pdf/iscf_bsca_main_i_h5a_20260813.pdf`。
 
 ### Main II
 
 - 完整性：70 checkpoint evaluations、280 raw prefix rows、224 aggregate cells、448 MSE/MAE scalars；
-- ISCF-BSCA macro MSE/MAE：0.262469 / 0.308281，均为八 systems rank 1；
-- 三位小数显示口径：24/56 best、27/56 second，共51/56 metric cells 位于 top-2；
+- H5A将ETTh1/ECL/Solar三个完整four-H profiles原子替换；其他systems与datasets保持不变；
+- 三位小数显示口径：28/56 best、25/56 second，共53/56 metric cells 位于 top-2；
 - Main II 现已与 Main I 对齐 dataset order、year label、best/second emphasis、column spacing 与 required packages；
 - 可直接编译的完整source为`table_iscf_bsca_main_ii_standalone.tex`，A3 landscape
-  review PDF为`output/pdf/iscf_bsca_main_ii_standalone.pdf`；正式manuscript仍使用
+  review PDF为`output/pdf/iscf_bsca_main_ii_h5a_20260813.pdf`；正式manuscript仍使用
   原始table fragment；
 - external source contracts 不 matched，因此该表不能兑现 component effectiveness 或 decoder portability claims。
 

@@ -66,6 +66,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--aggregate-cells", type=Path, required=True)
     parser.add_argument("--result-audit", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument(
+        "--table-id",
+        default="ISCF-BSCA-MAIN-II-H720-PREFIX-20260809",
+    )
     return parser.parse_args()
 
 
@@ -257,7 +261,7 @@ def main() -> None:
             "mae": sum(float(row["mae"]) for row in rows) / len(rows),
         }
     summary = {
-        "table_id": "ISCF-BSCA-MAIN-II-H720-PREFIX-20260809",
+        "table_id": args.table_id,
         "systems": list(SYSTEMS),
         "datasets": list(DATASETS),
         "horizons": list(HORIZONS),

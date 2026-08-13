@@ -8,7 +8,7 @@
 | `version` | `v0.67` |
 | `last_updated` | `2026-08-13` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Sections 5--7 v0.2 author-fixed structure temporarily frozen；experiments=Main I hash frozen，H5A Step 9--10 success-gate pass，Main II replacement pending authorization |
+| `current_review_cursor` | writing=Sections 5--7 v0.2 author-fixed structure temporarily frozen；experiments=Main I/Main II H5A synced and hash frozen，H5B ETTh1 expanded HPO prelaunch |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
@@ -16,7 +16,7 @@
 | `frozen_consensus` | 论文七章结构并保留standalone Discussion；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.2 structural design |
 | `provisional_content` | Method Figure 4 stable vector-asset synchronization；remaining manuscript prose and pending experiment evidence |
-| `authorization_source` | 2026-08-10用户显式重启ETTh1/ECL/Solar HPO；H5A training/formal test已完成且selector pass，H5B/extra seeds/confirmation/自动表格修改未授权 |
+| `authorization_source` | 2026-08-13用户授权H5A结果更新Main I/Main II，并授权ETTh1-only H5B扩大搜索范围、扩展训练预算与三GPU remote training；extra seeds/architecture redesign/automatic post-H5B table mutation未授权 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；

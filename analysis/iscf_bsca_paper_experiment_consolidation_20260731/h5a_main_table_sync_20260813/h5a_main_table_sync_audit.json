@@ -1,0 +1,24 @@
+{
+  "aggregate_cells": 224,
+  "claim_boundary": "Only the frozen H5A ETTh1/ECL/Solar dataset-level profiles replace the prior ISCF-BSCA values; all baseline cells remain unchanged.",
+  "gate": "pass",
+  "matrix_complete": true,
+  "replacement_scope": [
+    "ECL",
+    "ETTh1",
+    "Solar"
+  ],
+  "selected_trials": {
+    "ECL": "ECL__h5a_seq336_p1",
+    "ETTh1": "ETTh1__h5a_lr3p5e4",
+    "Solar": "Solar__h5a_seq512_p4_lr2p5e4"
+  },
+  "source_hashes": {
+    "h5a_manifest": "ee5940c8f66aceab5710f17a4bc8ce2efb9ae3c44fa9cec1459fcd9589fe6643",
+    "h5a_scorecard": "d40970add4091b5180d87a109bd1fee7b4ed696ba298393ce998ef3d1a6abeaa",
+    "merged_main_ii_cells": "dfc50facd41c019ea1b1e9cfca1f361d9d1977aa70b6f639673a5f5b45227f73",
+    "merged_scorecard": "454d1db0bdfe11d290a28882b7044da4bf647a716a538d0806848f5a7140a479",
+    "old_main_ii_cells": "3268b5f749c434c419a4b3480b29e69bb3fe16614099521ebb6b5ff7493484c5",
+    "old_scorecard": "aeb32304936e365b7fbf4072334a6a87930bef9825b4c8e91af82938c7b65bc7"
+  }
+}
