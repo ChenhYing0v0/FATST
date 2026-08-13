@@ -44,15 +44,15 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | H5B fallback retained；H5D 48/48 training complete，immutable manifest frozen，formal test authorized prelaunch |
+| `active_experiment_step` | H5D formal complete gate fail；H5B fallback retained，ETTh1 HPO paused |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
 | `local_protocol_patch_authorized` | true；限H5D config/checker/runner/history audit与governance sync |
 | `remote_training_authorized` | true；限H5D 48-profile resource smoke及train/validation |
 | `test_tuned_hpo_authorized` | true；限完整formal test后的ETTh1 dataset-level shared-profile selection |
-| `formal_test_authorized` | true；限H5D一次完整48-checkpoint/192-row audit |
-| `next_action` | focused commit/push -> remote exact-commit/GPU/zero-artifact preflight -> complete H5D formal test -> frozen selector |
+| `formal_test_authorized` | consumed；H5D 48/48、192/192 complete |
+| `next_action` | 保留H5B；等待作者决定是否结束ETTh1 HPO或另行设计新objective/candidate |
 | `conditional_next` | 任何新baseline仍需独立source/protocol gate；不得改写AMD/SimpleTM native role为matched attribution |
 
 2026-08-13用户授权H5A table mutation并继续ETTh1-only HPO。H5A selected profiles已替换Main I/Main II中ETTh1/ECL/Solar的12个ISCF cells；Main I=`31/56` best、`17/56` second，Main II=`28/56` best、`25/56` second，standalone LaTeX/PDF与hash均重新冻结。H5B审计25个ETTh1 profiles后固定36个expanded-range trials：重点为LR fine grid、`L576--960` context/patch、regularization interactions与rank，统一120 epochs/patience24；capacity仅保留一个moderate probe，LayerNorm保持开启。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5b_etth1_expanded_search_20260813/design_and_prelaunch_gate.md`。Decision=`H5B_frozen_authorized_remote_resource_gate_next`。
@@ -74,6 +74,8 @@ H5C formal test于14:08:17--14:11:20完成54/54 checkpoints与216/216 rows，err
 Remote精确清理五个旧resource-smoke目录后quota由189G降至186G；exact commit=`21df4c80`完成48/48 H5D resource smoke、48 unique hashes、failure=0、test=0。Full train/validation于14:43:23在GPU0/1/2启动，PID=`1092478`；首批batch16 jobs已完成epoch1，memory约561--562 MiB。Canonical launch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/remote_launch.md`。Decision=`H5D_three_GPU_train_validation_active_test_zero`。
 
 H5D train/validation于16:09:53完成48/48，training test=0、failure=0；48个checkpoint hashes唯一，best epoch范围1--3。Immutable manifest SHA256=`480180333de60c3f53d98c894b8854e4169401edcf7ca378d20f1b213e233a9e`。用户明确授权继续一次完整192-row formal test与冻结selector；H5E、extra seeds及table mutation仍false。Canonical gate=`analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/training_result_and_formal_test_gate.md`。Decision=`H5D_training_complete_48_checkpoint_manifest_frozen_formal_test_authorized`。
+
+H5D formal test于16:28:05--16:30:50完成48/48 checkpoints与192/192 rows，errors/temp/checkpoint mutation均为0。只有3个profiles通过双guard；唯一达到5/8 Main II best的`h5d_bs16_lr3p6`因mean MSE `+0.675%`而被排除。Eligible winner `h5d_bs16_lr2p4`为4/8 best、8/8 top-2，未严格超过H5B。冻结selector保留`h5b_seq640_p20`；Main I/II不变。Canonical result=`analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/formal_test_result_and_selection.md`。Failure=`objective_tradeoff_and_search_space_performance_shortfall`，rollback=Step 6 retain H5B。Decision=`H5D_no_eligible_best_cell_improvement_retain_H5B_profile`。
 
 2026-08-08用户要求暂时冻结Main I，并把Main II改为H720-trained one-model-all-horizons benchmark。Main I冻结manifest记录14 models × 7 dense datasets × four H、392 rows、29/56 best、19/56 second及全部关键hash。Main II v1包含ISCF-BSCA、TimeAlign、QDF、AMD、SimpleTM、iTransformer、PatchTST、DLinear；每个external baseline逐dataset训练/复用一个H720 model，并从同一H720 test tensor裁剪H96/H192/H336。49个checkpoint objects可复用，21个iTransformer/PatchTST/DLinear H720 jobs需新训练；PatchTST/DLinear Solar无official script/loader，固定为source-patch-required。Exchange因Main I H720 anchors不完整而deferred。Canonical protocol=`configs/iscf_bsca_main_ii_h720_prefix_protocol.json`；prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/design_and_prelaunch_gate.md`。当前只完成design/source audit，Tier A/B/C仍为false。
 

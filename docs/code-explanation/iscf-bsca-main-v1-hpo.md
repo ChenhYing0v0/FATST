@@ -311,3 +311,8 @@ hash。Manifest builder现支持H5D 48 rows；formal-contract checker支持H5D�
 `automatic_H5E_extension_authorized=false`。H5D wrapper复用generic atomic test queue，输出仍为
 每profile 720-row dense metrics、invariant JSON和diagnostic NPZ。Selector以`--phase H5D`复用
 H5C排序实现，但从H5D contract读取48/192 completeness与输出H5D-specific decision files。
+
+H5D selector的实际执行保持两阶段语义：先对每profile以H5B mean MSE/MAE计算双guard，
+再只在eligible集合内按best/top-2与tie-break排序。因而`h5d_bs16_lr3p6`即使取得5/8
+rounded best cells，也会因mean MSE ratio=`1.006752`先被过滤；代码不会让cell count越过
+aggregate safety contract。最终machine result保留H5B，并完整输出48个negative trials。

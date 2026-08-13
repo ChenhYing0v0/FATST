@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## H5D Formal-Test Result and Step 9--10 Decision (2026-08-13)
+
+Current cursor=`Step 9 complete -> Step 10 gate fail -> Step 6 rollback`。48/48 profiles与192/192 rows完整，checkpoint hash immutable，errors/temp/ABORT均为0。只有3个H5D profiles通过相对H5B的mean MSE/MAE `1.002x`双guard；唯一取得Main II 5/8 best的`h5d_bs16_lr3p6`因mean MSE退化0.675%而不eligible。Eligible winner `h5d_bs16_lr2p4`为4/8 best、8/8 top-2，未严格改善primary objective；冻结selector保留H5B。Batch×LR是唯一形成eligible frontier的block，p19/p21 geometry和rank interactions全部不eligible。Canonical result=`analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/formal_test_result_and_selection.md`。Failure=`objective_tradeoff_and_search_space_performance_shortfall`；Decision=`H5D_no_eligible_best_cell_improvement_retain_H5B_profile`。
+
 ## H5D Training Complete and Formal-Test Gate (2026-08-13)
 
 Current cursor=`Step 8 complete -> Step 9 formal-test preflight`。48/48 ETTh1 train/validation jobs于16:09:53完成，training test=0、failure=0，best epoch范围1--3。Artifact/provenance/four-H selector/numeric audit通过；48个checkpoint hashes唯一，immutable manifest SHA256=`480180333de60c3f53d98c894b8854e4169401edcf7ca378d20f1b213e233a9e`。用户已授权一次完整192-row formal test与冻结selector；H5B保持fallback，H5E/extra seeds/table mutation=false。Canonical gate=`analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/training_result_and_formal_test_gate.md`。Decision=`H5D_training_complete_48_checkpoint_manifest_frozen_formal_test_authorized`。
