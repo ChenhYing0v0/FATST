@@ -22,7 +22,7 @@
         "efficiency",
         "fresh_mechanism_diagnostics"
       ],
-      "status": "H5B_ETTh1_fallback_H5C_54_checkpoint_manifest_frozen_formal_test_authorized"
+      "status": "H5C_formal_complete_gate_fail_H5B_ETTh1_fallback_retained"
     }
   },
   "paper_table_registry": {
@@ -39,10 +39,10 @@
     "pending_appendix_tables": [
       "ablation_sensitivity"
     ],
-    "new_experiment_authorization_created": true
+    "new_experiment_authorization_created": false
   },
   "authorization": {
-    "current_decision": "H5C_training_complete_54_checkpoint_manifest_frozen_formal_test_authorized",
+    "current_decision": "H5C_no_eligible_best_cell_improvement_retain_H5B_profile",
     "existing_artifact_audit": true,
     "matrix_design": true,
     "test_tuned_hpo_project_principle": {
@@ -59,13 +59,13 @@
     "formal_test_gate": "H5C_requires_54_complete_checkpoints_and_216_rows_hash_immutable",
     "current_user_authorization": {
       "date": "2026-08-13",
-      "instruction": "expand_ETTh1_HPO_by_approximately_50_percent_and_continue_optimization",
+      "instruction": "continue_H5C_complete_formal_test_after_remote_training_completion",
       "Tier_A": true,
       "Tier_B1_H0_H1": true,
       "Tier_B2_bounded_HPO_and_test_profile_ranking": true,
       "Tier_B3_selected_profile_confirmation": false,
       "Tier_C_final_reporting_audit": true,
-      "scope_note": "H5B selection remains frozen; H5C authorizes 54 new ETTh1 seed2021 training jobs on three GPUs and a complete-manifest-gated full formal test, while extra seeds architecture redesign and automatic table mutation remain unauthorized"
+      "scope_note": "H5C complete formal test is consumed; H5B remains the frozen ETTh1 fallback because no H5C profile increased Main II best cells; extra seeds H5D architecture redesign and automatic table mutation remain unauthorized"
     },
     "scoped_local_patch_authorizations": {
       "timealign_exchange_script": {
@@ -158,7 +158,7 @@
   },
   "h5c_etth1_prelaunch": {
     "candidate_version": "ISCF-BSCA-MAIN-v1-etth1-h5c-test-informed-20260813",
-    "status": "training_complete_manifest_frozen_formal_test_authorized",
+    "status": "formal_complete_gate_fail_h5b_fallback_retained",
     "trials": 54,
     "increase_over_h5b": 0.5,
     "dataset": "ETTh1",
@@ -185,11 +185,28 @@
     "training_test_artifacts": 0,
     "checkpoint_manifest_sha256": "e94f95a67c748f95d72e1aab6ced4aaae498982105da5234d411d4c5c0c8379f",
     "formal_test_user_authorized": true,
-    "formal_test_status": "authorized_prelaunch",
+    "formal_test_status": "complete_consumed",
+    "formal_test_commit": "d2f9eacd8502d92cec2301a3ef283bc96dc7206a",
+    "formal_test_config_sha256": "a519c6dc197d090eecddb32df90cc072a46c41d35292e1f8a7211a1a03018dea",
+    "formal_test_start": "2026-08-13T14:08:17+08:00",
+    "formal_test_finish": "2026-08-13T14:11:20+08:00",
+    "formal_test_complete_profiles": 54,
+    "formal_test_complete_standard_rows": 216,
+    "formal_test_errors": 0,
+    "eligible_h5c_profiles": 22,
+    "h5c_max_main_ii_best_cells": 4,
+    "best_h5c_trial_id": "ETTh1__h5c_do0",
+    "best_h5c_mean_mse_4h": 0.3907248200645383,
+    "best_h5c_mean_mae_4h": 0.41700580932550546,
+    "best_h5c_main_ii_best_cells": 4,
+    "selected_trial_id": "ETTh1__h5b_seq640_p20",
+    "success_gate_pass": false,
+    "automatic_H5D_authorized": false,
     "config": "configs/iscf_bsca_main_v1_hpo_etth1_h5c.json",
     "prelaunch": "analysis/iscf_bsca_main_v1_hpo_20260731/h5c_etth1_refined_interaction_search_20260813/design_and_prelaunch_gate.md",
     "remote_launch": "analysis/iscf_bsca_main_v1_hpo_20260731/h5c_etth1_refined_interaction_search_20260813/remote_launch.md",
-    "formal_test_gate": "analysis/iscf_bsca_main_v1_hpo_20260731/h5c_etth1_refined_interaction_search_20260813/training_result_and_formal_test_gate.md"
+    "formal_test_gate": "analysis/iscf_bsca_main_v1_hpo_20260731/h5c_etth1_refined_interaction_search_20260813/training_result_and_formal_test_gate.md",
+    "formal_test_result": "analysis/iscf_bsca_main_v1_hpo_20260731/h5c_etth1_refined_interaction_search_20260813/formal_test_result_and_selection.md"
   },
   "evaluation_contract": {
     "datasets": [

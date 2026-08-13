@@ -281,3 +281,10 @@ cells、phase、guard reference和next-extension key。H5B原36/144 contract有�
 check，确保向后兼容。H5C test runner仍复用generic atomic queue，目标artifact为每profile
 720-row dense metrics、invariant JSON和diagnostic NPZ，216 standard rows只从完整dense artifacts
 聚合得到。
+
+`scripts/analyze_iscf_bsca_main_v1_h5c_result.py`在54/54与216/216 completeness gate通过后，
+从冻结Main I/Main II comparison surfaces计算共同三位小数口径的best/top-2 counts。它先用
+H5B mean MSE/MAE `1.002x`双guard过滤，再按Main II best、Main I best、Main II top-2、
+mean MSE/MAE、validation score、参数量和ID排序。输出包含全部profile ranking、best H5C
+scorecard、最终保留profile scorecard及machine decision。若H5C best-cell数没有严格超过H5B，
+selector必须保留H5B，不能因事后mean improvement改写primary objective，也不修改paper tables。

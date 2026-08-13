@@ -5,10 +5,10 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.69` |
+| `version` | `v0.70` |
 | `last_updated` | `2026-08-13` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Sections 5--7 v0.2 author-fixed structure temporarily frozen；experiments=H5B fallback frozen，H5C 54/54 training complete、manifest frozen、formal test authorized |
+| `current_review_cursor` | writing=Sections 5--7 v0.2 author-fixed structure temporarily frozen；experiments=H5C formal complete、target gate fail、H5B ETTh1 fallback retained |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
@@ -16,7 +16,7 @@
 | `frozen_consensus` | 论文七章结构并保留standalone Discussion；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.2 structural design |
 | `provisional_content` | Method Figure 4 stable vector-asset synchronization；remaining manuscript prose and pending experiment evidence |
-| `authorization_source` | 2026-08-13用户进一步授权将ETTh1 HPO matrix扩大约50%并继续优化；H5C限54个seed2021 profiles、三GPU training及complete-manifest后的完整formal test，extra seeds/architecture redesign/automatic table mutation未授权 |
+| `authorization_source` | 2026-08-13用户授权继续H5C完整formal test；授权已消费，H5D/extra seeds/architecture redesign/automatic table mutation未授权 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
@@ -31,6 +31,12 @@ evidence状态，不改变architecture、method claims或Sections 1--4；表格�
 H5C prelaunch amendment：本轮只在H5B winner附近细化context/patch、LR、dropout、
 weight decay与rank interactions，不改变method graph。54-trial matrix及success gate属于
 paper-facing hyperparameter optimization，不产生新的architecture contribution或mechanism claim。
+
+H5C result amendment：54/54 profiles与216/216 formal-test rows完整。最优H5C
+`h5c_do0`将four-H mean MSE/MAE相对H5B小幅降低0.167%/0.060%，但Main II best
+cells仍为4/8；全部54个H5C profiles的上限也只有4/8，未达到minimum 5/8。冻结selector
+因此保留H5B `h5b_seq640_p20`。该失败属于hyperparameter search-space performance
+shortfall，不改变architecture或method claim；H5D和table mutation均未自动授权。
 
 ## 1. 核心术语
 

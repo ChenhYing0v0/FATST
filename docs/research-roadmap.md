@@ -1,5 +1,21 @@
 # Research Roadmap
 
+## H5C ETTh1 Formal-Test Result and Step 9--10 Decision (2026-08-13)
+
+Current experiment cursor=`Step 9 complete -> Step 10 targeted gate fail -> rollback Step 6`。
+Once-only formal test已完整覆盖54/54 checkpoints与216/216 standard-horizon rows；54个
+checkpoint hashes保持immutable，errors=0。Frozen selector的22个eligible profiles中，
+`h5c_do0`取得eligible rank 1：mean MSE/MAE=`0.390725/0.417006`，相对H5B改善
+0.167%/0.060%，但Main II best/top-2仍为`4/8,7/8`。
+
+全部54个H5C profiles的Main II best-cell上限均为4/8，未达到minimum 5/8；因此按
+预注册primary objective保留H5B `h5b_seq640_p20`，不能事后改用mean improvement覆盖
+best-cell gate。Failure attribution=`search_space_performance_shortfall_at_best_cell_gate`，只否定
+H5C refined-interaction matrix，不否定architecture方向。Canonical result=
+`analysis/iscf_bsca_main_v1_hpo_20260731/h5c_etth1_refined_interaction_search_20260813/formal_test_result_and_selection.md`。
+Decision=`H5C_no_eligible_best_cell_improvement_retain_H5B_profile`；H5D、extra seeds与table
+mutation均未自动授权。
+
 ## H5C ETTh1 54-Trial Refined-Interaction HPO (2026-08-13)
 
 Current experiment cursor=`Step 6 frozen -> Step 8 remote resource gate`。H5B的36-profile result audit显示`L640/p20`是唯一产生大幅joint gain的profile；dropout0.05取得H336最低MSE，higher LR改善H336 MAE，rank80改善H720 MAE，而capacity扩张为负。H5C因此将matrix精确扩大50%至54个new ETTh1 seed2021 profiles：22个context/patch相关、15个LR相关、7个dropout、5个WD与5个rank profiles，与此前61个ETTh1 effective jobs零重复。
