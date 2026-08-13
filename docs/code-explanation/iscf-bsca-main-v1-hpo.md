@@ -303,3 +303,11 @@ geometry和mode rank，且都固定dropout0、width32、weight decay0.01、Layer
 budget。`scripts/check_iscf_bsca_main_v1_hpo_etth1_h5d.py`核验115个historical fingerprints、
 48个new fingerprints、six group counts、frozen hashes、divisible geometry与test=0 dry-run。
 Formal test flag明确为false，防止training完成后自动访问test或修改paper tables。
+
+H5D完成后，training artifact checker继续核验每个trial的effective config、four-H validation
+reduction、best epoch、checkpoint SHA256与failure logs；formal-test authorization改由独立
+`iscf_bsca_main_v1_hpo_etth1_h5d_test_audit.json`承载，因而不会回写训练config并破坏其provenance
+hash。Manifest builder现支持H5D 48 rows；formal-contract checker支持H5D的H5B双guard与
+`automatic_H5E_extension_authorized=false`。H5D wrapper复用generic atomic test queue，输出仍为
+每profile 720-row dense metrics、invariant JSON和diagnostic NPZ。Selector以`--phase H5D`复用
+H5C排序实现，但从H5D contract读取48/192 completeness与输出H5D-specific decision files。

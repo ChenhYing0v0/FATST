@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check a frozen H5B/H5C formal-test contract before test access."""
+"""Check a frozen H5B/H5C/H5D formal-test contract before test access."""
 
 from __future__ import annotations
 
@@ -68,17 +68,17 @@ def main() -> None:
     assert authorization["checkpoint_retraining_allowed"] is False
     assert authorization["checkpoint_mutation_during_test_allowed"] is False
     assert authorization["per_horizon_seed_metric_or_cell_tuning_allowed"] is False
-    extension_key = (
-        "automatic_H5D_extension_authorized"
-        if phase == "H5C"
-        else "automatic_H5C_extension_authorized"
-    )
+    extension_key = {
+        "H5B": "automatic_H5C_extension_authorized",
+        "H5C": "automatic_H5D_extension_authorized",
+        "H5D": "automatic_H5E_extension_authorized",
+    }[phase]
     assert authorization[extension_key] is False
     assert authorization["additional_seed_authorized"] is False
     assert authorization["automatic_Main_I_or_Main_II_table_mutation_authorized"] is False
 
     selection = config["hyperparameter_selection"]
-    guard_suffix = "h5b" if phase == "H5C" else "h5a"
+    guard_suffix = "h5b" if phase in {"H5C", "H5D"} else "h5a"
     mse_guard = f"eligibility_guard_mean_mse_relative_to_{guard_suffix}_max"
     mae_guard = f"eligibility_guard_mean_mae_relative_to_{guard_suffix}_max"
     assert selection[mse_guard] > 1.0

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Freeze a complete H5B/H5C checkpoint block before official-test access."""
+"""Freeze a complete H5B/H5C/H5D checkpoint block before official-test access."""
 
 from __future__ import annotations
 
@@ -18,7 +18,9 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ledger", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--phase", choices=("H5B", "H5C"), default="H5B")
+    parser.add_argument(
+        "--phase", choices=("H5B", "H5C", "H5D"), default="H5B"
+    )
     parser.add_argument("--expected-trials", type=int, default=36)
     parser.add_argument(
         "--test-output-root",

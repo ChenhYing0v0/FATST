@@ -22,7 +22,7 @@
         "efficiency",
         "fresh_mechanism_diagnostics"
       ],
-      "status": "H5B_ETTh1_fallback_retained_H5D_three_GPU_training_active"
+      "status": "H5B_ETTh1_fallback_retained_H5D_formal_test_authorized_prelaunch"
     }
   },
   "paper_table_registry": {
@@ -42,7 +42,7 @@
     "new_experiment_authorization_created": true
   },
   "authorization": {
-    "current_decision": "H5D_three_GPU_train_validation_active_test_zero",
+    "current_decision": "H5D_training_complete_48_checkpoint_manifest_frozen_formal_test_authorized",
     "existing_artifact_audit": true,
     "matrix_design": true,
     "test_tuned_hpo_project_principle": {
@@ -56,16 +56,16 @@
     "official_test_hpo_execution": true,
     "H4J_formal_test_after_complete_training_manifest": true,
     "formal_test": true,
-    "formal_test_gate": "H5C_requires_54_complete_checkpoints_and_216_rows_hash_immutable",
+    "formal_test_gate": "H5D_48_complete_checkpoints_192_rows_hash_immutable_pass",
     "current_user_authorization": {
       "date": "2026-08-13",
-      "instruction": "continue_ETTh1_HPO_from_all_completed_results_and_run_further_experiments",
+      "instruction": "continue_H5D_formal_test_and_analyze_results_after_remote_training_completion",
       "Tier_A": true,
       "Tier_B1_H0_H1": true,
       "Tier_B2_bounded_HPO_and_test_profile_ranking": true,
       "Tier_B3_selected_profile_confirmation": false,
       "Tier_C_final_reporting_audit": true,
-      "scope_note": "H5D authorizes 48 new ETTh1 train-validation profiles and local protocol work; formal test profile selection extra seeds H5E architecture redesign and automatic table mutation remain unauthorized"
+      "scope_note": "H5D once-only complete 48-checkpoint formal test and frozen profile selection are authorized; extra seeds H5E architecture redesign and automatic table mutation remain unauthorized"
     },
     "scoped_local_patch_authorizations": {
       "timealign_exchange_script": {
@@ -210,7 +210,7 @@
   },
   "h5d_etth1_prelaunch": {
     "candidate_version": "ISCF-BSCA-MAIN-v1-etth1-h5d-test-informed-20260813",
-    "status": "three_GPU_train_validation_active_test_zero",
+    "status": "training_complete_manifest_frozen_formal_test_authorized_prelaunch",
     "trials": 48,
     "dataset": "ETTh1",
     "seed": 2021,
@@ -230,7 +230,7 @@
     "minimum_main_ii_best_cells": 5,
     "stretch_main_ii_best_cells": 6,
     "remote_training_authorized": true,
-    "formal_test_authorized_after_complete_manifest": false,
+    "formal_test_authorized_after_complete_manifest": true,
     "automatic_table_mutation_authorized": false,
     "exact_training_commit": "21df4c80cd484350ea4ae777d6453bae94d8512c",
     "config_sha256": "1c0cf53197501652f5bafe5282a136e22913199c210a2c1210d4b6dfd3bdfaec",
@@ -242,7 +242,14 @@
     "resource_smoke_test_jobs": 0,
     "remote_pid": 1092478,
     "remote_start": "2026-08-13T14:43:23+08:00",
-    "initial_progress": "0_of_48_complete_first_three_jobs_epoch1_to_epoch2",
+    "remote_finish": "2026-08-13T16:09:53+08:00",
+    "training_complete": 48,
+    "training_test_artifacts": 0,
+    "checkpoint_manifest_sha256": "480180333de60c3f53d98c894b8854e4169401edcf7ca378d20f1b213e233a9e",
+    "formal_test_user_authorized": true,
+    "formal_test_status": "authorized_prelaunch",
+    "formal_test_config": "configs/iscf_bsca_main_v1_hpo_etth1_h5d_test_audit.json",
+    "formal_test_gate": "analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/training_result_and_formal_test_gate.md",
     "config": "configs/iscf_bsca_main_v1_hpo_etth1_h5d.json",
     "history_analysis": "analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/history_analysis/history_analysis.json",
     "prelaunch": "analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/design_and_prelaunch_gate.md",

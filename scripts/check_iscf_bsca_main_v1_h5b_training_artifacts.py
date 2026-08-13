@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit H5B/H5C train/validation artifacts before official-test access."""
+"""Audit H5B/H5C/H5D train/validation artifacts before official-test access."""
 
 from __future__ import annotations
 
@@ -71,7 +71,9 @@ def main() -> None:
     authorization_key = (
         f"official_test_{phase}_execution_authorized_after_complete_training_manifest"
     )
-    assert config["authorization"][authorization_key] is True
+    training_config_test_authorized = config["authorization"].get(
+        authorization_key, False
+    )
 
     config_hash = file_sha256(args.config)
     space_hash = search_space_hash(config)
@@ -181,7 +183,12 @@ def main() -> None:
                     "trial_id": validation_best[0],
                     "mean_mse_4h": validation_best[1],
                 },
-                "formal_test_authorized_after_manifest": True,
+                "training_config_formal_test_authorized_after_manifest": (
+                    training_config_test_authorized
+                ),
+                "formal_test_authorization_source": (
+                    "separate_frozen_test_contract_required_when_false"
+                ),
                 "overall_pass": True,
             },
             indent=2,

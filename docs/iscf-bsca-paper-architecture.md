@@ -8,7 +8,7 @@
 | `version` | `v0.71` |
 | `last_updated` | `2026-08-13` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Sections 5--7 v0.2 author-fixed structure temporarily frozen；experiments=H5B fallback retained、H5D 48-profile three-GPU train/validation active、test=0 |
+| `current_review_cursor` | writing=Sections 5--7 v0.2 author-fixed structure temporarily frozen；experiments=H5B fallback retained、H5D 48/48 training complete、formal test authorized prelaunch |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
@@ -16,7 +16,7 @@
 | `frozen_consensus` | 论文七章结构并保留standalone Discussion；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.2 structural design |
 | `provisional_content` | Method Figure 4 stable vector-asset synchronization；remaining manuscript prose and pending experiment evidence |
-| `authorization_source` | 2026-08-13用户授权基于全部ETTh1 HPO结果继续优化并运行实验；H5D local protocol与48-profile remote train/validation authorized，formal test/extra seeds/H5E/architecture redesign/table mutation未授权 |
+| `authorization_source` | 2026-08-13用户授权H5D一次完整48-checkpoint formal test与冻结selector；extra seeds/H5E/architecture redesign/table mutation未授权 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
@@ -43,6 +43,10 @@ H5D prelaunch amendment：基于115个completed ETTh1 profiles，H5D只搜索`dr
 weight decay和budget extension不再扩张。Architecture/objective/scopes/inference graph保持不变，
 因此本轮仍是paper-facing HPO而非method redesign。Remote train/validation已授权；formal test
 必须等待48/48 manifest及新授权。
+
+H5D training-gate amendment：48/48 train/validation jobs、192/192 validation rows与48个
+unique checkpoint hashes完整，training test=0。Immutable manifest已冻结；用户授权一次完整
+192-row formal test。该阶段仍仅更新paper-facing HPO evidence，不改变architecture或method claim。
 
 ## 1. 核心术语
 

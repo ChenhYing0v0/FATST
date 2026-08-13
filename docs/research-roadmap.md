@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## H5D Training Complete and Formal-Test Gate (2026-08-13)
+
+Current cursor=`Step 8 complete -> Step 9 formal-test preflight`。48/48 ETTh1 train/validation jobs于16:09:53完成，training test=0、failure=0，best epoch范围1--3。Artifact/provenance/four-H selector/numeric audit通过；48个checkpoint hashes唯一，immutable manifest SHA256=`480180333de60c3f53d98c894b8854e4169401edcf7ca378d20f1b213e233a9e`。用户已授权一次完整192-row formal test与冻结selector；H5B保持fallback，H5E/extra seeds/table mutation=false。Canonical gate=`analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/training_result_and_formal_test_gate.md`。Decision=`H5D_training_complete_48_checkpoint_manifest_frozen_formal_test_authorized`。
+
 ## H5D Remote Launch (2026-08-13)
 
 Current experiment cursor=`Step 8 three-GPU train/validation active`。Remote quota通过精确删除五个可重建的旧resource-smoke目录由189G降至186G；三个unrelated dirty analysis CSV保持原样。Exact commit=`21df4c80`的48/48 resource smoke确认48 unique hashes、failure=0、test=0，batch64/high-LR/high-rank边界均可运行。Full queue于14:43:23启动，PID=`1092478`；首批三个batch16 jobs已完成epoch1，GPU memory约561--562 MiB。Canonical launch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/remote_launch.md`。Decision=`H5D_three_GPU_train_validation_active_test_zero`；next=`48/48 artifact audit -> immutable manifest -> request formal-test authorization`。

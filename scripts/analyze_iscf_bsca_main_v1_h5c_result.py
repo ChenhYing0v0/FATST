@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Apply the frozen ETTh1 H5C selector after the complete formal test."""
+"""Apply the frozen ETTh1 H5C/H5D selector after the complete formal test."""
 
 from __future__ import annotations
 
@@ -20,8 +20,15 @@ METRICS = ("mse", "mae")
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--h5c-analysis-dir", type=Path, required=True)
+    parser.add_argument(
+        "--h5c-analysis-dir",
+        "--analysis-dir",
+        dest="analysis_dir",
+        type=Path,
+        required=True,
+    )
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--phase", choices=("H5C", "H5D"), default="H5C")
     return parser.parse_args()
 
 
@@ -152,23 +159,28 @@ def summarize(
 
 def main() -> None:
     args = parse_args()
+    phase = args.phase
+    phase_lower = phase.lower()
     config = json.loads(
         (
-            ROOT / "configs/iscf_bsca_main_v1_hpo_etth1_h5c_test_audit.json"
+            ROOT
+            / f"configs/iscf_bsca_main_v1_hpo_etth1_{phase_lower}_test_audit.json"
         ).read_text(encoding="utf-8")
     )
     completeness = json.loads(
-        (args.h5c_analysis_dir / "test_audit_completeness.json").read_text(
+        (args.analysis_dir / "test_audit_completeness.json").read_text(
             encoding="utf-8"
         )
     )
+    expected_profiles = config["matrix"]["expected_runs"]
+    expected_cells = expected_profiles * 4
     if not (
         completeness.get("complete") is True
-        and completeness.get("complete_trials") == 54
-        and completeness.get("complete_standard_horizon_cells") == 216
+        and completeness.get("complete_trials") == expected_profiles
+        and completeness.get("complete_standard_horizon_cells") == expected_cells
         and completeness.get("errors") == []
     ):
-        raise ValueError("H5C complete formal-test gate has not passed")
+        raise ValueError(f"{phase} complete formal-test gate has not passed")
 
     surfaces = config["frozen_comparison_surfaces"]
     main_i = load_targets(ROOT / surfaces["main_i_table_data"], "model")
@@ -198,14 +210,17 @@ def main() -> None:
         raise ValueError("H5B current Main II best-cell count drifted")
 
     cells_by_trial: dict[str, list[dict[str, str]]] = defaultdict(list)
-    for row in read_csv(args.h5c_analysis_dir / "all_trial_scorecard.csv"):
+    for row in read_csv(args.analysis_dir / "all_trial_scorecard.csv"):
         cells_by_trial[row["trial_id"]].append(row)
     metadata_by_trial = {
         row["trial_id"]: row
-        for row in read_csv(args.h5c_analysis_dir / "profile_aggregates.csv")
+        for row in read_csv(args.analysis_dir / "profile_aggregates.csv")
     }
-    if len(cells_by_trial) != 54 or len(metadata_by_trial) != 54:
-        raise ValueError("H5C profile pool is incomplete")
+    if (
+        len(cells_by_trial) != expected_profiles
+        or len(metadata_by_trial) != expected_profiles
+    ):
+        raise ValueError(f"{phase} profile pool is incomplete")
 
     candidate_rows = [
         summarize(
@@ -233,7 +248,7 @@ def main() -> None:
         ),
     )
     if not ranked:
-        raise ValueError("H5C has no profile passing both aggregate guards")
+        raise ValueError(f"{phase} has no profile passing both aggregate guards")
     candidate_winner = ranked[0]
     winner = (
         candidate_winner
@@ -285,38 +300,38 @@ def main() -> None:
         "protocol_id": config["protocol_id"],
         "candidate_version": config["candidate_version"],
         "formal_test_complete": True,
-        "h5c_profiles": 54,
-        "h5c_eligible_profiles": len(eligible),
-        "h5c_max_main_i_best_cells": max(
+        f"{phase_lower}_profiles": expected_profiles,
+        f"{phase_lower}_eligible_profiles": len(eligible),
+        f"{phase_lower}_max_main_i_best_cells": max(
             int(row["main_i_best"]) for row in candidate_rows
         ),
-        "h5c_max_main_ii_best_cells": max(
+        f"{phase_lower}_max_main_ii_best_cells": max(
             int(row["main_ii_best"]) for row in candidate_rows
         ),
-        "h5c_max_main_ii_top2_cells": max(
+        f"{phase_lower}_max_main_ii_top2_cells": max(
             int(row["main_ii_top2"]) for row in candidate_rows
         ),
         "current_h5b_profile": current,
-        "best_h5c_profile": candidate_winner,
+        f"best_{phase_lower}_profile": candidate_winner,
         "selected_profile": winner,
         "minimum_Main_II_best_cells": 5,
         "stretch_Main_II_best_cells": 6,
         "gate_pass": gate_pass,
         "automatic_table_mutation_authorized": False,
         "decision": (
-            "H5C_success_gate_pass_selection_frozen_table_mutation_not_authorized"
+            f"{phase}_success_gate_pass_selection_frozen_table_mutation_not_authorized"
             if gate_pass
-            else "H5C_no_eligible_best_cell_improvement_retain_H5B_profile"
+            else f"{phase}_no_eligible_best_cell_improvement_retain_H5B_profile"
         ),
     }
     args.output_dir.mkdir(parents=True, exist_ok=True)
     write_csv(args.output_dir / "all_profile_ranking.csv", all_rows)
     write_csv(args.output_dir / "selected_profile_scorecard.csv", output_cells)
     write_csv(
-        args.output_dir / "best_h5c_profile_scorecard.csv",
+        args.output_dir / f"best_{phase_lower}_profile_scorecard.csv",
         output_candidate_cells,
     )
-    (args.output_dir / "h5c_selection_result.json").write_text(
+    (args.output_dir / f"{phase_lower}_selection_result.json").write_text(
         json.dumps(result, indent=2) + "\n",
         encoding="utf-8",
     )
