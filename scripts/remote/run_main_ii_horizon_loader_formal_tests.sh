@@ -99,7 +99,7 @@ mkdir -p "${OUTPUT_ROOT}/formal"
   nvidia-smi --query-gpu=index,name,memory.total,memory.used,memory.free,utilization.gpu --format=csv,noheader,nounits
 } >"${OUTPUT_ROOT}/formal_launch_record.txt"
 
-mapfile -t JOBS < <("${CONDA_BIN}" run -n "${CONDA_ENV}" python -c '
+mapfile -t JOBS < <(python3 -c '
 import json, sys
 for i,j in enumerate(json.load(open(sys.argv[1]))["jobs"]):
  print("\t".join(map(str,(i,j["system"],j["dataset"],j["repeat"],j["loader_horizon"],j["evaluator_family"]))))
