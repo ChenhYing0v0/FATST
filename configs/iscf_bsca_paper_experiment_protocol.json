@@ -22,7 +22,7 @@
         "efficiency",
         "fresh_mechanism_diagnostics"
       ],
-      "status": "H5B_ETTh1_fallback_retained_H5D_48_profile_training_prelaunch"
+      "status": "H5B_ETTh1_fallback_retained_H5D_three_GPU_training_active"
     }
   },
   "paper_table_registry": {
@@ -42,7 +42,7 @@
     "new_experiment_authorization_created": true
   },
   "authorization": {
-    "current_decision": "H5D_48_profile_interaction_matrix_frozen_remote_train_validation_authorized_formal_test_pending",
+    "current_decision": "H5D_three_GPU_train_validation_active_test_zero",
     "existing_artifact_audit": true,
     "matrix_design": true,
     "test_tuned_hpo_project_principle": {
@@ -210,7 +210,7 @@
   },
   "h5d_etth1_prelaunch": {
     "candidate_version": "ISCF-BSCA-MAIN-v1-etth1-h5d-test-informed-20260813",
-    "status": "frozen_remote_train_validation_authorized_formal_test_pending",
+    "status": "three_GPU_train_validation_active_test_zero",
     "trials": 48,
     "dataset": "ETTh1",
     "seed": 2021,
@@ -232,9 +232,21 @@
     "remote_training_authorized": true,
     "formal_test_authorized_after_complete_manifest": false,
     "automatic_table_mutation_authorized": false,
+    "exact_training_commit": "21df4c80cd484350ea4ae777d6453bae94d8512c",
+    "config_sha256": "1c0cf53197501652f5bafe5282a136e22913199c210a2c1210d4b6dfd3bdfaec",
+    "search_space_sha256": "8dd043c3a0a40000bfc9dc917475ba4914d768cb77fa4644f9b18630d58b2f10",
+    "remote_cleanup_quota_before_gib": 189,
+    "remote_cleanup_quota_after_gib": 186,
+    "resource_smoke_complete": 48,
+    "resource_smoke_unique_hashes": 48,
+    "resource_smoke_test_jobs": 0,
+    "remote_pid": 1092478,
+    "remote_start": "2026-08-13T14:43:23+08:00",
+    "initial_progress": "0_of_48_complete_first_three_jobs_epoch1_to_epoch2",
     "config": "configs/iscf_bsca_main_v1_hpo_etth1_h5d.json",
     "history_analysis": "analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/history_analysis/history_analysis.json",
-    "prelaunch": "analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/design_and_prelaunch_gate.md"
+    "prelaunch": "analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/design_and_prelaunch_gate.md",
+    "remote_launch": "analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/remote_launch.md"
   },
   "evaluation_contract": {
     "datasets": [

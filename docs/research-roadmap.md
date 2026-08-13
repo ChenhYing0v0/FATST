@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## H5D Remote Launch (2026-08-13)
+
+Current experiment cursor=`Step 8 three-GPU train/validation active`。Remote quota通过精确删除五个可重建的旧resource-smoke目录由189G降至186G；三个unrelated dirty analysis CSV保持原样。Exact commit=`21df4c80`的48/48 resource smoke确认48 unique hashes、failure=0、test=0，batch64/high-LR/high-rank边界均可运行。Full queue于14:43:23启动，PID=`1092478`；首批三个batch16 jobs已完成epoch1，GPU memory约561--562 MiB。Canonical launch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/remote_launch.md`。Decision=`H5D_three_GPU_train_validation_active_test_zero`；next=`48/48 artifact audit -> immutable manifest -> request formal-test authorization`。
+
 ## H5D ETTh1 Interaction Search Prelaunch (2026-08-13)
 
 Current experiment cursor=`Step 6 evidence-based redesign frozen -> Step 7 local pass -> Step 8 remote resource gate`。统一审计H1/H2/H4J/H4K/H5A/H5B/H5C的115个ETTh1 profiles与460 cells后，H5D不再继续H5C单变量邻域加密。新的48-profile matrix以H5C `dropout=0` frontier为base，分配给12个batch×LR、16个p19/p21 geometry×do0、8个do0×rank及12个geometry×rank×do0 interactions；capacity、standalone weight decay和budget extension关闭。

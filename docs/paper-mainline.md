@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；H5B ETTh1 fallback retained；H5D 48-profile interaction search frozen、remote train/validation authorized、formal test pending |
+| `current_11_step` | paper consolidation；H5B ETTh1 fallback retained；H5D 48-profile three-GPU train/validation active、formal test pending |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -19,6 +19,8 @@
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1`的H5B ETTh1 profile保持fallback，H5D仅作同architecture HPO；matched ablation/transfer仍pending |
+
+[H5D Remote Launch, 2026-08-13] Launch前仅删除五个completed `_resource_smoke`目录，quota由189G降至186G；正式artifacts全部保留。Exact commit=`21df4c80`完成48/48 resource smoke，48 checkpoints与48 unique hashes、failure=0、test=0。Full queue于14:43:23在GPU0/1/2 detached启动，PID=`1092478`；首批三个batch16 jobs均完成epoch1，其中一个进入epoch2，validation finite，memory约561--562 MiB。预计16:15--18:45完成；48/48 manifest前不作partial selection或formal test。Canonical launch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/remote_launch.md`。Decision=`H5D_three_GPU_train_validation_active_test_zero`。
 
 [H5D ETTh1 Interaction HPO Prelaunch, 2026-08-13] 115个completed ETTh1 profiles/460 cells的统一审计确认：`h5c_do0`为mean-MSE frontier，`L589/p19`接近H192，`L630/p21`赢得H336两项，rank160唯一赢得H192 MAE但aggregate/long-horizon负向；all historical actual batch size均为32。H5D据此冻结48个new seed2021 profiles：12 batch×LR、8 p19×do0、8 p21×do0、8 do0×rank、8 p19×rank×do0及4 p21×rank×do0，与115个历史effective profiles零重复。Training test=0，minimum Main II best=5/8、stretch=6/8、mean双guard=`1.002x H5B`。Local patch与remote train/validation authorized；formal test/H5E/extra seeds/table mutation=false。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/design_and_prelaunch_gate.md`。Decision=`H5D_48_profile_interaction_matrix_frozen_remote_train_validation_authorized_formal_test_pending`。
 
