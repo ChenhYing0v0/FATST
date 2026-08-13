@@ -1,0 +1,8 @@
+{
+  "protocol_id": "ISCF-BSCA-MAIN-v1-HPO-ETTH1-H5B",
+  "expected_trials": 36,
+  "training_complete_trials": 36,
+  "test_complete_trials": 0,
+  "require_test": false,
+  "complete": true
+}

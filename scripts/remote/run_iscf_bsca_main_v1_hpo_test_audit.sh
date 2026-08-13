@@ -110,15 +110,15 @@ for row in rows:
     print("\t".join(fields))
 PY
 
-LINES=()
+JOB_LINES=()
 while IFS= read -r line; do
-  LINES+=("${line}")
+  JOB_LINES+=("${line}")
 done <"${JOBS_TMP}"
-[[ "${#LINES[@]}" -eq "${EXPECTED_RUNS}" ]]
+[[ "${#JOB_LINES[@]}" -eq "${EXPECTED_RUNS}" ]]
 
 target_artifact_count() {
   local count=0 line phase dataset trial profile seed expected_sha run_dir test_dir
-  for line in "${LINES[@]}"; do
+  for line in "${JOB_LINES[@]}"; do
     IFS=$'\t' read -r phase dataset trial profile seed expected_sha run_dir \
       test_dir <<< "${line}"
     if [[ -d "${test_dir}" ]]; then
@@ -297,14 +297,14 @@ PY
 }
 
 if [[ "${MODE}" == "dry-run" ]]; then
-  printf '%s\n' "${LINES[@]}"
+  printf '%s\n' "${JOB_LINES[@]}"
   echo "iscf_bsca_main_test_audit_dry_run=pass jobs=${EXPECTED_RUNS} test_cells=${EXPECTED_CELLS} authorized=${AUTHORIZED} manifest_hash=${MANIFEST_HASH}"
   exit 0
 fi
 
 if [[ "${MODE}" == "status" ]]; then
   complete=0
-  for line in "${LINES[@]}"; do
+  for line in "${JOB_LINES[@]}"; do
     if test_artifact_pass "${line}"; then
       complete=$((complete + 1))
     fi
@@ -321,7 +321,7 @@ fi
 }
 
 training_complete=0
-for line in "${LINES[@]}"; do
+for line in "${JOB_LINES[@]}"; do
   training_artifact_pass "${line}"
   training_complete=$((training_complete + 1))
 done
@@ -371,7 +371,7 @@ fi
     --query-compute-apps=gpu_uuid,pid,process_name,used_gpu_memory \
     --format=csv,noheader,nounits || true
 } | tee "${TEST_ROOT}/test_launch_record.txt"
-printf '%s\n' "${LINES[@]}" >"${TEST_ROOT}/test_jobs.tsv"
+printf '%s\n' "${JOB_LINES[@]}" >"${TEST_ROOT}/test_jobs.tsv"
 
 QUEUE_STATE="${TEST_ROOT}/.test_queue_index"
 QUEUE_LOCK="${TEST_ROOT}/.test_queue_lock"
@@ -447,7 +447,7 @@ run_one() {
 worker() {
   local gpu="$1" index
   while index="$(next_job)"; do
-    run_one "${index}" "${LINES[${index}]}" "${gpu}" || return 1
+    run_one "${index}" "${JOB_LINES[${index}]}" "${gpu}" || return 1
   done
 }
 
@@ -465,7 +465,7 @@ done
 [[ "${status}" == "0" ]]
 
 complete=0
-for line in "${LINES[@]}"; do
+for line in "${JOB_LINES[@]}"; do
   test_artifact_pass "${line}"
   complete=$((complete + 1))
 done
