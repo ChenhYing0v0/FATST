@@ -44,7 +44,7 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | H5B selection frozen as fallback；H5C ETTh1 54-trial matrix进入Step 8 remote resource gate |
+| `active_experiment_step` | H5B selection frozen as fallback；H5C ETTh1 54-trial three-GPU train/validation active，test=0 |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
@@ -52,7 +52,7 @@ paper candidate与claim boundary，但互不替代。
 | `remote_training_authorized` | true；限H5C 54 profiles、三GPU resource smoke及train/validation |
 | `test_tuned_hpo_authorized` | conditional true；限54/54 manifest后的ETTh1 dataset-level shared-profile selection |
 | `formal_test_authorized` | conditional true；54/54 immutable manifest后一次完整216-row formal test，禁止partial execution |
-| `next_action` | local gate -> commit/push -> remote 54/54 resource smoke/test=0 -> 三GPU full train/validation |
+| `next_action` | 等待54/54 train/validation完成 -> artifact/hash manifest -> 完整216-row formal test；manifest前test=0 |
 | `conditional_next` | 任何新baseline仍需独立source/protocol gate；不得改写AMD/SimpleTM native role为matched attribution |
 
 2026-08-13用户授权H5A table mutation并继续ETTh1-only HPO。H5A selected profiles已替换Main I/Main II中ETTh1/ECL/Solar的12个ISCF cells；Main I=`31/56` best、`17/56` second，Main II=`28/56` best、`25/56` second，standalone LaTeX/PDF与hash均重新冻结。H5B审计25个ETTh1 profiles后固定36个expanded-range trials：重点为LR fine grid、`L576--960` context/patch、regularization interactions与rank，统一120 epochs/patience24；capacity仅保留一个moderate probe，LayerNorm保持开启。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5b_etth1_expanded_search_20260813/design_and_prelaunch_gate.md`。Decision=`H5B_frozen_authorized_remote_resource_gate_next`。
@@ -62,6 +62,8 @@ H5B remote launch前quota由206G清理到186G，仅删除45个nonselected H5A de
 H5B train/validation于11:05:33完成36/36；training artifact checker确认test=0、36 unique checkpoint hashes及manifest SHA256=`25177fa760e2349ca618aebb0b8cdc960cc4be398d9c22a5d1a0260687dbf099`。Once-only formal test于11:14:40--11:16:42完成36/36 checkpoints与144/144 standard rows，errors=0。Frozen selector选择`h5b_seq640_p20`，mean MSE/MAE=`0.391378/0.417255`，Main II ETTh1 best由2/8提高到4/8并通过stretch gate；H336两项退化保留。Canonical result=`analysis/iscf_bsca_main_v1_hpo_20260731/h5b_etth1_expanded_search_20260813/formal_test_result_and_selection.md`。Decision=`H5B_success_gate_pass_selection_frozen_table_mutation_not_authorized`。
 
 2026-08-13用户随后要求利用ETTh1训练较快，将HPO matrix相对H5B扩大约50%。H5C冻结54个seed2021 profiles，分为18 local context/patch、10 winner-LR、7 winner-dropout、5 winner-WD、5 winner-rank、5 LR/dropout与4 context/dropout interactions；与此前61个ETTh1 effective jobs零重复。Capacity因历史负向不再扩张。Current Main II=`4/8` best，minimum=`5/8`、stretch=`6/8`；mean MSE/MAE双guard=`1.002×H5B`。Training test=0，54/54 manifest后一次完整216-row formal test conditional authorized；table mutation=false。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5c_etth1_refined_interaction_search_20260813/design_and_prelaunch_gate.md`。Decision=`H5C_frozen_authorized_remote_resource_smoke_next`。
+
+H5C exact commit=`fe9ac10b`于11:40:12--11:42:32完成54/54 resource smoke：54 checkpoints/metrics/configs、54 unique hashes、failure=0、test=0，quota188G。Full train/validation于11:43:04在GPU0/1/2启动，PID=`843554`；首批L736/L726/L713 jobs均完成epoch2且validation finite，显存766--784 MiB。Canonical launch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5c_etth1_refined_interaction_search_20260813/remote_launch.md`。Decision=`H5C_three_GPU_train_validation_active_test_zero`。
 
 2026-08-08用户要求暂时冻结Main I，并把Main II改为H720-trained one-model-all-horizons benchmark。Main I冻结manifest记录14 models × 7 dense datasets × four H、392 rows、29/56 best、19/56 second及全部关键hash。Main II v1包含ISCF-BSCA、TimeAlign、QDF、AMD、SimpleTM、iTransformer、PatchTST、DLinear；每个external baseline逐dataset训练/复用一个H720 model，并从同一H720 test tensor裁剪H96/H192/H336。49个checkpoint objects可复用，21个iTransformer/PatchTST/DLinear H720 jobs需新训练；PatchTST/DLinear Solar无official script/loader，固定为source-patch-required。Exchange因Main I H720 anchors不完整而deferred。Canonical protocol=`configs/iscf_bsca_main_ii_h720_prefix_protocol.json`；prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/design_and_prelaunch_gate.md`。当前只完成design/source audit，Tier A/B/C仍为false。
 

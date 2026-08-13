@@ -22,7 +22,7 @@
         "efficiency",
         "fresh_mechanism_diagnostics"
       ],
-      "status": "H5B_ETTh1_selection_frozen_H5C_54_trial_prelaunch"
+      "status": "H5B_ETTh1_selection_frozen_H5C_54_trial_training_active_test_zero"
     }
   },
   "paper_table_registry": {
@@ -42,7 +42,7 @@
     "new_experiment_authorization_created": true
   },
   "authorization": {
-    "current_decision": "H5C_frozen_authorized_remote_resource_smoke_next",
+    "current_decision": "H5C_three_GPU_train_validation_active_test_zero",
     "existing_artifact_audit": true,
     "matrix_design": true,
     "test_tuned_hpo_project_principle": {
@@ -158,7 +158,7 @@
   },
   "h5c_etth1_prelaunch": {
     "candidate_version": "ISCF-BSCA-MAIN-v1-etth1-h5c-test-informed-20260813",
-    "status": "frozen_authorized_remote_resource_smoke_next",
+    "status": "resource_smoke_pass_three_GPU_training_active_test_zero",
     "trials": 54,
     "increase_over_h5b": 0.5,
     "dataset": "ETTh1",
@@ -173,8 +173,16 @@
     "remote_training_authorized": true,
     "formal_test_authorized_after_complete_manifest": true,
     "automatic_table_mutation_authorized": false,
+    "exact_training_commit": "fe9ac10b49779b46e5d1e1aaba2566af796cb8e4",
+    "config_sha256": "55375b735cb87534625272d32fd07044e7ad9b122b65d57b1e4848c7c9ff9449",
+    "search_space_sha256": "500e3139e91b7770eca469fa762a8c6f9fb1ee167754e0485e7150f2811ff646",
+    "resource_smoke_complete": 54,
+    "resource_smoke_unique_hashes": 54,
+    "remote_pid": 843554,
+    "remote_start": "2026-08-13T11:43:04+08:00",
     "config": "configs/iscf_bsca_main_v1_hpo_etth1_h5c.json",
-    "prelaunch": "analysis/iscf_bsca_main_v1_hpo_20260731/h5c_etth1_refined_interaction_search_20260813/design_and_prelaunch_gate.md"
+    "prelaunch": "analysis/iscf_bsca_main_v1_hpo_20260731/h5c_etth1_refined_interaction_search_20260813/design_and_prelaunch_gate.md",
+    "remote_launch": "analysis/iscf_bsca_main_v1_hpo_20260731/h5c_etth1_refined_interaction_search_20260813/remote_launch.md"
   },
   "evaluation_contract": {
     "datasets": [

@@ -6,6 +6,8 @@ Current experiment cursor=`Step 6 frozen -> Step 8 remote resource gate`。H5B�
 
 Architecture/objective/H720-prefix graph保持不变。每trial仍由validation four-H mean MSE选checkpoint；54/54 manifest后完整216-row official test选择一个dataset-level shared profile。Current Main II best=`4/8`，minimum=`5/8`、stretch=`6/8`，mean MSE/MAE各自不得超过H5B `1.002×`。Remote GPU0--2当前idle，quota187G/200G soft，projection通过。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5c_etth1_refined_interaction_search_20260813/design_and_prelaunch_gate.md`。Decision=`H5C_frozen_authorized_remote_resource_smoke_next`。
 
+Exact commit=`fe9ac10b`的54/54 resource smoke已通过，54 unique hashes、failure=0、test=0；post-smoke quota188G。Full three-GPU queue于11:43:04启动，PID=`843554`，前三个long-context jobs均完成epoch2且numeric health正常。Current cursor=`Step 8 H5C train/validation active`；next=`54/54 artifact/hash manifest -> complete formal test`。Canonical launch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5c_etth1_refined_interaction_search_20260813/remote_launch.md`。
+
 ## H5B ETTh1 Formal-Test Result and Step 9--10 Decision (2026-08-13)
 
 Current experiment cursor=`Step 9 complete -> Step 10 targeted performance pass -> table mutation authorization pending`。H5B完整闭合36/36 checkpoints、36 immutable unique hashes、144/144 standard-horizon official-test rows与0 analyzer errors。Frozen selector选择`h5b_seq640_p20`，four-H mean MSE/MAE=`0.391378/0.417255`，相对H5A分别改善`0.363%/0.584%`，两项0.3% degradation guards均通过。
