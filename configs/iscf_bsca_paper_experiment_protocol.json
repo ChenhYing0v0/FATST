@@ -22,14 +22,14 @@
         "efficiency",
         "fresh_mechanism_diagnostics"
       ],
-      "status": "H5B_ETTh1_fallback_retained_H5D_formal_complete_gate_fail"
+      "status": "H5D_bs16_lr2p4_author_selected_paper_row_tables_frozen"
     }
   },
   "paper_table_registry": {
     "registry": "configs/iscf_bsca_paper_table_registry.json",
     "human_readable_index": "docs/iscf-bsca-paper-table-registry.md",
-    "main_i_status": "complete_hash_frozen_H5A_synced_31_of_56_best",
-    "main_ii_status": "complete_hash_frozen_H5A_synced_28_of_56_best",
+    "main_i_status": "complete_hash_frozen_H5D_bs16_lr2p4_synced_31_of_56_best_18_second",
+    "main_ii_status": "complete_hash_frozen_H5D_bs16_lr2p4_synced_30_of_56_best_25_second",
     "main_result_presentation_contract": "shared_TimeAlign_Table_6_style",
     "pending_main_text_tables": [
       "efficiency",
@@ -42,7 +42,7 @@
     "new_experiment_authorization_created": true
   },
   "authorization": {
-    "current_decision": "H5D_no_eligible_best_cell_improvement_retain_H5B_profile",
+    "current_decision": "H5D_bs16_lr2p4_author_selected_paper_row_Main_I_II_synced",
     "existing_artifact_audit": true,
     "matrix_design": true,
     "test_tuned_hpo_project_principle": {
@@ -56,16 +56,16 @@
     "official_test_hpo_execution": true,
     "H4J_formal_test_after_complete_training_manifest": true,
     "formal_test": true,
-    "formal_test_gate": "H5D_complete_48_checkpoints_192_rows_gate_fail_retain_H5B",
+    "formal_test_gate": "H5D_complete_48_checkpoints_192_rows_original_gate_fail_author_paper_row_override_applied",
     "current_user_authorization": {
       "date": "2026-08-13",
-      "instruction": "continue_H5D_formal_test_and_analyze_results_after_remote_training_completion",
+      "instruction": "temporarily_freeze_h5d_bs16_lr2p4_and_update_Main_I_Main_II_LaTeX_and_PDF",
       "Tier_A": true,
       "Tier_B1_H0_H1": true,
       "Tier_B2_bounded_HPO_and_test_profile_ranking": true,
       "Tier_B3_selected_profile_confirmation": false,
       "Tier_C_final_reporting_audit": true,
-      "scope_note": "H5D once-only complete 48-checkpoint formal test and frozen profile selection are authorized; extra seeds H5E architecture redesign and automatic table mutation remain unauthorized"
+      "scope_note": "Author explicitly selects eligible H5D bs16_lr2p4 as the current ETTh1 paper row and authorizes atomic Main I/Main II table mutation; the original H5D gate-fail history is retained. Extra seeds, H5E, and architecture redesign remain unauthorized."
     },
     "scoped_local_patch_authorizations": {
       "timealign_exchange_script": {
@@ -210,7 +210,7 @@
   },
   "h5d_etth1_prelaunch": {
     "candidate_version": "ISCF-BSCA-MAIN-v1-etth1-h5d-test-informed-20260813",
-    "status": "formal_complete_gate_fail_h5b_fallback_retained",
+    "status": "formal_complete_original_gate_fail_author_paper_row_override_applied",
     "trials": 48,
     "dataset": "ETTh1",
     "seed": 2021,
@@ -263,6 +263,15 @@
     "best_eligible_h5d_mean_mae_4h": 0.4168362744723449,
     "selected_trial_id": "ETTh1__h5b_seq640_p20",
     "success_gate_pass": false,
+    "author_selected_paper_trial_id": "ETTh1__h5d_bs16_lr2p4",
+    "author_selected_paper_profile_id": "h5d_bs16_lr2p4",
+    "author_selection_date": "2026-08-13",
+    "author_selection_role": "eligible_profile_paper_row_override_without_rewriting_original_gate",
+    "main_i_after_author_selection_best_cells": 31,
+    "main_i_after_author_selection_second_cells": 18,
+    "main_ii_after_author_selection_best_cells": 30,
+    "main_ii_after_author_selection_second_cells": 25,
+    "table_sync_audit": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/h5d_bs16_lr2p4_main_table_sync_20260813/h5d_bs16_lr2p4_main_table_sync_audit.json",
     "formal_test_config": "configs/iscf_bsca_main_v1_hpo_etth1_h5d_test_audit.json",
     "formal_test_gate": "analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/training_result_and_formal_test_gate.md",
     "formal_test_result": "analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/formal_test_result_and_selection.md",

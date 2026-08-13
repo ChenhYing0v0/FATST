@@ -1,0 +1,64 @@
+{
+  "table_id": "ISCF-BSCA-MAIN-I-H5D-BS16-LR2P4-SYNCED-20260813",
+  "models": [
+    "ISCF-BSCA",
+    "TimeAlign",
+    "QDF",
+    "AMD",
+    "SimpleTM",
+    "TVNet",
+    "iTransformer",
+    "TimeMixer",
+    "Leddam",
+    "ModernTCN",
+    "PatchTST",
+    "Crossformer",
+    "TimesNet",
+    "DLinear"
+  ],
+  "datasets": [
+    "ETTm1",
+    "ETTm2",
+    "ETTh1",
+    "ETTh2",
+    "Weather",
+    "ECL",
+    "Solar"
+  ],
+  "horizons": [
+    96,
+    192,
+    336,
+    720
+  ],
+  "display_precision": 3,
+  "ranking_rule": "best_and_second_distinct_displayed_values_after_three_decimal_rounding",
+  "average_rule": "arithmetic_mean_of_four_horizon_rows",
+  "row_count_without_averages": 392,
+  "row_count_with_averages": 490,
+  "iscf_best_cells_full_14_model_table": 31,
+  "iscf_second_cells_full_14_model_table": 18,
+  "frozen_33_of_56_scope": "ISCF-BSCA versus the five-model published comparator subset; not recomputed from all 14 displayed models",
+  "timealign_reproduced_cells_in_dense_table": 28,
+  "timealign_reproduced_cells_exchange_companion": 4,
+  "timealign_reproduced_cells_total": 32,
+  "timealign_published_cells": 0,
+  "qdf_reproduced_cells_in_dense_table": 28,
+  "qdf_reproduced_cells_exchange_companion": 4,
+  "qdf_published_cells": 0,
+  "amd_reproduced_cells_in_dense_table": 28,
+  "simpletm_reproduced_cells_in_dense_table": 28,
+  "replaced_models": [
+    "CMoS",
+    "TimeBase"
+  ],
+  "source_hashes": {
+    "timealign_pdf": "0a0d7deba16c5b3025902f897dddc70fd1f6efaeb3737c4a751d3b2440670b08",
+    "iscf_scorecard": "b90fc978902a25e5ad2842a623743c9bfb164f667cbab90a5cfafad410cc128e",
+    "timealign_reproduced": "6fccaeddec410ff2eda2c2533afacb1ce28459261eae6566dd6eb3f5b390d9f8",
+    "audited_published_selected": "c9286468a4ca5977bac40f18635d387eafda0fd14794cabaac9b6f659ae82d8c",
+    "qdf_reproduced_all": "2bb6bde2cbef54952bd381af017ac938c688875aae938eeb04c9717fab026cdc",
+    "amd_simpletm_reproduced": "44460b89696a2909123ccca8ba9327b74de058b08e6eebd8f369266e37211c3b"
+  },
+  "claim_boundary": "ISCF-BSCA is single-seed and test-tuned; TimeAlign is local single-seed reproduction on every shared dataset; QDF is a local single-seed L=336 reproduction with disclosed Solar/Exchange source-informed presets; AMD and SimpleTM are local official-native fixed-H reproductions; other baselines are unmatched published context"
+}

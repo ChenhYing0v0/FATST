@@ -1,0 +1,14 @@
+% Companion block; TimeAlign and QDF Exchange use source-informed presets.
+\begin{tabular}{c|cc|cc|cc}
+\toprule
+H & \multicolumn{2}{c}{ISCF-BSCA} & \multicolumn{2}{c}{TimeAlign$^{\dagger}$} & \multicolumn{2}{c}{QDF$^{\dagger}$} \\
+ & MSE & MAE & MSE & MAE & MSE & MAE \\
+\midrule
+96 & 0.098 & \textcolor{blue}{\underline{0.216}} & \textcolor{red}{\textbf{0.087}} & \textcolor{red}{\textbf{0.208}} & \textcolor{blue}{\underline{0.095}} & 0.218 \\
+192 & 0.206 & 0.318 & \textcolor{red}{\textbf{0.192}} & \textcolor{red}{\textbf{0.310}} & \textcolor{blue}{\underline{0.199}} & \textcolor{blue}{\underline{0.317}} \\
+336 & \textcolor{blue}{\underline{0.380}} & \textcolor{red}{\textbf{0.444}} & 0.442 & 0.473 & \textcolor{red}{\textbf{0.377}} & \textcolor{blue}{\underline{0.448}} \\
+720 & \textcolor{red}{\textbf{0.910}} & \textcolor{red}{\textbf{0.723}} & 1.330 & 0.847 & \textcolor{blue}{\underline{0.929}} & \textcolor{blue}{\underline{0.727}} \\
+Avg. & \textcolor{red}{\textbf{0.399}} & \textcolor{red}{\textbf{0.425}} & 0.513 & 0.460 & \textcolor{blue}{\underline{0.400}} & \textcolor{blue}{\underline{0.428}} \\
+\bottomrule
+\end{tabular}
+% $^{\dagger}$ ETTh1-derived source-informed preset; neither release provides an official Exchange script.

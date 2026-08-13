@@ -1,0 +1,22 @@
+{
+  "aggregate_cells": 224,
+  "all_baseline_and_non_ETTh1_cells_unchanged": true,
+  "claim_boundary": "The author-selected eligible H5D ETTh1 profile replaces the H5A ETTh1 paper row. ECL, Solar, all other datasets, and every baseline cell remain unchanged. This selection is test-tuned and test-informed.",
+  "gate": "pass",
+  "matrix_complete": true,
+  "replacement_scope": [
+    "ETTh1"
+  ],
+  "selected_trial": "ETTh1__h5d_bs16_lr2p4",
+  "selection_role": "author_selected_eligible_H5D_profile_after_formal_test",
+  "source_hashes": {
+    "h5d_manifest": "480180333de60c3f53d98c894b8854e4169401edcf7ca378d20f1b213e233a9e",
+    "h5d_scorecard": "ceb7b00a797982657c3d104c239520719d3cc07ba7d0e8549b15f4c9ebb19238",
+    "merged_main_ii_cells": "d3abdc5b488ae12dcd243c7c488e0122c87eb481261dcd1e2880b612973f083f",
+    "merged_scorecard": "b90fc978902a25e5ad2842a623743c9bfb164f667cbab90a5cfafad410cc128e",
+    "old_main_ii_cells": "dfc50facd41c019ea1b1e9cfca1f361d9d1977aa70b6f639673a5f5b45227f73",
+    "old_scorecard": "454d1db0bdfe11d290a28882b7044da4bf647a716a538d0806848f5a7140a479"
+  },
+  "updated_main_i_cells": 4,
+  "updated_main_ii_cells": 4
+}

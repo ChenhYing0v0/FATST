@@ -20,6 +20,19 @@ train one trial
 
 Official test不得选择epoch、checkpoint、seed或per-horizon profile。
 
+## 1.1 H5D author-selected table synchronizer
+
+`scripts/sync_iscf_bsca_h5d_etth1_main_tables.py`只执行paper-facing artifact
+consolidation，不训练或测试模型。脚本读取H5A当前完整scorecard、H5D完整formal-test
+scorecard与immutable checkpoint manifest，精确定位
+`ETTh1__h5d_bs16_lr2p4`的H96/H192/H336/H720四行，然后原子替换Main I selected
+scorecard与Main II aggregate surface中的同四个ISCF cells。
+
+同步器断言两份输出matrix完整，并逐cell检查所有baseline、非ETTh1 datasets、ECL与
+Solar未发生数值变化；audit同时记录输入输出SHA256。它不改变H5D原始gate，只实现用户
+明确指定的eligible profile paper-row override。下游table builders重新计算三位小数
+best/second styles，因此竞争系统的样式可能随ETTh1新数值改变，但其原始MSE/MAE不会改变。
+
 ## 2. Dataset Support
 
 `baselines/timealign_official/train_repo.py`的`OFFICIAL_PRESETS`新增：

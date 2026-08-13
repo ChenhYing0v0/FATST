@@ -1,0 +1,18 @@
+{
+  "table_id": "ISCF-BSCA-MAIN-II-H5D-BS16-LR2P4-SYNCED-20260813",
+  "status": "complete_hash_frozen",
+  "selection_role": "author_selected_eligible_H5D_profile_after_formal_test",
+  "selected_trial": "ETTh1__h5d_bs16_lr2p4",
+  "updated_cells": 4,
+  "updated_datasets": ["ETTh1"],
+  "iscf_best_metric_cells": 30,
+  "iscf_second_metric_cells": 25,
+  "artifact_hashes": {
+    "table_fragment": "f9b078d107d4ffa5db10986c61e1171299aba3e6d22a2665037224126a68dfec",
+    "standalone_latex": "d3b8ddad10c6ab3b10dfaa6e8bdec0962284ab067a6f20c51efdc29e2bc538d7",
+    "table_data": "1b12b850decc4e40a1c09537ee3974f17145cd8054e15fc9abd333fc3149d0cb",
+    "build_summary": "9137157f482b4bc40fadcf8527b58e7d13cb8953fa84b403cbeba7e9c814c9b5",
+    "compiled_pdf": "dc58d68387f2e6252391ad63a83b444537d97a7ee1cf5214be0d8fafed78590c"
+  },
+  "claim_boundary": "Source-native one-model-all-horizons system benchmark using the author-selected eligible H5D ETTh1 profile; test-tuned and test-informed, not matched mechanism attribution."
+}

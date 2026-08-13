@@ -1,0 +1,18 @@
+{
+  "table_id": "ISCF-BSCA-MAIN-I-H5D-BS16-LR2P4-SYNCED-20260813",
+  "status": "complete_hash_frozen",
+  "selection_role": "author_selected_eligible_H5D_profile_after_formal_test",
+  "selected_trial": "ETTh1__h5d_bs16_lr2p4",
+  "updated_cells": 4,
+  "updated_datasets": ["ETTh1"],
+  "iscf_best_metric_cells": 31,
+  "iscf_second_metric_cells": 18,
+  "artifact_hashes": {
+    "table_fragment": "45ddc016817ec6064d05d09dae6d8e924dfe67af4f444a64ea27dfab496573c8",
+    "standalone_latex": "57d4dc25c613dd14b5abc7a8d84f9ee54f5de7e343eaec01ff20928545905332",
+    "table_data": "79ae112306efe7e0022d67871eba0c8f2fc8c669fc7e6d7b0f371ffafab816d2",
+    "build_summary": "9dd4cfa6135fcdf2c67cc2a5fbe6ba386d002473e41f729b6d7c03fbabcef7fb",
+    "compiled_pdf": "5404c70e82281820580c8df0425aa0303291d9a33a61b68b81dd57d3f40992bf"
+  },
+  "claim_boundary": "Only the author-selected eligible H5D ETTh1 dataset-level profile changed relative to the H5A table; ECL, Solar, all other datasets, baseline evidence, and source roles are unchanged. The row is test-tuned and test-informed."
+}

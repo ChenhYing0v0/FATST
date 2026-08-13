@@ -44,16 +44,18 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | H5D formal complete gate fail；H5B fallback retained，ETTh1 HPO paused |
+| `active_experiment_step` | H5D原始gate fail历史保留；`h5d_bs16_lr2p4` author-selected为当前ETTh1 paper row；HPO paused |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
-| `local_protocol_patch_authorized` | true；限H5D config/checker/runner/history audit与governance sync |
-| `remote_training_authorized` | true；限H5D 48-profile resource smoke及train/validation |
+| `local_protocol_patch_authorized` | consumed；H5D table sync、registry与governance已完成 |
+| `remote_training_authorized` | consumed；H5D 48-profile train/validation已完成 |
 | `test_tuned_hpo_authorized` | true；限完整formal test后的ETTh1 dataset-level shared-profile selection |
 | `formal_test_authorized` | consumed；H5D 48/48、192/192 complete |
-| `next_action` | 保留H5B；等待作者决定是否结束ETTh1 HPO或另行设计新objective/candidate |
+| `next_action` | 当前两张主表固定`h5d_bs16_lr2p4`；等待作者决定后续ablation/transfer/efficiency或重新授权HPO |
 | `conditional_next` | 任何新baseline仍需独立source/protocol gate；不得改写AMD/SimpleTM native role为matched attribution |
+
+2026-08-13用户在H5D formal result后明确要求暂时采用eligible profile `ETTh1__h5d_bs16_lr2p4`并更新两张主表。原始H5D gate-fail与retain-H5B selector历史不变；当前paper row属于author-selected override。Main I/Main II各只替换4个ETTh1 ISCF cells，ECL、Solar、其他datasets及全部baseline保持不变；结果分别为`31/56 best + 18/56 second`与`30/56 best + 25/56 second`。LaTeX、A3 PDF与freeze manifest均重新生成并核验。Canonical sync=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/h5d_bs16_lr2p4_main_table_sync_20260813/table_sync_result.md`。Decision=`H5D_bs16_lr2p4_author_selected_paper_row_Main_I_II_synced`。
 
 2026-08-13用户授权H5A table mutation并继续ETTh1-only HPO。H5A selected profiles已替换Main I/Main II中ETTh1/ECL/Solar的12个ISCF cells；Main I=`31/56` best、`17/56` second，Main II=`28/56` best、`25/56` second，standalone LaTeX/PDF与hash均重新冻结。H5B审计25个ETTh1 profiles后固定36个expanded-range trials：重点为LR fine grid、`L576--960` context/patch、regularization interactions与rank，统一120 epochs/patience24；capacity仅保留一个moderate probe，LayerNorm保持开启。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5b_etth1_expanded_search_20260813/design_and_prelaunch_gate.md`。Decision=`H5B_frozen_authorized_remote_resource_gate_next`。
 

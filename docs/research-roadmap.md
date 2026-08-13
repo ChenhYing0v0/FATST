@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## H5D Author Paper-Row Selection and Table Freeze (2026-08-13)
+
+Current cursor=`paper consolidation; HPO paused`。用户在H5D formal gate完成后明确指定暂时采用eligible profile `ETTh1__h5d_bs16_lr2p4`作为当前Main I/Main II ETTh1 paper row。该author override不追溯修改预注册gate：H5D仍是`gate_pass=false`，H5B仍是原selector fallback；论文表格则按用户当前选择使用H5D profile。原子同步只替换两表各4个ETTh1 ISCF cells，所有baseline、ECL、Solar及其余datasets保持不变。Main I=`31/56` best、`18/56` second；Main II=`30/56` best、`25/56` second。Canonical sync=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/h5d_bs16_lr2p4_main_table_sync_20260813/table_sync_result.md`。Decision=`H5D_bs16_lr2p4_author_selected_paper_row_Main_I_II_synced`。
+
 ## H5D Formal-Test Result and Step 9--10 Decision (2026-08-13)
 
 Current cursor=`Step 9 complete -> Step 10 gate fail -> Step 6 rollback`。48/48 profiles与192/192 rows完整，checkpoint hash immutable，errors/temp/ABORT均为0。只有3个H5D profiles通过相对H5B的mean MSE/MAE `1.002x`双guard；唯一取得Main II 5/8 best的`h5d_bs16_lr3p6`因mean MSE退化0.675%而不eligible。Eligible winner `h5d_bs16_lr2p4`为4/8 best、8/8 top-2，未严格改善primary objective；冻结selector保留H5B。Batch×LR是唯一形成eligible frontier的block，p19/p21 geometry和rank interactions全部不eligible。Canonical result=`analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/formal_test_result_and_selection.md`。Failure=`objective_tradeoff_and_search_space_performance_shortfall`；Decision=`H5D_no_eligible_best_cell_improvement_retain_H5B_profile`。

@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；H5D formal complete gate fail；H5B ETTh1 fallback retained，HPO paused |
+| `current_11_step` | paper consolidation；H5D原始gate fail历史保留；用户指定`h5d_bs16_lr2p4`为当前ETTh1 paper row，HPO paused |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,7 +18,9 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1`的H5B ETTh1 profile保持fallback，H5D仅作同architecture HPO；matched ablation/transfer仍pending |
+| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1`当前ETTh1 paper row=`h5d_bs16_lr2p4`（author-selected eligible H5D profile）；matched ablation/transfer仍pending |
+
+[H5D Author-Selected Paper Row and Main-Table Sync, 2026-08-13] 用户明确要求暂时固定`ETTh1__h5d_bs16_lr2p4`。H5D原始预注册gate仍为fail、原selector仍retain H5B；本次只将eligible H5D profile作为author-selected current paper row。Main I/Main II分别只替换ISCF-BSCA ETTh1的4个horizon cells，ECL、Solar、其余datasets与所有baseline数值不变。同步后Main I=`31/56` best、`18/56` second，Main II=`30/56` best、`25/56` second；LaTeX、A3 PDF与hash均重新冻结。Canonical sync=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/h5d_bs16_lr2p4_main_table_sync_20260813/table_sync_result.md`。Decision=`H5D_bs16_lr2p4_author_selected_paper_row_Main_I_II_synced`。
 
 [H5D Remote Launch, 2026-08-13] Launch前仅删除五个completed `_resource_smoke`目录，quota由189G降至186G；正式artifacts全部保留。Exact commit=`21df4c80`完成48/48 resource smoke，48 checkpoints与48 unique hashes、failure=0、test=0。Full queue于14:43:23在GPU0/1/2 detached启动，PID=`1092478`；首批三个batch16 jobs均完成epoch1，其中一个进入epoch2，validation finite，memory约561--562 MiB。预计16:15--18:45完成；48/48 manifest前不作partial selection或formal test。Canonical launch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/remote_launch.md`。Decision=`H5D_three_GPU_train_validation_active_test_zero`。
 

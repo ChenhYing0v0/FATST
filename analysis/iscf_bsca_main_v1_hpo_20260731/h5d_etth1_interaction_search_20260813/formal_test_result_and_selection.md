@@ -1,5 +1,7 @@
 # H5D ETTh1 Formal-Test Result and Frozen Selection
 
+> **Author paper-row amendment (2026-08-13).** H5D原始预注册gate与selector结论保持不变；用户随后明确指定暂时采用eligible profile `ETTh1__h5d_bs16_lr2p4`作为Main I/Main II当前ETTh1 paper row。该author-selected override只替换ETTh1 four-H cells，不把H5D gate改写为pass。同步后Main I为`31/56` best、`18/56` second，Main II为`30/56` best、`25/56` second。Canonical sync audit位于`analysis/iscf_bsca_paper_experiment_consolidation_20260731/h5d_bs16_lr2p4_main_table_sync_20260813/`。
+
 ## 1. Decision
 
 - `decision=H5D_no_eligible_best_cell_improvement_retain_H5B_profile`

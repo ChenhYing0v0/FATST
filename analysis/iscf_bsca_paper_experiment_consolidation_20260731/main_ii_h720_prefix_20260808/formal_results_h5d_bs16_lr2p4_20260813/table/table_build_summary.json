@@ -1,0 +1,79 @@
+{
+  "aggregate_cells": 224,
+  "best_style": "red_bold",
+  "claim_boundary": "source-native H720 one-model-all-horizons system benchmark; not matched mechanism attribution",
+  "datasets": [
+    "ETTm1",
+    "ETTm2",
+    "ETTh1",
+    "ETTh2",
+    "Weather",
+    "ECL",
+    "Solar"
+  ],
+  "display_precision": 3,
+  "horizons": [
+    96,
+    192,
+    336,
+    720
+  ],
+  "iscf_best_cells": 30,
+  "iscf_second_cells": 25,
+  "macro_over_28_dataset_horizon_cells": {
+    "AMD": {
+      "mae": 0.32457354611584116,
+      "mse": 0.2735806966998747
+    },
+    "DLinear": {
+      "mae": 0.35790899877649524,
+      "mse": 0.3055585619675657
+    },
+    "ISCF-BSCA-MAIN-v1": {
+      "mae": 0.30725229859472,
+      "mse": 0.26191149063094776
+    },
+    "PatchTST": {
+      "mae": 0.3215061043865943,
+      "mse": 0.268637258499737
+    },
+    "QDF": {
+      "mae": 0.33638127282705416,
+      "mse": 0.28381460683964177
+    },
+    "SimpleTM": {
+      "mae": 0.3313769006038257,
+      "mse": 0.2877474440966751
+    },
+    "TimeAlign": {
+      "mae": 0.31050063121064114,
+      "mse": 0.26593466066130217
+    },
+    "iTransformer": {
+      "mae": 0.3428960295643518,
+      "mse": 0.3078252216894261
+    }
+  },
+  "metric_scalars": 448,
+  "presentation_template": "Main_I_TimeAlign_Table_6_style",
+  "ranking_rule": "best_and_second_distinct_displayed_values_after_three_decimal_rounding",
+  "rows_with_dataset_averages": 280,
+  "second_style": "blue_underline",
+  "source_hashes": {
+    "aggregate_cells": "d3abdc5b488ae12dcd243c7c488e0122c87eb481261dcd1e2880b612973f083f",
+    "result_audit": "b80eb2be56289c21859b23fa04342b17829ae3bc566f4b57c5d77624d801f61d"
+  },
+  "standalone_latex": "table_iscf_bsca_main_ii_standalone.tex",
+  "standalone_page": "A3_landscape_review_copy",
+  "systems": [
+    "ISCF-BSCA-MAIN-v1",
+    "TimeAlign",
+    "QDF",
+    "AMD",
+    "SimpleTM",
+    "iTransformer",
+    "PatchTST",
+    "DLinear"
+  ],
+  "table_id": "ISCF-BSCA-MAIN-II-H5D-BS16-LR2P4-SYNCED-20260813"
+}
