@@ -1,0 +1,79 @@
+{
+  "aggregate_cells": 224,
+  "best_style": "red_bold",
+  "claim_boundary": "source-native H720 checkpoints evaluated on official fixed-H loaders; not matched mechanism attribution",
+  "datasets": [
+    "ETTm1",
+    "ETTm2",
+    "ETTh1",
+    "ETTh2",
+    "Weather",
+    "ECL",
+    "Solar"
+  ],
+  "display_precision": 3,
+  "horizons": [
+    96,
+    192,
+    336,
+    720
+  ],
+  "iscf_best_cells": 41,
+  "iscf_second_cells": 13,
+  "macro_over_28_dataset_horizon_cells": {
+    "AMD": {
+      "mae": 0.3300292720752103,
+      "mse": 0.28383893253547804
+    },
+    "DLinear": {
+      "mae": 0.3626251076180442,
+      "mse": 0.31507523092267053
+    },
+    "ISCF-BSCA-MAIN-v1": {
+      "mae": 0.30725229859472,
+      "mse": 0.26191149063094776
+    },
+    "PatchTST": {
+      "mae": 0.3270869191767867,
+      "mse": 0.2793158361376404
+    },
+    "QDF": {
+      "mae": 0.3411564789712429,
+      "mse": 0.29343846227441517
+    },
+    "SimpleTM": {
+      "mae": 0.3354130150151852,
+      "mse": 0.2951515988918601
+    },
+    "TimeAlign": {
+      "mae": 0.3162589338808776,
+      "mse": 0.27702289990546997
+    },
+    "iTransformer": {
+      "mae": 0.34757252636103914,
+      "mse": 0.31781287456897545
+    }
+  },
+  "metric_scalars": 448,
+  "presentation_template": "Main_I_TimeAlign_Table_6_style",
+  "ranking_rule": "best_and_second_distinct_displayed_values_after_three_decimal_rounding",
+  "rows_with_dataset_averages": 280,
+  "second_style": "blue_underline",
+  "source_hashes": {
+    "aggregate_cells": "f32750d9ccfd8730658c47984a3f46236bbe487f6872a84b80386ca4bf250c9a",
+    "result_audit": "ab83befc521dad613b2cceb8269ed29396f0025074811841e33472118c30e272"
+  },
+  "standalone_latex": "table_iscf_bsca_main_ii_standalone.tex",
+  "standalone_page": "A3_landscape_review_copy",
+  "systems": [
+    "ISCF-BSCA-MAIN-v1",
+    "TimeAlign",
+    "QDF",
+    "AMD",
+    "SimpleTM",
+    "iTransformer",
+    "PatchTST",
+    "DLinear"
+  ],
+  "table_id": "ISCF-BSCA-MAIN-II-H720-HORIZON-LOADER-20260813"
+}

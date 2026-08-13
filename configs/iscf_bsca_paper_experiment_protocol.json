@@ -22,14 +22,14 @@
         "efficiency",
         "fresh_mechanism_diagnostics"
       ],
-      "status": "H5D_bs16_lr2p4_author_selected_paper_row_tables_frozen"
+      "status": "H5D_bs16_lr2p4_paper_row_frozen_Main_II_fixed_H_loader_reaudit_complete"
     }
   },
   "paper_table_registry": {
     "registry": "configs/iscf_bsca_paper_table_registry.json",
     "human_readable_index": "docs/iscf-bsca-paper-table-registry.md",
     "main_i_status": "complete_hash_frozen_H5D_bs16_lr2p4_synced_31_of_56_best_18_second",
-    "main_ii_status": "complete_hash_frozen_H5D_bs16_lr2p4_synced_30_of_56_best_25_second",
+    "main_ii_status": "complete_hash_frozen_horizon_loader_reaudit_41_of_56_best_13_second",
     "main_result_presentation_contract": "shared_TimeAlign_Table_6_style",
     "pending_main_text_tables": [
       "efficiency",
@@ -42,7 +42,7 @@
     "new_experiment_authorization_created": true
   },
   "authorization": {
-    "current_decision": "H5D_bs16_lr2p4_author_selected_paper_row_Main_I_II_synced",
+    "current_decision": "Main_II_all_baselines_recomputed_with_H720_checkpoints_on_fixed_H_official_loaders",
     "existing_artifact_audit": true,
     "matrix_design": true,
     "test_tuned_hpo_project_principle": {
@@ -56,16 +56,16 @@
     "official_test_hpo_execution": true,
     "H4J_formal_test_after_complete_training_manifest": true,
     "formal_test": true,
-    "formal_test_gate": "H5D_complete_48_checkpoints_192_rows_original_gate_fail_author_paper_row_override_applied",
+    "formal_test_gate": "Main_II_horizon_loader_63_checkpoints_252_of_252_complete_all_continuity_and_origin_gates_passed",
     "current_user_authorization": {
       "date": "2026-08-13",
-      "instruction": "temporarily_freeze_h5d_bs16_lr2p4_and_update_Main_I_Main_II_LaTeX_and_PDF",
+      "instruction": "recompute_all_Main_II_baselines_using_existing_horizon_specific_H720_checkpoints_and_each_fixed_H_native_test_loader_then_freeze_new_table",
       "Tier_A": true,
       "Tier_B1_H0_H1": true,
       "Tier_B2_bounded_HPO_and_test_profile_ranking": true,
       "Tier_B3_selected_profile_confirmation": false,
       "Tier_C_final_reporting_audit": true,
-      "scope_note": "Author explicitly selects eligible H5D bs16_lr2p4 as the current ETTh1 paper row and authorizes atomic Main I/Main II table mutation; the original H5D gate-fail history is retained. Extra seeds, H5E, and architecture redesign remain unauthorized."
+      "scope_note": "Author explicitly authorized a full Main II baseline re-evaluation. Each external system reuses its prior horizon-specific H720 checkpoint, reconstructs the corresponding fixed-H official test loader including split and drop_last semantics, crops the frozen H720 output to H, and compares against that loader's H-step labels. Main I and model checkpoints remain unchanged."
     },
     "scoped_local_patch_authorizations": {
       "timealign_exchange_script": {
@@ -1287,8 +1287,8 @@
       "main_i_outperforms_evaluated_standard_protocol_baselines": "pass_against_both_DLinear_Specific_and_PatchTST_Specific",
       "main_i_unqualified_horizon_specific_superiority": "prohibited",
       "main_i_modern_native_context": "separate_single_seed_point_estimates",
-      "main_ii_paper_facing": "complete_224_cell_H720_prefix_v1_system_benchmark_with_H720_continuity_audit",
-      "main_ii_system_benchmark": "source_native_H720_trained_one_model_all_horizons_not_matched_mechanism_attribution",
+      "main_ii_paper_facing": "complete_224_cell_fixed_H_loader_reaudit_with_63_checkpoint_hashes_252_external_evaluations_and_H720_continuity_audit",
+      "main_ii_system_benchmark": "source_native_H720_checkpoints_evaluated_on_each_official_fixed_H_loader_not_matched_mechanism_attribution",
       "exact_architecture_attribution": "decided_by_exact_core_ablations_and_same_backbone_transfer_controls",
       "each_component_effective": "pass_against_all_four_exact_without_controls",
       "decoder_portability": "both_backbones_pass_plus_ISCF_over_original_and_plus_ISCF_BSCA_over_plus_ISCF",
@@ -1972,7 +1972,7 @@
     "protocol": "configs/iscf_bsca_main_ii_h720_prefix_protocol.json",
     "prelaunch": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/design_and_prelaunch_gate.md",
     "manifest": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/checkpoint_and_source_manifest.csv",
-    "status": "formal_matrix_complete_system_benchmark_pass",
+    "status": "historical_complete_superseded_by_fixed_H_loader_reaudit_20260813",
     "role": "source_native_h720_trained_one_model_all_horizons_system_benchmark_not_matched_mechanism_attribution",
     "systems": ["ISCF-BSCA-MAIN-v1", "TimeAlign", "QDF", "AMD", "SimpleTM", "iTransformer", "PatchTST", "DLinear"],
     "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather", "ECL", "Solar"],
@@ -2002,7 +2002,38 @@
     "iscf_macro_mae": 0.30828128213381784,
     "iscf_best_metric_cells": 24,
     "iscf_second_metric_cells": 27,
-    "decision": "Main_II_H720_prefix_system_benchmark_complete_pass_not_matched_mechanism_attribution"
+    "decision": "historical_Main_II_H720_loader_crop_table_superseded_due_to_test_origin_mismatch"
+  },
+  "main_ii_horizon_loader_reaudit_20260813": {
+    "protocol": "configs/iscf_bsca_main_ii_horizon_loader_protocol.json",
+    "prelaunch": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/design_and_prelaunch_gate.md",
+    "formal_job_manifest": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/formal_results/formal_job_manifest.json",
+    "status": "complete_hash_frozen_horizon_loader_reaudit",
+    "role": "source_native_h720_checkpoint_one_model_all_horizons_system_benchmark_not_matched_mechanism_attribution",
+    "systems": ["ISCF-BSCA-MAIN-v1", "TimeAlign", "QDF", "AMD", "SimpleTM", "iTransformer", "PatchTST", "DLinear"],
+    "datasets": ["ETTh1", "ETTh2", "ETTm1", "ETTm2", "Weather", "ECL", "Solar"],
+    "training_horizon": 720,
+    "evaluation_horizons": [96, 192, 336, 720],
+    "evaluation_rule": "for_each_H_reconstruct_the_source_native_fixed_H_official_test_loader_feed_only_history_to_the_frozen_H720_checkpoint_crop_first_H_outputs_and_compare_with_that_loader_H_step_labels",
+    "external_checkpoint_objects": 63,
+    "external_unique_checkpoint_hashes": 63,
+    "external_formal_evaluations": 252,
+    "external_aggregate_cells": 196,
+    "final_aggregate_cells": 224,
+    "h720_same_checkpoint_checks": 49,
+    "h720_same_checkpoint_failures": 0,
+    "origin_count_monotonicity_checks": 63,
+    "origin_count_monotonicity_failures": 0,
+    "iscf_macro_mse": 0.26191149063094776,
+    "iscf_macro_mae": 0.30725229859472,
+    "iscf_best_metric_cells": 41,
+    "iscf_second_metric_cells": 13,
+    "result_artifact": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/formal_results/result_and_table_audit.md",
+    "table_artifact": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/formal_results/table/table_iscf_bsca_main_ii.tex",
+    "review_pdf": "output/pdf/iscf_bsca_main_ii_horizon_loader_20260813.pdf",
+    "freeze_manifest": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/formal_results/table/main_ii_horizon_loader_freeze_manifest.json",
+    "formal_result_gate": "pass",
+    "decision": "Main_II_fixed_H_loader_reaudit_complete_pass_not_matched_mechanism_attribution"
   },
   "gates": {
     "seed_policy": {

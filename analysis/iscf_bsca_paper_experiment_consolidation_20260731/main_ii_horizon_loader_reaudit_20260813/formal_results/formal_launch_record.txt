@@ -1,0 +1,11 @@
+launch_time=2026-08-13T18:09:53+08:00
+repo_commit=fb6132623d3ad738b006c6f84d3d58f10828044f
+protocol_sha256=5cd1a94a17f57dcfe74f2f126ef78d893f780861852204c8ff9906ac61603d94
+job_manifest_sha256=3f0de56908fd4c877a0776ebc17d11e50ecb14511d24836442289f90e7541a2d
+gpu_ids=0 1 2
+Disk quotas for user yingch (uid 1017):
+   文件系统   space  配额  规限宽限期文件节点  配额  规限宽限期
+      /dev/sdb3    187G    200G    220G            783k       0       0
+0, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0
+1, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0
+2, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0

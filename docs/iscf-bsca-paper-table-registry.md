@@ -12,6 +12,7 @@ source transcription audit、checkpoint manifest 和 smoke 统计不作为论文
 - `complete_hash_frozen`：结果、来源角色与输出 hash 已冻结；未经用户显式解冻不得改写；
 - `complete_hash_frozen_h5a_synced`：H5A选择的完整dataset-level profiles已获授权替换，结果与输出hash重新冻结；
 - `complete_hash_frozen_h5d_bs16_lr2p4_synced`：用户指定eligible H5D profile作为当前ETTh1 paper row，原H5D gate历史保留，结果与输出hash重新冻结；
+- `complete_hash_frozen_horizon_loader_reaudit`：Main II已使用既有H720 checkpoints在各fixed-H official test loaders上完整重算，continuity、origin-count与输出hash均已冻结；
 - `complete_presentation_aligned`：完整结果已通过审计，并已按 Main I 视觉契约生成；
 - `complete_limited_surface`：结果完整，但只覆盖明确列出的部分 systems；
 - `author_fixed_controls_prelaunch_pending`：author已固定control identities，但implementation、预算与formal matrix仍待独立prelaunch；
@@ -37,14 +38,14 @@ Main I 与 Main II 现在使用同一套表格语言：
 
 “相同形式”只约束展示结构和排名规则，不意味着两张表必须包含相同 systems。Main I
 比较一个 unified model 与 horizon-specific systems；Main II 比较各 system 的一个
-H720 model 所形成的 four-horizon prefix forecasts。
+H720 checkpoint在四个source-native fixed-H official test loaders上的prefix forecasts。
 
 ## 3. 当前论文表格清单
 
 | ID | 论文位置 | 状态 | 当前规模 | Canonical artifact | 能支持的结论 |
 | --- | --- | --- | --- | --- | --- |
 | `Main-I` | 正文主结果 | `complete_hash_frozen_h5d_bs16_lr2p4_synced` | 14 systems × 7 datasets × 4 H；392 system–dataset–H rows | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_h5d_bs16_lr2p4_synced_20260813/table_iscf_bsca_main_i_qdf.tex` | ISCF-BSCA 与 separately optimized horizon-specific systems 的 system-level accuracy competitiveness；不作 matched mechanism attribution |
-| `Main-II` | 正文主结果 | `complete_hash_frozen_h5d_bs16_lr2p4_synced` | 8 systems × 7 datasets × 4 H；224 cells，70 checkpoint evaluations | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_h5d_bs16_lr2p4_20260813/table/table_iscf_bsca_main_ii.tex` | one-model-for-all-horizons system competitiveness；不作 BSCA/decoder attribution |
+| `Main-II` | 正文主结果 | `complete_hash_frozen_horizon_loader_reaudit` | 8 systems × 7 datasets × 4 H；224 cells，63 external checkpoint objects / 252 formal evaluations | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/formal_results/table/table_iscf_bsca_main_ii.tex` | one-model-for-all-horizons system competitiveness；不作 BSCA/decoder attribution |
 | `Main-I-Exchange` | Supplementary companion | `complete_limited_surface` | ISCF-BSCA / TimeAlign / QDF × Exchange × 4 H | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_h5d_bs16_lr2p4_synced_20260813/table_exchange_companion.tex` | Exchange 的部分系统背景；不能表述为完整 Main I extension |
 | `Efficiency` | 正文 supporting result | `measurement_pending_baseline_subset_not_yet_frozen` | 指标已定，baseline subset 与 profiler contract 待冻结 | 尚无正式表 | trained-model/storage/training/inference/CHPC trade-off；测量完成前不作 efficiency claim |
 | `Core-Ablation` | 正文 mechanism attribution | `author_fixed_controls_prelaunch_pending` | 5 variants × 5 datasets × 4 H；seed2021共有100 cells；按新control identity暂仅Full的20 cells可直接复用，80 cells需source patch/retrain | 尚无正式表 | Full、w/o BSCA、w/o Target-Adaptive Allocation、Shared Scope Projection与Fixed Scope ($s=144$)的matched attribution |
@@ -63,12 +64,13 @@ H720 model 所形成的 four-horizon prefix forecasts。
 
 ### Main II
 
-- 完整性：70 checkpoint evaluations、280 raw prefix rows、224 aggregate cells、448 MSE/MAE scalars；
-- 当前ETTh1采用用户指定的eligible H5D profile `h5d_bs16_lr2p4`；相对H5A同步版只原子替换ETTh1 four-H profile，ECL、Solar、其他datasets及所有external systems保持不变；
-- 三位小数显示口径：30/56 best、25/56 second，共55/56 metric cells 位于 top-2；
+- 完整性：63个external H720 checkpoint objects、63个unique hashes、252/252 fixed-H evaluations、196个external aggregate cells；连同28个ISCF-BSCA cells形成224-cell主表；
+- 当前ISCF-BSCA仍采用已冻结dataset-level profiles，其中ETTh1为用户指定的eligible H5D profile `h5d_bs16_lr2p4`；本轮只重算全部external baselines，不改Main I；
+- 49/49个H720 same-checkpoint continuity checks与63/63个origin-count monotonicity checks均通过；
+- 三位小数显示口径：41/56 best、13/56 second，共54/56 metric cells 位于 top-2；
 - Main II 现已与 Main I 对齐 dataset order、year label、best/second emphasis、column spacing 与 required packages；
 - 可直接编译的完整source为`table_iscf_bsca_main_ii_standalone.tex`，A3 landscape
-  review PDF为`output/pdf/iscf_bsca_main_ii_h5d_bs16_lr2p4_20260813.pdf`；正式manuscript仍使用
+  review PDF为`output/pdf/iscf_bsca_main_ii_horizon_loader_20260813.pdf`；正式manuscript仍使用
   原始table fragment；
 - external source contracts 不 matched，因此该表不能兑现 component effectiveness 或 decoder portability claims。
 

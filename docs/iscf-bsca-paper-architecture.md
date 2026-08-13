@@ -8,7 +8,7 @@
 | `version` | `v0.71` |
 | `last_updated` | `2026-08-13` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Sections 5--7 v0.2 author-fixed structure temporarily frozen；experiments=H5D原始gate fail历史保留，`h5d_bs16_lr2p4` author-selected为当前ETTh1 paper row，HPO paused |
+| `current_review_cursor` | writing=Sections 5--7 v0.2 author-fixed structure temporarily frozen；experiments=Main II fixed-H loader re-audit complete，`h5d_bs16_lr2p4` remains current ETTh1 paper row，HPO paused |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
@@ -16,18 +16,25 @@
 | `frozen_consensus` | 论文七章结构并保留standalone Discussion；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.2 structural design |
 | `provisional_content` | Method Figure 4 stable vector-asset synchronization；remaining manuscript prose and pending experiment evidence |
-| `authorization_source` | 2026-08-13用户授权并完成H5D formal test，随后明确授权`h5d_bs16_lr2p4`同步Main I/Main II；extra seeds/H5E/architecture redesign未授权 |
+| `authorization_source` | 2026-08-13用户授权并完成Main II全部external baselines的fixed-H loader formal re-evaluation；Main I、extra seeds与architecture redesign未改变 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
 `temporarily_frozen_content` 只有在后续章节或证据产生明确矛盾且用户同意后才解冻；
 `provisional_content` 只表示当前最佳结构，后续按章节继续修订。
 
+Main II horizon-loader amendment：旧表在H720 loader common origins上裁短prefix，现已被
+每个H重新构造source-native fixed-H official test loader的完整重算取代。63个immutable
+H720 checkpoint objects、252/252 external evaluations、49/49 H720 continuity与63/63
+origin monotonicity checks全部通过；当前结果为`41/56 best + 13/56 second`。旧表只作
+historical protocol evidence，不再进入canonical registry。
+
 H5D paper-row amendment：原始H5D selector gate不变；用户指定eligible profile
 `h5d_bs16_lr2p4`作为当前Main I/Main II的ETTh1 row。两表仅替换ETTh1 four-H ISCF
 cells，同步后分别为`31/56 best + 18/56 second`与`30/56 best + 25/56 second`。
-该选择是single-seed、test-tuned/test-informed system evidence，不改变architecture或
-mechanism claim boundary。
+后一个Main II ranking已被上述fixed-H loader重算取代；profile本身保持不变。该选择是
+single-seed、test-tuned/test-informed system evidence，不改变architecture或mechanism
+claim boundary。
 
 H5B result amendment：ETTh1 expanded HPO已完成36/36 checkpoints与144/144 formal-test
 rows，选择`h5b_seq640_p20`。Main II ETTh1 best cells由2/8提高到4/8，four-H mean
@@ -1467,13 +1474,13 @@ Table 6的140个目标published rows已完成PDF-coordinate transcription与渲�
 
 ### 8.3 Main Results II：H720-trained One-Model-All-Horizons Benchmark
 
-Main II在2026-08-08按用户要求重新冻结为H720-prefix system benchmark。对每个
-external baseline和dataset，只使用一个由官方H720 training script得到的
-fixed-H model；H96、H192和H336均由同一次H720 forecast裁剪前$H$ steps获得。
-因此每个checkpoint的四个请求共享完全相同的H720 test origins，并形成一条nested
-prediction trajectory。
+Main II在2026-08-13完成fixed-H test-loader重审。对每个external baseline和dataset，
+仍只复用由官方horizon-specific H720 training script产生的一个checkpoint；但每个
+$H\in\{96,192,336,720\}$均重新构造与该baseline原horizon-specific实验一致的official
+fixed-H test loader（包括split、lookback、batch size与`drop_last`），将相同H720
+checkpoint的输出裁剪至前$H$ steps，并与该loader的$H$-step label计算MSE/MAE。
 
-| Model | # Models per Dataset | H96 Prefix | H192 Prefix | H336 Prefix | H720 | Avg. | H720 Main-I Audit |
+| Model | # H720 Checkpoints per Dataset | H96 Loader | H192 Loader | H336 Loader | H720 Loader | Avg. | H720 Continuity Audit |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 | TimeAlign | 1 |  |  |  |  |  | local exact |
 | QDF | 1 |  |  |  |  |  | local exact |
@@ -1489,22 +1496,21 @@ ETTm2、Weather、ECL、Solar。Exchange只保留为deferred extension，因为�
 尚无AMD、SimpleTM、iTransformer、PatchTST、DLinear的完整Exchange H720 anchors；
 不得为了得到eight-dataset表而把未审计结果混入。
 
-Local H720 checkpoints已存在于ISCF-BSCA、TimeAlign、QDF、AMD和SimpleTM，
-其Main II H720必须在相同native test contract下精确复现Main I；SimpleTM评估并
-平均全部三个native repetitions。iTransformer、PatchTST和DLinear的Main I值是
-published three-run means，而Main II首阶段是official-source single-seed复现，因此
-只做signed deviation audit，不能强制等于published mean，也不能回写已冻结Main I。
+全部external baseline均复用既有horizon-specific H720 checkpoints；SimpleTM保留并
+平均三个native repetitions，其余系统各dataset复用一个checkpoint，共63个checkpoint
+objects。H720 continuity在同一checkpoint、同一native loader与同一metric实现下逐项
+核验，而不是强制匹配Main I中的published mean。重审不得回写已冻结Main I。
 
 该表回答one-model-all-horizons system competitiveness，但不作matched mechanism
 attribution：各repository的lookback、objective、optimizer、selector、seed、参数量与
 test-loader `drop_last`并不完全一致。正式decoder attribution仍由five-dataset
 end-to-end core ablation和two-backbone transfer承担。Machine contract=
-`configs/iscf_bsca_main_ii_h720_prefix_protocol.json`，prelaunch=
-`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/design_and_prelaunch_gate.md`。
+`configs/iscf_bsca_main_ii_horizon_loader_protocol.json`，prelaunch=
+`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/design_and_prelaunch_gate.md`。
 
-截至2026-08-09，Main II formal matrix已完整闭合：70个checkpoint evaluations、280个raw prefix rows、224个aggregate cells和448个MSE/MAE scalars全部通过，35个local H720 exact anchors无失败。ISCF-BSCA在28个dataset–horizon cells上的macro MSE/MAE为`0.262469/0.308281`，两项均在八个systems中排名第一；按共同三位小数显示口径为24/56 best、27/56 second，即51/56 metric cells位于前二。分dataset弱项仍完整保留：ETTh1 MAE与Solar MSE为rank 3，ETTh2/ECL双指标为rank 2。
+截至2026-08-13，Main II重审formal matrix已完整闭合：63个checkpoint objects具有63个unique hashes，252/252个external fixed-H evaluations与196个external aggregate cells通过；连同28个既有ISCF-BSCA formal cells形成224-cell主表。49/49个external H720 same-checkpoint continuity checks与63/63个origin-count monotonicity checks均无失败。重算后ISCF-BSCA的macro MSE/MAE为`0.261911/0.307252`；按共同三位小数显示口径为41/56 best、13/56 second，即54/56 metric cells位于前二。相对旧H720-loader裁剪口径，external baselines在147个short-H cells中有118个MSE与100个MAE变差，证实旧口径对多数short-H结果存在乐观偏差。
 
-该结果只把Main II推进为`paper_facing_effectiveness=pass`的one-model-for-all-horizons system benchmark。它不改变mechanism claim boundary：external source contracts并不matched，故BSCA/ISCF attribution与decoder portability仍必须由five-dataset end-to-end ablation、internal diagnostics和two-backbone transfer兑现。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/result_and_table_audit.md`，LaTeX table=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_h720_prefix_20260808/formal_results_20260809/table/table_iscf_bsca_main_ii.tex`。
+该结果只把Main II推进为`paper_facing_effectiveness=pass`的one-model-for-all-horizons system benchmark。它不改变mechanism claim boundary：external source contracts并不matched，故BSCA/ISCF attribution与decoder portability仍必须由five-dataset end-to-end ablation、internal diagnostics和two-backbone transfer兑现。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/formal_results/result_and_table_audit.md`，LaTeX table=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/formal_results/table/table_iscf_bsca_main_ii.tex`。
 
 Main II现与Main I使用同一展示契约：dataset顺序为ETTm1、ETTm2、ETTh1、
 ETTh2、Weather、ECL、Solar；每dataset依次显示H96/H192/H336/H720与Avg.；

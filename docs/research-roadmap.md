@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## Main II Fixed-H Loader Re-audit (2026-08-13)
+
+Current cursor=`paper consolidation; corrected Main II frozen; HPO paused`。旧Main II使用H720 loader common origins裁短prefix，不能与每个H的horizon-specific test surface等同。用户授权后，7 external systems × 7 datasets × 4 H在63个immutable H720 checkpoint objects上完整重算；252/252 evaluations、49/49 H720 continuity、63/63 origin monotonicity与224/224 final cells通过。新表严格使用每个source的fixed-H split/preprocessing/batch/`drop_last`，future labels不输入model。ISCF-BSCA更新为41/56 best、13/56 second；旧表保留为historical protocol artifact并退出canonical registry。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/formal_results/result_and_table_audit.md`。Decision=`Main_II_horizon_loader_reaudit_complete_pass_old_common_origin_table_superseded`。
+
 ## H5D Author Paper-Row Selection and Table Freeze (2026-08-13)
 
 Current cursor=`paper consolidation; HPO paused`。用户在H5D formal gate完成后明确指定暂时采用eligible profile `ETTh1__h5d_bs16_lr2p4`作为当前Main I/Main II ETTh1 paper row。该author override不追溯修改预注册gate：H5D仍是`gate_pass=false`，H5B仍是原selector fallback；论文表格则按用户当前选择使用H5D profile。原子同步只替换两表各4个ETTh1 ISCF cells，所有baseline、ECL、Solar及其余datasets保持不变。Main I=`31/56` best、`18/56` second；Main II=`30/56` best、`25/56` second。Canonical sync=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/h5d_bs16_lr2p4_main_table_sync_20260813/table_sync_result.md`。Decision=`H5D_bs16_lr2p4_author_selected_paper_row_Main_I_II_synced`。

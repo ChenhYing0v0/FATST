@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "freeze_id": "ISCF-BSCA-MAIN-II-HORIZON-LOADER-20260813",
+  "frozen_at": "2026-08-13",
+  "status": "complete_hash_frozen_horizon_loader_reaudit",
+  "protocol": "configs/iscf_bsca_main_ii_horizon_loader_protocol.json",
+  "systems": 8,
+  "datasets": 7,
+  "horizons": [96, 192, 336, 720],
+  "external_checkpoint_objects": 63,
+  "external_unique_checkpoint_hashes": 63,
+  "external_formal_evaluations": 252,
+  "external_aggregate_cells": 196,
+  "final_table_cells": 224,
+  "h720_same_checkpoint_checks": 49,
+  "h720_same_checkpoint_failures": 0,
+  "origin_count_monotonicity_checks": 63,
+  "origin_count_monotonicity_failures": 0,
+  "iscf_best_metric_cells": 41,
+  "iscf_second_metric_cells": 13,
+  "artifacts": {
+    "table_fragment": {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/formal_results/table/table_iscf_bsca_main_ii.tex",
+      "sha256": "f7a32efff8f23d9cdef6939b503d429ff9b7538048ba747864edab3d5a59b729"
+    },
+    "standalone_latex": {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/formal_results/table/table_iscf_bsca_main_ii_standalone.tex",
+      "sha256": "85b224eb183097d7469c9f61d0e46a093250ecd37264408a462a0f12df187a7a"
+    },
+    "table_data": {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/formal_results/table/table_data_long.csv",
+      "sha256": "6a32ebaac7c95dbc32c0caff69abbce7bc439157017a00deb703d663b47a638b"
+    },
+    "table_build_summary": {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/formal_results/table/table_build_summary.json",
+      "sha256": "ab5e6d78ea8b240da9625643072ffdedb9850f6a8565b3b297426c49f58ee5bc"
+    },
+    "result_audit": {
+      "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/formal_results/aggregate_audit/main_ii_result_audit.json",
+      "sha256": "ab83befc521dad613b2cceb8269ed29396f0025074811841e33472118c30e272"
+    },
+    "review_pdf": {
+      "path": "output/pdf/iscf_bsca_main_ii_horizon_loader_20260813.pdf",
+      "sha256": "f186029d0cac17d86b5841731fd0be891c3919046c42be0631899afd0ed033f3"
+    }
+  },
+  "claim_boundary": "source-native H720 checkpoints evaluated on official fixed-H loaders; system-level benchmark only, not matched mechanism attribution"
+}

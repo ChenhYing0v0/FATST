@@ -290,7 +290,7 @@ def main() -> None:
             "aggregate_cells": sha256(args.aggregate_cells),
             "result_audit": sha256(args.result_audit),
         },
-        "claim_boundary": "source-native H720 one-model-all-horizons system benchmark; not matched mechanism attribution",
+        "claim_boundary": "source-native H720 checkpoints evaluated on official fixed-H loaders; not matched mechanism attribution",
     }
     args.output_dir.mkdir(parents=True, exist_ok=True)
     write_csv(args.output_dir / "table_data_long.csv", table_rows)

@@ -1,0 +1,1281 @@
+{
+  "aggregate_cells": 224,
+  "checkpoint_objects": 63,
+  "external_aggregate_cells": 196,
+  "formal_external_evaluations": 252,
+  "gate": "pass",
+  "h720_continuity_checks": 49,
+  "h720_continuity_failures": 0,
+  "input_files": [
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__ECL__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "1cc2291877b2ec16f0a7727aabd5f25a02bcd5b8063389f33a6d1cea5d83d4f0"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__ECL__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "05f74c87a50b7c65cb898e89a1ddee484c55d9fbb91c21f66f6d4830632a9987"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__ECL__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "8844f9b360600aba70448a0626bb81d4fbafa3e51de170832bc5e5fe323ac69d"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__ECL__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "f15b2bf69b2fd40783e9f3235ef48349a93459eaefb509fe4e985b4d2fb64821"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__ETTh1__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "206fdc2244b87e807419660fb899734a874f671b0d984f35d3d1f55eb117ee0a"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__ETTh1__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "b2cc325b8b02ee37ef996a2e808b9ab6034a1c68c5c310232fb28582e22333fe"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__ETTh1__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "a0e8b9b5766d23e6b3e48f6e4e591a7f57fc03d2cbf31429a97fb0f371031a1e"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__ETTh1__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "dd5bddb13fcdf9727a6fcecd6727037369e33d8ef1df8a1dcb9ce1657a9e9e16"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__ETTh2__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "5de70da7508f5e9f8aca403df3e49572658a1d0661edc5ef60baff3db67e18e4"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__ETTh2__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "f14577244b288e2a716eafc642169a98be86a571d634b89c0436d427f23e0fa9"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__ETTh2__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "41deeaab104d7bd8a44339f67f3a009c76eba9ddb55fc359ed57b59b545cd59b"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__ETTh2__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "2c69cf5175f0bce83040526d9d7a74440558a497c9003159740afc549c539205"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__ETTm1__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "b04db40c1eff543e12fd9274e068caaad0c09d5cc0a1072ebf67bec41077fbad"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__ETTm1__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "34cc3a43f9990fca1764e728d53d3614e4883baa61fee5152282148ec217ea53"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__ETTm1__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "829e03b97dcd413102e14d55584bf007f42e11ccbaea09daa024bf47ba7edbae"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__ETTm1__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "0ed7464007485325683d8ea87e48ba3ed8fcc50d7662af4811d11a787ebe5172"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__ETTm2__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "7ab2c91a62d06852216d68dcfeb87b12852dfc9c3036a75046567b8ba0b03aec"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__ETTm2__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "28c92d369fe12efce1f334e3d21cbfdf4962e04366615bf3aec59787ff519928"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__ETTm2__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "232fbf2380a113dcfe05053faa8a8f30b7637d3986e91f861c3e813eb43b5f86"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__ETTm2__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "7244df3bf7f8d9acfdbe40dfbb30a4ae0e86b48101ac2dbd022ddc29e6f36e4f"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__Solar__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "1f2c7bfaa90680acf32b36c761dd81a2d46c4d45c0379f19d61831ae75bddd8b"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__Solar__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "c1296e5e93a45e82f5e5356ff021652e17645ee05cc8227429988c11226647e6"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__Solar__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "afc9822036ea57dc189040f7a106b315526f6d9b16a0a7c41ec07c8b5a1fdc7e"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__Solar__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "6a02383368e7517bde7dadfd314a8f664f96c48e5ba3bb92d3b64331ac93165d"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__Weather__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "1ab8f524eb4f6b726402cd2e7ca1ec2e3500fa138201e1967bf24512e6affc52"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__Weather__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "bb04f075b38238e6979ed045cba7813da474985d2c7a87e2cde5e9675dd1f99c"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__Weather__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "8d6b3d83868331a5b10e9d40c5dc05e7e8455f1c3edc3b8c053e99048c519a41"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/AMD__Weather__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "0e84a005a0a46c4f05b3c40d7e1df07283ec46f42f51aa2f6e54e6197427ba3e"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__ECL__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "a338d20948f2a6fd8428bc3273ad16b78acde15c9c567e09477a1ac0a6d5d77b"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__ECL__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "e82375242f35e30438b8ddf4507dd3febce13662e9d00e05eaf15d039b9ede90"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__ECL__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "6ec5e30f775ddd4681929d9b16dc828eabb37f7d99e127e4cf4e8a7a06d96b4f"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__ECL__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "78ec001decc272cadec3b058937c8e589c87fb7ba89253ed83e8ea9ffba3b9b2"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__ETTh1__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "d8c81798093d237272165fa16c735dd289b3dcef8ef29a12cfd5095b888cd536"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__ETTh1__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "162a3e57d8a7a47fe68acef43f55ff143bbd6068a053bcf2588f1c469280ea93"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__ETTh1__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "86b6208010977809f8604e8bc4f86b94356c512379e804cc8d56eadd2b7b6d97"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__ETTh1__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "3ce64349621e4ef3c752a348e419a28cfb68da9120a8a646205bcb9c111c3b0f"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__ETTh2__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "dfe1b83bc078c052f4c91913a9b67e7a1de7a52d99b8e007172a29c5beaea29e"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__ETTh2__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "33fa4f18b8d274bfeb168238fa1fdd763873f5dfb50a71e6203b403f26849075"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__ETTh2__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "8b73c8d7572dabdcd80b97dd35f2d026a340492884ce78ae156f65d254782736"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__ETTh2__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "2d943cf9faccf621f8bad6b9b2bdcec67c97e77d6ed50a280798e2e6dab77fdc"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__ETTm1__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "dcdcd7d717af126f8e928ff7aceb1aeb7bc516972d933b134375e54645614847"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__ETTm1__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "6d059d73954691c84c6fee07bb901292201fc4d4ab74559dc8a258b564eee888"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__ETTm1__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "ed9135c748dc6c1e87a64defb516d6f1a8cac0c0b0da67f987300644f72f0411"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__ETTm1__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "de045deab1c6ba23d5f06e1c3f293d58cabac5f328b413fea93915d975de523b"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__ETTm2__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "e70eeb1daa7b599f6b92ee49c7e9111da7a61a1d137478d5475c3fb7e114906a"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__ETTm2__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "abb85d4c4e8bdd784f1c6c05b09323d1bf2095c4226300eb876b742d8ad5aa19"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__ETTm2__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "8a12d9f63851fd38c9ee7e1d268169ce60af9e7550a7d45819c5a4091744b528"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__ETTm2__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "fa60f6f6068dd9e23e0a885f95d3fd31a1f8d69b6164155711dcc0fd5152034a"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__Solar__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "6ecce734667feaf3176d08cb3a1770549f7fd31366e9ffd20d31149396c659ae"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__Solar__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "bc8b75cffe7b21dc3ec6f4f761cc27106559979d7a549af1d016b099c455488b"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__Solar__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "fd7cfd2a0af2cffd9a80be999278a14d9fd6b805e599271e13031603afc48a93"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__Solar__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "5478bacfff8c308b66755a108ed8417836dc0c8955e9fd205e07db2a442d15ed"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__Weather__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "42c69c015ceb6ef87a033753ca4aa69c3ae6e86cbd2973c7fb539d24cdb9cc7c"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__Weather__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "d7ff11b0c78bd3c667a1850f8c4657031abcf1d7ed8f393fa8c1e8c1ee2d8d2f"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__Weather__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "d55a6305149109078408425f655f853bbe3ca29669a753a301fd8f49c83a4ee9"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/DLinear__Weather__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "372b1607091f8694143d6b68cc07902ed4528199168b919b94fd4904def767b8"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__ECL__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "f0a5fa008da0a06c27dbc6cae179567a43de9afa08012ee6136453e1c8d0cc8c"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__ECL__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "2e6d9380b79661d7ac1a365e58f6153e72d3fdffb7da48edb71d633dd406b82e"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__ECL__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "98dd8cb2d648b9e060edb397b163eb7a3b323fc43669ad4b8f8534b80d192194"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__ECL__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "0d5fd94c08c46a461abe6ade9287e0fa886f86f87f715b97f35abdb36e27dd5b"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__ETTh1__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "d2cf04d5600899ab73ebbcc60e9d42f85ddd5b1dae5add3bbb544e627bac398d"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__ETTh1__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "832ea4ec61f5e70dfbbe7f88721638f4829c7e97efa0692d91a27c2fb6e9f8a6"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__ETTh1__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "c1eddf17a4febd587446ea147fc7b95d36c46407ec6a0961990ea17804e7e633"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__ETTh1__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "9e9aecd67c9e6232c0c8784fde7b2474cc0f04241939322c61aa0450bd6c7eee"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__ETTh2__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "9ee23b47c10974a6878d564093254261d265940e4b5259ef4a998db09bd8297e"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__ETTh2__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "3e239f4b85242d9d52226b7a89a200012a5876f56e98228d415d545b8301336f"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__ETTh2__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "9d1c8baccf2b5e7ae8db5a288924510ff8f928271cc4d91bfd71d9d648cc18b3"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__ETTh2__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "d8dd76963ba7aa48334067e64be98787c644b89ece842ee5d39896ee74e4a7f7"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__ETTm1__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "ae0ff86d3a4cda8f289dd8cefe36c0a242e36ead9642c7321eb1da86779e5072"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__ETTm1__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "2222245aeb0e6a246f0804c40f1a19e9376a0c7f3dfb220fd98496162b8feb43"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__ETTm1__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "c39d5ac85561e13caefa3c6d9bbfa41ffb48c3fa7df0c7b8335c20ab9191e7cb"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__ETTm1__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "fac76117e90d52c1a5753af07840cdae83409cbdfa282d0cf7bbe02d5507a69b"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__ETTm2__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "ddefdf1c17125c1482bd45fb909ea66570967cb5530e4410890904a6dcf502cb"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__ETTm2__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "c87107a456b8e999cc6c77b595e566d300241b0b7c8ea6059a3f001a08f15433"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__ETTm2__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "61df7278492ee41b49ae5179a28eff7908df04cbb14b4fe8239951f7f57e5d85"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__ETTm2__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "7f3c0417074d473fcaf388fb3911e37dfde9ed1fe36c636b1d9533115305ab49"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__Solar__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "965722cc17b41503347fa69a2da71129f939d0638a257e313a9cdb3988d6f31b"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__Solar__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "d8a277dee185e632cb00e125fd427a13c46d5ef49e5daa1d9943c2d7e34270df"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__Solar__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "c5c741847e228c12114e664abb3bf94cdb27a6834440fc2b2e577974277b4061"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__Solar__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "91cfee0046528568bb400ecb431aca5ab3ed0391908fb1f8dfe7087f508b7fbd"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__Weather__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "fd69b548ae7b91a7ffd2d03af4f86edda4ecbabfba22ced6e13d71504e826b10"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__Weather__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "5c46341446da82f0c1b34e750badd6ea5e67aab7c18bf5bed1759cd08827f3ae"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__Weather__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "7bca8a46ecdea95bf1db1949229979c96f20d917d3db5c37dd10ccce26d2a2ec"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/PatchTST__Weather__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "fd433afa336b26ce1a126877ac7123c46bb09aabf98ed9b7c5fd5e8536721a58"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__ECL__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "95bde491cd50de6f73d897af893459cb0647d943fe29e5827bfd53e9cbd5b179"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__ECL__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "0bd7de2249b1825376814dbc84bf11a7b01f15a61ed954141cbb8f6eb71bd6e8"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__ECL__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "bf3ea4392b72993ca8c36f9063494cf81d96e352bd687b181d2c33a013315d96"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__ECL__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "72fcced3eb5364879de5295df8160923eaaedb2a4e6b0f0f6dc01134d8ce6811"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__ETTh1__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "26da3ebb5c3c8458f9ce9a575e12cc012facdde93e9e96bff289aad30fa4340d"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__ETTh1__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "2e4548af409130f025d6ac811a31e607cbcd88b1ab9926b7ab30d0532196356a"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__ETTh1__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "d7b46cb23d6b9437a4641cfba57668807d552e2151b912afb36d5edab66ccad6"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__ETTh1__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "71126b0241c93c72dd03aa391ee40f3513562d177e7119bc8a09cc7b640448fc"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__ETTh2__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "2f8f6d45b22224d01b069343ae284da4e8829e5ed689867123b69b948463c669"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__ETTh2__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "0cf6c115b86b238a57c7e73aa7dd75630b817434a8fd8c88d02d838ec0eccc4b"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__ETTh2__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "ac13010cabf2fb2cd3f31a54ca1485a782e3baf32163f5ec8bca2273a05fc845"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__ETTh2__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "8cb30d7fa39fdf260c928aa8759eb7c134523da2845a76dbaaf8a02717806b79"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__ETTm1__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "71c8159c887be5019a5afb858369189ebd8713039926efcda0602292a1504cd1"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__ETTm1__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "7a3887568253b2db1e4f52b5feabd89cd4f5d0f2d5bf6b2c3647a43b49d040be"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__ETTm1__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "7a8d00a02f33734bcfee9b2535a765ceeb873a77e04ffddb4a8b432a12ea305c"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__ETTm1__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "fa5e4557da2824da34323722a35021dbe16fb043d3d3b79c02d35de28db06818"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__ETTm2__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "abaad2fef228ac9623534931ba36d9054ae691bd7bf3de4cb70f8649b62e1f3c"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__ETTm2__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "6899f4e63a5aaa834005cbad0a4f4c6d64aeb11232a6018480e00188bbd532ac"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__ETTm2__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "b1609f623a3b70b378798c8dc2242ad4171841a1e32f10b723ea8545abf78321"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__ETTm2__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "55b250d185db867762b5ad91dd69bec34ef901a1c829a87aa725d84d9d437f09"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__Solar__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "5bc17b4bd1a1b1d7582265053876be5534866d7bb1929f159ddff5cb134c04fe"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__Solar__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "f3e8247a3ea4c78b9c6a1d5acc146dc7b3294a17c80c321572d35bf9d94a737d"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__Solar__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "c4d20e14ae9d9467f57525cd9132b5d049b5e54568d94e4f8b32be511cb28fd7"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__Solar__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "9cf0f578002d63992f384aae9d54c9242c149a947041a7ad3d033c29c6632d25"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__Weather__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "2fc5a57f51d770558be466cdfcd2c62879eb11f849fb668be0e98343e1e97400"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__Weather__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "d223b41764f1b73438fbd7ff192bf8b5d7e7320f4327c599cf4ae091a2e3800d"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__Weather__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "aebcb876a37656e2797d91935615ad722e398f5abede49107bc2ccb5c38f41b8"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/QDF__Weather__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "fac528864723b4be3589fa2be6051d701fc5a3b3a40c1a6302d5ceb1657fb57e"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ECL__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "89e4991866c5d665878db359f00bd0122d9b98614be59c7d8173ba312d4db6a8"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ECL__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "f97b084d04105046b07c12591c7ed01b30db0484e0a191257f54cc246b41f8ec"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ECL__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "fce52c8b65775fc8c0a4321c67399e23b5dd571949c850dc62d0674d9b982a87"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ECL__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "f80a80a8c55cce1c5e149f314c8e274384584bc3acf33b2d429db41d9217ff11"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ECL__r1__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "b6b67e1b98202658d8e169df7e22e108af1a7c5c948aeb070ccb023bf316a286"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ECL__r1__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "f1b912c82dd83a72649933bf8ef1144ccc48203e777fbf299d7651271a3f0043"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ECL__r1__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "82bb9a2028a7c9313f1051cf50ee9ac808a15c0783d6da6b7d529dc2080ff8d9"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ECL__r1__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "dc02984cba369d400efd8e79635b26aede70dd05481e069d590c2d5d0690990e"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ECL__r2__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "9ab2d33a74e9d8ff41f0741eabf06c74502ebe638058ca9be170b477cc26c666"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ECL__r2__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "dc2a74ded15d4f5b10d2ad519b15cd2c947c5d571366c356cd32698ae7eebc75"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ECL__r2__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "bfc6483cba95abdaa7734ab5bcbc7117df86b861dc2cde4f9a3421dcb121b033"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ECL__r2__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "9851dfce828b6235068cedc7ff0baa051aeedc3f27b5c174ad5ec7b01fb1fb4d"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTh1__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "a4e5a08aba1dd3526006b53fa3ffd35deeadde7e82119e70f40b033c4a8e8fed"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTh1__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "330a23ec5584dc54c11dc3c01fd230fea7cf8d013a9d6bd24ae4536900923401"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTh1__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "e4f4e7b53511546c2d7aa9c415f8c572c5bb8f582764e6e58e3587024d1c47de"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTh1__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "973e83d1c225d9900c63c95c83e254010ba2d0ead6dc30650523a8e89c0e16dd"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTh1__r1__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "6b771fddc4c252fe95ec2c98865194e4e6da141d3d5323f857f683c7243ce473"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTh1__r1__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "a323d573637fa53cc36c5757dd50c213a41a7facd622651a57ae4feb3084d9b9"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTh1__r1__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "14b4aab452740f850278349cf16faded4b859c8517a39f762740a53ad5e2c15a"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTh1__r1__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "bf12be814152e9c2420b4e7f2f4ce9f94294c58c008237e1a590cba9bed6a083"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTh1__r2__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "27ae841cd77953575b661d071e50bc08efaf60abbbee4bf9786ac8efd2d6b020"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTh1__r2__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "3ac31495f267ea0a17b78152180379f98096ee585d96f10f63e501ee9ba91e8e"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTh1__r2__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "7dfbfa6f0111fc74364466bd68638e44f4cc0524e4d9874dffe4d8da0205fdd3"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTh1__r2__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "89578b1e516415e94111a7a9ab88445f08f01ba7d9134a48f5ee0ad02246904d"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTh2__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "04560956199bb6acb1a4ee409df5a4b253fa7e5c53f87496384bcd86ba0a6d2c"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTh2__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "8b954485d134b42d5ebbdb7ed00ce5dd2344657f4bda93703b5919940e84f7fd"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTh2__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "1ae8a6fb20453f53234c4ac5e18f03e15974f8d2f9a43ec3dc9c64088a1ae05e"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTh2__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "3bf85179612866e1031d406bc8cc4699ecee010a331f62aac44ebf2f2b6c2dfe"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTh2__r1__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "aa9875cafa00bc0236d7806e4b893395be2bfd35e6d10cc214609e6df4ce983c"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTh2__r1__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "c3def7d9f4b6b48e4fbec6df3636b1e989265d3fb4dd0febea26d55bdde906eb"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTh2__r1__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "99dc47e03b62773d17dcfa1b9d5cba94feb7f2f0a01fc710be4ed04a9a60f027"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTh2__r1__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "4cc50f9b260290b69d8206685ebc34ee6341277b8d2e56280a1cee33f491d2e6"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTh2__r2__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "533485eddb4fa8182b589751e7aa32a92ce262dda2b7d7e3a747f11b8e21da13"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTh2__r2__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "23dd860209abfe48f1dd68dcf5aab0bf57be08e9447934614ba2f9a0fcf1e9da"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTh2__r2__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "b7e8cae03f5895047eddc3d1128b038d7d37defa3de1e993f563f538df02cd63"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTh2__r2__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "7e8af5db3dc47798c77327f9299e4282a3d85be064b662fdb2c47a0028b9088a"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTm1__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "a55e14181bad9c04708758edc2207ddd8df314d98af9abfb41d913e85e5b0800"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTm1__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "3ba4e04733bead59a201afe8d61de9a5c764c922a7a0ed1b1bdf5e0e152c374f"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTm1__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "c214886360460319fc0dee8b6dc5944bbd02985ef7305f492a70c503f8f4cbfe"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTm1__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "b1f8f0abfcccac0bdcba768feafb3fad18e0ba69cca3db249aca0be6ecc6d8d4"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTm1__r1__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "f1bd3c3a2c5fe627e45f02cee012cab81fec75af0aef6512b213f7ee20cbddc4"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTm1__r1__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "2731ce310d3dd7df4b9bc93ac0840a0cdafbbf215437922e64734043f4ed7cfa"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTm1__r1__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "d7722c5afcbbbc06be7bb9f3bae4a16643f4b7f54372314718f54ab0d5f2056c"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTm1__r1__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "88088e491192a249ad2d83c941c00464dd402ba2ac767c4404d6278cf4bb0c94"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTm1__r2__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "a95b4f1a2c711d1a26d807a78b85c7b3d12ddef7434d11a3baae718c39bb7715"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTm1__r2__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "e6008191b65125db3f4406ea6bea7c486251be52b14f02f4ec28a1a72c46eb95"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTm1__r2__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "6171c8d5f399fdd858ae14f1571eadd7653917a39739c38044682daaf5fffb40"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTm1__r2__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "4c5dc6bfb13caa0802ba19002f481402c76c33cc46dabe99fd2af8a356b1c494"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTm2__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "21ad77bae38dcdbe1e0ef3562e1d353b5b028f5c09d5a967106cd4563fe1836c"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTm2__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "d68fd324e0488f847e13618735f91fd094664323f55042cf5b6dd812b5e6cda5"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTm2__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "bd7f5f06a9a0cbd0218006d3fd5ebe19550bf7a32497c5667f654ccb6e64ddfb"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTm2__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "eebead7605e8e05fddc201552c5f2c5635bd5122ff93da37d5879aad428c107d"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTm2__r1__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "cf9f5c9f7242f6a4143fcb62c50fc6f0a02aa76e2e56525b7dfb39ddfed8aca6"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTm2__r1__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "dfcb76da1316b519085dcd45e80f5716b670b913fe94c779806408f1a4e37f30"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTm2__r1__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "03657c12224086cdfc27b907e31c7dd3c05b908a8f455c0044214ec2fb064972"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTm2__r1__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "cfc6088120f43228a808727e774dd9646d945bec8988ed5db3b733b7cd615ae0"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTm2__r2__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "d13946dcfba4e9fd71a05d92122f8070eff1c82da57d19481ac87890799a7130"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTm2__r2__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "c462d6e6a615e11b75f850c104e243d5afaf5ced31e252d2fb171cc993506d34"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTm2__r2__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "d5591c40aca87703f98146aabb816cb35b4193c93a0b8d66d59aa3510dfa5bd0"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__ETTm2__r2__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "eaf3108557a6277236ea95483406a4000f55474ed972ba50ea2d6a0e065e9276"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__Solar__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "c0a6079c8f1a2a48a9885efd1da1a419a76abfcb12a6eed8fae8890c6c5cb13f"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__Solar__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "f3a45e27f2bef99074aae8dfa70d90c4064a7b54df1efc0c3724e35fe56b1cb1"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__Solar__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "1292301fb602dd047d4b1da28ea65bd520b4ca1758b0a34d7630b3daf2c5a3f6"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__Solar__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "6d1e202b94ef89e5d93d21cd84b6bfbe01c54987bc2296e486e8ecd3765c7062"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__Solar__r1__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "3b943ab20bca561576581f693a7c85363d1f9b6f31264390140a1749e551afd4"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__Solar__r1__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "7f51b763d01275dea4065d4dc36daaee65a9b9219f8992fc1df6a3db9d441d0e"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__Solar__r1__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "c83dd21e9002c5efa56264bd74c23c840930c18ccd468ef818bb649deef5493d"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__Solar__r1__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "d51a76a2964269cfc0329c1622279d57bff63405c83b749eccc99940fbd4859b"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__Solar__r2__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "0967eb56f053b3ae421398357458dbef1d0e6148655cf80e2632015071328cd8"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__Solar__r2__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "fe24b1660361c9a2d71972b350705fbf2b204ccfb592b9a0d1775930fbbcfe6d"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__Solar__r2__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "12ea33d768306b9691afddccd79c2ab0d8f42c16997b3b21f060919b45c9e598"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__Solar__r2__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "f91ad5c78da671d58f7e304cb22e9ab8f122c442394b7031566bd48889770f71"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__Weather__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "e8a8ae84b2d4b86a8a963f886d9fdc4b399bcaf07c26778fddc5d2403c057b95"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__Weather__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "03c5103efc434e10addbebaf51cd09d28e52d71abb7246eb77ebf5c8b17e4f7e"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__Weather__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "519bcfc084c9899d0b83f5d4665974c8570074e7e54bab11bb5ce403090e7d98"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__Weather__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "a19fc619e28179ee6f54dd28a61efcbdb6d6f3de27bb97b79b610292a9254184"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__Weather__r1__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "37c5f9f405fdf8d303b24ba970265293b79079d9883149b526cb92f454e13f88"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__Weather__r1__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "1a62463c18b499e073c1ab1d87ad3f494f850f635ae8bab804c4c2b948ebf755"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__Weather__r1__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "76491a8d0b1c517cd45c86ccafb2008ca252852ab350207dffc92008587af23a"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__Weather__r1__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "740b287101a58efd93f9be62f538e1750663f34a88b59a52c55a814900b09e42"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__Weather__r2__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "aff1948625a26efffaf08c66f6aa3336929e492ec229bc1a22ccff8c6ddbcc75"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__Weather__r2__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "9759e4a5306c4c8a3d5a32cca05e1c2b6dd338cb0d38512e027477b5eda65eb3"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__Weather__r2__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "ce5424bf5084a0bf90c7270493f755d4fb317d5d5f5eccd02b9afe2cbd402739"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/SimpleTM__Weather__r2__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "d7a2c7da03df865ee7e5122aa2049430614b099d8e3594a9b50f942eba569b18"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__ECL__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "96d78b2ca528061f580ff4e46d25dead8b8e815c89c9c1392596e2cce52fe42a"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__ECL__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "5c2d78bceb53d7f021784247480a35d4cf3a3707f04f0f333dac89531afdb285"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__ECL__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "46bfc466110bac2adb109768c623240745658cf7e0e0e48064db91286a6c5b44"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__ECL__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "54bb800c5766b9f8cebfad3b49f921e2184d08a6a41251bc7fc69a5267d097f6"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__ETTh1__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "898371ba35f26fd954436d2b483f2bdcd08570636e446a2d5a038bcf7d450b2b"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__ETTh1__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "f3a4ae2fa605f9982c9381ca1c59042bbaf9bfa2e9bef555d405c2173b8c5565"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__ETTh1__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "9f152ca35fc612399075ded39137ce50938ebea7c2858fd55162e26e4e7282c9"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__ETTh1__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "b6829b550dd13d1abd2779a015ea9e3857a542711ac85e5312d5d4daba712f9b"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__ETTh2__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "e4614b467614cdf59a0058c652ed1194260e4609fa5dee195ad680ea4e0d543a"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__ETTh2__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "3eb7cde25061884c3ef473e79d789b2885d185fa91058b22302450fd63ba36b7"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__ETTh2__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "0fec5f5e20ad3afea3a1f0a487e8abb66cdf44da4cfe17b21a614f1803107e3e"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__ETTh2__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "617fdcd07f9e669f978e4c13f4f9349174f7e7bda14902510c2392b5c7e4ad63"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__ETTm1__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "8e973057ee01450811d7347a62ecc23ade0e468a94870780989aa21b782feaa4"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__ETTm1__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "e5f86004131e20508e401a2f4b252bc2091065616e5e2d681baf5399c8e521b1"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__ETTm1__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "4c22b3c0b9571b651d89aa403f3564494f3b45b0b4cc5960e1e9fa72fcaeb4ed"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__ETTm1__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "98f0c33c92e86bf2365888d3c2f76e111c8626514aca2b7cc2c8fd15f9f86b49"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__ETTm2__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "5017778e64a9c7e3d1914dda638b961680ed252903342840afeb1dccefe5fcc1"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__ETTm2__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "d89e86110b1fb283e002665597c669a2911cb0c8d9d53b1046747da134854d45"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__ETTm2__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "9991f7a786e3ff71c11d10405c283aa17bcc3e8c97f2ab2c8c81eaec690c9481"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__ETTm2__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "8c2b8055acfb3316658ad1a73b876f75cf94fa5e6b67bcc987b1b5d77f1a7797"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__Solar__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "d5c25bf90ac2e02ef1e281ec371f5ee4626bd21e1cb03024c88af770aa1ba1a3"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__Solar__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "481561bfac707da7b682712e1d058e2a290e1e491cbb882c0ba966050785cd90"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__Solar__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "a4d068170f13944d342296b97cb4e4048334a45a7033bba156648452c5bed6e6"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__Solar__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "5cf6da68d2b3184cb8961e3cdb48a11539f62f1b1d137220d4fa0a787a9959a7"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__Weather__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "5a8b6776bab917d1af5e45ce3cd46d6fd146658cf1a528cbf759dd796824bef3"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__Weather__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "a869efd863d50aef939297dd069a55e1d8a396b5e8d6a5b37e5ddb96380223b1"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__Weather__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "9c16977f81ecb657956a60b76076b0568e90b811ef360d8ce38f69f87b3cf10c"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/TimeAlign__Weather__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "602cd5b06b18c6c24b8a8d196fb911ad36cf9db6d47beb48e68023c5b273d15c"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__ECL__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "36b4f6559b4ad7bea3ceac7374ef35ea98dcfdc722ccf45853f94b0648b50d36"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__ECL__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "f55dfb7ac606a0515cd9477daf766c96ce8112d3e2cbacef52c70494889517dc"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__ECL__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "e664ae7f0db92a4ddbfa7c3b0461674739b6c5e841fafee4f738f6e8eaec0a7c"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__ECL__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "2eaa4b3f0ea024bfd322d9c9c63901dbc48a9a745b7df159c3120781f7e0113f"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__ETTh1__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "6b5d16b77925457bc929d7418b6c77d5a3f9a78086953a877c04ddbe61deceb1"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__ETTh1__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "bd3314068f5d98b43a260bec53f9caa2a35690f763e82fc0ecc2287d675246f2"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__ETTh1__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "aedaa8a76f71504f9a3608e84d46598e1f71a2df9b5e9746d036dbbf99270206"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__ETTh1__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "6e3952fa14e7d5a8ad53bfeba0e37fe3e7da7127c8e8a0b2e7bba3edb52de0e7"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__ETTh2__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "9100c487efd172c0163e002d85b16ef5722e0db05ce2aacb8aaebe29058a649d"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__ETTh2__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "c7c6b6982261c1b15b037ff1786a985aeb053672a5cc2978537777e9be621286"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__ETTh2__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "9dd1ccfd8f275c66c6b5f1de40dd92766a180406eeb53f10deb985c129647317"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__ETTh2__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "32970ab3580ab2c80e66e8bb6933728410e8f3c62de6d7ab63b5b9c2cdf8efbe"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__ETTm1__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "b90d9f7af5cb377835a5c4f48e98b83f12e830e760125d2070bd52812a4599a8"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__ETTm1__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "2f7e92bc270874de1fca849b001eee0bf1abff12557b82b214bd4fd6e67b56d5"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__ETTm1__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "a7965a022df7c09a1241b7511cff679fdcea8e8f3a357bfc2edfe5f396298232"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__ETTm1__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "afdda5983194ab47baf05c7c42f9c07237df0a12b193439ea0b928b98f81cef3"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__ETTm2__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "5ffd0653ba1fe745ab8009b5332c708cc0aa949cc0fde3c6f585642ab3563130"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__ETTm2__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "f6ce1a960f6de005edc5d345d458e88dd708d195e6a93c67728da44d9e1fb941"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__ETTm2__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "092f0a7bf067db1e794eafdfe7e17ceff1c197a42521ec5a209c6f910ee1f01d"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__ETTm2__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "965c8eefc2ef761c7e1cb3c86f38eaaf9d4979b9251e2e8966a0092fd839a655"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__Solar__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "3aa095df9a96c6d069abf96a7df74fd7fc979193d9d9bcbe7894e1670b5a4fd3"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__Solar__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "cf73714a50b61c283c58d9650581bba96aa37807d72ee23068b0913318887d1f"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__Solar__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "7918db1b64601902c17a28e8f30f22658a1761dd42ac2aa9cef64ae1518e02f3"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__Solar__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "4d6bbfdddba86df69cdcb244a8a9687eefb4b7ec049fa8108e79e3ae044560a4"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__Weather__r0__H192/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "ec03fb6d12c05450b05dfb11c1cabaf7012ff5ec8d17310897a985b0cad345cd"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__Weather__r0__H336/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "c3f79dd3bd8242cd03fd9fd1e54378bba2ded9d2cd88d91a7a140e39f3d54368"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__Weather__r0__H720/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "804d2ae04888a9cafe15b967fd609902ec9fe4ae0f9ad409eb2d4b2ceac86c3a"
+    },
+    {
+      "path": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_horizon_loader_20260813/formal/iTransformer__Weather__r0__H96/prefix_metrics.csv",
+      "rows": 1,
+      "sha256": "8e6baffc863e928a7475b11f9b7f7b5b988b40b3299cbc05133ca928683d3ad1"
+    }
+  ],
+  "iscf_reused_cells": 28,
+  "iscf_scorecard_sha256": "b90fc978902a25e5ad2842a623743c9bfb164f667cbab90a5cfafad410cc128e",
+  "job_manifest_sha256": "3f0de56908fd4c877a0776ebc17d11e50ecb14511d24836442289f90e7541a2d",
+  "matrix_complete": true,
+  "metric_scalars": 448,
+  "negative_results_retained": true,
+  "origin_monotonicity_failures": 0,
+  "previous_main_ii_cells_sha256": "3268b5f749c434c419a4b3480b29e69bb3fe16614099521ebb6b5ff7493484c5",
+  "protocol": "horizon_specific_loader_H720_checkpoint",
+  "unique_checkpoint_hashes": 63
+}

@@ -44,16 +44,18 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | H5D原始gate fail历史保留；`h5d_bs16_lr2p4` author-selected为当前ETTh1 paper row；HPO paused |
+| `active_experiment_step` | Main II fixed-H loader re-audit complete；`h5d_bs16_lr2p4` remains current ETTh1 paper row；HPO paused |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
-| `local_protocol_patch_authorized` | consumed；H5D table sync、registry与governance已完成 |
-| `remote_training_authorized` | consumed；H5D 48-profile train/validation已完成 |
+| `local_protocol_patch_authorized` | consumed；Main II horizon-loader evaluator与protocol已完成 |
+| `remote_training_authorized` | consumed；本轮未训练新模型，只执行H720 checkpoint formal inference |
 | `test_tuned_hpo_authorized` | true；限完整formal test后的ETTh1 dataset-level shared-profile selection |
-| `formal_test_authorized` | consumed；H5D 48/48、192/192 complete |
-| `next_action` | 当前两张主表固定`h5d_bs16_lr2p4`；等待作者决定后续ablation/transfer/efficiency或重新授权HPO |
-| `conditional_next` | 任何新baseline仍需独立source/protocol gate；不得改写AMD/SimpleTM native role为matched attribution |
+| `formal_test_authorized` | consumed；Main II external 252/252 complete |
+| `next_action` | 新Main II fixed-H loader table已冻结；等待作者决定后续ablation/transfer/efficiency或重新授权HPO |
+| `conditional_next` | 任何新baseline仍需独立source/protocol gate；不得把source-native Main II改写为matched attribution |
+
+2026-08-13用户授权重新计算Main II全部baselines，并明确要求固定使用此前horizon-specific训练产生的H720 checkpoints，同时对每个H使用相同fixed-H test set/split/`drop_last`。旧Main II被确认使用H720 common-origin tensor裁短prefix，故不再canonical。新协议完成63 unique checkpoint objects、252/252 external evaluations、49/49 H720 continuity与63/63 origin monotonicity；最终224 cells完整，ISCF-BSCA=`41/56 best + 13/56 second`。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/formal_results/result_and_table_audit.md`。Decision=`Main_II_horizon_loader_reaudit_complete_pass_old_common_origin_table_superseded`。
 
 2026-08-13用户在H5D formal result后明确要求暂时采用eligible profile `ETTh1__h5d_bs16_lr2p4`并更新两张主表。原始H5D gate-fail与retain-H5B selector历史不变；当前paper row属于author-selected override。Main I/Main II各只替换4个ETTh1 ISCF cells，ECL、Solar、其他datasets及全部baseline保持不变；结果分别为`31/56 best + 18/56 second`与`30/56 best + 25/56 second`。LaTeX、A3 PDF与freeze manifest均重新生成并核验。Canonical sync=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/h5d_bs16_lr2p4_main_table_sync_20260813/table_sync_result.md`。Decision=`H5D_bs16_lr2p4_author_selected_paper_row_Main_I_II_synced`。
 
