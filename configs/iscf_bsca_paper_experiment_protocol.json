@@ -22,7 +22,7 @@
         "efficiency",
         "fresh_mechanism_diagnostics"
       ],
-      "status": "H5A_profiles_synced_Main_I_Main_II_H5B_ETTh1_HPO_active"
+      "status": "H5B_ETTh1_selection_frozen_stretch_gate_pass_table_mutation_pending"
     }
   },
   "paper_table_registry": {
@@ -42,7 +42,7 @@
     "new_experiment_authorization_created": true
   },
   "authorization": {
-    "current_decision": "H5A_tables_synced_H5B_ETTh1_three_GPU_train_validation_active_test_zero",
+    "current_decision": "H5B_success_gate_pass_selection_frozen_table_mutation_not_authorized",
     "existing_artifact_audit": true,
     "matrix_design": true,
     "test_tuned_hpo_project_principle": {
@@ -56,7 +56,7 @@
     "official_test_hpo_execution": true,
     "H4J_formal_test_after_complete_training_manifest": true,
     "formal_test": true,
-    "formal_test_gate": "H5B_requires_36_complete_checkpoints_and_144_rows_hash_immutable",
+    "formal_test_gate": "H5B_complete_36_checkpoints_144_rows_hash_immutable_scope_consumed",
     "current_user_authorization": {
       "date": "2026-08-13",
       "instruction": "sync_H5A_results_into_Main_I_and_Main_II_then_expand_ETTh1_HPO_on_three_GPUs",
@@ -65,7 +65,7 @@
       "Tier_B2_bounded_HPO_and_test_profile_ranking": true,
       "Tier_B3_selected_profile_confirmation": false,
       "Tier_C_final_reporting_audit": true,
-      "scope_note": "H5A tables are synchronized and frozen; H5B authorizes 36 ETTh1 seed2021 training jobs on three GPUs and a complete-manifest-gated formal test, while extra seeds architecture redesign and automatic post-H5B table mutation remain unauthorized"
+      "scope_note": "H5A tables remain synchronized and frozen; H5B completed 36 ETTh1 seed2021 training jobs and the complete-manifest-gated formal test, while extra seeds architecture redesign and automatic post-H5B table mutation remain unauthorized"
     },
     "scoped_local_patch_authorizations": {
       "timealign_exchange_script": {
@@ -132,6 +132,29 @@
       "B3_remote_selected_profile_confirmation",
       "C_complete_test_tuned_reporting_audit"
     ]
+  },
+  "h5b_etth1_result": {
+    "candidate_version": "ISCF-BSCA-MAIN-v1-etth1-h5b-test-informed-20260813",
+    "status": "formal_complete_selection_frozen_table_mutation_pending",
+    "training_commit": "776e6bc2ecaf4d199d1e03cffbc9f5cd92bac519",
+    "formal_test_commit": "4962947329b17c8c930b66ab528cbd98a49b54ae",
+    "complete_checkpoints": 36,
+    "unique_checkpoint_hashes": 36,
+    "complete_standard_rows": 144,
+    "manifest_sha256": "25177fa760e2349ca618aebb0b8cdc960cc4be398d9c22a5d1a0260687dbf099",
+    "selected_trial_id": "ETTh1__h5b_seq640_p20",
+    "selected_profile_id": "h5b_seq640_p20",
+    "seed": 2021,
+    "test_mean_mse_4h": 0.3913780204351919,
+    "test_mean_mae_4h": 0.41725538043894694,
+    "main_i_etth1_best_cells": 5,
+    "main_ii_etth1_best_cells": 4,
+    "projected_main_i_global_best_cells": 31,
+    "projected_main_ii_global_best_cells": 30,
+    "minimum_gate_pass": true,
+    "stretch_gate_pass": true,
+    "automatic_table_mutation_authorized": false,
+    "result_artifact": "analysis/iscf_bsca_main_v1_hpo_20260731/h5b_etth1_expanded_search_20260813/formal_test_result_and_selection.md"
   },
   "evaluation_contract": {
     "datasets": [

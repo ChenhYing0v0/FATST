@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；Main I/Main II H5A profiles synced and hash frozen；experiments=H5B ETTh1 Step 8 three-GPU train/validation active，test=0 |
+| `current_11_step` | paper consolidation；H5B ETTh1 Step 9--10 formal test complete、stretch gate pass；selection frozen，Main I/Main II mutation pending authorization |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,7 +18,9 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1`已用H5A ETTh1/ECL/Solar profiles更新Main I/Main II；H5B只继续ETTh1 HPO，matched ablation/transfer仍pending |
+| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1`的H5B ETTh1 profile已冻结但尚未写入paper tables；matched ablation/transfer仍pending |
+
+[H5B ETTh1 Formal-Test Result, 2026-08-13] H5B完成36/36 train/validation artifacts、36 unique checkpoint hashes及一次完整36-checkpoint/144-standard-row formal test，errors=0。Frozen selector选择`ETTh1__h5b_seq640_p20`（L640/p20）：four-H mean MSE/MAE=`0.391378/0.417255`，相对H5A下降`0.363%/0.584%`；Main II ETTh1 best cells由`2/8`提高到`4/8`，达到stretch gate，预计global由`28/56`增至`30/56`。Main I ETTh1 best保持5/8，top-2由6/8增至7/8。H336 MSE/MAE分别退化0.829%/0.155%，完整保留为negative cells。Canonical result=`analysis/iscf_bsca_main_v1_hpo_20260731/h5b_etth1_expanded_search_20260813/formal_test_result_and_selection.md`。该结果是single-seed、test-tuned performance evidence，不承担mechanism attribution；selection已冻结，但自动table mutation、extra seeds与new HPO未授权。Decision=`H5B_success_gate_pass_selection_frozen_table_mutation_not_authorized`。
 
 [H5A Main-Table Sync and H5B ETTh1 Prelaunch, 2026-08-13] 用户授权将H5A选择的ETTh1/ECL/Solar完整four-H profiles同步进Main I/Main II，并继续ETTh1-only HPO。新Main I=`31/56` best、`17/56` second；新Main II=`28/56` best、`25/56` second，均生成standalone LaTeX与A3 compiled PDF并hash冻结，baseline cells与source roles未变。H5B基于25个历史ETTh1 profiles冻结36个seed2021 trials，重点覆盖`lr=3.2e-4..4.2e-4`、`L=576..960`的context/patch interactions、regularization与rank，统一`120 epochs/patience24`；architecture/objective/scopes/inference graph不变。Training阶段test=0，36/36 manifest前禁止formal test与partial selection。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5b_etth1_expanded_search_20260813/design_and_prelaunch_gate.md`。Decision=`H5B_frozen_authorized_remote_resource_gate_next`。
 

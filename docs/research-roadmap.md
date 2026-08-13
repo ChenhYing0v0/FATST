@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## H5B ETTh1 Formal-Test Result and Step 9--10 Decision (2026-08-13)
+
+Current experiment cursor=`Step 9 complete -> Step 10 targeted performance pass -> table mutation authorization pending`。H5B完整闭合36/36 checkpoints、36 immutable unique hashes、144/144 standard-horizon official-test rows与0 analyzer errors。Frozen selector选择`h5b_seq640_p20`，four-H mean MSE/MAE=`0.391378/0.417255`，相对H5A分别改善`0.363%/0.584%`，两项0.3% degradation guards均通过。
+
+ETTh1 Main II best cells由2/8增至4/8，达到stretch gate；新增H96 MSE/MAE与H720 MAE best，同时H720 MSE保持best。Main I best保持5/8而top-2由6/8增至7/8。H336 MSE/MAE分别退化0.829%/0.155%，因此不能声称all-horizon一致改善。若其他cells不变，Main II global best预计由28/56增至30/56，Main I保持31/56。Canonical result=`analysis/iscf_bsca_main_v1_hpo_20260731/h5b_etth1_expanded_search_20260813/formal_test_result_and_selection.md`。Decision=`H5B_success_gate_pass_selection_frozen_table_mutation_not_authorized`；next=等待作者授权原子重建Main I/Main II CSV、LaTeX、PDF及hash audit，extra seeds/new HPO不自动启动。
+
 ## H5A Table Sync and H5B ETTh1 Expanded HPO (2026-08-13)
 
 Current experiment cursor=`Step 8 three-GPU train/validation active`。H5A三个selected dataset-level profiles已获授权原子替换Main I/Main II中的12个ISCF cells；Main I更新为`31/56` best、`17/56` second，Main II更新为`28/56` best、`25/56` second。旧表仍作为历史快照保留，新表、standalone LaTeX、compiled PDF与source hashes均已重新冻结。

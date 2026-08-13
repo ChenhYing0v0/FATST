@@ -216,3 +216,40 @@ hyperparameter choice能否改善Main II best-cell coverage。即使gate通过�
 test-tuned benchmark性能，不建立untouched-holdout或mechanism-attribution结论；若完整
 matrix、checkpoint provenance或target artifact hash不一致，分析会fail closed而不产生
 selector结果。
+
+## 11. ETTh1 H5B Artifact Gate and Frozen Selector
+
+H5B的training artifact checker与manifest builder把36个ETTh1 trials固定为一个完整
+formal-test block。`scripts/check_iscf_bsca_main_v1_h5b_training_artifacts.py`逐trial核对
+checkpoint、validation four-H selector、effective config、numeric health和training-stage
+test=0；`scripts/build_iscf_bsca_main_v1_h5b_test_manifest.py`随后记录36个validation-selected
+checkpoint的pre-test SHA256。只有36个hash全部唯一且manifest hash匹配时，H5B formal
+runner才允许构造test loader。
+
+`scripts/remote/run_iscf_bsca_main_v1_hpo_etth1_h5b_test_audit.sh`复用generic three-GPU
+atomic test runner，但固定H5B config、manifest和repo-external output root。一次完整execution
+生成36份720-row dense metrics、invariant和diagnostic artifact；
+`scripts/check_iscf_bsca_main_v1_hpo_etth1_h5b_test_audit.py`要求36/36 jobs、144/144
+standard rows、0 temporary files和checkpoint hash immutability同时通过。
+
+`scripts/analyze_iscf_bsca_main_v1_h5b_result.py`只在上述complete gate之后运行。其输入列
+及含义为：
+
+- `test_mse` / `test_mae`：checkpoint在指定standard horizon prefix上的official-test metric；
+- `test_mean_mse_4h` / `test_mean_mae_4h`：同一profile四个standard horizons的算术平均；
+- `main_i_best` / `main_ii_best`：按冻结external comparison surface和three-decimal
+  `ROUND_HALF_UP`计算的8个metric cells中的best数量；
+- `main_ii_top2`：同一口径下进入best或second的cell数量；
+- `mean_*_ratio_to_h5a`：候选four-H mean除以当前H5A ETTh1 mean；
+- `eligible`：MSE和MAE ratio都不超过`1.003`；
+- `eligible_rank`：eligible profiles按Main II best、Main I best、Main II top-2、mean
+  MSE/MAE、validation score、parameter count及profile ID依次排序。
+
+Selector显式把H5A current profile加入候选池；只有H5B winner严格提高Main II best-cell
+数量才替换current。最终选择`h5b_seq640_p20`，Main II ETTh1 best由2/8提高到4/8。
+Analyzer只写ranking、selected scorecard和decision JSON，不修改paper tables。
+
+Code-theory边界是：H5B验证expanded context/patch profile能否改善冻结ISCF-BSCA的
+paper-facing ETTh1 performance，不承担mechanism attribution。Official test只选择一个
+dataset-level profile，不选择epoch、checkpoint、seed或单独horizon；single-seed和
+test-informed属性必须随结果披露。
