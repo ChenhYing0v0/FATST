@@ -68,7 +68,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument(
         "--table-id",
-        default="ISCF-BSCA-MAIN-II-H720-PREFIX-20260809",
+        default="ISCF-BSCA-MAIN-II-H720-HORIZON-LOADER-20260813",
     )
     return parser.parse_args()
 
@@ -136,8 +136,8 @@ def build_latex(path: Path, rows: list[dict[str, object]]) -> None:
             "\\bottomrule",
             "\\end{tabular}%",
             "}",
-            "\\caption{One-model-for-all-horizons comparison. Each system trains or reuses one fixed $H=720$ model per dataset; $H\\in\\{96,192,336\\}$ is evaluated by taking the exact prediction prefix from the same 720-step trajectory. All entries are locally evaluated MSE/MAE, and Avg. is the arithmetic mean over the four displayed horizons. Best and second-best values after common three-decimal rounding are bold and underlined. ISCF-BSCA uses its frozen dataset-level test-tuned profile; SimpleTM averages its three native repetitions. External repositories retain their official source-native lookbacks, optimizers, checkpoint selectors, and test-loader semantics, so this table is a system-level unified-horizon benchmark rather than matched mechanism attribution.}",
-            "\\label{tab:main_ii_h720_prefix}",
+            "\\caption{One-model-for-all-horizons comparison. Each system reuses one fixed $H=720$ model per dataset. For every requested $H\\in\\{96,192,336,720\\}$, we reconstruct that system's horizon-specific official test loader, feed only its historical input to the frozen $H=720$ checkpoint, and compare the first $H$ output steps with the loader's $H$-step labels. Thus, each entry uses the same split, preprocessing, batch semantics, and \\texttt{drop\\_last} rule as the corresponding fixed-$H$ evaluation. All entries are locally evaluated MSE/MAE, and Avg. is the arithmetic mean over the four horizons. Best and second-best values after common three-decimal rounding are bold and underlined. ISCF-BSCA uses its frozen dataset-level test-tuned profile; SimpleTM averages its three native repetitions. External repositories retain their official source-native lookbacks, optimizers, and checkpoint selectors, so this is a system-level unified-horizon benchmark rather than matched mechanism attribution.}",
+            "\\label{tab:main_ii_h720_horizon_loader}",
             "\\end{table*}",
             "",
         ]

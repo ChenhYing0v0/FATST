@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import csv
 import hashlib
 import json
@@ -23,6 +24,7 @@ if str(QDF_ROOT) not in sys.path:
     sys.path.insert(0, str(QDF_ROOT))
 
 from exp import EXP_DICT  # noqa: E402
+from data_provider.data_factory import data_provider  # noqa: E402
 
 
 HORIZONS = (96, 192, 336, 720)
@@ -66,6 +68,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--expected-checkpoint-sha256", required=True)
     parser.add_argument("--dataset", required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--loader-horizon", type=int, choices=HORIZONS)
     parser.add_argument("--tolerance", type=float, default=1e-8)
     return parser.parse_args()
 
@@ -80,6 +83,9 @@ def main() -> None:
     args.gpu = 0
     args.use_multi_gpu = False
     args.num_workers = 0
+    evaluation_horizons = (
+        (cli.loader_horizon,) if cli.loader_horizon is not None else HORIZONS
+    )
 
     fix_seed = int(args.fix_seed)
     random.seed(fix_seed)
@@ -95,7 +101,10 @@ def main() -> None:
         torch.load(cli.checkpoint, map_location=experiment.device, weights_only=True)
     )
     experiment.model.eval()
-    test_data, test_loader = experiment._get_data(flag="test")
+    loader_args = copy.deepcopy(args)
+    if cli.loader_horizon is not None:
+        loader_args.pred_len = cli.loader_horizon
+    test_data, test_loader = data_provider(loader_args, flag="test")
     if test_loader.drop_last:
         expected_origins = len(test_loader) * int(test_loader.batch_size)
     else:
@@ -103,7 +112,7 @@ def main() -> None:
     channels = int(args.c_out)
     dtype = np.dtype(np.float32)
     accumulators: dict[int, dict[str, object]] = {}
-    for horizon in HORIZONS:
+    for horizon in evaluation_horizons:
         shape = (expected_origins, horizon, channels)
         accumulators[horizon] = {
             "squared_error_sum": 0.0,
@@ -118,14 +127,38 @@ def main() -> None:
     native_targets: list[torch.Tensor] = []
     with torch.no_grad():
         for batch_x, batch_y, batch_x_mark, batch_y_mark, batch_cycle in test_loader:
-            outputs, batch_y, _ = experiment.forward_step(
-                batch_x, batch_y, batch_x_mark, batch_y_mark, batch_cycle
-            )
+            if cli.loader_horizon is None:
+                outputs, target_tensor, _ = experiment.forward_step(
+                    batch_x, batch_y, batch_x_mark, batch_y_mark, batch_cycle
+                )
+            else:
+                batch_x = batch_x.float().to(experiment.device)
+                batch_x_mark = batch_x_mark.float().to(experiment.device)
+                batch_y_mark = batch_y_mark.float().to(experiment.device)
+                dummy_decoder = torch.zeros(
+                    batch_x.shape[0],
+                    int(args.label_len) + int(args.pred_len),
+                    batch_x.shape[-1],
+                    dtype=batch_x.dtype,
+                    device=experiment.device,
+                )
+                outputs = experiment.model(
+                    batch_x,
+                    batch_x_mark,
+                    dummy_decoder,
+                    batch_y_mark,
+                    batch_cycle.to(experiment.device),
+                )
+                f_dim = -1 if args.features == "MS" else 0
+                outputs = outputs[:, : loader_args.pred_len, f_dim:]
+                target_tensor = batch_y.float().to(experiment.device)[
+                    :, -loader_args.pred_len :, f_dim:
+                ]
             outputs = outputs.detach()
-            batch_y = batch_y.detach()
+            target_tensor = target_tensor.detach()
             if test_data.scale and args.inverse:
                 output_np = outputs.cpu().numpy()
-                target_np = batch_y.cpu().numpy()
+                target_np = target_tensor.cpu().numpy()
                 shape = output_np.shape
                 output_np = test_data.inverse_transform(
                     output_np.reshape(-1, shape[-1])
@@ -135,11 +168,11 @@ def main() -> None:
                 ).reshape(shape)
             else:
                 output_np = outputs.cpu().numpy()
-                target_np = batch_y.cpu().numpy()
+                target_np = target_tensor.cpu().numpy()
             prediction = np.ascontiguousarray(output_np, dtype=np.float32)
             target = np.ascontiguousarray(target_np, dtype=np.float32)
             if prediction.shape != target.shape or prediction.shape[1:] != (
-                720,
+                loader_args.pred_len,
                 channels,
             ):
                 raise RuntimeError(
@@ -150,7 +183,7 @@ def main() -> None:
             native_predictions.append(torch.from_numpy(prediction))
             native_targets.append(torch.from_numpy(target))
             observed_origins += int(prediction.shape[0])
-            for horizon in HORIZONS:
+            for horizon in evaluation_horizons:
                 pred_prefix = np.ascontiguousarray(prediction[:, :horizon, :])
                 true_prefix = np.ascontiguousarray(target[:, :horizon, :])
                 error = pred_prefix.astype(np.float64) - true_prefix.astype(np.float64)
@@ -172,7 +205,7 @@ def main() -> None:
     native_prediction = torch.cat(native_predictions, dim=0)
     native_target = torch.cat(native_targets, dim=0)
     native_metrics = {}
-    for horizon in HORIZONS:
+    for horizon in evaluation_horizons:
         difference = (
             native_prediction[:, :horizon, :] - native_target[:, :horizon, :]
         )
@@ -183,7 +216,7 @@ def main() -> None:
     del native_prediction, native_target, native_predictions, native_targets
 
     rows: list[dict[str, object]] = []
-    for horizon in HORIZONS:
+    for horizon in evaluation_horizons:
         accumulator = accumulators[horizon]
         count = int(accumulator["element_count"])
         rows.append(
@@ -208,24 +241,33 @@ def main() -> None:
                     "prediction_digest"
                 ].hexdigest(),
                 "target_prefix_sha256": accumulator["target_digest"].hexdigest(),
-                "prefix_identity": True,
-                "test_role": "formal_H720_native_loader_exact_prefix_stream",
+                "prefix_identity": cli.loader_horizon is None,
+                "test_role": (
+                    "formal_horizon_specific_loader_H720_checkpoint_prefix"
+                    if cli.loader_horizon is not None
+                    else "formal_H720_native_loader_exact_prefix_stream"
+                ),
+                "loader_horizon": loader_args.pred_len,
+                "loader_drop_last": bool(test_loader.drop_last),
+                "input_only_inference": cli.loader_horizon is not None,
                 "test_tuned": False,
                 "matrix_complete": False,
             }
         )
 
     anchor_mse, anchor_mae = read_anchor(cli.anchor_metrics)
-    mse_delta = float(rows[-1]["mse"]) - anchor_mse
-    mae_delta = float(rows[-1]["mae"]) - anchor_mae
-    mse_tolerance = numeric_tolerance(anchor_mse, cli.tolerance)
-    mae_tolerance = numeric_tolerance(anchor_mae, cli.tolerance)
-    if abs(mse_delta) > mse_tolerance or abs(mae_delta) > mae_tolerance:
-        raise RuntimeError(
-            "QDF H720 anchor mismatch: "
-            f"mse_delta={mse_delta}, mse_tolerance={mse_tolerance}, "
-            f"mae_delta={mae_delta}, mae_tolerance={mae_tolerance}"
-        )
+    mse_delta = mae_delta = mse_tolerance = mae_tolerance = None
+    if loader_args.pred_len == 720:
+        mse_delta = float(rows[-1]["mse"]) - anchor_mse
+        mae_delta = float(rows[-1]["mae"]) - anchor_mae
+        mse_tolerance = numeric_tolerance(anchor_mse, cli.tolerance)
+        mae_tolerance = numeric_tolerance(anchor_mae, cli.tolerance)
+        if abs(mse_delta) > mse_tolerance or abs(mae_delta) > mae_tolerance:
+            raise RuntimeError(
+                "QDF H720 anchor mismatch: "
+                f"mse_delta={mse_delta}, mse_tolerance={mse_tolerance}, "
+                f"mae_delta={mae_delta}, mae_tolerance={mae_tolerance}"
+            )
     checkpoint_after = sha256(cli.checkpoint)
     if checkpoint_after != checkpoint_before:
         raise RuntimeError("QDF checkpoint mutated during formal test")
@@ -256,6 +298,12 @@ def main() -> None:
         "h720_mse_tolerance": mse_tolerance,
         "h720_mae_tolerance": mae_tolerance,
         "numeric_tolerance_rule": "max(1e-8, four_float32_ULPs_of_anchor)",
+        "loader_horizon": loader_args.pred_len,
+        "loader_drop_last": bool(test_loader.drop_last),
+        "loader_dataset_size": len(test_loader.dataset),
+        "model_horizon": int(args.pred_len),
+        "input_only_inference": cli.loader_horizon is not None,
+        "future_label_used_as_model_input": False,
         "array_retention": "streamed_not_saved",
         "rows": rows,
     }
@@ -264,8 +312,10 @@ def main() -> None:
     )
     print(
         "main_ii_qdf_eval=pass "
-        f"dataset={cli.dataset} origins={observed_origins} rows=4 "
-        f"h720_mse_delta={mse_delta:.3e} h720_mae_delta={mae_delta:.3e}"
+        f"dataset={cli.dataset} loader_horizon={loader_args.pred_len} "
+        f"origins={observed_origins} rows={len(rows)} "
+        f"h720_mse_delta={mse_delta if mse_delta is not None else 'n/a'} "
+        f"h720_mae_delta={mae_delta if mae_delta is not None else 'n/a'}"
     )
 
 

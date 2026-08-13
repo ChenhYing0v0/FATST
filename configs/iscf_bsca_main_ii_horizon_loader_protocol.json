@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "protocol_id": "ISCF-BSCA-MAIN-II-H720-CHECKPOINT-HORIZON-LOADER-v2",
+  "frozen_at": "2026-08-13",
+  "status": "authorized_prelaunch",
+  "authorization": {
+    "user_request_date": "2026-08-13",
+    "formal_test": true,
+    "remote_execution": true,
+    "paper_table_replacement_after_complete_gate": true,
+    "new_training": false
+  },
+  "purpose": "Recompute every external Main II baseline by applying its frozen horizon-specific H720 checkpoint to the exact official fixed-H test loader for each requested horizon.",
+  "systems": {
+    "paper_model": "ISCF-BSCA-MAIN-v1",
+    "external_baselines": [
+      "TimeAlign",
+      "QDF",
+      "AMD",
+      "SimpleTM",
+      "iTransformer",
+      "PatchTST",
+      "DLinear"
+    ]
+  },
+  "datasets": [
+    "ETTh1",
+    "ETTh2",
+    "ETTm1",
+    "ETTm2",
+    "Weather",
+    "ECL",
+    "Solar"
+  ],
+  "horizons": [96, 192, 336, 720],
+  "checkpoint_contract": {
+    "model_horizon": 720,
+    "source": "previously completed horizon-specific H720 training artifact",
+    "selection": "reuse exact immutable H720 checkpoint object and verify SHA256 before and after evaluation",
+    "dataset_level_checkpoint": true,
+    "horizon_specific_checkpoint_selection": false,
+    "new_training": false,
+    "checkpoint_objects": 63,
+    "unique_checkpoint_hashes_required": 63,
+    "simpletm_repetitions": 3,
+    "all_other_external_repetitions": 1
+  },
+  "evaluation_contract": {
+    "loader_construction": "For each baseline, dataset and H, reconstruct the official horizon-specific command at H and call that source tree's official test data provider with pred_len=H.",
+    "test_split": "exact source-native fixed-H official test split",
+    "history_input": "the fixed-H loader's historical input only",
+    "known_decoder_context": "source-native label_len history is permitted when required by the official model API",
+    "future_decoder_input": "all zeros",
+    "future_label_used_as_model_input": false,
+    "prediction": "first H steps of the H720 checkpoint output",
+    "target": "the fixed-H loader's H-step test label",
+    "metrics": ["MSE", "MAE"],
+    "metric_scope": "all evaluated origins, future steps and channels retained by the official loader",
+    "formal_external_evaluations": 252,
+    "external_aggregate_cells": 196,
+    "paper_model_cells_reused_from_current_frozen_scorecard": 28,
+    "final_table_cells": 224
+  },
+  "official_test_loader_drop_last": {
+    "TimeAlign": false,
+    "QDF": true,
+    "AMD": false,
+    "SimpleTM": true,
+    "iTransformer": true,
+    "PatchTST": true,
+    "DLinear": false
+  },
+  "source_roles": {
+    "TimeAlign": "official repository and official dataset scripts",
+    "QDF": "official repository and official dataset scripts; locally frozen Solar script derived from the audited ECL form",
+    "AMD": "official repository and official dataset scripts",
+    "SimpleTM": "official repository and official dataset scripts",
+    "iTransformer": "official repository and official dataset scripts",
+    "PatchTST": "official repository and official dataset scripts; Solar uses the previously frozen source-informed loader/profile patch",
+    "DLinear": "official repository and official dataset scripts; Solar uses the previously frozen source-informed loader/profile patch"
+  },
+  "gates": {
+    "prelaunch": [
+      "63 checkpoint objects exist and have 63 unique frozen SHA256 hashes",
+      "252 jobs are present with the exact baseline/dataset/repetition/horizon identity",
+      "each expected drop_last value is frozen from the corresponding source data provider",
+      "GPU availability and remote quota are recorded before launch"
+    ],
+    "per_evaluation": [
+      "checkpoint SHA256 is unchanged",
+      "loader_horizon equals requested horizon",
+      "model_horizon equals 720",
+      "observed drop_last equals the frozen source-native value",
+      "future_label_used_as_model_input is false",
+      "origin_count equals the official loader's retained test origins",
+      "MSE and MAE are finite"
+    ],
+    "complete_matrix": [
+      "all 252 external evaluations finish",
+      "all 196 external aggregate cells and 28 frozen ISCF cells are present",
+      "H720 values reproduce the same-checkpoint previous H720 evaluation within numeric tolerance",
+      "for each checkpoint, fixed-H origin counts are non-increasing as H grows",
+      "all negative results are retained"
+    ],
+    "paper_replacement": "Replace the old Main II table only after every complete-matrix gate passes."
+  },
+  "failure_and_rollback": {
+    "loader_or_runtime_error": "patch only the evaluator/loader bridge, preserve checkpoint identity, rerun the failed job and record the correction",
+    "drop_last_or_origin_failure": "block aggregation and return to source/protocol audit",
+    "h720_continuity_failure": "block aggregation and identify checkpoint, loader or metric-semantic mismatch",
+    "incomplete_matrix": "retain the previous Main II as active and do not report partial replacements"
+  },
+  "disclosure": {
+    "test_role": "formal test-informed benchmark recomputation",
+    "test_tuned": false,
+    "comparison_role": "source-native one-H720-model system comparison, not matched mechanism attribution",
+    "old_protocol_status": "superseded only after this protocol's complete-matrix gate passes"
+  }
+}
