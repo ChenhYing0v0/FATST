@@ -253,3 +253,23 @@ Code-theory边界是：H5B验证expanded context/patch profile能否改善冻结
 paper-facing ETTh1 performance，不承担mechanism attribution。Official test只选择一个
 dataset-level profile，不选择epoch、checkpoint、seed或单独horizon；single-seed和
 test-informed属性必须随结果披露。
+
+## 12. ETTh1 H5C Refined-Interaction Matrix
+
+H5C复用generic HPO runner，只新增`configs/iscf_bsca_main_v1_hpo_etth1_h5c.json`和
+wrapper `scripts/remote/run_iscf_bsca_main_v1_hpo_etth1_h5c.sh`。Base profile是H5B
+selected `L640/p20`；54个jobs均通过显式overrides materialize完整effective config，runner
+仍输出trial/profile/config/search-space hashes并保持official-test mode关闭。
+
+`scripts/check_iscf_bsca_main_v1_hpo_etth1_h5c.py`完成三类检查：首先核对Main I/Main II
+comparison CSV及H5B evidence hashes；其次materialize H1/H2/H4J/H4K/H5A/H5B共61个
+ETTh1 historical jobs，并以dataset、context、patch、width、regularization、optimizer、
+rank、normalization和budget组成effective fingerprint，要求54个H5C profiles与历史集合
+零重复；最后检查54-job group counts、`seq_len % patch_num == 0`、fixed capacity/effective
+batch、training test=0与generic runner dry-run。
+
+H5C没有新的tensor path：输入仍为`[B,L,C]`，encoder生成history-conditioned states，
+five-scope decoder一次输出`[B,720,C]`，validation从同一field裁剪H96/H192/H336/H720。
+变化只在`L`、patch geometry、LR、dropout、weight decay与mode rank。Code-theory边界是
+搜索H5B winner附近的hyperparameter interactions；任何性能提升仍是test-tuned benchmark
+evidence，不是new architecture或BSCA mechanism attribution。

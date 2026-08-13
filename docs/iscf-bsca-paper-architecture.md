@@ -5,10 +5,10 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.68` |
+| `version` | `v0.69` |
 | `last_updated` | `2026-08-13` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Sections 5--7 v0.2 author-fixed structure temporarily frozen；experiments=H5B ETTh1 formal test complete、stretch gate pass、selection frozen，paper-table mutation pending authorization |
+| `current_review_cursor` | writing=Sections 5--7 v0.2 author-fixed structure temporarily frozen；experiments=H5B ETTh1 selection frozen as fallback，H5C 54-trial refined HPO进入remote gate |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
@@ -16,7 +16,7 @@
 | `frozen_consensus` | 论文七章结构并保留standalone Discussion；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.2 structural design |
 | `provisional_content` | Method Figure 4 stable vector-asset synchronization；remaining manuscript prose and pending experiment evidence |
-| `authorization_source` | 2026-08-13用户授权H5A结果更新Main I/Main II，并授权ETTh1-only H5B扩大搜索范围、扩展训练预算、三GPU remote training及complete-manifest后的完整formal test；scope已执行完毕，extra seeds/architecture redesign/automatic post-H5B table mutation未授权 |
+| `authorization_source` | 2026-08-13用户进一步授权将ETTh1 HPO matrix扩大约50%并继续优化；H5C限54个seed2021 profiles、三GPU training及complete-manifest后的完整formal test，extra seeds/architecture redesign/automatic table mutation未授权 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
@@ -27,6 +27,10 @@ H5B result amendment：ETTh1 expanded HPO已完成36/36 checkpoints与144/144 fo
 rows，选择`h5b_seq640_p20`。Main II ETTh1 best cells由2/8提高到4/8，four-H mean
 MSE/MAE均改善，但H336两项metric轻微退化。该结果只更新paper-facing performance
 evidence状态，不改变architecture、method claims或Sections 1--4；表格替换仍等待单独授权。
+
+H5C prelaunch amendment：本轮只在H5B winner附近细化context/patch、LR、dropout、
+weight decay与rank interactions，不改变method graph。54-trial matrix及success gate属于
+paper-facing hyperparameter optimization，不产生新的architecture contribution或mechanism claim。
 
 ## 1. 核心术语
 

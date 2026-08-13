@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；H5B ETTh1 Step 9--10 formal test complete、stretch gate pass；selection frozen，Main I/Main II mutation pending authorization |
+| `current_11_step` | paper consolidation；H5B selection frozen；H5C ETTh1 54-trial refined-interaction HPO进入Step 8 remote resource gate |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,7 +18,9 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1`的H5B ETTh1 profile已冻结但尚未写入paper tables；matched ablation/transfer仍pending |
+| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1`的H5B ETTh1 profile保持frozen fallback，H5C继续同architecture HPO；matched ablation/transfer仍pending |
+
+[H5C ETTh1 Refined-Interaction HPO Prelaunch, 2026-08-13] 用户要求利用ETTh1训练较快的特点，将HPO matrix相对H5B增加约50%。H5C冻结54个new seed2021 profiles，与此前61个ETTh1 effective training profiles零重复：18 context/patch、10 winner-LR、7 winner-dropout、5 winner-WD、5 winner-rank、5 LR/dropout及4 context/dropout interactions。预算重点来自H5B证据：`L640/p20`效应最大，dropout0.05改善H336 MSE，较高LR改善H336 MAE；negative capacity search不再扩张。Current Main II ETTh1=`4/8` best，minimum=`5/8`、stretch=`6/8`，mean MSE/MAE双guard=`1.002× H5B`。Training test=0；54/54 immutable manifest后才可执行完整216-row formal test。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5c_etth1_refined_interaction_search_20260813/design_and_prelaunch_gate.md`。Decision=`H5C_frozen_authorized_remote_resource_smoke_next`。
 
 [H5B ETTh1 Formal-Test Result, 2026-08-13] H5B完成36/36 train/validation artifacts、36 unique checkpoint hashes及一次完整36-checkpoint/144-standard-row formal test，errors=0。Frozen selector选择`ETTh1__h5b_seq640_p20`（L640/p20）：four-H mean MSE/MAE=`0.391378/0.417255`，相对H5A下降`0.363%/0.584%`；Main II ETTh1 best cells由`2/8`提高到`4/8`，达到stretch gate，预计global由`28/56`增至`30/56`。Main I ETTh1 best保持5/8，top-2由6/8增至7/8。H336 MSE/MAE分别退化0.829%/0.155%，完整保留为negative cells。Canonical result=`analysis/iscf_bsca_main_v1_hpo_20260731/h5b_etth1_expanded_search_20260813/formal_test_result_and_selection.md`。该结果是single-seed、test-tuned performance evidence，不承担mechanism attribution；selection已冻结，但自动table mutation、extra seeds与new HPO未授权。Decision=`H5B_success_gate_pass_selection_frozen_table_mutation_not_authorized`。
 
