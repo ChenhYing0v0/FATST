@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit all H5B train/validation artifacts before official-test access."""
+"""Audit H5B/H5C train/validation artifacts before official-test access."""
 
 from __future__ import annotations
 
@@ -58,21 +58,25 @@ def main() -> None:
     args = parse_args()
     config = json.loads(args.config.read_text(encoding="utf-8"))
     jobs = materialize_jobs(config, args.config)
+    phase = config["matrix"]["phase"]
+    expected_trials = config["matrix"]["expected_training_runs"]
     ledger = [
         json.loads(line)
         for line in args.ledger.read_text(encoding="utf-8").splitlines()
         if line.strip()
     ]
-    assert len(jobs) == len(ledger) == 36
-    assert {job["dataset"] for job in jobs} == {"ETTh1"}
-    assert config["authorization"][
-        "official_test_H5B_execution_authorized_after_complete_training_manifest"
-    ] is True
+    assert len(jobs) == len(ledger) == expected_trials
+    assert set(config["datasets"]) == {"ETTh1"}
+    assert {job["dataset"] for job in jobs} == set(config["datasets"])
+    authorization_key = (
+        f"official_test_{phase}_execution_authorized_after_complete_training_manifest"
+    )
+    assert config["authorization"][authorization_key] is True
 
     config_hash = file_sha256(args.config)
     space_hash = search_space_hash(config)
     ledger_by_trial = {row["trial_id"]: row for row in ledger}
-    assert len(ledger_by_trial) == 36
+    assert len(ledger_by_trial) == expected_trials
     checkpoint_hashes: set[str] = set()
     best_epochs: list[int] = []
     validation_best: tuple[str, float] | None = None
@@ -120,8 +124,8 @@ def main() -> None:
             "batch_size": job["batch_size"],
             "gradient_accumulation_steps": job["gradient_accumulation_steps"],
             "pcsd_mode_rank": job["mode_rank"],
-            "epochs": 120,
-            "patience": 24,
+            "epochs": config["training"]["max_epochs"],
+            "patience": config["training"]["early_stopping_patience"],
         }
         for field, value in expected.items():
             assert adapter[field] == value, (trial_id, field, adapter[field], value)
@@ -159,17 +163,17 @@ def main() -> None:
         assert log.is_file() and log.stat().st_size > 0
         assert FAILURE_PATTERN.search(log.read_text(encoding="utf-8")) is None
 
-    assert len(checkpoint_hashes) == 36
+    assert len(checkpoint_hashes) == expected_trials
     assert not (args.output_root / "test_audit").exists()
     assert validation_best is not None
     print(
         json.dumps(
             {
                 "protocol_id": config["protocol_id"],
-                "training_complete": "36/36",
-                "validation_complete": "36/36",
-                "test_complete": "0/36",
-                "unique_checkpoint_hashes": 36,
+                "training_complete": f"{expected_trials}/{expected_trials}",
+                "validation_complete": f"{expected_trials}/{expected_trials}",
+                "test_complete": f"0/{expected_trials}",
+                "unique_checkpoint_hashes": expected_trials,
                 "config_hash": config_hash,
                 "search_space_hash": space_hash,
                 "best_epoch_range": [min(best_epochs), max(best_epochs)],

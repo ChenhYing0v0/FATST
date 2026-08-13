@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Freeze the thirty-six H5B checkpoints before official-test access."""
+"""Freeze a complete H5B/H5C checkpoint block before official-test access."""
 
 from __future__ import annotations
 
@@ -18,6 +18,8 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ledger", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--phase", choices=("H5B", "H5C"), default="H5B")
+    parser.add_argument("--expected-trials", type=int, default=36)
     parser.add_argument(
         "--test-output-root",
         default=(
@@ -48,8 +50,14 @@ def main() -> None:
     args = parse_args()
     ledger_path = args.ledger.resolve()
     ledger = read_jsonl(ledger_path)
-    if len(ledger) != 36 or {entry["dataset"] for entry in ledger} != {"ETTh1"}:
-        raise ValueError("H5B manifest requires exactly 36 ETTh1 rows")
+    if (
+        len(ledger) != args.expected_trials
+        or {entry["dataset"] for entry in ledger} != {"ETTh1"}
+    ):
+        raise ValueError(
+            f"{args.phase} manifest requires exactly "
+            f"{args.expected_trials} ETTh1 rows"
+        )
 
     rows = []
     for entry in ledger:
@@ -62,7 +70,7 @@ def main() -> None:
             raise ValueError(f"missing checkpoint hash: {entry['trial_id']}")
         rows.append(
             {
-                "phase": "H5B",
+                "phase": args.phase,
                 "dataset": "ETTh1",
                 "trial_id": entry["trial_id"],
                 "profile_id": entry["profile_id"],
@@ -82,10 +90,13 @@ def main() -> None:
             }
         )
 
-    if len({row["trial_id"] for row in rows}) != 36:
-        raise ValueError("H5B trial IDs are not unique")
-    if len({row["checkpoint_sha256_before_test"] for row in rows}) != 36:
-        raise ValueError("H5B checkpoint hashes are not unique")
+    if len({row["trial_id"] for row in rows}) != args.expected_trials:
+        raise ValueError(f"{args.phase} trial IDs are not unique")
+    if (
+        len({row["checkpoint_sha256_before_test"] for row in rows})
+        != args.expected_trials
+    ):
+        raise ValueError(f"{args.phase} checkpoint hashes are not unique")
     rows.sort(key=lambda row: row["trial_id"])
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("w", encoding="utf-8", newline="") as handle:
@@ -95,9 +106,9 @@ def main() -> None:
     print(
         json.dumps(
             {
-                "trials": 36,
-                "profiles_per_dataset": {"ETTh1": 36},
-                "unique_checkpoint_hashes": 36,
+                "trials": args.expected_trials,
+                "profiles_per_dataset": {"ETTh1": args.expected_trials},
+                "unique_checkpoint_hashes": args.expected_trials,
                 "manifest_sha256": sha256(args.output),
                 "formal_test_authorized": True,
             },

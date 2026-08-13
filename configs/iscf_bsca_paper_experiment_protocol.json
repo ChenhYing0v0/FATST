@@ -22,7 +22,7 @@
         "efficiency",
         "fresh_mechanism_diagnostics"
       ],
-      "status": "H5B_ETTh1_selection_frozen_H5C_54_trial_training_active_test_zero"
+      "status": "H5B_ETTh1_fallback_H5C_54_checkpoint_manifest_frozen_formal_test_authorized"
     }
   },
   "paper_table_registry": {
@@ -42,7 +42,7 @@
     "new_experiment_authorization_created": true
   },
   "authorization": {
-    "current_decision": "H5C_three_GPU_train_validation_active_test_zero",
+    "current_decision": "H5C_training_complete_54_checkpoint_manifest_frozen_formal_test_authorized",
     "existing_artifact_audit": true,
     "matrix_design": true,
     "test_tuned_hpo_project_principle": {
@@ -158,7 +158,7 @@
   },
   "h5c_etth1_prelaunch": {
     "candidate_version": "ISCF-BSCA-MAIN-v1-etth1-h5c-test-informed-20260813",
-    "status": "resource_smoke_pass_three_GPU_training_active_test_zero",
+    "status": "training_complete_manifest_frozen_formal_test_authorized",
     "trials": 54,
     "increase_over_h5b": 0.5,
     "dataset": "ETTh1",
@@ -180,9 +180,16 @@
     "resource_smoke_unique_hashes": 54,
     "remote_pid": 843554,
     "remote_start": "2026-08-13T11:43:04+08:00",
+    "remote_finish": "2026-08-13T13:17:47+08:00",
+    "training_complete": 54,
+    "training_test_artifacts": 0,
+    "checkpoint_manifest_sha256": "e94f95a67c748f95d72e1aab6ced4aaae498982105da5234d411d4c5c0c8379f",
+    "formal_test_user_authorized": true,
+    "formal_test_status": "authorized_prelaunch",
     "config": "configs/iscf_bsca_main_v1_hpo_etth1_h5c.json",
     "prelaunch": "analysis/iscf_bsca_main_v1_hpo_20260731/h5c_etth1_refined_interaction_search_20260813/design_and_prelaunch_gate.md",
-    "remote_launch": "analysis/iscf_bsca_main_v1_hpo_20260731/h5c_etth1_refined_interaction_search_20260813/remote_launch.md"
+    "remote_launch": "analysis/iscf_bsca_main_v1_hpo_20260731/h5c_etth1_refined_interaction_search_20260813/remote_launch.md",
+    "formal_test_gate": "analysis/iscf_bsca_main_v1_hpo_20260731/h5c_etth1_refined_interaction_search_20260813/training_result_and_formal_test_gate.md"
   },
   "evaluation_contract": {
     "datasets": [

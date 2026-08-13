@@ -8,6 +8,8 @@ Architecture/objective/H720-prefix graph保持不变。每trial仍由validation 
 
 Exact commit=`fe9ac10b`的54/54 resource smoke已通过，54 unique hashes、failure=0、test=0；post-smoke quota188G。Full three-GPU queue于11:43:04启动，PID=`843554`，前三个long-context jobs均完成epoch2且numeric health正常。Current cursor=`Step 8 H5C train/validation active`；next=`54/54 artifact/hash manifest -> complete formal test`。Canonical launch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5c_etth1_refined_interaction_search_20260813/remote_launch.md`。
 
+H5C full queue于13:17:47完成54/54，training test=0、failure=0。54个checkpoint hashes唯一，manifest SHA256=`e94f95a67c748f95d72e1aab6ced4aaae498982105da5234d411d4c5c0c8379f`。用户授权一次完整216-row formal test。Current cursor=`Step 8 complete -> Step 9 formal-test preflight`；manifest前后禁止checkpoint retrain/mutation，formal execution禁止partial profiles。Canonical gate=`analysis/iscf_bsca_main_v1_hpo_20260731/h5c_etth1_refined_interaction_search_20260813/training_result_and_formal_test_gate.md`。
+
 ## H5B ETTh1 Formal-Test Result and Step 9--10 Decision (2026-08-13)
 
 Current experiment cursor=`Step 9 complete -> Step 10 targeted performance pass -> table mutation authorization pending`。H5B完整闭合36/36 checkpoints、36 immutable unique hashes、144/144 standard-horizon official-test rows与0 analyzer errors。Frozen selector选择`h5b_seq640_p20`，four-H mean MSE/MAE=`0.391378/0.417255`，相对H5A分别改善`0.363%/0.584%`，两项0.3% degradation guards均通过。

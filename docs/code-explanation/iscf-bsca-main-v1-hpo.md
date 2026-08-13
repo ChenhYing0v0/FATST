@@ -273,3 +273,11 @@ five-scope decoder一次输出`[B,720,C]`，validation从同一field裁剪H96/H1
 变化只在`L`、patch geometry、LR、dropout、weight decay与mode rank。Code-theory边界是
 搜索H5B winner附近的hyperparameter interactions；任何性能提升仍是test-tuned benchmark
 evidence，不是new architecture或BSCA mechanism attribution。
+
+H5C formal-test path复用H5B工具但将hard-coded trial count改为config-driven：training
+artifact checker读取`matrix.expected_training_runs`与phase-specific authorization key；manifest
+builder显式接收`--phase H5C --expected-trials 54`；formal-contract checker从config读取runs、
+cells、phase、guard reference和next-extension key。H5B原36/144 contract有独立regression
+check，确保向后兼容。H5C test runner仍复用generic atomic queue，目标artifact为每profile
+720-row dense metrics、invariant JSON和diagnostic NPZ，216 standard rows只从完整dense artifacts
+聚合得到。
