@@ -207,9 +207,12 @@ def main() -> None:
                     dec_inp = torch.cat(
                         [batch_y[:, : self.args.label_len, :], dec_zeros], dim=1
                     )
-                    outputs = self.model(
-                        batch_x, batch_x_mark, dec_inp, batch_y_mark
-                    )
+                    if cli.baseline in {"PatchTST", "DLinear"}:
+                        outputs = self.model(batch_x)
+                    else:
+                        outputs = self.model(
+                            batch_x, batch_x_mark, dec_inp, batch_y_mark
+                        )
                     if isinstance(outputs, tuple):
                         outputs = outputs[0]
                     f_dim = -1 if self.args.features == "MS" else 0
