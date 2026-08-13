@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；H5C formal complete、best-cell gate fail；H5B ETTh1 fallback retained，H5D/table mutation未授权 |
+| `current_11_step` | paper consolidation；H5B ETTh1 fallback retained；H5D 48-profile interaction search frozen、remote train/validation authorized、formal test pending |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,7 +18,9 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1`的H5B ETTh1 profile在H5C gate fail后继续作为frozen fallback；matched ablation/transfer仍pending |
+| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1`的H5B ETTh1 profile保持fallback，H5D仅作同architecture HPO；matched ablation/transfer仍pending |
+
+[H5D ETTh1 Interaction HPO Prelaunch, 2026-08-13] 115个completed ETTh1 profiles/460 cells的统一审计确认：`h5c_do0`为mean-MSE frontier，`L589/p19`接近H192，`L630/p21`赢得H336两项，rank160唯一赢得H192 MAE但aggregate/long-horizon负向；all historical actual batch size均为32。H5D据此冻结48个new seed2021 profiles：12 batch×LR、8 p19×do0、8 p21×do0、8 do0×rank、8 p19×rank×do0及4 p21×rank×do0，与115个历史effective profiles零重复。Training test=0，minimum Main II best=5/8、stretch=6/8、mean双guard=`1.002x H5B`。Local patch与remote train/validation authorized；formal test/H5E/extra seeds/table mutation=false。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/design_and_prelaunch_gate.md`。Decision=`H5D_48_profile_interaction_matrix_frozen_remote_train_validation_authorized_formal_test_pending`。
 
 [H5C ETTh1 Formal-Test Result, 2026-08-13] Exact commit=`d2f9eacd`完成54/54 checkpoint evaluations、216/216 standard rows，errors/temp/checkpoint mutation均为0。22/54 profiles通过H5B mean MSE/MAE `1.002x`双guard；eligible winner `h5c_do0`的four-H mean MSE/MAE=`0.390725/0.417006`，相对H5B改善0.167%/0.060%，但Main II best/top-2仍为`4/8,7/8`。全部54个H5C profiles的Main II best上限均为4/8，未达到minimum 5/8；冻结selector因此保留`h5b_seq640_p20`，不改Main I/Main II。Canonical result=`analysis/iscf_bsca_main_v1_hpo_20260731/h5c_etth1_refined_interaction_search_20260813/formal_test_result_and_selection.md`。Failure=`search_space_performance_shortfall_at_best_cell_gate`，rollback=Step 6；H5D/extra seeds/table mutation=false。Decision=`H5C_no_eligible_best_cell_improvement_retain_H5B_profile`。
 

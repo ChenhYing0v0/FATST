@@ -22,7 +22,7 @@
         "efficiency",
         "fresh_mechanism_diagnostics"
       ],
-      "status": "H5C_formal_complete_gate_fail_H5B_ETTh1_fallback_retained"
+      "status": "H5B_ETTh1_fallback_retained_H5D_48_profile_training_prelaunch"
     }
   },
   "paper_table_registry": {
@@ -39,10 +39,10 @@
     "pending_appendix_tables": [
       "ablation_sensitivity"
     ],
-    "new_experiment_authorization_created": false
+    "new_experiment_authorization_created": true
   },
   "authorization": {
-    "current_decision": "H5C_no_eligible_best_cell_improvement_retain_H5B_profile",
+    "current_decision": "H5D_48_profile_interaction_matrix_frozen_remote_train_validation_authorized_formal_test_pending",
     "existing_artifact_audit": true,
     "matrix_design": true,
     "test_tuned_hpo_project_principle": {
@@ -59,13 +59,13 @@
     "formal_test_gate": "H5C_requires_54_complete_checkpoints_and_216_rows_hash_immutable",
     "current_user_authorization": {
       "date": "2026-08-13",
-      "instruction": "continue_H5C_complete_formal_test_after_remote_training_completion",
+      "instruction": "continue_ETTh1_HPO_from_all_completed_results_and_run_further_experiments",
       "Tier_A": true,
       "Tier_B1_H0_H1": true,
       "Tier_B2_bounded_HPO_and_test_profile_ranking": true,
       "Tier_B3_selected_profile_confirmation": false,
       "Tier_C_final_reporting_audit": true,
-      "scope_note": "H5C complete formal test is consumed; H5B remains the frozen ETTh1 fallback because no H5C profile increased Main II best cells; extra seeds H5D architecture redesign and automatic table mutation remain unauthorized"
+      "scope_note": "H5D authorizes 48 new ETTh1 train-validation profiles and local protocol work; formal test profile selection extra seeds H5E architecture redesign and automatic table mutation remain unauthorized"
     },
     "scoped_local_patch_authorizations": {
       "timealign_exchange_script": {
@@ -207,6 +207,34 @@
     "remote_launch": "analysis/iscf_bsca_main_v1_hpo_20260731/h5c_etth1_refined_interaction_search_20260813/remote_launch.md",
     "formal_test_gate": "analysis/iscf_bsca_main_v1_hpo_20260731/h5c_etth1_refined_interaction_search_20260813/training_result_and_formal_test_gate.md",
     "formal_test_result": "analysis/iscf_bsca_main_v1_hpo_20260731/h5c_etth1_refined_interaction_search_20260813/formal_test_result_and_selection.md"
+  },
+  "h5d_etth1_prelaunch": {
+    "candidate_version": "ISCF-BSCA-MAIN-v1-etth1-h5d-test-informed-20260813",
+    "status": "frozen_remote_train_validation_authorized_formal_test_pending",
+    "trials": 48,
+    "dataset": "ETTh1",
+    "seed": 2021,
+    "historical_etth1_profiles_audited": 115,
+    "historical_effective_profile_duplicates": 0,
+    "groups": {
+      "dropout0_batch_lr_interaction": 12,
+      "h192_p19_dropout0_interaction": 8,
+      "h336_p21_dropout0_interaction": 8,
+      "dropout0_rank_refinement": 8,
+      "h192_geometry_rank_dropout0": 8,
+      "h336_geometry_rank_dropout0": 4
+    },
+    "training_test_jobs": 0,
+    "expected_formal_test_rows_after_manifest": 192,
+    "current_main_ii_best_cells": 4,
+    "minimum_main_ii_best_cells": 5,
+    "stretch_main_ii_best_cells": 6,
+    "remote_training_authorized": true,
+    "formal_test_authorized_after_complete_manifest": false,
+    "automatic_table_mutation_authorized": false,
+    "config": "configs/iscf_bsca_main_v1_hpo_etth1_h5d.json",
+    "history_analysis": "analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/history_analysis/history_analysis.json",
+    "prelaunch": "analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/design_and_prelaunch_gate.md"
   },
   "evaluation_contract": {
     "datasets": [

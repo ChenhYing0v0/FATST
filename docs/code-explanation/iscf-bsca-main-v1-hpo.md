@@ -288,3 +288,18 @@ H5B mean MSE/MAE `1.002x`双guard过滤，再按Main II best、Main I best、Mai
 mean MSE/MAE、validation score、参数量和ID排序。输出包含全部profile ranking、best H5C
 scorecard、最终保留profile scorecard及machine decision。若H5C best-cell数没有严格超过H5B，
 selector必须保留H5B，不能因事后mean improvement改写primary objective，也不修改paper tables。
+
+## 13. ETTh1 H5D History Audit and Interaction Matrix
+
+`scripts/analyze_iscf_bsca_main_v1_etth1_hpo_history.py`materialize H1/H2/H4J/H4K/
+H5A/H5B/H5C的ETTh1 configs，并按trial ID连接六套complete test scorecards。它从冻结Main II
+surface计算三位小数best thresholds，为115个profiles输出hyperparameters、8个metric cells、
+four-H means、best-cell count及H192/H336 normalized gap。任何missing/duplicate trial或cell都会
+hard fail；输出只作H5D design evidence，不改变historical selection。
+
+H5D仍复用generic runner，tensor path不变：`[B,L,C] -> history encoder -> five-scope decoder
+-> [B,720,C] -> four prefix crops`。48个profiles只改变actual batch size、LR、p19/p21
+geometry和mode rank，且都固定dropout0、width32、weight decay0.01、LayerNorm on与120/24
+budget。`scripts/check_iscf_bsca_main_v1_hpo_etth1_h5d.py`核验115个historical fingerprints、
+48个new fingerprints、six group counts、frozen hashes、divisible geometry与test=0 dry-run。
+Formal test flag明确为false，防止training完成后自动访问test或修改paper tables。

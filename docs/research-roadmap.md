@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## H5D ETTh1 Interaction Search Prelaunch (2026-08-13)
+
+Current experiment cursor=`Step 6 evidence-based redesign frozen -> Step 7 local pass -> Step 8 remote resource gate`。统一审计H1/H2/H4J/H4K/H5A/H5B/H5C的115个ETTh1 profiles与460 cells后，H5D不再继续H5C单变量邻域加密。新的48-profile matrix以H5C `dropout=0` frontier为base，分配给12个batch×LR、16个p19/p21 geometry×do0、8个do0×rank及12个geometry×rank×do0 interactions；capacity、standalone weight decay和budget extension关闭。
+
+H5D与115个historical effective profiles零重复；training test=0，一个validation-selected checkpoint和一个future dataset-level profile必须服务四H。Main II minimum=`5/8`、stretch=`6/8`，mean MSE/MAE双guard=`1.002x H5B`。Remote train/validation已授权；formal test、profile selection、H5E、extra seeds及table mutation未授权。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5d_etth1_interaction_search_20260813/design_and_prelaunch_gate.md`。Decision=`H5D_48_profile_interaction_matrix_frozen_remote_train_validation_authorized_formal_test_pending`。
+
 ## H5C ETTh1 Formal-Test Result and Step 9--10 Decision (2026-08-13)
 
 Current experiment cursor=`Step 9 complete -> Step 10 targeted gate fail -> rollback Step 6`。
