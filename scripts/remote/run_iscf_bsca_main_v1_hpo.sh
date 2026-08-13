@@ -152,9 +152,9 @@ for trial_id in config["provisional_lpt_order"]:
     ]
     print("\t".join(map(str, fields)))
 PY
-LINES=()
+JOB_LINES=()
 while IFS= read -r line; do
-  LINES+=("${line}")
+  JOB_LINES+=("${line}")
 done <"${JOBS_TMP}"
 
 EXPECTED_JOBS="$(
@@ -174,7 +174,7 @@ print(
 )
 PY
 )"
-[[ "${#LINES[@]}" -eq "${EXPECTED_JOBS}" ]]
+[[ "${#JOB_LINES[@]}" -eq "${EXPECTED_JOBS}" ]]
 
 run_dir_for_line() {
   local trial_id dataset rest
@@ -194,19 +194,19 @@ is_complete() {
 }
 
 if [[ "${MODE}" == "dry-run" ]]; then
-  printf '%s\n' "${LINES[@]}"
-  echo "iscf_bsca_main_${PHASE_LOWER}_dry_run=pass jobs=${#LINES[@]} test_jobs=0 config_hash=${CONFIG_HASH} search_space_hash=${SEARCH_SPACE_HASH} remote_authorized=${REMOTE_AUTHORIZED} canary_only=${CANARY_ONLY}"
+  printf '%s\n' "${JOB_LINES[@]}"
+  echo "iscf_bsca_main_${PHASE_LOWER}_dry_run=pass jobs=${#JOB_LINES[@]} test_jobs=0 config_hash=${CONFIG_HASH} search_space_hash=${SEARCH_SPACE_HASH} remote_authorized=${REMOTE_AUTHORIZED} canary_only=${CANARY_ONLY}"
   exit 0
 fi
 
 if [[ "${MODE}" == "status" ]]; then
   complete=0
-  for line in "${LINES[@]}"; do
+  for line in "${JOB_LINES[@]}"; do
     if is_complete "${line}"; then
       complete=$((complete + 1))
     fi
   done
-  echo "iscf_bsca_main_${PHASE_LOWER}_status=$(date -Is) complete=${complete}/${#LINES[@]} test=0/${#LINES[@]}"
+  echo "iscf_bsca_main_${PHASE_LOWER}_status=$(date -Is) complete=${complete}/${#JOB_LINES[@]} test=0/${#JOB_LINES[@]}"
   find "${OUTPUT_ROOT}/_logs" -name '*.log' -type f -print0 2>/dev/null \
     | xargs -0 -r tail -n 1
   exit 0
@@ -326,7 +326,7 @@ mkdir -p "${MODE_ROOT}" "${OUTPUT_ROOT}/_logs"
   echo "output_root=${OUTPUT_ROOT}"
   echo "dataset_root=${DATASET_ROOT}"
   echo "gpu_ids=${GPU_IDS[*]}"
-  echo "jobs=${#LINES[@]}"
+  echo "jobs=${#JOB_LINES[@]}"
   echo "test_jobs=0"
   echo "canary_only=${CANARY_ONLY}"
   nvidia-smi \
@@ -336,7 +336,7 @@ mkdir -p "${MODE_ROOT}" "${OUTPUT_ROOT}/_logs"
     --query-compute-apps=gpu_uuid,pid,process_name,used_gpu_memory \
     --format=csv,noheader,nounits || true
 } | tee "${OUTPUT_ROOT}/${MODE}_launch_record.txt"
-printf '%s\n' "${LINES[@]}" >"${OUTPUT_ROOT}/${MODE}_jobs.tsv"
+printf '%s\n' "${JOB_LINES[@]}" >"${OUTPUT_ROOT}/${MODE}_jobs.tsv"
 
 QUEUE_STATE="${OUTPUT_ROOT}/.${MODE}_queue_index"
 QUEUE_LOCK="${OUTPUT_ROOT}/.${MODE}_queue_lock"
@@ -347,7 +347,7 @@ next_job() {
     flock -x 9
     local index
     index="$(<"${QUEUE_STATE}")"
-    if [[ "${index}" -ge "${#LINES[@]}" ]]; then
+    if [[ "${index}" -ge "${#JOB_LINES[@]}" ]]; then
       exit 1
     fi
     echo $((index + 1)) >"${QUEUE_STATE}"
@@ -368,11 +368,11 @@ run_one() {
   fi
   log="${OUTPUT_ROOT}/_logs/${MODE}_${trial_id}.log"
   if [[ "${MODE}" == "train" ]] && is_complete "${line}"; then
-    echo "skip_existing job=$((index + 1))/${#LINES[@]} trial=${trial_id}"
+    echo "skip_existing job=$((index + 1))/${#JOB_LINES[@]} trial=${trial_id}"
     return
   fi
   mkdir -p "${run_dir}"
-  echo "run_start=$(date -Is) job=$((index + 1))/${#LINES[@]} dataset=${dataset} trial=${trial_id} gpu=${gpu}"
+  echo "run_start=$(date -Is) job=$((index + 1))/${#JOB_LINES[@]} dataset=${dataset} trial=${trial_id} gpu=${gpu}"
   run_training_command "${line}" "${gpu}" "${run_dir}" "${log}" "${smoke}"
   failure_pattern='Traceback|CUDA out of memory|(^|[^[:alnum:]_])(nan|inf)([^[:alnum:]_]|$)'
   if command -v rg >/dev/null 2>&1; then
@@ -383,14 +383,14 @@ run_one() {
   test -s "${run_dir}/training_log.csv"
   test -s "${run_dir}/effective_config.json"
   test -s "${run_dir}/metrics_by_target_horizon.csv"
-  echo "run_done=$(date -Is) job=$((index + 1))/${#LINES[@]} dataset=${dataset} trial=${trial_id} gpu=${gpu}"
+  echo "run_done=$(date -Is) job=$((index + 1))/${#JOB_LINES[@]} dataset=${dataset} trial=${trial_id} gpu=${gpu}"
 }
 
 worker() {
   local gpu="$1"
   local index
   while index="$(next_job)"; do
-    run_one "${index}" "${LINES[${index}]}" "${gpu}"
+    run_one "${index}" "${JOB_LINES[${index}]}" "${gpu}"
   done
 }
 
@@ -406,4 +406,4 @@ for pid in "${pids[@]}"; do
   fi
 done
 [[ "${status}" == "0" ]]
-echo "iscf_bsca_main_${PHASE_LOWER}_${MODE}_done=$(date -Is) jobs=${#LINES[@]} test_jobs=0"
+echo "iscf_bsca_main_${PHASE_LOWER}_${MODE}_done=$(date -Is) jobs=${#JOB_LINES[@]} test_jobs=0"
