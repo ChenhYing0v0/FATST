@@ -42,7 +42,7 @@
     "new_experiment_authorization_created": true
   },
   "authorization": {
-    "current_decision": "H5A_tables_synced_H5B_ETTh1_36_profile_remote_training_authorized",
+    "current_decision": "H5A_tables_synced_H5B_ETTh1_three_GPU_train_validation_active_test_zero",
     "existing_artifact_audit": true,
     "matrix_design": true,
     "test_tuned_hpo_project_principle": {

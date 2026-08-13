@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；Main I/Main II H5A profiles synced and hash frozen；experiments=H5B ETTh1 expanded HPO Step 6 frozen -> Step 8 remote resource gate |
+| `current_11_step` | paper consolidation；Main I/Main II H5A profiles synced and hash frozen；experiments=H5B ETTh1 Step 8 three-GPU train/validation active，test=0 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -21,6 +21,8 @@
 | `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1`已用H5A ETTh1/ECL/Solar profiles更新Main I/Main II；H5B只继续ETTh1 HPO，matched ablation/transfer仍pending |
 
 [H5A Main-Table Sync and H5B ETTh1 Prelaunch, 2026-08-13] 用户授权将H5A选择的ETTh1/ECL/Solar完整four-H profiles同步进Main I/Main II，并继续ETTh1-only HPO。新Main I=`31/56` best、`17/56` second；新Main II=`28/56` best、`25/56` second，均生成standalone LaTeX与A3 compiled PDF并hash冻结，baseline cells与source roles未变。H5B基于25个历史ETTh1 profiles冻结36个seed2021 trials，重点覆盖`lr=3.2e-4..4.2e-4`、`L=576..960`的context/patch interactions、regularization与rank，统一`120 epochs/patience24`；architecture/objective/scopes/inference graph不变。Training阶段test=0，36/36 manifest前禁止formal test与partial selection。Canonical prelaunch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5b_etth1_expanded_search_20260813/design_and_prelaunch_gate.md`。Decision=`H5B_frozen_authorized_remote_resource_gate_next`。
+
+[H5B Remote Launch, 2026-08-13] Remote quota从206G清理至186G：仅删除H5A 45个nonselected、可由checkpoint重建的dense diagnostic NPZ，保留三个selected NPZ及全部checkpoint/metrics/manifest。PTY smoke发现并在formal training前修复Bash `LINES`特殊变量冲突；exact commit=`776e6bc2`随后完成36/36 resource smoke、36 unique hashes、failure=0、test=0。Full train/validation于10:04:01用GPU0/1/2启动，PID=`700269`；首批`L960/L840/L768`均进入epoch1，显存约770--777 MiB/GPU。Canonical launch=`analysis/iscf_bsca_main_v1_hpo_20260731/h5b_etth1_expanded_search_20260813/remote_launch.md`。Decision=`H5B_three_GPU_train_validation_active_test_zero`。
 
 [H5A Formal-Test Result and Main II Selection, 2026-08-13] Once-only formal test于01:00:46完成queue级全局复核：48/48 checkpoints、192/192 standard-horizon rows、48 immutable hashes、720-row dense artifacts与provenance全部通过，`ABORT`未出现。Frozen Main II selector从historical+H5A pool选择ETTh1=`h5a_lr3p5e4`、ECL=`h5a_seq336_p1`、Solar=`h5a_seq512_p4_lr2p5e4`；mean MSE/MAE分别为`0.392803/0.419707`、`0.151848/0.244527`、`0.188300/0.208895`，三者均通过0.5% guard。Best cells由`1/8,0/8,4/8`提高到`2/8,1/8,6/8`，目标三dataset总计`9/24`，若其他datasets不变则Main II由`24/56`提高到`28/56`，全部冻结gates通过。负边界仍为ETTh1无MAE best、ECL仅H96 MAE best且mean MSE +0.147%、Solar H336/H720 MSE非best。Canonical result=`analysis/iscf_bsca_main_v1_hpo_20260731/h5a_main_ii_weak_dataset_search_20260810/formal_test_result_and_main_ii_selection.md`。H5B、extra seeds、confirmation及Main I/Main II自动mutation未授权。Decision=`H5A_success_gate_pass_selection_frozen_table_mutation_not_authorized`。
 
