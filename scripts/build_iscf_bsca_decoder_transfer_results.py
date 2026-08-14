@@ -131,7 +131,10 @@ def aggregate(
 
 
 def evaluate_gates(
-    config: dict[str, Any], dataset_means: list[dict[str, Any]], overall: list[dict[str, Any]]
+    config: dict[str, Any],
+    cells: list[dict[str, Any]],
+    dataset_means: list[dict[str, Any]],
+    overall: list[dict[str, Any]],
 ) -> tuple[list[dict[str, Any]], bool]:
     dataset_lookup = {
         (row["backbone"], row["arm_id"], row["dataset"]): row
@@ -139,6 +142,10 @@ def evaluate_gates(
     }
     overall_lookup = {
         (row["backbone"], row["arm_id"]): row for row in overall
+    }
+    cell_lookup = {
+        (row["backbone"], row["arm_id"], row["dataset"], row["horizon"]): row
+        for row in cells
     }
     gate_rows = []
     all_pass = True
@@ -169,18 +176,32 @@ def evaluate_gates(
         )
         all_pass = all_pass and passed
         iscf_mean = overall_lookup[(backbone, iscf)]
+        bsca_vs_original_mse_cell_wins = sum(
+            cell_lookup[(backbone, bsca, dataset, horizon)]["mse"]
+            < cell_lookup[(backbone, original, dataset, horizon)]["mse"]
+            for dataset in config["datasets"]
+            for horizon in HORIZONS
+        )
+        bsca_vs_iscf_mse_cell_wins = sum(
+            cell_lookup[(backbone, bsca, dataset, horizon)]["mse"]
+            < cell_lookup[(backbone, iscf, dataset, horizon)]["mse"]
+            for dataset in config["datasets"]
+            for horizon in HORIZONS
+        )
         gate_rows.append(
             {
                 "backbone": backbone,
                 "bsca_vs_original_macro_mse_gain_percent": mse_gain,
                 "bsca_vs_original_macro_mae_gain_percent": mae_gain,
                 "bsca_vs_original_dataset_mse_wins": dataset_mse_wins,
+                "bsca_vs_original_mse_cell_wins": bsca_vs_original_mse_cell_wins,
                 "iscf_vs_original_macro_mse_gain_percent": 100.0
                 * (original_mean["mean_mse"] - iscf_mean["mean_mse"])
                 / original_mean["mean_mse"],
                 "bsca_vs_iscf_macro_mse_gain_percent": 100.0
                 * (iscf_mean["mean_mse"] - bsca_mean["mean_mse"])
                 / iscf_mean["mean_mse"],
+                "bsca_vs_iscf_mse_cell_wins": bsca_vs_iscf_mse_cell_wins,
                 "gate_pass": passed,
             }
         )
@@ -290,7 +311,7 @@ def build_report(
         "",
         "## Pre-registered portability gates",
         "",
-        "| Backbone | BSCA vs Original MSE gain | MAE gain | Dataset MSE wins | ISCF vs Original MSE gain | BSCA vs ISCF MSE gain | Gate |",
+        "| Backbone | BSCA vs Original MSE gain | MAE gain | Dataset/Cell MSE wins | ISCF vs Original MSE gain | BSCA vs ISCF MSE gain/cell wins | Gate |",
         "| --- | ---: | ---: | ---: | ---: | ---: | --- |",
     ]
     for row in gate_rows:
@@ -298,13 +319,20 @@ def build_report(
             f"| {BACKBONE_LABELS[row['backbone']]} | "
             f"{row['bsca_vs_original_macro_mse_gain_percent']:+.3f}% | "
             f"{row['bsca_vs_original_macro_mae_gain_percent']:+.3f}% | "
-            f"{row['bsca_vs_original_dataset_mse_wins']}/5 | "
+            f"{row['bsca_vs_original_dataset_mse_wins']}/5, {row['bsca_vs_original_mse_cell_wins']}/20 | "
             f"{row['iscf_vs_original_macro_mse_gain_percent']:+.3f}% | "
-            f"{row['bsca_vs_iscf_macro_mse_gain_percent']:+.3f}% | "
+            f"{row['bsca_vs_iscf_macro_mse_gain_percent']:+.3f}%, {row['bsca_vs_iscf_mse_cell_wins']}/20 | "
             f"{'PASS' if row['gate_pass'] else 'FAIL'} |"
         )
     lines.extend(
         [
+            "",
+            "## Four-layer evaluation and failure attribution",
+            "",
+            "1. paper_facing_effectiveness：120/120 official-test cells完整，checkpoint hash复核未发现mutation或non-finite结果。",
+            "2. matched_mechanism_attribution：DLinear-style通过预注册相对gate；PatchTST-style未通过。PatchTST中+ISCF-BSCA相对+ISCF改善，但仍未优于Original Decoder。",
+            "3. internal_mechanism_health：本表不以routing、scope probability或oracle headroom替代matched effectiveness gate。",
+            "4. failure_attribution：总体记为hypothesis_false_for_cross_backbone_portability_in_exact_setting。DLinear-style的ETTh1/ETTh2绝对结果提示optimization_or_profile_pathology_suspected，因此其正向相对gate不得被夸大；PatchTST-style负结果未出现artifact或numeric pathology，仍是当前总体portability claim失败的直接证据。",
             "",
             "## Claim boundary",
             "",
@@ -315,6 +343,8 @@ def build_report(
             ),
             "",
             "DLinear-style与PatchTST-style arms不是native external baseline reproduction；本表只回答matched decoder transferability。",
+            "",
+            "若作者希望恢复跨backbone portability claim，应回到Step 4--6重新设计PatchTST intervention/readout并冻结新的candidate；不得把本轮负结果改写为HPO问题或选择性删除PatchTST block。",
         ]
     )
     return "\n".join(lines) + "\n"
@@ -328,7 +358,7 @@ def main(args: argparse.Namespace) -> None:
     cells = collect_cells(config, manifest, args.output_root)
     dataset_means = aggregate(cells, ("backbone", "arm_id", "dataset"))
     overall = aggregate(cells, ("backbone", "arm_id"))
-    gate_rows, all_pass = evaluate_gates(config, dataset_means, overall)
+    gate_rows, all_pass = evaluate_gates(config, cells, dataset_means, overall)
     args.results_dir.mkdir(parents=True, exist_ok=True)
     write_csv(args.results_dir / "decoder_transfer_120_cells.csv", cells)
     write_csv(args.results_dir / "decoder_transfer_dataset_means.csv", dataset_means)
@@ -366,6 +396,10 @@ def main(args: argparse.Namespace) -> None:
         "\\usepackage{booktabs}\n"
         "\\usepackage{graphicx}\n"
         "\\usepackage[normalem]{ulem}\n"
+        "\\makeatletter\n"
+        "\\setlength{\\@fptop}{0pt}\n"
+        "\\setlength{\\@fpbot}{0pt plus 1fil}\n"
+        "\\makeatother\n"
         "\\pagestyle{empty}\n"
         "\\begin{document}\n"
         + table
