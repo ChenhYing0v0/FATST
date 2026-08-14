@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## Core-Ablation Formal Result and Step 9--10 Decision (2026-08-14)
+
+Current cursor=`Core-Ablation complete -> paper consolidation; allocation claim narrowed`。Frozen 5-variant × 5-dataset × four-H matrix已100/100 official-test cells完整；20个新end-to-end controls通过artifact、selector、numeric与20 unique immutable checkpoint hash gates，Full的20 cells来自exact ablation anchor。Full macro MSE/MAE=`0.308549/0.346278`。相对prefix-only `w/o BSCA`、capacity-matched `Shared Scope Projection`与`Fixed Scope (s=144)`，Full分别取得2.401%、1.416%、1.796%的macro MSE收益并通过各自gate；相对equal fusion的`w/o Target-Adaptive Allocation`为-0.039%，只赢2/5 dataset means和0/4 horizon means，gate失败。
+
+Four-layer decision：paper-facing matrix complete；matched attribution=3/4；internal mechanism health仍归Figure 5且不能补救failed control；无numeric/artifact pathology，failure attribution=`hypothesis_false_for_exact_setting`。Rollback仅针对learned allocation的独立accuracy claim回Step 4--6，不否定已通过的三项机制证据。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/result_and_table_audit.md`。Decision=`core_ablation_complete_partial_attribution_3_of_4_controls_pass`；next=`freeze Decoder-Transfer or Efficiency/Figure-5 protocol under separate authorization`。
+
 ## Main II Fixed-H Loader Re-audit (2026-08-13)
 
 Current cursor=`paper consolidation; corrected Main II frozen; HPO paused`。旧Main II使用H720 loader common origins裁短prefix，不能与每个H的horizon-specific test surface等同。用户授权后，7 external systems × 7 datasets × 4 H在63个immutable H720 checkpoint objects上完整重算；252/252 evaluations、49/49 H720 continuity、63/63 origin monotonicity与224/224 final cells通过。新表严格使用每个source的fixed-H split/preprocessing/batch/`drop_last`，future labels不输入model。ISCF-BSCA更新为41/56 best、13/56 second；旧表保留为historical protocol artifact并退出canonical registry。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/formal_results/result_and_table_audit.md`。Decision=`Main_II_horizon_loader_reaudit_complete_pass_old_common_origin_table_superseded`。

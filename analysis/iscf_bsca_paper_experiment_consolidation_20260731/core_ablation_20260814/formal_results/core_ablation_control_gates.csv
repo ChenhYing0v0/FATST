@@ -1,0 +1,5 @@
+control_id,control_label,full_vs_control_macro_mse_gain_percent,full_vs_control_macro_mae_gain_percent,dataset_mse_wins,horizon_mse_wins,cell_mse_wins,cell_mae_wins,gate_pass
+without_bsca_prefix_loss_only,w/o BSCA,2.40059364900442,1.972431865343797,4,4,17,18,True
+without_target_adaptive_allocation,w/o Target-Adaptive Allocation,-0.03903138138174725,0.0007552623838970401,2,0,8,10,False
+shared_scope_projection,Shared Scope Projection,1.4164857022511006,1.2270966019594913,3,4,14,15,True
+fixed_scope_s144,Fixed Scope ($s=144$),1.795977741575741,1.038260627389003,5,4,16,20,True

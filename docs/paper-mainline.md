@@ -7,9 +7,9 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；Main II fixed-H loader re-audit complete；HPO paused |
+| `current_11_step` | paper consolidation；Core-Ablation Step 9--10 complete；HPO paused |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
-| `mechanism_control` | same-seed end-to-end `ISCF-EQUAL` no-anchor control；A6只作carrier benchmark/reference |
+| `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
 | `future_validation_suite` | Main I dense/Main II v1=ETTh1/ETTh2/ETTm1/ETTm2/Weather/ECL/Solar；Exchange=companion/deferred extension；ablation=original five datasets |
 | `active_ledger` | `docs/stage-ledgers/stage-c-unified-forecasting-redesign.md` |
@@ -18,7 +18,9 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1`仅作exact ablation anchor；`ISCF-BSCA-MAIN-v1`当前ETTh1 paper row=`h5d_bs16_lr2p4`；Main II baseline re-audit complete；matched ablation/transfer仍pending |
+| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1` Core-Ablation 100/100 complete且3/4 controls pass；Target-Adaptive Allocation独立accuracy claim不受支持；transfer仍pending |
+
+[Core-Ablation Formal Closure, 2026-08-14] 用户授权按frozen Sections 5--7推进完整Core-Ablation。Exact matrix完成5 variants × 5 datasets × 4 H=`100/100` cells；Full复用5个exact checkpoints，四个controls完成20/20 end-to-end training与20个unique immutable hashes。Full macro MSE/MAE=`0.308549/0.346278`。`w/o BSCA`、`Shared Scope Projection`、`Fixed Scope (s=144)`三项通过预注册gate；`w/o Target-Adaptive Allocation`失败，Full macro MSE反而高0.039%，horizon MSE wins=`0/4`。因此只支持BSCA objective、scope-specific projections与multi-scope design，不能声称all components或learned allocation优于equal fusion。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/result_and_table_audit.md`。Decision=`core_ablation_complete_partial_attribution_3_of_4_controls_pass`。
 
 [Main II Horizon-Specific Loader Re-audit Complete, 2026-08-13] 用户发现旧Main II one-model结果可能异常偏好，并授权按“同一H720 checkpoint + 每个H的official fixed-H test loader”重算全部external baselines。审计确认旧表确实在H720 loader的较小common-origin tensor上裁H96/H192/H336，不等同于horizon-specific evaluation surface。新矩阵复用63个unique H720 checkpoint objects，完成252/252 formal evaluations、196 external cells并合并28 current ISCF cells；49/49 H720 continuity与63/63 origin monotonicity通过，future labels未进入model input。新Main II中ISCF-BSCA=`41/56` best、`13/56` second，macro MSE/MAE=`0.261911/0.307252`。旧common-origin Main II被supersede但保留作历史审计；canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/formal_results/result_and_table_audit.md`。Decision=`Main_II_horizon_loader_reaudit_complete_pass_old_common_origin_table_superseded`。
 

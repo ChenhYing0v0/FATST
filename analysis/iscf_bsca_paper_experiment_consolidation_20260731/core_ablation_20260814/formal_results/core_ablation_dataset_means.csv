@@ -1,0 +1,26 @@
+arm_id,table_label,dataset,mean_mse,mean_mae,horizon_count
+full_iscf_bsca,Full ISCF-BSCA,ETTm1,0.3444679885542986,0.3675322072825563,4
+full_iscf_bsca,Full ISCF-BSCA,ETTm2,0.2572928310022632,0.31150020719253807,4
+full_iscf_bsca,Full ISCF-BSCA,ETTh1,0.4109108912616274,0.4347261575611111,4
+full_iscf_bsca,Full ISCF-BSCA,ETTh2,0.3128610209595804,0.36898052163865147,4
+full_iscf_bsca,Full ISCF-BSCA,Weather,0.21721319627192753,0.24865119770257765,4
+without_bsca_prefix_loss_only,w/o BSCA,ETTm1,0.35344965562629876,0.3780381905169429,4
+without_bsca_prefix_loss_only,w/o BSCA,ETTm2,0.2558981733835281,0.3123996158901828,4
+without_bsca_prefix_loss_only,w/o BSCA,ETTh1,0.4340526572707903,0.4503994425703023,4
+without_bsca_prefix_loss_only,w/o BSCA,ETTh2,0.3192575156384982,0.3751437698227686,4
+without_bsca_prefix_loss_only,w/o BSCA,Weather,0.21803391592056737,0.25024691516129793,4
+without_target_adaptive_allocation,w/o Target-Adaptive Allocation,ETTm1,0.3446047916018934,0.3676323102869122,4
+without_target_adaptive_allocation,w/o Target-Adaptive Allocation,ETTm2,0.256834287123584,0.3116395589839357,4
+without_target_adaptive_allocation,w/o Target-Adaptive Allocation,ETTh1,0.41065451940546627,0.4345205466073052,4
+without_target_adaptive_allocation,w/o Target-Adaptive Allocation,ETTh2,0.31301670702456297,0.36907644900423403,4
+without_target_adaptive_allocation,w/o Target-Adaptive Allocation,Weather,0.2170337027849955,0.24853450313339961,4
+shared_scope_projection,Shared Scope Projection,ETTm1,0.3545286961273095,0.3763964756439681,4
+shared_scope_projection,Shared Scope Projection,ETTm2,0.2569972750981583,0.31415838598924894,4
+shared_scope_projection,Shared Scope Projection,ETTh1,0.41132473656214363,0.43039119170190365,4
+shared_scope_projection,Shared Scope Projection,ETTh2,0.32493766085244274,0.38226447203570413,4
+shared_scope_projection,Shared Scope Projection,Weather,0.21712432395293566,0.24968954318358666,4
+fixed_scope_s144,Fixed Scope ($s=144$),ETTm1,0.3509237442753067,0.37224050818993454,4
+fixed_scope_s144,Fixed Scope ($s=144$),ETTm2,0.25730695814637383,0.313616615575316,4
+fixed_scope_s144,Fixed Scope ($s=144$),ETTh1,0.4279928110166965,0.4413696764864068,4
+fixed_scope_s144,Fixed Scope ($s=144$),ETTh2,0.31739520613720323,0.37291391065888124,4
+fixed_scope_s144,Fixed Scope ($s=144$),Weather,0.2173413007685514,0.24941452362146524,4

@@ -42,18 +42,20 @@ paper candidate与claim boundary，但互不替代。
 | `stage` | `StageC-UVHF paper consolidation` |
 | `handoff_date` | `2026-07-31` |
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
-| `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
+| `paper_core_status` | `performance_partial_pass`；Core-Ablation 3/4 controls pass；allocation独立accuracy attribution失败 |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | Main II fixed-H loader re-audit complete；`h5d_bs16_lr2p4` remains current ETTh1 paper row；HPO paused |
+| `active_experiment_step` | Core-Ablation Step 9--10 complete；100/100 cells；3/4 controls pass；HPO paused |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
-| `local_protocol_patch_authorized` | consumed；Main II horizon-loader evaluator与protocol已完成 |
-| `remote_training_authorized` | consumed；本轮未训练新模型，只执行H720 checkpoint formal inference |
-| `test_tuned_hpo_authorized` | true；限完整formal test后的ETTh1 dataset-level shared-profile selection |
-| `formal_test_authorized` | consumed；Main II external 252/252 complete |
-| `next_action` | 新Main II fixed-H loader table已冻结；等待作者决定后续ablation/transfer/efficiency或重新授权HPO |
-| `conditional_next` | 任何新baseline仍需独立source/protocol gate；不得把source-native Main II改写为matched attribution |
+| `local_protocol_patch_authorized` | consumed；Core-Ablation exact controls与protocol已完成 |
+| `remote_training_authorized` | consumed；Core-Ablation 20/20 new end-to-end controls completed |
+| `test_tuned_hpo_authorized` | consumed/paused；本轮Core-Ablation不属于HPO且不自动恢复Main-model search |
+| `formal_test_authorized` | consumed；Core-Ablation 80 new + 20 reused test cells complete |
+| `next_action` | Core-Ablation table/hash frozen；等待作者决定Decoder-Transfer、Efficiency或Figure 5的独立prelaunch |
+| `conditional_next` | allocation effectiveness claim必须保持negative/unsupported；不得用Figure 5 diagnostics补救failed matched control |
+
+2026-08-14 Core-Ablation完成5 variants × 5 datasets × four H=`100/100` cells。20个新controls均为same-profile end-to-end joint training，20个checkpoint hashes唯一且formal test后immutable；Full复用exact `ISCF-BSCA-v1`的5个checkpoints。Full macro MSE/MAE=`0.308549/0.346278`。`w/o BSCA`、`Shared Scope Projection`与`Fixed Scope (s=144)`通过，`w/o Target-Adaptive Allocation`失败（Full MSE -0.039% gain；dataset/horizon MSE wins=`2/5,0/4`）。Decision=`core_ablation_complete_partial_attribution_3_of_4_controls_pass`；canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/result_and_table_audit.md`。
 
 2026-08-13用户授权重新计算Main II全部baselines，并明确要求固定使用此前horizon-specific训练产生的H720 checkpoints，同时对每个H使用相同fixed-H test set/split/`drop_last`。旧Main II被确认使用H720 common-origin tensor裁短prefix，故不再canonical。新协议完成63 unique checkpoint objects、252/252 external evaluations、49/49 H720 continuity与63/63 origin monotonicity；最终224 cells完整，ISCF-BSCA=`41/56 best + 13/56 second`。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/formal_results/result_and_table_audit.md`。Decision=`Main_II_horizon_loader_reaudit_complete_pass_old_common_origin_table_superseded`。
 

@@ -1,0 +1,6 @@
+arm_id,table_label,macro_mse,macro_mae,dataset_count
+full_iscf_bsca,Full ISCF-BSCA,0.30854918560993944,0.3462780582754869,5
+without_bsca_prefix_loss_only,w/o BSCA,0.31613838356793655,0.3532455867922989,5
+without_target_adaptive_allocation,w/o Target-Adaptive Allocation,0.30842880158810043,0.34628067360315734,5
+shared_scope_projection,Shared Scope Projection,0.3129825385185979,0.35058001371088227,5
+fixed_scope_s144,Fixed Scope ($s=144$),0.3141920040688263,0.34991104690640074,5

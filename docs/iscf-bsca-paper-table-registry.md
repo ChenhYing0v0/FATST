@@ -13,6 +13,7 @@ source transcription audit、checkpoint manifest 和 smoke 统计不作为论文
 - `complete_hash_frozen_h5a_synced`：H5A选择的完整dataset-level profiles已获授权替换，结果与输出hash重新冻结；
 - `complete_hash_frozen_h5d_bs16_lr2p4_synced`：用户指定eligible H5D profile作为当前ETTh1 paper row，原H5D gate历史保留，结果与输出hash重新冻结；
 - `complete_hash_frozen_horizon_loader_reaudit`：Main II已使用既有H720 checkpoints在各fixed-H official test loaders上完整重算，continuity、origin-count与输出hash均已冻结；
+- `complete_hash_frozen_partial_attribution_3_of_4_controls`：Core-Ablation完整矩阵与hash已冻结，但仅3/4 matched controls通过，结论必须按control收窄；
 - `complete_presentation_aligned`：完整结果已通过审计，并已按 Main I 视觉契约生成；
 - `complete_limited_surface`：结果完整，但只覆盖明确列出的部分 systems；
 - `author_fixed_controls_prelaunch_pending`：author已固定control identities，但implementation、预算与formal matrix仍待独立prelaunch；
@@ -48,7 +49,7 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 | `Main-II` | 正文主结果 | `complete_hash_frozen_horizon_loader_reaudit` | 8 systems × 7 datasets × 4 H；224 cells，63 external checkpoint objects / 252 formal evaluations | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/formal_results/table/table_iscf_bsca_main_ii.tex` | one-model-for-all-horizons system competitiveness；不作 BSCA/decoder attribution |
 | `Main-I-Exchange` | Supplementary companion | `complete_limited_surface` | ISCF-BSCA / TimeAlign / QDF × Exchange × 4 H | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_h5d_bs16_lr2p4_synced_20260813/table_exchange_companion.tex` | Exchange 的部分系统背景；不能表述为完整 Main I extension |
 | `Efficiency` | 正文 supporting result | `measurement_pending_baseline_subset_not_yet_frozen` | 指标已定，baseline subset 与 profiler contract 待冻结 | 尚无正式表 | trained-model/storage/training/inference/CHPC trade-off；测量完成前不作 efficiency claim |
-| `Core-Ablation` | 正文 mechanism attribution | `author_fixed_controls_prelaunch_pending` | 5 variants × 5 datasets × 4 H；seed2021共有100 cells；按新control identity暂仅Full的20 cells可直接复用，80 cells需source patch/retrain | 尚无正式表 | Full、w/o BSCA、w/o Target-Adaptive Allocation、Shared Scope Projection与Fixed Scope ($s=144$)的matched attribution |
+| `Core-Ablation` | 正文 mechanism attribution | `complete_hash_frozen_partial_attribution_3_of_4_controls` | 5 variants × 5 datasets × 4 H；100/100 cells，25 checkpoints（5 reused + 20 new） | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/table/table_iscf_bsca_core_ablation.tex` | 支持BSCA objective、scope-specific projections与multi-scope design；不支持learned Target-Adaptive Allocation相对equal fusion的独立accuracy utility |
 | `Decoder-Transfer` | 正文 transfer evidence | `source_patch_and_retrain_required_prelaunch_pending` | 2 backbones × 3 decoder columns × 5 datasets × 4 H；120 cells | 尚无正式表 | decoder 是否可在 DLinear-style 与 PatchTST-style backbones 上 end-to-end transfer |
 | `Ablation-Sensitivity` | Appendix | `deferred_outside_current_core_closure` | random partition、scope count、$\lambda$ sensitivity | 尚无正式表 | 当前不纳入核心闭合；若恢复仅作sensitivity/robustness，canonical grouping不作为既定正向结论 |
 
@@ -74,15 +75,23 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
   原始table fragment；
 - external source contracts 不 matched，因此该表不能兑现 component effectiveness 或 decoder portability claims。
 
+### Core-Ablation
+
+- 完整性：5 variants × 5 datasets × 4 horizons = 100/100 cells；Full复用5个exact checkpoints，四个controls完成20/20 matched end-to-end runs与20个unique hashes；
+- Full macro MSE/MAE=`0.308549/0.346278`；
+- `w/o BSCA`、`Shared Scope Projection`、`Fixed Scope (s=144)`分别通过预注册gate，Full的macro MSE收益为`2.401%`、`1.416%`、`1.796%`；
+- `w/o Target-Adaptive Allocation`未通过：Full macro MSE反而高`0.039%`，dataset/horizon MSE wins仅`2/5`与`0/4`；
+- 因此证据状态是3/4 controls通过的`performance_partial_pass`，不得写成“all core components are effective”；
+- canonical audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/result_and_table_audit.md`；standalone LaTeX=`table/table_iscf_bsca_core_ablation_standalone.tex`；review PDF=`output/pdf/iscf_bsca_core_ablation_20260814.pdf`。
+
 ## 5. 尚未完成表格的最小闭合顺序
 
-1. `Core-Ablation`：五个variants已由author固定为Full、w/o BSCA、w/o Target-Adaptive Allocation、Shared Scope Projection与Fixed Scope ($s=144$)。`w/o BSCA`必须仅保留Uniform-Prefix Forecasting Loss，并同时移除Scope-Wise Forecasting Loss与Allocation-Balance Regularizer；因此旧ISCF-EQUAL不再视为该control。当前仅Full的20 cells可直接复用，其余80 cells仍须完成exact implementation、预算和prelaunch audit。Fixed Scope不做best-scope search，也不增加balance-only control。
-2. `Decoder-Transfer`：冻结 DLinear-style 与 PatchTST-style 的 backbone-specific profiles，并完成30 checkpoints / 120 cells；frozen replacement 只可作为 diagnostic。
-3. `Efficiency`：在所比较 checkpoints 全部冻结后，再冻结同机 profiler、warm-up/repetition 和统计规则；避免先测后选 baseline subset。
+1. `Decoder-Transfer`：冻结 DLinear-style 与 PatchTST-style 的 backbone-specific profiles，并完成30 checkpoints / 120 cells；frozen replacement 只可作为 diagnostic。
+2. `Efficiency`：在所比较 checkpoints 全部冻结后，再冻结同机 profiler、warm-up/repetition 和统计规则；避免先测后选 baseline subset。
+3. `Figure 5`：冻结Scope Probability、aggregate utilization、regional preference/error与illustrative trajectory的统计和selection contract；不得用该图补救allocation control的failed effectiveness。
 4. `Ablation-Sensitivity`：当前deferred，不属于正文核心闭合；若后续恢复，须单独冻结Appendix grid且不得因已见结果选择性扩张。
 
-以上新实验仍分别需要 local protocol patch、remote training 与 formal test 的分级授权；
-本次表格整理不新增任何实验授权。
+以上未完成实验仍分别需要独立prelaunch与相应授权；Core-Ablation scope已闭合，不自动追加seeds、control或allocation redesign。
 
 ## 6. 不作为论文表的现有材料
 

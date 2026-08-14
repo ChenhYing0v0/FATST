@@ -1,0 +1,57 @@
+{
+  "all_four_controls_pass": false,
+  "candidate_version": "ISCF-BSCA-v1-core-ablation-20260814",
+  "cell_count": 100,
+  "checkpoint_count": 25,
+  "decision": "performance_partial_pass_or_failed_control; limit claims to passing controls",
+  "gate_rows": [
+    {
+      "cell_mae_wins": 18,
+      "cell_mse_wins": 17,
+      "control_id": "without_bsca_prefix_loss_only",
+      "control_label": "w/o BSCA",
+      "dataset_mse_wins": 4,
+      "full_vs_control_macro_mae_gain_percent": 1.972431865343797,
+      "full_vs_control_macro_mse_gain_percent": 2.40059364900442,
+      "gate_pass": true,
+      "horizon_mse_wins": 4
+    },
+    {
+      "cell_mae_wins": 10,
+      "cell_mse_wins": 8,
+      "control_id": "without_target_adaptive_allocation",
+      "control_label": "w/o Target-Adaptive Allocation",
+      "dataset_mse_wins": 2,
+      "full_vs_control_macro_mae_gain_percent": 0.0007552623838970401,
+      "full_vs_control_macro_mse_gain_percent": -0.03903138138174725,
+      "gate_pass": false,
+      "horizon_mse_wins": 0
+    },
+    {
+      "cell_mae_wins": 15,
+      "cell_mse_wins": 14,
+      "control_id": "shared_scope_projection",
+      "control_label": "Shared Scope Projection",
+      "dataset_mse_wins": 3,
+      "full_vs_control_macro_mae_gain_percent": 1.2270966019594913,
+      "full_vs_control_macro_mse_gain_percent": 1.4164857022511006,
+      "gate_pass": true,
+      "horizon_mse_wins": 4
+    },
+    {
+      "cell_mae_wins": 20,
+      "cell_mse_wins": 16,
+      "control_id": "fixed_scope_s144",
+      "control_label": "Fixed Scope ($s=144$)",
+      "dataset_mse_wins": 5,
+      "full_vs_control_macro_mae_gain_percent": 1.038260627389003,
+      "full_vs_control_macro_mse_gain_percent": 1.795977741575741,
+      "gate_pass": true,
+      "horizon_mse_wins": 4
+    }
+  ],
+  "generated_at": "2026-08-14T15:04:10.965074+08:00",
+  "matrix_complete": true,
+  "protocol_sha256": "36e8ea1ea45a62e7698cd122b27f076cc9492e9f0973d7560291dd8bd91b7f40",
+  "training_manifest_sha256": "0fb24236aaa7b1ef2fb9fe13aebfd0947428abdb3351fab0a9744c79c45a139c"
+}

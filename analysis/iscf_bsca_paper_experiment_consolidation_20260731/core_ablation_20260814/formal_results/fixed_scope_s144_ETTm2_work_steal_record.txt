@@ -1,0 +1,5 @@
+manual_work_steal_start=2026-08-14T14:49:24+08:00
+commit=b3526e5d49eac67c8b18a3a52d2f1f99d0b11130
+gpu=0 dataset=ETTm2 arm=fixed_scope_s144
+manual_validation_replay_done=2026-08-14T15:00:36+08:00
+checkpoint_sha256=647ab9284b1a2b5eba41934a00a75ca6add1d583f9a7f7b432595b7768b2a4f2

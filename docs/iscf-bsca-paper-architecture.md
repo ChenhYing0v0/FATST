@@ -1539,13 +1539,15 @@ training或formal test。
 
 | Variant | Frozen intervention | MSE | MAE |
 | --- | --- | ---: | ---: |
-| Full ISCF-BSCA | complete architecture and objective |  |  |
-| w/o BSCA | retain Uniform-Prefix Forecasting Loss；remove Scope-Wise Forecasting Loss and Allocation-Balance Regularizer |  |  |
-| w/o Target-Adaptive Allocation | replace learned Scope Probabilities with a matched non-adaptive fusion rule |  |  |
-| Shared Scope Projection | replace scope-specific projections with one shared projection |  |  |
-| Fixed Scope ($s=144$) | use only the preregistered middle scope；do not search for a best fixed scope |  |  |
+| Full ISCF-BSCA | complete architecture and objective | 0.3085 | 0.3463 |
+| w/o BSCA | retain Uniform-Prefix Forecasting Loss；remove Scope-Wise Forecasting Loss and Allocation-Balance Regularizer | 0.3161 | 0.3532 |
+| w/o Target-Adaptive Allocation | replace learned Scope Probabilities with a matched non-adaptive fusion rule | 0.3084 | 0.3463 |
+| Shared Scope Projection | replace scope-specific projections with one shared projection | 0.3130 | 0.3506 |
+| Fixed Scope ($s=144$) | use only the preregistered middle scope；do not search for a best fixed scope | 0.3142 | 0.3499 |
 
 不为Allocation-Balance Regularizer设置单独对照。Fixed Scope的$s=144$是budget-aware preregistered control，不是validation-selected optimum。random partition、scope count与$\lambda$ sensitivity仅在后续确有必要且获得独立授权时进入Appendix；当前不把它们纳入核心闭合矩阵。
+
+2026-08-14的single-seed matched formal matrix已100/100 cells闭合。Full相对`w/o BSCA`、`Shared Scope Projection`与`Fixed Scope ($s=144$)`分别取得2.401%、1.416%和1.796%的macro MSE收益并通过预注册gate；相对`w/o Target-Adaptive Allocation`的macro MSE收益为-0.039%，该control失败。因此只能支持BSCA objective、scope-specific projections与multi-scope design，不能声称learned Target-Adaptive Allocation相对equal fusion具有独立accuracy增益，也不能将完整component chain标为all-pass。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/result_and_table_audit.md`。
 
 ### 8.6 Forecast Consistency and Scope-Allocation Behavior
 
@@ -1806,3 +1808,4 @@ Coverage boundary：
 | 2026-08-10 | Section 2 v0.2 temporary freeze | 2.3 opening改为`Beyond shallow output projections`，移除`A smaller body of work`的数量判断 | Author确认其余内容；Section 2正文、结构、citations与claim boundaries暂时冻结；next manuscript section pending direction；experiment cursor不变 |
 | 2026-08-11 | Sections 5--7 structural design v0.1 | 基于frozen Sections 1--4、table registry与claim boundaries设计Experiments、Discussion、Conclusion及Appendix evidence ladder | 新增独立设计稿；standalone Discussion、case-study routing与5.6 split/merge均pending author discussion；不填result prose、不改实验授权 |
 | 2026-08-12 | Sections 5--7 structural design v0.2 temporary freeze | Author确认七章结构与standalone Discussion；Core-Ablation固定为Full、w/o BSCA、w/o Target-Adaptive Allocation、Shared Scope Projection与Fixed Scope $s=144$；qualitative并入5.6 | 不设balance-only或failure-case；realized allocation value移出当前计划；performance-selected example必须披露selection；不新增实验授权 |
+| 2026-08-14 | Core-Ablation formal closure | 5 variants × 5 datasets × 4 H的100-cell matched formal matrix完成；20新checkpoints hashes immutable | 3/4 controls通过；Target-Adaptive Allocation control失败；component claim收窄，table/PDF/hash冻结 |

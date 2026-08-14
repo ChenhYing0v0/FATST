@@ -74,7 +74,7 @@ def build_table(config: dict[str, Any], results_dir: Path) -> str:
     lines = [
         "\\begin{table*}[t]",
         "\\centering",
-        "\\caption{Core ablation of ISCF-BSCA. Each dataset entry is the mean over prediction horizons $H\\in\\{96,192,336,720\\}$. Lower is better. Best and second-best results are shown in bold and underlined, respectively.}",
+        "\\caption{Core ablation of ISCF-BSCA. Each dataset entry is the mean over prediction horizons $H\\in\\{96,192,336,720\\}$. Lower is better. Best and second-best results are shown in bold and underlined, respectively; rankings use unrounded values.}",
         "\\label{tab:core-ablation}",
         "\\resizebox{\\textwidth}{!}{%",
         f"\\begin{{tabular}}{{{column_spec}}}",

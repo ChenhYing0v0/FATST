@@ -1,0 +1,12 @@
+core_ablation_start=2026-08-14T14:00:34+08:00
+commit=b3526e5d49eac67c8b18a3a52d2f1f99d0b11130
+output_root=/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_core_ablation_20260814
+config_hash=36e8ea1ea45a62e7698cd122b27f076cc9492e9f0973d7560291dd8bd91b7f40
+profile_hash=80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a
+gpu_ids=0 1 2
+jobs=20
+formal_test_execution_mode=0
+test_informed=true
+0, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0
+1, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0
+2, NVIDIA GeForce RTX 3090, 24576, 18, 24107, 0
