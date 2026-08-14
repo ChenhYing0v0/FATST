@@ -125,6 +125,9 @@ def latex_table(rows: list[dict[str, Any]]) -> str:
             r"one $H=720$ forward plus prefix views for one-model services and four "
             r"sequential native forwards for horizon-specific families. Inputs are "
             r"synthetic standardized tensors; no test loader or labels are accessed.}",
+            r"\parbox{\textwidth}{\footnotesize Train (GPU h) is the sum of native "
+            r"per-epoch training times recorded in the frozen logs and excludes "
+            r"validation, testing and unlogged orchestration overhead.}",
             r"\end{table*}",
             "",
         ]
