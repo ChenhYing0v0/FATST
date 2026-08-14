@@ -830,9 +830,10 @@ conclusion，提交前必须由main/ablation/transfer tables逐项兑现。**
    exact architecture attribution。Contribution 3由same-architecture objective
    control、three-seed official-test与internal health支撑。efficiency与
    transferability属于完整framework evidence，不能替代mechanism attribution。
-8. **transferability是empirical scope，不是预先成立的贡献。** 在decoder迁移
-   实验完成前，正文只写`evaluate ... decoder transferability`；若迁移结果不
-   稳定，应将其降为analysis或limitation，而不是保留正向claim。
+8. **transferability是empirical scope，不是既定贡献。** Decoder-Transfer已完成，
+   DLinear-style相对gate通过但PatchTST-style失败，因此总体cross-backbone
+   portability claim不成立。正文应把该结果写成mixed transfer evidence或
+   limitation，不得只报告DLinear block保留正向claim。
 9. **round1 author response边界。** Introduction只轻量承认少量
    varied-horizon先例，不加入conceptual comparison table，也不展开与本文native
    decoder主线无关的结构路线。当前优先事项是P4 problem-existence evidence、
@@ -1569,13 +1570,19 @@ Realized allocation value当前不纳入该节，以控制额外实验成本。Q
 
 | Backbone | Original Decoder | + ISCF | + ISCF-BSCA |
 | --- | ---: | ---: | ---: |
-| DLinear-style |  |  |  |
-| PatchTST-style |  |  |  |
+| DLinear-style | .478/.433 | .427/.407 | .403/.397 |
+| PatchTST-style | .310/.344 | .317/.349 | .313/.344 |
 
 各backbone使用同一test-tuned原则选出的backbone-specific profile；不把
 `ISCF-BSCA-v1` ablation hyperparameters机械迁移到transfer。
 迁移实验用于判断 decoder 是否超越当前 encoder 的特定 co-adaptation，不能通过
 只替换 frozen consumer 的不公平 probe 得出方向级结论。
+
+2026-08-14 formal matrix已完成30/30 checkpoints与120/120 cells。DLinear-style
++ISCF-BSCA相对Original Decoder的macro MSE/MAE改善15.702%/8.184%，但ETTh1/ETTh2
+绝对结果存在profile/optimization风险；PatchTST-style对应变化为-0.733%/-0.062%，
+只赢2/5 dataset MSE means。因此预注册的“两个backbones都通过”gate失败。
+Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_20260814/formal_results/result_and_table_audit.md`。
 
 ## 9. Discussion
 
@@ -1810,3 +1817,4 @@ Coverage boundary：
 | 2026-08-12 | Sections 5--7 structural design v0.2 temporary freeze | Author确认七章结构与standalone Discussion；Core-Ablation固定为Full、w/o BSCA、w/o Target-Adaptive Allocation、Shared Scope Projection与Fixed Scope $s=144$；qualitative并入5.6 | 不设balance-only或failure-case；realized allocation value移出当前计划；performance-selected example必须披露selection；不新增实验授权 |
 | 2026-08-14 | Core-Ablation formal closure | 5 variants × 5 datasets × 4 H的100-cell matched formal matrix完成；20新checkpoints hashes immutable | 3/4 controls通过；Target-Adaptive Allocation control失败；component claim收窄，table/PDF/hash冻结 |
 | 2026-08-14 | Decoder-Transfer / Efficiency prelaunch | Transfer冻结30-checkpoint end-to-end matrix并通过13项local gate；Efficiency冻结5-system、35-unit、77-object profiler contract | Transfer进入manifest-gated remote Step 8；Efficiency无新训练/无test access，正式测量与training错峰 |
+| 2026-08-14 | Decoder-Transfer formal closure | 30 checkpoints、30 unique hashes、120/120 test cells；DLinear pass / PatchTST fail | 总体cross-backbone portability unsupported；正向动词撤回；Efficiency进入独占GPU execution |

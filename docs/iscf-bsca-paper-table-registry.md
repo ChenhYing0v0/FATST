@@ -50,7 +50,7 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 | `Main-I-Exchange` | Supplementary companion | `complete_limited_surface` | ISCF-BSCA / TimeAlign / QDF × Exchange × 4 H | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_h5d_bs16_lr2p4_synced_20260813/table_exchange_companion.tex` | Exchange 的部分系统背景；不能表述为完整 Main I extension |
 | `Efficiency` | 正文 supporting result | `baseline_subset_and_profiler_contract_frozen_measurement_pending` | 5 systems × 7 datasets；35 service units / 77 checkpoint objects | protocol=`configs/iscf_bsca_efficiency_protocol.json` | trained-model/storage/training/inference/CHPC trade-off；独占GPU测量完成前不作 efficiency claim |
 | `Core-Ablation` | 正文 mechanism attribution | `complete_hash_frozen_partial_attribution_3_of_4_controls` | 5 variants × 5 datasets × 4 H；100/100 cells，25 checkpoints（5 reused + 20 new） | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/table/table_iscf_bsca_core_ablation.tex` | 支持BSCA objective、scope-specific projections与multi-scope design；不支持learned Target-Adaptive Allocation相对equal fusion的独立accuracy utility |
-| `Decoder-Transfer` | 正文 transfer evidence | `source_patch_complete_local_prelaunch_pass_remote_training_authorized` | 2 backbones × 3 decoder columns × 5 datasets × 4 H；30 checkpoints / 120 cells | protocol=`configs/iscf_bsca_decoder_transfer_protocol.json` | decoder 是否可在 DLinear-style 与 PatchTST-style backbones 上 end-to-end transfer |
+| `Decoder-Transfer` | 正文 transfer evidence | `complete_hash_frozen_cross_backbone_portability_gate_failed` | 2 backbones × 3 decoder columns × 5 datasets × 4 H；30 checkpoints / 120/120 cells | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_20260814/formal_results/table/table_iscf_bsca_decoder_transfer.tex` | DLinear-style相对gate通过但PatchTST-style失败，因此不支持总体cross-backbone portability claim |
 | `Ablation-Sensitivity` | Appendix | `deferred_outside_current_core_closure` | random partition、scope count、$\lambda$ sensitivity | 尚无正式表 | 当前不纳入核心闭合；若恢复仅作sensitivity/robustness，canonical grouping不作为既定正向结论 |
 
 ## 4. 已完成主表结果摘要
@@ -84,12 +84,20 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 - 因此证据状态是3/4 controls通过的`performance_partial_pass`，不得写成“all core components are effective”；
 - canonical audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/result_and_table_audit.md`；standalone LaTeX=`table/table_iscf_bsca_core_ablation_standalone.tex`；review PDF=`output/pdf/iscf_bsca_core_ablation_20260814.pdf`。
 
+### Decoder-Transfer
+
+- 完整性：30/30 from-scratch end-to-end checkpoints、30 unique immutable hashes、120/120 official-test cells；
+- DLinear-style中+ISCF-BSCA相对Original Decoder的macro MSE/MAE改善`15.702%/8.184%`，赢4/5 dataset MSE means，预注册gate通过；
+- PatchTST-style中+ISCF-BSCA相对Original Decoder为`-0.733%/-0.062%`，只赢2/5 dataset MSE means，预注册gate失败；
+- +ISCF-BSCA相对+ISCF在PatchTST-style改善1.385% MSE并赢16/20 MSE cells，但仍未超过Original Decoder，不能转写为decoder portability；
+- DLinear-style的ETTh1/ETTh2绝对结果存在profile/optimization风险，其正向相对gate只作限定证据；
+- canonical audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_20260814/formal_results/result_and_table_audit.md`；review PDF=`output/pdf/iscf_bsca_decoder_transfer_20260814.pdf`。
+
 ## 5. 尚未完成表格的最小闭合顺序
 
-1. `Decoder-Transfer`：profiles、source patch与13项local prelaunch已冻结/通过；下一步完成30 checkpoints manifest与120 formal cells；frozen replacement 只可作为 diagnostic。
-2. `Efficiency`：5-system subset与同机profiler contract已冻结；下一步先冻结77-object hash manifest，再在独占RTX 3090完成35 service units，禁止与transfer training同卡并发。
-3. `Figure 5`：冻结Scope Probability、aggregate utilization、regional preference/error与illustrative trajectory的统计和selection contract；不得用该图补救allocation control的failed effectiveness。
-4. `Ablation-Sensitivity`：当前deferred，不属于正文核心闭合；若后续恢复，须单独冻结Appendix grid且不得因已见结果选择性扩张。
+1. `Efficiency`：5-system subset与同机profiler contract已冻结；下一步冻结77-object hash manifest，并在独占RTX 3090完成35 service units。
+2. `Figure 5`：冻结Scope Probability、aggregate utilization、regional preference/error与illustrative trajectory的统计和selection contract；不得用该图补救allocation control的failed effectiveness。
+3. `Ablation-Sensitivity`：当前deferred，不属于正文核心闭合；若后续恢复，须单独冻结Appendix grid且不得因已见结果选择性扩张。
 
 以上未完成实验仍分别需要独立prelaunch与相应授权；Core-Ablation scope已闭合，不自动追加seeds、control或allocation redesign。
 

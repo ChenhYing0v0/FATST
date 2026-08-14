@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## Decoder-Transfer Formal Result and Step 9--10 Decision (2026-08-14)
+
+Current cursor=`Decoder-Transfer complete -> overall portability gate fail -> paper claim narrowed; Efficiency next`。30/30 from-scratch end-to-end checkpoints、30 unique immutable hashes与120/120 official-test cells全部闭合，test前后checkpoint hash不变。DLinear-style中+ISCF-BSCA相对Original Decoder的macro MSE/MAE改善15.702%/8.184%，赢4/5 dataset MSE means，预注册gate通过；但ETTh1/ETTh2绝对结果提示`optimization_or_profile_pathology_suspected`，正向证据需保持限定。
+
+PatchTST-style中+ISCF-BSCA相对Original Decoder为-0.733%/-0.062%，只赢2/5 dataset MSE means，预注册gate失败。BSCA相对ISCF改善1.385% MSE且赢16/20 MSE cells，但仍未超过Original Decoder，因此只支持BSCA对该ISCF transfer head的局部改善，不支持decoder replacement优于native readout。Failure attribution=`hypothesis_false_for_cross_backbone_portability_in_exact_setting`；不得选择性删除PatchTST block。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_20260814/formal_results/result_and_table_audit.md`。Decision=`decoder_transfer_complete_portability_gate_not_passed`；rollback=`only_if_reopened_return_to_Step4_6_for_PatchTST_intervention_redesign`。
+
 ## Decoder-Transfer and Efficiency Step 7 Prelaunch (2026-08-14)
 
 Current cursor=`Decoder-Transfer Step 7 pass -> Step 8 authorized; Efficiency measurement queued after exclusive-GPU gate`。Transfer冻结为DLinear-style/PatchTST-style × Original/+ISCF/+ISCF-BSCA × 5 datasets × seed2021，30 checkpoints/120 cells；所有arms from scratch end-to-end，共享backbone–dataset profile并使用four-H validation selector。Source patch、tensor contract、matched initialization、exact-prefix、runner与30-job dry-run共13项local gate通过。正式test必须等待30/30 artifacts与30 unique immutable hashes。

@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | Decoder-Transfer source patch/local prelaunch已通过并授权Step 8；Efficiency subset/profiler已冻结且等待独占GPU measurement；allocation正向accuracy claim保持unsupported |
+| `active_question` | Decoder-Transfer已完成且总体portability gate失败；Efficiency subset/profiler已冻结并进入独占GPU measurement；allocation正向accuracy claim保持unsupported |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
 | `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7与Sections 5--7 v0.2 structure temporarily frozen usable；Figure 4 visual design temporarily fixed |
@@ -22,11 +22,11 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Decoder-Transfer Step 7 pass / Step 8 authorized；Efficiency Step 6--7 contract frozen；Core-Ablation Step 9--10 complete |
+| `current_11_step` | Decoder-Transfer Step 9--10 complete；Efficiency Step 8 profiler execution；Core-Ablation Step 9--10 complete |
 | `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；`ISCF-BSCA-MAIN-v1` 8 selected profiles reusable |
-| `latest_decision` | `core_ablation_complete_partial_attribution_3_of_4_controls_pass` |
+| `latest_decision` | `decoder_transfer_complete_portability_gate_not_passed` |
 | `writing_latest_decision` | `sections_5_7_v0_2_core_ablation_evidence_synced` |
-| `next_required_action` | commit-pinned remote pull、six-arm resource smoke，pass后启动30-run transfer；Efficiency先冻结77-object hash manifest，再在独占GPU错峰profiling |
+| `next_required_action` | 冻结Efficiency 77-object immutable manifest并在独占RTX3090完成35 service units；Decoder-Transfer不自动重跑或删减负block |
 | `method_training_authorized` | Decoder-Transfer 30-run training与manifest-gated single formal test已由2026-08-14请求授权；Efficiency只授权profiling，不新增训练/不访问test |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
@@ -34,16 +34,16 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Decoder-Transfer Step 7 local gate complete -> Step 8 remote execution；Efficiency profiler implementation/inventory gate |
-| `problem` | exact ISCF-BSCA的BSCA objective、allocation、projection与multi-scope components是否各自提供matched性能贡献 |
-| `existence_evidence` | 20/20 new end-to-end controls、20 unique hashes、100/100 official-test cells；Full复用exact 5-checkpoint anchor |
-| `idea` | five author-fixed variants on identical profiles, seed, selector, data, objective boundary and scorecard |
-| `theory_check` | w/o BSCA为prefix-only而非historical ISCF-EQUAL；Shared Projection capacity-matched；s144 preregistered而非best-scope search |
-| `design` | 5 datasets × four H × 5 variants；MSE/MAE；seed2021；validation four-H mean selector；end-to-end joint training |
-| `narrative_gate` | attribution按control拆分；任一control失败则禁止all-components-positive wording |
-| `effectiveness_gate` | 3/4 pass：BSCA objective、scope-specific projections、multi-scope positive；Target-Adaptive Allocation vs equal fusion fail |
-| `artifacts` | protocol=`configs/iscf_bsca_core_ablation_protocol.json`；result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/result_and_table_audit.md`；table=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/table/table_iscf_bsca_core_ablation.tex` |
-| `decision` | `core_ablation_complete_partial_attribution_3_of_4_controls_pass`；allocation claim rollback Step 4--6；no automatic extra seed/redesign |
+| `current_step` | Decoder-Transfer Step 9--10 complete；Efficiency profiler execution gate |
+| `problem` | ISCF与ISCF-BSCA decoder path能否在DLinear-style与PatchTST-style两类backbone上端到端迁移 |
+| `existence_evidence` | 30/30 checkpoints、30 unique hashes、120/120 official-test cells；DLinear gate pass / PatchTST gate fail |
+| `idea` | two source-informed matched backbones × Original/+ISCF/+ISCF-BSCA，全部from-scratch joint training |
+| `theory_check` | frozen replacement/warm-start排除；只比较matched local backbone，不冒充native external reproduction |
+| `design` | 2 backbones × 3 arms × 5 datasets × four H；seed2021；validation four-H selector |
+| `narrative_gate` | 两个backbone都通过才允许cross-backbone portability verb |
+| `effectiveness_gate` | fail：DLinear-style +15.702% MSE pass；PatchTST-style -0.733% MSE fail |
+| `artifacts` | result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_20260814/formal_results/result_and_table_audit.md`；table=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_20260814/formal_results/table/table_iscf_bsca_decoder_transfer.tex` |
+| `decision` | `decoder_transfer_complete_portability_gate_not_passed`；不自动重跑；若恢复claim则PatchTST intervention redesign回Step 4--6 |
 
 ## Exact Ablation Anchor Contract
 

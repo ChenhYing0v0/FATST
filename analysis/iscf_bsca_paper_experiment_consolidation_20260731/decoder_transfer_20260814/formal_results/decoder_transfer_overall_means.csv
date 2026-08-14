@@ -1,0 +1,7 @@
+backbone,arm_id,mean_mse,mean_mae,cell_count
+dlinear_style,dlinear_iscf,0.4269698957431399,0.4065468954493049,20
+dlinear_style,dlinear_iscf_bsca,0.402628215484435,0.3973771316332202,20
+dlinear_style,dlinear_original,0.47762736735483136,0.43279780985318206,20
+patchtst_style,patchtst_iscf,0.31689469413134386,0.3485520213799398,20
+patchtst_style,patchtst_iscf_bsca,0.3125041569750683,0.34406187700543484,20
+patchtst_style,patchtst_original,0.31022976386304024,0.34384928427803574,20

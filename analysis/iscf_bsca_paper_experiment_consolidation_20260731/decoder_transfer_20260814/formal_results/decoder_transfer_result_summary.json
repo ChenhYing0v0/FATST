@@ -1,0 +1,33 @@
+{
+  "both_backbones_pass": false,
+  "candidate_version": "ISCF-BSCA-DECODER-TRANSFER-v1",
+  "checkpoint_rows": 30,
+  "decision": "decoder_transfer_complete_portability_gate_not_passed",
+  "gates": [
+    {
+      "backbone": "dlinear_style",
+      "bsca_vs_iscf_macro_mse_gain_percent": 5.701029627940933,
+      "bsca_vs_iscf_mse_cell_wins": 8,
+      "bsca_vs_original_dataset_mse_wins": 4,
+      "bsca_vs_original_macro_mae_gain_percent": 8.184116789310375,
+      "bsca_vs_original_macro_mse_gain_percent": 15.702440227776808,
+      "bsca_vs_original_mse_cell_wins": 15,
+      "gate_pass": true,
+      "iscf_vs_original_macro_mse_gain_percent": 10.606065538547288
+    },
+    {
+      "backbone": "patchtst_style",
+      "bsca_vs_iscf_macro_mse_gain_percent": 1.3854877464296775,
+      "bsca_vs_iscf_mse_cell_wins": 16,
+      "bsca_vs_original_dataset_mse_wins": 2,
+      "bsca_vs_original_macro_mae_gain_percent": -0.06182729966865217,
+      "bsca_vs_original_macro_mse_gain_percent": -0.7331318193673173,
+      "bsca_vs_original_mse_cell_wins": 8,
+      "gate_pass": false,
+      "iscf_vs_original_macro_mse_gain_percent": -2.148385179200935
+    }
+  ],
+  "matrix_complete": true,
+  "test_cells": 120,
+  "unique_checkpoint_hashes": 30
+}

@@ -12,7 +12,7 @@
 | `scope` | Subsection functions, evidence order, table/figure placement, claim boundaries and appendix routing only |
 | `manuscript_prose` | Not drafted |
 | `experiment_change` | None; this document does not authorize implementation, remote training or formal test |
-| `evidence_snapshot` | Main-I, corrected Main-II and Core-Ablation complete; Efficiency, mechanism analysis and Decoder-Transfer remain pending under the current table registry |
+| `evidence_snapshot` | Main-I, corrected Main-II, Core-Ablation and Decoder-Transfer complete; Efficiency and mechanism analysis remain pending under the current table registry |
 | `structure_decision` | Sections 5--7 use `Experiments -> Discussion -> Conclusion`; qualitative evidence is integrated into Section 5.6 rather than assigned a standalone subsection |
 
 This document designs the argumentative architecture of the remaining manuscript. It does not fill result values, write result paragraphs or promote pending experiments to completed evidence.
