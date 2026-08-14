@@ -55,6 +55,7 @@ from utils.tools import adjust_learning_rate  # noqa: E402
 HORIZONS = [96, 192, 336, 720]
 PCC_DISABLED = "off"
 PREFIX_READOUT_MODES = {
+    "direct-unified-original",
     "learned-basis-forecast-operator",
     "stage-native-coefficient-field",
     "stage-native-coefficient-field-no-stage",
@@ -107,6 +108,7 @@ PREFIX_READOUT_MODES = {
 }
 
 STAGE_C_ACTIVE_READOUTS = {
+    "direct-unified-original",
     "learned-basis-forecast-operator",
     "pmfo-rct",
     "pmfo-rct-no-transition",
@@ -416,6 +418,7 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         device=device,
         readout_mode=args.readout_mode,
         encoder_mode=encoder_mode,
+        dlinear_moving_avg=getattr(args, "dlinear_moving_avg", 25),
         history_patch_len=getattr(args, "history_patch_len", 48),
         history_patch_stride=getattr(args, "history_patch_stride", 24),
         history_token_dropout=getattr(args, "history_token_dropout", 0.0),
@@ -525,12 +528,29 @@ def initialization_contract(model: nn.Module) -> dict[str, Any]:
     encoder = [
         parameter
         for name, parameter in named_parameters
-        if name.startswith(("patch_emb_x.", "encoder.", "norm_x."))
+        if name.startswith(
+            (
+                "patch_emb_x.",
+                "encoder.",
+                "norm_x.",
+                "history_encoder.",
+                "decomposition_encoder.",
+            )
+        )
     ]
     payload: dict[str, Any] = {
         "encoder_initialization_hash": _tensor_hash(encoder),
         "readout_mode": getattr(model, "readout_mode", ""),
     }
+    if getattr(model, "readout_mode", "") == "direct-unified-original":
+        direct = [
+            parameter
+            for name, parameter in named_parameters
+            if name.startswith(
+                ("direct_readout.", "direct_seasonal.", "direct_trend.")
+            )
+        ]
+        payload["direct_readout_initialization_hash"] = _tensor_hash(direct)
     if getattr(model, "readout_mode", "") in {
         "learned-basis-forecast-operator",
         *TimeAlign.D20_READOUTS,
@@ -888,6 +908,29 @@ def model_diagnostics(model: nn.Module) -> dict[str, Any]:
         "patch_num": int(getattr(model, "patch_num", 0)),
         "d_model": int(getattr(model, "d_model", 0)),
     }
+    if getattr(model, "readout_mode", "") == "direct-unified-original":
+        payload.update(
+            {
+                "active_forward_parameters": total_parameters,
+                "unused_proj_x_parameters": 0,
+                "inactive_or_other_parameters": 0,
+                "direct_decoder_parameters": sum(
+                    parameter.numel()
+                    for name, parameter in model.named_parameters()
+                    if name.startswith(
+                        (
+                            "direct_readout.",
+                            "direct_seasonal.",
+                            "direct_trend.",
+                        )
+                    )
+                ),
+            }
+        )
+    if hasattr(model, "decomposition_encoder"):
+        payload["dlinear_moving_average_kernel"] = int(
+            model.decomposition_encoder.kernel_size
+        )
     if getattr(model, "readout_mode", "") in {
         "learned-basis-forecast-operator",
         *TimeAlign.D20_READOUTS,
@@ -2467,6 +2510,7 @@ def parse_args() -> argparse.Namespace:
         "--encoder-mode",
         choices=[
             "raw-history-identity",
+            "dlinear-decomposition",
             "timealign-token-mlp",
             "contextual-patch-transformer",
             "global-anchored-patch-transformer",
@@ -2474,6 +2518,7 @@ def parse_args() -> argparse.Namespace:
         ],
         default="timealign-token-mlp",
     )
+    parser.add_argument("--dlinear-moving-avg", type=int, default=25)
     parser.add_argument("--history-patch-len", type=int, default=16)
     parser.add_argument("--history-patch-stride", type=int, default=8)
     parser.add_argument("--history-d-model", type=int, default=128)
@@ -2713,6 +2758,16 @@ def parse_args() -> argparse.Namespace:
                 and args.readout_mode == "grouped-mlp"
             )
             and not (
+                name == "encoder_mode"
+                and value
+                in {
+                    "dlinear-decomposition",
+                    "contextual-patch-transformer",
+                }
+                and args.protocol_profile
+                == "iscf_bsca_decoder_transfer_20260814"
+            )
+            and not (
                 name == "pred_loss_mode"
                 and value == "multi-prefix"
                 and args.protocol_profile
@@ -2773,6 +2828,8 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("history patch length and stride must be positive")
     if args.history_patch_len > args.seq_len + args.history_patch_stride:
         raise ValueError("history patch length cannot exceed padded sequence length")
+    if args.dlinear_moving_avg <= 0 or args.dlinear_moving_avg % 2 == 0:
+        raise ValueError("dlinear moving average must be positive and odd")
     if args.history_d_model <= 0 or args.history_n_heads <= 0:
         raise ValueError("history d_model and n_heads must be positive")
     if args.history_d_model % args.history_n_heads != 0:
@@ -3046,13 +3103,28 @@ def parse_args() -> argparse.Namespace:
         "contextual-patch-transformer",
         "global-anchored-patch-transformer",
     }:
-        if args.readout_mode != "learned-basis-forecast-operator":
+        if args.readout_mode not in {
+            "learned-basis-forecast-operator",
+            "direct-unified-original",
+            "siff-independent-scope-control",
+        }:
             raise ValueError(
                 "contextual patch encoders currently require "
-                "readout-mode=learned-basis-forecast-operator"
+                "the learned-basis or frozen transfer readouts"
             )
         if args.mode != "unified" or args.pred_len != 720:
             raise ValueError("contextual patch encoders require unified A6-LBF")
+    if args.encoder_mode == "dlinear-decomposition":
+        if args.readout_mode not in {
+            "direct-unified-original",
+            "siff-independent-scope-control",
+        }:
+            raise ValueError(
+                "dlinear decomposition transfer supports only the frozen "
+                "Original or ISCF decoder arms"
+            )
+        if args.mode != "unified" or args.pred_len != 720:
+            raise ValueError("dlinear transfer requires unified pred_len=720")
     if args.encoder_mode == "hierarchical-patch-memory":
         if args.readout_mode != "learned-basis-forecast-operator":
             raise ValueError(

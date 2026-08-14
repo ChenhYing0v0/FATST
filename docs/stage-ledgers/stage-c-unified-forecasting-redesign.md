@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | Core-Ablation已100/100闭合且3/4 controls通过；下一步按独立授权冻结Figure 5、Decoder-Transfer或Efficiency prelaunch，allocation正向accuracy claim保持unsupported |
+| `active_question` | Decoder-Transfer source patch/local prelaunch已通过并授权Step 8；Efficiency subset/profiler已冻结且等待独占GPU measurement；allocation正向accuracy claim保持unsupported |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
 | `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7与Sections 5--7 v0.2 structure temporarily frozen usable；Figure 4 visual design temporarily fixed |
@@ -22,19 +22,19 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper consolidation；Core-Ablation Step 9--10 complete；writing=Sections 5--7 evidence sync |
+| `current_11_step` | Decoder-Transfer Step 7 pass / Step 8 authorized；Efficiency Step 6--7 contract frozen；Core-Ablation Step 9--10 complete |
 | `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；`ISCF-BSCA-MAIN-v1` 8 selected profiles reusable |
 | `latest_decision` | `core_ablation_complete_partial_attribution_3_of_4_controls_pass` |
 | `writing_latest_decision` | `sections_5_7_v0_2_core_ablation_evidence_synced` |
-| `next_required_action` | Core-Ablation不追加seeds/controls；按作者方向冻结Decoder-Transfer、Efficiency或Figure 5独立prelaunch |
-| `method_training_authorized` | completed-scope only；Core-Ablation授权已消费并闭合；新的transfer/efficiency/diagnostic training或formal test尚未授权 |
+| `next_required_action` | commit-pinned remote pull、six-arm resource smoke，pass后启动30-run transfer；Efficiency先冻结77-object hash manifest，再在独占GPU错峰profiling |
+| `method_training_authorized` | Decoder-Transfer 30-run training与manifest-gated single formal test已由2026-08-14请求授权；Efficiency只授权profiling，不新增训练/不访问test |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
 ## 11-Step Record
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Core-Ablation Step 9 formal scorecard complete -> Step 10 partial attribution decision |
+| `current_step` | Decoder-Transfer Step 7 local gate complete -> Step 8 remote execution；Efficiency profiler implementation/inventory gate |
 | `problem` | exact ISCF-BSCA的BSCA objective、allocation、projection与multi-scope components是否各自提供matched性能贡献 |
 | `existence_evidence` | 20/20 new end-to-end controls、20 unique hashes、100/100 official-test cells；Full复用exact 5-checkpoint anchor |
 | `idea` | five author-fixed variants on identical profiles, seed, selector, data, objective boundary and scorecard |

@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "protocol_id": "ISCF-BSCA-EFFICIENCY-20260814",
+  "status": "authorized_profiler_preparation_checkpoint_inventory_verified_measurement_queued",
+  "current_step": 7,
+  "datasets": ["ETTm1", "ETTm2", "ETTh1", "ETTh2", "Weather", "ECL", "Solar"],
+  "horizons": [96, 192, 336, 720],
+  "systems": [
+    {"id": "ISCF-BSCA", "service_role": "one_model_native_unified", "models_per_dataset": 1, "checkpoint_objects": 7, "chpc": "architectural_guarantee"},
+    {"id": "TimeAlign", "service_role": "four_horizon_specific_models", "models_per_dataset": 4, "checkpoint_objects": 28, "chpc": "no_guarantee"},
+    {"id": "QDF", "service_role": "four_horizon_specific_models", "models_per_dataset": 4, "checkpoint_objects": 28, "chpc": "no_guarantee"},
+    {"id": "DLinear-H720-prefix", "service_role": "one_model_full_forecast_then_prefix_views", "models_per_dataset": 1, "checkpoint_objects": 7, "chpc": "service_protocol_guarantee"},
+    {"id": "PatchTST-H720-prefix", "service_role": "one_model_full_forecast_then_prefix_views", "models_per_dataset": 1, "checkpoint_objects": 7, "chpc": "service_protocol_guarantee"}
+  ],
+  "matrix": {"service_units": 35, "checkpoint_objects": 77, "new_training_runs": 0, "formal_test_accesses": 0, "partial_reporting_allowed": false},
+  "checkpoint_roots": {
+    "ISCF-BSCA": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_main_v1_hpo",
+    "TimeAlign_primary": "/home/yingch/exp_outputs/r-2026-fatst/timealign_official_reproduction/main_i_8dataset_20260806",
+    "TimeAlign_ettm2_weather": "/home/yingch/exp_outputs/r-2026-fatst/timealign_official_reproduction/ettm2_weather_20260804",
+    "QDF": "/home/yingch/exp_outputs/r-2026-fatst/qdf_main_i_seq336_20260806",
+    "DLinear-H720-prefix": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_h720_prefix_20260808/training",
+    "PatchTST-H720-prefix": "/home/yingch/exp_outputs/r-2026-fatst/main_ii_h720_prefix_20260808/training"
+  },
+  "checkpoint_inventory": {
+    "verified_at": "2026-08-14",
+    "verified_read_only": true,
+    "available_objects": 77,
+    "required_objects": 77,
+    "hash_manifest_required_before_measurement": true,
+    "main_ii_source_manifest": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/formal_results/formal_job_manifest.json"
+  },
+  "profiler": {
+    "hardware": "one exclusive NVIDIA GeForce RTX 3090",
+    "software_environment": "remote conda env moe with each frozen native workspace",
+    "precision": "fp32",
+    "batch_size": 1,
+    "input": "synthetic standardized tensor with dataset-specific channel count and checkpoint-specific lookback",
+    "test_loader_or_labels_allowed": false,
+    "inference_context": "torch.inference_mode",
+    "timing": "CUDA events with synchronize before and after each timed round",
+    "warmup_iterations": 30,
+    "timed_rounds": 5,
+    "iterations_per_round": 100,
+    "unit_statistic": "median_of_five_round_means",
+    "uncertainty": ["p95_iteration_latency", "coefficient_of_variation_across_rounds"],
+    "dataset_aggregation": "arithmetic_macro_mean_over_all_seven_datasets",
+    "single_request_latency": "arithmetic_mean_of_the_four_horizon_request_latencies",
+    "all_horizon_service_latency": {
+      "ISCF-BSCA": "one_H720_forward_then_four_prefix_views",
+      "DLinear-H720-prefix": "one_H720_forward_then_four_prefix_views",
+      "PatchTST-H720-prefix": "one_H720_forward_then_four_prefix_views",
+      "TimeAlign": "sequential_native_H96_H192_H336_H720_forwards",
+      "QDF": "sequential_native_H96_H192_H336_H720_forwards"
+    },
+    "peak_memory": "fresh_process_total_peak_including_resident_model_weights_for_all_horizon_service",
+    "appendix_memory": "incremental_activation_peak_after_model_load",
+    "concurrency": "no_decoder_transfer_or_other_GPU_work_on_the_profiled_GPU"
+  },
+  "reported_metrics": ["trained_model_count", "total_stored_parameters", "actual_checkpoint_bytes", "training_gpu_hours", "single_request_latency_ms", "all_horizon_service_latency_ms", "peak_inference_memory_mib", "CHPC_guarantee"],
+  "training_time_contract": "reuse_complete_native_training_logs; never estimate missing time from another system",
+  "parameter_contract": "deployed_inference_parameters_only; exclude_QDF_train_only_learned_loss",
+  "gates": {
+    "all_77_checkpoint_hashes_frozen": true,
+    "all_35_service_units_measured": true,
+    "exclusive_gpu_required": true,
+    "no_test_data_access": true,
+    "nonfinite_or_CV_above_0p10_requires_remeasurement": true,
+    "baseline_subset_cannot_change_after_measurement": true
+  },
+  "rollback": {
+    "missing_checkpoint_or_training_time": "mark_the_entire_system_incomplete_and_block_primary_table_instead_of_imputing",
+    "profiler_instability": "repeat_the_full_affected_system_dataset_unit_in_a_fresh_exclusive_process",
+    "native_adapter_failure": "patch_only_the_runtime_adapter_and_remeasure_all_units_for_that_system"
+  },
+  "authorization": {
+    "user_authorization": "2026-08-14 explicit request to execute Decoder-Transfer and Efficiency experiments according to the frozen Sections 5-7 plan",
+    "user_authorized": true,
+    "authorization_date": "2026-08-14",
+    "remote_profiling_authorized": true,
+    "remote_training_authorized": false,
+    "formal_test_access_authorized": false
+  },
+  "claim_boundary": "deployment_cost_comparison_under_one_frozen_RTX3090_profiler; current_ISCF_full_domain_materialization_is_measured_as_implemented; no_prefix_bounded_speedup_claim"
+}

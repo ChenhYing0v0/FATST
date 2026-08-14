@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | paper consolidation；Core-Ablation Step 9--10 complete；HPO paused |
+| `current_11_step` | paper consolidation；Decoder-Transfer Step 7 local prelaunch pass / Step 8 authorized；Efficiency profiler contract frozen |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,7 +18,9 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；`ISCF-BSCA-v1` Core-Ablation 100/100 complete且3/4 controls pass；Target-Adaptive Allocation独立accuracy claim不受支持；transfer仍pending |
+| `paper_core_status` | architecture family frozen；Core-Ablation 3/4 controls pass；Decoder-Transfer 30-checkpoint end-to-end matrix authorized；Efficiency 35-unit measurement pending；allocation独立accuracy claim仍unsupported |
+
+[Decoder-Transfer and Efficiency Prelaunch, 2026-08-14] 用户授权同步推进Section 5.7 Decoder-Transfer与Section 5.4 Efficiency。Transfer冻结DLinear-style/PatchTST-style × Original/+ISCF/+ISCF-BSCA × 5 datasets × seed2021=`30 checkpoints/120 cells`，全部from-scratch end-to-end、four-H validation selector；13项local prelaunch通过，formal test受30/30 immutable manifest gate约束。Efficiency在新结果前冻结为ISCF-BSCA、TimeAlign、QDF、DLinear-H720-prefix、PatchTST-H720-prefix，7 datasets=`35 service units/77 checkpoint objects`，无新训练/无test access；latency/memory必须在独占RTX 3090上与transfer错峰测量。Decision=`decoder_transfer_step7_pass_step8_authorized_efficiency_contract_frozen`。
 
 [Core-Ablation Formal Closure, 2026-08-14] 用户授权按frozen Sections 5--7推进完整Core-Ablation。Exact matrix完成5 variants × 5 datasets × 4 H=`100/100` cells；Full复用5个exact checkpoints，四个controls完成20/20 end-to-end training与20个unique immutable hashes。Full macro MSE/MAE=`0.308549/0.346278`。`w/o BSCA`、`Shared Scope Projection`、`Fixed Scope (s=144)`三项通过预注册gate；`w/o Target-Adaptive Allocation`失败，Full macro MSE反而高0.039%，horizon MSE wins=`0/4`。因此只支持BSCA objective、scope-specific projections与multi-scope design，不能声称all components或learned allocation优于equal fusion。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/result_and_table_audit.md`。Decision=`core_ablation_complete_partial_attribution_3_of_4_controls_pass`。
 

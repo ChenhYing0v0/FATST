@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "protocol_id": "ISCF-BSCA-DECODER-TRANSFER-20260814",
+  "candidate_version": "ISCF-BSCA-DECODER-TRANSFER-v1",
+  "status": "authorized_prelaunch",
+  "current_step": 7,
+  "problem": "test whether the ISCF and BSCA decoder path remains useful under two source-informed forecasting backbones",
+  "datasets": ["ETTm1", "ETTm2", "ETTh1", "ETTh2", "Weather"],
+  "seeds": [2021],
+  "coupling_scales": [1, 48, 144, 360, 720],
+  "profiles": {
+    "path": "configs/iscf_bsca_decoder_transfer_profiles.json",
+    "sha256": "3a0b8864f1389ebb1346bebe0954b3fa7466b1ae8b054de597f263b8089c95ec"
+  },
+  "backbones": [
+    {
+      "id": "dlinear_style",
+      "encoder_mode": "dlinear-decomposition",
+      "tensor_contract": "normalized_history_[B,L,C]_to_seasonal_trend_memory_[B,C,2,L]",
+      "source_role": "source_informed_local_matched_backbone"
+    },
+    {
+      "id": "patchtst_style",
+      "encoder_mode": "contextual-patch-transformer",
+      "tensor_contract": "normalized_history_[B,L,C]_to_channel_independent_patch_memory_[B,C,P,D]",
+      "source_role": "source_informed_local_matched_backbone"
+    }
+  ],
+  "arms": [
+    {"id": "dlinear_original", "backbone": "dlinear_style", "column": "Original Decoder", "readout_mode": "direct-unified-original", "policy_mode": "direct", "objective_mode": "measure_only"},
+    {"id": "dlinear_iscf", "backbone": "dlinear_style", "column": "+ISCF", "readout_mode": "siff-independent-scope-control", "policy_mode": "direct", "objective_mode": "measure_only"},
+    {"id": "dlinear_iscf_bsca", "backbone": "dlinear_style", "column": "+ISCF-BSCA", "readout_mode": "siff-independent-scope-control", "policy_mode": "direct", "objective_mode": "equal_uniform_scope_anchor"},
+    {"id": "patchtst_original", "backbone": "patchtst_style", "column": "Original Decoder", "readout_mode": "direct-unified-original", "policy_mode": "direct", "objective_mode": "measure_only"},
+    {"id": "patchtst_iscf", "backbone": "patchtst_style", "column": "+ISCF", "readout_mode": "siff-independent-scope-control", "policy_mode": "direct", "objective_mode": "measure_only"},
+    {"id": "patchtst_iscf_bsca", "backbone": "patchtst_style", "column": "+ISCF-BSCA", "readout_mode": "siff-independent-scope-control", "policy_mode": "direct", "objective_mode": "equal_uniform_scope_anchor"}
+  ],
+  "matched_ranks": {"ETTm1": 116, "ETTm2": 106, "ETTh1": 109, "ETTh2": 116, "Weather": 116},
+  "matrix": {
+    "expected_runs": 30,
+    "new_training_runs": 30,
+    "expected_checkpoint_hashes": 30,
+    "horizons": [96, 192, 336, 720],
+    "metrics": ["mse", "mae"],
+    "test_cells": 120,
+    "full_matrix_required": true,
+    "partial_reporting_allowed": false
+  },
+  "training_contracts": [
+    {"target_horizons": [720], "validation_horizons": [96, 192, 336, 720], "pred_loss_mode": "full", "pcc_objective_mode": "measure_only", "training_final_evaluation_split": "val"},
+    {"target_horizons": [720], "validation_horizons": [96, 192, 336, 720], "pred_loss_mode": "full", "pcc_objective_mode": "equal_uniform_scope_anchor", "training_final_evaluation_split": "val"}
+  ],
+  "training": {
+    "from_scratch": true,
+    "joint_encoder_decoder": true,
+    "seq_len": 336,
+    "target_horizons": [720],
+    "validation_horizons": [96, 192, 336, 720],
+    "checkpoint_score": "mean_validation_mse_h96_h192_h336_h720",
+    "checkpoint_policy": "best-val",
+    "pred_loss_mode": "full",
+    "optimizer": "AdamW",
+    "profile_shared_across_three_decoder_arms_within_backbone_dataset": true,
+    "hyperparameter_search_inside_transfer_matrix": false,
+    "frozen_replacement_or_warm_start": false,
+    "test_labels_select_epoch_checkpoint_or_seed": false,
+    "training_final_evaluation_split": "val"
+  },
+  "checkpoint_selection_contract": "best-validation-mean-mse-h96-h192-h336-h720",
+  "artifact_contract": {
+    "remote_output_root": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_decoder_transfer_20260814",
+    "training_manifest": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_decoder_transfer_20260814/immutable_training_manifest.json",
+    "local_analysis_root": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_20260814",
+    "checkpoint_file": "checkpoint.pt",
+    "training_required_files": ["checkpoint.pt", "training_log.csv", "metrics_by_target_horizon.csv", "effective_config.json", "initialization_contract.json", "model_diagnostics.json", "pcsd_validation_diagnostics.npz", "trained_invariants.json"],
+    "formal_test_required_files": ["test_audit_metrics_by_target_horizon.csv", "test_audit_invariants.json", "pcsd_test_audit_diagnostics.npz"]
+  },
+  "diagnostic_protocol": {
+    "probe_rows": 64,
+    "future_bins": [
+      {"name": "H1_48", "start": 0, "end": 48},
+      {"name": "H49_96", "start": 48, "end": 96},
+      {"name": "H97_144", "start": 96, "end": 144},
+      {"name": "H145_192", "start": 144, "end": 192},
+      {"name": "H193_288", "start": 192, "end": 288},
+      {"name": "H289_336", "start": 288, "end": 336},
+      {"name": "H337_512", "start": 336, "end": 512},
+      {"name": "H513_720", "start": 512, "end": 720}
+    ]
+  },
+  "launch_order": [
+    ["patchtst_style", "Weather", "patchtst_iscf_bsca"], ["patchtst_style", "ETTm1", "patchtst_iscf_bsca"], ["patchtst_style", "ETTm2", "patchtst_iscf_bsca"],
+    ["patchtst_style", "Weather", "patchtst_iscf"], ["patchtst_style", "ETTm1", "patchtst_iscf"], ["patchtst_style", "ETTm2", "patchtst_iscf"],
+    ["patchtst_style", "Weather", "patchtst_original"], ["patchtst_style", "ETTm1", "patchtst_original"], ["patchtst_style", "ETTm2", "patchtst_original"],
+    ["patchtst_style", "ETTh1", "patchtst_iscf_bsca"], ["patchtst_style", "ETTh2", "patchtst_iscf_bsca"], ["patchtst_style", "ETTh1", "patchtst_iscf"],
+    ["patchtst_style", "ETTh2", "patchtst_iscf"], ["patchtst_style", "ETTh1", "patchtst_original"], ["patchtst_style", "ETTh2", "patchtst_original"],
+    ["dlinear_style", "Weather", "dlinear_iscf_bsca"], ["dlinear_style", "ETTm1", "dlinear_iscf_bsca"], ["dlinear_style", "ETTm2", "dlinear_iscf_bsca"],
+    ["dlinear_style", "ETTh1", "dlinear_iscf_bsca"], ["dlinear_style", "ETTh2", "dlinear_iscf_bsca"], ["dlinear_style", "Weather", "dlinear_iscf"],
+    ["dlinear_style", "ETTm1", "dlinear_iscf"], ["dlinear_style", "ETTm2", "dlinear_iscf"], ["dlinear_style", "ETTh1", "dlinear_iscf"],
+    ["dlinear_style", "ETTh2", "dlinear_iscf"], ["dlinear_style", "Weather", "dlinear_original"], ["dlinear_style", "ETTm1", "dlinear_original"],
+    ["dlinear_style", "ETTm2", "dlinear_original"], ["dlinear_style", "ETTh1", "dlinear_original"], ["dlinear_style", "ETTh2", "dlinear_original"]
+  ],
+  "gates": {
+    "training_runs_required": 30,
+    "unique_checkpoint_hashes_required": 30,
+    "checkpoint_nonmutation_required": true,
+    "all_120_cells_reported": true,
+    "numeric_health_required": true,
+    "per_backbone_bsca_vs_original_macro_mse_gain_percent_min_exclusive": 0.0,
+    "per_backbone_bsca_vs_original_macro_mae_gain_percent_min_exclusive": 0.0,
+    "per_backbone_bsca_vs_original_dataset_mse_wins_min": 3,
+    "both_backbones_must_pass_for_decoder_portability_claim": true,
+    "bsca_vs_iscf_reported_separately": true
+  },
+  "rollback": {
+    "resource_or_numeric_failure": "stop_before_formal_test_and_return_to_stable_shared_backbone_profile_design",
+    "one_backbone_negative": "limit_transfer_claim_to_the_passing_backbone_and_report_the_negative_block",
+    "both_backbones_negative": "reject_decoder_portability_claim_without_rejecting_the_exact_main_backbone_result",
+    "bsca_negative_but_iscf_positive": "support_ISCF_decoder_transfer_only_and_do_not_claim_BSCA_portability"
+  },
+  "authorization": {
+    "user_authorization": "2026-08-14 explicit request to execute Decoder-Transfer and Efficiency experiments according to the frozen Sections 5-7 plan",
+    "user_authorized": true,
+    "authorization_date": "2026-08-14",
+    "remote_training_authorized": true,
+    "formal_test_access_authorized": true,
+    "formal_test_access_count_for_version": 1,
+    "checkpoint_retraining_allowed": true,
+    "checkpoint_retrained_before_test": true,
+    "reused_control_protocol_profiles": [],
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+    "checkpoint_mutation_during_test_allowed": false,
+    "per_dataset_horizon_or_cell_tuning_allowed": false,
+    "test_role": "primary-mechanism-effectiveness-and-paper-benchmark"
+  },
+  "claim_boundary": "end_to_end_local_transfer_attribution_only; source_informed_backbones_are_not_native_external_baseline_reproductions; no_portability_claim_until_both_complete_blocks_pass"
+}

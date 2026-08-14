@@ -1,5 +1,13 @@
 # ISCF-BSCA-v1 code explanation
 
+## 2026-08-14 Decoder-Transfer carrier extension
+
+为匹配Section 5.7的end-to-end transfer contract，`TimeAlign.Model`新增两个仅供冻结transfer protocol使用的入口。`dlinear-decomposition`把归一化历史`x [B,L,C]`经kernel-25 moving average拆为seasonal/trend，并输出memory `[B,C,2,L]`；`contextual-patch-transformer`沿用既有PatchTST-derived memory `[B,C,P,D]`，但现在允许接入transfer readouts。
+
+`direct-unified-original`在DLinear memory上使用两个共享channel的`L -> 720`线性投影并求和，在PatchTST memory上flatten为`[B,C,P·D]`后使用一个`P·D -> 720`投影。ISCF与ISCF-BSCA两列把同一memory flatten为`hidden [B,C,R]`后输入`siff-independent-scope-control`。因此backbone–dataset block内encoder tensor、初始化class和训练路径一致，差别只位于decoder/objective；所有参数均jointly trainable。
+
+代码理论一致性边界：该实现检验decoder对两种source-informed representation family的可迁移性，不声称与official DLinear/PatchTST逐tensor等价。Original输出与ISCF输出都由一个H720轨迹按prefix返回，因而CHPC由实现构造保证；若两类end-to-end block不能同时通过formal gate，应收窄或撤回transfer claim，而不能用frozen replacement结果补救。
+
 ## Forward 与 shape
 
 模型 forward 与 ISCF-v0 完全相同。五个 independent scope arms 产生 `arm_forecasts:[B,C,T,5]`，direct policy 产生 `policy:[B,C,T,5]`，融合结果为 `fused_forecast:[B,T,C]`。BSCA 不增加 module、parameter、requested-H input 或 inference operation。

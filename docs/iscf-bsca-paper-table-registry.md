@@ -48,9 +48,9 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 | `Main-I` | 正文主结果 | `complete_hash_frozen_h5d_bs16_lr2p4_synced` | 14 systems × 7 datasets × 4 H；392 system–dataset–H rows | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_h5d_bs16_lr2p4_synced_20260813/table_iscf_bsca_main_i_qdf.tex` | ISCF-BSCA 与 separately optimized horizon-specific systems 的 system-level accuracy competitiveness；不作 matched mechanism attribution |
 | `Main-II` | 正文主结果 | `complete_hash_frozen_horizon_loader_reaudit` | 8 systems × 7 datasets × 4 H；224 cells，63 external checkpoint objects / 252 formal evaluations | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/formal_results/table/table_iscf_bsca_main_ii.tex` | one-model-for-all-horizons system competitiveness；不作 BSCA/decoder attribution |
 | `Main-I-Exchange` | Supplementary companion | `complete_limited_surface` | ISCF-BSCA / TimeAlign / QDF × Exchange × 4 H | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_h5d_bs16_lr2p4_synced_20260813/table_exchange_companion.tex` | Exchange 的部分系统背景；不能表述为完整 Main I extension |
-| `Efficiency` | 正文 supporting result | `measurement_pending_baseline_subset_not_yet_frozen` | 指标已定，baseline subset 与 profiler contract 待冻结 | 尚无正式表 | trained-model/storage/training/inference/CHPC trade-off；测量完成前不作 efficiency claim |
+| `Efficiency` | 正文 supporting result | `baseline_subset_and_profiler_contract_frozen_measurement_pending` | 5 systems × 7 datasets；35 service units / 77 checkpoint objects | protocol=`configs/iscf_bsca_efficiency_protocol.json` | trained-model/storage/training/inference/CHPC trade-off；独占GPU测量完成前不作 efficiency claim |
 | `Core-Ablation` | 正文 mechanism attribution | `complete_hash_frozen_partial_attribution_3_of_4_controls` | 5 variants × 5 datasets × 4 H；100/100 cells，25 checkpoints（5 reused + 20 new） | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/table/table_iscf_bsca_core_ablation.tex` | 支持BSCA objective、scope-specific projections与multi-scope design；不支持learned Target-Adaptive Allocation相对equal fusion的独立accuracy utility |
-| `Decoder-Transfer` | 正文 transfer evidence | `source_patch_and_retrain_required_prelaunch_pending` | 2 backbones × 3 decoder columns × 5 datasets × 4 H；120 cells | 尚无正式表 | decoder 是否可在 DLinear-style 与 PatchTST-style backbones 上 end-to-end transfer |
+| `Decoder-Transfer` | 正文 transfer evidence | `source_patch_complete_local_prelaunch_pass_remote_training_authorized` | 2 backbones × 3 decoder columns × 5 datasets × 4 H；30 checkpoints / 120 cells | protocol=`configs/iscf_bsca_decoder_transfer_protocol.json` | decoder 是否可在 DLinear-style 与 PatchTST-style backbones 上 end-to-end transfer |
 | `Ablation-Sensitivity` | Appendix | `deferred_outside_current_core_closure` | random partition、scope count、$\lambda$ sensitivity | 尚无正式表 | 当前不纳入核心闭合；若恢复仅作sensitivity/robustness，canonical grouping不作为既定正向结论 |
 
 ## 4. 已完成主表结果摘要
@@ -86,8 +86,8 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 
 ## 5. 尚未完成表格的最小闭合顺序
 
-1. `Decoder-Transfer`：冻结 DLinear-style 与 PatchTST-style 的 backbone-specific profiles，并完成30 checkpoints / 120 cells；frozen replacement 只可作为 diagnostic。
-2. `Efficiency`：在所比较 checkpoints 全部冻结后，再冻结同机 profiler、warm-up/repetition 和统计规则；避免先测后选 baseline subset。
+1. `Decoder-Transfer`：profiles、source patch与13项local prelaunch已冻结/通过；下一步完成30 checkpoints manifest与120 formal cells；frozen replacement 只可作为 diagnostic。
+2. `Efficiency`：5-system subset与同机profiler contract已冻结；下一步先冻结77-object hash manifest，再在独占RTX 3090完成35 service units，禁止与transfer training同卡并发。
 3. `Figure 5`：冻结Scope Probability、aggregate utilization、regional preference/error与illustrative trajectory的统计和selection contract；不得用该图补救allocation control的failed effectiveness。
 4. `Ablation-Sensitivity`：当前deferred，不属于正文核心闭合；若后续恢复，须单独冻结Appendix grid且不得因已见结果选择性扩张。
 

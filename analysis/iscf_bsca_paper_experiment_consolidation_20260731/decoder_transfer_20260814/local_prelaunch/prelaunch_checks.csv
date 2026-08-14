@@ -1,0 +1,14 @@
+category,case,value,expected,pass
+contract,profile_hash,3a0b8864f1389ebb1346bebe0954b3fa7466b1ae8b054de597f263b8089c95ec,3a0b8864f1389ebb1346bebe0954b3fa7466b1ae8b054de597f263b8089c95ec,True
+contract,matrix_30,30,30,True
+governance,joint_training,joint_from_scratch,joint_from_scratch,True
+model,dlinear_original,"full=(1, 720, 7),prefix=(1, 96, 7)",finite_and_exact_prefix,True
+model,dlinear_iscf,"full=(1, 720, 7),prefix=(1, 96, 7)",finite_and_exact_prefix,True
+model,dlinear_iscf_bsca,"full=(1, 720, 7),prefix=(1, 96, 7)",finite_and_exact_prefix,True
+model,dlinear_style_matched_encoder_init,1,1,True
+model,patchtst_original,"full=(1, 720, 7),prefix=(1, 96, 7)",finite_and_exact_prefix,True
+model,patchtst_iscf,"full=(1, 720, 7),prefix=(1, 96, 7)",finite_and_exact_prefix,True
+model,patchtst_iscf_bsca,"full=(1, 720, 7),prefix=(1, 96, 7)",finite_and_exact_prefix,True
+model,patchtst_style_matched_encoder_init,1,1,True
+execution,runner_syntax,0,0,True
+execution,runner_dry_run,decoder_transfer_dry_run=pass jobs=30 profile_hash=3a0b8864f1389ebb1346bebe0954b3fa7466b1ae8b054de597f263b8089c95ec,jobs=30,True

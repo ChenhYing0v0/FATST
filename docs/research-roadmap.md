@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## Decoder-Transfer and Efficiency Step 7 Prelaunch (2026-08-14)
+
+Current cursor=`Decoder-Transfer Step 7 pass -> Step 8 authorized; Efficiency measurement queued after exclusive-GPU gate`。Transfer冻结为DLinear-style/PatchTST-style × Original/+ISCF/+ISCF-BSCA × 5 datasets × seed2021，30 checkpoints/120 cells；所有arms from scratch end-to-end，共享backbone–dataset profile并使用four-H validation selector。Source patch、tensor contract、matched initialization、exact-prefix、runner与30-job dry-run共13项local gate通过。正式test必须等待30/30 artifacts与30 unique immutable hashes。
+
+Efficiency冻结为5 systems × 7 datasets=`35 service units/77 checkpoint objects`；已只读确认全部checkpoint和training timing logs存在。Profiler使用独占RTX 3090、FP32、batch1、synthetic inputs、30 warmups与5×100 CUDA-event repetitions，不访问test loader/labels。因GPU contention会污染latency，正式测量与transfer training错峰。Decision=`decoder_transfer_step7_pass_step8_authorized_efficiency_contract_frozen`。
+
 ## Core-Ablation Formal Result and Step 9--10 Decision (2026-08-14)
 
 Current cursor=`Core-Ablation complete -> paper consolidation; allocation claim narrowed`。Frozen 5-variant × 5-dataset × four-H matrix已100/100 official-test cells完整；20个新end-to-end controls通过artifact、selector、numeric与20 unique immutable checkpoint hash gates，Full的20 cells来自exact ablation anchor。Full macro MSE/MAE=`0.308549/0.346278`。相对prefix-only `w/o BSCA`、capacity-matched `Shared Scope Projection`与`Fixed Scope (s=144)`，Full分别取得2.401%、1.416%、1.796%的macro MSE收益并通过各自gate；相对equal fusion的`w/o Target-Adaptive Allocation`为-0.039%，只赢2/5 dataset means和0/4 horizon means，gate失败。

@@ -91,6 +91,7 @@ JAPO_READOUT_CONFIG = {
 
 ENCODER_MODES = {
     "raw-history-identity",
+    "dlinear-decomposition",
     "timealign-token-mlp",
     "contextual-patch-transformer",
     "global-anchored-patch-transformer",
@@ -138,6 +139,31 @@ D19_DIRECT_READOUTS = {"implicit-direct-nonlinear-matched"}
 D19_READOUTS = D19_IMPLICIT_READOUTS | D19_DIRECT_READOUTS
 D20_READOUTS = {"learned-basis-compact-history-statistic"}
 FCMI_READOUTS = FCMI_READOUT_MODES
+TRANSFER_ORIGINAL_READOUTS = {"direct-unified-original"}
+
+
+class DLinearDecompositionMemory(nn.Module):
+    """DLinear-style seasonal/trend memory with shape ``[B,C,2,L]``."""
+
+    def __init__(self, kernel_size=25):
+        super().__init__()
+        if kernel_size <= 0 or kernel_size % 2 == 0:
+            raise ValueError("DLinear moving-average kernel must be positive and odd")
+        self.kernel_size = int(kernel_size)
+        self.average = nn.AvgPool1d(
+            kernel_size=self.kernel_size,
+            stride=1,
+            padding=0,
+        )
+
+    def forward(self, x):
+        # x: [B,C,L] -> seasonal/trend: [B,C,2,L]
+        padding = (self.kernel_size - 1) // 2
+        front = x[..., :1].repeat(1, 1, padding)
+        end = x[..., -1:].repeat(1, 1, padding)
+        trend = self.average(torch.cat((front, x, end), dim=-1))
+        seasonal = x - trend
+        return torch.stack((seasonal, trend), dim=2)
 
 
 def _real_fourier_projection(length, dimension):
@@ -472,6 +498,7 @@ class Model(nn.Module):
         self.readout_mode = getattr(configs, "readout_mode", "official")
         if self.readout_mode not in {
             "official",
+            *TRANSFER_ORIGINAL_READOUTS,
             *LEARNED_BASIS_READOUTS,
             *STBO_READOUTS,
             *PMFO_READOUTS,
@@ -528,7 +555,12 @@ class Model(nn.Module):
                 "contextual-patch-transformer",
                 "global-anchored-patch-transformer",
             }
-            and self.readout_mode != "learned-basis-forecast-operator"
+            and self.readout_mode
+            not in {
+                "learned-basis-forecast-operator",
+                "direct-unified-original",
+                *SIFF_READOUTS,
+            }
         ):
             raise ValueError(
                 "The contextual patch encoder is a clean A6 prerequisite and requires "
@@ -539,6 +571,12 @@ class Model(nn.Module):
         if self.encoder_mode == "raw-history-identity":
             self.patch_num = 1
             self.d_model = self.seq_len
+        elif self.encoder_mode == "dlinear-decomposition":
+            self.patch_num = 2
+            self.d_model = self.seq_len
+            self.decomposition_encoder = DLinearDecompositionMemory(
+                kernel_size=int(getattr(configs, "dlinear_moving_avg", 25))
+            )
         elif self.encoder_mode in {
             "timealign-token-mlp",
             "hierarchical-patch-memory",
@@ -639,6 +677,13 @@ class Model(nn.Module):
             self.proj_x = nn.Linear(readout_dim, configs.pred_len)
         if self.has_future_recon_branch:
             self.proj_y = nn.Linear(readout_dim, configs.pred_len)
+
+        if self.readout_mode == "direct-unified-original":
+            if self.encoder_mode == "dlinear-decomposition":
+                self.direct_seasonal = nn.Linear(self.seq_len, self.pred_len)
+                self.direct_trend = nn.Linear(self.seq_len, self.pred_len)
+            else:
+                self.direct_readout = nn.Linear(readout_dim, self.pred_len)
 
         if self.readout_mode in LEARNED_BASIS_READOUTS:
             self.basis_rank = int(getattr(configs, "basis_rank", 256))
@@ -1082,6 +1127,8 @@ class Model(nn.Module):
         batch, seq_len, channels = x.shape
         if self.encoder_mode == "raw-history-identity":
             return x.permute(0, 2, 1).unsqueeze(2)
+        if self.encoder_mode == "dlinear-decomposition":
+            return self.decomposition_encoder(x.permute(0, 2, 1))
         if self.encoder_mode == "contextual-patch-transformer":
             return self.history_encoder(x.permute(0, 2, 1))
         if self.encoder_mode == "global-anchored-patch-transformer":
@@ -1334,6 +1381,14 @@ class Model(nn.Module):
         hidden = memory.flatten(start_dim=-2)
         if self.readout_mode == "official":
             output = self.proj_x(hidden).permute(0, 2, 1)
+        elif self.readout_mode == "direct-unified-original":
+            horizon = self.pred_len if target_prefix is None else int(target_prefix)
+            if self.encoder_mode == "dlinear-decomposition":
+                seasonal = self.direct_seasonal(memory[:, :, 0, :])
+                trend = self.direct_trend(memory[:, :, 1, :])
+                output = (seasonal + trend)[..., :horizon].permute(0, 2, 1)
+            else:
+                output = self.direct_readout(hidden)[..., :horizon].permute(0, 2, 1)
         elif self.readout_mode == "learned-basis-forecast-operator":
             output = self._learned_basis_forecast_operator(hidden, target_prefix)
         elif self.readout_mode in D20_READOUTS:

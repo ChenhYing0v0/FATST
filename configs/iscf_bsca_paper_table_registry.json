@@ -90,8 +90,13 @@
       "id": "efficiency",
       "manuscript_role": "main_text_supporting_result",
       "title": "Efficiency and deployment comparison",
-      "status": "measurement_pending_baseline_subset_not_yet_frozen",
+      "status": "baseline_subset_and_profiler_contract_frozen_checkpoint_manifest_and_measurement_pending",
       "primary_system": "ISCF-BSCA-MAIN-v1",
+      "systems": ["ISCF-BSCA", "TimeAlign", "QDF", "DLinear-H720-prefix", "PatchTST-H720-prefix"],
+      "datasets": 7,
+      "service_units": 35,
+      "checkpoint_objects": 77,
+      "protocol": "configs/iscf_bsca_efficiency_protocol.json",
       "metrics": [
         "trained_model_count",
         "total_stored_parameters",
@@ -155,7 +160,7 @@
       "id": "decoder_transfer",
       "manuscript_role": "main_text_transfer_evidence",
       "title": "Decoder transfer across two backbone families",
-      "status": "source_patch_and_retrain_required_prelaunch_pending",
+      "status": "source_patch_complete_local_prelaunch_pass_remote_training_authorized",
       "datasets": ["ETTm1", "ETTm2", "ETTh1", "ETTh2", "Weather"],
       "horizons": [96, 192, 336, 720],
       "primary_seed": 2021,
@@ -164,6 +169,8 @@
       "training_checkpoints": 30,
       "dataset_horizon_system_cells": 120,
       "training_contract": "matched_end_to_end_joint_training_with_backbone_specific_profiles",
+      "protocol": "configs/iscf_bsca_decoder_transfer_protocol.json",
+      "prelaunch": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_20260814/design_and_prelaunch_gate.md",
       "claim_boundary": "frozen_replacement_warm_start_and_cross_swap_are_diagnostic_only"
     },
     {

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "profile_id": "ISCF-BSCA-DECODER-TRANSFER-SOURCE-PRIOR-20260814",
+  "selection_role": "backbone_specific_source_prior_shared_by_all_three_decoder_arms",
+  "selection_boundary": "architecture_and_learning_rate_priors_are_frozen_from_audited_official_DLinear_and_PatchTST_H720_scripts; batch_sizes_are_symmetrically_capped_for_RTX3090_safety_before_new_transfer_results",
+  "common": {
+    "seq_len": 336,
+    "pred_len": 720,
+    "horizons": [96, 192, 336, 720],
+    "seed": 2021,
+    "checkpoint_selector": "mean_validation_mse_h96_h192_h336_h720",
+    "weight_decay": 0.0,
+    "max_epochs": 100,
+    "early_stopping": true
+  },
+  "backbones": {
+    "dlinear_style": {
+      "encoder_mode": "dlinear-decomposition",
+      "moving_average": 25,
+      "source_repository": "https://github.com/cure-lab/LTSF-Linear",
+      "source_commit": "0c113668a3b88c4c4ee586b8c5ec3e539c4de5a6",
+      "source_role": "source_informed_local_matched_backbone_not_native_baseline_reproduction",
+      "dataset_profiles": {
+        "ETTm1": {"learning_rate": 0.0001, "batch_size": 8, "patience": 3},
+        "ETTm2": {"learning_rate": 0.01, "batch_size": 32, "patience": 3},
+        "ETTh1": {"learning_rate": 0.005, "batch_size": 32, "patience": 3},
+        "ETTh2": {"learning_rate": 0.05, "batch_size": 32, "patience": 3},
+        "Weather": {"learning_rate": 0.0001, "batch_size": 16, "patience": 3}
+      }
+    },
+    "patchtst_style": {
+      "encoder_mode": "contextual-patch-transformer",
+      "history_patch_len": 16,
+      "history_patch_stride": 8,
+      "history_e_layers": 3,
+      "history_res_attention": true,
+      "history_attn_dropout": 0.0,
+      "source_repository": "https://github.com/yuqinie98/PatchTST",
+      "source_commit": "204c21efe0b39603ad6e2ca640ef5896646ab1a9",
+      "source_role": "source_informed_local_matched_backbone_not_native_baseline_reproduction",
+      "dataset_profiles": {
+        "ETTm1": {"d_model": 128, "n_heads": 16, "d_ff": 256, "dropout": 0.2, "learning_rate": 0.0001, "batch_size": 16, "patience": 20},
+        "ETTm2": {"d_model": 128, "n_heads": 16, "d_ff": 256, "dropout": 0.2, "learning_rate": 0.0001, "batch_size": 16, "patience": 20},
+        "ETTh1": {"d_model": 16, "n_heads": 4, "d_ff": 128, "dropout": 0.3, "learning_rate": 0.0001, "batch_size": 32, "patience": 3},
+        "ETTh2": {"d_model": 16, "n_heads": 4, "d_ff": 128, "dropout": 0.3, "learning_rate": 0.0001, "batch_size": 32, "patience": 3},
+        "Weather": {"d_model": 128, "n_heads": 16, "d_ff": 256, "dropout": 0.2, "learning_rate": 0.0001, "batch_size": 16, "patience": 20}
+      }
+    }
+  }
+}
