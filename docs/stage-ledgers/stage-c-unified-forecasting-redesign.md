@@ -24,7 +24,7 @@
 | --- | --- |
 | `current_11_step` | PatchTST Decoder-Transfer HPO v2 Step 8 remote train/validation；formal test blocked |
 | `current_candidate` | `ISCF-BSCA-DECODER-TRANSFER-PATCHTST-HPO-v2`；v1 PatchTST负结果保持有效且不回写 |
-| `latest_decision` | `patchtst_decoder_hpo_v2_frozen_remote_training_authorized_formal_test_blocked` |
+| `latest_decision` | `patchtst_decoder_hpo_v2_50_run_remote_train_validation_active_test_zero` |
 | `writing_latest_decision` | `sections_5_7_v0_2_efficiency_and_transfer_evidence_synced` |
 | `next_required_action` | 完成50/50 PatchTST BSCA HPO training artifacts与50 unique hashes；仅按four-H validation mean MSE选profile；通过gate后请求新formal-test授权 |
 | `method_training_authorized` | 2026-08-15用户授权继续PatchTST decoder调参并在失败时更换backbone；当前只启动50-run train/validation，formal test与table mutation=false |
@@ -59,6 +59,8 @@
 | `effectiveness_gate` | macro validation MSE改善>0.25%，且至少3/5 datasets改善>0.1%；否则test=0并转iTransformer Step 4--6 |
 | `artifacts` | design=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_hpo_v2_20260815/design_and_prelaunch_gate.md`；config=`configs/iscf_bsca_decoder_transfer_patchtst_hpo_v2.json` |
 | `decision` | `patchtst_decoder_hpo_v2_frozen_remote_training_authorized_formal_test_blocked` |
+
+Remote launch：commit=`7480ffc4`，PID=`3782929`，GPU0/1/2，50 jobs，start=`2026-08-15T01:39:23+08:00`。27/27 remote prelaunch与3/3 resource smoke通过；首批三个Weather profiles均进入epoch1且finite，formal test=0。Launch record=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_hpo_v2_20260815/remote_launch.md`。
 
 ## Exact Ablation Anchor Contract
 

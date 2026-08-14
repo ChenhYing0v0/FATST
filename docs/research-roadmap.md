@@ -6,6 +6,8 @@ Current cursor=`PatchTST decoder HPO v2 Step 8 train/validation -> formal test b
 
 冻结matrix为10 decoder profiles × 5 datasets × seed2021=`50 new joint-training runs`；encoder geometry/width/depth/dropout/base LR、BSCA objective、scope集合与four-H validation selector不变。搜索readout LR multiplier、readout-only weight decay及0.5×/1.5× rank边界点。进入formal-test申请的gate为相对v1 reference macro validation MSE改善>0.25%，且至少3/5 datasets改善>0.1%；50/50 artifacts和50 unique hashes为硬前提。若失败，test=0并回Step 4--6实现iTransformer-style carrier。Canonical design=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_hpo_v2_20260815/design_and_prelaunch_gate.md`；Decision=`patchtst_decoder_hpo_v2_frozen_remote_training_authorized_formal_test_blocked`。
 
+Remote launch已于2026-08-15 01:39:23完成：commit=`7480ffc4`、PID=`3782929`、GPU0/1/2、50 jobs；27/27 remote prelaunch及3/3 resource smoke通过，首批Weather jobs finite，formal test=0。Canonical launch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_hpo_v2_20260815/remote_launch.md`；Decision=`patchtst_decoder_hpo_v2_50_run_remote_train_validation_active_test_zero`。
+
 ## Efficiency Formal Result and Step 9--10 Decision (2026-08-14)
 
 Current cursor=`Efficiency complete -> deployment trade-off supported -> Figure 5 contract next`。独占RTX 3090完成35/35 service units与77/77 immutable checkpoint objects，所有finite/CV gates通过且未访问test loader/labels。ISCF-BSCA以1个model提供architectural CHPC，并相对four-model TimeAlign/QDF减少deployed parameters与checkpoint storage；但其single/all-H latency与logged training time均不领先，当前implementation仍materialize完整$T=720$ field。
