@@ -2989,19 +2989,24 @@ def parse_args() -> argparse.Namespace:
             raise ValueError(
                 "scope-credit objectives require a PCSD/SIFF coupling readout"
             )
-        supported_credit_policies = {
+        supported_learned_credit_policies = {
             "direct",
             "static-target",
             "target-scale-field",
             "target-scale-field-permuted",
             "target-scale-global",
         }
+        supported_credit_policies = set(supported_learned_credit_policies)
+        if args.pcc_objective_mode == "measure_only":
+            supported_credit_policies.update({"equal", "fixed"})
+        elif args.pcc_objective_mode == "equal_uniform_scope_anchor":
+            supported_credit_policies.add("equal")
         if (
             args.readout_mode in TimeAlign.COUPLING_READOUTS
             and args.pcsd_policy_mode not in supported_credit_policies
         ):
             raise ValueError(
-                "scope-credit training requires a learned supported policy"
+                "scope-credit objective and policy mode are incompatible"
             )
         if args.mode != "unified" or args.pred_len != 720:
             raise ValueError("PCC Phase A requires unified full-T=720 training")

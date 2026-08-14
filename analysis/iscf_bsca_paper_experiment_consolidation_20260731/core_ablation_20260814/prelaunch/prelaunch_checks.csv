@@ -1,0 +1,25 @@
+category,case,value,threshold,pass
+contract,profile_hash,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a,80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a,True
+contract,five_variants,5,5,True
+contract,effective_100_cells,100,100,True
+contract,new_20_runs,20,20,True
+contract,full_reuse_only,True,True,True
+contract,historical_equal_excluded,False,False,True
+governance,end_to_end_joint_training,from_scratch+joint,true+true,True
+governance,no_hpo,False,False,True
+governance,single_formal_access,1,1,True
+objective,without_bsca_prefix_only,"skill=0,route=0","skill=0,route=0,total=fused",True
+objective,fixed_scope_prefix_only,"skill=0,route=0","skill=0,route=0",True
+objective,equal_allocation_balance_zero,0.0,<=1e-7,True
+model,full_iscf_bsca,"(1, 720, 7)","(1, 720, 7)",True
+model,without_bsca_prefix_loss_only,"(1, 720, 7)","(1, 720, 7)",True
+model,without_target_adaptive_allocation,"(1, 720, 7)","(1, 720, 7)",True
+model,shared_scope_projection,"(1, 720, 7)","(1, 720, 7)",True
+model,fixed_scope_s144,"(1, 720, 7)","(1, 720, 7)",True
+model,matched_encoder_initialization,1,1,True
+model,shared_projection_capacity_match,0.0015641300263738354,<=0.005,True
+execution,runner_syntax,0,0,True
+execution,runner_dry_run_20,core_ablation_dry_run=pass jobs=20 config_hash=36e8ea1ea45a62e7698cd122b27f076cc9492e9f0973d7560291dd8bd91b7f40 profile_hash=80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a remote_authorized=true test_authorized=true,returncode=0 and jobs=20,True
+execution,formal_test_manifest_block,2,nonzero before manifest,True
+execution,remote_gpu_audit_present,present,present,True
+execution,manifest_verification_present,present,present,True

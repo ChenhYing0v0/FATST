@@ -1,0 +1,268 @@
+{
+  "stage": "StageC-UVHF",
+  "candidate_id": "ISCF-BSCA-v1-Core-Ablation",
+  "candidate_version": "ISCF-BSCA-v1-core-ablation-20260814",
+  "date": "2026-08-14",
+  "status": "authorized_prelaunch",
+  "role": "paper_core_matched_mechanism_attribution",
+  "test_informed": true,
+  "paper_anchor": "exact frozen ISCF-BSCA-v1; not ISCF-BSCA-MAIN-v1",
+  "profiles": {
+    "path": "configs/stage_c_five_dataset_natural_profiles.json",
+    "sha256": "80912741f9da5560234c400a36e2ec48461cef70bf96701b19fcb90ea278990a"
+  },
+  "datasets": ["Weather", "ETTm1", "ETTh1", "ETTh2", "ETTm2"],
+  "seeds": [2021],
+  "scales": [1, 48, 144, 360, 720],
+  "coupling_scales": [1, 48, 144, 360, 720],
+  "matched_ranks": {
+    "ETTh1": {
+      "independent_dataset_matched": 109,
+      "shared_q1_capacity_matched": 463
+    },
+    "ETTh2": {
+      "independent_dataset_matched": 116,
+      "shared_q1_capacity_matched": 430
+    },
+    "ETTm1": {
+      "independent_dataset_matched": 116,
+      "shared_q1_capacity_matched": 430
+    },
+    "ETTm2": {
+      "independent_dataset_matched": 106,
+      "shared_q1_capacity_matched": 485
+    },
+    "Weather": {
+      "independent_dataset_matched": 116,
+      "shared_q1_capacity_matched": 430
+    }
+  },
+  "arms": [
+    {
+      "id": "full_iscf_bsca",
+      "table_label": "Full ISCF-BSCA",
+      "role": "candidate_anchor",
+      "source": "reused_exact_artifact",
+      "readout_mode": "siff-independent-scope-control",
+      "policy_mode": "direct",
+      "objective_mode": "equal_uniform_scope_anchor",
+      "fixed_scale": 720,
+      "partition": "canonical",
+      "partition_seed": 15101,
+      "rank_rule": "independent_dataset_matched"
+    },
+    {
+      "id": "without_bsca_prefix_loss_only",
+      "table_label": "w/o BSCA",
+      "role": "same_architecture_objective_control",
+      "source": "new_end_to_end_training",
+      "readout_mode": "siff-independent-scope-control",
+      "policy_mode": "direct",
+      "objective_mode": "measure_only",
+      "fixed_scale": 720,
+      "partition": "canonical",
+      "partition_seed": 15101,
+      "rank_rule": "independent_dataset_matched",
+      "contract": "retain only Uniform-Prefix Forecasting Loss; remove Scope-Wise Forecasting Loss and Allocation-Balance Regularizer"
+    },
+    {
+      "id": "without_target_adaptive_allocation",
+      "table_label": "w/o Target-Adaptive Allocation",
+      "role": "non_adaptive_allocation_control",
+      "source": "new_end_to_end_training",
+      "readout_mode": "siff-independent-scope-control",
+      "policy_mode": "equal",
+      "objective_mode": "equal_uniform_scope_anchor",
+      "fixed_scale": 720,
+      "partition": "canonical",
+      "partition_seed": 15101,
+      "rank_rule": "independent_dataset_matched",
+      "contract": "replace target-wise learned allocation with equal non-adaptive fusion while retaining matched scope-wise supervision"
+    },
+    {
+      "id": "shared_scope_projection",
+      "table_label": "Shared Scope Projection",
+      "role": "capacity_matched_shared_projection_control",
+      "source": "new_end_to_end_training",
+      "readout_mode": "siff-q1-wide-control",
+      "policy_mode": "direct",
+      "objective_mode": "equal_uniform_scope_anchor",
+      "fixed_scale": 720,
+      "partition": "canonical",
+      "partition_seed": 15101,
+      "rank_rule": "shared_q1_capacity_matched",
+      "contract": "one shared scope projection widened to match active parameter count"
+    },
+    {
+      "id": "fixed_scope_s144",
+      "table_label": "Fixed Scope ($s=144$)",
+      "role": "preregistered_single_scope_control",
+      "source": "new_end_to_end_training",
+      "readout_mode": "siff-independent-scope-control",
+      "policy_mode": "fixed",
+      "objective_mode": "measure_only",
+      "fixed_scale": 144,
+      "partition": "canonical",
+      "partition_seed": 15101,
+      "rank_rule": "independent_dataset_matched",
+      "contract": "single preregistered fixed scope s=144; not selected as an optimum"
+    }
+  ],
+  "reference_contract": {
+    "full_remote_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_iscf_bsca_v1/iscf_bsca_v1",
+    "full_checkpoint_selector": "best-validation-mean-mse-h96-h192-h336-h720",
+    "full_expected_run_count": 5,
+    "full_expected_test_cell_count": 20,
+    "full_retraining_forbidden": true,
+    "historical_iscf_equal_reusable_as_without_bsca": false
+  },
+  "artifact_contract": {
+    "remote_output_root": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_core_ablation_20260814",
+    "training_manifest": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_core_ablation_20260814/immutable_training_manifest.json",
+    "local_analysis_root": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814",
+    "checkpoint_file": "checkpoint.pt",
+    "training_required_files": [
+      "checkpoint.pt",
+      "training_log.csv",
+      "metrics_by_target_horizon.csv",
+      "effective_config.json",
+      "initialization_contract.json",
+      "model_diagnostics.json",
+      "pcsd_validation_diagnostics.npz",
+      "trained_invariants.json"
+    ],
+    "formal_test_required_files": [
+      "test_audit_metrics_by_target_horizon.csv",
+      "test_audit_invariants.json",
+      "pcsd_test_audit_diagnostics.npz"
+    ]
+  },
+  "matrix": {
+    "expected_runs": 25,
+    "new_training_runs": 20,
+    "reused_runs": 5,
+    "new_formal_test_runs": 20,
+    "effective_runs": 25,
+    "horizons": [96, 192, 336, 720],
+    "metrics": ["mse", "mae"],
+    "new_test_cells": 80,
+    "reused_test_cells": 20,
+    "effective_test_cells": 100,
+    "full_matrix_required": true,
+    "partial_reporting_allowed": false
+  },
+  "training": {
+    "from_scratch": true,
+    "joint_encoder_decoder": true,
+    "target_horizons": [720],
+    "validation_horizons": [96, 192, 336, 720],
+    "checkpoint_score": "mean_validation_mse_h96_h192_h336_h720",
+    "checkpoint_policy": "best-val",
+    "pred_loss_mode": "full",
+    "optimizer": "AdamW",
+    "learning_rate": 0.0001,
+    "weight_decay": 0.0,
+    "batch_size": 32,
+    "max_epochs": 20,
+    "early_stopping_patience": 5,
+    "equal_skill_weight": 1.0,
+    "uniform_anchor_final_weight": 0.1,
+    "uniform_anchor_ramp_fraction": 0.25,
+    "test_labels_select_checkpoint_or_config": false,
+    "hyperparameter_search_allowed": false,
+    "frozen_replacement_allowed_for_formal_conclusion": false
+  },
+  "checkpoint_selection_contract": "best-validation-mean-mse-h96-h192-h336-h720",
+  "diagnostic_protocol": {
+    "probe_rows": 256,
+    "future_bins": [
+      {"name": "H1_48", "start": 0, "end": 48},
+      {"name": "H49_96", "start": 48, "end": 96},
+      {"name": "H97_144", "start": 96, "end": 144},
+      {"name": "H145_192", "start": 144, "end": 192},
+      {"name": "H193_288", "start": 192, "end": 288},
+      {"name": "H289_336", "start": 288, "end": 336},
+      {"name": "H337_512", "start": 336, "end": 512},
+      {"name": "H513_720", "start": 512, "end": 720}
+    ]
+  },
+  "launch_order": [
+    ["Weather", "without_bsca_prefix_loss_only"],
+    ["Weather", "without_target_adaptive_allocation"],
+    ["Weather", "shared_scope_projection"],
+    ["ETTm1", "without_bsca_prefix_loss_only"],
+    ["ETTm1", "without_target_adaptive_allocation"],
+    ["ETTm1", "shared_scope_projection"],
+    ["Weather", "fixed_scope_s144"],
+    ["ETTm1", "fixed_scope_s144"],
+    ["ETTm2", "without_bsca_prefix_loss_only"],
+    ["ETTh1", "without_bsca_prefix_loss_only"],
+    ["ETTh2", "without_bsca_prefix_loss_only"],
+    ["ETTm2", "without_target_adaptive_allocation"],
+    ["ETTh1", "without_target_adaptive_allocation"],
+    ["ETTh2", "without_target_adaptive_allocation"],
+    ["ETTm2", "shared_scope_projection"],
+    ["ETTh1", "shared_scope_projection"],
+    ["ETTh2", "shared_scope_projection"],
+    ["ETTm2", "fixed_scope_s144"],
+    ["ETTh1", "fixed_scope_s144"],
+    ["ETTh2", "fixed_scope_s144"]
+  ],
+  "resource_estimate": {
+    "gpu_count": 3,
+    "new_training_runs": 20,
+    "new_formal_test_runs": 20,
+    "expected_peak_gpu_memory_gib_per_job": 8.0,
+    "expected_incremental_storage_gib_max": 6.0,
+    "scheduling": "three independent GPU workers; slow Weather and ETTm1 runs front-loaded and distributed"
+  },
+  "gates": {
+    "training_artifact_runs_required": 20,
+    "unique_new_checkpoint_hashes_required": 20,
+    "checkpoint_nonmutation_required": true,
+    "all_100_cells_reported": true,
+    "numeric_health_required": true,
+    "per_control_macro_mse_gain_percent_min_exclusive": 0.0,
+    "per_control_macro_mae_gain_percent_min_exclusive": 0.0,
+    "per_control_dataset_mse_wins_min": 3,
+    "per_control_horizon_mse_wins_min": 3,
+    "all_four_controls_must_pass_for_full_mechanism_chain": true
+  },
+  "table": {
+    "dataset_order": ["ETTm1", "ETTm2", "ETTh1", "ETTh2", "Weather"],
+    "row_order": [
+      "full_iscf_bsca",
+      "without_bsca_prefix_loss_only",
+      "without_target_adaptive_allocation",
+      "shared_scope_projection",
+      "fixed_scope_s144"
+    ],
+    "dataset_values": "mean over horizons 96, 192, 336, 720",
+    "overall_values": "macro mean over the five dataset means",
+    "precision": 3,
+    "best_style": "bold",
+    "second_style": "underline"
+  },
+  "authorization": {
+    "user_authorization": "2026-08-14 explicit request to execute the frozen Core-Ablation plan through the final ablation table",
+    "user_authorized": true,
+    "authorization_date": "2026-08-14",
+    "remote_training_authorized": true,
+    "formal_test_access_authorized": true,
+    "formal_test_access_count_for_version": 1,
+    "checkpoint_retraining_allowed": true,
+    "checkpoint_retrained_before_test": true,
+    "reused_control_protocol_profiles": ["stage_c_iscf_bsca_v1"],
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+    "checkpoint_mutation_during_test_allowed": false,
+    "per_dataset_horizon_or_cell_tuning_allowed": false,
+    "test_role": "primary-mechanism-effectiveness-and-paper-benchmark"
+  },
+  "rollback": {
+    "missing_or_duplicate_training_artifact": "block formal test; repair or retrain only the invalid run",
+    "numeric_pathology": "optimization_or_numeric_pathology; repair exact control implementation and repeat the full affected arm",
+    "single_control_failure_without_pathology": "limit only the corresponding mechanism claim; retain and report all negative cells",
+    "multiple_control_failures": "block passed_core_candidate attribution; rollback to Step 4 mechanism design"
+  },
+  "decision": "authorized_prelaunch; immutable 20-checkpoint manifest required before the single formal-test access"
+}

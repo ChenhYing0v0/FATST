@@ -1,0 +1,9 @@
+{
+  "candidate_version": "ISCF-BSCA-v1-core-ablation-20260814",
+  "checks": 24,
+  "decision": "remote_training_ready",
+  "failed": 0,
+  "pass": true,
+  "passed": 24,
+  "training_jobs": 20
+}
