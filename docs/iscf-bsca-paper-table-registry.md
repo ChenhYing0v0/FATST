@@ -48,7 +48,7 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 | `Main-I` | 正文主结果 | `complete_hash_frozen_h5d_bs16_lr2p4_synced` | 14 systems × 7 datasets × 4 H；392 system–dataset–H rows | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_h5d_bs16_lr2p4_synced_20260813/table_iscf_bsca_main_i_qdf.tex` | ISCF-BSCA 与 separately optimized horizon-specific systems 的 system-level accuracy competitiveness；不作 matched mechanism attribution |
 | `Main-II` | 正文主结果 | `complete_hash_frozen_horizon_loader_reaudit` | 8 systems × 7 datasets × 4 H；224 cells，63 external checkpoint objects / 252 formal evaluations | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/formal_results/table/table_iscf_bsca_main_ii.tex` | one-model-for-all-horizons system competitiveness；不作 BSCA/decoder attribution |
 | `Main-I-Exchange` | Supplementary companion | `complete_limited_surface` | ISCF-BSCA / TimeAlign / QDF × Exchange × 4 H | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_h5d_bs16_lr2p4_synced_20260813/table_exchange_companion.tex` | Exchange 的部分系统背景；不能表述为完整 Main I extension |
-| `Efficiency` | 正文 supporting result | `baseline_subset_and_profiler_contract_frozen_measurement_pending` | 5 systems × 7 datasets；35 service units / 77 checkpoint objects | protocol=`configs/iscf_bsca_efficiency_protocol.json` | trained-model/storage/training/inference/CHPC trade-off；独占GPU测量完成前不作 efficiency claim |
+| `Efficiency` | 正文 supporting result | `complete_hash_frozen_tradeoff_supported_no_uniform_compute_advantage` | 5 systems × 7 datasets；35/35 service units / 77 checkpoint objects | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/table/table_iscf_bsca_efficiency.tex` | 支持one-model consolidation、architectural CHPC及相对four-model TimeAlign/QDF的parameter/storage reduction；不支持uniform training/latency/computation advantage |
 | `Core-Ablation` | 正文 mechanism attribution | `complete_hash_frozen_partial_attribution_3_of_4_controls` | 5 variants × 5 datasets × 4 H；100/100 cells，25 checkpoints（5 reused + 20 new） | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/table/table_iscf_bsca_core_ablation.tex` | 支持BSCA objective、scope-specific projections与multi-scope design；不支持learned Target-Adaptive Allocation相对equal fusion的独立accuracy utility |
 | `Decoder-Transfer` | 正文 transfer evidence | `complete_hash_frozen_cross_backbone_portability_gate_failed` | 2 backbones × 3 decoder columns × 5 datasets × 4 H；30 checkpoints / 120/120 cells | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_20260814/formal_results/table/table_iscf_bsca_decoder_transfer.tex` | DLinear-style相对gate通过但PatchTST-style失败，因此不支持总体cross-backbone portability claim |
 | `Ablation-Sensitivity` | Appendix | `deferred_outside_current_core_closure` | random partition、scope count、$\lambda$ sensitivity | 尚无正式表 | 当前不纳入核心闭合；若恢复仅作sensitivity/robustness，canonical grouping不作为既定正向结论 |
@@ -93,11 +93,18 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 - DLinear-style的ETTh1/ETTh2绝对结果存在profile/optimization风险，其正向相对gate只作限定证据；
 - canonical audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_20260814/formal_results/result_and_table_audit.md`；review PDF=`output/pdf/iscf_bsca_decoder_transfer_20260814.pdf`。
 
+### Efficiency
+
+- 完整性：35/35 service units、77/77 immutable checkpoint objects；所有finite/CV gates通过，最大all-H round CV=`0.0368`；测量后checkpoint hash复核通过；
+- ISCF-BSCA以1个model提供architectural CHPC；七dataset macro为`2.926M` parameters、`17.68 MiB` checkpoints、`2.028 logged GPU h`、single/all-H latency=`10.306/10.318 ms`、peak memory=`38.8 MiB`；
+- 相对TimeAlign/QDF four-model services，ISCF-BSCA分别减少`72.8%/45.2%` deployed parameters和`81.5%/13.3%` checkpoint storage；
+- 负向边界：ISCF-BSCA all-H latency分别为TimeAlign/QDF/DLinear-prefix/PatchTST-prefix的`2.88×/2.33×/24.04×/2.66×`，logged training time也不领先，因此不得声称uniform compute efficiency；
+- canonical audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/result_and_table_audit.md`；review PDF=`output/pdf/iscf_bsca_efficiency_20260814.pdf`。
+
 ## 5. 尚未完成表格的最小闭合顺序
 
-1. `Efficiency`：5-system subset与同机profiler contract已冻结；下一步冻结77-object hash manifest，并在独占RTX 3090完成35 service units。
-2. `Figure 5`：冻结Scope Probability、aggregate utilization、regional preference/error与illustrative trajectory的统计和selection contract；不得用该图补救allocation control的failed effectiveness。
-3. `Ablation-Sensitivity`：当前deferred，不属于正文核心闭合；若后续恢复，须单独冻结Appendix grid且不得因已见结果选择性扩张。
+1. `Figure 5`：冻结Scope Probability、aggregate utilization、regional preference/error与illustrative trajectory的统计和selection contract；不得用该图补救allocation control的failed effectiveness。
+2. `Ablation-Sensitivity`：当前deferred，不属于正文核心闭合；若后续恢复，须单独冻结Appendix grid且不得因已见结果选择性扩张。
 
 以上未完成实验仍分别需要独立prelaunch与相应授权；Core-Ablation scope已闭合，不自动追加seeds、control或allocation redesign。
 

@@ -1534,6 +1534,24 @@ training或formal test。
 
 `checkpoint count` 只允许出现在该实验/部署语境，不进入 Introduction 的宏观任务命名。
 
+2026-08-14的独占RTX 3090 profiler已完成35/35 service units与77/77
+immutable checkpoint objects。七dataset macro结果如下；training GPU-hours是native
+logs中的per-epoch training time之和，不含validation、test或unlogged orchestration。
+
+| System | Models | Params (M) | Ckpt. (MiB) | Train GPU h | Single ms | All-$H$ ms | Peak MiB | CHPC |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| ISCF-BSCA | 1 | 2.926 | 17.68 | 2.028 | 10.306 | 10.318 | 38.8 | architectural |
+| TimeAlign | 4 | 10.741 | 95.43 | 0.290 | 0.928 | 3.582 | 109.1 | no guarantee |
+| QDF | 4 | 5.337 | 20.38 | 0.204 | 1.141 | 4.426 | 31.9 | no guarantee |
+| DLinear-H720-prefix | 1 | 0.485 | 1.85 | 0.021 | 0.405 | 0.429 | 11.1 | service protocol |
+| PatchTST-H720-prefix | 1 | 3.198 | 12.23 | 1.110 | 3.933 | 3.882 | 58.0 | service protocol |
+
+该表支持的正向结论是：相对four-model TimeAlign/QDF services，ISCF-BSCA把
+deployed model count压缩为1，并减少parameters/checkpoint storage，同时提供
+architectural CHPC guarantee。它不支持uniform compute-efficiency claim：当前
+full-domain implementation的training time与single/all-H latency均不领先，且没有
+实现或测量prefix-bounded execution。Canonical audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/result_and_table_audit.md`。
+
 ### 8.5 Ablation Studies
 
 正文固定为五个matched end-to-end variants，并使用原5 datasets及exact `ISCF-BSCA-v1` hyperparameters，与Main I/II的tuned model严格分离：

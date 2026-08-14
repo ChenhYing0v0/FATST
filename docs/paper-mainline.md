@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Decoder-Transfer Step 9--10 complete / cross-backbone portability gate fail；Efficiency profiler execution next |
+| `current_11_step` | Decoder-Transfer与Efficiency Step 9--10 complete；Figure 5 mechanism-diagnostic contract next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,7 +18,9 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；Core-Ablation 3/4 controls pass；Decoder-Transfer总体portability claim unsupported（DLinear pass / PatchTST fail）；Efficiency 35-unit measurement pending；allocation独立accuracy claim仍unsupported |
+| `paper_core_status` | architecture family frozen；Core-Ablation 3/4 controls pass；Decoder-Transfer总体portability claim unsupported（DLinear pass / PatchTST fail）；Efficiency支持one-model/CHPC/parameter-storage trade-off但不支持uniform compute advantage；allocation独立accuracy claim仍unsupported |
+
+[Efficiency Formal Result, 2026-08-14] 独占RTX 3090完成5 systems × 7 datasets=`35/35 service units`与77/77 immutable checkpoint objects；全部finite/CV gates通过，最大all-H round CV=`0.0368`，无test loader/labels访问。ISCF-BSCA七dataset macro为1 model、`2.926M` params、`17.68 MiB` checkpoints、`2.028 logged GPU h`、single/all-H latency=`10.306/10.318 ms`、peak=`38.8 MiB`。相对TimeAlign/QDF four-model services，分别减少72.8%/45.2% deployed params与81.5%/13.3% checkpoint storage，并提供architectural CHPC；但all-H latency分别慢2.88×/2.33×，且training time不领先。因此只支持deployment consolidation与storage/compute trade-off，不支持uniform efficiency或未实现的prefix-bounded speedup。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/result_and_table_audit.md`。Decision=`efficiency_complete_tradeoff_supported_no_uniform_compute_advantage`；next=`Figure 5 contract freeze`。
 
 [Decoder-Transfer Formal Result, 2026-08-14] 完成30/30 from-scratch end-to-end checkpoints、30 unique immutable hashes与120/120 official-test cells。DLinear-style中+ISCF-BSCA相对Original Decoder的macro MSE/MAE改善15.702%/8.184%，赢4/5 dataset MSE means，预注册gate通过；但ETTh1/ETTh2绝对结果提示profile/optimization风险。PatchTST-style中对应结果为-0.733%/-0.062%，只赢2/5 dataset MSE means，gate失败；尽管BSCA相对ISCF改善1.385% MSE，仍未超过Original Decoder。因此总体cross-backbone portability claim不成立，不能选择性只报告DLinear block。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_20260814/formal_results/result_and_table_audit.md`。Decision=`decoder_transfer_complete_portability_gate_not_passed`；next=`Efficiency exclusive-GPU profiling`。
 

@@ -90,16 +90,21 @@
       "id": "efficiency",
       "manuscript_role": "main_text_supporting_result",
       "title": "Efficiency and deployment comparison",
-      "status": "baseline_subset_and_profiler_contract_frozen_checkpoint_manifest_and_measurement_pending",
+      "status": "complete_hash_frozen_tradeoff_supported_no_uniform_compute_advantage",
       "primary_system": "ISCF-BSCA-MAIN-v1",
       "systems": ["ISCF-BSCA", "TimeAlign", "QDF", "DLinear-H720-prefix", "PatchTST-H720-prefix"],
       "datasets": 7,
       "service_units": 35,
       "checkpoint_objects": 77,
       "protocol": "configs/iscf_bsca_efficiency_protocol.json",
+      "artifact": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/table/table_iscf_bsca_efficiency.tex",
+      "data": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/efficiency_system_macro_means.csv",
+      "audit": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/result_and_table_audit.md",
+      "review_pdf": "output/pdf/iscf_bsca_efficiency_20260814.pdf",
       "metrics": [
         "trained_model_count",
         "total_stored_parameters",
+        "actual_checkpoint_bytes",
         "training_gpu_hours",
         "single_request_latency",
         "all_horizon_service_latency",
@@ -107,7 +112,7 @@
         "CHPC_guarantee"
       ],
       "dependency": "frozen_selected_checkpoints_and_a_separately_frozen_same_environment_profiler_contract",
-      "claim_boundary": "no_efficiency_claim_until_measurement_and_environment_audit_are_complete"
+      "claim_boundary": "supports_one_model_consolidation_CHPC_and_parameter_storage_reduction_relative_to_four_model_TimeAlign_QDF_services_but_not_uniform_training_latency_or_compute_advantage"
     },
     {
       "id": "core_ablation",

@@ -1,0 +1,91 @@
+{
+  "actual_checkpoint_bytes": 42584885,
+  "all_horizon_service": {
+    "latency_ms": 10.365976028442383,
+    "p95_iteration_latency_ms": 10.586074018478394,
+    "round_cv": 0.005416901411109848,
+    "round_means_ms": [
+      10.365976028442383,
+      10.378917474746704,
+      10.501428785324096,
+      10.362920970916749,
+      10.345329599380493
+    ]
+  },
+  "batch_size": 1,
+  "checkpoint_object_ids": [
+    "ISCF-BSCA__ECL__Hall"
+  ],
+  "checkpoint_sha256": [
+    "91548c1801d1b0e954807e9afc5b64202f9295646c19301af680b1c9a76c6169"
+  ],
+  "cuda_version": "12.8",
+  "dataset": "ECL",
+  "gate": "pass",
+  "hardware": "NVIDIA GeForce RTX 3090",
+  "incremental_activation_peak_bytes": 35994624,
+  "input_role": "synthetic_standardized_no_test_loader_or_labels",
+  "iterations_per_round": 100,
+  "manifest_path": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_efficiency_20260814/immutable_checkpoint_manifest.json",
+  "peak_inference_memory_bytes": 91015168,
+  "precision": "fp32",
+  "protocol_id": "ISCF-BSCA-EFFICIENCY-20260814",
+  "request_latency_by_horizon": {
+    "192": {
+      "latency_ms": 10.351657609939576,
+      "p95_iteration_latency_ms": 10.453146028518677,
+      "round_cv": 0.002131392464445097,
+      "round_means_ms": [
+        10.39434308052063,
+        10.351657609939576,
+        10.351661748886109,
+        10.33193377494812,
+        10.336319646835328
+      ]
+    },
+    "336": {
+      "latency_ms": 10.362821083068848,
+      "p95_iteration_latency_ms": 10.52774429321289,
+      "round_cv": 0.00040904718716642586,
+      "round_means_ms": [
+        10.362821083068848,
+        10.363975687026977,
+        10.363786554336547,
+        10.358218240737916,
+        10.352988471984863
+      ]
+    },
+    "720": {
+      "latency_ms": 10.359079666137696,
+      "p95_iteration_latency_ms": 10.534699201583862,
+      "round_cv": 0.0023438214681077048,
+      "round_means_ms": [
+        10.359079666137696,
+        10.383135375976563,
+        10.337951974868774,
+        10.40293667793274,
+        10.344557123184204
+      ]
+    },
+    "96": {
+      "latency_ms": 10.37302370071411,
+      "p95_iteration_latency_ms": 10.526822423934936,
+      "round_cv": 0.0021242878098112626,
+      "round_means_ms": [
+        10.373820161819458,
+        10.37302370071411,
+        10.37187710762024,
+        10.378526754379273,
+        10.319566440582275
+      ]
+    }
+  },
+  "resident_allocated_bytes_before_service": 55020544,
+  "single_request_latency_ms": 10.361645514965058,
+  "system": "ISCF-BSCA",
+  "timed_rounds": 5,
+  "torch_version": "2.9.0+cu128",
+  "total_stored_parameters": 5509957,
+  "trained_model_count": 1,
+  "warmup_iterations": 30
+}

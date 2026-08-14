@@ -1,0 +1,91 @@
+{
+  "actual_checkpoint_bytes": 17142965,
+  "all_horizon_service": {
+    "latency_ms": 3.56643616437912,
+    "p95_iteration_latency_ms": 3.6239359378814697,
+    "round_cv": 0.003173332201343615,
+    "round_means_ms": [
+      3.562134077548981,
+      3.5475503969192506,
+      3.56643616437912,
+      3.5700064086914063,
+      3.5824019289016724
+    ]
+  },
+  "batch_size": 1,
+  "checkpoint_object_ids": [
+    "PatchTST-H720-prefix__ETTm2__H720"
+  ],
+  "checkpoint_sha256": [
+    "455c7ce03d593cb492c0b54ff872dfbfa54515bc2f242edb37300907bc9d394c"
+  ],
+  "cuda_version": "12.8",
+  "dataset": "ETTm2",
+  "gate": "pass",
+  "hardware": "NVIDIA GeForce RTX 3090",
+  "incremental_activation_peak_bytes": 3736064,
+  "input_role": "synthetic_standardized_no_test_loader_or_labels",
+  "iterations_per_round": 100,
+  "manifest_path": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_efficiency_20260814/immutable_checkpoint_manifest.json",
+  "peak_inference_memory_bytes": 30452224,
+  "precision": "fp32",
+  "protocol_id": "ISCF-BSCA-EFFICIENCY-20260814",
+  "request_latency_by_horizon": {
+    "192": {
+      "latency_ms": 3.548314859867096,
+      "p95_iteration_latency_ms": 3.6116480827331543,
+      "round_cv": 0.0018679990894409748,
+      "round_means_ms": [
+        3.553886070251465,
+        3.548314859867096,
+        3.54073792219162,
+        3.5495615935325624,
+        3.5354035091400147
+      ]
+    },
+    "336": {
+      "latency_ms": 3.547722854614258,
+      "p95_iteration_latency_ms": 3.6024832129478455,
+      "round_cv": 0.003402398000347336,
+      "round_means_ms": [
+        3.5372694158554077,
+        3.5731420803070066,
+        3.547722854614258,
+        3.5450947189331057,
+        3.5482313442230224
+      ]
+    },
+    "720": {
+      "latency_ms": 3.543594868183136,
+      "p95_iteration_latency_ms": 3.5983359813690186,
+      "round_cv": 0.001697812471842759,
+      "round_means_ms": [
+        3.556425595283508,
+        3.5459100866317748,
+        3.543594868183136,
+        3.540516495704651,
+        3.5397113490104677
+      ]
+    },
+    "96": {
+      "latency_ms": 3.55453439950943,
+      "p95_iteration_latency_ms": 3.9526912569999695,
+      "round_cv": 0.024324741092926244,
+      "round_means_ms": [
+        3.5347753596305846,
+        3.5514614391326904,
+        3.55453439950943,
+        3.7714876675605775,
+        3.5843718314170836
+      ]
+    }
+  },
+  "resident_allocated_bytes_before_service": 26716160,
+  "single_request_latency_ms": 3.54854174554348,
+  "system": "PatchTST-H720-prefix",
+  "timed_rounds": 5,
+  "torch_version": "2.9.0+cu128",
+  "total_stored_parameters": 4276435,
+  "trained_model_count": 1,
+  "warmup_iterations": 30
+}

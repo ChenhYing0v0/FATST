@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | Decoder-Transfer已完成且总体portability gate失败；Efficiency subset/profiler已冻结并进入独占GPU measurement；allocation正向accuracy claim保持unsupported |
+| `active_question` | Decoder-Transfer与Efficiency均已闭合；下一项为Figure 5 mechanism-diagnostic/illustrative-case contract；allocation正向accuracy claim保持unsupported |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
 | `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7与Sections 5--7 v0.2 structure temporarily frozen usable；Figure 4 visual design temporarily fixed |
@@ -22,11 +22,11 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Decoder-Transfer Step 9--10 complete；Efficiency Step 8 profiler execution；Core-Ablation Step 9--10 complete |
+| `current_11_step` | Decoder-Transfer、Efficiency与Core-Ablation Step 9--10 complete；Figure 5 Step 6 contract next |
 | `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；`ISCF-BSCA-MAIN-v1` 8 selected profiles reusable |
-| `latest_decision` | `decoder_transfer_complete_portability_gate_not_passed` |
-| `writing_latest_decision` | `sections_5_7_v0_2_core_ablation_evidence_synced` |
-| `next_required_action` | 冻结Efficiency 77-object immutable manifest并在独占RTX3090完成35 service units；Decoder-Transfer不自动重跑或删减负block |
+| `latest_decision` | `efficiency_complete_tradeoff_supported_no_uniform_compute_advantage` |
+| `writing_latest_decision` | `sections_5_7_v0_2_efficiency_and_transfer_evidence_synced` |
+| `next_required_action` | 冻结Figure 5 Scope Probability/utilization/regional preference-error与illustrative-case selection contract；不得用diagnostics补救allocation failed effectiveness |
 | `method_training_authorized` | Decoder-Transfer 30-run training与manifest-gated single formal test已由2026-08-14请求授权；Efficiency只授权profiling，不新增训练/不访问test |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
@@ -34,16 +34,16 @@
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Decoder-Transfer Step 9--10 complete；Efficiency profiler execution gate |
-| `problem` | ISCF与ISCF-BSCA decoder path能否在DLinear-style与PatchTST-style两类backbone上端到端迁移 |
-| `existence_evidence` | 30/30 checkpoints、30 unique hashes、120/120 official-test cells；DLinear gate pass / PatchTST gate fail |
-| `idea` | two source-informed matched backbones × Original/+ISCF/+ISCF-BSCA，全部from-scratch joint training |
-| `theory_check` | frozen replacement/warm-start排除；只比较matched local backbone，不冒充native external reproduction |
-| `design` | 2 backbones × 3 arms × 5 datasets × four H；seed2021；validation four-H selector |
-| `narrative_gate` | 两个backbone都通过才允许cross-backbone portability verb |
-| `effectiveness_gate` | fail：DLinear-style +15.702% MSE pass；PatchTST-style -0.733% MSE fail |
-| `artifacts` | result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_20260814/formal_results/result_and_table_audit.md`；table=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_20260814/formal_results/table/table_iscf_bsca_decoder_transfer.tex` |
-| `decision` | `decoder_transfer_complete_portability_gate_not_passed`；不自动重跑；若恢复claim则PatchTST intervention redesign回Step 4--6 |
+| `current_step` | Efficiency Step 9--10 complete；Figure 5 Step 6 contract next |
+| `problem` | one-model varied-horizon service相对four-model horizon-specific families的deployment cost实际如何变化 |
+| `existence_evidence` | 35/35 service units、77/77 immutable checkpoint objects；all finite/CV gates pass；test access=0 |
+| `idea` | 同一独占RTX3090、FP32/batch1 synthetic-input contract下比较完整deployed services |
+| `theory_check` | one-model服务一次H720 forward+prefix views；fixed-H families顺序执行四个native models；current ISCF full-domain materialization如实测量 |
+| `design` | 5 systems × 7 datasets；30 warmups；5×100 CUDA-event iterations；params/storage/training/latency/memory/CHPC |
+| `narrative_gate` | 只有实际测量支持时才允许efficiency verb；storage与compute必须分开报告 |
+| `effectiveness_gate` | trade-off：ISCF相对TimeAlign/QDF减少model count、params与storage，但training/latency不领先 |
+| `artifacts` | result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/result_and_table_audit.md`；table=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/table/table_iscf_bsca_efficiency.tex` |
+| `decision` | `efficiency_complete_tradeoff_supported_no_uniform_compute_advantage`；不宣称faster training/inference或prefix-bounded speedup |
 
 ## Exact Ablation Anchor Contract
 

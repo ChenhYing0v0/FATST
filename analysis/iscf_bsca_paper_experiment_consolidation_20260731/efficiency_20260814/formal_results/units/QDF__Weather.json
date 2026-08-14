@@ -1,0 +1,97 @@
+{
+  "actual_checkpoint_bytes": 21240468,
+  "all_horizon_service": {
+    "latency_ms": 4.565221118927002,
+    "p95_iteration_latency_ms": 4.608051013946533,
+    "round_cv": 0.0018645620951218062,
+    "round_means_ms": [
+      4.565759997367859,
+      4.5631571388244625,
+      4.565221118927002,
+      4.581858906745911,
+      4.55585599899292
+    ]
+  },
+  "batch_size": 1,
+  "checkpoint_object_ids": [
+    "QDF__Weather__H96",
+    "QDF__Weather__H192",
+    "QDF__Weather__H336",
+    "QDF__Weather__H720"
+  ],
+  "checkpoint_sha256": [
+    "7cf8fa111154ddde28c4866cbe447931227c716b89f7b2134116f954bf69f9ff",
+    "01bd954cc1e662bba93f63267023d9880c789388ac6397e9484309694263b063",
+    "23188f793b1307de3e11aae7d5e0158064c46ad1cd0d802f5fe7a191f83bcce6",
+    "1ca5ab292ce26ae2361cb115873c796518bc6aa48bb9d2d20eca1143d7990c1e"
+  ],
+  "cuda_version": "12.8",
+  "dataset": "Weather",
+  "gate": "pass",
+  "hardware": "NVIDIA GeForce RTX 3090",
+  "incremental_activation_peak_bytes": 412160,
+  "input_role": "synthetic_standardized_no_test_loader_or_labels",
+  "iterations_per_round": 100,
+  "manifest_path": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_efficiency_20260814/immutable_checkpoint_manifest.json",
+  "peak_inference_memory_bytes": 31556608,
+  "precision": "fp32",
+  "protocol_id": "ISCF-BSCA-EFFICIENCY-20260814",
+  "request_latency_by_horizon": {
+    "192": {
+      "latency_ms": 1.1747369587421417,
+      "p95_iteration_latency_ms": 1.1878399848937988,
+      "round_cv": 0.0010640152209764782,
+      "round_means_ms": [
+        1.1747369587421417,
+        1.174468802213669,
+        1.177749752998352,
+        1.175245761871338,
+        1.1744003260135651
+      ]
+    },
+    "336": {
+      "latency_ms": 1.1782931339740754,
+      "p95_iteration_latency_ms": 1.1885791838169097,
+      "round_cv": 0.00788815125838916,
+      "round_means_ms": [
+        1.1789216089248657,
+        1.177754567861557,
+        1.1736867260932922,
+        1.2000131249427795,
+        1.1782931339740754
+      ]
+    },
+    "720": {
+      "latency_ms": 1.1770790457725524,
+      "p95_iteration_latency_ms": 1.2711295664310454,
+      "round_cv": 0.017018382974557465,
+      "round_means_ms": [
+        1.1770790457725524,
+        1.1767315256595612,
+        1.2280604815483094,
+        1.175838086605072,
+        1.1813417661190033
+      ]
+    },
+    "96": {
+      "latency_ms": 1.1710828673839568,
+      "p95_iteration_latency_ms": 1.1847679615020752,
+      "round_cv": 0.001486092872693069,
+      "round_means_ms": [
+        1.1737638378143311,
+        1.1709977507591247,
+        1.1749494397640228,
+        1.1710828673839568,
+        1.1706156826019287
+      ]
+    }
+  },
+  "resident_allocated_bytes_before_service": 31144448,
+  "single_request_latency_ms": 1.1752980014681815,
+  "system": "QDF",
+  "timed_rounds": 5,
+  "torch_version": "2.9.0+cu128",
+  "total_stored_parameters": 5304704,
+  "trained_model_count": 4,
+  "warmup_iterations": 30
+}

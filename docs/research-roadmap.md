@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## Efficiency Formal Result and Step 9--10 Decision (2026-08-14)
+
+Current cursor=`Efficiency complete -> deployment trade-off supported -> Figure 5 contract next`。独占RTX 3090完成35/35 service units与77/77 immutable checkpoint objects，所有finite/CV gates通过且未访问test loader/labels。ISCF-BSCA以1个model提供architectural CHPC，并相对four-model TimeAlign/QDF减少deployed parameters与checkpoint storage；但其single/all-H latency与logged training time均不领先，当前implementation仍materialize完整$T=720$ field。
+
+因此Efficiency只能支持`one-model consolidation + CHPC + parameter/storage reduction versus four-model families`，不能支持`uniform compute efficiency`、`faster inference/training`或未实现的`prefix-bounded speedup`。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/result_and_table_audit.md`；Decision=`efficiency_complete_tradeoff_supported_no_uniform_compute_advantage`。下一步只冻结Figure 5 mechanism diagnostics与illustrative-case selection contract，不自动新增training/formal test。
+
 ## Decoder-Transfer Formal Result and Step 9--10 Decision (2026-08-14)
 
 Current cursor=`Decoder-Transfer complete -> overall portability gate fail -> paper claim narrowed; Efficiency next`。30/30 from-scratch end-to-end checkpoints、30 unique immutable hashes与120/120 official-test cells全部闭合，test前后checkpoint hash不变。DLinear-style中+ISCF-BSCA相对Original Decoder的macro MSE/MAE改善15.702%/8.184%，赢4/5 dataset MSE means，预注册gate通过；但ETTh1/ETTh2绝对结果提示`optimization_or_profile_pathology_suspected`，正向证据需保持限定。
