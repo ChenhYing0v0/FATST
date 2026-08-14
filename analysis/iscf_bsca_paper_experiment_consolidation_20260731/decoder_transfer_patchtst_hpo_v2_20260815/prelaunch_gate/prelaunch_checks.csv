@@ -1,0 +1,28 @@
+category,case,value,expected,pass
+contract,source_profile_hash,3a0b8864f1389ebb1346bebe0954b3fa7466b1ae8b054de597f263b8089c95ec,3a0b8864f1389ebb1346bebe0954b3fa7466b1ae8b054de597f263b8089c95ec,True
+contract,ten_profiles,10,10,True
+contract,matrix_50_unique,50,50,True
+governance,no_formal_test,0,0,True
+governance,joint_from_scratch,joint_from_scratch,joint_from_scratch,True
+optimizer,p01_lr0p25,"lr=2.5e-05,wd=0.0","lr=2.5e-05,wd=0.0",True
+model,p01_lr0p25,"(1, 720, 7)",finite_exact_prefix,True
+optimizer,p02_lr0p50,"lr=5e-05,wd=0.0","lr=5e-05,wd=0.0",True
+model,p02_lr0p50,"(1, 720, 7)",finite_exact_prefix,True
+optimizer,p03_lr2p00,"lr=0.0002,wd=0.0","lr=0.0002,wd=0.0",True
+model,p03_lr2p00,"(1, 720, 7)",finite_exact_prefix,True
+optimizer,p04_lr4p00,"lr=0.0004,wd=0.0","lr=0.0004,wd=0.0",True
+model,p04_lr4p00,"(1, 720, 7)",finite_exact_prefix,True
+optimizer,p05_wd1e5,"lr=0.0001,wd=1e-05","lr=0.0001,wd=1e-05",True
+model,p05_wd1e5,"(1, 720, 7)",finite_exact_prefix,True
+optimizer,p06_wd1e4,"lr=0.0001,wd=0.0001","lr=0.0001,wd=0.0001",True
+model,p06_wd1e4,"(1, 720, 7)",finite_exact_prefix,True
+optimizer,p07_wd1e3,"lr=0.0001,wd=0.001","lr=0.0001,wd=0.001",True
+model,p07_wd1e3,"(1, 720, 7)",finite_exact_prefix,True
+optimizer,p08_lr0p50_wd1e4,"lr=5e-05,wd=0.0001","lr=5e-05,wd=0.0001",True
+model,p08_lr0p50_wd1e4,"(1, 720, 7)",finite_exact_prefix,True
+optimizer,p09_rank0p50_lr0p50_wd1e4,"lr=5e-05,wd=0.0001","lr=5e-05,wd=0.0001",True
+model,p09_rank0p50_lr0p50_wd1e4,"(1, 720, 7)",finite_exact_prefix,True
+optimizer,p10_rank1p50_lr0p50_wd1e4,"lr=5e-05,wd=0.0001","lr=5e-05,wd=0.0001",True
+model,p10_rank1p50_lr0p50_wd1e4,"(1, 720, 7)",finite_exact_prefix,True
+execution,runner_syntax,0,0,True
+execution,runner_dry_run,patchtst_hpo_v2_dry_run=pass jobs=50 search_hash=0fe90562894ba68503a8afae63fbbafeaa1a6430dcca41b05600ea338cba931b,jobs=50,True

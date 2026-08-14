@@ -86,6 +86,8 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 
 ### Decoder-Transfer
 
+- 2026-08-15已另建PatchTST decoder-HPO v2 test-informed rescue candidate；当前只有50-run train/validation授权，未授权formal test或表格替换；因此本总账中的v1 negative table继续是唯一canonical Decoder-Transfer结果；
+
 - 完整性：30/30 from-scratch end-to-end checkpoints、30 unique immutable hashes、120/120 official-test cells；
 - DLinear-style中+ISCF-BSCA相对Original Decoder的macro MSE/MAE改善`15.702%/8.184%`，赢4/5 dataset MSE means，预注册gate通过；
 - PatchTST-style中+ISCF-BSCA相对Original Decoder为`-0.733%/-0.062%`，只赢2/5 dataset MSE means，预注册gate失败；

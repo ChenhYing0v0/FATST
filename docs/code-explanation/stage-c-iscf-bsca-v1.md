@@ -1,5 +1,13 @@
 # ISCF-BSCA-v1 code explanation
 
+## 2026-08-15 PatchTST decoder-HPO optimizer groups
+
+`train_repo.py::build_optimizer`为带`pcsd_readout`的HPO trial增加可选的readout参数组。默认`readout_learning_rate_multiplier=1.0`且`readout_weight_decay=None`时仍走历史single-group AdamW，不改变既有run；本轮PatchTST HPO显式把`pcsd_readout.*`与其余encoder参数分组。encoder组保持source profile的base learning rate与weight decay，readout组使用`base_lr × readout_learning_rate_multiplier`及独立`readout_weight_decay`。
+
+`utils/tools.py::adjust_learning_rate`读取每组的`lr_scale`，因此cosine schedule后仍保留readout相对倍率。`training_log.csv`同时记录`lr`与`readout_lr`，`effective_config.json`记录两个新增CLI参数。该patch只改变optimization path，不改变forward tensor、scope集合、policy、BSCA objective或checkpoint selector。
+
+代码理论一致性边界：该设置检验PatchTST representation下decoder optimization scale mismatch，不是新decoder mechanism。所有trial仍从scratch联合训练encoder和decoder；若validation gate失败，应转向新的backbone/carrier设计，而不能用frozen replacement或cross-swap作方向级补救。
+
 ## 2026-08-14 Decoder-Transfer carrier extension
 
 为匹配Section 5.7的end-to-end transfer contract，`TimeAlign.Model`新增两个仅供冻结transfer protocol使用的入口。`dlinear-decomposition`把归一化历史`x [B,L,C]`经kernel-25 moving average拆为seasonal/trend，并输出memory `[B,C,2,L]`；`contextual-patch-transformer`沿用既有PatchTST-derived memory `[B,C,P,D]`，但现在允许接入transfer readouts。

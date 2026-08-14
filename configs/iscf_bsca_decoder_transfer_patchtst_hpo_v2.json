@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "protocol_id": "ISCF-BSCA-DECODER-TRANSFER-PATCHTST-HPO-20260815",
+  "candidate_version": "ISCF-BSCA-DECODER-TRANSFER-PATCHTST-HPO-v2",
+  "status": "remote_training_authorized_formal_test_not_authorized",
+  "current_step": 8,
+  "test_informed": true,
+  "problem": "PatchTST-style ISCF-BSCA improves over the matched ISCF arm but does not beat the Original Decoder on the v1 official-test macro gate",
+  "prior_candidate": {
+    "version": "ISCF-BSCA-DECODER-TRANSFER-v1",
+    "result": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_20260814/formal_results/result_and_table_audit.md",
+    "decision": "valid_negative_cross_backbone_portability_result_not_reinterpreted_as_hpo_failure",
+    "patchtst_bsca_vs_original_macro_mse_gain_percent": -0.733,
+    "patchtst_bsca_vs_original_macro_mae_gain_percent": -0.062,
+    "patchtst_bsca_vs_original_dataset_mse_wins": 2
+  },
+  "datasets": ["Weather", "ETTm1", "ETTm2", "ETTh1", "ETTh2"],
+  "horizons": [96, 192, 336, 720],
+  "seeds": [2021],
+  "backbone": {
+    "id": "patchtst_style",
+    "encoder_mode": "contextual-patch-transformer",
+    "profile_path": "configs/iscf_bsca_decoder_transfer_profiles.json",
+    "profile_sha256": "3a0b8864f1389ebb1346bebe0954b3fa7466b1ae8b054de597f263b8089c95ec",
+    "frozen_fields": [
+      "seq_len",
+      "pred_len",
+      "history_patch_len",
+      "history_patch_stride",
+      "history_e_layers",
+      "history_res_attention",
+      "history_attn_dropout",
+      "d_model",
+      "n_heads",
+      "d_ff",
+      "dropout",
+      "base_learning_rate",
+      "batch_size",
+      "patience"
+    ]
+  },
+  "arm": {
+    "id": "patchtst_iscf_bsca",
+    "readout_mode": "siff-independent-scope-control",
+    "policy_mode": "direct",
+    "objective_mode": "equal_uniform_scope_anchor",
+    "joint_encoder_decoder_training": true,
+    "frozen_replacement": false,
+    "warm_start": false
+  },
+  "reference_profile": {
+    "id": "v1_matched_rank_lr1_wd0",
+    "reuse_training_artifacts": true,
+    "remote_root": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_decoder_transfer_20260814/patchtst_style/patchtst_iscf_bsca",
+    "mode_rank_by_dataset": {
+      "ETTm1": 116,
+      "ETTm2": 106,
+      "ETTh1": 109,
+      "ETTh2": 116,
+      "Weather": 116
+    },
+    "readout_learning_rate_multiplier": 1.0,
+    "readout_weight_decay": 0.0,
+    "validation_mean_mse_by_dataset": {
+      "ETTm1": 0.626720365,
+      "ETTm2": 0.185338586,
+      "ETTh1": 1.095634520,
+      "ETTh2": 0.377966682,
+      "Weather": 0.522395042
+    }
+  },
+  "search_profiles": [
+    {"id": "p01_lr0p25", "rank_scale": 1.0, "readout_learning_rate_multiplier": 0.25, "readout_weight_decay": 0.0},
+    {"id": "p02_lr0p50", "rank_scale": 1.0, "readout_learning_rate_multiplier": 0.5, "readout_weight_decay": 0.0},
+    {"id": "p03_lr2p00", "rank_scale": 1.0, "readout_learning_rate_multiplier": 2.0, "readout_weight_decay": 0.0},
+    {"id": "p04_lr4p00", "rank_scale": 1.0, "readout_learning_rate_multiplier": 4.0, "readout_weight_decay": 0.0},
+    {"id": "p05_wd1e5", "rank_scale": 1.0, "readout_learning_rate_multiplier": 1.0, "readout_weight_decay": 0.00001},
+    {"id": "p06_wd1e4", "rank_scale": 1.0, "readout_learning_rate_multiplier": 1.0, "readout_weight_decay": 0.0001},
+    {"id": "p07_wd1e3", "rank_scale": 1.0, "readout_learning_rate_multiplier": 1.0, "readout_weight_decay": 0.001},
+    {"id": "p08_lr0p50_wd1e4", "rank_scale": 1.0, "readout_learning_rate_multiplier": 0.5, "readout_weight_decay": 0.0001},
+    {"id": "p09_rank0p50_lr0p50_wd1e4", "rank_scale": 0.5, "readout_learning_rate_multiplier": 0.5, "readout_weight_decay": 0.0001},
+    {"id": "p10_rank1p50_lr0p50_wd1e4", "rank_scale": 1.5, "readout_learning_rate_multiplier": 0.5, "readout_weight_decay": 0.0001}
+  ],
+  "rank_rounding_rule": "round(reference_rank_times_rank_scale)_with_minimum_1",
+  "matrix": {
+    "new_training_runs": 50,
+    "reused_reference_runs": 5,
+    "expected_new_checkpoint_hashes": 50,
+    "formal_test_jobs": 0,
+    "metrics": ["mse", "mae"]
+  },
+  "training": {
+    "from_scratch": true,
+    "target_horizons": [720],
+    "validation_horizons": [96, 192, 336, 720],
+    "checkpoint_score": "mean_validation_mse_h96_h192_h336_h720",
+    "checkpoint_policy": "best-val",
+    "pred_loss_mode": "full",
+    "max_epochs": 100,
+    "optimizer": "AdamW_with_readout_parameter_group",
+    "encoder_learning_rate_and_weight_decay_unchanged": true,
+    "final_evaluation_split": "val",
+    "test_labels_select_epoch_checkpoint_seed_or_profile": false
+  },
+  "selection": {
+    "unit": "one_profile_per_dataset_shared_by_all_four_horizons",
+    "candidate_pool": "ten_new_profiles_plus_v1_reference",
+    "primary_metric": "mean_validation_mse_h96_h192_h336_h720",
+    "tie_breakers": ["lower_mode_rank", "lower_readout_learning_rate_multiplier", "lexicographic_profile_id"],
+    "minimum_macro_validation_mse_gain_percent_over_v1_reference_exclusive": 0.25,
+    "minimum_datasets_with_validation_mse_gain_over_0p1_percent": 3,
+    "numeric_health_required": true
+  },
+  "next_gate": {
+    "if_pass": "freeze five selected dataset profiles, train matched ISCF arms with the same decoder hyperparameters, then request a new single formal-test authorization",
+    "if_fail": "do_not_access_test; return to Step 4-6 and implement an iTransformer-style source-informed carrier candidate",
+    "no_automatic_table_mutation": true
+  },
+  "artifact_contract": {
+    "remote_output_root": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_decoder_transfer_patchtst_hpo_v2_20260815",
+    "local_analysis_root": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_hpo_v2_20260815",
+    "required_files": [
+      "checkpoint.pt",
+      "training_log.csv",
+      "metrics_by_target_horizon.csv",
+      "effective_config.json",
+      "trained_invariants.json"
+    ]
+  },
+  "resource_estimate": {
+    "gpu": "3 x RTX 3090",
+    "estimated_total_gpu_hours": "22-28",
+    "estimated_wall_hours": "8-11",
+    "estimated_storage_gb": "3-5",
+    "scheduling": "dataset-major longest-processing-time; Weather and ETTm jobs first"
+  },
+  "authorization": {
+    "user_authorization": "2026-08-15 request to continue PatchTST decoder tuning and use another backbone only if tuning fails",
+    "remote_training_authorized": true,
+    "formal_test_access_authorized": false,
+    "paper_table_update_authorized": false
+  },
+  "claim_boundary": "v2 is a test-informed rescue candidate; v1 remains a valid negative matched result; validation HPO cannot itself restore the cross-backbone portability claim"
+}

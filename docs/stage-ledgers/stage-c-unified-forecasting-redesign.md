@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | Decoder-Transfer与Efficiency均已闭合；下一项为Figure 5 mechanism-diagnostic/illustrative-case contract；allocation正向accuracy claim保持unsupported |
+| `active_question` | 用户显式重开PatchTST Decoder-Transfer修补：先做decoder-only HPO v2；若validation gate失败，再回Step 4--6设计iTransformer-style carrier；Figure 5暂后移 |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
 | `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7与Sections 5--7 v0.2 structure temporarily frozen usable；Figure 4 visual design temporarily fixed |
@@ -22,12 +22,12 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Decoder-Transfer、Efficiency与Core-Ablation Step 9--10 complete；Figure 5 Step 6 contract next |
-| `current_candidate` | paper architecture frozen；exact `ISCF-BSCA-v1`仅ablation；`ISCF-BSCA-MAIN-v1` 8 selected profiles reusable |
-| `latest_decision` | `efficiency_complete_tradeoff_supported_no_uniform_compute_advantage` |
+| `current_11_step` | PatchTST Decoder-Transfer HPO v2 Step 8 remote train/validation；formal test blocked |
+| `current_candidate` | `ISCF-BSCA-DECODER-TRANSFER-PATCHTST-HPO-v2`；v1 PatchTST负结果保持有效且不回写 |
+| `latest_decision` | `patchtst_decoder_hpo_v2_frozen_remote_training_authorized_formal_test_blocked` |
 | `writing_latest_decision` | `sections_5_7_v0_2_efficiency_and_transfer_evidence_synced` |
-| `next_required_action` | 冻结Figure 5 Scope Probability/utilization/regional preference-error与illustrative-case selection contract；不得用diagnostics补救allocation failed effectiveness |
-| `method_training_authorized` | Decoder-Transfer 30-run training与manifest-gated single formal test已由2026-08-14请求授权；Efficiency只授权profiling，不新增训练/不访问test |
+| `next_required_action` | 完成50/50 PatchTST BSCA HPO training artifacts与50 unique hashes；仅按four-H validation mean MSE选profile；通过gate后请求新formal-test授权 |
+| `method_training_authorized` | 2026-08-15用户授权继续PatchTST decoder调参并在失败时更换backbone；当前只启动50-run train/validation，formal test与table mutation=false |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
 ## 11-Step Record
@@ -44,6 +44,21 @@
 | `effectiveness_gate` | trade-off：ISCF相对TimeAlign/QDF减少model count、params与storage，但training/latency不领先 |
 | `artifacts` | result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/result_and_table_audit.md`；table=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/table/table_iscf_bsca_efficiency.tex` |
 | `decision` | `efficiency_complete_tradeoff_supported_no_uniform_compute_advantage`；不宣称faster training/inference或prefix-bounded speedup |
+
+## PatchTST Decoder-Transfer HPO v2 Record (2026-08-15)
+
+| Field | Current Record |
+| --- | --- |
+| `current_step` | Step 8 remote train/validation |
+| `problem` | v1 PatchTST `+ISCF-BSCA`比`+ISCF`更好但未超过Original Decoder；需判断decoder optimization/capacity profile是否不匹配 |
+| `existence_evidence` | v1 BSCA相对Original在validation为5/5 dataset means正向，但official test仅2/5正向，提示split-specific overfitting风险 |
+| `idea` | encoder profile完全冻结；只搜索readout LR multiplier、readout-only weight decay及两个rank边界点 |
+| `theory_check` | optimizer parameter group只作用`pcsd_readout.*`；forward、scope集合、policy、objective与four-H selector不变 |
+| `design` | 10 profiles × 5 datasets × seed2021=50 new runs；v1五个BSCA runs只作validation reference |
+| `narrative_gate` | v2是test-informed rescue candidate；不得删除或改写v1负结果 |
+| `effectiveness_gate` | macro validation MSE改善>0.25%，且至少3/5 datasets改善>0.1%；否则test=0并转iTransformer Step 4--6 |
+| `artifacts` | design=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_hpo_v2_20260815/design_and_prelaunch_gate.md`；config=`configs/iscf_bsca_decoder_transfer_patchtst_hpo_v2.json` |
+| `decision` | `patchtst_decoder_hpo_v2_frozen_remote_training_authorized_formal_test_blocked` |
 
 ## Exact Ablation Anchor Contract
 

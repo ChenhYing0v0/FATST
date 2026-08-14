@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Decoder-Transfer与Efficiency Step 9--10 complete；Figure 5 mechanism-diagnostic contract next |
+| `current_11_step` | PatchTST Decoder-Transfer HPO v2 Step 8 train/validation；formal test blocked |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,7 +18,9 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；Core-Ablation 3/4 controls pass；Decoder-Transfer总体portability claim unsupported（DLinear pass / PatchTST fail）；Efficiency支持one-model/CHPC/parameter-storage trade-off但不支持uniform compute advantage；allocation独立accuracy claim仍unsupported |
+| `paper_core_status` | architecture family frozen；Core-Ablation 3/4 controls pass；Decoder-Transfer v1总体portability claim unsupported（DLinear pass / PatchTST fail）；PatchTST decoder-HPO v2已重开但尚无test evidence；Efficiency只支持trade-off；allocation独立accuracy claim仍unsupported |
+
+[PatchTST Decoder-Transfer HPO v2 Prelaunch, 2026-08-15] v1负结果保持有效：PatchTST-style `+ISCF-BSCA`相对Original Decoder macro MSE/MAE=`-0.733%/-0.062%`、dataset MSE wins=`2/5`。新test-informed v2冻结10个decoder profiles × 5 datasets=`50`个from-scratch joint-training runs；PatchTST encoder、BSCA objective、seed与four-H validation selector不变，只搜索`pcsd_readout` LR multiplier、decoder-only weight decay及两个rank边界点。27项local gate通过。训练授权=true；formal test/table mutation=false。若validation macro改善不超过0.25%或不足3/5 datasets改善0.1%，不访问test并回Step 4--6设计iTransformer-style carrier。Canonical design=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_hpo_v2_20260815/design_and_prelaunch_gate.md`。Decision=`patchtst_decoder_hpo_v2_frozen_remote_training_authorized_formal_test_blocked`。
 
 [Efficiency Formal Result, 2026-08-14] 独占RTX 3090完成5 systems × 7 datasets=`35/35 service units`与77/77 immutable checkpoint objects；全部finite/CV gates通过，最大all-H round CV=`0.0368`，无test loader/labels访问。ISCF-BSCA七dataset macro为1 model、`2.926M` params、`17.68 MiB` checkpoints、`2.028 logged GPU h`、single/all-H latency=`10.306/10.318 ms`、peak=`38.8 MiB`。相对TimeAlign/QDF four-model services，分别减少72.8%/45.2% deployed params与81.5%/13.3% checkpoint storage，并提供architectural CHPC；但all-H latency分别慢2.88×/2.33×，且training time不领先。因此只支持deployment consolidation与storage/compute trade-off，不支持uniform efficiency或未实现的prefix-bounded speedup。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/result_and_table_audit.md`。Decision=`efficiency_complete_tradeoff_supported_no_uniform_compute_advantage`；next=`Figure 5 contract freeze`。
 

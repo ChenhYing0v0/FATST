@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## PatchTST Decoder-Transfer HPO v2 Prelaunch (2026-08-15)
+
+Current cursor=`PatchTST decoder HPO v2 Step 8 train/validation -> formal test blocked`。v1 PatchTST block仍是有效负结果，不作事后删除或改写。日志复核显示`+ISCF-BSCA`相对Original在four-H validation mean MSE上5/5 datasets正向，但official test只2/5正向，因此本轮优先处理decoder overfitting/optimization scale，而不是立即扩大encoder搜索。
+
+冻结matrix为10 decoder profiles × 5 datasets × seed2021=`50 new joint-training runs`；encoder geometry/width/depth/dropout/base LR、BSCA objective、scope集合与four-H validation selector不变。搜索readout LR multiplier、readout-only weight decay及0.5×/1.5× rank边界点。进入formal-test申请的gate为相对v1 reference macro validation MSE改善>0.25%，且至少3/5 datasets改善>0.1%；50/50 artifacts和50 unique hashes为硬前提。若失败，test=0并回Step 4--6实现iTransformer-style carrier。Canonical design=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_hpo_v2_20260815/design_and_prelaunch_gate.md`；Decision=`patchtst_decoder_hpo_v2_frozen_remote_training_authorized_formal_test_blocked`。
+
 ## Efficiency Formal Result and Step 9--10 Decision (2026-08-14)
 
 Current cursor=`Efficiency complete -> deployment trade-off supported -> Figure 5 contract next`。独占RTX 3090完成35/35 service units与77/77 immutable checkpoint objects，所有finite/CV gates通过且未访问test loader/labels。ISCF-BSCA以1个model提供architectural CHPC，并相对four-model TimeAlign/QDF减少deployed parameters与checkpoint storage；但其single/all-H latency与logged training time均不领先，当前implementation仍materialize完整$T=720$ field。

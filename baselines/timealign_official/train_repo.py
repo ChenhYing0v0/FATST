@@ -1915,6 +1915,64 @@ def validation_mean_mse(
     return float(np.mean([row["mse"] for row in rows]))
 
 
+def build_optimizer(
+    model: nn.Module,
+    official_args: argparse.Namespace,
+    args: argparse.Namespace,
+) -> optim.AdamW:
+    """Build optional readout-specific AdamW parameter groups.
+
+    The default values preserve the historical single-group optimizer.  HPO
+    trials can change the optimization scale of ``pcsd_readout`` without
+    changing the PatchTST-style encoder learning rate or weight decay.
+    """
+    readout_lr_scale = float(args.readout_learning_rate_multiplier)
+    readout_weight_decay = args.readout_weight_decay
+    if readout_lr_scale == 1.0 and readout_weight_decay is None:
+        return optim.AdamW(
+            model.parameters(),
+            lr=official_args.learning_rate,
+            weight_decay=official_args.weight_decay,
+        )
+
+    readout_parameters = []
+    backbone_parameters = []
+    for name, parameter in model.named_parameters():
+        if name.startswith("pcsd_readout."):
+            readout_parameters.append(parameter)
+        else:
+            backbone_parameters.append(parameter)
+    if not readout_parameters:
+        raise ValueError(
+            "readout-specific optimizer settings require a pcsd_readout module"
+        )
+    effective_readout_weight_decay = (
+        official_args.weight_decay
+        if readout_weight_decay is None
+        else float(readout_weight_decay)
+    )
+    return optim.AdamW(
+        [
+            {
+                "params": backbone_parameters,
+                "lr": official_args.learning_rate,
+                "lr_scale": 1.0,
+                "weight_decay": official_args.weight_decay,
+                "group_name": "backbone",
+            },
+            {
+                "params": readout_parameters,
+                "lr": official_args.learning_rate * readout_lr_scale,
+                "lr_scale": readout_lr_scale,
+                "weight_decay": effective_readout_weight_decay,
+                "group_name": "readout",
+            },
+        ],
+        lr=official_args.learning_rate,
+        weight_decay=official_args.weight_decay,
+    )
+
+
 def early_stopping_update(
     value: float,
     best_value: float,
@@ -1945,11 +2003,7 @@ def train(
         args.output_dir / "initialization_contract.json",
         initialization_contract(model),
     )
-    optimizer = optim.AdamW(
-        model.parameters(),
-        lr=official_args.learning_rate,
-        weight_decay=official_args.weight_decay,
-    )
+    optimizer = build_optimizer(model, official_args, args)
     criterion = nn.L1Loss()
     coalition_shuffle_generator = None
     if args.pcc_objective_mode in {
@@ -2230,6 +2284,16 @@ def train(
             ),
             "val_mean_mse": val_mean_mse,
             "lr": float(optimizer.param_groups[0]["lr"]),
+            "readout_lr": float(
+                next(
+                    (
+                        group["lr"]
+                        for group in optimizer.param_groups
+                        if group.get("group_name") == "readout"
+                    ),
+                    optimizer.param_groups[0]["lr"],
+                )
+            ),
             "epoch_seconds": time.time() - epoch_start,
             "early_stopping_enabled": int(args.enable_early_stopping),
             "early_stopping_patience": args.patience,
@@ -2543,6 +2607,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--legacy-layer-norm", type=int, choices=[0, 1], default=None)
     parser.add_argument("--learning-rate", type=float, default=None)
     parser.add_argument("--weight-decay", type=float, default=0.01)
+    parser.add_argument(
+        "--readout-learning-rate-multiplier",
+        type=float,
+        default=1.0,
+    )
+    parser.add_argument("--readout-weight-decay", type=float, default=None)
     parser.add_argument("--w-recon", type=float, default=1.0)
     parser.add_argument("--w-align", type=float, default=None)
     parser.add_argument("--batch-size", type=int, default=32)
@@ -2883,6 +2953,10 @@ def parse_args() -> argparse.Namespace:
         raise ValueError("learning rate must be positive")
     if args.weight_decay < 0.0:
         raise ValueError("weight decay must be non-negative")
+    if args.readout_learning_rate_multiplier <= 0.0:
+        raise ValueError("readout learning-rate multiplier must be positive")
+    if args.readout_weight_decay is not None and args.readout_weight_decay < 0.0:
+        raise ValueError("readout weight decay must be non-negative")
     if args.w_align is not None and args.w_align < 0.0:
         raise ValueError("w_align must be non-negative")
     if args.basis_rank <= 0:
