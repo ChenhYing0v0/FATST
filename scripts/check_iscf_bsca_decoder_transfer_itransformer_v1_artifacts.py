@@ -174,7 +174,9 @@ def main() -> None:
                     best_validation_mse = validation_values[best_index]
                     selector_ok = (
                         metrics_ok
-                        and abs(metric_mean_mse - best_validation_mse) <= 1e-9
+                        # The epoch logger and final evaluator aggregate the
+                        # same samples through different batch reductions.
+                        and abs(metric_mean_mse - best_validation_mse) <= 1e-6
                     )
 
                 initialization = load_json(run_dir / "initialization_contract.json")
