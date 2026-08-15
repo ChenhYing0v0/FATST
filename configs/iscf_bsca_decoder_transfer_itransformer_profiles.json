@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "profile_id": "ISCF-BSCA-DECODER-TRANSFER-ITRANSFORMER-SOURCE-PRIOR-20260815",
+  "selection_role": "official_source_informed_profile_shared_by_all_three_decoder_arms",
+  "source_repository": "https://github.com/thuml/iTransformer",
+  "source_commit": "c2426e68ca13f74aaec08045c5c724d8ad328124",
+  "source_role": "source_informed_local_matched_backbone_not_native_baseline_reproduction",
+  "common": {
+    "encoder_mode": "itransformer-variate-attention",
+    "seq_len": 96,
+    "pred_len": 720,
+    "n_heads": 8,
+    "dropout": 0.1,
+    "learning_rate": 0.0001,
+    "batch_size": 32,
+    "weight_decay": 0.0,
+    "max_epochs": 10,
+    "patience": 3,
+    "seed": 2021,
+    "checkpoint_selector": "mean_validation_mse_h96_h192_h336_h720"
+  },
+  "dataset_profiles": {
+    "ETTm1": {"d_model": 128, "d_ff": 128, "e_layers": 2, "mode_rank": 21},
+    "ETTm2": {"d_model": 128, "d_ff": 128, "e_layers": 2, "mode_rank": 21},
+    "ETTh1": {"d_model": 512, "d_ff": 512, "e_layers": 2, "mode_rank": 30},
+    "ETTh2": {"d_model": 128, "d_ff": 128, "e_layers": 2, "mode_rank": 21},
+    "Weather": {"d_model": 512, "d_ff": 512, "e_layers": 3, "mode_rank": 30}
+  },
+  "capacity_control": {
+    "rule": "choose_integer_mode_rank_with_minimum_absolute_difference_between_siff_and_native_linear_readout_parameter_counts",
+    "d_model_128_native_params": 92880,
+    "d_model_128_siff_params": 91961,
+    "d_model_512_native_params": 369360,
+    "d_model_512_siff_params": 370829
+  }
+}

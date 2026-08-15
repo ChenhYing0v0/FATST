@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | PatchTST decoder-only HPO v2.1已完成但formal gate仍失败；按已授权rollback回Step 4--6设计iTransformer-style carrier；Figure 5继续后移 |
+| `active_question` | PatchTST v2.1 formal gate失败后，iTransformer-style carrier已通过Step 4--7 source/design/local gate；下一步为15-run remote train/validation，formal test继续blocked；Figure 5后移 |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
 | `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7与Sections 5--7 v0.2 structure temporarily frozen usable；Figure 4 visual design temporarily fixed |
@@ -22,12 +22,12 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | PatchTST Decoder-Transfer v2.1 Step 9--10 complete；next=Step 4--6 iTransformer-style carrier narrative/design gate |
-| `current_candidate` | `ISCF-BSCA-DECODER-TRANSFER-PATCHTST-HPO-v2`；v1 PatchTST负结果保持有效且不回写 |
-| `latest_decision` | `decoder_transfer_v2p1_complete_portability_gate_not_passed` |
+| `current_11_step` | iTransformer-style Decoder-Transfer v1 Step 7 local gate pass；next=Step 8 remote train/validation |
+| `current_candidate` | `ISCF-BSCA-DECODER-TRANSFER-ITRANSFORMER-v1`；PatchTST v1/v2.1负结果保持有效且不回写 |
+| `latest_decision` | `itransformer_transfer_v1_local_gate_pass_remote_train_validation_authorized_formal_test_blocked` |
 | `writing_latest_decision` | `main_i_main_ii_author_corrected_20260815_complete_hash_frozen` |
-| `next_required_action` | 回到Step 4--6，先完成iTransformer-style carrier的source/protocol audit、matched end-to-end design与narrative gate；在新candidate冻结前不得直接启动training/formal test |
-| `method_training_authorized` | PatchTST decoder-HPO与v2.1 formal test授权已执行完毕；用户此前允许PatchTST失败后更换backbone，但iTransformer-style新candidate仍须先通过source-informed design/local gate后再进入remote execution |
+| `next_required_action` | commit/push exact local state；远程检查GPU/quota，完成3-job resource smoke后以GPU0/1/2启动15-run train/validation；15-hash manifest前test=0 |
+| `method_training_authorized` | iTransformer-style local patch与15-run remote train/validation=true；formal test、table mutation、extra HPO、extra seeds=false |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
 ## Main-Table Author Correction Record (2026-08-15)

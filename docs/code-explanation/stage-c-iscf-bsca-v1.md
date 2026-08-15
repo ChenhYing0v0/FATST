@@ -1,5 +1,15 @@
 # ISCF-BSCA-v1 code explanation
 
+## 2026-08-15 iTransformer-style transfer carrier
+
+`TimeAlign.Model`新增`itransformer-variate-attention` encoder mode。输入先由现有`Normalize`得到`x [B,L,C]`，随后转为`[B,C,L]`；`InvertedVariateEncoder.history_embedding`沿完整history维执行`Linear(L,D)`，将每个variate构造成一个token。每层`InvertedVariateEncoderLayer`在`C`个tokens上执行full non-causal multi-head self-attention，随后经过residual、LayerNorm和GELU-FFN；最终memory为`[B,C,1,D]`。
+
+`direct-unified-original`将singleton memory axis flatten为`hidden [B,C,D]`，使用共享的`Linear(D,720)`得到native-style trajectory。`+ISCF`和`+ISCF-BSCA`接收完全相同的`hidden [B,C,D]`并进入现有`siff-independent-scope-control`；三列均从scratch end-to-end训练。`train_repo.initialization_contract`把`inverted_history_encoder.*`纳入encoder hash，因此每个dataset的三臂必须证明encoder initialization一致。
+
+Source-informed边界：该实现采用official iTransformer的`full variate history -> variate token -> attention over variates -> shared D-to-H projection` tensor语义，但用PyTorch `MultiheadAttention`实现本地attention block，不追求official checkpoint或逐tensor数值等价。它检验的是ISCF readout对inverted variate representation的matched portability，不是native iTransformer baseline reproduction。
+
+代码理论一致性：若`+ISCF-BSCA`优于`+ISCF`但两者仍不及Original Decoder，应归因于replacement readout compatibility，而不是否定BSCA objective；只有完整iTransformer formal block同时超过Original的MSE/MAE gate，才能支持这一carrier上的transfer。PatchTST负结果必须继续保留，不能被新carrier选择性替换。
+
 ## 2026-08-15 PatchTST decoder-HPO optimizer groups
 
 `train_repo.py::build_optimizer`为带`pcsd_readout`的HPO trial增加可选的readout参数组。默认`readout_learning_rate_multiplier=1.0`且`readout_weight_decay=None`时仍走历史single-group AdamW，不改变既有run；本轮PatchTST HPO显式把`pcsd_readout.*`与其余encoder参数分组。encoder组保持source profile的base learning rate与weight decay，readout组使用`base_lr × readout_learning_rate_multiplier`及独立`readout_weight_decay`。

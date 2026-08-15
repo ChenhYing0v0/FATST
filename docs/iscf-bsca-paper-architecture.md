@@ -5,10 +5,10 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.73` |
+| `version` | `v0.74` |
 | `last_updated` | `2026-08-15` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Main I/Main II author-corrected tables hash-frozen；experiments=PatchTST Decoder-Transfer v2.1 formal complete/gate failed，next=iTransformer-style carrier Step 4--6 |
+| `current_review_cursor` | writing=Main I/Main II author-corrected tables hash-frozen；experiments=iTransformer-style Decoder-Transfer v1 local gate pass，15-run train/validation next，formal test blocked |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
@@ -16,7 +16,7 @@
 | `frozen_consensus` | 论文七章结构并保留standalone Discussion；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.2 structural design |
 | `provisional_content` | Method Figure 4 stable vector-asset synchronization；remaining manuscript prose and pending experiment evidence |
-| `authorization_source` | 2026-08-15用户授权继续decoder-HPO formal test；v2.1 10-checkpoint manifest-gated access已完成，PatchTST gate仍失败 |
+| `authorization_source` | 2026-08-15用户允许PatchTST decoder-HPO失败后更换backbone；iTransformer-style local patch与remote train/validation已进入授权scope，formal test/table mutation=false |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
@@ -1850,3 +1850,4 @@ Coverage boundary：
 | 2026-08-14 | Decoder-Transfer / Efficiency prelaunch | Transfer冻结30-checkpoint end-to-end matrix并通过13项local gate；Efficiency冻结5-system、35-unit、77-object profiler contract | Transfer进入manifest-gated remote Step 8；Efficiency无新训练/无test access，正式测量与training错峰 |
 | 2026-08-14 | Decoder-Transfer formal closure | 30 checkpoints、30 unique hashes、120/120 test cells；DLinear pass / PatchTST fail | 总体cross-backbone portability unsupported；正向动词撤回；Efficiency进入独占GPU execution |
 | 2026-08-15 | PatchTST Decoder-Transfer v2.1 formal closure | Parent 50-run HPO validation pass但uniqueness gate fail；冻结5个selected BSCA并补训5个matched ISCF；10 unique hashes、5 matched initialization pairs与40 new/120 combined test cells闭合 | HPO仅缩小MSE deficit；PatchTST gate仍fail；cross-backbone portability继续unsupported，rollback至iTransformer-style carrier Step 4--6 |
+| 2026-08-15 | iTransformer-style Decoder-Transfer v1 prelaunch | official source audit；`[B,C,1,D]` variate-token memory；3 arms × 5 datasets；28项local gate通过 | remote train/validation=true；15-hash manifest前formal test/table mutation=false；PatchTST negative block保留 |

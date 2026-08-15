@@ -303,6 +303,7 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
     contextual_encoder = encoder_mode in {
         "contextual-patch-transformer",
         "global-anchored-patch-transformer",
+        "itransformer-variate-attention",
     }
     global_anchored_encoder = encoder_mode == "global-anchored-patch-transformer"
     legacy_d_model = preset.d_model if args.legacy_d_model is None else args.legacy_d_model
@@ -534,6 +535,7 @@ def initialization_contract(model: nn.Module) -> dict[str, Any]:
                 "encoder.",
                 "norm_x.",
                 "history_encoder.",
+                "inverted_history_encoder.",
                 "decomposition_encoder.",
             )
         )
@@ -2575,6 +2577,7 @@ def parse_args() -> argparse.Namespace:
         choices=[
             "raw-history-identity",
             "dlinear-decomposition",
+            "itransformer-variate-attention",
             "timealign-token-mlp",
             "contextual-patch-transformer",
             "global-anchored-patch-transformer",
@@ -2833,9 +2836,13 @@ def parse_args() -> argparse.Namespace:
                 in {
                     "dlinear-decomposition",
                     "contextual-patch-transformer",
+                    "itransformer-variate-attention",
                 }
                 and args.protocol_profile
-                == "iscf_bsca_decoder_transfer_20260814"
+                in {
+                    "iscf_bsca_decoder_transfer_20260814",
+                    "iscf_bsca_decoder_transfer_itransformer_v1_20260815",
+                }
             )
             and not (
                 name == "pred_loss_mode"

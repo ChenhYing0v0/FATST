@@ -1,0 +1,29 @@
+category,case,value,expected,pass
+contract,profile_hash,5e8dc7f04765fae36d25f696cf66be00cc58ee59f7559871119751abb4ae8b51,5e8dc7f04765fae36d25f696cf66be00cc58ee59f7559871119751abb4ae8b51,True
+contract,matrix_15,15,15,True
+governance,formal_test_blocked,"test=False,table=False","test=False,table=False",True
+governance,joint_training,joint_from_scratch,joint_from_scratch,True
+capacity,d128_rank21,91961,91961,True
+capacity,d512_rank30,370829,370829,True
+model,ETTm1_itransformer_original,"full=(1, 720, 7),prefix=(1, 96, 7)",finite_and_exact_prefix,True
+model,ETTm1_itransformer_iscf,"full=(1, 720, 7),prefix=(1, 96, 7)",finite_and_exact_prefix,True
+model,ETTm1_itransformer_iscf_bsca,"full=(1, 720, 7),prefix=(1, 96, 7)",finite_and_exact_prefix,True
+model,ETTm1_matched_encoder_init,1,1,True
+model,ETTm2_itransformer_original,"full=(1, 720, 7),prefix=(1, 96, 7)",finite_and_exact_prefix,True
+model,ETTm2_itransformer_iscf,"full=(1, 720, 7),prefix=(1, 96, 7)",finite_and_exact_prefix,True
+model,ETTm2_itransformer_iscf_bsca,"full=(1, 720, 7),prefix=(1, 96, 7)",finite_and_exact_prefix,True
+model,ETTm2_matched_encoder_init,1,1,True
+model,ETTh1_itransformer_original,"full=(1, 720, 7),prefix=(1, 96, 7)",finite_and_exact_prefix,True
+model,ETTh1_itransformer_iscf,"full=(1, 720, 7),prefix=(1, 96, 7)",finite_and_exact_prefix,True
+model,ETTh1_itransformer_iscf_bsca,"full=(1, 720, 7),prefix=(1, 96, 7)",finite_and_exact_prefix,True
+model,ETTh1_matched_encoder_init,1,1,True
+model,ETTh2_itransformer_original,"full=(1, 720, 7),prefix=(1, 96, 7)",finite_and_exact_prefix,True
+model,ETTh2_itransformer_iscf,"full=(1, 720, 7),prefix=(1, 96, 7)",finite_and_exact_prefix,True
+model,ETTh2_itransformer_iscf_bsca,"full=(1, 720, 7),prefix=(1, 96, 7)",finite_and_exact_prefix,True
+model,ETTh2_matched_encoder_init,1,1,True
+model,Weather_itransformer_original,"full=(1, 720, 21),prefix=(1, 96, 21)",finite_and_exact_prefix,True
+model,Weather_itransformer_iscf,"full=(1, 720, 21),prefix=(1, 96, 21)",finite_and_exact_prefix,True
+model,Weather_itransformer_iscf_bsca,"full=(1, 720, 21),prefix=(1, 96, 21)",finite_and_exact_prefix,True
+model,Weather_matched_encoder_init,1,1,True
+execution,runner_syntax,0,0,True
+execution,runner_dry_run,itransformer_transfer_dry_run=pass jobs=15 profile_hash=5e8dc7f04765fae36d25f696cf66be00cc58ee59f7559871119751abb4ae8b51,jobs=15,True

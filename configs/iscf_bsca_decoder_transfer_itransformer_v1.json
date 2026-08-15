@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "candidate_version": "ISCF-BSCA-DECODER-TRANSFER-ITRANSFORMER-v1",
+  "test_role": "test_informed_decoder_transfer_extension_after_patchtst_negative_result",
+  "test_tuned": false,
+  "datasets": ["ETTm1", "ETTm2", "ETTh1", "ETTh2", "Weather"],
+  "horizons": [96, 192, 336, 720],
+  "primary_seed": 2021,
+  "profiles": {
+    "path": "configs/iscf_bsca_decoder_transfer_itransformer_profiles.json",
+    "sha256": "5e8dc7f04765fae36d25f696cf66be00cc58ee59f7559871119751abb4ae8b51"
+  },
+  "source_audit": {
+    "official_paper": "https://proceedings.iclr.cc/paper_files/paper/2024/file/2ea18fdc667e0ef2ad82b2b4d65147ad-Paper-Conference.pdf",
+    "official_repository": "https://github.com/thuml/iTransformer",
+    "official_commit": "c2426e68ca13f74aaec08045c5c724d8ad328124",
+    "adopted_contract": "full_variate_history_BCL_to_variate_tokens_BCD_then_full_attention_over_C",
+    "local_memory_contract": "B_C_1_D",
+    "native_readout_contract": "shared_linear_D_to_720_per_variate"
+  },
+  "arms": [
+    {
+      "id": "itransformer_original",
+      "column": "Original Decoder",
+      "readout_mode": "direct-unified-original",
+      "policy_mode": "direct",
+      "objective_mode": "measure_only"
+    },
+    {
+      "id": "itransformer_iscf",
+      "column": "+ISCF",
+      "readout_mode": "siff-independent-scope-control",
+      "policy_mode": "direct",
+      "objective_mode": "measure_only"
+    },
+    {
+      "id": "itransformer_iscf_bsca",
+      "column": "+ISCF-BSCA",
+      "readout_mode": "siff-independent-scope-control",
+      "policy_mode": "direct",
+      "objective_mode": "equal_uniform_scope_anchor"
+    }
+  ],
+  "training": {
+    "from_scratch": true,
+    "joint_encoder_decoder": true,
+    "frozen_replacement_or_warm_start": false,
+    "profile_shared_across_three_decoder_arms_within_dataset": true,
+    "target_horizons": [720],
+    "validation_horizons": [96, 192, 336, 720],
+    "checkpoint_score": "mean_validation_mse_h96_h192_h336_h720",
+    "checkpoint_policy": "best-val",
+    "pred_loss_mode": "full",
+    "optimizer": "AdamW",
+    "training_final_evaluation_split": "val",
+    "test_labels_select_epoch_checkpoint_seed_horizon_or_cell": false
+  },
+  "matrix": {
+    "training_runs": 15,
+    "checkpoint_objects": 15,
+    "formal_test_cells_if_later_authorized": 60,
+    "combined_decoder_transfer_cells_after_extension": 180,
+    "preserve_patchtst_negative_block": true
+  },
+  "launch_order": [
+    ["Weather", "itransformer_original"],
+    ["Weather", "itransformer_iscf"],
+    ["Weather", "itransformer_iscf_bsca"],
+    ["ETTm1", "itransformer_original"],
+    ["ETTm1", "itransformer_iscf"],
+    ["ETTm1", "itransformer_iscf_bsca"],
+    ["ETTm2", "itransformer_original"],
+    ["ETTm2", "itransformer_iscf"],
+    ["ETTm2", "itransformer_iscf_bsca"],
+    ["ETTh1", "itransformer_original"],
+    ["ETTh1", "itransformer_iscf"],
+    ["ETTh1", "itransformer_iscf_bsca"],
+    ["ETTh2", "itransformer_original"],
+    ["ETTh2", "itransformer_iscf"],
+    ["ETTh2", "itransformer_iscf_bsca"]
+  ],
+  "training_gate": {
+    "all_15_artifacts_required": true,
+    "unique_checkpoint_hashes_required": 15,
+    "matched_encoder_initialization_triplets_required": 5,
+    "numeric_health_required": true,
+    "formal_test_artifacts_absent_before_manifest": true
+  },
+  "formal_effectiveness_gate": {
+    "authorized": false,
+    "itransformer_bsca_vs_original_macro_mse_gain_percent_min_exclusive": 0.0,
+    "itransformer_bsca_vs_original_macro_mae_gain_percent_min_exclusive": 0.0,
+    "itransformer_bsca_vs_original_dataset_mse_wins_min": 3,
+    "bsca_vs_iscf_reported_separately": true,
+    "claim_if_pass": "transfer_supported_on_dlinear_and_itransformer_but_not_architecture_agnostic_due_patchtst_failure",
+    "claim_if_fail": "cross_backbone_portability_remains_unsupported_and_transfer_rescue_closes"
+  },
+  "authorization": {
+    "local_source_patch": true,
+    "remote_train_validation": true,
+    "formal_test": false,
+    "table_mutation": false,
+    "extra_hpo": false,
+    "extra_seeds": false,
+    "basis": "user_authorized_fallback_to_another_backbone_after_patchtst_decoder_hpo_failure"
+  }
+}

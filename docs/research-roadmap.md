@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## iTransformer-style Decoder-Transfer v1 Prelaunch (2026-08-15)
+
+Current cursor=`PatchTST v2.1 gate fail -> rollback Step 4--6 complete -> iTransformer v1 Step 7 pass -> Step 8 train/validation next`。Official iTransformer source audit确认其以完整variate history构造`[B,C,D]` tokens并在`C`维做attention，native head为shared `D->720` projection；本地source-informed carrier保持为`[B,C,1,D]`，与PatchTST `[B,C,P,D]`形成不同representation geometry。
+
+冻结matrix为Original/+ISCF/+ISCF-BSCA × 5 datasets × seed2021=`15`个from-scratch joint-training runs；每dataset一个official-source profile服务三臂，four-H validation mean MSE选择checkpoint。ISCF mode rank按native head参数量匹配为`D128->21`、`D512->30`。28项local gate通过，包括15个finite exact-prefix forward、5个matched encoder-init triplets和15-job dry run。PatchTST negative evidence不删除；若iTransformer通过，只能写“DLinear+iTransformer支持、PatchTST不支持”，不能写architecture-agnostic。Remote train/validation=true；formal test/table mutation/extra HPO/seeds=false。Canonical design=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_v1_20260815/design_and_prelaunch_gate.md`；Decision=`itransformer_transfer_v1_local_gate_pass_remote_train_validation_authorized_formal_test_blocked`。
+
 ## Main I / Main II Author-Corrected Freeze (2026-08-15)
 
 Current writing cursor=`author correction complete -> canonical paper tables hash-frozen`。Main I按作者修正覆盖ISCF/TimeAlign全部28 cells、SimpleTM Solar 4 cells与**TVNet ETTh2 4 cells**；Main II覆盖ISCF/TimeAlign全部28 cells、SimpleTM Solar 4 cells与PatchTST ETTh2 4 cells。其余cells不变。修正值按提供的三位小数冻结，corrected checkpoint hashes不作推断或沿用；旧冻结目录保留为history。

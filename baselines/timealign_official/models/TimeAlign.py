@@ -92,6 +92,7 @@ JAPO_READOUT_CONFIG = {
 ENCODER_MODES = {
     "raw-history-identity",
     "dlinear-decomposition",
+    "itransformer-variate-attention",
     "timealign-token-mlp",
     "contextual-patch-transformer",
     "global-anchored-patch-transformer",
@@ -164,6 +165,72 @@ class DLinearDecompositionMemory(nn.Module):
         trend = self.average(torch.cat((front, x, end), dim=-1))
         seasonal = x - trend
         return torch.stack((seasonal, trend), dim=2)
+
+
+class InvertedVariateEncoderLayer(nn.Module):
+    """Source-informed iTransformer block over variate tokens."""
+
+    def __init__(self, dim, heads, d_ff, dropout):
+        super().__init__()
+        if dim % heads != 0:
+            raise ValueError("iTransformer d_model must be divisible by n_heads")
+        self.attention = nn.MultiheadAttention(
+            embed_dim=dim,
+            num_heads=heads,
+            dropout=dropout,
+            batch_first=True,
+        )
+        self.attention_dropout = nn.Dropout(dropout)
+        self.attention_norm = nn.LayerNorm(dim)
+        self.feed_forward = nn.Sequential(
+            nn.Linear(dim, d_ff),
+            nn.GELU(),
+            nn.Dropout(dropout),
+            nn.Linear(d_ff, dim),
+        )
+        self.feed_forward_dropout = nn.Dropout(dropout)
+        self.feed_forward_norm = nn.LayerNorm(dim)
+
+    def forward(self, x):
+        attended, _weights = self.attention(
+            x,
+            x,
+            x,
+            need_weights=False,
+        )
+        x = self.attention_norm(x + self.attention_dropout(attended))
+        return self.feed_forward_norm(
+            x + self.feed_forward_dropout(self.feed_forward(x))
+        )
+
+
+class InvertedVariateEncoder(nn.Module):
+    """Embed each full variate history as one token and attend over variates."""
+
+    def __init__(self, seq_len, dim, heads, d_ff, layers, dropout):
+        super().__init__()
+        self.dim = int(dim)
+        self.history_embedding = nn.Linear(seq_len, dim)
+        self.input_dropout = nn.Dropout(dropout)
+        self.layers = nn.ModuleList(
+            [
+                InvertedVariateEncoderLayer(
+                    dim=dim,
+                    heads=heads,
+                    d_ff=d_ff,
+                    dropout=dropout,
+                )
+                for _ in range(layers)
+            ]
+        )
+        self.output_norm = nn.LayerNorm(dim)
+
+    def forward(self, x):
+        # x: [B, C, L] -> memory: [B, C, 1, D]
+        tokens = self.input_dropout(self.history_embedding(x))
+        for layer in self.layers:
+            tokens = layer(tokens)
+        return self.output_norm(tokens).unsqueeze(2)
 
 
 def _real_fourier_projection(length, dimension):
@@ -554,6 +621,7 @@ class Model(nn.Module):
             in {
                 "contextual-patch-transformer",
                 "global-anchored-patch-transformer",
+                "itransformer-variate-attention",
             }
             and self.readout_mode
             not in {
@@ -576,6 +644,17 @@ class Model(nn.Module):
             self.d_model = self.seq_len
             self.decomposition_encoder = DLinearDecompositionMemory(
                 kernel_size=int(getattr(configs, "dlinear_moving_avg", 25))
+            )
+        elif self.encoder_mode == "itransformer-variate-attention":
+            self.patch_num = 1
+            self.d_model = configs.d_model
+            self.inverted_history_encoder = InvertedVariateEncoder(
+                seq_len=configs.seq_len,
+                dim=configs.d_model,
+                heads=configs.n_heads,
+                d_ff=configs.d_ff,
+                layers=configs.e_layers,
+                dropout=configs.dropout,
             )
         elif self.encoder_mode in {
             "timealign-token-mlp",
@@ -1129,6 +1208,8 @@ class Model(nn.Module):
             return x.permute(0, 2, 1).unsqueeze(2)
         if self.encoder_mode == "dlinear-decomposition":
             return self.decomposition_encoder(x.permute(0, 2, 1))
+        if self.encoder_mode == "itransformer-variate-attention":
+            return self.inverted_history_encoder(x.permute(0, 2, 1))
         if self.encoder_mode == "contextual-patch-transformer":
             return self.history_encoder(x.permute(0, 2, 1))
         if self.encoder_mode == "global-anchored-patch-transformer":
