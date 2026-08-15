@@ -34,6 +34,16 @@
     "path": "configs/iscf_bsca_decoder_transfer_profiles.json",
     "sha256": "3a0b8864f1389ebb1346bebe0954b3fa7466b1ae8b054de597f263b8089c95ec"
   },
+  "matched_training_execution": {
+    "search_space_hash": "88b71e797fd9ee00fb4533a5fa942eb2e2a512eea4457ce827d201dfeea7f0ee",
+    "source_protocol_sha256_at_initial_launch": "88b71e797fd9ee00fb4533a5fa942eb2e2a512eea4457ce827d201dfeea7f0ee",
+    "protocol_repair_scope": "diagnostic_design_routing_only_no_training_or_checkpoint_contract_change"
+  },
+  "diagnostic_design": {
+    "path": "configs/iscf_bsca_decoder_transfer_protocol.json",
+    "sha256": "545cd3d42aad962fd9b75f967826e13ba1b6a5a730148b748be0d9930638ae84",
+    "role": "reuse frozen future bins and coupling scales for validation and formal diagnostics"
+  },
   "selection_artifact": {
     "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_hpo_v2_20260815/training_audit/selected_profiles.csv",
     "sha256": "9044d0534b34761a9353ee7d0854ec0fa2ee42b16f85a9b517f3571fc7ead9f4",

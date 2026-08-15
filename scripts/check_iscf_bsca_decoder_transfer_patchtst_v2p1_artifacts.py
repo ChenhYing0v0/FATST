@@ -169,6 +169,10 @@ def validate_row(
         "official_test_mode": False,
         "profile_hash": config["profiles"]["sha256"],
     }
+    if row["source"] == "new_matched_training":
+        expected["hpo_search_space_hash"] = config[
+            "matched_training_execution"
+        ]["search_space_hash"]
     mismatch = {
         key: {"expected": value, "actual": adapter.get(key)}
         for key, value in expected.items()
@@ -256,11 +260,14 @@ def main() -> None:
         return
 
     profile_path = Path(config["profiles"]["path"])
+    design_path = Path(config["diagnostic_design"]["path"])
     selection_path = Path(config["selection_artifact"]["path"])
     if sha256(profile_path) != config["profiles"]["sha256"]:
         raise RuntimeError("backbone profile hash mismatch")
     if sha256(selection_path) != config["selection_artifact"]["sha256"]:
         raise RuntimeError("selected profile artifact hash mismatch")
+    if sha256(design_path) != config["diagnostic_design"]["sha256"]:
+        raise RuntimeError("diagnostic design hash mismatch")
 
     rows = [
         validate_row(config, row)
@@ -290,6 +297,7 @@ def main() -> None:
         "created_at": datetime.now().astimezone().isoformat(),
         "protocol_sha256": sha256(args.config),
         "profile_sha256": sha256(profile_path),
+        "diagnostic_design_sha256": sha256(design_path),
         "selection_artifact_sha256": sha256(selection_path),
         "row_count": len(rows),
         "unique_checkpoint_hashes": len(hashes),

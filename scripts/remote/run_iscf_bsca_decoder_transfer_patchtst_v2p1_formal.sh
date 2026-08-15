@@ -23,6 +23,9 @@ print(value)' "${CONFIG}" "$1"
 PROFILE_PATH="$(json_value profiles.path)"
 PROFILE_HASH="$(hash_file "${PROFILE_PATH}")"
 EXPECTED_PROFILE_HASH="$(json_value profiles.sha256)"
+DESIGN_PATH="$(json_value diagnostic_design.path)"
+DESIGN_HASH="$(hash_file "${DESIGN_PATH}")"
+EXPECTED_DESIGN_HASH="$(json_value diagnostic_design.sha256)"
 SELECTION_PATH="$(json_value selection_artifact.path)"
 SELECTION_HASH="$(hash_file "${SELECTION_PATH}")"
 EXPECTED_SELECTION_HASH="$(json_value selection_artifact.sha256)"
@@ -33,6 +36,8 @@ TEST_AUTHORIZED="$(python3 -c 'import json,sys; print(str(json.load(open(sys.arg
 [[ "${PROFILE_HASH}" == "${EXPECTED_PROFILE_HASH}" ]]
 [[ "${SELECTION_HASH}" == "${EXPECTED_SELECTION_HASH}" ]]
 PROTOCOL_HASH="$(hash_file "${CONFIG}")"
+TRAINING_SEARCH_HASH="$(json_value matched_training_execution.search_space_hash)"
+[[ "${DESIGN_HASH}" == "${EXPECTED_DESIGN_HASH}" ]]
 
 SELECTED=()
 while IFS= read -r line; do SELECTED+=("${line}"); done < <(python3 - "${CONFIG}" "${PROFILE_PATH}" <<'PY'
@@ -142,7 +147,7 @@ run_training() {
     --allow-archived-research-modes \
     --protocol-class method_screening --protocol-profile iscf_bsca_decoder_transfer_patchtst_v2p1_20260815 \
     --profile-hash "${PROFILE_HASH}" --hpo-trial-id "matched_iscf__${profile}__${dataset}" \
-    --hpo-profile-id "${profile}" --hpo-search-space-hash "${PROTOCOL_HASH}" \
+    --hpo-profile-id "${profile}" --hpo-search-space-hash "${TRAINING_SEARCH_HASH}" \
     --seed 2021 --num-workers 0 --run-name "PATCHTST_V2P1_MATCHED_ISCF_${profile}" \
     --output-dir "${out}" --device cuda --no-save-predictions --no-official-test-mode \
     --history-patch-len "${patch}" --history-patch-stride "${stride}" --history-d-model "${dmodel}" \
@@ -182,8 +187,10 @@ mkdir -p "${OUTPUT_ROOT}/_logs"
   echo "start=$(date -Is)"
   echo "commit=$(git rev-parse HEAD)"
   echo "profile_hash=${PROFILE_HASH}"
+  echo "diagnostic_design_hash=${DESIGN_HASH}"
   echo "selection_hash=${SELECTION_HASH}"
   echo "protocol_hash=${PROTOCOL_HASH}"
+  echo "training_search_hash=${TRAINING_SEARCH_HASH}"
   echo "gpus=${GPU_IDS[*]}"
   echo "formal_test=${FORMAL_TEST_ONLY}"
 } | tee "${OUTPUT_ROOT}/launch_record_$(date +%Y%m%d_%H%M%S).txt"
@@ -208,7 +215,7 @@ run_one() {
       CUDA_VISIBLE_DEVICES="${gpu}" "${CONDA_BIN}" run --no-capture-output -n "${CONDA_ENV}" \
         python scripts/evaluate_stage_c_pcsd_cf_checkpoint.py \
         --run-dir "${source_dir}" --artifact-dir "${artifact_dir}" \
-        --design "${CONFIG}" --test-audit-config "${CONFIG}" \
+        --design "${DESIGN_PATH}" --test-audit-config "${CONFIG}" \
         --evaluation-split test --probe-rows 64 --device cuda >>"${log}" 2>&1
       after="$(hash_file "${source_dir}/checkpoint.pt")"
       [[ "${before}" == "${after}" ]]
@@ -224,7 +231,7 @@ run_one() {
     before="$(hash_file "${out}/checkpoint.pt")"
     CUDA_VISIBLE_DEVICES="${gpu}" "${CONDA_BIN}" run --no-capture-output -n "${CONDA_ENV}" \
       python scripts/evaluate_stage_c_pcsd_cf_checkpoint.py \
-      --run-dir "${out}" --design "${CONFIG}" --test-audit-config "${CONFIG}" \
+      --run-dir "${out}" --design "${DESIGN_PATH}" --test-audit-config "${CONFIG}" \
       --evaluation-split val --probe-rows 64 --device cuda >>"${log}" 2>&1
     after="$(hash_file "${out}/checkpoint.pt")"
     [[ "${before}" == "${after}" ]]

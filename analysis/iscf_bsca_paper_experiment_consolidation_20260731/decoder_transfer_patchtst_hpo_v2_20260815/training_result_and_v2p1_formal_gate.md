@@ -72,3 +72,9 @@ PatchTST-style `+ISCF-BSCA`相对Original Decoder必须同时满足：
 - checkpoint/seed/per-horizon/per-cell selection：forbidden；
 - partial reporting：forbidden；
 - table update：仅在120/120 combined cells与完整gate审计后执行。
+
+## 6. Diagnostic-runner repair
+
+首批Weather/ETTm1/ETTm2 matched training完成后，通用validation evaluator因v2.1 test-audit config不含`coupling_scales`而在diagnostic阶段触发`KeyError`。该错误发生在checkpoint已完成、four-H validation metrics已写出之后，不影响模型训练或selector；formal test保持0/10。
+
+修复只改变diagnostic design routing：validation/formal evaluator显式读取hash-frozen v1 transfer diagnostic design（future bins与coupling scales），test authorization仍读取v2.1 config。原training search hash `88b71e...`继续冻结，确保补跑ETTh1/ETTh2与已有三个matched checkpoints使用同一training contract。已有完整checkpoints不重训。
