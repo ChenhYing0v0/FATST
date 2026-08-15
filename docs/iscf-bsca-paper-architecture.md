@@ -5,10 +5,10 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.75` |
+| `version` | `v0.76` |
 | `last_updated` | `2026-08-15` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Main I/Main II author-corrected tables hash-frozen；experiments=iTransformer-style Decoder-Transfer v1 15-checkpoint/60-cell formal access authorized |
+| `current_review_cursor` | writing=Main I/Main II author-corrected tables hash-frozen；experiments=iTransformer-style Decoder-Transfer v1 formal gate failed，transfer rescue closed |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
@@ -16,7 +16,7 @@
 | `frozen_consensus` | 论文七章结构并保留standalone Discussion；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.2 structural design |
 | `provisional_content` | Method Figure 4 stable vector-asset synchronization；remaining manuscript prose and pending experiment evidence |
-| `authorization_source` | 2026-08-15用户明确要求继续iTransformer-style formal test；完整60-cell access=true，table mutation/extra HPO/seeds=false |
+| `authorization_source` | 2026-08-15 iTransformer-style 60-cell formal access consumed；table mutation/extra HPO/seeds仍false |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
@@ -1617,6 +1617,8 @@ Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/dec
 
 iTransformer-style第三carrier的15/15 training artifacts、15 unique hashes与5/5 matched encoder initialization triplets已冻结；formal test保持0。Validation-only中+ISCF-BSCA相对Original Decoder macro MSE/MAE为`-1.911%/-1.889%` gain，相对+ISCF为`-0.040%/-0.296%`。该信号只说明formal gate风险高，不能作为Section 5.7最终结论，也不能先写入transfer table。若获得显式授权，必须完整执行15 checkpoints × four H=`60` cells并保留全部负向cells。Canonical gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_v1_20260815/training_result_and_formal_test_gate.md`。
 
+现formal matrix已完成。iTransformer-style +ISCF-BSCA相对Original Decoder macro MSE/MAE为`-2.690%/-2.513%` gain，只赢1/5 dataset MSE means和4/20 MSE cells；相对matched +ISCF也为`-1.372%/-1.160%`。因此该third-carrier extension不能恢复portability claim。DLinear-style正向结果继续保留，但PatchTST-style与iTransformer-style两项负结果要求正文撤回general cross-backbone transferability。由于table mutation未授权，当前Section 8.7表仍不追加第三block；review artifact单独冻结。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_v1_20260815/formal_results/result_and_table_audit.md`。
+
 ## 9. Discussion
 
 ### 9.1 From Horizon-Specific Predictions to a Unified Forecasting System
@@ -1856,3 +1858,4 @@ Coverage boundary：
 | 2026-08-15 | iTransformer-style Decoder-Transfer v1 remote launch | commit `62418769`；3/3 Weather smoke；GPU0/1/2启动15-run queue | Step 8 active；formal test=0；next=15 artifacts/15 hashes/5 init triplets |
 | 2026-08-15 | iTransformer-style Decoder-Transfer v1 training gate | 15/15 artifacts、15 unique hashes、5/5 matched init triplets；manifest SHA256=`062588a...eecc9` | Step 8 complete；validation risk negative；formal 15-checkpoint/60-cell access pending explicit authorization |
 | 2026-08-15 | iTransformer-style Decoder-Transfer v1 formal authorization | 用户授权一次完整15-checkpoint/60-cell official-test audit | Step 9 authorized；hash-guarded preflight next；canonical table mutation=false |
+| 2026-08-15 | iTransformer-style Decoder-Transfer v1 formal closure | 15 immutable checkpoints、60/60 cells、10,800 dense rows；BSCA vs Original=`-2.690%/-2.513%` | Gate fail；general portability unsupported；no automatic fourth carrier/HPO；canonical table mutation=false |

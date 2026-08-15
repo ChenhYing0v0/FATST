@@ -1,0 +1,91 @@
+{
+  "all_finite": true,
+  "arm_diagnostics_present": false,
+  "candidate_id": "ISCF-BSCA-DECODER-TRANSFER-v1",
+  "candidate_version": "ISCF-BSCA-DECODER-TRANSFER-ITRANSFORMER-v1",
+  "checkpoint_retrained": false,
+  "checkpoint_sha256": "5348110340bc9afde9280cbf8389a2d2e1e6948ace2e704d0c52c5258e4e49ed",
+  "compact_history_diagnostics_present": false,
+  "cpsi_diagnostics_present": false,
+  "dataset": "ETTm2",
+  "diagnostic_id": "PCSD-CF-checkpoint-audit",
+  "evaluation_rows": 75607,
+  "evaluation_split": "test",
+  "fixed_scale": 720,
+  "frsc_conditioning_strength": null,
+  "frsc_full_rank": null,
+  "frsc_minimum_operator_eigenvalue": null,
+  "full_prefix_max_abs": 0.0,
+  "hyperparameter_profile_id": "",
+  "hyperparameter_trial_id": "",
+  "implicit_frequency_diagnostics_present": false,
+  "partition": "canonical",
+  "pass": true,
+  "policy_mode": "direct",
+  "prefix_rows": [
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 1,
+      "shape": [
+        1,
+        1,
+        7
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 48,
+      "shape": [
+        1,
+        48,
+        7
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 96,
+      "shape": [
+        1,
+        96,
+        7
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 192,
+      "shape": [
+        1,
+        192,
+        7
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 336,
+      "shape": [
+        1,
+        336,
+        7
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 720,
+      "shape": [
+        1,
+        720,
+        7
+      ]
+    }
+  ],
+  "probe_rows": 64,
+  "protocol_pass": true,
+  "readout_contract_pass": true,
+  "readout_mode": "direct-unified-original",
+  "scale_component_diagnostics_present": false,
+  "seed": 2021,
+  "sps_diagnostics_present": false,
+  "test_access_authorized": true,
+  "test_access_date": "2026-08-15",
+  "uses_test_split": true
+}

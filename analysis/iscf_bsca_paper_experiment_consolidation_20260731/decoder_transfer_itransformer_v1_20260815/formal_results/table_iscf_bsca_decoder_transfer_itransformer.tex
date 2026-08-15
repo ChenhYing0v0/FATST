@@ -1,0 +1,17 @@
+\begin{table*}[t]
+\centering
+\caption{Decoder transfer on the iTransformer-style carrier. Each dataset entry averages the four standard horizons. Lower is better.}
+\label{tab:decoder-transfer-itransformer}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccccccccc}
+\toprule
+Decoder & \multicolumn{2}{c}{ETTm1} & \multicolumn{2}{c}{ETTm2} & \multicolumn{2}{c}{ETTh1} & \multicolumn{2}{c}{ETTh2} & \multicolumn{2}{c}{Weather} & \multicolumn{2}{c}{Avg.} \\
+ & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE \\
+\midrule
+Original Decoder & 0.387 & 0.388 & 0.287 & 0.324 & 0.425 & 0.424 & 0.338 & 0.378 & 0.252 & 0.272 & 0.338 & 0.357 \\
++ISCF & 0.390 & 0.393 & 0.286 & 0.324 & 0.445 & 0.443 & 0.337 & 0.378 & 0.252 & 0.273 & 0.342 & 0.362 \\
++ISCF-BSCA & 0.393 & 0.396 & 0.293 & 0.331 & 0.458 & 0.453 & 0.337 & 0.378 & 0.253 & 0.273 & 0.347 & 0.366 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}

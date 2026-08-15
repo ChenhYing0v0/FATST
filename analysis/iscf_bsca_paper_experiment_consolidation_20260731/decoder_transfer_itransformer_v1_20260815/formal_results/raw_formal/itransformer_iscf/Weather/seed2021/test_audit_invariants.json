@@ -1,0 +1,91 @@
+{
+  "all_finite": true,
+  "arm_diagnostics_present": true,
+  "candidate_id": "ISCF-BSCA-DECODER-TRANSFER-v1",
+  "candidate_version": "ISCF-BSCA-DECODER-TRANSFER-ITRANSFORMER-v1",
+  "checkpoint_retrained": false,
+  "checkpoint_sha256": "44319ba9971fa85956d31e0cacb9299aea456e2c0d2cec20c2f4b29e4c86ba74",
+  "compact_history_diagnostics_present": false,
+  "cpsi_diagnostics_present": false,
+  "dataset": "Weather",
+  "diagnostic_id": "PCSD-CF-checkpoint-audit",
+  "evaluation_rows": 206220,
+  "evaluation_split": "test",
+  "fixed_scale": 720,
+  "frsc_conditioning_strength": null,
+  "frsc_full_rank": null,
+  "frsc_minimum_operator_eigenvalue": null,
+  "full_prefix_max_abs": 0.0,
+  "hyperparameter_profile_id": "",
+  "hyperparameter_trial_id": "",
+  "implicit_frequency_diagnostics_present": false,
+  "partition": "canonical",
+  "pass": true,
+  "policy_mode": "direct",
+  "prefix_rows": [
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 1,
+      "shape": [
+        1,
+        1,
+        21
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 48,
+      "shape": [
+        1,
+        48,
+        21
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 96,
+      "shape": [
+        1,
+        96,
+        21
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 192,
+      "shape": [
+        1,
+        192,
+        21
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 336,
+      "shape": [
+        1,
+        336,
+        21
+      ]
+    },
+    {
+      "full_prefix_max_abs": 0.0,
+      "horizon": 720,
+      "shape": [
+        1,
+        720,
+        21
+      ]
+    }
+  ],
+  "probe_rows": 64,
+  "protocol_pass": true,
+  "readout_contract_pass": true,
+  "readout_mode": "siff-independent-scope-control",
+  "scale_component_diagnostics_present": false,
+  "seed": 2021,
+  "sps_diagnostics_present": false,
+  "test_access_authorized": true,
+  "test_access_date": "2026-08-15",
+  "uses_test_split": true
+}

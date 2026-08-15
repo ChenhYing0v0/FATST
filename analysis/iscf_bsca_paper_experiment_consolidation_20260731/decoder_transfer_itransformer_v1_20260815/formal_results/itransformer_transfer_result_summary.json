@@ -1,0 +1,21 @@
+{
+  "pass": false,
+  "candidate_version": "ISCF-BSCA-DECODER-TRANSFER-ITRANSFORMER-v1",
+  "formal_checkpoint_jobs": 15,
+  "formal_cells": 60,
+  "unique_checkpoint_hashes": 15,
+  "test_access_dates": [
+    "2026-08-15"
+  ],
+  "bsca_vs_original_macro_mse_gain_percent": -2.690131286505788,
+  "bsca_vs_original_macro_mae_gain_percent": -2.512709104827973,
+  "bsca_vs_original_dataset_mse_wins": 1,
+  "bsca_vs_original_mse_cell_wins": 4,
+  "bsca_vs_iscf_macro_mse_gain_percent": -1.3720074014668644,
+  "bsca_vs_iscf_macro_mae_gain_percent": -1.1600609430934405,
+  "bsca_vs_iscf_dataset_mse_wins": 1,
+  "bsca_vs_iscf_mse_cell_wins": 3,
+  "checkpoint_nonmutation": true,
+  "formal_artifact_manifest_sha256": "aad13a13e2c1f486798caf0a67829396ed5ac334ffb1fb47e8b4277470d4e39a",
+  "table_mutation_authorized": false
+}

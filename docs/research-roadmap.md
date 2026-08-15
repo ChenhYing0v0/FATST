@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## iTransformer-style Decoder-Transfer v1 Formal Result (2026-08-15)
+
+Current cursor=`Step 9--10 complete -> effectiveness/attribution fail -> transfer rescue closed`。15/15 immutable checkpoints、60/60 standard cells与10,800 dense-prefix rows完整，formal artifact manifest SHA256=`aad13a13e2c1f486798caf0a67829396ed5ac334ffb1fb47e8b4277470d4e39a`。+ISCF-BSCA相对Original macro MSE/MAE gain=`-2.690%/-2.513%`，dataset/cell MSE wins=`1/5,4/20`；相对matched +ISCF为`-1.372%/-1.160%`，dataset/cell MSE wins=`1/5,3/20`。
+
+Formal gate失败且没有numeric/artifact pathology。Claim-level failure=`hypothesis_false_for_cross_backbone_portability_after_two_failed_transformer_carriers`；exact-design failure=`readout_or_head_design_wrong_for_itransformer_representation_compatibility`并且BSCA objective在该replacement head上没有aggregate utility。DLinear正向block保留，但PatchTST/iTransformer均不能支持general portability。按冻结rollback不自动开启第四carrier、extra decoder HPO或seeds；canonical table mutation仍false。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_v1_20260815/formal_results/result_and_table_audit.md`；Decision=`itransformer_transfer_v1_complete_portability_gate_failed_no_fourth_carrier_or_hpo`。
+
 ## iTransformer-style Decoder-Transfer v1 Formal Authorization (2026-08-15)
 
 Current cursor=`Step 9 authorized -> commit-pinned 15-checkpoint/60-cell formal audit`。用户明确要求继续formal test；输入严格锁定为SHA256=`062588a140ecd4fae385aa9d194c039355bef3c7d9f49f685d796779626eecc9`的15-row manifest。Runner在test loader access前后验证checkpoint hashes，三臂 × 五datasets × four H必须60/60闭合。Checkpoint retraining、partial reporting、extra HPO/seeds与canonical table mutation均false。Canonical prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_v1_20260815/formal_test_prelaunch.md`；Decision=`itransformer_transfer_v1_formal_15_checkpoint_60_cell_authorized_prelaunch`。
