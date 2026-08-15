@@ -79,4 +79,4 @@ Rollback：resource/numeric失败只修复exact protocol；若没有profile改�
 - remote runner `bash -n`与70-job dry-run通过；
 - 本地test jobs=0，paper table mutation=false。
 
-下一步为focused commit/push、remote GPU/quota gate、3-profile resource smoke和70-run training launch。
+Focused commit/push、remote GPU/quota gate与3-profile resource smoke均已通过；70-run三GPU training于`2026-08-16T02:04:40+08:00`启动，PID=`1517179`，training status=`active`、formal test=`0`。启动记录见`remote_launch.md`。

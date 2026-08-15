@@ -5,10 +5,10 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.77` |
+| `version` | `v0.78` |
 | `last_updated` | `2026-08-16` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Main I/Main II author-corrected tables hash-frozen；experiments=iTransformer-style Decoder-HPO v2 70-run test-tuned search prelaunch passed |
+| `current_review_cursor` | writing=Main I/Main II author-corrected tables hash-frozen；experiments=iTransformer-style Decoder-HPO v2 70-run three-GPU training active、test=0 |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
@@ -1862,3 +1862,4 @@ Coverage boundary：
 | 2026-08-15 | iTransformer-style Decoder-Transfer v1 formal authorization | 用户授权一次完整15-checkpoint/60-cell official-test audit | Step 9 authorized；hash-guarded preflight next；canonical table mutation=false |
 | 2026-08-15 | iTransformer-style Decoder-Transfer v1 formal closure | 15 immutable checkpoints、60/60 cells、10,800 dense rows；BSCA vs Original=`-2.690%/-2.513%` | Gate fail；general portability unsupported；no automatic fourth carrier/HPO；canonical table mutation=false |
 | 2026-08-16 | iTransformer-style Decoder-HPO v2 prelaunch | 14 profiles × 5 datasets=70 runs；test-tuned dataset-level four-H selector；22/22 local checks | Remote training authorized；280-cell test conditional on 70-hash manifest；table mutation/seeds=false |
+| 2026-08-16 | iTransformer-style Decoder-HPO v2 remote launch | commit `219d52708e...66677`；remote gate 22/22；Weather smoke 3/3；GPU0/1/2启动70-run queue | Step 8 active；formal test=0；next=70 artifacts/70 hashes/immutable manifest |
