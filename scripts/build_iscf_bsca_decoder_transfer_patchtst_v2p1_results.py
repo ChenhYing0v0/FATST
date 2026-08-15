@@ -378,7 +378,10 @@ def build_table(
 
 
 def build_report(
-    config: dict[str, Any], gates: list[dict[str, Any]], both_pass: bool
+    config: dict[str, Any],
+    gates: list[dict[str, Any]],
+    both_pass: bool,
+    historical: dict[str, float],
 ) -> str:
     decision = (
         "decoder_transfer_v2p1_complete_both_backbones_pass"
@@ -424,12 +427,19 @@ def build_report(
     lines.extend(
         [
             "",
+            "## HPO effect relative to v1",
+            "",
+            f"- PatchTST +ISCF macro MSE由{historical['v1_iscf_mse']:.6f}降至{historical['v2p1_iscf_mse']:.6f}（改善{historical['iscf_mse_gain_percent']:.3f}%），MAE改善{historical['iscf_mae_gain_percent']:.3f}%；",
+            f"- PatchTST +ISCF-BSCA macro MSE由{historical['v1_bsca_mse']:.6f}降至{historical['v2p1_bsca_mse']:.6f}（改善{historical['bsca_mse_gain_percent']:.3f}%），但MAE恶化{-historical['bsca_mae_gain_percent']:.3f}%；",
+            f"- BSCA相对Original的MSE deficit从{historical['v1_bsca_vs_original_mse_gain_percent']:.3f}%缩小到{historical['v2p1_bsca_vs_original_mse_gain_percent']:.3f}%，但MAE deficit从{historical['v1_bsca_vs_original_mae_gain_percent']:.3f}%扩大到{historical['v2p1_bsca_vs_original_mae_gain_percent']:.3f}%；",
+            "- 新BSCA只在ETTm1和ETTm2的dataset-mean MSE上超过Original；Weather、ETTh1与ETTh2仍落后。",
+            "",
             "## Four-layer decision",
             "",
             "1. `paper_facing_effectiveness`：完整120-cell表面决定最终performance viability；validation HPO本身不构成正式有效性证据。",
             "2. `matched_mechanism_attribution`：PatchTST +ISCF和+ISCF-BSCA共享encoder、rank、optimizer scale、seed与initialization class，仅objective不同；Original Decoder仍是同backbone native-readout control。",
             "3. `internal_mechanism_health`：diagnostics只用于解释，不替代相对Original的formal gate。",
-            "4. `failure_attribution`：若PatchTST仍失败且无numeric/artifact pathology，则记为`hypothesis_false_for_cross_backbone_portability_after_decoder_HPO`并转iTransformer-style carrier；若通过，则只能支持本地matched source-informed backbones上的portability。",
+            "4. `failure_attribution`：完整结果无numeric/artifact pathology。BSCA相对matched ISCF改善0.912% MSE并赢16/20 MSE cells，说明BSCA objective在该replacement head内部仍有作用；但两者都未超过native Original Decoder。因此exact two-backbone portability claim记为`hypothesis_false_for_cross_backbone_portability_after_decoder_HPO`，设计层更具体地指向`readout_or_head_design_wrong_for_PatchTST_representation_compatibility`，不能据此否定BSCA objective本身。",
             "",
             "## Claim boundary",
             "",
@@ -462,6 +472,53 @@ def main() -> None:
     dataset_means = aggregate(cells, ("backbone", "arm_id", "dataset"))
     overall = aggregate(cells, ("backbone", "arm_id"))
     gates, both_pass = evaluate_gates(config, cells, dataset_means, overall)
+    old_overall_rows = read_csv(
+        args.v1_results_dir / "decoder_transfer_overall_means.csv"
+    )
+    old_overall = {
+        (row["backbone"], row["arm_id"]): row
+        for row in old_overall_rows
+    }
+    new_overall = {
+        (row["backbone"], row["arm_id"]): row for row in overall
+    }
+    original_mse = float(
+        old_overall[("patchtst_style", "patchtst_original")]["mean_mse"]
+    )
+    original_mae = float(
+        old_overall[("patchtst_style", "patchtst_original")]["mean_mae"]
+    )
+    historical: dict[str, float] = {}
+    for short, arm in (
+        ("iscf", "patchtst_iscf"),
+        ("bsca", "patchtst_iscf_bsca"),
+    ):
+        old_mse = float(old_overall[("patchtst_style", arm)]["mean_mse"])
+        old_mae = float(old_overall[("patchtst_style", arm)]["mean_mae"])
+        new_mse = float(new_overall[("patchtst_style", arm)]["mean_mse"])
+        new_mae = float(new_overall[("patchtst_style", arm)]["mean_mae"])
+        historical[f"v1_{short}_mse"] = old_mse
+        historical[f"v1_{short}_mae"] = old_mae
+        historical[f"v2p1_{short}_mse"] = new_mse
+        historical[f"v2p1_{short}_mae"] = new_mae
+        historical[f"{short}_mse_gain_percent"] = 100.0 * (
+            old_mse - new_mse
+        ) / old_mse
+        historical[f"{short}_mae_gain_percent"] = 100.0 * (
+            old_mae - new_mae
+        ) / old_mae
+    historical["v1_bsca_vs_original_mse_gain_percent"] = 100.0 * (
+        original_mse - historical["v1_bsca_mse"]
+    ) / original_mse
+    historical["v1_bsca_vs_original_mae_gain_percent"] = 100.0 * (
+        original_mae - historical["v1_bsca_mae"]
+    ) / original_mae
+    historical["v2p1_bsca_vs_original_mse_gain_percent"] = 100.0 * (
+        original_mse - historical["v2p1_bsca_mse"]
+    ) / original_mse
+    historical["v2p1_bsca_vs_original_mae_gain_percent"] = 100.0 * (
+        original_mae - historical["v2p1_bsca_mae"]
+    ) / original_mae
 
     args.results_dir.mkdir(parents=True, exist_ok=True)
     write_csv(args.results_dir / "decoder_transfer_120_cells.csv", cells)
@@ -479,6 +536,12 @@ def main() -> None:
         "new_checkpoint_rows": manifest["row_count"],
         "new_unique_checkpoint_hashes": manifest["unique_checkpoint_hashes"],
         "both_backbones_pass": both_pass,
+        "historical_v1_comparison": historical,
+        "failure_attribution": {
+            "claim_level": "hypothesis_false_for_cross_backbone_portability_after_decoder_HPO",
+            "design_level": "readout_or_head_design_wrong_for_PatchTST_representation_compatibility",
+            "bsca_objective_rejected": False,
+        },
         "decision": (
             "decoder_transfer_v2p1_complete_both_backbones_pass"
             if both_pass
@@ -491,7 +554,7 @@ def main() -> None:
         encoding="utf-8",
     )
     (args.results_dir / "result_and_table_audit.md").write_text(
-        build_report(config, gates, both_pass), encoding="utf-8"
+        build_report(config, gates, both_pass, historical), encoding="utf-8"
     )
     table_dir = args.results_dir / "table"
     table_dir.mkdir(exist_ok=True)
@@ -505,6 +568,10 @@ def main() -> None:
         "\\usepackage{booktabs}\n"
         "\\usepackage{graphicx}\n"
         "\\usepackage[normalem]{ulem}\n"
+        "\\makeatletter\n"
+        "\\setlength{\\@fptop}{0pt}\n"
+        "\\setlength{\\@fpbot}{0pt plus 1fil}\n"
+        "\\makeatother\n"
         "\\pagestyle{empty}\n"
         "\\begin{document}\n"
         + table
