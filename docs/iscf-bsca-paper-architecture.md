@@ -8,7 +8,7 @@
 | `version` | `v0.74` |
 | `last_updated` | `2026-08-15` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Main I/Main II author-corrected tables hash-frozen；experiments=iTransformer-style Decoder-Transfer v1 local gate pass，15-run train/validation next，formal test blocked |
+| `current_review_cursor` | writing=Main I/Main II author-corrected tables hash-frozen；experiments=iTransformer-style Decoder-Transfer v1 15-run train/validation active，formal test=0 |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
@@ -1851,3 +1851,4 @@ Coverage boundary：
 | 2026-08-14 | Decoder-Transfer formal closure | 30 checkpoints、30 unique hashes、120/120 test cells；DLinear pass / PatchTST fail | 总体cross-backbone portability unsupported；正向动词撤回；Efficiency进入独占GPU execution |
 | 2026-08-15 | PatchTST Decoder-Transfer v2.1 formal closure | Parent 50-run HPO validation pass但uniqueness gate fail；冻结5个selected BSCA并补训5个matched ISCF；10 unique hashes、5 matched initialization pairs与40 new/120 combined test cells闭合 | HPO仅缩小MSE deficit；PatchTST gate仍fail；cross-backbone portability继续unsupported，rollback至iTransformer-style carrier Step 4--6 |
 | 2026-08-15 | iTransformer-style Decoder-Transfer v1 prelaunch | official source audit；`[B,C,1,D]` variate-token memory；3 arms × 5 datasets；28项local gate通过 | remote train/validation=true；15-hash manifest前formal test/table mutation=false；PatchTST negative block保留 |
+| 2026-08-15 | iTransformer-style Decoder-Transfer v1 remote launch | commit `62418769`；3/3 Weather smoke；GPU0/1/2启动15-run queue | Step 8 active；formal test=0；next=15 artifacts/15 hashes/5 init triplets |

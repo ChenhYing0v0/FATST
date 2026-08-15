@@ -6,6 +6,8 @@ Current cursor=`PatchTST v2.1 gate fail -> rollback Step 4--6 complete -> iTrans
 
 冻结matrix为Original/+ISCF/+ISCF-BSCA × 5 datasets × seed2021=`15`个from-scratch joint-training runs；每dataset一个official-source profile服务三臂，four-H validation mean MSE选择checkpoint。ISCF mode rank按native head参数量匹配为`D128->21`、`D512->30`。28项local gate通过，包括15个finite exact-prefix forward、5个matched encoder-init triplets和15-job dry run。PatchTST negative evidence不删除；若iTransformer通过，只能写“DLinear+iTransformer支持、PatchTST不支持”，不能写architecture-agnostic。Remote train/validation=true；formal test/table mutation/extra HPO/seeds=false。Canonical design=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_v1_20260815/design_and_prelaunch_gate.md`；Decision=`itransformer_transfer_v1_local_gate_pass_remote_train_validation_authorized_formal_test_blocked`。
 
+Remote commit=`62418769`已通过28/28 gate与3/3 Weather resource smoke；15-run queue于18:36:14使用GPU0/1/2启动，driver PID=`956722`。首批三臂epoch1 finite，formal test=0。Canonical launch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_v1_20260815/remote_launch.md`；Decision=`itransformer_transfer_v1_three_gpu_train_validation_active_test_zero`。
+
 ## Main I / Main II Author-Corrected Freeze (2026-08-15)
 
 Current writing cursor=`author correction complete -> canonical paper tables hash-frozen`。Main I按作者修正覆盖ISCF/TimeAlign全部28 cells、SimpleTM Solar 4 cells与**TVNet ETTh2 4 cells**；Main II覆盖ISCF/TimeAlign全部28 cells、SimpleTM Solar 4 cells与PatchTST ETTh2 4 cells。其余cells不变。修正值按提供的三位小数冻结，corrected checkpoint hashes不作推断或沿用；旧冻结目录保留为history。

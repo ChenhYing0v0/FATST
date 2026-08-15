@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | iTransformer-style Decoder-Transfer v1 Step 7 local gate pass；15-run remote train/validation next，formal test blocked |
+| `current_11_step` | iTransformer-style Decoder-Transfer v1 Step 8 remote train/validation active on GPU0/1/2；formal test=0 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -21,6 +21,8 @@
 | `paper_core_status` | architecture family frozen；Core-Ablation 3/4 controls pass；Decoder-Transfer v2.1总体portability claim仍unsupported（DLinear pass / validation-tuned PatchTST fail）；Efficiency只支持trade-off；allocation独立accuracy claim仍unsupported |
 
 [iTransformer-style Decoder-Transfer v1 Prelaunch, 2026-08-15] PatchTST HPO未改变formal方向后，按已授权fallback完成iTransformer official paper/repository source audit并冻结新carrier。Tensor contract=`[B,L,C] -> [B,C,D] variate tokens -> [B,C,1,D] memory`；三臂为Original/+ISCF/+ISCF-BSCA，5 datasets × seed2021=`15`个from-scratch end-to-end runs。Official-source priors使用`L=96`与dataset-specific width/depth；ISCF rank按native `D->720` head参数量匹配为21/30。28项local gate通过，覆盖15个finite exact-prefix forward、5个matched encoder-init triplets、capacity/routing与runner dry-run。PatchTST negative block必须保留；新结果只追加第三backbone。Remote train/validation=true；formal test/table mutation/extra HPO/seeds=false。Canonical design=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_v1_20260815/design_and_prelaunch_gate.md`。Decision=`itransformer_transfer_v1_local_gate_pass_remote_train_validation_authorized_formal_test_blocked`。
+
+[iTransformer-style Decoder-Transfer v1 Remote Launch, 2026-08-15] Commit=`62418769`；remote 28/28 local gate和3/3 Weather smoke通过，GPU0/1/2于18:36:14启动15-run train/validation queue（driver PID=`956722`）。首批三臂均进入epoch1且finite；显存约0.5/1.2/1.2 GiB。Formal test/table mutation/extra HPO/seeds=false；next=`15/15 artifacts + 15 hashes + 5 init triplets`。Canonical launch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_v1_20260815/remote_launch.md`。Decision=`itransformer_transfer_v1_three_gpu_train_validation_active_test_zero`。
 
 [Main I / Main II Author-Corrected Freeze, 2026-08-15] 作者修正复跑值已原子同步到两张主表：Main I覆盖ISCF与TimeAlign全部seven-dataset rows、SimpleTM Solar及**TVNet ETTh2**；Main II覆盖ISCF与TimeAlign全部rows、SimpleTM Solar及PatchTST ETTh2。其余baseline cells保持上一冻结版。统一重算Avg.与three-decimal ranking后，ISCF在Main I为`44/56` best、`9/56` second，在Main II为`50/56` best、`6/56` second；两表macro MSE/MAE均为`0.260714/0.306107`。修正值只具作者提供的三位小数精度，不推断checkpoint hashes；旧表保留为historical snapshots。Canonical freeze=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/result_and_freeze_audit.md`。Decision=`main_i_main_ii_author_corrected_20260815_complete_hash_frozen`。
 
