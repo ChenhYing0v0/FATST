@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## iTransformer-style Decoder-Transfer v1 Formal Authorization (2026-08-15)
+
+Current cursor=`Step 9 authorized -> commit-pinned 15-checkpoint/60-cell formal audit`。用户明确要求继续formal test；输入严格锁定为SHA256=`062588a140ecd4fae385aa9d194c039355bef3c7d9f49f685d796779626eecc9`的15-row manifest。Runner在test loader access前后验证checkpoint hashes，三臂 × 五datasets × four H必须60/60闭合。Checkpoint retraining、partial reporting、extra HPO/seeds与canonical table mutation均false。Canonical prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_v1_20260815/formal_test_prelaunch.md`；Decision=`itransformer_transfer_v1_formal_15_checkpoint_60_cell_authorized_prelaunch`。
+
 ## iTransformer-style Decoder-Transfer v1 Training Gate (2026-08-15)
 
 Current cursor=`Step 8 complete -> 15-hash immutable manifest -> formal test pending explicit authorization`。15/15 from-scratch joint-training runs与15 unique checkpoint hashes完整，5/5 dataset-level encoder initialization triplets匹配，four-H validation selector与numeric-health gates通过；manifest SHA256=`062588a140ecd4fae385aa9d194c039355bef3c7d9f49f685d796779626eecc9`，test=0。

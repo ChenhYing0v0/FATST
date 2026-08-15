@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "protocol_id": "ISCF-BSCA-DECODER-TRANSFER-ITRANSFORMER-v1-FORMAL-20260815",
+  "candidate_version": "ISCF-BSCA-DECODER-TRANSFER-ITRANSFORMER-v1",
+  "status": "authorized_prelaunch",
+  "current_step": 9,
+  "test_informed": true,
+  "test_tuned": false,
+  "datasets": ["ETTm1", "ETTm2", "ETTh1", "ETTh2", "Weather"],
+  "horizons": [96, 192, 336, 720],
+  "seeds": [2021],
+  "profiles": {
+    "path": "configs/iscf_bsca_decoder_transfer_itransformer_profiles.json",
+    "sha256": "5e8dc7f04765fae36d25f696cf66be00cc58ee59f7559871119751abb4ae8b51"
+  },
+  "training_protocol": {
+    "path": "configs/iscf_bsca_decoder_transfer_itransformer_v1.json",
+    "sha256": "21c777aa96f5ea4e5d23658f7dd2d84b3249fef138ffbf28def26c8ee0e3a78b"
+  },
+  "diagnostic_design": {
+    "path": "configs/iscf_bsca_decoder_transfer_protocol.json",
+    "sha256": "545cd3d42aad962fd9b75f967826e13ba1b6a5a730148b748be0d9930638ae84"
+  },
+  "arms": [
+    {
+      "id": "itransformer_original",
+      "column": "Original Decoder",
+      "objective_mode": "measure_only"
+    },
+    {
+      "id": "itransformer_iscf",
+      "column": "+ISCF",
+      "objective_mode": "measure_only"
+    },
+    {
+      "id": "itransformer_iscf_bsca",
+      "column": "+ISCF-BSCA",
+      "objective_mode": "equal_uniform_scope_anchor"
+    }
+  ],
+  "matrix": {
+    "expected_runs": 15,
+    "checkpoint_objects": 15,
+    "formal_test_checkpoint_jobs": 15,
+    "formal_test_cells": 60,
+    "metrics": ["mse", "mae"],
+    "full_matrix_required": true,
+    "partial_reporting_allowed": false
+  },
+  "training_contracts": [
+    {
+      "target_horizons": [720],
+      "validation_horizons": [96, 192, 336, 720],
+      "pred_loss_mode": "full",
+      "pcc_objective_mode": "measure_only",
+      "training_final_evaluation_split": "val"
+    },
+    {
+      "target_horizons": [720],
+      "validation_horizons": [96, 192, 336, 720],
+      "pred_loss_mode": "full",
+      "pcc_objective_mode": "equal_uniform_scope_anchor",
+      "training_final_evaluation_split": "val"
+    }
+  ],
+  "checkpoint_selection_contract": "best-validation-mean-mse-h96-h192-h336-h720",
+  "artifact_contract": {
+    "remote_output_root": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_decoder_transfer_itransformer_v1_20260815",
+    "remote_training_manifest": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_decoder_transfer_itransformer_v1_20260815/immutable_training_manifest.csv",
+    "local_training_manifest": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_v1_20260815/training_audit/immutable_training_manifest.csv",
+    "training_manifest_sha256": "062588a140ecd4fae385aa9d194c039355bef3c7d9f49f685d796779626eecc9",
+    "formal_test_subdir": "formal_test",
+    "formal_test_required_files": [
+      "test_audit_metrics_by_target_horizon.csv",
+      "test_audit_invariants.json",
+      "pcsd_test_audit_diagnostics.npz"
+    ]
+  },
+  "authorization": {
+    "user_authorization": "2026-08-15 explicit request to continue formal test work for the iTransformer-style carrier",
+    "user_authorized": true,
+    "authorization_date": "2026-08-15",
+    "remote_training_authorized": false,
+    "formal_test_access_authorized": true,
+    "formal_test_access_count_for_version": 1,
+    "checkpoint_retraining_allowed": false,
+    "checkpoint_retrained_before_test": false,
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+    "checkpoint_mutation_during_test_allowed": false,
+    "per_dataset_horizon_or_cell_tuning_allowed": false,
+    "test_role": "primary-mechanism-effectiveness-and-paper-benchmark",
+    "table_mutation_authorized": false,
+    "extra_hpo_authorized": false,
+    "extra_seeds_authorized": false
+  },
+  "gates": {
+    "checkpoint_nonmutation_required": true,
+    "all_60_cells_reported": true,
+    "numeric_health_required": true,
+    "bsca_vs_original_macro_mse_gain_percent_min_exclusive": 0.0,
+    "bsca_vs_original_macro_mae_gain_percent_min_exclusive": 0.0,
+    "bsca_vs_original_dataset_mse_wins_min": 3,
+    "bsca_vs_iscf_reported_separately": true
+  }
+}
