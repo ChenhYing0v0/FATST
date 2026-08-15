@@ -55,18 +55,20 @@ Main I与Main II已建立新的author-corrected canonical freeze；旧hash-froze
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Step 8 remote train/validation |
+| `current_step` | Parent v2 Step 9 audit complete；v2.1 Step 7--8 matched training/formal gate |
 | `problem` | v1 PatchTST `+ISCF-BSCA`比`+ISCF`更好但未超过Original Decoder；需判断decoder optimization/capacity profile是否不匹配 |
-| `existence_evidence` | v1 BSCA相对Original在validation为5/5 dataset means正向，但official test仅2/5正向，提示split-specific overfitting风险 |
+| `existence_evidence` | v2 50/50 training complete、validation macro gain=0.8126%且5/5 datasets改善；但仅40/50 unique hashes，parent artifact gate失败 |
 | `idea` | encoder profile完全冻结；只搜索readout LR multiplier、readout-only weight decay及两个rank边界点 |
 | `theory_check` | optimizer parameter group只作用`pcsd_readout.*`；forward、scope集合、policy、objective与four-H selector不变 |
-| `design` | 10 profiles × 5 datasets × seed2021=50 new runs；v1五个BSCA runs只作validation reference |
+| `design` | Parent v2保留50-run完整审计；v2.1复用5 selected BSCA并补训5 matched ISCF，10-hash manifest后formal-test 40 new cells，合并v1 controls为120 cells |
 | `narrative_gate` | v2是test-informed rescue candidate；不得删除或改写v1负结果 |
-| `effectiveness_gate` | macro validation MSE改善>0.25%，且至少3/5 datasets改善>0.1%；否则test=0并转iTransformer Step 4--6 |
-| `artifacts` | design=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_hpo_v2_20260815/design_and_prelaunch_gate.md`；config=`configs/iscf_bsca_decoder_transfer_patchtst_hpo_v2.json` |
-| `decision` | `patchtst_decoder_hpo_v2_frozen_remote_training_authorized_formal_test_blocked` |
+| `effectiveness_gate` | v2 validation gate已pass；v2.1 PatchTST BSCA vs Original需macro MSE/MAE均正向且dataset MSE wins>=3/5 |
+| `artifacts` | parent design=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_hpo_v2_20260815/design_and_prelaunch_gate.md`；formal gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_hpo_v2_20260815/training_result_and_v2p1_formal_gate.md`；v2.1 config=`configs/iscf_bsca_decoder_transfer_patchtst_v2p1_formal.json` |
+| `decision` | `parent_v2_uniqueness_fail_v2p1_manifest_gated_formal_authorized` |
 
 Remote launch：commit=`7480ffc4`，PID=`3782929`，GPU0/1/2，50 jobs，start=`2026-08-15T01:39:23+08:00`。27/27 remote prelaunch与3/3 resource smoke通过；首批三个Weather profiles均进入epoch1且finite，formal test=0。Launch record=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_hpo_v2_20260815/remote_launch.md`。
+
+Training closure：50/50 complete、validation gate pass；但两组profile pairs在五datasets上collapse，unique hashes=40/50，parent gate保持FAIL。v2.1只冻结五个互异selected BSCA checkpoints；用户已授权五个matched ISCF training及10-hash manifest后的单次formal access。Gate record=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_hpo_v2_20260815/training_result_and_v2p1_formal_gate.md`。
 
 ## Exact Ablation Anchor Contract
 

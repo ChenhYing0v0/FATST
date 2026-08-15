@@ -1,0 +1,253 @@
+{
+  "schema_version": 1,
+  "protocol_id": "ISCF-BSCA-DECODER-TRANSFER-PATCHTST-v2.1-FORMAL-20260815",
+  "candidate_version": "ISCF-BSCA-DECODER-TRANSFER-PATCHTST-v2.1",
+  "status": "authorized_prelaunch",
+  "current_step": 7,
+  "test_informed": true,
+  "test_tuned": false,
+  "problem": "evaluate whether validation-selected PatchTST decoder hyperparameters restore matched ISCF-BSCA transfer effectiveness without deleting the v1 negative result",
+  "parent_hpo": {
+    "candidate_version": "ISCF-BSCA-DECODER-TRANSFER-PATCHTST-HPO-v2",
+    "config": "configs/iscf_bsca_decoder_transfer_patchtst_hpo_v2.json",
+    "training_runs_complete": 50,
+    "unique_checkpoint_hashes_observed": 40,
+    "unique_checkpoint_hashes_required_by_parent": 50,
+    "artifact_gate": "fail",
+    "failure_reason": "two decoder-weight-decay profile pairs collapsed to bitwise-identical FP32 checkpoints on every dataset",
+    "validation_gate": "pass",
+    "macro_validation_mse_gain_percent": 0.8125909378626582,
+    "datasets_improved_over_0p1_percent": 5,
+    "formal_test_jobs_completed": 0
+  },
+  "protocol_amendment": {
+    "reason": "the parent search cannot honestly satisfy its literal 50-unique-hash gate, while all five validation-selected checkpoints are mutually unique and outside the collapsed profile pairs",
+    "scope": "freeze only five selected BSCA checkpoints, train five matched ISCF checkpoints, and formal-test those ten checkpoints once",
+    "parent_gate_not_retroactively_relaxed": true,
+    "negative_parent_trials_retained": true,
+    "v1_negative_result_retained": true
+  },
+  "datasets": ["Weather", "ETTm1", "ETTm2", "ETTh1", "ETTh2"],
+  "horizons": [96, 192, 336, 720],
+  "seeds": [2021],
+  "profiles": {
+    "path": "configs/iscf_bsca_decoder_transfer_profiles.json",
+    "sha256": "3a0b8864f1389ebb1346bebe0954b3fa7466b1ae8b054de597f263b8089c95ec"
+  },
+  "selection_artifact": {
+    "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_hpo_v2_20260815/training_audit/selected_profiles.csv",
+    "sha256": "9044d0534b34761a9353ee7d0854ec0fa2ee42b16f85a9b517f3571fc7ead9f4",
+    "rule": "one validation-selected profile per dataset shared by all four horizons"
+  },
+  "selected_profiles": [
+    {
+      "dataset": "Weather",
+      "profile_id": "p04_lr4p00",
+      "mode_rank": 116,
+      "readout_learning_rate_multiplier": 4.0,
+      "readout_weight_decay": 0.0,
+      "validation_mean_mse": 0.5205445134454214,
+      "reference_validation_mean_mse": 0.522395042,
+      "gain_percent_over_reference": 0.35423930278774884,
+      "bsca_checkpoint_sha256": "0e1784fc59ee5006f0d96332b2c9faf3c17b622734eefe1225235ac9a43babe9"
+    },
+    {
+      "dataset": "ETTm1",
+      "profile_id": "p01_lr0p25",
+      "mode_rank": 116,
+      "readout_learning_rate_multiplier": 0.25,
+      "readout_weight_decay": 0.0,
+      "validation_mean_mse": 0.6114107169841956,
+      "reference_validation_mean_mse": 0.626720365,
+      "gain_percent_over_reference": 2.4428196163378812,
+      "bsca_checkpoint_sha256": "1db5acc9f4723898e94ffc6d226585570ee086f217b22289ab71a2bc6655f261"
+    },
+    {
+      "dataset": "ETTm2",
+      "profile_id": "p01_lr0p25",
+      "mode_rank": 106,
+      "readout_learning_rate_multiplier": 0.25,
+      "readout_weight_decay": 0.0,
+      "validation_mean_mse": 0.18493015147230057,
+      "reference_validation_mean_mse": 0.185338586,
+      "gain_percent_over_reference": 0.22037209655814738,
+      "bsca_checkpoint_sha256": "f303cbe2428afbf5601778fd19f70ba53f4fd54362a50a28ca1e417b81a5b3b5"
+    },
+    {
+      "dataset": "ETTh1",
+      "profile_id": "p01_lr0p25",
+      "mode_rank": 109,
+      "readout_learning_rate_multiplier": 0.25,
+      "readout_weight_decay": 0.0,
+      "validation_mean_mse": 1.091247470973296,
+      "reference_validation_mean_mse": 1.09563452,
+      "gain_percent_over_reference": 0.4004117200235667,
+      "bsca_checkpoint_sha256": "c9c14a280916e2f38c4f36db6ddd62dced1212d8a9be0ff3b03c913585ea6894"
+    },
+    {
+      "dataset": "ETTh2",
+      "profile_id": "p10_rank1p50_lr0p50_wd1e4",
+      "mode_rank": 174,
+      "readout_learning_rate_multiplier": 0.5,
+      "readout_weight_decay": 0.0001,
+      "validation_mean_mse": 0.37710434008003507,
+      "reference_validation_mean_mse": 0.377966682,
+      "gain_percent_over_reference": 0.2281528931073682,
+      "bsca_checkpoint_sha256": "7e5dae0d5ffa8779e613c6347125a119f8183dc3727479009a74b6f4a87bf886"
+    }
+  ],
+  "backbone": {
+    "id": "patchtst_style",
+    "encoder_mode": "contextual-patch-transformer",
+    "tensor_contract": "normalized_history_[B,L,C]_to_channel_independent_patch_memory_[B,C,P,D]"
+  },
+  "arms": [
+    {
+      "id": "patchtst_iscf",
+      "column": "+ISCF",
+      "readout_mode": "siff-independent-scope-control",
+      "policy_mode": "direct",
+      "objective_mode": "measure_only",
+      "source": "new_matched_training"
+    },
+    {
+      "id": "patchtst_iscf_bsca",
+      "column": "+ISCF-BSCA",
+      "readout_mode": "siff-independent-scope-control",
+      "policy_mode": "direct",
+      "objective_mode": "equal_uniform_scope_anchor",
+      "source": "selected_parent_hpo_checkpoint"
+    }
+  ],
+  "matrix": {
+    "expected_runs": 10,
+    "new_matched_training_runs": 5,
+    "reused_selected_training_runs": 5,
+    "expected_checkpoint_hashes": 10,
+    "formal_test_checkpoint_jobs": 10,
+    "formal_test_cells": 40,
+    "combined_decoder_transfer_cells": 120,
+    "metrics": ["mse", "mae"],
+    "full_matrix_required": true,
+    "partial_reporting_allowed": false
+  },
+  "training_contracts": [
+    {
+      "target_horizons": [720],
+      "validation_horizons": [96, 192, 336, 720],
+      "pred_loss_mode": "full",
+      "pcc_objective_mode": "measure_only",
+      "training_final_evaluation_split": "val"
+    },
+    {
+      "target_horizons": [720],
+      "validation_horizons": [96, 192, 336, 720],
+      "pred_loss_mode": "full",
+      "pcc_objective_mode": "equal_uniform_scope_anchor",
+      "training_final_evaluation_split": "val"
+    }
+  ],
+  "training": {
+    "from_scratch": true,
+    "joint_encoder_decoder": true,
+    "seq_len": 336,
+    "target_horizons": [720],
+    "validation_horizons": [96, 192, 336, 720],
+    "checkpoint_score": "mean_validation_mse_h96_h192_h336_h720",
+    "checkpoint_policy": "best-val",
+    "pred_loss_mode": "full",
+    "max_epochs": 100,
+    "optimizer": "AdamW_with_readout_parameter_group",
+    "matched_fields": [
+      "encoder_architecture",
+      "base_learning_rate",
+      "batch_size",
+      "patience",
+      "seed",
+      "mode_rank",
+      "readout_learning_rate_multiplier",
+      "readout_weight_decay",
+      "initialization_class"
+    ],
+    "only_arm_difference": "pcc_objective_mode",
+    "final_evaluation_split": "val",
+    "test_labels_select_epoch_checkpoint_seed_profile_or_cell": false
+  },
+  "checkpoint_selection_contract": "best-validation-mean-mse-h96-h192-h336-h720",
+  "artifact_contract": {
+    "hpo_output_root": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_decoder_transfer_patchtst_hpo_v2_20260815",
+    "remote_output_root": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_decoder_transfer_patchtst_v2p1_formal_20260815",
+    "training_manifest": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_decoder_transfer_patchtst_v2p1_formal_20260815/immutable_training_manifest.json",
+    "local_analysis_root": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_v2p1_20260815",
+    "checkpoint_file": "checkpoint.pt",
+    "training_required_files": [
+      "checkpoint.pt",
+      "training_log.csv",
+      "metrics_by_target_horizon.csv",
+      "effective_config.json",
+      "initialization_contract.json",
+      "model_diagnostics.json",
+      "environment.json"
+    ],
+    "formal_test_required_files": [
+      "test_audit_metrics_by_target_horizon.csv",
+      "test_audit_invariants.json",
+      "pcsd_test_audit_diagnostics.npz"
+    ],
+    "v1_result_root": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_20260814/formal_results"
+  },
+  "reused_table_evidence": {
+    "dlinear_three_arms_cells": 60,
+    "patchtst_original_cells": 20,
+    "source_candidate": "ISCF-BSCA-DECODER-TRANSFER-v1",
+    "new_test_access": false,
+    "reason": "these controls and their checkpoints are unchanged by decoder HPO"
+  },
+  "diagnostic_protocol": {
+    "probe_rows": 64,
+    "future_bins": [
+      {"name": "H1_48", "start": 0, "end": 48},
+      {"name": "H49_96", "start": 48, "end": 96},
+      {"name": "H97_144", "start": 96, "end": 144},
+      {"name": "H145_192", "start": 144, "end": 192},
+      {"name": "H193_288", "start": 192, "end": 288},
+      {"name": "H289_336", "start": 288, "end": 336},
+      {"name": "H337_512", "start": 336, "end": 512},
+      {"name": "H513_720", "start": 512, "end": 720}
+    ]
+  },
+  "gates": {
+    "training_runs_required": 10,
+    "unique_checkpoint_hashes_required": 10,
+    "matched_initialization_required": true,
+    "checkpoint_nonmutation_required": true,
+    "all_40_new_cells_reported": true,
+    "all_120_combined_cells_reported": true,
+    "numeric_health_required": true,
+    "bsca_vs_original_macro_mse_gain_percent_min_exclusive": 0.0,
+    "bsca_vs_original_macro_mae_gain_percent_min_exclusive": 0.0,
+    "bsca_vs_original_dataset_mse_wins_min": 3,
+    "bsca_vs_iscf_reported_separately": true
+  },
+  "rollback": {
+    "matched_training_or_manifest_failure": "stop_before_formal_test_and_repair_only_the_failed_matched_artifact",
+    "patchtst_gate_fail": "retain_v1_negative_portability_decision_and_return_to_Step4_6_for_iTransformer_style_carrier",
+    "bsca_beats_iscf_but_not_original": "support_BSCA_within_transfer_head_only_and_do_not_claim_decoder_portability",
+    "patchtst_gate_pass": "update_the_complete_two_backbone_table_while_disclosing_validation_HPO_and_parent_test_exposure"
+  },
+  "authorization": {
+    "user_authorization": "2026-08-15 explicit request to continue formal test after remote decoder-HPO completion and organize the results",
+    "user_authorized": true,
+    "authorization_date": "2026-08-15",
+    "remote_training_authorized": true,
+    "formal_test_access_authorized": true,
+    "formal_test_access_count_for_version": 1,
+    "checkpoint_retraining_allowed": true,
+    "checkpoint_retrained_before_test": true,
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+    "checkpoint_mutation_during_test_allowed": false,
+    "per_dataset_horizon_or_cell_tuning_allowed": false,
+    "test_role": "primary-mechanism-effectiveness-and-paper-benchmark"
+  },
+  "claim_boundary": "test-informed validation-HPO rescue; one dataset-level profile shared across all four horizons; no untouched-holdout claim; v1 negative result and all parent trials remain auditable"
+}

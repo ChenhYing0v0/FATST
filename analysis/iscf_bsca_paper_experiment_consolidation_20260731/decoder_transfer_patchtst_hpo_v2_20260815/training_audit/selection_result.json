@@ -1,0 +1,9 @@
+{
+  "pass": true,
+  "macro_reference_validation_mean_mse": 0.561611039,
+  "macro_selected_validation_mean_mse": 0.5570474385910497,
+  "macro_gain_percent": 0.8125909378626582,
+  "datasets_improved_over_0p1_percent": 5,
+  "formal_test_authorized": false,
+  "next": "freeze five selected dataset profiles, train matched ISCF arms with the same decoder hyperparameters, then request a new single formal-test authorization"
+}

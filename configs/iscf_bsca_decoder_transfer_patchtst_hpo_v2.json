@@ -2,8 +2,8 @@
   "schema_version": 1,
   "protocol_id": "ISCF-BSCA-DECODER-TRANSFER-PATCHTST-HPO-20260815",
   "candidate_version": "ISCF-BSCA-DECODER-TRANSFER-PATCHTST-HPO-v2",
-  "status": "remote_training_authorized_formal_test_not_authorized",
-  "current_step": 8,
+  "status": "training_complete_validation_pass_artifact_uniqueness_fail_superseded_by_v2p1",
+  "current_step": 9,
   "test_informed": true,
   "problem": "PatchTST-style ISCF-BSCA improves over the matched ISCF arm but does not beat the Original Decoder on the v1 official-test macro gate",
   "prior_candidate": {
@@ -141,6 +141,22 @@
     "remote_training_authorized": true,
     "formal_test_access_authorized": false,
     "paper_table_update_authorized": false
+  },
+  "observed_outcome": {
+    "training_runs_complete": 50,
+    "expected_training_runs": 50,
+    "unique_checkpoint_hashes": 40,
+    "expected_unique_checkpoint_hashes": 50,
+    "artifact_gate": "fail",
+    "duplicate_profile_pairs_on_all_five_datasets": [
+      ["p02_lr0p50", "p08_lr0p50_wd1e4"],
+      ["p05_wd1e5", "p06_wd1e4"]
+    ],
+    "validation_macro_gain_percent": 0.8125909378626582,
+    "validation_datasets_improved_over_0p1_percent": 5,
+    "validation_gate": "pass",
+    "formal_test_jobs": 0,
+    "decision": "parent_gate_not_relaxed_freeze_unique_selected_profiles_under_v2p1_amendment"
   },
   "claim_boundary": "v2 is a test-informed rescue candidate; v1 remains a valid negative matched result; validation HPO cannot itself restore the cross-backbone portability claim"
 }

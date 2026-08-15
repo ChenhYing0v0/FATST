@@ -14,6 +14,12 @@ Current cursor=`PatchTST decoder HPO v2 Step 8 train/validation -> formal test b
 
 Remote launch已于2026-08-15 01:39:23完成：commit=`7480ffc4`、PID=`3782929`、GPU0/1/2、50 jobs；27/27 remote prelaunch及3/3 resource smoke通过，首批Weather jobs finite，formal test=0。Canonical launch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_hpo_v2_20260815/remote_launch.md`；Decision=`patchtst_decoder_hpo_v2_50_run_remote_train_validation_active_test_zero`。
 
+## PatchTST Decoder-Transfer HPO v2 Result and v2.1 Formal Gate (2026-08-15)
+
+Current cursor=`parent v2 artifact gate fail / validation gate pass -> v2.1 matched training authorized -> 10-hash manifest -> one formal access`。Parent训练50/50 complete、test=0；validation macro MSE从0.561611降至0.557047（+0.8126%），5/5 datasets改善超过0.1%。但两个profile pairs在每个dataset上产生bitwise-identical checkpoints，unique hashes仅40/50，故parent artifact gate保持FAIL且不得追认通过。
+
+修订后的v2.1冻结五个互异selected BSCA checkpoints，补训五个完全matched `+ISCF` checkpoints；每dataset一个profile共享四个horizons，only method difference=`pcc_objective_mode`。10/10 unique hashes、5/5 matched initialization pairs与formal-artifact-absence gate通过后，授权一次10-checkpoint/40-cell formal test。Combined table复用v1 DLinear三arms及PatchTST Original共80 cells，最终仍需120/120 complete。Canonical gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_hpo_v2_20260815/training_result_and_v2p1_formal_gate.md`；Decision=`parent_v2_uniqueness_fail_v2p1_manifest_gated_formal_authorized`。
+
 ## Efficiency Formal Result and Step 9--10 Decision (2026-08-14)
 
 Current cursor=`Efficiency complete -> deployment trade-off supported -> Figure 5 contract next`。独占RTX 3090完成35/35 service units与77/77 immutable checkpoint objects，所有finite/CV gates通过且未访问test loader/labels。ISCF-BSCA以1个model提供architectural CHPC，并相对four-model TimeAlign/QDF减少deployed parameters与checkpoint storage；但其single/all-H latency与logged training time均不领先，当前implementation仍materialize完整$T=720$ field。
