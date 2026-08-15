@@ -1,0 +1,9 @@
+{
+  "aggregate_cells": 224,
+  "author_corrected_standard_rows": 64,
+  "author_screenshot_sha256": "8de2d10fafaad540fbe2a713f528a8985a1ad90b1f657fa3e0216467e4fa8b8d",
+  "claim_boundary": "the corrected cells are author-provided three-decimal rerun values; their prior checkpoint hashes are intentionally not reused",
+  "gate": "pass",
+  "provenance": "author_corrected_screenshot_20260815_three_decimal",
+  "source_aggregate_sha256": "f32750d9ccfd8730658c47984a3f46236bbe487f6872a84b80386ca4bf250c9a"
+}

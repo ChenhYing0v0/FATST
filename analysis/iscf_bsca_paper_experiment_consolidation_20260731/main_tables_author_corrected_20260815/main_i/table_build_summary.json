@@ -1,0 +1,37 @@
+{
+  "author_corrected_standard_rows": 64,
+  "author_correction_scope": {
+    "ISCF-BSCA": "7 datasets x 4 horizons",
+    "SimpleTM": "Solar x 4 horizons",
+    "TVNet": "ETTh2 x 4 horizons",
+    "TimeAlign": "7 datasets x 4 horizons"
+  },
+  "claim_boundary": "author_corrected_three_decimal_reruns_and_preserved_prior_baselines; system-level accuracy context, not matched mechanism attribution",
+  "datasets": [
+    "ETTm1",
+    "ETTm2",
+    "ETTh1",
+    "ETTh2",
+    "Weather",
+    "ECL",
+    "Solar"
+  ],
+  "display_precision": 3,
+  "horizons": [
+    96,
+    192,
+    336,
+    720
+  ],
+  "iscf_best_metric_cells": 44,
+  "iscf_second_metric_cells": 9,
+  "rows_with_dataset_averages": 490,
+  "source_hashes": {
+    "author_screenshot": "5c8c2f3e9f0fecb28392095bf28d26240542cd373d5de65cfa36353b4ee2d38b",
+    "previous_table_data": "79ae112306efe7e0022d67871eba0c8f2fc8c669fc7e6d7b0f371ffafab816d2"
+  },
+  "standard_rows": 392,
+  "supersedes": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_h5d_bs16_lr2p4_synced_20260813/table_data_long.csv",
+  "systems": 14,
+  "table_id": "ISCF-BSCA-MAIN-I-AUTHOR-CORRECTED-20260815"
+}

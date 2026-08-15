@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## Main I / Main II Author-Corrected Freeze (2026-08-15)
+
+Current writing cursor=`author correction complete -> canonical paper tables hash-frozen`。Main I按作者修正覆盖ISCF/TimeAlign全部28 cells、SimpleTM Solar 4 cells与**TVNet ETTh2 4 cells**；Main II覆盖ISCF/TimeAlign全部28 cells、SimpleTM Solar 4 cells与PatchTST ETTh2 4 cells。其余cells不变。修正值按提供的三位小数冻结，corrected checkpoint hashes不作推断或沿用；旧冻结目录保留为history。
+
+Avg.和best/second在完整矩阵上重算，并将Main II `.xxx5` edge从banker's rounding统一为decimal half-up。最终Main I为`44/56` best、`9/56` second，Main II为`50/56` best、`6/56` second；两张standalone LaTeX均编译为one-page A3 PDF并通过render QA。Canonical audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/result_and_freeze_audit.md`；Decision=`main_i_main_ii_author_corrected_20260815_complete_hash_frozen`。该writing-side更新不改变并行PatchTST HPO v2的formal-test授权边界。
+
 ## PatchTST Decoder-Transfer HPO v2 Prelaunch (2026-08-15)
 
 Current cursor=`PatchTST decoder HPO v2 Step 8 train/validation -> formal test blocked`。v1 PatchTST block仍是有效负结果，不作事后删除或改写。日志复核显示`+ISCF-BSCA`相对Original在four-H validation mean MSE上5/5 datasets正向，但official test只2/5正向，因此本轮优先处理decoder overfitting/optimization scale，而不是立即扩大encoder搜索。

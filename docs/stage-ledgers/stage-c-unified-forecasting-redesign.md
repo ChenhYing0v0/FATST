@@ -25,10 +25,16 @@
 | `current_11_step` | PatchTST Decoder-Transfer HPO v2 Step 8 remote train/validation；formal test blocked |
 | `current_candidate` | `ISCF-BSCA-DECODER-TRANSFER-PATCHTST-HPO-v2`；v1 PatchTST负结果保持有效且不回写 |
 | `latest_decision` | `patchtst_decoder_hpo_v2_50_run_remote_train_validation_active_test_zero` |
-| `writing_latest_decision` | `sections_5_7_v0_2_efficiency_and_transfer_evidence_synced` |
+| `writing_latest_decision` | `main_i_main_ii_author_corrected_20260815_complete_hash_frozen` |
 | `next_required_action` | 完成50/50 PatchTST BSCA HPO training artifacts与50 unique hashes；仅按four-H validation mean MSE选profile；通过gate后请求新formal-test授权 |
 | `method_training_authorized` | 2026-08-15用户授权继续PatchTST decoder调参并在失败时更换backbone；当前只启动50-run train/validation，formal test与table mutation=false |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
+
+## Main-Table Author Correction Record (2026-08-15)
+
+Main I与Main II已建立新的author-corrected canonical freeze；旧hash-frozen版本只保留为historical snapshots。Main I修正scope=`ISCF + TimeAlign all 7x4, SimpleTM Solar, TVNet ETTh2`；Main II修正scope=`ISCF + TimeAlign all 7x4, SimpleTM Solar, PatchTST ETTh2`。未列出cells保持既有source role。
+
+作者只提供三位小数结果，因此canonical CSV不伪造额外精度，Main II corrected rows也不沿用被替换checkpoint hashes。完整重算后Main I=`44/56 best + 9/56 second`，Main II=`50/56 best + 6/56 second`。Canonical audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/result_and_freeze_audit.md`；freeze manifest=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/freeze_manifest.json`。该writing-side freeze不授权或触发PatchTST HPO v2 formal test。
 
 ## 11-Step Record
 
@@ -90,7 +96,7 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | `INTRO-CHPD-v1` | `integrated_in_section3_v0_7_temporarily_frozen_usable` | independently trained horizon models能否给出清晰overlap inconsistency | selected ETTh2 trajectory + all-validation heatmap；aggregate-CHPD selection retained in caption | shared-96 raw mean differences 2.16--2.51；long--short NCHPD 0.0365--0.0406 | retain frozen wording；formal family/seed prevalence deferred |
 | `SC-UVHF-FRSD-D1` | `integrated_in_section3_v0_7_temporarily_frozen_usable` | matched fixed sharing extent的future-region prediction-risk optimum是否随future region变化 | selected ETTm2 validation example；label-selected oracle role retained | five scopes win 2--3 regions；10/10 crossings；8.112% descriptive headroom | retain frozen wording；formal CFH remains architecture-level deferred control |
 | `ISCF-BSCA-v1` | `core_ablation_complete_partial_attribution` | BSCA objective、allocation、projection与multi-scope是否各自贡献 | exact five-control narrative frozen；all-component claim contingent on four controls | 100/100 cells；3/4 pass；allocation vs equal fusion fail；Full macro 0.308549/0.346278 | retain three passing claims；allocation accuracy claim unsupported；no automatic rerun |
-| `ISCF-BSCA-MAIN-v1` | `profiles_frozen_main_i_and_main_ii_reusable` | frozen architecture在8 datasets上经test-tuned HPO后能否达到SOTA-competitive并支持main claims | validation选checkpoint；test four-H aggregate选dataset profile；ECL/Solar test-informed expanded budget；seed2021 first | Main I profiles frozen；Main II macro MSE/MAE rank 1，51/56 top-2 metric cells | do not retrain；use exact ablation/transfer for attribution and portability |
+| `ISCF-BSCA-MAIN-v1` | `author_corrected_main_i_and_main_ii_hash_frozen` | frozen architecture在8 datasets上经test-tuned HPO后能否达到SOTA-competitive并支持main claims | validation选checkpoint；test four-H aggregate选dataset profile；ECL/Solar test-informed expanded budget；seed2021 first | Main I 44/56 best、53/56 top-2；Main II 50/56 best、56/56 top-2；macro MSE/MAE均0.260714/0.306107 | do not retrain；use exact ablation/transfer for attribution and portability |
 | `ISCF-BSCA-PAPER-EXP-v2` | `main_tables_and_core_ablation_complete_transfer_efficiency_pending` | 完整main/ablation/transfer/efficiency evidence能否兑现provisional claims | Main I frozen；corrected Main II complete；Core-Ablation claim split by control | Core-Ablation 100/100且3/4 controls pass；transfer/efficiency missing | retain allocation negative boundary；freeze transfer/efficiency prelaunch separately |
 | `SC-ISCF-UPA-D2` | `superseded_by_bsca_v1` | information-free uniform train-time anchor能否复现ARMERR/SHUFFLED gain | user chose outcome-first method route | not executed as separate diagnostic | retain design history only |
 | `SC-ISCF-PSA-D1` | `control_complete_h2_supported` | contemporaneous no-route EQUAL能否解释new ARMERR/SHUFFLED公共gain | not a method；只隔离H2/H3 | exact EQUAL tie；controls +0.6577/+0.6557%；H2 pass | feeds UPA-D2 only |

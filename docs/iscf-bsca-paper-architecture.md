@@ -5,10 +5,10 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.71` |
-| `last_updated` | `2026-08-13` |
+| `version` | `v0.72` |
+| `last_updated` | `2026-08-15` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Sections 5--7 v0.2 author-fixed structure temporarily frozen；experiments=Main II fixed-H loader re-audit complete，`h5d_bs16_lr2p4` remains current ETTh1 paper row，HPO paused |
+| `current_review_cursor` | writing=Main I/Main II author-corrected tables hash-frozen；experiments=PatchTST Decoder-Transfer HPO v2 train/validation active，formal test blocked |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
@@ -16,12 +16,21 @@
 | `frozen_consensus` | 论文七章结构并保留standalone Discussion；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.2 structural design |
 | `provisional_content` | Method Figure 4 stable vector-asset synchronization；remaining manuscript prose and pending experiment evidence |
-| `authorization_source` | 2026-08-13用户授权并完成Main II全部external baselines的fixed-H loader formal re-evaluation；Main I、extra seeds与architecture redesign未改变 |
+| `authorization_source` | 2026-08-15用户提供Main I/Main II修正复跑值并要求固定为论文表；并行PatchTST HPO v2的formal-test边界不变 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
 `temporarily_frozen_content` 只有在后续章节或证据产生明确矛盾且用户同意后才解冻；
 `provisional_content` 只表示当前最佳结构，后续按章节继续修订。
+
+Main-table author-correction amendment：Main I现覆盖作者修正的ISCF/TimeAlign全部
+seven-dataset rows、SimpleTM Solar与**TVNet ETTh2**；Main II覆盖ISCF/TimeAlign全部rows、
+SimpleTM Solar与PatchTST ETTh2。未列出cells保持上一冻结版。作者数据只提供三位小数，
+因此不推断额外精度或corrected checkpoint hashes。完整重算Avg.与排名后，Main I为
+`44/56 best + 9/56 second`，Main II为`50/56 best + 6/56 second`；两表macro
+MSE/MAE均为`0.260714/0.306107`。Canonical freeze=
+`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/result_and_freeze_audit.md`。
+旧表保留为historical snapshots；system-level / unmatched claim boundary不变。
 
 Main II horizon-loader amendment：旧表在H720 loader common origins上裁短prefix，现已被
 每个H重新构造source-native fixed-H official test loader的完整重算取代。63个immutable

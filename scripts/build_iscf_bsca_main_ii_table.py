@@ -8,6 +8,7 @@ import csv
 import hashlib
 import json
 from collections import defaultdict
+from decimal import Decimal, ROUND_HALF_UP
 from pathlib import Path
 
 
@@ -73,9 +74,14 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def round_for_display(value: float) -> Decimal:
+    """Round decimal table values to three places using explicit half-up rules."""
+    return Decimal(str(value)).quantize(Decimal("0.001"), rounding=ROUND_HALF_UP)
+
+
 def style_for(values: list[float], value: float) -> str:
-    displayed = sorted({round(item, 3) for item in values})
-    rounded = round(value, 3)
+    displayed = sorted({round_for_display(item) for item in values})
+    rounded = round_for_display(value)
     if rounded == displayed[0]:
         return "best"
     if len(displayed) > 1 and rounded == displayed[1]:
@@ -203,8 +209,8 @@ def main() -> None:
                         "horizon": horizon,
                         "mse": row["mse"],
                         "mae": row["mae"],
-                        "mse_display": f"{row['mse']:.3f}",
-                        "mae_display": f"{row['mae']:.3f}",
+                        "mse_display": f"{round_for_display(float(row['mse'])):.3f}",
+                        "mae_display": f"{round_for_display(float(row['mae'])):.3f}",
                         "mse_style": style_for(
                             [float(item["mse"]) for item in candidates],
                             float(row["mse"]),
@@ -233,8 +239,8 @@ def main() -> None:
                     "horizon": "Avg.",
                     "mse": row["mse"],
                     "mae": row["mae"],
-                    "mse_display": f"{row['mse']:.3f}",
-                    "mae_display": f"{row['mae']:.3f}",
+                    "mse_display": f"{round_for_display(float(row['mse'])):.3f}",
+                    "mae_display": f"{round_for_display(float(row['mae'])):.3f}",
                     "mse_style": style_for(
                         [float(item["mse"]) for item in averages.values()], row["mse"]
                     ),

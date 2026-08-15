@@ -1,0 +1,84 @@
+{
+  "freeze_id": "ISCF-BSCA-MAIN-TABLES-AUTHOR-CORRECTED-20260815",
+  "status": "complete_hash_frozen_author_corrected",
+  "freeze_date": "2026-08-15",
+  "provenance": "author_corrected_screenshot_20260815_three_decimal",
+  "superseded_artifacts_preserved": true,
+  "main_i": {
+    "author_corrected_standard_rows": 64,
+    "scope": {
+      "ISCF-BSCA": "7 datasets x 4 horizons",
+      "TimeAlign": "7 datasets x 4 horizons",
+      "SimpleTM": "Solar x 4 horizons",
+      "TVNet": "ETTh2 x 4 horizons"
+    },
+    "iscf_best_metric_cells": 44,
+    "iscf_second_metric_cells": 9,
+    "files": {
+      "table_fragment": {
+        "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_i/table_iscf_bsca_main_i_qdf.tex",
+        "sha256": "f5a19a4d66313ca679c257fa1dc4b50dbb808a7c61a126076f9ac8f399d840d7"
+      },
+      "standalone_latex": {
+        "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_i/table_iscf_bsca_main_i_standalone.tex",
+        "sha256": "724762fe0aeca2b389107d2503780f36c4fc3658002b17a2938f82962abe0641"
+      },
+      "table_data": {
+        "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_i/table_data_long.csv",
+        "sha256": "556776d9be6a3e3e33fdd6b4e8c0855f95a9f3158c0435274ee5bda0a500db94"
+      },
+      "build_summary": {
+        "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_i/table_build_summary.json",
+        "sha256": "1cb4a5135cb1c514046e594cc93f1b841eda27a538959db58114c119f318f1a6"
+      },
+      "compiled_review_pdf": {
+        "path": "output/pdf/iscf_bsca_main_i_author_corrected_20260815.pdf",
+        "sha256": "16547be531d88ecf8dfef2175431ac40120bf85ad4d02c053630751754f91572"
+      }
+    }
+  },
+  "main_ii": {
+    "author_corrected_standard_rows": 64,
+    "scope": {
+      "ISCF-BSCA-MAIN-v1": "7 datasets x 4 horizons",
+      "TimeAlign": "7 datasets x 4 horizons",
+      "SimpleTM": "Solar x 4 horizons",
+      "PatchTST": "ETTh2 x 4 horizons"
+    },
+    "iscf_best_metric_cells": 50,
+    "iscf_second_metric_cells": 6,
+    "files": {
+      "table_fragment": {
+        "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_ii/table_iscf_bsca_main_ii.tex",
+        "sha256": "ed8492ac4a28f9bcb556ef4bd54e6c7c98f05cc25876a5ec24c7d258ba83d0dd"
+      },
+      "standalone_latex": {
+        "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_ii/table_iscf_bsca_main_ii_standalone.tex",
+        "sha256": "9a9b6fe21b6d52702fefa542bf48b97267f83d9bd1e1523cf7522bad503f4f8c"
+      },
+      "table_data": {
+        "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_ii/table_data_long.csv",
+        "sha256": "37871cefbbf7207e2680b1fe9557ec2889c04ecf1d0c7a5fdd874287755e1d47"
+      },
+      "build_summary": {
+        "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_ii/table_build_summary.json",
+        "sha256": "aff386c1513fb5370161c91906f9127405039292b0fe2aea741af0b40ccb8f19"
+      },
+      "corrected_aggregate_cells": {
+        "path": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_ii/main_ii_aggregate_cells_author_corrected.csv",
+        "sha256": "371439473315d2a102adf16549421d2f89efca91a4fa820fedaab0488f979b3d"
+      },
+      "compiled_review_pdf": {
+        "path": "output/pdf/iscf_bsca_main_ii_author_corrected_20260815.pdf",
+        "sha256": "3a69e3ea66f44dbd08d56213616562fdc47e0928e2bf13d68ce2f8807cbfd800"
+      }
+    }
+  },
+  "source_evidence": {
+    "main_i_author_screenshot_sha256": "5c8c2f3e9f0fecb28392095bf28d26240542cd373d5de65cfa36353b4ee2d38b",
+    "main_ii_author_screenshot_sha256": "8de2d10fafaad540fbe2a713f528a8985a1ad90b1f657fa3e0216467e4fa8b8d",
+    "previous_main_i_table_data_sha256": "79ae112306efe7e0022d67871eba0c8f2fc8c669fc7e6d7b0f371ffafab816d2",
+    "previous_main_ii_aggregate_sha256": "f32750d9ccfd8730658c47984a3f46236bbe487f6872a84b80386ca4bf250c9a"
+  },
+  "claim_boundary": "author-provided corrected rerun values are available only at three-decimal precision; corrected checkpoint hashes are not inferred or reused; unchanged cells retain their prior evidence roles"
+}

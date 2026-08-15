@@ -1,0 +1,89 @@
+{
+  "aggregate_cells": 224,
+  "author_corrected_standard_rows": 64,
+  "author_correction_scope": {
+    "ISCF-BSCA-MAIN-v1": "7 datasets x 4 horizons",
+    "PatchTST": "ETTh2 x 4 horizons",
+    "SimpleTM": "Solar x 4 horizons",
+    "TimeAlign": "7 datasets x 4 horizons"
+  },
+  "best_style": "red_bold",
+  "claim_boundary": "author-corrected three-decimal reruns plus preserved complete horizon-loader reaudit; not matched mechanism attribution",
+  "datasets": [
+    "ETTm1",
+    "ETTm2",
+    "ETTh1",
+    "ETTh2",
+    "Weather",
+    "ECL",
+    "Solar"
+  ],
+  "display_precision": 3,
+  "horizons": [
+    96,
+    192,
+    336,
+    720
+  ],
+  "iscf_best_cells": 50,
+  "iscf_second_cells": 6,
+  "macro_over_28_dataset_horizon_cells": {
+    "AMD": {
+      "mae": 0.3300292720752103,
+      "mse": 0.28383893253547804
+    },
+    "DLinear": {
+      "mae": 0.36262510761804423,
+      "mse": 0.3150752309226705
+    },
+    "ISCF-BSCA-MAIN-v1": {
+      "mae": 0.30610714285714286,
+      "mse": 0.26071428571428573
+    },
+    "PatchTST": {
+      "mae": 0.3291305443974532,
+      "mse": 0.282719736815158
+    },
+    "QDF": {
+      "mae": 0.3411564789712429,
+      "mse": 0.29343846227441517
+    },
+    "SimpleTM": {
+      "mae": 0.33583561591405614,
+      "mse": 0.2958221501926868
+    },
+    "TimeAlign": {
+      "mae": 0.3179285714285714,
+      "mse": 0.27867857142857144
+    },
+    "iTransformer": {
+      "mae": 0.3475725263610391,
+      "mse": 0.31781287456897545
+    }
+  },
+  "metric_scalars": 448,
+  "presentation_template": "Main_I_TimeAlign_Table_6_style",
+  "ranking_rule": "best_and_second_distinct_displayed_values_after_three_decimal_rounding",
+  "rows_with_dataset_averages": 280,
+  "second_style": "blue_underline",
+  "source_hashes": {
+    "author_correction_gate": "8e5698068787901dd39d2937021cdbf485907bdaf43b743e79c381691882dd0f",
+    "author_screenshot": "8de2d10fafaad540fbe2a713f528a8985a1ad90b1f657fa3e0216467e4fa8b8d",
+    "corrected_aggregate_cells": "371439473315d2a102adf16549421d2f89efca91a4fa820fedaab0488f979b3d",
+    "previous_aggregate_cells": "f32750d9ccfd8730658c47984a3f46236bbe487f6872a84b80386ca4bf250c9a"
+  },
+  "standalone_latex": "table_iscf_bsca_main_ii_standalone.tex",
+  "standalone_page": "A3_landscape_review_copy",
+  "supersedes": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/formal_results/aggregate_audit/main_ii_aggregate_cells.csv",
+  "systems": [
+    "ISCF-BSCA-MAIN-v1",
+    "TimeAlign",
+    "QDF",
+    "AMD",
+    "SimpleTM",
+    "iTransformer",
+    "PatchTST",
+    "DLinear"
+  ],
+  "table_id": "ISCF-BSCA-MAIN-II-AUTHOR-CORRECTED-20260815"
+}

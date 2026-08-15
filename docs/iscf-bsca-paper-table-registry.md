@@ -13,6 +13,7 @@ source transcription audit、checkpoint manifest 和 smoke 统计不作为论文
 - `complete_hash_frozen_h5a_synced`：H5A选择的完整dataset-level profiles已获授权替换，结果与输出hash重新冻结；
 - `complete_hash_frozen_h5d_bs16_lr2p4_synced`：用户指定eligible H5D profile作为当前ETTh1 paper row，原H5D gate历史保留，结果与输出hash重新冻结；
 - `complete_hash_frozen_horizon_loader_reaudit`：Main II已使用既有H720 checkpoints在各fixed-H official test loaders上完整重算，continuity、origin-count与输出hash均已冻结；
+- `complete_hash_frozen_author_corrected_20260815`：作者提供的修正复跑值已按指定scope替换，其余cells保持上一冻结版；Avg.、排名、LaTeX、PDF与输出hash已重新冻结；
 - `complete_hash_frozen_partial_attribution_3_of_4_controls`：Core-Ablation完整矩阵与hash已冻结，但仅3/4 matched controls通过，结论必须按control收窄；
 - `complete_presentation_aligned`：完整结果已通过审计，并已按 Main I 视觉契约生成；
 - `complete_limited_surface`：结果完整，但只覆盖明确列出的部分 systems；
@@ -45,8 +46,8 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 
 | ID | 论文位置 | 状态 | 当前规模 | Canonical artifact | 能支持的结论 |
 | --- | --- | --- | --- | --- | --- |
-| `Main-I` | 正文主结果 | `complete_hash_frozen_h5d_bs16_lr2p4_synced` | 14 systems × 7 datasets × 4 H；392 system–dataset–H rows | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_h5d_bs16_lr2p4_synced_20260813/table_iscf_bsca_main_i_qdf.tex` | ISCF-BSCA 与 separately optimized horizon-specific systems 的 system-level accuracy competitiveness；不作 matched mechanism attribution |
-| `Main-II` | 正文主结果 | `complete_hash_frozen_horizon_loader_reaudit` | 8 systems × 7 datasets × 4 H；224 cells，63 external checkpoint objects / 252 formal evaluations | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_ii_horizon_loader_reaudit_20260813/formal_results/table/table_iscf_bsca_main_ii.tex` | one-model-for-all-horizons system competitiveness；不作 BSCA/decoder attribution |
+| `Main-I` | 正文主结果 | `complete_hash_frozen_author_corrected_20260815` | 14 systems × 7 datasets × 4 H；392 system–dataset–H rows | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_i/table_iscf_bsca_main_i_qdf.tex` | ISCF-BSCA 与 separately optimized horizon-specific systems 的 system-level accuracy competitiveness；不作 matched mechanism attribution |
+| `Main-II` | 正文主结果 | `complete_hash_frozen_author_corrected_20260815` | 8 systems × 7 datasets × 4 H；224 cells | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_ii/table_iscf_bsca_main_ii.tex` | one-model-for-all-horizons system competitiveness；不作 BSCA/decoder attribution |
 | `Main-I-Exchange` | Supplementary companion | `complete_limited_surface` | ISCF-BSCA / TimeAlign / QDF × Exchange × 4 H | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_h5d_bs16_lr2p4_synced_20260813/table_exchange_companion.tex` | Exchange 的部分系统背景；不能表述为完整 Main I extension |
 | `Efficiency` | 正文 supporting result | `complete_hash_frozen_tradeoff_supported_no_uniform_compute_advantage` | 5 systems × 7 datasets；35/35 service units / 77 checkpoint objects | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/table/table_iscf_bsca_efficiency.tex` | 支持one-model consolidation、architectural CHPC及相对four-model TimeAlign/QDF的parameter/storage reduction；不支持uniform training/latency/computation advantage |
 | `Core-Ablation` | 正文 mechanism attribution | `complete_hash_frozen_partial_attribution_3_of_4_controls` | 5 variants × 5 datasets × 4 H；100/100 cells，25 checkpoints（5 reused + 20 new） | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/table/table_iscf_bsca_core_ablation.tex` | 支持BSCA objective、scope-specific projections与multi-scope design；不支持learned Target-Adaptive Allocation相对equal fusion的独立accuracy utility |
@@ -57,23 +58,24 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 
 ### Main I
 
-- ISCF-BSCA：31/56 best、18/56 second；
-- TimeAlign、QDF、AMD、SimpleTM 为本地 official-source/native reproduction；
-- 其余 columns 为 published context，来源与 protocol 差异必须保留在 caption/Methods；
-- 当前ETTh1采用用户指定的eligible H5D profile `h5d_bs16_lr2p4`；ECL、Solar及其余datasets保持H5A同步版不变；
-- 当前版由 `main_i_h5d_bs16_lr2p4_freeze_manifest.json` hash冻结；standalone LaTeX与A3 review PDF分别为`table_iscf_bsca_main_i_standalone.tex`和`output/pdf/iscf_bsca_main_i_h5d_bs16_lr2p4_20260813.pdf`。
+- ISCF-BSCA：44/56 best、9/56 second；seven-dataset macro MSE/MAE=`0.260714/0.306107`；
+- 作者修正scope为ISCF与TimeAlign全部28 cells、SimpleTM Solar 4 cells、**TVNet ETTh2 4 cells**；共64个standard rows；
+- 修正值按作者提供的三位小数直接冻结，不推断额外精度或checkpoint hash；未列出的baseline cells保持上一冻结版的official-local / published-context role；
+- 当前canonical table fragment=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_i/table_iscf_bsca_main_i_qdf.tex`；standalone LaTeX=`main_i/table_iscf_bsca_main_i_standalone.tex`；A3 review PDF=`output/pdf/iscf_bsca_main_i_author_corrected_20260815.pdf`。
 
 ### Main II
 
-- 完整性：63个external H720 checkpoint objects、63个unique hashes、252/252 fixed-H evaluations、196个external aggregate cells；连同28个ISCF-BSCA cells形成224-cell主表；
-- 当前ISCF-BSCA仍采用已冻结dataset-level profiles，其中ETTh1为用户指定的eligible H5D profile `h5d_bs16_lr2p4`；本轮只重算全部external baselines，不改Main I；
-- 49/49个H720 same-checkpoint continuity checks与63/63个origin-count monotonicity checks均通过；
-- 三位小数显示口径：41/56 best、13/56 second，共54/56 metric cells 位于 top-2；
+- 完整性：8 systems × 7 datasets × 4 H=`224` cells；上一版63 external H720 objects / 252 formal evaluations的审计保留为未修正cells的来源证据；
+- 作者修正scope为ISCF与TimeAlign全部28 cells、SimpleTM Solar 4 cells、PatchTST ETTh2 4 cells；共64个standard rows；修正cells不沿用被替换版本的checkpoint hashes；
+- 三位小数显示口径：ISCF-BSCA 50/56 best、6/56 second，共56/56 metric cells位于top-2；seven-dataset macro MSE/MAE=`0.260714/0.306107`；
+- Avg.采用显式decimal half-up rounding，已修复旧builder在`.xxx5`上的banker's-rounding差异；
 - Main II 现已与 Main I 对齐 dataset order、year label、best/second emphasis、column spacing 与 required packages；
-- 可直接编译的完整source为`table_iscf_bsca_main_ii_standalone.tex`，A3 landscape
-  review PDF为`output/pdf/iscf_bsca_main_ii_horizon_loader_20260813.pdf`；正式manuscript仍使用
-  原始table fragment；
+- 可直接编译的完整source为`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_ii/table_iscf_bsca_main_ii_standalone.tex`，A3 landscape review PDF为`output/pdf/iscf_bsca_main_ii_author_corrected_20260815.pdf`；正式manuscript使用同目录table fragment；
 - external source contracts 不 matched，因此该表不能兑现 component effectiveness 或 decoder portability claims。
+
+两张主表的共同freeze audit与hash manifest分别为
+`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/result_and_freeze_audit.md`
+和`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/freeze_manifest.json`。旧Main I/Main II冻结目录保留为historical snapshots，不再是canonical manuscript source。
 
 ### Core-Ablation
 
