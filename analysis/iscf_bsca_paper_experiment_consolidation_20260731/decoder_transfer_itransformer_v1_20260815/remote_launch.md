@@ -25,4 +25,4 @@ Launch前GPU0/1/2均为18 MiB occupied、0% utilization。User quota为194G used
 
 Formal test、table mutation、extra HPO和extra seeds均为false。下一 gate 是15/15 training artifacts、15 unique checkpoint hashes与5/5 matched encoder-initialization triplets；immutable manifest前test必须保持0。
 
-Early status audit发现native Original arm按设计不生成`trained_invariants.json`，旧completion predicate会把已完成的Weather Original误计为incomplete，但不影响正在运行的worker继续下一个dataset。Runner已修正为：三臂都要求checkpoint、effective config、initialization contract、four-H metrics和training log；只有两个ISCF arms额外要求`trained_invariants.pass=true`。该修复只改变status/resume判定，不改变任何训练中的model、optimizer、seed、selector或artifact。
+Post-run status audit确认本轮train/validation path不会生成`trained_invariants.json`；此前只对Original放宽该文件的completion predicate，因而在15/15实际完成后仍误报为5/15。所有15个worker job均正常写出checkpoint与validation scorecard，没有run丢失。Runner现统一要求checkpoint、effective config、environment、initialization contract、four-H metrics、model diagnostics和training log。该修复只改变status/resume判定，不改变model、optimizer、seed、selector、checkpoint或已有artifact。

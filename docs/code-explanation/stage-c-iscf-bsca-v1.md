@@ -10,7 +10,7 @@ Source-informed边界：该实现采用official iTransformer的`full variate his
 
 代码理论一致性：若`+ISCF-BSCA`优于`+ISCF`但两者仍不及Original Decoder，应归因于replacement readout compatibility，而不是否定BSCA objective；只有完整iTransformer formal block同时超过Original的MSE/MAE gate，才能支持这一carrier上的transfer。PatchTST负结果必须继续保留，不能被新carrier选择性替换。
 
-Remote runner的completion contract区分native Original与ISCF arms。三臂共同要求`checkpoint.pt`、`effective_config.json`、`initialization_contract.json`、`metrics_by_target_horizon.csv`和`training_log.csv`；只有ISCF两臂会产生并额外要求`trained_invariants.json`。该区别只用于status与断点续跑，不改变训练或selection path。
+Remote runner的completion contract对三臂统一要求`checkpoint.pt`、`effective_config.json`、`environment.json`、`initialization_contract.json`、`metrics_by_target_horizon.csv`、`model_diagnostics.json`和`training_log.csv`。本轮train/validation path不生成`trained_invariants.json`，因此该文件不参与status或断点续跑判定；完整性、finite metrics、four-H selector、checkpoint hash和matched encoder initialization由独立artifact checker验证。该修复不改变训练或selection path。
 
 ## 2026-08-15 PatchTST decoder-HPO optimizer groups
 

@@ -62,18 +62,15 @@ run_dir() {
 }
 
 training_complete() {
-  local directory dataset arm
-  IFS=$'\t' read -r dataset arm _ <<< "$1"
+  local directory
   directory="$(run_dir "$1")"
   [[ -s "${directory}/checkpoint.pt" \
     && -s "${directory}/effective_config.json" \
+    && -s "${directory}/environment.json" \
     && -s "${directory}/initialization_contract.json" \
     && -s "${directory}/metrics_by_target_horizon.csv" \
-    && -s "${directory}/training_log.csv" ]] || return 1
-  if [[ "${arm}" != "itransformer_original" ]]; then
-    [[ -s "${directory}/trained_invariants.json" ]] \
-      && python3 -c 'import json,sys; assert json.load(open(sys.argv[1]))["pass"] is True' "${directory}/trained_invariants.json" 2>/dev/null
-  fi
+    && -s "${directory}/model_diagnostics.json" \
+    && -s "${directory}/training_log.csv" ]]
 }
 
 status_count() {
