@@ -1,0 +1,21 @@
+{
+  "evidence_role": "validation_only_checkpoint_and_risk_audit_not_formal_effectiveness",
+  "iscf_bsca_vs_original": {
+    "macro_mse_gain_percent": -1.9111818604,
+    "macro_mae_gain_percent": -1.8894807650,
+    "dataset_mse_wins": 1,
+    "dataset_mae_wins": 0,
+    "cell_mse_wins": 4,
+    "cell_mae_wins": 1
+  },
+  "iscf_bsca_vs_iscf": {
+    "macro_mse_gain_percent": -0.0396041354,
+    "macro_mae_gain_percent": -0.2964097290,
+    "dataset_mse_wins": 3,
+    "dataset_mae_wins": 2,
+    "cell_mse_wins": 9,
+    "cell_mae_wins": 7
+  },
+  "formal_test_accessed": false,
+  "formal_decision": "blocked_pending_explicit_user_authorization"
+}

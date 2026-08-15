@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## iTransformer-style Decoder-Transfer v1 Training Gate (2026-08-15)
+
+Current cursor=`Step 8 complete -> 15-hash immutable manifest -> formal test pending explicit authorization`。15/15 from-scratch joint-training runs与15 unique checkpoint hashes完整，5/5 dataset-level encoder initialization triplets匹配，four-H validation selector与numeric-health gates通过；manifest SHA256=`062588a140ecd4fae385aa9d194c039355bef3c7d9f49f685d796779626eecc9`，test=0。
+
+Validation-only risk signal显示+ISCF-BSCA相对Original Decoder macro MSE/MAE gain=`-1.911%/-1.889%`，dataset/cell MSE wins=`1/5,4/20`；相对matched +ISCF为`-0.040%/-0.296%`，MSE dataset wins虽为3/5但aggregate不改善。该结果只用于风险披露，不能替代official-test effectiveness或触发selective reporting。若作者授权，冻结下一步为15 checkpoints × four H=`60`完整formal cells；否则保持test=0。Canonical gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_v1_20260815/training_result_and_formal_test_gate.md`；Decision=`itransformer_transfer_v1_training_manifest_pass_validation_risk_negative_formal_test_pending_authorization`。
+
 ## iTransformer-style Decoder-Transfer v1 Prelaunch (2026-08-15)
 
 Current cursor=`PatchTST v2.1 gate fail -> rollback Step 4--6 complete -> iTransformer v1 Step 7 pass -> Step 8 train/validation next`。Official iTransformer source audit确认其以完整variate history构造`[B,C,D]` tokens并在`C`维做attention，native head为shared `D->720` projection；本地source-informed carrier保持为`[B,C,1,D]`，与PatchTST `[B,C,P,D]`形成不同representation geometry。

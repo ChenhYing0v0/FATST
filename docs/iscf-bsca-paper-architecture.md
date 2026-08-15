@@ -5,10 +5,10 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.74` |
+| `version` | `v0.75` |
 | `last_updated` | `2026-08-15` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Main I/Main II author-corrected tables hash-frozen；experiments=iTransformer-style Decoder-Transfer v1 15-run train/validation active，formal test=0 |
+| `current_review_cursor` | writing=Main I/Main II author-corrected tables hash-frozen；experiments=iTransformer-style Decoder-Transfer v1 15-hash manifest frozen，formal test pending authorization |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
@@ -16,7 +16,7 @@
 | `frozen_consensus` | 论文七章结构并保留standalone Discussion；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.2 structural design |
 | `provisional_content` | Method Figure 4 stable vector-asset synchronization；remaining manuscript prose and pending experiment evidence |
-| `authorization_source` | 2026-08-15用户允许PatchTST decoder-HPO失败后更换backbone；iTransformer-style local patch与remote train/validation已进入授权scope，formal test/table mutation=false |
+| `authorization_source` | 2026-08-15用户允许PatchTST decoder-HPO失败后更换backbone；iTransformer-style train/validation已完成，formal test/table mutation仍未授权 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
@@ -1615,6 +1615,8 @@ utility，但预注册的“两个backbones都通过”gate仍失败。Claim-lev
 `readout_or_head_design_wrong_for_PatchTST_representation_compatibility`。
 Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_v2p1_20260815/formal_results/result_and_table_audit.md`。
 
+iTransformer-style第三carrier的15/15 training artifacts、15 unique hashes与5/5 matched encoder initialization triplets已冻结；formal test保持0。Validation-only中+ISCF-BSCA相对Original Decoder macro MSE/MAE为`-1.911%/-1.889%` gain，相对+ISCF为`-0.040%/-0.296%`。该信号只说明formal gate风险高，不能作为Section 5.7最终结论，也不能先写入transfer table。若获得显式授权，必须完整执行15 checkpoints × four H=`60` cells并保留全部负向cells。Canonical gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_v1_20260815/training_result_and_formal_test_gate.md`。
+
 ## 9. Discussion
 
 ### 9.1 From Horizon-Specific Predictions to a Unified Forecasting System
@@ -1852,3 +1854,4 @@ Coverage boundary：
 | 2026-08-15 | PatchTST Decoder-Transfer v2.1 formal closure | Parent 50-run HPO validation pass但uniqueness gate fail；冻结5个selected BSCA并补训5个matched ISCF；10 unique hashes、5 matched initialization pairs与40 new/120 combined test cells闭合 | HPO仅缩小MSE deficit；PatchTST gate仍fail；cross-backbone portability继续unsupported，rollback至iTransformer-style carrier Step 4--6 |
 | 2026-08-15 | iTransformer-style Decoder-Transfer v1 prelaunch | official source audit；`[B,C,1,D]` variate-token memory；3 arms × 5 datasets；28项local gate通过 | remote train/validation=true；15-hash manifest前formal test/table mutation=false；PatchTST negative block保留 |
 | 2026-08-15 | iTransformer-style Decoder-Transfer v1 remote launch | commit `62418769`；3/3 Weather smoke；GPU0/1/2启动15-run queue | Step 8 active；formal test=0；next=15 artifacts/15 hashes/5 init triplets |
+| 2026-08-15 | iTransformer-style Decoder-Transfer v1 training gate | 15/15 artifacts、15 unique hashes、5/5 matched init triplets；manifest SHA256=`062588a...eecc9` | Step 8 complete；validation risk negative；formal 15-checkpoint/60-cell access pending explicit authorization |

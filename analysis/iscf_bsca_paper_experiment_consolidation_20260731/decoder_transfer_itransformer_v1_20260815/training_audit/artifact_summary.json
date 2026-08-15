@@ -1,0 +1,10 @@
+{
+  "pass": true,
+  "complete_training_runs": 15,
+  "expected_training_runs": 15,
+  "unique_checkpoint_hashes": 15,
+  "matched_encoder_initialization_triplets": 5,
+  "forbidden_test_artifacts": [],
+  "formal_test_jobs": 0,
+  "profile_sha256": "5e8dc7f04765fae36d25f696cf66be00cc58ee59f7559871119751abb4ae8b51"
+}

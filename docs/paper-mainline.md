@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | iTransformer-style Decoder-Transfer v1 Step 8 remote train/validation active on GPU0/1/2；formal test=0 |
+| `current_11_step` | iTransformer-style Decoder-Transfer v1 Step 8 complete；15-hash manifest frozen；formal test pending authorization |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -19,6 +19,8 @@
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `paper_core_status` | architecture family frozen；Core-Ablation 3/4 controls pass；Decoder-Transfer v2.1总体portability claim仍unsupported（DLinear pass / validation-tuned PatchTST fail）；Efficiency只支持trade-off；allocation独立accuracy claim仍unsupported |
+
+[iTransformer-style Decoder-Transfer v1 Training Gate, 2026-08-15] 15/15 train/validation runs、15 unique checkpoint hashes与5/5 matched encoder-initialization triplets通过；four-H validation selector一致，formal test artifacts=0。Immutable manifest SHA256=`062588a140ecd4fae385aa9d194c039355bef3c7d9f49f685d796779626eecc9`。Validation-only中+ISCF-BSCA相对Original MSE/MAE gain=`-1.911%/-1.889%`，相对+ISCF为`-0.040%/-0.296%`；该负向风险不能替代official test，也不改写当前paper claim/table。下一步只在作者显式授权后执行完整15-checkpoint/60-cell formal test；table mutation/extra HPO/seeds仍false。Canonical gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_v1_20260815/training_result_and_formal_test_gate.md`。Decision=`itransformer_transfer_v1_training_manifest_pass_validation_risk_negative_formal_test_pending_authorization`。
 
 [iTransformer-style Decoder-Transfer v1 Prelaunch, 2026-08-15] PatchTST HPO未改变formal方向后，按已授权fallback完成iTransformer official paper/repository source audit并冻结新carrier。Tensor contract=`[B,L,C] -> [B,C,D] variate tokens -> [B,C,1,D] memory`；三臂为Original/+ISCF/+ISCF-BSCA，5 datasets × seed2021=`15`个from-scratch end-to-end runs。Official-source priors使用`L=96`与dataset-specific width/depth；ISCF rank按native `D->720` head参数量匹配为21/30。28项local gate通过，覆盖15个finite exact-prefix forward、5个matched encoder-init triplets、capacity/routing与runner dry-run。PatchTST negative block必须保留；新结果只追加第三backbone。Remote train/validation=true；formal test/table mutation/extra HPO/seeds=false。Canonical design=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_v1_20260815/design_and_prelaunch_gate.md`。Decision=`itransformer_transfer_v1_local_gate_pass_remote_train_validation_authorized_formal_test_blocked`。
 

@@ -44,16 +44,18 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `performance_partial_pass`；Core-Ablation 3/4 controls pass；allocation独立accuracy attribution失败 |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | Core-Ablation Step 9--10 complete；100/100 cells；3/4 controls pass；HPO paused |
+| `active_experiment_step` | iTransformer-style Decoder-Transfer v1 Step 8 complete；15-hash manifest frozen；formal test pending explicit authorization |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none |
 | `local_audit_and_design_authorized` | true |
 | `local_protocol_patch_authorized` | consumed；Core-Ablation exact controls与protocol已完成 |
-| `remote_training_authorized` | consumed；Core-Ablation 20/20 new end-to-end controls completed |
+| `remote_training_authorized` | consumed；iTransformer-style transfer 15/15 end-to-end runs completed |
 | `test_tuned_hpo_authorized` | consumed/paused；本轮Core-Ablation不属于HPO且不自动恢复Main-model search |
-| `formal_test_authorized` | consumed；Core-Ablation 80 new + 20 reused test cells complete |
-| `next_action` | Core-Ablation table/hash frozen；等待作者决定Decoder-Transfer、Efficiency或Figure 5的独立prelaunch |
+| `formal_test_authorized` | false for iTransformer-style transfer；training manifest gate passed，test=0 |
+| `next_action` | 等待作者决定是否授权iTransformer 15-checkpoint/60-cell完整formal test；不得按validation方向选择性测试 |
 | `conditional_next` | allocation effectiveness claim必须保持negative/unsupported；不得用Figure 5 diagnostics补救failed matched control |
+
+2026-08-15 iTransformer-style Decoder-Transfer v1完成15/15 train/validation runs。Artifact checker确认15 unique checkpoint hashes、5/5 matched encoder-initialization triplets、four-H validation selector一致且formal test=0；immutable manifest SHA256=`062588a140ecd4fae385aa9d194c039355bef3c7d9f49f685d796779626eecc9`。Validation-only风险信号中+ISCF-BSCA相对Original为`-1.911%/-1.889%` MSE/MAE gain，仅赢1/5 dataset MSE means；相对+ISCF为`-0.040%/-0.296%`。该信号不能替代formal effectiveness。Canonical gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_v1_20260815/training_result_and_formal_test_gate.md`。Decision=`itransformer_transfer_v1_training_manifest_pass_validation_risk_negative_formal_test_pending_authorization`。
 
 2026-08-14 Core-Ablation完成5 variants × 5 datasets × four H=`100/100` cells。20个新controls均为same-profile end-to-end joint training，20个checkpoint hashes唯一且formal test后immutable；Full复用exact `ISCF-BSCA-v1`的5个checkpoints。Full macro MSE/MAE=`0.308549/0.346278`。`w/o BSCA`、`Shared Scope Projection`与`Fixed Scope (s=144)`通过，`w/o Target-Adaptive Allocation`失败（Full MSE -0.039% gain；dataset/horizon MSE wins=`2/5,0/4`）。Decision=`core_ablation_complete_partial_attribution_3_of_4_controls_pass`；canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/result_and_table_audit.md`。
 
