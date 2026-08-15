@@ -53,6 +53,10 @@ v2若通过validation gate，只能进入“候选profile冻结”状态。之�
 
 若未通过，不访问test，返回Step 4--6实现新的iTransformer-style carrier。该fallback必须继续采用from-scratch end-to-end joint training，不允许用frozen replacement或cross-swap补救方向结论。
 
+### 5.1 启动后artifact-contract修复
+
+2026-08-15首次进度审计发现runner状态函数错误要求`trained_invariants.json`，但HPO runner没有调用生成该文件的重型validation diagnostic evaluator，导致已完成checkpoint被误报为未完成。该问题不影响训练、checkpoint或validation metrics。Artifact contract现改为检查每个run已有的`checkpoint.pt`、`training_log.csv`、four-row `metrics_by_target_horizon.csv`、`effective_config.json`、`initialization_contract.json`、`model_diagnostics.json`与`environment.json`，并要求全部MSE/MAE finite及50个unique hashes。该repair不改变search space、selector、gate或任何已运行trial；formal test仍为0。
+
 ## 6. 资源与调度
 
 依据v1日志，Weather、ETTm1、ETTm2单run约40--55分钟，ETTh1/ETTh2明显更短。总预算约22--28 GPU-hours、3张RTX 3090下约8--11 wall-hours，新增存储约3--5 GB。任务按dataset-major顺序先铺Weather和ETTm，再执行ETTh，以减少慢任务尾部。启动前必须检查3张GPU；正式训练不与Efficiency profiling并发。

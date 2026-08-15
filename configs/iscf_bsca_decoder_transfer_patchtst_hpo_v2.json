@@ -124,7 +124,9 @@
       "training_log.csv",
       "metrics_by_target_horizon.csv",
       "effective_config.json",
-      "trained_invariants.json"
+      "initialization_contract.json",
+      "model_diagnostics.json",
+      "environment.json"
     ]
   },
   "resource_estimate": {

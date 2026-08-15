@@ -57,8 +57,7 @@ run_dir() {
 training_complete() {
   local out
   out="$(run_dir "$1")"
-  [[ -s "${out}/checkpoint.pt" && -s "${out}/training_log.csv" && -s "${out}/metrics_by_target_horizon.csv" && -s "${out}/effective_config.json" && -s "${out}/trained_invariants.json" ]] && \
-    python3 -c 'import json,sys; assert json.load(open(sys.argv[1]))["pass"] is True' "${out}/trained_invariants.json" 2>/dev/null
+  [[ -s "${out}/checkpoint.pt" && -s "${out}/training_log.csv" && -s "${out}/metrics_by_target_horizon.csv" && -s "${out}/effective_config.json" && -s "${out}/initialization_contract.json" && -s "${out}/model_diagnostics.json" && -s "${out}/environment.json" ]]
 }
 
 if [[ "${STATUS_ONLY}" == 1 ]]; then

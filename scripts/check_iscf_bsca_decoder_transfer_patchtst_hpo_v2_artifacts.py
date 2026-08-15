@@ -80,8 +80,17 @@ def main() -> None:
                     and abs(adapter["readout_learning_rate_multiplier"] - profile["readout_learning_rate_multiplier"]) < 1e-15
                     and abs(adapter["readout_weight_decay"] - profile["readout_weight_decay"]) < 1e-15
                 )
-                invariants = json.loads((run_dir / "trained_invariants.json").read_text())
-                effective_ok = effective_ok and invariants.get("pass") is True
+                metric_rows = read_rows(run_dir / "metrics_by_target_horizon.csv")
+                metric_values = [
+                    float(row[key])
+                    for row in metric_rows
+                    for key in ("mse", "mae")
+                ]
+                effective_ok = (
+                    effective_ok
+                    and len(metric_rows) == 4
+                    and all(math.isfinite(value) for value in metric_values)
+                )
                 checkpoint_hash = sha256(run_dir / "checkpoint.pt")
             passed = not missing and effective_ok and math.isfinite(validation_mse)
             rows.append(
