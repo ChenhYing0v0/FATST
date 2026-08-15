@@ -1,0 +1,58 @@
+{
+  "both_backbones_pass": false,
+  "candidate_version": "ISCF-BSCA-DECODER-TRANSFER-PATCHTST-v2.1",
+  "combined_test_cells": 120,
+  "decision": "decoder_transfer_v2p1_complete_portability_gate_not_passed",
+  "failure_attribution": {
+    "bsca_objective_rejected": false,
+    "claim_level": "hypothesis_false_for_cross_backbone_portability_after_decoder_HPO",
+    "design_level": "readout_or_head_design_wrong_for_PatchTST_representation_compatibility"
+  },
+  "gates": [
+    {
+      "backbone": "dlinear_style",
+      "bsca_vs_iscf_macro_mse_gain_percent": 5.701029627940933,
+      "bsca_vs_iscf_mse_cell_wins": 8,
+      "bsca_vs_original_dataset_mse_wins": 4,
+      "bsca_vs_original_macro_mae_gain_percent": 8.184116789310398,
+      "bsca_vs_original_macro_mse_gain_percent": 15.702440227776808,
+      "bsca_vs_original_mse_cell_wins": 15,
+      "gate_pass": true,
+      "iscf_vs_original_macro_mse_gain_percent": 10.606065538547288
+    },
+    {
+      "backbone": "patchtst_style",
+      "bsca_vs_iscf_macro_mse_gain_percent": 0.9117672742477433,
+      "bsca_vs_iscf_mse_cell_wins": 16,
+      "bsca_vs_original_dataset_mse_wins": 2,
+      "bsca_vs_original_macro_mae_gain_percent": -0.5678857749653304,
+      "bsca_vs_original_macro_mse_gain_percent": -0.4356559209638889,
+      "bsca_vs_original_mse_cell_wins": 9,
+      "gate_pass": false,
+      "iscf_vs_original_macro_mse_gain_percent": -1.3598216035812367
+    }
+  ],
+  "historical_v1_comparison": {
+    "bsca_mae_gain_percent": -0.5057457863338001,
+    "bsca_mse_gain_percent": 0.29531088037333975,
+    "iscf_mae_gain_percent": 0.3422108078019108,
+    "iscf_mse_gain_percent": 0.7719785038562161,
+    "v1_bsca_mae": 0.34406187700543484,
+    "v1_bsca_mse": 0.3125041569750683,
+    "v1_bsca_vs_original_mae_gain_percent": -0.06182729966865217,
+    "v1_bsca_vs_original_mse_gain_percent": -0.7331318193673173,
+    "v1_iscf_mae": 0.3485520213799398,
+    "v1_iscf_mse": 0.31689469413134386,
+    "v2p1_bsca_mae": 0.3458019554507708,
+    "v2p1_bsca_mse": 0.3115812981979019,
+    "v2p1_bsca_vs_original_mae_gain_percent": -0.5678857749653304,
+    "v2p1_bsca_vs_original_mse_gain_percent": -0.4356559209639069,
+    "v2p1_iscf_mae": 0.3473592386919656,
+    "v2p1_iscf_mse": 0.314448335212789
+  },
+  "matrix_complete": true,
+  "new_checkpoint_rows": 10,
+  "new_formal_test_cells": 40,
+  "new_unique_checkpoint_hashes": 10,
+  "reused_v1_cells": 80
+}

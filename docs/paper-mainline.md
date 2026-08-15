@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | PatchTST Decoder-Transfer v2.1 Step 7--8；matched +ISCF training authorized，formal test受10-hash manifest gate约束 |
+| `current_11_step` | PatchTST Decoder-Transfer v2.1 Step 9--10 complete；cross-backbone portability仍unsupported，next=Step 4--6 iTransformer-style carrier design |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,9 +18,11 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；Core-Ablation 3/4 controls pass；Decoder-Transfer v1总体portability claim unsupported（DLinear pass / PatchTST fail）；PatchTST decoder-HPO v2已重开但尚无test evidence；Efficiency只支持trade-off；allocation独立accuracy claim仍unsupported |
+| `paper_core_status` | architecture family frozen；Core-Ablation 3/4 controls pass；Decoder-Transfer v2.1总体portability claim仍unsupported（DLinear pass / validation-tuned PatchTST fail）；Efficiency只支持trade-off；allocation独立accuracy claim仍unsupported |
 
 [Main I / Main II Author-Corrected Freeze, 2026-08-15] 作者修正复跑值已原子同步到两张主表：Main I覆盖ISCF与TimeAlign全部seven-dataset rows、SimpleTM Solar及**TVNet ETTh2**；Main II覆盖ISCF与TimeAlign全部rows、SimpleTM Solar及PatchTST ETTh2。其余baseline cells保持上一冻结版。统一重算Avg.与three-decimal ranking后，ISCF在Main I为`44/56` best、`9/56` second，在Main II为`50/56` best、`6/56` second；两表macro MSE/MAE均为`0.260714/0.306107`。修正值只具作者提供的三位小数精度，不推断checkpoint hashes；旧表保留为historical snapshots。Canonical freeze=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/result_and_freeze_audit.md`。Decision=`main_i_main_ii_author_corrected_20260815_complete_hash_frozen`。
+
+[PatchTST Decoder-Transfer v2.1 Formal Result, 2026-08-15] Diagnostic-routing repair后matched training闭合5/5；manifest确认10/10 unique hashes与5/5 matched initialization pairs，完成40/40 new official-test cells并复用v1 controls形成120/120 combined cells。HPO后PatchTST +ISCF-BSCA macro MSE/MAE=`0.311581/0.345802`；相对Original为`-0.436%/-0.568%`，只赢2/5 dataset means与9/20 MSE cells，gate仍FAIL。其相对matched +ISCF改善`0.912%/0.448%`并赢16/20 MSE cells，说明BSCA objective在replacement head内仍有局部作用，但不能恢复decoder portability。相对v1 BSCA，MSE改善0.295%而MAE恶化0.506%。Failure attribution：claim-level=`hypothesis_false_for_cross_backbone_portability_after_decoder_HPO`；design-level=`readout_or_head_design_wrong_for_PatchTST_representation_compatibility`。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_v2p1_20260815/formal_results/result_and_table_audit.md`。Decision=`decoder_transfer_v2p1_complete_portability_gate_not_passed`；next=`Step4_6_iTransformer_style_carrier_design`。
 
 [PatchTST Decoder-Transfer HPO v2 Result and v2.1 Formal Gate, 2026-08-15] Parent v2完成50/50 train/validation且test=0；validation macro MSE改善`0.8126%`、5/5 datasets改善`>0.1%`，performance gate通过。但仅有40/50 unique checkpoint hashes：`p02=p08`与`p05=p06`两组profile在五个datasets上分别形成bitwise-identical checkpoints，因此parent artifact gate保持FAIL，不作事后放宽。五个selected BSCA checkpoints互异且不属于collapsed pairs。用户授权后冻结v2.1：复用这5个selected BSCA、from-scratch补训5个matched `+ISCF`，10/10 unique immutable hashes与5/5 matched initialization pairs通过后才执行一次10-checkpoint/40-cell formal test；旧DLinear三arms与PatchTST Original的80 cells复用v1 evidence。Canonical gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_hpo_v2_20260815/training_result_and_v2p1_formal_gate.md`。Decision=`parent_v2_uniqueness_fail_v2p1_manifest_gated_formal_authorized`。
 

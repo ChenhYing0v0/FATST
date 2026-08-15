@@ -5,10 +5,10 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.72` |
+| `version` | `v0.73` |
 | `last_updated` | `2026-08-15` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Main I/Main II author-corrected tables hash-frozen；experiments=PatchTST Decoder-Transfer HPO v2 train/validation active，formal test blocked |
+| `current_review_cursor` | writing=Main I/Main II author-corrected tables hash-frozen；experiments=PatchTST Decoder-Transfer v2.1 formal complete/gate failed，next=iTransformer-style carrier Step 4--6 |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
@@ -16,7 +16,7 @@
 | `frozen_consensus` | 论文七章结构并保留standalone Discussion；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.2 structural design |
 | `provisional_content` | Method Figure 4 stable vector-asset synchronization；remaining manuscript prose and pending experiment evidence |
-| `authorization_source` | 2026-08-15用户提供Main I/Main II修正复跑值并要求固定为论文表；并行PatchTST HPO v2的formal-test边界不变 |
+| `authorization_source` | 2026-08-15用户授权继续decoder-HPO formal test；v2.1 10-checkpoint manifest-gated access已完成，PatchTST gate仍失败 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
@@ -1598,18 +1598,22 @@ Realized allocation value当前不纳入该节，以控制额外实验成本。Q
 | Backbone | Original Decoder | + ISCF | + ISCF-BSCA |
 | --- | ---: | ---: | ---: |
 | DLinear-style | .478/.433 | .427/.407 | .403/.397 |
-| PatchTST-style | .310/.344 | .317/.349 | .313/.344 |
+| PatchTST-style | .310/.344 | .314/.347 | .312/.346 |
 
 各backbone使用同一test-tuned原则选出的backbone-specific profile；不把
 `ISCF-BSCA-v1` ablation hyperparameters机械迁移到transfer。
 迁移实验用于判断 decoder 是否超越当前 encoder 的特定 co-adaptation，不能通过
 只替换 frozen consumer 的不公平 probe 得出方向级结论。
 
-2026-08-14 formal matrix已完成30/30 checkpoints与120/120 cells。DLinear-style
+v2.1 combined matrix已完成30 checkpoint objects与120/120 cells。DLinear-style
 +ISCF-BSCA相对Original Decoder的macro MSE/MAE改善15.702%/8.184%，但ETTh1/ETTh2
-绝对结果存在profile/optimization风险；PatchTST-style对应变化为-0.733%/-0.062%，
-只赢2/5 dataset MSE means。因此预注册的“两个backbones都通过”gate失败。
-Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_20260814/formal_results/result_and_table_audit.md`。
+绝对结果存在profile/optimization风险。PatchTST-style经过validation-selected decoder HPO后
+仍为-0.436%/-0.568%，只赢2/5 dataset means与9/20 MSE cells；相对matched +ISCF则改善
+0.912% MSE/0.448% MAE并赢16/20 MSE cells。因此BSCA objective在replacement head内部有局部
+utility，但预注册的“两个backbones都通过”gate仍失败。Claim-level failure attribution为
+`hypothesis_false_for_cross_backbone_portability_after_decoder_HPO`；design-level为
+`readout_or_head_design_wrong_for_PatchTST_representation_compatibility`。
+Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_v2p1_20260815/formal_results/result_and_table_audit.md`。
 
 ## 9. Discussion
 
@@ -1845,3 +1849,4 @@ Coverage boundary：
 | 2026-08-14 | Core-Ablation formal closure | 5 variants × 5 datasets × 4 H的100-cell matched formal matrix完成；20新checkpoints hashes immutable | 3/4 controls通过；Target-Adaptive Allocation control失败；component claim收窄，table/PDF/hash冻结 |
 | 2026-08-14 | Decoder-Transfer / Efficiency prelaunch | Transfer冻结30-checkpoint end-to-end matrix并通过13项local gate；Efficiency冻结5-system、35-unit、77-object profiler contract | Transfer进入manifest-gated remote Step 8；Efficiency无新训练/无test access，正式测量与training错峰 |
 | 2026-08-14 | Decoder-Transfer formal closure | 30 checkpoints、30 unique hashes、120/120 test cells；DLinear pass / PatchTST fail | 总体cross-backbone portability unsupported；正向动词撤回；Efficiency进入独占GPU execution |
+| 2026-08-15 | PatchTST Decoder-Transfer v2.1 formal closure | Parent 50-run HPO validation pass但uniqueness gate fail；冻结5个selected BSCA并补训5个matched ISCF；10 unique hashes、5 matched initialization pairs与40 new/120 combined test cells闭合 | HPO仅缩小MSE deficit；PatchTST gate仍fail；cross-backbone portability继续unsupported，rollback至iTransformer-style carrier Step 4--6 |

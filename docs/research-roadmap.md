@@ -22,6 +22,12 @@ Current cursor=`parent v2 artifact gate fail / validation gate pass -> v2.1 matc
 
 Remote launch：commit=`9cf0e8e8`，3/3 resource smoke通过；GPU0/1/2于14:43启动5个matched ISCF runs，PID=`663673`。Guarded pipeline PID=`665646`将在training退出后先执行10-hash/5-pair checker，只有pass才formal-test 10 checkpoints并build 120-cell result；checker fail会自动保持test=0。Canonical launch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_v2p1_20260815/remote_launch.md`；Decision=`v2p1_matched_training_active_guarded_formal_pipeline_queued`。
 
+## PatchTST Decoder-Transfer v2.1 Formal Result (2026-08-15)
+
+Current cursor=`v2.1 Step 9--10 complete -> PatchTST gate fail -> rollback Step 4--6 for iTransformer-style carrier`。首次driver在training完成后因diagnostic design缺少`coupling_scales`安全停止，formal test保持0；hash-frozen v1 diagnostic design routing修复后只补跑缺失ETTh1/ETTh2。最终5/5 matched runs、10/10 unique manifest hashes、5/5 matched initialization pairs、40/40 new test cells及120/120 combined cells全部闭合。
+
+PatchTST +ISCF-BSCA相对Original的macro MSE/MAE gain=`-0.436%/-0.568%`，dataset/cell MSE wins=`2/5, 9/20`，因此formal gate仍FAIL。相对matched +ISCF则改善`0.912% MSE / 0.448% MAE`并赢16/20 MSE cells；这支持BSCA objective对该replacement head的局部utility，但不能支持replacement head优于native decoder。HPO相对v1仅将BSCA MSE改善0.295%，同时MAE恶化0.506%。Failure attribution分层为claim-level `hypothesis_false_for_cross_backbone_portability_after_decoder_HPO`与design-level `readout_or_head_design_wrong_for_PatchTST_representation_compatibility`，不否定BSCA objective本身。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_v2p1_20260815/formal_results/result_and_table_audit.md`；Decision=`decoder_transfer_v2p1_complete_portability_gate_not_passed`。
+
 ## Efficiency Formal Result and Step 9--10 Decision (2026-08-14)
 
 Current cursor=`Efficiency complete -> deployment trade-off supported -> Figure 5 contract next`。独占RTX 3090完成35/35 service units与77/77 immutable checkpoint objects，所有finite/CV gates通过且未访问test loader/labels。ISCF-BSCA以1个model提供architectural CHPC，并相对four-model TimeAlign/QDF减少deployed parameters与checkpoint storage；但其single/all-H latency与logged training time均不领先，当前implementation仍materialize完整$T=720$ field。

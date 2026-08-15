@@ -51,7 +51,7 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 | `Main-I-Exchange` | Supplementary companion | `complete_limited_surface` | ISCF-BSCA / TimeAlign / QDF × Exchange × 4 H | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_h5d_bs16_lr2p4_synced_20260813/table_exchange_companion.tex` | Exchange 的部分系统背景；不能表述为完整 Main I extension |
 | `Efficiency` | 正文 supporting result | `complete_hash_frozen_tradeoff_supported_no_uniform_compute_advantage` | 5 systems × 7 datasets；35/35 service units / 77 checkpoint objects | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/table/table_iscf_bsca_efficiency.tex` | 支持one-model consolidation、architectural CHPC及相对four-model TimeAlign/QDF的parameter/storage reduction；不支持uniform training/latency/computation advantage |
 | `Core-Ablation` | 正文 mechanism attribution | `complete_hash_frozen_partial_attribution_3_of_4_controls` | 5 variants × 5 datasets × 4 H；100/100 cells，25 checkpoints（5 reused + 20 new） | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/table/table_iscf_bsca_core_ablation.tex` | 支持BSCA objective、scope-specific projections与multi-scope design；不支持learned Target-Adaptive Allocation相对equal fusion的独立accuracy utility |
-| `Decoder-Transfer` | 正文 transfer evidence | `complete_hash_frozen_cross_backbone_portability_gate_failed` | 2 backbones × 3 decoder columns × 5 datasets × 4 H；30 checkpoints / 120/120 cells | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_20260814/formal_results/table/table_iscf_bsca_decoder_transfer.tex` | DLinear-style相对gate通过但PatchTST-style失败，因此不支持总体cross-backbone portability claim |
+| `Decoder-Transfer` | 正文 transfer evidence | `complete_hash_frozen_v2p1_patchtst_hpo_portability_gate_failed` | 2 backbones × 3 decoder columns × 5 datasets × 4 H；30 checkpoint objects / 120/120 cells | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_v2p1_20260815/formal_results/table/table_iscf_bsca_decoder_transfer.tex` | DLinear-style相对gate通过；validation-selected PatchTST-style仍失败，因此不支持总体cross-backbone portability claim |
 | `Ablation-Sensitivity` | Appendix | `deferred_outside_current_core_closure` | random partition、scope count、$\lambda$ sensitivity | 尚无正式表 | 当前不纳入核心闭合；若恢复仅作sensitivity/robustness，canonical grouping不作为既定正向结论 |
 
 ## 4. 已完成主表结果摘要
@@ -88,14 +88,15 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 
 ### Decoder-Transfer
 
-- 2026-08-15已另建PatchTST decoder-HPO v2 test-informed rescue candidate；当前只有50-run train/validation授权，未授权formal test或表格替换；因此本总账中的v1 negative table继续是唯一canonical Decoder-Transfer结果；
-
-- 完整性：30/30 from-scratch end-to-end checkpoints、30 unique immutable hashes、120/120 official-test cells；
+- v2.1完整性：5个validation-selected BSCA checkpoints + 5个matched ISCF checkpoints形成10/10 unique hashes与5/5 matched initialization pairs；新增formal test为40/40 cells，并复用v1 DLinear三arms与PatchTST Original的80 cells，combined table为120/120 cells；
+- parent v2的50-run validation HPO只有40/50 unique hashes，因此parent artifact gate保持FAIL；v2.1只冻结五个互异selected checkpoints，未删除negative trials或追认parent gate；
 - DLinear-style中+ISCF-BSCA相对Original Decoder的macro MSE/MAE改善`15.702%/8.184%`，赢4/5 dataset MSE means，预注册gate通过；
-- PatchTST-style中+ISCF-BSCA相对Original Decoder为`-0.733%/-0.062%`，只赢2/5 dataset MSE means，预注册gate失败；
-- +ISCF-BSCA相对+ISCF在PatchTST-style改善1.385% MSE并赢16/20 MSE cells，但仍未超过Original Decoder，不能转写为decoder portability；
+- HPO后PatchTST-style +ISCF-BSCA相对Original Decoder仍为`-0.436%/-0.568%`，只赢2/5 dataset means与9/20 MSE cells，预注册gate失败；
+- +ISCF-BSCA相对matched +ISCF改善`0.912%` MSE、`0.448%` MAE并赢16/20 MSE cells，说明BSCA objective在replacement head内仍有作用；但两种replacement heads均未超过Original Decoder，不能转写为decoder portability；
+- 相对v1，BSCA macro MSE改善0.295%，但MAE恶化0.506%；HPO缩小MSE deficit却未改变方向级结论；
 - DLinear-style的ETTh1/ETTh2绝对结果存在profile/optimization风险，其正向相对gate只作限定证据；
-- canonical audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_20260814/formal_results/result_and_table_audit.md`；review PDF=`output/pdf/iscf_bsca_decoder_transfer_20260814.pdf`。
+- failure attribution：claim-level=`hypothesis_false_for_cross_backbone_portability_after_decoder_HPO`；design-level=`readout_or_head_design_wrong_for_PatchTST_representation_compatibility`，不否定BSCA objective本身；
+- canonical audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_v2p1_20260815/formal_results/result_and_table_audit.md`；review PDF=`output/pdf/iscf_bsca_decoder_transfer_v2p1_20260815.pdf`。
 
 ### Efficiency
 

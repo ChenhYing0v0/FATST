@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | 用户显式重开PatchTST Decoder-Transfer修补：先做decoder-only HPO v2；若validation gate失败，再回Step 4--6设计iTransformer-style carrier；Figure 5暂后移 |
+| `active_question` | PatchTST decoder-only HPO v2.1已完成但formal gate仍失败；按已授权rollback回Step 4--6设计iTransformer-style carrier；Figure 5继续后移 |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
 | `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7与Sections 5--7 v0.2 structure temporarily frozen usable；Figure 4 visual design temporarily fixed |
@@ -22,12 +22,12 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | PatchTST Decoder-Transfer HPO v2 Step 8 remote train/validation；formal test blocked |
+| `current_11_step` | PatchTST Decoder-Transfer v2.1 Step 9--10 complete；next=Step 4--6 iTransformer-style carrier narrative/design gate |
 | `current_candidate` | `ISCF-BSCA-DECODER-TRANSFER-PATCHTST-HPO-v2`；v1 PatchTST负结果保持有效且不回写 |
-| `latest_decision` | `patchtst_decoder_hpo_v2_50_run_remote_train_validation_active_test_zero` |
+| `latest_decision` | `decoder_transfer_v2p1_complete_portability_gate_not_passed` |
 | `writing_latest_decision` | `main_i_main_ii_author_corrected_20260815_complete_hash_frozen` |
-| `next_required_action` | 完成50/50 PatchTST BSCA HPO training artifacts与50 unique hashes；仅按four-H validation mean MSE选profile；通过gate后请求新formal-test授权 |
-| `method_training_authorized` | 2026-08-15用户授权继续PatchTST decoder调参并在失败时更换backbone；当前只启动50-run train/validation，formal test与table mutation=false |
+| `next_required_action` | 回到Step 4--6，先完成iTransformer-style carrier的source/protocol audit、matched end-to-end design与narrative gate；在新candidate冻结前不得直接启动training/formal test |
+| `method_training_authorized` | PatchTST decoder-HPO与v2.1 formal test授权已执行完毕；用户此前允许PatchTST失败后更换backbone，但iTransformer-style新candidate仍须先通过source-informed design/local gate后再进入remote execution |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
 ## Main-Table Author Correction Record (2026-08-15)
@@ -55,22 +55,24 @@ Main I与Main II已建立新的author-corrected canonical freeze；旧hash-froze
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Parent v2 Step 9 audit complete；v2.1 Step 7--8 matched training/formal gate |
+| `current_step` | v2.1 Step 9--10 formal closure；rollback Step 4--6 |
 | `problem` | v1 PatchTST `+ISCF-BSCA`比`+ISCF`更好但未超过Original Decoder；需判断decoder optimization/capacity profile是否不匹配 |
-| `existence_evidence` | v2 50/50 training complete、validation macro gain=0.8126%且5/5 datasets改善；但仅40/50 unique hashes，parent artifact gate失败 |
+| `existence_evidence` | v2.1 10/10 unique hashes、5/5 initialization pairs与120/120 combined cells；PatchTST BSCA vs Original仍为-0.436%/-0.568% |
 | `idea` | encoder profile完全冻结；只搜索readout LR multiplier、readout-only weight decay及两个rank边界点 |
 | `theory_check` | optimizer parameter group只作用`pcsd_readout.*`；forward、scope集合、policy、objective与four-H selector不变 |
 | `design` | Parent v2保留50-run完整审计；v2.1复用5 selected BSCA并补训5 matched ISCF，10-hash manifest后formal-test 40 new cells，合并v1 controls为120 cells |
 | `narrative_gate` | v2是test-informed rescue candidate；不得删除或改写v1负结果 |
-| `effectiveness_gate` | v2 validation gate已pass；v2.1 PatchTST BSCA vs Original需macro MSE/MAE均正向且dataset MSE wins>=3/5 |
-| `artifacts` | parent design=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_hpo_v2_20260815/design_and_prelaunch_gate.md`；formal gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_hpo_v2_20260815/training_result_and_v2p1_formal_gate.md`；v2.1 config=`configs/iscf_bsca_decoder_transfer_patchtst_v2p1_formal.json` |
-| `decision` | `parent_v2_uniqueness_fail_v2p1_manifest_gated_formal_authorized` |
+| `effectiveness_gate` | FAIL：macro MSE/MAE均未超过Original，dataset MSE wins=2/5；BSCA vs matched ISCF局部改善单独保留 |
+| `artifacts` | result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_v2p1_20260815/formal_results/result_and_table_audit.md`；table=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_v2p1_20260815/formal_results/table/table_iscf_bsca_decoder_transfer.tex` |
+| `decision` | `decoder_transfer_v2p1_complete_portability_gate_not_passed`；rollback=`Step4_6_iTransformer_style_carrier_design` |
 
 Remote launch：commit=`7480ffc4`，PID=`3782929`，GPU0/1/2，50 jobs，start=`2026-08-15T01:39:23+08:00`。27/27 remote prelaunch与3/3 resource smoke通过；首批三个Weather profiles均进入epoch1且finite，formal test=0。Launch record=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_hpo_v2_20260815/remote_launch.md`。
 
 Training closure：50/50 complete、validation gate pass；但两组profile pairs在五datasets上collapse，unique hashes=40/50，parent gate保持FAIL。v2.1只冻结五个互异selected BSCA checkpoints；用户已授权五个matched ISCF training及10-hash manifest后的单次formal access。Gate record=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_hpo_v2_20260815/training_result_and_v2p1_formal_gate.md`。
 
 v2.1 launch：commit=`9cf0e8e8`，3/3 resource smoke pass；GPU0/1/2于14:43启动5个matched ISCF runs（PID=`663673`）。Guarded pipeline PID=`665646`严格执行`training -> 10-hash/5-pair manifest -> formal test -> 120-cell build`，任何gate failure均在test前停止。Launch record=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_v2p1_20260815/remote_launch.md`。
+
+v2.1 closure：diagnostic routing修复后5/5 matched training complete，10/10 unique hashes、5/5 initialization pairs、40/40 new test cells与120/120 combined cells通过。PatchTST BSCA vs Original=`-0.436% MSE / -0.568% MAE`、dataset/cell MSE wins=`2/5, 9/20`，gate FAIL；BSCA vs matched ISCF=`+0.912% MSE / +0.448% MAE`、16/20 MSE cell wins。Failure attribution=`readout_or_head_design_wrong_for_PatchTST_representation_compatibility` at design level；result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_v2p1_20260815/formal_results/result_and_table_audit.md`。
 
 ## Exact Ablation Anchor Contract
 

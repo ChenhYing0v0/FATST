@@ -1,0 +1,33 @@
+\documentclass[10pt]{article}
+\usepackage[margin=0.35in]{geometry}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage[normalem]{ulem}
+\makeatletter
+\setlength{\@fptop}{0pt}
+\setlength{\@fpbot}{0pt plus 1fil}
+\makeatother
+\pagestyle{empty}
+\begin{document}
+\begin{table*}[t]
+\centering
+\caption{Decoder transfer across two forecasting backbones. Each dataset entry is the mean over $H\in\{96,192,336,720\}$. PatchTST-style $+$ISCF and $+$ISCF-BSCA use validation-selected, dataset-level decoder profiles shared across all four horizons; the Original Decoder and the complete DLinear-style block reuse the unchanged v1 evidence. Lower is better. Best and second-best results within each backbone are bold and underlined, respectively.}
+\label{tab:decoder-transfer}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llcccccccccccc}
+\toprule
+Backbone & Decoder & \multicolumn{2}{c}{Weather} & \multicolumn{2}{c}{ETTm1} & \multicolumn{2}{c}{ETTm2} & \multicolumn{2}{c}{ETTh1} & \multicolumn{2}{c}{ETTh2} & \multicolumn{2}{c}{Avg.} \\
+ & & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE \\
+\midrule
+DLinear-style & Original Decoder & 0.246 & 0.274 & \underline{0.353} & \underline{0.372} & 0.311 & 0.354 & 0.468 & 0.465 & 1.009 & 0.698 & 0.478 & 0.433 \\
+ & +ISCF & \textbf{0.229} & \textbf{0.257} & \textbf{0.344} & \textbf{0.370} & \underline{0.283} & \underline{0.339} & \textbf{0.460} & \textbf{0.455} & \underline{0.819} & \underline{0.611} & \underline{0.427} & \underline{0.407} \\
+ & +ISCF-BSCA & \underline{0.232} & \underline{0.259} & 0.355 & 0.376 & \textbf{0.279} & \textbf{0.333} & \underline{0.465} & \underline{0.458} & \textbf{0.682} & \textbf{0.562} & \textbf{0.403} & \textbf{0.397} \\
+\midrule
+PatchTST-style & Original Decoder & \textbf{0.229} & \textbf{0.253} & 0.358 & \textbf{0.375} & \underline{0.259} & \textbf{0.314} & \textbf{0.394} & \textbf{0.416} & \textbf{0.311} & \textbf{0.361} & \textbf{0.310} & \textbf{0.344} \\
+ & +ISCF & 0.233 & 0.259 & \underline{0.354} & 0.378 & 0.261 & 0.315 & 0.406 & 0.421 & \underline{0.318} & 0.364 & 0.314 & 0.347 \\
+ & +ISCF-BSCA & \underline{0.232} & \underline{0.254} & \textbf{0.351} & \underline{0.377} & \textbf{0.258} & \underline{0.315} & \underline{0.398} & \underline{0.419} & 0.319 & \underline{0.364} & \underline{0.312} & \underline{0.346} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
+\end{document}

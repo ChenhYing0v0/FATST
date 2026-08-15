@@ -1,0 +1,3 @@
+backbone,bsca_vs_original_macro_mse_gain_percent,bsca_vs_original_macro_mae_gain_percent,bsca_vs_original_dataset_mse_wins,bsca_vs_original_mse_cell_wins,iscf_vs_original_macro_mse_gain_percent,bsca_vs_iscf_macro_mse_gain_percent,bsca_vs_iscf_mse_cell_wins,gate_pass
+dlinear_style,15.702440227776808,8.184116789310398,4,15,10.606065538547288,5.701029627940933,8,True
+patchtst_style,-0.4356559209638889,-0.5678857749653304,2,9,-1.3598216035812367,0.9117672742477433,16,False
