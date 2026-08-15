@@ -70,6 +70,8 @@ Remote launch：commit=`7480ffc4`，PID=`3782929`，GPU0/1/2，50 jobs，start=`
 
 Training closure：50/50 complete、validation gate pass；但两组profile pairs在五datasets上collapse，unique hashes=40/50，parent gate保持FAIL。v2.1只冻结五个互异selected BSCA checkpoints；用户已授权五个matched ISCF training及10-hash manifest后的单次formal access。Gate record=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_hpo_v2_20260815/training_result_and_v2p1_formal_gate.md`。
 
+v2.1 launch：commit=`9cf0e8e8`，3/3 resource smoke pass；GPU0/1/2于14:43启动5个matched ISCF runs（PID=`663673`）。Guarded pipeline PID=`665646`严格执行`training -> 10-hash/5-pair manifest -> formal test -> 120-cell build`，任何gate failure均在test前停止。Launch record=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_v2p1_20260815/remote_launch.md`。
+
 ## Exact Ablation Anchor Contract
 
 下表仅约束`ISCF-BSCA-v1` exact ablation anchor，不是Main I/II的最终超参数。

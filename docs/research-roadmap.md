@@ -20,6 +20,8 @@ Current cursor=`parent v2 artifact gate fail / validation gate pass -> v2.1 matc
 
 修订后的v2.1冻结五个互异selected BSCA checkpoints，补训五个完全matched `+ISCF` checkpoints；每dataset一个profile共享四个horizons，only method difference=`pcc_objective_mode`。10/10 unique hashes、5/5 matched initialization pairs与formal-artifact-absence gate通过后，授权一次10-checkpoint/40-cell formal test。Combined table复用v1 DLinear三arms及PatchTST Original共80 cells，最终仍需120/120 complete。Canonical gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_hpo_v2_20260815/training_result_and_v2p1_formal_gate.md`；Decision=`parent_v2_uniqueness_fail_v2p1_manifest_gated_formal_authorized`。
 
+Remote launch：commit=`9cf0e8e8`，3/3 resource smoke通过；GPU0/1/2于14:43启动5个matched ISCF runs，PID=`663673`。Guarded pipeline PID=`665646`将在training退出后先执行10-hash/5-pair checker，只有pass才formal-test 10 checkpoints并build 120-cell result；checker fail会自动保持test=0。Canonical launch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_v2p1_20260815/remote_launch.md`；Decision=`v2p1_matched_training_active_guarded_formal_pipeline_queued`。
+
 ## Efficiency Formal Result and Step 9--10 Decision (2026-08-14)
 
 Current cursor=`Efficiency complete -> deployment trade-off supported -> Figure 5 contract next`。独占RTX 3090完成35/35 service units与77/77 immutable checkpoint objects，所有finite/CV gates通过且未访问test loader/labels。ISCF-BSCA以1个model提供architectural CHPC，并相对four-model TimeAlign/QDF减少deployed parameters与checkpoint storage；但其single/all-H latency与logged training time均不领先，当前implementation仍materialize完整$T=720$ field。
