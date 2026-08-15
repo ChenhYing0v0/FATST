@@ -1,0 +1,7 @@
+{
+  "pass": true,
+  "checks": 22,
+  "protocol_sha256": "291b23be097fd991a325f5b83c8464bfa2e74264f2e69496c288cb8d92ea9c4d",
+  "training_jobs": 70,
+  "formal_test_jobs_before_manifest": 0
+}

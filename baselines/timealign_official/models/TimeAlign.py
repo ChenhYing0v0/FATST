@@ -993,9 +993,20 @@ class Model(nn.Module):
             scale_components, scale_basis_mode = SIFF_READOUT_CONFIG[
                 self.readout_mode
             ]
+            pcsd_scales = tuple(
+                int(scale)
+                for scale in getattr(
+                    configs,
+                    "pcsd_scales",
+                    (1, 48, 144, 360, 720),
+                )
+            )
+            if scale_basis_mode == "independent":
+                scale_components = len(pcsd_scales)
             self.pcsd_readout = SIFFCouplingFieldReadout(
                 readout_dim=readout_dim,
                 series_length=self.pred_len,
+                scales=pcsd_scales,
                 coordinate_dim=int(getattr(configs, "pcsd_coordinate_dim", 4)),
                 mode_rank=int(getattr(configs, "pcsd_mode_rank", 256)),
                 scale_components=scale_components,

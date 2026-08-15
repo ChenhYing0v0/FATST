@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## iTransformer-style Decoder-HPO v2 Prelaunch (2026-08-16)
+
+Current cursor=`Step 6--7 complete -> 70-run remote training resource gate`。用户在v1 formal negative result后显式重启iTransformer decoder-HPO，并允许official-test dataset-level反选。新candidate=`ISCF-BSCA-DECODER-TRANSFER-ITRANSFORMER-HPO-v2`，明确标记`test_informed/test_tuned`。
+
+14 profiles覆盖budget、readout LR、rank、future-coordinate dimension、allocation MLP width与两组scope geometry；5 datasets、seed2021、from-scratch joint training，共70 runs。Checkpoint仍由four-H mean validation MSE选epoch；70-hash immutable manifest后一次完整280-cell test access用于profile ranking。每dataset只选择一个服务全部四H的profile，禁止per-H/seed/metric/cell selection，全部负向trials保留。若超过Original仍必须补matched ISCF attribution。Local prelaunch=`22/22 pass`；canonical gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_hpo_v2_20260816/design_and_prelaunch_gate.md`。
+
 ## iTransformer-style Decoder-Transfer v1 Formal Result (2026-08-15)
 
 Current cursor=`Step 9--10 complete -> effectiveness/attribution fail -> transfer rescue closed`。15/15 immutable checkpoints、60/60 standard cells与10,800 dense-prefix rows完整，formal artifact manifest SHA256=`aad13a13e2c1f486798caf0a67829396ed5ac334ffb1fb47e8b4277470d4e39a`。+ISCF-BSCA相对Original macro MSE/MAE gain=`-2.690%/-2.513%`，dataset/cell MSE wins=`1/5,4/20`；相对matched +ISCF为`-1.372%/-1.160%`，dataset/cell MSE wins=`1/5,3/20`。

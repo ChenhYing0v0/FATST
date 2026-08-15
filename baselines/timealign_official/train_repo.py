@@ -466,6 +466,7 @@ def build_official_args(args: argparse.Namespace, preset: OfficialPreset) -> arg
         grouped_mlp_partition_seed=args.grouped_mlp_partition_seed,
         pcsd_coordinate_dim=args.pcsd_coordinate_dim,
         pcsd_mode_rank=args.pcsd_mode_rank,
+        pcsd_scales=args.pcsd_scales,
         pcsd_policy_history_dim=args.pcsd_policy_history_dim,
         pcsd_policy_hidden_dim=args.pcsd_policy_hidden_dim,
         pcsd_policy_mode=args.pcsd_policy_mode,
@@ -2708,6 +2709,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--grouped-mlp-partition-seed", type=int, default=14101)
     parser.add_argument("--pcsd-coordinate-dim", type=int, default=4)
     parser.add_argument("--pcsd-mode-rank", type=int, default=256)
+    parser.add_argument(
+        "--pcsd-scales",
+        type=parse_horizons,
+        default=[1, 48, 144, 360, 720],
+    )
     parser.add_argument("--cpsi-rank", type=int, default=32)
     parser.add_argument("--pcsd-policy-history-dim", type=int, default=32)
     parser.add_argument("--pcsd-policy-hidden-dim", type=int, default=64)
@@ -2727,7 +2733,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--pcsd-fixed-scale",
         type=int,
-        choices=[1, 48, 144, 360, 720],
         default=720,
     )
     parser.add_argument(
@@ -2842,6 +2847,7 @@ def parse_args() -> argparse.Namespace:
                 in {
                     "iscf_bsca_decoder_transfer_20260814",
                     "iscf_bsca_decoder_transfer_itransformer_v1_20260815",
+                    "iscf_bsca_decoder_transfer_itransformer_hpo_v2_20260816",
                 }
             )
             and not (
@@ -2995,7 +3001,18 @@ def parse_args() -> argparse.Namespace:
         and args.grouped_mlp_scale in {1, args.pred_len}
     ):
         raise ValueError("random grouped MLP endpoint partitions are invalid")
-    if args.pcsd_coordinate_dim != 4:
+    itransformer_decoder_hpo = (
+        args.protocol_profile
+        == "iscf_bsca_decoder_transfer_itransformer_hpo_v2_20260816"
+        and args.encoder_mode == "itransformer-variate-attention"
+        and args.readout_mode == "siff-independent-scope-control"
+    )
+    if itransformer_decoder_hpo:
+        if args.pcsd_coordinate_dim < 2:
+            raise ValueError(
+                "iTransformer decoder HPO coordinate dim must be at least 2"
+            )
+    elif args.pcsd_coordinate_dim != 4:
         raise ValueError("PCSD-CF v1 requires pcsd_coordinate_dim=4")
     if args.readout_mode in {
         "siff-q1-wide-control",
@@ -3009,10 +3026,30 @@ def parse_args() -> argparse.Namespace:
             raise ValueError("matched SIFF control rank must be positive")
     elif args.pcsd_mode_rank != 256:
         raise ValueError("PCSD/SIFF primary readouts require pcsd_mode_rank=256")
-    if args.pcsd_policy_history_dim != 32:
-        raise ValueError("PCSD-CF v1 requires pcsd_policy_history_dim=32")
-    if args.pcsd_policy_hidden_dim != 64:
-        raise ValueError("PCSD-CF v1 requires pcsd_policy_hidden_dim=64")
+    if itransformer_decoder_hpo:
+        if (
+            args.pcsd_policy_history_dim <= 0
+            or args.pcsd_policy_hidden_dim <= 0
+        ):
+            raise ValueError(
+                "iTransformer decoder HPO policy dims must be positive"
+            )
+    else:
+        if args.pcsd_policy_history_dim != 32:
+            raise ValueError("PCSD-CF v1 requires pcsd_policy_history_dim=32")
+        if args.pcsd_policy_hidden_dim != 64:
+            raise ValueError("PCSD-CF v1 requires pcsd_policy_hidden_dim=64")
+    if (
+        not args.pcsd_scales
+        or len(set(args.pcsd_scales)) != len(args.pcsd_scales)
+        or sorted(args.pcsd_scales) != args.pcsd_scales
+        or any(scale <= 0 or args.pred_len % scale for scale in args.pcsd_scales)
+    ):
+        raise ValueError(
+            "PCSD scales must be unique increasing positive divisors of pred_len"
+        )
+    if args.pcsd_fixed_scale not in args.pcsd_scales:
+        raise ValueError("pcsd_fixed_scale must be present in pcsd_scales")
     if args.readout_mode in TimeAlign.CPSI_READOUTS:
         if args.cpsi_rank != 32:
             raise ValueError("ISCF-v1-CPSI requires cpsi_rank=32")

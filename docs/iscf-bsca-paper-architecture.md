@@ -5,10 +5,10 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.76` |
-| `last_updated` | `2026-08-15` |
+| `version` | `v0.77` |
+| `last_updated` | `2026-08-16` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Main I/Main II author-corrected tables hash-frozen；experiments=iTransformer-style Decoder-Transfer v1 formal gate failed，transfer rescue closed |
+| `current_review_cursor` | writing=Main I/Main II author-corrected tables hash-frozen；experiments=iTransformer-style Decoder-HPO v2 70-run test-tuned search prelaunch passed |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
@@ -16,7 +16,7 @@
 | `frozen_consensus` | 论文七章结构并保留standalone Discussion；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.2 structural design |
 | `provisional_content` | Method Figure 4 stable vector-asset synchronization；remaining manuscript prose and pending experiment evidence |
-| `authorization_source` | 2026-08-15 iTransformer-style 60-cell formal access consumed；table mutation/extra HPO/seeds仍false |
+| `authorization_source` | 2026-08-16用户重启iTransformer decoder-HPO并允许dataset-level four-H official-test反选；table mutation/seeds=false |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
@@ -1619,6 +1619,8 @@ iTransformer-style第三carrier的15/15 training artifacts、15 unique hashes与
 
 现formal matrix已完成。iTransformer-style +ISCF-BSCA相对Original Decoder macro MSE/MAE为`-2.690%/-2.513%` gain，只赢1/5 dataset MSE means和4/20 MSE cells；相对matched +ISCF也为`-1.372%/-1.160%`。因此该third-carrier extension不能恢复portability claim。DLinear-style正向结果继续保留，但PatchTST-style与iTransformer-style两项负结果要求正文撤回general cross-backbone transferability。由于table mutation未授权，当前Section 8.7表仍不追加第三block；review artifact单独冻结。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_v1_20260815/formal_results/result_and_table_audit.md`。
 
+作者随后显式重启iTransformer decoder-HPO。v2只搜索decoder compatibility axes：30-epoch budget、readout LR、rank、future-coordinate dimension、allocation width与scope geometry；iTransformer encoder和BSCA objective保持不变。70个new checkpoints完整后，按每dataset的four-H mean official-test MSE从14 new profiles + v1 reference中选择一个shared profile，MAE和全部negative trials同步报告。该证据必须披露为`test_tuned`，且performance通过后仍需matched +ISCF attribution，不能直接恢复BSCA portability claim。Canonical prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_hpo_v2_20260816/design_and_prelaunch_gate.md`。
+
 ## 9. Discussion
 
 ### 9.1 From Horizon-Specific Predictions to a Unified Forecasting System
@@ -1859,3 +1861,4 @@ Coverage boundary：
 | 2026-08-15 | iTransformer-style Decoder-Transfer v1 training gate | 15/15 artifacts、15 unique hashes、5/5 matched init triplets；manifest SHA256=`062588a...eecc9` | Step 8 complete；validation risk negative；formal 15-checkpoint/60-cell access pending explicit authorization |
 | 2026-08-15 | iTransformer-style Decoder-Transfer v1 formal authorization | 用户授权一次完整15-checkpoint/60-cell official-test audit | Step 9 authorized；hash-guarded preflight next；canonical table mutation=false |
 | 2026-08-15 | iTransformer-style Decoder-Transfer v1 formal closure | 15 immutable checkpoints、60/60 cells、10,800 dense rows；BSCA vs Original=`-2.690%/-2.513%` | Gate fail；general portability unsupported；no automatic fourth carrier/HPO；canonical table mutation=false |
+| 2026-08-16 | iTransformer-style Decoder-HPO v2 prelaunch | 14 profiles × 5 datasets=70 runs；test-tuned dataset-level four-H selector；22/22 local checks | Remote training authorized；280-cell test conditional on 70-hash manifest；table mutation/seeds=false |

@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "protocol_id": "ISCF-BSCA-DECODER-TRANSFER-ITRANSFORMER-HPO-20260816",
+  "candidate_version": "ISCF-BSCA-DECODER-TRANSFER-ITRANSFORMER-HPO-v2",
+  "status": "search_frozen_remote_train_authorized_test_tuned_formal_conditional_on_manifest",
+  "current_step": 7,
+  "test_informed": true,
+  "test_tuned": true,
+  "problem": "the v1 ISCF replacement readout is less compatible with the iTransformer-style variate-token representation than the native direct decoder",
+  "prior_candidate": {
+    "version": "ISCF-BSCA-DECODER-TRANSFER-ITRANSFORMER-v1",
+    "formal_result": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_v1_20260815/formal_results/result_and_table_audit.md",
+    "bsca_vs_original_macro_mse_gain_percent": -2.690131286505788,
+    "bsca_vs_original_macro_mae_gain_percent": -2.512709104827973,
+    "bsca_vs_original_dataset_mse_wins": 1,
+    "bsca_vs_original_mse_cell_wins": 4,
+    "failure_attribution": "readout_or_head_design_wrong_for_itransformer_representation_compatibility"
+  },
+  "datasets": ["Weather", "ETTm1", "ETTm2", "ETTh1", "ETTh2"],
+  "horizons": [96, 192, 336, 720],
+  "seeds": [2021],
+  "backbone": {
+    "id": "itransformer_style",
+    "encoder_mode": "itransformer-variate-attention",
+    "profile_path": "configs/iscf_bsca_decoder_transfer_itransformer_profiles.json",
+    "profile_sha256": "5e8dc7f04765fae36d25f696cf66be00cc58ee59f7559871119751abb4ae8b51",
+    "frozen_fields": [
+      "seq_len",
+      "d_model",
+      "n_heads",
+      "d_ff",
+      "e_layers",
+      "dropout",
+      "base_learning_rate",
+      "batch_size",
+      "encoder_weight_decay",
+      "seed"
+    ]
+  },
+  "arm": {
+    "id": "itransformer_iscf_bsca_hpo_v2",
+    "readout_mode": "siff-independent-scope-control",
+    "policy_mode": "direct",
+    "objective_mode": "equal_uniform_scope_anchor",
+    "joint_encoder_decoder_training": true,
+    "frozen_replacement": false,
+    "warm_start": false
+  },
+  "reference_profile": {
+    "id": "v1_rank1_coord4_policy32x64_scopes_original_budget",
+    "reuse_formal_evidence": true,
+    "mode_rank_by_dataset": {
+      "ETTm1": 21,
+      "ETTm2": 21,
+      "ETTh1": 30,
+      "ETTh2": 21,
+      "Weather": 30
+    },
+    "coordinate_dim": 4,
+    "policy_history_dim": 32,
+    "policy_hidden_dim": 64,
+    "scales": [1, 48, 144, 360, 720],
+    "readout_learning_rate_multiplier": 1.0,
+    "readout_weight_decay": 0.0,
+    "max_epochs": 10,
+    "patience": 3
+  },
+  "search_profiles": [
+    {"id": "p00_budget30", "rank_scale": 1.0, "coordinate_dim": 4, "policy_history_dim": 32, "policy_hidden_dim": 64, "scales": [1, 48, 144, 360, 720], "readout_learning_rate_multiplier": 1.0, "readout_weight_decay": 0.0, "source_prior": "v1_geometry_with_extended_budget"},
+    {"id": "p01_lr0p25", "rank_scale": 1.0, "coordinate_dim": 4, "policy_history_dim": 32, "policy_hidden_dim": 64, "scales": [1, 48, 144, 360, 720], "readout_learning_rate_multiplier": 0.25, "readout_weight_decay": 0.0, "source_prior": "slower_decoder_optimization"},
+    {"id": "p02_lr0p50", "rank_scale": 1.0, "coordinate_dim": 4, "policy_history_dim": 32, "policy_hidden_dim": 64, "scales": [1, 48, 144, 360, 720], "readout_learning_rate_multiplier": 0.5, "readout_weight_decay": 0.0, "source_prior": "PatchTST_HPO_common_winner"},
+    {"id": "p03_lr2p00", "rank_scale": 1.0, "coordinate_dim": 4, "policy_history_dim": 32, "policy_hidden_dim": 64, "scales": [1, 48, 144, 360, 720], "readout_learning_rate_multiplier": 2.0, "readout_weight_decay": 0.0, "source_prior": "faster_decoder_optimization"},
+    {"id": "p04_lr4p00", "rank_scale": 1.0, "coordinate_dim": 4, "policy_history_dim": 32, "policy_hidden_dim": 64, "scales": [1, 48, 144, 360, 720], "readout_learning_rate_multiplier": 4.0, "readout_weight_decay": 0.0, "source_prior": "wide_decoder_optimization_boundary"},
+    {"id": "p05_rank0p50_lr0p50", "rank_scale": 0.5, "coordinate_dim": 4, "policy_history_dim": 32, "policy_hidden_dim": 64, "scales": [1, 48, 144, 360, 720], "readout_learning_rate_multiplier": 0.5, "readout_weight_decay": 0.0, "source_prior": "lower_decoder_capacity"},
+    {"id": "p06_rank1p50_lr0p50", "rank_scale": 1.5, "coordinate_dim": 4, "policy_history_dim": 32, "policy_hidden_dim": 64, "scales": [1, 48, 144, 360, 720], "readout_learning_rate_multiplier": 0.5, "readout_weight_decay": 0.0, "source_prior": "moderately_wider_decoder"},
+    {"id": "p07_rank2p00_lr0p50", "rank_scale": 2.0, "coordinate_dim": 4, "policy_history_dim": 32, "policy_hidden_dim": 64, "scales": [1, 48, 144, 360, 720], "readout_learning_rate_multiplier": 0.5, "readout_weight_decay": 0.0, "source_prior": "wide_decoder_capacity_boundary"},
+    {"id": "p08_coord2_capmatch_lr0p50", "rank_scale": 2.0, "coordinate_dim": 2, "policy_history_dim": 32, "policy_hidden_dim": 64, "scales": [1, 48, 144, 360, 720], "readout_learning_rate_multiplier": 0.5, "readout_weight_decay": 0.0, "source_prior": "lower_frequency_coordinate_with_approximate_capacity_match"},
+    {"id": "p09_coord8_capmatch_lr0p50", "rank_scale": 0.5, "coordinate_dim": 8, "policy_history_dim": 32, "policy_hidden_dim": 64, "scales": [1, 48, 144, 360, 720], "readout_learning_rate_multiplier": 0.5, "readout_weight_decay": 0.0, "source_prior": "higher_frequency_coordinate_with_approximate_capacity_match"},
+    {"id": "p10_policy16x32_lr0p50", "rank_scale": 1.0, "coordinate_dim": 4, "policy_history_dim": 16, "policy_hidden_dim": 32, "scales": [1, 48, 144, 360, 720], "readout_learning_rate_multiplier": 0.5, "readout_weight_decay": 0.0, "source_prior": "regularized_target_allocation_capacity"},
+    {"id": "p11_policy64x128_lr0p50", "rank_scale": 1.0, "coordinate_dim": 4, "policy_history_dim": 64, "policy_hidden_dim": 128, "scales": [1, 48, 144, 360, 720], "readout_learning_rate_multiplier": 0.5, "readout_weight_decay": 0.0, "source_prior": "expanded_target_allocation_capacity"},
+    {"id": "p12_scopes_short_lr0p50", "rank_scale": 1.0, "coordinate_dim": 4, "policy_history_dim": 32, "policy_hidden_dim": 64, "scales": [1, 24, 72, 240, 720], "readout_learning_rate_multiplier": 0.5, "readout_weight_decay": 0.0, "source_prior": "finer_short_to_mid_future_sharing_geometry"},
+    {"id": "p13_scopes_long_lr0p50", "rank_scale": 1.0, "coordinate_dim": 4, "policy_history_dim": 32, "policy_hidden_dim": 64, "scales": [1, 72, 180, 360, 720], "readout_learning_rate_multiplier": 0.5, "readout_weight_decay": 0.0, "source_prior": "coarser_mid_to_long_future_sharing_geometry"}
+  ],
+  "rank_rounding_rule": "max_1_round_reference_rank_times_rank_scale",
+  "matrix": {
+    "new_training_runs": 70,
+    "new_checkpoint_objects": 70,
+    "test_tuned_formal_jobs_after_manifest": 70,
+    "test_tuned_formal_cells_after_manifest": 280,
+    "reused_v1_reference_cells": 20,
+    "reused_original_anchor_cells": 20,
+    "metrics": ["mse", "mae"],
+    "full_trial_reporting_required": true
+  },
+  "training": {
+    "from_scratch": true,
+    "target_horizons": [720],
+    "validation_horizons": [96, 192, 336, 720],
+    "checkpoint_score": "mean_validation_mse_h96_h192_h336_h720",
+    "checkpoint_policy": "best-val",
+    "pred_loss_mode": "full",
+    "max_epochs": 30,
+    "patience": 6,
+    "optimizer": "AdamW_with_readout_parameter_group",
+    "base_encoder_learning_rate": 0.0001,
+    "encoder_weight_decay": 0.0,
+    "final_evaluation_split": "val",
+    "test_labels_select_epoch_checkpoint_or_seed": false
+  },
+  "test_tuned_selection": {
+    "unit": "one_dataset_profile_shared_by_all_four_horizons",
+    "candidate_pool": "fourteen_new_profiles_plus_v1_reference",
+    "primary_metric": "mean_official_test_mse_h96_h192_h336_h720",
+    "secondary_report_metric": "mean_official_test_mae_h96_h192_h336_h720",
+    "tie_breakers": ["lower_mean_test_mae", "lower_decoder_parameter_count", "lexicographic_profile_id"],
+    "per_horizon_seed_metric_or_cell_selection_allowed": false,
+    "all_negative_trials_retained": true,
+    "disclosure": "test_tuned_dataset_level_decoder_profile_selection"
+  },
+  "success_gates": {
+    "selected_bsca_vs_v1_original_macro_mse_gain_percent_min_exclusive": 0.0,
+    "selected_bsca_vs_v1_original_macro_mae_gain_percent_min_exclusive": 0.0,
+    "selected_bsca_vs_v1_original_dataset_mse_wins_min": 3,
+    "complete_300_candidate_and_reference_cells_required": true,
+    "numeric_health_required": true,
+    "checkpoint_nonmutation_required": true
+  },
+  "rollback": {
+    "resource_or_numeric_failure": "stop_before_test_and_repair_exact_protocol_only",
+    "no_profile_improves_v1_bsca": "retain_v1_negative_result_and_close_itransformer_decoder_rescue",
+    "improves_v1_bsca_but_not_original": "report_best_tuned_negative_result_without_portability_claim",
+    "passes_original_gate": "freeze_dataset_profiles_then_design_matched_ISCF_attribution_before_claiming_BSCA_portability"
+  },
+  "artifact_contract": {
+    "remote_output_root": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_decoder_transfer_itransformer_hpo_v2_20260816",
+    "local_analysis_root": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_hpo_v2_20260816",
+    "required_training_files": [
+      "checkpoint.pt",
+      "training_log.csv",
+      "metrics_by_target_horizon.csv",
+      "effective_config.json",
+      "initialization_contract.json",
+      "model_diagnostics.json",
+      "environment.json"
+    ]
+  },
+  "resource_estimate": {
+    "gpu": "3 x RTX 3090",
+    "estimated_total_gpu_hours": "20-32",
+    "estimated_wall_hours": "7-12",
+    "estimated_storage_gb": "2-4",
+    "scheduling": "dataset-major longest-processing-time; Weather then ETTm1/ETTm2 then ETTh1/ETTh2"
+  },
+  "authorization": {
+    "user_authorization": "2026-08-16 request to use HPO to find an improved iTransformer decoder and explicit permission to select parameters by official-test results",
+    "remote_training_authorized": true,
+    "formal_test_access_authorized_after_70_hash_manifest": true,
+    "per_dataset_aggregate_hyperparameter_tuning_allowed": true,
+    "per_horizon_seed_metric_or_cell_tuning_allowed": false,
+    "extra_seeds_authorized": false,
+    "paper_table_update_authorized": false
+  },
+  "claim_boundary": "test_informed_test_tuned_decoder_rescue; success requires later matched ISCF attribution; no untouched-holdout or architecture-agnostic portability claim"
+}

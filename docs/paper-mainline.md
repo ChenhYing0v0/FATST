@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | iTransformer-style Decoder-Transfer v1 Step 9--10 complete；formal gate failed；transfer rescue closed |
+| `current_11_step` | iTransformer-style Decoder-HPO v2 Step 7；70-run test-tuned search frozen；remote resource gate next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,7 +18,9 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；Core-Ablation 3/4 controls pass；Decoder portability unsupported（DLinear pass / PatchTST and iTransformer fail）；Efficiency只支持trade-off；allocation独立accuracy claim unsupported |
+| `paper_core_status` | architecture family frozen；Core-Ablation 3/4 controls pass；Decoder portability当前unsupported（DLinear pass / PatchTST and iTransformer v1 fail）；iTransformer HPO v2为test-tuned rescue pending；Efficiency只支持trade-off；allocation独立accuracy claim unsupported |
+
+[iTransformer-style Decoder-HPO v2 Prelaunch, 2026-08-16] 用户显式重启decoder-HPO并允许official-test dataset-level反选。冻结14 profiles × 5 datasets=`70` training runs，搜索budget/LR/rank/future-coordinate/allocation-width/scope geometry；保持iTransformer encoder、BSCA objective、seed和joint-training不变。70-hash manifest后完整执行280 test cells，每dataset按four-H mean test MSE选一个shared profile，禁止per-H/cell selection并保留全部负向trials。该candidate明确为`test_informed/test_tuned`；即使performance通过，仍需matched +ISCF attribution。Canonical gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_hpo_v2_20260816/design_and_prelaunch_gate.md`。Decision=`itransformer_decoder_hpo_v2_70_profile_dataset_runs_frozen_test_tuned_remote_training_authorized`。
 
 [iTransformer-style Decoder-Transfer v1 Formal Result, 2026-08-15] Once-only audit完成15/15 immutable checkpoints、60/60 standard cells与10,800 dense-prefix rows。+ISCF-BSCA相对Original macro MSE/MAE gain=`-2.690%/-2.513%`，dataset/cell MSE wins=`1/5,4/20`；相对matched +ISCF为`-1.372%/-1.160%`。Formal effectiveness与matched attribution均fail，且无numeric/artifact pathology。DLinear正向block保留，但PatchTST与iTransformer两个Transformer-style carriers均失败，因此general cross-backbone portability不成立。Canonical table mutation未授权；不自动开启第四carrier、extra HPO或seeds。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_v1_20260815/formal_results/result_and_table_audit.md`。Decision=`itransformer_transfer_v1_complete_portability_gate_failed_no_fourth_carrier_or_hpo`。
 

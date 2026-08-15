@@ -1,0 +1,23 @@
+category,case,value,expected,pass
+contract,source_profile_hash,5e8dc7f04765fae36d25f696cf66be00cc58ee59f7559871119751abb4ae8b51,5e8dc7f04765fae36d25f696cf66be00cc58ee59f7559871119751abb4ae8b51,True
+contract,profiles,14,14,True
+contract,matrix,70,70,True
+contract,unique_effective_profiles,14,14,True
+governance,dataset_level_test_tuning_only,one_dataset_profile_shared_by_all_four_horizons,one profile per dataset and four horizons,True
+governance,joint_from_scratch,joint_from_scratch,joint_from_scratch,True
+model,p00_budget30,"rank=30,params=370829",effective_contract_and_exact_prefix,True
+model,p01_lr0p25,"rank=30,params=370829",effective_contract_and_exact_prefix,True
+model,p02_lr0p50,"rank=30,params=370829",effective_contract_and_exact_prefix,True
+model,p03_lr2p00,"rank=30,params=370829",effective_contract_and_exact_prefix,True
+model,p04_lr4p00,"rank=30,params=370829",effective_contract_and_exact_prefix,True
+model,p05_rank0p50_lr0p50,"rank=15,params=195329",effective_contract_and_exact_prefix,True
+model,p06_rank1p50_lr0p50,"rank=45,params=546329",effective_contract_and_exact_prefix,True
+model,p07_rank2p00_lr0p50,"rank=60,params=721829",effective_contract_and_exact_prefix,True
+model,p08_coord2_capmatch_lr0p50,"rank=60,params=413901",effective_contract_and_exact_prefix,True
+model,p09_coord8_capmatch_lr0p50,"rank=15,params=349485",effective_contract_and_exact_prefix,True
+model,p10_policy16x32_lr0p50,"rank=30,params=360765",effective_contract_and_exact_prefix,True
+model,p11_policy64x128_lr0p50,"rank=30,params=394029",effective_contract_and_exact_prefix,True
+model,p12_scopes_short_lr0p50,"rank=30,params=370829",effective_contract_and_exact_prefix,True
+model,p13_scopes_long_lr0p50,"rank=30,params=370829",effective_contract_and_exact_prefix,True
+execution,runner_syntax,0,0,True
+execution,runner_dry_run,itransformer_hpo_v2_dry_run=pass jobs=70 search_hash=291b23be097fd991a325f5b83c8464bfa2e74264f2e69496c288cb8d92ea9c4d,jobs=70,True
