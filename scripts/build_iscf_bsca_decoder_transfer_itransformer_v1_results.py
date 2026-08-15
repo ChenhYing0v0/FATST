@@ -141,6 +141,7 @@ def main() -> None:
         raise RuntimeError("checkpoint uniqueness mismatch")
 
     cells: list[dict[str, Any]] = []
+    artifact_rows: list[dict[str, Any]] = []
     test_dates: set[str] = set()
     for manifest in manifest_rows:
         checkpoint = Path(manifest["checkpoint"])
@@ -153,7 +154,12 @@ def main() -> None:
             / manifest["dataset"]
             / "seed2021"
         )
-        invariants = load_json(artifact / "test_audit_invariants.json")
+        invariant_path = artifact / "test_audit_invariants.json"
+        metric_path = artifact / "test_audit_metrics_by_target_horizon.csv"
+        diagnostic_path = artifact / "pcsd_test_audit_diagnostics.npz"
+        if not diagnostic_path.is_file():
+            raise RuntimeError(f"formal diagnostic artifact missing: {artifact}")
+        invariants = load_json(invariant_path)
         if not (
             invariants.get("pass") is True
             and invariants.get("evaluation_split") == "test"
@@ -164,9 +170,7 @@ def main() -> None:
         ):
             raise RuntimeError(f"formal invariant failed: {artifact}")
         test_dates.add(invariants["test_access_date"])
-        dense_rows = read_csv(
-            artifact / "test_audit_metrics_by_target_horizon.csv"
-        )
+        dense_rows = read_csv(metric_path)
         if len(dense_rows) != 720:
             raise RuntimeError(f"dense test rows incomplete: {artifact}")
         by_horizon = {int(row["target_horizon"]): row for row in dense_rows}
@@ -192,6 +196,20 @@ def main() -> None:
                     "checkpoint_retrained": False,
                 }
             )
+        artifact_rows.append(
+            {
+                "dataset": manifest["dataset"],
+                "arm": manifest["arm"],
+                "checkpoint_sha256": manifest["checkpoint_sha256"],
+                "metrics_sha256": sha256(metric_path),
+                "metrics_bytes": metric_path.stat().st_size,
+                "invariants_sha256": sha256(invariant_path),
+                "invariants_bytes": invariant_path.stat().st_size,
+                "diagnostics_sha256": sha256(diagnostic_path),
+                "diagnostics_bytes": diagnostic_path.stat().st_size,
+                "formal_invariant_pass": True,
+            }
+        )
     if len(cells) != 60:
         raise RuntimeError(f"formal matrix incomplete: {len(cells)}/60")
 
@@ -258,6 +276,9 @@ def main() -> None:
         and bsca_original_dataset_wins
         >= config["gates"]["bsca_vs_original_dataset_mse_wins_min"]
     )
+    args.results_dir.mkdir(parents=True, exist_ok=True)
+    artifact_manifest_path = args.results_dir / "formal_artifact_manifest.csv"
+    write_csv(artifact_manifest_path, artifact_rows)
     summary = {
         "pass": gate_pass,
         "candidate_version": config["candidate_version"],
@@ -274,10 +295,10 @@ def main() -> None:
         "bsca_vs_iscf_dataset_mse_wins": bsca_iscf_dataset_wins,
         "bsca_vs_iscf_mse_cell_wins": bsca_iscf_cell_wins,
         "checkpoint_nonmutation": True,
+        "formal_artifact_manifest_sha256": sha256(artifact_manifest_path),
         "table_mutation_authorized": False,
     }
 
-    args.results_dir.mkdir(parents=True, exist_ok=True)
     write_csv(args.results_dir / "itransformer_transfer_60_cells.csv", cells)
     write_csv(
         args.results_dir / "itransformer_transfer_dataset_means.csv",
