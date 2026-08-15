@@ -24,3 +24,5 @@ Launch前GPU0/1/2均为18 MiB occupied、0% utilization。User quota为194G used
 15-run train/validation queue使用GPU0/1/2并行。每个GPU固定一个decoder arm并按`Weather -> ETTm1 -> ETTm2 -> ETTh1 -> ETTh2`推进，从而保持三臂dataset workload对齐。首批三条Weather run均已进入epoch 1；observed memory约为Original 0.5 GiB、+ISCF 1.2 GiB、+ISCF-BSCA 1.2 GiB，GPU utilization约32--34%。
 
 Formal test、table mutation、extra HPO和extra seeds均为false。下一 gate 是15/15 training artifacts、15 unique checkpoint hashes与5/5 matched encoder-initialization triplets；immutable manifest前test必须保持0。
+
+Early status audit发现native Original arm按设计不生成`trained_invariants.json`，旧completion predicate会把已完成的Weather Original误计为incomplete，但不影响正在运行的worker继续下一个dataset。Runner已修正为：三臂都要求checkpoint、effective config、initialization contract、four-H metrics和training log；只有两个ISCF arms额外要求`trained_invariants.pass=true`。该修复只改变status/resume判定，不改变任何训练中的model、optimizer、seed、selector或artifact。
