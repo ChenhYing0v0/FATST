@@ -10,7 +10,7 @@
 
 三GPU worker按manifest索引交错分配70个jobs。`STATUS_ONLY=1`只统计完整formal artifacts；`DRY_RUN=1`只验证70个checkpoint与打印执行矩阵，不访问test loader。
 
-Variable-scope HPO要求formal invariant使用checkpoint的effective config作为scope contract。Evaluator因此比较`model_diagnostics(model)["pcsd_scales"]`与`adapter["pcsd_scales"]`；旧实现比较全局diagnostic design中的默认scales，会错误拒绝已预注册的`p12/p13` alternate-scope profiles。默认protocol的adapter scales与旧design相同，行为保持不变。
+Variable-scope HPO要求formal invariant使用checkpoint的effective config作为scope contract。Evaluator因此比较`model_diagnostics(model)["pcsd_scales"]`与`adapter["pcsd_scales"]`；旧实现比较全局diagnostic design中的默认scales，会错误拒绝已预注册的`p12/p13` alternate-scope profiles。对于早期PatchTST HPO checkpoints，legacy `effective_config.adapter`尚未序列化该字段，但同一次训练保存的`initialization_contract["pcsd_scales"]`包含exact instantiated scopes；checker仅在adapter字段缺失时回退到该值。该兼容路径不改变model、checkpoint、test loader或metrics。
 
 ## 3. Result builder
 

@@ -1120,7 +1120,8 @@ def evaluate(args: argparse.Namespace) -> None:
             initialization.get("pcsd_initialization_hash")
             and initialization.get("pcsd_coordinate_hash")
             and initialization.get("pcsd_partition_hash")
-            and diagnostics.get("pcsd_scales") == adapter["pcsd_scales"]
+            and diagnostics.get("pcsd_scales")
+            == adapter.get("pcsd_scales", initialization.get("pcsd_scales"))
             and diagnostics.get("pcsd_policy_mode")
             == adapter["pcsd_policy_mode"]
             and diagnostics.get("pcsd_partition") == adapter["pcsd_partition"]
