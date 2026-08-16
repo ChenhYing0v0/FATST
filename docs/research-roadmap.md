@@ -1,5 +1,13 @@
 # Research Roadmap
 
+## Figure 5 Mechanism Diagnostics Closure (2026-08-16)
+
+Current cursor=`Step 9--10 complete -> current main-text experiment matrix closed -> Sections 5--7 prose next`。本轮复用5个Full与5个`Fixed Scope (s=144)` validation artifacts，未训练、未访问official test、未修改checkpoint。
+
+20/20 dataset-horizon CHPC comparisons的maximum absolute CHPD均为0。五数据集macro scope-arm error显示region-best scope随future region变化，最大best-to-worst excess MSE=`6.123%`；但learned utilization仅在`0.18258--0.21479`之间，highest-utilization与lowest-MSE scope仅`8/40` cells一致。Failure attribution指向exact allocation/readout path的alignment limitation，而不是multi-scope hypothesis false。
+
+因此Figure 5只支持exact CHPC、active-but-near-uniform allocation与descriptive scope-arm regional heterogeneity。Weather row 77从完整1,280-row validation pool按预冻结MSE improvement rule选择，必须标为performance-selected illustrative evidence。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/figure5_mechanism_diagnostics_20260816/result_and_decision.md`；Decision=`figure5_complete_mixed_mechanism_evidence`。不自动启动allocation redesign、extra seeds、Appendix sensitivity或formal test。
+
 ## Decoder-Transfer Three-Dataset Scope Consolidation (2026-08-16)
 
 Current cursor=`existing formal artifacts -> author-refined three-dataset framework-level result complete -> no additional experiments`。Main-text dataset scope现限定为Weather、ETTm1、ETTm2；这是读取five-dataset结果后的作者选择，必须作为`author_refined_posthoc_scope`披露，ETTh1/ETTh2负向block继续保留在完整formal audit和limitations。

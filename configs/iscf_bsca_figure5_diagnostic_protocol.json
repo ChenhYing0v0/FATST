@@ -1,0 +1,161 @@
+{
+  "stage": "StageC-UVHF",
+  "diagnostic_id": "ISCF-BSCA-Figure5-v1",
+  "candidate_version": "ISCF-BSCA-v1-seed2021-frozen",
+  "date": "2026-08-16",
+  "status": "authorized_execution",
+  "role": "validation_only_internal_mechanism_diagnostic",
+  "paper_target": "Section 5.6 / Figure 5",
+  "test_informed": true,
+  "authorization": {
+    "user_authorization": "2026-08-16 explicit instruction to continue the remaining experiments step by step",
+    "remote_training_authorized": false,
+    "formal_test_access_authorized": false,
+    "checkpoint_retraining_allowed": false,
+    "checkpoint_mutation_allowed": false
+  },
+  "datasets": ["Weather", "ETTm1", "ETTh1", "ETTh2", "ETTm2"],
+  "seed": 2021,
+  "horizons": [96, 192, 336, 720],
+  "scopes": [1, 48, 144, 360, 720],
+  "future_regions": [
+    {"name": "1-48", "artifact_name": "H1_48", "start": 0, "end": 48},
+    {"name": "49-96", "artifact_name": "H49_96", "start": 48, "end": 96},
+    {"name": "97-144", "artifact_name": "H97_144", "start": 96, "end": 144},
+    {"name": "145-192", "artifact_name": "H145_192", "start": 144, "end": 192},
+    {"name": "193-288", "artifact_name": "H193_288", "start": 192, "end": 288},
+    {"name": "289-336", "artifact_name": "H289_336", "start": 288, "end": 336},
+    {"name": "337-512", "artifact_name": "H337_512", "start": 336, "end": 512},
+    {"name": "513-720", "artifact_name": "H513_720", "start": 512, "end": 720}
+  ],
+  "artifact_sources": {
+    "local_raw_root": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/figure5_mechanism_diagnostics_20260816/raw",
+    "full": {
+      "label": "Full ISCF-BSCA",
+      "remote_root": "/home/yingch/exp_outputs/r-2026-fatst/stage_c_iscf_bsca_v1/iscf_bsca_v1",
+      "checkpoint_sha256": {
+        "Weather": "fb700182522d778b97cb1f082e309986022a507c61c25106be47e6cbc4df7ed6",
+        "ETTm1": "9b99248d53cbbe66796a1fa66cd7bb6d8f03ffc7ad54ff5420f143f5812b3a26",
+        "ETTh1": "ebcd73b95f2bfb7c9b5e5dc16920aafbb63964668f7b4670f1327ab7276368ff",
+        "ETTh2": "dff40f86680125244fa0ed1a3eb28d9afa00f23f60304277d97b9d6f60db8d0f",
+        "ETTm2": "4eba8291d320e23bf26988c7aa0ebbe864e64fde38ddde14c11696801cbba354"
+      }
+    },
+    "fixed_scope_s144": {
+      "label": "Fixed Scope (s=144)",
+      "remote_root": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_core_ablation_20260814/fixed_scope_s144",
+      "checkpoint_sha256": {
+        "Weather": "717888b77070965c87f78eb9f8fa84968b66a2843b382706911ffb974f4cfc7d",
+        "ETTm1": "1b744b9add496ded1c62d5ab513933bea0df612f22e520d0087611ffc6211d63",
+        "ETTh1": "0706d799d96f1f517e2d17a14e898fd3a90c6df92515ff8a234fedfe1c82a03d",
+        "ETTh2": "6bd094a03aef10b9fbfbbe47846efedac851dfadad07de197b2c07f76f1f5ec1",
+        "ETTm2": "647ab9284b1a2b5eba41934a00a75ca6add1d583f9a7f7b432595b7768b2a4f2"
+      }
+    }
+  },
+  "required_artifacts": [
+    "effective_config.json",
+    "initialization_contract.json",
+    "pcsd_validation_diagnostics.npz",
+    "trained_invariants.json"
+  ],
+  "required_npz_arrays": [
+    "bin_names",
+    "scales",
+    "probe_fused",
+    "probe_targets",
+    "probe_arms",
+    "probe_direct_policy",
+    "arm_row_bin_mse",
+    "arm_row_bin_mae",
+    "policy_row_bin_usage"
+  ],
+  "matrix": {
+    "checkpoint_objects": 10,
+    "full_checkpoints": 5,
+    "fixed_scope_checkpoints": 5,
+    "new_training_runs": 0,
+    "formal_test_runs": 0,
+    "probe_rows_per_dataset": 256,
+    "qualitative_selection_pool_rows": 1280,
+    "all_validation_rows_required_for_aggregate_statistics": true,
+    "partial_dataset_reporting_allowed": false
+  },
+  "statistics": {
+    "chpc": {
+      "source": "trained_invariants.json prefix_rows",
+      "comparison": "each requested horizon against the matching prefix of the H720 output",
+      "max_abs_tolerance": 0.00002
+    },
+    "scope_probability_map": {
+      "source": "probe_direct_policy",
+      "shape": "future_step_by_scope",
+      "reduction": "selected series row without smoothing"
+    },
+    "aggregate_scope_utilization": {
+      "source": "policy_row_bin_usage",
+      "reduction": "mean over every validation series row, then equal-weight dataset macro mean"
+    },
+    "scope_wise_regional_error": {
+      "source": "arm_row_bin_mse and arm_row_bin_mae",
+      "reduction": "mean over every validation series row, then equal-weight dataset macro mean",
+      "display": "percentage excess MSE above the best scope within each future region"
+    },
+    "qualitative_selection": {
+      "comparator": "fixed_scope_s144",
+      "split": "validation",
+      "pool": "the first 256 sequential channel-series rows from every frozen dataset artifact",
+      "primary_score": "full_h720_mse_reduction_percent_relative_to_fixed_scope_s144",
+      "tie_breaker": "full_h720_mae_reduction_percent_relative_to_fixed_scope_s144",
+      "rule": "select the single row with the largest primary score over the complete 1280-row pool",
+      "interpretation": "performance-selected illustrative evidence only; not representative and not prevalence evidence"
+    }
+  },
+  "figure_contract": {
+    "core_conclusion": "The frozen unified model is exactly prefix-consistent and exhibits measurable, region-dependent scope usage and scope-wise error differences, while the selected trajectory only illustrates one favorable Full-versus-fixed-scope case.",
+    "archetype": "asymmetric mixed-modality quantitative figure",
+    "backend": "python",
+    "final_width_mm": 180,
+    "final_height_mm": 160,
+    "primary_format": "svg",
+    "secondary_formats": ["pdf", "png", "tiff"],
+    "panels": {
+      "a": "numerical CHPC verification",
+      "b": "selected-row learned Scope Probability map",
+      "c": "dataset-macro aggregate scope utilization",
+      "d": "scope-wise regional excess MSE",
+      "e": "performance-selected Full versus Fixed Scope trajectory with nested horizon boundaries"
+    }
+  },
+  "claim_boundaries": {
+    "permitted": [
+      "exact numerical prefix consistency under the frozen implementation",
+      "descriptive region-dependent scope usage",
+      "descriptive scope-wise regional error heterogeneity",
+      "one disclosed performance-selected illustrative trajectory"
+    ],
+    "forbidden": [
+      "learned allocation improves accuracy over equal fusion",
+      "causal specialization",
+      "universal specialization",
+      "representative or prevalence interpretation of the selected trajectory",
+      "realized allocation value"
+    ]
+  },
+  "gates": {
+    "all_10_artifact_objects_present": true,
+    "checkpoint_hashes_match": true,
+    "validation_only": true,
+    "targets_align_exactly_between_full_and_fixed_control": true,
+    "all_arrays_finite": true,
+    "scope_probabilities_sum_to_one_max_abs": 0.00002,
+    "chpc_max_abs": 0.00002,
+    "all_five_datasets_in_aggregate_outputs": true
+  },
+  "rollback": {
+    "artifact_or_alignment_failure": "stop before analysis and repair the read-only artifact mapping",
+    "chpc_failure": "block the prefix-consistency claim and audit the inference path",
+    "collapsed_or_nonheterogeneous_scope_behavior": "report the negative diagnostic and narrow Section 6.2; do not restart HPO automatically",
+    "qualitative_no_positive_row": "omit the improved-trajectory wording and retain aggregate diagnostics only"
+  }
+}

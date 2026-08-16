@@ -20,6 +20,7 @@ source transcription audit、checkpoint manifest 和 smoke 统计不作为论文
 - `author_fixed_controls_prelaunch_pending`：author已固定control identities，但implementation、预算与formal matrix仍待独立prelaunch；
 - `source_patch_and_retrain_required_prelaunch_pending`：需要先完成 source/protocol gate，尚无正式结果；
 - `deferred_outside_current_core_closure`：不属于当前正文闭合范围，恢复前需要新的设计与授权。
+- `complete_mixed_mechanism_evidence`：diagnostic matrix与Figure已完成，但正负证据并存，结论必须保留失败边界。
 
 ## 2. Main I / Main II 统一展示契约
 
@@ -52,6 +53,7 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 | `Efficiency` | 正文 supporting result | `complete_hash_frozen_tradeoff_supported_no_uniform_compute_advantage` | 5 systems × 7 datasets；35/35 service units / 77 checkpoint objects | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/table/table_iscf_bsca_efficiency.tex` | 支持one-model consolidation、architectural CHPC及相对four-model TimeAlign/QDF的parameter/storage reduction；不支持uniform training/latency/computation advantage |
 | `Core-Ablation` | 正文 mechanism attribution | `complete_hash_frozen_partial_attribution_3_of_4_controls` | 5 variants × 5 datasets × 4 H；100/100 cells，25 checkpoints（5 reused + 20 new） | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/table/table_iscf_bsca_core_ablation.tex` | 支持BSCA objective、scope-specific projections与multi-scope design；不支持learned Target-Adaptive Allocation相对equal fusion的独立accuracy utility |
 | `Decoder-Transfer` | 正文 transfer evidence | `complete_framework_portability_author_refined_scope` | 2 backbones × 2 systems × 3 datasets；每cell为four-H mean；48 underlying cells | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/table_decoder_transfer_three_dataset_framework.tex` | 完整ISCF-BSCA framework在DLinear-style与PatchTST-style两类backbones上均取得三数据集macro MSE/MAE双正向；不作内部ISCF-vs-BSCA attribution，five-dataset negative audit保留 |
+| `Figure-5-Diagnostics` | 正文 mechanism behavior | `complete_mixed_mechanism_evidence` | 5 datasets × Full/Fixed artifacts；20 CHPC cells；全部validation rows + 1,280-row qualitative pool | `paper-figures/figure_iscf_bsca_mechanism.svg` | exact CHPC与scope-arm regional error heterogeneity；learned allocation接近均匀且仅8/40 utilization/error-preference cells一致，不支持allocation accuracy或causal specialization |
 | `Ablation-Sensitivity` | Appendix | `deferred_outside_current_core_closure` | random partition、scope count、$\lambda$ sensitivity | 尚无正式表 | 当前不纳入核心闭合；若恢复仅作sensitivity/robustness，canonical grouping不作为既定正向结论 |
 
 ## 4. 已完成主表结果摘要
@@ -118,19 +120,28 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 - 负向边界：ISCF-BSCA all-H latency分别为TimeAlign/QDF/DLinear-prefix/PatchTST-prefix的`2.88×/2.33×/24.04×/2.66×`，logged training time也不领先，因此不得声称uniform compute efficiency；
 - canonical audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/result_and_table_audit.md`；review PDF=`output/pdf/iscf_bsca_efficiency_20260814.pdf`。
 
-## 5. 尚未完成表格的最小闭合顺序
+### Figure 5 Diagnostics
 
-1. `Figure 5`：冻结Scope Probability、aggregate utilization、regional preference/error与illustrative trajectory的统计和selection contract；不得用该图补救allocation control的failed effectiveness。
-2. `Ablation-Sensitivity`：当前deferred，不属于正文核心闭合；若后续恢复，须单独冻结Appendix grid且不得因已见结果选择性扩张。
+- 完整性：5 datasets × 2 frozen validation artifact roles=`10/10` objects；training/test=`0/0`；
+- numerical CHPC：20/20 paper-facing cells的maximum absolute CHPD均为0；
+- aggregate learned probabilities范围为`0.18258--0.21479`，总体接近均匀；
+- macro region-best scope随future region变化，最大best-to-worst excess MSE=`6.123%`；
+- highest-utilization scope仅在`8/40` dataset-region cells等于lowest-MSE scope，因此只支持descriptive arm heterogeneity，不支持successful allocation；
+- qualitative row从完整1,280-row validation pool按预冻结MSE rule选择，只作illustrative evidence；
+- canonical audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/figure5_mechanism_diagnostics_20260816/result_and_decision.md`；PDF=`output/pdf/iscf_bsca_figure5_20260816.pdf`。
 
-以上未完成实验仍分别需要独立prelaunch与相应授权；Core-Ablation scope已闭合，不自动追加seeds、control或allocation redesign。
+## 5. 当前正文实验闭合状态
+
+Figure 5完成后，Main I、Main II、Efficiency、Core-Ablation、Figure 5与Decoder-Transfer均已有canonical artifact。`Ablation-Sensitivity`继续deferred，不属于当前正文核心闭合；若后续恢复，须单独冻结Appendix grid且不得因已见结果选择性扩张。
+
+当前不自动追加seeds、controls、allocation redesign或新的formal test。
 
 ## 6. 不作为论文表的现有材料
 
 - TimeAlign Table 6 transcription/source inconsistency audit；
 - Main II H720 continuity 与 published-mean signed-deviation audit；
 - resource smoke、checkpoint hash 与 completion manifests；
-- exact CHPC/CHPD、scope utilization与scope-wise regional preference/error等mechanism diagnostics：当前仍按Figure 5/analysis blocks组织，尚未冻结为表；realized allocation value明确不进入当前计划；
-- qualitative trajectory：并入Figure 5，从Full相对frozen matched control提升最清晰的样本之一选择，caption披露comparator、split和selection rule；只作illustrative evidence，不作representative或prevalence claim；不设置独立failure-case figure。
+- exact CHPC/CHPD、scope utilization与scope-wise regional preference/error等mechanism diagnostics：已按Figure 5/analysis blocks完成，不另建论文表；realized allocation value明确排除；
+- qualitative trajectory：已并入Figure 5，并按冻结规则从Full相对`Fixed Scope (s=144)`的完整1,280-row validation pool选择；只作illustrative evidence，不作representative或prevalence claim；不设置独立failure-case figure。
 
 这些材料用于 provenance、protocol disclosure 或图形证据，不应为了增加表格数量而重复进入正文。

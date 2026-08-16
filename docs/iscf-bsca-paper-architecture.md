@@ -1588,6 +1588,8 @@ full-domain implementation的training time与single/all-H latency均不领先，
 
 Realized allocation value当前不纳入该节，以控制额外实验成本。Qualitative trajectory允许从提升最明显的样本中选择，但caption必须披露comparator、split与selection rule，并明确其是illustrative而非representative evidence。该节不设置failure-case panel；aggregate negative cells在5.2--5.3完整报告，并在Discussion中解释。
 
+2026-08-16 validation-only Figure 5 diagnostic已完成：五数据集×四个paper horizons的20/20 numerical CHPC comparisons均为maximum absolute CHPD=0；scope-arm macro region-best随future region在`s=360`、`s=720`与`s=1`之间变化，最大best-to-worst excess MSE为6.123%。但learned probabilities的dataset-region means仅在0.18258--0.21479之间变化，highest-utilization scope只在8/40 dataset-region cells与lowest-MSE scope一致。因此该节只能写exact CHPC、active-but-near-uniform allocation与descriptive scope-arm regional heterogeneity；不能写successful routing、causal specialization或allocation accuracy gain。Qualitative comparator冻结为`Fixed Scope (s=144)`，selected Weather row 77只作performance-selected illustration。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/figure5_mechanism_diagnostics_20260816/result_and_decision.md`。
+
 ### 8.7 Backbone Transferability
 
 选择结构不同的两个 backbones，并把正文表的作者指定数据集范围固定为Weather、ETTm1与ETTm2：

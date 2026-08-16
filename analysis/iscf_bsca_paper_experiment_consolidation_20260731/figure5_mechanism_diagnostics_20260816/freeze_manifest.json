@@ -1,0 +1,21 @@
+{
+  "artifact_id": "ISCF-BSCA-Figure5-v1",
+  "freeze_date": "2026-08-16",
+  "decision": "figure5_complete_mixed_mechanism_evidence",
+  "training_runs": 0,
+  "formal_test_runs": 0,
+  "canonical_outputs": {
+    "paper-figures/figure_iscf_bsca_mechanism.svg": "28302ade483437204761ac3ef29504d2df735aaf59198cb916af0bd13e243b6e",
+    "paper-figures/figure_iscf_bsca_mechanism.pdf": "5fbc5995603bed56598d04c1c06f6b535c61e50e25057994f83a4e9cb71ce4b6",
+    "paper-figures/figure_iscf_bsca_mechanism.png": "49bbc04af848bdac5e16cf4ff28b7782f8dc4613d814b886a392a160cb1f7ca7",
+    "paper-figures/figure_iscf_bsca_mechanism.tiff": "b4a47687d51949cd72b85508c7581a3fcbbb03e19fc337dca21f52c55aadc6e6",
+    "output/pdf/iscf_bsca_figure5_20260816.pdf": "5fbc5995603bed56598d04c1c06f6b535c61e50e25057994f83a4e9cb71ce4b6"
+  },
+  "source_data": {
+    "results/figure5_summary.json": "62e1f8e674f2e9a2d72495784765041ac65732ef4408fefae1dd3a0df1f9e798",
+    "results/chpc_verification.csv": "0f66f5c3c32954b38e730f7a35ee85dfbf4cbd6e99601270ad1dc089c53fcb40",
+    "results/scope_utilization.csv": "ae65ba2e002dba01910f3e77e8c84f73ba3c875bf8b785e1e2293fb8cde82042",
+    "results/scope_regional_error.csv": "8d30691d4eff79e1cc4f87dc6c691405f488aea46b9300afa0323511ae1a50fb",
+    "results/qualitative_source_data.csv": "496cda135c119d1e4e0b7a0552a7a50f68ba47a6187a271b8779eda3d27f3a15"
+  }
+}

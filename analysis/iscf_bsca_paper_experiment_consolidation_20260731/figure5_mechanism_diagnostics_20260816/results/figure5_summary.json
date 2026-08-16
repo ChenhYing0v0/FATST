@@ -1,0 +1,53 @@
+{
+  "checkpoint_objects": 10,
+  "chpc_max_abs": 0.0,
+  "chpc_rows": 20,
+  "claim_boundary": {
+    "forbidden": [
+      "learned allocation improves accuracy over equal fusion",
+      "causal specialization",
+      "universal specialization",
+      "representative or prevalence interpretation of the selected trajectory",
+      "realized allocation value"
+    ],
+    "permitted": [
+      "exact numerical prefix consistency under the frozen implementation",
+      "descriptive region-dependent scope usage",
+      "descriptive scope-wise regional error heterogeneity",
+      "one disclosed performance-selected illustrative trajectory"
+    ]
+  },
+  "datasets": [
+    "Weather",
+    "ETTm1",
+    "ETTh1",
+    "ETTh2",
+    "ETTm2"
+  ],
+  "decision": "figure5_validation_diagnostics_complete_pending_visual_and_claim_audit",
+  "diagnostic_id": "ISCF-BSCA-Figure5-v1",
+  "figure_outputs": {
+    "pdf": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/figure5_mechanism_diagnostics_20260816/results/figure_5_iscf_bsca_mechanism.pdf",
+    "png": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/figure5_mechanism_diagnostics_20260816/results/figure_5_iscf_bsca_mechanism.png",
+    "svg": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/figure5_mechanism_diagnostics_20260816/results/figure_5_iscf_bsca_mechanism.svg",
+    "tiff": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/figure5_mechanism_diagnostics_20260816/results/figure_5_iscf_bsca_mechanism.tiff"
+  },
+  "formal_test_runs": 0,
+  "new_training_runs": 0,
+  "policy_sum_max_abs": 2.384185791015625e-07,
+  "selected_example_interpretation": "performance-selected illustrative evidence only; not representative and not prevalence evidence",
+  "selected_qualitative": {
+    "dataset": "Weather",
+    "fixed_scope_s144_mae": 0.008833490922633145,
+    "fixed_scope_s144_mse": 0.00011227969499407703,
+    "full_mae": 0.00402940810761518,
+    "full_mse": 2.416643226275314e-05,
+    "mae_gain_percent": 54.38487294653757,
+    "mse_gain_percent": 78.47657827710704,
+    "probe_row_index": 77
+  },
+  "status": "complete",
+  "utilization_mse_agreement_cells": 8,
+  "utilization_mse_agreement_total": 40,
+  "validation_only": true
+}

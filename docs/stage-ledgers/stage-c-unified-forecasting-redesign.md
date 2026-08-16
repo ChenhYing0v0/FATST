@@ -22,11 +22,11 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | three-dataset framework portability Step 9--10 complete |
-| `current_candidate` | complete ISCF-BSCA framework transfer result frozen |
-| `latest_decision` | `three_dataset_framework_portability_complete_no_additional_hpo_or_controls` |
+| `current_11_step` | Figure 5 validation diagnostic Step 9--10 complete；paper experiment matrix closed |
+| `current_candidate` | Sections 5--7 evidence-complete manuscript package |
+| `latest_decision` | `figure5_complete_mixed_mechanism_evidence` |
 | `writing_latest_decision` | `main_i_main_ii_author_corrected_20260815_complete_hash_frozen` |
-| `next_required_action` | write Section 5.7 with bounded two-backbone/three-dataset claim；no new transfer experiment |
+| `next_required_action` | consolidate Section 5.1 and draft Sections 5--7 with bounded claims；no new experiment required |
 | `method_training_authorized` | false；no matched controls、extra HPO/seeds or formal test required |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
@@ -70,16 +70,16 @@ Main I与Main II已建立新的author-corrected canonical freeze；旧hash-froze
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Efficiency Step 9--10 complete；Figure 5 Step 6 contract next |
-| `problem` | one-model varied-horizon service相对four-model horizon-specific families的deployment cost实际如何变化 |
-| `existence_evidence` | 35/35 service units、77/77 immutable checkpoint objects；all finite/CV gates pass；test access=0 |
-| `idea` | 同一独占RTX3090、FP32/batch1 synthetic-input contract下比较完整deployed services |
-| `theory_check` | one-model服务一次H720 forward+prefix views；fixed-H families顺序执行四个native models；current ISCF full-domain materialization如实测量 |
-| `design` | 5 systems × 7 datasets；30 warmups；5×100 CUDA-event iterations；params/storage/training/latency/memory/CHPC |
-| `narrative_gate` | 只有实际测量支持时才允许efficiency verb；storage与compute必须分开报告 |
-| `effectiveness_gate` | trade-off：ISCF相对TimeAlign/QDF减少model count、params与storage，但training/latency不领先 |
-| `artifacts` | result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/result_and_table_audit.md`；table=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/table/table_iscf_bsca_efficiency.tex` |
-| `decision` | `efficiency_complete_tradeoff_supported_no_uniform_compute_advantage`；不宣称faster training/inference或prefix-bounded speedup |
+| `current_step` | Figure 5 Step 9--10 complete；all current main-text experiment blocks complete |
+| `problem` | trained ISCF-BSCA是否满足CHPC，以及learned scope usage是否与scope-wise regional error preference一致 |
+| `existence_evidence` | 10/10 frozen validation artifacts；20/20 CHPC cells为0；scope-arm regional heterogeneity存在，但allocation-error agreement仅8/40 |
+| `idea` | 复用Full与Fixed Scope validation diagnostics，完整汇总scope utilization/error并按冻结规则选择一个illustrative trajectory |
+| `theory_check` | CHPC与accuracy分离；regional arm errors不等于successful allocation；selected case不能补救failed matched control |
+| `design` | 5 datasets × Full/Fixed artifacts；all validation rows；1,280-row qualitative pool；training/test=0 |
+| `narrative_gate` | 只允许exact CHPC、descriptive regional scope-error heterogeneity与near-uniform allocation；禁止causal specialization |
+| `effectiveness_gate` | mixed：CHPC pass；arm heterogeneity present；learned allocation alignment weak and accuracy utility unsupported |
+| `artifacts` | result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/figure5_mechanism_diagnostics_20260816/result_and_decision.md`；figure=`paper-figures/figure_iscf_bsca_mechanism.svg` |
+| `decision` | `figure5_complete_mixed_mechanism_evidence`；paper experiment matrix closed，next=Sections 5--7 prose |
 
 ## PatchTST Decoder-Transfer HPO v2 Record (2026-08-15)
 

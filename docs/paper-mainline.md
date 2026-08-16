@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Decoder-Transfer三数据集framework-level evidence complete；无新增HPO/control实验 |
+| `current_11_step` | Figure 5 validation diagnostics complete；current main-text experiment matrix closed |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,7 +18,9 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；Core-Ablation 3/4 controls pass；完整ISCF-BSCA在Weather/ETTm1/ETTm2及DLinear/PatchTST两类backbones上支持限定portability；Efficiency只支持trade-off；allocation独立accuracy claim unsupported |
+| `paper_core_status` | architecture family frozen；Main I/II、Efficiency、Core-Ablation、Figure 5与Decoder-Transfer complete；allocation独立accuracy claim unsupported；Sections 5--7 ready for prose |
+
+[Figure 5 Mechanism Diagnostics Closure, 2026-08-16] 复用5个Full与5个`Fixed Scope (s=144)`冻结validation artifacts完成Section 5.6 evidence；new training/formal test=`0/0`。五数据集×四H的20/20 numerical CHPC comparisons均为maximum absolute CHPD=0。Scope-arm macro region-best随future region在`s=360`、`s=720`与`s=1`间变化，最大best-to-worst excess MSE=`6.123%`；但learned probabilities总体接近均匀（dataset-region means=`0.18258--0.21479`），highest-utilization仅在`8/40` cells与lowest-MSE scope一致。该混合结果支持exact CHPC与descriptive scope-arm regional heterogeneity，不支持successful allocation、causal specialization或allocation accuracy gain。Qualitative panel按完整1,280-row validation pool的冻结规则选择Weather row 77，只作illustrative evidence。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/figure5_mechanism_diagnostics_20260816/result_and_decision.md`；figure=`paper-figures/figure_iscf_bsca_mechanism.svg`。Decision=`figure5_complete_mixed_mechanism_evidence`；current main-text experiment matrix closed。
 
 [Decoder-Transfer Framework-Level Closure, 2026-08-16] 作者明确本节只证明完整ISCF-BSCA framework的可迁移性与通用适用性，不区分ISCF与BSCA内部贡献；component attribution继续由Core-Ablation承担。正文Table 5因此只保留Original Decoder与ISCF-BSCA两行，范围为Weather、ETTm1、ETTm2以及DLinear-style、PatchTST-style两类backbones，共48个underlying four-H cells。完整framework相对Original的macro MSE/MAE收益分别为DLinear-style `+4.915%/+3.276%`、PatchTST-style `+1.268%/+0.192%`；PatchTST赢3/3 dataset mean MSE、9/12 MSE cells与8/12 MAE cells。该结果关闭额外BSCA HPO与matched `+ISCF`补训需求。范围仍标记`author_refined_posthoc_scope`，test-tuned profile选择与ETTh1/ETTh2负向five-dataset evidence继续披露；claim限定为evaluated two-backbone/three-dataset scope。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/result_and_next_gate.md`。Decision=`three_dataset_framework_portability_complete_no_additional_hpo_or_controls`。
 
