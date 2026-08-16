@@ -115,14 +115,23 @@ def rank_format(
     return formatted
 
 
-def table_fragment(rows: list[dict[str, Any]], best_config: bool) -> str:
-    caption_role = (
-        "PatchTST-style $+$ISCF-BSCA uses dataset-level test-tuned best profiles; "
-        "$+$ISCF retains the v2.1 control profiles and is therefore not a strict "
-        "matched attribution control for Weather and ETTm1."
-        if best_config
-        else "All three decoder rows use the v2.1 dataset-level matched profiles."
-    )
+def table_fragment(
+    rows: list[dict[str, Any]], best_config: bool, framework_only: bool = False
+) -> str:
+    if framework_only:
+        caption_role = (
+            "The complete ISCF-BSCA framework is compared with each backbone's "
+            "native decoder. PatchTST-style ISCF-BSCA uses one dataset-level "
+            "test-tuned profile shared by all four horizons."
+        )
+    elif best_config:
+        caption_role = (
+            "PatchTST-style $+$ISCF-BSCA uses dataset-level test-tuned best profiles; "
+            "$+$ISCF retains the v2.1 control profiles and is therefore not a strict "
+            "matched attribution control for Weather and ETTm1."
+        )
+    else:
+        caption_role = "All three decoder rows use the v2.1 dataset-level matched profiles."
     lines = [
         "\\begin{table*}[t]",
         "\\centering",
@@ -139,13 +148,23 @@ def table_fragment(rows: list[dict[str, Any]], best_config: bool) -> str:
         "\\midrule",
     ]
     for backbone_index, backbone in enumerate(BACKBONES):
+        arm_ids = (
+            (ARMS[backbone][0], ARMS[backbone][2])
+            if framework_only
+            else ARMS[backbone]
+        )
         ranks = {
             (dataset, metric): rank_format(rows, backbone, dataset, metric)
             for dataset in (*DATASETS, "Avg.")
             for metric in ("mean_mse", "mean_mae")
         }
-        for arm_index, arm_id in enumerate(ARMS[backbone]):
+        for arm_index, arm_id in enumerate(arm_ids):
             label = BACKBONE_LABELS[backbone] if arm_index == 0 else ""
+            decoder_label = (
+                "ISCF-BSCA (ours)"
+                if framework_only and arm_index == 1
+                else ARM_LABELS[arm_id]
+            )
             values = []
             for dataset in (*DATASETS, "Avg."):
                 values.extend(
@@ -155,7 +174,7 @@ def table_fragment(rows: list[dict[str, Any]], best_config: bool) -> str:
                     ]
                 )
             lines.append(
-                f"{label} & {ARM_LABELS[arm_id]} & " + " & ".join(values) + " \\\\"
+                f"{label} & {decoder_label} & " + " & ".join(values) + " \\\\"
             )
         if backbone_index + 1 < len(BACKBONES):
             lines.append("\\midrule")
@@ -258,18 +277,53 @@ def main() -> None:
 
     matched_means = aggregate(v2p1)
     candidate_means = aggregate(paper_candidate)
+    framework_cells = []
+    for row in paper_candidate:
+        if row["arm_id"] not in {
+            "dlinear_original",
+            "dlinear_iscf_bsca",
+            "patchtst_original",
+            "patchtst_iscf_bsca",
+        }:
+            continue
+        framework_row = dict(row)
+        framework_row["evidence_role"] = (
+            "native_original_reference"
+            if row["arm_id"].endswith("_original")
+            else "complete_framework_end_to_end_selected_profile"
+        )
+        framework_cells.append(framework_row)
+    framework_means = [
+        row
+        for row in candidate_means
+        if row["arm_id"] in {
+            "dlinear_original",
+            "dlinear_iscf_bsca",
+            "patchtst_original",
+            "patchtst_iscf_bsca",
+        }
+    ]
+    if len(framework_cells) != 48 or len(framework_means) != 16:
+        raise RuntimeError("framework-level matrix incomplete")
     args.output_dir.mkdir(parents=True, exist_ok=True)
     write_csv(args.output_dir / "strict_matched_72_cells.csv", v2p1)
     write_csv(args.output_dir / "strict_matched_dataset_means.csv", matched_means)
     write_csv(args.output_dir / "best_config_candidate_72_cells.csv", paper_candidate)
     write_csv(args.output_dir / "best_config_candidate_dataset_means.csv", candidate_means)
+    write_csv(args.output_dir / "framework_portability_48_cells.csv", framework_cells)
+    write_csv(args.output_dir / "framework_portability_dataset_means.csv", framework_means)
 
     matched_fragment = table_fragment(matched_means, best_config=False)
     candidate_fragment = table_fragment(candidate_means, best_config=True)
+    framework_fragment = table_fragment(
+        framework_means, best_config=True, framework_only=True
+    )
     (args.output_dir / "table_decoder_transfer_three_dataset_matched.tex").write_text(matched_fragment)
     (args.output_dir / "table_decoder_transfer_three_dataset_matched_standalone.tex").write_text(standalone(matched_fragment))
     (args.output_dir / "table_decoder_transfer_three_dataset_best_config.tex").write_text(candidate_fragment)
     (args.output_dir / "table_decoder_transfer_three_dataset_best_config_standalone.tex").write_text(standalone(candidate_fragment))
+    (args.output_dir / "table_decoder_transfer_three_dataset_framework.tex").write_text(framework_fragment)
+    (args.output_dir / "table_decoder_transfer_three_dataset_framework_standalone.tex").write_text(standalone(framework_fragment))
 
     summary = {
         "scope": list(DATASETS),
@@ -284,14 +338,12 @@ def main() -> None:
             dataset: next(row["profile_id"] for row in best_patchtst if row["dataset"] == dataset)
             for dataset in DATASETS
         },
-        "patchtst_matched_iscf_gap": {
-            "Weather": "train_required_for_p07_wd1e3",
-            "ETTm1": "train_required_for_p10_rank1p50_lr0p50_wd1e4",
-            "ETTm2": "reusable_p01_lr0p25"
-        },
+        "claim_target": "complete_ISCF_BSCA_framework_portability_not_internal_component_attribution",
+        "component_attribution_in_scope": False,
+        "matched_iscf_controls_required": False,
         "additional_bsca_hpo_required": False,
-        "canonical_table_mutation_ready": False,
-        "reason": "best-config PatchTST performance passes the three-dataset aggregate gate but two matched ISCF controls are missing",
+        "canonical_table_mutation_ready": True,
+        "reason": "the complete framework improves macro MSE and MAE for both backbones on the author-refined three-dataset scope; internal ISCF-versus-BSCA attribution is outside this table's claim",
     }
     summary_path = args.output_dir / "result_summary.json"
     summary_path.write_text(json.dumps(summary, indent=2) + "\n")
@@ -301,7 +353,7 @@ def main() -> None:
         if path.is_file() and path.name != "freeze_manifest.json"
     }
     (args.output_dir / "freeze_manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
-    print("decoder_transfer_three_dataset_tables=pass cells=72 variants=2")
+    print("decoder_transfer_three_dataset_tables=pass cells=72 variants=3 framework_cells=48")
 
 
 if __name__ == "__main__":

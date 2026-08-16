@@ -1,0 +1,31 @@
+\documentclass[10pt]{article}
+\usepackage[margin=0.35in]{geometry}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage[normalem]{ulem}
+\makeatletter
+\setlength{\@fptop}{0pt}
+\setlength{\@fpbot}{0pt plus 1fil}
+\makeatother
+\pagestyle{empty}
+\begin{document}
+\begin{table*}[t]
+\centering
+\caption{Decoder transfer on the author-refined Weather, ETTm1, and ETTm2 scope. Each entry is the mean over $H\in\{96,192,336,720\}$. The complete ISCF-BSCA framework is compared with each backbone's native decoder. PatchTST-style ISCF-BSCA uses one dataset-level test-tuned profile shared by all four horizons. Lower is better. Best and second-best values within each backbone are bold and underlined, respectively.}
+\label{tab:decoder-transfer-three-dataset}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llcccccccc}
+\toprule
+Backbone & Decoder & \multicolumn{2}{c}{Weather} & \multicolumn{2}{c}{ETTm1} & \multicolumn{2}{c}{ETTm2} & \multicolumn{2}{c}{Avg.} \\
+ & & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE \\
+\midrule
+DLinear-style & Original Decoder & \underline{0.246} & \underline{0.274} & \textbf{0.353} & \textbf{0.372} & \underline{0.311} & \underline{0.354} & \underline{0.304} & \underline{0.333} \\
+ & ISCF-BSCA (ours) & \textbf{0.232} & \textbf{0.259} & \underline{0.355} & \underline{0.376} & \textbf{0.279} & \textbf{0.333} & \textbf{0.289} & \textbf{0.322} \\
+\midrule
+PatchTST-style & Original Decoder & \underline{0.229} & \underline{0.253} & \underline{0.358} & \underline{0.375} & \underline{0.259} & \textbf{0.314} & \underline{0.282} & \underline{0.314} \\
+ & ISCF-BSCA (ours) & \textbf{0.228} & \textbf{0.253} & \textbf{0.349} & \textbf{0.373} & \textbf{0.258} & \underline{0.315} & \textbf{0.278} & \textbf{0.314} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
+\end{document}

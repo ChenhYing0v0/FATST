@@ -34,12 +34,10 @@
     "ETTm1": "p10_rank1p50_lr0p50_wd1e4",
     "ETTm2": "p01_lr0p25"
   },
-  "patchtst_matched_iscf_gap": {
-    "Weather": "train_required_for_p07_wd1e3",
-    "ETTm1": "train_required_for_p10_rank1p50_lr0p50_wd1e4",
-    "ETTm2": "reusable_p01_lr0p25"
-  },
+  "claim_target": "complete_ISCF_BSCA_framework_portability_not_internal_component_attribution",
+  "component_attribution_in_scope": false,
+  "matched_iscf_controls_required": false,
   "additional_bsca_hpo_required": false,
-  "canonical_table_mutation_ready": false,
-  "reason": "best-config PatchTST performance passes the three-dataset aggregate gate but two matched ISCF controls are missing"
+  "canonical_table_mutation_ready": true,
+  "reason": "the complete framework improves macro MSE and MAE for both backbones on the author-refined three-dataset scope; internal ISCF-versus-BSCA attribution is outside this table's claim"
 }

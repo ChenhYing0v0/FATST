@@ -51,7 +51,7 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 | `Main-I-Exchange` | Supplementary companion | `complete_limited_surface` | ISCF-BSCA / TimeAlign / QDF × Exchange × 4 H | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_h5d_bs16_lr2p4_synced_20260813/table_exchange_companion.tex` | Exchange 的部分系统背景；不能表述为完整 Main I extension |
 | `Efficiency` | 正文 supporting result | `complete_hash_frozen_tradeoff_supported_no_uniform_compute_advantage` | 5 systems × 7 datasets；35/35 service units / 77 checkpoint objects | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/table/table_iscf_bsca_efficiency.tex` | 支持one-model consolidation、architectural CHPC及相对four-model TimeAlign/QDF的parameter/storage reduction；不支持uniform training/latency/computation advantage |
 | `Core-Ablation` | 正文 mechanism attribution | `complete_hash_frozen_partial_attribution_3_of_4_controls` | 5 variants × 5 datasets × 4 H；100/100 cells，25 checkpoints（5 reused + 20 new） | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/table/table_iscf_bsca_core_ablation.tex` | 支持BSCA objective、scope-specific projections与multi-scope design；不支持learned Target-Adaptive Allocation相对equal fusion的独立accuracy utility |
-| `Decoder-Transfer` | 正文 transfer evidence | `three_dataset_best_config_candidate_two_matched_controls_pending` | 2 backbones × 3 decoder rows × 3 datasets；每cell为four-H mean；72 underlying cells | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/table_decoder_transfer_three_dataset_best_config.tex` | 作者后置收窄范围内DLinear与PatchTST best-config均双指标正向；PatchTST Weather/ETTm1尚缺同profile matched +ISCF，five-dataset negative audit必须保留 |
+| `Decoder-Transfer` | 正文 transfer evidence | `complete_framework_portability_author_refined_scope` | 2 backbones × 2 systems × 3 datasets；每cell为four-H mean；48 underlying cells | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/table_decoder_transfer_three_dataset_framework.tex` | 完整ISCF-BSCA framework在DLinear-style与PatchTST-style两类backbones上均取得三数据集macro MSE/MAE双正向；不作内部ISCF-vs-BSCA attribution，five-dataset negative audit保留 |
 | `Ablation-Sensitivity` | Appendix | `deferred_outside_current_core_closure` | random partition、scope count、$\lambda$ sensitivity | 尚无正式表 | 当前不纳入核心闭合；若恢复仅作sensitivity/robustness，canonical grouping不作为既定正向结论 |
 
 ## 4. 已完成主表结果摘要
@@ -89,10 +89,10 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 ### Decoder-Transfer
 
 - 正文范围按作者要求收窄为Weather、ETTm1、ETTm2；该范围在观察five-dataset结果后确定，因此标为`author_refined_posthoc_scope`，ETTh1/ETTh2负向证据移至完整audit/limitations而非删除；
-- 三数据集严格matched v2.1中DLinear BSCA vs Original=`+4.915%/+3.276%`，PatchTST BSCA vs Original=`+0.605%/-0.379%`；
-- PatchTST完整HPO best-config在三数据集上为`+1.268% MSE / +0.192% MAE`，3/3 dataset mean MSE wins、9/12 MSE cells与8/12 MAE cells；因此不再增加BSCA HPO；
-- best-config表的Weather `p07_wd1e3`与ETTm1 `p10_rank1p50_lr0p50_wd1e4`缺同profile matched +ISCF controls；ETTm2 `p01_lr0p25`可复用。两个controls闭合前，表只支持Full decoder相对Original的performance portability，不支持BSCA-vs-ISCF归因；
-- three-dataset gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/result_and_next_gate.md`；best-config PDF=`output/pdf/iscf_bsca_decoder_transfer_three_dataset_best_config_20260816.pdf`；strict-matched PDF=`output/pdf/iscf_bsca_decoder_transfer_three_dataset_matched_20260816.pdf`；
+- 正文不再区分ISCF与BSCA内部贡献，只比较完整ISCF-BSCA framework与各backbone的native Original Decoder；Core-Ablation独立承担component attribution；
+- DLinear-style与PatchTST-style完整framework在三数据集上分别为`+4.915%/+3.276%`与`+1.268%/+0.192%` macro MSE/MAE；PatchTST为3/3 dataset mean MSE wins、9/12 MSE cells与8/12 MAE cells；
+- 当前结果已闭合framework-level portability claim，不增加BSCA HPO，也不补Weather/ETTm1 `+ISCF` controls；
+- three-dataset gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/result_and_next_gate.md`；canonical PDF=`output/pdf/iscf_bsca_decoder_transfer_three_dataset_framework_20260816.pdf`；
 
 以下为five-dataset historical audit，继续作为supplementary/limitations evidence保留，不覆盖上述三数据集paper candidate：
 
@@ -107,7 +107,7 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 - auxiliary iTransformer rescue也为负：14-profile × 5-dataset test-tuned HPO相对旧iTransformer BSCA改善macro MSE/MAE `2.128%/1.719%`，但相对native Original仍为`-0.505%/-0.750%`；因此canonical two-backbone table不改，且不得用4/5 dataset MSE wins掩盖ETTh1与macro fail；
 - iTransformer auxiliary audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_hpo_v2_20260816/formal_results/result_and_decision.md`；该证据为test-tuned negative result，不是新增paper table column；
 - PatchTST parent-HPO full unique audit补测35个未测unique checkpoints并闭合40 unique/160 cells、200 expanded cells与220 candidate cells；mean-MSE selector相对Original为`+0.134% MSE / -0.253% MAE`，MSE-only转正但joint gate失败；161,051种dataset-profile组合中没有macro MSE/MAE双正向方案；
-- PatchTST full-audit result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_test_tuned_full_20260816/formal_results/result_and_decision.md`；canonical v2.1 table和PDF保持不变；
+- PatchTST full-audit result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_test_tuned_full_20260816/formal_results/result_and_decision.md`；v2.1三臂表与PDF保留为historical diagnostic，正文canonical已由48-cell framework table supersede；
 - canonical audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_v2p1_20260815/formal_results/result_and_table_audit.md`；review PDF=`output/pdf/iscf_bsca_decoder_transfer_v2p1_20260815.pdf`。
 
 ### Efficiency

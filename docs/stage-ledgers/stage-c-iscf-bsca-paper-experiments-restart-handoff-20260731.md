@@ -44,18 +44,18 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `performance_partial_pass`；Core-Ablation 3/4 controls pass；allocation独立accuracy attribution失败 |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | Decoder-Transfer three-dataset consolidation complete；2 matched `+ISCF` controls pending authorization |
+| `active_experiment_step` | Decoder-Transfer three-dataset framework-level evidence complete |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none；PatchTST BSCA HPO closed for Weather/ETTm1/ETTm2 scope |
 | `local_audit_and_design_authorized` | true |
-| `local_protocol_patch_authorized` | false for new matched-control work |
+| `local_protocol_patch_authorized` | false；no new transfer patch required |
 | `remote_training_authorized` | false；本轮未训练，只复用既有parent HPO checkpoints |
 | `test_tuned_hpo_authorized` | true；dataset-level four-H mean official-test MSE selector；per-H/cell selection=false |
 | `formal_test_authorized` | consumed and complete；40 unique checkpoints中复用5个已测artifact，新增35 checkpoints / 140 cells |
-| `next_action` | request staged authorization for Weather/ETTm1 same-profile `+ISCF` controls；no additional BSCA HPO |
+| `next_action` | paper writing/claim integration；no additional transfer HPO, training or formal test |
 | `conditional_next` | allocation effectiveness claim必须保持negative/unsupported；不得用Figure 5 diagnostics补救failed matched control |
 
-2026-08-16作者将Decoder-Transfer main-text scope限定为Weather、ETTm1、ETTm2。该scope为读取five-dataset结果后的`author_refined_posthoc_scope`，ETTh1/ETTh2负结果继续保留。严格matched v2.1中DLinear-style相对Original=`+4.915%/+3.276%` MSE/MAE，PatchTST-style=`+0.605%/-0.379%`。从完整冻结HPO formal pool按dataset-level four-H mean test MSE选profile后，PatchTST相对Original=`+1.268%/+0.192%`，dataset/cell wins=`3/3, 9/12 MSE, 8/12 MAE`。不需要再扩展BSCA HPO；但Weather `p07_wd1e3`和ETTm1 `p10_rank1p50_lr0p50_wd1e4`缺同profile `+ISCF` controls，ETTm2 `p01_lr0p25`可复用。当前只能形成performance candidate；matched attribution与canonical promotion待2 training runs、2 unique hashes和8 formal cells，且均未授权。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/result_and_next_gate.md`。Decision=`three_dataset_best_config_performance_pass_two_matched_iscf_controls_required`。
+2026-08-16作者明确Decoder-Transfer只证明完整ISCF-BSCA framework的可迁移性，不区分ISCF与BSCA内部贡献。正文scope为Weather、ETTm1、ETTm2与DLinear-style/PatchTST-style；canonical table只比较Original Decoder和complete framework，共48 cells。两类backbone相对Original的macro MSE/MAE分别为`+4.915%/+3.276%`与`+1.268%/+0.192%`，PatchTST dataset/cell wins=`3/3, 9/12 MSE, 8/12 MAE`。该scope为`author_refined_posthoc_scope`，ETTh1/ETTh2负结果与test-tuned disclosure保留。Framework-level evidence已闭合，不补Weather/ETTm1 `+ISCF` controls，不继续HPO/training/formal test。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/result_and_next_gate.md`。Decision=`three_dataset_framework_portability_complete_no_additional_hpo_or_controls`。
 
 2026-08-16用户明确授权补测parent PatchTST decoder-HPO中全部未测unique checkpoints，并允许按每个dataset的four-H mean official-test MSE反选一个shared profile。冻结输入为50 training objects / 40 unique hashes；复用v2.1已测5个unique checkpoints，只新增35 checkpoint jobs / 140 cells，最终扩回10 profiles × 5 datasets × four H=`200` cells，并加入v1 BSCA reference形成220-cell candidate pool。禁止per-H/seed/metric/cell selection；即使performance gate通过，在补齐selected-profile matched +ISCF controls前也只能是`performance_partial_pass`，canonical table不自动修改。Canonical gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_test_tuned_full_20260816/design_and_prelaunch_gate.md`。Decision=`patchtst_parent_hpo_40_unique_manifest_frozen_35_missing_formal_tests_authorized`。
 

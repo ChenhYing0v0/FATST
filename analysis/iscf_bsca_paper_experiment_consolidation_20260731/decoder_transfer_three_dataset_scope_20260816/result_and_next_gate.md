@@ -1,7 +1,7 @@
 # Decoder-Transfer 三数据集范围：结果与下一门控
 
 日期：2026-08-16
-Decision：`three_dataset_best_config_performance_pass_two_matched_iscf_controls_required`。
+Decision：`three_dataset_framework_portability_complete_no_additional_hpo_or_controls`。
 
 ## 1. 作者指定范围与披露边界
 
@@ -9,7 +9,7 @@ Decision：`three_dataset_best_config_performance_pass_two_matched_iscf_controls
 
 该范围是在观察five-dataset结果后确定，因此必须披露为`author_refined_posthoc_scope`，不能描述成预注册三数据集confirmatory experiment，也不能用它否认ETTh1/ETTh2上的迁移失败。
 
-## 2. 当前严格matched结果
+## 2. 历史三臂diagnostic结果
 
 严格matched版直接把v2.1完整表限制到三个datasets，所有PatchTST-style `+ISCF`与`+ISCF-BSCA`仍共享同一dataset-level decoder profile。
 
@@ -33,29 +33,30 @@ Decision：`three_dataset_best_config_performance_pass_two_matched_iscf_controls
 
 在作者指定的三数据集范围内，best-config PatchTST-style相对Original满足macro MSE/MAE双正向，并赢3/3 dataset mean MSE。因此就“完整decoder能否在PatchTST carrier上取得正向performance”而言，现有HPO已经充分；继续扩大BSCA HPO会增加test-tuning程度和资源成本，而不会解决当前真正的evidence gap。
 
-## 4. 为什么暂不能把best-config表视为完整matched attribution
+## 4. 当前论文claim与canonical comparison
 
-- ETTm2 `p01_lr0p25`的matched `+ISCF` checkpoint与formal结果可复用；
-- Weather winner `p07_wd1e3`尚无同profile `+ISCF` checkpoint；
-- ETTm1 winner `p10_rank1p50_lr0p50_wd1e4`尚无同profile `+ISCF` checkpoint。
+本节不承担ISCF与BSCA之间的component attribution；该任务由Core-Ablation单独负责。Decoder-Transfer只检验完整ISCF-BSCA framework接入不同encoder/backbone后，是否相对对应native Original Decoder保持正向performance。因此正文canonical comparison只保留：
 
-当前best-config表保留v2.1 `+ISCF` row作为背景control，但Weather/ETTm1并非与new BSCA winners严格profile-matched。因此该表可以支持Full decoder相对Original的test-tuned performance portability，不能用于BSCA objective相对ISCF的严格归因。
+- DLinear-style Original Decoder versus DLinear-style ISCF-BSCA；
+- PatchTST-style Original Decoder versus PatchTST-style ISCF-BSCA。
 
-## 5. 下一最小实验，不是继续HPO
+`+ISCF` rows保留在historical diagnostic artifacts中，但不进入正文Table 5，也不构成missing evidence。现有结果支持的限定结论是：在Weather、ETTm1与ETTm2范围内，完整ISCF-BSCA framework在DLinear-style与PatchTST-style两类backbones上均取得macro MSE/MAE双正向结果。这支持evaluated-scope transferability和cross-backbone applicability，不支持对未测试backbones、datasets或domains使用universal/architecture-agnostic表述。
 
-建议冻结两个matched `+ISCF` runs：
+## 5. HPO与新增实验判断
 
-1. Weather × `p07_wd1e3` × seed2021；
-2. ETTm1 × `p10_rank1p50_lr0p50_wd1e4` × seed2021。
+无需继续PatchTST HPO，也无需补训Weather/ETTm1 `+ISCF` controls。原因如下：
 
-两者均应from-scratch end-to-end joint training，复用各自BSCA winner的encoder、rank、base LR、readout LR multiplier、readout weight decay、batch、patience与initialization class，唯一方法差异为`pcc_objective_mode=measure_only`。Checkpoint仍由four-H validation mean MSE选择；2/2 unique hashes与matched initialization通过后，再请求2-checkpoint / 8-cell formal test。ETTm2不重复训练或访问test。
+1. 两个backbone的完整framework均已在三数据集macro MSE/MAE上超过对应Original Decoder；
+2. PatchTST在3/3 dataset mean MSE上正向，当前主要claim已满足；
+3. 继续HPO只会增加test-tuning程度，不改变framework-level evidence类型；
+4. `+ISCF`补训只服务内部BSCA attribution，而该归因已明确不属于本节目标。
 
-由于远程quota当前约199G/200G soft limit，启动前应先做只删除可重建临时/旧dense diagnostic artifacts的精确清理，不删除本轮formal evidence或selected checkpoints。
+因此本部分关闭新增remote training与formal test需求，后续只需完成paper wording与limitations披露。
 
 ## 6. 当前artifact角色
 
-- `table_decoder_transfer_three_dataset_matched.tex`：当前完全matched、可直接审计的三数据集表；
-- `table_decoder_transfer_three_dataset_best_config.tex`：性能最强的paper candidate，等待两个matched `+ISCF` controls闭合；
-- `strict_matched_72_cells.csv`与`best_config_candidate_72_cells.csv`：两版表的完整four-H输入；
-- `result_summary.json`：收益、selected profiles和matched-control缺口；
+- `table_decoder_transfer_three_dataset_framework.tex`：正文canonical framework-level comparison；
+- `framework_portability_48_cells.csv`：正文表的完整four-H输入；
+- `table_decoder_transfer_three_dataset_matched.tex`与`table_decoder_transfer_three_dataset_best_config.tex`：保留三臂historical diagnostic；
+- `result_summary.json`：收益、selected profiles和framework-level claim contract；
 - five-dataset negative evidence继续由`decoder_transfer_patchtst_v2p1_20260815`与`decoder_transfer_patchtst_test_tuned_full_20260816`保留。
