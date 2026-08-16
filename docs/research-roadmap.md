@@ -6,6 +6,8 @@ Current cursor=`Step 7 complete -> 40 unique checkpoint manifest frozen -> 35 mi
 
 该candidate显式为`test_informed/test_tuned`；per-H/seed/metric/cell反选与partial reporting均禁止。Gate仍要求相对Original Decoder macro MSE/MAE均正且dataset MSE wins>=3/5。若通过但缺少selected-profile matched +ISCF controls，只能得到`performance_partial_pass`并另行冻结matched training；若失败，保留PatchTST负结论且不继续扩展search。Canonical gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_test_tuned_full_20260816/design_and_prelaunch_gate.md`；Decision=`patchtst_parent_hpo_40_unique_manifest_frozen_35_missing_formal_tests_authorized`。
 
+Formal closure：40/40 unique checkpoints、160/160 unique cells、200/200 expanded profile cells与220/220 candidate-pool cells完整。Mean-MSE selector相对Original为`+0.134% MSE / -0.253% MAE`，dataset/cell MSE wins=`3/5,11/20`，因此双指标gate FAIL。完整枚举`11^5=161,051`种dataset-profile组合也没有macro MSE/MAE同时正向方案；ETTh1/ETTh2不存在双指标正向profile。没有numeric/artifact pathology，rollback关闭PatchTST rescue并返回Figure 5 paper closure。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_test_tuned_full_20260816/formal_results/result_and_decision.md`；Decision=`full_unique_audit_complete_mse_only_partial_gain_bidirectional_metric_gate_failed`。
+
 ## iTransformer-style Decoder-HPO v2 Formal Closure (2026-08-16)
 
 Current cursor=`Step 9--10 complete -> performance gate fail -> rollback closes iTransformer decoder rescue`。用户在v1 formal negative result后显式重启iTransformer decoder-HPO，并允许official-test dataset-level反选。新candidate=`ISCF-BSCA-DECODER-TRANSFER-ITRANSFORMER-HPO-v2`，明确标记`test_informed/test_tuned`。

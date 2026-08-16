@@ -1,0 +1,6 @@
+dataset,profile_id,mean_mse,mean_mae,cell_count,selection_rule
+Weather,p07_wd1e3,0.22809199560753546,0.25265780910416763,4,minimum_four_horizon_mean_official_test_mse
+ETTm1,p10_rank1p50_lr0p50_wd1e4,0.34922470941095024,0.3728423330849723,4,minimum_four_horizon_mean_official_test_mse
+ETTm2,p01_lr0p25,0.25802432616197823,0.3150453786515293,4,minimum_four_horizon_mean_official_test_mse
+ETTh1,p01_lr0p25,0.398304992532832,0.41942826386195337,4,minimum_four_horizon_mean_official_test_mse
+ETTh2,p01_lr0p25,0.31543102503404297,0.3636262833307987,4,minimum_four_horizon_mean_official_test_mse

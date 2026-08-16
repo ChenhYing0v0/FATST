@@ -1,0 +1,33 @@
+{
+  "pass": false,
+  "candidate_version": "ISCF-BSCA-DECODER-TRANSFER-PATCHTST-HPO-v2-TT",
+  "unique_checkpoint_jobs": 40,
+  "reused_formal_jobs": 5,
+  "new_formal_jobs": 35,
+  "unique_formal_cells": 160,
+  "expanded_profile_cells": 200,
+  "candidate_pool_cells": 220,
+  "test_access_dates": [
+    "2026-08-15",
+    "2026-08-16"
+  ],
+  "selected_profile_by_dataset": {
+    "Weather": "p07_wd1e3",
+    "ETTm1": "p10_rank1p50_lr0p50_wd1e4",
+    "ETTm2": "p01_lr0p25",
+    "ETTh1": "p01_lr0p25",
+    "ETTh2": "p01_lr0p25"
+  },
+  "selected_vs_original_macro_mse_gain_percent": 0.13356362342957487,
+  "selected_vs_original_macro_mae_gain_percent": -0.2532299377841491,
+  "selected_vs_original_dataset_mse_wins": 3,
+  "selected_vs_original_mse_cell_wins": 11,
+  "selected_vs_original_mae_cell_wins": 9,
+  "checkpoint_nonmutation": true,
+  "all_negative_trials_retained": true,
+  "per_horizon_seed_metric_or_cell_selection": false,
+  "test_tuned": true,
+  "matched_iscf_attribution_required_if_pass": false,
+  "canonical_table_mutation_authorized": false,
+  "formal_artifact_manifest_sha256": "5daa6ec83b8df240cd053ec0940421b3bcf918fb6743cb08b943c1785c48ff2e"
+}

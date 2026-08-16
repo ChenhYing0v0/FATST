@@ -44,18 +44,20 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `performance_partial_pass`；Core-Ablation 3/4 controls pass；allocation独立accuracy attribution失败 |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | PatchTST parent-HPO 40-unique-checkpoint test-tuned full audit Step 7 complete；formal launch next |
+| `active_experiment_step` | PatchTST full unique-checkpoint test-tuned audit Step 9--10 complete；joint gate fail |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | test-informed PatchTST decoder-HPO v2 full unique-checkpoint audit |
 | `local_audit_and_design_authorized` | true |
 | `local_protocol_patch_authorized` | true；2026-08-16用户授权补测全部未测PatchTST unique checkpoints |
-| `remote_training_authorized` | false；本轮只复用既有parent HPO checkpoints |
+| `remote_training_authorized` | false；本轮未训练，只复用既有parent HPO checkpoints |
 | `test_tuned_hpo_authorized` | true；dataset-level four-H mean official-test MSE selector；per-H/cell selection=false |
-| `formal_test_authorized` | true；40 unique checkpoints中复用5个已测artifact，只新增35 checkpoints / 140 cells |
-| `next_action` | run complete PatchTST unique-checkpoint formal audit；dataset-level four-H mean test MSE selection；report full negative trials |
+| `formal_test_authorized` | consumed and complete；40 unique checkpoints中复用5个已测artifact，新增35 checkpoints / 140 cells |
+| `next_action` | close decoder rescue；preserve DLinear positive and PatchTST/iTransformer negative boundaries；return to Figure 5 paper closure |
 | `conditional_next` | allocation effectiveness claim必须保持negative/unsupported；不得用Figure 5 diagnostics补救failed matched control |
 
 2026-08-16用户明确授权补测parent PatchTST decoder-HPO中全部未测unique checkpoints，并允许按每个dataset的four-H mean official-test MSE反选一个shared profile。冻结输入为50 training objects / 40 unique hashes；复用v2.1已测5个unique checkpoints，只新增35 checkpoint jobs / 140 cells，最终扩回10 profiles × 5 datasets × four H=`200` cells，并加入v1 BSCA reference形成220-cell candidate pool。禁止per-H/seed/metric/cell selection；即使performance gate通过，在补齐selected-profile matched +ISCF controls前也只能是`performance_partial_pass`，canonical table不自动修改。Canonical gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_test_tuned_full_20260816/design_and_prelaunch_gate.md`。Decision=`patchtst_parent_hpo_40_unique_manifest_frozen_35_missing_formal_tests_authorized`。
+
+Formal audit于14:15:06闭合40/40 unique checkpoints与160/160 unique cells；expanded profile matrix=200/200，candidate pool=220/220。Mean-MSE selector相对Original为`+0.134% MSE / -0.253% MAE`，dataset/cell MSE wins=`3/5,11/20`，双指标gate FAIL。完整枚举161,051种dataset-level组合也不存在macro MSE/MAE同时正向方案，且ETTh1/ETTh2无双指标正向profile。Canonical table保持v2.1；不补matched +ISCF、不继续PatchTST HPO/seeds。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_test_tuned_full_20260816/formal_results/result_and_decision.md`。Decision=`full_unique_audit_complete_mse_only_partial_gain_bidirectional_metric_gate_failed`。
 
 2026-08-15 iTransformer-style Decoder-Transfer v1完成15/15 train/validation runs。Artifact checker确认15 unique checkpoint hashes、5/5 matched encoder-initialization triplets、four-H validation selector一致且formal test=0；immutable manifest SHA256=`062588a140ecd4fae385aa9d194c039355bef3c7d9f49f685d796779626eecc9`。Validation-only风险信号中+ISCF-BSCA相对Original为`-1.911%/-1.889%` MSE/MAE gain，仅赢1/5 dataset MSE means；相对+ISCF为`-0.040%/-0.296%`。该信号不能替代formal effectiveness。Canonical gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_v1_20260815/training_result_and_formal_test_gate.md`。Decision=`itransformer_transfer_v1_training_manifest_pass_validation_risk_negative_formal_test_pending_authorization`。
 

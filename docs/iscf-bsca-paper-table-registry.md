@@ -98,6 +98,8 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 - failure attribution：claim-level=`hypothesis_false_for_cross_backbone_portability_after_decoder_HPO`；design-level=`readout_or_head_design_wrong_for_PatchTST_representation_compatibility`，不否定BSCA objective本身；
 - auxiliary iTransformer rescue也为负：14-profile × 5-dataset test-tuned HPO相对旧iTransformer BSCA改善macro MSE/MAE `2.128%/1.719%`，但相对native Original仍为`-0.505%/-0.750%`；因此canonical two-backbone table不改，且不得用4/5 dataset MSE wins掩盖ETTh1与macro fail；
 - iTransformer auxiliary audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_hpo_v2_20260816/formal_results/result_and_decision.md`；该证据为test-tuned negative result，不是新增paper table column；
+- PatchTST parent-HPO full unique audit补测35个未测unique checkpoints并闭合40 unique/160 cells、200 expanded cells与220 candidate cells；mean-MSE selector相对Original为`+0.134% MSE / -0.253% MAE`，MSE-only转正但joint gate失败；161,051种dataset-profile组合中没有macro MSE/MAE双正向方案；
+- PatchTST full-audit result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_test_tuned_full_20260816/formal_results/result_and_decision.md`；canonical v2.1 table和PDF保持不变；
 - canonical audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_v2p1_20260815/formal_results/result_and_table_audit.md`；review PDF=`output/pdf/iscf_bsca_decoder_transfer_v2p1_20260815.pdf`。
 
 ### Efficiency

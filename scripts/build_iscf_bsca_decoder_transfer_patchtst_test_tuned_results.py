@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
+import itertools
 import json
 import math
 from collections import defaultdict
@@ -207,6 +208,64 @@ def main() -> None:
     )
     gate_pass = bool(mse_gain > 0 and mae_gain > 0 and dataset_mse_wins >= 3)
 
+    dataset_gain_rows: list[dict[str, Any]] = []
+    for dataset in config["datasets"]:
+        original_row = lookup[("original_decoder", dataset)]
+        selected_row = lookup[("selected_bsca", dataset)]
+        dataset_gain_rows.append(
+            {
+                "dataset": dataset,
+                "selected_profile_id": selected_lookup[dataset],
+                "selected_mean_mse": selected_row["mean_mse"],
+                "selected_mean_mae": selected_row["mean_mae"],
+                "original_mean_mse": original_row["mean_mse"],
+                "original_mean_mae": original_row["mean_mae"],
+                "mse_gain_percent": 100.0
+                * (original_row["mean_mse"] - selected_row["mean_mse"])
+                / original_row["mean_mse"],
+                "mae_gain_percent": 100.0
+                * (original_row["mean_mae"] - selected_row["mean_mae"])
+                / original_row["mean_mae"],
+            }
+        )
+
+    options = [
+        [row for row in candidate_means if row["dataset"] == dataset]
+        for dataset in config["datasets"]
+    ]
+    dual_positive_combinations = 0
+    mae_optimal: list[dict[str, Any]] = []
+    for dataset_options in options:
+        mae_optimal.append(
+            min(
+                dataset_options,
+                key=lambda row: (row["mean_mae"], row["mean_mse"], row["profile_id"]),
+            )
+        )
+    for combination in itertools.product(*options):
+        combination_mse = sum(row["mean_mse"] for row in combination) / len(combination)
+        combination_mae = sum(row["mean_mae"] for row in combination) / len(combination)
+        if combination_mse < original["mean_mse"] and combination_mae < original["mean_mae"]:
+            dual_positive_combinations += 1
+    mae_optimal_mse = sum(row["mean_mse"] for row in mae_optimal) / len(mae_optimal)
+    mae_optimal_mae = sum(row["mean_mae"] for row in mae_optimal) / len(mae_optimal)
+    tradeoff_summary = {
+        "role": "posthoc_diagnostic_not_an_alternative_paper_selector",
+        "candidate_combinations": math.prod(len(dataset_options) for dataset_options in options),
+        "dual_positive_macro_mse_and_mae_combinations": dual_positive_combinations,
+        "mse_selected_macro_mse_gain_percent": mse_gain,
+        "mse_selected_macro_mae_gain_percent": mae_gain,
+        "mae_optimal_profile_by_dataset": {
+            row["dataset"]: row["profile_id"] for row in mae_optimal
+        },
+        "mae_optimal_macro_mse_gain_percent": 100.0
+        * (original["mean_mse"] - mae_optimal_mse)
+        / original["mean_mse"],
+        "mae_optimal_macro_mae_gain_percent": 100.0
+        * (original["mean_mae"] - mae_optimal_mae)
+        / original["mean_mae"],
+    }
+
     args.results_dir.mkdir(parents=True, exist_ok=True)
     write_csv(args.results_dir / "unique_checkpoint_160_cells.csv", unique_cells)
     write_csv(args.results_dir / "expanded_profile_200_cells.csv", expanded_cells)
@@ -217,6 +276,10 @@ def main() -> None:
     write_csv(args.results_dir / "selected_vs_original_40_cells.csv", comparison)
     write_csv(args.results_dir / "selected_vs_original_dataset_means.csv", dataset_means)
     write_csv(args.results_dir / "selected_vs_original_overall.csv", overall)
+    write_csv(args.results_dir / "selected_dataset_gains.csv", dataset_gain_rows)
+    (args.results_dir / "posthoc_tradeoff_summary.json").write_text(
+        json.dumps(tradeoff_summary, indent=2) + "\n"
+    )
     artifact_path = args.results_dir / "formal_artifact_manifest.csv"
     write_csv(artifact_path, artifact_rows)
     summary = {

@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | iTransformer-style Decoder-HPO v2 Step 9--10 complete；gate fail；rollback closes decoder rescue |
+| `current_11_step` | PatchTST full unique-checkpoint test-tuned audit Step 9--10 complete；MSE-only partial gain、joint gate fail；decoder rescue closed |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -21,6 +21,8 @@
 | `paper_core_status` | architecture family frozen；Core-Ablation 3/4 controls pass；Decoder portability unsupported（DLinear pass / PatchTST and test-tuned iTransformer fail）；Efficiency只支持trade-off；allocation独立accuracy claim unsupported |
 
 [PatchTST Decoder-HPO Full Test-Tuned Audit Prelaunch, 2026-08-16] 用户授权补测parent HPO全部未测unique checkpoints。50 training objects映射为40 unique hashes；5个v2.1 formal artifacts复用，只新增35 jobs / 140 cells。完整结果扩回10 profiles × 5 datasets × four H=`200` cells，并加入v1 BSCA reference形成220-cell candidate pool；每dataset只按four-H mean official-test MSE选一个shared profile，禁止per-H/cell反选。即使performance gate通过，matched +ISCF attribution缺失前只能标记`performance_partial_pass`，不得自动修改canonical Decoder-Transfer table。Canonical gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_test_tuned_full_20260816/design_and_prelaunch_gate.md`。Decision=`patchtst_parent_hpo_40_unique_manifest_frozen_35_missing_formal_tests_authorized`。
+
+[PatchTST Decoder-HPO Full Test-Tuned Audit Result, 2026-08-16] 40/40 unique checkpoints与160/160 unique cells闭合，展开duplicates后200/200 profile cells、加入v1 reference后220/220 candidate cells完整。Dataset-level mean-MSE selector相对Original取得`+0.134%` macro MSE、`-0.253%` macro MAE，dataset/cell MSE wins=`3/5,11/20`，joint gate FAIL。Post-hoc完整枚举`161,051`种dataset-profile组合也不存在macro MSE/MAE同时正向组合；ETTh1/ETTh2没有双指标正向profile。Canonical table保持v2.1不变，不补matched +ISCF、不继续PatchTST HPO。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_test_tuned_full_20260816/formal_results/result_and_decision.md`。Decision=`full_unique_audit_complete_mse_only_partial_gain_bidirectional_metric_gate_failed`。
 
 [iTransformer-style Decoder-HPO v2 Prelaunch, 2026-08-16] 用户显式重启decoder-HPO并允许official-test dataset-level反选。冻结14 profiles × 5 datasets=`70` training runs，搜索budget/LR/rank/future-coordinate/allocation-width/scope geometry；保持iTransformer encoder、BSCA objective、seed和joint-training不变。70-hash manifest后完整执行280 test cells，每dataset按four-H mean test MSE选一个shared profile，禁止per-H/cell selection并保留全部负向trials。该candidate明确为`test_informed/test_tuned`；即使performance通过，仍需matched +ISCF attribution。Canonical gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_hpo_v2_20260816/design_and_prelaunch_gate.md`。Decision=`itransformer_decoder_hpo_v2_70_profile_dataset_runs_frozen_test_tuned_remote_training_authorized`。
 

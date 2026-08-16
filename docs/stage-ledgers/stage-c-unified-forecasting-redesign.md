@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | iTransformer-style carrier 15-run train/validation已在GPU0/1/2启动；等待完整artifact/hash/init-triplet gate，formal test继续blocked；PatchTST negative保留，Figure 5后移 |
+| `active_question` | Decoder rescue已关闭：DLinear限定正向，PatchTST与iTransformer完整test-tuned audits仍未通过双指标gate；Figure 5 paper closure next |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
 | `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7与Sections 5--7 v0.2 structure temporarily frozen usable；Figure 4 visual design temporarily fixed |
@@ -22,12 +22,12 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | iTransformer-style Decoder-Transfer v1 Step 8 remote train/validation active；formal test=0 |
-| `current_candidate` | `ISCF-BSCA-DECODER-TRANSFER-ITRANSFORMER-v1`；PatchTST v1/v2.1负结果保持有效且不回写 |
-| `latest_decision` | `itransformer_transfer_v1_three_gpu_train_validation_active_test_zero` |
+| `current_11_step` | PatchTST full unique-checkpoint test-tuned audit Step 9--10 complete；joint gate fail |
+| `current_candidate` | decoder transfer rescue closed；canonical v2.1 table unchanged |
+| `latest_decision` | `full_unique_audit_complete_mse_only_partial_gain_bidirectional_metric_gate_failed` |
 | `writing_latest_decision` | `main_i_main_ii_author_corrected_20260815_complete_hash_frozen` |
-| `next_required_action` | 等待15/15 artifacts；审计15 unique hashes、5 matched encoder-init triplets、four-H validation selector与numeric health；manifest前test=0 |
-| `method_training_authorized` | iTransformer-style local patch与15-run remote train/validation=true；formal test、table mutation、extra HPO、extra seeds=false |
+| `next_required_action` | return to Figure 5 mechanism-diagnostic and illustrative-case paper closure |
+| `method_training_authorized` | false for further decoder rescue；PatchTST matched retraining、extra HPO/seeds与table mutation=false |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
 ## Main-Table Author Correction Record (2026-08-15)
@@ -35,6 +35,21 @@
 Main I与Main II已建立新的author-corrected canonical freeze；旧hash-frozen版本只保留为historical snapshots。Main I修正scope=`ISCF + TimeAlign all 7x4, SimpleTM Solar, TVNet ETTh2`；Main II修正scope=`ISCF + TimeAlign all 7x4, SimpleTM Solar, PatchTST ETTh2`。未列出cells保持既有source role。
 
 作者只提供三位小数结果，因此canonical CSV不伪造额外精度，Main II corrected rows也不沿用被替换checkpoint hashes。完整重算后Main I=`44/56 best + 9/56 second`，Main II=`50/56 best + 6/56 second`。Canonical audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/result_and_freeze_audit.md`；freeze manifest=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/freeze_manifest.json`。该writing-side freeze不授权或触发PatchTST HPO v2 formal test。
+
+## PatchTST Full Unique-Checkpoint Test-Tuned Audit (2026-08-16)
+
+| Field | Current Record |
+| --- | --- |
+| `current_step` | Step 9--10 complete；decoder rescue closed |
+| `problem` | parent PatchTST HPO只formal-test五个validation-selected checkpoints，无法判断完整冻结search space是否存在dataset-level正向profile |
+| `existence_evidence` | 50 training objects映射40 unique hashes；v2.1已有5个formal artifacts，其余35个此前未测 |
+| `idea` | 补测全部未测unique checkpoints，duplicate aliases共享metrics，并按dataset four-H mean official-test MSE选一个profile |
+| `theory_check` | dataset-level shared profile符合test-tuned contract；per-H/seed/metric/cell selection禁止；checkpoint只读且hash-guarded |
+| `design` | 40 unique / 160 cells；展开为200 profile cells；加入v1 reference为220 candidate cells；Original 20 cells复用 |
+| `narrative_gate` | 必须同时改善macro MSE/MAE且>=3/5 dataset MSE wins；MSE-only不能恢复portability claim |
+| `effectiveness_gate` | FAIL：`+0.134% MSE / -0.253% MAE`，3/5 dataset与11/20 MSE cell wins；161,051种组合无双指标正向解 |
+| `artifacts` | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_test_tuned_full_20260816/formal_results/result_and_decision.md` |
+| `decision` | `full_unique_audit_complete_mse_only_partial_gain_bidirectional_metric_gate_failed`；canonical v2.1 table不变；Figure 5 next |
 
 ## 11-Step Record
 

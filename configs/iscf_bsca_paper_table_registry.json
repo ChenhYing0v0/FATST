@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "registry_id": "ISCF-BSCA-PAPER-TABLES-20260815-AUTHOR-CORRECTED-MAIN",
-  "updated_at": "2026-08-15",
+  "updated_at": "2026-08-16",
   "scope": "paper_facing_experiment_tables",
   "presentation_contract": {
     "main_result_template": "TimeAlign_Table_6_style",
@@ -199,6 +199,11 @@
       "itransformer_hpo_v2_auxiliary_gate_pass": false,
       "itransformer_hpo_v2_test_tuned": true,
       "itransformer_hpo_v2_result": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_hpo_v2_20260816/formal_results/result_and_decision.md",
+      "patchtst_full_unique_audit_gate_pass": false,
+      "patchtst_full_unique_audit_test_tuned": true,
+      "patchtst_full_unique_audit_mse_gain_percent": 0.13356362342957487,
+      "patchtst_full_unique_audit_mae_gain_percent": -0.2532299377841491,
+      "patchtst_full_unique_audit_result": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_test_tuned_full_20260816/formal_results/result_and_decision.md",
       "decision": "decoder_transfer_v2p1_complete_portability_gate_not_passed",
       "claim_boundary": "DLinear_style_relative_gate_passes_but_PatchTST_style_and_test_tuned_iTransformer_style_BSCA_still_trail_native_original_so_cross_backbone_portability_is_not_supported"
     },
