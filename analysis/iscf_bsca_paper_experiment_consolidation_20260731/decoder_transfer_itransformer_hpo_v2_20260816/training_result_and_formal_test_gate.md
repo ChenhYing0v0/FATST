@@ -16,3 +16,9 @@ Decision：`itransformer_decoder_hpo_v2_training_manifest_pass_280_cell_test_tun
 每个dataset只能按four-H mean test MSE选择一个共享profile；依次以mean test MAE、decoder parameter count和profile id打破完全相同的排序。禁止per-H、per-seed、per-metric或per-cell拼接；所有negative trials必须进入scorecard。Runner在test loader前后验证全部checkpoint hashes，任何partial failure均阻止selection。
 
 本轮不授权checkpoint retraining、extra seeds或canonical paper-table mutation。若selected BSCA通过相对Original的macro MSE/MAE与3/5 dataset-win gate，下一步仍须补matched selected-profile `+ISCF` controls，不能直接宣称BSCA portability。
+
+## Formal invariant compatibility repair
+
+首次formal执行在16/70 complete时fail-fast。`p12/p13`的test prediction、metrics、prefix consistency与numeric health均正常，但旧evaluator将model scopes与全局default diagnostic scopes比较，错误产生`readout_contract_pass=false`。该失败归因为`formal_invariant_checker_protocol_defect`，不属于模型或checkpoint failure。
+
+修复仅将scope invariant的expected value改为checkpoint effective config中的`adapter["pcsd_scales"]`。训练、模型forward、checkpoint、test loader与selection rule均不变；旧default-scope protocols保持相同行为。修复后先对一个failed alternate-scope checkpoint做hash-guarded rerun，确认invariant pass，再从缺失jobs恢复同一次完整formal audit。已完成的partial metrics不得用于selection。
