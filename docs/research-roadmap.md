@@ -1,14 +1,16 @@
 # Research Roadmap
 
-## iTransformer-style Decoder-HPO v2 Prelaunch (2026-08-16)
+## iTransformer-style Decoder-HPO v2 Formal Closure (2026-08-16)
 
-Current cursor=`Step 8 complete -> 70-hash immutable manifest -> Step 9 formal prelaunch`。用户在v1 formal negative result后显式重启iTransformer decoder-HPO，并允许official-test dataset-level反选。新candidate=`ISCF-BSCA-DECODER-TRANSFER-ITRANSFORMER-HPO-v2`，明确标记`test_informed/test_tuned`。
+Current cursor=`Step 9--10 complete -> performance gate fail -> rollback closes iTransformer decoder rescue`。用户在v1 formal negative result后显式重启iTransformer decoder-HPO，并允许official-test dataset-level反选。新candidate=`ISCF-BSCA-DECODER-TRANSFER-ITRANSFORMER-HPO-v2`，明确标记`test_informed/test_tuned`。
 
 14 profiles覆盖budget、readout LR、rank、future-coordinate dimension、allocation MLP width与两组scope geometry；5 datasets、seed2021、from-scratch joint training，共70 runs。Checkpoint仍由four-H mean validation MSE选epoch；70-hash immutable manifest后一次完整280-cell test access用于profile ranking。每dataset只选择一个服务全部四H的profile，禁止per-H/seed/metric/cell selection，全部负向trials保留。若超过Original仍必须补matched ISCF attribution。Local prelaunch=`22/22 pass`；canonical gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_hpo_v2_20260816/design_and_prelaunch_gate.md`。
 
 Commit=`219d52708e...66677`通过remote 22/22 prelaunch与3/3 Weather smoke。GPU0/1/2于02:04:40启动，PID=`1517179`；首批三个profiles均已进入epoch1，formal test=`0`。Canonical launch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_hpo_v2_20260816/remote_launch.md`；Decision=`itransformer_decoder_hpo_v2_three_gpu_training_active_test_zero`。
 
 70/70 training于07:15:14完成，test=0。Artifact audit得到70 unique hashes与5/5 matched encoder sets，manifest SHA256=`ab3a4cd9...c66a`。已冻结70-job/280-cell hash-guarded formal protocol；复用v1 BSCA reference后按完整300-cell pool作dataset-level four-H mean MSE selection。Canonical gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_hpo_v2_20260816/training_result_and_formal_test_gate.md`；Decision=`itransformer_decoder_hpo_v2_training_manifest_pass_280_cell_test_tuned_formal_authorized`。
+
+Formal结果：70/70 jobs、280/280 new cells、300/300 candidate cells完整；selected HPO相对v1 BSCA改善`2.128%/1.719%`，相对Original仍为`-0.505%/-0.750%`。MSE赢4/5 datasets，但ETTh1退化`3.110%`使macro gate失败。一个variable-scope invariant compatibility defect被exact repair，不改变模型或metrics。Rollback=Step 4--6并关闭该rescue；不补matched ISCF、不再追加test-informed HPO。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_hpo_v2_20260816/formal_results/result_and_decision.md`；Decision=`itransformer_decoder_hpo_v2_improves_v1_bsca_but_fails_original_gate_close_rescue`。
 
 ## iTransformer-style Decoder-Transfer v1 Formal Result (2026-08-15)
 

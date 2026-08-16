@@ -96,6 +96,8 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 - 相对v1，BSCA macro MSE改善0.295%，但MAE恶化0.506%；HPO缩小MSE deficit却未改变方向级结论；
 - DLinear-style的ETTh1/ETTh2绝对结果存在profile/optimization风险，其正向相对gate只作限定证据；
 - failure attribution：claim-level=`hypothesis_false_for_cross_backbone_portability_after_decoder_HPO`；design-level=`readout_or_head_design_wrong_for_PatchTST_representation_compatibility`，不否定BSCA objective本身；
+- auxiliary iTransformer rescue也为负：14-profile × 5-dataset test-tuned HPO相对旧iTransformer BSCA改善macro MSE/MAE `2.128%/1.719%`，但相对native Original仍为`-0.505%/-0.750%`；因此canonical two-backbone table不改，且不得用4/5 dataset MSE wins掩盖ETTh1与macro fail；
+- iTransformer auxiliary audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_hpo_v2_20260816/formal_results/result_and_decision.md`；该证据为test-tuned negative result，不是新增paper table column；
 - canonical audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_v2p1_20260815/formal_results/result_and_table_audit.md`；review PDF=`output/pdf/iscf_bsca_decoder_transfer_v2p1_20260815.pdf`。
 
 ### Efficiency

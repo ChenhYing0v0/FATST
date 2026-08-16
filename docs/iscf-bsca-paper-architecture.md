@@ -5,10 +5,10 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.79` |
+| `version` | `v0.80` |
 | `last_updated` | `2026-08-16` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | writing=Main I/Main II author-corrected tables hash-frozen；experiments=iTransformer-style Decoder-HPO v2 70-hash manifest pass、280-cell formal prelaunch |
+| `current_review_cursor` | writing=Main I/Main II author-corrected tables hash-frozen；experiments=iTransformer Decoder-HPO v2 formal fail、cross-backbone portability unsupported |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
@@ -1621,6 +1621,8 @@ iTransformer-style第三carrier的15/15 training artifacts、15 unique hashes与
 
 作者随后显式重启iTransformer decoder-HPO。v2只搜索decoder compatibility axes：30-epoch budget、readout LR、rank、future-coordinate dimension、allocation width与scope geometry；iTransformer encoder和BSCA objective保持不变。70个new checkpoints完整后，按每dataset的four-H mean official-test MSE从14 new profiles + v1 reference中选择一个shared profile，MAE和全部negative trials同步报告。该证据必须披露为`test_tuned`，且performance通过后仍需matched +ISCF attribution，不能直接恢复BSCA portability claim。Canonical prelaunch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_hpo_v2_20260816/design_and_prelaunch_gate.md`。
 
+v2 formal结果最终闭合280个new cells与300个candidate-pool cells。Dataset-level selections相对旧v1 BSCA改善macro MSE/MAE `2.128%/1.719%`，说明budget与decoder geometry确实缓解了部分compatibility问题；但相对native Original Decoder仍为`-0.505%/-0.750%`。虽然MSE赢4/5 datasets，ETTh1仍退化`3.110%/3.376%`并使aggregate gate失败。因此不补matched +ISCF，不再追加test-informed HPO；cross-backbone portability继续为unsupported。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_hpo_v2_20260816/formal_results/result_and_decision.md`。
+
 ## 9. Discussion
 
 ### 9.1 From Horizon-Specific Predictions to a Unified Forecasting System
@@ -1864,3 +1866,4 @@ Coverage boundary：
 | 2026-08-16 | iTransformer-style Decoder-HPO v2 prelaunch | 14 profiles × 5 datasets=70 runs；test-tuned dataset-level four-H selector；22/22 local checks | Remote training authorized；280-cell test conditional on 70-hash manifest；table mutation/seeds=false |
 | 2026-08-16 | iTransformer-style Decoder-HPO v2 remote launch | commit `219d52708e...66677`；remote gate 22/22；Weather smoke 3/3；GPU0/1/2启动70-run queue | Step 8 active；formal test=0；next=70 artifacts/70 hashes/immutable manifest |
 | 2026-08-16 | iTransformer-style Decoder-HPO v2 training gate | 70/70 artifacts、70 unique hashes、5/5 matched encoder sets；manifest=`ab3a4cd9...c66a` | Step 9 formal 70 jobs/280 cells authorized；dataset-level four-H test-tuned selection；table mutation/seeds=false |
+| 2026-08-16 | iTransformer-style Decoder-HPO v2 formal closure | 280 new/300 candidate cells；vs v1 BSCA=`+2.128%/+1.719%`；vs Original=`-0.505%/-0.750%` | Gate fail；ETTh1 remains negative；close rescue；no matched ISCF/extra HPO/table mutation |

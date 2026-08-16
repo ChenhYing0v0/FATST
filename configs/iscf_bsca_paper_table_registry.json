@@ -196,8 +196,11 @@
       "compiled_review_pdf_sha256": "e328c9561b17f9f4ab05b53178e580a139d9182045428761f1b7c706f3ecaa07",
       "dlinear_gate_pass": true,
       "patchtst_gate_pass": false,
+      "itransformer_hpo_v2_auxiliary_gate_pass": false,
+      "itransformer_hpo_v2_test_tuned": true,
+      "itransformer_hpo_v2_result": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_hpo_v2_20260816/formal_results/result_and_decision.md",
       "decision": "decoder_transfer_v2p1_complete_portability_gate_not_passed",
-      "claim_boundary": "DLinear_style_relative_gate_passes_but_validation_selected_PatchTST_style_BSCA_still_trails_native_original_so_cross_backbone_portability_is_not_supported"
+      "claim_boundary": "DLinear_style_relative_gate_passes_but_PatchTST_style_and_test_tuned_iTransformer_style_BSCA_still_trail_native_original_so_cross_backbone_portability_is_not_supported"
     },
     {
       "id": "ablation_sensitivity",
