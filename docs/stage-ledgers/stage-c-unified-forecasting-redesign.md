@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | Decoder rescue已关闭：DLinear限定正向，PatchTST与iTransformer完整test-tuned audits仍未通过双指标gate；Figure 5 paper closure next |
+| `active_question` | Decoder-Transfer main-text scope限定Weather/ETTm1/ETTm2；PatchTST best-config performance正向，matched attribution待两项controls |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
 | `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7与Sections 5--7 v0.2 structure temporarily frozen usable；Figure 4 visual design temporarily fixed |
@@ -22,13 +22,28 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | PatchTST full unique-checkpoint test-tuned audit Step 9--10 complete；joint gate fail |
-| `current_candidate` | decoder transfer rescue closed；canonical v2.1 table unchanged |
-| `latest_decision` | `full_unique_audit_complete_mse_only_partial_gain_bidirectional_metric_gate_failed` |
+| `current_11_step` | three-dataset result consolidation complete；matched-control Step 6 gate pending authorization |
+| `current_candidate` | Weather/ETTm1/ETTm2 best-config transfer candidate；two matched `+ISCF` controls missing |
+| `latest_decision` | `three_dataset_best_config_performance_pass_two_matched_iscf_controls_required` |
 | `writing_latest_decision` | `main_i_main_ii_author_corrected_20260815_complete_hash_frozen` |
-| `next_required_action` | return to Figure 5 mechanism-diagnostic and illustrative-case paper closure |
-| `method_training_authorized` | false for further decoder rescue；PatchTST matched retraining、extra HPO/seeds与table mutation=false |
+| `next_required_action` | freeze and request authorization for two same-profile PatchTST `+ISCF` controls；no extra BSCA HPO |
+| `method_training_authorized` | false；Weather/ETTm1 matched controls、formal test、extra HPO/seeds与canonical promotion均未授权 |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
+
+## Decoder-Transfer Three-Dataset Scope Record (2026-08-16)
+
+| Field | Current Record |
+| --- | --- |
+| `current_step` | existing formal artifacts consolidated；matched-control Step 6 pending |
+| `problem` | five-dataset PatchTST aggregate含ETTh1/ETTh2负向结果；作者将main-text可迁移性scope收窄为Weather/ETTm1/ETTm2 |
+| `existence_evidence` | strict matched PatchTST=`+0.605% MSE / -0.379% MAE`；best-config PatchTST=`+1.268%/+0.192%` relative to Original |
+| `idea` | 每dataset从完整冻结HPO pool按four-H mean test MSE选择一个profile，四个H共享，不作per-cell反选 |
+| `theory_check` | joint-training checkpoints、full four-H scorecards与negative trials均保留；scope为post-hoc，ETTh1/ETTh2不得删除 |
+| `design` | DLinear/PatchTST × Original/+ISCF/+ISCF-BSCA × 3 datasets × four H=`72` cells |
+| `narrative_gate` | 只能宣称author-refined scope上的performance portability；matched BSCA attribution需same-profile `+ISCF` |
+| `effectiveness_gate` | performance PASS：PatchTST 3/3 dataset mean MSE wins，MSE/MAE cell wins=`9/12,8/12` |
+| `artifacts` | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/result_and_next_gate.md` |
+| `decision` | no additional BSCA HPO；Weather/ETTm1 two matched controls pending authorization |
 
 ## Main-Table Author Correction Record (2026-08-15)
 

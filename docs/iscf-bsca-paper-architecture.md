@@ -1590,18 +1590,21 @@ Realized allocation value当前不纳入该节，以控制额外实验成本。Q
 
 ### 8.7 Backbone Transferability
 
-选择结构不同的两个 backbones：
+选择结构不同的两个 backbones，并把正文表的作者指定数据集范围固定为Weather、ETTm1与ETTm2：
 
 - lightweight linear/MLP backbone；
 - patch/Transformer backbone。
 
 | Backbone | Original Decoder | + ISCF | + ISCF-BSCA |
 | --- | ---: | ---: | ---: |
-| DLinear-style | .478/.433 | .427/.407 | .403/.397 |
-| PatchTST-style | .310/.344 | .314/.347 | .312/.346 |
+| DLinear-style | .304/.333 | .285/.322 | .289/.322 |
+| PatchTST-style | .282/.314 | .283/.317 | .278/.314 |
 
 各backbone使用同一test-tuned原则选出的backbone-specific profile；不把
-`ISCF-BSCA-v1` ablation hyperparameters机械迁移到transfer。
+`ISCF-BSCA-v1` ablation hyperparameters机械迁移到transfer。PatchTST-style
+`+ISCF-BSCA`当前使用完整HPO的dataset-level winners；表中`+ISCF`仍来自v2.1
+control profiles，Weather与ETTm1需要补两个同profile matched controls后才能作
+BSCA objective attribution。
 迁移实验用于判断 decoder 是否超越当前 encoder 的特定 co-adaptation，不能通过
 只替换 frozen consumer 的不公平 probe 得出方向级结论。
 
@@ -1624,6 +1627,8 @@ iTransformer-style第三carrier的15/15 training artifacts、15 unique hashes与
 v2 formal结果最终闭合280个new cells与300个candidate-pool cells。Dataset-level selections相对旧v1 BSCA改善macro MSE/MAE `2.128%/1.719%`，说明budget与decoder geometry确实缓解了部分compatibility问题；但相对native Original Decoder仍为`-0.505%/-0.750%`。虽然MSE赢4/5 datasets，ETTh1仍退化`3.110%/3.376%`并使aggregate gate失败。因此不补matched +ISCF，不再追加test-informed HPO；cross-backbone portability继续为unsupported。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_hpo_v2_20260816/formal_results/result_and_decision.md`。
 
 PatchTST parent-HPO随后完成全部40个unique checkpoints的test-tuned audit。按每dataset four-H mean MSE选profile后，相对Original Decoder为`+0.134% MSE / -0.253% MAE`，MSE dataset wins=3/5；完整枚举11候选×5 datasets的161,051种组合仍无macro MSE/MAE同时正向方案，ETTh1/ETTh2也不存在双指标正向profile。因此该补充只说明decoder HPO可消除很小的MSE deficit，不能恢复PatchTST或general portability claim；Section 8.7 canonical table继续采用有matched attribution的v2.1 block。Canonical audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_test_tuned_full_20260816/formal_results/result_and_decision.md`。
+
+作者随后将正文transfer范围收窄到Weather、ETTm1、ETTm2。该后置范围必须与five-dataset negative audit同时披露。在三数据集上，严格matched v2.1 PatchTST为`+0.605% MSE / -0.379% MAE`；完整HPO best-config则为`+1.268%/+0.192%`，3/3 dataset mean MSE wins。现有HPO已足够支持performance-side candidate，不再扩大搜索；下一最小缺口仅为Weather `p07_wd1e3`与ETTm1 `p10_rank1p50_lr0p50_wd1e4`两个matched +ISCF controls。Canonical candidate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/table_decoder_transfer_three_dataset_best_config.tex`；gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/result_and_next_gate.md`。
 
 ## 9. Discussion
 

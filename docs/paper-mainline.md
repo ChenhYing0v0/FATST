@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | PatchTST full unique-checkpoint test-tuned audit Step 9--10 complete；MSE-only partial gain、joint gate fail；decoder rescue closed |
+| `current_11_step` | Decoder-Transfer三数据集scope consolidation完成；PatchTST best-config performance pass；两项matched `+ISCF` controls待授权 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,7 +18,9 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；Core-Ablation 3/4 controls pass；Decoder portability unsupported（DLinear pass / PatchTST and test-tuned iTransformer fail）；Efficiency只支持trade-off；allocation独立accuracy claim unsupported |
+| `paper_core_status` | architecture family frozen；Core-Ablation 3/4 controls pass；Decoder-Transfer在Weather/ETTm1/ETTm2的best-config performance正向但matched attribution未闭合；Efficiency只支持trade-off；allocation独立accuracy claim unsupported |
+
+[Decoder-Transfer Three-Dataset Scope Consolidation, 2026-08-16] 作者将main-text portability scope限定为Weather、ETTm1、ETTm2。该收窄发生在读取五数据集结果之后，故必须标记为`author_refined_posthoc_scope`，ETTh1/ETTh2负结果保留在完整audit/limitations，不得删除。严格matched v2.1中DLinear-style相对Original改善`4.915%/3.276%` MSE/MAE；PatchTST-style为`+0.605%/-0.379%`。完整冻结HPO按每dataset的four-H mean test MSE选择一个shared profile后，PatchTST-style相对Original改善`1.268%/0.192%`，赢`3/3` dataset mean MSE、`9/12` MSE cells与`8/12` MAE cells。Weather=`p07_wd1e3`、ETTm1=`p10_rank1p50_lr0p50_wd1e4`、ETTm2=`p01_lr0p25`。因此不再扩大BSCA HPO；但Weather和ETTm1缺少同profile `+ISCF` controls，当前表只能支持full-decoder相对Original的performance portability，不能完成BSCA matched attribution。下一步最小工作量为2个joint-training controls及其8个formal cells，remote training/formal test仍待分级授权。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/result_and_next_gate.md`。Decision=`three_dataset_best_config_performance_pass_two_matched_iscf_controls_required`。
 
 [PatchTST Decoder-HPO Full Test-Tuned Audit Prelaunch, 2026-08-16] 用户授权补测parent HPO全部未测unique checkpoints。50 training objects映射为40 unique hashes；5个v2.1 formal artifacts复用，只新增35 jobs / 140 cells。完整结果扩回10 profiles × 5 datasets × four H=`200` cells，并加入v1 BSCA reference形成220-cell candidate pool；每dataset只按four-H mean official-test MSE选一个shared profile，禁止per-H/cell反选。即使performance gate通过，matched +ISCF attribution缺失前只能标记`performance_partial_pass`，不得自动修改canonical Decoder-Transfer table。Canonical gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_test_tuned_full_20260816/design_and_prelaunch_gate.md`。Decision=`patchtst_parent_hpo_40_unique_manifest_frozen_35_missing_formal_tests_authorized`。
 

@@ -1,0 +1,12 @@
+{
+  "best_config_candidate_72_cells.csv": "81add147f24cdffb771695a11904300e20f03e4a5d6d844f52e33634b43dbdbc",
+  "best_config_candidate_dataset_means.csv": "6518a868cfd1e1f34f70e0be0c85d766d0eb6d87a586e235463b37f0ca69642a",
+  "result_and_next_gate.md": "6269a0d4e9e4061689be89a60406812be3ef07cbf80f20af8e95bdfdce177d31",
+  "result_summary.json": "4bc4586cc2e682be1374eeb3223442ae003d9c7239dfd21dc73b5e5f7d99f2f1",
+  "strict_matched_72_cells.csv": "bf6bb4ac782a7c57264dd5025906c8aa3d05745a3f158890c07196df1c1ed4ec",
+  "strict_matched_dataset_means.csv": "4499f53b09577f314fd873be198214b71b552df5e3e8461947f96e35741b8e30",
+  "table_decoder_transfer_three_dataset_best_config.tex": "d9c2dedefdd08cc1538dea0ada470bec48254446dac53efec7240dc960d09250",
+  "table_decoder_transfer_three_dataset_best_config_standalone.tex": "8af0e69525eba28bd113a8e54fb677016092624eb5318c8d5c8a4aaa8b281619",
+  "table_decoder_transfer_three_dataset_matched.tex": "15f6a09bab170bc365ff892fe334573cee21e083e0b9840dd09ba61227686534",
+  "table_decoder_transfer_three_dataset_matched_standalone.tex": "972525d019f015d73b2a49460bcf667744f43afa84ab510199373cbfcc00b38f"
+}

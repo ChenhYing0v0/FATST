@@ -1,0 +1,45 @@
+{
+  "scope": [
+    "Weather",
+    "ETTm1",
+    "ETTm2"
+  ],
+  "scope_role": "author_refined_posthoc_main_text_scope_full_five_dataset_audit_retained",
+  "strict_matched": {
+    "dlinear_style": {
+      "macro_mse_gain_percent": 4.91524716661519,
+      "macro_mae_gain_percent": 3.276449890936558,
+      "dataset_mse_wins": 2
+    },
+    "patchtst_style": {
+      "macro_mse_gain_percent": 0.6045038767158546,
+      "macro_mae_gain_percent": -0.3789375158833561,
+      "dataset_mse_wins": 2
+    }
+  },
+  "best_config_candidate": {
+    "dlinear_style": {
+      "macro_mse_gain_percent": 4.91524716661519,
+      "macro_mae_gain_percent": 3.276449890936558,
+      "dataset_mse_wins": 2
+    },
+    "patchtst_style": {
+      "macro_mse_gain_percent": 1.2678474316924913,
+      "macro_mae_gain_percent": 0.1920332833819184,
+      "dataset_mse_wins": 3
+    }
+  },
+  "patchtst_best_config_profiles": {
+    "Weather": "p07_wd1e3",
+    "ETTm1": "p10_rank1p50_lr0p50_wd1e4",
+    "ETTm2": "p01_lr0p25"
+  },
+  "patchtst_matched_iscf_gap": {
+    "Weather": "train_required_for_p07_wd1e3",
+    "ETTm1": "train_required_for_p10_rank1p50_lr0p50_wd1e4",
+    "ETTm2": "reusable_p01_lr0p25"
+  },
+  "additional_bsca_hpo_required": false,
+  "canonical_table_mutation_ready": false,
+  "reason": "best-config PatchTST performance passes the three-dataset aggregate gate but two matched ISCF controls are missing"
+}

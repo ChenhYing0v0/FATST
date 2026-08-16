@@ -51,7 +51,7 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 | `Main-I-Exchange` | Supplementary companion | `complete_limited_surface` | ISCF-BSCA / TimeAlign / QDF × Exchange × 4 H | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_h5d_bs16_lr2p4_synced_20260813/table_exchange_companion.tex` | Exchange 的部分系统背景；不能表述为完整 Main I extension |
 | `Efficiency` | 正文 supporting result | `complete_hash_frozen_tradeoff_supported_no_uniform_compute_advantage` | 5 systems × 7 datasets；35/35 service units / 77 checkpoint objects | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/table/table_iscf_bsca_efficiency.tex` | 支持one-model consolidation、architectural CHPC及相对four-model TimeAlign/QDF的parameter/storage reduction；不支持uniform training/latency/computation advantage |
 | `Core-Ablation` | 正文 mechanism attribution | `complete_hash_frozen_partial_attribution_3_of_4_controls` | 5 variants × 5 datasets × 4 H；100/100 cells，25 checkpoints（5 reused + 20 new） | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/table/table_iscf_bsca_core_ablation.tex` | 支持BSCA objective、scope-specific projections与multi-scope design；不支持learned Target-Adaptive Allocation相对equal fusion的独立accuracy utility |
-| `Decoder-Transfer` | 正文 transfer evidence | `complete_hash_frozen_v2p1_patchtst_hpo_portability_gate_failed` | 2 backbones × 3 decoder columns × 5 datasets × 4 H；30 checkpoint objects / 120/120 cells | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_v2p1_20260815/formal_results/table/table_iscf_bsca_decoder_transfer.tex` | DLinear-style相对gate通过；validation-selected PatchTST-style仍失败，因此不支持总体cross-backbone portability claim |
+| `Decoder-Transfer` | 正文 transfer evidence | `three_dataset_best_config_candidate_two_matched_controls_pending` | 2 backbones × 3 decoder rows × 3 datasets；每cell为four-H mean；72 underlying cells | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/table_decoder_transfer_three_dataset_best_config.tex` | 作者后置收窄范围内DLinear与PatchTST best-config均双指标正向；PatchTST Weather/ETTm1尚缺同profile matched +ISCF，five-dataset negative audit必须保留 |
 | `Ablation-Sensitivity` | Appendix | `deferred_outside_current_core_closure` | random partition、scope count、$\lambda$ sensitivity | 尚无正式表 | 当前不纳入核心闭合；若恢复仅作sensitivity/robustness，canonical grouping不作为既定正向结论 |
 
 ## 4. 已完成主表结果摘要
@@ -87,6 +87,14 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 - canonical audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/result_and_table_audit.md`；standalone LaTeX=`table/table_iscf_bsca_core_ablation_standalone.tex`；review PDF=`output/pdf/iscf_bsca_core_ablation_20260814.pdf`。
 
 ### Decoder-Transfer
+
+- 正文范围按作者要求收窄为Weather、ETTm1、ETTm2；该范围在观察five-dataset结果后确定，因此标为`author_refined_posthoc_scope`，ETTh1/ETTh2负向证据移至完整audit/limitations而非删除；
+- 三数据集严格matched v2.1中DLinear BSCA vs Original=`+4.915%/+3.276%`，PatchTST BSCA vs Original=`+0.605%/-0.379%`；
+- PatchTST完整HPO best-config在三数据集上为`+1.268% MSE / +0.192% MAE`，3/3 dataset mean MSE wins、9/12 MSE cells与8/12 MAE cells；因此不再增加BSCA HPO；
+- best-config表的Weather `p07_wd1e3`与ETTm1 `p10_rank1p50_lr0p50_wd1e4`缺同profile matched +ISCF controls；ETTm2 `p01_lr0p25`可复用。两个controls闭合前，表只支持Full decoder相对Original的performance portability，不支持BSCA-vs-ISCF归因；
+- three-dataset gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/result_and_next_gate.md`；best-config PDF=`output/pdf/iscf_bsca_decoder_transfer_three_dataset_best_config_20260816.pdf`；strict-matched PDF=`output/pdf/iscf_bsca_decoder_transfer_three_dataset_matched_20260816.pdf`；
+
+以下为five-dataset historical audit，继续作为supplementary/limitations evidence保留，不覆盖上述三数据集paper candidate：
 
 - v2.1完整性：5个validation-selected BSCA checkpoints + 5个matched ISCF checkpoints形成10/10 unique hashes与5/5 matched initialization pairs；新增formal test为40/40 cells，并复用v1 DLinear三arms与PatchTST Original的80 cells，combined table为120/120 cells；
 - parent v2的50-run validation HPO只有40/50 unique hashes，因此parent artifact gate保持FAIL；v2.1只冻结五个互异selected checkpoints，未删除negative trials或追认parent gate；

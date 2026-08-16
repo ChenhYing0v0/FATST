@@ -1,5 +1,13 @@
 # Research Roadmap
 
+## Decoder-Transfer Three-Dataset Scope Consolidation (2026-08-16)
+
+Current cursor=`existing formal artifacts -> author-refined three-dataset result built -> two matched controls pending authorization`。Main-text dataset scope现限定为Weather、ETTm1、ETTm2；这是读取five-dataset结果后的作者选择，必须作为`author_refined_posthoc_scope`披露，ETTh1/ETTh2负向block继续保留在完整formal audit和limitations。
+
+严格matched v2.1 evidence中，DLinear-style相对Original macro MSE/MAE gain=`4.915%/3.276%`；PatchTST-style=`+0.605%/-0.379%`。使用已完整formal-test的冻结HPO pool，并按每dataset的four-H mean official-test MSE选择一个shared profile后，PatchTST在three-dataset scope取得`+1.268% MSE / +0.192% MAE`，3/3 dataset mean MSE wins，MSE/MAE cell wins=`9/12,8/12`。该结果说明继续扩大PatchTST BSCA HPO不是当前必要项。
+
+Matched attribution尚缺Weather `p07_wd1e3 +ISCF`与ETTm1 `p10_rank1p50_lr0p50_wd1e4 +ISCF`两个same-profile controls；ETTm2 `p01_lr0p25 +ISCF`可复用。若后续授权，先清理remote quota，再仅训练这2项、冻结2 unique hashes与matched initialization，之后测试8 cells；任何失败均回退到strict-matched table，不增开HPO。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/result_and_next_gate.md`；Decision=`three_dataset_best_config_performance_pass_two_matched_iscf_controls_required`。
+
 ## PatchTST Decoder-HPO Full Test-Tuned Audit Prelaunch (2026-08-16)
 
 Current cursor=`Step 7 complete -> 40 unique checkpoint manifest frozen -> 35 missing formal tests authorized`。用户明确要求把parent PatchTST decoder-HPO中全部未测unique checkpoints跑完official test，并按dataset-level four-H mean test MSE选择一个profile。50 training objects包含40 unique hashes；v2.1已测5项复用，本轮只新增35 jobs / 140 cells，完整profile-expanded scorecard为200 cells，加入v1 BSCA reference后candidate pool为220 cells。
