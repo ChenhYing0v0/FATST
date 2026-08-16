@@ -1,0 +1,16 @@
+{
+  "role": "posthoc_diagnostic_not_an_alternative_paper_selector",
+  "candidate_combinations": 161051,
+  "dual_positive_macro_mse_and_mae_combinations": 0,
+  "mse_selected_macro_mse_gain_percent": 0.13356362342957487,
+  "mse_selected_macro_mae_gain_percent": -0.2532299377841491,
+  "mae_optimal_profile_by_dataset": {
+    "Weather": "p07_wd1e3",
+    "ETTm1": "p10_rank1p50_lr0p50_wd1e4",
+    "ETTm2": "p03_lr2p00",
+    "ETTh1": "p07_wd1e3",
+    "ETTh2": "p05_wd1e5"
+  },
+  "mae_optimal_macro_mse_gain_percent": -0.05100666855031563,
+  "mae_optimal_macro_mae_gain_percent": 0.13732696542159337
+}
