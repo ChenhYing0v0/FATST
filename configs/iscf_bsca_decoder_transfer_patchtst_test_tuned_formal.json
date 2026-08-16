@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "protocol_id": "ISCF-BSCA-DECODER-TRANSFER-PATCHTST-HPO-v2-TT-FORMAL-20260816",
+  "candidate_version": "ISCF-BSCA-DECODER-TRANSFER-PATCHTST-HPO-v2-TT",
+  "status": "authorized_prelaunch",
+  "current_step": 7,
+  "test_informed": true,
+  "test_tuned": true,
+  "problem": "evaluate every unique checkpoint in the frozen PatchTST decoder-HPO v2 search and select one four-horizon aggregate profile per dataset",
+  "datasets": ["Weather", "ETTm1", "ETTm2", "ETTh1", "ETTh2"],
+  "horizons": [96, 192, 336, 720],
+  "seeds": [2021],
+  "arms": ["patchtst_iscf_bsca_hpo_unique_checkpoint"],
+  "profiles": {
+    "path": "configs/iscf_bsca_decoder_transfer_profiles.json",
+    "sha256": "3a0b8864f1389ebb1346bebe0954b3fa7466b1ae8b054de597f263b8089c95ec"
+  },
+  "training_protocol": {
+    "path": "configs/iscf_bsca_decoder_transfer_patchtst_hpo_v2.json",
+    "sha256": "a3adb4e81cb4fb378cc50f9e16967e691ca41e7ce327d1547b27401c0ceb0ae1"
+  },
+  "diagnostic_design": {
+    "path": "configs/iscf_bsca_decoder_transfer_protocol.json",
+    "sha256": "545cd3d42aad962fd9b75f967826e13ba1b6a5a730148b748be0d9930638ae84"
+  },
+  "matrix": {
+    "expected_runs": 40,
+    "explicit_manifest_rows": 40,
+    "parent_checkpoint_objects": 50,
+    "unique_checkpoint_hashes": 40,
+    "reused_formal_checkpoint_jobs": 5,
+    "new_formal_checkpoint_jobs": 35,
+    "unique_formal_cells": 160,
+    "profile_expanded_cells": 200,
+    "candidate_pool_cells_with_v1_reference": 220,
+    "metrics": ["mse", "mae"],
+    "full_matrix_required": true,
+    "partial_reporting_allowed": false
+  },
+  "training_contracts": [
+    {
+      "target_horizons": [720],
+      "validation_horizons": [96, 192, 336, 720],
+      "pred_loss_mode": "full",
+      "pcc_objective_mode": "equal_uniform_scope_anchor",
+      "training_final_evaluation_split": "val"
+    }
+  ],
+  "checkpoint_selection_contract": "best-validation-mean-mse-h96-h192-h336-h720",
+  "test_tuned_selection": {
+    "unit": "one_profile_per_dataset_shared_by_all_four_horizons",
+    "candidate_pool": "ten_parent_hpo_profiles_plus_v1_bsca_reference",
+    "primary_metric": "mean_official_test_mse_h96_h192_h336_h720",
+    "reported_secondary_metric": "mean_official_test_mae_h96_h192_h336_h720",
+    "tie_breakers": ["lower_mean_test_mae", "lexicographic_profile_id"],
+    "per_horizon_seed_metric_or_cell_selection": false,
+    "all_trials_and_negative_cells_retained": true
+  },
+  "artifact_contract": {
+    "unique_manifest": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_test_tuned_full_20260816/unique_checkpoint_manifest.csv",
+    "unique_manifest_sha256": "62085a921c049c1360b8083825f7de475a9573022f5f5032c166b683cf305efa",
+    "remote_output_root": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_decoder_transfer_patchtst_test_tuned_full_20260816",
+    "v1_cells": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_20260814/formal_results/decoder_transfer_120_cells.csv",
+    "local_analysis_root": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_test_tuned_full_20260816/formal_results",
+    "formal_test_required_files": [
+      "test_audit_metrics_by_target_horizon.csv",
+      "test_audit_invariants.json",
+      "pcsd_test_audit_diagnostics.npz"
+    ]
+  },
+  "gates": {
+    "all_40_unique_checkpoints_reported": true,
+    "all_160_unique_cells_reported": true,
+    "all_200_profile_expanded_cells_reported": true,
+    "all_220_candidate_pool_cells_reported": true,
+    "checkpoint_nonmutation_required": true,
+    "numeric_health_required": true,
+    "selected_vs_original_macro_mse_gain_percent_min_exclusive": 0.0,
+    "selected_vs_original_macro_mae_gain_percent_min_exclusive": 0.0,
+    "selected_vs_original_dataset_mse_wins_min": 3
+  },
+  "rollback": {
+    "artifact_or_hash_failure": "stop and repair only the failed formal artifact without changing the frozen selection rule",
+    "performance_gate_fail": "retain the PatchTST negative result and do not expand search or selectively report favorable cells",
+    "performance_gate_pass_without_matched_attribution": "mark performance_partial_pass and require separately authorized matched ISCF training before canonical table mutation"
+  },
+  "authorization": {
+    "user_authorization": "2026-08-16 explicit request to formal-test every previously untested unique PatchTST HPO checkpoint and select one dataset-level profile",
+    "user_authorized": true,
+    "authorization_date": "2026-08-16",
+    "remote_training_authorized": false,
+    "formal_test_access_authorized": true,
+    "formal_test_access_count_for_version": 1,
+    "checkpoint_retraining_allowed": true,
+    "checkpoint_retrained_before_test": true,
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+    "checkpoint_mutation_during_test_allowed": false,
+    "test_role": "test-tuned-hyperparameter-selection-and-paper-benchmark",
+    "per_dataset_aggregate_hyperparameter_tuning_allowed": true,
+    "per_horizon_seed_metric_or_cell_tuning_allowed": false
+  },
+  "claim_boundary": "test-informed and test-tuned dataset-level performance audit; a pass is not matched BSCA mechanism attribution and cannot support architecture-agnostic portability"
+}

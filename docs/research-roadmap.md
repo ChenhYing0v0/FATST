@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## PatchTST Decoder-HPO Full Test-Tuned Audit Prelaunch (2026-08-16)
+
+Current cursor=`Step 7 complete -> 40 unique checkpoint manifest frozen -> 35 missing formal tests authorized`。用户明确要求把parent PatchTST decoder-HPO中全部未测unique checkpoints跑完official test，并按dataset-level four-H mean test MSE选择一个profile。50 training objects包含40 unique hashes；v2.1已测5项复用，本轮只新增35 jobs / 140 cells，完整profile-expanded scorecard为200 cells，加入v1 BSCA reference后candidate pool为220 cells。
+
+该candidate显式为`test_informed/test_tuned`；per-H/seed/metric/cell反选与partial reporting均禁止。Gate仍要求相对Original Decoder macro MSE/MAE均正且dataset MSE wins>=3/5。若通过但缺少selected-profile matched +ISCF controls，只能得到`performance_partial_pass`并另行冻结matched training；若失败，保留PatchTST负结论且不继续扩展search。Canonical gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_test_tuned_full_20260816/design_and_prelaunch_gate.md`；Decision=`patchtst_parent_hpo_40_unique_manifest_frozen_35_missing_formal_tests_authorized`。
+
 ## iTransformer-style Decoder-HPO v2 Formal Closure (2026-08-16)
 
 Current cursor=`Step 9--10 complete -> performance gate fail -> rollback closes iTransformer decoder rescue`。用户在v1 formal negative result后显式重启iTransformer decoder-HPO，并允许official-test dataset-level反选。新candidate=`ISCF-BSCA-DECODER-TRANSFER-ITRANSFORMER-HPO-v2`，明确标记`test_informed/test_tuned`。
