@@ -1,0 +1,9 @@
+{
+  "pass": true,
+  "complete_runs": 70,
+  "expected_runs": 70,
+  "unique_checkpoint_hashes": 70,
+  "expected_unique_checkpoint_hashes": 70,
+  "datasets_with_matched_encoder_initialization": 5,
+  "formal_test_jobs": 0
+}

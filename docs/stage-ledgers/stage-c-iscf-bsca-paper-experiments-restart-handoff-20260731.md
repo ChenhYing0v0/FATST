@@ -44,7 +44,7 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `performance_partial_pass`；Core-Ablation 3/4 controls pass；allocation独立accuracy attribution失败 |
 | `active_workstream` | paper-facing experiment execution |
-| `active_experiment_step` | iTransformer-style Decoder-HPO v2 Step 8；70-run three-GPU train/validation active；test=0 |
+| `active_experiment_step` | iTransformer-style Decoder-HPO v2 Step 8 complete；70-hash manifest pass；280-cell formal audit prelaunch |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | test-informed iTransformer decoder compatibility HPO v2 |
 | `local_audit_and_design_authorized` | true |
@@ -52,7 +52,7 @@ paper candidate与claim boundary，但互不替代。
 | `remote_training_authorized` | true for frozen 14 profiles × 5 datasets=`70` training-only runs |
 | `test_tuned_hpo_authorized` | true；dataset-level four-H mean official-test MSE selector；per-H/cell selection=false |
 | `formal_test_authorized` | conditional after 70/70 artifacts、70 unique hashes与immutable manifest；280 cells一次完整access |
-| `next_action` | 等待70/70 training artifacts -> checker -> 70 unique hashes -> immutable manifest；之后才执行已授权280-cell test-tuned audit |
+| `next_action` | commit/push formal protocol -> remote dry-run/hash gate -> execute complete 70-checkpoint/280-cell formal audit |
 | `conditional_next` | allocation effectiveness claim必须保持negative/unsupported；不得用Figure 5 diagnostics补救failed matched control |
 
 2026-08-15 iTransformer-style Decoder-Transfer v1完成15/15 train/validation runs。Artifact checker确认15 unique checkpoint hashes、5/5 matched encoder-initialization triplets、four-H validation selector一致且formal test=0；immutable manifest SHA256=`062588a140ecd4fae385aa9d194c039355bef3c7d9f49f685d796779626eecc9`。Validation-only风险信号中+ISCF-BSCA相对Original为`-1.911%/-1.889%` MSE/MAE gain，仅赢1/5 dataset MSE means；相对+ISCF为`-0.040%/-0.296%`。该信号不能替代formal effectiveness。Canonical gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_v1_20260815/training_result_and_formal_test_gate.md`。Decision=`itransformer_transfer_v1_training_manifest_pass_validation_risk_negative_formal_test_pending_authorization`。
@@ -64,6 +64,8 @@ iTransformer-style formal audit于20:15:40完成15/15 checkpoints、60/60 standa
 2026-08-16用户显式重启iTransformer decoder-HPO，并允许按official-test结果反选参数。新v2冻结14 profiles × 5 datasets=`70` new joint-training runs，搜索budget、readout LR、rank、coordinate dimension、allocation width与scope geometry；encoder与BSCA objective不变。70-hash manifest后允许完整280-cell test-tuned ranking，每dataset只按four-H mean test MSE选一个shared profile；MAE与全部负向trials完整报告，per-H/seed/metric/cell selection=false。Local prelaunch 22/22 pass。Canonical gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_hpo_v2_20260816/design_and_prelaunch_gate.md`。Decision=`itransformer_decoder_hpo_v2_70_profile_dataset_runs_frozen_test_tuned_remote_training_authorized`。
 
 Exact commit=`219d52708e22e651725de4b7c027c93c16566677`通过remote 22/22 prelaunch与3/3 Weather resource smoke；smoke均`evaluation_split=none`并已清理。GPU0/1/2于`02:04:40`启动70-run train/validation queue，driver PID=`1517179`；首批`p00/p01/p02`均进入epoch1且loss finite，显存约1.23 GiB。Formal test=`0`。Canonical launch=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_hpo_v2_20260816/remote_launch.md`。Decision=`itransformer_decoder_hpo_v2_three_gpu_training_active_test_zero`。
+
+70-run queue于`07:15:14`完成。Checker确认70/70 artifacts、70 unique checkpoint hashes、5/5 matched encoder initialization sets、four-H validation selector与numeric health通过，training test=0；manifest SHA256=`ab3a4cd95e73d25540f5d21d4aabfef3221ac1ca7a4ab14e6c03e7ce8286c66a`。用户既有dataset-level test-tuned授权生效，下一步固定为70 checkpoints × four H=`280` new cells；与v1 BSCA reference组成300-cell candidate pool，完整保留negative trials。Canonical gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_hpo_v2_20260816/training_result_and_formal_test_gate.md`。Decision=`itransformer_decoder_hpo_v2_training_manifest_pass_280_cell_test_tuned_formal_authorized`。
 
 2026-08-14 Core-Ablation完成5 variants × 5 datasets × four H=`100/100` cells。20个新controls均为same-profile end-to-end joint training，20个checkpoint hashes唯一且formal test后immutable；Full复用exact `ISCF-BSCA-v1`的5个checkpoints。Full macro MSE/MAE=`0.308549/0.346278`。`w/o BSCA`、`Shared Scope Projection`与`Fixed Scope (s=144)`通过，`w/o Target-Adaptive Allocation`失败（Full MSE -0.039% gain；dataset/horizon MSE wins=`2/5,0/4`）。Decision=`core_ablation_complete_partial_attribution_3_of_4_controls_pass`；canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/result_and_table_audit.md`。
 

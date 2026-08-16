@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "protocol_id": "ISCF-BSCA-DECODER-TRANSFER-ITRANSFORMER-HPO-v2-FORMAL-20260816",
+  "candidate_version": "ISCF-BSCA-DECODER-TRANSFER-ITRANSFORMER-HPO-v2",
+  "status": "authorized_prelaunch",
+  "current_step": 9,
+  "test_informed": true,
+  "test_tuned": true,
+  "datasets": ["Weather", "ETTm1", "ETTm2", "ETTh1", "ETTh2"],
+  "horizons": [96, 192, 336, 720],
+  "seeds": [2021],
+  "profiles": {
+    "path": "configs/iscf_bsca_decoder_transfer_itransformer_profiles.json",
+    "sha256": "5e8dc7f04765fae36d25f696cf66be00cc58ee59f7559871119751abb4ae8b51"
+  },
+  "training_protocol": {
+    "path": "configs/iscf_bsca_decoder_transfer_itransformer_hpo_v2.json",
+    "sha256": "291b23be097fd991a325f5b83c8464bfa2e74264f2e69496c288cb8d92ea9c4d"
+  },
+  "diagnostic_design": {
+    "path": "configs/iscf_bsca_decoder_transfer_protocol.json",
+    "sha256": "545cd3d42aad962fd9b75f967826e13ba1b6a5a730148b748be0d9930638ae84"
+  },
+  "matrix": {
+    "expected_runs": 70,
+    "explicit_manifest_rows": 70,
+    "checkpoint_objects": 70,
+    "formal_test_checkpoint_jobs": 70,
+    "formal_test_cells": 280,
+    "reused_v1_reference_cells": 20,
+    "reused_original_anchor_cells": 20,
+    "complete_candidate_pool_cells": 300,
+    "metrics": ["mse", "mae"],
+    "full_matrix_required": true,
+    "partial_reporting_allowed": false
+  },
+  "training_contracts": [
+    {
+      "target_horizons": [720],
+      "validation_horizons": [96, 192, 336, 720],
+      "pred_loss_mode": "full",
+      "pcc_objective_mode": "equal_uniform_scope_anchor",
+      "training_final_evaluation_split": "val"
+    }
+  ],
+  "checkpoint_selection_contract": "best-validation-mean-mse-h96-h192-h336-h720",
+  "test_tuned_selection": {
+    "unit": "one_dataset_profile_shared_by_all_four_horizons",
+    "candidate_pool": "fourteen_new_profiles_plus_v1_reference",
+    "primary_metric": "mean_official_test_mse_h96_h192_h336_h720",
+    "tie_breakers": [
+      "lower_mean_test_mae",
+      "lower_decoder_parameter_count",
+      "lexicographic_profile_id"
+    ],
+    "per_horizon_seed_metric_or_cell_selection_allowed": false,
+    "all_negative_trials_retained": true
+  },
+  "artifact_contract": {
+    "remote_output_root": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_decoder_transfer_itransformer_hpo_v2_20260816",
+    "remote_training_manifest": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_decoder_transfer_itransformer_hpo_v2_20260816/training_artifact_audit/immutable_training_manifest.csv",
+    "local_training_manifest": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_hpo_v2_20260816/training_artifact_audit/immutable_training_manifest.csv",
+    "training_manifest_sha256": "ab3a4cd95e73d25540f5d21d4aabfef3221ac1ca7a4ab14e6c03e7ce8286c66a",
+    "v1_reference_cells": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_itransformer_v1_20260815/formal_results/itransformer_transfer_60_cells.csv",
+    "formal_test_subdir": "formal_test"
+  },
+  "authorization": {
+    "user_authorization": "2026-08-16 explicit permission to select decoder hyperparameters using official-test results and continue after remote completion",
+    "user_authorized": true,
+    "authorization_date": "2026-08-16",
+    "remote_training_authorized": false,
+    "formal_test_access_authorized": true,
+    "formal_test_access_count_for_version": 1,
+    "checkpoint_retraining_allowed": false,
+    "checkpoint_retrained_before_test": false,
+    "checkpoint_selection": "best-validation-mean-mse-h96-h192-h336-h720",
+    "checkpoint_mutation_during_test_allowed": false,
+    "per_dataset_aggregate_hyperparameter_tuning_allowed": true,
+    "per_horizon_seed_metric_or_cell_tuning_allowed": false,
+    "test_role": "test-tuned-hyperparameter-selection-and-paper-benchmark",
+    "table_mutation_authorized": false,
+    "extra_seeds_authorized": false
+  },
+  "gates": {
+    "checkpoint_nonmutation_required": true,
+    "all_280_new_cells_reported": true,
+    "all_300_candidate_pool_cells_reported": true,
+    "numeric_health_required": true,
+    "selected_vs_v1_original_macro_mse_gain_percent_min_exclusive": 0.0,
+    "selected_vs_v1_original_macro_mae_gain_percent_min_exclusive": 0.0,
+    "selected_vs_v1_original_dataset_mse_wins_min": 3
+  }
+}
