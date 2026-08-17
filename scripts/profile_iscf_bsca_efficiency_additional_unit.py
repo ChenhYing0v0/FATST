@@ -270,7 +270,11 @@ def main() -> None:
     with torch.inference_mode():
         outputs = [call() for call in calls]
         for output, horizon in zip(outputs, HORIZONS, strict=True):
-            if output.shape[0] != 1 or output.shape[1] != horizon:
+            if (
+                output.shape[-2] != horizon
+                or output.shape[-1] != CHANNELS[args.dataset]
+                or any(size != 1 for size in output.shape[:-2])
+            ):
                 raise RuntimeError(f"unexpected output shape: {tuple(output.shape)}")
             if not bool(torch.isfinite(output).all().item()):
                 raise RuntimeError("non-finite synthetic output")
