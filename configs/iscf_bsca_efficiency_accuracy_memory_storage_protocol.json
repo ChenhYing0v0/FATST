@@ -1,0 +1,69 @@
+{
+  "schema_version": 2,
+  "protocol_id": "ISCF-BSCA-EFFICIENCY-ACCURACY-MEMORY-STORAGE-20260817",
+  "status": "complete_existing_profiler_reuse_no_new_training_no_test_access",
+  "datasets": ["ETTm1", "ETTm2", "ETTh1", "ETTh2", "Weather", "ECL", "Solar"],
+  "horizons": [96, 192, 336, 720],
+  "systems": [
+    {
+      "id": "ISCF-BSCA",
+      "models_per_dataset": 1,
+      "role": "one_unified_model_for_all_horizons"
+    },
+    {
+      "id": "TimeAlign",
+      "models_per_dataset": 4,
+      "role": "four_native_horizon_specific_models"
+    },
+    {
+      "id": "QDF",
+      "models_per_dataset": 4,
+      "role": "four_native_horizon_specific_models"
+    },
+    {
+      "id": "AMD",
+      "models_per_dataset": 4,
+      "role": "four_native_horizon_specific_models"
+    },
+    {
+      "id": "SimpleTM",
+      "models_per_dataset": 4,
+      "role": "four_native_horizon_specific_models",
+      "deployment_repeat": 0,
+      "note": "Main_I_accuracy_uses_the_frozen_multi_repeat_summary;_resource_cost_uses_one_non_ensemble_repeat_0_checkpoint_per_horizon"
+    }
+  ],
+  "metrics": {
+    "accuracy": "arithmetic_macro_mean_of_Main_I_MSE_and_MAE_over_7_datasets_x_4_horizons",
+    "peak_inference_memory": "fresh_process_total_peak_allocated_memory_for_complete_four_horizon_service_then_macro_mean_over_7_datasets",
+    "checkpoint_storage": "actual_checkpoint_file_bytes_for_complete_four_horizon_service_then_macro_mean_over_7_datasets"
+  },
+  "memory_contract": {
+    "hardware": "one_exclusive_NVIDIA_GeForce_RTX_3090",
+    "precision": "FP32",
+    "batch_size": 1,
+    "input": "synthetic_standardized_no_test_loader_or_labels",
+    "resident_models": "all_checkpoints_required_by_the_four_horizon_service",
+    "unified_service": "one_H720_forward_plus_prefix_views",
+    "fixed_horizon_service": "four_resident_native_models_executed_sequentially"
+  },
+  "checkpoint_contract": {
+    "unified_service": "one_actual_checkpoint_file",
+    "fixed_horizon_service": "sum_actual_checkpoint_files_for_H96_H192_H336_H720"
+  },
+  "source_profiler_protocol": "ISCF-BSCA-EFFICIENCY-20260814",
+  "source_profiler_service_units": 35,
+  "source_profiler_checkpoint_objects": 77,
+  "additional_profiler_service_units": 14,
+  "additional_profiler_checkpoint_objects": 56,
+  "new_training_runs": 0,
+  "formal_test_accesses": 0,
+  "excluded_systems": {
+    "iTransformer_H720_prefix": "only_one_H720_checkpoint_per_dataset_is_locally_available_and_does_not_match_the_four_native_model_service",
+    "DLinear_H720_prefix": "only_one_H720_checkpoint_per_dataset_is_locally_available_and_does_not_match_the_four_native_model_service",
+    "PatchTST_H720_prefix": "only_one_H720_checkpoint_per_dataset_is_locally_available_and_does_not_match_the_four_native_model_service",
+    "TVNet": "only_ETTh2_has_author_corrected_local_reproduction_evidence",
+    "remaining_Main_I_systems": "lack_complete_locally_audited_7x4_checkpoint_and_peak_memory_evidence"
+  },
+  "claim_boundary": "supports_accuracy_checkpoint_storage_and_peak_memory_comparison_for_complete_resident_services;_QDF_peak_memory_is_lower_than_ISCF_and_must_remain_visible"
+}
