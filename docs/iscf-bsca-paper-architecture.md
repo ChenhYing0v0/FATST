@@ -1567,15 +1567,15 @@ full-domain implementation的training time与single/all-H latency均不领先，
 
 | Variant | Frozen intervention | MSE | MAE |
 | --- | --- | ---: | ---: |
-| Full ISCF-BSCA | complete architecture and objective | 0.3085 | 0.3463 |
-| w/o BSCA | retain Uniform-Prefix Forecasting Loss；remove Scope-Wise Forecasting Loss and Allocation-Balance Regularizer | 0.3161 | 0.3532 |
-| w/o Target-Adaptive Allocation | replace learned Scope Probabilities with a matched non-adaptive fusion rule | 0.3084 | 0.3463 |
-| Shared Scope Projection | replace scope-specific projections with one shared projection | 0.3130 | 0.3506 |
-| Fixed Scope ($s=144$) | use only the preregistered middle scope；do not search for a best fixed scope | 0.3142 | 0.3499 |
+| Full ISCF-BSCA | complete architecture and objective | 0.305 | 0.344 |
+| w/o BSCA | retain Uniform-Prefix Forecasting Loss；remove Scope-Wise Forecasting Loss and Allocation-Balance Regularizer | 0.316 | 0.354 |
+| w/o Target-Adaptive Allocation | replace learned Scope Probabilities with a matched non-adaptive fusion rule | 0.310 | 0.349 |
+| Shared Scope Projection | replace scope-specific projections with one shared projection | 0.314 | 0.351 |
+| Fixed Scope ($s=144$) | use only the preregistered middle scope；do not search for a best fixed scope | 0.315 | 0.351 |
 
 不为Allocation-Balance Regularizer设置单独对照。Fixed Scope的$s=144$是budget-aware preregistered control，不是validation-selected optimum。random partition、scope count与$\lambda$ sensitivity仅在后续确有必要且获得独立授权时进入Appendix；当前不把它们纳入核心闭合矩阵。
 
-2026-08-14的single-seed matched formal matrix已100/100 cells闭合。Full相对`w/o BSCA`、`Shared Scope Projection`与`Fixed Scope ($s=144$)`分别取得2.401%、1.416%和1.796%的macro MSE收益并通过预注册gate；相对`w/o Target-Adaptive Allocation`的macro MSE收益为-0.039%，该control失败。因此只能支持BSCA objective、scope-specific projections与multi-scope design，不能声称learned Target-Adaptive Allocation相对equal fusion具有独立accuracy增益，也不能将完整component chain标为all-pass。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/result_and_table_audit.md`。
+2026-08-17作者提供复跑后的dataset-level four-horizon means并替换canonical Table 4。Full macro MSE/MAE为`.305/.344`，相对`w/o BSCA`、`w/o Target-Adaptive Allocation`、`Shared Scope Projection`与`Fixed Scope ($s=144$)`的display-precision macro MSE收益分别为3.481%、1.613%、2.866%和3.175%，且Full在12/12 metric columns中为best。因此aggregate accuracy attribution支持四项干预。新的per-horizon raw scorecard与checkpoint hashes未随截图提供，旧100-cell audit只作historical provenance；Figure 5的near-uniform utilization与8/40 alignment继续限制routing/specialization解释。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/result_and_table_audit.md`。
 
 ### 8.6 Forecast Consistency and Scope-Allocation Behavior
 
@@ -1588,7 +1588,7 @@ full-domain implementation的training time与single/all-H latency均不领先，
 
 Realized allocation value当前不纳入该节，以控制额外实验成本。Qualitative trajectory允许从提升最明显的样本中选择，但caption必须披露comparator、split与selection rule，并明确其是illustrative而非representative evidence。该节不设置failure-case panel；aggregate negative cells在5.2--5.3完整报告，并在Discussion中解释。
 
-2026-08-16 validation-only Figure 5 diagnostic已完成：五数据集×四个paper horizons的20/20 numerical CHPC comparisons均为maximum absolute CHPD=0；scope-arm macro region-best随future region在`s=360`、`s=720`与`s=1`之间变化，最大best-to-worst excess MSE为6.123%。但learned probabilities的dataset-region means仅在0.18258--0.21479之间变化，highest-utilization scope只在8/40 dataset-region cells与lowest-MSE scope一致。因此该节只能写exact CHPC、active-but-near-uniform allocation与descriptive scope-arm regional heterogeneity；不能写successful routing、causal specialization或allocation accuracy gain。Qualitative comparator冻结为`Fixed Scope (s=144)`，selected Weather row 77只作performance-selected illustration。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/figure5_mechanism_diagnostics_20260816/result_and_decision.md`。
+2026-08-16 validation-only Figure 5 diagnostic已完成：五数据集×四个paper horizons的20/20 numerical CHPC comparisons均为maximum absolute CHPD=0；scope-arm macro region-best随future region在`s=360`、`s=720`与`s=1`之间变化，最大best-to-worst excess MSE为6.123%。但learned probabilities的dataset-region means仅在0.18258--0.21479之间变化，highest-utilization scope只在8/40 dataset-region cells与lowest-MSE scope一致。因此该节只能写exact CHPC、active-but-near-uniform allocation与descriptive scope-arm regional heterogeneity；Figure 5本身不能建立accuracy attribution、successful routing或causal specialization。2026-08-17作者修正Table 4可独立支持aggregate allocation accuracy gain，但不能改变上述internal-health边界。Qualitative comparator冻结为`Fixed Scope (s=144)`，selected Weather row 77只作performance-selected illustration。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/figure5_mechanism_diagnostics_20260816/result_and_decision.md`。
 
 ### 8.7 Backbone Transferability
 
@@ -1857,7 +1857,8 @@ Coverage boundary：
 | 2026-08-10 | Section 2 v0.2 temporary freeze | 2.3 opening改为`Beyond shallow output projections`，移除`A smaller body of work`的数量判断 | Author确认其余内容；Section 2正文、结构、citations与claim boundaries暂时冻结；next manuscript section pending direction；experiment cursor不变 |
 | 2026-08-11 | Sections 5--7 structural design v0.1 | 基于frozen Sections 1--4、table registry与claim boundaries设计Experiments、Discussion、Conclusion及Appendix evidence ladder | 新增独立设计稿；standalone Discussion、case-study routing与5.6 split/merge均pending author discussion；不填result prose、不改实验授权 |
 | 2026-08-12 | Sections 5--7 structural design v0.2 temporary freeze | Author确认七章结构与standalone Discussion；Core-Ablation固定为Full、w/o BSCA、w/o Target-Adaptive Allocation、Shared Scope Projection与Fixed Scope $s=144$；qualitative并入5.6 | 不设balance-only或failure-case；realized allocation value移出当前计划；performance-selected example必须披露selection；不新增实验授权 |
-| 2026-08-14 | Core-Ablation formal closure | 5 variants × 5 datasets × 4 H的100-cell matched formal matrix完成；20新checkpoints hashes immutable | 3/4 controls通过；Target-Adaptive Allocation control失败；component claim收窄，table/PDF/hash冻结 |
+| 2026-08-17 | Core-Ablation author correction | 作者提供复跑后的5 variants × 5 datasets aggregate MSE/MAE；Table 4、PDF与registry更新 | Full在12/12 metric columns为best；四项aggregate方向均正；per-horizon/checkpoint rerun provenance未同步，Figure 5 routing boundary保留 |
+| 2026-08-14 | Core-Ablation historical formal closure | 5 variants × 5 datasets × 4 H的100-cell matched formal matrix完成；20新checkpoints hashes immutable | 历史3/4-control结论已被2026-08-17作者aggregate correction取代；raw artifacts保留作historical audit |
 | 2026-08-14 | Decoder-Transfer / Efficiency prelaunch | Transfer冻结30-checkpoint end-to-end matrix并通过13项local gate；Efficiency冻结5-system、35-unit、77-object profiler contract | Transfer进入manifest-gated remote Step 8；Efficiency无新训练/无test access，正式测量与training错峰 |
 | 2026-08-14 | Decoder-Transfer formal closure | 30 checkpoints、30 unique hashes、120/120 test cells；DLinear pass / PatchTST fail | 总体cross-backbone portability unsupported；正向动词撤回；Efficiency进入独占GPU execution |
 | 2026-08-15 | PatchTST Decoder-Transfer v2.1 formal closure | Parent 50-run HPO validation pass但uniqueness gate fail；冻结5个selected BSCA并补训5个matched ISCF；10 unique hashes、5 matched initialization pairs与40 new/120 combined test cells闭合 | HPO仅缩小MSE deficit；PatchTST gate仍fail；cross-backbone portability继续unsupported，rollback至iTransformer-style carrier Step 4--6 |

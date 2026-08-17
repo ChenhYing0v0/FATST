@@ -1,5 +1,7 @@
 # ISCF-BSCA Core-Ablation 实现说明
 
+> 2026-08-17 table correction：canonical Table 4使用作者提供的复跑后dataset-level four-horizon means。表格builder按数值dense rank处理并列项，因此在三位小数证据无法区分时，并列second-best会同时下划线。该改动只影响table rendering，不改变模型forward或训练逻辑。
+
 ## 1. 目的与边界
 
 本实现不修改 Full `ISCF-BSCA-v1` 的 forward graph，而是在既有 SIFF/PCSD primitives 上开放冻结的 formal control 组合。唯一 source-level change 位于 training-argument validation：允许 `measure_only` 与 `equal`/`fixed` policy、以及 `equal_uniform_scope_anchor` 与 `equal` policy 的合法组合。

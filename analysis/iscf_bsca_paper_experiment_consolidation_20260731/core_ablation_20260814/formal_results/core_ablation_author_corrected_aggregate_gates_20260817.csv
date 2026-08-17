@@ -1,0 +1,5 @@
+control_id,control_label,full_vs_control_macro_mse_gain_percent,full_vs_control_macro_mae_gain_percent,dataset_mse_wins,dataset_mae_wins,aggregate_direction_pass,per_horizon_gate_status
+without_bsca_prefix_loss_only,w/o BSCA,3.4810126582,2.8248587571,5,5,True,not_reauditable_from_aggregate_only
+without_target_adaptive_allocation,w/o Target-Adaptive Allocation,1.6129032258,1.4326647564,5,5,True,not_reauditable_from_aggregate_only
+shared_scope_projection,Shared Scope Projection,2.8662420382,1.9943019943,5,5,True,not_reauditable_from_aggregate_only
+fixed_scope_s144,Fixed Scope ($s=144$),3.1746031746,1.9943019943,5,5,True,not_reauditable_from_aggregate_only

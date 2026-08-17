@@ -24,7 +24,7 @@ Scope-wise regional MSE 则呈现可复现的区域差异。在五数据集等�
 - region `513--720`由`s=1`以很小margin最低；
 - region-best与最弱scope之间的macro excess MSE最高为`6.123%`。
 
-然而，highest-utilization scope只在`8/40` dataset-region cells与lowest-MSE scope一致。该结果支持“scope arms存在region-dependent error heterogeneity”，但不支持“learned allocation已经可靠识别region-best scope”。它与Core-Ablation中Full未优于equal fusion的结果一致。
+然而，highest-utilization scope只在`8/40` dataset-region cells与lowest-MSE scope一致。该结果支持“scope arms存在region-dependent error heterogeneity”，但不支持“learned allocation已经可靠识别region-best scope”。2026-08-17作者修正后的Core-Ablation aggregate table已显示Full优于equal fusion；两类证据不冲突：Table 4支持accuracy-level matched gain，本图仍表明不能把该gain解释为可靠region-best routing或causal specialization。
 
 ## 4. Qualitative trajectory
 
@@ -41,9 +41,9 @@ Scope-wise regional MSE 则呈现可复现的区域差异。在五数据集等�
 ## 5. Four-layer interpretation
 
 1. `paper_facing_effectiveness`：不在本轮重复；沿用Main I/II与Core-Ablation结果。
-2. `matched_mechanism_attribution`：Core-Ablation已支持BSCA objective、scope-specific projection与multi-scope design，但不支持learned allocation独立accuracy utility。
+2. `matched_mechanism_attribution`：2026-08-17作者修正后的Core-Ablation aggregate table支持四个controls均为正向，包括learned allocation的accuracy-level matched gain；新的per-horizon/checkpoint artifacts尚未同步。
 3. `internal_mechanism_health`：CHPC pass；五个scopes均active；regional arm errors存在heterogeneity；allocation-to-best-scope agreement较低。
-4. `failure_attribution`：allocation alignment不足属于exact learned allocation path的`readout_or_head_design_wrong`/optimization limitation，不否定multi-scope framework，也不能由selected trajectory补救。
+4. `failure_attribution`：allocation alignment不足仍属于internal mechanism-health limitation；它不否定作者修正表中的aggregate accuracy gain，但阻止将该gain扩大为可靠routing或specialization结论。
 
 ## 6. Decision
 
@@ -56,7 +56,7 @@ Section 5.6可写为：
 - learned probabilities保持active但总体接近均匀，且与region-best scope的一致率有限；
 - performance-selected trajectory仅作illustrative evidence。
 
-禁止写作：learned allocation improves accuracy over equal fusion、causal specialization、universal specialization或representative example。当前不自动重启allocation HPO或architecture search；下一步进入Sections 5--7写作与全文claim synchronization。
+允许基于作者修正Table 4写作：learned allocation improves aggregate accuracy over equal fusion。禁止写作：learned allocation reliably identifies region-best scope、causal specialization、universal specialization或representative example。当前不自动重启allocation HPO或architecture search；下一步进入Sections 5--7写作与全文claim synchronization。
 
 ## 7. Artifacts
 

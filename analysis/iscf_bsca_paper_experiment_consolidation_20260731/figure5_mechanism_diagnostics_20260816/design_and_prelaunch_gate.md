@@ -42,7 +42,7 @@ Qualitative selection 是刻意的 performance selection，caption 必须披露 
 
 ## 5. Claim boundary
 
-本轮可以支持 exact prefix consistency、descriptive region-dependent scope usage 与 scope-wise error heterogeneity。它不能补救 `w/o Target-Adaptive Allocation` matched ablation 的失败，因此禁止据此声称 learned allocation 优于 equal fusion、causal specialization 或 universal specialization。`realized allocation value` 不进入当前 contract。
+本轮可以支持 exact prefix consistency、descriptive region-dependent scope usage 与 scope-wise error heterogeneity。按当时冻结边界，它不能补救2026-08-14版`w/o Target-Adaptive Allocation` matched ablation的失败。2026-08-17作者复跑汇总已独立修正该aggregate ablation方向，但本Figure 5仍不得用于声称reliable region-best routing、causal specialization或universal specialization。`realized allocation value` 不进入当前 contract。
 
 ## 6. Prelaunch audit
 

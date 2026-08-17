@@ -1,0 +1,19 @@
+{
+  "artifact_id": "ISCF-BSCA-Core-Ablation-Author-Correction-20260817",
+  "freeze_date": "2026-08-17",
+  "decision": "core_ablation_author_corrected_aggregate_all_four_controls_positive",
+  "source_role": "author_provided_rerun_dataset_level_four_horizon_means",
+  "source_precision": 3,
+  "per_horizon_rerun_artifacts_available": false,
+  "checkpoint_hashes_refreshed": false,
+  "files": {
+    "author_corrected_ablation_table_source_20260817.png": "d5b80532080b8471520785ccf914afe3feea2904e01556c9f445ea4ff42e9402",
+    "core_ablation_dataset_means.csv": "2848c03680e4e454622a4495f940bc237aba1d7dc6e9524a4d20857be9d4fd6e",
+    "core_ablation_overall_means.csv": "ea727a6eac077bc5b5f09b149f167895acfe6bedbfd19c2f69e0e3d09d161b23",
+    "core_ablation_author_corrected_aggregate_gates_20260817.csv": "168976a5f32500715f9fce911043a2248a2b82128993a8280ef4d7b47097b814",
+    "core_ablation_result_summary.json": "234a347a7eccee1c57abfd8efadd3fca889c77743b52c64c58bfd08ae7169fdf",
+    "table/table_iscf_bsca_core_ablation.tex": "d13824ae81b152c73370c8530b09741d78472261aecda1a98e9ae608508c063d",
+    "table/table_iscf_bsca_core_ablation_standalone.tex": "f1dee69054bce5405082e1d2434c587b40d63dab3c7d9a546a436771aac343cd",
+    "output/pdf/iscf_bsca_core_ablation_20260814.pdf": "3990e643291ed131d1627ae69a339b089c132f9dee0c87deef954ee031b846d3"
+  }
+}

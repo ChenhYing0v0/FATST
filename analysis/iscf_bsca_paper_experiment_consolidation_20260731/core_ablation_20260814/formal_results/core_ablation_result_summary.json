@@ -1,57 +1,59 @@
 {
-  "all_four_controls_pass": false,
-  "candidate_version": "ISCF-BSCA-v1-core-ablation-20260814",
-  "cell_count": 100,
-  "checkpoint_count": 25,
-  "decision": "performance_partial_pass_or_failed_control; limit claims to passing controls",
-  "gate_rows": [
+  "candidate_version": "ISCF-BSCA-v1-core-ablation-author-corrected-20260817",
+  "generated_at": "2026-08-17T10:46:32+08:00",
+  "decision": "core_ablation_author_corrected_aggregate_all_four_controls_positive",
+  "canonical_table_source": "author_provided_rerun_dataset_level_four_horizon_means",
+  "source_precision": 3,
+  "dataset_count": 5,
+  "variant_count": 5,
+  "displayed_metric_cells": 60,
+  "underlying_horizon_count_per_dataset": 4,
+  "underlying_horizon_cell_artifacts_refreshed": false,
+  "checkpoint_manifest_refreshed": false,
+  "historical_100_cell_audit_retained": true,
+  "full_macro_mse": 0.305,
+  "full_macro_mae": 0.344,
+  "full_best_metric_columns": 12,
+  "aggregate_direction_controls_passed": 4,
+  "aggregate_direction_controls_total": 4,
+  "preregistered_per_horizon_gate_status": "not_reauditable_from_author_aggregate_only",
+  "aggregate_gate_rows": [
     {
-      "cell_mae_wins": 18,
-      "cell_mse_wins": 17,
       "control_id": "without_bsca_prefix_loss_only",
       "control_label": "w/o BSCA",
-      "dataset_mse_wins": 4,
-      "full_vs_control_macro_mae_gain_percent": 1.972431865343797,
-      "full_vs_control_macro_mse_gain_percent": 2.40059364900442,
-      "gate_pass": true,
-      "horizon_mse_wins": 4
+      "full_vs_control_macro_mse_gain_percent": 3.4810126582,
+      "full_vs_control_macro_mae_gain_percent": 2.8248587571,
+      "dataset_mse_wins": 5,
+      "dataset_mae_wins": 5,
+      "aggregate_direction_pass": true
     },
     {
-      "cell_mae_wins": 10,
-      "cell_mse_wins": 8,
       "control_id": "without_target_adaptive_allocation",
       "control_label": "w/o Target-Adaptive Allocation",
-      "dataset_mse_wins": 2,
-      "full_vs_control_macro_mae_gain_percent": 0.0007552623838970401,
-      "full_vs_control_macro_mse_gain_percent": -0.03903138138174725,
-      "gate_pass": false,
-      "horizon_mse_wins": 0
+      "full_vs_control_macro_mse_gain_percent": 1.6129032258,
+      "full_vs_control_macro_mae_gain_percent": 1.4326647564,
+      "dataset_mse_wins": 5,
+      "dataset_mae_wins": 5,
+      "aggregate_direction_pass": true
     },
     {
-      "cell_mae_wins": 15,
-      "cell_mse_wins": 14,
       "control_id": "shared_scope_projection",
       "control_label": "Shared Scope Projection",
-      "dataset_mse_wins": 3,
-      "full_vs_control_macro_mae_gain_percent": 1.2270966019594913,
-      "full_vs_control_macro_mse_gain_percent": 1.4164857022511006,
-      "gate_pass": true,
-      "horizon_mse_wins": 4
+      "full_vs_control_macro_mse_gain_percent": 2.8662420382,
+      "full_vs_control_macro_mae_gain_percent": 1.9943019943,
+      "dataset_mse_wins": 5,
+      "dataset_mae_wins": 5,
+      "aggregate_direction_pass": true
     },
     {
-      "cell_mae_wins": 20,
-      "cell_mse_wins": 16,
       "control_id": "fixed_scope_s144",
       "control_label": "Fixed Scope ($s=144$)",
+      "full_vs_control_macro_mse_gain_percent": 3.1746031746,
+      "full_vs_control_macro_mae_gain_percent": 1.9943019943,
       "dataset_mse_wins": 5,
-      "full_vs_control_macro_mae_gain_percent": 1.038260627389003,
-      "full_vs_control_macro_mse_gain_percent": 1.795977741575741,
-      "gate_pass": true,
-      "horizon_mse_wins": 4
+      "dataset_mae_wins": 5,
+      "aggregate_direction_pass": true
     }
   ],
-  "generated_at": "2026-08-14T15:04:10.965074+08:00",
-  "matrix_complete": true,
-  "protocol_sha256": "36e8ea1ea45a62e7698cd122b27f076cc9492e9f0973d7560291dd8bd91b7f40",
-  "training_manifest_sha256": "0fb24236aaa7b1ef2fb9fe13aebfd0947428abdb3351fab0a9744c79c45a139c"
+  "claim_boundary": "The author-corrected dataset-level aggregate table supports positive matched directions for all four controls. Per-horizon and checkpoint-level reproducibility claims remain tied to historical artifacts until refreshed rerun artifacts are supplied. Figure 5 still shows near-uniform learned utilization and weak utilization-error alignment, so the allocation claim is accuracy-level rather than reliable region-best routing or causal specialization."
 }

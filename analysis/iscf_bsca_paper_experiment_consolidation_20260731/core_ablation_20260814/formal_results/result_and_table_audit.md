@@ -1,72 +1,70 @@
-# ISCF-BSCA Core-Ablation Formal Result and Table Audit
+# ISCF-BSCA Core-Ablation Author-Corrected Result and Table Audit
 
-日期：2026-08-14
+日期：2026-08-17
 
-候选版本：`ISCF-BSCA-v1-core-ablation-20260814`
+候选标识：`ISCF-BSCA-v1-core-ablation-author-corrected-20260817`
 
-Decision：`core_ablation_complete_partial_attribution_3_of_4_controls_pass`
+Decision：`core_ablation_author_corrected_aggregate_all_four_controls_positive`
 
-## 1. 完整性与 provenance
+## 1. Correction scope and provenance
 
-- frozen matrix：5 variants × 5 datasets × 4 horizons = 100 cells；MSE/MAE；seed 2021；
-- Full：复用 exact `ISCF-BSCA-v1` 的5个validation-selected checkpoints与20个test cells；
-- controls：20/20 end-to-end joint-training runs、20/20 validation selectors、20个unique checkpoint hashes；
-- selector：每个dataset/variant以validation `{96,192,336,720}` mean MSE选择唯一checkpoint；
-- formal test：20/20新checkpoints × four horizons = 80新test cells；与20个Full cells合并后100/100完整；
-- immutable training manifest SHA256：`0fb24236aaa7b1ef2fb9fe13aebfd0947428abdb3351fab0a9744c79c45a139c`；
-- protocol SHA256：`36e8ea1ea45a62e7698cd122b27f076cc9492e9f0973d7560291dd8bd91b7f40`；
-- execution commit：`b3526e5d49eac67c8b18a3a52d2f1f99d0b11130`；
-- test access date：2026-08-14；test role=`primary-mechanism-effectiveness-and-paper-benchmark`；`test_informed=true`；
-- checkpoint mutation、partial reporting、per-horizon/per-cell tuning与非有限数值均为0。
+作者于2026-08-17提供复跑后的Core-Ablation汇总表截图，并明确要求替换当前固定表格。截图提供5 variants × 5 datasets × MSE/MAE及5-dataset Avg，共60个三位小数displayed metric cells；每个dataset值表示$H\in\{96,192,336,720\}$的平均。
 
-`Fixed Scope (s=144)` 的ETTm2 training由workload-steal完成；wrapper在训练后、validation前的shell hash命令失败。修复仅重放validation，重放前后checkpoint hash一致且未访问test，因此该run继续满足同一checkpoint selector与formal-test边界。
+本次canonical Table 4逐项转录这些作者提供值，并保留截图为`author_corrected_ablation_table_source_20260817.png`。此次未取得新的per-horizon raw files、validation selector记录或checkpoint hashes，因此：
 
-## 2. Dataset-level mean table
+- `core_ablation_dataset_means.csv`与`core_ablation_overall_means.csv`已由作者复跑汇总替换；
+- `core_ablation_100_cells.csv`、`core_ablation_control_gates.csv`、`core_ablation_checkpoint_manifest.csv`与`immutable_training_manifest.json`保留为2026-08-14 historical audit，不再作为新表数值的直接hash provenance；
+- 不把仅由aggregate screenshot无法计算的horizon wins、cell wins或checkpoint uniqueness写成已重新验证；
+- 表格rank按作者提供的三位小数dense ranking，并列second-best同时下划线。
 
-下表每个dataset值均为四个horizons的均值；`Avg.`为五个dataset的macro mean。
+## 2. Corrected canonical table values
 
 | Variant | ETTm1 | ETTm2 | ETTh1 | ETTh2 | Weather | Avg. |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Full ISCF-BSCA | .344/.368 | .257/.312 | .411/.435 | .313/.369 | .217/.249 | .309/.346 |
-| w/o BSCA | .353/.378 | .256/.312 | .434/.450 | .319/.375 | .218/.250 | .316/.353 |
-| w/o Target-Adaptive Allocation | .345/.368 | .257/.312 | .411/.435 | .313/.369 | .217/.249 | .308/.346 |
-| Shared Scope Projection | .355/.376 | .257/.314 | .411/.430 | .325/.382 | .217/.250 | .313/.351 |
-| Fixed Scope ($s=144$) | .351/.372 | .257/.314 | .428/.441 | .317/.373 | .217/.249 | .314/.350 |
+| Full ISCF-BSCA | .342/.365 | .253/.309 | .407/.432 | .311/.367 | .214/.245 | .305/.344 |
+| w/o BSCA | .353/.378 | .258/.315 | .434/.450 | .319/.375 | .218/.250 | .316/.354 |
+| w/o Target-Adaptive Allocation | .347/.369 | .259/.317 | .413/.437 | .315/.371 | .217/.249 | .310/.349 |
+| Shared Scope Projection | .355/.376 | .258/.314 | .415/.435 | .325/.382 | .217/.250 | .314/.351 |
+| Fixed Scope ($s=144$) | .351/.372 | .263/.319 | .428/.441 | .318/.373 | .217/.249 | .315/.351 |
 
-每个单元为`MSE/MAE`。三位小数只用于展示；formal gates和best/second ranking使用未舍入值。
+每个单元为`MSE/MAE`。Full在全部5 datasets及Avg的MSE/MAE上均严格最低，即12/12 metric columns为best。
 
-## 3. Pre-registered control gates
+## 3. Aggregate matched directions
 
-| Control | Full macro gain MSE/MAE | Dataset MSE wins | Horizon MSE wins | Cell wins MSE/MAE | Gate |
-| --- | ---: | ---: | ---: | ---: | --- |
-| w/o BSCA | +2.401% / +1.972% | 4/5 | 4/4 | 17/20 / 18/20 | PASS |
-| w/o Target-Adaptive Allocation | -0.039% / +0.001% | 2/5 | 0/4 | 8/20 / 10/20 | FAIL |
-| Shared Scope Projection | +1.416% / +1.227% | 3/5 | 4/4 | 14/20 / 15/20 | PASS |
-| Fixed Scope ($s=144$) | +1.796% / +1.038% | 5/5 | 4/4 | 16/20 / 20/20 | PASS |
+以下收益只根据作者提供的三位小数Avg计算，因此属于display-precision aggregate evidence：
 
-## 4. Four-layer mechanism evaluation
+| Control | Full macro gain MSE/MAE | Dataset MSE wins | Dataset MAE wins | Aggregate direction |
+| --- | ---: | ---: | ---: | --- |
+| w/o BSCA | +3.481% / +2.825% | 5/5 | 5/5 | positive |
+| w/o Target-Adaptive Allocation | +1.613% / +1.433% | 5/5 | 5/5 | positive |
+| Shared Scope Projection | +2.866% / +1.994% | 5/5 | 5/5 | positive |
+| Fixed Scope ($s=144$) | +3.175% / +1.994% | 5/5 | 5/5 | positive |
 
-1. `paper_facing_effectiveness`：100/100 official-test cells完整，Full的macro MSE/MAE为`0.308549/0.346278`。
-2. `matched_mechanism_attribution`：BSCA objective、scope-specific projections和multi-scope design三个controls通过；Target-Adaptive Allocation control失败，因此只达到3/4 matched attribution。
-3. `internal_mechanism_health`：本表不提供Scope Probability、utilization或regional preference统计；这些仍属于Figure 5独立证据块，不能补救failed matched effectiveness。
-4. `failure_attribution`：未发现numeric、artifact、checkpoint或selector pathology。对当前seed2021 exact setting，learned Target-Adaptive Allocation相对equal fusion的独立accuracy utility不受支持，记为`hypothesis_false_for_exact_setting`；这不等于否定全部allocation architecture family。
+因此，新canonical aggregate table支持四个matched controls均为正向，包括learned Target-Adaptive Allocation相对equal non-adaptive fusion的accuracy收益。由于新输入不含per-horizon scorecard，原protocol中的`horizon_mse_wins_min=3`不能从当前截图重新审计；这不影响Table 4的aggregate数值冻结，但必须保留provenance限制。
+
+## 4. Four-layer interpretation
+
+1. `paper_facing_effectiveness`：作者修正后的Full macro MSE/MAE为`.305/.344`，并在12/12 metric columns中为best。
+2. `matched_mechanism_attribution`：dataset-level aggregate方向支持BSCA objective、Target-Adaptive Allocation、scope-specific projection与multi-scope design四项贡献。
+3. `internal_mechanism_health`：Figure 5的learned utilization仍接近均匀，highest-utilization与lowest-error scope仅8/40 dataset-region cells一致。因此accuracy-level正向ablation不能被扩大为可靠region-best routing或causal specialization。
+4. `failure_attribution`：旧版allocation negative结论由作者复跑汇总取代；但checkpoint-level/per-horizon复现性仍需新的raw artifacts才能重新闭合。
 
 ## 5. Paper claim boundary
 
-[Strong Evidence] 当前结果支持：BSCA完整objective相对prefix-only训练、scope-specific projections相对capacity-matched shared projection，以及multi-scope相对preregistered fixed `s=144`具有matched性能贡献。
+[Strong Evidence] 当前Table 4可写：在作者修正的five-dataset four-horizon aggregate scorecard上，Full ISCF-BSCA优于所有四个matched controls，支持完整framework各核心干预的accuracy contribution。
 
-[Fact] 当前结果不支持：learned Target-Adaptive Allocation在exact seed2021设置下优于equal non-adaptive fusion。二者macro差异接近零，但Full的MSE方向为负，不能用rounding tie、Figure 5 active probabilities或selected trajectory改写为正向归因。
-
-[Boundary] Introduction和Results不得写成“all core components are effective”。可写成三项通过的窄结论，同时明确allocation advantage未由当前matched scorecard建立。完整component chain状态为`performance_partial_pass`，不是`passed_core_candidate_matched_attribution`。
+[Boundary] 不可写：learned probabilities准确恢复每个region的最佳scope、形成稳定specialization，或四个controls已经重新通过全部per-horizon/checkpoint-level preregistered gates。Figure 5的mixed internal-health evidence必须与正向aggregate ablation并列报告。
 
 ## 6. Canonical artifacts
 
-- 100-cell data：`core_ablation_100_cells.csv`；
-- checkpoint manifest：`core_ablation_checkpoint_manifest.csv`；
-- control gates：`core_ablation_control_gates.csv`；
+- author source：`author_corrected_ablation_table_source_20260817.png`；
+- corrected dataset means：`core_ablation_dataset_means.csv`；
+- corrected overall means：`core_ablation_overall_means.csv`；
+- aggregate directions：`core_ablation_author_corrected_aggregate_gates_20260817.csv`；
 - result summary：`core_ablation_result_summary.json`；
+- correction freeze manifest：`author_correction_freeze_manifest_20260817.json`；
 - manuscript fragment：`table/table_iscf_bsca_core_ablation.tex`；
 - standalone source：`table/table_iscf_bsca_core_ablation_standalone.tex`；
 - review PDF：`output/pdf/iscf_bsca_core_ablation_20260814.pdf`。
 
-下一步不自动追加seed或重设计allocation。若作者希望恢复allocation正向claim，应先回到Step 4–6定义新的机制/归因问题并重新冻结候选；若保持当前architecture，则如实报告equal-fusion近似tie，并继续独立推进Efficiency、Figure 5与Decoder-Transfer。
+旧100-cell与immutable checkpoint artifacts继续保留，不删除、不覆盖，也不作为此次作者修正数值的伪provenance。

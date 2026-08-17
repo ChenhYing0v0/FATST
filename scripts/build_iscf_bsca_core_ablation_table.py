@@ -39,8 +39,9 @@ def decorate(value: float, rank: int, precision: int) -> str:
 def metric_ranks(
     rows: list[dict[str, Any]], key: str
 ) -> dict[str, int]:
-    ordered = sorted(rows, key=lambda row: (float(row[key]), row["arm_id"]))
-    return {row["arm_id"]: index for index, row in enumerate(ordered)}
+    unique_values = sorted({float(row[key]) for row in rows})
+    value_ranks = {value: index for index, value in enumerate(unique_values)}
+    return {row["arm_id"]: value_ranks[float(row[key])] for row in rows}
 
 
 def build_table(config: dict[str, Any], results_dir: Path) -> str:
@@ -74,7 +75,7 @@ def build_table(config: dict[str, Any], results_dir: Path) -> str:
     lines = [
         "\\begin{table*}[t]",
         "\\centering",
-        "\\caption{Core ablation of ISCF-BSCA. Each dataset entry is the mean over prediction horizons $H\\in\\{96,192,336,720\\}$. Lower is better. Best and second-best results are shown in bold and underlined, respectively; rankings use unrounded values.}",
+        "\\caption{Core ablation of ISCF-BSCA. Each dataset entry is the mean over prediction horizons $H\\in\\{96,192,336,720\\}$. Lower is better. Best and second-best results are shown in bold and underlined, respectively.}",
         "\\label{tab:core-ablation}",
         "\\resizebox{\\textwidth}{!}{%",
         f"\\begin{{tabular}}{{{column_spec}}}",

@@ -14,7 +14,7 @@ source transcription audit、checkpoint manifest 和 smoke 统计不作为论文
 - `complete_hash_frozen_h5d_bs16_lr2p4_synced`：用户指定eligible H5D profile作为当前ETTh1 paper row，原H5D gate历史保留，结果与输出hash重新冻结；
 - `complete_hash_frozen_horizon_loader_reaudit`：Main II已使用既有H720 checkpoints在各fixed-H official test loaders上完整重算，continuity、origin-count与输出hash均已冻结；
 - `complete_hash_frozen_author_corrected_20260815`：作者提供的修正复跑值已按指定scope替换，其余cells保持上一冻结版；Avg.、排名、LaTeX、PDF与输出hash已重新冻结；
-- `complete_hash_frozen_partial_attribution_3_of_4_controls`：Core-Ablation完整矩阵与hash已冻结，但仅3/4 matched controls通过，结论必须按control收窄；
+- `complete_author_corrected_aggregate_all_controls_positive_provenance_partial`：Core-Ablation作者复跑aggregate表已冻结且四项方向均正；新的per-horizon/checkpoint artifacts未同步，必须保留provenance限制；
 - `complete_presentation_aligned`：完整结果已通过审计，并已按 Main I 视觉契约生成；
 - `complete_limited_surface`：结果完整，但只覆盖明确列出的部分 systems；
 - `author_fixed_controls_prelaunch_pending`：author已固定control identities，但implementation、预算与formal matrix仍待独立prelaunch；
@@ -51,9 +51,9 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 | `Main-II` | 正文主结果 | `complete_hash_frozen_author_corrected_20260815` | 8 systems × 7 datasets × 4 H；224 cells | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_ii/table_iscf_bsca_main_ii.tex` | one-model-for-all-horizons system competitiveness；不作 BSCA/decoder attribution |
 | `Main-I-Exchange` | Supplementary companion | `complete_limited_surface` | ISCF-BSCA / TimeAlign / QDF × Exchange × 4 H | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_h5d_bs16_lr2p4_synced_20260813/table_exchange_companion.tex` | Exchange 的部分系统背景；不能表述为完整 Main I extension |
 | `Efficiency` | 正文 supporting result | `complete_hash_frozen_tradeoff_supported_no_uniform_compute_advantage` | 5 systems × 7 datasets；35/35 service units / 77 checkpoint objects | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/table/table_iscf_bsca_efficiency.tex` | 支持one-model consolidation、architectural CHPC及相对four-model TimeAlign/QDF的parameter/storage reduction；不支持uniform training/latency/computation advantage |
-| `Core-Ablation` | 正文 mechanism attribution | `complete_hash_frozen_partial_attribution_3_of_4_controls` | 5 variants × 5 datasets × 4 H；100/100 cells，25 checkpoints（5 reused + 20 new） | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/table/table_iscf_bsca_core_ablation.tex` | 支持BSCA objective、scope-specific projections与multi-scope design；不支持learned Target-Adaptive Allocation相对equal fusion的独立accuracy utility |
+| `Core-Ablation` | 正文 mechanism attribution | `complete_author_corrected_aggregate_all_controls_positive_provenance_partial` | 5 variants × 5 datasets × MSE/MAE + Avg；60 displayed metric cells；historical 100-cell audit retained | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/table/table_iscf_bsca_core_ablation.tex` | 作者修正aggregate表支持四项matched accuracy directions；per-horizon/checkpoint rerun provenance待补；Figure 5不支持reliable routing或causal specialization |
 | `Decoder-Transfer` | 正文 transfer evidence | `complete_framework_portability_author_refined_scope` | 2 backbones × 2 systems × 3 datasets；每cell为four-H mean；48 underlying cells | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/table_decoder_transfer_three_dataset_framework.tex` | 完整ISCF-BSCA framework在DLinear-style与PatchTST-style两类backbones上均取得三数据集macro MSE/MAE双正向；不作内部ISCF-vs-BSCA attribution，five-dataset negative audit保留 |
-| `Figure-5-Diagnostics` | 正文 mechanism behavior | `complete_mixed_mechanism_evidence` | 5 datasets × Full/Fixed artifacts；20 CHPC cells；全部validation rows + 1,280-row qualitative pool | `paper-figures/figure_iscf_bsca_mechanism.svg` | exact CHPC与scope-arm regional error heterogeneity；learned allocation接近均匀且仅8/40 utilization/error-preference cells一致，不支持allocation accuracy或causal specialization |
+| `Figure-5-Diagnostics` | 正文 mechanism behavior | `complete_mixed_mechanism_evidence` | 5 datasets × Full/Fixed artifacts；20 CHPC cells；全部validation rows + 1,280-row qualitative pool | `paper-figures/figure_iscf_bsca_mechanism.svg` | exact CHPC与scope-arm regional error heterogeneity；learned allocation接近均匀且仅8/40 utilization/error-preference cells一致；Figure 5自身不建立accuracy attribution、reliable routing或causal specialization |
 | `Ablation-Sensitivity` | Appendix | `deferred_outside_current_core_closure` | random partition、scope count、$\lambda$ sensitivity | 尚无正式表 | 当前不纳入核心闭合；若恢复仅作sensitivity/robustness，canonical grouping不作为既定正向结论 |
 
 ## 4. 已完成主表结果摘要
@@ -81,12 +81,12 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 
 ### Core-Ablation
 
-- 完整性：5 variants × 5 datasets × 4 horizons = 100/100 cells；Full复用5个exact checkpoints，四个controls完成20/20 matched end-to-end runs与20个unique hashes；
-- Full macro MSE/MAE=`0.308549/0.346278`；
-- `w/o BSCA`、`Shared Scope Projection`、`Fixed Scope (s=144)`分别通过预注册gate，Full的macro MSE收益为`2.401%`、`1.416%`、`1.796%`；
-- `w/o Target-Adaptive Allocation`未通过：Full macro MSE反而高`0.039%`，dataset/horizon MSE wins仅`2/5`与`0/4`；
-- 因此证据状态是3/4 controls通过的`performance_partial_pass`，不得写成“all core components are effective”；
-- canonical audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/result_and_table_audit.md`；standalone LaTeX=`table/table_iscf_bsca_core_ablation_standalone.tex`；review PDF=`output/pdf/iscf_bsca_core_ablation_20260814.pdf`。
+- 2026-08-17作者提供复跑后的dataset-level four-horizon means；canonical table为5 variants × 5 datasets × MSE/MAE + Avg，共60 displayed metric cells；
+- Full macro MSE/MAE=`0.305/0.344`，并在12/12 metric columns中为best；
+- 相对`w/o BSCA`、`w/o Target-Adaptive Allocation`、`Shared Scope Projection`、`Fixed Scope (s=144)`，Full的display-precision macro MSE收益分别为`3.481%`、`1.613%`、`2.866%`、`3.175%`，五数据集MSE/MAE方向均为5/5；
+- 新截图未附per-horizon raw files、selector与checkpoint hashes；旧100-cell及immutable manifest保留为historical audit，不冒充新表provenance；
+- Table 4可支持四项aggregate accuracy contribution，但Figure 5仍不支持reliable region-best routing或causal specialization；
+- canonical audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/result_and_table_audit.md`；correction manifest=`author_correction_freeze_manifest_20260817.json`；standalone LaTeX=`table/table_iscf_bsca_core_ablation_standalone.tex`；review PDF=`output/pdf/iscf_bsca_core_ablation_20260814.pdf`。
 
 ### Decoder-Transfer
 

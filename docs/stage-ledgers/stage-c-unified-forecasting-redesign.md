@@ -74,10 +74,10 @@ Main I与Main II已建立新的author-corrected canonical freeze；旧hash-froze
 | `problem` | trained ISCF-BSCA是否满足CHPC，以及learned scope usage是否与scope-wise regional error preference一致 |
 | `existence_evidence` | 10/10 frozen validation artifacts；20/20 CHPC cells为0；scope-arm regional heterogeneity存在，但allocation-error agreement仅8/40 |
 | `idea` | 复用Full与Fixed Scope validation diagnostics，完整汇总scope utilization/error并按冻结规则选择一个illustrative trajectory |
-| `theory_check` | CHPC与accuracy分离；regional arm errors不等于successful allocation；selected case不能补救failed matched control |
+| `theory_check` | CHPC、aggregate accuracy与internal routing health分离；regional arm errors不等于successful allocation；selected case不能建立causal attribution |
 | `design` | 5 datasets × Full/Fixed artifacts；all validation rows；1,280-row qualitative pool；training/test=0 |
 | `narrative_gate` | 只允许exact CHPC、descriptive regional scope-error heterogeneity与near-uniform allocation；禁止causal specialization |
-| `effectiveness_gate` | mixed：CHPC pass；arm heterogeneity present；learned allocation alignment weak and accuracy utility unsupported |
+| `effectiveness_gate` | mixed by layer：CHPC pass；author-corrected aggregate ablation supports allocation accuracy gain；arm heterogeneity present；learned allocation alignment remains weak |
 | `artifacts` | result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/figure5_mechanism_diagnostics_20260816/result_and_decision.md`；figure=`paper-figures/figure_iscf_bsca_mechanism.svg` |
 | `decision` | `figure5_complete_mixed_mechanism_evidence`；paper experiment matrix closed，next=Sections 5--7 prose |
 
@@ -133,9 +133,9 @@ profile；test、candidate identity与per-mechanism tuning不得改变profile。
 | --- | --- | --- | --- | --- | --- |
 | `INTRO-CHPD-v1` | `integrated_in_section3_v0_7_temporarily_frozen_usable` | independently trained horizon models能否给出清晰overlap inconsistency | selected ETTh2 trajectory + all-validation heatmap；aggregate-CHPD selection retained in caption | shared-96 raw mean differences 2.16--2.51；long--short NCHPD 0.0365--0.0406 | retain frozen wording；formal family/seed prevalence deferred |
 | `SC-UVHF-FRSD-D1` | `integrated_in_section3_v0_7_temporarily_frozen_usable` | matched fixed sharing extent的future-region prediction-risk optimum是否随future region变化 | selected ETTm2 validation example；label-selected oracle role retained | five scopes win 2--3 regions；10/10 crossings；8.112% descriptive headroom | retain frozen wording；formal CFH remains architecture-level deferred control |
-| `ISCF-BSCA-v1` | `core_ablation_complete_partial_attribution` | BSCA objective、allocation、projection与multi-scope是否各自贡献 | exact five-control narrative frozen；all-component claim contingent on four controls | 100/100 cells；3/4 pass；allocation vs equal fusion fail；Full macro 0.308549/0.346278 | retain three passing claims；allocation accuracy claim unsupported；no automatic rerun |
+| `ISCF-BSCA-v1` | `core_ablation_author_corrected_aggregate_positive` | BSCA objective、allocation、projection与multi-scope是否各自贡献 | exact five-control narrative frozen；aggregate accuracy与internal routing claims分离 | author-corrected Full `.305/.344`；12/12 metric columns best；4/4 aggregate directions positive；per-H/hash provenance unsynchronized | retain four aggregate accuracy claims；keep Figure 5 routing/specialization boundary |
 | `ISCF-BSCA-MAIN-v1` | `author_corrected_main_i_and_main_ii_hash_frozen` | frozen architecture在8 datasets上经test-tuned HPO后能否达到SOTA-competitive并支持main claims | validation选checkpoint；test four-H aggregate选dataset profile；ECL/Solar test-informed expanded budget；seed2021 first | Main I 44/56 best、53/56 top-2；Main II 50/56 best、56/56 top-2；macro MSE/MAE均0.260714/0.306107 | do not retrain；use exact ablation/transfer for attribution and portability |
-| `ISCF-BSCA-PAPER-EXP-v2` | `main_tables_and_core_ablation_complete_transfer_efficiency_pending` | 完整main/ablation/transfer/efficiency evidence能否兑现provisional claims | Main I frozen；corrected Main II complete；Core-Ablation claim split by control | Core-Ablation 100/100且3/4 controls pass；transfer/efficiency missing | retain allocation negative boundary；freeze transfer/efficiency prelaunch separately |
+| `ISCF-BSCA-PAPER-EXP-v2` | `all_current_main_text_experiments_complete` | 完整main/ablation/transfer/efficiency evidence能否兑现provisional claims | Main I/II、Efficiency、Transfer、Figure 5与author-corrected Core-Ablation均闭合 | Core-Ablation 4/4 aggregate directions positive；Figure 5 routing health mixed | write Sections 5--7 with provenance and claim-layer separation |
 | `SC-ISCF-UPA-D2` | `superseded_by_bsca_v1` | information-free uniform train-time anchor能否复现ARMERR/SHUFFLED gain | user chose outcome-first method route | not executed as separate diagnostic | retain design history only |
 | `SC-ISCF-PSA-D1` | `control_complete_h2_supported` | contemporaneous no-route EQUAL能否解释new ARMERR/SHUFFLED公共gain | not a method；只隔离H2/H3 | exact EQUAL tie；controls +0.6577/+0.6557%；H2 pass | feeds UPA-D2 only |
 | `SC-ISCF-PSA-D0` | `diagnostic_only_closed_h1_not_supported` | EQUAL frozen policy向uniform收缩是否存在stable held-out frontier | diagnostic only；generic shrinkage不是paper claim | L1/MSE -0.2431%/-0.1218%；1/5 datasets；2/15 runs | no alpha/temperature rescue；retain joint-training unresolved |
@@ -360,7 +360,7 @@ Historical and control queue:
 
 | Task | Status | Next Action |
 | --- | --- | --- |
-| ISCF-BSCA paper architecture | `core_ablation_evidence_synced` | draft Section 5.5 with 3/4-control boundary；Figure 5/transfer/efficiency still pending |
+| ISCF-BSCA paper architecture | `all_experiment_evidence_synced_author_corrected_ablation` | draft Sections 5--7 with 4/4 aggregate ablation direction、per-H provenance limit与Figure 5 routing boundary |
 | ISCF-BSCA paper experiment protocol | `v2_single_seed_scoped_exchange_patch_complete` | request remaining 8-dataset/HPO/official-baseline local patches only；B1/B2/B3/C false |
 | ISCF-BSCA-v1 three-seed confirmation | `completed_exact_ablation_anchor` | reuse Full evidence；retain Equal as historical BSCA diagnostic only，不将其冒充新冻结的prefix-only w/o BSCA control |
 | ISCF-RSCC-v1 validation matrix | `completed_control_attribution_fail` | exact route closed；retain artifacts/control clue；return Step2/4 |
@@ -439,6 +439,7 @@ Historical and control queue:
 
 | Date | Trigger | Paper Section | Change Type | Decision |
 | --- | --- | --- | --- | --- |
+| 2026-08-17 | 作者提供复跑Core-Ablation汇总并要求修正固定表 | Section 5.5、Table 4、architecture/governance sync | author-corrected aggregate table + provenance split | Full `.305/.344`且12/12 metric columns best；4/4 aggregate directions positive；per-horizon/hash rerun provenance未同步；Figure 5 routing boundary保留 |
 | 2026-08-14 | 用户授权按冻结计划完成Core-Ablation与ablation table | Section 5.5、Table 4、architecture/governance sync | complete matched scorecard + claim-boundary update | 100/100 cells；3/4 controls pass；Target-Adaptive Allocation control fail；table/PDF/hash frozen；no automatic extra experiment |
 | 2026-08-12 | Author确认Section 5--7总体结构并收紧ablation、allocation analysis与qualitative scope | Sections 5--7 v0.2、table registry、architecture/governance sync | author-fixed experiment-writing contract + evidence-boundary freeze | Core-Ablation仅五variants；Fixed Scope=$s=144$；realized allocation value删除；performance-selected qualitative并入Figure 5且必须披露selection；standalone Discussion确认；无implementation/training/test授权 |
 | 2026-08-11 | Author要求基于已完成Sections 1--4设计后续章节但暂不填具体内容 | Sections 5--7 provisional architecture、table/figure routing、claim-evidence map | evidence-ladder design + Discussion proposal + Appendix routing | v0.1 pending author discussion；不替换既有六章共识、不填结果正文、不改变H5A或其他实验授权 |
