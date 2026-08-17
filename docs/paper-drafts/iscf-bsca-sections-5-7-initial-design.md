@@ -5,17 +5,17 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Temporarily frozen structural design for the manuscript sections after Method |
-| `version` | `v0.3-evidence-complete-structure` |
-| `date` | `2026-08-16 Figure 5 evidence sync` |
+| `version` | `v0.4-section5-draft-integrated` |
+| `date` | `2026-08-17 Section 5 initial draft` |
 | `review_status` | `temporarily_frozen_usable` |
 | `upstream_dependency` | Introduction v0.9, Related Work v0.2, Section 3 v0.7 and Section 4 v0.7 remain temporarily frozen and unchanged |
 | `scope` | Subsection functions, evidence order, table/figure placement, claim boundaries and appendix routing only |
-| `manuscript_prose` | Not drafted |
+| `manuscript_prose` | Section 5 v0.1 drafted at `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`; Sections 6--7 remain structural only |
 | `experiment_change` | None; this document does not authorize implementation, remote training or formal test |
 | `evidence_snapshot` | Main-I, corrected Main-II, Efficiency, Core-Ablation, Figure 5 mechanism diagnostics and Decoder-Transfer complete |
 | `structure_decision` | Sections 5--7 use `Experiments -> Discussion -> Conclusion`; qualitative evidence is integrated into Section 5.6 rather than assigned a standalone subsection |
 
-This document designs the argumentative architecture of the remaining manuscript. It does not fill result values, write result paragraphs or promote pending experiments to completed evidence.
+This document remains the frozen argumentative architecture of the remaining manuscript. Section 5 has now been instantiated as an initial evidence-complete draft, while Sections 6--7 remain structural designs; neither document promotes evidence beyond the boundaries recorded below.
 
 ## 1. Manuscript contract
 
@@ -194,4 +194,4 @@ The qualitative example is integrated into Figure 5 rather than assigned a separ
 
 These decisions freeze the writing and experiment-design reference only. They do not authorize implementation, remote training or formal test.
 
-`Decision=sections_5_7_v0_3_evidence_complete_ready_for_prose`.
+`Decision=sections_5_7_v0_4_section5_drafted_sections6_7_pending`.

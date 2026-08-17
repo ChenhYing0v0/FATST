@@ -1,5 +1,13 @@
 # Research Roadmap
 
+## Section 5 Evidence-Complete Initial Draft (2026-08-17)
+
+Current cursor=`paper experiment matrix closed -> Section 5 v0.1 drafted -> author review`。本轮只复用已冻结的Main-I/Main-II、Efficiency、author-corrected Core-Ablation、Figure 5与author-corrected Decoder-Transfer artifacts，new implementation/training/formal test=`0/0/0`。
+
+正文初稿=`docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`，按`5.1 setup -> 5.2 horizon-specific -> 5.3 one-model-all-horizons -> 5.4 accuracy/system cost -> 5.5 ablation -> 5.6 consistency/allocation -> 5.7 transfer`闭合evidence ladder。5.6保留mixed internal evidence：aggregate allocation ablation正向，但Scope Probability接近均匀且highest-utilization仅8/40匹配lowest-error scope，因此只写soft distributed allocation，不写reliable routing/specialization。
+
+Figure 6把Main-I macro MSE与完整deployed parameters、七dataset logged train GPU-hours编码为accuracy--system-cost plot；caption与正文同时披露当前ISCF-BSCA training和latency不领先。Figure 7以paired bars呈现two backbones × Weather/ETTm1/ETTm2 aggregate MSE，并披露author-refined post-hoc scope、historical negative blocks与unsynchronized per-H provenance。Figure source/QA bundle=`analysis/iscf_bsca_section5_figures_20260817/`，canonical assets=`paper-figures/figure_6_accuracy_system_cost.*`与`paper-figures/figure_7_decoder_transfer.*`。Decision=`section5_v0_1_evidence_complete_initial_draft_pending_author_review`；next=author逐节审阅，之后再起草Sections 6--7。
+
 ## Figure 5 Mechanism Diagnostics Closure (2026-08-16)
 
 Current cursor=`Step 9--10 complete -> current main-text experiment matrix closed -> Sections 5--7 prose next`。本轮复用5个Full与5个`Fixed Scope (s=144)` validation artifacts，未训练、未访问official test、未修改checkpoint。

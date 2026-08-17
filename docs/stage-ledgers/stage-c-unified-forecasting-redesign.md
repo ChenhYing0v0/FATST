@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | Decoder-Transfer framework-level evidence已在Weather/ETTm1/ETTm2与DLinear/PatchTST两类backbones闭合 |
+| `active_question` | Section 5 v0.1已基于闭合证据完成；等待author review后进入Sections 6--7 |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
-| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7与Sections 5--7 v0.2 structure temporarily frozen usable；Figure 4 visual design temporarily fixed |
+| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7 temporarily frozen usable；Section 5 v0.1 pending author review；Sections 5--7 v0.4 structure frozen；Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | Main I dense/Main II v1=ETTh1, ETTh2, ETTm1, ETTm2, Weather, ECL, Solar；Exchange=companion/deferred extension；ablation=original five |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
@@ -22,11 +22,11 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | Figure 5 validation diagnostic Step 9--10 complete；paper experiment matrix closed |
-| `current_candidate` | Sections 5--7 evidence-complete manuscript package |
-| `latest_decision` | `figure5_complete_mixed_mechanism_evidence` |
-| `writing_latest_decision` | `main_i_main_ii_author_corrected_20260815_complete_hash_frozen` |
-| `next_required_action` | consolidate Section 5.1 and draft Sections 5--7 with bounded claims；no new experiment required |
+| `current_11_step` | paper experiment matrix closed；Section 5 evidence synthesis and initial drafting complete |
+| `current_candidate` | Section 5 v0.1 evidence-complete initial draft |
+| `latest_decision` | `section5_v0_1_evidence_complete_initial_draft_pending_author_review` |
+| `writing_latest_decision` | `section5_v0_1_evidence_complete_initial_draft_pending_author_review` |
+| `next_required_action` | author review Section 5 v0.1；then draft standalone Discussion and Conclusion；no new experiment required |
 | `method_training_authorized` | false；no matched controls、extra HPO/seeds or formal test required |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
@@ -360,7 +360,7 @@ Historical and control queue:
 
 | Task | Status | Next Action |
 | --- | --- | --- |
-| ISCF-BSCA paper architecture | `all_experiment_evidence_synced_author_corrected_ablation` | draft Sections 5--7 with 4/4 aggregate ablation direction、per-H provenance limit与Figure 5 routing boundary |
+| ISCF-BSCA paper architecture | `section5_v0_1_drafted_pending_author_review` | author review 5.1--5.7；then draft Sections 6--7 with existing claim boundaries |
 | ISCF-BSCA paper experiment protocol | `v2_single_seed_scoped_exchange_patch_complete` | request remaining 8-dataset/HPO/official-baseline local patches only；B1/B2/B3/C false |
 | ISCF-BSCA-v1 three-seed confirmation | `completed_exact_ablation_anchor` | reuse Full evidence；retain Equal as historical BSCA diagnostic only，不将其冒充新冻结的prefix-only w/o BSCA control |
 | ISCF-RSCC-v1 validation matrix | `completed_control_attribution_fail` | exact route closed；retain artifacts/control clue；return Step2/4 |
@@ -439,6 +439,7 @@ Historical and control queue:
 
 | Date | Trigger | Paper Section | Change Type | Decision |
 | --- | --- | --- | --- | --- |
+| 2026-08-17 | 用户要求基于完整实验表与已冻结Sections 1--4起草Section 5并设计5.4/5.7 figures | Section 5 v0.1、Figures 6--7、architecture/governance sync | evidence-complete manuscript draft + audited scientific figures | 5.6保留aggregate allocation gain与mixed internal routing evidence；5.4披露storage/parameter与compute trade-off；5.7限于author-refined three-dataset scope；no new experiment |
 | 2026-08-17 | 作者提供复跑Decoder-Transfer汇总并要求修正固定表 | Section 5.7、Table 5、architecture/governance sync | author-corrected aggregate table + provenance split | DLinear-style与PatchTST-style均在16/16 comparator metric columns正向；per-horizon/hash rerun provenance未同步；five-dataset与iTransformer负向history保留 |
 | 2026-08-17 | 作者提供复跑Core-Ablation汇总并要求修正固定表 | Section 5.5、Table 4、architecture/governance sync | author-corrected aggregate table + provenance split | Full `.305/.344`且12/12 metric columns best；4/4 aggregate directions positive；per-horizon/hash rerun provenance未同步；Figure 5 routing boundary保留 |
 | 2026-08-14 | 用户授权按冻结计划完成Core-Ablation与ablation table | Section 5.5、Table 4、architecture/governance sync | complete matched scorecard + claim-boundary update | 100/100 cells；3/4 controls pass；Target-Adaptive Allocation control fail；table/PDF/hash frozen；no automatic extra experiment |

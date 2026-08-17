@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Figure 5 validation diagnostics complete；current main-text experiment matrix closed |
+| `current_11_step` | Section 5 evidence-complete initial draft and Figures 6--7 complete；author review next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,7 +18,9 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；Main I/II、Efficiency、author-corrected Core-Ablation、Figure 5与author-corrected aggregate Decoder-Transfer complete；allocation aggregate accuracy direction positive但routing health mixed；Sections 5--7 ready for prose |
+| `paper_core_status` | architecture family frozen；Sections 1--4 temporarily frozen usable；Section 5 v0.1 drafted from complete evidence；allocation aggregate accuracy direction positive但routing health mixed；Sections 6--7 prose pending |
+
+[Section 5 Initial Draft and Figures 6--7, 2026-08-17] 已基于complete Main-I/Main-II、Efficiency、author-corrected Core-Ablation、Figure 5与author-corrected Decoder-Transfer完成`docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`。5.4新增accuracy--system-cost Figure 6：x为four-horizon complete service的deployed parameters，y为Main-I seven-dataset/four-H macro MSE，bubble area为七dataset logged training GPU-hours；只比较具有完整four-model service artifacts的ISCF-BSCA、TimeAlign与QDF，并保留ISCF-BSCA training/latency不领先的负向边界。5.7新增two-panel Figure 7，展示DLinear-style与PatchTST-style在Weather/ETTm1/ETTm2的Original Decoder versus complete ISCF-BSCA aggregate MSE。5.6正文明确区分Table 4的aggregate allocation gain与Figure 5的near-uniform probability和8/40 utilization-error alignment，不宣称oracle routing或causal specialization。Figure contract、Python source、plot data与outputs位于`analysis/iscf_bsca_section5_figures_20260817/`；canonical assets位于`paper-figures/figure_6_accuracy_system_cost.*`和`paper-figures/figure_7_decoder_transfer.*`。Decision=`section5_v0_1_evidence_complete_initial_draft_pending_author_review`；no new training/formal test。
 
 [Figure 5 Mechanism Diagnostics Closure, 2026-08-16; interpretation synced 2026-08-17] 复用5个Full与5个`Fixed Scope (s=144)`冻结validation artifacts完成Section 5.6 evidence；new training/formal test=`0/0`。五数据集×四H的20/20 numerical CHPC comparisons均为maximum absolute CHPD=0。Scope-arm macro region-best随future region在`s=360`、`s=720`与`s=1`间变化，最大best-to-worst excess MSE=`6.123%`；但learned probabilities总体接近均匀（dataset-region means=`0.18258--0.21479`），highest-utilization仅在`8/40` cells与lowest-MSE scope一致。该混合结果支持exact CHPC与descriptive scope-arm regional heterogeneity；Figure 5自身不建立accuracy attribution、successful routing或causal specialization。2026-08-17作者修正Table 4独立支持aggregate allocation accuracy direction。Qualitative panel按完整1,280-row validation pool的冻结规则选择Weather row 77，只作illustrative evidence。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/figure5_mechanism_diagnostics_20260816/result_and_decision.md`；figure=`paper-figures/figure_iscf_bsca_mechanism.svg`。Decision=`figure5_complete_mixed_mechanism_evidence`；current main-text experiment matrix closed。
 
