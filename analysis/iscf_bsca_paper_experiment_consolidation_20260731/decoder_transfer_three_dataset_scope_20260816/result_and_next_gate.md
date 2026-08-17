@@ -1,62 +1,57 @@
-# Decoder-Transfer 三数据集范围：结果与下一门控
+# Decoder-Transfer Author-Corrected Result and Freeze Audit
 
-日期：2026-08-16
-Decision：`three_dataset_framework_portability_complete_no_additional_hpo_or_controls`。
+日期：2026-08-17
 
-## 1. 作者指定范围与披露边界
+Candidate：`ISCF-BSCA-decoder-transfer-author-corrected-20260817`
 
-正文Decoder-Transfer范围按作者要求缩减为Weather、ETTm1、ETTm2，仍使用H96/H192/H336/H720与MSE/MAE。ETTh1、ETTh2的既有完整负向结果不删除，继续保存在five-dataset formal audit与supplementary/limitation evidence中。
+Decision：`decoder_transfer_author_corrected_aggregate_both_backbones_all_columns_positive`
 
-该范围是在观察five-dataset结果后确定，因此必须披露为`author_refined_posthoc_scope`，不能描述成预注册三数据集confirmatory experiment，也不能用它否认ETTh1/ETTh2上的迁移失败。
+## 1. Correction scope and provenance
 
-## 2. 历史三臂diagnostic结果
+作者于2026-08-17提供Decoder-Transfer复跑后的汇总表截图，并要求替换当前固定表。正文范围保持Weather、ETTm1、ETTm2；每个dataset值为$H\in\{96,192,336,720\}$的MSE/MAE平均。截图覆盖2 backbones × 2 decoders × 3 datasets + Avg，共32个三位小数displayed metric cells。
 
-严格matched版直接把v2.1完整表限制到三个datasets，所有PatchTST-style `+ISCF`与`+ISCF-BSCA`仍共享同一dataset-level decoder profile。
+本次逐项转录作者提供值，并将截图保存为`author_corrected_decoder_transfer_source_20260817.png`。新输入未包含per-horizon raw files、validation selectors、profile IDs或checkpoint hashes，因此：
 
-| Backbone | Original | +ISCF | +ISCF-BSCA | BSCA gain vs Original |
+- `framework_portability_dataset_means.csv`、canonical framework LaTeX与review PDF更新为作者复跑汇总；
+- `framework_portability_48_cells.csv`及此前five-dataset/three-dataset checkpoint audits保留为historical artifacts，不再作为新表值的直接hash provenance；
+- 不把无法从aggregate screenshot计算的per-horizon/cell wins或checkpoint uniqueness写成已重新验证；
+- ETTh1/ETTh2与iTransformer-style历史负向结果继续保留，不据此扩大为universal transferability。
+
+## 2. Corrected canonical values
+
+| Backbone | Decoder | Weather | ETTm1 | ETTm2 | Avg. |
+| --- | --- | ---: | ---: | ---: | ---: |
+| DLinear-style | Original Decoder | .246/.274 | .353/.372 | .311/.354 | .303/.333 |
+| DLinear-style | ISCF-BSCA (ours) | .232/.259 | .347/.370 | .279/.333 | .286/.321 |
+| PatchTST-style | Original Decoder | .229/.253 | .358/.375 | .259/.314 | .282/.314 |
+| PatchTST-style | ISCF-BSCA (ours) | .226/.251 | .349/.369 | .254/.310 | .276/.310 |
+
+每个单元为`MSE/MAE`。ISCF-BSCA在两个backbones的Weather、ETTm1、ETTm2与Avg上均同时取得更低MSE/MAE，即16/16 comparator metric columns正向。
+
+## 3. Display-precision aggregate gains
+
+| Backbone | Original Avg. | ISCF-BSCA Avg. | MSE/MAE gain | Dataset MSE/MAE wins |
 | --- | ---: | ---: | ---: | ---: |
-| DLinear-style | 0.304 / 0.333 | 0.285 / 0.322 | 0.289 / 0.322 | +4.915% / +3.276% |
-| PatchTST-style | 0.282 / 0.314 | 0.283 / 0.317 | 0.280 / 0.315 | +0.605% / -0.379% |
+| DLinear-style | .303/.333 | .286/.321 | +5.611% / +3.604% | 3/3 / 3/3 |
+| PatchTST-style | .282/.314 | .276/.310 | +2.128% / +1.274% | 3/3 / 3/3 |
 
-[Fact] DLinear-style在三数据集范围内仍为双指标正向，但`+ISCF`的MSE略优于`+ISCF-BSCA`。PatchTST-style严格matched BSCA只在MSE上转正，MAE仍未超过Original。
+这些百分比由作者提供的三位小数Avg计算，是display-precision aggregate evidence，不是新的unrounded per-horizon audit。
 
-## 3. PatchTST best-config结果
+## 4. Claim boundary
 
-使用40个unique checkpoints完整formal audit后冻结的dataset-level mean-MSE winners：
+[Strong Evidence] 在作者指定的Weather、ETTm1、ETTm2正文范围内，完整ISCF-BSCA framework相对对应Original Decoder在DLinear-style和PatchTST-style两类backbones上均取得MSE/MAE aggregate改善，并覆盖3/3 datasets。
 
-| Dataset | Selected BSCA profile | MSE gain vs Original | MAE gain vs Original | MSE/MAE cell wins |
-| --- | --- | ---: | ---: | ---: |
-| Weather | `p07_wd1e3` | +0.251% | +0.298% | 2/4, 4/4 |
-| ETTm1 | `p10_rank1p50_lr0p50_wd1e4` | +2.564% | +0.624% | 4/4, 4/4 |
-| ETTm2 | `p01_lr0p25` | +0.371% | -0.410% | 3/4, 0/4 |
-| Macro | — | **+1.268%** | **+0.192%** | **9/12, 8/12** |
+[Boundary] 本表检验完整framework portability，不区分ISCF与BSCA内部贡献。不得写成对任意backbone、dataset或domain都有效；必须保留author-refined posthoc scope、test-tuned history、ETTh1/ETTh2与iTransformer-style negative evidence。新的per-horizon/checkpoint reproducibility仍需作者提供raw rerun artifacts后才能重新闭合。
 
-在作者指定的三数据集范围内，best-config PatchTST-style相对Original满足macro MSE/MAE双正向，并赢3/3 dataset mean MSE。因此就“完整decoder能否在PatchTST carrier上取得正向performance”而言，现有HPO已经充分；继续扩大BSCA HPO会增加test-tuning程度和资源成本，而不会解决当前真正的evidence gap。
+## 5. Canonical artifacts
 
-## 4. 当前论文claim与canonical comparison
+- author source：`author_corrected_decoder_transfer_source_20260817.png`；
+- corrected means：`framework_portability_dataset_means.csv`；
+- aggregate gains：`author_corrected_transfer_aggregate_gains_20260817.csv`；
+- result summary：`result_summary.json`；
+- correction manifest：`author_correction_freeze_manifest_20260817.json`；
+- manuscript fragment：`table_decoder_transfer_three_dataset_framework.tex`；
+- standalone source：`table_decoder_transfer_three_dataset_framework_standalone.tex`；
+- review PDF：`output/pdf/iscf_bsca_decoder_transfer_three_dataset_framework_20260816.pdf`。
 
-本节不承担ISCF与BSCA之间的component attribution；该任务由Core-Ablation单独负责。Decoder-Transfer只检验完整ISCF-BSCA framework接入不同encoder/backbone后，是否相对对应native Original Decoder保持正向performance。因此正文canonical comparison只保留：
-
-- DLinear-style Original Decoder versus DLinear-style ISCF-BSCA；
-- PatchTST-style Original Decoder versus PatchTST-style ISCF-BSCA。
-
-`+ISCF` rows保留在historical diagnostic artifacts中，但不进入正文Table 5，也不构成missing evidence。现有结果支持的限定结论是：在Weather、ETTm1与ETTm2范围内，完整ISCF-BSCA framework在DLinear-style与PatchTST-style两类backbones上均取得macro MSE/MAE双正向结果。这支持evaluated-scope transferability和cross-backbone applicability，不支持对未测试backbones、datasets或domains使用universal/architecture-agnostic表述。
-
-## 5. HPO与新增实验判断
-
-无需继续PatchTST HPO，也无需补训Weather/ETTm1 `+ISCF` controls。原因如下：
-
-1. 两个backbone的完整framework均已在三数据集macro MSE/MAE上超过对应Original Decoder；
-2. PatchTST在3/3 dataset mean MSE上正向，当前主要claim已满足；
-3. 继续HPO只会增加test-tuning程度，不改变framework-level evidence类型；
-4. `+ISCF`补训只服务内部BSCA attribution，而该归因已明确不属于本节目标。
-
-因此本部分关闭新增remote training与formal test需求，后续只需完成paper wording与limitations披露。
-
-## 6. 当前artifact角色
-
-- `table_decoder_transfer_three_dataset_framework.tex`：正文canonical framework-level comparison；
-- `framework_portability_48_cells.csv`：正文表的完整four-H输入；
-- `table_decoder_transfer_three_dataset_matched.tex`与`table_decoder_transfer_three_dataset_best_config.tex`：保留三臂historical diagnostic；
-- `result_summary.json`：收益、selected profiles和framework-level claim contract；
-- five-dataset negative evidence继续由`decoder_transfer_patchtst_v2p1_20260815`与`decoder_transfer_patchtst_test_tuned_full_20260816`保留。
+旧48-cell、72-cell与checkpoint-linked artifacts不删除、不覆盖，并明确降级为historical audit。

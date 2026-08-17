@@ -8,13 +8,13 @@ Current cursor=`Step 9--10 complete -> current main-text experiment matrix close
 
 因此Figure 5只支持exact CHPC、active-but-near-uniform allocation与descriptive scope-arm regional heterogeneity。Weather row 77从完整1,280-row validation pool按预冻结MSE improvement rule选择，必须标为performance-selected illustrative evidence。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/figure5_mechanism_diagnostics_20260816/result_and_decision.md`；Decision=`figure5_complete_mixed_mechanism_evidence`。不自动启动allocation redesign、extra seeds、Appendix sensitivity或formal test。
 
-## Decoder-Transfer Three-Dataset Scope Consolidation (2026-08-16)
+## Decoder-Transfer Author-Corrected Three-Dataset Consolidation (2026-08-17)
 
-Current cursor=`existing formal artifacts -> author-refined three-dataset framework-level result complete -> no additional experiments`。Main-text dataset scope现限定为Weather、ETTm1、ETTm2；这是读取five-dataset结果后的作者选择，必须作为`author_refined_posthoc_scope`披露，ETTh1/ETTh2负向block继续保留在完整formal audit和limitations。
+Current cursor=`author-corrected three-dataset aggregate table complete -> paper consolidation`。Main-text dataset scope仍为Weather、ETTm1、ETTm2；这是读取five-dataset结果后的作者选择，必须作为`author_refined_posthoc_scope`披露，ETTh1/ETTh2与iTransformer-style负向block继续保留在完整audit和limitations。
 
-正文claim改为完整ISCF-BSCA framework相对native Original Decoder的portability，不再区分ISCF与BSCA。DLinear-style与PatchTST-style的macro MSE/MAE gain分别为`4.915%/3.276%`与`1.268%/0.192%`；PatchTST在three-dataset scope取得3/3 dataset mean MSE wins，MSE/MAE cell wins=`9/12,8/12`。
+正文claim保持为完整ISCF-BSCA framework相对native Original Decoder的portability，不区分ISCF与BSCA。作者修正表中DLinear-style与PatchTST-style的display-precision macro MSE/MAE gains分别为`5.611%/3.604%`与`2.128%/1.274%`；两者均取得3/3 dataset MSE/MAE wins，ISCF-BSCA在16/16 comparator metric columns中更优。
 
-Canonical表冻结为Original versus complete framework的2 backbones × 2 systems × 3 datasets × four H=`48` cells。`+ISCF`只保留为historical diagnostic；不补matched controls、不增加HPO或formal test。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/result_and_next_gate.md`；Decision=`three_dataset_framework_portability_complete_no_additional_hpo_or_controls`。
+Canonical表冻结为Original versus complete framework的2 backbones × 2 systems × 3 datasets + Avg=`32` displayed metric cells。新输入不含per-horizon/checkpoint rerun artifacts；旧48-cell与`+ISCF` evidence只保留为historical diagnostic。不补matched controls、不增加HPO或formal test。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/result_and_next_gate.md`；Decision=`decoder_transfer_author_corrected_aggregate_both_backbones_all_columns_positive`。
 
 ## PatchTST Decoder-HPO Full Test-Tuned Audit Prelaunch (2026-08-16)
 

@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "candidate_version": "ISCF-BSCA-decoder-transfer-author-corrected-20260817",
+  "frozen_at": "2026-08-17",
+  "source_role": "author_supplied_rerun_aggregate_screenshot",
+  "source_precision": "three_decimal_dataset_level_four_horizon_means",
+  "datasets": ["Weather", "ETTm1", "ETTm2"],
+  "horizons_aggregated": [96, 192, 336, 720],
+  "per_horizon_rerun_provenance_synchronized": false,
+  "checkpoint_rerun_provenance_synchronized": false,
+  "historical_48_cell_artifacts_are_direct_provenance": false,
+  "files": {
+    "author_corrected_decoder_transfer_source_20260817.png": "188aa9b2360d11592510b314913de57b92c0dc5e1d0ed038b9a037020c4077d1",
+    "framework_portability_dataset_means.csv": "06a866c5376df7739d21ef462f4d8eee80ba7b1451cb4625337d739290dd91b2",
+    "author_corrected_transfer_aggregate_gains_20260817.csv": "03263bc30408625bba52de0fbf23cfa5703969e774cea09e5e8d0b79b4d612d0",
+    "result_summary.json": "0edd01a504f3d579ea1a478e38632fab1aee8b7b1792f2b2dbbd11155a2380d8",
+    "result_and_next_gate.md": "e141b83d153f5c4f8380af9344a2125ea5b10648fe4d729e64b2599c8a946fab",
+    "table_decoder_transfer_three_dataset_framework.tex": "bf26de1455ab79a91b09d56d29c32ee987dff07fc66a14167f77f56e4f92c6aa",
+    "table_decoder_transfer_three_dataset_framework_standalone.tex": "e7cce8a5b389023ddd234f4ef051165335eb9f94690594f9912ecde361ea72b3",
+    "output/pdf/iscf_bsca_decoder_transfer_three_dataset_framework_20260816.pdf": "26fd3a9ad8243728165ba5dbe7b9e19e295afda5c224dbfd1541c72f6fdeb617"
+  },
+  "decision": "decoder_transfer_author_corrected_aggregate_both_backbones_all_columns_positive",
+  "claim_boundary": "Complete-framework portability is supported only on the author-refined Weather_ETTm1_ETTm2 aggregate scope for DLinear_style and PatchTST_style; no internal component attribution or universal claim; historical negative evidence remains disclosed."
+}

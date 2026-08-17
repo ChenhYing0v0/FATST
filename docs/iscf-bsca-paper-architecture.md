@@ -839,10 +839,10 @@ conclusion，提交前必须由main/ablation/transfer tables逐项兑现。**
    exact architecture attribution。Contribution 3由same-architecture objective
    control、three-seed official-test与internal health支撑。efficiency与
    transferability属于完整framework evidence，不能替代mechanism attribution。
-8. **transferability是empirical scope，不是既定贡献。** Decoder-Transfer已完成，
-   DLinear-style相对gate通过但PatchTST-style失败，因此总体cross-backbone
-   portability claim不成立。正文应把该结果写成mixed transfer evidence或
-   limitation，不得只报告DLinear block保留正向claim。
+8. **transferability是empirical scope，不是universal贡献。** Five-dataset历史审计中
+   PatchTST-style与iTransformer-style存在负向结果；作者后置限定的Weather、ETTm1、
+   ETTm2正文范围内，复跑aggregate表支持DLinear-style与PatchTST-style均正向。
+   正文必须同时披露该posthoc scope与历史负向边界，不得写architecture-agnostic claim。
 9. **round1 author response边界。** Introduction只轻量承认少量
    varied-horizon先例，不加入conceptual comparison table，也不展开与本文native
    decoder主线无关的结构路线。当前优先事项是P4 problem-existence evidence、
@@ -1599,8 +1599,8 @@ Realized allocation value当前不纳入该节，以控制额外实验成本。Q
 
 | Backbone | Original Decoder | ISCF-BSCA (ours) |
 | --- | ---: | ---: |
-| DLinear-style | .304/.333 | .289/.322 |
-| PatchTST-style | .282/.314 | .278/.314 |
+| DLinear-style | .303/.333 | .286/.321 |
+| PatchTST-style | .282/.314 | .276/.310 |
 
 各backbone使用同一test-tuned原则选出的backbone-specific profile；不把`ISCF-BSCA-v1` ablation hyperparameters机械迁移到transfer。该表只比较完整ISCF-BSCA framework与相应native Original Decoder，不区分ISCF与BSCA的内部贡献；component attribution由Core-Ablation独立承担。所有framework arms均为end-to-end joint training，不使用frozen consumer replacement。
 
@@ -1624,7 +1624,7 @@ v2 formal结果最终闭合280个new cells与300个candidate-pool cells。Datase
 
 PatchTST parent-HPO随后完成全部40个unique checkpoints的test-tuned audit。按每dataset four-H mean MSE选profile后，相对Original Decoder为`+0.134% MSE / -0.253% MAE`，MSE dataset wins=3/5；完整枚举11候选×5 datasets的161,051种组合仍无macro MSE/MAE同时正向方案，ETTh1/ETTh2也不存在双指标正向profile。因此该补充只说明decoder HPO可消除很小的MSE deficit，不能恢复five-dataset general portability claim；当时的v2.1三臂block现保留为historical diagnostic，后续由作者限定的three-dataset framework table supersede。Canonical audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_patchtst_test_tuned_full_20260816/formal_results/result_and_decision.md`。
 
-作者随后将正文transfer范围收窄到Weather、ETTm1、ETTm2。该后置范围必须与five-dataset negative audit同时披露。在三数据集上，完整framework的DLinear-style与PatchTST-style分别相对Original取得`+4.915%/+3.276%`与`+1.268%/+0.192%` macro MSE/MAE，PatchTST赢3/3 dataset mean MSE。该framework-level claim不要求区分ISCF与BSCA，因此不再补matched `+ISCF` controls，也不继续HPO。Canonical table=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/table_decoder_transfer_three_dataset_framework.tex`；gate=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/result_and_next_gate.md`。结论限定为evaluated two-backbone/three-dataset scope，不写universal或architecture-agnostic。
+作者随后将正文transfer范围收窄到Weather、ETTm1、ETTm2。该后置范围必须与five-dataset negative audit同时披露。2026-08-17作者复跑aggregate表中，完整framework的DLinear-style与PatchTST-style分别相对Original取得`+5.611%/+3.604%`与`+2.128%/+1.274%` display-precision macro MSE/MAE gains；两者均赢3/3 dataset MSE/MAE，合计16/16 comparator metric columns正向。新per-horizon/checkpoint rerun provenance未同步。该framework-level claim不要求区分ISCF与BSCA，因此不再补matched `+ISCF` controls，也不继续HPO。Canonical table=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/table_decoder_transfer_three_dataset_framework.tex`；audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/result_and_next_gate.md`。结论限定为evaluated two-backbone/three-dataset scope，不写universal或architecture-agnostic。
 
 ## 9. Discussion
 
@@ -1857,6 +1857,7 @@ Coverage boundary：
 | 2026-08-10 | Section 2 v0.2 temporary freeze | 2.3 opening改为`Beyond shallow output projections`，移除`A smaller body of work`的数量判断 | Author确认其余内容；Section 2正文、结构、citations与claim boundaries暂时冻结；next manuscript section pending direction；experiment cursor不变 |
 | 2026-08-11 | Sections 5--7 structural design v0.1 | 基于frozen Sections 1--4、table registry与claim boundaries设计Experiments、Discussion、Conclusion及Appendix evidence ladder | 新增独立设计稿；standalone Discussion、case-study routing与5.6 split/merge均pending author discussion；不填result prose、不改实验授权 |
 | 2026-08-12 | Sections 5--7 structural design v0.2 temporary freeze | Author确认七章结构与standalone Discussion；Core-Ablation固定为Full、w/o BSCA、w/o Target-Adaptive Allocation、Shared Scope Projection与Fixed Scope $s=144$；qualitative并入5.6 | 不设balance-only或failure-case；realized allocation value移出当前计划；performance-selected example必须披露selection；不新增实验授权 |
+| 2026-08-17 | Decoder-Transfer author correction | 作者提供复跑后的two-backbone × three-dataset aggregate MSE/MAE；Table 5、PDF与registry更新 | DLinear-style与PatchTST-style完整framework均在3/3 datasets及16/16 comparator metric columns正向；per-horizon/checkpoint rerun provenance未同步，five-dataset与iTransformer负向history保留 |
 | 2026-08-17 | Core-Ablation author correction | 作者提供复跑后的5 variants × 5 datasets aggregate MSE/MAE；Table 4、PDF与registry更新 | Full在12/12 metric columns为best；四项aggregate方向均正；per-horizon/checkpoint rerun provenance未同步，Figure 5 routing boundary保留 |
 | 2026-08-14 | Core-Ablation historical formal closure | 5 variants × 5 datasets × 4 H的100-cell matched formal matrix完成；20新checkpoints hashes immutable | 历史3/4-control结论已被2026-08-17作者aggregate correction取代；raw artifacts保留作historical audit |
 | 2026-08-14 | Decoder-Transfer / Efficiency prelaunch | Transfer冻结30-checkpoint end-to-end matrix并通过13项local gate；Efficiency冻结5-system、35-unit、77-object profiler contract | Transfer进入manifest-gated remote Step 8；Efficiency无新训练/无test access，正式测量与training错峰 |

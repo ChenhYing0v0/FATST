@@ -4,40 +4,41 @@
     "ETTm1",
     "ETTm2"
   ],
+  "candidate_version": "ISCF-BSCA-decoder-transfer-author-corrected-20260817",
   "scope_role": "author_refined_posthoc_main_text_scope_full_five_dataset_audit_retained",
-  "strict_matched": {
+  "canonical_table_source": "author_provided_rerun_dataset_level_four_horizon_means",
+  "source_precision": 3,
+  "displayed_metric_cells": 32,
+  "comparator_metric_columns": 16,
+  "iscf_bsca_best_metric_columns": 16,
+  "underlying_horizon_cell_artifacts_refreshed": false,
+  "checkpoint_manifest_refreshed": false,
+  "historical_48_cell_audit_retained": true,
+  "author_corrected_framework": {
     "dlinear_style": {
-      "macro_mse_gain_percent": 4.91524716661519,
-      "macro_mae_gain_percent": 3.276449890936558,
-      "dataset_mse_wins": 2
+      "original_macro_mse": 0.303,
+      "original_macro_mae": 0.333,
+      "iscf_bsca_macro_mse": 0.286,
+      "iscf_bsca_macro_mae": 0.321,
+      "macro_mse_gain_percent": 5.6105610561,
+      "macro_mae_gain_percent": 3.6036036036,
+      "dataset_mse_wins": 3,
+      "dataset_mae_wins": 3
     },
     "patchtst_style": {
-      "macro_mse_gain_percent": 0.6045038767158546,
-      "macro_mae_gain_percent": -0.3789375158833561,
-      "dataset_mse_wins": 2
+      "original_macro_mse": 0.282,
+      "original_macro_mae": 0.314,
+      "iscf_bsca_macro_mse": 0.276,
+      "iscf_bsca_macro_mae": 0.310,
+      "macro_mse_gain_percent": 2.1276595745,
+      "macro_mae_gain_percent": 1.2738853503,
+      "dataset_mse_wins": 3,
+      "dataset_mae_wins": 3
     }
-  },
-  "best_config_candidate": {
-    "dlinear_style": {
-      "macro_mse_gain_percent": 4.91524716661519,
-      "macro_mae_gain_percent": 3.276449890936558,
-      "dataset_mse_wins": 2
-    },
-    "patchtst_style": {
-      "macro_mse_gain_percent": 1.2678474316924913,
-      "macro_mae_gain_percent": 0.1920332833819184,
-      "dataset_mse_wins": 3
-    }
-  },
-  "patchtst_best_config_profiles": {
-    "Weather": "p07_wd1e3",
-    "ETTm1": "p10_rank1p50_lr0p50_wd1e4",
-    "ETTm2": "p01_lr0p25"
   },
   "claim_target": "complete_ISCF_BSCA_framework_portability_not_internal_component_attribution",
   "component_attribution_in_scope": false,
-  "matched_iscf_controls_required": false,
-  "additional_bsca_hpo_required": false,
-  "canonical_table_mutation_ready": true,
-  "reason": "the complete framework improves macro MSE and MAE for both backbones on the author-refined three-dataset scope; internal ISCF-versus-BSCA attribution is outside this table's claim"
+  "additional_hpo_required": false,
+  "decision": "decoder_transfer_author_corrected_aggregate_both_backbones_all_columns_positive",
+  "claim_boundary": "The author-corrected aggregate table supports positive complete-framework transfer for DLinear-style and PatchTST-style on Weather, ETTm1, and ETTm2. New per-horizon and checkpoint-level rerun provenance is not synchronized; the five-dataset negative history and test-tuned disclosure remain retained; no universal or architecture-agnostic claim is allowed."
 }

@@ -30,20 +30,20 @@
 | `method_training_authorized` | false；no matched controls、extra HPO/seeds or formal test required |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
-## Decoder-Transfer Three-Dataset Scope Record (2026-08-16)
+## Decoder-Transfer Author-Corrected Three-Dataset Record (2026-08-17)
 
 | Field | Current Record |
 | --- | --- |
-| `current_step` | Step 9--10 framework-level evidence complete |
+| `current_step` | author-corrected aggregate framework-level evidence complete |
 | `problem` | five-dataset PatchTST aggregate含ETTh1/ETTh2负向结果；作者将main-text可迁移性scope收窄为Weather/ETTm1/ETTm2 |
-| `existence_evidence` | strict matched PatchTST=`+0.605% MSE / -0.379% MAE`；best-config PatchTST=`+1.268%/+0.192%` relative to Original |
+| `existence_evidence` | author-corrected DLinear=`+5.611%/+3.604%`、PatchTST=`+2.128%/+1.274%` display-precision macro MSE/MAE relative to Original；16/16 comparator columns positive |
 | `idea` | 每dataset从完整冻结HPO pool按four-H mean test MSE选择一个profile，四个H共享，不作per-cell反选 |
 | `theory_check` | joint-training checkpoints、full four-H scorecards与negative trials均保留；scope为post-hoc，ETTh1/ETTh2不得删除 |
-| `design` | DLinear/PatchTST × Original/complete ISCF-BSCA × 3 datasets × four H=`48` cells |
+| `design` | DLinear/PatchTST × Original/complete ISCF-BSCA × 3 datasets + Avg=`32` displayed metric cells；historical 48-cell audit retained |
 | `narrative_gate` | 只能宣称author-refined scope上的framework portability；内部component attribution不属于本表，禁止universal/architecture-agnostic措辞 |
-| `effectiveness_gate` | performance PASS：PatchTST 3/3 dataset mean MSE wins，MSE/MAE cell wins=`9/12,8/12` |
+| `effectiveness_gate` | aggregate performance PASS：two backbones均3/3 dataset MSE/MAE wins；per-H/hash rerun provenance unsynchronized |
 | `artifacts` | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/result_and_next_gate.md` |
-| `decision` | framework portability complete；no additional BSCA HPO or matched controls |
+| `decision` | `decoder_transfer_author_corrected_aggregate_both_backbones_all_columns_positive`；no additional HPO or matched controls |
 
 ## Main-Table Author Correction Record (2026-08-15)
 
@@ -439,6 +439,7 @@ Historical and control queue:
 
 | Date | Trigger | Paper Section | Change Type | Decision |
 | --- | --- | --- | --- | --- |
+| 2026-08-17 | 作者提供复跑Decoder-Transfer汇总并要求修正固定表 | Section 5.7、Table 5、architecture/governance sync | author-corrected aggregate table + provenance split | DLinear-style与PatchTST-style均在16/16 comparator metric columns正向；per-horizon/hash rerun provenance未同步；five-dataset与iTransformer负向history保留 |
 | 2026-08-17 | 作者提供复跑Core-Ablation汇总并要求修正固定表 | Section 5.5、Table 4、architecture/governance sync | author-corrected aggregate table + provenance split | Full `.305/.344`且12/12 metric columns best；4/4 aggregate directions positive；per-horizon/hash rerun provenance未同步；Figure 5 routing boundary保留 |
 | 2026-08-14 | 用户授权按冻结计划完成Core-Ablation与ablation table | Section 5.5、Table 4、architecture/governance sync | complete matched scorecard + claim-boundary update | 100/100 cells；3/4 controls pass；Target-Adaptive Allocation control fail；table/PDF/hash frozen；no automatic extra experiment |
 | 2026-08-12 | Author确认Section 5--7总体结构并收紧ablation、allocation analysis与qualitative scope | Sections 5--7 v0.2、table registry、architecture/governance sync | author-fixed experiment-writing contract + evidence-boundary freeze | Core-Ablation仅五variants；Fixed Scope=$s=144$；realized allocation value删除；performance-selected qualitative并入Figure 5且必须披露selection；standalone Discussion确认；无implementation/training/test授权 |
