@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "protocol_id": "ISCF-BSCA-EFFICIENCY-ACCURACY-PARAMS-EPOCH-20260817",
+  "status": "complete_log_reuse_no_new_training_no_test_access",
+  "datasets": ["ETTm1", "ETTm2", "ETTh1", "ETTh2", "Weather", "ECL", "Solar"],
+  "horizons": [96, 192, 336, 720],
+  "systems": [
+    {"id": "ISCF-BSCA", "models_per_dataset": 1, "role": "one_unified_model_for_all_horizons"},
+    {"id": "TimeAlign", "models_per_dataset": 4, "role": "four_native_horizon_specific_models"},
+    {"id": "QDF", "models_per_dataset": 4, "role": "four_native_horizon_specific_models"}
+  ],
+  "metrics": {
+    "accuracy": "arithmetic_macro_mean_of_Main_I_MSE_and_MAE_over_7_datasets_x_4_horizons",
+    "parameters": "deployed_inference_parameter_sum_for_serving_all_four_horizons_then_macro_mean_over_7_datasets",
+    "one_epoch_cycle_time": "per_checkpoint_median_logged_train_plus_scheduled_validation_seconds_no_test_then_sum_four_fixed_H_models_and_macro_mean_over_7_datasets"
+  },
+  "timing_hardware": "NVIDIA_GeForce_RTX_3090_native_completed_runs",
+  "timing_statistic": "median_over_logged_completed_epoch_cycles_per_checkpoint",
+  "new_training_runs": 0,
+  "formal_test_accesses": 0,
+  "excluded_systems": {
+    "DLinear_H720_prefix": "one_model_prefix_service_does_not_match_the_new_four_horizon_specific_sum_contract",
+    "PatchTST_H720_prefix": "one_model_prefix_service_does_not_match_the_new_four_horizon_specific_sum_contract",
+    "remaining_Main_I_systems": "published_accuracy_lacks_a_complete_locally_audited_7x4_checkpoint_and_timing_set"
+  },
+  "claim_boundary": "supports_accuracy_and_parameter_consolidation_but_one_epoch_cycle_time_must_be_reported_even_if_ISCF_is_slower; native_logged_cycles_are_not_an_exclusive_GPU_microbenchmark"
+}

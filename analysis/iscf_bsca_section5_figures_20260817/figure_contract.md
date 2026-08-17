@@ -7,9 +7,9 @@ This bundle creates two manuscript-facing figures from already frozen Section 5 
 ## Figure 6: accuracy and system cost
 
 - **Question:** What practical trade-off follows when one ISCF-BSCA model replaces a four-model horizon-specific service?
-- **Conclusion:** Among the three systems with audited full four-horizon service artifacts, ISCF-BSCA combines the lowest Main-I macro MSE with fewer deployed parameters, while requiring more logged training time.
-- **Evidence:** Main-I MSE over seven datasets and four horizons; Efficiency audit totals for deployed parameters and logged training GPU-hours.
-- **Visual encoding:** horizontal position = deployed parameters per dataset after summing four horizon-specific checkpoints for TimeAlign and QDF; vertical position = Main-I macro MSE; bubble area = logged training GPU-hours over all seven datasets; label = number of deployed models.
+- **Conclusion:** Among the three systems with audited full four-horizon service artifacts, ISCF-BSCA combines the lowest Main-I macro MSE with fewer deployed parameters, while requiring a longer one-epoch cycle.
+- **Evidence:** Main-I MSE over seven datasets and four horizons; Efficiency audit totals for deployed parameters and median native one-epoch cycles.
+- **Visual encoding:** horizontal position = deployed parameters per dataset after summing four horizon-specific checkpoints for TimeAlign and QDF; vertical position = Main-I macro MSE; bubble area = seven-dataset macro one-epoch cycle seconds; label = number of deployed models and exact one-epoch cycle.
 - **Boundary:** The plot is an accuracy--system-cost comparison, not evidence that ISCF-BSCA trains or infers faster. DLinear-$H720$-prefix and PatchTST-$H720$-prefix are excluded because they represent the one-model service protocol evaluated in Main-II rather than a four-model horizon-specific family.
 
 ## Figure 7: decoder transfer

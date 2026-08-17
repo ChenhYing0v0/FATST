@@ -98,30 +98,53 @@
     {
       "id": "efficiency",
       "manuscript_role": "main_text_supporting_result",
-      "title": "Efficiency and deployment comparison",
-      "status": "complete_hash_frozen_tradeoff_supported_no_uniform_compute_advantage",
+      "title": "Accuracy, four-horizon parameters and one-epoch training cycle",
+      "status": "complete_accuracy_params_epoch_accuracy_parameter_advantage_compute_tradeoff",
       "primary_system": "ISCF-BSCA-MAIN-v1",
-      "systems": ["ISCF-BSCA", "TimeAlign", "QDF", "DLinear-H720-prefix", "PatchTST-H720-prefix"],
+      "systems": ["ISCF-BSCA", "TimeAlign", "QDF"],
       "datasets": 7,
-      "service_units": 35,
-      "checkpoint_objects": 77,
-      "protocol": "configs/iscf_bsca_efficiency_protocol.json",
-      "artifact": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/table/table_iscf_bsca_efficiency.tex",
-      "data": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/efficiency_system_macro_means.csv",
-      "audit": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/result_and_table_audit.md",
-      "review_pdf": "output/pdf/iscf_bsca_efficiency_20260814.pdf",
+      "accuracy_cells": 84,
+      "parameter_service_units": 21,
+      "timing_checkpoint_objects": 63,
+      "protocol": "configs/iscf_bsca_efficiency_accuracy_params_epoch_protocol.json",
+      "artifact": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/table/table_iscf_bsca_efficiency.tex",
+      "data": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/efficiency_system_macro_results.csv",
+      "dataset_data": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/efficiency_dataset_results.csv",
+      "epoch_cycle_data": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/per_checkpoint_epoch_cycle_stats.csv",
+      "summary": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/efficiency_result_summary.json",
+      "audit": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/result_and_table_audit.md",
+      "review_pdf": "output/pdf/iscf_bsca_efficiency_accuracy_params_epoch_20260817.pdf",
       "metrics": [
-        "trained_model_count",
-        "total_stored_parameters",
-        "actual_checkpoint_bytes",
-        "training_gpu_hours",
-        "single_request_latency",
-        "all_horizon_service_latency",
-        "peak_inference_memory",
-        "CHPC_guarantee"
+        "main_i_macro_mse",
+        "main_i_macro_mae",
+        "four_horizon_total_parameters",
+        "one_epoch_cycle_seconds"
       ],
-      "dependency": "frozen_selected_checkpoints_and_a_separately_frozen_same_environment_profiler_contract",
-      "claim_boundary": "supports_one_model_consolidation_CHPC_and_parameter_storage_reduction_relative_to_four_model_TimeAlign_QDF_services_but_not_uniform_training_latency_or_compute_advantage"
+      "comparisons": {
+        "vs_TimeAlign": {
+          "mse_improvement_percent": 4.935538,
+          "mae_improvement_percent": 2.535820,
+          "parameter_reduction_percent": 72.760091,
+          "one_epoch_cycle_ratio": 1.272062
+        },
+        "vs_QDF": {
+          "mse_improvement_percent": 9.320191,
+          "mae_improvement_percent": 7.639359,
+          "parameter_reduction_percent": 45.181185,
+          "one_epoch_cycle_ratio": 2.404435
+        }
+      },
+      "dependency": "canonical_Main_I_accuracy_frozen_checkpoint_parameter_counts_and_native_completed_RTX3090_epoch_cycle_logs",
+      "claim_boundary": "supports_accuracy_and_parameter_consolidation_relative_to_four_model_TimeAlign_QDF_services_but_ISCF_has_a_slower_logged_one_epoch_cycle_and_no_uniform_efficiency_claim",
+      "freeze_manifest": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/freeze_manifest.json",
+      "freeze_manifest_sha256": "d868578c6c7561d279f992e1b9a9086d7347ae41db5d795abcd0d83811a54649",
+      "historical_profiler": {
+        "protocol": "configs/iscf_bsca_efficiency_protocol.json",
+        "artifact": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/table/table_iscf_bsca_efficiency.tex",
+        "data": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/efficiency_system_macro_means.csv",
+        "audit": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/result_and_table_audit.md",
+        "review_pdf": "output/pdf/iscf_bsca_efficiency_20260814.pdf"
+      }
     },
     {
       "id": "core_ablation",

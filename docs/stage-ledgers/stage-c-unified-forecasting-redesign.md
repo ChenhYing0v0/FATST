@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | Section 5 v0.1已基于闭合证据完成；等待author review后进入Sections 6--7 |
+| `active_question` | Section 5 v0.1与重新冻结的Efficiency Table 3/Figure 6已同步；等待author review后进入Sections 6--7 |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
 | `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7 temporarily frozen usable；Section 5 v0.1 pending author review；Sections 5--7 v0.4 structure frozen；Figure 4 visual design temporarily fixed |
@@ -22,13 +22,28 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper experiment matrix closed；Section 5 evidence synthesis and initial drafting complete |
-| `current_candidate` | Section 5 v0.1 evidence-complete initial draft |
-| `latest_decision` | `section5_v0_1_evidence_complete_initial_draft_pending_author_review` |
+| `current_11_step` | paper experiment matrix closed；Efficiency accuracy--parameters--one-epoch redesign complete；Section 5 synchronized |
+| `current_candidate` | Section 5 v0.1 with redesigned Efficiency Table 3 and Figure 6 |
+| `latest_decision` | `efficiency_accuracy_params_epoch_complete_accuracy_parameter_advantage_compute_tradeoff` |
 | `writing_latest_decision` | `section5_v0_1_evidence_complete_initial_draft_pending_author_review` |
 | `next_required_action` | author review Section 5 v0.1；then draft standalone Discussion and Conclusion；no new experiment required |
 | `method_training_authorized` | false；no matched controls、extra HPO/seeds or formal test required |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
+
+## Efficiency Accuracy--Parameters--One-Epoch Record (2026-08-17)
+
+| Field | Current Record |
+| --- | --- |
+| `current_step` | existing-artifact system-cost consolidation complete；no new training or formal test |
+| `problem` | total GPU-hours受epochs budget影响，且旧九列profiler没有直接把Main-I accuracy与four-horizon family cost放在同一主表 |
+| `existence_evidence` | ISCF、TimeAlign、QDF均有完整7×4 Main-I accuracy、matched checkpoint parameter counts与completed RTX 3090 native timing logs |
+| `idea` | 用Main-I macro MSE/MAE + four-horizon total parameters + normalized one-epoch cycle共同衡量one-model versus four-model family |
+| `theory_check` | ISCF每dataset计一个unified model；TimeAlign/QDF加和四个fixed-H models；one-epoch cycle不依赖训练epochs总数，但仍受native implementation/hardware条件影响 |
+| `design` | 3 systems；84/84 accuracy cells、21/21 parameter units、63/63 timing logs；per-checkpoint timing=`median(train + scheduled validation, no test)` |
+| `narrative_gate` | 只比较具备matched local cost evidence的三系统；DLinear/PatchTST H720-prefix和published-only baselines不混入four-fixed-H sum表 |
+| `effectiveness_gate` | ISCF相对TimeAlign/QDF改善MSE `4.936%/9.320%`、MAE `2.536%/7.639%`，减少params `72.760%/45.181%`；one-epoch cycle慢`1.272×/2.404×` |
+| `artifacts` | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/result_and_table_audit.md` |
+| `decision` | `efficiency_accuracy_params_epoch_complete_accuracy_parameter_advantage_compute_tradeoff`；支持accuracy/parameter consolidation，不支持lower training time或uniform efficiency |
 
 ## Decoder-Transfer Author-Corrected Three-Dataset Record (2026-08-17)
 
@@ -439,6 +454,7 @@ Historical and control queue:
 
 | Date | Trigger | Paper Section | Change Type | Decision |
 | --- | --- | --- | --- | --- |
+| 2026-08-17 | 用户要求以accuracy、four-horizon total parameters与one-epoch cycle重新设计Efficiency | Section 5.4、Table 3、Figure 6、architecture/governance sync | existing-artifact redesign + normalized timing audit | 84/84 accuracy、21/21 params、63/63 logs complete；ISCF accuracy/params占优但epoch cycle更慢；no new training/test |
 | 2026-08-17 | 用户要求基于完整实验表与已冻结Sections 1--4起草Section 5并设计5.4/5.7 figures | Section 5 v0.1、Figures 6--7、architecture/governance sync | evidence-complete manuscript draft + audited scientific figures | 5.6保留aggregate allocation gain与mixed internal routing evidence；5.4披露storage/parameter与compute trade-off；5.7限于author-refined three-dataset scope；no new experiment |
 | 2026-08-17 | 作者提供复跑Decoder-Transfer汇总并要求修正固定表 | Section 5.7、Table 5、architecture/governance sync | author-corrected aggregate table + provenance split | DLinear-style与PatchTST-style均在16/16 comparator metric columns正向；per-horizon/hash rerun provenance未同步；five-dataset与iTransformer负向history保留 |
 | 2026-08-17 | 作者提供复跑Core-Ablation汇总并要求修正固定表 | Section 5.5、Table 4、architecture/governance sync | author-corrected aggregate table + provenance split | Full `.305/.344`且12/12 metric columns best；4/4 aggregate directions positive；per-horizon/hash rerun provenance未同步；Figure 5 routing boundary保留 |

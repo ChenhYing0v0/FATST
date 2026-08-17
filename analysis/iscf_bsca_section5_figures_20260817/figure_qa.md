@@ -4,7 +4,7 @@
 
 - `nature-figure` static preflight: 14 pass, 0 warning, 0 failure.
 - Backend: Python/matplotlib in the repository `r2026-fsa` environment.
-- Source integrity: Figure 6 reads the canonical Main-I and Efficiency CSV files; Figure 7 reads the canonical author-corrected transfer CSV. No rows are sampled or excluded after the figure-specific system and reporting-scope filters defined in the contract.
+- Source integrity: Figure 6 reads the canonical redesigned Efficiency macro CSV, whose accuracy columns are generated from Main-I; Figure 7 reads the canonical author-corrected transfer CSV. No rows are sampled or excluded after the figure-specific system and reporting-scope filters defined in the contract.
 - Source-data bundle: `source_data/figure6_accuracy_system_cost.csv` and `source_data/figure7_decoder_transfer.csv` reproduce every plotted value and derived percentage.
 - Exports: both figures are available as editable SVG, vector PDF, 600 dpi LZW-compressed TIFF and review PNG.
 
@@ -12,9 +12,9 @@
 
 ### Figure 6
 
-- Direct labels, model counts and total logged training hours are legible at the target single-column width.
+- Direct labels, model counts and one-epoch cycle seconds are legible at the target single-column width.
 - No bubble or label is clipped; the parameter and MSE axes include all three systems without a broken scale.
-- Bubble area encodes training time, while the exact values remain printed in the point labels.
+- Bubble area encodes the seven-dataset macro one-epoch cycle, while exact seconds remain printed in the point labels.
 - The lower-left direction marker is visually subordinate to the data.
 - Reviewer-risk check: the figure does not imply lower training time for ISCF-BSCA and is captioned as a trade-off rather than uniform efficiency.
 

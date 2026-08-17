@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import csv
-from collections import defaultdict
 from pathlib import Path
 
 import matplotlib as mpl
@@ -13,15 +12,10 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = Path(__file__).resolve().parent / "outputs"
 SOURCE = Path(__file__).resolve().parent / "source_data"
 
-MAIN_I = (
-    ROOT
-    / "analysis/iscf_bsca_paper_experiment_consolidation_20260731"
-    / "main_tables_author_corrected_20260815/main_i/table_data_long.csv"
-)
 EFFICIENCY = (
     ROOT
     / "analysis/iscf_bsca_paper_experiment_consolidation_20260731"
-    / "efficiency_20260814/formal_results/efficiency_system_macro_means.csv"
+    / "efficiency_accuracy_params_epoch_20260817/efficiency_system_macro_results.csv"
 )
 TRANSFER = (
     ROOT
@@ -92,16 +86,7 @@ def save_figure(fig: plt.Figure, stem: str) -> None:
     )
 
 
-def main_i_macro_mse() -> dict[str, float]:
-    values: dict[str, list[float]] = defaultdict(list)
-    for row in read_rows(MAIN_I):
-        if row["model"] in {"ISCF-BSCA", "TimeAlign", "QDF"} and row["horizon"] != "Avg.":
-            values[row["model"]].append(float(row["mse"]))
-    return {name: float(np.mean(items)) for name, items in values.items()}
-
-
 def plot_efficiency() -> None:
-    mse = main_i_macro_mse()
     efficiency = {
         row["system"]: row
         for row in read_rows(EFFICIENCY)
@@ -115,21 +100,23 @@ def plot_efficiency() -> None:
         plot_rows.append(
             {
                 "system": system,
-                "trained_model_count": int(float(row["trained_model_count"])),
-                "deployed_parameters_million": float(row["parameters_million"]),
-                "main_i_macro_mse": mse[system],
-                "logged_training_gpu_hours_all_seven_datasets": float(
-                    row["training_gpu_hours_all_seven_datasets"]
+                "trained_model_count": int(row["model_count"]),
+                "deployed_parameters_million": float(
+                    row["total_parameters_million"]
+                ),
+                "main_i_macro_mse": float(row["main_i_mse"]),
+                "one_epoch_cycle_seconds": float(
+                    row["one_epoch_cycle_seconds"]
                 ),
             }
         )
     write_rows(SOURCE / "figure6_accuracy_system_cost.csv", plot_rows)
 
     fig, ax = plt.subplots(figsize=(3.50, 2.65), constrained_layout=True)
-    max_hours = max(float(row["logged_training_gpu_hours_all_seven_datasets"]) for row in plot_rows)
+    max_seconds = max(float(row["one_epoch_cycle_seconds"]) for row in plot_rows)
     for row in plot_rows:
-        hours = float(row["logged_training_gpu_hours_all_seven_datasets"])
-        area = 130.0 + 620.0 * hours / max_hours
+        seconds = float(row["one_epoch_cycle_seconds"])
+        area = 130.0 + 620.0 * seconds / max_seconds
         ax.scatter(
             row["deployed_parameters_million"],
             row["main_i_macro_mse"],
@@ -143,28 +130,29 @@ def plot_efficiency() -> None:
 
     label_offsets = {
         "ISCF-BSCA": (18, -3),
-        "TimeAlign": (-49, -2),
+        "TimeAlign": (-13, -2),
         "QDF": (7, -2),
     }
+    label_alignment = {"ISCF-BSCA": "left", "TimeAlign": "right", "QDF": "left"}
     for row in plot_rows:
         system = str(row["system"])
         ax.annotate(
             f"{system}\n{row['trained_model_count']} model{'s' if row['trained_model_count'] != 1 else ''} · "
-            f"{float(row['logged_training_gpu_hours_all_seven_datasets']):.1f} h",
+            f"{float(row['one_epoch_cycle_seconds']):.1f} s/epoch",
             (row["deployed_parameters_million"], row["main_i_macro_mse"]),
             xytext=label_offsets[system],
             textcoords="offset points",
             color=colors[system],
             fontsize=7.5,
             fontweight="semibold",
-            ha="left",
+            ha=label_alignment[system],
             va="center",
         )
 
     ax.text(
         0.985,
         0.985,
-        "Bubble area scales with logged train GPU h",
+        "Bubble area scales with one-epoch cycle time",
         transform=ax.transAxes,
         ha="right",
         va="top",

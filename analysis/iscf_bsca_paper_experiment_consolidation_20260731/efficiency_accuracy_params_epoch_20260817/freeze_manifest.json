@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "protocol_id": "ISCF-BSCA-EFFICIENCY-ACCURACY-PARAMS-EPOCH-20260817",
+  "frozen_at": "2026-08-17",
+  "decision": "efficiency_accuracy_params_epoch_complete_accuracy_parameter_advantage_compute_tradeoff",
+  "completeness": {
+    "accuracy_cells": 84,
+    "parameter_service_units": 21,
+    "timing_checkpoint_logs": 63,
+    "new_training_runs": 0,
+    "formal_test_accesses": 0
+  },
+  "sha256": {
+    "configs/iscf_bsca_efficiency_accuracy_params_epoch_protocol.json": "e3f4e483d933e06081e5ec815aabc2262f7a06fdaa98bef915e1c6171cdfd8aa",
+    "scripts/build_iscf_bsca_efficiency_accuracy_params_epoch.py": "59dbf6512a7fa204d41f4d5bf748f7499a0c057fc2d883fd3c89a09544f240bf",
+    "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/design_and_measurement_contract.md": "552870745a6612f04e325d2ef79264662fb2dce11dfb4ee24dbb16cb48fce7fc",
+    "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/per_checkpoint_epoch_cycle_stats.csv": "3d8cfd3fecd0517fca5ac6c8894e9c5e4df708314bea624f685d8be9af436ab3",
+    "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/efficiency_dataset_results.csv": "d990b91a7e056d2ff5483cbac7b77a3b1377b82542287314152ad5288d7bf305",
+    "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/efficiency_system_macro_results.csv": "e3a8843f4258b6c42765bfc2f54492890fe9c30fe631a21ba36b8cd7c6db7b12",
+    "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/efficiency_result_summary.json": "aef935ef4894d9cdebe298fbdf39847342310a9d3577f0d66abbc14b4c8b6c7a",
+    "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/result_and_table_audit.md": "91cab38bef52362244109e6e1b2c6a6d9efe932b9bc26c38bcbd5c16dd637d62",
+    "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/table/table_iscf_bsca_efficiency.tex": "8f6b340015a57a93be62b5cdf62999816837ec1d6a92e76d85449cee51997be1",
+    "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/table/table_iscf_bsca_efficiency_standalone.tex": "dbef88dd9ea89319bdbd67743436eb665b20269cbe718ae53e62b1ef7da1fd9e",
+    "output/pdf/iscf_bsca_efficiency_accuracy_params_epoch_20260817.pdf": "dab88c5ef531ae188abd8281f9cd8a1ec8b429a462b4f3da8a409e8a12313849",
+    "analysis/iscf_bsca_section5_figures_20260817/plot_section5_figures.py": "5ec0f77f774f94e48284ae93cb115b84861c9cf2b740e3c75de242675bfb35e6",
+    "analysis/iscf_bsca_section5_figures_20260817/figure_contract.md": "c549e4a7c926617f2f503c99931c9a7f8cb4ba4bc3cb0e4c8ff2a4ab40fb71ac",
+    "analysis/iscf_bsca_section5_figures_20260817/figure_qa.md": "b3de84b7bb3771f0af3572717bf9cf7abf7b8ddfcb701aa85612e9c2ee68b18d",
+    "analysis/iscf_bsca_section5_figures_20260817/source_data/figure6_accuracy_system_cost.csv": "1157e4802748fc76203f21c3aee89b738e540206de9b2cddf0fb2668b00ae54e",
+    "paper-figures/figure_6_accuracy_system_cost.svg": "99320cec12f693a1ebc36b23b73d58ac88925baa34e38fd1da5fe319b30fc306",
+    "paper-figures/figure_6_accuracy_system_cost.pdf": "29833d922597403b39e1fd6651600d0fe74db514c08e28adf20f3b9606615b87",
+    "paper-figures/figure_6_accuracy_system_cost.png": "f0dd4b714017767a72c0391e3a76e5256927c31d00dd46fed27d0f09f1679ecf",
+    "paper-figures/figure_6_accuracy_system_cost.tiff": "67c38ae60d407710b39af25c9217307e27af92fbaf81d80c1d6bf5e36da006ce"
+  }
+}

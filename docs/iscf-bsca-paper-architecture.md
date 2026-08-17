@@ -23,7 +23,7 @@
 `temporarily_frozen_content` 只有在后续章节或证据产生明确矛盾且用户同意后才解冻；
 `provisional_content` 只表示当前最佳结构，后续按章节继续修订。
 
-Section 5 drafting amendment：完整Experiments初稿已写入`docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`，沿用冻结顺序`setup -> Main-I -> Main-II -> system cost -> ablation -> mechanism behavior -> transfer`。新Figure 6以Main-I macro MSE、每dataset完整deployed parameters和七dataset logged training GPU-hours共同呈现accuracy--system-cost trade-off，明确保留ISCF-BSCA较慢training/latency边界；Figure 7用双panel paired bars呈现DLinear-style与PatchTST-style在Weather/ETTm1/ETTm2上的author-corrected aggregate transfer结果。Section 5.6显式区分Table 4的aggregate allocation accuracy gain与Figure 5的near-uniform/8-of-40 internal alignment limitation。两图的design/source-data/QA bundle位于`analysis/iscf_bsca_section5_figures_20260817/`，canonical assets位于`paper-figures/figure_6_accuracy_system_cost.*`与`paper-figures/figure_7_decoder_transfer.*`。当前状态=`initial_draft_pending_author_review`，不改Sections 1--4或实验授权。
+Section 5 drafting amendment：完整Experiments初稿已写入`docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`，沿用冻结顺序`setup -> Main-I -> Main-II -> system cost -> ablation -> mechanism behavior -> transfer`。Figure 6现按2026-08-17重新冻结的Efficiency合同，以Main-I macro MSE、four-horizon total parameters和one-epoch cycle seconds共同呈现accuracy--system-cost trade-off；ISCF-BSCA在accuracy与parameters上占优，但one-epoch cycle更慢。Figure 7用双panel paired bars呈现DLinear-style与PatchTST-style在Weather/ETTm1/ETTm2上的author-corrected aggregate transfer结果。Section 5.6显式区分Table 4的aggregate allocation accuracy gain与Figure 5的near-uniform/8-of-40 internal alignment limitation。两图的design/source-data/QA bundle位于`analysis/iscf_bsca_section5_figures_20260817/`，canonical assets位于`paper-figures/figure_6_accuracy_system_cost.*`与`paper-figures/figure_7_decoder_transfer.*`。当前状态=`initial_draft_pending_author_review`，不改Sections 1--4或实验授权。
 
 Main-table author-correction amendment：Main I现覆盖作者修正的ISCF/TimeAlign全部
 seven-dataset rows、SimpleTM Solar与**TVNet ETTh2**；Main II覆盖ISCF/TimeAlign全部rows、
@@ -1534,34 +1534,33 @@ training或formal test。
 
 ### 8.4 Efficiency Evaluation
 
-以tuned `ISCF-BSCA-MAIN-v1`和可在同一环境复现的关键baselines报告：
+正文Efficiency只比较具备完整Main-I accuracy、checkpoint parameter count和native
+timing logs的ISCF-BSCA、TimeAlign与QDF。它报告：
 
-- trained-model count；
-- total stored parameters；
-- training GPU-hours；
-- single-request 与 all-horizon service latency；
-- peak memory；
-- CHPC guarantee。
+- 服务四个horizons所需的model count；
+- Main-I七datasets × four horizons macro MSE/MAE；
+- four-horizon total deployed parameters；
+- 归一化后的one-epoch training cycle。
 
-`checkpoint count` 只允许出现在该实验/部署语境，不进入 Introduction 的宏观任务命名。
+ISCF-BSCA每dataset使用一个unified model；TimeAlign/QDF把四个native fixed-H models
+的parameters与epoch-cycle time求和。每checkpoint的timing取完成训练logs中
+`train + scheduled validation, no test` epoch cycle的中位数，再对七datasets作macro
+mean。该统计比total GPU-hours更少受epochs设置影响，但仍是native completed RTX 3090
+runs的logged duration，不是重新执行的exclusive-GPU microbenchmark。
 
-2026-08-14的独占RTX 3090 profiler已完成35/35 service units与77/77
-immutable checkpoint objects。七dataset macro结果如下；training GPU-hours是native
-logs中的per-epoch training time之和，不含validation、test或unlogged orchestration。
+| System | Models for four $H$ | Main-I MSE | Main-I MAE | Total params (M) | 1-epoch cycle (s) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| ISCF-BSCA | 1 | 0.261 | 0.306 | 2.926 | 133.1 |
+| TimeAlign | 4 | 0.274 | 0.314 | 10.741 | 104.6 |
+| QDF | 4 | 0.288 | 0.331 | 5.337 | 55.4 |
 
-| System | Models | Params (M) | Ckpt. (MiB) | Train GPU h | Single ms | All-$H$ ms | Peak MiB | CHPC |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| ISCF-BSCA | 1 | 2.926 | 17.68 | 2.028 | 10.306 | 10.318 | 38.8 | architectural |
-| TimeAlign | 4 | 10.741 | 95.43 | 0.290 | 0.928 | 3.582 | 109.1 | no guarantee |
-| QDF | 4 | 5.337 | 20.38 | 0.204 | 1.141 | 4.426 | 31.9 | no guarantee |
-| DLinear-H720-prefix | 1 | 0.485 | 1.85 | 0.021 | 0.405 | 0.429 | 11.1 | service protocol |
-| PatchTST-H720-prefix | 1 | 3.198 | 12.23 | 1.110 | 3.933 | 3.882 | 58.0 | service protocol |
-
-该表支持的正向结论是：相对four-model TimeAlign/QDF services，ISCF-BSCA把
-deployed model count压缩为1，并减少parameters/checkpoint storage，同时提供
-architectural CHPC guarantee。它不支持uniform compute-efficiency claim：当前
-full-domain implementation的training time与single/all-H latency均不领先，且没有
-实现或测量prefix-bounded execution。Canonical audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/result_and_table_audit.md`。
+相对TimeAlign/QDF，ISCF-BSCA分别改善MSE `4.936%/9.320%`、MAE
+`2.536%/7.639%`，并减少four-horizon total parameters `72.760%/45.181%`。
+但是其one-epoch cycle分别慢`1.272×/2.404×`，因此只支持accuracy与parameter
+consolidation，不支持uniform efficiency或lower training-time claim。DLinear/PatchTST
+H720-prefix属于one-model services，不进入“四个horizon-specific models求和”的本表。
+Canonical audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/result_and_table_audit.md`；旧2026-08-14
+latency/memory/storage profiler保留为historical supplementary audit。
 
 ### 8.5 Ablation Studies
 
@@ -1861,6 +1860,7 @@ Coverage boundary：
 | 2026-08-12 | Sections 5--7 structural design v0.2 temporary freeze | Author确认七章结构与standalone Discussion；Core-Ablation固定为Full、w/o BSCA、w/o Target-Adaptive Allocation、Shared Scope Projection与Fixed Scope $s=144$；qualitative并入5.6 | 不设balance-only或failure-case；realized allocation value移出当前计划；performance-selected example必须披露selection；不新增实验授权 |
 | 2026-08-17 | Decoder-Transfer author correction | 作者提供复跑后的two-backbone × three-dataset aggregate MSE/MAE；Table 5、PDF与registry更新 | DLinear-style与PatchTST-style完整framework均在3/3 datasets及16/16 comparator metric columns正向；per-horizon/checkpoint rerun provenance未同步，five-dataset与iTransformer负向history保留 |
 | 2026-08-17 | Core-Ablation author correction | 作者提供复跑后的5 variants × 5 datasets aggregate MSE/MAE；Table 4、PDF与registry更新 | Full在12/12 metric columns为best；四项aggregate方向均正；per-horizon/checkpoint rerun provenance未同步，Figure 5 routing boundary保留 |
+| 2026-08-17 | Efficiency accuracy--parameters--one-epoch redesign | Table 3冻结为ISCF/TimeAlign/QDF的84 accuracy cells、21 parameter units、63 timing logs；Figure 6同步 | ISCF accuracy/parameters占优，one-epoch cycle更慢；旧latency/memory/storage profiler转为historical supplementary audit；new training/test=0/0 |
 | 2026-08-14 | Core-Ablation historical formal closure | 5 variants × 5 datasets × 4 H的100-cell matched formal matrix完成；20新checkpoints hashes immutable | 历史3/4-control结论已被2026-08-17作者aggregate correction取代；raw artifacts保留作historical audit |
 | 2026-08-14 | Decoder-Transfer / Efficiency prelaunch | Transfer冻结30-checkpoint end-to-end matrix并通过13项local gate；Efficiency冻结5-system、35-unit、77-object profiler contract | Transfer进入manifest-gated remote Step 8；Efficiency无新训练/无test access，正式测量与training错峰 |
 | 2026-08-14 | Decoder-Transfer formal closure | 30 checkpoints、30 unique hashes、120/120 test cells；DLinear pass / PatchTST fail | 总体cross-backbone portability unsupported；正向动词撤回；Efficiency进入独占GPU execution |

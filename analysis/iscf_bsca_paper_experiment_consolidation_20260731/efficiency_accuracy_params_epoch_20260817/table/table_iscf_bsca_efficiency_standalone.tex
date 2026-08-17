@@ -1,0 +1,25 @@
+\documentclass[10pt]{article}
+\usepackage[letterpaper,margin=0.55in]{geometry}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\begin{document}
+\begin{table}[t]
+\centering
+\caption{Accuracy and training-resource cost for serving four forecasting horizons. Accuracy is the macro average of the 28 Main I dataset--horizon cells. Parameter count and one-epoch cycle time are macro-averaged over seven datasets; horizon-specific systems sum their four native models. Lower is better.}
+\label{tab:iscf-bsca-efficiency}
+\small
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{lrrrrr}
+\toprule
+System & Models & MSE & MAE & Params (M) & 1-Epoch (s) \\
+\midrule
+\textbf{ISCF-BSCA (ours)} & \textbf{1} & \textbf{0.261} & \textbf{0.306} & \textbf{2.926} & 133.1 \\
+TimeAlign & 4 & 0.274 & 0.314 & 10.741 & 104.6 \\
+QDF & 4 & 0.288 & 0.331 & 5.337 & \textbf{55.4} \\
+\bottomrule
+\end{tabular}
+\vspace{2pt}
+\parbox{0.98\linewidth}{\footnotesize ISCF-BSCA counts one unified model and one training epoch. TimeAlign and QDF count the sum of four independently trained models for $H\in\{96,192,336,720\}$. For each checkpoint, 1-Epoch is the median logged duration of a native training epoch plus its scheduled validation pass; no test evaluation is included.}
+\end{table}
+
+\end{document}

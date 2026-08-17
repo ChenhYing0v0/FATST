@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Clean manuscript-facing initial draft of Section 5 |
-| `version` | `v0.1-evidence-complete-initial-draft` |
+| `version` | `v0.2-efficiency-redesign-synchronized` |
 | `date` | `2026-08-17` |
 | `review_status` | `initial_draft_pending_author_review` |
 | `upstream_dependency` | Introduction v0.9, Related Work v0.2, Section 3 v0.7 and Section 4 v0.7 remain temporarily frozen and unchanged |
 | `evidence_scope` | Main-I, Main-II, Efficiency, Core-Ablation, Figure 5 mechanism diagnostics and author-refined Decoder-Transfer |
-| `experiment_change` | None; this draft uses existing frozen artifacts and launches no training or formal test |
+| `experiment_change` | Efficiency Table 3 and Figure 6 redesigned from existing artifacts; no new training or formal test |
 | `claim_boundary` | Main tables establish system-level effectiveness; matched ablations establish aggregate component utility; Figure 5 provides mixed internal-behavior evidence; transfer claims are restricted to the evaluated three-dataset scope |
 | `narrative_spine` | evaluation contract → horizon-specific comparison → one-model capability → system-cost trade-off → matched attribution → internal behavior → bounded transferability |
 
@@ -22,7 +22,7 @@ The status table and artifact map below are editorial metadata and are not part 
 | --- | --- |
 | Table 1 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_i/table_iscf_bsca_main_i_qdf.tex` |
 | Table 2 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_ii/table_iscf_bsca_main_ii.tex` |
-| Table 3 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/table/table_iscf_bsca_efficiency.tex` |
+| Table 3 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/table/table_iscf_bsca_efficiency.tex` |
 | Table 4 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/table/table_iscf_bsca_core_ablation.tex` |
 | Figure 5 | `paper-figures/figure_iscf_bsca_mechanism.*` |
 | Figure 6 | `paper-figures/figure_6_accuracy_system_cost.*` |
@@ -41,7 +41,7 @@ We evaluate ISCF-BSCA along seven complementary dimensions. The main comparisons
 
 **Training and model selection.** ISCF-BSCA uses one checkpoint per dataset and the primary seed 2021. Checkpoints within each training trial are selected on the validation split using the mean MSE over the four horizons. Dataset-level hyperparameter profiles are then selected by the preregistered mean official-test MSE over the same horizon set, without horizon-, seed-, metric- or cell-specific selection. The resulting benchmark is therefore explicitly test-informed and test-tuned rather than an untouched-holdout evaluation. All attempted profiles and negative cells are retained in the experiment record. External systems preserve their native optimization, checkpoint and seed protocols, and these source differences are reported with the full settings in Appendix A.
 
-**Matched and diagnostic evaluations.** The ablation study uses the exact ISCF-BSCA-v1 anchor and matched end-to-end controls on ETTm1, ETTm2, ETTh1, ETTh2 and Weather. Decoder-transfer experiments train the Original Decoder and complete ISCF-BSCA framework end to end under the same backbone block. Internal-behavior analyses use validation artifacts only and are not used to establish test accuracy. Efficiency is measured on one exclusive NVIDIA RTX 3090 in FP32 with batch size 1; latency uses synthetic standardized inputs, CUDA events, 30 warm-up iterations and five rounds of 100 timed iterations.
+**Matched and diagnostic evaluations.** The ablation study uses the exact ISCF-BSCA-v1 anchor and matched end-to-end controls on ETTm1, ETTm2, ETTh1, ETTh2 and Weather. Decoder-transfer experiments train the Original Decoder and complete ISCF-BSCA framework end to end under the same backbone block. Internal-behavior analyses use validation artifacts only and are not used to establish test accuracy. For the efficiency comparison, Main-I accuracy is paired with parameter counts and completed native RTX 3090 timing logs from the corresponding local reproductions. The one-epoch statistic is the median logged training-plus-scheduled-validation cycle for each checkpoint, excluding test evaluation; the four fixed-horizon cycles are summed for TimeAlign and QDF.
 
 ### 5.2 Comparison with horizon-specific forecasters
 
@@ -65,19 +65,19 @@ These results strengthen the practical case for varied-horizon forecasting: one 
 
 ### 5.4 Accuracy and system cost
 
-Replacing a four-model family changes more than forecast accuracy. Table 3 measures the complete deployed service for each dataset, including the number of model objects, summed parameters and checkpoint storage, logged training time, request latency, peak inference memory and the mechanism by which prefix consistency is obtained. Figure 6 links the Main-I accuracy result to two central system costs: total deployed parameters and logged training time.
+Replacing a four-model family changes both forecast accuracy and training-system cost. Table 3 jointly reports the Main-I macro MSE/MAE, the number of models required to serve all four horizons, their total deployed parameters and a normalized one-epoch training cycle. ISCF-BSCA contributes one unified model per dataset, whereas TimeAlign and QDF contribute the sum of four native fixed-horizon models. Figure 6 visualizes the same accuracy--parameter--epoch trade-off.
 
-<!-- Insert Table 3 near here. Canonical source: efficiency/table/table_iscf_bsca_efficiency.tex -->
+<!-- Insert Table 3 near here. Canonical source: efficiency_accuracy_params_epoch_20260817/table/table_iscf_bsca_efficiency.tex -->
 
 <a id="fig:accuracy-system-cost"></a>
 
 ![Accuracy and system-cost trade-off.](../../paper-figures/figure_6_accuracy_system_cost.png)
 
-**Figure 6 | Accuracy and system cost for complete four-horizon services.** Horizontal position shows the deployed parameter count per dataset, after summing the four horizon-specific checkpoints for TimeAlign and QDF; vertical position shows Main-I macro MSE over seven datasets and four horizons; bubble area represents the logged training GPU-hours accumulated over the seven datasets. Labels report model count and total logged GPU-hours. Only systems with audited complete horizon-specific service artifacts are shown. Lower and further left are preferable, whereas bubble size exposes rather than ranks the training-time trade-off.
+**Figure 6 | Accuracy and system cost for complete four-horizon services.** Horizontal position shows the total deployed parameter count per dataset, after summing the four horizon-specific checkpoints for TimeAlign and QDF; vertical position shows Main-I macro MSE over seven datasets and four horizons; bubble area represents the seven-dataset macro one-epoch cycle. Labels report model count and exact seconds per epoch cycle. Only systems with complete matched accuracy, checkpoint and timing artifacts are shown. Lower and further left are preferable, whereas bubble size exposes rather than ranks the training-time trade-off.
 
-ISCF-BSCA consolidates the four requested horizons into one 2.926-million-parameter model. Relative to the four-model TimeAlign service, this reduces deployed parameters by 72.8%, checkpoint storage by 81.5% and peak inference memory by 64.4%. Relative to four-model QDF, the reductions in parameters and checkpoint storage are 45.2% and 13.3%. In both comparisons, the consolidated model also supplies architectural CHPC rather than relying on agreement among independently optimized systems. Figure 6 shows that this parameter reduction accompanies the lowest macro MSE among the three audited four-model comparisons.
+ISCF-BSCA consolidates the four requested horizons into one 2.926-million-parameter model. Its Main-I macro MSE/MAE is 0.261/0.306, compared with 0.274/0.314 for TimeAlign and 0.288/0.331 for QDF. Relative to these four-model services, ISCF-BSCA reduces MSE by 4.94% and 9.32%, MAE by 2.54% and 7.64%, and total parameters by 72.76% and 45.18%, respectively. Figure 6 therefore shows that one unified checkpoint combines the lowest macro error with the smallest four-horizon parameter footprint among the three fully audited systems.
 
-The advantage is a storage-and-consolidation trade-off, not uniform computational efficiency. The current full-domain implementation requires 10.318 ms to serve all four horizons, compared with 3.582 ms for TimeAlign and 4.426 ms for QDF, and its logged training time is 2.028 GPU-hours per dataset. DLinear-$H720$-prefix and PatchTST-$H720$-prefix are also faster one-model services, although they provide prefix consistency through the serving protocol rather than the ISCF construction. Because the reference implementation materializes the complete $T=720$ field, the prefix-bounded execution described in Section 4 is not measured here. We therefore conclude that ISCF-BSCA reduces model multiplicity, parameters and storage while improving accuracy, at the cost of higher training time and inference latency in the current implementation.
+The result is not a uniform training-efficiency advantage. The one-epoch cycle is 133.1 s for ISCF-BSCA, 104.6 s for the summed TimeAlign family and 55.4 s for the summed QDF family, making the current implementation 1.27 and 2.40 times slower, respectively. Each checkpoint value is the median completed native epoch cycle including scheduled validation but excluding test evaluation; the statistic reduces dependence on the chosen number of epochs, yet it is not a newly controlled exclusive-GPU microbenchmark. DLinear-$H720$-prefix and PatchTST-$H720$-prefix are excluded because they are one-model prefix services rather than four horizon-specific models, and other Main-I systems lack a complete locally matched checkpoint-and-timing set. We therefore conclude only that ISCF-BSCA improves accuracy while reducing model multiplicity and parameters, with a higher logged epoch-cycle cost in the current implementation.
 
 ### 5.5 Component and training-objective ablations
 
@@ -129,7 +129,7 @@ The transfer evidence is deliberately bounded. The three-dataset reporting scope
 | --- | --- | --- | --- |
 | 5.2 Main-I | Complete seven-dataset, four-horizon table with mixed source roles | One unified ISCF-BSCA model is more accurate on most cells than separately optimized horizon-specific systems | Matched decoder attribution or untouched-holdout generalization |
 | 5.3 Main-II | Complete source-native one-model table | One ISCF-BSCA checkpoint serves all evaluated horizons competitively | Fully matched architecture comparison across all systems |
-| 5.4 Efficiency | 35/35 audited service units and 77 immutable checkpoint objects | Fewer model objects, parameters and storage than TimeAlign/QDF four-model families, with architectural CHPC | Faster inference, lower training cost or realized prefix-bounded speedup |
+| 5.4 Efficiency | 84/84 Main-I accuracy cells, 21/21 parameter units and 63/63 native timing logs | Better macro accuracy and fewer total parameters than TimeAlign/QDF four-model families | Lower training cost, uniform efficiency or an exclusive-GPU timing claim |
 | 5.5 Core ablation | Author-corrected five-dataset aggregate table | All four interventions improve aggregate MSE/MAE under the matched design | Per-horizon dominance, oracle routing or independently verified component semantics |
 | 5.6 Mechanism analysis | Complete validation diagnostic bundle | Exact CHPC, active scopes and regional scope-error heterogeneity; selected example is illustrative | Reliable region-best routing, sparse specialization, prevalence or causal interpretation of the example |
 | 5.7 Decoder transfer | Author-refined two-backbone, three-dataset aggregate table | Complete-framework portability within the displayed scope | Universal or architecture-agnostic transfer; separate ISCF/BSCA attribution |

@@ -44,7 +44,7 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `aggregate_all_controls_positive_provenance_partial`；作者修正Core-Ablation为4/4 aggregate directions positive；per-horizon/checkpoint rerun provenance未同步 |
 | `active_workstream` | paper-facing evidence consolidation and writing handoff |
-| `active_experiment_step` | Figure 5 validation diagnostics complete；all current main-text experiment blocks closed |
+| `active_experiment_step` | Efficiency accuracy--parameters--one-epoch redesign complete；all current main-text experiment blocks closed |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none；PatchTST BSCA HPO closed for Weather/ETTm1/ETTm2 scope |
 | `local_audit_and_design_authorized` | true |
@@ -52,8 +52,10 @@ paper candidate与claim boundary，但互不替代。
 | `remote_training_authorized` | false；Figure 5复用既有validation artifacts，training=0 |
 | `test_tuned_hpo_authorized` | true；dataset-level four-H mean official-test MSE selector；per-H/cell selection=false |
 | `formal_test_authorized` | consumed and complete；40 unique checkpoints中复用5个已测artifact，新增35 checkpoints / 140 cells |
-| `next_action` | finalize Section 5.1 and draft Sections 5--7；no additional experiment, training or formal test required |
+| `next_action` | author review synchronized Section 5/Table 3/Figure 6；no additional experiment, training or formal test required |
 | `conditional_next` | allocation可作aggregate accuracy gain；Figure 5仍禁止reliable region-best routing、causal specialization或universal specialization claim |
+
+2026-08-17用户要求以Main-I accuracy、four-horizon total parameters与one-epoch cycle重做Efficiency。比较集合冻结为ISCF-BSCA、TimeAlign与QDF，完整性=`84/84 accuracy cells + 21/21 parameter units + 63/63 timing logs`；new training/formal test=`0/0`。ISCF-BSCA相对TimeAlign/QDF分别改善MSE `4.936%/9.320%`、MAE `2.536%/7.639%`，减少parameters `72.760%/45.181%`；但one-epoch cycle为两者的`1.272×/2.404×`，故只支持accuracy/parameter consolidation，不支持lower training time或uniform efficiency。Timing是completed RTX 3090 native runs中每checkpoint `train + scheduled validation, no test` epoch cycle中位数，不是exclusive-GPU microbenchmark。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/result_and_table_audit.md`；旧2026-08-14 profiler保留为historical supplementary audit。
 
 2026-08-17作者提供Decoder-Transfer复跑后的Weather、ETTm1、ETTm2 aggregate表并要求替换固定Table 5。完整framework相对Original的display-precision macro MSE/MAE gains更新为DLinear-style `+5.611%/+3.604%`、PatchTST-style `+2.128%/+1.274%`；两者均为3/3 dataset MSE/MAE wins，合计16/16 comparator metric columns正向。本表仍不区分ISCF与BSCA内部贡献。新输入未附per-horizon raw files、selectors、profiles或checkpoint hashes；旧48-cell/hash artifacts为historical audit，`author_refined_posthoc_scope`、test-tuned disclosure及ETTh1/ETTh2/iTransformer-style负向结果保留。不继续HPO/training/formal test。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/result_and_next_gate.md`。Decision=`decoder_transfer_author_corrected_aggregate_both_backbones_all_columns_positive`。
 
@@ -349,17 +351,15 @@ decoder的结果证明portability。若算力不足，应先减少backbone数量
 
 ### 6.5 Efficiency and system properties
 
-同时记录：
+正文当前冻结为Main-I macro MSE/MAE、服务four horizons的model count、four-horizon
+total parameters与one-epoch cycle。ISCF计一个unified model；horizon-specific baseline
+计四个native fixed-H models的parameter/timing总和。One-epoch cycle以完成native logs中
+每checkpoint `train + scheduled validation, no test`的中位数统计，再对七datasets作
+macro mean；必须披露该统计不是exclusive-GPU microbenchmark。
 
-- model/checkpoint count；
-- parameter count与支持全部horizons的total stored parameters；
-- training GPU-hours；
-- single-request latency与服务全部horizons的system cost；
-- peak memory；
-- CHPC是否由architecture contract保证；
-- BSCA的train-only性质。
-
-效率比较必须区分单次forward成本与维护多个horizon-specific systems的总成本。
+旧2026-08-14的checkpoint storage、single/all-H latency、peak memory与CHPC profiler
+继续作为historical supplementary audit，不进入当前正文Table 3。正文结论必须同时报告
+accuracy/parameter正向结果与ISCF one-epoch cycle更慢的负向边界。
 
 ### 6.6 Problem alleviation and mechanism diagnostics
 
