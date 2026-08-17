@@ -1,0 +1,31 @@
+{
+  "actual_checkpoint_bytes": 3199700,
+  "batch_size": 1,
+  "checkpoint_paths": [
+    "/home/yingch/exp_outputs/r-2026-fatst/amd_simpletm_main_i_7dataset_20260807_recovery/runs/SimpleTM__Solar/workspace/source/checkpoints/Solar_Solar_96_96_128_256_1_db8_None_3_0.0_0.005_0.01_TST_256_2025_0_0/checkpoint.pth",
+    "/home/yingch/exp_outputs/r-2026-fatst/amd_simpletm_main_i_7dataset_20260807_recovery/runs/SimpleTM__Solar/workspace/source/checkpoints/Solar_Solar_96_192_128_256_1_db8_None_1_0.0_0.005_0.003_TST_256_2025_0_0/checkpoint.pth",
+    "/home/yingch/exp_outputs/r-2026-fatst/amd_simpletm_main_i_7dataset_20260807_recovery/runs/SimpleTM__Solar/workspace/source/checkpoints/Solar_Solar_96_336_128_256_1_db8_None_1_0.1_0.005_0.003_TST_256_2025_0_0/checkpoint.pth",
+    "/home/yingch/exp_outputs/r-2026-fatst/amd_simpletm_main_i_7dataset_20260807_recovery/runs/SimpleTM__Solar/workspace/source/checkpoints/Solar_Solar_96_720_128_256_1_db8_None_1_0.0_0.005_0.009_TST_256_2025_0_0/checkpoint.pth"
+  ],
+  "checkpoint_sha256": [
+    "342a5b6f7abbe940b626faa1b80fd50b822fdf1cb145b74df54cd377ca0af84d",
+    "0d744f6ddb3f020636072ad99de2b544e0ff3d866b0a6b7595bb4d0067cb2347",
+    "6183fcd9ca5d201a6a840258084ca9a904333f8086f7d296a31dcd8a5b0b365c",
+    "e670781f52ced4525bd382088db09f12f93bdc05a204863e79f81cb986c10bf6"
+  ],
+  "cuda_version": "12.8",
+  "dataset": "Solar",
+  "deployment_repeat": 0,
+  "gate": "pass",
+  "hardware": "NVIDIA GeForce RTX 3090",
+  "incremental_activation_peak_bytes": 3050496,
+  "input_role": "synthetic_standardized_no_test_loader_or_labels",
+  "peak_inference_memory_bytes": 16388608,
+  "precision": "fp32",
+  "protocol_id": "ISCF-BSCA-EFFICIENCY-ACCURACY-MEMORY-STORAGE-20260817",
+  "resident_allocated_bytes_before_service": 13338112,
+  "system": "SimpleTM",
+  "torch_version": "2.9.0+cu128",
+  "total_stored_parameters": 789056,
+  "trained_model_count": 4
+}

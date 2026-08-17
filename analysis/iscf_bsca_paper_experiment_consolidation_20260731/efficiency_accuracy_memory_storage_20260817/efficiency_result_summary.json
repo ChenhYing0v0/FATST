@@ -1,0 +1,76 @@
+{
+  "comparisons": {
+    "AMD": {
+      "checkpoint_storage_reduction_percent": 92.00687719688713,
+      "mae_improvement_percent": 6.716576514785426,
+      "mse_improvement_percent": 7.5914135880981215,
+      "peak_memory_reduction_percent": 83.69284310401464
+    },
+    "QDF": {
+      "checkpoint_storage_reduction_percent": 13.268897501777227,
+      "mae_improvement_percent": 7.639358628930269,
+      "mse_improvement_percent": 9.320191041968993,
+      "peak_memory_reduction_percent": -21.535229201110358
+    },
+    "SimpleTM": {
+      "checkpoint_storage_reduction_percent": -523.4563226019367,
+      "mae_improvement_percent": 8.03203270894119,
+      "mse_improvement_percent": 10.940980171480057,
+      "peak_memory_reduction_percent": -161.5515134423764
+    },
+    "TimeAlign": {
+      "checkpoint_storage_reduction_percent": 81.47728048623362,
+      "mae_improvement_percent": 2.535819877189006,
+      "mse_improvement_percent": 4.935538481573113,
+      "peak_memory_reduction_percent": 64.42169924895674
+    }
+  },
+  "input_sha256": {
+    "main_i_data": "556776d9be6a3e3e33fdd6b4e8c0855f95a9f3158c0435274ee5bda0a500db94",
+    "profiler_data": "a60067f25065e59e80aae94fd8d833469076709b89071a549b62cae897d0e694"
+  },
+  "protocol_id": "ISCF-BSCA-EFFICIENCY-ACCURACY-MEMORY-STORAGE-20260817",
+  "status": "complete_profiler_reuse_plus_additional_peak_measurement_no_new_training_no_test_access",
+  "systems": [
+    {
+      "checkpoint_storage_mib": 17.676764760698592,
+      "main_i_mae": 0.30610714285714286,
+      "main_i_mse": 0.26071428571428573,
+      "model_count": 1,
+      "peak_inference_memory_mib": 38.81675502232143,
+      "system": "ISCF-BSCA"
+    },
+    {
+      "checkpoint_storage_mib": 95.43288040161133,
+      "main_i_mae": 0.3140714285714286,
+      "main_i_mse": 0.27425,
+      "model_count": 4,
+      "peak_inference_memory_mib": 109.10232979910714,
+      "system": "TimeAlign"
+    },
+    {
+      "checkpoint_storage_mib": 20.381113869803293,
+      "main_i_mae": 0.33142596057483126,
+      "main_i_mse": 0.28751084581017494,
+      "model_count": 4,
+      "peak_inference_memory_mib": 31.938685825892858,
+      "system": "QDF"
+    },
+    {
+      "checkpoint_storage_mib": 221.1496707371303,
+      "main_i_mae": 0.32814741507172585,
+      "main_i_mse": 0.2821321003139019,
+      "model_count": 4,
+      "peak_inference_memory_mib": 238.03508649553572,
+      "system": "AMD"
+    },
+    {
+      "checkpoint_storage_mib": 2.835285186767578,
+      "main_i_mae": 0.3328410444131919,
+      "main_i_mse": 0.2927432686956156,
+      "model_count": 4,
+      "peak_inference_memory_mib": 14.840959821428571,
+      "system": "SimpleTM"
+    }
+  ]
+}

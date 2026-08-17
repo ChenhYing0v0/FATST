@@ -1,0 +1,28 @@
+\documentclass[10pt]{article}
+\usepackage[letterpaper,margin=0.55in]{geometry}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{float}
+\begin{document}
+\begin{table}[H]
+\centering
+\caption{Accuracy, peak inference memory, and checkpoint storage for serving four forecasting horizons. Accuracy is the macro average of the 28 Main I dataset--horizon cells. Memory and storage are macro-averaged over seven datasets. Lower is better.}
+\label{tab:iscf-bsca-efficiency}
+\small
+\setlength{\tabcolsep}{7pt}
+\begin{tabular}{lrrrr}
+\toprule
+System & MSE & MAE & Peak memory (MiB) & Checkpoints (MiB) \\
+\midrule
+\textbf{ISCF-BSCA (ours)} & \textbf{0.261} & \textbf{0.306} & 38.817 & \underline{17.677} \\
+TimeAlign & \underline{0.274} & \underline{0.314} & 109.102 & 95.433 \\
+QDF & 0.288 & 0.331 & \underline{31.939} & 20.381 \\
+AMD & 0.282 & 0.328 & 238.035 & 221.150 \\
+SimpleTM & 0.293 & 0.333 & \textbf{14.841} & \textbf{2.835} \\
+\bottomrule
+\end{tabular}
+\vspace{2pt}
+\parbox{0.98\linewidth}{\footnotesize ISCF-BSCA stores and serves one unified checkpoint. TimeAlign, QDF, AMD, and SimpleTM sum the four native checkpoints for $H\in\{96,192,336,720\}$. Peak memory is measured on an exclusive RTX 3090 in FP32 with batch size 1 and all service checkpoints resident: one $H=720$ forward plus prefix views for ISCF-BSCA, and four sequential native forwards for each horizon-specific family. SimpleTM resource cost uses repeat 0 as one deployable, non-ensemble instance per horizon, whereas its frozen Main I accuracy follows the table's multi-run summary. Synthetic standardized inputs are used; no test loader or labels are accessed. Best results are bold and second-best results are underlined.}
+\end{table}
+
+\end{document}

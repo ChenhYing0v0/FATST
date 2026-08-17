@@ -1,0 +1,31 @@
+{
+  "actual_checkpoint_bytes": 248282900,
+  "batch_size": 1,
+  "checkpoint_paths": [
+    "/home/yingch/exp_outputs/r-2026-fatst/amd_simpletm_main_i_7dataset_20260807_recovery/runs/AMD__ECL/workspace/source/checkpoints/electricity/best.pt",
+    "/home/yingch/exp_outputs/r-2026-fatst/amd_simpletm_main_i_7dataset_20260807_recovery/runs/AMD__ECL/workspace/source/checkpoints/electricity2/best.pt",
+    "/home/yingch/exp_outputs/r-2026-fatst/amd_simpletm_main_i_7dataset_20260807_recovery/runs/AMD__ECL/workspace/source/checkpoints/electricity3/best.pt",
+    "/home/yingch/exp_outputs/r-2026-fatst/amd_simpletm_main_i_7dataset_20260807_recovery/runs/AMD__ECL/workspace/source/checkpoints/electricity4/best.pt"
+  ],
+  "checkpoint_sha256": [
+    "71d6931365a92bb05cae589a04a083470e5cbbfad427d4aff09ba92b4ff88716",
+    "bdb3e90a10aa63f8e5d4ca7c5bb645c9bce29f837a78398df8c9cd60b96dfff5",
+    "183d7f22163844ff54e831c59b8dd440065b22e66b8db2d06cf7c01b3fb015d7",
+    "af65985faea71b7550bd06f742a8976fbe159d0371c6a65cfe8fcd484f68bea8"
+  ],
+  "cuda_version": "12.8",
+  "dataset": "ECL",
+  "deployment_repeat": 0,
+  "gate": "pass",
+  "hardware": "NVIDIA GeForce RTX 3090",
+  "incremental_activation_peak_bytes": 4746240,
+  "input_role": "synthetic_standardized_no_test_loader_or_labels",
+  "peak_inference_memory_bytes": 272400384,
+  "precision": "fp32",
+  "protocol_id": "ISCF-BSCA-EFFICIENCY-ACCURACY-MEMORY-STORAGE-20260817",
+  "resident_allocated_bytes_before_service": 267654144,
+  "system": "AMD",
+  "torch_version": "2.9.0+cu128",
+  "total_stored_parameters": 59379432,
+  "trained_model_count": 4
+}

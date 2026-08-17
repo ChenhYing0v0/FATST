@@ -98,47 +98,64 @@
     {
       "id": "efficiency",
       "manuscript_role": "main_text_supporting_result",
-      "title": "Accuracy, four-horizon parameters and one-epoch training cycle",
-      "status": "complete_accuracy_params_epoch_accuracy_parameter_advantage_compute_tradeoff",
+      "title": "Accuracy, peak inference memory and checkpoint storage",
+      "status": "complete_five_system_accuracy_advantage_resource_mixed",
       "primary_system": "ISCF-BSCA-MAIN-v1",
-      "systems": ["ISCF-BSCA", "TimeAlign", "QDF"],
+      "systems": ["ISCF-BSCA", "TimeAlign", "QDF", "AMD", "SimpleTM"],
       "datasets": 7,
-      "accuracy_cells": 84,
-      "parameter_service_units": 21,
-      "timing_checkpoint_objects": 63,
-      "protocol": "configs/iscf_bsca_efficiency_accuracy_params_epoch_protocol.json",
-      "artifact": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/table/table_iscf_bsca_efficiency.tex",
-      "data": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/efficiency_system_macro_results.csv",
-      "dataset_data": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/efficiency_dataset_results.csv",
-      "epoch_cycle_data": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/per_checkpoint_epoch_cycle_stats.csv",
-      "summary": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/efficiency_result_summary.json",
-      "audit": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/result_and_table_audit.md",
-      "review_pdf": "output/pdf/iscf_bsca_efficiency_accuracy_params_epoch_20260817.pdf",
+      "accuracy_cells": 140,
+      "memory_storage_service_units": 35,
+      "table_role_checkpoint_objects": 119,
+      "protocol": "configs/iscf_bsca_efficiency_accuracy_memory_storage_protocol.json",
+      "artifact": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/table/table_iscf_bsca_efficiency.tex",
+      "data": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/efficiency_system_macro_results.csv",
+      "dataset_data": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/efficiency_dataset_results.csv",
+      "additional_units": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/additional_units",
+      "summary": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/efficiency_result_summary.json",
+      "audit": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/result_and_table_audit.md",
+      "review_pdf": "output/pdf/iscf_bsca_efficiency_accuracy_memory_storage_20260817.pdf",
       "metrics": [
         "main_i_macro_mse",
         "main_i_macro_mae",
-        "four_horizon_total_parameters",
-        "one_epoch_cycle_seconds"
+        "four_horizon_service_peak_inference_memory_mib",
+        "four_horizon_checkpoint_storage_mib"
       ],
       "comparisons": {
         "vs_TimeAlign": {
           "mse_improvement_percent": 4.935538,
           "mae_improvement_percent": 2.535820,
-          "parameter_reduction_percent": 72.760091,
-          "one_epoch_cycle_ratio": 1.272062
+          "peak_memory_reduction_percent": 64.421699,
+          "checkpoint_storage_reduction_percent": 81.477280
         },
         "vs_QDF": {
           "mse_improvement_percent": 9.320191,
           "mae_improvement_percent": 7.639359,
-          "parameter_reduction_percent": 45.181185,
-          "one_epoch_cycle_ratio": 2.404435
+          "peak_memory_reduction_percent": -21.535229,
+          "checkpoint_storage_reduction_percent": 13.268898
+        },
+        "vs_AMD": {
+          "mse_improvement_percent": 7.591414,
+          "mae_improvement_percent": 6.716577,
+          "peak_memory_reduction_percent": 83.692843,
+          "checkpoint_storage_reduction_percent": 92.006877
+        },
+        "vs_SimpleTM": {
+          "mse_improvement_percent": 10.940980,
+          "mae_improvement_percent": 8.032033,
+          "peak_memory_reduction_percent": -161.551513,
+          "checkpoint_storage_reduction_percent": -523.456323
         }
       },
-      "dependency": "canonical_Main_I_accuracy_frozen_checkpoint_parameter_counts_and_native_completed_RTX3090_epoch_cycle_logs",
-      "claim_boundary": "supports_accuracy_and_parameter_consolidation_relative_to_four_model_TimeAlign_QDF_services_but_ISCF_has_a_slower_logged_one_epoch_cycle_and_no_uniform_efficiency_claim",
-      "freeze_manifest": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/freeze_manifest.json",
-      "freeze_manifest_sha256": "d868578c6c7561d279f992e1b9a9086d7347ae41db5d795abcd0d83811a54649",
-      "historical_profiler": {
+      "dependency": "canonical_Main_I_accuracy_plus_actual_locally_reproduced_checkpoints_and_exclusive_RTX3090_synthetic_input_peak_memory",
+      "claim_boundary": "supports_best_macro_accuracy_and_one_checkpoint_service_consolidation_with_memory_storage_advantages_over_TimeAlign_AMD_but_QDF_has_lower_peak_memory_and_SimpleTM_is_lower_on_both_resource_metrics",
+      "freeze_manifest": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/freeze_manifest.json",
+      "historical_compute_table": {
+        "protocol": "configs/iscf_bsca_efficiency_accuracy_params_epoch_protocol.json",
+        "artifact": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/table/table_iscf_bsca_efficiency.tex",
+        "audit": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/result_and_table_audit.md",
+        "review_pdf": "output/pdf/iscf_bsca_efficiency_accuracy_params_epoch_20260817.pdf"
+      },
+      "source_profiler": {
         "protocol": "configs/iscf_bsca_efficiency_protocol.json",
         "artifact": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/table/table_iscf_bsca_efficiency.tex",
         "data": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/efficiency_system_macro_means.csv",

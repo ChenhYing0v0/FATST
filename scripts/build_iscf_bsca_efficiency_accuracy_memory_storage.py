@@ -238,8 +238,9 @@ def main() -> None:
             r"\usepackage[letterpaper,margin=0.55in]{geometry}",
             r"\usepackage{booktabs}",
             r"\usepackage{amsmath}",
+            r"\usepackage{float}",
             r"\begin{document}",
-            fragment,
+            fragment.replace(r"\begin{table}[t]", r"\begin{table}[H]"),
             r"\end{document}",
             "",
         ]

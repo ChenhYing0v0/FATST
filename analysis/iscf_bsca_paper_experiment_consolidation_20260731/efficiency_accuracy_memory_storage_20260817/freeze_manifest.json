@@ -1,0 +1,31 @@
+{
+  "schema_version": 2,
+  "protocol_id": "ISCF-BSCA-EFFICIENCY-ACCURACY-MEMORY-STORAGE-20260817",
+  "decision": "complete_five_system_accuracy_advantage_resource_mixed",
+  "new_training_runs": 0,
+  "formal_test_accesses": 0,
+  "systems": 5,
+  "accuracy_cells": 140,
+  "memory_storage_service_units": 35,
+  "table_role_checkpoint_objects": 119,
+  "additional_profiler_units": 14,
+  "additional_checkpoint_hashes_verified": 56,
+  "input_sha256": {
+    "analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_i/table_data_long.csv": "556776d9be6a3e3e33fdd6b4e8c0855f95a9f3158c0435274ee5bda0a500db94",
+    "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_20260814/formal_results/efficiency_35_service_units.csv": "a60067f25065e59e80aae94fd8d833469076709b89071a549b62cae897d0e694",
+    "additional_units_bundle": "816c21f10fb5d371e40ccde7fbcb560a114af9cd361b93fd02f4ce9009e4833c"
+  },
+  "artifact_sha256": {
+    "configs/iscf_bsca_efficiency_accuracy_memory_storage_protocol.json": "e7c47dbf0d58102e528cf93c143809001d425b4b9b9dbbf78019c342554d1ed1",
+    "scripts/profile_iscf_bsca_efficiency_additional_unit.py": "ff9e571ff3aac3410199fbd78e5afb6917a989946bb47b64aad8ca204fc68021",
+    "scripts/build_iscf_bsca_efficiency_accuracy_memory_storage.py": "41c695d0bb6db82ae038a64cd8d168d977d2a22b208b6b250f27637062d9283a",
+    "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/design_and_measurement_contract.md": "d3838266a21ac68d28bdd7a4b6d0887a6cd93d11aae38f28f71ef3d571016572",
+    "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/efficiency_dataset_results.csv": "a730c06035ae20209b90eb5bbf72caf7a38190cd295899d10c02e1516fb6757b",
+    "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/efficiency_system_macro_results.csv": "58b5840d656e8e89cbb1b423235d9d329a01b968be5f10197f095c6747c3cb4e",
+    "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/efficiency_result_summary.json": "72cc4a80a2da59ebab4c38fbb7378681528c85a629786cfd81199af423768d66",
+    "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/result_and_table_audit.md": "c85ce141b7691987a9c019900a399d0b65336051025662c2f34974832a9d850d",
+    "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/table/table_iscf_bsca_efficiency.tex": "74088480d483b0fe60a91fb1031bcac32406fa30825ad8b2b27528dbf9bdbad1",
+    "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/table/table_iscf_bsca_efficiency_standalone.tex": "ce71aa7f41fd8997b6eb59cd506b7919996a7d21683ed4cba21a03abb4a3d0b2",
+    "output/pdf/iscf_bsca_efficiency_accuracy_memory_storage_20260817.pdf": "38a7a82cadcb86475681826a75d4f8e17018f8c0ea3f0e90ba642b61718e25b0"
+  }
+}

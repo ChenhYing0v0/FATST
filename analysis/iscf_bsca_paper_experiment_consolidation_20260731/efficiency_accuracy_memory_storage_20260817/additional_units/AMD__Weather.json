@@ -1,0 +1,31 @@
+{
+  "actual_checkpoint_bytes": 228305044,
+  "batch_size": 1,
+  "checkpoint_paths": [
+    "/home/yingch/exp_outputs/r-2026-fatst/amd_simpletm_main_i_7dataset_20260807_recovery/runs/AMD__Weather/workspace/source/checkpoints/weather/best.pt",
+    "/home/yingch/exp_outputs/r-2026-fatst/amd_simpletm_main_i_7dataset_20260807_recovery/runs/AMD__Weather/workspace/source/checkpoints/weather2/best.pt",
+    "/home/yingch/exp_outputs/r-2026-fatst/amd_simpletm_main_i_7dataset_20260807_recovery/runs/AMD__Weather/workspace/source/checkpoints/weather3/best.pt",
+    "/home/yingch/exp_outputs/r-2026-fatst/amd_simpletm_main_i_7dataset_20260807_recovery/runs/AMD__Weather/workspace/source/checkpoints/weather4/best.pt"
+  ],
+  "checkpoint_sha256": [
+    "6c97eaa9ac0cb1b97663e0e6fc5efb18cf26c41c9846d906d25bee8834611ebe",
+    "0378ed1bda2558e3a795420c8133e1578dcb4102b30b8c7054c74845e114099b",
+    "9e4a2f7527c44a2f4bd5ac68b370924feccae9ba5094458a9a02c4dd3fd7ca28",
+    "8e0dcb62be4466f0e4d802534aec7647b7015f9f33940bb164b0cc4ba0efa372"
+  ],
+  "cuda_version": "12.8",
+  "dataset": "Weather",
+  "deployment_repeat": 0,
+  "gate": "pass",
+  "hardware": "NVIDIA GeForce RTX 3090",
+  "incremental_activation_peak_bytes": 311296,
+  "input_role": "synthetic_standardized_no_test_loader_or_labels",
+  "peak_inference_memory_bytes": 244655616,
+  "precision": "fp32",
+  "protocol_id": "ISCF-BSCA-EFFICIENCY-ACCURACY-MEMORY-STORAGE-20260817",
+  "resident_allocated_bytes_before_service": 244344320,
+  "system": "AMD",
+  "torch_version": "2.9.0+cu128",
+  "total_stored_parameters": 56881032,
+  "trained_model_count": 4
+}

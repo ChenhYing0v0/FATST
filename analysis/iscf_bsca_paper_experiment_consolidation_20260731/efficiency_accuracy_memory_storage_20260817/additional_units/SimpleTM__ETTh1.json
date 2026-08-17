@@ -1,0 +1,31 @@
+{
+  "actual_checkpoint_bytes": 832724,
+  "batch_size": 1,
+  "checkpoint_paths": [
+    "/home/yingch/exp_outputs/r-2026-fatst/amd_simpletm_main_i_7dataset_20260807_recovery/runs/SimpleTM__ETTh1/workspace/source/checkpoints/ETTh1_ETTh1_96_96_32_32_1_db1_None_3_0.3_0.0005_0.02_TST_256_2025_1_0/checkpoint.pth",
+    "/home/yingch/exp_outputs/r-2026-fatst/amd_simpletm_main_i_7dataset_20260807_recovery/runs/SimpleTM__ETTh1/workspace/source/checkpoints/ETTh1_ETTh1_96_192_32_32_1_db1_None_3_1.0_5e-05_0.02_TST_256_2025_1_0/checkpoint.pth",
+    "/home/yingch/exp_outputs/r-2026-fatst/amd_simpletm_main_i_7dataset_20260807_recovery/runs/SimpleTM__ETTh1/workspace/source/checkpoints/ETTh1_ETTh1_96_336_64_64_4_db1_None_3_0.0_0.0_0.002_TST_256_2025_1_0/checkpoint.pth",
+    "/home/yingch/exp_outputs/r-2026-fatst/amd_simpletm_main_i_7dataset_20260807_recovery/runs/SimpleTM__ETTh1/workspace/source/checkpoints/ETTh1_ETTh1_96_720_32_32_1_db1_None_1_0.9_0.0005_0.009_TST_256_2025_1_0/checkpoint.pth"
+  ],
+  "checkpoint_sha256": [
+    "0c8fae7f0289022f5c599e1253232e15040c3beeb793dfac160840ad7d1c09ad",
+    "50ec14827d62d8c5233d12d58476471fb408c68f97dbeb742f4db7d0e6b2a896",
+    "06e601f8d1d90679432202b6cf8ca321f5f5c9000630c3bfab8b2a75832a33bc",
+    "aa62819f515a2062aa81faa5f0908281b3557681163e5bf3c4380272af0267c9"
+  ],
+  "cuda_version": "12.8",
+  "dataset": "ETTh1",
+  "deployment_repeat": 0,
+  "gate": "pass",
+  "hardware": "NVIDIA GeForce RTX 3090",
+  "incremental_activation_peak_bytes": 450048,
+  "input_role": "synthetic_standardized_no_test_loader_or_labels",
+  "peak_inference_memory_bytes": 10856960,
+  "precision": "fp32",
+  "protocol_id": "ISCF-BSCA-EFFICIENCY-ACCURACY-MEMORY-STORAGE-20260817",
+  "resident_allocated_bytes_before_service": 10406912,
+  "system": "SimpleTM",
+  "torch_version": "2.9.0+cu128",
+  "total_stored_parameters": 191592,
+  "trained_model_count": 4
+}
