@@ -5,23 +5,25 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.83` |
+| `version` | `v0.84` |
 | `last_updated` | `2026-08-19` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | Section 5 v0.4 setup author refinement complete；5.2 onward author review next |
+| `current_review_cursor` | Section 5 v0.5完成5.1补充修订与5.2 Main-I author refinement；5.3 onward author review next |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `frozen_consensus` | 论文七章结构并保留standalone Discussion；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
-| `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.6 structural design with Section 5 v0.4 integration |
-| `provisional_content` | Section 5 v0.4 with author-refined opening and 5.1；Sections 5.2--5.7 continue author review；Sections 6--7 prose；Method Figure 4 stable vector-asset synchronization |
-| `authorization_source` | 2026-08-19用户审阅Section 5 opening与5.1并要求重写setup、增加model/baseline与implementation details；no new implementation/training/formal test |
+| `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.7 structural design with Section 5 v0.5 integration |
+| `provisional_content` | Section 5 v0.5 with author-refined opening、5.1与5.2；Sections 5.3--5.7 continue author review；Sections 6--7 prose；Method Figure 4 stable vector-asset synchronization |
+| `authorization_source` | 2026-08-19用户进一步审阅5.1--5.2并要求baseline分类、dataset-average正文主表与Main-I结果叙事重写；no new implementation/training/formal test |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
 `temporarily_frozen_content` 只有在后续章节或证据产生明确矛盾且用户同意后才解冻；
 `provisional_content` 只表示当前最佳结构，后续按章节继续修订。
+
+Section 5 Main-I amendment：`docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`已更新为v0.5。5.1按dominant design family将13个baselines归入Transformer、lightweight linear/attention、convolutional与multi-scale/decomposition四类，并保留lightweight patch-token MLP Encoder实验实例。5.2改为只围绕seven dataset-level four-horizon means展开：正文Table 1使用compact `MSE/MAE` pairs，完整逐H表移至Appendix A。新口径下ISCF-BSCA为13/14 best、1/14 second；相对TimeAlign的seven-dataset macro改善为MSE `4.94%`、MAE `2.54%`，ETT组为`5.69%/2.89%`，ECL+Solar为`3.90%/2.27%`。Main-II正文Table 2同步切换为dataset-average presentation并保持完整逐H Appendix。冻结结果、source roles、test-informed边界与experiment authorization均未改变；new implementation/training/formal test=`0/0/0`。
 
 Section 5 setup amendment：`docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`已更新为v0.4。Experiments开场改为直接提出one-model varied-horizon empirical question；5.1收敛为`Datasets and metrics -> Model and baselines -> Evaluation protocols -> Implementation details`。实验模型明确为lightweight patch-token MLP Encoder加ISCF decoder；Main-I统一使用`horizon-specific baselines`，Main-II表述为one unified model。Implementation details记录Python 3.12.13、PyTorch 2.9.0、CUDA 12.8、RTX 3090、AdamW与cosine learning-rate schedule。由于Main-I包含official-code local reproductions与published-context rows，不采用不准确的“all baselines reproduced”表述，而是分别披露来源并路由至Appendix A。Sections 5.2--5.7的结果、Figures 5--7与claim boundaries不变；new implementation/training/formal test=`0/0/0`。
 
@@ -1876,3 +1878,6 @@ Coverage boundary：
 | 2026-08-16 | iTransformer-style Decoder-HPO v2 remote launch | commit `219d52708e...66677`；remote gate 22/22；Weather smoke 3/3；GPU0/1/2启动70-run queue | Step 8 active；formal test=0；next=70 artifacts/70 hashes/immutable manifest |
 | 2026-08-16 | iTransformer-style Decoder-HPO v2 training gate | 70/70 artifacts、70 unique hashes、5/5 matched encoder sets；manifest=`ab3a4cd9...c66a` | Step 9 formal 70 jobs/280 cells authorized；dataset-level four-H test-tuned selection；table mutation/seeds=false |
 | 2026-08-16 | iTransformer-style Decoder-HPO v2 formal closure | 280 new/300 candidate cells；vs v1 BSCA=`+2.128%/+1.719%`；vs Original=`-0.505%/-0.750%` | Gate fail；ETTh1 remains negative；close rescue；no matched ISCF/extra HPO/table mutation |
+| 2026-08-19 | Section 5 v0.3 latest-evidence redraft | 按Tables 1--5与Figures 5--7重建Experiments正文并保留system-level、matched attribution与validation diagnostic边界 | initial draft pending author review；no new implementation/training/test |
+| 2026-08-19 | Section 5 v0.4 setup author refinement | 重写opening与5.1，加入lightweight patch-token MLP Encoder、baseline集合、Main-I/Main-II protocols与implementation details | opening/5.1 author-refined；5.2 onward review |
+| 2026-08-19 | Section 5 v0.5 Main-I author refinement | Baselines按dominant design分类；Tables 1--2正文改为dataset-average；5.2按13/14 best与ETT/ECL+Solar group结果重写 | opening/5.1/5.2 author-refined；完整逐H表路由Appendix A；5.3 onward review；no new experiment |

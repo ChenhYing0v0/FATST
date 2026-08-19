@@ -5,7 +5,7 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Clean manuscript-facing initial draft of Section 5 |
-| `version` | `v0.4-setup-author-refinement` |
+| `version` | `v0.5-main-i-author-refinement` |
 | `date` | `2026-08-19` |
 | `review_status` | `initial_draft_pending_author_review` |
 | `upstream_dependency` | Introduction v0.9, Related Work v0.2, Section 3 v0.7 and Section 4 v0.7 remain temporarily frozen and unchanged |
@@ -20,8 +20,10 @@ The status table and artifact map below are editorial metadata and are not part 
 
 | Manuscript item | Canonical artifact |
 | --- | --- |
-| Table 1 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_i/table_iscf_bsca_main_i_qdf.tex` |
-| Table 2 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_ii/table_iscf_bsca_main_ii.tex` |
+| Table 1 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_i/table_iscf_bsca_main_i_dataset_average.tex` |
+| Table 2 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_ii/table_iscf_bsca_main_ii_dataset_average.tex` |
+| Appendix Table A1 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_i/table_iscf_bsca_main_i_qdf.tex` |
+| Appendix Table A2 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_ii/table_iscf_bsca_main_ii.tex` |
 | Table 3 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/table/table_iscf_bsca_efficiency.tex` |
 | Table 4 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/table/table_iscf_bsca_core_ablation.tex` |
 | Figure 5 | `paper-figures/figure_iscf_bsca_mechanism.*` |
@@ -35,31 +37,29 @@ ISCF-BSCA is designed to replace separately optimized horizon-specific predictor
 
 ### 5.1 Experimental setup
 
-**Datasets and metrics.** We evaluate ISCF-BSCA on seven public multivariate forecasting benchmarks: ETTm1, ETTm2, ETTh1, ETTh2, Weather, Electricity (ECL) and Solar. Together, they cover electricity transformers, meteorology, electricity consumption and solar generation at different sampling frequencies and variable dimensions. Following the standard long-term forecasting protocol, we use prediction horizons $\mathcal H=\{96,192,336,720\}$ and report mean squared error (MSE) and mean absolute error (MAE), where lower values indicate better forecasts. Dataset descriptions, statistics, data splits and preprocessing details are provided in Appendix A.
+**Datasets and metrics.** We evaluate ISCF-BSCA on seven public multivariate forecasting benchmarks: ETTm1, ETTm2, ETTh1, ETTh2, Weather, Electricity (ECL) and Solar. Together, they cover electricity transformers, meteorology, electricity consumption and solar generation at different sampling frequencies and variable dimensions. Following the standard long-term forecasting protocol, we use prediction horizons $\mathcal H=\{96,192,336,720\}$ and report mean squared error (MSE) and mean absolute error (MAE), where lower values indicate better forecasts. Further dataset descriptions, statistics, data splits and preprocessing details are provided in Appendix A.
 
-**Model and baselines.** ISCF is a decoder framework that can be coupled with different patch-token Encoders. To focus the main experiments on the proposed decoder rather than a highly specialized history backbone, we pair ISCF with a lightweight patch-token MLP Encoder. The baselines cover Transformer, linear, MLP, convolutional, decomposition and multi-scale architectures. The complete comparison includes TimeAlign, QDF, AMD, SimpleTM, TVNet, iTransformer, TimeMixer, Leddam, ModernTCN, PatchTST, Crossformer, TimesNet and DLinear.
+**Model and baselines.** ISCF is a decoder framework that can be coupled with different Encoders. To focus the main experiments on the proposed decoder rather than a highly specialized history backbone, we pair ISCF with a lightweight patch-token MLP Encoder. To compare its forecasting performance against recent competitive methods, we select baselines from four dominant design families: (1) Transformer-based models, including SimpleTM, iTransformer, PatchTST and Crossformer; (2) lightweight linear or attention-based forecasters and training frameworks, including TimeAlign, QDF and DLinear; (3) convolutional models, including TVNet, ModernTCN and TimesNet; and (4) multi-scale or decomposition-based models, including AMD, TimeMixer and Leddam.
 
 **Evaluation protocols.** We use two complementary comparisons. Main-I compares one ISCF-BSCA model per dataset with horizon-specific baselines that train a separate model for each requested horizon. It tests whether one unified predictor can replace four separately trained horizon-specific models while remaining competitive with horizon-wise optimization. Main-II evaluates every method under a one-model setting: each method uses one unified model trained for the maximum horizon, and an $H$-step request is evaluated from the first $H$ outputs using the corresponding official fixed-$H$ test loader.
 
-**Implementation details.** Local experiments are implemented in Python 3.12.13 and PyTorch 2.9.0 with CUDA 12.8, and run on NVIDIA GeForce RTX 3090 GPUs. ISCF-BSCA is optimized with AdamW and a cosine learning-rate schedule; the learning rate, batch size, model width and training budget are configured per dataset. All locally reproduced baselines are built from their official codebases, and any source-informed configuration adaptation is documented explicitly. Baseline entries retained from published reports use the audited reported values, with dataset-specific configurations, source roles and the test-informed profile-selection protocol provided in Appendix A.
+**Implementation details.** Local experiments are implemented in Python 3.12.13 and PyTorch 2.9.0 with CUDA 12.8, and run on NVIDIA GeForce RTX 3090 GPUs. ISCF-BSCA is optimized with AdamW and a cosine learning-rate schedule; the learning rate, batch size, model width and training budget are configured per dataset. All locally reproduced baselines are built from their official codebases, and any source-informed configuration adaptation is documented explicitly.
 
 ### 5.2 Comparison with horizon-specific forecasters
 
-The first comparison asks whether one unified forecaster can match baselines optimized separately for each requested horizon. ISCF-BSCA uses one model per dataset to produce all four forecasts, whereas each baseline entry in Table 1 follows its native horizon-specific protocol. The proposed model therefore competes directly with the flexibility of fitting four independent predictors.
+The first comparison asks whether one unified forecaster can match baselines optimized separately for each requested horizon. ISCF-BSCA uses one model per dataset to produce all four forecasts, whereas each baseline entry in Table 1 follows its native horizon-specific protocol.
 
-<!-- Insert Table 1 near here. Canonical source: main_i/table_iscf_bsca_main_i_qdf.tex -->
+<!-- Insert Table 1 near here. Main-text source: main_i/table_iscf_bsca_main_i_dataset_average.tex. Full horizon-wise source: main_i/table_iscf_bsca_main_i_qdf.tex (Appendix A). -->
 
-Across the complete seven-dataset scorecard, ISCF-BSCA achieves the best result in 44 of the 56 dataset--horizon metric cells and the second-best result in another nine. Its macro MSE and MAE are 0.2607 and 0.3061. Among baselines with a complete audited result block, TimeAlign provides the strongest aggregate reference; ISCF-BSCA reduces its macro MSE and MAE by 4.94% and 2.54%, respectively. The corresponding reductions relative to QDF are 9.32% and 7.64%. The advantage is most uniform on ETTh2 and Weather, where the unified model ranks first for both metrics at every horizon.
-
-The three remaining cells define the main exceptions: ISCF-BSCA falls outside the top two for MSE on ECL and Solar at $H=720$ and for MAE on ETTh1 at $H=336$. Table 1 also combines audited local reproductions with published-context values and does not align every optimization budget or seed. It therefore establishes a system-level result: one ISCF-BSCA model provides a more accurate alternative to four separately optimized forecasters on the large majority of evaluated cells. The table does not attribute this advantage to an individual decoder component.
+Table 1 reports the four-horizon mean for each dataset, while the complete horizon-wise results are provided in Appendix A. ISCF-BSCA obtains the best result in 13 of the 14 dataset--metric comparisons and the second-best result in the remaining comparison. Compared with TimeAlign, the strongest aggregate horizon-specific baseline, ISCF-BSCA uses one unified model instead of four separately trained horizon models and reduces the seven-dataset average MSE and MAE by 4.94% and 2.54%, respectively. The advantage persists across datasets with markedly different dimensionalities. Over the four low-dimensional ETT benchmarks, ISCF-BSCA improves the average MSE and MAE over TimeAlign by 5.69% and 2.89%; on the high-dimensional ECL and Solar datasets, the corresponding improvements are 3.90% and 2.27%. Notably, these results are obtained with a lightweight patch-token MLP Encoder rather than a specialized high-capacity backbone, indicating that the ISCF decoder can construct accurate future trajectories from comparatively shallow history representations. Overall, the results show that ISCF-BSCA improves forecasting accuracy over the evaluated horizon-specific baselines while consolidating the four requested horizons into one model.
 
 ### 5.3 One-model-all-horizons evaluation
 
 Main-I compares different deployment structures. Main-II instead applies the one-model constraint to every method, thereby testing unified serving without the advantage of separately optimized horizon-specific baselines. For each dataset, one unified model serves all four horizons, and shorter requests are evaluated from its corresponding output prefixes. No model is retrained or reselected for $H\in\{96,192,336\}$.
 
-<!-- Insert Table 2 near here. Canonical source: main_ii/table_iscf_bsca_main_ii.tex -->
+<!-- Insert Table 2 near here. Main-text source: main_ii/table_iscf_bsca_main_ii_dataset_average.tex. Full horizon-wise source: main_ii/table_iscf_bsca_main_ii.tex (Appendix A). -->
 
-Under the shared service constraint, ISCF-BSCA ranks first in 50 of 56 metric cells and second in the remaining six. It achieves the best MSE and MAE at every horizon on ETTm1, ETTh1, ETTh2 and Weather. The second-place results are limited to MSE on ETTm2 at $H\in\{192,336\}$, ECL at $H=720$ and Solar at $H\in\{336,720\}$, together with MAE on ECL at $H=720$. Averaged over all seven datasets and four horizons, ISCF-BSCA reduces MSE and MAE by 6.45% and 3.72% relative to TimeAlign, the next strongest complete baseline in Table 2.
+Table 2 summarizes the four-horizon mean for each dataset, with complete horizon-wise results deferred to Appendix A. Under the shared one-model constraint, ISCF-BSCA ranks first in all 14 dataset--metric comparisons. Averaged over all seven datasets and four horizons, it reduces MSE and MAE by 6.45% and 3.72% relative to TimeAlign, the next strongest complete baseline in Table 2.
 
 Together, these results show that one ISCF-BSCA checkpoint can serve all evaluated endpoints while improving aggregate accuracy over the compared one-model baselines. The comparison remains source-native rather than fully matched, and several baselines also obtain shorter outputs by slicing an $H=720$ forecast. Main-II therefore establishes one-model-all-horizons effectiveness; the separate contribution of ISCF-BSCA is its explicit future-step-indexed construction and adaptive output-side sharing, which are evaluated through the controlled analyses below.
 

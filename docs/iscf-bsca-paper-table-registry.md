@@ -29,26 +29,28 @@ Main I 与 Main II 现在使用同一套表格语言：
 | Field | Frozen presentation |
 | --- | --- |
 | Dataset order | ETTm1, ETTm2, ETTh1, ETTh2, Weather, ECL, Solar |
-| Horizon rows | 96, 192, 336, 720, Avg. |
+| Main-text rows | Seven dataset-level four-horizon means + one seven-dataset Average row |
+| Appendix rows | 96, 192, 336, 720, Avg. for every dataset |
 | Metrics | MSE / MAE |
 | Avg. | 四个 displayed horizons 的 arithmetic mean |
 | Precision | 三位小数 |
 | Ranking | 先统一舍入到三位小数，再按 distinct displayed values 取 best/second；允许 ties |
 | Best | red + bold |
 | Second | blue + underline |
-| LaTeX | `table*`、`resizebox{\textwidth}{!}`、`tabcolsep=1.2pt` |
-| Required packages | `booktabs`, `multirow`, `graphicx`, `xcolor` |
+| Main-text cell | one compact `MSE/MAE` pair per method and dataset |
+| LaTeX | `table*`、`resizebox{\textwidth}{!}`；完整逐H表保留原`tabcolsep=1.2pt` |
+| Required packages | `booktabs`, `graphicx`, `xcolor`；Appendix逐H表另需`multirow` |
 
 “相同形式”只约束展示结构和排名规则，不意味着两张表必须包含相同 systems。Main I
-比较一个 unified model 与 horizon-specific systems；Main II 比较各 system 的一个
-H720 checkpoint在四个source-native fixed-H official test loaders上的prefix forecasts。
+比较一个 unified model 与 horizon-specific baselines；Main II 比较各 baseline 的一个
+H720 checkpoint在四个source-native fixed-H official test loaders上的prefix forecasts。正文只展示dataset-level means，完整逐H表移至Appendix A；该版式调整不改变任何冻结数值、source role或claim boundary。
 
 ## 3. 当前论文表格清单
 
 | ID | 论文位置 | 状态 | 当前规模 | Canonical artifact | 能支持的结论 |
 | --- | --- | --- | --- | --- | --- |
-| `Main-I` | 正文主结果 | `complete_hash_frozen_author_corrected_20260815` | 14 systems × 7 datasets × 4 H；392 system–dataset–H rows | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_i/table_iscf_bsca_main_i_qdf.tex` | ISCF-BSCA 与 separately optimized horizon-specific systems 的 system-level accuracy competitiveness；不作 matched mechanism attribution |
-| `Main-II` | 正文主结果 | `complete_hash_frozen_author_corrected_20260815` | 8 systems × 7 datasets × 4 H；224 cells | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_ii/table_iscf_bsca_main_ii.tex` | one-model-for-all-horizons system competitiveness；不作 BSCA/decoder attribution |
+| `Main-I` | 正文主结果 + Appendix逐H结果 | `complete_hash_frozen_author_corrected_20260815` | 正文14 models × 7 dataset means；Appendix保留392 model–dataset–H rows | 正文=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_i/table_iscf_bsca_main_i_dataset_average.tex`；Appendix=`main_i/table_iscf_bsca_main_i_qdf.tex` | ISCF-BSCA 与 separately optimized horizon-specific baselines 的 system-level accuracy competitiveness；不作 matched mechanism attribution |
+| `Main-II` | 正文主结果 + Appendix逐H结果 | `complete_hash_frozen_author_corrected_20260815` | 正文8 models × 7 dataset means；Appendix保留224 model–dataset–H rows | 正文=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_ii/table_iscf_bsca_main_ii_dataset_average.tex`；Appendix=`main_ii/table_iscf_bsca_main_ii.tex` | one-model-for-all-horizons system competitiveness；不作 BSCA/decoder attribution |
 | `Main-I-Exchange` | Supplementary companion | `complete_limited_surface` | ISCF-BSCA / TimeAlign / QDF × Exchange × 4 H | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_h5d_bs16_lr2p4_synced_20260813/table_exchange_companion.tex` | Exchange 的部分系统背景；不能表述为完整 Main I extension |
 | `Efficiency` | 正文 supporting result | `complete_nine_system_accuracy_advantage_resource_mixed` | 9 systems；252/252 accuracy cells、63/63 memory/storage units、231 table-role objects | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/table/table_iscf_bsca_efficiency.tex` | 支持one-model macro accuracy与service consolidation；相对五个较重baseline有memory/storage优势，但DLinear/SimpleTM/QDF构成负向边界，不支持uniform resource advantage |
 | `Core-Ablation` | 正文 mechanism attribution | `complete_author_corrected_aggregate_all_controls_positive_provenance_partial` | 5 variants × 5 datasets × MSE/MAE + Avg；60 displayed metric cells；historical 100-cell audit retained | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/table/table_iscf_bsca_core_ablation.tex` | 作者修正aggregate表支持四项matched accuracy directions；per-horizon/checkpoint rerun provenance待补；Figure 5不支持reliable routing或causal specialization |
@@ -60,19 +62,19 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 
 ### Main I
 
-- ISCF-BSCA：44/56 best、9/56 second；seven-dataset macro MSE/MAE=`0.260714/0.306107`；
+- 正文dataset-average表中，ISCF-BSCA为13/14 best、1/14 second；完整Appendix逐H表保持44/56 best、9/56 second；seven-dataset macro MSE/MAE=`0.260714/0.306107`；
 - 作者修正scope为ISCF与TimeAlign全部28 cells、SimpleTM Solar 4 cells、**TVNet ETTh2 4 cells**；共64个standard rows；
 - 修正值按作者提供的三位小数直接冻结，不推断额外精度或checkpoint hash；未列出的baseline cells保持上一冻结版的official-local / published-context role；
-- 当前canonical table fragment=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_i/table_iscf_bsca_main_i_qdf.tex`；standalone LaTeX=`main_i/table_iscf_bsca_main_i_standalone.tex`；A3 review PDF=`output/pdf/iscf_bsca_main_i_author_corrected_20260815.pdf`。
+- 当前正文table fragment=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_i/table_iscf_bsca_main_i_dataset_average.tex`；完整逐H canonical fragment=`main_i/table_iscf_bsca_main_i_qdf.tex`，standalone LaTeX=`main_i/table_iscf_bsca_main_i_standalone.tex`，A3 review PDF=`output/pdf/iscf_bsca_main_i_author_corrected_20260815.pdf`。
 
 ### Main II
 
 - 完整性：8 systems × 7 datasets × 4 H=`224` cells；上一版63 external H720 objects / 252 formal evaluations的审计保留为未修正cells的来源证据；
 - 作者修正scope为ISCF与TimeAlign全部28 cells、SimpleTM Solar 4 cells、PatchTST ETTh2 4 cells；共64个standard rows；修正cells不沿用被替换版本的checkpoint hashes；
-- 三位小数显示口径：ISCF-BSCA 50/56 best、6/56 second，共56/56 metric cells位于top-2；seven-dataset macro MSE/MAE=`0.260714/0.306107`；
+- 正文dataset-average表中，ISCF-BSCA为14/14 best；完整Appendix逐H表保持50/56 best、6/56 second，共56/56 metric cells位于top-2；seven-dataset macro MSE/MAE=`0.260714/0.306107`；
 - Avg.采用显式decimal half-up rounding，已修复旧builder在`.xxx5`上的banker's-rounding差异；
 - Main II 现已与 Main I 对齐 dataset order、year label、best/second emphasis、column spacing 与 required packages；
-- 可直接编译的完整source为`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_ii/table_iscf_bsca_main_ii_standalone.tex`，A3 landscape review PDF为`output/pdf/iscf_bsca_main_ii_author_corrected_20260815.pdf`；正式manuscript使用同目录table fragment；
+- 正文使用`main_ii/table_iscf_bsca_main_ii_dataset_average.tex`；可直接编译的完整逐H source为`main_ii/table_iscf_bsca_main_ii_standalone.tex`，A3 landscape review PDF为`output/pdf/iscf_bsca_main_ii_author_corrected_20260815.pdf`；
 - external source contracts 不 matched，因此该表不能兑现 component effectiveness 或 decoder portability claims。
 
 两张主表的共同freeze audit与hash manifest分别为

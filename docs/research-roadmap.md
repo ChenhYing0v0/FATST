@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## Section 5 Main-I Author Refinement (2026-08-19)
+
+Current cursor=`Section 5 v0.5 opening/5.1/5.2 author-refined -> review 5.3 onward`。5.1保留lightweight patch-token MLP Encoder实验实例，并将13个baselines按dominant modeling design分类。Main-I与Main-II正文表均压缩为seven dataset-level four-horizon means加seven-dataset Average，完整逐H表路由至Appendix A；该presentation update不修改冻结CSV、逐HLaTeX或source roles。
+
+Main-I正文口径下，ISCF-BSCA为13/14 best、1/14 second，seven-dataset macro MSE/MAE=`0.260714/0.306107`；相对TimeAlign分别改善`4.936%/2.536%`。四个ETT数据集平均改善`5.686%/2.887%`，ECL+Solar平均改善`3.903%/2.271%`。Main-II正文dataset-average表为14/14 best。No new implementation/training/formal test；Decision=`section5_v0_5_main_i_author_refined_continue_5_3_review`。
+
 ## Section 5 Setup Author Refinement (2026-08-19)
 
 Current cursor=`Section 5 v0.4 opening and 5.1 author-refined -> review 5.2 onward`。5.1现按`Datasets and metrics -> Model and baselines -> Evaluation protocols -> Implementation details`组织。实验实例使用lightweight patch-token MLP Encoder连接ISCF decoder；Main-I比较one unified ISCF-BSCA与four separately trained horizon-specific baselines，Main-II要求每个方法以one unified model服务全部horizons。

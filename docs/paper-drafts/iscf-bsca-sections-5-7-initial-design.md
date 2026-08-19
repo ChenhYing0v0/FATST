@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Temporarily frozen structural design for the manuscript sections after Method |
-| `version` | `v0.6-section5-v0.4-integrated` |
-| `date` | `2026-08-19 Section 5 setup author refinement` |
+| `version` | `v0.7-section5-v0.5-integrated` |
+| `date` | `2026-08-19 Section 5 Main-I author refinement` |
 | `review_status` | `temporarily_frozen_usable` |
 | `upstream_dependency` | Introduction v0.9, Related Work v0.2, Section 3 v0.7 and Section 4 v0.7 remain temporarily frozen and unchanged |
 | `scope` | Subsection functions, evidence order, table/figure placement, claim boundaries and appendix routing only |
-| `manuscript_prose` | Section 5 v0.4 drafted at `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`; opening and 5.1 are author-refined, while Sections 5.2--5.7 remain under review；Sections 6--7 remain structural only |
+| `manuscript_prose` | Section 5 v0.5 drafted at `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`; opening、5.1与5.2 are author-refined, while Sections 5.3--5.7 remain under review；Sections 6--7 remain structural only |
 | `experiment_change` | None; this document does not authorize implementation, remote training or formal test |
 | `evidence_snapshot` | Main-I, corrected Main-II, Efficiency, Core-Ablation, Figure 5 mechanism diagnostics and Decoder-Transfer complete |
 | `structure_decision` | Sections 5--7 use `Experiments -> Discussion -> Conclusion`; qualitative evidence is integrated into Section 5.6 rather than assigned a standalone subsection |
@@ -88,8 +88,8 @@ Section 5 should follow an evidence ladder rather than the implementation order:
 | Subsection | Scientific question | Required content blocks | Primary artifact | Permitted conclusion | Current evidence status |
 | --- | --- | --- | --- | --- | --- |
 | 5.1 Experimental setup | Are the comparisons reproducible and are their roles distinguishable? | datasets and splits; horizons and metrics; baseline families and source roles; main model versus ablation anchor; checkpoint/profile selection; seeds; test-informed disclosure; implementation and hardware | experiment protocol + table registry | Defines the evaluation contract only | Evidence inputs complete; ready for final prose consolidation |
-| 5.2 Comparison with horizon-specific forecasters | Can one unified ISCF-BSCA model compete with separately optimized fixed-horizon systems? | explain one-versus-four-model protocol; introduce Main-I; report aggregate pattern, dataset/horizon exceptions and source-role caveat | Table 1 / `Main-I` | System-level accuracy competitiveness under the audited mixed-source comparison | Complete and hash-frozen |
-| 5.3 One-model-all-horizons evaluation | Is ISCF-BSCA competitive when every system must serve all horizons from one trained model? | define H720-prefix protocol; explain how it differs from Main-I; introduce Main-II; report dominant pattern and negative cells; retain unmatched-protocol caveat | Table 2 / `Main-II` | One-model-all-horizons system effectiveness, not decoder or BSCA attribution | Complete and horizon-loader re-audited |
+| 5.2 Comparison with horizon-specific forecasters | Can one unified ISCF-BSCA model compete with separately optimized fixed-horizon baselines? | explain one-versus-four-model protocol; report seven dataset-level four-horizon means, overall best/second counts and low-/high-dimensional dataset-group gains; route complete per-H results to Appendix A | Table 1 / `Main-I` | System-level accuracy competitiveness under the audited mixed-source comparison | Complete and hash-frozen |
+| 5.3 One-model-all-horizons evaluation | Is ISCF-BSCA competitive when every baseline must serve all horizons from one trained model? | define H720-prefix protocol; explain how it differs from Main-I; report dataset-level four-horizon means; route complete per-H results to Appendix A; retain unmatched-protocol caveat | Table 2 / `Main-II` | One-model-all-horizons system effectiveness, not decoder or BSCA attribution | Complete and horizon-loader re-audited |
 | 5.4 Efficiency and system cost | What accuracy and deployment cost changes when one model replaces a four-model horizon-specific family? | Main-I macro MSE/MAE; peak inference memory; four-horizon checkpoint storage | Table 3 / `Efficiency` | Best nine-system macro accuracy and one-checkpoint consolidation, with DLinear/SimpleTM/QDF retained as resource counterexamples | Complete; 252/252 accuracy cells, 63/63 service units and 231 table-role objects |
 | 5.5 Component and training-objective ablations | Which architectural and optimization components contribute within the frozen design family? | Full; w/o BSCA; w/o Target-Adaptive Allocation; Shared Scope Projection; Fixed Scope ($s=144$); matched budgets and end-to-end training | Table 4 / `Core-Ablation` | Author-corrected aggregate table supports all four interventions; per-horizon rerun provenance remains unsynchronized | Complete at dataset-aggregate table level; Full best in 12/12 metric columns |
 | 5.6 Forecast consistency and scope-allocation behavior | Does the trained system behave in the manner motivated by Section 3? | exact CHPC/CHPD verification; Scope Probability map; aggregate scope utilization across future regions; scope-wise regional preference/error analysis; one performance-selected qualitative trajectory with nested prefixes | Figure 5 / mechanism-analysis bundle | Exact CHPC and scope-arm regional error heterogeneity; probabilities remain near-uniform and do not reliably select the lowest-error scope; selected trajectory is illustrative only | Complete mixed evidence; 20/20 CHPC cells, 8/40 utilization-error agreements; realized allocation value excluded |
@@ -144,8 +144,8 @@ The Conclusion must not introduce new metrics, citations, mechanisms or future c
 
 | Provisional number | Artifact | Main narrative role | Status |
 | --- | --- | --- | --- |
-| Table 1 | Main-I | one unified model versus separately optimized horizon-specific systems | complete/hash-frozen |
-| Table 2 | Main-II | one-model-all-horizons system comparison | complete/presentation-aligned; active H5A cannot be anticipated |
+| Table 1 | Main-I | main text: dataset-level four-horizon means；Appendix A: complete one unified model versus separately optimized horizon-specific baselines | complete/hash-frozen |
+| Table 2 | Main-II | main text: dataset-level four-horizon means；Appendix A: complete one-model-all-horizons comparison | complete/presentation-aligned; active H5A cannot be anticipated |
 | Table 3 | Efficiency | accuracy, peak memory and four-horizon checkpoint-storage trade-off | complete; accuracy advantage with mixed resource ranking |
 | Table 4 | Core-Ablation | component and objective attribution | author-corrected aggregate table complete; 12/12 metric columns best for Full; historical 100-cell audit retained |
 | Figure 5 | Forecast consistency, allocation behavior and an illustrative improved trajectory | connect Section 3 problems to trained-system behavior and show the resulting forecast concretely | complete; exact CHPC, near-uniform utilization, regional scope-error differences and disclosed selected trajectory |

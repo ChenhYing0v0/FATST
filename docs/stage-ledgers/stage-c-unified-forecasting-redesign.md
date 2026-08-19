@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | Section 5 v0.4已完成opening与5.1 author refinement；继续逐节审阅5.2--5.7 |
+| `active_question` | Section 5 v0.5已完成opening、5.1与5.2 author refinement；继续逐节审阅5.3--5.7 |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
-| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7 temporarily frozen usable；Section 5 v0.4 setup author-refined；Sections 5--7 v0.6 structure frozen；Figure 4 visual design temporarily fixed |
+| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7 temporarily frozen usable；Section 5 v0.5 opening/5.1/5.2 author-refined；Sections 5--7 v0.7 structure frozen；Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | Main I dense/Main II v1=ETTh1, ETTh2, ETTm1, ETTm2, Weather, ECL, Solar；Exchange=companion/deferred extension；ablation=original five |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
@@ -22,11 +22,11 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper experiment matrix closed；Section 5 v0.4 opening and 5.1 author refinement complete |
-| `current_candidate` | Section 5 v0.4 setup author refinement |
-| `latest_decision` | `section5_v0_4_setup_author_refined_continue_subsection_review` |
-| `writing_latest_decision` | `section5_v0_4_setup_author_refined_continue_subsection_review` |
-| `next_required_action` | author review Section 5.2 onward；then draft standalone Discussion and Conclusion；no new experiment required |
+| `current_11_step` | paper experiment matrix closed；Section 5 v0.5 opening、5.1与5.2 author refinement complete |
+| `current_candidate` | Section 5 v0.5 Main-I author refinement |
+| `latest_decision` | `section5_v0_5_main_i_author_refined_continue_5_3_review` |
+| `writing_latest_decision` | `section5_v0_5_main_i_author_refined_continue_5_3_review` |
+| `next_required_action` | author review Section 5.3 onward；then draft standalone Discussion and Conclusion；no new experiment required |
 | `method_training_authorized` | false；no matched controls、extra HPO/seeds or formal test required |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
@@ -454,6 +454,7 @@ Historical and control queue:
 
 | Date | Trigger | Paper Section | Change Type | Decision |
 | --- | --- | --- | --- | --- |
+| 2026-08-19 | 用户进一步审阅5.1--5.2并要求baseline分类、正文dataset-average tables与Main-I结果叙事 | Section 5 v0.5、Tables 1--2 presentation、table registry与governance sync | author-guided result compression + frozen-evidence rerouting | Main-I正文13/14 best、1/14 second；完整逐H表转Appendix A；Main-II正文同步dataset-average；no new experiment |
 | 2026-08-19 | 用户审阅Experiments opening与5.1并要求重写setup | Section 5 v0.4 opening、5.1、architecture/governance sync | author-guided setup refinement + implementation evidence audit | 直接引出one-model empirical question；新增Patch-MLP Encoder、完整baseline集合与implementation details；mixed-source reproduction boundary保留；no new experiment |
 | 2026-08-19 | 用户要求基于最新figures与tables重新生成Section 5 | Section 5 v0.3、Figures 5--7 integration、architecture/governance sync | latest-evidence manuscript redraft | system-level、matched attribution与validation diagnostic roles分层；Figure 6/7最新视觉合同同步；no new experiment |
 | 2026-08-17 | 用户要求以accuracy、four-horizon total parameters与one-epoch cycle重新设计Efficiency | Section 5.4、Table 3、Figure 6、architecture/governance sync | existing-artifact redesign + normalized timing audit | 84/84 accuracy、21/21 params、63/63 logs complete；ISCF accuracy/params占优但epoch cycle更慢；no new training/test |
