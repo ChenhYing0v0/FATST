@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Section 5 v0.3 regenerated from latest Tables 1--5 and Figures 5--7；author review next |
+| `current_11_step` | Section 5 v0.4 opening and 5.1 author refinement complete；5.2 onward author review next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,7 +18,9 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；Sections 1--4 temporarily frozen usable；Section 5 v0.3 latest-evidence redraft pending author review；allocation aggregate accuracy direction positive但routing health mixed；Sections 6--7 prose pending |
+| `paper_core_status` | architecture family frozen；Sections 1--4 temporarily frozen usable；Section 5 v0.4 setup author-refined and remaining subsections pending review；allocation aggregate accuracy direction positive但routing health mixed；Sections 6--7 prose pending |
+
+[Section 5 Setup Author Refinement, 2026-08-19] `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`更新为`v0.4-setup-author-refinement`。Experiments引导语直接聚焦one-model varied-horizon forecasting的accuracy question；5.1重组为datasets、model and baselines、Main-I/Main-II protocols与implementation details四段。实验ISCF实例明确使用lightweight patch-token MLP Encoder；baseline术语统一，Main-I不再使用`four-model service`，Main-II改写为one unified model。Implementation details加入Python 3.12.13、PyTorch 2.9.0、CUDA 12.8、RTX 3090、AdamW与cosine learning-rate schedule。Main-I mixed-source边界继续保留：local reproductions来自official codebases，published-context rows不冒充本地复现。Decision=`section5_v0_4_setup_author_refined_continue_subsection_review`；new implementation/training/formal test=`0/0/0`。
 
 [Section 5 Latest-Evidence Redraft, 2026-08-19] `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`已更新为`v0.3-latest-evidence-redraft`。本轮以当前canonical Tables 1--5和Figures 5--7重建Experiments叙事，不改变任何数值、table source或experiment authorization。新版按`system-level effectiveness -> deployment trade-off -> controlled attribution -> validation-only internal behavior -> bounded transfer`组织证据；5.4与最新accuracy--storage--peak-memory Figure 6一致，5.7与coral/blue hatch Figure 7及其0.20 truncated MSE axis一致。5.6继续同时报告Target-Adaptive Allocation的aggregate accuracy gain、near-uniform probabilities与8/40 utilization/error alignment limitation。Decision=`section5_v0_3_latest_evidence_redraft_pending_author_review`；new implementation/training/formal test=`0/0/0`。
 

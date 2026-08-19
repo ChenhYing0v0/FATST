@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## Section 5 Setup Author Refinement (2026-08-19)
+
+Current cursor=`Section 5 v0.4 opening and 5.1 author-refined -> review 5.2 onward`。5.1现按`Datasets and metrics -> Model and baselines -> Evaluation protocols -> Implementation details`组织。实验实例使用lightweight patch-token MLP Encoder连接ISCF decoder；Main-I比较one unified ISCF-BSCA与four separately trained horizon-specific baselines，Main-II要求每个方法以one unified model服务全部horizons。
+
+Implementation details记录本地环境Python 3.12.13、PyTorch 2.9.0、CUDA 12.8、RTX 3090、AdamW与cosine learning-rate schedule。Main-I同时包含official-code local reproductions和published-context rows，因此只对本地复现项声明official-code来源，并把source-informed adaptations、published rows与test-informed profile-selection protocol路由至Appendix A。No result/table/figure change；new implementation/training/formal test=`0/0/0`。Decision=`section5_v0_4_setup_author_refined_continue_subsection_review`。
+
 ## Section 5 Latest-Evidence Redraft (2026-08-19)
 
 Current cursor=`latest Tables 1--5 and Figures 5--7 frozen -> Section 5 v0.3 regenerated -> author review`。Canonical draft=`docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`。本轮只重构Experiments论证与figure/table integration，不修改Sections 1--4、canonical evidence、implementation或experiment state，new training/formal test=`0/0`。

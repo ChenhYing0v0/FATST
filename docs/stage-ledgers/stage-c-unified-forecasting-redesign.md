@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | Section 5 v0.3已按最新Tables 1--5与Figures 5--7重建；等待author review后进入Sections 6--7 |
+| `active_question` | Section 5 v0.4已完成opening与5.1 author refinement；继续逐节审阅5.2--5.7 |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
-| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7 temporarily frozen usable；Section 5 v0.3 pending author review；Sections 5--7 v0.5 structure frozen；Figure 4 visual design temporarily fixed |
+| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7 temporarily frozen usable；Section 5 v0.4 setup author-refined；Sections 5--7 v0.6 structure frozen；Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | Main I dense/Main II v1=ETTh1, ETTh2, ETTm1, ETTm2, Weather, ECL, Solar；Exchange=companion/deferred extension；ablation=original five |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
@@ -22,11 +22,11 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper experiment matrix closed；Section 5 v0.3 regenerated from latest canonical figures and tables |
-| `current_candidate` | Section 5 v0.3 latest-evidence redraft |
-| `latest_decision` | `section5_v0_3_latest_evidence_redraft_pending_author_review` |
-| `writing_latest_decision` | `section5_v0_3_latest_evidence_redraft_pending_author_review` |
-| `next_required_action` | author review Section 5 v0.3；then draft standalone Discussion and Conclusion；no new experiment required |
+| `current_11_step` | paper experiment matrix closed；Section 5 v0.4 opening and 5.1 author refinement complete |
+| `current_candidate` | Section 5 v0.4 setup author refinement |
+| `latest_decision` | `section5_v0_4_setup_author_refined_continue_subsection_review` |
+| `writing_latest_decision` | `section5_v0_4_setup_author_refined_continue_subsection_review` |
+| `next_required_action` | author review Section 5.2 onward；then draft standalone Discussion and Conclusion；no new experiment required |
 | `method_training_authorized` | false；no matched controls、extra HPO/seeds or formal test required |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
@@ -454,6 +454,7 @@ Historical and control queue:
 
 | Date | Trigger | Paper Section | Change Type | Decision |
 | --- | --- | --- | --- | --- |
+| 2026-08-19 | 用户审阅Experiments opening与5.1并要求重写setup | Section 5 v0.4 opening、5.1、architecture/governance sync | author-guided setup refinement + implementation evidence audit | 直接引出one-model empirical question；新增Patch-MLP Encoder、完整baseline集合与implementation details；mixed-source reproduction boundary保留；no new experiment |
 | 2026-08-19 | 用户要求基于最新figures与tables重新生成Section 5 | Section 5 v0.3、Figures 5--7 integration、architecture/governance sync | latest-evidence manuscript redraft | system-level、matched attribution与validation diagnostic roles分层；Figure 6/7最新视觉合同同步；no new experiment |
 | 2026-08-17 | 用户要求以accuracy、four-horizon total parameters与one-epoch cycle重新设计Efficiency | Section 5.4、Table 3、Figure 6、architecture/governance sync | existing-artifact redesign + normalized timing audit | 84/84 accuracy、21/21 params、63/63 logs complete；ISCF accuracy/params占优但epoch cycle更慢；no new training/test |
 | 2026-08-17 | 用户要求基于完整实验表与已冻结Sections 1--4起草Section 5并设计5.4/5.7 figures | Section 5 v0.1、Figures 6--7、architecture/governance sync | evidence-complete manuscript draft + audited scientific figures | 5.6保留aggregate allocation gain与mixed internal routing evidence；5.4披露storage/parameter与compute trade-off；5.7限于author-refined three-dataset scope；no new experiment |

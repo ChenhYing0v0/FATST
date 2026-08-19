@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Temporarily frozen structural design for the manuscript sections after Method |
-| `version` | `v0.5-section5-v0.3-integrated` |
-| `date` | `2026-08-19 Section 5 latest-evidence redraft` |
+| `version` | `v0.6-section5-v0.4-integrated` |
+| `date` | `2026-08-19 Section 5 setup author refinement` |
 | `review_status` | `temporarily_frozen_usable` |
 | `upstream_dependency` | Introduction v0.9, Related Work v0.2, Section 3 v0.7 and Section 4 v0.7 remain temporarily frozen and unchanged |
 | `scope` | Subsection functions, evidence order, table/figure placement, claim boundaries and appendix routing only |
-| `manuscript_prose` | Section 5 v0.3 drafted at `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`; Sections 6--7 remain structural only |
+| `manuscript_prose` | Section 5 v0.4 drafted at `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`; opening and 5.1 are author-refined, while Sections 5.2--5.7 remain under review；Sections 6--7 remain structural only |
 | `experiment_change` | None; this document does not authorize implementation, remote training or formal test |
 | `evidence_snapshot` | Main-I, corrected Main-II, Efficiency, Core-Ablation, Figure 5 mechanism diagnostics and Decoder-Transfer complete |
 | `structure_decision` | Sections 5--7 use `Experiments -> Discussion -> Conclusion`; qualitative evidence is integrated into Section 5.6 rather than assigned a standalone subsection |
@@ -32,7 +32,7 @@ The primary reader is a time-series forecasting reviewer who will ask, in order:
 | Canonical term | Use in later sections | Avoid |
 | --- | --- | --- |
 | Comparison with horizon-specific forecasters | Main-I system-level comparison between one unified model and separately optimized fixed-$H$ models | matched architecture attribution |
-| One-model-all-horizons evaluation | Main-II comparison in which each system uses one H720-trained model and prefix forecasts | generic multi-horizon benchmark without protocol definition |
+| One-model-all-horizons evaluation | Main-II comparison in which each method uses one unified model trained for the maximum horizon and returns prefix forecasts | generic multi-horizon benchmark without protocol definition |
 | Efficiency and system cost | Main-I accuracy, peak inference memory and four-horizon checkpoint storage | collapsing one-checkpoint consolidation into a uniform resource-efficiency claim |
 | Component and training-objective ablations | Full, w/o BSCA, w/o Target-Adaptive Allocation, Shared Scope Projection and Fixed Scope ($s=144$) under matched end-to-end training | balance-only controls or interpreting native baselines as ablations |
 | Forecast consistency | CHPC/CHPD behavior across shared future targets | forecast accuracy |
@@ -194,4 +194,4 @@ The qualitative example is integrated into Figure 5 rather than assigned a separ
 
 These decisions freeze the writing and experiment-design reference only. They do not authorize implementation, remote training or formal test.
 
-`Decision=sections_5_7_v0_5_section5_v0_3_drafted_sections6_7_pending`.
+`Decision=sections_5_7_v0_6_section5_v0_4_setup_refined_sections6_7_pending`.
