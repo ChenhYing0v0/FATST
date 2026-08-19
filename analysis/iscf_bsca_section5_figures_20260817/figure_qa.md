@@ -6,7 +6,7 @@
 - Backend: Python 3.11.7 (`/opt/anaconda3`) with matplotlib 3.8.0; all rendering and QA stayed on the saved Python backend.
 - Source integrity: Figure 6 reads the canonical nine-system Efficiency macro CSV, whose accuracy columns are generated from Main-I. It applies the author-requested exact filter `system != SimpleTM`, preserving 8/9 rows; Figure 7 reads the canonical author-corrected transfer CSV. No other rows are sampled or excluded.
 - Source-data bundle: `source_data/figure6_accuracy_system_cost.csv` and `source_data/figure7_decoder_transfer.csv` reproduce every plotted value and derived percentage.
-- Exports: both figures are available as editable SVG, vector PDF, 600 dpi LZW-compressed TIFF and review PNG. Figure 6 raster dimensions are 4,269 × 2,259 px at 600 dpi (TIFF) and 2,134 × 1,129 px at 300 dpi (PNG); its PDF is one page at approximately double-column width.
+- Exports: both figures are available as editable SVG, vector PDF, 600 dpi LZW-compressed TIFF and review PNG. Figure 6 raster dimensions are 4,269 × 2,259 px at 600 dpi (TIFF) and 2,135 × 1,129 px at 300 dpi (PNG); its PDF is one page at approximately double-column width.
 
 ## Visual inspection
 
@@ -15,7 +15,7 @@
 - Direct labels and exact storage/peak-memory values are legible at the target double-column width.
 - No bubble, label, size legend or footnote is clipped; all eight included systems are visible. The peak-memory size key is placed in the empty lower-right region, with values centered inside their reference circles, so it does not obscure the iTransformer label.
 - The storage axis is explicitly labeled as logarithmic. Bubble area is directly proportional to peak memory, with 25/100/225 MiB reference circles.
-- The $\dagger$ marker separates four official-configuration architecture-equivalent rows from actual trained-checkpoint resource rows.
+- The plot uses no evidence-role footnote or dagger markers; the caption retains the distinction between four official-configuration architecture-equivalent rows and actual trained-checkpoint resource rows. ISCF-BSCA carries a superscript `ours` label that cannot be mistaken for a significance marker.
 - Reviewer-risk check: SimpleTM is excluded only from the figure at the author's request and remains in complete Table 3; DLinear and QDF preserve the negative resource boundary, so the figure is captioned as a trade-off rather than uniform efficiency.
 - Statistics boundary: all marks are deterministic seven-dataset macro point estimates from the frozen table; no seed-level interval is available or implied, so no error bars are drawn.
 

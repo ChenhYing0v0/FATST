@@ -11,7 +11,7 @@ This bundle creates two manuscript-facing figures from already frozen Section 5 
 - **Evidence:** Main-I MSE over seven datasets and four horizons; four-horizon service checkpoint storage and fresh-process RTX 3090 peak allocated memory from the frozen Efficiency audit.
 - **Visual encoding:** horizontal position = four-horizon checkpoint storage on a disclosed log scale; vertical position = Main-I macro MSE; bubble area is directly proportional to peak inference memory; direct labels report exact storage and memory values.
 - **Archetype and size:** single comparison hero panel at 7.0 × 3.65 inches for double-column placement.
-- **Evidence roles:** ISCF-BSCA, TimeAlign, QDF and AMD use actual trained checkpoint artifacts. DLinear, iTransformer, PatchTST and TimeMixer use official-configuration architecture-equivalent resource footprints and are marked with $\dagger$.
+- **Evidence roles:** ISCF-BSCA, TimeAlign, QDF and AMD use actual trained checkpoint artifacts. DLinear, iTransformer, PatchTST and TimeMixer use official-configuration architecture-equivalent resource footprints; this boundary is disclosed in the caption rather than annotated inside the plot.
 - **Display-scope boundary:** The frozen source has nine systems. SimpleTM is excluded from this figure at the author's explicit request, giving an 8/9 display, but remains in the complete Table 3 and audit. The figure therefore cannot be used to claim a uniform resource advantage.
 
 ## Figure 7: decoder transfer

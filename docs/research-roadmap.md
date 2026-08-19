@@ -2,7 +2,7 @@
 
 ## Efficiency Figure 6 Bubble Redesign (2026-08-19)
 
-Current cursor=`nine-system Efficiency complete -> author-requested eight-system Figure 6 ready -> Section 5 author review`。Figure 6现在以Main-I macro MSE为y、four-horizon checkpoint storage（log scale）为x、peak inference memory为bubble area。SimpleTM从figure display中明确过滤，但完整Table 3与audit继续保留；DLinear/iTransformer/PatchTST/TimeMixer继续标记为official-architecture-equivalent resource evidence，禁止冒充trained artifact totals或宣称uniform resource superiority。No new training/formal test。
+Current cursor=`nine-system Efficiency complete -> author-requested eight-system Figure 6 ready -> Section 5 author review`。Figure 6现在以macro MSE为y（轴标题=`MSE`）、four-horizon checkpoint storage（log scale）为x、peak inference memory为bubble area。SimpleTM从figure display中明确过滤，但完整Table 3与audit继续保留；DLinear/iTransformer/PatchTST/TimeMixer的official-architecture-equivalent resource role在caption披露，图内不使用$\dagger$或额外footnote，禁止冒充trained artifact totals或宣称uniform resource superiority。No new training/formal test。
 
 ## Efficiency Accuracy--Parameters--One-Epoch Redesign (2026-08-17)
 

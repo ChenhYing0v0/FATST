@@ -201,9 +201,13 @@ def plot_efficiency() -> None:
     }
     for row in plot_rows:
         system = str(row["system"])
-        marker = r"$^{\dagger}$" if system in ARCHITECTURE_EQUIVALENT else ""
+        display_name = (
+            r"ISCF-BSCA$^{\mathrm{ours}}$"
+            if system == "ISCF-BSCA"
+            else system
+        )
         ax.annotate(
-            f"{system}{marker}\n"
+            f"{display_name}\n"
             f"{float(row['checkpoint_storage_mib']):.1f} MiB storage · "
             f"{float(row['peak_inference_memory_mib']):.1f} MiB peak",
             (row["checkpoint_storage_mib"], row["main_i_macro_mse"]),
@@ -269,7 +273,7 @@ def plot_efficiency() -> None:
 
     ax.set_xscale("log")
     ax.set_xlabel("Four-horizon checkpoint storage (MiB, log scale)")
-    ax.set_ylabel("Main-I macro MSE (lower is better)")
+    ax.set_ylabel("MSE")
     ax.set_title("Accuracy-storage trade-off for four-horizon services", pad=7)
     ax.set_xlim(2.4, 330)
     ax.set_ylim(0.255, 0.306)
@@ -289,16 +293,6 @@ def plot_efficiency() -> None:
         ha="left",
         va="bottom",
         fontsize=6.8,
-        color="#6A747A",
-    )
-    ax.text(
-        0.012,
-        0.985,
-        r"$^{\dagger}$ Official-configuration architecture-equivalent resource footprint.",
-        transform=ax.transAxes,
-        ha="left",
-        va="top",
-        fontsize=6.5,
         color="#6A747A",
     )
     save_figure(fig, "figure_6_accuracy_system_cost")
