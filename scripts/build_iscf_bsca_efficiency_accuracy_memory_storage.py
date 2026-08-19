@@ -12,7 +12,17 @@ from pathlib import Path
 from typing import Any
 
 
-SYSTEMS = ("ISCF-BSCA", "TimeAlign", "QDF", "AMD", "SimpleTM")
+SYSTEMS = (
+    "ISCF-BSCA",
+    "TimeAlign",
+    "QDF",
+    "AMD",
+    "SimpleTM",
+    "DLinear",
+    "iTransformer",
+    "PatchTST",
+    "TimeMixer",
+)
 DATASETS = ("ETTm1", "ETTm2", "ETTh1", "ETTh2", "Weather", "ECL", "Solar")
 HORIZONS = {"96", "192", "336", "720"}
 EXPECTED_MODELS = {
@@ -21,6 +31,10 @@ EXPECTED_MODELS = {
     "QDF": 4,
     "AMD": 4,
     "SimpleTM": 4,
+    "DLinear": 4,
+    "iTransformer": 4,
+    "PatchTST": 4,
+    "TimeMixer": 4,
 }
 
 
@@ -70,6 +84,10 @@ def latex_table(rows: list[dict[str, Any]]) -> str:
         "QDF": "QDF",
         "AMD": "AMD",
         "SimpleTM": "SimpleTM",
+        "DLinear": "DLinear",
+        "iTransformer": "iTransformer",
+        "PatchTST": "PatchTST",
+        "TimeMixer": "TimeMixer",
     }
     metric_values = {
         key: [float(row[key]) for row in rows]
@@ -109,7 +127,7 @@ def latex_table(rows: list[dict[str, Any]]) -> str:
             r"\bottomrule",
             r"\end{tabular}",
             r"\vspace{2pt}",
-            r"\parbox{0.98\linewidth}{\footnotesize ISCF-BSCA stores and serves one unified checkpoint. TimeAlign, QDF, AMD, and SimpleTM sum the four native checkpoints for $H\in\{96,192,336,720\}$. Peak memory is measured on an exclusive RTX 3090 in FP32 with batch size 1 and all service checkpoints resident: one $H=720$ forward plus prefix views for ISCF-BSCA, and four sequential native forwards for each horizon-specific family. SimpleTM resource cost uses repeat 0 as one deployable, non-ensemble instance per horizon, whereas its frozen Main I accuracy follows the table's multi-run summary. Synthetic standardized inputs are used; no test loader or labels are accessed. Best results are bold and second-best results are underlined.}",
+            r"\parbox{0.98\linewidth}{\footnotesize ISCF-BSCA stores and serves one unified checkpoint. Each baseline sums four horizon-specific models for $H\in\{96,192,336,720\}$. Peak memory is measured on an exclusive RTX 3090 in FP32 with batch size 1 and all service models resident: one $H=720$ forward plus prefix views for ISCF-BSCA, and four sequential native forwards for each baseline. TimeAlign, QDF, AMD, and SimpleTM use actual trained checkpoint files (SimpleTM repeat 0); DLinear, iTransformer, PatchTST, and TimeMixer use official-configuration architecture-equivalent serialized state dicts because a complete local $7\times4$ trained-checkpoint inventory is unavailable. Synthetic standardized inputs are used; no test loader or labels are accessed. Best results are bold and second-best results are underlined.}",
             r"\end{table}",
             "",
         ]
@@ -198,7 +216,7 @@ def main() -> None:
 
     primary = next(row for row in system_rows if row["system"] == "ISCF-BSCA")
     comparisons = {}
-    for baseline in ("TimeAlign", "QDF", "AMD", "SimpleTM"):
+    for baseline in SYSTEMS[1:]:
         row = next(item for item in system_rows if item["system"] == baseline)
         comparisons[baseline] = {
             "mse_improvement_percent": (
@@ -261,7 +279,7 @@ def main() -> None:
     (args.output_dir / "efficiency_result_summary.json").write_text(
         json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
-    print("efficiency_accuracy_memory_storage=pass systems=5 datasets=7")
+    print(f"efficiency_accuracy_memory_storage=pass systems={len(SYSTEMS)} datasets=7")
 
 
 if __name__ == "__main__":
