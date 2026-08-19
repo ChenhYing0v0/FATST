@@ -336,78 +336,133 @@ def plot_transfer() -> None:
             )
     write_rows(SOURCE / "figure7_decoder_transfer.csv", plot_rows)
 
-    fig, axes = plt.subplots(1, 2, figsize=(6.75, 2.55), sharey=True, constrained_layout=True)
-    width = 0.34
+    coral = "#C66B6D"
+    blue = "#5E7FAE"
+    panel_background = "#EEF0F5"
+    outline = "#6D7278"
+    axis_floor = 0.20
+    fig, axes = plt.subplots(
+        1,
+        2,
+        figsize=(6.85, 2.70),
+        sharey=True,
+        constrained_layout=True,
+    )
+    width = 0.33
     x = np.arange(len(datasets))
     for panel_index, ((backbone, title), ax) in enumerate(zip(panels, axes)):
         rows = [row for row in plot_rows if row["backbone"] == backbone]
         originals = [float(row["original_decoder_mse"]) for row in rows]
         ours = [float(row["iscf_bsca_mse"]) for row in rows]
         reductions = [float(row["relative_mse_reduction_percent"]) for row in rows]
-        ax.bar(
+        ours_bars = ax.bar(
             x - width / 2,
-            originals,
+            np.asarray(ours) - axis_floor,
             width,
-            color=GRAY,
+            bottom=axis_floor,
+            color=coral,
             edgecolor="white",
-            linewidth=0.8,
-            label="Original Decoder",
-            zorder=2,
-        )
-        ax.bar(
-            x + width / 2,
-            ours,
-            width,
-            color=TEAL,
-            edgecolor="white",
-            linewidth=0.8,
+            linewidth=0.9,
+            hatch="xx",
             label="ISCF-BSCA",
             zorder=2,
         )
-        for index, (left, right, reduction) in enumerate(zip(originals, ours, reductions)):
-            top = max(left, right)
-            ax.plot(
-                [index - width / 2, index - width / 2, index + width / 2, index + width / 2],
-                [top + 0.006, top + 0.010, top + 0.010, top + 0.006],
-                color=ORANGE,
-                linewidth=0.8,
-                clip_on=False,
+        original_bars = ax.bar(
+            x + width / 2,
+            np.asarray(originals) - axis_floor,
+            width,
+            bottom=axis_floor,
+            color=blue,
+            edgecolor="white",
+            linewidth=0.9,
+            hatch="//",
+            label="Original Decoder",
+            zorder=2,
+        )
+        for bar in [*ours_bars, *original_bars]:
+            ax.add_patch(
+                mpl.patches.Rectangle(
+                    (bar.get_x(), bar.get_y()),
+                    bar.get_width(),
+                    bar.get_height(),
+                    fill=False,
+                    edgecolor=outline,
+                    linewidth=0.45,
+                    zorder=2.2,
+                )
+            )
+        for index, (original, ours_value, reduction) in enumerate(
+            zip(originals, ours, reductions)
+        ):
+            top = max(original, ours_value)
+            ax.annotate(
+                "",
+                xy=(index - width / 2, ours_value + 0.003),
+                xytext=(index + width / 2, original + 0.004),
+                arrowprops={
+                    "arrowstyle": "-|>",
+                    "color": INK,
+                    "linewidth": 0.75,
+                    "mutation_scale": 7.5,
+                    "connectionstyle": "arc3,rad=0.52",
+                },
+                annotation_clip=False,
             )
             ax.text(
                 index,
-                top + 0.013,
-                f"{reduction:.1f}%",
+                top + 0.014,
+                f"−{reduction:.1f}%",
                 ha="center",
                 va="bottom",
-                fontsize=7.0,
-                color=ORANGE,
+                fontsize=7.1,
+                color=INK,
                 fontweight="semibold",
             )
-        ax.set_title(title, pad=5)
+        ax.set_title(title, pad=6)
         ax.set_xticks(x, datasets)
-        ax.set_ylim(0.0, 0.405)
-        ax.set_yticks(np.arange(0.0, 0.41, 0.1))
-        ax.grid(axis="y", color=GRID, linewidth=0.65, zorder=0)
+        ax.set_ylim(axis_floor, 0.385)
+        ax.set_yticks([0.20, 0.24, 0.28, 0.32, 0.36])
+        ax.set_facecolor(panel_background)
+        ax.grid(axis="y", color="white", linewidth=0.85, zorder=0)
         ax.spines[["top", "right"]].set_visible(False)
+        ax.spines[["left", "bottom"]].set_color(INK)
         ax.tick_params(colors=INK)
+        ax.plot(
+            (-0.013, 0.004),
+            (-0.012, 0.010),
+            transform=ax.transAxes,
+            color=INK,
+            linewidth=0.8,
+            clip_on=False,
+        )
+        ax.plot(
+            (0.000, 0.017),
+            (-0.012, 0.010),
+            transform=ax.transAxes,
+            color=INK,
+            linewidth=0.8,
+            clip_on=False,
+        )
         ax.text(
-            -0.14,
-            1.04,
+            0.018,
+            0.975,
             chr(ord("a") + panel_index),
             transform=ax.transAxes,
-            fontsize=10,
+            fontsize=9.6,
             fontweight="bold",
-            va="bottom",
+            va="top",
         )
-    axes[0].set_ylabel("Four-horizon mean MSE (lower is better)")
+    axes[0].set_ylabel("Four-horizon mean MSE")
     handles, labels = axes[0].get_legend_handles_labels()
     fig.legend(
         handles,
         labels,
-        loc="upper center",
-        bbox_to_anchor=(0.53, 1.02),
+        loc="outside upper center",
         ncol=2,
-        frameon=False,
+        frameon=True,
+        facecolor="white",
+        edgecolor="#D3D6DC",
+        framealpha=0.96,
     )
     save_figure(fig, "figure_7_decoder_transfer")
     plt.close(fig)

@@ -6,7 +6,7 @@
 - Backend: Python 3.11.7 (`/opt/anaconda3`) with matplotlib 3.8.0; all rendering and QA stayed on the saved Python backend.
 - Source integrity: Figure 6 reads the canonical nine-system Efficiency macro CSV, whose accuracy columns are generated from Main-I. It applies the author-requested exact filter `system != SimpleTM`, preserving 8/9 rows; Figure 7 reads the canonical author-corrected transfer CSV. No other rows are sampled or excluded.
 - Source-data bundle: `source_data/figure6_accuracy_system_cost.csv` and `source_data/figure7_decoder_transfer.csv` reproduce every plotted value and derived percentage.
-- Exports: both figures are available as editable SVG, vector PDF, 600 dpi LZW-compressed TIFF and review PNG. Figure 6 raster dimensions are 4,269 × 2,259 px at 600 dpi (TIFF) and 2,135 × 1,129 px at 300 dpi (PNG); its PDF is one page at approximately double-column width.
+- Exports: both figures are available as editable SVG, vector PDF, 600 dpi LZW-compressed TIFF and review PNG. Figure 6 raster dimensions are 4,269 × 2,259 px at 600 dpi (TIFF) and 2,135 × 1,129 px at 300 dpi (PNG). The revised Figure 7 dimensions are 4,179 × 1,684 px at 600 dpi (TIFF) and 2,089 × 842 px at 300 dpi (PNG); its PDF is one page at 501.6 × 202.2 pt, approximately double-column width.
 
 ## Visual inspection
 
@@ -22,10 +22,12 @@
 ### Figure 7
 
 - Panel titles, legend, dataset labels and percentage annotations remain legible at double-column width.
-- Both panels share a zero-based MSE axis, preventing exaggerated paired-bar differences.
-- Original Decoder and ISCF-BSCA use a neutral gray versus deep teal distinction that remains interpretable in grayscale by ordering and labels.
+- Both panels share the same MSE axis from 0.20 to 0.385. The non-zero lower bound is marked by a double-slash break on each panel and disclosed in the caption; the labeled ticks preserve quantitative reading while making the small paired differences visible.
+- ISCF-BSCA uses muted coral with a cross hatch, whereas the Original Decoder uses muted blue with a diagonal hatch. This redundant encoding follows the author-provided style reference and remains interpretable without color.
+- Curved arrows point from each Original Decoder bar to its paired ISCF-BSCA bar, and the signed annotations report the exact derived relative MSE reduction rounded to one decimal place.
 - No error bars are shown because the canonical corrected source contains aggregate point estimates rather than repeated-run uncertainty; this is disclosed in the caption.
 - Reviewer-risk check: the plot contains the complete author-refined Weather/ETTm1/ETTm2 reporting scope for both backbones and does not imply universal transfer.
+- Source-value check: all 8/8 plotted pairs satisfy `ISCF-BSCA MSE < Original Decoder MSE`, and every displayed percentage recomputes from the canonical source CSV.
 
 ## Decision
 
