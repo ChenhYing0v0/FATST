@@ -99,13 +99,15 @@
       "id": "efficiency",
       "manuscript_role": "main_text_supporting_result",
       "title": "Accuracy, peak inference memory and checkpoint storage",
-      "status": "complete_five_system_accuracy_advantage_resource_mixed",
+      "status": "complete_nine_system_accuracy_advantage_resource_mixed",
       "primary_system": "ISCF-BSCA-MAIN-v1",
-      "systems": ["ISCF-BSCA", "TimeAlign", "QDF", "AMD", "SimpleTM"],
+      "systems": ["ISCF-BSCA", "TimeAlign", "QDF", "AMD", "SimpleTM", "DLinear", "iTransformer", "PatchTST", "TimeMixer"],
       "datasets": 7,
-      "accuracy_cells": 140,
-      "memory_storage_service_units": 35,
-      "table_role_checkpoint_objects": 119,
+      "accuracy_cells": 252,
+      "memory_storage_service_units": 63,
+      "table_role_checkpoint_objects": 231,
+      "actual_trained_checkpoint_objects": 119,
+      "official_architecture_equivalent_objects": 112,
       "protocol": "configs/iscf_bsca_efficiency_accuracy_memory_storage_protocol.json",
       "artifact": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/table/table_iscf_bsca_efficiency.tex",
       "data": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/efficiency_system_macro_results.csv",
@@ -144,10 +146,34 @@
           "mae_improvement_percent": 8.032033,
           "peak_memory_reduction_percent": -161.551513,
           "checkpoint_storage_reduction_percent": -523.456323
+        },
+        "vs_DLinear": {
+          "mse_improvement_percent": 13.146936,
+          "mae_improvement_percent": 9.607678,
+          "peak_memory_reduction_percent": -196.066122,
+          "checkpoint_storage_reduction_percent": -410.158658
+        },
+        "vs_iTransformer": {
+          "mse_improvement_percent": 10.659650,
+          "mae_improvement_percent": 8.916047,
+          "peak_memory_reduction_percent": 18.006828,
+          "checkpoint_storage_reduction_percent": 50.101527
+        },
+        "vs_PatchTST": {
+          "mse_improvement_percent": 6.733103,
+          "mae_improvement_percent": 6.235642,
+          "peak_memory_reduction_percent": 45.789634,
+          "checkpoint_storage_reduction_percent": 30.117198
+        },
+        "vs_TimeMixer": {
+          "mse_improvement_percent": 7.851553,
+          "mae_improvement_percent": 7.808971,
+          "peak_memory_reduction_percent": 27.339972,
+          "checkpoint_storage_reduction_percent": 52.458538
         }
       },
-      "dependency": "canonical_Main_I_accuracy_plus_actual_locally_reproduced_checkpoints_and_exclusive_RTX3090_synthetic_input_peak_memory",
-      "claim_boundary": "supports_best_macro_accuracy_and_one_checkpoint_service_consolidation_with_memory_storage_advantages_over_TimeAlign_AMD_but_QDF_has_lower_peak_memory_and_SimpleTM_is_lower_on_both_resource_metrics",
+      "dependency": "canonical_Main_I_accuracy_plus_actual_locally_reproduced_checkpoints_or_disclosed_official_architecture_equivalents_and_exclusive_RTX3090_synthetic_input_peak_memory",
+      "claim_boundary": "supports_best_macro_accuracy_and_one_checkpoint_service_consolidation_with_memory_storage_advantages_over_TimeAlign_AMD_iTransformer_PatchTST_TimeMixer_but_DLinear_SimpleTM_QDF_define_negative_resource_boundaries_and_architecture_equivalents_are_not_trained_artifacts",
       "freeze_manifest": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/freeze_manifest.json",
       "historical_compute_table": {
         "protocol": "configs/iscf_bsca_efficiency_accuracy_params_epoch_protocol.json",
