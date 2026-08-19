@@ -5,25 +5,25 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.81` |
-| `last_updated` | `2026-08-17` |
+| `version` | `v0.82` |
+| `last_updated` | `2026-08-19` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | Section 5 v0.1 evidence-complete initial draft and Figures 6--7 pending author review |
+| `current_review_cursor` | Section 5 v0.3 latest-evidence redraft pending author review |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `frozen_consensus` | 论文七章结构并保留standalone Discussion；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
-| `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.4 structural design with Section 5 draft integration |
-| `provisional_content` | Section 5 v0.1 initial draft and Figures 6--7 pending author review；Sections 6--7 prose；Method Figure 4 stable vector-asset synchronization |
-| `authorization_source` | 2026-08-17用户要求基于闭合证据起草Section 5并设计5.4/5.7 figures；no new implementation/training/formal test |
+| `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.5 structural design with Section 5 v0.3 integration |
+| `provisional_content` | Section 5 v0.3 latest-evidence redraft and Figures 5--7 integration pending author review；Sections 6--7 prose；Method Figure 4 stable vector-asset synchronization |
+| `authorization_source` | 2026-08-19用户要求基于最新figures与tables重新生成Section 5；no new implementation/training/formal test |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
 `temporarily_frozen_content` 只有在后续章节或证据产生明确矛盾且用户同意后才解冻；
 `provisional_content` 只表示当前最佳结构，后续按章节继续修订。
 
-Section 5 drafting amendment：完整Experiments初稿已写入`docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`，沿用冻结顺序`setup -> Main-I -> Main-II -> system cost -> ablation -> mechanism behavior -> transfer`。Figure 6现按2026-08-19 Efficiency合同，以macro MSE、four-horizon checkpoint storage（log scale）和peak inference memory共同呈现accuracy--system-cost trade-off。它显示8/9 systems：SimpleTM按作者要求仅从figure中过滤，但仍完整保留在Table 3；四个architecture-equivalent rows的证据角色在caption披露，图内不再使用$\dagger$或额外footnote，ISCF-BSCA以`ours`上标突出，禁止uniform resource claim。Figure 7用双panel paired bars呈现DLinear-style与PatchTST-style在Weather/ETTm1/ETTm2上的author-corrected aggregate transfer结果。Section 5.6显式区分Table 4的aggregate allocation accuracy gain与Figure 5的near-uniform/8-of-40 internal alignment limitation。两图的design/source-data/QA bundle位于`analysis/iscf_bsca_section5_figures_20260817/`，canonical assets位于`paper-figures/figure_6_accuracy_system_cost.*`与`paper-figures/figure_7_decoder_transfer.*`。当前状态=`initial_draft_pending_author_review`，不改Sections 1--4或实验授权。
+Section 5 drafting amendment：`docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`已按最新Tables 1--5与Figures 5--7重建为v0.3，沿用冻结顺序`setup -> Main-I -> Main-II -> system cost -> ablation -> mechanism behavior -> transfer`。新稿把system-level effectiveness、controlled attribution与validation-only internal behavior显式分层。Figure 6按2026-08-19 Efficiency合同，以macro MSE、four-horizon checkpoint storage（log scale）和peak inference memory呈现accuracy--system-cost trade-off；显示8/9 systems，SimpleTM只从figure中过滤但继续保留在Table 3，禁止uniform resource claim。Figure 7使用coral/blue hatch paired bars呈现DLinear-style与PatchTST-style在Weather/ETTm1/ETTm2上的author-corrected aggregate transfer结果，并在图与caption中披露MSE轴从0.20起始。Section 5.6同时保留Table 4的aggregate allocation gain与Figure 5的near-uniform/8-of-40 internal alignment limitation。当前状态=`initial_draft_pending_author_review`，不改Sections 1--4、canonical tables或实验授权。
 
 Main-table author-correction amendment：Main I现覆盖作者修正的ISCF/TimeAlign全部
 seven-dataset rows、SimpleTM Solar与**TVNet ETTh2**；Main II覆盖ISCF/TimeAlign全部rows、

@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Temporarily frozen structural design for the manuscript sections after Method |
-| `version` | `v0.4-section5-draft-integrated` |
-| `date` | `2026-08-17 Section 5 initial draft` |
+| `version` | `v0.5-section5-v0.3-integrated` |
+| `date` | `2026-08-19 Section 5 latest-evidence redraft` |
 | `review_status` | `temporarily_frozen_usable` |
 | `upstream_dependency` | Introduction v0.9, Related Work v0.2, Section 3 v0.7 and Section 4 v0.7 remain temporarily frozen and unchanged |
 | `scope` | Subsection functions, evidence order, table/figure placement, claim boundaries and appendix routing only |
-| `manuscript_prose` | Section 5 v0.1 drafted at `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`; Sections 6--7 remain structural only |
+| `manuscript_prose` | Section 5 v0.3 drafted at `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`; Sections 6--7 remain structural only |
 | `experiment_change` | None; this document does not authorize implementation, remote training or formal test |
 | `evidence_snapshot` | Main-I, corrected Main-II, Efficiency, Core-Ablation, Figure 5 mechanism diagnostics and Decoder-Transfer complete |
 | `structure_decision` | Sections 5--7 use `Experiments -> Discussion -> Conclusion`; qualitative evidence is integrated into Section 5.6 rather than assigned a standalone subsection |
@@ -194,4 +194,4 @@ The qualitative example is integrated into Figure 5 rather than assigned a separ
 
 These decisions freeze the writing and experiment-design reference only. They do not authorize implementation, remote training or formal test.
 
-`Decision=sections_5_7_v0_4_section5_drafted_sections6_7_pending`.
+`Decision=sections_5_7_v0_5_section5_v0_3_drafted_sections6_7_pending`.

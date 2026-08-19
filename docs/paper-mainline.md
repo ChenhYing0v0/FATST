@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Section 5 evidence-complete initial draft；nine-system Table 3 and eight-system Efficiency Figure 6 synchronized；author review next |
+| `current_11_step` | Section 5 v0.3 regenerated from latest Tables 1--5 and Figures 5--7；author review next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,7 +18,9 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；Sections 1--4 temporarily frozen usable；Section 5 v0.1 drafted from complete evidence；allocation aggregate accuracy direction positive但routing health mixed；Sections 6--7 prose pending |
+| `paper_core_status` | architecture family frozen；Sections 1--4 temporarily frozen usable；Section 5 v0.3 latest-evidence redraft pending author review；allocation aggregate accuracy direction positive但routing health mixed；Sections 6--7 prose pending |
+
+[Section 5 Latest-Evidence Redraft, 2026-08-19] `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`已更新为`v0.3-latest-evidence-redraft`。本轮以当前canonical Tables 1--5和Figures 5--7重建Experiments叙事，不改变任何数值、table source或experiment authorization。新版按`system-level effectiveness -> deployment trade-off -> controlled attribution -> validation-only internal behavior -> bounded transfer`组织证据；5.4与最新accuracy--storage--peak-memory Figure 6一致，5.7与coral/blue hatch Figure 7及其0.20 truncated MSE axis一致。5.6继续同时报告Target-Adaptive Allocation的aggregate accuracy gain、near-uniform probabilities与8/40 utilization/error alignment limitation。Decision=`section5_v0_3_latest_evidence_redraft_pending_author_review`；new implementation/training/formal test=`0/0/0`。
 
 [Efficiency Figure 6 Bubble Redesign, 2026-08-19] 正文Figure 6已改为8-system accuracy--storage--memory bubble chart：y为seven-dataset/four-H macro MSE（轴标题简化为`MSE`），x为four-horizon checkpoint storage（log scale），bubble area与fresh-process RTX 3090 peak allocated memory成正比。ISCF-BSCA使用一个unified checkpoint并以`ours`上标突出；baseline使用四个fixed-H models。DLinear/iTransformer/PatchTST/TimeMixer的official-configuration architecture-equivalent resource role保留在caption，图内不使用$\dagger$或额外footnote。按作者明确要求，SimpleTM只从Figure 6的9-system source中过滤，Table 3与完整audit继续保留其负向resource evidence；因此Figure 6仍不得支持uniform resource advantage。Source/QA=`analysis/iscf_bsca_section5_figures_20260817/`；canonical=`paper-figures/figure_6_accuracy_system_cost.*`；training/formal test=`0/0`。
 

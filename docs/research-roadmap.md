@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## Section 5 Latest-Evidence Redraft (2026-08-19)
+
+Current cursor=`latest Tables 1--5 and Figures 5--7 frozen -> Section 5 v0.3 regenerated -> author review`。Canonical draft=`docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`。本轮只重构Experiments论证与figure/table integration，不修改Sections 1--4、canonical evidence、implementation或experiment state，new training/formal test=`0/0`。
+
+新版按`system-level effectiveness -> deployment trade-off -> controlled attribution -> validation-only internal behavior -> bounded transfer`区分证据角色。Figure 6使用macro MSE、four-horizon checkpoint storage和peak inference memory；Figure 7使用coral/blue hatch paired bars并披露0.20 truncated MSE axis。Figure 5的mixed evidence边界保持不变：aggregate allocation ablation正向，但probabilities接近均匀且highest-utilization只在8/40 cells匹配lowest-error scope。Decision=`section5_v0_3_latest_evidence_redraft_pending_author_review`。
+
 ## Efficiency Figure 6 Bubble Redesign (2026-08-19)
 
 Current cursor=`nine-system Efficiency complete -> author-requested eight-system Figure 6 ready -> Section 5 author review`。Figure 6现在以macro MSE为y（轴标题=`MSE`）、four-horizon checkpoint storage（log scale）为x、peak inference memory为bubble area。SimpleTM从figure display中明确过滤，但完整Table 3与audit继续保留；DLinear/iTransformer/PatchTST/TimeMixer的official-architecture-equivalent resource role在caption披露，图内不使用$\dagger$或额外footnote，禁止冒充trained artifact totals或宣称uniform resource superiority。No new training/formal test。
