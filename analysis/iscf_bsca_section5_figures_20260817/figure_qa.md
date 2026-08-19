@@ -3,20 +3,21 @@
 ## Verification summary
 
 - `nature-figure` static preflight: 14 pass, 0 warning, 0 failure.
-- Backend: Python/matplotlib in the repository `r2026-fsa` environment.
-- Source integrity: Figure 6 reads the canonical redesigned Efficiency macro CSV, whose accuracy columns are generated from Main-I; Figure 7 reads the canonical author-corrected transfer CSV. No rows are sampled or excluded after the figure-specific system and reporting-scope filters defined in the contract.
+- Backend: Python 3.11.7 (`/opt/anaconda3`) with matplotlib 3.8.0; all rendering and QA stayed on the saved Python backend.
+- Source integrity: Figure 6 reads the canonical nine-system Efficiency macro CSV, whose accuracy columns are generated from Main-I. It applies the author-requested exact filter `system != SimpleTM`, preserving 8/9 rows; Figure 7 reads the canonical author-corrected transfer CSV. No other rows are sampled or excluded.
 - Source-data bundle: `source_data/figure6_accuracy_system_cost.csv` and `source_data/figure7_decoder_transfer.csv` reproduce every plotted value and derived percentage.
-- Exports: both figures are available as editable SVG, vector PDF, 600 dpi LZW-compressed TIFF and review PNG.
+- Exports: both figures are available as editable SVG, vector PDF, 600 dpi LZW-compressed TIFF and review PNG. Figure 6 raster dimensions are 4,269 × 2,259 px at 600 dpi (TIFF) and 2,134 × 1,129 px at 300 dpi (PNG); its PDF is one page at approximately double-column width.
 
 ## Visual inspection
 
 ### Figure 6
 
-- Direct labels, model counts and one-epoch cycle seconds are legible at the target single-column width.
-- No bubble or label is clipped; the parameter and MSE axes include all three systems without a broken scale.
-- Bubble area encodes the seven-dataset macro one-epoch cycle, while exact seconds remain printed in the point labels.
-- The lower-left direction marker is visually subordinate to the data.
-- Reviewer-risk check: the figure does not imply lower training time for ISCF-BSCA and is captioned as a trade-off rather than uniform efficiency.
+- Direct labels and exact storage/peak-memory values are legible at the target double-column width.
+- No bubble, label, size legend or footnote is clipped; all eight included systems are visible.
+- The storage axis is explicitly labeled as logarithmic. Bubble area is directly proportional to peak memory, with 25/100/225 MiB reference circles.
+- The $\dagger$ marker separates four official-configuration architecture-equivalent rows from actual trained-checkpoint resource rows.
+- Reviewer-risk check: SimpleTM is excluded only from the figure at the author's request and remains in complete Table 3; DLinear and QDF preserve the negative resource boundary, so the figure is captioned as a trade-off rather than uniform efficiency.
+- Statistics boundary: all marks are deterministic seven-dataset macro point estimates from the frozen table; no seed-level interval is available or implied, so no error bars are drawn.
 
 ### Figure 7
 

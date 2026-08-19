@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import csv
 from pathlib import Path
 
@@ -15,7 +16,7 @@ SOURCE = Path(__file__).resolve().parent / "source_data"
 EFFICIENCY = (
     ROOT
     / "analysis/iscf_bsca_paper_experiment_consolidation_20260731"
-    / "efficiency_accuracy_params_epoch_20260817/efficiency_system_macro_results.csv"
+    / "efficiency_accuracy_memory_storage_20260817/efficiency_system_macro_results.csv"
 )
 TRANSFER = (
     ROOT
@@ -31,6 +32,22 @@ GRAY = "#A8B0B8"
 INK = "#27343B"
 GRID = "#E4E8EA"
 ORANGE = "#D7652C"
+EFFICIENCY_COLORS = {
+    "ISCF-BSCA": "#C94F3D",
+    "TimeAlign": "#3B78B4",
+    "QDF": "#8C6BB1",
+    "AMD": "#D69E2E",
+    "DLinear": "#6BAF45",
+    "iTransformer": "#7E8AA2",
+    "PatchTST": "#2A9D8F",
+    "TimeMixer": "#56B4C2",
+}
+ARCHITECTURE_EQUIVALENT = {
+    "DLinear",
+    "iTransformer",
+    "PatchTST",
+    "TimeMixer",
+}
 
 
 def configure_style() -> None:
@@ -87,95 +104,189 @@ def save_figure(fig: plt.Figure, stem: str) -> None:
 
 
 def plot_efficiency() -> None:
-    efficiency = {
-        row["system"]: row
-        for row in read_rows(EFFICIENCY)
-        if row["system"] in {"ISCF-BSCA", "TimeAlign", "QDF"}
-    }
-    order = ["ISCF-BSCA", "TimeAlign", "QDF"]
-    colors = {"ISCF-BSCA": TEAL, "TimeAlign": BLUE, "QDF": PURPLE}
+    raw_rows = read_rows(EFFICIENCY)
+    if len(raw_rows) != 9 or {row["system"] for row in raw_rows} != {
+        "ISCF-BSCA",
+        "TimeAlign",
+        "QDF",
+        "AMD",
+        "SimpleTM",
+        "DLinear",
+        "iTransformer",
+        "PatchTST",
+        "TimeMixer",
+    }:
+        raise RuntimeError("expected the frozen nine-system efficiency source")
+    efficiency = {row["system"]: row for row in raw_rows}
+    order = [
+        "ISCF-BSCA",
+        "TimeAlign",
+        "QDF",
+        "AMD",
+        "DLinear",
+        "iTransformer",
+        "PatchTST",
+        "TimeMixer",
+    ]
     plot_rows: list[dict[str, object]] = []
     for system in order:
         row = efficiency[system]
         plot_rows.append(
             {
                 "system": system,
-                "trained_model_count": int(row["model_count"]),
-                "deployed_parameters_million": float(
-                    row["total_parameters_million"]
-                ),
+                "resident_model_count": int(row["model_count"]),
                 "main_i_macro_mse": float(row["main_i_mse"]),
-                "one_epoch_cycle_seconds": float(
-                    row["one_epoch_cycle_seconds"]
+                "checkpoint_storage_mib": float(row["checkpoint_storage_mib"]),
+                "peak_inference_memory_mib": float(
+                    row["peak_inference_memory_mib"]
+                ),
+                "resource_evidence_role": (
+                    "official_architecture_equivalent"
+                    if system in ARCHITECTURE_EQUIVALENT
+                    else "actual_trained_checkpoint"
                 ),
             }
         )
+    storage_values = np.asarray(
+        [float(row["checkpoint_storage_mib"]) for row in plot_rows],
+        dtype=np.float64,
+    )
+    if np.any(storage_values <= 0):
+        raise RuntimeError("log-scale checkpoint storage must be strictly positive")
     write_rows(SOURCE / "figure6_accuracy_system_cost.csv", plot_rows)
 
-    fig, ax = plt.subplots(figsize=(3.50, 2.65), constrained_layout=True)
-    max_seconds = max(float(row["one_epoch_cycle_seconds"]) for row in plot_rows)
+    fig, ax = plt.subplots(figsize=(7.0, 3.65), constrained_layout=True)
+    bubble_scale = 5.2
     for row in plot_rows:
-        seconds = float(row["one_epoch_cycle_seconds"])
-        area = 130.0 + 620.0 * seconds / max_seconds
+        memory = float(row["peak_inference_memory_mib"])
+        system = str(row["system"])
         ax.scatter(
-            row["deployed_parameters_million"],
+            row["checkpoint_storage_mib"],
             row["main_i_macro_mse"],
-            s=area,
-            color=colors[str(row["system"])],
-            edgecolor="white",
-            linewidth=1.2,
-            alpha=0.92,
+            s=memory * bubble_scale,
+            color=EFFICIENCY_COLORS[system],
+            edgecolor="#FFFFFF" if system != "ISCF-BSCA" else "#7A241C",
+            linewidth=1.1 if system != "ISCF-BSCA" else 1.5,
+            alpha=0.74 if system != "ISCF-BSCA" else 0.90,
             zorder=3,
+        )
+        ax.scatter(
+            row["checkpoint_storage_mib"],
+            row["main_i_macro_mse"],
+            s=5.0,
+            color="white",
+            linewidth=0,
+            zorder=4,
         )
 
     label_offsets = {
-        "ISCF-BSCA": (18, -3),
-        "TimeAlign": (-13, -2),
-        "QDF": (7, -2),
+        "ISCF-BSCA": (13, 1),
+        "TimeAlign": (13, -2),
+        "QDF": (-13, 15),
+        "AMD": (-13, 15),
+        "DLinear": (13, -7),
+        "iTransformer": (13, 15),
+        "PatchTST": (-14, -19),
+        "TimeMixer": (15, -6),
     }
-    label_alignment = {"ISCF-BSCA": "left", "TimeAlign": "right", "QDF": "left"}
+    label_alignment = {
+        "ISCF-BSCA": "left",
+        "TimeAlign": "left",
+        "QDF": "right",
+        "AMD": "right",
+        "DLinear": "left",
+        "iTransformer": "left",
+        "PatchTST": "right",
+        "TimeMixer": "left",
+    }
     for row in plot_rows:
         system = str(row["system"])
+        marker = r"$^{\dagger}$" if system in ARCHITECTURE_EQUIVALENT else ""
         ax.annotate(
-            f"{system}\n{row['trained_model_count']} model{'s' if row['trained_model_count'] != 1 else ''} · "
-            f"{float(row['one_epoch_cycle_seconds']):.1f} s/epoch",
-            (row["deployed_parameters_million"], row["main_i_macro_mse"]),
+            f"{system}{marker}\n"
+            f"{float(row['checkpoint_storage_mib']):.1f} MiB storage · "
+            f"{float(row['peak_inference_memory_mib']):.1f} MiB peak",
+            (row["checkpoint_storage_mib"], row["main_i_macro_mse"]),
             xytext=label_offsets[system],
             textcoords="offset points",
-            color=colors[system],
-            fontsize=7.5,
+            color=EFFICIENCY_COLORS[system],
+            fontsize=7.2,
             fontweight="semibold",
             ha=label_alignment[system],
             va="center",
+            arrowprops={
+                "arrowstyle": "-",
+                "color": EFFICIENCY_COLORS[system],
+                "alpha": 0.48,
+                "lw": 0.55,
+            },
+            zorder=5,
         )
 
-    ax.text(
-        0.985,
-        0.985,
-        "Bubble area scales with one-epoch cycle time",
-        transform=ax.transAxes,
-        ha="right",
-        va="top",
-        fontsize=6.8,
-        color="#6A747A",
+    legend_values = (25, 100, 225)
+    legend_handles = [
+        ax.scatter(
+            [],
+            [],
+            s=value * bubble_scale,
+            color="#BCC4C9",
+            edgecolor="white",
+            linewidth=0.9,
+            alpha=0.72,
+            label=str(value),
+        )
+        for value in legend_values
+    ]
+    legend = ax.legend(
+        handles=legend_handles,
+        title="Peak memory (MiB)",
+        loc="upper right",
+        ncol=3,
+        handletextpad=0.2,
+        columnspacing=1.0,
+        borderpad=1.1,
+        labelspacing=2.0,
+        frameon=True,
+        framealpha=0.94,
+        facecolor="white",
+        edgecolor="#D5DADD",
     )
-    ax.set_xlabel("Deployed parameters per dataset (M)")
+    legend.get_title().set_fontsize(7.2)
+    legend.get_title().set_fontweight("semibold")
+
+    ax.set_xscale("log")
+    ax.set_xlabel("Four-horizon checkpoint storage (MiB, log scale)")
     ax.set_ylabel("Main-I macro MSE (lower is better)")
-    ax.set_xlim(0.0, 12.2)
-    ax.set_ylim(0.253, 0.293)
-    ax.set_xticks([0, 3, 6, 9, 12])
-    ax.grid(True, color=GRID, linewidth=0.65, zorder=0)
+    ax.set_title("Accuracy-storage trade-off for four-horizon services", pad=7)
+    ax.set_xlim(2.4, 330)
+    ax.set_ylim(0.255, 0.306)
+    ax.set_xticks([3, 10, 30, 100, 300], labels=["3", "10", "30", "100", "300"])
+    ax.set_yticks(np.arange(0.26, 0.306, 0.01))
+    ax.grid(True, which="major", color=GRID, linewidth=0.68, zorder=0)
+    ax.grid(True, which="minor", axis="x", color=GRID, linewidth=0.38, alpha=0.45, zorder=0)
     ax.spines[["top", "right"]].set_visible(False)
     ax.tick_params(colors=INK)
     ax.xaxis.label.set_color(INK)
     ax.yaxis.label.set_color(INK)
-    ax.annotate(
-        "better",
-        xy=(0.8, 0.2548),
-        xytext=(2.0, 0.2574),
-        arrowprops={"arrowstyle": "->", "color": "#6A747A", "lw": 0.8},
+    ax.text(
+        0.012,
+        0.018,
+        "Lower-left is better",
+        transform=ax.transAxes,
+        ha="left",
+        va="bottom",
+        fontsize=6.8,
         color="#6A747A",
-        fontsize=7,
+    )
+    ax.text(
+        0.012,
+        0.985,
+        r"$^{\dagger}$ Official-configuration architecture-equivalent resource footprint.",
+        transform=ax.transAxes,
+        ha="left",
+        va="top",
+        fontsize=6.5,
+        color="#6A747A",
     )
     save_figure(fig, "figure_6_accuracy_system_cost")
     plt.close(fig)
@@ -295,10 +406,19 @@ def plot_transfer() -> None:
     plt.close(fig)
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Build Section 5 manuscript figures.")
+    parser.add_argument("--figure", choices=("6", "7", "all"), default="all")
+    return parser.parse_args()
+
+
 def main() -> None:
+    args = parse_args()
     configure_style()
-    plot_efficiency()
-    plot_transfer()
+    if args.figure in {"6", "all"}:
+        plot_efficiency()
+    if args.figure in {"7", "all"}:
+        plot_transfer()
 
 
 if __name__ == "__main__":

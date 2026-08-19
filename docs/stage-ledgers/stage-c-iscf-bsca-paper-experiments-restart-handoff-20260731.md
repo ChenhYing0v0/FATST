@@ -44,7 +44,7 @@ paper candidate与claim boundary，但互不替代。
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `aggregate_all_controls_positive_provenance_partial`；作者修正Core-Ablation为4/4 aggregate directions positive；per-horizon/checkpoint rerun provenance未同步 |
 | `active_workstream` | paper-facing evidence consolidation and writing handoff |
-| `active_experiment_step` | Efficiency accuracy--parameters--one-epoch redesign complete；all current main-text experiment blocks closed |
+| `active_experiment_step` | Efficiency accuracy--storage--peak-memory Figure 6 redesign complete；all current main-text experiment blocks closed |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `active_method_search` | none；PatchTST BSCA HPO closed for Weather/ETTm1/ETTm2 scope |
 | `local_audit_and_design_authorized` | true |
@@ -52,8 +52,10 @@ paper candidate与claim boundary，但互不替代。
 | `remote_training_authorized` | false；Figure 5复用既有validation artifacts，training=0 |
 | `test_tuned_hpo_authorized` | true；dataset-level four-H mean official-test MSE selector；per-H/cell selection=false |
 | `formal_test_authorized` | consumed and complete；40 unique checkpoints中复用5个已测artifact，新增35 checkpoints / 140 cells |
-| `next_action` | author review synchronized Section 5/Table 3/Figure 6；no additional experiment, training or formal test required |
+| `next_action` | author review synchronized Section 5/Table 3/eight-system Figure 6；no additional experiment, training or formal test required |
 | `conditional_next` | allocation可作aggregate accuracy gain；Figure 5仍禁止reliable region-best routing、causal specialization或universal specialization claim |
+
+2026-08-19 Figure 6按最新Efficiency证据重做为8-system bubble chart：y=`Main-I macro MSE`，x=`four-horizon checkpoint storage (log)`，bubble area=`peak inference memory`。SimpleTM按作者明确要求只从Figure 6过滤，完整Table 3/audit不删除；DLinear/iTransformer/PatchTST/TimeMixer以$\dagger$标记architecture-equivalent resource role。该图支持accuracy--resource trade-off，不支持uniform superiority。Canonical=`paper-figures/figure_6_accuracy_system_cost.*`；training/formal test=`0/0`。
 
 2026-08-17用户要求以Main-I accuracy、four-horizon total parameters与one-epoch cycle重做Efficiency。比较集合冻结为ISCF-BSCA、TimeAlign与QDF，完整性=`84/84 accuracy cells + 21/21 parameter units + 63/63 timing logs`；new training/formal test=`0/0`。ISCF-BSCA相对TimeAlign/QDF分别改善MSE `4.936%/9.320%`、MAE `2.536%/7.639%`，减少parameters `72.760%/45.181%`；但one-epoch cycle为两者的`1.272×/2.404×`，故只支持accuracy/parameter consolidation，不支持lower training time或uniform efficiency。Timing是completed RTX 3090 native runs中每checkpoint `train + scheduled validation, no test` epoch cycle中位数，不是exclusive-GPU microbenchmark。Canonical report=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/result_and_table_audit.md`；旧2026-08-14 profiler保留为historical supplementary audit。
 

@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | Section 5 v0.1与重新冻结的Efficiency Table 3/Figure 6已同步；等待author review后进入Sections 6--7 |
+| `active_question` | Section 5与nine-system Efficiency Table 3/eight-system bubble Figure 6已同步；等待author review后进入Sections 6--7 |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
 | `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7 temporarily frozen usable；Section 5 v0.1 pending author review；Sections 5--7 v0.4 structure frozen；Figure 4 visual design temporarily fixed |
@@ -22,9 +22,9 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper experiment matrix closed；Efficiency accuracy--parameters--one-epoch redesign complete；Section 5 synchronized |
+| `current_11_step` | paper experiment matrix closed；Efficiency accuracy--storage--peak-memory Figure 6 redesign complete；Section 5 synchronized |
 | `current_candidate` | Section 5 v0.1 with redesigned Efficiency Table 3 and Figure 6 |
-| `latest_decision` | `efficiency_accuracy_params_epoch_complete_accuracy_parameter_advantage_compute_tradeoff` |
+| `latest_decision` | `efficiency_figure6_eight_system_accuracy_storage_peak_memory_ready` |
 | `writing_latest_decision` | `section5_v0_1_evidence_complete_initial_draft_pending_author_review` |
 | `next_required_action` | author review Section 5 v0.1；then draft standalone Discussion and Conclusion；no new experiment required |
 | `method_training_authorized` | false；no matched controls、extra HPO/seeds or formal test required |

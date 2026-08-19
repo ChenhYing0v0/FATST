@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Section 5 evidence-complete initial draft and Figures 6--7 complete；author review next |
+| `current_11_step` | Section 5 evidence-complete initial draft；nine-system Table 3 and eight-system Efficiency Figure 6 synchronized；author review next |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -19,6 +19,8 @@
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `paper_core_status` | architecture family frozen；Sections 1--4 temporarily frozen usable；Section 5 v0.1 drafted from complete evidence；allocation aggregate accuracy direction positive但routing health mixed；Sections 6--7 prose pending |
+
+[Efficiency Figure 6 Bubble Redesign, 2026-08-19] 正文Figure 6已改为8-system accuracy--storage--memory bubble chart：y为Main-I seven-dataset/four-H macro MSE，x为four-horizon checkpoint storage（log scale），bubble area与fresh-process RTX 3090 peak allocated memory成正比。ISCF-BSCA使用一个unified checkpoint；baseline使用四个fixed-H models。DLinear/iTransformer/PatchTST/TimeMixer以$\dagger$披露official-configuration architecture-equivalent resource role。按作者明确要求，SimpleTM只从Figure 6的9-system source中过滤，Table 3与完整audit继续保留其负向resource evidence；因此Figure 6仍不得支持uniform resource advantage。Source/QA=`analysis/iscf_bsca_section5_figures_20260817/`；canonical=`paper-figures/figure_6_accuracy_system_cost.*`；training/formal test=`0/0`。
 
 [Efficiency Accuracy--Parameters--One-Epoch Redesign, 2026-08-17] 正文Table 3重新冻结为ISCF-BSCA、TimeAlign与QDF三系统，指标为Main-I macro MSE/MAE、服务four horizons的model count与total parameters、以及one-epoch cycle。完整性=`84/84 accuracy cells + 21/21 parameter units + 63/63 timing logs`；new training/formal test=`0/0`。ISCF-BSCA相对TimeAlign/QDF分别改善MSE `4.936%/9.320%`、MAE `2.536%/7.639%`，减少parameters `72.760%/45.181%`；但one-epoch cycle为`133.1 s`，分别是两者的`1.272×/2.404×`。因此只支持accuracy与parameter consolidation，不支持lower training time或uniform efficiency。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_params_epoch_20260817/result_and_table_audit.md`；旧2026-08-14 profiler转为historical supplementary audit。
 

@@ -7,10 +7,12 @@ This bundle creates two manuscript-facing figures from already frozen Section 5 
 ## Figure 6: accuracy and system cost
 
 - **Question:** What practical trade-off follows when one ISCF-BSCA model replaces a four-model horizon-specific service?
-- **Conclusion:** Among the three systems with audited full four-horizon service artifacts, ISCF-BSCA combines the lowest Main-I macro MSE with fewer deployed parameters, while requiring a longer one-epoch cycle.
-- **Evidence:** Main-I MSE over seven datasets and four horizons; Efficiency audit totals for deployed parameters and median native one-epoch cycles.
-- **Visual encoding:** horizontal position = deployed parameters per dataset after summing four horizon-specific checkpoints for TimeAlign and QDF; vertical position = Main-I macro MSE; bubble area = seven-dataset macro one-epoch cycle seconds; label = number of deployed models and exact one-epoch cycle.
-- **Boundary:** The plot is an accuracy--system-cost comparison, not evidence that ISCF-BSCA trains or infers faster. DLinear-$H720$-prefix and PatchTST-$H720$-prefix are excluded because they represent the one-model service protocol evaluated in Main-II rather than a four-model horizon-specific family.
+- **Conclusion:** In the eight-system display, ISCF-BSCA combines the lowest Main-I macro MSE with moderate checkpoint storage and peak memory, while DLinear remains the lightweight resource counterexample.
+- **Evidence:** Main-I MSE over seven datasets and four horizons; four-horizon service checkpoint storage and fresh-process RTX 3090 peak allocated memory from the frozen Efficiency audit.
+- **Visual encoding:** horizontal position = four-horizon checkpoint storage on a disclosed log scale; vertical position = Main-I macro MSE; bubble area is directly proportional to peak inference memory; direct labels report exact storage and memory values.
+- **Archetype and size:** single comparison hero panel at 7.0 × 3.65 inches for double-column placement.
+- **Evidence roles:** ISCF-BSCA, TimeAlign, QDF and AMD use actual trained checkpoint artifacts. DLinear, iTransformer, PatchTST and TimeMixer use official-configuration architecture-equivalent resource footprints and are marked with $\dagger$.
+- **Display-scope boundary:** The frozen source has nine systems. SimpleTM is excluded from this figure at the author's explicit request, giving an 8/9 display, but remains in the complete Table 3 and audit. The figure therefore cannot be used to claim a uniform resource advantage.
 
 ## Figure 7: decoder transfer
 
@@ -24,5 +26,5 @@ This bundle creates two manuscript-facing figures from already frozen Section 5 
 
 - Backend: Python/matplotlib, following the saved `nature-figure` backend preference.
 - Outputs: editable SVG, vector PDF, 600 dpi TIFF and review PNG.
-- Style: white background, restrained colorblind-conscious palette, direct labels, no decorative gradients or shadows.
+- Style: white background, restrained colorblind-conscious palette, direct labels, log-scale storage axis and proportional bubble areas; no decorative gradients or shadows.
 - Source-data bundle: the plotting script exports the exact plotted values and derived relative reductions.
