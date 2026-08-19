@@ -224,35 +224,48 @@ def plot_efficiency() -> None:
         )
 
     legend_values = (25, 100, 225)
-    legend_handles = [
-        ax.scatter(
-            [],
-            [],
+    legend_ax = ax.inset_axes([0.745, 0.035, 0.24, 0.20], zorder=8)
+    legend_ax.set_facecolor((1.0, 1.0, 1.0, 0.95))
+    legend_ax.set_xlim(0.0, 1.0)
+    legend_ax.set_ylim(0.0, 1.0)
+    legend_ax.set_xticks([])
+    legend_ax.set_yticks([])
+    for spine in legend_ax.spines.values():
+        spine.set_color("#D5DADD")
+        spine.set_linewidth(0.8)
+    legend_ax.text(
+        0.5,
+        0.86,
+        "Peak memory (MiB)",
+        ha="center",
+        va="center",
+        fontsize=7.2,
+        fontweight="semibold",
+        color=INK,
+    )
+    for x_position, value in zip((0.17, 0.50, 0.83), legend_values):
+        legend_ax.scatter(
+            x_position,
+            0.36,
             s=value * bubble_scale,
             color="#BCC4C9",
             edgecolor="white",
             linewidth=0.9,
-            alpha=0.72,
-            label=str(value),
+            alpha=0.78,
+            clip_on=False,
+            zorder=1,
         )
-        for value in legend_values
-    ]
-    legend = ax.legend(
-        handles=legend_handles,
-        title="Peak memory (MiB)",
-        loc="upper right",
-        ncol=3,
-        handletextpad=0.2,
-        columnspacing=1.0,
-        borderpad=1.1,
-        labelspacing=2.0,
-        frameon=True,
-        framealpha=0.94,
-        facecolor="white",
-        edgecolor="#D5DADD",
-    )
-    legend.get_title().set_fontsize(7.2)
-    legend.get_title().set_fontweight("semibold")
+        legend_ax.text(
+            x_position,
+            0.36,
+            str(value),
+            ha="center",
+            va="center",
+            fontsize=6.5,
+            fontweight="semibold",
+            color=INK,
+            zorder=2,
+        )
 
     ax.set_xscale("log")
     ax.set_xlabel("Four-horizon checkpoint storage (MiB, log scale)")

@@ -13,7 +13,7 @@
 ### Figure 6
 
 - Direct labels and exact storage/peak-memory values are legible at the target double-column width.
-- No bubble, label, size legend or footnote is clipped; all eight included systems are visible.
+- No bubble, label, size legend or footnote is clipped; all eight included systems are visible. The peak-memory size key is placed in the empty lower-right region, with values centered inside their reference circles, so it does not obscure the iTransformer label.
 - The storage axis is explicitly labeled as logarithmic. Bubble area is directly proportional to peak memory, with 25/100/225 MiB reference circles.
 - The $\dagger$ marker separates four official-configuration architecture-equivalent rows from actual trained-checkpoint resource rows.
 - Reviewer-risk check: SimpleTM is excluded only from the figure at the author's request and remains in complete Table 3; DLinear and QDF preserve the negative resource boundary, so the figure is captioned as a trade-off rather than uniform efficiency.
