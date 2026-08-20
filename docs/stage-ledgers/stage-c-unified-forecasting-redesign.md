@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | Section 5 v0.5已完成opening、5.1与5.2 author refinement；继续逐节审阅5.3--5.7 |
+| `active_question` | Section 5 v0.6已完成5.3--5.5与5.7 author refinement；5.6 visible body等待重新设计 |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
-| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7 temporarily frozen usable；Section 5 v0.5 opening/5.1/5.2 author-refined；Sections 5--7 v0.7 structure frozen；Figure 4 visual design temporarily fixed |
+| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7 temporarily frozen usable；Section 5 v0.6 opening/5.1--5.5/5.7 author-refined，5.6 body pending；Sections 5--7 v0.8 structure frozen；Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | Main I dense/Main II v1=ETTh1, ETTh2, ETTm1, ETTm2, Weather, ECL, Solar；Exchange=companion/deferred extension；ablation=original five |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
@@ -22,13 +22,28 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper experiment matrix closed；Section 5 v0.5 opening、5.1与5.2 author refinement complete |
-| `current_candidate` | Section 5 v0.5 Main-I author refinement |
-| `latest_decision` | `section5_v0_5_main_i_author_refined_continue_5_3_review` |
-| `writing_latest_decision` | `section5_v0_5_main_i_author_refined_continue_5_3_review` |
-| `next_required_action` | author review Section 5.3 onward；then draft standalone Discussion and Conclusion；no new experiment required |
+| `current_11_step` | paper experiment matrix closed；Section 5 v0.6 results author refinement complete except 5.6 visible body |
+| `current_candidate` | Section 5 v0.6 results author refinement |
+| `latest_decision` | `section5_v0_6_results_author_refined_5_6_pending_redesign` |
+| `writing_latest_decision` | `section5_v0_6_results_author_refined_5_6_pending_redesign` |
+| `next_required_action` | author review revised 5.3--5.5/5.7 and redesign 5.6；then draft standalone Discussion and Conclusion；no new experiment required |
 | `method_training_authorized` | false；no matched controls、extra HPO/seeds or formal test required |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
+
+## Section 5 Results Author Refinement Record (2026-08-20)
+
+| Field | Current Record |
+| --- | --- |
+| `current_step` | Section 5 v0.6 manuscript refinement；no new experiment |
+| `problem` | 5.3--5.7叙事需突出unified workflow、system-cost、component utility与plug-in decoder design，同时5.6需暂时退出visible body |
+| `existence_evidence` | Main-II seven-dataset average、nine-system Efficiency、five-variant Core-Ablation、two-backbone three-dataset Decoder-Transfer均已冻结 |
+| `idea` | 按`one-model effectiveness -> deployment cost -> matched component attribution -> deferred internal analysis -> bounded generalization`重排结果叙事 |
+| `theory_check` | one-model prefix workflow保持overlap consistency；Efficiency只测inference memory/storage；transfer只验证two backbone families而非universal Encoder-agnostic effectiveness |
+| `design` | 只修改manuscript prose与governance records；Tables 1--5、Figures 5--7及其source artifacts不变 |
+| `narrative_gate` | 5.6虽然留空，但near-uniform probabilities与8/40 alignment不得从project evidence中删除；5.7只写evaluated-scope compatibility |
+| `effectiveness_gate` | 沿用冻结结果；不新增formal evaluation |
+| `artifacts` | `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md` |
+| `decision` | `section5_v0_6_results_author_refined_5_6_pending_redesign` |
 
 ## Efficiency Accuracy--Parameters--One-Epoch Record (2026-08-17)
 

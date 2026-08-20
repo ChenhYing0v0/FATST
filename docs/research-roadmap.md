@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## Section 5 Results Author Refinement (2026-08-20)
+
+Current cursor=`Section 5 v0.6 5.3--5.5 and 5.7 author-refined -> 5.6 visible body pending redesign`。5.3以相同one-model-all-horizons workflow重写比较逻辑；ISCF-BSCA相对TimeAlign的MSE/MAE优势为`6.45%/3.72%`，较上一horizon-specific setting的`4.94%/2.54%`增加`1.51/1.18` percentage points。5.4只报告canonical Efficiency已测得的peak allocated inference memory与four-horizon checkpoint storage，不生成training-cost claim；caption缩短，DLinear/SimpleTM/QDF的轻量resource counterexamples继续保留。
+
+5.5按matched controls总结BSCA、Target-Adaptive Scope Allocation、scope-specific projection与multi-scope generation的aggregate utility。5.6 visible manuscript body按author要求暂时留空；Figure 5的exact CHPC、near-uniform probabilities与`8/40` allocation-error alignment仍作为不可丢失的mixed evidence boundary保存在governance records中。5.7改名`Generalization studies`，支持complete framework在two evaluated backbone families × three reported datasets上的compatibility，不支持universal architecture-agnostic transfer或separate ISCF/BSCA attribution。No artifact/table/figure value change；new implementation/training/formal test=`0/0/0`。Decision=`section5_v0_6_results_author_refined_5_6_pending_redesign`。
+
 ## Section 5 Main-I Author Refinement (2026-08-19)
 
 Current cursor=`Section 5 v0.5 opening/5.1/5.2 author-refined -> review 5.3 onward`。5.1保留lightweight patch-token MLP Encoder实验实例，并将13个baselines按dominant modeling design分类。Main-I与Main-II正文表均压缩为seven dataset-level four-horizon means加seven-dataset Average，完整逐H表路由至Appendix A；该presentation update不修改冻结CSV、逐HLaTeX或source roles。

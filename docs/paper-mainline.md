@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Section 5 v0.5完成5.1补充修订与5.2 Main-I author refinement；5.3 onward author review next |
+| `current_11_step` | Section 5 v0.6完成5.3--5.5与5.7 author refinement；5.6正文暂时留空等待重新设计 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,7 +18,9 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；Sections 1--4 temporarily frozen usable；Section 5 v0.5 opening/5.1/5.2 author-refined and remaining subsections pending review；allocation aggregate accuracy direction positive但routing health mixed；Sections 6--7 prose pending |
+| `paper_core_status` | architecture family frozen；Sections 1--4 temporarily frozen usable；Section 5 v0.6 opening/5.1--5.5/5.7 author-refined，5.6 visible body pending redesign；allocation aggregate accuracy direction positive但routing health mixed；Sections 6--7 prose pending |
+
+[Section 5 Results Author Refinement, 2026-08-20] `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`更新为`v0.6-results-author-refinement`。5.3以统一one-model workflow重写，ISCF-BSCA相对TimeAlign的MSE/MAE优势为`6.45%/3.72%`，较horizon-specific comparison增加`1.51/1.18` percentage points。5.4按canonical artifact继续使用peak allocated inference memory与four-horizon checkpoint storage，未将其误写为training peak memory；Figure 6 caption精简并保留resource counterexamples。5.5形成component-level受控消融总结。5.6正文按author要求暂时留空，mixed allocation evidence仍通过editorial boundary与治理文档保留。5.7改为`Generalization studies`，在DLinear-style与PatchTST-style、Weather/ETTm1/ETTm2范围内支持plug-in decoder compatibility，不写universal architecture-agnostic transfer。Decision=`section5_v0_6_results_author_refined_5_6_pending_redesign`；new implementation/training/formal test=`0/0/0`。
 
 [Section 5 Main-I Author Refinement, 2026-08-19] `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`更新为`v0.5-main-i-author-refinement`。5.1将全部13个baselines按dominant modeling design归入Transformer、lightweight linear/attention、convolutional与multi-scale/decomposition四类，并按作者意见删除published-entry说明句。正文Tables 1--2改为只展示seven dataset-level four-horizon means与seven-dataset Average，完整逐H表路由至Appendix A。5.2据此重写：ISCF-BSCA为13/14 best、1/14 second，相对TimeAlign的macro MSE/MAE改善为`4.94%/2.54%`；ETT组为`5.69%/2.89%`，ECL+Solar为`3.90%/2.27%`。Main-II正文口径同步为14/14 dataset-average best，冻结逐H结果与claim boundary不变。Decision=`section5_v0_5_main_i_author_refined_continue_5_3_review`；new implementation/training/formal test=`0/0/0`。
 

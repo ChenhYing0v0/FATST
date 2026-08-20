@@ -5,23 +5,25 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.84` |
-| `last_updated` | `2026-08-19` |
+| `version` | `v0.85` |
+| `last_updated` | `2026-08-20` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | Section 5 v0.5完成5.1补充修订与5.2 Main-I author refinement；5.3 onward author review next |
+| `current_review_cursor` | Section 5 v0.6完成5.3--5.5与5.7 author refinement；5.6正文暂时留空等待重新设计 |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `frozen_consensus` | 论文七章结构并保留standalone Discussion；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
-| `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.7 structural design with Section 5 v0.5 integration |
-| `provisional_content` | Section 5 v0.5 with author-refined opening、5.1与5.2；Sections 5.3--5.7 continue author review；Sections 6--7 prose；Method Figure 4 stable vector-asset synchronization |
-| `authorization_source` | 2026-08-19用户进一步审阅5.1--5.2并要求baseline分类、dataset-average正文主表与Main-I结果叙事重写；no new implementation/training/formal test |
+| `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.8 structural design with Section 5 v0.6 integration |
+| `provisional_content` | Section 5 v0.6 with author-refined opening、5.1--5.5与5.7；5.6 visible body pending redesign；Sections 6--7 prose；Method Figure 4 stable vector-asset synchronization |
+| `authorization_source` | 2026-08-20用户审阅5.3--5.7并要求重写one-model、system-cost、ablation与generalization叙事，同时暂时清空5.6；no new implementation/training/formal test |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
 `temporarily_frozen_content` 只有在后续章节或证据产生明确矛盾且用户同意后才解冻；
 `provisional_content` 只表示当前最佳结构，后续按章节继续修订。
+
+Section 5 results amendment：`docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`已更新为v0.6。5.3不再在正文使用未充分引出的Main-I/Main-II标签，而以`horizon-specific comparison -> shared one-model workflow`承接；相对TimeAlign的MSE/MAE优势由上一设置的`4.94%/2.54%`扩大到`6.45%/3.72%`，即增加`1.51/1.18` percentage points。5.4严格沿用canonical Efficiency口径，只写peak allocated inference memory与four-horizon checkpoint storage，不改写为training peak memory；Figure 6 caption同步精简，并保留DLinear/SimpleTM/QDF的resource counterexamples。5.5改为component-oriented ablation narrative。5.6 visible body按author要求暂时留空，但governance records保留near-uniform probability与`8/40` alignment边界。5.7改名`Generalization studies`，突出Encoder-independent design intent，同时只把结果限定为two evaluated backbone families × three reported datasets，不提升为universal architecture-agnostic evidence。new implementation/training/formal test=`0/0/0`。
 
 Section 5 Main-I amendment：`docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`已更新为v0.5。5.1按dominant design family将13个baselines归入Transformer、lightweight linear/attention、convolutional与multi-scale/decomposition四类，并保留lightweight patch-token MLP Encoder实验实例。5.2改为只围绕seven dataset-level four-horizon means展开：正文Table 1使用compact `MSE/MAE` pairs，完整逐H表移至Appendix A。新口径下ISCF-BSCA为13/14 best、1/14 second；相对TimeAlign的seven-dataset macro改善为MSE `4.94%`、MAE `2.54%`，ETT组为`5.69%/2.89%`，ECL+Solar为`3.90%/2.27%`。Main-II正文Table 2同步切换为dataset-average presentation并保持完整逐H Appendix。冻结结果、source roles、test-informed边界与experiment authorization均未改变；new implementation/training/formal test=`0/0/0`。
 
@@ -391,7 +393,7 @@ Abstract
    5.4 Efficiency and System Cost
    5.5 Component and Training-Objective Ablations
    5.6 Forecast Consistency and Scope-Allocation Behavior
-   5.7 Backbone Transferability
+   5.7 Generalization Studies
 
 6. Discussion
    6.1 From Horizon-Specific Predictions to a Unified Forecasting System
@@ -1584,6 +1586,8 @@ latency/memory/storage profiler保留为historical supplementary audit。
 
 ### 8.6 Forecast Consistency and Scope-Allocation Behavior
 
+Section 5 v0.6中本节visible body按author要求暂时留空，以下内容仅作为后续重新设计时不可丢失的evidence contract，不属于当前manuscript prose。
+
 展示：
 
 1. ISCF-BSCA在shared targets上的exact CHPC/CHPD verification；
@@ -1595,7 +1599,7 @@ Realized allocation value当前不纳入该节，以控制额外实验成本。Q
 
 2026-08-16 validation-only Figure 5 diagnostic已完成：五数据集×四个paper horizons的20/20 numerical CHPC comparisons均为maximum absolute CHPD=0；scope-arm macro region-best随future region在`s=360`、`s=720`与`s=1`之间变化，最大best-to-worst excess MSE为6.123%。但learned probabilities的dataset-region means仅在0.18258--0.21479之间变化，highest-utilization scope只在8/40 dataset-region cells与lowest-MSE scope一致。因此该节只能写exact CHPC、active-but-near-uniform allocation与descriptive scope-arm regional heterogeneity；Figure 5本身不能建立accuracy attribution、successful routing或causal specialization。2026-08-17作者修正Table 4可独立支持aggregate allocation accuracy gain，但不能改变上述internal-health边界。Qualitative comparator冻结为`Fixed Scope (s=144)`，selected Weather row 77只作performance-selected illustration。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/figure5_mechanism_diagnostics_20260816/result_and_decision.md`。
 
-### 8.7 Backbone Transferability
+### 8.7 Generalization Studies
 
 选择结构不同的两个 backbones，并把正文表的作者指定数据集范围固定为Weather、ETTm1与ETTm2：
 
