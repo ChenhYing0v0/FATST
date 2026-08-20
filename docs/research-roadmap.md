@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## Section 5 Evidence Integration Refinement (2026-08-20)
+
+Current cursor=`Section 5 v0.7 5.4/5.5/5.7 refined -> 5.6 visible body pending redesign`。5.4现只放Figure 6，不插入Efficiency Table 3；table artifact与完整audit继续保留为Figure 6 numerical source。正文按Figure 6实际展示范围报告eight displayed methods与macro MSE，并删除author指定的architecture-equivalent state-dict说明。Core-Ablation与Generalization tables顺延为Table 3与Table 4。5.5显式引用Table 3并拆分过度并列的总结句。5.7显式引用Table 4和Figure 7，删除`Within the evaluated three-dataset scope`，同时仍将结论落在DLinear与PatchTST两个示例backbones上。
+
+Evidence-carrier audit确认5.2 Table 1、5.3 Table 2、5.4 Figure 6、5.5 Table 3以及5.7 Table 4/Figure 7均在对应正文中显式出现。No artifact value、figure asset、implementation、training或formal test change。Decision=`section5_v0_7_evidence_integration_refined_5_6_pending`。
+
 ## Section 5 Results Author Refinement (2026-08-20)
 
 Current cursor=`Section 5 v0.6 5.3--5.5 and 5.7 author-refined -> 5.6 visible body pending redesign`。5.3以相同one-model-all-horizons workflow重写比较逻辑；ISCF-BSCA相对TimeAlign的MSE/MAE优势为`6.45%/3.72%`，较上一horizon-specific setting的`4.94%/2.54%`增加`1.51/1.18` percentage points。5.4只报告canonical Efficiency已测得的peak allocated inference memory与four-horizon checkpoint storage，不生成training-cost claim；caption缩短，DLinear/SimpleTM/QDF的轻量resource counterexamples继续保留。

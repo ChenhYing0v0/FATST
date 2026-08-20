@@ -5,23 +5,25 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.85` |
+| `version` | `v0.86` |
 | `last_updated` | `2026-08-20` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | Section 5 v0.6完成5.3--5.5与5.7 author refinement；5.6正文暂时留空等待重新设计 |
+| `current_review_cursor` | Section 5 v0.7完成5.4、5.5与5.7 evidence-integration refinement；5.6正文仍暂时留空 |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `frozen_consensus` | 论文七章结构并保留standalone Discussion；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
-| `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.8 structural design with Section 5 v0.6 integration |
-| `provisional_content` | Section 5 v0.6 with author-refined opening、5.1--5.5与5.7；5.6 visible body pending redesign；Sections 6--7 prose；Method Figure 4 stable vector-asset synchronization |
-| `authorization_source` | 2026-08-20用户审阅5.3--5.7并要求重写one-model、system-cost、ablation与generalization叙事，同时暂时清空5.6；no new implementation/training/formal test |
+| `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.9 structural design with Section 5 v0.7 integration |
+| `provisional_content` | Section 5 v0.7 with author-refined opening、5.1--5.5与5.7；5.6 visible body pending redesign；Sections 6--7 prose；Method Figure 4 stable vector-asset synchronization |
+| `authorization_source` | 2026-08-20用户进一步审阅5.4、5.5与5.7，要求5.4只保留Figure 6、优化ablation总结并补齐正文table/figure references；no new implementation/training/formal test |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
 `temporarily_frozen_content` 只有在后续章节或证据产生明确矛盾且用户同意后才解冻；
 `provisional_content` 只表示当前最佳结构，后续按章节继续修订。
+
+Section 5 evidence-integration amendment：manuscript更新为v0.7。5.4只保留Figure 6，Efficiency LaTeX table继续作为numerical audit source但不插入正文；正文删除architecture-equivalent state-dict说明，并按Figure 6实际展示范围改为eight displayed methods与MSE。为避免main-text table编号断档，Core-Ablation与Generalization tables顺延为Table 3与Table 4。5.5正文显式引用Table 3，并将并列式总结拆为更清晰的component contribution sentences。5.7第二段显式连接Table 4与Figure 7，删除`Within the evaluated three-dataset scope`短语，但结论仍只由two displayed backbones支撑。5.2--5.7 evidence-carrier audit确认：Table 1、Table 2、Figure 6、Table 3、Table 4与Figure 7均在对应正文中显式引用。Tables/Figures数值与new implementation/training/formal test均未改变。
 
 Section 5 results amendment：`docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`已更新为v0.6。5.3不再在正文使用未充分引出的Main-I/Main-II标签，而以`horizon-specific comparison -> shared one-model workflow`承接；相对TimeAlign的MSE/MAE优势由上一设置的`4.94%/2.54%`扩大到`6.45%/3.72%`，即增加`1.51/1.18` percentage points。5.4严格沿用canonical Efficiency口径，只写peak allocated inference memory与four-horizon checkpoint storage，不改写为training peak memory；Figure 6 caption同步精简，并保留DLinear/SimpleTM/QDF的resource counterexamples。5.5改为component-oriented ablation narrative。5.6 visible body按author要求暂时留空，但governance records保留near-uniform probability与`8/40` alignment边界。5.7改名`Generalization studies`，突出Encoder-independent design intent，同时只把结果限定为two evaluated backbone families × three reported datasets，不提升为universal architecture-agnostic evidence。new implementation/training/formal test=`0/0/0`。
 
@@ -1540,7 +1542,9 @@ training或formal test。
 
 ### 8.4 Efficiency Evaluation
 
-正文Efficiency只比较具备完整Main-I accuracy、checkpoint parameter count和native
+当前Section 5 v0.7只在正文放置Figure 6，不插入Efficiency Table 3。Figure 6以Main-I macro MSE为纵轴、four-horizon checkpoint storage为横轴，并以bubble area编码peak allocated inference memory；完整Efficiency LaTeX table保留为numerical audit source，不作为main-text table。
+
+以下accuracy--parameters--one-epoch方案是2026-08-17的historical table plan，不再是当前正文presentation。该方案只比较具备完整Main-I accuracy、checkpoint parameter count和native
 timing logs的ISCF-BSCA、TimeAlign与QDF。它报告：
 
 - 服务四个horizons所需的model count；
@@ -1582,7 +1586,7 @@ latency/memory/storage profiler保留为historical supplementary audit。
 
 不为Allocation-Balance Regularizer设置单独对照。Fixed Scope的$s=144$是budget-aware preregistered control，不是validation-selected optimum。random partition、scope count与$\lambda$ sensitivity仅在后续确有必要且获得独立授权时进入Appendix；当前不把它们纳入核心闭合矩阵。
 
-2026-08-17作者提供复跑后的dataset-level four-horizon means并替换canonical Table 4。Full macro MSE/MAE为`.305/.344`，相对`w/o BSCA`、`w/o Target-Adaptive Allocation`、`Shared Scope Projection`与`Fixed Scope ($s=144$)`的display-precision macro MSE收益分别为3.481%、1.613%、2.866%和3.175%，且Full在12/12 metric columns中为best。因此aggregate accuracy attribution支持四项干预。新的per-horizon raw scorecard与checkpoint hashes未随截图提供，旧100-cell audit只作historical provenance；Figure 5的near-uniform utilization与8/40 alignment继续限制routing/specialization解释。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/result_and_table_audit.md`。
+2026-08-17作者提供复跑后的dataset-level four-horizon means；该artifact在Section 5 v0.7中作为Table 3。Full macro MSE/MAE为`.305/.344`，相对`w/o BSCA`、`w/o Target-Adaptive Allocation`、`Shared Scope Projection`与`Fixed Scope ($s=144$)`的display-precision macro MSE收益分别为3.481%、1.613%、2.866%和3.175%，且Full在12/12 metric columns中为best。因此aggregate accuracy attribution支持四项干预。新的per-horizon raw scorecard与checkpoint hashes未随截图提供，旧100-cell audit只作historical provenance；Figure 5的near-uniform utilization与8/40 alignment继续限制routing/specialization解释。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/result_and_table_audit.md`。
 
 ### 8.6 Forecast Consistency and Scope-Allocation Behavior
 

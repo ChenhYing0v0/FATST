@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Clean manuscript-facing initial draft of Section 5 |
-| `version` | `v0.6-results-author-refinement` |
+| `version` | `v0.7-evidence-integration-refinement` |
 | `date` | `2026-08-20` |
 | `review_status` | `initial_draft_pending_author_review` |
 | `upstream_dependency` | Introduction v0.9, Related Work v0.2, Section 3 v0.7 and Section 4 v0.7 remain temporarily frozen and unchanged |
 | `evidence_scope` | Main-I, Main-II, Efficiency, Core-Ablation and author-refined Decoder-Transfer; Figure 5 mechanism diagnostics are temporarily deferred from the manuscript body |
-| `experiment_change` | None; the prose is regenerated from the latest frozen Tables 1--5 and Figures 5--7, with no new training or formal test |
+| `experiment_change` | None; the prose is refined from the latest frozen result artifacts, with no new training or formal test |
 | `claim_boundary` | Main tables establish system-level effectiveness; matched ablations establish aggregate component utility; Section 5.6 is intentionally left open for redesign; transfer claims are restricted to two evaluated backbone families and three reported datasets |
 | `narrative_spine` | evaluation contract → horizon-specific comparison → one-model capability → system-cost trade-off → matched attribution → deferred internal-behavior analysis → bounded generalization study |
 
@@ -24,11 +24,11 @@ The status table and artifact map below are editorial metadata and are not part 
 | Table 2 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_ii/table_iscf_bsca_main_ii_dataset_average.tex` |
 | Appendix Table A1 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_i/table_iscf_bsca_main_i_qdf.tex` |
 | Appendix Table A2 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_ii/table_iscf_bsca_main_ii.tex` |
-| Table 3 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/table/table_iscf_bsca_efficiency.tex` |
-| Table 4 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/table/table_iscf_bsca_core_ablation.tex` |
+| Figure 6 numerical source (not inserted as a main-text table) | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/table/table_iscf_bsca_efficiency.tex` |
+| Table 3 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/table/table_iscf_bsca_core_ablation.tex` |
 | Figure 5 (temporarily deferred from body) | `paper-figures/figure_iscf_bsca_mechanism.*` |
 | Figure 6 | `paper-figures/figure_6_accuracy_system_cost.*` |
-| Table 5 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/table_decoder_transfer_three_dataset_framework.tex` |
+| Table 4 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/table_decoder_transfer_three_dataset_framework.tex` |
 | Figure 7 | `paper-figures/figure_7_decoder_transfer.*` |
 
 ## 5. Experiments
@@ -65,9 +65,7 @@ These results establish ISCF-BSCA as an effective forecaster for unified multi-h
 
 ### 5.4 Accuracy and system cost
 
-Forecast accuracy is only one consideration in practical forecasting services. Runtime memory and model storage also determine deployment and management costs, particularly in resource-constrained settings. We therefore measure the peak allocated GPU memory of the complete inference service and the total checkpoint storage required to serve all four horizons. Table 3 reports these costs together with forecasting accuracy, and Figure 6 visualizes the resulting accuracy--system-cost trade-off. ISCF-BSCA uses one unified checkpoint per dataset, whereas each baseline retains four horizon-specific model instances.
-
-<!-- Insert Table 3 near here. Canonical source: efficiency_accuracy_memory_storage_20260817/table/table_iscf_bsca_efficiency.tex -->
+Forecast accuracy is only one consideration in practical forecasting services. Runtime memory and model storage also determine deployment and management costs, particularly in resource-constrained settings. We therefore measure the peak allocated GPU memory of the complete inference service and the total checkpoint storage required to serve all four horizons. Figure 6 compares forecasting accuracy with these two costs. ISCF-BSCA uses one unified checkpoint per dataset, whereas each baseline retains four horizon-specific model instances.
 
 <a id="fig:accuracy-system-cost"></a>
 
@@ -75,19 +73,19 @@ Forecast accuracy is only one consideration in practical forecasting services. R
 
 **Figure 6 | Accuracy and system cost for four-horizon forecasting.** Macro MSE is plotted against total checkpoint storage, and bubble area represents peak allocated inference memory. ISCF-BSCA uses one unified checkpoint, whereas each baseline uses four horizon-specific models. The storage axis is logarithmic; lower-left positions indicate a more favorable trade-off.
 
-ISCF-BSCA attains the lowest macro MSE and MAE among the nine evaluated methods, at 0.261 and 0.306, while requiring 17.677 MiB of checkpoint storage and 38.817 MiB of peak allocated inference memory. Compared with TimeAlign, AMD, iTransformer, PatchTST and TimeMixer, the unified model reduces checkpoint storage by 30.12--92.01% and peak memory by 18.01--83.69%. Relative to TimeAlign in particular, ISCF-BSCA lowers MSE by 4.94%, checkpoint storage by 81.48% and peak memory by 64.42%. The resource values for DLinear, iTransformer, PatchTST and TimeMixer are obtained from official-configuration architecture-equivalent state dicts because complete trained checkpoint inventories are unavailable.
+As shown in Figure 6, ISCF-BSCA attains the lowest macro MSE among the eight displayed methods, at 0.261, while requiring 17.677 MiB of checkpoint storage and 38.817 MiB of peak allocated inference memory. Compared with TimeAlign, AMD, iTransformer, PatchTST and TimeMixer, the unified model reduces checkpoint storage by 30.12--92.01% and peak memory by 18.01--83.69%. Relative to TimeAlign in particular, ISCF-BSCA lowers MSE by 4.94%, checkpoint storage by 81.48% and peak memory by 64.42%.
 
-By consolidating four forecasting horizons into one model, ISCF-BSCA achieves a favorable balance between accuracy, runtime memory and checkpoint storage. It is not the lightest method on every resource dimension, as DLinear, SimpleTM and QDF retain lower values on at least one cost measure, but it combines the best forecasting accuracy with substantially lower resource footprints than several competitive baselines. This balance makes the unified architecture attractive for practical forecasting services in which predictive quality and model-management cost must be considered together.
+By consolidating four forecasting horizons into one model, ISCF-BSCA achieves a favorable balance between accuracy, runtime memory and checkpoint storage. It is not the lightest method on every resource dimension, as DLinear and QDF retain lower values on at least one cost measure, but it combines the best forecasting accuracy with substantially lower resource footprints than several competitive baselines. This balance makes the unified architecture attractive for practical forecasting services in which predictive quality and model-management cost must be considered together.
 
 ### 5.5 Component and training-objective ablations
 
 The preceding experiments establish the overall effectiveness of ISCF-BSCA. To determine whether its individual components contribute to this performance, we conduct strictly controlled ablations in which each variant is trained end to end under the same protocol. **w/o BSCA** retains the Uniform-Prefix Forecasting Loss but removes the Scope-Wise Forecasting Loss and Allocation-Balance Regularizer. **w/o Target-Adaptive Allocation** replaces learned Scope Probabilities with equal non-adaptive fusion. **Shared Scope Projection** replaces the scope-specific history projections with one shared projection, whereas **Fixed Scope ($s=144$)** retains only the preregistered middle scope.
 
-<!-- Insert Table 4 near here. Canonical source: core_ablation/table/table_iscf_bsca_core_ablation.tex -->
+<!-- Insert Table 3 near here. Canonical source: core_ablation/table/table_iscf_bsca_core_ablation.tex -->
 
-Full ISCF-BSCA achieves a five-dataset macro MSE/MAE of 0.305/0.344 and ranks first in all 12 dataset and average metric columns. Removing BSCA produces the largest aggregate degradation, increasing MSE and MAE by 3.48% and 2.83%. Equal fusion yields 0.310/0.349, corresponding to gains of 1.61% in MSE and 1.43% in MAE from Target-Adaptive Allocation. Shared Scope Projection and Fixed Scope yield MSE values of 0.314 and 0.315, respectively, compared with 0.305 for the complete model. Full ISCF-BSCA improves both metrics over every control on all five datasets.
+As reported in Table 3, Full ISCF-BSCA achieves a five-dataset macro MSE/MAE of 0.305/0.344 and ranks first in all 12 dataset and average metric columns. Removing BSCA produces the largest aggregate degradation, increasing MSE and MAE by 3.48% and 2.83%. Equal fusion yields 0.310/0.349, corresponding to gains of 1.61% in MSE and 1.43% in MAE from Target-Adaptive Allocation. Shared Scope Projection and Fixed Scope yield MSE values of 0.314 and 0.315, respectively, compared with 0.305 for the complete model. Full ISCF-BSCA improves both metrics over every control on all five datasets.
 
-Together, the controlled results verify the aggregate contribution of each evaluated component. BSCA improves the joint optimization of the scope lines, Target-Adaptive Scope Allocation outperforms equal fusion, scope-specific projections preserve useful granularity-dependent information, and multi-scope generation improves on the fixed-scope control. These components jointly account for the performance of the complete ISCF-BSCA framework within the evaluated design family.
+Together, these controlled comparisons show that each evaluated component contributes to the complete model. BSCA improves joint optimization across the scope lines. Target-Adaptive Scope Allocation outperforms equal fusion, while scope-specific projections and multi-scope generation improve upon their shared-projection and fixed-scope counterparts. Their combination yields the strongest overall performance.
 
 ### 5.6 Forecast consistency and scope-allocation behavior
 
@@ -95,7 +93,7 @@ Together, the controlled results verify the aggregate contribution of each evalu
 
 ISCF is designed as an Encoder-agnostic plug-in decoder: it operates on an Encoder-produced history representation rather than relying on a particular history-modeling architecture. We examine this versatility using DLinear and PatchTST as representatives of lightweight linear and Transformer-based Encoders, respectively. For each backbone, we replace the Original Decoder with the complete ISCF-BSCA framework and train the resulting model end to end. The comparison covers Weather, ETTm1 and ETTm2, and each dataset value averages MSE or MAE over the four horizons.
 
-<!-- Insert Table 5 near here. Canonical source: decoder_transfer_three_dataset_scope_20260816/table_decoder_transfer_three_dataset_framework.tex -->
+<!-- Insert Table 4 near here. Canonical source: decoder_transfer_three_dataset_scope_20260816/table_decoder_transfer_three_dataset_framework.tex -->
 
 <a id="fig:decoder-transfer"></a>
 
@@ -103,7 +101,7 @@ ISCF is designed as an Encoder-agnostic plug-in decoder: it operates on an Encod
 
 **Figure 7 | Generalization across two forecasting backbones.** Four-horizon mean MSE is reported for **a**, DLinear and **b**, PatchTST with either the Original Decoder or ISCF-BSCA. Percentages denote the relative MSE change, and Avg. is the mean over Weather, ETTm1 and ETTm2. The MSE axis begins at 0.20 to resolve paired differences.
 
-On both example backbones, replacing the Original Decoder with ISCF-BSCA improves forecasting performance. For DLinear, the replacement lowers MSE and MAE on all three datasets and reduces the macro averages from 0.303/0.333 to 0.286/0.321, corresponding to improvements of 5.61% and 3.60%. PatchTST shows smaller but consistent gains, with macro MSE/MAE decreasing from 0.282/0.314 to 0.276/0.310, corresponding to improvements of 2.13% and 1.27%. Within the evaluated three-dataset scope, these results show that ISCF-BSCA is not tied to a single Encoder design and can improve both a lightweight linear backbone and a Transformer-based backbone, supporting its intended role as a general plug-in decoder for unified multi-horizon forecasting.
+As summarized in Table 4 and visualized in Figure 7, replacing the Original Decoder with ISCF-BSCA improves forecasting performance on both example backbones. For DLinear, the replacement lowers MSE and MAE on all three datasets and reduces the macro averages from 0.303/0.333 to 0.286/0.321, corresponding to improvements of 5.61% and 3.60%. PatchTST shows smaller but consistent gains, with macro MSE/MAE decreasing from 0.282/0.314 to 0.276/0.310, corresponding to improvements of 2.13% and 1.27%. The improvements obtained with both a lightweight linear backbone and a Transformer-based backbone show that ISCF-BSCA is not tied to a single Encoder design, supporting its intended role as a general plug-in decoder for unified multi-horizon forecasting.
 
 ## Editorial evidence and claim audit
 
@@ -111,7 +109,7 @@ On both example backbones, replacing the Original Decoder with ISCF-BSCA improve
 | --- | --- | --- | --- |
 | 5.2 Main-I | Complete seven-dataset, four-horizon table with mixed source roles | One unified ISCF-BSCA model is more accurate on most cells than separately optimized horizon-specific baselines | Matched decoder attribution or untouched-holdout generalization |
 | 5.3 Main-II | Complete source-native one-model table | One ISCF-BSCA checkpoint serves all evaluated horizons competitively | Fully matched architecture comparison across all baselines |
-| 5.4 Efficiency | 252/252 Main-I accuracy cells, 63/63 memory/storage service units and 231 table-role objects | Best nine-method macro accuracy and one-checkpoint consolidation; lower memory/storage than TimeAlign, AMD, iTransformer, PatchTST and TimeMixer | Uniform memory/storage advantage, treating architecture-equivalent rows as trained artifacts, or a training-time claim |
+| 5.4 Efficiency | Complete Figure 6 source with audited accuracy and memory/storage service units | Lowest macro MSE among the eight displayed methods and one-checkpoint consolidation; lower memory/storage than TimeAlign, AMD, iTransformer, PatchTST and TimeMixer | Uniform memory/storage advantage or a training-time claim |
 | 5.5 Core ablation | Author-corrected five-dataset aggregate table | All four interventions improve aggregate MSE/MAE under the matched design | Per-horizon dominance, oracle routing or independently verified component semantics |
 | 5.6 Mechanism analysis | Complete validation diagnostic bundle, temporarily deferred from the manuscript body | No visible claim in the current draft; mixed evidence remains preserved for redesign | Reliable region-best routing, sparse specialization, prevalence or causal interpretation of the example |
 | 5.7 Generalization studies | Author-refined two-backbone, three-dataset aggregate table | Complete-framework compatibility across the two displayed backbone families | Universal architecture-agnostic transfer; separate ISCF/BSCA attribution |

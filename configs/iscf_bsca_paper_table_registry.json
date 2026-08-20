@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "registry_id": "ISCF-BSCA-PAPER-TABLES-20260815-AUTHOR-CORRECTED-MAIN",
-  "updated_at": "2026-08-19",
+  "updated_at": "2026-08-20",
   "scope": "paper_facing_experiment_tables",
   "presentation_contract": {
     "main_result_template": "TimeAlign_Table_6_style",
@@ -116,7 +116,7 @@
     },
     {
       "id": "efficiency",
-      "manuscript_role": "main_text_supporting_result",
+      "manuscript_role": "figure_6_numerical_source_not_inserted_as_main_text_table",
       "title": "Accuracy, peak inference memory and checkpoint storage",
       "status": "complete_nine_system_accuracy_advantage_resource_mixed",
       "primary_system": "ISCF-BSCA-MAIN-v1",

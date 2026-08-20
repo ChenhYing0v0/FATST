@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Temporarily frozen structural design for the manuscript sections after Method |
-| `version` | `v0.8-section5-v0.6-integrated` |
-| `date` | `2026-08-20 Section 5 results author refinement` |
+| `version` | `v0.9-section5-v0.7-integrated` |
+| `date` | `2026-08-20 Section 5 evidence-integration refinement` |
 | `review_status` | `temporarily_frozen_usable` |
 | `upstream_dependency` | Introduction v0.9, Related Work v0.2, Section 3 v0.7 and Section 4 v0.7 remain temporarily frozen and unchanged |
 | `scope` | Subsection functions, evidence order, table/figure placement, claim boundaries and appendix routing only |
-| `manuscript_prose` | Section 5 v0.6 drafted at `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`; opening、5.1--5.5与5.7 are author-refined, while Section 5.6 visible body is intentionally blank pending redesign；Sections 6--7 remain structural only |
+| `manuscript_prose` | Section 5 v0.7 drafted at `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`; opening、5.1--5.5与5.7 are author-refined, while Section 5.6 visible body is intentionally blank pending redesign；Sections 6--7 remain structural only |
 | `experiment_change` | None; this document does not authorize implementation, remote training or formal test |
 | `evidence_snapshot` | Main-I, corrected Main-II, Efficiency, Core-Ablation, Figure 5 mechanism diagnostics and Decoder-Transfer complete |
 | `structure_decision` | Sections 5--7 use `Experiments -> Discussion -> Conclusion`; Section 5.6 heading is retained but its visible body is temporarily deferred pending redesign |
@@ -90,10 +90,10 @@ Section 5 should follow an evidence ladder rather than the implementation order:
 | 5.1 Experimental setup | Are the comparisons reproducible and are their roles distinguishable? | datasets and splits; horizons and metrics; baseline families and source roles; main model versus ablation anchor; checkpoint/profile selection; seeds; test-informed disclosure; implementation and hardware | experiment protocol + table registry | Defines the evaluation contract only | Evidence inputs complete; ready for final prose consolidation |
 | 5.2 Comparison with horizon-specific forecasters | Can one unified ISCF-BSCA model compete with separately optimized fixed-horizon baselines? | explain one-versus-four-model protocol; report seven dataset-level four-horizon means, overall best/second counts and low-/high-dimensional dataset-group gains; route complete per-H results to Appendix A | Table 1 / `Main-I` | System-level accuracy competitiveness under the audited mixed-source comparison | Complete and hash-frozen |
 | 5.3 One-model-all-horizons evaluation | Is ISCF-BSCA competitive when every baseline must serve all horizons from one trained model? | define H720-prefix protocol; explain how it differs from Main-I; report dataset-level four-horizon means; route complete per-H results to Appendix A; retain unmatched-protocol caveat | Table 2 / `Main-II` | One-model-all-horizons system effectiveness, not decoder or BSCA attribution | Complete and horizon-loader re-audited |
-| 5.4 Efficiency and system cost | What accuracy and deployment cost changes when one model replaces a four-model horizon-specific family? | Main-I macro MSE/MAE; peak inference memory; four-horizon checkpoint storage | Table 3 / `Efficiency` | Best nine-system macro accuracy and one-checkpoint consolidation, with DLinear/SimpleTM/QDF retained as resource counterexamples | Complete; 252/252 accuracy cells, 63/63 service units and 231 table-role objects |
-| 5.5 Component and training-objective ablations | Which architectural and optimization components contribute within the frozen design family? | Full; w/o BSCA; w/o Target-Adaptive Allocation; Shared Scope Projection; Fixed Scope ($s=144$); matched budgets and end-to-end training | Table 4 / `Core-Ablation` | Author-corrected aggregate table supports all four interventions; per-horizon rerun provenance remains unsynchronized | Complete at dataset-aggregate table level; Full best in 12/12 metric columns |
-| 5.6 Forecast consistency and scope-allocation behavior | Pending author redesign | visible body intentionally blank; preserve the complete mixed Figure 5 evidence in editorial records before reinstatement | Figure 5 / mechanism-analysis bundle, temporarily deferred | No visible claim in Section 5 v0.6 | Complete mixed evidence retained outside visible manuscript body; 20/20 CHPC cells and 8/40 utilization-error agreements |
-| 5.7 Generalization studies | Does the complete framework remain effective beyond its current Encoder realization? | Weather、ETTm1、ETTm2；DLinear-style与PatchTST-style；Original Decoder versus complete ISCF-BSCA；end-to-end training | Table 5 / `Decoder-Transfer` | 作者修正aggregate表中两类backbones均取得3/3 dataset MSE/MAE wins与16/16 comparator columns正向；conclusion restricted to evaluated-scope compatibility | author-corrected aggregate complete；per-H/hash rerun provenance unsynchronized；no additional HPO required |
+| 5.4 Efficiency and system cost | What accuracy and deployment cost changes when one model replaces a four-model horizon-specific family? | Main-I macro MSE; peak inference memory; four-horizon checkpoint storage | Figure 6 / `Efficiency` | Lowest macro MSE among eight displayed methods and one-checkpoint consolidation, with DLinear/QDF retained as visible resource counterexamples | Complete; Figure 6 is the sole main-text presentation and the table artifact remains a numerical source |
+| 5.5 Component and training-objective ablations | Which architectural and optimization components contribute within the frozen design family? | Full; w/o BSCA; w/o Target-Adaptive Allocation; Shared Scope Projection; Fixed Scope ($s=144$); matched budgets and end-to-end training | Table 3 / `Core-Ablation` | Author-corrected aggregate table supports all four interventions; per-horizon rerun provenance remains unsynchronized | Complete at dataset-aggregate table level; Full best in 12/12 metric columns |
+| 5.6 Forecast consistency and scope-allocation behavior | Pending author redesign | visible body intentionally blank; preserve the complete mixed Figure 5 evidence in editorial records before reinstatement | Figure 5 / mechanism-analysis bundle, temporarily deferred | No visible claim in Section 5 v0.7 | Complete mixed evidence retained outside visible manuscript body; 20/20 CHPC cells and 8/40 utilization-error agreements |
+| 5.7 Generalization studies | Does the complete framework remain effective beyond its current Encoder realization? | Weather、ETTm1、ETTm2；DLinear-style与PatchTST-style；Original Decoder versus complete ISCF-BSCA；end-to-end training | Table 4 / `Decoder-Transfer` | 作者修正aggregate表中两类backbones均取得3/3 dataset MSE/MAE wins与16/16 comparator columns正向；conclusion restricted to evaluated-scope compatibility | author-corrected aggregate complete；per-H/hash rerun provenance unsynchronized；no additional HPO required |
 
 ### 3.2 Why Main-I and Main-II must remain separate
 
@@ -146,10 +146,11 @@ The Conclusion must not introduce new metrics, citations, mechanisms or future c
 | --- | --- | --- | --- |
 | Table 1 | Main-I | main text: dataset-level four-horizon means；Appendix A: complete one unified model versus separately optimized horizon-specific baselines | complete/hash-frozen |
 | Table 2 | Main-II | main text: dataset-level four-horizon means；Appendix A: complete one-model-all-horizons comparison | complete/presentation-aligned; active H5A cannot be anticipated |
-| Table 3 | Efficiency | accuracy, peak memory and four-horizon checkpoint-storage trade-off | complete; accuracy advantage with mixed resource ranking |
-| Table 4 | Core-Ablation | component and objective attribution | author-corrected aggregate table complete; 12/12 metric columns best for Full; historical 100-cell audit retained |
+| Table 3 | Core-Ablation | component and objective attribution | author-corrected aggregate table complete; 12/12 metric columns best for Full; historical 100-cell audit retained |
 | Figure 5 | Forecast consistency, allocation behavior and an illustrative improved trajectory | evidence reserved for the redesign of Section 5.6 | complete but temporarily deferred from the visible manuscript body; exact CHPC, near-uniform utilization, regional scope-error differences and disclosed selected trajectory |
-| Table 5 | Generalization studies | end-to-end compatibility of the complete framework across two reported backbone families | author-corrected three-dataset aggregate complete；Original versus ISCF-BSCA only；historical 48-cell audit retained |
+| Figure 6 | Efficiency | main-text accuracy, peak-memory and checkpoint-storage trade-off | complete; sole main-text evidence carrier for Section 5.4 |
+| Table 4 | Generalization studies | end-to-end compatibility of the complete framework across two reported backbone families | author-corrected three-dataset aggregate complete；Original versus ISCF-BSCA only；historical 48-cell audit retained |
+| Figure 7 | Generalization studies | visual comparison of Original Decoder and ISCF-BSCA on two reported backbone families | complete; MSE axis begins at 0.20 and the claim remains bounded to the displayed backbones |
 
 The qualitative example remains integrated into the completed Figure 5 asset rather than assigned a separate figure or subsection, but Figure 5 is temporarily deferred from the visible manuscript body together with Section 5.6. If reinstated, the comparator, split and selection rule must remain disclosed, and the performance-selected example must be described as illustrative rather than representative. A dedicated failure-case panel is not required; negative aggregate cells remain reported in Sections 5.2--5.3 and interpreted in Section 6.3.
 
@@ -194,4 +195,4 @@ The qualitative example remains integrated into the completed Figure 5 asset rat
 
 These decisions freeze the writing and experiment-design reference only. They do not authorize implementation, remote training or formal test.
 
-`Decision=sections_5_7_v0_8_section5_v0_6_results_refined_5_6_pending_sections6_7_pending`.
+`Decision=sections_5_7_v0_9_section5_v0_7_evidence_integrated_5_6_pending_sections6_7_pending`.

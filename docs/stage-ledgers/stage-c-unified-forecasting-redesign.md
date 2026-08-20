@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | Section 5 v0.6已完成5.3--5.5与5.7 author refinement；5.6 visible body等待重新设计 |
+| `active_question` | Section 5 v0.7已完成5.4、5.5与5.7 evidence-integration refinement；5.6 visible body等待重新设计 |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
-| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7 temporarily frozen usable；Section 5 v0.6 opening/5.1--5.5/5.7 author-refined，5.6 body pending；Sections 5--7 v0.8 structure frozen；Figure 4 visual design temporarily fixed |
+| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7 temporarily frozen usable；Section 5 v0.7 opening/5.1--5.5/5.7 author-refined，5.6 body pending；Sections 5--7 v0.9 structure frozen；Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | Main I dense/Main II v1=ETTh1, ETTh2, ETTm1, ETTm2, Weather, ECL, Solar；Exchange=companion/deferred extension；ablation=original five |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
@@ -22,13 +22,28 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper experiment matrix closed；Section 5 v0.6 results author refinement complete except 5.6 visible body |
-| `current_candidate` | Section 5 v0.6 results author refinement |
-| `latest_decision` | `section5_v0_6_results_author_refined_5_6_pending_redesign` |
-| `writing_latest_decision` | `section5_v0_6_results_author_refined_5_6_pending_redesign` |
-| `next_required_action` | author review revised 5.3--5.5/5.7 and redesign 5.6；then draft standalone Discussion and Conclusion；no new experiment required |
+| `current_11_step` | paper experiment matrix closed；Section 5 v0.7 evidence integration complete except 5.6 visible body |
+| `current_candidate` | Section 5 v0.7 evidence-integration refinement |
+| `latest_decision` | `section5_v0_7_evidence_integration_refined_5_6_pending` |
+| `writing_latest_decision` | `section5_v0_7_evidence_integration_refined_5_6_pending` |
+| `next_required_action` | author review revised 5.4/5.5/5.7 and redesign 5.6；then draft standalone Discussion and Conclusion；no new experiment required |
 | `method_training_authorized` | false；no matched controls、extra HPO/seeds or formal test required |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
+
+## Section 5 Evidence Integration Refinement Record (2026-08-20)
+
+| Field | Current Record |
+| --- | --- |
+| `current_step` | Section 5 v0.7 manuscript refinement；no new experiment |
+| `problem` | 5.4只保留Figure 6，5.5与5.7需改善句法并显式连接对应table/figure |
+| `existence_evidence` | Figure 6、Core-Ablation table、Decoder-Transfer table与Figure 7 canonical artifacts均已冻结 |
+| `idea` | 删除unused main-text table route，并按`evidence reference -> observed result -> bounded conclusion`统一result paragraphs |
+| `theory_check` | Figure 6只显示eight-system macro MSE，不将未显示MAE或ninth system写成figure observation；two-backbone transfer仍非universal evidence |
+| `design` | manuscript prose、paper routing records与Efficiency manuscript role同步；Core-Ablation/Generalization顺延为Table 3/4；result values/assets不变 |
+| `narrative_gate` | 每个visible result artifact必须在正文显式引用；5.6 mixed evidence boundary不变 |
+| `effectiveness_gate` | 沿用冻结结果；不新增formal evaluation |
+| `artifacts` | `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`；`docs/iscf-bsca-paper-table-registry.md` |
+| `decision` | `section5_v0_7_evidence_integration_refined_5_6_pending` |
 
 ## Section 5 Results Author Refinement Record (2026-08-20)
 
