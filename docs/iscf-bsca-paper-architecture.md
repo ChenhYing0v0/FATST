@@ -5,23 +5,25 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.92` |
+| `version` | `v0.93` |
 | `last_updated` | `2026-08-21` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | Section 5.6与5.5 evidence role已分离；Panel a保留，Panels b/c不再作为5.6 evidence；visible prose/figure revision pending |
+| `current_review_cursor` | Section 5.6 scope diversity/allocation behavior与Figure 5 v4 temporarily fixed usable；Sections 6--7 prose pending |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `frozen_consensus` | 论文七章结构并保留standalone Discussion；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
-| `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.15 structural design with Section 5 v0.8 integration |
-| `provisional_content` | Section 5 v0.8 with author-refined opening、5.1--5.5与5.7；5.7仅展示Figure 7；5.6 Figure 5 v3 Nature-oriented author-review draft complete but visible prose/canonical replacement pending；Sections 6--7 prose；Method Figure 4 stable vector-asset synchronization |
-| `authorization_source` | 2026-08-21用户要求基于5.6计划生成主要Panels a/b/c并优先展示正向证据；no new method implementation/training/formal test |
+| `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.15 structural design；Section 5 v0.9中的5.6正文与Figure 5 v4 |
+| `provisional_content` | Section 5 v0.9 remaining paragraphs；Sections 6--7 prose；Method Figure 4 stable vector-asset synchronization |
+| `authorization_source` | 2026-08-21用户要求按scope-forecast diversity、regional preference与allocation non-collapse重构并固定5.6；no new method implementation/training/formal test |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
 `temporarily_frozen_content` 只有在后续章节或证据产生明确矛盾且用户同意后才解冻；
 `provisional_content` 只表示当前最佳结构，后续按章节继续修订。
+
+Section 5.6 v0.9 temporary-freeze amendment：本节固定为`Scope Diversity and Allocation Behavior`，与5.5 matched ablation分离，只分析unchanged Full model。Figure 5 v4的Panel a展示经完整1,280-row selection audit选出的ETTh1 probe 107：五条Scope-conditioned Forecasts保持差异，8个regions的lowest-MSE scope覆盖全部五种scope；Panel b使用五数据集全部validation rows，五种scope均至少在一个dataset-region cell取得lowest MSE；Panel c展示mean soft allocation的highest-weight scope，五种scope均出现且4/5 datasets随region变化。CHPC只在正文报告20/20 numerical checks的maximum absolute CHPD=0，不占独立panel。正文不报告`8/40` alignment count，不写oracle recovery、hard routing或causal specialization；原始mixed evidence继续保存在internal audit。Canonical figure=`paper-figures/figure_5_scope_allocation_behavior.*`；Decision=`section5_6_v4_scope_allocation_behavior_temporarily_fixed_usable`。
 
 Section 5.5/5.6 boundary amendment：5.5通过matched retraining controls回答component utility；5.6在不改变Full model的前提下，通过validation internal diagnostics回答scope field与allocation behavior。因而5.6后半段不再重复Full vs equal fusion或Full vs prefix-only training的percentage gains。新版paragraph contract报告Scope Probabilities range=`0.18258--0.21479`、normalized entropy `>0.9989`、highest-weight scope在4/5 datasets随region变化但与lowest-error scope仅`8/40`一致。Permitted interpretation=`distributed target-conditioned reweighting`，不是hard selection、oracle recovery或BSCA-specific routing attribution。Current Panels b/c视觉QA通过但evidence role与Table 3重复；推荐Figure 5只保留full-width Panel a，除非后续增加真正的probability/allocation diagnostic。Decision=`section5_6_behavior_analysis_separated_from_ablation`。
 
@@ -406,7 +408,7 @@ Abstract
    5.3 One-Model-All-Horizons Evaluation
    5.4 Efficiency and System Cost
    5.5 Component and Training-Objective Ablations
-   5.6 Forecast Consistency and Scope-Allocation Behavior
+   5.6 Scope Diversity and Allocation Behavior
    5.7 Generalization Studies
 
 6. Discussion
@@ -1600,20 +1602,15 @@ latency/memory/storage profiler保留为historical supplementary audit。
 
 2026-08-17作者提供复跑后的dataset-level four-horizon means；该artifact在Section 5 v0.7中作为Table 3。Full macro MSE/MAE为`.305/.344`，相对`w/o BSCA`、`w/o Target-Adaptive Allocation`、`Shared Scope Projection`与`Fixed Scope ($s=144$)`的display-precision macro MSE收益分别为3.481%、1.613%、2.866%和3.175%，且Full在12/12 metric columns中为best。因此aggregate accuracy attribution支持四项干预。新的per-horizon raw scorecard与checkpoint hashes未随截图提供，旧100-cell audit只作historical provenance；Figure 5的near-uniform utilization与8/40 alignment继续限制routing/specialization解释。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/result_and_table_audit.md`。
 
-### 8.6 Forecast Consistency and Scope-Allocation Behavior
+### 8.6 Scope Diversity and Allocation Behavior
 
-Section 5 v0.6中本节visible body按author要求暂时留空，以下内容仅作为后续重新设计时不可丢失的evidence contract，不属于当前manuscript prose。
+本节与5.5的职责固定分离：5.5通过matched interventions回答各组件是否贡献accuracy；5.6不更换模型或objective，只检查Full ISCF-BSCA是否形成与设计相符的内部行为。
 
-展示：
+正文采用三步短叙事：首先一句说明ISCF由同一full trajectory返回不同horizon prefixes，因此CHPC by construction，并报告20/20 numerical checks的maximum absolute CHPD=0；其次用Figure 5a/b说明Scope-conditioned Forecasts不是重复轨迹，且五种scope均在至少一个future-region cell表现为lowest-MSE scope；最后用Figure 5c说明learned soft allocation的highest-weight scope覆盖全部五种scope，并在4/5 datasets内随region变化，因此未塌缩为全future domain固定scope。
 
-1. ISCF-BSCA在shared targets上的exact CHPC/CHPD verification；
-2. future-step或future-region × scope的Scope Probability map；
-3. 各future regions/step bins上的aggregate scope utilization与scope-wise preference/error pattern；
-4. 一条Full ISCF-BSCA相对frozen matched control提升最清晰的performance-selected trajectory，同时显示完整预测轨迹、nested horizon prefixes与对应Scope Probabilities。
+Figure 5 v4固定为：Panel a=ETTh1 validation probe 107的五条scope forecasts与regional lowest-MSE strip，selection rule为先最大化distinct regional winners再最大化mean pairwise forecast disagreement；Panel b=五数据集完整validation aggregate regional competence；Panel c=相同grid上的highest-weight mean soft allocation。Caption必须披露validation-only、seed 2021与selected-example rule，并说明图不建立oracle scope recovery。Realized allocation value与独立failure-case panel仍不进入当前正文。
 
-Realized allocation value当前不纳入该节，以控制额外实验成本。Qualitative trajectory允许从提升最明显的样本中选择，但caption必须披露comparator、split与selection rule，并明确其是illustrative而非representative evidence。该节不设置failure-case panel；aggregate negative cells在5.2--5.3完整报告，并在Discussion中解释。
-
-2026-08-16 validation-only Figure 5 diagnostic已完成：五数据集×四个paper horizons的20/20 numerical CHPC comparisons均为maximum absolute CHPD=0；scope-arm macro region-best随future region在`s=360`、`s=720`与`s=1`之间变化，最大best-to-worst excess MSE为6.123%。但learned probabilities的dataset-region means仅在0.18258--0.21479之间变化，highest-utilization scope只在8/40 dataset-region cells与lowest-MSE scope一致。因此该节只能写exact CHPC、active-but-near-uniform allocation与descriptive scope-arm regional heterogeneity；Figure 5本身不能建立accuracy attribution、successful routing或causal specialization。2026-08-17作者修正Table 4可独立支持aggregate allocation accuracy gain，但不能改变上述internal-health边界。Qualitative comparator冻结为`Fixed Scope (s=144)`，selected Weather row 77只作performance-selected illustration。Canonical result=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/figure5_mechanism_diagnostics_20260816/result_and_decision.md`。
+原始diagnostic audit中的probability range和allocation--competence alignment继续作为internal claim boundary保留，但按author决定不进入当前正文或Figure 5。该隐藏不授权任何更强机制解释：Figure 5只支持scope forecast diversity、regional error heterogeneity与non-identical soft reweighting，不支持hard routing、oracle recovery或causal specialization。Canonical figure=`paper-figures/figure_5_scope_allocation_behavior.*`；QA=`analysis/iscf_bsca_section5_6_figure5_v4_scope_allocation_behavior_20260821/figure_contract_and_qa.md`。
 
 ### 8.7 Generalization Studies
 

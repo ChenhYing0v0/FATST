@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## Section 5.6 Scope/Allocation Behavior Temporary Freeze (2026-08-21)
+
+Current cursor=`Section 5 v0.9 -> 5.6 visible prose and Figure 5 v4 temporarily fixed usable`。本节固定回答两项Full-model internal behavior：scope-conditioned forecasts是否保留差异，以及learned Scope Probabilities是否随future region变化而非塌缩到一个固定scope。CHPC只作architecture/numerical property一句说明。
+
+Figure 5 v4采用hero trajectory + two aggregate maps：Panel a使用披露选择规则的ETTh1 validation probe 107展示五条不同scope forecasts及region-wise lowest-MSE scope；Panel b用五数据集完整validation rows显示五种scope均在至少一个dataset-region cell最低；Panel c显示五种scope均成为过highest-weight scope，且4/5 datasets存在region-wise switch。Main-text不报告`8/40` alignment、不将highest-weight scope解释为oracle winner；原始alignment与near-uniform boundary继续保存在internal audit。Decision=`section5_6_v4_scope_allocation_behavior_temporarily_fixed_usable`；new implementation/remote training/formal test=`0/0/0`。
+
 ## Section 5.5/5.6 Evidence-Role Separation (2026-08-21)
 
 Section 5.5=`matched intervention -> component utility`；Section 5.6=`unchanged Full model -> internal behavior`。5.6后半段不重复equal-fusion与prefix-only ablation gains，而报告Scope Probability range、normalized entropy、region-wise dominant-scope variation及`8/40` allocation--competence alignment，并以此限定mechanism interpretation。

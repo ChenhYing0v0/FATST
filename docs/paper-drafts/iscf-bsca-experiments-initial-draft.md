@@ -5,14 +5,14 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Clean manuscript-facing initial draft of Section 5 |
-| `version` | `v0.8-figure-only-transfer-presentation` |
+| `version` | `v0.9-section5-6-scope-allocation-fixed` |
 | `date` | `2026-08-21` |
-| `review_status` | `initial_draft_pending_author_review` |
+| `review_status` | `Section 5.6 temporarily fixed and usable; remaining Section 5 text unchanged` |
 | `upstream_dependency` | Introduction v0.9, Related Work v0.2, Section 3 v0.7 and Section 4 v0.7 remain temporarily frozen and unchanged |
-| `evidence_scope` | Main-I, Main-II, Efficiency, Core-Ablation and author-refined Decoder-Transfer; Figure 5 mechanism diagnostics are temporarily deferred from the manuscript body |
+| `evidence_scope` | Main-I, Main-II, Efficiency, Core-Ablation, Figure 5 scope/allocation behavior diagnostics and author-refined Decoder-Transfer |
 | `experiment_change` | None; the prose is refined from the latest frozen result artifacts, with no new training or formal test |
-| `claim_boundary` | Main tables establish system-level effectiveness; matched ablations establish aggregate component utility; Section 5.6 is intentionally left open for redesign; transfer claims are restricted to two evaluated backbone families and three reported datasets |
-| `narrative_spine` | evaluation contract → horizon-specific comparison → one-model capability → system-cost trade-off → matched attribution → deferred internal-behavior analysis → bounded generalization study |
+| `claim_boundary` | Main tables establish system-level effectiveness; matched ablations establish aggregate component utility; Figure 5 supports scope-forecast diversity, regional scope-error heterogeneity and non-collapsed soft allocation, but not oracle scope recovery or causal specialization; transfer claims are restricted to two evaluated backbone families and three reported datasets |
+| `narrative_spine` | evaluation contract → horizon-specific comparison → one-model capability → system-cost trade-off → matched attribution → scope/allocation behavior → bounded generalization study |
 
 The status table and artifact map below are editorial metadata and are not part of the manuscript body submitted for review.
 
@@ -26,7 +26,7 @@ The status table and artifact map below are editorial metadata and are not part 
 | Appendix Table A2 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_ii/table_iscf_bsca_main_ii.tex` |
 | Figure 6 numerical source (not inserted as a main-text table) | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/table/table_iscf_bsca_efficiency.tex` |
 | Table 3 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/table/table_iscf_bsca_core_ablation.tex` |
-| Figure 5 (temporarily deferred from body) | `paper-figures/figure_iscf_bsca_mechanism.*` |
+| Figure 5 | `paper-figures/figure_5_scope_allocation_behavior.*` |
 | Figure 6 | `paper-figures/figure_6_accuracy_system_cost.*` |
 | Figure 7 numerical source (not inserted as a main-text table) | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/table_decoder_transfer_three_dataset_framework.tex` |
 | Figure 7 | `paper-figures/figure_7_decoder_transfer.*` |
@@ -87,7 +87,19 @@ As reported in Table 3, Full ISCF-BSCA achieves a five-dataset macro MSE/MAE of 
 
 Together, these controlled comparisons show that each evaluated component contributes to the complete model. BSCA improves joint optimization across the scope lines. Target-Adaptive Scope Allocation outperforms equal fusion, while scope-specific projections and multi-scope generation improve upon their shared-projection and fixed-scope counterparts. Their combination yields the strongest overall performance.
 
-### 5.6 Forecast consistency and scope-allocation behavior
+### 5.6 Scope diversity and allocation behavior
+
+Because every horizon request is returned as a prefix of the same predicted trajectory, ISCF satisfies CHPC by construction; the frozen implementation also yields a maximum absolute CHPD of 0 across all 20 dataset--horizon checks. We therefore focus the internal analysis on two less immediate questions: whether the Scope-conditioned Forecasts retain distinct predictive signals and whether the learned allocation collapses to one fixed scope across the future domain.
+
+Figure 5a compares the five Scope-conditioned Forecasts for a validation example selected by regional scope-preference diversity and forecast disagreement. The trajectories remain distinct, and the lowest-error scope changes among all five candidates across the eight future regions. Figure 5b extends this analysis to every validation origin and variable in the five evaluated datasets. Each of the five scopes attains the lowest regional MSE in at least one of the 40 dataset--region cells, and no single scope is uniformly preferred across the future domain. These results show that the jointly constructed scope field does not degenerate into repeated copies of one forecast.
+
+Figure 5c summarizes the learned Scope Probabilities over the same dataset--region grid. All five scopes become the highest-weight scope in at least one cell, and four of the five datasets change their highest-weight scope across future regions. Because the allocation remains a soft probability distribution, this pattern indicates region-dependent reweighting rather than hard routing. The allocation mechanism therefore preserves access to multiple sharing granularities instead of collapsing to a fixed scope for all future regions.
+
+<a id="fig:scope-allocation-behavior"></a>
+
+![Scope diversity and regional allocation behavior.](../../paper-figures/figure_5_scope_allocation_behavior.png)
+
+**Figure 5 | Scope diversity and regional allocation behavior in ISCF-BSCA.** **a**, Five Scope-conditioned Forecasts for an ETTh1 validation probe selected from 1,280 candidates by first maximizing the number of distinct regional lowest-MSE scopes and then maximizing mean pairwise forecast disagreement; the strip identifies the lowest-MSE scope in each future region. **b**, Lowest-MSE scope after averaging each scope's regional MSE over all validation origins and variables; marker area denotes the best-to-worst MSE gap. **c**, Highest-weight scope of the mean soft allocation over the same dataset--region grid. All panels are validation-only diagnostics from seed 2021 and characterize diversity rather than oracle scope recovery.
 
 ### 5.7 Generalization studies
 
@@ -109,5 +121,5 @@ As shown in Figure 7, replacing the Original Decoder with ISCF-BSCA improves for
 | 5.3 Main-II | Complete source-native one-model table | One ISCF-BSCA checkpoint serves all evaluated horizons competitively | Fully matched architecture comparison across all baselines |
 | 5.4 Efficiency | Complete Figure 6 source with audited accuracy and memory/storage service units | Lowest macro MSE among the eight displayed methods and one-checkpoint consolidation; lower memory/storage than TimeAlign, AMD, iTransformer, PatchTST and TimeMixer | Uniform memory/storage advantage or a training-time claim |
 | 5.5 Core ablation | Author-corrected five-dataset aggregate table | All four interventions improve aggregate MSE/MAE under the matched design | Per-horizon dominance, oracle routing or independently verified component semantics |
-| 5.6 Mechanism analysis | Complete validation diagnostic bundle, temporarily deferred from the manuscript body | No visible claim in the current draft; mixed evidence remains preserved for redesign | Reliable region-best routing, sparse specialization, prevalence or causal interpretation of the example |
+| 5.6 Scope diversity and allocation behavior | Complete five-dataset validation diagnostic bundle; selected trajectory is explicitly audited | Scope-conditioned forecasts remain distinct; regional lowest-error scopes and soft allocation profiles vary across the future domain; numerical CHPC holds | Oracle scope recovery, hard routing, causal specialization or prevalence from the selected example |
 | 5.7 Generalization studies | Complete Figure 7 MSE source for two backbones and three datasets | Complete-framework compatibility across the two displayed backbone families | Universal architecture-agnostic transfer; separate ISCF/BSCA attribution |

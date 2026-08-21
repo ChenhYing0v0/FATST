@@ -346,19 +346,20 @@
   "non_table_experiment_blocks": [
     {
       "id": "unified_problem_and_mechanism_diagnostics",
-      "status": "complete_mixed_mechanism_evidence_20260816",
-      "current_presentation": "Figure_5_and_supporting_analysis_blocks",
-      "canonical_artifact": "paper-figures/figure_iscf_bsca_mechanism.svg",
+      "status": "section5_6_v4_temporarily_fixed_usable_20260821",
+      "current_presentation": "Figure_5_v4_scope_diversity_and_allocation_behavior",
+      "canonical_artifact": "paper-figures/figure_5_scope_allocation_behavior.svg",
       "canonical_report": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/figure5_mechanism_diagnostics_20260816/result_and_decision.md",
+      "presentation_qa": "analysis/iscf_bsca_section5_6_figure5_v4_scope_allocation_behavior_20260821/figure_contract_and_qa.md",
       "contents": [
         "exact_CHPC_and_CHPD_verification",
-        "future_step_by_scope_utilization",
-        "scope_wise_regional_preference_and_error",
-        "performance_selected_qualitative_trajectory_with_nested_prefixes"
+        "selected_scope_conditioned_forecast_diversity",
+        "aggregate_scope_wise_regional_competence",
+        "aggregate_region_wise_soft_allocation_diversity"
       ],
-      "result_boundary": "exact_CHPC_and_scope_arm_regional_error_heterogeneity_supported_but_learned_probabilities_are_near_uniform_and_highest_utilization_matches_lowest_MSE_scope_in_only_8_of_40_dataset_region_cells",
+      "result_boundary": "main_text_supports_exact_CHPC_scope_forecast_diversity_regional_error_heterogeneity_and_noncollapsed_soft_allocation_but_not_oracle_scope_recovery_hard_routing_or_causal_specialization_internal_audit_retains_near_uniform_and_8_of_40_alignment_boundary",
       "excluded_current_diagnostic": "realized_allocation_value",
-      "qualitative_selection_boundary": "performance_selected_illustration_with_comparator_split_and_selection_rule_disclosed_not_representative"
+      "qualitative_selection_boundary": "selected_from_1280_validation_probes_by_distinct_regional_winners_then_pairwise_scope_forecast_disagreement_not_representative"
     }
   ],
   "excluded_from_paper_table_inventory": [

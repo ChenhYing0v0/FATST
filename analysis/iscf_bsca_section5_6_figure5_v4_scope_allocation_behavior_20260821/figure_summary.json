@@ -1,0 +1,37 @@
+{
+  "split": "validation",
+  "seed": 2021,
+  "new_training": 0,
+  "formal_test": 0,
+  "selected_example": {
+    "dataset": "ETTh1",
+    "probe_row": 107,
+    "selection_rule": "maximize distinct regional lowest-MSE scopes, then maximize mean pairwise absolute scope-forecast disagreement",
+    "distinct_regional_winners": 5,
+    "mean_pairwise_scope_disagreement": 0.336374620190925
+  },
+  "aggregate_competence": {
+    "cells": 40,
+    "scopes_appearing_as_lowest_mse": [
+      1,
+      48,
+      144,
+      360,
+      720
+    ]
+  },
+  "aggregate_allocation": {
+    "cells": 40,
+    "scopes_appearing_as_highest_weight": [
+      1,
+      48,
+      144,
+      360,
+      720
+    ],
+    "datasets_with_regionwise_highest_weight_change": 4,
+    "mean_probability_min": 0.1825784131,
+    "mean_probability_max": 0.2147875595
+  },
+  "claim_boundary": "Supports scope-forecast diversity, regional scope-error heterogeneity, and non-identical soft allocation profiles. Does not establish oracle scope recovery, hard routing, or causal specialization."
+}

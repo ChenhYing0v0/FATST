@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | Section 5.5/5.6 evidence role separated；Panel a保留，Panels b/c不作为5.6 evidence；visible prose/figure revision pending |
+| `active_question` | Section 5.6 scope diversity and allocation behavior temporarily fixed；Sections 6--7 prose pending |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
-| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7 temporarily frozen usable；Section 5 v0.8 opening/5.1--5.5/5.7 author-refined，5.6 ablation-boundary proposal complete；Sections 5--7 v0.15 structure draft；Figure 4 visual design temporarily fixed |
+| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7 temporarily frozen usable；Section 5 v0.9中5.6与Figure 5 v4 temporarily fixed usable；Sections 6--7 prose pending；Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | Main I dense/Main II v1=ETTh1, ETTh2, ETTm1, ETTm2, Weather, ECL, Solar；Exchange=companion/deferred extension；ablation=original five |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
@@ -22,13 +22,28 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper experiment matrix closed；Section 5.5/5.6 evidence-role boundary complete |
-| `current_candidate` | Section 5.6 regional scope competence and allocation behavior |
-| `latest_decision` | `section5_6_behavior_analysis_separated_from_ablation` |
-| `writing_latest_decision` | `section5_6_behavior_analysis_separated_from_ablation` |
-| `next_required_action` | author review revised 5.6 paragraph contract and single-panel figure route；then draft visible prose and revise asset；no new experiment required |
+| `current_11_step` | paper experiment matrix closed；Section 5.6 prose/figure temporarily fixed |
+| `current_candidate` | Sections 6--7 paper writing |
+| `latest_decision` | `section5_6_v4_scope_allocation_behavior_temporarily_fixed_usable` |
+| `writing_latest_decision` | `section5_6_v4_scope_allocation_behavior_temporarily_fixed_usable` |
+| `next_required_action` | continue Discussion/Conclusion drafting or author-requested Section 5 refinement；no new experiment required |
 | `method_training_authorized` | false；no matched controls、extra HPO/seeds or formal test required |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
+
+## Section 5.6 Scope/Allocation Behavior Temporary Freeze Record (2026-08-21)
+
+| Field | Current Record |
+| --- | --- |
+| `current_step` | existing-artifact behavior analysis、manuscript integration与Figure 5 v4 QA complete |
+| `problem` | 5.6需与5.5 ablation分离，说明Full model内部的scope forecast diversity与allocation non-collapse，而非重复component-gain或CHPC图 |
+| `existence_evidence` | 5个Full validation diagnostic objects；全部validation regional errors/usages；1,280 sequential probe trajectories；20/20 CHPC numerical checks |
+| `idea` | Panel a展示披露选择的五条Scope-conditioned Forecasts与regional winners；Panel b展示aggregate lowest-MSE scope；Panel c展示aggregate highest-weight soft-allocation scope |
+| `theory_check` | forecast diversity、regional competence与allocation-profile variation为三个不同事实；highest-weight scope不等于oracle lowest-MSE scope；CHPC由architecture保证 |
+| `design` | 183 × 140 mm Python figure；ETTh1 probe 107；5 datasets × 8 regions aggregate maps；editable SVG/PDF + 300/600-dpi raster |
+| `narrative_gate` | 正文允许non-identical scope forecasts、all-five regional competence、all-five highest-weight coverage与4/5 region-wise allocation switches；禁止oracle recovery、hard routing、causal specialization或selected-example prevalence |
+| `effectiveness_gate` | validation-only internal behavior；paper-facing effectiveness与component utility分别由Main I/II和Table 3承担 |
+| `artifacts` | manuscript=`docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`；figure=`paper-figures/figure_5_scope_allocation_behavior.*`；QA=`analysis/iscf_bsca_section5_6_figure5_v4_scope_allocation_behavior_20260821/figure_contract_and_qa.md` |
+| `decision` | `section5_6_v4_scope_allocation_behavior_temporarily_fixed_usable` |
 
 ## Section 5.6 Figure 5 v3 Nature-Oriented Redesign Record (2026-08-21)
 

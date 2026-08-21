@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Section 5.5/5.6 evidence-role separation complete；Section 5.6 visible prose/figure revision pending |
+| `current_11_step` | Section 5.6 scope/allocation behavior prose and Figure 5 v4 temporarily fixed usable |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,7 +18,9 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；Sections 1--4 temporarily frozen usable；Section 5 v0.8 opening/5.1--5.5/5.7 author-refined；5.6 Figure 5 v3 Nature-oriented draft complete but visible body/canonical replacement pending；5.4 Figure 6 only，5.7 Figure 7 only；allocation aggregate accuracy direction positive但routing health mixed；Sections 6--7 prose pending |
+| `paper_core_status` | architecture family frozen；Sections 1--4 temporarily frozen usable；Section 5 v0.9中5.6 scope/allocation behavior与Figure 5 v4已暂时固定，5.4 Figure 6 only，5.7 Figure 7 only；allocation aggregate accuracy direction positive但oracle-routing claim仍关闭；Sections 6--7 prose pending |
+
+[Section 5.6 Scope/Allocation Behavior Temporary Freeze, 2026-08-21] `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`更新为v0.9并补全5.6。该节与5.5严格分工：5.5回答matched component utility，5.6只分析unchanged Full model的internal behavior。Figure 5 v4使用三层证据：Panel a为按“regional winner diversity优先、scope forecast disagreement次优”从1,280个validation probes中选择的ETTh1 row 107，五条Scope-conditioned Forecasts保持差异且8 regions覆盖全部五种lowest-MSE scopes；Panel b汇总五数据集全部validation rows，五种scope均至少在一个dataset-region cell取得lowest MSE；Panel c显示mean soft allocation的highest-weight scope，五种scope均出现且4/5 datasets随region改变。CHPC只在正文一句报告20/20 numerical checks的maximum absolute CHPD=0，不单独作图。正文与图不报告`8/40` alignment count，不声称oracle recovery、hard routing或causal specialization；原始mixed evidence仍保留在internal QA/governance。Canonical Figure 5=`paper-figures/figure_5_scope_allocation_behavior.*`，QA=`analysis/iscf_bsca_section5_6_figure5_v4_scope_allocation_behavior_20260821/figure_contract_and_qa.md`。Decision=`section5_6_v4_scope_allocation_behavior_temporarily_fixed_usable`；new implementation/training/formal test=`0/0/0`。
 
 [Section 5.6 Figure 5 v3 Nature-Oriented Redesign, 2026-08-21] 在不改变v2 evidence values和claim boundary的前提下，Figure 5按`nature-figure` contract完成结构性重绘。Panel a用5 × 8 preferred-scope map替代25 × 8 dense heatmap；marker number编码最低MSE scope，marker area编码best-to-worst excess MSE gap，全部40 cells仍由完整200个validation aggregates计算。Panels b/c改为共享0--7%轴的horizontal effect-size plots。180 × 110 mm输出通过static preflight `14/0/0`，并提供editable SVG/PDF与300/600-dpi raster。v3仍为author-review noncanonical asset，不替换`paper-figures/`、不修改5.6 visible prose；Decision=`figure5_v3_nature_redesign_author_review_noncanonical`；new method implementation/training/formal test=`0/0/0`。
 
