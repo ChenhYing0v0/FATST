@@ -1,0 +1,33 @@
+# Figure 5 v3 QA and evidence boundary
+
+## Decision
+
+- Status: `pass_author_review_nature_redesign`.
+- Canonical paper asset: `no`; author approval remains required before replacing the current `paper-figures/` asset or drafting visible Section 5.6 prose.
+- Reuse level: `build anew`. The v2 evidence and source values are preserved, but its dense heatmap layout is not reused.
+- New method implementation, training and formal test: `0/0/0`.
+
+## Data integrity
+
+- Panel a retains the complete $5\times8\times5=200$ dataset--region--scope validation aggregates and deterministically summarizes them into 40 dataset--region cells.
+- The displayed scope is the unique minimum-mean-MSE scope in each cell. Marker area uses the maximum excess MSE above that cell minimum; no dataset, region or scope is filtered.
+- Preferred-scope counts are $s=1/48/144/360/720\rightarrow1/3/2/17/17$. Best-to-worst excess MSE ranges from 0.391% to 14.120%.
+- Panel b retains all five dataset-level comparisons and their macro average. Full-model MSE reductions are 1.441%, 2.317%, 1.453%, 1.270% and 1.382%; macro=1.613%.
+- Panel c retains all five dataset-level comparisons and their macro average. Full-model MSE reductions are 3.116%, 1.938%, 6.221%, 2.508% and 1.835%; macro=3.481%.
+- Panels b/c reuse the current author-corrected aggregate ablation values. Their per-horizon raw scorecards and checkpoint hashes remain unsynchronized, so the figure supports aggregate component utility rather than a newly reconstructed checkpoint-level audit.
+
+## Claim boundary
+
+- Supported: preferred sharing scope varies across the displayed future regions and datasets; Target-Adaptive Allocation and BSCA improve aggregate MSE relative to their corresponding controls.
+- Not supported: learned Scope Probabilities reliably identify the lowest-error scope, sparse expert specialization, an oracle allocation interpretation, or a unique causal mechanism.
+- The earlier near-uniform probability profile and 8/40 utilization--error alignment remain preserved in internal records. Their omission from this author-review composition is a presentation decision, not an evidence reversal.
+
+## Visual and export QA
+
+- Final canvas: 180 × 110 mm, asymmetric three-panel layout.
+- Panel a uses number, colour and marker area as redundant encodings; colour is not the sole carrier of scope identity.
+- Panels b/c share the same 0--7% axis and show every dataset plus the macro average.
+- White background, sentence-case titles, restrained low-saturation palette, minimal spines and whitespace-based grouping were checked at final size.
+- Static preflight: 14 pass, 0 warn, 0 fail.
+- Editable outputs: SVG and PDF. Raster outputs: 2124 × 1299 px PNG at 300 dpi and 4248 × 2598 px LZW TIFF at 600 dpi.
+- SVG contains editable text, LF line endings and no trailing whitespace.

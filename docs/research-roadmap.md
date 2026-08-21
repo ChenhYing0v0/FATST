@@ -1,5 +1,13 @@
 # Research Roadmap
 
+## Section 5.6 Figure 5 v3 Nature-Oriented Redesign (2026-08-21)
+
+Current cursor=`Figure 5 v3 visual QA complete -> author review -> canonical replacement and 5.6 prose pending`。本轮不改变v2 source values或evidence role，只重构Figure 5的visual hierarchy。
+
+Panel a将25 × 8 dense heatmap压缩为5 × 8 preferred-scope map，但每个cell仍由全部五个scope values确定；number编码最低MSE scope，marker area编码best-to-worst excess MSE gap。Panels b/c使用统一0--7% MSE-reduction轴，分别展示Full相对equal fusion和prefix-only training的五数据集与macro gains。180 × 110 mm bundle包含source CSV、caption、QA、editable SVG/PDF、300-dpi PNG和600-dpi LZW TIFF，位于`analysis/iscf_bsca_section5_6_figure5_v3_nature_redesign_20260821/`。
+
+Claim boundary不变：支持descriptive region-dependent scope preference与aggregate component utility，不支持reliable region-best routing、sparse specialization或unique causal mechanism。Near-uniform probabilities与`8/40` alignment继续保存在internal records。Decision=`figure5_v3_nature_redesign_author_review_noncanonical`；new method implementation/training/formal test=`0/0/0`。
+
 ## Section 5.6 Figure 5 v2 Positive-Evidence Draft (2026-08-21)
 
 Current cursor=`5.6 evidence redesign -> three-panel author-review draft complete -> visible prose/canonical replacement pending`。旧Figure 5被author判定为当前不可用，本轮不修改其历史evidence bundle，也不直接替换`paper-figures/`中的canonical asset。

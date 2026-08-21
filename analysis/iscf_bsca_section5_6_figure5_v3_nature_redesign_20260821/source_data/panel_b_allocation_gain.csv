@@ -1,0 +1,7 @@
+dataset,full_mse,control_mse,mse_reduction_percent,horizon_count,aggregation,comparison,split,source_role
+ETTm1,0.342000,0.347000,1.44092219,4,dataset_four_horizon_mean,Full vs w/o Target-Adaptive Allocation,official_test,author_corrected_rerun_20260817
+ETTm2,0.253000,0.259000,2.31660232,4,dataset_four_horizon_mean,Full vs w/o Target-Adaptive Allocation,official_test,author_corrected_rerun_20260817
+ETTh1,0.407000,0.413000,1.45278450,4,dataset_four_horizon_mean,Full vs w/o Target-Adaptive Allocation,official_test,author_corrected_rerun_20260817
+ETTh2,0.311000,0.315000,1.26984127,4,dataset_four_horizon_mean,Full vs w/o Target-Adaptive Allocation,official_test,author_corrected_rerun_20260817
+Weather,0.214000,0.217000,1.38248848,4,dataset_four_horizon_mean,Full vs w/o Target-Adaptive Allocation,official_test,author_corrected_rerun_20260817
+Mean,,,1.61290323,4,author_corrected_five_dataset_macro_gate,Full vs w/o Target-Adaptive Allocation,official_test,author_corrected_rerun_20260817

@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | Section 5.6 Figure 5 v2三联图已生成供author review；visible body与canonical replacement pending |
+| `active_question` | Section 5.6 Figure 5 v3 Nature-oriented三联图已生成供author review；visible body与canonical replacement pending |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
-| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7 temporarily frozen usable；Section 5 v0.8 opening/5.1--5.5/5.7 author-refined，5.6 Figure 5 v2 author-review draft complete；Sections 5--7 v0.11 structure draft；Figure 4 visual design temporarily fixed |
+| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7 temporarily frozen usable；Section 5 v0.8 opening/5.1--5.5/5.7 author-refined，5.6 Figure 5 v3 Nature-oriented author-review draft complete；Sections 5--7 v0.12 structure draft；Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | Main I dense/Main II v1=ETTh1, ETTh2, ETTm1, ETTm2, Weather, ECL, Solar；Exchange=companion/deferred extension；ablation=original five |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
@@ -22,13 +22,28 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper experiment matrix closed；Section 5.6 Figure 5 v2 author-review draft complete |
-| `current_candidate` | Section 5.6 Figure 5 v2 positive-evidence draft |
-| `latest_decision` | `figure5_v2_positive_evidence_author_review_noncanonical` |
-| `writing_latest_decision` | `figure5_v2_positive_evidence_author_review_noncanonical` |
-| `next_required_action` | author review Figure 5 v2 panel logic and claim boundary；then decide canonical replacement and draft 5.6 prose；no new experiment required |
+| `current_11_step` | paper experiment matrix closed；Section 5.6 Figure 5 v3 Nature-oriented author-review draft complete |
+| `current_candidate` | Section 5.6 Figure 5 v3 Nature-oriented redesign |
+| `latest_decision` | `figure5_v3_nature_redesign_author_review_noncanonical` |
+| `writing_latest_decision` | `figure5_v3_nature_redesign_author_review_noncanonical` |
+| `next_required_action` | author review Figure 5 v3 visual hierarchy and claim boundary；then decide canonical replacement and draft 5.6 prose；no new experiment required |
 | `method_training_authorized` | false；no matched controls、extra HPO/seeds or formal test required |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
+
+## Section 5.6 Figure 5 v3 Nature-Oriented Redesign Record (2026-08-21)
+
+| Field | Current Record |
+| --- | --- |
+| `current_step` | Nature-oriented visual redesign and final-size QA complete；author review next |
+| `problem` | v2 dense heatmap重复信息过多、视觉层级弱，难以在journal final size下快速传达核心结论 |
+| `existence_evidence` | v2已冻结完整200-row scope surface与两项五数据集aggregate ablations；本轮不改数值 |
+| `idea` | 以preferred-scope marker map同时编码winner identity与error-separation magnitude，并用共享尺度的effect-size panels呈现两项component gains |
+| `theory_check` | winner map是完整scope surface的deterministic summary；不能由regional winner分布推出learned allocation成功 |
+| `design` | Panel a=5 × 8 numbered bubble map；Panels b/c=aligned 0--7% horizontal effect-size plots；180 × 110 mm Python SVG/PDF/PNG/TIFF bundle |
+| `narrative_gate` | 保留near-uniform probability、`8/40` alignment和author-corrected aggregate provenance；禁止oracle routing、sparse specialization或unique causal mechanism |
+| `effectiveness_gate` | 沿用既有validation diagnostic与official-test aggregate；no new evaluation |
+| `artifacts` | `analysis/iscf_bsca_section5_6_figure5_v3_nature_redesign_20260821/`；`scripts/build_iscf_bsca_figure5_v3_nature.py` |
+| `decision` | `figure5_v3_nature_redesign_author_review_noncanonical` |
 
 ## Section 5.6 Figure 5 v2 Positive-Evidence Draft Record (2026-08-21)
 

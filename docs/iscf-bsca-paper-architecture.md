@@ -5,23 +5,25 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.88` |
+| `version` | `v0.89` |
 | `last_updated` | `2026-08-21` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | Section 5.6 Figure 5 v2三联图已生成供author review；正文仍暂时留空，canonical Figure 5尚未替换 |
+| `current_review_cursor` | Section 5.6 Figure 5 v3 Nature-oriented三联图已生成供author review；正文仍暂时留空，canonical Figure 5尚未替换 |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `frozen_consensus` | 论文七章结构并保留standalone Discussion；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
-| `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.10 structural design with Section 5 v0.8 integration |
-| `provisional_content` | Section 5 v0.8 with author-refined opening、5.1--5.5与5.7；5.7仅展示Figure 7；5.6 Figure 5 v2 author-review draft complete but visible prose/canonical replacement pending；Sections 6--7 prose；Method Figure 4 stable vector-asset synchronization |
+| `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.12 structural design with Section 5 v0.8 integration |
+| `provisional_content` | Section 5 v0.8 with author-refined opening、5.1--5.5与5.7；5.7仅展示Figure 7；5.6 Figure 5 v3 Nature-oriented author-review draft complete but visible prose/canonical replacement pending；Sections 6--7 prose；Method Figure 4 stable vector-asset synchronization |
 | `authorization_source` | 2026-08-21用户要求基于5.6计划生成主要Panels a/b/c并优先展示正向证据；no new method implementation/training/formal test |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
 `temporarily_frozen_content` 只有在后续章节或证据产生明确矛盾且用户同意后才解冻；
 `provisional_content` 只表示当前最佳结构，后续按章节继续修订。
+
+Section 5.6 Figure 5 v3 amendment：本轮只重构visual hierarchy，不改变v2的数据或claim boundary。Panel a将密集的25 × 8 excess-MSE heatmap压缩为5 × 8 preferred-scope map：每个marker数字表示同dataset-region最低MSE scope，面积表示best-to-worst excess MSE gap，且仍由全部200个validation aggregates确定。Panel b/c改为同一0--7%尺度的horizontal effect-size plots，以对齐展示Target-Adaptive Allocation与BSCA的aggregate MSE gains。新版画布为180 × 110 mm，static preflight=`14 pass / 0 warn / 0 fail`。v2保留为历史visual draft；v3仍为noncanonical author-review asset，不替换`paper-figures/`，不恢复5.6正文。Bundle=`analysis/iscf_bsca_section5_6_figure5_v3_nature_redesign_20260821/`；new implementation/training/formal test=`0/0/0`。
 
 Section 5.6 Figure 5 v2 amendment：旧Figure 5已被author判定为不能用于当前main text，新版只生成author-review draft而不替换canonical asset。Panel a使用Full ISCF-BSCA全部5 datasets × 8 future regions × 5 scopes=`200`个validation aggregates，以相对同dataset-region最优scope的excess MSE表示region-wise scope performance，并标出40个regional minima；Panel b/c使用当前author-corrected Core-Ablation aggregates，分别显示Full相对equal scope fusion与prefix-only training的MSE reduction，五数据集方向均正，macro为`1.613%`与`3.481%`。该布局支持descriptive scope-error heterogeneity与aggregate component utility，但不支持learned probability可靠选择region-best scope、sparse specialization或unique causal mechanism。Near-uniform probabilities与`8/40` alignment继续保留在internal QA和历史evidence bundle，不从project record删除。Draft bundle=`analysis/iscf_bsca_section5_6_figure5_v2_positive_evidence_20260821/`；new implementation/training/formal test=`0/0/0`。
 
