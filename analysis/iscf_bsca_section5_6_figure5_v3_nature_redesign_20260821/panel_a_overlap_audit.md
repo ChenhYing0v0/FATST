@@ -2,7 +2,7 @@
 
 ## Decision
 
-Current Panel a should not be promoted to the main text in its present role. It is not a duplicate experiment, but it substantially repeats the reader-facing conclusion and visual task of Section 3 Figure 3. Panels b/c remain suitable after the subtitle-spacing refinement.
+The initial recommendation to replace Panel a with CHPC fulfillment evidence is withdrawn after a narrative-first reassessment. CHPC is guaranteed by the inference graph and does not warrant a main-text result panel. Current Panel a remains a defensible main-text candidate if it is explicitly framed as an aggregate diagnostic of the jointly trained ISCF scope field rather than another demonstration of the Section 3 problem.
 
 ## Evidence comparison
 
@@ -26,8 +26,10 @@ The source model, scope grid and aggregation level differ. These distinctions ma
 
 ## Recommended routing
 
-- Retain the current preferred-scope map as an Appendix diagnostic showing that the multi-scope field preserves heterogeneous regional competence across five datasets.
-- Replace main-text Panel a with numerical CHPC fulfillment: one nested-prefix forecast trajectory, accompanied by an aggregate verification summary reporting 20/20 comparisons with maximum absolute CHPD equal to zero across the five evaluated datasets and four paper horizons.
+- Retain Panel a in the main-text candidate, but rename it around `region-wise competence within the jointly trained scope field` and identify Full ISCF-BSCA plus all-validation aggregation in the subtitle and caption.
+- Use the body text to distinguish Section 3 Figure 3's problem-level, selected single-origin control from Figure 5a's method-internal, five-dataset aggregate analysis.
 - Keep Panels b/c as the accuracy-level controls for Target-Adaptive Allocation and BSCA.
+- Do not call the lowest-error scope an allocation decision. It is a diagnostic property of the scope-conditioned forecast field.
+- Do not add a CHPC visualization; retain numerical CHPD checks as implementation QA or Appendix material if needed.
 
-This replacement would create the progression `Section 3 problem evidence -> Section 4 architectural solution -> Section 5 contract verification and component utility` without promoting allocation specialization beyond the available evidence.
+This framing creates the progression `Section 3 problem evidence -> Section 4 architectural response -> Section 5 method-internal scope behavior and component utility` without promoting allocation specialization beyond the available evidence.

@@ -2,11 +2,11 @@
 
 ## Status
 
-- Role: `author_review_panel_bc_pass_panel_a_replacement_recommended`.
+- Role: `author_review_narrative_reassessment_panel_a_reframe_pending`.
 - Canonical paper asset: `no`.
 - Reuse level: `build anew`; v2 supplies the evidence contract and source data but not the visual structure.
 - New training, remote execution and formal test: `0`.
-- Cross-figure audit: Panels b/c pass author review after spacing refinement. Current Panel a is retained as an Appendix-capable diagnostic but is not recommended for main-text promotion because its reader-facing conclusion overlaps Section 3 Figure 3.
+- Cross-figure audit: Panels b/c pass author review after spacing refinement. Current Panel a remains a main-text candidate under a method-internal aggregate framing; its title and caption require revision before promotion. A CHPC visualization is not recommended.
 
 ## Core conclusion and archetype
 

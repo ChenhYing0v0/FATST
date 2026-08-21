@@ -5,15 +5,15 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Temporarily frozen structural design for the manuscript sections after Method |
-| `version` | `v0.13-figure5-v3-panel-a-overlap-audit` |
-| `date` | `2026-08-21 Figure 5 v3 cross-figure audit` |
+| `version` | `v0.14-section5-6-narrative-first-reassessment` |
+| `date` | `2026-08-21 Section 5.6 narrative-first reassessment` |
 | `review_status` | `temporarily_frozen_usable` |
 | `upstream_dependency` | Introduction v0.9, Related Work v0.2, Section 3 v0.7 and Section 4 v0.7 remain temporarily frozen and unchanged |
 | `scope` | Subsection functions, evidence order, table/figure placement, claim boundaries and appendix routing only |
-| `manuscript_prose` | Section 5 v0.8 drafted at `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`; opening、5.1--5.5与5.7 are author-refined；Section 5.6正文仍留空；Figure 5 v3 Panels b/c通过review，Panel a replacement pending；Sections 6--7 remain structural only |
+| `manuscript_prose` | Section 5 v0.8 drafted at `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`; opening、5.1--5.5与5.7 are author-refined；Section 5.6正文仍留空；narrative-first proposal complete，Panel a framing revision pending；Sections 6--7 remain structural only |
 | `experiment_change` | None; this document does not authorize implementation, remote training or formal test |
 | `evidence_snapshot` | Main-I, corrected Main-II, Efficiency, Core-Ablation, rejected historical Figure 5 diagnostics, Figure 5 v3 author-review draft and Decoder-Transfer complete |
-| `structure_decision` | Sections 5--7 use `Experiments -> Discussion -> Conclusion`; Section 5.6 heading is retained；current preferred-scope Panel a is Appendix-capable but should be replaced by CHPC fulfillment evidence before visible prose or canonical-asset replacement |
+| `structure_decision` | Sections 5--7 use `Experiments -> Discussion -> Conclusion`; Section 5.6 should focus on jointly trained regional scope competence、adaptive integration and BSCA；CHPC remains a construction fact without a main-text visualization |
 
 This document remains the frozen argumentative architecture of the remaining manuscript. Section 5 has now been instantiated as an initial evidence-complete draft, while Sections 6--7 remain structural designs; neither document promotes evidence beyond the boundaries recorded below.
 
@@ -61,7 +61,7 @@ No standalone ablation is allocated to the Allocation-Balance Regularizer. The F
    5.3 One-model-all-horizons evaluation
    5.4 Efficiency and system cost
    5.5 Component and training-objective ablations
-   5.6 Forecast consistency and scope-allocation behavior
+   5.6 Regional scope behavior and adaptive integration
    5.7 Generalization studies
 6. Discussion
    6.1 From horizon-specific predictions to a unified forecasting system
@@ -77,7 +77,7 @@ Appendices
    D. Reproducibility, selection protocol and artifact provenance
 ```
 
-The standalone Discussion remains frozen as the working manuscript structure. Section 5.6 retains its position in the outline. Panels b/c retain the Target-Adaptive Allocation and BSCA gains. The current preferred-scope Panel a is routed toward the Appendix because its reader-facing conclusion overlaps Section 3 Figure 3; the main-text replacement should verify numerical CHPC fulfillment.
+The standalone Discussion remains frozen as the working manuscript structure. Section 5.6 retains its position in the outline but is reframed around method-internal scope behavior. Panel a remains a main-text candidate when explicitly presented as an aggregate diagnostic of the jointly trained ISCF scope field; Panels b/c retain the Target-Adaptive Allocation and BSCA gains. CHPC is stated as an architectural property and is not assigned a result panel.
 
 ## 3. Section 5: Experiments
 
@@ -92,7 +92,7 @@ Section 5 should follow an evidence ladder rather than the implementation order:
 | 5.3 One-model-all-horizons evaluation | Is ISCF-BSCA competitive when every baseline must serve all horizons from one trained model? | define H720-prefix protocol; explain how it differs from Main-I; report dataset-level four-horizon means; route complete per-H results to Appendix A; retain unmatched-protocol caveat | Table 2 / `Main-II` | One-model-all-horizons system effectiveness, not decoder or BSCA attribution | Complete and horizon-loader re-audited |
 | 5.4 Efficiency and system cost | What accuracy and deployment cost changes when one model replaces a four-model horizon-specific family? | Main-I macro MSE; peak inference memory; four-horizon checkpoint storage | Figure 6 / `Efficiency` | Lowest macro MSE among eight displayed methods and one-checkpoint consolidation, with DLinear/QDF retained as visible resource counterexamples | Complete; Figure 6 is the sole main-text presentation and the table artifact remains a numerical source |
 | 5.5 Component and training-objective ablations | Which architectural and optimization components contribute within the frozen design family? | Full; w/o BSCA; w/o Target-Adaptive Allocation; Shared Scope Projection; Fixed Scope ($s=144$); matched budgets and end-to-end training | Table 3 / `Core-Ablation` | Author-corrected aggregate table supports all four interventions; per-horizon rerun provenance remains unsynchronized | Complete at dataset-aggregate table level; Full best in 12/12 metric columns |
-| 5.6 Forecast consistency and scope-allocation behavior | Does ISCF fulfill CHPC numerically, and do adaptive allocation and BSCA improve aggregate accuracy? | Panel a replacement: nested-prefix trajectory + 20/20 zero-CHPD verification；Panel b: Full versus equal fusion；Panel c: Full versus prefix-only training；current preferred-scope map routes to Appendix | Figure 5 v3 revision pending; not yet canonical | Numerical CHPC fulfillment plus aggregate allocation/BSCA utility; no reliable region-best routing or sparse specialization claim | Panels b/c pass；Panel a replacement pending；visible prose and canonical replacement pending author approval |
+| 5.6 Regional scope behavior and adaptive integration | Does the jointly trained ISCF scope field retain region-dependent competence, and do adaptive integration and BSCA improve aggregate accuracy? | Panel a: lowest-error scope and error separation across all 5 × 8 × 5 validation aggregates；Panel b: Full versus equal fusion；Panel c: Full versus prefix-only training；state near-uniform/8-of-40 boundary | Figure 5 v3 method-internal reframe pending; not yet canonical | Region-dependent competence within the jointly trained scope field plus aggregate allocation/BSCA utility; no hard selection、oracle recovery或sparse specialization claim | Paragraph contract complete；Panels b/c pass；Panel a title/caption revision and visible prose pending author approval |
 | 5.7 Generalization studies | Does the complete framework remain effective beyond its current Encoder realization? | Weather、ETTm1、ETTm2；DLinear-style与PatchTST-style；Original Decoder versus complete ISCF-BSCA；end-to-end training | Figure 7 / `Decoder-Transfer` | 两类backbones在Figure 7所示三数据集four-horizon mean MSE上均取得3/3 wins；conclusion restricted to evaluated-scope compatibility | Figure 7 complete；aggregate LaTeX table retained as numerical/audit source but not inserted into the main text；per-H/hash rerun provenance unsynchronized；no additional HPO required |
 
 ### 3.2 Why Main-I and Main-II must remain separate

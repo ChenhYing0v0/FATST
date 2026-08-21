@@ -2,7 +2,7 @@
 
 ## Decision
 
-- Status: `panel_bc_pass_panel_a_replacement_recommended`.
+- Status: `panel_bc_pass_panel_a_reframe_pending`.
 - Canonical paper asset: `no`; author approval remains required before replacing the current `paper-figures/` asset or drafting visible Section 5.6 prose.
 - Reuse level: `build anew`. The v2 evidence and source values are preserved, but its dense heatmap layout is not reused.
 - New method implementation, training and formal test: `0/0/0`.
@@ -37,5 +37,6 @@
 - Section 3 Figure 3 and current Panel a use different predictor families, scope sets and aggregation levels.
 - Their main-text conclusion is nevertheless the same: the lowest-error sharing extent changes across future regions. Both also visualize regional winners and error separation.
 - The overlap is therefore low at the raw-experiment level but high at the narrative and visual-task levels.
-- Current Panel a is suitable as an expanded five-dataset Appendix diagnostic. The recommended main-text replacement is a CHPC fulfillment panel combining one nested-prefix trajectory with the aggregate 20/20 zero-CHPD verification.
+- Current Panel a remains a main-text candidate only when framed as an aggregate diagnostic of the jointly trained ISCF scope field. Its current generic title must be revised to distinguish this role from Section 3 Figure 3.
+- A CHPC visualization is not recommended because zero CHPD follows from the inference graph and would serve only as implementation verification.
 - Panels b/c remain approved. Additional upper y-axis padding separates their comparison subtitles from the first dataset row.

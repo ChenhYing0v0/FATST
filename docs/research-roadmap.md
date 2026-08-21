@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## Section 5.6 Narrative-First Reassessment (2026-08-21)
+
+Previous CHPC-panel recommendation is withdrawn。CHPC由ISCF的future-step-indexed inference graph保证，zero CHPD不作为main-text empirical result。Section 5.6的科学任务重新冻结为：检查jointly trained scope field是否保留region-dependent relative competence，并用matched controls评估Target-Adaptive Allocation与BSCA的aggregate utility。
+
+当前Panel a保留为main-text candidate，但其角色改为Full ISCF-BSCA的五数据集aggregate internal diagnostic，而不是再次发现sharing-demand heterogeneity。正文必须区分lowest-error scope与learned allocation decision，并披露Scope Probabilities接近均匀、highest-weight与lowest-error仅`8/40`一致。Recommended title=`Regional scope behavior and adaptive integration`；Decision=`section5_6_narrative_first_panel_a_reframe_no_chpc_visual`；no figure redraw、training或formal test in this step。
+
 ## Section 5.6 Figure 5 v3 Cross-Figure Audit (2026-08-21)
 
 Panels b/c在增加comparison subtitle与首行数据的垂直留白后通过当前review。Panel a虽使用Full ISCF-BSCA scope arms、五数据集全量validation aggregates与不同scope/region grid，但其reader-facing conclusion及winner/error-gap visual task与Section 3 Figure 3高度重叠。
