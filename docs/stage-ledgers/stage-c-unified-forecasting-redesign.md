@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | Section 5 v0.7已完成5.4、5.5与5.7 evidence-integration refinement；5.6 visible body等待重新设计 |
+| `active_question` | Section 5 v0.8已将5.7收敛为Figure 7-only presentation；5.6 visible body等待重新设计 |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
-| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7 temporarily frozen usable；Section 5 v0.7 opening/5.1--5.5/5.7 author-refined，5.6 body pending；Sections 5--7 v0.9 structure frozen；Figure 4 visual design temporarily fixed |
+| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7 temporarily frozen usable；Section 5 v0.8 opening/5.1--5.5/5.7 author-refined，5.6 body pending；Sections 5--7 v0.10 structure frozen；Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | Main I dense/Main II v1=ETTh1, ETTh2, ETTm1, ETTm2, Weather, ECL, Solar；Exchange=companion/deferred extension；ablation=original five |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
@@ -22,13 +22,28 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper experiment matrix closed；Section 5 v0.7 evidence integration complete except 5.6 visible body |
-| `current_candidate` | Section 5 v0.7 evidence-integration refinement |
-| `latest_decision` | `section5_v0_7_evidence_integration_refined_5_6_pending` |
-| `writing_latest_decision` | `section5_v0_7_evidence_integration_refined_5_6_pending` |
-| `next_required_action` | author review revised 5.4/5.5/5.7 and redesign 5.6；then draft standalone Discussion and Conclusion；no new experiment required |
+| `current_11_step` | paper experiment matrix closed；Section 5 v0.8 figure-only transfer presentation complete except 5.6 visible body |
+| `current_candidate` | Section 5 v0.8 figure-only transfer presentation |
+| `latest_decision` | `section5_v0_8_figure_only_transfer_5_6_pending` |
+| `writing_latest_decision` | `section5_v0_8_figure_only_transfer_5_6_pending` |
+| `next_required_action` | author review Figure 7-only 5.7 and redesign 5.6；then draft standalone Discussion and Conclusion；no new experiment required |
 | `method_training_authorized` | false；no matched controls、extra HPO/seeds or formal test required |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
+
+## Section 5 Figure-Only Transfer Presentation Record (2026-08-21)
+
+| Field | Current Record |
+| --- | --- |
+| `current_step` | Section 5 v0.8 manuscript refinement；no new experiment |
+| `problem` | 5.7只展示Figure 7，不在正文插入Decoder-Transfer Table 4 |
+| `existence_evidence` | Figure 7与其Decoder-Transfer aggregate numerical source均已冻结 |
+| `idea` | 将Figure 7设为5.7唯一main-text evidence carrier，同时保留LaTeX table作为numerical/audit source |
+| `theory_check` | Figure 7只编码four-horizon mean MSE，正文因此不陈述图中不可见的MAE；two-backbone evidence仍不能支持universal transfer |
+| `design` | 删除Table 4插入标记与引用；5.7只报告Figure 7所示MSE；同步manuscript routing和registry，不修改结果资产 |
+| `narrative_gate` | visible claim必须可由Figure 7直接读取；完整MAE与negative boundaries继续保留在audit/limitations records |
+| `effectiveness_gate` | 沿用冻结结果；不新增formal evaluation |
+| `artifacts` | `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`；`paper-figures/figure_7_decoder_transfer.*` |
+| `decision` | `section5_v0_8_figure_only_transfer_5_6_pending` |
 
 ## Section 5 Evidence Integration Refinement Record (2026-08-20)
 

@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## Section 5 Figure-Only Transfer Presentation (2026-08-21)
+
+Current cursor=`Section 5 v0.8 5.7 Figure 7 only -> 5.6 visible body pending redesign`。5.7不再插入或引用Table 4，Figure 7成为Generalization studies的唯一main-text evidence carrier；Decoder-Transfer LaTeX table与完整aggregate audit继续保留为Figure 7 numerical source，不删除结果资产。
+
+Figure 7只展示four-horizon mean MSE，因此5.7正文同步移除MAE数值，只报告DLinear-style与PatchTST-style在Weather、ETTm1、ETTm2上的MSE对比。当前visible evidence-carrier chain为5.2 Table 1、5.3 Table 2、5.4 Figure 6、5.5 Table 3与5.7 Figure 7。No artifact value、figure asset、implementation、training或formal test change。Decision=`section5_v0_8_figure_only_transfer_5_6_pending`。
+
 ## Section 5 Evidence Integration Refinement (2026-08-20)
 
 Current cursor=`Section 5 v0.7 5.4/5.5/5.7 refined -> 5.6 visible body pending redesign`。5.4现只放Figure 6，不插入Efficiency Table 3；table artifact与完整audit继续保留为Figure 6 numerical source。正文按Figure 6实际展示范围报告eight displayed methods与macro MSE，并删除author指定的architecture-equivalent state-dict说明。Core-Ablation与Generalization tables顺延为Table 3与Table 4。5.5显式引用Table 3并拆分过度并列的总结句。5.7显式引用Table 4和Figure 7，删除`Within the evaluated three-dataset scope`，同时仍将结论落在DLinear与PatchTST两个示例backbones上。

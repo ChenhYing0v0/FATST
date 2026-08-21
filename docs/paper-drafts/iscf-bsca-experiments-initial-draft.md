@@ -5,8 +5,8 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Clean manuscript-facing initial draft of Section 5 |
-| `version` | `v0.7-evidence-integration-refinement` |
-| `date` | `2026-08-20` |
+| `version` | `v0.8-figure-only-transfer-presentation` |
+| `date` | `2026-08-21` |
 | `review_status` | `initial_draft_pending_author_review` |
 | `upstream_dependency` | Introduction v0.9, Related Work v0.2, Section 3 v0.7 and Section 4 v0.7 remain temporarily frozen and unchanged |
 | `evidence_scope` | Main-I, Main-II, Efficiency, Core-Ablation and author-refined Decoder-Transfer; Figure 5 mechanism diagnostics are temporarily deferred from the manuscript body |
@@ -28,7 +28,7 @@ The status table and artifact map below are editorial metadata and are not part 
 | Table 3 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/table/table_iscf_bsca_core_ablation.tex` |
 | Figure 5 (temporarily deferred from body) | `paper-figures/figure_iscf_bsca_mechanism.*` |
 | Figure 6 | `paper-figures/figure_6_accuracy_system_cost.*` |
-| Table 4 | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/table_decoder_transfer_three_dataset_framework.tex` |
+| Figure 7 numerical source (not inserted as a main-text table) | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/table_decoder_transfer_three_dataset_framework.tex` |
 | Figure 7 | `paper-figures/figure_7_decoder_transfer.*` |
 
 ## 5. Experiments
@@ -91,9 +91,7 @@ Together, these controlled comparisons show that each evaluated component contri
 
 ### 5.7 Generalization studies
 
-ISCF is designed as an Encoder-agnostic plug-in decoder: it operates on an Encoder-produced history representation rather than relying on a particular history-modeling architecture. We examine this versatility using DLinear and PatchTST as representatives of lightweight linear and Transformer-based Encoders, respectively. For each backbone, we replace the Original Decoder with the complete ISCF-BSCA framework and train the resulting model end to end. The comparison covers Weather, ETTm1 and ETTm2, and each dataset value averages MSE or MAE over the four horizons.
-
-<!-- Insert Table 4 near here. Canonical source: decoder_transfer_three_dataset_scope_20260816/table_decoder_transfer_three_dataset_framework.tex -->
+ISCF is designed as an Encoder-agnostic plug-in decoder: it operates on an Encoder-produced history representation rather than relying on a particular history-modeling architecture. We examine this versatility using DLinear and PatchTST as representatives of lightweight linear and Transformer-based Encoders, respectively. For each backbone, we replace the Original Decoder with the complete ISCF-BSCA framework and train the resulting model end to end. The comparison covers Weather, ETTm1 and ETTm2, and each displayed value averages MSE over the four horizons.
 
 <a id="fig:decoder-transfer"></a>
 
@@ -101,7 +99,7 @@ ISCF is designed as an Encoder-agnostic plug-in decoder: it operates on an Encod
 
 **Figure 7 | Generalization across two forecasting backbones.** Four-horizon mean MSE is reported for **a**, DLinear and **b**, PatchTST with either the Original Decoder or ISCF-BSCA. Percentages denote the relative MSE change, and Avg. is the mean over Weather, ETTm1 and ETTm2. The MSE axis begins at 0.20 to resolve paired differences.
 
-As summarized in Table 4 and visualized in Figure 7, replacing the Original Decoder with ISCF-BSCA improves forecasting performance on both example backbones. For DLinear, the replacement lowers MSE and MAE on all three datasets and reduces the macro averages from 0.303/0.333 to 0.286/0.321, corresponding to improvements of 5.61% and 3.60%. PatchTST shows smaller but consistent gains, with macro MSE/MAE decreasing from 0.282/0.314 to 0.276/0.310, corresponding to improvements of 2.13% and 1.27%. The improvements obtained with both a lightweight linear backbone and a Transformer-based backbone show that ISCF-BSCA is not tied to a single Encoder design, supporting its intended role as a general plug-in decoder for unified multi-horizon forecasting.
+As shown in Figure 7, replacing the Original Decoder with ISCF-BSCA improves forecasting performance on both example backbones. For DLinear, the replacement lowers MSE on all three datasets and reduces the macro average from 0.303 to 0.286, corresponding to an improvement of 5.61%. PatchTST shows smaller but consistent gains, with macro MSE decreasing from 0.282 to 0.276, corresponding to an improvement of 2.13%. The improvements obtained with both a lightweight linear backbone and a Transformer-based backbone show that ISCF-BSCA is not tied to a single Encoder design, supporting its intended role as a general plug-in decoder for unified multi-horizon forecasting.
 
 ## Editorial evidence and claim audit
 
@@ -112,4 +110,4 @@ As summarized in Table 4 and visualized in Figure 7, replacing the Original Deco
 | 5.4 Efficiency | Complete Figure 6 source with audited accuracy and memory/storage service units | Lowest macro MSE among the eight displayed methods and one-checkpoint consolidation; lower memory/storage than TimeAlign, AMD, iTransformer, PatchTST and TimeMixer | Uniform memory/storage advantage or a training-time claim |
 | 5.5 Core ablation | Author-corrected five-dataset aggregate table | All four interventions improve aggregate MSE/MAE under the matched design | Per-horizon dominance, oracle routing or independently verified component semantics |
 | 5.6 Mechanism analysis | Complete validation diagnostic bundle, temporarily deferred from the manuscript body | No visible claim in the current draft; mixed evidence remains preserved for redesign | Reliable region-best routing, sparse specialization, prevalence or causal interpretation of the example |
-| 5.7 Generalization studies | Author-refined two-backbone, three-dataset aggregate table | Complete-framework compatibility across the two displayed backbone families | Universal architecture-agnostic transfer; separate ISCF/BSCA attribution |
+| 5.7 Generalization studies | Complete Figure 7 MSE source for two backbones and three datasets | Complete-framework compatibility across the two displayed backbone families | Universal architecture-agnostic transfer; separate ISCF/BSCA attribution |

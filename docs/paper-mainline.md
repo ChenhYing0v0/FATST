@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Section 5 v0.7完成5.4、5.5与5.7 evidence-integration refinement；5.6正文暂时留空 |
+| `current_11_step` | Section 5 v0.8将5.7收敛为Figure 7-only presentation；5.6正文暂时留空 |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,7 +18,9 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；Sections 1--4 temporarily frozen usable；Section 5 v0.7 opening/5.1--5.5/5.7 author-refined，5.6 visible body pending redesign；5.4 Figure 6 only；allocation aggregate accuracy direction positive但routing health mixed；Sections 6--7 prose pending |
+| `paper_core_status` | architecture family frozen；Sections 1--4 temporarily frozen usable；Section 5 v0.8 opening/5.1--5.5/5.7 author-refined，5.6 visible body pending redesign；5.4 Figure 6 only，5.7 Figure 7 only；allocation aggregate accuracy direction positive但routing health mixed；Sections 6--7 prose pending |
+
+[Section 5 Figure-Only Transfer Presentation, 2026-08-21] manuscript更新为`v0.8-figure-only-transfer-presentation`。5.7删除Table 4插入标记与正文引用，Figure 7成为该节唯一main-text evidence carrier；Decoder-Transfer LaTeX table仍保留为Figure 7 numerical/audit source。因Figure 7仅显示MSE，5.7结果段同步只报告DLinear-style与PatchTST-style的four-horizon mean MSE，不再写图中不可见的MAE。当前visible evidence chain为Table 1、Table 2、Figure 6、Table 3与Figure 7。Decision=`section5_v0_8_figure_only_transfer_5_6_pending`；new implementation/training/formal test=`0/0/0`。
 
 [Section 5 Evidence Integration Refinement, 2026-08-20] manuscript更新为`v0.7-evidence-integration-refinement`。5.4删除Efficiency Table 3正文路由，仅保留Figure 6；Efficiency table artifact继续作为source，不进入main-text。为保持连续编号，Core-Ablation与Generalization tables顺延为Table 3与Table 4。5.5显式引用Table 3并优化component summary句法。5.7显式连接Table 4与Figure 7，删除指定scope lead-in，但仍以two displayed backbone families限制claim。完整引用审计确认5.2--5.7当前visible evidence均由正文点名。Decision=`section5_v0_7_evidence_integration_refined_5_6_pending`；new implementation/training/formal test=`0/0/0`。
 

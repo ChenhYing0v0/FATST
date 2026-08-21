@@ -54,7 +54,7 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 | `Main-I-Exchange` | Supplementary companion | `complete_limited_surface` | ISCF-BSCA / TimeAlign / QDF × Exchange × 4 H | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_h5d_bs16_lr2p4_synced_20260813/table_exchange_companion.tex` | Exchange 的部分系统背景；不能表述为完整 Main I extension |
 | `Efficiency` | Figure 6 numerical source；table不插入正文 | `complete_nine_system_accuracy_advantage_resource_mixed` | 9-system source audit；Figure 6显示8 systems；252/252 accuracy cells、63/63 memory/storage units、231 table-role objects | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/table/table_iscf_bsca_efficiency.tex` | Figure 6支持one-model macro MSE与service consolidation；相对五个较重baseline有memory/storage优势，但visible DLinear/QDF构成负向边界，不支持uniform resource advantage |
 | `Core-Ablation` | 正文 mechanism attribution | `complete_author_corrected_aggregate_all_controls_positive_provenance_partial` | 5 variants × 5 datasets × MSE/MAE + Avg；60 displayed metric cells；historical 100-cell audit retained | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/table/table_iscf_bsca_core_ablation.tex` | 作者修正aggregate表支持四项matched accuracy directions；per-horizon/checkpoint rerun provenance待补；Figure 5不支持reliable routing或causal specialization |
-| `Decoder-Transfer` | 正文 transfer evidence | `complete_author_corrected_aggregate_both_backbones_all_columns_positive_provenance_partial` | 2 backbones × 2 systems × 3 datasets + Avg；32 displayed metric cells；historical 48-cell audit retained | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/table_decoder_transfer_three_dataset_framework.tex` | 作者修正aggregate表中两类backbones均为3/3 dataset MSE/MAE wins且16/16 comparator columns正向；不作内部ISCF-vs-BSCA attribution，per-H/hash provenance与five-dataset negative audit保留 |
+| `Decoder-Transfer` | Figure 7 numerical/audit source；table不插入正文 | `complete_author_corrected_aggregate_both_backbones_all_columns_positive_provenance_partial` | 2 backbones × 2 systems × 3 datasets + Avg；32 displayed metric cells；historical 48-cell audit retained | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/table_decoder_transfer_three_dataset_framework.tex` | Figure 7只展示four-horizon mean MSE，正文5.7据此仅报告MSE；完整MSE/MAE aggregate table继续用于numerical audit，不作内部ISCF-vs-BSCA attribution，per-H/hash provenance与five-dataset negative audit保留 |
 | `Figure-5-Diagnostics` | 正文 mechanism behavior | `complete_mixed_mechanism_evidence` | 5 datasets × Full/Fixed artifacts；20 CHPC cells；全部validation rows + 1,280-row qualitative pool | `paper-figures/figure_iscf_bsca_mechanism.svg` | exact CHPC与scope-arm regional error heterogeneity；learned allocation接近均匀且仅8/40 utilization/error-preference cells一致；Figure 5自身不建立accuracy attribution、reliable routing或causal specialization |
 | `Ablation-Sensitivity` | Appendix | `deferred_outside_current_core_closure` | random partition、scope count、$\lambda$ sensitivity | 尚无正式表 | 当前不纳入核心闭合；若恢复仅作sensitivity/robustness，canonical grouping不作为既定正向结论 |
 
@@ -92,7 +92,7 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 
 ### Decoder-Transfer
 
-- 正文范围按作者要求收窄为Weather、ETTm1、ETTm2；该范围在观察five-dataset结果后确定，因此标为`author_refined_posthoc_scope`，ETTh1/ETTh2负向证据移至完整audit/limitations而非删除；
+- 正文范围按作者要求收窄为Weather、ETTm1、ETTm2，并仅通过Figure 7展示four-horizon mean MSE；aggregate LaTeX table不插入正文，只保留为Figure 7 numerical/audit source。该范围在观察five-dataset结果后确定，因此标为`author_refined_posthoc_scope`，ETTh1/ETTh2负向证据移至完整audit/limitations而非删除；
 - 正文不再区分ISCF与BSCA内部贡献，只比较完整ISCF-BSCA framework与各backbone的native Original Decoder；Core-Ablation独立承担component attribution；
 - 作者修正aggregate表中，DLinear-style与PatchTST-style完整framework相对Original分别为`+5.611%/+3.604%`与`+2.128%/+1.274%` display-precision macro MSE/MAE gains；两者均为3/3 dataset MSE/MAE wins，合计16/16 comparator metric columns正向；
 - correction manifest=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/author_correction_freeze_manifest_20260817.json`；新的per-horizon raw files、selectors、profiles与checkpoint hashes仍未同步；
@@ -137,7 +137,7 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 
 ## 5. 当前正文实验闭合状态
 
-Figure 5完成后，Main I、Main II、Efficiency、Core-Ablation、Figure 5与Decoder-Transfer均已有canonical artifact。Section 5 v0.7只将Efficiency结果通过Figure 6放入正文，其LaTeX table仅保留为numerical source。`Ablation-Sensitivity`继续deferred，不属于当前正文核心闭合；若后续恢复，须单独冻结Appendix grid且不得因已见结果选择性扩张。
+Figure 5完成后，Main I、Main II、Efficiency、Core-Ablation、Figure 5与Decoder-Transfer均已有canonical artifact。Section 5 v0.8中，Efficiency只通过Figure 6放入正文，Decoder-Transfer只通过Figure 7放入正文；两项LaTeX table均保留为numerical/audit source而不插入main text。`Ablation-Sensitivity`继续deferred，不属于当前正文核心闭合；若后续恢复，须单独冻结Appendix grid且不得因已见结果选择性扩张。
 
 当前不自动追加seeds、controls、allocation redesign或新的formal test。
 

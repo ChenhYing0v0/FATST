@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "registry_id": "ISCF-BSCA-PAPER-TABLES-20260815-AUTHOR-CORRECTED-MAIN",
-  "updated_at": "2026-08-20",
+  "updated_at": "2026-08-21",
   "scope": "paper_facing_experiment_tables",
   "presentation_contract": {
     "main_result_template": "TimeAlign_Table_6_style",
@@ -268,7 +268,7 @@
     },
     {
       "id": "decoder_transfer",
-      "manuscript_role": "main_text_transfer_evidence",
+      "manuscript_role": "figure_7_numerical_source_not_inserted_as_main_text_table",
       "title": "Decoder transfer across two backbone families",
       "status": "complete_author_corrected_aggregate_both_backbones_all_columns_positive_provenance_partial",
       "datasets": ["Weather", "ETTm1", "ETTm2"],
