@@ -5,25 +5,27 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.93` |
+| `version` | `v0.94` |
 | `last_updated` | `2026-08-21` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | Section 5.6 scope diversity/allocation behavior与Figure 5 v4 temporarily fixed usable；Sections 6--7 prose pending |
+| `current_review_cursor` | Section 5.6 sample-specific scope/allocation behavior与Figure 5 v5 author-review candidate；Sections 6--7 prose pending |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `frozen_consensus` | 论文七章结构并保留standalone Discussion；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
-| `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7 v0.15 structural design；Section 5 v0.9中的5.6正文与Figure 5 v4 |
-| `provisional_content` | Section 5 v0.9 remaining paragraphs；Sections 6--7 prose；Method Figure 4 stable vector-asset synchronization |
-| `authorization_source` | 2026-08-21用户要求按scope-forecast diversity、regional preference与allocation non-collapse重构并固定5.6；no new method implementation/training/formal test |
+| `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7整体结构（v0.17中仅5.6/Figure 5待author review） |
+| `provisional_content` | Section 5 v0.10与Figure 5 v5 author-review candidate；Sections 6--7 prose；Method Figure 4 stable vector-asset synchronization |
+| `authorization_source` | 2026-08-21用户要求将5.6重构为同一sample上的fused-forecast dominant-scope colouring、scope-forecast diversity与per-step probability heatmap；no new method implementation/training/formal test |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
 `temporarily_frozen_content` 只有在后续章节或证据产生明确矛盾且用户同意后才解冻；
 `provisional_content` 只表示当前最佳结构，后续按章节继续修订。
 
-Section 5.6 v0.9 temporary-freeze amendment：本节固定为`Scope Diversity and Allocation Behavior`，与5.5 matched ablation分离，只分析unchanged Full model。Figure 5 v4的Panel a展示经完整1,280-row selection audit选出的ETTh1 probe 107：五条Scope-conditioned Forecasts保持差异，8个regions的lowest-MSE scope覆盖全部五种scope；Panel b使用五数据集全部validation rows，五种scope均至少在一个dataset-region cell取得lowest MSE；Panel c展示mean soft allocation的highest-weight scope，五种scope均出现且4/5 datasets随region变化。CHPC只在正文报告20/20 numerical checks的maximum absolute CHPD=0，不占独立panel。正文不报告`8/40` alignment count，不写oracle recovery、hard routing或causal specialization；原始mixed evidence继续保存在internal audit。Canonical figure=`paper-figures/figure_5_scope_allocation_behavior.*`；Decision=`section5_6_v4_scope_allocation_behavior_temporarily_fixed_usable`。
+Section 5.6 v0.10 / Figure 5 v5 amendment：用户重新打开5.6并要求三个panels统一为sample-specific diagnostics。当前author-review candidate从完整5 datasets × 256 probes池中，按`distinct region-dominant scopes -> mean pairwise scope-forecast disagreement`确定性选择ETTm1 probe 113。Panel a只绘制真实soft-fused forecast，并按每个region内mean Scope Probability最高的scope着色，dominant sequence=`[1,48,720,144,360,144,48,720]`；不得把颜色误写为hard-selected scope forecast。Panel b以共享尺度绘制五条$\mathcal F^{(s)}-\widehat y$，mean pairwise disagreement=`0.081196`，用于暴露非重复scope signals。Panel c绘制同一probe的实际$5\times720$ per-step Scope Probabilities；概率范围必须通过colorbar披露，不声称sparse routing。CHPC仍只在正文报告20/20 checks的maximum absolute CHPD=0。该selected validation example只说明framework can express scope diversity与region-dependent soft reweighting，不估计prevalence，不建立oracle recovery、hard routing或causal specialization。Canonical figure path保持`paper-figures/figure_5_scope_allocation_behavior.*`；Decision=`section5_6_v5_sample_specific_behavior_author_review_candidate`。
+
+Section 5.6 v0.9 temporary-freeze historical amendment：本节曾固定为`Scope Diversity and Allocation Behavior`，与5.5 matched ablation分离，只分析unchanged Full model。Figure 5 v4的Panel a展示经完整1,280-row selection audit选出的ETTh1 probe 107：五条Scope-conditioned Forecasts保持差异，8个regions的lowest-MSE scope覆盖全部五种scope；Panel b使用五数据集全部validation rows，五种scope均至少在一个dataset-region cell取得lowest MSE；Panel c展示mean soft allocation的highest-weight scope，五种scope均出现且4/5 datasets随region变化。该版本已被v5 author-review candidate替代，但bundle保留为历史审计材料。
 
 Section 5.5/5.6 boundary amendment：5.5通过matched retraining controls回答component utility；5.6在不改变Full model的前提下，通过validation internal diagnostics回答scope field与allocation behavior。因而5.6后半段不再重复Full vs equal fusion或Full vs prefix-only training的percentage gains。新版paragraph contract报告Scope Probabilities range=`0.18258--0.21479`、normalized entropy `>0.9989`、highest-weight scope在4/5 datasets随region变化但与lowest-error scope仅`8/40`一致。Permitted interpretation=`distributed target-conditioned reweighting`，不是hard selection、oracle recovery或BSCA-specific routing attribution。Current Panels b/c视觉QA通过但evidence role与Table 3重复；推荐Figure 5只保留full-width Panel a，除非后续增加真正的probability/allocation diagnostic。Decision=`section5_6_behavior_analysis_separated_from_ablation`。
 
@@ -1606,11 +1608,11 @@ latency/memory/storage profiler保留为historical supplementary audit。
 
 本节与5.5的职责固定分离：5.5通过matched interventions回答各组件是否贡献accuracy；5.6不更换模型或objective，只检查Full ISCF-BSCA是否形成与设计相符的内部行为。
 
-正文采用三步短叙事：首先一句说明ISCF由同一full trajectory返回不同horizon prefixes，因此CHPC by construction，并报告20/20 numerical checks的maximum absolute CHPD=0；其次用Figure 5a/b说明Scope-conditioned Forecasts不是重复轨迹，且五种scope均在至少一个future-region cell表现为lowest-MSE scope；最后用Figure 5c说明learned soft allocation的highest-weight scope覆盖全部五种scope，并在4/5 datasets内随region变化，因此未塌缩为全future domain固定scope。
+正文采用三步短叙事：首先一句说明ISCF由同一full trajectory返回不同horizon prefixes，因此CHPC by construction，并报告20/20 numerical checks的maximum absolute CHPD=0；其次说明sample-conditioned allocation不宜只用dataset mean表征，并通过Figure 5a/c展示同一selected probe上的regional dominant-scope变化与完整per-step soft probabilities；最后通过Figure 5b的scope-relative deviation profiles说明Scope-conditioned Forecasts不是重复轨迹。结论严格限定为selected-example capability，不估计prevalence。
 
-Figure 5 v4固定为：Panel a=ETTh1 validation probe 107的五条scope forecasts与regional lowest-MSE strip，selection rule为先最大化distinct regional winners再最大化mean pairwise forecast disagreement；Panel b=五数据集完整validation aggregate regional competence；Panel c=相同grid上的highest-weight mean soft allocation。Caption必须披露validation-only、seed 2021与selected-example rule，并说明图不建立oracle scope recovery。Realized allocation value与独立failure-case panel仍不进入当前正文。
+Figure 5 v5 author-review candidate固定为：Panel a=ETTm1 validation probe 113的真实fused forecast与regional dominant-scope colour/strip；Panel b=五条Scope-conditioned Forecast相对fused forecast的deviation small multiples；Panel c=同一probe的$5\times720$ per-step Scope Probability heatmap。Selection rule为先最大化distinct region-dominant scopes，再最大化mean pairwise forecast disagreement。Caption必须披露validation-only、seed 2021、selection pool/rule、soft rather than hard allocation与selected-example boundary。Realized allocation value与独立failure-case panel仍不进入当前正文。
 
-原始diagnostic audit中的probability range和allocation--competence alignment继续作为internal claim boundary保留，但按author决定不进入当前正文或Figure 5。该隐藏不授权任何更强机制解释：Figure 5只支持scope forecast diversity、regional error heterogeneity与non-identical soft reweighting，不支持hard routing、oracle recovery或causal specialization。Canonical figure=`paper-figures/figure_5_scope_allocation_behavior.*`；QA=`analysis/iscf_bsca_section5_6_figure5_v4_scope_allocation_behavior_20260821/figure_contract_and_qa.md`。
+原始diagnostic audit中的aggregate probability range和allocation--competence alignment继续作为internal claim boundary保留。Figure 5 v5直接显示selected probe的per-step probability range并以colorbar透明呈现，不授权更强机制解释：只支持selected-example scope forecast diversity与region-dependent soft reweighting，不支持hard routing、oracle recovery或causal specialization。Canonical figure=`paper-figures/figure_5_scope_allocation_behavior.*`；QA=`analysis/iscf_bsca_section5_6_figure5_v5_sample_specific_behavior_20260821/figure_contract_and_qa.md`。
 
 ### 8.7 Generalization Studies
 

@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | Section 5.6 scope diversity and allocation behavior temporarily fixed；Sections 6--7 prose pending |
+| `active_question` | Section 5.6 sample-specific scope/allocation behavior and Figure 5 v5 under author review；Sections 6--7 prose pending |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
-| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7 temporarily frozen usable；Section 5 v0.9中5.6与Figure 5 v4 temporarily fixed usable；Sections 6--7 prose pending；Figure 4 visual design temporarily fixed |
+| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7 temporarily frozen usable；Section 5 v0.10中5.6与Figure 5 v5为author-review candidate；Sections 6--7 prose pending；Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | Main I dense/Main II v1=ETTh1, ETTh2, ETTm1, ETTm2, Weather, ECL, Solar；Exchange=companion/deferred extension；ablation=original five |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
@@ -22,15 +22,30 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper experiment matrix closed；Section 5.6 prose/figure temporarily fixed |
+| `current_11_step` | paper experiment matrix closed；Section 5.6 prose/Figure 5 v5 author-review candidate |
 | `current_candidate` | Sections 6--7 paper writing |
-| `latest_decision` | `section5_6_v4_scope_allocation_behavior_temporarily_fixed_usable` |
-| `writing_latest_decision` | `section5_6_v4_scope_allocation_behavior_temporarily_fixed_usable` |
+| `latest_decision` | `section5_6_v5_sample_specific_behavior_author_review_candidate` |
+| `writing_latest_decision` | `section5_6_v5_sample_specific_behavior_author_review_candidate` |
 | `next_required_action` | continue Discussion/Conclusion drafting or author-requested Section 5 refinement；no new experiment required |
 | `method_training_authorized` | false；no matched controls、extra HPO/seeds or formal test required |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
-## Section 5.6 Scope/Allocation Behavior Temporary Freeze Record (2026-08-21)
+## Section 5.6 Sample-Specific Behavior Redesign Record (2026-08-21)
+
+| Field | Current Record |
+| --- | --- |
+| `current_step` | existing-artifact sample-specific behavior analysis、manuscript integration与Figure 5 v5 QA complete；author review next |
+| `problem` | v4将scope forecasts叠画且混用selected与aggregate panels，无法清晰、同sample地说明scope-signal diversity与allocation non-collapse |
+| `existence_evidence` | 5个Full validation diagnostic objects；1,280 sequential probes的fused/scope forecasts与per-step probabilities；20/20 CHPC numerical checks |
+| `idea` | 同一selected probe中，Panel a展示真实fused forecast及regional dominant-scope colour，Panel b展示scope-relative deviations，Panel c展示完整per-step probability heatmap |
+| `theory_check` | fused output必须保持实际soft weighted contraction，segment colour只作dominant-component annotation；scope deviation不等于独立模型；CHPC无需可视化 |
+| `design` | 183 × 142 mm Python figure；ETTm1 probe 113；dominant sequence=`[1,48,720,144,360,144,48,720]`；editable SVG/PDF + 300/600-dpi raster |
+| `narrative_gate` | 允许selected-example non-identical scope signals与region-dependent soft reweighting；禁止prevalence、sparse/hard routing、oracle recovery或causal specialization |
+| `effectiveness_gate` | validation-only illustrative behavior；paper-facing effectiveness与component utility分别由Main I/II和Table 3承担 |
+| `artifacts` | manuscript=`docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`；figure=`paper-figures/figure_5_scope_allocation_behavior.*`；QA=`analysis/iscf_bsca_section5_6_figure5_v5_sample_specific_behavior_20260821/figure_contract_and_qa.md` |
+| `decision` | `section5_6_v5_sample_specific_behavior_author_review_candidate` |
+
+## Section 5.6 Scope/Allocation Behavior Temporary Freeze Record (2026-08-21, historical)
 
 | Field | Current Record |
 | --- | --- |

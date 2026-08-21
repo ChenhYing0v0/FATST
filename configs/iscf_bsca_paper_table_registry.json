@@ -346,20 +346,20 @@
   "non_table_experiment_blocks": [
     {
       "id": "unified_problem_and_mechanism_diagnostics",
-      "status": "section5_6_v4_temporarily_fixed_usable_20260821",
-      "current_presentation": "Figure_5_v4_scope_diversity_and_allocation_behavior",
+      "status": "section5_6_v5_author_review_candidate_20260821",
+      "current_presentation": "Figure_5_v5_sample_specific_scope_and_allocation_behavior",
       "canonical_artifact": "paper-figures/figure_5_scope_allocation_behavior.svg",
       "canonical_report": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/figure5_mechanism_diagnostics_20260816/result_and_decision.md",
-      "presentation_qa": "analysis/iscf_bsca_section5_6_figure5_v4_scope_allocation_behavior_20260821/figure_contract_and_qa.md",
+      "presentation_qa": "analysis/iscf_bsca_section5_6_figure5_v5_sample_specific_behavior_20260821/figure_contract_and_qa.md",
       "contents": [
         "exact_CHPC_and_CHPD_verification",
-        "selected_scope_conditioned_forecast_diversity",
-        "aggregate_scope_wise_regional_competence",
-        "aggregate_region_wise_soft_allocation_diversity"
+        "selected_actual_fused_forecast_with_regional_dominant_scope_annotation",
+        "selected_scope_conditioned_forecast_deviation_diversity",
+        "selected_per_step_soft_allocation_probability_heatmap"
       ],
-      "result_boundary": "main_text_supports_exact_CHPC_scope_forecast_diversity_regional_error_heterogeneity_and_noncollapsed_soft_allocation_but_not_oracle_scope_recovery_hard_routing_or_causal_specialization_internal_audit_retains_near_uniform_and_8_of_40_alignment_boundary",
+      "result_boundary": "main_text_reports_exact_CHPC_and_uses_one_selected_validation_probe_to_illustrate_nonidentical_scope_forecasts_and_region_dependent_soft_reweighting_but_not_prevalence_sparse_or_hard_routing_oracle_scope_recovery_or_causal_specialization_internal_audit_retains_aggregate_near_uniform_and_8_of_40_alignment_boundary",
       "excluded_current_diagnostic": "realized_allocation_value",
-      "qualitative_selection_boundary": "selected_from_1280_validation_probes_by_distinct_regional_winners_then_pairwise_scope_forecast_disagreement_not_representative"
+      "qualitative_selection_boundary": "ETTm1_probe_113_selected_from_1280_validation_probes_by_distinct_region_dominant_scopes_under_mean_soft_allocation_then_pairwise_scope_forecast_disagreement_not_representative"
     }
   ],
   "excluded_from_paper_table_inventory": [

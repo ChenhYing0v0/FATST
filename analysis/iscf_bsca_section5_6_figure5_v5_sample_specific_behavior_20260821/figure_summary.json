@@ -1,0 +1,34 @@
+{
+  "split": "validation",
+  "seed": 2021,
+  "new_training": 0,
+  "formal_test": 0,
+  "selected_example": {
+    "dataset": "ETTm1",
+    "probe_row": 113,
+    "selection_pool": 1280,
+    "selection_rule": "maximize the number of distinct region-dominant scopes under mean soft allocation, then maximize mean pairwise absolute scope-forecast disagreement",
+    "distinct_regional_dominant_scopes": 5,
+    "regional_dominant_scopes": [
+      1,
+      48,
+      720,
+      144,
+      360,
+      144,
+      48,
+      720
+    ],
+    "mean_pairwise_scope_disagreement": 0.08119599355384707,
+    "per_step_probability_min": 0.18886631727218628,
+    "per_step_probability_max": 0.21259385347366333,
+    "regional_mean_probability_min": 0.19431982468813658,
+    "regional_mean_probability_max": 0.2059428834428008
+  },
+  "panel_semantics": {
+    "a": "actual fused forecast; segment colour identifies the scope with the highest mean soft-allocation probability in that region",
+    "b": "each scope-conditioned forecast minus the actual fused forecast; all five rows use one shared deviation scale",
+    "c": "actual per-step soft-allocation probabilities for the same probe"
+  },
+  "claim_boundary": "The selected validation example illustrates non-identical scope forecasts and region-dependent soft reweighting. It does not estimate prevalence, establish sparse routing, or demonstrate oracle scope selection or causal specialization."
+}

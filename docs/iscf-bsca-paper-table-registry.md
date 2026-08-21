@@ -55,7 +55,7 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 | `Efficiency` | Figure 6 numerical source；table不插入正文 | `complete_nine_system_accuracy_advantage_resource_mixed` | 9-system source audit；Figure 6显示8 systems；252/252 accuracy cells、63/63 memory/storage units、231 table-role objects | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/table/table_iscf_bsca_efficiency.tex` | Figure 6支持one-model macro MSE与service consolidation；相对五个较重baseline有memory/storage优势，但visible DLinear/QDF构成负向边界，不支持uniform resource advantage |
 | `Core-Ablation` | 正文 mechanism attribution | `complete_author_corrected_aggregate_all_controls_positive_provenance_partial` | 5 variants × 5 datasets × MSE/MAE + Avg；60 displayed metric cells；historical 100-cell audit retained | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/core_ablation_20260814/formal_results/table/table_iscf_bsca_core_ablation.tex` | 作者修正aggregate表支持四项matched accuracy directions；per-horizon/checkpoint rerun provenance待补；Figure 5不支持reliable routing或causal specialization |
 | `Decoder-Transfer` | Figure 7 numerical/audit source；table不插入正文 | `complete_author_corrected_aggregate_both_backbones_all_columns_positive_provenance_partial` | 2 backbones × 2 systems × 3 datasets + Avg；32 displayed metric cells；historical 48-cell audit retained | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/table_decoder_transfer_three_dataset_framework.tex` | Figure 7只展示four-horizon mean MSE，正文5.7据此仅报告MSE；完整MSE/MAE aggregate table继续用于numerical audit，不作内部ISCF-vs-BSCA attribution，per-H/hash provenance与five-dataset negative audit保留 |
-| `Figure-5-Diagnostics` | 正文 Full-model internal behavior | `section5_6_v4_temporarily_fixed_usable` | 5 Full artifacts；20 CHPC cells；全部validation rows + 1,280-row scope-trajectory selection pool | `paper-figures/figure_5_scope_allocation_behavior.svg` | 正文支持scope-forecast diversity、regional scope-error heterogeneity与non-collapsed soft allocation；internal audit保留near-uniform/8-of-40 boundary，禁止oracle recovery、hard routing或causal specialization |
+| `Figure-5-Diagnostics` | 正文 Full-model internal behavior | `section5_6_v5_author_review_candidate` | 5 Full artifacts；20 CHPC cells；1,280-probe selection pool；selected ETTm1 probe 113完整720-step scope forecasts/probabilities | `paper-figures/figure_5_scope_allocation_behavior.svg` | 正文只用selected validation example说明non-identical scope forecasts与region-dependent soft reweighting；CHPC在正文报告；internal audit保留aggregate near-uniform/8-of-40 boundary，禁止prevalence、sparse/hard routing、oracle recovery或causal specialization |
 | `Ablation-Sensitivity` | Appendix | `deferred_outside_current_core_closure` | random partition、scope count、$\lambda$ sensitivity | 尚无正式表 | 当前不纳入核心闭合；若恢复仅作sensitivity/robustness，canonical grouping不作为既定正向结论 |
 
 ## 4. 已完成主表结果摘要
@@ -129,17 +129,17 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 
 - 完整性：5 datasets × 2 frozen validation artifact roles=`10/10` objects；training/test=`0/0`；
 - numerical CHPC：20/20 paper-facing cells的maximum absolute CHPD均为0；
-- 当前正文Figure 5 v4只使用Full-model behavior：Panel a从完整1,280-row pool按`distinct regional winners -> mean pairwise scope disagreement`选择ETTh1 probe 107，五条scope forecasts保持差异且regional winners覆盖五种scope；
-- Panel b使用五数据集全部validation rows，五种scope均至少在一个dataset-region cell取得lowest MSE；Panel c的highest-weight scope覆盖五种scope，且4/5 datasets随region改变；
+- 当前正文Figure 5 v5 author-review candidate只使用Full-model behavior：从完整1,280-row pool按`distinct region-dominant scopes under mean soft allocation -> mean pairwise scope disagreement`选择ETTm1 probe 113；
+- Panel a绘制真实fused forecast并按regional dominant scope着色，dominant sequence=`[1,48,720,144,360,144,48,720]`；Panel b绘制五条scope forecast相对fused forecast的deviation profiles；Panel c绘制同一probe完整$5\times720$ per-step Scope Probabilities；
 - aggregate learned probabilities范围为`0.18258--0.21479`，总体接近均匀；
 - macro region-best scope随future region变化，最大best-to-worst excess MSE=`6.123%`；
 - highest-utilization scope仅在`8/40` dataset-region cells等于lowest-MSE scope，因此只支持descriptive arm heterogeneity，不支持successful allocation；
-- main-text不报告上述alignment count，也不把highest-weight scope解释为oracle winner；该mixed evidence继续保存在registry与原始audit；
-- canonical Figure 5=`paper-figures/figure_5_scope_allocation_behavior.*`；v4 QA=`analysis/iscf_bsca_section5_6_figure5_v4_scope_allocation_behavior_20260821/figure_contract_and_qa.md`；原始audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/figure5_mechanism_diagnostics_20260816/result_and_decision.md`。
+- main-text不报告上述alignment count，也不把highest-weight scope解释为oracle winner；Figure 5只支持selected-example capability，该mixed aggregate evidence继续保存在registry与原始audit；
+- canonical Figure 5=`paper-figures/figure_5_scope_allocation_behavior.*`；v5 QA=`analysis/iscf_bsca_section5_6_figure5_v5_sample_specific_behavior_20260821/figure_contract_and_qa.md`；原始audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/figure5_mechanism_diagnostics_20260816/result_and_decision.md`。
 
 ## 5. 当前正文实验闭合状态
 
-Figure 5 v4完成后，Main I、Main II、Efficiency、Core-Ablation、Figure 5与Decoder-Transfer均已有canonical artifact。Section 5 v0.9中，Efficiency只通过Figure 6放入正文，Decoder-Transfer只通过Figure 7放入正文，5.6通过Figure 5呈现Full-model scope/allocation behavior；numerical source tables继续保留为audit source而不额外插入main text。`Ablation-Sensitivity`继续deferred，不属于当前正文核心闭合；若后续恢复，须单独冻结Appendix grid且不得因已见结果选择性扩张。
+Figure 5 v5 author-review candidate完成后，Main I、Main II、Efficiency、Core-Ablation、Figure 5与Decoder-Transfer均已有canonical artifact。Section 5 v0.10中，Efficiency只通过Figure 6放入正文，Decoder-Transfer只通过Figure 7放入正文，5.6通过Figure 5呈现Full-model sample-specific scope/allocation behavior；numerical source tables继续保留为audit source而不额外插入main text。`Ablation-Sensitivity`继续deferred，不属于当前正文核心闭合；若后续恢复，须单独冻结Appendix grid且不得因已见结果选择性扩张。
 
 当前不自动追加seeds、controls、allocation redesign或新的formal test。
 

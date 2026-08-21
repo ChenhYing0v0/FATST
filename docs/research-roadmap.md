@@ -1,6 +1,12 @@
 # Research Roadmap
 
-## Section 5.6 Scope/Allocation Behavior Temporary Freeze (2026-08-21)
+## Section 5.6 Sample-Specific Behavior Redesign (2026-08-21)
+
+Current cursor=`Section 5 v0.10 -> 5.6 and Figure 5 v5 author-review candidate`。本节继续与5.5分工：5.5回答matched component utility，5.6只检查unchanged Full model能否在一个sample中形成非重复scope signals与region-dependent soft allocation。CHPC由architecture保证并经20/20 numerical checks确认，不设置独立panel。
+
+Figure 5 v5的三个panels使用同一ETTm1 validation probe 113。该probe从完整1,280-candidate pool中按`distinct region-dominant scopes -> mean pairwise scope-forecast disagreement`选择。Panel a绘制真实fused forecast并仅用颜色标注region-mean probability最高的scope，不能解释为hard-spliced forecast；Panel b绘制五条scope forecast相对fused forecast的deviation profiles；Panel c绘制完整per-step probability heatmap。Dominant sequence覆盖全部五种scope，mean pairwise disagreement=`0.081196`。由于这是selected validation example，结论限定为illustrative capability，不估计prevalence，不建立sparse/hard routing、oracle recovery或causal specialization。Decision=`section5_6_v5_sample_specific_behavior_author_review_candidate`；new implementation/remote training/formal test=`0/0/0`。
+
+## Section 5.6 Scope/Allocation Behavior Temporary Freeze (2026-08-21, historical)
 
 Current cursor=`Section 5 v0.9 -> 5.6 visible prose and Figure 5 v4 temporarily fixed usable`。本节固定回答两项Full-model internal behavior：scope-conditioned forecasts是否保留差异，以及learned Scope Probabilities是否随future region变化而非塌缩到一个固定scope。CHPC只作architecture/numerical property一句说明。
 
