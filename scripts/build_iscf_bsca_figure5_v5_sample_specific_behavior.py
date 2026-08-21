@@ -391,7 +391,7 @@ def draw_fused_panel(
     axis.text(
         0.0,
         1.10,
-        "Line colour denotes the highest-weight scope of the region-mean soft allocation",
+        "line colour denotes the highest-weight scope of the region-mean soft allocation",
         transform=axis.transAxes,
         ha="left",
         va="bottom",
