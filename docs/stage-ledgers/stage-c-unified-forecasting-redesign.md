@@ -6,7 +6,7 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | Section 5.6 Figure 5 v3 Nature-oriented三联图已生成供author review；visible body与canonical replacement pending |
+| `active_question` | Section 5.6 Figure 5 v3 Panels b/c通过review；Panel a因与Section 3 Figure 3叙事重叠而等待replacement design |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
 | `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7 temporarily frozen usable；Section 5 v0.8 opening/5.1--5.5/5.7 author-refined，5.6 Figure 5 v3 Nature-oriented author-review draft complete；Sections 5--7 v0.12 structure draft；Figure 4 visual design temporarily fixed |
@@ -22,15 +22,17 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper experiment matrix closed；Section 5.6 Figure 5 v3 Nature-oriented author-review draft complete |
-| `current_candidate` | Section 5.6 Figure 5 v3 Nature-oriented redesign |
-| `latest_decision` | `figure5_v3_nature_redesign_author_review_noncanonical` |
-| `writing_latest_decision` | `figure5_v3_nature_redesign_author_review_noncanonical` |
-| `next_required_action` | author review Figure 5 v3 visual hierarchy and claim boundary；then decide canonical replacement and draft 5.6 prose；no new experiment required |
+| `current_11_step` | paper experiment matrix closed；Section 5.6 Figure 5 v3 Panel a replacement pending |
+| `current_candidate` | Section 5.6 Figure 5 v3 CHPC-oriented Panel a replacement |
+| `latest_decision` | `figure5_v3_panel_bc_pass_panel_a_replacement_recommended` |
+| `writing_latest_decision` | `figure5_v3_panel_bc_pass_panel_a_replacement_recommended` |
+| `next_required_action` | design nested-prefix trajectory + 20/20 zero-CHPD Panel a；then author review and canonical replacement decision；no new experiment required |
 | `method_training_authorized` | false；no matched controls、extra HPO/seeds or formal test required |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
 ## Section 5.6 Figure 5 v3 Nature-Oriented Redesign Record (2026-08-21)
+
+Cross-figure amendment：Panels b/c spacing refinement通过；current Panel a虽然source experiment与Section 3 Figure 3不同，但reader-facing conclusion和winner/error-gap visual task高度重叠，因此不建议main-text promotion。Preferred-scope map保留为Appendix-capable diagnostic；main-text replacement应直接验证CHPC。Decision=`figure5_v3_panel_bc_pass_panel_a_replacement_recommended`。
 
 | Field | Current Record |
 | --- | --- |

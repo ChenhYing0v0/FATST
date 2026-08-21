@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Section 5.6 Figure 5 v3 Nature-oriented author-review draft complete；正文与canonical replacement pending |
+| `current_11_step` | Section 5.6 Figure 5 v3 Panels b/c通过review；Panel a replacement pending |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -21,6 +21,8 @@
 | `paper_core_status` | architecture family frozen；Sections 1--4 temporarily frozen usable；Section 5 v0.8 opening/5.1--5.5/5.7 author-refined；5.6 Figure 5 v3 Nature-oriented draft complete but visible body/canonical replacement pending；5.4 Figure 6 only，5.7 Figure 7 only；allocation aggregate accuracy direction positive但routing health mixed；Sections 6--7 prose pending |
 
 [Section 5.6 Figure 5 v3 Nature-Oriented Redesign, 2026-08-21] 在不改变v2 evidence values和claim boundary的前提下，Figure 5按`nature-figure` contract完成结构性重绘。Panel a用5 × 8 preferred-scope map替代25 × 8 dense heatmap；marker number编码最低MSE scope，marker area编码best-to-worst excess MSE gap，全部40 cells仍由完整200个validation aggregates计算。Panels b/c改为共享0--7%轴的horizontal effect-size plots。180 × 110 mm输出通过static preflight `14/0/0`，并提供editable SVG/PDF与300/600-dpi raster。v3仍为author-review noncanonical asset，不替换`paper-figures/`、不修改5.6 visible prose；Decision=`figure5_v3_nature_redesign_author_review_noncanonical`；new method implementation/training/formal test=`0/0/0`。
+
+[Section 5.6 Figure 5 v3 Cross-Figure Audit, 2026-08-21] Panels b/c在增加subtitle与首行数据间距后通过当前review。Panel a与Section 3 Figure 3的source experiment不同，但二者均呈现region-wise lowest-error scope与error separation，读者结论同为sharing preference随future region变化，因而main-text叙事重叠显著。当前preferred-scope map保留为Appendix-capable diagnostic；main-text Panel a建议改为nested-prefix trajectory与20/20 zero-CHPD verification，从而直接验证ISCF的CHPC fulfillment。Decision=`figure5_v3_panel_bc_pass_panel_a_replacement_recommended`；no new training/formal test。
 
 [Section 5.6 Figure 5 v2 Positive-Evidence Draft, 2026-08-21] 基于现有validation diagnostics与author-corrected Core-Ablation aggregate生成新的三联图author-review bundle。Panel a完整展示5 datasets × 8 future regions × 5 scopes的excess MSE，并用橙色边框标记每个dataset-region的最低MSE scope；40个winners分布为`s=1/48/144/360/720 -> 1/3/2/17/17`。Panel b显示Target-Adaptive Allocation相对equal fusion的五数据集MSE reduction均为正，macro=`1.613%`；Panel c显示BSCA相对prefix-only training的五数据集方向均正，macro=`3.481%`。旧Figure 5不再作为新版main-text design依据，但near-uniform probability与`8/40` alignment作为不可丢失边界保留于internal QA。新图暂不复制到`paper-figures/`，不修改5.6正文，Decision=`figure5_v2_positive_evidence_author_review_noncanonical`；new method implementation/training/formal test=`0/0/0`。
 

@@ -2,7 +2,7 @@
 
 ## Decision
 
-- Status: `pass_author_review_nature_redesign`.
+- Status: `panel_bc_pass_panel_a_replacement_recommended`.
 - Canonical paper asset: `no`; author approval remains required before replacing the current `paper-figures/` asset or drafting visible Section 5.6 prose.
 - Reuse level: `build anew`. The v2 evidence and source values are preserved, but its dense heatmap layout is not reused.
 - New method implementation, training and formal test: `0/0/0`.
@@ -31,3 +31,11 @@
 - Static preflight: 14 pass, 0 warn, 0 fail.
 - Editable outputs: SVG and PDF. Raster outputs: 2124 × 1299 px PNG at 300 dpi and 4248 × 2598 px LZW TIFF at 600 dpi.
 - SVG contains editable text, LF line endings and no trailing whitespace.
+
+## Cross-figure redundancy audit
+
+- Section 3 Figure 3 and current Panel a use different predictor families, scope sets and aggregation levels.
+- Their main-text conclusion is nevertheless the same: the lowest-error sharing extent changes across future regions. Both also visualize regional winners and error separation.
+- The overlap is therefore low at the raw-experiment level but high at the narrative and visual-task levels.
+- Current Panel a is suitable as an expanded five-dataset Appendix diagnostic. The recommended main-text replacement is a CHPC fulfillment panel combining one nested-prefix trajectory with the aggregate 20/20 zero-CHPD verification.
+- Panels b/c remain approved. Additional upper y-axis padding separates their comparison subtitles from the first dataset row.

@@ -2,10 +2,11 @@
 
 ## Status
 
-- Role: `author_review_nature_redesign`.
+- Role: `author_review_panel_bc_pass_panel_a_replacement_recommended`.
 - Canonical paper asset: `no`.
 - Reuse level: `build anew`; v2 supplies the evidence contract and source data but not the visual structure.
 - New training, remote execution and formal test: `0`.
+- Cross-figure audit: Panels b/c pass author review after spacing refinement. Current Panel a is retained as an Appendix-capable diagnostic but is not recommended for main-text promotion because its reader-facing conclusion overlaps Section 3 Figure 3.
 
 ## Core conclusion and archetype
 

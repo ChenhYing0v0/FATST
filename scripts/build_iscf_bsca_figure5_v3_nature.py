@@ -370,6 +370,7 @@ def draw_effect_panel(
     for tick in axis.get_yticklabels():
         if tick.get_text() == "Mean":
             tick.set_fontweight("bold")
+    axis.set_ylim(-0.55, len(labels) - 0.20)
     axis.set_xlim(0, 7.0)
     axis.set_xticks([0, 2, 4, 6])
     axis.set_xlabel("MSE reduction (%)", labelpad=5)

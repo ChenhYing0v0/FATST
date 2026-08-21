@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## Section 5.6 Figure 5 v3 Cross-Figure Audit (2026-08-21)
+
+Panels b/c在增加comparison subtitle与首行数据的垂直留白后通过当前review。Panel a虽使用Full ISCF-BSCA scope arms、五数据集全量validation aggregates与不同scope/region grid，但其reader-facing conclusion及winner/error-gap visual task与Section 3 Figure 3高度重叠。
+
+Current decision=`figure5_v3_panel_bc_pass_panel_a_replacement_recommended`。现有Panel a保留为Appendix-capable expanded diagnostic；建议main-text Panel a改为nested-prefix trajectory + five-dataset/four-horizon `20/20` zero-CHPD verification，以验证CHPC而不重复problem motivation。5.6 visible prose与canonical replacement继续pending；new training/formal test=`0/0`。
+
 ## Section 5.6 Figure 5 v3 Nature-Oriented Redesign (2026-08-21)
 
 Current cursor=`Figure 5 v3 visual QA complete -> author review -> canonical replacement and 5.6 prose pending`。本轮不改变v2 source values或evidence role，只重构Figure 5的visual hierarchy。
