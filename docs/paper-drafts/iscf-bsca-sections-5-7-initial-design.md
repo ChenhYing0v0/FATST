@@ -5,15 +5,15 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Temporarily frozen structural design for the manuscript sections after Method |
-| `version` | `v0.10-section5-v0.8-integrated` |
-| `date` | `2026-08-21 Section 5 figure-only transfer presentation` |
+| `version` | `v0.11-figure5-v2-author-review` |
+| `date` | `2026-08-21 Figure 5 v2 positive-evidence draft` |
 | `review_status` | `temporarily_frozen_usable` |
 | `upstream_dependency` | Introduction v0.9, Related Work v0.2, Section 3 v0.7 and Section 4 v0.7 remain temporarily frozen and unchanged |
 | `scope` | Subsection functions, evidence order, table/figure placement, claim boundaries and appendix routing only |
-| `manuscript_prose` | Section 5 v0.8 drafted at `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`; opening、5.1--5.5与5.7 are author-refined, while Section 5.6 visible body is intentionally blank pending redesign；Sections 6--7 remain structural only |
+| `manuscript_prose` | Section 5 v0.8 drafted at `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`; opening、5.1--5.5与5.7 are author-refined；Section 5.6正文仍留空，但Figure 5 v2三联图已生成供author review；Sections 6--7 remain structural only |
 | `experiment_change` | None; this document does not authorize implementation, remote training or formal test |
-| `evidence_snapshot` | Main-I, corrected Main-II, Efficiency, Core-Ablation, Figure 5 mechanism diagnostics and Decoder-Transfer complete |
-| `structure_decision` | Sections 5--7 use `Experiments -> Discussion -> Conclusion`; Section 5.6 heading is retained but its visible body is temporarily deferred pending redesign |
+| `evidence_snapshot` | Main-I, corrected Main-II, Efficiency, Core-Ablation, rejected historical Figure 5 diagnostics, Figure 5 v2 author-review draft and Decoder-Transfer complete |
+| `structure_decision` | Sections 5--7 use `Experiments -> Discussion -> Conclusion`; Section 5.6 heading is retained, and its new three-panel evidence design awaits author approval before visible prose or canonical-asset replacement |
 
 This document remains the frozen argumentative architecture of the remaining manuscript. Section 5 has now been instantiated as an initial evidence-complete draft, while Sections 6--7 remain structural designs; neither document promotes evidence beyond the boundaries recorded below.
 
@@ -77,7 +77,7 @@ Appendices
    D. Reproducibility, selection protocol and artifact provenance
 ```
 
-The standalone Discussion remains frozen as the working manuscript structure. Section 5.6 retains its position in the outline, but its visible manuscript content is temporarily deferred for author redesign.
+The standalone Discussion remains frozen as the working manuscript structure. Section 5.6 retains its position in the outline. Its visible manuscript content remains deferred while the author reviews a new three-panel Figure 5 design: complete region-wise scope error in Panel a, Target-Adaptive Allocation gain in Panel b and BSCA gain in Panel c.
 
 ## 3. Section 5: Experiments
 
@@ -92,7 +92,7 @@ Section 5 should follow an evidence ladder rather than the implementation order:
 | 5.3 One-model-all-horizons evaluation | Is ISCF-BSCA competitive when every baseline must serve all horizons from one trained model? | define H720-prefix protocol; explain how it differs from Main-I; report dataset-level four-horizon means; route complete per-H results to Appendix A; retain unmatched-protocol caveat | Table 2 / `Main-II` | One-model-all-horizons system effectiveness, not decoder or BSCA attribution | Complete and horizon-loader re-audited |
 | 5.4 Efficiency and system cost | What accuracy and deployment cost changes when one model replaces a four-model horizon-specific family? | Main-I macro MSE; peak inference memory; four-horizon checkpoint storage | Figure 6 / `Efficiency` | Lowest macro MSE among eight displayed methods and one-checkpoint consolidation, with DLinear/QDF retained as visible resource counterexamples | Complete; Figure 6 is the sole main-text presentation and the table artifact remains a numerical source |
 | 5.5 Component and training-objective ablations | Which architectural and optimization components contribute within the frozen design family? | Full; w/o BSCA; w/o Target-Adaptive Allocation; Shared Scope Projection; Fixed Scope ($s=144$); matched budgets and end-to-end training | Table 3 / `Core-Ablation` | Author-corrected aggregate table supports all four interventions; per-horizon rerun provenance remains unsynchronized | Complete at dataset-aggregate table level; Full best in 12/12 metric columns |
-| 5.6 Forecast consistency and scope-allocation behavior | Pending author redesign | visible body intentionally blank; preserve the complete mixed Figure 5 evidence in editorial records before reinstatement | Figure 5 / mechanism-analysis bundle, temporarily deferred | No visible claim in Section 5 v0.8 | Complete mixed evidence retained outside visible manuscript body; 20/20 CHPC cells and 8/40 utilization-error agreements |
+| 5.6 Forecast consistency and scope-allocation behavior | Do scope-conditioned forecasts exhibit future-region-dependent relative performance, and do adaptive allocation and BSCA improve aggregate accuracy? | Panel a: all 5 × 8 × 5 validation scope-error aggregates；Panel b: Full versus equal fusion；Panel c: Full versus prefix-only training；retain routing-health limits in editorial records | Figure 5 v2 author-review bundle; not yet canonical | Descriptive region-dependent scope error plus aggregate allocation/BSCA utility; no reliable region-best routing or sparse specialization claim | Three-panel draft complete and visually audited；visible prose and canonical replacement pending author approval |
 | 5.7 Generalization studies | Does the complete framework remain effective beyond its current Encoder realization? | Weather、ETTm1、ETTm2；DLinear-style与PatchTST-style；Original Decoder versus complete ISCF-BSCA；end-to-end training | Figure 7 / `Decoder-Transfer` | 两类backbones在Figure 7所示三数据集four-horizon mean MSE上均取得3/3 wins；conclusion restricted to evaluated-scope compatibility | Figure 7 complete；aggregate LaTeX table retained as numerical/audit source but not inserted into the main text；per-H/hash rerun provenance unsynchronized；no additional HPO required |
 
 ### 3.2 Why Main-I and Main-II must remain separate

@@ -1,5 +1,13 @@
 # Research Roadmap
 
+## Section 5.6 Figure 5 v2 Positive-Evidence Draft (2026-08-21)
+
+Current cursor=`5.6 evidence redesign -> three-panel author-review draft complete -> visible prose/canonical replacement pending`。旧Figure 5被author判定为当前不可用，本轮不修改其历史evidence bundle，也不直接替换`paper-figures/`中的canonical asset。
+
+新Panel a使用全部5 datasets × 8 future regions × 5 scopes=`200`个validation aggregates，展示每个scope相对同dataset-region最低MSE的excess，并标出40个regional winners。Panel b/c分别复用author-corrected Core-Ablation aggregate，Full相对equal fusion与prefix-only training的macro MSE gains为`1.613%`和`3.481%`，且两项比较的五个dataset-level方向均正。Figure contract、source CSV、editable SVG/PDF、300-dpi PNG、600-dpi LZW TIFF与QA均位于`analysis/iscf_bsca_section5_6_figure5_v2_positive_evidence_20260821/`。
+
+该图只支持region-dependent scope error与aggregate component utility，不建立reliable region-best routing、sparse specialization或unique causal mechanism。Near-uniform probabilities与`8/40` alignment继续保存在internal QA中；author批准前不恢复5.6 visible prose。Decision=`figure5_v2_positive_evidence_author_review_noncanonical`；new method implementation/training/formal test=`0/0/0`。
+
 ## Section 5 Figure-Only Transfer Presentation (2026-08-21)
 
 Current cursor=`Section 5 v0.8 5.7 Figure 7 only -> 5.6 visible body pending redesign`。5.7不再插入或引用Table 4，Figure 7成为Generalization studies的唯一main-text evidence carrier；Decoder-Transfer LaTeX table与完整aggregate audit继续保留为Figure 7 numerical source，不删除结果资产。

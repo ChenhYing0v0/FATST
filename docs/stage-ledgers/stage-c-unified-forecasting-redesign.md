@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | Section 5 v0.8已将5.7收敛为Figure 7-only presentation；5.6 visible body等待重新设计 |
+| `active_question` | Section 5.6 Figure 5 v2三联图已生成供author review；visible body与canonical replacement pending |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
-| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7 temporarily frozen usable；Section 5 v0.8 opening/5.1--5.5/5.7 author-refined，5.6 body pending；Sections 5--7 v0.10 structure frozen；Figure 4 visual design temporarily fixed |
+| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7 temporarily frozen usable；Section 5 v0.8 opening/5.1--5.5/5.7 author-refined，5.6 Figure 5 v2 author-review draft complete；Sections 5--7 v0.11 structure draft；Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | Main I dense/Main II v1=ETTh1, ETTh2, ETTm1, ETTm2, Weather, ECL, Solar；Exchange=companion/deferred extension；ablation=original five |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
@@ -22,13 +22,28 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper experiment matrix closed；Section 5 v0.8 figure-only transfer presentation complete except 5.6 visible body |
-| `current_candidate` | Section 5 v0.8 figure-only transfer presentation |
-| `latest_decision` | `section5_v0_8_figure_only_transfer_5_6_pending` |
-| `writing_latest_decision` | `section5_v0_8_figure_only_transfer_5_6_pending` |
-| `next_required_action` | author review Figure 7-only 5.7 and redesign 5.6；then draft standalone Discussion and Conclusion；no new experiment required |
+| `current_11_step` | paper experiment matrix closed；Section 5.6 Figure 5 v2 author-review draft complete |
+| `current_candidate` | Section 5.6 Figure 5 v2 positive-evidence draft |
+| `latest_decision` | `figure5_v2_positive_evidence_author_review_noncanonical` |
+| `writing_latest_decision` | `figure5_v2_positive_evidence_author_review_noncanonical` |
+| `next_required_action` | author review Figure 5 v2 panel logic and claim boundary；then decide canonical replacement and draft 5.6 prose；no new experiment required |
 | `method_training_authorized` | false；no matched controls、extra HPO/seeds or formal test required |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
+
+## Section 5.6 Figure 5 v2 Positive-Evidence Draft Record (2026-08-21)
+
+| Field | Current Record |
+| --- | --- |
+| `current_step` | existing-artifact figure redesign complete；author review next |
+| `problem` | 旧Figure 5无法承担当前5.6 main-text叙事，需要更集中地展示future-region scope heterogeneity与两项核心component utility |
+| `existence_evidence` | Full validation diagnostics含5 datasets × 8 regions × 5 scopes完整arm errors；author-corrected Core-Ablation显示allocation与BSCA五数据集aggregate方向均正 |
+| `idea` | 以一张hero heatmap展示完整scope-region relative error，以两个aligned lollipop panels展示allocation与BSCA的controlled MSE gains |
+| `theory_check` | region-wise arm error支持sharing-demand heterogeneity；ablation gain支持aggregate utility，但两者不能合并推导为learned routing reliably selects region-best scope |
+| `design` | Panel a=`200` validation aggregates；Panel b=Full vs equal fusion；Panel c=Full vs prefix-only training；180 × 120 mm Python SVG/PDF/PNG/TIFF bundle |
+| `narrative_gate` | 正文可突出完整正向证据，但near-uniform probability、`8/40` alignment与author-corrected aggregate provenance继续保存在QA；禁止reliable routing/sparse specialization/unique causal mechanism |
+| `effectiveness_gate` | 沿用既有validation diagnostic与official-test aggregate；no new evaluation |
+| `artifacts` | `analysis/iscf_bsca_section5_6_figure5_v2_positive_evidence_20260821/`；`scripts/build_iscf_bsca_figure5_v2_positive_evidence.py` |
+| `decision` | `figure5_v2_positive_evidence_author_review_noncanonical` |
 
 ## Section 5 Figure-Only Transfer Presentation Record (2026-08-21)
 

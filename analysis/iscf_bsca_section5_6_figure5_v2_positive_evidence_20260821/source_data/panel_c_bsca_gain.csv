@@ -1,0 +1,7 @@
+dataset,full_mse,control_mse,mse_reduction_percent,horizon_count,aggregation,comparison,split,source_role
+ETTm1,0.342000,0.353000,3.11614731,4,dataset_four_horizon_mean,Full vs w/o BSCA,official_test,author_corrected_rerun_20260817
+ETTm2,0.253000,0.258000,1.93798450,4,dataset_four_horizon_mean,Full vs w/o BSCA,official_test,author_corrected_rerun_20260817
+ETTh1,0.407000,0.434000,6.22119816,4,dataset_four_horizon_mean,Full vs w/o BSCA,official_test,author_corrected_rerun_20260817
+ETTh2,0.311000,0.319000,2.50783699,4,dataset_four_horizon_mean,Full vs w/o BSCA,official_test,author_corrected_rerun_20260817
+Weather,0.214000,0.218000,1.83486239,4,dataset_four_horizon_mean,Full vs w/o BSCA,official_test,author_corrected_rerun_20260817
+Mean,,,3.48101266,4,author_corrected_five_dataset_macro_gate,Full vs w/o BSCA,official_test,author_corrected_rerun_20260817

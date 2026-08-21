@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Section 5 v0.8将5.7收敛为Figure 7-only presentation；5.6正文暂时留空 |
+| `current_11_step` | Section 5.6 Figure 5 v2三联图author-review draft complete；正文与canonical replacement pending |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,7 +18,9 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；Sections 1--4 temporarily frozen usable；Section 5 v0.8 opening/5.1--5.5/5.7 author-refined，5.6 visible body pending redesign；5.4 Figure 6 only，5.7 Figure 7 only；allocation aggregate accuracy direction positive但routing health mixed；Sections 6--7 prose pending |
+| `paper_core_status` | architecture family frozen；Sections 1--4 temporarily frozen usable；Section 5 v0.8 opening/5.1--5.5/5.7 author-refined；5.6 Figure 5 v2 draft complete but visible body/canonical replacement pending；5.4 Figure 6 only，5.7 Figure 7 only；allocation aggregate accuracy direction positive但routing health mixed；Sections 6--7 prose pending |
+
+[Section 5.6 Figure 5 v2 Positive-Evidence Draft, 2026-08-21] 基于现有validation diagnostics与author-corrected Core-Ablation aggregate生成新的三联图author-review bundle。Panel a完整展示5 datasets × 8 future regions × 5 scopes的excess MSE，并用橙色边框标记每个dataset-region的最低MSE scope；40个winners分布为`s=1/48/144/360/720 -> 1/3/2/17/17`。Panel b显示Target-Adaptive Allocation相对equal fusion的五数据集MSE reduction均为正，macro=`1.613%`；Panel c显示BSCA相对prefix-only training的五数据集方向均正，macro=`3.481%`。旧Figure 5不再作为新版main-text design依据，但near-uniform probability与`8/40` alignment作为不可丢失边界保留于internal QA。新图暂不复制到`paper-figures/`，不修改5.6正文，Decision=`figure5_v2_positive_evidence_author_review_noncanonical`；new method implementation/training/formal test=`0/0/0`。
 
 [Section 5 Figure-Only Transfer Presentation, 2026-08-21] manuscript更新为`v0.8-figure-only-transfer-presentation`。5.7删除Table 4插入标记与正文引用，Figure 7成为该节唯一main-text evidence carrier；Decoder-Transfer LaTeX table仍保留为Figure 7 numerical/audit source。因Figure 7仅显示MSE，5.7结果段同步只报告DLinear-style与PatchTST-style的four-horizon mean MSE，不再写图中不可见的MAE。当前visible evidence chain为Table 1、Table 2、Figure 6、Table 3与Figure 7。Decision=`section5_v0_8_figure_only_transfer_5_6_pending`；new implementation/training/formal test=`0/0/0`。
 
