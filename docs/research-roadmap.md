@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## Figure 5 v5.1 Probability-Contrast Refinement (2026-08-21)
+
+Current cursor=`Section 5 v0.10 unchanged -> Figure 5 v5.1 author-review candidate`。按author反馈只增强Panel c对不同future regions/steps probability variation的视觉分辨率。Observed data仍为`0.188866--0.212594`，sequential violet palette扩大lightness span，color limits向外取整为`0.188--0.213`并通过colorbar显式披露。No normalization、smoothing、clipping、filtering、new training or formal test。Decision=`section5_6_v5p1_probability_contrast_author_review_candidate`。
+
 ## Section 5.6 Sample-Specific Behavior Redesign (2026-08-21)
 
 Current cursor=`Section 5 v0.10 -> 5.6 and Figure 5 v5 author-review candidate`。本节继续与5.5分工：5.5回答matched component utility，5.6只检查unchanged Full model能否在一个sample中形成非重复scope signals与region-dependent soft allocation。CHPC由architecture保证并经20/20 numerical checks确认，不设置独立panel。

@@ -46,7 +46,7 @@ REGION_BAND = "#F7F8FA"
 ACCENT = "#C96C4A"
 PROBABILITY_CMAP = LinearSegmentedColormap.from_list(
     "allocation_probability",
-    ["#F7F5FA", "#D9D7E7", "#AAA6CB", "#6E699A"],
+    ["#ECEAF3", "#C5C1D8", "#928BB4", "#5B537F"],
 )
 
 
@@ -579,10 +579,10 @@ def draw_probability_panel(
     probabilities = arrays["probabilities"][probe_row].T
     observed_min = float(probabilities.min())
     observed_max = float(probabilities.max())
-    lower = np.floor(observed_min * 100.0) / 100.0
-    upper = np.ceil(observed_max * 100.0) / 100.0
+    lower = np.floor(observed_min * 1000.0) / 1000.0
+    upper = np.ceil(observed_max * 1000.0) / 1000.0
     if upper <= lower:
-        upper = lower + 0.01
+        upper = lower + 0.001
     image = axis.imshow(
         probabilities,
         aspect="auto",
@@ -636,6 +636,7 @@ def draw_probability_panel(
         aspect=22,
     )
     colorbar.set_label("Allocation probability", labelpad=2)
+    colorbar.set_ticks(np.linspace(lower, upper, 6))
     colorbar.ax.tick_params(length=2, width=0.55, pad=1)
     colorbar.outline.set_linewidth(0.55)
 

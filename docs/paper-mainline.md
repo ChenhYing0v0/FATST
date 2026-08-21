@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Section 5.6 sample-specific scope/allocation behavior and Figure 5 v5 author-review candidate |
+| `current_11_step` | Section 5.6 sample-specific scope/allocation behavior and Figure 5 v5.1 author-review candidate |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,7 +18,9 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；Sections 1--4 temporarily frozen usable；Section 5 v0.10中5.6 sample-specific behavior与Figure 5 v5待author review，5.4 Figure 6 only，5.7 Figure 7 only；allocation aggregate accuracy direction positive但prevalence、sparse/oracle-routing claims仍关闭；Sections 6--7 prose pending |
+| `paper_core_status` | architecture family frozen；Sections 1--4 temporarily frozen usable；Section 5 v0.10中5.6 sample-specific behavior与Figure 5 v5.1待author review，5.4 Figure 6 only，5.7 Figure 7 only；allocation aggregate accuracy direction positive但prevalence、sparse/oracle-routing claims仍关闭；Sections 6--7 prose pending |
+
+[Figure 5 v5.1 Probability-Contrast Refinement, 2026-08-21] 按author反馈只修改Panel c visual mapping。实际per-step Scope Probabilities、ETTm1 probe 113、Panels a/b、selection audit与Section 5.6正文均未改变。Sequential violet palette扩大lightness span，color limits由`0.18--0.22`收紧为对observed `0.188866--0.212594`向外取整的`0.188--0.213`，colorbar显式显示该范围。No normalization、smoothing、clipping、filtering、new training or formal test。Decision=`section5_6_v5p1_probability_contrast_author_review_candidate`。
 
 [Section 5.6 Sample-Specific Behavior Redesign, 2026-08-21] 用户重新打开Section 5.6并要求Figure 5围绕同一sample说明两个internal behaviors。Canonical draft更新为v0.10。新版Figure 5 v5从完整5 datasets × 256 probes池中，按`distinct region-dominant scopes -> mean pairwise scope-forecast disagreement`确定性选择ETTm1 validation probe 113。Panel a只绘制真实soft-fused forecast，并按region-mean Scope Probability最高的scope着色；8 regions的dominant sequence=`[1,48,720,144,360,144,48,720]`。Panel b用共享尺度绘制五条$\mathcal F^{(s)}-\widehat y$，mean pairwise disagreement=`0.081196`，避免raw-trajectory overplotting。Panel c展示同一probe完整$5\times720$ per-step Scope Probabilities，概率范围通过colorbar显式披露。CHPC继续只在正文报告20/20 checks的maximum absolute CHPD=0。该validation-only selected example支持scope-signal diversity与region-dependent soft reweighting的possibility，不估计prevalence，不支持sparse/hard routing、oracle recovery或causal specialization。Canonical Figure 5 path保持`paper-figures/figure_5_scope_allocation_behavior.*`；QA=`analysis/iscf_bsca_section5_6_figure5_v5_sample_specific_behavior_20260821/figure_contract_and_qa.md`。Decision=`section5_6_v5_sample_specific_behavior_author_review_candidate`；new implementation/training/formal test=`0/0/0`。
 
