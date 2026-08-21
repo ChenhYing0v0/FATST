@@ -1,4 +1,4 @@
-# Section 5.6 / Figure 5 v5.2: sample-specific scope and allocation behavior
+# Section 5.6 / Figure 5 v5.3: sample-specific scope and allocation behavior
 
 ## 1. Argument before visualization
 
@@ -70,12 +70,14 @@ Generated source data:
 - palette: the five scopes retain the low-saturation blue--violet identity used in the method figure; the probability heatmap uses one sequential violet scale because colour encodes a scalar probability;
 - data transparency: the probability colour bar shows the plotted range explicitly rather than implying a 0--1 spread;
 - Panel c contrast refinement: the sequential violet palette now spans a larger lightness range, and the colour limits are rounded outward to `0.188--0.213` from the unchanged observed range `0.188866--0.212594`; no probability transformation, smoothing or clipping is applied;
-- header hierarchy refinement: Panel a uses the requested direct line-colour description between the title and the right-aligned scope legend; Panels b/c place their grey descriptions directly below the titles and clearly above the plotted data;
+- header alignment refinement: all panel labels, titles and grey descriptions now use figure-level coordinates rather than panel-specific axis offsets. Panels a/b share the same label and title x-coordinates, Panels b/c share the same title and description y-coordinates, and every label precedes its corresponding title on one baseline;
+- bounding-box QA: all three label--title pairs are vertically aligned, Panels b/c descriptions share an exact upper baseline, all label boxes end before their title boxes begin, and all audited header boxes remain inside the canvas;
+- runtime QA: the complete SVG/PDF/PNG/TIFF regeneration exited normally with peak resident memory of approximately 361 MiB, zero swaps and no out-of-memory or rendering error;
 - layout: Panel a is the hero panel; Panel b answers forecast diversity; Panel c answers probability variation;
 - reviewer risk: the caption explicitly distinguishes the actual soft-fused output from hard scope selection and discloses the post-hoc validation-example selection rule.
 
 ## 7. Decision
 
-Decision=`section5_6_v5p2_panel_header_alignment_author_review_candidate`.
+Decision=`section5_6_v5p3_panel_header_grid_author_review_candidate`.
 
-Figure 5 v5.2 replaces v5.1 as the current author-review candidate. The probability data, panel semantics, sample selection and manuscript claim remain unchanged; this amendment only refines panel-header alignment and annotation hierarchy. The v4 bundle remains a historical audit artifact. Sections 1--4 and all frozen experiment results are unchanged.
+Figure 5 v5.3 replaces v5.2 as the current author-review candidate. The probability data, panel semantics, sample selection and manuscript claim remain unchanged; this amendment only replaces panel-specific header offsets with a shared alignment grid. The v4 bundle remains a historical audit artifact. Sections 1--4 and all frozen experiment results are unchanged.

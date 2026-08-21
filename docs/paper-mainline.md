@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Section 5.6 sample-specific scope/allocation behavior and Figure 5 v5.2 author-review candidate |
+| `current_11_step` | Section 5.6 sample-specific scope/allocation behavior and Figure 5 v5.3 author-review candidate |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,7 +18,9 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；Sections 1--4 temporarily frozen usable；Section 5 v0.10中5.6 sample-specific behavior与Figure 5 v5.2待author review，5.4 Figure 6 only，5.7 Figure 7 only；allocation aggregate accuracy direction positive但prevalence、sparse/oracle-routing claims仍关闭；Sections 6--7 prose pending |
+| `paper_core_status` | architecture family frozen；Sections 1--4 temporarily frozen usable；Section 5 v0.10中5.6 sample-specific behavior与Figure 5 v5.3待author review，5.4 Figure 6 only，5.7 Figure 7 only；allocation aggregate accuracy direction positive但prevalence、sparse/oracle-routing claims仍关闭；Sections 6--7 prose pending |
+
+[Figure 5 v5.3 Panel-Header Grid, 2026-08-22] 三个panel的label/title/grey description改为统一figure-level坐标。Panels a/b共享label与title横向基线，Panels b/c共享title与description纵向基线；label均位于对应title之前。Programmatic bounding-box audit确认无header overlap或canvas clipping，完整导出运行无memory/rendering error。Data、sample、caption、Section 5.6正文与claim boundary均不变。Decision=`section5_6_v5p3_panel_header_grid_author_review_candidate`。
 
 [Figure 5 v5.2 Panel-Header Alignment, 2026-08-21] 按author逐panel反馈只调整grey descriptions与header hierarchy。Panel a description固定为`Line colour denotes the highest-weight scope of the region-mean soft allocation`，位于title下方、right-aligned scope legend上方；Panels b/c description均上移并紧邻title，Panel b label同步对齐。Data、sample、probability color scale、caption、Section 5.6正文、claim boundary、training与formal test均不变。Decision=`section5_6_v5p2_panel_header_alignment_author_review_candidate`。
 

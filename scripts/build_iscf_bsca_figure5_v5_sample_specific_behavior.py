@@ -127,22 +127,44 @@ def contrasting_text(hex_color: str) -> str:
     return "white" if luminance < 0.58 else DARK
 
 
-def add_panel_label(
-    axis: plt.Axes,
+def add_panel_header(
+    figure: plt.Figure,
     label: str,
-    x: float = -0.08,
-    y: float = 1.08,
+    title: str,
+    subtitle: str,
+    title_x: float,
+    title_y: float,
+    subtitle_y: float,
 ) -> None:
-    axis.text(
-        x,
-        y,
+    """Place a panel label, title and subtitle on shared figure baselines."""
+    figure.text(
+        title_x - 0.035,
+        title_y,
         label,
-        transform=axis.transAxes,
-        ha="left",
-        va="bottom",
+        ha="right",
+        va="top",
         fontsize=8.8,
         fontweight="bold",
         color=DARK,
+    )
+    figure.text(
+        title_x,
+        title_y,
+        title,
+        ha="left",
+        va="top",
+        fontsize=8.8,
+        fontweight="bold",
+        color=DARK,
+    )
+    figure.text(
+        title_x,
+        subtitle_y,
+        subtitle,
+        ha="left",
+        va="top",
+        fontsize=6.05,
+        color=MID,
     )
 
 
@@ -380,24 +402,6 @@ def draw_fused_panel(
     axis.set_xticks(REGION_BOUNDS[1:], labels=[])
     axis.tick_params(axis="x", length=0)
     axis.grid(axis="y", color="#EBEDF0", linewidth=0.55)
-    axis.set_title(
-        "Region-adaptive Fused Forecast",
-        loc="left",
-        fontsize=8.8,
-        fontweight="bold",
-        color=DARK,
-        pad=21,
-    )
-    axis.text(
-        0.0,
-        1.10,
-        "line colour denotes the highest-weight scope of the region-mean soft allocation",
-        transform=axis.transAxes,
-        ha="left",
-        va="bottom",
-        fontsize=6.15,
-        color=MID,
-    )
     handles = [
         Line2D(
             [],
@@ -417,8 +421,6 @@ def draw_fused_panel(
         columnspacing=0.9,
         borderaxespad=0.0,
     )
-    add_panel_label(axis, "a", x=-0.055, y=1.15)
-
     strip_axis.set_xlim(1, 720)
     strip_axis.set_ylim(0, 1)
     for region_index, scope in enumerate(dominant_scopes):
@@ -473,7 +475,7 @@ def draw_scope_deviation_panel(
     grid: mpl.gridspec.SubplotSpec,
     arrays: dict[str, np.ndarray],
     probe_row: int,
-) -> None:
+) -> plt.Axes:
     fused = arrays["fused"][probe_row]
     arms = arrays["arms"][probe_row]
     deviations = arms - fused[np.newaxis, :]
@@ -531,29 +533,6 @@ def draw_scope_deviation_panel(
         axis.spines["bottom"].set_color("#AEB3B8")
         axis.spines["bottom"].set_linewidth(0.55)
 
-    top_axis = axes[0]
-    top_axis.set_title(
-        "Distinct Scope-conditioned Forecast Signals",
-        loc="left",
-        fontsize=8.8,
-        fontweight="bold",
-        color=DARK,
-        pad=21,
-    )
-    top_axis.text(
-        0.0,
-        1.42,
-        (
-            r"Deviation from the fused forecast, "
-            r"$\mathcal{F}^{(s)}_{\tau}-\widehat{y}_{\tau}$; shared scale"
-        ),
-        transform=top_axis.transAxes,
-        ha="left",
-        va="bottom",
-        fontsize=6.05,
-        color=MID,
-    )
-    add_panel_label(top_axis, "b", x=-0.14, y=2.02)
     figure.text(
         0.018,
         0.285,
@@ -564,6 +543,7 @@ def draw_scope_deviation_panel(
         fontsize=6.5,
         color=DARK,
     )
+    return axes[0]
 
 
 def draw_probability_panel(
@@ -604,25 +584,6 @@ def draw_probability_panel(
     axis.tick_params(axis="both", length=0)
     for spine in axis.spines.values():
         spine.set_visible(False)
-    axis.set_title(
-        "Sample-specific Scope Probabilities",
-        loc="left",
-        fontsize=8.8,
-        fontweight="bold",
-        color=DARK,
-        pad=21,
-    )
-    axis.text(
-        0.0,
-        1.17,
-        "Per-step soft allocation; white lines mark future-region boundaries",
-        transform=axis.transAxes,
-        ha="left",
-        va="bottom",
-        fontsize=6.05,
-        color=MID,
-    )
-    add_panel_label(axis, "c", x=-0.12, y=1.22)
     colorbar = figure.colorbar(
         image,
         ax=axis,
@@ -666,8 +627,43 @@ def build_figure(
 
     arrays = sources[dataset]
     draw_fused_panel(fused_axis, strip_axis, arrays, probe_row)
-    draw_scope_deviation_panel(figure, outer[1, 0], arrays, probe_row)
+    scope_top_axis = draw_scope_deviation_panel(
+        figure,
+        outer[1, 0],
+        arrays,
+        probe_row,
+    )
     draw_probability_panel(figure, probability_axis, arrays, probe_row)
+    add_panel_header(
+        figure,
+        "a",
+        "Region-adaptive Fused Forecast",
+        "line colour denotes the highest-weight scope of the region-mean soft allocation",
+        title_x=fused_axis.get_position().x0,
+        title_y=0.982,
+        subtitle_y=0.949,
+    )
+    add_panel_header(
+        figure,
+        "b",
+        "Distinct Scope-conditioned Forecast Signals",
+        (
+            r"Deviation from the fused forecast, "
+            r"$\mathcal{F}^{(s)}_{\tau}-\widehat{y}_{\tau}$; shared scale"
+        ),
+        title_x=scope_top_axis.get_position().x0,
+        title_y=0.495,
+        subtitle_y=0.459,
+    )
+    add_panel_header(
+        figure,
+        "c",
+        "Sample-specific Scope Probabilities",
+        "Per-step soft allocation; white lines mark future-region boundaries",
+        title_x=probability_axis.get_position().x0,
+        title_y=0.495,
+        subtitle_y=0.459,
+    )
     figure.text(
         0.52,
         0.022,

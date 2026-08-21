@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | Section 5.6 sample-specific scope/allocation behavior and Figure 5 v5.2 under author review；Sections 6--7 prose pending |
+| `active_question` | Section 5.6 sample-specific scope/allocation behavior and Figure 5 v5.3 under author review；Sections 6--7 prose pending |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
-| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7 temporarily frozen usable；Section 5 v0.10中5.6与Figure 5 v5.2为author-review candidate；Sections 6--7 prose pending；Figure 4 visual design temporarily fixed |
+| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7 temporarily frozen usable；Section 5 v0.10中5.6与Figure 5 v5.3为author-review candidate；Sections 6--7 prose pending；Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | Main I dense/Main II v1=ETTh1, ETTh2, ETTm1, ETTm2, Weather, ECL, Solar；Exchange=companion/deferred extension；ablation=original five |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
@@ -22,10 +22,10 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper experiment matrix closed；Section 5.6 prose/Figure 5 v5.2 author-review candidate |
+| `current_11_step` | paper experiment matrix closed；Section 5.6 prose/Figure 5 v5.3 author-review candidate |
 | `current_candidate` | Sections 6--7 paper writing |
-| `latest_decision` | `section5_6_v5p2_panel_header_alignment_author_review_candidate` |
-| `writing_latest_decision` | `section5_6_v5p2_panel_header_alignment_author_review_candidate` |
+| `latest_decision` | `section5_6_v5p3_panel_header_grid_author_review_candidate` |
+| `writing_latest_decision` | `section5_6_v5p3_panel_header_grid_author_review_candidate` |
 | `next_required_action` | continue Discussion/Conclusion drafting or author-requested Section 5 refinement；no new experiment required |
 | `method_training_authorized` | false；no matched controls、extra HPO/seeds or formal test required |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
@@ -35,6 +35,8 @@
 Figure 5 v5.1 visual amendment：只修改Panel c的sequential violet palette与display limits。Observed probabilities保持`0.188866--0.212594`，color limits向外取整为`0.188--0.213`，未做normalization、smoothing、clipping或filtering。Panels a/b、sample selection、source CSV、caption、5.6正文和claim boundary均不变。Decision=`section5_6_v5p1_probability_contrast_author_review_candidate`。
 
 Figure 5 v5.2 layout amendment：Panel a grey description改为author指定短句并放在title下、legend上；Panels b/c descriptions上移至title下方；Panel b label与title对齐。No data、sample、scale、caption、prose、claim、training or formal-test change。Decision=`section5_6_v5p2_panel_header_alignment_author_review_candidate`。
+
+Figure 5 v5.3 layout amendment：三个panel统一使用figure-level header grid；Panels a/b共享横向起点，Panels b/c共享标题与description纵向基线，所有label位于对应title之前。Bounding-box、final-size visual、export与runtime memory QA通过。No data、sample、scale、caption、prose、claim、training or formal-test change。Decision=`section5_6_v5p3_panel_header_grid_author_review_candidate`。
 
 | Field | Current Record |
 | --- | --- |

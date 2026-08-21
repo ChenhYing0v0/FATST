@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## Figure 5 v5.3 Panel-Header Grid (2026-08-22)
+
+Current cursor=`Section 5 v0.10 unchanged -> Figure 5 v5.3 author-review candidate`。三个panel改用统一figure-level header grid：Panels a/b的label与title横向对齐，Panels b/c的label/title与grey description分别纵向对齐，且所有label均位于对应title之前。Programmatic bounding-box、final-size visual、export与runtime memory QA通过。Data、sample、caption与claims不变。Decision=`section5_6_v5p3_panel_header_grid_author_review_candidate`。
+
 ## Figure 5 v5.2 Panel-Header Alignment (2026-08-21)
 
 Current cursor=`Section 5 v0.10 unchanged -> Figure 5 v5.2 author-review candidate`。Panel a grey description固定为author指定短句并置于title下方、right-aligned legend上方；Panels b/c descriptions均上移并紧邻title。Data、sample、Panel c scale、caption与claims不变。Decision=`section5_6_v5p2_panel_header_alignment_author_review_candidate`。
