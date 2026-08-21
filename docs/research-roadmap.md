@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## Figure 5 v5.2 Panel-Header Alignment (2026-08-21)
+
+Current cursor=`Section 5 v0.10 unchanged -> Figure 5 v5.2 author-review candidate`。Panel a grey description固定为author指定短句并置于title下方、right-aligned legend上方；Panels b/c descriptions均上移并紧邻title。Data、sample、Panel c scale、caption与claims不变。Decision=`section5_6_v5p2_panel_header_alignment_author_review_candidate`。
+
 ## Figure 5 v5.1 Probability-Contrast Refinement (2026-08-21)
 
 Current cursor=`Section 5 v0.10 unchanged -> Figure 5 v5.1 author-review candidate`。按author反馈只增强Panel c对不同future regions/steps probability variation的视觉分辨率。Observed data仍为`0.188866--0.212594`，sequential violet palette扩大lightness span，color limits向外取整为`0.188--0.213`并通过colorbar显式披露。No normalization、smoothing、clipping、filtering、new training or formal test。Decision=`section5_6_v5p1_probability_contrast_author_review_candidate`。

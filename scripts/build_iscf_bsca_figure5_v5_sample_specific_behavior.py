@@ -353,7 +353,6 @@ def draw_fused_panel(
     axis: plt.Axes,
     strip_axis: plt.Axes,
     arrays: dict[str, np.ndarray],
-    dataset: str,
     probe_row: int,
 ) -> None:
     fused = arrays["fused"][probe_row]
@@ -391,11 +390,8 @@ def draw_fused_panel(
     )
     axis.text(
         0.0,
-        1.03,
-        (
-            f"{dataset} validation probe {probe_row}; line colour denotes the "
-            "highest-weight scope of the region-mean soft allocation"
-        ),
+        1.10,
+        "Line colour denotes the highest-weight scope of the region-mean soft allocation",
         transform=axis.transAxes,
         ha="left",
         va="bottom",
@@ -416,7 +412,7 @@ def draw_fused_panel(
         handles=handles,
         ncol=5,
         loc="upper right",
-        bbox_to_anchor=(1.0, 1.17),
+        bbox_to_anchor=(1.0, 1.045),
         handlelength=1.7,
         columnspacing=0.9,
         borderaxespad=0.0,
@@ -546,7 +542,7 @@ def draw_scope_deviation_panel(
     )
     top_axis.text(
         0.0,
-        1.17,
+        1.42,
         (
             r"Deviation from the fused forecast, "
             r"$\mathcal{F}^{(s)}_{\tau}-\widehat{y}_{\tau}$; shared scale"
@@ -557,7 +553,7 @@ def draw_scope_deviation_panel(
         fontsize=6.05,
         color=MID,
     )
-    add_panel_label(top_axis, "b", x=-0.14, y=1.36)
+    add_panel_label(top_axis, "b", x=-0.14, y=2.02)
     figure.text(
         0.018,
         0.285,
@@ -618,7 +614,7 @@ def draw_probability_panel(
     )
     axis.text(
         0.0,
-        1.08,
+        1.17,
         "Per-step soft allocation; white lines mark future-region boundaries",
         transform=axis.transAxes,
         ha="left",
@@ -669,7 +665,7 @@ def build_figure(
     probability_axis = figure.add_subplot(outer[1, 1])
 
     arrays = sources[dataset]
-    draw_fused_panel(fused_axis, strip_axis, arrays, dataset, probe_row)
+    draw_fused_panel(fused_axis, strip_axis, arrays, probe_row)
     draw_scope_deviation_panel(figure, outer[1, 0], arrays, probe_row)
     draw_probability_panel(figure, probability_axis, arrays, probe_row)
     figure.text(

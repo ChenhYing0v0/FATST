@@ -5,18 +5,18 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.95` |
+| `version` | `v0.96` |
 | `last_updated` | `2026-08-21` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | Section 5.6 sample-specific scope/allocation behavior与Figure 5 v5.1 author-review candidate；Sections 6--7 prose pending |
+| `current_review_cursor` | Section 5.6 sample-specific scope/allocation behavior与Figure 5 v5.2 author-review candidate；Sections 6--7 prose pending |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `frozen_consensus` | 论文七章结构并保留standalone Discussion；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Sections 5--7整体结构（v0.17中仅5.6/Figure 5待author review） |
-| `provisional_content` | Section 5 v0.10与Figure 5 v5.1 author-review candidate；Sections 6--7 prose；Method Figure 4 stable vector-asset synchronization |
-| `authorization_source` | 2026-08-21用户要求增强Figure 5 Panel c的future-region probability对比度，保持sample、data与claim不变；no new method implementation/training/formal test |
+| `provisional_content` | Section 5 v0.10与Figure 5 v5.2 author-review candidate；Sections 6--7 prose；Method Figure 4 stable vector-asset synchronization |
+| `authorization_source` | 2026-08-21用户要求调整Figure 5三个panel的grey descriptions与header hierarchy，保持sample、data与claim不变；no new method implementation/training/formal test |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
@@ -26,6 +26,8 @@
 Section 5.6 v0.10 / Figure 5 v5 amendment：用户重新打开5.6并要求三个panels统一为sample-specific diagnostics。当前author-review candidate从完整5 datasets × 256 probes池中，按`distinct region-dominant scopes -> mean pairwise scope-forecast disagreement`确定性选择ETTm1 probe 113。Panel a只绘制真实soft-fused forecast，并按每个region内mean Scope Probability最高的scope着色，dominant sequence=`[1,48,720,144,360,144,48,720]`；不得把颜色误写为hard-selected scope forecast。Panel b以共享尺度绘制五条$\mathcal F^{(s)}-\widehat y$，mean pairwise disagreement=`0.081196`，用于暴露非重复scope signals。Panel c绘制同一probe的实际$5\times720$ per-step Scope Probabilities；概率范围必须通过colorbar披露，不声称sparse routing。CHPC仍只在正文报告20/20 checks的maximum absolute CHPD=0。该selected validation example只说明framework can express scope diversity与region-dependent soft reweighting，不估计prevalence，不建立oracle recovery、hard routing或causal specialization。Canonical figure path保持`paper-figures/figure_5_scope_allocation_behavior.*`；Decision=`section5_6_v5_sample_specific_behavior_author_review_candidate`。
 
 Figure 5 v5.1 visual amendment：只增强Panel c的probability visual contrast，不改sample、source values、panel roles、caption或5.6正文。Sequential violet palette增加lightness span，color limits从原`0.18--0.22`收紧为对observed `0.188866--0.212594`向外取整得到的`0.188--0.213`，并在colorbar显示六个三位小数刻度。No normalization、smoothing、clipping or data filtering。Decision=`section5_6_v5p1_probability_contrast_author_review_candidate`。
+
+Figure 5 v5.2 layout amendment：只调整三个panel的grey description与header hierarchy。Panel a删去description中的dataset/probe前缀，固定为`Line colour denotes the highest-weight scope of the region-mean soft allocation`，并形成`title -> description -> right-aligned scope legend -> plot`层级；Panels b/c的description均上移至紧邻title且明显高于plot。Panel b label同步与title对齐。Data、sample、color scale、caption、5.6正文与claim boundary均不变。Decision=`section5_6_v5p2_panel_header_alignment_author_review_candidate`。
 
 Section 5.6 v0.9 temporary-freeze historical amendment：本节曾固定为`Scope Diversity and Allocation Behavior`，与5.5 matched ablation分离，只分析unchanged Full model。Figure 5 v4的Panel a展示经完整1,280-row selection audit选出的ETTh1 probe 107：五条Scope-conditioned Forecasts保持差异，8个regions的lowest-MSE scope覆盖全部五种scope；Panel b使用五数据集全部validation rows，五种scope均至少在一个dataset-region cell取得lowest MSE；Panel c展示mean soft allocation的highest-weight scope，五种scope均出现且4/5 datasets随region变化。该版本已被v5 author-review candidate替代，但bundle保留为历史审计材料。
 

@@ -1,4 +1,4 @@
-# Section 5.6 / Figure 5 v5.1: sample-specific scope and allocation behavior
+# Section 5.6 / Figure 5 v5.2: sample-specific scope and allocation behavior
 
 ## 1. Argument before visualization
 
@@ -70,11 +70,12 @@ Generated source data:
 - palette: the five scopes retain the low-saturation blue--violet identity used in the method figure; the probability heatmap uses one sequential violet scale because colour encodes a scalar probability;
 - data transparency: the probability colour bar shows the plotted range explicitly rather than implying a 0--1 spread;
 - Panel c contrast refinement: the sequential violet palette now spans a larger lightness range, and the colour limits are rounded outward to `0.188--0.213` from the unchanged observed range `0.188866--0.212594`; no probability transformation, smoothing or clipping is applied;
+- header hierarchy refinement: Panel a uses the requested direct line-colour description between the title and the right-aligned scope legend; Panels b/c place their grey descriptions directly below the titles and clearly above the plotted data;
 - layout: Panel a is the hero panel; Panel b answers forecast diversity; Panel c answers probability variation;
 - reviewer risk: the caption explicitly distinguishes the actual soft-fused output from hard scope selection and discloses the post-hoc validation-example selection rule.
 
 ## 7. Decision
 
-Decision=`section5_6_v5p1_probability_contrast_author_review_candidate`.
+Decision=`section5_6_v5p2_panel_header_alignment_author_review_candidate`.
 
-Figure 5 v5.1 replaces v5 as the current author-review candidate. The probability data, panel semantics, sample selection and manuscript claim remain unchanged; only the Panel c visual mapping is revised. The v4 bundle remains a historical audit artifact. Sections 1--4 and all frozen experiment results are unchanged.
+Figure 5 v5.2 replaces v5.1 as the current author-review candidate. The probability data, panel semantics, sample selection and manuscript claim remain unchanged; this amendment only refines panel-header alignment and annotation hierarchy. The v4 bundle remains a historical audit artifact. Sections 1--4 and all frozen experiment results are unchanged.

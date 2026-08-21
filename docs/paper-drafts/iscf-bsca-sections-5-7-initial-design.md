@@ -5,14 +5,14 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Temporarily frozen structural design for the manuscript sections after Method |
-| `version` | `v0.18-figure5-probability-contrast-refinement` |
+| `version` | `v0.19-figure5-panel-header-alignment` |
 | `date` | `2026-08-21 Section 5.6 sample-specific behavior redesign` |
 | `review_status` | `Section 5.6/Figure 5 v5 pending author review; remaining structural design unchanged` |
 | `upstream_dependency` | Introduction v0.9, Related Work v0.2, Section 3 v0.7 and Section 4 v0.7 remain temporarily frozen and unchanged |
 | `scope` | Subsection functions, evidence order, table/figure placement, claim boundaries and appendix routing only |
-| `manuscript_prose` | Section 5 v0.10 drafted at `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`; Section 5.6正文与Figure 5 v5.1为author-review candidate；Sections 6--7 remain structural only |
+| `manuscript_prose` | Section 5 v0.10 drafted at `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`; Section 5.6正文与Figure 5 v5.2为author-review candidate；Sections 6--7 remain structural only |
 | `experiment_change` | None; this document does not authorize implementation, remote training or formal test |
-| `evidence_snapshot` | Main-I, corrected Main-II, Efficiency, Core-Ablation, Figure 5 v5.1 sample-specific scope/allocation behavior and Decoder-Transfer complete |
+| `evidence_snapshot` | Main-I, corrected Main-II, Efficiency, Core-Ablation, Figure 5 v5.2 sample-specific scope/allocation behavior and Decoder-Transfer complete |
 | `structure_decision` | Sections 5--7 use `Experiments -> Discussion -> Conclusion`; Section 5.6 focuses on selected-example scope forecast diversity与region-dependent soft allocation；CHPC remains a construction fact without a dedicated visualization |
 
 This document remains the frozen argumentative architecture of the remaining manuscript. Section 5 has now been instantiated as an initial evidence-complete draft, while Sections 6--7 remain structural designs; neither document promotes evidence beyond the boundaries recorded below.
@@ -92,7 +92,7 @@ Section 5 should follow an evidence ladder rather than the implementation order:
 | 5.3 One-model-all-horizons evaluation | Is ISCF-BSCA competitive when every baseline must serve all horizons from one trained model? | define H720-prefix protocol; explain how it differs from Main-I; report dataset-level four-horizon means; route complete per-H results to Appendix A; retain unmatched-protocol caveat | Table 2 / `Main-II` | One-model-all-horizons system effectiveness, not decoder or BSCA attribution | Complete and horizon-loader re-audited |
 | 5.4 Efficiency and system cost | What accuracy and deployment cost changes when one model replaces a four-model horizon-specific family? | Main-I macro MSE; peak inference memory; four-horizon checkpoint storage | Figure 6 / `Efficiency` | Lowest macro MSE among eight displayed methods and one-checkpoint consolidation, with DLinear/QDF retained as visible resource counterexamples | Complete; Figure 6 is the sole main-text presentation and the table artifact remains a numerical source |
 | 5.5 Component and training-objective ablations | Which architectural and optimization components contribute within the frozen design family? | Full; w/o BSCA; w/o Target-Adaptive Allocation; Shared Scope Projection; Fixed Scope ($s=144$); matched budgets and end-to-end training | Table 3 / `Core-Ablation` | Author-corrected aggregate table supports all four interventions; per-horizon rerun provenance remains unsynchronized | Complete at dataset-aggregate table level; Full best in 12/12 metric columns |
-| 5.6 Scope diversity and allocation behavior | Can Full ISCF-BSCA form distinct scope signals and sample-specific regional reweighting? | selected actual fused trajectory with regional dominant-scope colours；five scope-relative deviation profiles；same-probe $5\times720$ probability heatmap；20/20 CHPC numerical audit | Figure 5 v5.1 | In the selected probe, scope forecasts are non-identical and all five scopes appear as regional dominant components；no prevalence、sparse/hard routing、oracle recovery或causal specialization | Author-review candidate in Section 5 v0.10 |
+| 5.6 Scope diversity and allocation behavior | Can Full ISCF-BSCA form distinct scope signals and sample-specific regional reweighting? | selected actual fused trajectory with regional dominant-scope colours；five scope-relative deviation profiles；same-probe $5\times720$ probability heatmap；20/20 CHPC numerical audit | Figure 5 v5.2 | In the selected probe, scope forecasts are non-identical and all five scopes appear as regional dominant components；no prevalence、sparse/hard routing、oracle recovery或causal specialization | Author-review candidate in Section 5 v0.10 |
 | 5.7 Generalization studies | Does the complete framework remain effective beyond its current Encoder realization? | Weather、ETTm1、ETTm2；DLinear-style与PatchTST-style；Original Decoder versus complete ISCF-BSCA；end-to-end training | Figure 7 / `Decoder-Transfer` | 两类backbones在Figure 7所示三数据集four-horizon mean MSE上均取得3/3 wins；conclusion restricted to evaluated-scope compatibility | Figure 7 complete；aggregate LaTeX table retained as numerical/audit source but not inserted into the main text；per-H/hash rerun provenance unsynchronized；no additional HPO required |
 
 ### 3.2 Why Main-I and Main-II must remain separate
@@ -147,7 +147,7 @@ The Conclusion must not introduce new metrics, citations, mechanisms or future c
 | Table 1 | Main-I | main text: dataset-level four-horizon means；Appendix A: complete one unified model versus separately optimized horizon-specific baselines | complete/hash-frozen |
 | Table 2 | Main-II | main text: dataset-level four-horizon means；Appendix A: complete one-model-all-horizons comparison | complete/presentation-aligned; active H5A cannot be anticipated |
 | Table 3 | Core-Ablation | component and objective attribution | author-corrected aggregate table complete; 12/12 metric columns best for Full; historical 100-cell audit retained |
-| Figure 5 | Sample-specific scope diversity and allocation behavior | Full-model validation diagnostics for Section 5.6 | v5.1 author-review candidate; canonical=`paper-figures/figure_5_scope_allocation_behavior.*` |
+| Figure 5 | Sample-specific scope diversity and allocation behavior | Full-model validation diagnostics for Section 5.6 | v5.2 author-review candidate; canonical=`paper-figures/figure_5_scope_allocation_behavior.*` |
 | Figure 6 | Efficiency | main-text accuracy, peak-memory and checkpoint-storage trade-off | complete; sole main-text evidence carrier for Section 5.4 |
 | Figure 7 | Generalization studies | sole main-text comparison of Original Decoder and ISCF-BSCA on two reported backbone families | complete; MSE axis begins at 0.20；the Decoder-Transfer table remains a numerical/audit source and is not inserted into the main text；claim remains bounded to the displayed backbones |
 
