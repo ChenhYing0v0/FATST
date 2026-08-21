@@ -2,15 +2,16 @@
 
 ## Status
 
-- Role: `author_review_narrative_reassessment_panel_a_reframe_pending`.
+- Role: `author_review_panel_a_main_text_candidate_panel_bc_ablation_redundant`.
 - Canonical paper asset: `no`.
 - Reuse level: `build anew`; v2 supplies the evidence contract and source data but not the visual structure.
 - New training, remote execution and formal test: `0`.
-- Cross-figure audit: Panels b/c pass author review after spacing refinement. Current Panel a remains a main-text candidate under a method-internal aggregate framing; its title and caption require revision before promotion. A CHPC visualization is not recommended.
+- Narrative audit: Current Panel a remains a main-text candidate under a method-internal aggregate framing. Panels b/c are visually acceptable but repeat controls already reported in Section 5.5 and are not recommended as Section 5.6 evidence. A CHPC visualization is not recommended.
 
 ## Core conclusion and archetype
 
-- Core conclusion: The sharing scope with the lowest regional validation error varies across datasets and future regions, while Target-Adaptive Allocation and BSCA both improve aggregate forecasting accuracy in the corresponding controlled ablations.
+- Core conclusion of the current three-panel draft: The sharing scope with the lowest regional validation error varies across datasets and future regions, while Target-Adaptive Allocation and BSCA both improve aggregate forecasting accuracy in the corresponding controlled ablations.
+- Recommended Section 5.6 conclusion: The jointly trained scope field retains region-dependent competence, while learned allocation remains a distributed soft mixture rather than hard region-wise routing.
 - Archetype: asymmetric quantitative composite with one dominant evidence panel and two subordinate effect-size panels.
 - Backend: Python (`matplotlib`) exclusively.
 - Final size: 180 × 110 mm; editable SVG/PDF, 300-dpi PNG and 600-dpi LZW TIFF.
@@ -36,3 +37,4 @@
 - Panels b/c use the current author-corrected ablation aggregates and contain every evaluated dataset.
 - The figure does not establish that learned Scope Probabilities select the preferred scope, nor does it establish sparse specialization or a unique causal mechanism.
 - Earlier internal allocation-health diagnostics remain preserved outside this positive-evidence author-review layout.
+- Panels b/c carry valid ablation values but do not add a distinct mechanism-analysis claim beyond Table 3. Their visual quality does not justify repeating them in Section 5.6.

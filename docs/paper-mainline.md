@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Section 5.6 narrative-first reassessment complete；Panel a method-internal reframe pending |
+| `current_11_step` | Section 5.5/5.6 evidence-role separation complete；Section 5.6 visible prose/figure revision pending |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -25,6 +25,8 @@
 [Section 5.6 Figure 5 v3 Cross-Figure Audit, 2026-08-21] Panels b/c在增加subtitle与首行数据间距后通过当前review。Panel a与Section 3 Figure 3的source experiment不同，但二者均呈现region-wise lowest-error scope与error separation，读者结论同为sharing preference随future region变化，因而main-text叙事重叠显著。当前preferred-scope map保留为Appendix-capable diagnostic；main-text Panel a建议改为nested-prefix trajectory与20/20 zero-CHPD verification，从而直接验证ISCF的CHPC fulfillment。Decision=`figure5_v3_panel_bc_pass_panel_a_replacement_recommended`；no new training/formal test。
 
 [Section 5.6 Narrative-First Reassessment, 2026-08-21] 撤回上述CHPC Panel a replacement建议。CHPC是inference graph保证的construction fact，zero-CHPD visualization只属于implementation QA。Section 5.6应改为`Regional scope behavior and adaptive integration`：Panel a诊断Full ISCF-BSCA联合训练scope field的region-dependent relative competence，Panel b/c分别支持Target-Adaptive Allocation与BSCA的aggregate utility。当前Panel a保留为main-text candidate，但必须从generic heterogeneity改写为method-internal five-dataset aggregate evidence；lowest-error scope不得写成Allocation MLP的hard selection。Near-uniform probability与`8/40` alignment继续保留。Decision=`section5_6_narrative_first_panel_a_reframe_no_chpc_visual`；正文与figure title/caption仍待author review。
+
+[Section 5.5/5.6 Evidence-Role Separation, 2026-08-21] 5.5固定回答component utility：matched variants相对Full的official-test MSE/MAE变化。5.6改名`Regional scope competence and allocation behavior`，只分析不改变Full model的validation internal diagnostics。后半段不再重复allocation/BSCA ablation gains，而报告probability range=`0.18258--0.21479`、normalized entropy `>0.9989`、dominant scope在4/5 datasets随region变化及`8/40` competence alignment。该证据支持distributed soft reweighting，不支持hard routing、oracle recovery或将probability profile归因于BSCA。Current Panels b/c仅视觉QA通过，其Section 5.6 evidence role关闭；preferred main-text Figure 5为single hero Panel a，additional allocation panel only if it encodes actual probabilities。Decision=`section5_6_behavior_analysis_separated_from_ablation`。
 
 [Section 5.6 Figure 5 v2 Positive-Evidence Draft, 2026-08-21] 基于现有validation diagnostics与author-corrected Core-Ablation aggregate生成新的三联图author-review bundle。Panel a完整展示5 datasets × 8 future regions × 5 scopes的excess MSE，并用橙色边框标记每个dataset-region的最低MSE scope；40个winners分布为`s=1/48/144/360/720 -> 1/3/2/17/17`。Panel b显示Target-Adaptive Allocation相对equal fusion的五数据集MSE reduction均为正，macro=`1.613%`；Panel c显示BSCA相对prefix-only training的五数据集方向均正，macro=`3.481%`。旧Figure 5不再作为新版main-text design依据，但near-uniform probability与`8/40` alignment作为不可丢失边界保留于internal QA。新图暂不复制到`paper-figures/`，不修改5.6正文，Decision=`figure5_v2_positive_evidence_author_review_noncanonical`；new method implementation/training/formal test=`0/0/0`。
 

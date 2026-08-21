@@ -1,5 +1,11 @@
 # Research Roadmap
 
+## Section 5.5/5.6 Evidence-Role Separation (2026-08-21)
+
+Section 5.5=`matched intervention -> component utility`；Section 5.6=`unchanged Full model -> internal behavior`。5.6后半段不重复equal-fusion与prefix-only ablation gains，而报告Scope Probability range、normalized entropy、region-wise dominant-scope variation及`8/40` allocation--competence alignment，并以此限定mechanism interpretation。
+
+Current Panels b/c视觉设计可用但与Table 3 evidence role重复，因此不再作为5.6 panels。Preferred minimal Figure 5只保留method-internal full-width Panel a；如后续确有必要增加panel，只能展示actual probability distribution或allocation--competence relation。Decision=`section5_6_behavior_analysis_separated_from_ablation`；no redraw、training或formal test in this step。
+
 ## Section 5.6 Narrative-First Reassessment (2026-08-21)
 
 Previous CHPC-panel recommendation is withdrawn。CHPC由ISCF的future-step-indexed inference graph保证，zero CHPD不作为main-text empirical result。Section 5.6的科学任务重新冻结为：检查jointly trained scope field是否保留region-dependent relative competence，并用matched controls评估Target-Adaptive Allocation与BSCA的aggregate utility。

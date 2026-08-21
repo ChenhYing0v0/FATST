@@ -2,7 +2,7 @@
 
 ## Decision
 
-- Status: `panel_bc_pass_panel_a_reframe_pending`.
+- Status: `panel_a_main_text_candidate_panel_bc_redundant_with_ablation`.
 - Canonical paper asset: `no`; author approval remains required before replacing the current `paper-figures/` asset or drafting visible Section 5.6 prose.
 - Reuse level: `build anew`. The v2 evidence and source values are preserved, but its dense heatmap layout is not reused.
 - New method implementation, training and formal test: `0/0/0`.
@@ -39,4 +39,11 @@
 - The overlap is therefore low at the raw-experiment level but high at the narrative and visual-task levels.
 - Current Panel a remains a main-text candidate only when framed as an aggregate diagnostic of the jointly trained ISCF scope field. Its current generic title must be revised to distinguish this role from Section 3 Figure 3.
 - A CHPC visualization is not recommended because zero CHPD follows from the inference graph and would serve only as implementation verification.
-- Panels b/c remain approved. Additional upper y-axis padding separates their comparison subtitles from the first dataset row.
+- Panels b/c pass visual QA, and additional upper y-axis padding separates their comparison subtitles from the first dataset row. They nevertheless fail the Section 5.6 evidence-role audit because they repeat two controls already reported in Table 3.
+
+## Section 5.5 versus 5.6 audit
+
+- Section 5.5 uses matched interventions and official-test MSE/MAE to establish component utility.
+- Section 5.6 uses the unchanged Full model and aggregate validation diagnostics to characterize internal scope competence and allocation behavior.
+- Repeating Full-versus-control effect sizes in Section 5.6 would answer the Section 5.5 question a second time.
+- Recommended minimal Figure 5 is therefore the full-width scope-competence map. Probability range, normalized entropy and 8/40 alignment may be reported in the prose without an additional panel. If allocation is visualized later, the panel must encode learned probabilities or their relation to scope competence.
