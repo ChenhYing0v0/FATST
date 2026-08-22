@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## Figure 5 v5.3 Freeze and Section 5.6 v0.11 (2026-08-22)
+
+Current cursor=`Figure 5 v5.3 temporarily fixed usable -> Section 5.6 v0.11 author review`。Figure 5的sample、data、panels与visual encoding正式固定。5.6正文重组为`5.5 component utility -> Full-model internal questions -> sample-specific allocation -> scope forecast diversity -> CHPC and claim boundary`，并逐panel对应Figure 5a/b/c。CHPC继续不作图，仅报告by-construction property与20/20 maximum absolute CHPD=0。Decision=`figure5_v5p3_temporarily_fixed_section5_6_v0p11_author_review_candidate`。
+
 ## Figure 5 v5.3 Panel-Header Grid (2026-08-22)
 
 Current cursor=`Section 5 v0.10 unchanged -> Figure 5 v5.3 author-review candidate`。三个panel改用统一figure-level header grid：Panels a/b的label与title横向对齐，Panels b/c的label/title与grey description分别纵向对齐，且所有label均位于对应title之前。Programmatic bounding-box、final-size visual、export与runtime memory QA通过。Data、sample、caption与claims不变。Decision=`section5_6_v5p3_panel_header_grid_author_review_candidate`。

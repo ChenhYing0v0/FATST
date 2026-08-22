@@ -78,6 +78,6 @@ Generated source data:
 
 ## 7. Decision
 
-Decision=`section5_6_v5p3_panel_header_grid_author_review_candidate`.
+Decision=`section5_6_figure5_v5p3_temporarily_fixed_usable`.
 
-Figure 5 v5.3 replaces v5.2 as the current author-review candidate. The probability data, panel semantics, sample selection and manuscript claim remain unchanged; this amendment only replaces panel-specific header offsets with a shared alignment grid. The v4 bundle remains a historical audit artifact. Sections 1--4 and all frozen experiment results are unchanged.
+Figure 5 v5.3 is temporarily fixed as the manuscript-usable Figure 5 after author review on 2026-08-22. The probability data, panel semantics, sample selection and manuscript claim remain unchanged; the final amendment replaces panel-specific header offsets with a shared alignment grid. The v4 bundle remains a historical audit artifact. Sections 1--4 and all frozen experiment results are unchanged.

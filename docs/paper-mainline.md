@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Section 5.6 sample-specific scope/allocation behavior and Figure 5 v5.3 author-review candidate |
+| `current_11_step` | Figure 5 v5.3 temporarily fixed usable；Section 5.6 v0.11 figure-aligned narrative under author review |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,7 +18,9 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；Sections 1--4 temporarily frozen usable；Section 5 v0.10中5.6 sample-specific behavior与Figure 5 v5.3待author review，5.4 Figure 6 only，5.7 Figure 7 only；allocation aggregate accuracy direction positive但prevalence、sparse/oracle-routing claims仍关闭；Sections 6--7 prose pending |
+| `paper_core_status` | architecture family frozen；Sections 1--4与Figure 5 v5.3 temporarily frozen usable；Section 5 v0.11中5.6 figure-aligned narrative待author review，5.4 Figure 6 only，5.7 Figure 7 only；allocation aggregate accuracy direction positive但prevalence、sparse/oracle-routing claims仍关闭；Sections 6--7 prose pending |
+
+[Figure 5 v5.3 Freeze and Section 5.6 v0.11, 2026-08-22] Author将Figure 5 v5.3固定为论文可用图片。5.6不再以CHPC开场，而先承接5.5 matched ablation，区分component utility与unchanged Full-model internal behavior；随后依次解释selected probe、Figure 5a的regional dominant soft component、Figure 5b的non-identical scope signals与Figure 5c的per-step probabilities。CHPC在末段作为construction property及20/20 zero-CHPD implementation audit简述。Claim仍限于selected validation example，不支持prevalence、sparse/hard routing、oracle recovery或causal specialization。Decision=`figure5_v5p3_temporarily_fixed_section5_6_v0p11_author_review_candidate`。
 
 [Figure 5 v5.3 Panel-Header Grid, 2026-08-22] 三个panel的label/title/grey description改为统一figure-level坐标。Panels a/b共享label与title横向基线，Panels b/c共享title与description纵向基线；label均位于对应title之前。Programmatic bounding-box audit确认无header overlap或canvas clipping，完整导出运行无memory/rendering error。Data、sample、caption、Section 5.6正文与claim boundary均不变。Decision=`section5_6_v5p3_panel_header_grid_author_review_candidate`。
 

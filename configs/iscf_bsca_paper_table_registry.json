@@ -346,8 +346,8 @@
   "non_table_experiment_blocks": [
     {
       "id": "unified_problem_and_mechanism_diagnostics",
-      "status": "section5_6_v5p3_author_review_candidate_20260822",
-      "current_presentation": "Figure_5_v5p3_sample_specific_scope_and_allocation_behavior_with_shared_header_grid",
+      "status": "figure5_v5p3_temporarily_fixed_usable_20260822",
+      "current_presentation": "Figure_5_v5p3_fixed_sample_specific_scope_and_allocation_behavior",
       "canonical_artifact": "paper-figures/figure_5_scope_allocation_behavior.svg",
       "canonical_report": "analysis/iscf_bsca_paper_experiment_consolidation_20260731/figure5_mechanism_diagnostics_20260816/result_and_decision.md",
       "presentation_qa": "analysis/iscf_bsca_section5_6_figure5_v5_sample_specific_behavior_20260821/figure_contract_and_qa.md",
