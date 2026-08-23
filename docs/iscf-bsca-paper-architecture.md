@@ -5,23 +5,25 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v0.98` |
-| `last_updated` | `2026-08-22` |
+| `version` | `v0.99` |
+| `last_updated` | `2026-08-24` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | Section 5.6 v0.11 figure-aligned narrative待author review；Figure 5 v5.3 temporarily fixed usable；Sections 6--7 prose pending |
+| `current_review_cursor` | Section 5.6 v0.12 author-outline narrative待author review；Figure 5 v5.3 temporarily fixed usable；Sections 6--7 prose pending |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `frozen_consensus` | 论文七章结构并保留standalone Discussion；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Figure 5 v5.3；Sections 5--7整体结构 |
-| `provisional_content` | Section 5 v0.11（5.6 narrative待author review）；Sections 6--7 prose；Method Figure 4 stable vector-asset synchronization |
-| `authorization_source` | 2026-08-22用户固定Figure 5 v5.3为论文可用图片，并要求基于该图重组Section 5.6；no new method implementation/training/formal test |
+| `provisional_content` | Section 5 v0.12（5.6 narrative待author review）；Sections 6--7 prose；Method Figure 4 stable vector-asset synchronization |
+| `authorization_source` | 2026-08-24用户提供Section 5.6三段叙事大纲并要求学术性重构；Figure 5 v5.3、experiment artifacts与authorization boundary均不变 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
 `temporarily_frozen_content` 只有在后续章节或证据产生明确矛盾且用户同意后才解冻；
 `provisional_content` 只表示当前最佳结构，后续按章节继续修订。
+
+Section 5.6 v0.12 author-outline amendment：正文固定为三段证据链。P1由5.5 component utility过渡到Full-model internal behavior，并提出`distinct scope-dependent forecast signals`与`diverse region-wise scope preferences`两项检查；P2以Figure 5b的$\mathcal F_\tau^{(s)}-\widehat y_\tau$说明scope-indexed field未塌缩为重复轨迹；P3依次解释Figure 5a的regional highest-weight scope与Figure 5c的per-step Scope Probabilities，并将最远region对$s=720$的偏好限定为sample-level observation，不推广为单调scope--distance规律。为避免统计含义错误，正文使用`scope-specific forecast deviation/signal`而非`prediction bias`。CHPC仍在末段简述；Figure 5的selected-validation与non-causal claim boundary保持不变。Decision=`section5_6_v0p12_author_outline_narrative_author_review_candidate`。
 
 Section 5.6 v0.10 / Figure 5 v5 amendment：用户重新打开5.6并要求三个panels统一为sample-specific diagnostics。当前author-review candidate从完整5 datasets × 256 probes池中，按`distinct region-dominant scopes -> mean pairwise scope-forecast disagreement`确定性选择ETTm1 probe 113。Panel a只绘制真实soft-fused forecast，并按每个region内mean Scope Probability最高的scope着色，dominant sequence=`[1,48,720,144,360,144,48,720]`；不得把颜色误写为hard-selected scope forecast。Panel b以共享尺度绘制五条$\mathcal F^{(s)}-\widehat y$，mean pairwise disagreement=`0.081196`，用于暴露非重复scope signals。Panel c绘制同一probe的实际$5\times720$ per-step Scope Probabilities；概率范围必须通过colorbar披露，不声称sparse routing。CHPC仍只在正文报告20/20 checks的maximum absolute CHPD=0。该selected validation example只说明framework can express scope diversity与region-dependent soft reweighting，不估计prevalence，不建立oracle recovery、hard routing或causal specialization。Canonical figure path保持`paper-figures/figure_5_scope_allocation_behavior.*`；Decision=`section5_6_v5_sample_specific_behavior_author_review_candidate`。
 

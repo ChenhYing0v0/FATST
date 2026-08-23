@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | Figure 5 v5.3 temporarily fixed usable；Section 5.6 v0.11 figure-aligned narrative under author review；Sections 6--7 prose pending |
+| `active_question` | Figure 5 v5.3 temporarily fixed usable；Section 5.6 v0.12 author-outline narrative under author review；Sections 6--7 prose pending |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
-| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7与Figure 5 v5.3 temporarily frozen usable；Section 5 v0.11中5.6 narrative为author-review candidate；Sections 6--7 prose pending；Figure 4 visual design temporarily fixed |
+| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7与Figure 5 v5.3 temporarily frozen usable；Section 5 v0.12中5.6 narrative为author-review candidate；Sections 6--7 prose pending；Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | Main I dense/Main II v1=ETTh1, ETTh2, ETTm1, ETTm2, Weather, ECL, Solar；Exchange=companion/deferred extension；ablation=original five |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
@@ -22,15 +22,17 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper experiment matrix closed；Figure 5 v5.3 fixed；Section 5.6 v0.11 prose author-review candidate |
+| `current_11_step` | paper experiment matrix closed；Figure 5 v5.3 fixed；Section 5.6 v0.12 prose author-review candidate |
 | `current_candidate` | Sections 6--7 paper writing |
-| `latest_decision` | `figure5_v5p3_temporarily_fixed_section5_6_v0p11_author_review_candidate` |
-| `writing_latest_decision` | `section5_6_v0p11_figure_aligned_narrative_author_review_candidate` |
+| `latest_decision` | `section5_6_v0p12_author_outline_narrative_author_review_candidate` |
+| `writing_latest_decision` | `section5_6_v0p12_author_outline_narrative_author_review_candidate` |
 | `next_required_action` | continue Discussion/Conclusion drafting or author-requested Section 5 refinement；no new experiment required |
 | `method_training_authorized` | false；no matched controls、extra HPO/seeds or formal test required |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
 ## Section 5.6 Sample-Specific Behavior Redesign Record (2026-08-21)
+
+Section 5.6 v0.12 writing amendment（2026-08-24）：按author三段大纲重构可见正文。P1从5.5 ablation过渡到scope-signal diversity与allocation diversity两项internal questions；P2先解释Figure 5b的scope-relative deviation profiles及非重复candidate signals；P3再解释Figure 5a/c的regional highest-weight scopes与per-step Scope Probabilities。最远region偏好$s=720$只作sample-level observation，未扩张为单调distance--scope规律。Figure 5 v5.3、source values、validation-only role、CHPC audit及claim boundary均未改变。Decision=`section5_6_v0p12_author_outline_narrative_author_review_candidate`。
 
 Figure 5 v5.1 visual amendment：只修改Panel c的sequential violet palette与display limits。Observed probabilities保持`0.188866--0.212594`，color limits向外取整为`0.188--0.213`，未做normalization、smoothing、clipping或filtering。Panels a/b、sample selection、source CSV、caption、5.6正文和claim boundary均不变。Decision=`section5_6_v5p1_probability_contrast_author_review_candidate`。
 

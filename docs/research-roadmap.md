@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## Section 5.6 Author-Outline Narrative v0.12 (2026-08-24)
+
+Current cursor=`Figure 5 v5.3 fixed usable -> Section 5.6 v0.12 author review`。5.6按三段证据链重构为`component utility -> two internal-behavior questions -> scope-relative forecast deviations -> region-dependent allocation -> CHPC/boundary`。Figure 5b先证明selected probe中的五条Scope-conditioned Forecasts保留不同candidate signals，Figure 5a/c再说明最高权重scope与完整probability profile随future region/step变化。最远region偏好$s=720$仅作sample-level observation，不声称单调distance--scope规律。Decision=`section5_6_v0p12_author_outline_narrative_author_review_candidate`。
+
 ## Figure 5 v5.3 Freeze and Section 5.6 v0.11 (2026-08-22)
 
 Current cursor=`Figure 5 v5.3 temporarily fixed usable -> Section 5.6 v0.11 author review`。Figure 5的sample、data、panels与visual encoding正式固定。5.6正文重组为`5.5 component utility -> Full-model internal questions -> sample-specific allocation -> scope forecast diversity -> CHPC and claim boundary`，并逐panel对应Figure 5a/b/c。CHPC继续不作图，仅报告by-construction property与20/20 maximum absolute CHPD=0。Decision=`figure5_v5p3_temporarily_fixed_section5_6_v0p11_author_review_candidate`。
