@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Temporarily frozen structural design for the manuscript sections after Method |
-| `version` | `v0.24-section6-draft` |
-| `date` | `2026-08-24 Section 6 discussion draft` |
-| `review_status` | `Section 5 v0.13 and Figure 5 v5.3 remain temporarily fixed usable; Section 6 v0.1 drafted for author review; Section 7 remains structural only` |
+| `version` | `v0.25-section6-author-refinement` |
+| `date` | `2026-08-24 Section 6 author refinement` |
+| `review_status` | `Section 5 v0.13 and Figure 5 v5.3 remain temporarily fixed usable; Section 6 v0.2 refined for author review; Section 7 remains structural only` |
 | `upstream_dependency` | Introduction v0.9, Related Work v0.2, Section 3 v0.7 and Section 4 v0.7 remain temporarily frozen and unchanged |
 | `scope` | Subsection functions, evidence order, table/figure placement, claim boundaries and appendix routing only |
-| `manuscript_prose` | Section 5 v0.13 drafted at `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`; Section 6 v0.1 drafted at `docs/paper-drafts/iscf-bsca-discussion-initial-draft.md`; Figure 5 v5.3 temporarily fixed usable；Section 7 remains structural only |
+| `manuscript_prose` | Section 5 v0.13 drafted at `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`; Section 6 v0.2 drafted at `docs/paper-drafts/iscf-bsca-discussion-initial-draft.md`; Figure 5 v5.3 temporarily fixed usable；Section 7 remains structural only |
 | `experiment_change` | None; this document does not authorize implementation, remote training or formal test |
 | `evidence_snapshot` | Main-I, corrected Main-II, Efficiency, Core-Ablation, fixed Figure 5 v5.3 sample-specific scope/allocation behavior and Decoder-Transfer complete |
 | `structure_decision` | Sections 5--7 use `Experiments -> Discussion and Limitations -> Conclusion`; Section 6 has no subsections and focuses on unified forecasting interpretation, input-side multi-scale versus output-side multi-scope design, and methodological limitations；Section 5.6 focuses on selected-example scope forecast diversity与region-dependent soft allocation；CHPC remains a construction fact without a dedicated visualization |
@@ -111,14 +111,13 @@ The paper makes both a system contribution and a forecasting-design argument. Se
 | Paragraph | Main job | Evidence it may interpret | Boundary |
 | --- | --- | --- | --- |
 | P1 | Explain what changes when forecasts at different endpoints are treated as nested views of one trajectory | CHPC construction, Main-I, Main-II and Figure 6 | Do not infer accuracy from CHPC alone |
-| P2 | Distinguish input-side multi-scale representation from output-side multi-scope forecast synthesis | Section 3, Related Work, Core-Ablation and Figure 5 | Do not equate scope variation with causal specialization |
+| P2 | Distinguish input-side multi-scale representation from output-side multi-scope forecast generation | Section 3, Related Work, Core-Ablation and Figure 5 | Do not equate scope variation with causal specialization |
 | P3 | State methodological limitations and scientifically meaningful extensions | ISCF formulation, Section 4 and Section 5 behavior evidence | Do not replace method limitations with protocol or coverage disclaimers |
 
 ### 4.3 Methodological limitation inventory
 
 - finite, pre-specified contiguous scopes and future regions;
-- no explicit evolving dependency graph between future regions;
-- soft convex allocation of point forecasts without predictive uncertainty or multimodal outputs;
+- no dedicated mechanism that passes information from one predicted region to another;
 - additional decoder-side computation from retaining multiple scope branches;
 - the distinction between observed scope behavior and learned semantic specialization.
 

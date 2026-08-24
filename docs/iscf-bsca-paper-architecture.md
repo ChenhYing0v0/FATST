@@ -8,14 +8,14 @@
 | `version` | `v1.01` |
 | `last_updated` | `2026-08-24` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | Section 6 v0.1 discussion-and-limitations draft待author review；Section 5 v0.13 and Figure 5 v5.3 remain temporarily fixed usable；Section 7 prose pending |
+| `current_review_cursor` | Section 6 v0.2 author-refined discussion-and-limitations draft待author review；Section 5 v0.13 and Figure 5 v5.3 remain temporarily fixed usable；Section 7 prose pending |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `frozen_consensus` | 论文七章结构并保留精简的Discussion and Limitations；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Figure 5 v5.3；Sections 5--7整体结构 |
-| `provisional_content` | Section 5 v0.13（5.6 narrative待author review）；Section 6 v0.1 discussion-and-limitations draft；Section 7 prose；Method Figure 4 stable vector-asset synchronization |
+| `provisional_content` | Section 5 v0.13（5.6 narrative待author review）；Section 6 v0.2 discussion-and-limitations draft；Section 7 prose；Method Figure 4 stable vector-asset synchronization |
 | `authorization_source` | 2026-08-24用户要求按精简Discussion规划完成Section 6，并在P2区分multi-scale encoder与multi-scope forecasting、在P3改写为方法论limitations；Sections 1--5 evidence与Figure 5 v5.3不变 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
@@ -1661,7 +1661,7 @@ PatchTST parent-HPO随后完成全部40个unique checkpoints的test-tuned audit�
 
 ## 9. Discussion and Limitations
 
-Section 6正文采用三段布局：第一段讨论CHPC、统一forecasting system、Main-I/Main-II与one-checkpoint deployment的系统含义；第二段区分multi-scale encoder的input-side representation learning与ISCF的output-side multi-scope forecast synthesis；第三段只讨论finite contiguous scopes、显式跨region interaction缺失、point-forecast soft allocation与decoder-side multi-scope computation等方法论限制。该节不新增实验覆盖、测试选择或样本选择层面的claim。
+Section 6正文采用三段布局：第一段讨论CHPC、统一forecasting system、Sections 5.2/5.3与one-checkpoint deployment的系统含义；第二段区分multi-scale encoder的input-side representation learning与ISCF的output-side multi-scope forecast generation；第三段只讨论finite contiguous scopes、没有专门的region-to-region information passing mechanism与decoder-side multi-scope computation等方法论限制。该节不新增实验覆盖、测试选择或样本选择层面的claim。
 
 ## 10. Conclusion
 
