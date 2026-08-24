@@ -5,12 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Temporarily frozen structural design for the manuscript sections after Method |
-| `version` | `v0.25-section6-author-refinement` |
+| `version` | `v0.26-section6-author-refinement` |
 | `date` | `2026-08-24 Section 6 author refinement` |
-| `review_status` | `Section 5 v0.13 and Figure 5 v5.3 remain temporarily fixed usable; Section 6 v0.2 refined for author review; Section 7 remains structural only` |
+| `review_status` | `Section 5 v0.13 and Figure 5 v5.3 remain temporarily fixed usable; Section 6 v0.3 refined for author review; Section 7 remains structural only` |
 | `upstream_dependency` | Introduction v0.9, Related Work v0.2, Section 3 v0.7 and Section 4 v0.7 remain temporarily frozen and unchanged |
 | `scope` | Subsection functions, evidence order, table/figure placement, claim boundaries and appendix routing only |
-| `manuscript_prose` | Section 5 v0.13 drafted at `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`; Section 6 v0.2 drafted at `docs/paper-drafts/iscf-bsca-discussion-initial-draft.md`; Figure 5 v5.3 temporarily fixed usable；Section 7 remains structural only |
+| `manuscript_prose` | Section 5 v0.13 drafted at `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`; Section 6 v0.3 drafted at `docs/paper-drafts/iscf-bsca-discussion-initial-draft.md`; Figure 5 v5.3 temporarily fixed usable；Section 7 remains structural only |
 | `experiment_change` | None; this document does not authorize implementation, remote training or formal test |
 | `evidence_snapshot` | Main-I, corrected Main-II, Efficiency, Core-Ablation, fixed Figure 5 v5.3 sample-specific scope/allocation behavior and Decoder-Transfer complete |
 | `structure_decision` | Sections 5--7 use `Experiments -> Discussion and Limitations -> Conclusion`; Section 6 has no subsections and focuses on unified forecasting interpretation, input-side multi-scale versus output-side multi-scope design, and methodological limitations；Section 5.6 focuses on selected-example scope forecast diversity与region-dependent soft allocation；CHPC remains a construction fact without a dedicated visualization |
