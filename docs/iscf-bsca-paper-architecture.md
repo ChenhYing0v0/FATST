@@ -5,18 +5,18 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v1.00` |
+| `version` | `v1.01` |
 | `last_updated` | `2026-08-24` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | Section 5.6 v0.13 author-refinement narrative待author review；Figure 5 v5.3 temporarily fixed usable；Sections 6--7 prose pending |
+| `current_review_cursor` | Section 6 v0.1 discussion-and-limitations draft待author review；Section 5 v0.13 and Figure 5 v5.3 remain temporarily fixed usable；Section 7 prose pending |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `frozen_consensus` | 论文七章结构并保留standalone Discussion；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
+| `frozen_consensus` | 论文七章结构并保留精简的Discussion and Limitations；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Figure 5 v5.3；Sections 5--7整体结构 |
-| `provisional_content` | Section 5 v0.13（5.6 narrative待author review）；Sections 6--7 prose；Method Figure 4 stable vector-asset synchronization |
-| `authorization_source` | 2026-08-24用户要求删除Section 5.6中的四处限定性表述；Figure 5 v5.3、experiment artifacts与其余正文均不变 |
+| `provisional_content` | Section 5 v0.13（5.6 narrative待author review）；Section 6 v0.1 discussion-and-limitations draft；Section 7 prose；Method Figure 4 stable vector-asset synchronization |
+| `authorization_source` | 2026-08-24用户要求按精简Discussion规划完成Section 6，并在P2区分multi-scale encoder与multi-scope forecasting、在P3改写为方法论limitations；Sections 1--5 evidence与Figure 5 v5.3不变 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
@@ -425,10 +425,7 @@ Abstract
    5.6 Scope Diversity and Allocation Behavior
    5.7 Generalization Studies
 
-6. Discussion
-   6.1 From Horizon-Specific Predictions to a Unified Forecasting System
-   6.2 Output-Side Sharing as a Forecasting Design Dimension
-   6.3 Limitations and Future Scope
+   6. Discussion and Limitations
 
 7. Conclusion
 
@@ -439,7 +436,7 @@ Appendices
    D. Reproducibility Details
 ```
 
-standalone `Discussion`用于分离result observation、task/system interpretation与limitations。完整negative cells、secondary controls与敏感性结果放在Appendices。
+`Discussion and Limitations`用于分离result observation、task/system interpretation与methodological limitations。Section 6不再设置subsection，完整negative cells、secondary controls与敏感性结果放在Appendices。
 
 ### 3.1 Sections 5--7 author-fixed structural design
 
@@ -1662,19 +1659,9 @@ PatchTST parent-HPO随后完成全部40个unique checkpoints的test-tuned audit�
 
 作者随后将正文transfer范围收窄到Weather、ETTm1、ETTm2。该后置范围必须与five-dataset negative audit同时披露。2026-08-17作者复跑aggregate表中，完整framework的DLinear-style与PatchTST-style分别相对Original取得`+5.611%/+3.604%`与`+2.128%/+1.274%` display-precision macro MSE/MAE gains；两者均赢3/3 dataset MSE/MAE，合计16/16 comparator metric columns正向。新per-horizon/checkpoint rerun provenance未同步。该framework-level claim不要求区分ISCF与BSCA，因此不再补matched `+ISCF` controls，也不继续HPO。Canonical table=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/table_decoder_transfer_three_dataset_framework.tex`；audit=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/decoder_transfer_three_dataset_scope_20260816/result_and_next_gate.md`。结论限定为evaluated two-backbone/three-dataset scope，不写universal或architecture-agnostic。
 
-## 9. Discussion
+## 9. Discussion and Limitations
 
-### 9.1 From Horizon-Specific Predictions to a Unified Forecasting System
-
-解释将不同request endpoints视为同一预测轨迹的nested views后，forecasting system的定义、CHPC要求、accuracy与system cost之间的关系。该讨论只解释Main I、Main II、CHPC与efficiency evidence能够支持的系统层结论，不从CHPC推导accuracy，也不把所有flexible-horizon models概括为不一致。
-
-### 9.2 Output-Side Sharing as a Forecasting Design Dimension
-
-将Section 3的future-region sharing-demand heterogeneity与scope-indexed forecast generation、target-adaptive allocation、core ablation、allocation analysis和decoder transfer连接起来。Scope Probabilities或region-wise variation本身不等价于causal specialization；正向机制表述必须等待matched ablation与aggregate behavior共同支持。
-
-### 9.3 Limitations and Future Scope
-
-集中说明external baseline protocol heterogeneity、test-informed selection、seed coverage、deterministic point forecasting边界、prefix-bounded execution的implementation/evidence差距，以及最终结果中的negative dataset/horizon cells。这里只保留final artifacts实际支持的limitations，不使用泛化的future-work套话。
+Section 6正文采用三段布局：第一段讨论CHPC、统一forecasting system、Main-I/Main-II与one-checkpoint deployment的系统含义；第二段区分multi-scale encoder的input-side representation learning与ISCF的output-side multi-scope forecast synthesis；第三段只讨论finite contiguous scopes、显式跨region interaction缺失、point-forecast soft allocation与decoder-side multi-scope computation等方法论限制。该节不新增实验覆盖、测试选择或样本选择层面的claim。
 
 ## 10. Conclusion
 
@@ -1684,7 +1671,7 @@ PatchTST parent-HPO随后完成全部40个unique checkpoints的test-tuned audit�
    system，并概括ISCF-BSCA的scope-indexed forecast field、target-adaptive scope allocation与balanced co-adaptation；
 2. 只总结最终已由artifacts支持的performance、efficiency、mechanism与transfer结论，以最窄的material boundary收束。
 
-Conclusion不重复展开limitations；完整解释保留在Section 6.3。
+Conclusion不重复展开limitations；方法论边界集中保留在Section 6。
 
 ## 11. Claim Boundary
 

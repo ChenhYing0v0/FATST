@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## Section 6 Discussion and Limitations v0.1 (2026-08-24)
+
+Current cursor=`Section 5 v0.13 / Figure 5 v5.3 fixed usable -> Section 6 v0.1 author review`。Section 6按三段正文落地：统一forecasting system的CHPC与deployment含义；multi-scale encoder的input-side representation与ISCF multi-scope forecasting的output-side synthesis区分；以及finite contiguous scopes、cross-region interaction、soft point-forecast allocation与decoder-side computation等方法论limitations。实施层coverage与selection问题不进入P3，Section 7尚未起草。Decision=`section6_v0p1_discussion_methodological_limitations_author_review_candidate`。
+
 ## Section 5.6 Concise Author Refinement v0.13 (2026-08-24)
 
 Current cursor=`Figure 5 v5.3 fixed usable -> Section 5.6 v0.13 author review`。按author要求仅删除四处限定性正文表述；三段叙事链、panel mapping、evidence values、CHPC与Figure 5 caption均不变。Project-level evidence boundary继续保留于caption与governance records。Decision=`section5_6_v0p13_author_refinement_author_review_candidate`。

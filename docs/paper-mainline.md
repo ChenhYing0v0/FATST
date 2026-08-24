@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Figure 5 v5.3 temporarily fixed usable；Section 5.6 v0.13 author-refinement narrative under author review |
+| `current_11_step` | Section 6 v0.1 discussion-and-limitations draft under author review；Section 5 v0.13 and Figure 5 v5.3 remain temporarily fixed usable |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,7 +18,9 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；Sections 1--4与Figure 5 v5.3 temporarily frozen usable；Section 5 v0.13中5.6 author-refinement narrative待author review，5.4 Figure 6 only，5.7 Figure 7 only；allocation aggregate accuracy direction positive但prevalence、sparse/oracle-routing claims仍关闭；Sections 6--7 prose pending |
+| `paper_core_status` | architecture family frozen；Sections 1--5与Figure 5 v5.3 temporarily frozen usable；Section 6 v0.1 discussion-and-limitations draft待author review，Section 5.4 Figure 6 only，Section 5.7 Figure 7 only；allocation aggregate accuracy direction positive但prevalence、sparse/oracle-routing claims仍关闭；Section 7 prose pending |
+
+[Section 6 Discussion and Limitations v0.1, 2026-08-24] 新建`docs/paper-drafts/iscf-bsca-discussion-initial-draft.md`。正文压缩为三段：P1解释CHPC与统一forecasting system的关系；P2新增multi-scale encoder与multi-scope forecasting的input-side/output-side区分，并连接Section 3、Core-Ablation与Figure 5；P3只保留finite contiguous scopes、显式跨region interaction、point-forecast soft allocation与decoder-side computation等方法论limitations，不写test-informed selection、selected diagnostic、数据集/backbone覆盖等实施层限制。Section 7 Conclusion尚未起草。Decision=`section6_v0p1_discussion_methodological_limitations_author_review_candidate`。
 
 [Section 5.6 Concise Author Refinement v0.13, 2026-08-24] 按author要求从5.6正文删除`In this selected probe`、`in this probe`及两句显式boundary表述；未改三段论证、Figure 5、数值、CHPC说明或caption。Project-level claim boundary继续由caption与editorial records保留。Decision=`section5_6_v0p13_author_refinement_author_review_candidate`。
 

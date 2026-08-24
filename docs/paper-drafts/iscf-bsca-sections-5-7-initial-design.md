@@ -5,17 +5,17 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Temporarily frozen structural design for the manuscript sections after Method |
-| `version` | `v0.23-section5-6-author-refinement` |
-| `date` | `2026-08-24 Section 5.6 concise author refinement` |
-| `review_status` | `Figure 5 v5.3 remains temporarily fixed usable; Section 5.6 v0.13 pending author review; remaining structural design unchanged` |
+| `version` | `v0.24-section6-draft` |
+| `date` | `2026-08-24 Section 6 discussion draft` |
+| `review_status` | `Section 5 v0.13 and Figure 5 v5.3 remain temporarily fixed usable; Section 6 v0.1 drafted for author review; Section 7 remains structural only` |
 | `upstream_dependency` | Introduction v0.9, Related Work v0.2, Section 3 v0.7 and Section 4 v0.7 remain temporarily frozen and unchanged |
 | `scope` | Subsection functions, evidence order, table/figure placement, claim boundaries and appendix routing only |
-| `manuscript_prose` | Section 5 v0.13 drafted at `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`; Figure 5 v5.3 temporarily fixed usable，Section 5.6正文待author review；Sections 6--7 remain structural only |
+| `manuscript_prose` | Section 5 v0.13 drafted at `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`; Section 6 v0.1 drafted at `docs/paper-drafts/iscf-bsca-discussion-initial-draft.md`; Figure 5 v5.3 temporarily fixed usable；Section 7 remains structural only |
 | `experiment_change` | None; this document does not authorize implementation, remote training or formal test |
 | `evidence_snapshot` | Main-I, corrected Main-II, Efficiency, Core-Ablation, fixed Figure 5 v5.3 sample-specific scope/allocation behavior and Decoder-Transfer complete |
-| `structure_decision` | Sections 5--7 use `Experiments -> Discussion -> Conclusion`; Section 5.6 focuses on selected-example scope forecast diversity与region-dependent soft allocation；CHPC remains a construction fact without a dedicated visualization |
+| `structure_decision` | Sections 5--7 use `Experiments -> Discussion and Limitations -> Conclusion`; Section 6 has no subsections and focuses on unified forecasting interpretation, input-side multi-scale versus output-side multi-scope design, and methodological limitations；Section 5.6 focuses on selected-example scope forecast diversity与region-dependent soft allocation；CHPC remains a construction fact without a dedicated visualization |
 
-This document remains the frozen argumentative architecture of the remaining manuscript. Section 5 has now been instantiated as an initial evidence-complete draft, while Sections 6--7 remain structural designs; neither document promotes evidence beyond the boundaries recorded below.
+This document remains the frozen argumentative architecture of the remaining manuscript. Sections 5 and 6 now have manuscript-facing initial drafts, while Section 7 remains a structural design; neither document promotes evidence beyond the boundaries recorded below.
 
 ## 1. Manuscript contract
 
@@ -63,10 +63,7 @@ No standalone ablation is allocated to the Allocation-Balance Regularizer. The F
    5.5 Component and training-objective ablations
    5.6 Scope diversity and allocation behavior
    5.7 Generalization studies
-6. Discussion
-   6.1 From horizon-specific predictions to a unified forecasting system
-   6.2 Output-side sharing as a forecasting design dimension
-   6.3 Limitations and future scope
+   6. Discussion and Limitations
 
 7. Conclusion
 
@@ -77,7 +74,7 @@ Appendices
    D. Reproducibility, selection protocol and artifact provenance
 ```
 
-The standalone Discussion remains frozen as the working manuscript structure. Section 5.6 is organized around Full-model sample-specific behavior: the actual fused trajectory annotated by regional dominant scope, scope-relative forecast deviations and the corresponding per-step Scope Probabilities. It does not repeat Table 3 ablations or use dataset averages to stand in for sample-conditioned allocation. CHPC remains an architectural property without a result panel.
+Section 6 is a concise interpretive bridge between the result observations in Section 5 and the final summary in Section 7. It does not repeat Tables 1--3 or Figures 5--7, and it does not introduce implementation-level protocol limitations. The section uses three paragraphs without subsections: unified forecasting interpretation, input-side multi-scale versus output-side multi-scope design, and methodological limitations.
 
 ## 3. Section 5: Experiments
 
@@ -103,33 +100,29 @@ Main-I and Main-II answer different reviewer questions and should not be merged 
 
 Each result subsection should use the same internal order: `question -> comparison protocol -> table/figure scope -> aggregate pattern -> important exceptions -> bounded conclusion`. Numeric values and positive verbs should be inserted only after the corresponding artifact is frozen.
 
-## 4. Section 6: Discussion
+## 4. Section 6: Discussion and Limitations
 
-### 4.1 Why a standalone Discussion is recommended
+### 4.1 Section-level role
 
-The paper makes both a system contribution and a forecasting-design argument. The standalone Discussion interprets CHPC, output-side sharing and varied-horizon system design without mixing these claims into result reporting. It also provides a visible place for source-protocol differences, test-informed evaluation and negative cells that would otherwise overload the Conclusion.
+The paper makes both a system contribution and a forecasting-design argument. Section 6 interprets CHPC, output-side sharing and varied-horizon system design without mixing these claims into result reporting, while keeping methodological limitations separate from the final summary.
 
-### 4.2 Subsection contracts
+### 4.2 Paragraph contracts
 
-| Subsection | Main job | Evidence it may interpret | Boundary |
+| Paragraph | Main job | Evidence it may interpret | Boundary |
 | --- | --- | --- | --- |
-| 6.1 From horizon-specific predictions to a unified forecasting system | Explain what changes when forecasts at different endpoints are treated as nested views of one trajectory | CHPC construction, Main-I, Main-II and system-cost evidence | Do not infer accuracy from CHPC or claim all prior flexible-horizon models violate it |
-| 6.2 Output-side sharing as a forecasting design dimension | Connect future-region sharing-demand heterogeneity to scope-indexed forecast generation and allocation | Figure 3 motivation, Core-Ablation, allocation diagnostics and transfer results | Do not promote active probabilities or regional variation to causal specialization |
-| 6.3 Limitations and future scope | State where the evaluated claims stop and which extensions are scientifically meaningful | negative cells, unmatched baseline roles, seed coverage, profiler results and pending/negative controls | Limitations must be artifact-specific rather than generic future-work language |
+| P1 | Explain what changes when forecasts at different endpoints are treated as nested views of one trajectory | CHPC construction, Main-I, Main-II and Figure 6 | Do not infer accuracy from CHPC alone |
+| P2 | Distinguish input-side multi-scale representation from output-side multi-scope forecast synthesis | Section 3, Related Work, Core-Ablation and Figure 5 | Do not equate scope variation with causal specialization |
+| P3 | State methodological limitations and scientifically meaningful extensions | ISCF formulation, Section 4 and Section 5 behavior evidence | Do not replace method limitations with protocol or coverage disclaimers |
 
-### 4.3 Limitation inventory to audit before prose drafting
+### 4.3 Methodological limitation inventory
 
-- deterministic point forecasting rather than probabilistic forecasting;
-- the frozen benchmark horizon set and current dataset domains;
-- external baseline protocol heterogeneity in Main-I and Main-II;
-- explicit test-informed/test-tuned profile selection;
-- incomplete cross-seed evidence unless a full non-selective extension is completed;
-- the unverified necessity of canonical contiguous grouping;
-- current full-domain materialization versus architecture-supported prefix-bounded execution;
-- dataset- or horizon-specific negative cells that constrain uniform-superiority wording;
+- finite, pre-specified contiguous scopes and future regions;
+- no explicit evolving dependency graph between future regions;
+- soft convex allocation of point forecasts without predictive uncertainty or multimodal outputs;
+- additional decoder-side computation from retaining multiple scope branches;
 - the distinction between observed scope behavior and learned semantic specialization.
 
-Only limitations still supported by the final artifacts should enter the manuscript. This list is an audit inventory, not prewritten Discussion content.
+Only limitations that arise from the formulation or computation graph should enter the manuscript. This list is an audit inventory, not prewritten Discussion content.
 
 ## 5. Section 7: Conclusion
 

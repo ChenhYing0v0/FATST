@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | Figure 5 v5.3 temporarily fixed usable；Section 5.6 v0.13 author-refinement narrative under author review；Sections 6--7 prose pending |
+| `active_question` | Section 6 v0.1 discussion-and-limitations draft under author review；Section 5 v0.13 and Figure 5 v5.3 remain temporarily fixed usable；Section 7 prose pending |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
-| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7与Figure 5 v5.3 temporarily frozen usable；Section 5 v0.13中5.6 narrative为author-review candidate；Sections 6--7 prose pending；Figure 4 visual design temporarily fixed |
+| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7与Figure 5 v5.3 temporarily frozen usable；Section 5 v0.13中5.6 narrative为author-review candidate；Section 6 v0.1 discussion-and-limitations draft为author-review candidate；Section 7 prose pending；Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | Main I dense/Main II v1=ETTh1, ETTh2, ETTm1, ETTm2, Weather, ECL, Solar；Exchange=companion/deferred extension；ablation=original five |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
@@ -22,15 +22,17 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper experiment matrix closed；Figure 5 v5.3 fixed；Section 5.6 v0.13 prose author-review candidate |
+| `current_11_step` | paper experiment matrix closed；Section 5 v0.13 author-review candidate；Section 6 v0.1 discussion-and-limitations draft under author review；Figure 5 v5.3 fixed |
 | `current_candidate` | Sections 6--7 paper writing |
-| `latest_decision` | `section5_6_v0p13_author_refinement_author_review_candidate` |
-| `writing_latest_decision` | `section5_6_v0p13_author_refinement_author_review_candidate` |
+| `latest_decision` | `section6_v0p1_discussion_methodological_limitations_author_review_candidate` |
+| `writing_latest_decision` | `section6_v0p1_discussion_methodological_limitations_author_review_candidate` |
 | `next_required_action` | continue Discussion/Conclusion drafting or author-requested Section 5 refinement；no new experiment required |
 | `method_training_authorized` | false；no matched controls、extra HPO/seeds or formal test required |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
 ## Section 5.6 Sample-Specific Behavior Redesign Record (2026-08-21)
+
+Section 6 v0.1 writing record（2026-08-24）：新增`docs/paper-drafts/iscf-bsca-discussion-initial-draft.md`并将Discussion压缩为无subsection的三段布局。P1讨论CHPC、统一forecasting system与deployment含义；P2加入multi-scale encoder的input-side representation与multi-scope forecasting的output-side synthesis区分；P3仅讨论finite contiguous scopes、跨region interaction、soft point-forecast allocation与decoder-side computation等方法论limitations。Section 7尚未起草。Decision=`section6_v0p1_discussion_methodological_limitations_author_review_candidate`。
 
 Section 5.6 v0.13 writing amendment（2026-08-24）：按author要求从正文删除`In this selected probe`、`in this probe`、monotonic distance--scope boundary句与selected-validation boundary句。三段结构、Figure 5a/b/c对应关系、数值、CHPC及caption未改；相关evidence boundary继续保留于caption与governance。Decision=`section5_6_v0p13_author_refinement_author_review_candidate`。
 
