@@ -1,8 +1,8 @@
 # Research Roadmap
 
-## Section 6 Discussion and Limitations v0.3 (2026-08-24)
+## Section 6 Discussion and Limitations v0.4 (2026-08-24)
 
-Current cursor=`Section 5 v0.13 / Figure 5 v5.3 fixed usable -> Section 6 v0.3 author review`。P1恢复上一版的`Main-I and Main-II`结果归纳句；P2明确写出`Multi-scale encoders and ISCF`以消除指代歧义；三段结构、P3方法论limitations与其余章节不变。Section 7尚未起草。Decision=`section6_v0p3_author_refinement_author_review_candidate`。
+Current cursor=`Section 5 v0.13 / Figure 5 v5.3 fixed usable -> Section 6 v0.4 author review`。P1改为直接指代Sections 5.2和5.3的实验；P2明确写出`Multi-scale encoders and ISCF`以消除指代歧义；三段结构、P3方法论limitations与其余章节不变。Section 7尚未起草。Decision=`section6_v0p4_author_refinement_author_review_candidate`。
 
 ## Section 5.6 Concise Author Refinement v0.13 (2026-08-24)
 

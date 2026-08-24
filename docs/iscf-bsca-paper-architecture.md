@@ -8,14 +8,14 @@
 | `version` | `v1.01` |
 | `last_updated` | `2026-08-24` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | Section 6 v0.3 author-refined discussion-and-limitations draft待author review；Section 5 v0.13 and Figure 5 v5.3 remain temporarily fixed usable；Section 7 prose pending |
+| `current_review_cursor` | Section 6 v0.4 author-refined discussion-and-limitations draft待author review；Section 5 v0.13 and Figure 5 v5.3 remain temporarily fixed usable；Section 7 prose pending |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `frozen_consensus` | 论文七章结构并保留精简的Discussion and Limitations；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Figure 5 v5.3；Sections 5--7整体结构 |
-| `provisional_content` | Section 5 v0.13（5.6 narrative待author review）；Section 6 v0.3 discussion-and-limitations draft；Section 7 prose；Method Figure 4 stable vector-asset synchronization |
+| `provisional_content` | Section 5 v0.13（5.6 narrative待author review）；Section 6 v0.4 discussion-and-limitations draft；Section 7 prose；Method Figure 4 stable vector-asset synchronization |
 | `authorization_source` | 2026-08-24用户要求按精简Discussion规划完成Section 6，并在P2区分multi-scale encoder与multi-scope forecasting、在P3改写为方法论limitations；Sections 1--5 evidence与Figure 5 v5.3不变 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
