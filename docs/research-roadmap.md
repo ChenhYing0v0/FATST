@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## Section 5.6 Concise Author Refinement v0.13 (2026-08-24)
+
+Current cursor=`Figure 5 v5.3 fixed usable -> Section 5.6 v0.13 author review`。按author要求仅删除四处限定性正文表述；三段叙事链、panel mapping、evidence values、CHPC与Figure 5 caption均不变。Project-level evidence boundary继续保留于caption与governance records。Decision=`section5_6_v0p13_author_refinement_author_review_candidate`。
+
 ## Section 5.6 Author-Outline Narrative v0.12 (2026-08-24)
 
 Current cursor=`Figure 5 v5.3 fixed usable -> Section 5.6 v0.12 author review`。5.6按三段证据链重构为`component utility -> two internal-behavior questions -> scope-relative forecast deviations -> region-dependent allocation -> CHPC/boundary`。Figure 5b先证明selected probe中的五条Scope-conditioned Forecasts保留不同candidate signals，Figure 5a/c再说明最高权重scope与完整probability profile随future region/step变化。最远region偏好$s=720$仅作sample-level observation，不声称单调distance--scope规律。Decision=`section5_6_v0p12_author_outline_narrative_author_review_candidate`。

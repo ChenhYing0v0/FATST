@@ -139,7 +139,7 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 
 ## 5. 当前正文实验闭合状态
 
-Figure 5 v5.3固定为论文可用图后，Main I、Main II、Efficiency、Core-Ablation、Figure 5与Decoder-Transfer均已有canonical artifact。Section 5 v0.12中，Efficiency只通过Figure 6放入正文，Decoder-Transfer只通过Figure 7放入正文，5.6通过Figure 5呈现Full-model sample-specific scope/allocation behavior；numerical source tables继续保留为audit source而不额外插入main text。`Ablation-Sensitivity`继续deferred，不属于当前正文核心闭合；若后续恢复，须单独冻结Appendix grid且不得因已见结果选择性扩张。
+Figure 5 v5.3固定为论文可用图后，Main I、Main II、Efficiency、Core-Ablation、Figure 5与Decoder-Transfer均已有canonical artifact。Section 5 v0.13中，Efficiency只通过Figure 6放入正文，Decoder-Transfer只通过Figure 7放入正文，5.6通过Figure 5呈现Full-model sample-specific scope/allocation behavior；numerical source tables继续保留为audit source而不额外插入main text。`Ablation-Sensitivity`继续deferred，不属于当前正文核心闭合；若后续恢复，须单独冻结Appendix grid且不得因已见结果选择性扩张。
 
 当前不自动追加seeds、controls、allocation redesign或新的formal test。
 
