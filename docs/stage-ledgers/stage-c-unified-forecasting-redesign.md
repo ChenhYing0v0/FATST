@@ -1,5 +1,16 @@
 # StageC Unified Varied-Horizon Forecasting Ledger
 
+## Appendix Routing Design (2026-08-24)
+
+Author-facing manuscript routing is provisionally reduced to two appendices:
+Appendix A for the Section 5.1 experimental protocol and reproducibility
+details, and Appendix B for the complete Main-I/Main-II horizon-wise result
+cells behind Tables 1 and 2. No duplicate figures, unpromoted sensitivity
+experiments, historical diagnostics or failure-case material is required.
+Canonical design=`docs/paper-drafts/iscf-bsca-appendix-structure-design.md`;
+decision=`appendix_v0p1_minimal_two_appendices_design`; no new implementation,
+training or formal test is authorized by this routing decision.
+
 ## Stage Scope
 
 | Field | Content |

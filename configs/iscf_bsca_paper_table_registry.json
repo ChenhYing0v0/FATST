@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "registry_id": "ISCF-BSCA-PAPER-TABLES-20260815-AUTHOR-CORRECTED-MAIN",
-  "updated_at": "2026-08-21",
+  "updated_at": "2026-08-24",
   "scope": "paper_facing_experiment_tables",
   "presentation_contract": {
     "main_result_template": "TimeAlign_Table_6_style",
@@ -336,7 +336,7 @@
     },
     {
       "id": "ablation_sensitivity",
-      "manuscript_role": "appendix",
+      "manuscript_role": "deferred_not_current_appendix",
       "title": "Scope and objective sensitivity",
       "status": "deferred_outside_current_core_closure",
       "topics": ["random_partition", "scope_count", "balance_weight_lambda"],

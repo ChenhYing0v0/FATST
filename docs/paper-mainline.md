@@ -20,6 +20,8 @@
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `paper_core_status` | architecture family frozen；Sections 1--7与Figure 5 v5.3 temporarily frozen usable；Section 5.4 Figure 6 only，Section 5.7 Figure 7 only；allocation aggregate accuracy direction positive但prevalence、sparse/oracle-routing claims仍关闭 |
 
+[Appendix Structure Design v0.1, 2026-08-24] 基于已冻结的Sections 1--7完成Appendix最小化设计，新增`docs/paper-drafts/iscf-bsca-appendix-structure-design.md`。当前只规划两个Appendix：A用于Section 5.1所需的dataset/protocol/source-role/implementation/provenance信息；B用于Tables 1--2背后的完整Main-I/Main-II逐dataset--horizon--metric结果。Sections 1--4、5.5--5.7、6--7不新增重复材料；secondary sensitivity、historical audits与失败案例继续留在analysis artifacts。该设计不产生新的training、formal test或sensitivity authorization。Decision=`appendix_v0p1_minimal_two_appendices_design`。
+
 [Section 7 Conclusion Temporary Freeze v0.2, 2026-08-24] Author确认Section 7 v0.1两段式正文可作为论文可用版本。正文保持204词与原有claim boundary不变，暂时固定为`temporarily_frozen_usable`；不重复Section 6 limitations，不新增citations、metrics、mechanisms或generality claims。Decision=`section7_v0p2_temporarily_frozen_usable`。
 
 [Section 6 Discussion Author Refinement v0.2, 2026-08-24] P1改为直接说明 varied-horizon forecasting 需要一个服务不同request endpoints的统一系统，并改用Sections 5.2/5.3指代比较结果；删除CHPC structural-contract/accuracy-guarantee句。P2改为以“从输出端出发”的方法论表述，统一使用`forecast generation`，并将ISCF置于互补关系句的后半部分以突出output-side multi-scope设计。P3删除Scope Probabilities的point-forecast/uncertainty限制，将原有术语改写为fixed-interval region partitioning与region-to-region information passing。Section 7尚未起草。Decision=`section6_v0p2_author_refinement_author_review_candidate`。

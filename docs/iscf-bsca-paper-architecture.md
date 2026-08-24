@@ -432,13 +432,11 @@ Abstract
 7. Conclusion
 
 Appendices
-   A. Full Dataset-Horizon Results
-   B. Additional Coupling-Scope Diagnostics
-   C. Hyperparameter Sensitivity
-   D. Reproducibility Details
+   A. Experimental Protocol and Reproducibility Details
+   B. Complete Horizon-wise Benchmark Results
 ```
 
-`Discussion and Limitations`用于分离result observation、task/system interpretation与methodological limitations。Section 6不再设置subsection，完整negative cells、secondary controls与敏感性结果放在Appendices。
+`Discussion and Limitations`用于分离result observation、task/system interpretation与methodological limitations。Section 6不再设置subsection。完整negative cells仅随Main-I/Main-II的逐horizon结果保留在Appendix B；secondary controls、敏感性结果与历史诊断不自动进入Appendix，除非后续获得独立的作者决定。
 
 ### 3.1 Sections 5--7 author-fixed structural design
 

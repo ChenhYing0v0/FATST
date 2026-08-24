@@ -68,10 +68,8 @@ No standalone ablation is allocated to the Allocation-Balance Regularizer. The F
 7. Conclusion
 
 Appendices
-   A. Detailed experimental settings and source-role disclosures
-   B. Full dataset-horizon results and additional comparisons
-   C. Additional ablations, sensitivity and mechanism diagnostics
-   D. Reproducibility, selection protocol and artifact provenance
+   A. Experimental protocol and reproducibility details
+   B. Complete horizon-wise benchmark results
 ```
 
 Section 6 is a concise interpretive bridge between the result observations in Section 5 and the final summary in Section 7. It does not repeat Tables 1--3 or Figures 5--7, and it does not introduce implementation-level protocol limitations. The section uses three paragraphs without subsections: unified forecasting interpretation, input-side multi-scale versus output-side multi-scope design, and methodological limitations.
@@ -85,8 +83,8 @@ Section 5 should follow an evidence ladder rather than the implementation order:
 | Subsection | Scientific question | Required content blocks | Primary artifact | Permitted conclusion | Current evidence status |
 | --- | --- | --- | --- | --- | --- |
 | 5.1 Experimental setup | Are the comparisons reproducible and are their roles distinguishable? | datasets and splits; horizons and metrics; baseline families and source roles; main model versus ablation anchor; checkpoint/profile selection; seeds; test-informed disclosure; implementation and hardware | experiment protocol + table registry | Defines the evaluation contract only | Evidence inputs complete; ready for final prose consolidation |
-| 5.2 Comparison with horizon-specific forecasters | Can one unified ISCF-BSCA model compete with separately optimized fixed-horizon baselines? | explain one-versus-four-model protocol; report seven dataset-level four-horizon means, overall best/second counts and low-/high-dimensional dataset-group gains; route complete per-H results to Appendix A | Table 1 / `Main-I` | System-level accuracy competitiveness under the audited mixed-source comparison | Complete and hash-frozen |
-| 5.3 One-model-all-horizons evaluation | Is ISCF-BSCA competitive when every baseline must serve all horizons from one trained model? | define H720-prefix protocol; explain how it differs from Main-I; report dataset-level four-horizon means; route complete per-H results to Appendix A; retain unmatched-protocol caveat | Table 2 / `Main-II` | One-model-all-horizons system effectiveness, not decoder or BSCA attribution | Complete and horizon-loader re-audited |
+| 5.2 Comparison with horizon-specific forecasters | Can one unified ISCF-BSCA model compete with separately optimized fixed-horizon baselines? | explain one-versus-four-model protocol; report seven dataset-level four-horizon means, overall best/second counts and low-/high-dimensional dataset-group gains; route complete per-H results to Appendix B | Table 1 / `Main-I` | System-level accuracy competitiveness under the audited mixed-source comparison | Complete and hash-frozen |
+| 5.3 One-model-all-horizons evaluation | Is ISCF-BSCA competitive when every baseline must serve all horizons from one trained model? | define H720-prefix protocol; explain how it differs from Main-I; report dataset-level four-horizon means; route complete per-H results to Appendix B; retain unmatched-protocol caveat | Table 2 / `Main-II` | One-model-all-horizons system effectiveness, not decoder or BSCA attribution | Complete and horizon-loader re-audited |
 | 5.4 Efficiency and system cost | What accuracy and deployment cost changes when one model replaces a four-model horizon-specific family? | Main-I macro MSE; peak inference memory; four-horizon checkpoint storage | Figure 6 / `Efficiency` | Lowest macro MSE among eight displayed methods and one-checkpoint consolidation, with DLinear/QDF retained as visible resource counterexamples | Complete; Figure 6 is the sole main-text presentation and the table artifact remains a numerical source |
 | 5.5 Component and training-objective ablations | Which architectural and optimization components contribute within the frozen design family? | Full; w/o BSCA; w/o Target-Adaptive Allocation; Shared Scope Projection; Fixed Scope ($s=144$); matched budgets and end-to-end training | Table 3 / `Core-Ablation` | Author-corrected aggregate table supports all four interventions; per-horizon rerun provenance remains unsynchronized | Complete at dataset-aggregate table level; Full best in 12/12 metric columns |
 | 5.6 Scope diversity and allocation behavior | Can Full ISCF-BSCA form distinct scope signals and sample-specific regional reweighting? | selected actual fused trajectory with regional dominant-scope colours；five scope-relative deviation profiles；same-probe $5\times720$ probability heatmap；20/20 CHPC numerical audit | Figure 5 v5.3 | Scope forecasts are non-identical and all five scopes appear as regional dominant components；claim boundaries remain explicit in the caption and editorial audit | Figure fixed；Section 5 v0.13 prose under author review |
@@ -136,8 +134,8 @@ The fixed English draft contains 204 words. It introduces no new metrics, citati
 
 | Provisional number | Artifact | Main narrative role | Status |
 | --- | --- | --- | --- |
-| Table 1 | Main-I | main text: dataset-level four-horizon means；Appendix A: complete one unified model versus separately optimized horizon-specific baselines | complete/hash-frozen |
-| Table 2 | Main-II | main text: dataset-level four-horizon means；Appendix A: complete one-model-all-horizons comparison | complete/presentation-aligned; active H5A cannot be anticipated |
+| Table 1 | Main-I | main text: dataset-level four-horizon means；Appendix B: complete one unified model versus separately optimized horizon-specific baselines | complete/hash-frozen |
+| Table 2 | Main-II | main text: dataset-level four-horizon means；Appendix B: complete one-model-all-horizons comparison | complete/presentation-aligned; active H5A cannot be anticipated |
 | Table 3 | Core-Ablation | component and objective attribution | author-corrected aggregate table complete; 12/12 metric columns best for Full; historical 100-cell audit retained |
 | Figure 5 | Sample-specific scope diversity and allocation behavior | Full-model validation diagnostics for Section 5.6 | v5.3 temporarily fixed usable; canonical=`paper-figures/figure_5_scope_allocation_behavior.*` |
 | Figure 6 | Efficiency | main-text accuracy, peak-memory and checkpoint-storage trade-off | complete; sole main-text evidence carrier for Section 5.4 |
@@ -147,12 +145,18 @@ The selected example remains integrated into Figure 5 rather than assigned a sep
 
 ## 7. Appendix routing
 
-| Appendix | Content role | Examples |
+The minimal appendix contract is defined in
+`docs/paper-drafts/iscf-bsca-appendix-structure-design.md`. It uses two
+appendices only:
+
+| Appendix | Content role | Required contents |
 | --- | --- | --- |
-| A. Detailed experimental settings and source-role disclosures | reproduce the evaluated protocols and make native/published/matched roles explicit | dataset statistics, splits, look-back windows, baseline sources, hardware, profiler contract |
-| B. Full dataset-horizon results and additional comparisons | preserve complete cells without overloading the main argument | full-precision Main-I/Main-II results, Exchange companion, per-dataset breakdowns, negative cells |
-| C. Additional ablations, sensitivity and mechanism diagnostics | retain secondary controls and robustness evidence | random partition, scope count, loss weights, extended allocation/gradient plots, optional extra case studies |
-| D. Reproducibility, selection protocol and artifact provenance | disclose the test-informed workflow and artifact identity | full HPO trial records, checkpoint hashes, selector definitions, seed/environment details |
+| A. Experimental protocol and reproducibility details | consolidate the information needed to reproduce Section 5.1 and interpret source roles | datasets, splits, preprocessing, model/baseline roles, implementation, selection rule and artifact provenance |
+| B. Complete horizon-wise benchmark results | preserve the complete cells behind the compact main-text Tables 1 and 2 | full Main-I and Main-II dataset--horizon--metric tables, including negative cells |
+
+No separate appendix is planned for Figures 2--7, the core ablation table,
+the Figure 5 sample-specific diagnostic, transfer values behind Figure 7, or
+unpromoted sensitivity and historical audit material.
 
 ## 8. Claim-evidence map
 

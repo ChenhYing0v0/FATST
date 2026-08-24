@@ -1,5 +1,19 @@
 # Research Roadmap
 
+## Appendix routing design (2026-08-24)
+
+The manuscript-wide Appendix plan is frozen provisionally as a minimal
+two-appendix structure. Appendix A consolidates Section 5.1 dataset,
+protocol, source-role, implementation and provenance details. Appendix B
+contains the complete dataset--horizon--metric cells behind the compact
+Tables 1 and 2 (Main-I and Main-II), including negative cells. No duplicate
+figures, standalone sensitivity studies, historical audits, failure cases or
+transfer table are required under the current plan. The detailed outline and
+section-by-section audit are recorded in
+`docs/paper-drafts/iscf-bsca-appendix-structure-design.md`. This is a writing
+and routing decision only; it authorizes no new implementation, training or
+formal test.
+
 ## Section 7 Conclusion Initial Draft v0.1 (2026-08-24)
 
 Current cursor=`Sections 1--7 temporarily frozen usable`。Canonical draft=`docs/paper-drafts/iscf-bsca-conclusion-initial-draft.md`。Author确认204词两段正文可作为论文可用版本；P1为`problem -> CHPC formulation -> ISCF/BSCA principle`，P2为`system-level effectiveness -> accuracy--cost balance -> ablation/diagnostic/transfer support -> output-side design implication`。Section 6已承担methodological limitations，因此Conclusion不重复limitations、不新增future-work段落，也不引入新数据、citations、metrics或mechanisms。Decision=`section7_v0p2_temporarily_frozen_usable`。
