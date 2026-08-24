@@ -5,9 +5,9 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Initial structural design for the manuscript Conclusion |
-| `version` | `v0.1-structure-design` |
+| `version` | `v0.2-author-confirmed-structure` |
 | `date` | `2026-08-24` |
-| `review_status` | Initial structure pending author review; no manuscript prose drafted |
+| `review_status` | Two-paragraph structure confirmed by the author; initial prose drafted for review |
 | `upstream_dependency` | Introduction v0.9, Related Work v0.2, Section 3 v0.7, Section 4 v0.7, Section 5 v0.13 and Section 6 v0.4 remain temporarily frozen and unchanged |
 | `section_format` | No subsections; two compact paragraphs |
 | `target_length` | Approximately 180--230 words in the eventual English manuscript |
@@ -15,7 +15,7 @@
 | `experiment_change` | None; no new implementation, training or formal test |
 | `claim_boundary` | The Conclusion closes the established argument and introduces no new results, citations, mechanisms or generality claims |
 
-This file defines the argumentative structure only. It is not manuscript prose and should be converted into full English text only after author approval.
+This file records the author-confirmed argumentative structure. The corresponding English draft is available at `docs/paper-drafts/iscf-bsca-conclusion-initial-draft.md`.
 
 ## 1. Section-level role
 
@@ -79,4 +79,3 @@ The final Conclusion should not:
 ## 6. Terminology lock
 
 Use the established canonical forms: **varied-horizon forecasting**, **cross-horizon prefix consistency (CHPC)**, **ISCF**, **BSCA**, **sharing scope**, **scope-indexed forecast field**, **Target-Adaptive Allocation**, **Scope-conditioned Forecast**, **prefix-consistent trajectory** and **Encoder**. Use `forecast generation`, not `forecast synthesis`, and describe the method as an output-side decoder framework rather than a collection of independently trained forecasters.
-

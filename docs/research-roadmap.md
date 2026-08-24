@@ -1,8 +1,8 @@
 # Research Roadmap
 
-## Section 7 Conclusion Structure v0.1 (2026-08-24)
+## Section 7 Conclusion Initial Draft v0.1 (2026-08-24)
 
-Current cursor=`Sections 1--6 temporarily frozen usable -> Section 7 v0.1 structure author review`。Section 7固定为无subsection、约180--230词的两段式Conclusion：P1完成`problem -> CHPC formulation -> ISCF/BSCA principle`，P2完成`system-level effectiveness -> accuracy--cost balance -> ablation/transfer support -> output-side design implication`。Section 6已承担methodological limitations，因此Conclusion不重复limitations、不新增future-work段落，也不引入新数据、citations、metrics或mechanisms。Canonical design=`docs/paper-drafts/iscf-bsca-conclusion-structure-design.md`。Decision=`section6_v0p4_temporarily_frozen_section7_v0p1_structure_author_review_candidate`。
+Current cursor=`Sections 1--6 temporarily frozen usable -> Section 7 v0.1 prose author review`。Canonical draft=`docs/paper-drafts/iscf-bsca-conclusion-initial-draft.md`。两段204词正文按author-confirmed结构完成：P1为`problem -> CHPC formulation -> ISCF/BSCA principle`，P2为`system-level effectiveness -> accuracy--cost balance -> ablation/diagnostic/transfer support -> output-side design implication`。Section 6已承担methodological limitations，因此Conclusion不重复limitations、不新增future-work段落，也不引入新数据、citations、metrics或mechanisms。Decision=`section7_v0p1_concise_initial_draft_author_review_candidate`。
 
 ## Section 6 Discussion and Limitations v0.4 Temporary Freeze (2026-08-24)
 
