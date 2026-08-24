@@ -8,20 +8,22 @@
 | `version` | `v1.01` |
 | `last_updated` | `2026-08-24` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | Section 6 v0.4 author-refined discussion-and-limitations draft待author review；Section 5 v0.13 and Figure 5 v5.3 remain temporarily fixed usable；Section 7 prose pending |
+| `current_review_cursor` | Section 6 v0.4 temporarily frozen usable；Section 7 v0.1 Conclusion structure design待author review |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `frozen_consensus` | 论文七章结构并保留精简的Discussion and Limitations；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
-| `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Method Figure 4 visual design；Figure 5 v5.3；Sections 5--7整体结构 |
-| `provisional_content` | Section 5 v0.13（5.6 narrative待author review）；Section 6 v0.4 discussion-and-limitations draft；Section 7 prose；Method Figure 4 stable vector-asset synchronization |
-| `authorization_source` | 2026-08-24用户要求按精简Discussion规划完成Section 6，并在P2区分multi-scale encoder与multi-scope forecasting、在P3改写为方法论limitations；Sections 1--5 evidence与Figure 5 v5.3不变 |
+| `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Section 6 v0.4正文、paragraph structure、interpretation与methodological limitations；Method Figure 4 visual design；Figure 5 v5.3；Sections 5--7整体结构 |
+| `provisional_content` | Section 5 v0.13（5.6 narrative待author review）；Section 7 v0.1 two-paragraph structure与pending prose；Method Figure 4 stable vector-asset synchronization |
+| `authorization_source` | 2026-08-24用户确认Section 6 v0.4暂时固定可用，并要求结合全文形成精简Section 7初步结构；Sections 1--5 evidence与Figures 5--7不变 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
 `temporarily_frozen_content` 只有在后续章节或证据产生明确矛盾且用户同意后才解冻；
 `provisional_content` 只表示当前最佳结构，后续按章节继续修订。
+
+Section 6 temporary-freeze and Section 7 v0.1 structure amendment：Section 6 v0.4已由author确认暂时固定可用。Section 7采用无subsection、约180--230词的两段结构：P1收束varied-horizon problem、CHPC与ISCF-BSCA principle；P2只保留最强system-level、accuracy--cost、ablation与transfer evidence，并以output-side sharing granularity对unified forecasting的意义收尾。Conclusion不重复Section 6 limitations，不新增citations、metrics、mechanisms或future claims。Canonical design=`docs/paper-drafts/iscf-bsca-conclusion-structure-design.md`。Decision=`section6_v0p4_temporarily_frozen_section7_v0p1_structure_author_review_candidate`。
 
 Section 5.6 v0.13 concise-refinement amendment：按author要求删除P2中的`In this selected probe`、P3中的`in this probe`，并删除关于monotonic distance--scope relation与selected-validation claim boundary的两句正文表述。三段结构、Figure 5a/b/c对应关系、数值、CHPC说明与caption保持不变。Decision=`section5_6_v0p13_author_refinement_author_review_candidate`。
 

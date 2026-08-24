@@ -5,17 +5,17 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Temporarily frozen structural design for the manuscript sections after Method |
-| `version` | `v0.27-section6-author-refinement` |
-| `date` | `2026-08-24 Section 6 author refinement` |
-| `review_status` | `Section 5 v0.13 and Figure 5 v5.3 remain temporarily fixed usable; Section 6 v0.4 refined for author review; Section 7 remains structural only` |
+| `version` | `v0.28-section6-freeze-section7-structure` |
+| `date` | `2026-08-24 Section 6 freeze and Section 7 structure design` |
+| `review_status` | `Section 5 v0.13, Figure 5 v5.3 and Section 6 v0.4 temporarily fixed usable; Section 7 v0.1 structure pending author review` |
 | `upstream_dependency` | Introduction v0.9, Related Work v0.2, Section 3 v0.7 and Section 4 v0.7 remain temporarily frozen and unchanged |
 | `scope` | Subsection functions, evidence order, table/figure placement, claim boundaries and appendix routing only |
-| `manuscript_prose` | Section 5 v0.13 drafted at `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`; Section 6 v0.4 drafted at `docs/paper-drafts/iscf-bsca-discussion-initial-draft.md`; Figure 5 v5.3 temporarily fixed usable；Section 7 remains structural only |
+| `manuscript_prose` | Section 5 v0.13 drafted at `docs/paper-drafts/iscf-bsca-experiments-initial-draft.md`; Section 6 v0.4 fixed at `docs/paper-drafts/iscf-bsca-discussion-initial-draft.md`; Section 7 v0.1 structure at `docs/paper-drafts/iscf-bsca-conclusion-structure-design.md`; Figure 5 v5.3 temporarily fixed usable |
 | `experiment_change` | None; this document does not authorize implementation, remote training or formal test |
 | `evidence_snapshot` | Main-I, corrected Main-II, Efficiency, Core-Ablation, fixed Figure 5 v5.3 sample-specific scope/allocation behavior and Decoder-Transfer complete |
 | `structure_decision` | Sections 5--7 use `Experiments -> Discussion and Limitations -> Conclusion`; Section 6 has no subsections and focuses on unified forecasting interpretation, input-side multi-scale versus output-side multi-scope design, and methodological limitations；Section 5.6 focuses on selected-example scope forecast diversity与region-dependent soft allocation；CHPC remains a construction fact without a dedicated visualization |
 
-This document remains the frozen argumentative architecture of the remaining manuscript. Sections 5 and 6 now have manuscript-facing initial drafts, while Section 7 remains a structural design; neither document promotes evidence beyond the boundaries recorded below.
+This document remains the frozen argumentative architecture of the remaining manuscript. Sections 5 and 6 now have manuscript-facing drafts, Section 6 is temporarily fixed usable, and Section 7 has an author-review structure design; none of these documents promotes evidence beyond the boundaries recorded below.
 
 ## 1. Manuscript contract
 
@@ -125,12 +125,12 @@ Only limitations that arise from the formulation or computation graph should ent
 
 ## 5. Section 7: Conclusion
 
-The Conclusion should remain compact and should not use subsections. A two-paragraph structure is recommended if Section 6 is retained:
+The Conclusion should remain compact, use no subsections and follow the detailed structure in `docs/paper-drafts/iscf-bsca-conclusion-structure-design.md`. The current recommendation is two paragraphs:
 
-1. restate the varied-horizon forecasting problem, CHPC requirement and ISCF-BSCA response at principle level;
-2. summarize only evidence-backed effectiveness, attribution, efficiency and transfer outcomes, then close with the narrowest material boundary.
+1. restate the varied-horizon forecasting problem, the CHPC formulation and the ISCF-BSCA response at principle level;
+2. summarize the strongest system-level, ablation, efficiency and transfer evidence, then close on output-side sharing granularity as a design axis for unified forecasting.
 
-The Conclusion must not introduce new metrics, citations, mechanisms or future claims. If a standalone Discussion is rejected, the Conclusion should expand to three paragraphs by adding one explicit limitations paragraph.
+The eventual English section should target approximately 180--230 words. It must not introduce new metrics, citations, mechanisms, limitations or future claims. Section 6 already contains the methodological limitations, so the Conclusion should not add a third limitations paragraph or repeat the Discussion.
 
 ## 6. Main-text table and figure plan
 

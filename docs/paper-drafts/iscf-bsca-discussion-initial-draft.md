@@ -7,7 +7,10 @@
 | `document_role` | Clean manuscript-facing initial draft of Section 6 |
 | `version` | `v0.4-author-refinement` |
 | `date` | `2026-08-24` |
-| `review_status` | Author-refined draft; Section 5 v0.13 and Figures 5--7 remain unchanged |
+| `review_status` | `temporarily_frozen_usable` |
+| `freeze_date` | `2026-08-24` |
+| `freeze_scope` | Section 6 body, paragraph structure, interpretation and methodological limitations |
+| `unfreeze_condition` | A concrete contradiction from Section 7 or later manuscript assembly, followed by explicit author approval |
 | `upstream_dependency` | Introduction v0.9, Related Work v0.2, Section 3 v0.7, Section 4 v0.7 and Section 5 v0.13 remain temporarily frozen and unchanged |
 | `evidence_scope` | CHPC construction, Sections 5.2 and 5.3 experiments, Figure 3 motivation, Figure 5 diagnostics, Core-Ablation, Figure 6 and Figure 7 |
 | `experiment_change` | None; no new implementation, training or formal test |

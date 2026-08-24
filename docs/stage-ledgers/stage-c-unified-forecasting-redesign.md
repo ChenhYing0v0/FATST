@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | Section 6 v0.4 author-refined discussion-and-limitations draft under author review；Section 5 v0.13 and Figure 5 v5.3 remain temporarily fixed usable；Section 7 prose pending |
+| `active_question` | Section 6 v0.4 temporarily fixed usable；Section 7 v0.1 Conclusion structure design under author review |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
-| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7与Figure 5 v5.3 temporarily frozen usable；Section 5 v0.13中5.6 narrative为author-review candidate；Section 6 v0.4 discussion-and-limitations draft为author-review candidate；Section 7 prose pending；Figure 4 visual design temporarily fixed |
+| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7、Section 6 v0.4与Figure 5 v5.3 temporarily frozen usable；Section 5 v0.13中5.6 narrative为author-review candidate；Section 7 v0.1 structure为author-review candidate；Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | Main I dense/Main II v1=ETTh1, ETTh2, ETTm1, ETTm2, Weather, ECL, Solar；Exchange=companion/deferred extension；ablation=original five |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
@@ -22,15 +22,17 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper experiment matrix closed；Section 5 v0.13 author-review candidate；Section 6 v0.4 discussion-and-limitations draft under author review；Figure 5 v5.3 fixed |
+| `current_11_step` | paper experiment matrix closed；Section 5 v0.13 author-review candidate；Section 6 v0.4 temporarily fixed usable；Section 7 v0.1 structure under author review；Figure 5 v5.3 fixed |
 | `current_candidate` | Sections 6--7 paper writing |
-| `latest_decision` | `section6_v0p4_author_refinement_author_review_candidate` |
-| `writing_latest_decision` | `section6_v0p4_author_refinement_author_review_candidate` |
-| `next_required_action` | continue Discussion/Conclusion drafting or author-requested Section 5 refinement；no new experiment required |
+| `latest_decision` | `section6_v0p4_temporarily_frozen_section7_v0p1_structure_author_review_candidate` |
+| `writing_latest_decision` | `section6_v0p4_temporarily_frozen_section7_v0p1_structure_author_review_candidate` |
+| `next_required_action` | author review of Section 7 structure, then draft concise Conclusion prose；no new experiment required |
 | `method_training_authorized` | false；no matched controls、extra HPO/seeds or formal test required |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
 ## Section 5.6 Sample-Specific Behavior Redesign Record (2026-08-21)
+
+Section 6 temporary freeze and Section 7 v0.1 structure amendment（2026-08-24）：Author确认Section 6 v0.4暂时固定可用。Section 7规划为无subsection、约180--230词的两段式Conclusion；P1收束problem/CHPC/ISCF-BSCA principle，P2压缩system effectiveness、accuracy--cost、ablation与transfer evidence并以output-side sharing granularity的设计意义收尾。Canonical design=`docs/paper-drafts/iscf-bsca-conclusion-structure-design.md`。Decision=`section6_v0p4_temporarily_frozen_section7_v0p1_structure_author_review_candidate`。
 
 Section 6 v0.4 writing amendment（2026-08-24）：P1将`Main-I and Main-II`改为直接指代Sections 5.2和5.3的实验；P2将`two approaches`改为明确的`Multi-scale encoders and ISCF`。Section 7尚未起草。Decision=`section6_v0p4_author_refinement_author_review_candidate`。
 
