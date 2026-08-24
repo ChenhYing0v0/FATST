@@ -6,10 +6,10 @@
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
-| `active_question` | Section 6 v0.4 temporarily fixed usable；Section 7 v0.1 concise Conclusion draft under author review |
+| `active_question` | Sections 1--7 and Figure 5 v5.3 temporarily fixed usable；Section 7 v0.2 Conclusion fixed |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
-| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7、Section 6 v0.4与Figure 5 v5.3 temporarily frozen usable；Section 5 v0.13中5.6 narrative为author-review candidate；Section 7 v0.1 prose为author-review candidate；Figure 4 visual design temporarily fixed |
+| `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7、Section 6 v0.4、Section 7 v0.2与Figure 5 v5.3 temporarily frozen usable；Section 5 v0.13中5.6 narrative为author-review candidate；Figure 4 visual design temporarily fixed |
 | `future_validation_suite` | Main I dense/Main II v1=ETTh1, ETTh2, ETTm1, ETTm2, Weather, ECL, Solar；Exchange=companion/deferred extension；ablation=original five |
 | `paper_facing_scorecard` | validation/test H96,H192,H336,H720 MSE/MAE；dense默认diagnostic |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
@@ -22,17 +22,17 @@
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper experiment matrix closed；Section 5 v0.13 author-review candidate；Section 6 v0.4 temporarily fixed usable；Section 7 v0.1 prose under author review；Figure 5 v5.3 fixed |
+| `current_11_step` | paper experiment matrix closed；Section 5 v0.13 author-review candidate；Sections 6--7 temporarily fixed usable；Figure 5 v5.3 fixed |
 | `current_candidate` | Sections 6--7 paper writing |
-| `latest_decision` | `section7_v0p1_concise_initial_draft_author_review_candidate` |
-| `writing_latest_decision` | `section7_v0p1_concise_initial_draft_author_review_candidate` |
-| `next_required_action` | author review and targeted refinement of Section 7 prose；no new experiment required |
+| `latest_decision` | `section7_v0p2_temporarily_frozen_usable` |
+| `writing_latest_decision` | `section7_v0p2_temporarily_frozen_usable` |
+| `next_required_action` | full-manuscript assembly and targeted cross-section consistency audit；no new experiment required |
 | `method_training_authorized` | false；no matched controls、extra HPO/seeds or formal test required |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 
 ## Section 5.6 Sample-Specific Behavior Redesign Record (2026-08-21)
 
-Section 7 v0.1 prose amendment（2026-08-24）：Author确认两段功能与内容后，新建204词英文Conclusion初稿。P1完成problem/CHPC/ISCF-BSCA principle收束；P2完成system effectiveness、accuracy--cost、ablation、diagnostic、transfer与output-side design implication收束。Canonical draft=`docs/paper-drafts/iscf-bsca-conclusion-initial-draft.md`。Decision=`section7_v0p1_concise_initial_draft_author_review_candidate`。
+Section 7 temporary-freeze amendment（2026-08-24）：Author确认204词两段式Conclusion可作为论文可用版本。正文、structure、evidence selection与claim boundary不变。Canonical draft=`docs/paper-drafts/iscf-bsca-conclusion-initial-draft.md`。Decision=`section7_v0p2_temporarily_frozen_usable`。
 
 Section 6 temporary freeze and Section 7 v0.1 structure amendment（2026-08-24）：Author确认Section 6 v0.4暂时固定可用。Section 7规划为无subsection、约180--230词的两段式Conclusion；P1收束problem/CHPC/ISCF-BSCA principle，P2压缩system effectiveness、accuracy--cost、ablation与transfer evidence并以output-side sharing granularity的设计意义收尾。Canonical design=`docs/paper-drafts/iscf-bsca-conclusion-structure-design.md`。Decision=`section6_v0p4_temporarily_frozen_section7_v0p1_structure_author_review_candidate`。
 

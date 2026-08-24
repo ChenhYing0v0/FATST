@@ -2,7 +2,7 @@
 
 ## Section 7 Conclusion Initial Draft v0.1 (2026-08-24)
 
-Current cursor=`Sections 1--6 temporarily frozen usable -> Section 7 v0.1 prose author review`。Canonical draft=`docs/paper-drafts/iscf-bsca-conclusion-initial-draft.md`。两段204词正文按author-confirmed结构完成：P1为`problem -> CHPC formulation -> ISCF/BSCA principle`，P2为`system-level effectiveness -> accuracy--cost balance -> ablation/diagnostic/transfer support -> output-side design implication`。Section 6已承担methodological limitations，因此Conclusion不重复limitations、不新增future-work段落，也不引入新数据、citations、metrics或mechanisms。Decision=`section7_v0p1_concise_initial_draft_author_review_candidate`。
+Current cursor=`Sections 1--7 temporarily frozen usable`。Canonical draft=`docs/paper-drafts/iscf-bsca-conclusion-initial-draft.md`。Author确认204词两段正文可作为论文可用版本；P1为`problem -> CHPC formulation -> ISCF/BSCA principle`，P2为`system-level effectiveness -> accuracy--cost balance -> ablation/diagnostic/transfer support -> output-side design implication`。Section 6已承担methodological limitations，因此Conclusion不重复limitations、不新增future-work段落，也不引入新数据、citations、metrics或mechanisms。Decision=`section7_v0p2_temporarily_frozen_usable`。
 
 ## Section 6 Discussion and Limitations v0.4 Temporary Freeze (2026-08-24)
 

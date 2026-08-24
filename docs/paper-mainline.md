@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | TBD；provisional architecture base=`ISCF` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Section 6 v0.4 temporarily fixed usable；Section 7 v0.1 concise Conclusion draft under author review |
+| `current_11_step` | Sections 1--7 and Figure 5 v5.3 temporarily fixed usable；Section 7 v0.2 Conclusion fixed |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -18,9 +18,9 @@
 | `paper_architecture` | `docs/iscf-bsca-paper-architecture.md` |
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `paper_core_status` | architecture family frozen；Sections 1--6与Figure 5 v5.3 temporarily frozen usable；Section 7 v0.1 two-paragraph prose待author review，Section 5.4 Figure 6 only，Section 5.7 Figure 7 only；allocation aggregate accuracy direction positive但prevalence、sparse/oracle-routing claims仍关闭 |
+| `paper_core_status` | architecture family frozen；Sections 1--7与Figure 5 v5.3 temporarily frozen usable；Section 5.4 Figure 6 only，Section 5.7 Figure 7 only；allocation aggregate accuracy direction positive但prevalence、sparse/oracle-routing claims仍关闭 |
 
-[Section 7 Conclusion Initial Draft v0.1, 2026-08-24] Author确认两段式结构后，新建`docs/paper-drafts/iscf-bsca-conclusion-initial-draft.md`。204词正文按`problem/CHPC -> ISCF/BSCA principle -> system evidence -> cost/ablation/diagnostic/transfer support -> output-side design implication`收束全文；不重复Section 6 limitations，不新增citations、metrics、mechanisms或generality claims。Decision=`section7_v0p1_concise_initial_draft_author_review_candidate`。
+[Section 7 Conclusion Temporary Freeze v0.2, 2026-08-24] Author确认Section 7 v0.1两段式正文可作为论文可用版本。正文保持204词与原有claim boundary不变，暂时固定为`temporarily_frozen_usable`；不重复Section 6 limitations，不新增citations、metrics、mechanisms或generality claims。Decision=`section7_v0p2_temporarily_frozen_usable`。
 
 [Section 6 Discussion Author Refinement v0.2, 2026-08-24] P1改为直接说明 varied-horizon forecasting 需要一个服务不同request endpoints的统一系统，并改用Sections 5.2/5.3指代比较结果；删除CHPC structural-contract/accuracy-guarantee句。P2改为以“从输出端出发”的方法论表述，统一使用`forecast generation`，并将ISCF置于互补关系句的后半部分以突出output-side multi-scope设计。P3删除Scope Probabilities的point-forecast/uncertainty限制，将原有术语改写为fixed-interval region partitioning与region-to-region information passing。Section 7尚未起草。Decision=`section6_v0p2_author_refinement_author_review_candidate`。
 

@@ -5,9 +5,12 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Clean manuscript-facing initial draft of Section 7 |
-| `version` | `v0.1-initial-draft` |
+| `version` | `v0.2-author-fixed` |
 | `date` | `2026-08-24` |
-| `review_status` | Initial prose draft pending author review |
+| `review_status` | `temporarily_frozen_usable` |
+| `freeze_date` | `2026-08-24` |
+| `freeze_scope` | Section 7 body, two-paragraph structure, evidence selection and claim boundary |
+| `unfreeze_condition` | A concrete contradiction during full-manuscript assembly, followed by explicit author approval |
 | `structure_source` | `docs/paper-drafts/iscf-bsca-conclusion-structure-design.md` |
 | `upstream_dependency` | Introduction v0.9, Related Work v0.2, Section 3 v0.7, Section 4 v0.7, Section 5 v0.13 and Section 6 v0.4 remain temporarily frozen and unchanged |
 | `section_format` | No subsections; two compact paragraphs |
