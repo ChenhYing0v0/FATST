@@ -139,6 +139,9 @@ def load_effective_args(
     args.pred_len = PRED_LEN
     args.mode = "unified"
     args.target_horizons = [PRED_LEN]
+    # Older effective_config.json files omit this parser default even though
+    # it is part of the frozen ISCF scope contract.
+    args.pcsd_scales = list(getattr(args, "pcsd_scales", [1, 48, 144, 360, 720]))
     args.validation_horizons = list(HORIZONS)
     args.evaluation_horizons = list(HORIZONS)
     args.segment_horizons = list(HORIZONS)
