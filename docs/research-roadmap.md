@@ -2,16 +2,18 @@
 
 ## Appendix routing design (2026-08-25)
 
-The manuscript-wide Appendix plan is revised to a minimal three-appendix
-structure. Appendix A contains only three compact tables for dataset metadata
-and splits, training/evaluation settings, and dataset-specific ISCF-BSCA
-configuration. Appendix B contains the complete dataset--horizon--metric cells
-behind the compact Tables 1 and 2 (Main-I and Main-II), including negative
-cells. Appendix C adds one validation-only qualitative figure with two
-deterministically selected fused-forecast examples for each of the seven
-paper-core datasets and markers for the four evaluated prefixes. The attached
-PDT document and the TimeAlign Appendix D are reference sources only; the
-frozen FATST protocol remains authoritative. The final-profile prediction
+The manuscript-wide Appendix plan uses a minimal, reference-aligned structure.
+Appendix A follows `Metric Details -> Datasets -> Implementation Details`,
+with definitions of MSE/MAE, concise dataset introductions and three supporting
+tables for dataset statistics and splits, training/evaluation settings, and
+dataset-specific ISCF-BSCA configuration. Appendix B uses a concise full-results
+entry before the complete dataset--horizon--metric cells behind Tables 1 and 2,
+including negative cells. Appendix C has no separate visible large heading and
+moves directly to one validation-only qualitative figure with two deterministically
+selected fused-forecast examples for each of the seven paper-core datasets and
+markers for the four evaluated prefixes. The attached TimeAlign paper is a
+layout and writing reference only; the frozen FATST protocol remains
+authoritative. The final-profile prediction
 arrays, Figure C1 exports and source-data manifest are now available locally.
 The integrated manuscript draft is `docs/paper-drafts/iscf-bsca-appendix-initial-draft.md`,
 and the detailed audit remains in `docs/paper-drafts/iscf-bsca-appendix-structure-design.md`

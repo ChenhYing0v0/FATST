@@ -439,9 +439,9 @@ Appendices
 
 `Discussion and Limitations`用于分离result observation、task/system interpretation与methodological limitations。Section 6不再设置subsection。完整negative cells仅随Main-I/Main-II的逐horizon结果保留在Appendix B；secondary controls、敏感性结果与历史诊断不自动进入Appendix，除非后续获得独立的作者决定。
 
-Appendix A has been narrowed to three compact tables: dataset metadata and split boundaries, shared training/evaluation settings, and dataset-specific ISCF-BSCA configuration. Appendix C is reserved for one validation-only qualitative figure with two deterministically selected fused-forecast examples per paper-core dataset; it is not a new effectiveness experiment.
+Appendix A follows the compact sequence `Metric Details -> Datasets -> Implementation Details`: it defines MSE/MAE, introduces the four dataset families, and uses three tables for dataset statistics and split construction, training/evaluation settings, and dataset-specific ISCF-BSCA configuration. Appendix B uses a concise `Full Results -> Main Experiments` entry before the complete horizon-wise tables. Appendix C has no separate visible large heading and is reserved for one validation-only qualitative figure with two deterministically selected fused-forecast examples per paper-core dataset; it is not a new effectiveness experiment.
 
-The Appendix A protocol audit is complete for the seven paper-core datasets, and the three-part manuscript draft is integrated in `docs/paper-drafts/iscf-bsca-appendix-initial-draft.md`. Appendix B routes the complete horizon-wise benchmark cells to the frozen canonical LaTeX sources, while Appendix C uses the accepted validation-only Figure C1 and its source-data export.
+The Appendix protocol audit is complete for the seven paper-core datasets, and the reference-aligned manuscript draft is integrated in `docs/paper-drafts/iscf-bsca-appendix-initial-draft.md`. Appendix B routes the complete horizon-wise benchmark cells to the frozen canonical LaTeX sources, while the heading-free Appendix C block uses the accepted validation-only Figure C1 and its source-data export.
 
 ### 3.1 Sections 5--7 author-fixed structural design
 
