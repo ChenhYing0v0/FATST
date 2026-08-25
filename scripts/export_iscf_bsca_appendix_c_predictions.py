@@ -231,7 +231,7 @@ def visual_fidelity_scores(
     """Compute a deterministic shape-aware score for qualitative examples.
 
     The score is averaged over the four benchmark prefixes. It combines
-    normalized level error, trajectory correlation, first-difference
+    train-scale level error, trajectory correlation, first-difference
     correlation and amplitude agreement. Lower values indicate forecasts that
     are both numerically close and visually faithful to the target trajectory.
     """
@@ -240,8 +240,11 @@ def visual_fidelity_scores(
         pred_prefix = prediction[:, :horizon]
         target_prefix = target[:, :horizon]
         rmse = np.sqrt(np.mean(np.square(pred_prefix - target_prefix), axis=1))
-        level_scale = np.std(target_prefix, axis=1) + 1e-6
-        level_error = rmse / level_scale
+        # The model outputs are already standardized with the train-split
+        # scaler. Keeping this level error in that common scale prevents a
+        # strongly drifting sample from looking artificially good merely
+        # because its own target variance is large.
+        level_error = rmse
 
         level_corr = _rowwise_correlation(pred_prefix, target_prefix)
         level_corr_loss = (1.0 - level_corr) / 2.0
@@ -263,10 +266,10 @@ def visual_fidelity_scores(
         )
     components = np.mean(np.stack(component_rows, axis=1), axis=1)
     scores = (
-        0.45 * components[:, 0]
-        + 0.25 * components[:, 1]
-        + 0.20 * components[:, 2]
-        + 0.10 * components[:, 3]
+        0.70 * components[:, 0]
+        + 0.15 * components[:, 1]
+        + 0.10 * components[:, 2]
+        + 0.05 * components[:, 3]
     )
     return scores, components
 
@@ -432,8 +435,8 @@ def evaluate_dataset(
         "channel": channel,
         "selection_rule": (
             "lowest four-horizon visual-fidelity score on channel 0, combining "
-            "normalized level error (0.45), trajectory correlation loss (0.25), "
-            "first-difference correlation loss (0.20) and amplitude error (0.10), "
+            "train-scale level error (0.70), trajectory correlation loss (0.15), "
+            "first-difference correlation loss (0.10) and amplitude error (0.05), "
             f"with a minimum raw-origin separation of {min_origin_gap} steps"
         ),
         "profile_id": row["profile_id"],
