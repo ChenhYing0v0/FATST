@@ -1,0 +1,53 @@
+{
+  "dataset": "Weather",
+  "split": "val",
+  "prediction_length": 720,
+  "horizons": [
+    96,
+    192,
+    336,
+    720
+  ],
+  "channel": 0,
+  "selection_rule": "lowest four-horizon mean scaled MSE on channel 0, with a minimum raw-origin separation of 720 steps",
+  "profile_id": "h4n_seq608_p19_lr2e5",
+  "trial_id": "Weather__h4n_seq608_p19_lr2e5",
+  "candidate_version": "ISCF-BSCA-MAIN-v1-weather-h4n-test-informed-20260805",
+  "checkpoint": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_main_v1_hpo/h4n/trials/Weather/Weather__h4n_seq608_p19_lr2e5/seed2021/checkpoint.pt",
+  "checkpoint_sha256": "6c6619f047204a5b0c63b02c30562f0e765ad6855d8468e0f0151bc2e5c25ca8",
+  "checkpoint_role": "frozen Main-I/II selected profile",
+  "ablation_checkpoint": false,
+  "test_labels_accessed": false,
+  "raw_length": 52696,
+  "validation_window_count": 4551,
+  "selected": [
+    {
+      "rank": 1,
+      "dataset": "Weather",
+      "split": "val",
+      "validation_window_index": 3914,
+      "raw_forecast_origin": 40800,
+      "channel": 0,
+      "selection_score_scaled_mse": 0.03122270666062832,
+      "selection_separated_by_min_gap": true,
+      "mse_scaled_h96": 0.0034533124417066574,
+      "mse_scaled_h192": 0.007360722869634628,
+      "mse_scaled_h336": 0.03141787648200989,
+      "mse_scaled_h720": 0.08265891671180725
+    },
+    {
+      "rank": 2,
+      "dataset": "Weather",
+      "split": "val",
+      "validation_window_index": 0,
+      "raw_forecast_origin": 36886,
+      "channel": 0,
+      "selection_score_scaled_mse": 0.05384893715381622,
+      "selection_separated_by_min_gap": true,
+      "mse_scaled_h96": 0.005312379449605942,
+      "mse_scaled_h192": 0.02126704901456833,
+      "mse_scaled_h336": 0.025144582614302635,
+      "mse_scaled_h720": 0.16367174685001373
+    }
+  ]
+}

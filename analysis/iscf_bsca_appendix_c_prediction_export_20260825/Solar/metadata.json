@@ -1,0 +1,53 @@
+{
+  "dataset": "Solar",
+  "split": "val",
+  "prediction_length": 720,
+  "horizons": [
+    96,
+    192,
+    336,
+    720
+  ],
+  "channel": 0,
+  "selection_rule": "lowest four-horizon mean scaled MSE on channel 0, with a minimum raw-origin separation of 720 steps",
+  "profile_id": "h4j_patch4_lr3e4",
+  "trial_id": "Solar__h4j_patch4_lr3e4",
+  "candidate_version": "ISCF-BSCA-MAIN-v1-joint-h4j-test-informed-20260802",
+  "checkpoint": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_main_v1_hpo/h4j_r1/trials/Solar/Solar__h4j_patch4_lr3e4/seed2021/checkpoint.pt",
+  "checkpoint_sha256": "42172e2eafbcfb90855c0476b6315dece465ede82eb88f626e0f87a7a927c9a4",
+  "checkpoint_role": "frozen Main-I/II selected profile",
+  "ablation_checkpoint": false,
+  "test_labels_accessed": false,
+  "raw_length": 52560,
+  "validation_window_count": 4537,
+  "selected": [
+    {
+      "rank": 1,
+      "dataset": "Solar",
+      "split": "val",
+      "validation_window_index": 1884,
+      "raw_forecast_origin": 38675,
+      "channel": 0,
+      "selection_score_scaled_mse": 0.009016040712594986,
+      "selection_separated_by_min_gap": true,
+      "mse_scaled_h96": 0.0031000152230262756,
+      "mse_scaled_h192": 0.009465888142585754,
+      "mse_scaled_h336": 0.009376893751323223,
+      "mse_scaled_h720": 0.014121363870799541
+    },
+    {
+      "rank": 2,
+      "dataset": "Solar",
+      "split": "val",
+      "validation_window_index": 2943,
+      "raw_forecast_origin": 39734,
+      "channel": 0,
+      "selection_score_scaled_mse": 0.044759318232536316,
+      "selection_separated_by_min_gap": true,
+      "mse_scaled_h96": 0.0457441546022892,
+      "mse_scaled_h192": 0.034101296216249466,
+      "mse_scaled_h336": 0.03678346052765846,
+      "mse_scaled_h720": 0.062408361583948135
+    }
+  ]
+}

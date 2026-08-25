@@ -63,8 +63,8 @@ The minimal plan excludes repeated copies of Figures 2, 3, 5, 6 and 7; historica
 
 1. **Protocol audit:** completed for the seven paper-core datasets against the local loaders and frozen configs. Raw lengths, split boundaries, window counts and finite-loader checks are recorded in `docs/paper-drafts/iscf-bsca-appendix-a-c-data-audit.md`.
 2. **Configuration extraction:** completed for the selected dataset-level profiles from the frozen manifest, phase configs and trial ledgers. The manuscript-ready tables are drafted in `docs/paper-drafts/iscf-bsca-appendix-a-initial-draft.md`; values were not inferred from trial names.
-3. **Qualitative data export:** obtain final-profile fused predictions and targets for all seven datasets without retraining; freeze the validation selection rule and channel convention before selecting samples.
-4. **Figure C1 generation and QA:** use the saved `nature-figure` backend, export editable SVG/PDF plus raster fallback, and run source-data, typography, alignment and `git diff --check` checks.
-5. **Manuscript synchronization:** update Section 5.1 references, captions and the appendix routing in the architecture, mainline, roadmap and stage ledger documents.
+3. **Qualitative data export:** completed on 2026-08-25 using the frozen Main-I/II selected profiles. The validation-only export, checkpoint hashes, selected origins and raw prediction arrays are recorded in `analysis/iscf_bsca_appendix_c_prediction_export_20260825/`; no ablation checkpoint or test label was used.
+4. **Figure C1 generation and QA:** next step is to render the seven-row by two-column figure from these fixed arrays, export editable SVG/PDF plus raster fallback, and run source-data, typography, alignment and `git diff --check` checks.
+5. **Manuscript synchronization:** after Figure C1 is approved, update Section 5.1 references, captions and the appendix routing in the architecture, mainline, roadmap and stage ledger documents.
 
-No new architecture, training, remote launch or formal test is implied by this plan. The current repository lacks final-profile prediction arrays for all seven datasets, so Figure C1 remains blocked at the data-export step until those arrays are made available through an authorized evaluation-only route.
+No new architecture, training, remote launch or formal test is implied by this plan. The final-profile prediction arrays are now available; Figure C1 remains pending only figure rendering and author review.

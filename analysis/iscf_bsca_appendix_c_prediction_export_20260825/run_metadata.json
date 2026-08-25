@@ -1,0 +1,399 @@
+{
+  "purpose": "Appendix C validation-only qualitative trajectories",
+  "datasets": [
+    "ETTh1",
+    "ETTh2",
+    "ETTm1",
+    "ETTm2",
+    "Weather",
+    "ECL",
+    "Solar"
+  ],
+  "split": "val",
+  "prediction_length": 720,
+  "horizons": [
+    96,
+    192,
+    336,
+    720
+  ],
+  "device": "cuda",
+  "selection_channel": 0,
+  "min_origin_gap": 720,
+  "model_source": "selected_profile_manifest_final.csv",
+  "ablation_checkpoints_used": false,
+  "test_labels_accessed": false,
+  "dataset_outputs": [
+    {
+      "dataset": "ETTh1",
+      "split": "val",
+      "prediction_length": 720,
+      "horizons": [
+        96,
+        192,
+        336,
+        720
+      ],
+      "channel": 0,
+      "selection_rule": "lowest four-horizon mean scaled MSE on channel 0, with a minimum raw-origin separation of 720 steps",
+      "profile_id": "h4j_lr3e4",
+      "trial_id": "ETTh1__h4j_lr3e4",
+      "candidate_version": "ISCF-BSCA-MAIN-v1-joint-h4j-test-informed-20260802",
+      "checkpoint": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_main_v1_hpo/h4j_r1/trials/ETTh1/ETTh1__h4j_lr3e4/seed2021/checkpoint.pt",
+      "checkpoint_sha256": "1e4021071ac805b8941d9b4ab49da13ee4d8b520c03f16c4f4e458e6dec98814",
+      "checkpoint_role": "frozen Main-I/II selected profile",
+      "ablation_checkpoint": false,
+      "test_labels_accessed": false,
+      "raw_length": 17420,
+      "validation_window_count": 2161,
+      "selected": [
+        {
+          "rank": 1,
+          "dataset": "ETTh1",
+          "split": "val",
+          "validation_window_index": 8,
+          "raw_forecast_origin": 8647,
+          "channel": 0,
+          "selection_score_scaled_mse": 0.3966141939163208,
+          "selection_separated_by_min_gap": true,
+          "mse_scaled_h96": 0.25106295943260193,
+          "mse_scaled_h192": 0.3676629960536957,
+          "mse_scaled_h336": 0.3413945436477661,
+          "mse_scaled_h720": 0.6263362169265747
+        },
+        {
+          "rank": 2,
+          "dataset": "ETTh1",
+          "split": "val",
+          "validation_window_index": 936,
+          "raw_forecast_origin": 9575,
+          "channel": 0,
+          "selection_score_scaled_mse": 0.42635583877563477,
+          "selection_separated_by_min_gap": true,
+          "mse_scaled_h96": 0.3079107105731964,
+          "mse_scaled_h192": 0.41757336258888245,
+          "mse_scaled_h336": 0.4706285893917084,
+          "mse_scaled_h720": 0.5093107223510742
+        }
+      ]
+    },
+    {
+      "dataset": "ETTh2",
+      "split": "val",
+      "prediction_length": 720,
+      "horizons": [
+        96,
+        192,
+        336,
+        720
+      ],
+      "channel": 0,
+      "selection_rule": "lowest four-horizon mean scaled MSE on channel 0, with a minimum raw-origin separation of 720 steps",
+      "profile_id": "h2_lr5e4",
+      "trial_id": "ETTh2__h2_lr5e4",
+      "candidate_version": "ISCF-BSCA-MAIN-v1-hpo-h1-h2-20260801",
+      "checkpoint": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_main_v1_hpo/h2/trials/ETTh2/ETTh2__h2_lr5e4/seed2021/checkpoint.pt",
+      "checkpoint_sha256": "bcfbc9955754a9825d1dd33015610a049551e3441dabd0ad98982c0fc2285d3e",
+      "checkpoint_role": "frozen Main-I/II selected profile",
+      "ablation_checkpoint": false,
+      "test_labels_accessed": false,
+      "raw_length": 17420,
+      "validation_window_count": 2161,
+      "selected": [
+        {
+          "rank": 1,
+          "dataset": "ETTh2",
+          "split": "val",
+          "validation_window_index": 1922,
+          "raw_forecast_origin": 10561,
+          "channel": 0,
+          "selection_score_scaled_mse": 0.11137361079454422,
+          "selection_separated_by_min_gap": true,
+          "mse_scaled_h96": 0.08152312785387039,
+          "mse_scaled_h192": 0.07285067439079285,
+          "mse_scaled_h336": 0.08634334802627563,
+          "mse_scaled_h720": 0.2047773003578186
+        },
+        {
+          "rank": 2,
+          "dataset": "ETTh2",
+          "split": "val",
+          "validation_window_index": 519,
+          "raw_forecast_origin": 9158,
+          "channel": 0,
+          "selection_score_scaled_mse": 0.18491819500923157,
+          "selection_separated_by_min_gap": true,
+          "mse_scaled_h96": 0.14700329303741455,
+          "mse_scaled_h192": 0.1585325449705124,
+          "mse_scaled_h336": 0.19592498242855072,
+          "mse_scaled_h720": 0.23821189999580383
+        }
+      ]
+    },
+    {
+      "dataset": "ETTm1",
+      "split": "val",
+      "prediction_length": 720,
+      "horizons": [
+        96,
+        192,
+        336,
+        720
+      ],
+      "channel": 0,
+      "selection_rule": "lowest four-horizon mean scaled MSE on channel 0, with a minimum raw-origin separation of 720 steps",
+      "profile_id": "h2_table5_capacity",
+      "trial_id": "ETTm1__h2_table5_capacity",
+      "candidate_version": "ISCF-BSCA-MAIN-v1-hpo-h1-h2-20260801",
+      "checkpoint": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_main_v1_hpo/h2/trials/ETTm1/ETTm1__h2_table5_capacity/seed2021/checkpoint.pt",
+      "checkpoint_sha256": "2e8c7e7c7d7545a4edfbe81be857299b6fea0dc7e944464803f273257ecb6948",
+      "checkpoint_role": "frozen Main-I/II selected profile",
+      "ablation_checkpoint": false,
+      "test_labels_accessed": false,
+      "raw_length": 69680,
+      "validation_window_count": 10801,
+      "selected": [
+        {
+          "rank": 1,
+          "dataset": "ETTm1",
+          "split": "val",
+          "validation_window_index": 10409,
+          "raw_forecast_origin": 44968,
+          "channel": 0,
+          "selection_score_scaled_mse": 0.12022362649440765,
+          "selection_separated_by_min_gap": true,
+          "mse_scaled_h96": 0.046341150999069214,
+          "mse_scaled_h192": 0.10103640705347061,
+          "mse_scaled_h336": 0.16772501170635223,
+          "mse_scaled_h720": 0.16579192876815796
+        },
+        {
+          "rank": 2,
+          "dataset": "ETTm1",
+          "split": "val",
+          "validation_window_index": 6519,
+          "raw_forecast_origin": 41078,
+          "channel": 0,
+          "selection_score_scaled_mse": 0.16126906871795654,
+          "selection_separated_by_min_gap": true,
+          "mse_scaled_h96": 0.10672847181558609,
+          "mse_scaled_h192": 0.15672045946121216,
+          "mse_scaled_h336": 0.13542139530181885,
+          "mse_scaled_h720": 0.24620598554611206
+        }
+      ]
+    },
+    {
+      "dataset": "ETTm2",
+      "split": "val",
+      "prediction_length": 720,
+      "horizons": [
+        96,
+        192,
+        336,
+        720
+      ],
+      "channel": 0,
+      "selection_rule": "lowest four-horizon mean scaled MSE on channel 0, with a minimum raw-origin separation of 720 steps",
+      "profile_id": "h4m_p6_lr5e5",
+      "trial_id": "ETTm2__h4m_p6_lr5e5",
+      "candidate_version": "ISCF-BSCA-MAIN-v1-targeted-h4m-test-informed-20260804",
+      "checkpoint": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_main_v1_hpo/h4m/trials/ETTm2/ETTm2__h4m_p6_lr5e5/seed2021/checkpoint.pt",
+      "checkpoint_sha256": "aeb581e8c4b00f6516c1bf45683ee5e88b583af8b16cab332ebbeb8ea1ddc7e8",
+      "checkpoint_role": "frozen Main-I/II selected profile",
+      "ablation_checkpoint": false,
+      "test_labels_accessed": false,
+      "raw_length": 69680,
+      "validation_window_count": 10801,
+      "selected": [
+        {
+          "rank": 1,
+          "dataset": "ETTm2",
+          "split": "val",
+          "validation_window_index": 8224,
+          "raw_forecast_origin": 42783,
+          "channel": 0,
+          "selection_score_scaled_mse": 0.04282930865883827,
+          "selection_separated_by_min_gap": true,
+          "mse_scaled_h96": 0.031020646914839745,
+          "mse_scaled_h192": 0.040197666734457016,
+          "mse_scaled_h336": 0.04089783877134323,
+          "mse_scaled_h720": 0.059201087802648544
+        },
+        {
+          "rank": 2,
+          "dataset": "ETTm2",
+          "split": "val",
+          "validation_window_index": 9248,
+          "raw_forecast_origin": 43807,
+          "channel": 0,
+          "selection_score_scaled_mse": 0.0657355785369873,
+          "selection_separated_by_min_gap": true,
+          "mse_scaled_h96": 0.044932376593351364,
+          "mse_scaled_h192": 0.0482630580663681,
+          "mse_scaled_h336": 0.0684022530913353,
+          "mse_scaled_h720": 0.10134460777044296
+        }
+      ]
+    },
+    {
+      "dataset": "Weather",
+      "split": "val",
+      "prediction_length": 720,
+      "horizons": [
+        96,
+        192,
+        336,
+        720
+      ],
+      "channel": 0,
+      "selection_rule": "lowest four-horizon mean scaled MSE on channel 0, with a minimum raw-origin separation of 720 steps",
+      "profile_id": "h4n_seq608_p19_lr2e5",
+      "trial_id": "Weather__h4n_seq608_p19_lr2e5",
+      "candidate_version": "ISCF-BSCA-MAIN-v1-weather-h4n-test-informed-20260805",
+      "checkpoint": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_main_v1_hpo/h4n/trials/Weather/Weather__h4n_seq608_p19_lr2e5/seed2021/checkpoint.pt",
+      "checkpoint_sha256": "6c6619f047204a5b0c63b02c30562f0e765ad6855d8468e0f0151bc2e5c25ca8",
+      "checkpoint_role": "frozen Main-I/II selected profile",
+      "ablation_checkpoint": false,
+      "test_labels_accessed": false,
+      "raw_length": 52696,
+      "validation_window_count": 4551,
+      "selected": [
+        {
+          "rank": 1,
+          "dataset": "Weather",
+          "split": "val",
+          "validation_window_index": 3914,
+          "raw_forecast_origin": 40800,
+          "channel": 0,
+          "selection_score_scaled_mse": 0.03122270666062832,
+          "selection_separated_by_min_gap": true,
+          "mse_scaled_h96": 0.0034533124417066574,
+          "mse_scaled_h192": 0.007360722869634628,
+          "mse_scaled_h336": 0.03141787648200989,
+          "mse_scaled_h720": 0.08265891671180725
+        },
+        {
+          "rank": 2,
+          "dataset": "Weather",
+          "split": "val",
+          "validation_window_index": 0,
+          "raw_forecast_origin": 36886,
+          "channel": 0,
+          "selection_score_scaled_mse": 0.05384893715381622,
+          "selection_separated_by_min_gap": true,
+          "mse_scaled_h96": 0.005312379449605942,
+          "mse_scaled_h192": 0.02126704901456833,
+          "mse_scaled_h336": 0.025144582614302635,
+          "mse_scaled_h720": 0.16367174685001373
+        }
+      ]
+    },
+    {
+      "dataset": "ECL",
+      "split": "val",
+      "prediction_length": 720,
+      "horizons": [
+        96,
+        192,
+        336,
+        720
+      ],
+      "channel": 0,
+      "selection_rule": "lowest four-horizon mean scaled MSE on channel 0, with a minimum raw-origin separation of 720 steps",
+      "profile_id": "h2_intermediate_capacity",
+      "trial_id": "ECL__h2_intermediate_capacity",
+      "candidate_version": "ISCF-BSCA-MAIN-v1-hpo-h1-h2-20260801",
+      "checkpoint": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_main_v1_hpo/h2/trials/ECL/ECL__h2_intermediate_capacity/seed2021/checkpoint.pt",
+      "checkpoint_sha256": "97cf661db7fbf6d09e39c9f3f9f59c0a9817bba4d73b33c4e8a8219f6e5b85e1",
+      "checkpoint_role": "frozen Main-I/II selected profile",
+      "ablation_checkpoint": false,
+      "test_labels_accessed": false,
+      "raw_length": 26304,
+      "validation_window_count": 1913,
+      "selected": [
+        {
+          "rank": 1,
+          "dataset": "ECL",
+          "split": "val",
+          "validation_window_index": 222,
+          "raw_forecast_origin": 18633,
+          "channel": 0,
+          "selection_score_scaled_mse": 0.028746727854013443,
+          "selection_separated_by_min_gap": true,
+          "mse_scaled_h96": 0.018397629261016846,
+          "mse_scaled_h192": 0.023253122344613075,
+          "mse_scaled_h336": 0.024512171745300293,
+          "mse_scaled_h720": 0.04882398620247841
+        },
+        {
+          "rank": 2,
+          "dataset": "ECL",
+          "split": "val",
+          "validation_window_index": 1145,
+          "raw_forecast_origin": 19556,
+          "channel": 0,
+          "selection_score_scaled_mse": 0.15498030185699463,
+          "selection_separated_by_min_gap": true,
+          "mse_scaled_h96": 0.03672802075743675,
+          "mse_scaled_h192": 0.04912553355097771,
+          "mse_scaled_h336": 0.1823154091835022,
+          "mse_scaled_h720": 0.35175222158432007
+        }
+      ]
+    },
+    {
+      "dataset": "Solar",
+      "split": "val",
+      "prediction_length": 720,
+      "horizons": [
+        96,
+        192,
+        336,
+        720
+      ],
+      "channel": 0,
+      "selection_rule": "lowest four-horizon mean scaled MSE on channel 0, with a minimum raw-origin separation of 720 steps",
+      "profile_id": "h4j_patch4_lr3e4",
+      "trial_id": "Solar__h4j_patch4_lr3e4",
+      "candidate_version": "ISCF-BSCA-MAIN-v1-joint-h4j-test-informed-20260802",
+      "checkpoint": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_main_v1_hpo/h4j_r1/trials/Solar/Solar__h4j_patch4_lr3e4/seed2021/checkpoint.pt",
+      "checkpoint_sha256": "42172e2eafbcfb90855c0476b6315dece465ede82eb88f626e0f87a7a927c9a4",
+      "checkpoint_role": "frozen Main-I/II selected profile",
+      "ablation_checkpoint": false,
+      "test_labels_accessed": false,
+      "raw_length": 52560,
+      "validation_window_count": 4537,
+      "selected": [
+        {
+          "rank": 1,
+          "dataset": "Solar",
+          "split": "val",
+          "validation_window_index": 1884,
+          "raw_forecast_origin": 38675,
+          "channel": 0,
+          "selection_score_scaled_mse": 0.009016040712594986,
+          "selection_separated_by_min_gap": true,
+          "mse_scaled_h96": 0.0031000152230262756,
+          "mse_scaled_h192": 0.009465888142585754,
+          "mse_scaled_h336": 0.009376893751323223,
+          "mse_scaled_h720": 0.014121363870799541
+        },
+        {
+          "rank": 2,
+          "dataset": "Solar",
+          "split": "val",
+          "validation_window_index": 2943,
+          "raw_forecast_origin": 39734,
+          "channel": 0,
+          "selection_score_scaled_mse": 0.044759318232536316,
+          "selection_separated_by_min_gap": true,
+          "mse_scaled_h96": 0.0457441546022892,
+          "mse_scaled_h192": 0.034101296216249466,
+          "mse_scaled_h336": 0.03678346052765846,
+          "mse_scaled_h720": 0.062408361583948135
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "dataset": "ETTh2",
+  "split": "val",
+  "prediction_length": 720,
+  "horizons": [
+    96,
+    192,
+    336,
+    720
+  ],
+  "channel": 0,
+  "selection_rule": "lowest four-horizon mean scaled MSE on channel 0, with a minimum raw-origin separation of 720 steps",
+  "profile_id": "h2_lr5e4",
+  "trial_id": "ETTh2__h2_lr5e4",
+  "candidate_version": "ISCF-BSCA-MAIN-v1-hpo-h1-h2-20260801",
+  "checkpoint": "/home/yingch/exp_outputs/r-2026-fatst/iscf_bsca_main_v1_hpo/h2/trials/ETTh2/ETTh2__h2_lr5e4/seed2021/checkpoint.pt",
+  "checkpoint_sha256": "bcfbc9955754a9825d1dd33015610a049551e3441dabd0ad98982c0fc2285d3e",
+  "checkpoint_role": "frozen Main-I/II selected profile",
+  "ablation_checkpoint": false,
+  "test_labels_accessed": false,
+  "raw_length": 17420,
+  "validation_window_count": 2161,
+  "selected": [
+    {
+      "rank": 1,
+      "dataset": "ETTh2",
+      "split": "val",
+      "validation_window_index": 1922,
+      "raw_forecast_origin": 10561,
+      "channel": 0,
+      "selection_score_scaled_mse": 0.11137361079454422,
+      "selection_separated_by_min_gap": true,
+      "mse_scaled_h96": 0.08152312785387039,
+      "mse_scaled_h192": 0.07285067439079285,
+      "mse_scaled_h336": 0.08634334802627563,
+      "mse_scaled_h720": 0.2047773003578186
+    },
+    {
+      "rank": 2,
+      "dataset": "ETTh2",
+      "split": "val",
+      "validation_window_index": 519,
+      "raw_forecast_origin": 9158,
+      "channel": 0,
+      "selection_score_scaled_mse": 0.18491819500923157,
+      "selection_separated_by_min_gap": true,
+      "mse_scaled_h96": 0.14700329303741455,
+      "mse_scaled_h192": 0.1585325449705124,
+      "mse_scaled_h336": 0.19592498242855072,
+      "mse_scaled_h720": 0.23821189999580383
+    }
+  ]
+}

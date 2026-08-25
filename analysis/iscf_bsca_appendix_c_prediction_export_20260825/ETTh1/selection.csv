@@ -1,0 +1,3 @@
+rank,dataset,split,validation_window_index,raw_forecast_origin,channel,selection_score_scaled_mse,selection_separated_by_min_gap,mse_scaled_h96,mse_scaled_h192,mse_scaled_h336,mse_scaled_h720
+1,ETTh1,val,8,8647,0,0.3966141939163208,True,0.25106295943260193,0.3676629960536957,0.3413945436477661,0.6263362169265747
+2,ETTh1,val,936,9575,0,0.42635583877563477,True,0.3079107105731964,0.41757336258888245,0.4706285893917084,0.5093107223510742
