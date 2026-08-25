@@ -3,7 +3,7 @@
 
 This script is evaluation-only. It reads the frozen selected-profile manifest,
 verifies the checkpoint hash and profile identity, evaluates the validation
-split without shuffling, and saves two well-performing channel-level
+split without shuffling, and saves two visually faithful channel-level
 trajectories per paper-core dataset. It never trains, tunes, or loads an
 ablation checkpoint.
 """
@@ -209,6 +209,68 @@ def select_indices(
     return selected, False
 
 
+def _rowwise_correlation(left: np.ndarray, right: np.ndarray) -> np.ndarray:
+    """Return finite row-wise Pearson correlations for two 2-D arrays."""
+    left_centered = left - np.mean(left, axis=1, keepdims=True)
+    right_centered = right - np.mean(right, axis=1, keepdims=True)
+    numerator = np.sum(left_centered * right_centered, axis=1)
+    denominator = np.sqrt(
+        np.sum(np.square(left_centered), axis=1)
+        * np.sum(np.square(right_centered), axis=1)
+    )
+    correlation = np.zeros_like(numerator, dtype=np.float64)
+    valid = denominator > 1e-10
+    correlation[valid] = numerator[valid] / denominator[valid]
+    return np.clip(correlation, -1.0, 1.0)
+
+
+def visual_fidelity_scores(
+    prediction: np.ndarray,
+    target: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Compute a deterministic shape-aware score for qualitative examples.
+
+    The score is averaged over the four benchmark prefixes. It combines
+    normalized level error, trajectory correlation, first-difference
+    correlation and amplitude agreement. Lower values indicate forecasts that
+    are both numerically close and visually faithful to the target trajectory.
+    """
+    component_rows: list[np.ndarray] = []
+    for horizon in HORIZONS:
+        pred_prefix = prediction[:, :horizon]
+        target_prefix = target[:, :horizon]
+        rmse = np.sqrt(np.mean(np.square(pred_prefix - target_prefix), axis=1))
+        level_scale = np.std(target_prefix, axis=1) + 1e-6
+        level_error = rmse / level_scale
+
+        level_corr = _rowwise_correlation(pred_prefix, target_prefix)
+        level_corr_loss = (1.0 - level_corr) / 2.0
+
+        pred_diff = np.diff(pred_prefix, axis=1)
+        target_diff = np.diff(target_prefix, axis=1)
+        diff_corr = _rowwise_correlation(pred_diff, target_diff)
+        diff_corr_loss = (1.0 - diff_corr) / 2.0
+
+        pred_std = np.std(pred_prefix, axis=1)
+        target_std = np.std(target_prefix, axis=1)
+        amplitude_error = np.abs(pred_std - target_std) / (target_std + 1e-6)
+        amplitude_error = np.clip(amplitude_error, 0.0, 2.0)
+        component_rows.append(
+            np.stack(
+                [level_error, level_corr_loss, diff_corr_loss, amplitude_error],
+                axis=1,
+            )
+        )
+    components = np.mean(np.stack(component_rows, axis=1), axis=1)
+    scores = (
+        0.45 * components[:, 0]
+        + 0.25 * components[:, 1]
+        + 0.20 * components[:, 2]
+        + 0.10 * components[:, 3]
+    )
+    return scores, components
+
+
 def evaluate_dataset(
     dataset: str,
     row: dict[str, str],
@@ -283,11 +345,13 @@ def evaluate_dataset(
         ],
         axis=1,
     )
-    scores = np.mean(horizon_errors, axis=1)
+    visual_scores, visual_components = visual_fidelity_scores(
+        prediction_scaled, target_scaled
+    )
     total_raw_length = raw_length(dataset, official_args)
     origin_base = validation_origin_base(dataset, total_raw_length)
     origins = origin_base + np.arange(prediction_scaled.shape[0], dtype=np.int64)
-    selected, separated = select_indices(scores, origins, min_origin_gap)
+    selected, separated = select_indices(visual_scores, origins, min_origin_gap)
     if len(selected) != 2:
         raise RuntimeError(f"could not select two validation samples for {dataset}")
 
@@ -310,7 +374,7 @@ def evaluate_dataset(
     if candidate_count < 0:
         raise ValueError("candidate_count must be non-negative")
     if candidate_count:
-        candidate_indices = np.argsort(scores, kind="stable")[:candidate_count]
+        candidate_indices = np.argsort(visual_scores, kind="stable")[:candidate_count]
         np.savez_compressed(
             dataset_output / "candidate_pool.npz",
             prediction=(prediction_scaled[candidate_indices] * scale + mean).astype(
@@ -321,7 +385,11 @@ def evaluate_dataset(
             ).astype(np.float32),
             prediction_scaled=prediction_scaled[candidate_indices].astype(np.float32),
             ground_truth_scaled=target_scaled[candidate_indices].astype(np.float32),
-            scores=scores[candidate_indices].astype(np.float32),
+            visual_scores=visual_scores[candidate_indices].astype(np.float32),
+            visual_components=visual_components[candidate_indices].astype(np.float32),
+            mse_scores=np.mean(horizon_errors, axis=1)[candidate_indices].astype(
+                np.float32
+            ),
             horizon_errors=horizon_errors[candidate_indices].astype(np.float32),
             validation_window_index=candidate_indices.astype(np.int64),
             raw_forecast_origin=origins[candidate_indices].astype(np.int64),
@@ -338,7 +406,12 @@ def evaluate_dataset(
             "validation_window_index": int(index),
             "raw_forecast_origin": int(origins[index]),
             "channel": int(channel),
-            "selection_score_scaled_mse": float(scores[index]),
+            "selection_score_visual_fidelity": float(visual_scores[index]),
+            "visual_level_error": float(visual_components[index, 0]),
+            "visual_level_correlation_loss": float(visual_components[index, 1]),
+            "visual_difference_correlation_loss": float(visual_components[index, 2]),
+            "visual_amplitude_error": float(visual_components[index, 3]),
+            "selection_score_scaled_mse": float(np.mean(horizon_errors, axis=1)[index]),
             "selection_separated_by_min_gap": bool(separated),
         }
         for horizon_index, horizon in enumerate(HORIZONS):
@@ -358,8 +431,10 @@ def evaluate_dataset(
         "horizons": list(HORIZONS),
         "channel": channel,
         "selection_rule": (
-            "lowest four-horizon mean scaled MSE on channel 0, with a minimum "
-            f"raw-origin separation of {min_origin_gap} steps"
+            "lowest four-horizon visual-fidelity score on channel 0, combining "
+            "normalized level error (0.45), trajectory correlation loss (0.25), "
+            "first-difference correlation loss (0.20) and amplitude error (0.10), "
+            f"with a minimum raw-origin separation of {min_origin_gap} steps"
         ),
         "profile_id": row["profile_id"],
         "trial_id": row["trial_id"],
