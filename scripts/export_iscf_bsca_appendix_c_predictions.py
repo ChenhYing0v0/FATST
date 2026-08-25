@@ -67,6 +67,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--channel", type=int, default=0)
     parser.add_argument("--min-origin-gap", type=int, default=PRED_LEN)
+    parser.add_argument(
+        "--candidate-count",
+        type=int,
+        default=0,
+        help="Also save the lowest-scoring validation candidates for audit only.",
+    )
     parser.add_argument("--device", default="auto")
     return parser.parse_args()
 
@@ -210,6 +216,7 @@ def evaluate_dataset(
     output_dir: Path,
     channel: int,
     min_origin_gap: int,
+    candidate_count: int,
     device_name: str,
 ) -> dict[str, Any]:
     training_dir = Path(row["training_artifact_dir"])
@@ -300,6 +307,27 @@ def evaluate_dataset(
         horizons=np.asarray(HORIZONS, dtype=np.int64),
         channel=np.asarray(channel, dtype=np.int64),
     )
+    if candidate_count < 0:
+        raise ValueError("candidate_count must be non-negative")
+    if candidate_count:
+        candidate_indices = np.argsort(scores, kind="stable")[:candidate_count]
+        np.savez_compressed(
+            dataset_output / "candidate_pool.npz",
+            prediction=(prediction_scaled[candidate_indices] * scale + mean).astype(
+                np.float32
+            ),
+            ground_truth=(
+                target_scaled[candidate_indices] * scale + mean
+            ).astype(np.float32),
+            prediction_scaled=prediction_scaled[candidate_indices].astype(np.float32),
+            ground_truth_scaled=target_scaled[candidate_indices].astype(np.float32),
+            scores=scores[candidate_indices].astype(np.float32),
+            horizon_errors=horizon_errors[candidate_indices].astype(np.float32),
+            validation_window_index=candidate_indices.astype(np.int64),
+            raw_forecast_origin=origins[candidate_indices].astype(np.int64),
+            horizons=np.asarray(HORIZONS, dtype=np.int64),
+            channel=np.asarray(channel, dtype=np.int64),
+        )
 
     selected_rows = []
     for rank, index in enumerate(selected, start=1):
@@ -343,6 +371,7 @@ def evaluate_dataset(
         "test_labels_accessed": False,
         "raw_length": total_raw_length,
         "validation_window_count": int(len(data_set)),
+        "candidate_count": int(candidate_count),
         "selected": selected_rows,
     }
     with (dataset_output / "metadata.json").open("w", encoding="utf-8") as handle:
@@ -378,6 +407,7 @@ def main() -> None:
                 args.output_dir,
                 args.channel,
                 args.min_origin_gap,
+                args.candidate_count,
                 device,
             )
         )
