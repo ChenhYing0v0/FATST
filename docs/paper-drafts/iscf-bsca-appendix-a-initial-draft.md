@@ -52,7 +52,7 @@ The local experiments are implemented in Python 3.12.13 and PyTorch 2.9.0 with C
 
 ### Table A2 | Training and Evaluation Settings
 
-| Dataset | Max Length | Initial LR | Batch | Gradient Accumulation Steps | Max epochs | Patience |
+| Dataset | Max Length | Initial LR | Batch | Grad. Accum. | Max epochs | Patience |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | ETTh1 | 720 | $3\times10^{-4}$ | 32 | 1 | 45 | 10 |
 | ETTh2 | 720 | $5\times10^{-4}$ | 32 | 1 | 30 | 7 |
