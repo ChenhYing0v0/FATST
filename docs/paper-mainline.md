@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | `ISCF-BSCA: Prefix-Consistent Unified Varied-Horizon Forecasting` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Sections 1--7 and Figure 5 v5.3 temporarily fixed usable；Section 7 v0.2 Conclusion fixed |
+| `current_11_step` | Sections 1--7、Appendix、Figures 1--7与41-entry bibliography assembled；reference integration audited |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -19,6 +19,8 @@
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `paper_core_status` | architecture family frozen；Sections 1--7与Figure 5 v5.3 temporarily frozen usable；Section 5.4 Figure 6 only，Section 5.7 Figure 7 only；allocation aggregate accuracy direction positive但prevalence、sparse/oracle-routing claims仍关闭 |
+
+[Manuscript Reference Integration v1.0, 2026-08-25] 完成Sections 1--7与Appendix逐节citation audit，并以`manuscript/ref.bib`统一管理41条参考文献。候选发现参考PDT近邻论文，最终出版信息优先由formal proceedings、OpenReview accepted pages、PMLR、AAAI、Elsevier DOI与UCI原始记录核验；同时存在preprint与正式版本时仅保留正式版本。当前检查为`41 cited / 41 defined / 0 missing / 0 uncited / 0 duplicated`，其中28篇发表于2023--2026年。Section 7不重复引文；CHPC、CHPD/NCHPD、Future Coordinate、ISCF与BSCA等本文原创定义不通过相邻工作制造来源归属。Elsevier manuscript已切换为`elsarticle-num` + `ref.bib`并成功生成39页PDF，无undefined citations。Canonical audit=`docs/iscf-bsca-reference-audit.md`。Decision=`manuscript_reference_integration_v1_audited_ready`；new implementation/training/remote launch/formal test=`0/0/0/0`。
 
 [UVHF Terminology and Abstract Refinement v0.4, 2026-08-25] 本文任务正式命名为`Unified Varied-Horizon Forecasting (UVHF)`，与`horizon-specific forecasting`形成对照；`multi-horizon forecasting`仅保留为通用背景描述，`varied-horizon forecasting`仅用于既有文献语境或UVHF首次释义。Abstract按`horizon-specific fragmentation -> UVHF definition -> CHPC/cross-range decoder requirements -> ISCF/BSCA -> aggregate evidence`重构，实验结论不再列具体数值或baseline名称，只保留state-of-the-art accuracy、system consolidation、ablation与two-backbone transfer的已完成证据。Canonical draft=`docs/paper-drafts/iscf-bsca-abstract-initial-draft.md`；manuscript Sections 1--7、Appendix C与paper architecture同步UVHF术语；Introduction的既有论证和claim boundary不变。Decision=`uvhf_official_task_name_abstract_v0p4_author_review_candidate`；new implementation/training/remote launch/formal test=`0/0/0/0`。
 

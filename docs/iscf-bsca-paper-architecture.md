@@ -5,16 +5,16 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v1.01` |
-| `last_updated` | `2026-08-24` |
+| `version` | `v1.02` |
+| `last_updated` | `2026-08-25` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | Sections 1--7 and Figure 5 v5.3 temporarily frozen usable；Section 7 v0.2 Conclusion fixed |
+| `current_review_cursor` | Full manuscript assembled；41-entry bibliography and section-wise citation integration audited |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `frozen_consensus` | 论文七章结构并保留精简的Discussion and Limitations；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
-| `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure、citations与claim boundaries；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Section 6 v0.4正文、paragraph structure、interpretation与methodological limitations；Section 7 v0.2正文与two-paragraph structure；Method Figure 4 visual design；Figure 5 v5.3；Sections 5--7整体结构 |
+| `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure与claim boundaries；Sections 1--7及Appendix的audited citations；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Section 6 v0.4正文、paragraph structure、interpretation与methodological limitations；Section 7 v0.2正文与two-paragraph structure；Method Figure 4 visual design；Figure 5 v5.3；Sections 5--7整体结构 |
 | `provisional_content` | Section 5 v0.13（5.6 narrative待author review）；Method Figure 4 stable vector-asset synchronization |
 | `authorization_source` | 2026-08-24用户确认Section 7 v0.1两段正文可暂时固定为论文可用版本；Sections 1--6 evidence与Figures 5--7不变 |
 
@@ -22,6 +22,8 @@
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
 `temporarily_frozen_content` 只有在后续章节或证据产生明确矛盾且用户同意后才解冻；
 `provisional_content` 只表示当前最佳结构，后续按章节继续修订。
+
+Reference-integration amendment：在author显式启动全文参考文献工作后，对Sections 1--7与Appendix逐节审计citation needs，并以`manuscript/ref.bib`固定41条已使用参考文献。正式conference/journal版本优先于arXiv；PDT仅作为candidate seed，不覆盖primary-source metadata。当前引用图为`41 cited / 41 defined / 0 missing / 0 uncited / 0 duplicated`，完整角色与版本决策见`docs/iscf-bsca-reference-audit.md`。本轮只补外部claim、baseline、optimizer与dataset来源，不改变本文原创定义、结果数值、method claim或evidence boundary。Decision=`manuscript_reference_integration_v1_audited_ready`。
 
 Section 7 temporary-freeze amendment：Author确认204词两段式Conclusion可暂时固定为论文可用版本。正文、structure、evidence selection与claim boundary均不变；不重复Section 6 limitations，不新增citations、metrics、mechanisms或future claims。Canonical draft=`docs/paper-drafts/iscf-bsca-conclusion-initial-draft.md`。Decision=`section7_v0p2_temporarily_frozen_usable`。
 

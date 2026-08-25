@@ -42,12 +42,12 @@
 | `project` | `R_2026_FATST` |
 | `stage` | `StageC-UVHF paper consolidation` |
 | `handoff_date` | `2026-07-31` |
-| `last_updated` | `2026-08-10` |
+| `last_updated` | `2026-08-25` |
 | `source_commit_before_handoff` | `8e3eb99` |
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | manuscript writing and paper-facing evidence consolidation |
-| `active_section` | Introduction v0.9、Section 2 v0.2、Section 3 v0.7与Section 4 v0.7 temporarily frozen usable；Sections 5--7 v0.1 structural design pending author discussion |
+| `active_section` | Sections 1--7、Appendix与Figures 1--7 assembled；41-entry bibliography integration audited |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `section3_status` | `v0.7-author-risk-definition-refinement`=`temporarily_frozen_usable` |
 | `section4_status` | `v0.7-bsca-narrative-order-refinement`=`temporarily_frozen_usable` |
@@ -56,12 +56,22 @@
 | `new_remote_training_from_writing_thread` | false |
 | `new_formal_test_from_writing_thread` | false |
 | `parallel_experiment_authority` | use experiment handoff and current mainline；this writing handoff does not expand or revoke it |
-| `next_action` | author discussion of Sections 5--7 structure，优先决定standalone Discussion、case-study routing与5.6 analysis scope；do not reopen Sections 1--4 |
-| `conditional_next` | align Method and later result claims with the parallel paper-experiments workstream |
+| `next_action` | author review of the assembled Elsevier manuscript and reference placement；do not reopen frozen prose without explicit conflict or author request |
+| `conditional_next` | migrate the audited content and `ref.bib` into the final official journal template when selected |
 
 当前目标是把已冻结模型与已有证据组织成连贯论文，不是继续architecture search。
 不要因为旧ledger包含大量closed candidates而恢复D17--D24、TSAF、CPSI、SAC、
 SPS、FRSC、SCC或RSCC。
+
+### 1.1 Manuscript reference integration (2026-08-25)
+
+Sections 1--7与Appendix已完成逐节citation audit，统一bibliography为
+`manuscript/ref.bib`，共41条且全部被正文使用。版本选择优先formal
+conference/journal records；PDT只作为近邻candidate seed。机器检查为
+`41 cited / 41 defined / 0 missing / 0 uncited / 0 duplicated`，Elsevier
+`elsarticle-num`稿可完整编译且无undefined citations。详细审计见
+`docs/iscf-bsca-reference-audit.md`。本轮没有新增或改变模型、实验、结果与claim
+boundary。Decision=`manuscript_reference_integration_v1_audited_ready`。
 
 ## 2. Frozen Introduction
 
