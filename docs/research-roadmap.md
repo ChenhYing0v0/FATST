@@ -11,13 +11,13 @@ cells. Appendix C adds one validation-only qualitative figure with two
 deterministically selected fused-forecast examples for each of the seven
 paper-core datasets and markers for the four evaluated prefixes. The attached
 PDT document and the TimeAlign Appendix D are reference sources only; the
-frozen FATST protocol remains authoritative. Final-profile prediction arrays
-for all seven datasets are not yet available locally, so C1 is blocked at an
-evaluation-only export step. The detailed outline and source audit are
-recorded in `docs/paper-drafts/iscf-bsca-appendix-structure-design.md` and
-`docs/paper-drafts/iscf-bsca-appendix-a-c-data-audit.md`. This is a writing and
-routing decision only; it authorizes no new implementation, training, remote
-launch or formal test.
+frozen FATST protocol remains authoritative. The final-profile prediction
+arrays, Figure C1 exports and source-data manifest are now available locally.
+The integrated manuscript draft is `docs/paper-drafts/iscf-bsca-appendix-initial-draft.md`,
+and the detailed audit remains in `docs/paper-drafts/iscf-bsca-appendix-structure-design.md`
+and `docs/paper-drafts/iscf-bsca-appendix-a-c-data-audit.md`. This is a writing
+and routing decision only; it authorizes no new implementation, training,
+remote launch or formal test.
 
 ## Appendix A protocol and configuration audit (2026-08-25)
 
@@ -26,11 +26,11 @@ loaders and frozen configs. Raw lengths, chronological split boundaries,
 train/validation window counts and finite-loader checks are complete. The
 selected ISCF-BSCA profiles have also been resolved to effective optimizer,
 cosine schedule, maximum-epoch, patience and dataset-specific interface
-settings. The manuscript-ready tables are in
-`docs/paper-drafts/iscf-bsca-appendix-a-initial-draft.md`, with the audit trail
-in `docs/paper-drafts/iscf-bsca-appendix-a-c-data-audit.md`. Appendix C remains
-blocked at the final-profile evaluation-only prediction export; no new
-implementation, training, remote launch or formal test is authorized.
+settings. The integrated manuscript-ready Appendix is in
+`docs/paper-drafts/iscf-bsca-appendix-initial-draft.md`, with the audit trail
+in `docs/paper-drafts/iscf-bsca-appendix-a-c-data-audit.md`; Figure C1 passed
+the frozen validation-only export and QA route. No new implementation,
+training, remote launch or formal test is authorized.
 
 ## Section 7 Conclusion Initial Draft v0.1 (2026-08-24)
 

@@ -1,6 +1,6 @@
 # ISCF-BSCA Appendix Structure Design
 
-**Version:** v0.2-three-appendix-author-plan
+**Version:** v0.3-three-appendix-manuscript-draft
 **Date:** 2026-08-25
 **Scope:** minimal appendix routing for the frozen Sections 1--7 manuscript
 
@@ -65,6 +65,6 @@ The minimal plan excludes repeated copies of Figures 2, 3, 5, 6 and 7; historica
 2. **Configuration extraction:** completed for the selected dataset-level profiles from the frozen manifest, phase configs and trial ledgers. The manuscript-ready tables are drafted in `docs/paper-drafts/iscf-bsca-appendix-a-initial-draft.md`; values were not inferred from trial names.
 3. **Qualitative data export:** completed on 2026-08-25 using the frozen Main-I/II selected profiles. The validation-only export, checkpoint hashes, selected origins and raw prediction arrays are recorded in `analysis/iscf_bsca_appendix_c_prediction_export_20260825/`; no ablation checkpoint or test label was used.
 4. **Figure C1 generation and QA:** completed on 2026-08-25 and revised after a Weather/ECL candidate audit. The seven-row by two-column figure, source-data CSV, editable SVG/PDF and 600-dpi PNG/TIFF exports passed the strict static preflight and visual QA; the figure now uses a shared nested-prefix ruler and faint endpoint guides.
-5. **Manuscript synchronization:** the current draft, figure contract and QA record are synchronized. Final Appendix C acceptance remains an author-review decision; no new model training or formal test is implied.
+5. **Manuscript synchronization:** the complete three-part Appendix draft is now assembled in `docs/paper-drafts/iscf-bsca-appendix-initial-draft.md`. Appendix B points to the frozen canonical LaTeX tables, and Appendix C points to the accepted Figure C1 vector and source-data exports; no new model training or formal test is implied.
 
-No new architecture, training, remote launch or formal test is implied by this plan. The final-profile prediction arrays and candidate audit are available; Figure C1 is pending only author acceptance of the retained deterministic samples and revised visual design.
+No new architecture, training, remote launch or formal test is implied by this plan. The final-profile prediction arrays, candidate audit and accepted Figure C1 exports are available for manuscript assembly.

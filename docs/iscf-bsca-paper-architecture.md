@@ -441,7 +441,7 @@ Appendices
 
 Appendix A has been narrowed to three compact tables: dataset metadata and split boundaries, shared training/evaluation settings, and dataset-specific ISCF-BSCA configuration. Appendix C is reserved for one validation-only qualitative figure with two deterministically selected fused-forecast examples per paper-core dataset; it is not a new effectiveness experiment.
 
-The Appendix A protocol audit is complete for the seven paper-core datasets. The manuscript-ready tables are drafted in `docs/paper-drafts/iscf-bsca-appendix-a-initial-draft.md`; Appendix C remains blocked until final-profile prediction arrays are exported through an authorized evaluation-only route.
+The Appendix A protocol audit is complete for the seven paper-core datasets, and the three-part manuscript draft is integrated in `docs/paper-drafts/iscf-bsca-appendix-initial-draft.md`. Appendix B routes the complete horizon-wise benchmark cells to the frozen canonical LaTeX sources, while Appendix C uses the accepted validation-only Figure C1 and its source-data export.
 
 ### 3.1 Sections 5--7 author-fixed structural design
 

@@ -1,6 +1,6 @@
 # Appendix A. Datasets, Training Protocol and ISCF Configuration
 
-This appendix records the dataset contracts and the settings used for the paper-facing ISCF-BSCA experiments. The raw series length and the number of sliding-window examples are reported separately. Unless stated otherwise, all experiments use the same four horizons, a single seed and validation-based checkpoint selection; the frozen dataset-level profiles are test-informed, as disclosed in the main text.
+This appendix records the dataset contracts and the settings used for the paper-facing ISCF-BSCA experiments. The raw series length and the number of sliding-window examples are reported separately. The paper-facing ISCF-BSCA runs use the same four horizons, a single seed and validation-based checkpoint selection; the frozen dataset-level profiles are test-informed, as disclosed in the main text.
 
 ### Table A1 | Dataset metadata and split construction
 
