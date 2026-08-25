@@ -317,7 +317,13 @@ def render_figure(
     figure.savefig(f"{base}.svg", bbox_inches="tight", pad_inches=0.03)
     figure.savefig(f"{base}.pdf", bbox_inches="tight", pad_inches=0.03)
     figure.savefig(f"{base}.png", dpi=600, bbox_inches="tight", pad_inches=0.03)
-    figure.savefig(f"{base}.tiff", dpi=600, bbox_inches="tight", pad_inches=0.03)
+    figure.savefig(
+        f"{base}.tiff",
+        dpi=600,
+        bbox_inches="tight",
+        pad_inches=0.03,
+        pil_kwargs={"compression": "tiff_lzw"},
+    )
     normalize_svg(base.with_suffix(".svg"))
     plt.close(figure)
 
