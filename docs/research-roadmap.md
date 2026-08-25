@@ -19,6 +19,19 @@ recorded in `docs/paper-drafts/iscf-bsca-appendix-structure-design.md` and
 routing decision only; it authorizes no new implementation, training, remote
 launch or formal test.
 
+## Appendix A protocol and configuration audit (2026-08-25)
+
+The seven paper-core dataset contracts have now been checked against the local
+loaders and frozen configs. Raw lengths, chronological split boundaries,
+train/validation window counts and finite-loader checks are complete. The
+selected ISCF-BSCA profiles have also been resolved to effective optimizer,
+cosine schedule, maximum-epoch, patience and dataset-specific interface
+settings. The manuscript-ready tables are in
+`docs/paper-drafts/iscf-bsca-appendix-a-initial-draft.md`, with the audit trail
+in `docs/paper-drafts/iscf-bsca-appendix-a-c-data-audit.md`. Appendix C remains
+blocked at the final-profile evaluation-only prediction export; no new
+implementation, training, remote launch or formal test is authorized.
+
 ## Section 7 Conclusion Initial Draft v0.1 (2026-08-24)
 
 Current cursor=`Sections 1--7 temporarily frozen usable`。Canonical draft=`docs/paper-drafts/iscf-bsca-conclusion-initial-draft.md`。Author确认204词两段正文可作为论文可用版本；P1为`problem -> CHPC formulation -> ISCF/BSCA principle`，P2为`system-level effectiveness -> accuracy--cost balance -> ablation/diagnostic/transfer support -> output-side design implication`。Section 6已承担methodological limitations，因此Conclusion不重复limitations、不新增future-work段落，也不引入新数据、citations、metrics或mechanisms。Decision=`section7_v0p2_temporarily_frozen_usable`。

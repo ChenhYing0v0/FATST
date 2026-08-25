@@ -16,6 +16,18 @@ decision=`appendix_v0p2_three_appendix_author_plan_data_export_pending`; no new
 implementation, training, remote launch or formal test is authorized by this
 routing decision.
 
+## Appendix A Protocol Audit (2026-08-25)
+
+The seven paper-core datasets have passed the static loader audit: raw lengths,
+split boundaries, train/validation window counts and finite batches are
+recorded in `docs/paper-drafts/iscf-bsca-appendix-a-c-data-audit.md`. Effective
+training settings and dataset-specific ISCF-BSCA interface parameters have
+been extracted from the frozen phase configs and selected-profile ledgers and
+drafted in `docs/paper-drafts/iscf-bsca-appendix-a-initial-draft.md`.
+Appendix C remains blocked at an evaluation-only final-profile prediction
+export; no new implementation, training, remote launch or formal test is
+authorized. Decision=`appendix_a_protocol_and_config_audit_complete_c_export_pending`.
+
 ## Stage Scope
 
 | Field | Content |

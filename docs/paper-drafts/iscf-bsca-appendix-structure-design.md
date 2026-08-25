@@ -61,8 +61,8 @@ The minimal plan excludes repeated copies of Figures 2, 3, 5, 6 and 7; historica
 
 ## 5. Staged execution plan
 
-1. **Protocol audit:** verify Table A1 split boundaries and raw-length conventions against the local loaders, frozen configs, `PDT_final.pdf` and the TimeAlign Appendix D dataset table.
-2. **Configuration extraction:** resolve the selected dataset-level profile into Tables A2--A3 from the frozen manifest and trial ledgers; do not infer values from trial names.
+1. **Protocol audit:** completed for the seven paper-core datasets against the local loaders and frozen configs. Raw lengths, split boundaries, window counts and finite-loader checks are recorded in `docs/paper-drafts/iscf-bsca-appendix-a-c-data-audit.md`.
+2. **Configuration extraction:** completed for the selected dataset-level profiles from the frozen manifest, phase configs and trial ledgers. The manuscript-ready tables are drafted in `docs/paper-drafts/iscf-bsca-appendix-a-initial-draft.md`; values were not inferred from trial names.
 3. **Qualitative data export:** obtain final-profile fused predictions and targets for all seven datasets without retraining; freeze the validation selection rule and channel convention before selecting samples.
 4. **Figure C1 generation and QA:** use the saved `nature-figure` backend, export editable SVG/PDF plus raster fallback, and run source-data, typography, alignment and `git diff --check` checks.
 5. **Manuscript synchronization:** update Section 5.1 references, captions and the appendix routing in the architecture, mainline, roadmap and stage ledger documents.
