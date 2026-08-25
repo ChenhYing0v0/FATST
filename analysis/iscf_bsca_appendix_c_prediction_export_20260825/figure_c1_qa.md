@@ -20,9 +20,10 @@
 - Seven dataset rows and two sample columns are aligned on a common future-step
   axis; y-limits are independently scaled per dataset and shared between the
   two samples in each row.
-- Ground truth, ISCF-BSCA prediction and horizon-prefix markers use three
-  stable, color-blind-tolerant visual encodings. The horizon markers are
-  repeated in every panel and labeled once at the top to avoid repeated legends.
+- Ground truth and ISCF-BSCA use stable dark-slate and teal encodings. A single
+  nested-prefix ruler above the grid identifies the four horizon endpoints;
+  faint neutral vertical guides preserve alignment without overwhelming the
+  traces.
 - Dataset names, sample headers, legend and axis labels do not overlap at the
   rendered 600-dpi size. The two right-hand columns intentionally omit
   duplicated y tick labels to preserve the compact grid.
