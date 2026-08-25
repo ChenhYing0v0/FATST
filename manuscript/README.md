@@ -6,7 +6,7 @@ This directory contains a self-contained `elsarticle` manuscript assembled from 
 
 - The title is the provisional working title recorded in the paper architecture.
 - Author names, affiliations, corresponding-author details and journal name are placeholders.
-- Abstract, Keywords and References are intentionally empty.
+- The Abstract and Keywords are populated from the current author-review draft; References remain intentionally empty.
 - Citation commands are retained from the approved drafts and therefore remain unresolved until `references.bib` is populated.
 
 ## Build

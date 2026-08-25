@@ -38,11 +38,11 @@
             country={Country}}
 
 \begin{abstract}
-% Intentionally left blank. The Abstract will be drafted after manuscript QA.
+Multi-horizon forecasting is typically implemented with one predictor per horizon, increasing system cost while leaving shared future steps unconstrained. We formulate varied-horizon forecasting as one horizon-agnostic trajectory whose nested prefixes serve different endpoints, making cross-horizon prefix consistency (CHPC) a structural requirement. Because future regions may prefer different extents of latent-state sharing, we propose Independent Scope-Conditioned Forecasting with Balanced Scope Co-Adaptation (ISCF-BSCA). ISCF generates region-wise forecasts at multiple sharing scopes and integrates them using target-conditioned probabilities; BSCA balances joint optimization across scopes. The model satisfies CHPC by construction and serves all supported horizons with one model. Across seven multivariate benchmarks and four horizons, ISCF-BSCA achieves the best result in 13 of 14 dataset--metric comparisons with horizon-specific baselines. Relative to TimeAlign, it reduces average MSE and MAE by 4.94\% and 2.54\%, checkpoint storage by 81.48\%, and peak inference memory by 64.42\%. Under a one-model-all-horizons protocol, it ranks first in all 14 comparisons and reduces average MSE and MAE over TimeAlign by 6.45\% and 3.72\%. Ablations support the evaluated components, while DLinear and PatchTST replacements support compatibility across two Encoder families. These results establish output-side sharing granularity as an effective basis for unified, prefix-consistent forecasting.
 \end{abstract}
 
 \begin{keyword}
-% Intentionally left blank. Keywords will be added with the Abstract.
+Time series forecasting \sep varied-horizon forecasting \sep unified forecasting \sep cross-horizon prefix consistency \sep multi-scope forecasting
 \end{keyword}
 
 \end{frontmatter}
