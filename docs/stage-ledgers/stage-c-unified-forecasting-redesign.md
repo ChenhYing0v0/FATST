@@ -1,15 +1,20 @@
 # StageC Unified Varied-Horizon Forecasting Ledger
 
-## Appendix Routing Design (2026-08-24)
+## Appendix Routing Design (2026-08-25)
 
-Author-facing manuscript routing is provisionally reduced to two appendices:
-Appendix A for the Section 5.1 experimental protocol and reproducibility
-details, and Appendix B for the complete Main-I/Main-II horizon-wise result
-cells behind Tables 1 and 2. No duplicate figures, unpromoted sensitivity
-experiments, historical diagnostics or failure-case material is required.
-Canonical design=`docs/paper-drafts/iscf-bsca-appendix-structure-design.md`;
-decision=`appendix_v0p1_minimal_two_appendices_design`; no new implementation,
-training or formal test is authorized by this routing decision.
+Author-facing manuscript routing is revised to three minimal appendices:
+Appendix A for dataset metadata/splits, training settings and dataset-specific
+ISCF-BSCA configuration; Appendix B for the complete Main-I/Main-II
+horizon-wise result cells behind Tables 1 and 2; and Appendix C for one
+validation-only qualitative figure with two deterministically selected fused
+forecast examples per paper-core dataset and four prefix markers. The attached
+PDT document and TimeAlign Appendix D are reference sources only. Final-profile
+prediction arrays for all seven datasets are not yet available locally, so
+Appendix C remains blocked at an evaluation-only export gate. Canonical design=`docs/paper-drafts/iscf-bsca-appendix-structure-design.md`;
+data audit=`docs/paper-drafts/iscf-bsca-appendix-a-c-data-audit.md`;
+decision=`appendix_v0p2_three_appendix_author_plan_data_export_pending`; no new
+implementation, training, remote launch or formal test is authorized by this
+routing decision.
 
 ## Stage Scope
 

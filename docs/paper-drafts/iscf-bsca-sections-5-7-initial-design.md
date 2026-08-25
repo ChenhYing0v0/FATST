@@ -145,18 +145,21 @@ The selected example remains integrated into Figure 5 rather than assigned a sep
 
 ## 7. Appendix routing
 
-The minimal appendix contract is defined in
-`docs/paper-drafts/iscf-bsca-appendix-structure-design.md`. It uses two
-appendices only:
+The current minimal appendix contract is defined in
+`docs/paper-drafts/iscf-bsca-appendix-structure-design.md`. It uses three
+appendices:
 
 | Appendix | Content role | Required contents |
 | --- | --- | --- |
-| A. Experimental protocol and reproducibility details | consolidate the information needed to reproduce Section 5.1 and interpret source roles | datasets, splits, preprocessing, model/baseline roles, implementation, selection rule and artifact provenance |
+| A. Datasets, training protocol and ISCF configuration | consolidate only the protocol information needed to reproduce Section 5.1 | dataset metadata and splits; optimizer, learning-rate schedule, batch/epoch/patience settings; dataset-specific ISCF-BSCA configuration |
 | B. Complete horizon-wise benchmark results | preserve the complete cells behind the compact main-text Tables 1 and 2 | full Main-I and Main-II dataset--horizon--metric tables, including negative cells |
+| C. Qualitative varied-horizon forecasts | provide a bounded visual sanity check for the unified forecast across the paper-core datasets | one validation-only seven-dataset figure, two deterministically selected fused-forecast samples per dataset, ground truth plus ISCF-BSCA and four prefix markers |
 
 No separate appendix is planned for Figures 2--7, the core ablation table,
 the Figure 5 sample-specific diagnostic, transfer values behind Figure 7, or
-unpromoted sensitivity and historical audit material.
+unpromoted sensitivity and historical audit material. Figure C1 must not be
+generated until final-profile prediction arrays for all seven datasets are
+available through an authorized evaluation-only export.
 
 ## 8. Claim-evidence map
 

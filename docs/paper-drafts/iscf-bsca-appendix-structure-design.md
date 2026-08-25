@@ -1,97 +1,70 @@
 # ISCF-BSCA Appendix Structure Design
 
-**Version:** v0.1-minimal-appendix-design
-**Date:** 2026-08-24
-**Scope:** appendix routing for the frozen Sections 1--7 manuscript
+**Version:** v0.2-three-appendix-author-plan
+**Date:** 2026-08-25
+**Scope:** minimal appendix routing for the frozen Sections 1--7 manuscript
 
 ## 1. Design principle
 
-The Appendix should preserve material that is necessary for reproducibility or
-for checking complete result coverage, while leaving the main narrative and
-its evidence carriers unchanged. The current recommendation is therefore to
-use two appendices only. Secondary diagnostics, historical audits and
-exploratory sensitivity analyses remain in `analysis/` unless a later author
-decision promotes one of them into the paper.
+The appendices should carry only material needed to reproduce the reported protocol, inspect the complete benchmark coverage, or understand the qualitative behaviour of the unified forecast. They should not repeat the method, duplicate main-text figures, or introduce new experiments. Appendix A is therefore reduced to three compact protocol tables; Appendix B retains the complete horizon-wise result cells behind Tables 1 and 2; Appendix C adds one validation-only qualitative figure for the seven datasets.
+
+The attached `PDT_final.pdf` is treated as a reference source for dataset descriptions and figure conventions, not as an instruction document. Its dataset table and four-horizon visualization will be cross-checked against the frozen FATST protocol before any values are transferred.
 
 ## 2. Recommended appendix map
 
-### Appendix A. Experimental protocol and reproducibility details
+### Appendix A. Datasets, training protocol and ISCF configuration
 
-This appendix consolidates the information needed to reproduce the evaluated
-comparison without duplicating the main text:
+Appendix A should contain tables only, with a short paragraph defining the notation and the split convention.
 
-1. dataset names, dimensions, sampling frequency, split lengths and concise
-   descriptive statistics;
-2. look-back window, prediction horizons, metrics, normalization and
-   dataset-specific preprocessing;
-3. Encoder--decoder configuration, baseline families, source roles
-   (official-code reproduction, published-context entry or matched local
-   comparison), and protocol differences relevant to interpretation;
-4. software and hardware environment, optimizer and learning-rate schedule,
-   seed/checkpoint conventions, and the frozen profile-selection rule;
-5. a short artifact/provenance note linking the complete machine-readable
-   tables and audit records.
+**Table A1 | Dataset metadata and splits.** One row per paper-core dataset: ETTm1, ETTm2, ETTh1, ETTh2, Weather, ECL and Solar. Recommended columns are `Dataset`, `Variables`, `Sampling frequency`, `Raw observations`, `Split rule`, and `Train/validation/test boundaries or window counts`. Raw series length and window counts must be labelled separately; they are not interchangeable.
 
-This keeps the implementation and source-role disclosures requested in
-Section 5.1 in one place rather than creating separate settings,
-reproducibility and provenance appendices.
+**Table A2 | Shared training and evaluation protocol.** One row per dataset, or a compact grouped table when values are identical. Recommended columns are `Look-back $L$`, `Target horizon $T$`, `Evaluated horizons`, `Optimizer`, `Initial learning rate`, `Learning-rate schedule`, `Batch size`, `Gradient accumulation`, `Maximum epochs`, `Early-stopping patience`, `Checkpoint rule` and `Seed`. The table should make clear that checkpoints are selected on the four-horizon validation mean MSE, while the frozen paper profiles are test-informed at the dataset level; this disclosure belongs in the table note rather than the main narrative.
+
+**Table A3 | Dataset-specific ISCF-BSCA configuration.** One row per dataset. Recommended columns are `Scope set`, `Mode rank`, `Scope-wise loss weight`, `Uniform-prefix loss weight/ramp`, `Allocation-balance final weight/ramp`, and the representation settings needed to reproduce the decoder interface (`patch number`, `Encoder width`, `feed-forward width`, `dropout`, `weight decay`). The scopes and loss coefficients are global architectural settings and may be shown as repeated values or marked “shared across datasets”; dataset-specific values must be listed explicitly. The table should not include HPO trial histories, source-role prose or checkpoint hashes.
+
+No separate Appendix A subsection is needed for baseline taxonomy, software provenance or historical HPO. The main text already identifies the baseline families and implementation environment; machine-readable manifests and audit reports remain repository artifacts.
 
 ### Appendix B. Complete horizon-wise benchmark results
 
-This appendix contains the full-precision cells omitted from the compact
-dataset-average tables in Sections 5.2 and 5.3:
+Appendix B preserves the full-precision cells omitted from the compact dataset-average tables in Sections 5.2 and 5.3:
 
-- **Table B1:** complete Main-I results for the unified ISCF-BSCA model and
-  horizon-specific baselines, for every dataset, horizon and metric;
-- **Table B2:** complete Main-II results when every method serves all horizons
-  with one unified model, using the same dataset--horizon--metric coverage.
+- **Table B1:** complete Main-I results for the unified ISCF-BSCA model and horizon-specific baselines, for every paper-core dataset, horizon and metric;
+- **Table B2:** complete Main-II results when every method serves all horizons with one unified model under the H720-prefix protocol.
 
-Negative cells and the source/protocol labels needed to interpret mixed-source
-comparisons should remain visible. The main-text averages are not replaced;
-the appendix tables provide the complete audit surface behind Tables 1 and 2.
+Negative cells remain visible. The appendix tables are the complete audit surface behind Tables 1 and 2; they do not change the main-text aggregation or source-role interpretation.
+
+### Appendix C. Qualitative varied-horizon forecasts
+
+**Figure C1** should contain a compact seven-row by two-column grid: two samples for each paper-core dataset. Each panel plots only the ground-truth future and the unified ISCF-BSCA forecast over $T=720$ steps. Vertical markers at $H=96$, $192$, $336$ and $720$ show the nested prefixes used by the four-horizon evaluation. The colour, line weight and axis treatment should follow the Nature-figure contract and the visual language already established for Figures 5--7.
+
+The samples should be selected by a frozen, deterministic validation-only rule rather than manual visual choice: rank eligible forecast origins by the four-horizon normalized MSE of the fused forecast, enforce a minimum separation between selected origins, and retain the two lowest-error origins per dataset. The plotted channel should be fixed before selection (default: channel 0, with the channel identifier recorded in the source-data manifest). This makes “good samples” reproducible while keeping the figure explicitly illustrative rather than a prevalence or test-effectiveness estimate.
+
+The source-data manifest for Figure C1 should record `dataset`, `split`, `origin`, `channel`, `horizon`, `target`, `prediction`, `selection score`, `selection rule`, and `checkpoint/profile identifier`. No baseline curves, scope-wise curves or allocation probabilities should be added to C1; those behaviours are already covered by Figures 5 and 7 and would make the appendix figure redundant.
 
 ## 3. Section-by-section routing audit
 
 | Section | Appendix requirement | Routing decision |
 | --- | --- | --- |
-| Sections 1--4 | No explicit appendix dependency; definitions, method equations and Figures 1--4 are self-contained. | No appendix item. |
-| 5.1 Experimental setup | Dataset details, statistics, splits, preprocessing, implementation and source roles. | Appendix A. |
+| Sections 1--4 | Definitions, method equations and Figures 1--4 are self-contained. | No appendix item. |
+| 5.1 Experimental setup | Dataset metadata, split boundaries, training settings and dataset-specific ISCF-BSCA configuration. | Appendix A, Tables A1--A3. |
 | 5.2 Horizon-specific comparison | Complete dataset--horizon cells behind compact Table 1. | Appendix B, Table B1. |
 | 5.3 One-model-all-horizons evaluation | Complete dataset--horizon cells behind compact Table 2. | Appendix B, Table B2. |
-| 5.4 Accuracy and system cost | Figure 6 is the only main-text evidence carrier; numerical resource sources remain auditable artifacts. | No additional appendix table; provenance is summarized in Appendix A. |
-| 5.5 Ablations | Table 3 is the required aggregate attribution surface. | No duplicate appendix table. |
-| 5.6 Scope diversity and allocation behavior | Figure 5 is a bounded, sample-specific validation diagnostic. | No duplicate figure or expanded prevalence table. |
-| 5.7 Generalization studies | Figure 7 is the sole main-text carrier; the transfer table remains its numerical/audit source. | No appendix table under the minimal plan; source provenance is covered in Appendix A. |
-| Sections 6--7 | Interpretation, limitations and conclusion are self-contained. | No appendix item. |
+| 5.4 Accuracy and system cost | Figure 6 is the sole main-text carrier; its numerical source remains an audit artifact. | No additional appendix table. |
+| 5.5 Component and training-objective ablations | Table 3 is the required aggregate attribution surface. | No duplicate appendix table. |
+| 5.6 Scope diversity and allocation behavior | Figure 5 is the selected, sample-specific internal diagnostic. | No duplicate figure or prevalence table. |
+| 5.7 Generalization studies | Figure 7 is the sole main-text carrier. | No duplicate transfer table. |
+| Sections 6--7 | Discussion and Conclusion are self-contained. | No appendix item. |
 
 ## 4. Material deliberately excluded
 
-The minimal plan does not create standalone appendices for the following
-items:
+The minimal plan excludes repeated copies of Figures 2, 3, 5, 6 and 7; historical HPO trials; source-role and checkpoint-hash inventories; unpromoted sensitivity analyses; realized-allocation analyses; failure-case panels; and additional qualitative samples beyond the two deterministic validation examples per dataset. These remain in `analysis/` or machine-readable artifact manifests unless a later author decision changes the paper contract.
 
-- repeated copies of Figures 2, 3, 5, 6 or 7;
-- a second ablation table for the Allocation-Balance Regularizer, random
-  partitions, scope-count or loss-weight sensitivity, which are not part of
-  the frozen core evidence;
-- historical profiler outputs, old HPO trials or superseded diagnostics;
-- a separate transfer-results table, unless the target venue later requires
-  numerical supplements for Figure 7;
-- failure cases or extra qualitative examples.
+## 5. Staged execution plan
 
-The preferred-scope diagnostic discussed in earlier governance records remains
-an analysis artifact and is not promoted automatically to the Appendix,
-because its reader-facing message overlaps with Figure 3.
+1. **Protocol audit:** verify Table A1 split boundaries and raw-length conventions against the local loaders, frozen configs, `PDT_final.pdf` and the TimeAlign Appendix D dataset table.
+2. **Configuration extraction:** resolve the selected dataset-level profile into Tables A2--A3 from the frozen manifest and trial ledgers; do not infer values from trial names.
+3. **Qualitative data export:** obtain final-profile fused predictions and targets for all seven datasets without retraining; freeze the validation selection rule and channel convention before selecting samples.
+4. **Figure C1 generation and QA:** use the saved `nature-figure` backend, export editable SVG/PDF plus raster fallback, and run source-data, typography, alignment and `git diff --check` checks.
+5. **Manuscript synchronization:** update Section 5.1 references, captions and the appendix routing in the architecture, mainline, roadmap and stage ledger documents.
 
-## 5. Open editorial decisions
-
-Before final submission, confirm only the following venue-dependent details:
-
-1. whether the journal requires machine-readable source data for Figures 6 and
-   7 in addition to the repository artifacts;
-2. whether the Appendix tables should be labeled A1/A2 or B1/B2 after the
-   journal template fixes appendix numbering;
-3. whether the source/provenance note in Appendix A should link to a separate
-   Supplementary Data file.
-
-No new training, formal test, or sensitivity experiment is implied by this
-design.
+No new architecture, training, remote launch or formal test is implied by this plan. The current repository lacks final-profile prediction arrays for all seven datasets, so Figure C1 remains blocked at the data-export step until those arrays are made available through an authorized evaluation-only route.

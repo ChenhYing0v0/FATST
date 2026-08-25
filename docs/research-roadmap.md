@@ -1,18 +1,23 @@
 # Research Roadmap
 
-## Appendix routing design (2026-08-24)
+## Appendix routing design (2026-08-25)
 
-The manuscript-wide Appendix plan is frozen provisionally as a minimal
-two-appendix structure. Appendix A consolidates Section 5.1 dataset,
-protocol, source-role, implementation and provenance details. Appendix B
-contains the complete dataset--horizon--metric cells behind the compact
-Tables 1 and 2 (Main-I and Main-II), including negative cells. No duplicate
-figures, standalone sensitivity studies, historical audits, failure cases or
-transfer table are required under the current plan. The detailed outline and
-section-by-section audit are recorded in
-`docs/paper-drafts/iscf-bsca-appendix-structure-design.md`. This is a writing
-and routing decision only; it authorizes no new implementation, training or
-formal test.
+The manuscript-wide Appendix plan is revised to a minimal three-appendix
+structure. Appendix A contains only three compact tables for dataset metadata
+and splits, training/evaluation settings, and dataset-specific ISCF-BSCA
+configuration. Appendix B contains the complete dataset--horizon--metric cells
+behind the compact Tables 1 and 2 (Main-I and Main-II), including negative
+cells. Appendix C adds one validation-only qualitative figure with two
+deterministically selected fused-forecast examples for each of the seven
+paper-core datasets and markers for the four evaluated prefixes. The attached
+PDT document and the TimeAlign Appendix D are reference sources only; the
+frozen FATST protocol remains authoritative. Final-profile prediction arrays
+for all seven datasets are not yet available locally, so C1 is blocked at an
+evaluation-only export step. The detailed outline and source audit are
+recorded in `docs/paper-drafts/iscf-bsca-appendix-structure-design.md` and
+`docs/paper-drafts/iscf-bsca-appendix-a-c-data-audit.md`. This is a writing and
+routing decision only; it authorizes no new implementation, training, remote
+launch or formal test.
 
 ## Section 7 Conclusion Initial Draft v0.1 (2026-08-24)
 
