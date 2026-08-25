@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## UVHF terminology and Abstract refinement (2026-08-25)
+
+The paper task is officially named `Unified Varied-Horizon Forecasting (UVHF)` and contrasted with `horizon-specific forecasting`. `Multi-horizon forecasting` remains a generic background description rather than the formal task name. The Abstract now follows the chain `horizon-specific fragmentation -> UVHF definition -> decoder-side CHPC and cross-range sharing requirements -> ISCF/BSCA -> aggregate evidence`; exact metric values and named baseline comparisons are omitted from the Abstract, while the completed main, efficiency, ablation and two-backbone transfer evidence remains represented at the appropriate aggregate strength. Canonical draft=`docs/paper-drafts/iscf-bsca-abstract-initial-draft.md`; decision=`uvhf_official_task_name_abstract_v0p4_author_review_candidate`; no new implementation, training, remote launch or formal test.
+
 ## Appendix routing design (2026-08-25)
 
 The manuscript-wide Appendix plan uses a minimal, author-refined structure.

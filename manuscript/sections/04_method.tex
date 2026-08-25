@@ -3,7 +3,7 @@
 \label{sec:method}
 
 
-Section 3 established two requirements for varied-horizon forecasting. Predictions for a shared future target should be invariant to the requested horizon, while the decoder should not impose one latent-state sharing extent on the entire future domain. We address these requirements with ISCF-BSCA. Independent Scope-Conditioned Forecasting (ISCF) is a decoder-side architecture that constructs one future-step-indexed trajectory from multiple sharing scopes, while Balanced Scope Co-Adaptation (BSCA) is the joint optimization method designed for it.
+Section 3 established two decoder-side requirements for UVHF. Predictions for a shared future target should be invariant to the requested horizon, while the decoder should not impose one latent-state sharing extent on the entire future domain. We address these requirements with ISCF-BSCA. Independent Scope-Conditioned Forecasting (ISCF) is a decoder-side architecture that constructs one future-step-indexed trajectory from multiple sharing scopes, while Balanced Scope Co-Adaptation (BSCA) is the joint optimization method designed for it.
 
 \subsection{Architecture overview}
 
@@ -19,7 +19,7 @@ The Scope-conditioned Forecasts and Scope Probabilities are optimized jointly. B
 \begin{figure*}[t]
 \centering
 \includegraphics[width=1.00\textwidth]{figures/figure_04_method_overview.pdf}
-\caption{ISCF constructs one trajectory for Varied-Horizon Forecasting. The Scope Forecasting Path generates region-wise predictions under multiple sharing scopes. The Target-Adaptive Allocation Path assigns scope-conditioned information to each future target. Weighted contraction yields one trajectory whose nested prefixes answer different horizon requests. Three representative scopes are shown for clarity; the probability map and trajectories are schematic.}
+\caption{ISCF constructs one trajectory for Unified Varied-Horizon Forecasting. The Scope Forecasting Path generates region-wise predictions under multiple sharing scopes. The Target-Adaptive Allocation Path assigns scope-conditioned information to each future target. Weighted contraction yields one trajectory whose nested prefixes answer different horizon requests. Three representative scopes are shown for clarity; the probability map and trajectories are schematic.}
 \label{fig:iscf-bsca-method}
 \end{figure*}
 

@@ -5,7 +5,7 @@
 | Field | Content |
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
-| `working_title` | TBD；provisional architecture base=`ISCF` |
+| `working_title` | `ISCF-BSCA: Prefix-Consistent Unified Varied-Horizon Forecasting` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
 | `current_11_step` | Sections 1--7 and Figure 5 v5.3 temporarily fixed usable；Section 7 v0.2 Conclusion fixed |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
@@ -19,6 +19,8 @@
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `paper_core_status` | architecture family frozen；Sections 1--7与Figure 5 v5.3 temporarily frozen usable；Section 5.4 Figure 6 only，Section 5.7 Figure 7 only；allocation aggregate accuracy direction positive但prevalence、sparse/oracle-routing claims仍关闭 |
+
+[UVHF Terminology and Abstract Refinement v0.4, 2026-08-25] 本文任务正式命名为`Unified Varied-Horizon Forecasting (UVHF)`，与`horizon-specific forecasting`形成对照；`multi-horizon forecasting`仅保留为通用背景描述，`varied-horizon forecasting`仅用于既有文献语境或UVHF首次释义。Abstract按`horizon-specific fragmentation -> UVHF definition -> CHPC/cross-range decoder requirements -> ISCF/BSCA -> aggregate evidence`重构，实验结论不再列具体数值或baseline名称，只保留state-of-the-art accuracy、system consolidation、ablation与two-backbone transfer的已完成证据。Canonical draft=`docs/paper-drafts/iscf-bsca-abstract-initial-draft.md`；manuscript Sections 1--7、Appendix C与paper architecture同步UVHF术语；Introduction的既有论证和claim boundary不变。Decision=`uvhf_official_task_name_abstract_v0p4_author_review_candidate`；new implementation/training/remote launch/formal test=`0/0/0/0`。
 
 [Appendix Table and Hierarchy Refinement v0.6, 2026-08-25] Table A1的`Dataset Size`按TimeAlign Appendix D Table 4口径改为`(Train, Validation, Test)`三元组；Table A2将`Grad. accumulation`展开为`Gradient Accumulation Steps`并说明其为一次optimizer update前累计的mini-batch数量，effective batch size=`Batch × Steps`。Appendix B因仅包含main-result tables而删除B.1层级，Tables B1/B2直接置于`B. FULL RESULTS`下。冻结实验结果、Figure C1与claim boundary均未改变。Decision=`appendix_v0p6_table_hierarchy_refinement_ready`；new training/remote launch/formal test=`0/0/0`。
 

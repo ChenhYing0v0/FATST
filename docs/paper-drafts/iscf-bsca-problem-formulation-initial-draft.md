@@ -36,9 +36,9 @@ The status table and the editorial audit after Section 3 are not part of the man
 
 ## 3. Problem Formulation and Empirical Motivation
 
-The preceding discussion shows that varied-horizon forecasting involves more than sharing parameters across prediction lengths. A unified forecaster should return coherent predictions for future steps shared by different horizon requests, while its decoder must determine how predictive information is shared across the future domain. We now formalize these two issues and examine them through controlled empirical analyses, which motivate the decoder design developed in Section 4.
+The preceding discussion shows that UVHF involves more than sharing parameters across prediction lengths. A unified forecaster should return coherent predictions for future steps shared by different horizon requests, while its decoder must determine how predictive information is shared across the future domain. We now formalize these two issues and examine them through controlled empirical analyses, which motivate the decoder design developed in Section 4.
 
-### 3.1 Varied-horizon forecasting and cross-horizon prefix consistency
+### 3.1 Unified varied-horizon forecasting and cross-horizon prefix consistency
 
 Consider two forecasting requests with horizons $H_i<H_j$ issued from the same observed history. Their first $H_i$ steps refer to identical future targets and should therefore receive identical predictions. We formalize this requirement below.
 

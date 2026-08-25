@@ -1,5 +1,9 @@
 # StageC Unified Varied-Horizon Forecasting Ledger
 
+## UVHF Terminology and Abstract Refinement (2026-08-25)
+
+The formal task name is frozen as `Unified Varied-Horizon Forecasting (UVHF)`, contrasted with `horizon-specific forecasting`. The Abstract and canonical manuscript-facing drafts use UVHF after its first definition; `multi-horizon forecasting` remains generic background terminology. The Abstract is reorganized around the decoder-side requirements of CHPC and heterogeneous cross-range forecast generation, with aggregate state-of-the-art, system-cost, ablation and two-backbone transfer evidence but no exact values or named baseline comparison. Canonical draft=`docs/paper-drafts/iscf-bsca-abstract-initial-draft.md`; decision=`uvhf_official_task_name_abstract_v0p4_author_review_candidate`; no new implementation, training, remote launch or formal test.
+
 ## Appendix Table and Hierarchy Refinement (2026-08-25)
 
 Table A1 now reports `Dataset Size` as `(Train, Validation, Test)` using the TimeAlign Appendix D convention for the seven shared benchmarks. Table A2 renames the ambiguous abbreviated field to `Gradient Accumulation Steps` and defines it as the number of mini-batches accumulated before one optimizer update. Appendix B removes the redundant B.1 level and keeps Tables B1/B2 directly under `B. FULL RESULTS`. Canonical draft=`docs/paper-drafts/iscf-bsca-appendix-initial-draft.md`; decision=`appendix_v0p6_table_hierarchy_refinement_ready`; no new training, remote launch or formal test.
@@ -41,7 +45,7 @@ authorized. Decision=`appendix_a_protocol_and_config_audit_complete_c_export_pen
 | Field | Content |
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
-| `paper_role` | problem-first unified multi-horizon research；不再预设两项机制形式 |
+| `paper_role` | problem-first Unified Varied-Horizon Forecasting (UVHF) research；不再预设两项机制形式 |
 | `active_question` | Sections 1--7 and Figure 5 v5.3 temporarily fixed usable；Section 7 v0.2 Conclusion fixed |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |

@@ -19,11 +19,11 @@ This file records the author-confirmed argumentative structure. The correspondin
 
 ## 1. Section-level role
 
-Section 7 should close the paper by returning to the central varied-horizon forecasting problem and stating what the complete evidence establishes. Section 6 already interprets output-side multi-scope forecasting and records the methodological limitations, so the Conclusion should neither repeat that discussion nor enumerate every experiment. Its role is to compress the paper into the chain `problem -> principle -> method -> evidence-backed outcome -> final implication`.
+Section 7 should close the paper by returning to the central unified varied-horizon forecasting (UVHF) problem and stating what the complete evidence establishes. Section 6 already interprets output-side multi-scope forecasting and records the methodological limitations, so the Conclusion should neither repeat that discussion nor enumerate every experiment. Its role is to compress the paper into the chain `problem -> principle -> method -> evidence-backed outcome -> final implication`.
 
 ## 2. One-sentence argument
 
-For varied-horizon forecasting, one horizon-agnostic predictor can generate accurate and prefix-consistent forecasts by organizing forecast generation over multiple output-side sharing scopes and jointly optimizing their target-adaptive integration.
+For UVHF, one horizon-agnostic predictor can generate accurate and prefix-consistent forecasts by organizing forecast generation over multiple output-side sharing scopes and jointly optimizing their target-adaptive integration.
 
 ## 3. Recommended paragraph structure
 
@@ -34,7 +34,7 @@ For varied-horizon forecasting, one horizon-agnostic predictor can generate accu
 Recommended sentence functions:
 
 1. Return to the limitation of horizon-specific forecasting: separate predictors fragment multiple request endpoints and do not enforce one coherent trajectory.
-2. State the paper's formulation: varied-horizon forecasting should use one future-step-indexed predictor whose outputs satisfy CHPC across requests.
+2. State the paper's formulation: UVHF should use one future-step-indexed predictor whose outputs satisfy CHPC across requests.
 3. Introduce ISCF at principle level: it constructs one scope-indexed forecast field through region-wise forecast generation under multiple output-side sharing extents and performs target-adaptive integration.
 4. State the role of BSCA in one clause or sentence: it supports joint learning of the fused trajectory and the individual scope lines.
 
@@ -78,4 +78,4 @@ The final Conclusion should not:
 
 ## 6. Terminology lock
 
-Use the established canonical forms: **varied-horizon forecasting**, **cross-horizon prefix consistency (CHPC)**, **ISCF**, **BSCA**, **sharing scope**, **scope-indexed forecast field**, **Target-Adaptive Allocation**, **Scope-conditioned Forecast**, **prefix-consistent trajectory** and **Encoder**. Use `forecast generation`, not `forecast synthesis`, and describe the method as an output-side decoder framework rather than a collection of independently trained forecasters.
+Use the established canonical forms: **unified varied-horizon forecasting (UVHF)**, **horizon-specific forecasting**, **cross-horizon prefix consistency (CHPC)**, **ISCF**, **BSCA**, **sharing scope**, **scope-indexed forecast field**, **Target-Adaptive Allocation**, **Scope-conditioned Forecast**, **prefix-consistent trajectory** and **Encoder**. Use `forecast generation`, not `forecast synthesis`, and describe the method as an output-side decoder framework rather than a collection of independently trained forecasters.

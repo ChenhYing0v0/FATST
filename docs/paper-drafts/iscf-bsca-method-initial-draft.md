@@ -17,7 +17,7 @@
 | `implementation_change` | None |
 | `experiment_change` | None |
 | `claim_boundary` | Architectural properties remain construction facts; complexity is deferred to the later efficiency analysis, while ablation and transfer claims remain table-contingent |
-| `narrative_spine` | History State and Future Coordinate → Scope-conditioned Forecasts and Scope Probabilities → weighted contraction → Varied-Horizon Forecasting → balanced co-adaptation |
+| `narrative_spine` | History State and Future Coordinate → Scope-conditioned Forecasts and Scope Probabilities → weighted contraction → Unified Varied-Horizon Forecasting → balanced co-adaptation |
 
 The status table, terminology ledger and editorial audit are working metadata and are not part of the manuscript body submitted for review.
 
@@ -46,7 +46,7 @@ The status table, terminology ledger and editorial audit are working metadata an
 | Scope Probabilities | $\boldsymbol\Pi=[\pi_{b,c,\tau,s}]$ | Normalized scope weights produced by the Allocation MLP |
 | Target-Adaptive Allocation Path | -- | Target-wise assignment of scope-conditioned information using the History State and Future Coordinate |
 | Weighted contraction | $\sum_s\pi_s\mathcal F_s$ | Integration of scope-conditioned forecasts along the scope axis |
-| Varied-Horizon Forecasting | $\widehat{\mathbf Y}^{(H)}$ | Return of the first $H$ steps from one maximum-length prediction trajectory |
+| Unified Varied-Horizon Forecasting | $\widehat{\mathbf Y}^{(H)}$ | Return of the first $H$ steps from one maximum-length prediction trajectory |
 | Uniform-Prefix Forecasting Loss | $\mathcal L_{\mathrm{prefix}}$ | Fused forecasting loss that weights every prefix horizon equally |
 | Scope-Wise Forecasting Loss | $\mathcal L_{\mathrm{scope}}$ | Direct prediction loss applied uniformly to every Scope-conditioned Forecast |
 | Allocation-Balance Regularizer | $\mathcal L_{\mathrm{balance}}$ | Ramped regularizer that penalizes strongly non-uniform Scope Probabilities during training |
@@ -54,7 +54,7 @@ The status table, terminology ledger and editorial audit are working metadata an
 
 ## 4. ISCF-BSCA
 
-Section 3 established two requirements for varied-horizon forecasting. Predictions for a shared future target should be invariant to the requested horizon, while the decoder should not impose one latent-state sharing extent on the entire future domain. We address these requirements with ISCF-BSCA. Independent Scope-Conditioned Forecasting (ISCF) is a decoder-side architecture that constructs one future-step-indexed trajectory from multiple sharing scopes, while Balanced Scope Co-Adaptation (BSCA) is the joint optimization method designed for it.
+Section 3 established two decoder-side requirements for UVHF. Predictions for a shared future target should be invariant to the requested horizon, while the decoder should not impose one latent-state sharing extent on the entire future domain. We address these requirements with ISCF-BSCA. Independent Scope-Conditioned Forecasting (ISCF) is a decoder-side architecture that constructs one future-step-indexed trajectory from multiple sharing scopes, while Balanced Scope Co-Adaptation (BSCA) is the joint optimization method designed for it.
 
 ### 4.1 Architecture overview
 
@@ -68,7 +68,7 @@ The Scope-conditioned Forecasts and Scope Probabilities are optimized jointly. B
 
 ![Overview of the ISCF-BSCA architecture.](../../paper-figures/figure_iscf_bsca_method_overview.png)
 
-**Figure 4 | ISCF constructs one trajectory for Varied-Horizon Forecasting.** The Scope Forecasting Path generates region-wise predictions under multiple sharing scopes. The Target-Adaptive Allocation Path assigns scope-conditioned information to each future target. Weighted contraction yields one trajectory whose nested prefixes answer different horizon requests. Three representative scopes are shown for clarity; the probability map and trajectories are schematic.
+**Figure 4 | ISCF constructs one trajectory for Unified Varied-Horizon Forecasting.** The Scope Forecasting Path generates region-wise predictions under multiple sharing scopes. The Target-Adaptive Allocation Path assigns scope-conditioned information to each future target. Weighted contraction yields one trajectory whose nested prefixes answer different horizon requests. Three representative scopes are shown for clarity; the probability map and trajectories are schematic.
 
 ### 4.2 History state and future coordinate
 

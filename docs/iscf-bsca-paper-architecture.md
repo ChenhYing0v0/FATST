@@ -116,7 +116,20 @@ best上限仍为4/8。一个5/8 profile因mean MSE退化0.675%违反预注册gua
 
 ## 1. 核心术语
 
-### 1.1 Forecast horizon、future time step 与 forecast target
+### 1.1 Unified Varied-Horizon Forecasting
+
+本文任务的正式名称为：
+
+> **unified varied-horizon forecasting (UVHF)**
+
+UVHF指一个模型从同一observed history出发，生成一条horizon-agnostic
+prediction trajectory，并以其nested prefixes响应不同request endpoints。与之对照的
+protocol统一称为**horizon-specific forecasting**，其中不同forecast horizons由独立
+optimized predictors处理。`multi-horizon forecasting`只用于通用背景描述，
+`varied-horizon forecasting`只在引用既有文献或首次解释UVHF来源时使用，不再作为本文
+task的正式简称；不使用`horizon-specified forecasting`。
+
+### 1.2 Forecast horizon、future time step 与 forecast target
 
 给定长度为 $L$ 的历史观测
 
@@ -140,7 +153,7 @@ $$
 数学坐标系或代码中的 `coordinate_field` 时，才允许使用
 `future-step coordinate` 或 `future-step embedding`。
 
-### 1.2 Future-region sharing-demand heterogeneity
+### 1.3 Future-region sharing-demand heterogeneity
 
 问题层面的正式术语为：
 
@@ -179,7 +192,7 @@ evidence验证的建模假设，不是由“时间序列具有multi-scale struct
 不预先指定ISCF、scope arm、grouping或fusion。它也不表示requested horizon
 改变了同一future step的Bayes conditional mean。
 
-### 1.3 Region-dependent sharing-scale preference
+### 1.4 Region-dependent sharing-scale preference
 
 问题的可检验表现称为：
 
@@ -207,7 +220,7 @@ $s_b^\star=\arg\min_sR_{b,s}$ 稳定不同，则支持 region-dependent
 sharing-scale preference。这里的“preference”仅表示 matched empirical risk
 更低，不是数据区间对某种架构的内在或绝对偏好。
 
-### 1.4 Scope-indexed forecast field与latent-state sharing scope
+### 1.5 Scope-indexed forecast field与latent-state sharing scope
 
 ISCF正式解释为：
 
@@ -282,7 +295,7 @@ $$
 scope-conditioned slices。单个future step本身没有sharing scope；scope描述一组
 future steps之间的latent-state sharing关系。
 
-### 1.5 Horizon无关、future-step-indexed generation
+### 1.6 Horizon无关、future-step-indexed generation
 
 本文把统一预测函数写成：
 
@@ -316,7 +329,7 @@ allocation沿scope轴进行weighted contraction。这里的`step-specific`不表
 future steps相互独立；它们仍可在synthesis之前通过不同sharing scopes共享
 latent state。
 
-### 1.6 Cross-horizon prefix consistency
+### 1.7 Cross-horizon prefix consistency
 
 本文将统一模型需要满足的 nested-output contract 称为：
 
@@ -343,7 +356,7 @@ CHPC 是 task/system contract，不单独作为算法创新。本文的核心问
 满足 CHPC、使用一个 unified model 的同时，避免 single fixed
 cross-step sharing pattern 在整个 future domain 上形成表达折中。
 
-### 1.7 明确弃用或限制的表述
+### 1.8 明确弃用或限制的表述
 
 | Avoid | Replacement / Boundary |
 | --- | --- |
@@ -402,16 +415,16 @@ Abstract
 
 2. Related Work
    2.1 Fixed-Horizon Multi-Step Forecasting
-   2.2 Unified and Varied-Horizon Forecasting
+   2.2 Unified Varied-Horizon Forecasting
    2.3 Forecast Generation and Output-Side Modeling
    2.4 Multi-Scale Forecasting and Adaptive Allocation
 
 3. Problem Formulation and Empirical Motivation
-   3.1 Varied-Horizon Forecasting and Cross-Horizon Prefix Consistency
+   3.1 Unified Varied-Horizon Forecasting and Cross-Horizon Prefix Consistency
    3.2 Horizon-Specific Prefix Inconsistency
    3.3 Future-Region Sharing-Demand Heterogeneity
 
-4. ISCF-BSCA: Prefix-Consistent Unified Multi-Horizon Forecasting
+4. ISCF-BSCA: Prefix-Consistent Unified Varied-Horizon Forecasting
    4.1 Architecture Overview
    4.2 History State and Future Coordinate
    4.3 Generation of Scope-conditioned Forecasts
@@ -464,7 +477,7 @@ proof protocol移至Section 3，暂按Figures 2--3组织。
 写作目标：
 
 1. 从多个 planning ranges 的真实需求出发；
-2. 定义本文研究的是 nested horizons 上的 unified multi-horizon forecasting；
+2. 定义本文研究的是 nested horizons 上的 unified varied-horizon forecasting（UVHF）；
 3. 指出现行 benchmark 通常按 $H$ 分别训练模型；
 4. 暂不讨论 ISCF、scope 或 loss。
 
@@ -477,12 +490,13 @@ proof protocol移至Section 3，暂按Figures 2--3组织。
 > $H$, such as 96, 192, 336, and 720 steps. Recent work, including ElasTST and
 > time-series foundation models such as TimesFM and Time-MoE, has begun to
 > support varied or flexible forecasting horizons. Nevertheless, such efforts
-> remain sparse relative to the extensive horizon-specific literature, and
-> varied-horizon forecasting is still insufficiently developed as a unified
-> problem with an explicit task definition, systematic problem analysis, and
-> targeted decoder design. In this work, we formulate these requirements
-> explicitly and investigate how a unified forecaster should organize
-> output-side representations across different parts of the future domain.
+> remain sparse relative to the extensive horizon-specific literature. We
+> define **unified varied-horizon forecasting (UVHF)** as the setting in which
+> one model serves different request endpoints through a shared prediction
+> trajectory. UVHF remains insufficiently developed as an explicit task with
+> systematic problem analysis and targeted decoder design. We investigate how
+> its decoder should organize output-side representations across different
+> parts of the future domain.
 
 这里的 `multi-horizon` 特指：同一个 forecasting system 服务多个请求长度
 $H\in\mathcal H$，而不仅是一个模型一次输出多个 future steps。
@@ -538,7 +552,7 @@ $$
 
 建议正文逻辑：
 
-> We therefore formulate varied-horizon forecasting as learning a single
+> We formulate UVHF as learning a single
 > horizon-agnostic mapping from observed history and future-step index to
 > prediction. Under this formulation, a future-step prediction depends on the
 > history and its step index, but not on the requested horizon. For any
@@ -548,7 +562,7 @@ $$
 
 对应中文：
 
-> 因此，我们将varied-horizon forecasting形式化为学习一个从observed history与
+> 因此，我们将UVHF形式化为学习一个从observed history与
 > future-step index到prediction的统一horizon无关映射。在这一形式化下，某个
 > future step的预测由history及其step index决定，而不由requested horizon决定。
 > 对于任意$H_1<H_2$，两种请求在$1{:}H_1$范围内的预测因此保持一致。我们将
@@ -557,7 +571,7 @@ $$
 
 讨论过程中的细节：
 
-1. CHPC仍是varied-horizon forecasting system的basic requirement，不包装为
+1. CHPC仍是UVHF system的basic requirement，不包装为
    算法创新。
 2. 正文不采用“先生成max-$T$再crop”的实现叙事，只定义horizon无关、
    future-step-indexed prediction mapping。
@@ -671,7 +685,7 @@ Figure 1采用一张双面板schematic-led composite：
 
 精简caption：
 
-> **Figure 1 | Two challenges in varied-horizon forecasting.** **a**,
+> **Figure 1 | Two challenges in unified varied-horizon forecasting.** **a**,
 > Horizon-specific predictors may disagree at the same future time step
 > $\tau^\star$ despite identical observed history. **b**, The sharing extent
 > associated with the lowest risk can vary across future regions.
@@ -815,8 +829,8 @@ conclusion，提交前必须由main/ablation/transfer tables逐项兑现。**
 
 建议正文：
 
-> Our contributions are threefold. First, we formulate varied-horizon
-> forecasting as a unified system in which CHPC is a basic requirement, and
+> Our contributions are threefold. First, we formulate UVHF as a forecasting
+> system in which CHPC is a basic requirement, and
 > identify future-region sharing-demand heterogeneity as an output-side
 > challenge. Second, we introduce ISCF, which integrates forecasts generated
 > under multiple sharing scopes through target-conditioned allocation. Third,
@@ -829,7 +843,7 @@ conclusion，提交前必须由main/ablation/transfer tables逐项兑现。**
 
 对应中文：
 
-> 本文贡献主要包括三个方面。第一，我们将varied-horizon forecasting形式化为
+> 本文贡献主要包括三个方面。第一，我们将UVHF形式化为
 > 一个以CHPC为基本要求的unified system，并将future-region sharing-demand
 > heterogeneity识别为output-side challenge。第二，我们提出ISCF，通过
 > target-conditioned allocation整合multiple sharing scopes生成的预测。第三，
@@ -917,7 +931,7 @@ CHPC与future-region sharing-demand heterogeneity。
 > varied-horizon output strategy，由单一模型服务不同request endpoints，并返回
 > 同一prediction trajectory的prefix-consistent views。
 
-### 5.2 Unified and Varied-Horizon Forecasting
+### 5.2 Unified Varied-Horizon Forecasting
 
 区分：
 
@@ -987,7 +1001,7 @@ function。3.2使用`inconsistency`指违反CHPC的现象，保留CHPD/NCHPD作�
 disagreement的统计量。公式只承担formalization或matched measurement，不替代
 topic sentence与argument transition。
 
-### 6.1 Manuscript 3.1：Varied-Horizon Forecasting and CHPC
+### 6.1 Manuscript 3.1：Unified Varied-Horizon Forecasting and CHPC
 
 Section 3 v0.7先从same-history / shared-target语义定义CHPC：
 
@@ -1337,7 +1351,7 @@ Canonical manuscript draft：
 
 ### 7.1 Architecture Overview
 
-先以Figure 4引出两条协同路径。`Scope Forecasting Path`沿`History State/Future Coordinate -> Scope Matrix/Region Descriptor -> Scope-region State -> Scope-conditioned Forecasts:[B,C,T,S]`构建forecast field。`Target-Adaptive Allocation Path`沿`History State/Future Coordinate -> Condition Vector -> Allocation MLP -> Scope Probabilities:[B,C,T,S]`评估每个target的sharing-granularity preference。沿scope轴weighted contraction后形成`Varied-Horizon Forecasting` trajectory；BSCA不进入Figure 4 forward path。
+先以Figure 4引出两条协同路径。`Scope Forecasting Path`沿`History State/Future Coordinate -> Scope Matrix/Region Descriptor -> Scope-region State -> Scope-conditioned Forecasts:[B,C,T,S]`构建forecast field。`Target-Adaptive Allocation Path`沿`History State/Future Coordinate -> Condition Vector -> Allocation MLP -> Scope Probabilities:[B,C,T,S]`评估每个target的sharing-granularity preference。沿scope轴weighted contraction后形成UVHF trajectory；BSCA不进入Figure 4 forward path。
 
 ### 7.2 History State and Future Coordinate
 

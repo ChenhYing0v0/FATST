@@ -21,7 +21,7 @@ This document remains the frozen argumentative architecture of the remaining man
 
 ### 1.1 One-sentence argument
 
-In varied-horizon forecasting, ISCF-BSCA constructs one prefix-consistent prediction trajectory with target-adaptive output-side sharing, and its value must be established through system-level comparisons, matched ablations, internal-behavior analysis, efficiency measurements and end-to-end backbone transfer within explicitly stated protocol boundaries.
+In unified varied-horizon forecasting (UVHF), ISCF-BSCA constructs one prefix-consistent prediction trajectory with target-adaptive output-side sharing, and its value must be established through system-level comparisons, matched ablations, internal-behavior analysis, efficiency measurements and end-to-end backbone transfer within explicitly stated protocol boundaries.
 
 ### 1.2 Primary reader and evidence order
 
@@ -125,7 +125,7 @@ Only limitations that arise from the formulation or computation graph should ent
 
 The author has confirmed that the Conclusion should remain compact, use no subsections and follow the detailed structure in `docs/paper-drafts/iscf-bsca-conclusion-structure-design.md`. The resulting v0.2 prose draft is available at `docs/paper-drafts/iscf-bsca-conclusion-initial-draft.md` and uses two paragraphs:
 
-1. restate the varied-horizon forecasting problem, the CHPC formulation and the ISCF-BSCA response at principle level;
+1. restate the UVHF problem, the CHPC formulation and the ISCF-BSCA response at principle level;
 2. summarize the strongest system-level, ablation, efficiency and transfer evidence, then close on output-side sharing granularity as a design axis for unified forecasting.
 
 The fixed English draft contains 204 words. It introduces no new metrics, citations, mechanisms, limitations or future claims. Section 6 already contains the methodological limitations, so the Conclusion does not add a third limitations paragraph or repeat the Discussion.
