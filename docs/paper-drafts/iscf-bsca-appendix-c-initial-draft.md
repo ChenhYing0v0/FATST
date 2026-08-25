@@ -9,13 +9,16 @@ above the grid identifies the four benchmark endpoints
 $H\in\{96,192,336,720\}$, while faint vertical guides align those endpoints
 with the traces.
 
-The two samples for each dataset were selected deterministically by ranking
-validation windows according to the mean scaled MSE over the four prefix
-lengths on a fixed channel (channel 0), while enforcing a minimum separation
+To favour visual fidelity rather than low MSE alone, we first fix one channel
+per dataset using the global validation visual-fidelity score, excluding the
+lowest-variance 20% of channels. The score combines train-scale level error,
+trajectory correlation, first-difference correlation and amplitude agreement.
+Within the selected channel, validation windows are ranked by the same score,
+and the two lowest-scoring windows are retained subject to a minimum separation
 of 720 raw time steps between selected origins. The figure is therefore an
-illustrative view of representative low-error validation trajectories, not an
-estimate of population prevalence or an additional test-set result. The
-underlying predictions, ground truth, selection scores, raw origins and
+illustrative view of representative validation trajectories, not an estimate
+of population prevalence or an additional test-set result. The underlying
+predictions, ground truth, channel and sample scores, raw origins and
 checkpoint identifiers are provided in the accompanying source-data artifact.
 
 ![Validation-only qualitative varied-horizon forecasts.](../../analysis/iscf_bsca_appendix_c_prediction_export_20260825/outputs/figure_c1_varied_horizon_forecasts.png)

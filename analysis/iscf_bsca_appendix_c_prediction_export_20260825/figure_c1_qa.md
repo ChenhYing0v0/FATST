@@ -20,10 +20,13 @@
 - Seven dataset rows and two sample columns are aligned on a common future-step
   axis; y-limits are independently scaled per dataset and shared between the
   two samples in each row.
-- Ground truth and ISCF-BSCA use stable dark-slate and teal encodings. A single
-  nested-prefix ruler above the grid identifies the four horizon endpoints;
-  faint neutral vertical guides preserve alignment without overwhelming the
-  traces.
+- Ground truth and ISCF-BSCA use stable dark-slate and teal encodings. Paired
+  nested-prefix rulers above the sample columns identify the four horizon
+  endpoints; faint neutral vertical guides preserve alignment without
+  overwhelming the traces.
+- One prefix ruler is aligned above each sample column, and the selected
+  validation-audited channel is fixed within each dataset. Channel IDs and
+  sample scores are recorded in the source metadata.
 - Dataset names, sample headers, legend and axis labels do not overlap at the
   rendered 600-dpi size. The two right-hand columns intentionally omit
   duplicated y tick labels to preserve the compact grid.

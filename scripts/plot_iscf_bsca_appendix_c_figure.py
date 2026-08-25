@@ -293,49 +293,54 @@ def render_figure(
         style="italic",
     )
 
-    # A single nested-prefix ruler makes the varied-horizon contract explicit
-    # while keeping the forecast panels visually clean.
-    ruler = figure.add_axes([0.395, 0.907, 0.59, 0.034])
-    ruler.set_xlim(1, 720)
-    ruler.set_ylim(-0.35, 3.8)
-    ruler.axis("off")
-    for level, (horizon, color) in enumerate(zip(HORIZONS, PREFIX_COLORS)):
-        y = 3.15 - level
+    # Place one ruler directly above each sample column so that the prefix
+    # lengths share the same horizontal geometry as the traces below.
+    for column, show_labels in enumerate((True, False)):
+        panel_position = axes[0, column].get_position()
+        ruler = figure.add_axes(
+            [panel_position.x0, 0.886, panel_position.width, 0.039]
+        )
+        ruler.set_xlim(1, 720)
+        ruler.set_ylim(-0.35, 3.8)
+        ruler.axis("off")
+        for level, (horizon, color) in enumerate(zip(HORIZONS, PREFIX_COLORS)):
+            y = 3.15 - level
+            ruler.plot(
+                [1, horizon],
+                [y, y],
+                color=color,
+                linewidth=2.0 if horizon < 720 else 1.8,
+                solid_capstyle="round",
+                zorder=2,
+            )
+            ruler.plot(
+                horizon,
+                y,
+                marker="o",
+                markersize=2.7,
+                color=HORIZON_COLOR if horizon < 720 else "#6C777C",
+                markeredgecolor="white",
+                markeredgewidth=0.45,
+                zorder=3,
+            )
+            if show_labels:
+                ruler.text(
+                    horizon,
+                    y + 0.28,
+                    f"H={horizon}",
+                    ha="center" if horizon < 650 else "right",
+                    va="bottom",
+                    fontsize=5.0,
+                    color="#4D5A60",
+                )
         ruler.plot(
-            [1, horizon],
-            [y, y],
-            color=color,
-            linewidth=2.0 if horizon < 720 else 1.8,
+            [1, 720],
+            [-0.04, -0.04],
+            color="#D4DCDD",
+            linewidth=0.55,
             solid_capstyle="round",
-            zorder=2,
+            zorder=1,
         )
-        ruler.plot(
-            horizon,
-            y,
-            marker="o",
-            markersize=2.7,
-            color=HORIZON_COLOR if horizon < 720 else "#6C777C",
-            markeredgecolor="white",
-            markeredgewidth=0.45,
-            zorder=3,
-        )
-        ruler.text(
-            horizon,
-            y + 0.28,
-            f"H={horizon}",
-            ha="center" if horizon < 650 else "right",
-            va="bottom",
-            fontsize=5.0,
-            color="#4D5A60",
-        )
-    ruler.plot(
-        [1, 720],
-        [-0.04, -0.04],
-        color="#D4DCDD",
-        linewidth=0.55,
-        solid_capstyle="round",
-        zorder=1,
-    )
     legend_handles = [
         Line2D([0], [0], color=TARGET_COLOR, linewidth=1.0, label="Ground truth"),
         Line2D([0], [0], color=PREDICTION_COLOR, linewidth=1.15, label="ISCF-BSCA"),

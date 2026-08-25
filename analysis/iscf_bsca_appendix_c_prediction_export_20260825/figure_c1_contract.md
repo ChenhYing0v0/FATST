@@ -12,12 +12,18 @@
   while faint vertical guides align their endpoints across panels.
 - **Prefix encoding:** the ruler draws four nested horizontal segments ending
   at $H\in\{96,192,336,720\}$, with endpoint labels and a neutral $H=720$
-  terminus. This makes the varied-horizon relation explicit without repeating
-  prominent dashed lines in every trace panel.
+  terminus. One ruler is aligned with each sample column, so the segment lengths
+  share the same horizontal geometry as the traces below. This makes the
+  varied-horizon relation explicit without repeating prominent dashed lines in
+  every trace panel.
+- **Channel policy:** one validation-audited channel is fixed per dataset before
+  sample ranking; the selected channel identifiers are recorded in the source
+  metadata and visual-fidelity audit.
 - **Evidence role:** qualitative validation-only illustration, not a population
   prevalence estimate and not a replacement for Section 5 aggregate metrics.
 - **Source data:** `figure_c1_source_data.csv`, generated from the frozen
   `appendix_c_predictions.npz` arrays and their provenance metadata.
-- **Reviewer risk:** samples are selected by a deterministic low-error rule using
-  validation labels; this is disclosed in the source audit and should remain
-  explicit in the Appendix C caption.
+- **Reviewer risk:** the channel and samples are selected by a deterministic
+  visual-fidelity rule using validation labels; this is disclosed in the source
+  audit and should remain explicit in the Appendix C caption. The figure is
+  illustrative and must not be read as a prevalence estimate.

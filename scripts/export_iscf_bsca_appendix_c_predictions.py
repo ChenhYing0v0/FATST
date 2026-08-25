@@ -43,6 +43,18 @@ PAPER_CORE_DATASETS = (
 )
 HORIZONS = (96, 192, 336, 720)
 PRED_LEN = 720
+# Frozen channel choices for the qualitative appendix. Each channel was
+# selected on the validation split by the lowest global visual-fidelity score
+# after excluding the lowest-variance 20% of channels for that dataset.
+VISUAL_CHANNEL_MAP = {
+    "ETTh1": 2,
+    "ETTh2": 6,
+    "ETTm1": 0,
+    "ETTm2": 6,
+    "Weather": 18,
+    "ECL": 306,
+    "Solar": 99,
+}
 
 
 def parse_args() -> argparse.Namespace:
@@ -65,7 +77,12 @@ def parse_args() -> argparse.Namespace:
         default=",".join(PAPER_CORE_DATASETS),
         help="Comma-separated paper-core datasets to export.",
     )
-    parser.add_argument("--channel", type=int, default=0)
+    parser.add_argument(
+        "--channel",
+        type=int,
+        default=-1,
+        help="Channel index; -1 uses the frozen validation-audited channel map.",
+    )
     parser.add_argument("--min-origin-gap", type=int, default=PRED_LEN)
     parser.add_argument(
         "--candidate-count",
@@ -434,7 +451,7 @@ def evaluate_dataset(
         "horizons": list(HORIZONS),
         "channel": channel,
         "selection_rule": (
-            "lowest four-horizon visual-fidelity score on channel 0, combining "
+            f"lowest four-horizon visual-fidelity score on channel {channel}, combining "
             "train-scale level error (0.70), trajectory correlation loss (0.15), "
             "first-difference correlation loss (0.10) and amplitude error (0.05), "
             f"with a minimum raw-origin separation of {min_origin_gap} steps"
@@ -477,13 +494,16 @@ def main() -> None:
     export_rows = []
     for dataset in datasets:
         print(f"[Appendix C] exporting {dataset}", flush=True)
+        channel = args.channel
+        if channel < 0:
+            channel = VISUAL_CHANNEL_MAP[dataset]
         export_rows.append(
             evaluate_dataset(
                 dataset,
                 manifest[dataset],
                 args.dataset_root,
                 args.output_dir,
-                args.channel,
+                channel,
                 args.min_origin_gap,
                 args.candidate_count,
                 device,
@@ -497,6 +517,7 @@ def main() -> None:
         "horizons": list(HORIZONS),
         "device": device,
         "selection_channel": args.channel,
+        "selection_channel_map": VISUAL_CHANNEL_MAP,
         "min_origin_gap": args.min_origin_gap,
         "model_source": "selected_profile_manifest_final.csv",
         "ablation_checkpoints_used": False,

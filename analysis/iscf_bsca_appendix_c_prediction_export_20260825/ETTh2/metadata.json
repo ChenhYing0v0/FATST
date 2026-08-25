@@ -8,8 +8,8 @@
     336,
     720
   ],
-  "channel": 0,
-  "selection_rule": "lowest four-horizon mean scaled MSE on channel 0, with a minimum raw-origin separation of 720 steps",
+  "channel": 6,
+  "selection_rule": "lowest four-horizon visual-fidelity score on channel 0, combining train-scale level error (0.70), trajectory correlation loss (0.15), first-difference correlation loss (0.10) and amplitude error (0.05), with a minimum raw-origin separation of 720 steps",
   "profile_id": "h2_lr5e4",
   "trial_id": "ETTh2__h2_lr5e4",
   "candidate_version": "ISCF-BSCA-MAIN-v1-hpo-h1-h2-20260801",
@@ -20,20 +20,26 @@
   "test_labels_accessed": false,
   "raw_length": 17420,
   "validation_window_count": 2161,
+  "candidate_count": 256,
   "selected": [
     {
       "rank": 1,
       "dataset": "ETTh2",
       "split": "val",
-      "validation_window_index": 1922,
-      "raw_forecast_origin": 10561,
-      "channel": 0,
-      "selection_score_scaled_mse": 0.11137361079454422,
+      "validation_window_index": 1670,
+      "raw_forecast_origin": 10309,
+      "channel": 6,
+      "selection_score_visual_fidelity": 0.2644569907337427,
+      "visual_level_error": 0.2703576013445854,
+      "visual_level_correlation_loss": 0.17370489984750748,
+      "visual_difference_correlation_loss": 0.35154911130666733,
+      "visual_amplitude_error": 0.27992047369480133,
+      "selection_score_scaled_mse": 0.07625564187765121,
       "selection_separated_by_min_gap": true,
-      "mse_scaled_h96": 0.08152312785387039,
-      "mse_scaled_h192": 0.07285067439079285,
-      "mse_scaled_h336": 0.08634334802627563,
-      "mse_scaled_h720": 0.2047773003578186
+      "mse_scaled_h96": 0.05523037910461426,
+      "mse_scaled_h192": 0.055760111659765244,
+      "mse_scaled_h336": 0.058881163597106934,
+      "mse_scaled_h720": 0.13515090942382812
     },
     {
       "rank": 2,
@@ -41,13 +47,18 @@
       "split": "val",
       "validation_window_index": 519,
       "raw_forecast_origin": 9158,
-      "channel": 0,
-      "selection_score_scaled_mse": 0.18491819500923157,
+      "channel": 6,
+      "selection_score_visual_fidelity": 0.26725254170596596,
+      "visual_level_error": 0.3006136901676655,
+      "visual_level_correlation_loss": 0.08385606110095978,
+      "visual_difference_correlation_loss": 0.2433568686246872,
+      "visual_amplitude_error": 0.39817725121974945,
+      "selection_score_scaled_mse": 0.09988392144441605,
       "selection_separated_by_min_gap": true,
-      "mse_scaled_h96": 0.14700329303741455,
-      "mse_scaled_h192": 0.1585325449705124,
-      "mse_scaled_h336": 0.19592498242855072,
-      "mse_scaled_h720": 0.23821189999580383
+      "mse_scaled_h96": 0.02792292647063732,
+      "mse_scaled_h192": 0.07817709445953369,
+      "mse_scaled_h336": 0.09935365617275238,
+      "mse_scaled_h720": 0.19408200681209564
     }
   ]
 }
