@@ -27,3 +27,7 @@ ablation checkpoint；它只读取
 每个数据集输出 `appendix_c_predictions.npz`、`selection.csv` 和 `metadata.json`，
 并在运行根目录保存 `run_metadata.json`。这些材料只用于 Appendix C 的定性展示，
 不改变 Section 5 的正式指标，也不构成新的 checkpoint 选择或 test-set 评估。
+
+## Figure C1 绘制
+
+`scripts/plot_iscf_bsca_appendix_c_figure.py`读取上述冻结预测数组，并输出SVG、PDF、PNG、TIFF与source-data CSV。正文负责提供`C. VISUALIZATION`章节层级，因此图片内部标题只保留`Representative validation trajectories`，不重复显示`Appendix C`。本次标题调整不改变样本、曲线、prefix ruler、坐标轴范围或配色。

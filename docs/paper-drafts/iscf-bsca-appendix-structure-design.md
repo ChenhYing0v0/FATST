@@ -1,12 +1,12 @@
 # ISCF-BSCA Appendix Structure Design
 
-**Version:** v0.4-reference-aligned-manuscript
+**Version:** v0.5-author-refined-appendix
 **Date:** 2026-08-25
 **Scope:** minimal appendix routing for the frozen Sections 1--7 manuscript
 
 ## 1. Design principle
 
-The appendices should carry only material needed to interpret the evaluation metrics, reproduce the reported protocol, inspect the complete benchmark coverage, or understand the qualitative behaviour of the unified forecast. They should not repeat the method, duplicate main-text figures, or introduce new experiments. Appendix A follows the compact sequence `Metric Details -> Datasets -> Implementation Details`, supported by three protocol tables; Appendix B retains the complete horizon-wise result cells behind Tables 1 and 2; Appendix C adds one validation-only qualitative figure for the seven datasets without a separate visible appendix heading.
+The appendices should carry only material needed to interpret the evaluation metrics, reproduce the reported protocol, inspect the complete benchmark coverage, or understand the qualitative behaviour of the unified forecast. They should not repeat the method, duplicate main-text figures, or introduce new experiments. Appendix A follows the compact sequence `Metric Details -> Datasets -> Implementation Details`, supported by three protocol tables; Appendix B retains the complete horizon-wise result cells behind Tables 1 and 2; Appendix C is restored as `Visualization` and contains one validation-only qualitative figure for the seven datasets.
 
 The attached TimeAlign paper is treated as a reference for appendix organization and presentation, not as an instruction document or a source of FATST experimental values. Appendix A follows the structural role of its Appendix D, Appendix B follows the concise full-results entry used in Appendix E.1, and Appendix C follows the compact visualization presentation used in Appendix F. All reported values remain governed by the frozen FATST protocol and local audit artifacts.
 
@@ -16,9 +16,9 @@ The attached TimeAlign paper is treated as a reference for appendix organization
 
 Appendix A is organized into three concise subsections. `A.1 Metric Details` defines MSE and MAE; `A.2 Datasets` introduces the four dataset families and reports their statistics and split construction; `A.3 Implementation Details` records the software/hardware environment, optimization settings and dataset-specific ISCF-BSCA configuration.
 
-**Table A1 | Dataset metadata and splits.** One row per paper-core dataset: ETTm1, ETTm2, ETTh1, ETTh2, Weather, ECL and Solar. Recommended columns are `Dataset`, `Variables`, `Sampling frequency`, `Raw observations`, `Split rule`, and `Train/validation/test boundaries or window counts`. Raw series length and window counts must be labelled separately; they are not interchangeable.
+**Table A1 | Dataset statistics.** The ETT subsets may be grouped where their statistics are identical. The compact columns are `Dataset`, `Variables`, `Sampling frequency`, `Dataset size`, and `Domain`. Exact split boundaries and sliding-window counts remain in the audit artifact rather than the manuscript table; the accompanying prose states the standard ETT split and chronological 70/10/20 split used by the remaining datasets.
 
-**Table A2 | Shared training and evaluation protocol.** One row per dataset, or a compact grouped table when values are identical. Recommended columns are `Look-back $L$`, `Target horizon $T$`, `Evaluated horizons`, `Optimizer`, `Initial learning rate`, `Learning-rate schedule`, `Batch size`, `Gradient accumulation`, `Maximum epochs`, `Early-stopping patience`, `Checkpoint rule` and `Seed`. The table should make clear that checkpoints are selected on the four-horizon validation mean MSE, while the frozen paper profiles are test-informed at the dataset level; this disclosure belongs in the table note rather than the main narrative.
+**Table A2 | Training and evaluation settings.** One row is retained per dataset. The compact columns are `Max Length`, `Initial learning rate`, `Batch size`, `Gradient accumulation`, `Maximum epochs`, and `Early-stopping patience`. Optimizer, learning-rate schedule, seed and validation checkpoint selection are stated once in the surrounding prose.
 
 **Table A3 | Dataset-specific ISCF-BSCA configuration.** One row per dataset. Recommended columns are `Scope set`, `Mode rank`, `Scope-wise loss weight`, `Uniform-prefix loss weight/ramp`, `Allocation-balance final weight/ramp`, and the representation settings needed to reproduce the decoder interface (`patch number`, `Encoder width`, `feed-forward width`, `dropout`, `weight decay`). The scopes and loss coefficients are global architectural settings and may be shown as repeated values or marked “shared across datasets”; dataset-specific values must be listed explicitly. The table should not include HPO trial histories, source-role prose or checkpoint hashes.
 
@@ -33,9 +33,9 @@ Under `B.1 Main Experiments`, one concise paragraph introduces the full-precisio
 
 Negative cells remain visible. The appendix tables are the complete audit surface behind Tables 1 and 2; they do not change the main-text aggregation or source-role interpretation.
 
-### Appendix C. Qualitative varied-horizon forecasts
+### Appendix C. Visualization
 
-The assembled manuscript does not display a separate Appendix C heading. It follows Appendix F of the reference paper by moving directly from a short visualization paragraph to Figure C1; the `C1` figure label preserves appendix routing.
+The assembled manuscript restores a visible `C. VISUALIZATION` heading. Figure C1 itself contains only the title `Representative validation trajectories`; the appendix identifier belongs to the manuscript hierarchy and is not repeated inside the image.
 
 **Figure C1** should contain a compact seven-row by two-column grid: two samples for each paper-core dataset. Each panel plots only the ground-truth future and the unified ISCF-BSCA forecast over $T=720$ steps. A shared nested-prefix ruler above the grid, complemented by faint vertical endpoint guides, shows the four-horizon evaluation prefixes at $H=96$, $192$, $336$ and $720$. The colour, line weight and axis treatment should follow the Nature-figure contract and the visual language already established for Figures 5--7.
 
@@ -48,7 +48,7 @@ The source-data manifest for Figure C1 should record `dataset`, `split`, `origin
 | Section | Appendix requirement | Routing decision |
 | --- | --- | --- |
 | Sections 1--4 | Definitions, method equations and Figures 1--4 are self-contained. | No appendix item. |
-| 5.1 Experimental setup | Metric definitions, dataset descriptions and statistics, split boundaries, training settings and dataset-specific ISCF-BSCA configuration. | Appendix A.1--A.3 and Tables A1--A3. |
+| 5.1 Experimental setup | Metric definitions, dataset descriptions and compact statistics, split protocol, training settings and dataset-specific ISCF-BSCA configuration. | Appendix A.1--A.3 and Tables A1--A3. |
 | 5.2 Horizon-specific comparison | Complete dataset--horizon cells behind compact Table 1. | Appendix B, Table B1. |
 | 5.3 One-model-all-horizons evaluation | Complete dataset--horizon cells behind compact Table 2. | Appendix B, Table B2. |
 | 5.4 Accuracy and system cost | Figure 6 is the sole main-text carrier; its numerical source remains an audit artifact. | No additional appendix table. |
@@ -67,6 +67,6 @@ The minimal plan excludes repeated copies of Figures 2, 3, 5, 6 and 7; historica
 2. **Configuration extraction:** completed for the selected dataset-level profiles from the frozen manifest, phase configs and trial ledgers. The manuscript-ready tables are drafted in `docs/paper-drafts/iscf-bsca-appendix-a-initial-draft.md`; values were not inferred from trial names.
 3. **Qualitative data export:** completed on 2026-08-25 using the frozen Main-I/II selected profiles. The validation-only export, checkpoint hashes, selected origins and raw prediction arrays are recorded in `analysis/iscf_bsca_appendix_c_prediction_export_20260825/`; no ablation checkpoint or test label was used.
 4. **Figure C1 generation and QA:** completed on 2026-08-25 and revised after a Weather/ECL candidate audit. The seven-row by two-column figure, source-data CSV, editable SVG/PDF and 600-dpi PNG/TIFF exports passed the strict static preflight and visual QA; the figure now uses a shared nested-prefix ruler and faint endpoint guides.
-5. **Manuscript synchronization:** the complete Appendix draft is assembled in `docs/paper-drafts/iscf-bsca-appendix-initial-draft.md` using the reference-aligned A/D, B/E.1 and C/F presentation roles. Appendix B points to the frozen canonical LaTeX tables, and the heading-free Appendix C block points to the accepted Figure C1 and source-data exports; no new model training or formal test is implied.
+5. **Manuscript synchronization:** the complete Appendix draft is assembled in `docs/paper-drafts/iscf-bsca-appendix-initial-draft.md`. Appendix A uses the author-refined compact dataset and training tables, Appendix B points to the frozen canonical LaTeX tables, and Appendix C restores the `Visualization` heading while Figure C1 omits the redundant appendix identifier; no new model training or formal test is implied.
 
 No new architecture, training, remote launch or formal test is implied by this plan. The final-profile prediction arrays, candidate audit and accepted Figure C1 exports are available for manuscript assembly.

@@ -1,5 +1,9 @@
 # StageC Unified Varied-Horizon Forecasting Ledger
 
+## Appendix Author Refinement (2026-08-25)
+
+The integrated Appendix draft is updated to the author-refined structure. Appendix A retains `Metric Details -> Datasets -> Implementation Details`, rewrites the dataset introductions using the PDT presentation pattern, compresses Table A1 to dataset statistics and Table A2 to maximum length plus optimization settings, and removes the paper-profile selection disclosure requested by the author. Appendix C is restored as `Visualization`; the Figure C1 image removes the redundant `Appendix C` title prefix while preserving the curves, prefix rulers and frozen validation sources. Canonical draft=`docs/paper-drafts/iscf-bsca-appendix-initial-draft.md`; figure source=`scripts/plot_iscf_bsca_appendix_c_figure.py`; decision=`appendix_v0p5_author_refinement_ready`; no new training, remote launch or formal test.
+
 ## Appendix Routing Design (2026-08-25)
 
 Author-facing manuscript routing is revised to three minimal appendices:

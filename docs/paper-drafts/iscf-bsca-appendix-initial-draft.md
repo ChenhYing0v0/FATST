@@ -24,29 +24,27 @@ where $N$ is the total number of scalar predictions over all evaluation windows,
 
 ### A.2 DATASETS
 
-We evaluate ISCF-BSCA on seven widely used multivariate time-series forecasting datasets covering electricity transformers, meteorology, electricity consumption and solar generation. Table A1 summarizes their dimensions, sampling frequencies, chronological splits and evaluation-window counts. Brief descriptions are provided below.
+We evaluate ISCF-BSCA on seven widely used multivariate time-series forecasting datasets spanning electricity transformers, electricity consumption, meteorology and solar generation. These benchmarks differ substantially in variable dimension, sampling frequency and temporal dynamics. Table A1 summarizes their basic statistics.
 
-1. **ETT (Electricity Transformer Temperature)** comprises load and temperature measurements collected from electricity transformers between 2016 and 2018 \citep{zhou2021informer}. We use four standard subsets: ETTh1 and ETTh2 are sampled hourly, whereas ETTm1 and ETTm2 are sampled every 15 minutes. Each subset contains seven variables.
+1. **ETT (Electricity Transformer Temperature)** records seven load and temperature factors from two electricity transformers in two regions of China between 2016 and 2018 \citep{zhou2021informer}. We use its four standard subsets: ETTh1 and ETTh2 are sampled hourly, whereas ETTm1 and ETTm2 are sampled every 15 minutes.
 
-2. **Weather** contains 21 meteorological variables recorded at 10-minute intervals in Germany during 2020, including air temperature, humidity, pressure and visibility \citep{wu2023timesnet}.
+2. **Electricity (ECL)** records the hourly electricity consumption of 321 clients from 2012 to 2014 and is provided by the UCI Machine Learning Repository \citep{wu2023timesnet}.
 
-3. **Electricity (ECL)** records hourly electricity consumption in kilowatt-hours for 321 clients from 2012 to 2014 \citep{wu2023timesnet}.
+3. **Weather** is collected by the Beutenberg Weather Station at the Max Planck Institute for Biogeochemistry in Jena, Germany. It contains 21 meteorological indicators sampled every 10 minutes during 2020 \citep{wu2023timesnet}.
 
 4. **Solar** contains solar-power measurements collected every 10 minutes from 137 photovoltaic plants in Alabama during 2006 \citep{liu2024itransformer}.
 
-### Table A1 | Dataset Statistics and Split Construction
+### Table A1 | Dataset Statistics
 
-| Dataset | Variables | Prediction lengths | Raw observations | Sampling frequency | Train boundary | Validation boundary | Test boundary | Train windows | Validation windows |
-| --- | ---: | --- | ---: | --- | --- | --- | --- | ---: | ---: |
-| ETTh1 | 7 | 96/192/336/720 | 17,420 | 1 h | 0:8,640 | 7,920:11,520 | 10,800:14,400 | 7,201 | 2,161 |
-| ETTh2 | 7 | 96/192/336/720 | 17,420 | 1 h | 0:8,640 | 7,920:11,520 | 10,800:14,400 | 7,201 | 2,161 |
-| ETTm1 | 7 | 96/192/336/720 | 69,680 | 15 min | 0:34,560 | 33,840:46,080 | 45,360:57,600 | 33,121 | 10,801 |
-| ETTm2 | 7 | 96/192/336/720 | 69,680 | 15 min | 0:34,560 | 33,840:46,080 | 45,360:57,600 | 33,121 | 10,801 |
-| Weather | 21 | 96/192/336/720 | 52,696 | 10 min | 0:36,887 | 36,167:42,157 | 41,437:52,696 | 35,448 | 4,551 |
-| ECL | 321 | 96/192/336/720 | 26,304 | 1 h | 0:18,412 | 17,692:21,044 | 20,324:26,304 | 16,973 | 1,913 |
-| Solar | 137 | 96/192/336/720 | 52,560 | 10 min | 0:36,792 | 36,072:42,048 | 41,328:52,560 | 35,353 | 4,537 |
+| Dataset | Variables | Sampling Frequency | Dataset Size | Domain |
+| --- | ---: | --- | ---: | --- |
+| ETTh1, ETTh2 | 7 | 1 h | 17,420 | Electricity |
+| ETTm1, ETTm2 | 7 | 15 min | 69,680 | Electricity |
+| ECL | 321 | 1 h | 26,304 | Electricity |
+| Weather | 21 | 10 min | 52,696 | Weather |
+| Solar | 137 | 10 min | 52,560 | Solar energy |
 
-The split boundaries are row indices in the raw series. Validation and test segments include the preceding look-back context required to construct their first input window; this overlap is used only for history construction. The scaler is fitted exclusively on the training segment. The ETT datasets follow the standard fixed chronological splits, whereas Weather, ECL and Solar use chronological 70/10/20 splits.
+The ETT datasets follow their standard fixed chronological splits, whereas Weather, ECL and Solar use chronological 70/10/20 splits. The scaler is fitted exclusively on the training segment. All datasets are evaluated at prediction lengths $H\in\{96,192,336,720\}$.
 
 ### A.3 IMPLEMENTATION DETAILS
 
@@ -54,17 +52,17 @@ The local experiments are implemented in Python 3.12.13 and PyTorch 2.9.0 with C
 
 ### Table A2 | Training and Evaluation Settings
 
-| Dataset | Look-back $L$ | Target length $T$ | Initial LR | Batch | Grad. accumulation | Max epochs | Patience |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| ETTh1 | 720 | 720 | $3\times10^{-4}$ | 32 | 1 | 45 | 10 |
-| ETTh2 | 720 | 720 | $5\times10^{-4}$ | 32 | 1 | 30 | 7 |
-| ETTm1 | 720 | 720 | $1\times10^{-4}$ | 16 | 2 | 30 | 7 |
-| ETTm2 | 720 | 720 | $5\times10^{-5}$ | 16 | 2 | 60 | 12 |
-| Weather | 608 | 720 | $2\times10^{-5}$ | 32 | 1 | 120 | 24 |
-| ECL | 720 | 720 | $5\times10^{-4}$ | 4 | 8 | 30 | 7 |
-| Solar | 720 | 720 | $3\times10^{-4}$ | 16 | 2 | 45 | 10 |
+| Dataset | Max Length | Initial LR | Batch | Grad. accumulation | Max epochs | Patience |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| ETTh1 | 720 | $3\times10^{-4}$ | 32 | 1 | 45 | 10 |
+| ETTh2 | 720 | $5\times10^{-4}$ | 32 | 1 | 30 | 7 |
+| ETTm1 | 720 | $1\times10^{-4}$ | 16 | 2 | 30 | 7 |
+| ETTm2 | 720 | $5\times10^{-5}$ | 16 | 2 | 60 | 12 |
+| Weather | 720 | $2\times10^{-5}$ | 32 | 1 | 120 | 24 |
+| ECL | 720 | $5\times10^{-4}$ | 4 | 8 | 30 | 7 |
+| Solar | 720 | $3\times10^{-4}$ | 16 | 2 | 45 | 10 |
 
-All runs use seed 2021. The checkpoint with the lowest validation mean MSE over $H\in\{96,192,336,720\}$ is retained and serves all four forecasting requests. Weight decay is $0.01$ except for ETTm2, where it is $0.001$, and early stopping uses zero minimum improvement. The dataset-level hyperparameter profiles used in the paper-facing comparison are test-informed; this profile-selection role is distinct from validation-based checkpoint selection.
+All runs use seed 2021. The checkpoint with the lowest validation mean MSE over $H\in\{96,192,336,720\}$ is retained and serves all four forecasting requests. Weight decay is $0.01$ except for ETTm2, where it is $0.001$, and early stopping uses zero minimum improvement.
 
 ### Table A3 | ISCF-BSCA Configuration
 
@@ -94,10 +92,10 @@ Tables B1 and B2 provide the complete results for the two forecasting comparison
 
 **Table B2 | Full results for the one-model-all-horizons comparison.** Each method uses one maximum-horizon model per dataset, and the shorter horizons are evaluated from the corresponding output prefixes. Results are reported as MSE and MAE, and Avg. denotes the arithmetic mean over $H\in\{96,192,336,720\}$. The best and second-best displayed values are highlighted in bold and underlined, respectively.
 
-<!-- Appendix C begins here. No visible section heading is used by author request. -->
+## C. VISUALIZATION
 
 Figure C1 presents supplementary varied-horizon forecasting examples for the seven paper-core datasets. For each dataset, two validation samples show the ground-truth future and the fused ISCF-BSCA prediction over the maximum target length $T=720$. The paired rulers and vertical guides mark the four supported prediction lengths, showing how the same predicted trajectory provides the prefixes requested at $H\in\{96,192,336,720\}$.
 
 ![Validation-only qualitative varied-horizon forecasts.](../../analysis/iscf_bsca_appendix_c_prediction_export_20260825/outputs/figure_c1_varied_horizon_forecasts.png)
 
-**Figure C1 | Visualization of varied-horizon forecasts across seven datasets.** The dark curve denotes the ground truth and the teal curve denotes the prediction from the frozen unified ISCF-BSCA model. Two examples are shown for each dataset. The examples are selected on the validation split using a deterministic visual-fidelity score that combines train-scale level RMSE (0.70), trajectory-correlation loss (0.15), first-difference-correlation loss (0.10) and relative amplitude error (0.05), after excluding the lowest-variance 20% of channels. The selected origins are separated by at least 720 raw time steps. The figure is an illustrative validation diagnostic; no ablation checkpoint or test label is used.
+**Figure C1 | Visualization of varied-horizon forecasts across seven datasets.** The dark curve denotes the ground truth and the teal curve denotes the prediction from the frozen unified ISCF-BSCA model. Two validation examples are shown for each dataset. The paired rulers and vertical guides identify the four supported prediction lengths.

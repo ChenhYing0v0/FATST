@@ -2,17 +2,19 @@
 
 ## Appendix routing design (2026-08-25)
 
-The manuscript-wide Appendix plan uses a minimal, reference-aligned structure.
+The manuscript-wide Appendix plan uses a minimal, author-refined structure.
 Appendix A follows `Metric Details -> Datasets -> Implementation Details`,
-with definitions of MSE/MAE, concise dataset introductions and three supporting
-tables for dataset statistics and splits, training/evaluation settings, and
-dataset-specific ISCF-BSCA configuration. Appendix B uses a concise full-results
+with definitions of MSE/MAE, PDT-informed dataset introductions and three supporting
+tables for compact dataset statistics, training/evaluation settings, and dataset-specific
+ISCF-BSCA configuration. Table A1 reports dataset size rather than separate split
+boundaries and window counts; Table A2 reports maximum prediction length without
+the look-back column. Appendix B uses a concise full-results
 entry before the complete dataset--horizon--metric cells behind Tables 1 and 2,
-including negative cells. Appendix C has no separate visible large heading and
-moves directly to one validation-only qualitative figure with two deterministically
-selected fused-forecast examples for each of the seven paper-core datasets and
-markers for the four evaluated prefixes. The attached TimeAlign paper is a
-layout and writing reference only; the frozen FATST protocol remains
+including negative cells. Appendix C is restored as `Visualization` and contains
+one validation-only qualitative figure with two examples for each of the seven
+paper-core datasets and markers for the four evaluated prefixes. The Figure C1
+title no longer repeats `Appendix C`. The attached PDT and TimeAlign papers are
+content-organization and writing references only; the frozen FATST protocol remains
 authoritative. The final-profile prediction
 arrays, Figure C1 exports and source-data manifest are now available locally.
 The integrated manuscript draft is `docs/paper-drafts/iscf-bsca-appendix-initial-draft.md`,

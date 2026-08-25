@@ -275,7 +275,7 @@ def render_figure(
     figure.text(
         0.105,
         0.965,
-        "Appendix C | Representative validation trajectories",
+        "Representative validation trajectories",
         ha="left",
         va="bottom",
         fontsize=8.8,

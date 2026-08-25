@@ -24,6 +24,9 @@
   nested-prefix rulers above the sample columns identify the four horizon
   endpoints; faint neutral vertical guides preserve alignment without
   overwhelming the traces.
+- The image title is `Representative validation trajectories`; the redundant
+  `Appendix C` prefix is absent because the manuscript supplies the section
+  hierarchy.
 - One prefix ruler is aligned above each sample column, and the selected
   validation-audited channel is fixed within each dataset. Channel IDs and
   sample scores are recorded in the source metadata.

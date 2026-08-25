@@ -432,16 +432,16 @@ Abstract
 7. Conclusion
 
 Appendices
-   A. Datasets, Training Protocol and ISCF Configuration
-   B. Complete Horizon-wise Benchmark Results
-   C. Qualitative Varied-Horizon Forecasts
+   A. Experiment Details
+   B. Full Results
+   C. Visualization
 ```
 
 `Discussion and Limitations`用于分离result observation、task/system interpretation与methodological limitations。Section 6不再设置subsection。完整negative cells仅随Main-I/Main-II的逐horizon结果保留在Appendix B；secondary controls、敏感性结果与历史诊断不自动进入Appendix，除非后续获得独立的作者决定。
 
-Appendix A follows the compact sequence `Metric Details -> Datasets -> Implementation Details`: it defines MSE/MAE, introduces the four dataset families, and uses three tables for dataset statistics and split construction, training/evaluation settings, and dataset-specific ISCF-BSCA configuration. Appendix B uses a concise `Full Results -> Main Experiments` entry before the complete horizon-wise tables. Appendix C has no separate visible large heading and is reserved for one validation-only qualitative figure with two deterministically selected fused-forecast examples per paper-core dataset; it is not a new effectiveness experiment.
+Appendix A follows the compact sequence `Metric Details -> Datasets -> Implementation Details`: it defines MSE/MAE, introduces the four dataset families, and uses three tables for compact dataset statistics, training/evaluation settings, and dataset-specific ISCF-BSCA configuration. Table A1 reports `Dataset / Variables / Sampling frequency / Dataset size / Domain`, while Table A2 reports `Max Length` without a look-back column. Appendix B uses a concise `Full Results -> Main Experiments` entry before the complete horizon-wise tables. Appendix C is restored as `Visualization`; Figure C1 itself omits the redundant `Appendix C` title prefix and retains only the representative-trajectory title.
 
-The Appendix protocol audit is complete for the seven paper-core datasets, and the reference-aligned manuscript draft is integrated in `docs/paper-drafts/iscf-bsca-appendix-initial-draft.md`. Appendix B routes the complete horizon-wise benchmark cells to the frozen canonical LaTeX sources, while the heading-free Appendix C block uses the accepted validation-only Figure C1 and its source-data export.
+The Appendix protocol audit is complete for the seven paper-core datasets, and the author-refined manuscript draft is integrated in `docs/paper-drafts/iscf-bsca-appendix-initial-draft.md`. Appendix B routes the complete horizon-wise benchmark cells to the frozen canonical LaTeX sources, while Appendix C uses the revised validation-only Figure C1 and its unchanged source-data export.
 
 ### 3.1 Sections 5--7 author-fixed structural design
 
