@@ -1,5 +1,9 @@
 # StageC Unified Varied-Horizon Forecasting Ledger
 
+## HoriScope Paper-Facing Naming Migration (2026-08-25)
+
+Author已确认论文方法展示名为`HoriScope`，正式标题为`HoriScope: Adaptive Multi-Scope Decoding for Unified Varied-Horizon Time-Series Forecasting`。Paper-facing terminology固定为task=`UVHF`、model/framework=`HoriScope`、architecture=`HoriScope decoder`/`adaptive multi-scope decoder`、training strategy=`BSCA`、structural property=`CHPC`。正文、图片、表格与Appendix不再使用旧方法名；冻结candidate IDs、artifact paths、configs与历史ledger继续保留`ISCF-BSCA-v1`和`ISCF-BSCA-MAIN-v1`以保证traceability。No architecture、objective、metric、evidence、authorization or claim change。Decision=`horiscope_paper_facing_naming_migration_integrated`。
+
 ## UVHF Terminology and Abstract Refinement (2026-08-25)
 
 The formal task name is frozen as `Unified Varied-Horizon Forecasting (UVHF)`, contrasted with `horizon-specific forecasting`. The Abstract and canonical manuscript-facing drafts use UVHF after its first definition; `multi-horizon forecasting` remains generic background terminology. The Abstract is reorganized around the decoder-side requirements of CHPC and heterogeneous cross-range forecast generation, with aggregate state-of-the-art, system-cost, ablation and two-backbone transfer evidence but no exact values or named baseline comparison. Canonical draft=`docs/paper-drafts/iscf-bsca-abstract-initial-draft.md`; decision=`uvhf_official_task_name_abstract_v0p4_author_review_candidate`; no new implementation, training, remote launch or formal test.
@@ -46,7 +50,7 @@ authorized. Decision=`appendix_a_protocol_and_config_audit_complete_c_export_pen
 | --- | --- |
 | `stage_id` | `StageC-UVHF` |
 | `paper_role` | problem-first Unified Varied-Horizon Forecasting (UVHF) research；不再预设两项机制形式 |
-| `active_question` | Sections 1--7 and Figure 5 v5.3 temporarily fixed usable；Section 7 v0.2 Conclusion fixed |
+| `active_question` | HoriScope manuscript naming migration integrated across Sections 1--7, figures, tables and Appendix；final manuscript QA pending |
 | `source_evidence` | historical/source-faithful `A6-LBF-r256` |
 | `mechanism_control` | Core-Ablation five matched end-to-end variants；historical `ISCF-EQUAL`只作旧diagnostic |
 | `active_candidates` | architecture family frozen；`ISCF-BSCA-v1`=exact ablation anchor；`ISCF-BSCA-MAIN-v1`=8-dataset tuned main candidate；Introduction v0.9、Section 2 v0.2、Section 3 v0.7、Section 4 v0.7、Section 6 v0.4、Section 7 v0.2与Figure 5 v5.3 temporarily frozen usable；Section 5 v0.13中5.6 narrative为author-review candidate；Figure 4 visual design temporarily fixed |
@@ -62,11 +66,11 @@ authorized. Decision=`appendix_a_protocol_and_config_audit_complete_c_export_pen
 
 | Field | Content |
 | --- | --- |
-| `current_11_step` | paper experiment matrix closed；Section 5 v0.13 author-review candidate；Sections 6--7 temporarily fixed usable；Figure 5 v5.3 fixed |
-| `current_candidate` | Sections 6--7 paper writing |
-| `latest_decision` | `section7_v0p2_temporarily_frozen_usable` |
-| `writing_latest_decision` | `section7_v0p2_temporarily_frozen_usable` |
-| `next_required_action` | full-manuscript assembly and targeted cross-section consistency audit；no new experiment required |
+| `current_11_step` | paper experiment matrix closed；Sections 1--7 and Appendix assembled；HoriScope paper-facing naming migration integrated |
+| `current_candidate` | full-manuscript terminology and submission QA |
+| `latest_decision` | `horiscope_paper_facing_naming_migration_integrated` |
+| `writing_latest_decision` | `horiscope_paper_facing_naming_migration_integrated` |
+| `next_required_action` | compile and visually audit the renamed manuscript；no new experiment required |
 | `method_training_authorized` | false；no matched controls、extra HPO/seeds or formal test required |
 | `rollback_point` | data mismatch->H0；HPO instability->H1/H2；frozen-budget test-tuned optimum non-SOTA->report/narrow claim or new candidate gate；no per-H/cell tuning |
 

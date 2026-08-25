@@ -1,5 +1,7 @@
 # ISCF-BSCA 论文实验表格总账
 
+> **Paper-facing display name (2026-08-25):** all manuscript tables display the method as `HoriScope`. The historical registry title, candidate IDs and source-system keys remain unchanged for artifact provenance; `manuscript/build_manuscript.py` performs the paper-facing label mapping without altering values.
+
 ## 1. 总账边界
 
 本文件是当前 **paper-facing experiment tables** 的统一入口。它汇总已经完成的

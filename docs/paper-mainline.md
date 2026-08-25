@@ -5,7 +5,7 @@
 | Field | Content |
 | --- | --- |
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
-| `working_title` | `ISCF-BSCA: Prefix-Consistent Unified Varied-Horizon Forecasting` |
+| `working_title` | `HoriScope: Adaptive Multi-Scope Decoding for Unified Varied-Horizon Time-Series Forecasting` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
 | `current_11_step` | Sections 1--7、Appendix、Figures 1--7与41-entry bibliography assembled；reference integration audited |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
@@ -19,6 +19,8 @@
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `paper_core_status` | architecture family frozen；Sections 1--7与Figure 5 v5.3 temporarily frozen usable；Section 5.4 Figure 6 only，Section 5.7 Figure 7 only；allocation aggregate accuracy direction positive但prevalence、sparse/oracle-routing claims仍关闭 |
+
+[HoriScope Paper-Facing Naming Migration, 2026-08-25] Author确认将论文展示名由原双缩写迁移为`HoriScope`，标题固定为`HoriScope: Adaptive Multi-Scope Decoding for Unified Varied-Horizon Time-Series Forecasting`。Terminology ledger固定为task=`UVHF`、model/framework=`HoriScope`、architecture=`HoriScope decoder`或`adaptive multi-scope decoder`、training strategy=`BSCA`、structural property=`CHPC`。Sections 1--7、Abstract、Figures 6--7、main/ablation/Appendix tables、Appendix A--C与LaTeX labels已完成上下文敏感迁移。冻结candidate IDs、artifact paths、configs与历史experiment records继续保留`ISCF-BSCA-v1`/`ISCF-BSCA-MAIN-v1`以保证provenance，不代表论文可见命名。No metric、method computation、evidence or claim-boundary change。Decision=`horiscope_paper_facing_naming_migration_integrated`；new implementation/training/remote launch/formal test=`0/0/0/0`。
 
 [Manuscript Reference Integration v1.0, 2026-08-25] 完成Sections 1--7与Appendix逐节citation audit，并以`manuscript/ref.bib`统一管理41条参考文献。候选发现参考PDT近邻论文，最终出版信息优先由formal proceedings、OpenReview accepted pages、PMLR、AAAI、Elsevier DOI与UCI原始记录核验；同时存在preprint与正式版本时仅保留正式版本。当前检查为`41 cited / 41 defined / 0 missing / 0 uncited / 0 duplicated`，其中28篇发表于2023--2026年。Section 7不重复引文；CHPC、CHPD/NCHPD、Future Coordinate、ISCF与BSCA等本文原创定义不通过相邻工作制造来源归属。Elsevier manuscript已切换为`elsarticle-num` + `ref.bib`并成功生成40页PDF，无undefined citations。Canonical audit=`docs/iscf-bsca-reference-audit.md`。Decision=`manuscript_reference_integration_v1_audited_ready`；new implementation/training/remote launch/formal test=`0/0/0/0`。
 

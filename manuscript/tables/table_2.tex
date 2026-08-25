@@ -6,7 +6,7 @@
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{l|cccccccc}
 \toprule
-Dataset & ISCF-BSCA (Ours) & TimeAlign & QDF & AMD & SimpleTM & iTransformer & PatchTST & DLinear \\
+Dataset & HoriScope (Ours) & TimeAlign & QDF & AMD & SimpleTM & iTransformer & PatchTST & DLinear \\
 \midrule
 ETTm1 & \textcolor{red}{\textbf{0.329}}/\textcolor{red}{\textbf{0.363}} & \textcolor{blue}{\underline{0.345}}/\textcolor{blue}{\underline{0.371}} & 0.352/0.384 & 0.354/0.380 & 0.384/0.399 & 0.409/0.415 & 0.354/0.384 & 0.359/0.381 \\
 ETTm2 & \textcolor{red}{\textbf{0.248}}/\textcolor{red}{\textbf{0.304}} & \textcolor{blue}{\underline{0.250}}/\textcolor{blue}{\underline{0.308}} & 0.257/0.316 & 0.255/0.316 & 0.285/0.330 & 0.294/0.339 & 0.258/0.316 & 0.292/0.359 \\
@@ -21,5 +21,5 @@ Average & \textcolor{red}{\textbf{0.261}}/\textcolor{red}{\textbf{0.306}} & \tex
 \end{tabular}%
 }
 \caption{One-model-all-horizons comparison. Each method uses one unified model per dataset, and each entry reports MSE/MAE averaged over $H\in\{96,192,336,720\}$. The final row is the unweighted mean over seven datasets. Full horizon-wise results and protocol details are provided in ~\ref{app:full-results}. Best and second-best displayed values are marked in red bold and blue underline, respectively.}
-\label{tab:main_iscf_bsca_one_model}
+\label{tab:main_horiscope_one_model}
 \end{table*}

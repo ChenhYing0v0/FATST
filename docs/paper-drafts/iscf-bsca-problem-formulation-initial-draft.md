@@ -1,4 +1,4 @@
-# ISCF-BSCA Section 3: Problem Formulation and Empirical Motivation
+# HoriScope Section 3: Problem Formulation and Empirical Motivation
 
 ## Draft status
 
@@ -176,5 +176,5 @@ Figure 3b quantifies the performance upper bound associated with these region-wi
 | --- | --- | --- | --- |
 | Task formulation and CHPC | Mathematical definition | A horizon-agnostic future-step-indexed mapping satisfies CHPC by construction | CHPC implies lower forecast error |
 | Figure 2 | Selected DLinear trajectory plus all-validation ETTh2 NCHPD | The independently optimized DLinear models evaluated here do not form one prefix-consistent trajectory | Inconsistency is universal across model families or implies lower horizon-specific accuracy |
-| Figure 3 | Validation-selected, capacity-matched, single-origin illustration | Preferred sharing extent varies across future regions, with 8.112% descriptive oracle headroom in the selected example | Oracle headroom is learnable, out-of-sample or attributable to ISCF-BSCA |
+| Figure 3 | Validation-selected, capacity-matched, single-origin illustration | Preferred sharing extent varies across future regions, with 8.112% descriptive oracle headroom in the selected example | Oracle headroom is learnable, out-of-sample or attributable to HoriScope |
 | Method transition | Deferred to Section 4 | Section 3 motivates decoder design through CHPC and sharing-demand heterogeneity | Figures 2--3 establish unified superiority, component effectiveness or decoder transferability |

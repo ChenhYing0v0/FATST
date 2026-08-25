@@ -1,4 +1,4 @@
-# ISCF-BSCA Section 4: Method
+# HoriScope Section 4: Method
 
 ## Draft status
 
@@ -12,7 +12,7 @@
 | `freeze_scope` | Section 4 body, terminology, equations and Figure 4 integration/caption |
 | `unfreeze_condition` | A clear contradiction with later manuscript evidence plus explicit author approval |
 | `upstream_dependency` | Introduction v0.9 and Section 3 v0.7 remain frozen and unchanged |
-| `method_contract` | Exact frozen ISCF-BSCA-v1 architecture and objective |
+| `method_contract` | Exact frozen `ISCF-BSCA-v1` implementation, presented under the paper-facing name HoriScope |
 | `figure_4_status` | Visual design temporarily fixed by the author; stable vector-asset synchronization remains pending |
 | `implementation_change` | None |
 | `experiment_change` | None |
@@ -52,27 +52,27 @@ The status table, terminology ledger and editorial audit are working metadata an
 | Allocation-Balance Regularizer | $\mathcal L_{\mathrm{balance}}$ | Ramped regularizer that penalizes strongly non-uniform Scope Probabilities during training |
 | Balanced Scope Co-Adaptation | BSCA | Joint training objective combining uniform-prefix forecasting, direct scope supervision and allocation balancing |
 
-## 4. ISCF-BSCA
+## 4. HoriScope
 
-Section 3 established two decoder-side requirements for UVHF. Predictions for a shared future target should be invariant to the requested horizon, while the decoder should not impose one latent-state sharing extent on the entire future domain. We address these requirements with ISCF-BSCA. Independent Scope-Conditioned Forecasting (ISCF) is a decoder-side architecture that constructs one future-step-indexed trajectory from multiple sharing scopes, while Balanced Scope Co-Adaptation (BSCA) is the joint optimization method designed for it.
+Section 3 established two decoder-side requirements for UVHF. Predictions for a shared future target should be invariant to the requested horizon, while the decoder should not impose one latent-state sharing extent on the entire future domain. We address these requirements with **HoriScope**, an adaptive multi-scope decoder that constructs one future-step-indexed trajectory from multiple sharing granularities. We further develop **Balanced Scope Co-Adaptation (BSCA)** as the joint optimization strategy for its multi-scope forecast field and allocation process.
 
 ### 4.1 Architecture overview
 
-Figure 4 summarizes the forward computation of ISCF, which organizes its decoder into a **Scope Forecasting Path** and a **Target-Adaptive Allocation Path**. The architecture consumes a variable-wise History State rather than relying on a particular Encoder. Any Encoder that models temporal patch tokens and returns the required tensor interface can therefore serve as its backbone. This interface covers the patch-based Encoder family commonly used in time-series forecasting \citep{nie2023patchtst,zhang2023crossformer}. Given a History Series $\mathbf X\in\mathbb R^{B\times L\times C}$, Patchify and the Encoder produce $\mathbf R\in\mathbb R^{B\times C\times R}$. The Scope Forecasting Path constructs region-wise predictions under each sharing scope and assembles them into $\mathcal F_\theta(\mathbf X)\in\mathbb R^{B\times C\times T\times S}$. The Target-Adaptive Allocation Path then determines how each future target draws on these sharing granularities.
+Figure 4 summarizes the forward computation of HoriScope, which comprises a **Scope Forecasting Path** and a **Target-Adaptive Allocation Path**. The decoder consumes a variable-wise History State rather than relying on a particular Encoder. Any Encoder that models temporal patch tokens and returns the required tensor interface can therefore serve as its backbone. This interface covers the patch-based Encoder family commonly used in time-series forecasting \citep{nie2023patchtst,zhang2023crossformer}. Given a History Series $\mathbf X\in\mathbb R^{B\times L\times C}$, Patchify and the Encoder produce $\mathbf R\in\mathbb R^{B\times C\times R}$. The Scope Forecasting Path constructs region-wise predictions under each sharing scope and assembles them into $\mathcal F_\theta(\mathbf X)\in\mathbb R^{B\times C\times T\times S}$. The Target-Adaptive Allocation Path then determines how each future target draws on these sharing granularities.
 
-The Target-Adaptive Allocation Path combines a projected History State with the Future Coordinate $\boldsymbol\phi_\tau$ and produces Scope Probabilities $\boldsymbol\Pi\in\mathbb R^{B\times C\times T\times S}$. Weighted contraction with the scope-indexed forecast field yields one trajectory $\widehat{\mathbf Y}\in\mathbb R^{B\times T\times C}$. For an $H$-step request, the region-local construction permits computation to be restricted to regions and targets intersecting the first $H$ steps. The requested horizon changes only the evaluated prefix, not the computation assigned to a shared future target. ISCF therefore produces variable-length outputs while satisfying CHPC by construction.
+The Target-Adaptive Allocation Path combines a projected History State with the Future Coordinate $\boldsymbol\phi_\tau$ and produces Scope Probabilities $\boldsymbol\Pi\in\mathbb R^{B\times C\times T\times S}$. Weighted contraction with the scope-indexed forecast field yields one trajectory $\widehat{\mathbf Y}\in\mathbb R^{B\times T\times C}$. For an $H$-step request, the region-local construction permits computation to be restricted to regions and targets intersecting the first $H$ steps. The requested horizon changes only the evaluated prefix, not the computation assigned to a shared future target. HoriScope therefore produces variable-length outputs while satisfying CHPC by construction.
 
 The Scope-conditioned Forecasts and Scope Probabilities are optimized jointly. BSCA separates two training roles: the Uniform-Prefix Forecasting Loss optimizes varied-horizon prediction, while the Scope-Wise Forecasting Loss and Allocation-Balance Regularizer stabilize multi-scope learning. These objectives are described separately from the forward computation in Figure 4.
 
-<a id="fig:iscf-bsca-method"></a>
+<a id="fig:horiscope-method"></a>
 
-![Overview of the ISCF-BSCA architecture.](../../paper-figures/figure_iscf_bsca_method_overview.png)
+![Overview of the HoriScope architecture.](../../paper-figures/ISCF_overview.svg)
 
-**Figure 4 | ISCF constructs one trajectory for Unified Varied-Horizon Forecasting.** The Scope Forecasting Path generates region-wise predictions under multiple sharing scopes. The Target-Adaptive Allocation Path assigns scope-conditioned information to each future target. Weighted contraction yields one trajectory whose nested prefixes answer different horizon requests. Three representative scopes are shown for clarity; the probability map and trajectories are schematic.
+**Figure 4 | HoriScope constructs one trajectory for unified varied-horizon forecasting.** The Scope Forecasting Path generates region-wise predictions under multiple sharing scopes. The Target-Adaptive Allocation Path assigns scope-conditioned information to each future target. Weighted contraction yields one trajectory whose nested prefixes answer different horizon requests. Three representative scopes are shown for clarity; the probability map and trajectories are schematic.
 
 ### 4.2 History state and future coordinate
 
-ISCF begins with the History State and Future Coordinate shown on the left of Figure 4. The History Series is normalized per variable, divided into $P$ patches by Patchify and processed by the shared Encoder. This produces $\mathbf Z\in\mathbb R^{B\times C\times P\times D_e}$, which is flattened over its patch and embedding dimensions:
+HoriScope begins with the History State and Future Coordinate shown on the left of Figure 4. The History Series is normalized per variable, divided into $P$ patches by Patchify and processed by the shared Encoder. This produces $\mathbf Z\in\mathbb R^{B\times C\times P\times D_e}$, which is flattened over its patch and embedding dimensions:
 
 $$
 \mathbf Z
@@ -87,9 +87,9 @@ $$
 R=PD_e.
 $$
 
-Collecting $\mathbf r_{b,c}$ over samples and variables gives the History State $\mathbf R=[\mathbf r_{b,c}]\in\mathbb R^{B\times C\times R}$. The preserved variable axis provides one history representation for each sample-variable pair, which is used by both decoder paths. ISCF requires only this tensor interface and does not otherwise constrain the internal design of the patch-token Encoder.
+Collecting $\mathbf r_{b,c}$ over samples and variables gives the History State $\mathbf R=[\mathbf r_{b,c}]\in\mathbb R^{B\times C\times R}$. The preserved variable axis provides one history representation for each sample-variable pair, which is used by both decoder paths. HoriScope requires only this tensor interface and does not otherwise constrain the internal design of the patch-token Encoder.
 
-The History State summarizes the observed series, but a unified decoder must also identify where each prediction lies in the future domain. Using the requested horizon for this purpose would assign different conditioning contexts to the same target under different requests. ISCF instead introduces a **Future Coordinate** for every future step. This fixed coordinate supplies a horizon-independent target identity and a common positional basis for regions at different scopes. It also allows the Target-Adaptive Allocation Path to vary its scope preference across future steps.
+The History State summarizes the observed series, but a unified decoder must also identify where each prediction lies in the future domain. Using the requested horizon for this purpose would assign different conditioning contexts to the same target under different requests. HoriScope instead introduces a **Future Coordinate** for every future step. This fixed coordinate supplies a horizon-independent target identity and a common positional basis for regions at different scopes. It also allows the Target-Adaptive Allocation Path to vary its scope preference across future steps.
 
 Formally, the Future Coordinate is the field $\boldsymbol\Phi=[\boldsymbol\phi_1,\ldots,\boldsymbol\phi_T]^\top\in\mathbb R^{T\times D_q}$. We construct it from low-order discrete cosine functions, which provide smooth coordinate channels at progressively finer temporal frequencies. For $d=0,\ldots,D_q-1$, we first define
 
@@ -190,7 +190,7 @@ $$
 \beta_\tau.
 $$
 
-Concatenating the separately generated regions gives the Scope-conditioned Forecast $\mathcal F^{(s)}$ for scope $s$. Collecting these forecasts produces the scope-indexed field $\mathcal F_\theta(\mathbf X)\in\mathbb R^{B\times C\times T\times S}$. Rather than ensembling separately trained models, ISCF jointly constructs this field through scope-specific projections and a shared Encoder and Region-to-Step Forecast Generator. This design couples forecast synthesis across scopes while avoiding duplicated encoder computation and generator parameters.
+Concatenating the separately generated regions gives the Scope-conditioned Forecast $\mathcal F^{(s)}$ for scope $s$. Collecting these forecasts produces the scope-indexed field $\mathcal F_\theta(\mathbf X)\in\mathbb R^{B\times C\times T\times S}$. Rather than ensembling separately trained models, HoriScope jointly constructs this field through scope-specific projections and a shared Encoder and Region-to-Step Forecast Generator. This design couples forecast generation across scopes while avoiding duplicated Encoder computation and generator parameters.
 
 ### 4.4 Target-adaptive scope allocation
 
@@ -245,7 +245,7 @@ $$
 
 This contraction is not an average over separately trained model outputs. The Scope Forecasting Path and Target-Adaptive Allocation Path are jointly learned within one decoder, allowing each target to receive a history-conditioned mixture of sharing granularities.
 
-For an $H$-step request, ISCF needs only the Scope-region States whose regions intersect $1{:}H$ and the allocation entries for $\tau\leq H$. The resulting normalized prefix is transformed back to the original data scale and returned as
+For an $H$-step request, HoriScope needs only the Scope-region States whose regions intersect $1{:}H$ and the allocation entries for $\tau\leq H$. The resulting normalized prefix is transformed back to the original data scale and returned as
 
 $$
 \widehat{\mathbf Y}_b^{(H)}
@@ -259,7 +259,7 @@ Changing $H$ restricts the active region and target computations but does not al
 
 ### 4.5 Balanced Scope Co-Adaptation
 
-Training ISCF introduces two coupled requirements. The fused trajectory requires uniform supervision across supported prefix lengths, while all scope lines must develop reliable forecasts as allocation is learned. BSCA therefore combines the **Uniform-Prefix Forecasting Loss** for varied-horizon prediction with two terms that stabilize multi-scope learning: the **Scope-Wise Forecasting Loss** and **Allocation-Balance Regularizer**.
+Training HoriScope introduces two coupled requirements. The fused trajectory requires uniform supervision across supported prefix lengths, while all scope lines must develop reliable forecasts as allocation is learned. BSCA therefore combines the **Uniform-Prefix Forecasting Loss** for varied-horizon prediction with two terms that stabilize multi-scope learning: the **Scope-Wise Forecasting Loss** and **Allocation-Balance Regularizer**.
 
 Varied-horizon training should optimize every supported prediction length without privileging one endpoint. We therefore average raw-scale MAE equally over all prefixes $h=1,\ldots,T$ to define the Uniform-Prefix Forecasting Loss. Before loss evaluation, inverse normalization maps the fused and Scope-conditioned Forecasts to the original data scale. Let $y_{b,\tau,c}$ denote the corresponding raw-scale target. The fused objective is
 
@@ -387,7 +387,7 @@ The regularizer penalizes strongly non-uniform Scope Probabilities, discouraging
 
 | Manuscript element | Frozen implementation correspondence | Permitted claim | Deferred claim |
 | --- | --- | --- | --- |
-| History State | Normalization, Patchify, Encoder and flattened `hidden:[B,C,R]` | ISCF is compatible with patch-token Encoders that satisfy the stated tensor interface | Encoder superiority or empirical transfer across arbitrary backbones |
+| History State | Normalization, Patchify, Encoder and flattened `hidden:[B,C,R]` | HoriScope is compatible with patch-token Encoders that satisfy the stated tensor interface | Encoder superiority or empirical transfer across arbitrary backbones |
 | Scope Projection and Scope Matrix | Independent SIFF scale basis with one component per scope | Each scope has an independent Scope Projection | Each Scope-conditioned Forecast is an independent forecasting model |
 | Region Descriptor and Scope-region State | Contiguous group indices and pooled Future Coordinates | Scope controls state-reuse extent | Canonical partition is universally optimal |
 | Region-to-Step Forecast Generator | Shared step-specific linear and nonlinear synthesis parameters | One shared state can produce distinct step-specific predictions | The generator is universally transferable |

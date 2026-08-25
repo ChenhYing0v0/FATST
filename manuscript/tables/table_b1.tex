@@ -7,7 +7,7 @@
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{cc|cc|cc|cc|cc|cc|cc|cc|cc|cc|cc|cc|cc|cc|cc}
 \toprule
-Dataset & H & \multicolumn{2}{c}{ISCF-BSCA (Ours)} & \multicolumn{2}{c}{TimeAlign (2026)} & \multicolumn{2}{c}{QDF (2026)} & \multicolumn{2}{c}{AMD (2025)} & \multicolumn{2}{c}{SimpleTM (2025)} & \multicolumn{2}{c}{TVNet (2025)} & \multicolumn{2}{c}{iTransformer (2024b)} & \multicolumn{2}{c}{TimeMixer (2024)} & \multicolumn{2}{c}{Leddam (2024)} & \multicolumn{2}{c}{ModernTCN (2024)} & \multicolumn{2}{c}{PatchTST (2023)} & \multicolumn{2}{c}{Crossformer (2023)} & \multicolumn{2}{c}{TimesNet (2023)} & \multicolumn{2}{c}{DLinear (2023)} \\
+Dataset & H & \multicolumn{2}{c}{HoriScope (Ours)} & \multicolumn{2}{c}{TimeAlign (2026)} & \multicolumn{2}{c}{QDF (2026)} & \multicolumn{2}{c}{AMD (2025)} & \multicolumn{2}{c}{SimpleTM (2025)} & \multicolumn{2}{c}{TVNet (2025)} & \multicolumn{2}{c}{iTransformer (2024b)} & \multicolumn{2}{c}{TimeMixer (2024)} & \multicolumn{2}{c}{Leddam (2024)} & \multicolumn{2}{c}{ModernTCN (2024)} & \multicolumn{2}{c}{PatchTST (2023)} & \multicolumn{2}{c}{Crossformer (2023)} & \multicolumn{2}{c}{TimesNet (2023)} & \multicolumn{2}{c}{DLinear (2023)} \\
  &  & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE \\
 \midrule
 \multirow{5}{*}{ETTm1} & 96 & \textcolor{red}{\textbf{0.265}} & \textcolor{red}{\textbf{0.326}} & \textcolor{blue}{\underline{0.280}} & \textcolor{blue}{\underline{0.331}} & 0.283 & 0.336 & 0.289 & 0.343 & 0.325 & 0.363 & 0.288 & 0.343 & 0.300 & 0.353 & 0.293 & 0.345 & 0.294 & 0.347 & 0.292 & 0.346 & 0.293 & 0.346 & 0.310 & 0.361 & 0.338 & 0.375 & 0.300 & 0.345 \\
@@ -61,7 +61,7 @@ Dataset & H & \multicolumn{2}{c}{ISCF-BSCA (Ours)} & \multicolumn{2}{c}{TimeAlig
 \bottomrule
 \end{tabular}%
 }
-\caption{Full results for the horizon-specific comparison. Results are reported as MSE and MAE for $H\in\{96,192,336,720\}$, and Avg. is the arithmetic mean over the four horizons. ISCF-BSCA uses one unified model per dataset, whereas the baselines follow their horizon-specific evaluation protocols. The best and second-best displayed values are highlighted in bold and underlined, respectively.}
+\caption{Full results for the horizon-specific comparison. Results are reported as MSE and MAE for $H\in\{96,192,336,720\}$, and Avg. is the arithmetic mean over the four horizons. HoriScope uses one unified model per dataset, whereas the baselines follow their horizon-specific evaluation protocols. The best and second-best displayed values are highlighted in bold and underlined, respectively.}
 \label{tab:appendix-horizon-specific}
 \end{table}
 \end{landscape}

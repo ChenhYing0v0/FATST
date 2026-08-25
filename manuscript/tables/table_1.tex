@@ -6,7 +6,7 @@
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{l|cccccccccccccc}
 \toprule
-Dataset & ISCF-BSCA (Ours) & TimeAlign & QDF & AMD & SimpleTM & TVNet & iTransformer & TimeMixer & Leddam & ModernTCN & PatchTST & Crossformer & TimesNet & DLinear \\
+Dataset & HoriScope (Ours) & TimeAlign & QDF & AMD & SimpleTM & TVNet & iTransformer & TimeMixer & Leddam & ModernTCN & PatchTST & Crossformer & TimesNet & DLinear \\
 \midrule
 ETTm1 & \textcolor{red}{\textbf{0.329}}/\textcolor{red}{\textbf{0.363}} & \textcolor{blue}{\underline{0.341}}/\textcolor{blue}{\underline{0.368}} & 0.353/0.380 & 0.351/0.378 & 0.383/0.396 & 0.348/0.379 & 0.362/0.391 & 0.356/0.380 & 0.360/0.390 & 0.351/0.381 & 0.353/0.376 & 0.416/0.435 & 0.399/0.406 & 0.356/0.378 \\
 ETTm2 & \textcolor{blue}{\underline{0.248}}/\textcolor{red}{\textbf{0.304}} & \textcolor{red}{\textbf{0.245}}/\textcolor{red}{\textbf{0.304}} & 0.257/0.315 & 0.254/0.315 & 0.280/0.325 & 0.251/\textcolor{blue}{\underline{0.311}} & 0.269/0.329 & 0.257/0.318 & 0.265/0.321 & 0.253/0.314 & 0.256/0.317 & 0.518/0.501 & 0.292/0.331 & 0.259/0.324 \\
@@ -20,6 +20,6 @@ Average & \textcolor{red}{\textbf{0.261}}/\textcolor{red}{\textbf{0.306}} & \tex
 \bottomrule
 \end{tabular}%
 }
-\caption{Comparison with horizon-specific forecasters. Each dataset entry reports MSE/MAE averaged over $H\in\{96,192,336,720\}$, and the final row is the unweighted mean over seven datasets. ISCF-BSCA uses one unified model per dataset, whereas each baseline follows its horizon-specific protocol. Full horizon-wise results, source roles and protocol details are provided in ~\ref{app:full-results}. Best and second-best displayed values are marked in red bold and blue underline, respectively.}
-\label{tab:main_iscf_bsca}
+\caption{Comparison with horizon-specific forecasters. Each dataset entry reports MSE/MAE averaged over $H\in\{96,192,336,720\}$, and the final row is the unweighted mean over seven datasets. HoriScope uses one unified model per dataset, whereas each baseline follows its horizon-specific protocol. Full horizon-wise results, source roles and protocol details are provided in ~\ref{app:full-results}. Best and second-best displayed values are marked in red bold and blue underline, respectively.}
+\label{tab:main_horiscope}
 \end{table*}

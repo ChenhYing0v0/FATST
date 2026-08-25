@@ -200,7 +200,7 @@ def render_figure(
                 color=PREDICTION_COLOR,
                 linewidth=1.05,
                 solid_capstyle="round",
-                label="ISCF-BSCA",
+                label="HoriScope",
                 zorder=4,
             )
             # Keep the prefix boundaries visible without repeating the strong
@@ -343,7 +343,7 @@ def render_figure(
         )
     legend_handles = [
         Line2D([0], [0], color=TARGET_COLOR, linewidth=1.0, label="Ground truth"),
-        Line2D([0], [0], color=PREDICTION_COLOR, linewidth=1.15, label="ISCF-BSCA"),
+        Line2D([0], [0], color=PREDICTION_COLOR, linewidth=1.15, label="HoriScope"),
     ]
     figure.legend(
         handles=legend_handles,

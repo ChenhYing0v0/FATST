@@ -1,10 +1,10 @@
-# ISCF-BSCA Elsevier LaTeX manuscript
+# HoriScope Elsevier LaTeX manuscript
 
 This directory contains a self-contained `elsarticle` manuscript assembled from the temporarily frozen manuscript-facing Markdown drafts.
 
 ## Current placeholders
 
-- The title is the provisional working title recorded in the paper architecture.
+- The title is the author-approved HoriScope title recorded in the paper architecture.
 - Author names, affiliations, corresponding-author details and journal name are placeholders.
 - The Abstract and Keywords are populated from the current author-review draft.
 - References are managed in `ref.bib`; all manuscript citation keys are audited against that file.

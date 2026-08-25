@@ -1,19 +1,19 @@
-# ISCF-BSCA 论文结构与叙事共识稿
+# HoriScope 论文结构与叙事共识稿
 
 ## 文档状态
 
 | Field | Content |
 | --- | --- |
-| `document_role` | ISCF-BSCA 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v1.02` |
+| `document_role` | HoriScope 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
+| `version` | `v1.03` |
 | `last_updated` | `2026-08-25` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | Full manuscript assembled；41-entry bibliography and section-wise citation integration audited |
+| `current_review_cursor` | HoriScope paper-facing rename integrated across title, body, figures, tables and Appendix；manuscript QA pending final compile |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
-| `frozen_consensus` | 论文七章结构并保留精简的Discussion and Limitations；varied-horizon主问题；CHPC为basic property；ISCF decoder-side scope framework；BSCA train-only contribution boundary |
+| `frozen_consensus` | 论文七章结构并保留精简的Discussion and Limitations；formal task=`Unified Varied-Horizon Forecasting (UVHF)`；paper-facing model=`HoriScope`；CHPC为basic property；adaptive multi-scope decoder；BSCA training-strategy contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure与claim boundaries；Sections 1--7及Appendix的audited citations；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Section 6 v0.4正文、paragraph structure、interpretation与methodological limitations；Section 7 v0.2正文与two-paragraph structure；Method Figure 4 visual design；Figure 5 v5.3；Sections 5--7整体结构 |
 | `provisional_content` | Section 5 v0.13（5.6 narrative待author review）；Method Figure 4 stable vector-asset synchronization |
 | `authorization_source` | 2026-08-24用户确认Section 7 v0.1两段正文可暂时固定为论文可用版本；Sections 1--6 evidence与Figures 5--7不变 |
@@ -22,6 +22,8 @@
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
 `temporarily_frozen_content` 只有在后续章节或证据产生明确矛盾且用户同意后才解冻；
 `provisional_content` 只表示当前最佳结构，后续按章节继续修订。
+
+HoriScope naming amendment：Author确认论文标题为`HoriScope: Adaptive Multi-Scope Decoding for Unified Varied-Horizon Time-Series Forecasting`。论文展示层统一使用`HoriScope`指代完整model/framework，使用`HoriScope decoder`或`adaptive multi-scope decoder`指代architecture，`Balanced Scope Co-Adaptation (BSCA)`继续作为training strategy。旧的`ISCF-BSCA-v1`与`ISCF-BSCA-MAIN-v1`仅保留为冻结implementation/checkpoint provenance，不再作为正文、图片、表格或Appendix中的方法名。Canonical manuscript sources、Figures 6--7与LaTeX table assembly均已迁移；结果数值、figure data、architecture computation、evidence role与claim boundary不变。Decision=`horiscope_paper_facing_naming_migration_integrated`。
 
 Reference-integration amendment：在author显式启动全文参考文献工作后，对Sections 1--7与Appendix逐节审计citation needs，并以`manuscript/ref.bib`固定41条已使用参考文献。正式conference/journal版本优先于arXiv；PDT仅作为candidate seed，不覆盖primary-source metadata。当前引用图为`41 cited / 41 defined / 0 missing / 0 uncited / 0 duplicated`，完整角色与版本决策见`docs/iscf-bsca-reference-audit.md`。本轮只补外部claim、baseline、optimizer与dataset来源，不改变本文原创定义、结果数值、method claim或evidence boundary。Decision=`manuscript_reference_integration_v1_audited_ready`。
 
@@ -222,13 +224,9 @@ $s_b^\star=\arg\min_sR_{b,s}$ 稳定不同，则支持 region-dependent
 sharing-scale preference。这里的“preference”仅表示 matched empirical risk
 更低，不是数据区间对某种架构的内在或绝对偏好。
 
-### 1.5 Scope-indexed forecast field与latent-state sharing scope
+### 1.5 HoriScope、scope-indexed forecast field与latent-state sharing scope
 
-ISCF正式解释为：
-
-> **Independent Scope-Conditioned Forecasting**
-
-它不是多个完整predictors的ensemble，而是在future-step与sharing-scope的乘积域
+`HoriScope`是paper-facing model/framework name，不作强制 acronym expansion。它不是多个完整predictors的ensemble，而是在future-step与sharing-scope的乘积域
 上定义一个统一的：
 
 > **scope-indexed forecast field**
@@ -365,7 +363,7 @@ cross-step sharing pattern 在整个 future domain 上形成表达折中。
 | `single-checkpoint multi-horizon forecaster` | Introduction 使用 `unified multi-horizon forecaster` |
 | `same-origin cross-horizon prefix consistency` | 正式术语使用 CHPC；`fixed forecast origin` 写入定义 |
 | `future-region predictive-structure heterogeneity` | 过于宽泛，无法直接推出sharing extent；问题使用 `future-region sharing-demand heterogeneity` |
-| `Independent Scope-Coupled Fields` / multiple scope fields | ISCF=`Independent Scope-Conditioned Forecasting`；整体对象为单一`scope-indexed forecast field`，固定$s$只是一个slice |
+| former ISCF expansion / `Independent Scope-Coupled Fields` / multiple scope fields | 论文统一使用`HoriScope`；整体对象为单一`scope-indexed forecast field`，固定$s$只是一个slice |
 | `future-generation scope heterogeneity` / `future-step coupling heterogeneity` | 问题使用 `future-region sharing-demand heterogeneity`；方法使用 `future-step latent-state sharing scope` |
 | `future-step coupling granularity` / “某个future step具有某种coupling granularity” | 使用`latent-state sharing granularity/extent`；scope是多个future steps之间的共享关系 |
 | `forecast-target-wise fusion policy` | 使用`target-conditioned scope allocation`；最终运算称`weighted contraction along the scope axis` |
@@ -393,7 +391,7 @@ cross-step sharing pattern 在整个 future domain 上形成表达折中。
 > broad shared representation或单一固定output-generation pattern生成所有
 > future steps。细粒度变化可能需要更强step-specific flexibility，平滑、宽范围
 > 轨迹成分则可能受益于跨步复用共同latent state。单一共享范围未必能适合
-> 所有samples、variables与future regions。ISCF通过多个independent
+> 所有samples、variables与future regions。HoriScope通过多个scope-specific
 > scope-specific history projections构造具有不同cross-step latent-state
 > sharing extents的scope-region states，并与共享的future-step-specific
 > synthesis vectors共同形成一个scope-indexed forecast field；
@@ -406,7 +404,7 @@ cross-step sharing pattern 在整个 future domain 上形成表达折中。
 1. `system need`：一个 unified model 服务多个 nested horizons；
 2. `system contract`：CHPC；
 3. `modeling problem`：future-region sharing-demand heterogeneity；
-4. `solution`：ISCF architecture + BSCA training。
+4. `solution`：HoriScope adaptive multi-scope decoder + BSCA training。
 
 ## 3. 全文结构
 
@@ -426,7 +424,7 @@ Abstract
    3.2 Horizon-Specific Prefix Inconsistency
    3.3 Future-Region Sharing-Demand Heterogeneity
 
-4. ISCF-BSCA: Prefix-Consistent Unified Varied-Horizon Forecasting
+4. HoriScope
    4.1 Architecture Overview
    4.2 History State and Future Coordinate
    4.3 Generation of Scope-conditioned Forecasts
@@ -698,37 +696,36 @@ Canonical source artifact位于
 `paper-figures/`。该图仍仅作constructed conceptual illustration，不承担
 empirical evidence。
 
-### 4.5 Paragraph 5：ISCF-BSCA
+### 4.5 Paragraph 5：HoriScope
 
 **状态：v1.1 author-refined；显式加入single-scope decoder对照，Method Figure
 4承担完整架构可视化。**
 
 建议正文：
 
-> Motivated by this heterogeneity, we propose ISCF-BSCA, an output-side decoder
-> that integrates forecasts generated under different sharing extents.
-> Independent Scope-Conditioned Forecasting (ISCF) represents each sharing
-> extent through an independent history projection within a single
+> Motivated by this heterogeneity, we propose HoriScope, an adaptive multi-scope
+> decoder that integrates forecasts generated under different sharing extents.
+> HoriScope assigns each scope a dedicated history projection within one
 > scope-indexed forecast field. Each scope determines how broadly a
-> history-conditioned latent state is reused before step-specific synthesis.
+> history-conditioned latent state is reused before step-specific generation.
 > A single-scope decoder applies one sharing extent throughout the forecast
-> domain. ISCF instead integrates scope-conditioned forecasts through a
-> target-conditioned allocation for each sample, variable and future step.
-> The resulting forecast can adapt its sharing composition across future
-> regions while retaining a single horizon-agnostic prediction function. To
-> support joint learning, Balanced Scope Co-Adaptation (BSCA) supplies direct
-> prediction signals to all scopes and discourages premature allocation
-> concentration. BSCA operates only during training, adds no inference
-> parameters or paths, and preserves CHPC across supported horizons.
+> domain. HoriScope instead allocates scope-conditioned forecasts for each
+> sample, variable and future step. The resulting trajectory can adapt its
+> sharing composition across future regions while retaining a single
+> horizon-agnostic prediction function. To support joint learning, Balanced
+> Scope Co-Adaptation (BSCA) supplies direct prediction signals to all scopes
+> and discourages premature allocation concentration. BSCA operates only during
+> training, adds no inference parameters or paths, and preserves CHPC across
+> supported horizons.
 
 对应中文：
 
-> 受上述异质性启发，我们提出ISCF-BSCA，一个融合不同sharing extents所生成预测
-> 的output-side decoder。Independent Scope-Conditioned Forecasting（ISCF）通过
-> 独立history projection，在单一scope-indexed forecast field中表示每种sharing
-> extent。每个scope决定history-conditioned latent state在step-specific
-> synthesis之前被复用的范围。Single-scope decoder在整个forecast domain使用
-> 一种sharing extent；ISCF则通过target-conditioned allocation，为每个sample、
+> 受上述异质性启发，我们提出HoriScope，一个融合不同sharing extents所生成预测
+> 的adaptive multi-scope decoder。HoriScope通过scope-specific history
+> projection，在单一scope-indexed forecast field中表示每种sharing extent。
+> 每个scope决定history-conditioned latent state在step-specific generation前
+> 被复用的范围。Single-scope decoder在整个forecast domain使用一种sharing
+> extent；HoriScope则通过target-adaptive allocation，为每个sample、
 > variable与future step整合scope-conditioned forecasts。由此，forecast能够跨
 > future regions调整sharing
 > composition，同时保持单一horizon无关prediction function。为支持joint

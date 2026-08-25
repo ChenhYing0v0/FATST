@@ -1,5 +1,7 @@
 # Stage C ISCF-BSCA Paper-Writing Restart Handoff
 
+> **Current paper-facing name (2026-08-25):** `HoriScope`. The historical filename and frozen candidate identifiers remain unchanged for provenance. The approved title is `HoriScope: Adaptive Multi-Scope Decoding for Unified Varied-Horizon Time-Series Forecasting`.
+
 ## 0. Authority and use
 
 本文件是2026-07-31之后新对话继续ISCF-BSCA论文写作工作的current首读入口。
@@ -47,7 +49,7 @@
 | `paper_candidate` | exact frozen `ISCF-BSCA-v1` |
 | `paper_core_status` | `passed_core_candidate_ready_for_paper_consolidation` |
 | `active_workstream` | manuscript writing and paper-facing evidence consolidation |
-| `active_section` | Sections 1--7、Appendix与Figures 1--7 assembled；41-entry bibliography integration audited |
+| `active_section` | HoriScope Sections 1--7、Appendix、Figures 1--7与tables assembled；paper-facing naming migration integrated |
 | `introduction_status` | `v0.9-author-refinement`=`temporarily_frozen_usable` |
 | `section3_status` | `v0.7-author-risk-definition-refinement`=`temporarily_frozen_usable` |
 | `section4_status` | `v0.7-bsca-narrative-order-refinement`=`temporarily_frozen_usable` |
@@ -56,7 +58,7 @@
 | `new_remote_training_from_writing_thread` | false |
 | `new_formal_test_from_writing_thread` | false |
 | `parallel_experiment_authority` | use experiment handoff and current mainline；this writing handoff does not expand or revoke it |
-| `next_action` | author review of the assembled Elsevier manuscript and reference placement；do not reopen frozen prose without explicit conflict or author request |
+| `next_action` | final compile and visual QA of the renamed HoriScope manuscript；do not reopen frozen prose without explicit conflict or author request |
 | `conditional_next` | migrate the audited content and `ref.bib` into the final official journal template when selected |
 
 当前目标是把已冻结模型与已有证据组织成连贯论文，不是继续architecture search。

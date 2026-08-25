@@ -24,7 +24,7 @@ where $N$ is the total number of scalar predictions over all evaluation windows,
 
 ### A.2 DATASETS
 
-We evaluate ISCF-BSCA on seven widely used multivariate time-series forecasting datasets spanning electricity transformers, electricity consumption, meteorology and solar generation. These benchmarks differ substantially in variable dimension, sampling frequency and temporal dynamics. Table A1 summarizes their basic statistics.
+We evaluate HoriScope on seven widely used multivariate time-series forecasting datasets spanning electricity transformers, electricity consumption, meteorology and solar generation. These benchmarks differ substantially in variable dimension, sampling frequency and temporal dynamics. Table A1 summarizes their basic statistics.
 
 1. **ETT (Electricity Transformer Temperature)** records seven load and temperature factors from two electricity transformers in two regions of China between 2016 and 2018 \citep{zhou2021informer}. We use its four standard subsets: ETTh1 and ETTh2 are sampled hourly, whereas ETTm1 and ETTm2 are sampled every 15 minutes.
 
@@ -50,7 +50,7 @@ Dataset Size is reported as (Train, Validation, Test). The ETT datasets follow t
 
 ### A.3 IMPLEMENTATION DETAILS
 
-The local experiments are implemented in Python 3.12.13 and PyTorch 2.9.0 with CUDA 12.8. Each training run uses one NVIDIA GeForce RTX 3090 GPU. ISCF-BSCA is trained from scratch with AdamW and a cosine learning-rate schedule \citep{loshchilov2019adamw,loshchilov2017sgdr}. Table A2 reports the dataset-specific optimization settings, and Table A3 lists the corresponding Encoder interface and ISCF-BSCA configuration.
+The local experiments are implemented in Python 3.12.13 and PyTorch 2.9.0 with CUDA 12.8. Each training run uses one NVIDIA GeForce RTX 3090 GPU. HoriScope is trained from scratch under the BSCA objective using AdamW and a cosine learning-rate schedule \citep{loshchilov2019adamw,loshchilov2017sgdr}. Table A2 reports the dataset-specific optimization settings, and Table A3 lists the corresponding Encoder interface and HoriScope configuration.
 
 ### Table A2 | Training and Evaluation Settings
 
@@ -66,7 +66,7 @@ The local experiments are implemented in Python 3.12.13 and PyTorch 2.9.0 with C
 
 Gradient Accumulation Steps denotes the number of mini-batches whose gradients are accumulated before one optimizer update; the effective batch size is therefore the batch size multiplied by this value. All runs use seed 2021. The checkpoint with the lowest validation mean MSE over $H\in\{96,192,336,720\}$ is retained and serves all four forecasting requests. Weight decay is $0.01$ except for ETTm2, where it is $0.001$, and early stopping uses zero minimum improvement.
 
-### Table A3 | ISCF-BSCA Configuration
+### Table A3 | HoriScope Configuration
 
 | Dataset | Scope set | Mode rank | Patch number | $d_{\mathrm{model}}$ | $d_{\mathrm{ff}}$ | Dropout | Weight decay | $\lambda_{\mathrm{scope}}$ | $\lambda_{\mathrm{balance}}^{\max}$ / ramp |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
@@ -82,11 +82,11 @@ The scope set and BSCA coefficients are shared across datasets. Specifically, $\
 
 ## B. FULL RESULTS
 
-Tables B1 and B2 provide the complete results for the two forecasting comparisons in Sections 5.2 and 5.3. The main text reports the four-horizon average for each dataset, whereas the appendix retains MSE and MAE at every evaluated horizon. Table B1 compares one unified ISCF-BSCA model with baselines optimized separately for each requested horizon. Table B2 places every method under the same one-model-all-horizons workflow, where shorter requests are evaluated from the corresponding prefixes of one maximum-length forecast.
+Tables B1 and B2 provide the complete results for the two forecasting comparisons in Sections 5.2 and 5.3. The main text reports the four-horizon average for each dataset, whereas the appendix retains MSE and MAE at every evaluated horizon. Table B1 compares one unified HoriScope model with baselines optimized separately for each requested horizon. Table B2 places every method under the same one-model-all-horizons workflow, where shorter requests are evaluated from the corresponding prefixes of one maximum-length forecast.
 
 <!-- Typeset insertion: analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_i/table_iscf_bsca_main_i_qdf.tex -->
 
-**Table B1 | Full results for the horizon-specific comparison.** Results are reported as MSE and MAE for $H\in\{96,192,336,720\}$, and Avg. is the arithmetic mean over the four horizons. ISCF-BSCA uses one unified model per dataset, whereas the baselines follow their horizon-specific evaluation protocols. The best and second-best displayed values are highlighted in bold and underlined, respectively.
+**Table B1 | Full results for the horizon-specific comparison.** Results are reported as MSE and MAE for $H\in\{96,192,336,720\}$, and Avg. is the arithmetic mean over the four horizons. HoriScope uses one unified model per dataset, whereas the baselines follow their horizon-specific evaluation protocols. The best and second-best displayed values are highlighted in bold and underlined, respectively.
 
 <!-- Typeset insertion: analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_ii/table_iscf_bsca_main_ii.tex -->
 
@@ -94,8 +94,8 @@ Tables B1 and B2 provide the complete results for the two forecasting comparison
 
 ## C. VISUALIZATION
 
-Figure C1 presents supplementary UVHF examples for the seven paper-core datasets. For each dataset, two validation samples show the ground-truth future and the fused ISCF-BSCA prediction over the maximum target length $T=720$. The paired rulers and vertical guides mark the four supported prediction lengths, showing how the same predicted trajectory provides the prefixes requested at $H\in\{96,192,336,720\}$.
+Figure C1 presents supplementary UVHF examples for the seven paper-core datasets. For each dataset, two validation samples show the ground-truth future and the fused HoriScope prediction over the maximum target length $T=720$. The paired rulers and vertical guides mark the four supported prediction lengths, showing how the same predicted trajectory provides the prefixes requested at $H\in\{96,192,336,720\}$.
 
 ![Validation-only qualitative varied-horizon forecasts.](../../analysis/iscf_bsca_appendix_c_prediction_export_20260825/outputs/figure_c1_varied_horizon_forecasts.png)
 
-**Figure C1 | Visualization of varied-horizon forecasts across seven datasets.** The dark curve denotes the ground truth and the teal curve denotes the prediction from the frozen unified ISCF-BSCA model. Two validation examples are shown for each dataset. The paired rulers and vertical guides identify the four supported prediction lengths.
+**Figure C1 | Visualization of varied-horizon forecasts across seven datasets.** The dark curve denotes the ground truth and the teal curve denotes the prediction from the frozen unified HoriScope model. Two validation examples are shown for each dataset. The paired rulers and vertical guides identify the four supported prediction lengths.

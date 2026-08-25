@@ -37,7 +37,7 @@ SECTION_SOURCES = (
     (
         "04_method.tex",
         "docs/paper-drafts/iscf-bsca-method-initial-draft.md",
-        "## 4. ISCF-BSCA",
+        "## 4. HoriScope",
         "## Editorial implementation and claim audit",
     ),
     (
@@ -87,10 +87,10 @@ FIGURES = {
         "width": "0.96\\textwidth",
     },
     "4": {
-        # pdflatex-compatible export of the editable ISCF_overview.svg source.
+        # pdflatex-compatible export of the editable HoriScope overview source.
         "source": "paper-figures/ISCF_overview.pdf",
         "target": "figure_04_method_overview.pdf",
-        "label": "fig:iscf-bsca-method",
+        "label": "fig:horiscope-method",
         "width": "1.00\\textwidth",
     },
     # Automatic LaTeX numbering follows manuscript order. The efficiency figure
@@ -181,7 +181,7 @@ REFERENCE_REPLACEMENTS = (
     (r"Figure~\\ref\{fig:conceptual-problems\}", r"Fig.~\\ref{fig:conceptual-problems}"),
     (r"Figure 2", r"Fig.~\\ref{fig:prefix-disagreement}"),
     (r"Figure 3", r"Fig.~\\ref{fig:sharing-heterogeneity}"),
-    (r"Figure 4", r"Fig.~\\ref{fig:iscf-bsca-method}"),
+    (r"Figure 4", r"Fig.~\\ref{fig:horiscope-method}"),
     (r"Figure 5", r"Fig.~\\ref{fig:scope-allocation-behavior}"),
     (r"Figure 6", r"Fig.~\\ref{fig:accuracy-system-cost}"),
     (r"Figure 7", r"Fig.~\\ref{fig:decoder-transfer}"),
@@ -192,8 +192,8 @@ REFERENCE_REPLACEMENTS = (
     (r"Table A3", r"Table~\\ref{tab:model-settings}"),
     (r"Table B1", r"Table~\\ref{tab:appendix-horizon-specific}"),
     (r"Table B2", r"Table~\\ref{tab:appendix-one-model}"),
-    (r"Table 1", r"Table~\\ref{tab:main_iscf_bsca}"),
-    (r"Table 2", r"Table~\\ref{tab:main_iscf_bsca_one_model}"),
+    (r"Table 1", r"Table~\\ref{tab:main_horiscope}"),
+    (r"Table 2", r"Table~\\ref{tab:main_horiscope_one_model}"),
     (r"Table 3", r"Table~\\ref{tab:core-ablation}"),
     (r"Appendix A", r"\\ref{app:experiment-details}"),
     (r"Appendix B", r"\\ref{app:full-results}"),
@@ -429,6 +429,13 @@ def copy_and_adjust_tables() -> None:
     TABLES_DIR.mkdir(parents=True, exist_ok=True)
     for target_name, source_name in TABLE_SOURCES.items():
         source_text = (REPO_ROOT / source_name).read_text(encoding="utf-8")
+        source_text = source_text.replace("ISCF-BSCA", "HoriScope")
+        source_text = source_text.replace(
+            "tab:main_iscf_bsca_one_model", "tab:main_horiscope_one_model"
+        )
+        source_text = source_text.replace(
+            "tab:main_iscf_bsca", "tab:main_horiscope"
+        )
         source_text = source_text.replace(
             "provided in Appendix A", "provided in ~\\ref{app:full-results}"
         )
@@ -437,7 +444,7 @@ def copy_and_adjust_tables() -> None:
                 "\\caption{Full results for the horizon-specific comparison. "
                 "Results are reported as MSE and MAE for "
                 "$H\\in\\{96,192,336,720\\}$, and Avg. is the arithmetic mean over "
-                "the four horizons. ISCF-BSCA uses one unified model per dataset, "
+                "the four horizons. HoriScope uses one unified model per dataset, "
                 "whereas the baselines follow their horizon-specific evaluation "
                 "protocols. The best and second-best displayed values are highlighted "
                 "in bold and underlined, respectively.}\n"

@@ -202,7 +202,7 @@ def plot_efficiency() -> None:
     for row in plot_rows:
         system = str(row["system"])
         display_name = (
-            r"ISCF-BSCA$^{\mathrm{ours}}$"
+            r"HoriScope$^{\mathrm{ours}}$"
             if system == "ISCF-BSCA"
             else system
         )
@@ -364,7 +364,7 @@ def plot_transfer() -> None:
             edgecolor="white",
             linewidth=0.9,
             hatch="xx",
-            label="ISCF-BSCA",
+            label="HoriScope",
             zorder=2,
         )
         original_bars = ax.bar(
