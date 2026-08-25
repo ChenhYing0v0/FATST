@@ -44,11 +44,21 @@ All selected profiles use scopes ${1,48,144,360,720}$, seed 2021, the four-horiz
 
 ## 4. Appendix C prediction-data availability
 
-The repository currently contains complete sample-level diagnostic arrays for several earlier or mechanism-specific probes, but it does not contain a single final-profile prediction export covering all seven paper-core datasets. In particular, no local artifact currently provides the final ISCF-BSCA fused prediction and target arrays needed to select two validation origins for ECL and Solar under the Appendix C rule.
+The final-profile prediction export was completed on 2026-08-25 through an
+evaluation-only route. The seven paper-core datasets each have two selected
+validation trajectories from the frozen Main-I/II profiles, with raw-scale
+prediction and ground truth arrays, selection scores, raw forecast origins and
+checkpoint provenance in
+`analysis/iscf_bsca_appendix_c_prediction_export_20260825/`. The export did not
+retrain a model, reselect a profile or access test labels, and every selected
+checkpoint hash matches the frozen selected-profile manifest.
 
-Therefore, Figure C1 is not generated from synthetic or substituted predictions. The next authorized data step is an evaluation-only export from the frozen final profiles, with no retraining and no profile reselection. The export must include the fused $T=720$ forecast, ground truth, dataset, origin, channel and checkpoint identifier. After the export, the selection rule is frozen before ranking examples.
+Figure C1 was then generated from these fixed arrays using the Python
+`nature-figure` workflow. The rendered source-data CSV, SVG, PDF, TIFF and PNG
+outputs are stored with the prediction export and are ready for author review.
 
 ## 5. Remaining checks before manuscript tables
 
-1. Confirm whether Appendix C should plot a fixed channel (recommended: channel 0) or the benchmark’s conventional target channel; record the choice in the selection manifest.
-2. Obtain the final-profile prediction export for all seven datasets through an explicitly authorized evaluation-only route.
+1. Author review of Figure C1 at final manuscript scale.
+2. Final synchronization of the Appendix C caption and Section 5.1 appendix
+   pointer after the figure layout is approved.
