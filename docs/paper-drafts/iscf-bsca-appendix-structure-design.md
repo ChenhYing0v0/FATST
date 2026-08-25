@@ -1,6 +1,6 @@
 # ISCF-BSCA Appendix Structure Design
 
-**Version:** v0.5-author-refined-appendix
+**Version:** v0.6-table-hierarchy-refinement
 **Date:** 2026-08-25
 **Scope:** minimal appendix routing for the frozen Sections 1--7 manuscript
 
@@ -16,9 +16,9 @@ The attached TimeAlign paper is treated as a reference for appendix organization
 
 Appendix A is organized into three concise subsections. `A.1 Metric Details` defines MSE and MAE; `A.2 Datasets` introduces the four dataset families and reports their statistics and split construction; `A.3 Implementation Details` records the software/hardware environment, optimization settings and dataset-specific ISCF-BSCA configuration.
 
-**Table A1 | Dataset statistics.** The ETT subsets may be grouped where their statistics are identical. The compact columns are `Dataset`, `Variables`, `Sampling frequency`, `Dataset size`, and `Domain`. Exact split boundaries and sliding-window counts remain in the audit artifact rather than the manuscript table; the accompanying prose states the standard ETT split and chronological 70/10/20 split used by the remaining datasets.
+**Table A1 | Dataset statistics.** One row is retained for each of the seven paper-core datasets. The compact columns are `Dataset`, `Variables`, `Sampling frequency`, `Dataset size`, and `Domain`. `Dataset size` is reported as a `(Train, Validation, Test)` tuple following the TimeAlign Appendix D convention; exact boundary indices and loader-window counts remain in the audit artifact rather than the manuscript table.
 
-**Table A2 | Training and evaluation settings.** One row is retained per dataset. The compact columns are `Max Length`, `Initial learning rate`, `Batch size`, `Gradient accumulation`, `Maximum epochs`, and `Early-stopping patience`. Optimizer, learning-rate schedule, seed and validation checkpoint selection are stated once in the surrounding prose.
+**Table A2 | Training and evaluation settings.** One row is retained per dataset. The compact columns are `Max Length`, `Initial learning rate`, `Batch size`, `Gradient Accumulation Steps`, `Maximum epochs`, and `Early-stopping patience`. The accompanying prose defines gradient accumulation as the number of mini-batches combined before one optimizer update and states that effective batch size equals batch size multiplied by accumulation steps. Optimizer, learning-rate schedule, seed and validation checkpoint selection are stated once in the surrounding prose.
 
 **Table A3 | Dataset-specific ISCF-BSCA configuration.** One row per dataset. Recommended columns are `Scope set`, `Mode rank`, `Scope-wise loss weight`, `Uniform-prefix loss weight/ramp`, `Allocation-balance final weight/ramp`, and the representation settings needed to reproduce the decoder interface (`patch number`, `Encoder width`, `feed-forward width`, `dropout`, `weight decay`). The scopes and loss coefficients are global architectural settings and may be shown as repeated values or marked “shared across datasets”; dataset-specific values must be listed explicitly. The table should not include HPO trial histories, source-role prose or checkpoint hashes.
 
@@ -26,7 +26,7 @@ No separate Appendix A subsection is needed for baseline taxonomy or historical 
 
 ### Appendix B. Full results
 
-Under `B.1 Main Experiments`, one concise paragraph introduces the full-precision cells omitted from the compact dataset-average tables in Sections 5.2 and 5.3:
+Because Appendix B contains only the two main-result tables, it uses one `B. FULL RESULTS` section without a nested B.1 subsection. A concise opening paragraph introduces the full-precision cells omitted from the compact dataset-average tables in Sections 5.2 and 5.3:
 
 - **Table B1:** complete Main-I results for the unified ISCF-BSCA model and horizon-specific baselines, for every paper-core dataset, horizon and metric;
 - **Table B2:** complete Main-II results when every method serves all horizons with one unified model under the H720-prefix protocol.

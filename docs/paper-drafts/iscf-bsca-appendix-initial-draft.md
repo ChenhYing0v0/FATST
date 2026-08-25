@@ -38,13 +38,15 @@ We evaluate ISCF-BSCA on seven widely used multivariate time-series forecasting 
 
 | Dataset | Variables | Sampling Frequency | Dataset Size | Domain |
 | --- | ---: | --- | ---: | --- |
-| ETTh1, ETTh2 | 7 | 1 h | 17,420 | Electricity |
-| ETTm1, ETTm2 | 7 | 15 min | 69,680 | Electricity |
-| ECL | 321 | 1 h | 26,304 | Electricity |
-| Weather | 21 | 10 min | 52,696 | Weather |
-| Solar | 137 | 10 min | 52,560 | Solar energy |
+| ETTh1 | 7 | 1 h | (8545, 2881, 2881) | Electricity |
+| ETTh2 | 7 | 1 h | (8545, 2881, 2881) | Electricity |
+| ETTm1 | 7 | 15 min | (34465, 11521, 11521) | Electricity |
+| ETTm2 | 7 | 15 min | (34465, 11521, 11521) | Electricity |
+| ECL | 321 | 1 h | (18317, 2633, 5261) | Electricity |
+| Weather | 21 | 10 min | (36792, 5271, 10540) | Weather |
+| Solar | 137 | 10 min | (36601, 5161, 10417) | Solar energy |
 
-The ETT datasets follow their standard fixed chronological splits, whereas Weather, ECL and Solar use chronological 70/10/20 splits. The scaler is fitted exclusively on the training segment. All datasets are evaluated at prediction lengths $H\in\{96,192,336,720\}$.
+Dataset Size is reported as (Train, Validation, Test). The ETT datasets follow their standard fixed chronological splits, whereas Weather, ECL and Solar use chronological 70/10/20 splits. The scaler is fitted exclusively on the training segment. All datasets are evaluated at prediction lengths $H\in\{96,192,336,720\}$.
 
 ### A.3 IMPLEMENTATION DETAILS
 
@@ -52,7 +54,7 @@ The local experiments are implemented in Python 3.12.13 and PyTorch 2.9.0 with C
 
 ### Table A2 | Training and Evaluation Settings
 
-| Dataset | Max Length | Initial LR | Batch | Grad. accumulation | Max epochs | Patience |
+| Dataset | Max Length | Initial LR | Batch | Gradient Accumulation Steps | Max epochs | Patience |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | ETTh1 | 720 | $3\times10^{-4}$ | 32 | 1 | 45 | 10 |
 | ETTh2 | 720 | $5\times10^{-4}$ | 32 | 1 | 30 | 7 |
@@ -62,7 +64,7 @@ The local experiments are implemented in Python 3.12.13 and PyTorch 2.9.0 with C
 | ECL | 720 | $5\times10^{-4}$ | 4 | 8 | 30 | 7 |
 | Solar | 720 | $3\times10^{-4}$ | 16 | 2 | 45 | 10 |
 
-All runs use seed 2021. The checkpoint with the lowest validation mean MSE over $H\in\{96,192,336,720\}$ is retained and serves all four forecasting requests. Weight decay is $0.01$ except for ETTm2, where it is $0.001$, and early stopping uses zero minimum improvement.
+Gradient Accumulation Steps denotes the number of mini-batches whose gradients are accumulated before one optimizer update; the effective batch size is therefore the batch size multiplied by this value. All runs use seed 2021. The checkpoint with the lowest validation mean MSE over $H\in\{96,192,336,720\}$ is retained and serves all four forecasting requests. Weight decay is $0.01$ except for ETTm2, where it is $0.001$, and early stopping uses zero minimum improvement.
 
 ### Table A3 | ISCF-BSCA Configuration
 
@@ -79,8 +81,6 @@ All runs use seed 2021. The checkpoint with the lowest validation mean MSE over 
 The scope set and BSCA coefficients are shared across datasets. Specifically, $\lambda_{\mathrm{scope}}=1$ and $\lambda_{\mathrm{balance}}(u)=0.1\min(u/0.25,1)$, where $u\in[0,1]$ denotes normalized optimizer progress.
 
 ## B. FULL RESULTS
-
-### B.1 MAIN EXPERIMENTS
 
 Tables B1 and B2 provide the complete results for the two forecasting comparisons in Sections 5.2 and 5.3. The main text reports the four-horizon average for each dataset, whereas the appendix retains MSE and MAE at every evaluated horizon. Table B1 compares one unified ISCF-BSCA model with baselines optimized separately for each requested horizon. Table B2 places every method under the same one-model-all-horizons workflow, where shorter requests are evaluated from the corresponding prefixes of one maximum-length forecast.
 

@@ -1,5 +1,9 @@
 # StageC Unified Varied-Horizon Forecasting Ledger
 
+## Appendix Table and Hierarchy Refinement (2026-08-25)
+
+Table A1 now reports `Dataset Size` as `(Train, Validation, Test)` using the TimeAlign Appendix D convention for the seven shared benchmarks. Table A2 renames the ambiguous abbreviated field to `Gradient Accumulation Steps` and defines it as the number of mini-batches accumulated before one optimizer update. Appendix B removes the redundant B.1 level and keeps Tables B1/B2 directly under `B. FULL RESULTS`. Canonical draft=`docs/paper-drafts/iscf-bsca-appendix-initial-draft.md`; decision=`appendix_v0p6_table_hierarchy_refinement_ready`; no new training, remote launch or formal test.
+
 ## Appendix Author Refinement (2026-08-25)
 
 The integrated Appendix draft is updated to the author-refined structure. Appendix A retains `Metric Details -> Datasets -> Implementation Details`, rewrites the dataset introductions using the PDT presentation pattern, compresses Table A1 to dataset statistics and Table A2 to maximum length plus optimization settings, and removes the paper-profile selection disclosure requested by the author. Appendix C is restored as `Visualization`; the Figure C1 image removes the redundant `Appendix C` title prefix while preserving the curves, prefix rulers and frozen validation sources. Canonical draft=`docs/paper-drafts/iscf-bsca-appendix-initial-draft.md`; figure source=`scripts/plot_iscf_bsca_appendix_c_figure.py`; decision=`appendix_v0p5_author_refinement_ready`; no new training, remote launch or formal test.

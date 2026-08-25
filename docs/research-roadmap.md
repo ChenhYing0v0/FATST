@@ -6,11 +6,12 @@ The manuscript-wide Appendix plan uses a minimal, author-refined structure.
 Appendix A follows `Metric Details -> Datasets -> Implementation Details`,
 with definitions of MSE/MAE, PDT-informed dataset introductions and three supporting
 tables for compact dataset statistics, training/evaluation settings, and dataset-specific
-ISCF-BSCA configuration. Table A1 reports dataset size rather than separate split
-boundaries and window counts; Table A2 reports maximum prediction length without
-the look-back column. Appendix B uses a concise full-results
-entry before the complete dataset--horizon--metric cells behind Tables 1 and 2,
-including negative cells. Appendix C is restored as `Visualization` and contains
+ISCF-BSCA configuration. Table A1 reports dataset size as `(Train, Validation, Test)`
+rather than separate split boundaries and loader-window counts; Table A2 reports maximum
+prediction length without the look-back column and defines gradient accumulation steps.
+Appendix B uses one full-results section without a nested B.1 subsection and retains the
+complete dataset--horizon--metric cells behind Tables 1 and 2, including negative cells.
+Appendix C is restored as `Visualization` and contains
 one validation-only qualitative figure with two examples for each of the seven
 paper-core datasets and markers for the four evaluated prefixes. The Figure C1
 title no longer repeats `Appendix C`. The attached PDT and TimeAlign papers are
