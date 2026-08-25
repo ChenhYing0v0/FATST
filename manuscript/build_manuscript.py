@@ -87,7 +87,8 @@ FIGURES = {
         "width": "0.96\\textwidth",
     },
     "4": {
-        "source": "paper-figures/figure_iscf_bsca_method_overview.pdf",
+        # pdflatex-compatible export of the editable ISCF_overview.svg source.
+        "source": "paper-figures/ISCF_overview.pdf",
         "target": "figure_04_method_overview.pdf",
         "label": "fig:iscf-bsca-method",
         "width": "1.00\\textwidth",
