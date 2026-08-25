@@ -1,0 +1,25 @@
+% Required packages: booktabs, graphicx, xcolor
+\begin{table*}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2.0pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{l|cccccccccccccc}
+\toprule
+Dataset & ISCF-BSCA (Ours) & TimeAlign & QDF & AMD & SimpleTM & TVNet & iTransformer & TimeMixer & Leddam & ModernTCN & PatchTST & Crossformer & TimesNet & DLinear \\
+\midrule
+ETTm1 & \textcolor{red}{\textbf{0.329}}/\textcolor{red}{\textbf{0.363}} & \textcolor{blue}{\underline{0.341}}/\textcolor{blue}{\underline{0.368}} & 0.353/0.380 & 0.351/0.378 & 0.383/0.396 & 0.348/0.379 & 0.362/0.391 & 0.356/0.380 & 0.360/0.390 & 0.351/0.381 & 0.353/0.376 & 0.416/0.435 & 0.399/0.406 & 0.356/0.378 \\
+ETTm2 & \textcolor{blue}{\underline{0.248}}/\textcolor{red}{\textbf{0.304}} & \textcolor{red}{\textbf{0.245}}/\textcolor{red}{\textbf{0.304}} & 0.257/0.315 & 0.254/0.315 & 0.280/0.325 & 0.251/\textcolor{blue}{\underline{0.311}} & 0.269/0.329 & 0.257/0.318 & 0.265/0.321 & 0.253/0.314 & 0.256/0.317 & 0.518/0.501 & 0.292/0.331 & 0.259/0.324 \\
+ETTh1 & \textcolor{red}{\textbf{0.390}}/\textcolor{red}{\textbf{0.415}} & 0.418/0.431 & 0.439/0.442 & 0.412/0.428 & 0.428/0.433 & 0.407/0.421 & 0.439/0.448 & 0.427/0.441 & 0.415/0.431 & \textcolor{blue}{\underline{0.404}}/\textcolor{blue}{\underline{0.420}} & 0.419/0.437 & 0.440/0.463 & 0.488/0.452 & 0.425/0.439 \\
+ETTh2 & \textcolor{red}{\textbf{0.306}}/\textcolor{red}{\textbf{0.364}} & 0.347/0.387 & 0.353/0.394 & 0.366/0.406 & 0.356/0.392 & 0.324/\textcolor{blue}{\underline{0.377}} & 0.374/0.406 & 0.349/0.397 & 0.346/0.392 & \textcolor{blue}{\underline{0.322}}/0.379 & 0.351/0.395 & 0.809/0.658 & 0.390/0.417 & 0.431/0.447 \\
+Weather & \textcolor{red}{\textbf{0.214}}/\textcolor{red}{\textbf{0.245}} & \textcolor{blue}{\underline{0.218}}/\textcolor{blue}{\underline{0.247}} & 0.237/0.271 & 0.225/0.265 & 0.243/0.271 & 0.221/0.261 & 0.233/0.271 & 0.226/0.264 & 0.227/0.264 & 0.224/0.264 & 0.226/0.264 & 0.228/0.287 & 0.259/0.287 & 0.242/0.293 \\
+ECL & \textcolor{red}{\textbf{0.151}}/\textcolor{red}{\textbf{0.244}} & \textcolor{blue}{\underline{0.156}}/\textcolor{blue}{\underline{0.246}} & 0.167/0.260 & 0.162/0.257 & 0.168/0.262 & 0.165/0.254 & 0.164/0.261 & 0.173/0.272 & 0.162/0.257 & \textcolor{blue}{\underline{0.156}}/0.253 & 0.159/0.253 & 0.181/0.279 & 0.193/0.295 & 0.166/0.264 \\
+Solar & \textcolor{red}{\textbf{0.188}}/\textcolor{red}{\textbf{0.208}} & 0.196/\textcolor{blue}{\underline{0.217}} & 0.208/0.258 & 0.205/0.248 & \textcolor{blue}{\underline{0.191}}/0.251 & 0.228/0.277 & 0.202/0.248 & 0.193/0.252 & 0.224/0.265 & 0.228/0.282 & 0.194/0.245 & 0.205/0.232 & 0.244/0.334 & 0.223/0.226 \\
+\midrule
+Average & \textcolor{red}{\textbf{0.261}}/\textcolor{red}{\textbf{0.306}} & \textcolor{blue}{\underline{0.274}}/\textcolor{blue}{\underline{0.314}} & 0.288/0.331 & 0.282/0.328 & 0.293/0.333 & 0.278/0.326 & 0.292/0.336 & 0.283/0.332 & 0.286/0.331 & 0.277/0.327 & 0.280/0.326 & 0.399/0.408 & 0.324/0.360 & 0.300/0.339 \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Comparison with horizon-specific forecasters. Each dataset entry reports MSE/MAE averaged over $H\in\{96,192,336,720\}$, and the final row is the unweighted mean over seven datasets. ISCF-BSCA uses one unified model per dataset, whereas each baseline follows its horizon-specific protocol. Full horizon-wise results, source roles and protocol details are provided in ~\ref{app:full-results}. Best and second-best displayed values are marked in red bold and blue underline, respectively.}
+\label{tab:main_iscf_bsca}
+\end{table*}

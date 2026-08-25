@@ -1,0 +1,74 @@
+\documentclass[preprint,12pt]{elsarticle}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,bm}
+\usepackage{booktabs,multirow,array,tabularx}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\usepackage{adjustbox}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{pdflscape}
+\usepackage{microtype}
+\usepackage{lineno}
+\usepackage[hidelinks]{hyperref}
+
+\emergencystretch=1em
+\hfuzz=2pt
+
+\journal{Journal name to be confirmed}
+
+\begin{document}
+
+\begin{frontmatter}
+
+% Provisional working title from the frozen paper architecture.
+\title{ISCF-BSCA: Prefix-Consistent Unified Multi-Horizon Forecasting}
+
+% Replace the author and affiliation placeholders before submission.
+\author[inst1]{Author Name}
+\author[inst1]{Author Name\corref{cor1}}
+\ead{corresponding.author@example.com}
+\cortext[cor1]{Corresponding author.}
+\affiliation[inst1]{organization={Institution Name},
+            addressline={Department or Laboratory},
+            city={City},
+            postcode={Postal Code},
+            country={Country}}
+
+\begin{abstract}
+% Intentionally left blank. The Abstract will be drafted after manuscript QA.
+\end{abstract}
+
+\begin{keyword}
+% Intentionally left blank. Keywords will be added with the Abstract.
+\end{keyword}
+
+\end{frontmatter}
+
+% Uncomment for a line-numbered review copy.
+% \linenumbers
+
+\input{sections/01_introduction.tex}
+\input{sections/02_related_work.tex}
+\input{sections/03_problem_formulation.tex}
+\input{sections/04_method.tex}
+\input{sections/05_experiments.tex}
+\FloatBarrier
+\input{sections/06_discussion.tex}
+\input{sections/07_conclusion.tex}
+
+\section*{References}
+\addcontentsline{toc}{section}{References}
+% Intentionally left blank. Enable the following commands after references.bib
+% has been populated and audited.
+% \bibliographystyle{elsarticle-num}
+% \bibliography{references}
+
+\appendix
+\renewcommand*{\theHtable}{appendix.\Alph{section}.\arabic{table}}
+\renewcommand*{\theHfigure}{appendix.\Alph{section}.\arabic{figure}}
+\input{sections/appendices.tex}
+
+\end{document}

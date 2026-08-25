@@ -1,0 +1,21 @@
+\begin{table*}[t]
+\centering
+\caption{Core ablation of ISCF-BSCA. Each dataset entry is the mean over prediction horizons $H\in\{96,192,336,720\}$. Lower is better. Best and second-best results are shown in bold and underlined, respectively.}
+\label{tab:core-ablation}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccccccccc}
+\toprule
+Variant & \multicolumn{2}{c}{ETTm1} & \multicolumn{2}{c}{ETTm2} & \multicolumn{2}{c}{ETTh1} & \multicolumn{2}{c}{ETTh2} & \multicolumn{2}{c}{Weather} & \multicolumn{2}{c}{Avg} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(lr){8-9} \cmidrule(lr){10-11} \cmidrule(lr){12-13}
+ & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE \\
+\midrule
+Full ISCF-BSCA & \textbf{0.342} & \textbf{0.365} & \textbf{0.253} & \textbf{0.309} & \textbf{0.407} & \textbf{0.432} & \textbf{0.311} & \textbf{0.367} & \textbf{0.214} & \textbf{0.245} & \textbf{0.305} & \textbf{0.344} \\
+\midrule
+w/o BSCA & 0.353 & 0.378 & \underline{0.258} & 0.315 & 0.434 & 0.450 & 0.319 & 0.375 & 0.218 & 0.250 & 0.316 & 0.354 \\
+w/o Target-Adaptive Allocation & \underline{0.347} & \underline{0.369} & 0.259 & 0.317 & \underline{0.413} & 0.437 & \underline{0.315} & \underline{0.371} & \underline{0.217} & \underline{0.249} & \underline{0.310} & \underline{0.349} \\
+Shared Scope Projection & 0.355 & 0.376 & \underline{0.258} & \underline{0.314} & 0.415 & \underline{0.435} & 0.325 & 0.382 & \underline{0.217} & 0.250 & 0.314 & 0.351 \\
+Fixed Scope ($s=144$) & 0.351 & 0.372 & 0.263 & 0.319 & 0.428 & 0.441 & 0.318 & 0.373 & \underline{0.217} & \underline{0.249} & 0.315 & 0.351 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
