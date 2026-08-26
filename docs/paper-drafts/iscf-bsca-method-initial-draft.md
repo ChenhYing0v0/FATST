@@ -66,7 +66,7 @@ The Scope-conditioned Forecasts and Scope Probabilities are optimized jointly. B
 
 <a id="fig:horiscope-method"></a>
 
-![Overview of the HoriScope architecture.](../../paper-figures/HoriScope_overview.svg)
+![Overview of the HoriScope architecture.](../../paper-figures/HoriScope_overview.png)
 
 **Figure 4 | HoriScope for unified varied-horizon forecasting.** The Scope Forecasting Path constructs region-wise forecasts under multiple scopes, and the Target-Adaptive Allocation Path combines them into one trajectory whose prefixes serve different horizon requests.
 

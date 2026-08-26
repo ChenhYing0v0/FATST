@@ -87,9 +87,9 @@ FIGURES = {
         "width": "0.96\\textwidth",
     },
     "4": {
-        # pdflatex-compatible export generated from HoriScope_overview.svg.
-        "source": "paper-figures/HoriScope_overview.pdf",
-        "target": "figure_04_method_overview.pdf",
+        # High-resolution raster asset supplied for the HoriScope overview.
+        "source": "paper-figures/HoriScope_overview.png",
+        "target": "figure_04_method_overview.png",
         "label": "fig:horiscope-method",
         "width": "1.00\\textwidth",
     },
