@@ -123,7 +123,7 @@ $$
 }.
 $$
 
-Here, $\mathcal O$ denotes the aligned evaluation origins, $\sigma_c^{\mathrm{train}}$ is the train-split standard deviation of variable $c$, and $\epsilon>0$ prevents division by zero. All comparisons use identical histories, forecast origins, scalers and overlapping target indices.
+Here, $\mathcal O$ denotes the aligned evaluation origins, $\sigma_c^{\mathrm{train}}$ is the train-split standard deviation of variable $c$, and $\epsilon$ is the fixed numerical stabilizer used in the computation. All comparisons use identical histories, forecast origins, scalers and overlapping target indices.
 
 To visualize this inconsistency, we compare multi-horizon forecasts from DLinear models independently optimized on ETTh2 \citep{zeng2023dlinear}. Figure 2a shows that their predictions diverge over the same 96 future steps: relative to the $H=720$ forecast, the forecasts for $H\in\{96,192,336\}$ differ by 2.51, 2.16 and 2.40 in mean absolute raw scale, respectively.
 
@@ -133,7 +133,7 @@ We further evaluate all 2,161 aligned ETTh2 validation origins and variables, wi
 
 ![Validation-only illustration of horizon-specific prefix disagreement.](../../analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures/figure_intro_prefix_disagreement.png)
 
-**Figure 2 | Independently optimized horizon-specific forecasts are inconsistent on shared future steps.** **a**, An ETTh2 validation trajectory selected by aggregate CHPD, showing predictions from DLinear models trained separately for horizons 96, 192, 336 and 720. The panel includes 48 observed steps and the first 96 shared future steps; the inset reports mean absolute differences from the 720-step forecast. **b**, NCHPD averaged over all ETTh2 validation origins ($n=2{,}161$) and variables.
+**Figure 2 | Horizon-specific forecasts disagree on shared future steps.** **a**, Selected ETTh2 validation trajectory from independently trained DLinear models for horizons 96, 192, 336 and 720; the inset reports differences from the $H=720$ forecast. **b**, NCHPD over 2,161 aligned ETTh2 validation origins and all variables.
 
 ### 3.3 Future-region sharing-demand heterogeneity
 
@@ -158,15 +158,15 @@ y_{o+\tau,c}
 \right)^2.
 $$
 
-Operationally, $R_{o,b,s}$ is averaged over all future steps and variables in $\mathcal B_b$ for a given origin; it is an empirical region-level risk rather than an expectation over the data distribution. Lower $R_{o,b,s}$ indicates that extent $s$ better matches region $\mathcal B_b$ within the controlled family. A region-dependent preference appears when $s_{o,b}^{\star}=\arg\min_sR_{o,b,s}$ changes with $b$.
+For a given origin and region, $R_{o,b,s}$ averages squared errors over the region's future steps and variables. Lower $R_{o,b,s}$ indicates that extent $s$ better matches region $\mathcal B_b$ within the controlled family; a region-dependent preference appears when $s_{o,b}^{\star}=\arg\min_sR_{o,b,s}$ changes with $b$.
 
-We evaluate the five predictors with $s\in\{1,8,32,128,720\}$ across 12 contiguous 60-step future regions on ETTm2. Figure 3a reports the percentage excess prediction risk of each extent above the lowest-risk extent within each region, with outlined squares marking the region-wise winners. The preferred extents vary across the future domain: each of the five extents wins two or three regions, all ten extent pairs exhibit bidirectional crossings beyond the predefined 0.5% margin, and the mean best-versus-second-best margin reaches 10.266%. No fixed extent minimizes prediction risk throughout this controlled example, supporting heterogeneous sharing demand across future regions.
+We evaluate the five predictors with $s\in\{1,8,32,128,720\}$ across 12 contiguous 60-step future regions on ETTm2. Figure 3a reports the percentage excess prediction risk of each extent above the lowest-risk extent within each region, with outlined squares marking the region-wise winners. The preferred extents vary across the future domain: each of the five extents wins two or three regions, and the mean best-versus-second-best margin reaches 10.266%. No fixed extent minimizes prediction risk throughout this controlled example, supporting heterogeneous sharing demand across future regions.
 
 <a id="fig:sharing-heterogeneity"></a>
 
 ![Validation-only illustration of future-region sharing-demand heterogeneity.](../../analysis/iscf_bsca_intro_evidence_full_search_20260730/selected_figures/figure_intro_sharing_heterogeneity.png)
 
-**Figure 3 | Preferred sharing extent varies across future regions.** **a**, Percentage excess future-region prediction risk (mean squared error) of five capacity-matched single-extent predictors above the regional minimum for one selected ETTm2 validation example; outlined squares mark the best extent in each 60-step region. **b**, MSE reduction obtained by selecting the regional winner instead of the best fixed extent ($s=720$); the dashed line denotes the 12-region mean.
+**Figure 3 | Sharing preferences vary across future regions.** **a**, Percentage excess prediction risk of five capacity-matched single-extent predictors on a selected ETTm2 validation example; squares mark regional winners. **b**, MSE reduction from regional selection relative to the fixed extent $s=720$; dashed line, mean over 12 regions.
 
 Figure 3b quantifies the performance upper bound associated with these region-wise preferences. Relative to the best fixed extent ($s=720$), selecting the lowest-risk extent separately for each region reduces average MSE by 8.112%. Because the regional winners are selected using validation labels across separately trained predictors, this value represents descriptive oracle headroom rather than the realized gain of a learned decoder. Within this controlled example, its magnitude nevertheless shows that one fixed extent can leave meaningful region-specific headroom, motivating a decoder that can adapt sharing across the future domain.
 

@@ -42,4 +42,4 @@ The contributions of our work are summarized as follows:
 2. We introduce HoriScope, which integrates forecasts generated under multiple sharing scopes through target-adaptive allocation.
 3. We develop BSCA to support balanced scope learning without increasing inference-time complexity.
 
-Experiments across datasets from multiple application domains show that our unified model outperforms separately trained horizon-specific forecasters. Component-wise ablations support the utility of the proposed components, and generalization studies demonstrate decoder portability across the evaluated backbone families.
+Experiments across datasets from multiple application domains show that our unified model achieves state-of-the-art performance among the evaluated baselines and outperforms separately trained horizon-specific forecasters. Component-wise ablations support the utility of the proposed components, and generalization studies demonstrate decoder portability across the evaluated backbone families.
