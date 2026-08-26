@@ -10,16 +10,16 @@ Section 3 established two decoder-side requirements for UVHF. Predictions for a 
 
 Fig.~\ref{fig:horiscope-method} summarizes the forward computation of HoriScope, which comprises a \textbf{Scope Forecasting Path} and a \textbf{Target-Adaptive Allocation Path}. The decoder consumes a variable-wise History State rather than relying on a particular Encoder. Any Encoder that models temporal patch tokens and returns the required tensor interface can therefore serve as its backbone. This interface covers the patch-based Encoder family commonly used in time-series forecasting \citep{nie2023patchtst,zhang2023crossformer}. Given a History Series $\mathbf X\in\mathbb R^{B\times L\times C}$, Patchify and the Encoder produce $\mathbf R\in\mathbb R^{B\times C\times R}$. The Scope Forecasting Path constructs region-wise predictions under each sharing scope and assembles them into $\mathcal F_\theta(\mathbf X)\in\mathbb R^{B\times C\times T\times S}$. The Target-Adaptive Allocation Path then determines how each future target draws on these sharing granularities.
 
-The Target-Adaptive Allocation Path combines a projected History State with the Future Coordinate $\boldsymbol\phi_\tau$ and produces Scope Probabilities $\boldsymbol\Pi\in\mathbb R^{B\times C\times T\times S}$. Weighted contraction with the scope-indexed forecast field yields one trajectory $\widehat{\mathbf Y}\in\mathbb R^{B\times T\times C}$. For an $H$-step request, the region-local construction permits computation to be restricted to regions and targets intersecting the first $H$ steps. The requested horizon changes only the evaluated prefix, not the computation assigned to a shared future target. HoriScope therefore produces variable-length outputs while satisfying CHPC by construction.
+The Target-Adaptive Allocation Path combines a projected History State with the Future Coordinate $\boldsymbol\phi_\tau$ and produces Scope Probabilities $\boldsymbol\Pi\in\mathbb R^{B\times C\times T\times S}$. Weighted contraction with the scope-indexed forecast field yields one trajectory $\widehat{\mathbf Y}\in\mathbb R^{B\times T\times C}$. For an $H$-step request, HoriScope evaluates the region-target pairs intersecting the first $H$ future steps. Every shared target is generated through the same region-local mapping, irrespective of the requested endpoint. Varying $H$ consequently changes only the output extent, yielding variable-length forecasts that satisfy CHPC by construction.
 
-The Scope-conditioned Forecasts and Scope Probabilities are optimized jointly. BSCA separates two training roles: the Uniform-Prefix Forecasting Loss optimizes varied-horizon prediction, while the Scope-Wise Forecasting Loss and Allocation-Balance Regularizer stabilize multi-scope learning. These objectives are described separately from the forward computation in Fig.~\ref{fig:horiscope-method}.
+The Scope-conditioned Forecasts and Scope Probabilities are optimized jointly. BSCA separates two training roles: the Uniform-Prefix Forecasting Loss optimizes varied-horizon prediction, while the Scope-Wise Forecasting Loss and Allocation-Balance Regularizer stabilize multi-scope learning.
 
 
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=1.00\textwidth]{figures/figure_04_method_overview.pdf}
-\caption{HoriScope constructs one trajectory for unified varied-horizon forecasting. The Scope Forecasting Path generates region-wise predictions under multiple sharing scopes. The Target-Adaptive Allocation Path assigns scope-conditioned information to each future target. Weighted contraction yields one trajectory whose nested prefixes answer different horizon requests. Three representative scopes are shown for clarity; the probability map and trajectories are schematic.}
+\caption{HoriScope for unified varied-horizon forecasting. The Scope Forecasting Path constructs region-wise forecasts under multiple scopes, and the Target-Adaptive Allocation Path combines them into one trajectory whose prefixes serve different horizon requests.}
 \label{fig:horiscope-method}
 \end{figure*}
 
@@ -43,7 +43,7 @@ R=PD_e.
 \]
 
 
-Collecting $\mathbf r_{b,c}$ over samples and variables gives the History State $\mathbf R=[\mathbf r_{b,c}]\in\mathbb R^{B\times C\times R}$. The preserved variable axis provides one history representation for each sample-variable pair, which is used by both decoder paths. HoriScope requires only this tensor interface and does not otherwise constrain the internal design of the patch-token Encoder.
+Collecting $\mathbf r_{b,c}$ over samples and variables gives the History State $\mathbf R=[\mathbf r_{b,c}]\in\mathbb R^{B\times C\times R}$. The preserved variable axis provides one history representation for each sample-variable pair, which is used by both decoder paths.
 
 The History State summarizes the observed series, but a unified decoder must also identify where each prediction lies in the future domain. Using the requested horizon for this purpose would assign different conditioning contexts to the same target under different requests. HoriScope instead introduces a \textbf{Future Coordinate} for every future step. This fixed coordinate supplies a horizon-independent target identity and a common positional basis for regions at different scopes. It also allows the Target-Adaptive Allocation Path to vary its scope preference across future steps.
 
@@ -75,37 +75,12 @@ The constant coordinate is $\phi_{\tau,0}=1$. Each nonconstant coordinate is cen
 \]
 
 
-The constant channel preserves a global reference, while the centered nonconstant channels distinguish positions across the future domain. The resulting parameter-free field serves two roles. Region-wise averaging produces the Region Descriptors used to generate Scope-conditioned Forecasts, whereas the unpooled coordinate $\boldsymbol\phi_\tau$ identifies the individual target in the Condition Vector used for Scope Probabilities.
+The constant channel preserves a global reference, while the centered nonconstant channels distinguish positions across the future domain. The Future Coordinate field serves two roles. Region-wise averaging produces the Region Descriptors used to generate Scope-conditioned Forecasts, whereas the unpooled coordinate $\boldsymbol\phi_\tau$ identifies the individual target in the Condition Vector used for Scope Probabilities.
 
 \subsection{Generation of scope-conditioned forecasts}
 
 
-The Scope Forecasting Path contains $S$ parallel scope lines, one for each sharing scope in $\mathcal S=\{s_1,\ldots,s_S\}$. A single Scope Projection stage contains an independently parameterized projection for every scope, so each line receives a dedicated Scope Matrix as its history-conditioned information pool. The matrix form is important because it retains a Future-Coordinate axis and a latent-mode axis. Region Descriptors can therefore query the same scope-specific history information at different future locations, without assigning a separate prediction head to every region.
-
-For a scope $s$, the future domain is divided into contiguous regions
-
-\[
-\mathcal G_g^{(s)}
-=
-\{(g-1)s+1,\ldots,gs\},
-\qquad
-g=1,\ldots,T/s.
-\]
-
-
-The Future Coordinate within each region is averaged to form the Region Descriptor:
-
-\[
-\overline{\boldsymbol\phi}_g^{(s)}
-=
-\frac{1}{s}
-\sum_{\tau\in\mathcal G_g^{(s)}}
-\boldsymbol\phi_\tau
-\in\mathbb R^{D_q}.
-\]
-
-
-For each scope, Scope Projection maps $\mathbf r_{b,c}$ into its dedicated Scope Matrix
+The Scope Forecasting Path contains $S$ parallel scope lines, one for each sharing scope in $\mathcal S=\{s_1,\ldots,s_S\}$. Each scope has its own parameterized Scope Projection, which maps the History State into a dedicated Scope Matrix:
 
 \[
 \mathbf M_{b,c}^{(s)}
@@ -120,6 +95,31 @@ For each scope, Scope Projection maps $\mathbf r_{b,c}$ into its dedicated Scope
 \]
 
 
+The matrix form preserves a Future-Coordinate axis and a latent-mode axis, allowing Region Descriptors to query scope-specific history information at different future locations without assigning a separate prediction head to every region.
+
+For a scope $s$, the future domain is divided into contiguous regions
+
+\[
+\mathcal G_g^{(s)}
+=
+\{(g-1)s+1,\ldots,gs\},
+\qquad
+g=1,\ldots,T/s.
+\]
+
+
+The Future Coordinate within each region is averaged to form the Region Descriptor, which provides a compact positional summary for region-wise state construction:
+
+\[
+\overline{\boldsymbol\phi}_g^{(s)}
+=
+\frac{1}{s}
+\sum_{\tau\in\mathcal G_g^{(s)}}
+\boldsymbol\phi_\tau
+\in\mathbb R^{D_q}.
+\]
+
+
 The Region Descriptor selects and combines information from this matrix through a coordinate contraction, producing the region-wise Scope-region State
 
 \[
@@ -131,7 +131,7 @@ The Region Descriptor selects and combines information from this matrix through 
 \]
 
 
-Once the Scope Matrix is available, each Scope-region State depends only on the descriptor of its own region. Regions can therefore be evaluated separately and in parallel, although they draw on the same scope-specific history information. All future steps in $\mathcal G_g^{(s)}$ reuse $\mathbf z_{b,c,g}^{(s)}$. A finer scope constructs more region states and limits reuse to shorter intervals, whereas a broader scope shares each state over a longer interval. Scope thus defines a cross-step reuse pattern rather than a requested prediction horizon.
+Once the Scope Matrix is available, each Scope-region State depends only on the descriptor of its own region. Regions can therefore be evaluated separately and in parallel, although they draw on the same scope-specific history information. All future steps in $\mathcal G_g^{(s)}$ reuse $\mathbf z_{b,c,g}^{(s)}$. A finer scope constructs more region states and limits reuse to shorter intervals, whereas a broader scope shares each state over a longer interval. Scope therefore defines the cross-step reuse pattern.
 
 The Region-to-Step Forecast Generator converts each shared Scope-region State into step-wise predictions. Let $g_s(\tau)$ denote the region containing step $\tau$. The generator is shared across scopes and regions, and uses step-specific vectors $\mathbf a_\tau,\mathbf n_\tau\in\mathbb R^K$ and bias $\beta_\tau$ to define
 

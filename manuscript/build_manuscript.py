@@ -87,8 +87,8 @@ FIGURES = {
         "width": "0.96\\textwidth",
     },
     "4": {
-        # pdflatex-compatible export of the editable HoriScope overview source.
-        "source": "paper-figures/ISCF_overview.pdf",
+        # pdflatex-compatible export generated from HoriScope_overview.svg.
+        "source": "paper-figures/HoriScope_overview.pdf",
         "target": "figure_04_method_overview.pdf",
         "label": "fig:horiscope-method",
         "width": "1.00\\textwidth",
