@@ -72,7 +72,7 @@ FIGURES = {
         "source": "paper-figures/figure_intro_conceptual_problem.pdf",
         "target": "figure_01_conceptual_problem.pdf",
         "label": "fig:conceptual-problems",
-        "width": "0.92\\textwidth",
+        "width": "1.00\\textwidth",
     },
     "2": {
         "source": "paper-figures/figure_intro_prefix_disagreement.pdf",
