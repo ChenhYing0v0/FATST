@@ -255,7 +255,7 @@ $$
 \right]_{\tau=1,\ldots,H;\ c=1,\ldots,C}.
 $$
 
-Changing $H$ restricts the active region and target computations but does not alter any prediction shared with a longer request. Every request is therefore a nested view of the same trajectory. The learned probabilities represent target-adaptive information allocation rather than an oracle scope selector. Later ablations and internal-behavior analyses evaluate whether this allocation yields useful scope differentiation.
+Changing $H$ restricts the active region and target computations but does not alter any prediction shared with a longer request. Every request is therefore a nested view of the same trajectory. The learned probabilities encode target-adaptive information allocation across scopes; their scope preferences are evaluated empirically in later ablations and internal-behavior analyses.
 
 ### 4.5 Balanced Scope Co-Adaptation
 
