@@ -313,19 +313,29 @@ Consequently, early probability concentration can suppress learning in low-proba
 \]
 
 
-This term gives every scope a direct prediction gradient independent of its current Scope Probability. Direct supervision alone, however, does not regulate how the fused predictor distributes probability-mediated gradients. We therefore introduce the Allocation-Balance Regularizer using the uniform reference $q_s=1/S$:
+This term gives every scope a direct prediction gradient independent of its current Scope Probability. Direct supervision alone, however, does not regulate how the fused predictor distributes probability-mediated gradients. We therefore introduce the Allocation-Balance Regularizer using the uniform reference $q_s=1/S$. We first compute the marginal scope usage over the batch and future domain:
 
 \[
-\mathcal L_{\mathrm{balance}}
+\bar{\pi}_s
 =
 \frac{1}{BC}
 \sum_{b=1}^{B}
 \sum_{c=1}^{C}
 \sum_{\tau=1}^{T}
-\omega_\tau
+\omega_\tau\pi_{b,c,\tau,s},
+\qquad
+s=1,\ldots,S.
+\]
+
+
+The Allocation-Balance Regularizer then constrains this aggregate usage toward the uniform reference:
+
+\[
+\mathcal L_{\mathrm{balance}}
+=
 \frac{
 D_{\mathrm{KL}}\!\left(
-\mathbf q\,\Vert\,\boldsymbol\pi_{b,c,\tau}
+\mathbf q\,\Vert\,\bar{\boldsymbol\pi}
 \right)
 }{
 \log S
@@ -360,4 +370,4 @@ where $u\in[0,1]$ is optimizer progress. In the frozen configuration, $\lambda_{
 \]
 
 
-The regularizer penalizes strongly non-uniform Scope Probabilities, discouraging a small subset of scopes from dominating early optimization. Its ramp introduces this pressure gradually as the forecasting paths develop. This pressure promotes broader allocation and a more even distribution of probability-mediated gradients across scope lines. Together with direct scope supervision, it supports more balanced multi-scope optimization.
+The regularizer penalizes systematic imbalance in marginal scope usage across the batch and future domain. Because it acts on $\bar{\boldsymbol\pi}$, individual future steps and regions can retain distinct, non-uniform scope preferences while the aggregate allocation remains distributed across scopes. Its ramp introduces this pressure gradually as the forecasting paths develop, reducing persistent scope underuse while preserving local allocation patterns. Together with direct scope supervision, it supports more balanced multi-scope optimization.
