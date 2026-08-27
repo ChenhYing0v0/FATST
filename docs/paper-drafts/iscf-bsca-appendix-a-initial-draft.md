@@ -26,7 +26,7 @@ We evaluate ISCF-BSCA on seven widely used multivariate time-series forecasting 
 
 1. **ETT (Electricity Transformer Temperature)** records seven load and temperature factors from two electricity transformers in two regions of China between 2016 and 2018 \citep{zhou2021informer}. We use its four standard subsets: ETTh1 and ETTh2 are sampled hourly, whereas ETTm1 and ETTm2 are sampled every 15 minutes.
 
-2. **Electricity (ECL)** records the hourly electricity consumption of 321 clients from 2012 to 2014 and is provided by the UCI Machine Learning Repository \citep{trindade2015electricity,wu2023timesnet}.
+2. **Electricity (ECL)** records the hourly electricity consumption of 321 clients from 2012 to 2014 and is provided by the UCI Machine Learning Repository.\footnote{\url{https://archive.ics.uci.edu/dataset/321}}
 
 3. **Weather** is collected by the Beutenberg Weather Station at the Max Planck Institute for Biogeochemistry in Jena, Germany. It contains 21 meteorological indicators sampled every 10 minutes during 2020 \citep{wu2023timesnet}.
 
