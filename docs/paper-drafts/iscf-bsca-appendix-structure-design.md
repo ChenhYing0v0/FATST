@@ -31,13 +31,15 @@ Because Appendix B contains only the two main-result tables, it uses one `B. FUL
 - **Table B1:** complete Main-I results for the unified ISCF-BSCA model and horizon-specific baselines, for every paper-core dataset, horizon and metric;
 - **Table B2:** complete Main-II results when every method serves all horizons with one unified model under the H720-prefix protocol.
 
+Tables B1 and B2 should each occupy one portrait-oriented full-width page. The manuscript builder may scale the complete table to `\textwidth`, but it should not rotate either the page or the table.
+
 Negative cells remain visible. The appendix tables are the complete audit surface behind Tables 1 and 2; they do not change the main-text aggregation or source-role interpretation.
 
 ### Appendix C. Visualization
 
 The assembled manuscript restores a visible `C. VISUALIZATION` heading. Figure C1 itself contains only the title `Representative validation trajectories`; the appendix identifier belongs to the manuscript hierarchy and is not repeated inside the image.
 
-**Figure C1** should contain a compact seven-row by two-column grid: two samples for each paper-core dataset. Each panel plots only the ground-truth future and the unified ISCF-BSCA forecast over $T=720$ steps. A shared nested-prefix ruler above the grid, complemented by faint vertical endpoint guides, shows the four-horizon evaluation prefixes at $H=96$, $192$, $336$ and $720$. The colour, line weight and axis treatment should follow the Nature-figure contract and the visual language already established for Figures 5--7.
+**Figure C1** should contain a compact seven-row by two-column grid: two samples for each paper-core dataset. Each panel plots only the ground-truth future and the unified ISCF-BSCA forecast over $T=720$ steps. Dataset names are oriented vertically beside the first column and the redundant common `Value` label is omitted, reserving the full-width figure area for the trajectories. A shared nested-prefix ruler above the grid, complemented by faint vertical endpoint guides, shows the four-horizon evaluation prefixes at $H=96$, $192$, $336$ and $720$. The colour, line weight and axis treatment should follow the Nature-figure contract and the visual language already established for Figures 5--7.
 
 The samples should be selected by a frozen, deterministic validation-only rule rather than manual visual choice. First select one fixed channel per dataset using the global visual-fidelity score, excluding the lowest-variance 20% of channels. Then rank eligible forecast origins by the four-horizon visual-fidelity score, enforce a minimum separation between selected origins, and retain the two lowest-scoring origins per dataset. The score combines train-scale level error, trajectory correlation, first-difference correlation and amplitude agreement. This makes “good samples” reproducible while keeping the figure explicitly illustrative rather than a prevalence or test-effectiveness estimate.
 

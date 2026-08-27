@@ -120,7 +120,7 @@ FIGURES = {
         ),
         "target": "figure_c1_varied_horizon_forecasts.pdf",
         "label": "fig:appendix-visualization",
-        "width": "0.90\\textwidth",
+        "width": "1.00\\textwidth",
         "environment": "figure",
         "placement": "H",
     },
@@ -489,7 +489,14 @@ def convert(lines: list[str]) -> str:
             index += 1
             continue
         if "Typeset insertion:" in line and "main_ii/" in line:
-            output.extend([r"\clearpage", r"\input{tables/table_b2.tex}", ""])
+            output.extend(
+                [
+                    r"\clearpage",
+                    r"\input{tables/table_b2.tex}",
+                    r"\clearpage",
+                    "",
+                ]
+            )
             index += 1
             continue
         if line.startswith("**Table B"):
@@ -596,21 +603,7 @@ def copy_and_adjust_tables() -> None:
             )
         if target_name in {"table_b1.tex", "table_b2.tex"}:
             source_text = source_text.replace(
-                r"\begin{table*}[t]", "\\begin{landscape}\n\\begin{table}[p]"
-            )
-            source_text = source_text.replace(
-                r"\resizebox{\textwidth}{!}", r"\resizebox{\linewidth}{!}"
-            )
-            source_text = source_text.replace(
-                r"\end{table*}", "\\end{table}\n\\end{landscape}"
-            )
-        if target_name == "table_b1.tex":
-            source_text = source_text.replace(
-                r"\resizebox{\linewidth}{!}", r"\resizebox{0.76\linewidth}{!}"
-            )
-        if target_name == "table_b2.tex":
-            source_text = source_text.replace(
-                r"\resizebox{\linewidth}{!}", r"\resizebox{0.774\linewidth}{!}"
+                r"\begin{table*}[t]", r"\begin{table*}[p]"
             )
         (TABLES_DIR / target_name).write_text(source_text, encoding="utf-8", newline="\n")
 

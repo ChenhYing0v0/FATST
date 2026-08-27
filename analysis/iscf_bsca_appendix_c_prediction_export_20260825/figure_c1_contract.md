@@ -10,6 +10,9 @@
   row. Each panel contains only ground truth and ISCF-BSCA prediction; a shared
   nested-prefix ruler above the grid identifies the four requested horizons,
   while faint vertical guides align their endpoints across panels.
+- **Space allocation:** dataset names are rotated vertically beside the first
+  sample column, and the redundant common `Value` label is omitted so that the
+  two trajectory columns occupy the full 183-mm figure width.
 - **Title policy:** the manuscript provides the `C. VISUALIZATION` hierarchy;
   the image title is `Representative validation trajectories` and does not
   repeat the appendix identifier.

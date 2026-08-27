@@ -1,10 +1,9 @@
 % Required packages: booktabs, multirow, graphicx, xcolor
-\begin{landscape}
-\begin{table}[p]
+\begin{table*}[p]
 \centering
 \scriptsize
 \setlength{\tabcolsep}{1.2pt}
-\resizebox{0.774\linewidth}{!}{%
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{cc|cc|cc|cc|cc|cc|cc|cc|cc}
 \toprule
 Dataset & H & \multicolumn{2}{c}{HoriScope (Ours)} & \multicolumn{2}{c}{TimeAlign (2026)} & \multicolumn{2}{c}{QDF (2026)} & \multicolumn{2}{c}{AMD (2025)} & \multicolumn{2}{c}{SimpleTM (2025)} & \multicolumn{2}{c}{iTransformer (2024b)} & \multicolumn{2}{c}{PatchTST (2023)} & \multicolumn{2}{c}{DLinear (2023)} \\
@@ -63,5 +62,4 @@ Dataset & H & \multicolumn{2}{c}{HoriScope (Ours)} & \multicolumn{2}{c}{TimeAlig
 }
 \caption{Full results for the one-model-all-horizons comparison. Each method uses one maximum-horizon model per dataset, and shorter horizons are evaluated from the corresponding output prefixes. Results are reported as MSE and MAE, and Avg. denotes the arithmetic mean over $H\in\{96,192,336,720\}$. The best and second-best displayed values are highlighted in bold and underlined, respectively.}
 \label{tab:appendix-one-model}
-\end{table}
-\end{landscape}
+\end{table*}

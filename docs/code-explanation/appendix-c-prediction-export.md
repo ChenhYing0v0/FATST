@@ -30,4 +30,4 @@ ablation checkpoint；它只读取
 
 ## Figure C1 绘制
 
-`scripts/plot_iscf_bsca_appendix_c_figure.py`读取上述冻结预测数组，并输出SVG、PDF、PNG、TIFF与source-data CSV。正文负责提供`C. VISUALIZATION`章节层级，因此图片内部标题只保留`Representative validation trajectories`，不重复显示`Appendix C`。本次标题调整不改变样本、曲线、prefix ruler、坐标轴范围或配色。
+`scripts/plot_iscf_bsca_appendix_c_figure.py`读取上述冻结预测数组，并输出SVG、PDF、PNG、TIFF与source-data CSV。正文负责提供`C. VISUALIZATION`章节层级，因此图片内部标题只保留`Representative validation trajectories`，不重复显示`Appendix C`。dataset名称在首列左侧纵向排布，公共`Value`标签被移除，使两列trajectory panel能够使用更大的水平空间；该布局调整不改变样本、曲线、prefix ruler、坐标轴范围或配色。

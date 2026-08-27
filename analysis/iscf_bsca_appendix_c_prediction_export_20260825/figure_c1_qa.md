@@ -30,9 +30,10 @@
 - One prefix ruler is aligned above each sample column, and the selected
   validation-audited channel is fixed within each dataset. Channel IDs and
   sample scores are recorded in the source metadata.
-- Dataset names, sample headers, legend and axis labels do not overlap at the
-  rendered 600-dpi size. The two right-hand columns intentionally omit
-  duplicated y tick labels to preserve the compact grid.
+- Vertically oriented dataset names, sample headers, legend and axis labels do
+  not overlap at the rendered 600-dpi size. The redundant common `Value` label
+  is omitted, and the two right-hand panels omit duplicated y tick labels to
+  maximize the trajectory area.
 - The figure is explicitly validation-only and qualitative; no error bars,
   population statistics or test-set claims are encoded.
 

@@ -1,10 +1,9 @@
 % Required packages: booktabs, multirow, graphicx, xcolor
-\begin{landscape}
-\begin{table}[p]
+\begin{table*}[p]
 \centering
 \scriptsize
 \setlength{\tabcolsep}{1.2pt}
-\resizebox{0.76\linewidth}{!}{%
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{cc|cc|cc|cc|cc|cc|cc|cc|cc|cc|cc|cc}
 \toprule
 Dataset & H & \multicolumn{2}{c}{\shortstack{HoriScope\\(Ours)}} & \multicolumn{2}{c}{\shortstack{TimeAlign\\(2026)}} & \multicolumn{2}{c}{\shortstack{QDF\\(2026)}} & \multicolumn{2}{c}{\shortstack{AMD\\(2025)}} & \multicolumn{2}{c}{\shortstack{SimpleTM\\(2025)}} & \multicolumn{2}{c}{\shortstack{TVNet\\(2025)}} & \multicolumn{2}{c}{\shortstack{iTransformer\\(2024)}} & \multicolumn{2}{c}{\shortstack{TimeMixer\\(2024)}} & \multicolumn{2}{c}{\shortstack{ModernTCN\\(2024)}} & \multicolumn{2}{c}{\shortstack{PatchTST\\(2023)}} & \multicolumn{2}{c}{\shortstack{DLinear\\(2023)}} \\
@@ -63,5 +62,4 @@ Dataset & H & \multicolumn{2}{c}{\shortstack{HoriScope\\(Ours)}} & \multicolumn{
 }
 \caption{Full results for the horizon-specific comparison. Results are reported as MSE and MAE for $H\in\{96,192,336,720\}$, and Avg. is the arithmetic mean over the four horizons. HoriScope uses one unified model per dataset, whereas the baselines follow their horizon-specific evaluation protocols. The best and second-best displayed values are highlighted in bold and underlined, respectively.}
 \label{tab:appendix-horizon-specific}
-\end{table}
-\end{landscape}
+\end{table*}

@@ -168,8 +168,8 @@ def render_figure(
     grid = figure.add_gridspec(
         nrows=len(DATASETS),
         ncols=2,
-        left=0.105,
-        right=0.985,
+        left=0.060,
+        right=0.995,
         top=0.850,
         bottom=0.075,
         hspace=0.34,
@@ -238,13 +238,14 @@ def render_figure(
                 ax.set_xticklabels([str(h) for h in HORIZONS])
             if column == 0:
                 ax.text(
-                    -0.20,
+                    -0.075,
                     0.5,
                     dataset,
                     transform=ax.transAxes,
-                    ha="right",
+                    rotation=90,
+                    ha="center",
                     va="center",
-                    fontsize=6.7,
+                    fontsize=6.4,
                     fontweight="bold",
                     color="#303940",
                 )
@@ -263,17 +264,7 @@ def render_figure(
     axes[-1, 0].set_xlabel("Future step", color=TICK_COLOR, labelpad=3.5)
     axes[-1, 1].set_xlabel("Future step", color=TICK_COLOR, labelpad=3.5)
     figure.text(
-        0.028,
-        0.52,
-        "Value",
-        rotation=90,
-        ha="center",
-        va="center",
-        fontsize=6.8,
-        color=TICK_COLOR,
-    )
-    figure.text(
-        0.105,
+        0.060,
         0.965,
         "Representative validation trajectories",
         ha="left",
@@ -283,7 +274,7 @@ def render_figure(
         color="#283238",
     )
     figure.text(
-        0.105,
+        0.060,
         0.932,
         "Nested prefixes returned by one unified model",
         ha="left",
@@ -348,7 +339,7 @@ def render_figure(
     figure.legend(
         handles=legend_handles,
         loc="upper right",
-        bbox_to_anchor=(0.985, 0.965),
+        bbox_to_anchor=(0.995, 0.965),
         ncol=2,
         handlelength=1.8,
         columnspacing=1.0,
