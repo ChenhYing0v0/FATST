@@ -1,4 +1,8 @@
-# HoriScope KBS submission source
+# Superseded HoriScope KBS migration
+
+> This split-file migration is retained only as a historical artifact. The
+> canonical, PDT-exact, flat submission source is now
+> `../HoriScope_KBS_submission/`.
 
 This directory contains the self-contained Knowledge-Based Systems manuscript
 source migrated from the frozen HoriScope paper draft.
