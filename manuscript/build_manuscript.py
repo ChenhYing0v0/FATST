@@ -156,6 +156,29 @@ TABLE_SOURCES = {
 }
 
 
+MAIN_I_SOURCE_MODELS = (
+    ("HoriScope", "Ours"),
+    ("TimeAlign", "2026"),
+    ("QDF", "2026"),
+    ("AMD", "2025"),
+    ("SimpleTM", "2025"),
+    ("TVNet", "2025"),
+    ("iTransformer", "2024"),
+    ("TimeMixer", "2024"),
+    ("Leddam", "2024"),
+    ("ModernTCN", "2024"),
+    ("PatchTST", "2023"),
+    ("Crossformer", "2023"),
+    ("TimesNet", "2023"),
+    ("DLinear", "2023"),
+)
+MAIN_I_PAPER_MODEL_INDICES = tuple(
+    index
+    for index, (name, _) in enumerate(MAIN_I_SOURCE_MODELS)
+    if name not in {"Leddam", "Crossformer", "TimesNet"}
+)
+
+
 SECTION_LABELS = {
     "1": "sec:introduction",
     "2": "sec:related-work",
@@ -223,6 +246,96 @@ def inline(text: str) -> str:
     )
     text = re.sub(r"Section~3", r"Section~\\ref{sec:problem-formulation}", text)
     return text
+
+
+def _main_i_headers(*, paired_metrics: bool) -> str:
+    """Return centered two-line headers for the paper-facing Main-I subset."""
+    headers = []
+    for index in MAIN_I_PAPER_MODEL_INDICES:
+        name, year = MAIN_I_SOURCE_MODELS[index]
+        header = rf"\shortstack{{{name}\\({year})}}"
+        if paired_metrics:
+            header = rf"\multicolumn{{2}}{{c}}{{{header}}}"
+        headers.append(header)
+    return " & ".join(headers)
+
+
+def _rerank_main_i_metric_cells(cells: list[str]) -> list[str]:
+    """Recompute best/second emphasis after selecting displayed baselines."""
+    rank_pattern = re.compile(
+        r"\\textcolor\{(?:red|blue)\}\{\\(?:textbf|underline)\{([0-9.]+)\}\}"
+    )
+    plain_cells = [rank_pattern.sub(r"\1", cell) for cell in cells]
+    output = plain_cells.copy()
+    for metric_index in (0, 1):
+        indices = list(range(metric_index, len(plain_cells), 2))
+        values = [float(re.search(r"[0-9]+\.[0-9]+", plain_cells[i]).group()) for i in indices]
+        distinct = sorted(set(values))
+        best, second = distinct[:2]
+        for index, value in zip(indices, values):
+            if value == best:
+                output[index] = rf"\textcolor{{red}}{{\textbf{{{plain_cells[index]}}}}}"
+            elif value == second:
+                output[index] = rf"\textcolor{{blue}}{{\underline{{{plain_cells[index]}}}}}"
+    return output
+
+
+def select_main_i_paper_subset(source_text: str, *, horizon_wise: bool) -> str:
+    """Select the author-approved Main-I display subset without editing frozen data."""
+    output = []
+    source_model_count = len(MAIN_I_SOURCE_MODELS)
+    for line in source_text.splitlines():
+        if line.startswith(r"\begin{tabular}"):
+            if horizon_wise:
+                line = r"\begin{tabular}{cc|" + "|".join(
+                    ["cc"] * len(MAIN_I_PAPER_MODEL_INDICES)
+                ) + "}"
+            else:
+                line = r"\begin{tabular}{l|" + "c" * len(MAIN_I_PAPER_MODEL_INDICES) + "}"
+        elif horizon_wise and line.startswith("Dataset & H &"):
+            line = "Dataset & H & " + _main_i_headers(paired_metrics=True) + r" \\"
+        elif not horizon_wise and line.startswith("Dataset &"):
+            line = "Dataset & " + _main_i_headers(paired_metrics=False) + r" \\"
+        elif horizon_wise and line.startswith(" &  & MSE"):
+            line = " &  & " + " & ".join(
+                ["MSE & MAE"] * len(MAIN_I_PAPER_MODEL_INDICES)
+            ) + r" \\"
+        elif horizon_wise and line.startswith(r"\cmidrule(lr){2-30}"):
+            line = r"\cmidrule(lr){2-24}"
+        elif " & " in line and line.endswith(r"\\"):
+            parts = line[:-3].split(" & ")
+            if horizon_wise and len(parts) == 2 + 2 * source_model_count:
+                selected = parts[:2]
+                metric_cells = []
+                for index in MAIN_I_PAPER_MODEL_INDICES:
+                    metric_cells.extend(parts[2 + 2 * index : 4 + 2 * index])
+                selected.extend(_rerank_main_i_metric_cells(metric_cells))
+                line = " & ".join(selected) + r" \\"
+            elif not horizon_wise and len(parts) == 1 + source_model_count:
+                selected = [parts[0]] + [
+                    parts[1 + index] for index in MAIN_I_PAPER_MODEL_INDICES
+                ]
+                line = " & ".join(selected) + r" \\"
+        output.append(line)
+
+    selected_text = "\n".join(output) + "\n"
+    if not horizon_wise:
+        selected_text = re.sub(
+            r"\\caption\{.*?\}\n\\label\{.*?\}",
+            lambda _: (
+                "\\caption{Comparison with horizon-specific forecasters. Each dataset "
+                "entry reports MSE/MAE averaged over $H\\in\\{96,192,336,720\\}$, and "
+                "the final row is the unweighted mean over seven datasets. HoriScope "
+                "uses one unified model per dataset, while each baseline follows its "
+                "horizon-specific protocol. Full horizon-wise results are provided in "
+                "~\\ref{app:full-results}. Best and second-best displayed values are "
+                "marked in red bold and blue underline, respectively.}\n"
+                "\\label{tab:main_horiscope}"
+            ),
+            selected_text,
+            flags=re.DOTALL,
+        )
+    return selected_text
 
 
 def figure_block(caption_line: str) -> list[str]:
@@ -439,6 +552,14 @@ def copy_and_adjust_tables() -> None:
         source_text = source_text.replace(
             "provided in Appendix A", "provided in ~\\ref{app:full-results}"
         )
+        if target_name == "table_1.tex":
+            source_text = select_main_i_paper_subset(
+                source_text, horizon_wise=False
+            )
+        elif target_name == "table_b1.tex":
+            source_text = select_main_i_paper_subset(
+                source_text, horizon_wise=True
+            )
         if target_name == "table_b1.tex":
             replacement = (
                 "\\caption{Full results for the horizon-specific comparison. "
@@ -483,9 +604,13 @@ def copy_and_adjust_tables() -> None:
             source_text = source_text.replace(
                 r"\end{table*}", "\\end{table}\n\\end{landscape}"
             )
+        if target_name == "table_b1.tex":
+            source_text = source_text.replace(
+                r"\resizebox{\linewidth}{!}", r"\resizebox{0.76\linewidth}{!}"
+            )
         if target_name == "table_b2.tex":
             source_text = source_text.replace(
-                r"\resizebox{\linewidth}{!}", r"\resizebox{0.78\linewidth}{!}"
+                r"\resizebox{\linewidth}{!}", r"\resizebox{0.774\linewidth}{!}"
             )
         (TABLES_DIR / target_name).write_text(source_text, encoding="utf-8", newline="\n")
 

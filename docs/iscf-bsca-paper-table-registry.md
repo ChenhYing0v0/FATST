@@ -51,7 +51,7 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 
 | ID | 论文位置 | 状态 | 当前规模 | Canonical artifact | 能支持的结论 |
 | --- | --- | --- | --- | --- | --- |
-| `Main-I` | 正文主结果 + Appendix B逐H结果 | `complete_hash_frozen_author_corrected_20260815` | 正文14 models × 7 dataset means；Appendix B保留392 model–dataset–H rows | 正文=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_i/table_iscf_bsca_main_i_dataset_average.tex`；Appendix B=`main_i/table_iscf_bsca_main_i_qdf.tex` | ISCF-BSCA 与 separately optimized horizon-specific baselines 的 system-level accuracy competitiveness；不作 matched mechanism attribution |
+| `Main-I` | 正文主结果 + Appendix B逐H结果 | `complete_hash_frozen_author_corrected_20260815` | 冻结source保留14 models / 392 rows；paper display为11 models × 7 dataset means，Appendix B展示308 model–dataset–H rows | 冻结source=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_i/table_iscf_bsca_main_i_{dataset_average,qdf}.tex`；paper display由`manuscript/build_manuscript.py`选择列 | HoriScope 与 separately optimized horizon-specific baselines 的 system-level accuracy competitiveness；不作 matched mechanism attribution |
 | `Main-II` | 正文主结果 + Appendix B逐H结果 | `complete_hash_frozen_author_corrected_20260815` | 正文8 models × 7 dataset means；Appendix B保留224 model–dataset–H rows | 正文=`analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_ii/table_iscf_bsca_main_ii_dataset_average.tex`；Appendix B=`main_ii/table_iscf_bsca_main_ii.tex` | one-model-for-all-horizons system competitiveness；不作 BSCA/decoder attribution |
 | `Main-I-Exchange` | Supplementary companion | `complete_limited_surface` | ISCF-BSCA / TimeAlign / QDF × Exchange × 4 H | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_i_h5d_bs16_lr2p4_synced_20260813/table_exchange_companion.tex` | Exchange 的部分系统背景；不能表述为完整 Main I extension |
 | `Efficiency` | Figure 6 numerical source；table不插入正文 | `complete_nine_system_accuracy_advantage_resource_mixed` | 9-system source audit；Figure 6显示8 systems；252/252 accuracy cells、63/63 memory/storage units、231 table-role objects | `analysis/iscf_bsca_paper_experiment_consolidation_20260731/efficiency_accuracy_memory_storage_20260817/table/table_iscf_bsca_efficiency.tex` | Figure 6支持one-model macro MSE与service consolidation；相对五个较重baseline有memory/storage优势，但visible DLinear/QDF构成负向边界，不支持uniform resource advantage |
@@ -64,6 +64,7 @@ H720 checkpoint在四个source-native fixed-H official test loaders上的prefix 
 
 ### Main I
 
+- Paper-facing Table 1与Appendix Table B1按author review仅展示HoriScope、TimeAlign、QDF、AMD、SimpleTM、TVNet、iTransformer、TimeMixer、ModernTCN、PatchTST和DLinear；Leddam、Crossformer与TimesNet仍保留在14-model冻结source/data中，不进入当前稿件展示；
 - 正文dataset-average表中，ISCF-BSCA为13/14 best、1/14 second；完整Appendix逐H表保持44/56 best、9/56 second；seven-dataset macro MSE/MAE=`0.260714/0.306107`；
 - 作者修正scope为ISCF与TimeAlign全部28 cells、SimpleTM Solar 4 cells、**TVNet ETTh2 4 cells**；共64个standard rows；
 - 修正值按作者提供的三位小数直接冻结，不推断额外精度或checkpoint hash；未列出的baseline cells保持上一冻结版的official-local / published-context role；

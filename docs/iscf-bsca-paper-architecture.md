@@ -5,18 +5,18 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | HoriScope 论文全文结构、术语、claim 与实验布局的权威讨论稿 |
-| `version` | `v1.03` |
-| `last_updated` | `2026-08-25` |
+| `version` | `v1.04` |
+| `last_updated` | `2026-08-27` |
 | `paper_candidate` | architecture family frozen；`ISCF-BSCA-v1`=ablation anchor；`ISCF-BSCA-MAIN-v1`=tuned main candidate |
-| `current_review_cursor` | HoriScope paper-facing rename integrated across title, body, figures, tables and Appendix；manuscript QA pending final compile |
+| `current_review_cursor` | Section 5 v0.14 author refinement integrated；continue manuscript-wide author review |
 | `restart_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-writing-restart-handoff-20260731.md` |
 | `experiment_handoff` | `docs/stage-ledgers/stage-c-iscf-bsca-paper-experiments-restart-handoff-20260731.md` |
 | `experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `frozen_consensus` | 论文七章结构并保留精简的Discussion and Limitations；formal task=`Unified Varied-Horizon Forecasting (UVHF)`；paper-facing model=`HoriScope`；CHPC为basic property；adaptive multi-scope decoder；BSCA training-strategy contribution boundary |
 | `temporarily_frozen_content` | Introduction P1--P6 v0.9正文 + approved Figure 1；Section 2 v0.2正文、subsection structure与claim boundaries；Sections 1--7及Appendix的audited citations；Section 3 v0.7正文 + approved Figures 2--3；Section 4 v0.7正文、公式与Figure 4 integration/caption；Section 6 v0.4正文、paragraph structure、interpretation与methodological limitations；Section 7 v0.2正文与two-paragraph structure；Method Figure 4 visual design；Figure 5 v5.3；Sections 5--7整体结构 |
-| `provisional_content` | Section 5 v0.13（5.6 narrative待author review）；Method Figure 4 stable vector-asset synchronization |
-| `authorization_source` | 2026-08-24用户确认Section 7 v0.1两段正文可暂时固定为论文可用版本；Sections 1--6 evidence与Figures 5--7不变 |
+| `provisional_content` | Section 5 v0.14 author-refined prose and 11-model paper-facing Main-I presentation；Method Figure 4 stable vector-asset synchronization |
+| `authorization_source` | 2026-08-27用户完成Section 5逐项审阅并授权正文、caption、Table 1与Appendix Table B1 presentation修改；冻结结果数值与figure assets不变 |
 
 本文档用于逐段讨论论文，而不是宣告全文已经定稿。标记为
 `frozen_consensus` 的内容在出现新证据或明确讨论结论前保持不变；
@@ -24,6 +24,8 @@
 `provisional_content` 只表示当前最佳结构，后续按章节继续修订。
 
 HoriScope naming amendment：Author确认论文标题为`HoriScope: Adaptive Multi-Scope Decoding for Unified Varied-Horizon Time-Series Forecasting`。论文展示层统一使用`HoriScope`指代完整model/framework，使用`HoriScope decoder`或`adaptive multi-scope decoder`指代architecture，`Balanced Scope Co-Adaptation (BSCA)`继续作为training strategy。旧的`ISCF-BSCA-v1`与`ISCF-BSCA-MAIN-v1`仅保留为冻结implementation/checkpoint provenance，不再作为正文、图片、表格或Appendix中的方法名。Canonical manuscript sources、Figures 6--7与LaTeX table assembly均已迁移；结果数值、figure data、architecture computation、evidence role与claim boundary不变。Decision=`horiscope_paper_facing_naming_migration_integrated`。
+
+Section 5 author-refinement amendment：Section 5更新为`v0.14-section5-author-refinement`。Setup与evaluation protocols压缩重复说明；5.2合并引入与Table 1结果段；5.4--5.7按author意见精简system-cost、ablation、internal-behavior与generalization叙事及captions。Table 1采用model/year双行居中表头，HoriScope第二行标记`(Ours)`；正文与Appendix B1展示11个模型，删除Leddam、Crossformer与TimesNet。冻结14-model artifacts/data不被改写，builder仅在paper presentation层选择列并重算displayed ranking。Decision=`section5_v0p14_author_refinement_integrated`。
 
 Reference-integration amendment：在author显式启动全文参考文献工作后，对Sections 1--7与Appendix逐节审计citation needs，并以`manuscript/ref.bib`固定41条已使用参考文献。正式conference/journal版本优先于arXiv；PDT仅作为candidate seed，不覆盖primary-source metadata。当前引用图为`41 cited / 41 defined / 0 missing / 0 uncited / 0 duplicated`，完整角色与版本决策见`docs/iscf-bsca-reference-audit.md`。本轮只补外部claim、baseline、optimizer与dataset来源，不改变本文原创定义、结果数值、method claim或evidence boundary。Decision=`manuscript_reference_integration_v1_audited_ready`。
 

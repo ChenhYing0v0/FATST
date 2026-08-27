@@ -1,5 +1,9 @@
 # StageC Unified Varied-Horizon Forecasting Ledger
 
+## Section 5 Author Refinement (2026-08-27)
+
+Author已完成Section 5逐项审阅。Canonical draft更新为`v0.14-section5-author-refinement`，setup、protocol、5.2、5.4--5.7正文与Figures 5--7 captions按author意见精简。Table 1改为model/year双行表头并将`(Ours)`置于HoriScope下一行；paper-facing Table 1与Appendix Table B1展示11个模型，删去Leddam、Crossformer与TimesNet。14-model冻结source/data保持不变，presentation subset由manuscript builder生成并通过ranking、compile与visual QA。Decision=`section5_v0p14_author_refinement_integrated`；new implementation/training/remote launch/formal test=`0/0/0/0`。
+
 ## HoriScope Paper-Facing Naming Migration (2026-08-25)
 
 Author已确认论文方法展示名为`HoriScope`，正式标题为`HoriScope: Adaptive Multi-Scope Decoding for Unified Varied-Horizon Time-Series Forecasting`。Paper-facing terminology固定为task=`UVHF`、model/framework=`HoriScope`、architecture=`HoriScope decoder`/`adaptive multi-scope decoder`、training strategy=`BSCA`、structural property=`CHPC`。正文、图片、表格与Appendix不再使用旧方法名；冻结candidate IDs、artifact paths、configs与历史ledger继续保留`ISCF-BSCA-v1`和`ISCF-BSCA-MAIN-v1`以保证traceability。No architecture、objective、metric、evidence、authorization or claim change。Decision=`horiscope_paper_facing_naming_migration_integrated`。

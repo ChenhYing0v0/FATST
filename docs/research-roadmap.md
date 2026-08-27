@@ -1,5 +1,9 @@
 # Research Roadmap
 
+## Section 5 author refinement (2026-08-27)
+
+Section 5 v0.14 integrates the author's prose and caption review without changing any result value or figure asset. Table 1 now places publication years beneath model names and marks HoriScope as `(Ours)`. The manuscript-facing horizon-specific comparison retains 11 models after removing Leddam, Crossformer and TimesNet from both Table 1 and Appendix Table B1. The frozen 14-model source tables and data remain unchanged; the LaTeX builder selects the displayed subset and recomputes best/second emphasis at build time. The revised manuscript compiles without float overflow, unresolved references or table-ranking inconsistencies. Decision=`section5_v0p14_author_refinement_integrated`; no new experiment, training or formal test.
+
 ## HoriScope paper-facing naming migration (2026-08-25)
 
 The author-approved paper title is `HoriScope: Adaptive Multi-Scope Decoding for Unified Varied-Horizon Time-Series Forecasting`. The manuscript now uses `HoriScope` for the complete model/framework, `HoriScope decoder` or `adaptive multi-scope decoder` for the architecture, and `Balanced Scope Co-Adaptation (BSCA)` for the training strategy. The formal task remains `Unified Varied-Horizon Forecasting (UVHF)`, and CHPC remains its structural consistency property. The legacy identifiers `ISCF-BSCA-v1` and `ISCF-BSCA-MAIN-v1` remain unchanged only in frozen code, checkpoint and experiment provenance. The migration changes no architecture, objective, result, figure data, evidence role or authorization. Decision=`horiscope_paper_facing_naming_migration_integrated`.
