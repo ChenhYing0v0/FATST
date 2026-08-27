@@ -73,6 +73,7 @@ Generated source data:
 - header alignment refinement: all panel labels, titles and grey descriptions now use figure-level coordinates rather than panel-specific axis offsets. Panels a/b share the same label and title x-coordinates, Panels b/c share the same title and description y-coordinates, and every label precedes its corresponding title on one baseline;
 - bounding-box QA: all three label--title pairs are vertically aligned, Panels b/c descriptions share an exact upper baseline, all label boxes end before their title boxes begin, and all audited header boxes remain inside the canvas;
 - runtime QA: the complete SVG/PDF/PNG/TIFF regeneration exited normally with peak resident memory of approximately 361 MiB, zero swaps and no out-of-memory or rendering error;
+- presentation refinement: the non-essential bottom footer was removed; panel content, data encodings and canvas dimensions remain unchanged;
 - layout: Panel a is the hero panel; Panel b answers forecast diversity; Panel c answers probability variation;
 - reviewer risk: the caption explicitly distinguishes the actual soft-fused output from hard scope selection and discloses the post-hoc validation-example selection rule.
 
@@ -80,4 +81,4 @@ Generated source data:
 
 Decision=`section5_6_figure5_v5p3_temporarily_fixed_usable`.
 
-Figure 5 v5.3 is temporarily fixed as the manuscript-usable Figure 5 after author review on 2026-08-22. The probability data, panel semantics, sample selection and manuscript claim remain unchanged; the final amendment replaces panel-specific header offsets with a shared alignment grid. The v4 bundle remains a historical audit artifact. Sections 1--4 and all frozen experiment results are unchanged.
+Figure 5 v5.3 is temporarily fixed as the manuscript-usable Figure 5 after author review on 2026-08-22. The probability data, panel semantics, sample selection and manuscript claim remain unchanged; the final presentation amendment removes the non-essential bottom footer while preserving the shared header-alignment grid. The v4 bundle remains a historical audit artifact. Sections 1--4 and all frozen experiment results are unchanged.

@@ -664,15 +664,6 @@ def build_figure(
         title_y=0.495,
         subtitle_y=0.459,
     )
-    figure.text(
-        0.52,
-        0.022,
-        "Validation-only sample-specific diagnostics · seed 2021",
-        ha="center",
-        va="center",
-        fontsize=5.9,
-        color=MID,
-    )
     return figure
 
 
