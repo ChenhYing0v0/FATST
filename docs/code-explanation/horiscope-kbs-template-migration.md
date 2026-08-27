@@ -34,6 +34,8 @@
 
 当前审计结果记录于 `analysis/horiscope_kbs_flat_submission_20260827/audit_report.md`。最终 PDF 为 A4、24 页。编译不存在 LaTeX error、undefined control、oversized float 或 undefined citation/reference；PDT 原 scaffold 产生的非致命 duplicate-destination warnings 与 bibliography metadata warnings 已在 audit 中单独披露。
 
+Table 1 使用显式的 model-name/year 两行表头；`Dataset` 通过 `multirow` 跨两行居中。该结构使所有模型名与年份分别共享统一基线，避免独立 `shortstack` 在缩放后产生视觉错位，且不改变任何实验数值、排名标记或 caption。
+
 旧的 `Elsevier_template/` 分文件版本保留为历史迁移记录，已不再是 canonical 投稿源。
 
 ## 投稿前作者确认

@@ -20,6 +20,6 @@ The main source intentionally retains the PDT preamble and front-matter scaffold
 
 ## Checksums
 
-- main TeX: `6106dba4471a580c12ced0e199b35bb386f6c6ce56eae1189e9b34e87722315f`
-- final PDF: `849008389d845baf85093bb09c7c6af38babf2fd2e052dd56f34fe3ecca32a71`
+- main TeX: `d9e938b71d9d314b9684ae63e4ce27d1ad7127114fd635f1f1b6bc791eeb5baf`
+- final PDF: `8cb789b0910e04d67dea62936bc1565a063d2a93102fbcbc6485c02b6369cb91`
 - bibliography: `2b04e03e5c5b3cd3b1bca9b2eca62a1e35471334a89fd88a2fb79a3e7bd76e7d`
