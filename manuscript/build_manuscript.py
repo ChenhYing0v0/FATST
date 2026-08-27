@@ -485,7 +485,7 @@ def convert(lines: list[str]) -> str:
             index += 1
             continue
         if "Typeset insertion:" in line and "main_i/" in line:
-            output.extend([r"\clearpage", r"\input{tables/table_b1.tex}", ""])
+            output.extend([r"\input{tables/table_b1.tex}", ""])
             index += 1
             continue
         if "Typeset insertion:" in line and "main_ii/" in line:
@@ -570,11 +570,9 @@ def copy_and_adjust_tables() -> None:
         if target_name == "table_b1.tex":
             replacement = (
                 "\\caption{Full results for the horizon-specific comparison. "
-                "Results are reported as MSE and MAE for "
-                "$H\\in\\{96,192,336,720\\}$, and Avg. is the arithmetic mean over "
-                "the four horizons. HoriScope uses one unified model per dataset, "
-                "whereas the baselines follow their horizon-specific evaluation "
-                "protocols. The best and second-best displayed values are highlighted "
+                "MSE and MAE are reported for $H\\in\\{96,192,336,720\\}$ and "
+                "averaged over the four horizons. The best and second-best values "
+                "are highlighted "
                 "in bold and underlined, respectively.}\n"
                 "\\label{tab:appendix-horizon-specific}"
             )
@@ -587,11 +585,9 @@ def copy_and_adjust_tables() -> None:
         elif target_name == "table_b2.tex":
             replacement = (
                 "\\caption{Full results for the one-model-all-horizons comparison. "
-                "Each method uses one maximum-horizon model per dataset, and shorter "
-                "horizons are evaluated from the corresponding output prefixes. "
-                "Results are reported as MSE and MAE, and Avg. denotes the arithmetic "
-                "mean over $H\\in\\{96,192,336,720\\}$. The best and second-best "
-                "displayed values are highlighted in bold and underlined, "
+                "MSE and MAE are reported for $H\\in\\{96,192,336,720\\}$ and "
+                "averaged over the four horizons. The best and second-best values are "
+                "highlighted in bold and underlined, "
                 "respectively.}\n"
                 "\\label{tab:appendix-one-model}"
             )
@@ -603,8 +599,9 @@ def copy_and_adjust_tables() -> None:
             )
         if target_name in {"table_b1.tex", "table_b2.tex"}:
             source_text = source_text.replace(
-                r"\begin{table*}[t]", r"\begin{table*}[p]"
+                r"\begin{table*}[t]", r"\begin{table}[H]"
             )
+            source_text = source_text.replace(r"\end{table*}", r"\end{table}")
         (TABLES_DIR / target_name).write_text(source_text, encoding="utf-8", newline="\n")
 
 

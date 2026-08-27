@@ -25,7 +25,7 @@ PREFIX_COLORS = ["#5B8F9B", "#729DA6", "#91AEB2", "#C2A383"]
 GRID_COLOR = "#D9DEE2"
 TICK_COLOR = "#5F686F"
 FIGURE_WIDTH_MM = 183
-FIGURE_HEIGHT_MM = 188
+FIGURE_HEIGHT_MM = 160
 
 
 def parse_args() -> argparse.Namespace:
@@ -238,7 +238,7 @@ def render_figure(
                 ax.set_xticklabels([str(h) for h in HORIZONS])
             if column == 0:
                 ax.text(
-                    -0.075,
+                    -0.105,
                     0.5,
                     dataset,
                     transform=ax.transAxes,

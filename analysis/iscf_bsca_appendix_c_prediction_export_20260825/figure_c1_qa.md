@@ -2,7 +2,7 @@
 
 **Figure source:** `scripts/plot_iscf_bsca_appendix_c_figure.py`  
 **Backend:** Python/matplotlib only  
-**Target dimensions:** 183 mm wide, approximately 188 mm high
+**Target dimensions:** 183 mm wide, approximately 160 mm high
 
 ## Automated checks
 
@@ -30,10 +30,14 @@
 - One prefix ruler is aligned above each sample column, and the selected
   validation-audited channel is fixed within each dataset. Channel IDs and
   sample scores are recorded in the source metadata.
-- Vertically oriented dataset names, sample headers, legend and axis labels do
-  not overlap at the rendered 600-dpi size. The redundant common `Value` label
-  is omitted, and the two right-hand panels omit duplicated y tick labels to
-  maximize the trajectory area.
+- Vertically oriented dataset names are offset beyond the first-column y tick
+  labels; sample headers, legend and axis labels do not overlap at the rendered
+  600-dpi size. The redundant common `Value` label is omitted, and the two
+  right-hand panels omit duplicated y tick labels to maximize the trajectory
+  area.
+- The compiled Elsevier preview keeps the Appendix C heading, introductory
+  paragraph, full-width Figure C1 and caption on one portrait page without an
+  overfull box or float-size warning.
 - The figure is explicitly validation-only and qualitative; no error bars,
   population statistics or test-set claims are encoded.
 

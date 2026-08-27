@@ -82,15 +82,15 @@ The scope set and BSCA coefficients are shared across datasets. Specifically, $\
 
 ## B. FULL RESULTS
 
-Tables B1 and B2 provide the complete results for the two forecasting comparisons in Sections 5.2 and 5.3. The main text reports the four-horizon average for each dataset, whereas the appendix retains MSE and MAE at every evaluated horizon. Table B1 compares one unified HoriScope model with baselines optimized separately for each requested horizon. Table B2 places every method under the same one-model-all-horizons workflow, where shorter requests are evaluated from the corresponding prefixes of one maximum-length forecast.
+Tables B1 and B2 report the complete horizon-wise MSE and MAE results underlying Sections 5.2 and 5.3. Table B1 compares HoriScope with horizon-specific baselines, while Table B2 evaluates every method under the one-model-all-horizons workflow. The main text reports the corresponding four-horizon dataset averages.
 
 <!-- Typeset insertion: analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_i/table_iscf_bsca_main_i_qdf.tex -->
 
-**Table B1 | Full results for the horizon-specific comparison.** Results are reported as MSE and MAE for $H\in\{96,192,336,720\}$, and Avg. is the arithmetic mean over the four horizons. HoriScope uses one unified model per dataset, whereas the baselines follow their horizon-specific evaluation protocols. The best and second-best displayed values are highlighted in bold and underlined, respectively.
+**Table B1 | Full results for the horizon-specific comparison.** MSE and MAE are reported for $H\in\{96,192,336,720\}$ and averaged over the four horizons. The best and second-best values are highlighted in bold and underlined, respectively.
 
 <!-- Typeset insertion: analysis/iscf_bsca_paper_experiment_consolidation_20260731/main_tables_author_corrected_20260815/main_ii/table_iscf_bsca_main_ii.tex -->
 
-**Table B2 | Full results for the one-model-all-horizons comparison.** Each method uses one maximum-horizon model per dataset, and the shorter horizons are evaluated from the corresponding output prefixes. Results are reported as MSE and MAE, and Avg. denotes the arithmetic mean over $H\in\{96,192,336,720\}$. The best and second-best displayed values are highlighted in bold and underlined, respectively.
+**Table B2 | Full results for the one-model-all-horizons comparison.** MSE and MAE are reported for $H\in\{96,192,336,720\}$ and averaged over the four horizons. The best and second-best values are highlighted in bold and underlined, respectively.
 
 ## C. VISUALIZATION
 

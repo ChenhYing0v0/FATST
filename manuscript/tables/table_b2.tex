@@ -1,5 +1,5 @@
 % Required packages: booktabs, multirow, graphicx, xcolor
-\begin{table*}[p]
+\begin{table}[H]
 \centering
 \scriptsize
 \setlength{\tabcolsep}{1.2pt}
@@ -60,6 +60,6 @@ Dataset & H & \multicolumn{2}{c}{HoriScope (Ours)} & \multicolumn{2}{c}{TimeAlig
 \bottomrule
 \end{tabular}%
 }
-\caption{Full results for the one-model-all-horizons comparison. Each method uses one maximum-horizon model per dataset, and shorter horizons are evaluated from the corresponding output prefixes. Results are reported as MSE and MAE, and Avg. denotes the arithmetic mean over $H\in\{96,192,336,720\}$. The best and second-best displayed values are highlighted in bold and underlined, respectively.}
+\caption{Full results for the one-model-all-horizons comparison. MSE and MAE are reported for $H\in\{96,192,336,720\}$ and averaged over the four horizons. The best and second-best values are highlighted in bold and underlined, respectively.}
 \label{tab:appendix-one-model}
-\end{table*}
+\end{table}
