@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | `HoriScope: Adaptive Multi-Scope Decoding for Unified Varied-Horizon Time-Series Forecasting` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Sections 1--7、Appendix、Figures 1--7与41-entry bibliography assembled；reference integration audited |
+| `current_11_step` | Sections 1--7、Appendix、Figures 1--7与bibliography assembled；KBS submission template migration audited |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -19,6 +19,8 @@
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `paper_core_status` | architecture family frozen；Sections 1--7与Figure 5 v5.3 temporarily frozen usable；Section 5.4 Figure 6 only，Section 5.7 Figure 7 only；allocation aggregate accuracy direction positive但prevalence、sparse/oracle-routing claims仍关闭 |
+
+[HoriScope KBS Template Migration, 2026-08-27] 将冻结手稿逐模块迁移至作者提供的PDT KBS模板库`Elsevier_template/`：保留KBS `elsarticle` `final,3p,times`容器，注入HoriScope title/abstract/keywords、Sections 1--7、Appendix A--C、main/appendix tables、Figures 1--7/C1与`ref.bib`；新增4条Elsevier highlights及纯文本上传版本。除Appendix A/B边界新增一个layout-only `\FloatBarrier`外，正文、表格、图片与bibliography均与`manuscript/`冻结源保持byte identity。24页A4 PDF编译无overfull、oversized float、undefined citation/reference或LaTeX error；canonical audit=`analysis/horiscope_kbs_template_migration_20260827/audit_report.md`。作者信息、CRediT、基金、Acknowledgments、Competing Interest与Data Availability沿用作者提供的PDT原稿，投稿前需作者最终确认。Decision=`horiscope_kbs_template_migration_audited_ready_for_author_review`；new implementation/training/remote launch/formal test=`0/0/0/0`。
 
 [Section 5 Author Refinement v0.14, 2026-08-27] 按author逐项审阅完成Section 5 setup、protocol、main comparison、system cost、ablation、internal behavior与generalization叙事精简。正文及captions删除指定的重复说明、冗长数值和`Together / first / next / rather than`式连接；Table 1使用model/year双行居中表头，HoriScope第二行标`(Ours)`。Paper-facing Table 1与Appendix Table B1删除Leddam、Crossformer与TimesNet，保留11个展示模型；14-model冻结source/data及hash不改，由`manuscript/build_manuscript.py`在presentation层选择列并重算displayed best/second。LaTeX编译、35-row/770-cell ranking audit与表格视觉QA通过。Decision=`section5_v0p14_author_refinement_integrated`；new experiment/training/formal test=`0/0/0`。
 

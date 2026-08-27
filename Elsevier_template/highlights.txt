@@ -1,0 +1,6 @@
+Highlights
+
+• Unified varied-horizon forecasting is formalized with nested trajectory prefixes.
+• HoriScope adaptively combines forecasts generated under multiple sharing scopes.
+• Balanced training supports joint optimization of all forecasting scopes.
+• One model achieves state-of-the-art accuracy across seven forecasting benchmarks.
