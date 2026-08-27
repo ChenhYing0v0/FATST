@@ -123,12 +123,12 @@ Only limitations that arise from the formulation or computation graph should ent
 
 ## 5. Section 7: Conclusion
 
-The author has confirmed that the Conclusion should remain compact, use no subsections and follow the detailed structure in `docs/paper-drafts/iscf-bsca-conclusion-structure-design.md`. The resulting v0.2 prose draft is available at `docs/paper-drafts/iscf-bsca-conclusion-initial-draft.md` and uses two paragraphs:
+The Conclusion remains compact, uses no subsections and follows the refined structure in `docs/paper-drafts/iscf-bsca-conclusion-structure-design.md`. The resulting v0.3 author-refinement candidate is available at `docs/paper-drafts/iscf-bsca-conclusion-initial-draft.md` and uses two paragraphs:
 
-1. restate the UVHF problem, the CHPC formulation and the ISCF-BSCA response at principle level;
-2. summarize the strongest system-level, ablation, efficiency and transfer evidence, then close on output-side sharing granularity as a design axis for unified forecasting.
+1. state the conceptual reframing of multi-horizon service and compress the HoriScope-BSCA response at principle level;
+2. select only the evidence needed for the final judgment, then close on output-side sharing granularity as a design axis for unified forecasting.
 
-The fixed English draft contains 204 words. It introduces no new metrics, citations, mechanisms, limitations or future claims. Section 6 already contains the methodological limitations, so the Conclusion does not add a third limitations paragraph or repeat the Discussion.
+The refined English draft contains approximately 150 words. It introduces no new metrics, citations, mechanisms, limitations or future claims. Section 6 already contains the methodological interpretation and limitations, so the Conclusion does not repeat the Discussion or reproduce the order of Section 5.
 
 ## 6. Main-text table and figure plan
 

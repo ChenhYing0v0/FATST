@@ -1,16 +1,16 @@
-# ISCF-BSCA Section 7: Conclusion Structure Design
+# HoriScope Section 7: Conclusion Structure Design
 
 ## Design status
 
 | Field | Content |
 | --- | --- |
 | `document_role` | Initial structural design for the manuscript Conclusion |
-| `version` | `v0.3-author-fixed-structure` |
-| `date` | `2026-08-24` |
-| `review_status` | Two-paragraph structure and corresponding prose temporarily fixed usable |
-| `upstream_dependency` | Introduction v0.9, Related Work v0.2, Section 3 v0.7, Section 4 v0.7, Section 5 v0.13 and Section 6 v0.4 remain temporarily frozen and unchanged |
+| `version` | `v0.4-author-refined-structure` |
+| `date` | `2026-08-27` |
+| `review_status` | Two-paragraph structure retained; paragraph functions refined to avoid Discussion overlap and sequential summary |
+| `upstream_dependency` | Introduction v0.9, Related Work v0.2, Section 3 v0.7, Section 4 v0.7, Section 5 v0.15 and Section 6 v0.5 remain temporarily frozen and unchanged |
 | `section_format` | No subsections; two compact paragraphs |
-| `target_length` | Approximately 180--230 words in the eventual English manuscript |
+| `target_length` | Approximately 140--180 words in the eventual English manuscript |
 | `evidence_scope` | CHPC construction, Sections 5.2--5.7 and Figure 6 deployment evidence |
 | `experiment_change` | None; no new implementation, training or formal test |
 | `claim_boundary` | The Conclusion closes the established argument and introduces no new results, citations, mechanisms or generality claims |
@@ -23,33 +23,33 @@ Section 7 should close the paper by returning to the central unified varied-hori
 
 ## 2. One-sentence argument
 
-For UVHF, one horizon-agnostic predictor can generate accurate and prefix-consistent forecasts by organizing forecast generation over multiple output-side sharing scopes and jointly optimizing their target-adaptive integration.
+For UVHF, a horizon-agnostic predictor can combine prefix-consistent serving with adaptive forecast generation by treating output-side sharing granularity as an explicit decoder design axis.
 
 ## 3. Recommended paragraph structure
 
-### Paragraph 1: Problem and technical contribution
+### Paragraph 1: Conceptual contribution
 
-**Main job:** restate the problem solved and the technical principle introduced.
+**Main job:** state the conceptual change introduced by the paper without replaying the Introduction or Method section.
 
 Recommended sentence functions:
 
-1. Return to the limitation of horizon-specific forecasting: separate predictors fragment multiple request endpoints and do not enforce one coherent trajectory.
-2. State the paper's formulation: UVHF should use one future-step-indexed predictor whose outputs satisfy CHPC across requests.
-3. Introduce ISCF at principle level: it constructs one scope-indexed forecast field through region-wise forecast generation under multiple output-side sharing extents and performs target-adaptive integration.
-4. State the role of BSCA in one clause or sentence: it supports joint learning of the fused trajectory and the individual scope lines.
+1. Reframe multiple request horizons as nested views of one coherent future trajectory.
+2. Identify CHPC and output-side sharing granularity as the two principles that organize this formulation.
+3. Compress HoriScope and BSCA into their functional roles: adaptive multi-scope forecast generation and balanced joint learning.
+4. Close on the capability of the complete architecture, not on a module inventory.
 
 This paragraph should avoid repeating tensor notation, module-by-module computation, loss formulas or the complete contribution list from the Introduction.
 
-### Paragraph 2: Evidence-backed outcome and closing implication
+### Paragraph 2: Selective evidence and closing implication
 
 **Main job:** state the strongest empirical outcome and close on the capability established by the paper.
 
 Recommended sentence functions:
 
-1. Summarize the principal system result: across seven forecasting benchmarks and four horizons, one ISCF-BSCA model achieves stronger aggregate forecasting accuracy than the evaluated horizon-specific baselines and remains strongest under the one-model-all-horizons comparison.
-2. Add the practical result: unified serving combines competitive accuracy with a favorable checkpoint-storage and inference-memory profile.
-3. Compress the supporting evidence into one sentence: controlled ablations support the contribution of the multi-scope architecture, Target-Adaptive Allocation and BSCA, while internal diagnostics and two-backbone studies support the intended scope behavior and decoder compatibility within the evaluated settings.
-4. End with the conceptual implication: output-side sharing granularity is a useful design axis for building unified forecasters that serve multiple horizons through one prefix-consistent trajectory.
+1. State the principal result: one HoriScope model achieves state-of-the-art aggregate accuracy among the evaluated methods while serving every supported horizon.
+2. Retain only complementary evidence needed for trust, namely the unified-workflow comparison, controlled ablations and two-backbone studies.
+3. Avoid enumerating every experiment, figure or component already discussed in Section 5.
+4. End with the broader implication that output-side sharing granularity is a productive design axis for unified time-series forecasting.
 
 The final sentence should close on the established capability rather than introduce a new future-work agenda. Methodological extensions have already been stated in Section 6.
 
@@ -78,4 +78,4 @@ The final Conclusion should not:
 
 ## 6. Terminology lock
 
-Use the established canonical forms: **unified varied-horizon forecasting (UVHF)**, **horizon-specific forecasting**, **cross-horizon prefix consistency (CHPC)**, **ISCF**, **BSCA**, **sharing scope**, **scope-indexed forecast field**, **Target-Adaptive Allocation**, **Scope-conditioned Forecast**, **prefix-consistent trajectory** and **Encoder**. Use `forecast generation`, not `forecast synthesis`, and describe the method as an output-side decoder framework rather than a collection of independently trained forecasters.
+Use the established canonical forms: **unified varied-horizon forecasting (UVHF)**, **horizon-specific forecasting**, **cross-horizon prefix consistency (CHPC)**, **HoriScope**, **BSCA**, **sharing scope**, **scope-indexed forecast field**, **Target-Adaptive Allocation**, **Scope-conditioned Forecast**, **prefix-consistent trajectory** and **Encoder**. Use `forecast generation`, not `forecast synthesis`, and describe HoriScope as an output-side decoder framework instead of a collection of independently trained forecasters.
