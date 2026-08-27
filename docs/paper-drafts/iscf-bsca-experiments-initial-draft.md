@@ -5,9 +5,9 @@
 | Field | Content |
 | --- | --- |
 | `document_role` | Clean manuscript-facing initial draft of Section 5 |
-| `version` | `v0.14-section5-author-refinement` |
+| `version` | `v0.15-section5-author-refinement` |
 | `date` | `2026-08-27` |
-| `review_status` | `Section 5 v0.14 incorporates the author-reviewed prose, baseline set and caption revisions; Figure 5 v5.3 remains manuscript-usable` |
+| `review_status` | `Section 5 v0.15 clarifies the purpose of the two main evaluation protocols; all experimental results and figure/table artifacts remain unchanged` |
 | `upstream_dependency` | Introduction v0.9, Related Work v0.2, Section 3 v0.7 and Section 4 v0.7 remain temporarily frozen and unchanged |
 | `evidence_scope` | Main-I, Main-II, Efficiency, Core-Ablation, Figure 5 sample-specific scope/allocation diagnostics and author-refined Decoder-Transfer |
 | `experiment_change` | None; the prose is refined from the latest frozen result artifacts, with no new training or formal test |
@@ -41,7 +41,7 @@ HoriScope is designed to replace separately optimized horizon-specific predictor
 
 **Model and baselines.** HoriScope is a decoder framework that can be coupled with different Encoders. We pair it with a lightweight patch-token MLP Encoder to isolate the contribution of the proposed decoder. The comparison covers four representative design families: (1) Transformer-based models, including SimpleTM, iTransformer and PatchTST \citep{chen2025simpletm,liu2024itransformer,nie2023patchtst}; (2) lightweight linear or attention-based forecasters and training frameworks, including TimeAlign, QDF and DLinear \citep{hu2026timealign,wang2026qdf,zeng2023dlinear}; (3) convolutional models, including TVNet and ModernTCN \citep{li2025tvnet,luo2024moderntcn}; and (4) multi-scale or decomposition-based models, including AMD and TimeMixer \citep{hu2025amd,wang2024timemixer}.
 
-**Evaluation protocols.** The horizon-specific comparison evaluates one HoriScope model per dataset against baselines trained independently for each requested horizon. A complementary one-model-all-horizons comparison trains every method for the maximum horizon and evaluates an $H$-step request from its first $H$ outputs using the corresponding official fixed-$H$ test loader.
+**Evaluation protocols.** The horizon-specific comparison tests whether one HoriScope model per dataset can retain forecasting accuracy against baselines optimized separately for each requested horizon. It therefore evaluates unified serving against the separate model specialization of the standard horizon-specific protocol. The complementary one-model-all-horizons comparison places every method under the same unified workflow. Each model is trained for the maximum horizon, and an $H$-step request is evaluated from its first $H$ outputs using the corresponding official fixed-$H$ test loader. This protocol evaluates how effectively each architecture serves all requested horizons through one model and one shared prediction trajectory.
 
 **Implementation details.** Local experiments are implemented in Python 3.12.13 and PyTorch 2.9.0 with CUDA 12.8, and run on NVIDIA GeForce RTX 3090 GPUs. HoriScope is optimized under the BSCA objective using AdamW and a cosine learning-rate schedule \citep{loshchilov2019adamw,loshchilov2017sgdr}. All locally reproduced baselines are built from their official codebases, and any source-informed configuration adaptation is documented explicitly.
 
