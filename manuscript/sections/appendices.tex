@@ -45,7 +45,6 @@ We evaluate HoriScope on seven widely used multivariate time-series forecasting 
 \setlength{\tabcolsep}{4pt}
 \caption{Dataset Statistics.}
 \label{tab:dataset-statistics}
-\resizebox{\textwidth}{!}{%
 \begin{tabular}{lcccc}
 \toprule
 Dataset & Variables & Sampling Frequency & Dataset Size & Domain \\
@@ -58,8 +57,7 @@ ECL & 321 & 1 h & (18317, 2633, 5261) & Electricity \\
 Weather & 21 & 10 min & (36792, 5271, 10540) & Weather \\
 Solar & 137 & 10 min & (36601, 5161, 10417) & Solar energy \\
 \bottomrule
-\end{tabular}%
-}
+\end{tabular}
 \end{table*}
 
 
@@ -76,7 +74,6 @@ The local experiments are implemented in Python 3.12.13 and PyTorch 2.9.0 with C
 \setlength{\tabcolsep}{4pt}
 \caption{Training and Evaluation Settings.}
 \label{tab:training-settings}
-\resizebox{\textwidth}{!}{%
 \begin{tabular}{lcccccc}
 \toprule
 Dataset & Max Length & Initial LR & Batch & Grad. Accum. & Max epochs & Patience \\
@@ -89,8 +86,7 @@ Weather & 720 & $2\times10^{-5}$ & 32 & 1 & 120 & 24 \\
 ECL & 720 & $5\times10^{-4}$ & 4 & 8 & 30 & 7 \\
 Solar & 720 & $3\times10^{-4}$ & 16 & 2 & 45 & 10 \\
 \bottomrule
-\end{tabular}%
-}
+\end{tabular}
 \end{table*}
 
 

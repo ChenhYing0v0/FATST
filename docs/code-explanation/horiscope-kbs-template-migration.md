@@ -2,7 +2,7 @@
 
 ## 目标与边界
 
-本次工作以作者指定的 PDT 成品源文件为唯一版式参考，将冻结的 HoriScope 手稿重新组装为平铺、单主文件的 `Knowledge-Based Systems` 投稿源。迁移不改动论文的科学内容、实验数值、图片数据或参考文献条目。
+本次工作以作者指定的 PDT 成品源文件为唯一版式参考，将冻结的 HoriScope 手稿重新组装为平铺、单主文件的 `Knowledge-Based Systems` 投稿源。迁移不改动论文的科学内容、实验数值或图片数据；bibliography 另按 PDT 的无 URL、缩写 venue 格式统一排版。
 
 ## 文件组织
 
@@ -16,7 +16,7 @@
 
 ## 迁移流程
 
-`scripts/build_horiscope_kbs_flat_submission.py` 直接以指定 PDT `elsarticle-template-num.tex` 为 scaffold。脚本保留 PDT front matter 与 bibliography 结构，将 HoriScope 的 title、abstract、keywords 和 highlights 注入对应环境，再按论文顺序内联 Sections 1--7、声明和 Appendices A--C。表格 `\input` 在构建时展开为完整 LaTeX，figure paths 统一改为当前目录文件名。
+`scripts/build_horiscope_kbs_flat_submission.py` 直接以指定 PDT `elsarticle-template-num.tex` 为 scaffold。脚本保留 PDT front matter 与 bibliography 结构，将 HoriScope 的 title、abstract、keywords 和 highlights 注入对应环境，再按论文顺序内联 Sections 1--7、声明和 Appendices A--C。表格 `\input` 在构建时展开为完整 LaTeX，figure paths 统一改为当前目录文件名。`scripts/normalize_horiscope_bibliography.py` 按 PDT `ref.bib`/`.bbl`惯例移除 URL、DOI、series 与 conference publisher 元数据，并标准化 venue 缩写。
 
 脚本不会重写 PDT preamble，也不会加入 `xurl`、额外 page-anchor 设置或 Appendix float barrier。因此，从文件起始至 `\journal{Knowledge-Based Systems}` 之前的内容与参考源完全相同，Appendix 的组织顺序也沿用 PDT 的 inline layout。
 
@@ -32,7 +32,7 @@
 6. PDF page count 及 LaTeX fatal diagnostics；
 7. front matter、主图表、Appendix A/B/C 与 references 的逐页视觉检查。
 
-当前审计结果记录于 `analysis/horiscope_kbs_flat_submission_20260827/audit_report.md`。最终 PDF 为 A4、25 页。编译不存在 LaTeX error、undefined control、oversized float 或 undefined citation/reference；PDT 原 scaffold 产生的非致命 duplicate-destination warnings 与 bibliography metadata warnings 已在 audit 中单独披露。
+当前审计结果记录于 `analysis/horiscope_kbs_flat_submission_20260827/audit_report.md`。最终 PDF 为 A4、24 页。编译不存在 LaTeX error、undefined control、oversized float 或 undefined citation/reference；PDT 原 scaffold 产生的非致命 duplicate-destination warnings 与 bibliography metadata warnings 已在 audit 中单独披露。
 
 旧的 `Elsevier_template/` 分文件版本保留为历史迁移记录，已不再是 canonical 投稿源。
 

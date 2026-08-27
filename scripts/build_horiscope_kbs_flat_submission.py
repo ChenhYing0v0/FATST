@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import argparse
 import re
 import shutil
 from pathlib import Path
@@ -183,13 +184,27 @@ This work was supported in part by the National Natural Science Foundation of Ch
     return assembled.rstrip() + "\n"
 
 
+def parse_args() -> argparse.Namespace:
+    """Parse command-line options."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="Refresh the existing flat submission in place.",
+    )
+    return parser.parse_args()
+
+
 def main() -> None:
     """Create the clean flat directory and all submission assets."""
+    args = parse_args()
     if TARGET.exists():
-        raise FileExistsError(
-            f"Refusing to overwrite existing submission directory: {TARGET}"
-        )
-    TARGET.mkdir()
+        if not args.overwrite:
+            raise FileExistsError(
+                f"Refusing to overwrite existing submission directory: {TARGET}"
+            )
+    else:
+        TARGET.mkdir()
 
     for filename in (".latexmkrc", "elsarticle-num.bst", "math_utils.tex"):
         shutil.copy2(PDT_SOURCE / filename, TARGET / filename)
@@ -203,7 +218,8 @@ def main() -> None:
         encoding="utf-8",
         newline="\n",
     )
-    print(f"Created flat KBS submission at {TARGET}")
+    action = "Refreshed" if args.overwrite else "Created"
+    print(f"{action} flat KBS submission at {TARGET}")
 
 
 if __name__ == "__main__":

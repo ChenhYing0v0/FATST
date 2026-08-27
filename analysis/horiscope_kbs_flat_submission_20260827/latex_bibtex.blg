@@ -1,0 +1,62 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: elsarticle-template-num.aux
+The style file: elsarticle-num.bst
+Database file #1: ref.bib
+Warning--empty pages in nie2023patchtst
+Warning--empty pages in liu2024itransformer
+Warning--empty pages in shi2025timemoe
+Warning--empty pages in zhang2023crossformer
+Warning--empty pages in luo2024moderntcn
+Warning--empty pages in oreshkin2020nbeats
+Warning--empty pages in chen2024pathformer
+Warning--empty pages in wang2024timemixer
+Warning--empty pages in chen2025simpletm
+Warning--empty pages in hu2026timealign
+Warning--empty pages in wang2026qdf
+Warning--empty pages in li2025tvnet
+Warning--empty pages in loshchilov2019adamw
+Warning--empty pages in loshchilov2017sgdr
+Warning--empty pages in wu2023timesnet
+You've used 39 entries,
+            2952 wiz_defined-function locations,
+            845 strings with 12738 characters,
+and the built_in function-call counts, 16799 in all, are:
+= -- 1452
+> -- 660
+< -- 38
++ -- 246
+- -- 207
+* -- 1055
+:= -- 2074
+add.period$ -- 39
+call.type$ -- 39
+change.case$ -- 39
+chr.to.int$ -- 0
+cite$ -- 54
+duplicate$ -- 655
+empty$ -- 1945
+format.name$ -- 244
+if$ -- 4438
+int.to.chr$ -- 0
+int.to.str$ -- 39
+missing$ -- 39
+newline$ -- 125
+num.names$ -- 39
+pop$ -- 367
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 1250
+stack$ -- 0
+substring$ -- 938
+swap$ -- 262
+text.length$ -- 38
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 15
+while$ -- 103
+width$ -- 41
+write$ -- 357
+(There were 15 warnings)

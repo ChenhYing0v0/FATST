@@ -23,6 +23,10 @@ BUILD_LOG = (
     ROOT
     / "analysis/horiscope_kbs_flat_submission_20260827/latex_build.log"
 )
+BIBTEX_LOG = (
+    ROOT
+    / "analysis/horiscope_kbs_flat_submission_20260827/latex_bibtex.blg"
+)
 REPORT = (
     ROOT
     / "analysis/horiscope_kbs_flat_submission_20260827/audit_report.md"
@@ -131,6 +135,8 @@ def main() -> None:
         raise FileNotFoundError(FINAL_PDF)
     if not BUILD_LOG.is_file():
         raise FileNotFoundError(BUILD_LOG)
+    if not BIBTEX_LOG.is_file():
+        raise FileNotFoundError(BIBTEX_LOG)
     pdfinfo = subprocess.run(
         ["pdfinfo", str(FINAL_PDF)],
         check=True,
@@ -143,6 +149,7 @@ def main() -> None:
     page_count = int(page_match.group(1))
 
     build_log = BUILD_LOG.read_text(encoding="utf-8", errors="replace")
+    bibtex_log = BIBTEX_LOG.read_text(encoding="utf-8", errors="replace")
     fatal_patterns = (
         "LaTeX Error",
         "Undefined control sequence",
@@ -156,7 +163,7 @@ def main() -> None:
 
     overfull_hbox = len(re.findall(r"Overfull \\hbox", build_log))
     duplicate_destinations = len(re.findall(r"destination with the same identifier", build_log))
-    empty_bib_pages = len(re.findall(r"empty pages in", build_log))
+    empty_bib_pages = len(re.findall(r"empty pages in", bibtex_log))
 
     REPORT.parent.mkdir(parents=True, exist_ok=True)
     report = f"""# HoriScope KBS flat-submission audit

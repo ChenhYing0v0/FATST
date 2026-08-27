@@ -7,7 +7,7 @@
 | `paper_target` | 高水平 SCI 期刊时间序列预测论文 |
 | `working_title` | `HoriScope: Adaptive Multi-Scope Decoding for Unified Varied-Horizon Time-Series Forecasting` |
 | `current_stage` | `StageC-UVHF` active；StageB 已归档 |
-| `current_11_step` | Sections 1--7、Appendix、Figures 1--7与bibliography assembled；PDT-exact flat KBS submission audited |
+| `current_11_step` | Sections 1--7、Appendix、Figures 1--7与bibliography assembled；PDT-exact flat KBS submission audited；reference/table refinement complete |
 | `source_evidence` | A6-LBF-r256 historical/source-faithful performance |
 | `mechanism_control` | Core-Ablation five matched variants；historical `ISCF-EQUAL`仅作旧BSCA diagnostic，不冒充prefix-only `w/o BSCA` |
 | `test_reference` | 3 datasets × 3 seeds × 8 horizons，72/72 complete |
@@ -19,6 +19,8 @@
 | `paper_experiment_protocol` | `configs/iscf_bsca_paper_experiment_protocol.json` |
 | `paper_table_registry` | `docs/iscf-bsca-paper-table-registry.md`；machine contract=`configs/iscf_bsca_paper_table_registry.json` |
 | `paper_core_status` | architecture family frozen；Sections 1--7与Figure 5 v5.3 temporarily frozen usable；Section 5.4 Figure 6 only，Section 5.7 Figure 7 only；allocation aggregate accuracy direction positive但prevalence、sparse/oracle-routing claims仍关闭 |
+
+[HoriScope KBS Reference and Appendix Layout Refinement, 2026-08-27] 按author反馈修订canonical flat投稿源。Appendix A Table A.1/A.2移除`resizebox{\textwidth}{!}`，保留`\scriptsize`与紧凑列距，使两表按自然宽度居中排版。基于PDT `ref.bib`/`.bbl`格式对`manuscript/ref.bib`逐条规范：删除URL、DOI、series与会议publisher元数据，将会议venue统一为`Proc. ... (ICLR/ICML/NeurIPS/AAAI/AISTATS/SIGIR)`等缩写，期刊名采用PDT式缩写，并删除未被正文引用的Leddam条目。刷新`HoriScope_KBS_submission/`后，references压缩为24页稿件中的两页；39 cited/39 defined/0 missing，视觉QA确认Table A.1/A.2与references均无裁切、重叠或不可读文字。Canonical audit=`analysis/horiscope_kbs_flat_submission_20260827/audit_report.md`；new implementation/training/remote launch/formal test=`0/0/0/0`。
 
 [HoriScope PDT-Exact Flat KBS Submission, 2026-08-27] 根据author更正要求，以`/Users/river/PaperResearch/Project/R_2026_PDT/manuscript/revision/PDT_revision_v01/source_latex/elsarticle-template-num.tex`重新建立canonical投稿库`HoriScope_KBS_submission/`。`\journal{Knowledge-Based Systems}`之前的内容与PDT参考稿exact byte identity；`.latexmkrc`、`elsarticle-num.bst`与`math_utils.tex`保持byte identity。Sections 1--7、Appendices A--C及8张table全部内联到单一主`.tex`，8个figure assets与`ref.bib`平铺在同一目录，最终source inventory为13 files/0 subdirectories。25页A4 PDF通过编译与逐页视觉QA，无LaTeX error、undefined control、oversized float或undefined citation/reference；canonical audit=`analysis/horiscope_kbs_flat_submission_20260827/audit_report.md`。旧`Elsevier_template/`仅保留为被取代的历史迁移稿。Decision=`horiscope_pdt_exact_flat_kbs_submission_audited_ready_for_author_review`；new implementation/training/remote launch/formal test=`0/0/0/0`。
 
