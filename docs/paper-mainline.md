@@ -2559,3 +2559,13 @@ loss 或更多 tuning 来掩盖失败。
 
 2026-07-13 reset 前主线完整 snapshot 位于
 `docs/archive/pre-stage-c-reset-20260713/`，仅作历史审计。
+
+## 2026-08-31 UVHF naming review draft
+
+- 当前冻结的 `HoriScope_KBS_submission/` 保持不变。
+- 新建 `UVHF_KBS_submission_highlighted_review/` 作为待用户审阅的独立命名修改稿。
+- 修改稿固定术语层级：task=`unified varied-horizon forecasting`，framework/model=`UVHF`，
+  architecture=`Multi-Scope Decoder (MSD)`，training=`Balanced Co-Adaptation (BCA)`，
+  structural property=`CHPC`。
+- 本次只变更 paper-facing naming、上下文叙述与图片标签，不改变模型计算、实验数据、指标或 claim boundary。
+- 在用户正式确认前，该命名修改稿不替代原 KBS submission package。

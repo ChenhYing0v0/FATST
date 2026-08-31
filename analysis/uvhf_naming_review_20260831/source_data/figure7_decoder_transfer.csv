@@ -1,0 +1,9 @@
+backbone,dataset,original_decoder_mse,iscf_bsca_mse,relative_mse_reduction_percent
+dlinear_style,Weather,0.246,0.232,5.6910569105691
+dlinear_style,ETTm1,0.353,0.347,1.6997167138810214
+dlinear_style,ETTm2,0.311,0.279,10.289389067524107
+dlinear_style,Avg.,0.303,0.286,5.610561056105616
+patchtst_style,Weather,0.229,0.226,1.3100436681222718
+patchtst_style,ETTm1,0.358,0.349,2.5139664804469297
+patchtst_style,ETTm2,0.259,0.254,1.9305019305019322
+patchtst_style,Avg.,0.282,0.276,2.1276595744680673
