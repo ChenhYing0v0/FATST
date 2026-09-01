@@ -2568,4 +2568,4 @@ loss 或更多 tuning 来掩盖失败。
   architecture=`Multi-Scope Decoder (MSD)`，training=`Balanced Co-Adaptation (BCA)`，
   structural property=`CHPC`。
 - 本次只变更 paper-facing naming、上下文叙述与图片标签，不改变模型计算、实验数据、指标或 claim boundary。
-- 在用户正式确认前，该命名修改稿不替代原 KBS submission package。
+- 用户已于 2026-09-01 确认全面命名重构通过。`UVHF_KBS_submission/` 现为最新 canonical KBS 投稿版本；其内容继承已通过的 UVHF/MSD/BCA 修改稿并移除 review-only 蓝色高亮。`HoriScope_KBS_submission/` 与 `UVHF_KBS_submission_highlighted_review/` 分别保留为重构前版本和高亮对照版本，不再作为当前投稿源。

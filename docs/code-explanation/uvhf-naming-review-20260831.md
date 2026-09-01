@@ -28,3 +28,13 @@ only visible framework/component labels.
 The package is compiled with `latexmk`; the generated PDF is inspected across
 all pages. Static terminology checks ensure that legacy method names and
 task/model ambiguity patterns do not remain in the revised manuscript.
+
+## Approved submission package
+
+After author approval, the reviewed manuscript was promoted to
+`UVHF_KBS_submission/`. The canonical package contains the same accepted text,
+figures, tables and references as the highlighted review package. All 94
+review-only wrappers and the blue BCA loss label are removed, and the source
+preamble before `\journal{Knowledge-Based Systems}` is restored to exact byte
+identity with the previously audited PDT-based package. The original HoriScope
+package and highlighted UVHF package are retained unchanged for comparison.
