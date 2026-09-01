@@ -33,3 +33,16 @@ Date: 2026-09-01
 
 The refined package remains scientifically identical to the approved canonical
 UVHF manuscript and is suitable as the current KBS submission source.
+
+## Frozen submission snapshot
+
+The author confirmed this audited package as the temporarily frozen,
+submission-ready version on 2026-09-01. The scientific content is anchored to
+commit `c0eb5974` with the following SHA-256 digests:
+
+- canonical TeX: `5f63fed2899f92177bb99e2abdd5bd3be30489162050f2da58ff1d626d8450ec`
+- compiled PDF: `bce1823779ede5728f37e5abe79b17e72dfbf72009463cd8195c57bc8d159555`
+- Figure 7 manuscript asset: `c6af340d87780d4d997a7d42209a53f86cb087aedacca3e49003fead02bfb7f0`
+
+The freeze is a paper-governance state and does not alter any file inside the
+flat `UVHF_KBS_submission/` package.
