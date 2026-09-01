@@ -1,60 +1,30 @@
-# Expert review of the UVHF/MSD/BCA naming revision
+# UVHF/MSD/BCA 命名修改的专家评审
 
-## Verdict
+## 结论
 
-**Recommendation: adopt after author approval.** The revised hierarchy is
-clearer and more paper-defining than the former HoriScope/BSCA naming. It gives
-the title direct task salience, separates architectural and optimization
-contributions, and aligns the terminology used in the abstract, method,
-experiments, figures and appendices.
+**建议：经作者确认后采用。** 相较于原有的 HoriScope/BSCA 命名，修改后的层级关系更加清晰，也更有利于突出论文的核心定位。新方案使标题能够直接指向研究任务，明确区分架构贡献与优化贡献，并统一了 Abstract、Method、Experiments、Figures 和 Appendices 中的术语体系。
 
-## Reviewer-facing strengths
+## 面向审稿人的优势
 
-1. **Task salience.** The title immediately identifies unified varied-horizon
-   time-series forecasting, so the paper topic is legible without first
-   decoding a coined model name.
-2. **Contribution hierarchy.** `UVHF = MSD + BCA` provides a compact mental
-   model: UVHF is the complete framework, MSD is the inference architecture,
-   and BCA is its training strategy.
-3. **Claim alignment.** The method section, ablations and generalization study
-   now refer to the level actually evaluated. Decoder replacement is described
-   as MSD transfer with BCA training, avoiding the inaccurate impression that
-   BCA is part of the inference decoder.
-4. **Task/model disambiguation.** The generic task is always written as
-   `unified varied-horizon forecasting`; `UVHF` is reserved for the proposed
-   framework. This resolves the main ambiguity created when an acronym names
-   both a setting and a model.
-5. **Visual consistency.** Every figure containing an old model label was
-   regenerated from the same source data, and captions for the component-only
-   figures were updated to the new hierarchy.
+1. **任务指向性更强。** 标题直接表明论文研究的是 unified varied-horizon time-series forecasting。审稿人无需先理解一个新造的模型名称，即可快速判断论文主题及其相关性。
+2. **贡献层级清晰。** `UVHF = MSD + BCA` 提供了简洁且易于记忆的认知框架：UVHF 表示完整的预测框架，MSD 表示前向推理所使用的 decoder architecture，BCA 表示与之配套的 training strategy。
+3. **Claim 与证据层级更加一致。** Method、Ablation 和 Generalization Studies 现在均指向其实际评估的对象。Decoder replacement 被准确描述为使用 BCA 训练的 MSD transfer，从而避免审稿人误认为 BCA 属于 inference-time decoder 的组成部分。
+4. **Task 与 model 的语义得到区分。** 通用研究任务始终写作 `unified varied-horizon forecasting`，而 `UVHF` 仅用于指代本文提出的完整框架。这一规则解决了同一缩写同时表示 forecasting setting 和具体模型时可能产生的歧义。
+5. **视觉表达保持一致。** 所有包含旧模型名称的图片均基于相同的 source data 重新生成；仅展示组件的图片也通过 caption 与新的术语层级完成了同步。
 
-## Remaining risks and boundaries
+## 仍需关注的风险与边界
 
-1. **Generic acronym risk.** `UVHF` is intentionally close to the task name.
-   Its clarity depends on preserving the terminology contract. Future revisions
-   should not introduce phrases such as `the UVHF task`, `UVHF setting` or
-   `UVHF workflow`.
-2. **Novelty wording.** Prior flexible-horizon methods, especially ElasTST,
-   prevent an unqualified claim that UVHF creates the first multi-horizon
-   paradigm. The manuscript appropriately claims systematic formulation,
-   decoder-side problem analysis and a targeted framework.
-3. **BCA specificity.** `Balanced Co-Adaptation` is concise but generic in
-   isolation. Its first definition therefore explicitly ties co-adaptation to
-   the scope-indexed forecast field and allocation process.
-4. **MSD versus multi-scale encoding.** Reviewers may initially associate MSD
-   with conventional multi-scale history modeling. Related Work and Discussion
-   preserve the essential distinction: scope indexes output-side latent-state
-   reuse, whereas scale usually indexes input resolution or frequency.
+1. **缩写的通用性风险。** `UVHF` 与任务名称天然接近，其清晰性依赖于全文持续遵守术语契约。后续修改中不应重新引入 `the UVHF task`、`UVHF setting` 或 `UVHF workflow` 等表述。
+2. **Novelty claim 的边界。** 既有 flexible-horizon 方法，尤其是 ElasTST，使本文不宜直接宣称 UVHF 首次创立了 multi-horizon forecasting paradigm。当前手稿将贡献限定为系统化任务定义、decoder-side problem analysis 和针对性的 forecasting framework，这一边界较为稳妥。
+3. **BCA 名称的特异性。** `Balanced Co-Adaptation` 简洁，但脱离上下文时可能显得较为宽泛。因此，其首次定义需要明确指出 co-adaptation 发生在 scope-indexed forecast field 与 allocation process 之间。
+4. **MSD 与 multi-scale encoding 的区分。** 审稿人可能会将 MSD 初步理解为传统的 multi-scale history modeling。Related Work 和 Discussion 需要继续保持当前的核心区分：scope 描述 output-side latent-state reuse extent，而 scale 通常描述 input resolution 或 frequency structure。
 
-## Verification summary
+## 验证摘要
 
-- Original submission directory: byte-for-byte unchanged by checksum.
-- Legacy manuscript terms (`HoriScope`, `ISCF`, `BSCA`): absent from the
-  revised TeX and compiled PDF.
-- Task/model ambiguity patterns: absent.
-- Revision markers: 94 blue-highlight blocks.
-- Modified plotting sources: both pass the Nature Figure static preflight.
-- Manuscript build: 24 pages, all citations and cross-references resolved, no
-  overfull or underfull box warnings.
-- Visual QA: all 24 pages inspected; revised labels, tables, captions and
-  appendix figures render without clipping or overlap.
+- 原始投稿文件夹已经过 checksum 检查，文件内容未发生变化。
+- 修改后的 TeX 和编译 PDF 中均不存在旧手稿术语 `HoriScope`、`ISCF` 和 `BSCA`。
+- 未检测到 task/model 语义混用模式。
+- 修改稿共包含 94 个蓝色高亮区块。
+- 两个修改后的绘图脚本均通过 Nature Figure static preflight。
+- 手稿编译结果为 24 页，所有 citations 和 cross-references 均已正确解析，未出现 overfull 或 underfull box warning。
+- 已完成全部 24 页的视觉检查；修改后的 labels、tables、captions 和 appendix figures 均不存在裁切、重叠或明显排版问题。
