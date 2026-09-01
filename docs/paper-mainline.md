@@ -2569,3 +2569,4 @@ loss 或更多 tuning 来掩盖失败。
   structural property=`CHPC`。
 - 本次只变更 paper-facing naming、上下文叙述与图片标签，不改变模型计算、实验数据、指标或 claim boundary。
 - 用户已于 2026-09-01 确认全面命名重构通过。`UVHF_KBS_submission/` 现为最新 canonical KBS 投稿版本；其内容继承已通过的 UVHF/MSD/BCA 修改稿并移除 review-only 蓝色高亮。`HoriScope_KBS_submission/` 与 `UVHF_KBS_submission_highlighted_review/` 分别保留为重构前版本和高亮对照版本，不再作为当前投稿源。
+- 2026-09-01 投稿版细化完成：Highlights 标题保持单行且条目不依赖未定义缩写；Abstract 结句恢复为 `effective foundation`；30 处 display equations 全部编号；BCA balance schedule 使用 $\lambda_{\mathrm{balance}}^{\max}$ 与 $u_{\mathrm{ramp}}$，具体值保留在 Appendix A；Figure 7 调整为 `Original Decoder` 在前、`UVHF (MSD + BCA)` 在后。该更新只改变排版与符号表达，不改变实验数据、模型计算或 claim boundary。

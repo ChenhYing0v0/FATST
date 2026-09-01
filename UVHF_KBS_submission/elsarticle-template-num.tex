@@ -108,8 +108,7 @@
 %%             country={}}
 %% \fntext[label3]{}
 
-\title{UVHF: Unified Varied-Horizon Time-Series Forecasting\\
-with a Multi-Scope Decoder and Balanced Co-Adaptation}
+\title{UVHF: Unified Varied-Horizon Time-Series Forecasting with a Multi-Scope Decoder and Balanced Co-Adaptation}
 
 %% use optional labels to link authors explicitly to addresses:
 %% \author[label1,label2]{}
@@ -144,7 +143,7 @@ with a Multi-Scope Decoder and Balanced Co-Adaptation}
 
 %% Abstract
 \begin{abstract}
-Most time-series forecasting methods optimize a model for a predefined prediction horizon, whereas practical applications often request forecasts of different lengths from the same history. Under the prevailing horizon-specific paradigm, separate models are optimized for different prediction lengths. This fragments multi-horizon service and can produce inconsistent forecasts for future steps shared across horizon requests. We define unified varied-horizon forecasting as learning one horizon-agnostic trajectory whose nested prefixes serve different request endpoints. This formulation imposes two coupled requirements on decoder design. First, predictions for shared future steps must remain invariant to the requested horizon, a property we term cross-horizon prefix consistency (CHPC). Second, jointly modeling short-, medium- and long-range futures requires the decoder to regulate how broadly history-conditioned information is shared across the future domain. We therefore introduce UVHF, a unified forecasting framework built around a Multi-Scope Decoder (MSD). The MSD constructs region-wise forecasts under multiple sharing scopes and integrates them through target-adaptive allocation into one trajectory, thereby satisfying CHPC by construction. We further develop Balanced Co-Adaptation (BCA), which balances the joint optimization of scope-conditioned forecasts and their allocation through scope-wise supervision and usage regularization. Experiments across seven multivariate benchmarks show that UVHF achieves state-of-the-art accuracy against recent horizon-specific and unified forecasters while serving all supported horizons with a single model. It also offers a favorable trade-off between checkpoint storage and inference memory. Controlled ablations support the proposed components, and generalization studies demonstrate the portability of the MSD across the evaluated backbone families. These results establish output-side multi-scope generation as an effective basis for unified varied-horizon forecasting.
+Most time-series forecasting methods optimize a model for a predefined prediction horizon, whereas practical applications often request forecasts of different lengths from the same history. Under the prevailing horizon-specific paradigm, separate models are optimized for different prediction lengths. This fragments multi-horizon service and can produce inconsistent forecasts for future steps shared across horizon requests. We define unified varied-horizon forecasting as learning one horizon-agnostic trajectory whose nested prefixes serve different request endpoints. This formulation imposes two coupled requirements on decoder design. First, predictions for shared future steps must remain invariant to the requested horizon, a property we term cross-horizon prefix consistency (CHPC). Second, jointly modeling short-, medium- and long-range futures requires the decoder to regulate how broadly history-conditioned information is shared across the future domain. We therefore introduce UVHF, a unified forecasting framework built around a Multi-Scope Decoder (MSD). The MSD constructs region-wise forecasts under multiple sharing scopes and integrates them through target-adaptive allocation into one trajectory, thereby satisfying CHPC by construction. We further develop Balanced Co-Adaptation (BCA), which balances the joint optimization of scope-conditioned forecasts and their allocation through scope-wise supervision and usage regularization. Experiments across seven multivariate benchmarks show that UVHF achieves state-of-the-art accuracy against recent horizon-specific and unified forecasters while serving all supported horizons with a single model. It also offers a favorable trade-off between checkpoint storage and inference memory. Controlled ablations support the proposed components, and generalization studies demonstrate the portability of the MSD across the evaluated backbone families. These results establish output-side multi-scope generation as an effective foundation for unified varied-horizon forecasting.
 \end{abstract}
 
 %%Graphical abstract
@@ -153,12 +152,17 @@ Most time-series forecasting methods optimize a model for a predefined predictio
 % \end{graphicalabstract}
 
 %%Research highlights
+\begingroup
+\makeatletter
+\def\@title{\small UVHF: Unified Varied-Horizon Time-Series Forecasting with a Multi-Scope Decoder and Balanced Co-Adaptation}
+\makeatother
 \begin{highlights}
 \item Unified varied-horizon forecasting is formalized through nested trajectory prefixes.
-\item UVHF uses an MSD to adaptively combine forecasts from multiple sharing scopes.
-\item BCA supports balanced joint optimization of scope forecasts and allocation.
+\item A Multi-Scope Decoder adaptively combines forecasts from multiple sharing scopes.
+\item Balanced Co-Adaptation jointly optimizes scope forecasts and their allocation.
 \item One model achieves state-of-the-art accuracy across seven forecasting benchmarks.
 \end{highlights}
+\endgroup
 
 %% Keywords
 \begin{keyword}
@@ -258,7 +262,7 @@ Consider two forecasting requests with horizons $H_i<H_j$ issued from the same o
 
 At forecast origin $o$, let
 
-\[
+\begin{equation}
 \mathbf X_o
 =
 \left[\mathbf x_{o-L+1},\ldots,\mathbf x_o\right]
@@ -268,14 +272,14 @@ At forecast origin $o$, let
 =
 \left[y_{o+\tau,c}\right]_{\tau=1,\ldots,H;\ c=1,\ldots,C}
 \in\mathbb R^{H\times C}.
-\]
+\end{equation}
 
 
 Here, $\mathbf X_o$ is a length-$L$ multivariate history, and $\mathbf Y_o^{(H)}$ contains the next $H$ targets for $C$ variables. Let $\mathcal H=\{H_1,\ldots,H_M\}$ denote the supported horizons and $T=\max\mathcal H$. The horizon $H$ specifies the request endpoint, whereas $\tau$ indexes a particular future step. Thus, target $(\tau,c)$ is shared by all requests with $H\geq\tau$.
 
 This shared-target relation defines \textbf{cross-horizon prefix consistency (CHPC)}. Let $\widehat y_{o+\tau,c}^{(H)}$ denote the prediction returned for target $(\tau,c)$ under a request with horizon $H$. Given identical history, forecast origin and preprocessing, CHPC requires
 
-\[
+\begin{equation}
 \widehat y_{o+\tau,c}^{(H_i)}
 =
 \widehat y_{o+\tau,c}^{(H_j)},
@@ -283,20 +287,20 @@ This shared-target relation defines \textbf{cross-horizon prefix consistency (CH
 \forall\,H_i,H_j\in\mathcal H,\ H_i<H_j,\quad
 1\leq\tau\leq H_i,\quad
 1\leq c\leq C.
-\]
+\end{equation}
 
 
 Conventional long-term forecasting learns an independent predictor $f_{\theta_H}$ for each horizon. Because both parameters and optimization are horizon-specific, these predictors are not constrained to satisfy CHPC on their overlapping outputs.
 
 A varied-horizon forecaster should instead use a single \textbf{future-step-indexed prediction function} $g_\theta(\mathbf X_o,\tau,c)$ and construct an $H$-step forecast as
 
-\[
+\begin{equation}
 \widehat{\mathbf Y}_o^{(H)}
 =
 \left[
 g_\theta(\mathbf X_o,\tau,c)
 \right]_{\tau=1,\ldots,H;\ c=1,\ldots,C}.
-\]
+\end{equation}
 
 
 For a varied-horizon forecaster, all horizon requests query the same function at a shared target, so CHPC holds by construction. Changing the requested horizon alters only the returned prefix length, and each request becomes a nested view of one predicted trajectory.
@@ -308,7 +312,7 @@ Independently trained horizon-specific predictors may agree on some overlapping 
 
 At origin $o$, let $\widehat{\mathbf Y}_{o}^{(H_i)}\in\mathbb R^{H_i\times C}$ and $\widehat{\mathbf Y}_{o}^{(H_j)}\in\mathbb R^{H_j\times C}$ denote forecasts from independently trained models, where $H_i<H_j$. We define their \textbf{cross-horizon prefix disagreement (CHPD)} as
 
-\[
+\begin{equation}
 \operatorname{CHPD}_o(H_i,H_j)
 =
 \frac{1}{H_iC}
@@ -319,12 +323,12 @@ At origin $o$, let $\widehat{\mathbf Y}_{o}^{(H_i)}\in\mathbb R^{H_i\times C}$ a
 -
 \widehat y_{o+\tau,c}^{(H_j)}
 \right|.
-\]
+\end{equation}
 
 
 CHPD measures the mean absolute difference over the shared prefix in the original data scale. To aggregate variables with different magnitudes, we further define normalized CHPD (NCHPD):
 
-\[
+\begin{equation}
 \operatorname{NCHPD}(H_i,H_j)
 =
 \frac{1}{|\mathcal O|C}
@@ -340,7 +344,7 @@ CHPD measures the mean absolute difference over the shared prefix in the origina
 }{
 \sigma_c^{\mathrm{train}}+\epsilon
 }.
-\]
+\end{equation}
 
 
 Here, $\mathcal O$ denotes the aligned evaluation origins, $\sigma_c^{\mathrm{train}}$ is the train-split standard deviation of variable $c$, and $\epsilon$ is the fixed numerical stabilizer used in the computation. All comparisons use identical histories, forecast origins, scalers and overlapping target indices.
@@ -370,7 +374,7 @@ To isolate this factor, we construct capacity-matched single-extent predictors t
 
 For aligned origin $o$, we define the \textbf{future-region prediction risk} of sharing extent $s$ over region $\mathcal B_b$ as the empirical squared-error loss
 
-\[
+\begin{equation}
 R_{o,b,s}
 =
 \frac{1}{|\mathcal B_b|C}
@@ -381,7 +385,7 @@ R_{o,b,s}
 -
 y_{o+\tau,c}
 \right)^2.
-\]
+\end{equation}
 
 
 For a given origin and region, $R_{o,b,s}$ averages squared errors over the region's future steps and variables. Lower $R_{o,b,s}$ indicates that extent $s$ better matches region $\mathcal B_b$ within the controlled family; a region-dependent preference appears when $s_{o,b}^{\star}=\arg\min_sR_{o,b,s}$ changes with $b$.
@@ -430,7 +434,7 @@ The Scope-conditioned Forecasts and Scope Probabilities are optimized jointly. B
 
 The MSD begins with the History State and Future Coordinate shown on the left of Fig.~\ref{fig:uvhf-method}. The History Series is normalized per variable, divided into $P$ patches by Patchify and processed by the shared Encoder. This produces $\mathbf Z\in\mathbb R^{B\times C\times P\times D_e}$, which is flattened over its patch and embedding dimensions:
 
-\[
+\begin{equation}
 \mathbf Z
 =
 \mathcal E\!\left(\mathcal N(\mathbf X)\right),
@@ -441,7 +445,7 @@ The MSD begins with the History State and Future Coordinate shown on the left of
 \in\mathbb R^R,
 \qquad
 R=PD_e.
-\]
+\end{equation}
 
 
 Collecting $\mathbf r_{b,c}$ over samples and variables gives the History State $\mathbf R=[\mathbf r_{b,c}]\in\mathbb R^{B\times C\times R}$. The preserved variable axis provides one history representation for each sample-variable pair, which is used by both decoder paths.
@@ -450,18 +454,18 @@ The History State summarizes the observed series, but a unified decoder must als
 
 Formally, the Future Coordinate is the field $\boldsymbol\Phi=[\boldsymbol\phi_1,\ldots,\boldsymbol\phi_T]^\top\in\mathbb R^{T\times D_q}$. We construct it from low-order discrete cosine functions, which provide smooth coordinate channels at progressively finer temporal frequencies. For $d=0,\ldots,D_q-1$, we first define
 
-\[
+\begin{equation}
 \widetilde\phi_{\tau,d}
 =
 \cos\!\left(
 \frac{\pi(\tau-\tfrac12)d}{T}
 \right).
-\]
+\end{equation}
 
 
 The constant coordinate is $\phi_{\tau,0}=1$. Each nonconstant coordinate is centered over the future domain and scaled as
 
-\[
+\begin{equation}
 \phi_{\tau,d}
 =
 \sqrt{2}
@@ -473,7 +477,7 @@ The constant coordinate is $\phi_{\tau,0}=1$. Each nonconstant coordinate is cen
 \widetilde\phi_{j,d}
 \right),
 \qquad d\geq 1.
-\]
+\end{equation}
 
 
 The constant channel preserves a global reference, while the centered nonconstant channels distinguish positions across the future domain. The Future Coordinate field serves two roles. Region-wise averaging produces the Region Descriptors used to generate Scope-conditioned Forecasts, whereas the unpooled coordinate $\boldsymbol\phi_\tau$ identifies the individual target in the Condition Vector used for Scope Probabilities.
@@ -483,7 +487,7 @@ The constant channel preserves a global reference, while the centered nonconstan
 
 The Scope Forecasting Path contains $S$ parallel scope lines, one for each sharing scope in $\mathcal S=\{s_1,\ldots,s_S\}$. Each scope has its own parameterized Scope Projection, which maps the History State into a dedicated Scope Matrix:
 
-\[
+\begin{equation}
 \mathbf M_{b,c}^{(s)}
 =
 \operatorname{reshape}_{D_q\times K}
@@ -493,50 +497,50 @@ The Scope Forecasting Path contains $S$ parallel scope lines, one for each shari
 \mathbf b^{(s)}
 \right)
 \in\mathbb R^{D_q\times K}.
-\]
+\end{equation}
 
 
 The matrix form preserves a Future-Coordinate axis and a latent-mode axis, allowing Region Descriptors to query scope-specific history information at different future locations without assigning a separate prediction head to every region.
 
 For a scope $s$, the future domain is divided into contiguous regions
 
-\[
+\begin{equation}
 \mathcal G_g^{(s)}
 =
 \{(g-1)s+1,\ldots,gs\},
 \qquad
 g=1,\ldots,T/s.
-\]
+\end{equation}
 
 
 The Future Coordinate within each region is averaged to form the Region Descriptor, which provides a compact positional summary for region-wise state construction:
 
-\[
+\begin{equation}
 \overline{\boldsymbol\phi}_g^{(s)}
 =
 \frac{1}{s}
 \sum_{\tau\in\mathcal G_g^{(s)}}
 \boldsymbol\phi_\tau
 \in\mathbb R^{D_q}.
-\]
+\end{equation}
 
 
 The Region Descriptor selects and combines information from this matrix through a coordinate contraction, producing the region-wise Scope-region State
 
-\[
+\begin{equation}
 \mathbf z_{b,c,g}^{(s)}
 =
 \left(\overline{\boldsymbol\phi}_g^{(s)}\right)^\top
 \mathbf M_{b,c}^{(s)}
 \in\mathbb R^K.
-\]
+\end{equation}
 
 
 Once the Scope Matrix is available, each Scope-region State depends only on the descriptor of its own region. Regions can therefore be evaluated separately and in parallel, although they draw on the same scope-specific history information. All future steps in $\mathcal G_g^{(s)}$ reuse $\mathbf z_{b,c,g}^{(s)}$. A finer scope constructs more region states and limits reuse to shorter intervals, whereas a broader scope shares each state over a longer interval. Scope therefore defines the cross-step reuse pattern.
 
 The Region-to-Step Forecast Generator converts each shared Scope-region State into step-wise predictions. Let $g_s(\tau)$ denote the region containing step $\tau$. The generator is shared across scopes and regions, and uses step-specific vectors $\mathbf a_\tau,\mathbf n_\tau\in\mathbb R^K$ and bias $\beta_\tau$ to define
 
-\[
+\begin{equation}
 \mathcal F_{b,c,\tau,s}
 =
 \left\langle
@@ -552,7 +556,7 @@ The Region-to-Step Forecast Generator converts each shared Scope-region State in
 \right\rangle
 +
 \beta_\tau.
-\]
+\end{equation}
 
 
 Concatenating the separately generated regions gives the Scope-conditioned Forecast $\mathcal F^{(s)}$ for scope $s$. Collecting these forecasts produces the scope-indexed field $\mathcal F_\theta(\mathbf X)\in\mathbb R^{B\times C\times T\times S}$. The MSD constructs this field as a unified decoder through scope-specific projections and a shared Encoder and Region-to-Step Forecast Generator. Parameter sharing couples forecast generation across scopes while avoiding duplicated Encoder computation and generator parameters.
@@ -562,19 +566,19 @@ Concatenating the separately generated regions gives the Scope-conditioned Forec
 
 Different future targets may require information organized at different sharing granularities. Estimating this preference requires both the dynamics encoded in the observed history and the target position in the future domain. The Target-Adaptive Allocation Path represents these two signals using a compact history summary and the Future Coordinate. It first projects the History State as
 
-\[
+\begin{equation}
 \mathbf u_{b,c}
 =
 \mathbf W_h\mathbf r_{b,c}
 +
 \mathbf b_h
 \in\mathbb R^{D_h}.
-\]
+\end{equation}
 
 
 The compact summary $\mathbf u_{b,c}$ retains the sample-variable context used for allocation. For future step $\tau$, the Condition Vector concatenates this summary with $\boldsymbol\phi_\tau$. The Allocation MLP maps the resulting vector to scope logits
 
-\[
+\begin{equation}
 \boldsymbol\ell_{b,c,\tau}
 =
 \mathbf W_o
@@ -587,10 +591,10 @@ The compact summary $\mathbf u_{b,c}$ retains the sample-variable context used f
 +
 \mathbf b_o
 \in\mathbb R^S,
-\]
+\end{equation}
 
 
-\[
+\begin{equation}
 \pi_{b,c,\tau,s}
 =
 \frac{
@@ -599,31 +603,31 @@ The compact summary $\mathbf u_{b,c}$ retains the sample-variable context used f
 \sum_{s'=1}^{S}
 \exp(\ell_{b,c,\tau,s'})
 }.
-\]
+\end{equation}
 
 
 Softmax converts these logits into the Scope Probability $\pi_{b,c,\tau,s}$ assigned to scope $s$. Collecting all probabilities gives $\boldsymbol\Pi\in\mathbb R^{B\times C\times T\times S}$, with $\sum_{s=1}^{S}\pi_{b,c,\tau,s}=1$. Each probability vector parameterizes how strongly a future target draws on information organized at different sharing granularities. The final normalized prediction reads from the unified scope-indexed forecast field through weighted contraction:
 
-\[
+\begin{equation}
 \widehat y_{b,\tau,c}
 =
 \sum_{s=1}^{S}
 \pi_{b,c,\tau,s}
 \mathcal F_{b,c,\tau,s}.
-\]
+\end{equation}
 
 
 This contraction is not an average over separately trained model outputs. The Scope Forecasting Path and Target-Adaptive Allocation Path are jointly learned within one decoder, allowing each target to receive a history-conditioned mixture of sharing granularities.
 
 For an $H$-step request, the MSD needs only the Scope-region States whose regions intersect $1{:}H$ and the allocation entries for $\tau\leq H$. The resulting normalized prefix is transformed back to the original data scale and returned as
 
-\[
+\begin{equation}
 \widehat{\mathbf Y}_b^{(H)}
 =
 \left[
 \widehat y_{b,\tau,c}
 \right]_{\tau=1,\ldots,H;\ c=1,\ldots,C}.
-\]
+\end{equation}
 
 
 Changing $H$ restricts the active region and target computations but does not alter any prediction shared with a longer request. Every request is therefore a nested view of the same trajectory. The learned probabilities encode target-adaptive information allocation across scopes; their scope preferences are evaluated empirically in later ablations and internal-behavior analyses.
@@ -635,7 +639,7 @@ Training the MSD within UVHF introduces two coupled requirements. The fused traj
 
 Varied-horizon training should optimize every supported prediction length without privileging one endpoint. We therefore average raw-scale MAE equally over all prefixes $h=1,\ldots,T$ to define the Uniform-Prefix Forecasting Loss. Before loss evaluation, inverse normalization maps the fused and Scope-conditioned Forecasts to the original data scale. Let $y_{b,\tau,c}$ denote the corresponding raw-scale target. The fused objective is
 
-\[
+\begin{equation}
 \mathcal L_{\mathrm{prefix}}
 =
 \frac{1}{T}
@@ -647,12 +651,12 @@ Varied-horizon training should optimize every supported prediction length withou
 \left|
 \widehat y_{b,\tau,c}-y_{b,\tau,c}
 \right|.
-\]
+\end{equation}
 
 
 Exchanging the prefix and future-step summations gives an equivalent dense-prefix measure
 
-\[
+\begin{equation}
 \omega_\tau
 =
 \frac{1}{T}
@@ -660,12 +664,12 @@ Exchanging the prefix and future-step summations gives an equivalent dense-prefi
 \frac{1}{h},
 \qquad
 \sum_{\tau=1}^{T}\omega_\tau=1.
-\]
+\end{equation}
 
 
 Under this measure, every prefix endpoint contributes equally, while a future step is weighted by the number of prefixes containing it. The same loss can therefore be written as
 
-\[
+\begin{equation}
 \mathcal L_{\mathrm{prefix}}
 =
 \frac{1}{BC}
@@ -676,12 +680,12 @@ Under this measure, every prefix endpoint contributes equally, while a future st
 \left|
 \widehat y_{b,\tau,c}-y_{b,\tau,c}
 \right|.
-\]
+\end{equation}
 
 
 The Uniform-Prefix Forecasting Loss establishes the varied-horizon objective, but it does not resolve the joint optimization of multiple scope lines. Weighted contraction makes the fused-loss gradient received by each scope depend on its current Scope Probability. For a fixed target, this relation gives
 
-\[
+\begin{equation}
 \frac{
 \partial\mathcal L_{\mathrm{prefix}}
 }{
@@ -694,12 +698,12 @@ The Uniform-Prefix Forecasting Loss establishes the varied-horizon objective, bu
 }{
 \partial\widehat y_{b,\tau,c}
 }.
-\]
+\end{equation}
 
 
 Consequently, early probability concentration can suppress learning in low-probability scope lines before their forecasts mature. The allocator then compares unevenly developed predictions, which can reinforce its initial preference. We first address this imbalance with the Scope-Wise Forecasting Loss, which applies the same prefix measure directly to every Scope-conditioned Forecast:
 
-\[
+\begin{equation}
 \mathcal L_{\mathrm{scope}}
 =
 \frac{1}{BCS}
@@ -711,12 +715,12 @@ Consequently, early probability concentration can suppress learning in low-proba
 \left|
 \mathcal F_{b,c,\tau,s}-y_{b,\tau,c}
 \right|.
-\]
+\end{equation}
 
 
 This term gives every scope a direct prediction gradient independent of its current Scope Probability. Direct supervision alone, however, does not regulate how the fused predictor distributes probability-mediated gradients. We therefore introduce the Allocation-Balance Regularizer using the uniform reference $q_s=1/S$. We first compute the marginal scope usage over the batch and future domain:
 
-\[
+\begin{equation}
 \bar{\pi}_s
 =
 \frac{1}{BC}
@@ -726,12 +730,12 @@ This term gives every scope a direct prediction gradient independent of its curr
 \omega_\tau\pi_{b,c,\tau,s},
 \qquad
 s=1,\ldots,S.
-\]
+\end{equation}
 
 
 The Allocation-Balance Regularizer then constrains this aggregate usage toward the uniform reference:
 
-\[
+\begin{equation}
 \mathcal L_{\mathrm{balance}}
 =
 \frac{
@@ -741,12 +745,12 @@ D_{\mathrm{KL}}\!\left(
 }{
 \log S
 }.
-\]
+\end{equation}
 
 
 The complete objective is
 
-\[
+\begin{equation}
 \mathcal L_{\mathrm{BCA}}
 =
 \mathcal L_{\mathrm{prefix}}
@@ -756,19 +760,19 @@ The complete objective is
 +
 \lambda_{\mathrm{balance}}(u)
 \mathcal L_{\mathrm{balance}},
-\]
+\end{equation}
 
 
-where $u\in[0,1]$ is optimizer progress. In the frozen configuration, $\lambda_{\mathrm{scope}}=1$ and
+where $u\in[0,1]$ is optimizer progress. The coefficient $\lambda_{\mathrm{balance}}^{\max}$ specifies the maximum regularization strength, while $u_{\mathrm{ramp}}$ denotes the optimizer progress at which the ramp reaches this value. In the frozen configuration, $\lambda_{\mathrm{scope}}=1$ and
 
-\[
+\begin{equation}
 \lambda_{\mathrm{balance}}(u)
 =
-0.1
+\lambda_{\mathrm{balance}}^{\max}
 \min\!\left(
-\frac{u}{0.25},1
+\frac{u}{u_{\mathrm{ramp}}},1
 \right).
-\]
+\end{equation}
 
 
 The regularizer penalizes systematic imbalance in marginal scope usage across the batch and future domain. Because it acts on $\bar{\boldsymbol\pi}$, individual future steps and regions can retain distinct, non-uniform scope preferences while the aggregate allocation remains distributed across scopes. Its ramp introduces this pressure gradually as the forecasting paths develop, reducing persistent scope underuse while preserving local allocation patterns. Together with direct scope supervision, it supports more balanced multi-scope optimization.
@@ -997,7 +1001,7 @@ This work was supported in part by the National Natural Science Foundation of Ch
 
 We use mean squared error (MSE) and mean absolute error (MAE) to evaluate forecasting accuracy. Given the ground-truth values $y_i$ and their predictions $\widehat y_i$, the two metrics are defined as
 
-\[
+\begin{equation}
 \operatorname{MSE}
 =
 \frac{1}{N}
@@ -1009,7 +1013,7 @@ We use mean squared error (MSE) and mean absolute error (MAE) to evaluate foreca
 \frac{1}{N}
 \sum_{i=1}^{N}
 \left|y_i-\widehat y_i\right|,
-\]
+\end{equation}
 
 
 where $N$ is the total number of scalar predictions over all evaluation windows, forecast steps and variables for the requested horizon. Lower MSE and MAE indicate more accurate forecasts.
@@ -1088,7 +1092,7 @@ Gradient Accumulation Steps denotes the number of mini-batches whose gradients a
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lccccccccc}
 \toprule
-Dataset & Scope set & Mode rank & Patch number & $d_{\mathrm{model}}$ & $d_{\mathrm{ff}}$ & Dropout & Weight decay & $\lambda_{\mathrm{scope}}$ & $\lambda_{\mathrm{balance}}^{\max}$ / ramp \\
+Dataset & Scope set & Mode rank & Patch number & $d_{\mathrm{model}}$ & $d_{\mathrm{ff}}$ & Dropout & Weight decay & $\lambda_{\mathrm{scope}}$ & $\lambda_{\mathrm{balance}}^{\max}/u_{\mathrm{ramp}}$ \\
 \midrule
 ETTh1 & $\{1,48,144,360,720\}$ & 109 & 24 & 32 & 32 & 0.1 & 0.01 & 1.0 & 0.1 / 0.25 \\
 ETTh2 & $\{1,48,144,360,720\}$ & 116 & 12 & 64 & 128 & 0.1 & 0.01 & 1.0 & 0.1 / 0.25 \\
@@ -1106,15 +1110,16 @@ Solar & $\{1,48,144,360,720\}$ & 128 & 4 & 256 & 256 & 0.3 & 0.01 & 1.0 & 0.1 / 
 The scope set and BCA coefficients are shared across datasets.
 Specifically,
 
-\[
+\begin{equation}
 \lambda_{\mathrm{scope}}=1,
 \qquad
 \lambda_{\mathrm{balance}}(u)
 =
-0.1\min(u/0.25,1),
-\]
+\lambda_{\mathrm{balance}}^{\max}
+\min\!\left(u/u_{\mathrm{ramp}},1\right),
+\end{equation}
 
-where $u\in[0,1]$ denotes normalized optimizer progress.
+where $u\in[0,1]$ denotes normalized optimizer progress, $\lambda_{\mathrm{balance}}^{\max}$ is the maximum balance weight and $u_{\mathrm{ramp}}$ is the progress at which this weight is reached. We use $\lambda_{\mathrm{balance}}^{\max}=0.1$ and $u_{\mathrm{ramp}}=0.25$ for every dataset.
 
 \setcounter{table}{0}
 \setcounter{figure}{0}
