@@ -1,6 +1,6 @@
 # UVHF KBS submission refinement audit
 
-Date: 2026-09-01
+Date: 2026-09-02
 
 ## Requested changes
 
@@ -39,10 +39,10 @@ UVHF manuscript and is suitable as the current KBS submission source.
 
 ## Frozen submission snapshot
 
-The author confirmed this audited package as the temporarily frozen,
-submission-ready version on 2026-09-01. The scientific content is unchanged
-from commit `c0eb5974`; the title-only revision below forms the current
-submission snapshot with the following SHA-256 digests:
+The author confirmed the preceding audited package as temporarily frozen on
+2026-09-01. On 2026-09-02, the title-only revision below formed the current
+submission snapshot; its scientific content remains unchanged from commit
+`c0eb5974` with the following SHA-256 digests:
 
 - canonical TeX: `cc8818bab27eff29141001906d9c720cc555ed332a508a661f1db577ef6dc8c3`
 - compiled PDF: `68daf408990d29c506258e021aad6f919c470dd0ae88c3d1c031267714f6d2b3`
