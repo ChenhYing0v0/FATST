@@ -2575,5 +2575,6 @@ loss 或更多 tuning 来掩盖失败。
 
 - 用户确认当前 `UVHF_KBS_submission/` 为暂时固定的可投稿版本。
 - 冻结对象包括单文件 LaTeX 投稿源、同目录图片与 bibliography，以及已编译的 24 页 PDF；正文、公式、图片、表格、Appendix、Highlights 和 References 暂不再调整，除非用户后续明确解除冻结或提出新的投稿修改。
-- 冻结内容对应 commit `c0eb5974`；投稿源 SHA-256 为 `5f63fed2899f92177bb99e2abdd5bd3be30489162050f2da58ff1d626d8450ec`，最终 PDF SHA-256 为 `bce1823779ede5728f37e5abe79b17e72dfbf72009463cd8195c57bc8d159555`。
+- 上一版冻结内容对应 commit `c0eb5974`；本次标题-only revision 形成新的冻结快照。当前投稿源 SHA-256 为 `cc8818bab27eff29141001906d9c720cc555ed332a508a661f1db577ef6dc8c3`，最终 PDF SHA-256 为 `68daf408990d29c506258e021aad6f919c470dd0ae88c3d1c031267714f6d2b3`。
 - `HoriScope_KBS_submission/` 与 `UVHF_KBS_submission_highlighted_review/` 继续作为历史对照保留，不属于当前投稿源。
+- 2026-09-02 根据导师意见，当前投稿标题进一步固定为 `UVHF: Unified Varied-Horizon Forecasting with Multi-Scope Decoder and Balanced Co-Adaptation`；仅移除标题中的 `Time-Series` 与冠词 `a`，不改变 task、model、architecture、training strategy、实验结果或 claim boundary。该标题同步应用于正文标题与 Highlights 标题。

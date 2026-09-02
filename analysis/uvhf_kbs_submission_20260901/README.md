@@ -6,6 +6,9 @@ This package records the submission-facing refinement requested after the UVHF
 naming review was promoted to the canonical KBS manuscript. It changes only
 presentation and notation:
 
+The current submission title is **UVHF: Unified Varied-Horizon Forecasting with
+Multi-Scope Decoder and Balanced Co-Adaptation**.
+
 - Figure 7 displays `Original Decoder` before `UVHF (MSD + BCA)` within every
   group;
 - all numerical values, relative reductions, panels, colours and hatches are

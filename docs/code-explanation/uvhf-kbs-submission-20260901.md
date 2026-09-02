@@ -5,6 +5,9 @@
 This update refines the canonical `UVHF_KBS_submission/` package without
 changing the model, experiment results or paper claims.
 
+The submission title is **UVHF: Unified Varied-Horizon Forecasting with
+Multi-Scope Decoder and Balanced Co-Adaptation**.
+
 ## Manuscript changes
 
 - Highlights use a one-line title and spell out all paper-specific concepts so

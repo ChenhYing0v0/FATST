@@ -6,12 +6,15 @@ Date: 2026-09-01
 
 1. The Highlights title is typeset on one line.
 2. Highlights are self-contained and avoid paper-specific abbreviations.
-3. The Abstract closes with “effective foundation”.
-4. Every display equation uses a numbered `equation` environment.
-5. The BCA schedule is written with
+3. The submission title is `UVHF: Unified Varied-Horizon Forecasting with
+   Multi-Scope Decoder and Balanced Co-Adaptation` in both the manuscript title
+   and the Highlights title.
+4. The Abstract closes with “effective foundation”.
+5. Every display equation uses a numbered `equation` environment.
+6. The BCA schedule is written with
    $\lambda_{\mathrm{balance}}^{\max}$ and $u_{\mathrm{ramp}}$; both symbols are
    defined in the method and Appendix A, where the frozen values are retained.
-6. Figure 7 presents `Original Decoder` before `UVHF (MSD + BCA)`.
+7. Figure 7 presents `Original Decoder` before `UVHF (MSD + BCA)`.
 
 ## Verification
 
@@ -37,11 +40,12 @@ UVHF manuscript and is suitable as the current KBS submission source.
 ## Frozen submission snapshot
 
 The author confirmed this audited package as the temporarily frozen,
-submission-ready version on 2026-09-01. The scientific content is anchored to
-commit `c0eb5974` with the following SHA-256 digests:
+submission-ready version on 2026-09-01. The scientific content is unchanged
+from commit `c0eb5974`; the title-only revision below forms the current
+submission snapshot with the following SHA-256 digests:
 
-- canonical TeX: `5f63fed2899f92177bb99e2abdd5bd3be30489162050f2da58ff1d626d8450ec`
-- compiled PDF: `bce1823779ede5728f37e5abe79b17e72dfbf72009463cd8195c57bc8d159555`
+- canonical TeX: `cc8818bab27eff29141001906d9c720cc555ed332a508a661f1db577ef6dc8c3`
+- compiled PDF: `68daf408990d29c506258e021aad6f919c470dd0ae88c3d1c031267714f6d2b3`
 - Figure 7 manuscript asset: `c6af340d87780d4d997a7d42209a53f86cb087aedacca3e49003fead02bfb7f0`
 
 The freeze is a paper-governance state and does not alter any file inside the
