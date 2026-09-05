@@ -1,0 +1,34 @@
+[
+  {
+    "horizon": 96,
+    "validation_count": 2785,
+    "saved_common_origins": 2161,
+    "local_mse": 0.2181601407975804,
+    "remote_mse": 0.21816013753414154,
+    "difference": 3.2634388524854785e-09
+  },
+  {
+    "horizon": 192,
+    "validation_count": 2689,
+    "saved_common_origins": 2161,
+    "local_mse": 0.3033895799014621,
+    "remote_mse": 0.3033895790576935,
+    "difference": 8.437686105366993e-10
+  },
+  {
+    "horizon": 336,
+    "validation_count": 2545,
+    "saved_common_origins": 2161,
+    "local_mse": 0.408613009845623,
+    "remote_mse": 0.40861302614212036,
+    "difference": 1.6296497373780028e-08
+  },
+  {
+    "horizon": 720,
+    "validation_count": 2161,
+    "saved_common_origins": 2161,
+    "local_mse": 0.6980719600624642,
+    "remote_mse": 0.6980719566345215,
+    "difference": 3.4279427074679347e-09
+  }
+]

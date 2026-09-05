@@ -1,0 +1,16 @@
+{
+  "dataset_root": "/home/yingch/dataset",
+  "dataset": "ETTh2",
+  "seq_len": 720,
+  "pred_len": 192,
+  "batch_size": 128,
+  "epochs": 50,
+  "learning_rate": 0.0001,
+  "patience": 8,
+  "seed": 2021,
+  "init_mode": "pytorch_default",
+  "run_name": "MatchedHistoryDLinear",
+  "output_root": "/home/yingch/exp_outputs/r-2026-fatst/uvhf_real_prefix_case_l720_20260905",
+  "device": "cuda",
+  "skip_test": true
+}

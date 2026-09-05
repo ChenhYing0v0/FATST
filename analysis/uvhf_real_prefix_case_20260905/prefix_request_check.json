@@ -1,0 +1,21 @@
+{
+  "lookback": 720,
+  "checkpoint_sha256": "bcfbc9955754a9825d1dd33015610a049551e3441dabd0ad98982c0fc2285d3e",
+  "validation_origins": [
+    0,
+    1239,
+    2160
+  ],
+  "channel": 6,
+  "request_max_abs_difference_scaled": {
+    "96": 0.0,
+    "192": 0.0,
+    "336": 0.0,
+    "720": 0.0
+  },
+  "matched_input_max_scaled_gap": 4.76837158203125e-07,
+  "cached_gpu_vs_cpu_replay_max_abs_gap": 4.76837158203125e-07,
+  "future_labels_input": "zeros",
+  "device": "cpu",
+  "torch": "2.5.0"
+}

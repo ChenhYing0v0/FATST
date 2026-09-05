@@ -1,0 +1,130 @@
+[
+  {
+    "horizon": 96,
+    "epochs_run": 45,
+    "best_epoch": 37,
+    "checkpoint_sha256": "3ab6854f79e14b24d1f17efaa6bb84f2a17206535ab6e7279060dc4122d62464",
+    "effective_config": {
+      "dataset_root": "/home/yingch/dataset",
+      "dataset": "ETTh2",
+      "seq_len": 720,
+      "pred_len": 96,
+      "batch_size": 128,
+      "epochs": 50,
+      "learning_rate": 0.0001,
+      "patience": 8,
+      "seed": 2021,
+      "init_mode": "pytorch_default",
+      "run_name": "MatchedHistoryDLinear",
+      "output_root": "/home/yingch/exp_outputs/r-2026-fatst/uvhf_real_prefix_case_l720_20260905",
+      "device": "cuda",
+      "skip_test": true
+    },
+    "environment": {
+      "python": "3.12.13 | packaged by Anaconda, Inc. | (main, Mar 19 2026, 20:20:58) [GCC 14.3.0]",
+      "torch": "2.9.0+cu128",
+      "cuda": "12.8",
+      "device": "cuda"
+    },
+    "validation_metrics": {
+      "mse": 0.21816013753414154,
+      "mae": 0.32765164971351624
+    }
+  },
+  {
+    "horizon": 192,
+    "epochs_run": 50,
+    "best_epoch": 45,
+    "checkpoint_sha256": "9f64deb146d15a6176b880c32e88f849bef3b3972082ee44fcef3876738b7791",
+    "effective_config": {
+      "dataset_root": "/home/yingch/dataset",
+      "dataset": "ETTh2",
+      "seq_len": 720,
+      "pred_len": 192,
+      "batch_size": 128,
+      "epochs": 50,
+      "learning_rate": 0.0001,
+      "patience": 8,
+      "seed": 2021,
+      "init_mode": "pytorch_default",
+      "run_name": "MatchedHistoryDLinear",
+      "output_root": "/home/yingch/exp_outputs/r-2026-fatst/uvhf_real_prefix_case_l720_20260905",
+      "device": "cuda",
+      "skip_test": true
+    },
+    "environment": {
+      "python": "3.12.13 | packaged by Anaconda, Inc. | (main, Mar 19 2026, 20:20:58) [GCC 14.3.0]",
+      "torch": "2.9.0+cu128",
+      "cuda": "12.8",
+      "device": "cuda"
+    },
+    "validation_metrics": {
+      "mse": 0.3033895790576935,
+      "mae": 0.3868327736854553
+    }
+  },
+  {
+    "horizon": 336,
+    "epochs_run": 30,
+    "best_epoch": 22,
+    "checkpoint_sha256": "dc0cde19368f3b07e9e63dce53b9b73426b19d33c5c5a7ba1fe347043afbc73e",
+    "effective_config": {
+      "dataset_root": "/home/yingch/dataset",
+      "dataset": "ETTh2",
+      "seq_len": 720,
+      "pred_len": 336,
+      "batch_size": 128,
+      "epochs": 50,
+      "learning_rate": 0.0001,
+      "patience": 8,
+      "seed": 2021,
+      "init_mode": "pytorch_default",
+      "run_name": "MatchedHistoryDLinear",
+      "output_root": "/home/yingch/exp_outputs/r-2026-fatst/uvhf_real_prefix_case_l720_20260905",
+      "device": "cuda",
+      "skip_test": true
+    },
+    "environment": {
+      "python": "3.12.13 | packaged by Anaconda, Inc. | (main, Mar 19 2026, 20:20:58) [GCC 14.3.0]",
+      "torch": "2.9.0+cu128",
+      "cuda": "12.8",
+      "device": "cuda"
+    },
+    "validation_metrics": {
+      "mse": 0.40861302614212036,
+      "mae": 0.4471474289894104
+    }
+  },
+  {
+    "horizon": 720,
+    "epochs_run": 33,
+    "best_epoch": 25,
+    "checkpoint_sha256": "52901c97e5ed4c9733f7d8144ed659847bbd7f9ce0dc00314a2b5ed05d118a3e",
+    "effective_config": {
+      "dataset_root": "/home/yingch/dataset",
+      "dataset": "ETTh2",
+      "seq_len": 720,
+      "pred_len": 720,
+      "batch_size": 128,
+      "epochs": 50,
+      "learning_rate": 0.0001,
+      "patience": 8,
+      "seed": 2021,
+      "init_mode": "pytorch_default",
+      "run_name": "MatchedHistoryDLinear",
+      "output_root": "/home/yingch/exp_outputs/r-2026-fatst/uvhf_real_prefix_case_l720_20260905",
+      "device": "cuda",
+      "skip_test": true
+    },
+    "environment": {
+      "python": "3.12.13 | packaged by Anaconda, Inc. | (main, Mar 19 2026, 20:20:58) [GCC 14.3.0]",
+      "torch": "2.9.0+cu128",
+      "cuda": "12.8",
+      "device": "cuda"
+    },
+    "validation_metrics": {
+      "mse": 0.6980719566345215,
+      "mae": 0.5812137722969055
+    }
+  }
+]

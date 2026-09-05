@@ -1,0 +1,147 @@
+{
+  "source": "analysis/uvhf_real_prefix_case_20260905/plot_figure.py",
+  "backend": "python",
+  "summary": {
+    "ready": true,
+    "strict": false,
+    "counts": {
+      "PASS": 13,
+      "WARN": 1,
+      "FAIL": 0
+    }
+  },
+  "findings": [
+    {
+      "check_id": "SOURCE-SYNTAX",
+      "level": "PASS",
+      "message": "Python source parses successfully",
+      "evidence": []
+    },
+    {
+      "check_id": "FONT-FAMILY",
+      "level": "PASS",
+      "message": "A publication-safe sans-serif family is configured",
+      "evidence": [
+        "Arial",
+        "sans-serif"
+      ]
+    },
+    {
+      "check_id": "FONT-SIZE",
+      "level": "PASS",
+      "message": "All detected text sizes are at least 5 pt (minimum 6.5 pt)",
+      "evidence": []
+    },
+    {
+      "check_id": "COLOR-MAP",
+      "level": "PASS",
+      "message": "No rainbow/jet/hsv color mapping detected",
+      "evidence": []
+    },
+    {
+      "check_id": "EDITABLE-TEXT",
+      "level": "PASS",
+      "message": "SVG and PDF editable-text settings are configured",
+      "evidence": []
+    },
+    {
+      "check_id": "EXPORT-VECTOR",
+      "level": "PASS",
+      "message": "Both SVG and PDF exports are present",
+      "evidence": []
+    },
+    {
+      "check_id": "EXPORT-RASTER",
+      "level": "PASS",
+      "message": "TIFF raster export is present",
+      "evidence": []
+    },
+    {
+      "check_id": "RASTER-DPI",
+      "level": "PASS",
+      "message": "A raster export of at least 600 dpi is configured",
+      "evidence": [
+        "1000"
+      ]
+    },
+    {
+      "check_id": "FINAL-WIDTH",
+      "level": "WARN",
+      "message": "No static final width detected; verify the target journal's current specification",
+      "evidence": []
+    },
+    {
+      "check_id": "DATA-SAMPLING",
+      "level": "PASS",
+      "message": "No high-confidence row-sampling operation detected",
+      "evidence": []
+    },
+    {
+      "check_id": "DATA-EXCLUSION",
+      "level": "PASS",
+      "message": "No high-confidence missing-data exclusion detected",
+      "evidence": []
+    },
+    {
+      "check_id": "DEMO-DATA",
+      "level": "PASS",
+      "message": "No obvious simulated-data generator detected",
+      "evidence": []
+    },
+    {
+      "check_id": "LOG-GUARD",
+      "level": "PASS",
+      "message": "No logarithmic transform or axis detected",
+      "evidence": []
+    },
+    {
+      "check_id": "BACKEND-EXCLUSIVE",
+      "level": "PASS",
+      "message": "No obvious cross-backend plotting reference found for python",
+      "evidence": []
+    }
+  ],
+  "exports": {
+    "svg_text_nodes": 72,
+    "svg_root": {
+      "width": "518.740157pt",
+      "height": "445.03937pt",
+      "viewBox": "0 0 518.740157 445.03937",
+      "version": "1.1"
+    },
+    "pdf_font_embedded": true,
+    "png": {
+      "size": [
+        2161,
+        1854
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "tiff": {
+      "size": [
+        7204,
+        6181
+      ],
+      "dpi": [
+        1000.0,
+        1000.0
+      ]
+    }
+  },
+  "width_warning_resolution": "Measured PDF/SVG dimensions confirm 183 x 157 mm.",
+  "visual_review": "Final Python PNG inspected: no legend/title/footer overlap; axes and curves readable.",
+  "sha256": {
+    "plot_figure.py": "e954e3ab9747dec877db3951e4f65457a23a8286cc7dd15f8d39cab3afda0575",
+    "source_data.csv": "68f2f6666faceeae593a6bad619ca6c1c52f103856d08405e43ba397b3384423",
+    "selection_audit.json": "2141f8a40df569e6efd23f914e2d9142f5711d61b2aeecce43afce6839108a28",
+    "selected_metrics.csv": "0d23e5f3374e3c69c42c48e1239875d17b8f30961e7028c9b8e7fe18c21d864b",
+    "selected_pair_disagreement.csv": "af48694ca0dd5547210929eb8a88422c7edbb7b42ba77a2554c6f22fad9ac8b5",
+    "uvhf_real_prefix_case.pdf": "78c204e081f216c4bd15b7968b33c6b3f0c0bd22ccc66f54c6ca91877bfb7c03",
+    "uvhf_real_prefix_case.svg": "fc9dc57bf8770d3f58f631e68a451286ae8d8dee9a58e6d87cffa9906c3fdd2d",
+    "uvhf_real_prefix_case.png": "58d2977f792cde0b8bede511a53a8c86785ea470d110117205f18f0b25bad973",
+    "uvhf_real_prefix_case.tiff": "5bf4ea4ba28c12fa1998a0c7d912ca032480355b0286f88c667d2827f8008eaa"
+  }
+}

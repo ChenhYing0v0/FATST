@@ -1,0 +1,16 @@
+{
+  "prelaunch": "ea89cd673fe23597fe530e655481ea509bebffcf\n0, NVIDIA GeForce RTX 3090, 24576 MiB, 6130 MiB, 17995 MiB\n1, NVIDIA GeForce RTX 3090, 24576 MiB, 5663 MiB, 18462 MiB\n2, NVIDIA GeForce RTX 3090, 24576 MiB, 5663 MiB, 18462 MiB\n",
+  "initial_attempt": "No training ran; wrong environment path. Retried after Git bundle pull completed.",
+  "commands": [
+    {
+      "gpu": 1,
+      "pid": "1800014",
+      "script": "set -e\ncd /home/yingch/projects/FATST\ngit rev-parse HEAD > /home/yingch/exp_outputs/r-2026-fatst/uvhf_real_prefix_case_l720_20260905/code_commit_gpu1.txt\nfor h in 720 96; do\n CUDA_VISIBLE_DEVICES=1 PYTHONHASHSEED=2021 /home/yingch/.conda/envs/moe/bin/python -u baselines/dlinear/train.py --dataset-root /home/yingch/dataset --dataset ETTh2 --seq-len 720 --pred-len \"$h\" --batch-size 128 --epochs 50 --learning-rate 0.0001 --patience 8 --seed 2021 --init-mode pytorch_default --run-name MatchedHistoryDLinear --output-root /home/yingch/exp_outputs/r-2026-fatst/uvhf_real_prefix_case_l720_20260905 --device cuda --skip-test > /home/yingch/exp_outputs/r-2026-fatst/uvhf_real_prefix_case_l720_20260905/logs/h\"$h\".log 2>&1\n date -Iseconds > /home/yingch/exp_outputs/r-2026-fatst/uvhf_real_prefix_case_l720_20260905/logs/h\"$h\".done\ndone\n"
+    },
+    {
+      "gpu": 0,
+      "pid": "1800117",
+      "script": "set -e\ncd /home/yingch/projects/FATST\ngit rev-parse HEAD > /home/yingch/exp_outputs/r-2026-fatst/uvhf_real_prefix_case_l720_20260905/code_commit_gpu0.txt\nfor h in 336 192; do\n CUDA_VISIBLE_DEVICES=0 PYTHONHASHSEED=2021 /home/yingch/.conda/envs/moe/bin/python -u baselines/dlinear/train.py --dataset-root /home/yingch/dataset --dataset ETTh2 --seq-len 720 --pred-len \"$h\" --batch-size 128 --epochs 50 --learning-rate 0.0001 --patience 8 --seed 2021 --init-mode pytorch_default --run-name MatchedHistoryDLinear --output-root /home/yingch/exp_outputs/r-2026-fatst/uvhf_real_prefix_case_l720_20260905 --device cuda --skip-test > /home/yingch/exp_outputs/r-2026-fatst/uvhf_real_prefix_case_l720_20260905/logs/h\"$h\".log 2>&1\n date -Iseconds > /home/yingch/exp_outputs/r-2026-fatst/uvhf_real_prefix_case_l720_20260905/logs/h\"$h\".done\ndone\n"
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "date": "2026-09-05",
+  "split": "validation",
+  "new_test_access": false,
+  "uvhf_pools": [
+    {
+      "dataset": "ETTh1",
+      "candidate_count": 256,
+      "channel_index": 2,
+      "channel_name": "MUFL",
+      "max_raw_target_gap": 1.9073486363652137e-06,
+      "max_train_scale_target_gap": 3.456097078192036e-07,
+      "target_alignment_pass": true,
+      "raw_sha256": "f18de3ad269cef59bb07b5438d79bb3042d3be49bdeecf01c1cd6d29695ee066",
+      "candidate_sha256": "deafe2b3c75aba17f312c3559c3b46a4bfb39ccc703e96dcc01c1cb2f4285eaf"
+    },
+    {
+      "dataset": "ETTh2",
+      "candidate_count": 256,
+      "channel_index": 6,
+      "channel_name": "OT",
+      "max_raw_target_gap": 3.814697272730427e-06,
+      "max_train_scale_target_gap": 3.2928699418164363e-07,
+      "target_alignment_pass": true,
+      "raw_sha256": "a3dc2c597b9218c7ce1cd55eb77b283fd459a1d09d753063f944967dd6b9218b",
+      "candidate_sha256": "363a524aac2412f23f8c92cb760ac977c48000597b836ac09f513cc240398455"
+    },
+    {
+      "dataset": "ETTm1",
+      "candidate_count": 256,
+      "channel_index": 0,
+      "channel_name": "HUFL",
+      "max_raw_target_gap": 1.907348634588857e-06,
+      "max_train_scale_target_gap": 3.269875420741724e-07,
+      "target_alignment_pass": true,
+      "raw_sha256": "6ce1759b1a18e3328421d5d75fadcb316c449fcd7cec32820c8dafda71986c9e",
+      "candidate_sha256": "546b7e46e075ad84981cd7f0f38d739a24e521dd2ec4ecf69addbd59adddf440"
+    },
+    {
+      "dataset": "ETTm2",
+      "candidate_count": 256,
+      "channel_index": 6,
+      "channel_name": "OT",
+      "max_raw_target_gap": 3.814697272730427e-06,
+      "max_train_scale_target_gap": 3.2939995814651264e-07,
+      "target_alignment_pass": true,
+      "raw_sha256": "db973ca252c6410a30d0469b13d696cf919648d0f3fd588c60f03fdbdbadd1fd",
+      "candidate_sha256": "54efbda153e002fc324aac5e31d2ae134b571d652e3bb80d3c2f1c08b1dc4675"
+    },
+    {
+      "dataset": "Weather",
+      "candidate_count": 256,
+      "channel_index": 18,
+      "channel_name": "max. PAR (\ufffdmol/m\ufffd/s)",
+      "max_raw_target_gap": 0.00013671874989995558,
+      "max_train_scale_target_gap": 2.1250979681265078e-07,
+      "target_alignment_pass": true,
+      "raw_sha256": "34ee981d07313e51da2a50bb600072c8ae4a69cb4b0651f4cb93a069d7a2ba63",
+      "candidate_sha256": "4c3a54a283d0ac4f2e55fcb03a6c480080a20b8caa84d6c2bb4fad59a6bc277d"
+    },
+    {
+      "dataset": "ECL",
+      "candidate_count": 256,
+      "channel_index": 306,
+      "channel_name": "306",
+      "max_raw_target_gap": 0.000244140625,
+      "max_train_scale_target_gap": 1.5751837109852443e-07,
+      "target_alignment_pass": true,
+      "raw_sha256": "7e45845d54c5219bad0ae6bc1b5316cf8ff9cead5d33fa998a5a51c2e4a497ad",
+      "candidate_sha256": "2fdaf580d9fc7d26fa857b9db2c75efcfab016cb25098457ca6dc75eaed11f7d"
+    }
+  ],
+  "dlinear_available_case": {
+    "dataset": "ETTh2",
+    "validation_window_index": 805,
+    "channel": 0,
+    "first_future_raw_index": 9445,
+    "raw_target_alignment_max_gap": 1.4210854715202004e-14,
+    "source_sha256": "581f566cef384efc937898ad3110634d44c4ce1644880479977e26c94e19933b"
+  },
+  "paired_figure_ready": false,
+  "blocking_reason": "DLinear four-horizon checkpoint/predictions unavailable locally; remote SSH timed out; available UVHF ETTh2 candidates use channel 6 and do not contain origin 805.",
+  "audit_role": "historical initial local inventory, superseded by selection_audit.json",
+  "blocking_resolved": "Network restored; complete patent-work arrays located; L720 controls trained and replayed; see reviewer_audit.md"
+}
