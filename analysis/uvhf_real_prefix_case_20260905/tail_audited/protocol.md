@@ -56,3 +56,9 @@ TimeMixer首发在EarlyStopping构造前因numpy2移除np.Inf失败，没有epoc
 ## TimeMixer优化失败与稳定性重跑
 
 lr=.01的H192/336/720在L720下发生数值发散，H192最后validation loss约1.18e10，H720约7.08e8。这些checkpoints不进入样本选择，也不作为UVHF优势证据；未启动H96。归因optimization_or_numeric_pathology，不能据此否定TimeMixer。回退优化配置：仅lr改.001、其余保持，重新完整4H训练，输出独立`uvhf_prefix_tail_timemixer_lr1e3_20260905`。此次在validation上诊断数值稳定性，无test调参。
+
+## 用户明确更新seq_len边界
+
+用户明确：本论文seq_len是可调超参数，允许直接用L96 TimeMixer对L720 UVHF，图中无需额外说明。按此授权，停止新增matched-length训练；已有在运行的稳定性试验若完成则保留记录，不作为继续任务的依赖。最终优先既有官方ETTh1/L96 TimeMixer四H checkpoints。
+
+`export_native96.py`从既有etth1.log通过AST literal parsing恢复配置，读取唯一对应H的checkpoint，在ordered validation前2161个共同origins上导出。使用相同forecast origin与原始GT，TimeMixer只取该origin前96步、UVHF取前720步。新图不再写identical input history；不额外强调lookback差异。内部provenance保存真实长度与用户授权，这是标准可调超参数模型对比，不作matched architecture/mechanism attribution。后程、accuracy与96步visibility gate保持。
