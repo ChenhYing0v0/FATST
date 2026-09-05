@@ -1,0 +1,153 @@
+{
+  "source": "analysis/uvhf_real_prefix_case_20260905/plot_single_panel.py",
+  "backend": "python",
+  "summary": {
+    "ready": true,
+    "strict": false,
+    "counts": {
+      "PASS": 13,
+      "WARN": 1,
+      "FAIL": 0
+    }
+  },
+  "findings": [
+    {
+      "check_id": "SOURCE-SYNTAX",
+      "level": "PASS",
+      "message": "Python source parses successfully",
+      "evidence": []
+    },
+    {
+      "check_id": "FONT-FAMILY",
+      "level": "PASS",
+      "message": "A publication-safe sans-serif family is configured",
+      "evidence": [
+        "Arial",
+        "sans-serif"
+      ]
+    },
+    {
+      "check_id": "FONT-SIZE",
+      "level": "PASS",
+      "message": "All detected text sizes are at least 5 pt (minimum 6.2 pt)",
+      "evidence": []
+    },
+    {
+      "check_id": "COLOR-MAP",
+      "level": "PASS",
+      "message": "No rainbow/jet/hsv color mapping detected",
+      "evidence": []
+    },
+    {
+      "check_id": "EDITABLE-TEXT",
+      "level": "PASS",
+      "message": "SVG and PDF editable-text settings are configured",
+      "evidence": []
+    },
+    {
+      "check_id": "EXPORT-VECTOR",
+      "level": "PASS",
+      "message": "Both SVG and PDF exports are present",
+      "evidence": []
+    },
+    {
+      "check_id": "EXPORT-RASTER",
+      "level": "PASS",
+      "message": "TIFF raster export is present",
+      "evidence": []
+    },
+    {
+      "check_id": "RASTER-DPI",
+      "level": "PASS",
+      "message": "A raster export of at least 600 dpi is configured",
+      "evidence": [
+        "1000"
+      ]
+    },
+    {
+      "check_id": "FINAL-WIDTH",
+      "level": "WARN",
+      "message": "No static final width detected; verify the target journal's current specification",
+      "evidence": []
+    },
+    {
+      "check_id": "DATA-SAMPLING",
+      "level": "PASS",
+      "message": "No high-confidence row-sampling operation detected",
+      "evidence": []
+    },
+    {
+      "check_id": "DATA-EXCLUSION",
+      "level": "PASS",
+      "message": "No high-confidence missing-data exclusion detected",
+      "evidence": []
+    },
+    {
+      "check_id": "DEMO-DATA",
+      "level": "PASS",
+      "message": "No obvious simulated-data generator detected",
+      "evidence": []
+    },
+    {
+      "check_id": "LOG-GUARD",
+      "level": "PASS",
+      "message": "No logarithmic transform or axis detected",
+      "evidence": []
+    },
+    {
+      "check_id": "BACKEND-EXCLUSIVE",
+      "level": "PASS",
+      "message": "No obvious cross-backend plotting reference found for python",
+      "evidence": []
+    }
+  ],
+  "export_checks": {
+    "main_axes": 1,
+    "inset_axes": 1,
+    "inset_rows": 96,
+    "inset_series": 6,
+    "inset_exact_source_values": true,
+    "inset_all_values_inside_limits": true,
+    "main_curves_unobscured": true,
+    "horizon_labels_clear_of_inset_labels": true,
+    "source_metrics_unchanged_from_commit": "670bad45",
+    "width_mm": 182.99999983055554,
+    "height_mm": 134.999999875,
+    "editable_svg_text_count": 45,
+    "pdf_embeds_font": true,
+    "width_warning_resolution": "SVG dimensions checked directly",
+    "visual_review": "pass after moving H336 label left of inset tick labels and temperature label",
+    "png": {
+      "pixels": [
+        2161,
+        1594
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "tiff": {
+      "pixels": [
+        7204,
+        5314
+      ],
+      "dpi": [
+        1000.0,
+        1000.0
+      ]
+    }
+  },
+  "source_sha256": {
+    "source_data.csv": "68f2f6666faceeae593a6bad619ca6c1c52f103856d08405e43ba397b3384423",
+    "selected_metrics.csv": "0d23e5f3374e3c69c42c48e1239875d17b8f30961e7028c9b8e7fe18c21d864b",
+    "selected_pair_disagreement.csv": "af48694ca0dd5547210929eb8a88422c7edbb7b42ba77a2554c6f22fad9ac8b5"
+  },
+  "sha256": {
+    "plot_single_panel.py": "f71d7e9216414735e6d7bcea67a77140d06bc0eb7cdd6df34e8478e023f2e52d",
+    "uvhf_real_prefix_zoom.pdf": "7901252e7269e0b8cf53cfef7506e73f73ec23f10c83708c78e083769ddf5731",
+    "uvhf_real_prefix_zoom.svg": "65a0304f1c9d333264ac6cc4d6a93fb775489cf841378e3c825b4fd253c78282",
+    "uvhf_real_prefix_zoom.png": "e05a62816830c2a7061ac6d8fc855601dbfa1c651e642929cffb08885737e6c5",
+    "uvhf_real_prefix_zoom.tiff": "a9a2c117d43c4678fcdcb835d3aa9a0a3308ab5b867c47125442aaee1235f4c8"
+  }
+}

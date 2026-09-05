@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
 
 import matplotlib
@@ -11,6 +12,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 import matplotlib.patheffects as pe
+from matplotlib.patches import ConnectionPatch, Rectangle
 import pandas as pd
 
 OUT = Path(__file__).resolve().parent
@@ -20,7 +22,7 @@ MARKERS = {96: "o", 192: "s", 336: "^", 720: "D"}
 TRUTH, UVHF = "#252A31", "#087F79"
 
 
-def main() -> None:
+def main(zoom: bool = False) -> None:
     source = pd.read_csv(OUT / "source_data.csv")
     future = source[source.step > 0].set_index("step")
     history = source[(source.step >= -47) & (source.step <= 0)]
@@ -44,7 +46,7 @@ def main() -> None:
             "pdf.fonttype": 42,
         }
     )
-    width_in, height_in = 183 / 25.4, 110 / 25.4
+    width_in, height_in = 183 / 25.4, (135 if zoom else 110) / 25.4
     fig, ax = plt.subplots(figsize=(width_in, height_in))
     fig.subplots_adjust(left=0.08, right=0.98, bottom=0.235, top=0.79)
     fig.text(
@@ -125,8 +127,8 @@ def main() -> None:
     )
     for h in HORIZONS:
         ax.text(
-            h,
-            54.3,
+            h - 24 if zoom and h == 336 else h,
+            46 if zoom and h == 720 else 54.3,
             f"H={h}",
             fontsize=7,
             color="#6F7881",
@@ -197,13 +199,84 @@ def main() -> None:
         va="center",
     )
     ax.set_xlim(-47, 802)
-    ax.set_ylim(18.5, 56.5)
+    ax.set_ylim(18.5, 83.5 if zoom else 56.5)
     ax.set_xticks([0, 96, 192, 336, 480, 600, 720])
     ax.set_yticks([20, 30, 40, 50])
     ax.set_xlabel("Forecast step (hours)", labelpad=5)
     ax.set_ylabel("Oil temperature (°C)")
     ax.grid(axis="y", color="#E5E8EB", lw=0.45)
     ax.tick_params(length=3, width=0.65)
+
+    if zoom:
+        # Repeat all six unmodified prefixes on explicit linear inset axes.
+        inset = ax.inset_axes([0.49, 0.50, 0.49, 0.47], zorder=15)
+        prefix = future.loc[1:96]
+        inset.set_facecolor("#F8FAFC")
+        inset.plot(prefix.index, prefix.ground_truth, color=TRUTH, lw=0.9)
+        for j, h in enumerate(HORIZONS):
+            inset.plot(
+                prefix.index,
+                prefix[f"dlinear_h{h}"],
+                color=COLORS[h],
+                lw=0.85,
+                marker=MARKERS[h],
+                markevery=[10 + j * 4, 67, 90 - j * 4],
+                markersize=2.8,
+                markeredgecolor="white",
+                markeredgewidth=0.3,
+            )
+        inset.plot(prefix.index, prefix.uvhf, color=UVHF, lw=1.25)
+        inset.axvline(step, color="#AAB2BA", ls=":", lw=0.6)
+        inset.vlines(step, low, high, color="#505963", lw=0.85)
+        inset.hlines(
+            [low, high], step - 1.5, step + 1.5, color="#505963", lw=0.85
+        )
+        inset.set(
+            xlim=(1, 96),
+            ylim=(26, 53),
+            xticks=[1, 24, 48, 68, 96],
+            yticks=[30, 40, 50],
+        )
+        inset.set_title(
+            "Shared prefix enlarged · steps 1–96",
+            fontsize=7.5,
+            loc="left",
+            pad=5,
+            weight="bold",
+        )
+        inset.set_xlabel("Forecast step (hours)", fontsize=6.5, labelpad=2)
+        inset.set_ylabel("Temperature (°C)", fontsize=6.5, labelpad=2)
+        inset.tick_params(labelsize=6.5, length=2.5)
+        inset.grid(axis="y", color="#E1E6EB", lw=0.4)
+        for spine in inset.spines.values():
+            spine.set_visible(True)
+            spine.set_color("#9BAABD")
+            spine.set_linewidth(0.6)
+        ax.add_patch(
+            Rectangle(
+                (1, 26),
+                95,
+                27,
+                fill=False,
+                edgecolor="#8FA3B8",
+                lw=0.8,
+                zorder=10,
+            )
+        )
+        connector = ConnectionPatch(
+            xyA=(96, 53),
+            coordsA=ax.transData,
+            xyB=(0, 1),
+            coordsB=inset.transAxes,
+            color="#8FA3B8",
+            lw=0.7,
+            ls="--",
+            zorder=14,
+        )
+        fig.add_artist(connector)
+        assert len(ax.child_axes) == 1
+        for line in inset.lines[:6]:
+            assert len(line.get_xdata()) == 96
 
     gains = 100 * (1 - scores.UVHF / scores.DLinear)
     gain_text = "    ".join(f"H{h}: −{gains.loc[h]:.1f}%" for h in HORIZONS)
@@ -225,16 +298,17 @@ def main() -> None:
         color="#69717A",
     )
     assert len(fig.axes) == 1
-    fig.savefig(OUT / "uvhf_real_prefix_single.pdf")
-    fig.savefig(OUT / "uvhf_real_prefix_single.svg")
-    svg = OUT / "uvhf_real_prefix_single.svg"
+    stem = "uvhf_real_prefix_zoom" if zoom else "uvhf_real_prefix_single"
+    fig.savefig(OUT / f"{stem}.pdf")
+    fig.savefig(OUT / f"{stem}.svg")
+    svg = OUT / f"{stem}.svg"
     svg.write_text(
         "\n".join(line.rstrip() for line in svg.read_text().splitlines())
         + "\n"
     )
-    fig.savefig(OUT / "uvhf_real_prefix_single.png", dpi=300)
+    fig.savefig(OUT / f"{stem}.png", dpi=300)
     fig.savefig(
-        OUT / "uvhf_real_prefix_single.tiff",
+        OUT / f"{stem}.tiff",
         dpi=1000,
         pil_kwargs={"compression": "tiff_lzw"},
     )
@@ -242,4 +316,10 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--zoom",
+        action="store_true",
+        help="Add an inset of the complete shared prefix.",
+    )
+    main(zoom=parser.parse_args().zoom)

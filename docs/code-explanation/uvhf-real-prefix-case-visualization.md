@@ -33,3 +33,7 @@ CHPC 是统一轨迹的 prefix identity，不由较小 MSE 推导。数值 reque
 ## 用户指定的单张总图版本
 
 `plot_single_panel.py`新增一个Axes的总图，不替换历史multi-panel脚本。相同720步future curves全部叠加；history仅显示最后48步，两模型实际input仍为720步。DLinear各H曲线终止于H；UVHF四个endpoints从同一个720步数组读取。图中标注step68处四条DLinear的max−min原尺度range，不是confidence interval或任意放大。底部用文字保留完整四H MSE改善和six-pair mean CHPD，没有额外统计轴。新输出为183×110mm的`uvhf_real_prefix_single.*`；代码断言`len(fig.axes)==1`，不改变sample、checkpoint或已有量化结果。
+
+## 总图内嵌前缀放大
+
+用户进一步要求放大前部后，`plot_single_panel.py --zoom`在主Axes内新增一个child Axes，直接重复`source_data.csv`中step 1–96的全部六条曲线。主图矩形与连接线标明窗口来源，inset采用明确的线性x/y刻度，不改变原始数值、sample或指标。step68的range沿用原值2.134502°C。画布增加到183×135mm，以在实际轨迹上方容纳inset；完整720步仍显示。无参数保留原版输出；本轮输出`uvhf_real_prefix_zoom.*`，完整契约、图注与审核见`zoom_caption_and_review.md`。注意`fig.axes`仅统计主Axes，inset由`ax.child_axes`检查；放大版本实际有一个主坐标轴和一个内嵌坐标轴。
