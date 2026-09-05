@@ -1,0 +1,141 @@
+{
+  "source": "analysis/uvhf_real_prefix_case_20260905/plot_single_panel.py",
+  "backend": "python",
+  "summary": {
+    "ready": true,
+    "strict": false,
+    "counts": {
+      "PASS": 13,
+      "WARN": 1,
+      "FAIL": 0
+    }
+  },
+  "findings": [
+    {
+      "check_id": "SOURCE-SYNTAX",
+      "level": "PASS",
+      "message": "Python source parses successfully",
+      "evidence": []
+    },
+    {
+      "check_id": "FONT-FAMILY",
+      "level": "PASS",
+      "message": "A publication-safe sans-serif family is configured",
+      "evidence": [
+        "Arial",
+        "sans-serif"
+      ]
+    },
+    {
+      "check_id": "FONT-SIZE",
+      "level": "PASS",
+      "message": "All detected text sizes are at least 5 pt (minimum 6.2 pt)",
+      "evidence": []
+    },
+    {
+      "check_id": "COLOR-MAP",
+      "level": "PASS",
+      "message": "No rainbow/jet/hsv color mapping detected",
+      "evidence": []
+    },
+    {
+      "check_id": "EDITABLE-TEXT",
+      "level": "PASS",
+      "message": "SVG and PDF editable-text settings are configured",
+      "evidence": []
+    },
+    {
+      "check_id": "EXPORT-VECTOR",
+      "level": "PASS",
+      "message": "Both SVG and PDF exports are present",
+      "evidence": []
+    },
+    {
+      "check_id": "EXPORT-RASTER",
+      "level": "PASS",
+      "message": "TIFF raster export is present",
+      "evidence": []
+    },
+    {
+      "check_id": "RASTER-DPI",
+      "level": "PASS",
+      "message": "A raster export of at least 600 dpi is configured",
+      "evidence": [
+        "1000"
+      ]
+    },
+    {
+      "check_id": "FINAL-WIDTH",
+      "level": "WARN",
+      "message": "No static final width detected; verify the target journal's current specification",
+      "evidence": []
+    },
+    {
+      "check_id": "DATA-SAMPLING",
+      "level": "PASS",
+      "message": "No high-confidence row-sampling operation detected",
+      "evidence": []
+    },
+    {
+      "check_id": "DATA-EXCLUSION",
+      "level": "PASS",
+      "message": "No high-confidence missing-data exclusion detected",
+      "evidence": []
+    },
+    {
+      "check_id": "DEMO-DATA",
+      "level": "PASS",
+      "message": "No obvious simulated-data generator detected",
+      "evidence": []
+    },
+    {
+      "check_id": "LOG-GUARD",
+      "level": "PASS",
+      "message": "No logarithmic transform or axis detected",
+      "evidence": []
+    },
+    {
+      "check_id": "BACKEND-EXCLUSIVE",
+      "level": "PASS",
+      "message": "No obvious cross-backend plotting reference found for python",
+      "evidence": []
+    }
+  ],
+  "export_checks": {
+    "axes_count": 1,
+    "width_mm": 182.99999983055554,
+    "height_mm": 110.00000013333332,
+    "editable_svg_text_count": 34,
+    "pdf_embeds_truetype": true,
+    "source_data_and_metrics_unchanged": true,
+    "visual_review": "pass after moving prefix label above all data peaks and reducing bracket cap widths",
+    "width_warning_resolution": "SVG dimensions directly verified",
+    "png": {
+      "pixels": [
+        2161,
+        1299
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "tiff": {
+      "pixels": [
+        7204,
+        4330
+      ],
+      "dpi": [
+        1000.0,
+        1000.0
+      ]
+    }
+  },
+  "sha256": {
+    "plot_single_panel.py": "e2b74e0e38acf3ee92692b764fe50d15aee49d6580ef38a5837b1f4d825ef1cb",
+    "uvhf_real_prefix_single.svg": "74a2aa3eeee9b02ea7ab16320ea50c51d2dbb5438a30b503706af402ada87af5",
+    "uvhf_real_prefix_single.pdf": "27e99200b2247d05cc04311540da3745ddffe1bc767cffa6706d162b1b83ef68",
+    "uvhf_real_prefix_single.png": "22fae54fc9adc04c1f577a258c15b2c598bd4064345869c81bc0f31a2cfd5ca1",
+    "uvhf_real_prefix_single.tiff": "ea61a755799fb7f50950f2bd8400b487ccdfc00be43f8f95a5377a730ada3ec2"
+  }
+}

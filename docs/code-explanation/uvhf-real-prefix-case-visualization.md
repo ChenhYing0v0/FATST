@@ -29,3 +29,7 @@ CHPC 是统一轨迹的 prefix identity，不由较小 MSE 推导。数值 reque
 `plot_figure.py` 只读取 source CSV、selection audit、metric CSV 和 horizon-pair CSV。上排两图共享 x/y 轴；显示 history 的最后96步但两系统实际输入均为720步。下排放大全部共同96步、显示四H train-standardized MSE。shaded envelope 是四个 DLinear 输出的 pointwise min–max，不是 uncertainty。底部的 mean CHPD 对六对完整 overlap 的 absolute difference 等权平均；不把 NCHPD 与 raw CHPD 混用。所有 forecast point 均保留，无 smoothing。
 
 最终c面板还包含有独立纵轴的 signed within-system difference：每个DLinear短H预测减去DLinear H720在共同96步的prefix；UVHF请求减去UVHF H720的prefix为0。该轴不比较DLinear与UVHF之间的预测差，而比较各自系统内部的request agreement。metric图不用第二y-axis。导出183×157mm PDF/SVG、300dpi PNG和1000dpi TIFF。
+
+## 用户指定的单张总图版本
+
+`plot_single_panel.py`新增一个Axes的总图，不替换历史multi-panel脚本。相同720步future curves全部叠加；history仅显示最后48步，两模型实际input仍为720步。DLinear各H曲线终止于H；UVHF四个endpoints从同一个720步数组读取。图中标注step68处四条DLinear的max−min原尺度range，不是confidence interval或任意放大。底部用文字保留完整四H MSE改善和six-pair mean CHPD，没有额外统计轴。新输出为183×110mm的`uvhf_real_prefix_single.*`；代码断言`len(fig.axes)==1`，不改变sample、checkpoint或已有量化结果。
