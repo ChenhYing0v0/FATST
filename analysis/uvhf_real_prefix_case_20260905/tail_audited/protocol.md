@@ -62,3 +62,11 @@ lr=.01的H192/336/720在L720下发生数值发散，H192最后validation loss约
 用户明确：本论文seq_len是可调超参数，允许直接用L96 TimeMixer对L720 UVHF，图中无需额外说明。按此授权，停止新增matched-length训练；已有在运行的稳定性试验若完成则保留记录，不作为继续任务的依赖。最终优先既有官方ETTh1/L96 TimeMixer四H checkpoints。
 
 `export_native96.py`从既有etth1.log通过AST literal parsing恢复配置，读取唯一对应H的checkpoint，在ordered validation前2161个共同origins上导出。使用相同forecast origin与原始GT，TimeMixer只取该origin前96步、UVHF取前720步。新图不再写identical input history；不额外强调lookback差异。内部provenance保存真实长度与用户授权，这是标准可调超参数模型对比，不作matched architecture/mechanism attribution。后程、accuracy与96步visibility gate保持。
+
+## 最终选择与交付决定（2026-09-05）
+
+current_step=9–10（仅可视化诊断），decision=通过selected validation illustration；不更新paper-core effectiveness状态。使用native L96 TimeMixer后，15127个ETTh1 origin–variable cells中262个同时通过原accuracy、visibility与full/tail gate。按既定visibility96、tail R2降序审阅前5个间隔候选，保留首选MUFL/origin947。完整结果、失败候选和排序均保留在timemixer_all_candidate_audit.csv、timemixer_eligible.csv、timemixer_review_candidates.csv。
+
+最终图及确认前审计在review_case_0/。full720 R2=.6611、tail337–720 R2=.6618、last192 R2=.4553；四H MSE改善57.0%、7.8%、13.1%、26.5%。H336 MAE略差，不能写所有metric均优。UVHF独立四H请求prefix gap全为0；TimeMixer平均六对完整overlap disagreement=1.70原始单位。新增L720/lr.001 TimeMixer已完成但不进入最终选择，数值发散的lr.01结果被明确排除。
+
+失败归因：旧样本失败源于selection/readout审计缺失（只看relative gain），DLinear扩展失败源于在固定fidelity gate下prefix visibility不足；因此回退sample/dataset/baseline选择，保留用户接受的单张总图+局部放大形式。最终仅调整留白和标签位置，未改变曲线数据。该图可支撑所选实例的现象说明；不能替代完整official-test benchmark，也不能建立prefix consistency导致accuracy gain的因果归因。冻结论文和专利稿件未修改。

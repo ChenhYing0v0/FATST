@@ -36,6 +36,8 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
     )
     pairs = pd.read_csv(output / "selected_pair_disagreement.csv")
     unit = settings.get("unit", "°C")
+    baseline_label = settings.get("baseline", "DLinear")
+    baseline_prefix = settings.get("baseline_prefix", "dlinear")
     prefix_ylim = settings.get("prefix_ylim", [26, 53])
     mpl.rcParams.update(
         {
@@ -85,7 +87,7 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
             marker=MARKERS[h],
             lw=1,
             markersize=3,
-            label=f"DLinear H={h}",
+            label=f"{baseline_label} H={h}",
         )
         for h in HORIZONS
     ]
@@ -108,7 +110,7 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
     ax.plot(history.step, history.history, color="#A0A6AD", lw=0.95)
     ax.plot(future.index, future.ground_truth, color=TRUTH, lw=1.05, zorder=3)
     for j, h in enumerate(reversed(HORIZONS)):
-        values = future[f"dlinear_h{h}"].iloc[:h]
+        values = future[f"{baseline_prefix}_h{h}"].iloc[:h]
         ax.plot(
             values.index,
             values,
@@ -165,7 +167,7 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
 
     # This real pointwise range is an illustration, not an uncertainty interval.
     step = settings.get("annotation_step", 68)
-    values = future.loc[step, [f"dlinear_h{h}" for h in HORIZONS]]
+    values = future.loc[step, [f"{baseline_prefix}_h{h}" for h in HORIZONS]]
     low, high = float(values.min()), float(values.max())
     ax.vlines(step, low, high, color="#505963", linewidth=0.9, zorder=11)
     ax.hlines(
@@ -177,7 +179,7 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
         zorder=11,
     )
     ax.annotate(
-        f"Same future step, different values\nDLinear spread at step {step}: {high - low:.2f} {unit}",
+        f"Same future step, different values\n{baseline_label} spread at step {step}: {high - low:.2f} {unit}",
         xy=(step, low),
         xytext=(130, settings.get("annotation_y", 20.6)),
         fontsize=6.8,
@@ -204,8 +206,8 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
     )
     ax.text(
         735,
-        future.loc[720, "dlinear_h720"],
-        "DLinear",
+        future.loc[720, f"{baseline_prefix}_h720"],
+        baseline_label,
         color=COLORS[720],
         fontsize=7,
         va="center",
@@ -228,7 +230,7 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
         for j, h in enumerate(HORIZONS):
             inset.plot(
                 prefix.index,
-                prefix[f"dlinear_h{h}"],
+                prefix[f"{baseline_prefix}_h{h}"],
                 color=COLORS[h],
                 lw=0.85,
                 marker=MARKERS[h],
@@ -294,16 +296,21 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
         for line in inset.lines[:6]:
             assert len(line.get_xdata()) == 96
 
-    gains = 100 * (1 - scores.UVHF / scores.DLinear)
+    gains = 100 * (1 - scores.UVHF / scores[baseline_label])
     gain_text = "    ".join(f"H{h}: −{gains.loc[h]:.1f}%" for h in HORIZONS)
     fig.text(
-        0.08, 0.12, "MSE vs DLinear", color=TRUTH, weight="bold", fontsize=7
+        0.08,
+        0.12,
+        f"MSE vs {baseline_label}",
+        color=TRUTH,
+        weight="bold",
+        fontsize=7,
     )
     fig.text(0.27, 0.12, gain_text, color=UVHF, weight="bold", fontsize=7)
     fig.text(
         0.08,
         0.077,
-        f"Mean cross-horizon disagreement: DLinear {pairs.chpd_raw.mean():.2f} {unit}   |   UVHF 0 (identical prefixes)",
+        f"Mean cross-horizon disagreement: {baseline_label} {pairs.chpd_raw.mean():.2f} {unit}   |   UVHF 0 (identical prefixes)",
         fontsize=7,
     )
     fig.text(

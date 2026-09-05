@@ -49,3 +49,11 @@ CHPC 是统一轨迹的 prefix identity，不由较小 MSE 推导。数值 reque
 用户否决LUFL/origin144后，`tail_audited/audit_candidates.py`对现有15127 cells增加full720、tail337–720、last192的R2、Pearson corr、std ratio、bias/sigma，使用各窗口GT仅作回顾性评估。保留accuracy与prefix visibility条件；硬条件和空集结果记录于protocol.md/gate_counts.json。旧审阅结论撤回；四H relative gain不再单独支持视觉通过。扩展到Weather须使用同样后程gate，并匹配冻结UVHF的608步history；只新增validation-only DLinear controls，不改变模型或论文冻结结果。
 
 后程gate扩展先后否决ETTh2、Weather/ETTh1的DLinear 96步方案及192步观察窗口。`train_timemixer.py`因此使用上游native Exp/Model做L720匹配对照：从native train函数删除test-only调用，保持优化路径；完整有序validation仍使用native batch-mean checkpoint规则。每H保存配置、派生函数、checkpoint hash与完整validation预测，原始TimeMixer仓库不修改。相关source audit、控制偏差与失败结果见tail_audited/protocol.md。
+
+## 最终native L96 TimeMixer案例
+
+用户允许seq_len作为可调超参数后，`export_native96.py`从native etth1.log恢复四H配置并导出validation2161 origins，不训练或访问test。`audit_timemixer.py`使用ETTh1冻结UVHF全变量数组、原始GT和TimeMixer预测重算四H/common96优势及visibility；合并既有绝对fit gate，共262/15127 cells通过。`build_final_case.py`从排名第一的审阅候选导出原始单位CSV，最终为origin947/MUFL；5例完整轨迹人工检查保留首选。
+
+`check_final_case.py`独立载入UVHF checkpoint，验证原始GT/history、四H请求prefix identity、TimeMixer缓存与source逐元素一致、原尺度重新计算fit gate。最终输出目录`tail_audited/review_case_0`，最终布局由同目录figure_settings.json控制；该settings为完成视觉审计后的权威布局，重建source后应保留它。`plot_single_panel.py`增加可选baseline名称及CSV前缀，仅为使用TimeMixer标签，不改变历史DLinear默认行为。native source参考https://github.com/kwuking/TimeMixer，冻结版本及hash在numeric_audit.json中。
+
+`check_figure_exports.py`复用绘图函数构造画布，不改写导出文件；检查六条inset曲线与source逐点一致、主曲线未被inset覆盖、H标签与inset轴标签不相交、文本不越界，并重算各H MSE/MAE和各pair disagreement。读取SVG/PDF的可编辑文字/字体证据及PNG/TIFF尺寸、DPI，输出figure_qa.json和交付文件SHA-256。`build_final_case.py`重建source时保留已有figure_settings，但重置selection为待复审，避免把重新构建的数据静默视为已审计。

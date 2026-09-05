@@ -1,0 +1,39 @@
+{
+  "baseline": "TimeMixer",
+  "baseline_prefix": "timemixer",
+  "subtitle": "ETTh1 \u00b7 MUFL \u00b7 selected validation example",
+  "unit": "units",
+  "ylabel": "MUFL (original scale)",
+  "main_ylim": [
+    -22,
+    70
+  ],
+  "main_yticks": [
+    -15,
+    -5,
+    5,
+    15
+  ],
+  "prefix_ylim": [
+    -11.889559669494627,
+    15.691559715270996
+  ],
+  "prefix_yticks": [
+    -10,
+    0,
+    10
+  ],
+  "prefix_label_y": 16.343279724121093,
+  "horizon_y": {
+    "96": 24,
+    "192": 24,
+    "336": 18,
+    "720": 12
+  },
+  "annotation_y": -21.12439085960388,
+  "annotation_step": 41,
+  "connector_corner": [
+    0,
+    0
+  ]
+}
