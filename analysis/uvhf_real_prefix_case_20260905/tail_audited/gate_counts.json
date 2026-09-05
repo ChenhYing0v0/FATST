@@ -1,0 +1,14 @@
+{
+  "total": 15127,
+  "accuracy_eligible": 2378,
+  "audited_eligible": 0,
+  "each_gate_count": {
+    "full_fit": 58,
+    "tail_fit": 142,
+    "tail_shape": 120,
+    "last192_fit": 1561,
+    "tail_amplitude": 4527,
+    "tail_bias": 1752,
+    "prefix_visible": 1742
+  }
+}

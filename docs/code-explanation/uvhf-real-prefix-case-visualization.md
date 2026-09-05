@@ -43,3 +43,7 @@ CHPC 是统一轨迹的 prefix identity，不由较小 MSE 推导。数值 reque
 `reselection/replay_all_channels.py`读取同一冻结UVHF模型，对2161个validation origins批量32重放全部7变量，输出`prediction_scaled [2161,720,7]`，输入为历史与全零future占位。`select_visible_case.py`计算每个origin/channel的共同96步pointwise max−min、均值、25th percentile，以及相对于六条曲线整体数据range的`visibility96`与超过10% range的步数比例；前者用于排序，后者衡量持续性。四H与common96 accuracy条件保留，全部15127候选均记录，最终选LUFL/origin144。完整字段与rollback见reselection/protocol.md及caption_and_review.md。
 
 `plot_single_panel.py --output`复用既有图形模块：从指定目录读取source_data/metrics以及可选figure_settings，后者仅提供真实变量标签、线性坐标范围、局部标注位置和connector位置。`check_prefix_requests.py --selection-dir`复用旧checkpoints，新增变量从全channel replay缓存读取对照，保持独立四H请求验证。旧图导出文件保持原样；新的selection、request与QA记录单独存放。
+
+## 后程绝对贴合度审计
+
+用户否决LUFL/origin144后，`tail_audited/audit_candidates.py`对现有15127 cells增加full720、tail337–720、last192的R2、Pearson corr、std ratio、bias/sigma，使用各窗口GT仅作回顾性评估。保留accuracy与prefix visibility条件；硬条件和空集结果记录于protocol.md/gate_counts.json。旧审阅结论撤回；四H relative gain不再单独支持视觉通过。扩展到Weather须使用同样后程gate，并匹配冻结UVHF的608步history；只新增validation-only DLinear controls，不改变模型或论文冻结结果。
