@@ -1,0 +1,122 @@
+{
+  "96": {
+    "checkpoint_sha256": "622e246bb528d47c8e83d93bb4fd109da8e74f01e8184a9e1a0416ca48f52098",
+    "epochs": 26,
+    "config": {
+      "dataset_root": "/home/yingch/dataset",
+      "dataset": "Weather",
+      "seq_len": 608,
+      "pred_len": 96,
+      "batch_size": 128,
+      "epochs": 50,
+      "learning_rate": 0.0001,
+      "patience": 8,
+      "seed": 2021,
+      "init_mode": "pytorch_default",
+      "run_name": "TailAuditedDLinear",
+      "output_root": "/home/yingch/exp_outputs/r-2026-fatst/uvhf_prefix_tail_weather_20260905",
+      "device": "cuda",
+      "skip_test": true
+    },
+    "environment": {
+      "python": "3.12.13 | packaged by Anaconda, Inc. | (main, Mar 19 2026, 20:20:58) [GCC 14.3.0]",
+      "torch": "2.9.0+cu128",
+      "cuda": "12.8",
+      "device": "cuda"
+    },
+    "validation_metrics": {
+      "mse": 0.4080829620361328,
+      "mae": 0.3014077842235565
+    }
+  },
+  "192": {
+    "checkpoint_sha256": "2857e3289c43404c43c3f16808c4d7690b06bb6a7b518ff4ae2cbdb9eabab0eb",
+    "epochs": 25,
+    "config": {
+      "dataset_root": "/home/yingch/dataset",
+      "dataset": "Weather",
+      "seq_len": 608,
+      "pred_len": 192,
+      "batch_size": 128,
+      "epochs": 50,
+      "learning_rate": 0.0001,
+      "patience": 8,
+      "seed": 2021,
+      "init_mode": "pytorch_default",
+      "run_name": "TailAuditedDLinear",
+      "output_root": "/home/yingch/exp_outputs/r-2026-fatst/uvhf_prefix_tail_weather_20260905",
+      "device": "cuda",
+      "skip_test": true
+    },
+    "environment": {
+      "python": "3.12.13 | packaged by Anaconda, Inc. | (main, Mar 19 2026, 20:20:58) [GCC 14.3.0]",
+      "torch": "2.9.0+cu128",
+      "cuda": "12.8",
+      "device": "cuda"
+    },
+    "validation_metrics": {
+      "mse": 0.46563249826431274,
+      "mae": 0.3416411578655243
+    }
+  },
+  "336": {
+    "checkpoint_sha256": "2858cf2a2b87c8f6a87577d0633a3ab8c9b2a5a7dee2e0dde4284ad7881c924d",
+    "epochs": 26,
+    "config": {
+      "dataset_root": "/home/yingch/dataset",
+      "dataset": "Weather",
+      "seq_len": 608,
+      "pred_len": 336,
+      "batch_size": 128,
+      "epochs": 50,
+      "learning_rate": 0.0001,
+      "patience": 8,
+      "seed": 2021,
+      "init_mode": "pytorch_default",
+      "run_name": "TailAuditedDLinear",
+      "output_root": "/home/yingch/exp_outputs/r-2026-fatst/uvhf_prefix_tail_weather_20260905",
+      "device": "cuda",
+      "skip_test": true
+    },
+    "environment": {
+      "python": "3.12.13 | packaged by Anaconda, Inc. | (main, Mar 19 2026, 20:20:58) [GCC 14.3.0]",
+      "torch": "2.9.0+cu128",
+      "cuda": "12.8",
+      "device": "cuda"
+    },
+    "validation_metrics": {
+      "mse": 0.5226466059684753,
+      "mae": 0.3821539878845215
+    }
+  },
+  "720": {
+    "checkpoint_sha256": "ea826e052a69dbb352d5fe68a78e31db2f9bf4845f82181ea849784c9090b583",
+    "epochs": 20,
+    "config": {
+      "dataset_root": "/home/yingch/dataset",
+      "dataset": "Weather",
+      "seq_len": 608,
+      "pred_len": 720,
+      "batch_size": 128,
+      "epochs": 50,
+      "learning_rate": 0.0001,
+      "patience": 8,
+      "seed": 2021,
+      "init_mode": "pytorch_default",
+      "run_name": "TailAuditedDLinear",
+      "output_root": "/home/yingch/exp_outputs/r-2026-fatst/uvhf_prefix_tail_weather_20260905",
+      "device": "cuda",
+      "skip_test": true
+    },
+    "environment": {
+      "python": "3.12.13 | packaged by Anaconda, Inc. | (main, Mar 19 2026, 20:20:58) [GCC 14.3.0]",
+      "torch": "2.9.0+cu128",
+      "cuda": "12.8",
+      "device": "cuda"
+    },
+    "validation_metrics": {
+      "mse": 0.5915713906288147,
+      "mae": 0.4218195080757141
+    }
+  }
+}

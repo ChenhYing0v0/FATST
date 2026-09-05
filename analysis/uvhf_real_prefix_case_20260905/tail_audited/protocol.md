@@ -23,3 +23,14 @@ R2 = 1 − sum((u−y)^2)/sum((y−mean(y))^2)，为该窗口内真实均值作�
 扫描已有七数据集每集256个UVHF validation candidates的拟合gate，ECL、Solar、Weather各256个通过；ETTh1通过221、ETTm1通过235，ETTh2/ETTm2均0。该pool历史已按UVHF visual-fidelity筛选，后续图必须披露两阶段post-hoc selection。
 优先Weather：已有冻结profile为L608，channel18，实际lookback从effective_config核实；21变量raw dataset和source-audited DLinear均可直接支持。补充4个L608 DLinear matched-history visualization controls，沿用先前协议（H96/192/336/720、seed2021、Adam1e-4、batch128、max50epochs、patience8、pytorch_default init、full-H validation最小MSE checkpoint、skip_test）。不训练UVHF。GPU运行前先核验空闲显存并同步已commit代码。
 同样的后程gate和prefix visibility gate适用Weather256候选；完整H及common96 MSE优势条件保持。原本ETTh2的target_std_scaled>=.25也保留。仅审计candidate pool已包含的channel18，若空集如实记录，不临时挑其他指标。
+
+## Weather channel18结果与全变量扩展
+
+4/4匹配DLinear controls已完成。既有256候选中247满足accuracy条件，但最大的visibility96仅.03493，无一达到.075；因此不通过确认，不降低visibility gate。
+扩大到Weather全部21变量×4551个validation origin。沿用同一UVHF和四DLinear checkpoints，仅本地CPU重放；后程、accuracy、visibility gate全保持不变。选择需审阅完整720步，而不是仅radiation preselected pool。
+
+数值对齐说明：Weather全validation检查发现float32 numpy scaler与官方float64 scaler导致最大输入差7.6294e-6（channel14），超出ETT沿用的5e-6阈值。两loader数据shape均[5878,21]且raw split一致；将数值容差设为1e-5并记录实际gap，这不是变更样本通过标准。零方差窗口的中心化R2/amp/bias定义无效，记NaN并拒绝fit gate，不能以零除得到高分。
+
+## Weather全量结论与ETTh1扩展
+
+Weather95571 cells中7063个通过fit+accuracy，但最大visibility96=.05720，小于.075，继续拒绝。ETTh1冻结UVHF确认L720，原pool256例有221例通过fit；新增4个ETTh1/L720 DLinear对照，训练参数与Weather相同，仅dataset及lookback变更。后程、accuracy及visibility门槛全部保持。

@@ -1,0 +1,32 @@
+{
+  "code_commit": "7e1378f72feb23ed7cddbc1be73be54147a528ff",
+  "host": "529_Lab-3090",
+  "output_root": "/home/yingch/exp_outputs/r-2026-fatst/uvhf_prefix_tail_weather_20260905",
+  "gpu_schedule": {
+    "0": [
+      720,
+      96
+    ],
+    "1": [
+      336
+    ],
+    "2": [
+      192
+    ]
+  },
+  "prelaunch_memory_used_mib": [
+    18,
+    18,
+    18
+  ],
+  "observed_active_memory_used_mib": [
+    18,
+    430,
+    426
+  ],
+  "command_template": "bash analysis/uvhf_real_prefix_case_20260905/tail_audited/launch_weather.sh GPU HORIZONS",
+  "git_sync": "GitHub pull stalled; terminated only own identified fetch processes, pulled Git bundle of pushed commit",
+  "new_uvhf_training": false,
+  "new_test_access": false,
+  "all_four_baselines_complete": true
+}
