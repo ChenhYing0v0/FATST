@@ -1,0 +1,167 @@
+{
+  "source": "analysis/uvhf_real_prefix_case_20260905/plot_single_panel.py",
+  "backend": "python",
+  "summary": {
+    "ready": true,
+    "strict": false,
+    "counts": {
+      "PASS": 13,
+      "WARN": 1,
+      "FAIL": 0
+    }
+  },
+  "findings": [
+    {
+      "check_id": "SOURCE-SYNTAX",
+      "level": "PASS",
+      "message": "Python source parses successfully",
+      "evidence": []
+    },
+    {
+      "check_id": "FONT-FAMILY",
+      "level": "PASS",
+      "message": "A publication-safe sans-serif family is configured",
+      "evidence": [
+        "Arial",
+        "sans-serif"
+      ]
+    },
+    {
+      "check_id": "FONT-SIZE",
+      "level": "PASS",
+      "message": "All detected text sizes are at least 5 pt (minimum 6.2 pt)",
+      "evidence": []
+    },
+    {
+      "check_id": "COLOR-MAP",
+      "level": "PASS",
+      "message": "No rainbow/jet/hsv color mapping detected",
+      "evidence": []
+    },
+    {
+      "check_id": "EDITABLE-TEXT",
+      "level": "PASS",
+      "message": "SVG and PDF editable-text settings are configured",
+      "evidence": []
+    },
+    {
+      "check_id": "EXPORT-VECTOR",
+      "level": "PASS",
+      "message": "Both SVG and PDF exports are present",
+      "evidence": []
+    },
+    {
+      "check_id": "EXPORT-RASTER",
+      "level": "PASS",
+      "message": "TIFF raster export is present",
+      "evidence": []
+    },
+    {
+      "check_id": "RASTER-DPI",
+      "level": "PASS",
+      "message": "A raster export of at least 600 dpi is configured",
+      "evidence": [
+        "1000"
+      ]
+    },
+    {
+      "check_id": "FINAL-WIDTH",
+      "level": "WARN",
+      "message": "No static final width detected; verify the target journal's current specification",
+      "evidence": []
+    },
+    {
+      "check_id": "DATA-SAMPLING",
+      "level": "PASS",
+      "message": "No high-confidence row-sampling operation detected",
+      "evidence": []
+    },
+    {
+      "check_id": "DATA-EXCLUSION",
+      "level": "PASS",
+      "message": "No high-confidence missing-data exclusion detected",
+      "evidence": []
+    },
+    {
+      "check_id": "DEMO-DATA",
+      "level": "PASS",
+      "message": "No obvious simulated-data generator detected",
+      "evidence": []
+    },
+    {
+      "check_id": "LOG-GUARD",
+      "level": "PASS",
+      "message": "No logarithmic transform or axis detected",
+      "evidence": []
+    },
+    {
+      "check_id": "BACKEND-EXCLUSIVE",
+      "level": "PASS",
+      "message": "No obvious cross-backend plotting reference found for python",
+      "evidence": []
+    }
+  ],
+  "evidence_checks": {
+    "candidate_count": 15127,
+    "accuracy_eligible_count": 2378,
+    "old_visibility96": 0.055155034458142,
+    "new_visibility96": 0.1417886843961667,
+    "visibility_ratio": 2.5707296856785087,
+    "persistent_steps96": 81,
+    "legacy_gpu_vs_allchannel_cpu_max_gap": {
+      "0": 7.152557373046875e-07,
+      "6": 9.5367431640625e-07
+    },
+    "four_baseline_sha256_unchanged": true,
+    "source_metric_recalculation": true,
+    "all_six_inset_series_exact_and_unclipped": true,
+    "main_curves_unobscured": true,
+    "horizon_labels_clear_of_inset_labels": true,
+    "old_figure_files_unchanged": true,
+    "final_selector_exact_csv_reproduction": true
+  },
+  "export_checks": {
+    "main_axes": 1,
+    "inset_axes": 1,
+    "width_mm": 182.99999983055554,
+    "height_mm": 134.999999875,
+    "editable_svg_text_count": 46,
+    "pdf_embeds_font": true,
+    "width_warning_resolution": "SVG dimensions checked directly",
+    "visual_review": "pass for selected-case illustration; local curve overlaps retained",
+    "png": {
+      "pixels": [
+        2161,
+        1594
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "tiff": {
+      "pixels": [
+        7204,
+        5314
+      ],
+      "dpi": [
+        1000.0,
+        1000.0
+      ]
+    }
+  },
+  "sha256": {
+    "plot_single_panel.py": "cd591ef4885bba47e13e720aa491ab9515b72cd7f9fd29e5c7552551613f6c4d",
+    "check_prefix_requests.py": "66a020b4f5a4056e74bd81150c79c687cdf79eea44ccae562b7571736b2934d7",
+    "reselection/replay_all_channels.py": "94f6dbdbdae977bb77881e9b1be2eeb9e8e02b4d2f26b7d0bb92c4aa5513dc9a",
+    "reselection/review_candidates.py": "58a23cab648215c93254569e841011271069cc0657bfcf2e22df97d77c4124bb",
+    "reselection/select_visible_case.py": "1e8f5523630c3cb30b20a286f1c5e94d401ffb698a9f560e5523e52b651af009",
+    "reselection/source_data.csv": "8c3bc756d6099e4766796b4f0b316a613a914b0f8081206f80aacec562d7e665",
+    "reselection/selected_metrics.csv": "53ecb608ecbe9f106ddd5c179112b558e43613da14f34f20a599beb091b6f81c",
+    "reselection/figure_settings.json": "ec5b1a5cc68459832b74ed3907454ac0c4a4cab1a5c2f782ad01faf7bb63cbd8",
+    "reselection/uvhf_real_prefix_zoom.pdf": "a0cb4b6bf5bcaa3f0ef5f01e8b0a5bf9498ce2f893c5633d2d5d389a10dd333d",
+    "reselection/uvhf_real_prefix_zoom.png": "6f08a58402666beaa6367cace8eff457290ba51c8a1223846b7052a8412fbddf",
+    "reselection/uvhf_real_prefix_zoom.svg": "9b7451b1de06f7d8dbcea7b94097018ac213e41631f078e0a370ca6bc80fedde",
+    "reselection/uvhf_real_prefix_zoom.tiff": "c15a4b46f4f64c867771737c442a7800cb85b4b0adb805989fc9a089f950c44c"
+  }
+}

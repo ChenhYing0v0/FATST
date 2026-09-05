@@ -37,3 +37,9 @@ CHPC 是统一轨迹的 prefix identity，不由较小 MSE 推导。数值 reque
 ## 总图内嵌前缀放大
 
 用户进一步要求放大前部后，`plot_single_panel.py --zoom`在主Axes内新增一个child Axes，直接重复`source_data.csv`中step 1–96的全部六条曲线。主图矩形与连接线标明窗口来源，inset采用明确的线性x/y刻度，不改变原始数值、sample或指标。step68的range沿用原值2.134502°C。画布增加到183×135mm，以在实际轨迹上方容纳inset；完整720步仍显示。无参数保留原版输出；本轮输出`uvhf_real_prefix_zoom.*`，完整契约、图注与审核见`zoom_caption_and_review.md`。注意`fig.axes`仅统计主Axes，inset由`ax.child_axes`检查；放大版本实际有一个主坐标轴和一个内嵌坐标轴。
+
+## 按共同前缀可见性重选案例
+
+`reselection/replay_all_channels.py`读取同一冻结UVHF模型，对2161个validation origins批量32重放全部7变量，输出`prediction_scaled [2161,720,7]`，输入为历史与全零future占位。`select_visible_case.py`计算每个origin/channel的共同96步pointwise max−min、均值、25th percentile，以及相对于六条曲线整体数据range的`visibility96`与超过10% range的步数比例；前者用于排序，后者衡量持续性。四H与common96 accuracy条件保留，全部15127候选均记录，最终选LUFL/origin144。完整字段与rollback见reselection/protocol.md及caption_and_review.md。
+
+`plot_single_panel.py --output`复用既有图形模块：从指定目录读取source_data/metrics以及可选figure_settings，后者仅提供真实变量标签、线性坐标范围、局部标注位置和connector位置。`check_prefix_requests.py --selection-dir`复用旧checkpoints，新增变量从全channel replay缓存读取对照，保持独立四H请求验证。旧图导出文件保持原样；新的selection、request与QA记录单独存放。

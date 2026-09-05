@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
 import matplotlib
@@ -22,14 +23,20 @@ MARKERS = {96: "o", 192: "s", 336: "^", 720: "D"}
 TRUTH, UVHF = "#252A31", "#087F79"
 
 
-def main(zoom: bool = False) -> None:
-    source = pd.read_csv(OUT / "source_data.csv")
+def main(zoom: bool = False, output: Path = OUT) -> None:
+    settings_path = output / "figure_settings.json"
+    settings = (
+        json.loads(settings_path.read_text()) if settings_path.exists() else {}
+    )
+    source = pd.read_csv(output / "source_data.csv")
     future = source[source.step > 0].set_index("step")
     history = source[(source.step >= -47) & (source.step <= 0)]
-    scores = pd.read_csv(OUT / "selected_metrics.csv").pivot(
+    scores = pd.read_csv(output / "selected_metrics.csv").pivot(
         index="horizon", columns="model", values="mse_scaled"
     )
-    pairs = pd.read_csv(OUT / "selected_pair_disagreement.csv")
+    pairs = pd.read_csv(output / "selected_pair_disagreement.csv")
+    unit = settings.get("unit", "°C")
+    prefix_ylim = settings.get("prefix_ylim", [26, 53])
     mpl.rcParams.update(
         {
             "font.family": "sans-serif",
@@ -59,7 +66,10 @@ def main(zoom: bool = False) -> None:
     fig.text(
         0.08,
         0.919,
-        "ETTh2 · oil temperature · identical 720-step history · selected validation example",
+        settings.get(
+            "subtitle",
+            "ETTh2 · oil temperature · identical 720-step history · selected validation example",
+        ),
         fontsize=7.5,
         color="#626A73",
     )
@@ -128,7 +138,9 @@ def main(zoom: bool = False) -> None:
     for h in HORIZONS:
         ax.text(
             h - 24 if zoom and h == 336 else h,
-            46 if zoom and h == 720 else 54.3,
+            settings.get("horizon_y", {}).get(
+                str(h), 46 if zoom and h == 720 else 54.3
+            ),
             f"H={h}",
             fontsize=7,
             color="#6F7881",
@@ -137,7 +149,7 @@ def main(zoom: bool = False) -> None:
         )
     ax.text(
         48,
-        52.9,
+        settings.get("prefix_label_y", 52.9),
         "Shared prefix",
         ha="center",
         va="bottom",
@@ -152,7 +164,7 @@ def main(zoom: bool = False) -> None:
     )
 
     # This real pointwise range is an illustration, not an uncertainty interval.
-    step = 68
+    step = settings.get("annotation_step", 68)
     values = future.loc[step, [f"dlinear_h{h}" for h in HORIZONS]]
     low, high = float(values.min()), float(values.max())
     ax.vlines(step, low, high, color="#505963", linewidth=0.9, zorder=11)
@@ -165,9 +177,9 @@ def main(zoom: bool = False) -> None:
         zorder=11,
     )
     ax.annotate(
-        f"Same future step, different values\nDLinear spread at step {step}: {high - low:.2f} °C",
+        f"Same future step, different values\nDLinear spread at step {step}: {high - low:.2f} {unit}",
         xy=(step, low),
-        xytext=(130, 20.6),
+        xytext=(130, settings.get("annotation_y", 20.6)),
         fontsize=6.8,
         color="#505963",
         ha="left",
@@ -199,11 +211,11 @@ def main(zoom: bool = False) -> None:
         va="center",
     )
     ax.set_xlim(-47, 802)
-    ax.set_ylim(18.5, 83.5 if zoom else 56.5)
+    ax.set_ylim(settings.get("main_ylim", [18.5, 83.5 if zoom else 56.5]))
     ax.set_xticks([0, 96, 192, 336, 480, 600, 720])
-    ax.set_yticks([20, 30, 40, 50])
+    ax.set_yticks(settings.get("main_yticks", [20, 30, 40, 50]))
     ax.set_xlabel("Forecast step (hours)", labelpad=5)
-    ax.set_ylabel("Oil temperature (°C)")
+    ax.set_ylabel(settings.get("ylabel", "Oil temperature (°C)"))
     ax.grid(axis="y", color="#E5E8EB", lw=0.45)
     ax.tick_params(length=3, width=0.65)
 
@@ -220,7 +232,7 @@ def main(zoom: bool = False) -> None:
                 color=COLORS[h],
                 lw=0.85,
                 marker=MARKERS[h],
-                markevery=[10 + j * 4, 67, 90 - j * 4],
+                markevery=[10 + j * 4, step - 1, 90 - j * 4],
                 markersize=2.8,
                 markeredgecolor="white",
                 markeredgewidth=0.3,
@@ -233,9 +245,9 @@ def main(zoom: bool = False) -> None:
         )
         inset.set(
             xlim=(1, 96),
-            ylim=(26, 53),
-            xticks=[1, 24, 48, 68, 96],
-            yticks=[30, 40, 50],
+            ylim=prefix_ylim,
+            xticks=[1, 24, 48, 72, 96],
+            yticks=settings.get("prefix_yticks", [30, 40, 50]),
         )
         inset.set_title(
             "Shared prefix enlarged · steps 1–96",
@@ -245,7 +257,11 @@ def main(zoom: bool = False) -> None:
             weight="bold",
         )
         inset.set_xlabel("Forecast step (hours)", fontsize=6.5, labelpad=2)
-        inset.set_ylabel("Temperature (°C)", fontsize=6.5, labelpad=2)
+        inset.set_ylabel(
+            settings.get("ylabel", "Temperature (°C)"),
+            fontsize=6.5,
+            labelpad=2,
+        )
         inset.tick_params(labelsize=6.5, length=2.5)
         inset.grid(axis="y", color="#E1E6EB", lw=0.4)
         for spine in inset.spines.values():
@@ -254,9 +270,9 @@ def main(zoom: bool = False) -> None:
             spine.set_linewidth(0.6)
         ax.add_patch(
             Rectangle(
-                (1, 26),
+                (1, prefix_ylim[0]),
                 95,
-                27,
+                prefix_ylim[1] - prefix_ylim[0],
                 fill=False,
                 edgecolor="#8FA3B8",
                 lw=0.8,
@@ -264,9 +280,9 @@ def main(zoom: bool = False) -> None:
             )
         )
         connector = ConnectionPatch(
-            xyA=(96, 53),
+            xyA=(96, prefix_ylim[1]),
             coordsA=ax.transData,
-            xyB=(0, 1),
+            xyB=settings.get("connector_corner", [0, 1]),
             coordsB=inset.transAxes,
             color="#8FA3B8",
             lw=0.7,
@@ -287,7 +303,7 @@ def main(zoom: bool = False) -> None:
     fig.text(
         0.08,
         0.077,
-        f"Mean cross-horizon disagreement: DLinear {pairs.chpd_raw.mean():.2f} °C   |   UVHF 0 (identical prefixes)",
+        f"Mean cross-horizon disagreement: DLinear {pairs.chpd_raw.mean():.2f} {unit}   |   UVHF 0 (identical prefixes)",
         fontsize=7,
     )
     fig.text(
@@ -299,16 +315,16 @@ def main(zoom: bool = False) -> None:
     )
     assert len(fig.axes) == 1
     stem = "uvhf_real_prefix_zoom" if zoom else "uvhf_real_prefix_single"
-    fig.savefig(OUT / f"{stem}.pdf")
-    fig.savefig(OUT / f"{stem}.svg")
-    svg = OUT / f"{stem}.svg"
+    fig.savefig(output / f"{stem}.pdf")
+    fig.savefig(output / f"{stem}.svg")
+    svg = output / f"{stem}.svg"
     svg.write_text(
         "\n".join(line.rstrip() for line in svg.read_text().splitlines())
         + "\n"
     )
-    fig.savefig(OUT / f"{stem}.png", dpi=300)
+    fig.savefig(output / f"{stem}.png", dpi=300)
     fig.savefig(
-        OUT / f"{stem}.tiff",
+        output / f"{stem}.tiff",
         dpi=1000,
         pil_kwargs={"compression": "tiff_lzw"},
     )
@@ -322,4 +338,6 @@ if __name__ == "__main__":
         action="store_true",
         help="Add an inset of the complete shared prefix.",
     )
-    main(zoom=parser.parse_args().zoom)
+    parser.add_argument("--output", type=Path, default=OUT)
+    args = parser.parse_args()
+    main(zoom=args.zoom, output=args.output)

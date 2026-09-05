@@ -1,0 +1,16 @@
+{
+  "checkpoint_sha256": "bcfbc9955754a9825d1dd33015610a049551e3441dabd0ad98982c0fc2285d3e",
+  "origins": 2161,
+  "channels": 7,
+  "shape": [
+    2161,
+    720,
+    7
+  ],
+  "max_input_gap": 4.76837158203125e-07,
+  "seconds": 8.985762625001371,
+  "future_labels": "zeros",
+  "test_access": false,
+  "training": false,
+  "torch": "2.5.0"
+}

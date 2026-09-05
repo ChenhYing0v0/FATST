@@ -1,0 +1,38 @@
+{
+  "subtitle": "ETTh2 \u00b7 LUFL \u00b7 identical 720-step history \u00b7 selected validation example",
+  "unit": "units",
+  "ylabel": "LUFL (original scale)",
+  "main_ylim": [
+    -14,
+    17
+  ],
+  "main_yticks": [
+    -12,
+    -8,
+    -4,
+    0
+  ],
+  "prefix_ylim": [
+    -12,
+    -4.5
+  ],
+  "prefix_yticks": [
+    -11,
+    -9,
+    -7,
+    -5
+  ],
+  "prefix_label_y": -4.35,
+  "horizon_y": {
+    "96": 0.9,
+    "192": 0.9,
+    "336": 0.9,
+    "720": -5.5
+  },
+  "annotation_y": -13.2,
+  "annotation_step": 51,
+  "connector_corner": [
+    0,
+    0
+  ]
+}
