@@ -1,6 +1,7 @@
-"""Scan all Weather validation cells under unchanged late-fidelity gates."""
+"""Scan all validation cells for Weather or ETTh1 under unchanged late-fidelity gates."""
 
 from pathlib import Path
+import argparse
 import json
 import sys
 import time
@@ -22,22 +23,23 @@ from evaluate_weather import fit_metrics
 HORIZONS = (96, 192, 336, 720)
 
 
-def main() -> None:
+def main(dataset: str = "Weather") -> None:
+    key = dataset.lower()
     torch.set_num_threads(4)
     args = exporter.load_effective_args(
-        BASE / "checkpoints/weather/effective_config.json",
-        "Weather",
+        BASE / f"checkpoints/{key}/effective_config.json",
+        dataset,
         Path("/Users/river/PaperResearch/Project/datasets"),
         OUT,
         "cpu",
     )
     official = exporter.train_repo.build_official_args(
-        args, exporter.train_repo.OFFICIAL_PRESETS["Weather"][720]
+        args, exporter.train_repo.OFFICIAL_PRESETS[dataset][720]
     )
     model = exporter.train_repo.TimeAlign.Model(official).float().eval()
     model.load_state_dict(
         torch.load(
-            BASE / "checkpoints/weather/checkpoint.pt",
+            BASE / f"checkpoints/{key}/checkpoint.pt",
             map_location="cpu",
             weights_only=True,
         ),
@@ -46,26 +48,33 @@ def main() -> None:
     uvhf_ds, _ = exporter.train_repo.data_provider(official, "val")
     ds = ForecastDataset(
         "/Users/river/PaperResearch/Project/datasets",
-        "Weather",
+        dataset,
         "val",
-        608,
+        official.seq_len,
         720,
     )
     count = len(ds)
-    assert count == len(uvhf_ds) == 4551
-    dest = BASE / "raw/weather_all_uvhf.npy"
+    assert count == len(uvhf_ds)
+    channels = official.enc_in
+    dest = BASE / f"raw/{key}_all_uvhf.npy"
     values = np.lib.format.open_memmap(
-        dest, mode="w+", dtype=np.float32, shape=(count, 720, 21)
+        dest, mode="w+", dtype=np.float32, shape=(count, 720, channels)
     )
-    y = np.empty((count, 720, 21), dtype=np.float32)
-    prefix = {h: np.empty((count, 96, 21), dtype=np.float32) for h in HORIZONS}
-    errors = {h: np.empty((count, 21), dtype=np.float64) for h in HORIZONS}
+    y = np.empty((count, 720, channels), dtype=np.float32)
+    prefix = {
+        h: np.empty((count, 96, channels), dtype=np.float32) for h in HORIZONS
+    }
+    errors = {
+        h: np.empty((count, channels), dtype=np.float64) for h in HORIZONS
+    }
     baselines = {}
     for h in HORIZONS:
-        b = DLinear(608, h, 21, init_mode="pytorch_default").eval()
+        b = DLinear(
+            official.seq_len, h, channels, init_mode="pytorch_default"
+        ).eval()
         b.load_state_dict(
             torch.load(
-                BASE / f"matched_checkpoints/weather/h{h}/checkpoint.pt",
+                BASE / f"matched_checkpoints/{key}/h{h}/checkpoint.pt",
                 map_location="cpu",
                 weights_only=True,
             )
@@ -88,7 +97,9 @@ def main() -> None:
             )
             assert max_gap < 1e-5
             values[start:stop] = model(
-                x, torch.zeros((stop - start, 720, 21)), is_training=False
+                x,
+                torch.zeros((stop - start, 720, channels)),
+                is_training=False,
             )[0].numpy()
             y[start:stop] = torch.stack(
                 [ds[i][1] for i in range(start, stop)]
@@ -106,7 +117,7 @@ def main() -> None:
                 )
     values.flush()
     rows = []
-    for c in range(21):
+    for c in range(channels):
         u = values[:, :, c].astype(float)
         target = y[:, :, c].astype(float)
         fit = fit_metrics(u, target)
@@ -166,16 +177,16 @@ def main() -> None:
             )
             rows.append(row)
     table = pd.DataFrame(rows)
-    table.to_csv(OUT / "weather_all_candidate_audit.csv", index=False)
+    table.to_csv(OUT / f"{key}_all_candidate_audit.csv", index=False)
     ranked = table[table.audited_eligible].sort_values(
         ["visibility96", "tail_r2"], ascending=False
     )
-    ranked.to_csv(OUT / "weather_all_eligible.csv", index=False)
-    (OUT / "weather_all_replay_audit.json").write_text(
+    ranked.to_csv(OUT / f"{key}_all_eligible.csv", index=False)
+    (OUT / f"{key}_all_replay_audit.json").write_text(
         json.dumps(
             {
                 "origins": count,
-                "channels": 21,
+                "channels": channels,
                 "max_input_gap": max_gap,
                 "seconds": time.monotonic() - started,
                 "eligible": len(ranked),
@@ -202,4 +213,8 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--dataset", choices=["Weather", "ETTh1"], default="Weather"
+    )
+    main(dataset=parser.parse_args().dataset)

@@ -1,0 +1,9 @@
+{
+  "origins": 2161,
+  "channels": 7,
+  "max_input_gap": 4.76837158203125e-07,
+  "seconds": 10.644337334204465,
+  "eligible": 0,
+  "future_labels": "zeros",
+  "new_test_access": false
+}

@@ -34,3 +34,19 @@ R2 = 1 − sum((u−y)^2)/sum((y−mean(y))^2)，为该窗口内真实均值作�
 ## Weather全量结论与ETTh1扩展
 
 Weather95571 cells中7063个通过fit+accuracy，但最大visibility96=.05720，小于.075，继续拒绝。ETTh1冻结UVHF确认L720，原pool256例有221例通过fit；新增4个ETTh1/L720 DLinear对照，训练参数与Weather相同，仅dataset及lookback变更。后程、accuracy及visibility门槛全部保持。
+
+## 第二次失败归因：共同前缀观察窗口
+
+ETTh1全7变量也未通过96步visibility gate。接下来回退到展示窗口设计：比较前192步的真实重叠，H96只显示前96步，H192/H336/H720覆盖192步。该变化公开记录为post-hoc design revision，不能说旧96步gate通过。
+在已通过全部fit与accuracy gate的Weather/ETTh1 cells内计算`visibility192`：每一步至少3条有效DLinear预测的max-min，再对192步均值，并除以同窗口所有有效DLinear、GT、UVHF值的整体range。前96步有4条，97–192步有3条，不补零或外推H96。仍要求visibility>=.075；如果通过，需审阅全程和局部，图注明确97步后只有3条baseline仍在比较。
+
+## TimeMixer对照协议与来源
+
+前192步窗口扩展亦0通过；因此回退baseline选择，使用用户初始许可的TimeMixer。
+上游官方仓库https://github.com/kwuking/TimeMixer（2026-09-05检索），服务器native checkout=e24610583b36fdd8c76cc17a8df4e65759a5f460。models/TimeMixer.py为native PDM+FMM实现，predict_layers的输出长度依赖pred_len，各H独立checkpoint不保证前缀相同。先读模型、run.py、exp训练函数、data_factory与ETTh1官方unify script。
+
+新4个ETTh1 TimeMixer与冻结UVHF同为L720；原脚本L96，因此明确为matched-history visualization control。其余参数沿用原脚本：d_model16、d_ff32、e_layers2、downsampling3层avg/window2、dropout.1、channel_independence1、use_norm1、use_future_temporal_feature0、label_len0、Adam maxlr.01、OneCycleLR/TST pct_start.2、batch128、10epochs/patience10、seed2021。
+
+`train_timemixer.py`使用原仓库Exp训练函数；仅动态移除test loader和逐epoch test evaluation，禁止任何_get_data('test')调用；validation改为完整有序不drop，仍沿用native mean-batch validation loss checkpoint selector（末尾小batch等权，此差别披露）。不调用native run的final test。模型定义、训练loss、初始化与LR路径不变。原repo源文件不修改，保存派生训练函数和实际args便于审计。此前已有L96 TimeMixer artifacts不用于这次matched comparison。
+
+TimeMixer筛选恢复原共同96步visibility>=.075，全部后程及accuracy条件不变，需独立全程视觉审阅。训练和evaluation均validation-only；不存在新test access。

@@ -28,5 +28,32 @@
   "git_sync": "GitHub pull stalled; terminated only own identified fetch processes, pulled Git bundle of pushed commit",
   "new_uvhf_training": false,
   "new_test_access": false,
-  "all_four_baselines_complete": true
+  "all_four_baselines_complete": true,
+  "etth1": {
+    "code_commit": "4e9fa9661306d654ac590f7c4e728ac9ab238b33",
+    "output_root": "/home/yingch/exp_outputs/r-2026-fatst/uvhf_prefix_tail_etth1_20260905",
+    "gpu_schedule": {
+      "0": [
+        720,
+        96
+      ],
+      "1": [
+        336
+      ],
+      "2": [
+        192
+      ]
+    },
+    "prelaunch_memory_used_mib": [
+      18,
+      18,
+      18
+    ],
+    "launch_pids": [
+      2362319,
+      2362320,
+      2362321
+    ],
+    "all_four_baselines_complete": true
+  }
 }

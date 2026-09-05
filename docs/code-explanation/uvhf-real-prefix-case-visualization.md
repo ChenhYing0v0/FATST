@@ -47,3 +47,5 @@ CHPC 是统一轨迹的 prefix identity，不由较小 MSE 推导。数值 reque
 ## 后程绝对贴合度审计
 
 用户否决LUFL/origin144后，`tail_audited/audit_candidates.py`对现有15127 cells增加full720、tail337–720、last192的R2、Pearson corr、std ratio、bias/sigma，使用各窗口GT仅作回顾性评估。保留accuracy与prefix visibility条件；硬条件和空集结果记录于protocol.md/gate_counts.json。旧审阅结论撤回；四H relative gain不再单独支持视觉通过。扩展到Weather须使用同样后程gate，并匹配冻结UVHF的608步history；只新增validation-only DLinear controls，不改变模型或论文冻结结果。
+
+后程gate扩展先后否决ETTh2、Weather/ETTh1的DLinear 96步方案及192步观察窗口。`train_timemixer.py`因此使用上游native Exp/Model做L720匹配对照：从native train函数删除test-only调用，保持优化路径；完整有序validation仍使用native batch-mean checkpoint规则。每H保存配置、派生函数、checkpoint hash与完整validation预测，原始TimeMixer仓库不修改。相关source audit、控制偏差与失败结果见tail_audited/protocol.md。
