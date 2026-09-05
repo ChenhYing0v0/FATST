@@ -52,3 +52,7 @@ ETTh1全7变量也未通过96步visibility gate。接下来回退到展示窗口
 TimeMixer筛选恢复原共同96步visibility>=.075，全部后程及accuracy条件不变，需独立全程视觉审阅。训练和evaluation均validation-only；不存在新test access。
 
 TimeMixer首发在EarlyStopping构造前因numpy2移除np.Inf失败，没有epoch训练。添加进程内`np.Inf=np.inf`兼容别名后重启，不更改native源文件、数值含义或共享环境版本。
+
+## TimeMixer优化失败与稳定性重跑
+
+lr=.01的H192/336/720在L720下发生数值发散，H192最后validation loss约1.18e10，H720约7.08e8。这些checkpoints不进入样本选择，也不作为UVHF优势证据；未启动H96。归因optimization_or_numeric_pathology，不能据此否定TimeMixer。回退优化配置：仅lr改.001、其余保持，重新完整4H训练，输出独立`uvhf_prefix_tail_timemixer_lr1e3_20260905`。此次在validation上诊断数值稳定性，无test调参。

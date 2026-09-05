@@ -19,6 +19,7 @@ def main() -> None:
     np.Inf = np.inf
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--horizon", type=int, required=True)
+    parser.add_argument("--learning-rate", type=float, default=0.01)
     parser.add_argument(
         "--source", type=Path, default=Path("/home/yingch/TimeMixer")
     )
@@ -63,7 +64,7 @@ def main() -> None:
             "--patience",
             "10",
             "--learning_rate",
-            "0.01",
+            str(options.learning_rate),
             "--down_sampling_layers",
             "3",
             "--down_sampling_window",
