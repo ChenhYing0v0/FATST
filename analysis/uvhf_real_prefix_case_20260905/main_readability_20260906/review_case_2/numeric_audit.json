@@ -1,0 +1,87 @@
+{
+  "raw_gt_and_history_aligned": true,
+  "selected_origin": 869,
+  "channel": 0,
+  "independent_request_max_gap": {
+    "96": 0.0,
+    "192": 0.0,
+    "336": 0.0,
+    "720": 0.0
+  },
+  "cached_vs_replay_raw_max_gap": 3.464668637320756e-06,
+  "fit_metrics_raw_recalculated": {
+    "full_r2": 0.6336069115822032,
+    "full_corr": 0.8403368057589685,
+    "full_amplitude_ratio": 0.9153244546562462,
+    "full_bias_sigma": 0.25871970942284567,
+    "tail_r2": 0.7069653152896013,
+    "tail_corr": 0.8695806042188012,
+    "tail_amplitude_ratio": 0.834009515851687,
+    "tail_bias_sigma": 0.2189516147835261,
+    "last192_r2": 0.7313185441126283,
+    "last192_corr": 0.8664540584937429,
+    "last192_amplitude_ratio": 0.8437856850140922,
+    "last192_bias_sigma": 0.1375144945503455
+  },
+  "native96_baselines": {
+    "96": {
+      "source_checkpoint": "/home/yingch/TimeMixer/checkpoints/long_term_forecast_ETTh1_96_96_none_TimeMixer_ETTh1_sl96_pl96_dm16_nh8_el2_dl1_df32_fc1_ebtimeF_dtTrue_Exp_0/checkpoint.pth",
+      "checkpoint_sha256": "6481f49bf69702bacffe7d83d1b70439c117a25465553030f3b93597b4f9fdf1",
+      "native_model_sha256": "817d62f4aac54c8566e560f6d3785856e31c8ee51460279ee3d0a4823f11d4be",
+      "source_training_log_sha256": "9d89918d9c924cdb71e1d8db1d32c6e291d621a7169d3ef0fdf9afd94f2d7838",
+      "origins": 2161,
+      "seq_len": 96,
+      "horizon": 96,
+      "new_training": false,
+      "new_test_access": false,
+      "historical_training_logged_test_losses": true,
+      "checkpoint_rule": "historical native minimum validation loss",
+      "torch": "2.9.0+cu128"
+    },
+    "192": {
+      "source_checkpoint": "/home/yingch/TimeMixer/checkpoints/long_term_forecast_ETTh1_96_192_none_TimeMixer_ETTh1_sl96_pl192_dm16_nh8_el2_dl1_df32_fc1_ebtimeF_dtTrue_Exp_0/checkpoint.pth",
+      "checkpoint_sha256": "34aed8d6989a59d2caee8a87b313bbd77236c668809a08fba5c9eddcb582a75a",
+      "native_model_sha256": "817d62f4aac54c8566e560f6d3785856e31c8ee51460279ee3d0a4823f11d4be",
+      "source_training_log_sha256": "9d89918d9c924cdb71e1d8db1d32c6e291d621a7169d3ef0fdf9afd94f2d7838",
+      "origins": 2161,
+      "seq_len": 96,
+      "horizon": 192,
+      "new_training": false,
+      "new_test_access": false,
+      "historical_training_logged_test_losses": true,
+      "checkpoint_rule": "historical native minimum validation loss",
+      "torch": "2.9.0+cu128"
+    },
+    "336": {
+      "source_checkpoint": "/home/yingch/TimeMixer/checkpoints/long_term_forecast_ETTh1_96_336_none_TimeMixer_ETTh1_sl96_pl336_dm16_nh8_el2_dl1_df32_fc1_ebtimeF_dtTrue_Exp_0/checkpoint.pth",
+      "checkpoint_sha256": "b32731c5425891829a0df1c57dc8b004bde8bc200cd3fbce25819e22b4432cfa",
+      "native_model_sha256": "817d62f4aac54c8566e560f6d3785856e31c8ee51460279ee3d0a4823f11d4be",
+      "source_training_log_sha256": "9d89918d9c924cdb71e1d8db1d32c6e291d621a7169d3ef0fdf9afd94f2d7838",
+      "origins": 2161,
+      "seq_len": 96,
+      "horizon": 336,
+      "new_training": false,
+      "new_test_access": false,
+      "historical_training_logged_test_losses": true,
+      "checkpoint_rule": "historical native minimum validation loss",
+      "torch": "2.9.0+cu128"
+    },
+    "720": {
+      "source_checkpoint": "/home/yingch/TimeMixer/checkpoints/long_term_forecast_ETTh1_96_720_none_TimeMixer_ETTh1_sl96_pl720_dm16_nh8_el2_dl1_df32_fc1_ebtimeF_dtTrue_Exp_0/checkpoint.pth",
+      "checkpoint_sha256": "d6af111e6cef0b2479d09e490b6d5c0e9d4ad234b117ec2b7b9f4a5ed1dab23e",
+      "native_model_sha256": "817d62f4aac54c8566e560f6d3785856e31c8ee51460279ee3d0a4823f11d4be",
+      "source_training_log_sha256": "9d89918d9c924cdb71e1d8db1d32c6e291d621a7169d3ef0fdf9afd94f2d7838",
+      "origins": 2161,
+      "seq_len": 96,
+      "horizon": 720,
+      "new_training": false,
+      "new_test_access": false,
+      "historical_training_logged_test_losses": true,
+      "checkpoint_rule": "historical native minimum validation loss",
+      "torch": "2.9.0+cu128"
+    }
+  },
+  "new_test_access": false,
+  "future_label_input": "zeros",
+  "status": "numeric audit passed; see reviewer report for visual audit"
+}

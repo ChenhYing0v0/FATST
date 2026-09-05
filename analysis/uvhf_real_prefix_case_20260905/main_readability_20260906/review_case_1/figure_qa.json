@@ -1,0 +1,61 @@
+{
+  "status": "PASS technical export checks; see separate recommendation",
+  "date": "2026-09-06",
+  "backend": "Python matplotlib",
+  "dimensions_mm": [
+    183,
+    135
+  ],
+  "main_axes": 1,
+  "embedded_prefix_axes": 1,
+  "six_inset_curves_equal_source": true,
+  "main_trajectory_not_occluded_by_inset": true,
+  "horizon_labels_clear_of_inset_labels": true,
+  "figure_text_inside_canvas": true,
+  "metrics_recalculated_from_csv": true,
+  "mean_pairwise_disagreement_raw": 1.5983515413770635,
+  "editable_svg_text_elements": 46,
+  "pdf_embedded_truetype": true,
+  "exports": {
+    "png": {
+      "pixels": [
+        2161,
+        1594
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "tiff": {
+      "pixels": [
+        7204,
+        5314
+      ],
+      "dpi": [
+        1000.0,
+        1000.0
+      ]
+    }
+  },
+  "source_preflight": {
+    "PASS": 13,
+    "WARN": 1,
+    "FAIL": 0,
+    "warning_resolution": "Static width detector cannot resolve variables; actual figure and exports verified as 183 x 135 mm. Final submission must follow target journal specifications."
+  },
+  "visual_review": "not recommended: fewer prominent peaks do not imply a longer cycle. Full review: ../reviewer_assessment.md. Deep trough errors and 24-step dominant cycle remain visible.",
+  "sha256": {
+    "figure_settings.json": "4379c9d3f62daa23337e8db4457ef69c418668d74c06e31a1d5c56a0f70ac7eb",
+    "numeric_audit.json": "eafc033eaa169b902caa4f1ba11477622729344ac9da364c71a08793c53dff40",
+    "selected_metrics.csv": "dc67feff17671704dd87d9f753fc3f59d60cde934b4922c859c99c162a021b1d",
+    "selected_pair_disagreement.csv": "1d9e063c627d35d9067b87d445a396da15a1a49c39f193f72e21137620ee45f7",
+    "selection_audit.json": "2a0dfadf057382964c27d350d530439e194388b566e8752ce0026d59f52e5beb",
+    "source_data.csv": "a16ab73ba3c5365c12552f5d5ab33c4376fb058997db25cb1a83a17322e2c11c",
+    "uvhf_real_prefix_zoom.pdf": "f4b05db6a5f2dfdbc67cc3e6b69bb738b1cb591f3d4af9f044076e864195eebe",
+    "uvhf_real_prefix_zoom.png": "f4a6a100128fa8cbf8464143e6ec27ab3e5e1985ebd99f390797f24acf5dedd4",
+    "uvhf_real_prefix_zoom.svg": "efd6e0fb2f17940d0b71c1b6716184f853e5b1b3a3423a0253aa2dde23939e8e",
+    "uvhf_real_prefix_zoom.tiff": "a74b7b12dcc25a43e397a5bfba4efd6e3beacf6ae56761fd21b74dce9b224587"
+  },
+  "endpoint_labels_do_not_overlap": true
+}

@@ -1,5 +1,6 @@
 """Independently replay the chosen UVHF case and audit plotted source values."""
 
+import argparse
 import hashlib
 import json
 from pathlib import Path
@@ -17,9 +18,8 @@ import export_iscf_bsca_appendix_c_predictions as exporter
 from evaluate_weather import fit_metrics
 
 
-def main() -> None:
+def main(case: Path = OUT / "review_case_0") -> None:
     torch.set_num_threads(4)
-    case = OUT / "review_case_0"
     selection = json.loads((case / "selection_audit.json").read_text())
     o = int(selection["selected"]["origin"])
     c = int(selection["selected"]["channel"])
@@ -123,4 +123,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--case-dir", type=Path, default=OUT / "review_case_0")
+    main(parser.parse_args().case_dir)

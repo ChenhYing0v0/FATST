@@ -1,0 +1,61 @@
+{
+  "status": "PASS technical export checks; see separate recommendation",
+  "date": "2026-09-06",
+  "backend": "Python matplotlib",
+  "dimensions_mm": [
+    183,
+    135
+  ],
+  "main_axes": 1,
+  "embedded_prefix_axes": 1,
+  "six_inset_curves_equal_source": true,
+  "main_trajectory_not_occluded_by_inset": true,
+  "horizon_labels_clear_of_inset_labels": true,
+  "figure_text_inside_canvas": true,
+  "metrics_recalculated_from_csv": true,
+  "mean_pairwise_disagreement_raw": 1.801482374214383,
+  "editable_svg_text_elements": 46,
+  "pdf_embedded_truetype": true,
+  "exports": {
+    "png": {
+      "pixels": [
+        2161,
+        1594
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "tiff": {
+      "pixels": [
+        7204,
+        5314
+      ],
+      "dpi": [
+        1000.0,
+        1000.0
+      ]
+    }
+  },
+  "source_preflight": {
+    "PASS": 13,
+    "WARN": 1,
+    "FAIL": 0,
+    "warning_resolution": "Static width detector cannot resolve variables; actual figure and exports verified as 183 x 135 mm. Final submission must follow target journal specifications."
+  },
+  "visual_review": "recommended alternative for full-horizon readability; not an approved replacement. Full review: ../reviewer_assessment.md. Deep trough errors and 24-step dominant cycle remain visible.",
+  "sha256": {
+    "figure_settings.json": "eaee1d17667c6c5589a05da9f93a0d342f5fbdeef0aa339a6751bb9eb22541fe",
+    "numeric_audit.json": "481daf2c5257e16d9985a4051f32161680faa3f60e8587238ee2f283d6f9c1d9",
+    "selected_metrics.csv": "38c1c813100ca01f7ab24c2063809502f8f72e2fe4b32fd2c53bdcb310eedd9e",
+    "selected_pair_disagreement.csv": "79effc7ab65defb4cbc1e03824f307f15eabef6a84fb6e3a752c36575daad435",
+    "selection_audit.json": "cbab226c9b1f15069ee3988556b6708e22d58e4ff7555d882e2e8001e49a0208",
+    "source_data.csv": "8dff5b959e0fe60bdf178ff4bba42977998d43781fd016b1259cb0cd65790620",
+    "uvhf_real_prefix_zoom.pdf": "a643897207da72a5e84816db0d57f91e8371b000f1c3a842fb620687d55a5cf3",
+    "uvhf_real_prefix_zoom.png": "51a9f9f86499f8f69781574e72a593c97f82381d29a5a40d36767674993dcb12",
+    "uvhf_real_prefix_zoom.svg": "e4661592e74f90fa7bea386a346ed37693f6c06c37f8f5dde84f95c323033f28",
+    "uvhf_real_prefix_zoom.tiff": "9c8667e00956ccbe298d64491b4a67be76fc31222d01ae01e77fa4e7fd8617ed"
+  },
+  "endpoint_labels_do_not_overlap": true
+}

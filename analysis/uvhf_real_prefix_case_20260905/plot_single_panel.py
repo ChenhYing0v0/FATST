@@ -197,7 +197,7 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
     )
     ax.text(
         735,
-        future.loc[720, "uvhf"],
+        settings.get("endpoint_label_y", {}).get("UVHF", future.loc[720, "uvhf"]),
         "UVHF",
         color=UVHF,
         fontsize=7,
@@ -206,12 +206,25 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
     )
     ax.text(
         735,
-        future.loc[720, f"{baseline_prefix}_h720"],
+        settings.get("endpoint_label_y", {}).get(
+            baseline_label, future.loc[720, f"{baseline_prefix}_h720"]
+        ),
         baseline_label,
         color=COLORS[720],
         fontsize=7,
         va="center",
     )
+    for label, col, color in [
+        ("UVHF", "uvhf", UVHF),
+        (baseline_label, f"{baseline_prefix}_h720", COLORS[720]),
+    ]:
+        if label in settings.get("endpoint_label_y", {}):
+            ax.plot(
+                [722, 733],
+                [future.loc[720, col], settings["endpoint_label_y"][label]],
+                color=color,
+                lw=0.5,
+            )
     ax.set_xlim(-47, 802)
     ax.set_ylim(settings.get("main_ylim", [18.5, 83.5 if zoom else 56.5]))
     ax.set_xticks([0, 96, 192, 336, 480, 600, 720])

@@ -1,0 +1,44 @@
+{
+  "baseline": "TimeMixer",
+  "baseline_prefix": "timemixer",
+  "subtitle": "ETTh1 \u00b7 HUFL \u00b7 selected validation example",
+  "unit": "units",
+  "ylabel": "HUFL (original scale)",
+  "main_ylim": [
+    -21.520817340738095,
+    89.96968502626446
+  ],
+  "main_yticks": [
+    -15.0,
+    -0.0,
+    10.0,
+    25.0
+  ],
+  "prefix_ylim": [
+    -16.963401521641448,
+    25.865433006192934
+  ],
+  "prefix_yticks": [
+    -15.0,
+    -5.0,
+    10.0,
+    25.0
+  ],
+  "prefix_label_y": 26.630233622761406,
+  "horizon_y": {
+    "96": 34.22443384276318,
+    "192": 34.22443384276318,
+    "336": 26.953314123176057,
+    "720": 19.682194403588937
+  },
+  "annotation_y": -20.459707526173936,
+  "annotation_step": 29,
+  "connector_corner": [
+    0,
+    0
+  ],
+  "endpoint_label_y": {
+    "UVHF": 13.475094261435093,
+    "TimeMixer": 17.681497652561685
+  }
+}

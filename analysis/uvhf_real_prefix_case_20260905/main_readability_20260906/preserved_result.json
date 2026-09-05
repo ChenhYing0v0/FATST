@@ -1,0 +1,21 @@
+{
+  "status": "preserved_author_accepted_provisional_result",
+  "request_date": "2026-09-06",
+  "source_commit": "7888b99c",
+  "directory": "tail_audited/review_case_0",
+  "user_feedback": "基本符合要求；保留，继续评估完整720步主图的精度优势可读性。",
+  "sha256": {
+    "figure_settings.json": "82e6c678fb657e5dd4a5c9f5a6839c0a9ca898add26c773551c56afd2b548ace",
+    "selected_metrics.csv": "b2e1b747961ab8956352bac557f869d5ab586f83ab3858ffe54633cb2d1df1e4",
+    "figure_qa.json": "30a088596667970f04f2a974ec80aa83b241f9a3ce87515861cc7a4469c3d35e",
+    "uvhf_real_prefix_zoom.pdf": "550c2d28068136180881f296982358f2b6e13cea4a11c0c5b160a04f2b9adbbb",
+    "uvhf_real_prefix_zoom.png": "8ccb4bbbb93c8426d1366d595950a22dc4796b1240d9663d7e5e28a517489c6b",
+    "uvhf_real_prefix_zoom.svg": "e355e4d6d6513d4dd34d5dc2aea31c466a49e25acaa5174854375177589f0de5",
+    "reviewer_audit.md": "cf9742f899fd9aa1ca8804fdeef613c4877c14b320d17027232cf78afe8900a4",
+    "uvhf_real_prefix_zoom.tiff": "f12b32e2777c82740ddb4f93c0a35d3671ac185d7b546f6918d67ccd3ab1f86e",
+    "selected_pair_disagreement.csv": "a4c5bd70bf42c2c7fef72febc21e48caea043254ea5a90184cded259250c6424",
+    "numeric_audit.json": "c7e5bca7020866899647cbd2dc630b7a9350d3d7768f4aaaae8000499309da07",
+    "source_data.csv": "3789fbcbff802d68ce70c751be6800f980ae103ae4877164f89d5cefbca0596a",
+    "selection_audit.json": "98090f29f4f3cbf9b4b5c5fb316f2210a64fb4384606513b3e9941bfb4599062"
+  }
+}

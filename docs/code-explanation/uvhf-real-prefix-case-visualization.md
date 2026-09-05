@@ -57,3 +57,11 @@ CHPC 是统一轨迹的 prefix identity，不由较小 MSE 推导。数值 reque
 `check_final_case.py`独立载入UVHF checkpoint，验证原始GT/history、四H请求prefix identity、TimeMixer缓存与source逐元素一致、原尺度重新计算fit gate。最终输出目录`tail_audited/review_case_0`，最终布局由同目录figure_settings.json控制；该settings为完成视觉审计后的权威布局，重建source后应保留它。`plot_single_panel.py`增加可选baseline名称及CSV前缀，仅为使用TimeMixer标签，不改变历史DLinear默认行为。native source参考https://github.com/kwuking/TimeMixer，冻结版本及hash在numeric_audit.json中。
 
 `check_figure_exports.py`复用绘图函数构造画布，不改写导出文件；检查六条inset曲线与source逐点一致、主曲线未被inset覆盖、H标签与inset轴标签不相交、文本不越界，并重算各H MSE/MAE和各pair disagreement。读取SVG/PDF的可编辑文字/字体证据及PNG/TIFF尺寸、DPI，输出figure_qa.json和交付文件SHA-256。`build_final_case.py`重建source时保留已有figure_settings，但重置selection为待复审，避免把重新构建的数据静默视为已审计。
+
+## 完整720步可读性再评估（2026-09-06）
+
+`main_readability_20260906/evaluate_readability.py`保持既有三个gate，针对262个合格cases计算GT的FFT dominant period、prominence峰数与各时刻绝对误差优势；所有新列的输入、计算和意义定义在同目录protocol.md。结果区分“周期更稀疏”和“相同密度但误差优势更明显”，输出完整262行与候选排序。
+
+`render_candidates.py`结构复用既有builder/plot，明确将输出root路由至新目录并保持原BASE数据源，原版本不写入。相同相对数据range/留白映射保障全程展示尺度可比。可选`endpoint_label_y`只移动右端文字，并用细线接回真实endpoint，不变更曲线。`check_final_case.py --case-dir`为同一独立checkpoint重放新增输出目录参数；默认旧路径不变。preserved_result.json锁定此前交付文件hash；本轮仅给出备选，不变更冻结论文及模型。
+
+`audit_candidates.py`将旧export checker的CASE显式路由至新候选，复用数据/导出检查，并新增右端两个直接标签的bounding-box不重叠检查。读取三个独立numeric audit后，分别记录不推荐/推荐备选/次选的审阅状态；技术QA通过与是否推荐替换分开。最后重新计算旧版本所有文件hash，写preservation_check.json。复现顺序为evaluate_readability → render_candidates → check_final_case对各候选 → audit_candidates；渲染重建后需要重新审计。

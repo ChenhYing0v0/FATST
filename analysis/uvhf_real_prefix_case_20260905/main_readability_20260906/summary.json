@@ -1,0 +1,53 @@
+{
+  "existing_audit_cells": 15127,
+  "unchanged_gates_eligible": 262,
+  "channel_counts": {
+    "HUFL": 160,
+    "MUFL": 102
+  },
+  "dominant_period_range": [
+    24.0,
+    24.0
+  ],
+  "prominent_peaks_range": [
+    19,
+    30
+  ],
+  "less_dense_count": 4,
+  "clearer_same_density_count": 25,
+  "current_case": {
+    "origin": 947,
+    "channel": 2,
+    "min_gain": 0.0775115220284741,
+    "visibility96": 0.1257796178557186,
+    "persistent_fraction96": 0.6458333333333334,
+    "accuracy_eligible": true,
+    "gain_h96": 0.5703581566551466,
+    "gain_h192": 0.0775115220284741,
+    "gain_h336": 0.1309928081528744,
+    "gain_h720": 0.2645882952879469,
+    "fit_eligible": true,
+    "full_r2": 0.6610564014517717,
+    "full_corr": 0.8296533316447678,
+    "full_amplitude_ratio": 0.8940243784674744,
+    "full_bias_sigma": 0.1520678058907945,
+    "tail_r2": 0.6617658730697618,
+    "tail_corr": 0.819760405858897,
+    "tail_amplitude_ratio": 0.8361176873513964,
+    "tail_bias_sigma": 0.0998683597860545,
+    "last192_r2": 0.4552605484193628,
+    "last192_corr": 0.7436200341305353,
+    "last192_amplitude_ratio": 1.056009056438156,
+    "last192_bias_sigma": 0.0111043001861858,
+    "audited_eligible": true,
+    "channel_name": "MUFL",
+    "dominant_period": 24.0,
+    "prominent_peaks": 29,
+    "high_frequency_share": 0.9505916020048955,
+    "normalized_mae_advantage": 0.013185487136747583,
+    "visible_win_fraction": 0.14722222222222223,
+    "visible_loss_fraction": 0.12361111111111112,
+    "visible_net": 0.02361111111111111,
+    "tail_visible_net": 0.049479166666666685
+  }
+}
