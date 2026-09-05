@@ -15,6 +15,8 @@ from torch.utils.data import DataLoader
 
 
 def main() -> None:
+    # Preserve the native NumPy 1.x infinity alias under NumPy 2.x.
+    np.Inf = np.inf
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--horizon", type=int, required=True)
     parser.add_argument(
