@@ -65,3 +65,7 @@ CHPC 是统一轨迹的 prefix identity，不由较小 MSE 推导。数值 reque
 `render_candidates.py`结构复用既有builder/plot，明确将输出root路由至新目录并保持原BASE数据源，原版本不写入。相同相对数据range/留白映射保障全程展示尺度可比。可选`endpoint_label_y`只移动右端文字，并用细线接回真实endpoint，不变更曲线。`check_final_case.py --case-dir`为同一独立checkpoint重放新增输出目录参数；默认旧路径不变。preserved_result.json锁定此前交付文件hash；本轮仅给出备选，不变更冻结论文及模型。
 
 `audit_candidates.py`将旧export checker的CASE显式路由至新候选，复用数据/导出检查，并新增右端两个直接标签的bounding-box不重叠检查。读取三个独立numeric audit后，分别记录不推荐/推荐备选/次选的审阅状态；技术QA通过与是否推荐替换分开。最后重新计算旧版本所有文件hash，写preservation_check.json。复现顺序为evaluate_readability → render_candidates → check_final_case对各候选 → audit_candidates；渲染重建后需要重新审计。
+
+## ETTm1扩展
+
+按用户指定转到ETTm1，`train_timemixer.py`增加dataset、seq_len、batch_size参数；原ETTh1默认值不变。ETTm1设freq=t，采用上游L96/batch16配置。不同H的validation窗口数不同，导出按`len(ds)-(720-H)`裁到共享10801个origins，而非ETTh1专用2161；该裁剪只统一forecast origin范围，不裁短任何预测轨迹。参数、checkpoint来源及筛选门槛在ettm1_20260906/protocol.md冻结。

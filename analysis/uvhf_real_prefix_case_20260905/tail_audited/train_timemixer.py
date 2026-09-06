@@ -20,6 +20,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--horizon", type=int, required=True)
     parser.add_argument("--learning-rate", type=float, default=0.01)
+    parser.add_argument("--dataset", choices=["ETTh1", "ETTm1"], default="ETTh1")
+    parser.add_argument("--seq-len", type=int, default=720)
+    parser.add_argument("--batch-size", type=int, default=128)
     parser.add_argument(
         "--source", type=Path, default=Path("/home/yingch/TimeMixer")
     )
@@ -46,19 +49,21 @@ def main() -> None:
             "--model",
             "TimeMixer",
             "--data",
-            "ETTh1",
+            options.dataset,
             "--root_path",
             "/home/yingch/dataset/ETT-small/",
             "--data_path",
-            "ETTh1.csv",
+            f"{options.dataset}.csv",
+            "--freq",
+            "t" if options.dataset == "ETTm1" else "h",
             "--seq_len",
-            "720",
+            str(options.seq_len),
             "--label_len",
             "0",
             "--pred_len",
             str(options.horizon),
             "--batch_size",
-            "128",
+            str(options.batch_size),
             "--train_epochs",
             "10",
             "--patience",
@@ -81,6 +86,7 @@ def main() -> None:
     np.random.seed(2021)
     torch.manual_seed(2021)
     torch.cuda.manual_seed_all(2021)
+    torch.set_num_threads(4)
     args.use_gpu = True
     experiment = native_exp.Exp_Long_Term_Forecast(args)
     source = textwrap.dedent(
@@ -140,7 +146,7 @@ def main() -> None:
             )
     np.savez_compressed(
         folder / "predictions_validation.npz",
-        pred=np.concatenate(predictions)[:2161],
+        pred=np.concatenate(predictions)[: len(ds) - (720 - options.horizon)],
         train_mean=ds.scaler.mean_,
         train_std=ds.scaler.scale_,
     )
@@ -157,7 +163,7 @@ def main() -> None:
             (options.source / "models/TimeMixer.py").read_bytes()
         ).hexdigest(),
         "test_access": False,
-        "validation_export_origins": 2161,
+        "validation_export_origins": len(ds) - (720 - options.horizon),
         "validation_loader": "ordered, drop_last=False",
         "checkpoint_rule": "native minimum validation mean batch MSE",
     }
