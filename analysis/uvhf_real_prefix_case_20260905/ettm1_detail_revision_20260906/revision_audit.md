@@ -11,3 +11,5 @@
 复现：python analysis/uvhf_real_prefix_case_20260905/ettm1_detail_revision_20260906/plot_refined.py --zoom --output analysis/uvhf_real_prefix_case_20260905/ettm1_detail_revision_20260906
 
 后续按用户确认，将inset标注改为两行Prefix inconsistency和Δ = 0.73。Δ是第69步四个TimeMixer预测的极差，不是完整prefix最大分歧。已重新检查导出与文字位置。
+
+最新修订：总标题改为Forecasting Performance and Prefix Consistency；恢复Mean cross-horizon disagreement整行。inset标注采用深蓝灰粗体、白底浅边框与加粗极差括线；上界扩至4.05为标注留白，不裁剪数据。主轴下边距0.195，MSE与分歧页脚分别0.087/0.038。首轮标注框接近曲线，增加顶部留白后再次目视检查并通过导出检查。此为内部呈现审计，非期刊接受保证。

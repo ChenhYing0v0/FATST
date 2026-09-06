@@ -61,13 +61,12 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
     )
     width_in, height_in = 183 / 25.4, (135 if zoom else 110) / 25.4
     fig, ax = plt.subplots(figsize=(width_in, height_in))
-    fig.subplots_adjust(left=0.08, right=0.98, bottom=0.16, top=0.79)
+    fig.subplots_adjust(left=0.08, right=0.98, bottom=0.195, top=0.79)
     fig.text(
         0.08,
         0.962,
-        "预测性能与前缀一致性",
+        "Forecasting Performance and Prefix Consistency",
         fontsize=10,
-        fontfamily="SimHei",
         weight="bold",
     )
     fig.text(
@@ -234,14 +233,18 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
         inset.plot(prefix.index, prefix.uvhf, color=uvhf_color, lw=1.25)
         inset.annotate(
             f"Prefix inconsistency\nΔ = {high - low:.2f}",
-            xy=(step, (low + high) / 2), xytext=(0.98, 0.94),
-            textcoords="axes fraction", ha="right", va="top", fontsize=6.5,
-            color="#505963", arrowprops={"arrowstyle": "-", "color": "#85909B", "lw": 0.65},
-            bbox={"facecolor": "#F8FAFC", "edgecolor": "none", "pad": 1.5},
+            xy=(step, high), xytext=(0.98, 0.96),
+            textcoords="axes fraction", ha="right", va="top", fontsize=7,
+            weight="bold", linespacing=1.35, color="#253B53",
+            arrowprops={"arrowstyle": "-", "color": "#253B53", "lw": 0.9,
+                        "connectionstyle": "angle,angleA=0,angleB=90,rad=3"},
+            bbox={"boxstyle": "round,pad=0.35", "facecolor": "white",
+                  "edgecolor": "#BCC8D4", "linewidth": 0.6},
+            zorder=20,
         )
-        inset.vlines(step, low, high, color="#505963", lw=0.85)
+        inset.vlines(step, low, high, color="#253B53", lw=1.35, zorder=12)
         inset.hlines(
-            [low, high], step - 1.5, step + 1.5, color="#505963", lw=0.85
+            [low, high], step - 1.8, step + 1.8, color="#253B53", lw=1.35, zorder=12
         )
         inset.set(
             xlim=(1, 96),
@@ -300,13 +303,18 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
     gain_text = "    ".join(f"H{h}: −{gains.loc[h]:.1f}%" for h in HORIZONS)
     fig.text(
         0.08,
-        0.055,
+        0.087,
         f"MSE vs {baseline_label}",
         color=truth_color,
         weight="bold",
         fontsize=7,
     )
-    fig.text(0.27, 0.055, gain_text, color=uvhf_color, weight="bold", fontsize=7)
+    fig.text(0.27, 0.087, gain_text, color=uvhf_color, weight="bold", fontsize=7)
+    fig.text(
+        0.08, 0.038,
+        f"Mean cross-horizon disagreement: {baseline_label} {pairs.chpd_raw.mean():.2f} {unit}  |  UVHF 0 (identical prefixes)",
+        fontsize=7, color="#252A31",
+    )
     assert len(fig.axes) == 1
     stem = "uvhf_real_prefix_zoom" if zoom else "uvhf_real_prefix_single"
     fig.savefig(output / f"{stem}.pdf")
