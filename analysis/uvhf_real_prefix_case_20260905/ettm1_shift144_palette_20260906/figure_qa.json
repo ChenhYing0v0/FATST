@@ -1,0 +1,62 @@
+{
+  "status": "PASS for selected-case illustration",
+  "date": "2026-09-06",
+  "backend": "Python matplotlib",
+  "dimensions_mm": [
+    183,
+    135
+  ],
+  "main_axes": 1,
+  "embedded_prefix_axes": 1,
+  "six_inset_curves_equal_source": true,
+  "main_trajectory_not_occluded_by_inset": true,
+  "horizon_labels_clear_of_inset_labels": true,
+  "figure_text_inside_canvas": true,
+  "metrics_recalculated_from_csv": true,
+  "mean_pairwise_disagreement_raw": 0.22732555881195285,
+  "editable_svg_text_elements": 46,
+  "pdf_embedded_truetype": true,
+  "exports": {
+    "png": {
+      "pixels": [
+        2161,
+        1594
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "tiff": {
+      "pixels": [
+        7204,
+        5314
+      ],
+      "dpi": [
+        1000.0,
+        1000.0
+      ]
+    }
+  },
+  "source_preflight": {
+    "PASS": 13,
+    "WARN": 1,
+    "FAIL": 0,
+    "warning_resolution": "Static width detector cannot resolve variables; actual figure and exports verified as 183 x 135 mm. Final submission must follow target journal specifications."
+  },
+  "visual_review": "Color-only revision inspected; black truth, vermilion UVHF, blue H720, muted shorter horizons; source bytes unchanged.",
+  "sha256": {
+    "figure_settings.json": "bc87a2003b0ebc860c8334cfdd9aa1dc4bed4acaadb338cde14ac36666c39222",
+    "numeric_audit.json": "dd9e7cb455d79a626e0e624415940c0f2e37b662fe48c59e8b1aecd69f857918",
+    "segment_metrics.csv": "a5df27e627f58c9ede90f0bd7a472b8687e10f3370b6496670f0646653566726",
+    "selected_metrics.csv": "6fa1ba312af65ead935f7c4f1f1fc45a084ffd181ad1a22e92e35a5ab4b8d471",
+    "selected_pair_disagreement.csv": "36d294bf6ca5bde382893430900b8b6c9608d9200c96851afba0d0170fd0c8ef",
+    "selection_audit.json": "85f04d420f66f2fcaa5f05a9e092203233b4efd9bdf13413d45580a6a47c04cf",
+    "source_data.csv": "6609a6a3a0f9da14c7cf16a3e6cbea27136b65b9922b67ecd85c76ae368d82ea",
+    "uvhf_real_prefix_zoom.pdf": "3216c1e71d3752a8be4bcdcf09a4f2d25adf6c353dac412ab9842c7dda7bf9d4",
+    "uvhf_real_prefix_zoom.png": "e6b07704d61b1c2841232c28b8b25711135e1d6eb647c08a298c60331ad5f7df",
+    "uvhf_real_prefix_zoom.svg": "806b9a0e8486e79af055ff54e3a36477d009f28ca18330b37ad152e0144d5c09",
+    "uvhf_real_prefix_zoom.tiff": "7263654a9c8038d39f0a994ac2a0944f8496d6684b01b0290cdd59532f083d1e"
+  },
+  "source_bytes_unchanged": true
+}

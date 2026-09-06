@@ -28,6 +28,10 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
     settings = (
         json.loads(settings_path.read_text()) if settings_path.exists() else {}
     )
+    palette = settings.get("palette", {})
+    truth_color = palette.get("ground_truth", TRUTH)
+    uvhf_color = palette.get("uvhf", UVHF)
+    horizon_colors = {h: palette.get(str(h), COLORS[h]) for h in HORIZONS}
     source = pd.read_csv(output / "source_data.csv")
     future = source[source.step > 0].set_index("step")
     history = source[(source.step >= -47) & (source.step <= 0)]
@@ -76,14 +80,14 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
         color="#626A73",
     )
     handles = [
-        Line2D([], [], color=TRUTH, lw=1.15, label="Ground truth"),
-        Line2D([], [], color=UVHF, lw=1.45, label="UVHF (one model)"),
+        Line2D([], [], color=truth_color, lw=1.15, label="Ground truth"),
+        Line2D([], [], color=uvhf_color, lw=1.45, label="UVHF (one model)"),
     ]
     handles += [
         Line2D(
             [],
             [],
-            color=COLORS[h],
+            color=horizon_colors[h],
             marker=MARKERS[h],
             lw=1,
             markersize=3,
@@ -108,13 +112,13 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
     for h in HORIZONS:
         ax.axvline(h, color="#D4D9DD", ls=(0, (2, 3)), lw=0.6, zorder=0)
     ax.plot(history.step, history.history, color="#A0A6AD", lw=0.95)
-    ax.plot(future.index, future.ground_truth, color=TRUTH, lw=1.05, zorder=3)
+    ax.plot(future.index, future.ground_truth, color=truth_color, lw=1.05, zorder=3)
     for j, h in enumerate(reversed(HORIZONS)):
         values = future[f"{baseline_prefix}_h{h}"].iloc[:h]
         ax.plot(
             values.index,
             values,
-            color=COLORS[h],
+            color=horizon_colors[h],
             lw=0.95,
             marker=MARKERS[h],
             markersize=2.5,
@@ -127,12 +131,12 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
                 pe.Normal(),
             ],
         )
-    ax.plot(future.index, future.uvhf, color=UVHF, lw=1.4, zorder=8)
+    ax.plot(future.index, future.uvhf, color=uvhf_color, lw=1.4, zorder=8)
     ax.scatter(
         HORIZONS,
         future.loc[list(HORIZONS), "uvhf"],
         s=14,
-        color=UVHF,
+        color=uvhf_color,
         edgecolor="white",
         linewidth=0.45,
         zorder=9,
@@ -199,7 +203,7 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
         735,
         settings.get("endpoint_label_y", {}).get("UVHF", future.loc[720, "uvhf"]),
         "UVHF",
-        color=UVHF,
+        color=uvhf_color,
         fontsize=7,
         weight="bold",
         va="center",
@@ -210,13 +214,13 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
             baseline_label, future.loc[720, f"{baseline_prefix}_h720"]
         ),
         baseline_label,
-        color=COLORS[720],
+        color=horizon_colors[720],
         fontsize=7,
         va="center",
     )
     for label, col, color in [
-        ("UVHF", "uvhf", UVHF),
-        (baseline_label, f"{baseline_prefix}_h720", COLORS[720]),
+        ("UVHF", "uvhf", uvhf_color),
+        (baseline_label, f"{baseline_prefix}_h720", horizon_colors[720]),
     ]:
         if label in settings.get("endpoint_label_y", {}):
             ax.plot(
@@ -239,12 +243,12 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
         inset = ax.inset_axes([0.49, 0.50, 0.49, 0.47], zorder=15)
         prefix = future.loc[1:96]
         inset.set_facecolor("#F8FAFC")
-        inset.plot(prefix.index, prefix.ground_truth, color=TRUTH, lw=0.9)
+        inset.plot(prefix.index, prefix.ground_truth, color=truth_color, lw=0.9)
         for j, h in enumerate(HORIZONS):
             inset.plot(
                 prefix.index,
                 prefix[f"{baseline_prefix}_h{h}"],
-                color=COLORS[h],
+                color=horizon_colors[h],
                 lw=0.85,
                 marker=MARKERS[h],
                 markevery=[10 + j * 4, step - 1, 90 - j * 4],
@@ -252,7 +256,7 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
                 markeredgecolor="white",
                 markeredgewidth=0.3,
             )
-        inset.plot(prefix.index, prefix.uvhf, color=UVHF, lw=1.25)
+        inset.plot(prefix.index, prefix.uvhf, color=uvhf_color, lw=1.25)
         inset.axvline(step, color="#AAB2BA", ls=":", lw=0.6)
         inset.vlines(step, low, high, color="#505963", lw=0.85)
         inset.hlines(
@@ -317,11 +321,11 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
         0.08,
         0.12,
         f"MSE vs {baseline_label}",
-        color=TRUTH,
+        color=truth_color,
         weight="bold",
         fontsize=7,
     )
-    fig.text(0.27, 0.12, gain_text, color=UVHF, weight="bold", fontsize=7)
+    fig.text(0.27, 0.12, gain_text, color=uvhf_color, weight="bold", fontsize=7)
     fig.text(
         0.08,
         0.077,
