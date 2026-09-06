@@ -1,0 +1,25 @@
+{
+  "status": "user_accepted_paper_usable_figure_frozen_insertion_pending",
+  "date": "2026-09-06",
+  "source_commit": "7a97d9d0f5b2f0eca630c6aaa9c8f53cd17fb3c1",
+  "source_directory": "analysis/uvhf_real_prefix_case_20260905/ettm1_detail_revision_20260906",
+  "existing_submission_files_unchanged": true,
+  "manuscript_insertion_performed": false,
+  "sha256": {
+    "figure_forecasting_performance_prefix_consistency_source/figure_settings.json": "65b4ebc9b3025ceb84463546aaf057d5f22a676d84a65b54c43e5d6edf8e7101",
+    "figure_forecasting_performance_prefix_consistency_source/selected_metrics.csv": "6fa1ba312af65ead935f7c4f1f1fc45a084ffd181ad1a22e92e35a5ab4b8d471",
+    "figure_forecasting_performance_prefix_consistency_source/figure_qa.json": "4f85adfd9a733ff6196151338108960f64eaf526250d0b75c5a8d7d019bc5d7f",
+    "figure_forecasting_performance_prefix_consistency_source/segment_metrics.csv": "a5df27e627f58c9ede90f0bd7a472b8687e10f3370b6496670f0646653566726",
+    "figure_forecasting_performance_prefix_consistency_source/README.md": "d97716b2c503ef0d15e9dba9265907c0ce3d4718154d237fabcde599d62d13cf",
+    "figure_forecasting_performance_prefix_consistency_source/selected_pair_disagreement.csv": "36d294bf6ca5bde382893430900b8b6c9608d9200c96851afba0d0170fd0c8ef",
+    "figure_forecasting_performance_prefix_consistency_source/revision_audit.md": "8bb79b170807fb6356c50d9c88f92118cfce4396abc0a362e55a75c44620cf3f",
+    "figure_forecasting_performance_prefix_consistency_source/plot_refined.py": "fee88c626651bfe4ff81c06aabbe43d9a1ac80da7db191acc7de919a6681cf09",
+    "figure_forecasting_performance_prefix_consistency_source/numeric_audit.json": "dd9e7cb455d79a626e0e624415940c0f2e37b662fe48c59e8b1aecd69f857918",
+    "figure_forecasting_performance_prefix_consistency_source/source_data.csv": "6609a6a3a0f9da14c7cf16a3e6cbea27136b65b9922b67ecd85c76ae368d82ea",
+    "figure_forecasting_performance_prefix_consistency_source/selection_audit.json": "85f04d420f66f2fcaa5f05a9e092203233b4efd9bdf13413d45580a6a47c04cf",
+    "figure_forecasting_performance_prefix_consistency.pdf": "4a137c910a425e93d18a93c95845f8552e93f3ad923c2a94b724014a64dbdab0",
+    "figure_forecasting_performance_prefix_consistency.svg": "b7bbcd491105e01820a11222cb8b48e68fde35dfad95d5131f753a059e4c6c33",
+    "figure_forecasting_performance_prefix_consistency.png": "3bc17d129ebd264a2e64f9dfcf3afeed3039e20d18b07d466f1b0cab7cc867ef",
+    "figure_forecasting_performance_prefix_consistency.tiff": "2d4a01527f023b2751f275f9a47645a4ad0442851db06e5d3f2121f0f44421d0"
+  }
+}

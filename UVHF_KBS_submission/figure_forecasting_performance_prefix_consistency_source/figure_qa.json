@@ -1,0 +1,63 @@
+{
+  "status": "PASS for selected-case illustration",
+  "date": "2026-09-06",
+  "backend": "Python matplotlib",
+  "dimensions_mm": [
+    183,
+    135
+  ],
+  "main_axes": 1,
+  "embedded_prefix_axes": 1,
+  "six_inset_curves_equal_source": true,
+  "main_trajectory_not_occluded_by_inset": true,
+  "horizon_labels_clear_of_inset_labels": true,
+  "figure_text_inside_canvas": true,
+  "metrics_recalculated_from_csv": true,
+  "mean_pairwise_disagreement_raw": 0.22732555881195285,
+  "editable_svg_text_elements": 45,
+  "pdf_embedded_truetype": true,
+  "exports": {
+    "png": {
+      "pixels": [
+        2161,
+        1594
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "tiff": {
+      "pixels": [
+        7204,
+        5314
+      ],
+      "dpi": [
+        1000.0,
+        1000.0
+      ]
+    }
+  },
+  "source_preflight": {
+    "PASS": 13,
+    "WARN": 1,
+    "FAIL": 0,
+    "warning_resolution": "Static width detector cannot resolve variables; actual figure and exports verified as 183 x 135 mm. Final submission must follow target journal specifications."
+  },
+  "visual_review": "English title, bold inset callout with added upper headroom, restored disagreement footer inspected.",
+  "sha256": {
+    "figure_settings.json": "65b4ebc9b3025ceb84463546aaf057d5f22a676d84a65b54c43e5d6edf8e7101",
+    "numeric_audit.json": "dd9e7cb455d79a626e0e624415940c0f2e37b662fe48c59e8b1aecd69f857918",
+    "plot_refined.py": "fee88c626651bfe4ff81c06aabbe43d9a1ac80da7db191acc7de919a6681cf09",
+    "revision_audit.md": "1e9b7d49e39bab6d03ce274c16ee31682ecdb63769d795c821d110b478ca5dd4",
+    "segment_metrics.csv": "a5df27e627f58c9ede90f0bd7a472b8687e10f3370b6496670f0646653566726",
+    "selected_metrics.csv": "6fa1ba312af65ead935f7c4f1f1fc45a084ffd181ad1a22e92e35a5ab4b8d471",
+    "selected_pair_disagreement.csv": "36d294bf6ca5bde382893430900b8b6c9608d9200c96851afba0d0170fd0c8ef",
+    "selection_audit.json": "85f04d420f66f2fcaa5f05a9e092203233b4efd9bdf13413d45580a6a47c04cf",
+    "source_data.csv": "6609a6a3a0f9da14c7cf16a3e6cbea27136b65b9922b67ecd85c76ae368d82ea",
+    "uvhf_real_prefix_zoom.pdf": "4a137c910a425e93d18a93c95845f8552e93f3ad923c2a94b724014a64dbdab0",
+    "uvhf_real_prefix_zoom.png": "3bc17d129ebd264a2e64f9dfcf3afeed3039e20d18b07d466f1b0cab7cc867ef",
+    "uvhf_real_prefix_zoom.svg": "b7bbcd491105e01820a11222cb8b48e68fde35dfad95d5131f753a059e4c6c33",
+    "uvhf_real_prefix_zoom.tiff": "2d4a01527f023b2751f275f9a47645a4ad0442851db06e5d3f2121f0f44421d0"
+  }
+}
