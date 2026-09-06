@@ -77,3 +77,9 @@ ETTm1启动时发现native Exp_Basic会覆盖外部CUDA_VISIBLE_DEVICES，修正
 `render_cases.py`复用总图，xlabel明确每步15min，source仍完整720步，settings单独保存。`check_final_case.py`从selection的dataset选择ETTh1/ETTm1对应checkpoint、raw validation起点及baseline目录，其余独立请求、GT/history和预测缓存断言不变；ETTh1默认流程兼容。
 
 `collect_provenance.py`从4个完整训练日志解析epoch、steps、train_loss、validation_loss，核验10epochs及固定配置，按validation_loss最小行记录best_validation_epoch（native等权batch均值，非最终case MSE）；保存原始日志SHA256和实际physical_gpu。`audit_delivery.py`保留四例视觉审阅决定，复用导出/指标QA，新增15min时间单位与endpoint标签检查，写delivery.json。最终ETTm1选中origin2295/review_case_1；此前ETTh1交付保持不变。
+
+## ETTm1分段与前缀严格复审
+
+`ettm1_segments_20260906/search.py`使用已冻结全量UVHF缓存和四TimeMixer exports，对75607个cells逐变量向量化计算四H和不重叠区间1–96/97–192/193–336/337–720的MSE、MAE相对改善。仅评估覆盖完整区间的baseline，短H未定义区间不补值。字段mse_gain_a_b_hH、mae_gain_a_b_hH分别为1−UVHF_error/baseline_error；min_prefix_mse_gain对四baseline取最小值。visibility、持续分歧及更强full/tail gate定义在protocol；零方差fit记NaN并拒绝。原始原点均从34560+origin取未来。
+
+`build_cases.py`导出分离候选的source与metrics，复用ETTm1绘图结构，按原CSV设置变量名，浮点小尺度变量使用不重复ticks。`audit_selected.py`复用旧导出QA，额外从source重算10个有效区间–horizon组合的MSE/MAE，写segment_metrics.csv；独立checkpoint复用check_final_case.py。最终LUFL8897是作者侧推荐，旧HUFL2295推荐撤回、文件保留，未修改模型/数据/稿件。

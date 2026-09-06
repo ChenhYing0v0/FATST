@@ -1,0 +1,45 @@
+{
+  "baseline": "TimeMixer",
+  "baseline_prefix": "timemixer",
+  "subtitle": "ETTm1 \u00b7 LUFL \u00b7 selected validation example",
+  "unit": "units",
+  "ylabel": "LUFL (original scale)",
+  "xlabel": "Forecast step (15 min per step)",
+  "main_ylim": [
+    0.3672452236743713,
+    8.271285437449738
+  ],
+  "main_yticks": [
+    1.0,
+    1.7,
+    2.4,
+    3.1
+  ],
+  "prefix_ylim": [
+    1.3615000081062314,
+    3.2375000882148743
+  ],
+  "prefix_yticks": [
+    1.4,
+    2.0,
+    2.6,
+    3.2
+  ],
+  "prefix_label_y": 3.2710000896453857,
+  "horizon_y": {
+    "96": 4.319265330562054,
+    "192": 4.319265330562054,
+    "336": 3.803784447054965,
+    "720": 3.2883035635478763
+  },
+  "annotation_y": 0.44247185255741694,
+  "annotation_step": 24,
+  "connector_corner": [
+    0,
+    0
+  ],
+  "endpoint_label_y": {
+    "UVHF": 2.3040135329039195,
+    "TimeMixer": 2.005803543236981
+  }
+}
