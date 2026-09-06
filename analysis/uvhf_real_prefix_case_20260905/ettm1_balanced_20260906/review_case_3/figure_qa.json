@@ -1,0 +1,63 @@
+{
+  "status": "PASS for selected-case illustration",
+  "date": "2026-09-06",
+  "backend": "Python matplotlib",
+  "dimensions_mm": [
+    183,
+    135
+  ],
+  "main_axes": 1,
+  "embedded_prefix_axes": 1,
+  "six_inset_curves_equal_source": true,
+  "main_trajectory_not_occluded_by_inset": true,
+  "horizon_labels_clear_of_inset_labels": true,
+  "figure_text_inside_canvas": true,
+  "metrics_recalculated_from_csv": true,
+  "mean_pairwise_disagreement_raw": 1.5179218487538426,
+  "editable_svg_text_elements": 46,
+  "pdf_embedded_truetype": true,
+  "exports": {
+    "png": {
+      "pixels": [
+        2161,
+        1594
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "tiff": {
+      "pixels": [
+        7204,
+        5314
+      ],
+      "dpi": [
+        1000.0,
+        1000.0
+      ]
+    }
+  },
+  "source_preflight": {
+    "PASS": 13,
+    "WARN": 1,
+    "FAIL": 0,
+    "warning_resolution": "Static width detector cannot resolve variables; actual figure and exports verified as 183 x 135 mm. Final submission must follow target journal specifications."
+  },
+  "visual_review": "Balanced MUFL3738 selected. Both models have skill; local sharp trough errors remain. See ../reviewer_audit.md.",
+  "sha256": {
+    "figure_settings.json": "f39db83b3d2c087a7957d97f9aa70b4f0bf3fb74ed17a51d4e565683e24cf6f5",
+    "numeric_audit.json": "ff41d4136c8402907902e1290dcb4141ec722f81cdf161823573f5a24e547912",
+    "segment_metrics.csv": "08a58282a1a6c718c40620e4fd055bfe0a347b4082b422dc5888f52b568ac4e5",
+    "selected_metrics.csv": "270b86bbe3a92c509bcc7df4a8743fc9d6ac50492aecc7d1e84ee45c6fe968d3",
+    "selected_pair_disagreement.csv": "fe89041b7ba9ed7fc7b1147aa559046ef6fd7e19bf5b21057769a73af7d6b04a",
+    "selection_audit.json": "a7428b712a916d5ffdd062c31352c3a3ee3a58b42831f15387c9e6968ca9d164",
+    "source_data.csv": "437b43ed5ad523fc613f011670bbff865b5233b2f6973e812b9931dc9032bb2b",
+    "uvhf_real_prefix_zoom.pdf": "0aaafe7d0eb98b0a0428a68f91da99ccd050eedfb3c1067ea5fe21f7e35c66bd",
+    "uvhf_real_prefix_zoom.png": "a4f81eebd527d005ef5226ffc8086aa391c5b587e1430bd628c486c87b0d98a1",
+    "uvhf_real_prefix_zoom.svg": "d017cf236f01f3b1189af4d67e78870fb0092d2df145ad17f6c9dd9d58d1fcbb",
+    "uvhf_real_prefix_zoom.tiff": "a607572603198c42edc80546c70b58afa8d5d202ea7f9c2ed8d297ba143bb5aa"
+  },
+  "segment_combinations_verified": 10,
+  "baseline_skill_recalculated": true
+}

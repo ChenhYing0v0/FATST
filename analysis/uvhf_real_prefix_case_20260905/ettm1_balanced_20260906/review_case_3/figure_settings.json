@@ -1,0 +1,45 @@
+{
+  "baseline": "TimeMixer",
+  "baseline_prefix": "timemixer",
+  "subtitle": "ETTm1 \u00b7 MUFL \u00b7 selected validation example",
+  "unit": "units",
+  "ylabel": "MUFL (original scale)",
+  "xlabel": "Forecast step (15 min per step)",
+  "main_ylim": [
+    -20.4851881271525,
+    66.52248943386473
+  ],
+  "main_yticks": [
+    -13.5,
+    -5.7,
+    2.1,
+    10.0
+  ],
+  "prefix_ylim": [
+    -14.70574169349231,
+    16.3694297490933
+  ],
+  "prefix_yticks": [
+    -14.7,
+    -4.3,
+    6.0,
+    16.4
+  ],
+  "prefix_label_y": 16.924343524853757,
+  "horizon_y": {
+    "96": 23.018650653356126,
+    "192": 23.018650653356126,
+    "336": 17.34423689937674,
+    "720": 11.66982314539735
+  },
+  "annotation_y": -19.657093368923533,
+  "annotation_step": 30,
+  "connector_corner": [
+    0,
+    0
+  ],
+  "endpoint_label_y": {
+    "UVHF": -2.1006325823380907,
+    "TimeMixer": -5.383328257544166
+  }
+}

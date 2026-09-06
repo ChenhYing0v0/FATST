@@ -83,3 +83,9 @@ ETTm1启动时发现native Exp_Basic会覆盖外部CUDA_VISIBLE_DEVICES，修正
 `ettm1_segments_20260906/search.py`使用已冻结全量UVHF缓存和四TimeMixer exports，对75607个cells逐变量向量化计算四H和不重叠区间1–96/97–192/193–336/337–720的MSE、MAE相对改善。仅评估覆盖完整区间的baseline，短H未定义区间不补值。字段mse_gain_a_b_hH、mae_gain_a_b_hH分别为1−UVHF_error/baseline_error；min_prefix_mse_gain对四baseline取最小值。visibility、持续分歧及更强full/tail gate定义在protocol；零方差fit记NaN并拒绝。原始原点均从34560+origin取未来。
 
 `build_cases.py`导出分离候选的source与metrics，复用ETTm1绘图结构，按原CSV设置变量名，浮点小尺度变量使用不重复ticks。`audit_selected.py`复用旧导出QA，额外从source重算10个有效区间–horizon组合的MSE/MAE，写segment_metrics.csv；独立checkpoint复用check_final_case.py。最终LUFL8897是作者侧推荐，旧HUFL2295推荐撤回、文件保留，未修改模型/数据/稿件。
+
+## ETTm1平衡案例筛选
+
+`ettm1_balanced_20260906/select_balanced.py`连接既有全量segment audit，新增TimeMixer每H full/prefix与H720 tail/last192 R2，定义baseline_competent、gain上限和修订后的prefix可见门槛；完整新增列在baseline_audit.csv，避免重复已有60MB表。centrality_distance为合格集中七个字段百分位距0.5的L1距离，非随机抽样代表性指标。3760最后192步反转后追加3738的规则公开记录并写回脚本。
+
+`render_balanced.py`路由既有builder到新输出目录，数据/plot方法不变。`audit_balanced.py`从source复算10个有效区间组合并核验prefix及baseline skill，复用export QA。最终3738保持双方有合理skill、温和差距，未改变Main-I引用数值或使用其checkpoint。
