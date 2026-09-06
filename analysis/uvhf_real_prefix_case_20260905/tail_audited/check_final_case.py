@@ -21,19 +21,23 @@ from evaluate_weather import fit_metrics
 def main(case: Path = OUT / "review_case_0") -> None:
     torch.set_num_threads(4)
     selection = json.loads((case / "selection_audit.json").read_text())
+    dataset = selection["dataset"]
+    assert dataset in ("ETTh1", "ETTm1")
+    key = dataset.lower()
+    validation_start = 34560 if dataset == "ETTm1" else 8640
     o = int(selection["selected"]["origin"])
     c = int(selection["selected"]["channel"])
     args = exporter.load_effective_args(
-        BASE / "checkpoints/etth1/effective_config.json",
-        "ETTh1",
+        BASE / f"checkpoints/{key}/effective_config.json",
+        dataset,
         Path("/Users/river/PaperResearch/Project/datasets"),
         OUT,
         "cpu",
     )
     official = exporter.train_repo.build_official_args(
-        args, exporter.train_repo.OFFICIAL_PRESETS["ETTh1"][720]
+        args, exporter.train_repo.OFFICIAL_PRESETS[dataset][720]
     )
-    checkpoint = BASE / "checkpoints/etth1/checkpoint.pt"
+    checkpoint = BASE / f"checkpoints/{key}/checkpoint.pt"
     assert (
         hashlib.sha256(checkpoint.read_bytes()).hexdigest()
         == selection["uvhf_checkpoint_sha256"]
@@ -68,15 +72,15 @@ def main(case: Path = OUT / "review_case_0") -> None:
     gap = float(np.max(abs(raw_replay - u)))
     assert gap < 1e-4
     raw = pd.read_csv(
-        "/Users/river/PaperResearch/Project/datasets/ETT-small/ETTh1.csv"
+        f"/Users/river/PaperResearch/Project/datasets/ETT-small/{dataset}.csv"
     )
     np.testing.assert_allclose(
         source.loc[-719:0, "history"],
-        raw.iloc[8640 + o - 720 : 8640 + o, c + 1],
+        raw.iloc[validation_start + o - 720 : validation_start + o, c + 1],
         atol=1e-10,
     )
     np.testing.assert_allclose(
-        y, raw.iloc[8640 + o : 8640 + o + 720, c + 1], atol=1e-10
+        y, raw.iloc[validation_start + o : validation_start + o + 720, c + 1], atol=1e-10
     )
     measured = {
         k: float(v[0]) for k, v in fit_metrics(u[None], y[None]).items()
@@ -91,7 +95,8 @@ def main(case: Path = OUT / "review_case_0") -> None:
     )
     baseline_checks = {}
     for h in [96, 192, 336, 720]:
-        folder = BASE / f"matched_checkpoints/timemixer/h{h}"
+        baseline_key = "ettm1_timemixer" if dataset == "ETTm1" else "timemixer"
+        folder = BASE / f"matched_checkpoints/{baseline_key}/h{h}"
         a = json.loads((folder / "audit.json").read_text())
         cache = np.load(folder / "predictions_validation.npz")
         pred = (

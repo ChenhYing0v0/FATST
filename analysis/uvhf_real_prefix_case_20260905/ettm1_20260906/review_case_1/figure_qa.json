@@ -1,0 +1,63 @@
+{
+  "status": "PASS for selected-case illustration",
+  "date": "2026-09-06",
+  "backend": "Python matplotlib",
+  "dimensions_mm": [
+    183,
+    135
+  ],
+  "main_axes": 1,
+  "embedded_prefix_axes": 1,
+  "six_inset_curves_equal_source": true,
+  "main_trajectory_not_occluded_by_inset": true,
+  "horizon_labels_clear_of_inset_labels": true,
+  "figure_text_inside_canvas": true,
+  "metrics_recalculated_from_csv": true,
+  "mean_pairwise_disagreement_raw": 1.2880776565909284,
+  "editable_svg_text_elements": 46,
+  "pdf_embedded_truetype": true,
+  "exports": {
+    "png": {
+      "pixels": [
+        2161,
+        1594
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "tiff": {
+      "pixels": [
+        7204,
+        5314
+      ],
+      "dpi": [
+        1000.0,
+        1000.0
+      ]
+    }
+  },
+  "source_preflight": {
+    "PASS": 13,
+    "WARN": 1,
+    "FAIL": 0,
+    "warning_resolution": "Static width detector cannot resolve variables; actual figure and exports verified as 183 x 135 mm. Final submission must follow target journal specifications."
+  },
+  "visual_review": "PASS for selected ETTm1 HUFL origin2295. Fewer cycles across720 steps; visible late TimeMixer bias; prefix disagreement retained. Partial peak underestimation remains. See ../reviewer_audit.md.",
+  "sha256": {
+    "figure_settings.json": "02d32798a5b0c49ff4227e3b7b7a3669438cb40825daf72f8d0747cd55ed953a",
+    "numeric_audit.json": "23ff9e5fd31b34a01e829e678ae7e0cd8c46785705188285e92d964f910365a3",
+    "selected_metrics.csv": "07e18467c8a6fd7467892e75ad329054b1169bb0bc14476f774ef84db62b7099",
+    "selected_pair_disagreement.csv": "e0aa201f7f44758a9fb452c708f63d1bedc09afd771e38b52bb162db4987c2c4",
+    "selection_audit.json": "fcdc183c68e5043d2732fd3496b27b7011f736d992d8b4a7bc33088a1f18c03d",
+    "source_data.csv": "0e74f12a442e627234071b901d659108a6aac4e3c02b6ffc9b32f40fc0d4d63c",
+    "uvhf_real_prefix_zoom.pdf": "2e93249f63c01c0f13929906cddbaf65eb30215840561722c5454082cccbc790",
+    "uvhf_real_prefix_zoom.png": "c911d35a048171606af47344a5ad028292bfc7d81754f6b2c2dcbd5089b49ca3",
+    "uvhf_real_prefix_zoom.svg": "f3bf0a44dfdb0a654597bcdcac9c09c03d76ea27fe9d9dbd84687f5dc28e7a40",
+    "uvhf_real_prefix_zoom.tiff": "8afc7cd250ace930d624103e6a3fa0674ef98a00bf272b522bac1ca91a995956"
+  },
+  "time_unit": "15 minutes per step",
+  "forecast_duration_hours": 180,
+  "endpoint_labels_do_not_overlap": true
+}

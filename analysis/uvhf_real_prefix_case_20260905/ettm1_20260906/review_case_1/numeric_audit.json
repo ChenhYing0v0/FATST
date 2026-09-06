@@ -1,0 +1,83 @@
+{
+  "raw_gt_and_history_aligned": true,
+  "selected_origin": 2295,
+  "channel": 0,
+  "independent_request_max_gap": {
+    "96": 0.0,
+    "192": 0.0,
+    "336": 0.0,
+    "720": 0.0
+  },
+  "cached_vs_replay_raw_max_gap": 7.399910991523484e-06,
+  "fit_metrics_raw_recalculated": {
+    "full_r2": 0.9101059945136283,
+    "full_corr": 0.9575186178006032,
+    "full_amplitude_ratio": 0.8823971862527866,
+    "full_bias_sigma": 0.033055702130736796,
+    "tail_r2": 0.9101551350990947,
+    "tail_corr": 0.9652310643607861,
+    "tail_amplitude_ratio": 0.9481238249923178,
+    "tail_bias_sigma": 0.145681896161298,
+    "last192_r2": 0.9484596962091772,
+    "last192_corr": 0.9926710932750475,
+    "last192_amplitude_ratio": 0.9133967546744054,
+    "last192_bias_sigma": 0.1750765045748055
+  },
+  "native96_baselines": {
+    "96": {
+      "checkpoint_sha256": "93d61b7281379898b0e2ae49e182f20390899378537b65bbb4957ed0abe43d23",
+      "torch": "2.9.0+cu128",
+      "python": "3.12.13 | packaged by Anaconda, Inc. | (main, Mar 19 2026, 20:20:58) [GCC 14.3.0]",
+      "cuda": "12.8",
+      "gpu": "NVIDIA GeForce RTX 3090",
+      "native_source_commit": "e24610583b36fdd8c76cc17a8df4e65759a5f460",
+      "native_model_sha256": "817d62f4aac54c8566e560f6d3785856e31c8ee51460279ee3d0a4823f11d4be",
+      "test_access": false,
+      "validation_export_origins": 10801,
+      "validation_loader": "ordered, drop_last=False",
+      "checkpoint_rule": "native minimum validation mean batch MSE"
+    },
+    "192": {
+      "checkpoint_sha256": "bf21f1d3a5ada6f74100a891a36f95afc4a45e26c764144004258d9cde6d9fa3",
+      "torch": "2.9.0+cu128",
+      "python": "3.12.13 | packaged by Anaconda, Inc. | (main, Mar 19 2026, 20:20:58) [GCC 14.3.0]",
+      "cuda": "12.8",
+      "gpu": "NVIDIA GeForce RTX 3090",
+      "native_source_commit": "e24610583b36fdd8c76cc17a8df4e65759a5f460",
+      "native_model_sha256": "817d62f4aac54c8566e560f6d3785856e31c8ee51460279ee3d0a4823f11d4be",
+      "test_access": false,
+      "validation_export_origins": 10801,
+      "validation_loader": "ordered, drop_last=False",
+      "checkpoint_rule": "native minimum validation mean batch MSE"
+    },
+    "336": {
+      "checkpoint_sha256": "701f8564b4dce5284dff9954a9e583239767d180daa97740663b346c0cddabc3",
+      "torch": "2.9.0+cu128",
+      "python": "3.12.13 | packaged by Anaconda, Inc. | (main, Mar 19 2026, 20:20:58) [GCC 14.3.0]",
+      "cuda": "12.8",
+      "gpu": "NVIDIA GeForce RTX 3090",
+      "native_source_commit": "e24610583b36fdd8c76cc17a8df4e65759a5f460",
+      "native_model_sha256": "817d62f4aac54c8566e560f6d3785856e31c8ee51460279ee3d0a4823f11d4be",
+      "test_access": false,
+      "validation_export_origins": 10801,
+      "validation_loader": "ordered, drop_last=False",
+      "checkpoint_rule": "native minimum validation mean batch MSE"
+    },
+    "720": {
+      "checkpoint_sha256": "360462f8197e15ff97375a8c7488c0c836e6ddd4ff2231705ca5f4b6f4974baf",
+      "torch": "2.9.0+cu128",
+      "python": "3.12.13 | packaged by Anaconda, Inc. | (main, Mar 19 2026, 20:20:58) [GCC 14.3.0]",
+      "cuda": "12.8",
+      "gpu": "NVIDIA GeForce RTX 3090",
+      "native_source_commit": "e24610583b36fdd8c76cc17a8df4e65759a5f460",
+      "native_model_sha256": "817d62f4aac54c8566e560f6d3785856e31c8ee51460279ee3d0a4823f11d4be",
+      "test_access": false,
+      "validation_export_origins": 10801,
+      "validation_loader": "ordered, drop_last=False",
+      "checkpoint_rule": "native minimum validation mean batch MSE"
+    }
+  },
+  "new_test_access": false,
+  "future_label_input": "zeros",
+  "status": "numeric audit passed; see reviewer report for visual audit"
+}

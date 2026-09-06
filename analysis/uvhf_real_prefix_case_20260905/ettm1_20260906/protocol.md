@@ -15,3 +15,11 @@ narrative_gate=仅selected validation illustration，不是matched机制归因�
 启动审计修正：第一次bundle导入指定main失败（bundle仅有HEAD），未启动训练；随后按HEAD完成ff-only同步00fac229后启动。native Exp_Basic._acquire_device覆盖CUDA_VISIBLE_DEVICES，前三个模型实际共用GPU0，显存约1.3GB且训练正常；保留这三项，不重训或改其优化参数。设备选择修正为尊重launcher mask的cuda:0映射，H96安排空闲GPU1，同时终止仅负责排队H96的GPU0父shell，保留其正在训练的H720子进程。此变更只影响设备选择，不改模型/损失/数据/checkpoint选择。
 
 展示候选排序固定为visible_net降序、min_gain降序、visibility96降序，按origin至少间隔96取最多5个完整图审阅。统计沿用上一轮定义。若原256池无通过例，按原计划扩展全变量，不降低门槛。
+
+数据身份：本地与3090 ETTm1.csv SHA256一致，为6ce1759b1a18e3328421d5d75fadcb316c449fcd7cec32820c8dafda71986c9e。UVHF全10801×720×7 validation重放完成，用全零future占位；与旧256 pool的scaled最大差1.669e-6，未改冻结权重。该全量缓存仅准备备用；第一轮仍按预先规定的256池筛选。
+
+## Step9–10结果
+
+四H训练全部完成10epochs并返回完整10801-origin validation export。首轮256池得到57个全gate通过例，经origin间隔96得到4个完整图审阅候选；origin6657/10703因后程深谷失配不推荐，origin2392因H192优势较小作次选，最终选择HUFL/origin2295。full/tail/last192 R2分别.910106/.910155/.948460，四H MSE降低30.6%/41.4%/32.5%/56.7%；visibility96=.084255。独立四H UVHF请求prefix max gap=0，数字和导出QA通过。
+
+effectiveness_gate=selected-case fidelity passed；decision=交付review_case_1，不变更paper-core机制状态。该图为post-hoc validation case，未进行新test访问，也不替代完整benchmark。failure_attribution：显示代理排名第一不能保证后程完整贴合，已回退同一合格池进行全图复审，未继续扩大筛选或降低门槛。最终证据与其限制见reviewer_audit.md。

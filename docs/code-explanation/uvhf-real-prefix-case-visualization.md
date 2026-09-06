@@ -71,3 +71,9 @@ CHPC 是统一轨迹的 prefix identity，不由较小 MSE 推导。数值 reque
 按用户指定转到ETTm1，`train_timemixer.py`增加dataset、seq_len、batch_size参数；原ETTh1默认值不变。ETTm1设freq=t，采用上游L96/batch16配置。不同H的validation窗口数不同，导出按`len(ds)-(720-H)`裁到共享10801个origins，而非ETTh1专用2161；该裁剪只统一forecast origin范围，不裁短任何预测轨迹。参数、checkpoint来源及筛选门槛在ettm1_20260906/protocol.md冻结。
 
 ETTm1启动时发现native Exp_Basic会覆盖外部CUDA_VISIBLE_DEVICES，修正进程内device acquisition为cuda:0，使其指向launcher选定的物理卡；不更改上游文件或训练算法。前三项已经开始的GPU0运行保留，H96使用GPU1。该操作与设备状态记录于本轮protocol。
+
+`ettm1_20260906/replay_uvhf.py`通过官方参数构造冻结ETTm1模型，逐batch32重放全部10801个validation origins/all7channels；缓存为raw/ettm1_all_uvhf.npy，不纳入Git。与旧256例prediction_scaled校验后记录最大差。`evaluate_pool.py`先使用旧HUFL256池逐origin对齐四TimeMixer的完整H预测，计算原有hard gate和完整720步visible_net，保留全部池结果并导出最多5个间隔候选。
+
+`render_cases.py`复用总图，xlabel明确每步15min，source仍完整720步，settings单独保存。`check_final_case.py`从selection的dataset选择ETTh1/ETTm1对应checkpoint、raw validation起点及baseline目录，其余独立请求、GT/history和预测缓存断言不变；ETTh1默认流程兼容。
+
+`collect_provenance.py`从4个完整训练日志解析epoch、steps、train_loss、validation_loss，核验10epochs及固定配置，按validation_loss最小行记录best_validation_epoch（native等权batch均值，非最终case MSE）；保存原始日志SHA256和实际physical_gpu。`audit_delivery.py`保留四例视觉审阅决定，复用导出/指标QA，新增15min时间单位与endpoint标签检查，写delivery.json。最终ETTm1选中origin2295/review_case_1；此前ETTh1交付保持不变。

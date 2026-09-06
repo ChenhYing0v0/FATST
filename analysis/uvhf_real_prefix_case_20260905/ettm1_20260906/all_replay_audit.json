@@ -1,0 +1,17 @@
+{
+  "checkpoint_sha256": "2e8c7e7c7d7545a4edfbe81be857299b6fea0dc7e944464803f273257ecb6948",
+  "origins": 10801,
+  "channels": 7,
+  "shape": [
+    10801,
+    720,
+    7
+  ],
+  "seconds": 38.267188916914165,
+  "cached_pool_scaled_max_gap": 1.6689300537109375e-06,
+  "future_labels": "zeros",
+  "new_training": false,
+  "new_test_access": false,
+  "torch": "2.5.0",
+  "numpy": "2.4.5"
+}

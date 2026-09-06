@@ -229,7 +229,7 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
     ax.set_ylim(settings.get("main_ylim", [18.5, 83.5 if zoom else 56.5]))
     ax.set_xticks([0, 96, 192, 336, 480, 600, 720])
     ax.set_yticks(settings.get("main_yticks", [20, 30, 40, 50]))
-    ax.set_xlabel("Forecast step (hours)", labelpad=5)
+    ax.set_xlabel(settings.get("xlabel", "Forecast step (hours)"), labelpad=5)
     ax.set_ylabel(settings.get("ylabel", "Oil temperature (°C)"))
     ax.grid(axis="y", color="#E5E8EB", lw=0.45)
     ax.tick_params(length=3, width=0.65)
@@ -271,7 +271,9 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
             pad=5,
             weight="bold",
         )
-        inset.set_xlabel("Forecast step (hours)", fontsize=6.5, labelpad=2)
+        inset.set_xlabel(
+            settings.get("xlabel", "Forecast step (hours)"), fontsize=6.5, labelpad=2
+        )
         inset.set_ylabel(
             settings.get("ylabel", "Temperature (°C)"),
             fontsize=6.5,

@@ -1,0 +1,45 @@
+{
+  "baseline": "TimeMixer",
+  "baseline_prefix": "timemixer",
+  "subtitle": "ETTm1 \u00b7 HUFL \u00b7 selected validation example",
+  "unit": "units",
+  "ylabel": "HUFL (original scale)",
+  "xlabel": "Forecast step (15 min per step)",
+  "main_ylim": [
+    -14.565595370604822,
+    78.5831264428869
+  ],
+  "main_yticks": [
+    -10.0,
+    0.0,
+    10.0,
+    25.0
+  ],
+  "prefix_ylim": [
+    -8.806712740211628,
+    24.30259188615412
+  ],
+  "prefix_yticks": [
+    -5.0,
+    5.0,
+    15.0,
+    25.0
+  ],
+  "prefix_label_y": 24.893829468767795,
+  "horizon_y": {
+    "96": 32.008765536141034,
+    "192": 32.008765536141034,
+    "336": 25.933848896130705,
+    "720": 19.858932256120376
+  },
+  "annotation_y": -13.679053281081902,
+  "annotation_step": 67,
+  "connector_corner": [
+    0,
+    0
+  ],
+  "endpoint_label_y": {
+    "UVHF": -0.8162495517462274,
+    "TimeMixer": 2.698140382793568
+  }
+}

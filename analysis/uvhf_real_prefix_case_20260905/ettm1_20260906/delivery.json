@@ -1,0 +1,20 @@
+{
+  "selected_case": "review_case_1",
+  "dataset": "ETTm1",
+  "channel": "HUFL",
+  "origin": 2295,
+  "new_test_access": false,
+  "uvhf_retrained": false,
+  "timemixer_trained_horizons": [
+    96,
+    192,
+    336,
+    720
+  ],
+  "status": "numeric, visual and export audits passed",
+  "sha256": {
+    "reviewer_audit.md": "d7fe9e3d5f17f9b221ec620c5fb2ca3e044f208d6851f5c763c091c1de168516",
+    "baseline_provenance.json": "1d6cd90b514958c76e5a572560d0385f1eff22694c4a581c8560df042a884e71",
+    "review_case_1/figure_qa.json": "b2dbc873bc9df973fc04231b220b2415f7e767cf92fa1df4a42d445fa5cf6568"
+  }
+}
