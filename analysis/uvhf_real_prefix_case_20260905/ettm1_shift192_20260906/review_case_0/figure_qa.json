@@ -1,0 +1,61 @@
+{
+  "status": "PASS for selected-case illustration",
+  "date": "2026-09-06",
+  "backend": "Python matplotlib",
+  "dimensions_mm": [
+    183,
+    135
+  ],
+  "main_axes": 1,
+  "embedded_prefix_axes": 1,
+  "six_inset_curves_equal_source": true,
+  "main_trajectory_not_occluded_by_inset": true,
+  "horizon_labels_clear_of_inset_labels": true,
+  "figure_text_inside_canvas": true,
+  "metrics_recalculated_from_csv": true,
+  "mean_pairwise_disagreement_raw": 0.13282674546448894,
+  "editable_svg_text_elements": 46,
+  "pdf_embedded_truetype": true,
+  "exports": {
+    "png": {
+      "pixels": [
+        2161,
+        1594
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "tiff": {
+      "pixels": [
+        7204,
+        5314
+      ],
+      "dpi": [
+        1000.0,
+        1000.0
+      ]
+    }
+  },
+  "source_preflight": {
+    "PASS": 13,
+    "WARN": 1,
+    "FAIL": 0,
+    "warning_resolution": "Static width detector cannot resolve variables; actual figure and exports verified as 183 x 135 mm. Final submission must follow target journal specifications."
+  },
+  "visual_review": "Exact user shift +192. Full720 and prefix96 inspected; local sharp peak and final endpoint misses remain visible.",
+  "sha256": {
+    "figure_settings.json": "e407f4bbb00a240fbc79d952a08d204407562fc818b08b98a3d23f99bd401cb0",
+    "numeric_audit.json": "44a3b77386c1cc48cb74a9f3d81baed57a4e697f806e0a0216a5d10a1eda8dad",
+    "segment_metrics.csv": "e96acd1ae8eb65c05768d0bf2c300a9d0efb2786b4569f164d6f5cdd574da9d5",
+    "selected_metrics.csv": "9260068e545a055e1cbdabbd90d1d533599389b1465d11e3a88cf34b7c534e6e",
+    "selected_pair_disagreement.csv": "238e5a59385ba2f7e76f34ed21520374a8e13056059366f546ade7143ffa2e26",
+    "selection_audit.json": "1cbabb1670f9daca17c9df0107d6ec1770b321a9efa1813df7aba8b3e96ad5f6",
+    "source_data.csv": "32463ac34c34d81909841f2b8fd30ad2bfa9bd0f37105b62803ba14256880cfa",
+    "uvhf_real_prefix_zoom.pdf": "1eef0fca294a8588a8478b10713af002435936827844ea598e8324af62519017",
+    "uvhf_real_prefix_zoom.png": "19ac3d193a3fc8a44413a8d0a3e6ed34283dd5765e6fcf133e4c7b229345de3a",
+    "uvhf_real_prefix_zoom.svg": "8c19834bd66aef98eeb8d15522414b90097d010b1f7e4e3190d8dbe5a344224f",
+    "uvhf_real_prefix_zoom.tiff": "c7485dae55d47dcbbfbe81a1f6c970b94d96cac9df6edb08b478fac28e7c44fc"
+  }
+}
