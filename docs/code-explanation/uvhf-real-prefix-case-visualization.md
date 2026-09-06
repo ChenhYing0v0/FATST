@@ -69,3 +69,5 @@ CHPC 是统一轨迹的 prefix identity，不由较小 MSE 推导。数值 reque
 ## ETTm1扩展
 
 按用户指定转到ETTm1，`train_timemixer.py`增加dataset、seq_len、batch_size参数；原ETTh1默认值不变。ETTm1设freq=t，采用上游L96/batch16配置。不同H的validation窗口数不同，导出按`len(ds)-(720-H)`裁到共享10801个origins，而非ETTh1专用2161；该裁剪只统一forecast origin范围，不裁短任何预测轨迹。参数、checkpoint来源及筛选门槛在ettm1_20260906/protocol.md冻结。
+
+ETTm1启动时发现native Exp_Basic会覆盖外部CUDA_VISIBLE_DEVICES，修正进程内device acquisition为cuda:0，使其指向launcher选定的物理卡；不更改上游文件或训练算法。前三项已经开始的GPU0运行保留，H96使用GPU1。该操作与设备状态记录于本轮protocol。

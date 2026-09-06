@@ -88,6 +88,10 @@ def main() -> None:
     torch.cuda.manual_seed_all(2021)
     torch.set_num_threads(4)
     args.use_gpu = True
+    # Honor the launcher mask; native device acquisition overwrites it with GPU 0.
+    native_exp.Exp_Long_Term_Forecast._acquire_device = (
+        lambda self: torch.device("cuda:0")
+    )
     experiment = native_exp.Exp_Long_Term_Forecast(args)
     source = textwrap.dedent(
         inspect.getsource(native_exp.Exp_Long_Term_Forecast.train)
