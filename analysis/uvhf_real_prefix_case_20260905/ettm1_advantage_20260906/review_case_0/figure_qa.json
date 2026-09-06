@@ -1,0 +1,62 @@
+{
+  "status": "PASS for selected-case illustration",
+  "date": "2026-09-06",
+  "backend": "Python matplotlib",
+  "dimensions_mm": [
+    183,
+    135
+  ],
+  "main_axes": 1,
+  "embedded_prefix_axes": 1,
+  "six_inset_curves_equal_source": true,
+  "main_trajectory_not_occluded_by_inset": true,
+  "horizon_labels_clear_of_inset_labels": true,
+  "figure_text_inside_canvas": true,
+  "metrics_recalculated_from_csv": true,
+  "mean_pairwise_disagreement_raw": 0.16239774126820813,
+  "editable_svg_text_elements": 46,
+  "pdf_embedded_truetype": true,
+  "exports": {
+    "png": {
+      "pixels": [
+        2161,
+        1594
+      ],
+      "dpi": [
+        299.9994,
+        299.9994
+      ]
+    },
+    "tiff": {
+      "pixels": [
+        7204,
+        5314
+      ],
+      "dpi": [
+        1000.0,
+        1000.0
+      ]
+    }
+  },
+  "source_preflight": {
+    "PASS": 13,
+    "WARN": 1,
+    "FAIL": 0,
+    "warning_resolution": "Static width detector cannot resolve variables; actual figure and exports verified as 183 x 135 mm. Final submission must follow target journal specifications."
+  },
+  "visual_review": "LUFL8752: repeated trough advantage, explicit prefix divergence, sharp spike misses preserved. See ../reviewer_audit.md.",
+  "sha256": {
+    "figure_settings.json": "825f13ff10ce336886b8f3356ea32a7080f7f7cea73caf644f9895d8172e267e",
+    "numeric_audit.json": "9c3dfe2a579b2a552c7dd80eb8c30d89987f6086589848ac7d7bbeb006e8151a",
+    "segment_metrics.csv": "2678798f53eb683ec160f39bf76990a7ec30ebd027c7c42a0d4ee6415296c93c",
+    "selected_metrics.csv": "770703c1e34229f316badd151f4e49eea757c73c209763984f7225531ea36466",
+    "selected_pair_disagreement.csv": "388b5f7fb5200eb31efc0f33870024495fd781f3b5588de2f567379fd086f84c",
+    "selection_audit.json": "2b636ff1d9a8285976bf4a18fb0380adfdcfe772cf9b44fb25e6c3bf7c5d62cb",
+    "source_data.csv": "5737568915ed20fec69061a4527d4fd856eedf64840354474a43874bb51ee414",
+    "uvhf_real_prefix_zoom.pdf": "029462a64027117bc8402f8293966b29e01ce91bc67555a55fdd98881c8036e5",
+    "uvhf_real_prefix_zoom.png": "1d62095817724e5793e72f9b64b54e9cb1a6d8552672e408b1505bd4bdc85f2b",
+    "uvhf_real_prefix_zoom.svg": "c811e824306886144ce73089eb043465545272b0fed79fe6807f1ea2fb71a0ea",
+    "uvhf_real_prefix_zoom.tiff": "c1b9f0d436d77ac01a10d7fbc483354092a672886d7fbde25f372bf6c3b21706"
+  },
+  "segment_combinations_verified": 11
+}
