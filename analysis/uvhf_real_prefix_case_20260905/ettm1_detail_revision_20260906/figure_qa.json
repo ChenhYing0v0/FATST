@@ -14,7 +14,7 @@
   "figure_text_inside_canvas": true,
   "metrics_recalculated_from_csv": true,
   "mean_pairwise_disagreement_raw": 0.22732555881195285,
-  "editable_svg_text_elements": 43,
+  "editable_svg_text_elements": 44,
   "pdf_embedded_truetype": true,
   "exports": {
     "png": {
@@ -44,19 +44,20 @@
     "FAIL": 0,
     "warning_resolution": "Static width detector cannot resolve variables; actual figure and exports verified as 183 x 135 mm. Final submission must follow target journal specifications."
   },
-  "visual_review": "Six requested edits inspected: Chinese title, short subtitle, UVHF circle, inset spread annotation, two deleted footers. Source unchanged.",
+  "visual_review": "Two-line Prefix inconsistency / Delta=0.73 annotation inspected; no text overlap.",
   "sha256": {
     "figure_settings.json": "d9f8ecfc73019d553a72386b02e328b3e9085ae78caab1e8b27271a89cd60581",
     "numeric_audit.json": "dd9e7cb455d79a626e0e624415940c0f2e37b662fe48c59e8b1aecd69f857918",
-    "plot_refined.py": "26556cfecf7f1af9cdf1253fd23ef2495d5585e21bb8cb4ba06c2ecdac77c77e",
+    "plot_refined.py": "90abd18b21abb653f888c488cd26ae3b4c672190de2b6fe9fbded98478846d05",
+    "revision_audit.md": "82f1389909d92109fef04262b8f0ea491e920b9cc221e7b0814d4aa60f4b2b8f",
     "segment_metrics.csv": "a5df27e627f58c9ede90f0bd7a472b8687e10f3370b6496670f0646653566726",
     "selected_metrics.csv": "6fa1ba312af65ead935f7c4f1f1fc45a084ffd181ad1a22e92e35a5ab4b8d471",
     "selected_pair_disagreement.csv": "36d294bf6ca5bde382893430900b8b6c9608d9200c96851afba0d0170fd0c8ef",
     "selection_audit.json": "85f04d420f66f2fcaa5f05a9e092203233b4efd9bdf13413d45580a6a47c04cf",
     "source_data.csv": "6609a6a3a0f9da14c7cf16a3e6cbea27136b65b9922b67ecd85c76ae368d82ea",
-    "uvhf_real_prefix_zoom.pdf": "3a602547761f9907ae2fca135f6a9a6ff07dcb27cd827831525bc6f46c2191a3",
-    "uvhf_real_prefix_zoom.png": "431c1303601859d11ce7b97d61950d35f1fea3e899a6cfec6b0aa92312bbbe32",
-    "uvhf_real_prefix_zoom.svg": "9824642f3659e41cf3f97b277d0fb63d3860cde828593b55440cb55a3e22b9ae",
-    "uvhf_real_prefix_zoom.tiff": "cf808aa31074e86e1bfd8ce35dc4cf51cee2848da43f8f082074888cb080786e"
+    "uvhf_real_prefix_zoom.pdf": "ca91cd892b74187b861e395a6d5844f54a7d3421f90ff7ef59a0f32b68338bf6",
+    "uvhf_real_prefix_zoom.png": "34ec6a0fc452a588e4574cfa75d096e149cb98ad25c39d1c9a2728496e8a9b76",
+    "uvhf_real_prefix_zoom.svg": "2c2075568e577a6b549a87f3e78befd1d872a53393b17917a4b5c1698230e19b",
+    "uvhf_real_prefix_zoom.tiff": "9b7a59917d310c44b7f54546d18c47fa06d5fb5885f3905dccbf3e5c77418efe"
   }
 }

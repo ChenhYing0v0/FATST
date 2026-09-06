@@ -233,7 +233,7 @@ def main(zoom: bool = False, output: Path = OUT) -> None:
             )
         inset.plot(prefix.index, prefix.uvhf, color=uvhf_color, lw=1.25)
         inset.annotate(
-            f"Prefix spread: {high - low:.2f}",
+            f"Prefix inconsistency\nΔ = {high - low:.2f}",
             xy=(step, (low + high) / 2), xytext=(0.98, 0.94),
             textcoords="axes fraction", ha="right", va="top", fontsize=6.5,
             color="#505963", arrowprops={"arrowstyle": "-", "color": "#85909B", "lw": 0.65},
