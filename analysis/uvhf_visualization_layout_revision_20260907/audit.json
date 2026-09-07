@@ -1,0 +1,13 @@
+{
+  "pages": 25,
+  "figure_pdf_pages": {
+    "6": 16,
+    "8": 18
+  },
+  "both_figures_followed_by_body_text": true,
+  "figure_assets_unchanged": true,
+  "sha256": {
+    "elsarticle-template-num.tex": "90cce646b71fa161261a4c4aed9a158e3b40688addda65d82ded0308b8231ca6",
+    "UVHF_KBS_submission.pdf": "812955c4b3a528ad245dbad100aa92cfdb050466a62c5cabeaa7fdd978dd76c8"
+  }
+}

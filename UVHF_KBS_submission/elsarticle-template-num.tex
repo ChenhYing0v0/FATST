@@ -79,8 +79,6 @@
 
 \journal{Knowledge-Based Systems}
 
-\usepackage{placeins}
-
 \begin{document}
 
 \begin{frontmatter}
@@ -930,7 +928,7 @@ Fig.~\ref{fig:scope-allocation-behavior}a shows how the Target-Adaptive Allocati
 
 
 
-\begin{figure*}[!htbp]
+\begin{figure*}[!t]
 \centering
 \includegraphics[width=1.00\textwidth]{figure_06_uvhf_scope_allocation_behavior.pdf}
 \caption{Scope diversity and sample-specific allocation behavior in UVHF. \textbf{a}, The fused forecast; line colour and the lower strip identify the highest-weight scope after averaging Scope Probabilities within each future region. \textbf{b}, Deviations of the five Scope-conditioned Forecasts from the fused forecast on a shared scale. \textbf{c}, Per-step Scope Probabilities; white lines mark future-region boundaries.}
@@ -963,14 +961,12 @@ The aggregate comparisons assess forecasting accuracy across datasets and horizo
 
 Across the full forecast window, UVHF more closely follows the recurring troughs, while the TimeMixer forecasts frequently overestimate these low-value intervals. The enlarged prefix makes both the differences among the TimeMixer predictions and UVHF's closer tracking of the observed trough directly visible. This selected case illustrates how forecasting accuracy and prefix consistency can coexist, while the aggregate comparisons in Sections~\ref{sec:horizon-specific-comparison} and~\ref{sec:one-model-comparison} establish the broader performance results. Additional UVHF forecasting examples across all seven datasets are provided in \ref{app:visualization}.
 
-\begin{figure*}[!htbp]
+\begin{figure*}[!t]
 \centering
 \includegraphics[width=1.00\textwidth]{figure_forecasting_performance_prefix_consistency.pdf}
-\caption{Forecasting performance and prefix consistency on a selected ETTm1 validation example. The black curve denotes the ground truth for LUFL, the red curve denotes UVHF, and the other curves denote independently trained TimeMixer models for $H\in\{96,192,336,720\}$. The inset enlarges the shared first 96 steps. At step 69, $\Delta$ is the range across the four TimeMixer predictions in the original data scale. MSE reductions compare UVHF with the corresponding TimeMixer model over each complete horizon. Mean cross-horizon disagreement averages the six pairwise mean absolute differences over their respective overlapping intervals for this variable. The example is selected for illustration, not to estimate average performance.}
+\caption{Forecasting accuracy and prefix consistency on a selected ETTm1--LUFL validation window. UVHF is compared with four horizon-specific TimeMixer models. The inset shows steps 1--96; $\Delta$ denotes their prediction range at step 69. MSE reductions use each complete horizon; mean disagreement averages the six pairwise mean absolute differences over their respective overlaps for LUFL.}
 \label{fig:forecast-consistency}
 \end{figure*}
-
-\FloatBarrier
 
 \section{Discussion and Limitations}
 \label{sec:discussion}
