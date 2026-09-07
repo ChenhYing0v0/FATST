@@ -1,0 +1,17 @@
+{
+  "date": "2026-09-07",
+  "user_authorization": "Integrate the frozen figure into submission according to agreed Section5.8 plan",
+  "source_commit_before": "8f7eb899016c2578997e783f82579070164430a0",
+  "status": "integrated_and_compiled",
+  "subsection": "5.8",
+  "figure": "8",
+  "pdf_pages": 26,
+  "figure_and_support_freeze_hashes_unchanged": true,
+  "new_training": false,
+  "new_test_access": false,
+  "sha256": {
+    "elsarticle-template-num.tex": "856d8c93d87318db7dd2ed6d7c9bff275873815694874d227101835c3153ecec",
+    "UVHF_KBS_submission.pdf": "c94551403ea9b5da759324fbc0b9b5fad0b179dc3040a6cae60dfc3c4acef67c",
+    "figure_forecasting_performance_prefix_consistency.pdf": "4a137c910a425e93d18a93c95845f8552e93f3ad923c2a94b724014a64dbdab0"
+  }
+}

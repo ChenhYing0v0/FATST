@@ -79,6 +79,8 @@
 
 \journal{Knowledge-Based Systems}
 
+\usepackage{placeins}
+
 \begin{document}
 
 \begin{frontmatter}
@@ -928,7 +930,7 @@ Fig.~\ref{fig:scope-allocation-behavior}a shows how the Target-Adaptive Allocati
 
 
 
-\begin{figure*}[t]
+\begin{figure*}[!htbp]
 \centering
 \includegraphics[width=1.00\textwidth]{figure_06_uvhf_scope_allocation_behavior.pdf}
 \caption{Scope diversity and sample-specific allocation behavior in UVHF. \textbf{a}, The fused forecast; line colour and the lower strip identify the highest-weight scope after averaging Scope Probabilities within each future region. \textbf{b}, Deviations of the five Scope-conditioned Forecasts from the fused forecast on a shared scale. \textbf{c}, Per-step Scope Probabilities; white lines mark future-region boundaries.}
@@ -944,7 +946,7 @@ The MSD is designed as an Encoder-agnostic plug-in decoder that operates on Enco
 
 
 
-\begin{figure*}[t]
+\begin{figure*}[!htbp]
 \centering
 \includegraphics[width=0.90\textwidth]{figure_07_uvhf_generalization.pdf}
 \caption{Generalization across two forecasting backbones. Four-horizon mean MSE is reported for \textbf{a}, DLinear and \textbf{b}, PatchTST with either the Original Decoder or UVHF (MSD trained with BCA).}
@@ -953,6 +955,22 @@ The MSD is designed as an Encoder-agnostic plug-in decoder that operates on Enco
 
 
 As shown in Fig.~\ref{fig:decoder-transfer}, replacing the Original Decoder with the MSD and applying BCA improves forecasting performance on both example backbones. For DLinear, the replacement lowers MSE on all three datasets and reduces the macro average from 0.303 to 0.286, corresponding to an improvement of 5.61\%. PatchTST shows smaller but consistent gains, with macro MSE decreasing from 0.282 to 0.276, corresponding to an improvement of 2.13\%. Improvements with both a lightweight linear backbone and a Transformer-based backbone support the portability of the MSD and its role within UVHF.
+
+\subsection{Visualization of forecasting performance and prefix consistency}
+\label{sec:forecast-visualization}
+
+The aggregate comparisons assess forecasting accuracy across datasets and horizons; Fig.~\ref{fig:forecast-consistency} complements them with a trajectory-level view of accuracy and CHPC. We compare UVHF with four independently trained horizon-specific TimeMixer models on a selected ETTm1 validation window for the LUFL variable. All forecasts are aligned to the same forecast origin and future targets. Within the shared 96-step prefix, the TimeMixer models assign different values to the same future steps, whereas UVHF serves the four requested horizons through nested prefixes of one trajectory. Separate inference requests for UVHF returned identical predictions on their overlapping targets.
+
+Across the full forecast window, UVHF more closely follows the recurring troughs, while the TimeMixer forecasts frequently overestimate these low-value intervals. The enlarged prefix makes both the differences among the TimeMixer predictions and UVHF's closer tracking of the observed trough directly visible. This selected case illustrates how forecasting accuracy and prefix consistency can coexist, while the aggregate comparisons in Sections~\ref{sec:horizon-specific-comparison} and~\ref{sec:one-model-comparison} establish the broader performance results. Additional UVHF forecasting examples across all seven datasets are provided in \ref{app:visualization}.
+
+\begin{figure*}[!htbp]
+\centering
+\includegraphics[width=1.00\textwidth]{figure_forecasting_performance_prefix_consistency.pdf}
+\caption{Forecasting performance and prefix consistency on a selected ETTm1 validation example. The black curve denotes the ground truth for LUFL, the red curve denotes UVHF, and the other curves denote independently trained TimeMixer models for $H\in\{96,192,336,720\}$. The inset enlarges the shared first 96 steps. At step 69, $\Delta$ is the range across the four TimeMixer predictions in the original data scale. MSE reductions compare UVHF with the corresponding TimeMixer model over each complete horizon. Mean cross-horizon disagreement averages the six pairwise mean absolute differences over their respective overlapping intervals for this variable. The example is selected for illustration, not to estimate average performance.}
+\label{fig:forecast-consistency}
+\end{figure*}
+
+\FloatBarrier
 
 \section{Discussion and Limitations}
 \label{sec:discussion}
@@ -1058,6 +1076,8 @@ Dataset Size is reported as (Train, Validation, Test). The ETT datasets follow t
 
 
 The local experiments are implemented in Python 3.12.13 and PyTorch 2.9.0 with CUDA 12.8. Each training run uses one NVIDIA GeForce RTX 3090 GPU. UVHF is trained from scratch with BCA using AdamW and a cosine learning-rate schedule \citep{loshchilov2019adamw,loshchilov2017sgdr}. Table~\ref{tab:training-settings} reports the dataset-specific optimization settings, and Table~\ref{tab:model-settings} lists the corresponding Encoder interface and UVHF configuration.
+
+\textbf{Visualization protocol.} The trajectory comparison in Section~\ref{sec:forecast-visualization} uses separately reproduced TimeMixer models from the official codebase, with one model trained for each requested horizon and seed 2021. These checkpoints are distinct from the source of the TimeMixer results in Table~\ref{tab:main-uvhf}. Each TimeMixer checkpoint was selected by its validation loss. The frozen UVHF checkpoint was queried separately at the four requested horizons to verify agreement on shared targets. The displayed LUFL window was selected after inspecting validation forecasts to make trajectory differences and prefix disagreement visible; it does not provide a representative estimate of the performance gap. Forecasts were aligned by origin and target timestamp and transformed back to the original data scale using training-set statistics.
 
 \begin{table*}[t]
 \centering
@@ -1273,7 +1293,7 @@ Dataset & H & \multicolumn{2}{c}{UVHF (Ours)} & \multicolumn{2}{c}{TimeAlign (20
 \label{app:visualization}
 
 
-Fig.~\ref{fig:appendix-visualization} presents supplementary unified varied-horizon forecasting examples for the seven paper-core datasets. For each dataset, two validation samples show the ground-truth future and the fused UVHF prediction over the maximum target length $T=720$. The paired rulers and vertical guides mark the four supported prediction lengths, showing how the same predicted trajectory provides the prefixes requested at $H\in\{96,192,336,720\}$.
+Complementing the baseline comparison in Section~\ref{sec:forecast-visualization}, Fig.~\ref{fig:appendix-visualization} presents additional UVHF forecasting examples for the seven paper-core datasets. For each dataset, two validation samples show the ground-truth future and the fused UVHF prediction over the maximum target length $T=720$. The paired rulers and vertical guides mark the four supported prediction lengths, showing how the same predicted trajectory provides the prefixes requested at $H\in\{96,192,336,720\}$.
 
 
 \begin{figure}[H]
