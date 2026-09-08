@@ -818,10 +818,12 @@ ECL & \textcolor{red}{\textbf{0.151}}/\textcolor{red}{\textbf{0.244}} & \textcol
 Solar & \textcolor{red}{\textbf{0.188}}/\textcolor{red}{\textbf{0.208}} & 0.196/\textcolor{blue}{\underline{0.217}} & 0.208/0.258 & 0.205/0.248 & \textcolor{blue}{\underline{0.191}}/0.251 & 0.228/0.277 & 0.202/0.248 & 0.193/0.252 & 0.228/0.282 & 0.194/0.245 & 0.223/0.226 \\
 \midrule
 Average & \textcolor{red}{\textbf{0.261}}/\textcolor{red}{\textbf{0.306}} & \textcolor{blue}{\underline{0.274}}/\textcolor{blue}{\underline{0.314}} & 0.288/0.331 & 0.282/0.328 & 0.293/0.333 & 0.278/0.326 & 0.292/0.336 & 0.283/0.332 & 0.277/0.327 & 0.280/0.326 & 0.300/0.339 \\
+\midrule
+Best count & 6/7 & 1/1 & 0/0 & 0/0 & 0/0 & 0/0 & 0/0 & 0/0 & 0/0 & 0/0 & 0/0 \\
 \bottomrule
 \end{tabular}%
 }
-\caption{Comparison with horizon-specific forecasters. Each dataset entry reports MSE/MAE averaged over $H\in\{96,192,336,720\}$, and the final row is the unweighted mean over seven datasets. UVHF uses one unified model per dataset, while each baseline follows its horizon-specific protocol. Full horizon-wise results are provided in ~\ref{app:full-results}. Best and second-best displayed values are marked in red bold and blue underline, respectively.}
+\caption{Comparison with horizon-specific forecasters. Each dataset entry reports MSE/MAE averaged over $H\in\{96,192,336,720\}$, and the Average row is the unweighted mean over seven datasets. UVHF uses one unified model per dataset, while each baseline follows its horizon-specific protocol. Full horizon-wise results are provided in ~\ref{app:full-results}. Best and second-best displayed values are marked in red bold and blue underline, respectively. Best counts are reported as MSE/MAE over the seven dataset rows, excluding Average; ties at the displayed precision count for each tied method.}
 \label{tab:main-uvhf}
 \end{table*}
 
@@ -853,10 +855,12 @@ ECL & \textcolor{red}{\textbf{0.151}}/\textcolor{red}{\textbf{0.244}} & \textcol
 Solar & \textcolor{red}{\textbf{0.188}}/\textcolor{red}{\textbf{0.208}} & 0.193/\textcolor{blue}{\underline{0.219}} & 0.207/0.268 & 0.204/0.250 & \textcolor{blue}{\underline{0.190}}/0.247 & 0.229/0.261 & 0.194/0.247 & 0.253/0.313 \\
 \midrule
 Average & \textcolor{red}{\textbf{0.261}}/\textcolor{red}{\textbf{0.306}} & \textcolor{blue}{\underline{0.279}}/\textcolor{blue}{\underline{0.318}} & 0.293/0.341 & 0.284/0.330 & 0.296/0.336 & 0.318/0.348 & 0.283/0.329 & 0.315/0.363 \\
+\midrule
+Best count & 7/7 & 0/0 & 0/0 & 0/0 & 0/0 & 0/0 & 0/0 & 0/0 \\
 \bottomrule
 \end{tabular}%
 }
-\caption{One-model-all-horizons comparison. Each method uses one unified model per dataset, and each entry reports MSE/MAE averaged over $H\in\{96,192,336,720\}$. The final row is the unweighted mean over seven datasets. Full horizon-wise results and protocol details are provided in ~\ref{app:full-results}. Best and second-best displayed values are marked in red bold and blue underline, respectively.}
+\caption{One-model-all-horizons comparison. Each method uses one unified model per dataset, and each entry reports MSE/MAE averaged over $H\in\{96,192,336,720\}$. The Average row is the unweighted mean over seven datasets. Full horizon-wise results and protocol details are provided in ~\ref{app:full-results}. Best and second-best displayed values are marked in red bold and blue underline, respectively. Best counts are reported as MSE/MAE over the seven dataset rows, excluding Average; ties at the displayed precision count for each tied method.}
 \label{tab:main-uvhf-one-model}
 \end{table*}
 
@@ -1204,10 +1208,13 @@ Dataset & H & \multicolumn{2}{c}{\shortstack{UVHF\\(Ours)}} & \multicolumn{2}{c}
  & 720 & 0.204 & \textcolor{red}{\textbf{0.218}} & \textcolor{red}{\textbf{0.201}} & \textcolor{blue}{\underline{0.223}} & 0.223 & 0.278 & 0.215 & 0.257 & 0.207 & 0.259 & 0.242 & 0.287 & 0.223 & 0.261 & \textcolor{blue}{\underline{0.203}} & 0.261 & 0.247 & 0.292 & 0.209 & 0.256 & 0.243 & 0.241 \\
 \cmidrule(lr){2-24}
  & Avg. & \textcolor{red}{\textbf{0.188}} & \textcolor{red}{\textbf{0.208}} & 0.196 & \textcolor{blue}{\underline{0.217}} & 0.208 & 0.258 & 0.205 & 0.248 & \textcolor{blue}{\underline{0.191}} & 0.251 & 0.229 & 0.277 & 0.202 & 0.248 & 0.193 & 0.252 & 0.228 & 0.282 & 0.194 & 0.245 & 0.223 & 0.226 \\
+\midrule
+\multicolumn{2}{c|}{Best count} & 21 & 23 & 5 & 4 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 2 & 0 & 0 & 1 & 0 & 2 & 0 & 0 & 1 & 0 & 0 \\
+\multicolumn{2}{c|}{Second-best count} & 5 & 4 & 9 & 15 & 2 & 0 & 1 & 0 & 3 & 1 & 7 & 6 & 0 & 0 & 2 & 0 & 5 & 4 & 1 & 1 & 0 & 0 \\
 \bottomrule
 \end{tabular}%
 }
-\caption{Full results for the horizon-specific comparison. MSE and MAE are reported for $H\in\{96,192,336,720\}$ and averaged over the four horizons. The best and second-best values are highlighted in bold and underlined, respectively.}
+\caption{Full results for the horizon-specific comparison. MSE and MAE are reported for $H\in\{96,192,336,720\}$ and averaged over the four horizons. The best and second-best values are highlighted in bold and underlined, respectively. Counts cover the 28 dataset--horizon rows, excluding Avg.; ties at the displayed precision count for each tied method.}
 \label{tab:appendix-horizon-specific}
 \end{table}
 
@@ -1273,10 +1280,13 @@ Dataset & H & \multicolumn{2}{c}{UVHF (Ours)} & \multicolumn{2}{c}{TimeAlign (20
  & 720 & \textcolor{blue}{\underline{0.204}} & \textcolor{red}{\textbf{0.218}} & \textcolor{red}{\textbf{0.201}} & \textcolor{blue}{\underline{0.223}} & 0.223 & 0.278 & 0.215 & 0.257 & 0.207 & 0.259 & 0.250 & 0.276 & 0.206 & 0.257 & 0.271 & 0.327 \\
 \cmidrule(lr){2-18}
  & Avg. & \textcolor{red}{\textbf{0.188}} & \textcolor{red}{\textbf{0.208}} & 0.193 & \textcolor{blue}{\underline{0.219}} & 0.207 & 0.268 & 0.204 & 0.250 & \textcolor{blue}{\underline{0.190}} & 0.247 & 0.229 & 0.261 & 0.194 & 0.247 & 0.253 & 0.313 \\
+\midrule
+\multicolumn{2}{c|}{Best count} & 23 & 27 & 4 & 1 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+\multicolumn{2}{c|}{Second-best count} & 5 & 1 & 14 & 20 & 4 & 2 & 3 & 4 & 2 & 2 & 0 & 0 & 0 & 2 & 0 & 0 \\
 \bottomrule
 \end{tabular}%
 }
-\caption{Full results for the one-model-all-horizons comparison. MSE and MAE are reported for $H\in\{96,192,336,720\}$ and averaged over the four horizons. The best and second-best values are highlighted in bold and underlined, respectively.}
+\caption{Full results for the one-model-all-horizons comparison. MSE and MAE are reported for $H\in\{96,192,336,720\}$ and averaged over the four horizons. The best and second-best values are highlighted in bold and underlined, respectively. Counts cover the 28 dataset--horizon rows, excluding Avg.; ties at the displayed precision count for each tied method.}
 \label{tab:appendix-one-model}
 \end{table}
 \clearpage
