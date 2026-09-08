@@ -801,6 +801,8 @@ UVHF is designed to replace separately optimized horizon-specific predictors wit
 % Required packages: booktabs, graphicx, xcolor
 \begin{table*}[t]
 \centering
+\caption{Comparison with horizon-specific baselines (four-horizon mean MSE/MAE). Average denotes the seven-dataset mean. Red bold and blue underline indicate best and second-best values. Best reports MSE/MAE win counts across datasets, excluding Average; displayed ties count for each method.}
+\label{tab:main-uvhf}
 \scriptsize
 \setlength{\tabcolsep}{2.0pt}
 \resizebox{\textwidth}{!}{%
@@ -823,8 +825,6 @@ Best & 6/7 & 1/1 & 0/0 & 0/0 & 0/0 & 0/0 & 0/0 & 0/0 & 0/0 & 0/0 & 0/0 \\
 \bottomrule
 \end{tabular}%
 }
-\caption{Comparison with horizon-specific forecasters. Each dataset entry reports MSE/MAE averaged over $H\in\{96,192,336,720\}$, and the Average row is the unweighted mean over seven datasets. UVHF uses one unified model per dataset, while each baseline follows its horizon-specific protocol. Full horizon-wise results are provided in ~\ref{app:full-results}. Best and second-best displayed values are marked in red bold and blue underline, respectively. Best counts are reported as MSE/MAE over the seven dataset rows, excluding Average; ties at the displayed precision count for each tied method.}
-\label{tab:main-uvhf}
 \end{table*}
 
 
@@ -839,6 +839,8 @@ Section 5.2 shows that UVHF can outperform baselines trained separately for each
 % Required packages: booktabs, graphicx, xcolor
 \begin{table*}[t]
 \centering
+\caption{One-model-all-horizons comparison (four-horizon mean MSE/MAE). Average denotes the seven-dataset mean. Red bold and blue underline indicate best and second-best values. Best reports MSE/MAE win counts across datasets, excluding Average; displayed ties count for each method.}
+\label{tab:main-uvhf-one-model}
 \scriptsize
 \setlength{\tabcolsep}{2.0pt}
 \resizebox{\textwidth}{!}{%
@@ -860,8 +862,6 @@ Best & 7/7 & 0/0 & 0/0 & 0/0 & 0/0 & 0/0 & 0/0 & 0/0 \\
 \bottomrule
 \end{tabular}%
 }
-\caption{One-model-all-horizons comparison. Each method uses one unified model per dataset, and each entry reports MSE/MAE averaged over $H\in\{96,192,336,720\}$. The Average row is the unweighted mean over seven datasets. Full horizon-wise results and protocol details are provided in ~\ref{app:full-results}. Best and second-best displayed values are marked in red bold and blue underline, respectively. Best counts are reported as MSE/MAE over the seven dataset rows, excluding Average; ties at the displayed precision count for each tied method.}
-\label{tab:main-uvhf-one-model}
 \end{table*}
 
 
@@ -895,7 +895,7 @@ To determine whether the individual UVHF components contribute to forecasting pe
 
 \begin{table*}[t]
 \centering
-\caption{Core ablation of UVHF. Each dataset entry is the mean over prediction horizons $H\in\{96,192,336,720\}$. Lower is better. Best and second-best results are shown in bold and underlined, respectively.}
+\caption{UVHF ablations (four-horizon mean MSE/MAE). Bold and underline indicate best and second-best values.}
 \label{tab:core-ablation}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lcccccccccccc}
@@ -1050,10 +1050,10 @@ We evaluate UVHF on seven widely used multivariate time-series forecasting datas
 
 \begin{table*}[t]
 \centering
+\caption{Dataset statistics.}
+\label{tab:dataset-statistics}
 \scriptsize
 \setlength{\tabcolsep}{4pt}
-\caption{Dataset Statistics.}
-\label{tab:dataset-statistics}
 \begin{tabular}{lcccc}
 \toprule
 Dataset & Variables & Sampling Frequency & Dataset Size & Domain \\
@@ -1081,10 +1081,10 @@ The local experiments are implemented in Python 3.12.13 and PyTorch 2.9.0 with C
 
 \begin{table*}[t]
 \centering
+\caption{Training and evaluation settings.}
+\label{tab:training-settings}
 \scriptsize
 \setlength{\tabcolsep}{4pt}
-\caption{Training and Evaluation Settings.}
-\label{tab:training-settings}
 \begin{tabular}{lcccccc}
 \toprule
 Dataset & Max Length & Initial LR & Batch & Grad. Accum. & Max epochs & Patience \\
@@ -1105,10 +1105,10 @@ Gradient Accumulation Steps denotes the number of mini-batches whose gradients a
 
 \begin{table*}[t]
 \centering
+\caption{UVHF configuration.}
+\label{tab:model-settings}
 \scriptsize
 \setlength{\tabcolsep}{4pt}
-\caption{UVHF Configuration.}
-\label{tab:model-settings}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lccccccccc}
 \toprule
@@ -1152,6 +1152,8 @@ Tables~\ref{tab:appendix-horizon-specific} and~\ref{tab:appendix-one-model} repo
 % Required packages: booktabs, multirow, graphicx, xcolor
 \begin{table}[H]
 \centering
+\caption{Horizon-wise results against horizon-specific baselines. Bold and underline indicate best and second-best values. Best and Second-best count the corresponding ranks across 28 dataset--horizon pairs, excluding Avg.; displayed ties count for each method.}
+\label{tab:appendix-horizon-specific}
 \scriptsize
 \setlength{\tabcolsep}{1.2pt}
 \resizebox{\textwidth}{!}{%
@@ -1214,8 +1216,6 @@ Dataset & H & \multicolumn{2}{c}{\shortstack{UVHF\\(Ours)}} & \multicolumn{2}{c}
 \bottomrule
 \end{tabular}%
 }
-\caption{Full results for the horizon-specific comparison. MSE and MAE are reported for $H\in\{96,192,336,720\}$ and averaged over the four horizons. The best and second-best values are highlighted in bold and underlined, respectively. Counts cover the 28 dataset--horizon rows, excluding Avg.; ties at the displayed precision count for each tied method.}
-\label{tab:appendix-horizon-specific}
 \end{table}
 
 
@@ -1224,6 +1224,8 @@ Dataset & H & \multicolumn{2}{c}{\shortstack{UVHF\\(Ours)}} & \multicolumn{2}{c}
 % Required packages: booktabs, multirow, graphicx, xcolor
 \begin{table}[H]
 \centering
+\caption{Horizon-wise results under the one-model-all-horizons protocol. Bold and underline indicate best and second-best values. Best and Second-best count the corresponding ranks across 28 dataset--horizon pairs, excluding Avg.; displayed ties count for each method.}
+\label{tab:appendix-one-model}
 \scriptsize
 \setlength{\tabcolsep}{1.2pt}
 \resizebox{\textwidth}{!}{%
@@ -1286,8 +1288,6 @@ Dataset & H & \multicolumn{2}{c}{UVHF (Ours)} & \multicolumn{2}{c}{TimeAlign (20
 \bottomrule
 \end{tabular}%
 }
-\caption{Full results for the one-model-all-horizons comparison. MSE and MAE are reported for $H\in\{96,192,336,720\}$ and averaged over the four horizons. The best and second-best values are highlighted in bold and underlined, respectively. Counts cover the 28 dataset--horizon rows, excluding Avg.; ties at the displayed precision count for each tied method.}
-\label{tab:appendix-one-model}
 \end{table}
 \clearpage
 
